@@ -15,18 +15,22 @@ export const AUTO_RESTART_INITIAL = 6;
 // 사용: const box = new DoubleBox(); box.value = 123.5. 쓰기는 JS 수(double)를 그대로 저장한다. (2026-11-12 WB04-E325)
 export class DoubleBox {
     // 현재 double 값이다.
-    #value;
+    #value = new Float64Array(1);
 
     // 초기값(기본 0)을 저장한다. (2026-11-12 WB04-E325)
     constructor(initial = 0) {
-        this.#value = Number(initial);
+        this.#value[0] = Number(initial);
     }
 
     // 현재 값을 읽는다. (2026-11-12 WB04-E325)
-    get value() { return this.#value; }
+    get value() { return this.#value[0]; }
 
     // 새 값을 저장한다. 수가 아닌 값은 NaN 이 되므로 호출자가 수를 넘긴다. (2026-11-12 WB04-E325)
-    set value(next) { this.#value = Number(next); }
+    set value(next) { this.#value[0] = Number(next); }
+
+    // State 직접 저장의 64비트 전체를 같은 double 물리에서 읽고 쓴다.
+    get bits() { return new DataView(this.#value.buffer).getBigUint64(0, true); }
+    set bits(next) { new DataView(this.#value.buffer).setBigUint64(0, next, true); }
 }
 
 // Client 수명의 활동 표와 Zone/하트비트 전역의 소유자이다. 각 접근자는 호출마다 같은 객체를 돌려준다(주소 고정). (2026-11-12 WB04-E325)

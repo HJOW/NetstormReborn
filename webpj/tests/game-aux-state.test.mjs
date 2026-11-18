@@ -266,6 +266,8 @@ test('GameAuxState: 일반 월드 준비와 손실 좌표 정리', () => {
         [0, 0, 0, 25, 0, 0, 0, 0, 122, false]);
     assert.deepEqual([aux.priestType, aux.processFormType, aux.regularProcessType, aux.geyserDeadline, aux.archipelagoMinimum, aux.defaultSp], [200, 9, 47, 12.5, 3, 900]);
     assert.deepEqual([aux.spellDeadline, aux.incomePrimed, ...aux.centralPosition()], [50.5, 1, 7.5, -2.25]);
+    aux.writeWideBits('spellDeadline', 0x7ff8000000001234n); assert.equal(aux.readWideBits('spellDeadline'), 0x7ff8000000001234n);
+    assert.throws(() => aux.writeWideBits('priestType', 0n), /double 필드 없음/);
     aux.resetLostPositionForCleanup();
     const view = new DataView(new ArrayBuffer(4));
     view.setFloat32(0, aux.lostX, true);

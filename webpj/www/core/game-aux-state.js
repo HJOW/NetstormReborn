@@ -180,6 +180,8 @@ export class GameAuxState {
 
     // 필드 이름 → 현재 값이다.
     #values = new Map(GAME_AUX_FIELDS.map((field) => [field.name, field.initial]));
+    // double 기한은 State의 직접 64비트 쓰기와 일반 숫자 접근이 같은 물리를 쓴다.
+    #wideValues = new Map(GAME_AUX_FIELDS.filter((field) => field.kind === 'f64').map((field) => [field.name, Float64Array.of(field.initial)]));
     // 세계 장식 네 TYPE 의 실제 DWORD 저장소이다(빌려 주는 같은 배열).
     #decorations = Uint32Array.from(WORLD_DECORATION_FIELDS, (field) => field.initial);
     // 세 주문의 현재 TYPE DWORD는 Session 교체를 넘어 같은 배열을 유지한다.
@@ -207,13 +209,14 @@ export class GameAuxState {
     #packet0cHeader = Uint8Array.of(0x0c, 1); #packet0cLength = new Uint16Array(1);
 
     // 필드 값을 읽는다(접근자 공통 구현).
-    #read(name) { if (name === 'lostX') return this.#lostPosition[0]; if (name === 'lostY') return this.#lostPosition[1]; return this.#values.get(name); }
+    #read(name) { if (name === 'lostX') return this.#lostPosition[0]; if (name === 'lostY') return this.#lostPosition[1]; if (this.#wideValues.has(name)) return this.#wideValues.get(name)[0]; return this.#values.get(name); }
 
     // 필드 값을 폭 검사 뒤 쓴다(접근자 공통 구현).
     #write(field, value) {
         const checked = KIND_CHECKS[field.kind](value);
         if (field.name === 'lostX') this.#lostPosition[0] = checked;
         else if (field.name === 'lostY') this.#lostPosition[1] = checked;
+        else if (field.kind === 'f64') this.#wideValues.get(field.name)[0] = checked;
         else this.#values.set(field.name, checked);
     }
 
@@ -245,6 +248,10 @@ export class GameAuxState {
     centralPosition() { return this.#centralPosition; }
     // State 직접 저장과 일반 좌표 소비자가 공유하는 두 float32 물리다.
     lostPosition() { return this.#lostPosition; }
+    // 지정 double 기한의 원문 비트를 숫자 재변환 없이 읽는다.
+    readWideBits(name) { const value = this.#wideValues.get(name); if (!value) throw new RangeError('GameAux double 필드 없음'); return new DataView(value.buffer).getBigUint64(0, true); }
+    // 지정 double 기한의 같은 물리에 원문 비트를 직접 쓴다.
+    writeWideBits(name, bits) { const value = this.#wideValues.get(name); if (!value) throw new RangeError('GameAux double 필드 없음'); new DataView(value.buffer).setBigUint64(0, bits, true); }
 
     // 로그인 초기화와 69h 수신이 같은 256BYTE를 직접 빌린다.
     typeUse() { return this.#typeUse; }

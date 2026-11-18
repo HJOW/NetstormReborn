@@ -9,7 +9,7 @@ function stateBoolean(value) {
 
 // 같은 권한·보조 전역·표면을 확인하고 직접 접근 callback을 반환한다. 바인딩 자체는 값을 바꾸지 않는다.
 export function bindClientStateWorldGlobals(context) {
-    const { gameplay, local, activity, storage, currentStorage, nsInfo, kencloud, players, templates, random } = context;
+    const { gameplay, local, activity, storage, currentStorage, nsInfo, kencloud, players, templates, random, audio } = context;
     if (storage.pool.edition !== 'patch1078' || storage.authority !== gameplay.authority() || storage.gameAux !== gameplay.gameAux() || (currentStorage && currentStorage !== storage)) {
         throw new TypeError('State 전역의 같은 실제 Client/표면/권한 owner 필요');
     }
@@ -89,6 +89,21 @@ export function bindClientStateWorldGlobals(context) {
         write16(address, value) {
             if (address !== 0x5c89b4) throw new RangeError('State 직접 쓰기의 미등록 Native WORD 주소');
             random.fortCoreSeed = ((random.fortCoreSeed & 0xffff0000) | (value & 0xffff)) >>> 0;
+        },
+        // 독립 double 기한은 각 장기 소유자에 64비트 그대로 쓰고 음악 장치는 선택된 경우에만 요구한다.
+        write64Bits(address, bits) {
+            switch (address) {
+            case 0x565e68: if (typeof audio?.writeSongEndBits !== 'function') throw new Error('State 음악 기한의 실제 음향 장치 미연결'); audio.writeSongEndBits(bits); return;
+            case 0x5950b8: aux.writeWideBits('geyserDeadline', bits); return;
+            case 0x5950c0: aux.writeWideBits('cleanupDeadline', bits); return;
+            case 0x5950c8: aux.writeWideBits('secondaryGeyserDeadline', bits); return;
+            case 0x595358: aux.writeWideBits('scheduledDrawDeadline', bits); return;
+            case 0x5c85f0: local.loginEnd().bits = bits; return;
+            case 0x5c85f8: local.connectEnd().bits = bits; return;
+            case 0x5c8610: local.reconnectSaveEnd().bits = bits; return;
+            case 0x5c8618: local.captureEnd().bits = bits; return;
+            default: throw new RangeError('State 직접 쓰기의 미등록 Native double 주소');
+            }
         },
         // 매 호출마다 현재 Player 물리를 다시 빌린다.
         players() { return players.records(); },

@@ -119,6 +119,11 @@ test('Client State 전역: 연결 활동·Client DWORD와 모드 별칭', () => 
     assert.equal(globals.templateManager(1), 0x87654321); assert.throws(() => globals.templateManager(9), /슬롯 범위/);
     const cost = globals.typeDefault(85); cost.value = 1 / 3; assert.equal(storage.types[85].cost, Math.fround(1 / 3));
     storage.types[85].cost = 17; assert.equal(cost.value, 17); assert.throws(() => globals.typeDefault(188), /TYPE 범위/);
+    const nanBits = 0x7ff8000000001234n; globals.write64Bits(0x5950b8, nanBits); globals.write64Bits(0x5c85f0, nanBits);
+    assert.equal(gameplay.gameAux().readWideBits('geyserDeadline'), nanBits); assert.equal(local.loginEnd().bits, nanBits);
+    globals.write64Bits(0x5c8610, 0x4024000000000000n); assert.equal(local.reconnectSaveEnd().value, 10);
+    assert.throws(() => globals.write64Bits(0x565e68, 0n), /음향 장치 미연결/); assert.throws(() => globals.write64Bits(0, 0n), /미등록/);
+    let songBits = null; bindClientStateWorldGlobals({ ...context, audio: { writeSongEndBits: (bits) => { songBits = bits; } } }).write64Bits(0x565e68, nanBits); assert.equal(songBits, nanBits);
     assert.throws(() => globals.write32(0x594fb8, 2), /정상0\/1/); assert.equal(storage.ownerMode.fort, true);
     assert.throws(() => globals.write32(0x540c70, 1), /미등록/); assert.throws(() => globals.read32(0x5c8540), /미등록/);
     assert.throws(() => bindClientStateWorldGlobals({ ...context, gameplay: new ClientGameplayGlobals() }), /owner 필요/);
