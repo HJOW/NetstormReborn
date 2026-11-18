@@ -17,6 +17,7 @@ import { RawSurfaceStorage } from '../www/core/raw-surface-storage.js';
 import { Kernel } from '../www/core/kernel.js';
 import { InputCode, InputQueue } from '../www/core/input-queue.js';
 import { CampaignUserInput } from '../www/core/campaign-user-input.js';
+import { bindCampaignUserInputServices } from '../www/core/campaign-user-input-services.js';
 import { clearClientUserSelection } from '../www/core/client-user-selection-cleanup.js';
 import { resetClientClockSynchronization, resetClientStateZone, resetClientStateWorldStorage, resetClientSquidPool, clearClientMetaZoneRecords } from '../www/core/client-state-storage-cleanup.js';
 import { StateWorldCleanupEffect } from '../www/core/raw-state-world-cleanup.js';
@@ -1438,8 +1439,8 @@ test('CampaignGameWorld TheWarBegins: 선택 강조와 미니맵 이동', () => 
         } finally { display.hit = originalHit; }
         const origin = gameplay.camera().snapshot().world;
         gameplay.selection.mouse.x = Math.round((90 - origin.x) * 16 - 16); gameplay.selection.mouse.y = Math.round((108 - origin.y) * 11 - 11);
-        world.bindUserInput({ paused: () => 0, dump: () => {}, assertion: forbidden('선택 진단'), previewAssertion: forbidden('미리보기 진단') },
-            { selectCursor: (number) => cursors.push(number) }, { selectCursor: (number) => cursors.push(number), assertion: forbidden('운반 입력 진단') });
+        bindCampaignUserInputServices({ paused: () => worldPaused, traceObject: (sid) => traces.push(sid), drawNativePathMarker: forbidden('이동 진단 표시'), presentNativeCursorClear: forbidden('커서 즉시 출력') },
+            world, (number) => cursors.push(number), forbidden('희생 Tell'));
         assert.throws(() => world.bindUserInput(), /새 수명/); world.select(priest.sid); assert.equal(world.selected(), priest.sid); assert.equal(gameplay.selection.mode, 5); assert.equal(cursors.at(-1), 0x12);
         const count = cursors.length; world.updateMovementCursor(); assert.equal(cursors.length, count + 1); assert.equal(cursors.at(-1), 0x12);
         let paused = false, pauseReads = 0; const keyQueue = new InputQueue();
