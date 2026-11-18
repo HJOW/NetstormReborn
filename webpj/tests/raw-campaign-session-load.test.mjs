@@ -668,3 +668,18 @@ test('CampaignSession Tutorial 1: 개발자 도움말 패킷', () => {
         assert.deepEqual(logs[31], [29, 'getPriest(gp) - sticks a enemy priest next to your priest\n']);
     } finally { s.dispose(); }
 });
+
+// 실제 세션의 그림 표와 31h 분배기로 같은 프레임 헤더를 추적한다.
+test('CampaignSession Tutorial 1: 개발자 그림 진단 패킷', () => {
+    const logs = [], { s } = scene(), dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); s.registerCarrierCommandPrefix(dispatch); s.world().storage.bindGraphTrace((...args) => logs.push(args));
+        const shape = s.core().shapes[154], header = shape.frames[0], text = 'dad 154', packet = new Uint8Array(9 + text.length);
+        assert.ok(shape.loaded && shape.frameCount > 0 && header);
+        packet.set([1, 0x31, packet.length, 0]); new DataView(packet.buffer).setUint32(4, text.length + 1, true);
+        packet.set(Uint8Array.from(text, (letter) => letter.charCodeAt(0)), 8);
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
+        assert.equal(logs.length, shape.frameCount);
+        assert.deepEqual(logs[0], [29, `0: hx=${header.hotspotX} hy=${header.hotspotY} w=${header.width} h=${header.height} wx=${header.muzzleX} wy=${header.muzzleY}\n`]);
+    } finally { s.dispose(); }
+});

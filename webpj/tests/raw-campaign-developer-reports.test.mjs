@@ -40,3 +40,42 @@ test('개발자 그래프 진단: 기록과 입력 경계', () => {
     assert.deepEqual(calls, [[29, 'graph index: 0 numSurface: -1 inUse: 2\n'], [29, 'bad command\n']]);
     assert.throws(() => executeDeveloperReports('dg -1', data, graph, trace), /물리 범위/);
 });
+
+// 그림 진단은 최초 프레임 수를 고정하되 출력 뒤 현재 헤더와 TYPE를 다시 읽는다.
+test('개발자 그림 진단: 실제 헤더와 변경된 프레임 경계', () => {
+    const data = core(), calls = [];
+    data.types[1] = { flags1: 0, maxHitPoints: 100 };
+    data.shapes[1] = { frameCount: 2, loaded: true, frames: [
+        { hotspotX: -1, hotspotY: 2, width: 3, height: 4, muzzleX: -5, muzzleY: 6 },
+        { hotspotX: 7, hotspotY: 8, width: 9, height: 10, muzzleX: 11, muzzleY: 12 },
+    ] };
+    const storage = {
+        recordDisplayFrameError: (...args) => calls.push(['frame', ...args]),
+        assertDisplay: (...args) => calls.push(['assert', ...args]),
+    };
+    assert.equal(executeDeveloperReports('dad 1 trailing', data, {}, (level, line) => {
+        calls.push(['log', level, line]);
+        if (calls.length === 1) data.shapes[1].frameCount = 1;
+    }, storage), true);
+    assert.deepEqual(calls, [
+        ['log', 29, '0: hx=-1 hy=2 w=3 h=4 wx=-5 wy=6\n'],
+        ['frame', 1, 1, 0], ['assert', 'frameCheck( abstract, frame, false )', '..\\o\\rifttype.h', 0xe1],
+        ['log', 29, '1: hx=7 hy=8 w=9 h=10 wx=11 wy=12\n'],
+    ]);
+    assert.throws(() => executeDeveloperReports('dad -1', data, {}, () => {}), /TYPE 범위/);
+    const errors = [];
+    assert.equal(executeDeveloperReports('dad', data, {}, (...args) => errors.push(args)), true);
+    assert.deepEqual(errors, [[29, 'bad command\n']]);
+});
+
+// 누락된 그림·해제된 타입은 실제 단정 장치를 호출하고 복귀 뒤 현재 헤더를 읽는다.
+test('개발자 그림 진단: 단정 복귀와 물리 프레임 경계', () => {
+    const data = core(), calls = [];
+    data.types[1] = { flags1: 0, maxHitPoints: -0x22222223 };
+    data.shapes[1] = { frameCount: 1, loaded: false, frames: [] };
+    const storage = { assertDisplay: (...args) => { calls.push(args); data.shapes[1].frames.push({ hotspotX: 1, hotspotY: 2, width: 3, height: 4, muzzleX: 5, muzzleY: 6 }); } };
+    executeDeveloperReports('dumpartdata 1', data, {}, (...args) => calls.push(args), storage);
+    assert.deepEqual(calls, [['frameCheck( abstract, frame, false )', '..\\o\\rifttype.h', 0xe1], [29, '0: hx=1 hy=2 w=3 h=4 wx=5 wy=6\n']]);
+    data.shapes[1].frames.length = 0; data.shapes[1].loaded = true; data.types[1].maxHitPoints = 100;
+    assert.throws(() => executeDeveloperReports('dad 1', data, {}, () => {}, storage), /프레임 물리 범위/);
+});

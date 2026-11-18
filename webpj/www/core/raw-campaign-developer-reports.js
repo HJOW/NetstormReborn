@@ -1,5 +1,5 @@
 // 31h 타입·그래프 진단을 현재 Session의 TYPE·그림·그래프 기록에 연결한다.
-// 사용: executeDeveloperReports(text, core, graph, trace) → 처리한 명령이면 true, 다른 명령이면 false.
+// 사용: executeDeveloperReports(text, core, graph, trace, storage) → 처리한 명령이면 true, 다른 명령이면 false.
 import { firstDeveloperInteger, parseDeveloperCommand } from './raw-campaign-developer-settings.js';
 
 // 개발자 help가 수준29 추적 장치에 순서대로 출력하는 원문 32행이다.
@@ -42,7 +42,7 @@ const DEVELOPER_HELP_LINES = Object.freeze([
 function log(trace, text) { if (typeof trace !== 'function') throw new Error('개발자 명령의 실제 추적 장치 미연결'); trace(29, text); }
 
 // 현재 TYPE·그림과 그래프 레코드를 원문 순서로 진단 출력한다. (2026-11-18 WB04-E743)
-export function executeDeveloperReports(text, core, graph, trace) {
+export function executeDeveloperReports(text, core, graph, trace, storage = null) {
     const { key, rest } = parseDeveloperCommand(text);
     if (key === 'help' || key === '?') {
         // 원문 각 행을 개별 호출하여 추적 장치의 오류와 출력 순서를 보존한다.
@@ -64,6 +64,31 @@ export function executeDeveloperReports(text, core, graph, trace) {
         return true;
     }
     if (key === 'dumptype') { dumpType((firstDeveloperInteger(rest) ?? 0) >>> 0); return true; }
+    if (key === 'dumpartdata' || key === 'dad') {
+        const value = firstDeveloperInteger(rest);
+        if (value === null) { log(trace, 'bad command\n'); return true; }
+        const type = value >>> 0;
+        if (type >= core.shapes.length || type >= core.types.length) throw new RangeError('개발자 그림 덤프의 현재 TYPE 범위');
+        const frames = core.shapes[type].frameCount;
+        // 원문의 최초 프레임 수를 상한으로 삼고 각 반복에서 현재 그림과 TYPE를 다시 조회한다.
+        for (let frame = 0; frame < frames; frame += 1) {
+            const shape = core.shapes[type], record = core.types[type];
+            const limit = Math.imul(shape.frameCount, (record.flags1 & 0x440000) ? 2 : 1);
+            const inRange = frame < limit;
+            if (!inRange) {
+                if (typeof storage?.recordDisplayFrameError !== 'function') throw new Error('개발자 그림 덤프의 실제 프레임 진단 미연결');
+                storage.recordDisplayFrameError(type, frame, 0);
+            }
+            if (!inRange || !shape.loaded || record.maxHitPoints === -0x22222223 || record.maxHitPoints === -0x32323233) {
+                if (typeof storage?.assertDisplay !== 'function') throw new Error('개발자 그림 덤프의 실제 단정 진단 미연결');
+                storage.assertDisplay('frameCheck( abstract, frame, false )', '..\\o\\rifttype.h', 0xe1);
+            }
+            const header = shape.frames[frame];
+            if (!header) throw new RangeError('개발자 그림 덤프의 실제 프레임 물리 범위');
+            log(trace, `${frame}: hx=${header.hotspotX} hy=${header.hotspotY} w=${header.width} h=${header.height} wx=${header.muzzleX} wy=${header.muzzleY}\n`);
+        }
+        return true;
+    }
     if (key === 'dumpgraph' || key === 'dg') {
         const value = firstDeveloperInteger(rest);
         if (value === null) { log(trace, 'bad command\n'); return true; }
