@@ -62,6 +62,8 @@ export class SidPool {
 
     // 예측 영역 첫 번호에 더할 현재 커서를 읽는다.
     get predictableCursor() { return this.#predictableCursor; }
+    // State 직접 DWORD 쓰기는 목록을 다시 만들지 않고 같은 예측 커서만 바꾼다.
+    set predictableCursor(value) { integer(value, 0, 0xffffffff, '예측 SID 현재 커서'); this.#predictableCursor = value; }
 
     // 공유 권한을 복제하지 않고 현재 소유자에서 다시 읽는다.
     get isServer() { return this.#serverOwner === null ? this.#server : this.#serverOwner.value; }

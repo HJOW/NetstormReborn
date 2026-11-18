@@ -540,7 +540,7 @@
       "bytes": 8139,
       "lines": 17,
       "fixtureCommit": "e210c7559",
-      "webCommit": "worktree",
+      "webCommit": "958801fbf",
       "cpppjBasis": {
         "cpppj/src/client/RawCameraView.cpp": "e210c7559",
         "cpppj/src/client/ClientCameraGlobals.cpp": "66583eb4f"
@@ -607,11 +607,11 @@
       "sha256": "b45b5726f2860a762fd0fa53fa85949f941baf28e836570b43dfd7a2c9e40eb4",
       "bytes": 238949,
       "lines": 4721,
-      "fixtureCommit": "ffdc5ddb",
-      "webCommit": "41cb8da9",
+      "fixtureCommit": "ffdc5ddbf",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/SidPool.cpp": "6035f810",
-        "cpppj/src/o/SidPool.h": "b7065914"
+        "cpppj/src/o/SidPool.cpp": "9cb0547f5",
+        "cpppj/src/o/SidPool.h": "541624a91"
       }
     },
     {
@@ -785,7 +785,7 @@
       "bytes": 1552384,
       "lines": null,
       "fixtureCommit": "2f80430a0",
-      "webCommit": "4acf1fe01",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/RawGameAuxState.h": "8defb347c",
         "cpppj/src/o/RawSquidContainedUnpop.h": "be567d46b",
@@ -1494,11 +1494,11 @@
       "sha256": "79c03977292f3c33b0ca2f7394150a1e98c00c7ba4913565633c5ccb159d0764",
       "bytes": 366794,
       "lines": 601,
-      "fixtureCommit": "a466b2a6",
-      "webCommit": "410beda4",
+      "fixtureCommit": "a466b2a60",
+      "webCommit": "worktree",
       "cpppjBasis": {
-        "cpppj/src/o/SquidForms.cpp": "09ad72b0",
-        "cpppj/src/o/SidPool.cpp": "435cfa1d"
+        "cpppj/src/o/SquidForms.cpp": "09ad72b07",
+        "cpppj/src/o/SidPool.cpp": "9cb0547f5"
       }
     },
     {
@@ -1646,7 +1646,7 @@
       "bytes": 146005,
       "lines": 577,
       "fixtureCommit": "21da88755",
-      "webCommit": "f2f3cdefd",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/SquidFactory.cpp": "be567d46b",
         "cpppj/src/o/RawRiftHitPoints.cpp": "804b87a59"
@@ -1707,7 +1707,7 @@
       "bytes": 164662,
       "lines": 1649,
       "fixtureCommit": "078ea3e8c",
-      "webCommit": "f2f3cdefd",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/SquidFactory.cpp": "be567d46b"
       }
@@ -1739,7 +1739,7 @@
       "bytes": 975424,
       "lines": 7469,
       "fixtureCommit": "f7675661a",
-      "webCommit": "f2f3cdefd",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/SquidFactory.cpp": "be567d46b",
         "cpppj/src/o/DerivedConstructors.inc": "f7675661a"
@@ -1773,7 +1773,7 @@
       "bytes": 862447,
       "lines": 8423,
       "fixtureCommit": "a86150dba",
-      "webCommit": "f2f3cdefd",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/SquidFactory.cpp": "be567d46b",
         "cpppj/src/o/SquidUnpop.cpp": "2c6ab7cc1",
@@ -2402,7 +2402,7 @@
       "bytes": 2102,
       "lines": 65,
       "fixtureCommit": "98c3aea8f",
-      "webCommit": "worktree",
+      "webCommit": "958801fbf",
       "cpppjBasis": {
         "cpppj/src/o/RawProcessRemoval.cpp": "98c3aea8f"
       }
@@ -2712,7 +2712,7 @@
       "bytes": 1160765,
       "lines": 643,
       "fixtureCommit": "d207940cd",
-      "webCommit": "worktree",
+      "webCommit": "958801fbf",
       "cpppjBasis": {
         "cpppj/src/o/RawPlayerCoreRefresh.cpp": "c1b8fbf41",
         "cpppj/src/o/RawPlayerCoreData.cpp": "79c3a5815",
@@ -2748,7 +2748,7 @@
       "bytes": 1983,
       "lines": 21,
       "fixtureCommit": "d207940cd",
-      "webCommit": "worktree",
+      "webCommit": "958801fbf",
       "cpppjBasis": {
         "cpppj/src/o/RawPlayerCoreRefresh.cpp": "c1b8fbf41",
         "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe",
@@ -9659,7 +9659,7 @@
       "bytes": 630169,
       "lines": 983,
       "fixtureCommit": "f3e45255a",
-      "webCommit": "worktree",
+      "webCommit": "c45dafe90",
       "cpppjBasis": {
         "cpppj/src/o/RawCarrierMove.cpp": "9388cd633"
       }
@@ -11322,7 +11322,7 @@
       "bytes": 44300,
       "lines": 307,
       "fixtureCommit": "a5afdafbe",
-      "webCommit": "worktree",
+      "webCommit": "958801fbf",
       "cpppjBasis": {
         "cpppj/src/o/RawConstructionArrival.cpp": "fa80cc900"
       }
@@ -11709,7 +11709,7 @@
       "bytes": 5616,
       "lines": 102,
       "fixtureCommit": "8bf762066",
-      "webCommit": "worktree",
+      "webCommit": "958801fbf",
       "cpppjBasis": {
         "cpppj/src/o/RawManaBoltArrival.cpp": "dfde4ad3e"
       }
@@ -17106,7 +17106,7 @@
       "bytes": 35353,
       "lines": 165,
       "fixtureCommit": "05d7cb57d",
-      "webCommit": "915fe6044",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/o/RawMissionSettingsPacket.cpp": "ae0e58b3a"
       }
@@ -21338,7 +21338,7 @@
       "bytes": 288716,
       "lines": 2365,
       "fixtureCommit": "82cc43831",
-      "webCommit": "f6c7c3a04",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/client/CameraHome.cpp": "acf3df968",
         "cpppj/src/client/CameraHome.h": "acf3df968"
@@ -21634,7 +21634,7 @@
       "bytes": 15891,
       "lines": 197,
       "fixtureCommit": "0e6574fcd",
-      "webCommit": "worktree",
+      "webCommit": "958801fbf",
       "cpppjBasis": {
         "cpppj/src/o/RawManaBoltRegular.cpp": "dfde4ad3e",
         "cpppj/src/o/RawManaBoltRegular.h": "dfde4ad3e"
@@ -24859,7 +24859,7 @@
       "bytes": 201111,
       "lines": 339,
       "fixtureCommit": "2ede40273",
-      "webCommit": "worktree",
+      "webCommit": "958801fbf",
       "cpppjBasis": {
         "cpppj/src/o/RawFortCoreWrite.cpp": "2ede40273",
         "cpppj/src/o/RawFortCoreWrite.h": "2ede40273",
@@ -24896,7 +24896,7 @@
       "bytes": 13449,
       "lines": 23,
       "fixtureCommit": "2ede40273",
-      "webCommit": "worktree",
+      "webCommit": "958801fbf",
       "cpppjBasis": {
         "cpppj/src/o/RawFortCoreWrite.cpp": "2ede40273",
         "cpppj/src/o/RawFortCoreWrite.h": "2ede40273",
@@ -24933,7 +24933,7 @@
       "bytes": 24235,
       "lines": 37,
       "fixtureCommit": "2ede40273",
-      "webCommit": "worktree",
+      "webCommit": "958801fbf",
       "cpppjBasis": {
         "cpppj/src/o/RawFortCoreWrite.cpp": "2ede40273",
         "cpppj/src/o/RawFortCoreWrite.h": "2ede40273",
@@ -24970,7 +24970,7 @@
       "bytes": 2138588,
       "lines": 199,
       "fixtureCommit": "d207940cd",
-      "webCommit": "worktree",
+      "webCommit": "958801fbf",
       "cpppjBasis": {
         "cpppj/src/o/RawFortSpWrite.cpp": "d207940cd",
         "cpppj/src/o/RawFortSpWrite.h": "d207940cd",

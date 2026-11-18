@@ -199,16 +199,23 @@ export class GameAuxState {
     #missionSettings = Uint32Array.from(MISSION_SETTING_FIELDS, (field) => field.initial);
     // 00568afc/00568b00의 현재 중앙 좌표이며 같은 float32 물리를 계속 빌린다.
     #centralPosition = new Float32Array(2);
+    // 005c848c/005c8490의 손실 좌표이며 State의 비트 쓰기도 같은 물리를 사용한다.
+    #lostPosition = new Float32Array(2);
     // 원문 005451f8의 타입 사용 목록이며 명시 ClearTypes까지 Session 교체로 지우지 않는다.
     #typeUse = new Uint8Array(256);
     // 0052ed54/55의 디버그 패킷 헤더와 00544c24의 최초 BSS 길이 WORD다.
     #packet0cHeader = Uint8Array.of(0x0c, 1); #packet0cLength = new Uint16Array(1);
 
     // 필드 값을 읽는다(접근자 공통 구현).
-    #read(name) { return this.#values.get(name); }
+    #read(name) { if (name === 'lostX') return this.#lostPosition[0]; if (name === 'lostY') return this.#lostPosition[1]; return this.#values.get(name); }
 
     // 필드 값을 폭 검사 뒤 쓴다(접근자 공통 구현).
-    #write(field, value) { this.#values.set(field.name, KIND_CHECKS[field.kind](value)); }
+    #write(field, value) {
+        const checked = KIND_CHECKS[field.kind](value);
+        if (field.name === 'lostX') this.#lostPosition[0] = checked;
+        else if (field.name === 'lostY') this.#lostPosition[1] = checked;
+        else this.#values.set(field.name, checked);
+    }
 
     // 세계 장식 네 TYPE 의 실제 저장소(Uint32Array 4칸)를 빌려 준다. 원소 쓰기는 원본 메모리처럼 32비트로 감긴다.
     get worldDecorationTypes() { return this.#decorations; }
@@ -236,6 +243,8 @@ export class GameAuxState {
     missionSettings() { return this.#missionSettings; }
     // 일반 중앙섬과 State가 공유하는 두 좌표를 복사하지 않고 빌린다.
     centralPosition() { return this.#centralPosition; }
+    // State 직접 저장과 일반 좌표 소비자가 공유하는 두 float32 물리다.
+    lostPosition() { return this.#lostPosition; }
 
     // 로그인 초기화와 69h 수신이 같은 256BYTE를 직접 빌린다.
     typeUse() { return this.#typeUse; }

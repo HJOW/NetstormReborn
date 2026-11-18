@@ -9,7 +9,7 @@ function stateBoolean(value) {
 
 // 같은 권한·보조 전역·표면을 확인하고 직접 접근 callback을 반환한다. 바인딩 자체는 값을 바꾸지 않는다.
 export function bindClientStateWorldGlobals(context) {
-    const { gameplay, local, activity, storage, currentStorage } = context;
+    const { gameplay, local, activity, storage, currentStorage, nsInfo, kencloud } = context;
     if (storage.pool.edition !== 'patch1078' || storage.authority !== gameplay.authority() || storage.gameAux !== gameplay.gameAux() || (currentStorage && currentStorage !== storage)) {
         throw new TypeError('State 전역의 같은 실제 Client/표면/권한 owner 필요');
     }
@@ -21,12 +21,15 @@ export function bindClientStateWorldGlobals(context) {
         [0x59a8ac, () => gameplay.hideBuildings()], [0x5c7a74, () => local.begin()], [0x5c85a0, () => local.centralCreated()],
         [0x5c85b4, () => local.connectionNotified()], [0x5c85c0, () => local.zonePending()], [0x5c85c4, () => local.metaConnected()],
         [0x5c85c8, () => local.metadataMode()], [0x5c85cc, () => local.stateAuxCC()], [0x5c85e0, () => local.abortPending()],
+        [0x59a8b0, () => kencloud.worldRedraw()],
     ]);
     // 읽기 전용 주소와 직접 읽기·쓰기가 가능한 Player/모드 필드를 구분한다.
     const values = new Map([
         [0x540bc0, { get: () => Number(gameplay.server().value), set: (v) => { gameplay.server().value = stateBoolean(v); } }],
         [0x540bc4, { get: () => Number(gameplay.boss().value), set: (v) => { gameplay.boss().value = stateBoolean(v); } }],
         [0x540c70, { get: () => gameplay.player.battleOwner }], [0x540cac, { get: () => gameplay.player.templateOwner }],
+        [0x5424b0, { get: () => storage.pool.predictableCursor, set: (v) => { storage.pool.predictableCursor = v; } }],
+        [0x5467b8, { get: () => nsInfo.zone, set: (v) => { nsInfo.zone = v; } }],
         [0x594fa0, { get: () => Number(storage.links.mission) }],
         [0x594fa4, { get: () => Number(gameplay.world.missionPost), set: (v) => { gameplay.world.missionPost = stateBoolean(v); } }],
         [0x594fb8, { get: () => Number(storage.ownerMode.fort), set: (v) => { storage.ownerMode.fort = stateBoolean(v); gameplay.player.fortMode = storage.ownerMode.fort; } }],
@@ -58,6 +61,11 @@ export function bindClientStateWorldGlobals(context) {
     // 중앙 좌표는 float 변환 없이 원본 DWORD 비트를 같은 Float32Array에 쓴다.
     for (const [address, offset] of [[0x568afc, 0], [0x568b00, 4]]) {
         const view = () => { const point = aux.centralPosition(); return new DataView(point.buffer, point.byteOffset, point.byteLength); };
+        values.set(address, { get: () => view().getUint32(offset, true), set: (value) => view().setUint32(offset, value, true) });
+    }
+    // 손실 좌표도 같은 float32 물리에서 직접 DWORD 비트를 보존한다.
+    for (const [address, offset] of [[0x5c848c, 0], [0x5c8490, 4]]) {
+        const view = () => { const point = aux.lostPosition(); return new DataView(point.buffer, point.byteOffset, point.byteLength); };
         values.set(address, { get: () => view().getUint32(offset, true), set: (value) => view().setUint32(offset, value, true) });
     }
     // 22칸 프레임 표의 정렬된 원문 주소만 인덱스로 변환한다.
