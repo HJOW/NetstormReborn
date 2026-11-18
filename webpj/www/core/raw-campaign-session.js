@@ -27,6 +27,7 @@ import { executeDeveloperReports } from './raw-campaign-developer-reports.js';
 import { executeDeveloperObjects } from './raw-campaign-developer-objects.js';
 import { executeDeveloperBridge } from './raw-campaign-developer-bridge.js';
 import { executeDeveloperSubscriber } from './raw-campaign-developer-subscriber.js';
+import { RawPriestMenu, bindPriestMenuWorld, createPriestMenuState } from './raw-priest-menu.js';
 import { GunProcess, GunProcessFields } from './raw-gun-process.js';
 import { FlyerProcess, FlyerProcessFields, RawFlyerProcess } from './raw-flyer-process.js';
 import { findAttachedProcess, WindAviaryProcess } from './raw-wind-aviary-process.js';
@@ -59,6 +60,8 @@ const CONSTRUCTOR_STEPS = Object.freeze([
 export class RawCampaignSession {
     // 실제 Impl 소유자와 외곽 반납 관문이다. 외부에는 원시 owner를 공개하지 않는다.
     #owner = null; #login = null; #disposed = false;
+    // 사제 메뉴는 여러 번 생성돼도 같은 현재 원본 설정을 공유한다.
+    #priestMenuState = createPriestMenuState();
 
     // 모든 Impl 모듈이 구성된 뒤 외곽 callback을 연결하고 마지막에 현재 Session을 게시한다.
     constructor(game, files, fort, mission, services = {}) {
@@ -640,6 +643,28 @@ export class RawCampaignSession {
     addTechnology(owner, list) { this.#live().technology.addList(owner, list); }
     // 현재 Player의 기술 내용을 같은 실제 부모에서 찾는다.
     findTechnology(owner, type) { return this.#live().technology.find(owner, type); }
+    // 설치된 Session의 실제 커서와 현재 배치 상태를 빌린다.
+    cursor() { const o = this.#live(); if (!o.loaded || !o.cursor) throw new Error('설치 전 실제 커서 요청'); return o.cursor; }
+    // 커서 수명과 배치 명령이 함께 쓰는 현재 저장소다.
+    cursorDropSettings() { return this.#live().cursorDrop; }
+    // 같은 Session의 현재 에너지 공급 판정을 빌린다.
+    energySupply() { return this.#live().energySupply; }
+    // 현재 건설 설정을 준비한 뒤 실제 전체 게임 배치 판정을 실행한다.
+    mayPlaceConstruction(query) { const o = this.#live(); o.assetModules.prepareConstruction(); return o.constructionModules.mayPlace(query); }
+    // GUI 효과는 호출자에게 남기고 사제 메뉴의 월드·기술·자금·커서를 같은 Session에 연결한다.
+    makePriestMenu(input = {}) {
+        const o = this.#live(); if (!o.loaded) throw new Error('설치 전 실제 Session 사제 메뉴 요청');
+        const state = this.#priestMenuState, hooks = { ...input }, c = o.core;
+        state.localOwnerRead = () => this.#live().playerState.battleOwner;
+        state.workshopModeRead = () => this.#live().core.ownerMode.battle;
+        state.editorRead = () => this.#live().globals.editor !== 0;
+        state.chargeBlockedRead = () => this.#live().globals.missionPost;
+        bindPriestMenuWorld(hooks, c.pool, o.priests.priestState, c.processes, o.player, o.priests.carrier, o.hp, o.contained);
+        if (!hooks.takePreview) this.cursor().bind(hooks);
+        hooks.allowed = (type) => this.#live().totalMade.allowed(type);
+        hooks.money = (owner) => this.sp(owner);
+        return new RawPriestMenu(c.pool, c.types, c.frames, o.players, o.constructionExcludedTypes, o.contentFinder, state, hooks);
+    }
     // 같은 옵션 저장소의 숨김 Player 바이트를 빌린다.
     hiddenPlayers() { return this.#live().hiddenPlayers; }
     // 현재 87바이트 옵션의 유효한 위치를 조회한다.

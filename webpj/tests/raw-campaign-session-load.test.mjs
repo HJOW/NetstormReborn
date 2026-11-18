@@ -291,6 +291,56 @@ test('CampaignSession GuardMyBack: 실제 로그인 뒤 미션 시작과 동맹'
     }
 });
 
+// 실제 로그인과 Start 뒤 사제 메뉴가 같은 Session 커서에 워크샾을 취득한다.
+test('CampaignSession TheWarBegins: 실제 로그인 뒤 사제 메뉴와 커서', () => {
+    const files = new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)]]);
+    const gameData = GameData.build({ files, language: 'english' });
+    gameData.configuration.assign('missionSpec="d/{local.1}.english"\nfortSpec="d/{local.1}.fort"\n[END]\n');
+    const script = new MissionScript(gameData, 'TheWarBegins'), events = [], packets = [], mouse = { x: 0, y: 0 };
+    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {},
+        observePacket: (sender, _boss, _local, packet) => { if (packet[1] === 0x3e) packets.push([sender, packet.slice()]); } };
+    const ai = { allocationBytes: (bytes) => bytes.fill(0xa7), defaultName: () => 'AI', participation: { addChat: () => {}, clearChat: () => {} } };
+    const { s } = scene({ localLogin, ai, construction: { refresh: () => events.push(['construction-refresh']) },
+        sound: { playOnceAt: (...args) => events.push(['sound', ...args]), play: (...args) => { events.push(['sound', ...args]); return 1; } } });
+    try {
+        assert.throws(() => s.cursor(), /설치 전/); assert.throws(() => s.makePriestMenu(), /설치 전/);
+        s.startLocalConnection(); s.pumpLocalConnection(); s.pollLocalConnectionState(); s.pumpLocalConnection();
+        const gate = createMissionFrameGateState(), state = createMissionStartState();
+        const effects = { settingsBytes: (_owner, bytes) => bytes.fill(0xa7), gameSeconds: () => 123.5, refreshSp: () => {}, refreshCommandGump: () => {},
+            resetCamera: () => {}, randomGeysers: forbidden('예상하지 않은 간헐천') };
+        new RawCampaignMissionStartBindings(s, script, gate, state, s.missionStartSettings(), s.missionAiSettings(), effects).start();
+        assert.equal(s.sp(1), 3000);
+        const cursor = s.cursor(); cursor.snapToGrid.value = 1;
+        cursor.setEffects({ lifecycle: { highlight: (value) => events.push(['highlight', value]), selectCursor: (value) => events.push(['cursor', value]), closePopups: () => events.push(['close']),
+            translate: (text) => text, measure: (text) => [text.length * 8, 16], mouse: () => mouse },
+        placement: { gumpAt: () => 0, invalidate: (...args) => events.push(['dirty', ...args]) },
+        drop: { showSp: (...args) => events.push(['sp', ...args]), battleRefresh: () => events.push(['battle']), refresh: (...args) => events.push(['refresh', ...args]), closeGump: (...args) => events.push(['closeGump', ...args]) },
+        send: (target, packet) => s.sendLocalPacket(target, packet) });
+        const priest = s.world().objects().find(({ object }) => object.type === 158 && object.owner === 1);
+        assert.ok(priest); const menu = s.makePriestMenu({ tell: forbidden('건설 실패 안내') });
+        assert.equal(menu.selectBuild(85, priest.sid), true); assert.ok(s.cursorDropSettings().preview); assert.equal(s.cursorDropSettings().costFlags, 0x160);
+        assert.equal(s.sp(1), 3000); assert.ok(cursor.lifecycle.previewCount > 0);
+        const drop = s.cursorDropSettings(), placement = cursor.placement; let target = null;
+        // 공급과 전체 배치 판정이 허용한 현재 지면만 실제 커서 위치에 전달한다.
+        for (let y = 4; y < 248 && !target; y += 1) {
+            // 허용 여부와 좌표는 같은 현재 월드의 판정을 사용한다.
+            for (let x = 4; x < 248; x += 1) {
+                if (!s.energySupply().evaluate('', x, y, drop.type, drop.localPlayer).value) continue;
+                if (!s.mayPlaceConstruction({ type: drop.type, argument: drop.argument, x, y, flags: drop.direction, owner: drop.localPlayer, mode: 1 })) continue;
+                mouse.x = x * 16 - placement.screenOriginX() - placement.hotspotX + Math.trunc(placement.imageWidth / 2);
+                mouse.y = y * 11 - placement.screenOriginY() - placement.hotspotY + Math.trunc(placement.imageHeight / 2);
+                cursor.update(mouse.x, mouse.y); if (drop.legal) { target = { x, y }; break; }
+            }
+        }
+        assert.ok(target, '현재 실제 커서 허용 위치 없음'); assert.deepEqual([drop.x, drop.y], [target.x, target.y]);
+        const before = s.localConnectionPackets(); cursor.drop(); assert.equal(s.sp(1), 2200); assert.deepEqual(s.localConnectionPackets(), before); assert.equal(packets.length, 0);
+        s.pumpLocalConnection(); assert.ok(s.localConnectionPackets().slice(before.length).includes(0x3e));
+        assert.equal(packets.length, 1); assert.equal(packets[0][0], 1); assert.deepEqual([...packets[0][1].subarray(0, 5)], [1, 0x3e, 25, 0, 85]);
+        const workshops = s.world().objects().filter(({ object }) => object.type === 85 && object.owner === 1 && object.x === target.x && object.y === target.y);
+        assert.equal(workshops.length, 1); assert.equal(s.core().pool.slot(workshops[0].sid)[40] & 1, 1);
+    } finally { s.dispose(); script.dispose(); }
+});
+
 // 출하된 일반 31미션과 별도 데모 맵의 실제 스크립트가 고른 Fort를 각각 내부 로그인한다.
 test('CampaignSession: 출하 미션 32종의 Fort 선택과 내부 로그인', () => {
     const names = [
