@@ -322,6 +322,8 @@ export class RawCampaignSessionOwners {
     terrainModules = null; terrainGlobals; randomPlacement; additional = new SquidPostPopList();
     // 튜토리얼 1이 읽는 원본 Home·회수 명령 전역의 초기 DWORD다.
     tutorialHomeCommand = 0x020000ae; tutorialReclaimCommand = 0x02000008; tutorialSalvageCommand = 0x0200005d;
+    // 튜토리얼 3~6이 공유 큐에서 비교하는 내용물·기술·포획·상승 사건이다.
+    tutorialContainedCommand = 0x030000b1; tutorialCaptureCommand = 0x020000d7; tutorialAscendCommand = 0x020000df;
     pipeline = null; normal = null; finishPlacement = null; finish = null;
     // Template 설치/WorldRuntime과 같은 현재 tutorial TYPE 역할의 독립 typed 소유 구간이다.
     installModules = null; tutorialWorkshopType; tutorialArcherType; tutorialTypes;

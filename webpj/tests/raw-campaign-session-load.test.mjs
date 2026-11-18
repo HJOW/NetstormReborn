@@ -626,6 +626,29 @@ test('CampaignSession TheWarBegins: 동맹 요청 직접 수신', () => {
     assert.throws(() => s.registerAllianceNegotiationCommands(dispatch), /반납/);
 });
 
+// 튜토리얼 4~6의 허용·제작·기술 사건 판정은 현재 Session 저장소를 사용한다.
+test('CampaignSession TheWarBegins: 튜토리얼 4~6 현재 옵션과 제작 판정', () => {
+    const gameplay = new ClientGameplayGlobals(), state = createMissionFrameGateState(), mission = createMissionStartState();
+    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {} };
+    const { s } = scene({ gameplayGlobals: gameplay, localLogin, production: { allocationBytes: (bytes) => bytes.fill(0) }, ai: { participation: { addChat: () => {}, clearChat: () => {} } } });
+    const gateHooks = Object.fromEntries(['checkOutcome', 'dialogsClear', 'knowledgeOpen', 'guideOpen', 'blockingGumpOpen', 'tellStage', 'tellAt', 'endDemo', 'tutorial', 'pause', 'resume'].map((name) => [name, forbidden(name)]));
+    gateHooks.gameSeconds = () => 42; gateHooks.paused = () => false; const gate = new RawMissionFrameGate(state, gateHooks);
+    const ui = { gameSeconds: () => 42, selected: () => 0, resetSelection: forbidden('선택 초기화'), clearSelection: forbidden('선택 해제'), tell: forbidden('안내'), closeTransientGumps: forbidden('창 닫기') };
+    try {
+        assert.throws(() => s.makeTutorialLater(gate, mission, ui), /로그인 설치 전/); s.loadLocalConnection();
+        const early = s.makeTutorialLater(gate, mission, ui), counts = s.core().bookkeeping;
+        state.stage = 0x41; state.lockFrames = 0; early.handle(4, [0, 0, 0]); assert.equal(s.battleOption(2), 2); assert.equal(state.stage, 0x41);
+        state.stage = 0x42; counts.globalCounts()[128] = 2; counts.localCounts()[128] = 1; early.handle(4, [0, 0, 0]); assert.equal(state.stage, 0x42);
+        counts.localCounts()[128] = 2; early.handle(4, [0, 0, 0]); assert.equal(state.stage, 0x43);
+        mission.fieldC0 = 1; mission.fieldC4 = 1; state.stage = 0x41; state.lockFrames = 0;
+        early.handle(5, [0x020000b5, 132, 78]); assert.equal(state.stage, 0x42);
+        state.stage = 0x42; state.lockFrames = 0; early.handle(6, [0x020000b4, 0, 0]); assert.equal(state.stage, 0x43);
+        state.stage = 0x45; state.lockFrames = 0; counts.globalCounts()[71] = 0; counts.globalCounts()[72] = 0; counts.globalCounts()[131] = 0;
+        early.handle(6, [0, 0, 0]); assert.equal(state.stage, 0x46);
+    } finally { s.dispose(); }
+    assert.throws(() => s.makeTutorialLater(gate, mission, ui), /반납/);
+});
+
 // 튜토리얼 2는 실제 로그인 옵션·제작 집계·현재 생산 목록과 UI 경계를 함께 사용한다.
 test('CampaignSession TheWarBegins: 튜토리얼 2 로그인 옵션과 제작 판정', () => {
     const gameplay = new ClientGameplayGlobals(), events = [], state = createMissionFrameGateState(); let now = 42;

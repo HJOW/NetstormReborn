@@ -51,6 +51,8 @@ import { createCursorRangeProcess } from './raw-cursor-range.js';
 import { CameraHome } from './camera-home.js';
 import { RawTutorialOne } from './raw-tutorial-one.js';
 import { RawTutorialTwo } from './raw-tutorial-two.js';
+import { RawTutorialLater } from './raw-tutorial-later.js';
+import { RawPriestLookup } from './raw-priest-lookup.js';
 
 // 분산 SP DWORD를 원본 단정도로 읽고 같은 비트 표현으로 쓴다.
 function spFloat(bits) { const data = new DataView(new ArrayBuffer(4)); data.setUint32(0, bits, true); return data.getFloat32(0, true); }
@@ -750,6 +752,36 @@ export class RawCampaignSession {
         return new RawTutorialTwo(o.core.pool, o.core.types, o.totalMade, gate, state, {
             ...hooks, refreshEnergyRange: () => live().login.options.updateRange(),
             productionContains: (type) => live().production.contains(type),
+        });
+    }
+    // 튜토리얼 3~6의 판정을 현재 월드·생산·Player와 공유 미션 게이트에 연결한다.
+    makeTutorialLater(gate, mission, hooks) {
+        const o = this.#live(); if (!o.loaded || !o.login?.options) throw new Error('로그인 설치 전 Early3~6 실제 판정 연결');
+        const live = () => this.#live(), state = {
+            battleOptions: o.battleOptions, get localOwner() { return live().playerState.battleOwner; },
+            type: (address) => {
+                const current = live();
+                if (address === 0x541174) return current.tutorialArcherType;
+                if (address === 0x5411ac) return current.tutorialWorkshopType;
+                if (!current.tutorialTypes.has(address)) throw new RangeError('튜토리얼 현재 TYPE 주소 범위');
+                return current.tutorialTypes.get(address);
+            },
+            get rangeCommand() { return live().state.contentLifetimeState.notice; }, get placedCommand() { return live().archerCommand; },
+            get containedCommand() { return live().tutorialContainedCommand; }, get technologyCommand() { return live().tutorialTechnologyCommand; },
+            get captureCommand() { return live().tutorialCaptureCommand; }, get ascendCommand() { return live().tutorialAscendCommand; },
+        };
+        return new RawTutorialLater(o.core.pool, o.core.types, o.players, o.totalMade, gate, mission, state, {
+            ...hooks, findPriest: (owner) => { const current = live(); return new RawPriestLookup(current.core.pool, current.priestState.priests).find(owner); },
+            graphFor: (sid) => live().anchor.graphFor(sid), productionContains: (type) => live().production.contains(type),
+            indicateTechnology: (type) => live().production.indicateTechnology(type), regionFor: (x, y) => live().ownership.islandNumber(x, y),
+            nearby: (x, y, genus) => live().damageablePost.genusAt(x, y, genus),
+            priestCaptured: (sid) => {
+                const current = live(), core = current.core;
+                if (!Number.isInteger(sid) || sid < 0 || sid > 65535 || sid >= core.pool.capacity) throw new RangeError('Early3 현재 사제 HP 조회 SID 범위');
+                const raw = core.pool.slot(sid), type = core.types[raw[10]];
+                if (!type || !(type.flags2 & 0x200000)) throw new Error('원본 Priest.cpp:1939의 사제 부류 진단');
+                return new DataView(raw.buffer, raw.byteOffset, raw.byteLength).getInt32(26, true) < Math.trunc(current.hp.maxHitPoints(sid) / 2);
+            },
         });
     }
     // 현재 Client가 소유한 같은 카메라 전역을 빌린다.
