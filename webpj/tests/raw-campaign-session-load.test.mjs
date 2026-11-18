@@ -194,6 +194,34 @@ test('Client State 부모: Session 없는 실제 장기 소유자 정리', () =>
     assert.ok(events.some((entry) => Array.isArray(entry) && entry[0] === 'song' && entry[1] === 0n));
 });
 
+// 실제 Fort를 적재한 Session의 자식과 장기 소유자를 State 부모가 함께 반납한다.
+test('Client State 부모: 적재된 실제 Session 정리', () => {
+    const gameplay = new ClientGameplayGlobals(), local = new ClientLocalStateGlobals(), activity = new ClientConnectionActivityGlobals();
+    const players = new ClientPlayerRecords(), coreData = new ClientCoreDataGlobals(), kernel = new Kernel(), random = new ClientRandomGlobals();
+    const assets = new CampaignSessionAssets(game, { read: forbidden('파일') }), metadata = new PriestPlacementAssets(game.typeTable, game.shapes, assets.loadedTypes);
+    const storage = new RawSurfaceStorage(assets.types, assets.frames, metadata.shapes, { source: game, authority: gameplay.authority(), gameAux: gameplay.gameAux() });
+    const clock = { game: 12 }; storage.processes.bindDevices(kernel, clock); players.bindCoreData(coreData);
+    const connections = new ClientConnectionGlobals(local), templates = new CampaignTemplateStorage(), popupState = new QuickHelpPopupState();
+    const sp = new ScrambledSpStore(random.game, () => 1); sp.bindTrackingOffset({ value: 0 }); sp.initialize();
+    const chat = new RawChatChannels(new Uint8Array(4800), () => 0), events = [];
+    const audio = { popMute: () => events.push('mute'), writeSongEndBits: () => {}, startScene: () => {}, sounds: () => ({ stopLoops: () => {} }) };
+    const client = { paused: () => false, popGamePause: () => {}, resetGameClock: () => { clock.game = 0; }, wallSeconds: () => 42, interpretStateOptions: () => {} };
+    const context = { gameplay, local, activity, storage, currentStorage: storage, players, coreData, kernel, random, connections, templates, sp, chat, audio, client,
+        popupState, nsInfo: new ClientNsInfoGlobals(), kencloud: new ClientKencloudGlobals(), gameTime: () => clock.game };
+    const { s } = scene({ gameplayGlobals: gameplay, surfaceStorage: storage, playerRecords: players, coreDataGlobals: coreData, processKernel: kernel });
+    try {
+        s.load(); gameplay.bindRuntimeOwner(s, {});
+        s.cursor().setEffects({ placement: { invalidate: () => {} }, lifecycle: { selectCursor: () => {}, highlight: () => {} } });
+        assert.ok(storage.borrowed); assert.ok(s.core().pool.freeCount < 65535);
+        const devices = { cancelInitialCursor: () => {}, refreshSp: () => {}, selectCursor: () => {}, killGumps: () => events.push('kill'),
+            cleanupGumps: () => events.push('cleanup'), replaceUber: () => events.push('uber'), retireRuntime: () => { events.push('retire'); s.dispose(); } };
+        cleanupClientStateWorld(0, context, devices);
+        assert.equal(gameplay.borrowed(), false); assert.equal(storage.borrowed, false);
+        assert.deepEqual(events, ['kill', 'cleanup', 'uber', 'retire']);
+        assert.equal(local.reconnectSaveEnd().value, 52); assert.equal(players.records().length, 9 * 180);
+    } finally { s.dispose(); }
+});
+
 // 실제 장기 Client·표면의 선택된 물리만 정리하고 World 대여 관문을 지킨다.
 test('Client State 저장소 정리: 장기 전역과 대여 관문', () => {
     const gameplay = new ClientGameplayGlobals(), local = new ClientLocalStateGlobals();
