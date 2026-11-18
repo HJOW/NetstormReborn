@@ -777,11 +777,21 @@ test('CampaignGameWorld TheWarBegins: 선택 강조와 미니맵 이동', () => 
         assert.equal(world.selected(), priest.sid); assert.ok(traces.includes(priest.sid)); gameplay.player.special = 0;
         const event = { button: 2 }, menus = []; assert.equal(world.openSelectionMenu(priest.sid, event, false, (sid, current) => { menus.push([sid, current]); return 37; }), 37);
         assert.deepEqual(menus, [[priest.sid, event]]); assert.equal(world.selected(), priest.sid);
-        const originalCancel = cursor.cancel, previousPreview = drop.preview; let cancellations = 0;
-        try {
-            drop.lockDepth = 0; drop.preview = 123; cursor.cancel = () => { cancellations += 1; drop.lockDepth = 1; drop.preview = 0; gameplay.selection.selected = 0; };
-            input.event({ code: 0x70, x: 0, y: 0 }); assert.equal(cancellations, 1); assert.equal(world.selected(), priest.sid); assert.equal(gameplay.selection.priestSelections, 1);
-        } finally { cursor.cancel = originalCancel; drop.lockDepth = 1; drop.preview = previousPreview; }
+        cursor.setEffects({ lifecycle: { highlight: (value) => world.highlight(value), selectCursor: () => {}, closePopups: () => {},
+            translate: (text) => text, measure: (text) => [text.length * 8, 16], mouse: () => currentMouse },
+        placement: { gumpAt: () => 0, invalidate: () => {} },
+        drop: { showSp: () => {}, battleRefresh: () => {}, refresh: () => {}, closeGump: () => {} },
+        send: (target, packet) => session.sendLocalPacket(target, packet) });
+        session.setSp(1, 3000); session.addTechnology(1, session.core().types[85].name);
+        assert.equal(session.makePriestMenu({ tell: (message) => { throw new Error(message); } }).selectBuild(85, priest.sid), true);
+        const preview = drop.preview, previewParts = cursor.lifecycle.previews.slice(), beforeCancel = session.localConnectionPackets();
+        assert.ok(preview); assert.equal(drop.lockDepth, 0); assert.ok(cursor.lifecycle.previewCount > 0);
+        input.event({ code: 0x70, x: 0, y: 0 });
+        assert.equal(drop.preview, 0); assert.equal(drop.lockDepth, 1); assert.ok(session.core().pool.slot(preview)[11] & 1);
+        // 임시 조각과 그 표시를 반환하고 비용이나 패킷은 만들지 않는다.
+        for (const sid of previewParts) if (sid) assert.ok(session.core().pool.slot(sid)[11] & 1);
+        assert.equal(session.sp(1), 3000); assert.deepEqual(session.localConnectionPackets(), beforeCancel);
+        assert.equal(world.selected(), priest.sid); assert.equal(gameplay.selection.priestSelections, 1);
         input.event({ code: 0x72, x: 0, y: 0 }); assert.deepEqual(keyQueue.pop(false), { code: 0x020000b8, x: 1, y: 1 });
         const core = session.core(), localMovers = session.world().objects().filter(({ object }) => object.owner === 1 && (core.types[object.type].flags2 & 0x30000));
         assert.ok(localMovers.length > 0); assert.ok(localMovers.every(({ object }) => object.type === 158));
