@@ -146,6 +146,12 @@ export class RawCampaignSession {
     }
     // 현재 Login의 실제 송신·시계·수신만 진행한다.
     pumpLocalConnection() { this.#live(); if (this.#login) this.#login.pump(); }
+    // 설치된 같은 로컬 Login에 원본 패킷을 넣고 후속 Pump에서 수신한다.
+    sendLocalPacket(target, packet) {
+        const o = this.#live(); if (!o.loaded) throw new Error('실제 설치 전 원본 패킷 송신');
+        if (!this.#login) throw new Error('실제 로컬 Login 전송 없는 원본 패킷 송신');
+        this.#login.send(target, packet);
+    }
     // 원본처럼 설치·상태14·현재 Player와 연결 비트를 모두 확인한다.
     localConnectionReady() {
         const o = this.#live(); if (!this.#login || !o.loaded || o.localStateGlobals.state().phase[0] !== 14 || !o.playerState.playerKnown) return false;

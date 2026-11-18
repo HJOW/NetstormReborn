@@ -191,6 +191,29 @@ test('CampaignSession TheWarBegins: 실제 로그인 전송의 사제 이동 요
     assert.throws(() => s.requestCarrierMove(50, { x: 90, y: 108 }), /반납/);
 });
 
+// UI의 원본 패킷은 같은 로그인 전송에 복사되며 Pump 전에는 수신되지 않는다.
+test('CampaignSession TheWarBegins: 실제 로컬 패킷 송신과 지연 수신', () => {
+    const gameplay = new ClientGameplayGlobals(), received = [];
+    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {},
+        observePacket: (sender, _boss, _local, packet) => { if (packet[1] === 0x31) received.push([sender, packet.slice()]); } };
+    const { s } = scene({ gameplayGlobals: gameplay, localLogin, ai: { participation: { addChat: () => {}, clearChat: () => {} } } });
+    const text = 'shm 1', packet = new Uint8Array(9 + text.length);
+    packet.set([1, 0x31, packet.length, 0]); new DataView(packet.buffer).setUint32(4, text.length + 1, true);
+    packet.set(Uint8Array.from(text, (letter) => letter.charCodeAt(0)), 8); const original = packet.slice();
+    try {
+        assert.throws(() => s.sendLocalPacket(9, packet), /설치 전/);
+        s.startLocalConnection(); s.pumpLocalConnection(); s.pollLocalConnectionState(); s.pumpLocalConnection();
+        const before = s.localConnectionPackets(); s.sendLocalPacket(9, packet);
+        assert.deepEqual(s.localConnectionPackets(), before); assert.equal(gameplay.gameAux().missionSettings()[1], 0); assert.equal(received.length, 0);
+        packet[8] = 0x7a; s.pumpLocalConnection();
+        assert.equal(gameplay.gameAux().missionSettings()[1], 1); assert.equal(received.length, 1);
+        assert.equal(received[0][0], 1); assert.deepEqual(received[0][1], original); assert.equal(s.localConnectionPackets().at(-1), 0x31);
+    } finally { s.dispose(); }
+    assert.throws(() => s.sendLocalPacket(9, original), /반납/);
+    const independent = scene().s;
+    try { independent.load(); assert.throws(() => independent.sendLocalPacket(9, original), /Login 전송 없는/); } finally { independent.dispose(); }
+});
+
 // 공유 Client 시각은 입력 스냅샷이 덮어쓰지 않으며 준비와 정지 실행은 Kernel을 돌리지 않는다.
 test('CampaignSession: 공유 시각과 준비·정지·단일 Kernel 실행', () => {
     const gameplay = new ClientGameplayGlobals(), assets = new CampaignSessionAssets(game, { read: forbidden('파일') });
