@@ -4,14 +4,14 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-19, 마지막 단위 WB04-E851)
+### 0.1 현재 값 (2026-11-19, 마지막 단위 WB04-E852)
 
 | 항목 | 현행 상태 |
 | --- | --- |
 | 실행·플레이 | 브라우저에서 ‘클릭하여 시작’, 메인 메뉴·캠페인/데모 목록·도움말·옵션·Credits와 개발용 지형 미리보기가 동작한다. Node 통합 검사에서 실제 Fort로 Session을 적재하고 내부 Login·Start·일부 이동과 건설을 확인했다. 브라우저의 `MissionBegin`·`StartDemo`에서 실제 월드로 들어가 플레이하는 기능은 미연결이다. |
 | 원본과의 동일성 | 영어 4:3 메뉴 M1 8장면은 cpppj 오라클과 알려진 구름 배경 등 차이 영역 밖에서 픽셀 차이 0이다. 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다. 실제 미션 L2·L3·L4, 자연 완주는 미검증이다. |
-| 현재 작업 | **M2의 4-D 진행 중.** 4D-3 typed Login 잔여를 이어가고 4D-4~4D-6에서 이미 확인된 프레임·튜토리얼 게이트·반납·GameWorld 경계를 실제 Client 수명으로 연결한다. E851은 로그인 진행 안내 장치를 같은 GameWorld의 실제 내부 로그인에 연결했다. 다음은 실제 앱 메뉴·프레임 타이머·스커미시 결과·저장 장치와 나머지 공개 조회다. [E851](docs/webpj-client-login-progress-20261119.md) |
-| 전체 회귀 | E851 Node v26.13.0과 v22.23.3 전체 각 6,365건 통과(실패·취소·건너뜀 0). v22 전체 검사 뒤 v26 회귀 0/8회. fixture 824개 해시·파일 불일치/누락 0; 전체 Git 이력 재조회는 중단하고 이번 본체의 변경 여부와 대응표는 별도 확인했다. |
+| 현재 작업 | **M2의 4-D 진행 중.** 4D-3 typed Login 잔여를 이어가고 4D-4~4D-6에서 이미 확인된 프레임·튜토리얼 게이트·반납·GameWorld 경계를 실제 Client 수명으로 연결한다. E852는 Session 로그인 타이머를 전송 Pump와 분리해 공개했다. 다음은 실제 앱 메뉴·Client 프레임 순서·스커미시 결과·저장 장치와 나머지 공개 조회다. [E852](docs/webpj-session-login-frame-timer-20261119.md) |
+| 전체 회귀 | E852 Node v26.13.0 전체 6,366건 통과(실패·취소·건너뜀 0). E851 Node v22.23.3 전체 6,365건 통과 뒤 v26 회귀 1/8회. fixture 824개 해시·파일 불일치/누락 0; 전체 Git 이력 재조회는 중단하고 이번 본체의 변경 여부와 대응표는 별도 확인했다. |
 | 브라우저 검사 | 2026-11-17 Chromium 2/2. 갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체 확인. 최초 실행·진행 잠금/체크 및 저장 재실행은 E616에서 별도 Chromium 2/2로 확인했다. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
 
 **미션 식별.** 이전 공통 fixture의 `thewarbegins.fort`는 캠페인 1-1이다. 실제 `tutorial1`이 선택하는 Fort는 `BridgeTheGap`이며, 지형·섬을 E753에서 다시 대조했다. [미션명 정정](docs/webpj-session-login-shipped-forts-20261118.md) · [Tutorial1 지형 재검증](docs/webpj-tutorial1-terrain-recheck-20261118.md)
@@ -124,7 +124,7 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 
 **4D-3 Login·로컬 연결·4-C 통합 시험.** 내부 Login → Load·명령 등록 → Ready → Start 순서를 실제 Session에서 확인했다.
 
-- [ ] **4D-3a RawCampaignSessionLogin** — typed 미션 Begin/Pump·내부 Ready 왕복과 행 base 뒤 32커밋 판정은 완료했다. E851은 진행 안내 장치를 실제 내부 로그인에 연결했으며 앱 메뉴와 분리 Poll은 4D-6, 고정 수신기는 4D-8과 연계한다. 나머지 31h 명령은 4D-3e에서 잇는다. `BeginGeneral`·`InitializeGeneral`·`LocalFort`의 필요 범위는 스커미시에서 판단한다. [E765](docs/webpj-session-login-commit-audit-20261118.md) · [E851](docs/webpj-client-login-progress-20261119.md)
+- [ ] **4D-3a RawCampaignSessionLogin** — typed 미션 Begin/Pump·내부 Ready 왕복과 행 base 뒤 32커밋 판정은 완료했다. E851은 진행 안내 장치를 실제 내부 로그인에 연결했고 E852는 Pump와 분리한 타이머 실행을 공개했다. 앱 메뉴와 Client 프레임 순서·분리 Poll은 4D-6, 고정 수신기는 4D-8과 연계한다. 나머지 31h 명령은 4D-3e에서 잇는다. `BeginGeneral`·`InitializeGeneral`·`LocalFort`의 필요 범위는 스커미시에서 판단한다. [E765](docs/webpj-session-login-commit-audit-20261118.md) · [E851](docs/webpj-client-login-progress-20261119.md) · [E852](docs/webpj-session-login-frame-timer-20261119.md)
   - [x] **출하 Fort 로그인** — 일반 31종과 별도 데모 1종의 스크립트가 선택한 Fort를 실제 내부 Login/Ready까지 적재했다. 데모 모드 Start는 별도 확인 범위다. [E752](docs/webpj-session-login-shipped-forts-20261118.md)
 - [ ] **4D-3b 로컬 공개 API·ClientCampaignTransport** — 시작/Poll/Pump·상태8·전송 기록·로컬/mutable 송신·Tell과 typed 기본 수신기(경로/압축 관찰·기술·Chat·연결 종료)는 확인했다. 실제 Client의 장기 소유·Native 전송 수명에 연결한다(4146..4200, 4292..4317). [E772](docs/webpj-session-state-connect-record-20261118.md)
 - [ ] **4D-3c 전송 앞단** — E820에서 공통 `RawPacketFrame`을 로컬 전송에 연결하고 E821에서 시간 표본과 GameClock 보정의 공유를 검사했다. 실제 Client 시계 소유·`RawClockSynchronization`의 전체 외곽 수명과 Native baseline, 소켓 지연 FIFO의 웹 제외 경계 및 `ClientPacketSources`를 확인한다. [E820](docs/webpj-packet-frame-20261119.md) · [E821](docs/webpj-clock-synchronization-20261119.md)

@@ -290,6 +290,8 @@ export class RawCampaignSession {
     }
     // 현재 Login의 실제 송신·시계·수신만 진행한다.
     pumpLocalConnection() { this.#live(); if (this.#login) this.#login.pump(); }
+    // Client 프레임은 같은 Login 타이머를 실행하며 기한 0은 타이머 본체가 처리한다.
+    runConnectionLoginTimer() { this.#live(); if (this.#login) this.#login.timer.run(false); }
     // 설치된 같은 로컬 Login에 원본 패킷을 넣고 후속 Pump에서 수신한다.
     sendLocalPacket(target, packet) {
         const o = this.#live(); if (!o.loaded) throw new Error('실제 설치 전 원본 패킷 송신');

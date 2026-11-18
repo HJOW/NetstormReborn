@@ -697,6 +697,23 @@ test('CampaignSession TheWarBegins: 로컬 로그인과 실제 게임 수신 등
     assert.throws(() => s.pumpLocalConnection(), /반납/);
 });
 
+// Client 프레임 타이머는 전송 Pump와 분리되며 같은 실제 로그인 기한을 완료한다.
+test('CampaignSession TheWarBegins: 로그인 타이머의 프레임 분리', () => {
+    const local = new ClientLocalStateGlobals(), events = [];
+    const localLogin = { frameLoginTimer: true, configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234,
+        log: () => {}, refresh: () => events.push('refresh'), playerUiBusy: () => false, playerNotice: () => {} };
+    const { s } = scene({ localLogin, localStateGlobals: local, ai: { participation: { addChat: () => {}, clearChat: () => {} } } });
+    try {
+        s.runConnectionLoginTimer(); s.startLocalConnection(); s.pumpLocalConnection(); s.pollLocalConnectionState(); s.pumpLocalConnection();
+        assert.equal(s.localConnectionReady(), true); assert.ok(local.loginEnd().value > 0);
+        const pending = local.loginEnd().value, before = events.length; s.pumpLocalConnection();
+        assert.equal(local.loginEnd().value, pending); assert.equal(events.length, before);
+        s.runConnectionLoginTimer(); assert.equal(local.loginEnd().value, 0); assert.ok(events.length > before);
+        const completed = events.length; s.runConnectionLoginTimer(); assert.equal(events.length, completed);
+    } finally { s.dispose(); }
+    assert.throws(() => s.runConnectionLoginTimer(), /반납/);
+});
+
 // 같은 실제 로그인·Player·동맹·사제 상태를 일반 전투 종료 판정이 조회한다.
 test('CampaignSession TheWarBegins: 실제 로그인과 일반 전투 종료 관문', () => {
     const gameplay = new ClientGameplayGlobals(), players = new ClientPlayerRecords(), local = new ClientLocalStateGlobals();
