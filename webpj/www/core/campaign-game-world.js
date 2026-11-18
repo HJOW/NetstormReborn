@@ -1,7 +1,9 @@
 // 지연 로그인 캠페인의 GameWorld 앞단을 같은 Session·카메라·자산 표시기와 묶는다.
 // 사용: new CampaignGameWorld(assets, files, fort, mission, services, { x, y }) → startLocalConnection() → 같은 session의 로그인 진행 → dispose().
-// 입력·객체 보기·로그인 완료 공개와 브라우저 앱 수명은 후속이며 이 생성자만으로 플레이할 수 없다.
+// 입력·프레임·팔레트 전달과 브라우저 앱 수명은 후속이며 이 생성자만으로 플레이할 수 없다.
 import { ClientGameplayGlobals } from './client-gameplay-globals.js';
+import { FIRST_ASSET_TYPE_NUMBER } from '../assets/type-table.js';
+import { TypeFlag2 } from '../assets/type-flags.js';
 import { createCameraHomeState } from './camera-home.js';
 import { RawCampaignSession } from './raw-campaign-session.js';
 import { RawCampaignFactoryDisplay } from '../render/raw-campaign-factory-display.js';
@@ -15,11 +17,13 @@ export class CampaignGameWorld {
     #gameplay; #session = null; #factoryDisplay = null; #width; #height; #services; #cameraHome = createCameraHomeState();
     // 로그인 대기·화면 변경 및 외곽 반납 상태다.
     #connecting = false; #changed = false; #disposed = false;
+    // 현재 실제 자산 보기와 그 보기를 구성하는 같은 자산 저장소다.
+    #assets; #objects = [];
 
     // 화면 크기와 자산을 확인하고 실제 Session과 표시기를 만든다. 로그인은 호출자가 나중에 시작한다.
     constructor(assets, files, fort, mission, services, viewport) {
         if (!viewport || !(viewport.x > 0) || !(viewport.y > 0)) throw new RangeError('실제 캠페인 설치 전 화면 크기 누락');
-        this.#width = viewport.x; this.#height = viewport.y; this.#services = { ...services };
+        this.#width = viewport.x; this.#height = viewport.y; this.#services = { ...services }; this.#assets = assets;
         const storage = services?.surfaceStorage;
         this.#gameplay = services?.gameplayGlobals ?? new ClientGameplayGlobals(services?.subscriberGlobals, storage?.authority, storage?.gameAux);
         const input = { ...services, gameplayGlobals: this.#gameplay, install: { ...services?.install, resetCamera: () => this.resetCampaignCamera() } };
@@ -84,6 +88,31 @@ export class CampaignGameWorld {
         const session = this.#live(); if (this.#connecting || session.loaded) throw new Error('부모 State7 World 로그인 새 수명 계약 오류');
         this.#connecting = true; session.prepareLocalConnectionForState();
     }
+    // 실제 Ready 뒤 현재 슬롯의 표시·선택용 보기를 갱신하고 한 번만 로그인 관문을 연다.
+    completeLocalConnection() {
+        const session = this.#live(); if (!this.#connecting || !session.localConnectionReady()) return false;
+        this.refreshCampaignObjects(); this.#connecting = false; return true;
+    }
+    // 같은 실제 자산 슬롯의 좌표·프레임·체력을 읽어 원본 월드 표시 보기를 갱신한다.
+    refreshCampaignObjects() {
+        const session = this.#live(), core = session.core(), hp = session.hitPoints(), assets = this.#assets;
+        this.#objects = [];
+        // 로더가 제공한 현재 활성 자산만 순서대로 읽는다.
+        for (const snapshot of session.world().objects()) {
+            const raw = snapshot.object, index = raw.type - FIRST_ASSET_TYPE_NUMBER;
+            if (index < 0 || index >= assets.types().length) continue;
+            const type = assets.types()[index], slot = core.pool.slot(snapshot.sid), frame = Math.max(raw.frame, 0);
+            const pictures = assets.shapes.blocks[type.block].frames;
+            const visible = type.assetName.toLowerCase() !== 'noisland' && frame < pictures.length && !pictures[frame].special;
+            const selectable = visible && !(type.definition?.flags ?? []).some((flag) => flag.toLowerCase() === 'not_selectable');
+            const view = { id: snapshot.sid, type: raw.type, owner: raw.owner, x: raw.x, y: raw.y, cell: { x: Math.trunc(raw.x), y: Math.trunc(raw.y) },
+                frame, initialFrame: frame, mobile: (core.types[raw.type].flags2 & TypeFlag2.walker) !== 0, visible, selectable, hitPoints: 0, maxHitPoints: 0 };
+            if (hp.hasHitPoints(snapshot.sid)) { view.maxHitPoints = hp.maxHitPoints(snapshot.sid); view.hitPoints = new DataView(slot.buffer, slot.byteOffset, slot.byteLength).getInt32(26, true); }
+            this.#objects.push(view);
+        }
+    }
+    // 호출자가 현재 보기의 좌표나 목록을 수정해 내부 상태를 바꾸지 못하도록 사본을 돌려준다.
+    objects() { this.#live(); return this.#objects.map((view) => ({ ...view, cell: { ...view.cell } })); }
     // 완료 공개 전의 로그인 대기 여부이며 Session Ready와 구별한다.
     get connecting() { this.#live(); return this.#connecting; }
     // 화면 변경을 한 번 읽고 원본처럼 지운다.

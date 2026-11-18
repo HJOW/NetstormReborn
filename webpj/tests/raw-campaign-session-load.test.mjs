@@ -651,9 +651,24 @@ test('CampaignGameWorld TheWarBegins: 지연 생성과 실제 로그인 준비',
         const session = world.session(); assert.equal(gameplay.requireSession(), session); assert.equal(world.cameraGlobals(), gameplay.camera());
         assert.ok(world.factoryDisplay() instanceof RawCampaignFactoryDisplay); assert.equal(session.loaded, false); assert.equal(world.connecting, false);
         assert.deepEqual(world.mapView(), { left: 0, top: 28, right: 640, bottom: 480 });
-        world.startLocalConnection(); assert.equal(world.connecting, true);
+        assert.equal(world.completeLocalConnection(), false); assert.deepEqual(world.objects(), []);
+        world.startLocalConnection(); assert.equal(world.connecting, true); assert.equal(world.completeLocalConnection(), false);
         session.pumpLocalConnection(); session.pollLocalConnectionState(); session.pumpLocalConnection();
         assert.equal(session.localConnectionReady(), true); assert.equal(session.loaded, true); assert.ok(session.world().objects().length > 1000);
+        assert.equal(world.completeLocalConnection(), true); assert.equal(world.connecting, false); assert.equal(world.completeLocalConnection(), false);
+        const rawObjects = session.world().objects(), viewsNow = world.objects(); assert.equal(viewsNow.length, rawObjects.length);
+        const priest = rawObjects.find(({ object }) => object.type === 158 && object.owner === 1); assert.ok(priest);
+        const priestView = viewsNow.find((entry) => entry.id === priest.sid), hp = session.hitPoints();
+        assert.deepEqual([priestView.x, priestView.y, priestView.frame, priestView.initialFrame], [priest.object.x, priest.object.y, Math.max(priest.object.frame, 0), Math.max(priest.object.frame, 0)]);
+        assert.equal(priestView.mobile, true); assert.equal(priestView.maxHitPoints, hp.maxHitPoints(priest.sid));
+        const raw = session.core().pool.physical(priest.sid), bytes = new DataView(raw.buffer, raw.byteOffset, raw.byteLength), oldHp = bytes.getInt32(26, true);
+        const oldX = bytes.getFloat32(14, true), oldFrame = bytes.getInt32(36, true);
+        try {
+            bytes.setInt32(26, 17, true); bytes.setFloat32(14, 45.75, true); bytes.setInt32(36, -1, true); world.refreshCampaignObjects();
+            const updated = world.objects().find((entry) => entry.id === priest.sid);
+            assert.deepEqual([updated.hitPoints, updated.x, updated.cell.x, updated.frame, updated.initialFrame], [17, 45.75, 45, 0, 0]);
+            const copy = world.objects(); copy[0].cell.x = -99; copy.length = 0; assert.notEqual(world.objects()[0].cell.x, -99); assert.ok(world.objects().length > 0);
+        } finally { bytes.setInt32(26, oldHp, true); bytes.setFloat32(14, oldX, true); bytes.setInt32(36, oldFrame, true); }
         assert.ok(commits.length > 0); assert.equal(commits[0].camera, gameplay.camera()); assert.ok(views.length > 0); assert.ok(dirty.length > 0);
         assert.deepEqual([views[0].left, views[0].top, views[0].right, views[0].bottom], [0, 28, 640, 480]);
         const pixels = gameplay.camera().rendererView().pixels, sprites = world.factoryDisplay().sprites(world.mapView(), pixels.x, pixels.y, session.localOwner());
