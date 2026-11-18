@@ -408,6 +408,14 @@ export class RawCampaignSessionLoginFront {
     send(target, packet) { this.#send(target, packet, false); }
     // 선택된 연결의 송신 관찰기가 같은 버퍼의 길이를 확정한 뒤 큐에 복사한다.
     sendMutable(target, packet) { this.#send(target, packet, true); }
+    // 실제 상태8의 주소·포트를 기존 연결 장치에 그대로 전달한다.
+    connectForState(address, port) { this.#connect(address, port); }
+    // 현재 수신의 원문 종류를 기록하고 선택된 관찰 장치에 같은 패킷을 전달한다.
+    record(connection, packet) {
+        const o = this.#live(); if (packet.length < 4) throw new RangeError('현재 수신 기록의 실제 헤더 부족');
+        this.wireTypes.push(packet[1]);
+        if (this.#effects.observePacket) this.#effects.observePacket(connection.sender, o.state.assetState.readBoss(), o.state.assetState.localOwner, packet);
+    }
     // 현재 벽시각을 기록하고 송신·시계·수신과 독립 타이머를 원본 순서대로 처리한다.
     pump() {
         const o = this.#live(); this.#wall = this.#need('wallSeconds', 'Login Pump')();
@@ -461,11 +469,7 @@ export class RawCampaignSessionLoginFront {
     #device() {
         return {
             now: () => this.#need('wallSeconds', '패킷 분배')() >>> 0,
-            record: (connection, packet) => {
-                const o = this.#live(); if (packet.length < 4) throw new RangeError('현재 수신 기록의 실제 헤더 부족');
-                this.wireTypes.push(packet[1]);
-                if (this.#effects.observePacket) this.#effects.observePacket(connection.sender, o.state.assetState.readBoss(), o.state.assetState.localOwner, packet);
-            },
+            record: (connection, packet) => this.record(connection, packet),
             terminate: (connection) => { connection.flags |= 0x40; this.#need('log', '연결 종료')('로컬 미션 연결 종료\n'); },
             close: () => { this.#need('log', '연결 닫기')('로컬 연결 큐/소켓 종료\n'); },
             release: () => { this.#need('log', '연결 반납')('로컬 연결 반납\n'); },

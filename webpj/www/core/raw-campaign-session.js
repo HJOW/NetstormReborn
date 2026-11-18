@@ -212,6 +212,13 @@ export class RawCampaignSession {
     }
     // 외부 State7 부모의 공통 확정을 중첩하지 않고 실제 후반만 준비한다.
     prepareLocalConnectionForState() { this.#beginLocalConnection(true); }
+    // 외부 상태8이 전달한 주소와 포트를 현재 Login의 실제 연결에 넘긴다.
+    connectLocalConnectionForState(address, port) {
+        this.#live(); if (!this.#login) throw new Error('실제 로그인 없는 부모 상태8 접속');
+        this.#login.connectForState(address, port);
+    }
+    // 장기 전송이 현재 Session을 찾았을 때만 같은 Login의 수신 관찰기를 실행한다.
+    recordConnectionPacket(connection, packet) { this.#live(); if (this.#login) this.#login.record(connection, packet); }
     // 원본의 로컬 로그인 상태만 Poll하고 큰 부모 상태는 호출자에게 남긴다.
     pollLocalConnectionState() {
         const o = this.#live(); if (!this.#login) return false;

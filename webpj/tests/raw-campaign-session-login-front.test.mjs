@@ -29,6 +29,21 @@ function loginServerOwner(extra = {}) {
     try { o.connectWorldInstall(fort); o.connectOutcome(); o.connectAiBrains(); return o; } catch (error) { o.dispose(); throw error; }
 }
 
+// 외부 상태8 연결은 현재 상태와 20BYTE 주소를 확인한 뒤 같은 전송에 원문 인자를 전달한다.
+test('Session Login 앞단: 외부 상태8 연결 인자와 관문', () => {
+    const o = campaignOwners(), front = new RawCampaignSessionLoginFront(o, devices([])), calls = [];
+    try {
+        front.transport.connect = (address, port) => calls.push([address, port]);
+        const address = new Uint8Array(20); address[0] = 2;
+        assert.throws(() => front.connectForState(address, 6799), /State8/);
+        o.localStateGlobals.state().current[0] = 8;
+        assert.throws(() => front.connectForState(new Uint8Array(19), 6799), /주소20BYTE/);
+        front.connectForState(address, 0xffffffff); assert.deepEqual(calls, [[address, 0xffffffff]]);
+        o.localStateGlobals.state().current[33] = 1;
+        assert.throws(() => front.connectForState(address, 6799), /재접속/); assert.equal(calls.length, 1);
+    } finally { front.dispose(); o.dispose(); }
+});
+
 // Zone이 실제 Player 이름·Core 슬롯·권한을 변경하고 미등록 수신기의 서버 열기는 거부한다.
 test('Session Login 앞단: 같은 현재 저장소에 Zone 설치와 이름 정제', () => {
     const o = campaignOwners(), trace = [], front = new RawCampaignSessionLoginFront(o, devices(trace));

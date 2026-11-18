@@ -257,6 +257,25 @@ test('CampaignSession TheWarBegins: 실제 로그인 전송의 사제 이동 요
     assert.throws(() => s.requestCarrierMove(50, { x: 90, y: 108 }), /반납/);
 });
 
+// 외부 상태8 연결과 장기 전송의 기록은 현재 Login 수명에만 위임한다.
+test('CampaignSession TheWarBegins: 현재 Login의 외부 연결·패킷 기록', () => {
+    const received = [], localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {},
+        observePacket: (...args) => received.push(args) };
+    const { s } = scene({ localLogin, ai: { participation: { addChat: () => {}, clearChat: () => {} } } });
+    try {
+        const connection = { sender: 17 }, packet = Uint8Array.of(1, 0x31, 4, 0);
+        assert.throws(() => s.connectLocalConnectionForState(new Uint8Array(20), 6799), /로그인 없는/);
+        s.recordConnectionPacket(connection, new Uint8Array()); assert.deepEqual(received, []);
+        s.startLocalConnection(); const before = s.localConnectionPackets();
+        assert.throws(() => s.connectLocalConnectionForState(new Uint8Array(19), 6799), /주소20BYTE/);
+        assert.throws(() => s.recordConnectionPacket(connection, new Uint8Array(3)), /헤더 부족/);
+        s.recordConnectionPacket(connection, packet);
+        assert.deepEqual(s.localConnectionPackets(), [...before, 0x31]);
+        assert.equal(received.at(-1)[0], 17); assert.equal(received.at(-1)[3], packet);
+    } finally { s.dispose(); }
+    assert.throws(() => s.recordConnectionPacket({}, new Uint8Array()), /반납/);
+});
+
 // 편의 로그인 뒤 같은 실제 mutable 송신 관찰기와 원격 Tell 수신을 연속 검증한다.
 test('CampaignSession TheWarBegins: 편의 로그인과 mutable 송신·Tell', () => {
     const gameplay = new ClientGameplayGlobals(), received = [], tells = [];
