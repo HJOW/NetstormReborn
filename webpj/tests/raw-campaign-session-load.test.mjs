@@ -77,7 +77,7 @@ const forbidden = (name) => () => { throw new Error(`외부 장치 미연결: ${
 function scene(overrides = {}, savedFort = fort) {
     const trace = [], queue = new InputQueue();
     const s = new RawCampaignSession(game, { read: forbidden('파일') }, savedFort, overrides.missionName ?? 'thewarbegins', {
-        unixSeconds: () => 1700000000, soundNames: new SoundList(), carrierRequest: forbidden('전송'), deletion: { selected: () => 0, ...overrides.deletion },
+        unixSeconds: () => 1700000000, soundNames: new SoundList(), carrierRequest: overrides.carrierRequest ?? forbidden('전송'), deletion: { selected: () => 0, ...overrides.deletion },
         install: { translateYou: () => Uint8Array.of(89, 111, 117, 0), setConfig: () => trace.push('config'), refreshWindowTitle: () => trace.push('title'), resetCamera: () => trace.push('camera'), ...overrides.install },
         ownership: { refreshProduction: () => trace.push('production'), themeMode: () => 0 },
         assets: { postPop: { playImpactSound: () => trace.push('impact') }, queueCommand: (...args) => queue.pushCommand(...args) },
@@ -750,17 +750,20 @@ test('CampaignSession GuardMyBack: 실제 로그인 뒤 미션 시작과 동맹'
     }
 });
 
-// 실제 로그인과 Start 뒤 사제 메뉴가 같은 Session 커서에 워크샾을 취득한다.
-test('CampaignSession TheWarBegins: 실제 로그인 뒤 사제 메뉴와 커서', () => {
+// 실제 로그인·배치 뒤 격리 실행 또는 전체 Kernel 실행으로 워크샾 완공을 검사한다.
+function runWorkshopConstruction(natural) {
     const files = new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)]]);
     const gameData = GameData.build({ files, language: 'english' });
     gameData.configuration.assign('missionSpec="d/{local.1}.english"\nfortSpec="d/{local.1}.fort"\n[END]\n');
-    const script = new MissionScript(gameData, 'TheWarBegins'), events = [], packets = [], mouse = { x: 0, y: 0 };
-    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {},
+    const script = new MissionScript(gameData, 'TheWarBegins'), events = [], packets = [], mouse = { x: 0, y: 0 }; let wall = 100;
+    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => wall, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {},
         observePacket: (sender, _boss, _local, packet) => { if (packet[1] === 0x3e) packets.push([sender, packet.slice()]); } };
-    const ai = { allocationBytes: (bytes) => bytes.fill(0xa7), defaultName: () => 'AI', participation: { addChat: () => {}, clearChat: () => {} } };
-    const { s } = scene({ localLogin, ai, construction: { refresh: () => events.push(['construction-refresh']) }, motion: { path: { stepSound: (...args) => events.push(['step', ...args]) } },
-        sound: { playOnceAt: (...args) => events.push(['sound', ...args]), play: (...args) => { events.push(['sound', ...args]); return 1; } } });
+    const ai = { allocationBytes: (bytes) => bytes.fill(0xa7), bridgeScratchBytes: (bytes) => bytes.fill(0), defaultName: () => 'AI', names: { language: () => 1, translate: (text) => text, substitute: (text) => text }, participation: { addChat: () => {}, clearChat: () => {} } };
+    let session;
+    const { s } = scene({ localLogin, ai, carrierRequest: (target, packet) => session.sendLocalPacket(target, packet), missionOutcome: { demo: () => 0 }, construction: { refresh: () => events.push(['construction-refresh']), wallSeconds: () => wall }, motion: { path: { stepSound: (...args) => events.push(['step', ...args]) } },
+        sound: { wallSeconds: () => wall, playOnceAt: (...args) => events.push(['sound', ...args]), play: (...args) => { events.push(['sound', ...args]); return 1; },
+            playLoopAt: (x, y, current, sound) => { events.push(['loop', x, y, current, sound]); return current || 1; }, stop: (handle) => events.push(['stop', handle]) } });
+    session = s;
     try {
         assert.throws(() => s.cursor(), /설치 전/); assert.throws(() => s.makePriestMenu(), /설치 전/);
         s.startLocalConnection(); s.pumpLocalConnection(); s.pollLocalConnectionState(); s.pumpLocalConnection();
@@ -799,6 +802,25 @@ test('CampaignSession TheWarBegins: 실제 로그인 뒤 사제 메뉴와 커서
         assert.equal(workshops.length, 1); assert.equal(s.core().pool.slot(workshops[0].sid)[40] & 1, 1);
         const core = s.core(), workshop = workshops[0].sid, pathForm = findAttachedProcess(core.pool, priest.sid, 54), path = core.processes.fromForm(pathForm);
         assert.ok(path instanceof RawPathProcess); const begin = core.processState.now, arrival = path.runtime.time(path.runtime.count - 1);
+        if (natural) {
+            let frame = 0;
+            // 같은 Kernel의 모든 프로세스를 순서대로 실행해 건설 재시도와 완공을 기다린다.
+            for (; frame < 4000 && (core.pool.slot(workshop)[40] & 1); frame += 1) {
+                const now = begin + frame * 0.025; wall = 100 + now - begin; s.pumpLocalConnection();
+                s.runFrame({ game: now, wall, delta: frame ? 0.025 : 0, number: frame }, false);
+            }
+            assert.ok(frame > 1 && frame < 4000); assert.equal(core.pool.slot(workshop)[40] & 1, 0);
+            assert.equal(new DataView(core.pool.slot(workshop).buffer, core.pool.slot(workshop).byteOffset).getUint32(26, true), core.types[85].maxHitPoints);
+            assert.equal(findAttachedProcess(core.pool, workshop, 30), 0); assert.equal(s.sp(1), 2200);
+            // 완공 뒤 후속 프레임에서 표시·반복 소리 Form도 자연스럽게 반납한다.
+            for (let extra = 0; extra < 10; extra += 1) {
+                const now = begin + (frame + extra) * 0.025; wall = 100 + now - begin; s.pumpLocalConnection();
+                s.runFrame({ game: now, wall, delta: 0.025, number: frame + extra }, false);
+            }
+            assert.equal(findAttachedProcess(core.pool, workshop, 17), 0); assert.equal(findAttachedProcess(core.pool, workshop, 47), 0);
+            assert.ok(events.some((event) => event[0] === 'loop')); assert.ok(events.some((event) => event[0] === 'stop'));
+            return;
+        }
         // 다른 AI·미션 프로세스는 실행하지 않고 실제 사제 경로만 도착까지 진행한다.
         for (let frame = 0; frame < 3000 && core.processes.fromForm(pathForm); frame += 1) {
             const now = begin + frame * 0.025; if (now > arrival + 2) break;
@@ -822,7 +844,12 @@ test('CampaignSession TheWarBegins: 실제 로그인 뒤 사제 메뉴와 커서
         assert.equal(new DataView(core.pool.slot(workshop).buffer, core.pool.slot(workshop).byteOffset).getUint32(26, true), core.types[85].maxHitPoints);
         assert.equal(findAttachedProcess(core.pool, workshop, 47), 0); drawing.runFrame(); assert.equal(core.processes.fromForm(visual), null);
     } finally { s.dispose(); script.dispose(); }
-});
+}
+
+// 기존 검사는 선택한 실제 건설 프로세스만 격리 실행한다.
+test('CampaignSession TheWarBegins: 실제 로그인 뒤 사제 메뉴와 커서', () => runWorkshopConstruction(false));
+// 전체 Kernel의 프레임에서 같은 워크샾이 자연 완공되는지 확인한다.
+test('CampaignSession TheWarBegins: 전체 Kernel의 워크샾 자연 완공', () => runWorkshopConstruction(true));
 
 // 출하된 일반 31미션과 별도 데모 맵의 실제 스크립트가 고른 Fort를 각각 내부 로그인한다.
 test('CampaignSession: 출하 미션 32종의 Fort 선택과 내부 로그인', () => {
