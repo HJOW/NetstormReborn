@@ -1,7 +1,7 @@
 // 캠페인 Start Client 장치의 선택 순서와 현재 대상 재조회를 검사한다.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { makeCampaignMissionStartEffects, bindCampaignAiClientServices, bindCampaignClientInputServices, prepareCampaignMissionStarting, captureCampaignMissionStarting, runCampaignMissionStarting } from '../www/core/campaign-client-services.js';
+import { makeCampaignMissionStartEffects, bindCampaignAiClientServices, bindCampaignClientInputServices, bindCampaignLoginProgressServices, prepareCampaignMissionStarting, captureCampaignMissionStarting, runCampaignMissionStarting } from '../www/core/campaign-client-services.js';
 import { InputQueue } from '../www/core/input-queue.js';
 import { GameData, ARCHIVE_PATH, SETUP_PATH } from '../www/assets/game-data.js';
 import { encodeOriginalText, decodeWindows1252 } from '../www/assets/text-encoding.js';
@@ -33,6 +33,24 @@ test('캠페인 Client 입력 서비스: 현재 큐와 원본 명령 고리', ()
     // 각 명령은 현재 큐의 FIFO 순서를 유지한다.
     for (let index = 0; index < 39; index += 1) assert.deepEqual(second.pop(false), { code: 0x02000000 | index, x: index, y: index });
     assert.equal(second.empty, true);
+});
+
+// 로그인 안내는 연결 시 창을 요구하지 않고 호출 시점의 창·시계·serial을 사용한다.
+test('캠페인 Client 로그인 안내: 현재 메뉴와 프레임 시계', () => {
+    const calls = [], local = new ClientLocalStateGlobals(), clock = { wall: 13 }, serial = local.loginProgressSerial();
+    let menu = null, menus = null, edition = 'patch1078';
+    const client = { edition: () => edition, menu: () => menu, localStateGlobals: () => local, time: () => clock,
+        translate: (key) => `T:${key}`, encodeDisplayText: encodeOriginalText, decodeDisplayText: decodeWindows1252 };
+    const controls = { menus: () => menus }, login = {}; bindCampaignLoginProgressServices(client, controls, login);
+    assert.throws(() => login.progress('MissionStarting', 3), /UberGump/); assert.throws(() => login.closeProgress(), /메뉴 미설치/);
+    assert.throws(() => login.showTimerProgress('wait'), /UberGump/); assert.throws(() => login.closeTimerProgress(), /메뉴 미설치/);
+    menu = { showLoginProgress: (...args) => calls.push(['progress', ...args]), showLoginWaiting: (text) => { calls.push(['waiting', text]); return 42; } };
+    menus = { closeMissionLoading: () => calls.push('close'), closeHtmlSerial: (box) => { assert.equal(box, serial); calls.push(['serial', box.value]); box.value = 0; } };
+    serial.value = 77; login.progress('MissionStarting', 3); assert.equal(login.showTimerProgress('wait'), 42);
+    assert.equal(login.translate('Caf\xe9'), 'T:Caf\xe9'); assert.equal(login.frameWallSeconds(), 13); clock.wall = 15; assert.equal(login.frameWallSeconds(), 15);
+    login.closeTimerProgress(); login.closeProgress(); assert.equal(serial.value, 0);
+    assert.deepEqual(calls, [['progress', 'MissionStarting', 3], ['waiting', 'wait'], ['serial', 77], 'close']);
+    edition = 'cd1072'; const untouched = { progress: 7 }; bindCampaignLoginProgressServices(client, controls, untouched); assert.deepEqual(untouched, { progress: 7 });
 });
 
 // UI·시계·World 대상은 각 효과가 호출되는 시점의 실제 공급자에서 다시 조회한다.

@@ -56,6 +56,29 @@ export function bindCampaignClientInputServices(client, services) {
     services.developerQueue = (code, first, second) => client.input().pushCommand(code >>> 0, first | 0, second | 0);
 }
 
+// 로그인 안내와 타이머가 선택한 시점의 Client 메뉴·시계·번역을 조회한다.
+export function bindCampaignLoginProgressServices(client, controls, login) {
+    if (client.edition() !== 'patch1078') return;
+    login.closeProgress = () => {
+        const menus = controls.menus(); if (!menus) throw new Error('로그인 진행 안내의 실제 메뉴 미설치');
+        menus.closeMissionLoading();
+    };
+    login.progress = (kind, remaining) => {
+        const menu = client.menu(); if (!menu) throw new Error('현재 로그인 안내의 실제 UberGump 미연결');
+        menu.showLoginProgress(kind, remaining);
+    };
+    login.translate = (key) => encodeDisplay(client, client.translate(decodeDisplay(client, key)));
+    login.frameWallSeconds = () => client.time().wall;
+    login.showTimerProgress = (text) => {
+        const menu = client.menu(); if (!menu) throw new Error('일반 대기 안내의 실제 UberGump 미연결');
+        return menu.showLoginWaiting(text);
+    };
+    login.closeTimerProgress = () => {
+        const menus = controls.menus(); if (!menus) throw new Error('일반 대기 안내의 실제 메뉴 미설치');
+        menus.closeHtmlSerial(client.localStateGlobals().loginProgressSerial());
+    };
+}
+
 // 현재 State7과 요청의 실제 Zone을 검사한 뒤 기본 분모와 정리 전 지역 값을 캡처한다.
 export function captureCampaignMissionStarting(client, request) {
     const local = client.localStateGlobals(), state = local.state();
