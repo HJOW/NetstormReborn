@@ -98,6 +98,11 @@ test('Client State 전역: 연결 활동·Client DWORD와 모드 별칭', () => 
     globals.write32(0x594fb8, 1); assert.equal(storage.ownerMode.fort, true); assert.equal(gameplay.player.fortMode, true);
     globals.write32(0x594fbc, 1); assert.equal(storage.ownerMode.battle, true); assert.equal(storage.links.battle, true);
     globals.write32(0x540bc0, 0); globals.write32(0x5c85d4, 1); assert.equal(gameplay.server().value, false); assert.equal(local.savedGame().value, true);
+    globals.write32(0x595088, 0xffffffff); assert.equal(gameplay.gameAux().resourcePool, -1); assert.equal(globals.read32(0x595088), 0xffffffff);
+    globals.write32(0x595124, 0x80000000); assert.equal(gameplay.gameAux().incomePrimed, 0x80000000);
+    globals.write32(0x568afc, 0x7fc01234); globals.write32(0x568b00, 0x80000000);
+    assert.equal(globals.read32(0x568afc), 0x7fc01234); assert.equal(globals.read32(0x568b00), 0x80000000);
+    globals.write32(0x54c8a0, 7); assert.equal(storage.chunks.mode, 7);
     assert.throws(() => globals.write32(0x594fb8, 2), /정상0\/1/); assert.equal(storage.ownerMode.fort, true);
     assert.throws(() => globals.write32(0x540c70, 1), /미등록/); assert.throws(() => globals.read32(0x5c8540), /미등록/);
     assert.throws(() => bindClientStateWorldGlobals({ ...context, gameplay: new ClientGameplayGlobals() }), /owner 필요/);

@@ -44,6 +44,8 @@ export const GAME_AUX_FIELDS = Object.freeze([
     ['geyserDeadline', 0x005950b8, 'f64', 0, null, '간헐천 게임 시각 기한'],
     ['cleanupDeadline', 0x005950c0, 'f64', 0, null, '원문 정리가 쓰는 별도 기한(의미 미확정)'],
     ['secondaryGeyserDeadline', 0x005950c8, 'f64', 0, null, 'b8 과 별개인 게임 프레임 기한'],
+    ['spellDeadline', 0x005950d0, 'f64', 0, null, '주문 재생성의 별도 게임 시각 기한'],
+    ['incomePrimed', 0x00595124, 'u32', 0, null, '최초 SP 기한의 지급 준비 상태'],
     ['scheduledDrawDeadline', 0x00595358, 'f64', 0, null, 'Draw/Dais 부모가 읽는 게임 기한'],
     ['totalCost', 0x0059508c, 'i32', 0, null, 'Pop/삭제 장부의 signed 비용'],
     ['resourcePool', 0x00595088, 'i32', 0, null, '보상/지역 간헐천이 공유하는 signed 자원'],
@@ -195,6 +197,8 @@ export class GameAuxState {
     #squidTransmission = createSquidTransmissionState();
     // 새 Client에서 한 번 만든 같은 미션 설정 물리다. 일반/준비 대여·반납과 reset은 재생성하거나0으로 지우지 않는다. (WB04-E572)
     #missionSettings = Uint32Array.from(MISSION_SETTING_FIELDS, (field) => field.initial);
+    // 00568afc/00568b00의 현재 중앙 좌표이며 같은 float32 물리를 계속 빌린다.
+    #centralPosition = new Float32Array(2);
     // 원문 005451f8의 타입 사용 목록이며 명시 ClearTypes까지 Session 교체로 지우지 않는다.
     #typeUse = new Uint8Array(256);
     // 0052ed54/55의 디버그 패킷 헤더와 00544c24의 최초 BSS 길이 WORD다.
@@ -230,6 +234,8 @@ export class GameAuxState {
 
     // 32h 수신/송신과 Session의 강제 배치/무적/동맹 사격이 공유하는7칸 현재DWORD 배열이다. (WB04-E572)
     missionSettings() { return this.#missionSettings; }
+    // 일반 중앙섬과 State가 공유하는 두 좌표를 복사하지 않고 빌린다.
+    centralPosition() { return this.#centralPosition; }
 
     // 로그인 초기화와 69h 수신이 같은 256BYTE를 직접 빌린다.
     typeUse() { return this.#typeUse; }

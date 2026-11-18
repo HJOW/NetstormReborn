@@ -37,6 +37,29 @@ export function bindClientStateWorldGlobals(context) {
         [0x5c85d4, { get: () => Number(local.savedGame().value), set: (v) => { local.savedGame().value = stateBoolean(v); } }],
         [0x5c8758, { get: () => local.state().phase[0] }],
     ]);
+    const aux = gameplay.gameAux();
+    // GameAux의 DWORD는 원래 signed/unsigned 저장 폭과 읽기 전용 주소를 유지한다.
+    const auxFields = [
+        [0x540bdc, 'defaultSp', 'signed', false], [0x541240, 'geyserType', 'unsigned', false],
+        [0x5424bc, 'refundPercent', 'unsigned', true], [0x5453e4, 'allowAnyCapture', 'signed', true],
+        [0x5467bc, 'subscriberMarker', 'unsigned', true], [0x595088, 'resourcePool', 'signed', true],
+        [0x59508c, 'totalCost', 'signed', true], [0x595090, 'savedGeyserCount', 'unsigned', true],
+        [0x5950ac, 'ordinaryGeysers', 'unsigned', true], [0x5950b0, 'geyserFrameFlag', 'unsigned', true],
+        [0x595124, 'incomePrimed', 'unsigned', true], [0x5c8bb0, 'archipelago', 'unsigned', true],
+        [0x5ca8f0, 'priestQuarterHp', 'bool', true],
+    ];
+    // 각 효과는 같은 실제 GameAux 필드를 현재 시점에 읽고 쓴다.
+    for (const [address, name, kind, writable] of auxFields) {
+        const entry = { get: () => Number(aux[name]) };
+        if (writable) entry.set = (value) => { aux[name] = kind === 'bool' ? stateBoolean(value) : kind === 'signed' ? value | 0 : value; };
+        values.set(address, entry);
+    }
+    values.set(0x54c8a0, { get: () => storage.chunks.mode, set: (value) => { storage.chunks.mode = value; } });
+    // 중앙 좌표는 float 변환 없이 원본 DWORD 비트를 같은 Float32Array에 쓴다.
+    for (const [address, offset] of [[0x568afc, 0], [0x568b00, 4]]) {
+        const view = () => { const point = aux.centralPosition(); return new DataView(point.buffer, point.byteOffset, point.byteLength); };
+        values.set(address, { get: () => view().getUint32(offset, true), set: (value) => view().setUint32(offset, value, true) });
+    }
     // 22칸 프레임 표의 정렬된 원문 주소만 인덱스로 변환한다.
     const frameIndex = (address) => address >= 0x5c84e8 && address < 0x5c8540 && (address - 0x5c84e8) % 4 === 0 ? (address - 0x5c84e8) / 4 : -1;
     return {

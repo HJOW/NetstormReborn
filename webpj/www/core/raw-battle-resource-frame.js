@@ -2,7 +2,7 @@
 // 사용: runBattleResourceFrame(globals, hooks)
 //   globals = { aux, loginEnd, now, boss, battle, single, editor, owner, options, players }
 //     aux: 같은 보조 전역 객체로 { spellCount(u32, 00595090), spellDeadline(f64, 005950d0), incomePrimed(u32, 00595124), geyserFrameFlag(u32), geyserDeadline(f64, b8), secondaryGeyserDeadline(f64, c8), ordinaryGeysers(u32), resourcePool(i32) } 의 읽기/쓰기 속성이다.
-//       (웹 `game-aux-state.js` 에는 spellDeadline·incomePrimed 두 칸이 아직 없다 — 실제 보조 전역 연결 때 추가한다. 이 모듈은 위 속성 계약만 쓴다.)
+//       `game-aux-state.js` 의 같은 장기 칸을 실제 소비자에서 빌릴 수 있다.
 //     loginEnd·now(프레임 고정 게임 시각, double)·boss·battle·single·editor·owner 는 읽기 전용 전역으로 { value } 상자·현재 값을 돌려주는 함수·단순 값 중 하나이며 각 효과 뒤 원문 위치에서 다시 읽는다.
 //     options: 현재 87바이트 전투 옵션(Uint8Array), players(): 현재 Player 9행(180바이트 기록, 1620바이트)을 돌려주는 함수이다.
 //   hooks = { replenish(), income(owner, localOwner, amount), predictable(), wallSeconds(), budget(), density(), spacing(), whole(), partition(cell), count(rectangle), geyserCount(), typeCost(), choose(count), populate(quantity, random, rectangle, options) }

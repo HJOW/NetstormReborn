@@ -173,6 +173,7 @@ function decode(kind, raw) {
 // 초기값: 모든 필드와 장식 네 칸이 원본 PE 의 .data 초기값/BSS 0 과 같고, 새 객체의 값도 같다.
 test('GameAuxState: 초기값이 원본10.78 PE 의 .data/BSS 와 같다', (t) => {
     const aux = new GameAuxState();
+    assert.deepEqual([...aux.centralPosition()], [0, 0]); assert.equal(aux.centralPosition(), aux.centralPosition());
     // 새 객체의 값이 표의 초기값이다.
     for (const field of GAME_AUX_FIELDS) assert.equal(aux[field.name], field.initial, field.name);
     assert.deepEqual([...aux.worldDecorationTypes], WORLD_DECORATION_FIELDS.map((field) => field.initial));
@@ -183,6 +184,7 @@ test('GameAuxState: 초기값이 원본10.78 PE 의 .data/BSS 와 같다', (t) =
     const bytes = fs.readFileSync(ORIGINAL_EXE);
     assert.equal(sha256(bytes), ORIGINAL_EXE_SHA256, '보호 원본 10.78 실행 파일');
     const read = peReader(bytes);
+    assert.equal(read(0x00568afc).bytes.readUInt32LE(0), 0); assert.equal(read(0x00568b00).bytes.readUInt32LE(0), 0);
     const mismatches = [];
     // 표의 각 주소를 원본 폭으로 읽어 비교한다.
     for (const field of GAME_AUX_FIELDS) {
@@ -201,8 +203,8 @@ test('GameAuxState: 초기값이 원본10.78 PE 의 .data/BSS 와 같다', (t) =
         if (value !== aux.manoSpellTypes[index]) mismatches.push(`주문@${address.toString(16)}: ${value} ≠ ${aux.manoSpellTypes[index]}`);
     }
     assert.deepEqual(mismatches, []);
-    // 필드90개(double4개의8바이트 전체 포함)와 장식4칸이다.
-    assert.deepEqual([GAME_AUX_FIELDS.length, WORLD_DECORATION_FIELDS.length], [90, 4]);
+    // 필드92개와 장식4칸이다.
+    assert.deepEqual([GAME_AUX_FIELDS.length, WORLD_DECORATION_FIELDS.length], [92, 4]);
 });
 
 // TYPE 번호 칸: 웹 타입 표에서 같은 번호의 이름이 표의 대응 이름과 같다(자산 70~, 프로세스 10~, 내장 Form 1·2·3·6). 프로세스 상한 63 은 마지막 프로세스(62)+1 이다.
@@ -257,11 +259,13 @@ test('GameAuxState: 원본 폭 검사와 자원 비트 해석', () => {
 test('GameAuxState: 일반 월드 준비와 손실 좌표 정리', () => {
     const aux = new GameAuxState();
     Object.assign(aux, { ordinaryGeysers: 3, totalCost: 50, resourcePool: -7, refundPercent: 40, allowAnyCapture: 1, archipelago: 2, lostX: 5, lostY: 6, geyserType: 123, priestQuarterHp: true });
-    Object.assign(aux, { priestType: 200, processFormType: 9, regularProcessType: 47, geyserDeadline: 12.5, archipelagoMinimum: 3, defaultSp: 900 });
+    Object.assign(aux, { priestType: 200, processFormType: 9, regularProcessType: 47, geyserDeadline: 12.5, archipelagoMinimum: 3, defaultSp: 900, spellDeadline: 50.5, incomePrimed: 1 });
+    aux.centralPosition().set([7.5, -2.25]);
     aux.resetForGeneralWorld();
     assert.deepEqual([aux.ordinaryGeysers, aux.totalCost, aux.resourcePool, aux.refundPercent, aux.allowAnyCapture, aux.archipelago, aux.lostX, aux.lostY, aux.geyserType, aux.priestQuarterHp],
         [0, 0, 0, 25, 0, 0, 0, 0, 122, false]);
     assert.deepEqual([aux.priestType, aux.processFormType, aux.regularProcessType, aux.geyserDeadline, aux.archipelagoMinimum, aux.defaultSp], [200, 9, 47, 12.5, 3, 900]);
+    assert.deepEqual([aux.spellDeadline, aux.incomePrimed, ...aux.centralPosition()], [50.5, 1, 7.5, -2.25]);
     aux.resetLostPositionForCleanup();
     const view = new DataView(new ArrayBuffer(4));
     view.setFloat32(0, aux.lostX, true);
