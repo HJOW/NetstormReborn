@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { RawCampaignSession } from '../www/core/raw-campaign-session.js';
 import { synchronizeProductionControlContents } from '../www/core/client-production-sync.js';
+import { runClientBridgeDecay } from '../www/core/client-bridge-decay.js';
 import { ProductionMaintenanceGlobals, ProductionMaintenancePanel } from '../www/core/raw-production-maintenance.js';
 import { ProductionControlContext } from '../www/core/production-control-context.js';
 import { ClientColorSortInput } from '../www/core/client-color-sort-input.js';
@@ -1779,6 +1780,19 @@ test('Client 생산 동기화: 실제 Session 설치 관문과 같은 Deck', () 
         synchronizeProductionControlContents(context); assert.equal(new DataView(records.buffer, records.byteOffset + owner * 180 + 0x68, 4).getUint32(0, true), token);
     } finally { s.dispose(); }
     assert.throws(() => s.productionContext(), /반납/); assert.equal(context.options, options);
+});
+
+// 같은 실제 Session의 다리 칸을 Client 공통 프레임 스캔으로 전달한다.
+test('Client 다리 붕괴: 실제 적재 Session 칸 전달', () => {
+    const gameplay = new ClientGameplayGlobals(), { s } = scene({ gameplayGlobals: gameplay });
+    try {
+        s.load(); const world = s.world(), storage = world.storage, core = s.core();
+        const bridge = world.objects().find(({ sid, object }) => object.type === 82 && !(core.pool.slot(sid)[40] & 1)); assert.ok(bridge);
+        const clock = { game: 50, wall: 50, delta: 1, number: 1 }, scan = storage.bridgeDecayScan;
+        Object.assign(scan, { first: bridge.sid, last: bridge.sid + 1, cursor: bridge.sid, next: 0 });
+        runClientBridgeDecay({ surfaceStorageIfInitialized: () => storage, gameplayGlobals: () => gameplay, time: () => clock, paused: () => false });
+        assert.equal(core.processState.now, 50); assert.equal(scan.cursor, bridge.sid); assert.equal(scan.next, 60);
+    } finally { s.dispose(); }
 });
 
 // 중간 외부 장치 오류는 loaded를 켜지 않고 원문의 앞선 설치를 보존한다.
