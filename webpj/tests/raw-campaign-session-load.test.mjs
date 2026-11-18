@@ -13,11 +13,13 @@ import { clearClientUserSelection } from '../www/core/client-user-selection-clea
 import { resetClientClockSynchronization, resetClientStateZone, resetClientStateWorldStorage, resetClientSquidPool, clearClientMetaZoneRecords } from '../www/core/client-state-storage-cleanup.js';
 import { StateWorldCleanupEffect } from '../www/core/raw-state-world-cleanup.js';
 import { ClientStateRuntimeRetirement } from '../www/core/client-state-runtime-retirement.js';
-import { cancelClientStateCursor } from '../www/core/client-state-world-cleanup.js';
+import { cancelClientStateCursor, makeClientStateWorldHooks } from '../www/core/client-state-world-cleanup.js';
 import { bindClientStateWorldGlobals } from '../www/core/client-state-world-globals.js';
 import { ClientKencloudGlobals } from '../www/core/client-kencloud-globals.js';
 import { ClientNsInfoGlobals } from '../www/core/client-ns-info-globals.js';
 import { ClientRandomGlobals } from '../www/core/random.js';
+import { ScrambledSpStore } from '../www/core/sp-store.js';
+import { RawChatChannels } from '../www/core/raw-chat-channels.js';
 import { QuickHelpPopupState } from '../www/ui/quick-help-popup-state.js';
 import { GameAssets } from '../www/assets/game-assets.js';
 import { GamePalette } from '../www/assets/palette.js';
@@ -130,6 +132,37 @@ test('Client State 전역: 연결 활동·Client DWORD와 모드 별칭', () => 
     assert.throws(() => globals.write32(0x594fb8, 2), /정상0\/1/); assert.equal(storage.ownerMode.fort, true);
     assert.throws(() => globals.write32(0x540c70, 1), /미등록/); assert.throws(() => globals.read32(0x5c8540), /미등록/);
     assert.throws(() => bindClientStateWorldGlobals({ ...context, gameplay: new ClientGameplayGlobals() }), /owner 필요/);
+});
+
+// State 효과가 같은 Client 전역·저장소·Runtime 장치에 도달한 순서대로 분배된다.
+test('Client State 효과: 실제 장기 소유자와 선택된 외부 장치', () => {
+    const gameplay = new ClientGameplayGlobals(), local = new ClientLocalStateGlobals(), players = new ClientPlayerRecords(), coreData = new ClientCoreDataGlobals();
+    const assets = new CampaignSessionAssets(game, { read: forbidden('파일') }), metadata = new PriestPlacementAssets(game.typeTable, game.shapes, assets.loadedTypes);
+    const storage = new RawSurfaceStorage(assets.types, assets.frames, metadata.shapes, { source: game, authority: gameplay.authority(), gameAux: gameplay.gameAux() });
+    const kernel = new Kernel(); storage.processes.bindDevices(kernel, { game: 0 }); players.bindCoreData(coreData); players.initialize(() => {});
+    const connections = new ClientConnectionGlobals(local), templates = new CampaignTemplateStorage(), random = new ClientRandomGlobals(), events = [];
+    const sp = new ScrambledSpStore(random.game, () => 1); sp.bindTrackingOffset({ value: 0 }); sp.initialize();
+    const chat = new RawChatChannels(new Uint8Array(4800), () => 0);
+    const client = { paused: () => false, popGamePause: () => events.push('resume'), resetGameClock: () => events.push('clock'),
+        wallSeconds: () => 42, interpretStateOptions: () => events.push('options') };
+    const audio = { popMute: () => events.push('mute'), startScene: (battle) => events.push(['music', battle]), sounds: () => ({ stopLoops: () => events.push('stop') }) };
+    const context = { gameplay, storage, local, players, coreData, kernel, connections, templates, sp, chat, audio, client, currentStorage: storage, gameTime: () => 10 };
+    const runtime = new ClientStateRuntimeRetirement(context), hooks = makeClientStateWorldHooks(context, { cancelInitialCursor: () => events.push('cursor'), refreshSp: () => events.push('sp') }, runtime);
+    const E = StateWorldCleanupEffect; local.synchronizationConnection().value = 8; local.zoneWords().fill(0xffffffff);
+    hooks.effect(E.CloseAllConnections); hooks.effect(E.EndConnections); hooks.disconnect(1); hooks.effect(E.Clear446e70); hooks.effect(E.Clear4c1f20); hooks.effect(E.Clear42b1b0);
+    assert.equal(local.synchronizationConnection().value, 0); assert.equal(local.metaFirstReset().value, 0);
+    gameplay.selection.selected = 5; gameplay.selection.multipleCount = -1; hooks.effect(E.ClearCursor); assert.equal(gameplay.selection.selected, 0);
+    hooks.setSp(1, 15.5); assert.equal(new DataView(Uint32Array.of(sp.get(1)).buffer).getFloat32(0, true), 15.5);
+    hooks.resetOtherPlayer(2, 20); assert.equal(new DataView(Uint32Array.of(sp.get(2)).buffer).getFloat32(0, true), 20);
+    hooks.effect(E.ClearTemplates); hooks.effect(E.Clear445140);
+    storage.priestOwnerState[1] = 99; hooks.resetPriest(1); assert.equal(storage.priestOwnerState[1], 0);
+    hooks.resetAi(1); hooks.effect(E.ClearPlayerLinks); hooks.effect(E.ClearKernel); hooks.resetPool(0);
+    hooks.effect(E.Clear43b540); hooks.effect(E.Reset422490); assert.equal(storage.bridgeDecayScan.next, 20);
+    hooks.effect(E.ResetZone); assert.deepEqual([...local.zoneWords()], [0, 0xffff0000]);
+    hooks.effect(E.MapMode); hooks.effect(E.ResumeGame); hooks.effect(E.ResumeAudio); hooks.effect(E.ResetClock); hooks.effect(E.RefreshSp);
+    hooks.effect(E.SceneMusic); hooks.effect(E.Clear4a9e50); hooks.effect(E.InterpretOptions);
+    assert.deepEqual(events, ['cursor', 'resume', 'mute', 'clock', 'sp', ['music', false], 'stop', 'options']);
+    assert.throws(() => hooks.effect(E.KillGumps), /외부 장치 누락/); assert.throws(() => hooks.effect(0xffffffff), /미등록 Effect/);
 });
 
 // 실제 장기 Client·표면의 선택된 물리만 정리하고 World 대여 관문을 지킨다.
