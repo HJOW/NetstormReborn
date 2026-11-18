@@ -406,6 +406,8 @@ export class RawCampaignSessionLoginFront {
     }
     // 같은 내부 전송에 읽기 전용 원본 패킷을 넣고 수신은 후속 Pump에 맡긴다.
     send(target, packet) { this.#send(target, packet, false); }
+    // 선택된 연결의 송신 관찰기가 같은 버퍼의 길이를 확정한 뒤 큐에 복사한다.
+    sendMutable(target, packet) { this.#send(target, packet, true); }
     // 현재 벽시각을 기록하고 송신·시계·수신과 독립 타이머를 원본 순서대로 처리한다.
     pump() {
         const o = this.#live(); this.#wall = this.#need('wallSeconds', 'Login Pump')();

@@ -257,6 +257,28 @@ test('CampaignSession TheWarBegins: 실제 로그인 전송의 사제 이동 요
     assert.throws(() => s.requestCarrierMove(50, { x: 90, y: 108 }), /반납/);
 });
 
+// 편의 로그인 뒤 같은 실제 mutable 송신 관찰기와 원격 Tell 수신을 연속 검증한다.
+test('CampaignSession TheWarBegins: 편의 로그인과 mutable 송신·Tell', () => {
+    const gameplay = new ClientGameplayGlobals(), received = [], tells = [];
+    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {},
+        observePacket: (_sender, _boss, _local, packet) => { if (packet[1] === 0x31 || packet[1] === 0x70) received.push(packet.slice()); } };
+    const { s } = scene({ gameplayGlobals: gameplay, localLogin, factoryTell: (text) => tells.push(text), ai: { participation: { addChat: () => {}, clearChat: () => {} } } });
+    const text = 'shm 1', packet = new Uint8Array(9 + text.length); packet.set([1, 0x31, 4, 0]);
+    new DataView(packet.buffer).setUint32(4, text.length + 1, true); packet.set(Uint8Array.from(text, (letter) => letter.charCodeAt(0)), 8);
+    try {
+        assert.throws(() => s.sendMutableLocalPacket(9, packet), /설치 전/);
+        s.loadLocalConnection(); assert.equal(s.localConnectionReady(), true);
+        s.sendMutableLocalPacket(9, packet); assert.equal(packet[2] | (packet[3] << 8), packet.length);
+        assert.equal(received.length, 0); packet[8] = 0x7a;
+        s.sendPlayerTell(9, 'TestSection', false); assert.deepEqual(tells, []);
+        s.pumpLocalConnection(); assert.equal(gameplay.gameAux().missionSettings()[1], 1);
+        assert.deepEqual(received.map((item) => item[1]), [0x31, 0x70]); assert.deepEqual(tells, ['TestSection']);
+    } finally { s.dispose(); }
+    assert.throws(() => s.sendMutableLocalPacket(9, packet), /반납/);
+    const independent = scene().s;
+    try { independent.load(); assert.throws(() => independent.sendMutableLocalPacket(9, packet), /로컬 전송 없는/); } finally { independent.dispose(); }
+});
+
 // UI의 원본 패킷은 같은 로그인 전송에 복사되며 Pump 전에는 수신되지 않는다.
 test('CampaignSession TheWarBegins: 실제 로컬 패킷 송신과 지연 수신', () => {
     const gameplay = new ClientGameplayGlobals(), received = [];

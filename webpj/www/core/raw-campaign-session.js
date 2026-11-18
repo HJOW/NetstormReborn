@@ -201,10 +201,15 @@ export class RawCampaignSession {
             });
             login.bindClient(); login.registerReceivers();
         } catch (error) { login.dispose(); throw error; }
-        this.#login = login; login.begin(parentRunning);
+        this.#login = login; o.login = login; login.begin(parentRunning);
     }
     // 독립 미션의 같은 상태8 시작을 실행한다.
     startLocalConnection() { this.#beginLocalConnection(false); }
+    // 독립 접합의 원문 편의 진입이다. 같은 상태 Poll과 Pump를 한 번씩 실행하고 실제 준비를 확인한다.
+    loadLocalConnection() {
+        this.startLocalConnection(); this.#login.state.poll(); this.#login.pump();
+        if (!this.localConnectionReady()) throw new Error('실제 로컬 미션 로그인 미완료');
+    }
     // 외부 State7 부모의 공통 확정을 중첩하지 않고 실제 후반만 준비한다.
     prepareLocalConnectionForState() { this.#beginLocalConnection(true); }
     // 원본의 로컬 로그인 상태만 Poll하고 큰 부모 상태는 호출자에게 남긴다.
@@ -221,6 +226,10 @@ export class RawCampaignSession {
         if (!this.#login) throw new Error('실제 로컬 Login 전송 없는 원본 패킷 송신');
         this.#login.send(target, packet);
     }
+    // 같은 현재 Login의 mutable 관찰기와 송신 큐를 UI에 제공한다.
+    sendMutableLocalPacket(target, packet) { this.#live().constructionModules.sendChatMutable(target, packet); }
+    // 단일 또는 자기 제외 대상에게 같은 실제 원격 Tell 패킷을 전달한다.
+    sendPlayerTell(owner, section, others = false) { this.#live().constructionModules.sendRemoteTell(owner, section, others); }
     // 원본처럼 설치·상태14·현재 Player와 연결 비트를 모두 확인한다.
     localConnectionReady() {
         const o = this.#live(); if (!this.#login || !o.loaded || o.localStateGlobals.state().phase[0] !== 14 || !o.playerState.playerKnown) return false;
@@ -853,6 +862,6 @@ export class RawCampaignSession {
         const o = this.#live();
         if (o.gameplayGlobals.runtimeCallActive(this)) throw new Error('실제 Runtime 배송 종료 전 외곽 Session 반납');
         try { this.bindRuntimePin(null); this.detachConnectionTransport(); }
-        finally { try { this.#login?.dispose(); } finally { this.#disposed = true; o.dispose(); } }
+        finally { try { this.#login?.dispose(); } finally { o.login = null; this.#disposed = true; o.dispose(); } }
     }
 }
