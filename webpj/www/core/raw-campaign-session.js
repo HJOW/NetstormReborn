@@ -162,6 +162,16 @@ export class RawCampaignSession {
         const o = this.#live(); if (!o.loaded || !o.motion) throw new Error('미설치 Session의 건설 이동');
         return o.motion.paths.startConstruction(request);
     }
+    // 같은 Session의 실제 운반체와 경로·Kernel을 사용해 이동을 시작한다.
+    startCarrierMovement(request) {
+        const o = this.#live(); if (!o.loaded || !o.motion) throw new Error('미설치 Session의 Carrier 이동');
+        return o.motion.paths.startCarrier(request);
+    }
+    // 같은 Session의 실제 Dude 부모 효과와 경로·Kernel을 사용해 이동을 시작한다.
+    startDudeMovement(request) {
+        const o = this.#live(); if (!o.loaded || !o.motion) throw new Error('미설치 Session의 Dude 이동');
+        return o.motion.paths.startDude(request);
+    }
     // 현재 Player의 실제 기술 부모에 kind를 표시하며 중복 여부는 생산 본체가 판정한다.
     indicateTechnology(type) { const o = this.#live(); if (!o.production) throw new Error('현재 기술표시의 실제 생산/Player 부모 미설치'); o.production.indicateTechnology(type); }
     // 서버 표식이 있는 Player의 연결 비트부터 정리하고 미션/미확정 Player는 저장 장치 없이 반환한다.

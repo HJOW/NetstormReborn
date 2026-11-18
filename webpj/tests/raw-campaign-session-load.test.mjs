@@ -436,6 +436,25 @@ test('CampaignSession TheWarBegins: 건설 운반 도착과 실제 진행 부착
     } finally { s.dispose(); }
 });
 
+// 실제 운반체와 Dude의 공개 이동이 같은 Session의 경로와 Kernel에 부착되는지 확인한다.
+test('CampaignSession TheWarBegins: 운반체와 Dude의 공개 이동 경계', () => {
+    // 각 종류가 별도 Session의 실제 객체와 수명을 사용한다.
+    for (const [kind, method, movement] of [[133, 'startCarrierMovement', 40], [70, 'startDudeMovement', 24]]) {
+        const { s } = scene({ sound: { play: () => 1, playOnceAt: () => 1 } });
+        try {
+            assert.throws(() => s[method]({ parent: 1 }), /미설치/);
+            s.load(); const core = s.core(), priest = s.world().objects().find(({ object }) => object.type === 158 && object.owner === 1);
+            assert.ok(priest); const { x, y } = priest.object, parent = s.world().create(kind, 2);
+            core.owner.set(parent, 1); s.world().pop(parent, x, y, 0);
+            const path = s[method]({ parent, destination: { x: x + 4, y }, replaceStart: 1, helper: 0, tailWord: 0, tailByte: 0, reserved: 0 });
+            assert.ok(path instanceof RawPathProcess); assert.equal(core.processes.fromForm(findAttachedProcess(core.pool, parent, movement)), path);
+            assert.equal(core.kernel.get(core.kernel.find(path)), path);
+            assert.throws(() => s[method]({ parent: priest.sid, destination: { x, y } }), /실제 부모/);
+        } finally { s.dispose(); }
+        assert.throws(() => s[method]({ parent: 1 }), /반납/);
+    }
+});
+
 // 실제 120BYTE 섬과 저장 객체를 적재한 다음에만 loaded를 공개한다.
 test('CampaignSession TheWarBegins: 실제 저장 객체·Graph와 커서까지 Load', () => {
     const { s, trace, queue } = scene();
