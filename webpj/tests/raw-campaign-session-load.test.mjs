@@ -455,6 +455,46 @@ test('CampaignSession TheWarBegins: 운반체와 Dude의 공개 이동 경계', 
     }
 });
 
+// 같은 월드의 Dude 최초 Pop과 도착 삭제가 공개된 부모의 인구 목록을 갱신한다.
+test('CampaignSession TheWarBegins: Dude 부모와 통지의 실제 월드 수명', () => {
+    const { s } = scene();
+    try {
+        assert.throws(() => s.dudeBehavior(), /미설치/); assert.throws(() => s.dudes(), /미설치/);
+        s.load(); const core = s.core(), behavior = s.dudeBehavior(), notice = s.dudes(), population = behavior.population, before = population.count;
+        assert.equal(behavior, s.dudeBehavior()); assert.equal(notice, s.dudes());
+        assert.equal(behavior.pool, core.pool); assert.equal(notice.pool, core.pool);
+        const dude = s.world().create(70, 0); core.owner.set(dude, 1); s.world().pop(dude, 100, 111, 0);
+        assert.equal(behavior.handles(dude), true); assert.equal(population.count, before + 1);
+        assert.equal(new DataView(core.pool.slot(dude).buffer, core.pool.slot(dude).byteOffset).getUint16(12, true), 0x5101);
+        assert.equal(behavior.arrival(dude), 1001); assert.equal(core.pool.slot(dude)[11] & 3, 3); assert.equal(population.count, before);
+    } finally { s.dispose(); }
+    assert.throws(() => s.dudeBehavior(), /반납/); assert.throws(() => s.dudes(), /반납/);
+});
+
+// 실제 지도에서 통행 가능한 칸을 찾아 Dude 통지가 같은 경로를 재사용하는지 확인한다.
+test('CampaignSession TheWarBegins: Dude 통지의 실제 경로 시작과 동일 목적지', () => {
+    const { s } = scene();
+    try {
+        s.load(); const core = s.core(); let source = null;
+        // 원본 지도에서 다섯 연속 칸의 표면·점유·해시를 차례로 확인한다.
+        for (let y = 32; y < 220 && !source; y += 1) {
+            // 아직 찾지 못한 줄에서 가능한 시작점을 확인한다.
+            for (let x = 32; x < 215 && !source; x += 1) {
+                let clear = true;
+                // 시작점과 목적지 사이의 실제 칸을 확인한다.
+                for (let dx = 0; dx < 5; dx += 1) if (!(core.spots[y * 256 + x + dx] & 6) || (core.spots[y * 256 + x + dx] & 8) || !core.hash.cell(0, x + dx, y)) clear = false;
+                if (clear) source = [x, y];
+            }
+        }
+        assert.ok(source); const dude = s.world().create(70, 0); core.owner.set(dude, 1); s.world().pop(dude, ...source, 0);
+        const target = [source[0] + 3, source[1]], notice = s.dudes();
+        assert.equal(notice.move(dude, target, false), true);
+        const form = findAttachedProcess(core.pool, dude, 24), path = core.processes.fromForm(form);
+        assert.ok(path instanceof RawPathProcess); const before = Uint8Array.from(path.runtime.bytes);
+        assert.equal(notice.move(dude, target, true), true); assert.equal(core.processes.fromForm(form), path); assert.deepEqual(path.runtime.bytes, before);
+    } finally { s.dispose(); }
+});
+
 // 실제 120BYTE 섬과 저장 객체를 적재한 다음에만 loaded를 공개한다.
 test('CampaignSession TheWarBegins: 실제 저장 객체·Graph와 커서까지 Load', () => {
     const { s, trace, queue } = scene();

@@ -172,6 +172,16 @@ export class RawCampaignSession {
         const o = this.#live(); if (!o.loaded || !o.motion) throw new Error('미설치 Session의 Dude 이동');
         return o.motion.paths.startDude(request);
     }
+    // 현재 월드의 Dude 생성·이동·삭제가 공유하는 부모 행동을 빌린다.
+    dudeBehavior() {
+        const o = this.#live(); if (!o.loaded || !o.dudeBehavior) throw new Error('미설치 Session의 Dude 부모 조회');
+        return o.dudeBehavior;
+    }
+    // 현재 월드의 피격·이동이 공유하는 Dude 통지 처리기를 빌린다.
+    dudes() {
+        const o = this.#live(); if (!o.loaded || !o.hits) throw new Error('미설치 Session의 Dude 통지 조회');
+        return o.hits.dudes;
+    }
     // 현재 Player의 실제 기술 부모에 kind를 표시하며 중복 여부는 생산 본체가 판정한다.
     indicateTechnology(type) { const o = this.#live(); if (!o.production) throw new Error('현재 기술표시의 실제 생산/Player 부모 미설치'); o.production.indicateTechnology(type); }
     // 서버 표식이 있는 Player의 연결 비트부터 정리하고 미션/미확정 Player는 저장 장치 없이 반환한다.
