@@ -503,3 +503,26 @@ test('CampaignSession Tutorial 1: AcidZap과 주문 수신 등록', () => {
         assert.throws(() => dispatch.dispatch(new PacketConnection({ sender: 1 }), timer), /타이머 수신 진단/);
     } finally { s.dispose(); }
 });
+
+// 의식·기도·Meltdown의 등록과 반환된 슬롯 관문만 확인하고 실제 의식은 실행하지 않는다.
+test('CampaignSession Tutorial 1: 의식과 Meltdown 수신 등록', () => {
+    const { s } = scene(), dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); s.registerCarrierCommandPrefix(dispatch);
+        const c = s.core(); let sid = c.pool.layout.serverFirst;
+        // 실제 Pool의 반환된 슬롯을 선택한다.
+        while (sid < c.pool.capacity && !(c.pool.slot(sid)[11] & 1)) sid += 1;
+        assert.ok(sid < c.pool.capacity); const saved = c.pool.slot(sid), raw = c.pool.physical(sid);
+        // 효과가 발생하지 않는 두 반환 슬롯 경로만 분배한다.
+        for (const [type, length] of [[0x6b, 10], [0x6d, 8]]) {
+            const packet = new Uint8Array(length); packet.set([1, type, length, 0]); new DataView(packet.buffer).setUint16(4, sid, true);
+            assert.equal(dispatch.registration(type).length, length);
+            assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
+        }
+        raw[11] |= 2;
+        const request = new Uint8Array(6); request.set([1, 0x76, 6, 0]); new DataView(request.buffer).setUint16(4, sid, true);
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), request), true);
+        assert.equal(dispatch.registration(0x75).length, 0xffff); assert.equal(dispatch.registration(0x76).length, 6);
+        raw.set(saved);
+    } finally { s.dispose(); }
+});

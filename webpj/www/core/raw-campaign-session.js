@@ -20,6 +20,7 @@ import { receiveSessionSquid } from './raw-campaign-session-squid.js';
 import { decodeCompressedSquid, observeCompressedSquid } from './raw-squid-compressed-receive.js';
 import { registerGeyserMined } from './raw-geyser-mined.js';
 import { registerRemoteTellPacket } from './raw-remote-tell-packet.js';
+import { receiveRitualChoice } from './raw-ritual-choice.js';
 import { GunProcess, GunProcessFields } from './raw-gun-process.js';
 import { FlyerProcess, FlyerProcessFields, RawFlyerProcess } from './raw-flyer-process.js';
 import { findAttachedProcess, WindAviaryProcess } from './raw-wind-aviary-process.js';
@@ -558,6 +559,17 @@ export class RawCampaignSession {
         dispatch.register(0x5c, (_sender, _connection, packet) => this.#live().runtimeModules.receiveDevastationActivation(packet));
         dispatch.register(0x5f, (_sender, _connection, packet) => this.#live().runtimeModules.receiveDevastationEffect(packet));
         dispatch.register(0x7d, (_sender, _connection, packet) => this.#live().receiveBombTimer(packet));
+        // 의식 선택·기도·Meltdown 수신은 현재 Session의 동일한 풀과 처리기를 사용한다. (2026-11-18 WB04-E739)
+        for (const [type, length] of [[0x6b, 10], [0x6d, 8], [0x75, 0xffff], [0x76, 6]]) {
+            dispatch.observe(type, null); dispatch.version(type, 1, 0); dispatch.requireLength(type, length);
+        }
+        dispatch.register(0x6b, (_sender, _connection, packet) => {
+            const current = this.#live();
+            receiveRitualChoice(current.core.pool, current.contentFinder, current.contained, packet, (form, flags) => current.world.destroy(form, flags));
+        });
+        dispatch.register(0x6d, (_sender, _connection, packet) => this.#live().receivePriestPrayer(packet));
+        dispatch.register(0x75, (_sender, _connection, packet) => this.#live().meltdown.receiveEffect(packet));
+        dispatch.register(0x76, (_sender, _connection, packet) => this.#live().meltdown.receiveRequest(packet));
     }
     // 현재 방향별 동맹 DWORD를 복사하지 않고 빌린다.
     alliances() { return this.#live().alliances; }
