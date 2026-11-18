@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — dotnetpj(C# + MonoGame) 현행 상태와 남은 작업
 
-**기준 단위 0.606 · 갱신 2026-11-17(VM-W11-Codex) · 현재 단계 R4(세션·월드 조립) · 다음 단위 0.607 = [R4-2](#r4-detail) · cpppj 기준 제품 1322 · 전체 목표 미완료 · 사용자 재개 지시로 작업 진행 중 — 지금 어디까지 왔는지는 [0.1](#dotnet-overview), 단계별 남은 양은 [0.2](#dotnet-stage-board), 다음에 할 일은 [0.4](#now), 단계별 체크 목록은 [2.4](#r4-detail)**
+**기준 단위 0.607 · 갱신 2026-11-18(HJOW-Athlon) · 현재 단계 R4(세션·월드 조립) · 다음 단위 0.608 = R4-2 잔여(농지·그래프·첫 지역·AI·정기 처리) · cpppj 기준 제품 1322 · 전체 목표 미완료 · 사용자 재개 지시로 작업 진행 중 — 지금 어디까지 왔는지는 [0.1](#dotnet-overview), 단계별 남은 양은 [0.2](#dotnet-stage-board), 다음에 할 일은 [0.4](#now), 단계별 체크 목록은 [2.4](#r4-detail)**
 
 이 문서는 dotnetpj의 **현재 상태·남은 작업·계속 유효한 결정과 규칙**만 둔다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), webpj는 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다. 이번 정리(2026-11-15) 직전의 이 문서 전체(단위 기록 0.453~0.545 93건, R4 진행판의 묶음별 경과, 0.3의 단위별 검사·fixture 나열)는 [LEFT_JOBS.dotnetpj.old.md](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261115-through-0545)에 바이트 그대로 보관했고, 그 이전 보관본 6개와 0.452 이하 단위 기록도 같은 파일에 있다. [이식 계획](docs/dotnet-cpp-port-plan-20261016.md)의 W 번호·fixture 목록은 근거 목록으로만 쓰고, 순서·구조·완료 기준은 이 문서를 따른다.
 
@@ -51,10 +51,10 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 | 항목 | 값 |
 | --- | --- |
 | 마지막 구현 단위 | **0.606(2026-11-17, VM-W11-Codex):** [L2 재측정과 격차 분석](docs/dotnet-l2-0606-20261117.md). Mesa 실행 환경 복구·오라클 재빌드·3경로 대조. 격차 3뿌리 특정(요새 Pop·농지·전용 슬롯). 31경로 전체·R4-2 잔여는 계속 |
-| 검사 기준선 | **0.605 집중: Client 전체1263/1263·Core(Fence\|CppPortMap\|Surface\|Dais)470/470·Assets366/366 통과, Release 빌드 0경고·0오류.** 신규4검사(`HostSessionTerrainGraphTests`). Core 전체 회귀는 시간이 걸려 이번 단위에서는 돌리지 않았다(마지막 전체 측정 0.589 직전 2842/2846에서 PortMap 중복 해소 뒤 자료 부재 3건만 남음). TRX 미보관(집중 실행). 0.566 전체 회귀 최종(Assets366/366·Client일반1,233/1,233·Core2,664/2,664)은 [근거](docs/dotnet-regression-inventory-20261115.md). 0.567 집중Core378/378·Client120/120(신규48)도 유지 |
+| 검사 기준선 | **0.607 집중: Client 전체1265/1265 통과(신규 `HostSessionFortPopTests` 2건 포함, 실패하던 총계 단언을 TotalMade 누적으로 확정), Release 빌드 0경고·0오류.** Assets 선별70건 통과. Core 전체 회귀는 이번 단위에서 돌리지 않았다(마지막 전체 측정 0.589 직전 2842/2846에서 PortMap 중복 해소 뒤 자료 부재 3건만 남음). TRX 미보관(집중 실행). 0.566 전체 회귀 최종(Assets366/366·Client일반1,233/1,233·Core2,664/2,664)은 [근거](docs/dotnet-regression-inventory-20261115.md). 0.567 집중Core378/378·Client120/120(신규48)도 유지 |
 | PORT_MAP | `PORT_MAP.tsv` **1021행(L1 445·port 571)**, cpppj 438단위에 대응. 행은 파일 전체 완료를 뜻하지 않는다 |
 | fixture | 연결 **319개**(원본 x86 대조 자료, `cpp-fixture-manifest.tsv`) |
-| L2 기준선 | 0.606: 신 오라클·현행 dn으로 3경로 재수집(thewarbegins·tutorial1·bc1menu76, 모두 불일치). **일치0/34**, 데모dn3 미연결 유지. 격차 3뿌리는 [분석](docs/dotnet-l2-0606-20261117.md). 직전 전체 자료 `extracted/dotnet-l2-0567/`, [일괄 도구](docs/dotnet-l2-batch-20261114.md) |
+| L2 기준선 | 0.607: HJOW-Athlon 실측 3경로 재수집(thewarbegins·tutorial1·bc1menu76, 같은 시드). thewarbegins dn 1856→1885·cpp전용 85→56·소유자 464→497(요새 지원 타입 등록 효과). **일치0/34**, 데모dn3 미연결 유지. 격차 3뿌리는 [0.606 분석](docs/dotnet-l2-0606-20261117.md) 그대로이며 요새 일반 Pop 1뿌리의 지원 타입 부분을 닫았다([0.607 문서](docs/dotnet-fort-general-pop-20261118.md)). 덤프 `extracted/dotnet-l2-0607/`(경로별 보관, summary.json은 마지막 경로만 남음). 직전 전체 자료 `extracted/dotnet-l2-0567/`, [일괄 도구](docs/dotnet-l2-batch-20261114.md) |
 | cpppj 기준 | 제품 **1314 / 11.01**(M8 최종 관문 1311 완료+최초 실행 1314, CD 10.72 복원은 사용자 보류, cpppj 목표 일시 중지). 영향 분류는 0.379(1247→1300 전수)·0.499(1304~1310)·0.530(1312·1313)까지 마쳤다([1.2](#resync-scope)). `reflected-commit`/floor는 올리지 않았다 |
 | 오라클 | `cpppj/build/bin/Release/Netstorm.exe`. cpppj `src`가 바뀌면 PowerShell로 다시 빌드한다. 데이터 사본 `extracted/dotnet-oracle-data/`·캡처 `extracted/dotnet-oracle-captures/`·기준선 `extracted/dotnet-r0-baseline/`은 이 PC에만 있다(Git 제외) |
 | 디컴파일 | dotnetpj는 디컴파일 소스 분석이 필요하지 않다(AGENTS.md `c17aeede1`). 이식 근거는 cpppj 소스·fixture·문서다 |
@@ -63,14 +63,14 @@ AGENTS.md의 진행 요약 기준(실행·플레이 가능 여부, 원본과의 
 
 ### 0.4 남은 작업 — 순서대로
 
-**작업 상태:** 사용자 재개 지시로 0.546부터 R4-1을 진행 중이다(2026-11-15). **0.606에서 L2 실행 환경을 복구하고 3경로를 재측정해 격차 3뿌리(요새 Pop 미발화·농지 미배치·Prefix 산물 부재)를 특정했다.** 파생 종단·HostSession 별도 풀 전환은 남아 있다. 사제 포획/희생·특정 적 공격·시나리오 승리 재현과 MP 실행 검사는 계속 사용자 확인 대상이다.
+**작업 상태:** 사용자 재개 지시로 0.546부터 R4-1을 진행 중이다(2026-11-15). **0.607에서 요새 일반 Pop 결선 검증을 완료했다**(HJOW-Athlon, [단위 문서](docs/dotnet-fort-general-pop-20261118.md)). L2 실행 환경을 복구하고 3경로를 재측정해 thewarbegins 격차를 줄였다(cpp전용 85→56·소유자 +33). 파생 종단·HostSession 별도 풀 전환은 남아 있다. 사제 포획/희생·특정 적 공격·시나리오 승리 재현과 MP 실행 검사는 계속 사용자 확인 대상이다.
 
-**0.607 중단 인계(2026-11-17 사용자 중단 지시, 미완):** 요새 일반 Pop 결선을 구현했으나 검증이 끝나지 않았다. 이어서 할 일은 아래 순서대로 한다.
+**0.607 완료(2026-11-18, HJOW-Athlon):** 0.607 중단 인계(2026-11-17 사용자 중단 지시)의 4항목을 모두 닫았다.
 
-1. 현황: `HostSession.cs`의 요새 Pop 훅이 화신·사제·보호막·Player는 공통 Pop으로, 다리·섬·표면과 양쪽 표시 지원 표를 모두 만족하는 공통 타입은 `TerrainPopObject`로 등록하고, 나머지는 `FortPopSkips`에 기록만 남긴다(전용 파생 R6 대기·지원표 밖·장치 미연결 구별). 판정은 `RawPostPop.RequiresDedicatedPostPop`(`RawPostPop.Dispatch.cs`에 0.607에서 추가, 분배 본문의 분기 순서와 같은 가상표 판정)과 `OriginalPopDisplay/OriginalUnpopDisplay.Supports` 조합이다. `TerrainPopObject`가 `BindTransmission`(단독 임무 송신 기록, `TerrainPopTransmissions`)·기록형 Assertion(`pop-assert`)을 쓰며, 섬 후처리 연결의 `SetFrame`은 세션 `SquidFrame`+`RawUnpop` 실행기로 연결했다. Release 빌드는 0경고·0오류다.
-2. 검사 상태: 신규 `HostSessionFortPopTests` 2건 중 스킵 경로 1건 통과, `FortGeneralPopRegistersSupportedTypes` 1건 실패(90행 `TotalCost != totalsBeforeFort` 단언). 기존 전체는 통과한다(Client 전체 1264/1265, 실패는 신규 단언 1건뿐). 실패 원인은 요새 Pop이 발화하는데도 장부 총계가 0으로 남기 때문이다. 유력 가설은 (a) 실제로 Pop된 타입들의 비용이 모두 0이거나, (b) `ValidateBaseCore`의 `extra & 9` 관문·`AiAttached`·`PendingPlacement` 중 하나가 조용히 집계 경로를 막거나, (c) 덤프가 읽는 장부와 Pop이 쓰는 장부가 다른 경우다. `TerrainPopCalls`의 type 목록과 해당 타입 `Cost`를 대조해 가설을 가른 뒤, (a)이면 단언을 총계 대신 `TotalMade` 누적으로 바꾸고, (b·c)이면 결선을 고친다.
-3. L2 재측정: `extracted/dn-gl-run/`의 dn 호스트는 0.607 이전 빌드이므로, 코드 수정 뒤 `dotnet build`로 다시 빌드하고 같은 디렉터리에 복사한 뒤(`opengl32.dll`·`libgallium_wgl.dll`·`Netstorm.Client.Host.exe.local` 유지) `GALLIUM_DRIVER=llvmpipe` 환경에서 `python -X utf8 dotnetpj/tools/l2_compare.py --capture --host-exe extracted/dn-gl-run/Netstorm.Client.Host.exe --out extracted/dotnet-l2-0606 --mission thewarbegins`를 다시 실행한다. Mesa 실행 환경 세부사항(7z SHA-256·KnownDLL 리다이렉션·cursors 복사·`--host-exe` 옵션)은 [0.606 문서](docs/dotnet-l2-0606-20261117.md)에 있다. 성공 기준은 owner·frame·graph·totals 행의 일치 수 증가다.
-4. 정리: `extracted/`의 일회성 스크립트(`swap_fort_hook.py`·`wire_frame.py`·`fix_fort_hook.py`·`finalize_0607.py`·`dedup*.py`·`dbg*.py`·`procdump-run.txt`)는 인계용이 아니므로 삭제한다. `mesa/`·`dn-gl-run/`·`dotnet-l2-0606/`·`procdump64.exe`·Mesa 7z는 다음 L2 실행에 필요하므로 둔다.
+1. 현황: `HostSession.cs`의 요새 Pop 훅이 화신·사제·보호막·Player는 공통 Pop으로, 다리·섬·표면과 양쪽 표시 지원 표를 모두 만족하는 공통 타입은 `TerrainPopObject`로 등록하고, 나머지는 `FortPopSkips`에 기록만 남긴다(전용 파생 R6 대기·지원표 밖·장치 미연결 구별). 판정은 `RawPostPop.RequiresDedicatedPostPop`(`RawPostPop.Dispatch.cs`)과 `OriginalPopDisplay/OriginalUnpopDisplay.Supports` 조합이다. Release 빌드는 0경고·0오류다.
+2. 검사: 신규 `HostSessionFortPopTests` 2건 모두 통과(Client 전체 1265/1265). 실패 원인은 가설 (a)(Pop된 지원 타입 157·94·95의 비용이 모두 0)였으며, `TerrainPopCalls` type 목록과 `RiftTypeTable` 비용 대조로 확정했다. 단언을 총계 대신 `TotalMade` 누적으로 바꿨다(지형 생성 뒤 지역 1673→1813·전역 1673→1834). 비용이 있는 요새 8종(71·75·78·89·122·123·124·158)은 전용 파생(R6)이라 기록만 남는다.
+3. L2 재측정: HJOW-Athlon 실장치에서 `dotnet build` 뒤 같은 시드(1760000000)로 3경로 재수집했다. thewarbegins dn 1856→1885·cpp전용 85→56·소유자 464→497·타입 +8, tutorial1 동일, bc1menu76 cpp전용 111→106·소유자 +9. 덤프는 `extracted/dotnet-l2-0607/` 경로별 보관이다.
+4. 정리: 0.607 일회성 스크립트(`swap_fort_hook.py` 등)는 이 PC(`HJOW-Athlon`)에 없어 삭제할 것이 없었다. `mesa/`·`dn-gl-run/`도 이 PC에 없다(실장치 실행). 임시 진단(`extracted/diag-fortpop.txt`·`DiagFortPopTests.cs`)은 삭제했다.
 
 <a id="korean-font-change"></a>
 
@@ -1199,6 +1199,7 @@ cpppj/build/bin/Release/Netstorm.exe --run <데이터 사본> --mission thewarbe
 | 0.604 (11-17) | 적재 깊이 흐름 연결(깊이 1 프레임 선택 발화·깊이 0 유지 대조) | [단위 문서](docs/dotnet-session-loading-depth-20261117.md) | 새 경로 R4-2(깊이 흐름 연결 완료, 그래프·농지·장부 대조 잔여) |
 | 0.605 (11-17) | 그래프 per-Pop 결선(늦은 바인딩·그래프 관문·ResetGraph 발화·실제 지형 생성 결정성) | [단위 문서](docs/dotnet-session-terrain-graph-20261117.md) | 새 경로 R4-2(농지는 R6 파이프라인 대기, L2 대조는 0.606에서 재개) |
 | 0.606 (11-17) | L2 재측정과 격차 분석(Mesa 실행 환경 복구·신 오라클·3경로 대조·격차 3뿌리 특정) | [단위 문서](docs/dotnet-l2-0606-20261117.md) | 새 경로 R4-2(요새 일반 Pop 지원 타입부터, 31경로 전체·첫 지역·AI·정기 처리 잔여) |
+| 0.607 (11-18) | 요새 일반 Pop 결선 검증 완료(지원 타입 등록 확정·실패 단언을 TotalMade 누적으로·3경로 재측정 thewarbegins 개선·Client 전체1265/1265) | [단위 문서](docs/dotnet-fort-general-pop-20261118.md) | 새 경로 R4-2(비용 요새 8종은 R6 파생 대기, 농지·그래프·첫 지역·AI·정기 처리 잔여) |
 | 0.478~0.499 (11-12~14) | L2 기준선 확장 — 6번째~26번째 경로의 cpp 기준선·dn 덤프와 구조 대조, 담긴 섬 판정(0.484), 34경로 같은 시드 일괄 수집·도구(0.499) | [L2 일괄](docs/dotnet-l2-batch-20261114.md), 같은 보관본 | 새 경로 R4(M1 판정 자료) |
 | 0.453~0.477 (11-12) | 지형 바인딩 조립·Generate 라이브·난수 단일 스트림·시작 1회 reseed(0.453~0.465), Pop 공간 등록·요새 객체 적재·그래프 재구성(0.466~0.470), 장부·전투섬·첫 지역 귀속 확정과 Player 월드 갈고리(0.471~0.477) | 같은 보관본 | 새 경로 R4 |
 | 기간·단위 | 완료 범위 | 근거 문서 | 처리 |

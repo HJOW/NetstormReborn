@@ -80,14 +80,18 @@ public sealed class HostSessionFortPopTests
         HostSession first = BuildFortScene(startup, fort);
         int callsBeforeFort = first.TerrainPopCalls.Count;
         int totalsBeforeFort = first.DumpTotals().TotalCost;
+        // TotalMade 누계를 쓴다. 요새 지원 타입(표면 157·섬 94·종유 95)은 비용이 0이라 총계가 그대로다. 0.607 진단에서 확인했다.
+        long madeBeforeFort = SumTotalMade(first.DumpTotalMade());
         first.LoadFortObjects(fort.Fort, 1u);
         // 요새 객체 중 지원 타입은 분배 Pop으로 등록된다.
         Assert.True(first.TerrainPopCalls.Count > callsBeforeFort);
         Assert.Contains(first.TerrainPopCalls, entry => entry.Contains("island:ready") && entry.Contains("Registered"));
         // 전용 파생이 필요한 종류는 기록만 남는다.
         Assert.Contains(first.FortPopSkips, entry => entry.Contains("dedicated-r6"));
-        // 요새 건물 비용이 장부에 누적된다.
-        Assert.True(first.DumpTotals().TotalCost != totalsBeforeFort);
+        // 요새 지원 타입은 비용이 0이라 총계가 그대로이며 개수 장부(TotalMade)가 누적된다.
+        // 비용이 있는 요새 타입(71·75·78·89·122·123·124·158)은 전용 파생(R6)이라 기록만 남는다. 0.607에서 가설 (a)로 확정했다.
+        Assert.Equal(totalsBeforeFort, first.DumpTotals().TotalCost);
+        Assert.True(SumTotalMade(first.DumpTotalMade()) > madeBeforeFort);
         // 같은 입력의 다른 세션과 완전히 같다.
         HostSession second = BuildFortScene(startup, fort);
         second.LoadFortObjects(fort.Fort, 1u);
@@ -99,5 +103,18 @@ public sealed class HostSessionFortPopTests
 
         Assert.Equal(first.FortPopSkips.Count, second.FortPopSkips.Count);
         Assert.Equal(first.Pool.Bytes.ToArray(), second.Pool.Bytes.ToArray());
+    }
+
+    /// <summary>TotalMade 세 표의 합계를 구한다. 비용 0 타입의 등록도 센다.</summary>
+    /// <param name="made">덤프한 TotalMade 세 표다.</param>
+    /// <returns>세 표 합계다.</returns>
+    private static long SumTotalMade(Netstorm.Client.Automation.SessionDumpTotalMade made)
+    {
+        long total = 0;
+        // 세 표를 순서대로 더하는 반복문이다.
+        foreach (uint value in made.Local) total += value;
+        foreach (uint value in made.Built) total += value;
+        foreach (uint value in made.Global) total += value;
+        return total;
     }
 }
