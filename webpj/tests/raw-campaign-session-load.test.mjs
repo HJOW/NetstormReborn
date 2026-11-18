@@ -31,6 +31,7 @@ import { MissionScript } from '../www/core/mission-script.js';
 import { PacketConnection, RawPacketDispatch } from '../www/core/raw-packet-dispatch.js';
 import { ClientGameplayGlobals } from '../www/core/client-gameplay-globals.js';
 import { ClientConnectionGlobals } from '../www/core/client-connection-globals.js';
+import { ClientChatWindowGlobals } from '../www/core/client-chat-window-globals.js';
 import { installClientPacketDefaults } from '../www/core/client-campaign-transport.js';
 import { ClientUserSelectionGlobals } from '../www/core/client-user-selection-globals.js';
 import { RawUserHighlight } from '../www/core/raw-user-highlight.js';
@@ -605,13 +606,13 @@ test('CampaignSession TheWarBegins: 비미션 너겟의 단일 미션 진단', (
 
 // 공개 기술 표시는 실제 생산 부모의 중복 방지와 같은 Battle snapshot을 사용한다.
 test('CampaignSession TheWarBegins: Client 기본 69h와 실제 기술 부모', () => {
-    const storage = new CampaignTemplateStorage(), gameplay = new ClientGameplayGlobals(), players = new ClientPlayerRecords(), registry = new ClientConnectionGlobals();
+    const storage = new CampaignTemplateStorage(), gameplay = new ClientGameplayGlobals(), players = new ClientPlayerRecords(), registry = new ClientConnectionGlobals(), chat = new ClientChatWindowGlobals();
     const { s } = scene({ gameplayGlobals: gameplay, playerRecords: players, templateStorage: storage, fortMission: { current: () => 0 }, production: { allocationBytes: (bytes) => bytes.fill(0xa5), effects: { configInt: () => 0 } } });
     const runtime = { session: () => s }, dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
     try {
         s.load(); gameplay.bindRuntimeOwner(s, runtime);
         const surface = { gameAux: () => gameplay.gameAux(), assertDisplay: (...args) => s.world().storage.assertDisplay(...args) };
-        installClientPacketDefaults({ gameplayGlobals: () => gameplay, surfaceStorage: () => surface, connectionGlobals: () => registry, playerRecords: () => players }, dispatch);
+        installClientPacketDefaults({ gameplayGlobals: () => gameplay, surfaceStorage: () => surface, connectionGlobals: () => registry, playerRecords: () => players, chatWindowGlobals: () => chat }, dispatch);
         const packet = Uint8Array.of(1, 0x69, 7, 0, 2, 128, 0);
         assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
         assert.equal(gameplay.runtimeCallActive(s), false); assert.equal(gameplay.gameAux().typeUse()[0], 128);

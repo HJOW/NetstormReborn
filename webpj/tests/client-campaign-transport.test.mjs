@@ -15,6 +15,7 @@ import { ClientConnectionGlobals } from '../www/core/client-connection-globals.j
 import { RawPacketDispatch } from '../www/core/raw-packet-dispatch.js';
 import { observeBombEffectPacket } from '../www/core/raw-bomb-effect.js';
 import { ClientGameplayGlobals } from '../www/core/client-gameplay-globals.js';
+import { ClientChatWindowGlobals } from '../www/core/client-chat-window-globals.js';
 
 // 패킷 한 칸을 만든다: 크기만큼 0 으로 채우고 지정한 (오프셋, 값, 폭) 필드를 리틀엔디언으로 쓴다. (2026-11-12 WB04-E328)
 function packetOf(size, fields = [], fill = 0) {
@@ -160,8 +161,9 @@ function makeClient({ initialized = true } = {}) {
     const writes = [];
     const settings = new Uint32Array(7);
     const typeUse = new Uint8Array(256);
+    const chat = new ClientChatWindowGlobals();
     const header = [0x0c, 0x85];
-    const state = { milliseconds: 5000, initialLength: 0, server: { value: true } };
+    const state = { milliseconds: 5000, initialLength: 0, server: { value: true }, battle: false, subscriber: 100, menu: null };
     const sentMutable = [];
     const realSendMutable = registry.sendMutable.bind(registry);
     registry.sendMutable = (id, packet, players) => { sentMutable.push([id, Uint8Array.from(packet), players.length]); return realSendMutable(id, packet, players); };
@@ -172,14 +174,16 @@ function makeClient({ initialized = true } = {}) {
         gameClockOwner: () => ({ wallSeconds: (ms) => ms / 1000 }),
         clientMilliseconds: () => state.milliseconds,
         connectionGlobals: () => registry,
+        chatWindowGlobals: () => chat, currentSubscriber: () => state.subscriber, menu: () => state.menu,
         packetRecordOwner: () => ({ write: (outgoing, connection, packet, length) => { writes.push([outgoing, connection.sender, packet.length, length]); } }),
         surfaceStorage: () => ({
             assertDisplay: (expression, file, line) => { diagnostics.push([expression, file, line]); },
             gameAux: () => ({ packet0cHeader: () => header, packet0cInitialLength: () => state.initialLength }),
+            ownerMode: { get battle() { return state.battle; } },
         }),
         log: (text) => { log.push(text); },
     };
-    return { client, records, registry, log, diagnostics, writes, settings, header, state, sentMutable };
+    return { client, records, registry, log, diagnostics, writes, settings, header, state, sentMutable, chat };
 }
 
 // 열여덟 행 표: 종류·길이·C3 수신기·mutable 관찰기 구분이 원문과 같고 서로 겹치지 않는다.
@@ -220,8 +224,28 @@ test('Client 기본 등록 표: 설치된 version/policy/길이/관찰기/수신
     for (const type of [0x2a, 0x2b, 0x67, 0x81]) assert.equal(typeof dispatch.registration(type).packetObserver, 'function');
     assert.equal(typeof dispatch.registration(0x32).observer, 'function');
     assert.equal(typeof dispatch.registration(0x32).receive, 'function');
-    // 경로·압축 관찰기는 수신기를 설치하지 않는다. 채팅과 연결 종료는 후속이다.
-    for (const type of [0x02, 0x30, 0x41, 0x7a]) assert.equal(dispatch.registration(type).receive, null);
+    // 경로·압축 관찰기는 수신기를 설치하지 않는다. 연결 종료는 후속이다.
+    for (const type of [0x02, 0x30, 0x7a]) assert.equal(dispatch.registration(type).receive, null);
+});
+
+// 41h는 같은 장기 마스크를 사용하며 Chat 창이 있을 때만 현재 메뉴를 조회한다.
+test('Client 기본 등록 표: 41h 현재 Chat 수신과 대여 반납', () => {
+    const scene = makeScene(), transport = makeClientCampaignTransport(scene.client, CompositeTransportRole.InternalMission, scene.world), dispatch = transport.dispatch;
+    scene.registry.address = (sender) => { assert.equal(sender, 9); return new Uint8Array(20); };
+    scene.state.battle = true; const received = [];
+    const makePacket = () => {
+        const packet = packetOf(35, [[0, 1, 1], [1, 0x41, 1], [2, 4, 2], [5, 1, 1], [6, 100, 4], [10, 7, 2], [12, 9, 2], [14, 1, 1], [31, 100, 4]]);
+        packet.set(Buffer.from('Local\0\0'), 15); packet.set(Buffer.from('032hello\n'), 22); return packet;
+    };
+    const entry = dispatch.registration(0x41), observer = entry.packetObserver, receiver = entry.directReceive;
+    assert.deepEqual([entry.version, entry.mismatch, entry.length, typeof receiver], [1, 0, 0xffff, 'function']);
+    const lease = transport.bindSession({ name: 'Session' }); dispatch.registerDirect(0x41, () => {}); lease.detach();
+    assert.equal(dispatch.registration(0x41).directReceive, receiver);
+    const first = makePacket(); observer(first, 1); assert.equal(declared(first), 35); receiver(9, null, first);
+    assert.equal(scene.chat.receivedMask, 32); assert.equal(first[30], 0); assert.deepEqual(received, []);
+    scene.chat.window.current = 5; assert.throws(() => receiver(9, null, makePacket()), /Chat UI 없음/);
+    scene.state.menu = { receiveNativePacketChat: (packet) => received.push(packet) };
+    const second = makePacket(); receiver(9, null, second); assert.deepEqual(received, [second]);
 });
 
 // 장기 기본 경로·압축 관찰기는 Session 등록을 반납한 뒤에도 같은 진단을 사용한다.
