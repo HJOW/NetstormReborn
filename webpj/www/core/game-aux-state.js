@@ -101,6 +101,7 @@ export const GAME_AUX_FIELDS = Object.freeze([
     ['quickBuild', 0x0055a49c, 'u32', 0, null, '일반 건설의 현재 즉시 완료 DWORD'],
     ['quickVortex', 0x0055a498, 'u32', 0, null, '신전 건설의 현재 즉시 완료 DWORD'],
     ['developerCombatResizeCommand', 0x0054288c, 'u32', 0x02000065, null, '개발자 전투 패널 크기 변경의 현재 입력 명령'],
+    ['developerScatterRow', 0x005326d8, 'i32', 3, null, '개발자 객체 분산 생성의 현재 행 번호'],
     ['rainCannonType', 0x0054125c, 'u32', 129, 'rainCannon', '아이스 캐논의 현재 원문 역할 TYPE'],
     ['thunderCannonType', 0x00541264, 'u32', 131, 'thunderCannon', '썬더 캐논의 현재 역할 TYPE'],
     ['processFormType', 0x00541078, 'u32', 2, 'ProcessForm', '공통 Process 부모 Create/Take TYPE'],

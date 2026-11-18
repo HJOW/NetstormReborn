@@ -1,6 +1,7 @@
 // 개발자 객체 명령의 권한 분기·실제 장치 순서·SID 경계를 확인한다.
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { GameAuxState } from '../www/core/game-aux-state.js';
 import { executeDeveloperObjects } from '../www/core/raw-campaign-developer-objects.js';
 
 // 같은 슬롯과 선택 효과를 기록하는 독립 Session 입력이다.
@@ -54,4 +55,53 @@ test('개발자 객체: HP·추상 상태와 피해 전달', () => {
     assert.deepEqual(s.calls, [['damage', 5, 0xffffffff, 0, 0]]);
     s.calls.length = 0; executeDeveloperObjects('ad -1 4', s.owner, s.trace); executeDeveloperObjects('slhp 5', s.owner, s.trace);
     assert.deepEqual(s.calls, [['trace', 29, 'bad command\n'], ['trace', 29, 'bad command.\n']]);
+});
+
+// create는 두 signed 입력 뒤 서버에서만 frame을 직접 쓰고 같은 좌표 20·20에 배치한다.
+test('개발자 객체: create의 입력·서버 권한·frame과 Pop 순서', () => {
+    const s = scene(), raw = s.slots[7];
+    s.owner.world.create = (...args) => { s.calls.push(['create', ...args]); return 7; };
+    s.owner.world.pop = (...args) => s.calls.push(['pop', ...args]);
+    executeDeveloperObjects('c -1 -2', s.owner, s.trace);
+    assert.deepEqual(s.calls, [['create', 0xffffffff, 0], ['pop', 7, 20, 20, 0]]);
+    assert.equal(new DataView(raw.buffer).getUint32(36, true), 0xfffffffe);
+    s.calls.length = 0; s.owner.core.processState.server = false;
+    assert.equal(executeDeveloperObjects('create 70 2', s.owner, s.trace), true);
+    assert.deepEqual(s.calls, []);
+    s.owner.core.processState.server = true; executeDeveloperObjects('create 70', s.owner, s.trace);
+    assert.deepEqual(s.calls, [['trace', 29, 'bad command.\n']]);
+    s.calls.length = 0; s.owner.world.create = () => 0;
+    assert.throws(() => executeDeveloperObjects('c 70 2', s.owner, s.trace), /NULL 슬롯/);
+});
+
+// scatter는 열마다 생성·현재 TYPE 프레임 수·CRT 소비·frame/Pop 순서를 반복하고 행은 마지막에 한 번만 회전한다.
+test('개발자 객체: scatter의 열·CRT·행 회전과 클라이언트 생략', () => {
+    const s = scene(), aux = new GameAuxState(), frames = Array.from({ length: 188 }, () => ({ codes: [] }));
+    const rolls = [9, 2, 7, 4, 1, 6, 3, 8, 5, 0], created = [];
+    frames[70].codes = Array.from({ length: 4 }, () => ({})); s.owner.core.frames = frames;
+    s.owner.gameplayGlobals = { gameAux: () => aux };
+    s.owner.particleCrt = { next: () => { const roll = rolls.shift(); s.calls.push(['crt', roll]); return roll; } };
+    s.owner.world.create = (type, flags) => {
+        const target = created.length + 1; created.push(target); s.slots[target][10] = 70;
+        s.calls.push(['create', target, type, flags]); return target;
+    };
+    s.owner.world.pop = (...args) => s.calls.push(['pop', ...args]);
+    aux.developerScatterRow = 9;
+    assert.equal(executeDeveloperObjects('sct 70', s.owner, s.trace), true);
+    assert.deepEqual(created, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
+    assert.equal(aux.developerScatterRow, 1); assert.deepEqual(rolls, []);
+    assert.deepEqual(created.map((target) => new DataView(s.slots[target].buffer).getUint32(36, true)), [1, 2, 3, 0, 1, 2, 3, 0, 1, 0]);
+    assert.deepEqual(s.calls.filter(([name]) => name === 'pop'), created.map((target, index) => ['pop', target, 3 + index * 3, 9, 0]));
+    // 각 생성 슬롯의 CRT 소비가 해당 Pop보다 먼저 일어났는지 확인한다.
+    for (let index = 0; index < created.length; index += 1) {
+        const create = s.calls.indexOf(s.calls.find((call) => call[0] === 'create' && call[1] === created[index]));
+        const crt = s.calls.findIndex((call, callIndex) => callIndex > create && call[0] === 'crt');
+        const pop = s.calls.findIndex((call, callIndex) => callIndex > crt && call[0] === 'pop' && call[1] === created[index]);
+        assert.ok(create < crt && crt < pop);
+    }
+    s.calls.length = 0; s.owner.core.processState.server = false; rolls.push(123);
+    executeDeveloperObjects('scatter 70 trailing', s.owner, s.trace);
+    assert.deepEqual(s.calls, []); assert.deepEqual(rolls, [123]); assert.equal(aux.developerScatterRow, 1);
+    s.owner.core.processState.server = true; executeDeveloperObjects('scatter', s.owner, s.trace);
+    assert.deepEqual(s.calls, [['trace', 29, 'bad command.\n']]);
 });

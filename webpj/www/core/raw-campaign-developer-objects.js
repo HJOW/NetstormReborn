@@ -61,6 +61,33 @@ export function executeDeveloperObjects(text, owner, trace) {
         if (typeof owner.developerDamage !== 'function') throw new Error('개발자 피해의 실제 가상98 미연결');
         owner.developerDamage(sid(core.pool, values[0]), values[1] >>> 0, 0, 0); return true;
     }
+    if (key === 'create' || key === 'c') {
+        const values = readDeveloperIntegers(rest, 2);
+        if (values.length !== 2) { log('bad command.\n'); return true; }
+        if (!core.processState.server) return true;
+        const target = owner.world.create(values[0] >>> 0, 0);
+        if (!target) throw new Error('개발자 create의 원문 NULL 슬롯');
+        const raw = core.pool.allocated(target); new DataView(raw.buffer, raw.byteOffset, raw.byteLength).setUint32(36, values[1] >>> 0, true);
+        owner.world.pop(target, 20, 20, 0); return true;
+    }
+    if (key === 'scatter' || key === 'sct') {
+        const values = readDeveloperIntegers(rest, 1);
+        if (values.length !== 1) { log('bad command.\n'); return true; }
+        if (!core.processState.server) return true;
+        const aux = owner.gameplayGlobals.gameAux();
+        // 각 열에서 생성·현재 프레임 수 조회·CRT 한 번 소비·Pop 순서를 유지한다.
+        for (let x = 3; x < 33; x += 3) {
+            const target = owner.world.create(values[0] >>> 0, 0);
+            if (!target) throw new Error('개발자 scatter의 원문 NULL 슬롯');
+            const type = core.pool.slot(target)[10];
+            if (type >= core.frames.length) throw new RangeError('개발자 scatter의 현재 TYPE 물리 범위');
+            const count = core.frames[type].codes.length, roll = owner.particleCrt.next();
+            if (!count || count > 0x7fffffff) throw new RangeError('개발자 scatter의 원문 나눗셈 프레임 개수');
+            const raw = core.pool.allocated(target); new DataView(raw.buffer, raw.byteOffset, raw.byteLength).setUint32(36, roll % count, true);
+            owner.world.pop(target, x, Math.fround(aux.developerScatterRow), 0);
+        }
+        aux.developerScatterRow = ((aux.developerScatterRow + 2) | 0) % 10; return true;
+    }
     if (key === 'destroy' || key === 'de') {
         if (!core.processState.server) return true;
         const values = readDeveloperIntegers(rest, 1);

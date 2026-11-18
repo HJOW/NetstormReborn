@@ -630,3 +630,26 @@ test('CampaignSession Tutorial 1: 개발자 패널 크기 패킷', () => {
         assert.deepEqual(queued, [[0x02000065, 2, 4]]);
     } finally { s.dispose(); }
 });
+
+// 실제 31h 분배기는 create/scatter를 같은 Session의 Factory·Pool·CRT·World에 연결한다.
+test('CampaignSession Tutorial 1: 개발자 생성과 분산 패킷', () => {
+    const gameplay = new ClientGameplayGlobals(), { s } = scene({ gameplayGlobals: gameplay });
+    const dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); s.registerCarrierCommandPrefix(dispatch);
+        let previous = s.world().objects();
+        const created = [];
+        // 두 명령을 실제 패킷 경계로 순서대로 전달하고 새 객체를 모은다.
+        for (const text of ['create 154 2', 'scatter 154']) {
+            const packet = new Uint8Array(9 + text.length);
+            packet.set([1, 0x31, packet.length, 0]); new DataView(packet.buffer).setUint32(4, text.length + 1, true);
+            packet.set(Uint8Array.from(text, (letter) => letter.charCodeAt(0)), 8);
+            assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
+            const current = s.world().objects();
+            created.push(...current.filter(({ sid }) => !previous.some((old) => old.sid === sid))); previous = current;
+        }
+        assert.equal(created.length, 11); assert.equal(gameplay.gameAux().developerScatterRow, 5);
+        assert.deepEqual(created[0].object, { type: 154, owner: 0, frame: 2, x: 20, y: 20 });
+        assert.deepEqual(created.slice(1).map(({ object }) => [object.x, object.y]), [[3, 3], [6, 3], [9, 3], [12, 3], [15, 3], [18, 3], [21, 3], [24, 3], [27, 3], [30, 3]]);
+    } finally { s.dispose(); }
+});
