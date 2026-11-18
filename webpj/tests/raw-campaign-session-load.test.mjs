@@ -626,6 +626,32 @@ test('CampaignSession TheWarBegins: 동맹 요청 직접 수신', () => {
     assert.throws(() => s.registerAllianceNegotiationCommands(dispatch), /반납/);
 });
 
+// 튜토리얼 2는 실제 로그인 옵션·제작 집계·현재 생산 목록과 UI 경계를 함께 사용한다.
+test('CampaignSession TheWarBegins: 튜토리얼 2 로그인 옵션과 제작 판정', () => {
+    const gameplay = new ClientGameplayGlobals(), events = [], state = createMissionFrameGateState(); let now = 42;
+    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {} };
+    const { s } = scene({ gameplayGlobals: gameplay, localLogin, production: { allocationBytes: (bytes) => bytes.fill(0) }, ai: { participation: { addChat: () => {}, clearChat: () => {} } } });
+    const gateHooks = Object.fromEntries(['checkOutcome', 'dialogsClear', 'knowledgeOpen', 'guideOpen', 'blockingGumpOpen', 'tellStage', 'tellAt', 'endDemo', 'tutorial', 'pause', 'resume'].map((name) => [name, forbidden(name)]));
+    gateHooks.gameSeconds = () => now; gateHooks.paused = () => false; const gate = new RawMissionFrameGate(state, gateHooks);
+    const ui = { gameSeconds: () => now, selected: () => 0, resetSelection: () => events.push('reset'), clearSelection: () => events.push('clear'), tell: forbidden('안내'), closeTransientGumps: forbidden('창 닫기') };
+    try {
+        assert.throws(() => s.makeTutorialTwo(gate, ui), /로그인 설치 전/); s.loadLocalConnection();
+        const early = s.makeTutorialTwo(gate, ui), core = s.core(), counts = core.bookkeeping.localSecondaryCounts(); counts.fill(0);
+        state.stage = 0x41; state.lockFrames = 0; early.handle(0);
+        assert.equal(s.battleOption(4), 0); assert.equal(s.battleOption(2), 2);
+        assert.equal(gameplay.manaRadius().value, gameplay.manaRanges()[0]); assert.equal(gameplay.energy.radiusSquared, Math.fround(gameplay.manaRanges()[0] ** 2));
+        const temple = core.types.findIndex((type, index) => index >= 70 && (type.flags2 & 0x200)); assert.ok(temple >= 70);
+        counts[temple] = 1; early.handle(0); assert.equal(state.stage, 0x42);
+        counts.fill(0); const workshop = core.types.findIndex((type, index) => index >= 70 && (type.flags2 & 0x4000)); assert.ok(workshop >= 70);
+        counts[workshop] = 1; state.lockFrames = 0; early.handle(0); assert.equal(state.stage, 0x43); assert.deepEqual(events, ['reset', 'clear']);
+        state.lockFrames = 0; early.handle(0); assert.equal(state.stage, 0x43); // 빈 실제 생산 목록에서는 단계를 유지한다.
+        state.stage = 0x48; state.lockFrames = 0; state.timerSeconds = 0; gameplay.denySalvage().value = -1;
+        early.handle(0x0200005d); assert.equal(gameplay.denySalvage().value, 0); assert.equal(state.timerSeconds, 44);
+        now = 44; early.handle(0); assert.equal(state.stage, 0x49);
+    } finally { s.dispose(); }
+    assert.throws(() => s.makeTutorialTwo(gate, ui), /반납/);
+});
+
 // 튜토리얼 1의 단계 조건은 현재 Session 제작 집계와 SP를 읽는다.
 test('CampaignSession TheWarBegins: 튜토리얼 1 현재 집계와 자금 판정', () => {
     const records = new ClientPlayerRecords(), { s } = scene({ playerRecords: records }), state = createMissionFrameGateState();

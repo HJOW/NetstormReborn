@@ -50,6 +50,7 @@ import { createCursorManaProcess } from './raw-cursor-mana.js';
 import { createCursorRangeProcess } from './raw-cursor-range.js';
 import { CameraHome } from './camera-home.js';
 import { RawTutorialOne } from './raw-tutorial-one.js';
+import { RawTutorialTwo } from './raw-tutorial-two.js';
 
 // 분산 SP DWORD를 원본 단정도로 읽고 같은 비트 표현으로 쓴다.
 function spFloat(bits) { const data = new DataView(new ArrayBuffer(4)); data.setUint32(0, bits, true); return data.getFloat32(0, true); }
@@ -733,6 +734,22 @@ export class RawCampaignSession {
         return new RawTutorialOne(state, o.players, o.world.storage.recentGeysers, {
             builtForGenus: (genus) => live().totalMade.builtForGenus(genus), graphFor: (sid) => live().anchor.graphFor(sid),
             money: (owner) => this.sp(owner), advance: () => gate.advance(), spawnGeysers: () => this.generateLocalGeysers(),
+        });
+    }
+    // 튜토리얼 2의 옵션·제작·생산 판정을 로그인된 같은 Session에 연결한다.
+    makeTutorialTwo(gate, hooks) {
+        const o = this.#live(); if (!o.loaded || !o.login?.options) throw new Error('로그인 설치 전 Early2 실제 판정 연결');
+        const live = () => this.#live();
+        const state = {
+            battleOptions: o.battleOptions,
+            get denySalvage() { return live().gameplayGlobals.denySalvage().value >>> 0; },
+            set denySalvage(value) { live().gameplayGlobals.denySalvage().value = value | 0; },
+            get workshopType() { return live().tutorialWorkshopType; }, get archerType() { return live().tutorialArcherType; },
+            get salvageCommand() { return live().tutorialSalvageCommand; },
+        };
+        return new RawTutorialTwo(o.core.pool, o.core.types, o.totalMade, gate, state, {
+            ...hooks, refreshEnergyRange: () => live().login.options.updateRange(),
+            productionContains: (type) => live().production.contains(type),
         });
     }
     // 현재 Client가 소유한 같은 카메라 전역을 빌린다.
