@@ -396,6 +396,14 @@ public sealed class ClientHostGame : Game
             // 농지 군집 배치 실결선. Generate 현장의 빈 place를 실제 파이프라인·단일·군집으로 잇는다.
             // 근거: cpppj RawCampaignSession.cpp 1826~1858행과 RawNormalTerrainWorldBinding.cpp 36~40행이다. (2026-11-18 0.614)
             session.BuildFarmPlacementDevices(types.Types, worldDefinitions, popShapes);
+            // 지역 칠하기·소유권 투표 실결선. 요새 적재 중 신전 배치가 투표·도장을 일으킨다.
+            // 근거: cpppj RawCampaignSession.cpp 1266~1267행의 ownership 조립이다. (2026-11-18 0.619)
+            session.BuildRegionOwnershipDevices(types.Types, () =>
+            {
+                int mode = 1;
+                _startup.Configuration.ReadInt("theammode", ref mode);
+                return unchecked((uint)mode);
+            });
             var worldOrder = new List<string>();
             RawCampaignWorldLoad worldLoad = session.BuildWorldLoad(
                 new IslandRuntimeHooks

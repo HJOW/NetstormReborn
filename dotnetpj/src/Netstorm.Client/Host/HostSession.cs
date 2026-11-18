@@ -1363,6 +1363,15 @@ public sealed partial class HostSession
                     PopWorldObject(sid, x, y, flags);
                     return;
                 }
+                // 신전(소용돌이)은 지역 투표 목록에 등록하고 즉시 투표·도장한다. 일반 Pop 분배는 기존 경로를 유지한다.
+                if (_regionOwnership is not null && _regionTemples is not null)
+                {
+                    uint number = Pool.Slot(sid)[RawSidPool.TypeOffset];
+                    if (number < (uint)types.Count && (types[(int)number].Flags2 & TypeFlag2.Vortex) != 0)
+                    {
+                        RegisterRegionTemple(sid, x, y);
+                    }
+                }
                 // 다리·섬·표면과 공통 지원 타입은 지형 분배 Pop으로 등록한다. 전용 파생이 필요한 종류는 기록만 남긴다.
                 if (TryPopFortTerrain(sid, x, y, flags))
                 {
@@ -1779,6 +1788,155 @@ public sealed partial class HostSession
     {
         RawFarmCluster cluster = _farmCluster ?? throw new InvalidOperationException("농지 군집 미연결");
         cluster.Place(area, region, quantity);
+    }
+
+    /// <summary>지역 칠하기·소유권 투표의 세션 소유 상태다. BuildRegionOwnershipDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-18 0.619에서 R4-2 지역 소유권 결선용으로 추가했다. 같은 인스턴스를 도장·투표가 빌리며 수명은 세션이 진다.</remarks>
+    private RegionPaintState? _regionPaintState;
+
+    /// <summary>지역 소유권 투표의 세션 소유 상태다. BuildRegionOwnershipDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-18 0.619에서 R4-2 지역 소유권 투표용으로 추가했다. 같은 인스턴스를 도장·투표가 빌리며 수명은 세션이 진다.</remarks>
+    private RegionOwnershipState? _regionOwnershipState;
+
+    /// <summary>지역 투표가 읽는 세션 소유 별도(outpost) 목록이다. BuildRegionOwnershipDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-18 0.619에서 R4-2 지역 소유권 투표용으로 추가했다. 단독 미션 적재 스코프에서는 비어 있다.</remarks>
+    private RawPostPopList? _regionAdditional;
+
+    /// <summary>지역 투표가 읽는 세션 소유 신전 목록이다. BuildRegionOwnershipDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-18 0.619에서 R4-2 지역 소유권 투표용으로 추가했다. 요새 적재 중 신전 배치를 만나면 등록한다.</remarks>
+    private RawPostPopList? _regionTemples;
+
+    /// <summary>지역 투표가 읽는 세션 소유 타입별 테마 표다. BuildRegionOwnershipDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-18 0.619에서 R4-2 지역 소유권 투표용으로 추가했다. 같은 인스턴스를 투표가 빌린다.</remarks>
+    private uint[]? _regionThemes;
+
+    /// <summary>지역 getter용 세션 소유 지형 몸체다. BuildRegionOwnershipDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-18 0.619에서 R4-2 지역 소유권 투표용으로 추가했다. 배치 순회에는 쓰지 않고 RegionAt 조회에만 쓴다.</remarks>
+    private RawCanonPlacementTerrain? _regionTerrain;
+
+    /// <summary>지역 getter용 세션 소유 지형 상태다. BuildRegionOwnershipDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-18 0.619에서 R4-2 지역 소유권 투표용으로 추가했다. 같은 인스턴스를 지형 몸체가 빌린다.</remarks>
+    private CanonPlacementTerrainState? _regionTerrainState;
+
+    /// <summary>같은 월드의 실제 지역 도장 몸체다. BuildRegionOwnershipDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-18 0.619에서 R4-2 지역 칠하기 결선용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 1266~1267행의 ownership 조립이다.</remarks>
+    private RawRegionPaint? _regionPaint;
+
+    /// <summary>같은 월드의 실제 지역 투표 몸체다. BuildRegionOwnershipDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-18 0.619에서 R4-2 지역 소유권 투표용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 1266~1267행의 ownership 조립이다.</remarks>
+    private RawRegionOwnership? _regionOwnership;
+
+    /// <summary>지역 칠하기·소유권 투표 장치를 세션에 연결한다. 요새 객체 적재의 신전 배치가 투표를 일으킨다.</summary>
+    /// <param name="types">같은 실제 TYPE 표다. 지형 Pop 장치와 같은 인스턴스여야 한다.</param>
+    /// <param name="themeMode">패치 theammode 읽기다. 없으면 1(켜짐)을 쓴다.</param>
+    /// <exception cref="InvalidOperationException">지역 투표의 지형 장치가 미연결이다.</exception>
+    /// <exception cref="ArgumentException">지역 투표의 TYPE·풀 불일치다.</exception>
+    /// <remarks>2026-11-18 0.619에서 R4-2 지역 소유권 결선용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 1266~1267행의 ownership 조립과 RawCampaignOwnership.cpp 49~53행의 paint·ownership·terrain 결선이다. 공장 후처리·신전 경로의 실제 트리거는 R4-6·R6에서 잇는다.</remarks>
+    public void BuildRegionOwnershipDevices(IReadOnlyList<OriginalTypeRecord> types, Func<uint>? themeMode = null)
+    {
+        ArgumentNullException.ThrowIfNull(types);
+        if (_regionPaint is not null || _regionOwnership is not null)
+        {
+            throw new InvalidOperationException("지역 투표 장치 중복 연결");
+        }
+
+        RawSquidHash hash = _terrainHash ?? throw new InvalidOperationException("지역 투표 공간 해시 미연결");
+        IReadOnlyList<OriginalTypeRecord> popTypes = _terrainPopTypes ?? throw new InvalidOperationException("지역 투표 지형 TYPE 미연결");
+        if (!ReferenceEquals(types, popTypes))
+        {
+            throw new ArgumentException("지역 투표 TYPE은 지형 Pop 장치와 같은 인스턴스여야 한다", nameof(types));
+        }
+
+        if (WorldFrames.Length != types.Count)
+        {
+            throw new ArgumentException("지역 투표 프레임 표 크기 오류", nameof(types));
+        }
+
+        ushort[] surfaces = hash.BorrowEntries(0);
+        var paintState = new RegionPaintState();
+        var ownershipState = new RegionOwnershipState();
+        var additional = new RawPostPopList();
+        var temples = new RawPostPopList();
+        var regionThemes = new uint[types.Count];
+        // 모든 타입 번호마다 현재 테마 값을 넣는 반복문이다. 투표의 kind→테마 판정이 읽는다.
+        for (int i = 0; i < regionThemes.Length; ++i)
+        {
+            regionThemes[i] = unchecked((uint)types[i].Theme);
+        }
+
+        var terrainState = new CanonPlacementTerrainState();
+        var plain = new PriestPlainCanonType[types.Count];
+        // 모든 타입 번호마다 빈 프레임 표를 넣는 반복문이다. RegionAt 조회는 프레임을 읽지 않는다.
+        for (int i = 0; i < plain.Length; ++i)
+        {
+            plain[i] = new PriestPlainCanonType();
+        }
+
+        var terrain = new RawCanonPlacementTerrain(Pool, types, plain, surfaces, terrainState, new CanonPlacementTerrainHooks
+        {
+            CandidatePermission = (_, _) => throw new InvalidOperationException("지역 소유권 getter의 배치 후보 호출"),
+            ShapePermission = (_, _) => throw new InvalidOperationException("지역 소유권 getter의 배치 모양 호출"),
+            FinishRelations = (_, _) => throw new InvalidOperationException("지역 소유권 getter의 배치 완료 호출"),
+        });
+        var paintHooks = new RegionPaintHooks
+        {
+            SetOwner = SetWorldObjectOwner,
+            BoundaryAt = (x, y, type) => FindTerrainObjectAt(types, x, y, type),
+            RegionAt = (x, y) => terrain.RegionAt((int)x, (int)y),
+        };
+        var paint = new RawRegionPaint(Pool, WorldFrames, surfaces, TerrainGlobals.IslandType, PlacementState.EdgeFarmType, Game, paintState, ownershipState, paintHooks);
+        var ownershipHooks = new RegionOwnershipHooks { ThemeMode = themeMode ?? (() => 1u) };
+        ownershipHooks = RawRegionPaint.MakePaintOwnershipHooks(Pool, paint, ownershipHooks);
+        ownershipHooks = RawRegionOwnership.MakeTerrainRegionOwnershipHooks(Pool, terrain, ownershipHooks);
+        var ownership = new RawRegionOwnership(Pool, additional, temples, regionThemes, ownershipState, ownershipHooks);
+        _regionPaintState = paintState;
+        _regionOwnershipState = ownershipState;
+        _regionAdditional = additional;
+        _regionTemples = temples;
+        _regionThemes = regionThemes;
+        _regionTerrainState = terrainState;
+        _regionTerrain = terrain;
+        _regionPaint = paint;
+        _regionOwnership = ownership;
+    }
+
+    /// <summary>지역 투표 몸체를 빌려준다. 연결하기 전에는 예외다.</summary>
+    /// <returns>같은 월드의 실제 지역 투표 몸체다.</returns>
+    /// <remarks>2026-11-18 0.619에서 추가했다. 공장·신전 트리거 결선(R4-6·R6) 전까지는 적재 중 신전 배치만 투표를 일으킨다.</remarks>
+    public RawRegionOwnership RegionOwnership => _regionOwnership ?? throw new InvalidOperationException("지역 투표 미연결");
+
+    /// <summary>지역 도장 몸체를 빌려준다. 연결하기 전에는 예외다.</summary>
+    /// <returns>같은 월드의 실제 지역 칠하기 몸체다.</returns>
+    /// <remarks>2026-11-18 0.619에서 추가했다. 소유자 투표의 도장 효과를 L2에서 대조할 때 쓴다.</remarks>
+    public RawRegionPaint RegionPaint => _regionPaint ?? throw new InvalidOperationException("지역 도장 미연결");
+
+    /// <summary>지역 신전 목록을 빌려준다. 연결하기 전에는 예외다.</summary>
+    /// <returns>요새 적재 중 등록한 신전 목록이다.</returns>
+    /// <remarks>2026-11-18 0.619에서 추가했다. 단독 미션 적재 스코프에서는 요새 신전만 들어간다.</remarks>
+    public RawPostPopList RegionTemples => _regionTemples ?? throw new InvalidOperationException("지역 신전 목록 미연결");
+
+    /// <summary>신전 배치를 지역 투표 목록에 등록하고 즉시 투표·도장한다. Generate 뒤 Objects 적재에서 신전을 만나면 부른다.</summary>
+    /// <param name="sid">등록할 신전 슬롯 번호다.</param>
+    /// <param name="x">신전 가로 좌표다.</param>
+    /// <param name="y">신전 세로 좌표다.</param>
+    /// <remarks>2026-11-18 0.619에서 R4-2 지역 소유권 결선용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 2694행의 vortex regionOwnership 호출과 RawAssetPostPop.cpp 287행의 신전 목록 등록이다. 좌표 쓰기·목록 등록·투표까지만 수행하고 신전 전용 후처리 본체는 R6에서 잇는다.</remarks>
+    public void RegisterRegionTemple(int sid, float x, float y)
+    {
+        RawPostPopList temples = _regionTemples ?? throw new InvalidOperationException("지역 신전 목록 미연결");
+        RawRegionOwnership ownership = _regionOwnership ?? throw new InvalidOperationException("지역 투표 미연결");
+        Span<byte> raw = Pool.AllocatedBytes(sid);
+        uint xb = BitConverter.SingleToUInt32Bits(x);
+        uint yb = BitConverter.SingleToUInt32Bits(y);
+        raw[14] = unchecked((byte)xb);
+        raw[15] = unchecked((byte)(xb >> 8));
+        raw[16] = unchecked((byte)(xb >> 16));
+        raw[17] = unchecked((byte)(xb >> 24));
+        raw[18] = unchecked((byte)yb);
+        raw[19] = unchecked((byte)(yb >> 8));
+        raw[20] = unchecked((byte)(yb >> 16));
+        raw[21] = unchecked((byte)(yb >> 24));
+        temples.Append(sid);
+        ownership.Update(x, y);
     }
 
     public void RebuildWorldGraph(bool mode)
