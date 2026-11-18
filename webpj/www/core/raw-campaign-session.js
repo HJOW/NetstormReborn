@@ -27,6 +27,7 @@ import { executeDeveloperReports } from './raw-campaign-developer-reports.js';
 import { executeDeveloperObjects } from './raw-campaign-developer-objects.js';
 import { executeDeveloperBridge } from './raw-campaign-developer-bridge.js';
 import { executeDeveloperSubscriber } from './raw-campaign-developer-subscriber.js';
+import { executeDeveloperDevices } from './raw-campaign-developer-devices.js';
 import { RawPriestMenu, bindPriestMenuWorld, createPriestMenuState } from './raw-priest-menu.js';
 import { GunProcess, GunProcessFields } from './raw-gun-process.js';
 import { FlyerProcess, FlyerProcessFields, RawFlyerProcess } from './raw-flyer-process.js';
@@ -88,7 +89,7 @@ export class RawCampaignSession {
             o.executeDeveloperCommand = (text) => {
                 const current = this.#live();
                 const trace = (level, message) => current.world.storage.traceGraph(level, message);
-                if (!executeDeveloperBridge(text, current.world.storage, trace) && !executeDeveloperSubscriber(text, current, trace) && !executeDeveloperSettings(text, current.gameplayGlobals.gameAux(), trace, current.services) && !executeDeveloperPlayers(text, current.players, trace, (owner, target) => current.participation.addAlly(owner, target)) && !executeDeveloperReports(text, current.core, current.world.storage.graph, trace, current.world.storage) && !executeDeveloperObjects(text, current, trace)) throw new Error('개발자 명령의 나머지 해석기 미연결');
+                if (!executeDeveloperBridge(text, current.world.storage, trace) && !executeDeveloperSubscriber(text, current, trace) && !executeDeveloperSettings(text, current.gameplayGlobals.gameAux(), trace, current.services) && !executeDeveloperPlayers(text, current.players, trace, (owner, target) => current.participation.addAlly(owner, target)) && !executeDeveloperReports(text, current.core, current.world.storage.graph, trace, current.world.storage) && !executeDeveloperObjects(text, current, trace) && !executeDeveloperDevices(text, current.gameplayGlobals.cursor, current.services, trace)) throw new Error('개발자 명령의 나머지 해석기 미연결');
             };
             o.refreshLocalRitual = () => {
                 const current = this.#live();

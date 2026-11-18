@@ -58,6 +58,7 @@ function scene(overrides = {}, savedFort = fort) {
         assets: { postPop: { playImpactSound: () => trace.push('impact') }, queueCommand: (...args) => queue.pushCommand(...args) },
         templateStorage: overrides.templateStorage, playerRecords: overrides.playerRecords, coreDataGlobals: overrides.coreDataGlobals, subscriberGlobals: overrides.subscriberGlobals, missionFortRequest: overrides.missionFortRequest, missionSubscriber: overrides.missionSubscriber, missionOptions: overrides.missionOptions, fortMission: overrides.fortMission, production: overrides.production, newTechnology: overrides.newTechnology, localLogin: overrides.localLogin,
         gameplayGlobals: overrides.gameplayGlobals, surfaceStorage: overrides.surfaceStorage, processKernel: overrides.processKernel, localStateGlobals: overrides.localStateGlobals, cameraScreenSize: overrides.cameraScreenSize, developerQueue: overrides.developerQueue, motion: overrides.motion,
+        developerHeapTrace: overrides.developerHeapTrace, developerQueryDirectDraw: overrides.developerQueryDirectDraw, developerRecordLabel: overrides.developerRecordLabel,
         sound: { wallSeconds: () => 0, play: forbidden('소리'), playOnceAt: forbidden('위치 소리'), playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false, ...overrides.sound },
         player: { log: overrides.playerLog ?? (() => trace.push('log')) }, construction: overrides.construction, missionOutcome: overrides.missionOutcome, factoryTell: overrides.factoryTell,
         ai: { assertion: forbidden('AI 진단'), ...overrides.ai },
@@ -1074,6 +1075,27 @@ test('CampaignSession TheWarBegins: 개발자 생성과 분산 패킷', () => {
         assert.deepEqual(created[0].object, { type: 154, owner: 0, frame: 2, x: 20, y: 20 });
         assert.deepEqual(created.slice(1).map(({ object }) => [object.x, object.y]), [[3, 3], [6, 3], [9, 3], [12, 3], [15, 3], [18, 3], [21, 3], [24, 3], [27, 3], [30, 3]]);
     } finally { s.dispose(); }
+});
+
+// 실제 31h 분배기는 현재 Client 장치와 기록 관문을 공유한다.
+test('CampaignSession TheWarBegins: 개발자 장치 명령 패킷', () => {
+    const calls = [], gameplay = new ClientGameplayGlobals(), { s } = scene({ gameplayGlobals: gameplay,
+        developerHeapTrace: (value) => calls.push(['heap', value]), developerQueryDirectDraw: () => calls.push(['query']), developerRecordLabel: (label) => calls.push(['label', label]) });
+    const dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); s.registerCarrierCommandPrefix(dispatch);
+        // 같은 31h 수신기로 각각 실제 장치 명령을 전달한다.
+        for (const text of ['ht -1', 'qdd', 'al ignored']) {
+            const packet = new Uint8Array(9 + text.length); packet.set([1, 0x31, packet.length, 0]);
+            new DataView(packet.buffer).setUint32(4, text.length + 1, true); packet.set(Uint8Array.from(text, (letter) => letter.charCodeAt(0)), 8);
+            assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
+        }
+        gameplay.cursor.recording = 1;
+        const text = 'al named', packet = new Uint8Array(9 + text.length); packet.set([1, 0x31, packet.length, 0]);
+        new DataView(packet.buffer).setUint32(4, text.length + 1, true); packet.set(Uint8Array.from(text, (letter) => letter.charCodeAt(0)), 8);
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
+        assert.deepEqual(calls, [['heap', true], ['query'], ['label', 'named']]);
+    } finally { gameplay.cursor.recording = 0; s.dispose(); }
 });
 
 // 실제 31h 분배기는 도움말을 같은 월드의 추적 장치에 순서대로 전달한다.
