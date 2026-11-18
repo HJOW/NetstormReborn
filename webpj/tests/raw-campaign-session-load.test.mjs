@@ -93,7 +93,7 @@ function scene(overrides = {}, savedFort = fort) {
         templateStorage: overrides.templateStorage, playerRecords: overrides.playerRecords, coreDataGlobals: overrides.coreDataGlobals, subscriberGlobals: overrides.subscriberGlobals, missionFortRequest: overrides.missionFortRequest, missionSubscriber: overrides.missionSubscriber, missionOptions: overrides.missionOptions, fortMission: overrides.fortMission, fortBadges: overrides.fortBadges, production: overrides.production, newTechnology: overrides.newTechnology, localLogin: overrides.localLogin,
         ownerColorTables: overrides.ownerColorTables, gameplayGlobals: overrides.gameplayGlobals, surfaceStorage: overrides.surfaceStorage, processKernel: overrides.processKernel, localStateGlobals: overrides.localStateGlobals, connectionActivityGlobals: overrides.connectionActivityGlobals, connectionRegistry: overrides.connectionRegistry, cameraScreenSize: overrides.cameraScreenSize, cameraCommit: overrides.cameraCommit, developerQueue: overrides.developerQueue, motion: overrides.motion, randomGlobals: overrides.randomGlobals, spGlobals: overrides.spGlobals,
         developerHeapTrace: overrides.developerHeapTrace, developerQueryDirectDraw: overrides.developerQueryDirectDraw, developerRecordLabel: overrides.developerRecordLabel,
-        sound: { wallSeconds: () => 0, play: forbidden('소리'), playOnceAt: forbidden('위치 소리'), playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false, ...overrides.sound },
+        battlePeers: overrides.battlePeers, sound: { wallSeconds: () => 0, play: forbidden('소리'), playOnceAt: forbidden('위치 소리'), playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false, ...overrides.sound },
         player: { log: overrides.playerLog ?? (() => trace.push('log')) }, construction: overrides.construction, missionOutcome: overrides.missionOutcome, factoryTell: overrides.factoryTell,
         ai: { assertion: forbidden('AI 진단'), ...overrides.ai },
     });
@@ -679,6 +679,32 @@ test('Client 전투 종료 프레임: 실제 소유자와 내부 로그인 결�
         assert.equal(gameplay.gameAux().battleFinishFrames, 0); assert.equal(resultState.value, 1); assert.deepEqual(events, ['dialog', 'delete']);
         assert.deepEqual(queue.pop(false), { code: 0x020000c5, x: 1, y: 1 });
     } finally { s.dispose(); }
+});
+
+// 실제 Session의 6fh 거절은 현재 flags 정리 뒤 같은 패킷을 방송한다.
+test('Client 전투 종료 프레임: Session의 실제 무승부 거절과 방송', () => {
+    const gameplay = new ClientGameplayGlobals(), players = new ClientPlayerRecords(), local = new ClientLocalStateGlobals(), connections = new ClientConnectionGlobals(local), queue = new InputQueue(), events = [];
+    let failTell = false;
+    const peers = new Array(9).fill(null); peers[2] = (packet) => events.push(['broadcast', [...packet]]);
+    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {} };
+    const { s } = scene({ gameplayGlobals: gameplay, playerRecords: players, localStateGlobals: local, connectionRegistry: connections, battlePeers: peers, localLogin,
+        factoryTell: (text) => { if (failTell) throw new Error('Tell 실패'); events.push(['tell', text]); }, ai: { participation: { addChat: () => {}, clearChat: () => {} } } });
+    const client = { edition: () => 'patch1078', gameplayGlobals: () => gameplay, localStateGlobals: () => local, surfaceStorage: () => s.world().storage,
+        playerRecords: () => players, connectionGlobals: () => connections, input: () => queue, time: () => ({ game: 20 }), wallSeconds: () => 100 };
+    try {
+        s.startLocalConnection(); s.pumpLocalConnection(); s.pollLocalConnectionState(); s.pumpLocalConnection(); assert.equal(s.localConnectionReady(), true);
+        gameplay.world.missionPost = false; local.scriptBreak().value = 0; local.loginEnd().value = 0;
+        const rows = players.records(), view = new DataView(rows.buffer, rows.byteOffset, rows.byteLength), alliances = players.alliances();
+        view.setUint32(180 + 0x2c, 1, true); view.setUint32(2 * 180 + 0x2c, 2, true);
+        rows[180 + 0x50] = 0xa3; rows[2 * 180 + 0x50] = 0x23; alliances[1 * 9 + 2] = 0; alliances[2 * 9 + 1] = 0;
+        gameplay.gameAux().battleFinishFrames = 5; gameplay.gameAux().scheduledDrawDeadline = 20;
+        pollClientBattleCompletion(client);
+        assert.equal(gameplay.gameAux().scheduledDrawDeadline, 0); assert.equal(rows[180 + 0x50] & 0x80, 0);
+        assert.deepEqual(events, [['tell', 'DrawNotAccepted'], ['broadcast', [1, 0x6f, 6, 0, 0, 0]]]); assert.equal(queue.empty, true);
+        rows[180 + 0x50] |= 0x80; failTell = true;
+        assert.throws(() => s.rejectDraw(), /Tell 실패/); assert.notEqual(rows[180 + 0x50] & 0x80, 0); assert.equal(events.length, 2);
+    } finally { s.dispose(); }
+    assert.throws(() => s.rejectDraw(), /반납/);
 });
 
 // 로그인된 실제 내부 전송은 사제 이동 요청을 지연 송신해 같은 Host의 경로로 연결한다.

@@ -33,7 +33,7 @@ export function pollClientBattleCompletion(client, devices = {}) {
     const frameHooks = {
         wallSeconds: () => client.wallSeconds(), currentDialog: () => need(devices.currentDialog, '현재 대화상자')(),
         assertion: (expression, file, line) => storage.assertDisplay(expression, file, line),
-        deleteSavedState: () => need(devices.deleteSavedState, '저장 정리')(), rejectDraw: () => need(devices.rejectDraw, '무승부 거절')(),
+        deleteSavedState: () => need(devices.deleteSavedState, '저장 정리')(), rejectDraw: () => game.requireSession().rejectDraw(),
         queueMainMenu: () => { const command = gameMenuCommandValue(0x00542a08); if (command === null) throw new Error('전투 종료의 실제 메뉴 명령 누락'); client.input().pushCommand(command, 1, 1); },
     };
     new RawBattleCompletion(globals, playerHooks).frame(frame, frameHooks);

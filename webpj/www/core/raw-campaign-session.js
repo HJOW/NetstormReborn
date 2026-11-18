@@ -442,6 +442,12 @@ export class RawCampaignSession {
             broadcast: (packet) => o.tables.broadcast.send(packet), gameSeconds: () => o.core.processState.now,
         };
     }
+    // 현재 Player의 6fh 거절을 먼저 처리한 뒤 같은 패킷을 기존 방송으로 보낸다.
+    rejectDraw() {
+        const o = this.#live(), aux = o.gameplayGlobals.gameAux(), packet = Uint8Array.of(1, 0x6f, 6, 0, 0, 0);
+        o.participation.receiveDraw(packet, { get value() { return aux.scheduledDrawDeadline; }, set value(value) { aux.scheduledDrawDeadline = value; } }, this.#allianceDevices());
+        o.tables.broadcast.send(packet);
+    }
     // Carrier 등록의 첫 77h·79h·6fh를 같은 Player와 현재 협상 장치에 연결한다.
     registerAllianceNegotiationCommands(dispatch) {
         const o = this.#live(); if (!o.loaded) throw new Error('미설치 Session의 동맹 수신 등록');
