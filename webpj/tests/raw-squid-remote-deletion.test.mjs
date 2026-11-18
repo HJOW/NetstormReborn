@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { SidPool } from '../www/core/sid-pool.js';
-import { receiveRemoteDeletedSquid, receiveRemoteDeletedSquids, observeRemoteDeletedSquids, receiveContentSquid, receiveDependencySquid } from '../www/core/raw-squid-remote-deletion.js';
+import { receiveRemoteDeletedSquid, receiveRemoteDeletedSquids, observeRemoteDeletedSquids, receiveContentSquid, receiveDependencySquid, receiveDeletedSquid } from '../www/core/raw-squid-remote-deletion.js';
 
 // 단일 삭제는 예약 SID를 별도로 차단하지 않으며 범위 밖과 free만 건너뛴다.
 test('원격 삭제 53h: 현재 Pool과 flags 0', () => {
@@ -93,4 +93,27 @@ test('감시 65h: 필드와 부착 순서 및 부분 효과', () => {
     assert.throws(() => receiveDependencySquid(pool, packet, hooks), /선택된 실제 장치/);
     assert.equal(pool.slot(sid)[11], 0x44);
     assert.throws(() => receiveDependencySquid(pool, packet.subarray(0, 12), hooks), /PATCH13BYTE/);
+});
+
+// 로그와 환급 뒤에도 같은 슬롯의 현재 상태를 사용하고 삭제 뒤 감사를 실행한다.
+test('일반 삭제 2eh: 환급·삭제·감사의 순서', () => {
+    const pool = new SidPool(24000, { server: true }), sid = pool.allocate(), raw = pool.physical(sid), packet = new Uint8Array(8), view = new DataView(packet.buffer), calls = [];
+    view.setUint16(4, sid, true); view.setUint16(6, 0x20, true); raw[10] = 70; raw[34] = 3;
+    receiveDeletedSquid(pool, packet, {
+        boss: () => true, assertion: (...args) => calls.push(['assert', ...args]), typeName: () => 'unit',
+        log: (...args) => calls.push(['log', ...args]), refund: (...args) => calls.push(['refund', ...args]),
+        destroy: (...args) => calls.push(['destroy', ...args]), auditSp: () => calls.push(['audit']),
+    });
+    assert.deepEqual(calls, [['assert', '!boss', '.\\Clientboard.cpp', 0x260], ['log', 0x1d, 'destroying unit\n'], ['refund', sid, 3], ['destroy', sid, 0x200008], ['audit']]);
+});
+
+// 이미 빈 감시 Form은 중복 삭제 로그 없이 감사하고 다른 타입은 로그를 남긴다.
+test('일반 삭제 2eh: 빈 슬롯과 현재 감시 타입', () => {
+    const pool = new SidPool(24000, { server: true }), sid = pool.allocate(), raw = pool.physical(sid), packet = new Uint8Array(8), calls = [];
+    new DataView(packet.buffer).setUint16(4, sid, true); raw[11] |= 1; raw[10] = 1;
+    const hooks = { boss: () => false, typeName: () => 'depend', log: (...args) => calls.push(args), dependType: () => 1, auditSp: () => calls.push(['audit']) };
+    receiveDeletedSquid(pool, packet, hooks); assert.deepEqual(calls, [[0x1d, 'destroying depend\n'], ['audit']]);
+    calls.length = 0; hooks.dependType = () => 2;
+    receiveDeletedSquid(pool, packet, hooks); assert.deepEqual(calls, [[0x1d, 'destroying depend\n'], [0x1d, '~rdouble destroy'], ['audit']]);
+    assert.throws(() => receiveDeletedSquid(pool, packet.subarray(0, 7), hooks), /PATCH8BYTE/);
 });

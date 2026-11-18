@@ -80,3 +80,18 @@ export function receiveDependencySquid(pool, packet, hooks) {
     raw[11] |= 4;
     need(hooks.dependencyAttach)(object, word(packet, 6), 0);
 }
+
+// 2eh 삭제는 현재 슬롯을 기록하고 조건부 환급·삭제 뒤 SP 감사를 실행한다. (2026-11-18 WB04-E733)
+export function receiveDeletedSquid(pool, packet, hooks) {
+    if (pool?.edition !== 'patch1078' || !(packet instanceof Uint8Array) || packet.length < 8) throw new TypeError('삭제 수신의 PATCH8BYTE 계약');
+    const object = word(packet, 4), raw = pool.physical(object);
+    if (need(hooks.boss)()) need(hooks.assertion)('!boss', '.\\Clientboard.cpp', 0x260);
+    const name = need(hooks.typeName)(object);
+    need(hooks.log)(0x1d, `destroying ${name}\n`);
+    if (!(raw[11] & 1)) {
+        const flags = (word(packet, 6) << 16) >>> 0;
+        if (raw[10] >= 70 && (flags & 0x200000)) need(hooks.refund)(object, raw[34]);
+        need(hooks.destroy)(object, (flags | 8) >>> 0);
+    } else if (raw[10] !== need(hooks.dependType)()) need(hooks.log)(0x1d, '~rdouble destroy');
+    need(hooks.auditSp)();
+}

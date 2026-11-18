@@ -24,7 +24,7 @@ import { WindAviaryProcessFields, RawWindAviaryState } from './raw-wind-aviary-s
 import { SunAviaryProcess, SunAviaryProcessFields } from './raw-sun-aviary-process.js';
 import { RainAviaryProcess, RainAviaryProcessFields } from './raw-rain-aviary-process.js';
 import { readAviaryProcessData } from './raw-aviary-process-data.js';
-import { receiveRemoteDeletedSquid, receiveRemoteDeletedSquids, observeRemoteDeletedSquids, receiveContentSquid, receiveDependencySquid } from './raw-squid-remote-deletion.js';
+import { receiveRemoteDeletedSquid, receiveRemoteDeletedSquids, observeRemoteDeletedSquids, receiveContentSquid, receiveDependencySquid, receiveDeletedSquid } from './raw-squid-remote-deletion.js';
 import { setRawSquidWord } from './raw-squid-word.js';
 import { SquidFactory } from './squid-factory.js';
 import { isFormConstructorVtable } from './squid-forms.js';
@@ -472,6 +472,34 @@ export class RawCampaignSession {
         // 내용물 데이터는 현재 Form 가상 표에 따라 실제 부착을 선택한다. (2026-11-18 WB04-E731)
         dispatch.observe(0x2d, null); dispatch.version(0x2d, 1, 0); dispatch.requireLength(0x2d, 18);
         dispatch.register(0x2d, (_sender, _connection, packet) => this.#receiveContent(packet));
+        // 삭제 통지는 같은 월드와 공유 SP 추적 상태를 사용한다. (2026-11-18 WB04-E733)
+        dispatch.observe(0x2e, null); dispatch.version(0x2e, 1, 0); dispatch.requireLength(0x2e, 8);
+        dispatch.register(0x2e, (_sender, _connection, packet) => {
+            const current = this.#live(), core = current.core, patch = current.priestState.regen.patch, sp = current.sp;
+            receiveDeletedSquid(core.pool, packet, {
+                boss: () => core.processState.boss,
+                assertion: (expression, file, line) => current.world.storage.assertDisplay(expression, file, line),
+                typeName: (sid) => { const type = core.pool.slot(sid)[10]; if (type >= core.types.length) throw new RangeError('삭제 수신의 현재 TYPE 물리 범위'); return core.types[type].name.split('\0', 1)[0]; },
+                log: current.services.player.log,
+                dependType: () => current.gameplayGlobals.gameAux().dependFormType,
+                refund: (sid, owner) => current.hp.refund(sid, owner, true),
+                destroy: (sid, flags) => current.world.destroy(sid, flags),
+                auditSp: () => {
+                    let sample = patch.readSample();
+                    if ((sp.offset >>> 0) !== (sp.trackingOffset >>> 0)) patch.writeChangedSample(sample);
+                    if (patch.remaining) {
+                        if (current.playerState.playerKnown) {
+                            const money = spFloat(sp.get(current.playerState.battleOwner));
+                            sample = patch.readSample();
+                            if (money > 7000) patch.writeChangedSample(sample);
+                        }
+                        patch.remaining = (patch.remaining - 1) >>> 0;
+                    }
+                    if (!sp.firstPoolReady) patch.writeChangedSample(sample);
+                    if (sp.permutation()[0] === -1) patch.writeChangedSample(sample);
+                },
+            });
+        });
         // 감시 Form은 현재 타입과 가상 표를 확인해 같은 공장에 부착한다. (2026-11-18 WB04-E732)
         dispatch.observe(0x65, null); dispatch.version(0x65, 1, 0); dispatch.requireLength(0x65, 13);
         dispatch.register(0x65, (_sender, _connection, packet) => {

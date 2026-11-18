@@ -391,3 +391,21 @@ test('CampaignSession Tutorial 1: 감시 Form 수신', () => {
         assert.deepEqual([fields.getUint16(18, true), fields.getUint16(20, true)], [12, 34]);
     } finally { s.dispose(); }
 });
+
+// 빈 감시 슬롯의 삭제 통지는 같은 Session의 로그와 SP 감사까지 도달한다.
+test('CampaignSession Tutorial 1: 일반 삭제 수신', () => {
+    const logs = [], { s } = scene({ playerLog: (...args) => logs.push(args) });
+    const dispatch = new RawPacketDispatch({ now: () => 1, record: () => {}, terminate: () => {}, close: () => {}, release: () => {} });
+    try {
+        s.load(); s.registerCarrierCommandPrefix(dispatch);
+        const c = s.core(); let sid = c.pool.layout.serverFirst;
+        // 비어 있는 슬롯을 찾아 중복 삭제 경로만 검증한다.
+        while (sid < c.pool.capacity && !(c.pool.slot(sid)[11] & 1)) sid += 1;
+        assert.ok(sid < c.pool.capacity); c.pool.physical(sid)[10] = 1;
+        const packet = new Uint8Array(8); packet.set([1, 0x2e, 8, 0]); new DataView(packet.buffer).setUint16(4, sid, true);
+        c.processState.boss = false; logs.length = 0;
+        assert.equal(dispatch.registration(0x2e).length, 8);
+        assert.equal(dispatch.dispatch(new PacketConnection({ sender: 1 }), packet), true);
+        assert.equal(logs.length, 1); assert.match(logs[0][1], /^destroying /);
+    } finally { s.dispose(); }
+});
