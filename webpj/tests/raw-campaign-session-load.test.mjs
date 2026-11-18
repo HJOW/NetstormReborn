@@ -627,6 +627,20 @@ test('CampaignSession TheWarBegins: 동맹 요청 직접 수신', () => {
     assert.throws(() => s.registerAllianceNegotiationCommands(dispatch), /반납/);
 });
 
+// Process 정리 오류는 진단하고 나머지 수명 반납을 계속한다.
+test('CampaignSession TheWarBegins: 일반 종료의 Process 정리 오류', () => {
+    const gameplay = new ClientGameplayGlobals(), { s } = scene({ gameplayGlobals: gameplay }), core = s.core(), errors = [];
+    const parent = core.factory.create(6, 2), regular = core.processes.addRegular(parent, 6700, 0.25); let attempts = 0;
+    regular.destroy = () => { attempts += 1; if (attempts === 1) throw new Error('일회성 Process 소멸 실패'); };
+    const originalError = console.error;
+    try {
+        console.error = (...args) => errors.push(args);
+        assert.doesNotThrow(() => s.dispose());
+        assert.equal(attempts, 2); assert.equal(core.kernel.size, 0); assert.equal(gameplay.borrowed(), false);
+        assert.equal(errors.length, 1); assert.match(errors[0][0], /Kernel 정리 실패/);
+    } finally { console.error = originalError; s.dispose(); }
+});
+
 // 일반 종료는 Player 링크와 Deck을 Process 소멸 전에 정리한다.
 test('CampaignSession TheWarBegins: 일반 종료의 Player 링크와 Process 순서', () => {
     const players = new ClientPlayerRecords(), production = { allocationBytes: (bytes) => bytes.fill(0) };
