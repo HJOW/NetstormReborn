@@ -2,7 +2,7 @@
 // 사용: makeCampaignMissionStartEffects(client, world, refreshCommandGump). 호출자와 실제 Client/World는 효과보다 오래 살아야 한다.
 import { currentAllocationBytes } from './current-allocation-bytes.js';
 import { DIFFICULTY_CONFIG_KEY } from './ai-difficulty.js';
-import { captureLocalMissionStarting } from './raw-local-mission-state.js';
+import { captureLocalMissionStarting, RawLocalMissionState } from './raw-local-mission-state.js';
 
 // 같은 실제 Client 시계·화면 및 현재 World의 카메라·전체 간헐천 생성기를 빌린다.
 export function makeCampaignMissionStartEffects(client, world, refreshCommandGump) {
@@ -71,4 +71,32 @@ export function prepareCampaignMissionStarting(client, request) {
     const state = client.localStateGlobals().state();
     if (client.edition() !== 'patch1078' || request.consumed || request.starting || request.zone.length !== 86 || state.next[0] !== 7 || state.next[32] !== 1 || request.next[32] !== 1) throw new Error('실제 State7 현재 요청/Zone/새 앞단 계약 오류');
     state.current.set(state.next); state.next[0] = 0; captureCampaignMissionStarting(client, request);
+}
+
+// World 교체 중에도 같은 Client·표면·State를 빌려 State7과 후속 State8을 공통 부모에서 확정한다.
+export function runCampaignMissionStarting(client, body, connect) {
+    const storage = client.surfaceStorage();
+    if (client.edition() !== 'patch1078' || !storage || typeof body !== 'function' || typeof connect !== 'function') throw new Error('실제 미션 부모의 판본/장기 표면/몸체/접속 장치 계약 오류');
+    const local = client.localStateGlobals(), game = client.gameplayGlobals(), title = client.htmlWindowGlobals().text.background;
+    const globals = {
+        get server() { return game.authority().server; }, set server(value) { game.authority().server = Boolean(value); },
+        get boss() { return game.authority().boss; }, set boss(value) { game.authority().boss = Boolean(value); },
+        get inBattle() { return storage.ownerMode.battle; }, set inBattle(value) { storage.ownerMode.battle = Boolean(value); },
+        get missionPost() { return game.world.missionPost; }, get missionWorld() { return storage.links.mission; },
+        get savedGame() { return local.savedGame().value; }, set savedGame(value) { local.savedGame().value = value; },
+        get simulconnect() { return local.simulconnect().value; }, get metamap() { return storage.ownerMode.challenge; }, player: game.player,
+        get zonePending() { return local.zonePending().value; }, set zonePending(value) { local.zonePending().value = value; },
+        get gameTicks() { return local.gameTicks().value; }, set gameTicks(value) { local.gameTicks().value = value; },
+        get sourceType() { return local.sourceType().value; }, set sourceType(value) { local.sourceType().value = value; },
+        get cdPresent() { return local.cdPresent().value; }, set cdPresent(value) { local.cdPresent().value = value; },
+        get metaRefresh() { return local.metaRefresh().value; }, set metaRefresh(value) { local.metaRefresh().value = value; },
+        get metaRebuild() { return local.metaRebuild().value; }, set metaRebuild(value) { local.metaRebuild().value = value; },
+        get titleInitial() { return title[0]; }, set titleInitial(value) { title[0] = value; }, get battleByte() { return local.battleByte().value; },
+        get connectEnd() { return local.connectEnd().value; }, set connectEnd(value) { local.connectEnd().value = value; },
+        get activityEnd() { return local.activityEnd().value; }, set activityEnd(value) { local.activityEnd().value = value; },
+        get gameSeconds() { return client.time().game; }, get wallCached() { return client.time().wall; },
+    };
+    const hooks = { logState: (value) => console.info(`State ${value}`), wallSeconds: () => client.wallSeconds(), connectServer: connect,
+        invalidState: (value) => { throw new Error(`미션 부모의 선택된 다른 Native 상태 미연결:${value}`); } };
+    new RawLocalMissionState(local.state(), globals, hooks).pollStarting(body);
 }

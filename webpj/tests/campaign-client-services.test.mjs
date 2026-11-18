@@ -1,7 +1,7 @@
 // 캠페인 Start Client 장치의 선택 순서와 현재 대상 재조회를 검사한다.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { makeCampaignMissionStartEffects, bindCampaignAiClientServices, prepareCampaignMissionStarting, captureCampaignMissionStarting } from '../www/core/campaign-client-services.js';
+import { makeCampaignMissionStartEffects, bindCampaignAiClientServices, prepareCampaignMissionStarting, captureCampaignMissionStarting, runCampaignMissionStarting } from '../www/core/campaign-client-services.js';
 import { GameData, ARCHIVE_PATH, SETUP_PATH } from '../www/assets/game-data.js';
 import { encodeOriginalText, decodeWindows1252 } from '../www/assets/text-encoding.js';
 import { RawChatChannels } from '../www/core/raw-chat-channels.js';
@@ -10,6 +10,12 @@ import { ClientLocalStateGlobals } from '../www/core/client-local-state-globals.
 import { ClientGameplayGlobals } from '../www/core/client-gameplay-globals.js';
 import { ClientKencloudGlobals } from '../www/core/client-kencloud-globals.js';
 import { ClientHtmlWindowGlobals } from '../www/core/client-html-window-globals.js';
+import { RawSurfaceStorage } from '../www/core/raw-surface-storage.js';
+import { CampaignSessionAssets } from '../www/core/raw-campaign-session-owners.js';
+import { PriestPlacementAssets } from '../www/core/priest-placement-assets.js';
+import { GameAssets } from '../www/assets/game-assets.js';
+import { GamePalette } from '../www/assets/palette.js';
+import { realCaptureAssets } from './capture-assets-support.mjs';
 import { createMissionFortLoadRequest, writeMissionFortRequest, captureMissionFortZone } from '../www/core/mission-fort-request.js';
 import { restoreLocalMissionStarting } from '../www/core/raw-local-mission-state.js';
 
@@ -89,4 +95,43 @@ test('캠페인 Client State7: 판본·Zone·중복 관문이 앞선 상태를 �
         request.consumed = false; request.starting = null; request.zone = new Uint8Array(86); state.next.set(originalNext);
     }
     client.edition = () => 'cd1072'; assert.throws(() => prepareCampaignMissionStarting(client, request), /앞단 계약/); assert.deepEqual(state.next, originalNext); assert.deepEqual(state.current, originalCurrent);
+});
+
+// State7 몸체가 현재 블록을 바꾸어도 즉시 State8은 최초 복사된 인자로 확정한다.
+test('캠페인 Client State7 부모: 실제 장기 저장소와 후속 연결 순서', () => {
+    const data = realCaptureAssets(), game = new GameAssets(data.table, data.database, GamePalette.parse(readData('d/GIFCLOUD.COL')));
+    const local = new ClientLocalStateGlobals(), gameplay = new ClientGameplayGlobals(), cloud = new ClientKencloudGlobals(), html = new ClientHtmlWindowGlobals();
+    const assets = new CampaignSessionAssets(game, { read: () => { throw new Error('선택하지 않은 파일'); } }), metadata = new PriestPlacementAssets(game.typeTable, game.shapes, assets.loadedTypes);
+    const storage = new RawSurfaceStorage(assets.types, assets.frames, metadata.shapes, { source: game, authority: gameplay.authority(), gameAux: gameplay.gameAux() });
+    const time = { game: 12, wall: 100 }, client = { edition: () => 'patch1078', surfaceStorage: () => storage, localStateGlobals: () => local, gameplayGlobals: () => gameplay, kencloudGlobals: () => cloud, htmlWindowGlobals: () => html, time: () => time, wallSeconds: () => 101 };
+    const request = createMissionFortLoadRequest(), state = local.state(), address = Uint8Array.from([122, 108, 111, 99, 97, 108, 44, 42, 0]);
+    writeMissionFortRequest('thewarbegins', { next: state.next, sequence: local.zonePending(), localAddress: address, port: { value: 6799 } }, { selectFort: (name) => { request.fort = name; }, duplicate: (packet) => captureMissionFortZone(request, packet) });
+    request.next.set(state.next); request.sequence = local.zonePending().value; state.next[2] = 0x12345678; state.phase.fill(0x11223344); state.phase[0] = 4; state.old.fill(0x55667788);
+    const previous = state.phase.slice(), older = state.old.slice(), calls = [];
+    runCampaignMissionStarting(client, () => {
+        assert.deepEqual(state.phase, previous); assert.deepEqual(state.old, older); assert.equal(state.current[0], 7); assert.equal(state.immediate[2], 0x12345678);
+        captureCampaignMissionStarting(client, request); state.current[2] = 0xfaceb00c; state.current[32] = 0; state.immediate[0] = 8; state.immediate[1] = 20; calls.push('body');
+    }, (received, port) => {
+        assert.equal(state.phase[0], 7); assert.equal(state.phase[2], 0xfaceb00c); assert.equal(state.current[0], 8); assert.equal(state.current[2], 0x12345678);
+        assert.equal(received.length, 20); assert.equal(received[0], 122); assert.equal(port, 6799); calls.push('connect');
+    });
+    assert.deepEqual(calls, ['body', 'connect']); assert.equal(state.old[0], 7); assert.equal(state.old[2], 0xfaceb00c); assert.equal(state.phase[0], 8);
+    assert.equal(state.phase[2], 0x12345678); assert.equal(state.next[0], 9); assert.equal(state.current[0], 0); assert.equal(local.connectEnd().value, 131);
+});
+
+// State7 몸체와 후속 State8 연결의 실패는 서로 다른 확정 경계를 보존한다.
+test('캠페인 Client State7 부모: 몸체 실패와 연결 실패의 부분 상태', () => {
+    const data = realCaptureAssets(), game = new GameAssets(data.table, data.database, GamePalette.parse(readData('d/GIFCLOUD.COL')));
+    // 두 실패 지점은 각각 새 Client 장기 소유자에서 검사한다.
+    for (const bodyFailure of [true, false]) {
+        const local = new ClientLocalStateGlobals(), gameplay = new ClientGameplayGlobals(), html = new ClientHtmlWindowGlobals();
+        const assets = new CampaignSessionAssets(game, { read: () => { throw new Error('선택하지 않은 파일'); } }), metadata = new PriestPlacementAssets(game.typeTable, game.shapes, assets.loadedTypes);
+        const storage = new RawSurfaceStorage(assets.types, assets.frames, metadata.shapes, { source: game, authority: gameplay.authority(), gameAux: gameplay.gameAux() });
+        const state = local.state(); state.next[0] = 7; state.phase.fill(0x12345678); state.phase[0] = 4; state.old.fill(0x90abcdef);
+        const prior = state.phase.slice(), older = state.old.slice(); let connects = 0;
+        const client = { edition: () => 'patch1078', surfaceStorage: () => storage, localStateGlobals: () => local, gameplayGlobals: () => gameplay, htmlWindowGlobals: () => html, time: () => ({ game: 1, wall: 2 }), wallSeconds: () => 2 };
+        assert.throws(() => runCampaignMissionStarting(client, () => { state.immediate[0] = 8; if (bodyFailure) throw new Error('몸체 실패'); }, () => { connects += 1; throw new Error('연결 실패'); }), bodyFailure ? /몸체 실패/ : /연결 실패/);
+        if (bodyFailure) { assert.equal(connects, 0); assert.deepEqual(state.phase, prior); assert.deepEqual(state.old, older); assert.equal(state.current[0], 7); assert.equal(state.immediate[0], 8); }
+        else { assert.equal(connects, 1); assert.equal(state.phase[0], 7); assert.deepEqual(state.old, prior); assert.equal(state.current[0], 8); assert.equal(state.immediate[0], 0); }
+    }
 });
