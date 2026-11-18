@@ -707,6 +707,37 @@ test('CampaignGameWorld TheWarBegins: 지연 생성과 실제 로그인 준비',
     assert.throws(() => oldCarrier.highlight(5, { x: 90, y: 108 }, 1), /반납/);
 });
 
+// 실제 World 입력은 같은 카메라·선택·운반 요청을 조립한다.
+test('CampaignGameWorld TheWarBegins: 선택 강조와 미니맵 이동', () => {
+    const gameplay = new ClientGameplayGlobals(), queue = new InputQueue(), cursors = [];
+    gameplay.camera().initializeNativeRenderer(640, 480, 256, { value: 0 }, { value: 0 });
+    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {} };
+    const services = {
+        gameplayGlobals: gameplay, localLogin, unixSeconds: () => 1700000000, soundNames: new SoundList(), carrierRequest: forbidden('전송'),
+        install: { translateYou: () => Uint8Array.of(89, 111, 117, 0), setConfig: () => {}, refreshWindowTitle: () => {} },
+        ownership: { refreshProduction: () => {}, themeMode: () => 0 }, assets: { postPop: { playImpactSound: () => {} }, queueCommand: (...args) => queue.pushCommand(...args) },
+        sound: { wallSeconds: () => 0, play: () => {}, playOnceAt: () => {}, playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false },
+        missionOutcome: { demo: () => 0 }, player: { log: () => {} }, ai: { assertion: forbidden('AI 진단'), participation: { addChat: () => {}, clearChat: () => {} } },
+        surfaceDisplay: { suppressed: () => false, invalidate: () => {} },
+        cameraCommit: (context) => { const pixels = context.camera.target().pixels; context.camera.applyPixelsToRendererAndSnapshot(pixels[0], pixels[1]); },
+    };
+    const world = new CampaignGameWorld(game, { read: forbidden('파일') }, fort, 'thewarbegins', services, { x: 640, y: 480 });
+    try {
+        const session = world.session(); assert.throws(() => world.select(1), /미설치/); assert.throws(() => world.bindUserInput(), /설치 전/);
+        world.startLocalConnection(); session.pumpLocalConnection(); session.pollLocalConnectionState(); session.pumpLocalConnection(); assert.equal(world.completeLocalConnection(), true);
+        const priest = session.world().objects().find(({ object }) => object.type === 158 && object.owner === 1); assert.ok(priest);
+        const origin = gameplay.camera().snapshot().world;
+        gameplay.selection.mouse.x = Math.round((90 - origin.x) * 16 - 16); gameplay.selection.mouse.y = Math.round((108 - origin.y) * 11 - 11);
+        world.bindUserInput({ paused: () => 0, dump: () => {}, assertion: forbidden('선택 진단'), previewAssertion: forbidden('미리보기 진단') },
+            { selectCursor: (number) => cursors.push(number) }, { selectCursor: (number) => cursors.push(number), assertion: forbidden('운반 입력 진단') });
+        assert.throws(() => world.bindUserInput(), /새 수명/); world.select(priest.sid); assert.equal(world.selected(), priest.sid); assert.equal(gameplay.selection.mode, 5); assert.equal(cursors.at(-1), 0x12);
+        const before = session.localConnectionPackets(); world.moveFromMinimap(90, 108); session.pumpLocalConnection();
+        assert.equal(world.selected(), 0); assert.equal(gameplay.selection.mode, 0); assert.equal(cursors.at(-1), 1);
+        assert.equal(session.localConnectionPackets().length, before.length + 1); assert.equal(session.localConnectionPackets().at(-1), 0x40);
+    } finally { world.dispose(); }
+    assert.equal(gameplay.borrowed(), false); assert.throws(() => world.highlight(0), /반납/);
+});
+
 // Process 정리 오류는 진단하고 나머지 수명 반납을 계속한다.
 test('CampaignSession TheWarBegins: 일반 종료의 Process 정리 오류', () => {
     const gameplay = new ClientGameplayGlobals(), { s } = scene({ gameplayGlobals: gameplay }), core = s.core(), errors = [];

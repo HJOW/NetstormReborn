@@ -1,10 +1,12 @@
 // 지연 로그인 캠페인의 GameWorld 앞단을 같은 Session·카메라·자산 표시기와 묶는다.
 // 사용: new CampaignGameWorld(assets, files, fort, mission, services, { x, y }) → startLocalConnection() → 같은 session의 로그인 진행 → dispose().
-// 입력·프레임과 브라우저 앱 수명은 후속이며 이 생성자만으로 플레이할 수 없다.
+// 화면 이벤트·프레임과 브라우저 앱 수명은 후속이며 이 생성자만으로 플레이할 수 없다.
 import { ClientGameplayGlobals } from './client-gameplay-globals.js';
 import { FIRST_ASSET_TYPE_NUMBER } from '../assets/type-table.js';
 import { TypeFlag2 } from '../assets/type-flags.js';
 import { SQUID_DESTROY_EFFECT } from './squid-destroy.js';
+import { RawUserHighlight } from './raw-user-highlight.js';
+import { RawCursorPosition } from './raw-cursor-position.js';
 import { createCameraHomeState } from './camera-home.js';
 import { RawCampaignSession } from './raw-campaign-session.js';
 import { RawCampaignFactoryDisplay } from '../render/raw-campaign-factory-display.js';
@@ -12,6 +14,10 @@ import { cursorDisplayLogicalPalette } from '../render/raw-campaign-cursor-displ
 
 // 원본 기본 지도 영역에서 상단 게임 메뉴가 차지하는 논리 픽셀 높이다.
 const MENU_HEIGHT = 28;
+
+// 단정도 좌표와 원본 DWORD 비트를 손실 없이 교환한다.
+function floatBits(value) { const bytes = new DataView(new ArrayBuffer(4)); bytes.setFloat32(0, value, true); return bytes.getUint32(0, true); }
+function bitsFloat(value) { const bytes = new DataView(new ArrayBuffer(4)); bytes.setUint32(0, value >>> 0, true); return bytes.getFloat32(0, true); }
 
 // 실제 캠페인 Session과 표시기의 지연 로그인 수명이다.
 export class CampaignGameWorld {
@@ -24,7 +30,7 @@ export class CampaignGameWorld {
     // 현재 파일 팔레트·ColorSort 대여와 커서 설치 전까지 보유하는 색 사본이다.
     #palette = null; #pendingPalette = null; #colorSortLogical = []; #colorSortMaps = null;
     // 선택 입력 부분은 같은 Session과 장기 선택 전역을 빌린다.
-    #selection = null;
+    #selection = null; #input = null;
 
     // 화면 크기와 자산을 확인하고 실제 Session과 표시기를 만든다. 로그인은 호출자가 나중에 시작한다.
     constructor(assets, files, fort, mission, services, viewport) {
@@ -149,6 +155,27 @@ export class CampaignGameWorld {
             appendMultiple: (sid) => state.appendMultiple(sid), removeMultiple: (sid) => state.removeMultiple(sid), writeEnabled: (value) => { state.enabled = value >>> 0; } });
         return this.#selection;
     }
+    // 같은 Session의 운반 입력·강조·선택을 현재 카메라와 하나의 선택 전역에 조립한다.
+    bindUserInput(selectionHooks = {}, highlightHooks = {}, carrierHooks = {}) {
+        const session = this.#live(); if (this.#input || this.#selection) throw new Error('실제 월드 입력의 새 수명 계약');
+        const state = this.#gameplay.selection; let highlight;
+        const carrier = session.makeCarrierInput({ ...carrierHooks, highlight: (mode) => highlight.highlight(mode), multiple: () => state.multipleCount > 0 ? 1 : 0 });
+        highlight = new RawUserHighlight(state.highlightState(), { ...highlightHooks,
+            project: (x, y) => { const view = this.#gameplay.camera().snapshot().data; const point = RawCursorPosition.screenToWorld(x, y, [view.getUint32(0, true), view.getUint32(4, true)]); return point.map(floatBits); },
+            move: (sid, x, y, force) => carrier.highlight(sid, { x: bitsFloat(x), y: bitsFloat(y) }, force),
+        });
+        this.bindUserSelection({ ...selectionHooks, highlight: (mode) => highlight.highlight(mode) });
+        this.#input = { carrier, highlight };
+    }
+    // 실제 선택의 세 인자를 원본처럼 유지하고 다음 화면 갱신을 요청한다.
+    select(sid) { this.#live(); if (!this.#input) throw new Error('실제 선택 장치 미설치'); this.#selection.select(sid, 0, 1); this.#changed = true; }
+    // 현재 마우스와 선택 전역을 사용하는 강조 모드다.
+    highlight(mode) { this.#live(); if (!this.#input) throw new Error('실제 선택/강조 장치 미설치'); this.#input.highlight.highlight(mode); }
+    // 미니맵 좌표의 이동 명령 뒤 같은 강조를 해제한다.
+    moveFromMinimap(x, y) {
+        this.#live(); if (!this.#input) throw new Error('실제 미니맵 선택 장치 없음');
+        this.#input.carrier.commit(this.#gameplay.selection.selected, { x, y }); this.#input.highlight.highlight(0); this.#changed = true;
+    }
     // 삭제가 선택 객체를 반납한 뒤에는 원본 Clear만 호출하여 이전 슬롯을 다시 읽지 않는다.
     clearSelection() { this.#live(); if (!this.#selection) throw new Error('미션 선택 해제 장치 미설치'); this.#selection.clear(); this.#changed = true; }
     // 원본 선택 초기화는 활성 이동을 켜지 않는 세 인자를 그대로 전달한다.
@@ -164,7 +191,7 @@ export class CampaignGameWorld {
     // 표시기를 Session보다 먼저 놓고 같은 외곽 수명을 반납한다.
     dispose() {
         if (this.#disposed) return;
-        this.#selection = null; this.#factoryDisplay = null;
+        this.#input = null; this.#selection = null; this.#factoryDisplay = null;
         try { this.#session?.dispose(); } finally { this.#session = null; this.#disposed = true; }
     }
 }
