@@ -32,6 +32,7 @@ import { Screen, ScreenMode } from './render/screen.js';
 import { Settings, findSettingKey, getLocalStorage } from './platform/settings.js';
 import { Progress, isProgressKey } from './platform/progress.js';
 import { reportGameError } from './platform/error-reporting.js';
+import { BrowserInputPoll } from './platform/browser-input-poll.js';
 import { ClientFrameClock } from './core/client-frame-clock.js';
 import { ClientLocalStateGlobals } from './core/client-local-state-globals.js';
 import { ClientKencloudGlobals } from './core/client-kencloud-globals.js';
@@ -488,6 +489,8 @@ export class Netstorm {
         this._audioStatus = 'none';
         // 입력 상태다. pointer 는 논리 좌표, keys 는 눌린 키의 code 집합이다.
         this._input = { pointer: { x: -1, y: -1, inside: false, buttons: 0, type: 'mouse' }, keys: new Set() };
+        // 재시작 시 현재 브라우저 입력과 창 활성 상태를 다시 빌리는 폴링 소유자다.
+        this._clientInputPoll = new BrowserInputPoll(() => this._input, () => this._layout, () => this._root?.ownerDocument?.hasFocus?.() ?? true);
         // 메인 메뉴 그리기 자원 묶음(buildMenuResources 결과)이다. 자산 적재 전에는 null 이며, 재시작해도 다시 받지 않는다.
         this._resources = null;
         // 게임 데이터 조회 객체(GameData: 파일 조회·설정 층·언어 용어표·Tell 섹션)다. 자산 적재 전에는 null 이며 재시작해도 다시 만들지 않는다.
@@ -632,6 +635,8 @@ export class Netstorm {
         this._abort = new AbortController();
         this._clock = new FrameClock();
         this._input = { pointer: { x: -1, y: -1, inside: false, buttons: 0, type: 'mouse' }, keys: new Set() };
+        // 재시작 시 현재 브라우저 입력과 창 활성 상태를 다시 빌리는 폴링 소유자다.
+        this._clientInputPoll = new BrowserInputPoll(() => this._input, () => this._layout, () => this._root?.ownerDocument?.hasFocus?.() ?? true);
         this._audioStatus = 'none';
         // 저장된 설정을 읽는다(저장소를 쓸 수 없으면 기본값으로 계속). 호스트가 음량을 정했으면 저장하지 않고 우선 적용한다. (2026-10-29 WB03-F)
         const storage = getLocalStorage(doc.defaultView);
@@ -1836,6 +1841,7 @@ export class Netstorm {
             // 포인터 붙잡기에 실패해도 입력 처리는 계속한다.
         }
         this._updatePointer(event);
+        this._clientInputPoll.recordMouseDown(event.button);
         this._retryAudioOnGesture();
         const pointer = this._input.pointer;
         if (this._state === AppState.MAIN_MENU && this._mainMenu && event.button === 0 && pointer.inside) {
@@ -1884,6 +1890,7 @@ export class Netstorm {
 
     // 키를 눌렀을 때: 눌린 키 집합에 넣고, 게임이 쓰는 스크롤 키의 브라우저 기본 동작을 막고, Enter/Space 는 시작 입력으로 쓴다.
     _onKeyDown(event) {
+        this._clientInputPoll.recordKeyDown(event.code, this._input.keys.has(event.code) || event.repeat);
         this._input.keys.add(event.code);
         if (PREVENTED_KEYS.has(event.code)) event.preventDefault();
         this._retryAudioOnGesture();
