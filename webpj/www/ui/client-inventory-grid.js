@@ -37,4 +37,6 @@ export class ClientInventoryGrid {
         root.bindDraw(token, () => {}); root.bindObjectGone(token, (current, parent) => inventory.parentGone(current, parent));
         return token;
     }
+    // 같은 격자 실행기의 실제 점멸 Idle을 항목 가상 호출에 전달한다.
+    idleItem(token) { this.#inventory.idleItem(token); }
 }

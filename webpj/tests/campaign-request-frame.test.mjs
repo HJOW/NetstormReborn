@@ -19,7 +19,11 @@ import { CampaignRenderCollection } from '../www/render/campaign-render-collecti
 import { CampaignRendererDrawing } from '../www/render/campaign-renderer-drawing.js';
 import { RawContainedFinder } from '../www/core/raw-contained-finder.js';
 import { ClientInventoryGrid } from '../www/ui/client-inventory-grid.js';
-import { InventoryItemNode } from '../www/ui/inventory-gump.js';
+import { ClientInventoryItem } from '../www/ui/client-inventory-item.js';
+import { ClientImageGump } from '../www/ui/client-image-gump.js';
+import { PriestPlacementAssets } from '../www/core/priest-placement-assets.js';
+import { RawCanonPixelShape } from '../www/core/raw-canon-pixel-shape.js';
+import { GumpDrawState, GumpPixelTarget, setGumpDrawClip } from '../www/render/gump-draw.js';
 import { DATA_ROOT, readData, readDataMap } from './helpers.mjs';
 import { realCaptureAssets } from './capture-assets-support.mjs';
 
@@ -308,16 +312,32 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         assert.equal(gump.node(outstanding), null); assert.ok(session.core().pool.slot(outstandingForm)[11] & 1); gump.setFormHost(session.gumpFormHost());
         // 실제 기술 내용물을 공통 Gump 트리의 원본 생산 격자 항목으로 수집한다.
         const gridState = { cursorPoint: { x: 260, y: 260 }, cursorFlags: 0x40 };
-        const grid = new ClientInventoryGrid(gump, session, gridState, {
-            now: () => app._gameClock.wallSeconds(), baseHandle: () => 0,
-            allocateItem: (size) => { assert.equal(size, 0xc0); const item = new InventoryItemNode(); return gump.allocateDerived(item, () => 0, (token, flags) => gump.lifetime().deleteScalar(token, flags)); },
+        const metadata = new PriestPlacementAssets(game.typeTable, game.shapes, session.core().types);
+        const measure = new RawCanonPixelShape(session.core().pool, session.core().types, metadata.frames, metadata.shapes, metadata.hotspots, metadata.geometry, { scaleX: 16, scaleY: 11 });
+        const images = new ClientImageGump(gump, game, { localOwner: 0, ownerMaps: new Uint32Array(188), shadowOffset: { x: 5, y: 5 } }, () => { throw new Error('선택하지 않은 색표'); }, () => 0);
+        const itemState = { localOwner: session.localOwner(), editor: 0, stockEnabled: 0, inputDisabled: 0, lastType: 0, bridgeType: session.core().bridgeState.bridgeType, pixelsX: 16, pixelsY: 11, backgroundType: 0, backgroundFrame: 0 };
+        let grid; const itemDevice = new ClientInventoryItem(gump, session, game, metadata, measure, images, itemState, { idleItem: (token) => grid.idleItem(token), denied: () => 0 });
+        grid = new ClientInventoryGrid(gump, session, gridState, {
+            now: () => app._gameClock.wallSeconds(), baseHandle: () => 0, allocateItem: (size) => itemDevice.allocate(size),
         });
         const gridToken = grid.create(2, 2, 0x40), gridNode = gump.node(gridToken); gridNode.fixed = 1; gridNode.acceptedCursor = 0x40; gridNode.baseWidth = gridNode.width = 72; gridNode.baseHeight = gridNode.height = 72;
-        gump.bindObject(gridToken, technology); gump.attach(gridToken, 250, 250); let items = 0;
+        const selectedItems = [], panel = gump.createBase(0, 80, 200, 1, (event, first, second) => { if (event === 0x02000008) { selectedItems.push([first, second]); return 1; } return 0; });
+        gump.attach(panel, 0, 0); gump.bindObject(gridToken, technology); gump.attach(gridToken, 250, 250, panel); let items = 0;
         // 실제 내용물과 같은 풀에서 각 항목의 다리 플래그를 확인한다.
         for (let item = gridNode.child; item; item = gump.node(item).next) { const raw = session.core().pool.slot(gump.node(item).content); assert.ok((raw[20] | (raw[21] << 8)) & 0x40); items += 1; }
         assert.ok(items > 0); assert.equal(gump.handle(gridToken, 0x0200005f, 0, 0), 0x40);
+        const firstItemToken = gridNode.child, firstItem = gump.node(firstItemToken), icon = firstItem.child; assert.ok(icon); assert.equal(gump.node(icon).command, 3);
+        const draw = new GumpDrawState(); setGumpDrawClip(draw, { left: 0, top: 0, right: 1366, bottom: 768 });
+        const iconPixels = new Uint8Array(1366 * 768).fill(255); gump.draw(icon, draw, new GumpPixelTarget(iconPixels, 1366, 768, draw));
+        assert.ok(iconPixels.some((value) => value !== 255)); let hitPoint = null;
+        // 실제 아이콘의 불투명 픽셀을 항목 로컬 적중으로 찾아 클릭한다.
+        for (let y = 240; y < 340 && !hitPoint; y += 1) for (let x = 240; x < 340; x += 1) {
+            if (iconPixels[y * 1366 + x] === 255) continue; const local = gump.collection().screenToLocal(firstItemToken, { x, y });
+            if (images.hit(icon, local[0], local[1])) { hitPoint = { x, y }; break; }
+        }
+        assert.ok(hitPoint); assert.equal(gump.handle(firstItemToken, 0x10000, hitPoint.x, hitPoint.y), 1);
+        assert.deepEqual(selectedItems, [[firstItem.content, firstItem.serial]]); assert.equal(itemState.lastType, session.core().bridgeState.bridgeType);
         assert.equal(gump.handle(gridToken, 0x0200003f, 0, 0), 1); gridState.cursorPoint.x = 322; assert.equal(gump.handle(gridToken, 0x0200003f, 0, 0), 0);
-        gump.remove(gridToken);
+        gump.remove(gridToken); gump.remove(panel);
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); app._clientSoundDevice.dispose(); app._missionAudioAssets.dispose(); }
 });
