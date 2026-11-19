@@ -1,9 +1,10 @@
 // 앱 소유 효과음 준비와 실제 미션 서비스·설정 사이의 수명을 검사한다.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { Netstorm } from '../www/netstorm.js';
+import { AppState, Netstorm } from '../www/netstorm.js';
 import { AudioSystem } from '../www/audio/audio-system.js';
 import { Settings } from '../www/platform/settings.js';
+import { ClientState } from '../www/core/client-state.js';
 
 // 연결과 실제 소스·음량을 관찰할 수 있는 Web Audio 경계다.
 function contextFixture() {
@@ -69,4 +70,35 @@ test('앱 미션 효과음: 실제 프레임 재생 수 계산 순서', async ()
         app._onFrame(16); assert.deepEqual(order, [['state', 1], ['packet', 0]]);
         assert.equal(player.play(sound, 0, 0, 0, 0, 0), sound); assert.equal(scene.sources.length, 2);
     } finally { app._clientSoundDevice?.dispose(); app._missionAudioAssets?.dispose(); }
+});
+
+// 준비 실패는 현재 요청만 오류 화면에 남기고 취소된 요청의 오래된 오류는 무시한다.
+test('앱 미션 효과음: 요청 준비 실패와 취소', async () => {
+    // 같은 실패를 현재 요청과 취소된 요청에 각각 적용한다.
+    for (const cancel of [false, true]) {
+        const app = new Netstorm(), scene = contextFixture(); app._initializeClientRuntime(false); app._settings = new Settings(); app._audio = new AudioSystem(scene.context);
+        let fail; app._assetLoader = { manifest: { files: [{ path: 'sound/test.wav' }] }, loadFile: () => new Promise((_resolve, reject) => { fail = reject; }) };
+        const pending = new ClientState(), request = { fort: 'BridgeTheGap' }; let current = request;
+        pending.post({ command: 'LoadMissionFort', argument: request.fort });
+        const guide = { pending: () => pending, fortRequest: () => current }; app._clientGuide = guide; app._setState(AppState.MAIN_MENU);
+        const oldError = console.error; console.error = () => {};
+        try {
+            app._beginCampaignAudioForRequest(guide); const preparation = app._clientSoundPrepare;
+            app._beginCampaignAudioForRequest(guide); assert.equal(app._clientSoundPrepare, preparation);
+            if (cancel) { pending.cancel('LoadMissionFort'); current = null; }
+            fail(new Error('파일 실패')); await assert.rejects(preparation, /파일 실패/); await new Promise((resolve) => setImmediate(resolve));
+            assert.equal(app._state, cancel ? AppState.MAIN_MENU : AppState.ERROR);
+            assert.equal(pending.pending(), !cancel); assert.equal(app._loadError?.message ?? null, cancel ? null : '파일 실패');
+        } finally { console.error = oldError; app._missionAudioAssets.dispose(); }
+    }
+});
+
+// 아직 기존 World를 정리하지 않았다면 새 Fort 요청과 음향 준비를 앞당기지 않는다.
+test('앱 미션 효과음: 기존 World의 대기 요청 보존', () => {
+    const app = new Netstorm(), pending = new ClientState(), events = [];
+    pending.post({ command: 'LoadMissionFort', argument: 'BridgeTheGap' });
+    app._clientGuide = { pending: () => pending, run: () => events.push('guide') };
+    app._campaignWorld = { session: () => ({ connectionCallbackActive: () => false, pollLocalConnectionState: () => events.push('state'), pumpLocalConnection: () => events.push('packet') }) };
+    app._setState(AppState.MAIN_MENU); app._canvas = {}; app._render = () => {}; app._applyCursor = () => {}; app._startFrameLoop = () => {};
+    app._onFrame(0); assert.deepEqual(events, ['state', 'packet', 'guide']); assert.equal(pending.pending(), true); assert.equal(app._clientSoundPrepare, null);
 });

@@ -65,6 +65,7 @@ import { CampaignTemplateStorage } from './core/campaign-template-storage.js';
 import { loadClientWorldAssets } from './core/client-world-assets.js';
 import { ClientMissionAssets } from './core/client-mission-assets.js';
 import { CampaignGameWorld } from './core/campaign-game-world.js';
+import { runCampaignRequestFrame } from './core/campaign-request-frame.js';
 import { parseFort } from './assets/fort.js';
 import { createFortTypes } from './assets/type-flags.js';
 import { PATCH_TYPE_COUNT } from './assets/type-table.js';
@@ -1785,6 +1786,17 @@ export class Netstorm {
     // 선택한 미션 음악 한 곡만 비동기로 받고 해독한다.
     _prepareMissionMusic(name) { return this._missionAudioLoader().loadMusic(name); }
 
+    // 대기 중인 Fort 요청의 음향을 한 번 준비하고 현재 요청의 실패만 오류 화면에 기록한다.
+    _beginCampaignAudioForRequest(guide) {
+        if (this._clientSoundPlayer || this._clientSoundPrepare) return;
+        const generation = this._loadGeneration, request = guide.fortRequest();
+        this._prepareCampaignAudio().catch((error) => {
+            if (generation !== this._loadGeneration || this._clientGuide !== guide || guide.fortRequest() !== request) return;
+            reportGameError('mission-audio', error, { state: this._state, fort: request?.fort });
+            this._loadError = error; this._setState(AppState.ERROR); this._displayDirty = true;
+        });
+    }
+
     // AudioContext 와 재생기(AudioSystem)를 만들고 재생 재개를 요청한다. 사용자 입력 처리 안에서 불러야 한다.
     // 문맥은 원본 표본 빈도(22,050Hz)로 만들고, 받은 효과음·음악을 해독해 둔다.
     // 지원하지 않거나 실패해도 게임은 계속되며 상태 문자열로만 알린다. 메인 메뉴에서 다음 입력 때 다시 시도한다.
@@ -2333,8 +2345,12 @@ export class Netstorm {
         this._clock.tick(now);
         this._frameSeconds = now / 1000;
         // 원본 루프 2번: 현재 미션의 로컬 State만 Poll한다. 수신 콜백 안의 재진입은 정리와 전환을 미룬다.
-        const stateWorld = this._campaignWorld;
-        if (stateWorld && !stateWorld.session().connectionCallbackActive()) stateWorld.session().pollLocalConnectionState();
+        const stateWorld = this._campaignWorld, guide = this._clientGuide;
+        // 아직 World가 없는 대기 요청은 음향을 준비한 뒤 기존 Poll 전 요청만 State7로 넘긴다.
+        if (this._state === AppState.MAIN_MENU && guide?.pending().pending() && !stateWorld) {
+            this._beginCampaignAudioForRequest(guide);
+            if (this._clientSoundPlayer) runCampaignRequestFrame(guide, () => {}, () => this._runCampaignState7({}, { x: this._layout.logicalWidth, y: this._layout.logicalHeight }));
+        } else if (stateWorld && !stateWorld.session().connectionCallbackActive()) stateWorld.session().pollLocalConnectionState();
         // 원본 루프 3번: 자연 종료한 버퍼를 포함해 패킷 처리 전에 현재 재생 수를 갱신한다.
         this._clientSoundPlayer?.recount();
         // 원본 루프 4번: Poll 뒤 현재 World를 다시 조회해 같은 내부 전송을 진행한다. 완료 후 화면 설치는 별도 경계다.

@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { ClientState } from '../www/core/client-state.js';
 import { runCampaignRequestFrame } from '../www/core/campaign-request-frame.js';
-import { Netstorm } from '../www/netstorm.js';
+import { AppState, Netstorm } from '../www/netstorm.js';
 import { GameAssets } from '../www/assets/game-assets.js';
 import { GamePalette } from '../www/assets/palette.js';
 import { GameData } from '../www/assets/game-data.js';
@@ -77,21 +77,19 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
     app._settings = new Settings(); app._audio = new AudioSystem(context);
     app._assetLoader = { manifest: { files: manifest.files.filter((entry) => entry.path === 'sound/button.wav') },
         loadFile: async (entry) => Uint8Array.from(fs.readFileSync(path.join(DATA_ROOT, ...entry.path.split('/')))) };
-    await app._prepareCampaignAudio();
     app._root = { ownerDocument: { title: 'before' } }; app._resources = buildMenuResources(files);
     app._layout = { logicalWidth: 1024, logicalHeight: 768, visible: false }; app._surface = new IndexedSurface(1024, 768); app._presenter = new IndexedPresenter(null);
     app._mainMenu = new MainMenuScreen({ resources: app._resources }); app._mainMenu.resize(1024, 768); app._initializeClientGump();
     app._initializeClientWorldStorage(game, data.files); app._syncClientCloudOptions(); app._initializeClientPalette(game); app._initializeClientPaletteCache(game); app._initializeClientGuide();
-    app._canvas = {}; app._render = () => {}; app._startFrameLoop = () => {};
-    const guide = app._clientGuide, events = [];
-    const services = {};
+    app._canvas = {}; app._render = () => {}; app._startFrameLoop = () => {}; app._applyCursor = () => {};
+    const guide = app._clientGuide;
     try {
         guide.begin('Tutorial1'); guide.run(); guide.run();
         const request = guide.fortRequest(); assert.equal(request.fort, 'BridgeTheGap'); assert.equal(guide.pending().pending(), true);
-        assert.equal(runCampaignRequestFrame(guide, () => events.push('poll'), (current) => {
-            assert.equal(current, request); events.push('state7'); app._runCampaignState7(services, { x: 1024, y: 768 });
-        }), true);
-        assert.deepEqual(events, ['poll', 'state7']); assert.equal(request.consumed, true); assert.equal(guide.pending().pending(), false);
+        app._setState(AppState.MAIN_MENU); app._onFrame(0);
+        assert.equal(request.consumed, false); assert.equal(guide.pending().pending(), true); assert.ok(app._clientSoundPrepare);
+        await app._clientSoundPrepare; app._onFrame(16);
+        assert.equal(request.consumed, true); assert.equal(guide.pending().pending(), false);
         assert.ok(app._missionLoadingWindow); assert.equal(app._mainMenu.dialog, app._missionLoadingWindow);
         app._mainMenu.render(new IndexedSurface(1024, 768));
         const session = app._campaignWorld.session();
