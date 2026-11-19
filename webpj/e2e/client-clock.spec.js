@@ -6,7 +6,7 @@ test('게임 시계는 앱 프레임과 같은 수명으로 생성되고 재시�
   await page.goto('/');
   await page.waitForFunction(() => window.netstorm?.state === 'clickToStart' && window.netstorm?._gameClock?.time().number >= 2);
   const initial = await page.evaluate(() => {
-    const app = window.netstorm; window.previousGameClock = app._gameClock; window.previousLocal = app._clientLocal; window.previousRandom = app._clientRandom; window.previousSp = app._clientSp; window.previousPlayers = app._clientPlayers; window.previousTemplates = app._clientTemplates; window.previousCamera = app._clientGameplay.camera(); window.previousPaletteScreen = app._clientPaletteScreen; window.previousColorSort = app._clientColorSort;
+    const app = window.netstorm; window.previousGameClock = app._gameClock; window.previousLocal = app._clientLocal; window.previousRandom = app._clientRandom; window.previousSp = app._clientSp; window.previousPlayers = app._clientPlayers; window.previousTemplates = app._clientTemplates; window.previousCamera = app._clientGameplay.camera(); window.previousPaletteScreen = app._clientPaletteScreen; window.previousColorSort = app._clientColorSort; window.previousGump = app._clientGump;
     const camera = app._clientGameplay.camera();
     return { frames: app._gameClock.time().number, sameTicks: app._clientLocal.gameTicks().value, spInitialized: app._clientSp.store().initialized, playersInitialized: app._clientPlayers.initialized() && app._clientCoreData.players === app._clientPlayers.records(), surface: Boolean(app._surfaceStorage && app._surfaceStorage.source === app._gameAssets && app._surfaceStorage.processes.usesKernel(app._clientKernel)), shared: app._campaignSharedServices().randomGlobals === app._clientRandom && app._clientSp.randomGlobals() === app._clientRandom,
       camera: [...camera.target().limits, app._layout.logicalWidth, app._layout.logicalHeight, app._clientKencloud.worldRedraw().value, app._clientGameplay.mapRevision().value], palette: [app._clientPaletteScreen.paletteLoaded.value, app._clientColorSort.captured, app._clientColorSort.primary.constructed, app._clientColorSort.logical.every((color, index) => color === app._clientPaletteScreen.logicalPalette()[index]), app._clientColorSort.mapsReady, app._clientColorSort.ownerTables.ready, app._clientColorMapFiles.read('cache/!color.dat').length] };
@@ -15,6 +15,7 @@ test('게임 시계는 앱 프레임과 같은 수명으로 생성되고 재시�
   // Renderer 초기화 뒤 소유자 색표 등록이 같은 redraw 값을 한 번 더 증가시킨다.
   expect(initial.camera).toEqual([4096 - initial.camera[2], 2816 - initial.camera[3], initial.camera[2], initial.camera[3], 2, 1]);
   expect(initial.palette).toEqual([1, true, true, true, true, true, 2304]);
+  expect(await page.evaluate(() => [window.netstorm._clientGump.createState().count, window.netstorm._clientGump.root().width, window.netstorm._clientGump.root().height])).toEqual([1, initial.camera[2], initial.camera[3]]);
   // 화면 팔레트 변경이 실제 표시기의 같은 색 번호에 전달되는지 확인한 뒤 원래 색을 복구한다.
   const presentedColor = await page.evaluate(async () => {
     const app = window.netstorm, { GamePalette } = await import('/assets/palette.js');
@@ -38,11 +39,11 @@ test('게임 시계는 앱 프레임과 같은 수명으로 생성되고 재시�
     app.setAspect('4:3');
     const narrow = app._clientPaletteScreen, result = [narrow.width, narrow.height, narrow !== before, narrow.paletteLoaded === loaded,
       app._clientColorSort === colors, palette.every((value, index) => narrow.palette()[index] === value)];
-    app.setAspect('16:10'); result.push(app._clientPaletteScreen.width, app._clientPaletteScreen.height, app._clientColorSort === colors);
+    app.setAspect('16:10'); result.push(app._clientPaletteScreen.width, app._clientPaletteScreen.height, app._clientColorSort === colors, app._clientGump.root().width);
     app.setAspect('16:9'); result.push(app._clientPaletteScreen.width, app._clientPaletteScreen.height, app._clientColorSort === colors);
     return result;
   });
-  expect(resized).toEqual([1024, 768, true, true, true, true, 1228, 768, true, 1366, 768, true]);
+  expect(resized).toEqual([1024, 768, true, true, true, true, 1228, 768, true, 1228, 1366, 768, true]);
   // 실제 설정 쓰기는 같은 구름 전역을 즉시 갱신하고 검사 뒤 원래 값을 복구한다.
   const cloudSpeed = await page.evaluate(() => {
     const app = window.netstorm, cloud = app._clientKencloud, previous = cloud.value(1).value;
@@ -80,10 +81,11 @@ test('게임 시계는 앱 프레임과 같은 수명으로 생성되고 재시�
   });
   expect(guide).toEqual([['BridgeTheGap', true, '1', 'BridgeTheGap', true, 7, true], false, '0', true, true]);
   await page.evaluate(() => window.netstorm.destroy());
-  expect(await page.evaluate(() => [window.netstorm._gameClock, window.netstorm._clientLocal, window.netstorm._clientRandom, window.netstorm._clientSp, window.netstorm._clientPlayers, window.netstorm._clientTemplates, window.netstorm._clientPaletteScreen, window.netstorm._clientColorSort])).toEqual([null, null, null, null, null, null, null, null]);
+  expect(await page.evaluate(() => [window.netstorm._gameClock, window.netstorm._clientLocal, window.netstorm._clientRandom, window.netstorm._clientSp, window.netstorm._clientPlayers, window.netstorm._clientTemplates, window.netstorm._clientPaletteScreen, window.netstorm._clientColorSort, window.netstorm._clientGump])).toEqual([null, null, null, null, null, null, null, null, null]);
   await page.evaluate(() => window.netstorm.init(document.getElementById('netstorm_root')));
   await page.waitForFunction(() => window.netstorm?.state === 'clickToStart' && window.netstorm?._gameClock?.time().number >= 2);
   expect(await page.evaluate(() => window.netstorm._gameClock !== window.previousGameClock && window.netstorm._clientLocal !== window.previousLocal && window.netstorm._clientRandom !== window.previousRandom && window.netstorm._clientSp !== window.previousSp && window.netstorm._clientPlayers !== window.previousPlayers && window.netstorm._clientTemplates !== window.previousTemplates && window.netstorm._clientGameplay.camera() !== window.previousCamera && window.netstorm._clientGameplay.mapRevision().value === 1)).toBe(true);
   expect(await page.evaluate(() => window.netstorm._clientPaletteScreen !== window.previousPaletteScreen && window.netstorm._clientColorSort !== window.previousColorSort && window.netstorm._clientColorSort.captured && window.netstorm._clientColorSort.mapsReady && window.netstorm._clientColorSort.ownerTables.ready)).toBe(true);
+  expect(await page.evaluate(() => window.netstorm._clientGump !== window.previousGump && window.netstorm._clientGump.createState().count === 1)).toBe(true);
   expect(errors).toEqual([]);
 });

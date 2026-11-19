@@ -70,6 +70,7 @@ import { ClientTimeSource } from './core/client-time-source.js';
 import { resetGameStorage } from './platform/reset-storage.js';
 import { createCanvasGlyphRasterizer } from './platform/glyph-rasterizer.js';
 import { MainMenuScreen } from './ui/main-menu.js';
+import { ClientGumpRoot } from './ui/client-gump-root.js';
 import { TerrainPreview } from './ui/terrain-preview.js';
 import { PopupMenu } from './ui/popup-menu.js';
 import { buildPopupItems } from './ui/option-menus.js';
@@ -471,6 +472,8 @@ export class Netstorm {
         this._gameAssets = null; this._surfaceStorage = null; this._clientKernel = null;
         // 실제 미션 Guide는 자산과 장기 저장소가 준비된 뒤 생성한다.
         this._clientGuide = null; this._clientFort = null; this._clientFortName = null;
+        // 원본 공통 Gump 루트와 입력 전역은 Client 수명에 보유한다.
+        this._clientGump = null;
         // 설치된 GameWorld와 그 월드를 빌리는 현재 미션 세대다.
         this._campaignWorld = null; this._campaignWorldMissionToken = 0;
         // init 때 저장해 둔 루트 인라인 스타일이다. destroy 가 되돌린다.
@@ -810,6 +813,13 @@ export class Netstorm {
             worldConnecting: (token) => Boolean(this._campaignWorld?.connecting && token === this._campaignWorldMissionToken), tellGlobal: (name, mode) => { if (mode !== 1) throw new Error('Guide init Tell 인자 위반'); this._openTell(name); } });
     }
 
+    // 실제 Client 진단 DWORD와 현재 논리 화면으로 공통 Gump 루트를 만든다.
+    _initializeClientGump() {
+        if (this._clientGump || !this._layout || !this._clientGameplay) throw new Error('Client Gump의 중복 또는 공통 수명 누락');
+        const gameplay = this._clientGameplay;
+        this._clientGump = new ClientGumpRoot(this._layout.logicalWidth, this._layout.logicalHeight, () => gameplay.aiDebug().checking().value);
+    }
+
     // 현재 Fort·Guide·설정으로 원본 창 제목을 계산해 실제 문서에 적용한다.
     _refreshFortWindowTitle() {
         if (!this._root || !this._clientFort || !this._clientTemplates || !this._clientGameplay || !this._surfaceStorage || !this._gameData) throw new Error('Fort 제목의 실제 Client 수명 미설치');
@@ -965,6 +975,7 @@ export class Netstorm {
         // Guide를 먼저 반납하고 장기 Process 소유자는 TYPE·Kernel과 시계가 살아 있는 동안 반납한다.
         this._clientGuide?.dispose(); this._clientGuide = null; this._clientFortName = null; this._clientFort = null;
         this._releaseCampaignWorld();
+        this._clientGump?.dispose(); this._clientGump = null;
         this._clientConnections?.shutdownDevices();
         this._clientKencloud = null; this._clientHtml = null; this._clientConnections = null; this._clientConnectionActivity = null;
         this._surfaceStorage?.dispose();
@@ -1072,6 +1083,7 @@ export class Netstorm {
             this._syncClientCloudOptions();
             if (!this._clientPaletteScreen) this._initializeClientPalette(this._gameAssets);
             if (!this._clientColorSort.mapsReady) this._initializeClientPaletteCache(this._gameAssets);
+            if (!this._clientGump) this._initializeClientGump();
             if (!this._clientGuide) this._initializeClientGuide();
             await this.options.prepare(this);
         } catch (error) {
@@ -1682,6 +1694,7 @@ export class Netstorm {
         this._displayDirty = true;
         if (this._state === AppState.MAIN_MENU || this._state === AppState.TERRAIN_PREVIEW) this._ensureSurface();
         if (this._clientPaletteScreen) this._resizeClientPaletteScreen(next.logicalWidth, next.logicalHeight);
+        this._clientGump?.resize(next.logicalWidth, next.logicalHeight);
         this._applyCursor();
         if (next.visible) this._render(view.performance?.now?.() ?? 0);
     }
