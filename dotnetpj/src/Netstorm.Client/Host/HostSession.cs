@@ -2975,7 +2975,7 @@ public sealed partial class HostSession
     public RawAiPreparation AiPreparation => _aiPreparation ?? throw new InvalidOperationException("AI 준비 미연결");
 
     /// <summary>AI 전략 설정 본체를 빌려준다. 연결하기 전에는 예외다.</summary>
-    /// <remarks>2026-11-19 0.650에서 추가했다.</remarks>
+    /// <remarks>2026-11-19 0.650에서 추가했다. 0.658에서 신전 생산 TYPE을 실제 GameAux 상자로 이었다. 근거: cpppj src/client/RawCampaignSession.cpp 822행의 templeProduct다.</remarks>
     public RawAiStrategySetup AiStrategySetup => _aiStrategySetup ?? throw new InvalidOperationException("AI 전략 설정 미연결");
 
     /// <summary>AI 전체 프레임 본체를 빌려준다. 연결하기 전에는 예외다.</summary>
@@ -3117,7 +3117,7 @@ public sealed partial class HostSession
             {
                 LocalOwner = () => MissionPlayer.BattleOwner,
                 NoRegion = () => TerrainGlobals.NoRegion,
-                TempleProduct = () => throw new InvalidOperationException("AI 전략 신전 생산 TYPE 미연결(R6)"),
+                TempleProduct = () => GameAux.TempleProductTypeBox.Value,
                 BridgeType = () => BridgeState.BridgeType,
                 // 지도 상한은 독립 입력 기본값 256을 쓴다. 공유 Client 주소 연결은 R6에서 잇는다.
                 // 2026-11-19 0.654에서 추가했다. 근거: cpppj RawCarrierDropPoint.h 10행의 독립 기본값이다.

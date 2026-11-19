@@ -157,6 +157,37 @@ public sealed class HostSessionAiRuntimeTests
         Assert.Equal(0u, BinaryPrimitives.ReadUInt32LittleEndian(session.AiBrainMemory.Bytes(brain).AsSpan(0x2a8, 4)));
     }
 
+    /// <summary>신전이 있으면 세션 신전 생산물을 만들고 theme을 기록한다. 생산 TYPE은 실제 GameAux 상자에서 읽는다.</summary>
+    [Fact]
+    public void InitializeAiAddsSessionTempleProduct()
+    {
+        (HostSession session, IReadOnlyList<OriginalTypeRecord> types) = BuildScene();
+        int technology = session.Pool.Allocate(SidAllocation.Client);
+        session.Pool.AllocatedBytes(technology).Fill(0);
+        int temple = session.Pool.Allocate(SidAllocation.Client);
+        session.Pool.AllocatedBytes(temple).Fill(0);
+        session.Pool.AllocatedBytes(temple)[10] = 40;
+        types[40].Flags1 |= 0x800u;
+        types[40].Theme = 7;
+        session.GameAux.TempleProductTypeBox.Value = 60u;
+        for (int i = 0; i < 4; i++)
+        {
+            session.AiIslands.Add(1, unchecked((byte)i));
+        }
+
+        session.AiIslands.Temple(3, unchecked((uint)temple));
+        Put(session.PlayerRecords, 1 * 180 + 0x78, 3u);
+        Put(session.PlayerRecords, 2 * 180 + 0x78, 4u);
+        Put(session.PlayerRecords, 0 * 180 + 0x78, 127u);
+        Put(session.PlayerRecords, 1 * 180 + 0x9c, unchecked((uint)technology));
+        session.MissionPlayer.PlayerKnown = 1u;
+        uint brain = PrepareBrain(session, 1);
+        Put(session.AiBrainMemory.Bytes(brain), 0x264, 2u);
+        Assert.True(session.InitializeAi(1));
+        Assert.Equal(1u, BinaryPrimitives.ReadUInt32LittleEndian(session.AiBrainMemory.Bytes(brain).AsSpan(0x258, 4)));
+        Assert.Equal(7u, BinaryPrimitives.ReadUInt32LittleEndian(session.AiBrainMemory.Bytes(brain).AsSpan(0x390, 4)));
+    }
+
     /// <summary>양쪽 지역이 없으면 초기는 258을 쓰지 않고 거짓으로 돌아간다.</summary>
     [Fact]
     public void InitializeAiSkipsWithoutRegions()
