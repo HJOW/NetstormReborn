@@ -2252,6 +2252,9 @@ public sealed partial class HostSession
         // 펜스 후처리·정기 본체를 공장 분배보다 나중에 둔다. 펜스 사슬이 공장 사슬을 감싸므로 해제 순서는 펜스가 먼저다.
         // 2026-11-19 0.636에서 R4-4 펜스 Pop·정기용으로 추가했다.
         BuildFenceDevices(types);
+        // 장식 정기 분배를 펜스 분배보다 나중에 둔다. 장식 사슬이 펜스 사슬을 감싸므로 해제 순서는 장식이 먼저다.
+        // 2026-11-19 0.642에서 R4-4 장식 정기용으로 추가했다.
+        BuildDecorationRegularDevices(types);
     }
 
     /// <summary>공장 정기 트리거 본체를 세션에 연결하고 지형 분배 Pop의 공장 갈고리로 등록한다.</summary>
@@ -2340,6 +2343,21 @@ public sealed partial class HostSession
         }
 
         return BinaryPrimitives.ReadUInt32LittleEndian(raw) == 0x00509470u;
+    }
+
+    /// <summary>장식 가상표 2종(패치 0x50a820·0x50a8e8)인지 판정한다. CD판은 장식 전용 분배를 열지 않는다.</summary>
+    /// <param name="raw">조회할 슬롯 바이트다.</param>
+    /// <returns>장식 가상표이면 참이다.</returns>
+    /// <remarks>2026-11-19 0.642에서 R4-4 장식 정기용으로 추가했다. 근거: cpppj client/RawCampaignSession.cpp 1800~1806행의 장식 분기다.</remarks>
+    private bool IsDecorationVtable(ReadOnlySpan<byte> raw)
+    {
+        if (Pool.Edition != OriginalEdition.Patch1078)
+        {
+            return false;
+        }
+
+        uint table = BinaryPrimitives.ReadUInt32LittleEndian(raw);
+        return table == 0x0050a820u || table == 0x0050a8e8u;
     }
 
     /// <summary>간헐천 가상표인지 판정한다. 패치 0x50da88·CD 0x500760만 받는다.</summary>
@@ -2638,6 +2656,78 @@ public sealed partial class HostSession
     /// <returns>지형 분배 Pop의 펜스 갈고리로 등록한 본체다.</returns>
     /// <remarks>2026-11-19 0.636에서 추가했다. L1에서 적재 경로를 대조할 때 쓴다.</remarks>
     public RawFencePostPop FencePostPop => _fencePostPop ?? throw new InvalidOperationException("펜스 후처리 미연결");
+
+    /// <summary>장식 정기 분배 전에 사용하던 공통 정기 분배기다. 장식 사슬이 펜스 사슬을 감싸므로 해제 순서는 장식이 먼저다.</summary>
+    /// <remarks>2026-11-19 0.642에서 R4-4 장식 정기용으로 추가했다. 장식 가상표가 아니면 이전 처리기로 넘긴다.</remarks>
+    private RegularHandler? _beforeDecorationRegular;
+
+    /// <summary>장식 가상표 부모를 장식 정기 본체에 분배하고 나머지는 이전 처리기로 넘긴다.</summary>
+    /// <param name="fallback">장식이 맡지 않는 부모의 기존 처리기다. 없으면 payload를 돌려준다.</param>
+    /// <returns>같은 풀의 현재 가상표로 분배하는 처리기다.</returns>
+    /// <remarks>2026-11-19 0.642에서 R4-4 장식 정기용으로 추가했다. 근거: cpppj client/RawCampaignSession.cpp 1800~1806행의 장식 분기다.</remarks>
+    private RegularHandler RegularHandlerWithDecoration(RegularHandler? fallback) => (sid, ev, count, payload) =>
+    {
+        if (IsDecorationVtable(Pool.Slot(sid)))
+        {
+            return RunDecorationRegularSession(sid, ev, count, payload, fallback);
+        }
+
+        return fallback?.Invoke(sid, ev, count, payload) ?? payload;
+    };
+
+    /// <summary>장식 정기 분배 장치를 세션에 연결한다. Pop 분배는 기존 지형 경로를 그대로 쓴다.</summary>
+    /// <param name="types">같은 실제 TYPE 표다. 지형 Pop 장치와 같은 인스턴스여야 한다.</param>
+    /// <exception cref="InvalidOperationException">장식 정기 분배의 정기 프로세스·HP 장치가 미연결이다.</exception>
+    /// <exception cref="ArgumentException">장식 정기 TYPE이 지형 Pop 장치와 다르다.</exception>
+    /// <remarks>2026-11-19 0.642에서 R4-4 장식 정기용으로 추가했다. 근거: cpppj client/RawSurfaceDecoration.cpp 10~23행의 DecorationRegular 결선이다.</remarks>
+    private void BuildDecorationRegularDevices(IReadOnlyList<OriginalTypeRecord> types)
+    {
+        ArgumentNullException.ThrowIfNull(types);
+        if (_beforeDecorationRegular is not null)
+        {
+            throw new InvalidOperationException("장식 정기 분배 장치 중복 연결");
+        }
+
+        SquidProcessHost processes = PlayerProcesses ?? throw new InvalidOperationException("장식 정기 분배 프로세스 미연결");
+        if (_terrainPopTypes is null || !ReferenceEquals(types, _terrainPopTypes))
+        {
+            throw new ArgumentException("장식 정기 TYPE은 지형 Pop 장치와 같은 인스턴스여야 한다", nameof(types));
+        }
+
+        _beforeDecorationRegular = processes.Regular();
+        processes.SetRegularHandler(RegularHandlerWithDecoration(_beforeDecorationRegular));
+    }
+
+    /// <summary>같은 장기 풀·HP·해제의 현재 조회로 장식 정기 사건을 실행한다.</summary>
+    /// <param name="sid">처리할 장식 부모 번호다.</param>
+    /// <param name="event">사건 번호다.</param>
+    /// <param name="count">개수다.</param>
+    /// <param name="payload">전달 값이다.</param>
+    /// <param name="fallback">선택된 조기 반환 이외의 이전 처리기다.</param>
+    /// <returns>원문과 같은 반환 값이다.</returns>
+    /// <remarks>2026-11-19 0.642에서 R4-4 장식 정기용으로 추가했다. 근거: cpppj client/RawCampaignSession.cpp 1802~1805행의 typed 경로 장식 갈고리다. 가상98 전체 몸체 대신 현재 HP 직접 차감으로 잇는다. 방어 보정·소유자 통지·연소 갱신은 R6 피해 결선에서 잇는다. 삭제는 world.Destroy 전체 효과 대신 지형 해제로 잇는다. 송신·통지는 R6에서 잇는다.</remarks>
+    private float RunDecorationRegularSession(int sid, uint @event, uint count, float payload, RegularHandler? fallback)
+    {
+        RawSquidReward hp = _fortHp ?? throw new InvalidOperationException("장식 정기 HP 미연결");
+        var hooks = new DecorationRegularHooks
+        {
+            MaxHitPoints = parent => hp.MaxHitPoints(parent),
+            HitPoints = (parent, amount, _, _) =>
+            {
+                Span<byte> raw = Pool.AllocatedBytes(parent);
+                int current = BinaryPrimitives.ReadInt32LittleEndian(raw.Slice(26, 4));
+                BinaryPrimitives.WriteInt32LittleEndian(raw.Slice(26, 4), unchecked(current - amount));
+            },
+            Destroy = (parent, flags) =>
+            {
+                RawUnpop unpop = _terrainUnpop ?? throw new InvalidOperationException("장식 파괴 지형 해제 미연결");
+                IReadOnlyList<OriginalTypeRecord> types = _terrainPopTypes ?? throw new InvalidOperationException("장식 정기 TYPE 미연결");
+                unpop.Unpop(parent, types[Pool.Slot(parent)[RawSidPool.TypeOffset]], flags);
+            },
+            Damageable = (parent, code, times, value) => fallback?.Invoke(parent, code, times, value) ?? value,
+        };
+        return RawDecorationRegular.Run(Pool, Gameplay.Authority.Boss, sid, @event, count, payload, hooks);
+    }
 
     /// <summary>같은 장기 풀·프레임·난수의 현재 조회로 공장 정기 사건을 실행한다.</summary>
     /// <param name="sid">처리할 공장 부모 번호다.</param>
