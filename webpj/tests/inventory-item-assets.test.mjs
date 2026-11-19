@@ -8,6 +8,7 @@ import { decodeCanonType } from '../www/core/raw-canon-type.js';
 import { ClientImageGump } from '../www/ui/client-image-gump.js';
 import { ClientGumpBackground } from '../www/ui/client-gump-background.js';
 import { ClientHudDivider } from '../www/ui/client-hud-divider.js';
+import { ClientGumpDecoration, createClientDecorationState } from '../www/ui/client-gump-decoration.js';
 import { ClientGumpRoot } from '../www/ui/client-gump-root.js';
 import { GumpDrawState, GumpPixelTarget, setGumpDrawClip } from '../www/render/gump-draw.js';
 
@@ -28,6 +29,21 @@ test('생산 항목 자산: 실제 다리 TYPE·SHP와 Canon 패턴', () => {
         assert.ok(actual.length > 0); assert.deepEqual(actual, expected); assert.throws(() => hooks.type(188), /범위/u);
         assert.throws(() => hooks.walk({ ...query, type: 188 }, () => {}), /타입 오류/u);
     } finally { scene.world.dispose(); }
+});
+
+// 실제 장식은 배경과 네 모서리를 출력하고 확장된 사각형을 재그리도록 요청한다.
+test('Client 장식 Gump: 실제 패널 모서리·재그리기·삭제', () => {
+    const scene = new CampaignCursorScene(), root = new ClientGumpRoot(200, 200, () => 0, () => {}), dirty = [];
+    try {
+        const identity = Uint8Array.from({ length: 256 }, (_value, index) => index);
+        const background = new ClientGumpBackground(root, scene.assets, () => 35, () => ({ bright: identity, dark: identity }), () => ({ basic: new Uint8Array(9) }), () => 0);
+        const type = scene.assets.find('fortGump').block + 70, decoration = new ClientGumpDecoration(root, scene.assets, background, createClientDecorationState(type), () => 0, (rect) => dirty.push(rect));
+        const token = decoration.allocate(); decoration.construct(token, 60, 40); root.attach(token, 50, 50);
+        assert.deepEqual(dirty.at(-1), { left: 49, top: 49, right: 113, bottom: 93 });
+        const draw = new GumpDrawState(); setGumpDrawClip(draw, { left: 0, top: 0, right: 200, bottom: 200 });
+        const pixels = new Uint8Array(40000).fill(255); root.draw(token, draw, new GumpPixelTarget(pixels, 200, 200, draw));
+        assert.ok(pixels.some((value) => value !== 255)); root.remove(token); assert.equal(root.node(token), null);
+    } finally { root.dispose(); scene.world.dispose(); }
 });
 
 // 실제 배경에서 파생된 구분선도 같은 자산 생성과 클립 출력에 참여한다.
