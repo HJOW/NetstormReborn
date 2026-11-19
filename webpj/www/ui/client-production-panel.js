@@ -62,6 +62,12 @@ export class ClientProductionPanel {
         root.attach(this.#token, 0, 0); const technology = parts.technology(); root.bindObject(n.bridge, technology); root.bindObject(n.teleport, technology);
         this.#session.synchronizeProductionContents(); this.refresh(3); return this.#token;
     }
+    // 화면 높이가 바뀌면 기존 자식·Form을 유지하며 원본 하단 여백으로 다시 배치한다.
+    resize(height) {
+        if (!this.#token || !Number.isInteger(height) || height <= 80) throw new RangeError('생산 패널 화면 높이 또는 수명 오류');
+        const node = this.node(), value = Math.fround(height - 80); if (node.baseHeight === value) return;
+        node.baseHeight = node.height = value; this.#root.tree().push(this.#token); this.#root.attach(this.#token, 0, 0, this.#root.createState().collection.root, 0);
+    }
     // 공통 수명이 자식과 실제 Form을 먼저 반납한다.
     close() { if (this.#token) { this.#root.remove(this.#token); this.#token = 0; } }
 }

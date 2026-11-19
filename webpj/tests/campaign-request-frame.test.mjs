@@ -428,6 +428,9 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         const completeItem = gump.node(gump.node(completeNode.bridge).child), completeSlot = session.core().pool.slot(completeItem.content)[23];
         const completePixels = new Uint8Array(1366 * 768).fill(255); gump.draw(completeItem.child, draw, new GumpPixelTarget(completePixels, 1366, 768, draw));
         assert.ok(completePixels.some((value) => value !== 255));
-        assert.equal(gump.handle(completeToken, 0x020000f4, completeSlot, 0), 1); assert.equal(drop.preview, completeItem.content); cursor.cancel(); complete.close();
+        assert.equal(gump.handle(completeToken, 0x020000f4, completeSlot, 0), 1); assert.equal(drop.preview, completeItem.content); cursor.cancel();
+        const bridgeForm = gump.node(completeNode.bridge).form, budgetId = gump.node(completeNode.budget).id;
+        complete.resize(700); assert.equal(completeNode.height, 620); assert.equal(gump.node(completeNode.bridge).form, bridgeForm); assert.equal(gump.node(completeNode.budget).id, budgetId);
+        complete.resize(768); assert.equal(completeNode.height, 688); complete.close();
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); app._clientSoundDevice.dispose(); app._missionAudioAssets.dispose(); }
 });
