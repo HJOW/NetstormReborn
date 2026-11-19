@@ -47,7 +47,7 @@ import { MemoryColorMapFiles } from './core/color-map-files.js';
 import { ClientHtmlWindowGlobals } from './core/client-html-window-globals.js';
 import { ClientConnectionGlobals } from './core/client-connection-globals.js';
 import { ClientConnectionActivityGlobals } from './core/client-connection-activity-globals.js';
-import { captureCampaignMissionStarting, runCampaignMissionStarting } from './core/campaign-client-services.js';
+import { bindCampaignClientInputServices, bindCampaignOwnershipTheme, bindCampaignProductionRefresh, captureCampaignMissionStarting, runCampaignMissionStarting } from './core/campaign-client-services.js';
 import { ClientRandomGlobals } from './core/random.js';
 import { ClientSpGlobals } from './core/client-sp-globals.js';
 import { ClientSubscriberGlobals } from './core/client-subscriber-globals.js';
@@ -939,6 +939,25 @@ export class Netstorm {
         };
     }
 
+    // 같은 앱의 현재 설정·Gump·입력 큐를 미션 소유권과 자산 후처리에 빌려준다.
+    _campaignGameplayServices() {
+        const services = {};
+        bindCampaignOwnershipTheme({ configuration: () => {
+            if (!this._gameData) throw new Error('미션 소유권의 실제 설정 수명 누락');
+            return this._gameData;
+        } }, services);
+        bindCampaignProductionRefresh({ route: (...args) => {
+            if (!this._clientGump) throw new Error('미션 생산 갱신의 실제 Gump 수명 누락');
+            return this._clientGump.input().route(...args);
+        } }, services);
+        bindCampaignClientInputServices({ input: () => {
+            if (!this._clientInputQueue) throw new Error('미션 명령의 실제 입력 큐 수명 누락');
+            return this._clientInputQueue;
+        } }, services);
+        services.assets.queueCommand = services.developerQueue;
+        return services;
+    }
+
     // 현재 논리 화면과 Client 전역으로 카메라 Renderer·snapshot·한계를 원본 순서로 초기화한다.
     _initializeClientRendererView() {
         const layout = this._layout, game = this._clientGameplay, clouds = this._clientKencloud;
@@ -1026,7 +1045,10 @@ export class Netstorm {
         const fort = parseFort(current.script.readFortImage(request.fort), createFortTypes(this._gameAssets.typeTable));
         const install = { ...this._campaignInstallServices(), ...services?.install };
         const localLogin = services?.localLogin === null ? null : { ...this._campaignLoginServices(), ...services?.localLogin };
-        const world = new CampaignGameWorld(this._gameAssets, this._gameData.files, fort, request.fort, { ...services, ...this._campaignSharedServices(), install, localLogin }, viewport);
+        const gameplay = this._campaignGameplayServices();
+        const ownership = { ...gameplay.ownership, ...services?.ownership };
+        const assets = { ...gameplay.assets, ...services?.assets, postPop: { ...gameplay.assets.postPop, ...services?.assets?.postPop } };
+        const world = new CampaignGameWorld(this._gameAssets, this._gameData.files, fort, request.fort, { ...gameplay, ...services, ...this._campaignSharedServices(), install, localLogin, ownership, assets }, viewport);
         this._campaignWorld = world; this._campaignWorldMissionToken = current.runtime.saveToken;
         return world;
     }
