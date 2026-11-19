@@ -698,15 +698,26 @@ export class Netstorm {
         this._gameAssets = game; this._surfaceStorage = storage; this._clientKernel = kernel;
     }
 
-    // 실제 fortPal 자산을 원본 시작 순서로 Screen에 적용하고 그 논리 색을 한 번 캡처한다. 표시 장치와 캐시는 후속 연결이다.
+    // 실제 fortPal 자산을 Screen과 표시기에 적용하고 그 논리 색을 한 번 캡처한다. DIB 표면과 캐시는 후속 연결이다.
     _initializeClientPalette(game) {
         if (this._clientPaletteScreen || this._clientColorSort || !this._layout || !game) throw new Error('Client 팔레트의 중복 또는 시작 수명 누락');
-        const screen = new Screen(this._layout.logicalWidth, this._layout.logicalHeight);
+        const screen = new Screen(this._layout.logicalWidth, this._layout.logicalHeight, { devices: { paletteChanged: (palette) => this._applyClientScreenPalette(palette) } });
         const colors = new ClientColorSortInput();
         screen.init(); screen.loadPalette(game.palette, 1);
         colors.captureWithPrimary(screen.logicalPalette());
         screen.bindColorSortInput(() => colors.logical);
         this._clientPaletteScreen = screen; this._clientColorSort = colors;
+    }
+
+    // 현재 Screen의 BGRX 색을 실제 표시기의 RGB 표로 전달하고 다음 화면 출력을 예약한다.
+    _applyClientScreenPalette(palette) {
+        if (!(palette instanceof Uint8Array) || palette.length !== 1024) throw new TypeError('Client Screen 팔레트 BGRX 계약');
+        const rgb = new Uint8Array(768);
+        // 색 번호와 원본 채널 순서를 보존하며 표시기 형식으로 옮긴다.
+        for (let index = 0; index < 256; index += 1) {
+            rgb[index * 3] = palette[index * 4 + 2]; rgb[index * 3 + 1] = palette[index * 4 + 1]; rgb[index * 3 + 2] = palette[index * 4];
+        }
+        this._presenter?.setPalette(rgb); this._displayDirty = true;
     }
 
     // 최초 TYPE 등록 뒤 같은 primary로 소유자 표와 9색표 캐시를 만들고 Screen 명암 조회에 연결한다.

@@ -15,6 +15,15 @@ test('게임 시계는 앱 프레임과 같은 수명으로 생성되고 재시�
   // Renderer 초기화 뒤 소유자 색표 등록이 같은 redraw 값을 한 번 더 증가시킨다.
   expect(initial.camera).toEqual([4096 - initial.camera[2], 2816 - initial.camera[3], initial.camera[2], initial.camera[3], 2, 1]);
   expect(initial.palette).toEqual([1, true, true, true, true, true, 2304]);
+  // 화면 팔레트 변경이 실제 표시기의 같은 색 번호에 전달되는지 확인한 뒤 원래 색을 복구한다.
+  const presentedColor = await page.evaluate(async () => {
+    const app = window.netstorm, { GamePalette } = await import('/assets/palette.js');
+    const rgb = app._gameAssets.palette.rgb.slice(); rgb.set([17, 33, 97], 37 * 3);
+    app._clientPaletteScreen.loadPalette(new GamePalette(rgb), 0);
+    const bytes = new Uint8Array(app._presenter.lookup.buffer).slice(37 * 4, 37 * 4 + 4);
+    app._clientPaletteScreen.loadPalette(app._gameAssets.palette, 0); return [...bytes];
+  });
+  expect(presentedColor).toEqual([17, 33, 97, 255]);
   // 준비는 실제 공개 자산에서 스크립트가 지정한 Fort를 읽고 사용 뒤 등록 객체를 반납한다.
   const mission = await page.evaluate(() => {
     const prepared = window.netstorm._prepareCampaignMission('Tutorial1');

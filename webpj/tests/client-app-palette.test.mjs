@@ -2,8 +2,9 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Netstorm } from '../www/netstorm.js';
-import { GamePalette } from '../www/assets/palette.js';
+import { GamePalette, buildRgbaLookup } from '../www/assets/palette.js';
 import { GameAssets } from '../www/assets/game-assets.js';
+import { IndexedPresenter } from '../www/render/presenter.js';
 import { realCaptureAssets } from './capture-assets-support.mjs';
 import { readData } from './helpers.mjs';
 
@@ -32,6 +33,21 @@ test('Client 시작 팔레트: 실패한 크기는 소유자를 발행하지 않
     const app = new Netstorm(); app._layout = { logicalWidth: 0, logicalHeight: 768 };
     assert.throws(() => app._initializeClientPalette({ palette: GamePalette.parse(readData('d/GIFCLOUD.COL')) }), /크기 오류/u);
     assert.equal(app._clientPaletteScreen, null); assert.equal(app._clientColorSort, null);
+});
+
+// 현재 화면 색의 BGRX를 표시기의 RGB로 연결하며 팔레트 변경 때 재표시를 예약한다.
+test('Client 화면 팔레트: 실제 표시기의 색상과 갱신 요청을 바꾼다', () => {
+    const app = new Netstorm(), palette = GamePalette.parse(readData('d/GIFCLOUD.COL'));
+    app._layout = { logicalWidth: 1024, logicalHeight: 768 }; app._presenter = new IndexedPresenter(null);
+    app._initializeClientPalette({ palette });
+    const rgb = palette.rgb.slice(); rgb.fill(0, 0, 3); rgb.fill(255, 765, 768);
+    assert.deepEqual(app._presenter.lookup, buildRgbaLookup(rgb));
+    const changed = rgb.slice(); changed.set([17, 33, 97], 3 * 37);
+    app._displayDirty = false; app._presenter.stale = false;
+    app._clientPaletteScreen.loadPalette(new GamePalette(changed), 0);
+    assert.deepEqual(app._presenter.lookup, buildRgbaLookup(changed));
+    assert.equal(app._displayDirty, true); assert.equal(app._presenter.stale, true);
+    assert.throws(() => app._applyClientScreenPalette(new Uint8Array(3)), /BGRX/u);
 });
 
 // 실제 자산의 첫 miss와 같은 페이지 재시작의 hit가 같은 캐시와 별도 Client 소유자를 사용한다.
