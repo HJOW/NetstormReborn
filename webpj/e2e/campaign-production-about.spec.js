@@ -44,7 +44,12 @@ test('Tutorial 생산 항목에서 우클릭으로 정보와 도움말을 연다
   });
   expect(menu.count).toBeGreaterThan(0); expect(menu.title).toBe(true); expect(menu.form).toBe(true);
   await page.mouse.move(menu.x, menu.y); await page.mouse.click(menu.x, menu.y, { delay: 60 });
-  await page.waitForFunction(() => window.netstorm._mainMenu.dialog?.topic?.endsWith('Type'));
+  await page.waitForFunction(() => window.netstorm._mainMenu.dialog?.topic === 'bridgeType');
   await clickLabel(page, 'OK'); await page.waitForFunction(() => !window.netstorm._mainMenu.dialog);
+  // 원본 다리에는 정보 태그가 없으므로 실제 썬더 팩토리 TYPE 명령을 큐에 넣어 별도 정보 화면을 확인한다.
+  await page.evaluate(() => { const app = window.netstorm, type = app._gameAssets.find('thunderFactory').block + 70; app._clientInputQueue.pushCommand(0x02000017, 0, type); });
+  await page.waitForFunction(() => window.netstorm._mainMenu.dialog?.topic === 'thunderFactoryType' && window.netstorm._mainMenu.dialog.information);
+  const information = await page.evaluate(() => { const pane = window.netstorm._mainMenu.dialog.information; return { x: pane.x, y: pane.y, lines: pane.softLines.length }; });
+  expect(information.lines).toBeGreaterThan(0); await clickLabel(page, 'OK'); await page.waitForFunction(() => !window.netstorm._mainMenu.dialog);
   await expect.poll(() => page.evaluate(() => window.netstorm._clientInputQueue.size)).toBe(0); expect(errors).toEqual([]);
 });

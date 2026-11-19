@@ -95,6 +95,7 @@ import { refreshWindowTitle } from './core/window-title.js';
 import { decodeWindows1252, encodeWindows1252 } from './assets/text-encoding.js';
 import { displayTextCodec } from './assets/display-text.js';
 import { RawPlayerIdentity } from './core/raw-player-identity.js';
+import { buildQuickHelpInfoHtml } from './ui/quick-help-info.js';
 import { CampaignSessionAssets } from './core/raw-campaign-session-owners.js';
 import { PriestPlacementAssets } from './core/priest-placement-assets.js';
 import { RawSurfaceStorage } from './core/raw-surface-storage.js';
@@ -1390,7 +1391,10 @@ export class Netstorm {
             else if (code === 0x02000017 && !release && !this._mainMenu?.dialog) {
                 const type = event.y >>> 0, types = world.session().core().types;
                 if (!type || type >= 256 || type >= types.length) throw new RangeError('생산 정보 Help TYPE 범위 오류');
-                this._closeCampaignPopups(); this._openHelp(types[type].name.split('\0', 1)[0] + this._resources.translate('Type'));
+                const information = () => buildQuickHelpInfoHtml({ type: () => world.session().helpTypeInfo(type),
+                    description: () => this._resources.translate(types[type].description), hitPoints: () => world.session().hitPoints().typeHitPoints(type),
+                    translate: (text) => this._resources.translate(text), substitute: (text) => this._gameData.substitute(text), config: (key) => this._gameData.get(key) ?? '' });
+                this._closeCampaignPopups(); this._openHelp(types[type].name.split('\0', 1)[0] + this._resources.translate('Type'), information);
             }
             else if (code === 0x0200005d && !release && !this._mainMenu?.dialog) world.session().requestSalvage(event.y >>> 0);
             else if (code === PRODUCTION_BRIDGE_COMMAND && !release && !this._mainMenu?.dialog) this._dispatchCampaignBridgeProduction(event);
@@ -1918,18 +1922,18 @@ export class Netstorm {
 
     // 일반 도움말 창을 열어 메인 메뉴 위에 올린다(원본 F1Help: 메인 메뉴 Help 목록의 General Help 행과 F1 키). 이미 열려 있으면 그 창에서 주제만 첫 주제로 되돌린다.
     // 도움말 파일(`Quick Help Spec`)이 없으면 원본처럼 오류 로그만 남기고 열지 않는다. 바깥 주소 링크는 `_openExternalAddress` 로 새 탭/창에 연다(2026-11-07 WB03-AD, 그 전에는 콘솔 안내만). 열었으면 true 를 돌려준다. (2026-10-30 WB03-G)
-    _openHelp(topic) {
+    _openHelp(topic, information = null) {
         if (!this._mainMenu || !this._gameData || !this._resources) return false;
         const open = this._mainMenu.dialog;
         if (open instanceof HelpWindow && !open.closed) {
-            open.open(topic);
+            open.open(topic, information);
             this._mainMenu.dirty = true;
             return true;
         }
         const result = createHelpWindow({
             gameData: this._gameData,
             resources: this._resources,
-            topic,
+            topic, information,
             screen: { width: this._mainMenu.width, height: this._mainMenu.height },
             now: () => this._frameSeconds,
             onClose: () => {

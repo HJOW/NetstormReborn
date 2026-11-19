@@ -285,8 +285,12 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         while (appMenu && gump.node(appMenu).command !== 26) appMenu = gump.node(appMenu).next;
         assert.ok(appMenu); const appMenuBounds = gump.collection().bounds(appMenu), helpX = appMenuBounds.left + 8, helpY = appMenuBounds.top + 5;
         gump.broadcast(0, helpX, helpY); assert.equal(gump.input().route(0x10000, helpX, helpY), appMenu);
-        app._runCampaignInputFrame(); assert.ok(app._mainMenu.dialog); assert.ok(app._mainMenu.dialog.topic.endsWith('Type'));
-        app._mainMenu.setDialog(null); gump.lifetime().cleanup();
+        app._runCampaignInputFrame(); assert.ok(app._mainMenu.dialog); assert.equal(app._mainMenu.dialog.topic, 'bridgeType');
+        // 원본 다리 주제에는 info 태그가 없다. 실제 info 태그가 있는 썬더 팩토리 주제를 같은 큐로 요청한다.
+        assert.equal(app._mainMenu.dialog.information, null); app._mainMenu.setDialog(null); gump.lifetime().cleanup();
+        const factoryType = game.find('thunderFactory').block + 70; app._clientInputQueue.pushCommand(0x02000017, 0, factoryType); app._runCampaignInputFrame();
+        assert.equal(app._mainMenu.dialog.topic, 'thunderFactoryType'); assert.ok(app._mainMenu.dialog.information); assert.ok(app._mainMenu.dialog.information.softLines.length);
+        app._mainMenu.setDialog(null);
         assert.throws(() => app._prepareCampaignProduction(), /수명 오류/);
         // 실제 앱 프레임은 월드를 표시하고 Tell을 그 위에 합성하며 닫은 뒤 DIB 원본을 복구한다.
         let presentations = 0; app._presenter.present = () => { presentations += 1; };
