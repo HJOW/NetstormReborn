@@ -7,8 +7,8 @@
 
 // 원본 signed 구간 길이 한도(이 값을 넘는 입력은 원본 signed 범위 밖)다.
 const INT32_MAXIMUM = 0x7fffffff;
-// 원문 바이트 문자열(바이트 하나가 문자 하나)을 NUL 로 끝낸 바이트 배열로 바꾼다. 입력 버퍼의 NUL 은 마지막 구간의 NUL 탐색 종료 기준이다.
-function terminated(source) { const bytes = new Uint8Array(source.length + 1); for (let i = 0; i < source.length; i += 1) bytes[i] = source.charCodeAt(i) & 255; return bytes; }
+// 입력 코드 단위 폭을 보존해 구간마다 NUL 종료 배열을 만든다.
+function terminated(source, kind = Uint8Array) { const bytes = new kind(source.length + 1); for (let i = 0; i < source.length; i += 1) bytes[i] = source.charCodeAt(i); return bytes; }
 
 // 다중 줄 스타일 파서다. 같은 판본·조각/그림/팔레트/옵션을 쓰는 처리기와 노드 저장소는 이 파서보다 오래 살아야 한다.
 // 사용: new ScrollingTextGumpMarkup(scrollingTextGump, style, pictures, styleTextMarkup, { node, base }).parse(token, '안내 ~[I fortGump.*] ~B굵게~N')
@@ -32,9 +32,10 @@ export class ScrollingTextGumpMarkup {
     #tag(token) { const node = this.#node(token); return { get value() { return node.metadata; }, set value(value) { node.metadata = value >>> 0; } }; }
 
     // 문자열의 첫 NUL 까지만 처리한다. 현재 기본 문맥을 복사해 시작하되 `~.`/`~n` 은 현재 기본 문맥을 다시 읽는다. T 태그는 +c8 에 호출 간 유지된다.
-    // 원본 끝 `~` 의 버퍼 밖 접근 대신 마지막 빈 입력을 수행하고, 닫히지 않은 대괄호는 `~[` 두 글자만 소비한다. text 는 바이트 문자열(또는 Uint8Array)이다.
+    // 원본 끝 `~` 의 버퍼 밖 접근 대신 마지막 빈 입력을 수행하고, 닫히지 않은 대괄호는 `~[` 두 글자만 소비한다. text 는 바이트 문자열·Uint8Array 또는 명시 UTF-16 Uint16Array다.
     parse(token, text) {
-        if (text instanceof Uint8Array) { let value = ''; for (let i = 0; i < text.length; i += 1) value += String.fromCharCode(text[i]); text = value; }
+        let kind = Uint8Array;
+        if (text instanceof Uint8Array || text instanceof Uint16Array) { kind = text.constructor; let value = ''; for (let i = 0; i < text.length; i += 1) value += String.fromCharCode(text[i]); text = value; }
         if (text.length > INT32_MAXIMUM) throw new RangeError('다중 줄 스타일 원본 signed 구간 길이 한도 초과');
         const context = Uint32Array.from(this.#node(token).textContext);
         const nul = text.indexOf('\0'); const source = nul < 0 ? text : text.slice(0, nul);
@@ -42,13 +43,13 @@ export class ScrollingTextGumpMarkup {
         // 명령 앞의 문자열을 먼저 더한다. 소리/통지가 바꾼 현재 태그/기본 문맥은 다음 구간에서 다시 사용한다.
         for (;;) {
             const mark = source.indexOf('~', position);
-            const remaining = terminated(source.slice(position));
+            const remaining = terminated(source.slice(position), kind);
             if (mark < 0) { this.#text.appendText(token, remaining, context, -1, this.#node(token).metadata); return; }
             if (mark > position) this.#text.appendText(token, remaining, context, mark - position, this.#node(token).metadata);
             const command = source[mark + 1] ?? '\0'; let next = mark + 2;
             if (command === '~') {
                 // 리터럴도 길이 1 의 버퍼 입력이므로 줄 추가 통지와 redraw 를 생략하지 않는다.
-                this.#text.appendText(token, Uint8Array.of(126, 0), context, 1, this.#node(token).metadata);
+                this.#text.appendText(token, kind.of(126, 0), context, 1, this.#node(token).metadata);
             } else if (command === '[') {
                 const close = source.indexOf(']', next);
                 if (close >= 0) {

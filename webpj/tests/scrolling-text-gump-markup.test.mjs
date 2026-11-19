@@ -41,6 +41,18 @@ test('Parse: 구간마다 appendText → dirty → redraw(false) 이고 길이 -
     const w = parserScene(); let notices = 0; w.bufferState.onAppend = () => { notices += 1; }; w.parser.parse(3, ''); assert.equal(notices, 1); assert.deepEqual(only(w.slider, 'redraw'), [['redraw', 3, false]]); assert.deepEqual(tail(w), []);
 });
 
+// 명시 UTF-16은 한글과 보조 평면 코드 단위·리터럴·태그를 같은 조각에 보존한다.
+test('Parse UTF-16: 한글·서로게이트·스타일 명령의 코드 단위를 보존한다', () => {
+    const s = parserScene(), source = '한~B글~~끝~[T7]🙂\0';
+    const input = Uint16Array.from({ length: source.length }, (_value, index) => source.charCodeAt(index)); s.parser.parse(3, input);
+    const nodes = []; let token = s.bufferState.hardLines[0];
+    // 같은 버퍼 체인의 실제 UTF-16 조각을 순서대로 읽는다.
+    while (token) { const node = s.fragments.fragments.get(token); nodes.push(node); token = node.next; }
+    assert.ok(nodes.every((node) => node.text instanceof Uint16Array));
+    assert.deepEqual(nodes.map((node) => String.fromCharCode(...node.text.subarray(0, node.text.indexOf(0)))), ['한', '글', '~', '끝', '🙂']);
+    assert.deepEqual(nodes.map((node) => node.context[3]), [0, 2, 2, 2, 2]); assert.equal(nodes.at(-1).metadata, 7);
+});
+
 test('Parse 짧은 명령: 색은 StyleText 팔레트 장치·`~.` `~n` 은 현재 기본 문맥 재조회·제한(callback)이면 글꼴 0/1/3/4 무시·모르는 명령은 `~` 만 버린다', () => {
     const s = parserScene(); s.parser.parse(3, 'a~kb~.c~nd');
     assert.deepEqual(tail(s).map((x) => [x.text, x.context[2]]), [['a', 7], ['b', 107], ['c', 7], ['d', 7]]);
