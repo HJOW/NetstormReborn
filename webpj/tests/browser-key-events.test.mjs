@@ -2,7 +2,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { InputQueue } from '../www/core/input-queue.js';
-import { queueBrowserVirtualKeyEvent } from '../www/platform/browser-key-events.js';
+import { queueBrowserVirtualKeyEvent, queueBrowserCharacterEvent } from '../www/platform/browser-key-events.js';
 
 // 방향·기능·보조 키, 누름/뗌과 문자·IME 제외를 실제 큐에서 확인한다.
 test('브라우저 가상 키: 원본 코드·수정자·좌표와 문자 분리', () => {
@@ -17,4 +17,21 @@ test('브라우저 가상 키: 원본 코드·수정자·좌표와 문자 분리
     assert.equal(queueBrowserVirtualKeyEvent(queue, { code: 'ArrowLeft', isComposing: true }, pointer, false), false);
     assert.equal(queueBrowserVirtualKeyEvent(queue, { code: 'F13' }, pointer, false), false);
     assert.equal(queue.empty, true); assert.throws(() => queueBrowserVirtualKeyEvent(null, {}, pointer, false), /큐/u);
+});
+
+// 문자 사건과 가상 키 사건을 분리하고 수정자·제어 키를 보존한다.
+test('브라우저 문자 키: 영문·1252·제어 문자와 조합 제외', () => {
+    const queue = new InputQueue(), pointer = { x: -1, y: 7 };
+    assert.equal(queueBrowserCharacterEvent(queue, { code: 'KeyA', key: 'A', shiftKey: true }, pointer), true);
+    assert.deepEqual(queue.pop(false), { code: 0x20000041, x: -1, y: 7 });
+    assert.equal(queueBrowserCharacterEvent(queue, { code: 'KeyA', key: 'a', ctrlKey: true }, pointer), true);
+    assert.equal(queue.pop(false).code, 0x10000001);
+    assert.equal(queueBrowserCharacterEvent(queue, { code: 'KeyE', key: '€' }, pointer), true); assert.equal(queue.pop(false).code, 0x80);
+    for (const [key, value] of [['Backspace', 8], ['Tab', 9], ['Enter', 13], ['Escape', 27]]) {
+        assert.equal(queueBrowserCharacterEvent(queue, { key }, pointer), true); assert.equal(queue.pop(false).code, value);
+    }
+    assert.equal(queueBrowserCharacterEvent(queue, { key: '한', isComposing: true }, pointer), false);
+    assert.equal(queueBrowserCharacterEvent(queue, { key: '한' }, pointer), false);
+    assert.equal(queueBrowserCharacterEvent(queue, { key: 'ArrowRight' }, pointer), false);
+    assert.equal(queue.empty, true);
 });

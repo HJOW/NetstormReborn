@@ -54,3 +54,13 @@ test('브라우저 비문자 키의 원본 큐 예약', async ({ page }) => {
   const codes = await page.evaluate(() => { const queue = window.netstorm._clientInputQueue; return [queue.pop(false).code, queue.pop(false).code, queue.empty]; });
   expect(codes).toEqual([0x00270000, 0x80270000, true]);
 });
+
+// 실제 Canvas의 영문과 Enter는 누름 한 번당 원본 문자 사건 하나다.
+test('브라우저 문자 키의 원본 큐 예약', async ({ page }) => {
+  await page.goto('/'); await page.waitForFunction(() => window.netstorm?.state === 'clickToStart');
+  const canvas = page.locator('canvas'); await canvas.focus();
+  await page.evaluate(() => { window.netstorm._clientNativeInputEnabled = true; });
+  await page.keyboard.press('a'); await page.keyboard.press('Enter');
+  const codes = await page.evaluate(() => { const queue = window.netstorm._clientInputQueue; return [queue.pop(false).code, queue.pop(false).code, queue.empty]; });
+  expect(codes).toEqual([0x61, 13, true]);
+});

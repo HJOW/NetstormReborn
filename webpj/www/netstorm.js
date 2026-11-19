@@ -34,7 +34,7 @@ import { Progress, isProgressKey } from './platform/progress.js';
 import { reportGameError } from './platform/error-reporting.js';
 import { BrowserInputPoll } from './platform/browser-input-poll.js';
 import { queueBrowserMouseEvent } from './platform/browser-mouse-events.js';
-import { queueBrowserVirtualKeyEvent } from './platform/browser-key-events.js';
+import { queueBrowserVirtualKeyEvent, queueBrowserCharacterEvent } from './platform/browser-key-events.js';
 import { InputQueue } from './core/input-queue.js';
 import { GumpPointerBoundaryState, prepareGumpPointerBoundaryWithQueue } from './ui/gump-pointer-boundary.js';
 import { ClientFrameClock } from './core/client-frame-clock.js';
@@ -1911,7 +1911,10 @@ export class Netstorm {
     _onKeyDown(event) {
         this._clientInputPoll.recordKeyDown(event.code, this._input.keys.has(event.code) || event.repeat);
         this._input.keys.add(event.code);
-        if (this._clientNativeInputEnabled) queueBrowserVirtualKeyEvent(this._clientInputQueue, event, this._input.pointer, false);
+        if (this._clientNativeInputEnabled) {
+            queueBrowserVirtualKeyEvent(this._clientInputQueue, event, this._input.pointer, false);
+            queueBrowserCharacterEvent(this._clientInputQueue, event, this._input.pointer);
+        }
         if (PREVENTED_KEYS.has(event.code)) event.preventDefault();
         this._retryAudioOnGesture();
         // 미리보기의 키 정책은 게임 명령과 분리한다. Escape는 메뉴로 돌아가며 방향키는 카메라만 바꾼다. (2026-11-02 WB03-AA)
