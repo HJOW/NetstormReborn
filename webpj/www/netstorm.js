@@ -63,6 +63,8 @@ import { bindCampaignAiClientServices, bindCampaignClientInputServices, bindCamp
 import { bindCampaignUserInputServices } from './core/campaign-user-input-services.js';
 import { CampaignUserInput } from './core/campaign-user-input.js';
 import { makeCampaignCursorClientEffects } from './core/campaign-cursor-client-effects.js';
+import { RawContainedFinder } from './core/raw-contained-finder.js';
+import { PRODUCTION_BRIDGE_COMMAND } from './core/production-shortcuts.js';
 import { ProductionMaintenanceGlobals, ProductionMaintenancePanel } from './core/raw-production-maintenance.js';
 import { GameMenuActions } from './core/game-menu-actions.js';
 import { gameMenuCommandValue } from './core/game-menu-commands.js';
@@ -1273,6 +1275,27 @@ export class Netstorm {
         production.session.updateProductionContents(); production.maintenance.run();
     }
 
+    // 생산 패널의 원본 슬롯 명령을 현재 기술 내용물과 실제 커서에 전달한다.
+    _dispatchCampaignBridgeProduction(event) {
+        const world = this._campaignWorld, production = this._campaignProduction, names = this._clientSoundNames, sound = this._clientSoundPlayer;
+        if (!world || !production || production.session !== world.session() || !names || !sound) throw new Error('미션 다리 생산의 실제 수명 누락');
+        const session = production.session, context = session.productionContext(), owner = context.gameplay.player.templateOwner;
+        if (!context.gameplay.player.playerKnown) throw new Error('생산의 명시 PlayerKnown 진단');
+        const records = context.players.records(), at = owner * 180 + 0x9c;
+        if (!Number.isInteger(owner) || owner < 0 || owner >= 9 || at + 4 > records.length) throw new RangeError('생산의 실제 Player 기술 필드 없음');
+        const technology = new DataView(records.buffer, records.byteOffset + at, 4).getUint32(0, true);
+        if (technology > 0xffff) throw new RangeError('생산의 기술 SID 범위');
+        const finder = new RawContainedFinder(context.storage.pool, session.productionFinder());
+        // 실제 기술 내용물의 원본 순서와 슬롯 BYTE를 그대로 사용한다.
+        for (let sid = finder.begin(technology); sid; sid = finder.next()) {
+            const raw = context.storage.pool.slot(sid);
+            if (((raw[20] | (raw[21] << 8)) & 0x40) && raw[23] === (event.x >>> 0)) {
+                session.cursor().take(sid, 0); sound.play(names.lookup('getPiece.wav'), 0, 0, 0, 0, 0); return true;
+            }
+        }
+        return false;
+    }
+
     // 같은 Player·월드 전역에 원본 홈·사제 보기 메뉴 명령을 분배한다.
     _dispatchCampaignViewAction(event) {
         const game = this._clientGameplay, storage = this._surfaceStorage, world = this._campaignWorld, players = this._clientPlayers;
@@ -1308,11 +1331,14 @@ export class Netstorm {
             const next = queue.peek(); if (!next) break;
             const code = (next.code & 0x03ffffff) >>> 0, release = Boolean(next.code & InputCode.release);
             const selectionKey = code === 0x50 || code === 0x70 || code === 0x52 || code === 0x72 || code === 0x4e || code === 0x6e;
-            if (code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !selectionKey && code !== InputCode.leftButton && !(release && code === InputCode.rightButton)) break;
+            const productionKey = 'qwaszyxe'.includes(String.fromCharCode(code).toLowerCase()) && code < 256;
+            const cursorCancel = code === 0x1b;
+            if (code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !selectionKey && !productionKey && !cursorCancel && code !== InputCode.leftButton && !(release && code === InputCode.rightButton)) break;
             const event = queue.pop(false);
             if (tutorial.event(event) || gump.input().route(event.code, event.x, event.y)) continue;
             if (code === InputCode.leftButton && !release && !this._mainMenu?.dialog) user.event(event);
-            else if ((code === MISSION_F4 || code === MISSION_F5 || selectionKey) && !release && !this._mainMenu?.dialog) user.event(event);
+            else if ((code === MISSION_F4 || code === MISSION_F5 || selectionKey || productionKey || cursorCancel) && !release && !this._mainMenu?.dialog) user.event(event);
+            else if (code === PRODUCTION_BRIDGE_COMMAND && !release && !this._mainMenu?.dialog) this._dispatchCampaignBridgeProduction(event);
             else if (code === MISSION_VIEW_HOME || code === MISSION_VIEW_PRIEST) this._dispatchCampaignViewAction(event);
         }
     }
@@ -2479,7 +2505,7 @@ export class Netstorm {
         if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && (event.code === 'F4' || event.code === 'F5')) {
             event.preventDefault(); queueBrowserVirtualKeyEvent(this._clientInputQueue, event, this._input.pointer, false);
         }
-        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && !event.isComposing && !this._clientComposing && !event.ctrlKey && !event.altKey && !event.metaKey && /^[npr]$/iu.test(event.key ?? '')) queueBrowserCharacterEvent(this._clientInputQueue, event, this._input.pointer);
+        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && !event.isComposing && !this._clientComposing && !event.ctrlKey && !event.altKey && !event.metaKey && (/^[nprqwaszyxe]$/iu.test(event.key ?? '') || (event.key === 'Escape' && this._campaignWorld.session().cursorDropSettings().lockDepth === 0))) queueBrowserCharacterEvent(this._clientInputQueue, event, this._input.pointer);
         if (PREVENTED_KEYS.has(event.code)) event.preventDefault();
         this._retryAudioOnGesture();
         // 미리보기의 키 정책은 게임 명령과 분리한다. Escape는 메뉴로 돌아가며 방향키는 카메라만 바꾼다. (2026-11-02 WB03-AA)

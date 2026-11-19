@@ -73,6 +73,14 @@ test('캠페인 목록에서 첫 Tutorial의 월드와 안내를 표시한다', 
     return count;
   });
   expect(bridgeCount).toBeGreaterThan(0);
+  // 실제 Q 입력은 첫 생산 슬롯의 다리를 같은 커서에 집고 Escape는 돌려놓는다.
+  await page.keyboard.press('q');
+  await expect.poll(() => page.evaluate(() => window.netstorm._campaignWorld.session().cursorDropSettings().preview), { timeout: 15000 }).toBeGreaterThan(0);
+  const taken = await page.evaluate(() => { const session = window.netstorm._campaignWorld.session(); return { lock: session.cursorDropSettings().lockDepth, parts: session.cursor().lifecycle.previewCount }; });
+  expect(taken.lock).toBe(0); expect(taken.parts).toBeGreaterThan(0);
+  const previewFrame = await page.evaluate(() => window.netstorm._clientRenderer.drawCount);
+  await page.waitForFunction((before) => window.netstorm._clientRenderer.drawCount > before, previewFrame, { timeout: 15000 });
+  await page.keyboard.press('Escape'); await expect.poll(() => page.evaluate(() => window.netstorm._campaignWorld.session().cursorDropSettings().preview)).toBe(0);
   // P/R은 같은 실제 사제를 선택하고 반복 입력은 사제 보기 명령을 큐에서 소비한다.
   await page.keyboard.press('p'); await expect.poll(() => page.evaluate(() => window.netstorm._campaignWorld.selected())).toBe(priest.sid);
   await page.keyboard.press('r'); await expect.poll(() => page.evaluate(() => window.netstorm._clientInputQueue.size)).toBe(0);
