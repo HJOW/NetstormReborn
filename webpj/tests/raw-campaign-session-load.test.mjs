@@ -7,7 +7,7 @@ import { synchronizeProductionControlContents } from '../www/core/client-product
 import { runClientBridgeDecay } from '../www/core/client-bridge-decay.js';
 import { pollClientBattleCompletion } from '../www/core/client-battle-completion.js';
 import { pollClientConnectionHealth } from '../www/core/client-connection-health.js';
-import { ClientTraceGlobals, traceClientObject } from '../www/core/client-diagnostics.js';
+import { ClientTraceGlobals, traceClientObject, writeClientProcessSummary } from '../www/core/client-diagnostics.js';
 import { ProductionMaintenanceGlobals, ProductionMaintenancePanel } from '../www/core/raw-production-maintenance.js';
 import { ProductionControlContext } from '../www/core/production-control-context.js';
 import { ClientColorSortInput } from '../www/core/client-color-sort-input.js';
@@ -528,6 +528,19 @@ test('CampaignSession TheWarBegins: Client 객체 진단의 실제 사제', () =
         traceClientObject(client, diagnostics, priest.sid, { info: (line) => lines.push(line) });
         assert.ok(lines.some((line) => line.includes('Base type='))); assert.ok(lines.some((line) => line.includes('Main(')));
         assert.equal(diagnostics.depth.value, 0); assert.equal(diagnostics.log.indent, 0);
+    } finally { s.dispose(); }
+});
+
+// 실제 Session에 붙은 Regular 프로세스의 Form과 부모 TYPE를 Client 요약이 같은 풀에서 읽는다.
+test('CampaignSession TheWarBegins: Client 프로세스 요약의 실제 Regular', () => {
+    const { s } = scene();
+    try {
+        s.load();
+        const core = s.core(), parent = core.factory.create(6, 2);
+        assert.ok(core.processes.addRegular(parent, 6700, 0.25));
+        const lines = [];
+        writeClientProcessSummary(core.kernel, s.world().storage, (line) => lines.push(line));
+        assert.ok(lines.some((line) => line.includes('pType=regularProcessType') && line.includes(`sid=${parent},`)));
     } finally { s.dispose(); }
 });
 
