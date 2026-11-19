@@ -16,12 +16,12 @@ const ROOT_TOKEN = 1;
 export class ClientGumpRoot {
     // 생성·수명·사건·입력 상태와 같은 노드·처리기를 보유한다.
     #create = new GumpCreateState(); #life = new GumpLifetimeState(); #event = new GumpEventState(); #inputState = new GumpInputState();
-    #nodes = new Map(); #handlers = new Map(); #destructors = new Map(); #attachers = new Map(); #broadcasters = new Map(); #idlers = new Map(); #nextToken = 2; #factory; #lifetime; #collection; #events; #input; #tree; #frame; #root = 0; #disposed = false;
+    #nodes = new Map(); #handlers = new Map(); #destructors = new Map(); #attachers = new Map(); #broadcasters = new Map(); #idlers = new Map(); #nextToken = 2; #factory; #lifetime; #collection; #events; #input; #tree; #frame; #redrawDevice; #root = 0; #disposed = false;
 
     // 원본 등록표를 초기화하고 기본 루트를 생성한 뒤 현재 화면 크기를 적용한다.
     constructor(width, height, checking, redraw = null, diagnostic = null) {
         if (typeof checking !== 'function') throw new TypeError('Client Gump의 현재 진단 전역 누락');
-        this.#life.checking = checking; this.#inputState.overlayEvent = OVERLAY_EVENT;
+        this.#life.checking = checking; this.#inputState.overlayEvent = OVERLAY_EVENT; this.#redrawDevice = redraw;
         const node = (token) => this.#nodes.get(token) ?? null;
         this.#factory = new GumpCreate(this.#create, { node, allocate: (bytes) => {
             if (bytes !== GUMP_BASE_SIZE || this.#nodes.has(ROOT_TOKEN)) throw new Error('Client Gump의 실제 루트 할당 계약');
@@ -47,7 +47,7 @@ export class ClientGumpRoot {
         } });
         const treeState = new GumpTreeState(); treeState.checking = checking;
         this.#tree = new GumpTree(this.#create, treeState, { node,
-            redraw: (token, erase) => { if (typeof redraw !== 'function') throw new Error('Client Gump 다시 그리기 장치 누락'); redraw(token, erase); },
+            redraw: (token, erase) => this.redraw(token, erase),
             push: (token) => this.#tree.push(token), attach: (...args) => this.#attach(...args), kill: (token) => this.#lifetime.kill(token),
             diagnostic: (text) => { if (typeof diagnostic !== 'function') throw new Error('Client Gump 상세 진단 장치 누락'); diagnostic(text); },
         });
@@ -75,6 +75,8 @@ export class ClientGumpRoot {
     lifetimeState() { this.#live(); return this.#life; }
     // 같은 현재 루트와 수명에 연결된 입력기를 빌린다.
     input() { this.#live(); return this.#input; }
+    // 같은 Client의 실제 다시 그리기 장치에 요청한다.
+    redraw(token, erase) { this.#live(); if (typeof this.#redrawDevice !== 'function') throw new Error('Client Gump 다시 그리기 장치 누락'); this.#redrawDevice(token, erase); }
     // 가상 구분선 입력과 위치 계산에 실제 트리를 빌린다.
     tree() { this.#live(); return this.#tree; }
     // 같은 현재 트리의 좌표 수집기를 빌린다.
@@ -131,6 +133,12 @@ export class ClientGumpRoot {
     }
     // 같은 수명의 지연 삭제를 요청하고 현재 큐를 정리한다.
     remove(token) { this.#live(); this.#lifetime.kill(token); this.#lifetime.cleanup(); }
+    // 기본 생성 전이고 등록·트리 연결이 없는 파생 할당만 직접 반납한다.
+    discardUnregistered(token) {
+        this.#live(); const node = this.#nodes.get(token);
+        if (!node || node.constructor === GumpCreateNode || this.#create.entries.includes(token) || node.parent || node.child || node.next || node.previous) throw new Error('Client Gump 미등록 반납 계약');
+        this.#nodes.delete(token); this.#handlers.delete(token); this.#destructors.delete(token); this.#attachers.delete(token); this.#broadcasters.delete(token); this.#idlers.delete(token);
+    }
     // 임시 등록을 반환한 실제 새 루트로 공통 수명과 Client의 현재 별칭을 함께 바꾼다.
     replaceRoot(token) { this.#live(); this.#lifetime.replaceRoot(token); this.#root = token >>> 0; }
     // 루트의 현재 기본·표시 크기를 원본 SetControls와 같이 갱신한다.
