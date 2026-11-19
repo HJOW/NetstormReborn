@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { AssetLoader } from '../www/assets/asset-loader.js';
 import { AudioSystem } from '../www/audio/audio-system.js';
-import { MissionAudioAssets } from '../www/audio/mission-audio-assets.js';
+import { MissionAudioAssets, soundFileAttenuation } from '../www/audio/mission-audio-assets.js';
 import { Netstorm } from '../www/netstorm.js';
 import { DATA_ROOT } from './helpers.mjs';
 
@@ -55,4 +55,27 @@ test('미션 음향: 실패 재시도와 비동기 반납', async () => {
     assert.equal(typeof finishDecode, 'function'); assets.dispose(); finishDecode({});
     await assert.rejects(pending, /반납/); assert.equal(audio.sounds.size, 0); assert.equal(attempts, 2);
     assert.throws(() => new MissionAudioAssets({ ...loader, manifest: { files: [{ path: 'sound/A.wav' }, { path: 'sound/a.WAV' }] } }, audio), /중복 경로/);
+});
+
+// 원본은 감쇠 접미사 파일을 일반 파일보다 먼저 찾고 같은 물리 파일의 해독을 공유한다.
+test('미션 음향: 원본 감쇠 파일 선택과 별칭 공유', async () => {
+    const { loader, requests } = diskLoader(), { audio } = audioFixture(); await loader.loadManifest(); requests.length = 0;
+    const assets = new MissionAudioAssets(loader, audio);
+    const selected = assets.resolveSound('sunFenceImpact.wav');
+    assert.equal(selected.entry.path, 'sound/sunFenceImpact-500.wav'); assert.equal(selected.attenuation, 500);
+    const [first, second] = await Promise.all([assets.loadSound('sunFenceImpact.wav'), assets.loadSound('sunFenceImpact-500.wav')]);
+    assert.equal(first, second); assert.deepEqual(requests, ['sound/sunFenceImpact-500.wav']);
+    assert.equal(audio.sounds.get('sunfenceimpact.wav'), first); assert.equal(audio.sounds.get('sunfenceimpact-500.wav'), first);
+    assert.equal(soundFileAttenuation('sound/a--200.wav'), -200); assert.equal(soundFileAttenuation('sound/a- 17oops.wav'), 17);
+    assert.equal(soundFileAttenuation('root-with-hyphen/a-1000.wav'), 0); assert.equal(soundFileAttenuation('sound/a.wav'), 0);
+});
+
+// 언어별 경로는 기본 경로보다 먼저, 같은 경로에서는 감쇠 파일을 우선한다.
+test('미션 음향: 언어별 경로와 감쇠 접미사 우선순위', () => {
+    const files = ['sound/a-1000.wav', 'sound/english/a.wav', 'sound/english/a-500.wav', 'sound/a.wav'].map((item) => ({ path: item }));
+    const loader = { manifest: { files }, loadFile: async () => Uint8Array.of(0) }, audio = { sounds: new Map(), music: new Map(), decode: async () => ({}) };
+    const english = new MissionAudioAssets(loader, audio, { language: 'english' }), korean = new MissionAudioAssets(loader, audio, { language: 'korean' });
+    assert.equal(english.resolveSound('A.wav').entry.path, 'sound/english/a-500.wav');
+    assert.equal(korean.resolveSound('a.wav').entry.path, 'sound/a-1000.wav'); assert.equal(korean.resolveSound('none.wav'), null);
+    assert.throws(() => new MissionAudioAssets(loader, audio, { language: '../english' }), /언어 이름 오류/);
 });

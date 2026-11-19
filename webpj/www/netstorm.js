@@ -1705,7 +1705,7 @@ export class Netstorm {
     // 현재 매니페스트와 활성 재생기를 빌려 필요한 미션 음향 하나만 준비한다.
     _missionAudioLoader() {
         if (!this._assetLoader || !this._audio || this._audio.closed) throw new Error('미션 음향의 실제 자산·재생기 수명 누락');
-        if (!this._missionAudioAssets) this._missionAudioAssets = new MissionAudioAssets(this._assetLoader, this._audio);
+        if (!this._missionAudioAssets) this._missionAudioAssets = new MissionAudioAssets(this._assetLoader, this._audio, { language: this.options.language });
         return this._missionAudioAssets;
     }
 
