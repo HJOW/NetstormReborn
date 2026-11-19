@@ -4,6 +4,7 @@ import { GUMP_BASE_SIZE, GumpCreate, GumpCreateNode, GumpCreateState } from './g
 import { GumpLifetime, GumpLifetimeState } from './gump-lifetime.js';
 import { GumpEventState, GumpEvents } from './gump-events.js';
 import { GumpInput, GumpInputState } from './gump-input.js';
+import { GumpFrame } from './gump-frame.js';
 import { GumpTree, GumpTreeState } from './gump-tree.js';
 import { GumpCollection } from '../render/gump-collection.js';
 
@@ -15,7 +16,7 @@ const ROOT_TOKEN = 1;
 export class ClientGumpRoot {
     // 생성·수명·사건·입력 상태와 같은 노드·처리기를 보유한다.
     #create = new GumpCreateState(); #life = new GumpLifetimeState(); #event = new GumpEventState(); #inputState = new GumpInputState();
-    #nodes = new Map(); #handlers = new Map(); #destructors = new Map(); #attachers = new Map(); #nextToken = 2; #factory; #lifetime; #collection; #events; #input; #tree; #root = 0; #disposed = false;
+    #nodes = new Map(); #handlers = new Map(); #destructors = new Map(); #attachers = new Map(); #broadcasters = new Map(); #nextToken = 2; #factory; #lifetime; #collection; #events; #input; #tree; #frame; #root = 0; #disposed = false;
 
     // 원본 등록표를 초기화하고 기본 루트를 생성한 뒤 현재 화면 크기를 적용한다.
     constructor(width, height, checking, redraw = null, diagnostic = null) {
@@ -35,6 +36,11 @@ export class ClientGumpRoot {
         };
         this.#events = new GumpEvents(this.#create, this.#life, this.#event, this.#collection, { node, handle });
         this.#input = new GumpInput(this.#create, this.#life, this.#inputState, this.#collection, this.#events, { node, handle });
+        this.#frame = new GumpFrame(this.#create, this.#life, { node, broadcast: (token, event, first, second) => {
+            const broadcast = this.#broadcasters.get(token);
+            if (broadcast) return broadcast(token, event, first, second);
+            if (node(token)?.constructor !== GumpCreateNode) throw new Error('Client Gump 파생 방송 처리기 미연결');
+        } });
         const treeState = new GumpTreeState(); treeState.checking = checking;
         this.#tree = new GumpTree(this.#create, treeState, { node,
             redraw: (token, erase) => { if (typeof redraw !== 'function') throw new Error('Client Gump 다시 그리기 장치 누락'); redraw(token, erase); },
@@ -50,7 +56,7 @@ export class ClientGumpRoot {
                 if (this.#nodes.get(token)?.constructor !== GumpCreateNode) throw new Error('Client Gump 파생 소멸자 누락');
                 return this.#lifetime.deleteScalar(token, flags);
             },
-            release: (token) => { if (!this.#nodes.delete(token)) throw new Error('Client Gump 반납 대상 누락'); this.#handlers.delete(token); this.#destructors.delete(token); this.#attachers.delete(token); },
+            release: (token) => { if (!this.#nodes.delete(token)) throw new Error('Client Gump 반납 대상 누락'); this.#handlers.delete(token); this.#destructors.delete(token); this.#attachers.delete(token); this.#broadcasters.delete(token); },
         });
         this.#root = this.#factory.initializeRoot(); this.resize(width, height);
     }
@@ -77,15 +83,16 @@ export class ClientGumpRoot {
     lifetime() { this.#live(); return this.#lifetime; }
     // 현재 토큰의 실제 기본 또는 파생 노드를 빌린다.
     node(token) { this.#live(); return this.#nodes.get(token) ?? null; }
-    // 호출자가 소유한 실제 파생 노드를 등록 전 주소에 두고 처리기·소멸자·선택적 가상 부착을 연결한다.
-    allocateDerived(node, handler, destructor, attacher = null) {
+    // 호출자가 소유한 실제 파생 노드를 등록 전 주소에 두고 처리기·소멸자·선택적 가상 부착과 방송을 연결한다.
+    allocateDerived(node, handler, destructor, attacher = null, broadcaster = null) {
         this.#live();
         if (!(node instanceof GumpCreateNode) || node.constructor === GumpCreateNode || typeof handler !== 'function' || typeof destructor !== 'function') throw new TypeError('Client Gump 파생 노드·처리기·소멸자 계약');
         if (attacher !== null && typeof attacher !== 'function') throw new TypeError('Client Gump 파생 부착 계약');
+        if (broadcaster !== null && typeof broadcaster !== 'function') throw new TypeError('Client Gump 파생 방송 계약');
         if (this.#nextToken > 0xffffffff) throw new RangeError('Client Gump 주소 소진');
         // 같은 물리 노드를 서로 다른 토큰으로 중복 등록하지 않는다.
         for (const current of this.#nodes.values()) if (current === node) throw new Error('Client Gump 파생 노드 중복 할당');
-        const token = this.#nextToken++; this.#nodes.set(token, node); this.#handlers.set(token, handler); this.#destructors.set(token, destructor); if (attacher) this.#attachers.set(token, attacher); return token;
+        const token = this.#nextToken++; this.#nodes.set(token, node); this.#handlers.set(token, handler); this.#destructors.set(token, destructor); if (attacher) this.#attachers.set(token, attacher); if (broadcaster) this.#broadcasters.set(token, broadcaster); return token;
     }
     // 실제 기본 노드를 등록하고 고유 사건 처리기를 연결한다. 부착은 별도 호출이다.
     createBase(command, width, height, flags, handler) {
@@ -101,6 +108,8 @@ export class ClientGumpRoot {
     attachBase(token, x, y, parent, mode, bits = {}) { this.#live(); this.#tree.attach(token, x, y, parent, mode, bits); }
     // 원본 Move가 Push 뒤 실제 파생 가상 부착을 사용한다.
     move(token, x, y, parent = 0) { this.#live(); this.#tree.move(token, x, y, parent); }
+    // 등록표의 표시·통지·삭제 상태를 검사해 현재 파생 방송에 전달한다.
+    broadcast(event, first, second) { this.#live(); this.#frame.broadcast(event, first, second); }
     // 같은 수명의 지연 삭제를 요청하고 현재 큐를 정리한다.
     remove(token) { this.#live(); this.#lifetime.kill(token); this.#lifetime.cleanup(); }
     // 임시 등록을 반환한 실제 새 루트로 공통 수명과 Client의 현재 별칭을 함께 바꾼다.

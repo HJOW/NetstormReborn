@@ -37,7 +37,8 @@ export class ClientHudDivider {
         let token = 0;
         token = this.#owner.allocateDerived(node, (event, first, second) => this.#input.handle(token, event, first, second),
             (current, flags) => this.#owner.lifetime().deleteScalar(current, flags),
-            (current, x, y, parent, mode) => this.#divider.attach(current, x, y, parent, mode));
+            (current, x, y, parent, mode) => this.#divider.attach(current, x, y, parent, mode),
+            (current, event, first, second) => this.#input.broadcast(current, event, first, second));
         return token;
     }
     // 할당 토큰에 실제 배경과 구분선 생성 순서를 적용한다.

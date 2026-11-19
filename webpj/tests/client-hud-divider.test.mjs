@@ -16,7 +16,7 @@ test('Client HUD 구분선: 실제 생성·부착·입력·연결 자식 이동'
     controls.registerSlave(token, slave, 1); owner.attach(token, 20, 0);
     assert.equal(node.x, 20); assert.equal(owner.node(slave).baseWidth, 20); assert.deepEqual(calls, ['close']);
     assert.equal(owner.input().route(0x10000, 21, 20), token); assert.equal(owner.lifetimeState().focus, token);
-    controls.broadcast(token, 0, 42, 20); assert.equal(node.x, 39); assert.equal(owner.node(slave).baseWidth, 39);
+    owner.broadcast(0, 42, 20); assert.equal(node.x, 39); assert.equal(owner.node(slave).baseWidth, 39);
     assert.deepEqual(calls, ['close', 'close']); assert.ok(redraw.length > 0);
     assert.equal(owner.input().route(0x80010000, 42, 20), token); assert.equal(owner.lifetimeState().focus, 0);
     const state = owner.createState(); owner.dispose(); assert.equal(state.count, 0);

@@ -91,3 +91,17 @@ test('Client Gump 루트: 파생 가상 부착과 공통 Move 분배', () => {
     assert.throws(() => owner.allocateDerived(new GumpBackgroundNode(), () => 0, () => {}, 3), /부착 계약/u);
     owner.remove(token); assert.equal(owner.node(token), null); owner.dispose();
 });
+
+// 공통 프레임은 실제 등록표의 visible·notify·dead에 따라 파생 방송을 분배한다.
+test('Client Gump 루트: 실제 프레임 방송의 등록·표시·삭제 필터', () => {
+    const owner = new ClientGumpRoot(100, 80, () => 0, () => {}), events = [], node = new GumpBackgroundNode();
+    const token = owner.allocateDerived(node, () => 0, (value, flags) => owner.lifetime().deleteScalar(value, flags), null,
+        (value, event, first, second) => events.push([value, event, first, second]));
+    owner.factory().construct(token, 0, 10, 10, 0x101); owner.attach(token, 0, 0);
+    owner.broadcast(3, 4, 5); assert.deepEqual(events, [[token, 3, 4, 5]]);
+    node.flags &= ~1; owner.broadcast(3, 4, 5); node.flags |= 1; node.flags |= 0x10000; owner.broadcast(3, 4, 5);
+    node.flags &= ~0x10000; node.flags &= ~0x100; owner.broadcast(3, 4, 5); assert.equal(events.length, 1);
+    assert.throws(() => owner.allocateDerived(new GumpBackgroundNode(), () => 0, () => {}, null, 3), /방송 계약/u);
+    owner.remove(token); owner.broadcast(3, 4, 5); assert.equal(events.length, 1); owner.dispose();
+    assert.throws(() => owner.broadcast(0, 0, 0), /반납/u);
+});
