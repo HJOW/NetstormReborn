@@ -92,7 +92,7 @@ const forbidden = (name) => () => { throw new Error(`외부 장치 미연결: ${
 function scene(overrides = {}, savedFort = fort) {
     const trace = [], queue = new InputQueue();
     const s = new RawCampaignSession(game, { read: forbidden('파일') }, savedFort, overrides.missionName ?? 'thewarbegins', {
-        unixSeconds: () => 1700000000, soundNames: new SoundList(), carrierRequest: overrides.carrierRequest ?? forbidden('전송'), deletion: { selected: () => 0, ...overrides.deletion },
+        unixSeconds: overrides.unixSeconds ?? (() => 1700000000), soundNames: new SoundList(), carrierRequest: overrides.carrierRequest ?? forbidden('전송'), deletion: { selected: () => 0, ...overrides.deletion },
         install: { translateYou: () => Uint8Array.of(89, 111, 117, 0), setConfig: () => trace.push('config'), refreshWindowTitle: () => trace.push('title'), resetCamera: () => trace.push('camera'), ...overrides.install },
         ownership: { refreshProduction: () => trace.push('production'), themeMode: () => 0 },
         assets: { postPop: { playImpactSound: () => trace.push('impact') }, queueCommand: (...args) => queue.pushCommand(...args) },
@@ -1357,6 +1357,62 @@ test('CampaignSession Tutorial1: cpppj 오라클의 실제 지형 객체와 영�
         const differences = [...actual].filter(([key, frame]) => frame !== expected.get(key));
         t.diagnostic(`지형 프레임 차이 ${differences.length}개; 예: ${differences.slice(0, 3).map(([key, frame]) => `${key} 웹=${frame} cpppj=${expected.get(key)}`).join(', ')}`);
     } finally { s.dispose(); }
+});
+
+// 실제 내부 로그인과 Tutorial1 Start 뒤의 지형을 같은 cpppj 관측과 비교한다. 아직 Client 프레임 시계·난수는 완전히 동일하지 않다.
+test('CampaignSession Tutorial1: 실제 로그인·Start 뒤 cpppj 지형 프레임 관측', (t) => {
+    const files = new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)]]);
+    const data = GameData.build({ files, language: 'english' });
+    data.configuration.assign('missionSpec="d/{local.1}.english"\nfortSpec="d/{local.1}.fort"\n[END]\n');
+    const script = new MissionScript(data, 'Tutorial1');
+    const input = parseFort(script.readFortImage(script.fortName()), createFortTypes(TypeTable.fromArchive(archive, decodeOriginalText)));
+    const fixture = path.join(REPO_ROOT, 'webpj', 'tests', 'fixtures', 'cpppj', 'candidate-225553df', 'tutorial1', 'oracle', 'tutorial1', 'load.tsv');
+    const expected = new Map();
+    // cpppj의 지면·가장자리 TYPE과 좌표 비트로 프레임을 찾는다.
+    for (const line of fs.readFileSync(fixture, 'utf8').split('\n')) {
+        const cells = line.split('\t');
+        if (cells[0] === 'object' && (cells[2] === '97' || cells[2] === '121')) expected.set(`${cells[2]}:${cells[6]}:${cells[7]}`, Number(cells[5]));
+    }
+    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {} };
+    const { s } = scene({ missionName: script.fortName(), localLogin, unixSeconds: () => 946684800, sound: { playOnceAt: () => {} },
+        ai: { participation: { addChat: () => {}, clearChat: () => {} } } }, input);
+    try {
+        s.startLocalConnection(); s.pumpLocalConnection(); assert.equal(s.pollLocalConnectionState(), true); s.pumpLocalConnection();
+        assert.equal(s.localConnectionReady(), true);
+        const core = s.core(), pool = core.pool;
+        // 현재 지면의 위치별 프레임을 새 표로 수집한다.
+        const terrainFrames = () => {
+            const result = new Map();
+            // 같은 실제 Session의 현재 지면과 가장자리 원문을 읽는다.
+            for (const item of s.world().objects()) {
+                const raw = pool.slot(item.sid); if (raw[10] !== 97 && raw[10] !== 121) continue;
+                const view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
+                result.set(`${raw[10]}:${view.getUint32(14, true)}:${view.getUint32(18, true)}`, view.getUint32(36, true));
+            }
+            return result;
+        };
+        const before = terrainFrames();
+        const gate = createMissionFrameGateState(), state = createMissionStartState();
+        const effects = { settingsBytes: (_owner, bytes) => bytes.fill(0), gameSeconds: () => 9.2, refreshSp: () => {}, refreshCommandGump: () => {},
+            resetCamera: () => {}, randomGeysers: forbidden('예상하지 않은 간헐천') };
+        new RawCampaignMissionStartBindings(s, script, gate, state, s.missionStartSettings(), s.missionAiSettings(), effects).start();
+        assert.equal(gate.started, 1);
+        const actual = terrainFrames();
+        assert.equal(expected.size, 763); assert.deepEqual([...actual.keys()].sort(), [...expected.keys()].sort());
+        const differences = [...actual].filter(([key, value]) => value !== expected.get(key));
+        const changedAtStart = [...actual].filter(([key, value]) => value !== before.get(key)).length;
+        const sameCode = differences.filter(([key, value]) => {
+            const table = core.frames[Number(key.split(':', 1)[0])].codes;
+            const first = table[value], second = table[expected.get(key)];
+            return first && second && first.side === second.side && first.variant === second.variant;
+        }).length;
+        const sameFullCode = differences.filter(([key, value]) => {
+            const table = core.frames[Number(key.split(':', 1)[0])].codes;
+            const first = table[value], second = table[expected.get(key)];
+            return first && second && first.side === second.side && first.variant === second.variant && first.number === second.number && first.flags === second.flags;
+        }).length;
+        t.diagnostic(`로그인·Start 뒤 지형 프레임 차이 ${differences.length}개, Start 중 변경 ${changedAtStart}개, 방향·변형 코드 일치 ${sameCode}개, 전체 코드 일치 ${sameFullCode}개`);
+    } finally { s.dispose(); script.dispose(); }
 });
 
 // 외곽 등록은 설치 전에 닫고 Load 뒤 같은 Session 연구 본체만 분배기에 연결한다.
