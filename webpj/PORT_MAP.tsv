@@ -313,7 +313,7 @@ cpppj/src/client/ProductPresentation.cpp	port	www/assets/product.js	225553df	por
 cpppj/src/client/ProductVersion.h	port	www/assets/product.js	1f00a25a	port	[client-default] WB03-AC
 cpppj/src/client/QuickHelpControl.cpp	port	www/ui/help-window.js;www/ui/quick-help-popup-state.js	1f00a25a	partial	[client-default] 이력·Back / WB04-E815: 마지막 팝업 명령·80BYTE 장기 저장소 이식, 실제 메뉴/Help 결선 잔여; docs/webpj-state-help-popup-20261119.md
 cpppj/src/client/QuickHelpFileRead.cpp	adapt	www/ui/help-window.js;www/assets/game-files.js	225553df	port	[adapt-file] WB04-E272: 도움말 d/help.<언어> 는 GameFiles.read 전체 바이트(언어 파일이 없으면 영어)로 읽음(help.test·korean-help.test). 추가 2바이트·성공 캐시는 QuickHelpWindow. quick-help-file-read-x86.tsv 63행 FILE 효과열 웹 제외 / WB04-E507 3.6①: 웹은 준비된 언어 파일을 읽고 UTF-8·원본 문자를 해독하며 C++ 표시 전용 부호화를 사용하지 않는다.
-cpppj/src/client/QuickHelpHtml.cpp	port	www/ui/help-topic.js	1f00a25a	partial	[client-default] F1 도움말 주제 본문
+cpppj/src/client/QuickHelpHtml.cpp	port	www/ui/help-topic.js;www/ui/quick-help-info.js	1f00a25a	partial	[client-default] F1 도움말 주제 본문
 cpppj/src/client/QuickHelpList.cpp	exclude-host			-	[host-dev-files]
 cpppj/src/client/QuickHelpRequest.cpp	port	www/ui/help-window.js	1f00a25a	partial	[client-default] 주제 요청
 cpppj/src/client/QuickHelpWindow.cpp	port	www/ui/help-window.js	225553df	partial	[client-default] 도움말 창 배치 / WB04-E507 3.6③: 새 도움말 창은 현재 파일을 다시 읽지만 열린 창은 재사용한다. 동적 언어 전환에서 현재 창·캐시 수명을 확인한다.
