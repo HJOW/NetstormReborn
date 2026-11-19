@@ -147,6 +147,8 @@ export class RawCampaignSession {
         const o = this.#live(); if (o.gameplayGlobals.runtimeCallActive(this)) return true;
         return Boolean(this.#login?.transport.callbacksActive?.() || o.services.localLogin?.transport?.callbacksActive?.());
     }
+    // 같은 현재 Session의 회수 요청을 원본 송신 처리기에 전달한다.
+    requestSalvage(sid) { const owner = this.#live(); if (!owner.loaded || !owner.salvageCommand) throw new Error('미설치 Session의 실제 회수 요청'); owner.salvageCommand.request(sid); }
     // 같은 실제 풀의 HP 판정과 최대 HP 처리기를 빌린다.
     hitPoints() { return this.#live().hp; }
     // State 종료 위치에서 같은 실제 Process Host를 정리하고 정상 복귀 증빙을 발급한다.

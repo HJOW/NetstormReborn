@@ -535,6 +535,13 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         gump.broadcast(0, integratedX, integratedY); assert.equal(gump.input().route(0x10000, integratedX, integratedY), productionMenuToken);
         assert.equal(integratedCommands[0][0], 0x02000017); gump.lifetime().cleanup(); assert.equal(productionMenu.instances(), 0);
         assert.equal(productionMenu.open(aboutItem, { x: 750, y: 420 }), 1); productionMenu.close(); assert.equal(productionMenu.instances(), 0);
+        // 같은 원본 회수 명령은 실제 로컬 패킷을 보내고 수신 전까지 월드를 바꾸지 않는다.
+        const salvageSid = actualBridges.at(-1).sid, salvageFlags = session.core().pool.slot(salvageSid)[11], beforeSalvage = session.localConnectionPackets().length;
+        const denied = app._clientGameplay.denySalvage().value; app._clientGameplay.denySalvage().value = 0;
+        app._clientInputQueue.pushCommand(0x0200005d, 0, salvageSid); app._runCampaignInputFrame();
+        assert.deepEqual(session.localConnectionPackets().slice(beforeSalvage), []); assert.equal(session.core().pool.slot(salvageSid)[11], salvageFlags);
+        session.pumpLocalConnection(); assert.deepEqual(session.localConnectionPackets().slice(beforeSalvage), [0x54]); assert.ok(session.core().pool.slot(salvageSid)[11] & 3); app._clientGameplay.denySalvage().value = denied;
+
 
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); app._clientSoundDevice.dispose(); app._missionAudioAssets.dispose(); }
 });
