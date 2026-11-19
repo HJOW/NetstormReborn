@@ -35,6 +35,7 @@ import { executeDeveloperDevices } from './raw-campaign-developer-devices.js';
 import { RawPriestMenu, bindPriestMenuWorld, createPriestMenuState } from './raw-priest-menu.js';
 import { RawPlayerMenu, createPlayerMenuState } from './raw-player-menu.js';
 import { RawObjectMenu, createObjectMenuState } from './raw-object-menu.js';
+import { RawCarrierMenu } from './raw-carrier-menu.js';
 import { GunProcess, GunProcessFields } from './raw-gun-process.js';
 import { FlyerProcess, FlyerProcessFields, RawFlyerProcess } from './raw-flyer-process.js';
 import { findAttachedProcess, WindAviaryProcess } from './raw-wind-aviary-process.js';
@@ -1116,6 +1117,18 @@ export class RawCampaignSession {
             salvageRefund: (sid, type, count) => this.#live().hp.salvageRefund(sid, type, count | 0),
             ownerSubscriber: (owner) => identity.subscriberForOwner(owner), playerMenu: (subscriber) => players.open(subscriber) };
         return new RawObjectMenu(o.core.pool, o.core.types, state, hooks);
+    }
+    // 실제 운반물 내용·프로세스·위치·자금과 기본 객체 메뉴를 같은 Session에서 조회한다.
+    makeCarrierMenu(input = {}) {
+        const o = this.#live(); if (!o.loaded || !o.carrierDropPoint) throw new Error('실제 Session 운반 메뉴의 설치 수명 누락');
+        const live = () => this.#live();
+        const state = { localOwnerRead: () => live().playerState.battleOwner, editorRead: () => live().globals.editor !== 0,
+            get mapSize() { return live().cursorManaGlobals.mapLimit | 0; }, helpCommand: 0x02000017 };
+        const hooks = { ...input, groundImmobile: (sid) => live().priests.priestState.groundImmobile(sid),
+            movementType: (type) => live().priests.movementProcessType(type), findPath: (sid, type) => findAttachedProcess(live().core.pool, sid, type),
+            pathActive: (sid) => Boolean(live().core.processes.fromForm(sid)), dropPoint: (sid, type) => { const current = live(); current.prepareCarrierDrop(); return current.carrierDropPoint.find(sid, type); },
+            patchCost: (type) => live().hp.typeCostUnits(type), money: (owner) => this.sp(owner), hasEvent: (sid, event) => live().core.processes.findEvent(sid, event) !== null };
+        return new RawCarrierMenu(o.core.pool, o.core.types, o.contentFinder, state, hooks);
     }
     // 같은 옵션 저장소의 숨김 Player 바이트를 빌린다.
     hiddenPlayers() { return this.#live().hiddenPlayers; }

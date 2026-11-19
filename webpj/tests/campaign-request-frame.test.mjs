@@ -47,6 +47,7 @@ import { ClientMenuGump } from '../www/ui/client-menu-gump.js';
 import { ClientPriestMenu } from '../www/ui/client-priest-menu.js';
 import { ClientPlayerMenu } from '../www/ui/client-player-menu.js';
 import { ClientObjectMenu } from '../www/ui/client-object-menu.js';
+import { ClientCarrierMenu } from '../www/ui/client-carrier-menu.js';
 import { RawPlayerIdentity } from '../www/core/raw-player-identity.js';
 import { StyleTextFragmentKind } from '../www/ui/style-text-fragments.js';
 import { PriestPlacementAssets } from '../www/core/priest-placement-assets.js';
@@ -581,6 +582,16 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         objects.open(priest); const objectNode = gump.node(objectRoot); assert.equal(objectNode.itemCount, 2);
         assert.equal(objectNode.items[0].command, 0x02000017); assert.equal(objectNode.items[0].parameter, session.core().pool.slot(priest)[10]);
         assert.ok(objectNode.items[1].childId); menus.attach({ x: 750, y: 420 }, menus.root()); gump.remove(objectRoot); menus.close(); scroll.close();
+        assert.equal(bufferText.styleState().fragments.size, 0);
+        // 사제 건설 메뉴의 기본 호출을 실제 운반체와 공통 객체 메뉴까지 잇는다.
+        const chainRoot = menus.beginFancy(); menus.title('Priest\n');
+        const carrierMenu = new ClientCarrierMenu(session, menus, objects, (value) => app._resources.translate(value));
+        const chainPriest = new ClientPriestMenu(session, menus, { translate: (value) => app._resources.translate(value),
+            baseMenu: (sid) => carrierMenu.open(sid), tell: (value) => { throw new Error(value); } });
+        chainPriest.open(priest); const chainNode = gump.node(chainRoot);
+        assert.ok(chainNode.items.slice(0, chainNode.itemCount).some((item) => item.command === 0x02000017));
+        assert.ok(chainNode.items.slice(0, chainNode.itemCount).filter((item) => item.childId).length >= 2);
+        menus.attach({ x: 750, y: 420 }, menus.root()); gump.remove(chainRoot); menus.close(); scroll.close();
         assert.equal(bufferText.styleState().fragments.size, 0);
         // 실제 신전은 현재 환불과 회수 금지 전역을 읽어 원본의 신전 회수 안내를 만든다.
         const damageRoot = menus.beginFancy(); menus.title('Temple\n'); const priorDeny = app._clientGameplay.denySalvage().value;
