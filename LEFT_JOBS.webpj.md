@@ -433,7 +433,7 @@
 
 <a id="favicon"></a>
 
-- [ ] **favicon 탭 시각 확인.** E894에서 공통 ICO를 복사하고 상대 경로 링크를 추가했다. 원본 두 이미지의 바이트 대조와 Chromium의 HTTP 200·해독을 확인했다. 기존 창 소유자 오류·Edge 시간 초과 뒤 재시도에서는 인앱 화면에 탭 영역이 없었고 Chrome은 URL 판별 실패로 컴퓨터 사용이 중단되어 탭 표시는 시각 확인이 남았다. [작업·검증](docs/webpj-favicon-20261119.md) · [공통 기준](LEFT_JOBS.md#exe-icon)
+- [ ] **favicon 탭 시각 확인.** E894에서 공통 ICO를 복사하고 상대 경로 링크를 추가했다. 원본 두 이미지의 바이트 대조와 Chromium의 HTTP 200·해독을 확인했다. 2026-11-20 Chrome의 localhost NetStorm 탭은 접근성 트리에서 확인했으나 Windows 창 캡처가 반복 시간 초과하여 탭 그림의 시각 확인이 남았다. [작업·검증](docs/webpj-favicon-20261119.md) · [공통 기준](LEFT_JOBS.md#exe-icon)
 
 <a id="korean-font-change"></a>
 
