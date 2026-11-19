@@ -39,6 +39,12 @@ public sealed partial class AssetPostPopState
     /// <summary>거주 구역 애니메이션 여부. 켜지면 잔여 프레임을 2로 나눈 나머지와 묶는다.</summary>
     public bool ResidenceAnimation { get; set; }
 
+    /// <summary>거주 구역이 탐색하는 실제 장식 타입 번호다. 원본 기본값 102를 둔다.</summary>
+    public uint DecorationType { get; set; } = 102u;
+
+    /// <summary>원본 전역에 저장하는 한 번의 finder 최대 조사 개수다.</summary>
+    public int MaxDecorationScan { get; set; }
+
     /// <summary>로딩 깊이. 0이 아니면 최초 처리를 건너뛰는 쪽으로 분기한다.</summary>
     public uint LoadingDepth { get; set; }
 

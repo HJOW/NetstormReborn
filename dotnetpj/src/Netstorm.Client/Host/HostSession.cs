@@ -1482,6 +1482,13 @@ public sealed partial class HostSession
             TerrainPopObject(sid, x, y, flags);
             return true;
         }
+        // 거주 구역 전용 자산 본체가 연결된 Residence는 지형 분배 Pop으로 등록한다. 다른 전용 파생은 R6 본체를 기다린다.
+        // 2026-11-19 0.635에서 R4-4 거주 구역 Pop용으로 추가했다. 근거: cpppj RawSurfaceStorage.cpp의 자산 분배다.
+        if (_vortexAssetPostPop is not null && IsResidenceVtable(Pool.Slot(sid)))
+        {
+            TerrainPopObject(sid, x, y, flags);
+            return true;
+        }
         // 전용 파생 후처리가 필요한 종류는 R6 본체를 기다린다.
         if (RawPostPop.RequiresDedicatedPostPop(Pool, sid))
         {
@@ -1956,6 +1963,9 @@ public sealed partial class HostSession
             throw new InvalidOperationException("지역 투표 장치 중복 연결");
         }
 
+        // 거주 구역 신전 일치 판정이 같은 테마 모드 값을 읽는다. 2026-11-19 0.635에서 추가했다.
+        _themeModeReader = themeMode;
+
         RawSquidHash hash = _terrainHash ?? throw new InvalidOperationException("지역 투표 공간 해시 미연결");
         IReadOnlyList<OriginalTypeRecord> popTypes = _terrainPopTypes ?? throw new InvalidOperationException("지역 투표 지형 TYPE 미연결");
         if (!ReferenceEquals(types, popTypes))
@@ -2170,6 +2180,12 @@ public sealed partial class HostSession
                 ReadOnlySpan<byte> raw = Pool.Slot(sid);
                 TerrainPopObject(sid, BitConverter.ToSingle(raw.Slice(14, 4)), BitConverter.ToSingle(raw.Slice(18, 4)), flags);
             },
+            // 거주 구역 지면 조회는 같은 월드의 실제 표면 찾기를 쓴다. 근거: cpppj RawAssetPostPop.cpp의 Surface 후크다.
+            // 2026-11-19 0.635에서 R4-4 거주 구역 Pop용으로 추가했다.
+            Surface = (x, y) => RawPathSurface.SurfaceAt(_terrainHash ?? throw new InvalidOperationException("거주 구역 지면 찾기 해시 미연결"), new RawPathPoint { X = x, Y = y }),
+            // 주민 변화 뒤 실제 연결 재평가는 건물 옆면과 같은 통지를 쓴다. 근거: cpppj RawCampaignAssetBindings.cpp의 PostHooks 조립이다.
+            // 2026-11-19 0.635에서 추가했다.
+            NotifySurface = sid => (_fortBuilding ?? throw new InvalidOperationException("거주 구역 연결 통지 미연결")).NotifySurface(sid),
             // cpppj PostHooks의 setOwner는 같은 소유자 지정 분배다. 도장 갈고리와 달리 가상 Owner를 거친다.
             SetOwner = SetFortObjectOwner,
         };
@@ -2182,6 +2198,9 @@ public sealed partial class HostSession
         // 간헐천 정기 분배를 공장 분배보다 먼저 둔다. 공장 사슬이 간헐천 사슬을 감싸므로 해제 순서는 공장이 먼저다.
         // 2026-11-19 0.634에서 R4-4 간헐천 정기용으로 추가했다.
         BuildGeyserRegularDevices(types);
+        // 거주 구역 정기 분배를 간헐천 분배보다 나중에 둔다. 간헐천 사슬이 거주 구역 사슬을 감싸므로 해제 순서는 거주 구역이 먼저다.
+        // 2026-11-19 0.635에서 R4-4 거주 구역 정기용으로 추가했다.
+        BuildResidenceRegularDevices(types);
         BuildFactoryPostPopDevices(types);
     }
 
@@ -2244,6 +2263,20 @@ public sealed partial class HostSession
 
         return fallback?.Invoke(sid, ev, count, payload) ?? payload;
     };
+
+    /// <summary>거주 구역 가상표(패치 0x50f540)인지 판정한다. CD판은 거주 구역 전용 분배를 열지 않는다.</summary>
+    /// <param name="raw">조회할 슬롯 바이트다.</param>
+    /// <returns>거주 구역 가상표이면 참이다.</returns>
+    /// <remarks>2026-11-19 0.635에서 R4-4 거주 구역 Pop·정기용으로 추가했다. 근거: cpppj RawAssetPostPop.cpp 38행의 kResidence 대응표다.</remarks>
+    private bool IsResidenceVtable(ReadOnlySpan<byte> raw)
+    {
+        if (Pool.Edition != OriginalEdition.Patch1078)
+        {
+            return false;
+        }
+
+        return BinaryPrimitives.ReadUInt32LittleEndian(raw) == 0x0050f540u;
+    }
 
     /// <summary>간헐천 가상표인지 판정한다. 패치 0x50da88·CD 0x500760만 받는다.</summary>
     /// <param name="raw">조회할 슬롯 바이트다.</param>
@@ -2323,6 +2356,89 @@ public sealed partial class HostSession
     /// <returns>등록 뒤 누적 기록이다. 실제 등록이 아니라 요청만 센다.</returns>
     /// <remarks>2026-11-19 0.634에서 추가했다. L1에서 호출 순서와 좌표를 대조할 때 쓴다. 실제 AI 등록은 R4-5에서 잇는다.</remarks>
     public IReadOnlyList<string> GeyserRegistrations => _geyserRegistrations;
+
+    /// <summary>지역 투표가 읽는 테마 모드 조회다. BuildRegionOwnershipDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-19 0.635에서 R4-4 거주 구역 정기용으로 추가했다. 거주 구역 신전 일치 판정이 같은 값을 읽는다.</remarks>
+    private Func<uint>? _themeModeReader;
+
+    /// <summary>거주 구역 가상표 부모를 거주 구역 정기 본체에 분배하고 나머지는 이전 처리기로 넘긴다.</summary>
+    /// <param name="fallback">거주 구역이 맡지 않는 부모의 기존 처리기다. 없으면 payload를 돌려준다.</param>
+    /// <returns>같은 풀의 현재 가상표로 분배하는 처리기다.</returns>
+    /// <remarks>2026-11-19 0.635에서 R4-4 거주 구역 정기용으로 추가했다. 간헐천 분배보다 나중에 두어 공장 사슬 안쪽에 둔다.</remarks>
+    private RegularHandler RegularHandlerWithResidence(RegularHandler? fallback) => (sid, ev, count, payload) =>
+    {
+        if (IsResidenceVtable(Pool.Slot(sid)))
+        {
+            return RunResidenceRegularSession(sid, ev, count, payload, fallback);
+        }
+
+        return fallback?.Invoke(sid, ev, count, payload) ?? payload;
+    };
+
+    /// <summary>거주 구역 정기 본체를 세션에 연결하고 간헐천 분배보다 나중에 분배 사슬에 둔다.</summary>
+    /// <param name="types">같은 실제 TYPE 표다. 지형 Pop 장치와 같은 인스턴스여야 한다.</param>
+    /// <exception cref="InvalidOperationException">거주 구역 정기 분배의 지형 표시·정기 프로세스·해시·프레임 표가 미연결이다.</exception>
+    /// <remarks>2026-11-19 0.635에서 R4-4 거주 구역 정기용으로 추가했다. 간헐천 사슬을 감싸므로 해제 순서는 간헐천이 먼저다.</remarks>
+    private void BuildResidenceRegularDevices(IReadOnlyList<OriginalTypeRecord> types)
+    {
+        ArgumentNullException.ThrowIfNull(types);
+        SquidProcessHost processes = PlayerProcesses ?? throw new InvalidOperationException("거주 구역 정기 분배 프로세스 미연결");
+        if (_terrainDisplay is null)
+        {
+            throw new InvalidOperationException("거주 구역 정기 분배 표시 미연결");
+        }
+
+        if (_terrainHash is null)
+        {
+            throw new InvalidOperationException("거주 구역 정기 분배 해시 미연결");
+        }
+
+        if (_terrainPopTypes is null || !ReferenceEquals(types, _terrainPopTypes))
+        {
+            throw new ArgumentException("거주 구역 정기 TYPE은 지형 Pop 장치와 같은 인스턴스여야 한다", nameof(types));
+        }
+
+        if (_beforeResidenceRegular is not null)
+        {
+            throw new InvalidOperationException("거주 구역 정기 분배 장치 중복 연결");
+        }
+
+        _beforeResidenceRegular = processes.Regular();
+        processes.SetRegularHandler(RegularHandlerWithResidence(_beforeResidenceRegular));
+    }
+
+    /// <summary>거주 구역 정기 분배 전에 사용하던 공통 정기 분배기다. 공장 분배가 이 사슬을 감싸므로 해제 순서는 공장이 먼저다.</summary>
+    /// <remarks>2026-11-19 0.635에서 R4-4 거주 구역 정기용으로 추가했다. 거주 구역 가상표가 아니면 이전 처리기로 넘긴다.</remarks>
+    private RegularHandler? _beforeResidenceRegular;
+
+    /// <summary>같은 장기 풀·해시·타입·프레임·난수의 현재 조회로 거주 구역 정기 사건을 실행한다.</summary>
+    /// <param name="sid">처리할 거주 구역 부모 번호다.</param>
+    /// <param name="event">사건 번호다. 0·1·3만 처리하고 2는 R6 주민 생성에서 잇는다.</param>
+    /// <param name="count">개수다. 그대로 돌려주지 않는다.</param>
+    /// <param name="payload">전달 값이다. 사건별 다음 지연으로 바뀐다.</param>
+    /// <param name="fallback">선택된 조기 반환 이외의 이전 처리기다. 거주 구역 본체가 쓰지 않는다.</param>
+    /// <returns>원문과 같은 반환 값이다.</returns>
+    /// <remarks>2026-11-19 0.635에서 R4-4 거주 구역 정기용으로 추가했다. 근거: cpppj o/RawResidenceRegular.cpp 16행의 RunResidenceRegular다. 주민 생성(ev2)은 R6에서 잇는다.</remarks>
+    private float RunResidenceRegularSession(int sid, uint @event, uint count, float payload, RegularHandler? fallback)
+    {
+        _ = fallback;
+        var hooks = new ResidenceRegularHooks
+        {
+            Random = () => Game,
+            Notify = parent => (_fortBuilding ?? throw new InvalidOperationException("거주 구역 정기 연결 통지 미연결")).NotifySurface(parent),
+            Frame = (parent, value, flags) => (_terrainFrames ?? throw new InvalidOperationException("거주 구역 정기 프레임 미연결")).Set(parent, value, flags),
+            Surface = (x, y) => RawPathSurface.SurfaceAt(_terrainHash ?? throw new InvalidOperationException("거주 구역 정기 지면 찾기 미연결"), new RawPathPoint { X = x, Y = y }),
+            SetOwner = SetFortObjectOwner,
+            Dude = _ => throw new InvalidOperationException("거주 구역 주민 생성 미연결(R6)"),
+            Element = temple => _terrainPopTypes![Pool.Slot(temple)[RawSidPool.TypeOffset]].Theme,
+            ThemeMode = () => _themeModeReader?.Invoke() ?? 1u,
+            DecorationType = () => _vortexAssetState?.DecorationType ?? 102u,
+            RecordScan = scanned => { if (_vortexAssetState is not null && _vortexAssetState.MaxDecorationScan < scanned) _vortexAssetState.MaxDecorationScan = scanned; },
+        };
+        IReadOnlyList<OriginalTypeRecord> types = _terrainPopTypes ?? throw new InvalidOperationException("거주 구역 정기 TYPE 미연결");
+        RawSquidHash hash = _terrainHash ?? throw new InvalidOperationException("거주 구역 정기 해시 미연결");
+        return RawResidenceRegular.Run(Pool, hash, types, WorldFrames, SidLists.Temples, sid, @event, count, payload, hooks);
+    }
 
     /// <summary>같은 장기 풀·프레임·난수의 현재 조회로 공장 정기 사건을 실행한다.</summary>
     /// <param name="sid">처리할 공장 부모 번호다.</param>
