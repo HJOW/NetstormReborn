@@ -45,6 +45,7 @@ import { decodeOriginalText, decodeWindows1252, encodeOriginalText } from '../ww
 import { createFortTypes } from '../www/assets/type-flags.js';
 import { TypeTable } from '../www/assets/type-table.js';
 import { layoutFort, pieceFrameCodes } from '../www/assets/territory.js';
+import { terrainFrameCandidates } from '../www/assets/terrain-tiles.js';
 import { SoundList } from '../www/audio/sound-list.js';
 import { CampaignTemplateStorage } from '../www/core/campaign-template-storage.js';
 import { ClientPlayerRecords } from '../www/core/client-player-records.js';
@@ -1420,6 +1421,20 @@ test('CampaignSession Tutorial1: 실제 로그인·Start 뒤 cpppj 지형 프레
         });
         assert.equal(interior.length, 613);
         assert.equal(interior.filter(([key, value]) => value !== expected.get(key)).length, 0);
+        // 차이가 난 두 프레임이 같은 방향·변형의 현재 원소 후보 범위에 들어가는지 검사한다.
+        const candidateMismatches = differences.filter(([key, value]) => {
+            const table = core.frames[Number(key.split(':', 1)[0])];
+            const code = table.codes[value];
+            if (!code) return true;
+            const { candidates } = terrainFrameCandidates(table, String.fromCharCode(code.side), String.fromCharCode(code.variant));
+            const quarter = Math.trunc(candidates.length / 4);
+            const low = quarter * 2 + 1, high = quarter * 3;
+            if (high <= low) return !candidates.includes(value) || !candidates.includes(expected.get(key));
+            const eligible = candidates.slice(low, high);
+            return !eligible.includes(value) || !eligible.includes(expected.get(key));
+        });
+        t.diagnostic(`서로 같은 원소 후보 범위 밖의 프레임 차이 ${candidateMismatches.length}개`);
+        assert.deepEqual(candidateMismatches, []);
         const deltas = new Map();
         // 같은 위치에서 cpppj 프레임과 웹 프레임의 차이를 집계한다.
         for (const [key, value] of differences) {
