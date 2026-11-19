@@ -15,6 +15,7 @@ import { IndexedSurface } from '../www/render/indexed-surface.js';
 import { IndexedPresenter } from '../www/render/presenter.js';
 import { AudioSystem } from '../www/audio/audio-system.js';
 import { Settings } from '../www/platform/settings.js';
+import { CampaignRenderCollection } from '../www/render/campaign-render-collection.js';
 import { DATA_ROOT, readData, readDataMap } from './helpers.mjs';
 import { realCaptureAssets } from './capture-assets-support.mjs';
 
@@ -118,6 +119,18 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         assert.equal(app._clientPaletteScreen.width, 1366); assert.notEqual(app._clientRenderer, beforeRenderer);
         assert.equal(app._clientRendererFrame, frameGlobals); assert.equal(frameGlobals.scan()[3], 17); assert.equal(frameGlobals.cloudDirtyCount().value, 2);
         assert.deepEqual(app._campaignWorld.mapView(), { left: 0, top: 28, right: 1366, bottom: 768 });
+        // 현재 Tutorial1의 실제 지면 묶음·객체·입자·커서를 같은 원본 표시 목록에 모은다.
+        const collectedUi = [], collector = new CampaignRenderCollection(app._campaignWorld, camera.snapshot(), 1366, 768, (clip, output, limit) => {
+            collectedUi.push({ clip, limit }); const view = new DataView(output.buffer, output.byteOffset, output.byteLength);
+            view.setFloat32(0, 1, true); view.setFloat32(4, 2, true); view.setUint32(8, 123, true); output[14] = 2; return 1;
+        });
+        const all = collector.collect({ left: 0, top: 0, right: 1366, bottom: 768 }, 0), kinds = [];
+        for (let at = 14; at < all.entries.length; at += 16) kinds.push(all.entries[at]);
+        assert.equal(kinds[0], 2); assert.ok(kinds.includes(1)); assert.ok(kinds.includes(0));
+        const groupAt = kinds.indexOf(1) * 16, group = collector.group(new DataView(all.entries.buffer, all.entries.byteOffset).getUint32(groupAt + 8, true));
+        assert.ok(group.count.value > 0); assert.equal(collectedUi.length, 1);
+        const uiOnly = collector.collect({ left: 0, top: 0, right: 20, bottom: 20 }, 4);
+        assert.equal(uiOnly.entries.length, 16); assert.equal(uiOnly.entries[14], 2); assert.equal(uiOnly.covered, false);
         assert.throws(() => app._prepareCampaignMissionStart(), /수명 오류/); assert.throws(() => app._prepareCampaignTutorial(), /수명 오류/);
         assert.doesNotThrow(() => session.checkMissionOutcome());
         const outcome = app._campaignGameplayServices().missionOutcome;
