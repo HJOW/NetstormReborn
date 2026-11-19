@@ -94,7 +94,7 @@ import { CampaignSessionAssets } from './core/raw-campaign-session-owners.js';
 import { PriestPlacementAssets } from './core/priest-placement-assets.js';
 import { RawSurfaceStorage } from './core/raw-surface-storage.js';
 import { Kernel } from './core/kernel.js';
-import { bindClientKernelDiagnostics, ClientTraceGlobals, traceClientObject } from './core/client-diagnostics.js';
+import { bindClientKernelDiagnostics, ClientTraceGlobals, traceClientObject, writeClientDiagnosticLog } from './core/client-diagnostics.js';
 import { ClientTimeSource } from './core/client-time-source.js';
 import { resetGameStorage } from './platform/reset-storage.js';
 import { createCanvasGlyphRasterizer } from './platform/glyph-rasterizer.js';
@@ -1017,6 +1017,11 @@ export class Netstorm {
             decodeDisplayText: (bytes) => displayTextCodec.decode(bytes), chatChannels: () => this._clientChatChannels }, services.ai);
         // 승패 안내와 AI·생산 할당은 같은 현재 미션·Gump와 웹 할당 바이트를 사용한다.
         services.production = { allocationBytes: currentAllocationBytes };
+        // Player 정기 처리의 현재 진단 그룹과 문장을 같은 Client trace로 전달한다.
+        services.player = { log: (group, text) => {
+            if (!this._clientTrace) throw new Error('미션 Player 진단의 실제 Client 수명 누락');
+            writeClientDiagnosticLog(this._clientTrace, group | 0, text);
+        } };
         services.missionOutcome = {
             demo: () => this._clientGuide?.current()?.runtime.gate.demo ?? 0,
             tellBlocked: () => Boolean(this._mainMenu?.dialog),

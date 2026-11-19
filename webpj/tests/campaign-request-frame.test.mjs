@@ -121,6 +121,9 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         try { player.playOnceAt = (...args) => steps.push(args); app._campaignGameplayServices().motion.path.stepSound(42, 10.5, 20.25, 7); }
         finally { player.playOnceAt = originalPlay; }
         assert.deepEqual(steps, [[10.5, 20.25, 7, 0, 0]]);
+        // 실제 Player 정기 진단은 같은 Client 로그 버퍼를 사용한다.
+        app._campaignGameplayServices().player.log(1, 'Player test');
+        assert.ok(app._clientTrace.log.buffer.some((byte) => byte !== 0));
         // 미구현 사건을 추월하지 않고 맨 앞 이동 통지만 현재 Guide와 Gump에 전달한다.
         const inputQueue = app._clientInputQueue; inputQueue.pushCommand(0x02000050, 1, 2); inputQueue.pushCommand(0x02000044, 3, 4);
         app._runCampaignInputFrame(); assert.equal(inputQueue.size, 2); assert.equal(inputQueue.pop(false).code, 0x02000050);

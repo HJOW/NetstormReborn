@@ -63,7 +63,7 @@ test('캠페인 목록에서 첫 Tutorial의 월드와 안내를 표시한다', 
   }, { sid: priest.sid, x: destination.startX, y: destination.startY }, { timeout: 15000 });
   // 이동 첫 좌표만 관찰하고 끝내지 않고 발소리 단계까지 게임 시계와 프레임이 계속 진행되는지 확인한다.
   const movementTime = await page.evaluate(() => window.netstorm._gameClock.time().game);
-  await page.waitForFunction((start) => window.netstorm._gameClock.time().game >= start + 2, movementTime, { timeout: 15000 });
+  await page.waitForFunction((start) => window.netstorm._gameClock.time().game >= start + 12, movementTime, { timeout: 25000 });
   // P/R은 같은 실제 사제를 선택하고 반복 입력은 사제 보기 명령을 큐에서 소비한다.
   await page.keyboard.press('p'); await expect.poll(() => page.evaluate(() => window.netstorm._campaignWorld.selected())).toBe(priest.sid);
   await page.keyboard.press('r'); await expect.poll(() => page.evaluate(() => window.netstorm._clientInputQueue.size)).toBe(0);
