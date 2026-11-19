@@ -24,6 +24,14 @@ test('게임 시계는 앱 프레임과 같은 수명으로 생성되고 재시�
     app._clientPaletteScreen.loadPalette(app._gameAssets.palette, 0); return [...bytes];
   });
   expect(presentedColor).toEqual([17, 33, 97, 255]);
+  // clear=1은 DIB 픽셀을 실제 색 번호 표면과 Canvas에 즉시 내보낸다.
+  const cleared = await page.evaluate(() => {
+    const app = window.netstorm; app._ensureSurface(); app._surface.fill(9);
+    const screen = app._clientPaletteScreen; screen.lock().fill(9); screen.unlock();
+    screen.loadPalette(app._gameAssets.palette, 1);
+    return [app._surface.pixels[0], ...app._ctx.getImageData(0, 0, 1, 1).data];
+  });
+  expect(cleared).toEqual([0, 0, 0, 0, 255]);
   // 준비는 실제 공개 자산에서 스크립트가 지정한 Fort를 읽고 사용 뒤 등록 객체를 반납한다.
   const mission = await page.evaluate(() => {
     const prepared = window.netstorm._prepareCampaignMission('Tutorial1');

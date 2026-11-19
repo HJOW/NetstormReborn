@@ -698,10 +698,12 @@ export class Netstorm {
         this._gameAssets = game; this._surfaceStorage = storage; this._clientKernel = kernel;
     }
 
-    // 실제 fortPal 자산을 적용해 논리 색을 캡처한 뒤 창 모드 DIB를 준비한다. DIB의 실제 출력 연결은 후속이다.
+    // 실제 fortPal 자산을 적용해 논리 색을 캡처한 뒤 창 모드 DIB와 출력 장치를 준비한다.
     _initializeClientPalette(game) {
         if (this._clientPaletteScreen || this._clientColorSort || !this._layout || !game) throw new Error('Client 팔레트의 중복 또는 시작 수명 누락');
-        const screen = new Screen(this._layout.logicalWidth, this._layout.logicalHeight, { devices: { paletteChanged: (palette) => this._applyClientScreenPalette(palette) } });
+        const screen = new Screen(this._layout.logicalWidth, this._layout.logicalHeight, { devices: {
+            paletteChanged: (palette) => this._applyClientScreenPalette(palette), present: (rect, view) => this._presentClientScreen(rect, view),
+        } });
         const colors = new ClientColorSortInput();
         screen.init(); screen.loadPalette(game.palette, 1);
         colors.captureWithPrimary(screen.logicalPalette());
@@ -721,6 +723,23 @@ export class Netstorm {
             rgb[index * 3] = palette[index * 4 + 2]; rgb[index * 3 + 1] = palette[index * 4 + 1]; rgb[index * 3 + 2] = palette[index * 4];
         }
         this._presenter?.setPalette(rgb); this._displayDirty = true;
+    }
+
+    // 현재 DIB의 잘린 사각형을 실제 색 번호 표면에 복사하고 보이는 Canvas에 즉시 출력한다.
+    _presentClientScreen(rect, view) {
+        const surface = this._surface, layout = this._layout;
+        if (!surface || !layout || !this._presenter || surface.width !== view.width || surface.height !== view.height ||
+            layout.logicalWidth !== view.width || layout.logicalHeight !== view.height || !view.pixels || view.pitch < view.width) throw new Error('Client Screen의 현재 DIB 출력 수명 누락');
+        // DIB 패딩을 제외하고 지정된 영역의 각 행만 같은 색 번호로 복사한다.
+        for (let row = rect.top; row < rect.bottom; row += 1) {
+            const source = row * view.pitch + rect.left, target = row * surface.width + rect.left;
+            surface.pixels.set(view.pixels.subarray(source, source + rect.right - rect.left), target);
+        }
+        this._displayDirty = true;
+        if (layout.visible) {
+            if (!this._ctx) throw new Error('Client Screen의 현재 Canvas 문맥 누락');
+            this._presenter.present(this._ctx, surface, layout, true);
+        }
     }
 
     // 최초 TYPE 등록 뒤 같은 primary로 소유자 표와 9색표 캐시를 만들고 Screen 명암 조회에 연결한다.
