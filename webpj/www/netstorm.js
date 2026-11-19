@@ -1020,6 +1020,9 @@ export class Netstorm {
         bindCampaignAiClientServices({ configuration: () => this._gameData, languageNumber: () => this.options.language === 'korean' ? 7 : 0,
             translate: (text) => this._resources.translate(text), encodeDisplayText: (text) => displayTextCodec.encode(text),
             decodeDisplayText: (bytes) => displayTextCodec.decode(bytes), chatChannels: () => this._clientChatChannels }, services.ai);
+        // 섬 피격·사제 방어와 생산 자금 안내는 같은 현재 Tell 창을 사용한다.
+        services.factoryTell = (section) => this._openTell(section);
+        services.priest = { shield: { tell: (section) => this._openTell(section) } };
         // 승패 안내와 AI·생산 할당은 같은 현재 미션·Gump와 웹 할당 바이트를 사용한다.
         services.production = { allocationBytes: currentAllocationBytes, effects: {
             configInt: (key) => this._gameData.readInt(key, 0).value | 0,
@@ -1968,7 +1971,7 @@ export class Netstorm {
     // Tutorial 1~6과 연결된 캠페인 미션을 현재 Guide에 시작한다. 다른 미션과 기존 World 교체는 실제 수명 연결 전까지 거부한다.
     _beginCampaignFromDialog(argument) {
         const name = String(argument ?? '');
-        if (!/^tutorial[1-6]$/iu.test(name) && !['thewarbegins', 'masterofwhirligigs'].includes(name.toLowerCase())) { console.info(`Netstorm: 미션 '${name}' 은(는) 아직 연결되지 않았습니다.`); return false; }
+        if (!/^tutorial[1-6]$/iu.test(name) && !['thewarbegins', 'masterofwhirligigs', 'savetheisland', 'fragilefortune', 'thunderingpower', 'dissolvedalliance'].includes(name.toLowerCase())) { console.info(`Netstorm: 미션 '${name}' 은(는) 아직 연결되지 않았습니다.`); return false; }
         if (!this._clientGuide || this._state !== AppState.MAIN_MENU) throw new Error('미션 시작의 현재 Guide·메뉴 수명 누락');
         if (this._campaignWorld || this._clientGuide.current()) { console.warn('Netstorm: 현재 미션을 정리하기 전에는 새 미션을 시작할 수 없습니다.'); return false; }
         this._clientGuide.begin(name); return true;

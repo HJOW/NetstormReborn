@@ -270,3 +270,39 @@ test('캠페인 목록에서 MasterOfWhirligigs 월드와 안내를 표시한다
   await page.waitForFunction((before) => window.netstorm._gameClock.time().game >= before + 12, started, { timeout: 30000 });
   expect(errors).toEqual([]);
 });
+
+// 첫 캠페인의 후속 네 미션은 직전 완료 조건을 사용해 실제 목록에서 연다.
+for (const [mission, previous] of [['SaveTheIsland', 'MasterOfWhirligigs'], ['FragileFortune', 'SaveTheIsland'], ['ThunderingPower', 'FragileFortune'], ['DissolvedAlliance', 'ThunderingPower']]) {
+  test(`캠페인 목록에서 ${mission} 월드와 안내를 표시한다`, async ({ page }) => {
+    const errors = []; page.on('pageerror', (error) => errors.push(error.message));
+    await page.addInitScript((finished) => {
+      localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } }));
+      localStorage.setItem('netstorm.progress', JSON.stringify({ version: 1, values: { [`Done${finished}`]: '1' } }));
+    }, previous);
+    await page.setViewportSize({ width: 1280, height: 720 }); await page.goto('/');
+    await page.waitForFunction(() => window.netstorm?.state === 'clickToStart'); await page.locator('canvas').click();
+    await page.waitForFunction(() => window.netstorm?.state === 'mainMenu');
+    // 실제 Tell 동작은 그대로 실행하면서 공격 경고 도달 여부만 관찰한다.
+    if (mission === 'DissolvedAlliance') await page.evaluate(() => {
+      const app = window.netstorm, open = app._openTell.bind(app); window.testTellNames = [];
+      app._openTell = (name, ...args) => { window.testTellNames.push(name); return open(name, ...args); };
+    });
+    await clickLabel(page, 'Campaign'); await clickLabel(page, 'Struggle For Freedom');
+    const label = await page.evaluate((name) => window.netstorm._mainMenu.dialog.menu.items.find((item) => item.command?.name === 'MissionBegin' && item.command.argument === name)?.label, mission);
+    expect(label).toBeTruthy(); await clickLabel(page, label);
+    await page.waitForFunction(() => window.netstorm?._campaignDisplayActive() && window.netstorm._clientGuide.current()?.runtime.gate.started === 1, null, { timeout: 50000 });
+    await page.waitForFunction(() => Boolean(window.netstorm._mainMenu.dialog), null, { timeout: 15000 });
+    expect(await page.evaluate(() => window.netstorm._clientGuide.current().script.name.toLowerCase())).toBe(mission.toLowerCase());
+    // 실제 브리핑의 버튼을 마지막까지 누른다.
+    for (let pageIndex = 0; pageIndex < 8; pageIndex += 1) {
+      const button = await page.evaluate(() => window.netstorm._mainMenu.dialog?.buttons.at(-1)?.label ?? null);
+      if (button === null) break;
+      await clickLabel(page, button);
+    }
+    await page.waitForFunction(() => !window.netstorm._gameClock.paused(), null, { timeout: 15000 });
+    const started = await page.evaluate(() => window.netstorm._gameClock.time().game);
+    await page.waitForFunction((before) => window.netstorm._gameClock.time().game >= before + 6, started, { timeout: 20000 });
+    if (mission === 'DissolvedAlliance') expect(await page.evaluate(() => window.testTellNames)).toContain('islandUnderAttack');
+    expect(errors).toEqual([]);
+  });
+}
