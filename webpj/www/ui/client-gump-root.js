@@ -65,6 +65,12 @@ export class ClientGumpRoot {
     lifetimeState() { this.#live(); return this.#life; }
     // 같은 현재 루트와 수명에 연결된 입력기를 빌린다.
     input() { this.#live(); return this.#input; }
+    // 가상 구분선 입력과 위치 계산에 실제 트리를 빌린다.
+    tree() { this.#live(); return this.#tree; }
+    // 같은 현재 트리의 좌표 수집기를 빌린다.
+    collection() { this.#live(); return this.#collection; }
+    // 같은 현재 트리의 부모 사건 전달기를 빌린다.
+    events() { this.#live(); return this.#events; }
     // 같은 노드 주소의 기본 생성기를 빌린다.
     factory() { this.#live(); return this.#factory; }
     // 같은 지연 삭제와 기본 소멸자를 빌린다.
