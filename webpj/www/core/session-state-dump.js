@@ -1,0 +1,93 @@
+// cpppj SessionStateDump 판번호 1의 순수 TSV 서식이다. Client/Session에서 값을 수집하는 작업은 별도다. (2026-11-19 WB04-E865)
+
+// 풀 전체 원문의 FNV-1a 64비트 해시를 계산한다.
+export function sessionDumpHash(bytes) {
+    let hash = 0xcbf29ce484222325n;
+    // 각 바이트에 XOR과 64비트 곱을 적용한다.
+    for (const byte of bytes) hash = BigInt.asUintN(64, (hash ^ BigInt(byte)) * 0x100000001b3n);
+    return hash;
+}
+
+// 분산 SP의 현재 비트만 읽는다. 저장소 초기화나 난수 소비는 하지 않는다.
+export function decodeDumpScrambledSp(pools, permutation, offset, owner) {
+    if (!Number.isInteger(owner) || owner < 0 || owner >= 9 || pools.length !== 288 || permutation.length !== 32) throw new RangeError('Session 덤프 분산 SP 입력 크기');
+    let value = 0;
+    // 원본 비트 순열과 offset을 이용해 소유자의 32비트를 복원한다.
+    for (let bit = 0; bit < 32; bit += 1) {
+        const index = permutation[bit];
+        if (!Number.isInteger(index) || index < 0 || index >= 32) throw new RangeError('Session 덤프 분산 SP 순열 범위');
+        if ((pools[index * 9 + owner] & (1 << ((offset + bit) & 31))) !== 0) value = (value | (1 << bit)) >>> 0;
+    }
+    return value >>> 0;
+}
+
+// 비어 있는 바이트열은 '-'로, 나머지는 소문자 16진으로 바꾼다.
+function hex(bytes) {
+    return bytes.length ? Array.from(bytes, (byte) => byte.toString(16).padStart(2, '0')).join('') : '-';
+}
+
+// 현재 비정렬 원문의 지정 폭을 리틀 엔디언 부호 없는 정수로 읽는다.
+function read(raw, offset, width) {
+    if (offset < 0 || offset + width > raw.length) throw new RangeError('Session 덤프 슬롯 필드 범위');
+    let value = 0;
+    // 낮은 바이트부터 지정 폭을 조립한다.
+    for (let index = 0; index < width; index += 1) value = (value | (raw[offset + index] << (index * 8))) >>> 0;
+    return value;
+}
+
+// 게임 시각 double을 계산 없이 64비트 정수 비트로 바꾼다.
+function doubleBits(value) {
+    const view = new DataView(new ArrayBuffer(8));
+    view.setFloat64(0, value, true);
+    return view.getBigUint64(0, true);
+}
+
+// 명시된 관측값을 판번호 1 TSV로 변환한다. 숫자·행 순서는 cpppj FormatSessionStateDump와 같다.
+export function formatSessionStateDump(input) {
+    const patch = input.edition === 'patch1078';
+    if (!patch && input.edition !== 'cd1072') throw new RangeError('Session 덤프 판본 오류');
+    const rows = [
+        'netstorm_session_dump\t1', `edition\t${patch ? 'originals' : 'originalCD'}`,
+        `frame\t${input.frame}\t${doubleBits(input.gameTime)}`, `random\t${input.gameRandom}\t${input.crtRandom}`,
+        `world\t${input.world ? 1 : 0}`, `kernel\t${input.kernelSize}\t${input.kernelCapacity}`,
+    ];
+    // 호출자가 관측한 PID 순서를 유지하고 정기 프로세스는 바로 뒤에 추가한다.
+    for (const process of input.processes) {
+        rows.push(`process\t${process.pid}\t${process.form}\t${process.parent}`);
+        if (process.regular) rows.push(`regular\t${process.pid}\t${process.event}\t${process.count}\t${process.payloadBits}\t${process.timeBits}`);
+    }
+    if (!input.world) return `${rows.join('\n')}\nend\n`;
+    const { poolBytes, poolCapacity, stride } = input;
+    if (!Number.isInteger(stride) || stride < 12 || !Number.isInteger(poolCapacity) || poolCapacity < 0 || poolBytes.length !== poolCapacity * stride) throw new RangeError('Session 덤프 풀 원문 크기');
+    rows.push(`pool\t${poolCapacity}\t${stride}\t${input.freeCount}\t${input.firstFreeServer}\t${input.firstFreeClient}\t${input.predictableCursor}\t${sessionDumpHash(poolBytes).toString(16)}`);
+    // 예약 0~4번과 사용 중인 슬롯을 출력하고 자산은 판본에 맞는 읽기용 행도 만든다.
+    for (let sid = 0; sid < poolCapacity; sid += 1) {
+        const raw = poolBytes.subarray(sid * stride, (sid + 1) * stride);
+        if (sid >= 5 && (raw[11] & 1)) continue;
+        rows.push(`slot\t${sid}\t${hex(raw)}`);
+        if (sid < 5 || raw[10] < 70) continue;
+        rows.push(`object\t${sid}\t${raw[10]}\t${raw[11]}\t${raw[patch ? 34 : 32]}\t${read(raw, patch ? 36 : 34, patch ? 4 : 1)}\t${read(raw, 14, 4)}\t${read(raw, 18, 4)}\t${read(raw, 26, patch ? 4 : 2)}`);
+    }
+    if (input.players.length % 180) throw new RangeError('Session 덤프 Player 원문 크기');
+    // Player와 숨김·동맹 행을 원래 번호 순서로 쓴다.
+    for (let offset = 0; offset < input.players.length; offset += 180) rows.push(`player\t${offset / 180}\t${hex(input.players.subarray(offset, offset + 180))}`);
+    rows.push(`hidden_players\t${hex(input.hiddenPlayers)}`);
+    rows.push(['alliances', ...input.alliances].join('\t'));
+    const sp = ['sp', input.spInitialized ? 1 : 0, input.spOffset];
+    // 미초기화 상태는 분산 배열을 읽지 않고 아홉 개 '-'를 쓴다.
+    for (let owner = 0; owner < 9; owner += 1) sp.push(input.spInitialized ? decodeDumpScrambledSp(input.spPools, input.spPermutation, input.spOffset, owner) : '-');
+    rows.push(sp.join('\t'));
+    // Graph 전체와 비용·깊이·생산 알림을 원래 순서로 쓴다.
+    for (let index = 0; index < input.graph.length; index += 1) {
+        const item = input.graph[index];
+        rows.push(`graph\t${index}\t${item.surfaces}\t${item.inUse}\t${item.reserved}`);
+    }
+    rows.push(`totals\t${input.totalCost}\t${input.postPopDepth}\t${input.productionDirty}`);
+    const { totalLocal, totalBuilt, totalGlobal } = input;
+    if (totalLocal.length !== totalBuilt.length || totalLocal.length !== totalGlobal.length) throw new RangeError('Session 덤프 TotalMade 표 크기');
+    // 하나라도 비영인 TYPE만 출력한다.
+    for (let type = 0; type < totalLocal.length; type += 1) {
+        if (totalLocal[type] || totalBuilt[type] || totalGlobal[type]) rows.push(`totalmade\t${type}\t${totalLocal[type]}\t${totalBuilt[type]}\t${totalGlobal[type]}`);
+    }
+    return `${rows.join('\n')}\nend\n`;
+}
