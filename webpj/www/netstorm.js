@@ -42,6 +42,9 @@ import { initializeClientPlayerRecords } from './core/client-player-runtime.js';
 import { CampaignTemplateStorage } from './core/campaign-template-storage.js';
 import { loadClientWorldAssets } from './core/client-world-assets.js';
 import { ClientMissionAssets } from './core/client-mission-assets.js';
+import { CampaignGameWorld } from './core/campaign-game-world.js';
+import { parseFort } from './assets/fort.js';
+import { createFortTypes } from './assets/type-flags.js';
 import { ClientCampaignGuide } from './core/client-campaign-guide.js';
 import { ClientFortGlobals } from './core/client-fort-globals.js';
 import { ClientFortCurrentName } from './core/client-fort-current-name.js';
@@ -722,6 +725,22 @@ export class Netstorm {
             unixSeconds: () => clock.unixSeconds(), frameTime: () => clock.time(), paused: () => clock.paused() };
     }
 
+    // 현재 Guide의 선택된 Fort와 같은 Client 공통 소유자로 GameWorld를 설치한다. State7·로그인은 호출자의 책임이다.
+    _installCampaignWorld(services, viewport) {
+        const current = this._clientGuide?.current(), request = this._clientGuide?.fortRequest();
+        if (this._campaignWorld || !current || !request || request.consumed || !this._gameAssets || !this._gameData) throw new Error('캠페인 World의 현재 Guide/요청 또는 단독 수명 계약 오류');
+        const fort = parseFort(current.script.readFortImage(request.fort), createFortTypes(this._gameAssets.typeTable));
+        const world = new CampaignGameWorld(this._gameAssets, this._gameData.files, fort, request.fort, { ...services, ...this._campaignSharedServices() }, viewport);
+        this._campaignWorld = world; this._campaignWorldMissionToken = current.runtime.saveToken;
+        return world;
+    }
+
+    // 현재 World의 Session을 반납하고 같은 미션 연결 대기 관문을 해제한다.
+    _releaseCampaignWorld() {
+        if (!this._campaignWorld) return;
+        this._campaignWorld.dispose(); this._campaignWorld = null; this._campaignWorldMissionToken = 0;
+    }
+
     // 게임을 정리한다. 프레임 예약·이벤트·관찰자·오디오·진행 중 로딩을 모두 해제하고 Canvas 를 제거한다.
     // 여러 번 호출해도 안전하며, 이후 init 으로 다시 시작할 수 있다. 처음 골격의 destroy(div) 형태로 불러도 인자는 무시한다.
     // init 도중 실패한 반쪽 상태도 이 함수가 정리하므로 상태 이름이 아니라 루트 요소의 유무로 판단한다.
@@ -741,6 +760,7 @@ export class Netstorm {
         this._progress = null;
         // Guide를 먼저 반납하고 장기 Process 소유자는 TYPE·Kernel과 시계가 살아 있는 동안 반납한다.
         this._clientGuide?.dispose(); this._clientGuide = null; this._clientFortName = null; this._clientFort = null;
+        this._releaseCampaignWorld();
         this._surfaceStorage?.dispose();
         this._gameClock = null; this._clientLocal = null; this._hiddenGamePause = false;
         this._clientSp = null; this._clientRandom = null;

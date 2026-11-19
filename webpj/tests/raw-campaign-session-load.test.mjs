@@ -747,6 +747,35 @@ test('Netstorm Client Guide: 원본 반복기의 창·State 대기와 Tutorial I
     } finally { guide.dispose(); app._surfaceStorage.dispose(); }
 });
 
+// 앱이 현재 Guide Fort와 실제 공유 소유자로 GameWorld를 설치하고 Session 반납까지 관리한다.
+test('Netstorm Client World: 실제 Guide Fort 설치와 로컬 로그인 수명', () => {
+    const app = new Netstorm(); app._initializeClientRuntime(false);
+    const data = GameData.build({ files: new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)]]), language: 'english' });
+    app._gameData = data; app._root = { ownerDocument: { title: 'before' } }; app._initializeClientWorldStorage(game, data.files); app._initializeClientGuide();
+    const guide = app._clientGuide; let world;
+    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {} };
+    app._clientGameplay.camera().initializeNativeRenderer(1024, 768, 256, { value: 0 }, { value: 0 });
+    const services = { localLogin, soundNames: new SoundList(), carrierRequest: forbidden('전송'),
+        cameraCommit: (context) => { const pixels = context.camera.target().pixels; context.camera.applyPixelsToRendererAndSnapshot(pixels[0], pixels[1]); },
+        surfaceDisplay: { suppressed: () => false, invalidate: () => {} },
+        install: { translateYou: () => Uint8Array.of(89, 111, 117, 0), setConfig: () => {}, refreshWindowTitle: () => {}, resetCamera: () => {} },
+        ownership: { refreshProduction: () => {}, themeMode: () => 1 }, assets: { postPop: { playImpactSound: () => {} }, queueCommand: () => {} },
+        sound: { wallSeconds: () => 0, play: forbidden('소리'), playOnceAt: forbidden('위치 소리'), playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false },
+        ai: { assertion: forbidden('AI 진단'), participation: { addChat: () => {}, clearChat: () => {} } } };
+    try {
+        assert.throws(() => app._installCampaignWorld(services, { x: 1024, y: 768 }), /Guide/);
+        guide.begin('Tutorial1'); guide.initializeTutorial(); const request = guide.fortRequest();
+        assert.throws(() => app._installCampaignWorld({ ...services, localLogin: null }, { x: 1024, y: 768 }), /로그인 장치/);
+        assert.equal(app._campaignWorld, null); assert.equal(app._surfaceStorage.borrowed, false);
+        world = app._installCampaignWorld(services, { x: 1024, y: 768 });
+        assert.equal(app._campaignWorld, world); assert.equal(app._campaignWorldMissionToken, guide.current().runtime.saveToken);
+        assert.equal(world.session().world().storage, app._surfaceStorage); assert.throws(() => app._installCampaignWorld(services, { x: 1024, y: 768 }), /단독 수명/);
+        world.startLocalConnection(); const session = world.session(); session.pumpLocalConnection(); session.pollLocalConnectionState(); session.pumpLocalConnection();
+        assert.equal(world.completeLocalConnection(), true); assert.equal(session.localConnectionReady(), true); assert.equal(request.consumed, true);
+        guide.dispose(); app._releaseCampaignWorld(); assert.equal(app._campaignWorld, null); assert.equal(app._campaignWorldMissionToken, 0); assert.equal(app._surfaceStorage.borrowed, false);
+    } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); }
+});
+
 // 누락된 미션 공장은 등록 설정을 반납하고 동일 Guide를 다시 사용할 수 있게 한다.
 test('Netstorm Client Guide: 없는 미션과 다음 정상 생성', () => {
     const app = new Netstorm(); app._initializeClientRuntime(false);
