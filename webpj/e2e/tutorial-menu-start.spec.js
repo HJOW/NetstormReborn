@@ -114,5 +114,41 @@ test('캠페인 목록에서 첫 Tutorial의 월드와 안내를 표시한다', 
   await page.keyboard.press('F4');
   await expect.poll(() => page.evaluate(() => window.netstorm._clientGuide.current().runtime.gate.stage), { timeout: 15000 }).toBe(centered.stage + 1);
   await expect.poll(() => page.evaluate(() => window.netstorm._clientGameplay.camera().snapshot().pixels.x), { timeout: 15000 }).toBeLessThan(panned);
+  // 다음 안내를 실제 버튼으로 닫고 생산 다리를 실제 화면에서 내려놓는다.
+  await page.waitForFunction(() => Boolean(window.netstorm._mainMenu.dialog), null, { timeout: 15000 });
+  for (let pageIndex = 0; pageIndex < 8; pageIndex += 1) {
+    const label = await page.evaluate(() => window.netstorm._mainMenu.dialog?.buttons.at(-1)?.label ?? null);
+    if (label === null) break;
+    await clickLabel(page, label);
+  }
+  await page.waitForFunction(() => !window.netstorm._gameClock.paused(), null, { timeout: 15000 });
+  await page.keyboard.press('q'); await expect.poll(() => page.evaluate(() => window.netstorm._campaignWorld.session().cursorDropSettings().preview)).toBeGreaterThan(0);
+  const placement = await page.evaluate(() => {
+    const app = window.netstorm, session = app._campaignWorld.session(), core = session.core(), cursor = session.cursor(), drop = session.cursorDropSettings();
+    const records = app._clientPlayers.records(), temple = new DataView(records.buffer, records.byteOffset + session.localOwner() * 180 + 0x7c, 4).getUint32(0, true);
+    const slot = core.pool.slot(temple), raw = new DataView(slot.buffer, slot.byteOffset, slot.byteLength);
+    const home = app._clientGameplay.camera().snapshot().project(raw.getFloat32(14, true), raw.getFloat32(18, true));
+    // 실제 커서의 배치 판정으로 신전 주변 후보를 확인한다.
+    for (let y = home.y - 150; y <= home.y + 150; y += 11) {
+      for (let x = home.x - 200; x <= home.x + 200; x += 16) {
+        if (x < 0 || y < 28 || x >= app._layout.logicalWidth || y >= app._layout.logicalHeight) continue;
+        cursor.update(x, y);
+        if (drop.legal) {
+          const rect = app.canvas.getBoundingClientRect();
+          return { x: rect.left + x * rect.width / app._layout.logicalWidth, y: rect.top + y * rect.height / app._layout.logicalHeight,
+            packets: session.localConnectionPackets().length, bridges: session.world().objects().filter(({ object }) => object.type === core.bridgeState.bridgeType).length };
+        }
+      }
+    }
+    throw new Error('실제 다리 배치 가능 지점이 없습니다');
+  });
+  await page.mouse.move(placement.x, placement.y);
+  await expect.poll(() => page.evaluate(() => window.netstorm._campaignWorld.session().cursorDropSettings().legal)).toBe(1);
+  await page.mouse.click(placement.x, placement.y, { delay: 60 });
+  await expect.poll(() => page.evaluate(() => window.netstorm._campaignWorld.session().cursorDropSettings().preview)).toBe(0);
+  await page.waitForFunction(({ packets, bridges }) => {
+    const session = window.netstorm._campaignWorld.session(), core = session.core();
+    return session.localConnectionPackets().slice(packets).includes(0x3e) && session.world().objects().filter(({ object }) => object.type === core.bridgeState.bridgeType).length > bridges;
+  }, placement, { timeout: 15000 });
   expect(errors).toEqual([]);
 });

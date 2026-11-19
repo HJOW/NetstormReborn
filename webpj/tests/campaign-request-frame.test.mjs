@@ -269,6 +269,21 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         for (let sid = finder.begin(technology); sid; sid = finder.next()) { const raw = session.core().pool.slot(sid); if ((raw[20] | (raw[21] << 8)) & 0x40) { bridge = sid; break; } }
         assert.ok(bridge); const cursor = session.cursor(), drop = session.cursorDropSettings(); cursor.take(bridge, 0);
         assert.equal(drop.preview, bridge); assert.equal(drop.lockDepth, 0); assert.ok(cursor.lifecycle.previewCount > 0);
-        cursor.cancel(); assert.equal(drop.preview, 0); assert.equal(drop.lockDepth, 1);
+        const playerRecords = app._clientPlayers.records(); const temple = new DataView(playerRecords.buffer, playerRecords.byteOffset + session.localOwner() * 180 + 0x7c, 4).getUint32(0, true);
+        const templeBytes = session.core().pool.slot(temple), templeRaw = new DataView(templeBytes.buffer, templeBytes.byteOffset, templeBytes.byteLength);
+        const home = camera.snapshot().project(templeRaw.getFloat32(14, true), templeRaw.getFloat32(18, true)); let legal = null;
+        // 실제 배치 판정으로 신전 주변의 유효한 화면점을 찾는다.
+        for (let y = home.y - 150; y <= home.y + 150 && !legal; y += 11) {
+            for (let x = home.x - 200; x <= home.x + 200; x += 16) {
+                if (x < 0 || y < 28 || x >= 1366 || y >= 768) continue;
+                cursor.update(x, y); if (drop.legal) { legal = { x, y }; break; }
+            }
+        }
+        assert.ok(legal); const beforeConstruction = session.localConnectionPackets().length;
+        const beforeBridges = session.world().objects().filter(({ object }) => object.type === session.core().bridgeState.bridgeType).length;
+        app._campaignUserInput.event({ code: 0x00010000, ...legal });
+        assert.equal(drop.preview, 0); assert.equal(drop.lockDepth, 2); session.pumpLocalConnection();
+        const actualBridges = session.world().objects().filter(({ object }) => object.type === session.core().bridgeState.bridgeType);
+        assert.deepEqual(session.localConnectionPackets().slice(beforeConstruction), [0x3e]); assert.ok(actualBridges.length > beforeBridges);
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); app._clientSoundDevice.dispose(); app._missionAudioAssets.dispose(); }
 });

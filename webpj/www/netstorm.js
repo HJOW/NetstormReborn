@@ -1044,6 +1044,11 @@ export class Netstorm {
             stop: (...args) => player().stop(...args), isPlaying: (...args) => player().isPlaying(...args) };
         // 이동 경로의 발소리는 같은 Client 위치 음향으로 원본 반복·우선순위 0을 전달한다.
         services.motion = { path: { stepSound: (_sid, x, y, sound) => player().playOnceAt(x, y, sound, 0, 0) } };
+        // 건설 확정·간헐천은 같은 현재 설정·벽시계·Renderer와 원본 진단 출력을 사용한다.
+        services.construction = { configInt: (key, fallback) => this._gameData.readInt(key, fallback).value | 0,
+            wallSeconds: () => this._gameClock.wallSeconds(), refresh: () => this._clientRenderer.invalidateAll(),
+            negativeQuantity: () => console.error('로컬 간헐천 원본 진단: reps >= 0'),
+            boundsAssertion: (code) => console.error(`Player 간헐천 범위 원본 진단: ${code}`) };
         services.assets.postPop.playImpactSound = (sound) => player().play(sound, 0, 0, 0, 0, 0);
         // Session 초기 카메라 요청을 같은 앱의 실제 화면·변경 표·Gump에 적용한다.
         services.cameraCommit = (context) => this._commitCampaignCamera(context);
