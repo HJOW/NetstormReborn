@@ -25229,6 +25229,37 @@
       "cpppjBasis": {
         "cpppj/src/o/RawFortCurrentName.cpp": "fa7762f9e"
       }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E912",
+      "consumers": [
+        "webpj/tests/uber-root-native.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/uber-root-gump.js"
+      ],
+      "doc": "docs/webpj-uber-root-construct-20261119.md",
+      "cpppjSources": [
+        "cpppj/src/client/UberRootGump.cpp",
+        "cpppj/src/client/UberRootGump.h"
+      ],
+      "id": "uber-root",
+      "path": "cpppj/tests/fixtures/uber-root-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: Uber 루트 생성·교체와 현재 하위 장치",
+      "scope": "10.78 원본 160행 전체 노드 guard·등록표·전역·호출 순서·명시 변이 및 중단. 재생성은 별도 시험",
+      "text": true,
+      "sha256": "eb1720f168c6d48b45a5c6526c82019657f14c197c4b5f62c9d50b394e27b717",
+      "bytes": 1774446,
+      "lines": 161,
+      "fixtureCommit": "da5f7b881",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/UberRootGump.cpp": "52cfee23d",
+        "cpppj/src/client/UberRootGump.h": "52cfee23d"
+      }
     }
   ]
 }

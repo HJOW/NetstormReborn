@@ -4,7 +4,7 @@ import assert from 'node:assert/strict';
 import { ClientGumpRoot } from '../www/ui/client-gump-root.js';
 import { GumpCreateNode } from '../www/ui/gump-create.js';
 import { HudDividerNode, HudDock, HudDockPart } from '../www/ui/hud-dock.js';
-import { UberRootNode, uberRootDockView } from '../www/ui/uber-root-gump.js';
+import { UberRootGump, UberRootNode, uberRootDockView } from '../www/ui/uber-root-gump.js';
 
 // 루트의 필드를 호출 때마다 다시 읽고 같은 파생·기본 주소를 요구한다.
 test('Uber 루트 HUD 뷰: 같은 실제 노드와 현재 자식 필드', () => {
@@ -14,6 +14,8 @@ test('Uber 루트 HUD 뷰: 같은 실제 노드와 현재 자식 필드', () => 
     const view = uberRootDockView(token, { node: (value) => owner.node(value), base: (value) => owner.node(value) });
     root.vertical = 17; assert.equal(view(HudDockPart.root), token); assert.equal(view(HudDockPart.vertical), 17);
     root.vertical = 29; assert.equal(view(HudDockPart.vertical), 29); assert.throws(() => view(99), /종류/u);
+    let reads = 0; const counted = new UberRootGump(owner.createState(), { node: (value) => { reads += 1; return owner.node(value); }, base: (value) => owner.node(value) });
+    const countedView = counted.dockView(token); assert.equal(reads, 1); assert.equal(countedView(HudDockPart.vertical), 29); assert.equal(reads, 2);
     assert.throws(() => uberRootDockView(token, { node: () => root, base: () => new GumpCreateNode() }), /불일치/u);
     owner.dispose(); assert.throws(() => view(HudDockPart.root), /반납/u);
 });
