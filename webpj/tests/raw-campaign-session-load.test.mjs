@@ -29,6 +29,7 @@ import { StateWorldCleanupEffect } from '../www/core/raw-state-world-cleanup.js'
 import { ClientStateRuntimeRetirement } from '../www/core/client-state-runtime-retirement.js';
 import { cancelClientStateCursor, cleanupClientStateWorld, makeClientStateWorldHooks } from '../www/core/client-state-world-cleanup.js';
 import { formatPlayerMenuText } from '../www/core/raw-player-menu.js';
+import { ClientFactoryMenu } from '../www/ui/client-factory-menu.js';
 import { bindClientStateWorldGlobals } from '../www/core/client-state-world-globals.js';
 import { ClientKencloudGlobals } from '../www/core/client-kencloud-globals.js';
 import { ClientHtmlWindowGlobals } from '../www/core/client-html-window-globals.js';
@@ -1608,6 +1609,15 @@ function runWorkshopConstruction(natural) {
                 baseMenu: (sid) => factoryBase.push(sid) });
             factoryMenu.open(workshop); assert.deepEqual(factoryBase, [workshop]);
             assert.ok(factoryEntries.some((entry) => entry.command === 0x03000080 && entry.parameter === ((128 << 16) | workshop) && entry.include && entry.enabled));
+            // 같은 실제 Session을 Client 작성기에 연결하고 같은 연구 행·기본 메뉴를 확인한다.
+            const clientEntries = [], clientBase = []; let clientToken = 1;
+            const writer = { beginFancy: () => {}, title: () => {}, header: () => {}, takeCurrent: () => clientToken++, submenu: () => {},
+                entry: (label, command, parameter, include, enabled) => clientEntries.push({ label, command, parameter, include, enabled }) };
+            const clientFactory = new ClientFactoryMenu(s, writer, { openDamageable: (sid) => clientBase.push(sid) },
+                { translate: (value) => value, helpWord: () => 'Help', staticText: (value) => value === 'researchHelp' ? 0x71000000 : 0 });
+            clientFactory.open(workshop); assert.deepEqual(clientBase, [workshop]);
+            assert.ok(clientEntries.some((entry) => entry.command === 0x03000080 && entry.parameter === ((128 << 16) | workshop) && entry.include && entry.enabled));
+            assert.ok(clientEntries.some((entry) => entry.command === 0x02000017 && entry.parameter === 0x71000000));
             assert.equal(s.production().contains(128), false); const prior = s.localConnectionPackets().length;
             assert.equal(s.selectFactoryKnowledge(workshop, 0x03000080, ((128 << 16) | workshop) >>> 0), 1);
             const predicted = s.priests().carrier.findContained(workshop, 16, 128, 0);
