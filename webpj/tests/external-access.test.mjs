@@ -53,7 +53,7 @@ function codeLines(relativePath) {
 const FORBIDDEN = Object.freeze([
     /\bXMLHttpRequest\b/, /\bWebSocket\b/, /\bEventSource\b/, /\bsendBeacon\b/, /\bRTCPeerConnection\b/, /\bimportScripts\b/,
     /\bserviceWorker\b/, /\bnew\s+(?:Shared)?Worker\b/, /\blocation\s*\.\s*(?:href|assign|replace)\b/, /\blocation\s*=[^=]/,
-    /\b(?:globalThis|self|top|parent|opener|view)\s*\.\s*open\s*\(/, /\bdocument\s*\.\s*(?:write|domain)\b/,
+    /(?<!#)\b(?:globalThis|self|top|parent|opener|view)\s*\.\s*open\s*\(/, /\bdocument\s*\.\s*(?:write|domain)\b/,
     /['"`](?:https?|wss?|ftp|mailto|telnet|file):/i, /['"`]\/\/[a-z0-9]/i,
 ]);
 
@@ -61,8 +61,8 @@ const FORBIDDEN = Object.freeze([
 test('외부 접속 소스 감사: 네트워크 API 는 같은 출처 자산 요청뿐이다', () => {
     // 음성 대조: 패턴이 실제 위반 예시를 잡고 같은 출처 적재 코드는 잡지 않는다.
     const caught = (line) => FORBIDDEN.some((pattern) => pattern.test(line));
-    for (const bad of ["fetch('https://a.b/c')", 'const s = new WebSocket(url);', "globalThis.open('x')", 'view.open(address)', 'location.href = next;', "const u = '//cdn.example/x.js';", 'navigator.sendBeacon(u, d);']) assert.ok(caught(bad), bad);
-    for (const good of ['const response = await this.fetchFunction(this.url(entry.path));', 'window.open(topic);', "if (a === b) return 'mailto';"]) assert.equal(caught(good), false, good);
+    for (const bad of ["fetch('https://a.b/c')", 'const s = new WebSocket(url);', "globalThis.open('x')", 'view.open(address)', 'window.opener.open(address)', 'location.href = next;', "const u = '//cdn.example/x.js';", 'navigator.sendBeacon(u, d);']) assert.ok(caught(bad), bad);
+    for (const good of ['const response = await this.fetchFunction(this.url(entry.path));', 'window.open(topic);', 'this.#opener.open(sid, event);', "if (a === b) return 'mailto';"]) assert.equal(caught(good), false, good);
     const files = sourceFiles();
     assert.ok(files.length > 50, `소스 ${files.length}개`);
     const violations = [];
