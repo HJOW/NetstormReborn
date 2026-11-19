@@ -4,8 +4,8 @@ import { StyleTextMarkup, StyleTextMarkupState, bindStyleTextMarkupAssets } from
 import { bindStyleTextPalette } from './style-text-fragments.js';
 
 // ClientTextGump의 스타일 훅 공장을 만든다. palette와 pictureColors는 현재 화면의 표를 반환한다.
-export function makeClientTextMarkup(game, palette, pictureColors, sound, options = new StyleTextMarkupState()) {
-    if (!game || [palette, pictureColors, sound].some((device) => typeof device !== 'function')) throw new TypeError('Client 글자 마크업의 실제 장치 누락');
+export function makeClientTextMarkup(game, palette, pictureColors, sound, options = new StyleTextMarkupState(), onCreate = null) {
+    if (!game || [palette, pictureColors, sound].some((device) => typeof device !== 'function') || (onCreate !== null && typeof onCreate !== 'function')) throw new TypeError('Client 글자 마크업의 실제 장치 누락');
     return (fragments, target) => {
         const assets = new MarkupAssets(game), state = new MarkupState(), pictureHooks = {}, colors = new Uint8Array(256);
         bindMarkupAssets(state, pictureHooks, assets);
@@ -18,6 +18,7 @@ export function makeClientTextMarkup(game, palette, pictureColors, sound, option
         const pictures = new Markup(fragments, state, pictureHooks), markupHooks = { black: () => palette().basic[0], sound };
         bindStyleTextMarkupAssets(markupHooks, game);
         const markup = new StyleTextMarkup(fragments, pictures, options, markupHooks), hooks = {};
+        if (onCreate) onCreate(pictures, markup);
         bindMarkup(hooks, pictures);
         // 짧은 색 명령도 팔레트 변경 뒤의 현재 기본·명명 색을 사용한다.
         hooks.color = (command) => { const current = {}; bindStyleTextPalette(current, palette()); return current.color(command); };
