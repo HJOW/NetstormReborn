@@ -84,7 +84,7 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
     app._initializeClientWorldStorage(game, data.files); app._syncClientCloudOptions(); app._initializeClientPalette(game); app._initializeClientPaletteCache(game); app._initializeClientGuide();
     app._canvas = {}; app._render = () => {}; app._startFrameLoop = () => {};
     const guide = app._clientGuide, events = [];
-    const services = { ai: { assertion: (value) => { throw new Error(`AI 진단 ${value}`); }, participation: { addChat: () => {}, clearChat: () => {} } } };
+    const services = {};
     try {
         guide.begin('Tutorial1'); guide.run(); guide.run();
         const request = guide.fortRequest(); assert.equal(request.fort, 'BridgeTheGap'); assert.equal(guide.pending().pending(), true);

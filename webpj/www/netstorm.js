@@ -52,7 +52,8 @@ import { MemoryColorMapFiles } from './core/color-map-files.js';
 import { ClientHtmlWindowGlobals } from './core/client-html-window-globals.js';
 import { ClientConnectionGlobals } from './core/client-connection-globals.js';
 import { ClientConnectionActivityGlobals } from './core/client-connection-activity-globals.js';
-import { bindCampaignClientInputServices, bindCampaignOwnershipTheme, bindCampaignProductionRefresh, captureCampaignMissionStarting, runCampaignMissionStarting } from './core/campaign-client-services.js';
+import { bindCampaignAiClientServices, bindCampaignClientInputServices, bindCampaignOwnershipTheme, bindCampaignProductionRefresh, captureCampaignMissionStarting, runCampaignMissionStarting } from './core/campaign-client-services.js';
+import { CHAT_RECORD_BYTES, RawChatChannels } from './core/raw-chat-channels.js';
 import { ClientRandomGlobals } from './core/random.js';
 import { ClientSpGlobals } from './core/client-sp-globals.js';
 import { ClientSubscriberGlobals } from './core/client-subscriber-globals.js';
@@ -489,6 +490,8 @@ export class Netstorm {
         this._clientKencloud = null; this._clientHtml = null; this._clientConnections = null; this._clientConnectionActivity = null;
         // 같은 Client가 장기 소유하는 게임·CRT 난수와 SP 저장소다.
         this._clientRandom = null; this._clientSp = null;
+        // 같은 Client가 소유하는 원본 채팅 채널 100기록과 그 연산이다.
+        this._clientChatRecords = null; this._clientChatChannels = null;
         // 미션 Session이 공유하는 효과음 이름표는 Client 수명에 소유한다.
         this._clientSoundNames = null;
         // 현재 브라우저 효과음 장치와 원본 재생 전역·준비 중인 수명이다.
@@ -737,6 +740,7 @@ export class Netstorm {
         const local = new ClientLocalStateGlobals(), clock = new ClientFrameClock(source, local.gameTicks());
         const cloud = new ClientKencloudGlobals(), html = new ClientHtmlWindowGlobals(), connections = new ClientConnectionGlobals(local), activity = new ClientConnectionActivityGlobals();
         const subscriber = new ClientSubscriberGlobals(), gameplay = new ClientGameplayGlobals(subscriber), fort = new ClientFortGlobals();
+        const chatRecords = new Uint8Array(CHAT_RECORD_BYTES), chatChannels = new RawChatChannels(chatRecords, () => subscriber.mySubscriber().value);
         const coreData = new ClientCoreDataGlobals(), players = new ClientPlayerRecords(), templates = new CampaignTemplateStorage();
         const soundNames = new SoundList(); soundNames.initialize();
         players.bindCoreData(coreData);
@@ -746,6 +750,7 @@ export class Netstorm {
         this._clientKencloud = cloud; this._clientHtml = html; this._clientConnections = connections; this._clientConnectionActivity = activity;
         this._clientSubscriber = subscriber; this._clientGameplay = gameplay; this._clientCoreData = coreData; this._clientPlayers = players; this._clientTemplates = templates; this._clientFort = fort;
         this._clientSoundNames = soundNames;
+        this._clientChatRecords = chatRecords; this._clientChatChannels = chatChannels;
     }
 
     // 현재 설정에서 구름 전역 옵션을 읽는다. 설정이나 Client가 아직 없으면 실제 초기화 시 다시 적용한다.
@@ -975,6 +980,11 @@ export class Netstorm {
             return this._clientInputQueue;
         } }, services);
         services.assets.queueCommand = services.developerQueue;
+        // AI 이름·난이도와 채팅은 같은 Client 설정·번역·Subscriber 기록을 읽는다.
+        services.ai = { assertion: (expression) => console.error(`미션 AI 원본 진단: ${expression}`) };
+        bindCampaignAiClientServices({ configuration: () => this._gameData, languageNumber: () => this.options.language === 'korean' ? 7 : 0,
+            translate: (text) => this._resources.translate(text), encodeDisplayText: (text) => displayTextCodec.encode(text),
+            decodeDisplayText: (bytes) => displayTextCodec.decode(bytes), chatChannels: () => this._clientChatChannels }, services.ai);
         // 미션 효과음은 같은 Client 이름표와 현재 재생기에 전달한다.
         const player = () => { if (!this._clientSoundPlayer) throw new Error('미션 효과음의 실제 재생기 미준비'); return this._clientSoundPlayer; };
         services.sound = { wallSeconds: () => this._gameClock.wallSeconds(), play: (...args) => player().play(...args),
@@ -1110,7 +1120,8 @@ export class Netstorm {
         const gameplay = this._campaignGameplayServices();
         const ownership = { ...gameplay.ownership, ...services?.ownership };
         const assets = { ...gameplay.assets, ...services?.assets, postPop: { ...gameplay.assets.postPop, ...services?.assets?.postPop } };
-        const world = new CampaignGameWorld(this._gameAssets, this._gameData.files, fort, request.fort, { ...gameplay, ...services, ...this._campaignSharedServices(), install, localLogin, ownership, assets }, viewport);
+        const ai = { ...gameplay.ai, ...services?.ai, names: { ...gameplay.ai.names, ...services?.ai?.names }, participation: { ...gameplay.ai.participation, ...services?.ai?.participation } };
+        const world = new CampaignGameWorld(this._gameAssets, this._gameData.files, fort, request.fort, { ...gameplay, ...services, ...this._campaignSharedServices(), install, localLogin, ownership, assets, ai }, viewport);
         this._campaignWorld = world; this._campaignWorldMissionToken = current.runtime.saveToken;
         return world;
     }
@@ -1149,6 +1160,7 @@ export class Netstorm {
         this._clientSoundDevice?.dispose(); this._clientSoundDevice = null; this._clientSoundPlayer = null; this._clientSoundState = null; this._clientSoundPrepare = null;
         this._gameClock = null; this._clientLocal = null; this._hiddenGamePause = false; this._clientSoundNames = null;
         this._clientSp = null; this._clientRandom = null;
+        this._clientChatRecords = null; this._clientChatChannels = null;
         this._clientPaletteScreen = null; this._clientColorSort = null; this._clientRenderer = null; this._clientSurfaceDisplay = null;
         this._clientTemplates = null; this._clientPlayers = null; this._clientCoreData = null; this._clientGameplay = null; this._clientSubscriber = null;
         this._clientKernel = null; this._surfaceStorage = null; this._gameAssets = null;
