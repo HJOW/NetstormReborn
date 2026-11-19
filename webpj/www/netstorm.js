@@ -1100,10 +1100,10 @@ export class Netstorm {
                 let menuTotal = 0;
                 const files = await loader.loadBundle(MENU_BUNDLE, (loaded, total) => {
                     menuTotal = total;
-                    this._loadProgress = { loaded, total: total + koreanTotal };
+                    if (generation === this._loadGeneration) this._loadProgress = { loaded, total: total + koreanTotal };
                 });
                 if (generation !== this._loadGeneration) return;
-                const korean = this.options.language === 'korean' ? await this._loadKorean(loader, menuTotal, koreanTotal) : null;
+                const korean = this.options.language === 'korean' ? await this._loadKorean(loader, menuTotal, koreanTotal, generation) : null;
                 if (generation !== this._loadGeneration) return;
                 this._resources = buildMenuResources(files, korean);
                 // 설정 층에는 웹 사용자 설정(언어·음량)과 저장된 캠페인 진행 값을 원본 options.cfg 자리에 넣는다. 해상도·전체화면 값은 넣지 않는다.
@@ -1148,17 +1148,18 @@ export class Netstorm {
         return loader.entries(bundle).reduce((sum, entry) => sum + entry.size, 0);
     }
 
-    // 한국어 묶음(갈무리11 글꼴 woff2·번역표)을 받아 한국어 지원을 만든다. 실패하면(파일 누락·글꼴 등록 실패) 경고만 남기고 null 을 돌려줘 영어 메뉴로 계속한다.
-    // 한국어는 영어 자료로 대체할 수 있는 선택 기능이라 게임 전체를 멈추지 않는 웹 적응이다(원본에는 한국어가 없다). (2026-10-31 WB03-N)
-    async _loadKorean(loader, menuTotal, koreanTotal) {
+    // 현재 적재 세대에서 한국어 글꼴·번역을 준비하고, 실패하면 진단을 남기고 영어 자료로 대체한다.
+    // 이전 세대의 응답과 진행률은 새 앱 수명에서 무시한다. (2026-11-19 WB04-E944)
+    async _loadKorean(loader, menuTotal, koreanTotal, generation) {
         try {
             const files = await loader.loadBundle(KOREAN_BUNDLE, (loaded) => {
-                this._loadProgress = { loaded: menuTotal + loaded, total: menuTotal + koreanTotal };
+                if (generation === this._loadGeneration) this._loadProgress = { loaded: menuTotal + loaded, total: menuTotal + koreanTotal };
             });
+            if (generation !== this._loadGeneration) return null;
             const document = this._root.ownerDocument;
             return await buildKoreanSupport(files, { createRasterizer: ({ regular, bold }) => createCanvasGlyphRasterizer({ document, regular, bold }) });
         } catch (error) {
-            console.warn('Netstorm: 한국어 글꼴·번역표를 준비하지 못해 영어 메뉴로 계속합니다.', error);
+            if (generation === this._loadGeneration) reportGameError('korean-assets', error, { state: this._state, generation });
             return null;
         }
     }
@@ -1187,7 +1188,7 @@ export class Netstorm {
             })
             .catch((error) => {
                 this._musicStatus = 'failed';
-                console.warn('Netstorm: 메뉴 음악을 받지 못했습니다. 음악 없이 계속합니다.', error);
+                if (this._root) reportGameError('audio-download', error, { state: this._state, asset: MENU_ASSET_PATHS.music });
             });
     }
 
@@ -1614,12 +1615,15 @@ export class Netstorm {
                     .then(() => {
                         if (this._audioContext === context) this._audioStatus = context.state;
                     })
-                    .catch(() => {
-                        if (this._audioContext === context) this._audioStatus = 'failed';
+                    .catch((error) => {
+                        if (this._audioContext !== context) return;
+                        this._audioStatus = 'failed';
+                        reportGameError('audio-unlock', error, { state: this._state });
                     });
             }
         } catch (error) {
             this._audioStatus = 'failed';
+            reportGameError('audio-unlock', error, { state: this._state });
         }
     }
 
@@ -1629,12 +1633,12 @@ export class Netstorm {
         if (!audio) return;
         if (this._buttonSoundBytes) {
             audio.loadSound(BUTTON_SOUND_NAME, this._buttonSoundBytes).catch((error) => {
-                console.warn('Netstorm: 버튼 효과음을 해독하지 못했습니다.', error);
+                if (this._audio === audio) reportGameError('audio-decode', error, { state: this._state, asset: BUTTON_SOUND_NAME });
             });
         }
         if (this._menuSoundBytes) {
             audio.loadSound(MENU_SOUND_NAME, this._menuSoundBytes).catch((error) => {
-                console.warn('Netstorm: 대화상자 목록 효과음을 해독하지 못했습니다.', error);
+                if (this._audio === audio) reportGameError('audio-decode', error, { state: this._state, asset: MENU_SOUND_NAME });
             });
         }
     }
@@ -1655,7 +1659,7 @@ export class Netstorm {
             .catch((error) => {
                 if (this._audio !== audio) return;
                 this._musicStatus = 'failed';
-                console.warn('Netstorm: 메뉴 음악을 해독하지 못했습니다. 음악 없이 계속합니다.', error);
+                reportGameError('audio-music', error, { state: this._state, asset: MENU_MUSIC_NAME });
             });
     }
 
@@ -1827,9 +1831,16 @@ export class Netstorm {
         this._listen(canvas, 'blur', (event) => { if (event.relatedTarget !== this._clientImeElement) this._clearInput(); });
         this._listen(doc, 'visibilitychange', () => this._onVisibilityChange());
 
-        // 루트 크기가 바뀌면 배치를 다시 계산한다. 관찰자가 없는 환경에서는 창 크기 변경으로 대신한다.
+        // 비동기 크기 관찰 오류는 현재 상태와 함께 보고한 뒤 브라우저에 전달한다. (2026-11-19 WB04-E944)
         if (typeof view?.ResizeObserver === 'function') {
-            this._resizeObserver = new view.ResizeObserver(() => this._applyLayout());
+            this._resizeObserver = new view.ResizeObserver(() => {
+                try {
+                    this._applyLayout();
+                } catch (error) {
+                    reportGameError('layout', error, { state: this._state, source: 'resize-observer' });
+                    throw error;
+                }
+            });
             this._resizeObserver.observe(this._root);
         } else if (view) {
             this._listen(view, 'resize', () => this._applyLayout());
@@ -1843,13 +1854,14 @@ export class Netstorm {
         const view = this._root?.ownerDocument.defaultView;
         if (typeof view?.matchMedia !== 'function' || !this._abort) return;
         const query = view.matchMedia(`(resolution: ${view.devicePixelRatio || 1}dppx)`);
-        query.addEventListener(
+        this._listen(
+            query,
             'change',
             () => {
                 this._applyLayout();
                 this._watchPixelRatio();
             },
-            { once: true, signal: this._abort.signal },
+            { once: true },
         );
     }
 
@@ -2068,18 +2080,24 @@ export class Netstorm {
     // 원본 효과음·음악 버퍼는 창이 포커스를 잃으면 들리지 않으므로(GLOBALFOCUS 없음) 웹에서는 탭 숨김을 그 대응으로 쓴다.
     // (2026-10-23 WB01, 2026-10-23 WB03-M1: 소리 일시 정지 추가)
     _onVisibilityChange() {
-        if (this._root.ownerDocument.hidden) {
+        const hidden = this._root.ownerDocument.hidden;
+        if (hidden) {
             if (this._gameClock && !this._hiddenGamePause) { this._gameClock.pushGamePause(); this._hiddenGamePause = true; }
             this._stopFrameLoop();
             this._clearInput();
-            this._audio?.suspend().catch(() => {});
         } else {
             if (this._gameClock && this._hiddenGamePause) { this._gameClock.popGamePause(); this._hiddenGamePause = false; }
             this._clock.reset();
             this._displayDirty = true;
             this._startFrameLoop();
-            this._audio?.resume().catch(() => {});
         }
+        // 탭 전환 중 오디오 장치 오류는 표시 루프와 독립적으로 보고한다. (2026-11-19 WB04-E944)
+        const audio = this._audio;
+        if (!audio) return;
+        const update = hidden ? audio.suspend() : audio.resume();
+        update.catch((error) => {
+            if (this._audio === audio) reportGameError('audio-visibility', error, { state: this._state, hidden });
+        });
     }
 
     // ----- 프레임 루프 -----

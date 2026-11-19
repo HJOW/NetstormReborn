@@ -117,3 +117,40 @@ test('이벤트 오류를 보고하면서 리스너 수명과 호출 문맥을 �
         assert.equal(entries[0][2], error);
     });
 });
+
+// 영어 대체 경로의 현재 오류와 정리된 세대의 실패를 구별한다. (2026-11-19 WB04-E944)
+test('한국어 자료 실패는 현재 적재 세대에서만 진행률과 진단을 남긴다', async () => {
+    const error = new Error('글꼴 다운로드 실패');
+    await captureErrors(async (entries) => {
+        const app = new Netstorm();
+        app._loadGeneration = 2;
+        const loader = { async loadBundle(bundle, onProgress) {
+            onProgress(1);
+            throw error;
+        } };
+        const previousProgress = app._loadProgress;
+        assert.equal(await app._loadKorean(loader, 10, 4, 1), null);
+        assert.equal(app._loadProgress, previousProgress);
+        assert.equal(entries.length, 0);
+        assert.equal(await app._loadKorean(loader, 10, 4, 2), null);
+        assert.deepEqual(app._loadProgress, { loaded: 11, total: 14 });
+        assert.equal(entries[0][1].phase, 'korean-assets');
+        assert.equal(entries[0][1].generation, 2);
+        assert.equal(entries[0][2], error);
+    });
+});
+
+// 정책에 의한 오디오 활성화 실패가 앱을 중단하지 않고 진단에 남는지 확인한다. (2026-11-19 WB04-E944)
+test('오디오 활성화 거부를 현재 장치의 오류로 보고한다', async () => {
+    const error = new Error('audio resume rejected');
+    await captureErrors(async (entries) => {
+        const app = new Netstorm();
+        app._audioContext = { state: 'suspended', resume: () => Promise.reject(error) };
+        app._unlockAudio();
+        // 활성화 약속 뒤의 오류 처리까지 기다린다.
+        await new Promise((resolve) => setImmediate(resolve));
+        assert.equal(app._audioStatus, 'failed');
+        assert.equal(entries[0][1].phase, 'audio-unlock');
+        assert.equal(entries[0][2], error);
+    });
+});
