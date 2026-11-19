@@ -6,6 +6,7 @@ import { ClientGumpRoot } from '../www/ui/client-gump-root.js';
 import { GumpCreateNode } from '../www/ui/gump-create.js';
 import { GumpBackgroundCreate, GumpBackgroundNode } from '../www/ui/gump-background-create.js';
 import { UberRootNode } from '../www/ui/uber-root-gump.js';
+import { GumpDrawState, GumpPixelTarget, setGumpDrawClip } from '../www/render/gump-draw.js';
 
 // 등록 루트와 현재 입력 전역은 크기 변경에도 같은 객체이며 원본 삭제 큐로 반납한다.
 test('Client Gump 루트: 실제 등록표·크기·입력·삭제 수명', () => {
@@ -26,6 +27,24 @@ test('Client Gump 루트: 잘못된 Client 수명을 거부한다', () => {
     const app = new Netstorm(); assert.throws(() => app._initializeClientGump(), /수명 누락/u);
     assert.throws(() => new ClientGumpRoot(10, 10, null), /진단 전역 누락/u);
     assert.throws(() => new ClientGumpRoot(0, 10, () => 0), /크기/u);
+});
+
+// 실제 파생 노드의 가상 출력은 공통 클립과 픽셀 장치를 공유하며 반납 뒤 제거된다.
+test('Client Gump 루트: 파생 출력과 클립·픽셀·삭제 수명', () => {
+    const owner = new ClientGumpRoot(100, 80, () => 0, () => {}), node = new GumpBackgroundNode();
+    const token = owner.allocateDerived(node, () => 0, (value, flags) => owner.lifetime().deleteScalar(value, flags));
+    owner.factory().construct(token, 0, 20, 10, 0x400001); owner.attach(token, 10, 20);
+    const state = new GumpDrawState(); setGumpDrawClip(state, { left: 0, top: 0, right: 50, bottom: 50 });
+    const pixels = new Uint8Array(100 * 80), target = new GumpPixelTarget(pixels, 100, 80, state);
+    assert.throws(() => owner.draw(token, state, target), /출력기 미연결/);
+    owner.bindDraw(token, (_current, actual) => actual.fill({ left: 0, top: 0, right: 100, bottom: 80 }, 77));
+    owner.draw(token, state, target); assert.equal(pixels[20 * 100 + 10], 77); assert.equal(pixels[29 * 100 + 29], 77);
+    assert.equal(pixels[19 * 100 + 10], 0); assert.equal(pixels[20 * 100 + 30], 0);
+    assert.deepEqual(state.clip, { left: 0, top: 0, right: 50, bottom: 50 });
+    owner.bindDraw(token, () => { throw new Error('출력 실패'); }); assert.throws(() => owner.draw(token, state, target), /출력 실패/);
+    assert.deepEqual(state.clip, { left: 0, top: 0, right: 50, bottom: 50 });
+    owner.bindDraw(token, null); assert.throws(() => owner.draw(token, state, target), /출력기 미연결/);
+    owner.remove(token); assert.throws(() => owner.bindDraw(token, () => {}), /토큰/); owner.dispose();
 });
 
 // 같은 실제 트리에 부착한 기본 노드가 입력을 받고 지연 삭제 뒤에는 받지 않는다.
