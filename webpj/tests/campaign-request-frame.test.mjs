@@ -16,6 +16,7 @@ import { IndexedPresenter } from '../www/render/presenter.js';
 import { AudioSystem } from '../www/audio/audio-system.js';
 import { Settings } from '../www/platform/settings.js';
 import { CampaignRenderCollection } from '../www/render/campaign-render-collection.js';
+import { CampaignRendererDrawing } from '../www/render/campaign-renderer-drawing.js';
 import { DATA_ROOT, readData, readDataMap } from './helpers.mjs';
 import { realCaptureAssets } from './capture-assets-support.mjs';
 
@@ -138,6 +139,20 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         const uiOnly = collector.collect({ left: 0, top: 0, right: 20, bottom: 20 }, 4);
         assert.equal(uiOnly.entries.length, 16); assert.equal(uiOnly.entries[14], 2); assert.equal(uiOnly.covered, false);
         assert.throws(() => collector.submit(pixels, 1366, 768, fullClip), /분배 콜백 누락/);
+        // 실제 Screen DIB와 구름·Renderer·표시기를 같은 미션 화면에 연결한다.
+        const screen = app._clientPaletteScreen, renderer = app._clientRenderer;
+        const drawing = new CampaignRendererDrawing({ world: app._campaignWorld, screen, camera: camera.snapshot(), globals: frameGlobals,
+            clouds: app._clientKencloud, files: data.files, config: data, random: app._clientRandom.game,
+            denominator: camera.denominator(), tint: () => 0 });
+        app._layout = { ...app._layout, visible: false }; renderer.invalidateAll(); const target = screen.lock();
+        try { renderer.draw(target, screen.pitch, 0, drawing); } finally { screen.unlock(); }
+        renderer.present((rect) => screen.update(rect)); assert.ok(app._surface.pixels.some((value) => value !== 0));
+        // 빈 지면의 구름은 지도 영역에만, UI 전용 dirty는 배경을 건드리지 않는다.
+        screen.clear(fullClip, 55); drawing.collect(fullClip, 0); const sky = screen.lock();
+        try { drawing.background(fullClip, 0, 0); assert.ok(sky.subarray(screen.pitch * 28).some((value) => value !== 55)); assert.equal(sky[0], 55); }
+        finally { screen.unlock(); }
+        screen.clear(fullClip, 55); drawing.collect(fullClip, 4); const uiPixels = screen.lock(), beforeUi = uiPixels.slice();
+        try { drawing.background(fullClip, 4, 0); assert.deepEqual(uiPixels, beforeUi); } finally { screen.unlock(); }
         assert.throws(() => app._prepareCampaignMissionStart(), /수명 오류/); assert.throws(() => app._prepareCampaignTutorial(), /수명 오류/);
         assert.doesNotThrow(() => session.checkMissionOutcome());
         const outcome = app._campaignGameplayServices().missionOutcome;
