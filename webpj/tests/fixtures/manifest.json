@@ -25288,7 +25288,7 @@
       "bytes": 1934351,
       "lines": 14479,
       "fixtureCommit": "238ce2343",
-      "webCommit": "worktree",
+      "webCommit": "3c1078991",
       "cpppjBasis": {
         "cpppj/src/client/Sound.cpp": "d445a5d04",
         "cpppj/src/client/Sound.h": "d445a5d04"
@@ -25319,10 +25319,40 @@
       "bytes": 2114555,
       "lines": 3193,
       "fixtureCommit": "cbb3e130a",
-      "webCommit": "worktree",
+      "webCommit": "3c1078991",
       "cpppjBasis": {
         "cpppj/src/client/Sound.cpp": "d445a5d04",
         "cpppj/src/client/Sound.h": "d445a5d04"
+      }
+    },
+    {
+      "id": "renderer-projection",
+      "path": "cpppj/tests/fixtures/renderer-projection-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "producer": "tools/decomp_renderer_projection.py의 원본 Renderer 지형 수집 좌표와 행 제한 관측",
+      "consumers": [
+        "webpj/tests/renderer-collection-geometry.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/renderer-collection-geometry.js",
+        "webpj/www/render/camera-view.js"
+      ],
+      "unit": "WB04-E978",
+      "doc": "docs/webpj-renderer-collection-geometry-20261120.md",
+      "cpppjSources": [
+        "cpppj/src/client/ClientRendererFrame.cpp"
+      ],
+      "scope": "10.78 실제 수집 가시 월드 float 비트와 행 제한 90행",
+      "text": true,
+      "sha256": "df9d2b4b708e767466ee0ea6b9350c164708ac82b8db47f78ba6088abac4cc87",
+      "bytes": 9195,
+      "lines": 91,
+      "fixtureCommit": "be33646d3",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ClientRendererFrame.cpp": "c254e7716"
       }
     }
   ]
