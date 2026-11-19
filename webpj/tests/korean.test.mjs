@@ -535,6 +535,7 @@ test('Netstorm 적재: 언어별 묶음 선택과 한국어 실패 대체', asyn
     const sizeOf = (bundle) => manifest.files.filter((entry) => entry.bundle === bundle).reduce((sum, entry) => sum + entry.size, 0);
     const build = (language, fetch) => {
         const app = new Netstorm({ language, fetch, audio: false, assetBase: 'http://localhost/data/' });
+        app._initializeClientRuntime(false);
         app._root = { ownerDocument: { ...fakeDocument().document, baseURI: 'http://localhost/' } };
         app._settings = new Settings();
         app._progress = { snapshot: () => ({}) };

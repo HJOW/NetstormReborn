@@ -10,6 +10,12 @@ test('게임 시계는 앱 프레임과 같은 수명으로 생성되고 재시�
     return { frames: app._gameClock.time().number, sameTicks: app._clientLocal.gameTicks().value, spInitialized: app._clientSp.store().initialized, playersInitialized: app._clientPlayers.initialized() && app._clientCoreData.players === app._clientPlayers.records(), surface: Boolean(app._surfaceStorage && app._surfaceStorage.source === app._gameAssets && app._surfaceStorage.processes.usesKernel(app._clientKernel)), shared: app._campaignSharedServices().randomGlobals === app._clientRandom && app._clientSp.randomGlobals() === app._clientRandom };
   });
   expect(initial.frames).toBeGreaterThanOrEqual(2); expect(initial.sameTicks).toBe(0); expect(initial.spInitialized).toBe(true); expect(initial.playersInitialized).toBe(true); expect(initial.surface).toBe(true); expect(initial.shared).toBe(true);
+  // 준비는 실제 공개 자산에서 스크립트가 지정한 Fort를 읽고 사용 뒤 등록 객체를 반납한다.
+  const mission = await page.evaluate(() => {
+    const prepared = window.netstorm._prepareCampaignMission('Tutorial1');
+    try { return [prepared.script.loaded, prepared.script.fortName()]; } finally { prepared.dispose(); }
+  });
+  expect(mission).toEqual([true, 'BridgeTheGap']);
   await page.evaluate(() => window.netstorm.destroy());
   expect(await page.evaluate(() => [window.netstorm._gameClock, window.netstorm._clientLocal, window.netstorm._clientRandom, window.netstorm._clientSp, window.netstorm._clientPlayers, window.netstorm._clientTemplates])).toEqual([null, null, null, null, null, null]);
   await page.evaluate(() => window.netstorm.init(document.getElementById('netstorm_root')));

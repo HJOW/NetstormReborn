@@ -41,6 +41,7 @@ import { ClientPlayerRecords } from './core/client-player-records.js';
 import { initializeClientPlayerRecords } from './core/client-player-runtime.js';
 import { CampaignTemplateStorage } from './core/campaign-template-storage.js';
 import { loadClientWorldAssets } from './core/client-world-assets.js';
+import { ClientMissionAssets } from './core/client-mission-assets.js';
 import { CampaignSessionAssets } from './core/raw-campaign-session-owners.js';
 import { PriestPlacementAssets } from './core/priest-placement-assets.js';
 import { RawSurfaceStorage } from './core/raw-surface-storage.js';
@@ -664,6 +665,12 @@ export class Netstorm {
         storage.bindDisplayDiagnostics(gameplay.aiDebug().assertionDetail(), (expression, file, line) => console.error(`원본 표시 진단: ${file}:${line} ${expression}`));
         storage.bindGraphClock(() => clock.gameSeconds()); bindClientKernelDiagnostics(kernel, storage, (line) => console.info(line));
         this._gameAssets = game; this._surfaceStorage = storage; this._clientKernel = kernel;
+    }
+
+    // 실제 앱 설정과 게임 자산에서 한 미션의 스크립트·Fort를 준비한다. 반환 소유자는 호출자가 반납한다.
+    _prepareCampaignMission(name) {
+        if (!this._gameData || !this._gameAssets || !this._surfaceStorage) throw new Error('미션 준비 전 실제 Client 자산 미설치');
+        return new ClientMissionAssets(this._gameData, this._gameAssets, name);
     }
 
     // 미션 조립은 현재 Client의 난수·SP·Player·Core·Template·Subscriber와 시계를 대여한다. 이 호출은 Session을 생성하지 않는다.

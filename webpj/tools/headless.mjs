@@ -97,6 +97,8 @@ export async function createHeadless({ language = 'english', screen = { width: 1
     };
     const app = new Netstorm({ language, audio: false, originalComparison, fetch: diskFetch(dataRoot), autoFocus: false, previewMap: null, debug: false, openExternal });
     const doc = fakeDocument();
+    // 실제 init과 같은 Client 공통 수명을 먼저 구성한다.
+    app._initializeClientRuntime(doc.hidden);
     // Netstorm.init 의 DOM 준비 대신 표시 경계 대체물을 넣는다(init 의 설정·진행 저장소 준비와 같은 순서).
     app._root = { ownerDocument: doc };
     app._canvas = fakeCanvas(screen.width, screen.height);

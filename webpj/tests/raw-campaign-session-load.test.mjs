@@ -616,6 +616,24 @@ test('Netstorm Client 월드 저장소: 실제 Session 적재와 반납', () => 
     assert.equal(app._campaignSharedServices().processKernel, kernel);
 });
 
+// 실제 앱이 선택한 Tutorial1 스크립트의 Fort를 같은 장기 저장소의 Session에 적재한다.
+test('Netstorm Client 미션 자산: Tutorial1 스크립트와 실제 Session 적재', () => {
+    const app = new Netstorm(); assert.throws(() => app._prepareCampaignMission('Tutorial1'), /자산 미설치/);
+    app._initializeClientRuntime(false);
+    app._gameData = GameData.build({ files: new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)]]), language: 'english' });
+    app._initializeClientWorldStorage(game, app._gameData.files);
+    const mission = app._prepareCampaignMission('Tutorial1');
+    try {
+        assert.equal(mission.script.loaded, true); assert.equal(mission.script.name, 'Tutorial1'); assert.equal(mission.script.fortName(), 'BridgeTheGap');
+        const { s } = scene({ ...app._campaignSharedServices(), missionName: mission.script.fortName() }, mission.fort);
+        try { s.load(); assert.equal(s.loaded, true); assert.equal(s.world().storage, app._surfaceStorage); assert.equal(s.core().kernel, app._clientKernel); }
+        finally { s.dispose(); }
+    } finally { mission.dispose(); }
+    assert.throws(() => mission.script, /반납/); assert.throws(() => mission.fort, /반납/); mission.dispose();
+    assert.throws(() => app._prepareCampaignMission('NoSuchMission_4773'), /미션 스크립트 없음/);
+    const again = app._prepareCampaignMission('Tutorial1'); assert.equal(again.script.fortName(), 'BridgeTheGap'); again.dispose();
+});
+
 // 실제 월드 전체를 관측하고 Session이 초기화한 SP와 현재 원문·장부를 바꾸지 않는다.
 test('CampaignSession TheWarBegins: 덤프의 실제 풀·Player·SP·Graph', () => {
     const random = new ClientRandomGlobals(), { s } = scene({ randomGlobals: random });
