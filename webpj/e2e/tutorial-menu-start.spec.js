@@ -73,6 +73,16 @@ test('캠페인 목록에서 첫 Tutorial의 월드와 안내를 표시한다', 
     return count;
   });
   expect(bridgeCount).toBeGreaterThan(0);
+  // 실제 화면에 설치된 생산 격자의 다리를 마우스로 집고 취소한다.
+  const productionItem = await page.evaluate(() => {
+    const app = window.netstorm, root = app._clientGump, panel = app._campaignProduction.ui.node();
+    const token = root.node(panel.bridge).child, item = root.node(token), bounds = root.collection().bounds(token), rect = app.canvas.getBoundingClientRect();
+    return { sid: item.content, x: rect.left + (bounds.left + bounds.right) / 2 * rect.width / app._layout.logicalWidth,
+      y: rect.top + (bounds.top + bounds.bottom) / 2 * rect.height / app._layout.logicalHeight };
+  });
+  await page.mouse.click(productionItem.x, productionItem.y, { delay: 60 });
+  await expect.poll(() => page.evaluate(() => window.netstorm._campaignWorld.session().cursorDropSettings().preview), { timeout: 15000 }).toBe(productionItem.sid);
+  await page.keyboard.press('Escape'); await expect.poll(() => page.evaluate(() => window.netstorm._campaignWorld.session().cursorDropSettings().preview)).toBe(0);
   // 실제 Q 입력은 첫 생산 슬롯의 다리를 같은 커서에 집고 Escape는 돌려놓는다.
   await page.keyboard.press('q');
   await expect.poll(() => page.evaluate(() => window.netstorm._campaignWorld.session().cursorDropSettings().preview), { timeout: 15000 }).toBeGreaterThan(0);

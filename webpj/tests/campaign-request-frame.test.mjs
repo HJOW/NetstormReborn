@@ -219,10 +219,10 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
             denominator: camera.denominator(), tint: () => 0 });
         app._layout = { ...app._layout, visible: false }; redraw.value = 1; const beforePresent = renderer.presentCount;
         // 실제 Client 트리의 기본 Gump 출력기가 같은 Renderer kind 2와 DIB를 통과한다.
-        let uiDraws = 0; gump.bindDraw(parent, (_token, target) => { uiDraws += 1; target.fill({ left: 1, top: 1, right: 5, bottom: 5 }, 241); });
+        gump.move(parent, 100, 0); let uiDraws = 0; gump.bindDraw(parent, (_token, target) => { uiDraws += 1; target.fill({ left: 101, top: 1, right: 105, bottom: 5 }, 241); });
         app._drawCampaignRendererFrame();
         assert.ok(renderer.presentCount > beforePresent); assert.equal(redraw.value, 0); assert.equal(renderer.cameraDirtyEntries().length, 0);
-        assert.ok(uiDraws > 0); assert.equal(app._surface.pixels[1366 + 1], 241); gump.bindDraw(parent, null);
+        assert.ok(uiDraws > 0); assert.equal(app._surface.pixels[1366 + 101], 241); gump.bindDraw(parent, null);
         assert.ok(app._surface.pixels.some((value) => value !== 0));
         // 빈 지면의 구름은 지도 영역에만, UI 전용 dirty는 배경을 건드리지 않는다.
         screen.clear(fullClip, 55); drawing.collect(fullClip, 0); const sky = screen.lock();
@@ -253,13 +253,16 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
             assert.equal(visits, beforeResume + 7); assert.equal(runtime.gate.scriptPaused, 0); assert.equal(app._gameClock.paused(), false);
         } finally { app._clientKernel.remove(probe); }
         // 실제 생산 유지 장치가 현재 기술 내용물에 다리를 공급한다.
-        const production = app._campaignProduction, technology = session.currentTechnologyParent(); assert.ok(production); assert.ok(technology);
+        const production = app._campaignProduction, technology = session.currentTechnologyParent(); assert.ok(production?.ui); assert.ok(technology);
         const bridges = () => { const finder = new RawContainedFinder(session.core().pool, session.productionFinder()); let count = 0;
             // 같은 기술 부모의 실제 내용물만 센다.
             for (let sid = finder.begin(technology); sid; sid = finder.next()) { const raw = session.core().pool.slot(sid); if ((raw[20] | (raw[21] << 8)) & 0x40) count += 1; }
             return count; };
         const previousBridges = bridges(); production.panel.bridgeUntil = 0; app._runCampaignProductionFrame();
         assert.equal(production.panel.slots, session.battleOption(1) * 2 + 2); assert.equal(bridges(), Math.min(previousBridges + 1, production.panel.slots));
+        // 자동 공급 후 화면 격자도 같은 기술 내용물 개수로 갱신된다.
+        let visibleBridges = 0; for (let token = gump.node(production.ui.node().bridge).child; token; token = gump.node(token).next) visibleBridges += 1;
+        assert.equal(visibleBridges, bridges());
         assert.throws(() => app._prepareCampaignProduction(), /수명 오류/);
         // 실제 앱 프레임은 월드를 표시하고 Tell을 그 위에 합성하며 닫은 뒤 DIB 원본을 복구한다.
         let presentations = 0; app._presenter.present = () => { presentations += 1; };

@@ -104,6 +104,8 @@ import { resetGameStorage } from './platform/reset-storage.js';
 import { createCanvasGlyphRasterizer } from './platform/glyph-rasterizer.js';
 import { MainMenuScreen } from './ui/main-menu.js';
 import { ClientGumpRoot } from './ui/client-gump-root.js';
+import { GumpHelp, GumpHelpState } from './ui/gump-help.js';
+import { createClientProductionAssembly } from './ui/client-production-assembly.js';
 import { RawUberRootLookup } from './ui/raw-uber-root-lookup.js';
 import { projectGumpObject } from './ui/gump-form-binding.js';
 import { UberGumpCamera } from './ui/uber-gump-camera.js';
@@ -1216,7 +1218,7 @@ export class Netstorm {
     // 현재 World의 Session을 반납하고 같은 미션 연결 대기 관문을 해제한다.
     _releaseCampaignWorld() {
         if (!this._campaignWorld) return;
-        this._clientGump?.releaseFormHost(); this._campaignWorld.dispose(); this._campaignWorld = null; this._campaignWorldMissionToken = 0; this._campaignUserInput = null; this._campaignProduction = null; this._campaignCursor = CURSOR_NORMAL;
+        this._campaignProduction?.ui?.close(); this._clientGump?.releaseFormHost(); this._campaignWorld.dispose(); this._campaignWorld = null; this._campaignWorldMissionToken = 0; this._campaignUserInput = null; this._campaignProduction = null; this._campaignCursor = CURSOR_NORMAL;
     }
 
     // 로그인된 현재 World와 Guide의 실제 미션 Start를 같은 Client 수명에 준비한다.
@@ -1278,8 +1280,25 @@ export class Netstorm {
         panel.initialized = true; panel.bridgeUntil = clock.wallSeconds(); panel.slots = session.battleOption(1) * 2 + 2;
         globals.bridgeType = this._surfaceStorage.links.bridgeType;
         session.synchronizeProductionContents();
-        const maintenance = session.makeProductionMaintenance(globals, panel, () => clock.wallSeconds(), () => this._clientRenderer.invalidateAll());
-        this._campaignProduction = { session, panel, maintenance }; return this._campaignProduction;
+        const production = { session, panel, maintenance: null, ui: null };
+        production.maintenance = session.makeProductionMaintenance(globals, panel, () => clock.wallSeconds(), (mask) => { production.ui?.refresh(mask); this._clientRenderer.invalidateAll(); });
+        this._campaignProduction = production; return production;
+    }
+
+    // 실제 미션 생산 UI를 같은 Client 수명과 기존 생산 유지 상태에 설치한다.
+    _prepareCampaignProductionUi() {
+        const production = this._campaignProduction, root = this._clientGump, screen = this._clientPaletteScreen;
+        if (!production || production.ui || !root || !screen || !this._clientColorSort || !this._gameAssets || !this._resources?.fonts || !this._clientSoundPlayer || !this._clientSoundNames) throw new Error('미션 생산 UI의 현재 수명 누락');
+        const help = new GumpHelp(root.createState(), new GumpHelpState(), { node: (token) => root.node(token) });
+        const ui = createClientProductionAssembly(root, production.session, this._gameAssets, this._resources.fonts, screen, this._clientColorSort, this._clientProductionGlobals, production.panel, {
+            now: () => this._gameClock.wallSeconds(), translate: (value) => this._resources.translate(value),
+            sound: (name) => this._clientSoundPlayer.play(this._clientSoundNames.lookup(name), 0, 0, 0, 0, 0), tell: (section) => this._openTell(section),
+            about: () => { console.error('생산 항목 정보 메뉴가 아직 연결되지 않았습니다.'); return 0; },
+            changed: () => { this._clientRenderer.invalidateAll(); this._displayDirty = true; }, closePopups: () => this._closeCampaignPopups(),
+            poll: (code) => this._clientInputPoll.poll(code), cursor: (number) => { this._campaignCursor = number; this._applyCursor(); },
+            baseHandle: (...args) => help.handle(...args), menuInstances: () => this._mainMenu?.popup?.isOpen ? 1 : 0,
+        });
+        ui.open(); production.ui = ui; return ui;
     }
 
     // 원본 생산 패널 idle 순서로 현재 내용물과 재고·다리 공급을 갱신한다.
@@ -2268,6 +2287,7 @@ export class Netstorm {
         if (this._state === AppState.MAIN_MENU || this._state === AppState.TERRAIN_PREVIEW) this._ensureSurface();
         if (this._clientPaletteScreen) this._resizeClientPaletteScreen(next.logicalWidth, next.logicalHeight);
         this._clientGump?.resize(next.logicalWidth, next.logicalHeight);
+        this._campaignProduction?.ui?.resize(next.logicalHeight);
         this._campaignWorld?.resize(next.logicalWidth, next.logicalHeight);
         this._applyCursor();
         if (next.visible) this._render(view.performance?.now?.() ?? 0);
@@ -2686,6 +2706,7 @@ export class Netstorm {
         // 원본 루프 8번의 Guide를 상태·패킷 처리 뒤, 입력 처리보다 먼저 실행한다.
         this._clientGuide?.run();
         if (this._campaignDisplayActive() && !this._campaignProduction) this._prepareCampaignProduction();
+        if (this._campaignDisplayActive() && !this._campaignProduction.ui) this._prepareCampaignProductionUi();
         if (this._campaignDisplayActive()) this._runCampaignInputFrame();
         if (this._state === AppState.MAIN_MENU) {
             // 원본 UserInput 은 매 프레임 마우스 위치를 폴링해 Gump 에 알린다. 그래서 포인터가 멈춰 있어도 그 아래에 새로 열린 펼침 메뉴 행이 바로 강조된다
@@ -2697,7 +2718,7 @@ export class Netstorm {
             this._applyCursor();
         }
         // 원본 Kernel 단계에서 같은 현재 World를 준비하고 단일 Client Kernel을 실행한다.
-        if (this._campaignDisplayActive()) { this._runCampaignProductionFrame(); this._runCampaignKernelFrame(); }
+        if (this._campaignDisplayActive()) { this._runCampaignProductionFrame(); this._clientGump.idle(); this._runCampaignKernelFrame(); }
         this._render(now);
         this._startFrameLoop();
     }
