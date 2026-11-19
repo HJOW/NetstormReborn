@@ -7,6 +7,7 @@ import { bindInventoryItemAssets } from '../www/ui/inventory-item-gump.js';
 import { decodeCanonType } from '../www/core/raw-canon-type.js';
 import { ClientImageGump } from '../www/ui/client-image-gump.js';
 import { ClientGumpBackground } from '../www/ui/client-gump-background.js';
+import { ClientHudDivider } from '../www/ui/client-hud-divider.js';
 import { ClientGumpRoot } from '../www/ui/client-gump-root.js';
 import { GumpDrawState, GumpPixelTarget, setGumpDrawClip } from '../www/render/gump-draw.js';
 
@@ -27,6 +28,22 @@ test('생산 항목 자산: 실제 다리 TYPE·SHP와 Canon 패턴', () => {
         assert.ok(actual.length > 0); assert.deepEqual(actual, expected); assert.throws(() => hooks.type(188), /범위/u);
         assert.throws(() => hooks.walk({ ...query, type: 188 }, () => {}), /타입 오류/u);
     } finally { scene.world.dispose(); }
+});
+
+// 실제 배경에서 파생된 구분선도 같은 자산 생성과 클립 출력에 참여한다.
+test('Client HUD 구분선: 실제 패널 배경 생성·픽셀·수명', () => {
+    const scene = new CampaignCursorScene(), root = new ClientGumpRoot(200, 200, () => 0, () => {});
+    try {
+        const identity = Uint8Array.from({ length: 256 }, (_value, index) => index);
+        const background = new ClientGumpBackground(root, scene.assets, () => 0, () => ({ bright: identity, dark: identity }), () => ({ basic: new Uint8Array(9) }), () => 0);
+        const divider = new ClientHudDivider(root, { background, backgroundColor: () => 0, dividerColor: () => 55, closePopups: () => {} });
+        const type = scene.assets.find('fortGump').block + 70, token = divider.allocate();
+        divider.construct(token, 0, 80, 5, 0x02a00000, type, 2); root.attach(token, 20, 20);
+        const draw = new GumpDrawState(); setGumpDrawClip(draw, { left: 30, top: 20, right: 60, bottom: 25 });
+        const pixels = new Uint8Array(40000).fill(255); root.draw(token, draw, new GumpPixelTarget(pixels, 200, 200, draw));
+        assert.ok(pixels.some((value) => value !== 255)); assert.equal(pixels[20 * 200 + 20], 255);
+        root.remove(token); assert.equal(root.node(token), null);
+    } finally { root.dispose(); scene.world.dispose(); }
 });
 
 // 실제 원본 그림을 같은 Gump 클립에 출력하고 픽셀 기반 적중과 삭제를 검사한다.

@@ -26,9 +26,13 @@ export class ClientGumpBackground {
         const root = this.#root, node = new GumpBackgroundNode(); let token = 0;
         token = root.allocateDerived(node, (event, first, second) => this.#baseHandle(token, event, first, second),
             (current, destroyFlags) => root.lifetime().deleteScalar(current, destroyFlags), null, () => {});
-        this.#create.construct(token, width, height, flags, 1, type, frame);
-        root.bindDraw(token, (current, target, clip) => this.#drawing(target, clip).draw(current)); return token;
+        this.construct(token, width, height, flags, type, frame);
+        root.bindDraw(token, (current, target, clip) => this.draw(current, target, clip)); return token;
     }
+    // 구분선처럼 배경에서 파생된 기존 노드도 같은 자산 생성자를 사용한다.
+    construct(token, width, height, flags, type, frame) { return this.#create.construct(token, width, height, flags, 1, type, frame); }
+    // 구분선의 가상 출력에서도 같은 현재 표면과 클립을 사용한다.
+    draw(token, target, clip) { this.#drawing(target, clip).draw(token); }
     // 항목 장식 등 직접 배경 질감도 같은 실제 화면과 클립을 사용한다.
     texture(target, clip, rect, flags, type, frame) { this.#drawing(target, clip).texture(rect, flags, type, frame); }
 }

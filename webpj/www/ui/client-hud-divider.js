@@ -8,18 +8,18 @@ import { RawUberRootLookup } from './raw-uber-root-lookup.js';
 // Client와 같은 등록표·트리·수명에서 실제 파생 구분선을 관리한다.
 export class ClientHudDivider {
     // 원본 생성·부착·입력 본체와 같은 Client 소유자다.
-    #owner; #divider; #input;
+    #owner; #divider; #input; #background;
     // 실제 색과 popup·입력 장치는 호출자가 제공하고 도달한 분기에서 사용한다.
     constructor(owner, devices) {
         if (!owner || typeof owner.createState !== 'function' || typeof devices?.backgroundColor !== 'function' || typeof devices?.dividerColor !== 'function') throw new TypeError('HUD 구분선의 실제 소유자와 색 전역 필요');
-        this.#owner = owner;
+        this.#owner = owner; this.#background = devices.background ?? null;
         const node = (token) => owner.node(token);
         const divider = (token) => { const value = node(token); return value instanceof HudDividerNode ? value : null; };
         const lookup = new RawUberRootLookup(owner);
         const background = new GumpBackgroundCreate(owner.createState(), owner.factory(), devices.backgroundColor,
             { node, type: devices.type, frame: devices.frame });
         const hooks = { node, divider,
-            constructBackground: (token, width, height, flags, type, frame) => background.construct(token, width, height, flags, 1, type, frame),
+            constructBackground: (token, width, height, flags, type, frame) => this.#background ? this.#background.construct(token, width, height, flags, type, frame) : background.construct(token, width, height, flags, 1, type, frame),
             activate: (token, enabled) => owner.lifetime().setOverlay(token, enabled),
             baseAttach: (...args) => owner.attachBase(...args), push: (token) => owner.tree().push(token),
             attach: (...args) => owner.attach(...args), move: (...args) => owner.move(...args),
@@ -39,6 +39,7 @@ export class ClientHudDivider {
             (current, flags) => this.#owner.lifetime().deleteScalar(current, flags),
             (current, x, y, parent, mode) => this.#divider.attach(current, x, y, parent, mode),
             (current, event, first, second) => this.#input.broadcast(current, event, first, second));
+        if (this.#background) this.#owner.bindDraw(token, (current, target, clip) => this.#background.draw(current, target, clip));
         return token;
     }
     // 할당 토큰에 실제 배경과 구분선 생성 순서를 적용한다.
