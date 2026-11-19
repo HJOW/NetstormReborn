@@ -16,7 +16,7 @@
 - **0.641 부분 완료.** 미션 세션의 AI 생성·해제·반납에 같은 참여 모듈을 사용한다. 시작 시 설정된 난이도는 로컬 플레이어 기록과 AI 설정의 동맹 선언을 확인해 적 AI에 적용한다. Release 빌드와 집중 검사 76건 통과. [0.641](docs/dotnet-canon-0641-20261119.md)
 - **0.640.** 미션 시작 `InitialUpdate` live 연결·`--mission` 시작 흐름 결선·전체 회귀를 마쳤다. L1 집중 29건 + Core AI 30건(환경 1건 지정 재실행 통과), 전체 Assets 366·Core 2,962·Client 1,323 통과, `thewarbegins` L2 재수집(DN brain·기술 행 생성). [0.640](docs/dotnet-canon-0640-20261119.md)
 - **0.639.** 미션 시작 `CreateAiBrains` live 연결(실제 `Construct`·첫 지역·신전 조회·색 변경·사제 조회의 세션 결선)과 brain 행 대조를 연결했다. L1 집중 27건 + Core AI 28건 통과. [0.639](docs/dotnet-canon-0639-20261119.md)
-- **검사 기준선.** 마지막 전체 회귀는 0.640이다. Assets 366/366·Core 2,962/2,962·Client 1,323/1,323(건너뜀 1, 소리 실장치 검사)이 통과했다. 실패 0. `NETSTORM_DATA` 지정 실행(보호 사본)에서는 사본 진행 상태 탓에 새 상태 가정 검사 3건이 실패하므로 미지정 실행이 기준이며, Core 지정 단일 환경 요인 1건은 지정 뒤 단독 재실행에서 통과한다. 2026-11-19 사용자 지시로 전체 회귀는 4단위당 1회만 수행한다. 다음 전체 회귀는 0.644 시점에 수행한다. 단위별 집중 검사 수는 각 단위 문서에 있다. [0.640](docs/dotnet-canon-0640-20261119.md) · [회귀 목록](docs/dotnet-regression-inventory-20261115.md)
+- **검사 기준선.** 마지막 정기 전체 회귀는 0.640이다. 실패 0으로 집계된 수치는 데이터 경로를 바꿔 재실행한 결과를 포함한다. 0.641 이후 별도 점검에서는 환경에 따른 네 실패와 두 장시간 검사 코드를 교정한 뒤 Release 프로젝트별 전체 검사 4,659건 통과·실패 0을 확인했다. 기본 검사는 `NETSTORM_DATA` 없이 실행한다. 다음 정기 전체 회귀는 4단위 주기에 따라 0.644다. [0.640 정기 회귀](docs/dotnet-canon-0640-20261119.md) · [후속 점검](#regression-audit-0640)
 - **L2 기준선.** 일반 31경로의 양쪽 덤프와 데모 3경로의 cpp 덤프를 확보했고 전체 대조는 `extracted/dotnet-l2-0567/`에 있다. 최근 재측정은 3경로(`thewarbegins`·`tutorial1`·`bc1menu76`)가 0.625, `surrounded`가 0.623, `guardmyback`이 0.636(`extracted/dotnet-l2-0636/`)이며, `thewarbegins`는 0.640(`extracted/dotnet-l2-0640/`)에서 시작 흐름 live AI 생성 뒤 다시 쟀다(DN brain·기술 행 생성, 기술 SID·SP·정기 잔여). 단위별 수집은 `extracted/dotnet-l2-0NNN/`에 둔다. 남은 차이는 정기 60행·`object` 행 부재·AI·cpp 전용 슬롯·농지 가장자리·공장 뒤 4건 sid 재사용 순서다. [일괄 수집](docs/dotnet-l2-batch-20261114.md) · [격차 분석](docs/dotnet-l2-0606-20261117.md) · [3경로 재측정](docs/dotnet-canon-0623-20261119.md)
 
 <a id="now"></a><a id="09-바로-다음-작업"></a><a id="r4-board"></a>
@@ -182,8 +182,18 @@ AGENTS.md 2026-11-19 추가(`d047bf9a3`)로 `Netstorm.exe`의 아이콘은 기�
 - **사용자 확인.** L5와 전체 화면/청취, 실제 사제 포획·희생·특정 적 공격·승리·MP/LAN, 공격형 공중 3종 실제 생산/조작은 사용자 확인 범위다. 창 실행은 AGENTS.md의 명시 확인·예외 PC 규칙을 따른다. Windows 10에서 통과하면 Windows 11 실기와 사용자 관찰만 남은 상태에서도 다음 단계로 진행한다. 물리 DPI·4K FSR·UAC는 R8 이후, `DSERR_NODRIVER` 실장치 재검사는 출력 장치가 있는 PC에서 한다. [소리 장치 기록](docs/dotnet-sound-device-20261114.md) · [공통 실행 범위](LEFT_JOBS.md#rules-verify)
 - **공통 기능 경계.** CHEAT 메뉴는 Edit에서만 표시한다. 연녹색 직사각형 분석은 보류다. 폐기된 인터넷 master/root·검증·ping/진단은 비활성 상태를 유지한다. 도움말 링크와 LAN은 해당 사용자가 선택한 경로를 따른다. [공통 계약](LEFT_JOBS.md#rules-verify)
 - **오라클과 자료.** `cpppj/build/bin/Release/Netstorm.exe`를 PowerShell에서 빌드한다. 실행은 `extracted/dotnet-oracle-data/` 사본과 분리한 사용자 루트로 진행하며 `originals/` 해시를 전후 확인한다. 0.606의 VM 소프트웨어 GPU 환경은 [재측정 기록](docs/dotnet-l2-0606-20261117.md)에 있다. 일반 덤프 비교와 최초 실행 검증의 옵션을 구별한다.
-- **검사 명령.** `dotnet build dotnetpj/Netstorm.sln -c Release`, `dotnet test dotnetpj/Netstorm.sln -c Release`, `python -X utf8 dotnetpj/tools/cpp_sync.py`를 쓴다. 실제 TYPE 검사는 `NETSTORM_DATA`를 보호 자료 사본으로 지정한다. 2026-11-19 사용자 지시로 전체 회귀는 4단위당 1회만 수행한다(다음 전체 회귀는 0.644 시점). fixture는 사본 없이 한 소비자 프로젝트에 링크하고 `cpp_sync.py --update --add`로 매니페스트에 등록한다. GUI 명령·변이 검사·등록 규칙 전문은 보관본 6.1에 있다. [L2 도구](docs/dotnet-l2-batch-20261114.md) · [L4a 도구](dotnetpj/tools/l4a_compare.ps1) · [덤프 형식](docs/exe/cpp-session-state-dump-20261109.md)
+- **검사 명령.** `dotnet build dotnetpj/Netstorm.sln -c Release`, `dotnet test dotnetpj/Netstorm.sln -c Release`, `python -X utf8 dotnetpj/tools/cpp_sync.py`를 쓴다. 실제 TYPE 검사는 기본 데이터 또는 `NETSTORM_DATA`로 선택한 보호 자료 사본을 읽는다. 2026-11-19 사용자 지시로 정기 전체 회귀는 4단위당 1회만 수행한다(다음 0.644). fixture는 사본 없이 한 소비자 프로젝트에 링크하고 `cpp_sync.py --update --add`로 매니페스트에 등록한다. GUI 명령·변이 검사·등록 규칙 전문은 보관본 6.1에 있다. [L2 도구](docs/dotnet-l2-batch-20261114.md) · [L4a 도구](dotnetpj/tools/l4a_compare.ps1) · [덤프 형식](docs/exe/cpp-session-state-dump-20261109.md)
 - **착수·보호·커밋.** AGENTS.md·LEFT_JOBS.md와 이 문서, git status/log를 확인한다. dotnetpj 이식에 디컴파일은 필요 없다. AGENTS.md·기존 원본/CD 파일·README 개요·기존 fixture를 보호한다. 작업 단위마다 진행판·체크와 단위 문서를 갱신하고 해당 파일만 `YYYYMMDD-NN DN 요약`으로 로컬 커밋한다. push 금지. 새 코드·문서는 UTF-8, AGENTS 범위의 코드 주석은 설명·사용법부터 한국어로 적는다. 작업 트리 줄바꿈은 본문 LF, 보관본 CRLF다.
+
+<a id="regression-audit-0640"></a>
+
+### 5.1 0.640 회귀 지연과 실패 점검
+
+- 수정 전 보호 사본을 지정하면 기본 옵션·캠페인 진행·배포 파일 검사 3건이 실패했고, 데이터 경로가 비면 Core의 실제 TYPE 검사 1건이 실패했다. Assets의 배포 자료 검사는 기본 데이터 경로를 사용하고, Core의 기술 표 검사는 기존 탐색을 사용해 환경 변수가 없을 때도 아카이브를 찾는다. 보호 사본을 지정한 집중 검사에서도 Assets 3건과 Core 3건을 통과했다.
+- `CanonMayPlaceTests`는 판본당 해시 버퍼 하나를 재사용해 432행의 바이트와 체크섬을 대조한다. 기존에는 행마다 버킷 86,272개를 기록하며 매번 배열을 확장했다. 0.611 기록의 동일 검사 3건은 약 20분이었고 이번 집중 검사에서 세 판본의 합계는 0.64초였다. [0.611 검증](docs/dotnet-canon-0611-20261118.md)
+- `FortObjectSaveTests`는 실제 호출 기록과 기대 기록을 `StringBuilder`로 누적한다. 청크 672행의 기록 내용과 순서에 대한 단언을 유지했다. `IndependentNativeChunk`의 기존 TRX 시간은 0.566에서 13분 57초와 15분 45초였고, 이번 집중 검사에서는 0.66초였다. [0.566 회귀](docs/dotnet-regression-inventory-20261115.md)
+- `NETSTORM_DATA` 미지정 Release 전체를 프로젝트별로 확인했다. Assets 366건(7초), Core 2,962건(2분 49초), Client 1,331건(3분 59초)이 통과했다. 실패 0건, 실장치 오디오 1건은 미실행이다. 프로젝트별 검사 시간 합계는 약 7분이다. TRX는 `extracted/dotnet-regression-audit-0640-3ceabef6/`(Assets)와 `extracted/dotnet-regression-audit-0640-recheck/`에 있다.
+- cpppj 대응 코드는 공간 해시에 `std::vector` 추가, Fort 저장 기록에 `std::string`의 제자리 추가, 기술 표 조회에 고정 보호 자료 경로를 사용한다. 기존 Release 검사 실행 파일에서 MayPlace 3건·Fort 저장 1건·기술 표 1건이 약 4.5초에 통과했다. 기술 표 단독은 `NETSTORM_DATA` 없이도 통과했다. cpppj 확인 범위는 해당 집중 검사다.
 
 <a id="dotnet-done-index"></a><a id="dotnet-unit-records"></a><a id="dotnet-archive-log"></a>
 

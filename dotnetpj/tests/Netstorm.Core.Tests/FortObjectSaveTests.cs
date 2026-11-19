@@ -151,8 +151,11 @@ public sealed class FortObjectSaveTests
         /// <summary>flags11과 flags12처럼 종류별 호출 번호를 만든다.</summary>
         public Dictionary<string, int> Calls = [];
 
-        /// <summary>실제로 호출된 외부 경계만 순서대로 보관한다.</summary>
-        public string Trace = "";
+        /// <summary>실제 호출 기록을 순서대로 누적한다. 0.640 회귀 점검에서 기록 전체를 호출마다 복사하던 비용을 없앴다.</summary>
+        private readonly StringBuilder _trace = new();
+
+        /// <summary>단언에서 실제 호출 순서를 한 번 문자열로 읽는다.</summary>
+        public string Trace => _trace.ToString();
 
         /// <summary>고정 객체 SID다.</summary>
         public uint Sid;
@@ -300,11 +303,11 @@ public sealed class FortObjectSaveTests
         /// <param name="text">기록할 본문이다.</param>
         public string Event(string kind, string text)
         {
-            if (Trace.Length != 0)
+            if (_trace.Length != 0)
             {
-                Trace += ';';
+                _trace.Append(';');
             }
-            Trace += text;
+            _trace.Append(text);
             Calls.TryGetValue(kind, out int count);
             Calls[kind] = count + 1;
             return kind + (count + 1);
@@ -607,7 +610,7 @@ public sealed class FortObjectSaveTests
     /// <param name="source">독립 trace다.</param>
     private static string NativeChunkTrace(string source)
     {
-        string trace = "";
+        var trace = new StringBuilder(source.Length);
         int removed = 0;
         // 실제 외부 호출 순서를 보존하고 정확한 내부 관측 항목 하나만 생략한다
         foreach (string item in source.Split(';'))
@@ -619,12 +622,12 @@ public sealed class FortObjectSaveTests
             }
             if (trace.Length != 0)
             {
-                trace += ';';
+                trace.Append(';');
             }
-            trace += item;
+            trace.Append(item);
         }
         Assert.Equal(1, removed);
-        return trace;
+        return trace.ToString();
     }
 
     /// <summary>모든 모드·필드 폭·실제 CRT 좌표·현재 재조회·진단 중단의 원문 3294행을 대조한다.</summary>

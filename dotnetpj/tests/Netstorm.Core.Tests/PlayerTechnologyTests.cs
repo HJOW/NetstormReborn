@@ -191,8 +191,12 @@ public sealed class PlayerTechnologyTests
     [Fact]
     public void ActualTypeBindingsAndStalledBoundary()
     {
-        string data = Environment.GetEnvironmentVariable("NETSTORM_DATA") ?? throw new InvalidOperationException("NETSTORM_DATA실제 자료 루트 필요");
-        var archive = TaffArchive.Open(Path.Combine(data, "netstorm.tarc"));
+        // 기존 클론 데이터 탐색을 재사용하여 환경 변수가 없어도 기본 아카이브로 검사한다.
+        string? data = GameDataLocator.FindDataDirectory();
+        Assert.NotNull(data);
+        string? archivePath = GameDataLocator.FindFile(data, "netstorm.tarc");
+        Assert.NotNull(archivePath);
+        var archive = TaffArchive.Open(archivePath);
         var sources = new List<RiftTypeSource>();
         // 실제 원본 아카이브의116개 타입을 정해진 로딩 순서로 읽는다.
         foreach (string name in RiftTypeLoadOrder.Get(OriginalEdition.Patch1078))

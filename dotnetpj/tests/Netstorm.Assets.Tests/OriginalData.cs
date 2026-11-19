@@ -5,14 +5,15 @@ namespace Netstorm.Assets.Tests;
 /// </summary>
 internal static class OriginalData
 {
-    /// <summary>찾은 클론 데이터 폴더 (없으면 null). 한 번만 탐색한다.</summary>
-    private static readonly Lazy<string?> DirectoryLazy = new(GameDataLocator.FindDataDirectory);
+    /// <summary>배포나 저장소의 기본 클론 데이터 폴더를 한 번만 탐색한다. 0.640 회귀에서 사용자 진행 상태가 검사에 섞인 문제를 막기 위해 명시 경로 탐색을 사용한다.</summary>
+    private static readonly Lazy<string?> DirectoryLazy = new(
+        () => GameDataLocator.FindDataDirectory(AppContext.BaseDirectory, Directory.GetCurrentDirectory()));
 
     /// <summary>필수 클론 데이터 폴더를 반환한다. 누락 시 테스트를 실패시킨다.</summary>
     public static string RequireDirectory()
     {
         string? dir = DirectoryLazy.Value;
-        Assert.True(dir != null, $"클론 데이터 폴더가 없습니다: assets/game-data/ 또는 {GameDataLocator.EnvironmentVariable}");
+        Assert.True(dir != null, "기본 클론 데이터 폴더가 없습니다: game-data/ 또는 assets/game-data/");
         return dir!;
     }
 

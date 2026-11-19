@@ -1,4 +1,5 @@
 // 전체 MayPlace 독립 원본 관찰을 저장소를 공유하는 실제 파이프라인과 대조한다.
+using System.Buffers.Binary;
 using System.Globalization;
 using Netstorm.Core.Original;
 using Netstorm.Tests;
@@ -103,7 +104,8 @@ public sealed class CanonMayPlaceTests
             Regions = regions,
         };
         var pipeline = new RawCanonPlacementPipeline(pool, hash, data, books, additional, contained, state);
-        byte[] hashBytes = [];
+        int hashEntryCount = Enumerable.Range(0, RawSquidHash.Levels).Sum(level => hash.Entries(level).Length);
+        byte[] hashBytes = new byte[hashEntryCount * sizeof(ushort)];
         byte[] fixedBytes = new byte[131072];
         string[][] rows = Fixture();
         Assert.Equal(3 * Rows, rows.Length);
@@ -227,15 +229,15 @@ public sealed class CanonMayPlaceTests
 
             var query = new CanonPlacementQuery(placing, Number(row[2]), BitConverter.UInt32BitsToSingle(Number(row[4])), BitConverter.UInt32BitsToSingle(Number(row[5])), Number(row[3]), owner, Number(row[17]));
             bool allowed = pipeline.MayPlace(query);
-            hashBytes = new byte[0];
-            // 네 단계 배열을 원본 메모리 순서로 직렬화하는 반복문이다.
-            for (int level = 0; level < 4; ++level)
+            int hashOffset = 0;
+            // 단계별 배열을 순서대로 직렬화한다. 0.640 장시간 회귀 점검에서 버킷마다 배열을 다시 할당하던 비용을 없앴다.
+            for (int level = 0; level < RawSquidHash.Levels; ++level)
             {
+                // 각 버킷의 목록 머리를 리틀 엔디언으로 기록한다.
                 foreach (ushort head in hash.Entries(level))
                 {
-                    Array.Resize(ref hashBytes, hashBytes.Length + 2);
-                    hashBytes[^2] = (byte)head;
-                    hashBytes[^1] = (byte)(head >> 8);
+                    BinaryPrimitives.WriteUInt16LittleEndian(hashBytes.AsSpan(hashOffset), head);
+                    hashOffset += sizeof(ushort);
                 }
             }
 
