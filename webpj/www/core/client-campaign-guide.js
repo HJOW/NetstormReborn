@@ -3,6 +3,7 @@
 import { asciiLower } from '../assets/config.js';
 import { decodeWindows1252, encodeOriginalText } from '../assets/text-encoding.js';
 import { ClientState } from './client-state.js';
+import { RawMissionGuide } from './raw-mission-guide.js';
 import { CampaignGuideRuntime, releaseCampaignGuideMission } from './campaign-guide-release.js';
 import { beginGuideMission, closeGuideMission } from './guide-mission-transitions.js';
 import { runTutorialMissionStage } from './mission-lifecycle.js';
@@ -17,7 +18,7 @@ export class ClientCampaignGuide {
     // 동일 Client 설정·게임 전역·Player와 원본 Guide 소유 상태다.
     #data; #gameplay; #players; #storage; #pending = new ClientState(); #owned; #nextToken = 0; #disposed = false;
     // 튜토리얼 초기화의 같은 Client 장치와 원본 안내 표시 전역이다.
-    #tutorial = null; #tutorialSeen = { value: 0 };
+    #tutorial = null; #tutorialSeen = { value: 0 }; #runner = null;
 
     // 원본 Native 미션 모드 참조를 같은 장기 월드 저장소에 연결한다.
     constructor(data, gameplay, players, storage) {
@@ -86,6 +87,36 @@ export class ClientCampaignGuide {
             requestFort: (name) => this.#requestFort(name), header: () => applyMissionTechnologyToRestrictions(mission, devices.types, this.#owned.restrictions),
         });
     }
+
+    // 실제 창·시계·월드 연결 상태를 빌려 원본 Guide 반복기를 만든다.
+    bindLoop(devices) {
+        this.#live();
+        if (this.#runner || !devices || ['dialogsClear', 'gameSeconds', 'worldConnecting', 'tellGlobal'].some((name) => typeof devices[name] !== 'function')) throw new TypeError('Guide 반복기의 실제 Client 장치 누락 또는 중복');
+        this.#runner = new RawMissionGuide({
+            current: () => this.#owned.runtime.value?.guided ? this.#owned.runtime.value.state : null,
+            pending: () => this.#pending.pending() || this.#tutorial.local.state().next[0] !== 0 || devices.worldConnecting(this.#owned.runtime.value?.saveToken),
+            dialogsClear: () => devices.dialogsClear(),
+            stage: (state, sequence) => runTutorialMissionStage(state, sequence, {
+                initialize: () => this.initializeTutorial(),
+                tellGlobal: (name, mode) => devices.tellGlobal(name, mode),
+                showStage: () => { const tutorial = this.#owned.runtime.value?.tutorial; if (!tutorial) throw new Error('Guide First의 현재 안내 연결 누락'); tutorial.tellStage(); },
+                start: () => { throw new Error('Guide 단계3 실제 World Start 연결 누락'); },
+                frame: () => { const tutorial = this.#owned.runtime.value?.tutorial; if (!tutorial) throw new Error('Guide 프레임의 실제 미션 연결 누락'); tutorial.frame(); },
+                tellMission: (name) => { if (typeof devices.tellMission !== 'function') throw new Error('Guide 종료 안내의 실제 미션 Tell 연결 누락'); return devices.tellMission(name); },
+                closeTransient: () => { if (typeof devices.closeTransient !== 'function') throw new Error('Guide 팝업 닫기 연결 누락'); devices.closeTransient(); },
+                pause: () => { const tutorial = this.#owned.runtime.value?.tutorial; if (!tutorial) throw new Error('Guide 안내의 실제 자기 정지 연결 누락'); tutorial.gate().pauseForDialog(); },
+            }),
+            postpone: () => {
+                const runtime = this.#owned.runtime.value; if (!runtime) throw new Error('Guide 재지연의 현재 미션 없음');
+                if (runtime.tutorial) runtime.tutorial.gate().postpone();
+                else if (runtime.gate.nextStageSeconds !== 0) runtime.gate.nextStageSeconds = runtime.gate.delaySeconds + devices.gameSeconds();
+            },
+            release: () => this.#release(),
+            invalidStage: () => { throw new Error('Guide 현재 미션 순번0..6 위반'); },
+        });
+    }
+    // 한 차례 Guide 반복을 실행한다. State나 창이 막으면 초기화를 앞당기지 않는다.
+    run() { this.#live(); if (!this.#runner || !this.#tutorial) throw new Error('Guide 반복기의 실제 Client 장치 미설치'); this.#runner.run(); }
 
     // 기존 미션의 종료·해제 뒤 새 미션을 만들며 단계 진행이나 World 생성은 앞당기지 않는다.
     begin(name, demo = 0, mode = 0) {

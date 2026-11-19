@@ -451,6 +451,7 @@ export class Netstorm {
         this._gameAssets = null; this._surfaceStorage = null; this._clientKernel = null;
         // 실제 미션 Guide는 자산과 장기 저장소가 준비된 뒤 생성한다.
         this._clientGuide = null; this._clientFort = null; this._clientFortName = null;
+        this._campaignWorld = null; this._campaignWorldMissionToken = 0;
         // init 때 저장해 둔 루트 인라인 스타일이다. destroy 가 되돌린다.
         this._savedRootStyle = null;
         // 비동기 로딩 결과가 오래된 것인지 가리는 세대 번호다. destroy/재시도 때마다 올라간다.
@@ -682,6 +683,8 @@ export class Netstorm {
             { refreshTitle: () => this._refreshFortWindowTitle(), assertion: (line) => console.error(`Fort 현재 이름 원본 진단: ${line}`) });
         this._clientGuide.bindTutorialInit({ templates: this._clientTemplates, local: this._clientLocal, subscriber: this._clientSubscriber, types: this._gameAssets.typeTable,
             selectFort: (name) => { this._selectCampaignFort(name); const bytes = this._clientFort.currentBytes(); return decodeWindows1252(bytes.subarray(0, bytes.indexOf(0))); } });
+        this._clientGuide.bindLoop({ dialogsClear: () => !this._mainMenu?.dialog, gameSeconds: () => this._gameClock.gameSeconds(),
+            worldConnecting: (token) => Boolean(this._campaignWorld?.connecting && token === this._campaignWorldMissionToken), tellGlobal: (name, mode) => { if (mode !== 1) throw new Error('Guide init Tell 인자 위반'); this._openTell(name); } });
     }
 
     // 현재 Fort·Guide·설정으로 원본 창 제목을 계산해 실제 문서에 적용한다.

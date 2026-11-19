@@ -726,6 +726,27 @@ test('Netstorm Client Guide: Tutorial Init에서 Fort 요청과 실제 Session �
     } finally { guide.dispose(); s?.dispose(); app._surfaceStorage.dispose(); }
 });
 
+// 실제 Guide 반복기가 창과 Native State 요청을 기다린 뒤 Tutorial Init을 실행한다.
+test('Netstorm Client Guide: 원본 반복기의 창·State 대기와 Tutorial Init', () => {
+    const app = new Netstorm(); app._initializeClientRuntime(false);
+    const data = GameData.build({ files: new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)]]), language: 'english' });
+    app._gameData = data; app._root = { ownerDocument: { title: 'before' } }; app._initializeClientWorldStorage(game, data.files); app._initializeClientGuide();
+    const guide = app._clientGuide; app._mainMenu = { dialog: {} };
+    try {
+        guide.begin('Tutorial1'); const state = guide.current().runtime.state, gate = guide.current().runtime.gate;
+        guide.run(); assert.equal(state.sequence, 0); assert.equal(state.flags, 0); assert.equal(guide.fortRequest(), null);
+        app._mainMenu.dialog = null; app._clientLocal.state().next[0] = 3;
+        guide.run(); assert.equal(state.sequence, 0); assert.equal(guide.fortRequest(), null);
+        app._clientLocal.state().next[0] = 0; app._campaignWorld = { connecting: true }; app._campaignWorldMissionToken = guide.current().runtime.saveToken;
+        guide.run(); assert.equal(state.sequence, 0); assert.equal(state.flags, 0);
+        app._campaignWorld = null; guide.run(); assert.equal(state.sequence, 0); assert.equal(state.flags & 1, 1);
+        guide.run(); assert.equal(state.sequence, 1); assert.equal(state.flags & 1, 1); assert.equal(guide.fortRequest().fort, 'BridgeTheGap');
+        assert.equal(guide.pending().pending(), true); assert.equal(gate.tutorialNumber, 1);
+        guide.run(); assert.equal(state.sequence, 1); assert.equal(guide.pending().pending(), true);
+        guide.close(); assert.equal(guide.pending().pending(), false); assert.equal(guide.fortRequest(), null);
+    } finally { guide.dispose(); app._surfaceStorage.dispose(); }
+});
+
 // 누락된 미션 공장은 등록 설정을 반납하고 동일 Guide를 다시 사용할 수 있게 한다.
 test('Netstorm Client Guide: 없는 미션과 다음 정상 생성', () => {
     const app = new Netstorm(); app._initializeClientRuntime(false);
