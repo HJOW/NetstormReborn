@@ -533,6 +533,15 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         // 장식·제목·항목은 별도 Gump 수집 항목으로 각각 출력한다.
         for (const token of [fancyNode.fancy, fancyNode.title, fancyToken]) gump.draw(token, draw, fancyTarget);
         assert.ok(fancyPixels.some((value) => value !== 255)); gump.remove(fancyToken); scroll.close(); assert.equal(bufferText.styleState().fragments.size, 0);
+        // 사제 건설에 필요한 중첩 메뉴는 같은 controlled 스택과 실제 자식 등록을 사용한다.
+        const parentMenu = menus.beginFancy(); menus.title('Construct Building\n');
+        const childMenu = menus.beginVertical(); menus.entry('Build', 0x02000060, 0x007b0001);
+        assert.equal(menus.itemCount(), 1); assert.equal(menus.takeCurrent(), childMenu);
+        menus.submenu('Temple', childMenu, true); menus.separator(); menus.entry('Help', 0x02000017, 82);
+        assert.equal(menus.itemCount(), 3); assert.equal(gump.node(parentMenu).items[0].childId, gump.node(childMenu).id);
+        assert.equal(gump.node(childMenu).items[0].command, 0x02000060); assert.equal(gump.node(childMenu).items[0].parameter, 0x007b0001);
+        menus.attach({ x: 750, y: 420 }, menus.root()); gump.remove(parentMenu); menus.close(); scroll.close();
+        assert.equal(gump.node(childMenu), null); assert.equal(bufferText.styleState().fragments.size, 0);
         // 실제 생산 정보가 작성한 장식 메뉴의 제목·비용·항목과 Form을 같은 공통 수명에서 확인한다.
         const integratedCommands = [], productionMenu = createClientProductionMenu(gump, session, game, data, app._resources.fonts, screen, app._clientColorSort, itemBackground, 92, {
             baseHandle: () => 0, sound: () => {}, translate: (value) => app._resources.translate(value),

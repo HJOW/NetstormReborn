@@ -69,6 +69,13 @@ export class ClientMenuGump {
     instances() { return this.#state.instances; }
     closePopups() { this.#input.closePopups(); }
     beginVertical(flags = 0) { return this.#widgets.beginVertical(flags); }
+    // 중첩 메뉴 작성을 마치고 현재 메뉴를 꺼내 부모 작성 상태로 돌아간다.
+    takeCurrent() { return this.#menu.takeCurrent(); }
+    // 현재 메뉴에 실제 자식 메뉴와 사용 가능 여부를 연결한다.
+    submenu(value, child, enabled = true, checked = false) { this.#controls.addSubmenu(value, child, enabled, checked); }
+    // 현재 메뉴의 구분선과 항목 수는 기존 원본 작성기에서 처리한다.
+    separator() { this.#controls.addSeparator(); }
+    itemCount() { return this.#menu.itemCount(); }
     title(value) { this.#controls.addTitle(value); }
     header(value) { this.#controls.addHeader(value); }
     entry(...args) { this.#controls.addText(...args); }
