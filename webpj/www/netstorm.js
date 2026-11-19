@@ -32,6 +32,11 @@ import { Progress, isProgressKey } from './platform/progress.js';
 import { reportGameError } from './platform/error-reporting.js';
 import { ClientFrameClock } from './core/client-frame-clock.js';
 import { ClientLocalStateGlobals } from './core/client-local-state-globals.js';
+import { ClientKencloudGlobals } from './core/client-kencloud-globals.js';
+import { ClientHtmlWindowGlobals } from './core/client-html-window-globals.js';
+import { ClientConnectionGlobals } from './core/client-connection-globals.js';
+import { ClientConnectionActivityGlobals } from './core/client-connection-activity-globals.js';
+import { captureCampaignMissionStarting, runCampaignMissionStarting } from './core/campaign-client-services.js';
 import { ClientRandomGlobals } from './core/random.js';
 import { ClientSpGlobals } from './core/client-sp-globals.js';
 import { ClientSubscriberGlobals } from './core/client-subscriber-globals.js';
@@ -446,6 +451,8 @@ export class Netstorm {
         this._clock = new FrameClock();
         // Client 게임 시계와 보정 전역은 init에서 생성하고 destroy에서 반납한다.
         this._clientLocal = null; this._gameClock = null; this._hiddenGamePause = false;
+        // 같은 Client 수명의 구름·HTML과 연결표·연결 활동 전역이다.
+        this._clientKencloud = null; this._clientHtml = null; this._clientConnections = null; this._clientConnectionActivity = null;
         // 같은 Client가 장기 소유하는 게임·CRT 난수와 SP 저장소다.
         this._clientRandom = null; this._clientSp = null;
         // Client 공통 Player·Core·Template과 Subscriber는 Session보다 오래 산다.
@@ -454,6 +461,7 @@ export class Netstorm {
         this._gameAssets = null; this._surfaceStorage = null; this._clientKernel = null;
         // 실제 미션 Guide는 자산과 장기 저장소가 준비된 뒤 생성한다.
         this._clientGuide = null; this._clientFort = null; this._clientFortName = null;
+        // 설치된 GameWorld와 그 월드를 빌리는 현재 미션 세대다.
         this._campaignWorld = null; this._campaignWorldMissionToken = 0;
         // init 때 저장해 둔 루트 인라인 스타일이다. destroy 가 되돌린다.
         this._savedRootStyle = null;
@@ -656,12 +664,14 @@ export class Netstorm {
         const source = new ClientTimeSource(), random = new ClientRandomGlobals();
         const sp = new ClientSpGlobals(random, () => source.unixSeconds()); sp.store().initialize();
         const local = new ClientLocalStateGlobals(), clock = new ClientFrameClock(source, local.gameTicks());
+        const cloud = new ClientKencloudGlobals(), html = new ClientHtmlWindowGlobals(), connections = new ClientConnectionGlobals(local), activity = new ClientConnectionActivityGlobals();
         const subscriber = new ClientSubscriberGlobals(), gameplay = new ClientGameplayGlobals(subscriber), fort = new ClientFortGlobals();
         const coreData = new ClientCoreDataGlobals(), players = new ClientPlayerRecords(), templates = new CampaignTemplateStorage();
         players.bindCoreData(coreData);
         initializeClientPlayerRecords({ gameplayGlobals: () => gameplay, playerRecords: () => players });
         if (hidden) clock.pushGamePause();
         this._clientRandom = random; this._clientSp = sp; this._clientLocal = local; this._gameClock = clock; this._hiddenGamePause = Boolean(hidden);
+        this._clientKencloud = cloud; this._clientHtml = html; this._clientConnections = connections; this._clientConnectionActivity = activity;
         this._clientSubscriber = subscriber; this._clientGameplay = gameplay; this._clientCoreData = coreData; this._clientPlayers = players; this._clientTemplates = templates; this._clientFort = fort;
     }
 
@@ -720,9 +730,30 @@ export class Netstorm {
         if (!clock || !random || !sp || !local || !subscriber || !gameplay || !coreData || !players || !templates) throw new Error('캠페인의 실제 Client 공통 수명 미설치');
         const surface = this._surfaceStorage, kernel = this._clientKernel, request = this._clientGuide?.fortRequest();
         return { randomGlobals: random, spGlobals: sp, localStateGlobals: local, subscriberGlobals: subscriber, gameplayGlobals: gameplay, coreDataGlobals: coreData,
-            playerRecords: players, templateStorage: templates, ...(surface && kernel ? { surfaceStorage: surface, processKernel: kernel } : {}),
+            playerRecords: players, templateStorage: templates, connectionActivityGlobals: this._clientConnectionActivity, connectionRegistry: this._clientConnections, connectionFrameNumber: () => clock.time().number, ...(surface && kernel ? { surfaceStorage: surface, processKernel: kernel } : {}),
             ...(this._clientGuide ? { missionRestrictions: this._clientGuide.restrictions(), missionOptions: gameplay.battleOptionsOwner() } : {}), ...(request ? { missionFortRequest: request } : {}),
             unixSeconds: () => clock.unixSeconds(), frameTime: () => clock.time(), paused: () => clock.paused() };
+    }
+
+    // State7 부모가 실제 앱의 장기 전역과 같은 프레임 시계를 빌리도록 한다.
+    _campaignStateClient() {
+        if (!this._surfaceStorage || !this._clientLocal || !this._clientGameplay || !this._clientKencloud || !this._clientHtml || !this._gameClock) throw new Error('캠페인 State7의 실제 Client 공통 수명 미설치');
+        return { edition: () => 'patch1078', surfaceStorage: () => this._surfaceStorage, localStateGlobals: () => this._clientLocal,
+            gameplayGlobals: () => this._clientGameplay, kencloudGlobals: () => this._clientKencloud, htmlWindowGlobals: () => this._clientHtml,
+            time: () => this._gameClock.time(), wallSeconds: () => this._gameClock.wallSeconds() };
+    }
+
+    // 같은 실제 Client의 State7 부모에서 선택된 Fort World를 설치하고 State8 내부 접속을 건다.
+    _runCampaignState7(services, viewport) {
+        const client = this._campaignStateClient(), request = this._clientGuide?.fortRequest();
+        if (!request || this._campaignWorld) throw new Error('캠페인 State7의 현재 요청 또는 World 수명 오류');
+        runCampaignMissionStarting(client, () => {
+            captureCampaignMissionStarting(client, request);
+            const world = this._installCampaignWorld(services, viewport); world.prepareLocalConnectionForState();
+        }, (address, port) => {
+            if (!this._campaignWorld) throw new Error('캠페인 State8의 현재 World 없음');
+            this._campaignWorld.session().connectLocalConnectionForState(address, port);
+        });
     }
 
     // 현재 Guide의 선택된 Fort와 같은 Client 공통 소유자로 GameWorld를 설치한다. State7·로그인은 호출자의 책임이다.
@@ -761,6 +792,8 @@ export class Netstorm {
         // Guide를 먼저 반납하고 장기 Process 소유자는 TYPE·Kernel과 시계가 살아 있는 동안 반납한다.
         this._clientGuide?.dispose(); this._clientGuide = null; this._clientFortName = null; this._clientFort = null;
         this._releaseCampaignWorld();
+        this._clientConnections?.shutdownDevices();
+        this._clientKencloud = null; this._clientHtml = null; this._clientConnections = null; this._clientConnectionActivity = null;
         this._surfaceStorage?.dispose();
         this._gameClock = null; this._clientLocal = null; this._hiddenGamePause = false;
         this._clientSp = null; this._clientRandom = null;
