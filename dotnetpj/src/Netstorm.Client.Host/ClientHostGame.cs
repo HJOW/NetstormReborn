@@ -176,6 +176,7 @@ public sealed class ClientHostGame : Game
     {
         if (disposing)
         {
+            _missionSession?.ReleaseMissionAiBrains();
             _missionSession?.ReleasePlayerProcesses();
             _missionBurning?.Dispose();
             _missionAudio?.Dispose();
@@ -487,9 +488,14 @@ public sealed class ClientHostGame : Game
                     ResetCamera = () => worldOrder.Add("camera"),
                 });
             worldLoad.Load();
-            // 미션 시작 AI 생성 live 연결. 적재된 월드의 사제가 있는 인공지능 소유자만 실제 brain을 만든다.
-            // 근거: RawMissionStart 163~165행의 생성 루프다. 로컬 제외·신전 삭제·난이도 서비스는 후속 단위에서 잇는다. (2026-11-19 0.640)
-            session.CreateMissionAiBrains(players, types, worldDefinitions, () => System.Text.Encoding.Latin1.GetString(Netstorm.Core.Original.ExtendedText.EncodeDisplayText(_startup.Configuration.PathSpec("defaultAiName"))));
+            // 미션 시작의 AI 생성 시 난이도 옵션을 읽어 적 AI에만 적용한다. 0.641에서 옵션을 연결했다.
+            int difficultyValue = 0;
+            _startup.Configuration.ReadInt(AiDifficulty.DifficultyConfigKey, ref difficultyValue);
+            AiDifficultyLevel difficulty = AiDifficulty.FromValue(unchecked((uint)difficultyValue));
+            session.CreateMissionAiBrains(
+                players, types, worldDefinitions,
+                () => System.Text.Encoding.Latin1.GetString(ExtendedText.EncodeDisplayText(_startup.Configuration.PathSpec("defaultAiName"))),
+                difficulty: (owner, settings) => session.ResolveMissionAiDifficulty(difficulty, owner, settings));
             // 단일 미션의 첫 지역(+0x78)은 소용돌이→섬 소유자→첫 지역 사슬이 적재 중 기록한다(R6: 신전 Pop·postPop 표시와 함께).
             // 전투섬 배정 region 갈고리는 MP 전투 경로의 makeBattleIsland에서만 쓰므로 시작 흐름에서 직접 기록하지 않는다(0.477 정정).
             _missionSession = session;
@@ -500,6 +506,7 @@ public sealed class ClientHostGame : Game
         catch
         {
             // 적재 중 예외에서도 같은 Host 프로세스를 장치보다 먼저 반납한다.
+            session.ReleaseMissionAiBrains();
             session.ReleasePlayerProcesses();
             pendingBurning?.Dispose();
             throw;

@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-19 · 마지막 커밋 구현 0.640 · 다음 구현 0.641(R4-5 ResetAi·반납·258 판정·동맹 판정 live 연결) · 현재 단계 R4-2·R4-5 병행 · cpppj 제품 1322 / 11.01 · 전체 목표 미완료**
+**2026-11-19 · 마지막 구현 0.641(부분, AI 해제·반납·동맹 난이도) · 다음 후보 0.642(R4-4 틱 난수원·정기) · 현재 단계 R4-2·R4-5 병행 · cpppj 제품 1322 / 11.01 · 전체 목표 미완료**
 
 현행 인계는 이 문서가 기준이다. 0.600~0.635의 단위별 완료 문장, 단위마다 누적한 검사 수와 L2 보관 경로 나열은 [0.635 정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635)에 있다. 0.613까지의 경과, 파일 계열별 체크 목록과 옛 집계는 [0.613 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)에 있다. 단위별 근거는 `docs/dotnet-canon-0NNN-*.md`이다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
@@ -13,18 +13,18 @@
 | 기존 배포 `Netstorm.Game` (`Netstorm.exe`) | 메인 메뉴와 캠페인 1-1·1-2를 플레이할 수 있다. 한국어 선택, 와이드 시야 확장, 테두리 없는 전체화면을 제공한다. 실행 오류만 수정하는 동결 상태다. | RGBA 합성·자체 UI·근사 `BattleSession`으로 동작한다. |
 | 새 경로 `Netstorm.Client` + `Netstorm.Client.Host` | 타이틀·메뉴·도움말·Options·Credits·캠페인 선택·Edit 목록과 이름 창이 동작한다. 개발용 `--mission <키> --handle <이름>`으로 일반 31미션의 시작 상태 일부를 조립한다. 월드 표시·입력·규칙의 실제 경로가 남아 있어 플레이 불가다. | 1024×768 메뉴 **12장면**의 논리 BMP가 cpppj와 바이트 일치했다(0.381~0.388). L2는 **0/34**, 데모 3경로는 DN 진입 미연결이며 L3·L4b·L5는 미착수다. |
 
-- **마지막 커밋 구현 0.640.** 미션 시작 `InitialUpdate` live 연결·`--mission` 시작 흐름 결선·전체 회귀를 마쳤다. L1 집중 29건 + Core AI 30건(환경 1건 지정 재실행 통과), 전체 Assets 366·Core 2,962·Client 1,323 통과, `thewarbegins` L2 재수집(DN brain·기술 행 생성). [0.640](docs/dotnet-canon-0640-20261119.md)
-- **마지막 커밋 구현 0.639.** 미션 시작 `CreateAiBrains` live 연결(실제 `Construct`·첫 지역·신전 조회·색 변경·사제 조회의 세션 결선)과 brain 행 대조를 연결했다. L1 집중 27건 + Core AI 28건 통과. [0.639](docs/dotnet-canon-0639-20261119.md)
-- **마지막 커밋 구현 0.638.** 직접 AI 지갑·파라미터 세션 결선과 세션 소유 brain 메모리(첫 토큰 `0x20000000`)를 연결했다. L1 집중 4건 통과. [0.638](docs/dotnet-canon-0638-20261119.md)
-- **검사 기준선.** 마지막 전체 회귀는 0.640이다. Assets 366/366·Core 2,962/2,962·Client 1,323/1,323(건너뜀 1, 소리 실장치 검사)이 통과했다. 실패 0. `NETSTORM_DATA` 지정 실행(보호 사본)에서는 사본 진행 상태 탓에 새 상태 가정 검사 3건이 실패하므로 미지정 실행이 기준이며, Core 지정 단일 환경 요인 1건은 지정 뒤 단독 재실행에서 통과한다. 2026-11-19 사용자 지시로 전체 회귀는 4단위당 1회만 수행한다. 이번 단위는 전체 회귀를 수행했고 다음 전체 회귀는 0.644 시점에 수행한다. 단위별 집중 검사 수는 각 단위 문서에 있다. [0.640](docs/dotnet-canon-0640-20261119.md) · [회귀 목록](docs/dotnet-regression-inventory-20261115.md)
+- **0.641 부분 완료.** 미션 세션의 AI 생성·해제·반납에 같은 참여 모듈을 사용한다. 시작 시 설정된 난이도는 로컬 플레이어 기록과 AI 설정의 동맹 선언을 확인해 적 AI에 적용한다. Release 빌드와 집중 검사 76건 통과. [0.641](docs/dotnet-canon-0641-20261119.md)
+- **0.640.** 미션 시작 `InitialUpdate` live 연결·`--mission` 시작 흐름 결선·전체 회귀를 마쳤다. L1 집중 29건 + Core AI 30건(환경 1건 지정 재실행 통과), 전체 Assets 366·Core 2,962·Client 1,323 통과, `thewarbegins` L2 재수집(DN brain·기술 행 생성). [0.640](docs/dotnet-canon-0640-20261119.md)
+- **0.639.** 미션 시작 `CreateAiBrains` live 연결(실제 `Construct`·첫 지역·신전 조회·색 변경·사제 조회의 세션 결선)과 brain 행 대조를 연결했다. L1 집중 27건 + Core AI 28건 통과. [0.639](docs/dotnet-canon-0639-20261119.md)
+- **검사 기준선.** 마지막 전체 회귀는 0.640이다. Assets 366/366·Core 2,962/2,962·Client 1,323/1,323(건너뜀 1, 소리 실장치 검사)이 통과했다. 실패 0. `NETSTORM_DATA` 지정 실행(보호 사본)에서는 사본 진행 상태 탓에 새 상태 가정 검사 3건이 실패하므로 미지정 실행이 기준이며, Core 지정 단일 환경 요인 1건은 지정 뒤 단독 재실행에서 통과한다. 2026-11-19 사용자 지시로 전체 회귀는 4단위당 1회만 수행한다. 다음 전체 회귀는 0.644 시점에 수행한다. 단위별 집중 검사 수는 각 단위 문서에 있다. [0.640](docs/dotnet-canon-0640-20261119.md) · [회귀 목록](docs/dotnet-regression-inventory-20261115.md)
 - **L2 기준선.** 일반 31경로의 양쪽 덤프와 데모 3경로의 cpp 덤프를 확보했고 전체 대조는 `extracted/dotnet-l2-0567/`에 있다. 최근 재측정은 3경로(`thewarbegins`·`tutorial1`·`bc1menu76`)가 0.625, `surrounded`가 0.623, `guardmyback`이 0.636(`extracted/dotnet-l2-0636/`)이며, `thewarbegins`는 0.640(`extracted/dotnet-l2-0640/`)에서 시작 흐름 live AI 생성 뒤 다시 쟀다(DN brain·기술 행 생성, 기술 SID·SP·정기 잔여). 단위별 수집은 `extracted/dotnet-l2-0NNN/`에 둔다. 남은 차이는 정기 60행·`object` 행 부재·AI·cpp 전용 슬롯·농지 가장자리·공장 뒤 4건 sid 재사용 순서다. [일괄 수집](docs/dotnet-l2-batch-20261114.md) · [격차 분석](docs/dotnet-l2-0606-20261117.md) · [3경로 재측정](docs/dotnet-canon-0623-20261119.md)
 
 <a id="now"></a><a id="09-바로-다음-작업"></a><a id="r4-board"></a>
 
-### 0.1 다음 구현 0.641
+### 0.1 0.641 잔여와 다음 작업
 
-1. **0.641 R4-5 `ResetAiForState`·반납·258 완료 판정·`+0x23c` 동맹 판정 live 연결.** 실제 brain 수명·준비 완료·동맹 판정을 세션에 잇고 brain·SP·Player 행을 대조한다. [0.640 결과](docs/dotnet-canon-0640-20261119.md)
-2. **나머지 틱 난수원과 정기 연결(R4-4).** 장식 재생·연소 등 나머지 틱 난수를 잇는다. 정기 부착 시점 정렬(R4-6 로그인·시작 흐름)과 미션 시작 Pop 19+1건(R6 내용물·생산)도 남아 있다.
+1. **0.641 R4-5 잔여.** AI 준비 `00416eb0`·258 완료 판정의 실제 경로와 brain·SP·Player 행 L2 대조가 남아 있다. 해제·반납과 난이도 동맹 판정은 연결했다. [0.641 결과](docs/dotnet-canon-0641-20261119.md)
+2. **0.642 후보는 나머지 틱 난수원과 정기 연결(R4-4).** 장식 재생·연소 등 나머지 틱 난수를 잇는다. 정기 부착 시점 정렬(R4-6 로그인·시작 흐름)과 미션 시작 Pop 19+1건(R6 내용물·생산)도 남아 있다.
 3. **R4-2 나머지 차이와 R4-3~R4-8.** 농지 프레임, 전용 요새, 표시 등록, 그래프 번호, 장부를 처리한 뒤 R4-3~R4-8을 진행한다. 통합 조각을 마칠 때 같은 조건의 일괄 덤프로 M1 진척을 확인한다. [R4 체크](#r4-detail)
 
 <a id="first-run"></a>
@@ -97,7 +97,7 @@ AGENTS.md 2026-11-19 추가(`d047bf9a3`)로 `Netstorm.exe`의 아이콘은 기�
 - [ ] **R4-4 정기 처리·프로세스 초기 등록.** 입력은 `RawAssetRegular`과 Player·Dais·Dude·Disc·장식 정기 처리다.
   - 완료: 미션 틱 `AdvanceMissionFrame`(0.629), 고정 시각 1프레임 1틱과 덤프 시계(0.631), 매 프레임 `UpdateAmbientWind`(0.632)와 주변음(0.633), 간헐천 Pop과 사건 0 정기(0.634), 거주 구역 Pop과 사건 0·1·3 정기(0.635), 펜스 Pop·정기 결선(0.636). [0.631 격차 분해](docs/dotnet-canon-0631-20261119.md)
   - 남음: Kernel/Process 초기 등록과 초기 덤프 비교, Player·Dais·Dude·Disc·장식 정기, AI 초기화·장식 재생·연소 등 나머지 틱 난수원을 잇는다. 정기 부착 시점(0.631에서 분해한 RNG 25,611 격차의 틱 구간)도 맞춘다. 거주 구역 사건 2(주민 생성)는 R6이다. 펜스 표식 생성·삭제·연결선 생성·이웃 새로고침도 R6이다.
-- [ ] **R4-5 AI 초기화.** 실제 생성자(0.639 미션 시작 live `Construct`·0.640 live `InitialUpdate`·`--mission` 시작 흐름 호출 세션 결선 완료, 신전 삭제·난이도 live 연결 잔여)·`SetAiParameter`(0.637 본체·0.638 세션 결선 완료, live 연결 잔여)·`CrankAiMoney`(0.637 본체·0.638 세션 결선 완료, live 연결 잔여)·`ResetAiForState`·`ReturnAiForState`, 600바이트 검사·준비 `00416eb0`·258 완료 판정, 설정 `+0x23c` 동맹 판정을 연결해 brain·SP·Player 행을 대조한다.
+- [ ] **R4-5 AI 초기화.** 0.639 live `Construct`, 0.640 live `InitialUpdate`와 `--mission` 시작, 0.641 `ResetAiForState`·`ReturnAiForState`·설정 길이 검사·동맹 난이도 연결까지 확인했다. 신전 삭제, `SetAiParameter`·`CrankAiMoney`의 실제 호출자, 준비 `00416eb0`·258 완료 판정과 brain·SP·Player L2 대조가 남아 있다. [0.641](docs/dotnet-canon-0641-20261119.md)
 - [ ] **R4-6 내부 로그인·전송·Client 전역.** 메뉴 핸들 출처와 이름 꼬리 16~19바이트, 로컬 Login→Ready→Start 실제 패킷, 요새 이미지·`Bind*`·State 수명을 연결한다. 실제 handshake 검사와 메뉴/`--mission`의 진입 덤프를 대조한다.
 - [ ] **R4-7 데모와 보류 검사.** `StartDemo` 3경로 덤프, `player-world-x86.tsv` 1,680행, F3에서 미룬 Fort/지형 바인딩·미션 Fort 경로·로그인 객체 전송·미션 재적재 검사를 잇는다.
 - [ ] **R4-8 M1 판정.** 같은 시드·고정 프레임·빈 사용자 루트로 34/34 상태 일치. 로드 뒤 프레임 진행에서만 생기는 차이는 cpp 후속 프레임 덤프로 입증한 뒤 R6으로 넘긴다.
@@ -182,7 +182,7 @@ AGENTS.md 2026-11-19 추가(`d047bf9a3`)로 `Netstorm.exe`의 아이콘은 기�
 - **사용자 확인.** L5와 전체 화면/청취, 실제 사제 포획·희생·특정 적 공격·승리·MP/LAN, 공격형 공중 3종 실제 생산/조작은 사용자 확인 범위다. 창 실행은 AGENTS.md의 명시 확인·예외 PC 규칙을 따른다. Windows 10에서 통과하면 Windows 11 실기와 사용자 관찰만 남은 상태에서도 다음 단계로 진행한다. 물리 DPI·4K FSR·UAC는 R8 이후, `DSERR_NODRIVER` 실장치 재검사는 출력 장치가 있는 PC에서 한다. [소리 장치 기록](docs/dotnet-sound-device-20261114.md) · [공통 실행 범위](LEFT_JOBS.md#rules-verify)
 - **공통 기능 경계.** CHEAT 메뉴는 Edit에서만 표시한다. 연녹색 직사각형 분석은 보류다. 폐기된 인터넷 master/root·검증·ping/진단은 비활성 상태를 유지한다. 도움말 링크와 LAN은 해당 사용자가 선택한 경로를 따른다. [공통 계약](LEFT_JOBS.md#rules-verify)
 - **오라클과 자료.** `cpppj/build/bin/Release/Netstorm.exe`를 PowerShell에서 빌드한다. 실행은 `extracted/dotnet-oracle-data/` 사본과 분리한 사용자 루트로 진행하며 `originals/` 해시를 전후 확인한다. 0.606의 VM 소프트웨어 GPU 환경은 [재측정 기록](docs/dotnet-l2-0606-20261117.md)에 있다. 일반 덤프 비교와 최초 실행 검증의 옵션을 구별한다.
-- **검사 명령.** `dotnet build dotnetpj/Netstorm.sln -c Release`, `dotnet test dotnetpj/Netstorm.sln -c Release`, `python -X utf8 dotnetpj/tools/cpp_sync.py`를 쓴다. 실제 TYPE 검사는 `NETSTORM_DATA`를 보호 자료 사본으로 지정한다. 2026-11-19 사용자 지시로 전체 회귀는 4단위당 1회만 수행한다(다음 전체 회귀는 0.640 시점). fixture는 사본 없이 한 소비자 프로젝트에 링크하고 `cpp_sync.py --update --add`로 매니페스트에 등록한다. GUI 명령·변이 검사·등록 규칙 전문은 보관본 6.1에 있다. [L2 도구](docs/dotnet-l2-batch-20261114.md) · [L4a 도구](dotnetpj/tools/l4a_compare.ps1) · [덤프 형식](docs/exe/cpp-session-state-dump-20261109.md)
+- **검사 명령.** `dotnet build dotnetpj/Netstorm.sln -c Release`, `dotnet test dotnetpj/Netstorm.sln -c Release`, `python -X utf8 dotnetpj/tools/cpp_sync.py`를 쓴다. 실제 TYPE 검사는 `NETSTORM_DATA`를 보호 자료 사본으로 지정한다. 2026-11-19 사용자 지시로 전체 회귀는 4단위당 1회만 수행한다(다음 전체 회귀는 0.644 시점). fixture는 사본 없이 한 소비자 프로젝트에 링크하고 `cpp_sync.py --update --add`로 매니페스트에 등록한다. GUI 명령·변이 검사·등록 규칙 전문은 보관본 6.1에 있다. [L2 도구](docs/dotnet-l2-batch-20261114.md) · [L4a 도구](dotnetpj/tools/l4a_compare.ps1) · [덤프 형식](docs/exe/cpp-session-state-dump-20261109.md)
 - **착수·보호·커밋.** AGENTS.md·LEFT_JOBS.md와 이 문서, git status/log를 확인한다. dotnetpj 이식에 디컴파일은 필요 없다. AGENTS.md·기존 원본/CD 파일·README 개요·기존 fixture를 보호한다. 작업 단위마다 진행판·체크와 단위 문서를 갱신하고 해당 파일만 `YYYYMMDD-NN DN 요약`으로 로컬 커밋한다. push 금지. 새 코드·문서는 UTF-8, AGENTS 범위의 코드 주석은 설명·사용법부터 한국어로 적는다. 작업 트리 줄바꿈은 본문 LF, 보관본 CRLF다.
 
 <a id="dotnet-done-index"></a><a id="dotnet-unit-records"></a><a id="dotnet-archive-log"></a>

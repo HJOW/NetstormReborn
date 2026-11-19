@@ -21,12 +21,61 @@ public sealed partial class HostSession
     /// <remarks>2026-11-19 0.640에서 R4-5 미션 시작 InitialUpdate live 연결용으로 추가했다. 근거: cpppj src/client/RawCampaignSession.cpp 564행의 aiExcludedType이다.</remarks>
     private const uint LiveAiExcludedType = 133u;
 
+    /// <summary>AI 생성과 해제 및 반납이 공유하는 세션 참여 모듈이다. 0.641에서 작업별 참여 모듈의 수명을 하나로 모았다.</summary>
+    private readonly PlayerParticipation _aiParticipation;
+
+    /// <summary>각 AI에 할당을 수행한 생성기를 보관한다. 0.641에서 할당한 쪽에 해제도 맡기도록 추가했다.</summary>
+    private readonly Dictionary<uint, RawAiBrainConstructor> _aiConstructors = [];
+
+    /// <summary>세션에서 해당 AI를 구성한 생성기를 찾는다. 0.641에서 다른 생성기의 토큰이 해제되는 것을 막기 위해 추가했다.</summary>
+    private RawAiBrainConstructor AiConstructorFor(uint brain) =>
+        _aiConstructors.GetValueOrDefault(brain) ?? throw new InvalidOperationException("세션이 소유한 AI 토큰이 아닙니다.");
+
+    /// <summary>지정한 플레이어의 AI와 그 하위 할당을 해제하고 같은 세션에서 사용할 반납 증빙을 돌려준다. 0.641에서 추가했다.</summary>
+    public PlayerParticipation.BrainResetPass ResetAiForState(uint owner)
+    {
+        PlayerParticipation.BrainResetPass pass = _aiParticipation.RemoveBrainForState(owner);
+        AiBrains.Remove(owner);
+        return pass;
+    }
+
+    /// <summary>같은 세션에서 해제를 마친 플레이어의 AI 반납을 확정한다. 0.641에서 추가했다.</summary>
+    public void ReturnAiForState(PlayerParticipation.BrainResetPass pass) => _aiParticipation.ReturnBrainForState(pass);
+
+    /// <summary>미션이 종료되거나 시작에 실패했을 때 세션이 생성해 붙인 AI를 모두 해제한다. 0.641에서 추가했다.</summary>
+    public void ReleaseMissionAiBrains()
+    {
+        // 현재 Player 기록을 조회하므로 초기 갱신이 실패해 AiBrains에 등록되지 않은 토큰도 해제한다.
+        for (uint owner = 1; owner < PlayerParticipation.PlayerCount; owner++)
+        {
+            if (_aiConstructors.ContainsKey(_aiParticipation.Brain(owner)))
+            {
+                ReturnAiForState(ResetAiForState(owner));
+            }
+        }
+    }
+
+    /// <summary>게임 옵션에서 선택한 난이도를 적 AI에만 적용한다. 0.641에서 생성 전 동맹 판정을 연결하기 위해 추가했다.</summary>
+    public uint ResolveMissionAiDifficulty(AiDifficultyLevel level, uint owner, ReadOnlyMemory<byte> settings)
+    {
+        if (level == AiDifficultyLevel.Normal)
+        {
+            return (uint)level;
+        }
+
+        uint localOwner = MissionPlayer.BattleOwner;
+        int offset = checked((int)localOwner * PlayerParticipation.PlayerStride + PlayerParticipation.AllyMaskOffset);
+        uint localAllies = BinaryPrimitives.ReadUInt32LittleEndian(PlayerRecords.AsSpan(offset));
+        return (uint)(AiAllianceSide.IsAiEnemyOfLocal(owner, localOwner, localAllies, settings.Span)
+            ? level : AiDifficultyLevel.Normal);
+    }
+
     /// <summary>미션 시작의 실제 AI 생성 효과를 세션 소유 메모리·기록에 연결한다.</summary>
     /// <param name="types">같은 실제 TYPE 표다. 패치판 188개여야 한다.</param>
     /// <param name="definitions">같은 순서의 실제 자산 정의다. 에너지 조회에 116개가 필요하다.</param>
     /// <param name="initialUpdate">실제 초기 갱신 효과다. null이면 실제 기술·목록 몸체로 잇는다. null인데 실제 표 조회도 없으면 명시 거부한다.</param>
     /// <param name="destroyTemple">실제 신전 제거 효과다. null이면 명시 거부한다. 월드 삭제 결선은 다음 단위다.</param>
-    /// <param name="difficulty">11차 난이도 조회다. null이면 보통으로 둔다. 로컬·동맹 판정은 RawAiCreate가 한다.</param>
+    /// <param name="difficulty">11차 난이도 조회다. null이면 보통으로 둔다. 호스트는 ResolveMissionAiDifficulty를 통해 동맹을 확인한다.</param>
     /// <param name="changeNotify">실제 색 변경 뒤의 외부 통지다. null이면 표 쓰기만 한다.</param>
     /// <param name="typeTable">실제 기술 이름 조회용 표다. null이면 live 초기 갱신을 만들지 않고 명시 거부한다. 주입한 초기 갱신을 쓸 때는 필요 없다.</param>
     /// <param name="player">실제 화신 부모다. null이면 세션 풀에 최소 live 부모를 둔다. 흐름에서는 연결된 live 부모를 넘긴다.</param>
@@ -64,7 +113,7 @@ public sealed partial class HostSession
         var constructor = new RawAiBrainConstructor(
             AiBrainMemory,
             createPlayer,
-            new Netstorm.Core.Simulation.PlayerParticipation(PlayerRecords, Alliances, HiddenPlayers, new Netstorm.Core.Simulation.PlayerParticipationState(), new Netstorm.Core.Simulation.PlayerParticipationHooks()),
+            _aiParticipation,
             islands,
             Alliances,
             types,
@@ -102,7 +151,13 @@ public sealed partial class HostSession
             IslandTemple = region => islands.Temple(checked((int)region)),
             DestroyTemple = destroyTemple,
             Difficulty = difficulty,
-            Construct = (owner, settings, size) => constructor.Construct(owner, settings.Span, size),
+            Construct = (owner, settings, size) =>
+            {
+                // 여러 생성 갈고리를 만들더라도 실제 할당을 수행한 생성기를 해제 시점까지 보관한다.
+                uint brain = constructor.Construct(owner, settings.Span, size);
+                _aiConstructors.Add(brain, constructor);
+                return brain;
+            },
             InitialUpdate = ResolveLiveInitialUpdate(types, energy, typeTable, player, contained, finderState, defaultName, initialUpdate),
         };
     }
@@ -299,8 +354,7 @@ public sealed partial class HostSession
             destroyTemple: destroyTemple,
             difficulty: difficulty,
             changeNotify: changeNotify);
-        var participation = new Netstorm.Core.Simulation.PlayerParticipation(PlayerRecords, Alliances, HiddenPlayers, new Netstorm.Core.Simulation.PlayerParticipationState(), new Netstorm.Core.Simulation.PlayerParticipationHooks());
-        var create = new RawAiCreate(OriginalEdition.Patch1078, participation, hooks);
+        var create = new RawAiCreate(OriginalEdition.Patch1078, _aiParticipation, hooks);
         var priestLookup = new RawPriestLookup(Pool, PriestState.Priests);
         // 활성 인공지능 소유자를 번호 순서대로 방문한다. 원문 Start 루프와 같은 순서다.
         for (uint owner = 1; owner <= (uint)MissionPlayers.PlayerCount; owner++)

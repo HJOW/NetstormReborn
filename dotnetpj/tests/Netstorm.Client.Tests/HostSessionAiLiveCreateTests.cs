@@ -195,4 +195,107 @@ public sealed class HostSessionAiLiveCreateTests
         }
         finally { script.Dispose(); }
     }
+
+    /// <summary>게임 실행 없이 AI 생성과 반납을 검사할 세션과 빈 타입 표를 만든다. 0.641에서 추가했다.</summary>
+    private static (HostSession Session, MissionPlayers Players, OriginalTypeRecord[] Types, RiftTypeDefinition[] Definitions) NewSyntheticScene()
+    {
+        var session = new HostSession(new Kernel(), new GameRandom(), new CrtRandom());
+        var players = new MissionPlayers();
+        players.Players[2].Active = true;
+        players.Players[2].Computer = true;
+        session.AiSettings[2] = new byte[RawMissionAiSettings.Size];
+        return (session, players, Enumerable.Range(0, HostSession.WorldFrameCount).Select(_ => new OriginalTypeRecord()).ToArray(),
+            Enumerable.Range(0, 116).Select(_ => new RiftTypeDefinition()).ToArray());
+    }
+
+    /// <summary>해제 후 다시 생성할 수 있고 같은 세션에서 반납을 확정하면 다시 붙일 수 없는지 검사한다. 0.641에서 추가했다.</summary>
+    [Fact]
+    public void ResetAndReturnShareTheSessionThatCreatedTheBrain()
+    {
+        var (session, players, types, definitions) = NewSyntheticScene();
+        session.CreateAiBrainsLive(players, types, definitions, initialUpdate: (_, _) => { });
+        uint brain = session.AiBrains[2];
+        var allocated = session.AiBrainMemory.Allocations.Select(entry => entry.Token).Order().ToArray();
+
+        _ = session.ResetAiForState(2);
+
+        Assert.Equal(allocated, session.AiBrainMemory.Frees.Order());
+        Assert.Equal(brain, session.AiBrainMemory.Frees[^1]);
+        Assert.Empty(session.AiBrains);
+        Assert.Equal(0u, Get(session.PlayerRecords, 2 * PlayerParticipation.PlayerStride + PlayerParticipation.BrainOffset));
+
+        session.CreateAiBrainsLive(players, types, definitions, initialUpdate: (_, _) => { });
+        Assert.NotEqual(brain, session.AiBrains[2]);
+        PlayerParticipation.BrainResetPass pass = session.ResetAiForState(2);
+        var other = new HostSession(new Kernel(), new GameRandom(), new CrtRandom());
+        Assert.Throws<ArgumentException>(() => other.ReturnAiForState(pass));
+        session.ReturnAiForState(pass);
+        Assert.Throws<ArgumentException>(() => session.ReturnAiForState(pass));
+        Assert.Throws<InvalidOperationException>(() =>
+            session.CreateAiBrainsLive(players, types, definitions, initialUpdate: (_, _) => { }));
+    }
+
+    /// <summary>초기 갱신 중 실패하여 목록에 아직 등록되지 않은 AI도 미션 종료 시 해제하는지 검사한다. 0.641에서 추가했다.</summary>
+    [Fact]
+    public void ReleaseCleansUpAnAttachedBrainAfterInitialUpdateFails()
+    {
+        var (session, players, types, definitions) = NewSyntheticScene();
+        session.CreateAiBrainsLive(players, types, definitions, initialUpdate: (_, _) => { });
+        players.Players[3].Active = true;
+        players.Players[3].Computer = true;
+        session.AiSettings[3] = new byte[RawMissionAiSettings.Size];
+        Assert.Throws<InvalidOperationException>(() => session.CreateAiBrainsLive(players, types, definitions,
+            initialUpdate: (_, _) => throw new InvalidOperationException("테스트용 초기 갱신 실패")));
+        Assert.False(session.AiBrains.ContainsKey(3));
+        Assert.NotEqual(0u, Get(session.PlayerRecords, 3 * PlayerParticipation.PlayerStride + PlayerParticipation.BrainOffset));
+
+        session.ReleaseMissionAiBrains();
+        session.ReleaseMissionAiBrains();
+
+        Assert.Empty(session.AiBrains);
+        Assert.Equal(0u, Get(session.PlayerRecords, 3 * PlayerParticipation.PlayerStride + PlayerParticipation.BrainOffset));
+        Assert.Equal(session.AiBrainMemory.Allocations.Select(entry => entry.Token).Order(), session.AiBrainMemory.Frees.Order());
+    }
+
+    /// <summary>미션 설정 길이가 맞지 않으면 AI 메모리 할당 전에 거부하는지 검사한다. 0.641에서 추가했다.</summary>
+    [Fact]
+    public void LiveCreateRejectsTruncatedSettingsBeforeAllocation()
+    {
+        var (session, players, types, definitions) = NewSyntheticScene();
+        session.AiSettings[2] = new byte[RawMissionAiSettings.Size - 1];
+
+        Assert.Throws<ArgumentException>(() => session.CreateAiBrainsLive(players, types, definitions, initialUpdate: (_, _) => { }));
+
+        Assert.Empty(session.AiBrainMemory.Allocations);
+        Assert.Empty(session.AiBrains);
+    }
+
+    /// <summary>생성 경로의 난이도 배율이 적 AI에만 적용되며 입력 설정은 보존하는지 검사한다. 0.641에서 추가했다.</summary>
+    [Theory]
+    [InlineData(AiDifficultyLevel.Easy, false, false, 32f)]
+    [InlineData(AiDifficultyLevel.Hard, false, false, 4f)]
+    [InlineData(AiDifficultyLevel.Normal, false, false, 8f)]
+    [InlineData(AiDifficultyLevel.Easy, true, false, 8f)]
+    [InlineData(AiDifficultyLevel.Hard, false, true, 8f)]
+    public void MissionDifficultyUsesBothAllianceInputs(AiDifficultyLevel level, bool declared, bool recorded, float expectedCycle)
+    {
+        var (session, players, types, definitions) = NewSyntheticScene();
+        session.MissionPlayer.BattleOwner = 3;
+        int localMask = 3 * PlayerParticipation.PlayerStride + PlayerParticipation.AllyMaskOffset;
+        byte[] settings = session.AiSettings[2];
+        BinaryPrimitives.WriteUInt32LittleEndian(settings.AsSpan(AiAllianceSide.SettingsAllyMaskOffset), declared ? 1u << 3 : 0u);
+        BinaryPrimitives.WriteUInt32LittleEndian(session.PlayerRecords.AsSpan(localMask), recorded ? 1u << 2 : 0u);
+        BinaryPrimitives.WriteSingleLittleEndian(settings.AsSpan(0x220), 8f);
+        byte[] before = settings.ToArray();
+        float updateCycle = 0;
+
+        session.CreateAiBrainsLive(players, types, definitions,
+            initialUpdate: (_, active) => updateCycle = BinaryPrimitives.ReadSingleLittleEndian(active.Span[0x220..]),
+            difficulty: (owner, active) => session.ResolveMissionAiDifficulty(level, owner, active));
+
+        ReadOnlySpan<byte> brain = session.AiBrainMemory.Bytes(session.AiBrains[2]);
+        Assert.Equal(expectedCycle, BinaryPrimitives.ReadSingleLittleEndian(brain[0x220..]));
+        Assert.Equal(expectedCycle, updateCycle);
+        Assert.Equal(before, settings);
+    }
 }

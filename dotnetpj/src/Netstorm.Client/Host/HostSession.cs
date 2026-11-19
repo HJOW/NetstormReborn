@@ -124,6 +124,18 @@ public sealed partial class HostSession
         Kernel = kernel;
         Game = game;
         Crt = crt;
+        _aiParticipation = new PlayerParticipation(
+            PlayerRecords, Alliances, HiddenPlayers,
+            new Netstorm.Core.Simulation.PlayerParticipationState(),
+            new Netstorm.Core.Simulation.PlayerParticipationHooks
+            {
+                DestructBrain = brain => AiConstructorFor(brain).Destruct(brain),
+                FreeBrain = brain =>
+                {
+                    AiConstructorFor(brain).FreeBody(brain);
+                    _aiConstructors.Remove(brain);
+                },
+            });
         Gameplay = sharedGameplay ?? new ClientGameplayGlobals();
         Pool = pool ?? new RawSidPool(poolCapacity <= 0 ? MissionPoolCapacity : poolCapacity, true, () => Gameplay.Authority.Server);
         if (pool is not null)
@@ -238,8 +250,7 @@ public sealed partial class HostSession
     {
         ArgumentNullException.ThrowIfNull(players);
         ArgumentNullException.ThrowIfNull(hooks);
-        var participation = new Netstorm.Core.Simulation.PlayerParticipation(PlayerRecords, Alliances, HiddenPlayers, new Netstorm.Core.Simulation.PlayerParticipationState(), new Netstorm.Core.Simulation.PlayerParticipationHooks());
-        var create = new RawAiCreate(OriginalEdition.Patch1078, participation, hooks);
+        var create = new RawAiCreate(OriginalEdition.Patch1078, _aiParticipation, hooks);
         // 인공지능(활성·전산) 소유자만 번호 순서대로 만든다.
         for (int owner = 1; owner <= MissionPlayers.PlayerCount; owner++)
         {
