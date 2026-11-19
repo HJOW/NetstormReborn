@@ -2212,6 +2212,14 @@
       "use": "한국어 용어표(UTF-8): 워크샾·신전·사제 같은 이름 용어와 기본 확인 단추 OkButton"
     },
     {
+      "path": "d/Tutorial1.korean",
+      "source": "webpj/translations/Tutorial1.korean",
+      "bundle": "korean",
+      "size": 6512,
+      "sha256": "5a07d8c9062146844ef08df86c24bb1d0460250386ac16e6f3c359970198799b",
+      "use": "한국어 첫 튜토리얼 대본(UTF-8): 원본 실행 설정과 안내·미션 완료 명령 유지"
+    },
+    {
       "path": "d/help.korean",
       "source": "webpj/translations/help.korean",
       "bundle": "korean",
