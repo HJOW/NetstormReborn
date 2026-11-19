@@ -6,7 +6,7 @@ import { InventoryItemGump, bindInventoryItemAssets } from './inventory-item-gum
 // 실제 항목의 가상 입력·부착·출력과 그림 자식 수명을 같은 트리에 소유한다.
 export class ClientInventoryItem {
     // 현재 루트와 실제 항목 본체, 출력 중에만 유효한 픽셀 대상이다.
-    #root; #item; #devices; #target = null;
+    #root; #item; #devices; #target = null; #clip = null;
     // 텍스트·도움말·배경 등 선택된 UI 경계는 호출자가 제공한다.
     constructor(root, session, assets, geometry, measure, images, state, devices) {
         if (!root || !session?.core || !images || !state || !devices) throw new TypeError('Client 생산 항목의 실제 수명 누락');
@@ -24,7 +24,7 @@ export class ClientInventoryItem {
             styledText: (...args) => device('styledText', ...args), fitText: (...args) => device('fitText', ...args),
             attach: (...args) => root.attach(...args), costUnits: (type) => session.hitPoints().typeCostUnits(type), money: (owner) => session.sp(owner),
             position: (token) => root.collection().position(token),
-            background: (...args) => { if (!this.#target) throw new Error('생산 항목의 현재 출력 표면 누락'); device('background', this.#target, ...args); },
+            background: (...args) => { if (!this.#target || !this.#clip) throw new Error('생산 항목의 현재 출력 표면 누락'); device('background', this.#target, this.#clip, ...args); },
             local: (token, _event, x, y) => root.collection().screenToLocal(token, { x: x | 0, y: y | 0 }),
             knowledgeOpen: () => session.cursorDropSettings().lockDepth === 0 ? 1 : 0, imageHit: (...args) => images.hit(...args),
             denied: (...args) => device('denied', ...args), tell: (...args) => device('tell', ...args),
@@ -40,7 +40,10 @@ export class ClientInventoryItem {
             (current, flags) => root.lifetime().deleteScalar(current, flags),
             (current, x, y, parent, mode) => item.attach(current, x, y, parent, mode), () => {},
             (current) => { if (typeof this.#devices.idleItem !== 'function') throw new Error('생산 항목 실제 점멸 Idle 미연결'); this.#devices.idleItem(current); });
-        root.bindDraw(token, (current, target) => { const previous = this.#target; this.#target = target; try { item.draw(current); } finally { this.#target = previous; } });
+        root.bindDraw(token, (current, target, clip) => {
+            const previousTarget = this.#target, previousClip = this.#clip; this.#target = target; this.#clip = clip;
+            try { item.draw(current); } finally { this.#target = previousTarget; this.#clip = previousClip; }
+        });
         return token;
     }
 }

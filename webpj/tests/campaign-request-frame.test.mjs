@@ -24,6 +24,7 @@ import { ClientImageGump } from '../www/ui/client-image-gump.js';
 import { ClientTextGump } from '../www/ui/client-text-gump.js';
 import { makeClientTextMarkup } from '../www/ui/client-text-markup.js';
 import { ClientProductionBudget } from '../www/ui/client-production-budget.js';
+import { ClientGumpBackground } from '../www/ui/client-gump-background.js';
 import { StyleTextFragmentKind } from '../www/ui/style-text-fragments.js';
 import { PriestPlacementAssets } from '../www/core/priest-placement-assets.js';
 import { RawCanonPixelShape } from '../www/core/raw-canon-pixel-shape.js';
@@ -319,8 +320,10 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         const metadata = new PriestPlacementAssets(game.typeTable, game.shapes, session.core().types);
         const measure = new RawCanonPixelShape(session.core().pool, session.core().types, metadata.frames, metadata.shapes, metadata.hotspots, metadata.geometry, { scaleX: 16, scaleY: 11 });
         const images = new ClientImageGump(gump, game, { localOwner: 0, ownerMaps: new Uint32Array(188), shadowOffset: { x: 5, y: 5 } }, () => { throw new Error('선택하지 않은 색표'); }, () => 0);
-        const itemState = { localOwner: session.localOwner(), editor: 0, stockEnabled: 0, inputDisabled: 0, lastType: 0, bridgeType: session.core().bridgeState.bridgeType, pixelsX: 16, pixelsY: 11, backgroundType: 0, backgroundFrame: 0 };
-        let grid; const itemDevice = new ClientInventoryItem(gump, session, game, metadata, measure, images, itemState, { idleItem: (token) => grid.idleItem(token), denied: () => 0 });
+        const itemState = { localOwner: session.localOwner(), editor: 0, stockEnabled: 0, inputDisabled: 0, lastType: 0, bridgeType: session.core().bridgeState.bridgeType, pixelsX: 16, pixelsY: 11, backgroundType: 92, backgroundFrame: 2 };
+        const itemBackground = new ClientGumpBackground(gump, game, () => 0, () => screen.shadeMaps(), () => screen.colors(), () => 0);
+        let grid; const itemDevice = new ClientInventoryItem(gump, session, game, metadata, measure, images, itemState, { idleItem: (token) => grid.idleItem(token), denied: () => 0,
+            background: (target, clip, ...args) => itemBackground.texture(target, clip, ...args) });
         grid = new ClientInventoryGrid(gump, session, gridState, {
             now: () => app._gameClock.wallSeconds(), baseHandle: () => 0, allocateItem: (size) => itemDevice.allocate(size),
         });
@@ -334,6 +337,8 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         const draw = new GumpDrawState(); setGumpDrawClip(draw, { left: 0, top: 0, right: 1366, bottom: 768 });
         const iconPixels = new Uint8Array(1366 * 768).fill(255); gump.draw(icon, draw, new GumpPixelTarget(iconPixels, 1366, 768, draw));
         assert.ok(iconPixels.some((value) => value !== 255)); let hitPoint = null;
+        firstItem.decoration = 1; const decoration = new Uint8Array(1366 * 768).fill(255);
+        gump.draw(firstItemToken, draw, new GumpPixelTarget(decoration, 1366, 768, draw)); assert.ok(decoration.some((value) => value !== 255)); firstItem.decoration = 0;
         // 실제 아이콘의 불투명 픽셀을 항목 로컬 적중으로 찾아 클릭한다.
         for (let y = 240; y < 340 && !hitPoint; y += 1) for (let x = 240; x < 340; x += 1) {
             if (iconPixels[y * 1366 + x] === 255) continue; const local = gump.collection().screenToLocal(firstItemToken, { x, y });
