@@ -1,6 +1,8 @@
 # LEFT_JOBS.webpj — 현행 상태와 남은 작업
 
-현재 진행 상황, 남은 단계와 유효한 결정을 기록한다. 단위별 구현과 검증은 `docs/webpj-*.md` 및 [PORT_MAP.tsv](webpj/PORT_MAP.tsv), 지난 인계 원문은 [E801 정리 전 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261118-through-wb04-e801)을 참조한다. 공통 사항과 cpppj는 [LEFT_JOBS.md](LEFT_JOBS.md), dotnetpj는 [LEFT_JOBS.dotnetpj.md](LEFT_JOBS.dotnetpj.md)를 따른다.
+현재 진행 상황, 남은 단계와 유효한 결정을 기록한다. 단위별 구현과 검증은 `docs/webpj-*.md` 및 [PORT_MAP.tsv](webpj/PORT_MAP.tsv), 지난 인계 원문은 [E1081 정리 전 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261120-through-wb04-e1081)과 그 아래 날짜별 보관본을 참조한다. 공통 사항과 cpppj는 [LEFT_JOBS.md](LEFT_JOBS.md), dotnetpj는 [LEFT_JOBS.dotnetpj.md](LEFT_JOBS.dotnetpj.md)를 따른다.
+
+**읽는 순서:** 0.1(현재 값·다음 작업) → 0.2(단계 진행판) → 3.1(단계별 항목) → 0.5(단위 착수·종료 절차) → 필요할 때 나머지 절. 진행 요약을 요청받으면 0.1의 **실행·플레이**와 **원본과의 동일성** 두 칸으로 답한다(AGENTS.md).
 
 ## 0. 한눈에 보기
 
@@ -8,437 +10,55 @@
 
 | 항목 | 현행 상태 |
 | --- | --- |
-| 실행·플레이 | 브라우저에서 ‘클릭하여 시작’, 메인 메뉴·캠페인/데모 목록·도움말·옵션·Credits와 개발용 지형 미리보기가 동작한다. Node 통합 검사에서 실제 Fort로 Session을 적재하고 내부 Login·Start·일부 이동과 건설을 확인했다. 브라우저에서 Tutorial1~6과 세 캠페인 묶음 Struggle For Freedom·A Nation Rises·Complete Victory의 미션 진입·안내, Tutorial1 사제 이동·생산 패널 클릭·일부 단축키와 자동 다리 공급이 동작한다. 다리 한 조각의 실제 배치도 확인했다. 나머지 HUD·다른 미션 및 자연 완주는 미완성이다. |
-| 원본과의 동일성 | 영어 4:3 메뉴 M1 8장면은 cpppj 오라클과 알려진 구름 배경 등 차이 영역 밖에서 픽셀 차이 0이다. 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다. 실제 미션 L2·L3·L4, 자연 완주는 미검증이다. |
-| 현재 작업 | **M2의 4-D 진행 중.** 앱의 공통 시계·난수·SP·Player·Template·월드 저장소와 Guide 생성/반납을 연결하고 독립 Session 적재를 확인했다. E893에서 내부 미션 전송의 실제 Session 수신 콜백 대여와 State 정리 관문을 연결했다. [내부 전송 콜백](docs/webpj-session-internal-callback-20261119.md) E892에서 Fort 이름의 원본 관측 876행 전부를 물리·콜백 변이·중단과 호출 순서로 대조했다. [전체 Fort 관측](docs/webpj-fort-name-observation-20261119.md) E891에서 manager 없는 편집 설정 경계 20행을 추가했다. [Fort 관측](docs/webpj-fort-name-editor-observation-20261119.md) E890에서 앱 프레임의 시각 고정 뒤 Guide를 호출해 실제 Tutorial1의 단계·지연 요청 관문을 확인했다. [앱 Guide 프레임](docs/webpj-app-guide-frame-20261119.md) E889에서 앱의 실제 Client 전역과 State7 부모·State8 내부 접속을 같은 Guide/World에 연결했다. [앱 State7](docs/webpj-app-state7-20261119.md) E888에서 앱이 같은 Guide의 Fort로 GameWorld를 소유하고 로컬 로그인·반납하는 경계를 검사했다. [앱 GameWorld](docs/webpj-app-game-world-20261119.md) E887에서 Guide 반복기를 실제 창·State 대기 조건과 Tutorial Init에 결합했다. E886은 Fort 요청을 Session 로컬 로그인까지 검사했다. [Guide 반복기](docs/webpj-app-guide-loop-20261119.md) E941에서 Chromium의 실제 갈무리11·확정 문자 큐·Gump 픽셀 출력을 검사했다. 실제 OS IME와 미션 앱 연결은 남았다. [갈무리11 편집 검증](docs/webpj-client-text-entry-galmuri-20261119.md) E940에서 실제 Gump 배경·픽셀에 혼합 글꼴과 선택 영역 출력을 연결했다. 앱 렌더러 연결은 남았다. [편집 글자 출력](docs/webpj-client-text-entry-draw-20261119.md) E939에서 원본 FontSet과 확장 문자 글꼴의 혼합 폭을 편집기에 연결했다. 앱 글꼴 인스턴스·실제 출력은 남았다. [편집 글꼴 측정](docs/webpj-client-text-entry-measure-20261119.md) E938에서 실제 TextEntry·Console의 버퍼·두 Slider·공통 입력/idle/수명을 연결했다. 앱 글꼴·출력과 미션 UI는 남았다. [Client TextEntry](docs/webpj-client-text-entry-controls-20261119.md) E937에서 실제 Slider·손잡이·돌 화살표를 같은 Client 트리와 입력·수명에 연결했다. TextEntry·출력은 남았다. [Client Slider](docs/webpj-client-scroll-controls-20261119.md) E936에서 같은 Client의 돌 버튼·배경 생성·입력·idle·실패 정리를 연결했다. Slider·출력은 남았다. [Client 돌 버튼](docs/webpj-client-stone-controls-20261119.md) E935에서 같은 공통 수명의 파생 idle 분배를 연결했다. TextEntry 공장·앱 프레임은 남았다. [Gump idle](docs/webpj-app-gump-idle-20261119.md) E934에서 직접 beforeinput과 조합 후속의 중복을 구분하고 영어·한국어 접근성 이름을 적용했다. OS IME·미션 연결은 남았다. [직접 텍스트](docs/webpj-browser-beforeinput-20261119.md) E933에서 실제 편집 가능한 IME 요소의 포커스·큐·앱 수명을 연결했다. 실제 OS IME와 미션 TextEntry는 미검증이다. [IME 요소](docs/webpj-browser-ime-element-20261119.md) E932에서 Canvas 조합 확정 사건을 원자적 문자 큐에 연결했다. 실제 OS IME용 편집 요소·포커스는 남았다. [조합 사건](docs/webpj-browser-composition-events-20261119.md) E931에서 영문·1252 및 기본 제어 키의 원본 문자 사건을 큐에 연결했다. IME·실제 입력 소비는 남았다. [문자 키](docs/webpj-browser-character-key-20261119.md) E930에서 한글 Console 자동완성이 확장 토큰을 한 문자로 탐색한다. 실제 Console 장치는 남았다. [Console 단어](docs/webpj-console-korean-word-20261119.md) E929에서 확장 줄의 화면 잘라내기·선택·캐럿 경계를 보정했다. 실제 글꼴·IME 연결은 남았다. [한글 출력 경계](docs/webpj-text-entry-draw-boundary-20261119.md) E928에서 한글 줄의 수평 스크롤을 완전한 문자 경계로 보정했다. 실제 출력 보정은 남았다. [한글 스크롤](docs/webpj-text-entry-scroll-20261119.md) E927에서 편집 버퍼의 확장 문자 붙여넣기·바이트 제한을 연결했다. 실제 클립보드·출력·IME는 남았다. [한글 붙여넣기](docs/webpj-text-entry-paste-20261119.md) E926에서 원본형 편집기의 한글 태그 삽입·선택·이동·삭제를 연결했다. Paste·출력·IME는 남았다. [한글 편집](docs/webpj-text-entry-korean-20261119.md) E925에서 확장 표시 문자의 앞·뒤·이전·다음 바이트 경계를 구현했다. 실제 편집기 연결은 남았다. [표시 문자 경계](docs/webpj-display-text-boundary-20261119.md) E924에서 한국어 확정 문자 태그·표시 바이트와 원자적 큐 사건을 구현했다. 편집기·IME 연결은 남았다. [확정 문자](docs/webpj-committed-text-input-20261119.md) E923에서 원본 입력 큐의 확정 본문 일괄 삽입과 여유 칸을 구현했다. 실제 문자·IME 연결은 남았다. [일괄 큐](docs/webpj-input-queue-batch-20261119.md) E922에서 방향·기능·보조 키의 가상 키 큐 예약을 연결했다. 문자·IME·실제 미션 소비는 남았다. [가상 키](docs/webpj-browser-virtual-key-20261119.md) E921에서 실제 Canvas 버튼 사건의 원본 큐 적재를 구현했다. 미션 소비자 전까지 비활성이다. [마우스 큐](docs/webpj-browser-mouse-queue-20261119.md) E920에서 실제 앱 폴링·40칸 큐의 포인터 재진입 뗌 보정을 연결했다. 일반 입력·앱 프레임은 남았다. [앱 포인터 경계](docs/webpj-app-pointer-boundary-20261119.md) E919에서 실제 앱의 마우스·보조 키 폴링과 Chromium 입력을 확인했다. 일반 큐·프레임 연결은 남았다. [브라우저 폴링](docs/webpj-browser-input-poll-20261119.md) E918에서 창 안팎과 대화창·포커스 조건에 따른 실제 overlay→방송 관문을 연결했다. 포인터 폴링·앱 프레임은 남았다. [포인터 통지](docs/webpj-app-gump-pointer-notify-20261119.md) E917에서 공통 GumpFrame 방송을 실제 구분선 입력에 분배했다. 브라우저 포인터·앱 프레임 호출은 남았다. [Client 방송](docs/webpj-app-gump-broadcast-20261119.md) E916에서 실제 Client 구분선 생성·부착·입력·자식 연동을 연결했다. 전체 HUD 공장과 자동 방송은 남았다. [Client 구분선](docs/webpj-app-hud-divider-20261119.md) E915에서 공통 트리의 직접 부착·Move를 파생 가상 부착으로 분배했다. 실제 구분선 본체 연결은 남았다. [가상 부착](docs/webpj-app-gump-virtual-attach-20261119.md) E914에서 실제 Client 등록표의 HUD serial·현재 완성 상태 조회를 구현했다. UI 공장·분배는 남았다. [HUD 등록 조회](docs/webpj-uber-root-lookup-20261119.md) E913에서 실제 Gump 등록0 교체와 Client 루트 별칭·파생 입력 분배를 연결했다. 실제 Uber UI 공장은 남았다. [앱 Gump 루트 교체](docs/webpj-app-gump-replace-20261119.md) E912에서 Uber 루트 생성·교체 전체 물리와 호출 순서를 원본 160행에 대조하고 재생성을 검사했다. 실제 하위 UI 공장·앱 연결은 남았다. [Uber 루트 생성](docs/webpj-uber-root-construct-20261119.md) E911에서 Uber 루트의 현재 HUD 자식 뷰와 실제 공통 트리의 표준 배치 등록을 확인했다. 전체 생성·교체와 UI 공장은 남았다. [Uber 루트 뷰](docs/webpj-uber-root-view-20261119.md) E910에서 실제 파생 Gump 노드의 공통 주소·입력·소멸을 배경 생성기로 확인했다. HUD·HTML·글자 저장소는 남았다. [앱 파생 Gump](docs/webpj-app-gump-derived-20261119.md) E909에서 같은 Gump 루트의 기본 자식 부착·입력·지연 삭제와 Client 상세 진단을 연결했다. 파생 UI·월드 투영은 남았다. [앱 Gump 트리](docs/webpj-app-gump-tree-20261119.md) E908에서 실제 Gump 루트·등록·수명·수집·입력을 Client 수명에 연결했다. HUD·진행 창·브라우저 입력은 남았다. [앱 Gump 루트](docs/webpj-app-gump-root-20261119.md) E907에서 State7 battlePal을 실제 구름·난수·파일·Screen·World 색표에 연결했다. 다른 UI 색상·날씨·Renderer·구름 표시는 남았다. [앱 전투 팔레트](docs/webpj-app-battle-palette-20261119.md) E906에서 최초 설정과 이후 쓰기를 같은 Client 구름 전역에 반영했다. 구름 생성·표시와 전체 설정 순서는 남았다. [앱 구름 설정](docs/webpj-app-cloud-options-20261119.md) E905에서 화면비 변경 시 현재 팔레트·loaded 상자·고정 색표를 유지해 Screen DIB를 재생성했다. Renderer·카메라 재배치는 남았다. [앱 Screen 크기](docs/webpj-app-screen-resize-20261119.md) E904에서 Screen DIB 부분 출력을 앱 표면과 실제 Canvas에 연결했다. [앱 Screen 출력](docs/webpj-app-screen-present-20261119.md) E903에서 앱 Screen의 최초 캡처 뒤 창 모드 DIB·전체 clip을 준비했다. 화면비에 따른 Renderer·카메라 재배치는 남았다. [앱 Screen DIB](docs/webpj-app-screen-dib-20261119.md) E902에서 Screen 적용 색상을 실제 브라우저 표시기에 연결하고 색 변경 뒤 재출력을 예약했다. 전체 Renderer와 다른 UI 색상·날씨 연결은 남았다. [앱 표시기 색상](docs/webpj-app-presenter-palette-20261119.md) E901에서 현재 Screen 팔레트와 고정 색표·소유자 표를 실제 Tutorial1 World·Session에 대여했다. 전투 팔레트 전환·표시 연결은 잔여다. [앱 Session 색상표](docs/webpj-app-session-colors-20261119.md) E900에서 실제 TYPE·고정 입력·공유 redraw로 소유자 색표와 9표 메모리 캐시를 초기화하고 Screen 명암 행을 연결했다. 전투 팔레트 및 영구 캐시는 남았다. [앱 색상 캐시](docs/webpj-app-color-cache-20261119.md) E899에서 앱의 실제 fortPal과 Screen 논리 색을 Client 장기 ColorSort primary에 최초 캡처했다. 표시 장치와 전투 팔레트 연결은 남았다. [앱 팔레트 캡처](docs/webpj-app-palette-capture-20261119.md) E898에서 앱 시작과 실제 Tutorial1 State7에 공유 카메라 Renderer 초기화를 연결했다. [앱 카메라 초기화](docs/webpj-app-renderer-init-20261119.md) E897에서 앱의 Login 설정·시계·Player 관문·화면 갱신을 실제 Tutorial1 연결에 제공했다. [앱 Login 장치](docs/webpj-app-login-services-20261119.md) E896에서 앱의 실제 번역·설정·제목을 Session 설치에 연결하고 Player 이름의 표시 바이트를 cpppj와 대조했다. [앱 설치·표시 바이트](docs/webpj-app-install-display-20261119.md) E895에서 기존 앱 World의 로컬 State Poll·패킷 Pump를 Guide 앞에 연결해 실제 Tutorial1 로그인 Ready를 앱 프레임으로 확인했다. [앱 연결 프레임](docs/webpj-app-connection-frame-20261119.md) 앱 메뉴의 지연 요청 소비·로그인 완료 후 화면 설치·Kernel 프레임, 실제 Fort Snapshot/Notify 및 Tutorial1 L2가 남았다. [Tutorial Init](docs/webpj-app-tutorial-init-20261119.md) [앱 소유자](docs/webpj-app-world-storage-20261119.md) · [Guide](docs/webpj-app-campaign-guide-20261119.md) · [Fort 이름](docs/webpj-client-fort-name-20261119.md) · [Tutorial1 프레임 차이](docs/webpj-campaign-ownership-theme-20261119.md) |
-| 전체 회귀 | E1047 고정 Node 22·26 각 6,568건 통과. E1043 고정 Node 22·26 각 6,567건 통과. E1030 고정 Node 22·26 각 6,564건 통과. E1039 고정 Node 26 전체 6,566건, E1035 고정 Node 26 전체 6,564건 통과. 이하 과거 이력: E941 Node v26.13.0 전체 6,512건, E939 Node v22.23.3 전체 6,511건 통과(실패·취소·건너뜀 0). E941 실제 갈무리11 편집 Chromium 1건 통과; E940 편집 출력·원본 2,292행 포함 연관 Node 검사 46건 통과; E939 글꼴 측정·원본 2,292행 포함 연관 Node 검사 72건 통과; E938 Client TextEntry·원본 2,292행 포함 연관 Node 검사 63건 통과; E937 Client Slider·연관 Node 검사 51건 통과; E936 Client 돌 버튼·연관 Node 검사 27건 통과; E935 Gump idle·연관 Node 검사 49건 통과; E934 직접 텍스트·연관 Node 검사 15건과 Chromium 1건 통과; E933 IME 요소·연관 Node 검사 22건과 Chromium 1건 통과; E932 조합 사건·연관 Node 검사 14건과 합성 Chromium 1건 통과; E931 브라우저 문자 키·연관 Node 검사 10건과 Chromium 5건 통과; E930 Console 한글 단어·원본 2,292행 포함 Node 검사 28건 통과; E929 한글 출력 경계·원본 2,292행 포함 Node 검사 31건 통과; E928 한글 스크롤·원본 2,292행 포함 Node 검사 27건 통과; E927 확장 붙여넣기·원본 2,862행 포함 Node 검사 30건 통과; E926 한글 편집·원본 2,292행 포함 Node 검사 27건 통과; E925 표시 문자 경계·연관 Node 검사 7건 통과; E924 확정 문자·연관 Node 검사 24건 통과; E923 입력 큐·연관 Node 검사 17건 통과; E922 가상 키·연관 Node 검사 12건과 Chromium 4건 통과; E921 마우스 큐·연관 Node 검사 11건과 Chromium 3건 통과; E920 앱 포인터 경계·연관 Node 검사 20건과 Chromium 2건 통과; E919 브라우저 폴링·연관 Node 검사 18건과 Chromium 1건 통과; E918 포인터 통지·연관 Node 검사 36건 통과; E917 공통 방송·연관 Node 검사 17건 통과; E916 실제 구분선·연관 Node 검사 30건 통과; E915 가상 부착·연관 Node 검사 29건 통과; E914 HUD 등록 조회·연관 Node 검사 22건 통과; E913 실제 루트 교체·연관 Node 검사 36건과 Chromium 1건 통과; E912 원본 Uber 전체 160행·연관 Node 검사 28건 통과; E911 Uber/HUD·Gump 연관 Node 검사 24건 통과; E910 파생 Gump 연관 Node 검사 40건·Chromium 1건 통과; E909 Gump 연관 Node 검사 39건·Chromium 입력 1건 통과; E908 Gump 및 앱 연관 Node 검사 60건·Chromium 수명 1건 통과; E907 구름·팔레트 Node 검사 17건·실제 로그인 2건 및 Chromium 전환 1건 통과; E906 집중·연관 Node 검사 53건 및 Chromium 설정 쓰기 1건 통과; E905 집중·연관 Node 검사 47건 및 Chromium 화면비 전환 1건 통과; E904 집중·연관 Node 검사 84건 및 Chromium 실제 Canvas 1건 통과; E903 집중·연관 Node 검사 83건 및 Chromium 1건 통과; E902 집중·연관 Node 검사 42건 및 Chromium 1건 통과; E901 실제 로그인 2건·연관 Node 검사 22건 및 Chromium 1건 통과; E900 집중·연관 Node 검사 38건과 Chromium 1건 통과; E899 집중·연관 Node 검사 42건, 수동 적재 관련 Node v22 31건, Guide 로그인 2건과 Chromium 종료·재시작 1건 통과. 전체 회귀 중 선행 레이아웃 누락 시험 5건을 교정한 뒤 전부 재실행했다. E898 Node 관련 검사 37건·실제 로그인 1건·Chromium 1건 통과; E897 집중 검사 6건·실제 World 2건 통과; E896 Node 25건·실제 World 2건·Chromium 2건 및 cpppj 표시 바이트 11,683행 일치; E895 앱 프레임·상태 관련 검사 23건과 실제 Tutorial1 로그인을 포함한 Session 검사 126건 통과; E894 favicon Chromium 창·헤드리스 각 1건 통과; E893 집중·연관 Node 검사 62건과 E892 원본 관측 전체 876행 및 연관 검사 통과. HJOW-Athlon의 작업 단위 주기: E962 v26 전체 6,539건 통과 이후 v26 4/4, E958 v22 전체 6,529건 통과 이후 E966 고정 v26·v22 전체 각각 6,547건 통과. E970 고정 v26 전체 회귀 실행 중이며 E970 고정 v26 전체 6,551건과 E974 고정 v22 전체 6,554건 통과·실패와 건너뜀 0. E974 고정 v26 전체 6,554건 통과·실패와 건너뜀 0, E978 고정 v26 전체 6,556건 통과·실패와 건너뜀 0, E982 고정 v22·v26 전체 각각 6,556건 통과·실패와 건너뜀 0이며 E986 고정 v26 전체 6,556건 통과·실패와 건너뜀 0이며 E990 고정 v22 전체 6,557건 통과·실패와 건너뜀 0이며 같은 상태 v26 전체 회귀 실행 중이다. E998 고정 v22와 E994 고정 v26 전체 회귀도 순차 실행해야 한다. fixture 835개 해시·파일 불일치/누락 0; 대응표 1,160행 오류 0을 확인했고 기존 cpppj 글꼴 관련 변경 검토 항목은 유지한다. |
-| 브라우저 검사 | 2026-11-17 Chromium 2/2. 갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체 확인. 최초 실행·진행 잠금/체크 및 저장 재실행은 E616에서 별도 Chromium 2/2로 확인했다. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
-
-**일시 중지 인계 (2026-11-20).** 사용자가 현재 작업을 마친 뒤 목표 일시 중지를 요청했다. 마지막 구현 단위 E1081까지 문서화·커밋했다. E1079 고정 전체 회귀는 Node 22.23.5와 Node 26.13.0에서 각각 6,582건 전부 통과했다(실패·취소·건너뜀 0). 결과 로그는 `extracted/webpj-e1079-node22-isolated.log`와 `extracted/webpj-e1079-node26-isolated.log`다. E1080·E1081은 이 고정 전체 회귀에 포함되지 않으며 각 단위의 집중·Chromium 검사는 통과했다. 이어서 Tutorial2 D 이후 생산품 배치·나머지 객체 메뉴·자연 완주와 상단 HUD를 진행한다. 검증 산출물 `webpj/test-results-e1072-rerun`, `test-results-e1074*`, `test-results-e1075`, `test-results-e1079*`, `test-results-e1080`, `test-results-e1081`은 정리 명령의 자동 승인 검토가 차단해 미추적 상태로 남겼다.
-
-**E1081.** Gump 이동 전후의 원본 전체 범위를 실제 Renderer dirty에 연결해 건설 비용 표시의 잔상을 없앴다. 미완성 상단 HUD 영역은 임시 검은 바탕을 복구한다. Node 22·26 각 6건과 Tutorial2 실제 픽셀 Chromium 1건이 통과했다. [Gump 화면 갱신](docs/webpj-gump-redraw-cost-trails-20261120.md)
-
-**E1080.** 워크샾 생산·업그레이드·회수 메뉴와 Tutorial2 생산 안내를 한국어로 맞췄다. 원본 서식·아이콘·줄바꿈 보존과 Node 22·26 각 4건, Chromium 실제 생산 진행을 확인했다. 다른 미션 번역은 남았다. [생산 메뉴 한국어](docs/webpj-korean-factory-menu-20261120.md)
-
-**E1079.** 실제 워크샾 우클릭 메뉴와 생산·업그레이드 명령을 앱에 연결하고 한국어 Tutorial2에서 신전·워크샾 자연 완공 후 무기 생산과 다음 안내까지 Chromium으로 확인했다. 원본 공통 메뉴 788행·Factory 메뉴 39행을 포함한 관련 Node 22·26 각 14건이 통과했다. 나머지 객체 메뉴와 튜토리얼 전체 완주는 남았다. [워크샾 생산 메뉴](docs/webpj-browser-tutorial2-factory-20261120.md)
-
-**E1078.** E1072 고정 Node 22·26 전체 회귀 각각 6,581건 통과와 1건 실패의 외부 접속 감사 오탐을 교정했다. 실제 전역 opener 호출 검사는 유지하며 수정 상태의 전체 회귀는 다시 필요하다. [접속 감사](docs/webpj-external-audit-private-field-20261120.md)
-
-**E1077.** 실제 Factory의 생산·지식 항목을 Client 메뉴 작성기와 공통 객체 메뉴에 결합했다. 사용자 우클릭과 연구 명령 소비는 남았다. [Factory Client 메뉴](docs/webpj-client-factory-menu-20261120.md)
-
-**E1076.** 실제 Session Factory 메뉴에 생산 용량·지식·Deck·에너지·비용을 연결하고 완공된 워크샾의 연구 명령을 확인했다. Client 메뉴와 브라우저 연결은 남았다. [Factory Session](docs/webpj-session-factory-menu-20261120.md)
-
-**E1075.** 한국어 Tutorial2에서 실제 사제가 윈드 신전을 완공하고 다음 안내가 열리는 자연 진행을 Chromium에서 확인했다. 워크샾·무기 생산과 전체 완주는 남았다. [신전 완공](docs/webpj-browser-tutorial2-temple-complete-20261120.md)
-
-**E1074.** 실제 건설 비용 표시 Gump를 커서·게임 시계에 연결하고 브라우저에서 윈드 신전 배치와 비용 표시를 확인했다. 건설 완료·후속 단계는 남았다. [비용 표시](docs/webpj-app-floating-sp-20261120.md)
-
-**E1073.** 사제 건설·Player 메뉴의 한국어 명칭과 서식을 보강하고 Tutorial2 안내를 실제 메뉴 용어에 맞췄다. 다른 객체·미션 번역은 남았다. [사제 메뉴 한국어](docs/webpj-korean-priest-menu-20261120.md)
-
-**E1072.** 브라우저에서 사제 우클릭 → 건설 → 신전 → 윈드 신전 선택을 실제 Session 미리보기까지 연결했다. 배치·완공, 다른 객체 메뉴와 채팅 분기는 남았다. [사제 우클릭](docs/webpj-browser-priest-menu-20261120.md)
-
-**E1071.** 실제 사제 선택·원본 메뉴 열기와 객체 Form 부착·효과음을 연결했다. 앱 우클릭 및 다른 객체 메뉴 경로는 남았다. [사제 메뉴 열기](docs/webpj-client-priest-menu-open-20261120.md)
-
-**E1070.** 실제 Session 객체의 제목·소유 관계·상태를 Client 장식 메뉴에 결합했다. 사용자 우클릭과 다른 객체 파생 메뉴는 남았다. [객체 정보](docs/webpj-client-object-menu-info-20261120.md)
-
-**E1069.** 사제 메뉴 뒤 실제 Session 운반체와 공통 객체 메뉴를 같은 Client 스택으로 연결했다. 운반 중인 객체·실제 우클릭과 명령 소비는 남았다. [운반체 메뉴](docs/webpj-client-carrier-menu-20261120.md)
-
-**E1068.** 실제 공통 객체·회수 메뉴를 Session 가상 개수·체력·Player 하위 메뉴에 결합했다. 사용자 우클릭과 운반체·Factory 파생 메뉴는 남았다. [객체 메뉴](docs/webpj-client-object-menu-20261120.md)
-
-**E1067.** 실제 Session의 Player·동맹·사제 상태와 Client Player 하위 메뉴를 결합하고 원본 메뉴 292행 및 실제 Gump 수명을 확인했다. 공통 객체 메뉴와 채팅 입력 장치 연결은 남았다. [Player 메뉴](docs/webpj-client-player-menu-20261120.md)
-
-**E1066.** 원본 사제 건설 선택 명령을 앱 입력 큐에서 실제 Session 커서 미리보기까지 연결했다. 사제 우클릭과 공통 객체 메뉴는 남았다. [건설 선택](docs/webpj-app-priest-build-command-20261120.md)
-
-**E1065.** 실제 Session의 사제 건설 작성기를 Client 중첩 메뉴·번역·커서에 결합해 로그인된 사제의 하위 메뉴와 반납을 확인했다. 공통 객체 메뉴·우클릭·건설 명령의 앱 연결은 남았다. [사제 메뉴](docs/webpj-client-priest-menu-20261120.md)
-
-**E1064.** 실제 Client 메뉴에 중첩 메뉴 꺼내기·자식·구분선·항목 수를 연결하고 현재 Session의 Gump 수명을 확인했다. 실제 사제 우클릭·건설 명령 연결은 남았다. [중첩 메뉴](docs/webpj-client-submenu-20261120.md)
-
-**E1063.** Tell의 원본 그림 태그를 기존 셰이프 해석기와 연결했다. 실제 한국어 Tutorial2의 신전·워크샾 그림을 Chromium에서 확인했다. 다른 그림 변형과 미션 화면 비교는 남았다. [Tell 그림](docs/webpj-tell-inline-pictures-20261120.md)
-
-**E1062.** Tutorial2 전체 안내를 한국어로 옮기고 실행 설정·단계·명령·원본 그림 태그를 대조했으며 Chromium에서 첫 두 페이지를 확인했다. 당시 Tell 그림은 미출력이었으며 E1063에서 연결했다. 나머지 미션 번역은 남았다. [두 번째 튜토리얼](docs/webpj-korean-tutorial2-20261120.md)
-
-**E1061.** 원본대로 승리·패배 음악을 한 번만 재생하고 지연된 이전 소스 종료가 새 곡을 지우지 않게 했다. 실제 장면 선택·음악 채널 앱 연결은 남았다. [결과 음악](docs/webpj-result-music-playback-20261120.md)
-
-**E1060.** E1057 고정 Node 26 전체 회귀의 6,577건 중 실패 2건을 확인해 관측 자료 누락과 메뉴 전용 번역 검사 범위를 교정했다. 관련 Node 22·26 각 31건과 수정 상태 고정 전체 회귀 각 6,580건이 통과했다. [회귀 교정](docs/webpj-regression-translation-fixtures-20261120.md)
-
-**E1059.** 원본 장면 음악 선택·기한·날씨를 독립 3,113행과 대조했다. 실제 음악 채널·앱과 State 정리는 남았다. [장면 음악](docs/webpj-scene-music-20261120.md)
-
-**E1058.** 실제 Client 수명에 State 정리용 NSInfo·도움말 팝업 저장소를 설치했다. 실제 State 정리와 기존 World 교체는 남았다. [State 소유자](docs/webpj-app-state-cleanup-owners-20261120.md)
-
-**E1057.** 공통 유닛 용어표와 생산 정보·TYPE 분류·능력치를 한국어로 연결해 실제 미션 메뉴와 도움말을 확인했다. 나머지 미션 대본·다른 객체 메뉴는 남았다. [한국어 생산 정보](docs/webpj-korean-production-info-20261120.md)
-
-**E1056.** Tutorial1 전체 안내 대본을 한국어로 작성하고 실제 Chromium의 두 페이지·줄바꿈과 Tutorial2 영어 대체를 확인했다. 나머지 미션의 한국어 대본은 남았다. [한국어 미션](docs/webpj-korean-tutorial1-20261120.md)
-
-**E1055.** 실제 Help 그림과 원본 그림 유무별 본문 배치를 연결하고 Chromium에서 SHP 픽셀을 확인했다. 타입별 원본 화면 비교와 다른 객체 메뉴는 남았다. [앱 도움말 그림](docs/webpj-app-help-picture-20261120.md)
-
-**E1054.** 실제 TYPE Help 프레임과 SHP 기준점·그림 제외 타입을 조회한다. 도움말 창의 그림 출력·그림 유무별 배치는 남았다. [도움말 그림 자산](docs/webpj-help-picture-assets-20261120.md)
-
-**E1053.** 미션 타입 Help에 실제 Session 능력치·요구 에너지를 연결해 Chromium에서 정보 패널을 확인했다. 타입 그림과 원본 그림 유무별 배치는 남았다. [앱 도움말 TYPE](docs/webpj-app-help-type-info-20261120.md)
-
-**E1052.** 도움말 창에 별도 TYPE 정보 본문과 상단 배치를 추가했다. 현재는 정보가 있으면 본문을 아래로 내리며 원본 그림 유무별 배치·그림과 실제 앱 연결은 남았다. [도움말 정보 창](docs/webpj-help-information-pane-20261120.md)
-
-**E1051.** 실제 Session의 TYPE·사거리·피해·요구 에너지를 전용 도움말 조회로 제공했다. 정보 패널과 앱 표시 연결은 남았다. [도움말 Session TYPE](docs/webpj-help-session-type-20261120.md)
-
-**E1050.** 선택된 도움말 주제의 `<info>`를 별도 스타일 본문으로 변환하고 중첩 링크를 보존했다. 실제 TYPE 공급과 정보 패널 출력은 남았다. [도움말 정보 파싱](docs/webpj-help-info-parser-20261120.md)
-
-**E1049.** 전용 도움말 TYPE 정보 HTML과 중첩 스타일 결과를 원본 관측 16행에 대조했다. 실제 TYPE 공급과 정보 패널·앱 표시 연결은 남았다. [도움말 TYPE 정보](docs/webpj-help-type-info-20261120.md)
-
-**E1048.** 전용 도움말 요구 에너지 그림의 원본 프레임·강조·경계와 관측 24행을 복원했다. TYPE 정보 본문과 앱 표시 연결은 남았다. [도움말 마나 그림](docs/webpj-help-mana-pictures-20261120.md)
-
-**E1047.** 원본 회수 명령을 현재 Session의 실제 송신·수신에 연결해 건설 다리의 비동기 삭제를 검사했다. 회수 메뉴 전체 경로와 다른 객체 메뉴는 남았다. [회수 명령](docs/webpj-app-salvage-command-20261120.md)
-
-**E1046.** 실제 Tutorial 생산 격자 우클릭에 원본 정보 메뉴와 타입 Help를 설치하고 Chromium에서 열기·닫기를 확인했다. 회수 명령과 Help의 동적 TYPE 본문 등은 남았다. [생산 메뉴 앱](docs/webpj-app-production-about-20261120.md)
-
-**E1045.** 앱 시작·설정 갱신에 실제 helpWord 캐시를 연결하고 영어 설정·한국어 교체를 검사했다. 생산 메뉴 설치와 명령 처리는 남았다. [도움말 문구](docs/webpj-client-help-word-app-20261120.md)
-
-**E1044.** 실제 생산 정보 작성기를 원본 장식 메뉴와 글자·스크롤·Form 수명에 조립하고 Tutorial1 내용물·Help 명령·정리를 확인했다. 메뉴의 앱 설치, 도움말 캐시 초기화 및 명령 처리는 남았다. [생산 정보 메뉴](docs/webpj-client-production-menu-20261120.md)
-
-**E1043.** 실제 Client 원본 세로·장식 메뉴의 생성·제목·입력·출력·Form 수명을 조립했다. E1039 고정 Node 26 전체 6,566건 통과. 생산 우클릭 메뉴 설치·명령 처리는 남았다. [Client 메뉴](docs/webpj-client-menu-gump-20261120.md)
-
-**E1042.** 실제 Client Slider의 돌 배경·화살표·손잡이 픽셀 출력을 연결했다. 브라우저 스크롤 조작과 메뉴 조립은 남았다. [Client Slider 출력](docs/webpj-client-slider-draw-20261120.md)
-
-**E1041.** 실제 Client 다중 줄 Gump의 생성·입력·출력·수명을 글꼴·그림·숨긴 Slider에 조립했다. 표시되는 Slider와 메뉴 연결은 남았다. [Client 다중 줄](docs/webpj-client-scrolling-text-20261120.md)
-
-**E1040.** 다중 줄 스타일 파서가 명시 UTF-16 입력의 한글·서로게이트·스타일을 보존한다. 다중 줄 Gump의 실제 한국어 화면 연결은 남았다. [다중 줄 UTF-16](docs/webpj-scrolling-style-utf16-20261120.md)
-
-**E1039.** 실제 Client 글꼴·조각·그림을 다중 줄 스타일 버퍼와 연결했다. 다중 줄 Gump와 메뉴 조립은 남았다. [Client 스타일 버퍼](docs/webpj-client-style-text-buffers-20261120.md)
-
-**E1038.** 원본 장식 배경·네 모서리·확장 재그리기를 실제 Client Gump와 픽셀에 연결했다. E1035 고정 Node 26 전체 6,564건 통과. 메뉴 제목·본문 조립은 남았다. [Client 장식](docs/webpj-client-gump-decoration-20261120.md)
-
-**E1037.** 공통 트리·프레임의 파생 Gump 재그리기 분배와 반납을 연결했다. 장식 메뉴 출력과 조립은 남았다. [파생 재그리기](docs/webpj-gump-derived-redraw-20261120.md)
-
-**E1036.** 생산 항목의 원본 설명·비용·Help 작성기를 실제 Session에 연결했다. E1035 고정 미션 Chromium 22건과 E1030 고정 Node 22·26 전체 각 6,564건 통과. 실제 우클릭 메뉴 표시는 남았다. [생산 정보 작성](docs/webpj-client-production-about-20261120.md)
-
-**E1035.** 생산 패널을 미션 프레임·생산 갱신·idle·크기 변경·정리와 연결했고 실제 Chromium 마우스 취득을 확인했다. 우클릭 정보 메뉴와 나머지 HUD는 남았다. [앱 생산 패널](docs/webpj-app-production-panel-20261120.md)
-
-**E1034.** 생산 패널의 화면 높이 재배치에서 기술 Form과 예산 등록을 유지한다. 앱 화면 크기 변경과 자동 설치는 남았다. [패널 크기](docs/webpj-production-panel-resize-20261120.md)
-
-**E1033.** 실제 미션 Client 색표·글꼴·생산 정책으로 생산 UI 구성 요소를 조립했다. E1030 고정 Node 26 전체 6,564건 통과. 앱 프레임 설치와 정보 메뉴·브라우저 검증은 남았다. [생산 UI 장치](docs/webpj-client-production-assembly-20261120.md)
-
-**E1032.** 생산 패널의 예산·배경·두 격자·구분선을 실제 Session과 Gump 트리에 조립하고 아이콘 클릭·단축키 취득을 확인했다. 앱 화면·유지 콜백 및 브라우저 설치는 남았다. [생산 패널](docs/webpj-client-production-panel-20261120.md)
-
-**E1031.** 생산 실패 안내를 실제 글꼴·번역·픽셀 및 Gump 수명에 연결했다. 실제 생산 패널의 실패 경로와 브라우저 설치는 남았다. [생산 실패 안내](docs/webpj-client-production-hint-20261120.md)
-
-**E1030.** 생산 격자 선택·단축키를 실제 Session 커서에 연결하고 내용물 변경의 Gump 통지 누락을 수정했다. E1026 고정 Node 26 전체 6,563건 통과. 생산 패널과 비용 부족 안내 UI는 남았다. [생산 항목 선택](docs/webpj-client-production-selection-20261120.md)
-
-**E1029.** 생산 항목 장식에 실제 배경 장치가 필요로 하는 현재 출력 클립을 전달하고 실제 픽셀을 검사했다. 생산 패널 조립과 앱 설치는 남았다. [항목 장식 클립](docs/webpj-inventory-decoration-clip-20261120.md)
-
-**E1028.** 실제 HUD 구분선의 배경 생성·SHP 픽셀 출력을 같은 Client 배경 장치에 연결했다. 생산 패널 조립과 앱 설치는 남았다. [구분선 배경](docs/webpj-client-divider-background-20261120.md)
-
-**E1027.** 생산 예산 금액 이동·단계별 색·점멸을 실제 Session과 글자 Gump에 연결했다. 생산 패널과 앱 프레임 설치는 남았다. [생산 예산](docs/webpj-client-production-budget-20261120.md)
-
-**E1026.** 한 줄 글자에 실제 자산·색상·소리 장치와 대괄호 그림 조각을 연결하고 생산 예산 형식의 픽셀과 조각 수명을 확인했다. E1023 전체 회귀에서 발견된 이식 대응표 누락도 수정했다. 실제 생산 패널 설치는 남았다. [글자 스타일 그림](docs/webpj-client-text-markup-20261120.md)
-
-**E1025.** 실제 Client Gump·FontSet·StyleText의 한 줄 글자 생성·측정·출력·소멸을 연결했다. 생산 예산의 이미지 스타일과 패널 설치는 남았다. [글자 Gump 소유자](docs/webpj-client-text-gump-20261120.md)
-
-**E1024.** 실제 Client Gump의 원본 배경 생성·SHP 질감·클립·명암 장치를 조립했다. 생산 패널의 배경 배치와 화면 설치는 남았다. [배경 Gump 소유자](docs/webpj-client-gump-background-20261120.md)
-
-**E1023.** 메인 메뉴 검사에서 확장된 원본 커서 전체를 자원 준비에 포함했다. E1010 고정 전체 회귀에서 발견된 누락이다. [메뉴 검사 자산](docs/webpj-menu-cursor-test-assets-20261120.md)
-
-**E1022.** 실제 생산 항목을 격자·Session·Canon·이미지 자식·점멸에 조립하고 아이콘 픽셀 클릭이 부모 선택 명령까지 전달됨을 확인했다. 완성 패널과 화면 설치는 남았다. [항목 소유자](docs/webpj-client-inventory-item-20261120.md)
-
-**E1021.** 실제 Client Gump·GameAssets·픽셀 표면에 원본 이미지 자식의 출력·적중·수명을 연결했다. 생산 항목 공장과 패널 설치는 남았다. [이미지 Gump 소유자](docs/webpj-client-image-gump-20261120.md)
-
-**E1020.** 생산 항목의 실제 TYPE·Gump 프레임·Canon 패턴·SHP 픽셀 측정 바인딩을 이식했다. 항목 공장·그림 출력·패널 설치는 남았다. [항목 자산](docs/webpj-inventory-item-assets-20261120.md)
-
-**E1019.** 원본 InventoryGump를 실제 Client Gump 트리·Session 내용물·Form에 조립하는 격자 소유자를 추가했다. 항목 아이콘·패널 생성 및 화면 설치는 남았다. [생산 격자 소유자](docs/webpj-client-inventory-grid-20261120.md)
-
-**E1018.** GumpForm 객체 소멸 통지를 현재 파생 처리기로 분배하고 실제 Session에서 등록 ID·부모 SID와 수명을 확인했다. 생산 격자 ParentGone 본체 연결은 남았다. [파생 객체 통지](docs/webpj-gump-object-notice-dispatch-20261120.md)
-
-**E1017.** 실제 Session GumpForm을 Client Gump 객체 부착·소멸 통지·World 반납 전 삭제에 연결했다. 생산 격자의 별도 ParentGone 분배와 화면 UI는 남았다. [GumpForm 수명](docs/webpj-app-gump-form-lifetime-20261120.md)
-
-**E1016.** 마지막 캠페인 Complete Victory 다섯 미션의 실제 진입을 연결하고 윈드 플라이어 공격 때 다리 프레임 자료 오류를 수정했다. 승리·자연 완주는 남았다. [마지막 캠페인](docs/webpj-browser-final-campaign-group-20261120.md)
-
-**E1015.** 두 번째 캠페인 A Nation Rises 다섯 미션의 실제 목록 진입과 초기 월드 진행을 연결했다. 승리·자연 완주는 남았다. [두 번째 캠페인 묶음](docs/webpj-browser-second-campaign-group-20261120.md)
-
-**E1014.** 첫 캠페인의 나머지 네 미션 진입을 연결하고 마지막 미션의 섬 공격 Tell 경계를 수정했다. 미션별 승리·완주는 남았다. [첫 캠페인 후속](docs/webpj-browser-first-campaign-rest-20261120.md)
-
-**E1013.** 선행 미션 완료로 잠금이 풀린 두 번째 캠페인 MasterOfWhirligigs의 실제 진입과 게임 시계 12초 진행을 확인했다. 목표 수행·승리는 남았다. [두 번째 캠페인](docs/webpj-browser-second-campaign-20261120.md)
-
-**E1012.** 첫 캠페인 TheWarBegins의 목록 진입과 적 AI 다리 탐색 입력을 연결하고 브라우저 게임 시계 12초 진행을 확인했다. 승리와 이후 캠페인은 남았다. [첫 캠페인](docs/webpj-browser-first-campaign-20261120.md)
-
-**E1011.** Tutorial3~6을 실제 목록·Guide·World에 연결했다. Tutorial5 실행 중 대포 프레임 표 연결 오류를 수정했다. 각 미션 목표 수행과 자연 완주는 남았다. [Tutorial3~6](docs/webpj-browser-tutorial-three-six-20261120.md)
-
-**E1010.** 선행 완료로 잠금 해제된 Tutorial2를 실제 캠페인 목록과 Guide·World에 연결하고 안내 이후 게임 프레임 진행을 확인했다. 이후 미션·자연 완주는 남았다. [두 번째 Tutorial](docs/webpj-browser-tutorial-two-start-20261120.md)
-
-**E1009.** 조각을 든 동안 오른쪽 클릭과 좌우 방향키를 실제 원본 커서 회전에 연결했다. 일반 우클릭 메뉴는 남았다. [조각 회전](docs/webpj-browser-cursor-rotation-20261120.md)
-
-**E1008.** 건설 확정이 요구하는 실제 설정·벽시계·화면 갱신·진단을 연결하고 Chromium에서 생산 다리의 클릭 배치, 0x3e 요청과 월드 객체 생성을 확인했다. HUD와 여러 조각의 자연 완주는 남았다. [다리 배치](docs/webpj-browser-bridge-placement-20261120.md)
-
-**E1007.** 원본 커서 18종의 리소스와 번호 매핑을 웹 자산에 포함해 배치·이동 중 실제 커서를 사용한다. [미션 커서 자산](docs/webpj-mission-cursor-assets-20261120.md)
-
-**E1006.** Q/W/A/S/Z/Y/X/E 생산 키와 원본 슬롯 명령을 실제 기술 내용물·커서에 연결했다. Chromium에서 Q 취득·미리보기 프레임·Escape 취소를 확인했다. 생산 UI·다리 배치와 나머지 키는 남았다. [생산 키](docs/webpj-browser-production-shortcuts-20261120.md)
-
-**E1005.** 로그인 World의 커서를 실제 Gump·번역·글꼴·입력·선택·전송 장치에 연결하고 실제 다리 취득·취소를 검사했다. 다리 미리보기의 실제 프레임 표 계약 오류도 수정했다. 키 입력·HUD·배치는 남았다. [앱 커서](docs/webpj-app-campaign-cursor-20261120.md)
-
-**E1004.** 실제 Client Gump의 직접 가상 명령 경계를 공개해 커서가 재귀 분배와 구별된 원본 반환값을 읽을 수 있도록 했다. 앱 커서 연결과 다리 취득은 남았다. [Gump 직접 명령](docs/webpj-gump-direct-command-20261120.md)
-
-**E1003.** 실제 미션 프레임에 생산 내용물 동기화·재고·다리 공급과 설정 조회를 연결했다. 생산 UI·다리 취득은 남았다. [생산 프레임](docs/webpj-app-production-frame-20261120.md)
-
-**E1002.** 실제 Tutorial1 생산 유지 소유자와 기술 내용물 동기화를 준비하고 다리 공급을 독립 호출로 확인했다. 자동 프레임·생산 UI/취득은 남았다. [생산 유지](docs/webpj-app-production-maintenance-20261120.md)
-
-**E1001.** N 다음 유닛 선택을 실제 미션 입력 큐에 연결하고 Chromium에서 선택·카메라 복귀를 확인했다. 일반 입력과 여러 유닛의 브라우저 순환은 남았다. [다음 유닛](docs/webpj-browser-next-unit-key-20261120.md)
-
-**E1000.** Player 정기 로그 미연결로 장시간 실행이 멈추는 문제를 같은 Client trace에 연결해 수정했다. [Player 진단](docs/webpj-app-player-regular-log-20261120.md)
-
-**E999.** P/R 사제 선택과 F5 사제 보기 명령을 실제 입력 큐·Session 카메라에 연결하고 Chromium에서 확인했다. 일반 키와 HUD는 남았다. [사제 단축키](docs/webpj-browser-priest-shortcuts-20261120.md)
-
-**E998.** F4와 원본 ViewHome 명령을 같은 입력 큐·현재 Player·카메라에 연결해 Chromium에서 Tutorial1 A→B 진행을 확인했다. 다른 키와 HUD는 남았다. [F4 홈 보기](docs/webpj-browser-tutorial-view-home-20261120.md)
-
-**E997.** 사제 이동 후 경로 발소리 미연결로 프레임이 멈추는 문제를 실제 위치 음향에 연결해 수정했다. 실제 스피커 출력 검증은 남았다. [경로 발소리](docs/webpj-app-path-step-sound-20261120.md)
-
-**E996.** 실제 미션 프레임의 가장자리 폴링과 Present 후 카메라 적용을 연결하고 Chromium 오른쪽 가장자리 이동을 확인했다. HUD와 전체 화면비 검증은 남았다. [가장자리 이동](docs/webpj-app-edge-scroll-frame-20261120.md)
-
-**E995.** 앱의 Uber 카메라 장기 소유자와 World 카메라 적용 통지를 연결했다. 프레임 가장자리 폴링과 Present 후 적용은 남았다. [카메라 수명](docs/webpj-app-camera-device-lifetime-20261120.md)
-
-**E994.** 미션 포인터 폴링·Guide/Gump 통지와 좌클릭 큐를 Kernel 앞 프레임에 연결했다. 일반 명령·우클릭 메뉴·키보드는 남았다. [포인터 프레임](docs/webpj-app-mission-pointer-frame-20261120.md)
-
-**E993.** 미션 좌클릭을 Tutorial에 먼저 전달하고 이동점 통지만 원본 큐 순서대로 Guide·Gump에 소비한다. 다른 명령과 일반 입력 전체는 남았다. [이동 통지](docs/webpj-app-movement-notice-20261120.md)
-
-**E992.** 실제 Chromium에서 사제 선택 뒤 목적지 클릭이 로컬 이동 패킷과 실제 사제 좌표 변경으로 이어짐을 확인했다. HUD·건설·승리 검증은 남았다. [사제 이동](docs/webpj-browser-priest-movement-20261120.md)
-
-**E991.** 미션 좌클릭을 실제 Gump와 World에 전달하고 Chromium에서 안내를 넘긴 뒤 사제를 선택했다. 전체 큐 소비·오른쪽 버튼·키보드·HUD는 남았다. [미션 좌클릭](docs/webpj-browser-mission-left-click-20261120.md)
-
-**E990.** 로그인 World의 실제 선택·강조·운반 입력기와 객체 진단·게임 커서를 앱에 설치했다. 브라우저 입력 큐 소비·HUD는 남았다. [미션 입력 소유자](docs/webpj-app-campaign-user-input-20261120.md)
-
-**E989.** 실제 Client 풀·카메라의 월드 부착 Gump 투영을 수집과 트리 부착에 연결했다. 실제 HUD 공장은 남았다. [Gump 투영](docs/webpj-app-gump-world-projection-20261120.md)
-
-**E988.** 미션 Renderer에서 실제 Client Gump 트리 kind 2를 수집·정렬하고 같은 DIB에 출력한다. 실제 HUD 공장·출력기는 남았다. [Gump 제출](docs/webpj-app-renderer-gump-submission-20261120.md)
-
-**E987.** Client Gump에 실제 픽셀·클립을 공유하는 가상 출력 분배와 삭제 수명을 연결했다. Renderer kind 2와 실제 HUD 출력기는 남았다. [Gump 출력](docs/webpj-client-gump-draw-dispatch-20261120.md)
-
-**E986.** 실제 Chromium에서 캠페인 클릭→Tutorial1 로그인·월드와 첫 안내 표시를 확인했다. 음향·HUD·조작과 플레이 완료는 남았다. [브라우저 Tutorial](docs/webpj-browser-tutorial-menu-start-20261120.md)
-
-**E985.** Campaign → Early Missions의 첫 Tutorial 행을 실제 Guide 시작에 연결했다. 원본 명령 큐 소비, 나머지 미션·HUD·조작은 남았다. [Tutorial 메뉴 시작](docs/webpj-app-tutorial-menu-start-20261120.md)
-
-**E984.** 준비된 미션의 World와 Tell 창을 앱 프레임에 표시하고 가려진 메뉴 버튼 입력을 차단했다. 실제 HUD·입력·메뉴 시작 명령과 성능 최적화는 남았다. [미션 화면 프레임](docs/webpj-app-mission-display-frame-20261120.md)
-
-**E983.** 실제 미션 Renderer의 준비→DIB 합성→구름 정리→표시→redraw 해제 경계를 앱에 연결했다. 자동 프레임·HUD·입력은 남았다. [Renderer 출력](docs/webpj-app-renderer-present-20261120.md)
-
-**E982.** 실제 미션 Screen·Renderer·구름·카메라·Gump에 원본 표시 전 준비를 연결하고 현재 카메라 시차 분모 조회를 교정했다. 자동 프레임·HUD·입력은 남았다. [Renderer 준비](docs/webpj-app-renderer-prelude-20261120.md)
-
-**E981.** 실제 Tutorial1 World·구름·Renderer를 Screen DIB와 앱 IndexedSurface까지 독립 합성했다. 앱 자동 프레임·HUD/Canvas는 남았다. [미션 화면 합성](docs/webpj-campaign-renderer-drawing-20261120.md)
-
-**E980.** 실제 Tutorial1 표시 목록의 원본 정렬과 지면·자산·입자·커서 출력기를 연결했다. 앱 배경·실제 UI·Screen/Canvas는 남았다. [미션 표시 제출](docs/webpj-campaign-render-submission-20261120.md)
-
-**E979.** 실제 Tutorial1의 지면·객체·입자·커서를 원본 공통 표시 목록에 수집한다. 앱 UI 수집·정렬/출력·배경은 남았다. [미션 표시 수집](docs/webpj-campaign-render-collection-20261120.md)
-
-**E978.** Renderer의 현재 카메라 기반 지형 수집 범위·행 한도를 원본 x86 90행에 대조했다. 실제 수집과 앱 출력은 남았다. [수집 범위](docs/webpj-renderer-collection-geometry-20261120.md)
-
-**E977.** Renderer 프레임 구름 큐·스캔 전역을 Client 수명에 소유하고 화면 크기 변경에서 보존한다. 실제 구름 합성은 남았다. [Renderer 전역](docs/webpj-app-renderer-frame-owner-20261120.md)
-
-**E976.** 앱 프레임의 현재 World 준비·공유 Kernel 단일 실행·객체 보기 후처리를 연결했다. 주변 원본 루프·월드 화면/입력은 남았다. [앱 Kernel](docs/webpj-app-mission-kernel-frame-20261120.md)
-
-**E975.** Tutorial1의 Ready→Start→첫 안내·시계 정지/재개를 앱 프레임에 연결했다. 메뉴 시작 명령·세계 표시/입력과 Kernel은 남았다. [앱 Tutorial Start](docs/webpj-app-tutorial-start-frame-20261120.md)
-
-**E974.** 실제 Tutorial1 Session·Start에 앱 안내와 시계 정지/재개 실행기를 준비했다. Guide 자동 호출·세계 입력/표시는 남았다. [앱 Tutorial](docs/webpj-app-tutorial-runtime-20261120.md)
-
-**E973.** 앱 Session에 현재 미션 승패 안내·팝업·AI/생산 할당 장치를 연결했다. Tutorial 자동 프레임과 실제 승패는 남았다. [앱 승패 장치](docs/webpj-app-mission-outcome-20261120.md)
-
-**E972.** 앱 Client Gump 루트의 직계 팝업 차단 조회와 지연 닫기를 연결했다. Tutorial 프레임 연결은 남았다. [팝업 관문](docs/webpj-app-gump-popup-lifetime-20261120.md)
-
-**E971.** 현재 미션 대본의 Tell 우선 조회와 창 없는 init 첫 파서를 연결하고 실제 Tutorial1 안내를 확인했다. [미션 Tell](docs/webpj-app-mission-tell-20261120.md)
-
-**E970.** 로그인 Ready인 실제 Tutorial1의 Guide·World에 앱 시계·표시·자원·명령 창을 사용하는 미션 Start를 준비하고 직접 실행했다. Guide 자동 호출과 안내·화면은 남았다. [앱 Start](docs/webpj-app-mission-start-20261120.md)
-
-**E969.** 앱 Client의 채팅 창·로그·무시 목록 전역을 같은 Session에 대여한다. 실제 채팅 창 공장과 명령 Gump 알림은 남았다. [채팅 창 전역](docs/webpj-app-chat-window-owner-20261120.md)
-
-**E968.** 기존 World가 없는 메인 메뉴의 Guide Fort 요청을 음향 준비 뒤 앱 프레임에서 State7·로컬 로그인으로 자동 전달했다. 메뉴 명령·World 교체와 Start/표시는 남았다. [앱 Fort 요청](docs/webpj-app-fort-request-frame-20261120.md)
-
-**E967.** 앱의 실제 채팅 100기록과 AI 이름·번역·현재 난이도를 Session에 연결하고 시험 대역 없는 Tutorial1 로그인을 확인했다. [앱 AI·채팅](docs/webpj-app-campaign-ai-20261120.md)
-
-**E966.** 앱 프레임의 State Poll 뒤·패킷 처리 전 효과음 재생 수를 재계산해 자연 종료 후 동시 재생 한도를 회복한다. [프레임 재계산](docs/webpj-app-sound-frame-20261119.md)
-
-**E965.** 앱 소유 SoundPlayer·WebSoundDevice와 설정·Session 효과음을 연결하고 실제 Tutorial1 로그인을 확인했다. 미션 진입 자동 준비·프레임 재계산과 음악은 남았다. [앱 미션 음향](docs/webpj-app-campaign-audio-20261119.md)
-
-**E964.** 현재 언어·기본 효과음의 제한된 동시 적재와 해독을 구현하고 Chromium에서 218개 전체를 확인했다. 미션 진입 자동 호출·앱 옵션·Session 재생은 남았다. [효과음 준비](docs/webpj-mission-sound-preload-20261119.md)
-
-**E963.** SoundPlayer에 연결할 Web Audio 버퍼·복제·음량/좌우 장치를 구현하고 Chromium 오프라인 출력을 확인했다. 앱 옵션·Session 연결은 남았다. [웹 소리 장치](docs/webpj-web-sound-device-20261119.md)
-
-**E962.** 원본 효과음의 언어별·감쇠 접미사 우선 파일 선택과 같은 파일의 중복 해독 방지를 연결했다. Web Audio 버퍼 장치·미션 재생은 남았다. [파일 선택](docs/webpj-sound-file-resolution-20261119.md)
-
-**E961.** 원본 SoundPlayer의 재생·복제·위치·이름·음량 제어를 이식하고 10.78 관측 2,128행을 대조했다. 실제 Web Audio 장치·Session 연결은 남았다. [재생 계층](docs/webpj-sound-player-20261119.md)
-
-**E960.** 원본 위치 음향의 화면 투영·가시·좌우·거리 음량을 이식해 10.78 관측 3,759행과 대조했다. 실제 재생 장치·위치 음향 연결은 남았다. [위치 음향](docs/webpj-sound-spatial-20261119.md)
-
-**E959.** 현재 매니페스트와 Web Audio에 미션 효과음·음악의 개별 적재, 동시 요청 공유와 반납을 연결했다. 미션 재생·위치 음향·곡 선택은 남았다. [음향 적재](docs/webpj-mission-audio-loader-20261119.md)
-
-**E958.** E954 전체 회귀에서 실패한 독립 World 로그인 검사를 실제 앱 메뉴·Gump·팔레트·Renderer에 연결해 교정했다. [회귀 교정](docs/webpj-app-world-login-regression-20261119.md)
-
-**E957.** 공통 효과음·음악 전체를 웹 공개 자산의 미션 묶음에 포함했다. E959에서 선별 적재를 연결했으며 위치 음향·음악 재생 장치는 남았다. [미션 음향 자산](docs/webpj-mission-audio-assets-20261119.md)
-
-**E956.** Session의 즉시 카메라 적용을 실제 앱 Screen·Renderer·Gump·World에 연결했다. 프레임 말미 적용·월드 합성·입력은 남았다. [카메라 적용](docs/webpj-app-camera-commit-20261119.md)
-
-**E955.** 앱 논리 크기 변경을 실제 미션 World에도 전달해 카메라 위치를 유지하면서 한계와 표면·입자 보기를 갱신한다. E956에서 즉시 카메라 적용을 연결했으며 월드 합성은 남았다. [World 크기](docs/webpj-app-world-resize-20261119.md)
-
-**E954.** 앱 논리 Screen과 실제 Renderer·SquidRenderer 변경 표를 연결하고 화면 크기 변경 시 함께 교체한다. 월드 합성·Present와 실제 카메라 적용은 남았다. [표시 장치](docs/webpj-app-renderer-display-20261119.md)
-
-**E953.** 소유권 테마·생산 갱신과 자산·개발자 명령을 현재 앱 설정·Gump·입력 큐에 연결했다. 프레임의 명령 소비·실제 월드 표시와 HUD는 남았다. [미션 장치](docs/webpj-app-gameplay-services-20261119.md)
-
-**E952.** 앱 로그인 진행 창을 실제 메뉴 TellWindow와 연결하고 Tutorial1 요청부터 로그인 Ready까지 실제 진행 창을 확인했다. 원본 Gump serial 재사용과 LeaveBattle 취소·자동 요청 소비·기존 World 반납은 남았다. [진행 창](docs/webpj-app-mission-loading-20261119.md)
-
-**E951.** 로그인 State7·13의 HUD 모드를 실제 앱 Gump 입력 트리에 연결하고 Tutorial1에서 모드 2·3을 확인했다. E950 지연 Fort 요청 처리기의 앱 프레임 자동 호출·현재 World 반납·진행 창은 남았다. 4D-1c의 비미션 검증은 스커미시 후속이다. [로그인 HUD](docs/webpj-app-login-hud-mode-20261119.md) · [요청 프레임](docs/webpj-campaign-request-frame-20261119.md) · [E949 이름표](docs/webpj-app-sound-list-20261119.md)
-
-**E1025 검증.** 실제 앱 글꼴 출력·정리와 TextGump·StyleText Node 30건 통과. [검증](docs/webpj-client-text-gump-20261120.md)
-
-**E1024 검증.** 실제 패널 SHP 출력·클립과 원본 배경 관측 등 Node 13건 통과. E1023 고정 Node 26 전체 회귀 실행 중. [검증](docs/webpj-client-gump-background-20261120.md)
-
-**E1023 검증.** 메인 메뉴·커서 Node 17건 통과. E1010 고정 Node 26 전체는 커서 테스트 자원 누락으로 6,550건 통과·1파일 실패했고, 수정 버전의 전체 회귀를 다시 실행해야 한다. [검증](docs/webpj-menu-cursor-test-assets-20261120.md)
-
-**E1022 검증.** 실제 Tutorial1 생산 아이콘 출력·불투명 클릭과 원본 격자·항목 관측 등 Node 19건 통과. [검증](docs/webpj-client-inventory-item-20261120.md)
-
-**E1021 검증.** 실제 다리 SHP 출력·적중과 이미지 Gump Node 12건 통과. [검증](docs/webpj-client-image-gump-20261120.md)
-
-**E1020 검증.** 실제 다리 자산과 원본 항목 132행 등 Node 7건 통과. [검증](docs/webpj-inventory-item-assets-20261120.md)
-
-**E1019 검증.** 실제 Tutorial1 기술 내용물의 격자 항목·커서 수신과 원본 격자 관측 등 Node 13건 통과. [검증](docs/webpj-client-inventory-grid-20261120.md)
-
-**E1018 검증.** 실제 Session Form 통지와 기본·파생 Gump 수명 등 Node 24건 통과. [검증](docs/webpj-gump-object-notice-dispatch-20261120.md)
-
-**E1017 검증.** 실제 Session 기술 객체 부착·통지·반납 포함 Node 24건과 Chromium Tutorial1 배치 회귀 1건 통과. [검증](docs/webpj-app-gump-form-lifetime-20261120.md)
-
-**E1016 검증.** 다리 손상·Session Node 24건, Chromium 다섯 미션 브리핑 종료·게임 시계 6초 각 1건 통과. [검증](docs/webpj-browser-final-campaign-group-20261120.md)
-
-**E1015 검증.** Chromium 실제 목록·브리핑·게임 시계 6초 각 5건 통과. [검증](docs/webpj-browser-second-campaign-group-20261120.md)
-
-**E1014 검증.** 피해 처리·앱 Node 21건, Chromium 후속 네 미션 진입·게임 시계 6초와 실제 섬 공격 Tell 확인 통과. E1006 고정 Node 22·26 전체 각각 6,559건 통과. [검증](docs/webpj-browser-first-campaign-rest-20261120.md)
-
-**E1013 검증.** Chromium 실제 목록·브리핑·12초 월드 진행 1건 통과. [검증](docs/webpj-browser-second-campaign-20261120.md)
-
-**E1012 검증.** AI 경로·탐색·전략과 앱 Node 37건, Chromium 실제 첫 캠페인 진입·AI 실행 12초 1건 통과. [검증](docs/webpj-browser-first-campaign-20261120.md)
-
-**E1011 검증.** 대포·투사체 Node 33건과 Chromium Tutorial3~6 진입·안내 종료·게임 시계 3초 각 1건 통과. E1002 고정 Node 26 전체 6,558건 통과, E1006 고정 Node 22 전체 회귀는 이후 6,559건 통과했다. [검증](docs/webpj-browser-tutorial-three-six-20261120.md)
-
-**E1010 검증.** Tutorial2 원본 단계·앱 Node 7건과 Chromium 실제 메뉴 진입·안내 종료·게임 시계 5초 1건 통과. E998 고정 Node 26 전체 6,558건 통과, E1002 고정 Node 26 전체 회귀는 이후 6,558건 통과했다. [검증](docs/webpj-browser-tutorial-two-start-20261120.md)
-
-**E1009 검증.** 원본 회전·브라우저 입력 Node 10건과 앱 Node 4건, Chromium 오른쪽 클릭·왼쪽 방향키 회전 및 다리 배치 1건 통과. [검증](docs/webpj-browser-cursor-rotation-20261120.md)
-
-**E1008 검증.** 실제 Tutorial1 건설 요청·객체와 미리보기 Node 9건, Chromium 생산 다리 클릭 배치 1건 통과. [검증](docs/webpj-browser-bridge-placement-20261120.md)
-
-**E1007 검증.** 커서·자산 Node 17건과 Chromium 다리 미리보기의 실제 배치 커서 1건, 자산 복사본 검사가 통과했다. [검증](docs/webpj-mission-cursor-assets-20261120.md)
-
-**E1006 검증.** 생산 단축키·앱 Node 6건과 Chromium Q 취득·미리보기·취소 1건 통과. E994 고정 Node 26 전체 6,558건 통과, E998 고정 Node 26 전체 회귀는 이후 6,558건 통과했다. [검증](docs/webpj-browser-production-shortcuts-20261120.md)
-
-**E1005 검증.** 실제 Tutorial1 다리 취득·취소 포함 Node 21건과 기존 Chromium 미션 흐름 1건 통과. [검증](docs/webpj-app-campaign-cursor-20261120.md)
-
-**E1004 검증.** Gump 수명·직접 명령과 커서 효과 Node 17건 통과. E998 고정 Node 22 전체 6,558건 통과, E994 고정 Node 26 전체 회귀는 이후 6,558건 통과했다. [검증](docs/webpj-gump-direct-command-20261120.md)
-
-**E1003 검증.** 실제 앱·원본 생산 유지 등 Node 10건과 Chromium 12초 자동 다리 공급 1건 통과. E998 고정 v22 전체 검사는 이후 6,558건 통과했다. [검증](docs/webpj-app-production-frame-20261120.md)
-
-**E1002 검증.** 실제 Tutorial1 다리 공급과 원본 생산 유지 86행 등 Node 10건 통과. E998 고정 v22 전체 회귀 실행 중이다. [검증](docs/webpj-app-production-maintenance-20261120.md)
-
-**E1001 검증.** 원본 다음 유닛 410행 등 Node 23건과 Chromium N 선택·카메라 1건 통과. E990 고정 v26 전체 검사는 실행 중이다. [검증](docs/webpj-browser-next-unit-key-20261120.md)
-
-**E1000 검증.** 실제 Tutorial1 Player 진단·원본 정기 처리 등 Node 14건과 Chromium 이동 후 12초 지속 1건 통과. E990 고정 v26 전체 회귀 실행 중이다. [검증](docs/webpj-app-player-regular-log-20261120.md)
-
-**E999 검증.** 원본 선택 키 등 Node 29건, Chromium P/R·F5·F4 1건 통과. E990 고정 v22 전체 6,557건 통과, 같은 상태 v26 실행 중이다. [검증](docs/webpj-browser-priest-shortcuts-20261120.md)
-
-**E998 검증.** 원본 메뉴·선택 키·Tutorial 등 Node 26건과 Chromium F4 홈 복귀 및 A→B 1건 통과. E990 고정 v22 전체 회귀 실행 중이다. [검증](docs/webpj-browser-tutorial-view-home-20261120.md)
-
-**E997 검증.** 실제 발소리 인자·원본 SoundPlayer/경로 등 Node 43건과 Chromium 이동 후 2초 지속 1건 통과. E990 고정 v22 전체 회귀 실행 중이다. [검증](docs/webpj-app-path-step-sound-20261120.md)
-
-**E996 검증.** 실제 Tutorial1·원본 카메라 등 Node 30건, Chromium 실제 가장자리 이동 1건 통과. E986 고정 v26 전체 6,556건 통과, E990 고정 v22 실행 중이다. [검증](docs/webpj-app-edge-scroll-frame-20261120.md)
-
-**E995 검증.** 실제 Tutorial1 화면 변경의 카메라 장치 보존·World 갱신과 원본 카메라 등 Node 27건 통과. E986 고정 v26 전체 회귀 실행 중이다. [검증](docs/webpj-app-camera-device-lifetime-20261120.md)
-
-**E994 검증.** 실제 Tutorial1 포인터와 원본 3,878행 등 Node 32건, Chromium 사제 이동 1건 통과. E986 고정 v26 전체 검사는 실행 중이다. [검증](docs/webpj-app-mission-pointer-frame-20261120.md)
-
-**E993 검증.** 실제 Tutorial1 이동 통지의 큐 순서와 원본 Tutorial·Gump 등 Node 31건, Chromium 이동 및 큐 소비 1건 통과. E986 고정 v26 실행 중이다. [검증](docs/webpj-app-movement-notice-20261120.md)
-
-**E992 검증.** Chromium 실제 첫 Tutorial 안내·선택·이동 1건 통과. E982 고정 v22·v26 전체 각각 6,556건 통과, E986 고정 v26 실행 중이다. [검증](docs/webpj-browser-priest-movement-20261120.md)
-
-**E991 검증.** 실제 Tutorial1 좌클릭 선택과 Gump 등 Node 23건 및 Chromium 실제 사제 선택 1건 통과. E982 고정 v26 전체 검사는 실행 중이다. [검증](docs/webpj-browser-mission-left-click-20261120.md)
-
-**E990 검증.** 실제 Tutorial1 사제 선택·해제와 진단·커서 등 Node 30건, Chromium 첫 Tutorial 1건 통과. E982 고정 v22 전체 6,556건 통과, 같은 상태 v26 실행 중이다. [검증](docs/webpj-app-campaign-user-input-20261120.md)
-
-**E989 검증.** 실제 Tutorial1 객체·카메라의 부착 Gump 투영과 원본 수집/트리 등 Node 39건 통과. E982 고정 v22 전체 검사는 실행 중이다. [검증](docs/webpj-app-gump-world-projection-20261120.md)
-
-**E988 검증.** 실제 Tutorial1 Gump 픽셀 제출과 관련 Node 64건, Chromium 첫 안내 1건 통과. E982 고정 v22 실행 중이고 v26은 이후다. [검증](docs/webpj-app-renderer-gump-submission-20261120.md)
-
-**E987 검증.** 파생 노드 출력·클립 복구·삭제와 공통 Gump 등 Node 35건 통과. E982 고정 v22 전체 검사는 실행 중이다. [검증](docs/webpj-client-gump-draw-dispatch-20261120.md)
-
-**E986 검증.** Chromium 실제 클릭·첫 안내 1건 통과. 비활성 음향 경로를 사용했고 E982 고정 v22 전체 검사는 실행 중이다. [검증](docs/webpj-browser-tutorial-menu-start-20261120.md)
-
-**E985 검증.** 실제 목록 클릭→Guide→로그인·첫 화면과 중복 차단, 원본 명령 1,002행 등 Node 32건 통과. E978 고정 v26 전체 6,556건 통과, E982 고정 v22 실행 중이다. [검증](docs/webpj-app-tutorial-menu-start-20261120.md)
-
-**E984 검증.** 실제 Tutorial1 화면·Tell 합성/복구와 포인터 차단, 메인 메뉴 스크린샷·Renderer 등 Node 49건 통과. E978 고정 v26 실행 중이며 E982 고정 v22는 이후다. [검증](docs/webpj-app-mission-display-frame-20261120.md)
-
-**E983 검증.** 실제 Tutorial1 화면 출력·갱신 요청 소비와 원본 Renderer 앞단·구름 관측 등 Node 55건 통과. E978 고정 v26 실행 중이며 E982 고정 v22는 이후 순차 실행한다. [검증](docs/webpj-app-renderer-present-20261120.md)
-
-**E982 검증.** 실제 Tutorial1의 화면 크기 변경·구름 큐·강제 갱신과 시차 분모, 원본 앞단 720행·구름 695행 포함 Node 28건 통과. E974 고정 v26 전체 6,554건 통과, E978 고정 v26 실행 중이며 E982 고정 v22는 이후 순차 실행한다. [검증](docs/webpj-app-renderer-prelude-20261120.md)
-
-**E981 검증.** 실제 Tutorial1 DIB 출력·구름/지도 clip, 원본 구름 관측과 Renderer 등 Node 50건 통과. E974 고정 v26 전체 회귀 실행 중이다. [검증](docs/webpj-campaign-renderer-drawing-20261120.md)
-
-**E980 검증.** 실제 Tutorial1 픽셀 출력·묶음 숨김 및 원본 제출/지면과 Renderer 검사 등 Node 47건 통과. E974 고정 v26 전체 회귀 실행 중. [검증](docs/webpj-campaign-render-submission-20261120.md)
-
-**E979 검증.** 실제 Tutorial1 목록과 원본 공통 제출 322행·지면 묶음 353행 등 Node 29건 통과. E974 고정 v26 전체 회귀 실행 중. [검증](docs/webpj-campaign-render-collection-20261120.md)
-
-**E978 검증.** 원본 수집 범위·행 한도 90행과 fixture/대응표 포함 Node 12건 통과. E974 고정 v22 전체 6,554건 통과 후 같은 상태 v26 실행 중이다. [검증](docs/webpj-renderer-collection-geometry-20261120.md)
-
-**E977 검증.** 실제 Tutorial1 화면비 변경의 Renderer 전역 보존과 원본 구름 695행 등 Node 14건 통과. E974 고정 v22 전체 회귀 실행 중. [검증](docs/webpj-app-renderer-frame-owner-20261120.md)
-
-**E976 검증.** 실제 Tutorial1 정지/재개 프레임의 Kernel 단일 호출과 ProcessForm 원본 482행 등 Node 24건 통과. E970 고정 v26 전체 6,551건 통과·실패와 건너뜀 0, E974 고정 v22 전체 회귀 실행 중. [검증](docs/webpj-app-mission-kernel-frame-20261120.md)
-
-**E975 검증.** 실제 Tutorial1 자동 Ready/Start/안내·시계 재개 및 원본 수명/게이트 등 Node 25건 통과. E970 고정 v26 실행 중이며 E974 고정 v22 검증 트리를 준비했다. [검증](docs/webpj-app-tutorial-start-frame-20261120.md)
-
-**E974 검증.** 실제 Tutorial1 안내 10프레임과 종료 후 7프레임 재개, 공통 게이트 등 Node 30건 통과. E970 고정 v26 회귀 뒤 E974 고정 v22 정기 전체 회귀가 필요하다. [검증](docs/webpj-app-tutorial-runtime-20261120.md)
-
-**E973 검증.** 실제 Tutorial1 로그인·Start 뒤 승패 조회, 원본 승패 364행과 Gump 등 Node 24건 통과. E970 고정 v26 전체 회귀 실행 중. [검증](docs/webpj-app-mission-outcome-20261120.md)
-
-**E972 검증.** Client 실제 Gump 트리·기존 팝업 처리기 Node 32건 통과. E966 고정 v26·v22 전체 각각 6,547건 통과·실패와 건너뜀 0, E970 고정 v26 실행 중. [검증](docs/webpj-app-gump-popup-lifetime-20261120.md)
-
-**E971 검증.** 실제 Tutorial1 안내·원본 Tell 조회 및 메뉴 스크린샷 등 Node 54건 통과. E966 고정 v22 전체 회귀 뒤 E970 고정 v26 회귀를 실행할 검증 트리를 준비했다. [검증](docs/webpj-app-mission-tell-20261120.md)
-
-**E970 검증.** 실제 Tutorial1 로그인·Start의 자원·순번·명령 창 알림 및 Client 서비스 등 Node 14건 통과. E966 고정 v22 전체 회귀 실행 중. [검증](docs/webpj-app-mission-start-20261120.md)
-
-**E969 검증.** 앱 채팅 창 전역·Session 대여·실제 Tutorial1 로그인 등 Node 26건 통과. E966 고정 v26 전체 6,547건 통과·실패와 건너뜀 0, 같은 상태의 v22 실행 중. [검증](docs/webpj-app-chat-window-owner-20261120.md)
-
-**E968 검증.** 실제 Tutorial1 요청 자동 처리·내부 로그인, 음향 실패/취소 및 기존 World 보존·시계 등 Node 13건 통과. E966 고정 v26 전체 회귀 실행 중이며 v22는 이후다. [검증](docs/webpj-app-fort-request-frame-20261120.md)
-
-**E967 검증.** 실제 Tutorial1 로그인·AI 설정/번역·원본 채팅 2,448행 등 Node 17건 통과. E966 고정 Node 26 전체 회귀 실행 중이다. [검증](docs/webpj-app-campaign-ai-20261120.md)
-
-**E966 검증.** 원본 SoundPlayer 관측 2,128행·실제 Tutorial1 로그인·재생 수 순서 등 Node 14건 통과. E966 고정 Node 26 및 Node 22 정기 전체 회귀를 순차 실행한다. [검증](docs/webpj-app-sound-frame-20261119.md)
-
-**E965 검증.** 앱 음향·실제 Tutorial1 로그인 등 Node 15건 통과. E962 고정 Node 26 전체 6,539건 통과·실패와 건너뜀 0. Node 26 주기 3/4, Node 22 주기 7/8. [검증](docs/webpj-app-campaign-audio-20261119.md)
-
-**E964 검증.** 음향 연관 Node 12건과 Chromium 실제 효과음 218개 해독·오프라인 출력 2건 통과. E962 고정 v26 정기 전체 회귀 실행 중이다. [검증](docs/webpj-mission-sound-preload-20261119.md)
-
-**E963 검증.** SoundPlayer·Web Audio 장치 연관 Node 10건과 Chromium 오프라인 출력 1건 통과. E958 고정 Node v26·v22 전체 회귀 각각 6,529건 모두 통과. E962 고정 v26 정기 전체 회귀 실행 중이다. [검증](docs/webpj-web-sound-device-20261119.md)
-
-**E962 검증.** 실제 감쇠 파일 선택·별칭 공유·언어 우선 및 SoundPlayer 연관 8건 통과. E958 기준 Node v22 전체 6,529건 통과 뒤 E962 고정 v26 정기 전체 회귀(4/4)가 실행 중이다. [검증](docs/webpj-sound-file-resolution-20261119.md)
-
-**E961 검증.** 원본 SoundPlayer 재생 1,065행과 제어 1,063행 및 실제 SoundProcess 훅을 포함한 연관 22건이 통과했다. E958 고정 Node v26 전체 6,529건 통과(실패·건너뜀 0), 같은 상태의 Node v22 전체 6,529건도 통과했다. E962 기준 후속 v26 정기 전체 회귀는 실행 중이다. [검증](docs/webpj-sound-player-20261119.md)
-
-**E960 검증.** 원본 위치 음향 관측 3,759행과 SoundProcess·fixture 목록 연관 검사 18건 통과. E958 고정 v26 전체 회귀는 6,529건 통과했고 v22 정기 회귀가 진행 중이다. [검증](docs/webpj-sound-spatial-20261119.md)
-
-**E959 검증.** 실제 파일 선별 적재·해독·동시 요청·실패·반납 등 연관 29건과 E958 Session Load 전체 127건 통과. E958 고정 v26 전체 회귀는 6,529건 통과했고 v22 정기 회귀가 진행 중이다. [검증](docs/webpj-mission-audio-loader-20261119.md)
-
-**E958 검증.** 실패했던 실제 World 로그인과 앱 State7 로그인 2건, 진행 창·요청·앱 장치 11건 통과. Session Load 전체 파일 127건 통과. 교정 커밋의 v26 전체 6,529건 통과 후 같은 커밋의 v22 정기 전체 회귀가 진행 중이다. [교정](docs/webpj-app-world-login-regression-20261119.md)
-
-**E957 검증.** 음향 원본 목록·해시·같은 출처와 메뉴 적재 관련 14건 및 자산 도구 --check 통과. E954 기준 격리 v26 전체 6,526건 중 1건 실패(기존 독립 World 검사에 새 로그인 Gump 장치 누락), 건너뜀 0. E958에서 해당 검사를 실제 장치로 교정했고 v26 재회귀 통과 후 v22 회귀가 진행 중이다. [검증](docs/webpj-mission-audio-assets-20261119.md)
-
-**E956 검증.** 실제 앱 카메라·Gump·Tutorial1 요청 연관 34건과 추가 Tutorial1 확인 4건 통과. E954 기준 v26 전체 회귀 결과와 교정 대기는 E957 검증을 따른다. [검증](docs/webpj-app-camera-commit-20261119.md)
-
-**E955 검증.** 실제 로그인 World 1건 및 앱 화면·요청 검사 14건 통과. E950 기준 격리 v26 전체 6,519건 중 6,518건 통과·실패 0·1건 건너뜀(dotnetpj 패턴 파일 누락). E954 기준 정기 v26 전체 회귀 결과와 교정 대기는 E957 검증을 따른다(`extracted/webpj-e954-node26-isolated.log`). v22 8/8 전체 회귀는 교정된 v26 회귀 뒤 실행해야 한다. [검증](docs/webpj-app-world-resize-20261119.md)
-
-**E954 검증.** 실제 앱 표시·팔레트·Tutorial1 요청 집중 검사 14건 통과. v22 주기 7/8. E954 고정 상태의 정기 v26 격리 전체 회귀 결과는 E957 검증을 따른다(4/4). [단위 검증](docs/webpj-app-renderer-display-20261119.md)
-
-**E953 검증.** 실제 앱 장치·Client 장치 및 Tutorial1 요청 집중 검사 14건 통과. E950 기준 격리 Node v26 전체 회귀는 스크린샷 누락과 글꼴 라이선스의 CRLF 변환으로 6,519건 중 3건 실패·2건 건너뜀. 격리 자산 보완 후 관련 38건이 통과했고 동일 커밋 전체는 6,518건 통과·1건 건너뜀·실패 0으로 끝났다. 건너뛴 dotnetpj 자료를 포함한 E954 회귀와 후속 교정 결과는 E958 검증을 따른다. [원인·검증](docs/webpj-app-gameplay-services-20261119.md)
-
-**E952 검증.** 실제 메뉴·진행 창·Client 및 Tutorial1 요청 집중 검사 29건과 실제 앱 State7 로그인 1건 통과. HJOW-Athlon 주기는 v22 5/8이며, 진행 중인 E950 기준 v26 격리 회귀 성공 뒤 E951부터 2/4다. [단위 검증](docs/webpj-app-mission-loading-20261119.md)
-
-**E951 검증.** 실제 Tutorial1 로그인 1건과 앱 로그인·Gump 연관 검사 22건 통과. E950 실제 Tutorial1 요청을 포함한 집중 검사 4건과 ClientState 검사 3건 통과. E947 Node v22.23.3 정기 전체 회귀 6,514건 통과. E949 Node v26 전체 회귀는 실행 중 E950 모듈 추가·대응표 갱신이 겹쳐 6,515건 중 대응표 검사 1건이 실패했으며 현행 대응표 집중 검사 7건은 통과했다. `b4ff359de` 격리 작업 트리의 첫 Node v26 회귀는 환경 문제 3건으로 실패했고 보완 뒤 결과는 E955 검증을 따른다.
-
-**E941 미완료 범위.** 앱의 FontSet·Gump 출력과 TextEntry 수명, 웹 입력 큐의 앱 프레임 소비, 실제 OS IME를 확인해야 한다. 미션 앱의 진행 창·프레임, HUD, Tutorial1 플레이 역시 미확인이다.
-
-**미션 식별.** 이전 공통 fixture의 `thewarbegins.fort`는 캠페인 1-1이다. 실제 `tutorial1`이 선택하는 Fort는 `BridgeTheGap`이며, 지형·섬을 E753에서 다시 대조했다. [미션명 정정](docs/webpj-session-login-shipped-forts-20261118.md) · [Tutorial1 지형 재검증](docs/webpj-tutorial1-terrain-recheck-20261118.md)
-
-1. **4D-3 Login.** 남은 명령·전송 장치와 World 입력을 경유하는 통합 시험을 서로 구분해 추적한다. 실제 Client 진행 창·Poll은 4D-6, Native 수신기는 4D-8에서 연결한다.
-2. **4D-1 후속.** Fort 모드 snapshot 실제 통합을 확인한다. 비미션 너겟 정상 생성은 12차 스커미시 Session에서 검증한다.
-3. **4D-4~4D-10.** 프레임·게이트 → 종료/반납 → GameWorld·Client → Native 장기 저장소 → 덤프 → Tutorial1 L2 순으로 진행한다. GameWorld 프레임을 연결한 뒤 다음 입력 작업은 상위 메뉴·브라우저 사건 연결과 실제 다중 유닛 이동 검증이다.
+| 실행·플레이 | 브라우저에서 ‘클릭하여 시작’, 메인 메뉴·캠페인/데모 목록·도움말·옵션·Credits와 개발용 지형 미리보기가 동작한다. **미션 진입:** Early Missions(Tutorial1~6)와 세 캠페인 묶음(Struggle For Freedom·A Nation Rises·Complete Victory)의 미션을 목록에서 시작해 브리핑·안내를 보고 월드가 진행된다. **조작:** Tutorial1·2에서 사제 선택·이동, 가장자리 스크롤, F4·F5·P/R·N, 생산 격자 클릭과 단축키·회전·다리 배치, 사제 우클릭 → 윈드 신전 건설·완공, 워크샾 우클릭 생산 메뉴의 무기 생산까지 확인했다. **미완성:** 좌측 사이드바(SP·생산 덱·미니맵 자리)는 표시되지만 화면 내 위치가 원본과 어긋난다(다음 작업 1). 상단 HUD·미니맵 도킹·나머지 객체 메뉴·ESC 게임 메뉴·채팅과 미션 자연 완주는 남았다. |
+| 원본과의 동일성 | 영어 4:3 메뉴 M1 8장면은 cpppj 오라클과 알려진 구름 배경 등 차이 영역 밖에서 픽셀 차이 0이다. 월드·UI 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다(최근 원본 공통 메뉴 788행·Factory 메뉴 39행·Uber 루트 160행·장면 음악 3,113행 등). 실제 미션의 L2(Tutorial1 시작 상태 덤프)·L3·L4 화면 비교와 자연 완주는 미검증이다. |
+| 현재 작업 | **게임 플레이 중 UI 구현 단계.** 4-D 후반(GameWorld·Client 서비스)과 5-A·5-B·6·8단계 항목을 미션 앱 프레임 위에서 병행한다. Renderer·Gump 트리·입력 큐·생산 패널·객체 메뉴·도움말·음향이 실제 Tutorial 화면에 연결돼 있다. 순서는 아래 [다음 작업](#next)을 따른다. |
+| 전체 회귀 | E1079 고정 Node 22.23.5·26.13.0 각 6,582건 통과(실패·취소·건너뜀 0). 로그는 `extracted/webpj-e1079-node22-isolated.log`·`extracted/webpj-e1079-node26-isolated.log`다. E1080·E1081은 각 단위의 집중 Node 22·26 검사와 Chromium 검사만 통과했다. HJOW-Athlon 주기는 E1079 뒤 완료 2단위로 v26 2/4·v22 2/8이다. 2026-11-20 정리 때 대응표 1,160행 오류 0을 다시 확인했다. |
+| 브라우저 검사 | 메뉴: 2026-11-17 Chromium 2/2(갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체). 최초 실행·진행 잠금/체크·저장 재실행은 E616 Chromium 2/2. 미션 화면은 단위마다 Chromium으로 확인한다(최근 E1081 Tutorial2 실제 픽셀). [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
+
+<a id="next"></a>
+
+#### 다음 작업
+
+<a id="left-sidebar"></a>
+
+1. **좌측 사이드바 위치 보정 — 바로 다음 작업(2026-11-20 사용자 지시).** 실제 미션 화면을 테스트하면 좌측 사이드바(스톰 파워 SP 예산, 생산 덱, 미니맵 자리)의 화면 내 위치가 원본과 어긋난다. 다른 UI 작업보다 먼저 보정한다.
+   - **원본 기준.** 원본 1024×768 화면([스크린샷](<screenShots/Bridge the Gap - Started.png>))에서 사이드바는 화면 왼쪽 끝의 폭 80픽셀 기둥이다. 맨 위에 SP 예산 칸이 있고 그 아래 생산 격자와 돌 질감 배경이 이어지며, 하단 80픽셀은 미니맵 자리다. cpppj [RawProductionControls.cpp](cpppj/src/client/RawProductionControls.cpp)는 생성(원문 0043e640) 뒤 `Open()`에서 루트를 폭 80·높이 `screenHeight-80`으로 Uber 루트 (0,0)에 붙이고, `Resize()`에서 같은 하단 80 예약을 쓴다. 자식은 상단 예산 높이 23, 구분선 y 21, 다리 격자·중간 배경 y 26, 그 아래 텔레포트 격자·하단 배경 순이다.
+   - **웹 현황.** [client-production-panel.js](webpj/www/ui/client-production-panel.js)·[client-production-assembly.js](webpj/www/ui/client-production-assembly.js)가 패널을 조립하고 E1035에서 미션 앱 루트에 직접 설치했다. HUD 도킹([hud-dock.js](webpj/www/ui/hud-dock.js))·Uber 허브([uber-root-gump.js](webpj/www/ui/uber-root-gump.js))·미니맵([raw-minimap-controls.js](webpj/www/ui/raw-minimap-controls.js))은 아직 실제 HUD에 결합되지 않았다(5-B·5-C). [생산 패널](docs/webpj-client-production-panel-20261120.md) · [앱 생산 패널](docs/webpj-app-production-panel-20261120.md) · [패널 크기](docs/webpj-production-panel-resize-20261120.md)
+   - **원인 후보.** ① 원본의 설치 순서(생성 → `Open` 부착 → HUD 도킹·하단 예약 → 즉시 Sync)와 웹 설치의 차이, ② Gump scale·월드/화면 투영(E988·E989)과 Renderer 제출 좌표, ③ 화면비·창 크기 변경(E943·E954~E955·E1034)과 Canvas 표시 배율·DPI, ④ 자식 높이·scale 계산. 이 중 어디서 원점·크기가 바뀌는지 수치로 구분한다.
+   - **확인 방법.** 4:3 1024×768에서 Tutorial1·2 진입 직후 화면을 cpppj 오라클(3.3절) 또는 원본 스크린샷과 비교해 사이드바 x/y 원점·폭·높이·자식 배치를 기록한다. 이어서 16:9·16:10과 창 크기 변경 뒤에도 같은 기준을 유지하는지 확인한다.
+   - **완료 기준.** 4:3에서 사이드바 영역이 원본 위치와 일치한다(가능하면 오라클 논리 화면 대조). 생산 격자 클릭·단축키·건설 비용 표시(E1074·E1081)에 회귀가 없다. 16:9·16:10 위치를 확인한다. 단위 문서와 5-B의 RawProductionControls 항목을 갱신한다.
+2. **Tutorial2 D 이후 진행.** 생산품 배치, 나머지 객체 메뉴(3.1절 6단계 객체 우클릭)와 Tutorial 자연 진행을 잇는다.
+3. **상단 HUD.** E1081에서 임시 검은 바탕으로 둔 상단 HUD 영역을 UberHud·HudDock·Uber 허브로 구성한다(5-B·5-C).
+4. **나머지 번역과 미션 확장.** Tutorial1·2와 사제·Player·생산·워크샾 메뉴 밖의 미션 대본·객체 메뉴 한국어, 다른 미션의 목표 수행·자연 완주(8단계·3.7절 6차, 자연 완주는 1절 사용자 확인 범위).
+5. **4-D 완료 기준 L2.** Tutorial1 Load/Start의 보고서·덤프·첫 프레임 논리 화면 대조(4D-10b)는 계속 4-D의 완료 기준이다.
+
+- **로컬 산출물.** `webpj/test-results-e1072-rerun`~`webpj/test-results-e1081`의 10개 폴더는 빈 폴더이거나 Git 제외 `*.zip` trace만 들어 있어 Git 상태에 나타나지 않는다. 다시 볼 필요가 없으면 삭제해도 된다.
+- **미션 식별.** 공통 fixture의 `thewarbegins.fort`는 캠페인 1-1이고, 실제 `tutorial1`이 선택하는 Fort는 `BridgeTheGap`이다(E753 재대조). [미션명 정정](docs/webpj-session-login-shipped-forts-20261118.md)
+
+<a id="e951-e1081"></a>
+
+#### E951~E1081 진행 요약
+
+단위별 완료 문단·검증 수·회귀 이력은 [E1081 정리 전 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261120-through-wb04-e1081)의 0.1절과 각 단위 문서에 있다.
+
+| 주제 | 단위 | 연결한 것 | 남은 것 | 대표 문서 |
+| --- | --- | --- | --- | --- |
+| 미션 로딩·Start | E951~E958, E968, E970, E974~E976 | 로그인 HUD 모드·진행 창, 앱 장치·Renderer 변경 표·World 크기 변경·즉시 카메라, 최초 Fort 요청 자동 처리, Ready→Start→첫 안내와 시계 정지/재개, 공유 Kernel 단일 프레임 | 기존 World 교체, 원본 Gump serial·LeaveBattle 취소 | [로딩](docs/webpj-app-mission-loading-20261119.md) · [요청 프레임](docs/webpj-app-fort-request-frame-20261120.md) · [Start](docs/webpj-app-tutorial-start-frame-20261120.md) · [Kernel](docs/webpj-app-mission-kernel-frame-20261120.md) |
+| 음향·음악 | E957, E959~E966, E997, E1059, E1061 | 효과음·음악 공개 자산과 선별 적재, 원본 위치 음향·SoundPlayer, 감쇠 파일 선택, Web Audio 장치, 효과음 218개 사전 해독, 앱 설정·Session 재생·재생 수, 경로 발소리, 장면 음악 선택, 결과 음악 1회 재생 | 음악 채널·앱 연결, 실제 청취, Wind Noise | [SoundPlayer](docs/webpj-sound-player-20261119.md) · [Web Audio](docs/webpj-web-sound-device-20261119.md) · [앱 음향](docs/webpj-app-campaign-audio-20261119.md) · [장면 음악](docs/webpj-scene-music-20261120.md) |
+| AI·채팅·Tell·승패 | E967, E969, E971~E973, E1058 | AI 이름·난이도·채팅 기록, 채팅 창 전역 대여, 미션 Tell 조회, Gump 팝업 차단·닫기, 승패 안내·AI/생산 할당, State 정리용 NSInfo·도움말 팝업 저장소 | 채팅 창 공장, 실제 State 정리·World 교체, 실제 승패 | [AI](docs/webpj-app-campaign-ai-20261120.md) · [Tell](docs/webpj-app-mission-tell-20261120.md) · [승패](docs/webpj-app-mission-outcome-20261120.md) · [State 소유자](docs/webpj-app-state-cleanup-owners-20261120.md) |
+| Renderer·화면 | E977~E989, E1081 | Renderer 전역 소유, 원본 수집 범위 90행, 지면·객체·입자·커서 수집·정렬·출력, Screen DIB·구름 합성, 표시 준비·Present, 미션 화면·Tell 합성, Gump 수집·출력·월드 부착 투영, Gump 이동 dirty로 비용 표시 잔상 제거 | HUD 공장, Kencloud·구름 차이 | [출력](docs/webpj-campaign-renderer-drawing-20261120.md) · [Present](docs/webpj-app-renderer-present-20261120.md) · [Gump 제출](docs/webpj-app-renderer-gump-submission-20261120.md) · [화면 갱신](docs/webpj-gump-redraw-cost-trails-20261120.md) |
+| 미션 진입 | E985~E986, E1010~E1016 | 캠페인 목록의 Tutorial1~6과 세 캠페인 묶음 미션 진입·브리핑·게임 시계 진행, 대포·다리 프레임 자료 오류와 섬 공격 Tell 경계 수정 | 미션별 목표 수행·승리·자연 완주 | [Tutorial 시작](docs/webpj-browser-tutorial-menu-start-20261120.md) · [Tutorial3~6](docs/webpj-browser-tutorial-three-six-20261120.md) · [첫 캠페인](docs/webpj-browser-first-campaign-20261120.md) · [마지막 묶음](docs/webpj-browser-final-campaign-group-20261120.md) |
+| 입력·카메라 | E990~E1001, E1009 | 선택·강조·운반 입력기, 좌클릭 선택·이동, 포인터 폴링·이동점 통지, 가장자리 스크롤·카메라 장치, F4·ViewHome·P/R·F5·N, Player 정기 로그, 조각 회전 | 전체 입력 큐 소비, 여러 유닛 순환, ESC 게임 메뉴 | [포인터](docs/webpj-app-mission-pointer-frame-20261120.md) · [가장자리](docs/webpj-app-edge-scroll-frame-20261120.md) · [사제 키](docs/webpj-browser-priest-shortcuts-20261120.md) · [회전](docs/webpj-browser-cursor-rotation-20261120.md) |
+| 생산·건설 | E1002~E1008, E1019~E1022, E1026~E1036, E1047, E1074, E1076~E1079 | 생산 유지·다리 공급, 커서·생산 단축키, 다리 배치, 생산 격자·항목·예산, 생산 패널 조립·크기·앱 설치, 실패 안내, 회수 명령, 비용 표시, Factory 메뉴와 생산·업그레이드 명령 | **사이드바 위치 보정**, 연속 배치·자연 완주, 연구 명령 소비 | [생산 패널](docs/webpj-client-production-panel-20261120.md) · [다리 배치](docs/webpj-browser-bridge-placement-20261120.md) · [비용 표시](docs/webpj-app-floating-sp-20261120.md) · [워크샾 생산](docs/webpj-browser-tutorial2-factory-20261120.md) |
+| Gump·메뉴 UI | E1017~E1018, E1023~E1025, E1037~E1045, E1064~E1072, E1075 | Form 부착·소멸 통지, 한 줄 글자·배경·장식, 다중 줄·Slider 출력, 세로/장식 메뉴, 생산 정보 메뉴, 중첩 메뉴, 사제·Player·공통 객체·운반체 메뉴, 사제 우클릭 → 윈드 신전 건설·완공 | 나머지 객체 메뉴, 채팅 분기 | [Client 메뉴](docs/webpj-client-menu-gump-20261120.md) · [중첩 메뉴](docs/webpj-client-submenu-20261120.md) · [사제 우클릭](docs/webpj-browser-priest-menu-20261120.md) · [신전 완공](docs/webpj-browser-tutorial2-temple-complete-20261120.md) |
+| 도움말 | E1046, E1048~E1055 | 생산 우클릭 Help, 요구 에너지 그림, TYPE 정보 HTML·파서·Session TYPE·정보 창, 도움말 그림 자산과 앱 출력 | 타입별 원본 화면 비교 | [생산 Help](docs/webpj-app-production-about-20261120.md) · [앱 TYPE](docs/webpj-app-help-type-info-20261120.md) · [도움말 그림](docs/webpj-app-help-picture-20261120.md) |
+| 한국어 | E1056~E1057, E1062~E1063, E1073, E1080 | Tutorial1·2 대본, 공통 유닛 용어표·생산 정보, Tell 그림, 사제·Player·워크샾 생산 메뉴 | 나머지 미션 대본·객체 메뉴 | [Tutorial1](docs/webpj-korean-tutorial1-20261120.md) · [Tutorial2](docs/webpj-korean-tutorial2-20261120.md) · [생산 메뉴](docs/webpj-korean-factory-menu-20261120.md) |
+| 회귀 교정 | E1060, E1078 | 관측 자료 누락·메뉴 전용 번역 검사 범위, 외부 접속 감사의 비공개 필드 오탐 | — | [회귀 교정](docs/webpj-regression-translation-fixtures-20261120.md) · [접속 감사](docs/webpj-external-audit-private-field-20261120.md) |
 
 ### 0.2 단계 진행판
 
-`n/m`은 상위 체크 수이며 보관한 완료 항목을 포함한다. 상위 항목 안의 완료 부분은 중복 가산하지 않는다. 남은 단위와 줄 수는 `PORT_MAP.tsv`의 partial·todo 기준이며 partial에는 파일 전체 줄 수를 센다.
+`n/m`은 상위 체크 수이며 보관한 완료 항목을 포함한다. 상위 항목 안의 완료 부분은 중복 가산하지 않는다. 남은 단위와 줄 수는 `PORT_MAP.tsv`의 partial·todo 기준이며 partial에는 파일 전체 줄 수를 센다. E951~E1081은 대부분 상위 항목 안의 부분 진행이라 체크 수는 바뀌지 않았고, 2026-11-20 재집계에서도 남은 145단위·33,562줄이 같다.
 
 | 순서 | 단계 | 체크·상태 | 남은 단위 / 줄 |
 | --- | --- | --- | --- |
@@ -457,12 +77,12 @@
 
 ### 0.3 이식량
 
-기준선 `225553df`의 이식 대상 1,022단위는 **port 877(85.8%)·partial 64·todo 81**이다. 제외 138단위를 합하면 대응표 1,160행이다. 앱 수명 연결을 뜻하는 `session`과 오라클 대조를 뜻하는 `oracle`은 0이다.
+기준선 `225553df`의 이식 대상 1,022단위는 **port 877(85.8%)·partial 68·todo 77**이다(2026-11-20 재집계). 제외 138단위를 합하면 대응표 1,160행이다. 앱 수명 연결을 뜻하는 `session`과 오라클 대조를 뜻하는 `oracle`은 0이다.
 
 | 범위 | port / 대상 | partial | todo |
 | --- | --- | --- | --- |
-| `o/` 월드·규칙 | 564 / 574 | 5 | 5 |
-| `client/` 세션·UI·표시 | 312 / 447 | 58 | 77 |
+| `o/` 월드·규칙 | 564 / 574 | 6 | 4 |
+| `client/` 세션·UI·표시 | 312 / 447 | 62 | 73 |
 | `zacket/` 내부 미션 전송 | 1 / 1 | 0 | 0 |
 
 남은 145단위 중 기존 기준선은 76단위/28,124줄, 재기준선 추가분은 69단위/5,438줄이다. E854에서 `UberReconnect`의 단독 감시를, E884에서 단독 미션의 Fort 이름 선택 두 단위를 이식 대상으로 재분류했다. 재기준선 분류·영역별 상세는 [E801 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261118-through-wb04-e801)과 `python -X utf8 tools/port_inventory.py --families wb`에서 확인한다.
@@ -470,7 +90,7 @@
 ### 0.4 기준선과 자료
 
 - **이식 기준선**은 cpppj 제품 1313(11.01) `225553df`다. 이후 변경 판정은 3.6절을 따른다. 별도 오라클 빌드는 HJOW-Athlon의 `extracted/webpj-oracle/225553df/Netstorm.exe`에 있다(SHA-256 `5b52d96d…b77eb46`, Git 제외).
-- **자료 추적**은 [PORT_MAP.tsv](webpj/PORT_MAP.tsv)와 [fixture manifest](webpj/tests/fixtures/manifest.json) 834항목을 기준으로 한다. 이식 자료는 cpppj 소스·fixture·문서를 사용한다.
+- **자료 추적**은 [PORT_MAP.tsv](webpj/PORT_MAP.tsv)와 [fixture manifest](webpj/tests/fixtures/manifest.json) 837항목을 기준으로 한다. 이식 자료는 cpppj 소스·fixture·문서를 사용한다.
 
 ### 0.5 단위 착수와 종료
 
@@ -518,6 +138,8 @@ E896에서 실제 미션 설치의 You→당신 번역과 Player 표시 바이�
 | E633~E702 | 외곽 생성자·snapshot/콜백과 typed `Load()` 완료분. 실제 1-1 Fort 적재, Battle snapshot 재적재, 기술·로컬/세계 간헐천 및 단일 미션 너겟 관문 확인. [typed Load](docs/webpj-session-load-20261118.md) · [Battle snapshot](docs/webpj-session-battle-snapshot-20261118.md) |
 | E703~E774 | 실제 typed Login/Ready·Start, 출하 스크립트 32종의 Fort 로그인, 같은 Session의 사제·골렘·벌룬 이동과 워크샾 배치·격리 완공. [Login](docs/webpj-session-login-ready-20261118.md) · [Start](docs/webpj-session-mission-start-20261118.md) · [워크샾](docs/webpj-workshop-isolated-completion-20261118.md) |
 | E775~E801 | Session 카메라·입자·튜토리얼 게이트, AI/Player/Process 반납 경계, 지연 GameWorld·팔레트·자산 보기·선택. World 입력 부품과 UserInput 폴링·단축키·우클릭까지 연결. [공통 게이트](docs/webpj-session-tutorial-gate-20261118.md) · [지연 GameWorld](docs/webpj-campaign-game-world-front-20261118.md) · [입력](docs/webpj-campaign-selection-keys-20261118.md) |
+| E802~E950 | 입력 클릭·NB20 취소, GameWorld 프레임·세 운반 유닛 도착, 워크샾 Kernel 완공·연구 동기화, 전투 완료 관문, Client 진단·프레임 시계, Session 덤프 형식과 오라클 시나리오(4D-9b), 앱 Guide·State7·Gump 루트·팔레트·Screen·입력 큐·TextEntry/IME·갈무리11 편집, Reset All(E863), 16:9 최대 1920×1080(E943), 하위 경로 배포(E945). [E1081 보관본 0.1·3.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261120-through-wb04-e1081) |
+| E951~E1081 | 미션 앱 프레임의 로딩·Start, 음향, Renderer·Gump 출력, 브라우저 입력·카메라, Tutorial·세 캠페인 묶음 진입, 생산 패널·건설, 객체 메뉴·도움말, 한국어 Tutorial1·2. [0.1절 요약](#e951-e1081) |
 
 ## 3. 남은 작업과 실행 순서
 
@@ -569,8 +191,14 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 
 - **E951 선행:** State7·13 HUD 모드를 실제 앱 Gump 입력에 연결했다. E952에서 메뉴 진행 창을 추가했으며 원본 serial과 전체 HUD는 별도다. [로그인 HUD](docs/webpj-app-login-hud-mode-20261119.md)
 
-- [ ] **4D-6a GameWorld** — 지연 Session 소유·Login 시작/완료·현재 자산·팔레트·선택 효과까지 확인했다. GameWorld 프레임 및 단일 Kernel 준비·후처리와 State7 부모의 생성·State8 내부 로그인은 확인했다. E855에서 실제 GameWorld의 로그인 이후 연결 감시·타이머 프레임까지 검사했다. E895에서 앱 프레임의 로컬 State Poll·패킷 Pump를 실제 Tutorial1 로그인에 연결했다. E913에서 공통 Gump 등록0과 Client 루트 별칭 교체 및 파생 입력을 연결했다. [E913](docs/webpj-app-gump-replace-20261119.md) E912에서 Uber 전체 생성·교체를 원본 160행과 대조했다. [E912](docs/webpj-uber-root-construct-20261119.md) E911에서 Uber의 현재 HUD 자식 뷰와 공통 트리 배치를 확인했다. [E911](docs/webpj-uber-root-view-20261119.md) E910에서 같은 등록표의 파생 노드·입력·소멸 경계를 연결했다. [E910](docs/webpj-app-gump-derived-20261119.md) E909에서 공통 Gump 기본 자식 부착·입력·삭제와 실제 Client 진단을 연결했다. [E909](docs/webpj-app-gump-tree-20261119.md) E908에서 공통 Gump 루트·등록·수명·입력 Client 소유자를 연결했다. [E908](docs/webpj-app-gump-root-20261119.md) E907에서 State7 팔레트를 같은 구름·파일·Screen·World에 연결했다. [E907](docs/webpj-app-battle-palette-20261119.md) E906에서 설정 적재·변경을 같은 구름 전역에 반영했다. [E906](docs/webpj-app-cloud-options-20261119.md) E905에서 화면비 변경 시 Screen을 현재 색상표와 함께 재생성했다. [E905](docs/webpj-app-screen-resize-20261119.md) E904에서 Screen DIB 출력을 앱 표면과 Canvas에 연결했다. [E904](docs/webpj-app-screen-present-20261119.md) E903에서 Screen DIB와 전체 clip을 준비하고 clear 픽셀을 확인했다. [E903](docs/webpj-app-screen-dib-20261119.md) E902에서 Screen 색상 적용을 실제 표시기 팔레트와 재출력 요청에 연결했다. [E902](docs/webpj-app-presenter-palette-20261119.md) E901에서 앱의 같은 고정 색표와 소유자 표를 실제 Tutorial1 Session과 World에 대여했다. 다른 UI 색상·날씨와 실제 Renderer 연결은 잔여다. [E901](docs/webpj-app-session-colors-20261119.md) E900에서 고정 입력의 소유자 표·9색표 캐시와 Screen 명암 조회를 연결했다. [E900](docs/webpj-app-color-cache-20261119.md) E899에서 실제 fortPal의 최초 ColorSort 입력을 앱 수명에 연결했다. [E899](docs/webpj-app-palette-capture-20261119.md) E898에서 앱 시작과 State7에 공유 논리 카메라 초기화를 연결했다. [E898](docs/webpj-app-renderer-init-20261119.md) 지연 요청 소비·완료 후 화면 설치·분리 타이머·진행 안내·종료·전체 삭제·Renderer를 연결한다. [E895](docs/webpj-app-connection-frame-20261119.md) 입력은 6단계에서 이어간다. [E790](docs/webpj-campaign-game-world-front-20261118.md) · [E793](docs/webpj-campaign-game-world-selection-20261118.md) · [E855](docs/webpj-game-world-login-frame-20261119.md)
-- [ ] **4D-6b Client 서비스** — E985~E986에서 실제 캠페인 메뉴의 첫 Tutorial 시작과 Chromium 화면을 확인하고 E990에서 같은 World의 선택·강조·운반 입력 소유자와 객체 진단을 연결했다. E991에서 브라우저 좌클릭으로 실제 사제를 선택하고 E993~E994에서 Tutorial 관문·포인터 폴링·좌클릭과 이동점 통지를 같은 입력 큐와 앱 프레임에 연결했다. [E994](docs/webpj-app-mission-pointer-frame-20261120.md) E998에서 F4·ViewHome과 Tutorial A→B도 연결했다. 나머지 미션과 전체 입력 큐 소비는 남았다. [E998](docs/webpj-browser-tutorial-view-home-20261120.md) [E993](docs/webpj-app-movement-notice-20261120.md) [E991](docs/webpj-browser-mission-left-click-20261120.md) [E990](docs/webpj-app-campaign-user-input-20261120.md) [E986](docs/webpj-browser-tutorial-menu-start-20261120.md) [E985](docs/webpj-app-tutorial-menu-start-20261120.md) CampaignClientServices의 단독 미션 Start 효과, AI 이름·채팅·난이도, State7 요청 준비·캡처 및 부모 Poll의 State8 연결을 실제 Session에 연결했다. 개발자 입력 예약은 실제 입력 고리에 연결했다. E851에서 로그인 진행 안내·타이머 창 장치를 같은 GameWorld 로그인에 연결했고 E856~E858에서 사용자 입력과 커서 Gump·Client 표시 장치를 연결했다. E875에서 신전 소유권·PostPop 생산 갱신 사건을 실제 Gump 입력에 연결했다. E896에서 앱의 현재 번역·설정·제목을 실제 Session 설치와 연결했다. E897에서 Login 공통 설정·시계·Player 관문·화면 갱신을 앱 소유자로 연결했다. [E897](docs/webpj-app-login-services-20261119.md) [E896](docs/webpj-app-install-display-20261119.md) E952에서 현재 메뉴의 로그인 진행 창을, E953에서 현재 설정·Gump·입력 큐의 미션 장치를, E954~E955에서 화면 크기와 실제 Renderer 변경 표·World 크기 변경을, E956에서 즉시 카메라 적용을, E965에서 앱 미션 효과음·설정과 Session 재생을 연결했다. E966에서 실제 프레임 재생 수 재계산을, E967에서 앱의 실제 AI 이름·난이도·채팅 서비스를, E969에서 같은 Client의 채팅 창 전역 대여를, E970에서 로그인 Ready Session의 실제 앱 Start 준비를, E971에서 현재 미션 Tell 조회와 숨긴 init 파서를, E972에서 실제 Gump 루트의 팝업 차단·닫기를, E973에서 앱 Session 승패 안내와 AI/생산 할당 장치를, E974에서 실제 앱 Tutorial 안내·정지 실행기를, E975에서 앱 프레임 Ready→Start→첫 안내를, E976에서 World 준비·공유 Kernel·객체 보기 갱신을 연결했다. [E976](docs/webpj-app-mission-kernel-frame-20261120.md) [E975](docs/webpj-app-tutorial-start-frame-20261120.md) [E974](docs/webpj-app-tutorial-runtime-20261120.md) [E973](docs/webpj-app-mission-outcome-20261120.md) [E972](docs/webpj-app-gump-popup-lifetime-20261120.md) [E971](docs/webpj-app-mission-tell-20261120.md) [E970](docs/webpj-app-mission-start-20261120.md) [E969](docs/webpj-app-chat-window-owner-20261120.md) [E967](docs/webpj-app-campaign-ai-20261120.md) E968에서 최초 Fort 요청의 음향 자동 준비를 연결했다. [E968](docs/webpj-app-fort-request-frame-20261120.md) [E966](docs/webpj-app-sound-frame-20261119.md) [E965](docs/webpj-app-campaign-audio-20261119.md) 원본 Gump serial·취소 명령과 나머지 실제 앱 메뉴·Gump 소유자·프레임 타이머·입력 장치, 나머지 Poll, 스커미시 준비와 건설 기록 장치가 남았다. [E837](docs/webpj-campaign-client-start-effects-20261119.md) · [E838](docs/webpj-campaign-client-ai-services-20261119.md) · [E839](docs/webpj-client-mission-starting-20261119.md) · [E840](docs/webpj-client-mission-parent-20261119.md) · [E841](docs/webpj-client-developer-input-20261119.md) · [E851](docs/webpj-client-login-progress-20261119.md) · [E856](docs/webpj-campaign-user-input-services-20261119.md) · [E857](docs/webpj-campaign-cursor-gumps-20261119.md) · [E858](docs/webpj-campaign-cursor-client-20261119.md) · [E875](docs/webpj-campaign-production-refresh-20261119.md)
+- [ ] **4D-6a GameWorld** — 지연 Session 소유부터 앱 프레임 결선까지 진행 중이다.
+  - 완료: 지연 Session 소유·Login 시작/완료·현재 자산·팔레트·선택 효과(E790~E793), GameWorld 프레임·단일 Kernel 준비/후처리와 State7 부모 생성·State8 내부 로그인, 로그인 이후 연결 감시·타이머 프레임(E855), 앱 프레임의 State Poll·패킷 Pump(E895), 공유 카메라 초기화·팔레트 캡처·색 캐시·Session 색상표·표시기 색상·Screen DIB/출력/크기·구름 설정·전투 팔레트(E898~E907), 공통 Gump 루트·트리·파생 노드·Uber 루트 뷰/생성/교체(E908~E913). Renderer 결선은 5-A(E977~E989)에서 했다.
+  - 남음: 기존 World 교체, 로그인 완료 후 화면 설치·분리 타이머·진행 안내·종료·전체 삭제, 다른 UI 색상·날씨. 입력은 6단계에서 잇는다.
+  - 근거: [E790](docs/webpj-campaign-game-world-front-20261118.md) · [E793](docs/webpj-campaign-game-world-selection-20261118.md) · [E855](docs/webpj-game-world-login-frame-20261119.md) · [E895](docs/webpj-app-connection-frame-20261119.md) · [E898](docs/webpj-app-renderer-init-20261119.md) · [E907](docs/webpj-app-battle-palette-20261119.md) · [E908](docs/webpj-app-gump-root-20261119.md) · [E913](docs/webpj-app-gump-replace-20261119.md)
+- [ ] **4D-6b Client 서비스** — CampaignClientServices와 앱 Client 장치를 실제 Session에 연결하고 있다.
+  - 완료: 단독 미션 Start 효과·AI 이름/채팅/난이도·State7 요청 준비·부모 Poll의 State8 연결·개발자 입력 예약(E837~E841), 로그인 진행 안내·사용자 입력·커서 Gump·Client 표시 장치(E851·E856~E858), 신전 소유권·PostPop 생산 갱신 사건(E875), 번역·설정·제목·Login 공통 장치(E896~E897), 메뉴 진행 창·미션 장치·화면 크기·즉시 카메라(E952~E956), 효과음 설정·재생 수(E965~E966), AI·채팅 창·Start·Tell·팝업·승패·Tutorial 안내·Kernel 프레임(E967~E976), 첫 Tutorial 메뉴 시작과 선택·이동·포인터·F4/ViewHome(E985~E998).
+  - 남음: 원본 Gump serial·취소 명령, 나머지 실제 앱 메뉴·Gump 소유자·프레임 타이머·입력 장치·Poll, 나머지 미션의 입력 큐 소비, 스커미시 준비와 건설 기록 장치.
+  - 근거: [E837](docs/webpj-campaign-client-start-effects-20261119.md) · [E856](docs/webpj-campaign-user-input-services-20261119.md) · [E897](docs/webpj-app-login-services-20261119.md) · [E952](docs/webpj-app-mission-loading-20261119.md) · [E967](docs/webpj-app-campaign-ai-20261120.md) · [E976](docs/webpj-app-mission-kernel-frame-20261120.md) · [E985](docs/webpj-app-tutorial-menu-start-20261120.md) · [E998](docs/webpj-browser-tutorial-view-home-20261120.md)
 - [ ] **4D-6c Session 공개 조회·장치** — Start의 조회·기술·사제, 건설 운반, 생산 소유자, 커서·에너지·배치까지 확인했다. E848에서 운반체·Dude 이동 시작을 같은 경로/Kernel에 공개했고 E849~E850에서 Dude 부모·통지 조회와 실제 인구/경로, 속도별 시간표와 도착 삭제를 확인했다. 남은 조회/장치를 연결한다(4590..4619, 4643..4741, 6029..6032, 6076..6079, 6100..6114, 6316..6399). [E848](docs/webpj-session-public-movement-20261119.md) · [E849](docs/webpj-session-dude-public-20261119.md) · [E850](docs/webpj-session-dude-path-20261119.md)
 
 **4D-7 ClientMain·Client 전역**
@@ -605,14 +233,18 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 
 #### 5-A 렌더러·Draw·시각 시스템 (44/46)
 
-- [ ] **ClientRendererFrame** — E982~E984에서 원본 표시 준비·합성·Present와 앱의 미션 화면/임시 Tell 출력을 연결하고 E988에서 실제 Gump kind 2 수집·출력을 연결했다. E989에서 월드 부착 Gump 투영을 연결했으며 HUD 공장은 남았다. [E989](docs/webpj-app-gump-world-projection-20261120.md) [E988](docs/webpj-app-renderer-gump-submission-20261120.md) [E984](docs/webpj-app-mission-display-frame-20261120.md) [E983](docs/webpj-app-renderer-present-20261120.md) [E982](docs/webpj-app-renderer-prelude-20261120.md) E978에서 원본 지형 수집 범위·행 한도 90행을 복원하고 E979에서 실제 미션 지면·객체·입자·커서 수집을, E980에서 원본 정렬·출력을, E981에서 실제 Screen DIB·구름·Renderer 독립 합성을 연결했다. [E981](docs/webpj-campaign-renderer-drawing-20261120.md) [E980](docs/webpj-campaign-render-submission-20261120.md) [E979](docs/webpj-campaign-render-collection-20261120.md) [E978](docs/webpj-renderer-collection-geometry-20261120.md) RawMenuControls(5-C)·GameWorld(4D-6a)를 선행하고 ClientRendererFrameGlobals·GumpVisual을 함께 확인한다. Kencloud를 메뉴에 연결하고 구름 배경의 알려진 차이를 해소한다. [화면 문서](docs/webpj-screen-20261113.md)
+- [ ] **ClientRendererFrame** — 미션 화면 출력의 원본 순서를 앱에 연결하고 있다.
+  - 완료: 지형 수집 범위·행 한도 90행(E978), 지면·객체·입자·커서 수집과 원본 정렬·출력(E979~E980), Screen DIB·구름·Renderer 합성(E981), 표시 준비·Present·미션 화면과 임시 Tell 출력(E982~E984), Gump kind 2 수집·출력과 월드 부착 투영(E988~E989), Gump 이동 dirty(E1081).
+  - 남음: HUD 공장(5-B·5-C), RawMenuControls(5-C)·GameWorld(4D-6a) 선행, ClientRendererFrameGlobals·GumpVisual 확인, Kencloud 메뉴 연결과 구름 배경의 알려진 차이 해소.
+  - 근거: [E978](docs/webpj-renderer-collection-geometry-20261120.md) · [E981](docs/webpj-campaign-renderer-drawing-20261120.md) · [E984](docs/webpj-app-mission-display-frame-20261120.md) · [E989](docs/webpj-app-gump-world-projection-20261120.md) · [E1081](docs/webpj-gump-redraw-cost-trails-20261120.md) · [화면 문서](docs/webpj-screen-20261113.md)
 - [ ] **E197·E198·E201 재대조** — 웹 조립으로만 확인한 시각 시스템을 실제 Session의 cpppj 시험과 대조한다. 7단계와 중복되는 시험은 한 번만 한다.
 
 #### 5-B 카메라·HUD·미니맵 (9/13)
 
 - [ ] **UberHud** — HudDock·HudDividerInput을 Uber에 연결하고 HudNsInfoMeta·NativePlayerInfoInput·NativeNsInfoInput·HudPlayerButtonDraw의 단독 경로를 확인한다.
 - [ ] **RawMinimapControls** — 초안에 MinimapGeometry·cpppj 전체 계약·원본 fixture와 메뉴/월드 허브를 연결한다.
-- [ ] **FloatingSpGump·RawProductionControls** — 실제 표시 소비자를 연결하고 InventoryItemGump 분리 뒤 잔여를 확인한다.
+- [ ] **FloatingSpGump·RawProductionControls** — 실제 표시 소비자를 연결하고 InventoryItemGump 분리 뒤 잔여를 확인한다. E1032~E1035에서 생산 패널을 조립·앱 설치하고 E1074에서 건설 비용 표시 Gump를 커서·게임 시계에 연결했다.
+  - **다음 작업: 좌측 사이드바 위치 보정.** 패널·SP 예산이 원본처럼 화면 왼쪽 폭 80 기둥과 하단 80 미니맵 자리에 맞도록 보정한다. 상세는 [0.1절 다음 작업 1](#left-sidebar)을 따른다.
 - [ ] **Cursor·RawCursor 표시** — 선행 커서 부품을 실 화면에 연결한다. 실제 카메라 투영·가장자리 스크롤·마나 볼트 정기 표시를 함께 대조한다.
 
 #### 5-C 게임 화면 허브·미션 진입 (0/6)
@@ -629,10 +261,13 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 - [ ] **입력 본체** — UserInput의 상위 메뉴·브라우저 이벤트와 특수 진단의 실제 로그 장치를 연결한다. 폴링·우클릭·단축키·실제 후보 선택 및 일반·이동 모드 좌클릭을 확인했다. NB20의 실제 조각 취득→P 취소는 Session에서 검증했다. [E802](docs/webpj-campaign-user-input-movement-click-20261118.md) · [E803](docs/webpj-campaign-user-input-primary-click-20261118.md) · [E804](docs/webpj-nb20-real-cursor-cancel-20261118.md)
   - [x] **GameWorldInput 코드 이식** — 선택/강조·미니맵 이동과 객체 메뉴·이동 커서까지 완료했다. 대응표 `GameWorldInput.inc` 상태는 `port`다. [E795](docs/webpj-campaign-game-world-input-20261118.md) · [E796](docs/webpj-campaign-game-world-menu-cursor-20261118.md)
 - [ ] **게임 메뉴** — RawGameMenus의 ESC 가로/하위 메뉴·명령·Player 메뉴의 실제 수명.
-- [ ] **객체 우클릭 메뉴** — CampaignObjectMenuClient의 건물·운반체·특수 대상 메뉴와 소유자 명령 연결.
+- [ ] **객체 우클릭 메뉴** — CampaignObjectMenuClient의 건물·운반체·특수 대상 메뉴와 소유자 명령 연결. E1064~E1072에서 중첩 메뉴와 사제·Player·공통 객체·운반체 메뉴, 사제 우클릭 건설을, E1076~E1079에서 워크샾 우클릭 생산·업그레이드를 앱에 연결했다. 나머지 건물·특수 대상 메뉴와 채팅 분기가 남았다. [사제 우클릭](docs/webpj-browser-priest-menu-20261120.md) · [워크샾 생산](docs/webpj-browser-tutorial2-factory-20261120.md)
 - [ ] **사제·운반·경로 바인딩** — 캠페인 Session 운반 입력과 일반 사제 이동은 E794에서 확인했다. MetaMap·CampaignUserInputServices·앱과 저장 미션 thewarbegins/masterofwhirligigs의 전체 초기화·경로 루프를 대조한다. [E794](docs/webpj-session-carrier-input-20261118.md)
-- [ ] **건설·생산·경제** — E1002에서 실제 앱의 생산 유지 소유자를 준비하고 E1003에서 생산 동기화·공급을 프레임에 연결했다. E1006에서 생산 단축키 취득, E1008에서 다리 한 조각의 실제 배치를 연결했다. 생산 UI와 연속 배치·자연 완주는 남았다. [E1008](docs/webpj-browser-bridge-placement-20261120.md) [E1006](docs/webpj-browser-production-shortcuts-20261120.md) [E1003](docs/webpj-app-production-frame-20261120.md) [E1002](docs/webpj-app-production-maintenance-20261120.md) RawProductionMaintenance 본체는 원본 86행으로 대조했고 같은 Session의 기술·SP·시계·내용물에 연결해 실제 다리 공급을 확인했다. ClientProductionSync는 무월드와 실제 Session 양쪽의 같은 Deck 경로를 연결했다. ProductionControlContext는 같은 Client 장기 소유자와 옵션을 공유한다. ClientBridgeDecay는 장기 스캔과 현재 Session 칸 전달을 연결했다. HUD의 주기 호출, 실제 Client 메인 루프 및 4-D에 남은 건설 장치의 입력 소비자가 남았다. [E831](docs/webpj-production-maintenance-20261119.md) · [E832](docs/webpj-session-production-maintenance-20261119.md) · [E833](docs/webpj-client-production-sync-20261119.md) · [E834](docs/webpj-production-context-20261119.md) · [E835](docs/webpj-client-bridge-decay-20261119.md) 실제 wire 배치/확정, SP·덱/생산, 다리 붕괴, RawBuildReplay·ClientBuildReplay의 FILE/최신 rec·Host·F7/Ctrl+F6를 확인한다. [건설 기록 재생](docs/webpj-build-replay-runtime-20261116.md)
-- [ ] **공장·지식 메뉴와 기술** — ThemeTechnologyCommand에서 연구·업그레이드·지식 메뉴와 기술 명령을 연결한다.
+- [ ] **건설·생산·경제** — 생산 유지부터 실제 화면 생산 UI까지 진행 중이다.
+  - 완료: RawProductionMaintenance 원본 86행 대조와 Session 연결, ClientProductionSync·ProductionControlContext·ClientBridgeDecay(E831~E835), 앱 생산 유지·다리 공급·생산 단축키·다리 배치(E1002~E1008), 생산 격자·항목·예산·패널 조립과 앱 설치(E1019~E1035), 회수 명령(E1047), 비용 표시(E1074), Factory 메뉴와 생산·업그레이드 명령(E1076~E1079).
+  - 남음: **좌측 사이드바 위치 보정([다음 작업 1](#left-sidebar))**, 연속 배치·자연 완주, HUD의 주기 호출과 실제 Client 메인 루프, 4-D에 남은 건설 장치의 입력 소비자, 실제 wire 배치/확정, SP·덱/생산, 다리 붕괴, RawBuildReplay·ClientBuildReplay의 FILE/최신 rec·Host·F7/Ctrl+F6.
+  - 근거: [E831](docs/webpj-production-maintenance-20261119.md) · [E835](docs/webpj-client-bridge-decay-20261119.md) · [E1003](docs/webpj-app-production-frame-20261120.md) · [E1008](docs/webpj-browser-bridge-placement-20261120.md) · [E1035](docs/webpj-app-production-panel-20261120.md) · [E1079](docs/webpj-browser-tutorial2-factory-20261120.md) · [건설 기록 재생](docs/webpj-build-replay-runtime-20261116.md)
+- [ ] **공장·지식 메뉴와 기술** — ThemeTechnologyCommand에서 연구·업그레이드·지식 메뉴와 기술 명령을 연결한다. E1076~E1079에서 Factory 생산·지식 항목과 생산·업그레이드 명령을 앱에 연결했고, 연구 명령의 앱 소비가 남았다. [Factory Session](docs/webpj-session-factory-menu-20261120.md) · [Factory Client 메뉴](docs/webpj-client-factory-menu-20261120.md)
 - [ ] **M3 / L3** — Tutorial1 이동·수확·건설·생산의 입력 단계표로 cpppj 상태·화면을 대조한다. Tutorial1·2와 캠페인 1-1·1-2의 브라우저 검증까지 진행한다.
 
 #### 7 전투·의식·AI (0/6)
@@ -646,11 +281,11 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 
 #### 8 미션 수명·안내·대본·소리·채팅·도움말 (0/9)
 
-- [ ] **대본·대화창** — DialogScript·DialogBodyLayout, 현재 미션의 안내·채팅·대화 소비자.
-- [ ] **소리 본체** — Sound·SoundDevice·ClientAudio를 Web Audio로 적응한다. E957에서 원본 효과음 전체를 공개 루트에 배치하고 E959에서 파일별 선별 적재, E960에서 원본 위치 음향 계산, E961에서 장치 독립 SoundPlayer, E962에서 감쇠 파일 선택, E963에서 Web Audio 버퍼 장치, E964에서 효과음 전체 사전 해독, E965에서 앱 설정·Session 재생 장치를 연결했다. E966에서 프레임별 재생 수 계산을 연결했다. E968에서 최초 Fort 요청의 음향 자동 준비를 연결했다. 실제 청취와 Wind Noise 및 음악을 확인한다.
-- [ ] **음악** — E957에서 원본 음악 전체를 공개 루트에 배치하고 E959에서 파일별 선별 적재를 연결했다. SoundMusic·SoundMusicRuntime·SoundMusicFile·SoundMusicSelection·SoundSceneMusic의 선별 적재·재생 수명·곡 선택은 남았다.
+- [ ] **대본·대화창** — DialogScript·DialogBodyLayout, 현재 미션의 안내·채팅·대화 소비자. Tutorial1·2 한국어 대본(E1056·E1062)과 Tell 그림(E1063)은 연결했다.
+- [ ] **소리 본체** — Sound·SoundDevice·ClientAudio를 Web Audio로 적응한다. E957~E966에서 효과음 공개 자산·선별 적재·원본 위치 음향·SoundPlayer·감쇠 파일 선택·Web Audio 장치·사전 해독·앱 설정/Session 재생·재생 수를, E968에서 최초 Fort 요청의 음향 자동 준비를, E997에서 경로 발소리를 연결했다. 실제 청취와 Wind Noise를 확인한다.
+- [ ] **음악** — E957 공개 자산·E959 선별 적재, E1059 장면 음악 선택·기한·날씨(독립 3,113행 대조), E1061 승리·패배 음악 1회 재생을 연결했다. SoundMusic·SoundMusicRuntime·SoundMusicFile의 재생 수명과 실제 음악 채널·앱 연결이 남았다. [장면 음악](docs/webpj-scene-music-20261120.md) · [결과 음악](docs/webpj-result-music-playback-20261120.md)
 - [ ] **동영상** — 인트로 제공 범위를 판정하고 RawMovieControls·MoviePlayback·MoviePcmOutput·MovieLifecycle·SmackerDecoder를 브라우저 디코더에 맞춘다.
-- [ ] **도움말·Tell** — QuickHelpHtml/Control/Window/Request, HtmlConditionEffect·HtmlLinkText·TellFileMenus·HelpLinkPolicy·ExternalHelpClient·RawNsInfoContext의 남은 계약.
+- [ ] **도움말·Tell** — QuickHelpHtml/Control/Window/Request, HtmlConditionEffect·HtmlLinkText·TellFileMenus·HelpLinkPolicy·ExternalHelpClient·RawNsInfoContext의 남은 계약. E1046·E1048~E1055에서 생산 메뉴 Help·TYPE 정보 본문·요구 에너지 그림·도움말 그림을 연결했다.
 - [ ] **글자·설정·그림** — BitmapFont·KoreanResources·ClientOptionsDisk·GifImage·GifScreenshot의 웹 적응·남은 부분과 1322 글꼴 변경 영향.
 - [ ] **미션 수명** — 튜토리얼/정지·Retry/Next/Abort·메뉴 복귀와 실제 진행 저장, 데모 360초 반복·Auto-Demo를 확인한다.
 - [ ] **적응 fixture** — 3.8절의 오디오·글꼴·렌더러·음악 관측을 판정한다.
@@ -665,12 +300,12 @@ M1은 메뉴 관문을 통과했다. 4-D의 Tutorial1 L2 → 5-A/5-B·5-C의 Tut
 ### 3.3 cpppj 오라클 사용법
 
 - **같은 조건.** 자료 해시·언어·화면 크기·옵션·시드·프레임과 입력을 맞춘다. 기준선 실행 파일은 0.4절의 별도 빌드를 쓴다. 독립 `NETSTORM_USER_DATA`와 `--mute-audio`로 소리 장치 상태를 보존한다.
-- **수집·비교.** `tools/cpp-oracle.mjs`의 시나리오에서 `--ui-script`의 `snapshot`·`report`를 수집하고 `tools/screen-compare.mjs`로 논리 화면을 비교한다. 알려진 차이는 영역·픽셀 수·원인을 기록한다. 기준선 cpppj에는 `session-dump`·`--fixed-frame-ms`가 있으며 웹 시나리오·덤프 포맷 지원은 4D-9에 남았다. L4b는 cpppj MCP 녹화를 쓴다. [오라클 비교](docs/webpj-cpp-oracle-20261107.md) · [덤프·고정 시각](docs/exe/cpp-session-state-dump-20261109.md)
+- **수집·비교.** `tools/cpp-oracle.mjs`의 시나리오에서 `--ui-script`의 `snapshot`·`report`를 수집하고 `tools/screen-compare.mjs`로 논리 화면을 비교한다. 알려진 차이는 영역·픽셀 수·원인을 기록한다. 기준선 cpppj의 `session-dump`·`--fixed-frame-ms` 수집 시나리오(E868~E869)와 웹 덤프 형식·수집(E865~E867)은 갖췄고, 웹 덤프와의 행별 비교·L2 판정은 4D-10b에 남았다. L4b는 cpppj MCP 녹화를 쓴다. [오라클 비교](docs/webpj-cpp-oracle-20261107.md) · [덤프·고정 시각](docs/exe/cpp-session-state-dump-20261109.md)
 - **실행·추적.** 창을 띄우는 수집은 AGENTS.md의 확인과 호스트 예외를 적용한다. 결과·cpppj 커밋·EXE SHA-256·명령줄을 manifest에 남긴다. Node 검사는 저장된 결과를 읽는다.
 
 ### 3.4 cpppj 현황과 기준선 관계
 
-공통 인계상 최신 제품은 1322(갈무리11)이며 웹 비교 기준선은 제품 1313이다. 1314 최초 실행과 1320 미션 전환을 웹에 반영했다(E616·E620). 1315의 한국어 `Type` 번역 교정본은 8단계 공식 한국어 자료에 적용하고, cpppj 시험만 바뀐 항목은 해당 시험을 옮길 때 현행 기대값을 확인한다. 1322 소스 영향 판정은 3.6절에 있다. [공통 인계](LEFT_JOBS.md)
+공통 인계상 최신 제품은 1323(실행 파일 아이콘, 웹은 favicon으로 별도 반영)이며 웹 비교 기준선은 제품 1313이다. 1314 최초 실행과 1320 미션 전환을 웹에 반영했다(E616·E620). 1315의 한국어 `Type` 번역 교정본은 8단계 공식 한국어 자료에 적용하고, cpppj 시험만 바뀐 항목은 해당 시험을 옮길 때 현행 기대값을 확인한다. 1322(갈무리11) 소스 영향 판정은 3.6절에 있다. [공통 인계](LEFT_JOBS.md)
 
 ### 3.5 사용자 확인과 결정 대기
 
@@ -681,7 +316,7 @@ M1은 메뉴 관문을 통과했다. 4-D의 Tutorial1 L2 → 5-A/5-B·5-C의 Tut
 
 ### 3.6 cpppj 변경 재반영
 
-대응표 검사에서 행 base 이후 변경을 확인한다. ① 웹 영향 없음, ② 웹 재반영, ③ 해당 소비 단계에서 처리로 판정한다. ②는 별도 단위로 반영하고 ③은 대상 단계에 남긴다. 판정 근거를 대응표와 단위 문서에 기록한다. 현재 보고는 1322(`635906357`)의 BitmapFont·ClientMain·KoreanResources·UberGump 4행이며 새 EmbeddedBitmapFont·KoreanFontSettings 파일의 웹 영향도 함께 판정한다.
+대응표 검사에서 행 base 이후 변경을 확인한다. ① 웹 영향 없음, ② 웹 재반영, ③ 해당 소비 단계에서 처리로 판정한다. ②는 별도 단위로 반영하고 ③은 대상 단계에 남긴다. 판정 근거를 대응표와 단위 문서에 기록한다. 2026-11-20 `node webpj/tools/port-map.mjs` 보고는 5행이다. 1322(`635906357`)의 BitmapFont·ClientMain·KoreanResources·UberGump 4행과 새 EmbeddedBitmapFont·KoreanFontSettings 파일의 웹 영향을 함께 판정한다. SoundMusicSelection 행은 base가 기준선보다 앞선 `50ca1acf`(2026-10-10)로 적혀 기준선 이전 두 커밋(`225f2322c`·`07885f694`)이 보고된다. 다음 대응표 갱신 때 base를 확인해 바로잡는다.
 
 | 처리 단계 | 남은 판정·연결 |
 | --- | --- |
@@ -763,6 +398,6 @@ npm --prefix webpj run test:e2e
 
 ## 7. 정리 기록
 
-**2026-11-18.** E801 직후 문서 전체를 보관본에 이관했다. 오래된 재개·중단 안내, E632 계획 견적, 단위별 진행 기록 및 이미 끝난 체크의 상세는 보관본에서 확인한다. 출하 Fort 로그인과 GameWorldInput 코드 이식을 완료 하위 항목으로 명시했다. 출하 Fort 로그인·월드 선택/미니맵 이동·세 운반 유닛의 Session 이동 집중 검사 3건이 통과했다. 상위 4-D와 입력 본체는 남은 검증을 마친 뒤 완료한다. [E801 정리 전 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261118-through-wb04-e801)
+**2026-11-20.** E1081 직후 문서 전체를 [보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261120-through-wb04-e1081)에 이관했다. 0.1절에 누적된 E951~E1081 단위 문단 131개와 전체 회귀 이력, 옛 다음 작업 목록(4D-3·4D-1 후속·4D-4~4D-10)과 E941 미완료 범위는 주제별 요약표로 바꿨다. 4D-6a·4D-6b·ClientRendererFrame·건설·생산·경제·소리 본체의 긴 단위 나열은 완료/남음/근거 하위 목록으로 줄였다. 사용자 지시에 따라 좌측 사이드바 위치 보정을 [다음 작업 1](#left-sidebar)로 넣었다. 대응표 이식량(partial 68·todo 77), fixture manifest 837항목, cpppj 최신 제품 1323과 대응표 변경 보고 5행을 현행 값으로 고쳤다. 단위 체크 상태와 단계 체크 수는 바꾸지 않았다.
 
-현재 AGENTS.md 기준은 `faecb9cb`(15차 설정 초기화), `2c8ca3bf`(갈무리11·다른 언어 글꼴), `d047bf9a`(cpppj·dotnetpj 실행 파일 아이콘, 웹 해당 없음)와 `11b16b77`(webpj favicon, [0.6절](#favicon))까지 반영했다. 이전 이관 기록은 보관본의 날짜별 원문에서 확인한다.
+현재 AGENTS.md 기준은 `faecb9cb`(15차 설정 초기화), `2c8ca3bf`(갈무리11·다른 언어 글꼴), `d047bf9a`(cpppj·dotnetpj 실행 파일 아이콘, 웹 해당 없음)와 `11b16b77`(webpj favicon, [0.6절](#favicon))까지 반영했다. 2026-11-20 정리 때 이후 AGENTS.md 변경이 없음을 확인했다. 이전 이관 기록은 보관본의 날짜별 원문에서 확인한다.
