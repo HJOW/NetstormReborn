@@ -102,4 +102,54 @@ public sealed class HostSessionAiRuntimeTests
         Assert.False(session.InitializeAi(1));
         Assert.Equal(0u, BinaryPrimitives.ReadUInt32LittleEndian(session.AiBrainMemory.Bytes(brain).AsSpan(0x258, 4)));
     }
+
+    /// <summary>지역이 있으면 준비는 적 경계 중심까지 진행한다. 섬 경계는 실제 섬 런타임에서 읽는다.</summary>
+    [Fact]
+    public void PrepareAiWritesEnemyBoundsCenter()
+    {
+        HostSession session = BuildScene();
+        uint brain = PrepareBrain(session, 1);
+        Put(session.PlayerRecords, 1 * 180 + 0x78, 3u);
+        Put(session.PlayerRecords, 2 * 180 + 0x78, 4u);
+        Put(session.AiBrainMemory.Bytes(brain), 0x260, 1u);
+        Put(session.AiBrainMemory.Bytes(brain), 0x264, 2u);
+        // 섬 기록 0~4를 두어 4번 경계를 쓴다.
+        for (int i = 0; i < 5; i++)
+        {
+            session.AiIslands.Add(1, unchecked((byte)i));
+        }
+
+        session.AiIslands.Bounds(4, new FortRandomRectangle(0, 0, 100, 50));
+        Assert.True(session.PrepareAi(1));
+        Assert.Equal(
+            BitConverter.SingleToUInt32Bits(50.0f),
+            BinaryPrimitives.ReadUInt32LittleEndian(session.AiBrainMemory.Bytes(brain).AsSpan(0x2b0, 4)));
+    }
+
+    /// <summary>지역이 있으면 초기는 자기 영역·첫 재고·258을 기록한다.</summary>
+    [Fact]
+    public void InitializeAiWritesHomeBoundsAndFlag()
+    {
+        HostSession session = BuildScene();
+        int technology = session.Pool.Allocate(SidAllocation.Client);
+        session.Pool.AllocatedBytes(technology).Fill(0);
+        Put(session.PlayerRecords, 1 * 180 + 0x78, 3u);
+        Put(session.PlayerRecords, 2 * 180 + 0x78, 4u);
+        Put(session.PlayerRecords, 1 * 180 + 0x9c, unchecked((uint)technology));
+        session.MissionPlayer.PlayerKnown = 1u;
+        // 섬 기록 0~3을 두어 3번 경계를 쓴다.
+        for (int i = 0; i < 4; i++)
+        {
+            session.AiIslands.Add(1, unchecked((byte)i));
+        }
+
+        session.AiIslands.Bounds(3, new FortRandomRectangle(0, 0, 100, 50));
+        uint brain = PrepareBrain(session, 1);
+        Put(session.AiBrainMemory.Bytes(brain), 0x264, 2u);
+        Assert.True(session.InitializeAi(1));
+        Assert.Equal(1u, BinaryPrimitives.ReadUInt32LittleEndian(session.AiBrainMemory.Bytes(brain).AsSpan(0x258, 4)));
+        Assert.Equal(
+            BitConverter.SingleToUInt32Bits(50.0f),
+            BinaryPrimitives.ReadUInt32LittleEndian(session.AiBrainMemory.Bytes(brain).AsSpan(0x268, 4)));
+    }
 }

@@ -2931,6 +2931,10 @@ public sealed partial class HostSession
     /// <remarks>2026-11-19 0.650에서 추가했다. 전략 설정과 통지의 finder가 같은 상태를 공유한다.</remarks>
     private ContainedFinderState? _aiFinderState;
 
+    /// <summary>AI 준비·전략이 공유하는 섬 런타임 본체다. BuildAiRuntimeDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-19 0.653에서 추가했다. 지역 경계 조회가 같은 저장소를 공유한다.</remarks>
+    private RawIslandRuntime? _aiIslands;
+
     /// <summary>AI 통지·실행시간 로그 기록이다. 화면 로그 UI는 R6에서 잇는다.</summary>
     /// <remarks>2026-11-19 0.650에서 추가했다. L1에서 통지·느린 틱 순서를 대조할 때 쓴다.</remarks>
     private readonly List<string> _aiRuntimeLogs = [];
@@ -2969,6 +2973,11 @@ public sealed partial class HostSession
     /// <remarks>2026-11-19 0.650에서 추가했다. 매 프레임 호출은 R6 틱 결선에서 잇는다.</remarks>
     public RawAiRuntime AiRuntime => _aiRuntime ?? throw new InvalidOperationException("AI 전체 프레임 미연결");
 
+    /// <summary>AI 런타임이 공유하는 섬 런타임 본체를 빌려준다. 연결하기 전에는 예외다.</summary>
+    /// <returns>준비·전략이 함께 쓰는 실제 섬 런타임이다.</returns>
+    /// <remarks>2026-11-19 0.653에서 추가했다. L1에서 지역 경계를 둘 때 쓴다.</remarks>
+    public RawIslandRuntime AiIslands => _aiIslands ?? throw new InvalidOperationException("AI 섬 런타임 미연결");
+
     /// <summary>같은 실제 중심·발자국으로 현재 SID 발 중심을 읽는다.</summary>
     /// <param name="sid">읽을 슬롯 번호다.</param>
     /// <returns>발 중심 좌표다.</returns>
@@ -2983,11 +2992,23 @@ public sealed partial class HostSession
             (float)(BitConverter.UInt32BitsToSingle(BinaryPrimitives.ReadUInt32LittleEndian(raw.Slice(18, 4))) - type.FootY * 0.5)];
     }
 
+    /// <summary>같은 섬 런타임의 현재 지역 경계를 float 사각형으로 읽는다.</summary>
+    /// <param name="islands">같은 세션 저장소를 공유하는 섬 런타임이다.</param>
+    /// <param name="region">조회할 지역 번호다.</param>
+    /// <returns>좌·상·우·하 순서의 현재 경계다.</returns>
+    /// <remarks>2026-11-19 0.653에서 추가했다. 근거: cpppj src/client/RawCampaignSession.cpp 2866·2872행의 regionBounds 조립이다. 청크 int 경계의 16배 float 변환과 같다.</remarks>
+    private static float[] AiRegionBounds(RawIslandRuntime islands, int region)
+    {
+        ArgumentNullException.ThrowIfNull(islands);
+        FortRandomRectangle bounds = islands.Bounds(region);
+        return [bounds.Left, bounds.Top, bounds.Right, bounds.Bottom];
+    }
+
     /// <summary>AI 준비·전략·통지·등록·전체 프레임 본체와 세션 결선을 연결한다.</summary>
     /// <param name="types">같은 실제 TYPE 표다. 지형 Pop 장치와 같은 인스턴스여야 한다.</param>
     /// <exception cref="InvalidOperationException">AI 런타임의 화신·공장·프로세스·해시 장치가 미연결이다.</exception>
     /// <exception cref="ArgumentException">AI 런타임 TYPE이 지형 Pop 장치와 다르다.</exception>
-    /// <remarks>2026-11-19 0.650에서 R4-5 AI 런타임 결선용으로 추가했다. 근거: cpppj src/client/RawCampaignSession.cpp 2831~2870행의 통지·등록 조립과 2937~2943행의 전체 프레임 조립이다. 수집자·시설·부족스캔·사제·배치·다리·운반·경제·자금·SP·그래프·지역경계는 R6에서 잇는다. 매 프레임 호출도 R6 틱 결선에서 잇는다.</remarks>
+    /// <remarks>2026-11-19 0.650에서 R4-5 AI 런타임 결선용으로 추가했다. 근거: cpppj src/client/RawCampaignSession.cpp 2831~2870행의 통지·등록 조립과 2937~2943행의 전체 프레임 조립이다. 수집자·시설·부족스캔·사제·배치·다리·운반·경제·자금·SP·그래프·신전생산·지도상한은 R6에서 잇는다. 지역 경계는 0.653에서 같은 섬 런타임으로 이었다. 매 프레임 호출도 R6 틱 결선에서 잇는다.</remarks>
     private void BuildAiRuntimeDevices(IReadOnlyList<OriginalTypeRecord> types)
     {
         ArgumentNullException.ThrowIfNull(types);
@@ -3019,6 +3040,7 @@ public sealed partial class HostSession
             SetResidenceOwner = (sid, owner) => SetFortObjectOwner(sid, owner),
             Assertion = text => _aiRuntimeDiagnostics.Add("island:" + text),
         });
+        _aiIslands = islands;
         var preparation = new RawAiPreparation(AiBrainMemory, Pool, PlayerRecords, Alliances,
             new AiPreparationGlobals
             {
@@ -3040,7 +3062,7 @@ public sealed partial class HostSession
                     return Math.Sqrt(dx * dx + dy * dy);
                 },
                 Graph = _ => throw new InvalidOperationException("AI 준비 그래프 조회 미연결(R6)"),
-                RegionBounds = _ => throw new InvalidOperationException("AI 준비 지역 경계 조회 미연결(R6)"),
+                RegionBounds = region => AiRegionBounds(islands, region),
                 StoredSp = _ => throw new InvalidOperationException("AI 준비 분산 SP 조회 미연결(R6)"),
                 AddLocalSp = _ => throw new InvalidOperationException("AI 준비 로컬 SP 가산 미연결(R6)"),
                 Demo = () => 0u,
@@ -3084,7 +3106,7 @@ public sealed partial class HostSession
             },
             new AiStrategySetupHooks
             {
-                RegionBounds = _ => throw new InvalidOperationException("AI 전략 지역 경계 조회 미연결(R6)"),
+                RegionBounds = region => AiRegionBounds(islands, region),
                 Temple = region => islands.Temple(region),
                 Destroy = (sid, flags) => destroy(sid, flags),
                 Assertion = text => _aiRuntimeDiagnostics.Add("strategy:" + text),
