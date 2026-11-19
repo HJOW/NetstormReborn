@@ -76,6 +76,8 @@ export class ClientMenuGump {
     // 현재 메뉴의 구분선과 항목 수는 기존 원본 작성기에서 처리한다.
     separator() { this.#controls.addSeparator(); }
     itemCount() { return this.#menu.itemCount(); }
+    // 현재 메뉴에 체크·포함·활성 상태를 가진 원본 항목을 쓴다.
+    checked(checked, value, command, parameter, include = true, enabled = true) { this.#controls.addChecked(checked, value, command, parameter, include, enabled); }
     title(value) { this.#controls.addTitle(value); }
     header(value) { this.#controls.addHeader(value); }
     entry(...args) { this.#controls.addText(...args); }

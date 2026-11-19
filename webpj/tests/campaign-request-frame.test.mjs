@@ -45,6 +45,8 @@ import { ScrollingTextGumpWidgetState } from '../www/ui/scrolling-text-gump-widg
 import { ClientGumpDecoration, createClientDecorationState } from '../www/ui/client-gump-decoration.js';
 import { ClientMenuGump } from '../www/ui/client-menu-gump.js';
 import { ClientPriestMenu } from '../www/ui/client-priest-menu.js';
+import { ClientPlayerMenu } from '../www/ui/client-player-menu.js';
+import { RawPlayerIdentity } from '../www/core/raw-player-identity.js';
 import { StyleTextFragmentKind } from '../www/ui/style-text-fragments.js';
 import { PriestPlacementAssets } from '../www/core/priest-placement-assets.js';
 import { RawCanonPixelShape } from '../www/core/raw-canon-pixel-shape.js';
@@ -280,9 +282,14 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         let visibleBridges = 0; for (let token = gump.node(production.ui.node().bridge).child; token; token = gump.node(token).next) visibleBridges += 1;
         assert.equal(visibleBridges, bridges());
         // 실제 앱의 생산 격자 우클릭은 같은 정보 메뉴와 Help 큐로 이어진다.
-        const appItem = gump.node(production.ui.node().bridge).child, appBounds = gump.collection().bounds(appItem);
-        const appX = (appBounds.left + appBounds.right) >> 1, appY = (appBounds.top + appBounds.bottom) >> 1;
-        assert.equal(gump.handle(appItem, 0x20000, appX, appY), 1);
+        const appItem = gump.node(production.ui.node().bridge).child, appBounds = gump.collection().bounds(appItem), appIcon = gump.node(appItem).child;
+        const hitDevice = new ClientImageGump(gump, game, { localOwner: 0, ownerMaps: new Uint32Array(188), shadowOffset: { x: 5, y: 5 } }, () => { throw new Error('적중 검사의 색표 호출'); }, () => 0);
+        let appPoint = null;
+        // 다리 모양의 중심이 투명할 수 있으므로 실제 불투명 픽셀을 선택한다.
+        for (let y = appBounds.top; y < appBounds.bottom && !appPoint; y += 1) for (let x = appBounds.left; x < appBounds.right; x += 1) {
+            const local = gump.collection().screenToLocal(appItem, { x, y }); if (hitDevice.hit(appIcon, local[0], local[1])) { appPoint = { x, y }; break; }
+        }
+        assert.ok(appPoint); assert.equal(gump.handle(appItem, 0x20000, appPoint.x, appPoint.y), 1);
         let appMenu = gump.node(gump.createState().collection.root).child;
         while (appMenu && gump.node(appMenu).command !== 26) appMenu = gump.node(appMenu).next;
         assert.ok(appMenu); const appMenuBounds = gump.collection().bounds(appMenu), helpX = appMenuBounds.left + 8, helpY = appMenuBounds.top + 5;
@@ -552,6 +559,20 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         assert.ok(priestNode.items.slice(0, priestNode.itemCount).some((item) => item.childId));
         menus.attach({ x: 750, y: 420 }, menus.root()); gump.remove(priestRoot); menus.close(); scroll.close();
         assert.equal(bufferText.styleState().fragments.size, 0);
+        // 같은 현재 Player와 동맹·사제 상태를 Client Player 하위 메뉴에 결합한다.
+        const identity = new RawPlayerIdentity(app._clientPlayers.records(), new Uint8Array(0), app._clientChatRecords, {
+            localOwner: () => app._clientGameplay.player.battleOwner, subscriber: () => app._clientSubscriber.mySubscriber().value,
+            address: () => app._clientGameplay.localAddress().value, name: () => { const bytes = app._clientSubscriber.handle(), end = bytes.indexOf(0); return String.fromCharCode(...bytes.subarray(0, end)); },
+            battle: () => app._surfaceStorage.ownerMode.battle, editor: () => app._clientGameplay.world.editor, metamap: () => app._surfaceStorage.ownerMode.challenge, unknownName: () => 'SOMEONE',
+        });
+        const parentPlayer = menus.beginFancy(); menus.title('Object\n');
+        const playerMenu = new ClientPlayerMenu(session, identity, menus, { translate: (value) => app._resources.translate(value),
+            assertion: (value) => { throw new Error(`Player 진단 ${value}`); }, parseAddress: () => { throw new Error('예상하지 않은 주소'); }, reliability: () => { throw new Error('예상하지 않은 메타맵'); },
+            ignored: (subscriber) => app._clientChatWindows.ignored.includes(subscriber), whispered: () => 0 });
+        const subscriber = identity.subscriberForOwner(session.localOwner()), playerChild = playerMenu.open(subscriber); assert.ok(playerChild);
+        menus.submenu('Player', playerChild); assert.equal(gump.node(parentPlayer).items[0].childId, gump.node(playerChild).id);
+        assert.ok(gump.node(playerChild).itemCount); menus.attach({ x: 750, y: 420 }, menus.root()); gump.remove(parentPlayer); menus.close(); scroll.close();
+        assert.equal(gump.node(playerChild), null); assert.equal(bufferText.styleState().fragments.size, 0);
         // 실제 생산 정보가 작성한 장식 메뉴의 제목·비용·항목과 Form을 같은 공통 수명에서 확인한다.
         const integratedCommands = [], productionMenu = createClientProductionMenu(gump, session, game, data, app._resources.fonts, screen, app._clientColorSort, itemBackground, 92, {
             baseHandle: () => 0, sound: () => {}, translate: (value) => app._resources.translate(value),

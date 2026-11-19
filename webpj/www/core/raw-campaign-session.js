@@ -33,6 +33,7 @@ import { executeDeveloperBridge } from './raw-campaign-developer-bridge.js';
 import { executeDeveloperSubscriber } from './raw-campaign-developer-subscriber.js';
 import { executeDeveloperDevices } from './raw-campaign-developer-devices.js';
 import { RawPriestMenu, bindPriestMenuWorld, createPriestMenuState } from './raw-priest-menu.js';
+import { RawPlayerMenu, createPlayerMenuState } from './raw-player-menu.js';
 import { GunProcess, GunProcessFields } from './raw-gun-process.js';
 import { FlyerProcess, FlyerProcessFields, RawFlyerProcess } from './raw-flyer-process.js';
 import { findAttachedProcess, WindAviaryProcess } from './raw-wind-aviary-process.js';
@@ -86,6 +87,8 @@ export class RawCampaignSession {
     #owner = null; #login = null; #disposed = false;
     // 사제 메뉴는 여러 번 생성돼도 같은 현재 원본 설정을 공유한다.
     #priestMenuState = createPriestMenuState();
+    // Player 메뉴의 두 정적 문자열과 명령은 같은 Session에서 공유한다.
+    #playerMenuState = createPlayerMenuState();
     // 같은 Session의 운반체 입력 전역과 음향 장부다.
     #carrierInput = new RawCampaignSessionCarrierInput(() => this.#live());
 
@@ -1094,6 +1097,13 @@ export class RawCampaignSession {
         hooks.allowed = (type) => this.#live().totalMade.allowed(type);
         hooks.money = (owner) => this.sp(owner);
         return new RawPriestMenu(c.pool, c.types, c.frames, o.players, o.constructionExcludedTypes, o.contentFinder, state, hooks);
+    }
+    // 같은 실제 Player·동맹·사제 상태와 미션·SP를 Player 메뉴에 빌려준다.
+    makePlayerMenu(identity, input = {}) {
+        const o = this.#live(); if (!o.loaded || identity?.playerRecords !== o.players) throw new Error('실제 Session Player 메뉴의 기록 수명 불일치');
+        const hooks = { ...input, mission: () => this.#live().globals.missionPost,
+            fort: () => this.#live().core.bridgeState.mission, money: (owner) => this.sp(owner) };
+        return new RawPlayerMenu(identity, o.alliances, o.hiddenPlayers, o.priestState.priests.currentOwnerState(), this.#playerMenuState, hooks);
     }
     // 같은 옵션 저장소의 숨김 Player 바이트를 빌린다.
     hiddenPlayers() { return this.#live().hiddenPlayers; }
