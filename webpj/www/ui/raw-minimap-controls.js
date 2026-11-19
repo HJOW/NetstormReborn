@@ -11,6 +11,10 @@ const MINIMAP_VTABLE = 0x0050d51c;
 const LEFT = 0x10000;
 const RELEASE = 0x80000000;
 
+// 원본 미니맵의 파생 노드다. 실제 Client Gump 등록표가 기본 노드와 파생 노드를 구별하므로 별도 클래스로 둔다.
+// 사용: RawMinimapControls가 내부에서 하나만 만들며 호출자는 `tree.token(node)`로 같은 주소를 등록한다. (2026-11-20 WB04-E1082: 앱 Gump 루트 등록용으로 추가)
+export class MinimapNode extends GumpCreateNode {}
+
 // Client 수명 전역을 생성한다. current/serial과 색표는 개별 창보다 오래 산다.
 export function createRawMinimapGlobals() { return { current: 0, serial: 0, colors: createMinimapRasterState() }; }
 
@@ -24,7 +28,7 @@ export class RawMinimapControls {
     // 트리와 메뉴, 장기 물리, 공유 표시 상태, 현재 입력 장치다.
     #tree; #menus; #storage; #state; #globals; #hooks;
     // 같은 기본 노드와 지도 기하, 셀 화가, dirty 처리기다.
-    #node = new GumpCreateNode(); #token = 0; #geometry = new MinimapGeometryState(); #raster; #dirty;
+    #node = new MinimapNode(); #token = 0; #geometry = new MinimapGeometryState(); #raster; #dirty;
     // 현재 대여한 Pop/Unpop, 외부 표시 등록 및 갱신 여부다.
     #pop = null; #unpop = null; #registration; #modified = false;
 
@@ -59,7 +63,7 @@ export class RawMinimapControls {
     // 원본 생성자는 현재 bitmap 폭으로 기본 노드를 만든 뒤 현재 포인터와 serial을 기록한다.
     construct() {
         if (this.#token) throw new Error('현재 미니맵 중복 생성');
-        this.#token = this.#tree.token(); this.#tree.factory.construct(this.#token, 0, this.#state.bitmapWidth, this.#state.bitmapWidth, 0x301);
+        this.#token = this.#tree.token(this.#node); this.#tree.factory.construct(this.#token, 0, this.#state.bitmapWidth, this.#state.bitmapWidth, 0x301);
         this.#node.vtable = MINIMAP_VTABLE; this.#node.command = 29; this.#geometry = new MinimapGeometryState();
         this.#menus.setHelpText(this.#token, 'Sky Overview'); this.#menus.setHelpWord(this.#token, 'minimapGump');
         this.#globals.serial = this.#node.serial; this.#globals.current = this.#token; this.#state.displayPresent = true; this.#state.displayFlags = this.#node.flags & 255; return this.#token;

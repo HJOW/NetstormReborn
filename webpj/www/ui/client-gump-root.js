@@ -17,7 +17,7 @@ const ROOT_TOKEN = 1;
 export class ClientGumpRoot {
     // 생성·수명·사건·입력·출력 상태와 같은 노드·처리기를 보유한다.
     #create = new GumpCreateState(); #life = new GumpLifetimeState(); #event = new GumpEventState(); #inputState = new GumpInputState();
-    #nodes = new Map(); #handlers = new Map(); #destructors = new Map(); #attachers = new Map(); #broadcasters = new Map(); #idlers = new Map(); #drawers = new Map(); #redrawHandlers = new Map(); #objectGoneHandlers = new Map(); #nextToken = 2; #factory; #lifetime; #collection; #events; #input; #tree; #frame; #redrawDevice; #formHost = null; #root = 0; #disposed = false;
+    #nodes = new Map(); #handlers = new Map(); #destructors = new Map(); #attachers = new Map(); #broadcasters = new Map(); #idlers = new Map(); #drawers = new Map(); #redrawHandlers = new Map(); #objectGoneHandlers = new Map(); #nextToken = 2; #treeState; #factory; #lifetime; #collection; #events; #input; #tree; #frame; #redrawDevice; #formHost = null; #root = 0; #disposed = false;
 
     // 원본 등록표를 초기화하고 기본 루트를 생성한 뒤 현재 화면 크기를 적용한다.
     constructor(width, height, checking, redraw = null, diagnostic = null, project = null) {
@@ -42,7 +42,7 @@ export class ClientGumpRoot {
             if (broadcast) return broadcast(token, event, first, second);
             if (node(token)?.constructor !== GumpCreateNode) throw new Error('Client Gump 파생 방송 처리기 미연결');
         } });
-        const treeState = new GumpTreeState(); treeState.checking = checking;
+        const treeState = new GumpTreeState(); treeState.checking = checking; this.#treeState = treeState;
         this.#tree = new GumpTree(this.#create, treeState, { node, project,
             redraw: (token, erase) => this.redraw(token, erase),
             push: (token) => this.#tree.push(token), attach: (...args) => this.#attach(...args), kill: (token) => this.#lifetime.kill(token),
@@ -87,6 +87,8 @@ export class ClientGumpRoot {
     tree() { this.#live(); return this.#tree; }
     // 같은 현재 트리의 좌표 수집기를 빌린다.
     collection() { this.#live(); return this.#collection; }
+    // 원본 `GumpTree` 지도 영역(005ca9cc~d8)의 같은 저장소를 빌린다. HUD 도킹이 이 객체에 정수 LTRB를 쓰고 월드·Renderer·중앙 정렬이 같은 객체를 읽는다. (2026-11-20 WB04-E1082)
+    mapView() { this.#live(); return this.#treeState.mapView; }
     // 현재 토큰의 실제 파생 출력기를 설치하거나 해제한다.
     bindDraw(token, draw) {
         this.#live(); if (!this.#nodes.has(token) || (draw !== null && typeof draw !== 'function')) throw new TypeError('Client Gump 출력 토큰 또는 처리기 오류');

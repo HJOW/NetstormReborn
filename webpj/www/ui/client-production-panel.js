@@ -40,8 +40,9 @@ export class ClientProductionPanel {
         for (const [token, bit] of [[n.teleport, 1], [n.bridge, 2]]) if (mask & bit) { root.tree().push(token); const item = root.node(token); root.attach(token, item.x, item.y, 0, 0); }
         this.#parts.changed();
     }
-    // 같은 원본 80폭·하단 80 예약 크기로 열고 실제 기술 내용물을 연결한다.
-    open() {
+    // 원본 `RawProductionControls::Construct`다. 루트는 폭 40·높이 화면으로 만들고 예산·배경·격자·구분선을 자식으로 붙이되 루트 자체는 트리에 붙이지 않는다.
+    // Uber HUD가 이 토큰을 직계 자식으로 붙이고 구분선 도킹이 80폭·하단 80 예약 크기를 정한다. 사용: Uber 루트의 `createProduction` 공장이 호출한다. (2026-11-20 WB04-E1082)
+    construct() {
         if (this.#used) throw new Error('생산 패널 중복 생성'); this.#used = true;
         const root = this.#root, parts = this.#parts, globals = this.#globals, n = new ProductionPanelNode();
         this.#token = root.allocateDerived(n, (event, first, second) => this.#handle(event, first, second),
@@ -58,9 +59,21 @@ export class ClientProductionPanel {
         n.teleport = parts.grid.create(1, 6, 8); child = root.node(n.teleport); child.baseHeight = child.height = 250; child.acceptedCursor = 8; child.alignFlags |= 1; root.attach(n.teleport, 0, 26 + slots * 18, this.#token, 0);
         n.bottom = parts.background.create(40, n.baseHeight, 0x02000000, globals.backgroundType, globals.panelFrame); child = root.node(n.bottom); child.alignFlags |= 1; child.baseHeight = child.height = 250; root.attach(n.bottom, 0, root.node(n.teleport).y, this.#token, 0);
         n.separator = parts.divider.allocate(); parts.divider.construct(n.separator, 0, 40, 5, 0x02a00000, globals.backgroundType, globals.backgroundFrame); root.node(n.separator).alignFlags |= 1; root.attach(n.separator, 0, 21, this.#token, 0);
-        globals.rootSerial = n.serial; n.baseWidth = n.width = 80; n.baseHeight = n.height = root.createState().screenHeight - 80;
-        root.attach(this.#token, 0, 0); const technology = parts.technology(); root.bindObject(n.bridge, technology); root.bindObject(n.teleport, technology);
-        this.#session.synchronizeProductionContents(); this.refresh(3); return this.#token;
+        globals.rootSerial = n.serial; return this.#token;
+    }
+    // 원본 HUD 모드 명령(0200003d)의 생산 패널 처리다. 두 격자를 현재 기술에 연결하고 모드 1이면 현재 내용물을 동기화한다.
+    handleHudMode(first) {
+        const root = this.#root, n = this.node(), technology = this.#parts.technology();
+        root.bindObject(n.bridge, technology); root.bindObject(n.teleport, technology);
+        if (first === 1) this.#session.synchronizeProductionContents();
+    }
+    // Uber HUD가 도킹을 끝낸 뒤 설치된 현재 내용물을 실제 격자로 다시 부착한다(원본 `Open`의 마지막 단계). (2026-11-20 WB04-E1082)
+    finishInstall() { this.handleHudMode(3); this.refresh(3); }
+    // 독립 호출자를 위한 같은 원본 80폭·하단 80 예약 크기로 열고 실제 기술 내용물을 연결한다(원본 `Open`: 생성 → 루트 부착 → 모드 1 → 격자 재부착).
+    open() {
+        this.construct(); const root = this.#root, n = this.node();
+        n.baseWidth = n.width = 80; n.baseHeight = n.height = root.createState().screenHeight - 80;
+        root.attach(this.#token, 0, 0); this.handleHudMode(1); this.refresh(3); return this.#token;
     }
     // 화면 높이가 바뀌면 기존 자식·Form을 유지하며 원본 하단 여백으로 다시 배치한다.
     resize(height) {

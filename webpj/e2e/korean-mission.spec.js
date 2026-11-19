@@ -170,9 +170,12 @@ test('한국어 Tutorial2의 안내 페이지를 표시한다', async ({ page })
   await page.waitForFunction((type) => window.netstorm._campaignWorld.session().production().contains(type), selectedType, { timeout: 15000 });
   await page.waitForFunction(() => window.netstorm._gameData.currentTell === 'D.' && Boolean(window.netstorm._mainMenu.dialog), null, { timeout: 30000 });
   expect(await page.evaluate(() => window.netstorm._mainMenu.dialog.content.styleText)).toContain('첫 무기');
-  // 자연 완공 후 상단 HUD 바깥에는 이동한 비용 글자의 잔상이 남지 않는다.
-  expect(await page.evaluate(() => { const screen = window.netstorm._clientPaletteScreen, pixels = screen.lock(), black = screen.colors().basic[0];
-    try { for (let y = 0; y < 28; y += 1) for (let x = 100; x < screen.width; x += 1) if (pixels[y * screen.pitch + x] !== black) return false; return true; }
-    finally { screen.unlock(); } })).toBe(true);
+  // 자연 완공 후 지도 위쪽에는 이동한 비용 글자의 잔상이 남지 않는다. 전체 다시 그리기 전후의 같은 영역 해시가 일치해야 한다.
+  // (2026-11-20 WB04-E1082: 실제 Uber HUD 도킹으로 상단 28줄이 임시 검은 바탕이 아니라 지도가 되어 검사 방식을 바꿨다)
+  const topHash = () => page.evaluate(() => { const screen = window.netstorm._clientPaletteScreen, pixels = screen.lock(); let hash = 2166136261;
+    try { for (let y = 0; y < 60; y += 1) for (let x = 100; x < screen.width; x += 1) hash = Math.imul(hash ^ pixels[y * screen.pitch + x], 16777619) >>> 0; return hash; }
+    finally { screen.unlock(); } });
+  const shownTop = await topHash(); await page.evaluate(() => window.netstorm._clientRenderer.invalidateAll()); await page.waitForTimeout(400);
+  expect(await topHash()).toBe(shownTop);
   await page.screenshot({ path: test.info().outputPath('korean-tutorial2-research.png') }); expect(errors).toEqual([]);
 });

@@ -194,7 +194,9 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         assert.equal(app._clientPaletteScreen.width, 1366); assert.notEqual(app._clientRenderer, beforeRenderer);
         assert.equal(app._clientRendererFrame, frameGlobals); assert.equal(frameGlobals.scan()[3], 17); assert.equal(frameGlobals.cloudDirtyCount().value, 2);
         assert.equal(app._campaignCameraDevice(), cameraDevice);
-        assert.deepEqual(app._campaignWorld.mapView(), { left: 0, top: 28, right: 1366, bottom: 768 });
+        // 실제 Uber HUD 도킹 뒤의 지도 영역은 세로 구분선(x80, 폭5) 오른쪽 전체다(2026-11-20 WB04-E1082: 예전 임시 상단 28 값에서 교체).
+        assert.deepEqual(app._campaignWorld.mapView(), { left: 85, top: 0, right: 1366, bottom: 768 });
+        assert.deepEqual(app._clientGump.mapView(), app._campaignWorld.mapView());
         app._campaignWorld.takeChanged(); app._campaignWorld.cameraApplied(); assert.equal(app._campaignWorld.takeChanged(), true);
         // 현재 Screen의 모드 변경과 강제 갱신은 같은 구름 큐에 각 한 칸씩 넣고 실제 Renderer의 이전 dirty를 전체 화면으로 교체한다.
         const redraw = app._clientKencloud.worldRedraw(); redraw.value = 1;

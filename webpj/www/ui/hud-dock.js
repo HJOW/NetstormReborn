@@ -229,13 +229,13 @@ export class HudDock {
             return need(hooks.baseHandle, 'HUD 기본 입력 경계 없음')(event, first, second);
         }
         if (first === 1 || first === 3) {
-            // 표시 비트를 켜고 왼쪽 덱의 이동 위치를 정한다.
+            // 표시 비트를 켜고 왼쪽 덱의 이동 위치를 정한다. 지식 패널 공장이 아직 연결되지 않은 앱은 지식 토큰이 0이므로 그 플래그만 건너뛴다. (2026-11-20 WB04-E1082)
             setFlag(this.#node(this.#token(part.vertical)), 1); setFlag(this.#node(this.#token(part.minimapDivider)), 1); setFlag(this.#node(this.#token(part.minimap)), 1); setFlag(this.#node(this.#token(part.production)), 1);
-            clearFlag(this.#node(this.#token(part.knowledge)), 1);
+            if (this.#token(part.knowledge)) clearFlag(this.#node(this.#token(part.knowledge)), 1);
             hooks.move(this.#token(part.vertical), (first === 3 || globals.showHud) ? 80.0 : -this.#node(this.#token(part.vertical)).baseWidth, 0, 0);
             hooks.move(this.#token(part.minimapDivider), 0, Math.fround(subtract(globals.screenHeight, 80)), 0);
         } else if (first === 4) {
-            clearFlag(this.#node(this.#token(part.production)), 1); setFlag(this.#node(this.#token(part.knowledge)), 1); clearFlag(this.#node(this.#token(part.minimap)), 1);
+            clearFlag(this.#node(this.#token(part.production)), 1); if (this.#token(part.knowledge)) setFlag(this.#node(this.#token(part.knowledge)), 1); clearFlag(this.#node(this.#token(part.minimap)), 1);
             hooks.move(this.#token(part.vertical), 170, 0, 0); hooks.move(this.#token(part.minimapDivider), 0, Math.fround(globals.screenHeight | 0), 0);
         }
         hooks.push(this.#token(part.chatDivider)); const token = this.#token(part.chatDivider); hooks.attach(token, this.#node(token).x, this.#node(token).y, 0, 0);

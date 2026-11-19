@@ -322,6 +322,8 @@ export class CampaignGameWorld {
         const selected = this.#gameplay.selection.selected;
         this.#input.carrier.commit(selected, { x: point[0], y: point[1] }); this.#changed = true; return selected !== 0;
     }
+    // 미니맵 누름·드래그의 카메라 중심 요청이다(cpppj `GameWorld::CenterCamera`). 목표만 저장하며 실제 적용은 화면 출력 뒤 카메라 프레임이 맡는다. (2026-11-20 WB04-E1082)
+    centerCamera(x, y) { this.#live().requestCameraCenter(x, y, this.#width, this.#height); }
     // 미니맵 좌표의 이동 명령 뒤 같은 강조를 해제한다.
     moveFromMinimap(x, y) {
         this.#live(); if (!this.#input) throw new Error('실제 미니맵 선택 장치 없음');

@@ -99,13 +99,20 @@ export class UberRootGump {
         child = this.#node(token).minimap; base = this.#base(child); base.baseWidth = 128; base.width = Math.fround(base.scale * 128);
         this.#attach(this.#node(token).minimap, 0, 0, token);
         next = need(h.createProduction)() >>> 0; this.#node(token).production = next; base = this.#base(this.#node(token).production); base.flags = (base.flags | 0x20000) >>> 0; this.#attach(this.#node(token).production, 0, 0, token);
-        next = need(h.createKnowledge)() >>> 0; this.#node(token).knowledge = next; child = this.#node(token).knowledge;
-        let size = this.#read(WIDTH) | 0; base = this.#base(child); base.baseWidth = Math.fround(size); base.width = Math.fround(size * base.scale);
-        child = this.#node(token).knowledge; size = this.#read(HEIGHT) | 0; base = this.#base(child); base.baseHeight = Math.fround(size); base.height = Math.fround(size * base.scale);
-        base = this.#base(this.#node(token).knowledge); base.flags = (base.flags | 0x20000) >>> 0; this.#attach(this.#node(token).knowledge, 0, 0, token);
-        need(h.type)(this.#read(FORT_GUMP)); next = need(h.createChat)() >>> 0; this.#node(token).chat = next; base = this.#base(this.#node(token).chat); base.flags = (base.flags | 0x20000) >>> 0;
-        const label = need(h.translate)('Chat Window'); need(h.help)(this.#node(token).chat, label); need(h.helpWord)(this.#node(token).chat, 'chatView');
-        this.#empty(); this.#attach(this.#node(token).chat, 0, 0, token); this.#empty(); need(h.refreshTechnology)(); this.#layout(token);
+        // 지식(NSInfo) 패널 공장이 아직 앱에 연결되지 않았으면 이 자식을 만들지 않고 필드를 0으로 둔다(등록·배치는 0 자식을 건너뛴다). (2026-11-20 WB04-E1082)
+        if (typeof h.createKnowledge === 'function') {
+            next = need(h.createKnowledge)() >>> 0; this.#node(token).knowledge = next; child = this.#node(token).knowledge;
+            let size = this.#read(WIDTH) | 0; base = this.#base(child); base.baseWidth = Math.fround(size); base.width = Math.fround(size * base.scale);
+            child = this.#node(token).knowledge; size = this.#read(HEIGHT) | 0; base = this.#base(child); base.baseHeight = Math.fround(size); base.height = Math.fround(size * base.scale);
+            base = this.#base(this.#node(token).knowledge); base.flags = (base.flags | 0x20000) >>> 0; this.#attach(this.#node(token).knowledge, 0, 0, token);
+        }
+        // 채팅 창 공장이 앱에 연결되기 전에는 채팅 자식·도움말·기술 접두 갱신을 함께 건너뛴다. (2026-11-20 WB04-E1082)
+        if (typeof h.createChat === 'function') {
+            need(h.type)(this.#read(FORT_GUMP)); next = need(h.createChat)() >>> 0; this.#node(token).chat = next; base = this.#base(this.#node(token).chat); base.flags = (base.flags | 0x20000) >>> 0;
+            const label = need(h.translate)('Chat Window'); need(h.help)(this.#node(token).chat, label); need(h.helpWord)(this.#node(token).chat, 'chatView');
+            this.#empty(); this.#attach(this.#node(token).chat, 0, 0, token); this.#empty(); need(h.refreshTechnology)();
+        }
+        this.#layout(token);
         // 각 현재 구분선을 정리 뒤 다시 조회해 같은 좌표로 이동한다.
         for (const field of ['vertical', 'minimapDivider', 'chatDivider']) { need(h.cleanup)(); child = this.#node(token)[field]; need(h.move)(child, this.#base(child).x, this.#base(child).y, 0); }
         need(h.cleanup)();

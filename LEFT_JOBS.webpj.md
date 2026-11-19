@@ -6,39 +6,31 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-20, 마지막 단위 WB04-E1081)
+### 0.1 현재 값 (2026-11-20, 마지막 단위 WB04-E1082)
 
 | 항목 | 현행 상태 |
 | --- | --- |
-| 실행·플레이 | 브라우저에서 ‘클릭하여 시작’, 메인 메뉴·캠페인/데모 목록·도움말·옵션·Credits와 개발용 지형 미리보기가 동작한다. **미션 진입:** Early Missions(Tutorial1~6)와 세 캠페인 묶음(Struggle For Freedom·A Nation Rises·Complete Victory)의 미션을 목록에서 시작해 브리핑·안내를 보고 월드가 진행된다. **조작:** Tutorial1·2에서 사제 선택·이동, 가장자리 스크롤, F4·F5·P/R·N, 생산 격자 클릭과 단축키·회전·다리 배치, 사제 우클릭 → 윈드 신전 건설·완공, 워크샾 우클릭 생산 메뉴의 무기 생산까지 확인했다. **미완성:** 좌측 사이드바(SP·생산 덱·미니맵 자리)는 표시되지만 화면 내 위치가 원본과 어긋난다(다음 작업 1). 상단 HUD·미니맵 도킹·나머지 객체 메뉴·ESC 게임 메뉴·채팅과 미션 자연 완주는 남았다. |
-| 원본과의 동일성 | 영어 4:3 메뉴 M1 8장면은 cpppj 오라클과 알려진 구름 배경 등 차이 영역 밖에서 픽셀 차이 0이다. 월드·UI 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다(최근 원본 공통 메뉴 788행·Factory 메뉴 39행·Uber 루트 160행·장면 음악 3,113행 등). 실제 미션의 L2(Tutorial1 시작 상태 덤프)·L3·L4 화면 비교와 자연 완주는 미검증이다. |
+| 실행·플레이 | 브라우저에서 ‘클릭하여 시작’, 메인 메뉴·캠페인/데모 목록·도움말·옵션·Credits와 개발용 지형 미리보기가 동작한다. **미션 진입:** Early Missions(Tutorial1~6)와 세 캠페인 묶음(Struggle For Freedom·A Nation Rises·Complete Victory)의 미션을 목록에서 시작해 브리핑·안내를 보고 월드가 진행된다. **조작:** Tutorial1·2에서 사제 선택·이동, 가장자리 스크롤, F4·F5·P/R·N, 생산 격자 클릭과 단축키·회전·다리 배치, 사제 우클릭 → 윈드 신전 건설·완공, 워크샾 우클릭 생산 메뉴의 무기 생산까지 확인했다. **HUD 틀:** 실제 Uber 루트가 세로·미니맵·채팅 구분선, 좌측 사이드바(SP·생산 덱)와 하단 미니맵 칸을 원본 위치로 도킹하고 지도 영역이 `{85,0,W,H}`다(4:3 하단 85×82픽셀이 원본 스크린샷과 일치, 16:9·16:10·1920×1080과 창 크기 변경 확인). **미완성:** 지식(NSInfo) 패널·채팅 창 공장, 미니맵 클릭·드래그 실사용, 나머지 객체 메뉴·ESC 게임 메뉴·채팅과 미션 자연 완주는 남았다. |
+| 원본과의 동일성 | 영어 4:3 메뉴 M1 8장면은 cpppj 오라클과 알려진 구름 배경 등 차이 영역 밖에서 픽셀 차이 0이다. 월드·UI 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다(최근 원본 공통 메뉴 788행·Factory 메뉴 39행·Uber 루트 160행·장면 음악 3,113행 등). 좌측 HUD 틀의 하단(미니맵 구분선·세로 구분선 아랫부분·미니맵 칸) 85×82픽셀은 원본 스크린샷과 완전히 일치한다. 실제 미션의 L2(Tutorial1 시작 상태 덤프)·L3·L4 화면 비교와 자연 완주는 미검증이다. |
 | 현재 작업 | **게임 플레이 중 UI 구현 단계.** 4-D 후반(GameWorld·Client 서비스)과 5-A·5-B·6·8단계 항목을 미션 앱 프레임 위에서 병행한다. Renderer·Gump 트리·입력 큐·생산 패널·객체 메뉴·도움말·음향이 실제 Tutorial 화면에 연결돼 있다. 순서는 아래 [다음 작업](#next)을 따른다. |
-| 전체 회귀 | E1079 고정 Node 22.23.5·26.13.0 각 6,582건 통과(실패·취소·건너뜀 0). 로그는 `extracted/webpj-e1079-node22-isolated.log`·`extracted/webpj-e1079-node26-isolated.log`다. E1080·E1081은 각 단위의 집중 Node 22·26 검사와 Chromium 검사만 통과했다. HJOW-Athlon 주기는 E1079 뒤 완료 2단위로 v26 2/4·v22 2/8이다. 2026-11-20 정리 때 대응표 1,160행 오류 0을 다시 확인했다. |
-| 브라우저 검사 | 메뉴: 2026-11-17 Chromium 2/2(갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체). 최초 실행·진행 잠금/체크·저장 재실행은 E616 Chromium 2/2. 미션 화면은 단위마다 Chromium으로 확인한다(최근 E1081 Tutorial2 실제 픽셀). [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
+| 전체 회귀 | E1079 고정 Node 22.23.5·26.13.0 각 6,582건 통과(실패·취소·건너뜀 0). 로그는 `extracted/webpj-e1079-node22-isolated.log`·`extracted/webpj-e1079-node26-isolated.log`다. E1080~E1082는 각 단위의 집중 Node 22·26 검사와 Chromium 검사만 통과했다(E1082: 15개 파일 84건·Chromium 31건). HJOW-Athlon 주기는 E1079 뒤 완료 3단위로 v26 3/4·v22 3/8이다. 2026-11-20 정리 때 대응표 1,160행 오류 0을 다시 확인했다. |
+| 브라우저 검사 | 메뉴: 2026-11-17 Chromium 2/2(갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체). 최초 실행·진행 잠금/체크·저장 재실행은 E616 Chromium 2/2. 미션 화면은 단위마다 Chromium으로 확인한다(최근 E1082 좌측 HUD 틀·화면 크기 변경 2/2, 한국어 Tutorial2 전체 흐름). [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
 
 <a id="next"></a>
 
 #### 다음 작업
 
-<a id="left-sidebar"></a>
-
-1. **좌측 사이드바 위치 보정 — 바로 다음 작업(2026-11-20 사용자 지시).** 실제 미션 화면을 테스트하면 좌측 사이드바(스톰 파워 SP 예산, 생산 덱, 미니맵 자리)의 화면 내 위치가 원본과 어긋난다. 다른 UI 작업보다 먼저 보정한다.
-   - **원본 기준.** 원본 1024×768 화면([스크린샷](<screenShots/Bridge the Gap - Started.png>))에서 사이드바는 화면 왼쪽 끝의 폭 80픽셀 기둥이다. 맨 위에 SP 예산 칸이 있고 그 아래 생산 격자와 돌 질감 배경이 이어지며, 하단 80픽셀은 미니맵 자리다. cpppj [RawProductionControls.cpp](cpppj/src/client/RawProductionControls.cpp)는 생성(원문 0043e640) 뒤 `Open()`에서 루트를 폭 80·높이 `screenHeight-80`으로 Uber 루트 (0,0)에 붙이고, `Resize()`에서 같은 하단 80 예약을 쓴다. 자식은 상단 예산 높이 23, 구분선 y 21, 다리 격자·중간 배경 y 26, 그 아래 텔레포트 격자·하단 배경 순이다.
-   - **웹 현황.** [client-production-panel.js](webpj/www/ui/client-production-panel.js)·[client-production-assembly.js](webpj/www/ui/client-production-assembly.js)가 패널을 조립하고 E1035에서 미션 앱 루트에 직접 설치했다. HUD 도킹([hud-dock.js](webpj/www/ui/hud-dock.js))·Uber 허브([uber-root-gump.js](webpj/www/ui/uber-root-gump.js))·미니맵([raw-minimap-controls.js](webpj/www/ui/raw-minimap-controls.js))은 아직 실제 HUD에 결합되지 않았다(5-B·5-C). [생산 패널](docs/webpj-client-production-panel-20261120.md) · [앱 생산 패널](docs/webpj-app-production-panel-20261120.md) · [패널 크기](docs/webpj-production-panel-resize-20261120.md)
-   - **원인 후보.** ① 원본의 설치 순서(생성 → `Open` 부착 → HUD 도킹·하단 예약 → 즉시 Sync)와 웹 설치의 차이, ② Gump scale·월드/화면 투영(E988·E989)과 Renderer 제출 좌표, ③ 화면비·창 크기 변경(E943·E954~E955·E1034)과 Canvas 표시 배율·DPI, ④ 자식 높이·scale 계산. 이 중 어디서 원점·크기가 바뀌는지 수치로 구분한다.
-   - **확인 방법.** 4:3 1024×768에서 Tutorial1·2 진입 직후 화면을 cpppj 오라클(3.3절) 또는 원본 스크린샷과 비교해 사이드바 x/y 원점·폭·높이·자식 배치를 기록한다. 이어서 16:9·16:10과 창 크기 변경 뒤에도 같은 기준을 유지하는지 확인한다.
-   - **완료 기준.** 4:3에서 사이드바 영역이 원본 위치와 일치한다(가능하면 오라클 논리 화면 대조). 생산 격자 클릭·단축키·건설 비용 표시(E1074·E1081)에 회귀가 없다. 16:9·16:10 위치를 확인한다. 단위 문서와 5-B의 RawProductionControls 항목을 갱신한다.
-2. **Tutorial2 D 이후 진행.** 생산품 배치, 나머지 객체 메뉴(3.1절 6단계 객체 우클릭)와 Tutorial 자연 진행을 잇는다.
-3. **상단 HUD.** E1081에서 임시 검은 바탕으로 둔 상단 HUD 영역을 UberHud·HudDock·Uber 허브로 구성한다(5-B·5-C).
-4. **나머지 번역과 미션 확장.** Tutorial1·2와 사제·Player·생산·워크샾 메뉴 밖의 미션 대본·객체 메뉴 한국어, 다른 미션의 목표 수행·자연 완주(8단계·3.7절 6차, 자연 완주는 1절 사용자 확인 범위).
-5. **4-D 완료 기준 L2.** Tutorial1 Load/Start의 보고서·덤프·첫 프레임 논리 화면 대조(4D-10b)는 계속 4-D의 완료 기준이다.
+1. **Tutorial2 D 이후 진행.** 생산품 배치, 나머지 객체 메뉴(3.1절 6단계 객체 우클릭)와 Tutorial 자연 진행을 잇는다.
+2. **Uber HUD 나머지.** 지식(NSInfo) 패널과 채팅 창 공장을 Uber 루트에 연결하고(`createKnowledge`·`createChat`), 채팅 표시 전환·수신·제출 경로와 미니맵 클릭·드래그 실사용, ESC 게임 메뉴 상단 바를 잇는다(5-B·5-C). 좌측 사이드바·미니맵 칸·지도 영역은 [E1082](docs/webpj-uber-hud-left-dock-20261120.md)에서 원본 위치로 도킹했다.
+3. **나머지 번역과 미션 확장.** Tutorial1·2와 사제·Player·생산·워크샾 메뉴 밖의 미션 대본·객체 메뉴 한국어, 다른 미션의 목표 수행·자연 완주(8단계·3.7절 6차, 자연 완주는 1절 사용자 확인 범위).
+4. **4-D 완료 기준 L2.** Tutorial1 Load/Start의 보고서·덤프·첫 프레임 논리 화면 대조(4D-10b)는 계속 4-D의 완료 기준이다.
 
 - **로컬 산출물.** `webpj/test-results-e1072-rerun`~`webpj/test-results-e1081`의 10개 폴더는 빈 폴더이거나 Git 제외 `*.zip` trace만 들어 있어 Git 상태에 나타나지 않는다. 다시 볼 필요가 없으면 삭제해도 된다.
 - **미션 식별.** 공통 fixture의 `thewarbegins.fort`는 캠페인 1-1이고, 실제 `tutorial1`이 선택하는 Fort는 `BridgeTheGap`이다(E753 재대조). [미션명 정정](docs/webpj-session-login-shipped-forts-20261118.md)
 
 <a id="e951-e1081"></a>
 
-#### E951~E1081 진행 요약
+#### E951~E1082 진행 요약
 
 단위별 완료 문단·검증 수·회귀 이력은 [E1081 정리 전 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261120-through-wb04-e1081)의 0.1절과 각 단위 문서에 있다.
 
@@ -47,10 +39,11 @@
 | 미션 로딩·Start | E951~E958, E968, E970, E974~E976 | 로그인 HUD 모드·진행 창, 앱 장치·Renderer 변경 표·World 크기 변경·즉시 카메라, 최초 Fort 요청 자동 처리, Ready→Start→첫 안내와 시계 정지/재개, 공유 Kernel 단일 프레임 | 기존 World 교체, 원본 Gump serial·LeaveBattle 취소 | [로딩](docs/webpj-app-mission-loading-20261119.md) · [요청 프레임](docs/webpj-app-fort-request-frame-20261120.md) · [Start](docs/webpj-app-tutorial-start-frame-20261120.md) · [Kernel](docs/webpj-app-mission-kernel-frame-20261120.md) |
 | 음향·음악 | E957, E959~E966, E997, E1059, E1061 | 효과음·음악 공개 자산과 선별 적재, 원본 위치 음향·SoundPlayer, 감쇠 파일 선택, Web Audio 장치, 효과음 218개 사전 해독, 앱 설정·Session 재생·재생 수, 경로 발소리, 장면 음악 선택, 결과 음악 1회 재생 | 음악 채널·앱 연결, 실제 청취, Wind Noise | [SoundPlayer](docs/webpj-sound-player-20261119.md) · [Web Audio](docs/webpj-web-sound-device-20261119.md) · [앱 음향](docs/webpj-app-campaign-audio-20261119.md) · [장면 음악](docs/webpj-scene-music-20261120.md) |
 | AI·채팅·Tell·승패 | E967, E969, E971~E973, E1058 | AI 이름·난이도·채팅 기록, 채팅 창 전역 대여, 미션 Tell 조회, Gump 팝업 차단·닫기, 승패 안내·AI/생산 할당, State 정리용 NSInfo·도움말 팝업 저장소 | 채팅 창 공장, 실제 State 정리·World 교체, 실제 승패 | [AI](docs/webpj-app-campaign-ai-20261120.md) · [Tell](docs/webpj-app-mission-tell-20261120.md) · [승패](docs/webpj-app-mission-outcome-20261120.md) · [State 소유자](docs/webpj-app-state-cleanup-owners-20261120.md) |
-| Renderer·화면 | E977~E989, E1081 | Renderer 전역 소유, 원본 수집 범위 90행, 지면·객체·입자·커서 수집·정렬·출력, Screen DIB·구름 합성, 표시 준비·Present, 미션 화면·Tell 합성, Gump 수집·출력·월드 부착 투영, Gump 이동 dirty로 비용 표시 잔상 제거 | HUD 공장, Kencloud·구름 차이 | [출력](docs/webpj-campaign-renderer-drawing-20261120.md) · [Present](docs/webpj-app-renderer-present-20261120.md) · [Gump 제출](docs/webpj-app-renderer-gump-submission-20261120.md) · [화면 갱신](docs/webpj-gump-redraw-cost-trails-20261120.md) |
+| Renderer·화면 | E977~E989, E1081~E1082 | Renderer 전역 소유, 원본 수집 범위 90행, 지면·객체·입자·커서 수집·정렬·출력, Screen DIB·구름 합성, 표시 준비·Present, 미션 화면·Tell 합성, Gump 수집·출력·월드 부착 투영, Gump 이동 dirty로 비용 표시 잔상 제거, 도킹된 지도 영역 `{85,0,W,H}` | 지식·채팅 HUD 공장, Kencloud·구름 차이 | [출력](docs/webpj-campaign-renderer-drawing-20261120.md) · [Present](docs/webpj-app-renderer-present-20261120.md) · [Gump 제출](docs/webpj-app-renderer-gump-submission-20261120.md) · [화면 갱신](docs/webpj-gump-redraw-cost-trails-20261120.md) |
 | 미션 진입 | E985~E986, E1010~E1016 | 캠페인 목록의 Tutorial1~6과 세 캠페인 묶음 미션 진입·브리핑·게임 시계 진행, 대포·다리 프레임 자료 오류와 섬 공격 Tell 경계 수정 | 미션별 목표 수행·승리·자연 완주 | [Tutorial 시작](docs/webpj-browser-tutorial-menu-start-20261120.md) · [Tutorial3~6](docs/webpj-browser-tutorial-three-six-20261120.md) · [첫 캠페인](docs/webpj-browser-first-campaign-20261120.md) · [마지막 묶음](docs/webpj-browser-final-campaign-group-20261120.md) |
 | 입력·카메라 | E990~E1001, E1009 | 선택·강조·운반 입력기, 좌클릭 선택·이동, 포인터 폴링·이동점 통지, 가장자리 스크롤·카메라 장치, F4·ViewHome·P/R·F5·N, Player 정기 로그, 조각 회전 | 전체 입력 큐 소비, 여러 유닛 순환, ESC 게임 메뉴 | [포인터](docs/webpj-app-mission-pointer-frame-20261120.md) · [가장자리](docs/webpj-app-edge-scroll-frame-20261120.md) · [사제 키](docs/webpj-browser-priest-shortcuts-20261120.md) · [회전](docs/webpj-browser-cursor-rotation-20261120.md) |
-| 생산·건설 | E1002~E1008, E1019~E1022, E1026~E1036, E1047, E1074, E1076~E1079 | 생산 유지·다리 공급, 커서·생산 단축키, 다리 배치, 생산 격자·항목·예산, 생산 패널 조립·크기·앱 설치, 실패 안내, 회수 명령, 비용 표시, Factory 메뉴와 생산·업그레이드 명령 | **사이드바 위치 보정**, 연속 배치·자연 완주, 연구 명령 소비 | [생산 패널](docs/webpj-client-production-panel-20261120.md) · [다리 배치](docs/webpj-browser-bridge-placement-20261120.md) · [비용 표시](docs/webpj-app-floating-sp-20261120.md) · [워크샾 생산](docs/webpj-browser-tutorial2-factory-20261120.md) |
+| 생산·건설 | E1002~E1008, E1019~E1022, E1026~E1036, E1047, E1074, E1076~E1079 | 생산 유지·다리 공급, 커서·생산 단축키, 다리 배치, 생산 격자·항목·예산, 생산 패널 조립·크기·앱 설치, 실패 안내, 회수 명령, 비용 표시, Factory 메뉴와 생산·업그레이드 명령 | 연속 배치·자연 완주, 연구 명령 소비 | [생산 패널](docs/webpj-client-production-panel-20261120.md) · [다리 배치](docs/webpj-browser-bridge-placement-20261120.md) · [비용 표시](docs/webpj-app-floating-sp-20261120.md) · [워크샾 생산](docs/webpj-browser-tutorial2-factory-20261120.md) |
+| HUD 틀 | E1082 | 실제 Uber 루트 교체 설치·HUD 모드 3 도킹(세로·미니맵·채팅 구분선, 좌측 사이드바 80폭, 하단 미니맵 80×75)·화면 크기 변경 재배치·월드 해제 정리, 이식해 둔 미니맵을 Gump 루트에 연결(월드 Pop/Unpop dirty·카메라 중심·이동 입력), 생산 패널의 Construct/Open 분리, 지도 영역 공유 | 지식(NSInfo)·채팅 창 공장, 미니맵 클릭·드래그 실사용, ESC 게임 메뉴 상단 바 | [좌측 HUD 틀](docs/webpj-uber-hud-left-dock-20261120.md) |
 | Gump·메뉴 UI | E1017~E1018, E1023~E1025, E1037~E1045, E1064~E1072, E1075 | Form 부착·소멸 통지, 한 줄 글자·배경·장식, 다중 줄·Slider 출력, 세로/장식 메뉴, 생산 정보 메뉴, 중첩 메뉴, 사제·Player·공통 객체·운반체 메뉴, 사제 우클릭 → 윈드 신전 건설·완공 | 나머지 객체 메뉴, 채팅 분기 | [Client 메뉴](docs/webpj-client-menu-gump-20261120.md) · [중첩 메뉴](docs/webpj-client-submenu-20261120.md) · [사제 우클릭](docs/webpj-browser-priest-menu-20261120.md) · [신전 완공](docs/webpj-browser-tutorial2-temple-complete-20261120.md) |
 | 도움말 | E1046, E1048~E1055 | 생산 우클릭 Help, 요구 에너지 그림, TYPE 정보 HTML·파서·Session TYPE·정보 창, 도움말 그림 자산과 앱 출력 | 타입별 원본 화면 비교 | [생산 Help](docs/webpj-app-production-about-20261120.md) · [앱 TYPE](docs/webpj-app-help-type-info-20261120.md) · [도움말 그림](docs/webpj-app-help-picture-20261120.md) |
 | 한국어 | E1056~E1057, E1062~E1063, E1073, E1080 | Tutorial1·2 대본, 공통 유닛 용어표·생산 정보, Tell 그림, 사제·Player·워크샾 생산 메뉴 | 나머지 미션 대본·객체 메뉴 | [Tutorial1](docs/webpj-korean-tutorial1-20261120.md) · [Tutorial2](docs/webpj-korean-tutorial2-20261120.md) · [생산 메뉴](docs/webpj-korean-factory-menu-20261120.md) |
@@ -58,7 +51,7 @@
 
 ### 0.2 단계 진행판
 
-`n/m`은 상위 체크 수이며 보관한 완료 항목을 포함한다. 상위 항목 안의 완료 부분은 중복 가산하지 않는다. 남은 단위와 줄 수는 `PORT_MAP.tsv`의 partial·todo 기준이며 partial에는 파일 전체 줄 수를 센다. E951~E1081은 대부분 상위 항목 안의 부분 진행이라 체크 수는 바뀌지 않았고, 2026-11-20 재집계에서도 남은 145단위·33,562줄이 같다.
+`n/m`은 상위 체크 수이며 보관한 완료 항목을 포함한다. 상위 항목 안의 완료 부분은 중복 가산하지 않는다. 남은 단위와 줄 수는 `PORT_MAP.tsv`의 partial·todo 기준이며 partial에는 파일 전체 줄 수를 센다. E951~E1082는 대부분 상위 항목 안의 부분 진행이라 체크 수는 바뀌지 않았고, E1082 뒤 재집계에서도 남은 145단위·33,562줄이 같다(`UberHud.inc` todo→partial).
 
 | 순서 | 단계 | 체크·상태 | 남은 단위 / 줄 |
 | --- | --- | --- | --- |
@@ -77,12 +70,12 @@
 
 ### 0.3 이식량
 
-기준선 `225553df`의 이식 대상 1,022단위는 **port 877(85.8%)·partial 68·todo 77**이다(2026-11-20 재집계). 제외 138단위를 합하면 대응표 1,160행이다. 앱 수명 연결을 뜻하는 `session`과 오라클 대조를 뜻하는 `oracle`은 0이다.
+기준선 `225553df`의 이식 대상 1,022단위는 **port 877(85.8%)·partial 69·todo 76**이다(2026-11-20 E1082 뒤 재집계). 제외 138단위를 합하면 대응표 1,160행이다. 앱 수명 연결을 뜻하는 `session`과 오라클 대조를 뜻하는 `oracle`은 0이다.
 
 | 범위 | port / 대상 | partial | todo |
 | --- | --- | --- | --- |
 | `o/` 월드·규칙 | 564 / 574 | 6 | 4 |
-| `client/` 세션·UI·표시 | 312 / 447 | 62 | 73 |
+| `client/` 세션·UI·표시 | 312 / 447 | 63 | 72 |
 | `zacket/` 내부 미션 전송 | 1 / 1 | 0 | 0 |
 
 남은 145단위 중 기존 기준선은 76단위/28,124줄, 재기준선 추가분은 69단위/5,438줄이다. E854에서 `UberReconnect`의 단독 감시를, E884에서 단독 미션의 Fort 이름 선택 두 단위를 이식 대상으로 재분류했다. 재기준선 분류·영역별 상세는 [E801 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261118-through-wb04-e801)과 `python -X utf8 tools/port_inventory.py --families wb`에서 확인한다.
@@ -234,22 +227,21 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 #### 5-A 렌더러·Draw·시각 시스템 (44/46)
 
 - [ ] **ClientRendererFrame** — 미션 화면 출력의 원본 순서를 앱에 연결하고 있다.
-  - 완료: 지형 수집 범위·행 한도 90행(E978), 지면·객체·입자·커서 수집과 원본 정렬·출력(E979~E980), Screen DIB·구름·Renderer 합성(E981), 표시 준비·Present·미션 화면과 임시 Tell 출력(E982~E984), Gump kind 2 수집·출력과 월드 부착 투영(E988~E989), Gump 이동 dirty(E1081).
-  - 남음: HUD 공장(5-B·5-C), RawMenuControls(5-C)·GameWorld(4D-6a) 선행, ClientRendererFrameGlobals·GumpVisual 확인, Kencloud 메뉴 연결과 구름 배경의 알려진 차이 해소.
+  - 완료: 지형 수집 범위·행 한도 90행(E978), 지면·객체·입자·커서 수집과 원본 정렬·출력(E979~E980), Screen DIB·구름·Renderer 합성(E981), 표시 준비·Present·미션 화면과 임시 Tell 출력(E982~E984), Gump kind 2 수집·출력과 월드 부착 투영(E988~E989), Gump 이동 dirty(E1081), 도킹된 지도 영역(E1082).
+  - 남음: 지식·채팅 HUD 공장(5-B·5-C), RawMenuControls(5-C)·GameWorld(4D-6a) 선행, ClientRendererFrameGlobals·GumpVisual 확인, Kencloud 메뉴 연결과 구름 배경의 알려진 차이 해소.
   - 근거: [E978](docs/webpj-renderer-collection-geometry-20261120.md) · [E981](docs/webpj-campaign-renderer-drawing-20261120.md) · [E984](docs/webpj-app-mission-display-frame-20261120.md) · [E989](docs/webpj-app-gump-world-projection-20261120.md) · [E1081](docs/webpj-gump-redraw-cost-trails-20261120.md) · [화면 문서](docs/webpj-screen-20261113.md)
 - [ ] **E197·E198·E201 재대조** — 웹 조립으로만 확인한 시각 시스템을 실제 Session의 cpppj 시험과 대조한다. 7단계와 중복되는 시험은 한 번만 한다.
 
 #### 5-B 카메라·HUD·미니맵 (9/13)
 
-- [ ] **UberHud** — HudDock·HudDividerInput을 Uber에 연결하고 HudNsInfoMeta·NativePlayerInfoInput·NativeNsInfoInput·HudPlayerButtonDraw의 단독 경로를 확인한다.
-- [ ] **RawMinimapControls** — 초안에 MinimapGeometry·cpppj 전체 계약·원본 fixture와 메뉴/월드 허브를 연결한다.
-- [ ] **FloatingSpGump·RawProductionControls** — 실제 표시 소비자를 연결하고 InventoryItemGump 분리 뒤 잔여를 확인한다. E1032~E1035에서 생산 패널을 조립·앱 설치하고 E1074에서 건설 비용 표시 Gump를 커서·게임 시계에 연결했다.
-  - **다음 작업: 좌측 사이드바 위치 보정.** 패널·SP 예산이 원본처럼 화면 왼쪽 폭 80 기둥과 하단 80 미니맵 자리에 맞도록 보정한다. 상세는 [0.1절 다음 작업 1](#left-sidebar)을 따른다.
+- [ ] **UberHud** — E1082에서 Uber 루트 교체 설치·HudDock 모드 3 도킹·화면 크기 변경 재배치·월드 해제 정리를 앱에 연결했다([좌측 HUD 틀](docs/webpj-uber-hud-left-dock-20261120.md)). 지식(NSInfo)·채팅 창 공장을 `createKnowledge`·`createChat`에 연결하고 HudNsInfoMeta·NativePlayerInfoInput·NativeNsInfoInput·HudPlayerButtonDraw의 단독 경로를 확인한다.
+- [ ] **RawMinimapControls** — E1082에서 Gump 루트·월드 Pop/Unpop dirty·카메라 입력에 연결하고 Tutorial1 화면의 미니맵 칸을 원본 스크린샷과 대조했다(85×82픽셀 일치). 원본 fixture 전체 대조와 클릭·드래그 실사용 확인이 남았다.
+- [ ] **FloatingSpGump·RawProductionControls** — 실제 표시 소비자를 연결하고 InventoryItemGump 분리 뒤 잔여를 확인한다. E1032~E1035에서 생산 패널을 조립·앱 설치하고 E1074에서 건설 비용 표시 Gump를 커서·게임 시계에 연결했다. E1082에서 생산 패널을 Uber 루트의 직계 자식(폭 80·높이 H−80)으로 도킹해 좌측 사이드바 위치를 원본과 맞췄다.
 - [ ] **Cursor·RawCursor 표시** — 선행 커서 부품을 실 화면에 연결한다. 실제 카메라 투영·가장자리 스크롤·마나 볼트 정기 표시를 함께 대조한다.
 
 #### 5-C 게임 화면 허브·미션 진입 (0/6)
 
-- [ ] **Uber 허브** — E917에서 공통 프레임 방송을 실제 구분선에 분배했다. [E917](docs/webpj-app-gump-broadcast-20261119.md) E916에서 실제 Client 공통 구분선 생성·입력·부착을 연결했다. [E916](docs/webpj-app-hud-divider-20261119.md) E914에서 실제 Client 등록표의 serial·현재 HUD 판정을 구현했다. [E914](docs/webpj-uber-root-lookup-20261119.md) UberRootGump의 전체 생성·교체는 원본 160행으로 대조했다. [E912](docs/webpj-uber-root-construct-20261119.md) UberGump·RawUberRootControls와 실제 하위 공장을 연결해 HUD·덱·미니맵·채팅을 소유하게 한다. Meta Sprite 두 단위는 4D-7c와 확인한다.
+- [ ] **Uber 허브** — E917에서 공통 프레임 방송을 실제 구분선에 분배했다. [E917](docs/webpj-app-gump-broadcast-20261119.md) E916에서 실제 Client 공통 구분선 생성·입력·부착을 연결했다. [E916](docs/webpj-app-hud-divider-20261119.md) E914에서 실제 Client 등록표의 serial·현재 HUD 판정을 구현했다. [E914](docs/webpj-uber-root-lookup-20261119.md) UberRootGump의 전체 생성·교체는 원본 160행으로 대조했다. [E912](docs/webpj-uber-root-construct-20261119.md) E1082에서 `ClientUberHud`로 구분선·미니맵·생산 패널을 소유하는 실제 Uber 루트를 앱에 설치했다. 지식·채팅 공장을 연결해 HUD·덱·미니맵·채팅 전체를 소유하게 한다. Meta Sprite 두 단위는 4D-7c와 확인한다.
 - [ ] **메뉴·버튼 컨트롤** — RawMenuControls·RawButtonControls·RawMenuHtml·RawMenuLoading·RawTextEntryControls·RawMenuChat. RawMenuControls는 5-A의 선행이다.
 - [ ] **메인 메뉴·타이틀 상태** — NativeIntroState·TitleBitmapLifetime·NativeMainMenuState는 이식했다. ClientTitleBitmaps가 남았다.
 - [ ] **미션 진입 명령** — MissionBegin·StartDemo·환영 창 명령을 실제 Fort 요청·State 전환·Session 생성에 연결한다.
@@ -265,7 +257,7 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 - [ ] **사제·운반·경로 바인딩** — 캠페인 Session 운반 입력과 일반 사제 이동은 E794에서 확인했다. MetaMap·CampaignUserInputServices·앱과 저장 미션 thewarbegins/masterofwhirligigs의 전체 초기화·경로 루프를 대조한다. [E794](docs/webpj-session-carrier-input-20261118.md)
 - [ ] **건설·생산·경제** — 생산 유지부터 실제 화면 생산 UI까지 진행 중이다.
   - 완료: RawProductionMaintenance 원본 86행 대조와 Session 연결, ClientProductionSync·ProductionControlContext·ClientBridgeDecay(E831~E835), 앱 생산 유지·다리 공급·생산 단축키·다리 배치(E1002~E1008), 생산 격자·항목·예산·패널 조립과 앱 설치(E1019~E1035), 회수 명령(E1047), 비용 표시(E1074), Factory 메뉴와 생산·업그레이드 명령(E1076~E1079).
-  - 남음: **좌측 사이드바 위치 보정([다음 작업 1](#left-sidebar))**, 연속 배치·자연 완주, HUD의 주기 호출과 실제 Client 메인 루프, 4-D에 남은 건설 장치의 입력 소비자, 실제 wire 배치/확정, SP·덱/생산, 다리 붕괴, RawBuildReplay·ClientBuildReplay의 FILE/최신 rec·Host·F7/Ctrl+F6.
+  - 남음: 연속 배치·자연 완주, HUD의 주기 호출과 실제 Client 메인 루프, 4-D에 남은 건설 장치의 입력 소비자, 실제 wire 배치/확정, SP·덱/생산, 다리 붕괴, RawBuildReplay·ClientBuildReplay의 FILE/최신 rec·Host·F7/Ctrl+F6.
   - 근거: [E831](docs/webpj-production-maintenance-20261119.md) · [E835](docs/webpj-client-bridge-decay-20261119.md) · [E1003](docs/webpj-app-production-frame-20261120.md) · [E1008](docs/webpj-browser-bridge-placement-20261120.md) · [E1035](docs/webpj-app-production-panel-20261120.md) · [E1079](docs/webpj-browser-tutorial2-factory-20261120.md) · [건설 기록 재생](docs/webpj-build-replay-runtime-20261116.md)
 - [ ] **공장·지식 메뉴와 기술** — ThemeTechnologyCommand에서 연구·업그레이드·지식 메뉴와 기술 명령을 연결한다. E1076~E1079에서 Factory 생산·지식 항목과 생산·업그레이드 명령을 앱에 연결했고, 연구 명령의 앱 소비가 남았다. [Factory Session](docs/webpj-session-factory-menu-20261120.md) · [Factory Client 메뉴](docs/webpj-client-factory-menu-20261120.md)
 - [ ] **M3 / L3** — Tutorial1 이동·수확·건설·생산의 입력 단계표로 cpppj 상태·화면을 대조한다. Tutorial1·2와 캠페인 1-1·1-2의 브라우저 검증까지 진행한다.

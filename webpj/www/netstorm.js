@@ -111,6 +111,12 @@ import { MainMenuScreen } from './ui/main-menu.js';
 import { ClientGumpRoot } from './ui/client-gump-root.js';
 import { GumpHelp, GumpHelpState } from './ui/gump-help.js';
 import { createClientProductionAssembly } from './ui/client-production-assembly.js';
+import { ClientGumpBackground } from './ui/client-gump-background.js';
+import { ClientHudDivider } from './ui/client-hud-divider.js';
+import { ClientMinimap } from './ui/client-minimap.js';
+import { ClientUberHud } from './ui/client-uber-hud.js';
+import { createRawMinimapGlobals } from './ui/raw-minimap-controls.js';
+import { createMetadisplayDirtyState } from './core/metadisplay-dirty.js';
 import { RawUberRootLookup } from './ui/raw-uber-root-lookup.js';
 import { projectGumpObject } from './ui/gump-form-binding.js';
 import { UberGumpCamera } from './ui/uber-gump-camera.js';
@@ -541,6 +547,8 @@ export class Netstorm {
         this._clientSubscriber = null; this._clientGameplay = null; this._clientCoreData = null; this._clientPlayers = null; this._clientTemplates = null;
         // 자산 적재 뒤 구성해 Session보다 오래 유지하는 월드 물리와 Kernel이다.
         this._gameAssets = null; this._surfaceStorage = null; this._clientKernel = null; this._clientTrace = null; this._clientProductionGlobals = null; this._campaignProduction = null;
+        // 미니맵의 장기 dirty 상태와 색 전역은 Client 수명에 둔다. (2026-11-20 WB04-E1082)
+        this._clientMinimapState = null; this._clientMinimapGlobals = null;
         // 실제 미션 Guide는 자산과 장기 저장소가 준비된 뒤 생성한다.
         this._clientGuide = null; this._clientFort = null; this._clientFortName = null;
         // 원본 공통 Gump 루트와 입력 전역은 Client 수명에 보유한다.
@@ -954,6 +962,8 @@ export class Netstorm {
                 if (!this._surfaceStorage || !this._clientGameplay) throw new Error('월드 Gump 투영의 실제 Client 수명 누락');
                 return projectGumpObject(this._surfaceStorage.pool, this._clientGameplay.camera().snapshot(), object);
             });
+        // HUD 도킹 전의 지도 영역은 전체 논리 화면이다. 도킹이 같은 객체에 정수 LTRB를 다시 쓴다. (2026-11-20 WB04-E1082)
+        Object.assign(this._clientGump.mapView(), { left: 0, top: 0, right: this._layout.logicalWidth, bottom: this._layout.logicalHeight });
     }
 
     // 현재 Fort·Guide·설정으로 원본 창 제목을 계산해 실제 문서에 적용한다.
@@ -991,7 +1001,9 @@ export class Netstorm {
             playerRecords: players, templateStorage: templates, connectionActivityGlobals: this._clientConnectionActivity, connectionRegistry: this._clientConnections, connectionFrameNumber: () => clock.time().number, ...(surface && kernel ? { surfaceStorage: surface, processKernel: kernel } : {}),
             ...(colors ? { colorSortInput: colors, ownerColorTables: colors.ownerTables, screenPalette: () => this._clientPaletteScreen.palette() } : {}),
             ...(this._clientGuide ? { missionRestrictions: this._clientGuide.restrictions(), missionOptions: gameplay.battleOptionsOwner() } : {}), ...(request ? { missionFortRequest: request } : {}),
-            unixSeconds: () => clock.unixSeconds(), frameTime: () => clock.time(), paused: () => clock.paused() };
+            unixSeconds: () => clock.unixSeconds(), frameTime: () => clock.time(), paused: () => clock.paused(),
+            // 지도 영역은 HUD 도킹이 쓰는 Gump 트리의 같은 객체다. Gump 루트가 없으면 전체 논리 화면이다. (2026-11-20 WB04-E1082)
+            mapView: () => this._clientGump?.mapView() ?? { left: 0, top: 0, right: this._layout.logicalWidth, bottom: this._layout.logicalHeight } };
     }
 
     // State7 부모가 실제 앱의 장기 전역과 같은 프레임 시계를 빌리도록 한다.
@@ -1237,7 +1249,7 @@ export class Netstorm {
     // 현재 World의 Session을 반납하고 같은 미션 연결 대기 관문을 해제한다.
     _releaseCampaignWorld() {
         if (!this._campaignWorld) return;
-        this._campaignProduction?.ui?.close(); this._clientGump?.releaseFormHost(); this._campaignWorld.dispose(); this._campaignWorld = null; this._campaignWorldMissionToken = 0; this._campaignUserInput = null; this._campaignProduction = null; this._campaignCursor = CURSOR_NORMAL;
+        this._campaignProduction?.ui?.close(); this._campaignProduction?.hud?.close(); this._clientGump?.releaseFormHost(); this._campaignWorld.dispose(); this._campaignWorld = null; this._campaignWorldMissionToken = 0; this._campaignUserInput = null; this._campaignProduction = null; this._campaignCursor = CURSOR_NORMAL;
     }
 
     // 로그인된 현재 World와 Guide의 실제 미션 Start를 같은 Client 수명에 준비한다.
@@ -1315,7 +1327,7 @@ export class Netstorm {
             battle: () => this._surfaceStorage.ownerMode.battle, editor: () => this._clientGameplay.world.editor !== 0,
             metamap: () => this._surfaceStorage.ownerMode.challenge, unknownName: () => 'SOMEONE',
         });
-        const ui = createClientProductionAssembly(root, production.session, this._gameAssets, this._resources.fonts, screen, this._clientColorSort, this._clientProductionGlobals, production.panel, {
+        const devices = {
             now: () => this._gameClock.wallSeconds(), gameSeconds: () => this._gameClock.gameSeconds(), translate: (value) => this._resources.translate(value),
             sound: (name) => this._clientSoundPlayer.play(this._clientSoundNames.lookup(name), 0, 0, 0, 0, 0), tell: (section) => this._openTell(section),
             about: () => { throw new Error('생산 정보 메뉴 미연결'); },
@@ -1335,8 +1347,31 @@ export class Netstorm {
             changed: () => { this._clientRenderer.invalidateAll(); this._displayDirty = true; }, closePopups: () => this._closeCampaignPopups(),
             poll: (code) => this._clientInputPoll.poll(code), cursor: (number) => { this._campaignCursor = number; this._applyCursor(); },
             baseHandle: (...args) => help.handle(...args), menuInstances: () => this._mainMenu?.popup?.isOpen ? 1 : 0,
-        });
-        ui.open(); production.ui = ui; return ui;
+        };
+        // 원본 `InstallHud` 순서: 전체 Uber 루트가 세로·미니맵·채팅 구분선과 미니맵·생산 패널을 만들고 모드 3으로 도킹해 지도 영역을 정한다. (2026-11-20 WB04-E1082)
+        let ui = null;
+        const background = new ClientGumpBackground(root, this._gameAssets, () => 35, () => screen.shadeMaps(), () => screen.colors(), devices.baseHandle);
+        const divider = new ClientHudDivider(root, { background, backgroundColor: () => 35, dividerColor: () => 55, baseHandle: devices.baseHandle, closePopups: devices.closePopups,
+            menuInstances: devices.menuInstances, poll: devices.poll, cursor: devices.cursor });
+        const world = this._campaignWorld;
+        this._clientMinimapState ??= createMetadisplayDirtyState({ fullRefreshOwner: this._clientGameplay.mapRevision() });
+        this._clientMinimapGlobals ??= createRawMinimapGlobals();
+        const minimap = new ClientMinimap(root, { storage: this._surfaceStorage, dirty: this._clientMinimapState, globals: this._clientMinimapGlobals,
+            view: () => {
+                const data = this._clientGameplay.camera().snapshot().data, map = root.mapView();
+                return { camera: [data.getUint32(0, true), data.getUint32(4, true)], viewport: { left: map.left, top: map.top, right: map.right, bottom: map.bottom }, pixelsX: data.getInt32(8, true), pixelsY: data.getInt32(12, true) };
+            },
+            center: (x, y) => world.centerCamera(x, y), move: (x, y) => world.moveFromMinimap(x, y), inputMode: () => world.inputMode(), poll: () => this._clientInputPoll.poll(0xffff),
+            baseHandle: devices.baseHandle, changed: devices.changed });
+        const hud = new ClientUberHud(root, { assets: this._gameAssets, panelGlobals: this._clientProductionGlobals, divider, minimap,
+            fullDeck: () => this._clientGameplay.fullDeck(), mapRevision: () => this._clientGameplay.mapRevision(),
+            createMinimap: () => minimap.create(),
+            createProduction: () => { ui = createClientProductionAssembly(root, production.session, this._gameAssets, this._resources.fonts, screen, this._clientColorSort, this._clientProductionGlobals, production.panel, devices); return ui.construct(); },
+            closePopups: () => this._closeCampaignPopups(), baseHandle: devices.baseHandle, invalidate: (rect, flags) => this._clientRenderer.invalidate(rect, flags),
+            finishResize: () => { this._clientKencloud.worldRedraw().value = 1; this._campaignWorld?.resize(this._layout.logicalWidth, this._layout.logicalHeight); this._clientRenderer.invalidateAll(); this._displayDirty = true; } });
+        production.hud = hud; production.minimap = minimap; hud.install(); production.ui = ui;
+        ui.finishInstall(); minimap.setPalette(screen.colors()); minimap.bindWorld(production.session.core());
+        return ui;
     }
 
     // 원본 생산 패널 idle 순서로 현재 내용물과 재고·다리 공급을 갱신한다.
@@ -1543,7 +1578,7 @@ export class Netstorm {
         this._clientChatRecords = null; this._clientChatChannels = null; this._clientChatWindows = null;
         this._clientPaletteScreen = null; this._clientColorSort = null; this._clientRenderer = null; this._clientSurfaceDisplay = null; this._clientRendererFrame = null;
         this._clientTemplates = null; this._clientPlayers = null; this._clientCoreData = null; this._clientGameplay = null; this._clientSubscriber = null;
-        this._clientKernel = null; this._surfaceStorage = null; this._gameAssets = null; this._clientTrace = null; this._clientProductionGlobals = null; this._campaignCamera = null;
+        this._clientKernel = null; this._surfaceStorage = null; this._gameAssets = null; this._clientTrace = null; this._clientProductionGlobals = null; this._campaignCamera = null; this._clientMinimapState = null; this._clientMinimapGlobals = null;
         this._missionAudioAssets?.dispose(); this._missionAudioAssets = null;
         if (this._audio) {
             // 음악을 멈추고 문맥을 닫는다. 닫기에 실패해도 정리를 막지 않는다.
@@ -2348,7 +2383,9 @@ export class Netstorm {
         if (this._state === AppState.MAIN_MENU || this._state === AppState.TERRAIN_PREVIEW) this._ensureSurface();
         if (this._clientPaletteScreen) this._resizeClientPaletteScreen(next.logicalWidth, next.logicalHeight);
         this._clientGump?.resize(next.logicalWidth, next.logicalHeight);
-        this._campaignProduction?.ui?.resize(next.logicalHeight);
+        // HUD가 있으면 구분선을 재배치해 지도·생산 패널·미니맵을 같은 도킹으로 다시 맞추고, 없으면 지도 영역은 전체 화면이다. (2026-11-20 WB04-E1082)
+        if (this._campaignProduction?.hud) this._campaignProduction.hud.reflow(next.logicalWidth, next.logicalHeight);
+        else if (this._clientGump) Object.assign(this._clientGump.mapView(), { left: 0, top: 0, right: next.logicalWidth, bottom: next.logicalHeight });
         this._campaignWorld?.resize(next.logicalWidth, next.logicalHeight);
         this._applyCursor();
         if (next.visible) this._render(view.performance?.now?.() ?? 0);
@@ -2779,7 +2816,7 @@ export class Netstorm {
             this._applyCursor();
         }
         // 원본 Kernel 단계에서 같은 현재 World를 준비하고 단일 Client Kernel을 실행한다.
-        if (this._campaignDisplayActive()) { this._runCampaignProductionFrame(); this._clientGump.idle(); this._runCampaignKernelFrame(); }
+        if (this._campaignDisplayActive()) { this._runCampaignProductionFrame(); this._clientGump.idle(); this._runCampaignKernelFrame(); this._campaignProduction?.hud?.refresh(); }
         this._render(now);
         this._startFrameLoop();
     }
