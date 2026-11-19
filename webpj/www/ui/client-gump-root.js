@@ -110,6 +110,18 @@ export class ClientGumpRoot {
     move(token, x, y, parent = 0) { this.#live(); this.#tree.move(token, x, y, parent); }
     // 등록표의 표시·통지·삭제 상태를 검사해 현재 파생 방송에 전달한다.
     broadcast(event, first, second) { this.#live(); this.#frame.broadcast(event, first, second); }
+    // 원본 포인터 단계처럼 창 안에서 선택적 overlay 다음 같은 사건을 방송한다.
+    notifyPointer(event, mode, cursorActive, allowOverlay) {
+        this.#live();
+        if (!event || !Number.isInteger(event.code) || !Number.isInteger(event.x) || !Number.isInteger(event.y)) throw new TypeError('Client Gump 포인터 사건 계약');
+        const code = event.code >>> 0, x = event.x | 0, y = event.y | 0;
+        let overlay = null;
+        if (!(code & 0x04000000)) {
+            if (this.#life.currentDialog || (allowOverlay && (mode >>> 0) === 0 && !this.#life.focus && !cursorActive)) overlay = this.#input.overlay(code, { x, y });
+            this.#frame.broadcast(code, x >>> 0, y >>> 0);
+        }
+        return { overlay };
+    }
     // 같은 수명의 지연 삭제를 요청하고 현재 큐를 정리한다.
     remove(token) { this.#live(); this.#lifetime.kill(token); this.#lifetime.cleanup(); }
     // 임시 등록을 반환한 실제 새 루트로 공통 수명과 Client의 현재 별칭을 함께 바꾼다.

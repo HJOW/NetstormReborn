@@ -105,3 +105,29 @@ test('Client Gump 루트: 실제 프레임 방송의 등록·표시·삭제 필�
     owner.remove(token); owner.broadcast(3, 4, 5); assert.equal(events.length, 1); owner.dispose();
     assert.throws(() => owner.broadcast(0, 0, 0), /반납/u);
 });
+
+// 원본 포인터 관문이 같은 입력 overlay와 공통 방송을 순서대로 호출한다.
+test('Client Gump 루트: 포인터 overlay·방송의 대화창·포커스·창 안팎 관문', () => {
+    const owner = new ClientGumpRoot(100, 80, () => 0, () => {}), events = [], node = new GumpBackgroundNode();
+    const token = owner.allocateDerived(node, (event, first, second) => { events.push(['overlay', event, first, second]); return 1; },
+        (value, flags) => owner.lifetime().deleteScalar(value, flags), null,
+        (value, event, first, second) => events.push(['broadcast', value, event, first, second]));
+    owner.factory().construct(token, 0, 20, 20, 0x101); owner.attach(token, 10, 10); owner.lifetime().setOverlay(token, true);
+    const point = { code: 42, x: 15, y: 15 };
+    assert.deepEqual(owner.notifyPointer(point, 0, false, true), { overlay: 1 });
+    assert.deepEqual(events.splice(0), [['overlay', 0x0200003b, 15, 15], ['broadcast', token, 42, 15, 15]]);
+    // 창 밖은 overlay와 방송을 모두 건너뛴다.
+    assert.deepEqual(owner.notifyPointer({ ...point, code: 0x0400002a }, 0, false, true), { overlay: null }); assert.deepEqual(events, []);
+    // 일반 상태의 각각의 차단 조건은 overlay만 생략하고 방송은 보존한다.
+    for (const [mode, cursor, allowed] of [[1, false, true], [0, true, true], [0, false, false]]) {
+        assert.deepEqual(owner.notifyPointer(point, mode, cursor, allowed), { overlay: null });
+        assert.deepEqual(events.splice(0), [['broadcast', token, 42, 15, 15]]);
+    }
+    owner.input().capture(token); assert.deepEqual(owner.notifyPointer(point, 0, false, true), { overlay: null }); events.length = 0;
+    // 대화창은 focus·커서·모드·허용 여부보다 우선한다.
+    owner.input().addDialog(token); assert.deepEqual(owner.notifyPointer(point, 1, true, false), { overlay: 1 });
+    assert.deepEqual(events.splice(0), [['overlay', 0x0200003b, 15, 15], ['broadcast', token, 42, 15, 15]]);
+    assert.deepEqual(owner.notifyPointer({ code: 42, x: 99, y: 79 }, 0, false, true), { overlay: 0 });
+    assert.throws(() => owner.notifyPointer({ code: 1, x: 0 }, 0, false, true), /사건 계약/u);
+    owner.dispose(); assert.throws(() => owner.notifyPointer(point, 0, false, true), /반납/u);
+});
