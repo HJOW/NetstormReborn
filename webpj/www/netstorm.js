@@ -36,6 +36,7 @@ import { BrowserInputPoll } from './platform/browser-input-poll.js';
 import { queueBrowserMouseEvent } from './platform/browser-mouse-events.js';
 import { queueBrowserVirtualKeyEvent, queueBrowserCharacterEvent } from './platform/browser-key-events.js';
 import { InputQueue } from './core/input-queue.js';
+import { queueCommittedText } from './core/display-text-input.js';
 import { GumpPointerBoundaryState, prepareGumpPointerBoundaryWithQueue } from './ui/gump-pointer-boundary.js';
 import { ClientFrameClock } from './core/client-frame-clock.js';
 import { ClientLocalStateGlobals } from './core/client-local-state-globals.js';
@@ -499,6 +500,8 @@ export class Netstorm {
         this._clientInputQueue = new InputQueue(); this._clientPointerBoundary = new GumpPointerBoundaryState();
         // 원본 입력 소비자가 설치되기 전에는 독립 메뉴와 같은 사건을 중복 예약하지 않는다.
         this._clientNativeInputEnabled = false;
+        // 원본 조합 중 키 중복을 막는 현재 브라우저 조합 상태다.
+        this._clientComposing = false;
         // 메인 메뉴 그리기 자원 묶음(buildMenuResources 결과)이다. 자산 적재 전에는 null 이며, 재시작해도 다시 받지 않는다.
         this._resources = null;
         // 게임 데이터 조회 객체(GameData: 파일 조회·설정 층·언어 용어표·Tell 섹션)다. 자산 적재 전에는 null 이며 재시작해도 다시 만들지 않는다.
@@ -649,6 +652,8 @@ export class Netstorm {
         this._clientInputQueue = new InputQueue(); this._clientPointerBoundary = new GumpPointerBoundaryState();
         // 원본 입력 소비자가 설치되기 전에는 독립 메뉴와 같은 사건을 중복 예약하지 않는다.
         this._clientNativeInputEnabled = false;
+        // 원본 조합 중 키 중복을 막는 현재 브라우저 조합 상태다.
+        this._clientComposing = false;
         this._audioStatus = 'none';
         // 저장된 설정을 읽는다(저장소를 쓸 수 없으면 기본값으로 계속). 호스트가 음량을 정했으면 저장하지 않고 우선 적용한다. (2026-10-29 WB03-F)
         const storage = getLocalStorage(doc.defaultView);
@@ -1796,6 +1801,9 @@ export class Netstorm {
         this._listen(canvas, 'contextmenu', (event) => event.preventDefault());
         this._listen(canvas, 'keydown', (event) => this._onKeyDown(event));
         this._listen(canvas, 'keyup', (event) => this._onKeyUp(event));
+        // 확정 전 조합 키는 큐에 넣지 않고 조합 종료 본문만 원자적으로 예약한다.
+        this._listen(canvas, 'compositionstart', () => this._onCompositionStart());
+        this._listen(canvas, 'compositionend', (event) => this._onCompositionEnd(event));
         // 마우스 휠은 열린 도움말 창 본문을 스크롤한다(웹 적응). 도움말이 열려 있을 때만 페이지 스크롤을 막는다. (2026-10-30 WB03-G)
         this._listen(canvas, 'wheel', (event) => this._onWheel(event), { passive: false });
         this._listen(canvas, 'blur', () => this._clearInput());
@@ -1911,10 +1919,12 @@ export class Netstorm {
     _onKeyDown(event) {
         this._clientInputPoll.recordKeyDown(event.code, this._input.keys.has(event.code) || event.repeat);
         this._input.keys.add(event.code);
-        if (this._clientNativeInputEnabled) {
+        if (this._clientNativeInputEnabled && !this._clientComposing) {
             queueBrowserVirtualKeyEvent(this._clientInputQueue, event, this._input.pointer, false);
             queueBrowserCharacterEvent(this._clientInputQueue, event, this._input.pointer);
         }
+        // 조합 중 Enter 등은 기존 메뉴 명령으로도 중복 실행하지 않는다.
+        if (this._clientNativeInputEnabled && (this._clientComposing || event.isComposing)) return;
         if (PREVENTED_KEYS.has(event.code)) event.preventDefault();
         this._retryAudioOnGesture();
         // 미리보기의 키 정책은 게임 명령과 분리한다. Escape는 메뉴로 돌아가며 방향키는 카메라만 바꾼다. (2026-11-02 WB03-AA)
@@ -1948,11 +1958,26 @@ export class Netstorm {
     // 키를 뗐을 때 눌린 키 집합에서 뺀다.
     _onKeyUp(event) {
         this._input.keys.delete(event.code);
-        if (this._clientNativeInputEnabled) queueBrowserVirtualKeyEvent(this._clientInputQueue, event, this._input.pointer, true);
+        if (this._clientNativeInputEnabled && !this._clientComposing) queueBrowserVirtualKeyEvent(this._clientInputQueue, event, this._input.pointer, true);
+    }
+
+    // 원본 입력을 사용하는 동안 조합 키를 일반 문자·가상 키 경로에서 제외한다.
+    _onCompositionStart() { if (this._clientNativeInputEnabled) this._clientComposing = true; }
+
+    // 확정 본문만 같은 원본 큐에 원자적으로 넣고 미지원·공간 부족은 진단한다.
+    _onCompositionEnd(event) {
+        if (!this._clientComposing) return;
+        this._clientComposing = false;
+        if (!this._clientNativeInputEnabled || !event?.data) return;
+        try {
+            const pointer = this._input.pointer;
+            if (!queueCommittedText(this._clientInputQueue, event.data, pointer.x | 0, pointer.y | 0)) throw new Error('확정 문자 입력 큐 공간 부족');
+        } catch (error) { reportGameError('composition', error, { state: this._state }); }
     }
 
     // 포커스를 잃거나 탭이 숨겨질 때 눌린 키·버튼이 남지 않도록 입력 상태를 비우고, 메뉴 누름을 실행 없이 취소한다.
     _clearInput() {
+        this._clientComposing = false;
         this._input.keys.clear();
         this._input.pointer.buttons = 0;
         this._input.pointer.inside = false;

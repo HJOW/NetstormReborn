@@ -35,3 +35,17 @@ test('브라우저 문자 키: 영문·1252·제어 문자와 조합 제외', ()
     assert.equal(queueBrowserCharacterEvent(queue, { key: 'ArrowRight' }, pointer), false);
     assert.equal(queue.empty, true);
 });
+
+// 앱 조합 상태는 중간 키를 삼키고 확정 한글을 원본 큐에 한 번만 넣는다.
+test('브라우저 문자 키: 조합 시작·중간 키·확정 사건', async () => {
+    const { Netstorm } = await import('../www/netstorm.js'); const app = new Netstorm();
+    app._clientNativeInputEnabled = true; app._input.pointer.x = 12; app._input.pointer.y = 34;
+    let activated = 0; app._activate = () => { activated += 1; };
+    app._onCompositionStart(); app._onKeyDown({ code: 'Enter', key: 'Enter', isComposing: true });
+    assert.equal(app._clientInputQueue.empty, true); assert.equal(activated, 0);
+    app._onCompositionEnd({ data: '한글' });
+    assert.deepEqual(app._clientInputQueue.pop(false), { code: 0x0100d55c, x: 12, y: 34 });
+    assert.deepEqual(app._clientInputQueue.pop(false), { code: 0x0100ae00, x: 12, y: 34 });
+    app._onCompositionEnd({ data: '한' }); assert.equal(app._clientInputQueue.empty, true);
+    app._onCompositionStart(); app._clearInput(); app._onCompositionEnd({ data: '글' }); assert.equal(app._clientInputQueue.empty, true);
+});

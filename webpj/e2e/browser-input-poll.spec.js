@@ -64,3 +64,14 @@ test('브라우저 문자 키의 원본 큐 예약', async ({ page }) => {
   const codes = await page.evaluate(() => { const queue = window.netstorm._clientInputQueue; return [queue.pop(false).code, queue.pop(false).code, queue.empty]; });
   expect(codes).toEqual([0x61, 13, true]);
 });
+
+// 합성 조합 사건으로 확정 본문만 큐에 한 번 들어가고 중간 Enter는 실행되지 않는다.
+test('브라우저 조합 확정 사건의 원본 큐 예약', async ({ page }) => {
+  await page.goto('/'); await page.waitForFunction(() => window.netstorm?.state === 'clickToStart');
+  const canvas = page.locator('canvas'); await canvas.focus();
+  await page.evaluate(() => { window.netstorm._clientNativeInputEnabled = true; });
+  await canvas.evaluate((element) => element.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true, data: '' }))); await page.keyboard.press('Enter');
+  await canvas.evaluate((element) => element.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true, data: '한글' })));
+  const result = await page.evaluate(() => { const app = window.netstorm, queue = app._clientInputQueue; return [app.state, queue.pop(false).code, queue.pop(false).code, queue.empty]; });
+  expect(result).toEqual(['clickToStart', 0x0100d55c, 0x0100ae00, true]);
+});
