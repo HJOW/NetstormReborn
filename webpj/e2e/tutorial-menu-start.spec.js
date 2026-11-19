@@ -71,5 +71,14 @@ test('캠페인 목록에서 첫 Tutorial의 월드와 안내를 표시한다', 
   });
   await page.mouse.move(edge.x, edge.y);
   await expect.poll(() => page.evaluate(() => window.netstorm._clientGameplay.camera().snapshot().pixels.x), { timeout: 15000 }).toBeGreaterThan(edge.before);
+  // F4의 원본 ViewHome 큐가 튜토리얼 단계와 실제 카메라에 반영된다.
+  const centered = await page.evaluate(() => {
+    const app = window.netstorm, rect = app.canvas.getBoundingClientRect();
+    return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2, stage: app._clientGuide.current().runtime.gate.stage };
+  });
+  await page.mouse.move(centered.x, centered.y); const panned = await page.evaluate(() => window.netstorm._clientGameplay.camera().snapshot().pixels.x);
+  await page.keyboard.press('F4');
+  await expect.poll(() => page.evaluate(() => window.netstorm._clientGuide.current().runtime.gate.stage), { timeout: 15000 }).toBe(centered.stage + 1);
+  await expect.poll(() => page.evaluate(() => window.netstorm._clientGameplay.camera().snapshot().pixels.x), { timeout: 15000 }).toBeLessThan(panned);
   expect(errors).toEqual([]);
 });

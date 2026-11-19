@@ -62,6 +62,8 @@ import { currentAllocationBytes } from './core/current-allocation-bytes.js';
 import { bindCampaignAiClientServices, bindCampaignClientInputServices, bindCampaignOwnershipTheme, bindCampaignProductionRefresh, captureCampaignMissionStarting, makeCampaignMissionStartEffects, runCampaignMissionStarting } from './core/campaign-client-services.js';
 import { bindCampaignUserInputServices } from './core/campaign-user-input-services.js';
 import { CampaignUserInput } from './core/campaign-user-input.js';
+import { GameMenuActions } from './core/game-menu-actions.js';
+import { gameMenuCommandValue } from './core/game-menu-commands.js';
 import { CHAT_RECORD_BYTES, RawChatChannels } from './core/raw-chat-channels.js';
 import { RawCampaignMissionStartBindings } from './core/raw-campaign-mission-start-bindings.js';
 import { RawCampaignTutorialOneBindings } from './core/raw-campaign-tutorial-one-bindings.js';
@@ -122,6 +124,10 @@ import { CURSOR_NORMAL, applyCursorStyle, buildCursorCss } from './ui/cursor.js'
 // 논리 화면의 높이(픽셀)이다. 원본이 1024x768 이 최대였으므로 모든 화면비에서 높이를 768 로 고정해
 // UI 의 세로 배치를 원본과 같게 유지하고, 화면비가 넓을수록 가로 시야만 늘어나게 한다. (2026-10-23 WB01)
 const LOGICAL_HEIGHT = 768;
+
+// 미션의 F4 가상 키와 같은 입력 큐에 예약되는 원본 ViewHome 명령이다.
+const MISSION_F4 = 0x00730000;
+const MISSION_VIEW_HOME = 0x020000ae;
 
 // 지원하는 화면비 목록이다. name 은 설정·URL 에서 쓰는 이름, ratio 는 명목 가로세로비,
 // width/height 는 그 화면비에서의 논리 화면 크기(픽셀, 가로는 짝수)다.
@@ -1213,6 +1219,24 @@ export class Netstorm {
         return this._campaignUserInput;
     }
 
+    // 같은 Player·월드 전역에 원본 ViewHome 메뉴 명령을 분배한다.
+    _dispatchCampaignViewHome(event) {
+        const game = this._clientGameplay, storage = this._surfaceStorage, world = this._campaignWorld, players = this._clientPlayers;
+        if (!game || !storage || !world || !players || !this._clientKencloud) throw new Error('미션 ViewHome의 현재 장치 수명 누락');
+        const read = (address) => {
+            if (address === 0x00595344) return game.player.playerKnown;
+            if (address === 0x00594fc8) return Number(storage.ownerMode.challenge);
+            if (address === 0x00540c70) return game.player.battleOwner;
+            throw new Error('미션 ViewHome의 미연결 전역');
+        };
+        const actions = new GameMenuActions({ read, hideBuildings: game.hideBuildings(), redraw: this._clientKencloud.worldRedraw() }, {
+            command: (address) => gameMenuCommandValue(address),
+            player: (owner) => { if (owner >= 9) throw new RangeError('미션 ViewHome Player 범위'); return players.records().subarray(owner * 180, (owner + 1) * 180); },
+            centerObject: (sid) => world.centerOnObject(sid), assertion: (line) => console.error(`미션 ViewHome 원본 진단: ${line}`),
+        });
+        actions.handle(event.code, event.x, event.y);
+    }
+
     // 현재 포인터 폴링과 지원된 큐 사건을 Guide→Gump→World 순서로 처리한다.
     _runCampaignInputFrame() {
         const world = this._campaignWorld, queue = this._clientInputQueue, tutorial = this._clientGuide?.current()?.runtime.tutorial, gump = this._clientGump, user = this._campaignUserInput;
@@ -1228,10 +1252,12 @@ export class Netstorm {
         for (;;) {
             const next = queue.peek(); if (!next) break;
             const code = (next.code & 0x03ffffff) >>> 0, release = Boolean(next.code & InputCode.release);
-            if (code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== InputCode.leftButton && !(release && code === InputCode.rightButton)) break;
+            if (code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== MISSION_F4 && code !== MISSION_VIEW_HOME && code !== InputCode.leftButton && !(release && code === InputCode.rightButton)) break;
             const event = queue.pop(false);
             if (tutorial.event(event) || gump.input().route(event.code, event.x, event.y)) continue;
             if (code === InputCode.leftButton && !release && !this._mainMenu?.dialog) user.event(event);
+            else if (code === MISSION_F4 && !release && !this._mainMenu?.dialog) user.event(event);
+            else if (code === MISSION_VIEW_HOME) this._dispatchCampaignViewHome(event);
         }
     }
 
@@ -2394,6 +2420,9 @@ export class Netstorm {
         }
         // 조합 중 Enter 등은 기존 메뉴 명령으로도 중복 실행하지 않는다.
         if (this._clientNativeInputEnabled && (this._clientComposing || event.isComposing)) return;
+        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && event.code === 'F4') {
+            event.preventDefault(); queueBrowserVirtualKeyEvent(this._clientInputQueue, event, this._input.pointer, false);
+        }
         if (PREVENTED_KEYS.has(event.code)) event.preventDefault();
         this._retryAudioOnGesture();
         // 미리보기의 키 정책은 게임 명령과 분리한다. Escape는 메뉴로 돌아가며 방향키는 카메라만 바꾼다. (2026-11-02 WB03-AA)
@@ -2429,6 +2458,7 @@ export class Netstorm {
         this._input.keys.delete(event.code);
         if (event.target === this._clientImeElement && this._clientImePending?.text === event.key) this._clientImePending = null;
         if (this._clientNativeInputEnabled && !this._clientComposing) queueBrowserVirtualKeyEvent(this._clientInputQueue, event, this._input.pointer, true);
+        else if (this._campaignDisplayActive() && event.code === 'F4') queueBrowserVirtualKeyEvent(this._clientInputQueue, event, this._input.pointer, true);
     }
 
     // 원본 입력을 사용하는 동안 조합 키를 일반 문자·가상 키 경로에서 제외한다.
