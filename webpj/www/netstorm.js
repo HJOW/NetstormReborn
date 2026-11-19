@@ -52,6 +52,7 @@ import { MemoryColorMapFiles } from './core/color-map-files.js';
 import { ClientHtmlWindowGlobals } from './core/client-html-window-globals.js';
 import { ClientConnectionGlobals } from './core/client-connection-globals.js';
 import { ClientConnectionActivityGlobals } from './core/client-connection-activity-globals.js';
+import { ClientChatWindowGlobals } from './core/client-chat-window-globals.js';
 import { bindCampaignAiClientServices, bindCampaignClientInputServices, bindCampaignOwnershipTheme, bindCampaignProductionRefresh, captureCampaignMissionStarting, runCampaignMissionStarting } from './core/campaign-client-services.js';
 import { CHAT_RECORD_BYTES, RawChatChannels } from './core/raw-chat-channels.js';
 import { ClientRandomGlobals } from './core/random.js';
@@ -492,7 +493,7 @@ export class Netstorm {
         // 같은 Client가 장기 소유하는 게임·CRT 난수와 SP 저장소다.
         this._clientRandom = null; this._clientSp = null;
         // 같은 Client가 소유하는 원본 채팅 채널 100기록과 그 연산이다.
-        this._clientChatRecords = null; this._clientChatChannels = null;
+        this._clientChatRecords = null; this._clientChatChannels = null; this._clientChatWindows = null;
         // 미션 Session이 공유하는 효과음 이름표는 Client 수명에 소유한다.
         this._clientSoundNames = null;
         // 현재 브라우저 효과음 장치와 원본 재생 전역·준비 중인 수명이다.
@@ -751,7 +752,7 @@ export class Netstorm {
         this._clientKencloud = cloud; this._clientHtml = html; this._clientConnections = connections; this._clientConnectionActivity = activity;
         this._clientSubscriber = subscriber; this._clientGameplay = gameplay; this._clientCoreData = coreData; this._clientPlayers = players; this._clientTemplates = templates; this._clientFort = fort;
         this._clientSoundNames = soundNames;
-        this._clientChatRecords = chatRecords; this._clientChatChannels = chatChannels;
+        this._clientChatRecords = chatRecords; this._clientChatChannels = chatChannels; this._clientChatWindows = new ClientChatWindowGlobals();
     }
 
     // 현재 설정에서 구름 전역 옵션을 읽는다. 설정이나 Client가 아직 없으면 실제 초기화 시 다시 적용한다.
@@ -929,11 +930,11 @@ export class Netstorm {
     _campaignSharedServices() {
         const clock = this._gameClock, random = this._clientRandom, sp = this._clientSp, local = this._clientLocal;
         const subscriber = this._clientSubscriber, gameplay = this._clientGameplay, coreData = this._clientCoreData, players = this._clientPlayers, templates = this._clientTemplates;
-        if (!clock || !random || !sp || !local || !subscriber || !gameplay || !coreData || !players || !templates || !this._clientSoundNames) throw new Error('캠페인의 실제 Client 공통 수명 미설치');
+        if (!clock || !random || !sp || !local || !subscriber || !gameplay || !coreData || !players || !templates || !this._clientSoundNames || !this._clientChatWindows) throw new Error('캠페인의 실제 Client 공통 수명 미설치');
         const surface = this._surfaceStorage, kernel = this._clientKernel, request = this._clientGuide?.fortRequest();
         const colors = this._clientColorSort, screen = this._clientPaletteScreen;
         if (Boolean(colors) !== Boolean(screen) || (colors && !colors.mapsReady)) throw new Error('캠페인의 실제 Client 색표 수명 미설치');
-        return { soundNames: this._clientSoundNames, randomGlobals: random, spGlobals: sp, localStateGlobals: local, subscriberGlobals: subscriber, gameplayGlobals: gameplay, coreDataGlobals: coreData,
+        return { soundNames: this._clientSoundNames, chatGlobals: this._clientChatWindows, randomGlobals: random, spGlobals: sp, localStateGlobals: local, subscriberGlobals: subscriber, gameplayGlobals: gameplay, coreDataGlobals: coreData,
             playerRecords: players, templateStorage: templates, connectionActivityGlobals: this._clientConnectionActivity, connectionRegistry: this._clientConnections, connectionFrameNumber: () => clock.time().number, ...(surface && kernel ? { surfaceStorage: surface, processKernel: kernel } : {}),
             ...(colors ? { colorSortInput: colors, ownerColorTables: colors.ownerTables, screenPalette: () => this._clientPaletteScreen.palette() } : {}),
             ...(this._clientGuide ? { missionRestrictions: this._clientGuide.restrictions(), missionOptions: gameplay.battleOptionsOwner() } : {}), ...(request ? { missionFortRequest: request } : {}),
@@ -1161,7 +1162,7 @@ export class Netstorm {
         this._clientSoundDevice?.dispose(); this._clientSoundDevice = null; this._clientSoundPlayer = null; this._clientSoundState = null; this._clientSoundPrepare = null;
         this._gameClock = null; this._clientLocal = null; this._hiddenGamePause = false; this._clientSoundNames = null;
         this._clientSp = null; this._clientRandom = null;
-        this._clientChatRecords = null; this._clientChatChannels = null;
+        this._clientChatRecords = null; this._clientChatChannels = null; this._clientChatWindows = null;
         this._clientPaletteScreen = null; this._clientColorSort = null; this._clientRenderer = null; this._clientSurfaceDisplay = null;
         this._clientTemplates = null; this._clientPlayers = null; this._clientCoreData = null; this._clientGameplay = null; this._clientSubscriber = null;
         this._clientKernel = null; this._surfaceStorage = null; this._gameAssets = null;

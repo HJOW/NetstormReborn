@@ -19,3 +19,11 @@ test('앱 미션 AI: 채팅·언어·이름·현재 난이도', () => {
     ai.participation.addChat(6, 'Bot', 0x20); assert.equal(chat[0x2c], 6); assert.equal(chat[0x28], 0x20);
     ai.participation.clearChat(0x20); assert.equal(chat[0x28], 0); assert.equal(chat[0x2c], 6);
 });
+
+// Session이 받는 창·무시 목록은 앱이 장기 소유하는 같은 객체다.
+test('앱 미션 채팅: Client 창 전역 대여', () => {
+    const app = new Netstorm(); app._initializeClientRuntime(false);
+    const shared = app._campaignSharedServices(), windows = app._clientChatWindows;
+    assert.equal(shared.chatGlobals, windows); windows.window.current = 17; shared.chatGlobals.ignored.push(42);
+    assert.equal(app._campaignSharedServices().chatGlobals.window.current, 17); assert.deepEqual(windows.ignored, [42]);
+});
