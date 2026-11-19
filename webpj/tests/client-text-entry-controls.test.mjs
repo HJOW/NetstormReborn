@@ -1,6 +1,8 @@
 // 실제 공통 Client에서 편집기·버퍼·두 Slider를 함께 검증한다.
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import { FontSet } from '../www/assets/font-set.js';
 import { ClientGumpRoot } from '../www/ui/client-gump-root.js';
 import { ClientTextEntryControls } from '../www/ui/client-text-entry-controls.js';
 import { TextEntryGumpState } from '../www/ui/text-entry-gump.js';
@@ -12,14 +14,14 @@ import { makeCommittedTextEvents } from '../www/core/display-text-input.js';
 import { displayTextCodec } from '../www/assets/display-text.js';
 
 // 실제 처리기를 같은 소유자에 두고 검사에 필요한 장치를 공급한다.
-function fixture() {
+function fixture(fonts = null) {
     let time = 10; const owner = new ClientGumpRoot(300, 200, () => 0, () => {});
     const buttonState = new ButtonGumpState(), stoneState = new StoneButtonGumpState(), scrollState = new ScrollGumpState();
     Object.assign(buttonState, { valueEvent: 0x02000070, clickEvent: 0x0200002c, rightEvent: 0x02000012, repeatEvent: 0x0200002f, baseColor: 56 });
     Object.assign(scrollState, { clickEvent: 0x0200002c, repeatEvent: 0x0200002f, stepEvent: 0x0200002e, changeEvent: 0x02000036 });
     stoneState.color = 49; stoneState.palette = { black: 0, white: 1, edge: 2 };
     const controls = new ClientTextEntryControls(owner, { entryState: new TextEntryGumpState(), buttonState, stoneState, scrollState, widgetState: new ScrollGumpWidgetState(),
-        backgroundColor: () => 35, now: () => time, measure: () => [8, 16], poll: () => ({ code: 0 }), sound: () => {}, baseEvent: () => 0 });
+        backgroundColor: () => 35, now: () => time, ...(fonts ? { fonts } : { measure: () => [8, 16] }), poll: () => ({ code: 0 }), sound: () => {}, baseEvent: () => 0 });
     return { owner, controls, stoneState, tick: (value) => { time = value; } };
 }
 
@@ -48,4 +50,16 @@ test('Client TextEntry: Console과 부분 생성 실패 정리', () => {
     stoneState.backgroundType = 123; const failed = controls.allocate();
     assert.throws(() => controls.construct(failed, 150, 60, null, 1, 0, 3), /타입\/SHP/u);
     controls.close(); assert.equal(controls.storage().bufferCount(), 0); assert.equal(controls.storage().allocationCount(), 0); assert.equal(owner.createState().count, 1); owner.dispose();
+});
+
+// 동일 편집기의 두 Slider가 실제 비트맵 글꼴 M 폭과 논리 높이로 페이지를 계산한다.
+test('Client TextEntry: 실제 FontSet 측정으로 Slider 페이지 계산', () => {
+    const path = 'd/!Arial.normal.14.0.chfnt';
+    const files = new Map([[path, new Uint8Array(readFileSync(new URL('../www/data/d/!Arial.normal.14.0.chfnt', import.meta.url)))]]);
+    const fonts = new FontSet(files), { owner, controls } = fixture(fonts), token = controls.allocate();
+    controls.construct(token, 150, 60, 'a'.repeat(100), 5, 0, 3); owner.attach(token, 5, 5);
+    const node = owner.node(token), m = fonts.get(5, 0).glyph(77).advance;
+    assert.equal(owner.node(node.horizontalSlider).page, Math.trunc(150 / m));
+    assert.equal(owner.node(node.verticalSlider).page, 1);
+    controls.close(); assert.equal(controls.storage().allocationCount(), 0); owner.dispose();
 });
