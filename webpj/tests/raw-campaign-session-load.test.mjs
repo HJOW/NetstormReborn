@@ -747,6 +747,25 @@ test('Netstorm Client Guide: 원본 반복기의 창·State 대기와 Tutorial I
     } finally { guide.dispose(); app._surfaceStorage.dispose(); }
 });
 
+// 실제 앱 프레임이 Guide를 호출하고 창 및 지연 요청 관문을 보존하는지 확인한다.
+test('Netstorm Client Guide: 앱 프레임에서 Tutorial 단계와 지연 요청', () => {
+    const app = new Netstorm(); app._initializeClientRuntime(false);
+    const data = GameData.build({ files: new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)]]), language: 'english' });
+    app._gameData = data; app._root = { ownerDocument: { title: 'before' } }; app._canvas = {};
+    app._initializeClientWorldStorage(game, data.files); app._initializeClientGuide();
+    app._render = () => {}; app._startFrameLoop = () => {};
+    const guide = app._clientGuide; app._mainMenu = { dialog: {} };
+    try {
+        guide.begin('Tutorial1'); const state = guide.current().runtime.state;
+        app._onFrame(0); assert.equal(state.flags, 0); assert.equal(guide.fortRequest(), null);
+        app._mainMenu.dialog = null;
+        app._onFrame(16); assert.equal(state.flags & 1, 1); assert.equal(guide.fortRequest(), null);
+        app._onFrame(32); assert.equal(state.sequence, 1); assert.equal(guide.fortRequest().fort, 'BridgeTheGap');
+        app._onFrame(48); assert.equal(state.sequence, 1); assert.equal(guide.pending().pending(), true);
+        guide.close(); app._onFrame(64); assert.equal(guide.pending().pending(), false);
+    } finally { guide.dispose(); app._surfaceStorage.dispose(); }
+});
+
 // 앱이 현재 Guide Fort와 실제 공유 소유자로 GameWorld를 설치하고 Session 반납까지 관리한다.
 test('Netstorm Client World: 실제 Guide Fort 설치와 로컬 로그인 수명', () => {
     const app = new Netstorm(); app._initializeClientRuntime(false);

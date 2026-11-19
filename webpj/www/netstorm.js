@@ -1790,6 +1790,8 @@ export class Netstorm {
         this._gameClock?.captureFrame();
         this._clock.tick(now);
         this._frameSeconds = now / 1000;
+        // 원본 루프 8번의 Guide를 입력 처리보다 먼저 실행한다. State와 패킷 소비는 별도 연결 경계다.
+        this._clientGuide?.run();
         if (this._state === AppState.MAIN_MENU) {
             // 원본 UserInput 은 매 프레임 마우스 위치를 폴링해 Gump 에 알린다. 그래서 포인터가 멈춰 있어도 그 아래에 새로 열린 펼침 메뉴 행이 바로 강조된다
             // (cpppj 오라클 help-popup/options-popup 관측). 브라우저는 포인터가 움직일 때만 사건을 주므로 마지막 포인터 위치를 매 프레임 다시 알린다. (2026-11-07 WB02-H)
