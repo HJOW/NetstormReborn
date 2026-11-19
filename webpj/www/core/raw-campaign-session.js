@@ -142,10 +142,10 @@ export class RawCampaignSession {
     spStorage() { return this.#live().sp; }
     // 덤프가 다른 Client의 난수 소유자를 섞지 않도록 같은 장기 난수 전역을 빌린다. (2026-11-19 WB04-E867)
     randomGlobals() { return this.#live().randomGlobals; }
-    // Runtime 배송 또는 외부 전송 콜백 중에는 공유 State를 정리하지 않는다.
+    // Runtime 배송 또는 내부·외부 전송 콜백 중에는 공유 State를 정리하지 않는다.
     connectionCallbackActive() {
         const o = this.#live(); if (o.gameplayGlobals.runtimeCallActive(this)) return true;
-        return Boolean(o.services.localLogin?.transport?.callbacksActive?.());
+        return Boolean(this.#login?.transport.callbacksActive?.() || o.services.localLogin?.transport?.callbacksActive?.());
     }
     // 같은 실제 풀의 HP 판정과 최대 HP 처리기를 빌린다.
     hitPoints() { return this.#live().hp; }
@@ -258,7 +258,7 @@ export class RawCampaignSession {
     #beginLocalConnection(parentRunning) {
         const o = this.#live();
         if (o.loaded || this.#login || !o.services.localLogin) throw new Error('실제 로컬 Login의 새 수명/장치 계약 오류');
-        const login = new RawCampaignSessionLoginFront(o, o.services.localLogin);
+        const login = new RawCampaignSessionLoginFront(o, o.services.localLogin, this);
         try {
             login.bindServer(() => {
                 this.load();

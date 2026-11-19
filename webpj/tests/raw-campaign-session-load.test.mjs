@@ -1030,6 +1030,30 @@ test('CampaignGameWorld TheWarBegins: 실제 State7 부모와 지연 내부 로�
     assert.equal(gameplay.borrowed(), false); assert.equal(storage.borrowed, false);
 });
 
+// 내부 전송 수신의 실제 등록 세대가 Session 정리 관문을 유지하고 예외에도 대여를 복구한다.
+test('CampaignSession 내부 전송: 수신 중 Session 정리 금지와 정상·예외 복귀', () => {
+    // 정상 로그인과 관찰기 예외를 각각 독립된 실제 Session에서 확인한다.
+    for (const fail of [false, true]) {
+        const gameplay = new ClientGameplayGlobals(), observed = []; let session;
+        const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234,
+            log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {},
+            observePacket: () => {
+                observed.push(session.connectionCallbackActive());
+                assert.throws(() => cleanupClientStateWorld(0, { gameplay, storage: session.world().storage }), /콜백 실행 중/);
+                if (fail) throw new Error('관찰기 중단');
+            } };
+        ({ s: session } = scene({ localLogin, gameplayGlobals: gameplay, ai: { participation: { addChat: () => {}, clearChat: () => {} } } }));
+        try {
+            session.startLocalConnection(); assert.equal(session.connectionCallbackActive(), false);
+            session.pumpLocalConnection(); session.pollLocalConnectionState();
+            if (fail) assert.throws(() => session.pumpLocalConnection(), /관찰기 중단/);
+            else { session.pumpLocalConnection(); assert.equal(session.localConnectionReady(), true); }
+            assert.ok(observed.length > 0); assert.ok(observed.every(Boolean)); assert.equal(session.connectionCallbackActive(), false);
+        } finally { session.dispose(); }
+        assert.equal(gameplay.borrowed(), false);
+    }
+});
+
 // 실제 외곽 Session은 내부 로그인에서 같은 월드와 수신기를 설치하고 Player·Ready까지 왕복한다.
 test('CampaignSession TheWarBegins: 로컬 로그인과 실제 게임 수신 등록 왕복', () => {
     const events = [], logs = [], gameplay = new ClientGameplayGlobals(), players = new ClientPlayerRecords();

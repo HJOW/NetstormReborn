@@ -25,7 +25,7 @@ import { resetAmbientSoundDeadline } from './raw-ambient-sound.js';
 // 현재 Session을 빌려 원본 Login의 전송 앞단과 Zone 설치만 소유한다.
 export class RawCampaignSessionLoginFront {
     // 실제 부모·장치와 내부 전송 수명, 반납 관문이다.
-    #owner; #effects; #internal = null; #disposed = false; #registered = false; #wall = 0; #localTitle = 0; #timeout = 0; #localRequestPhase = 0; #beginSeed = 0; #battleSeed = 0;
+    #owner; #effects; #internal = null; #internalLease = null; #disposed = false; #registered = false; #wall = 0; #localTitle = 0; #timeout = 0; #localRequestPhase = 0; #beginSeed = 0; #battleSeed = 0;
     // 원문의 독립 초기 지역 입력과 현재 수신 종류 기록이다.
     pendingStamp = 0; overrideFlags = 0; wireTypes = [];
     // 현재 연결표와 패킷 분배기 및 같은 옵션/패킷/시계 처리기를 소유자와 함께 공개한다.
@@ -36,7 +36,7 @@ export class RawCampaignSessionLoginFront {
     uiMode = 0; inputMode = 0;
 
     // Player 초기화 뒤 옵션 기본값과 현재 전송을 순서대로 준비한다.
-    constructor(owner, effects = {}) {
+    constructor(owner, effects = {}, sessionOwner = null) {
         if (!owner?.playersReady) throw new TypeError('Login의 실제 Player 초기화 누락');
         this.#owner = owner; this.#effects = createCampaignLoginServices(effects);
         if (!owner.services.missionOptions) resetMissionBattleOptions(owner.battleOptions);
@@ -48,6 +48,9 @@ export class RawCampaignSessionLoginFront {
         } else {
             this.#internal = new LocalMissionTransport(owner.players, () => owner.core.processState.server, this.#device(), owner.services.connectionRegistry ?? null);
             this.transport = bindInternalCampaignTransport(this.#internal);
+            // 실제 Session은 내부 분배기의 등록 세대에 자기 전체 수명을 대여한다. 독립 장치 검사는 대여 없이 유지한다.
+            if (sessionOwner) this.#internalLease = this.transport.dispatch.registrations.bindSession(sessionOwner);
+            this.transport.callbacksActive = () => this.transport.dispatch.registrations.connectionCallbackActive();
         }
         try {
             const aux = owner.gameplayGlobals.gameAux(), ranges = owner.gameplayGlobals.manaRanges(), energy = owner.energyState;
@@ -100,7 +103,7 @@ export class RawCampaignSessionLoginFront {
                 initialGeysers: () => owner.state.assetState.readBoss(), checkingAssertions: () => Boolean(owner.state.gunState.checking),
             }, this.#timerHooks());
         } catch (error) {
-            if (this.#effects.transport) this.transport.detachSession(); else this.#internal.dispose();
+            if (this.#effects.transport) this.transport.detachSession(); else { this.#internalLease?.detach(); this.#internal.dispose(); }
             this.#disposed = true; throw error;
         }
     }
@@ -505,7 +508,7 @@ export class RawCampaignSessionLoginFront {
     // 외부 등록 대여 또는 내부 두 끝을 실제 소유 방식에 따라 반납한다.
     dispose() {
         if (this.#disposed) return;
-        if (this.#effects.transport) this.transport.detachSession(); else this.#internal.dispose();
+        if (this.#effects.transport) this.transport.detachSession(); else { this.#internalLease?.detach(); this.#internal.dispose(); }
         this.#disposed = true;
     }
 }
