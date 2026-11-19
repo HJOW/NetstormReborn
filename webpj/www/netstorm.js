@@ -1018,7 +1018,10 @@ export class Netstorm {
             translate: (text) => this._resources.translate(text), encodeDisplayText: (text) => displayTextCodec.encode(text),
             decodeDisplayText: (bytes) => displayTextCodec.decode(bytes), chatChannels: () => this._clientChatChannels }, services.ai);
         // 승패 안내와 AI·생산 할당은 같은 현재 미션·Gump와 웹 할당 바이트를 사용한다.
-        services.production = { allocationBytes: currentAllocationBytes };
+        services.production = { allocationBytes: currentAllocationBytes, effects: {
+            configInt: (key) => this._gameData.readInt(key, 0).value | 0,
+            modeAssertion: () => console.error('생산 재계산 원본 진단: inFortMode || inBattleMode'),
+        } };
         // Player 정기 처리의 현재 진단 그룹과 문장을 같은 Client trace로 전달한다.
         services.player = { log: (group, text) => {
             if (!this._clientTrace) throw new Error('미션 Player 진단의 실제 Client 수명 누락');
@@ -1238,6 +1241,14 @@ export class Netstorm {
         session.synchronizeProductionContents();
         const maintenance = session.makeProductionMaintenance(globals, panel, () => clock.wallSeconds(), () => this._clientRenderer.invalidateAll());
         this._campaignProduction = { session, panel, maintenance }; return this._campaignProduction;
+    }
+
+    // 원본 생산 패널 idle 순서로 현재 내용물과 재고·다리 공급을 갱신한다.
+    _runCampaignProductionFrame() {
+        const production = this._campaignProduction, world = this._campaignWorld, globals = this._clientProductionGlobals;
+        if (!production || !world || world.connecting || production.session !== world.session() || !globals || !this._gameData || !this._surfaceStorage) throw new Error('미션 생산 프레임의 현재 수명 오류');
+        globals.stockEnabled = this._gameData.readInt('useProductTimers', 1).value >>> 0; globals.bridgeType = this._surfaceStorage.links.bridgeType;
+        production.session.updateProductionContents(); production.maintenance.run();
     }
 
     // 같은 Player·월드 전역에 원본 홈·사제 보기 메뉴 명령을 분배한다.
@@ -2611,6 +2622,7 @@ export class Netstorm {
         }
         // 원본 루프 8번의 Guide를 상태·패킷 처리 뒤, 입력 처리보다 먼저 실행한다.
         this._clientGuide?.run();
+        if (this._campaignDisplayActive() && !this._campaignProduction) this._prepareCampaignProduction();
         if (this._campaignDisplayActive()) this._runCampaignInputFrame();
         if (this._state === AppState.MAIN_MENU) {
             // 원본 UserInput 은 매 프레임 마우스 위치를 폴링해 Gump 에 알린다. 그래서 포인터가 멈춰 있어도 그 아래에 새로 열린 펼침 메뉴 행이 바로 강조된다
@@ -2622,7 +2634,7 @@ export class Netstorm {
             this._applyCursor();
         }
         // 원본 Kernel 단계에서 같은 현재 World를 준비하고 단일 Client Kernel을 실행한다.
-        if (this._state === AppState.MAIN_MENU && this._campaignWorld && !this._campaignWorld.connecting && !this._campaignWorld.session().connectionCallbackActive()) this._runCampaignKernelFrame();
+        if (this._campaignDisplayActive()) { this._runCampaignProductionFrame(); this._runCampaignKernelFrame(); }
         this._render(now);
         this._startFrameLoop();
     }

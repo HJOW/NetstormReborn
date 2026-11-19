@@ -64,6 +64,15 @@ test('캠페인 목록에서 첫 Tutorial의 월드와 안내를 표시한다', 
   // 이동 첫 좌표만 관찰하고 끝내지 않고 발소리 단계까지 게임 시계와 프레임이 계속 진행되는지 확인한다.
   const movementTime = await page.evaluate(() => window.netstorm._gameClock.time().game);
   await page.waitForFunction((start) => window.netstorm._gameClock.time().game >= start + 12, movementTime, { timeout: 25000 });
+  // 자동 생산 프레임이 실제 기술 부모에 다리 내용물을 공급한다.
+  const bridgeCount = await page.evaluate(async () => {
+    const { RawContainedFinder } = await import('./core/raw-contained-finder.js');
+    const session = window.netstorm._campaignWorld.session(), pool = session.core().pool, finder = new RawContainedFinder(pool, session.productionFinder());
+    let count = 0;
+    for (let sid = finder.begin(session.currentTechnologyParent()); sid; sid = finder.next()) { const raw = pool.slot(sid); if ((raw[20] | (raw[21] << 8)) & 0x40) count += 1; }
+    return count;
+  });
+  expect(bridgeCount).toBeGreaterThan(0);
   // P/R은 같은 실제 사제를 선택하고 반복 입력은 사제 보기 명령을 큐에서 소비한다.
   await page.keyboard.press('p'); await expect.poll(() => page.evaluate(() => window.netstorm._campaignWorld.selected())).toBe(priest.sid);
   await page.keyboard.press('r'); await expect.poll(() => page.evaluate(() => window.netstorm._clientInputQueue.size)).toBe(0);
