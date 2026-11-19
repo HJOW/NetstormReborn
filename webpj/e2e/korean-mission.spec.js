@@ -55,6 +55,7 @@ test('한국어 Tutorial1 미션 메뉴와 브리핑을 표시한다', async ({ 
 
 // 두 번째 튜토리얼의 한국어 안내 페이지를 실제 미션에서 확인한다.
 test('한국어 Tutorial2의 안내 페이지를 표시한다', async ({ page }) => {
+  test.setTimeout(180000);
   const errors = []; page.on('pageerror', (error) => { errors.push(error.message); console.error('브라우저 예외:', error.message); });
   await page.addInitScript(() => {
     localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } }));
@@ -115,5 +116,10 @@ test('한국어 Tutorial2의 안내 페이지를 표시한다', async ({ page })
   const before = await page.evaluate(() => window.netstorm._campaignWorld.session().world().objects().filter(({object}) => object.type === 123 && object.owner === 1).length);
   await page.mouse.click(target.x, target.y, { delay: 60 });
   await expect.poll(() => page.evaluate(() => window.netstorm._campaignWorld.session().world().objects().filter(({object}) => object.type === 123 && object.owner === 1).length), { timeout: 15000 }).toBe(before + 1);
-  await page.screenshot({ path: test.info().outputPath('korean-tutorial2-temple.png') }); expect(errors).toEqual([]);
+  await page.screenshot({ path: test.info().outputPath('korean-tutorial2-temple.png') });
+  // 실제 사제가 건설 위치에 도착해 신전을 완성하고 튜토리얼이 다음 안내로 넘어가는지 기다린다.
+  await page.waitForFunction(() => { const session = window.netstorm._campaignWorld.session(); return session.world().objects().some(({sid, object}) => object.type === 123 && object.owner === 1 && !(session.core().pool.slot(sid)[40] & 1)); }, null, { timeout: 120000 });
+  await page.waitForFunction(() => window.netstorm._gameData.currentTell === 'B.' && Boolean(window.netstorm._mainMenu.dialog), null, { timeout: 30000 });
+  expect(await page.evaluate(() => window.netstorm._mainMenu.dialog.content.styleText)).toContain('신전 완성');
+  await page.screenshot({ path: test.info().outputPath('korean-tutorial2-temple-complete.png') }); expect(errors).toEqual([]);
 });
