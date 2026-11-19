@@ -32,6 +32,7 @@ import { ClientHudDivider } from '../www/ui/client-hud-divider.js';
 import { createClientProductionAssembly } from '../www/ui/client-production-assembly.js';
 import { GumpHelp, GumpHelpState } from '../www/ui/gump-help.js';
 import { ClientProductionAbout } from '../www/ui/client-production-about.js';
+import { createClientProductionMenu } from '../www/ui/client-production-menu.js';
 import { ClientStyleTextBuffers } from '../www/ui/client-style-text-buffers.js';
 import { ClientScrollingText } from '../www/ui/client-scrolling-text.js';
 import { ClientScrollControls } from '../www/ui/client-scroll-controls.js';
@@ -506,5 +507,23 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         // 장식·제목·항목은 별도 Gump 수집 항목으로 각각 출력한다.
         for (const token of [fancyNode.fancy, fancyNode.title, fancyToken]) gump.draw(token, draw, fancyTarget);
         assert.ok(fancyPixels.some((value) => value !== 255)); gump.remove(fancyToken); scroll.close(); assert.equal(bufferText.styleState().fragments.size, 0);
+        // 실제 생산 정보가 작성한 장식 메뉴의 제목·비용·항목과 Form을 같은 공통 수명에서 확인한다.
+        const integratedCommands = [], productionMenu = createClientProductionMenu(gump, session, game, data, app._resources.fonts, screen, app._clientColorSort, itemBackground, 92, {
+            baseHandle: () => 0, sound: () => {}, translate: (value) => app._resources.translate(value),
+            ownerName: (owner) => { const records = app._clientPlayers.records(), start = owner * 180 + 12, end = records.indexOf(0, start); return String.fromCharCode(...records.subarray(start, end)); },
+            helpWord: () => 'Help', affordable: (sid) => itemDevice.affordable(sid), now: () => app._gameClock.wallSeconds(),
+            poll: (code) => app._clientInputPoll.poll(code), cursor: (number) => { app._campaignCursor = number; },
+            command: (...args) => integratedCommands.push(args), invalidate: (rect) => app._clientRenderer.invalidate(rect, 0),
+        });
+        assert.equal(productionMenu.open(aboutItem, { x: 750, y: 420 }), 1); assert.equal(productionMenu.instances(), 1);
+        let productionMenuToken = gump.node(gump.createState().collection.root).child;
+        while (productionMenuToken && gump.node(productionMenuToken).command !== 26) productionMenuToken = gump.node(productionMenuToken).next;
+        assert.ok(productionMenuToken); const productionMenuNode = gump.node(productionMenuToken);
+        assert.equal(session.gumpFormHost().parent(productionMenuNode.form), aboutItem.content); assert.ok(productionMenuNode.title); assert.ok(productionMenuNode.itemCount);
+        const integratedBounds = gump.collection().bounds(productionMenuToken), integratedX = integratedBounds.left + 8, integratedY = integratedBounds.top + 5;
+        gump.broadcast(0, integratedX, integratedY); assert.equal(gump.input().route(0x10000, integratedX, integratedY), productionMenuToken);
+        assert.equal(integratedCommands[0][0], 0x02000017); gump.lifetime().cleanup(); assert.equal(productionMenu.instances(), 0);
+        assert.equal(productionMenu.open(aboutItem, { x: 750, y: 420 }), 1); productionMenu.close(); assert.equal(productionMenu.instances(), 0);
+
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); app._clientSoundDevice.dispose(); app._missionAudioAssets.dispose(); }
 });
