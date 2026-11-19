@@ -471,6 +471,8 @@ cpppj/src/o/RawAiBrain.cpp	Netstorm.Core/Original/RawAiBrain.cs	04c87c034dd35923
 cpppj/src/o/RawAiBrain.h	Netstorm.Core/Original/RawAiBrain.cs	04c87c034dd35923a20a363fd9a24ff708329648	L1
 cpppj/src/o/RawAiBrainInitialUpdate.cpp	Netstorm.Core/Original/RawAiBrainInitialUpdate.cs	efa953c41c6e53b21cfbea5ebd8948124d94edf1	L1
 cpppj/src/o/RawAiBrainInitialUpdate.h	Netstorm.Core/Original/RawAiBrainInitialUpdate.cs	efa953c41c6e53b21cfbea5ebd8948124d94edf1	L1
+cpppj/src/o/RawAiCommandState.cpp	Netstorm.Core/Original/RawAiCommandState.cs	64f8d1cfb41aff3a95fa10432da0552b1e257aff	L1
+cpppj/src/o/RawAiCommandState.h	Netstorm.Core/Original/RawAiCommandState.cs	64f8d1cfb41aff3a95fa10432da0552b1e257aff	L1
 cpppj/src/o/RawAiCreate.cpp	Netstorm.Core/Original/RawAiCreate.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	L1
 cpppj/src/o/RawAiCreate.h	Netstorm.Core/Original/RawAiCreate.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	L1
 cpppj/src/o/RawAmbientWind.cpp	Netstorm.Core/Original/RawAmbientWind.cs	e5a198df450ae720da38f5110ebc611119ea2f38	L1

@@ -22,6 +22,7 @@
   </ItemGroup>
   <ItemGroup>
     <!-- 실제 색 띠/두 생성자 팔레트의 원본 관측을 링크로 공유한다. -->
+    <None Include="../../../cpppj/tests/fixtures/ai-command-state-x86.tsv" Link="X86/ai-command-state-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/particle-gradient-x86.tsv" Link="X86/particle-gradient-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/fierytail-lifetime-x86.tsv" Link="X86/fierytail-lifetime-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/lightning-lifetime-x86.tsv" Link="X86/lightning-lifetime-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
