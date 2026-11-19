@@ -92,6 +92,43 @@ public sealed class HostSessionAiRuntimeTests
         Assert.Contains(session.AiRuntimeDiagnostics, line => line.Contains("enemyPlayerId"));
     }
 
+    /// <summary>지갑이 상하면 실제 SP 저장소와의 차이를 가산한다.</summary>
+    [Fact]
+    public void PrepareAiAddsWalletDelta()
+    {
+        HostSession session = BuildScene();
+        uint brain = PrepareBrain(session, 1);
+        Put(session.PlayerRecords, 1 * 180 + 0x78, 127u);
+        Put(session.PlayerRecords, 0 * 180 + 0x78, 127u);
+        Put(session.AiBrainMemory.Bytes(brain), 0x260, 1u);
+        Put(session.AiBrainMemory.Bytes(brain), 0x264, 2u);
+        Put(session.AiBrainMemory.Bytes(brain), 0x2d8, 30000u);
+        session.MissionPlayer.PlayerKnown = 1u;
+        session.BindSpReseed(() => 0x12345678u);
+        session.Sp.Set(1, BitConverter.SingleToUInt32Bits(5000.0f));
+        Assert.True(session.PrepareAi(1));
+        Assert.Equal(
+            BitConverter.SingleToUInt32Bits(30000.0f),
+            session.Sp.Get(1));
+    }
+
+    /// <summary>유효 특정 좌표이면 목표 4를 고른다. 지도 상한은 독립 기본값을 쓴다.</summary>
+    [Fact]
+    public void SelectGoalUsesMapLimit()
+    {
+        HostSession session = BuildScene();
+        uint brain = PrepareBrain(session, 1);
+        Put(session.AiBrainMemory.Bytes(brain), 0x2d0, 0u);
+        Put(session.AiBrainMemory.Bytes(brain), 0x2d8, 0u);
+        Put(session.AiBrainMemory.Bytes(brain), 0x290, 100000u);
+        Put(session.AiBrainMemory.Bytes(brain), 0x248, 0u);
+        Put(session.AiBrainMemory.Bytes(brain), 0xaf0, BitConverter.SingleToUInt32Bits(50.0f));
+        Put(session.AiBrainMemory.Bytes(brain), 0xaf4, BitConverter.SingleToUInt32Bits(60.0f));
+        Put(session.AiBrainMemory.Bytes(brain), 0x2d4, 9u);
+        session.AiStrategySetup.SelectGoal(brain);
+        Assert.Equal(4u, BinaryPrimitives.ReadUInt32LittleEndian(session.AiBrainMemory.Bytes(brain).AsSpan(0x2d4, 4)));
+    }
+
     /// <summary>양쪽 지역이 없으면 초기는 258을 쓰지 않고 거짓으로 돌아간다.</summary>
     [Fact]
     public void InitializeAiSkipsWithoutRegions()

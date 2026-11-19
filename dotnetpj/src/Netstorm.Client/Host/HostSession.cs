@@ -3008,7 +3008,7 @@ public sealed partial class HostSession
     /// <param name="types">같은 실제 TYPE 표다. 지형 Pop 장치와 같은 인스턴스여야 한다.</param>
     /// <exception cref="InvalidOperationException">AI 런타임의 화신·공장·프로세스·해시 장치가 미연결이다.</exception>
     /// <exception cref="ArgumentException">AI 런타임 TYPE이 지형 Pop 장치와 다르다.</exception>
-    /// <remarks>2026-11-19 0.650에서 R4-5 AI 런타임 결선용으로 추가했다. 근거: cpppj src/client/RawCampaignSession.cpp 2831~2870행의 통지·등록 조립과 2937~2943행의 전체 프레임 조립이다. 수집자·시설·부족스캔·사제·배치·다리·운반·경제·자금·SP·그래프·신전생산·지도상한은 R6에서 잇는다. 지역 경계는 0.653에서 같은 섬 런타임으로 이었다. 매 프레임 호출도 R6 틱 결선에서 잇는다.</remarks>
+    /// <remarks>2026-11-19 0.650에서 R4-5 AI 런타임 결선용으로 추가했다. 근거: cpppj src/client/RawCampaignSession.cpp 2831~2870행의 통지·등록 조립과 2937~2943행의 전체 프레임 조립이다. 수집자·시설·부족스캔·사제·배치·다리·운반·경제·그래프·신전생산은 R6에서 잇는다. 분산 SP·자금·지도상한은 0.654에서 실제 저장소·독립 기본값으로 이었다. 지역 경계는 0.653에서 같은 섬 런타임으로 이었다. 매 프레임 호출도 R6 틱 결선에서 잇는다.</remarks>
     private void BuildAiRuntimeDevices(IReadOnlyList<OriginalTypeRecord> types)
     {
         ArgumentNullException.ThrowIfNull(types);
@@ -3063,8 +3063,8 @@ public sealed partial class HostSession
                 },
                 Graph = _ => throw new InvalidOperationException("AI 준비 그래프 조회 미연결(R6)"),
                 RegionBounds = region => AiRegionBounds(islands, region),
-                StoredSp = _ => throw new InvalidOperationException("AI 준비 분산 SP 조회 미연결(R6)"),
-                AddLocalSp = _ => throw new InvalidOperationException("AI 준비 로컬 SP 가산 미연결(R6)"),
+                StoredSp = owner => BitConverter.UInt32BitsToSingle(Sp.Get(owner)),
+                AddLocalSp = delta => (_fortHp ?? throw new InvalidOperationException("AI 준비 로컬 SP 보상 미연결")).AddSp(MissionPlayer.BattleOwner, delta),
                 Demo = () => 0u,
                 KnowledgeOpen = () => false,
                 BlockingGumpOpen = () => false,
@@ -3101,7 +3101,9 @@ public sealed partial class HostSession
                 NoRegion = () => TerrainGlobals.NoRegion,
                 TempleProduct = () => throw new InvalidOperationException("AI 전략 신전 생산 TYPE 미연결(R6)"),
                 BridgeType = () => BridgeState.BridgeType,
-                MapLimit = () => throw new InvalidOperationException("AI 전략 지도 상한 미연결(R6)"),
+                // 지도 상한은 독립 입력 기본값 256을 쓴다. 공유 Client 주소 연결은 R6에서 잇는다.
+                // 2026-11-19 0.654에서 추가했다. 근거: cpppj RawCarrierDropPoint.h 10행의 독립 기본값이다.
+                MapLimit = () => 256,
                 Now = () => ProcessTime.Value,
             },
             new AiStrategySetupHooks
@@ -3133,7 +3135,7 @@ public sealed partial class HostSession
                 Bridges = _ => throw new InvalidOperationException("AI 다리 행동 미연결(R6)"),
                 Carriers = _ => throw new InvalidOperationException("AI 운반 행동 미연결(R6)"),
                 Economy = _ => throw new InvalidOperationException("AI 경제 행동 미연결(R6)"),
-                Money = _ => throw new InvalidOperationException("AI 자금 조회 미연결(R6)"),
+                Money = owner => BitConverter.UInt32BitsToSingle(Sp.Get(owner)),
                 Wall = () => ProcessTime.Value,
                 Took = (brain, elapsed) => _aiRuntimeLogs.Add(brain + ":took:" + elapsed),
                 Assertion = (text, line) => _aiRuntimeDiagnostics.Add("runtime:" + line + ":" + text),
