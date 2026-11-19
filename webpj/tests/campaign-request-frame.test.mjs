@@ -27,6 +27,8 @@ import { ClientProductionBudget } from '../www/ui/client-production-budget.js';
 import { ClientGumpBackground } from '../www/ui/client-gump-background.js';
 import { ClientProductionSelection } from '../www/ui/client-production-selection.js';
 import { ClientProductionHint } from '../www/ui/client-production-hint.js';
+import { ClientProductionPanel } from '../www/ui/client-production-panel.js';
+import { ClientHudDivider } from '../www/ui/client-hud-divider.js';
 import { StyleTextFragmentKind } from '../www/ui/style-text-fragments.js';
 import { PriestPlacementAssets } from '../www/core/priest-placement-assets.js';
 import { RawCanonPixelShape } from '../www/core/raw-canon-pixel-shape.js';
@@ -391,5 +393,25 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         const notice = hint.show(false, gump.node(reference).serial), noticePixels = new Uint8Array(1366 * 768).fill(255);
         gump.draw(notice, draw, new GumpPixelTarget(noticePixels, 1366, 768, draw)); assert.ok(noticePixels.some((value) => value !== 255));
         hintNow = 4; gump.idle(); assert.ok(gump.node(notice).flags & 0x10000); gump.lifetime().cleanup(); assert.equal(gump.node(notice), null); gump.remove(reference);
+        // 실제 생산 유지 상태에 예산·배경·구분선·두 격자를 같은 트리로 조립한다.
+        const panelBudget = new ClientProductionBudget(gump, budgetText, { now: () => app._gameClock.wallSeconds(), money: () => session.sp(session.localOwner()),
+            known: () => true, fort: () => false, editor: () => false, backgroundType: () => 92, changed: () => app._clientRenderer.invalidateAll() });
+        const divider = new ClientHudDivider(gump, { background: itemBackground, backgroundColor: () => 0, dividerColor: () => 55, closePopups: () => gump.closePopups() });
+        const globals = app._clientProductionGlobals; globals.backgroundType = 92; globals.backgroundFrame = 0;
+        const assembled = new ClientProductionPanel(gump, session, { grid, background: itemBackground, divider, budget: panelBudget, selection,
+            technology: () => technology, changed: () => app._clientRenderer.invalidateAll() }, globals, production.panel);
+        const assembledToken = assembled.open(), assembledNode = assembled.node(); assert.equal(assembledNode.panel, production.panel); assert.equal(assembledNode.width, 80);
+        assert.ok(gump.node(assembledNode.bridge).child); assert.equal(gump.node(assembledNode.bridge).object, technology); assert.equal(gump.node(assembledNode.teleport).object, technology);
+        const actualItem = gump.node(gump.node(assembledNode.bridge).child), actualSlot = session.core().pool.slot(actualItem.content)[23];
+        assert.equal(gump.handle(assembledToken, 0x020000f4, actualSlot, 0), 1); assert.equal(drop.preview, actualItem.content); cursor.cancel();
+        const clickedToken = gump.node(assembledNode.bridge).child, clickedItem = gump.node(clickedToken), clickedIcon = clickedItem.child;
+        const panelPixels = new Uint8Array(1366 * 768).fill(255); gump.draw(clickedIcon, draw, new GumpPixelTarget(panelPixels, 1366, 768, draw)); let panelHit = null;
+        // 현재 패널의 실제 불투명 아이콘을 적중하고 공통 입력 경로로 누른다.
+        for (let y = 26; y < 250 && !panelHit; y += 1) for (let x = 0; x < 80; x += 1) {
+            if (panelPixels[y * 1366 + x] === 255) continue; const local = gump.collection().screenToLocal(clickedToken, { x, y });
+            if (images.hit(clickedIcon, local[0], local[1])) { panelHit = { x, y }; break; }
+        }
+        assert.ok(panelHit); gump.input().route(0x10000, panelHit.x, panelHit.y); assert.equal(drop.preview, clickedItem.content); cursor.cancel();
+        assembled.close(); assert.equal(gump.node(assembledToken), null); assert.throws(() => assembled.open(), /중복 생성/u);
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); app._clientSoundDevice.dispose(); app._missionAudioAssets.dispose(); }
 });
