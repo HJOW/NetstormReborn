@@ -98,6 +98,7 @@ import { resetGameStorage } from './platform/reset-storage.js';
 import { createCanvasGlyphRasterizer } from './platform/glyph-rasterizer.js';
 import { MainMenuScreen } from './ui/main-menu.js';
 import { ClientGumpRoot } from './ui/client-gump-root.js';
+import { RawUberRootLookup } from './ui/raw-uber-root-lookup.js';
 import { projectGumpObject } from './ui/gump-form-binding.js';
 import { UberGumpCamera } from './ui/uber-gump-camera.js';
 import { TerrainPreview } from './ui/terrain-preview.js';
@@ -526,7 +527,7 @@ export class Netstorm {
         // 원본 공통 Gump 루트와 입력 전역은 Client 수명에 보유한다.
         this._clientGump = null;
         // 설치된 GameWorld와 그 월드를 빌리는 현재 미션 세대다.
-        this._campaignWorld = null; this._campaignWorldMissionToken = 0; this._campaignUserInput = null; this._campaignCursor = CURSOR_NORMAL;
+        this._campaignWorld = null; this._campaignWorldMissionToken = 0; this._campaignUserInput = null; this._campaignCursor = CURSOR_NORMAL; this._campaignCamera = null;
         // 현재 메뉴에 표시한 미션 진행 창의 소유 수명이다.
         this._missionLoadingWindow = null;
         // init 때 저장해 둔 루트 인라인 스타일이다. destroy 가 되돌린다.
@@ -1049,10 +1050,11 @@ export class Netstorm {
         this._clientGump.closePopups(); this._mainMenu?.closePopup();
     }
 
-    // 원본 497960 카메라 적용 장치를 현재 앱 Screen·Renderer·World에 연결한다.
-    _commitCampaignCamera(context) {
+    // 현재 앱 장치를 빌리는 장기 카메라 소유자를 만들고 화면 교체 뒤에도 같은 타이머를 유지한다.
+    _campaignCameraDevice() {
+        if (this._campaignCamera) return this._campaignCamera;
         const gameplay = this._clientGameplay, screen = this._clientPaletteScreen, renderer = this._clientRenderer, gump = this._clientGump;
-        if (!gameplay || !screen || !renderer || !gump || !this._clientKencloud || !this._clientLocal || !this._gameClock || context?.camera !== gameplay.camera()) throw new Error('미션 카메라 적용의 실제 Client 수명 불일치');
+        if (!gameplay || !screen || !renderer || !gump || !this._clientKencloud || !this._clientLocal || !this._gameClock) throw new Error('미션 카메라 장치의 실제 Client 수명 불일치');
         const game = { camera: () => gameplay.camera(), cursor: () => gameplay.cursor, selection: () => gameplay.selection,
             patchDiagnostic: () => gameplay.patchDiagnostic(), worldCells: () => gameplay.worldCells() };
         const client = { configuration: () => this._gameData, screen: () => this._clientPaletteScreen, renderer: () => this._clientRenderer,
@@ -1060,10 +1062,19 @@ export class Netstorm {
             active: () => this._root?.ownerDocument?.hasFocus?.() ?? true, poll: (code) => this._clientInputPoll.poll(code),
             cursor: () => { throw new Error('미션 소프트웨어 커서 장치 미연결'); } };
         const app = this, rebuild = { get value() { return app._displayDirty; }, set value(value) { app._displayDirty = Boolean(value); } };
-        const buttons = { redrawRoots: () => this._clientGump.redrawRoots() };
-        const camera = new UberGumpCamera({ client, buttons: () => buttons, world: () => this._campaignWorld, gameMenuState: () => null,
+        const lookup = new RawUberRootLookup(gump);
+        const buttons = { redrawRoots: () => this._clientGump.redrawRoots(), serialGump: (serial) => lookup.reference(serial),
+            blockingGumpOpen: () => this._clientGump.blockingPopups(), requestClosePopups: () => this._closeCampaignPopups(),
+            currentDialog: () => this._clientGump.lifetimeState().currentDialog || (this._mainMenu?.dialog ? 1 : 0) };
+        this._campaignCamera = new UberGumpCamera({ client, buttons: () => buttons, world: () => this._campaignWorld, gameMenuState: () => null,
             pointerBoundary: this._clientPointerBoundary, worldRedraw: this._clientKencloud.worldRedraw(), rebuild });
-        camera.commitCameraNow();
+        return this._campaignCamera;
+    }
+
+    // 원본 497960 카메라 적용 장치를 현재 앱 Screen·Renderer·World에 연결한다.
+    _commitCampaignCamera(context) {
+        if (!this._clientGameplay || context?.camera !== this._clientGameplay.camera()) throw new Error('미션 카메라 적용의 실제 Client 수명 불일치');
+        this._campaignCameraDevice().commitCameraNow();
     }
 
     // 현재 논리 화면과 Client 전역으로 카메라 Renderer·snapshot·한계를 원본 순서로 초기화한다.
@@ -1326,7 +1337,7 @@ export class Netstorm {
         this._clientChatRecords = null; this._clientChatChannels = null; this._clientChatWindows = null;
         this._clientPaletteScreen = null; this._clientColorSort = null; this._clientRenderer = null; this._clientSurfaceDisplay = null; this._clientRendererFrame = null;
         this._clientTemplates = null; this._clientPlayers = null; this._clientCoreData = null; this._clientGameplay = null; this._clientSubscriber = null;
-        this._clientKernel = null; this._surfaceStorage = null; this._gameAssets = null; this._clientTrace = null;
+        this._clientKernel = null; this._surfaceStorage = null; this._gameAssets = null; this._clientTrace = null; this._campaignCamera = null;
         this._missionAudioAssets?.dispose(); this._missionAudioAssets = null;
         if (this._audio) {
             // 음악을 멈추고 문맥을 닫는다. 닫기에 실패해도 정리를 막지 않는다.

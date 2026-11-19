@@ -110,6 +110,8 @@ export class CampaignGameWorld {
         session.setParticleView(view, this.#services.surfaceDisplay, false);
         if (this.#services.soundViewChanged) this.#services.soundViewChanged(view);
     }
+    // 프레임 말미에 적용한 실제 카메라를 같은 표면·입자·음향에 공개한다.
+    cameraApplied() { this.#surfaceView(); this.#changed = true; }
     // 실제 카메라 적용 장치 뒤 픽셀 또는 배율이 바뀌면 현재 표면과 음향을 갱신한다.
     #commitCamera() {
         const session = this.#live(), camera = this.#gameplay.camera(), before = camera.rendererView().pixels, zoom = camera.rendererView().zoom;

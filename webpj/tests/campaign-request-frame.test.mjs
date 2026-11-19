@@ -141,11 +141,13 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         assert.equal(app._campaignWorld.selected(), priest); app._campaignWorld.resetSelection();
         // 같은 실제 앱의 레이아웃 변경이 새 Screen·Renderer와 현재 World 지도 범위에 순서대로 반영된다.
         app._root.clientWidth = 1366; app._root.clientHeight = 768; app._aspect = '16:9'; app._canvas = { style: {} }; app._applyCursor = () => {};
-        const beforeRenderer = app._clientRenderer, frameGlobals = app._clientRendererFrame; frameGlobals.scan()[3] = 17; frameGlobals.cloudDirtyCount().value = 2;
+        const beforeRenderer = app._clientRenderer, frameGlobals = app._clientRendererFrame, cameraDevice = app._campaignCameraDevice(); frameGlobals.scan()[3] = 17; frameGlobals.cloudDirtyCount().value = 2;
         app._applyLayout();
         assert.equal(app._clientPaletteScreen.width, 1366); assert.notEqual(app._clientRenderer, beforeRenderer);
         assert.equal(app._clientRendererFrame, frameGlobals); assert.equal(frameGlobals.scan()[3], 17); assert.equal(frameGlobals.cloudDirtyCount().value, 2);
+        assert.equal(app._campaignCameraDevice(), cameraDevice);
         assert.deepEqual(app._campaignWorld.mapView(), { left: 0, top: 28, right: 1366, bottom: 768 });
+        app._campaignWorld.takeChanged(); app._campaignWorld.cameraApplied(); assert.equal(app._campaignWorld.takeChanged(), true);
         // 현재 Screen의 모드 변경과 강제 갱신은 같은 구름 큐에 각 한 칸씩 넣고 실제 Renderer의 이전 dirty를 전체 화면으로 교체한다.
         const redraw = app._clientKencloud.worldRedraw(); redraw.value = 1;
         app._clientRenderer.clearDirty(); app._clientRenderer.invalidate({ left: 10, top: 20, right: 30, bottom: 40 });
