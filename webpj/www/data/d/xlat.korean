@@ -215,3 +215,621 @@ You
 ---
 당신
 ===
+
+// 미션 생산 정보·타입 도움말과 공통 유닛 명칭이다. 원본 서식·그림 명령은 유지한다.
+
+***
+Priest
+---
+사제
+===
+
+***
+High Priest
+---
+사제
+===
+
+***
+Temple
+---
+신전
+===
+
+***
+Fire Temple
+---
+파이어 신전
+===
+
+***
+Rain Temple
+---
+레인 신전
+===
+
+***
+Wind Temple
+---
+윈드 신전
+===
+
+***
+Thunder Temple
+---
+썬더 신전
+===
+
+***
+Bridge
+---
+다리
+===
+
+***
+Thrower
+---
+발사기
+===
+
+***
+Sun Disc Thrower
+---
+썬 디스크 발사기
+===
+
+***
+Workshop
+---
+워크샾
+===
+
+***
+Sun Workshop
+---
+썬 워크샾
+===
+
+***
+Rain Workshop
+---
+레인 워크샾
+===
+
+***
+Wind Workshop
+---
+윈드 워크샾
+===
+
+***
+Thunder Workshop
+---
+썬더 워크샾
+===
+
+***
+Generator
+---
+제네레이터
+===
+
+***
+Rain Generator
+---
+레인 제네레이터
+===
+
+***
+Wind Generator
+---
+윈드 제네레이터
+===
+
+***
+Thunder Generator
+---
+썬더 제네레이터
+===
+
+***
+Altar
+---
+제단
+===
+
+***
+Outpost
+---
+아웃포스트
+===
+
+***
+Golem
+---
+골렘
+===
+
+***
+Fire Ant
+---
+파이어 앤트
+===
+
+***
+Crystal Crab
+---
+크리스탈 크랩
+===
+
+***
+Sail Skater
+---
+세일 스케이터
+===
+
+***
+Bulf
+---
+벌프
+===
+
+***
+Sun Cannon
+---
+썬 캐논
+===
+
+***
+Ice Cannon
+---
+아이스 캐논
+===
+
+***
+Thunder Cannon
+---
+썬더 캐논
+===
+
+***
+Crossbow
+---
+크로스보우
+===
+
+***
+Vander Tower
+---
+반더 타워
+===
+
+***
+Whirligig
+---
+훨리기그
+===
+
+***
+Whirlibase
+---
+훨리베이스
+===
+
+***
+Man o'War
+---
+맨 오 워
+===
+
+***
+Man o'War Pool
+---
+맨 오 워 풀
+===
+
+***
+Dust Devil
+---
+더스트 데빌
+===
+
+***
+Devil Maker
+---
+데빌 메이커
+===
+
+***
+Balloon
+---
+벌룬
+===
+
+***
+Cloud Floater
+---
+클라우드 플로터
+===
+
+***
+Air Ship
+---
+에어 쉽
+===
+
+***
+Stone Tower
+---
+스톤 타워
+===
+
+***
+Ice Tower
+---
+아이스 타워
+===
+
+***
+Wind Tower
+---
+윈드 타워
+===
+
+***
+Bulwark
+---
+불워크
+===
+
+***
+Sun Barricade
+---
+썬 바리케이드
+===
+
+***
+Acid Barricade
+---
+애시드 바리케이드
+===
+
+***
+Arc Spire
+---
+아크 스파이어
+===
+
+***
+Edge Farm
+---
+에지 팜
+===
+
+***
+Force Field
+---
+포스 필드
+===
+
+***
+Storm Geyser
+---
+스톰 간헐천
+===
+
+***
+Empty Storm Geyser
+---
+고갈된 스톰 간헐천
+===
+
+***
+Geyser
+---
+간헐천
+===
+
+***
+Storm Crystal
+---
+스톰 크리스탈
+===
+
+***
+Residence
+---
+거주 구역
+===
+
+***
+Obelisk
+---
+오벨리스크
+===
+
+***
+Bird
+---
+버드
+===
+
+***
+Owner
+---
+소유자
+===
+
+***
+Ally
+---
+동맹
+===
+
+***
+Enemy
+---
+적
+===
+
+***
+Nobody
+---
+없음
+===
+
+***
+None
+---
+없음
+===
+
+***
+Wind
+---
+윈드
+===
+
+***
+Rain
+---
+레인
+===
+
+***
+Thunder
+---
+썬더
+===
+
+***
+Sun
+---
+썬
+===
+
+***
+Energy
+---
+에너지
+===
+
+***
+ Level %s
+---
+ 레벨 %s
+===
+
+***
+
+Alignment: ~i%s~.
+---
+
+속성: ~i%s~.
+===
+
+***
+
+Class: ~i%s~.
+---
+
+분류: ~i%s~.
+===
+
+***
+Cost: ~i%d~[IfortGump.3]~.
+
+---
+비용: ~i%d~[IfortGump.3]~.
+
+===
+
+***
+~r~ENeed more Storm Power to Build!
+
+---
+~r~E건설하려면 스톰 파워가 더 필요합니다!
+
+===
+
+***
+Salvage for %d~[IfortGump.3]
+---
+회수: %d~[IfortGump.3]
+===
+
+***
+Alignment: <c>%s</c>
+---
+속성: <c>%s</c>
+===
+
+***
+Alignment: <c>None</c>
+---
+속성: <c>없음</c>
+===
+
+***
+Class: <c>%s</c>
+---
+분류: <c>%s</c>
+===
+
+***
+Hits: <c>%d</c>
+---
+체력: <c>%d</c>
+===
+
+***
+Hits: <c>Invulnerable</c>
+---
+체력: <c>무적</c>
+===
+
+***
+Range: <c>%d</c>
+---
+사거리: <c>%d</c>
+===
+
+***
+Range: <c>n/a</c>
+---
+사거리: <c>없음</c>
+===
+
+***
+Damage: <c>%d</c>
+---
+피해: <c>%d</c>
+===
+
+***
+Damage: <c>special</c>
+---
+피해: <c>특수</c>
+===
+
+***
+Damage: <c>n/a</c>
+---
+피해: <c>없음</c>
+===
+
+***
+Cost in Storm Power: <c>%d</c>~[IfortGump.3]
+---
+스톰 파워 비용: <c>%d</c>~[IfortGump.3]
+===
+
+***
+Cost in Storm Power: <c>n/a</c>
+---
+스톰 파워 비용: <c>없음</c>
+===
+
+***
+%s to Build: <c>n/a</c>
+---
+건설에 필요한 %s: <c>없음</c>
+===
+
+***
+%s to Build: <c>None</c>
+---
+건설에 필요한 %s: <c>없음</c>
+===
+
+***
+%s to Build: <c>%s</c>
+---
+건설에 필요한 %s: <c>%s</c>
+===
+
+// 원본 TYPE class의 표시 문구다.
+
+***
+Aerial Attack
+---
+공중 공격
+===
+
+***
+Aerial Transport
+---
+공중 운송
+===
+
+***
+Air Attack Base
+---
+공중 공격 기지
+===
+
+***
+Defense
+---
+방어
+===
+
+***
+Defensive Spell
+---
+방어 주문
+===
+
+***
+Ground Transport
+---
+지상 운송
+===
+
+***
+Offensive Spell
+---
+공격 주문
+===
+
+***
+Offsensive Spell
+---
+공격 주문
+===
+
+***
+Production
+---
+생산
+===
+
+***
+Shooter
+---
+사격
+===
+
+***
+Source of Energy
+---
+에너지 공급원
+===
+
+***
+Source of Storm Power
+---
+스톰 파워 공급원
+===
+
+***
+Spell
+---
+주문
+===
+
+***
+Summons Spell
+---
+소환 주문
+===

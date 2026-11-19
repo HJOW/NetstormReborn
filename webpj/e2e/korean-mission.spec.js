@@ -32,7 +32,25 @@ test('한국어 Tutorial1 미션 메뉴와 브리핑을 표시한다', async ({ 
   await clickLabel(page, '다음'); await page.waitForFunction(() => window.netstorm._gameData.currentTell === 'A1.');
   const next = await page.evaluate(() => { const app = window.netstorm, d = app._mainMenu.dialog; return { style: d.content.styleText, width: d.body.width, maxLine: Math.max(...d.body.softLines.map((line) => { const last = line.fragments.at(-1), bytes = last?.bytes; return line.width - (bytes?.at(-1) === 32 ? app._resources.fonts.measure(bytes.slice(-1), last.context).width : 0); })) }; });
   expect(next.style).toContain('화면 이동'); expect(next.style).toContain('F4'); expect(next.maxLine).toBeLessThanOrEqual(next.width);
-  await page.screenshot({ path: test.info().outputPath('korean-mission-next.png') }); expect(errors).toEqual([]);
+  await page.screenshot({ path: test.info().outputPath('korean-mission-next.png') });
+  // 실제 생산 항목과 한국어 도움말 항목도 같은 미션에서 누른다.
+  await clickLabel(page, '확인'); await page.waitForFunction(() => !window.netstorm._gameClock.paused() && window.netstorm._clientGump.node(window.netstorm._campaignProduction.ui.node().bridge).child);
+  const item = await page.evaluate(() => { const app = window.netstorm, root = app._clientGump, token = root.node(app._campaignProduction.ui.node().bridge).child, bounds = root.collection().bounds(token), rect = app.canvas.getBoundingClientRect();
+    return { x: rect.left + (bounds.left + bounds.right) / 2 * rect.width / app._layout.logicalWidth, y: rect.top + (bounds.top + bounds.bottom) / 2 * rect.height / app._layout.logicalHeight }; });
+  await page.mouse.click(item.x, item.y, { button: 'right', delay: 60 });
+  await page.waitForFunction(() => { const root = window.netstorm._clientGump; for (let token = root.root().child; token; token = root.node(token).next) if (root.node(token).command === 26) return true; return false; });
+  const menu = await page.evaluate(() => { const app = window.netstorm, root = app._clientGump, rect = app.canvas.getBoundingClientRect(); let token = root.root().child;
+    while (token && root.node(token).command !== 26) token = root.node(token).next; const bounds = root.collection().bounds(token);
+    return { help: app._clientLocal.helpWord().get(), bridge: app._resources.translate('Bridge'), owner: app._resources.translate('Owner'), x: rect.left + (bounds.left + 8) * rect.width / app._layout.logicalWidth, y: rect.top + (bounds.top + 5) * rect.height / app._layout.logicalHeight }; });
+  expect(menu.help).toBe('정보'); expect(menu.bridge).toBe('다리'); expect(menu.owner).toBe('소유자'); await page.screenshot({ path: test.info().outputPath('korean-production-menu.png') });
+  await page.mouse.move(menu.x, menu.y); await page.mouse.click(menu.x, menu.y, { delay: 60 });
+  await page.waitForFunction(() => Boolean(window.netstorm._mainMenu.dialog?.topic)); await clickLabel(page, '확인');
+  // 정보 태그가 있는 실제 TYPE은 현지화된 능력치와 그림을 표시한다.
+  await page.evaluate(() => { const app = window.netstorm, type = app._gameAssets.find('thunderFactory').block + 70; app._clientInputQueue.pushCommand(0x02000017, 0, type); });
+  await page.waitForFunction(() => Boolean(window.netstorm._mainMenu.dialog?.information));
+  const typeHelp = await page.evaluate(() => window.netstorm._mainMenu.dialog.informationFactory());
+  expect(typeHelp).toContain('분류: <c>생산</c>'); expect(typeHelp).toContain('체력:'); expect(typeHelp).toContain('스톰 파워 비용:'); await page.screenshot({ path: test.info().outputPath('korean-type-help.png') });
+  await clickLabel(page, '확인'); expect(errors).toEqual([]);
 });
 
 // 아직 번역하지 않은 미션은 한국어 메뉴에서 시작해도 원본 영어 안내를 사용한다.

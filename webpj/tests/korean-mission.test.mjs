@@ -8,6 +8,7 @@ import { TaffArchive } from '../www/assets/taff.js';
 import { decodeOriginalText } from '../www/assets/text-encoding.js';
 import { GameData } from '../www/assets/game-data.js';
 import { MissionScript } from '../www/core/mission-script.js';
+import { XlatTable } from '../www/assets/xlat.js';
 
 // 원본과 동일한 실행 키·단계·명령을 유지하고 안내만 한국어로 출력한다.
 test('한국어 Tutorial1: 실행 설정과 단계별 명령은 원본과 같다', () => {
@@ -34,4 +35,13 @@ test('한국어 미션: 번역하지 않은 Tutorial2는 영어 원문으로 대
     const data = GameData.build({ files, language: 'korean' }), mission = new MissionScript(data, 'Tutorial2');
     try { assert.ok(mission.loaded); assert.match(mission.section('A.'), /[A-Za-z]{4}/); assert.doesNotMatch(mission.section('A.'), /[가-힣]/u); }
     finally { mission.dispose(); }
+});
+
+// 공통 명칭과 서식은 사용자 용어표 및 원본 삽입 토큰을 보존한다.
+test('한국어 미션 정보: 유닛 이름과 서식 토큰을 보존한다', () => {
+    const table = new XlatTable(fs.readFileSync(path.join(REPO_ROOT, 'webpj/translations/xlat.korean'), 'utf8'));
+    const names = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, 'assets/unit-names.korean.json'), 'utf8'));
+    for (const [english, korean] of Object.entries(names)) assert.equal(table.translate(english), korean, english);
+    assert.equal(table.translate('Production'), '생산'); assert.equal(table.translate('Owner'), '소유자'); assert.equal(table.translate('\nClass: ~i%s~.'), '\n분류: ~i%s~.');
+    assert.equal(table.translate('Cost: ~i%d~[IfortGump.3]~.\n'), '비용: ~i%d~[IfortGump.3]~.\n');
 });
