@@ -26,6 +26,17 @@ test('자산 복사본과 매니페스트가 assets/game-data 원본과 같다',
     for (const assetPath of Object.values(MENU_ASSET_PATHS)) assert.ok(paths.includes(assetPath), assetPath);
 });
 
+// 미션 효과음과 음악은 원본 전체를 포함하고 기존 메뉴 음향과 경로가 겹치지 않는다.
+test('미션 음향 자산: 원본 전체와 메뉴 묶음의 중복 없는 경로', () => {
+    const manifest = JSON.parse(fs.readFileSync(prepareTool.MANIFEST_PATH, 'utf8'));
+    const expected = ['sound', 'music'].flatMap((directory) => fs.readdirSync(path.join(prepareTool.SOURCE_ROOT, directory), { withFileTypes: true })
+        .filter((entry) => entry.isFile() && entry.name.toLowerCase().endsWith(directory === 'sound' ? '.wav' : '.mus'))
+        .map((entry) => `${directory}/${entry.name}`.toLowerCase())).sort();
+    const actual = manifest.files.filter((entry) => entry.path.startsWith('sound/') || entry.path.startsWith('music/')).map((entry) => entry.path.toLowerCase()).sort();
+    assert.deepEqual(actual, expected); assert.equal(new Set(actual).size, actual.length);
+    assert.ok(manifest.files.some((entry) => entry.bundle === 'mission-sound')); assert.ok(manifest.files.some((entry) => entry.bundle === 'mission-music'));
+});
+
 // COL 팔레트와 원본 화면 팔레트 규칙(0 검정·255 흰색)을 확인한다.
 test('팔레트: COL 해독과 0/255 고정, 버튼 색 검색', () => {
     const file = GamePalette.parse(readData(MENU_ASSET_PATHS.palette));

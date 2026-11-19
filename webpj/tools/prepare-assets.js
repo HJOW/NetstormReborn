@@ -36,6 +36,8 @@ const MANIFEST_FORMAT = 1;
 const BUNDLES = Object.freeze({
     menu: '메인 메뉴 표시 전에 받아야 하는 필수 자산',
     'menu-music': '메인 메뉴 음악(크기가 커서 화면 표시를 막지 않고 뒤에서 받음)',
+    'mission-sound': '미션 효과음 원본(메뉴에 포함된 두 효과음 제외, 미션 재생 준비용)',
+    'mission-music': '미션 장면 음악 원본(메인 메뉴 음악 제외, 미션 재생 준비용)',
     korean: '한국어 지원(갈무리11 글꼴 woff2·UI 번역표 xlat.korean·Tell 본문 tell.korean·캠페인 목록 offical*.korean·용어표 config.korean). 언어가 한국어일 때만 받는다(2026-10-31 WB03-N, WB03-O)',
 });
 
@@ -64,6 +66,13 @@ const KOREAN_LANGUAGE_FILES = Object.freeze([
     })),
 ]);
 
+// 공통 게임 자산의 음향 파일을 이름순으로 열거한다. 이미 메뉴가 소유한 파일은 중복 등록하지 않는다.
+function missionAudioFiles(directory, extension, excluded, bundle) {
+    const names = fs.readdirSync(path.join(SOURCE_ROOT, directory), { withFileTypes: true });
+    return names.filter((entry) => entry.isFile() && entry.name.toLowerCase().endsWith(extension) && !excluded.has(entry.name.toLowerCase()))
+        .map((entry) => entry.name).sort().map((name) => ({ path: `${directory}/${name}`, bundle, use: '원본 미션 음향 파일(변환 없이 복사)' }));
+}
+
 // 복사할 자산 목록이다. path 는 www/data 안의 상대 경로(원본이 assets/game-data 이면 그쪽의 같은 경로), use 는 원본 근거와 용도다.
 // source 는 원본이 assets/game-data 밖일 때 저장소 루트 기준 원본 경로이다(생략하면 assets/game-data/<path>). (2026-10-23 WB03-M1, 2026-10-31 WB03-N: source 추가)
 const ASSET_FILES = Object.freeze([
@@ -80,6 +89,8 @@ const ASSET_FILES = Object.freeze([
     { path: 'netstorm.tarc', bundle: 'menu', use: '데이터 아카이브 TAFF(메뉴 대화상자 본문 tell.english·용어표 config.english·미션 스크립트·타입 정의, 246개 엔트리)' },
     { path: 'd/setup.cfg', bundle: 'menu', use: '게임 기본 설정(스타일 코드 H2·Text·CText, 경로 지정값 missionSpec·guideSpec, 인코딩된 원본 파일)' },
     { path: 'music/ser22.mus', bundle: 'menu-music', use: '메인 메뉴(전투 밖) 음악, RIFF WAV PCM' },
+    ...missionAudioFiles('sound', '.wav', new Set(['button.wav', 'opensubgump.wav']), 'mission-sound'),
+    ...missionAudioFiles('music', '.mus', new Set(['ser22.mus']), 'mission-music'),
     { path: KOREAN_FONT_PATHS.regular, source: KOREAN_FONT_PATHS.regular, bundle: 'korean', use: '한국어 UI 글꼴 갈무리11 보통체(woff2)' },
     { path: KOREAN_FONT_PATHS.bold, source: KOREAN_FONT_PATHS.bold, bundle: 'korean', use: '한국어 UI 글꼴 갈무리11 굵은체(woff2)' },
     { path: KOREAN_FONT_PATHS.license, source: KOREAN_FONT_PATHS.license, bundle: 'korean', use: '갈무리11 글꼴 사용 허가. 글꼴과 함께 배포한다.' },

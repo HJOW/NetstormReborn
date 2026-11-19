@@ -6,6 +6,8 @@
   "bundles": {
     "menu": "메인 메뉴 표시 전에 받아야 하는 필수 자산",
     "menu-music": "메인 메뉴 음악(크기가 커서 화면 표시를 막지 않고 뒤에서 받음)",
+    "mission-sound": "미션 효과음 원본(메뉴에 포함된 두 효과음 제외, 미션 재생 준비용)",
+    "mission-music": "미션 장면 음악 원본(메인 메뉴 음악 제외, 미션 재생 준비용)",
     "korean": "한국어 지원(갈무리11 글꼴 woff2·UI 번역표 xlat.korean·Tell 본문 tell.korean·캠페인 목록 offical*.korean·용어표 config.korean). 언어가 한국어일 때만 받는다(2026-10-31 WB03-N, WB03-O)"
   },
   "files": [
@@ -248,6 +250,1798 @@
       "size": 17988172,
       "sha256": "d75d5b9e522176a3779e9483cebe544ba5f5b6a49052b1e8a92958dcaaee2398",
       "use": "메인 메뉴(전투 밖) 음악, RIFF WAV PCM"
+    },
+    {
+      "path": "sound/70AriseMyChampions.wav",
+      "source": "assets/game-data/sound/70AriseMyChampions.wav",
+      "bundle": "mission-sound",
+      "size": 185388,
+      "sha256": "8c52e222dba561aaf551600caccb42595be64cad72f675948a848466d3ab87de",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70BombardCast1.wav",
+      "source": "assets/game-data/sound/70BombardCast1.wav",
+      "bundle": "mission-sound",
+      "size": 91180,
+      "sha256": "99f97a8019f036a545a04016db2e2b9e4fad2f0a1668dae15c7aae56b752226f",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70BombardmentPickup1.wav",
+      "source": "assets/game-data/sound/70BombardmentPickup1.wav",
+      "bundle": "mission-sound",
+      "size": 78892,
+      "sha256": "eca35446bbcc54889fbbc28b9a5a80adccc52427599b437fe20c8dc8683bd842",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70DemonicChant1.wav",
+      "source": "assets/game-data/sound/70DemonicChant1.wav",
+      "bundle": "mission-sound",
+      "size": 500780,
+      "sha256": "026351f66321e9321ea799eda1ae3d1443bc7f6bf3b31e32d0b9fb0848273f42",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70DemonicChant2.wav",
+      "source": "assets/game-data/sound/70DemonicChant2.wav",
+      "bundle": "mission-sound",
+      "size": 713772,
+      "sha256": "dc7bc5ce1b268d1cc9406a2c25db7a637df26dc891cc6fa0d1beed41daa7cfc7",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70DemonicChant3.wav",
+      "source": "assets/game-data/sound/70DemonicChant3.wav",
+      "bundle": "mission-sound",
+      "size": 369708,
+      "sha256": "f4ad55a6d6d54971d2349e3670931dfc39de0106ccc74deeea79d246e0ea878e",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70GravitateCast1.wav",
+      "source": "assets/game-data/sound/70GravitateCast1.wav",
+      "bundle": "mission-sound",
+      "size": 81964,
+      "sha256": "73ee5380b903c6d2020e0b7b7dbeff150a8509ef6c3054c13ce0ce0f52f1bbce",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70GravitationPickup1.wav",
+      "source": "assets/game-data/sound/70GravitationPickup1.wav",
+      "bundle": "mission-sound",
+      "size": 88108,
+      "sha256": "60825a99c829eaae4a7332b544cc2a512cb3ba82206b8adab47c8cb73587c2a7",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70HydraCast1.wav",
+      "source": "assets/game-data/sound/70HydraCast1.wav",
+      "bundle": "mission-sound",
+      "size": 96300,
+      "sha256": "d0b972e5fa0ca292d55ed406defb1ba59251f75d64cd6a3995a0b567076d85aa",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70HydraFloodCast1.wav",
+      "source": "assets/game-data/sound/70HydraFloodCast1.wav",
+      "bundle": "mission-sound",
+      "size": 115756,
+      "sha256": "8d13957d11645bec8e9fdb5f781beee7c69b562280f114113cd50254f8a2ac77",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70HydraFloodPickup1.wav",
+      "source": "assets/game-data/sound/70HydraFloodPickup1.wav",
+      "bundle": "mission-sound",
+      "size": 78892,
+      "sha256": "326ce513a69964a63a6808b0ab65d273bb465327d421610161bc6a1101671100",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70HydraPickup1.wav",
+      "source": "assets/game-data/sound/70HydraPickup1.wav",
+      "bundle": "mission-sound",
+      "size": 89132,
+      "sha256": "eea5e84e2ec3a374c0c895db5cf46752a8e7d63716a648506933476e44fe7e52",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70HydraWaveCast1.wav",
+      "source": "assets/game-data/sound/70HydraWaveCast1.wav",
+      "bundle": "mission-sound",
+      "size": 128044,
+      "sha256": "f49fab76614e32cfdebfd978ecfd26e2edc9211c0c75277b990c0156dc3cee04",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70HydraWavePickup1.wav",
+      "source": "assets/game-data/sound/70HydraWavePickup1.wav",
+      "bundle": "mission-sound",
+      "size": 76844,
+      "sha256": "71fac248f37c793e1cd687d2bc00266543c5fe686796620bbe61408143892d1c",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70LightChant1.wav",
+      "source": "assets/game-data/sound/70LightChant1.wav",
+      "bundle": "mission-sound",
+      "size": 460844,
+      "sha256": "8f158d468f39e59b88ee70e86f0f01b6adedbe2e8a72e5de9105a873b9a8f3b2",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70LightChant2.wav",
+      "source": "assets/game-data/sound/70LightChant2.wav",
+      "bundle": "mission-sound",
+      "size": 473132,
+      "sha256": "45cfc965f075b10fae4d084ee5c4a3c4768fbec36045cd9b608bfd4b09590af9",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70PlummetCast1.wav",
+      "source": "assets/game-data/sound/70PlummetCast1.wav",
+      "bundle": "mission-sound",
+      "size": 94252,
+      "sha256": "ec37357eafb5bbb19c30881515a75f373c18f5ae8f7f26391e1c756c3f26c7c7",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70SpawnCast1.wav",
+      "source": "assets/game-data/sound/70SpawnCast1.wav",
+      "bundle": "mission-sound",
+      "size": 81964,
+      "sha256": "28476589a83c48eb3328ec1e40b8316eae429949a6a9101226ae63bad46f0a8b",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70ThunderStormCast1.wav",
+      "source": "assets/game-data/sound/70ThunderStormCast1.wav",
+      "bundle": "mission-sound",
+      "size": 91180,
+      "sha256": "6537071d91f4671ee0f867e2233c02d2ab30b197afb3e0d64f2023d0b35ec48f",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70ThunderStormPickup1.wav",
+      "source": "assets/game-data/sound/70ThunderStormPickup1.wav",
+      "bundle": "mission-sound",
+      "size": 89132,
+      "sha256": "7e1871d021168d7fe3f46d7a2fec170676902c9b302135c5a925005af0708a7e",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70ThunderStrikeCast1.wav",
+      "source": "assets/game-data/sound/70ThunderStrikeCast1.wav",
+      "bundle": "mission-sound",
+      "size": 77868,
+      "sha256": "22e148af64aa8548c7f2e95812e08e17cb1f807fd2f545f169be5b910b79a6bf",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70ThunderStrikePickup1.wav",
+      "source": "assets/game-data/sound/70ThunderStrikePickup1.wav",
+      "bundle": "mission-sound",
+      "size": 91180,
+      "sha256": "235db275d5203a1bcd4f04f98a157e4678df926a650a286e10b255a8d4177a60",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70Twister.wav",
+      "source": "assets/game-data/sound/70Twister.wav",
+      "bundle": "mission-sound",
+      "size": 30060,
+      "sha256": "493be5c1d2717d0d910813f14983460a6e46569bf50958de514dde5b1cbd1525",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70TwisterCast1.wav",
+      "source": "assets/game-data/sound/70TwisterCast1.wav",
+      "bundle": "mission-sound",
+      "size": 129068,
+      "sha256": "442fd51210e009693bd7cd868fa0a9ff34af14394aa5140cd1322309e7940cf1",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70TwisterPickup1.wav",
+      "source": "assets/game-data/sound/70TwisterPickup1.wav",
+      "bundle": "mission-sound",
+      "size": 75820,
+      "sha256": "59ecdf7882fa8de898df563b84ec0a8cc2a7d92120f73cda9f42c6fce2b52f3f",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70VortexCast1.wav",
+      "source": "assets/game-data/sound/70VortexCast1.wav",
+      "bundle": "mission-sound",
+      "size": 48006,
+      "sha256": "4855df751538d80964c526531c10271edd509990e6993d120fe8e4086df9299d",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70VortexPickup1.wav",
+      "source": "assets/game-data/sound/70VortexPickup1.wav",
+      "bundle": "mission-sound",
+      "size": 75820,
+      "sha256": "47eb5fcf832c95867913167bddaa2d1f5c26d5414035f9af0adc4c210f78aeb4",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70WhirlwindCast1.wav",
+      "source": "assets/game-data/sound/70WhirlwindCast1.wav",
+      "bundle": "mission-sound",
+      "size": 37018,
+      "sha256": "8fbd87858de51ba46bfd8cf5b86c15785d38f44c65eb3bfb0a1f4abf3e138bfb",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70WhirlwindPickup1.wav",
+      "source": "assets/game-data/sound/70WhirlwindPickup1.wav",
+      "bundle": "mission-sound",
+      "size": 105516,
+      "sha256": "ff664e2777a2a4ad6b92395a4ad63d5b4f1ee1e493655b6bf458e9e0109fc704",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70twisterget.wav",
+      "source": "assets/game-data/sound/70twisterget.wav",
+      "bundle": "mission-sound",
+      "size": 27116,
+      "sha256": "b91e34623f220eb4e57d2dea84dbca9c59e2bd4c293b062f7a0d87e4ab298748",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70vortex-2.wav",
+      "source": "assets/game-data/sound/70vortex-2.wav",
+      "bundle": "mission-sound",
+      "size": 38140,
+      "sha256": "c679031d74300ea493615177699c383182ac682f9ded27644b5a26d14d157fa7",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70vortexget.wav",
+      "source": "assets/game-data/sound/70vortexget.wav",
+      "bundle": "mission-sound",
+      "size": 23292,
+      "sha256": "7d1a2abe253cf6f798dd8553579f9d150a3d9518b376aa40691d6e4a80ee10e5",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70whirlwind-2.wav",
+      "source": "assets/game-data/sound/70whirlwind-2.wav",
+      "bundle": "mission-sound",
+      "size": 26812,
+      "sha256": "6dba3c63026a720830c08292c4b41a090d628658915f88daccac45594ab7a39a",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/70whirlwindget.wav",
+      "source": "assets/game-data/sound/70whirlwindget.wav",
+      "bundle": "mission-sound",
+      "size": 32556,
+      "sha256": "0b46edcd3eaa76b9b63880f9a996d8ee6e5fc2576ab4c6e4acbd7d241c4b0510",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/GOLEMMOVE3.WAV",
+      "source": "assets/game-data/sound/GOLEMMOVE3.WAV",
+      "bundle": "mission-sound",
+      "size": 28460,
+      "sha256": "996523c71670b03d8d571f7747654f6b12f27fe7e28ed6fd6406966eb05e9b3d",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/PRIESTMOVE2.WAV",
+      "source": "assets/game-data/sound/PRIESTMOVE2.WAV",
+      "bundle": "mission-sound",
+      "size": 29740,
+      "sha256": "d369c00d2d7578ae634f5d3dbc5f6eac5d1ad6d669160f36c929109a7c38f26a",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/PRIESTMOVE4.WAV",
+      "source": "assets/game-data/sound/PRIESTMOVE4.WAV",
+      "bundle": "mission-sound",
+      "size": 23812,
+      "sha256": "d4df88bd78f3642ce4d30df2ffb0bffd17471418e240cc5abccb90b1f7c9ff08",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/ThunderQuietDistant.wav",
+      "source": "assets/game-data/sound/ThunderQuietDistant.wav",
+      "bundle": "mission-sound",
+      "size": 75590,
+      "sha256": "574b8f992fc9ea5a74a807e230ceef5c13e22a67287a2763ad384acda7245d85",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/altarBurnCollapse.wav",
+      "source": "assets/game-data/sound/altarBurnCollapse.wav",
+      "bundle": "mission-sound",
+      "size": 65863,
+      "sha256": "0eb594d93ea47c00e0f8e0f61ce665614aea9f9d1212f5b303b118f1e1ed84a3",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/ambient02.WAV",
+      "source": "assets/game-data/sound/ambient02.WAV",
+      "bundle": "mission-sound",
+      "size": 40450,
+      "sha256": "664d296aa4cb08014b026496aedefd6718b84c683ae2934e7b0d91f1252aadbd",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/apBuilding.wav",
+      "source": "assets/game-data/sound/apBuilding.wav",
+      "bundle": "mission-sound",
+      "size": 19204,
+      "sha256": "8ed45fb1c8ba1c593725a2cdcbf9f63056453822727089c852fe88035c90d266",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/apStart.wav",
+      "source": "assets/game-data/sound/apStart.wav",
+      "bundle": "mission-sound",
+      "size": 33898,
+      "sha256": "f64685dfc4a20053b7252db07c8616eeedb686da4376bdf3027a88b11a88ce22",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/balloonDrop.wav",
+      "source": "assets/game-data/sound/balloonDrop.wav",
+      "bundle": "mission-sound",
+      "size": 12817,
+      "sha256": "c684e66e85f78a523b07585d4eb87a5bc9c714587cd03f0d0c04d8c08b7af39e",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/balloonFlame.WAV",
+      "source": "assets/game-data/sound/balloonFlame.WAV",
+      "bundle": "mission-sound",
+      "size": 23568,
+      "sha256": "ed6609cf16084c356dd868607c2d6e4bb9d2dbeadc8d6267de71d44870cf614c",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/balloonMove.wav",
+      "source": "assets/game-data/sound/balloonMove.wav",
+      "bundle": "mission-sound",
+      "size": 14701,
+      "sha256": "4256a1d0cef4fa0b493db148e2ec556fb2c01975291806eda23a185a78f57795",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/balloonPickUp.wav",
+      "source": "assets/game-data/sound/balloonPickUp.wav",
+      "bundle": "mission-sound",
+      "size": 15417,
+      "sha256": "96788e698ad449b082b3d596e5a206da301723cb9b1a40952dae8c100e8a4bb1",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/beamOver-1000.wav",
+      "source": "assets/game-data/sound/beamOver-1000.wav",
+      "bundle": "mission-sound",
+      "size": 37649,
+      "sha256": "3f451d9e070be61235b40e36bbe24fb3d3590a95a55d873975907238c948b30e",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/beamOver03.WAV",
+      "source": "assets/game-data/sound/beamOver03.WAV",
+      "bundle": "mission-sound",
+      "size": 40093,
+      "sha256": "4e04cf847a7f40d373dac3d5e0b10c4dc1e0ffe08286a6c55a0b856fff563d73",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/bell.wav",
+      "source": "assets/game-data/sound/bell.wav",
+      "bundle": "mission-sound",
+      "size": 69420,
+      "sha256": "dfcb0285fc7148ca55bea4cdd64ca5be51d9b7c078199c778e14a8156db1b692",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/bridgeFall.WAV",
+      "source": "assets/game-data/sound/bridgeFall.WAV",
+      "bundle": "mission-sound",
+      "size": 72518,
+      "sha256": "87be4d5fe171ad368ebb70b9ce6f53c659e770ee9e4b8f154f5631edf460caa4",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/bridgeHardenCast.wav",
+      "source": "assets/game-data/sound/bridgeHardenCast.wav",
+      "bundle": "mission-sound",
+      "size": 26154,
+      "sha256": "c845f854739052681755ea7294f26762dbedc99d4ae47d79d7f94688da864331",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/bridgeHardenGet.wav",
+      "source": "assets/game-data/sound/bridgeHardenGet.wav",
+      "bundle": "mission-sound",
+      "size": 19500,
+      "sha256": "2958b2e572501ffe9c836490de0f04b1c282d74a2831d3e5f9ef1245f5cee0d5",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/bridgecrack.wav",
+      "source": "assets/game-data/sound/bridgecrack.wav",
+      "bundle": "mission-sound",
+      "size": 26938,
+      "sha256": "0770687f73df385a89538ac441f2c904e070810d82bcf25fbc103f9be4854d41",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/buildDone.wav",
+      "source": "assets/game-data/sound/buildDone.wav",
+      "bundle": "mission-sound",
+      "size": 22430,
+      "sha256": "35401581dfec5f03bfb43dfe6a81e648cbdb1011395f6da27f595a94fbe7c923",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/bulfDrop.WAV",
+      "source": "assets/game-data/sound/bulfDrop.WAV",
+      "bundle": "mission-sound",
+      "size": 19174,
+      "sha256": "6abade8d5bdf4eae3e9eafabd5e851972749816d609ebe7aeb71c52e39f734a5",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/bulfHurt.wav",
+      "source": "assets/game-data/sound/bulfHurt.wav",
+      "bundle": "mission-sound",
+      "size": 27459,
+      "sha256": "0aeca209dd0747350d5893dae8ba6fe0bf6eb4438ac7126c5de288eb62d291da",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/bulfMove.WAV",
+      "source": "assets/game-data/sound/bulfMove.WAV",
+      "bundle": "mission-sound",
+      "size": 15224,
+      "sha256": "7504c43c8763200eac1d03fcfe0e246f2cc865aae4d7d187cbc47b23a10db69c",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/bulfPickUp.WAV",
+      "source": "assets/game-data/sound/bulfPickUp.WAV",
+      "bundle": "mission-sound",
+      "size": 12278,
+      "sha256": "1ff6d138ee5de738d58d60dc1856715f5c555f5439c2722fb74604c34bdb0901",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/bulfWalk1.WAV",
+      "source": "assets/game-data/sound/bulfWalk1.WAV",
+      "bundle": "mission-sound",
+      "size": 7244,
+      "sha256": "45a28c53078fa9086e9f33ca085650393076122bf0bc74b736c156a3c21f8ad2",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/bulfWalk2.WAV",
+      "source": "assets/game-data/sound/bulfWalk2.WAV",
+      "bundle": "mission-sound",
+      "size": 6828,
+      "sha256": "1478dc45cb6eab68060f81cb4803d856f40410f9f3353cc7d833aff6410a9e7f",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/bulfWalk3.WAV",
+      "source": "assets/game-data/sound/bulfWalk3.WAV",
+      "bundle": "mission-sound",
+      "size": 5996,
+      "sha256": "6054da96b47d7ecfc120e289fb9f043f09fc662ea7ddea41f6e8b2f0aa610a9c",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/bulfWalk4.WAV",
+      "source": "assets/game-data/sound/bulfWalk4.WAV",
+      "bundle": "mission-sound",
+      "size": 9186,
+      "sha256": "636849f0b369371d54cab307a2c3deb8f485a1475ac54e57801840cc6c437a79",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/bulfWalk5.WAV",
+      "source": "assets/game-data/sound/bulfWalk5.WAV",
+      "bundle": "mission-sound",
+      "size": 7244,
+      "sha256": "dc8098b6f80b082ff93b64edf599988f428748c8cfad859a06e19f72e11700a0",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/burning.wav",
+      "source": "assets/game-data/sound/burning.wav",
+      "bundle": "mission-sound",
+      "size": 93806,
+      "sha256": "15e4de5ceccdce1b71b1404af29f0b5d789aaabfc7b7bf460bcdf5ca4f5ab1aa",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/chainRattle23.WAV",
+      "source": "assets/game-data/sound/chainRattle23.WAV",
+      "bundle": "mission-sound",
+      "size": 19109,
+      "sha256": "1cd3c36d95d04b14b2174c6d65b4d861f40a6412238f6fae342d9974332120c3",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/chainRattle24.WAV",
+      "source": "assets/game-data/sound/chainRattle24.WAV",
+      "bundle": "mission-sound",
+      "size": 30015,
+      "sha256": "21ea6bd5e6b0957c9d74af2d8bec69e3e3e79d80fec1ef9c3efeea2507406bcd",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/chainRattle25.WAV",
+      "source": "assets/game-data/sound/chainRattle25.WAV",
+      "bundle": "mission-sound",
+      "size": 20241,
+      "sha256": "71cdc51ad5e9a6a22cbf2bae375d55bc3a7416a3a16b058ac83da76fe34459f5",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/chainRattle26.wav",
+      "source": "assets/game-data/sound/chainRattle26.wav",
+      "bundle": "mission-sound",
+      "size": 25339,
+      "sha256": "cbda04ceb7849fd00bd35016a5ec2eb12452884036254ba1bc6c3f627aa4bced",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/chainRattle27.WAV",
+      "source": "assets/game-data/sound/chainRattle27.WAV",
+      "bundle": "mission-sound",
+      "size": 22454,
+      "sha256": "a523f1ec471eb869cd352f690ea6dc6123e004fcf45e98146fe90f5206fa049c",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/cloudDrop.wav",
+      "source": "assets/game-data/sound/cloudDrop.wav",
+      "bundle": "mission-sound",
+      "size": 14778,
+      "sha256": "68e5ad3f4a47183c0be48906fdc10fb5f31234ab2cbe8b714817afa0043d47fd",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/cloudMove.wav",
+      "source": "assets/game-data/sound/cloudMove.wav",
+      "bundle": "mission-sound",
+      "size": 14252,
+      "sha256": "5cb2fc0046a3c600feb31ea3c84b350a805e05b06d906bdc17e7eae81a13f31e",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/collapse.wav",
+      "source": "assets/game-data/sound/collapse.wav",
+      "bundle": "mission-sound",
+      "size": 57293,
+      "sha256": "240738f63f49d9ab68fb645218ec2507e7ff38b4771be8cc833ccdd9895a1444",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/crabSteal.WAV",
+      "source": "assets/game-data/sound/crabSteal.WAV",
+      "bundle": "mission-sound",
+      "size": 20903,
+      "sha256": "ebb77a04653d7fb31a07ae4c6e47a51f2eb8e81ebaff6c87e380d2bf493fb362",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/decimationCast.wav",
+      "source": "assets/game-data/sound/decimationCast.wav",
+      "bundle": "mission-sound",
+      "size": 15397,
+      "sha256": "bc6cd4430f3dd8bd121fd884d8d4553bd3465248b194e0340781a851869d3a4f",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/decimationGet.wav",
+      "source": "assets/game-data/sound/decimationGet.wav",
+      "bundle": "mission-sound",
+      "size": 19948,
+      "sha256": "a68736acbcc169cd219f3e051456ade11031f9c7519b66e2ea5d107239b7cbb2",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/devastationCast.wav",
+      "source": "assets/game-data/sound/devastationCast.wav",
+      "bundle": "mission-sound",
+      "size": 13122,
+      "sha256": "a9325067b0901da2d19cb8d21cb8e86b572809e45e032fd841a847ecc024656e",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/devastationGet.wav",
+      "source": "assets/game-data/sound/devastationGet.wav",
+      "bundle": "mission-sound",
+      "size": 18860,
+      "sha256": "d89ac9a4ad0a79d593ce990f0bd1eea3af035810b7b41b703bc88a89931f7414",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/dissolve.wav",
+      "source": "assets/game-data/sound/dissolve.wav",
+      "bundle": "mission-sound",
+      "size": 3310,
+      "sha256": "315cc5d40697076008b941703abd615c8ca0fad5e404a182feba13fa153cf564",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/distantWindQuiet-3000.wav",
+      "source": "assets/game-data/sound/distantWindQuiet-3000.wav",
+      "bundle": "mission-sound",
+      "size": 68258,
+      "sha256": "a3b20e62f7db6c5d141be7b6f5326e355e8deb4a15803e8b0d5789e406902d5d",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/dropPiece-500.wav",
+      "source": "assets/game-data/sound/dropPiece-500.wav",
+      "bundle": "mission-sound",
+      "size": 2244,
+      "sha256": "3562fa63a08f708d7412b839b877129ba2792417f465d9bd8c373ab0b95c3127",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/dustDevilSpin-500.wav",
+      "source": "assets/game-data/sound/dustDevilSpin-500.wav",
+      "bundle": "mission-sound",
+      "size": 69619,
+      "sha256": "6d4253c6f998b7cd3c56edb65ab48e772674864d672e833ef9fad1779def798c",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/eagleScream-1500.wav",
+      "source": "assets/game-data/sound/eagleScream-1500.wav",
+      "bundle": "mission-sound",
+      "size": 51774,
+      "sha256": "4bad4115b2633a92e4d6e807ccfa8fef0ed912195ebda89c63d86c5ddf87fd4f",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/enemyIslandPreparing.wav",
+      "source": "assets/game-data/sound/enemyIslandPreparing.wav",
+      "bundle": "mission-sound",
+      "size": 50044,
+      "sha256": "c05f2f008ffc402cedde77c98d05f73edffbe630917a76edf094becf6485c4bd",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/enemyPriestCaptured.wav",
+      "source": "assets/game-data/sound/enemyPriestCaptured.wav",
+      "bundle": "mission-sound",
+      "size": 38776,
+      "sha256": "e888a0b3b3c78eaab27b497dabf5132ffef69f898adaaff7df4a63382cc70151",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/explodeSlot.wav",
+      "source": "assets/game-data/sound/explodeSlot.wav",
+      "bundle": "mission-sound",
+      "size": 9952,
+      "sha256": "d21899d6b889a6de30f4e50e9a20fd38a4620ed895b4c1ee2f5cdbb0235765d0",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/explosion.wav",
+      "source": "assets/game-data/sound/explosion.wav",
+      "bundle": "mission-sound",
+      "size": 34562,
+      "sha256": "a7735320c0b17e012b5c0c0dc8a31766eacf8fd6a716afdc10b961a288279fb3",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/fireCrossbow.wav",
+      "source": "assets/game-data/sound/fireCrossbow.wav",
+      "bundle": "mission-sound",
+      "size": 15076,
+      "sha256": "a0f242612e0eaa31e0f1c144e9bf70280951ba2da64934ae5328b7137e1ec008",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/forRain2.WAV",
+      "source": "assets/game-data/sound/forRain2.WAV",
+      "bundle": "mission-sound",
+      "size": 41714,
+      "sha256": "98ceeb317299722280d865629a4132c465e36a6ba06edf8a0c60ae4fb7e7cc88",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/forStorm2.WAV",
+      "source": "assets/game-data/sound/forStorm2.WAV",
+      "bundle": "mission-sound",
+      "size": 53362,
+      "sha256": "ef12dc45225543839795035d9016ea1b7d64cfbc0d4441aff69302b9606330cf",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/forSun2.WAV",
+      "source": "assets/game-data/sound/forSun2.WAV",
+      "bundle": "mission-sound",
+      "size": 49710,
+      "sha256": "4e966e0e0c4a3d819e416eb8ed4ef028ac066be6ccc01b5fd7c0accb6edc2067",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/forThunder2.WAV",
+      "source": "assets/game-data/sound/forThunder2.WAV",
+      "bundle": "mission-sound",
+      "size": 49168,
+      "sha256": "22df64b3c72b84b0b38de502b91a2f39309dac0aab6ce84472957b63ce8368e3",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/forWind2.WAV",
+      "source": "assets/game-data/sound/forWind2.WAV",
+      "bundle": "mission-sound",
+      "size": 43290,
+      "sha256": "c089727f631326eea27d34c6f5b96a9453a23a4696b4a886a74e3b7a4e45c70d",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/getPiece-500.wav",
+      "source": "assets/game-data/sound/getPiece-500.wav",
+      "bundle": "mission-sound",
+      "size": 2244,
+      "sha256": "3562fa63a08f708d7412b839b877129ba2792417f465d9bd8c373ab0b95c3127",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/geyserMined1.WAV",
+      "source": "assets/game-data/sound/geyserMined1.WAV",
+      "bundle": "mission-sound",
+      "size": 5626,
+      "sha256": "32b799d41b8aab9646e6f771583157d81e8ac137c191f30233ef4c36bff5f1af",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/geyserMined2.WAV",
+      "source": "assets/game-data/sound/geyserMined2.WAV",
+      "bundle": "mission-sound",
+      "size": 5880,
+      "sha256": "fe41be437933a950ce865a0d11f0223cc43ae819536bf900769408ac5e59acf1",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/geyserMined3.WAV",
+      "source": "assets/game-data/sound/geyserMined3.WAV",
+      "bundle": "mission-sound",
+      "size": 6454,
+      "sha256": "43f2ccada36b9d3935f465b216670e5e986065038ef82bdfc5874817db93f6a6",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/geyserMined4.WAV",
+      "source": "assets/game-data/sound/geyserMined4.WAV",
+      "bundle": "mission-sound",
+      "size": 4060,
+      "sha256": "93def0cd2db025dd8409a37c04b85f5a5aced683113e285432b0db0bfacd6105",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/geyserMined5.WAV",
+      "source": "assets/game-data/sound/geyserMined5.WAV",
+      "bundle": "mission-sound",
+      "size": 6066,
+      "sha256": "bd0c7204b54b8f6d4cf4c29c91cd57be841c607137483863f5493c8ffe2f8a0b",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/geyserMined6.WAV",
+      "source": "assets/game-data/sound/geyserMined6.WAV",
+      "bundle": "mission-sound",
+      "size": 8330,
+      "sha256": "f8059aa5653ca76495e9fe3e22c1f644ab693226ee252bc62cf8c32ec0b14f49",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/golemDrop.wav",
+      "source": "assets/game-data/sound/golemDrop.wav",
+      "bundle": "mission-sound",
+      "size": 19436,
+      "sha256": "bca722b6a9ad601436cc47c1ca3239a5200eb4779dc3cba281fb6dd448df957a",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/golemMove1.wav",
+      "source": "assets/game-data/sound/golemMove1.wav",
+      "bundle": "mission-sound",
+      "size": 35308,
+      "sha256": "4cacb4a413a8f8d9a52454048f0629f7a017b6a3903ba128d4ba1466da011d35",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/golemMove2.WAV",
+      "source": "assets/game-data/sound/golemMove2.WAV",
+      "bundle": "mission-sound",
+      "size": 43628,
+      "sha256": "e4b19fefcf4656116dfc4852c3423be888613595c11c9f8c03708503028282de",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/golemMove4.wav",
+      "source": "assets/game-data/sound/golemMove4.wav",
+      "bundle": "mission-sound",
+      "size": 8812,
+      "sha256": "f00682ee400aad7ba206a0cfe6b7bfe0efa11feea8d05150266774a404b13a72",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/golemMove5.wav",
+      "source": "assets/game-data/sound/golemMove5.wav",
+      "bundle": "mission-sound",
+      "size": 10028,
+      "sha256": "dfc462bb5ea06f946babade0759b8536f8b6e3567da9fefec4cdad57aad61b04",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/golemPickUp.wav",
+      "source": "assets/game-data/sound/golemPickUp.wav",
+      "bundle": "mission-sound",
+      "size": 11948,
+      "sha256": "9ce99d1e60d29caa706d2af9befe633492d0fc258d0ba762fbda80985bc1d3e3",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/gravitate1.wav",
+      "source": "assets/game-data/sound/gravitate1.wav",
+      "bundle": "mission-sound",
+      "size": 220558,
+      "sha256": "3a10f77e1ffbd609bc37e70e6c7e61276902798fe181054a083d85a5bccad529",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/gravitation.wav",
+      "source": "assets/game-data/sound/gravitation.wav",
+      "bundle": "mission-sound",
+      "size": 352858,
+      "sha256": "dfef20189e0a4bd1243989f6ffe0235b007263fe4e4ca1293a3c68d483231174",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/guy-1200.wav",
+      "source": "assets/game-data/sound/guy-1200.wav",
+      "bundle": "mission-sound",
+      "size": 1403,
+      "sha256": "c9e0b882f2d5c534df758a5c06df71c81769ea853588c5590b8da2a1c92dafd0",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/healCast.wav",
+      "source": "assets/game-data/sound/healCast.wav",
+      "bundle": "mission-sound",
+      "size": 16905,
+      "sha256": "08e034851b364a262701ccdc30bb51169b8f00f0072a0c2e601d63a9e658f212",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/healGet.wav",
+      "source": "assets/game-data/sound/healGet.wav",
+      "bundle": "mission-sound",
+      "size": 9676,
+      "sha256": "ba5853858259280ee5223a96611354aef896d74436cad0275e72bfcf0fc43230",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/horn.wav",
+      "source": "assets/game-data/sound/horn.wav",
+      "bundle": "mission-sound",
+      "size": 48960,
+      "sha256": "85c7ba2a9ffbcdeb02e1001c0c2f4fc1eb06df244b32880a030fd7c1b88c6873",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/iceCannonImpact2-800.WAV",
+      "source": "assets/game-data/sound/iceCannonImpact2-800.WAV",
+      "bundle": "mission-sound",
+      "size": 9890,
+      "sha256": "085b53784361f01b7c9bc01a4df31f72cd29ed3030a272d63de9144f2951a3b9",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/iceCannonImpact3-800.wav",
+      "source": "assets/game-data/sound/iceCannonImpact3-800.wav",
+      "bundle": "mission-sound",
+      "size": 10167,
+      "sha256": "7ad0227c14bace687c309027f776cb33f9f392ea10b428d7a0ea45c0e644e026",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/iceCannonImpact4-800.wav",
+      "source": "assets/game-data/sound/iceCannonImpact4-800.wav",
+      "bundle": "mission-sound",
+      "size": 10320,
+      "sha256": "ac81e412846151ccbeeb050577f671baf08e111a2a1a54a21fb07c0eca0e6958",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/icecannonimpact-500.wav",
+      "source": "assets/game-data/sound/icecannonimpact-500.wav",
+      "bundle": "mission-sound",
+      "size": 9835,
+      "sha256": "6a3e81fed591388bf9431a82ce2ac9a977e801a0248250f07554899d9cc6385d",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/icecannonimpact-800.wav",
+      "source": "assets/game-data/sound/icecannonimpact-800.wav",
+      "bundle": "mission-sound",
+      "size": 9835,
+      "sha256": "6a3e81fed591388bf9431a82ce2ac9a977e801a0248250f07554899d9cc6385d",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/icecannonimpact1-800.wav",
+      "source": "assets/game-data/sound/icecannonimpact1-800.wav",
+      "bundle": "mission-sound",
+      "size": 9835,
+      "sha256": "6a3e81fed591388bf9431a82ce2ac9a977e801a0248250f07554899d9cc6385d",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/impact.wav",
+      "source": "assets/game-data/sound/impact.wav",
+      "bundle": "mission-sound",
+      "size": 24684,
+      "sha256": "ce75c6a4e3a0c28a0008ca61a8d760ca34f1453669fba7d2399123b033ad7b91",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/influenceIcon.wav",
+      "source": "assets/game-data/sound/influenceIcon.wav",
+      "bundle": "mission-sound",
+      "size": 7772,
+      "sha256": "e0e791e8efd0f6209a51cbf656f37ca9a0c0c1800e59350cde8c93bbc6c78886",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/invisibilityCast.wav",
+      "source": "assets/game-data/sound/invisibilityCast.wav",
+      "bundle": "mission-sound",
+      "size": 14174,
+      "sha256": "420a6db75669268a7334de47da2a96a973f90baee8c808eae4f82d84452d893f",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/invisibilityGet.wav",
+      "source": "assets/game-data/sound/invisibilityGet.wav",
+      "bundle": "mission-sound",
+      "size": 18540,
+      "sha256": "99e9569d61df22c7e1df00ef4261019b22f878d48367db574ce6facc876e5c87",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/islandFall.wav",
+      "source": "assets/game-data/sound/islandFall.wav",
+      "bundle": "mission-sound",
+      "size": 35556,
+      "sha256": "b8abe74133c490191d198ce1dc40ebc73de4484c8368c75dcbc98c2f14e57658",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/islandRise.wav",
+      "source": "assets/game-data/sound/islandRise.wav",
+      "bundle": "mission-sound",
+      "size": 49676,
+      "sha256": "0f5c9272490f72b12f7a6e5bcde8d844f57dbf8b71e402b2d1560bd771d1cefa",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/islandUnderAttack.wav",
+      "source": "assets/game-data/sound/islandUnderAttack.wav",
+      "bundle": "mission-sound",
+      "size": 34320,
+      "sha256": "70a07c5ae24abb63f68385de2f6bf08eb6b3661a323d35a8db4fd785d6d662fb",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/itIsDone2.WAV",
+      "source": "assets/game-data/sound/itIsDone2.WAV",
+      "bundle": "mission-sound",
+      "size": 22944,
+      "sha256": "886b732aef5fbbd03a6b8799828523a669bd2c5ba0aade3efba936cb16b20697",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/jacoblad.wav",
+      "source": "assets/game-data/sound/jacoblad.wav",
+      "bundle": "mission-sound",
+      "size": 10812,
+      "sha256": "3c286951f0e3cb45bab3eeefc9ba3f88f595d38ac84f71ce53a017e0583e6e2a",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/jimbuild.wav",
+      "source": "assets/game-data/sound/jimbuild.wav",
+      "bundle": "mission-sound",
+      "size": 25270,
+      "sha256": "5ea106e5051aaca725b0df62ce0f2ad938abdf33c3dae8a9eb3c99b5761d6c7e",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/kickedoff.wav",
+      "source": "assets/game-data/sound/kickedoff.wav",
+      "bundle": "mission-sound",
+      "size": 28268,
+      "sha256": "6ae27532e995ea54650034cbdfe1ec93faf69921b3dd07bde36212d033dff5e0",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/manOWarBuild.wav",
+      "source": "assets/game-data/sound/manOWarBuild.wav",
+      "bundle": "mission-sound",
+      "size": 38386,
+      "sha256": "2797c3049e5145f47060714ccafd2c5522e30e1af8f629e148f4b03f9a2e076f",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/manOWarFire-500.wav",
+      "source": "assets/game-data/sound/manOWarFire-500.wav",
+      "bundle": "mission-sound",
+      "size": 64869,
+      "sha256": "2dc2382ad19a6114dd0445864626a1ec2bf969077971c84d4c7b25bd7962faa3",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/moveBeetle.wav",
+      "source": "assets/game-data/sound/moveBeetle.wav",
+      "bundle": "mission-sound",
+      "size": 12424,
+      "sha256": "a6c225df40a70554f919ae4043d3e5fcd319d62863adcd4934856a0b1558278e",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/newchatmessage-1000.wav",
+      "source": "assets/game-data/sound/newchatmessage-1000.wav",
+      "bundle": "mission-sound",
+      "size": 3344,
+      "sha256": "a134c8c06dfc09f5ab26a7fac61eeb108faab449ba78d9dc77f84d499139803c",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/newwarnmessage-1000.wav",
+      "source": "assets/game-data/sound/newwarnmessage-1000.wav",
+      "bundle": "mission-sound",
+      "size": 6533,
+      "sha256": "d963d846abc6fd1f5770db4b4cd1641b4735f5d4023e4b397dc7afded50254d8",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/openGump-1000.wav",
+      "source": "assets/game-data/sound/openGump-1000.wav",
+      "bundle": "mission-sound",
+      "size": 5408,
+      "sha256": "20c083d11bb087338d96c408ed327cf826ae2979e75b750f914cb519667c69a8",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/openGump.wav",
+      "source": "assets/game-data/sound/openGump.wav",
+      "bundle": "mission-sound",
+      "size": 5408,
+      "sha256": "20c083d11bb087338d96c408ed327cf826ae2979e75b750f914cb519667c69a8",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/ourPriestCaptured.wav",
+      "source": "assets/game-data/sound/ourPriestCaptured.wav",
+      "bundle": "mission-sound",
+      "size": 34488,
+      "sha256": "ec1a35c9eb9cef40a7c10ee8eb27cc67c12cb9d5397ece855b83b786c60d1819",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/ourPriestImmobile.wav",
+      "source": "assets/game-data/sound/ourPriestImmobile.wav",
+      "bundle": "mission-sound",
+      "size": 38636,
+      "sha256": "25461966a953dd36bd4b16d2f5f5950017fc15cd7551e455668e4bf232c5c6bb",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/paralysisCast.wav",
+      "source": "assets/game-data/sound/paralysisCast.wav",
+      "bundle": "mission-sound",
+      "size": 24921,
+      "sha256": "023e1c53c5280ce9647fef6d5092241d344365d22abe7473b12a3adfac30220b",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/paralysisGet.wav",
+      "source": "assets/game-data/sound/paralysisGet.wav",
+      "bundle": "mission-sound",
+      "size": 18572,
+      "sha256": "c4420b6b7b6c59ec806ca841d23a40d97fce3a84dcc070229ce3f5b3127f2db0",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/pointBlastCast.wav",
+      "source": "assets/game-data/sound/pointBlastCast.wav",
+      "bundle": "mission-sound",
+      "size": 15838,
+      "sha256": "e588414caa3b12f2358bfc8d7ca4b6a74152bbf887da53588249a325f19016f4",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/pointBlastGet.wav",
+      "source": "assets/game-data/sound/pointBlastGet.wav",
+      "bundle": "mission-sound",
+      "size": 18540,
+      "sha256": "a508ac3e0ad2865415abfa9ca3b88fbcf97a0e9b9366e7d8f5c9f420b6d58e43",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/powerup.wav",
+      "source": "assets/game-data/sound/powerup.wav",
+      "bundle": "mission-sound",
+      "size": 15484,
+      "sha256": "002dd7e3eb3e5dee9d33b14a34978c1af390ad35c0b6c50adbd8e80a144915cd",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/preparingAscend.wav",
+      "source": "assets/game-data/sound/preparingAscend.wav",
+      "bundle": "mission-sound",
+      "size": 27724,
+      "sha256": "fef86920f95f05db90317da46c47c6b4a41b86f0b4430356e1c7030b31cf7bb5",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/priestDrop.wav",
+      "source": "assets/game-data/sound/priestDrop.wav",
+      "bundle": "mission-sound",
+      "size": 22604,
+      "sha256": "b90cf0426ca84cd18f41b7da4b66f8f7557b824ae105dbf9053b94f2471232e7",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/priestFall.wav",
+      "source": "assets/game-data/sound/priestFall.wav",
+      "bundle": "mission-sound",
+      "size": 17341,
+      "sha256": "ca864b583ca6024f7a2439434638cefa900486d3d113c598053d034ab1adf977",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/priestForceField.wav",
+      "source": "assets/game-data/sound/priestForceField.wav",
+      "bundle": "mission-sound",
+      "size": 27337,
+      "sha256": "1ee3e957606d16d9573ea4ba716564ca31f486e33aab92e18306efd4a69de6ac",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/priestFree.wav",
+      "source": "assets/game-data/sound/priestFree.wav",
+      "bundle": "mission-sound",
+      "size": 18290,
+      "sha256": "092c9d6a6c456a9d3f6595b4d96cb4e98709b228478291a026d2b287163cdbe4",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/priestMove3.WAV",
+      "source": "assets/game-data/sound/priestMove3.WAV",
+      "bundle": "mission-sound",
+      "size": 23724,
+      "sha256": "e5da6b09f3d327b8e20108d34cb947c194cc3066dc22a097943742361a8a6b99",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/priestPickUp.wav",
+      "source": "assets/game-data/sound/priestPickUp.wav",
+      "bundle": "mission-sound",
+      "size": 19194,
+      "sha256": "504c4a2125a1cb9fc854d449fb200adb5bad28e32202fee5602404436d29ee10",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/priestSacrifice2.WAV",
+      "source": "assets/game-data/sound/priestSacrifice2.WAV",
+      "bundle": "mission-sound",
+      "size": 125355,
+      "sha256": "9bcd5fb9394ebb571ab9ea49f045270fa540749e29a0cbcf623aba3d9d429f56",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/priestSacrifice4.WAV",
+      "source": "assets/game-data/sound/priestSacrifice4.WAV",
+      "bundle": "mission-sound",
+      "size": 97993,
+      "sha256": "d5e22b6ecf3bd38a29be68c0a4bfd22af58cb97d895e53d04291ba8bf31d433d",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/priestStruggleFade01.wav",
+      "source": "assets/game-data/sound/priestStruggleFade01.wav",
+      "bundle": "mission-sound",
+      "size": 35451,
+      "sha256": "e988e5ae3f18d0e5868ea6d4bc5295685a47cf2c948fcc74c276fdf1c3476ed0",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/priestStruggleFade02-800.wav",
+      "source": "assets/game-data/sound/priestStruggleFade02-800.wav",
+      "bundle": "mission-sound",
+      "size": 7849,
+      "sha256": "bb40090479bb25d267010b233e5101d11e0d3f509c8c228dc732cd7713ecdf64",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/priestStruggleFade03.wav",
+      "source": "assets/game-data/sound/priestStruggleFade03.wav",
+      "bundle": "mission-sound",
+      "size": 24774,
+      "sha256": "12f82f1f3b91c47877d4ea32c88cdcba0bf6613676a03a92e7c7bdd8f95d5e1b",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/priestmove1.wav",
+      "source": "assets/game-data/sound/priestmove1.wav",
+      "bundle": "mission-sound",
+      "size": 22724,
+      "sha256": "ca00b0e229d49020315f7fab97c533e281d1d2cb4caf6685ab01735c30bf97a5",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/rotatePiece-500.wav",
+      "source": "assets/game-data/sound/rotatePiece-500.wav",
+      "bundle": "mission-sound",
+      "size": 1152,
+      "sha256": "481b84f94b8cfb3db1f714d48522aee7b5406048cb7fdb9ec190baec603c2b25",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/saFired.wav",
+      "source": "assets/game-data/sound/saFired.wav",
+      "bundle": "mission-sound",
+      "size": 15490,
+      "sha256": "8f376d40e7b6069c18dace543b39fa531205e9f0a879bd439acd1c10df3ad702",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/saRachet.wav",
+      "source": "assets/game-data/sound/saRachet.wav",
+      "bundle": "mission-sound",
+      "size": 4708,
+      "sha256": "4e3f8da5fb5cae64688fded2ba54fbf7f81e6182a7314d17700047fb0a5d0ee6",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/saSprung.wav",
+      "source": "assets/game-data/sound/saSprung.wav",
+      "bundle": "mission-sound",
+      "size": 3714,
+      "sha256": "9b6e0687ff1fb414e79e9a4a8b1f0d8b23bd3887df845ab72ed137a35e03f382",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/sailDrop.wav",
+      "source": "assets/game-data/sound/sailDrop.wav",
+      "bundle": "mission-sound",
+      "size": 19436,
+      "sha256": "e3ca3a24b90ab94761349accc8f3937170c499fd7be3ec3d607715b516cca82e",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/sailMove.wav",
+      "source": "assets/game-data/sound/sailMove.wav",
+      "bundle": "mission-sound",
+      "size": 15468,
+      "sha256": "b5b74aa7978ee3861e7c13bbbf32dc7eca5b56ab005054a26e7010a90a09d4ad",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/select.wav",
+      "source": "assets/game-data/sound/select.wav",
+      "bundle": "mission-sound",
+      "size": 2340,
+      "sha256": "0a26e48c4c24a6aa120c92437aaff2c844e2ce7b08cbc1b0879d0b401b7509a9",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/selectTab.wav",
+      "source": "assets/game-data/sound/selectTab.wav",
+      "bundle": "mission-sound",
+      "size": 4708,
+      "sha256": "21112ad2d9e2722178a40a9e746ee75c492dcbe57e7d7deed19d66722941717e",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/shortThunderCrack.wav",
+      "source": "assets/game-data/sound/shortThunderCrack.wav",
+      "bundle": "mission-sound",
+      "size": 174700,
+      "sha256": "ae97b64e22e946276abcf211f082b1231e7c59dbe90600eaf1dc05f1c62df27b",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/shortZap.wav",
+      "source": "assets/game-data/sound/shortZap.wav",
+      "bundle": "mission-sound",
+      "size": 8790,
+      "sha256": "019fb69b42cd91e13f713eec3dc72178885a49352b6bf5a726be58f20445799b",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/somethingCreated.wav",
+      "source": "assets/game-data/sound/somethingCreated.wav",
+      "bundle": "mission-sound",
+      "size": 58266,
+      "sha256": "6d2ffa220cee8f120853e21977494fcca1a62ccaf299192b25eac5f3f8cb52da",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/spyboom.wav",
+      "source": "assets/game-data/sound/spyboom.wav",
+      "bundle": "mission-sound",
+      "size": 16046,
+      "sha256": "69e19f9afe585b3b1dd78fc57a4af271abb465850e88a79f837c717d0874cc20",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/startStreak.wav",
+      "source": "assets/game-data/sound/startStreak.wav",
+      "bundle": "mission-sound",
+      "size": 3310,
+      "sha256": "315cc5d40697076008b941703abd615c8ca0fad5e404a182feba13fa153cf564",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/sunCannonFire.wav",
+      "source": "assets/game-data/sound/sunCannonFire.wav",
+      "bundle": "mission-sound",
+      "size": 27754,
+      "sha256": "e15b641a4397b2e9f20e2803855d3adf881ac039f0a16ecb8917f2e21290fe94",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/sunCannonRaiseLower.wav",
+      "source": "assets/game-data/sound/sunCannonRaiseLower.wav",
+      "bundle": "mission-sound",
+      "size": 10790,
+      "sha256": "dfe3283d4d210c77e693db5f8a44c76156df528a22f8356b82f1e657953febf0",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/sunCannonRaiseLower1.wav",
+      "source": "assets/game-data/sound/sunCannonRaiseLower1.wav",
+      "bundle": "mission-sound",
+      "size": 1134,
+      "sha256": "1067e7d44a655117fedc5d56856e770b8f1bf84e597568c22f3f889d35a48215",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/sunCannonRaiseLower2.wav",
+      "source": "assets/game-data/sound/sunCannonRaiseLower2.wav",
+      "bundle": "mission-sound",
+      "size": 1360,
+      "sha256": "041bad5c1fdde12552425a7c464fb978fe17d28e320981f04b79464b4b07a543",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/sunCannonRaiseLower3.wav",
+      "source": "assets/game-data/sound/sunCannonRaiseLower3.wav",
+      "bundle": "mission-sound",
+      "size": 1451,
+      "sha256": "9df9411af3141b96d3560fc7c75c77d545013df5eee6017144e9b2d7854cab8b",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/sunCannonRaiseLower4.wav",
+      "source": "assets/game-data/sound/sunCannonRaiseLower4.wav",
+      "bundle": "mission-sound",
+      "size": 1433,
+      "sha256": "4d10d6fcbfd2178752ca1ce068a7bb61f7ee190fc8dc0b810373aa4abf2f2274",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/sunCannonRaiseLower5.wav",
+      "source": "assets/game-data/sound/sunCannonRaiseLower5.wav",
+      "bundle": "mission-sound",
+      "size": 1182,
+      "sha256": "5eaf185289f00c95fa123d7f9205a1e351c2295529a5e3a9f058f688530817a3",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/sunCannonRaiseLower6.wav",
+      "source": "assets/game-data/sound/sunCannonRaiseLower6.wav",
+      "bundle": "mission-sound",
+      "size": 1434,
+      "sha256": "173b77ba6075d106930ba53e1d0c37064646901ea88857b617031153bbe50799",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/sunCannonRaiseLower7.wav",
+      "source": "assets/game-data/sound/sunCannonRaiseLower7.wav",
+      "bundle": "mission-sound",
+      "size": 1445,
+      "sha256": "0d23dd7c81f1466fb4896c55bfe21e3a2d4bcaa39dd0f9f59af695c0b6c00ffb",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/sunCannonRaiseLower8.wav",
+      "source": "assets/game-data/sound/sunCannonRaiseLower8.wav",
+      "bundle": "mission-sound",
+      "size": 1265,
+      "sha256": "53e148a8af88e289c62d5339cc046e1754ae8b16ac4c110801f1b06db30d7e01",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/sunCannonRaiseLower9.wav",
+      "source": "assets/game-data/sound/sunCannonRaiseLower9.wav",
+      "bundle": "mission-sound",
+      "size": 1341,
+      "sha256": "4e96572bc5b8835261da6321e1e51d3d5858c608a3d9530a914bcfeaff4ddeab",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/sunDiscThrowerImpact.wav",
+      "source": "assets/game-data/sound/sunDiscThrowerImpact.wav",
+      "bundle": "mission-sound",
+      "size": 11159,
+      "sha256": "0ecf9bc464279d00e66f6a165c097e2c1fa30ac867241ec074e4a74b2cfb5e01",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/sunDiscThrowerRatchet01.wav",
+      "source": "assets/game-data/sound/sunDiscThrowerRatchet01.wav",
+      "bundle": "mission-sound",
+      "size": 1182,
+      "sha256": "3e718230979c2115b2eb4af275175b1c9b384a2b2253b70d300cb3dfd81aecec",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/sunDiscThrowerRatchet02.wav",
+      "source": "assets/game-data/sound/sunDiscThrowerRatchet02.wav",
+      "bundle": "mission-sound",
+      "size": 1587,
+      "sha256": "6acf6aa9eea22b681ba201c09cfcf2f4dd56f1fe49d0eb301aa417caa8888fd1",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/sunDiscThrowerRatchet03.wav",
+      "source": "assets/game-data/sound/sunDiscThrowerRatchet03.wav",
+      "bundle": "mission-sound",
+      "size": 1650,
+      "sha256": "32df8093b58e2b2e9f08f3dca32507ed1a1afa3f2a79526b638fdfcb4afd34c8",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/sunDiscThrowerRatchet04.wav",
+      "source": "assets/game-data/sound/sunDiscThrowerRatchet04.wav",
+      "bundle": "mission-sound",
+      "size": 1470,
+      "sha256": "dcc59295d50ef835e9d7e90a25d4b47d26ace4d5a9f651a53f798d7f10a74dd3",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/sunDiscThrowerRatchet05.wav",
+      "source": "assets/game-data/sound/sunDiscThrowerRatchet05.wav",
+      "bundle": "mission-sound",
+      "size": 1145,
+      "sha256": "755176b98963f6b79b040db3c6105a90bb37f9fa84d3113e511f381df7338807",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/sunDiscThrowerRatchet06.wav",
+      "source": "assets/game-data/sound/sunDiscThrowerRatchet06.wav",
+      "bundle": "mission-sound",
+      "size": 1307,
+      "sha256": "37e28091e8accee3f7fa031317ad30a139c7a12036de052cf8ae30b42dbdc3f9",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/sunDiscThrowerRatchet07.wav",
+      "source": "assets/game-data/sound/sunDiscThrowerRatchet07.wav",
+      "bundle": "mission-sound",
+      "size": 893,
+      "sha256": "f1f655d70f3a7002387cf4df464affdd03d5d2298ae68e84c24044d1e1f9117d",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/sunDiscThrowerRatchet08.wav",
+      "source": "assets/game-data/sound/sunDiscThrowerRatchet08.wav",
+      "bundle": "mission-sound",
+      "size": 1277,
+      "sha256": "23be67b3f52a239e941ce7e32eae6f7b2bce069ff78bd4f1cd87aaf141bb75d8",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/sunDiscThrowerRatchet09.wav",
+      "source": "assets/game-data/sound/sunDiscThrowerRatchet09.wav",
+      "bundle": "mission-sound",
+      "size": 1449,
+      "sha256": "dc274902dc581d020a8f2c26a35b6226c96e9b91f7633fdd12f958dc87026d40",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/sunDiscThrowerWhoosh.wav",
+      "source": "assets/game-data/sound/sunDiscThrowerWhoosh.wav",
+      "bundle": "mission-sound",
+      "size": 13066,
+      "sha256": "5294fb1795d0140e796816d385f65599d8d20dc64c80e9b75d98df99a2d4f7e9",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/sunFenceImpact-500.wav",
+      "source": "assets/game-data/sound/sunFenceImpact-500.wav",
+      "bundle": "mission-sound",
+      "size": 8961,
+      "sha256": "2878e6cd5b0754e545d27d13739a3ac27406b05a0e05d7dfe3ea46fe0ff44098",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/tVortexReady.wav",
+      "source": "assets/game-data/sound/tVortexReady.wav",
+      "bundle": "mission-sound",
+      "size": 66092,
+      "sha256": "1bbb0e51dbcf01918b24ddae665ea084a556f2039876ff2ade459259db995be9",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/teleportEffect.wav",
+      "source": "assets/game-data/sound/teleportEffect.wav",
+      "bundle": "mission-sound",
+      "size": 7772,
+      "sha256": "e0e791e8efd0f6209a51cbf656f37ca9a0c0c1800e59350cde8c93bbc6c78886",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/teleporterActive.wav",
+      "source": "assets/game-data/sound/teleporterActive.wav",
+      "bundle": "mission-sound",
+      "size": 13600,
+      "sha256": "059c81c1ce9c2d78155a8d653e4fc3e5c20553534532f84e775140c42f1cc0a1",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/templeComplete.wav",
+      "source": "assets/game-data/sound/templeComplete.wav",
+      "bundle": "mission-sound",
+      "size": 19650,
+      "sha256": "1d136dd893f3b20ee14ba5b89fba8a56af05b25f041e019865107c22c08362da",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/templeascend.wav",
+      "source": "assets/game-data/sound/templeascend.wav",
+      "bundle": "mission-sound",
+      "size": 22430,
+      "sha256": "35401581dfec5f03bfb43dfe6a81e648cbdb1011395f6da27f595a94fbe7c923",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/thunderCannon-1000.wav",
+      "source": "assets/game-data/sound/thunderCannon-1000.wav",
+      "bundle": "mission-sound",
+      "size": 57962,
+      "sha256": "41e13f36ad2c76a5fed24123a9b3d23dca3a05691cab8c18712984df69866eb5",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/thunderCannonGrowl.wav",
+      "source": "assets/game-data/sound/thunderCannonGrowl.wav",
+      "bundle": "mission-sound",
+      "size": 37766,
+      "sha256": "7a5ebb4aa4e64477417d825da4f553fb2f8ceebeafeabb47f41b84ecce7e6ab1",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/thunderCannonImpact.wav",
+      "source": "assets/game-data/sound/thunderCannonImpact.wav",
+      "bundle": "mission-sound",
+      "size": 24684,
+      "sha256": "ce75c6a4e3a0c28a0008ca61a8d760ca34f1453669fba7d2399123b033ad7b91",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/thunderCannonRoar.wav",
+      "source": "assets/game-data/sound/thunderCannonRoar.wav",
+      "bundle": "mission-sound",
+      "size": 64932,
+      "sha256": "6e090a358ba939b3d3338fe946a4398f64d18efeceaa69e0a7933625a41935b9",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/thunderCrack.wav",
+      "source": "assets/game-data/sound/thunderCrack.wav",
+      "bundle": "mission-sound",
+      "size": 99438,
+      "sha256": "c36c0fcdb9d158727758df2c17252910d942b019073a9e8303b0a8063271eb52",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/treasonCast.wav",
+      "source": "assets/game-data/sound/treasonCast.wav",
+      "bundle": "mission-sound",
+      "size": 22983,
+      "sha256": "6309064fe61a5faa14b886fd7aff4822b4aa882815bcab2b0888977b9381bd8e",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/treasonGet.wav",
+      "source": "assets/game-data/sound/treasonGet.wav",
+      "bundle": "mission-sound",
+      "size": 10636,
+      "sha256": "d9541148ba517dfa08e49adfea131eefa391a5110af25e34d7db80a24a1720b5",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/unitLost.wav",
+      "source": "assets/game-data/sound/unitLost.wav",
+      "bundle": "mission-sound",
+      "size": 19052,
+      "sha256": "929e88bc92a36aea835a0f6541543850415505b72cbda4d1e4ef1790b288da7e",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/upgradeComplete.wav",
+      "source": "assets/game-data/sound/upgradeComplete.wav",
+      "bundle": "mission-sound",
+      "size": 22700,
+      "sha256": "9e35a483d2f670ec8016cf1ad74af88ed123fe32e400bf03bdc91f225dc4290b",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/upgradeDone.wav",
+      "source": "assets/game-data/sound/upgradeDone.wav",
+      "bundle": "mission-sound",
+      "size": 141552,
+      "sha256": "e0c4427c39845ba177f61c80803736d750ba54fab3467ab18cc41d43d15d5b0f",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/waterBattery.wav",
+      "source": "assets/game-data/sound/waterBattery.wav",
+      "bundle": "mission-sound",
+      "size": 19684,
+      "sha256": "2713140a46755dc4adbe7e70d7efea96f90fe55b89e07d863f0cab63ad6d5483",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/whale.wav",
+      "source": "assets/game-data/sound/whale.wav",
+      "bundle": "mission-sound",
+      "size": 61290,
+      "sha256": "f7f11f6d26714215436918bbb25a1df73b7a17b2c5e096f9f8498a34e7519d79",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/whirligigFire-1000.wav",
+      "source": "assets/game-data/sound/whirligigFire-1000.wav",
+      "bundle": "mission-sound",
+      "size": 14104,
+      "sha256": "22a340f2a2f177e36b6caba58cce5bd786a5b5f052ce0ea245073984602a4b2e",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/whirligigFire.wav",
+      "source": "assets/game-data/sound/whirligigFire.wav",
+      "bundle": "mission-sound",
+      "size": 31922,
+      "sha256": "18b294cc8508bd4e35bbce45be7a4b9dd002c0a5e93a5343d8993a9646ff9383",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/whirligigSpin.wav",
+      "source": "assets/game-data/sound/whirligigSpin.wav",
+      "bundle": "mission-sound",
+      "size": 3310,
+      "sha256": "1bffdd17f6dac1c30d46f645bcc58caf1c32c85ab8e68f3b5788c131fd8ade3d",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/whirligigSpinSlow.wav",
+      "source": "assets/game-data/sound/whirligigSpinSlow.wav",
+      "bundle": "mission-sound",
+      "size": 6562,
+      "sha256": "ccf11f9511a5f39a6d24558820a841e885866cc8b1b0a8918158b1264578ada2",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/windBalloonDrop.wav",
+      "source": "assets/game-data/sound/windBalloonDrop.wav",
+      "bundle": "mission-sound",
+      "size": 16364,
+      "sha256": "daf9d639be3daa31cac50a6279d734ca3b8cd0563884d966357bf16c0934d7d3",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/windBalloonMove.wav",
+      "source": "assets/game-data/sound/windBalloonMove.wav",
+      "bundle": "mission-sound",
+      "size": 14316,
+      "sha256": "c8745e76c51cae5fc600c66d805df04067126ecb49b7a9ff6ed8cb797a7bd1bc",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/windBalloonPickup.wav",
+      "source": "assets/game-data/sound/windBalloonPickup.wav",
+      "bundle": "mission-sound",
+      "size": 12076,
+      "sha256": "f2e4153888595ddbe6d5902ccdfab7566781e045c5926fccfaa60a7a8f29958e",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "sound/workshopComplete.wav",
+      "source": "assets/game-data/sound/workshopComplete.wav",
+      "bundle": "mission-sound",
+      "size": 26092,
+      "sha256": "5ab2b688e6faa5939075f49c982e09c78b9faaa85ac2b865b7a4808122761ff9",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "music/anticipation.mus",
+      "source": "assets/game-data/music/anticipation.mus",
+      "bundle": "mission-music",
+      "size": 9395776,
+      "sha256": "f629b3683da019b0fe90e8894893f5ed63c84cfaf0749c3027f08b8aebd4693d",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "music/defeat.mus",
+      "source": "assets/game-data/music/defeat.mus",
+      "bundle": "mission-music",
+      "size": 7155304,
+      "sha256": "fbf563631c08d414b28e8ed72b45aa68650ef1bd00f26262f3e99f3d4442b806",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "music/fanfare.mus",
+      "source": "assets/game-data/music/fanfare.mus",
+      "bundle": "mission-music",
+      "size": 1901468,
+      "sha256": "34d08e83cd6a9510ab5775a3df1bf12ecc7c995e0f3c8cbaeadc518e329e27da",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "music/rain22.mus",
+      "source": "assets/game-data/music/rain22.mus",
+      "bundle": "mission-music",
+      "size": 18881900,
+      "sha256": "8fcca4fa49fc4500a14a54880b269ccd7a801b4344e9c9306c2a6428cb58e62d",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "music/sacrifice.mus",
+      "source": "assets/game-data/music/sacrifice.mus",
+      "bundle": "mission-music",
+      "size": 12340664,
+      "sha256": "dedc1fd42ac4c32508990162043910b9bc6f1edca3a3accf60a4af400ccd2d05",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "music/sun22.mus",
+      "source": "assets/game-data/music/sun22.mus",
+      "bundle": "mission-music",
+      "size": 20535360,
+      "sha256": "404cef48b7e54eb0b966a68f9641dfefc600732978fcd74d5125f7dedf8fb1d0",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "music/thu22.mus",
+      "source": "assets/game-data/music/thu22.mus",
+      "bundle": "mission-music",
+      "size": 19841548,
+      "sha256": "90474f7318103bfaaa55bc5906e8f820568cf945c44289ce99ad42f3eca89d65",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
+    },
+    {
+      "path": "music/wind22.mus",
+      "source": "assets/game-data/music/wind22.mus",
+      "bundle": "mission-music",
+      "size": 18236276,
+      "sha256": "4064b1ed52ab490f39bb94594c07badf6925472faea1ca777ce22e252e70b8e4",
+      "use": "원본 미션 음향 파일(변환 없이 복사)"
     },
     {
       "path": "fonts/Galmuri11.woff2",
