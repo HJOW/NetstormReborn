@@ -552,3 +552,13 @@ test('RawPacketCopies: token 이 DWORD 끝에 닿으면 소진 진단이고 앞�
     assert.equal(copies.size, 2);
     assert.ok(copies.acquire(0xffffffff));
 });
+
+// 앱 설정 해석은 같은 캐시에 현재 값만 반영하고 누락·빈 값은 보존한다.
+test('Client 도움말 문구: 앱의 설정 갱신과 실제 캐시를 공유한다', async () => {
+    const { Netstorm } = await import('../www/netstorm.js'); const app = new Netstorm(); app._initializeClientRuntime(false);
+    let value = 'Help'; app._gameData = { get: (key) => key === 'helpWord' ? value : null };
+    app._syncClientHelpWord(); const cache = app._clientLocal.helpWord(); assert.equal(cache.get(), 'Help');
+    value = 'help'; app._syncClientHelpWord(); assert.equal(cache.get(), 'Help'); assert.equal(cache.generation, 1);
+    value = ''; app._syncClientHelpWord(); assert.equal(cache.get(), 'Help');
+    value = '정보'; app._syncClientHelpWord(); assert.equal(cache.get(), '정보'); assert.equal(cache.generation, 2);
+});

@@ -103,6 +103,7 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
     const files = readDataMap(manifest.files.filter((entry) => entry.bundle === 'menu').map((entry) => entry.path));
     const data = GameData.build({ files, language: 'english' });
     const app = new Netstorm(); app._initializeClientRuntime(false); app._gameData = data;
+    app._syncClientHelpWord(); assert.equal(app._clientLocal.helpWord().get(), data.get('helpWord'));
     // 실제 미션 재생기와 Web Audio 경계로 로그인 경로를 연결한다.
     const node = () => ({ connect() {}, disconnect() {} });
     const context = { destination: {}, createGain: () => ({ ...node(), gain: { value: 0 } }), createChannelSplitter: node, createChannelMerger: node,
@@ -511,7 +512,7 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         const integratedCommands = [], productionMenu = createClientProductionMenu(gump, session, game, data, app._resources.fonts, screen, app._clientColorSort, itemBackground, 92, {
             baseHandle: () => 0, sound: () => {}, translate: (value) => app._resources.translate(value),
             ownerName: (owner) => { const records = app._clientPlayers.records(), start = owner * 180 + 12, end = records.indexOf(0, start); return String.fromCharCode(...records.subarray(start, end)); },
-            helpWord: () => 'Help', affordable: (sid) => itemDevice.affordable(sid), now: () => app._gameClock.wallSeconds(),
+            helpWord: () => app._clientLocal.helpWord().get(), affordable: (sid) => itemDevice.affordable(sid), now: () => app._gameClock.wallSeconds(),
             poll: (code) => app._clientInputPoll.poll(code), cursor: (number) => { app._campaignCursor = number; },
             command: (...args) => integratedCommands.push(args), invalidate: (rect) => app._clientRenderer.invalidate(rect, 0),
         });
