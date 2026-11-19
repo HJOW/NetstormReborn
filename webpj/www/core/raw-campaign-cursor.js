@@ -54,7 +54,7 @@ export class RawCampaignCursor {
         this.#placement = new RawCursorPlacement(c.pool, c.types, c.hash.view(0), data.drop, this.#life, this.#placementState, placementHooks);
         const previewHooks = {};
         bindCursorPreviewPlacement(previewHooks, c.pool, this.#placement, placementHooks);
-        bindCursorPreviewWorld(previewHooks, c.pool, c.factory, data.reward, data.world.bridgeConnections, data.frames, c.bridgeState, (sid) => c.building.notifySurface(sid));
+        bindCursorPreviewWorld(previewHooks, c.pool, c.factory, data.reward, data.world.bridgeConnections, c.frames, c.bridgeState, (sid) => c.building.notifySurface(sid));
         previewHooks.setOwner = makeOwnerDispatch(c.pool, c.bridgeState, (sid, owner) => c.owner.set(sid, owner));
         this.#previews = new RawCursorPreviews(c.pool, c.types, data.drop, this.#life, c.bridgeState, previewHooks);
         const lifecycleHooks = { ...g.lifecycle }; const dropHooks = {};

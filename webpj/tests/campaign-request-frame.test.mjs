@@ -262,5 +262,13 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         app._retryAudioOnGesture = () => {}; const pointerEvent = { button: 0, buttons: 1, pointerId: 1, clientX: 100, clientY: 100 };
         app._onPointerDown(pointerEvent); app._onPointerUp(pointerEvent); assert.equal(downs, 0); assert.equal(ups, 0);
         assert.equal(app._openTell('A.'), true); app._onPointerDown(pointerEvent); app._onPointerUp(pointerEvent); assert.equal(downs, 1); assert.equal(ups, 1);
+        // 실제 기술 내용물의 다리를 같은 앱 커서에 집고 취소해 원본 위치·글꼴·선택 수명을 확인한다.
+        app._mainMenu.setDialog(null); Object.assign(app._input.pointer, { inside: true, x: 400, y: 300, buttons: 0 });
+        const finder = new RawContainedFinder(session.core().pool, session.productionFinder()); let bridge = 0;
+        // 첫 실제 다리 슬롯을 고른다.
+        for (let sid = finder.begin(technology); sid; sid = finder.next()) { const raw = session.core().pool.slot(sid); if ((raw[20] | (raw[21] << 8)) & 0x40) { bridge = sid; break; } }
+        assert.ok(bridge); const cursor = session.cursor(), drop = session.cursorDropSettings(); cursor.take(bridge, 0);
+        assert.equal(drop.preview, bridge); assert.equal(drop.lockDepth, 0); assert.ok(cursor.lifecycle.previewCount > 0);
+        cursor.cancel(); assert.equal(drop.preview, 0); assert.equal(drop.lockDepth, 1);
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); app._clientSoundDevice.dispose(); app._missionAudioAssets.dispose(); }
 });

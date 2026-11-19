@@ -69,11 +69,11 @@ test('CursorPreviewWorld 실제 연결: Factory·현재 HP·프레임 표·다�
     const factory = new SquidFactory(s.pool, s.types); const reward = new SquidReward(s.pool, s.types, { localOwner: 1, aiAttached: Array(9).fill(false) }, new SquidRewardState(), new ScrambledSpStore(new GameRandom(), () => 1));
     reward.bindCurrentTypes(s.types); const bridgeHooks = s.hooks(); bridgeHooks.create = (type, flags) => factory.create(type, flags);
     bridgeHooks.pop = () => assert.fail('미리보기의 공간 Pop 없음'); const connect = new RawBridgeConnect(s.pool, s.neighbors, s.state, bridgeHooks);
-    const frames = s.frames.map((codes) => ({ frames: new FrameCodeTable(codes) })); const notify = []; const owner = () => 17; const hooks = { setOwner: owner };
+    const frames = s.frames.map((codes) => new FrameCodeTable(codes)); const notify = []; const owner = () => 17; const hooks = { setOwner: owner };
     bindCursorPreviewWorld(hooks, s.pool, factory, reward, connect, frames, s.state, (sid) => notify.push([sid, get(s.pool.slot(sid), 12, 2)]));
     assert.equal(hooks.setOwner, owner); const born = hooks.create(100, 2); assert.equal(born, 128); assert.equal(s.pool.slot(born)[10], 100); assert.equal(hooks.hasHitPoints(born), true);
     hooks.setHitPoints(born, 0); assert.equal(get(s.pool.slot(born), 26), 0); s.types[100].flags1 = 0; assert.equal(hooks.hasHitPoints(born), false);
-    assert.equal(hooks.frames(s.state.bridgeType), frames[s.state.bridgeType].frames); assert.throws(() => hooks.frames(188), /프레임 표 범위/);
+    assert.equal(hooks.frames(s.state.bridgeType), frames[s.state.bridgeType]); assert.throws(() => hooks.frames(188), /프레임 표 범위/);
     hooks.setWord(SOURCE, 0xface1234); assert.deepEqual(notify, [[SOURCE, 0x1234]]);
     const output = new Uint32Array(8); const count = hooks.connect(SOURCE, output); assert.equal(count, row[7].split(',').length);
     assert.ok(output.subarray(0, count).every((sid) => sid > born && s.pool.slot(sid)[10] === s.state.connectorType)); assert.ok(output.subarray(count).every((sid) => sid === 0));

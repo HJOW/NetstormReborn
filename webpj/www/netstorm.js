@@ -62,6 +62,7 @@ import { currentAllocationBytes } from './core/current-allocation-bytes.js';
 import { bindCampaignAiClientServices, bindCampaignClientInputServices, bindCampaignOwnershipTheme, bindCampaignProductionRefresh, captureCampaignMissionStarting, makeCampaignMissionStartEffects, runCampaignMissionStarting } from './core/campaign-client-services.js';
 import { bindCampaignUserInputServices } from './core/campaign-user-input-services.js';
 import { CampaignUserInput } from './core/campaign-user-input.js';
+import { makeCampaignCursorClientEffects } from './core/campaign-cursor-client-effects.js';
 import { ProductionMaintenanceGlobals, ProductionMaintenancePanel } from './core/raw-production-maintenance.js';
 import { GameMenuActions } from './core/game-menu-actions.js';
 import { gameMenuCommandValue } from './core/game-menu-commands.js';
@@ -1229,6 +1230,27 @@ export class Netstorm {
         bindCampaignUserInputServices(client, world, (number) => { this._campaignCursor = number >>> 0; this._applyCursor(); }, (section) => this._openTell(section));
         this._campaignUserInput = new CampaignUserInput(world, this._gameData, { paused: () => clock.paused(), queue: this._clientInputQueue });
         return this._campaignUserInput;
+    }
+
+    // 현재 World 커서의 화면·Gump·선택·전송 효과를 같은 앱 장치에 연결한다.
+    _prepareCampaignCursor() {
+        const world = this._campaignWorld, gump = this._clientGump, resources = this._resources;
+        if (!world || !world.session().localConnectionReady() || !this._campaignUserInput || !gump || !resources?.fonts || !this._clientInputPoll || !this._clientRenderer) throw new Error('미션 커서의 실제 Client 수명 누락');
+        const session = world.session(), cursor = session.cursor();
+        const client = { getRenderer: () => this._clientRenderer, fonts: () => this._resources.fonts,
+            translate: (text) => this._resources.translate(text), poll: (code) => this._clientInputPoll.poll(code),
+            getCursor: () => ({ set: (number) => { this._campaignCursor = number >>> 0; this._applyCursor(); } }) };
+        const node = (token) => { const current = gump.node(token); if (!current) throw new Error('미션 커서의 실제 Gump 토큰 누락'); return current; };
+        const controls = { pickGump: (point) => gump.events().pickTopLevel(point),
+            dispatchGump: (token, ...args) => gump.events().dispatch(token, ...args), gumpParentSid: (token) => node(token).object,
+            handleGump: (token, ...args) => gump.handle(token, ...args), requestClosePopups: () => this._closeCampaignPopups(), menus: () => null };
+        const effects = makeCampaignCursorClientEffects(client, controls);
+        effects.lifecycle.highlight = (mode) => world.highlight(mode);
+        effects.send = (target, packet) => session.sendLocalPacket(target | 0, packet);
+        effects.drop.refresh = (sid, force, move) => { if (force || move !== 1) throw new Error('미션 커서 선택 갱신 인자 오류'); world.select(sid); };
+        cursor.setEffects(effects); cursor.display.setExternal((token) => node(token).depth, null);
+        cursor.display.setText(resources.fonts, (text) => this._resources.translate(text));
+        return cursor;
     }
 
     // 현재 Session과 Client 생산 전역을 같은 생산 패널 유지 상태에 연결한다.
@@ -2618,7 +2640,7 @@ export class Netstorm {
         // Ready인 같은 미션에 Start·Tutorial을 준비한 뒤 World 연결 관문을 연다.
         const readyWorld = this._campaignWorld;
         if (this._state === AppState.MAIN_MENU && readyWorld?.connecting && !readyWorld.session().connectionCallbackActive() && readyWorld.session().localConnectionReady()) {
-            this._prepareCampaignMissionStart(); this._prepareCampaignUserInput(); this._prepareCampaignTutorial(); readyWorld.completeLocalConnection();
+            this._prepareCampaignMissionStart(); this._prepareCampaignUserInput(); this._prepareCampaignCursor(); this._prepareCampaignTutorial(); readyWorld.completeLocalConnection();
         }
         // 원본 루프 8번의 Guide를 상태·패킷 처리 뒤, 입력 처리보다 먼저 실행한다.
         this._clientGuide?.run();

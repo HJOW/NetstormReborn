@@ -120,7 +120,7 @@ export function bindCursorPreviewWorld(hooks, pool, factory, reward, connect, fr
     hooks.setWord = (sid, value) => { const raw = pool.allocated(sid); put(raw, 12, value, 2); if (raw[10] === (surfaces.bridgeType >>> 0)) need(notifySurface)(sid); };
     hooks.hasHitPoints = (sid) => reward.hasHitPoints(sid); hooks.setHitPoints = (sid, value) => setRawSquidHitPoints(pool, sid, value);
     // 현재 bridge TYPE의 실제 FrameCodeTable만 반환한다.
-    hooks.frames = (type) => { if ((type >>> 0) >= frames.length) throw new RangeError('커서 실제 bridge 프레임 표 범위'); return frames[type >>> 0].frames; };
+    hooks.frames = (type) => { if ((type >>> 0) >= frames.length) throw new RangeError('커서 실제 bridge 프레임 표 범위'); return frames[type >>> 0]; };
     // 실제 연결기가 만든 SID를 같은32비트 꼬리에 바로 쓴다.
     hooks.connect = (sid, output) => {
         let count = 0;
