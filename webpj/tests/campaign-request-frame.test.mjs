@@ -138,6 +138,16 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         assert.deepEqual(frameGlobals.cloudRectangles()[3], { left: 0, top: 0, right: 1366, bottom: 768 });
         assert.deepEqual(app._clientRenderer.cameraDirtyEntries(), [{ rect: { left: 0, top: 0, right: 1366, bottom: 768 }, flags: 0 }]);
         assert.equal(redraw.value, 1); redraw.value = 0;
+        // 실제 월드 객체의 현재 풀 좌표와 같은 카메라 snapshot으로 부착 Gump를 투영한다.
+        const object = app._campaignWorld.objects()[0]; assert.ok(object);
+        const attached = gump.createBase(0, 10, 10, 1, () => 0); gump.attach(attached, 3, 4);
+        const attachedNode = gump.node(attached); attachedNode.flags |= 0x2000; attachedNode.object = object.id;
+        const slot = session.core().pool.slot(object.id), raw = new DataView(slot.buffer, slot.byteOffset, slot.byteLength);
+        const snap = camera.snapshot(), savedCamera = snap.bytes.slice(), projected = snap.project(raw.getFloat32(14, true), raw.getFloat32(18, true));
+        assert.deepEqual(gump.collection().position(attached), { x: projected.x + 3, y: projected.y + 4 });
+        const origin = snap.pixels; snap.setPixels(origin.x + 17, origin.y + 11);
+        assert.deepEqual(gump.collection().position(attached), { x: projected.x + 3 - 17, y: projected.y + 4 - 11 });
+        snap.bytes.set(savedCamera); gump.remove(attached);
         // 현재 Tutorial1의 실제 지면 묶음·객체·입자·커서를 같은 원본 표시 목록에 모은다.
         const collectedUi = [], collector = new CampaignRenderCollection(app._campaignWorld, camera.snapshot(), 1366, 768, (clip, output, limit) => {
             collectedUi.push({ clip, limit }); const view = new DataView(output.buffer, output.byteOffset, output.byteLength);

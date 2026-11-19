@@ -95,6 +95,7 @@ import { resetGameStorage } from './platform/reset-storage.js';
 import { createCanvasGlyphRasterizer } from './platform/glyph-rasterizer.js';
 import { MainMenuScreen } from './ui/main-menu.js';
 import { ClientGumpRoot } from './ui/client-gump-root.js';
+import { projectGumpObject } from './ui/gump-form-binding.js';
 import { UberGumpCamera } from './ui/uber-gump-camera.js';
 import { TerrainPreview } from './ui/terrain-preview.js';
 import { PopupMenu } from './ui/popup-menu.js';
@@ -910,7 +911,10 @@ export class Netstorm {
         if (this._clientGump || !this._layout || !this._clientGameplay) throw new Error('Client Gump의 중복 또는 공통 수명 누락');
         const gameplay = this._clientGameplay;
         this._clientGump = new ClientGumpRoot(this._layout.logicalWidth, this._layout.logicalHeight, () => gameplay.aiDebug().checking().value,
-            () => { this._displayDirty = true; }, (text) => { gameplay.aiDebug().assertionDetail().value = text; });
+            () => { this._displayDirty = true; }, (text) => { gameplay.aiDebug().assertionDetail().value = text; }, (object) => {
+                if (!this._surfaceStorage || !this._clientGameplay) throw new Error('월드 Gump 투영의 실제 Client 수명 누락');
+                return projectGumpObject(this._surfaceStorage.pool, this._clientGameplay.camera().snapshot(), object);
+            });
     }
 
     // 현재 Fort·Guide·설정으로 원본 창 제목을 계산해 실제 문서에 적용한다.

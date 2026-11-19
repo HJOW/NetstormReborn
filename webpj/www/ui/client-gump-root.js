@@ -20,15 +20,16 @@ export class ClientGumpRoot {
     #nodes = new Map(); #handlers = new Map(); #destructors = new Map(); #attachers = new Map(); #broadcasters = new Map(); #idlers = new Map(); #drawers = new Map(); #nextToken = 2; #factory; #lifetime; #collection; #events; #input; #tree; #frame; #redrawDevice; #root = 0; #disposed = false;
 
     // 원본 등록표를 초기화하고 기본 루트를 생성한 뒤 현재 화면 크기를 적용한다.
-    constructor(width, height, checking, redraw = null, diagnostic = null) {
+    constructor(width, height, checking, redraw = null, diagnostic = null, project = null) {
         if (typeof checking !== 'function') throw new TypeError('Client Gump의 현재 진단 전역 누락');
+        if (project !== null && typeof project !== 'function') throw new TypeError('Client Gump의 월드 투영 계약');
         this.#life.checking = checking; this.#inputState.overlayEvent = OVERLAY_EVENT; this.#redrawDevice = redraw;
         const node = (token) => this.#nodes.get(token) ?? null;
         this.#factory = new GumpCreate(this.#create, { node, allocate: (bytes) => {
             if (bytes !== GUMP_BASE_SIZE || this.#nodes.has(ROOT_TOKEN)) throw new Error('Client Gump의 실제 루트 할당 계약');
             this.#nodes.set(ROOT_TOKEN, new GumpCreateNode()); return ROOT_TOKEN;
         } });
-        this.#collection = new GumpCollection(this.#create.collection, this.#factory.collectionHooks());
+        this.#collection = new GumpCollection(this.#create.collection, this.#factory.collectionHooks(project));
         const handle = (token, event, first, second) => {
             const handler = this.#handlers.get(token);
             if (!handler && token === this.#root && this.#nodes.get(token)?.constructor === GumpCreateNode) return 0;
@@ -47,7 +48,7 @@ export class ClientGumpRoot {
             if (node(token)?.constructor !== GumpCreateNode) throw new Error('Client Gump 파생 방송 처리기 미연결');
         } });
         const treeState = new GumpTreeState(); treeState.checking = checking;
-        this.#tree = new GumpTree(this.#create, treeState, { node,
+        this.#tree = new GumpTree(this.#create, treeState, { node, project,
             redraw: (token, erase) => this.redraw(token, erase),
             push: (token) => this.#tree.push(token), attach: (...args) => this.#attach(...args), kill: (token) => this.#lifetime.kill(token),
             diagnostic: (text) => { if (typeof diagnostic !== 'function') throw new Error('Client Gump 상세 진단 장치 누락'); diagnostic(text); },
