@@ -354,7 +354,7 @@ export class TextEntryGump {
             case 9: case 27: case 0x260000: case 0x280000: result = 0; notify = false; break;
             // Insert 는 Ctrl 복사 우선이며 shift 가 있으면 붙여넣는다.
             case 0x2d0000:
-                if (event & CONTROL) buffer().copy(); else if (event & SHIFT) buffer().paste(this.#excluded(token));
+                if (event & CONTROL) buffer().copy(); else if (event & SHIFT) buffer().paste(this.#excluded(token), node.maxLength);
                 break;
             // Shift+Delete 는 Cut, 일반 Delete 는 현재 선택 또는 오른쪽 한 문자다.
             case 0x2e0000: {

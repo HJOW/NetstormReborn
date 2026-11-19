@@ -88,3 +88,21 @@ export function nextDisplayText(text, position) {
     const bytes = displayBytes(text), at = displayTextFloor(bytes, position);
     return at < bytes.length ? at + displayWidth(bytes, at) : at;
 }
+
+// 제외 목록과 바이트 상한을 적용하되 확장 문자 중간에서 자르지 않는다.
+export function filterDisplayText(text, excluded, maximum) {
+    const bytes = displayBytes(text), blocked = displayBytes(excluded);
+    if (!Number.isInteger(maximum) || maximum < 0) throw new RangeError('표시 문자 필터 상한 오류');
+    const end = bytes.indexOf(0), blockedEnd = blocked.indexOf(0), output = [];
+    const limit = end < 0 ? bytes.length : end, forbidden = blocked.subarray(0, blockedEnd < 0 ? blocked.length : blockedEnd);
+    // 제외된 선두 바이트는 확장 숫자가 아닌 전체 문자를 건너뛴다.
+    for (let at = 0; at < limit;) {
+        const width = displayWidth(bytes.subarray(0, limit), at);
+        if (forbidden.includes(bytes[at])) { at += width; continue; }
+        if (width > maximum - output.length) break;
+        // 실제 원본 바이트 순서를 보존한다.
+        for (let offset = 0; offset < width; offset++) output.push(bytes[at + offset]);
+        at += width;
+    }
+    return Uint8Array.from(output);
+}

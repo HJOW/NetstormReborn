@@ -44,3 +44,16 @@ test('TextEntry 확정 한글: Shift 선택과 일반 문자 대체', () => {
     r.gump.handle(1, 0x20270000, 0, 0); assert.deepEqual([r.buffer().state().selectionBegin, r.buffer().state().selectionEnd], [5, 9]);
     r.root.maxLength = 11; assert.equal(r.gump.handle(1, 0x58, 0, 0), 1); assert.equal(text(r), 'A한XB');
 });
+
+// 클립보드의 바이트 상한·제외문자를 확장 토큰 전체에 적용한다.
+test('TextEntry 확정 한글: 붙여넣기 한도·제외·선택 보존', () => {
+    const raw = (value) => Array.from(displayTextCodec.encode(value), (byte) => String.fromCharCode(byte)).join('');
+    const limited = built({ clipboard: raw('한글B') }, 'A'); limited.buffer().select(1, 1); limited.root.maxLength = 6;
+    limited.gump.handle(1, 0x202d0000, 0, 0); assert.equal(text(limited), 'A한');
+    const blocked = built({ clipboard: raw('한글B') }, 'A'); blocked.buffer().select(1, 1); blocked.gump.setExcluded(1, String.fromCharCode(31));
+    blocked.gump.handle(1, 0x202d0000, 0, 0); assert.equal(text(blocked), 'AB');
+    const existing = built({ clipboard: 'abcd' }, ''); const queue = new InputQueue(); queueCommittedText(queue, '한'); enter(queue, existing.gump);
+    existing.root.maxLength = 7; existing.gump.handle(1, 0x202d0000, 0, 0); assert.equal(text(existing), '한ab');
+    const none = built({ clipboard: raw('한') }, 'A'); none.buffer().select(0, 1); none.root.maxLength = 4;
+    none.gump.handle(1, 0x202d0000, 0, 0); assert.equal(text(none), 'A'); assert.deepEqual([none.buffer().state().selectionBegin, none.buffer().state().selectionEnd], [0, 1]);
+});

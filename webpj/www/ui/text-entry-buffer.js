@@ -2,9 +2,11 @@
 // cpppj client/TextEntryBuffer.cpp/.h, 기준선 1f00a25a, 10.78 전용).
 // 본문/줄 offset 배열은 같은 가상 주소 공간의 DWORD 주소(토큰)이며 주소+내부 offset 합산을 허용한다. 할당/해제/재할당/주소 조회/clipboard 는 호스트 훅이고(보통 TextEntryStorage),
 // 이 클래스는 원문의 부분 실패·현재 재조회·선택·LF 줄 offset 규칙만 가진다. 원본 10.78 독립 관측 570행은 tests/text-entry-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E481 연결, 첫 실행 전체일치).
-// 기준선 뒤 변경(3.6절): 상위 웹 창은 UTF-16을 쓰지만 이 원본형 편집 버퍼는 바이트를 소유한다. 확장 토큰의 붙여넣기·maxLength는 아직 기준선 Paste만 구현했다.
+// 기준선 뒤 변경(3.6절): 상위 웹 창은 UTF-16을 쓰지만 이 원본형 편집 버퍼는 바이트를 소유한다. 확장 토큰의 붙여넣기·maxLength도 같은 표시 codec을 사용한다.
 // 사용: const state = new TextEntryBufferState(); const buffer = new TextEntryBuffer(state, { allocate, release, resize, bytes, clipboardRead, clipboardWrite }); buffer.construct(); buffer.insert('hello'); buffer.text() === 'hello'.
 // (2026-11-14 WB04-E438: RawMenuControls 선행 문자 편집 버퍼 이식)
+
+import { hasExtendedDisplayText, displayTextFloor, displayTextCeil, filterDisplayText } from '../core/display-text-input.js';
 
 // 원본 가상표/기본 본문/줄표 할당 크기다.
 const BUFFER_VTABLE = 0x00508da8; const INITIAL_DATA = 0x800; const OFFSET_BYTES = 0x200;
@@ -236,12 +238,21 @@ export class TextEntryBuffer {
         this.copy(); this.insert(null); s.dirty = 1;
     }
 
-    // 00451800: clipboard 256바이트(NUL 문자열)에서 제외문자들을 지운 뒤 비어 있지 않으면 삽입한다. 제외문자를 지울 때 현재 칸을 다시 검사하며 빈 clipboard 도 dirty 1 을 남긴다.
-    // excluded 는 바이트 문자열/NUL 이 든 바이트 배열이다(기준선 동작, 6차 한국어 확장 토큰 분기는 이식하지 않는다).
-    paste(excluded = null) {
+    // clipboard 256바이트에서 제외문자를 지우고 확장 토큰은 완전한 문자와 최대 바이트만 삽입한다.
+    // excluded 는 바이트 문자열/NUL 이 든 바이트 배열이며 maxLength 0 이하면 제한하지 않는다.
+    paste(excluded = null, maxLength = 0) {
         if (typeof this.#hooks.clipboardRead !== 'function') throw new Error('편집버퍼 실제clipboard읽기 없음');
         const text = new Uint8Array(256); this.#hooks.clipboardRead(text); const length = cStringLength(text);
-        const excludedBytes = bytesOf(excluded);
+        const excludedBytes = bytesOf(excluded), incoming = text.subarray(0, length), current = this.text();
+        if (hasExtendedDisplayText(incoming) || hasExtendedDisplayText(current)) {
+            const state = this.#state, begin = displayTextFloor(current, Math.max(0, state.selectionBegin));
+            const end = state.selectionBegin === state.selectionEnd ? begin : displayTextCeil(current, Math.max(0, state.selectionEnd));
+            const kept = state.length - (end - begin), available = maxLength > 0 ? Math.max(0, maxLength - 1 - kept) : 255;
+            const excludedLength = excludedBytes.length ? cStringLength(excluded) : 0;
+            const filtered = filterDisplayText(incoming, excludedBytes.subarray(0, excludedLength), available);
+            if (filtered.length) { this.select(begin, end); this.insert(Uint8Array.of(...filtered, 0)); }
+            state.dirty = 1; return;
+        }
         if (excludedBytes.length) {
             const excludedLength = cStringLength(excluded); let index = 0;
             // 원문은 제외문자 삭제 시 현재 칸을 다시 검사한다.
