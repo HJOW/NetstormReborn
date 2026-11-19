@@ -46,6 +46,7 @@ import { ClientGumpDecoration, createClientDecorationState } from '../www/ui/cli
 import { ClientMenuGump } from '../www/ui/client-menu-gump.js';
 import { ClientPriestMenu } from '../www/ui/client-priest-menu.js';
 import { ClientPlayerMenu } from '../www/ui/client-player-menu.js';
+import { ClientObjectMenu } from '../www/ui/client-object-menu.js';
 import { RawPlayerIdentity } from '../www/core/raw-player-identity.js';
 import { StyleTextFragmentKind } from '../www/ui/style-text-fragments.js';
 import { PriestPlacementAssets } from '../www/core/priest-placement-assets.js';
@@ -573,6 +574,21 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         menus.submenu('Player', playerChild); assert.equal(gump.node(parentPlayer).items[0].childId, gump.node(playerChild).id);
         assert.ok(gump.node(playerChild).itemCount); menus.attach({ x: 750, y: 420 }, menus.root()); gump.remove(parentPlayer); menus.close(); scroll.close();
         assert.equal(gump.node(playerChild), null); assert.equal(bufferText.styleState().fragments.size, 0);
+        // 같은 실제 사제의 공통 메뉴는 현재 도움말과 Player 하위를 같은 스택에 쓴다.
+        const objectRoot = menus.beginFancy(); menus.title('Object\n');
+        const objects = new ClientObjectMenu(session, identity, playerMenu, menus, data, { translate: (value) => app._resources.translate(value),
+            helpWord: () => app._clientLocal.helpWord().get(), staticText: (value) => app._clientChatWindows.store(value) });
+        objects.open(priest); const objectNode = gump.node(objectRoot); assert.equal(objectNode.itemCount, 2);
+        assert.equal(objectNode.items[0].command, 0x02000017); assert.equal(objectNode.items[0].parameter, session.core().pool.slot(priest)[10]);
+        assert.ok(objectNode.items[1].childId); menus.attach({ x: 750, y: 420 }, menus.root()); gump.remove(objectRoot); menus.close(); scroll.close();
+        assert.equal(bufferText.styleState().fragments.size, 0);
+        // 실제 신전은 현재 환불과 회수 금지 전역을 읽어 원본의 신전 회수 안내를 만든다.
+        const damageRoot = menus.beginFancy(); menus.title('Temple\n'); const priorDeny = app._clientGameplay.denySalvage().value;
+        app._clientGameplay.denySalvage().value = 0; const damageSid = temple;
+        objects.openDamageable(damageSid); const damageNode = gump.node(damageRoot);
+        assert.ok(damageNode.items.slice(0, damageNode.itemCount).some((item) => item.command === 0x02000095 && app._clientChatWindows.strings.get(item.parameter) === 'SalvageVortex'));
+        menus.attach({ x: 750, y: 420 }, menus.root()); gump.remove(damageRoot); menus.close(); scroll.close();
+        app._clientGameplay.denySalvage().value = priorDeny; assert.equal(bufferText.styleState().fragments.size, 0);
         // 실제 생산 정보가 작성한 장식 메뉴의 제목·비용·항목과 Form을 같은 공통 수명에서 확인한다.
         const integratedCommands = [], productionMenu = createClientProductionMenu(gump, session, game, data, app._resources.fonts, screen, app._clientColorSort, itemBackground, 92, {
             baseHandle: () => 0, sound: () => {}, translate: (value) => app._resources.translate(value),

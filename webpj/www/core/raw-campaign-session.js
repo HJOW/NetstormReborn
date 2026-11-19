@@ -34,6 +34,7 @@ import { executeDeveloperSubscriber } from './raw-campaign-developer-subscriber.
 import { executeDeveloperDevices } from './raw-campaign-developer-devices.js';
 import { RawPriestMenu, bindPriestMenuWorld, createPriestMenuState } from './raw-priest-menu.js';
 import { RawPlayerMenu, createPlayerMenuState } from './raw-player-menu.js';
+import { RawObjectMenu, createObjectMenuState } from './raw-object-menu.js';
 import { GunProcess, GunProcessFields } from './raw-gun-process.js';
 import { FlyerProcess, FlyerProcessFields, RawFlyerProcess } from './raw-flyer-process.js';
 import { findAttachedProcess, WindAviaryProcess } from './raw-wind-aviary-process.js';
@@ -1104,6 +1105,17 @@ export class RawCampaignSession {
         const hooks = { ...input, mission: () => this.#live().globals.missionPost,
             fort: () => this.#live().core.bridgeState.mission, money: (owner) => this.sp(owner) };
         return new RawPlayerMenu(identity, o.alliances, o.hiddenPlayers, o.priestState.priests.currentOwnerState(), this.#playerMenuState, hooks);
+    }
+    // 공통 객체 메뉴가 실제 현재 SID·체력·가상 개수·동일 Player 메뉴를 조회한다.
+    makeObjectMenu(identity, players, input = {}) {
+        const o = this.#live(); if (!o.loaded || identity?.playerRecords !== o.players || typeof players?.open !== 'function') throw new Error('실제 Session 객체 메뉴의 Player 수명 불일치');
+        const state = createObjectMenuState({ localOwnerRead: () => this.#live().playerState.battleOwner, editorRead: () => this.#live().globals.editor !== 0,
+            specialRead: () => Boolean(this.#live().globals.editor && this.#live().playerState.special), chargeBlockedRead: () => this.#live().globals.missionPost,
+            denySalvageRead: () => this.#live().gameplayGlobals.denySalvage().value, helpWordRead: input.helpWord });
+        const hooks = { ...input, hasHitPoints: (sid) => this.#live().hp.hasHitPoints(sid), count: (sid) => this.#live().assetModules.virtualCount(sid),
+            salvageRefund: (sid, type, count) => this.#live().hp.salvageRefund(sid, type, count | 0),
+            ownerSubscriber: (owner) => identity.subscriberForOwner(owner), playerMenu: (subscriber) => players.open(subscriber) };
+        return new RawObjectMenu(o.core.pool, o.core.types, state, hooks);
     }
     // 같은 옵션 저장소의 숨김 Player 바이트를 빌린다.
     hiddenPlayers() { return this.#live().hiddenPlayers; }
