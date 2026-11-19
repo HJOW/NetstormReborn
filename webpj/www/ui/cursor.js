@@ -15,12 +15,16 @@ export const CURSOR_SCROLL = 15;
 // 본문의 링크 위의 모양(가리키는 손)이다. 원본 ScrollingTextGumpWidgets 의 kTagCursor 이다. (2026-10-31 WB03-L)
 export const CURSOR_LINK = 16;
 
-// 웹 묶음에 들어 있는 커서의 번호별 데이터 폴더 기준 경로이다. 다른 번호는 쓰이는 곳이 연결될 때 자산 묶음(tools/prepare-assets.js)과 함께 더한다.
+// 웹 묶음에 들어 있는 원본 1~18번 커서의 데이터 폴더 기준 경로이다.
 // 번호와 파일의 대응은 assets/game-data/cursors/README.md 의 표와 같아야 한다(tests/cursor.test.mjs 가 표와 대조한다). (2026-10-31 WB03-L)
 export const CURSOR_PATHS = Object.freeze({
     [CURSOR_NORMAL]: DEFAULT_CURSOR_PATH,
-    [CURSOR_SCROLL]: 'cursors/RT_CURSOR_17.bin',
-    [CURSOR_LINK]: 'cursors/RT_CURSOR_18.bin',
+    2: 'cursors/RT_CURSOR_6.bin', 3: 'cursors/RT_CURSOR_7.bin', 4: 'cursors/RT_CURSOR_4.bin',
+    5: 'cursors/RT_CURSOR_3.bin', 6: 'cursors/RT_CURSOR_5.bin', 7: 'cursors/RT_CURSOR_9.bin',
+    8: 'cursors/RT_CURSOR_10.bin', 9: 'cursors/RT_CURSOR_14.bin', 10: 'cursors/RT_CURSOR_11.bin',
+    11: 'cursors/RT_CURSOR_13.bin', 12: 'cursors/RT_CURSOR_12.bin', 13: 'cursors/RT_CURSOR_15.bin',
+    14: 'cursors/RT_CURSOR_16.bin', [CURSOR_SCROLL]: 'cursors/RT_CURSOR_17.bin',
+    [CURSOR_LINK]: 'cursors/RT_CURSOR_18.bin', 17: 'cursors/RT_CURSOR_19.bin', 18: 'cursors/RT_CURSOR_20.bin',
 });
 
 // 커서 리소스의 핫스폿 머리 크기(바이트)이다. 그 뒤에 BITMAPINFOHEADER 가 온다. (2026-10-23 WB03-M1)

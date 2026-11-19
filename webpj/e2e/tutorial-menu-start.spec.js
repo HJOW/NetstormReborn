@@ -80,6 +80,8 @@ test('캠페인 목록에서 첫 Tutorial의 월드와 안내를 표시한다', 
   expect(taken.lock).toBe(0); expect(taken.parts).toBeGreaterThan(0);
   const previewFrame = await page.evaluate(() => window.netstorm._clientRenderer.drawCount);
   await page.waitForFunction((before) => window.netstorm._clientRenderer.drawCount > before, previewFrame, { timeout: 15000 });
+  const previewCursor = await page.evaluate(() => ({ number: window.netstorm._wantedCursor(), css: window.netstorm.canvas.style.cursor }));
+  expect([2, 3]).toContain(previewCursor.number); expect(previewCursor.css).toContain('url(');
   await page.keyboard.press('Escape'); await expect.poll(() => page.evaluate(() => window.netstorm._campaignWorld.session().cursorDropSettings().preview)).toBe(0);
   // P/R은 같은 실제 사제를 선택하고 반복 입력은 사제 보기 명령을 큐에서 소비한다.
   await page.keyboard.press('p'); await expect.poll(() => page.evaluate(() => window.netstorm._campaignWorld.selected())).toBe(priest.sid);

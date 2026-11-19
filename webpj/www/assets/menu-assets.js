@@ -118,7 +118,7 @@ function requireFile(files, path) {
 // 내려받은 파일 Map(경로 → Uint8Array)으로 메인 메뉴 그리기 자원 묶음을 만든다.
 // palette 는 원본 화면 팔레트 규칙(0번 검정·255번 흰색 고정)을 적용한 화면 팔레트다.
 // 반환: { palette, shadeMaps, buttonPalette, textContexts, font, clouds(512×512 아니면 null), title, texture, textureMetrics, cursor, cursors }
-// cursor 는 기본 커서(번호 1)이고 cursors 는 번호 → 해독한 커서의 표(번호 1·15·16)이다.
+// cursor 는 기본 커서(번호 1)이고 cursors 는 번호 → 해독한 원본 커서의 표(번호 1~18)이다.
 // 사용: new MainMenuScreen({ resources: buildMenuResources(files) }) (2026-10-23 WB03-M1, 2026-10-31 WB03-L: cursors 추가)
 // korean 은 한국어 지원(assets/korean-assets.js buildKoreanSupport 결과 { translate, unicode })이다. 없으면 영어: translate 는 원문 그대로, 글꼴 묶음은 원본 비트맵 글꼴만 쓴다.
 // 결과의 translate(원문) 가 메뉴 라벨 번역을, fonts.encode(문구) 가 그 라벨의 글꼴용 부호화를 맡는다. (2026-10-31 WB03-N: korean 추가)

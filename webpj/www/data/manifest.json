@@ -196,6 +196,126 @@
       "use": "원본 기본 커서 번호 1(흰 화살표, 핫스폿 10,6)"
     },
     {
+      "path": "cursors/RT_CURSOR_6.bin",
+      "source": "assets/game-data/cursors/RT_CURSOR_6.bin",
+      "bundle": "menu",
+      "size": 308,
+      "sha256": "30ea793b7c795ef7ae4fb40f5c8b0c6e30464d8df1e55ef4d152b4b8f027ed00",
+      "use": "원본 게임 커서 번호 2"
+    },
+    {
+      "path": "cursors/RT_CURSOR_7.bin",
+      "source": "assets/game-data/cursors/RT_CURSOR_7.bin",
+      "bundle": "menu",
+      "size": 308,
+      "sha256": "b30f7263620557144f7353c2153562ea67ef219ba3210d8fadb19c591f3c82c2",
+      "use": "원본 게임 커서 번호 3"
+    },
+    {
+      "path": "cursors/RT_CURSOR_4.bin",
+      "source": "assets/game-data/cursors/RT_CURSOR_4.bin",
+      "bundle": "menu",
+      "size": 308,
+      "sha256": "0ae89d8d7f64f5751d2e0b04ccd0138b697b8b7cafd4746dd3a3f243628340e0",
+      "use": "원본 게임 커서 번호 4"
+    },
+    {
+      "path": "cursors/RT_CURSOR_3.bin",
+      "source": "assets/game-data/cursors/RT_CURSOR_3.bin",
+      "bundle": "menu",
+      "size": 308,
+      "sha256": "b28663a924b31bc1dfdf48eec44dda9cb365e8a84773c3db4c62871c4e95de2e",
+      "use": "원본 게임 커서 번호 5"
+    },
+    {
+      "path": "cursors/RT_CURSOR_5.bin",
+      "source": "assets/game-data/cursors/RT_CURSOR_5.bin",
+      "bundle": "menu",
+      "size": 308,
+      "sha256": "134c9d61eac637ab35f980139b7e597986a44e391ee8a410aed8466c97dd3fc4",
+      "use": "원본 게임 커서 번호 6"
+    },
+    {
+      "path": "cursors/RT_CURSOR_9.bin",
+      "source": "assets/game-data/cursors/RT_CURSOR_9.bin",
+      "bundle": "menu",
+      "size": 308,
+      "sha256": "8c59aa38fa64f2bac5f510d38ec283988d6b0f1fd94344526507d80446f2af77",
+      "use": "원본 게임 커서 번호 7"
+    },
+    {
+      "path": "cursors/RT_CURSOR_10.bin",
+      "source": "assets/game-data/cursors/RT_CURSOR_10.bin",
+      "bundle": "menu",
+      "size": 308,
+      "sha256": "36c00db530e2f9a39da23a498d3e87bfcd772cc4ac7e6e5ef703ea7c3a395cec",
+      "use": "원본 게임 커서 번호 8"
+    },
+    {
+      "path": "cursors/RT_CURSOR_14.bin",
+      "source": "assets/game-data/cursors/RT_CURSOR_14.bin",
+      "bundle": "menu",
+      "size": 308,
+      "sha256": "b618b248088a4e80ceac032e718b1810e83280d09600b2ca069bca2f1ec17376",
+      "use": "원본 게임 커서 번호 9"
+    },
+    {
+      "path": "cursors/RT_CURSOR_11.bin",
+      "source": "assets/game-data/cursors/RT_CURSOR_11.bin",
+      "bundle": "menu",
+      "size": 308,
+      "sha256": "a50b75b5d244b177e36328c5bf89c364fc017955d24d28489a7df03869cdce14",
+      "use": "원본 게임 커서 번호 10"
+    },
+    {
+      "path": "cursors/RT_CURSOR_13.bin",
+      "source": "assets/game-data/cursors/RT_CURSOR_13.bin",
+      "bundle": "menu",
+      "size": 308,
+      "sha256": "b9c26a699ff2a54be673b7080894efb7eca3eee30a4dd0bb8c18cc4b3c722a94",
+      "use": "원본 게임 커서 번호 11"
+    },
+    {
+      "path": "cursors/RT_CURSOR_12.bin",
+      "source": "assets/game-data/cursors/RT_CURSOR_12.bin",
+      "bundle": "menu",
+      "size": 308,
+      "sha256": "6025ccfa35338db3d7447808ef835ce1b2f731e49d9408b8789c9b28dcdc1333",
+      "use": "원본 게임 커서 번호 12"
+    },
+    {
+      "path": "cursors/RT_CURSOR_15.bin",
+      "source": "assets/game-data/cursors/RT_CURSOR_15.bin",
+      "bundle": "menu",
+      "size": 308,
+      "sha256": "36c00db530e2f9a39da23a498d3e87bfcd772cc4ac7e6e5ef703ea7c3a395cec",
+      "use": "원본 게임 커서 번호 13"
+    },
+    {
+      "path": "cursors/RT_CURSOR_16.bin",
+      "source": "assets/game-data/cursors/RT_CURSOR_16.bin",
+      "bundle": "menu",
+      "size": 308,
+      "sha256": "3727847dfb23bbad9d4bda218dc9e4c5075fe2239177242175c3971a89785be6",
+      "use": "원본 게임 커서 번호 14"
+    },
+    {
+      "path": "cursors/RT_CURSOR_19.bin",
+      "source": "assets/game-data/cursors/RT_CURSOR_19.bin",
+      "bundle": "menu",
+      "size": 308,
+      "sha256": "ca98a89f47dd050f756c1a9ac4577c39820d58fc0aa07407fe9feae9dae5587f",
+      "use": "원본 게임 커서 번호 17"
+    },
+    {
+      "path": "cursors/RT_CURSOR_20.bin",
+      "source": "assets/game-data/cursors/RT_CURSOR_20.bin",
+      "bundle": "menu",
+      "size": 308,
+      "sha256": "7b5aae5d39e67e189dcfa53d8e467000ffe57cf63c4d8290581818403675fed6",
+      "use": "원본 게임 커서 번호 18"
+    },
+    {
       "path": "cursors/RT_CURSOR_17.bin",
       "source": "assets/game-data/cursors/RT_CURSOR_17.bin",
       "bundle": "menu",

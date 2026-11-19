@@ -98,10 +98,10 @@ function readCursorTable() {
     return rows;
 }
 
-// 커서 번호 표: 번호는 원본 값(1·15·16)이고, 번호별 파일·핫스폿이 원본 커서 표(README)와 같으며, 모두 메뉴 묶음에 들어 있고 해독한 값이 자원 묶음에 있다. (2026-10-31 WB03-L)
+// 커서 번호 표: 번호는 원본 값(1~18)이고, 번호별 파일·핫스폿이 원본 커서 표(README)와 같으며, 모두 메뉴 묶음에 들어 있고 해독한 값이 자원 묶음에 있다. (2026-10-31 WB03-L)
 test('커서 번호 표: 원본 번호·파일·핫스폿과 같고 메뉴 묶음에 들어 있다', () => {
     assert.deepEqual([CURSOR_NORMAL, CURSOR_SCROLL, CURSOR_LINK], [1, 15, 16]);
-    assert.deepEqual(Object.keys(CURSOR_PATHS).map(Number), [CURSOR_NORMAL, CURSOR_SCROLL, CURSOR_LINK]);
+    assert.deepEqual(Object.keys(CURSOR_PATHS).map(Number), Array.from({ length: 18 }, (_value, index) => index + 1));
     const table = readCursorTable();
     assert.equal(table.size, 18);
     // 번호마다 파일 이름·핫스폿이 원본 표와 같고, 해독한 크기·핫스폿이 자원 묶음의 값과 같다.
