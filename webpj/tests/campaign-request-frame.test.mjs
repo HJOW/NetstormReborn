@@ -120,6 +120,15 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         assert.equal(app._clientPaletteScreen.width, 1366); assert.notEqual(app._clientRenderer, beforeRenderer);
         assert.equal(app._clientRendererFrame, frameGlobals); assert.equal(frameGlobals.scan()[3], 17); assert.equal(frameGlobals.cloudDirtyCount().value, 2);
         assert.deepEqual(app._campaignWorld.mapView(), { left: 0, top: 28, right: 1366, bottom: 768 });
+        // 현재 Screen의 모드 변경과 강제 갱신은 같은 구름 큐에 각 한 칸씩 넣고 실제 Renderer의 이전 dirty를 전체 화면으로 교체한다.
+        const redraw = app._clientKencloud.worldRedraw(); redraw.value = 1;
+        app._clientRenderer.clearDirty(); app._clientRenderer.invalidate({ left: 10, top: 20, right: 30, bottom: 40 });
+        app._prepareCampaignRendererFrame();
+        assert.equal(frameGlobals.scan()[18], app._clientPaletteScreen.flags); assert.equal(frameGlobals.cloudDirtyCount().value, 0);
+        assert.deepEqual(frameGlobals.cloudRectangles()[2], { left: 0, top: 0, right: 1366, bottom: 768 });
+        assert.deepEqual(frameGlobals.cloudRectangles()[3], { left: 0, top: 0, right: 1366, bottom: 768 });
+        assert.deepEqual(app._clientRenderer.cameraDirtyEntries(), [{ rect: { left: 0, top: 0, right: 1366, bottom: 768 }, flags: 0 }]);
+        assert.equal(redraw.value, 1); redraw.value = 0;
         // 현재 Tutorial1의 실제 지면 묶음·객체·입자·커서를 같은 원본 표시 목록에 모은다.
         const collectedUi = [], collector = new CampaignRenderCollection(app._campaignWorld, camera.snapshot(), 1366, 768, (clip, output, limit) => {
             collectedUi.push({ clip, limit }); const view = new DataView(output.buffer, output.byteOffset, output.byteLength);
@@ -153,6 +162,14 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         finally { screen.unlock(); }
         screen.clear(fullClip, 55); drawing.collect(fullClip, 4); const uiPixels = screen.lock(), beforeUi = uiPixels.slice();
         try { drawing.background(fullClip, 4, 0); assert.deepEqual(uiPixels, beforeUi); } finally { screen.unlock(); }
+        // 시차 경로는 분모 객체의 현재 current 칸을 출력마다 다시 읽는다.
+        const movingCamera = camera.snapshot().copy(); movingCamera.setPixels(90, 60);
+        const parallaxScreen = new Proxy(screen, { get(target, key) { if (key === 'flags') return 0x18; const value = Reflect.get(target, key, target); return typeof value === 'function' ? value.bind(target) : value; } });
+        const offsets = [], divisor = { current: 3 };
+        const parallax = new CampaignRendererDrawing({ world: app._campaignWorld, screen: parallaxScreen, camera: movingCamera, globals: frameGlobals,
+            clouds: { draw: (_screen, area) => offsets.push(area.slice(4)) }, files: data.files, config: data, random: app._clientRandom.game, denominator: divisor, tint: () => 0 });
+        parallax.collect(fullClip, 0); parallax.background(fullClip, 0, 0); divisor.current = 5; parallax.background(fullClip, 0, 0);
+        assert.deepEqual(offsets, [[30, 20], [18, 12]]);
         assert.throws(() => app._prepareCampaignMissionStart(), /수명 오류/); assert.throws(() => app._prepareCampaignTutorial(), /수명 오류/);
         assert.doesNotThrow(() => session.checkMissionOutcome());
         const outcome = app._campaignGameplayServices().missionOutcome;

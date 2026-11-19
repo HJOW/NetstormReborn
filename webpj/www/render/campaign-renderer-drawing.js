@@ -31,7 +31,7 @@ export class CampaignRendererDrawing {
         const { screen, camera, globals, clouds, files, config, random, denominator, tint } = this.#devices;
         const values = { mode: { get value() { return screen.flags; } }, hideGroups: globals.hideGroups(),
             tint: { get value() { return tint(); } }, black: { get value() { return screen.colors().basic[0]; } },
-            cameraX: { get value() { return camera.pixels.x; } }, cameraY: { get value() { return camera.pixels.y; } }, denominator };
+            cameraX: { get value() { return camera.pixels.x; } }, cameraY: { get value() { return camera.pixels.y; } }, denominator: { get value() { return denominator.current; } } };
         drawRendererBackdrop(this.#mapClip, { value: flags }, { value: covered }, values, {
             clear: (rect, color) => screen.clear(rect, color),
             draw: (rect, x, y, alternate) => clouds.draw(screen, [rect.left, rect.top, rect.right, rect.bottom, x, y], files, config, random, alternate),

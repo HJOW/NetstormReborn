@@ -35,6 +35,8 @@ import { IndexedPresenter, normalizeScaling } from './render/presenter.js';
 import { Screen, ScreenMode } from './render/screen.js';
 import { Renderer } from './render/renderer.js';
 import { SquidRenderer } from './render/squid-renderer.js';
+import { prepareRendererFrame } from './render/raw-renderer-prelude.js';
+import { appendRendererCloudDirty, refreshRendererCloudBackground } from './render/raw-renderer-clouds.js';
 import { Settings, findSettingKey, getLocalStorage } from './platform/settings.js';
 import { Progress, isProgressKey } from './platform/progress.js';
 import { reportGameError } from './platform/error-reporting.js';
@@ -1196,6 +1198,29 @@ export class Netstorm {
         const world = this._campaignWorld, kernel = this._clientKernel;
         if (!world || !kernel || world.connecting || world.session().connectionCallbackActive()) throw new Error('미션 Kernel 프레임의 현재 World·Kernel 수명 오류');
         world.prepareKernelFrame(); kernel.runFrame(); world.finishKernelFrame();
+    }
+
+    // 현재 미션의 실제 화면·구름·카메라·Gump에 원본 Renderer의 표시 전 준비를 연결한다.
+    _prepareCampaignRendererFrame() {
+        const world = this._campaignWorld, screen = this._clientPaletteScreen, renderer = this._clientRenderer;
+        const globals = this._clientRendererFrame, clouds = this._clientKencloud, game = this._clientGameplay;
+        const gump = this._clientGump, data = this._gameData, random = this._clientRandom?.game;
+        if (!world || world.connecting || !screen || !renderer || !globals || !clouds || !game || !gump || !data || !random || !this._layout) throw new Error('미션 Renderer 준비의 현재 장치 수명 오류');
+        const camera = game.camera(), snapshot = camera.snapshot(), view = world.mapView(), queue = globals.cloudQueue();
+        const box = (value) => ({ value });
+        const denominator = { get value() { return camera.denominator().current; } };
+        const cloudDraw = (rect, x, y, alternate) => clouds.draw(screen, [rect.left, rect.top, rect.right, rect.bottom, x, y], data.files, data, random, alternate);
+        prepareRendererFrame({ scan: globals.scan(), backgroundRedraw: renderer.backgroundRedraw, dirtyCount: box(renderer.cameraDirtyEntries().length), drawCounter: globals.cloudDirtyCount() },
+            { mode: { get value() { return screen.flags; } }, force: clouds.worldRedraw(), width: box(screen.width), height: box(screen.height),
+                initialHeight: box(this._layout.logicalHeight), cameraY: { get value() { return snapshot.pixels.y; } },
+                left: box(view.left), top: box(view.top), right: box(view.right), bottom: box(view.bottom) }, {
+                markCloudDirty: () => clouds.markDirty(),
+                queueCloudDirty: (rect) => appendRendererCloudDirty(queue, rect, game.aiDebug().checking().value, { assertion: (line) => console.error(`Renderer 구름 사각형 원본 진단: ${line}`) }),
+                overrideActive: () => gump.createState().collection.overrideHead,
+                updateClouds: () => clouds.update(data.files, data, random), rowDirty: (row, y) => clouds.rowDirty(row >>> 0, y >>> 0),
+                invalidate: (rect, flags) => renderer.invalidate(rect, flags), clearDirty: () => renderer.clearDirty(),
+                invalidateBackground: () => refreshRendererCloudBackground(queue, { get value() { return snapshot.pixels.x; } }, { get value() { return snapshot.pixels.y; } }, denominator, { draw: cloudDraw }),
+            });
     }
 
     // 게임을 정리한다. 프레임 예약·이벤트·관찰자·오디오·진행 중 로딩을 모두 해제하고 Canvas 를 제거한다.
