@@ -79,3 +79,29 @@ test('미션 음향: 언어별 경로와 감쇠 접미사 우선순위', () => {
     assert.equal(korean.resolveSound('a.wav').entry.path, 'sound/a-1000.wav'); assert.equal(korean.resolveSound('none.wav'), null);
     assert.throws(() => new MissionAudioAssets(loader, audio, { language: '../english' }), /언어 이름 오류/);
 });
+
+// 미션 시작 준비는 동시 다운로드 수를 제한하며 진행을 알리고 실패하면 재시도한다.
+test('미션 음향: 효과음 일괄 준비의 동시성·실패·재시도', async () => {
+    const files = ['a.wav', 'b.wav', 'c.wav', 'd.wav'].map((name) => ({ path: `sound/${name}` }));
+    let active = 0, maximum = 0, fail = true;
+    const loader = { manifest: { files }, loadFile: async (entry) => {
+        active += 1; maximum = Math.max(maximum, active); await new Promise((resolve) => setImmediate(resolve)); active -= 1;
+        if (fail && entry.path === 'sound/b.wav') throw new Error('준비 실패'); return Uint8Array.of(1);
+    } };
+    const audio = { sounds: new Map(), music: new Map(), decode: async () => ({}) }, assets = new MissionAudioAssets(loader, audio), progress = [];
+    await assert.rejects(assets.preloadSounds({ concurrency: 2, onProgress: (done, total) => progress.push([done, total]) }), /준비 실패/);
+    assert.equal(maximum, 2); assert.deepEqual(progress[0], [0, 4]);
+    fail = false; progress.length = 0; assert.equal(await assets.preloadSounds({ concurrency: 2, onProgress: (done, total) => progress.push([done, total]) }), 4);
+    assert.deepEqual(progress.at(-1), [4, 4]); assert.equal(audio.sounds.size, 4);
+    await assert.rejects(assets.preloadSounds({ concurrency: 0 }), /동시 요청/);
+});
+
+// 실제 공개 효과음 전체를 준비해도 음악 파일은 요청하지 않는다.
+test('미션 음향: 실제 효과음 전체 준비와 음악 분리', async () => {
+    const { loader, requests } = diskLoader(), { audio } = audioFixture(); await loader.loadManifest(); requests.length = 0;
+    const app = new Netstorm(); app._assetLoader = loader; app._audio = audio;
+    const count = await app._prepareMissionSounds({ concurrency: 4 });
+    const names = loader.manifest.files.filter((entry) => entry.path.startsWith('sound/')).map((entry) => entry.path.split('/').at(-1).toLowerCase());
+    assert.equal(count, names.length); assert.ok(names.every((name) => audio.sounds.has(name)));
+    assert.ok(requests.length > 0 && requests.every((name) => name.startsWith('sound/')));
+});

@@ -22,3 +22,19 @@ test('웹 소리 장치는 실제 Web Audio 출력에 음량과 좌우 감쇠를
   expect(result.left).toBeCloseTo(0.5 * 10 ** (-1500 / 2000) * 0.1, 5);
   expect(result.right).toBeCloseTo(0.5 * 10 ** (-1500 / 2000), 5);
 });
+
+// 출하된 효과음 전체가 Chromium에서 실제로 해독되며 음악은 내려받지 않는다.
+test('미션 효과음은 제한된 요청으로 모두 해독된다', async ({ page }) => {
+  test.setTimeout(120000);
+  await page.goto('/');
+  const result = await page.evaluate(async () => {
+    const { AssetLoader } = await import('/assets/asset-loader.js');
+    const { AudioSystem } = await import('/audio/audio-system.js');
+    const { MissionAudioAssets } = await import('/audio/mission-audio-assets.js');
+    const loader = new AssetLoader({ baseUrl: new URL('/data/', location.href), fetchFunction: fetch.bind(window) });
+    await loader.loadManifest(); const audio = new AudioSystem(new OfflineAudioContext(2, 1, 22050));
+    const assets = new MissionAudioAssets(loader, audio); const count = await assets.preloadSounds({ concurrency: 8 });
+    return { count, sounds: audio.sounds.size, music: audio.music.size };
+  });
+  expect(result.count).toBe(218); expect(result.sounds).toBe(218); expect(result.music).toBe(0);
+});

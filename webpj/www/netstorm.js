@@ -1711,6 +1711,8 @@ export class Netstorm {
 
     // 미션 효과음의 현재 원본 파일을 비동기로 받고 해독한다.
     _prepareMissionSound(name) { return this._missionAudioLoader().loadSound(name); }
+    // 미션 시작 전 현재 언어의 효과음을 제한된 요청으로 준비한다.
+    _prepareMissionSounds(options) { return this._missionAudioLoader().preloadSounds(options); }
     // 선택한 미션 음악 한 곡만 비동기로 받고 해독한다.
     _prepareMissionMusic(name) { return this._missionAudioLoader().loadMusic(name); }
 

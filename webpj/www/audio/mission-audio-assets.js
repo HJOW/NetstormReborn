@@ -65,7 +65,9 @@ export class MissionAudioAssets {
             pending = (async () => {
                 const bytes = await this.#loader.loadFile(entry);
                 if (this.#disposed || this.#audio.closed) throw new Error('반납한 미션 음향 적재기');
-                const buffer = await this.#audio.decode(bytes);
+                let buffer;
+                try { buffer = await this.#audio.decode(bytes); }
+                catch (error) { throw new Error(`미션 음향 해독 실패: ${entry.path}`, { cause: error }); }
                 if (this.#disposed || this.#audio.closed) throw new Error('반납한 미션 음향 적재기');
                 this.#decoded.set(index, buffer); return buffer;
             })();
@@ -77,6 +79,25 @@ export class MissionAudioAssets {
 
     // 효과음 하나를 읽고 해독한다. 이미 등록했으면 다운로드하지 않는다.
     loadSound(name) { return this.#load('sound', name); }
+    // 현재 언어와 기본 효과음을 제한된 동시 요청으로 준비한다. 음악은 받지 않는다.
+    async preloadSounds({ concurrency = 8, onProgress = null } = {}) {
+        if (this.#disposed || this.#audio.closed) throw new Error('반납한 미션 음향 적재기');
+        if (!Number.isInteger(concurrency) || concurrency < 1 || concurrency > 32 || (onProgress !== null && typeof onProgress !== 'function')) throw new TypeError('미션 효과음 준비의 동시 요청·진행 장치 오류');
+        const names = [...new Set(this.#soundEntries.filter((item) => item.directory === '' || item.directory === this.#language).map((item) => item.name))];
+        if (!names.length) throw new Error('미션 효과음 자산이 비어 있습니다');
+        let next = 0, done = 0, failure = null; onProgress?.(done, names.length);
+        // 작업자는 실패를 공유하여 이미 시작된 요청만 마치고 새 요청을 시작하지 않는다.
+        const worker = async () => {
+            while (!failure && next < names.length) {
+                const name = names[next++];
+                try { await this.loadSound(name); done += 1; onProgress?.(done, names.length); }
+                catch (error) { failure ??= error; }
+            }
+        };
+        await Promise.all(Array.from({ length: Math.min(concurrency, names.length) }, () => worker()));
+        if (failure) throw failure;
+        return done;
+    }
     // 선택된 음악 한 곡만 읽고 해독한다. 재생과 곡 선택은 호출자가 맡는다.
     loadMusic(name) { return this.#load('music', name); }
     // 반납 후 진행 중인 다운로드·해독 결과가 재생기에 등록되지 않도록 한다.
