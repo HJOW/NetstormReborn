@@ -1837,6 +1837,7 @@ export class Netstorm {
         if (this._state === AppState.MAIN_MENU || this._state === AppState.TERRAIN_PREVIEW) this._ensureSurface();
         if (this._clientPaletteScreen) this._resizeClientPaletteScreen(next.logicalWidth, next.logicalHeight);
         this._clientGump?.resize(next.logicalWidth, next.logicalHeight);
+        this._campaignWorld?.resize(next.logicalWidth, next.logicalHeight);
         this._applyCursor();
         if (next.visible) this._render(view.performance?.now?.() ?? 0);
     }

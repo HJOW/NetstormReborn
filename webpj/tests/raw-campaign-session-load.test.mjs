@@ -1938,6 +1938,9 @@ test('CampaignGameWorld TheWarBegins: 지연 생성과 실제 로그인 준비',
         const session = world.session(); assert.equal(gameplay.requireSession(), session); assert.equal(world.cameraGlobals(), gameplay.camera());
         assert.ok(world.factoryDisplay() instanceof RawCampaignFactoryDisplay); assert.equal(session.loaded, false); assert.equal(world.connecting, false);
         assert.deepEqual(world.mapView(), { left: 0, top: 28, right: 640, bottom: 480 });
+        // 아직 로그인하지 않은 같은 World도 창 크기 변경에 현재 표면을 갱신할 수 있다.
+        world.resize(800, 600); assert.deepEqual(world.mapView(), { left: 0, top: 28, right: 800, bottom: 600 });
+        world.resize(640, 480); views.length = 0; dirty.length = 0; world.takeChanged();
         assert.equal(world.completeLocalConnection(), false); assert.deepEqual(world.objects(), []);
         assert.throws(() => session.makeCarrierInput(), /설치 전/);
         assert.throws(() => world.clearSelection(), /미설치/); assert.throws(() => world.bindUserSelection(), /설치 전/);
@@ -1995,6 +1998,16 @@ test('CampaignGameWorld TheWarBegins: 지연 생성과 실제 로그인 준비',
         assert.equal(selection.select(priest.sid, 0, 0), priest.sid); const packets = session.localConnectionPackets();
         carrier.commit(priest.sid, { x: 90, y: 108 }); assert.equal(world.selected(), 0); assert.ok(sounds.length > 0); session.pumpLocalConnection();
         assert.equal(session.localConnectionPackets().length, packets.length + 1); assert.equal(session.localConnectionPackets().at(-1), 0x40);
+        // 실제 로그인된 World의 크기 변경은 현재·대기 카메라를 보존하고 한계와 표면 보기를 새로 공개한다.
+        world.takeChanged(); const camera = gameplay.camera(), target = [...camera.target().pixels], viewBefore = camera.rendererView().bytes.slice(), snapshot = camera.snapshot().bytes.slice();
+        const previousViewCount = views.length, cells = gameplay.worldCells().value;
+        world.resize(1024, 768);
+        assert.deepEqual(world.mapView(), { left: 0, top: 28, right: 1024, bottom: 768 });
+        assert.deepEqual([...camera.target().pixels], target); assert.deepEqual(camera.rendererView().bytes, viewBefore); assert.deepEqual(camera.snapshot().bytes, snapshot);
+        assert.deepEqual([...camera.target().limits], [16 * cells - 1024, 11 * cells - 768]);
+        assert.equal(views.length, previousViewCount + 1); assert.deepEqual([views.at(-1).right, views.at(-1).bottom], [1024, 768]);
+        assert.equal(world.takeChanged(), true); world.resize(1024, 768); assert.equal(views.length, previousViewCount + 2); assert.equal(world.takeChanged(), false);
+        assert.throws(() => world.resize(0, 768), /화면 정수 크기/); assert.throws(() => world.resize(1024.5, 768), /화면 정수 크기/);
     } finally { world.dispose(); }
     assert.equal(gameplay.borrowed(), false); assert.throws(() => world.session(), /반납/);
     assert.throws(() => oldCarrier.highlight(5, { x: 90, y: 108 }, 1), /반납/);

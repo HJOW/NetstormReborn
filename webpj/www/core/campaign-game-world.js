@@ -92,6 +92,16 @@ export class CampaignGameWorld {
     cameraGlobals() { this.#live(); return this.#gameplay.camera(); }
     // 원본 도킹 장치가 없으면 상단 메뉴 아래의 논리 화면을 사용한다.
     mapView() { this.#live(); return this.#services.mapView ? this.#services.mapView() : { left: 0, top: Math.min(MENU_HEIGHT, this.#height), right: this.#width, bottom: this.#height }; }
+    // 호스트 논리 크기를 바꾸되 현재 카메라와 대기 목표는 유지하고 새 한계·표면 보기를 갱신한다.
+    resize(width, height) {
+        this.#live();
+        if (!Number.isInteger(width) || !Number.isInteger(height) || width <= 0 || height <= 0) throw new RangeError('캠페인 World 화면 정수 크기 오류');
+        if (width === this.#width && height === this.#height) { this.#surfaceView(); return; }
+        this.#width = width; this.#height = height;
+        const cells = this.#gameplay.worldCells().value;
+        this.#gameplay.camera().updateTargetLimits(width, height, cells, cells);
+        this.#surfaceView(); this.#changed = true;
+    }
     // 카메라 적용 뒤 같은 영역을 표면·입자·선택적 위치 음향에 전달한다.
     #surfaceView() {
         const session = this.#live(), pixels = this.#gameplay.camera().rendererView().pixels, clip = this.mapView();

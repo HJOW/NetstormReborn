@@ -91,5 +91,10 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         // 실제 패킷·State는 앱 프레임에서만 진행하고 준비 전에는 Guide를 기다린다.
         for (let frame = 0; frame < 10 && !session.localConnectionReady(); frame += 1) app._onFrame(frame * 16);
         assert.equal(session.localConnectionReady(), true); assert.equal(session.world().storage, app._surfaceStorage);
+        // 같은 실제 앱의 레이아웃 변경이 새 Screen·Renderer와 현재 World 지도 범위에 순서대로 반영된다.
+        app._root.clientWidth = 1366; app._root.clientHeight = 768; app._aspect = '16:9'; app._canvas = { style: {} }; app._applyCursor = () => {};
+        const beforeRenderer = app._clientRenderer; app._applyLayout();
+        assert.equal(app._clientPaletteScreen.width, 1366); assert.notEqual(app._clientRenderer, beforeRenderer);
+        assert.deepEqual(app._campaignWorld.mapView(), { left: 0, top: 28, right: 1366, bottom: 768 });
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); }
 });
