@@ -16,7 +16,7 @@
 
 **E950.** 지연 Fort 요청의 Poll 전 수명을 보존하는 처리기를 준비하고 실제 Tutorial1 Guide→State7→로그인 Ready를 검사했다. 앱 프레임 자동 호출·현재 World 반납·진행 창은 남았다. 4D-1c의 비미션 검증은 스커미시 후속이다. [요청 프레임](docs/webpj-campaign-request-frame-20261119.md) · [E949 이름표](docs/webpj-app-sound-list-20261119.md) · [E948 이름 수명](docs/webpj-app-fort-name-session-20261119.md)
 
-**E950 검증.** 실제 Tutorial1 요청을 포함한 집중 검사 4건과 ClientState 검사 3건 통과. E949 실제 Session 교체·World 설치·로그인 3건과 연관 검사 10건 통과. E948 실제 앱 Session·이름 집중 검사 4건과 원본 876관측을 포함한 연관 검사 37건 통과. E947 Node v22.23.3 정기 전체 회귀 6,514건 통과(실패·취소·건너뜀 0). HJOW-Athlon 주기는 v22 3/8이며, v26 4/4 전체 회귀는 `extracted/webpj-e949-node26.log`에 실행 중이다. E950은 별도 신규 파일로 진행했고 결과 확인 뒤 v26 주기를 갱신한다.
+**E950 검증.** 실제 Tutorial1 요청을 포함한 집중 검사 4건과 ClientState 검사 3건 통과. E949 실제 Session 교체·World 설치·로그인 3건과 연관 검사 10건 통과. E947 Node v22.23.3 정기 전체 회귀 6,514건 통과. E949 Node v26 전체 회귀는 6,515건 중 1건 실패했다. 회귀 중 E950 모듈 추가와 대응표 갱신이 겹쳐 발생한 대응표 검사는 현행에서 7건 전부 통과했다. 로그는 `extracted/webpj-e949-node26.log`이며 Node v26 전체 재실행이 필요하다. HJOW-Athlon 주기는 v22 3/8, v26 전체 회귀 재검증 대기다.
 
 **E941 미완료 범위.** 앱의 FontSet·Gump 출력과 TextEntry 수명, 웹 입력 큐의 앱 프레임 소비, 실제 OS IME를 확인해야 한다. 미션 앱의 진행 창·프레임, HUD, Tutorial1 플레이 역시 미확인이다.
 
