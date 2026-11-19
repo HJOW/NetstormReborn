@@ -64,3 +64,15 @@ test('TextEntry 확정 한글: 수평 스크롤을 현재 줄 문자 경계로 �
     r.gump.setScroll(1, 0, 3); assert.equal(r.root.scrollColumn, 1); assert.equal(r.sliderOf(201).position, 1);
     assert.deepEqual(r.log.filter((entry) => entry[0] === 'sliderPosition' && entry[1] === 201), [['sliderPosition', 201, 3], ['sliderPosition', 201, 1]]);
 });
+
+// 실제 줄 복사·스크롤 뒤 선택과 캐럿이 완전한 한글 바이트를 유지한다.
+test('TextEntry 확정 한글: 수평 잘라내기 뒤 선택과 화면 밖 선택', () => {
+    const r = built({}, ''), queue = new InputQueue(); queueCommittedText(queue, 'A한글B'); enter(queue, r.gump);
+    const decode = (value) => displayTextCodec.decode(Uint8Array.from(value, (character) => character.charCodeAt(0)));
+    r.buffer().select(5, 9); r.root.scrollColumn = 2; r.log.length = 0; r.gump.draw(1);
+    assert.deepEqual(r.log.filter((entry) => entry[0] === 'drawText').map((entry) => decode(entry[1])), ['한', '글', 'B']);
+    assert.equal(r.log.filter((entry) => entry[0] === 'fill').length, 1);
+    r.buffer().select(0, 1); r.root.scrollColumn = 1; r.root.blinkPhase = 1; r.log.length = 0; r.gump.draw(1);
+    assert.deepEqual(r.log.filter((entry) => entry[0] === 'drawText').map((entry) => decode(entry[1])), ['한글B']);
+    assert.equal(r.log.filter((entry) => entry[0] === 'fill').length, 0);
+});

@@ -1,6 +1,6 @@
 // 원본 Editgump(VT 00508e10)의 실제 문자 편집 노드와 Console 파생(VT 00506a6c)을 공통 Gump/문자 버퍼에 연결한다(cpppj client/TextEntryGump.cpp/.h, 기준선 1f00a25a, 10.78 전용).
 // 실제 0x28 편집 버퍼(TextEntryBuffer)와 두 Slider 를 공유하며 원본의 현재 필드 재조회/사건 순서를 유지한다. 노드/버퍼/Slider/글꼴·픽셀 출력은 모두 호스트 훅이고 빈 성공 노드를 만들지 않는다.
-// 문자열 인자(span<const char>)는 NUL 로 끝나는 Uint8Array(또는 바이트 문자열)이며 훅이 받는 글 바이트도 같다. 기준선 뒤 K1 한국어 확장 토큰의 입력·이동·삭제·붙여넣기와 스크롤 경계를 적용했고 출력 보정은 남았다. 원본 10.78 독립 관측 2,292행은 tests/text-entry-gump-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E483 연결, 첫 실행 전체일치).
+// 문자열 인자(span<const char>)는 NUL 로 끝나는 Uint8Array(또는 바이트 문자열)이며 훅이 받는 글 바이트도 같다. 기준선 뒤 K1 한국어 확장 토큰의 입력·이동·삭제·붙여넣기와 스크롤·출력 경계를 적용했다. 원본 10.78 독립 관측 2,292행은 tests/text-entry-gump-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E483 연결, 첫 실행 전체일치).
 // 사용: const gump = new TextEntryGump(state, hooks); gump.construct(token, 200, 60, 'hello', fontToken, backgroundToken, color); gump.handle(token, 0x41, 0, 0)(문자 'A' 입력); gump.draw(token).
 // (2026-11-14 WB04-E439: RawMenuControls 선행 문자 편집 Gump 이식)
 import { GumpBackgroundNode } from './gump-background-create.js';
@@ -469,13 +469,27 @@ export class TextEntryGump {
         // 줄 수는 각 반복 끝의 현재 문자 버퍼에서 다시 읽는다.
         for (let index = node.scrollLine; index < buffer().lineCount(); index = add(index, 1)) {
             if (limit <= sub(index, node.scrollLine)) return;
-            // 수평 잘라내기 뒤에도 원문의 선택/길이 쌍을 임의 보정하지 않는다.
-            const length = buffer().copyLine(index, line, selection);
+            // 순수 바이트는 원문을 유지하고 확장 줄만 선택·스크롤 경계를 보정한다.
+            let length = buffer().copyLine(index, line, selection);
             if (length === 0xffffffff) { if (typeof hooks.assertion === 'function') hooks.assertion(0x2ae); throw new Error('TextEntry 원본 줄 복사 범위 거부'); }
+            const original = line.subarray(0, length), extended = hasExtendedDisplayText(original);
+            const removedColumn = extended ? displayTextFloor(original, Math.max(0, node.scrollColumn)) : Math.max(0, node.scrollColumn);
+            if (extended && selection[0] >= 0 && selection[1] >= 0) {
+                const begin = displayTextFloor(original, selection[0]);
+                const end = selection[0] === selection[1] ? begin : displayTextCeil(original, selection[1]);
+                selection[0] = begin; selection[1] = end;
+            }
             if (node.scrollColumn > 0 && node.scrollColumn < 1024) {
                 // 원본 String::erase 는 요청 수가 길이를 넘으면 아무것도 바꾸지 않는다.
-                const visible = cString(line).length - 1; const removed = node.scrollColumn;
+                const visible = cString(line).length - 1; const removed = removedColumn;
                 if (removed <= visible) line.copyWithin(0, removed, visible + 1);
+                if (extended && removed <= visible) {
+                    length -= removed;
+                    if (selection[0] >= 0) {
+                        if (selection[1] < removed || (selection[1] === removed && selection[0] !== selection[1])) { selection[0] = -1; selection[1] = -1; }
+                        else { selection[0] = Math.max(0, selection[0] - removed); selection[1] = Math.max(0, selection[1] - removed); }
+                    }
+                }
             }
             if (length) { if (length > line.length) throw new Error('TextEntry 줄 끝 범위'); if (line[length - 1] === 10) line[length - 1] = 32; }
             else { line[0] = 32; line[1] = 0; }
