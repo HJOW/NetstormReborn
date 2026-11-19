@@ -291,6 +291,7 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         assert.equal(app._mainMenu.dialog.information, null); app._mainMenu.setDialog(null); gump.lifetime().cleanup();
         const factoryType = game.find('thunderFactory').block + 70; app._clientInputQueue.pushCommand(0x02000017, 0, factoryType); app._runCampaignInputFrame();
         assert.equal(app._mainMenu.dialog.topic, 'thunderFactoryType'); assert.ok(app._mainMenu.dialog.information); assert.ok(app._mainMenu.dialog.information.softLines.length);
+        assert.equal(app._mainMenu.dialog.picture?.frameNumber ?? -1, game.types()[factoryType - 70].definition.helpFrame);
         app._mainMenu.setDialog(null);
         assert.throws(() => app._prepareCampaignProduction(), /수명 오류/);
         // 실제 앱 프레임은 월드를 표시하고 Tell을 그 위에 합성하며 닫은 뒤 DIB 원본을 복구한다.

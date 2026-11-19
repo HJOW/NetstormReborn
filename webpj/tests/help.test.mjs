@@ -665,8 +665,11 @@ test('본문 그림: fortGump 아이콘 해석 · 줄 안 배치 · 그리기 ·
 // TYPE 정보는 별도 상단 본문에 표시되고 일반 주제로 이동하면 초기 배치로 돌아간다.
 test('도움말 창: TYPE 정보 본문 배치·출력·주제 전환', () => {
     const { window } = newHelp(); window.helpText = '<a name="unitType"><info>본문</a>\n<a name="other">Other</a>';
-    window.open('unitType', () => '<h2>Unit</h2>Hits: <c>101</c>');
+    const image = { width: 2, height: 2, indices: Uint8Array.of(250, 250, 250, 250), opacity: Uint8Array.of(1, 1, 1, 1) };
+    const picture = { image, frame: { rect: { left: 0, top: 0, right: 2, bottom: 2 } }, hotspotX: 0, hotspotY: 0 };
+    window.open('unitType', () => '<h2>Unit</h2>Hits: <c>101</c>', picture);
     assert.ok(window.information); assert.equal(window.frameRect.y, 153); assert.equal(window.information.x, window.x + 182); assert.equal(window.information.y, window.y + 15);
-    const surface = new IndexedSurface(1024, 768); window.draw(surface); assert.ok(surface.pixels.some((value) => value !== 0));
-    window.open('other'); assert.equal(window.information, null); assert.equal(window.frameRect.y, 17);
+    const surface = new IndexedSurface(1024, 768); window.draw(surface); assert.equal(surface.pixels[(window.y + 19) * surface.width + window.x + 17], 250);
+    window.open('other'); assert.equal(window.information, null); assert.equal(window.picture, null); assert.equal(window.frameRect.y, 17);
+    window.open('unitType', () => '<h2>Unit</h2>'); assert.ok(window.information); assert.equal(window.frameRect.y, 17);
 });

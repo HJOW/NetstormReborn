@@ -98,7 +98,7 @@ export class HelpWindow {
         // 본문(ScrollingText)과 스크롤바이다. 주제를 바꿀 때마다 새로 만든다(원본 SetText 가 자식을 지우고 다시 만듦).
         this.body = null;
         // 현재 TYPE 정보 생성기와 별도 정보 본문이다.
-        this.informationFactory = null; this.information = null;
+        this.informationFactory = null; this.information = null; this.picture = null;
         // 본문을 누른 채 끄는 중이면 이전 y 이다. 아니면 null 이다(원본 dragY + notify 비트).
         this.dragY = null;
         // 단색 본문 칸의 색 번호이다(원본 nearestColor(55,51,54)).
@@ -140,7 +140,7 @@ export class HelpWindow {
         this.buttonLocals = [{ x: f32(offset), y: f32(bottom) }, { x: f32((offset + BUTTON_GAP) + widest), y: f32(bottom) }];
         // 본문 배경과 안쪽 칸의 지역 크기이다.
         const frameWidth = (HELP_WINDOW_WIDTH - BODY_SIDE_MARGIN) - BODY_SIDE_MARGIN;
-        const top = this.information ? 153 : BODY_TOP;
+        const top = this.picture ? 153 : BODY_TOP;
         const frameHeight = (((HELP_WINDOW_HEIGHT - top) - BODY_BOTTOM_GAP) - BODY_BOTTOM_GAP) - height;
         this.frameRect = { x: f32(BODY_LEFT), y: f32(top), width: f32(frameWidth), height: f32(frameHeight) };
         this.innerRect = { x: f32(INNER_INSET), y: f32(INNER_INSET), width: f32((frameWidth - INNER_INSET) - INNER_INSET), height: f32((frameHeight - INNER_INSET) - INNER_INSET) };
@@ -153,8 +153,8 @@ export class HelpWindow {
     }
 
     // 주제 하나를 요청한다(원본 QuickHelpRequest::Open): 방문 기록에 쌓고(마지막과 같으면 쌓지 않음) 본문을 바꾼다. (2026-10-30 WB03-G)
-    open(topic, informationFactory = null) {
-        this.informationFactory = informationFactory;
+    open(topic, informationFactory = null, picture = null) {
+        this.informationFactory = informationFactory; this.picture = picture;
         const last = this.history[this.history.length - 1];
         if (last === undefined || last.toLowerCase() !== topic.toLowerCase()) this.history.push(topic);
         this._show(topic);
@@ -200,7 +200,7 @@ export class HelpWindow {
         this.history.pop();
         const previous = this.history[this.history.length - 1];
         if (previous === undefined) this.closeWindow();
-        else { this.informationFactory = null; this._show(previous); }
+        else { this.informationFactory = null; this.picture = null; this._show(previous); }
     }
 
     // 창을 닫고 호스트에 알린다. 이미 닫혔으면 아무것도 하지 않는다. (2026-10-30 WB03-G)
@@ -273,6 +273,13 @@ export class HelpWindow {
         const anchors = [{ x: rect.left, y: rect.top }, { x: right, y: rect.top }, { x: right, y: bottom }, { x: rect.left, y: bottom }];
         // 네 모서리 금장식을 각 꼭짓점에 그린다.
         panel.corners.forEach((image, index) => surface.drawImage(image, (anchors[index].x + image.left) | 0, (anchors[index].y + image.top) | 0));
+        if (this.picture) {
+            const pictureFrame = boundsOf(this.x + 15, this.y + 17, 157, 126);
+            drawGumpBackground(surface, panel.texture, planGumpBackground(pictureFrame, surface.bounds, panel.textureMetrics.width, panel.textureMetrics.height, BODY_FRAME_FLAGS), this.resources.shadeMaps);
+            const picture = this.picture, clip = boundsOf(this.x + 17, this.y + 19, 153, 122);
+            if (picture.image) surface.drawImage(picture.image, ftol(this.x + 17 + picture.hotspotX) + picture.frame.rect.left,
+                ftol(this.y + 19 + picture.hotspotY) + picture.frame.rect.top, clip);
+        }
         const frame = boundsOf(this.frame.x, this.frame.y, this.frame.width, this.frame.height);
         drawGumpBackground(surface, panel.texture, planGumpBackground(frame, surface.bounds, panel.textureMetrics.width, panel.textureMetrics.height, BODY_FRAME_FLAGS), this.resources.shadeMaps);
         const inner = boundsOf(this.inner.x, this.inner.y, this.inner.width, this.inner.height);
@@ -280,9 +287,9 @@ export class HelpWindow {
         for (let y = Math.max(0, inner.top); y < Math.min(surface.height, inner.bottom); y += 1) {
             surface.pixels.fill(this.backgroundColor, y * surface.width + Math.max(0, inner.left), y * surface.width + Math.min(surface.width, inner.right));
         }
-        this.information?.draw(surface, this.resources.fonts);
         this.body.draw(surface, this.resources.fonts);
         this.body.drawSlider(surface, this.resources);
+        this.information?.draw(surface, this.resources.fonts);
         this.backButton.draw(surface, this.resources);
         this.okButton.draw(surface, this.resources);
     }
@@ -398,14 +405,14 @@ export class HelpWindow {
 
 // 도움말 창을 만든다. 도움말 파일은 설정 키 `Quick Help Spec`(`\d\help.<언어>`)의 경로에서 읽고 언어 파일이 없으면 영어 파일로 대체한다. 파일이 없으면 null 이다(원본: 로드 오류).
 // topic 은 처음 보일 주제 이름(F1 은 'F1Help')이다. 사용: const result = createHelpWindow({ gameData, resources, topic: 'F1Help', screen }); result.window?.fit(). (2026-10-30 WB03-G, 2026-10-31 WB03-P: 영어 도움말 파일 주제 단위 대체)
-export function createHelpWindow({ gameData, resources, topic = 'F1Help', information = null, screen, now = () => 0, onClose = null, onCommand = null, onExternal = null, onSound = null, onUnsupported = null }) {
+export function createHelpWindow({ gameData, resources, topic = 'F1Help', information = null, picture = null, screen, now = () => 0, onClose = null, onCommand = null, onExternal = null, onSound = null, onUnsupported = null }) {
     const path = gameData.get('Quick Help Spec');
     const helpText = path ? gameData.readText(path) : null;
     if (helpText === null) return { window: null, missing: true, path };
     // 영어가 아닌 언어는 번역하지 않은 주제를 영어 도움말 파일에서 찾도록 영어 파일도 함께 넘긴다(같은 파일이거나 없으면 null). (2026-10-31 WB03-P)
     const english = gameData.readEnglishText(path);
     const window = new HelpWindow({ resources, helpText, fallbackHelpText: english !== helpText ? english : null, substitute: (text) => gameData.substitute(text), screen, now, onClose, onCommand, onExternal, onSound, onUnsupported });
-    window.open(topic, information);
+    window.open(topic, information, picture);
     window.fit();
     window.place();
     return { window, missing: false, path };

@@ -49,7 +49,19 @@ test('Tutorial 생산 항목에서 우클릭으로 정보와 도움말을 연다
   // 원본 다리에는 정보 태그가 없으므로 실제 썬더 팩토리 TYPE 명령을 큐에 넣어 별도 정보 화면을 확인한다.
   await page.evaluate(() => { const app = window.netstorm, type = app._gameAssets.find('thunderFactory').block + 70; app._clientInputQueue.pushCommand(0x02000017, 0, type); });
   await page.waitForFunction(() => window.netstorm._mainMenu.dialog?.topic === 'thunderFactoryType' && window.netstorm._mainMenu.dialog.information);
-  const information = await page.evaluate(() => { const pane = window.netstorm._mainMenu.dialog.information; return { x: pane.x, y: pane.y, lines: pane.softLines.length }; });
-  expect(information.lines).toBeGreaterThan(0); await clickLabel(page, 'OK'); await page.waitForFunction(() => !window.netstorm._mainMenu.dialog);
+  const information = await page.evaluate(() => { const pane = window.netstorm._mainMenu.dialog.information; return { x: pane.x, y: pane.y, lines: pane.softLines.length, picture: Boolean(window.netstorm._mainMenu.dialog.picture), top: window.netstorm._mainMenu.dialog.frameRect.y }; });
+  expect(information.lines).toBeGreaterThan(0); expect(information.picture).toBe(true); expect(information.top).toBe(153);
+  // 실제 SHP의 불투명 픽셀 하나가 그리기 영역에 출력되는지 확인한다.
+  const drawn = await page.evaluate(() => {
+    const app = window.netstorm, dialog = app._mainMenu.dialog, picture = dialog.picture, image = picture.image;
+    if (!image) return null; const left = Math.trunc(dialog.x + 17 + picture.hotspotX) + picture.frame.rect.left, top = Math.trunc(dialog.y + 19 + picture.hotspotY) + picture.frame.rect.top;
+    for (let y = 0; y < image.height; y += 1) for (let x = 0; x < image.width; x += 1) {
+      const px = left + x, py = top + y, at = y * image.width + x;
+      if (image.opacity[at] && px >= dialog.x + 17 && px < dialog.x + 170 && py >= dialog.y + 19 && py < dialog.y + 141)
+        return { expected: image.indices[at], actual: app._surface.pixels[py * app._surface.width + px] };
+    }
+    return null;
+  });
+  expect(drawn).not.toBeNull(); expect(drawn.actual).toBe(drawn.expected); await clickLabel(page, 'OK'); await page.waitForFunction(() => !window.netstorm._mainMenu.dialog);
   await expect.poll(() => page.evaluate(() => window.netstorm._clientInputQueue.size)).toBe(0); expect(errors).toEqual([]);
 });
