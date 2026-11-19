@@ -1475,6 +1475,13 @@ public sealed partial class HostSession
             TerrainPopObject(sid, x, y, flags);
             return true;
         }
+        // 간헐천 전용 자산 본체가 연결된 Geyser는 지형 분배 Pop으로 등록한다. 전용 파생 검사를 피하려고 공장·신전 다음에 둔다.
+        // 2026-11-19 0.634에서 R4-4 간헐천 Pop용으로 추가했다. 근거: cpppj RawSurfaceStorage.cpp 236행의 GeyserPostPop 분배다.
+        if (_vortexAssetPostPop is not null && IsGeyserVtable(Pool.Slot(sid)))
+        {
+            TerrainPopObject(sid, x, y, flags);
+            return true;
+        }
         // 전용 파생 후처리가 필요한 종류는 R6 본체를 기다린다.
         if (RawPostPop.RequiresDedicatedPostPop(Pool, sid))
         {
@@ -1886,6 +1893,10 @@ public sealed partial class HostSession
     /// <remarks>2026-11-19 0.629에서 R4-2 공장 정기 분배용으로 추가했다. 공장 가상표가 아니면 이전 처리기로 넘긴다.</remarks>
     private RegularHandler? _beforeFactoryRegular;
 
+    /// <summary>사전·사후Warning과 별개인 간헐천 AI 등록 요청 기록이다. 세션 연결 뒤에만 쌓이며 덤프에는 나가지 않는다.</summary>
+    /// <remarks>2026-11-19 0.634에서 R4-4 간헐천 Pop용으로 추가했다. 실제 AI 등록은 R4-5에서 잇는다.</remarks>
+    private readonly List<string> _geyserRegistrations = [];
+
     /// <summary>공장 중복 삭제 직전의 원본 경고 기록이다. 세션 연결 뒤에만 쌓이며 덤프에는 나가지 않는다.</summary>
     /// <remarks>2026-11-19 0.625에서 R4-2 공장 정기 트리거용으로 추가했다. 원본 로그를 L1에서 대조할 때 쓴다.</remarks>
     private readonly List<string> _factoryWarnings = [];
@@ -2109,6 +2120,7 @@ public sealed partial class HostSession
             SharedTemples = SidLists.Temples,
             SharedOutposts = SidLists.Outposts,
             SharedResidences = IslandResidences,
+            SharedGeysers = SidLists.Geysers,
         };
         assetState.LoadingDepth = _worldLoadingDepth;
         var carrierState = new CarrierPostPopState
@@ -2145,6 +2157,19 @@ public sealed partial class HostSession
             CreateSlot = (sid, slot) => throw new InvalidOperationException("신전 내용물 생성 미연결(R6)"),
             RefreshProduction = () => { _regionVortexRefreshes++; },
             Assertion = (expression, file, line) => throw new InvalidOperationException($"사원 자산 후처리 원본 진단: {expression} {file}:{line}"),
+            // 간헐천 목록 등록은 실제 AI 등록 대신 기록만 남긴다. R4-5에서 실제 등록으로 잇는다.
+            // 2026-11-19 0.634에서 R4-4 간헐천 Pop용으로 추가했다. 근거: cpppj RawCampaignAssetBindings.cpp의 PostHooks 조립이다.
+            GeyserRegistration = (sid, op) => _geyserRegistrations.Add($"geyser sid={sid} op={op}"),
+            // 간헐천 이웃 찾기는 같은 월드의 실제 finder를 빌린다. 근거: cpppj RawAssetPostPop.cpp 257행의 visitAtPosition 분기다.
+            VisitAtPosition = RawAssetPostPop.MakeAssetPostPopFinder(Pool, _terrainHash ?? throw new InvalidOperationException("간헐천 이웃 찾기 해시 미연결"), types),
+            // 이웃 섬·종유 해제는 같은 월드의 실제 공간 해제를 쓴다. 근거: cpppj RawAssetPostPop.cpp 253행의 unpop 호출이다.
+            Unpop = (sid, flags) => (_terrainUnpop ?? throw new InvalidOperationException("간헐천 이웃 해제 미연결")).Unpop(sid, types[Pool.Slot(sid)[RawSidPool.TypeOffset]], flags),
+            // 이웃 재등록은 같은 월드 좌표의 실제 Pop을 다시 실행한다. 근거: cpppj RawSurfaceStorage.cpp 371행의 RepopAsset다.
+            Repop = (sid, flags) =>
+            {
+                ReadOnlySpan<byte> raw = Pool.Slot(sid);
+                TerrainPopObject(sid, BitConverter.ToSingle(raw.Slice(14, 4)), BitConverter.ToSingle(raw.Slice(18, 4)), flags);
+            },
             // cpppj PostHooks의 setOwner는 같은 소유자 지정 분배다. 도장 갈고리와 달리 가상 Owner를 거친다.
             SetOwner = SetFortObjectOwner,
         };
@@ -2154,6 +2179,9 @@ public sealed partial class HostSession
         _vortexAssetCarrier = carrier;
         _vortexAssetPostPop = body;
         terrainPostPop.SetAssetPostPop(body);
+        // 간헐천 정기 분배를 공장 분배보다 먼저 둔다. 공장 사슬이 간헐천 사슬을 감싸므로 해제 순서는 공장이 먼저다.
+        // 2026-11-19 0.634에서 R4-4 간헐천 정기용으로 추가했다.
+        BuildGeyserRegularDevices(types);
         BuildFactoryPostPopDevices(types);
     }
 
@@ -2216,6 +2244,85 @@ public sealed partial class HostSession
 
         return fallback?.Invoke(sid, ev, count, payload) ?? payload;
     };
+
+    /// <summary>간헐천 가상표인지 판정한다. 패치 0x50da88·CD 0x500760만 받는다.</summary>
+    /// <param name="raw">조회할 슬롯 바이트다.</param>
+    /// <returns>간헐천 가상표이면 참이다.</returns>
+    /// <remarks>2026-11-19 0.634에서 R4-4 간헐천 Pop·정기용으로 추가했다. 근거: cpppj RawAssetPostPop.cpp 38행의 kGeyser 대응표다.</remarks>
+    private bool IsGeyserVtable(ReadOnlySpan<byte> raw)
+    {
+        uint table = BinaryPrimitives.ReadUInt32LittleEndian(raw);
+        return Pool.Edition == OriginalEdition.Patch1078 ? table == 0x0050da88u : table == 0x00500760u;
+    }
+
+    /// <summary>간헐천 정기 분배 전에 사용하던 공통 정기 분배기다. 공장 분배가 이 사슬을 감싸므로 해제 순서는 공장이 먼저다.</summary>
+    /// <remarks>2026-11-19 0.634에서 R4-4 간헐천 정기용으로 추가했다. 간헐천 가상표가 아니면 이전 처리기로 넘긴다.</remarks>
+    private RegularHandler? _beforeGeyserRegular;
+
+    /// <summary>간헐천 가상표 부모를 간헐천 정기 본체에 분배하고 나머지는 이전 처리기로 넘긴다.</summary>
+    /// <param name="fallback">간헐천이 맡지 않는 부모의 기존 처리기다. 없으면 payload를 돌려준다.</param>
+    /// <returns>같은 풀의 현재 가상표로 분배하는 처리기다.</returns>
+    /// <remarks>2026-11-19 0.634에서 R4-4 간헐천 정기용으로 추가했다. 근거: cpppj client/RawSurfaceStorage.cpp 297행의 분배다.</remarks>
+    private RegularHandler RegularHandlerWithGeyser(RegularHandler? fallback) => (sid, ev, count, payload) =>
+    {
+        if (IsGeyserVtable(Pool.Slot(sid)))
+        {
+            return RunGeyserRegularSession(sid, ev, count, payload, fallback);
+        }
+
+        return fallback?.Invoke(sid, ev, count, payload) ?? payload;
+    };
+
+    /// <summary>간헐천 정기 본체를 세션에 연결하고 공장 분배보다 먼저 분배 사슬에 둔다.</summary>
+    /// <param name="types">같은 실제 TYPE 표다. 지형 Pop 장치와 같은 인스턴스여야 한다.</param>
+    /// <exception cref="InvalidOperationException">간헐천 정기 분배의 지형 표시·정기 프로세스·프레임 표가 미연결이다.</exception>
+    /// <remarks>2026-11-19 0.634에서 R4-4 간헐천 정기용으로 추가했다. 근거: cpppj client/RawSurfaceStorage.cpp 297행의 분배다. 간헐천 ev0은 난수를 소비하지 않는다.</remarks>
+    private void BuildGeyserRegularDevices(IReadOnlyList<OriginalTypeRecord> types)
+    {
+        ArgumentNullException.ThrowIfNull(types);
+        if (_beforeGeyserRegular is not null)
+        {
+            throw new InvalidOperationException("간헐천 정기 분배 장치 중복 연결");
+        }
+
+        SquidProcessHost processes = PlayerProcesses ?? throw new InvalidOperationException("간헐천 정기 분배 프로세스 미연결");
+        if (_terrainDisplay is null)
+        {
+            throw new InvalidOperationException("간헐천 정기 분배 표시 미연결");
+        }
+
+        if (_terrainPopTypes is null || !ReferenceEquals(types, _terrainPopTypes))
+        {
+            throw new ArgumentException("간헐천 정기 TYPE은 지형 Pop 장치와 같은 인스턴스여야 한다", nameof(types));
+        }
+
+        _beforeGeyserRegular = processes.Regular();
+        processes.SetRegularHandler(RegularHandlerWithGeyser(_beforeGeyserRegular));
+    }
+
+    /// <summary>같은 장기 풀·타입·표시의 현재 조회로 간헐천 정기 사건을 실행한다.</summary>
+    /// <param name="sid">처리할 간헐천 부모 번호다.</param>
+    /// <param name="event">사건 번호다.</param>
+    /// <param name="count">개수다.</param>
+    /// <param name="payload">전달 값이다.</param>
+    /// <param name="fallback">선택된 조기 반환 이외의 이전 처리기다.</param>
+    /// <returns>원문과 같은 반환 값이다.</returns>
+    /// <remarks>2026-11-19 0.634에서 R4-4 간헐천 정기용으로 추가했다. 근거: cpppj o/RawAssetRegular.cpp 51~62행의 RunNativeGeyserRegular다. 표시 갱신은 실제 가상88이며 프레임 쓰기는 직접 DWORD 저장이다.</remarks>
+    private float RunGeyserRegularSession(int sid, uint @event, uint count, float payload, RegularHandler? fallback)
+    {
+        var hooks = new GeyserRegularHooks
+        {
+            DisplayUpdate = (parent, flags) => (_terrainDisplay ?? throw new InvalidOperationException("간헐천 정기 분배 표시 미연결")).Update(Pool.Slot(parent), flags),
+            Damageable = (parent, code, times, value) => fallback?.Invoke(parent, code, times, value) ?? value,
+        };
+        IReadOnlyList<OriginalTypeRecord> types = _terrainPopTypes ?? throw new InvalidOperationException("간헐천 정기 TYPE 미연결");
+        return RawGeyserRegular.Run(Pool, types, sid, @event, count, payload, hooks);
+    }
+
+    /// <summary>간헐천 AI 등록 요청 기록을 빌려준다. 연결 뒤에도 비어 있을 수 있다.</summary>
+    /// <returns>등록 뒤 누적 기록이다. 실제 등록이 아니라 요청만 센다.</returns>
+    /// <remarks>2026-11-19 0.634에서 추가했다. L1에서 호출 순서와 좌표를 대조할 때 쓴다. 실제 AI 등록은 R4-5에서 잇는다.</remarks>
+    public IReadOnlyList<string> GeyserRegistrations => _geyserRegistrations;
 
     /// <summary>같은 장기 풀·프레임·난수의 현재 조회로 공장 정기 사건을 실행한다.</summary>
     /// <param name="sid">처리할 공장 부모 번호다.</param>
