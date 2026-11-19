@@ -27,12 +27,14 @@ import { KOREAN_FONT_FAMILY } from './assets/korean-font-config.js';
 import { AudioSystem, createAudioContext } from './audio/audio-system.js';
 import { IndexedSurface } from './render/indexed-surface.js';
 import { IndexedPresenter, normalizeScaling } from './render/presenter.js';
+import { Screen } from './render/screen.js';
 import { Settings, findSettingKey, getLocalStorage } from './platform/settings.js';
 import { Progress, isProgressKey } from './platform/progress.js';
 import { reportGameError } from './platform/error-reporting.js';
 import { ClientFrameClock } from './core/client-frame-clock.js';
 import { ClientLocalStateGlobals } from './core/client-local-state-globals.js';
 import { ClientKencloudGlobals } from './core/client-kencloud-globals.js';
+import { ClientColorSortInput } from './core/client-color-sort-input.js';
 import { ClientHtmlWindowGlobals } from './core/client-html-window-globals.js';
 import { ClientConnectionGlobals } from './core/client-connection-globals.js';
 import { ClientConnectionActivityGlobals } from './core/client-connection-activity-globals.js';
@@ -456,6 +458,8 @@ export class Netstorm {
         this._clientKencloud = null; this._clientHtml = null; this._clientConnections = null; this._clientConnectionActivity = null;
         // 같은 Client가 장기 소유하는 게임·CRT 난수와 SP 저장소다.
         this._clientRandom = null; this._clientSp = null;
+        // 시작 팔레트와 최초 색 정렬 입력은 Client 수명 동안 같은 객체로 유지한다.
+        this._clientPaletteScreen = null; this._clientColorSort = null;
         // Client 공통 Player·Core·Template과 Subscriber는 Session보다 오래 산다.
         this._clientSubscriber = null; this._clientGameplay = null; this._clientCoreData = null; this._clientPlayers = null; this._clientTemplates = null;
         // 자산 적재 뒤 구성해 Session보다 오래 유지하는 월드 물리와 Kernel이다.
@@ -690,6 +694,17 @@ export class Netstorm {
         this._gameAssets = game; this._surfaceStorage = storage; this._clientKernel = kernel;
     }
 
+    // 실제 fortPal 자산을 원본 시작 순서로 Screen에 적용하고 그 논리 색을 한 번 캡처한다. 표시 장치와 캐시는 후속 연결이다.
+    _initializeClientPalette(game) {
+        if (this._clientPaletteScreen || this._clientColorSort || !this._layout || !game) throw new Error('Client 팔레트의 중복 또는 시작 수명 누락');
+        const screen = new Screen(this._layout.logicalWidth, this._layout.logicalHeight);
+        const colors = new ClientColorSortInput();
+        screen.init(); screen.loadPalette(game.palette, 1);
+        colors.captureWithPrimary(screen.logicalPalette());
+        screen.bindColorSortInput(() => colors.logical);
+        this._clientPaletteScreen = screen; this._clientColorSort = colors;
+    }
+
     // 같은 Client 설정·Player·월드 저장소에 Guide 수명을 연결한다.
     _initializeClientGuide() {
         if (this._clientGuide || !this._gameData || !this._surfaceStorage || !this._clientGameplay || !this._clientPlayers) throw new Error('Client Guide의 중복 또는 공통 수명 누락');
@@ -857,6 +872,7 @@ export class Netstorm {
         this._surfaceStorage?.dispose();
         this._gameClock = null; this._clientLocal = null; this._hiddenGamePause = false;
         this._clientSp = null; this._clientRandom = null;
+        this._clientPaletteScreen = null; this._clientColorSort = null;
         this._clientTemplates = null; this._clientPlayers = null; this._clientCoreData = null; this._clientGameplay = null; this._clientSubscriber = null;
         this._clientKernel = null; this._surfaceStorage = null; this._gameAssets = null;
         if (this._audio) {
@@ -955,6 +971,7 @@ export class Netstorm {
                 const palettePath = this._gameData.pathSpec('GamePalSpec', this._gameData.pathSpec('fortPal'));
                 this._initializeClientWorldStorage(loadClientWorldAssets(this._gameData.files, palettePath), this._gameData.files);
             }
+            if (!this._clientPaletteScreen) this._initializeClientPalette(this._gameAssets);
             if (!this._clientGuide) this._initializeClientGuide();
             await this.options.prepare(this);
         } catch (error) {

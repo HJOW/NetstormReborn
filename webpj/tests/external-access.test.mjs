@@ -136,6 +136,7 @@ test('앱 적재 요청: 언어별 묶음을 데이터 폴더 아래에서만 �
         const urls = [];
         const app = new Netstorm({ language, fetch: recordingFetch(urls), audio: false });
         app._initializeClientRuntime(false);
+        app._layout = { logicalWidth: 1024, logicalHeight: 768 };
         app._root = { ownerDocument: { baseURI: DOCUMENT_URL } };
         app._settings = new Settings();
         app._progress = { snapshot: () => ({}) };

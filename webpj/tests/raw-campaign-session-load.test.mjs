@@ -775,7 +775,7 @@ test('Netstorm Client World: 실제 Guide Fort 설치와 로컬 로그인 수명
     app._gameData = data; app._root = { ownerDocument: { title: 'before' } }; app._initializeClientWorldStorage(game, data.files); app._initializeClientGuide();
     const guide = app._clientGuide; let world;
     const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {} };
-    app._clientGameplay.camera().initializeNativeRenderer(1024, 768, 256, { value: 0 }, { value: 0 });
+    app._layout = { logicalWidth: 1024, logicalHeight: 768 }; app._initializeClientRendererView();
     const services = { localLogin, soundNames: new SoundList(), carrierRequest: forbidden('전송'),
         cameraCommit: (context) => { const pixels = context.camera.target().pixels; context.camera.applyPixelsToRendererAndSnapshot(pixels[0], pixels[1]); },
         surfaceDisplay: { suppressed: () => false, invalidate: () => {} },
