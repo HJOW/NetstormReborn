@@ -277,8 +277,8 @@
       "path": "d/xlat.korean",
       "source": "webpj/translations/xlat.korean",
       "bundle": "korean",
-      "size": 2292,
-      "sha256": "07c91766d99c0cc79b5a633e6577b724abbad89052b67b4e900c91418710ef16",
+      "size": 2332,
+      "sha256": "f7cda3b65e5210e9d41496fea3a6a488d3d383b89cf633c8cd5a59eb067a2c3e",
       "use": "한국어 UI 문자열 번역표(원본 xlat 형식, UTF-8): 메인 메뉴 버튼·Help·Options 펼침 메뉴 라벨, 일반 도움말 창 Back·OK"
     },
     {

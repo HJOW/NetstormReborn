@@ -66,6 +66,7 @@ export function buildOptionsItems(settings, { includeAll = false } = {}) {
             ...(includeAll ? [check('Pause - ~iShift-F9~.', false, 'Pause', '0')] : []),
         ],
         includeAll ? [check('Pass Server Diagnostic ', false, 'Tell', 'ChangeFirewall')] : [],
+        includeAll ? [] : [text('Reset All', 'ResetAll', '0')],
     ]);
 }
 

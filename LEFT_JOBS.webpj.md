@@ -4,14 +4,14 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-19, 마지막 단위 WB04-E862)
+### 0.1 현재 값 (2026-11-19, 마지막 단위 WB04-E863)
 
 | 항목 | 현행 상태 |
 | --- | --- |
 | 실행·플레이 | 브라우저에서 ‘클릭하여 시작’, 메인 메뉴·캠페인/데모 목록·도움말·옵션·Credits와 개발용 지형 미리보기가 동작한다. Node 통합 검사에서 실제 Fort로 Session을 적재하고 내부 Login·Start·일부 이동과 건설을 확인했다. 브라우저의 `MissionBegin`·`StartDemo`에서 실제 월드로 들어가 플레이하는 기능은 미연결이다. |
 | 원본과의 동일성 | 영어 4:3 메뉴 M1 8장면은 cpppj 오라클과 알려진 구름 배경 등 차이 영역 밖에서 픽셀 차이 0이다. 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다. 실제 미션 L2·L3·L4, 자연 완주는 미검증이다. |
-| 현재 작업 | **M2의 4-D 진행 중.** 4D-3 typed Login 잔여를 이어가고 4D-4~4D-6에서 이미 확인된 프레임·튜토리얼 게이트·반납·GameWorld 경계를 실제 Client 수명으로 연결한다. E862는 앱 초기화·적재·프레임·이벤트 오류의 콘솔 보고를 연결했다. 다음은 실제 Client 고리·진단 수명과 앱 메뉴·프레임 루프·스커미시 결과·저장 장치 및 나머지 공개 조회다. [E862](docs/webpj-browser-error-reporting-20261119.md) |
-| 전체 회귀 | E862 Node v26.13.0 전체 6,386건 통과(실패·취소·건너뜀 0). E859 Node v22.23.3 전체 6,376건 통과 뒤 v26 회귀 3/8회. fixture 824개 해시·파일 불일치/누락 0; 전체 Git 이력 재조회는 중단하고 이번 본체의 변경 여부와 대응표는 별도 확인했다. |
+| 현재 작업 | **M2의 4-D 진행 중.** 4D-3 typed Login 잔여를 이어가고 4D-4~4D-6에서 이미 확인된 프레임·튜토리얼 게이트·반납·GameWorld 경계를 실제 Client 수명으로 연결한다. E863은 15차 Reset All을 구현·검증했다. 다음은 실제 Client 고리·진단 수명과 앱 메뉴·프레임 루프·스커미시 결과·저장 장치 및 나머지 공개 조회다. [E863](docs/webpj-reset-all-20261119.md) |
+| 전체 회귀 | E863 Node v26.13.0 전체 6,392건 통과(실패·취소·건너뜀 0). E859 Node v22.23.3 전체 6,376건 통과 뒤 v26 회귀 4/8회. fixture 824개 해시·파일 불일치/누락 0; 전체 Git 이력 재조회는 중단하고 이번 본체의 변경 여부와 대응표는 별도 확인했다. |
 | 브라우저 검사 | 2026-11-17 Chromium 2/2. 갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체 확인. 최초 실행·진행 잠금/체크 및 저장 재실행은 E616에서 별도 Chromium 2/2로 확인했다. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
 
 **미션 식별.** 이전 공통 fixture의 `thewarbegins.fort`는 캠페인 1-1이다. 실제 `tutorial1`이 선택하는 Fort는 `BridgeTheGap`이며, 지형·섬을 E753에서 다시 대조했다. [미션명 정정](docs/webpj-session-login-shipped-forts-20261118.md) · [Tutorial1 지형 재검증](docs/webpj-tutorial1-terrain-recheck-20261118.md)
@@ -67,7 +67,7 @@
 
 ### 0.6 제품 공통 요구
 
-11.01 표기·Credits 세 번째 항목과 HJOW/AI 문구·`Copyright 2026 HJOW`, 시작 클릭 화면, 공개 루트 내 실행 자산, 외부 접속 문서화·유효성 검사 비활성화는 반영했다. Credits AI 문구는 사용자가 다시 지시할 때 수정한다. **15차 Reset All은 미착수**이며 구현·검증 범위는 3.7절에 둔다. [제품 11.01](docs/webpj-product-1101-20261105.md) · [외부 접속](docs/webpj-external-access-20261105.md)
+11.01 표기·Credits 세 번째 항목과 HJOW/AI 문구·`Copyright 2026 HJOW`, 시작 클릭 화면, 공개 루트 내 실행 자산, 외부 접속 문서화·유효성 검사 비활성화는 반영했다. Credits AI 문구는 사용자가 다시 지시할 때 수정한다. **15차 Reset All은 E863에서 구현·검증했다.** [제품 11.01](docs/webpj-product-1101-20261105.md) · [외부 접속](docs/webpj-external-access-20261105.md) · [초기화](docs/webpj-reset-all-20261119.md)
 
 <a id="korean-font-change"></a>
 
@@ -280,7 +280,7 @@ M1은 메뉴 관문을 통과했다. 4-D의 Tutorial1 L2 → 5-A/5-B·5-C의 Tut
 | 13 | 일본어 등 추가 언어. WOFF2가 없는 글꼴은 Google Fonts CDN을 사용하고 외부 접속 문서와 소스 감사를 함께 갱신한다. 일본어 Patch Credits에도 카피라이트를 넣는다. |
 | 14 | 웹 자체 JS 사용으로 QuickJS 탑재 불필요. |
 
-- [ ] **15차 Reset All** — Options 최하단에 두고 재확인 후 게임 설정·진행 데이터를 모두 초기화한다. 게임을 사용 해제한 뒤 다시 로딩하며 취소·확정·오류·최초 실행 상태를 검증한다. 게임이 소유한 저장 키에 한정한다.
+- [x] **15차 Reset All** — Options 최하단에서 확인 후 현재 게임 소유 설정·진행 키만 지우고 앱 정리 후 다시 로딩한다. 취소·확정·오류·최초 실행과 다른 앱 저장값 보존을 검사했고 Chromium 실제 메뉴에서도 확인했다. 영구 저장 키가 추가되면 초기화 목록도 갱신한다. [E863](docs/webpj-reset-all-20261119.md)
 - **12차 Outpost 잔여.** 배치/거리 후보 목록의 실제 소유 관계 확인, 지역 소유 통지·Factory/연구/운반·AI·전투·Client 연결, 건설·금지 목록·삭제를 확인한다. 일반 캠페인/데모에서의 제외도 확인한다. [Outpost 부품](docs/webpj-raw-outpost-lifecycle-20261115.md) · [이관 전 범위](LEFT_JOBS.webpj.old.md#archive-webpj-20261118-through-wb04-e801)
 
 ### 3.8 원본 관측 연결 이월

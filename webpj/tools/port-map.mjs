@@ -119,6 +119,7 @@ export const RULES = Object.freeze([
 // cpppj 단위에 대응하지 않는 웹 전용 모듈(webpj 기준 경로)과 사유이다. www 의 모든 .js 모듈은 대응표의 web 칸이나 이 목록 중 한 곳에 있어야 한다. (2026-11-06 WB02-G)
 export const WEB_ONLY = Object.freeze({
     'www/platform/error-reporting.js': '브라우저 콘솔에 게임 예외와 실행 문맥을 남기는 웹 전용 경계(WB04-E862)',
+    'www/platform/reset-storage.js': '웹 게임 소유 저장 항목의 확인 후 초기화와 실패 복구 경계(WB04-E863)',
     'www/assets/korean-font-config.js': '한국어 웹 글꼴 등록 이름과 배포 경로를 공유하는 웹 전용 설정',
     'www/assets/menu-assets.js': '메인 메뉴 자산 경로 묶음(웹 자산 준비). 원본 setup.cfg 값과 실행 파일 전역을 근거로 적은 웹 구성',
     'www/assets/terrain-scene.js': '개발용 지형 미리보기의 정적 출력 목록(게임 규칙 없음, WB03-AA)',

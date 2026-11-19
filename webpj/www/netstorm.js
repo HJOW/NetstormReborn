@@ -30,6 +30,7 @@ import { IndexedPresenter, normalizeScaling } from './render/presenter.js';
 import { Settings, findSettingKey, getLocalStorage } from './platform/settings.js';
 import { Progress, isProgressKey } from './platform/progress.js';
 import { reportGameError } from './platform/error-reporting.js';
+import { resetGameStorage } from './platform/reset-storage.js';
 import { createCanvasGlyphRasterizer } from './platform/glyph-rasterizer.js';
 import { MainMenuScreen } from './ui/main-menu.js';
 import { TerrainPreview } from './ui/terrain-preview.js';
@@ -109,6 +110,8 @@ const TEXTS = Object.freeze({
         loadFailed: 'Failed to load game data.',
         retry: 'Click to retry',
         clickToStart: 'Click to start',
+        resetConfirm: 'Reset all settings and campaign progress? The game will reload.',
+        resetFailed: 'Could not reset game data. Check storage access and try again.',
     }),
     korean: Object.freeze({
         title: 'NetStorm',
@@ -116,6 +119,8 @@ const TEXTS = Object.freeze({
         loadFailed: '게임 데이터를 불러오지 못했습니다.',
         retry: '클릭하여 다시 시도',
         clickToStart: '클릭하여 시작',
+        resetConfirm: '모든 설정과 캠페인 진행 상황을 초기화할까요? 게임을 다시 불러옵니다.',
+        resetFailed: '게임 데이터를 초기화하지 못했습니다. 저장소 접근을 확인한 후 다시 시도하세요.',
     }),
 });
 
@@ -889,10 +894,27 @@ export class Netstorm {
             this._settings?.set(key, Number(value));
         } else if (name === 'tell') {
             this._openTell(command.argument);
+        } else if (name === 'resetall') {
+            this._resetAll();
         } else {
             console.info(`Netstorm: 펼침 메뉴 명령 '${command.name}' 은(는) 아직 구현되지 않았습니다.`, command);
         }
         this._displayDirty = true;
+    }
+
+    // 확인을 받은 뒤 게임 소유 저장 항목을 지우고 현재 앱을 정리한 다음 페이지를 다시 불러온다. (2026-11-19 WB04-E863)
+    _resetAll() {
+        const view = this._view();
+        if (!view.confirm(this.texts.resetConfirm)) return;
+        try {
+            resetGameStorage(getLocalStorage(view));
+        } catch (error) {
+            reportGameError('reset-storage', error, { state: this._state });
+            view.alert(this.texts.resetFailed);
+            return;
+        }
+        this.destroy();
+        view.location.reload();
     }
 
     // 설정 값이 바뀌었을 때 소리에 반영한다. 소리·음악·음량은 바로 적용되고, 바람 소리·좌우 교환·가장자리 스크롤·자동 데모·시작 팁은 값만 저장되며 해당 기능이 생길 때 쓰인다. (2026-10-29 WB03-F)

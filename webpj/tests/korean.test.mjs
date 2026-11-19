@@ -101,6 +101,7 @@ test('xlat.korean: UTF-8·중복 없음·메뉴 라벨 전부 번역', () => {
     };
     const settings = new Settings();
     collect(buildOptionsItems(settings, { includeAll: true }));
+    collect(buildOptionsItems(settings));
     collect(buildHelpItems({ includeAll: true }));
     // 숫자만 있는 해상도 라벨(640 by 480 …)은 번역하지 않는다.
     const untranslatable = new Set(['640 by 480', '800 by 600', '1024 by 768']);
@@ -335,7 +336,7 @@ test('buildPopupItems: translate 로 Options·Help 라벨을 번역하고 구조
         assert.equal(item.checked, plain[index].checked);
     });
     assert.deepEqual(translated.filter((item) => item.kind !== 'separator').map((item) => item.label), [
-        '소리 켜기', '음악 재생', '바람 소리', '스피커 좌우 바꾸기', '효과음 음량', '음악 음량', '전체 화면 가장자리 스크롤', '자동 데모', '시작 시 팁 표시',
+        '소리 켜기', '음악 재생', '바람 소리', '스피커 좌우 바꾸기', '효과음 음량', '음악 음량', '전체 화면 가장자리 스크롤', '자동 데모', '시작 시 팁 표시', '모두 초기화',
     ]);
     // 하위 음량 목록도 번역되고 현재 단계 체크는 그대로다.
     const volume = translated.find((item) => item.kind === 'submenu');
