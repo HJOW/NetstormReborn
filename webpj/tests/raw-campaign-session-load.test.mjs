@@ -32,6 +32,8 @@ import { ClientKencloudGlobals } from '../www/core/client-kencloud-globals.js';
 import { ClientHtmlWindowGlobals } from '../www/core/client-html-window-globals.js';
 import { ClientNsInfoGlobals } from '../www/core/client-ns-info-globals.js';
 import { ClientRandomGlobals } from '../www/core/random.js';
+import { ClientFrameClock } from '../www/core/client-frame-clock.js';
+import { ClientTimeSource } from '../www/core/client-time-source.js';
 import { ClientSpGlobals } from '../www/core/client-sp-globals.js';
 import { ScrambledSpStore } from '../www/core/sp-store.js';
 import { RawChatChannels } from '../www/core/raw-chat-channels.js';
@@ -1507,12 +1509,16 @@ test('CampaignSession TheWarBegins: 동맹 요청 직접 수신', () => {
 // 지연 GameWorld는 같은 Session·카메라·표시기를 소유하고 실제 로컬 로그인을 준비한다.
 test('CampaignGameWorld TheWarBegins: 지연 생성과 실제 로그인 준비', () => {
     const gameplay = new ClientGameplayGlobals(), queue = new InputQueue(), commits = [], views = [], dirty = [], sounds = [];
-    let frameTime = { game: 0.125, wall: 100.125, delta: 0.125, number: 1 }, worldPaused = false, frameRequests = 0;
+    const local = new ClientLocalStateGlobals(), source = new ClientTimeSource();
+    source.enableFixed({ frameMilliseconds: 25 }); const clock = new ClientFrameClock(source, local.gameTicks());
+    // 원본 Client처럼 각 프레임에서 먼저 고정 시각을 전진시킨다.
+    for (let frame = 0; frame < 5; frame += 1) clock.captureFrame();
+    let worldPaused = false, frameRequests = 0;
     gameplay.camera().initializeNativeRenderer(640, 480, 256, { value: 0 }, { value: 0 });
     const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {} };
     const services = {
-        gameplayGlobals: gameplay, localLogin, unixSeconds: () => 1700000000, soundNames: new SoundList(), carrierRequest: forbidden('전송'),
-        frameTime: () => { frameRequests += 1; return frameTime; }, paused: () => worldPaused,
+        gameplayGlobals: gameplay, localStateGlobals: local, localLogin, unixSeconds: () => 1700000000, soundNames: new SoundList(), carrierRequest: forbidden('전송'),
+        frameTime: () => { frameRequests += 1; return clock.time(); }, paused: () => worldPaused,
         deletion: { selected: () => 0 }, install: { translateYou: () => Uint8Array.of(89, 111, 117, 0), setConfig: () => {}, refreshWindowTitle: () => {} },
         ownership: { refreshProduction: () => {}, themeMode: () => 0 }, assets: { postPop: { playImpactSound: () => {} }, queueCommand: (...args) => queue.pushCommand(...args) },
         sound: { wallSeconds: () => 0, play: (...args) => { sounds.push(args); return 1; }, playOnceAt: () => {}, playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false },
@@ -1547,7 +1553,9 @@ test('CampaignGameWorld TheWarBegins: 지연 생성과 실제 로그인 준비',
         const frameVisits = [], core = session.core(), probe = core.kernel.add({ runFrame: () => frameVisits.push(core.processState.now) });
         world.prepareKernelFrame(); assert.equal(core.processState.now, 0.125); assert.deepEqual(frameVisits, []);
         core.kernel.runFrame(); world.finishKernelFrame(); assert.deepEqual(frameVisits, [0.125]);
-        frameTime = { game: 0.25, wall: 100.25, delta: 0.125, number: 2 }; worldPaused = true; world.runFrame(); assert.deepEqual(frameVisits, [0.125]);
+        // 실제 공유 Client 시계를 다음 125ms까지 전진시킨다.
+        for (let frame = 0; frame < 5; frame += 1) clock.captureFrame();
+        worldPaused = true; world.runFrame(); assert.deepEqual(frameVisits, [0.125]);
         worldPaused = false; world.runFrame(); assert.deepEqual(frameVisits, [0.125, 0.25]); core.kernel.remove(probe);
         assert.throws(() => world.step(-1), /시간차 범위/); assert.throws(() => world.step(NaN), /시간차 범위/);
         assert.deepEqual(cursorPalettes, [expectedPalette]);
