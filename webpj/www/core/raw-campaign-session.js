@@ -138,6 +138,10 @@ export class RawCampaignSession {
     core() { return { ...this.#live().core }; }
     // 현재 Session이 빌린 같은 Player 물리이며 복사하지 않는다.
     playerRecords() { return this.#live().players; }
+    // 덤프와 실제 미션이 같은 SP 저장소를 조회한다. 조회만으로 초기화하지 않는다. (2026-11-19 WB04-E867)
+    spStorage() { return this.#live().sp; }
+    // 덤프가 다른 Client의 난수 소유자를 섞지 않도록 같은 장기 난수 전역을 빌린다. (2026-11-19 WB04-E867)
+    randomGlobals() { return this.#live().randomGlobals; }
     // Runtime 배송 또는 외부 전송 콜백 중에는 공유 State를 정리하지 않는다.
     connectionCallbackActive() {
         const o = this.#live(); if (o.gameplayGlobals.runtimeCallActive(this)) return true;

@@ -1,4 +1,4 @@
-// cpppj SessionStateDump 판번호 1의 순수 TSV 서식과 현재 Client 공통 상태 수집이다. World 수집은 별도다. (2026-11-19 WB04-E865~E866)
+// cpppj SessionStateDump 판번호 1의 순수 TSV 서식과 현재 Client·Session 상태 수집이다. (2026-11-19 WB04-E865~E867)
 import { RegularProcess, SquidProcess } from './squid-process.js';
 
 // 풀 전체 원문의 FNV-1a 64비트 해시를 계산한다.
@@ -61,6 +61,27 @@ export function captureSessionDumpBase(edition, frame, random, kernel) {
         }
         input.processes.push(row);
     }
+    return input;
+}
+
+// 같은 Client가 소유한 현재 Session의 풀·Player·SP·Graph·장부를 공통 관측에 추가한다. 관측 사본을 만들어 이후 상태 변경과 구별한다. (2026-11-19 WB04-E867)
+export function captureSessionStateDump(edition, frame, random, kernel, session = null) {
+    const input = captureSessionDumpBase(edition, frame, random, kernel);
+    if (!session) return input;
+    const core = session.core();
+    if (core.kernel !== kernel || session.randomGlobals() !== random) throw new TypeError('Session 덤프의 같은 Kernel·난수 소유자 필요');
+    const pool = core.pool, sp = session.spStorage(), book = core.bookkeeping;
+    input.edition = pool.edition; input.world = true;
+    input.poolBytes = pool.bytes(); input.poolCapacity = pool.capacity; input.stride = pool.layout.stride;
+    input.freeCount = pool.freeCount; input.firstFreeServer = pool.firstFree(false); input.firstFreeClient = pool.firstFree(true);
+    input.predictableCursor = pool.predictableCursor;
+    input.players = session.playerRecords().slice(); input.hiddenPlayers = session.hiddenPlayers().slice();
+    input.alliances = Array.from(session.alliances());
+    input.spInitialized = sp.initialized; input.spOffset = sp.offset;
+    if (input.spInitialized) { input.spPools = sp.pools(); input.spPermutation = sp.permutation(); }
+    input.graph = core.graph.records().map((item) => ({ surfaces: item.surfaces, inUse: item.inUse, reserved: item.reserved }));
+    input.totalCost = book.totalCost; input.postPopDepth = book.depth; input.productionDirty = book.productionDirty;
+    input.totalLocal = book.localCounts().slice(); input.totalBuilt = book.localSecondaryCounts().slice(); input.totalGlobal = book.globalCounts().slice();
     return input;
 }
 

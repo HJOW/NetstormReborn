@@ -8,7 +8,7 @@ import { runClientBridgeDecay } from '../www/core/client-bridge-decay.js';
 import { pollClientBattleCompletion } from '../www/core/client-battle-completion.js';
 import { pollClientConnectionHealth } from '../www/core/client-connection-health.js';
 import { ClientTraceGlobals, traceClientObject, writeClientProcessSummary } from '../www/core/client-diagnostics.js';
-import { captureSessionDumpBase, formatSessionStateDump } from '../www/core/session-state-dump.js';
+import { captureSessionDumpBase, captureSessionStateDump, formatSessionStateDump, sessionDumpHash } from '../www/core/session-state-dump.js';
 import { ProductionMaintenanceGlobals, ProductionMaintenancePanel } from '../www/core/raw-production-maintenance.js';
 import { ProductionControlContext } from '../www/core/production-control-context.js';
 import { ClientColorSortInput } from '../www/core/client-color-sort-input.js';
@@ -558,6 +558,33 @@ test('CampaignSession TheWarBegins: 덤프 공통 수집의 실제 Regular', () 
         const row = input.processes.find((entry) => entry.pid === process.pid);
         assert.deepEqual([row.form, row.parent, row.event, row.payloadBits], [process.form, parent, 6700, 0x3e800000]);
         assert.ok(formatSessionStateDump(input).includes(`process\t${process.pid}\t${process.form}\t${parent}\nregular\t${process.pid}\t6700\t0\t1048576000\t`));
+    } finally { s.dispose(); }
+});
+
+// 실제 월드 전체를 관측하고 Session이 초기화한 SP와 현재 원문·장부를 바꾸지 않는다.
+test('CampaignSession TheWarBegins: 덤프의 실제 풀·Player·SP·Graph', () => {
+    const random = new ClientRandomGlobals(), { s } = scene({ randomGlobals: random });
+    try {
+        const core = s.core(), frame = { number: 42, game: 1.5 };
+        assert.equal(s.spStorage().initialized, true);
+        const seed = [random.game.state, random.crt.state];
+        const blank = captureSessionStateDump('patch1078', frame, random, core.kernel, s);
+        assert.equal(blank.world, true); assert.equal(blank.spInitialized, true); assert.deepEqual([random.game.state, random.crt.state], seed);
+        assert.equal(blank.graph.length, 255); assert.equal(blank.graph[254].surfaces, 0x7dfd);
+        s.load(); s.setSp(1, 100);
+        const before = core.pool.bytes(), previous = [random.game.state, random.crt.state, core.kernel.size];
+        const captured = captureSessionStateDump('patch1078', frame, random, core.kernel, s);
+        const text = formatSessionStateDump(captured);
+        assert.deepEqual(core.pool.bytes(), before); assert.deepEqual([random.game.state, random.crt.state, core.kernel.size], previous);
+        assert.equal(captured.spInitialized, true); assert.equal(captured.players.length, 1620);
+        assert.equal(captured.graph.length, 255); assert.ok(text.includes(`\nsp\t1\t${captured.spOffset}\t`));
+        assert.equal(text.split('\n').filter((line) => line.startsWith('graph\t')).length, 255);
+        assert.ok(text.includes(`\t${sessionDumpHash(before).toString(16)}\nslot\t0\t`));
+        assert.equal(captured.poolCapacity, core.pool.capacity); assert.equal(captured.totalLocal.length, 256);
+        assert.throws(() => captureSessionStateDump('patch1078', frame, new ClientRandomGlobals(), core.kernel, s), /같은 Kernel·난수/);
+        assert.throws(() => captureSessionStateDump('patch1078', frame, random, new Kernel(), s), /같은 Kernel·난수/);
+        core.pool.allocated(core.factory.create(6, 2))[34] = 7;
+        assert.deepEqual(captured.poolBytes, before);
     } finally { s.dispose(); }
 });
 
