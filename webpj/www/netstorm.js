@@ -2323,6 +2323,8 @@ export class Netstorm {
         // 원본 루프 2번: 현재 미션의 로컬 State만 Poll한다. 수신 콜백 안의 재진입은 정리와 전환을 미룬다.
         const stateWorld = this._campaignWorld;
         if (stateWorld && !stateWorld.session().connectionCallbackActive()) stateWorld.session().pollLocalConnectionState();
+        // 원본 루프 3번: 자연 종료한 버퍼를 포함해 패킷 처리 전에 현재 재생 수를 갱신한다.
+        this._clientSoundPlayer?.recount();
         // 원본 루프 4번: Poll 뒤 현재 World를 다시 조회해 같은 내부 전송을 진행한다. 완료 후 화면 설치는 별도 경계다.
         const packetWorld = this._campaignWorld;
         if (packetWorld && !packetWorld.session().connectionCallbackActive()) packetWorld.session().pumpLocalConnection();

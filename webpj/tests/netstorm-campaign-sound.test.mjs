@@ -53,3 +53,20 @@ test('앱 미션 효과음: 준비 중 자산 반납', async () => {
     const pending = app._prepareCampaignAudio(); app._missionAudioAssets.dispose(); resume(Uint8Array.of(1));
     await assert.rejects(pending, /반납한 미션 음향/); assert.equal(app._clientSoundPlayer, null); assert.equal(app._clientSoundPrepare, null);
 });
+
+// 자연 종료한 소리는 State Poll 뒤와 패킷 처리 사이에 다시 세어 재생 한도를 회복한다.
+test('앱 미션 효과음: 실제 프레임 재생 수 계산 순서', async () => {
+    const app = new Netstorm(), scene = contextFixture(); app._initializeClientRuntime(false); app._settings = new Settings();
+    app._gameData = { readInt: () => ({ value: 1 }) }; app._audio = new AudioSystem(scene.context);
+    app._assetLoader = { manifest: { files: [{ path: 'sound/test.wav' }] }, loadFile: async () => Uint8Array.of(1) };
+    try {
+        const player = await app._prepareCampaignAudio(), sound = app._clientSoundNames.lookup('test.wav'), order = [];
+        player.play(sound, 0, 0, 0, 0, 0); assert.equal(app._clientSoundState.playing, 1);
+        scene.sources[0].onended(); assert.equal(player.play(sound, 0, 0, 0, 0, 0), 0);
+        const session = { connectionCallbackActive: () => false, pollLocalConnectionState: () => order.push(['state', app._clientSoundState.playing]),
+            pumpLocalConnection: () => order.push(['packet', app._clientSoundState.playing]) };
+        app._campaignWorld = { session: () => session }; app._canvas = {}; app._render = () => {}; app._startFrameLoop = () => {};
+        app._onFrame(16); assert.deepEqual(order, [['state', 1], ['packet', 0]]);
+        assert.equal(player.play(sound, 0, 0, 0, 0, 0), sound); assert.equal(scene.sources.length, 2);
+    } finally { app._clientSoundDevice?.dispose(); app._missionAudioAssets?.dispose(); }
+});
