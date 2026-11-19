@@ -53,8 +53,8 @@ test('한국어 Tutorial1 미션 메뉴와 브리핑을 표시한다', async ({ 
   await clickLabel(page, '확인'); expect(errors).toEqual([]);
 });
 
-// 아직 번역하지 않은 미션은 한국어 메뉴에서 시작해도 원본 영어 안내를 사용한다.
-test('한국어 메뉴에서 미번역 Tutorial2는 영어 안내로 대체한다', async ({ page }) => {
+// 두 번째 튜토리얼의 한국어 안내 페이지를 실제 미션에서 확인한다.
+test('한국어 Tutorial2의 안내 페이지를 표시한다', async ({ page }) => {
   const errors = []; page.on('pageerror', (error) => errors.push(error.message));
   await page.addInitScript(() => {
     localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } }));
@@ -68,5 +68,10 @@ test('한국어 메뉴에서 미번역 Tutorial2는 영어 안내로 대체한�
   await page.waitForFunction(() => window.netstorm?._campaignDisplayActive() && window.netstorm._clientGuide.current()?.runtime.gate.started === 1, null, { timeout: 50000 });
   await page.waitForFunction(() => Boolean(window.netstorm._mainMenu.dialog?.content), null, { timeout: 15000 });
   const brief = await page.evaluate(() => window.netstorm._mainMenu.dialog.content.styleText);
-  expect(brief).toMatch(/[A-Za-z]{4}/); expect(brief).not.toMatch(/[가-힣]/); expect(errors).toEqual([]);
+  expect(brief).toContain('건물'); expect(brief).toContain('사제');
+  await page.screenshot({ path: test.info().outputPath('korean-tutorial2.png') });
+  await clickLabel(page, '다음'); await page.waitForFunction(() => window.netstorm._gameData.currentTell === 'A1.');
+  const next = await page.evaluate(() => window.netstorm._mainMenu.dialog.content.styleText);
+  expect(next).toContain('신전'); expect(next).toContain('워크샾');
+  await page.screenshot({ path: test.info().outputPath('korean-tutorial2-next.png') }); expect(errors).toEqual([]);
 });
