@@ -62,4 +62,12 @@ test('한국어 미션 정보: 유닛 이름과 서식 토큰을 보존한다', 
     for (const [english, korean] of Object.entries(names)) assert.equal(table.translate(english), korean, english);
     assert.equal(table.translate('Production'), '생산'); assert.equal(table.translate('Owner'), '소유자'); assert.equal(table.translate('\nClass: ~i%s~.'), '\n분류: ~i%s~.');
     assert.equal(table.translate('Cost: ~i%d~[IfortGump.3]~.\n'), '비용: ~i%d~[IfortGump.3]~.\n');
+    // 사제 건설 메뉴의 번역은 원본 포맷 인자와 그림 명령 순서를 보존한다.
+    const priestPatterns = ['Construct Building\n', '%sConstruct~.', '%sTemple', 'Build %s%s', '~[Imana.%d] Build %s%s', ' for %s%d~[IfortGump.3]', 'Player %s\n'];
+    for (const pattern of priestPatterns) {
+        const translated = table.translate(pattern); assert.notEqual(translated, pattern, pattern);
+        assert.deepEqual(translated.match(/%[sd]/g) ?? [], pattern.match(/%[sd]/g) ?? [], pattern);
+        assert.deepEqual(translated.match(/~\[I[^\]]+\]/g) ?? [], pattern.match(/~\[I[^\]]+\]/g) ?? [], pattern);
+    }
+    assert.equal(table.translate('%sConstruct~.'), '%s건설~.'); assert.equal(table.translate('%sTemple'), '%s신전');
 });

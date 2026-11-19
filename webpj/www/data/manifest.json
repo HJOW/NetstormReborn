@@ -2191,8 +2191,8 @@
       "path": "d/xlat.korean",
       "source": "webpj/translations/xlat.korean",
       "bundle": "korean",
-      "size": 6856,
-      "sha256": "67fd1ad08092c3f1b86449c1589a6603512dea240b117a96b50c82e3ad0c12e3",
+      "size": 7925,
+      "sha256": "635bc301292f02b5896af9e2d70ff5630514bbf54a7243b82e8dca22997e01b9",
       "use": "한국어 UI 문자열 번역표(원본 xlat 형식, UTF-8): 메뉴·도움말 라벨과 미션 설치의 플레이어 이름"
     },
     {
@@ -2223,8 +2223,8 @@
       "path": "d/Tutorial2.korean",
       "source": "webpj/translations/Tutorial2.korean",
       "bundle": "korean",
-      "size": 8831,
-      "sha256": "4f27716444c9dfa968b791597875383888b6c863c926ee2f95b12cb022f858f5",
+      "size": 8830,
+      "sha256": "30d02c9f2de2874e4257071111a165a5c4aa008fd66355482ac2cc27d0f6ff9e",
       "use": "한국어 두 번째 튜토리얼 대본(UTF-8): 원본 실행 설정과 안내·미션 완료 명령 유지"
     },
     {

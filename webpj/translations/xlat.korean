@@ -833,3 +833,169 @@ Summons Spell
 ---
 소환 주문
 ===
+
+***
+Construct Building
+
+---
+건물 건설
+
+===
+
+***
+%sConstruct~.
+---
+%s건설~.
+===
+
+***
+%sTemple
+---
+%s신전
+===
+
+***
+Build %s%s
+---
+%s 건설%s
+===
+
+***
+~[Imana.%d] Build %s%s
+---
+~[Imana.%d] %s 건설%s
+===
+
+***
+ for %s%d~[IfortGump.3]
+---
+ (%s%d~[IfortGump.3])
+===
+
+***
+Build Level %d %s%s
+---
+%d단계 %s 건설%s
+===
+
+***
+Prayer
+
+---
+기도
+
+===
+
+***
+%sPray~.
+---
+%s기도~.
+===
+
+***
+Devastation
+---
+데버스테이션
+===
+
+***
+View Netstorm Knowledge
+---
+NetStorm 지식 보기
+===
+
+***
+Player
+---
+플레이어
+===
+
+***
+Player %s
+
+---
+플레이어 %s
+
+===
+
+***
+Priest: ~i%s~.
+
+---
+사제: ~i%s~.
+
+===
+
+***
+Dead
+---
+사망
+===
+
+***
+Captured
+---
+포획됨
+===
+
+***
+Alive
+---
+생존
+===
+
+***
+Allied with nobody.
+
+---
+동맹 없음.
+
+===
+
+***
+Allied with ~i%s~.
+---
+~i%s~.와 동맹
+===
+
+***
+(One-Way)
+---
+(일방적)
+===
+
+***
+Find Priest!
+---
+사제 찾기!
+===
+
+***
+Send Money
+---
+자금 보내기
+===
+
+***
+Request Alliance
+---
+동맹 요청
+===
+
+***
+Break Alliance
+---
+동맹 해제
+===
+
+***
+Ignore chat
+---
+채팅 무시
+===
+
+***
+Whisper To
+---
+귓속말
+===

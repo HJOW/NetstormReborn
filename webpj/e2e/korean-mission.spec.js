@@ -86,6 +86,7 @@ test('한국어 Tutorial2의 안내 페이지를 표시한다', async ({ page })
   await page.waitForFunction(() => { const app = window.netstorm, root = app._clientGump; for (let token = root.root().child; token; token = root.node(token).next) if (root.node(token).command === 26 && root.node(token).object) return true; return false; }, null, { timeout: 10000 });
   const rootMenu = await page.evaluate(() => { const root = window.netstorm._clientGump; for (let token = root.root().child; token; token = root.node(token).next) if (root.node(token).command === 26 && root.node(token).object) return token; return 0; });
   expect(await page.evaluate((token) => window.netstorm._clientGump.node(token).object, rootMenu)).toBe(priest.sid);
+  expect(await page.evaluate(() => [window.netstorm._resources.translate('%sConstruct~.'), window.netstorm._resources.translate('%sTemple')])).toEqual(['%s건설~.', '%s신전']);
   await page.screenshot({ path: test.info().outputPath('korean-priest-menu.png') });
   // 원본 메뉴 행을 실제 마우스로 눌러 건설 → 신전 → 윈드 신전을 선택한다.
   const clickMenuRow = async (token, index) => {
