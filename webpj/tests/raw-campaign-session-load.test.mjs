@@ -573,7 +573,7 @@ test('Netstorm Client 공통 수명: 실제 Session이 앱의 난수와 SP를 �
     app._initializeClientRuntime(false); const shared = app._campaignSharedServices(), sp = shared.spGlobals.store();
     assert.equal(sp.initialized, true); assert.equal(shared.spGlobals.randomGlobals(), shared.randomGlobals);
     sp.set(1, 0x42c80000); const before = [sp.offset, sp.get(1)];
-    const { s } = scene(shared);
+    const { s } = scene(shared, parseFort(entry.bytes, createFortTypes(game.typeTable)));
     try {
         assert.equal(s.randomGlobals(), shared.randomGlobals); assert.equal(s.spStorage(), sp);
         assert.equal(s.productionContext().sp, shared.spGlobals); assert.deepEqual([sp.offset, sp.get(1)], before);
@@ -589,14 +589,31 @@ test('Netstorm Client 공통 수명: 실제 Session 교체와 Player·Template �
     assert.equal(players.initialized(), true); assert.equal(players.records().length, 1620); assert.equal(players.boundCoreData(), core); assert.equal(core.players, players.records());
     assert.equal(gameplay.subscribers(), subscriber); subscriber.mySubscriber().value = 77;
     const headers = templates.headers(), firstBase = players.base();
-    const first = scene(shared).s;
+    const first = scene(shared, parseFort(entry.bytes, createFortTypes(game.typeTable))).s;
     try { assert.equal(first.playerRecords(), players.records()); assert.equal(core.players, players.records()); assert.notEqual(players.base(), firstBase); }
     finally { first.dispose(); }
     assert.equal(gameplay.borrowed(), false); assert.equal(templates.headers(), headers); assert.equal(subscriber.mySubscriber().value, 77);
-    const second = scene(shared).s;
+    const second = scene(shared, parseFort(entry.bytes, createFortTypes(game.typeTable))).s;
     try { assert.equal(second.playerRecords(), players.records()); assert.equal(core.players, players.records()); assert.equal(templates.headers(), headers); assert.equal(subscriber.mySubscriber().value, 77); }
     finally { second.dispose(); }
     assert.equal(gameplay.borrowed(), false); assert.equal(app._campaignSharedServices().playerRecords, players);
+});
+
+// 같은 앱 장기 월드 물리와 Kernel을 실제 Session이 빌리고 반납 뒤에도 소유자가 보존된다.
+test('Netstorm Client 월드 저장소: 실제 Session 적재와 반납', () => {
+    const app = new Netstorm(); app._initializeClientRuntime(false);
+    app._initializeClientWorldStorage(game, { read: forbidden('파일') });
+    assert.throws(() => app._initializeClientWorldStorage(game, { read: forbidden('파일') }), /중복/);
+    const shared = app._campaignSharedServices(), storage = shared.surfaceStorage, kernel = shared.processKernel;
+    assert.equal(storage.source, game); assert.equal(storage.authority, shared.gameplayGlobals.authority());
+    assert.equal(storage.processes.usesKernel(kernel), true); assert.equal(storage.borrowed, false);
+    const { s } = scene(shared, parseFort(entry.bytes, createFortTypes(game.typeTable)));
+    try {
+        assert.equal(s.world().storage, storage); assert.equal(s.core().kernel, kernel); assert.equal(s.core().pool, storage.pool);
+        s.load(); assert.equal(s.loaded, true); assert.equal(storage.borrowed, true); assert.ok(s.world().objects().length > 1000);
+    } finally { s.dispose(); }
+    assert.equal(storage.borrowed, false); assert.equal(app._campaignSharedServices().surfaceStorage, storage);
+    assert.equal(app._campaignSharedServices().processKernel, kernel);
 });
 
 // 실제 월드 전체를 관측하고 Session이 초기화한 SP와 현재 원문·장부를 바꾸지 않는다.

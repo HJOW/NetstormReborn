@@ -40,6 +40,12 @@ import { ClientCoreDataGlobals } from './core/client-core-data-globals.js';
 import { ClientPlayerRecords } from './core/client-player-records.js';
 import { initializeClientPlayerRecords } from './core/client-player-runtime.js';
 import { CampaignTemplateStorage } from './core/campaign-template-storage.js';
+import { loadClientWorldAssets } from './core/client-world-assets.js';
+import { CampaignSessionAssets } from './core/raw-campaign-session-owners.js';
+import { PriestPlacementAssets } from './core/priest-placement-assets.js';
+import { RawSurfaceStorage } from './core/raw-surface-storage.js';
+import { Kernel } from './core/kernel.js';
+import { bindClientKernelDiagnostics } from './core/client-diagnostics.js';
 import { ClientTimeSource } from './core/client-time-source.js';
 import { resetGameStorage } from './platform/reset-storage.js';
 import { createCanvasGlyphRasterizer } from './platform/glyph-rasterizer.js';
@@ -435,6 +441,8 @@ export class Netstorm {
         this._clientRandom = null; this._clientSp = null;
         // Client 공통 Player·Core·Template과 Subscriber는 Session보다 오래 산다.
         this._clientSubscriber = null; this._clientGameplay = null; this._clientCoreData = null; this._clientPlayers = null; this._clientTemplates = null;
+        // 자산 적재 뒤 구성해 Session보다 오래 유지하는 월드 물리와 Kernel이다.
+        this._gameAssets = null; this._surfaceStorage = null; this._clientKernel = null;
         // init 때 저장해 둔 루트 인라인 스타일이다. destroy 가 되돌린다.
         this._savedRootStyle = null;
         // 비동기 로딩 결과가 오래된 것인지 가리는 세대 번호다. destroy/재시도 때마다 올라간다.
@@ -645,13 +653,28 @@ export class Netstorm {
         this._clientSubscriber = subscriber; this._clientGameplay = gameplay; this._clientCoreData = coreData; this._clientPlayers = players; this._clientTemplates = templates;
     }
 
+    // 실제 게임 자산에서 장기 물리를 만들고 같은 Client 권한·시각·Kernel과 진단을 연결한다.
+    _initializeClientWorldStorage(game, files) {
+        if (this._surfaceStorage || !this._clientGameplay || !this._gameClock) throw new Error('Client 월드 저장소의 중복 또는 공통 수명 누락');
+        const assets = new CampaignSessionAssets(game, files), metadata = new PriestPlacementAssets(game.typeTable, game.shapes, assets.loadedTypes);
+        const gameplay = this._clientGameplay, clock = this._gameClock;
+        const storage = new RawSurfaceStorage(assets.types, assets.frames, metadata.shapes, { source: game, authority: gameplay.authority(), gameAux: gameplay.gameAux() });
+        const kernel = new Kernel(); storage.processes.bindDevices(kernel, clock.time());
+        storage.bindChecking(() => gameplay.aiDebug().checking().value);
+        storage.bindDisplayDiagnostics(gameplay.aiDebug().assertionDetail(), (expression, file, line) => console.error(`원본 표시 진단: ${file}:${line} ${expression}`));
+        storage.bindGraphClock(() => clock.gameSeconds()); bindClientKernelDiagnostics(kernel, storage, (line) => console.info(line));
+        this._gameAssets = game; this._surfaceStorage = storage; this._clientKernel = kernel;
+    }
+
     // 미션 조립은 현재 Client의 난수·SP·Player·Core·Template·Subscriber와 시계를 대여한다. 이 호출은 Session을 생성하지 않는다.
     _campaignSharedServices() {
         const clock = this._gameClock, random = this._clientRandom, sp = this._clientSp, local = this._clientLocal;
         const subscriber = this._clientSubscriber, gameplay = this._clientGameplay, coreData = this._clientCoreData, players = this._clientPlayers, templates = this._clientTemplates;
         if (!clock || !random || !sp || !local || !subscriber || !gameplay || !coreData || !players || !templates) throw new Error('캠페인의 실제 Client 공통 수명 미설치');
+        const surface = this._surfaceStorage, kernel = this._clientKernel;
         return { randomGlobals: random, spGlobals: sp, localStateGlobals: local, subscriberGlobals: subscriber, gameplayGlobals: gameplay, coreDataGlobals: coreData,
-            playerRecords: players, templateStorage: templates, unixSeconds: () => clock.unixSeconds(), frameTime: () => clock.time(), paused: () => clock.paused() };
+            playerRecords: players, templateStorage: templates, ...(surface && kernel ? { surfaceStorage: surface, processKernel: kernel } : {}),
+            unixSeconds: () => clock.unixSeconds(), frameTime: () => clock.time(), paused: () => clock.paused() };
     }
 
     // 게임을 정리한다. 프레임 예약·이벤트·관찰자·오디오·진행 중 로딩을 모두 해제하고 Canvas 를 제거한다.
@@ -671,9 +694,12 @@ export class Netstorm {
         this._terrainPreview = null;
         this._settings = null;
         this._progress = null;
+        // 장기 Process 소유자를 TYPE·Kernel과 시계가 살아 있는 동안 반납한다.
+        this._surfaceStorage?.dispose();
         this._gameClock = null; this._clientLocal = null; this._hiddenGamePause = false;
         this._clientSp = null; this._clientRandom = null;
         this._clientTemplates = null; this._clientPlayers = null; this._clientCoreData = null; this._clientGameplay = null; this._clientSubscriber = null;
+        this._clientKernel = null; this._surfaceStorage = null; this._gameAssets = null;
         if (this._audio) {
             // 음악을 멈추고 문맥을 닫는다. 닫기에 실패해도 정리를 막지 않는다.
             this._audio.close();
@@ -764,6 +790,11 @@ export class Netstorm {
                 this._presenter?.setPalette(this._resources.palette.rgb);
                 this._applyCursor();
                 this._startMusicDownload(loader);
+            }
+            // 같은 자산이 재사용되는 재시작에서도 Client 장기 물리는 새로 구성한다.
+            if (!this._surfaceStorage) {
+                const palettePath = this._gameData.pathSpec('GamePalSpec', this._gameData.pathSpec('fortPal'));
+                this._initializeClientWorldStorage(loadClientWorldAssets(this._gameData.files, palettePath), this._gameData.files);
             }
             await this.options.prepare(this);
         } catch (error) {
