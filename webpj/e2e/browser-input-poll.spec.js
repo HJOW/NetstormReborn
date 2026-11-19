@@ -43,3 +43,14 @@ test('브라우저 버튼 사건의 원본 큐 예약', async ({ page }) => {
   expect(events[0].code).toBe(0x00010000); expect(events[1].code).toBe(0x80010000);
   expect(events[0].x).toBe(events[1].x); expect(events[0].y).toBe(events[1].y); expect(events[2]).toBe(true);
 });
+
+// 실제 Canvas의 방향키 누름과 뗌이 원본 가상 키 코드로 예약된다.
+test('브라우저 비문자 키의 원본 큐 예약', async ({ page }) => {
+  await page.goto('/'); await page.waitForFunction(() => window.netstorm?.state === 'clickToStart');
+  const canvas = page.locator('canvas'), bounds = await canvas.boundingBox();
+  await page.mouse.move(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2); await canvas.focus();
+  await page.evaluate(() => { window.netstorm._clientNativeInputEnabled = true; });
+  await page.keyboard.down('ArrowRight'); await page.keyboard.up('ArrowRight');
+  const codes = await page.evaluate(() => { const queue = window.netstorm._clientInputQueue; return [queue.pop(false).code, queue.pop(false).code, queue.empty]; });
+  expect(codes).toEqual([0x00270000, 0x80270000, true]);
+});
