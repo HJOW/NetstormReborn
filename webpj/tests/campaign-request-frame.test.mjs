@@ -121,10 +121,14 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         const outcome = app._campaignGameplayServices().missionOutcome;
         assert.equal(outcome.section('A.'), true); assert.equal(outcome.tellBlocked(), true); app._mainMenu.setDialog(null);
         assert.equal(outcome.tellBlocked(), false); assert.equal(outcome.section('없는 안내'), false); assert.equal(outcome.demo(), runtime.gate.demo);
-        // 같은 앱 프레임에서 실제 A 안내가 열리고 닫은 뒤 7프레임에 게임 시계가 재개된다.
-        for (let frame = 0; frame < 15 && !app._mainMenu.dialog; frame += 1) app._onFrame(200 + frame * 16);
-        assert.ok(app._mainMenu.dialog); assert.equal(runtime.gate.scriptPaused, 1); assert.equal(app._gameClock.paused(), true);
-        app._mainMenu.setDialog(null); for (let frame = 0; frame < 7; frame += 1) app._onFrame(500 + frame * 16);
-        assert.equal(runtime.gate.scriptPaused, 0); assert.equal(app._gameClock.paused(), false);
+        // 실제 앱의 같은 Kernel은 안내와 정지 중에도 프레임마다 정확히 한 번 실행된다.
+        let visits = 0; const probe = app._clientKernel.add({ runFrame: () => { visits += 1; } });
+        try {
+            for (let frame = 0; frame < 15 && !app._mainMenu.dialog; frame += 1) { const before = visits; app._onFrame(200 + frame * 16); assert.equal(visits, before + 1); }
+            assert.ok(app._mainMenu.dialog); assert.equal(runtime.gate.scriptPaused, 1); assert.equal(app._gameClock.paused(), true);
+            const pausedVisits = visits; app._onFrame(480); assert.equal(visits, pausedVisits + 1);
+            app._mainMenu.setDialog(null); const beforeResume = visits; for (let frame = 0; frame < 7; frame += 1) app._onFrame(500 + frame * 16);
+            assert.equal(visits, beforeResume + 7); assert.equal(runtime.gate.scriptPaused, 0); assert.equal(app._gameClock.paused(), false);
+        } finally { app._clientKernel.remove(probe); }
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); app._clientSoundDevice.dispose(); app._missionAudioAssets.dispose(); }
 });

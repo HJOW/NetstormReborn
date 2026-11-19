@@ -1189,6 +1189,13 @@ export class Netstorm {
         runtime.tutorial = tutorial; return tutorial;
     }
 
+    // 현재 미션 표면을 준비하고 같은 Client Kernel을 한 번 실행한 뒤 자산 보기를 갱신한다.
+    _runCampaignKernelFrame() {
+        const world = this._campaignWorld, kernel = this._clientKernel;
+        if (!world || !kernel || world.connecting || world.session().connectionCallbackActive()) throw new Error('미션 Kernel 프레임의 현재 World·Kernel 수명 오류');
+        world.prepareKernelFrame(); kernel.runFrame(); world.finishKernelFrame();
+    }
+
     // 게임을 정리한다. 프레임 예약·이벤트·관찰자·오디오·진행 중 로딩을 모두 해제하고 Canvas 를 제거한다.
     // 여러 번 호출해도 안전하며, 이후 init 으로 다시 시작할 수 있다. 처음 골격의 destroy(div) 형태로 불러도 인자는 무시한다.
     // init 도중 실패한 반쪽 상태도 이 함수가 정리하므로 상태 이름이 아니라 루트 요소의 유무로 판단한다.
@@ -2430,6 +2437,8 @@ export class Netstorm {
             // 스크롤·창 열림/닫힘·키 입력으로 포인터 아래 내용이 바뀌었을 수 있으므로 커서를 다시 고른다(원본은 매 포인터 갱신마다 선택). (2026-10-31 WB03-L)
             this._applyCursor();
         }
+        // 원본 Kernel 단계에서 같은 현재 World를 준비하고 단일 Client Kernel을 실행한다.
+        if (this._state === AppState.MAIN_MENU && this._campaignWorld && !this._campaignWorld.connecting && !this._campaignWorld.session().connectionCallbackActive()) this._runCampaignKernelFrame();
         this._render(now);
         this._startFrameLoop();
     }
