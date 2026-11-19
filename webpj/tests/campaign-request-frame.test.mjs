@@ -21,6 +21,7 @@ import { RawContainedFinder } from '../www/core/raw-contained-finder.js';
 import { ClientInventoryGrid } from '../www/ui/client-inventory-grid.js';
 import { ClientInventoryItem } from '../www/ui/client-inventory-item.js';
 import { ClientImageGump } from '../www/ui/client-image-gump.js';
+import { ClientTextGump } from '../www/ui/client-text-gump.js';
 import { PriestPlacementAssets } from '../www/core/priest-placement-assets.js';
 import { RawCanonPixelShape } from '../www/core/raw-canon-pixel-shape.js';
 import { GumpDrawState, GumpPixelTarget, setGumpDrawClip } from '../www/render/gump-draw.js';
@@ -339,5 +340,10 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         assert.deepEqual(selectedItems, [[firstItem.content, firstItem.serial]]); assert.equal(itemState.lastType, session.core().bridgeState.bridgeType);
         assert.equal(gump.handle(gridToken, 0x0200003f, 0, 0), 1); gridState.cursorPoint.x = 322; assert.equal(gump.handle(gridToken, 0x0200003f, 0, 0), 0);
         gump.remove(gridToken); gump.remove(panel);
+        // 실제 Client 글꼴과 TextGump 스타일 체인을 같은 Gump 픽셀에 출력한다.
+        const text = new ClientTextGump(gump, app._resources.fonts, () => 0), textToken = text.allocate();
+        text.construct(textToken, 0, 0, 0, 241); text.style(textToken, 'Storm Power'); text.fit(textToken); gump.attach(textToken, 350, 350);
+        const textPixels = new Uint8Array(1366 * 768).fill(255); gump.draw(textToken, draw, new GumpPixelTarget(textPixels, 1366, 768, draw));
+        assert.ok(textPixels.some((value) => value !== 255)); text.clear(textToken); assert.equal(gump.node(textToken).head, 0); gump.remove(textToken);
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); app._clientSoundDevice.dispose(); app._missionAudioAssets.dispose(); }
 });
