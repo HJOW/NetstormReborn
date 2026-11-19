@@ -43,6 +43,13 @@ test('게임 시계는 앱 프레임과 같은 수명으로 생성되고 재시�
     return result;
   });
   expect(resized).toEqual([1024, 768, true, true, true, true, 1228, 768, true, 1366, 768, true]);
+  // 실제 설정 쓰기는 같은 구름 전역을 즉시 갱신하고 검사 뒤 원래 값을 복구한다.
+  const cloudSpeed = await page.evaluate(() => {
+    const app = window.netstorm, cloud = app._clientKencloud, previous = cloud.value(1).value;
+    app._gameData.setInt('cloudSpeed', 7); const result = cloud.value(1).value;
+    app._gameData.set('cloudSpeed', previous); return result;
+  });
+  expect(cloudSpeed).toBe(7);
   // 준비는 실제 공개 자산에서 스크립트가 지정한 Fort를 읽고 사용 뒤 등록 객체를 반납한다.
   const mission = await page.evaluate(() => {
     const prepared = window.netstorm._prepareCampaignMission('Tutorial1');

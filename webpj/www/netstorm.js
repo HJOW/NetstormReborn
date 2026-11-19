@@ -686,6 +686,11 @@ export class Netstorm {
         this._clientSubscriber = subscriber; this._clientGameplay = gameplay; this._clientCoreData = coreData; this._clientPlayers = players; this._clientTemplates = templates; this._clientFort = fort;
     }
 
+    // 현재 설정에서 구름 전역 옵션을 읽는다. 설정이나 Client가 아직 없으면 실제 초기화 시 다시 적용한다.
+    _syncClientCloudOptions() {
+        if (this._clientKencloud && this._gameData) this._clientKencloud.readOptions(this._gameData);
+    }
+
     // 실제 게임 자산에서 장기 물리를 만들고 같은 Client 권한·시각·Kernel과 진단을 연결한다.
     _initializeClientWorldStorage(game, files) {
         if (this._surfaceStorage || !this._clientGameplay || !this._gameClock) throw new Error('Client 월드 저장소의 중복 또는 공통 수명 누락');
@@ -1039,6 +1044,7 @@ export class Netstorm {
                 const palettePath = this._gameData.pathSpec('GamePalSpec', this._gameData.pathSpec('fortPal'));
                 this._initializeClientWorldStorage(loadClientWorldAssets(this._gameData.files, palettePath), this._gameData.files);
             }
+            this._syncClientCloudOptions();
             if (!this._clientPaletteScreen) this._initializeClientPalette(this._gameAssets);
             if (!this._clientColorSort.mapsReady) this._initializeClientPaletteCache(this._gameAssets);
             if (!this._clientGuide) this._initializeClientGuide();
@@ -1245,11 +1251,13 @@ export class Netstorm {
         if (key === 'sound' || key === 'music' || key === 'soundVolume' || key === 'musicVolume') this._applySettings();
         const value = this._settings?.get(key);
         if (value !== undefined) this._gameData?.set(key, value, { silent: true });
+        this._syncClientCloudOptions();
     }
 
     // 게임 데이터 설정 층에 쓴 값을 저장소로 옮긴다(원본에서는 메인 루프가 변경 표시를 보고 options.cfg 를 저장한다). 진행 값(`Done*`)은 진행 저장소에,
     // 설정 키(대소문자 무시)는 설정 저장소에 넣어 로컬 저장소에 바로 저장한다. 그 밖의 값(`global.` 실행 중 값 등)은 저장하지 않는다. (2026-10-30 WB03-H)
     _onConfigWrite(key, value) {
+        this._syncClientCloudOptions();
         if (isProgressKey(key)) {
             this._progress?.set(key, value);
             return;
@@ -1265,6 +1273,7 @@ export class Netstorm {
         if (!data || !this._settings || !this._progress) return;
         // 설정과 진행 값을 하나씩 옮긴다.
         for (const [key, value] of Object.entries({ ...this._settings.snapshot(), ...this._progress.snapshot() })) data.set(key, value, { silent: true });
+        this._syncClientCloudOptions();
     }
 
     // 현재 설정(소리 켜짐·음악 켜짐·음량 단계)을 재생기에 적용한다. 음악을 다시 켠 경우 메인 메뉴 곡을 이어 재생한다. (2026-10-29 WB03-F)
