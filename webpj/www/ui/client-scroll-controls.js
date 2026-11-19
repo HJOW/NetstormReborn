@@ -43,6 +43,8 @@ export class ClientScrollControls {
     #delete(token, flags) { const result = this.#widgets.deleteScalar(token, flags); if (flags & 1) this.#owned.delete(token); return result; }
     // 실제 화살표·배경·손잡이와 값 초기화를 기존 생성기에 위임한다.
     construct(token, width, height, type, frame) { return this.#widgets.construct(token, width, height, type, frame); }
+    // 같은 실제 배경 생성기를 TextEntry가 빌린다.
+    background() { return this.#stones.background(); }
     // 같은 실제 Slider 값 처리기를 TextEntry가 빌린다.
     backend() { return this.#slider; }
     // 현재 파생 노드를 같은 Client 저장소에서 조회한다.
