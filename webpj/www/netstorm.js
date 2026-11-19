@@ -59,7 +59,7 @@ import { ClientCampaignGuide } from './core/client-campaign-guide.js';
 import { ClientFortGlobals } from './core/client-fort-globals.js';
 import { ClientFortCurrentName } from './core/client-fort-current-name.js';
 import { refreshWindowTitle } from './core/window-title.js';
-import { decodeWindows1252 } from './assets/text-encoding.js';
+import { decodeWindows1252, encodeWindows1252 } from './assets/text-encoding.js';
 import { displayTextCodec } from './assets/display-text.js';
 import { CampaignSessionAssets } from './core/raw-campaign-session-owners.js';
 import { PriestPlacementAssets } from './core/priest-placement-assets.js';
@@ -775,6 +775,29 @@ export class Netstorm {
         screen.setClip(0, 0, width, height); this._clientPaletteScreen = screen;
     }
 
+    // 같은 Client의 구름·파일·Screen·최초 색표를 사용해 원본 팔레트 전환 부모를 실행한다.
+    _changeClientFortPalette(name) {
+        const data = this._gameData, cloud = this._clientKencloud, random = this._clientRandom, colors = this._clientColorSort;
+        if (typeof name !== 'string' || !data || !cloud || !random || !this._clientPaletteScreen || !colors?.mapsReady) throw new Error('Client 팔레트 전환의 실제 수명 누락');
+        const encoded = encodeWindows1252(name), argument = new Uint8Array(encoded.length + 1); argument.set(encoded);
+        cloud.transition(argument, data.files, data, random.game, {
+            log: (level, message) => console.info(`Palette ${level} ${message}`),
+            // 현재 설정 경로를 실제 VFS에서 읽고 Screen의 지우기 관문을 통과한다.
+            loadPalette: (path, clear) => {
+                const end = path?.indexOf(0) ?? -1; if (end < 0) throw new RangeError('팔레트 파일 경로 NUL 누락');
+                const name = decodeWindows1252(path.subarray(0, end)), bytes = data.files.read(name);
+                if (!bytes) throw new Error(`팔레트 파일 누락: ${name}`);
+                this._clientPaletteScreen.loadPalette(GamePalette.parse(bytes), clear);
+            },
+            // 같은 최초 색으로 9표를 다시 만들고 현재 World 표시기에도 실제 Screen 색을 전한다.
+            buildMaps: () => {
+                const screen = this._clientPaletteScreen; colors.rebuild(screen.colors().basic[1]);
+                this._campaignWorld?.setPalette(screen.palette(), colors.logical, colors.maps);
+                if (this._mainMenu) this._mainMenu.dirty = true; this._displayDirty = true;
+            },
+        });
+    }
+
     // 같은 Client 설정·Player·월드 저장소에 Guide 수명을 연결한다.
     _initializeClientGuide() {
         if (this._clientGuide || !this._gameData || !this._surfaceStorage || !this._clientGameplay || !this._clientPlayers) throw new Error('Client Guide의 중복 또는 공통 수명 누락');
@@ -863,6 +886,8 @@ export class Netstorm {
         return {
             // State7은 실제 화면 크기와 공유 카메라 전역을 다시 초기화한다.
             initializeRenderer: () => this._initializeClientRendererView(),
+            // State7에서 현재 battlePal을 조회해 같은 Client 팔레트 전환을 실행한다.
+            battlePalette: () => this._changeClientFortPalette(this._gameData.pathSpec('battlePal')),
             // 서버 포트는 공통 전역을, 다른 정수는 현재 설정과 기본값을 사용한다.
             configInt: (key, fallback) => {
                 if (!this._gameData || !this._clientGameplay) throw new Error('로그인 설정의 실제 Client 수명 누락');

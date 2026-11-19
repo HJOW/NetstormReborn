@@ -63,6 +63,8 @@ import { RawCampaignTutorialOneBindings } from '../www/core/raw-campaign-tutoria
 import { CampaignGameWorld } from '../www/core/campaign-game-world.js';
 import { makeCampaignMissionStartEffects, bindCampaignAiClientServices, bindCampaignClientInputServices, bindCampaignOwnershipTheme, bindCampaignLoginProgressServices, prepareCampaignMissionStarting, captureCampaignMissionStarting, runCampaignMissionStarting } from '../www/core/campaign-client-services.js';
 import { RawCampaignFactoryDisplay } from '../www/render/raw-campaign-factory-display.js';
+import { IndexedPresenter } from '../www/render/presenter.js';
+import { IndexedSurface } from '../www/render/indexed-surface.js';
 import { projectCameraCoordinates } from '../www/render/camera-view.js';
 import { cursorDisplayLogicalPalette } from '../www/render/raw-campaign-cursor-display.js';
 import { buildPaletteColorTable } from '../www/core/palette-colors.js';
@@ -774,7 +776,7 @@ test('Netstorm Client World: 실제 Guide Fort 설치와 로컬 로그인 수명
     const data = GameData.build({ files: new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)]]), language: 'english' });
     app._gameData = data; app._root = { ownerDocument: { title: 'before' } }; app._initializeClientWorldStorage(game, data.files); app._initializeClientGuide();
     const guide = app._clientGuide; let world;
-    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {} };
+    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {}, battlePalette: undefined };
     app._layout = { logicalWidth: 1024, logicalHeight: 768 }; app._initializeClientRendererView();
     const services = { localLogin, soundNames: new SoundList(), carrierRequest: forbidden('전송'),
         cameraCommit: (context) => { const pixels = context.camera.target().pixels; context.camera.applyPixelsToRendererAndSnapshot(pixels[0], pixels[1]); },
@@ -800,12 +802,12 @@ test('Netstorm Client World: 실제 Guide Fort 설치와 로컬 로그인 수명
 // 실제 앱 Client State7 부모와 State8 접속이 같은 Guide·World·연결표를 사용한다.
 test('Netstorm Client World: 실제 앱 State7 부모와 State8 로컬 로그인', () => {
     const app = new Netstorm(); app._initializeClientRuntime(false);
-    const data = GameData.build({ files: new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)]]), language: 'english' });
+    const data = GameData.build({ files: new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)], ['d/Gifcloud.gif', readData('d/Gifcloud.gif')], ['d/GIFCLOUD.COL', readData('d/GIFCLOUD.COL')]]), language: 'english' });
     const xlat = new XlatTable(fs.readFileSync(path.join(REPO_ROOT, 'webpj/translations/xlat.korean'), 'utf8'));
     app._gameData = data; app._root = { ownerDocument: { title: 'before' } }; app._resources = { translate: (text) => xlat.translate(text) }; app._initializeClientWorldStorage(game, data.files); app._initializeClientGuide();
     const guide = app._clientGuide; let world;
-    const localLogin = { uiMode: () => {}, startingProgress: () => {}, battlePalette: () => {}, closeProgress: () => {} };
-    app._layout = { logicalWidth: 1024, logicalHeight: 768 };
+    const localLogin = { uiMode: () => {}, startingProgress: () => {}, closeProgress: () => {} };
+    app._layout = { logicalWidth: 1024, logicalHeight: 768, visible: false }; app._surface = new IndexedSurface(1024, 768); app._presenter = new IndexedPresenter(null); app._syncClientCloudOptions();
     app._initializeClientPalette(game); app._initializeClientPaletteCache(game);
     const sharedColors = app._campaignSharedServices();
     assert.equal(sharedColors.colorSortInput, app._clientColorSort); assert.equal(sharedColors.ownerColorTables, app._clientColorSort.ownerTables);
@@ -821,6 +823,7 @@ test('Netstorm Client World: 실제 앱 State7 부모와 State8 로컬 로그인
         assert.deepEqual(guide.pending().take(), { command: 'LoadMissionFort', argument: 'BridgeTheGap' });
         app._runCampaignState7(services, { x: 1024, y: 768 }); world = app._campaignWorld;
         const session = world.session(), state = app._clientLocal.state();
+        assert.ok(app._clientKencloud.globals().cache); assert.equal(new TextDecoder().decode(app._clientKencloud.paletteName().subarray(0, 8)), 'gifcloud');
         assert.equal(state.phase[0], 8); assert.equal(state.next[0], 9); assert.equal(request.consumed, true); assert.equal(world.connecting, true);
         assert.deepEqual([...app._clientGameplay.camera().target().limits], [3072, 2048]);
         assert.equal(app._clientKencloud.worldRedraw().value, 1); assert.equal(app._clientGameplay.mapRevision().value, 1);

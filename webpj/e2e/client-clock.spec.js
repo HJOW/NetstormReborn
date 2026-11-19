@@ -50,6 +50,16 @@ test('게임 시계는 앱 프레임과 같은 수명으로 생성되고 재시�
     app._gameData.set('cloudSpeed', previous); return result;
   });
   expect(cloudSpeed).toBe(7);
+  // 실제 구름·파일·Screen 팔레트 전환과 같은 이름의 자연 반환을 브라우저에서 확인한다.
+  const battlePalette = await page.evaluate(() => {
+    const app = window.netstorm, screen = app._clientPaletteScreen;
+    app._surface.fill(9); screen.lock().fill(9); screen.unlock();
+    app._changeClientFortPalette(app._gameData.pathSpec('battlePal'));
+    const cache = app._clientKencloud.globals().cache, cleared = app._surface.pixels[0];
+    app._surface.fill(6); app._changeClientFortPalette('GIFCLOUD');
+    return [Boolean(cache), cleared, app._clientKencloud.globals().cache === cache, app._surface.pixels[0]];
+  });
+  expect(battlePalette).toEqual([true, 0, true, 6]);
   // 준비는 실제 공개 자산에서 스크립트가 지정한 Fort를 읽고 사용 뒤 등록 객체를 반납한다.
   const mission = await page.evaluate(() => {
     const prepared = window.netstorm._prepareCampaignMission('Tutorial1');
