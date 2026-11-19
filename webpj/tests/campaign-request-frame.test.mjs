@@ -116,6 +116,11 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         assert.equal(session.localConnectionReady(), true); assert.equal(session.world().storage, app._surfaceStorage);
         const runtime = guide.current().runtime; assert.equal(app._campaignWorld.connecting, false);
         assert.ok(runtime.start && runtime.tutorial); assert.equal(runtime.state.sequence, 4); assert.equal(runtime.gate.started, 1);
+        // 실제 경로 발소리는 같은 Client 재생기에 원본 위치와 반복·우선순위를 전달한다.
+        const player = app._clientSoundPlayer, originalPlay = player.playOnceAt, steps = [];
+        try { player.playOnceAt = (...args) => steps.push(args); app._campaignGameplayServices().motion.path.stepSound(42, 10.5, 20.25, 7); }
+        finally { player.playOnceAt = originalPlay; }
+        assert.deepEqual(steps, [[10.5, 20.25, 7, 0, 0]]);
         // 미구현 사건을 추월하지 않고 맨 앞 이동 통지만 현재 Guide와 Gump에 전달한다.
         const inputQueue = app._clientInputQueue; inputQueue.pushCommand(0x02000050, 1, 2); inputQueue.pushCommand(0x02000044, 3, 4);
         app._runCampaignInputFrame(); assert.equal(inputQueue.size, 2); assert.equal(inputQueue.pop(false).code, 0x02000050);

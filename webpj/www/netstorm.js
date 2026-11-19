@@ -1021,6 +1021,8 @@ export class Netstorm {
         services.sound = { wallSeconds: () => this._gameClock.wallSeconds(), play: (...args) => player().play(...args),
             playOnceAt: (...args) => player().playOnceAt(...args), playLoopAt: (...args) => player().playLoopAt(...args),
             stop: (...args) => player().stop(...args), isPlaying: (...args) => player().isPlaying(...args) };
+        // 이동 경로의 발소리는 같은 Client 위치 음향으로 원본 반복·우선순위 0을 전달한다.
+        services.motion = { path: { stepSound: (_sid, x, y, sound) => player().playOnceAt(x, y, sound, 0, 0) } };
         services.assets.postPop.playImpactSound = (sound) => player().play(sound, 0, 0, 0, 0, 0);
         // Session 초기 카메라 요청을 같은 앱의 실제 화면·변경 표·Gump에 적용한다.
         services.cameraCommit = (context) => this._commitCampaignCamera(context);
