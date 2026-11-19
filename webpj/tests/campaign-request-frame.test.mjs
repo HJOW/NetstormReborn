@@ -124,5 +124,11 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         const outcome = app._campaignGameplayServices().missionOutcome;
         assert.equal(outcome.section('A.'), true); assert.equal(outcome.tellBlocked(), true); app._mainMenu.setDialog(null);
         assert.equal(outcome.tellBlocked(), false); assert.equal(outcome.section('없는 안내'), false); assert.equal(outcome.demo(), runtime.gate.demo);
+        const tutorial = app._prepareCampaignTutorial(); assert.equal(runtime.tutorial, tutorial); assert.throws(() => app._prepareCampaignTutorial(), /수명 오류/);
+        // 같은 게이트의 10프레임 뒤 실제 A 안내가 열리고, 닫은 뒤 7프레임에 게임 시계가 재개된다.
+        for (let frame = 0; frame < 10; frame += 1) tutorial.frame();
+        assert.ok(app._mainMenu.dialog); assert.equal(runtime.gate.scriptPaused, 1); assert.equal(app._gameClock.paused(), true);
+        app._mainMenu.setDialog(null); for (let frame = 0; frame < 7; frame += 1) tutorial.frame();
+        assert.equal(runtime.gate.scriptPaused, 0); assert.equal(app._gameClock.paused(), false);
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); app._clientSoundDevice.dispose(); app._missionAudioAssets.dispose(); }
 });

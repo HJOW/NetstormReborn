@@ -57,6 +57,8 @@ import { currentAllocationBytes } from './core/current-allocation-bytes.js';
 import { bindCampaignAiClientServices, bindCampaignClientInputServices, bindCampaignOwnershipTheme, bindCampaignProductionRefresh, captureCampaignMissionStarting, makeCampaignMissionStartEffects, runCampaignMissionStarting } from './core/campaign-client-services.js';
 import { CHAT_RECORD_BYTES, RawChatChannels } from './core/raw-chat-channels.js';
 import { RawCampaignMissionStartBindings } from './core/raw-campaign-mission-start-bindings.js';
+import { RawCampaignTutorialOneBindings } from './core/raw-campaign-tutorial-one-bindings.js';
+import { MISSION_RELOAD_COMMAND } from './core/mission-guide-input.js';
 import { ClientRandomGlobals } from './core/random.js';
 import { ClientSpGlobals } from './core/client-sp-globals.js';
 import { ClientSubscriberGlobals } from './core/client-subscriber-globals.js';
@@ -1167,6 +1169,24 @@ export class Netstorm {
         const session = world.session(), runtime = current.runtime;
         const start = new RawCampaignMissionStartBindings(session, current.script, runtime.gate, runtime.state, session.missionStartSettings(), session.missionAiSettings(), effects);
         runtime.start = start; return start;
+    }
+
+    // 같은 로그인 Session과 Start에 현재 안내·시계·입력·선택 장치를 연결한다.
+    _prepareCampaignTutorial() {
+        const world = this._campaignWorld, current = this._clientGuide?.current(), gump = this._clientGump, clock = this._gameClock;
+        if (!world || !current?.runtime.guided || !current.runtime.start || current.runtime.tutorial || !gump || !clock || !world.session().localConnectionReady() || this._campaignWorldMissionToken !== current.runtime.saveToken) throw new Error('Tutorial의 현재 World·Guide·Start 수명 오류');
+        const session = world.session(), runtime = current.runtime;
+        const tell = (section) => current.script.section(section) !== null && this._openTell(section);
+        const effects = {
+            frame: { gameSeconds: () => clock.time().game, paused: () => clock.paused(), dialogsClear: () => !this._mainMenu?.dialog,
+                knowledgeOpen: () => session.cursorDropSettings().lockDepth === 0,
+                guideOpen: () => Boolean(this._clientHtml.window.instances || this._mainMenu?.dialog), blockingGumpOpen: () => gump.blockingPopups(),
+                endDemo: () => this._clientInputQueue.push(MISSION_RELOAD_COMMAND, 0, 0), pause: () => clock.pushGamePause(), resume: () => clock.popGamePause() },
+            tell, closeTransient: () => this._closeCampaignPopups(), selected: () => world.selected(),
+            resetSelection: () => world.resetSelection(), clearSelection: () => world.clearSelection(),
+        };
+        const tutorial = new RawCampaignTutorialOneBindings(session, current.script, runtime.start, runtime.gate, runtime.state, effects);
+        runtime.tutorial = tutorial; return tutorial;
     }
 
     // 게임을 정리한다. 프레임 예약·이벤트·관찰자·오디오·진행 중 로딩을 모두 해제하고 Canvas 를 제거한다.
