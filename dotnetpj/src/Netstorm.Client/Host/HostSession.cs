@@ -2258,6 +2258,9 @@ public sealed partial class HostSession
         // Player 정기 분배를 장식 분배보다 나중에 둔다. Player 사슬이 장식 사슬을 감싸므로 해제 순서는 Player가 먼저다.
         // 2026-11-19 0.643에서 R4-4 Player 정기용으로 추가했다. 화신 장치는 BuildPlayerWorldHooks에서 먼저 연결된다.
         BuildPlayerRegularDevices(types);
+        // AI 런타임 장치를 Player 정기 분배보다 나중에 둔다. 통지·등록 본체는 적재·틱에서 같은 세션 저장소를 공유한다.
+        // 2026-11-19 0.650에서 R4-5 AI 런타임 결선용으로 추가했다.
+        BuildAiRuntimeDevices(types);
     }
 
     /// <summary>공장 정기 트리거 본체를 세션에 연결하고 지형 분배 Pop의 공장 갈고리로 등록한다.</summary>
@@ -2572,6 +2575,48 @@ public sealed partial class HostSession
         throw new InvalidOperationException($"펜스 자산 이름 미등록: {name}");
     }
 
+    /// <summary>같은 실제 전체 파괴로 가상+10 삭제를 잇는 효과를 만든다. 펜스 정리와 AI 전략 삭제가 공유한다.</summary>
+    /// <param name="name">진단 문장에 쓸 장치 이름이다.</param>
+    /// <param name="processes">같은 실제 삭제 몸체를 빌리는 프로세스 호스트다.</param>
+    /// <returns>실제 파괴를 호출하는 삭제 효과다.</returns>
+    /// <remarks>2026-11-19 0.650에서 펜스 결선에서 분리했다. 근거: cpppj o/RawFencePostPop.cpp·o/RawFenceCreate.cpp의 가상+10 삭제다. Pre/Post는 같은 몸체의 깊이로 닫고 종속은 같은 몸체로 재귀한다. 단일 미션의 송신은 기록만 하며 선택 해제는 화면이 없어 생략한다. 전송·통지 일치는 R4-6 전송 결선에서 대조한다.</remarks>
+    private Action<int, uint> BuildSessionDestroy(string name, SquidProcessHost processes)
+    {
+        ArgumentException.ThrowIfNullOrEmpty(name);
+        ArgumentNullException.ThrowIfNull(processes);
+        RawSquidDestroy body = processes.Destroy();
+        SquidDestroyHooks? hooks = null;
+        hooks = new SquidDestroyHooks
+        {
+            Emit = e =>
+            {
+                switch (e.Effect)
+                {
+                    case SquidDestroyEffect.PreDestroy:
+                        body.CompletePreDestroy();
+                        break;
+                    case SquidDestroyEffect.PostDestroy:
+                        body.CompletePostDestroy();
+                        break;
+                    case SquidDestroyEffect.Transmit:
+                        _terrainPopTransmissions.Add((e.Sid, e.Flags));
+                        break;
+                    case SquidDestroyEffect.ReleaseDependent:
+                    case SquidDestroyEffect.DestroyDependent:
+                        body.Destroy(e.Sid, e.Flags, hooks!);
+                        break;
+                    case SquidDestroyEffect.ClearSelection:
+                        break;
+                    default:
+                        throw new InvalidOperationException($"{name} 삭제 효과 미연결: {e.Effect}");
+                }
+            },
+            Selected = () => 0,
+            UnpopForm = sid => processes.UnpopForm(sid),
+        };
+        return (sid, flags) => body.Destroy(sid, flags, hooks!);
+    }
+
     /// <summary>펜스 후처리·정기 본체와 이웃·표식·연결선·재생성 장치를 세션에 연결한다.</summary>
     /// <param name="types">같은 실제 TYPE 표다. 지형 Pop 장치와 같은 인스턴스여야 한다.</param>
     /// <exception cref="InvalidOperationException">펜스 장치의 표시·정기 프로세스·해시·프레임 표가 미연결이다.</exception>
@@ -2603,39 +2648,7 @@ public sealed partial class HostSession
         var neighbors = new RawFenceNeighbors(Pool, hash, types, type => types[(int)type].Range, (row, col) => Alliances[row * 9 + col]);
         _fenceNeighbors = neighbors;
         SquidProcessHost fenceProcesses = PlayerProcesses ?? throw new InvalidOperationException("펜스 삭제 프로세스 미연결");
-        // 표식·연결선 삭제는 같은 실제 전체 파괴로 잇는다. 근거: cpppj `o/RawFencePostPop.cpp`·`o/RawFenceCreate.cpp`의 가상+10 삭제와 client `RawSurfaceFence.cpp`의 결선이다.
-        // 0.644에서 R4-4 펜스 정리 경로로 연결했다. Pre/Post는 같은 몸체의 깊이로 닫고 종속은 같은 몸체로 재귀한다. 단일 미션의 송신은 기록만 하며 선택 해제는 화면이 없어 생략한다. 전송·통지 일치는 R4-6 전송 결선에서 대조한다.
-        RawSquidDestroy fenceDestroyBody = fenceProcesses.Destroy();
-        SquidDestroyHooks? fenceDestroyHooks = null;
-        fenceDestroyHooks = new SquidDestroyHooks
-        {
-            Emit = e =>
-            {
-                switch (e.Effect)
-                {
-                    case SquidDestroyEffect.PreDestroy:
-                        fenceDestroyBody.CompletePreDestroy();
-                        break;
-                    case SquidDestroyEffect.PostDestroy:
-                        fenceDestroyBody.CompletePostDestroy();
-                        break;
-                    case SquidDestroyEffect.Transmit:
-                        _terrainPopTransmissions.Add((e.Sid, e.Flags));
-                        break;
-                    case SquidDestroyEffect.ReleaseDependent:
-                    case SquidDestroyEffect.DestroyDependent:
-                        fenceDestroyBody.Destroy(e.Sid, e.Flags, fenceDestroyHooks!);
-                        break;
-                    case SquidDestroyEffect.ClearSelection:
-                        break;
-                    default:
-                        throw new InvalidOperationException($"펜스 삭제 효과 미연결: {e.Effect}");
-                }
-            },
-            Selected = () => 0,
-            UnpopForm = sid => fenceProcesses.UnpopForm(sid),
-        };
-        Action<int, uint> fenceDestroy = (sid, flags) => fenceDestroyBody.Destroy(sid, flags, fenceDestroyHooks!);
+        Action<int, uint> fenceDestroy = BuildSessionDestroy("펜스", fenceProcesses);
         var markerClear = new RawFenceMarkerClear(Pool, hash, types, _fenceMarkerType,
             fenceDestroy,
             parent => { ReadOnlySpan<byte> raw = Pool.Slot(parent); return new float[] { BitConverter.ToSingle(raw.Slice(14, 4)), BitConverter.ToSingle(raw.Slice(18, 4)) }; });
@@ -2889,6 +2902,256 @@ public sealed partial class HostSession
             TemplateChanged = slot => _playerTemplateMarks.Add(slot),
         };
         return RawPlayerRegular.Run(Pool, MissionPlayer.BattleOwner, MissionPlayer.TemplateOwner, OwnerMode.Battle, sid, @event, count, payload, hooks);
+    }
+
+    /// <summary>같은 장기 풀의 AI 통지 본체다. BuildAiRuntimeDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-19 0.650에서 R4-5 AI 런타임 결선용으로 추가했다. 근거: cpppj o/RawAiObjectNotice.h·cpp의 RawAiObjectNotice다.</remarks>
+    private RawAiObjectNotice? _aiObjects;
+
+    /// <summary>같은 장기 풀의 AI 월드 등록 본체다. BuildAiRuntimeDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-19 0.650에서 R4-5 AI 런타임 결선용으로 추가했다. 근거: cpppj o/RawAiWorldRegistration.h·cpp의 RawAiWorldRegistration이다.</remarks>
+    private RawAiWorldRegistration? _aiWorld;
+
+    /// <summary>같은 장기 풀의 AI 준비 본체다. BuildAiRuntimeDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-19 0.650에서 R4-5 AI 런타임 결선용으로 추가했다. 근거: cpppj o/RawAiPreparation.h·cpp의 RawAiPreparation이다.</remarks>
+    private RawAiPreparation? _aiPreparation;
+
+    /// <summary>같은 장기 풀의 AI 전략 설정 본체다. BuildAiRuntimeDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-19 0.650에서 R4-5 AI 런타임 결선용으로 추가했다. 근거: cpppj o/RawAiStrategySetup.h·cpp의 RawAiStrategySetup이다.</remarks>
+    private RawAiStrategySetup? _aiStrategySetup;
+
+    /// <summary>같은 장기 풀의 AI 전체 프레임 본체다. BuildAiRuntimeDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-19 0.650에서 R4-5 AI 런타임 결선용으로 추가했다. 근거: cpppj o/RawAiRuntime.h·cpp의 RawAiRuntime이다. 매 프레임 호출은 R6 틱 결선에서 잇는다.</remarks>
+    private RawAiRuntime? _aiRuntime;
+
+    /// <summary>AI 내용물 조회가 공유하는 현재 권한·내용물 TYPE다. BuildAiRuntimeDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-19 0.650에서 추가했다. 전략 설정과 통지의 finder가 같은 상태를 공유한다.</remarks>
+    private ContainedFinderState? _aiFinderState;
+
+    /// <summary>AI 통지·실행시간 로그 기록이다. 화면 로그 UI는 R6에서 잇는다.</summary>
+    /// <remarks>2026-11-19 0.650에서 추가했다. L1에서 통지·느린 틱 순서를 대조할 때 쓴다.</remarks>
+    private readonly List<string> _aiRuntimeLogs = [];
+
+    /// <summary>AI 준비·전략·등록 진단 기록이다.</summary>
+    /// <remarks>2026-11-19 0.650에서 추가했다. L1에서 진단 순서를 대조할 때 쓴다.</remarks>
+    private readonly List<string> _aiRuntimeDiagnostics = [];
+
+    /// <summary>AI 통지 로그 기록을 빌려준다. 연결 뒤에도 비어 있을 수 있다.</summary>
+    /// <returns>기록 뒤 누적 기록이다. 실제 화면 로그가 아니라 순서만 센다.</returns>
+    /// <remarks>2026-11-19 0.650에서 추가했다. 실제 화면 로그 UI는 R6에서 잇는다.</remarks>
+    public IReadOnlyList<string> AiRuntimeLogs => _aiRuntimeLogs;
+
+    /// <summary>AI 진단 기록을 빌려준다. 연결 뒤에도 비어 있을 수 있다.</summary>
+    /// <returns>기록 뒤 누적 기록이다.</returns>
+    /// <remarks>2026-11-19 0.650에서 추가했다.</remarks>
+    public IReadOnlyList<string> AiRuntimeDiagnostics => _aiRuntimeDiagnostics;
+
+    /// <summary>AI 통지 본체를 빌려준다. 연결하기 전에는 예외다.</summary>
+    /// <remarks>2026-11-19 0.650에서 추가했다.</remarks>
+    public RawAiObjectNotice AiObjects => _aiObjects ?? throw new InvalidOperationException("AI 통지 미연결");
+
+    /// <summary>AI 월드 등록 본체를 빌려준다. 연결하기 전에는 예외다.</summary>
+    /// <remarks>2026-11-19 0.650에서 추가했다.</remarks>
+    public RawAiWorldRegistration AiWorld => _aiWorld ?? throw new InvalidOperationException("AI 월드 등록 미연결");
+
+    /// <summary>AI 준비 본체를 빌려준다. 연결하기 전에는 예외다.</summary>
+    /// <remarks>2026-11-19 0.650에서 추가했다.</remarks>
+    public RawAiPreparation AiPreparation => _aiPreparation ?? throw new InvalidOperationException("AI 준비 미연결");
+
+    /// <summary>AI 전략 설정 본체를 빌려준다. 연결하기 전에는 예외다.</summary>
+    /// <remarks>2026-11-19 0.650에서 추가했다.</remarks>
+    public RawAiStrategySetup AiStrategySetup => _aiStrategySetup ?? throw new InvalidOperationException("AI 전략 설정 미연결");
+
+    /// <summary>AI 전체 프레임 본체를 빌려준다. 연결하기 전에는 예외다.</summary>
+    /// <remarks>2026-11-19 0.650에서 추가했다. 매 프레임 호출은 R6 틱 결선에서 잇는다.</remarks>
+    public RawAiRuntime AiRuntime => _aiRuntime ?? throw new InvalidOperationException("AI 전체 프레임 미연결");
+
+    /// <summary>같은 실제 중심·발자국으로 현재 SID 발 중심을 읽는다.</summary>
+    /// <param name="sid">읽을 슬롯 번호다.</param>
+    /// <returns>발 중심 좌표다.</returns>
+    /// <remarks>2026-11-19 0.650에서 추가했다. 근거: cpppj RawFenceNeighbors.cpp의 Center 계산이다. 이웃 본체 없이 같은 풀·타입에서 읽는다.</remarks>
+    private float[] AiFootCenter(int sid)
+    {
+        ReadOnlySpan<byte> raw = Pool.Slot(sid);
+        IReadOnlyList<OriginalTypeRecord> types = _terrainPopTypes ?? throw new InvalidOperationException("AI 발 중심 TYPE 미연결");
+        OriginalTypeRecord type = types[raw[RawSidPool.TypeOffset]];
+        return [
+            (float)(BitConverter.UInt32BitsToSingle(BinaryPrimitives.ReadUInt32LittleEndian(raw.Slice(14, 4))) - type.FootX * 0.5),
+            (float)(BitConverter.UInt32BitsToSingle(BinaryPrimitives.ReadUInt32LittleEndian(raw.Slice(18, 4))) - type.FootY * 0.5)];
+    }
+
+    /// <summary>AI 준비·전략·통지·등록·전체 프레임 본체와 세션 결선을 연결한다.</summary>
+    /// <param name="types">같은 실제 TYPE 표다. 지형 Pop 장치와 같은 인스턴스여야 한다.</param>
+    /// <exception cref="InvalidOperationException">AI 런타임의 화신·공장·프로세스·해시 장치가 미연결이다.</exception>
+    /// <exception cref="ArgumentException">AI 런타임 TYPE이 지형 Pop 장치와 다르다.</exception>
+    /// <remarks>2026-11-19 0.650에서 R4-5 AI 런타임 결선용으로 추가했다. 근거: cpppj src/client/RawCampaignSession.cpp 2831~2870행의 통지·등록 조립과 2937~2943행의 전체 프레임 조립이다. 수집자·시설·부족스캔·사제·배치·다리·운반·경제·자금·SP·그래프·지역경계는 R6에서 잇는다. 매 프레임 호출도 R6 틱 결선에서 잇는다.</remarks>
+    private void BuildAiRuntimeDevices(IReadOnlyList<OriginalTypeRecord> types)
+    {
+        ArgumentNullException.ThrowIfNull(types);
+        if (_aiPreparation is not null || _aiStrategySetup is not null || _aiObjects is not null || _aiWorld is not null || _aiRuntime is not null)
+        {
+            throw new InvalidOperationException("AI 런타임 장치 중복 연결");
+        }
+
+        if (_terrainPopTypes is null || !ReferenceEquals(types, _terrainPopTypes))
+        {
+            throw new ArgumentException("AI 런타임 TYPE은 지형 Pop 장치와 같은 인스턴스여야 한다", nameof(types));
+        }
+
+        RawPlayerWorld player = _livePlayerWorld ?? throw new InvalidOperationException("AI 런타임 화신 미연결");
+        RawSquidHash hash = _terrainHash ?? throw new InvalidOperationException("AI 런타임 해시 미연결");
+        RawSquidReward hp = _fortHp ?? throw new InvalidOperationException("AI 런타임 HP 미연결");
+        _aiFinderState = new ContainedFinderState();
+        var finder = new RawCarrierPreDestroy(Pool, _aiFinderState, new CarrierPreDestroyHooks
+        {
+            ValidateDamageable = (_, _) => throw new InvalidOperationException("AI 전략 사전 파괴 검증 미연결(R6)"),
+            DamageablePre = (_, _) => throw new InvalidOperationException("AI 전략 사전 파괴 후처리 미연결(R6)"),
+            DependentFound = () => throw new InvalidOperationException("AI 전략 종속 통지 미연결(R6)"),
+        });
+        RawContainedCreate create = _fortContained ?? throw new InvalidOperationException("AI 런타임 내용물 생성 미연결");
+
+        // 섬 조회가 같은 세션 기록·모드·목록·해시를 읽는 부모다. 거주 구역 owner는 실제 지정으로 잇는다.
+        RawIslandRuntime islands = BuildIslands(new IslandRuntimeHooks
+        {
+            SetResidenceOwner = (sid, owner) => SetFortObjectOwner(sid, owner),
+            Assertion = text => _aiRuntimeDiagnostics.Add("island:" + text),
+        });
+        var preparation = new RawAiPreparation(AiBrainMemory, Pool, PlayerRecords, Alliances,
+            new AiPreparationGlobals
+            {
+                LocalOwner = () => MissionPlayer.BattleOwner,
+                PlayerKnown = () => MissionPlayer.PlayerKnown,
+                NoRegion = () => TerrainGlobals.NoRegion,
+                InvalidGraph = () => TerrainBookkeeping.InvalidGraph,
+                Now = () => ProcessTime.Value,
+            },
+            new AiPreparationHooks
+            {
+                MissingEnemyAssertion = () => _aiRuntimeDiagnostics.Add("assert:enemyPlayerId != INVALID_PLAYER_ID"),
+                Priest = owner => new RawPriestLookup(Pool, PriestState.Priests).Find(owner),
+                Temple = region => islands.Temple(region),
+                MaxHitPoints = sid => hp.MaxHitPoints(sid),
+                PointDistance = (source, target) =>
+                {
+                    double dx = source[0] - target[0], dy = source[1] - target[1];
+                    return Math.Sqrt(dx * dx + dy * dy);
+                },
+                Graph = _ => throw new InvalidOperationException("AI 준비 그래프 조회 미연결(R6)"),
+                RegionBounds = _ => throw new InvalidOperationException("AI 준비 지역 경계 조회 미연결(R6)"),
+                StoredSp = _ => throw new InvalidOperationException("AI 준비 분산 SP 조회 미연결(R6)"),
+                AddLocalSp = _ => throw new InvalidOperationException("AI 준비 로컬 SP 가산 미연결(R6)"),
+                Demo = () => 0u,
+                KnowledgeOpen = () => false,
+                BlockingGumpOpen = () => false,
+                InitialScan = token => (_aiWorld ?? throw new InvalidOperationException("AI 초기 전체 등록 미연결")).FullScan(token),
+            });
+        var objects = new RawAiObjectNotice(AiBrainMemory, Pool, types, PlayerRecords,
+            () => ProcessTime.Value,
+            () => unchecked((uint)FindTypeByName(types, "outpost")),
+            () => OwnerMode.Challenge,
+            new AiObjectNoticeHooks
+            {
+                CarrierTargets = _ => throw new InvalidOperationException("AI 통지 이동 목표 조회 미연결(R6)"),
+                DistanceSquared = (first, second) =>
+                {
+                    float[] source = AiFootCenter(first), target = AiFootCenter(unchecked((int)second));
+                    double dx = source[0] - target[0], dy = source[1] - target[1];
+                    return dx * dx + dy * dy;
+                },
+                Log = (brain, entry) => _aiRuntimeLogs.Add(brain + ":" + entry.Kind + ":" + entry.Object),
+            });
+        var world = new RawAiWorldRegistration(AiBrainMemory, Pool, types, PlayerRecords, Alliances, hash.BorrowEntries(0), objects,
+            new AiWorldRegistrationHooks
+            {
+                Center = sid => AiFootCenter(unchecked((int)sid)),
+                FartherGeyser = (brain, sid) => _aiRuntimeLogs.Add(brain + ":farther:" + sid),
+                MissingSurface = sid => _aiRuntimeDiagnostics.Add("surface:" + sid),
+            });
+        SquidProcessHost processes = PlayerProcesses ?? throw new InvalidOperationException("AI 런타임 프로세스 미연결");
+        Action<int, uint> destroy = BuildSessionDestroy("AI 전략", processes);
+        var strategy = new RawAiStrategySetup(AiBrainMemory, player, preparation, finder, create, _aiFinderState, types, Game, Alliances,
+            new AiStrategySetupGlobals
+            {
+                LocalOwner = () => MissionPlayer.BattleOwner,
+                NoRegion = () => TerrainGlobals.NoRegion,
+                TempleProduct = () => throw new InvalidOperationException("AI 전략 신전 생산 TYPE 미연결(R6)"),
+                BridgeType = () => BridgeState.BridgeType,
+                MapLimit = () => throw new InvalidOperationException("AI 전략 지도 상한 미연결(R6)"),
+                Now = () => ProcessTime.Value,
+            },
+            new AiStrategySetupHooks
+            {
+                RegionBounds = _ => throw new InvalidOperationException("AI 전략 지역 경계 조회 미연결(R6)"),
+                Temple = region => islands.Temple(region),
+                Destroy = (sid, flags) => destroy(sid, flags),
+                Assertion = text => _aiRuntimeDiagnostics.Add("strategy:" + text),
+                Demo = () => false,
+            });
+        var runtime = new RawAiRuntime(AiBrainMemory, PlayerRecords,
+            new AiRuntimeGlobals
+            {
+                Battle = () => OwnerMode.Battle,
+                Timing = () => 0u,
+                DryLog = () => 0u,
+            },
+            new AiRuntimeHooks
+            {
+                Initialize = brain => strategy.Initialize(brain),
+                Prepare = brain => preparation.Update(brain),
+                SelectGoal = brain => strategy.SelectGoal(brain),
+                Collectors = _ => throw new InvalidOperationException("AI 수집자 행동 미연결(R6)"),
+                Factories = _ => throw new InvalidOperationException("AI 시설 행동 미연결(R6)"),
+                DryScan = _ => throw new InvalidOperationException("AI 부족좌표 스캔 미연결(R6)"),
+                DryNotice = (_, _, _) => throw new InvalidOperationException("AI 부족좌표 통지 미연결(R6)"),
+                Priest = (_, _) => throw new InvalidOperationException("AI 사제 행동 미연결(R6)"),
+                Drops = _ => throw new InvalidOperationException("AI 배치 행동 미연결(R6)"),
+                Bridges = _ => throw new InvalidOperationException("AI 다리 행동 미연결(R6)"),
+                Carriers = _ => throw new InvalidOperationException("AI 운반 행동 미연결(R6)"),
+                Economy = _ => throw new InvalidOperationException("AI 경제 행동 미연결(R6)"),
+                Money = _ => throw new InvalidOperationException("AI 자금 조회 미연결(R6)"),
+                Wall = () => ProcessTime.Value,
+                Took = (brain, elapsed) => _aiRuntimeLogs.Add(brain + ":took:" + elapsed),
+                Assertion = (text, line) => _aiRuntimeDiagnostics.Add("runtime:" + line + ":" + text),
+                Destruct = brain => AiConstructorFor(brain).Destruct(brain),
+                Free = brain => AiConstructorFor(brain).FreeBody(brain),
+            });
+        _aiPreparation = preparation;
+        _aiObjects = objects;
+        _aiWorld = world;
+        _aiStrategySetup = strategy;
+        _aiRuntime = runtime;
+        RawPostPop terrainPostPop = _terrainPostPop ?? throw new InvalidOperationException("AI 통지 지형 분배 미연결");
+        terrainPostPop.BindPatchAiNotice((owner, sid, added) => objects.Notice(owner, sid, added));
+    }
+
+    /// <summary>같은 brain에 00416eb0 준비 전체를 명시 호출한다. 없으면 거짓이다.</summary>
+    /// <param name="owner">준비할 AI 소유자다.</param>
+    /// <returns>brain이 있어 준비를 실행하면 참이다.</returns>
+    /// <remarks>2026-11-19 0.650에서 R4-5 AI 초기화용으로 추가했다. 근거: cpppj src/client/RawCampaignSession.cpp 461행의 PrepareAi다. 매 프레임 호출은 R6 틱 결선에서 잇는다.</remarks>
+    public bool PrepareAi(uint owner)
+    {
+        if (!AiBrains.TryGetValue(owner, out uint brain))
+        {
+            return false;
+        }
+
+        (_aiPreparation ?? throw new InvalidOperationException("AI 준비 미연결")).Update(brain);
+        return true;
+    }
+
+    /// <summary>같은 brain의 00414af0 초기 전략을 명시 재시도한다. 258 완료 여부를 반환한다.</summary>
+    /// <param name="owner">초기화할 AI 소유자다.</param>
+    /// <returns>258이 서 있으면 참이다.</returns>
+    /// <remarks>2026-11-19 0.650에서 R4-5 AI 초기화용으로 추가했다. 근거: cpppj src/client/RawCampaignSession.cpp 462행의 InitializeAi다. 매 프레임 호출은 R6 틱 결선에서 잇는다.</remarks>
+    public bool InitializeAi(uint owner)
+    {
+        if (!AiBrains.TryGetValue(owner, out uint brain))
+        {
+            return false;
+        }
+
+        (_aiStrategySetup ?? throw new InvalidOperationException("AI 전략 설정 미연결")).Initialize(brain);
+        return BinaryPrimitives.ReadUInt32LittleEndian(AiBrainMemory.Bytes(brain).AsSpan(0x258, 4)) != 0;
     }
 
     /// <summary>같은 장기 풀·프레임·난수의 현재 조회로 공장 정기 사건을 실행한다.</summary>
