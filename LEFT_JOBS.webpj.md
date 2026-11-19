@@ -4,7 +4,7 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-19, 마지막 단위 WB04-E941)
+### 0.1 현재 값 (2026-11-19, 마지막 단위 WB04-E942)
 
 | 항목 | 현행 상태 |
 | --- | --- |
@@ -14,7 +14,9 @@
 | 전체 회귀 | E941 Node v26.13.0 전체 6,512건, E939 Node v22.23.3 전체 6,511건 통과(실패·취소·건너뜀 0). E941 실제 갈무리11 편집 Chromium 1건 통과; E940 편집 출력·원본 2,292행 포함 연관 Node 검사 46건 통과; E939 글꼴 측정·원본 2,292행 포함 연관 Node 검사 72건 통과; E938 Client TextEntry·원본 2,292행 포함 연관 Node 검사 63건 통과; E937 Client Slider·연관 Node 검사 51건 통과; E936 Client 돌 버튼·연관 Node 검사 27건 통과; E935 Gump idle·연관 Node 검사 49건 통과; E934 직접 텍스트·연관 Node 검사 15건과 Chromium 1건 통과; E933 IME 요소·연관 Node 검사 22건과 Chromium 1건 통과; E932 조합 사건·연관 Node 검사 14건과 합성 Chromium 1건 통과; E931 브라우저 문자 키·연관 Node 검사 10건과 Chromium 5건 통과; E930 Console 한글 단어·원본 2,292행 포함 Node 검사 28건 통과; E929 한글 출력 경계·원본 2,292행 포함 Node 검사 31건 통과; E928 한글 스크롤·원본 2,292행 포함 Node 검사 27건 통과; E927 확장 붙여넣기·원본 2,862행 포함 Node 검사 30건 통과; E926 한글 편집·원본 2,292행 포함 Node 검사 27건 통과; E925 표시 문자 경계·연관 Node 검사 7건 통과; E924 확정 문자·연관 Node 검사 24건 통과; E923 입력 큐·연관 Node 검사 17건 통과; E922 가상 키·연관 Node 검사 12건과 Chromium 4건 통과; E921 마우스 큐·연관 Node 검사 11건과 Chromium 3건 통과; E920 앱 포인터 경계·연관 Node 검사 20건과 Chromium 2건 통과; E919 브라우저 폴링·연관 Node 검사 18건과 Chromium 1건 통과; E918 포인터 통지·연관 Node 검사 36건 통과; E917 공통 방송·연관 Node 검사 17건 통과; E916 실제 구분선·연관 Node 검사 30건 통과; E915 가상 부착·연관 Node 검사 29건 통과; E914 HUD 등록 조회·연관 Node 검사 22건 통과; E913 실제 루트 교체·연관 Node 검사 36건과 Chromium 1건 통과; E912 원본 Uber 전체 160행·연관 Node 검사 28건 통과; E911 Uber/HUD·Gump 연관 Node 검사 24건 통과; E910 파생 Gump 연관 Node 검사 40건·Chromium 1건 통과; E909 Gump 연관 Node 검사 39건·Chromium 입력 1건 통과; E908 Gump 및 앱 연관 Node 검사 60건·Chromium 수명 1건 통과; E907 구름·팔레트 Node 검사 17건·실제 로그인 2건 및 Chromium 전환 1건 통과; E906 집중·연관 Node 검사 53건 및 Chromium 설정 쓰기 1건 통과; E905 집중·연관 Node 검사 47건 및 Chromium 화면비 전환 1건 통과; E904 집중·연관 Node 검사 84건 및 Chromium 실제 Canvas 1건 통과; E903 집중·연관 Node 검사 83건 및 Chromium 1건 통과; E902 집중·연관 Node 검사 42건 및 Chromium 1건 통과; E901 실제 로그인 2건·연관 Node 검사 22건 및 Chromium 1건 통과; E900 집중·연관 Node 검사 38건과 Chromium 1건 통과; E899 집중·연관 Node 검사 42건, 수동 적재 관련 Node v22 31건, Guide 로그인 2건과 Chromium 종료·재시작 1건 통과. 전체 회귀 중 선행 레이아웃 누락 시험 5건을 교정한 뒤 전부 재실행했다. E898 Node 관련 검사 37건·실제 로그인 1건·Chromium 1건 통과; E897 집중 검사 6건·실제 World 2건 통과; E896 Node 25건·실제 World 2건·Chromium 2건 및 cpppj 표시 바이트 11,683행 일치; E895 앱 프레임·상태 관련 검사 23건과 실제 Tutorial1 로그인을 포함한 Session 검사 126건 통과; E894 favicon Chromium 창·헤드리스 각 1건 통과; E893 집중·연관 Node 검사 62건과 E892 원본 관측 전체 876행 및 연관 검사 통과. HJOW-Athlon의 작업 단위 주기: v26 0/4, v22 2/8. fixture 832개 해시·파일 불일치/누락 0; 대응표 1,160행 오류 0을 확인했고 기존 cpppj 글꼴 관련 변경 검토 항목은 유지한다. |
 | 브라우저 검사 | 2026-11-17 Chromium 2/2. 갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체 확인. 최초 실행·진행 잠금/체크 및 저장 재실행은 E616에서 별도 Chromium 2/2로 확인했다. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
 
-**2026-11-19 일시 중지 인계.** 사용자 요청에 따라 E941 검증·커밋 뒤 목표를 일시 중지한다. 재개 시 우선 실제 앱의 FontSet·Gump 배경/픽셀 장치와 TextEntry 수명을 연결하고, 입력 큐를 원본 Uber 입력 순서에 맞춰 실제 프레임에서 소비하도록 조립한다. E941은 큐 소비를 검사에서 직접 호출했으며 실제 OS IME·미션 UI 표시·Tutorial1 플레이를 검증하지 않았다. 이어서 4D-6의 진행 창·프레임과 5-C의 메뉴/HUD 공장을 연결하고 남은 체크를 계속 수행한다. 다른 세션의 dotnetpj 변경은 건드리지 않는다.
+**2026-11-19 재개.** E942에서 Chromium의 링크 새 탭, 출처 정보 차단과 팝업 차단 시 현재 문서 유지를 검증했다. Chromium 2건과 Node v26 외부 접속 검사 8건이 통과했다. 작업 단위 주기는 v26 1/4, v22 3/8이다. [외부 링크 검증](docs/webpj-external-access-20261105.md#71-브라우저-검증)
+
+**E941 미완료 범위.** 앱의 FontSet·Gump 출력과 TextEntry 수명, 웹 입력 큐의 앱 프레임 소비, 실제 OS IME를 확인해야 한다. 미션 앱의 진행 창·프레임, HUD, Tutorial1 플레이 역시 미확인이다.
 
 **미션 식별.** 이전 공통 fixture의 `thewarbegins.fort`는 캠페인 1-1이다. 실제 `tutorial1`이 선택하는 Fort는 `BridgeTheGap`이며, 지형·섬을 E753에서 다시 대조했다. [미션명 정정](docs/webpj-session-login-shipped-forts-20261118.md) · [Tutorial1 지형 재검증](docs/webpj-tutorial1-terrain-recheck-20261118.md)
 
@@ -254,7 +256,7 @@ M1은 메뉴 관문을 통과했다. 4-D의 Tutorial1 L2 → 5-A/5-B·5-C의 Tut
 
 - 자연 완주·실제 사제 포획/희생·특정 적 공격·승리·전체 화면/음향은 1절 범위에 따라 확인한다.
 - 미션 한국어는 cpppj K1~K5 확정본을 기본으로 한다. 자료 분리 여부와 실제 미션 줄바꿈/혼합 제목·대체 표시를 8단계에서 확인한다.
-- 바깥 링크의 실제 브라우저 새 탭/창과 팝업 차단은 미확인이다.
+- [x] **웹 링크 브라우저 검증.** Chromium에서 외부 출처 탭의 `opener`와 `referrer`가 비어 있고, 브라우저가 팝업을 차단해도 현재 문서가 유지된다. [E942](docs/webpj-external-access-20261105.md#71-브라우저-검증)
 - 4차 와이드의 창 크기/논리 화면 정책과 WebMCP 대상 브라우저·조작/캡처/녹화 범위는 착수 시 확정한다.
 
 ### 3.6 cpppj 변경 재반영

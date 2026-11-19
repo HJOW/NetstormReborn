@@ -85,9 +85,18 @@
 | 판정 | `www/ui/external-link.js`의 `resolveExternalLink(원문)`(DOM 없음). 첫 NUL 앞까지만 읽고 앞뒤 공백을 지운다. 접두는 ASCII 대소문자를 구분하지 않는다 |
 | 여는 대상 | 치환이 끝난 `http:`/`https:`(`//호스트`가 있고 URL 해석이 같은 접두·비지 않은 호스트를 돌려주는 것)는 새 탭/창, `mailto:`(받는 사람이 비지 않은 것)는 메일 처리기. 주소는 URL 해석으로 정규화한다(`http://www.netstormhq.com` → `http://www.netstormhq.com/`). `mailto:`는 원문을 그대로 쓴다 |
 | 열지 않는 대상 | `file:`(원본 PieceDump가 로컬에 만드는 파일, 웹에 없음)·`telnet:`·`javascript:`·`data:` 등 그 밖의 접두, 접두가 없는 주소, 치환 뒤에도 `{…}`가 남거나 공백·제어 문자가 있는 주소(예: `http://{{param.1}.WebSite}`), 호스트가 없는 웹 주소(`http://`·`http:///x`), 받는 사람이 없는 메일, 2048자를 넘는 주소는 이유와 함께 콘솔 안내만 한다. 게임 치환(`gameData.substitute`) 뒤의 `http://{UPDATEURL}`은 `http://www.netstormhq.com`, `mailto:{EMAIL1}`은 `mailto:www.netstormhq.com`(`@` 없음)이 되어 둘 다 열린다. 원본도 이 주소를 그대로 셸/메일 처리기에 넘겼으므로 `@`는 요구하지 않는다 |
-| 브라우저 조건 | 열기는 `www/platform/external-opener.js`의 `openExternalLink(문서, 판정)` 한 곳이다: 숨은 `<a>`를 만들어 `href`를 주고 `click()`한다. 웹 주소는 `target="_blank"`·`rel="noopener noreferrer"`로 새 탭/창에 열어 게임 창(opener)을 건드리지 못하고 Referer도 보내지 않는다. 메일 주소는 target 없이 메일 처리기에 넘긴다. 링크를 누른 `pointerdown` 처리 안에서 동기로 불리므로 팝업 차단 대상이 아니다. 열기는 `click()` 예외만 실패로 알 수 있다 |
+| 브라우저 조건 | `www/platform/external-opener.js`의 `openExternalLink(문서, 판정)`은 임시 `<a>`의 `click()`을 호출한다. 웹 주소는 `target="_blank"`·`rel="noopener noreferrer"`로 열고, 메일 주소는 메일 처리기에 넘긴다. 앱은 링크를 누른 `pointerdown` 처리 중에 동기로 호출한다. 브라우저 정책은 팝업을 차단할 수 있다. 반환값은 `click()` 호출 결과를 뜻한다. |
 | `window.open`을 쓰지 않은 이유 | `noopener`로 열면 성공해도 `null`을 돌려주어 차단과 구분되지 않는다(2026-11-05 구상의 "null 반환은 콘솔 안내"는 이 때문에 `click()` 예외로 바꿨다). 소스 감사의 창 열기 허용 경로(`window.open(` 도움말 창 지역 변수 한 곳)도 그대로 둘 수 있다 |
 | 호스트 훅 | `new Netstorm({ openExternal: (문서, 판정) => boolean })`로 열기 장치를 바꾼다(기본 `null` = 위 장치). 무브라우저 실행 `tools/headless.mjs`는 실제 탭을 열지 않고 `openedLinks`에 주소만 기록한다. 열기 장치가 `false`를 돌려주면 경고만 하고 게임은 계속한다 |
 | 검사 갱신 | 소스 감사: 앵커 요소 생성(`createElement('a')`)은 `platform/external-opener.js` 한 파일뿐, `window.open(`은 그대로 도움말 창 한 곳. 링크 검사: 열 수 있는 주소는 열기 장치로, `{UPDATEURL}`·`{EMAIL1}` 미치환 원문과 `file:`은 이유와 함께 알림만. 새 검사 3개: 판정 경계(열림 7종·거부 30여 종 + 불변 객체), 가짜 문서로 앵커 속성·click·실패, 실제 자료(문서 3.1절 11종의 치환 뒤 판정 + 도움말 전 주제의 바깥 링크) |
+
+### 7.1 브라우저 검증
+
+2026-11-19 WB04-E942. 테스트 문서에서 운영 모듈을 불러와 실제 Chromium 클릭으로 시험했다. 목적지는 같은 로컬 테스트 서버의 다른 호스트명으로 지정했다.
+
+- 팝업이 허용되면 별도 탭에서 목적지를 열었다. 목적지에서 `window.opener`는 `null`, `document.referrer`는 빈 문자열이었고 현재 문서의 URL은 유지됐다.
+- 문서의 샌드박스 정책으로 팝업을 제한하자 새 탭이 열리지 않았고 현재 문서는 계속 동작했다. 이때도 열기 함수는 `true`를 반환했다. 브라우저가 팝업 열기 결과를 호출 코드에 전달하지 않는 동작을 확인했다.
+
+Chromium [브라우저 검사](../webpj/e2e/external-opener.spec.js) 2건과 Node v26의 링크 판정·외부 접속 검사 8건이 통과했다.
 | 실제 브라우저 확인 | 하지 않았다. 사용자 클릭 입력 안에서 새 탭이 열리는지(팝업 차단·포커스 이동 뒤 포인터 뗌 처리)는 실제 브라우저 확인 대상이며 이 단위의 정적/단위 검사에 포함되지 않는다. 새 탭이 열리면 게임 캔버스의 `blur`가 입력을 비운다(기존 동작) |
 | 범위 밖 | 구 업데이트 다운로드·검증·서버 목록 등 4절의 미연결 기능은 링크 열기와 별개이며 계속 만들지 않는다. 원본 주소 도메인의 생존 여부는 확인하지 않아 사라진 사이트가 열릴 수 있다 |
