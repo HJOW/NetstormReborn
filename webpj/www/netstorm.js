@@ -80,6 +80,7 @@ import { resetGameStorage } from './platform/reset-storage.js';
 import { createCanvasGlyphRasterizer } from './platform/glyph-rasterizer.js';
 import { MainMenuScreen } from './ui/main-menu.js';
 import { ClientGumpRoot } from './ui/client-gump-root.js';
+import { UberGumpCamera } from './ui/uber-gump-camera.js';
 import { TerrainPreview } from './ui/terrain-preview.js';
 import { PopupMenu } from './ui/popup-menu.js';
 import { buildPopupItems } from './ui/option-menus.js';
@@ -967,6 +968,8 @@ export class Netstorm {
             return this._clientInputQueue;
         } }, services);
         services.assets.queueCommand = services.developerQueue;
+        // Session 초기 카메라 요청을 같은 앱의 실제 화면·변경 표·Gump에 적용한다.
+        services.cameraCommit = (context) => this._commitCampaignCamera(context);
         // 카메라 패킷은 도킹 영역이 아닌 현재 논리 Screen의 전체 크기를 읽는다.
         services.cameraScreenSize = () => {
             const screen = this._clientPaletteScreen;
@@ -985,6 +988,23 @@ export class Netstorm {
             },
         };
         return services;
+    }
+
+    // 원본 497960 카메라 적용 장치를 현재 앱 Screen·Renderer·World에 연결한다.
+    _commitCampaignCamera(context) {
+        const gameplay = this._clientGameplay, screen = this._clientPaletteScreen, renderer = this._clientRenderer, gump = this._clientGump;
+        if (!gameplay || !screen || !renderer || !gump || !this._clientKencloud || !this._clientLocal || !this._gameClock || context?.camera !== gameplay.camera()) throw new Error('미션 카메라 적용의 실제 Client 수명 불일치');
+        const game = { camera: () => gameplay.camera(), cursor: () => gameplay.cursor, selection: () => gameplay.selection,
+            patchDiagnostic: () => gameplay.patchDiagnostic(), worldCells: () => gameplay.worldCells() };
+        const client = { configuration: () => this._gameData, screen: () => this._clientPaletteScreen, renderer: () => this._clientRenderer,
+            gameplay: () => game, localState: () => this._clientLocal, time: () => this._gameClock.time(),
+            active: () => this._root?.ownerDocument?.hasFocus?.() ?? true, poll: (code) => this._clientInputPoll.poll(code),
+            cursor: () => { throw new Error('미션 소프트웨어 커서 장치 미연결'); } };
+        const app = this, rebuild = { get value() { return app._displayDirty; }, set value(value) { app._displayDirty = Boolean(value); } };
+        const buttons = { redrawRoots: () => this._clientGump.redrawRoots() };
+        const camera = new UberGumpCamera({ client, buttons: () => buttons, world: () => this._campaignWorld, gameMenuState: () => null,
+            pointerBoundary: this._clientPointerBoundary, worldRedraw: this._clientKencloud.worldRedraw(), rebuild });
+        camera.commitCameraNow();
     }
 
     // 현재 논리 화면과 Client 전역으로 카메라 Renderer·snapshot·한계를 원본 순서로 초기화한다.

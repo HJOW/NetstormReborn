@@ -36,7 +36,7 @@ export class ClientGumpRoot {
         };
         this.#events = new GumpEvents(this.#create, this.#life, this.#event, this.#collection, { node, handle });
         this.#input = new GumpInput(this.#create, this.#life, this.#inputState, this.#collection, this.#events, { node, handle });
-        this.#frame = new GumpFrame(this.#create, this.#life, { node, idle: (token) => {
+        this.#frame = new GumpFrame(this.#create, this.#life, { node, redraw: (token, erase) => this.redraw(token, erase), idle: (token) => {
             const idle = this.#idlers.get(token);
             if (idle) return idle(token);
             if (node(token)?.constructor !== GumpCreateNode) throw new Error('Client Gump 파생 idle 처리기 미연결');
@@ -119,6 +119,8 @@ export class ClientGumpRoot {
     broadcast(event, first, second) { this.#live(); this.#frame.broadcast(event, first, second); }
     // 같은 Client 수명의 원본 idle 표를 순서대로 처리한다.
     idle() { this.#live(); this.#frame.idle(); }
+    // 현재 루트 자식의 원본 visible·삭제 관문과 재귀 순서로 다시 그리기를 요청한다.
+    redrawRoots() { this.#live(); this.#frame.redrawRoots(); }
     // 원본 포인터 단계처럼 창 안에서 선택적 overlay 다음 같은 사건을 방송한다.
     notifyPointer(event, mode, cursorActive, allowOverlay) {
         this.#live();

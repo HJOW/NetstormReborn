@@ -40,6 +40,17 @@ test('Client Gump 루트: 자식 부착·입력·지연 삭제가 같은 등록�
     owner.dispose();
 });
 
+// 카메라 적용의 루트 재그리기가 실제 트리의 표시·자식 전파 관문을 사용한다.
+test('Client Gump 루트: 현재 표시 자식과 하위 재그리기', () => {
+    const redraw = [], owner = new ClientGumpRoot(100, 80, () => 0, (token, erase) => redraw.push([token, erase]));
+    const visible = owner.createBase(1, 20, 20, 0x421, () => 0), hidden = owner.createBase(2, 20, 20, 0x401, () => 0);
+    const child = owner.createBase(3, 10, 10, 0x401, () => 0);
+    owner.attach(visible, 0, 0); owner.attach(hidden, 30, 0); owner.attach(child, 0, 0, visible);
+    owner.node(hidden).flags &= ~1; redraw.length = 0;
+    owner.redrawRoots(); assert.deepEqual(redraw, [[visible, false], [child, false]]);
+    owner.dispose(); assert.throws(() => owner.redrawRoots(), /반납한 Client Gump/);
+});
+
 // 실제 Client 진단이 켜져 있으면 부착의 상세 문자열을 같은 전역에 남기고 계속한다.
 test('Client Gump 루트: 부착 진단이 현재 Client 전역에 기록된다', () => {
     const app = new Netstorm(); app._initializeClientRuntime(false); app._layout = { logicalWidth: 100, logicalHeight: 80 }; app._initializeClientGump();
