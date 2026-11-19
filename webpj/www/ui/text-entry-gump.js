@@ -5,6 +5,7 @@
 // (2026-11-14 WB04-E439: RawMenuControls 선행 문자 편집 Gump 이식)
 import { GumpBackgroundNode } from './gump-background-create.js';
 import { cameraFtolLow } from '../render/camera-view.js';
+import { isCommittedTextInput, committedTextBytes, hasExtendedDisplayText, displayTextFloor, displayTextCeil, previousDisplayText, nextDisplayText } from '../core/display-text-input.js';
 
 // 원본 10.78 의 가상 표와 기본 Gump 비트다(표시/void/dead).
 const ENTRY_VTABLE = 0x508e10; const CONSOLE_VTABLE = 0x506a6c; const VISIBLE = 1; const VOID = 8; const DEAD = 0x10000;
@@ -293,6 +294,18 @@ export class TextEntryGump {
         const node = this.#node(token); event >>>= 0; first >>>= 0; second >>>= 0;
         let value = event; let result = 0; const code = event & CODE_MASK; const buffer = () => this.#buffer(token);
         if (!(event & COMMAND) && code !== 0x10000 && code !== 0x20000 && !node.readOnly && !(event & RELEASE)) {
+            // 확장 문자가 있을 때 외부 선택과 Shift 기준이 토큰 내부를 가리키지 않도록 맞춘다.
+            const extended = hasExtendedDisplayText(buffer().text());
+            if (extended) {
+                const text = buffer().text(), current = buffer().state();
+                const begin = displayTextFloor(text, Math.max(0, current.selectionBegin));
+                const end = current.selectionBegin === current.selectionEnd ? begin : displayTextCeil(text, Math.max(0, current.selectionEnd));
+                buffer().select(begin, end);
+                node.shiftAnchor = displayTextFloor(text, Math.max(0, node.shiftAnchor)); node.shiftEnd = displayTextFloor(text, Math.max(0, node.shiftEnd));
+            }
+            // 재할당 뒤에도 현재 본문을 다시 읽어 이전·다음 전체 문자를 찾는다.
+            const previous = (at) => extended ? previousDisplayText(buffer().text(), Math.max(0, at)) : sub(at, 1);
+            const next = (at) => extended ? nextDisplayText(buffer().text(), Math.max(0, at)) : add(at, 1);
             // 인식하지 않는 문자/키는 공통 Redraw 뒤 반환 0 이다.
             result = 1; let notify = true;
             // shift 선택 기준/끝을 현재 선택에서 시작하는 공통 준비다(선택이 비어 있을 때만 기준 갱신).
@@ -301,21 +314,21 @@ export class TextEntryGump {
             // 왼쪽: 선택이 있어도 shift 가 없으면 현재 begin-1 한 칸으로 옮긴다.
             case 0x250000: {
                 const begin = buffer().state().selectionBegin;
-                if (!(event & SHIFT)) buffer().select(sub(begin, 1), sub(begin, 1));
-                else { startShift(); node.shiftEnd = sub(node.shiftEnd, 1); buffer().select(node.shiftAnchor, node.shiftEnd); }
+                if (!(event & SHIFT)) buffer().select(previous(begin), previous(begin));
+                else { startShift(); node.shiftEnd = previous(node.shiftEnd); buffer().select(node.shiftAnchor, node.shiftEnd); }
                 break;
             }
             // 오른쪽은 현재 end+1 을 기준으로 삼는다.
             case 0x270000: {
                 const end = buffer().state().selectionEnd;
-                if (!(event & SHIFT)) buffer().select(add(end, 1), add(end, 1));
-                else { startShift(); node.shiftEnd = add(node.shiftEnd, 1); buffer().select(node.shiftAnchor, node.shiftEnd); }
+                if (!(event & SHIFT)) buffer().select(next(end), next(end));
+                else { startShift(); node.shiftEnd = next(node.shiftEnd); buffer().select(node.shiftAnchor, node.shiftEnd); }
                 break;
             }
             // End 는 length+1 로 Select 한 뒤 원문처럼 +dc 기준의 열 delta 를 전달한다.
             case 0x230000: {
-                if (!(event & SHIFT)) { const at = add(buffer().state().length, 1); buffer().select(at, at); this.relativeScroll(token, 0, node.shiftEnd); }
-                else { startShift(); node.shiftEnd = add(buffer().state().length, 1); buffer().select(node.shiftAnchor, node.shiftEnd); this.relativeScroll(token, 0, node.shiftEnd); }
+                if (!(event & SHIFT)) { const at = extended ? buffer().state().length : add(buffer().state().length, 1); buffer().select(at, at); this.relativeScroll(token, 0, node.shiftEnd); }
+                else { startShift(); node.shiftEnd = extended ? buffer().state().length : add(buffer().state().length, 1); buffer().select(node.shiftAnchor, node.shiftEnd); this.relativeScroll(token, 0, node.shiftEnd); }
                 break;
             }
             // Home 의 shift 선택과 열 0 요청은 서로 다른 상태를 사용한다.
@@ -328,7 +341,7 @@ export class TextEntryGump {
             // Ctrl+Backspace 는 단어 삭제가 아니라 전체 Reset 이다.
             case 8: {
                 if (event & CONTROL) buffer().reset(null);
-                else { let begin = buffer().state().selectionBegin; const end = buffer().state().selectionEnd; if (begin === end) begin = sub(begin, 1); buffer().select(begin, end); buffer().insert(null); }
+                else { let begin = buffer().state().selectionBegin; const end = buffer().state().selectionEnd; if (begin === end) begin = previous(begin); buffer().select(begin, end); buffer().insert(null); }
                 break;
             }
             // multiline 일 때만 LF 를 삽입하나 Enter 부모 통지는 항상 보낸다.
@@ -346,12 +359,22 @@ export class TextEntryGump {
             // Shift+Delete 는 Cut, 일반 Delete 는 현재 선택 또는 오른쪽 한 문자다.
             case 0x2e0000: {
                 if (event & SHIFT) buffer().cut();
-                else { const begin = buffer().state().selectionBegin; let end = buffer().state().selectionEnd; if (begin === end) end = add(end, 1); buffer().select(begin, end); buffer().insert(null); }
+                else { const begin = buffer().state().selectionBegin; let end = buffer().state().selectionEnd; if (begin === end) end = next(end); buffer().select(begin, end); buffer().insert(null); }
                 break;
             }
             default: {
+                if (isCommittedTextInput(event)) {
+                    const bytes = committedTextBytes(event), current = buffer().state(), excluded = this.#excluded(token);
+                    if (excluded.includes(0x1f)) { result = 0; notify = false; break; }
+                    const length = current.length - (current.selectionEnd - current.selectionBegin) + bytes.length;
+                    if (node.maxLength < 1 || length < node.maxLength) buffer().insert(Uint8Array.of(...bytes, 0));
+                    else { result = 0; notify = false; }
+                    break;
+                }
                 if (code < 0x20 || code >= 0x100) { result = 0; notify = false; break; }
-                if (node.maxLength < 1 || add(buffer().state().length, 1) < node.maxLength) {
+                const current = buffer().state();
+                const length = extended ? current.length - (current.selectionEnd - current.selectionBegin) + 1 : add(current.length, 1);
+                if (node.maxLength < 1 || length < node.maxLength) {
                     // 문자 제한은 현재 선택 길이를 빼지 않고 전체 length+1 로 판정한다.
                     const excluded = this.#excluded(token);
                     if (excluded.length && excluded.includes(value & 0xff)) { result = 0; notify = false; break; }
