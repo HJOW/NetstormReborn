@@ -131,3 +131,18 @@ test('Client Gump 루트: 포인터 overlay·방송의 대화창·포커스·창
     assert.throws(() => owner.notifyPointer({ code: 1, x: 0 }, 0, false, true), /사건 계약/u);
     owner.dispose(); assert.throws(() => owner.notifyPointer(point, 0, false, true), /반납/u);
 });
+
+// 공통 idle 표는 같은 실제 파생 노드를 현재 슬롯 순서로 호출하고 삭제 시 해제한다.
+test('Client Gump 루트: 파생 idle 분배와 현재 표 재조회', () => {
+    const owner = new ClientGumpRoot(100, 80, () => 0, () => {}), calls = [], nodes = [new GumpBackgroundNode(), new GumpBackgroundNode()];
+    let second = 0, firstRun = true;
+    const first = owner.allocateDerived(nodes[0], () => 0, (value, flags) => owner.lifetime().deleteScalar(value, flags), null, null,
+        (value) => { calls.push(value); if (firstRun) { firstRun = false; owner.lifetime().setIdle(second, false); } });
+    second = owner.allocateDerived(nodes[1], () => 0, (value, flags) => owner.lifetime().deleteScalar(value, flags), null, null, (value) => calls.push(value));
+    // 실제 공통 등록·트리·idle 수명을 사용한다.
+    for (const token of [first, second]) { owner.factory().construct(token, 0, 10, 10, 1); owner.attach(token, 0, 0); owner.lifetime().setIdle(token, true); }
+    owner.idle(); assert.deepEqual(calls, [first]);
+    owner.lifetime().setIdle(second, true); owner.remove(first); owner.idle(); assert.deepEqual(calls, [first, second]);
+    assert.throws(() => owner.allocateDerived(new GumpBackgroundNode(), () => 0, () => {}, null, null, 3), /idle 계약/u);
+    owner.dispose(); assert.throws(() => owner.idle(), /반납/u);
+});
