@@ -8,6 +8,7 @@ import { runClientBridgeDecay } from '../www/core/client-bridge-decay.js';
 import { pollClientBattleCompletion } from '../www/core/client-battle-completion.js';
 import { pollClientConnectionHealth } from '../www/core/client-connection-health.js';
 import { ClientTraceGlobals, traceClientObject, writeClientProcessSummary } from '../www/core/client-diagnostics.js';
+import { captureSessionDumpBase, formatSessionStateDump } from '../www/core/session-state-dump.js';
 import { ProductionMaintenanceGlobals, ProductionMaintenancePanel } from '../www/core/raw-production-maintenance.js';
 import { ProductionControlContext } from '../www/core/production-control-context.js';
 import { ClientColorSortInput } from '../www/core/client-color-sort-input.js';
@@ -541,6 +542,22 @@ test('CampaignSession TheWarBegins: Client 프로세스 요약의 실제 Regular
         const lines = [];
         writeClientProcessSummary(core.kernel, s.world().storage, (line) => lines.push(line));
         assert.ok(lines.some((line) => line.includes('pType=regularProcessType') && line.includes(`sid=${parent},`)));
+    } finally { s.dispose(); }
+});
+
+// 실제 Session에 부착된 Regular의 PID·Form·부모와 같은 Client 난수 상태를 덤프 앞부분에서 읽는다.
+test('CampaignSession TheWarBegins: 덤프 공통 수집의 실제 Regular', () => {
+    const random = new ClientRandomGlobals(), { s } = scene({ randomGlobals: random });
+    try {
+        s.load();
+        const core = s.core(), parent = core.factory.create(6, 2), process = core.processes.addRegular(parent, 6700, 0.25);
+        assert.ok(process && process.pid && process.form);
+        const before = [random.game.state, random.crt.state, core.kernel.size];
+        const input = captureSessionDumpBase('patch1078', { number: 12, game: 1.5 }, random, core.kernel);
+        assert.deepEqual([random.game.state, random.crt.state, core.kernel.size], before);
+        const row = input.processes.find((entry) => entry.pid === process.pid);
+        assert.deepEqual([row.form, row.parent, row.event, row.payloadBits], [process.form, parent, 6700, 0x3e800000]);
+        assert.ok(formatSessionStateDump(input).includes(`process\t${process.pid}\t${process.form}\t${parent}\nregular\t${process.pid}\t6700\t0\t1048576000\t`));
     } finally { s.dispose(); }
 });
 

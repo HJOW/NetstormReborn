@@ -10,6 +10,8 @@ import { RawCampaignSessionOwners } from '../www/core/raw-campaign-session-owner
 import { RegularProcess, SquidProcess, SquidProcessHost, createProcessHostRuntime } from '../www/core/squid-process.js';
 import { createSquidTransmissionState } from '../www/core/raw-squid-transmission.js';
 import { put, get, bitsToFloat } from './raw-support.mjs';
+import { captureSessionDumpBase } from '../www/core/session-state-dump.js';
+import { ClientRandomGlobals } from '../www/core/random.js';
 
 // 같은 실제 보호 TYPE/SHP의 Pool/Kernel/Host를 빌린다.
 const data = realCaptureAssets(); const game = new GameAssets(data.table, data.database);
@@ -23,6 +25,19 @@ function parent(o, flags = 0) { return o.world.create(75, flags); }
 function derived(o, owner) { const process = new SquidProcess(); o.core.processes.attach(process, 14, owner, 0x50); return process; }
 // writer가 실제 목적지를 빌렸는지 확인하는 고정 초기 바이트다.
 function packet(length = 40) { return Uint8Array.from({ length }, (_, n) => 0x80 + n); }
+
+// 패킷에서 수신한 signaling NaN도 덤프가 JS 숫자 변환으로 원문 비트를 잃지 않고 읽는다.
+test('Session 덤프: 공유 Regular 수신 payload의 원문 NaN 비트', () => {
+    const o = scene();
+    try {
+        const sid = parent(o), bytes = new Uint8Array(28), view = new DataView(bytes.buffer);
+        view.setUint16(6, sid, true); view.setUint32(16, 7, true); view.setUint32(20, 0x7f812345, true);
+        const process = o.core.processes.receiveSharedRegular(bytes);
+        assert.equal(process.payloadBits, 0x7f812345);
+        const dump = captureSessionDumpBase('patch1078', { number: 1, game: 0 }, new ClientRandomGlobals(), o.core.kernel);
+        assert.equal(dump.processes.find((entry) => entry.pid === process.pid).payloadBits, 0x7f812345);
+    } finally { o.dispose(); }
+});
 
 // 수신 패킷의 시각과 횟수는 현재 시각으로 덮지 않고 같은 부모에 붙인다.
 test('공유 Regular 수신: 패킷 필드와 실제 Host 부착', () => {

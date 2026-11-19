@@ -162,6 +162,14 @@ export class RegularProcess extends SquidProcess {
     // payload(float32)이다.
     get payload() { return this.#payload; }
 
+    // 현재 payload의 원문 float32 비트다. 패킷에서 받은 NaN은 산술 갱신 전까지 원래 페이로드를 유지한다. (2026-11-19 WB04-E866)
+    get payloadBits() {
+        if (this.#payloadBits !== null) return this.#payloadBits;
+        const view = new DataView(new ArrayBuffer(4));
+        view.setFloat32(0, this.#payload, true);
+        return view.getUint32(0, true);
+    }
+
     // 호출 횟수이다.
     get count() { return this.#count; }
 

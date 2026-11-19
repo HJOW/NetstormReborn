@@ -1,9 +1,12 @@
 // cpppj SessionStateDump의 순수 판번호 1 서식·SP 복호·해시 계약을 검증한다. (2026-11-19 WB04-E865)
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { formatSessionStateDump, sessionDumpHash, decodeDumpScrambledSp } from '../www/core/session-state-dump.js';
-import { GameRandom } from '../www/core/random.js';
+import { formatSessionStateDump, sessionDumpHash, decodeDumpScrambledSp, captureSessionDumpBase } from '../www/core/session-state-dump.js';
+import { ClientRandomGlobals, GameRandom } from '../www/core/random.js';
 import { ScrambledSpStore } from '../www/core/sp-store.js';
+import { Kernel } from '../www/core/kernel.js';
+import { RegularProcess } from '../www/core/squid-process.js';
+import { GameClock } from '../www/core/game-clock.js';
 
 // C++ 검사와 같은 판본별 자산 슬롯·Player·동맹·Graph·TotalMade 관측값을 만든다.
 function sample(edition) {
@@ -77,4 +80,20 @@ test('Session 덤프 world 0과 입력 범위 오류', () => {
     assert.throws(() => formatSessionStateDump(broken), /풀 원문 크기/);
     const badTotals = sample('patch1078'); badTotals.totalBuilt = new Uint32Array(1);
     assert.throws(() => formatSessionStateDump(badTotals), /TotalMade/);
+});
+
+// 실제 시계·난수·Kernel의 현재 값을 실행이나 난수 소비 없이 수집하고 비 Squid와 Regular를 구분한다.
+test('Session 덤프 공통 수집은 현재 시계·난수·Kernel을 보존한다', () => {
+    const clock = new GameClock(1000), frame = clock.capture(2500), random = new ClientRandomGlobals(), kernel = new Kernel(3);
+    random.game.setState(0x1234); random.crt.setState(99);
+    const ordinary = { runFrame() { throw new Error('실행 금지'); } };
+    const regular = new RegularProcess(0x5104, -3.25); regular.setNextTime(27); regular.setInitialCount(3);
+    kernel.add(ordinary); kernel.add(regular);
+    const input = captureSessionDumpBase('patch1078', frame, random, kernel);
+    assert.equal(random.game.state, 0x1234); assert.equal(random.crt.state, 99); assert.equal(kernel.size, 2);
+    assert.deepEqual(input.processes, [{ pid: 1, form: 0, parent: 0, regular: false },
+        { pid: 2, form: 0, parent: 0, regular: true, event: 0x5104, count: 3, payloadBits: 3226468352, timeBits: 4628293042053316608n }]);
+    const text = formatSessionStateDump(input);
+    assert.ok(text.includes('frame\t1\t4609434218613702656\nrandom\t4660\t99\nworld\t0\nkernel\t2\t3\n'));
+    assert.ok(text.includes('regular\t2\t20740\t3\t3226468352\t4628293042053316608\n'));
 });

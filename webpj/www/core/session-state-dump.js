@@ -1,4 +1,5 @@
-// cpppj SessionStateDump 판번호 1의 순수 TSV 서식이다. Client/Session에서 값을 수집하는 작업은 별도다. (2026-11-19 WB04-E865)
+// cpppj SessionStateDump 판번호 1의 순수 TSV 서식과 현재 Client 공통 상태 수집이다. World 수집은 별도다. (2026-11-19 WB04-E865~E866)
+import { RegularProcess, SquidProcess } from './squid-process.js';
 
 // 풀 전체 원문의 FNV-1a 64비트 해시를 계산한다.
 export function sessionDumpHash(bytes) {
@@ -40,6 +41,27 @@ function doubleBits(value) {
     const view = new DataView(new ArrayBuffer(8));
     view.setFloat64(0, value, true);
     return view.getBigUint64(0, true);
+}
+
+// 장기 Client가 소유한 현재 시각·난수·Kernel을 읽어 월드 없는 덤프 입력을 만든다. 프로세스 실행과 난수 소비는 하지 않는다. (2026-11-19 WB04-E866)
+export function captureSessionDumpBase(edition, frame, random, kernel) {
+    if (edition !== 'patch1078' && edition !== 'cd1072') throw new RangeError('Session 덤프 판본 오류');
+    if (!frame || !random?.game || !random?.crt || !kernel || typeof kernel.get !== 'function') throw new TypeError('Session 덤프의 현재 시계·난수·Kernel 필요');
+    const input = { edition, frame: frame.number, gameTime: frame.game, gameRandom: random.game.state, crtRandom: random.crt.state,
+        world: false, kernelSize: kernel.size, kernelCapacity: kernel.capacity, processes: [] };
+    // PID 1부터 현재 슬롯을 읽는다. 같은 Kernel의 비 Squid는 Form과 부모를 0으로 둔다.
+    for (let pid = 1; pid <= kernel.capacity; pid += 1) {
+        const process = kernel.get(pid);
+        if (!process) continue;
+        const row = { pid, form: 0, parent: 0, regular: false };
+        if (process instanceof SquidProcess) { row.form = process.form; row.parent = process.parent; }
+        if (process instanceof RegularProcess) {
+            row.regular = true; row.event = process.event; row.count = process.count;
+            row.payloadBits = process.payloadBits; row.timeBits = doubleBits(process.time);
+        }
+        input.processes.push(row);
+    }
+    return input;
 }
 
 // 명시된 관측값을 판번호 1 TSV로 변환한다. 숫자·행 순서는 cpppj FormatSessionStateDump와 같다.
