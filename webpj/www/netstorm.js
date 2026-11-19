@@ -1059,7 +1059,7 @@ export class Netstorm {
             patchDiagnostic: () => gameplay.patchDiagnostic(), worldCells: () => gameplay.worldCells() };
         const client = { configuration: () => this._gameData, screen: () => this._clientPaletteScreen, renderer: () => this._clientRenderer,
             gameplay: () => game, localState: () => this._clientLocal, time: () => this._gameClock.time(),
-            active: () => this._root?.ownerDocument?.hasFocus?.() ?? true, poll: (code) => this._clientInputPoll.poll(code),
+            active: () => Boolean((this._root?.ownerDocument?.hasFocus?.() ?? true) && this._input.pointer.inside), poll: (code) => this._clientInputPoll.poll(code),
             cursor: () => { throw new Error('미션 소프트웨어 커서 장치 미연결'); } };
         const app = this, rebuild = { get value() { return app._displayDirty; }, set value(value) { app._displayDirty = Boolean(value); } };
         const lookup = new RawUberRootLookup(gump);
@@ -1217,6 +1217,7 @@ export class Netstorm {
         if (!world || !queue || !tutorial || !gump || !user) throw new Error('미션 입력 프레임의 현재 장치 수명 누락');
         const mouse = this._prepareClientPointer(this.options.language === 'korean' ? 7 : 0);
         tutorial.event(mouse);
+        this._campaignCameraDevice().pollEdgeScroll(mouse);
         const dialog = Boolean(this._mainMenu?.dialog), cursorActive = world.session().cursorDropSettings().lockDepth === 0;
         const pointer = gump.notifyPointer(mouse, world.inputMode(), cursorActive, !dialog);
         if (pointer.overlay === 0) this._campaignCursor = CURSOR_NORMAL;
@@ -2587,6 +2588,7 @@ export class Netstorm {
             this._drawCampaignRendererFrame();
             if (dialog) { dialog.draw(this._surface); this._presenter.present(ctx, this._surface, layout, true); }
             this._mainMenu.dirty = false; this._displayDirty = false;
+            this._campaignCameraDevice().applyCameraFrame();
             if (this.options.debug) { ctx.setTransform(drawScaleX, 0, 0, drawScaleY, 0, 0); this._drawDebug(ctx); }
             return;
         }

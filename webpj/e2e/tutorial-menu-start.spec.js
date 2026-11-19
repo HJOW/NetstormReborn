@@ -61,5 +61,12 @@ test('캠페인 목록에서 첫 Tutorial의 월드와 안내를 표시한다', 
     const bytes = window.netstorm._campaignWorld.session().core().pool.slot(sid), raw = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
     return raw.getFloat32(14, true) !== x || raw.getFloat32(18, true) !== y;
   }, { sid: priest.sid, x: destination.startX, y: destination.startY }, { timeout: 15000 });
+  // 화면 오른쪽 가장자리에 포인터를 두면 실제 카메라의 현재 X 원점이 이동한다.
+  const edge = await page.evaluate(() => {
+    const app = window.netstorm, rect = app.canvas.getBoundingClientRect();
+    return { before: app._clientGameplay.camera().snapshot().pixels.x, x: rect.right - 0.1, y: rect.top + rect.height / 2 };
+  });
+  await page.mouse.move(edge.x, edge.y);
+  await expect.poll(() => page.evaluate(() => window.netstorm._clientGameplay.camera().snapshot().pixels.x), { timeout: 15000 }).toBeGreaterThan(edge.before);
   expect(errors).toEqual([]);
 });
