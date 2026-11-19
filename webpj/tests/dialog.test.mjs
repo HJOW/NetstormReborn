@@ -32,6 +32,15 @@ function newData({ product = true } = {}) {
     return GameData.build({ files, language: 'english', options: { soundVolume: 3, musicVolume: 2 }, product });
 }
 
+// 숨긴 init Tell은 실제 미션 본문을 첫 파서만 실행하고 창이나 메타데이터를 만들지 않는다.
+test('Tell 창 공장: 현재 미션 본문과 숨긴 첫 파서', () => {
+    const data = newData(), unsupported = [], result = createTellWindow({ gameData: data, resources, name: 'init', screen: { width: 1024, height: 768 },
+        missionSection: (name) => name === 'init' ? '<$config,foo=3>\n$Zsend=Send,Zsend,47\nBody' : null,
+        suppressWindow: true, onUnsupported: (what) => unsupported.push(what) });
+    assert.equal(result.missing, false); assert.equal(result.window, null); assert.equal(result.inlineCommands.length, 1);
+    assert.equal(result.inlineCommands[0].name.toLowerCase(), 'config'); assert.equal(result.inlineCommands[0].argument, 'foo=3'); assert.deepEqual(unsupported, []);
+});
+
 // 기본 글자 문맥(슬롯 0, 흰색, 효과 없음)이다. (2026-10-28 WB03-D)
 const BASE_CONTEXT = { flags: 0, font: 0, color: colors.white, style: 0, extra: 0, shadowColor: 0, shadowX: 1, shadowY: 1 };
 

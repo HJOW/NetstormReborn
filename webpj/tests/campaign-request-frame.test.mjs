@@ -84,7 +84,10 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
     app._canvas = {}; app._render = () => {}; app._startFrameLoop = () => {}; app._applyCursor = () => {};
     const guide = app._clientGuide;
     try {
-        guide.begin('Tutorial1'); guide.run(); guide.run();
+        guide.begin('Tutorial1');
+        assert.ok(guide.current().script.section('A.').includes('NetStorm!')); assert.equal(app._openTell('A.'), true);
+        assert.ok(app._mainMenu.dialog); app._mainMenu.setDialog(null);
+        guide.run(); guide.run();
         const request = guide.fortRequest(); assert.equal(request.fort, 'BridgeTheGap'); assert.equal(guide.pending().pending(), true);
         app._setState(AppState.MAIN_MENU); app._onFrame(0);
         assert.equal(request.consumed, false); assert.equal(guide.pending().pending(), true); assert.ok(app._clientSoundPrepare);

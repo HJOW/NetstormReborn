@@ -4,7 +4,7 @@
 //  - 시작: 설정 버퍼는 `d/setup.cfg` 를 읽은 다음 언어 용어표(`config.<언어>`)를 읽는다(원본 00441790 → 00440e00).
 //  - 미션: cpppj `MissionScript` 와 같이 미션 스크립트(`missionSpec`)를 읽은 뒤 `mission.loadFort`(없으면 미션 이름)로 `fortSpec` 경로를 정해 `.fort` 를 읽는다.
 //    타입 표는 미션보다 앞서 읽혀 있고(자산 초기화), `.fort` 해석은 그 타입 표를 쓴다.
-//  - Tell: 등록 객체 접두어 섹션 → 현재 언어 tell → (웹 적응) 영어 tell 순이며, 영어 tell 은 현재 언어 tell 에 섹션이 없을 때만 한 번 읽는다.
+//  - Tell: 등록 객체 접두어 섹션 → 현재 미션 → 현재 언어 tell → (웹 적응) 영어 tell 순이다.
 // 파일 조회를 `GameFiles.read/find` 위에서 기록해 비교하며 게임·브라우저 실행이 아니다. (2026-11-10 WB04-E273)
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -115,6 +115,19 @@ test('Tell 조회 순서: 등록 객체 → 현재 언어 tell → 영어 tell �
     assert.deepEqual(log, []);
     assert.equal(data.findTellSection('quest.WELCOME'), null);
     quest.dispose();
+});
+
+// 현재 미션이 제공한 본문과 빈 본문도 기본 tell 파일보다 앞서며 등록 객체는 미션보다 앞선다.
+test('Tell 조회 순서: 등록 객체 → 현재 미션 → 기본 tell', () => {
+    const { data, log } = openData('english'), calls = [], quest = new Config(data.registry, 'quest');
+    quest.append('[Intro]\nobject body\n[END]\n'); log.length = 0;
+    // 원본과 같이 대상 전체 이름으로 현재 미션을 조회한다.
+    const mission = (name) => { calls.push(name); if (name === 'WELCOME') return 'mission'; if (name === 'Empty') return ''; return null; };
+    assert.equal(data.findTellSection('quest.Intro', mission), quest.section('Intro')); assert.deepEqual(calls, []); assert.deepEqual(log, []);
+    assert.equal(data.findTellSection('WELCOME', mission), 'mission'); assert.deepEqual(calls, ['WELCOME']); assert.deepEqual(log, []);
+    assert.equal(data.findTellSection('Empty', mission), ''); assert.deepEqual(log, []);
+    assert.ok(data.findTellSection('About', mission)); assert.ok(log.some((entry) => entry.includes('tell.english')));
+    assert.throws(() => data.findTellSection('Absent', 3), /미션 섹션 조회 오류/); quest.dispose();
 });
 
 test('미션 자료 조회 순서: 타입 표 → 미션 스크립트(missionSpec) → loadFort 의 .fort(fortSpec) 이며 .fort 해석은 앞서 읽은 타입 표를 쓴다', () => {

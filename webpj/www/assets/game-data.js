@@ -291,14 +291,18 @@ export class GameData {
     }
 
     // Tell 섹션 본문을 찾는다. 이름에 점이 있으면 먼저 등록된 객체(접두어)의 섹션을, 이어 기본 tell 스크립트의 섹션을 조회한다(원본 004cf730 FindTellSection).
-    // 현재 미션 스크립트 조회는 미션 구현 때 연결한다. 없으면 null, 섹션이 있어도 본문이 비어 있으면 빈 문자열이다.
+    // 선택적인 현재 미션 조회기는 등록 객체 다음, 기본 tell 파일 전에 읽는다. 빈 본문도 있는 섹션이다.
     // 사용: tellSection('UCampaign'). (2026-10-28 WB02-D)
-    tellSection(name) {
+    tellSection(name, missionSection = null) {
         const dot = name.indexOf('.');
         if (dot >= 0) {
             const object = this.registry.findByName(name.slice(0, dot));
             const body = object?.section(name.slice(dot + 1)) ?? null;
             if (body !== null) return body;
+        }
+        if (missionSection !== null) {
+            if (typeof missionSection !== 'function') throw new TypeError('Tell의 현재 미션 섹션 조회 오류');
+            const body = missionSection(name); if (body !== null && body !== undefined) return body;
         }
         // 현재 언어의 tell 스크립트를 먼저, 섹션이 없으면 영어 tell 스크립트를 찾는다. 본문이 비어 있는 섹션은 있는 것으로 본다.
         // 영어 tell 스크립트는 현재 언어 tell 에 섹션이 없을 때만 읽는다(배열로 둘을 한꺼번에 평가하면 섹션이 있어도 영어 파일을 읽는다). (2026-11-10 WB04-E273: 조회 순서 시험에서 발견해 지연 평가로 고침)
@@ -315,12 +319,12 @@ export class GameData {
     // 먼저 이전 이름을 `global.priorTell`(본문의 `{global.priorTell}`)에 쓴다. 조회가 실패해도 이름 기록은 남는다. 이름이 256바이트 이상이면 RangeError 이다.
     // 호출자(Tell 창 공장)가 `param` 객체를 등록한 상태에서 부르며, 이름에는 이미 지역 인자를 뗀 순수 섹션 이름을 넘긴다. BLANK 는 이 함수 앞에서 걸러진다.
     // 사용: const body = data.findTellSection('Tips'); body === null 이면 섹션이 없다. (2026-10-30 WB03-J)
-    findTellSection(name) {
+    findTellSection(name, missionSection = null) {
         const nul = name.indexOf('\0');
         const local = nul >= 0 ? name.slice(0, nul) : name;
         if (local.length >= TELL_NAME_BYTES) throw new RangeError('Tell 이름이 원본 256바이트 지역 범위를 넘었습니다.');
         if (asciiLower(this.currentTell) !== asciiLower(local)) this.set('global.priorTell', this.currentTell, { silent: true });
         this.currentTell = local;
-        return this.tellSection(local);
+        return this.tellSection(local, missionSection);
     }
 }

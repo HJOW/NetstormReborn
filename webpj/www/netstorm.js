@@ -888,7 +888,7 @@ export class Netstorm {
         this._clientGuide.bindTutorialInit({ templates: this._clientTemplates, local: this._clientLocal, subscriber: this._clientSubscriber, types: this._gameAssets.typeTable,
             selectFort: (name) => { this._selectCampaignFort(name); const bytes = this._clientFort.currentBytes(); return decodeWindows1252(bytes.subarray(0, bytes.indexOf(0))); } });
         this._clientGuide.bindLoop({ dialogsClear: () => !this._mainMenu?.dialog, gameSeconds: () => this._gameClock.gameSeconds(),
-            worldConnecting: (token) => Boolean(this._campaignWorld?.connecting && token === this._campaignWorldMissionToken), tellGlobal: (name, mode) => { if (mode !== 1) throw new Error('Guide init Tell 인자 위반'); this._openTell(name); } });
+            worldConnecting: (token) => Boolean(this._campaignWorld?.connecting && token === this._campaignWorldMissionToken), tellGlobal: (name, mode) => { if (mode !== 1) throw new Error('Guide init Tell 인자 위반'); this._openTell(name, { suppressWindow: true }); } });
     }
 
     // 현재 폴링과 같은 Client 입력 큐로 원본 포인터 안팎 보정을 실행한다.
@@ -1536,12 +1536,14 @@ export class Netstorm {
     // 본문의 스크립트 명령(`<$config,키=값>` 등)은 창이 올라간 뒤(창이 없어도) 순서대로 실행한다. 열린 대화상자의 명령은 _onDialogCommand 가 받는다. 열었으면 true 를 돌려준다.
     // 본문의 링크(`<a href>`)를 누르면 _onDialogLink 가 받는다. 본문이 화면보다 길면 스크롤바가 생긴다(시계는 _frameSeconds).
     // (2026-10-28 WB03-D, 2026-10-30 WB03-J: Blank·지역 인자·본문 스크립트 명령 추가, 2026-10-31 WB03-K: 링크·스크롤바 연결)
-    _openTell(name) {
+    _openTell(name, { suppressWindow = false } = {}) {
         if (!this._mainMenu || !this._gameData || !this._resources) return false;
         const result = createTellWindow({
             gameData: this._gameData,
             resources: this._resources,
             name,
+            missionSection: (section) => this._clientGuide?.current()?.script.section(section) ?? null,
+            suppressWindow,
             screen: { width: this._mainMenu.width, height: this._mainMenu.height },
             nowSeconds: this._frameSeconds,
             now: () => this._frameSeconds,
@@ -1552,7 +1554,7 @@ export class Netstorm {
             // 원본 비교 모드는 웹이 빼는 목록 행(User Made Campaigns)도 만든다. (2026-11-07 WB02-H)
             excludedLists: this.options.originalComparison ? [] : undefined,
         });
-        if (result.missing) console.warn(`Netstorm: TELL cannot find "${name}".`);
+        if (result.missing && !suppressWindow) console.warn(`Netstorm: TELL cannot find "${name}".`);
         if (result.window) {
             this._mainMenu.setDialog(result.window);
             this._displayDirty = true;

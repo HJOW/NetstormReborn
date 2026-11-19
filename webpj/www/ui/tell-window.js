@@ -15,7 +15,7 @@ import { ScrollingText } from './scroll-text.js';
 import { CURSOR_NORMAL } from './cursor.js';
 import { VerticalSlider } from './slider.js';
 import { parseStyleText } from './style-text.js';
-import { LinkTable, applyHtmlCondition, prepareDialogContent } from './html-text.js';
+import { LinkTable, applyHtmlCondition, createParserGlobals, createParserState, parseHtml, prepareDialogContent } from './html-text.js';
 import { expandFileList } from './tell-lists.js';
 import { parseTellParameters } from './tell-parameters.js';
 import { parseScriptCommand } from './script-command.js';
@@ -466,7 +466,8 @@ export class TellWindow {
 // (2026-10-28 WB03-D, 2026-10-30 WB03-J: BLANK·지역 인자·이름 기록·조건 태그·인라인 명령 추가, 2026-10-31 WB03-K: 링크 표·onLink·now 추가)
 // excludedLists 는 파일 목록 메뉴에서 뺄 목록 객체 이름 배열이다. 생략하면 웹 판본 제외 목록(tell-lists.js WEB_EXCLUDED_LIST_OBJECTS)이며,
 // cpppj 오라클과 비교하는 원본 비교 모드는 빈 배열을 넘겨 원본처럼 모든 행(User Made Campaigns 포함)을 만든다. (2026-11-07 WB02-H)
-export function createTellWindow({ gameData, resources, name, screen, nowSeconds = 0, now = () => 0, onCommand = null, onLink = null, onSound = null, onUnsupported = null, onTrace = null, hooks = {}, excludedLists = undefined }) {
+// missionSection은 현재 미션 본문 조회이며 suppressWindow는 창 없이 첫 변환의 명령만 처리한다.
+export function createTellWindow({ gameData, resources, name, screen, nowSeconds = 0, now = () => 0, onCommand = null, onLink = null, onSound = null, onUnsupported = null, onTrace = null, hooks = {}, excludedLists = undefined, missionSection = null, suppressWindow = false }) {
     const inlineCommands = [];
     if (asciiLower(name) === 'blank') return { window: null, empty: false, missing: false, blank: true, inlineCommands };
     // 지역 인자 객체이다. 같은 이름의 바깥 객체는 일시적으로 가려지고 본문 처리 뒤 내려간다.
@@ -479,7 +480,7 @@ export function createTellWindow({ gameData, resources, name, screen, nowSeconds
             if (error instanceof RangeError) return { window: null, empty: false, missing: true, blank: false, inlineCommands };
             throw error;
         }
-        const found = gameData.findTellSection(sectionName);
+        const found = gameData.findTellSection(sectionName, missionSection);
         if (found === null) return { window: null, empty: false, missing: true, blank: false, inlineCommands };
         // 제품 표기(메인 Credits 의 세 번째 Patch Credits 행)를 원문 본문에 적용한다. 같은 HTML 창·메뉴·입력 경로를 그대로 쓴다(cpppj UberGump 의 ProductTellBody 자리). (2026-11-05 WB03-AC)
         const body = gameData.presentTellBody(sectionName, found);
@@ -494,6 +495,12 @@ export function createTellWindow({ gameData, resources, name, screen, nowSeconds
             onUnsupported,
             ...hooks,
         };
+        // 원본 suppress는 창과 메타데이터 없이 치환과 첫 HTML 파서 효과만 실행한다.
+        if (suppressWindow) {
+            const substituted = gameData.substitute(body.length > 8192 ? body.slice(0, 8192) : body);
+            parseHtml(substituted, createParserState(), createParserGlobals(), mergedHooks);
+            return { window: null, empty: false, missing: false, blank: false, inlineCommands };
+        }
         const content = prepareDialogContent(body, { substitute: (text) => gameData.substitute(text), okButton: gameData.get('OkButton') ?? undefined, hooks: mergedHooks });
         if (content.empty) return { window: null, empty: true, missing: false, blank: false, inlineCommands };
         const window = new TellWindow({ resources, content, screen, nowSeconds, links, now, onCommand, onLink, onSound, onUnsupported, onTrace });
