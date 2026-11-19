@@ -1272,7 +1272,7 @@ export class Netstorm {
         const node = (token) => { const current = gump.node(token); if (!current) throw new Error('미션 커서의 실제 Gump 토큰 누락'); return current; };
         const controls = { pickGump: (point) => gump.events().pickTopLevel(point),
             dispatchGump: (token, ...args) => gump.events().dispatch(token, ...args), gumpParentSid: (token) => node(token).object,
-            handleGump: (token, ...args) => gump.handle(token, ...args), requestClosePopups: () => this._closeCampaignPopups(), menus: () => null };
+            handleGump: (token, ...args) => gump.handle(token, ...args), requestClosePopups: () => this._closeCampaignPopups(), menus: () => this._campaignProduction?.ui ?? null };
         const effects = makeCampaignCursorClientEffects(client, controls);
         effects.lifecycle.highlight = (mode) => world.highlight(mode);
         effects.send = (target, packet) => session.sendLocalPacket(target | 0, packet);
@@ -1307,7 +1307,7 @@ export class Netstorm {
             metamap: () => this._surfaceStorage.ownerMode.challenge, unknownName: () => 'SOMEONE',
         });
         const ui = createClientProductionAssembly(root, production.session, this._gameAssets, this._resources.fonts, screen, this._clientColorSort, this._clientProductionGlobals, production.panel, {
-            now: () => this._gameClock.wallSeconds(), translate: (value) => this._resources.translate(value),
+            now: () => this._gameClock.wallSeconds(), gameSeconds: () => this._gameClock.gameSeconds(), translate: (value) => this._resources.translate(value),
             sound: (name) => this._clientSoundPlayer.play(this._clientSoundNames.lookup(name), 0, 0, 0, 0, 0), tell: (section) => this._openTell(section),
             about: () => { throw new Error('생산 정보 메뉴 미연결'); },
             menu: { data: this._gameData, helpWord: () => this._clientLocal.helpWord().get(),

@@ -10,6 +10,7 @@ import { ClientTextGump } from './client-text-gump.js';
 import { makeClientTextMarkup } from './client-text-markup.js';
 import { ClientProductionBudget } from './client-production-budget.js';
 import { ClientProductionHint } from './client-production-hint.js';
+import { ClientFloatingSp } from './client-floating-sp.js';
 import { ClientProductionSelection } from './client-production-selection.js';
 import { ClientProductionPanel } from './client-production-panel.js';
 import { createClientProductionMenu } from './client-production-menu.js';
@@ -26,6 +27,7 @@ export function createClientProductionAssembly(root, session, game, fonts, scree
     const background = new ClientGumpBackground(root, game, () => 35, () => screen.shadeMaps(), () => screen.colors(), devices.baseHandle);
     const text = new ClientTextGump(root, fonts, devices.baseHandle, makeClientTextMarkup(game, () => screen.colors(), () => colors.maps[2], devices.sound));
     const hint = new ClientProductionHint(root, text, { now: devices.now, translate: devices.translate, palette: () => screen.colors(), changed: devices.changed });
+    const floating = devices.gameSeconds ? new ClientFloatingSp(root, text, devices.gameSeconds, devices.changed) : null;
     const budget = new ClientProductionBudget(root, text, { now: devices.now, money: () => session.sp(context.gameplay.player.battleOwner),
         known: () => context.gameplay.player.playerKnown, fort: () => core.ownerMode.fort, editor: () => context.gameplay.world.editor,
         backgroundType: () => globals.backgroundType, changed: devices.changed });
@@ -60,5 +62,7 @@ export function createClientProductionAssembly(root, session, game, fonts, scree
     const divider = new ClientHudDivider(root, { background, backgroundColor: () => 35, dividerColor: () => 55, baseHandle: devices.baseHandle,
         closePopups: devices.closePopups, menuInstances: () => menu ? menu.instances() : devices.menuInstances(), poll: devices.poll, cursor: devices.cursor });
     return new ClientProductionPanel(root, session, { grid, background, divider, budget, selection,
-        technology: () => context.gameplay.player.playerKnown ? technology(context.gameplay.player.battleOwner) : 0, changed: devices.changed, openPriest: (sid, event) => menu?.openPriest(sid, event) ?? 0, close: () => menu?.close() }, globals, panel);
+        technology: () => context.gameplay.player.playerKnown ? technology(context.gameplay.player.battleOwner) : 0, changed: devices.changed, openPriest: (sid, event) => menu?.openPriest(sid, event) ?? 0,
+        showSp: (cost, x, y, reference) => { if (!floating) throw new Error('생산 UI의 실제 비용 표시 미연결'); return floating.showSp(cost, x, y, reference); },
+        close: () => { floating?.close(); menu?.close(); } }, globals, panel);
 }

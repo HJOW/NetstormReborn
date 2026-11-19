@@ -104,5 +104,16 @@ test('한국어 Tutorial2의 안내 페이지를 표시한다', async ({ page })
   await page.waitForFunction(() => window.netstorm._campaignWorld.session().cursorDropSettings().preview !== 0, null, { timeout: 10000 });
   const preview = await page.evaluate(() => { const session = window.netstorm._campaignWorld.session(), drop = session.cursorDropSettings(), slot = session.core().pool.slot(drop.preview);
     return { type: new DataView(slot.buffer, slot.byteOffset, slot.byteLength).getUint16(18, true), costFlags: drop.costFlags }; });
-  expect(preview).toEqual({ type: 123, costFlags: 0x160 }); expect(errors).toEqual([]);
+  expect(preview).toEqual({ type: 123, costFlags: 0x160 });
+  // 실제 마우스로 섬의 유효한 자리를 찾은 뒤 신전을 내려놓는다.
+  let target = null;
+  for (const [dx, dy] of [[60, 20], [-60, 20], [65, -35], [-65, -35], [35, 70], [-35, 70], [100, 35], [-100, 35]]) {
+    await page.mouse.move(priest.x + dx, priest.y + dy); await page.waitForTimeout(100);
+    if (await page.evaluate(() => Boolean(window.netstorm._campaignWorld.session().cursorDropSettings().legal))) { target = { x: priest.x + dx, y: priest.y + dy }; break; }
+  }
+  expect(target).toBeTruthy();
+  const before = await page.evaluate(() => window.netstorm._campaignWorld.session().world().objects().filter(({object}) => object.type === 123 && object.owner === 1).length);
+  await page.mouse.click(target.x, target.y, { delay: 60 });
+  await expect.poll(() => page.evaluate(() => window.netstorm._campaignWorld.session().world().objects().filter(({object}) => object.type === 123 && object.owner === 1).length), { timeout: 15000 }).toBe(before + 1);
+  await page.screenshot({ path: test.info().outputPath('korean-tutorial2-temple.png') }); expect(errors).toEqual([]);
 });
