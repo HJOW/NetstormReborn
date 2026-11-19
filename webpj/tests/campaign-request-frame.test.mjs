@@ -153,9 +153,10 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         const drawing = new CampaignRendererDrawing({ world: app._campaignWorld, screen, camera: camera.snapshot(), globals: frameGlobals,
             clouds: app._clientKencloud, files: data.files, config: data, random: app._clientRandom.game,
             denominator: camera.denominator(), tint: () => 0 });
-        app._layout = { ...app._layout, visible: false }; renderer.invalidateAll(); const target = screen.lock();
-        try { renderer.draw(target, screen.pitch, 0, drawing); } finally { screen.unlock(); }
-        renderer.present((rect) => screen.update(rect)); assert.ok(app._surface.pixels.some((value) => value !== 0));
+        app._layout = { ...app._layout, visible: false }; redraw.value = 1; const beforePresent = renderer.presentCount;
+        app._drawCampaignRendererFrame();
+        assert.ok(renderer.presentCount > beforePresent); assert.equal(redraw.value, 0); assert.equal(renderer.cameraDirtyEntries().length, 0);
+        assert.ok(app._surface.pixels.some((value) => value !== 0));
         // 빈 지면의 구름은 지도 영역에만, UI 전용 dirty는 배경을 건드리지 않는다.
         screen.clear(fullClip, 55); drawing.collect(fullClip, 0); const sky = screen.lock();
         try { drawing.background(fullClip, 0, 0); assert.ok(sky.subarray(screen.pitch * 28).some((value) => value !== 55)); assert.equal(sky[0], 55); }

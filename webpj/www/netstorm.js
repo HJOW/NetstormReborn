@@ -37,6 +37,7 @@ import { Renderer } from './render/renderer.js';
 import { SquidRenderer } from './render/squid-renderer.js';
 import { prepareRendererFrame } from './render/raw-renderer-prelude.js';
 import { appendRendererCloudDirty, refreshRendererCloudBackground } from './render/raw-renderer-clouds.js';
+import { CampaignRendererDrawing } from './render/campaign-renderer-drawing.js';
 import { Settings, findSettingKey, getLocalStorage } from './platform/settings.js';
 import { Progress, isProgressKey } from './platform/progress.js';
 import { reportGameError } from './platform/error-reporting.js';
@@ -1221,6 +1222,21 @@ export class Netstorm {
                 invalidate: (rect, flags) => renderer.invalidate(rect, flags), clearDirty: () => renderer.clearDirty(),
                 invalidateBackground: () => refreshRendererCloudBackground(queue, { get value() { return snapshot.pixels.x; } }, { get value() { return snapshot.pixels.y; } }, denominator, { draw: cloudDraw }),
             });
+    }
+
+    // 현재 미션의 준비·DIB 합성·구름 정리·표시를 원본 순서로 한 번 실행한다.
+    _drawCampaignRendererFrame() {
+        const world = this._campaignWorld, screen = this._clientPaletteScreen, renderer = this._clientRenderer;
+        const clouds = this._clientKencloud, game = this._clientGameplay, data = this._gameData;
+        if (!world || world.connecting || !screen || !renderer || !clouds || !game || !data || !this._clientRendererFrame || !this._clientRandom) throw new Error('미션 Renderer 출력의 현재 장치 수명 오류');
+        const camera = game.camera();
+        const drawing = new CampaignRendererDrawing({ world, screen, camera: camera.snapshot(), globals: this._clientRendererFrame,
+            clouds, files: data.files, config: data, random: this._clientRandom.game, denominator: camera.denominator(),
+            tint: () => { throw new Error('미션 날씨색 장치 미연결'); }, hideBuildings: () => game.hideBuildings().value });
+        this._prepareCampaignRendererFrame(); screen.setClip(0, 0, screen.width, screen.height);
+        const pixels = screen.lock();
+        try { renderer.draw(pixels, screen.pitch, 0, drawing); } finally { screen.unlock(); }
+        clouds.cleanDirty(); renderer.present((rect) => screen.update(rect)); clouds.worldRedraw().value = 0;
     }
 
     // 게임을 정리한다. 프레임 예약·이벤트·관찰자·오디오·진행 중 로딩을 모두 해제하고 Canvas 를 제거한다.
