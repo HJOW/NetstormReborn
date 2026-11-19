@@ -27,7 +27,7 @@ import { KOREAN_FONT_FAMILY } from './assets/korean-font-config.js';
 import { AudioSystem, createAudioContext } from './audio/audio-system.js';
 import { IndexedSurface } from './render/indexed-surface.js';
 import { IndexedPresenter, normalizeScaling } from './render/presenter.js';
-import { Screen } from './render/screen.js';
+import { Screen, ScreenMode } from './render/screen.js';
 import { Settings, findSettingKey, getLocalStorage } from './platform/settings.js';
 import { Progress, isProgressKey } from './platform/progress.js';
 import { reportGameError } from './platform/error-reporting.js';
@@ -698,7 +698,7 @@ export class Netstorm {
         this._gameAssets = game; this._surfaceStorage = storage; this._clientKernel = kernel;
     }
 
-    // 실제 fortPal 자산을 Screen과 표시기에 적용하고 그 논리 색을 한 번 캡처한다. DIB 표면과 캐시는 후속 연결이다.
+    // 실제 fortPal 자산을 적용해 논리 색을 캡처한 뒤 창 모드 DIB를 준비한다. DIB의 실제 출력 연결은 후속이다.
     _initializeClientPalette(game) {
         if (this._clientPaletteScreen || this._clientColorSort || !this._layout || !game) throw new Error('Client 팔레트의 중복 또는 시작 수명 누락');
         const screen = new Screen(this._layout.logicalWidth, this._layout.logicalHeight, { devices: { paletteChanged: (palette) => this._applyClientScreenPalette(palette) } });
@@ -706,6 +706,9 @@ export class Netstorm {
         screen.init(); screen.loadPalette(game.palette, 1);
         colors.captureWithPrimary(screen.logicalPalette());
         screen.bindColorSortInput(() => colors.logical);
+        screen.initDibSection();
+        if (!screen.setMode(ScreenMode.fallbackWindowed)) throw new Error('Client Screen의 창 모드 DIB 초기화 실패');
+        screen.setClip(0, 0, screen.width, screen.height);
         this._clientPaletteScreen = screen; this._clientColorSort = colors;
     }
 

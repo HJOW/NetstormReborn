@@ -5,6 +5,7 @@ import { Netstorm } from '../www/netstorm.js';
 import { GamePalette, buildRgbaLookup } from '../www/assets/palette.js';
 import { GameAssets } from '../www/assets/game-assets.js';
 import { IndexedPresenter } from '../www/render/presenter.js';
+import { ScreenMode } from '../www/render/screen.js';
 import { realCaptureAssets } from './capture-assets-support.mjs';
 import { readData } from './helpers.mjs';
 
@@ -48,6 +49,19 @@ test('Client 화면 팔레트: 실제 표시기의 색상과 갱신 요청을 �
     assert.deepEqual(app._presenter.lookup, buildRgbaLookup(changed));
     assert.equal(app._displayDirty, true); assert.equal(app._presenter.stale, true);
     assert.throws(() => app._applyClientScreenPalette(new Uint8Array(3)), /BGRX/u);
+});
+
+// 창 모드 DIB의 4바이트 정렬 행 간격과 전체 clip에서 clear가 실제 색 번호 영역만 지운다.
+test('Client 화면 DIB: 팔레트 clear가 현재 표면을 지운다', () => {
+    const app = new Netstorm(), palette = GamePalette.parse(readData('d/GIFCLOUD.COL'));
+    app._layout = { logicalWidth: 7, logicalHeight: 4 }; app._initializeClientPalette({ palette });
+    const screen = app._clientPaletteScreen;
+    assert.equal(screen.flags, ScreenMode.fallbackWindowed | ScreenMode.modeSet);
+    assert.equal(screen.pitch, 8); assert.deepEqual(screen.clip(), { left: 0, top: 0, right: 7, bottom: 4 });
+    screen.lock().fill(9); screen.unlock(); screen.loadPalette(palette, 1);
+    const result = screen.lock().slice(); screen.unlock();
+    // 패딩은 칠하지 않고 각 행의 논리 픽셀만 검정으로 만든다.
+    for (let row = 0; row < 4; row += 1) assert.deepEqual([...result.subarray(row * 8, row * 8 + 8)], [0, 0, 0, 0, 0, 0, 0, 9]);
 });
 
 // 실제 자산의 첫 miss와 같은 페이지 재시작의 hit가 같은 캐시와 별도 Client 소유자를 사용한다.
