@@ -1971,7 +1971,7 @@ export class Netstorm {
     // Tutorial 1~6과 연결된 캠페인 미션을 현재 Guide에 시작한다. 다른 미션과 기존 World 교체는 실제 수명 연결 전까지 거부한다.
     _beginCampaignFromDialog(argument) {
         const name = String(argument ?? '');
-        if (!/^tutorial[1-6]$/iu.test(name) && !['thewarbegins', 'masterofwhirligigs', 'savetheisland', 'fragilefortune', 'thunderingpower', 'dissolvedalliance'].includes(name.toLowerCase())) { console.info(`Netstorm: 미션 '${name}' 은(는) 아직 연결되지 않았습니다.`); return false; }
+        if (!/^tutorial[1-6]$/iu.test(name) && !['thewarbegins', 'masterofwhirligigs', 'savetheisland', 'fragilefortune', 'thunderingpower', 'dissolvedalliance', 'thenoose', 'rainvsrain', 'runforit', 'guardmyback', 'surrounded'].includes(name.toLowerCase())) { console.info(`Netstorm: 미션 '${name}' 은(는) 아직 연결되지 않았습니다.`); return false; }
         if (!this._clientGuide || this._state !== AppState.MAIN_MENU) throw new Error('미션 시작의 현재 Guide·메뉴 수명 누락');
         if (this._campaignWorld || this._clientGuide.current()) { console.warn('Netstorm: 현재 미션을 정리하기 전에는 새 미션을 시작할 수 없습니다.'); return false; }
         this._clientGuide.begin(name); return true;
