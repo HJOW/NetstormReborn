@@ -537,6 +537,14 @@ public sealed class RiftTypeTable
                 }
                 type.Cost = (float)number.Value;
             }
+            else if (Is("range"))
+            {
+                if (number is null)
+                {
+                    throw new ArgumentException("range는 숫자여야 합니다");
+                }
+                type.Range = (float)number.Value;
+            }
             else if (Is("damageEffect"))
             {
                 // 실제 0049c3b0 / CD Parse의 type +0xd4를 숫자 절삭으로 채운다. 누락된 속성은 초기 0이다

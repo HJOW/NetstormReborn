@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-19 · 마지막 커밋 구현 0.635 · 다음 구현 0.636(펜스 Pop·정기, 작업 트리 미커밋) · 현재 단계 R4-2·R4-4 병행 · cpppj 제품 1322 / 11.01 · 전체 목표 미완료**
+**2026-11-19 · 마지막 커밋 구현 0.636 · 다음 구현 0.637(나머지 틱 난수원·정기) · 현재 단계 R4-2·R4-4 병행 · cpppj 제품 1322 / 11.01 · 전체 목표 미완료**
 
 현행 인계는 이 문서가 기준이다. 0.600~0.635의 단위별 완료 문장, 단위마다 누적한 검사 수와 L2 보관 경로 나열은 [0.635 정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635)에 있다. 0.613까지의 경과, 파일 계열별 체크 목록과 옛 집계는 [0.613 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)에 있다. 단위별 근거는 `docs/dotnet-canon-0NNN-*.md`이다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
@@ -13,20 +13,16 @@
 | 기존 배포 `Netstorm.Game` (`Netstorm.exe`) | 메인 메뉴와 캠페인 1-1·1-2를 플레이할 수 있다. 한국어 선택, 와이드 시야 확장, 테두리 없는 전체화면을 제공한다. 실행 오류만 수정하는 동결 상태다. | RGBA 합성·자체 UI·근사 `BattleSession`으로 동작한다. |
 | 새 경로 `Netstorm.Client` + `Netstorm.Client.Host` | 타이틀·메뉴·도움말·Options·Credits·캠페인 선택·Edit 목록과 이름 창이 동작한다. 개발용 `--mission <키> --handle <이름>`으로 일반 31미션의 시작 상태 일부를 조립한다. 월드 표시·입력·규칙의 실제 경로가 남아 있어 플레이 불가다. | 1024×768 메뉴 **12장면**의 논리 BMP가 cpppj와 바이트 일치했다(0.381~0.388). L2는 **0/34**, 데모 3경로는 DN 진입 미연결이며 L3·L4b·L5는 미착수다. |
 
-- **마지막 커밋 구현 0.635.** 거주 구역 Pop과 사건 0·1·3 정기(주민·장식·테마)를 결선했다. L1 12건과 Client 전체 1,308 통과, `guardmyback` L2 재수집(사건 0·1·3 행 12건·난수 누적 128회·결정성 유지). [0.635](docs/dotnet-canon-0635-20261119.md)
-- **검사 기준선.** 마지막 전체 회귀는 0.630이다. Assets 366/366·Core 2,936/2,937·Client 1,297/1,297이 통과했다. Core 1건은 `PlayerTechnology`의 `NETSTORM_DATA` 미설정으로 인한 환경 요인이며, 지정 뒤 단독 재실행에서 통과했다. 이후 Client 전체는 0.635에서 1,308 통과다. 단위별 집중 검사 수는 각 단위 문서에 있다. [0.630](docs/dotnet-canon-0630-20261119.md) · [회귀 목록](docs/dotnet-regression-inventory-20261115.md)
-- **L2 기준선.** 일반 31경로의 양쪽 덤프와 데모 3경로의 cpp 덤프를 확보했고 전체 대조는 `extracted/dotnet-l2-0567/`에 있다. 최근 재측정은 3경로(`thewarbegins`·`tutorial1`·`bc1menu76`)가 0.625, `surrounded`가 0.623, `guardmyback`이 0.635(`extracted/dotnet-l2-0635/`)이다. 단위별 수집은 `extracted/dotnet-l2-0NNN/`에 둔다. 남은 차이는 정기 60행·`object` 행 부재·AI·cpp 전용 슬롯·농지 가장자리·펜스 정기·공장 뒤 4건 sid 재사용 순서다. [일괄 수집](docs/dotnet-l2-batch-20261114.md) · [격차 분석](docs/dotnet-l2-0606-20261117.md) · [3경로 재측정](docs/dotnet-canon-0623-20261119.md)
+- **마지막 커밋 구현 0.636.** 펜스 Pop·정기 세션 결선(`BuildFenceDevices`·가상표 관문·`range` 파싱)을 마감했다. L1 집중 6건 통과, `guardmyback` L2 재수집(DN +2행·공통 +4행·타입 +21행·`dn_only` 해소). [0.636](docs/dotnet-canon-0636-20261119.md)
+- **검사 기준선.** 마지막 전체 회귀는 0.630이다. Assets 366/366·Core 2,936/2,937·Client 1,297/1,297이 통과했다. Core 1건은 `PlayerTechnology`의 `NETSTORM_DATA` 미설정으로 인한 환경 요인이며, 지정 뒤 단독 재실행에서 통과했다. 이후 Client 전체는 0.635에서 1,308 통과다. 2026-11-19 사용자 지시로 전체 회귀는 4단위당 1회만 수행한다. 이번 단위는 집중 검사만 수행했고 다음 전체 회귀는 0.640 시점에 수행한다. 단위별 집중 검사 수는 각 단위 문서에 있다. [0.630](docs/dotnet-canon-0630-20261119.md) · [회귀 목록](docs/dotnet-regression-inventory-20261115.md)
+- **L2 기준선.** 일반 31경로의 양쪽 덤프와 데모 3경로의 cpp 덤프를 확보했고 전체 대조는 `extracted/dotnet-l2-0567/`에 있다. 최근 재측정은 3경로(`thewarbegins`·`tutorial1`·`bc1menu76`)가 0.625, `surrounded`가 0.623, `guardmyback`이 0.636(`extracted/dotnet-l2-0636/`)이다. 단위별 수집은 `extracted/dotnet-l2-0NNN/`에 둔다. 남은 차이는 정기 60행·`object` 행 부재·AI·cpp 전용 슬롯·농지 가장자리·공장 뒤 4건 sid 재사용 순서다. [일괄 수집](docs/dotnet-l2-batch-20261114.md) · [격차 분석](docs/dotnet-l2-0606-20261117.md) · [3경로 재측정](docs/dotnet-canon-0623-20261119.md)
 
 <a id="now"></a><a id="09-바로-다음-작업"></a><a id="r4-board"></a>
 
-### 0.1 다음 구현 0.636
+### 0.1 다음 구현 0.637
 
-1. **0.636 펜스 Pop·정기(R4-4)를 마감한다.** 2026-11-19 10:43 이후 작업 트리에 커밋되지 않은 변경이 남아 있다.
-   - 코드: `HostSession.cs`(썬 바리케이드 가상표 관문, `BuildFenceDevices`, 지면 소유자 섬 후처리 연결), `RawPostPop.cs`·`RawPostPop.Dispatch.cs`(펜스 후처리 등록·분배), `RiftTypeTable.cs`(`range` 숫자 키).
-   - 검사·수집: 신규 `HostSessionFenceTests.cs`, L2 수집 `extracted/dotnet-l2-0636/`.
-   - 남은 마감: 단위 문서 `docs/dotnet-canon-0636-*.md`와 커밋이 없다. 이어받을 때 빌드·집중 검사·Client 전체·L2 결과를 다시 확인한 뒤 문서화하고 커밋한다.
-2. **나머지 틱 난수원과 정기 연결(R4-4·R4-5).** AI 초기화·장식 재생·연소 등 나머지 틱 난수를 잇는다. 정기 부착 시점 정렬(R4-6 로그인·시작 흐름)과 미션 시작 Pop 19+1건(R6 내용물·생산)도 남아 있다. [0.635 결과](docs/dotnet-canon-0635-20261119.md)
-3. **R4-2 나머지 차이와 R4-3~R4-8.** 농지 프레임, 전용 요새, 표시 등록, 그래프 번호, 장부를 처리한 뒤 R4-3~R4-8을 진행한다. 통합 조각을 마칠 때 같은 조건의 일괄 덤프로 M1 진척을 확인한다. [R4 체크](#r4-detail)
+1. **0.637 나머지 틱 난수원과 정기 연결(R4-4·R4-5).** AI 초기화·장식 재생·연소 등 나머지 틱 난수를 잇는다. 정기 부착 시점 정렬(R4-6 로그인·시작 흐름)과 미션 시작 Pop 19+1건(R6 내용물·생산)도 남아 있다. [0.636 결과](docs/dotnet-canon-0636-20261119.md)
+2. **R4-2 나머지 차이와 R4-3~R4-8.** 농지 프레임, 전용 요새, 표시 등록, 그래프 번호, 장부를 처리한 뒤 R4-3~R4-8을 진행한다. 통합 조각을 마칠 때 같은 조건의 일괄 덤프로 M1 진척을 확인한다. [R4 체크](#r4-detail)
 
 <a id="first-run"></a>
 
@@ -86,9 +82,8 @@ AGENTS.md의 현행 지정은 갈무리11이다. cpppj 1322의 외부 비트맵 
   - 완료: 신전 Pop → 소용돌이 → 섬 소유자 → Player `+0x78` 경로값이 일치했다(0.622, `thewarbegins`·`tutorial1`). `surrounded` 혼합 경로에서도 첫 지역 9행이 일치했다(0.623).
   - 남음: AI 뇌 경로(`bc1menu76` 사원 없는 6행)는 R4-5 뒤에 닫는다. 농지 가장자리 432칸은 R6·R11 투표 입력이다. 거주 구역 5칸 전파는 0.623 기준이며, 0.635 거주 구역 연결 뒤 `surrounded`는 다시 재지 않았다.
 - [ ] **R4-4 정기 처리·프로세스 초기 등록.** 입력은 `RawAssetRegular`과 Player·Dais·Dude·Disc·장식 정기 처리다.
-  - 완료: 미션 틱 `AdvanceMissionFrame`(0.629), 고정 시각 1프레임 1틱과 덤프 시계(0.631), 매 프레임 `UpdateAmbientWind`(0.632)와 주변음(0.633), 간헐천 Pop과 사건 0 정기(0.634), 거주 구역 Pop과 사건 0·1·3 정기(0.635). [0.631 격차 분해](docs/dotnet-canon-0631-20261119.md)
-  - 진행: 펜스 Pop·정기 결선(0.636, 작업 트리 미커밋, [0.1](#now) 참조).
-  - 남음: Kernel/Process 초기 등록과 초기 덤프 비교, Player·Dais·Dude·Disc·장식 정기, AI 초기화·장식 재생·연소 등 나머지 틱 난수원을 잇는다. 정기 부착 시점(0.631에서 분해한 RNG 25,611 격차의 틱 구간)도 맞춘다. 거주 구역 사건 2(주민 생성)는 R6이다.
+  - 완료: 미션 틱 `AdvanceMissionFrame`(0.629), 고정 시각 1프레임 1틱과 덤프 시계(0.631), 매 프레임 `UpdateAmbientWind`(0.632)와 주변음(0.633), 간헐천 Pop과 사건 0 정기(0.634), 거주 구역 Pop과 사건 0·1·3 정기(0.635), 펜스 Pop·정기 결선(0.636). [0.631 격차 분해](docs/dotnet-canon-0631-20261119.md)
+  - 남음: Kernel/Process 초기 등록과 초기 덤프 비교, Player·Dais·Dude·Disc·장식 정기, AI 초기화·장식 재생·연소 등 나머지 틱 난수원을 잇는다. 정기 부착 시점(0.631에서 분해한 RNG 25,611 격차의 틱 구간)도 맞춘다. 거주 구역 사건 2(주민 생성)는 R6이다. 펜스 표식 생성·삭제·연결선 생성·이웃 새로고침도 R6이다.
 - [ ] **R4-5 AI 초기화.** 실제 생성자·`CrankAiMoney`·`SetAiParameter`·`ResetAiForState`·`ReturnAiForState`, 600바이트 검사·준비 `00416eb0`·258 완료 판정, 설정 `+0x23c` 동맹 판정을 연결해 brain·SP·Player 행을 대조한다.
 - [ ] **R4-6 내부 로그인·전송·Client 전역.** 메뉴 핸들 출처와 이름 꼬리 16~19바이트, 로컬 Login→Ready→Start 실제 패킷, 요새 이미지·`Bind*`·State 수명을 연결한다. 실제 handshake 검사와 메뉴/`--mission`의 진입 덤프를 대조한다.
 - [ ] **R4-7 데모와 보류 검사.** `StartDemo` 3경로 덤프, `player-world-x86.tsv` 1,680행, F3에서 미룬 Fort/지형 바인딩·미션 Fort 경로·로그인 객체 전송·미션 재적재 검사를 잇는다.
@@ -99,7 +94,7 @@ AGENTS.md의 현행 지정은 갈무리11이다. cpppj 1322의 외부 비트맵 
 ### 1.2 후속 단계에서 이미 이식한 범위
 
 - [x] **R6-3 배치 본체(0.609~0.611).** 권한·관계, 지형 메이커 2종, Player 앵커·서라운딩·파이프라인을 이식했고 MayPlace 3건 전수 일치를 확인했다. 실제 농지 호출은 R4-2(0.614)에서 결선했다. 사용자 건설 입력 통합은 R6-3에서 검증한다. [0.611](docs/dotnet-canon-0611-20261118.md)
-- [x] **펜스 본체 8종(0.587~0.592).** `RawFenceLifetime`·`Neighbors`·`Line`·`MarkerClear`·`Rebuild`·`Create`·`PostPop`·`Regular`과 해당 저장소 갈고리를 이식했다. 세션 Pop·정기 결선은 0.636(미커밋)에서 진행 중이다. R6의 타깃·타입 부모·Damageable 정기 라우팅은 열려 있다. [펜스 후처리와 정기 처리](docs/dotnet-surface-fence-postpop-20261117.md)
+- [x] **펜스 본체 8종(0.587~0.592).** `RawFenceLifetime`·`Neighbors`·`Line`·`MarkerClear`·`Rebuild`·`Create`·`PostPop`·`Regular`과 해당 저장소 갈고리를 이식했다. 세션 Pop·정기 결선은 0.636에서 마감했다. R6의 타깃·타입 부모·Damageable 정기 라우팅과 표식 생성·연결선 생성·이웃 새로고침은 열려 있다. [펜스 후처리와 정기 처리](docs/dotnet-surface-fence-postpop-20261117.md)
 - [x] **간헐천 수명과 벌룬 본체(0.583~0.584).** 세션 Pop·사건 0 정기는 0.634에서 결선했다. 채굴 `RawGeyserMined`과 `RawBalloonFrame`은 R6, AI 등록은 R4-5에서 잇는다. [간헐천](docs/dotnet-surface-geyser-20261117.md) · [벌룬](docs/dotnet-surface-balloon-20261117.md)
 - [x] **Outpost 전처리 본체(0.582).** 장기 삭제 분배·목록 압축·부모 호출을 집중 검사했다. 전체 Outpost 수명과 LAN 통합은 R11에서 이어간다. [Outpost](docs/dotnet-surface-outpost-20261117.md)
 - [ ] **공통 장치의 실제 미션 연결.** `RawSurfaceAssetDeletion/Notice`·`Content/Reward`·`Lifetime/Deletion`·`PriestDeletion`·`Damageable/Fence/Balloon`은 대응 본체 또는 분배 장치가 있다. 큰 파일의 미이식 분기와 호출자 장치는 R4-2~R6에서 확인한다. `RawIceTower`의 성장 정기·완성형 파괴·재생성/삭제와 Native 설치도 남아 있다. [R4-1 감사](docs/dotnet-r4-1-close-20261117.md)
@@ -174,14 +169,14 @@ AGENTS.md의 현행 지정은 갈무리11이다. cpppj 1322의 외부 비트맵 
 - **사용자 확인.** L5와 전체 화면/청취, 실제 사제 포획·희생·특정 적 공격·승리·MP/LAN, 공격형 공중 3종 실제 생산/조작은 사용자 확인 범위다. 창 실행은 AGENTS.md의 명시 확인·예외 PC 규칙을 따른다. Windows 10에서 통과하면 Windows 11 실기와 사용자 관찰만 남은 상태에서도 다음 단계로 진행한다. 물리 DPI·4K FSR·UAC는 R8 이후, `DSERR_NODRIVER` 실장치 재검사는 출력 장치가 있는 PC에서 한다. [소리 장치 기록](docs/dotnet-sound-device-20261114.md) · [공통 실행 범위](LEFT_JOBS.md#rules-verify)
 - **공통 기능 경계.** CHEAT 메뉴는 Edit에서만 표시한다. 연녹색 직사각형 분석은 보류다. 폐기된 인터넷 master/root·검증·ping/진단은 비활성 상태를 유지한다. 도움말 링크와 LAN은 해당 사용자가 선택한 경로를 따른다. [공통 계약](LEFT_JOBS.md#rules-verify)
 - **오라클과 자료.** `cpppj/build/bin/Release/Netstorm.exe`를 PowerShell에서 빌드한다. 실행은 `extracted/dotnet-oracle-data/` 사본과 분리한 사용자 루트로 진행하며 `originals/` 해시를 전후 확인한다. 0.606의 VM 소프트웨어 GPU 환경은 [재측정 기록](docs/dotnet-l2-0606-20261117.md)에 있다. 일반 덤프 비교와 최초 실행 검증의 옵션을 구별한다.
-- **검사 명령.** `dotnet build dotnetpj/Netstorm.sln -c Release`, `dotnet test dotnetpj/Netstorm.sln -c Release`, `python -X utf8 dotnetpj/tools/cpp_sync.py`를 쓴다. 실제 TYPE 검사는 `NETSTORM_DATA`를 보호 자료 사본으로 지정한다. 20단위 또는 한 작업일마다 전체 회귀를 확인한다. fixture는 사본 없이 한 소비자 프로젝트에 링크하고 `cpp_sync.py --update --add`로 매니페스트에 등록한다. GUI 명령·변이 검사·등록 규칙 전문은 보관본 6.1에 있다. [L2 도구](docs/dotnet-l2-batch-20261114.md) · [L4a 도구](dotnetpj/tools/l4a_compare.ps1) · [덤프 형식](docs/exe/cpp-session-state-dump-20261109.md)
+- **검사 명령.** `dotnet build dotnetpj/Netstorm.sln -c Release`, `dotnet test dotnetpj/Netstorm.sln -c Release`, `python -X utf8 dotnetpj/tools/cpp_sync.py`를 쓴다. 실제 TYPE 검사는 `NETSTORM_DATA`를 보호 자료 사본으로 지정한다. 2026-11-19 사용자 지시로 전체 회귀는 4단위당 1회만 수행한다(다음 전체 회귀는 0.640 시점). fixture는 사본 없이 한 소비자 프로젝트에 링크하고 `cpp_sync.py --update --add`로 매니페스트에 등록한다. GUI 명령·변이 검사·등록 규칙 전문은 보관본 6.1에 있다. [L2 도구](docs/dotnet-l2-batch-20261114.md) · [L4a 도구](dotnetpj/tools/l4a_compare.ps1) · [덤프 형식](docs/exe/cpp-session-state-dump-20261109.md)
 - **착수·보호·커밋.** AGENTS.md·LEFT_JOBS.md와 이 문서, git status/log를 확인한다. dotnetpj 이식에 디컴파일은 필요 없다. AGENTS.md·기존 원본/CD 파일·README 개요·기존 fixture를 보호한다. 작업 단위마다 진행판·체크와 단위 문서를 갱신하고 해당 파일만 `YYYYMMDD-NN DN 요약`으로 로컬 커밋한다. push 금지. 새 코드·문서는 UTF-8, AGENTS 범위의 코드 주석은 설명·사용법부터 한국어로 적는다. 작업 트리 줄바꿈은 본문 LF, 보관본 CRLF다.
 
 <a id="dotnet-done-index"></a><a id="dotnet-unit-records"></a><a id="dotnet-archive-log"></a>
 
 ## 6. 완료 기록과 보관
 
-- **0.546~0.600** 객체 수명 공통층과 미션 저장소 공유 완료. **0.601~0.608** 섬·지형·지원 요새 Pop과 그래프 후처리, 3경로 L2 비교. **0.609~0.613** 실제 MayPlace 본체·전수 대조와 농지 월드훅. **0.614~0.622** 농지 Generate 실결선과 지역 본체·세션 연결, 신전 가상 Owner 결선, 사원 Pop 파생, 3경로 L2 재측정. **0.623** `surrounded` 혼합 경로 첫 지역 9행 일치 대조. **0.624~0.630** 공장 후처리·정기·초기 레벨 적재와 `guardmyback` L2 대조. **0.631~0.635** 미션 틱 결정론, 매 프레임 바람·주변음, 간헐천·거주 구역 Pop과 정기. 단위별 근거는 `docs/dotnet-*.md` 및 Git 기록에 있다.
+- **0.546~0.600** 객체 수명 공통층과 미션 저장소 공유 완료. **0.601~0.608** 섬·지형·지원 요새 Pop과 그래프 후처리, 3경로 L2 비교. **0.609~0.613** 실제 MayPlace 본체·전수 대조와 농지 월드훅. **0.614~0.622** 농지 Generate 실결선과 지역 본체·세션 연결, 신전 가상 Owner 결선, 사원 Pop 파생, 3경로 L2 재측정. **0.623** `surrounded` 혼합 경로 첫 지역 9행 일치 대조. **0.624~0.630** 공장 후처리·정기·초기 레벨 적재와 `guardmyback` L2 대조. **0.631~0.636** 미션 틱 결정론, 매 프레임 바람·주변음, 간헐천·거주 구역·펜스 Pop과 정기. 단위별 근거는 `docs/dotnet-*.md` 및 Git 기록에 있다.
 - **2026-11-19 이관.** 정리 직전 0.635 인계 전문을 보존했다. [0.635 전체 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635)
   - 옮긴 것: R4 체크의 단위별 `[x]` 문장 22건(0.601~0.635)을 R4-2·R4-3·R4-4 하위 목록의 완료 범위로 줄였다. 0절의 단위별 검사 수 나열과 L2 보관 경로 나열도 최근 기준선 요약으로 바꿨다.
   - 바로잡은 것: 0.631~0.635는 단위 문서상 R4-4 작업이므로 R4-4 완료 범위로 옮겼고, 머리·1절 단계를 R4-2·R4-4 병행으로 고쳤다. R4-2 잔여에서 끝난 지역 칠하기·소유자 세션 연결(0.619·0.621)을 뺐다. R4-4 설명에서 연결이 끝난 `UpdateAmbientWind`(0.632)를 완료로 옮겼다. 간헐천 세션 결선(0.634)도 1.2절에 반영했다. 마지막 전체 회귀를 0.566에서 0.630으로 정정했고, 4절 집계를 재집계했다(442→448 대응, fixture 324→329, PORT_MAP 1,031→1,043줄).

@@ -1489,6 +1489,13 @@ public sealed partial class HostSession
             TerrainPopObject(sid, x, y, flags);
             return true;
         }
+        // 썬 바리케이드 전용 펜스 본체가 연결된 Fence는 지형 분배 Pop으로 등록한다. 다른 전용 파생은 R6 본체를 기다린다.
+        // 2026-11-19 0.636에서 R4-4 펜스 Pop용으로 추가했다. 근거: cpppj RawSurfaceStorage.cpp의 자산 분배와 DefaultResourcePostPop의 펜스 분기다.
+        if (_fencePostPop is not null && IsFenceVtable(Pool.Slot(sid)))
+        {
+            TerrainPopObject(sid, x, y, flags);
+            return true;
+        }
         // 전용 파생 후처리가 필요한 종류는 R6 본체를 기다린다.
         if (RawPostPop.RequiresDedicatedPostPop(Pool, sid))
         {
@@ -2143,7 +2150,9 @@ public sealed partial class HostSession
             Pool,
             terrainPostPop,
             static _ => { },
-            (x, y, owner) => throw new InvalidOperationException("신전 지면 소유자 갱신 미연결(R6)"));
+            // 적재 중 지면 받침 소유자 갱신은 같은 월드의 실제 섬 후처리로 실행한다. 근거: cpppj RawCampaignSession.cpp 1198행의 claimGround 조립이다.
+            // 2026-11-19 0.636에서 R4-4 펜스 Pop용으로 연결했다. Flags1 0x400 표식이 있는 적재가 대상이며 간헐천은 제외된다.
+            (x, y, owner) => (_islandPostPop ?? throw new InvalidOperationException("지면 소유자 섬 후처리 미연결")).SetSupportOwner(x, y, owner));
         var carrier = new RawCarrierPostPop(Pool, types, carrierState, carrierHooks);
         if (Pool.Edition == OriginalEdition.Patch1078)
         {
@@ -2186,6 +2195,9 @@ public sealed partial class HostSession
             // 주민 변화 뒤 실제 연결 재평가는 건물 옆면과 같은 통지를 쓴다. 근거: cpppj RawCampaignAssetBindings.cpp의 PostHooks 조립이다.
             // 2026-11-19 0.635에서 추가했다.
             NotifySurface = sid => (_fortBuilding ?? throw new InvalidOperationException("거주 구역 연결 통지 미연결")).NotifySurface(sid),
+            // 썬 바리케이드 전용 후처리는 같은 세션의 펜스 본체로 위임한다. 근거: cpppj o/RawAssetPostPop.cpp의 SunFenceKind 분기와 client/RawSurfaceFence.cpp의 FencePostPop 조립이다.
+            // 2026-11-19 0.636에서 R4-4 펜스 Pop용으로 추가했다. 펜스 본체는 뒤에 연결되므로 호출 시점에 조회한다.
+            SunFencePostPop = (sid, flags) => (_fencePostPop ?? throw new InvalidOperationException("펜스 후처리 미연결(R6)")).PostPop(sid, flags),
             // cpppj PostHooks의 setOwner는 같은 소유자 지정 분배다. 도장 갈고리와 달리 가상 Owner를 거친다.
             SetOwner = SetFortObjectOwner,
         };
@@ -2202,6 +2214,9 @@ public sealed partial class HostSession
         // 2026-11-19 0.635에서 R4-4 거주 구역 정기용으로 추가했다.
         BuildResidenceRegularDevices(types);
         BuildFactoryPostPopDevices(types);
+        // 펜스 후처리·정기 본체를 공장 분배보다 나중에 둔다. 펜스 사슬이 공장 사슬을 감싸므로 해제 순서는 펜스가 먼저다.
+        // 2026-11-19 0.636에서 R4-4 펜스 Pop·정기용으로 추가했다.
+        BuildFenceDevices(types);
     }
 
     /// <summary>공장 정기 트리거 본체를 세션에 연결하고 지형 분배 Pop의 공장 갈고리로 등록한다.</summary>
@@ -2276,6 +2291,20 @@ public sealed partial class HostSession
         }
 
         return BinaryPrimitives.ReadUInt32LittleEndian(raw) == 0x0050f540u;
+    }
+
+    /// <summary>썬 바리케이드 가상표(패치 0x509470)인지 판정한다. CD판은 펜스 전용 분배를 열지 않는다.</summary>
+    /// <param name="raw">조회할 슬롯 바이트다.</param>
+    /// <returns>썬 바리케이드 가상표이면 참이다.</returns>
+    /// <remarks>2026-11-19 0.636에서 R4-4 펜스 Pop·정기용으로 추가했다. 근거: cpppj RawFencePostPop.h 51행의 FenceVtable이다.</remarks>
+    private bool IsFenceVtable(ReadOnlySpan<byte> raw)
+    {
+        if (Pool.Edition != OriginalEdition.Patch1078)
+        {
+            return false;
+        }
+
+        return BinaryPrimitives.ReadUInt32LittleEndian(raw) == 0x00509470u;
     }
 
     /// <summary>간헐천 가상표인지 판정한다. 패치 0x50da88·CD 0x500760만 받는다.</summary>
@@ -2439,6 +2468,141 @@ public sealed partial class HostSession
         RawSquidHash hash = _terrainHash ?? throw new InvalidOperationException("거주 구역 정기 해시 미연결");
         return RawResidenceRegular.Run(Pool, hash, types, WorldFrames, SidLists.Temples, sid, @event, count, payload, hooks);
     }
+
+    /// <summary>같은 장기 풀·해시·타입에서 이웃을 찾는 펜스 이웃 본체다. BuildFenceDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-19 0.636에서 R4-4 펜스 Pop·정기용으로 추가했다. 근거: cpppj RawSurfaceFence.cpp의 이웃 결선이다.</remarks>
+    private RawFenceNeighbors? _fenceNeighbors;
+
+    /// <summary>같은 장기 풀의 펜스 후처리 본체다. BuildFenceDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-19 0.636에서 R4-4 펜스 Pop용으로 추가했다. 근거: cpppj o/RawFencePostPop.h·cpp의 RawFencePostPop이다.</remarks>
+    private RawFencePostPop? _fencePostPop;
+
+    /// <summary>같은 장기 풀·프레임의 펜스 정기 본체다. BuildFenceDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-19 0.636에서 R4-4 펜스 정기용으로 추가했다. 근거: cpppj o/RawFenceRegular.h·cpp의 RawFenceRegular다.</remarks>
+    private RawFenceRegular? _fenceRegular;
+
+    /// <summary>표식 삭제가 읽는 fencemark 타입 번호 상자다. 같은 세션 수명을 공유한다.</summary>
+    /// <remarks>2026-11-19 0.636에서 R4-4 펜스용으로 추가했다. 근거: cpppj DAT005411c0의 현재 fencemark 번호다.</remarks>
+    private readonly UIntBox _fenceMarkerType = new();
+
+    /// <summary>연결선 정리가 읽는 fenceShield 타입 번호 상자다. 같은 세션 수명을 공유한다.</summary>
+    /// <remarks>2026-11-19 0.636에서 R4-4 펜스용으로 추가했다. 근거: cpppj DAT00541300의 현재 연결선 타입 번호다.</remarks>
+    private readonly UIntBox _fenceLineType = new();
+
+    /// <summary>타입 표에서 이름이 일치하는 첫 타입 번호를 찾는다.</summary>
+    /// <param name="types">같은 실제 TYPE 표다.</param>
+    /// <param name="name">찾을 자산 이름이다.</param>
+    /// <returns>일치하는 타입 번호다.</returns>
+    /// <remarks>2026-11-19 0.636에서 R4-4 펜스 표식·연결선 타입용으로 추가했다. 이름 목록은 RiftTypeLoadOrder와 같은 순서다.</remarks>
+    private static int FindTypeByName(IReadOnlyList<OriginalTypeRecord> types, string name)
+    {
+        // 모든 타입 번호를 순서대로 비교하는 반복문이다. 없으면 데이터 오류로 거부한다.
+        for (int i = 0; i < types.Count; i++)
+        {
+            if (types[i].Name == name)
+            {
+                return i;
+            }
+        }
+
+        throw new InvalidOperationException($"펜스 자산 이름 미등록: {name}");
+    }
+
+    /// <summary>펜스 후처리·정기 본체와 이웃·표식·연결선·재생성 장치를 세션에 연결한다.</summary>
+    /// <param name="types">같은 실제 TYPE 표다. 지형 Pop 장치와 같은 인스턴스여야 한다.</param>
+    /// <exception cref="InvalidOperationException">펜스 장치의 표시·정기 프로세스·해시·프레임 표가 미연결이다.</exception>
+    /// <exception cref="ArgumentException">펜스 TYPE이 지형 Pop 장치와 다르다.</exception>
+    /// <remarks>2026-11-19 0.636에서 R4-4 펜스 Pop·정기용으로 추가했다. 근거: cpppj client/RawSurfaceFence.cpp의 BindFenceLifetimeDevices·BindFenceRegularDevices 상당 결선이다. 표식 생성·삭제와 연결선 생성은 R6에서 잇는다.</remarks>
+    private void BuildFenceDevices(IReadOnlyList<OriginalTypeRecord> types)
+    {
+        ArgumentNullException.ThrowIfNull(types);
+        if (_fencePostPop is not null || _fenceRegular is not null)
+        {
+            throw new InvalidOperationException("펜스 장치 중복 연결");
+        }
+
+        SquidProcessHost processes = PlayerProcesses ?? throw new InvalidOperationException("펜스 정기 분배 프로세스 미연결");
+        RawSquidHash hash = _terrainHash ?? throw new InvalidOperationException("펜스 이웃 찾기 해시 미연결");
+        SquidFrame frames = _terrainFrames ?? throw new InvalidOperationException("펜스 정기 프레임 미연결");
+        if (_terrainPopTypes is null || !ReferenceEquals(types, _terrainPopTypes))
+        {
+            throw new ArgumentException("펜스 TYPE은 지형 Pop 장치와 같은 인스턴스여야 한다", nameof(types));
+        }
+
+        if (_terrainDisplay is null)
+        {
+            throw new InvalidOperationException("펜스 정기 분배 표시 미연결");
+        }
+
+        _fenceMarkerType.Value = unchecked((uint)FindTypeByName(types, "fencemark"));
+        _fenceLineType.Value = unchecked((uint)FindTypeByName(types, "fenceShield"));
+        var neighbors = new RawFenceNeighbors(Pool, hash, types, type => types[(int)type].Range, (row, col) => Alliances[row * 9 + col]);
+        _fenceNeighbors = neighbors;
+        var markerClear = new RawFenceMarkerClear(Pool, hash, types, _fenceMarkerType,
+            (_, _) => throw new InvalidOperationException("펜스 표식 삭제 미연결(R6)"),
+            parent => { ReadOnlySpan<byte> raw = Pool.Slot(parent); return new float[] { BitConverter.ToSingle(raw.Slice(14, 4)), BitConverter.ToSingle(raw.Slice(18, 4)) }; });
+        var line = new RawFenceLine(Pool, hash, types, WorldFrames, _fenceLineType,
+            (_, _) => throw new InvalidOperationException("펜스 연결선 삭제 미연결(R6)"));
+        var rebuild = new RawFenceRebuild(Pool, new FenceRebuildHooks
+        {
+            Neighbor = (parent, direction) => neighbors.Neighbor(parent, direction),
+            WithinRange = (parent, endpoints) => neighbors.WithinRange(parent, endpoints),
+            Markers = (_, _) => throw new InvalidOperationException("펜스 표식 생성 미연결(R6)"),
+            Shields = (_, _, _, _, _) => throw new InvalidOperationException("펜스 포스 필드 생성 미연결(R6)"),
+        });
+        var postPop = new RawFencePostPop(Pool, new FencePostPopHooks
+        {
+            Theme = sid => unchecked((uint)types[Pool.Slot(sid)[RawSidPool.TypeOffset]].Theme),
+            Neighbor = (sid, direction) => neighbors.Neighbor(sid, direction),
+            ReserveRegular = static () => true,
+            AddRegular = (sid, ev, payload) => { processes.AddRegular(sid, ev, payload); },
+            ClearLine = points => line.Clear(points),
+            Connections = sid => neighbors.Connections(sid),
+            ValidateBase = (sid, flags, projected) => (_terrainPostPop ?? throw new InvalidOperationException("펜스 후처리 공통 검사 미연결")).ValidateBase(sid, flags, projected),
+            Damageable = (sid, flags) => (_vortexAssetCarrier ?? throw new InvalidOperationException("펜스 후처리 피해 분배 미연결")).DamageablePostPop(sid, flags),
+        });
+        _fencePostPop = postPop;
+        RawPostPop terrainPostPop = _terrainPostPop ?? throw new InvalidOperationException("펜스 후처리 지형 분배 미연결");
+        terrainPostPop.SetFencePostPop(postPop);
+        var regular = new RawFenceRegular(Pool, WorldFrames, frames, new FenceRegularHooks
+        {
+            Neighbor = (sid, direction) => neighbors.Neighbor(sid, direction),
+            ClearMarkers = (parent, other) => markerClear.Clear(parent, other),
+            ClearLine = points => line.Clear(points),
+            Connections = sid => neighbors.Connections(sid),
+            ReserveRegular = static () => true,
+            AddRegular = (sid, ev, payload) => { processes.AddRegular(sid, ev, payload); },
+            RefreshNeighbors = sid => throw new InvalidOperationException("펜스 이웃 새로고침 미연결(R6)"),
+            Rebuild = sid => rebuild.Rebuild(sid),
+            Damageable = (parent, code, times, value) => _beforeFenceRegular?.Invoke(parent, code, times, value) ?? value,
+        });
+        _fenceRegular = regular;
+        _beforeFenceRegular = processes.Regular();
+        processes.SetRegularHandler(RegularHandlerWithFence(_beforeFenceRegular));
+    }
+
+    /// <summary>펜스 정기 분배 전에 사용하던 공통 정기 분배기다. 펜스 사슬이 공장 사슬을 감싸므로 해제 순서는 펜스가 먼저다.</summary>
+    /// <remarks>2026-11-19 0.636에서 R4-4 펜스 정기용으로 추가했다. 펜스 가상표가 아니면 이전 처리기로 넘긴다.</remarks>
+    private RegularHandler? _beforeFenceRegular;
+
+    /// <summary>썬 바리케이드 가상표 부모를 펜스 정기 본체에 분배하고 나머지는 이전 처리기로 넘긴다.</summary>
+    /// <param name="fallback">펜스가 맡지 않는 부모의 기존 처리기다. 없으면 payload를 돌려준다.</param>
+    /// <returns>같은 풀의 현재 가상표로 분배하는 처리기다.</returns>
+    /// <remarks>2026-11-19 0.636에서 R4-4 펜스 정기용으로 추가했다. 근거: cpppj client/RawSurfaceFence.cpp의 정기 분배다.</remarks>
+    private RegularHandler RegularHandlerWithFence(RegularHandler? fallback) => (sid, ev, count, payload) =>
+    {
+        if (_fenceRegular is not null && IsFenceVtable(Pool.Slot(sid)))
+        {
+            return _fenceRegular.Handle(sid, ev, count, payload);
+        }
+
+        return fallback?.Invoke(sid, ev, count, payload) ?? payload;
+    };
+
+    /// <summary>펜스 후처리 본체를 빌려준다. 연결하기 전에는 예외다.</summary>
+    /// <returns>지형 분배 Pop의 펜스 갈고리로 등록한 본체다.</returns>
+    /// <remarks>2026-11-19 0.636에서 추가했다. L1에서 적재 경로를 대조할 때 쓴다.</remarks>
+    public RawFencePostPop FencePostPop => _fencePostPop ?? throw new InvalidOperationException("펜스 후처리 미연결");
 
     /// <summary>같은 장기 풀·프레임·난수의 현재 조회로 공장 정기 사건을 실행한다.</summary>
     /// <param name="sid">처리할 공장 부모 번호다.</param>
