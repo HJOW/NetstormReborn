@@ -88,7 +88,8 @@ export const RULES = Object.freeze([
     // 실제 캠페인 저장 객체도 같은 TypeNames/변환표를 거친다. Editor 전용이라는 앞 판정을 호출 사슬 근거로 교정한다. (WB04-E573)
     { id: 'campaign-type-names', class: 'port', names: ['RawFortTypeNamesLoad', 'FortTypeConversionStorage'], reason: 'RawCampaignSession data.campaignObjects(3484)→ReadFortObjectStreams(3218)→PrepareFortTypeNames(3345)의 캠페인 공용 적재/255BYTE owner' },
     { id: 'edit-new-fort', class: 'exclude-edit', names: ['RawNewFort', 'RawCampaignNewFort', 'NewFortManagerDevices'], reason: '새 맵 Template manager·보호 작업본 파일. cpppj 987 뒤로 원격 Fort(MP)도 같은 생성을 쓴다' },
-    { id: 'edit-fort-name', class: 'exclude-edit', names: ['RawFortCurrentName', 'FortCurrentNameDevices'], reason: 'Editor 플레이어 초기화·현재 Fort 이름과 원격 Fort 경로(987)' },
+    // 단독 Tutorial Init도 같은 현재 Fort 이름 부모를 호출한다. Editor 삭제와 원격 경로는 별도로 제외한다. (2026-11-19 WB04-E884)
+    { id: 'campaign-fort-name', class: 'port', names: ['RawFortCurrentName', 'FortCurrentNameDevices'], reason: 'UberGump의 단독 Tutorial Init → RequestMissionFort → SelectCurrentFortName이 같은 이름 선택 본체와 Client 장치를 호출한다. Editor 삭제·원격 경로는 제외' },
     { id: 'edit-map-list', class: 'exclude-edit', names: ['FortSelection', 'SoloMapCatalog', 'RawSoloMapList', 'TellMapMenus'], reason: '편집/단독(커스텀) 맵 선택·목록. WB03-I 에서 웹 제외(User Made Campaigns 포함)' },
     { id: 'host-cd', class: 'exclude-host', names: ['CdDirectory', 'CdPresence', 'ClientCdGlobals', 'RecheckCdInput'], reason: 'CD-ROM 루트 열거·표시 파일 탐색·RecheckCD' },
     { id: 'host-gpu', class: 'exclude-host', names: ['GpuPresenter', 'FsrConstants'], reason: '7차 Direct3D 11 AA/FSR 1.0 출력기' },

@@ -25002,7 +25002,7 @@
       "bytes": 295465,
       "lines": 87,
       "fixtureCommit": "071d1c0e4",
-      "webCommit": "worktree",
+      "webCommit": "6f6437061",
       "cpppjBasis": {
         "cpppj/src/client/RawProductionMaintenance.cpp": "49729df64"
       }
@@ -25198,6 +25198,35 @@
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "c91d9b849",
         "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "fort-current-name-x86",
+      "path": "cpppj/tests/fixtures/fort-current-name-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "producer": "cpppj FortCurrentNameTests의 보호 10.78 x86 관측 876행",
+      "consumers": [
+        "webpj/tests/raw-fort-current-name.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-fort-current-name.js"
+      ],
+      "unit": "WB04-E884",
+      "doc": "docs/webpj-fort-current-name-20261119.md",
+      "cpppjSources": [
+        "cpppj/src/o/RawFortCurrentName.cpp"
+      ],
+      "scope": "원본 현재 Fort 이름/manager setter의 독립 물리·호출 순서 관측 중 단독 경로 40행. 전체 876행 대조는 후속.",
+      "text": true,
+      "sha256": "4c89096cbf763420fde7f95977c2d1d505ac01efb7c62f728a453c1de1869604",
+      "bytes": 3951961,
+      "lines": 877,
+      "fixtureCommit": "fa7762f9e",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/o/RawFortCurrentName.cpp": "fa7762f9e"
       }
     }
   ]

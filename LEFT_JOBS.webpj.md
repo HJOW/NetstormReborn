@@ -4,14 +4,14 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-19, 마지막 단위 WB04-E883)
+### 0.1 현재 값 (2026-11-19, 마지막 단위 WB04-E884)
 
 | 항목 | 현행 상태 |
 | --- | --- |
 | 실행·플레이 | 브라우저에서 ‘클릭하여 시작’, 메인 메뉴·캠페인/데모 목록·도움말·옵션·Credits와 개발용 지형 미리보기가 동작한다. Node 통합 검사에서 실제 Fort로 Session을 적재하고 내부 Login·Start·일부 이동과 건설을 확인했다. 브라우저의 `MissionBegin`·`StartDemo`에서 실제 월드로 들어가 플레이하는 기능은 미연결이다. |
 | 원본과의 동일성 | 영어 4:3 메뉴 M1 8장면은 cpppj 오라클과 알려진 구름 배경 등 차이 영역 밖에서 픽셀 차이 0이다. 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다. 실제 미션 L2·L3·L4, 자연 완주는 미검증이다. |
-| 현재 작업 | **M2의 4-D 진행 중.** 4D-3 typed Login 잔여를 이어가고 4D-4~4D-6에서 이미 확인된 프레임·튜토리얼 게이트·반납·GameWorld 경계를 실제 Client 수명으로 연결한다. E873은 실제 `theammode` 기본값을 연결해 Tutorial1 지형 프레임 차이를 763개에서 45개로 줄였다. E874에서 남은 45개 모두 같은 원소·방향·변형의 후보 구간에 속함을 확인했고, E875에서 신전 소유권·PostPop의 같은 생산 갱신 사건을 Gump 입력에 연결했다. E876에서 Client 시각 공급원·게임 시계·공유 보정을 실제 GameWorld의 Kernel 준비에 연결했다. E877에서 앱의 프레임 시계와 탭 숨김 정지를 연결했다. E878에서 앱 공통 난수·SP를 초기화해 실제 Session 대여까지 검사했다. E879에서 Player·Core·Template·Subscriber 장기 소유자와 실제 Session 교체를 확인했다. E880에서 실제 자산으로 앱 장기 월드 저장소·Kernel을 만들고 Session 적재·반납을 확인했다. E881에서 앱 자산으로 미션 스크립트·Fort를 준비해 Tutorial1 Session 적재를 확인했다. E882에서 실제 Client 전역의 Guide 해제 오류를 수정하고 Session 보유·무World 반납을 검증했다. E883에서 앱 Guide의 미션 생성·교체·반납과 Session 제한 표 공유를 연결했다. 웹 덤프의 실제 Client 호출·원본 대조 및 메뉴 명령·Guide 단계·Kernel 프레임 결선이 남았다. [E873](docs/webpj-campaign-ownership-theme-20261119.md) · [E874](docs/webpj-tutorial1-border-candidates-20261119.md) · [E875](docs/webpj-campaign-production-refresh-20261119.md) · [E876](docs/webpj-client-frame-clock-20261119.md) · [E877](docs/webpj-app-frame-clock-20261119.md) · [E878](docs/webpj-app-shared-sp-20261119.md) · [E879](docs/webpj-app-shared-players-20261119.md) · [E880](docs/webpj-app-world-storage-20261119.md) · [E881](docs/webpj-app-mission-assets-20261119.md) · [E882](docs/webpj-client-guide-release-20261119.md) · [E883](docs/webpj-app-campaign-guide-20261119.md) |
-| 전체 회귀 | E881 Node v26.13.0 전체 6,425건, E883 Node v22.23.3 전체 6,429건 통과(실패·취소·건너뜀 0). E883 집중·연관 Node 검사 74건과 Chromium 2건 통과. HJOW-Athlon의 작업 단위 주기: v26 2/4, v22 0/8. fixture 830개 해시·파일 불일치/누락 0; 전체 Git 이력 재조회는 중단하고 이번 본체의 변경 여부와 대응표는 별도 확인했다. |
+| 현재 작업 | **M2의 4-D 진행 중.** 4D-3 typed Login 잔여를 이어가고 4D-4~4D-6에서 이미 확인된 프레임·튜토리얼 게이트·반납·GameWorld 경계를 실제 Client 수명으로 연결한다. E873은 실제 `theammode` 기본값을 연결해 Tutorial1 지형 프레임 차이를 763개에서 45개로 줄였다. E874에서 남은 45개 모두 같은 원소·방향·변형의 후보 구간에 속함을 확인했고, E875에서 신전 소유권·PostPop의 같은 생산 갱신 사건을 Gump 입력에 연결했다. E876에서 Client 시각 공급원·게임 시계·공유 보정을 실제 GameWorld의 Kernel 준비에 연결했다. E877에서 앱의 프레임 시계와 탭 숨김 정지를 연결했다. E878에서 앱 공통 난수·SP를 초기화해 실제 Session 대여까지 검사했다. E879에서 Player·Core·Template·Subscriber 장기 소유자와 실제 Session 교체를 확인했다. E880에서 실제 자산으로 앱 장기 월드 저장소·Kernel을 만들고 Session 적재·반납을 확인했다. E881에서 앱 자산으로 미션 스크립트·Fort를 준비해 Tutorial1 Session 적재를 확인했다. E882에서 실제 Client 전역의 Guide 해제 오류를 수정하고 Session 보유·무World 반납을 검증했다. E883에서 앱 Guide의 미션 생성·교체·반납과 Session 제한 표 공유를 연결했다. E884에서 단독 미션이 사용하는 Fort 이름 선택 두 단위의 제외 판정을 정정하고 이름 선택 본체를 이식했다. Client 장치·나머지 원본 관측과 메뉴 명령·Guide 단계·Kernel 프레임 결선이 남았다. [E873](docs/webpj-campaign-ownership-theme-20261119.md) · [E874](docs/webpj-tutorial1-border-candidates-20261119.md) · [E875](docs/webpj-campaign-production-refresh-20261119.md) · [E876](docs/webpj-client-frame-clock-20261119.md) · [E877](docs/webpj-app-frame-clock-20261119.md) · [E878](docs/webpj-app-shared-sp-20261119.md) · [E879](docs/webpj-app-shared-players-20261119.md) · [E880](docs/webpj-app-world-storage-20261119.md) · [E881](docs/webpj-app-mission-assets-20261119.md) · [E882](docs/webpj-client-guide-release-20261119.md) · [E883](docs/webpj-app-campaign-guide-20261119.md) · [E884](docs/webpj-fort-current-name-20261119.md) |
+| 전체 회귀 | E881 Node v26.13.0 전체 6,425건, E883 Node v22.23.3 전체 6,429건 통과(실패·취소·건너뜀 0). E884 집중·연관 검사 41건 통과. HJOW-Athlon의 작업 단위 주기: v26 3/4, v22 1/8. fixture 831개 해시·파일 불일치/누락 0; 전체 Git 이력 재조회는 중단하고 이번 본체의 변경 여부와 대응표는 별도 확인했다. |
 | 브라우저 검사 | 2026-11-17 Chromium 2/2. 갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체 확인. 최초 실행·진행 잠금/체크 및 저장 재실행은 E616에서 별도 Chromium 2/2로 확인했다. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
 
 **미션 식별.** 이전 공통 fixture의 `thewarbegins.fort`는 캠페인 1-1이다. 실제 `tutorial1`이 선택하는 Fort는 `BridgeTheGap`이며, 지형·섬을 E753에서 다시 대조했다. [미션명 정정](docs/webpj-session-login-shipped-forts-20261118.md) · [Tutorial1 지형 재검증](docs/webpj-tutorial1-terrain-recheck-20261118.md)
@@ -28,7 +28,7 @@
 | --- | --- | --- | --- |
 | 1~3 | M1·월드 선행 부품 | 완료 | — |
 | 4 | 4-A 자료·4-B 적재·4-C 전송·4-R 재기준선 | 완료. 4-C 통합 잔여는 4D-3 | — |
-| 4 | **4-D Session 조립·Tutorial1 Load/Start** | **55/85, L2 미완료** | 74 / 17,577 |
+| 4 | **4-D Session 조립·Tutorial1 Load/Start** | **55/85, L2 미완료** | 76 / 17,771 |
 | 5 | 5-A 렌더러·Draw | 44/46 | 3 / 533 |
 | 5 | 5-B 카메라·HUD·미니맵·커서 | 9/13 | 9 / 1,446 |
 | 5 | 5-C 화면 허브·미션 진입 | 0/6 → M2 | 10 / 5,770 |
@@ -37,24 +37,24 @@
 | 8 | 미션 수명·대본·오디오·도움말 | 0/9 → M4 | 30 / 5,979 |
 | 9 | 표시 품질·브라우저/OS·배포 | 미착수 → M5 | 1 / 41 |
 | 10 | AGENTS 후순위 웹 요구 | 일부 선행, 3.7절 참조 | 6 / 749 |
-| **합계** | | | **143 / 33,105** |
+| **합계** | | | **145 / 33,299** |
 
 ### 0.3 이식량
 
-기준선 `225553df`의 이식 대상 1,020단위는 **port 877(86.0%)·partial 56·todo 87**이다. 제외 140단위를 합하면 대응표 1,160행이다. 앱 수명 연결을 뜻하는 `session`과 오라클 대조를 뜻하는 `oracle`은 0이다.
+기준선 `225553df`의 이식 대상 1,022단위는 **port 877(85.8%)·partial 57·todo 88**이다. 제외 138단위를 합하면 대응표 1,160행이다. 앱 수명 연결을 뜻하는 `session`과 오라클 대조를 뜻하는 `oracle`은 0이다.
 
 | 범위 | port / 대상 | partial | todo |
 | --- | --- | --- | --- |
-| `o/` 월드·규칙 | 564 / 573 | 4 | 5 |
-| `client/` 세션·UI·표시 | 312 / 446 | 51 | 83 |
+| `o/` 월드·규칙 | 564 / 574 | 5 | 5 |
+| `client/` 세션·UI·표시 | 312 / 447 | 51 | 84 |
 | `zacket/` 내부 미션 전송 | 1 / 1 | 0 | 0 |
 
-남은 143단위 중 기존 기준선은 74단위/27,667줄, 재기준선 추가분은 69단위/5,438줄이다. E854에서 `UberReconnect`의 단독 감시를 이식 대상으로 재분류했다. 재기준선 분류·영역별 상세는 [E801 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261118-through-wb04-e801)과 `python -X utf8 tools/port_inventory.py --families wb`에서 확인한다.
+남은 145단위 중 기존 기준선은 76단위/27,861줄, 재기준선 추가분은 69단위/5,438줄이다. E854에서 `UberReconnect`의 단독 감시를, E884에서 단독 미션의 Fort 이름 선택 두 단위를 이식 대상으로 재분류했다. 재기준선 분류·영역별 상세는 [E801 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261118-through-wb04-e801)과 `python -X utf8 tools/port_inventory.py --families wb`에서 확인한다.
 
 ### 0.4 기준선과 자료
 
 - **이식 기준선**은 cpppj 제품 1313(11.01) `225553df`다. 이후 변경 판정은 3.6절을 따른다. 별도 오라클 빌드는 HJOW-Athlon의 `extracted/webpj-oracle/225553df/Netstorm.exe`에 있다(SHA-256 `5b52d96d…b77eb46`, Git 제외).
-- **자료 추적**은 [PORT_MAP.tsv](webpj/PORT_MAP.tsv)와 [fixture manifest](webpj/tests/fixtures/manifest.json) 830항목을 기준으로 한다. 이식 자료는 cpppj 소스·fixture·문서를 사용한다.
+- **자료 추적**은 [PORT_MAP.tsv](webpj/PORT_MAP.tsv)와 [fixture manifest](webpj/tests/fixtures/manifest.json) 831항목을 기준으로 한다. 이식 자료는 cpppj 소스·fixture·문서를 사용한다.
 
 ### 0.5 단위 착수와 종료
 
@@ -124,7 +124,7 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 
 **4D-3 Login·로컬 연결·4-C 통합 시험.** 내부 Login → Load·명령 등록 → Ready → Start 순서를 실제 Session에서 확인했다.
 
-- [ ] **4D-3a RawCampaignSessionLogin** — typed 미션 Begin/Pump·내부 Ready 왕복과 행 base 뒤 32커밋 판정은 완료했다. E851은 진행 안내 장치를 실제 내부 로그인에 연결했고 E852는 Pump와 분리한 타이머 실행을 공개했다. 앱 메뉴와 Client 프레임 순서·분리 Poll은 4D-6, 고정 수신기는 4D-8과 연계한다. 나머지 31h 명령은 4D-3e에서 잇는다. `BeginGeneral`·`InitializeGeneral`·`LocalFort`의 필요 범위는 스커미시에서 판단한다. [E765](docs/webpj-session-login-commit-audit-20261118.md) · [E851](docs/webpj-client-login-progress-20261119.md) · [E852](docs/webpj-session-login-frame-timer-20261119.md)
+- [ ] **4D-3a RawCampaignSessionLogin** — typed 미션 Begin/Pump·내부 Ready 왕복과 행 base 뒤 32커밋 판정은 완료했다. E851은 진행 안내 장치를 실제 내부 로그인에 연결했고 E852는 Pump와 분리한 타이머 실행을 공개했다. 앱 메뉴와 Client 프레임 순서·분리 Poll은 4D-6, 고정 수신기는 4D-8과 연계한다. E884에서 단독 Tutorial Init이 쓰는 Fort 이름 선택 본체를 이식했다. 원본 관측 나머지 836행과 실제 Client 장치는 후속이다. 나머지 31h 명령은 4D-3e에서 잇는다. `BeginGeneral`·`InitializeGeneral`·`LocalFort`의 필요 범위는 스커미시에서 판단한다. [E765](docs/webpj-session-login-commit-audit-20261118.md) · [E851](docs/webpj-client-login-progress-20261119.md) · [E852](docs/webpj-session-login-frame-timer-20261119.md) · [E884](docs/webpj-fort-current-name-20261119.md)
   - [x] **출하 Fort 로그인** — 일반 31종과 별도 데모 1종의 스크립트가 선택한 Fort를 실제 내부 Login/Ready까지 적재했다. 데모 모드 Start는 별도 확인 범위다. [E752](docs/webpj-session-login-shipped-forts-20261118.md)
 - [ ] **4D-3b 로컬 공개 API·ClientCampaignTransport** — 시작/Poll/Pump·상태8·전송 기록·로컬/mutable 송신·Tell과 typed 기본 수신기(경로/압축 관찰·기술·Chat·연결 종료)는 확인했다. 실제 Client의 장기 소유·Native 전송 수명에 연결한다(4146..4200, 4292..4317). [E772](docs/webpj-session-state-connect-record-20261118.md)
 - [ ] **4D-3c 전송 앞단** — E820에서 공통 `RawPacketFrame`을 로컬 전송에 연결하고 E821에서 시간 표본과 GameClock 보정의 공유를 검사했다. 실제 Client 시계 소유·`RawClockSynchronization`의 전체 외곽 수명과 Native baseline, 소켓 지연 FIFO의 웹 제외 경계 및 `ClientPacketSources`를 확인한다. [E820](docs/webpj-packet-frame-20261119.md) · [E821](docs/webpj-clock-synchronization-20261119.md)
