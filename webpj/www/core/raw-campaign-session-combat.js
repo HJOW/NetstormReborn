@@ -80,7 +80,9 @@ export class RawCampaignSessionCombat {
         };
         o.iceRicochet = new RawIceRicochet(c.pool, c.types, o.missileTypes, o.random, makeIceRicochetWorldHooks(c.pool, c.hash, c.types, o.hp, this.ricochetHooks));
         e.missile.ricochet = (fields) => { o.iceRicochet.generate(fields); };
-        o.combat = new RawCampaignArcherBindings(o.world, o.gunTarget, o.random, o.archerTypes, o.metadata.frames, o.missileTypes, s.archerState, s.missileState, e);
+        // 캐논은 Canon 배열이 아니라 같은 실제 World의 FrameCodeTable과 현재 교체값을 읽는다.
+        const cannonFrames = c.frames.map((_table, type) => ({ get frames() { return c.frames[type]; } }));
+        o.combat = new RawCampaignArcherBindings(o.world, o.gunTarget, o.random, o.archerTypes, cannonFrames, o.missileTypes, s.archerState, s.missileState, e);
         this.#ready = true;
     }
     // 부모가 같은 World 프로세스를 정리한 뒤 재사용을 차단한다. 현재 장기 전역은 초기화하지 않는다.
