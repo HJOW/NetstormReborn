@@ -30,6 +30,9 @@ import { IndexedPresenter, normalizeScaling } from './render/presenter.js';
 import { Settings, findSettingKey, getLocalStorage } from './platform/settings.js';
 import { Progress, isProgressKey } from './platform/progress.js';
 import { reportGameError } from './platform/error-reporting.js';
+import { ClientFrameClock } from './core/client-frame-clock.js';
+import { ClientLocalStateGlobals } from './core/client-local-state-globals.js';
+import { ClientTimeSource } from './core/client-time-source.js';
 import { resetGameStorage } from './platform/reset-storage.js';
 import { createCanvasGlyphRasterizer } from './platform/glyph-rasterizer.js';
 import { MainMenuScreen } from './ui/main-menu.js';
@@ -418,6 +421,8 @@ export class Netstorm {
         this._frameHandle = 0;
         // 표시용 프레임 시계다.
         this._clock = new FrameClock();
+        // Client 게임 시계와 보정 전역은 init에서 생성하고 destroy에서 반납한다.
+        this._clientLocal = null; this._gameClock = null; this._hiddenGamePause = false;
         // init 때 저장해 둔 루트 인라인 스타일이다. destroy 가 되돌린다.
         this._savedRootStyle = null;
         // 비동기 로딩 결과가 오래된 것인지 가리는 세대 번호다. destroy/재시도 때마다 올라간다.
@@ -571,6 +576,11 @@ export class Netstorm {
         this._ctx = ctx;
         this._abort = new AbortController();
         this._clock = new FrameClock();
+        // 게임 규칙 시계는 표시용 rAF 시계와 별도로 현재 Client 보정 상자를 공유한다.
+        this._clientLocal = new ClientLocalStateGlobals();
+        this._gameClock = new ClientFrameClock(new ClientTimeSource(), this._clientLocal.gameTicks());
+        this._hiddenGamePause = Boolean(doc.hidden);
+        if (this._hiddenGamePause) this._gameClock.pushGamePause();
         this._input = { pointer: { x: -1, y: -1, inside: false, buttons: 0, type: 'mouse' }, keys: new Set() };
         this._audioStatus = 'none';
         // 저장된 설정을 읽는다(저장소를 쓸 수 없으면 기본값으로 계속). 호스트가 음량을 정했으면 저장하지 않고 우선 적용한다. (2026-10-29 WB03-F)
@@ -629,6 +639,7 @@ export class Netstorm {
         this._terrainPreview = null;
         this._settings = null;
         this._progress = null;
+        this._gameClock = null; this._clientLocal = null; this._hiddenGamePause = false;
         if (this._audio) {
             // 음악을 멈추고 문맥을 닫는다. 닫기에 실패해도 정리를 막지 않는다.
             this._audio.close();
@@ -1570,10 +1581,12 @@ export class Netstorm {
     // (2026-10-23 WB01, 2026-10-23 WB03-M1: 소리 일시 정지 추가)
     _onVisibilityChange() {
         if (this._root.ownerDocument.hidden) {
+            if (this._gameClock && !this._hiddenGamePause) { this._gameClock.pushGamePause(); this._hiddenGamePause = true; }
             this._stopFrameLoop();
             this._clearInput();
             this._audio?.suspend().catch(() => {});
         } else {
+            if (this._gameClock && this._hiddenGamePause) { this._gameClock.popGamePause(); this._hiddenGamePause = false; }
             this._clock.reset();
             this._displayDirty = true;
             this._startFrameLoop();
@@ -1608,6 +1621,8 @@ export class Netstorm {
     _onFrame(now) {
         this._frameHandle = 0;
         if (!this._canvas) return;
+        // 원본 Client 순서대로 화면 입력과 갱신 전에 같은 게임 프레임을 고정한다.
+        this._gameClock?.captureFrame();
         this._clock.tick(now);
         this._frameSeconds = now / 1000;
         if (this._state === AppState.MAIN_MENU) {
