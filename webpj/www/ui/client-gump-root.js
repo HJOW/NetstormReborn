@@ -30,12 +30,7 @@ export class ClientGumpRoot {
             this.#nodes.set(ROOT_TOKEN, new GumpCreateNode()); return ROOT_TOKEN;
         } });
         this.#collection = new GumpCollection(this.#create.collection, this.#factory.collectionHooks(project));
-        const handle = (token, event, first, second) => {
-            const handler = this.#handlers.get(token);
-            if (!handler && token === this.#root && this.#nodes.get(token)?.constructor === GumpCreateNode) return 0;
-            if (!handler) throw new Error('Client Gump 파생 처리기 미연결');
-            return handler(event, first, second) >>> 0;
-        };
+        const handle = (token, event, first, second) => this.handle(token, event, first, second);
         this.#events = new GumpEvents(this.#create, this.#life, this.#event, this.#collection, { node, handle });
         this.#input = new GumpInput(this.#create, this.#life, this.#inputState, this.#collection, this.#events, { node, handle });
         this.#frame = new GumpFrame(this.#create, this.#life, { node, redraw: (token, erase) => this.redraw(token, erase), idle: (token) => {
@@ -98,6 +93,14 @@ export class ClientGumpRoot {
             else if (node.constructor !== GumpCreateNode) throw new Error('Client Gump 파생 출력기 미연결');
         } });
         draw.draw(token);
+    }
+    // 현재 노드의 가상 처리기를 직접 호출한다. 재귀 전달과 달리 처리기의 DWORD 반환을 보존한다.
+    handle(token, event, first, second) {
+        this.#live(); const node = this.#nodes.get(token), handler = this.#handlers.get(token);
+        if (!node) throw new Error('Client Gump 처리 토큰 누락');
+        if (!handler && token === this.#root && node.constructor === GumpCreateNode) return 0;
+        if (!handler) throw new Error('Client Gump 파생 처리기 미연결');
+        return handler(event, first, second) >>> 0;
     }
     // 같은 현재 트리의 부모 사건 전달기를 빌린다.
     events() { this.#live(); return this.#events; }

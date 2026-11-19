@@ -191,3 +191,14 @@ test('Client Gump 루트: 파생 idle 분배와 현재 표 재조회', () => {
     assert.throws(() => owner.allocateDerived(new GumpBackgroundNode(), () => 0, () => {}, null, null, 3), /idle 계약/u);
     owner.dispose(); assert.throws(() => owner.idle(), /반납/u);
 });
+
+// 직접 가상 호출은 입력 필터나 자식 분배 없이 실제 반환 DWORD와 현재 수명을 보존한다.
+test('Client Gump 루트: 커서의 직접 가상 명령', () => {
+    const owner = new ClientGumpRoot(100, 80, () => 0, () => {}), calls = [];
+    const token = owner.createBase(0, 10, 10, 1, (...args) => { calls.push(args); return 0xfedcba98; });
+    owner.attach(token, 0, 0);
+    assert.equal(owner.handle(token, 0x0200005f, 3, 4), 0xfedcba98);
+    assert.deepEqual(calls, [[0x0200005f, 3, 4]]); assert.equal(owner.handle(1, 0, 0, 0), 0);
+    owner.remove(token); assert.throws(() => owner.handle(token, 0, 0, 0), /토큰 누락/u); owner.dispose();
+    assert.throws(() => owner.handle(1, 0, 0, 0), /반납/u);
+});
