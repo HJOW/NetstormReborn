@@ -493,7 +493,7 @@ cpppj/src/client/SkirmishStartIslands.inc	port			todo	[rebaseline-port]
 cpppj/src/client/SmackerDecoder.cpp	adapt			todo	[adapt-sound]
 cpppj/src/client/SoloMapCatalog.cpp	exclude-edit			-	[edit-map-list]
 cpppj/src/client/Sound.cpp	port	www/audio/audio-system.js;www/audio/sound-list.js;www/audio/sound-spatial.js;www/audio/sound-player.js	225553df	partial	[client-default] WB04-E571: SoundList 공개API 전체(조회/초기화/포인터/머리/복제)·실제32768바이트 표, 원본7묶음/124조회·Adler 일치. 기준선 뒤 변경0. 남음: SoundPlayer/위치 음향·동시 재생/장치와 음악/음량 공통 계층의 웹 적응·실제 Session 설치(8단계). 기존 audio-system은 메뉴 음향 일부 / WB04-E949: Client 효과음 이름표의 앱 소유와 실제 Session 대여; docs/webpj-app-sound-list-20261119.md / WB04-E960: 원본 위치 투영·가시·좌우·거리 음량을 10.78 독립 관측 3759행과 대조. 재생 장치는 남음. docs/webpj-sound-spatial-20261119.md / WB04-E961: 원본 SoundPlayer 재생·복제·위치·정지·이름/음량 제어를 10.78 독립 관측 2128행과 대조. Web Audio 장치와 Session 연결은 남음. docs/webpj-sound-player-20261119.md
-cpppj/src/client/SoundDevice.cpp	adapt	www/audio/mission-audio-assets.js	225553df	partial	[adapt-sound] / WB04-E962: 언어·감쇠 접미사 우선 파일 선택과 감쇠 수치, 같은 물리 파일의 비동기 공유. Web Audio 버퍼 장치는 남음. docs/webpj-sound-file-resolution-20261119.md
+cpppj/src/client/SoundDevice.cpp	adapt	www/audio/mission-audio-assets.js;www/audio/web-sound-device.js	225553df	partial	[adapt-sound] / WB04-E962: 언어·감쇠 접미사 우선 파일 선택과 감쇠 수치, 같은 물리 파일의 비동기 공유. Web Audio 버퍼 장치는 남음. docs/webpj-sound-file-resolution-20261119.md / WB04-E963: 준비된 AudioBuffer의 복제·재생·정지·상태·음량/좌우 Web Audio 장치. 앱 옵션·Session 연결은 남음. docs/webpj-web-sound-device-20261119.md
 cpppj/src/client/SoundMusic.cpp	port	www/audio/audio-system.js	1f00a25a	partial	[client-default] 음악 채널 일부
 cpppj/src/client/SoundMusicFile.cpp	adapt			todo	[adapt-sound]
 cpppj/src/client/SoundMusicRuntime.cpp	adapt			todo	[adapt-sound]
