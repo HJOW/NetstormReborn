@@ -16,7 +16,7 @@
 
 **E947.** 실제 앱의 Tutorial1 로컬 Session 패킷 프레임에서 동기화 표본이 같은 Client 게임 시계에 반영되고 State 정리에서 초기화되는 것을 확인했다. 4D-1c의 비미션 검증은 스커미시 후속이며, 4D-3의 나머지 앱·Native 수명을 이어간다. [시계 수명](docs/webpj-app-clock-synchronization-20261119.md) · [E946 Fort 경계](docs/webpj-session-fort-snapshot-boundary-20261119.md)
 
-**E947 검증.** 실제 앱 Session 1건과 시계·로그인·상태 연관 Node v26 검사 56건 통과. E946 실제 Session 3건과 연관 검사 11건 통과. E945 Node v26.13.0 전체 회귀 6,514건 통과, 하위 경로 브라우저 4종과 기본 경로·오류·언어 Chromium 4건 통과. HJOW-Athlon 주기는 v26 2/4이며, v22 8/8 정기 전체 회귀는 `extracted/webpj-e947-node22.log`에 실행 중이다. 결과 확인 뒤 주기를 갱신한다. 대응표는 1,160행 오류 0이다.
+**E947 검증.** 실제 앱 Session 1건과 시계·로그인·상태 연관 Node v26 검사 56건, Node v22.23.3 정기 전체 회귀 6,514건 통과(실패·취소·건너뜀 0). E946 실제 Session 3건과 연관 검사 11건 통과. E945 Node v26.13.0 전체 회귀 6,514건, 하위 경로 브라우저 4종과 기본 경로·오류·언어 Chromium 4건 통과. HJOW-Athlon 주기는 v26 2/4, v22 0/8이다. 대응표는 1,160행 오류 0이다.
 
 **E941 미완료 범위.** 앱의 FontSet·Gump 출력과 TextEntry 수명, 웹 입력 큐의 앱 프레임 소비, 실제 OS IME를 확인해야 한다. 미션 앱의 진행 창·프레임, HUD, Tutorial1 플레이 역시 미확인이다.
 
