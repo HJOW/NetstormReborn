@@ -29,6 +29,7 @@ import { IndexedSurface } from './render/indexed-surface.js';
 import { IndexedPresenter, normalizeScaling } from './render/presenter.js';
 import { Settings, findSettingKey, getLocalStorage } from './platform/settings.js';
 import { Progress, isProgressKey } from './platform/progress.js';
+import { reportGameError } from './platform/error-reporting.js';
 import { createCanvasGlyphRasterizer } from './platform/glyph-rasterizer.js';
 import { MainMenuScreen } from './ui/main-menu.js';
 import { TerrainPreview } from './ui/terrain-preview.js';
@@ -541,6 +542,16 @@ export class Netstorm {
     // 루트 요소 안에 게임을 만들고 시작한다. 이미 시작된 앱이면 먼저 destroy 한다.
     // 자산 준비는 비동기로 진행되며, 끝나면 '클릭하여 시작' 상태가 된다. this 를 돌려준다.
     init(root) {
+        try {
+            return this._init(root);
+        } catch (error) {
+            reportGameError('initialization', error, { state: this._state });
+            throw error;
+        }
+    }
+
+    // 초기화 본문을 실행한다. 실패 보고는 공개 init 에서 맡고 기존 부분 정리와 예외 전달은 유지한다. (2026-11-19 WB04-E862)
+    _init(root) {
         if (!root || root.nodeType !== 1) throw new TypeError('Netstorm.init: 게임을 넣을 DOM 요소가 필요합니다.');
         if (this._root) this.destroy();
 
@@ -707,6 +718,7 @@ export class Netstorm {
             await this.options.prepare(this);
         } catch (error) {
             if (generation !== this._loadGeneration) return;
+            reportGameError('asset-loading', error, { state: this._state, generation });
             this._loadError = error;
             this._setState(AppState.ERROR);
             return;
@@ -1339,7 +1351,17 @@ export class Netstorm {
 
     // 대상에 리스너를 붙인다. destroy 의 abort 로 한꺼번에 해제되도록 signal 을 함께 넘긴다.
     _listen(target, type, handler, options = {}) {
-        target.addEventListener(type, handler, { ...options, signal: this._abort.signal });
+        const app = this;
+        // 입력 처리에서 생긴 예외에 이벤트 종류와 앱 상태를 더한 뒤 브라우저에 원래 예외를 전달한다. (2026-11-19 WB04-E862)
+        function onEvent(event) {
+            try {
+                return handler.call(this, event);
+            } catch (error) {
+                reportGameError('event', error, { state: app._state, eventType: type });
+                throw error;
+            }
+        }
+        target.addEventListener(type, onEvent, { ...options, signal: this._abort.signal });
     }
 
     // 입력·크기·가시성 이벤트를 연결한다.
@@ -1542,7 +1564,14 @@ export class Netstorm {
     // 프레임 루프를 시작한다. 이미 예약돼 있거나 탭이 숨겨져 있으면 아무것도 하지 않는다.
     _startFrameLoop() {
         if (this._frameHandle || !this._root || this._root.ownerDocument.hidden) return;
-        this._frameHandle = this._view().requestAnimationFrame((now) => this._onFrame(now));
+        this._frameHandle = this._view().requestAnimationFrame((now) => {
+            try {
+                this._onFrame(now);
+            } catch (error) {
+                reportGameError('frame', error, { state: this._state, frameTime: now });
+                throw error;
+            }
+        });
     }
 
     // 프레임 루프를 멈춘다. 예약된 프레임이 없으면 아무것도 하지 않는다.
