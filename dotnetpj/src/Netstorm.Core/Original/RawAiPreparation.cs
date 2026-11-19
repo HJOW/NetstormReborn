@@ -340,6 +340,9 @@ public sealed class RawAiPreparation
         }
     }
 
+    /// <summary>후속 실제 월드 조립 확인용 동일 풀이다. 0.645에서 추가했다.</summary>
+    public RawSidPool Pool() => _pool;
+
     /// <summary>실제 소유 블록을 매번 다시 확인하며 값형 사본을 만들지 않는다. 0.645에서 추가했다.</summary>
     /// <param name="token">살아 있는 실제 본체 토큰이다.</param>
     private byte[] Body(uint token)
