@@ -36,6 +36,7 @@ import { RawPriestMenu, bindPriestMenuWorld, createPriestMenuState } from './raw
 import { RawPlayerMenu, createPlayerMenuState } from './raw-player-menu.js';
 import { RawObjectMenu, createObjectMenuState } from './raw-object-menu.js';
 import { RawCarrierMenu } from './raw-carrier-menu.js';
+import { RawObjectMenuInfo, createObjectMenuInfoState } from './raw-object-menu-info.js';
 import { GunProcess, GunProcessFields } from './raw-gun-process.js';
 import { FlyerProcess, FlyerProcessFields, RawFlyerProcess } from './raw-flyer-process.js';
 import { findAttachedProcess, WindAviaryProcess } from './raw-wind-aviary-process.js';
@@ -1129,6 +1130,20 @@ export class RawCampaignSession {
             pathActive: (sid) => Boolean(live().core.processes.fromForm(sid)), dropPoint: (sid, type) => { const current = live(); current.prepareCarrierDrop(); return current.carrierDropPoint.find(sid, type); },
             patchCost: (type) => live().hp.typeCostUnits(type), money: (owner) => this.sp(owner), hasEvent: (sid, event) => live().core.processes.findEvent(sid, event) !== null };
         return new RawCarrierMenu(o.core.pool, o.core.types, o.contentFinder, state, hooks);
+    }
+    // 현재 TYPE 정의·Player·동맹·체력 상태로 객체 메뉴의 실제 제목과 정보를 만든다.
+    makeObjectMenuInfo(game, identity, input = {}) {
+        const o = this.#live(); if (!o.loaded || !game || identity?.playerRecords !== o.players) throw new Error('실제 Session 객체 정보의 자산·Player 수명 불일치');
+        const live = () => this.#live(), classes = new Array(o.core.types.length).fill('');
+        // 원본 TYPE 정의에서 분류를 한 번 읽되 각 게임 필드는 현재 Session에서 재조회한다.
+        for (const asset of game.types()) { const value = typeString(asset.definition, 'class'); if (value !== null) { const name = value.split('\0', 1)[0]; if (name.length > 23) throw new RangeError('객체 정보 TYPE class 길이 초과'); classes[asset.block + 70] = name; } }
+        const state = createObjectMenuInfoState({ localOwner: () => live().playerState.battleOwner, editor: () => live().globals.editor, missionPost: () => live().globals.missionPost });
+        // 제단과 크리스탈 종류는 다른 시스템과 같은 현재 공유 전역이다.
+        Object.defineProperties(state, { altar: { get: () => live().world.storage.gameAux.altarType }, nugget: { get: () => live().world.storage.gameAux.nuggetType } });
+        const hooks = { ...input, count: (sid) => live().assetModules.virtualCount(sid),
+            alliance: (owner, local) => { if (owner >= 9 || local >= 9) throw new RangeError('객체 정보 동맹 범위 오류'); return live().alliances[owner * 9 + local]; },
+            groundImmobile: (sid) => live().priests.priestState.groundImmobile(sid), ownerStatus: (owner) => { if (owner >= 9) throw new RangeError('객체 정보 Player 범위 오류'); return live().players[owner * 180 + 0x50]; } };
+        return new RawObjectMenuInfo(o.core.pool, o.core.types, classes, state, hooks);
     }
     // 같은 옵션 저장소의 숨김 Player 바이트를 빌린다.
     hiddenPlayers() { return this.#live().hiddenPlayers; }
