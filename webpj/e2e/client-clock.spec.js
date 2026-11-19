@@ -16,6 +16,13 @@ test('게임 시계는 앱 프레임과 같은 수명으로 생성되고 재시�
     try { return [prepared.script.loaded, prepared.script.fortName()]; } finally { prepared.dispose(); }
   });
   expect(mission).toEqual([true, 'BridgeTheGap']);
+  // 실제 앱 Guide의 미션 생성과 해제가 같은 설정·월드 전역에 반영된다.
+  const guide = await page.evaluate(() => {
+    const app = window.netstorm; app._clientGuide.begin('Tutorial1');
+    const begun = [app._clientGuide.current().script.fortName(), app._surfaceStorage.links.mission, app._gameData.get('global.inMission')];
+    app._clientGuide.close(); return [begun, app._surfaceStorage.links.mission, app._gameData.get('global.inMission')];
+  });
+  expect(guide).toEqual([['BridgeTheGap', true, '1'], false, '0']);
   await page.evaluate(() => window.netstorm.destroy());
   expect(await page.evaluate(() => [window.netstorm._gameClock, window.netstorm._clientLocal, window.netstorm._clientRandom, window.netstorm._clientSp, window.netstorm._clientPlayers, window.netstorm._clientTemplates])).toEqual([null, null, null, null, null, null]);
   await page.evaluate(() => window.netstorm.init(document.getElementById('netstorm_root')));

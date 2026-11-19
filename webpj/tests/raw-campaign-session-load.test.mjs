@@ -102,7 +102,7 @@ function scene(overrides = {}, savedFort = fort) {
         install: { translateYou: () => Uint8Array.of(89, 111, 117, 0), setConfig: () => trace.push('config'), refreshWindowTitle: () => trace.push('title'), resetCamera: () => trace.push('camera'), ...overrides.install },
         ownership: { refreshProduction: () => trace.push('production'), themeMode: () => 0, ...overrides.ownership },
         assets: { postPop: { playImpactSound: () => trace.push('impact') }, queueCommand: (...args) => queue.pushCommand(...args) },
-        templateStorage: overrides.templateStorage, playerRecords: overrides.playerRecords, coreDataGlobals: overrides.coreDataGlobals, subscriberGlobals: overrides.subscriberGlobals, missionFortRequest: overrides.missionFortRequest, missionSubscriber: overrides.missionSubscriber, missionOptions: overrides.missionOptions, fortMission: overrides.fortMission, fortBadges: overrides.fortBadges, production: overrides.production, newTechnology: overrides.newTechnology, localLogin: overrides.localLogin,
+        templateStorage: overrides.templateStorage, playerRecords: overrides.playerRecords, coreDataGlobals: overrides.coreDataGlobals, subscriberGlobals: overrides.subscriberGlobals, missionFortRequest: overrides.missionFortRequest, missionSubscriber: overrides.missionSubscriber, missionOptions: overrides.missionOptions, missionRestrictions: overrides.missionRestrictions, fortMission: overrides.fortMission, fortBadges: overrides.fortBadges, production: overrides.production, newTechnology: overrides.newTechnology, localLogin: overrides.localLogin,
         ownerColorTables: overrides.ownerColorTables, gameplayGlobals: overrides.gameplayGlobals, surfaceStorage: overrides.surfaceStorage, processKernel: overrides.processKernel, localStateGlobals: overrides.localStateGlobals, connectionActivityGlobals: overrides.connectionActivityGlobals, connectionFrameNumber: overrides.connectionFrameNumber, connectionRegistry: overrides.connectionRegistry, cameraScreenSize: overrides.cameraScreenSize, cameraCommit: overrides.cameraCommit, developerQueue: overrides.developerQueue, motion: overrides.motion, randomGlobals: overrides.randomGlobals, spGlobals: overrides.spGlobals,
         developerHeapTrace: overrides.developerHeapTrace, developerQueryDirectDraw: overrides.developerQueryDirectDraw, developerRecordLabel: overrides.developerRecordLabel,
         battlePeers: overrides.battlePeers, sound: { wallSeconds: () => 0, play: forbidden('소리'), playOnceAt: forbidden('위치 소리'), playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false, ...overrides.sound },
@@ -673,6 +673,45 @@ test('Netstorm Client Guide: World 없는 실제 Client 전역과 지연 요청 
         assert.equal(gameplay.denySalvage().value, 0); assert.equal(gameplay.denyAscend().value, 0);
         assert.equal(pending.pending(), false); assert.equal(owned.request.value, null); assert.equal(owned.runtime.value, null); assert.equal(storage.links.mission, false);
     } finally { mission.value?.dispose(); storage.dispose(); }
+});
+
+// 실제 앱 Client의 Guide가 Script 교체·상태 반납을 수행하고 Session은 같은 금지 표를 빌린다.
+test('Netstorm Client Guide: 실제 미션 생성·교체와 공통 금지 표', () => {
+    const app = new Netstorm(); app._initializeClientRuntime(false);
+    const data = GameData.build({ files: new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)]]), language: 'english' });
+    app._gameData = data; app._initializeClientWorldStorage(game, data.files); app._initializeClientGuide();
+    assert.throws(() => app._initializeClientGuide(), /중복/);
+    const guide = app._clientGuide, shared = app._campaignSharedServices();
+    assert.equal(guide.current(), null); assert.equal(shared.missionRestrictions, guide.restrictions());
+    guide.begin('Tutorial1', 1, 0); const first = guide.current();
+    assert.equal(first.script.fortName(), 'BridgeTheGap'); assert.equal(first.runtime.guided, true); assert.equal(first.runtime.gate.demo, 1);
+    assert.equal(app._surfaceStorage.links.mission, true); assert.equal(data.get('global.inMission'), '1');
+    const { s } = scene(shared, parseFort(entry.bytes, createFortTypes(game.typeTable)));
+    try {
+        assert.equal(s.world().storage, app._surfaceStorage);
+        shared.missionRestrictions[97] = 1; assert.equal(s.production().allowed(97), false);
+        shared.gameplayGlobals.denySalvage().value = 7; shared.gameplayGlobals.denyAscend().value = 9;
+        guide.begin('Tutorial2');
+        assert.equal(shared.gameplayGlobals.denySalvage().value, 0); assert.equal(shared.gameplayGlobals.denyAscend().value, 0);
+        assert.equal(s.production().allowed(97), true);
+        assert.equal(guide.current().script.name, 'Tutorial2'); assert.equal(guide.current().runtime.gate.demo, 0); assert.equal(guide.current().runtime.saveToken, 2);
+        assert.equal(shared.gameplayGlobals.requireSession(), s);
+    } finally { guide.dispose(); s.dispose(); app._surfaceStorage.dispose(); }
+    assert.equal(data.get('global.inMission'), '0'); assert.equal(app._surfaceStorage.links.mission, false);
+    assert.throws(() => guide.current(), /반납/); guide.dispose();
+});
+
+// 누락된 미션 공장은 등록 설정을 반납하고 동일 Guide를 다시 사용할 수 있게 한다.
+test('Netstorm Client Guide: 없는 미션과 다음 정상 생성', () => {
+    const app = new Netstorm(); app._initializeClientRuntime(false);
+    const data = GameData.build({ files: new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)]]), language: 'english' });
+    app._gameData = data; app._initializeClientWorldStorage(game, data.files); app._initializeClientGuide();
+    const guide = app._clientGuide;
+    try {
+        assert.throws(() => guide.begin('NoSuchMission_4773'), /미션 스크립트 없음/);
+        assert.equal(guide.current(), null); assert.equal(app._surfaceStorage.links.mission, false); assert.equal(data.get('global.inMission'), '0');
+        guide.begin('Tutorial1'); assert.equal(guide.current().script.name, 'Tutorial1');
+    } finally { guide.dispose(); app._surfaceStorage.dispose(); }
 });
 
 // 실제 월드 전체를 관측하고 Session이 초기화한 SP와 현재 원문·장부를 바꾸지 않는다.

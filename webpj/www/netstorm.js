@@ -42,6 +42,7 @@ import { initializeClientPlayerRecords } from './core/client-player-runtime.js';
 import { CampaignTemplateStorage } from './core/campaign-template-storage.js';
 import { loadClientWorldAssets } from './core/client-world-assets.js';
 import { ClientMissionAssets } from './core/client-mission-assets.js';
+import { ClientCampaignGuide } from './core/client-campaign-guide.js';
 import { CampaignSessionAssets } from './core/raw-campaign-session-owners.js';
 import { PriestPlacementAssets } from './core/priest-placement-assets.js';
 import { RawSurfaceStorage } from './core/raw-surface-storage.js';
@@ -444,6 +445,8 @@ export class Netstorm {
         this._clientSubscriber = null; this._clientGameplay = null; this._clientCoreData = null; this._clientPlayers = null; this._clientTemplates = null;
         // 자산 적재 뒤 구성해 Session보다 오래 유지하는 월드 물리와 Kernel이다.
         this._gameAssets = null; this._surfaceStorage = null; this._clientKernel = null;
+        // 실제 미션 Guide는 자산과 장기 저장소가 준비된 뒤 생성한다.
+        this._clientGuide = null;
         // init 때 저장해 둔 루트 인라인 스타일이다. destroy 가 되돌린다.
         this._savedRootStyle = null;
         // 비동기 로딩 결과가 오래된 것인지 가리는 세대 번호다. destroy/재시도 때마다 올라간다.
@@ -667,6 +670,12 @@ export class Netstorm {
         this._gameAssets = game; this._surfaceStorage = storage; this._clientKernel = kernel;
     }
 
+    // 같은 Client 설정·Player·월드 저장소에 Guide 수명을 연결한다.
+    _initializeClientGuide() {
+        if (this._clientGuide || !this._gameData || !this._surfaceStorage || !this._clientGameplay || !this._clientPlayers) throw new Error('Client Guide의 중복 또는 공통 수명 누락');
+        this._clientGuide = new ClientCampaignGuide(this._gameData, this._clientGameplay, this._clientPlayers, this._surfaceStorage);
+    }
+
     // 실제 앱 설정과 게임 자산에서 한 미션의 스크립트·Fort를 준비한다. 반환 소유자는 호출자가 반납한다.
     _prepareCampaignMission(name) {
         if (!this._gameData || !this._gameAssets || !this._surfaceStorage) throw new Error('미션 준비 전 실제 Client 자산 미설치');
@@ -681,6 +690,7 @@ export class Netstorm {
         const surface = this._surfaceStorage, kernel = this._clientKernel;
         return { randomGlobals: random, spGlobals: sp, localStateGlobals: local, subscriberGlobals: subscriber, gameplayGlobals: gameplay, coreDataGlobals: coreData,
             playerRecords: players, templateStorage: templates, ...(surface && kernel ? { surfaceStorage: surface, processKernel: kernel } : {}),
+            ...(this._clientGuide ? { missionRestrictions: this._clientGuide.restrictions() } : {}),
             unixSeconds: () => clock.unixSeconds(), frameTime: () => clock.time(), paused: () => clock.paused() };
     }
 
@@ -701,7 +711,8 @@ export class Netstorm {
         this._terrainPreview = null;
         this._settings = null;
         this._progress = null;
-        // 장기 Process 소유자를 TYPE·Kernel과 시계가 살아 있는 동안 반납한다.
+        // Guide를 먼저 반납하고 장기 Process 소유자는 TYPE·Kernel과 시계가 살아 있는 동안 반납한다.
+        this._clientGuide?.dispose(); this._clientGuide = null;
         this._surfaceStorage?.dispose();
         this._gameClock = null; this._clientLocal = null; this._hiddenGamePause = false;
         this._clientSp = null; this._clientRandom = null;
@@ -803,6 +814,7 @@ export class Netstorm {
                 const palettePath = this._gameData.pathSpec('GamePalSpec', this._gameData.pathSpec('fortPal'));
                 this._initializeClientWorldStorage(loadClientWorldAssets(this._gameData.files, palettePath), this._gameData.files);
             }
+            if (!this._clientGuide) this._initializeClientGuide();
             await this.options.prepare(this);
         } catch (error) {
             if (generation !== this._loadGeneration) return;

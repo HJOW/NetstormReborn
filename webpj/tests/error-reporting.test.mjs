@@ -49,7 +49,7 @@ test('현재 세대의 적재 실패를 보고하고 오류 상태를 유지한�
     const error = new Error('준비 실패');
     await captureErrors(async (entries) => {
         const app = new Netstorm({ prepare: async () => { throw error; } });
-        app._resources = {}; app._surfaceStorage = {};
+        app._resources = {}; app._surfaceStorage = {}; app._clientGuide = {};
         await app._load();
         assert.equal(app._state, 'error');
         assert.equal(app._loadError, error);
@@ -66,7 +66,7 @@ test('이전 적재 세대의 실패는 무시한다', async () => {
     let rejectPreparation;
     await captureErrors(async (entries) => {
         const app = new Netstorm({ prepare: () => new Promise((resolve, reject) => { rejectPreparation = reject; }) });
-        app._resources = {}; app._surfaceStorage = {};
+        app._resources = {}; app._surfaceStorage = {}; app._clientGuide = {};
         const loading = app._load();
         app._loadGeneration += 1;
         rejectPreparation(new Error('취소된 적재'));
