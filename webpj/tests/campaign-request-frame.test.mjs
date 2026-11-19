@@ -25,6 +25,7 @@ import { ClientTextGump } from '../www/ui/client-text-gump.js';
 import { makeClientTextMarkup } from '../www/ui/client-text-markup.js';
 import { ClientProductionBudget } from '../www/ui/client-production-budget.js';
 import { ClientGumpBackground } from '../www/ui/client-gump-background.js';
+import { ClientProductionSelection } from '../www/ui/client-production-selection.js';
 import { StyleTextFragmentKind } from '../www/ui/style-text-fragments.js';
 import { PriestPlacementAssets } from '../www/core/priest-placement-assets.js';
 import { RawCanonPixelShape } from '../www/core/raw-canon-pixel-shape.js';
@@ -328,7 +329,10 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
             now: () => app._gameClock.wallSeconds(), baseHandle: () => 0, allocateItem: (size) => itemDevice.allocate(size),
         });
         const gridToken = grid.create(2, 2, 0x40), gridNode = gump.node(gridToken); gridNode.fixed = 1; gridNode.acceptedCursor = 0x40; gridNode.baseWidth = gridNode.width = 72; gridNode.baseHeight = gridNode.height = 72;
-        const selectedItems = [], panel = gump.createBase(0, 80, 200, 1, (event, first, second) => { if (event === 0x02000008) { selectedItems.push([first, second]); return 1; } return 0; });
+        const selectedItems = [], selectionSounds = [], selection = new ClientProductionSelection(session, itemDevice, { technology: () => technology,
+            templateOwner: () => session.localOwner(), stock: () => false, failure: () => { throw new Error('다리 선택 실패'); },
+            flash: () => { throw new Error('다리 예산 부족'); }, sound: (name) => selectionSounds.push(name), changed: () => {} });
+        const panel = gump.createBase(0, 80, 200, 1, (event, first, second) => { if (event === 0x02000008) { selectedItems.push([first, second]); return selection.choose(first, second); } return 0; });
         gump.attach(panel, 0, 0); gump.bindObject(gridToken, technology); gump.attach(gridToken, 250, 250, panel); let items = 0;
         // 실제 내용물과 같은 풀에서 각 항목의 다리 플래그를 확인한다.
         for (let item = gridNode.child; item; item = gump.node(item).next) { const raw = session.core().pool.slot(gump.node(item).content); assert.ok((raw[20] | (raw[21] << 8)) & 0x40); items += 1; }
@@ -346,6 +350,8 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         }
         assert.ok(hitPoint); assert.equal(gump.handle(firstItemToken, 0x10000, hitPoint.x, hitPoint.y), 1);
         assert.deepEqual(selectedItems, [[firstItem.content, firstItem.serial]]); assert.equal(itemState.lastType, session.core().bridgeState.bridgeType);
+        assert.equal(drop.preview, firstItem.content); assert.deepEqual(selectionSounds, ['getPiece.wav']); cursor.cancel();
+        const bridgeSlot = session.core().pool.slot(firstItem.content)[23]; assert.equal(selection.shortcut(bridgeSlot), 1); assert.equal(drop.preview, firstItem.content); cursor.cancel();
         assert.equal(gump.handle(gridToken, 0x0200003f, 0, 0), 1); gridState.cursorPoint.x = 322; assert.equal(gump.handle(gridToken, 0x0200003f, 0, 0), 0);
         gump.remove(gridToken); gump.remove(panel);
         // 실제 Client 글꼴과 TextGump 스타일 체인을 같은 Gump 픽셀에 출력한다.

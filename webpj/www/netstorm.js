@@ -1016,6 +1016,11 @@ export class Netstorm {
         services.assets.queueCommand = services.developerQueue;
         // 객체 소멸 통지는 같은 Client의 현재 Gump 등록 ID에 전달한다.
         services.gumpNotice = (owner, parent) => { if (!this._clientGump) throw new Error('미션 Gump 객체 통지 수명 누락'); this._clientGump.objectGone(owner, parent); };
+        // Player 내용물 변경은 같은 현재 등록표에서 조회한 Gump에 원본 사건을 직접 전달한다.
+        services.playerContent = {
+            gump: (id) => { if (!this._clientGump) throw new Error('미션 내용물 Gump 등록표 수명 누락'); return this._clientGump.createState().entries[id] ?? 0; },
+            handle: (token, event, form, reason) => { if (!this._clientGump) throw new Error('미션 내용물 Gump 처리 수명 누락'); return this._clientGump.handle(token, event, form, reason); },
+        };
         // AI 이름·난이도와 채팅은 같은 Client 설정·번역·Subscriber 기록을 읽는다.
         services.ai = { assertion: (expression) => console.error(`미션 AI 원본 진단: ${expression}`), allocationBytes: currentAllocationBytes, bridgeScratchBytes: currentAllocationBytes,
             blockingGumpOpen: () => this._clientGump.blockingPopups() };

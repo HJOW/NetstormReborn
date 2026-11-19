@@ -46,4 +46,6 @@ export class ClientInventoryItem {
         });
         return token;
     }
+    // 같은 Session의 비용·자본으로 항목 구매 가능성을 조회한다.
+    affordable(content) { return this.#item.affordable(content); }
 }
