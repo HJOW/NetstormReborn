@@ -103,10 +103,11 @@ public sealed partial class HostSession
         Func<uint, string> energy = AiTypeRequiredEnergy.BindAiTypeRequiredEnergy(types, definitions);
         // 생성자가 같은 PATCH 풀·Player 9기록을 읽는 최소 부모다. 화신 공장 장치는 아직 잇지 않아 빈 갈고리다.
         var createPlayer = new RawPlayerWorld(Pool, new RawPostPop(Pool, types, new RawPostPopState()), PlayerRecords, MissionPlayer, new PlayerWorldHooks());
-        // 섬 조회가 같은 세션 기록·모드·목록·해시를 읽는 부모다. 거주 구역·진단은 아직 잇지 않아 명시 거부한다.
+        // 섬 조회가 같은 세션 기록·모드·목록·해시를 읽는 부모다. 거주 구역 owner는 실제 세션 지정으로 잇는다.
+        // 0.644에서 거주 구역 owner를 실제 지정으로 이었다. 근거: cpppj ClientConstructionRegions.cpp 68행의 setResidenceOwner다.
         RawIslandRuntime islands = BuildIslands(new IslandRuntimeHooks
         {
-            SetResidenceOwner = (_, _) => throw new InvalidOperationException("AI 생성의 실제 거주 구역 owner 미연결"),
+            SetResidenceOwner = (sid, owner) => SetFortObjectOwner(sid, owner),
             Assertion = _ => throw new InvalidOperationException("AI 생성의 실제 섬 진단 미연결"),
         });
         // 같은 세션 AiBrainMemory·Player·섬·동맹·TYPE를 공유하는 실제 생성자다.
@@ -134,7 +135,9 @@ public sealed partial class HostSession
             ChangeColor = (owner, color) =>
             {
                 // 같은 실제 색 표·섬 받침 프레임을 갱신한다. 빈 풀에서는 섬 객체가 없어 프레임 갈고리에 닿지 않는다.
-                RawPlayerColor.ChangePlayerColor(Pool, BridgeState, owner, color, (_, _, _) => throw new InvalidOperationException("AI 생성의 실제 색 프레임 미연결"));
+                // 0.644에서 실제 프레임 지정으로 이었다. 근거: cpppj src/client/RawCampaignSession.cpp 2809행의 ChangePlayerColor 조립이다.
+                RawPlayerColor.ChangePlayerColor(Pool, BridgeState, owner, color, (sid, frame, flags) =>
+                    (_terrainFrames ?? throw new InvalidOperationException("AI 생성 색 프레임 미연결")).Set(sid, frame, flags));
                 changeNotify?.Invoke(owner, color);
             },
             FirstRegion = owner =>

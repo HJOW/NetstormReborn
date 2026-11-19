@@ -2537,6 +2537,14 @@ public sealed partial class HostSession
     /// <remarks>2026-11-19 0.636에서 R4-4 펜스 정기용으로 추가했다. 근거: cpppj o/RawFenceRegular.h·cpp의 RawFenceRegular다.</remarks>
     private RawFenceRegular? _fenceRegular;
 
+    /// <summary>같은 장기 풀·이웃 중심의 펜스 표식 생성 본체다. BuildFenceDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-19 0.644에서 R4-4 펜스 재생성용으로 추가했다. 근거: cpppj o/RawFenceCreate.h·cpp의 RawFenceMarkerCreate다.</remarks>
+    private RawFenceMarkerCreate? _fenceMarkerCreate;
+
+    /// <summary>같은 장기 풀·프레임의 펜스 포스 필드 생성 본체다. BuildFenceDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-19 0.644에서 R4-4 펜스 재생성용으로 추가했다. 근거: cpppj o/RawFenceCreate.h·cpp의 RawFenceShieldCreate다.</remarks>
+    private RawFenceShieldCreate? _fenceShieldCreate;
+
     /// <summary>표식 삭제가 읽는 fencemark 타입 번호 상자다. 같은 세션 수명을 공유한다.</summary>
     /// <remarks>2026-11-19 0.636에서 R4-4 펜스용으로 추가했다. 근거: cpppj DAT005411c0의 현재 fencemark 번호다.</remarks>
     private readonly UIntBox _fenceMarkerType = new();
@@ -2594,17 +2602,62 @@ public sealed partial class HostSession
         _fenceLineType.Value = unchecked((uint)FindTypeByName(types, "fenceShield"));
         var neighbors = new RawFenceNeighbors(Pool, hash, types, type => types[(int)type].Range, (row, col) => Alliances[row * 9 + col]);
         _fenceNeighbors = neighbors;
+        SquidProcessHost fenceProcesses = PlayerProcesses ?? throw new InvalidOperationException("펜스 삭제 프로세스 미연결");
+        // 표식·연결선 삭제는 같은 실제 전체 파괴로 잇는다. 근거: cpppj `o/RawFencePostPop.cpp`·`o/RawFenceCreate.cpp`의 가상+10 삭제와 client `RawSurfaceFence.cpp`의 결선이다.
+        // 0.644에서 R4-4 펜스 정리 경로로 연결했다. Pre/Post는 같은 몸체의 깊이로 닫고 종속은 같은 몸체로 재귀한다. 단일 미션의 송신은 기록만 하며 선택 해제는 화면이 없어 생략한다. 전송·통지 일치는 R4-6 전송 결선에서 대조한다.
+        RawSquidDestroy fenceDestroyBody = fenceProcesses.Destroy();
+        SquidDestroyHooks? fenceDestroyHooks = null;
+        fenceDestroyHooks = new SquidDestroyHooks
+        {
+            Emit = e =>
+            {
+                switch (e.Effect)
+                {
+                    case SquidDestroyEffect.PreDestroy:
+                        fenceDestroyBody.CompletePreDestroy();
+                        break;
+                    case SquidDestroyEffect.PostDestroy:
+                        fenceDestroyBody.CompletePostDestroy();
+                        break;
+                    case SquidDestroyEffect.Transmit:
+                        _terrainPopTransmissions.Add((e.Sid, e.Flags));
+                        break;
+                    case SquidDestroyEffect.ReleaseDependent:
+                    case SquidDestroyEffect.DestroyDependent:
+                        fenceDestroyBody.Destroy(e.Sid, e.Flags, fenceDestroyHooks!);
+                        break;
+                    case SquidDestroyEffect.ClearSelection:
+                        break;
+                    default:
+                        throw new InvalidOperationException($"펜스 삭제 효과 미연결: {e.Effect}");
+                }
+            },
+            Selected = () => 0,
+            UnpopForm = sid => fenceProcesses.UnpopForm(sid),
+        };
+        Action<int, uint> fenceDestroy = (sid, flags) => fenceDestroyBody.Destroy(sid, flags, fenceDestroyHooks!);
         var markerClear = new RawFenceMarkerClear(Pool, hash, types, _fenceMarkerType,
-            (_, _) => throw new InvalidOperationException("펜스 표식 삭제 미연결(R6)"),
+            fenceDestroy,
             parent => { ReadOnlySpan<byte> raw = Pool.Slot(parent); return new float[] { BitConverter.ToSingle(raw.Slice(14, 4)), BitConverter.ToSingle(raw.Slice(18, 4)) }; });
-        var line = new RawFenceLine(Pool, hash, types, WorldFrames, _fenceLineType,
-            (_, _) => throw new InvalidOperationException("펜스 연결선 삭제 미연결(R6)"));
+        var line = new RawFenceLine(Pool, hash, types, WorldFrames, _fenceLineType, fenceDestroy);
+        // 표식·포스 필드 생성은 같은 풀·공장·표면·소유자·Pop으로 잇는다. 근거: cpppj client/RawSurfaceFence.cpp 26~50행의 생성 결선이다.
+        // 0.644에서 R4-4 펜스 재생성 경로로 연결했다. 표면 통지는 요새 공간 장치가 있어야 하며 지형·요새 장치 뒤에 연결되므로 실제 경로를 쓴다.
+        RawSquidFactory createFactory = _fortFactory ?? throw new InvalidOperationException("펜스 생성 공장 미연결");
+        var createHooks = new FenceCreateHooks
+        {
+            Create = (type, flags) => createFactory.Create(type, (Netstorm.Core.Simulation.SidAllocation)flags),
+            NotifySurface = sid => (_fortBuilding ?? throw new InvalidOperationException("펜스 생성 표면 통지 미연결")).NotifySurface(sid),
+            SetOwner = SetFortObjectOwner,
+            Pop = (sid, x, y, flags) => TerrainPopObject(sid, x, y, flags),
+        };
+        _fenceMarkerCreate = new RawFenceMarkerCreate(Pool, _fenceMarkerType, createHooks, sid => neighbors.Center(sid));
+        _fenceShieldCreate = new RawFenceShieldCreate(Pool, WorldFrames, _fenceLineType, createHooks);
         var rebuild = new RawFenceRebuild(Pool, new FenceRebuildHooks
         {
             Neighbor = (parent, direction) => neighbors.Neighbor(parent, direction),
             WithinRange = (parent, endpoints) => neighbors.WithinRange(parent, endpoints),
-            Markers = (_, _) => throw new InvalidOperationException("펜스 표식 생성 미연결(R6)"),
-            Shields = (_, _, _, _, _) => throw new InvalidOperationException("펜스 포스 필드 생성 미연결(R6)"),
+            Markers = (parent, other) => FenceMarkerCreate.Create(parent, other),
+            Shields = (points, first, second, firstId, secondId) => FenceShieldCreate.Create(points, first, second, firstId, secondId),
         });
         var postPop = new RawFencePostPop(Pool, new FencePostPopHooks
         {
@@ -2659,6 +2712,16 @@ public sealed partial class HostSession
     /// <returns>지형 분배 Pop의 펜스 갈고리로 등록한 본체다.</returns>
     /// <remarks>2026-11-19 0.636에서 추가했다. L1에서 적재 경로를 대조할 때 쓴다.</remarks>
     public RawFencePostPop FencePostPop => _fencePostPop ?? throw new InvalidOperationException("펜스 후처리 미연결");
+
+    /// <summary>펜스 표식 생성 본체를 빌려준다. 연결하기 전에는 예외다.</summary>
+    /// <returns>재생성 갈고리가 쓰는 실제 생성 본체다.</returns>
+    /// <remarks>2026-11-19 0.644에서 추가했다. L1에서 재생성 경로를 대조할 때 쓴다.</remarks>
+    public RawFenceMarkerCreate FenceMarkerCreate => _fenceMarkerCreate ?? throw new InvalidOperationException("펜스 표식 생성 미연결");
+
+    /// <summary>펜스 포스 필드 생성 본체를 빌려준다. 연결하기 전에는 예외다.</summary>
+    /// <returns>재생성 갈고리가 쓰는 실제 생성 본체다.</returns>
+    /// <remarks>2026-11-19 0.644에서 추가했다. L1에서 재생성 경로를 대조할 때 쓴다.</remarks>
+    public RawFenceShieldCreate FenceShieldCreate => _fenceShieldCreate ?? throw new InvalidOperationException("펜스 포스 필드 생성 미연결");
 
     /// <summary>장식 정기 분배 전에 사용하던 공통 정기 분배기다. 장식 사슬이 펜스 사슬을 감싸므로 해제 순서는 장식이 먼저다.</summary>
     /// <remarks>2026-11-19 0.642에서 R4-4 장식 정기용으로 추가했다. 장식 가상표가 아니면 이전 처리기로 넘긴다.</remarks>
