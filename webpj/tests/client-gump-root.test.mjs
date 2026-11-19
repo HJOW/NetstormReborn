@@ -5,6 +5,7 @@ import { Netstorm } from '../www/netstorm.js';
 import { ClientGumpRoot } from '../www/ui/client-gump-root.js';
 import { GumpCreateNode } from '../www/ui/gump-create.js';
 import { GumpBackgroundCreate, GumpBackgroundNode } from '../www/ui/gump-background-create.js';
+import { UberRootNode } from '../www/ui/uber-root-gump.js';
 
 // 등록 루트와 현재 입력 전역은 크기 변경에도 같은 객체이며 원본 삭제 큐로 반납한다.
 test('Client Gump 루트: 실제 등록표·크기·입력·삭제 수명', () => {
@@ -61,4 +62,16 @@ test('Client Gump 루트: 실제 파생 배경 노드의 생성·입력·소멸'
     assert.throws(() => owner.allocateDerived(new GumpCreateNode(), () => 0, () => {}), /파생 노드/u);
     assert.throws(() => owner.allocateDerived(new GumpBackgroundNode(), () => 0, null), /소멸자/u);
     owner.dispose();
+});
+
+// 원본 임시 등록 해제 뒤 파생 루트를 공개하고 그 실제 처리기에 입력한다.
+test('Client Gump 루트: 실제 파생 루트 교체와 입력 분배', () => {
+    const owner = new ClientGumpRoot(100, 80, () => 0, () => {}), previous = owner.root(), root = new UberRootNode(), events = [];
+    const token = owner.allocateDerived(root, (event) => { events.push(event); return 1; }, (value, flags) => owner.lifetime().deleteScalar(value, flags));
+    owner.factory().construct(token, 1, 100, 80, 0x401);
+    const state = owner.createState(); state.entries[root.id] = 0; root.id = 0;
+    owner.replaceRoot(token);
+    assert.equal(owner.root(), root); assert.notEqual(owner.root(), previous); assert.equal(state.entries[0], token); assert.equal(state.collection.root, token);
+    assert.equal(owner.input().route(42, 0, 0), token); assert.deepEqual(events, [42]);
+    owner.resize(120, 80); assert.equal(root.width, 120); owner.dispose(); assert.equal(state.entries[0], 0);
 });

@@ -35,6 +35,15 @@ test('게임 시계는 앱 프레임과 같은 수명으로 생성되고 재시�
     return [...result, ...calls, owner.node(token) === null];
   });
   expect(derivedGump).toEqual([true, true, 43, 'destroy', true]);
+  // 별도 Client 수명에서 실제 Uber 파생 루트를 공개하고 그 처리기에 입력한다.
+  const replacedGump = await page.evaluate(async () => {
+    const { ClientGumpRoot } = await import('/ui/client-gump-root.js'), { UberRootNode } = await import('/ui/uber-root-gump.js');
+    const owner = new ClientGumpRoot(100, 80, () => 0, () => {}), root = new UberRootNode();
+    const token = owner.allocateDerived(root, () => 1, (value, flags) => owner.lifetime().deleteScalar(value, flags));
+    owner.factory().construct(token, 1, 100, 80, 0x401); owner.createState().entries[root.id] = 0; root.id = 0; owner.replaceRoot(token);
+    const result = [owner.root() === root, owner.createState().entries[0] === token, owner.input().route(42, 0, 0) === token]; owner.dispose(); return result;
+  });
+  expect(replacedGump).toEqual([true, true, true]);
   // 화면 팔레트 변경이 실제 표시기의 같은 색 번호에 전달되는지 확인한 뒤 원래 색을 복구한다.
   const presentedColor = await page.evaluate(async () => {
     const app = window.netstorm, { GamePalette } = await import('/assets/palette.js');

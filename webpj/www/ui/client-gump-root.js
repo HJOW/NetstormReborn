@@ -28,8 +28,9 @@ export class ClientGumpRoot {
         } });
         this.#collection = new GumpCollection(this.#create.collection, this.#factory.collectionHooks());
         const handle = (token, event, first, second) => {
-            if (token === this.#root) return 0;
-            const handler = this.#handlers.get(token); if (!handler) throw new Error('Client Gump 파생 처리기 미연결');
+            const handler = this.#handlers.get(token);
+            if (!handler && token === this.#root && this.#nodes.get(token)?.constructor === GumpCreateNode) return 0;
+            if (!handler) throw new Error('Client Gump 파생 처리기 미연결');
             return handler(event, first, second) >>> 0;
         };
         this.#events = new GumpEvents(this.#create, this.#life, this.#event, this.#collection, { node, handle });
@@ -89,6 +90,8 @@ export class ClientGumpRoot {
     attach(token, x, y, parent = this.#root, mode = 0) { this.#live(); this.#tree.attach(token, x, y, parent, mode); }
     // 같은 수명의 지연 삭제를 요청하고 현재 큐를 정리한다.
     remove(token) { this.#live(); this.#lifetime.kill(token); this.#lifetime.cleanup(); }
+    // 임시 등록을 반환한 실제 새 루트로 공통 수명과 Client의 현재 별칭을 함께 바꾼다.
+    replaceRoot(token) { this.#live(); this.#lifetime.replaceRoot(token); this.#root = token >>> 0; }
     // 루트의 현재 기본·표시 크기를 원본 SetControls와 같이 갱신한다.
     resize(width, height) {
         this.#live(); if (!Number.isInteger(width) || !Number.isInteger(height) || width <= 0 || height <= 0) throw new RangeError('Client Gump 화면 크기 오류');
