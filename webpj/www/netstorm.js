@@ -11,6 +11,7 @@
 // (2026-10-31 WB03-N: 언어가 한국어면 갈무리11 글꼴·번역표 묶음을 받아 메인 메뉴·펼침 메뉴 라벨을 한국어로 그린다)
 import { AssetLoader } from './assets/asset-loader.js';
 import { GameData } from './assets/game-data.js';
+import { GamePalette } from './assets/palette.js';
 import { loadTerrainScene } from './assets/terrain-scene.js';
 import {
     BUTTON_SOUND_NAME,
@@ -751,6 +752,22 @@ export class Netstorm {
             colors.ownerTables.initialize(colors.primary, PATCH_TYPE_COUNT, bridge, clouds.worldRedraw());
         });
         screen.bindColorMaps(() => ({ bright: colors.maps[4], dark: colors.maps[6] }));
+    }
+
+    // 논리 크기가 바뀌면 현재 색과 loaded 상자·고정 색표를 유지한 새 창 모드 Screen을 만든다.
+    _resizeClientPaletteScreen(width, height) {
+        const previous = this._clientPaletteScreen, colors = this._clientColorSort;
+        if (!previous || !colors?.mapsReady) throw new Error('Client Screen 크기 변경의 현재 색표 수명 누락');
+        if (previous.width === width && previous.height === height) return;
+        const palette = GamePalette.parse(previous.palette().slice()), mode = previous.flags;
+        const screen = new Screen(width, height, { paletteLoaded: previous.paletteLoaded, devices: {
+            paletteChanged: (value) => this._applyClientScreenPalette(value), present: (rect, view) => this._presentClientScreen(rect, view),
+        } });
+        screen.init(); screen.initDibSection();
+        screen.bindColorSortInput(() => colors.logical); screen.bindColorMaps(() => ({ bright: colors.maps[4], dark: colors.maps[6] }));
+        screen.loadPalette(palette, 0);
+        if (!screen.setMode(mode)) throw new Error('Client Screen 크기 변경의 창 모드 초기화 실패');
+        screen.setClip(0, 0, width, height); this._clientPaletteScreen = screen;
     }
 
     // 같은 Client 설정·Player·월드 저장소에 Guide 수명을 연결한다.
@@ -1630,6 +1647,7 @@ export class Netstorm {
         style.visibility = next.visible ? 'visible' : 'hidden';
         this._displayDirty = true;
         if (this._state === AppState.MAIN_MENU || this._state === AppState.TERRAIN_PREVIEW) this._ensureSurface();
+        if (this._clientPaletteScreen) this._resizeClientPaletteScreen(next.logicalWidth, next.logicalHeight);
         this._applyCursor();
         if (next.visible) this._render(view.performance?.now?.() ?? 0);
     }

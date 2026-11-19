@@ -100,3 +100,20 @@ test('Client 시작 색표: 실제 TYPE의 소유자 표와 캐시를 화면에 
     assert.notEqual(app._clientColorSort.maps[2][0], first.maps[2][0]);
     assert.equal(app._clientColorSort.ownerTables.ready, true);
 });
+
+// 논리 크기 변경은 현재 화면색을 새 DIB로 옮기고 최초 입력과 loaded 상자를 유지한다.
+test('Client 화면 크기: 현재 팔레트와 같은 고정 색표를 보존한다', () => {
+    const app = new Netstorm(), assets = realCaptureAssets();
+    const game = new GameAssets(assets.table, assets.database, GamePalette.parse(readData('d/GIFCLOUD.COL')));
+    app._initializeClientRuntime(false); app._layout = { logicalWidth: 7, logicalHeight: 4, visible: false }; app._presenter = new IndexedPresenter(null);
+    app._initializeClientPalette(game); app._initializeClientPaletteCache(game);
+    const old = app._clientPaletteScreen, owner = app._clientColorSort, loaded = old.paletteLoaded, fixed = owner.logical.slice();
+    const rgb = game.palette.rgb.slice(); rgb.set([17, 33, 97], 37 * 3); old.loadPalette(new GamePalette(rgb), 0);
+    const current = old.palette().slice(); app._resizeClientPaletteScreen(9, 4);
+    const next = app._clientPaletteScreen;
+    assert.notEqual(next, old); assert.equal(next.width, 9); assert.equal(next.pitch, 12); assert.equal(next.paletteLoaded, loaded);
+    assert.deepEqual(next.palette(), current); assert.deepEqual(owner.logical, fixed); assert.equal(app._clientColorSort, owner);
+    assert.equal(next.shadeMaps().bright, owner.maps[4]); assert.equal(next.shadeMaps().dark, owner.maps[6]);
+    assert.deepEqual(next.clip(), { left: 0, top: 0, right: 9, bottom: 4 });
+    app._resizeClientPaletteScreen(9, 4); assert.equal(app._clientPaletteScreen, next);
+});

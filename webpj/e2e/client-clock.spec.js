@@ -32,6 +32,17 @@ test('게임 시계는 앱 프레임과 같은 수명으로 생성되고 재시�
     return [app._surface.pixels[0], ...app._ctx.getImageData(0, 0, 1, 1).data];
   });
   expect(cleared).toEqual([0, 0, 0, 0, 255]);
+  // 화면비를 바꿔도 현재 팔레트와 Client 색표 수명은 유지하고 DIB 크기만 바뀐다.
+  const resized = await page.evaluate(() => {
+    const app = window.netstorm, before = app._clientPaletteScreen, colors = app._clientColorSort, loaded = before.paletteLoaded, palette = [...before.palette()];
+    app.setAspect('4:3');
+    const narrow = app._clientPaletteScreen, result = [narrow.width, narrow.height, narrow !== before, narrow.paletteLoaded === loaded,
+      app._clientColorSort === colors, palette.every((value, index) => narrow.palette()[index] === value)];
+    app.setAspect('16:10'); result.push(app._clientPaletteScreen.width, app._clientPaletteScreen.height, app._clientColorSort === colors);
+    app.setAspect('16:9'); result.push(app._clientPaletteScreen.width, app._clientPaletteScreen.height, app._clientColorSort === colors);
+    return result;
+  });
+  expect(resized).toEqual([1024, 768, true, true, true, true, 1228, 768, true, 1366, 768, true]);
   // 준비는 실제 공개 자산에서 스크립트가 지정한 Fort를 읽고 사용 뒤 등록 객체를 반납한다.
   const mission = await page.evaluate(() => {
     const prepared = window.netstorm._prepareCampaignMission('Tutorial1');
