@@ -7,7 +7,7 @@ import { StoneButtonGump, StoneButtonGumpNode } from './stone-button-gump.js';
 // 실제 공통 수명과 버튼·배경 생성 장치를 한 번 묶는다.
 export class ClientStoneControls {
     // Client 소유자와 기존 원본 버튼·돌 버튼 본체다.
-    #owner; #buttons; #stones; #owned = new Set();
+    #owner; #buttons; #stones; #background; #owned = new Set();
     // 실제 색 상태와 호출할 때 필요한 시간·소리·폰트·타입 장치를 빌린다.
     constructor(owner, devices) {
         if (!owner || typeof owner.createState !== 'function' || !devices?.buttonState || !devices?.stoneState || typeof devices.backgroundColor !== 'function') throw new TypeError('Client 돌 버튼의 실제 소유자·상태 필요');
@@ -16,6 +16,7 @@ export class ClientStoneControls {
         const button = (token) => { const node = base(token); return node instanceof ButtonGumpNode ? node : null; };
         const stone = (token) => { const node = base(token); return node instanceof StoneButtonGumpNode ? node : null; };
         const background = new GumpBackgroundCreate(owner.createState(), owner.factory(), devices.backgroundColor, { node: base, type: devices.type, frame: devices.frame });
+        this.#background = background;
         this.#buttons = new ButtonGump(owner.createState(), devices.buttonState, owner.factory(), owner.collection(), owner.events(), owner.input(), owner.lifetime(), {
             node: button, baseNode: base, now: devices.now, poll: devices.poll, sound: devices.sound, baseEvent: devices.baseEvent,
             redraw: (token, erase) => owner.redraw(token, erase), backgroundFlags: (token) => {
@@ -60,6 +61,8 @@ export class ClientStoneControls {
     }
     // 기존 원본 돌 버튼 생성자에 같은 주소·자산·문맥을 전달한다.
     construct(token, width, height, label = null, unused = 0, context = null) { return this.#stones.construct(token, width, height, label, unused, context); }
+    // 같은 실제 배경 생성기를 Slider 손잡이가 빌린다.
+    background() { return this.#background; }
     // 같은 원본 돌 버튼 본체를 Slider 생성기가 빌린다.
     backend() { return this.#stones; }
     // 같은 원본 버튼 본체를 Slider 입력기가 빌린다.
