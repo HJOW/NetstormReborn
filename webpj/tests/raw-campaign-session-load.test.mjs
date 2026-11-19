@@ -802,6 +802,8 @@ test('Netstorm Client World: 실제 Guide Fort 설치와 로컬 로그인 수명
 // 실제 앱 Client State7 부모와 State8 접속이 같은 Guide·World·연결표를 사용한다.
 test('Netstorm Client World: 실제 앱 State7 부모와 State8 로컬 로그인', () => {
     const app = new Netstorm(); app._initializeClientRuntime(false);
+    const source = new ClientTimeSource(); source.enableFixed({ frameMilliseconds: 100 });
+    app._gameClock = new ClientFrameClock(source, app._clientLocal.gameTicks());
     const data = GameData.build({ files: new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)], ['d/Gifcloud.gif', readData('d/Gifcloud.gif')], ['d/GIFCLOUD.COL', readData('d/GIFCLOUD.COL')]]), language: 'english' });
     const xlat = new XlatTable(fs.readFileSync(path.join(REPO_ROOT, 'webpj/translations/xlat.korean'), 'utf8'));
     app._gameData = data; app._root = { ownerDocument: { title: 'before' } }; app._resources = { translate: (text) => xlat.translate(text) }; app._initializeClientWorldStorage(game, data.files); app._initializeClientGuide();
@@ -839,6 +841,15 @@ test('Netstorm Client World: 실제 앱 State7 부모와 State8 로컬 로그인
             assert.deepEqual(order.splice(0), ['state', 'packet', 'guide']);
         }
         assert.equal(session.localConnectionReady(), true); assert.equal(world.connecting, true);
+        // 같은 앱 전역의 표본을 실제 Session 전송 프레임에서 처리하고 다음 프레임의 시계에 반영한다.
+        const sync = app._clientLocal.clockSynchronization(), samples = app._clientLocal.clockSamples();
+        sync.replyMode = 0; sync.connection = 1; samples.next = 0;
+        const sample = new DataView(samples.samples[0].buffer);
+        sample.setFloat64(8, 0.125, true); sample.setFloat64(16, 0.125, true); sample.setFloat64(24, 0.375, true);
+        app._onFrame(1000); assert.equal(sync.gameTicks, 125);
+        app._onFrame(1100); assert.ok(Math.abs(app._gameClock.time().wall - app._gameClock.time().game - 0.125) < 1e-12);
+        resetClientClockSynchronization(app._clientLocal); app._onFrame(1200);
+        assert.equal(app._gameClock.time().game, app._gameClock.time().wall);
         assert.equal(data.get('fort.mySubHandle'), '당신');
         const owner = app._clientGameplay.player.battleOwner, record = app._clientPlayers.records().subarray(owner * 180 + 12, owner * 180 + 52);
         assert.equal(displayTextCodec.decode(record.subarray(0, record.indexOf(0))), '당신');
