@@ -1790,7 +1790,13 @@ export class Netstorm {
         this._gameClock?.captureFrame();
         this._clock.tick(now);
         this._frameSeconds = now / 1000;
-        // 원본 루프 8번의 Guide를 입력 처리보다 먼저 실행한다. State와 패킷 소비는 별도 연결 경계다.
+        // 원본 루프 2번: 현재 미션의 로컬 State만 Poll한다. 수신 콜백 안의 재진입은 정리와 전환을 미룬다.
+        const stateWorld = this._campaignWorld;
+        if (stateWorld && !stateWorld.session().connectionCallbackActive()) stateWorld.session().pollLocalConnectionState();
+        // 원본 루프 4번: Poll 뒤 현재 World를 다시 조회해 같은 내부 전송을 진행한다. 완료 후 화면 설치는 별도 경계다.
+        const packetWorld = this._campaignWorld;
+        if (packetWorld && !packetWorld.session().connectionCallbackActive()) packetWorld.session().pumpLocalConnection();
+        // 원본 루프 8번의 Guide를 상태·패킷 처리 뒤, 입력 처리보다 먼저 실행한다.
         this._clientGuide?.run();
         if (this._state === AppState.MAIN_MENU) {
             // 원본 UserInput 은 매 프레임 마우스 위치를 폴링해 Gump 에 알린다. 그래서 포인터가 멈춰 있어도 그 아래에 새로 열린 펼침 메뉴 행이 바로 강조된다

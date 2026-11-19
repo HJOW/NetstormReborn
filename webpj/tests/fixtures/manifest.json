@@ -1930,8 +1930,8 @@
       "sha256": "24ea26b4fab1acea08eedf30bb48b8e5ff947f81b98261235c9728a283e4e3ac",
       "bytes": 7575,
       "lines": 259,
-      "fixtureCommit": "5bf64ed5",
-      "webCommit": "97b687ea",
+      "fixtureCommit": "5bf64ed5e",
+      "webCommit": "worktree",
       "cpppjBasis": {}
     },
     {
@@ -1962,8 +1962,8 @@
       "sha256": "4f5fe359e092afe07f46b3c5c8e9bdb30814700bcf51b796096affb04c616b39",
       "bytes": 5596,
       "lines": 71,
-      "fixtureCommit": "5bf64ed5",
-      "webCommit": "97b687ea",
+      "fixtureCommit": "5bf64ed5e",
+      "webCommit": "worktree",
       "cpppjBasis": {}
     },
     {
@@ -1995,8 +1995,8 @@
       "sha256": "895e1cb3e574385dd413506f81adcdab711b937bb7d31cfc130811686641b89e",
       "bytes": 7594,
       "lines": 259,
-      "fixtureCommit": null,
-      "webCommit": "97b687ea6",
+      "fixtureCommit": "9a3c8ce4e",
+      "webCommit": "worktree",
       "cpppjBasis": {}
     },
     {
@@ -2028,8 +2028,8 @@
       "sha256": "4ecd16f5566c7d68e369dc3df7f5c718b6b385439fdb7a5ccc35e158b9c63ca8",
       "bytes": 6926,
       "lines": 308,
-      "fixtureCommit": null,
-      "webCommit": "97b687ea6",
+      "fixtureCommit": "9a3c8ce4e",
+      "webCommit": "worktree",
       "cpppjBasis": {}
     },
     {
@@ -3188,7 +3188,7 @@
       "bytes": 1543,
       "lines": 55,
       "fixtureCommit": "4e66a8743",
-      "webCommit": "worktree",
+      "webCommit": "87a8741a6",
       "cpppjBasis": {
         "cpppj/src/o/RawRitualRefresh.cpp": "4e66a8743"
       }
@@ -25099,7 +25099,7 @@
       "bytes": 142237,
       "lines": 1963,
       "fixtureCommit": "e2b39c791",
-      "webCommit": "worktree",
+      "webCommit": "87a8741a6",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "c91d9b849",
         "cpppj/src/app/main.cpp": "382ec33fe",

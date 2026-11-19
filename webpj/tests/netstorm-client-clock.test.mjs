@@ -35,3 +35,16 @@ test('Netstorm Client 시계: 기존 중첩 정지 보존', () => {
     assert.equal(app._gameClock.paused(), true); app._gameClock.popGamePause();
     assert.equal(app._gameClock.paused(), false); assert.equal(app._gameClock.gameSeconds(), 0);
 });
+
+// State Poll이 World를 교체하면 패킷은 새 소유자에게만 보내고 수신 콜백 중 재진입은 건너뛴다.
+test('Netstorm Client 프레임: 현재 World 재조회와 수신 중 재진입', () => {
+    const app = new Netstorm(), calls = [];
+    app._canvas = {}; app._render = () => {}; app._startFrameLoop = () => {};
+    const next = { session: () => ({ connectionCallbackActive: () => false, pumpLocalConnection: () => calls.push('새 패킷') }) };
+    const prior = { session: () => ({ connectionCallbackActive: () => false, pollLocalConnectionState: () => { calls.push('이전 State'); app._campaignWorld = next; }, pumpLocalConnection: () => calls.push('이전 패킷') }) };
+    app._campaignWorld = prior; app._clientGuide = { run: () => calls.push('Guide') };
+    app._onFrame(0); assert.deepEqual(calls, ['이전 State', '새 패킷', 'Guide']);
+    calls.length = 0;
+    app._campaignWorld = { session: () => ({ connectionCallbackActive: () => true, pollLocalConnectionState: () => calls.push('State'), pumpLocalConnection: () => calls.push('패킷') }) };
+    app._onFrame(16); assert.deepEqual(calls, ['Guide']);
+});

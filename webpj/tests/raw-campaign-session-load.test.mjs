@@ -816,7 +816,18 @@ test('Netstorm Client World: 실제 앱 State7 부모와 State8 로컬 로그인
         app._runCampaignState7(services, { x: 1024, y: 768 }); world = app._campaignWorld;
         const session = world.session(), state = app._clientLocal.state();
         assert.equal(state.phase[0], 8); assert.equal(state.next[0], 9); assert.equal(request.consumed, true); assert.equal(world.connecting, true);
-        assert.equal(session.world().storage, app._surfaceStorage); session.pumpLocalConnection(); session.pollLocalConnectionState(); session.pumpLocalConnection();
+        assert.equal(session.world().storage, app._surfaceStorage);
+        app._canvas = {}; app._render = () => {}; app._startFrameLoop = () => {};
+        const order = [], poll = session.pollLocalConnectionState.bind(session), pump = session.pumpLocalConnection.bind(session), runGuide = guide.run.bind(guide);
+        session.pollLocalConnectionState = () => { order.push('state'); return poll(); };
+        session.pumpLocalConnection = () => { order.push('packet'); return pump(); };
+        guide.run = () => { order.push('guide'); return runGuide(); };
+        // 실제 비동기 연결이 준비될 때까지 앱 프레임만 진행한다.
+        for (let frame = 0; frame < 10 && !session.localConnectionReady(); frame += 1) {
+            app._onFrame(frame * 16);
+            assert.deepEqual(order.splice(0), ['state', 'packet', 'guide']);
+        }
+        assert.equal(session.localConnectionReady(), true); assert.equal(world.connecting, true);
         assert.equal(world.completeLocalConnection(), true); assert.equal(session.localConnectionReady(), true);
         guide.dispose(); app._releaseCampaignWorld(); assert.equal(app._campaignWorld, null); assert.equal(app._campaignWorldMissionToken, 0); assert.equal(app._surfaceStorage.borrowed, false);
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); }
