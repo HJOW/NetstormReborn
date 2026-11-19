@@ -450,6 +450,8 @@ export class Netstorm {
         this._root = null;
         // 게임 Canvas 요소다.
         this._canvas = null;
+        // IME 포커스가 필요할 때만 만드는 실제 편집 요소다.
+        this._clientImeElement = null;
         // Canvas 2D 그리기 컨텍스트다.
         this._ctx = null;
         // 가장 최근에 적용한 Canvas 배치다.
@@ -1029,6 +1031,7 @@ export class Netstorm {
         this._surface = null;
         if (this._savedTitle !== null && this._root.ownerDocument) this._root.ownerDocument.title = this._savedTitle;
         this._savedTitle = null;
+        this._clientImeElement?.remove(); this._clientImeElement = null;
         this._canvas?.remove();
         this._restoreRootStyle();
         this._root = null;
@@ -1806,7 +1809,7 @@ export class Netstorm {
         this._listen(canvas, 'compositionend', (event) => this._onCompositionEnd(event));
         // 마우스 휠은 열린 도움말 창 본문을 스크롤한다(웹 적응). 도움말이 열려 있을 때만 페이지 스크롤을 막는다. (2026-10-30 WB03-G)
         this._listen(canvas, 'wheel', (event) => this._onWheel(event), { passive: false });
-        this._listen(canvas, 'blur', () => this._clearInput());
+        this._listen(canvas, 'blur', (event) => { if (event.relatedTarget !== this._clientImeElement) this._clearInput(); });
         this._listen(doc, 'visibilitychange', () => this._onVisibilityChange());
 
         // 루트 크기가 바뀌면 배치를 다시 계산한다. 관찰자가 없는 환경에서는 창 크기 변경으로 대신한다.
@@ -1833,6 +1836,34 @@ export class Netstorm {
             },
             { once: true, signal: this._abort.signal },
         );
+    }
+
+    // 실제 문자 편집이 활성화될 때만 IME가 포커스할 수 있는 입력 요소를 만든다.
+    _activateClientTextInput(x, y) {
+        if (!this._root || !this._canvas || !this._layout?.visible || !this._clientNativeInputEnabled || !Number.isFinite(x) || !Number.isFinite(y)) throw new Error('Client IME 입력의 활성 화면·좌표 누락');
+        let element = this._clientImeElement;
+        if (!element) {
+            element = this._root.ownerDocument.createElement('textarea'); this._clientImeElement = element;
+            element.setAttribute('aria-label', '문자 입력'); element.setAttribute('autocomplete', 'off'); element.setAttribute('autocapitalize', 'off');
+            element.spellcheck = false; element.tabIndex = -1;
+            Object.assign(element.style, { position: 'fixed', width: '1px', height: '1px', opacity: '0', padding: '0', border: '0', resize: 'none', overflow: 'hidden', pointerEvents: 'none' });
+            this._listen(element, 'keydown', (event) => this._onKeyDown(event)); this._listen(element, 'keyup', (event) => this._onKeyUp(event));
+            this._listen(element, 'compositionstart', () => this._onCompositionStart());
+            this._listen(element, 'compositionend', (event) => { this._onCompositionEnd(event); element.value = ''; });
+            this._listen(element, 'input', () => { if (!this._clientComposing) element.value = ''; });
+            this._listen(element, 'blur', (event) => { if (event.relatedTarget !== this._canvas) this._clearInput(); });
+            this._root.appendChild(element);
+        }
+        const rect = this._canvas.getBoundingClientRect();
+        element.style.left = `${rect.left + x * rect.width / this._layout.logicalWidth}px`;
+        element.style.top = `${rect.top + y * rect.height / this._layout.logicalHeight}px`;
+        element.focus({ preventScroll: true }); return element;
+    }
+
+    // 편집 종료는 미완성 조합을 버리고 기존 Canvas 포커스로 돌아간다.
+    _deactivateClientTextInput() {
+        const element = this._clientImeElement; if (!element) return;
+        this._clientComposing = false; element.value = ''; this._canvas?.focus({ preventScroll: true }); element.remove(); this._clientImeElement = null;
     }
 
     // 포인터 이벤트로 입력 상태의 포인터 정보를 갱신한다. 논리 화면과 맞지 않으면 갱신하지 않는다.

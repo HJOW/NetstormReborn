@@ -75,3 +75,25 @@ test('브라우저 조합 확정 사건의 원본 큐 예약', async ({ page }) 
   const result = await page.evaluate(() => { const app = window.netstorm, queue = app._clientInputQueue; return [app.state, queue.pop(false).code, queue.pop(false).code, queue.empty]; });
   expect(result).toEqual(['clickToStart', 0x0100d55c, 0x0100ae00, true]);
 });
+
+// 편집 요소에 포커스한 조합·키 사건이 같은 큐로 가고 종료 시 Canvas로 돌아간다.
+test('브라우저 IME 편집 요소의 포커스와 수명', async ({ page }) => {
+  await page.goto('/'); await page.waitForFunction(() => window.netstorm?.state === 'clickToStart');
+  const canvas = page.locator('canvas'); await canvas.focus();
+  const activated = await page.evaluate(() => {
+    const app = window.netstorm; app._clientNativeInputEnabled = true; app._input.pointer.inside = true;
+    const element = app._activateClientTextInput(100, 120); return [document.activeElement === element, app._input.pointer.inside, element.tagName, element.getAttribute('aria-label')];
+  });
+  expect(activated).toEqual([true, true, 'TEXTAREA', '문자 입력']);
+  const input = page.locator('textarea[aria-label="문자 입력"]');
+  await input.evaluate((element) => element.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true, data: '' })));
+  await page.keyboard.press('Enter');
+  await input.evaluate((element) => element.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true, data: '한글' })));
+  await page.keyboard.press('a');
+  const values = await page.evaluate(() => {
+    const app = window.netstorm, queue = app._clientInputQueue; return [app.state, queue.pop(false).code, queue.pop(false).code, queue.pop(false).code, queue.empty, app._clientImeElement.value];
+  });
+  expect(values).toEqual(['clickToStart', 0x0100d55c, 0x0100ae00, 0x61, true, '']);
+  expect(await page.evaluate(() => { const app = window.netstorm, old = app._clientImeElement; app._deactivateClientTextInput(); return [old.isConnected, document.activeElement === app._canvas, app._clientImeElement === null]; })).toEqual([false, true, true]);
+  expect(await page.evaluate(() => { const app = window.netstorm, old = app._activateClientTextInput(5, 5); app.destroy(); return [old.isConnected, app._clientImeElement === null]; })).toEqual([false, true]);
+});
