@@ -26,6 +26,7 @@ import { makeClientTextMarkup } from '../www/ui/client-text-markup.js';
 import { ClientProductionBudget } from '../www/ui/client-production-budget.js';
 import { ClientGumpBackground } from '../www/ui/client-gump-background.js';
 import { ClientProductionSelection } from '../www/ui/client-production-selection.js';
+import { ClientProductionHint } from '../www/ui/client-production-hint.js';
 import { StyleTextFragmentKind } from '../www/ui/style-text-fragments.js';
 import { PriestPlacementAssets } from '../www/core/priest-placement-assets.js';
 import { RawCanonPixelShape } from '../www/core/raw-canon-pixel-shape.js';
@@ -383,5 +384,12 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         session.setSp(session.localOwner(), cash); immediate = true; gump.idle(); assert.equal(budget.amount(), cash);
         budget.flash(); budgetNow = 0.16; gump.idle(); assert.equal(gump.node(budgetToken).head, 0);
         budgetNow = 0.32; gump.idle(); assert.notEqual(gump.node(budgetToken).head, 0); gump.remove(budgetPanel); session.setSp(session.localOwner(), previousCash);
+        // 실제 글꼴·번역·픽셀의 생산 실패 안내는 4초 뒤 같은 Gump 수명에서 사라진다.
+        let hintNow = 0; const hint = new ClientProductionHint(gump, budgetText, { now: () => hintNow, translate: (value) => app._resources.translate(value),
+            palette: () => screen.colors(), changed: () => {} });
+        const reference = gump.createBase(0, 36, 36, 1, () => 0); gump.attach(reference, 500, 400);
+        const notice = hint.show(false, gump.node(reference).serial), noticePixels = new Uint8Array(1366 * 768).fill(255);
+        gump.draw(notice, draw, new GumpPixelTarget(noticePixels, 1366, 768, draw)); assert.ok(noticePixels.some((value) => value !== 255));
+        hintNow = 4; gump.idle(); assert.ok(gump.node(notice).flags & 0x10000); gump.lifetime().cleanup(); assert.equal(gump.node(notice), null); gump.remove(reference);
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); app._clientSoundDevice.dispose(); app._missionAudioAssets.dispose(); }
 });

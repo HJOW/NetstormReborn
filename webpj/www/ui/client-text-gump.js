@@ -31,13 +31,20 @@ export class ClientTextGump {
         const root = this.#root; return new TextGump(root.createState(), this.#state, root.factory(), root.lifetime(), root.collection(), clip, this.#style, { node: (token) => root.node(token), baseNode: (token) => root.node(token) });
     }
     // 실제 한 줄 파생 노드의 가상 입력·출력·소멸을 등록한다.
-    allocate(idle = null) {
-        const root = this.#root, node = new TextGumpNode(); let token = 0;
+    allocate(idle = null) { return this.allocateDerived(new TextGumpNode(), { idle }); }
+    // 안내처럼 TextGump에서 파생된 같은 노드에 선택적 가상 동작을 설치한다.
+    allocateDerived(node, { idle = null, destroy = null, draw = null } = {}) {
+        if (!(node instanceof TextGumpNode)) throw new TypeError('Client 글자 Gump 파생 노드 오류');
+        const root = this.#root; let token = 0;
         token = root.allocateDerived(node, (event, first, second) => this.#baseHandle(token, event, first, second),
-            (current, flags) => this.#body().deleteScalar(current, flags), null, () => {}, idle);
-        root.bindDraw(token, (current, target, clip) => { const previous = this.#target; this.#target = target; try { this.#body(clip).draw(current); } finally { this.#target = previous; } });
+            (current, flags) => destroy ? destroy(current, flags) : this.deleteScalar(current, flags), null, () => {}, idle);
+        root.bindDraw(token, (current, target, clip) => { const previous = this.#target; this.#target = target; try { if (draw) draw(current); else this.#body(clip).draw(current); } finally { this.#target = previous; } });
         return token;
     }
+    // 파생 소멸자가 소유 문자열을 반납한 뒤 같은 글자 본체를 소멸한다.
+    deleteScalar(token, flags) { return this.#body().deleteScalar(token, flags); }
+    // 파생 출력기가 현재 Gump 클립 안에서 같은 스타일 조각을 그린다.
+    drawFragments(head, position) { if (!this.#target) throw new Error('Client 글자 Gump의 현재 출력 표면 누락'); return this.#style.draw(head, position); }
     // 원본 TextGump를 초기화하고 스타일·크기를 같은 조각 체인에 적용한다.
     construct(token, width, height, font, color) { return this.#body().construct(token, width, height, font, color); }
     // 현재 글꼴 인코딩과 노드의 실제 문맥으로 스타일 문자열을 추가한다.
