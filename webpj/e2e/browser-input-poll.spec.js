@@ -13,3 +13,19 @@ test('브라우저 포인터와 보조 키 폴링', async ({ page }) => {
   await page.keyboard.up('Control'); expect((await page.evaluate(() => window.netstorm._clientInputPoll.poll(0x110000))).code).toBe(0x80110000);
   expect(errors).toEqual([]);
 });
+
+// 실제 Canvas 사건과 포인터 폴링이 같은 앱 큐에 재진입 release를 예약한다.
+test('브라우저 포인터 재진입 보정', async ({ page }) => {
+  await page.goto('/'); await page.waitForFunction(() => window.netstorm?.state === 'clickToStart');
+  const canvas = page.locator('canvas'), bounds = await canvas.boundingBox();
+  await page.mouse.move(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+  await page.evaluate(() => window.netstorm._prepareClientPointer(0));
+  await page.mouse.down();
+  await canvas.dispatchEvent('pointerleave', { buttons: 1 });
+  await page.evaluate(() => window.netstorm._prepareClientPointer(0));
+  await page.mouse.up();
+  const result = await page.evaluate(() => {
+    const app = window.netstorm; app._prepareClientPointer(0); return [app._clientInputQueue.pop(false).code, app._clientInputQueue.empty];
+  });
+  expect(result).toEqual([0x80010000, true]);
+});

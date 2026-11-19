@@ -33,6 +33,8 @@ import { Settings, findSettingKey, getLocalStorage } from './platform/settings.j
 import { Progress, isProgressKey } from './platform/progress.js';
 import { reportGameError } from './platform/error-reporting.js';
 import { BrowserInputPoll } from './platform/browser-input-poll.js';
+import { InputQueue } from './core/input-queue.js';
+import { GumpPointerBoundaryState, prepareGumpPointerBoundaryWithQueue } from './ui/gump-pointer-boundary.js';
 import { ClientFrameClock } from './core/client-frame-clock.js';
 import { ClientLocalStateGlobals } from './core/client-local-state-globals.js';
 import { ClientKencloudGlobals } from './core/client-kencloud-globals.js';
@@ -491,6 +493,8 @@ export class Netstorm {
         this._input = { pointer: { x: -1, y: -1, inside: false, buttons: 0, type: 'mouse' }, keys: new Set() };
         // 재시작 시 현재 브라우저 입력과 창 활성 상태를 다시 빌리는 폴링 소유자다.
         this._clientInputPoll = new BrowserInputPoll(() => this._input, () => this._layout, () => this._root?.ownerDocument?.hasFocus?.() ?? true);
+        // 원본 40칸 입력 큐와 창 안팎 정적 기록은 같은 Client 수명이다.
+        this._clientInputQueue = new InputQueue(); this._clientPointerBoundary = new GumpPointerBoundaryState();
         // 메인 메뉴 그리기 자원 묶음(buildMenuResources 결과)이다. 자산 적재 전에는 null 이며, 재시작해도 다시 받지 않는다.
         this._resources = null;
         // 게임 데이터 조회 객체(GameData: 파일 조회·설정 층·언어 용어표·Tell 섹션)다. 자산 적재 전에는 null 이며 재시작해도 다시 만들지 않는다.
@@ -637,6 +641,8 @@ export class Netstorm {
         this._input = { pointer: { x: -1, y: -1, inside: false, buttons: 0, type: 'mouse' }, keys: new Set() };
         // 재시작 시 현재 브라우저 입력과 창 활성 상태를 다시 빌리는 폴링 소유자다.
         this._clientInputPoll = new BrowserInputPoll(() => this._input, () => this._layout, () => this._root?.ownerDocument?.hasFocus?.() ?? true);
+        // 원본 40칸 입력 큐와 창 안팎 정적 기록은 같은 Client 수명이다.
+        this._clientInputQueue = new InputQueue(); this._clientPointerBoundary = new GumpPointerBoundaryState();
         this._audioStatus = 'none';
         // 저장된 설정을 읽는다(저장소를 쓸 수 없으면 기본값으로 계속). 호스트가 음량을 정했으면 저장하지 않고 우선 적용한다. (2026-10-29 WB03-F)
         const storage = getLocalStorage(doc.defaultView);
@@ -816,6 +822,11 @@ export class Netstorm {
             selectFort: (name) => { this._selectCampaignFort(name); const bytes = this._clientFort.currentBytes(); return decodeWindows1252(bytes.subarray(0, bytes.indexOf(0))); } });
         this._clientGuide.bindLoop({ dialogsClear: () => !this._mainMenu?.dialog, gameSeconds: () => this._gameClock.gameSeconds(),
             worldConnecting: (token) => Boolean(this._campaignWorld?.connecting && token === this._campaignWorldMissionToken), tellGlobal: (name, mode) => { if (mode !== 1) throw new Error('Guide init Tell 인자 위반'); this._openTell(name); } });
+    }
+
+    // 현재 폴링과 같은 Client 입력 큐로 원본 포인터 안팎 보정을 실행한다.
+    _prepareClientPointer(language) {
+        return prepareGumpPointerBoundaryWithQueue(this._clientPointerBoundary, language, (code) => this._clientInputPoll.poll(code), this._clientInputQueue);
     }
 
     // 실제 Client 진단 DWORD와 현재 논리 화면으로 공통 Gump 루트를 만든다.

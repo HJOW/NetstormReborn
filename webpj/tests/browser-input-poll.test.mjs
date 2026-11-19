@@ -32,3 +32,17 @@ test('브라우저 입력 폴링: 앱의 현재 입력과 키 사건을 사용�
     assert.equal(app._clientInputPoll.poll(InputCode.leftButton).code, InputCode.leftButton);
     app._onKeyDown({ code: 'AltLeft', repeat: true, preventDefault() {} }); assert.equal(app._clientInputPoll.poll(0x00120000).code, 0x00120000);
 });
+
+// 실제 앱의 폴링 상태와 같은 입력 큐가 창 재진입 시 놓친 뗌을 보정한다.
+test('브라우저 입력 폴링: Client 포인터 안팎과 실제 큐 수명', () => {
+    const app = new Netstorm(); app._layout = { logicalWidth: 100, logicalHeight: 80 };
+    const pointer = app._input.pointer; Object.assign(pointer, { x: 10, y: 20, inside: true, buttons: 0 });
+    assert.equal(app._prepareClientPointer(0).code, 0x80120000); assert.equal(app._clientInputQueue.empty, true);
+    pointer.inside = false; pointer.buttons = 1; pointer.x = -3; app._clientInputPoll.recordMouseDown(0);
+    assert.deepEqual(app._prepareClientPointer(0), { code: 0x84120000, x: 0, y: 20 });
+    assert.equal(app._clientPointerBoundary.wasInside, 0); assert.equal(app._clientInputQueue.empty, true);
+    pointer.inside = true; pointer.buttons = 0; pointer.x = 5;
+    assert.deepEqual(app._prepareClientPointer(0), { code: 0x80120000, x: 5, y: 20 });
+    assert.deepEqual(app._clientInputQueue.pop(false), { code: 0x80010000, x: 5, y: 20 });
+    assert.equal(app._clientInputQueue.empty, true); assert.equal(app._clientPointerBoundary.wasInside, 1);
+});
