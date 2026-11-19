@@ -62,6 +62,7 @@ import { currentAllocationBytes } from './core/current-allocation-bytes.js';
 import { bindCampaignAiClientServices, bindCampaignClientInputServices, bindCampaignOwnershipTheme, bindCampaignProductionRefresh, captureCampaignMissionStarting, makeCampaignMissionStartEffects, runCampaignMissionStarting } from './core/campaign-client-services.js';
 import { bindCampaignUserInputServices } from './core/campaign-user-input-services.js';
 import { CampaignUserInput } from './core/campaign-user-input.js';
+import { ProductionMaintenanceGlobals, ProductionMaintenancePanel } from './core/raw-production-maintenance.js';
 import { GameMenuActions } from './core/game-menu-actions.js';
 import { gameMenuCommandValue } from './core/game-menu-commands.js';
 import { CHAT_RECORD_BYTES, RawChatChannels } from './core/raw-chat-channels.js';
@@ -529,7 +530,7 @@ export class Netstorm {
         // Client 공통 Player·Core·Template과 Subscriber는 Session보다 오래 산다.
         this._clientSubscriber = null; this._clientGameplay = null; this._clientCoreData = null; this._clientPlayers = null; this._clientTemplates = null;
         // 자산 적재 뒤 구성해 Session보다 오래 유지하는 월드 물리와 Kernel이다.
-        this._gameAssets = null; this._surfaceStorage = null; this._clientKernel = null; this._clientTrace = null;
+        this._gameAssets = null; this._surfaceStorage = null; this._clientKernel = null; this._clientTrace = null; this._clientProductionGlobals = null; this._campaignProduction = null;
         // 실제 미션 Guide는 자산과 장기 저장소가 준비된 뒤 생성한다.
         this._clientGuide = null; this._clientFort = null; this._clientFortName = null;
         // 원본 공통 Gump 루트와 입력 전역은 Client 수명에 보유한다.
@@ -760,6 +761,7 @@ export class Netstorm {
     // 원본 공통 시작의 SP 초기화와 게임 시계 생성을 같은 Client 소유자로 연결한다.
     _initializeClientRuntime(hidden) {
         this._clientTrace = new ClientTraceGlobals();
+        this._clientProductionGlobals = new ProductionMaintenanceGlobals();
         const source = new ClientTimeSource(), random = new ClientRandomGlobals();
         const sp = new ClientSpGlobals(random, () => source.unixSeconds()); sp.store().initialize();
         const local = new ClientLocalStateGlobals(), clock = new ClientFrameClock(source, local.gameTicks());
@@ -1193,7 +1195,7 @@ export class Netstorm {
     // 현재 World의 Session을 반납하고 같은 미션 연결 대기 관문을 해제한다.
     _releaseCampaignWorld() {
         if (!this._campaignWorld) return;
-        this._campaignWorld.dispose(); this._campaignWorld = null; this._campaignWorldMissionToken = 0; this._campaignUserInput = null; this._campaignCursor = CURSOR_NORMAL;
+        this._campaignWorld.dispose(); this._campaignWorld = null; this._campaignWorldMissionToken = 0; this._campaignUserInput = null; this._campaignProduction = null; this._campaignCursor = CURSOR_NORMAL;
     }
 
     // 로그인된 현재 World와 Guide의 실제 미션 Start를 같은 Client 수명에 준비한다.
@@ -1224,6 +1226,18 @@ export class Netstorm {
         bindCampaignUserInputServices(client, world, (number) => { this._campaignCursor = number >>> 0; this._applyCursor(); }, (section) => this._openTell(section));
         this._campaignUserInput = new CampaignUserInput(world, this._gameData, { paused: () => clock.paused(), queue: this._clientInputQueue });
         return this._campaignUserInput;
+    }
+
+    // 현재 Session과 Client 생산 전역을 같은 생산 패널 유지 상태에 연결한다.
+    _prepareCampaignProduction() {
+        const world = this._campaignWorld, current = this._clientGuide?.current(), globals = this._clientProductionGlobals, clock = this._gameClock;
+        if (!world || world.connecting || !current?.runtime.start || !globals || !clock || !this._clientRenderer || this._campaignProduction || this._campaignWorldMissionToken !== current.runtime.saveToken) throw new Error('미션 생산 유지의 현재 수명 오류');
+        const session = world.session(), panel = new ProductionMaintenancePanel();
+        panel.initialized = true; panel.bridgeUntil = clock.wallSeconds(); panel.slots = session.battleOption(1) * 2 + 2;
+        globals.bridgeType = this._surfaceStorage.links.bridgeType;
+        session.synchronizeProductionContents();
+        const maintenance = session.makeProductionMaintenance(globals, panel, () => clock.wallSeconds(), () => this._clientRenderer.invalidateAll());
+        this._campaignProduction = { session, panel, maintenance }; return this._campaignProduction;
     }
 
     // 같은 Player·월드 전역에 원본 홈·사제 보기 메뉴 명령을 분배한다.
@@ -1375,7 +1389,7 @@ export class Netstorm {
         this._clientChatRecords = null; this._clientChatChannels = null; this._clientChatWindows = null;
         this._clientPaletteScreen = null; this._clientColorSort = null; this._clientRenderer = null; this._clientSurfaceDisplay = null; this._clientRendererFrame = null;
         this._clientTemplates = null; this._clientPlayers = null; this._clientCoreData = null; this._clientGameplay = null; this._clientSubscriber = null;
-        this._clientKernel = null; this._surfaceStorage = null; this._gameAssets = null; this._clientTrace = null; this._campaignCamera = null;
+        this._clientKernel = null; this._surfaceStorage = null; this._gameAssets = null; this._clientTrace = null; this._clientProductionGlobals = null; this._campaignCamera = null;
         this._missionAudioAssets?.dispose(); this._missionAudioAssets = null;
         if (this._audio) {
             // 음악을 멈추고 문맥을 닫는다. 닫기에 실패해도 정리를 막지 않는다.
