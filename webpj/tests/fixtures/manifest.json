@@ -25269,10 +25269,12 @@
       "required": true,
       "producer": "원본 PE 소리 위치 계산의 독립 관측(창·오디오 장치 실행 없음)",
       "consumers": [
-        "webpj/tests/sound-spatial.test.mjs"
+        "webpj/tests/sound-spatial.test.mjs",
+        "webpj/tests/sound-player.test.mjs"
       ],
       "modules": [
-        "webpj/www/audio/sound-spatial.js"
+        "webpj/www/audio/sound-spatial.js",
+        "webpj/www/audio/sound-player.js"
       ],
       "unit": "WB04-E960",
       "doc": "docs/webpj-sound-spatial-20261119.md",
@@ -25280,12 +25282,43 @@
         "cpppj/src/client/Sound.cpp",
         "cpppj/src/client/Sound.h"
       ],
-      "scope": "10.78 화면 투영 399행·위치 판정/좌우/음량 3360행. 재생 장치 Script와 다른 판본은 후속",
+      "scope": "10.78 화면 투영 399행·위치 판정/좌우/음량 3360행과 E961 재생 Script 1065행. 다른 판본은 제외",
       "text": true,
       "sha256": "b2e2d5ad3a065fcd1659920e7ebf104610a298da91a47828ab74fd895e860861",
       "bytes": 1934351,
       "lines": 14479,
       "fixtureCommit": "238ce2343",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/Sound.cpp": "d445a5d04",
+        "cpppj/src/client/Sound.h": "d445a5d04"
+      }
+    },
+    {
+      "id": "sound-control",
+      "path": "cpppj/tests/fixtures/soundcontrol-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "producer": "원본 PE 소리 제어의 독립 관측(장치는 상태표 대체)",
+      "consumers": [
+        "webpj/tests/sound-player.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/audio/sound-player.js"
+      ],
+      "unit": "WB04-E961",
+      "doc": "docs/webpj-sound-player-20261119.md",
+      "cpppjSources": [
+        "cpppj/src/client/Sound.cpp",
+        "cpppj/src/client/Sound.h"
+      ],
+      "scope": "10.78 재계산·이름·반복 정지·전체 음량 제어의 독립 관측 1063행. 다른 판본은 제외",
+      "text": true,
+      "sha256": "490c4ad9faf92ed2f3762725819c8b8a3bbe20c4a26e1869f84e40d570904b94",
+      "bytes": 2114555,
+      "lines": 3193,
+      "fixtureCommit": "cbb3e130a",
       "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/client/Sound.cpp": "d445a5d04",
