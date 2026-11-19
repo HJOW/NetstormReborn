@@ -49,3 +49,22 @@ test('브라우저 문자 키: 조합 시작·중간 키·확정 사건', async 
     app._onCompositionEnd({ data: '한' }); assert.equal(app._clientInputQueue.empty, true);
     app._onCompositionStart(); app._clearInput(); app._onCompositionEnd({ data: '글' }); assert.equal(app._clientInputQueue.empty, true);
 });
+
+// 조합 확정 뒤 같은 beforeinput은 중복하지 않고 다음 같은 텍스트는 받는다.
+test('브라우저 문자 키: 조합 후속과 독립 beforeinput 구별', async () => {
+    const { Netstorm } = await import('../www/netstorm.js'); const app = new Netstorm(); app._clientNativeInputEnabled = true;
+    app._onCompositionStart(); app._onCompositionEnd({ data: '한' }); let prevented = 0;
+    const event = { data: '한', inputType: 'insertText', isComposing: false, preventDefault() { prevented += 1; } };
+    app._onClientBeforeInput(event); app._onClientBeforeInput(event);
+    assert.equal(prevented, 2); assert.equal(app._clientInputQueue.pop(false).code, 0x0100d55c);
+    assert.equal(app._clientInputQueue.pop(false).code, 0x0100d55c); assert.equal(app._clientInputQueue.empty, true);
+});
+
+// 이전 조합과 다른 이벤트 턴에 같은 문자를 다시 넣으면 누락하지 않는다.
+test('브라우저 문자 키: 조합 후 다음 턴의 같은 입력은 보존', async () => {
+    const { Netstorm } = await import('../www/netstorm.js'); const app = new Netstorm(); app._clientNativeInputEnabled = true;
+    app._onCompositionStart(); app._onCompositionEnd({ data: '한' });
+    await new Promise((resolve) => setTimeout(resolve, 10));
+    app._onClientBeforeInput({ data: '한', inputType: 'insertText', preventDefault() {} });
+    assert.equal(app._clientInputQueue.pop(false).code, 0x0100d55c); assert.equal(app._clientInputQueue.pop(false).code, 0x0100d55c);
+});

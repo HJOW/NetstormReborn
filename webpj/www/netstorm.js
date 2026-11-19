@@ -504,6 +504,8 @@ export class Netstorm {
         this._clientNativeInputEnabled = false;
         // 원본 조합 중 키 중복을 막는 현재 브라우저 조합 상태다.
         this._clientComposing = false;
+        // 같은 편집 동작의 후속 beforeinput을 중복 예약하지 않기 위한 본문이다.
+        this._clientImePending = null;
         // 메인 메뉴 그리기 자원 묶음(buildMenuResources 결과)이다. 자산 적재 전에는 null 이며, 재시작해도 다시 받지 않는다.
         this._resources = null;
         // 게임 데이터 조회 객체(GameData: 파일 조회·설정 층·언어 용어표·Tell 섹션)다. 자산 적재 전에는 null 이며 재시작해도 다시 만들지 않는다.
@@ -656,6 +658,8 @@ export class Netstorm {
         this._clientNativeInputEnabled = false;
         // 원본 조합 중 키 중복을 막는 현재 브라우저 조합 상태다.
         this._clientComposing = false;
+        // 같은 편집 동작의 후속 beforeinput을 중복 예약하지 않기 위한 본문이다.
+        this._clientImePending = null;
         this._audioStatus = 'none';
         // 저장된 설정을 읽는다(저장소를 쓸 수 없으면 기본값으로 계속). 호스트가 음량을 정했으면 저장하지 않고 우선 적용한다. (2026-10-29 WB03-F)
         const storage = getLocalStorage(doc.defaultView);
@@ -1844,12 +1848,13 @@ export class Netstorm {
         let element = this._clientImeElement;
         if (!element) {
             element = this._root.ownerDocument.createElement('textarea'); this._clientImeElement = element;
-            element.setAttribute('aria-label', '문자 입력'); element.setAttribute('autocomplete', 'off'); element.setAttribute('autocapitalize', 'off');
+            element.setAttribute('aria-label', this.options.language === 'korean' ? '문자 입력' : 'Text input'); element.setAttribute('autocomplete', 'off'); element.setAttribute('autocapitalize', 'off');
             element.spellcheck = false; element.tabIndex = -1;
             Object.assign(element.style, { position: 'fixed', width: '1px', height: '1px', opacity: '0', padding: '0', border: '0', resize: 'none', overflow: 'hidden', pointerEvents: 'none' });
             this._listen(element, 'keydown', (event) => this._onKeyDown(event)); this._listen(element, 'keyup', (event) => this._onKeyUp(event));
             this._listen(element, 'compositionstart', () => this._onCompositionStart());
             this._listen(element, 'compositionend', (event) => { this._onCompositionEnd(event); element.value = ''; });
+            this._listen(element, 'beforeinput', (event) => this._onClientBeforeInput(event));
             this._listen(element, 'input', () => { if (!this._clientComposing) element.value = ''; });
             this._listen(element, 'blur', (event) => { if (event.relatedTarget !== this._canvas) this._clearInput(); });
             this._root.appendChild(element);
@@ -1863,7 +1868,7 @@ export class Netstorm {
     // 편집 종료는 미완성 조합을 버리고 기존 Canvas 포커스로 돌아간다.
     _deactivateClientTextInput() {
         const element = this._clientImeElement; if (!element) return;
-        this._clientComposing = false; element.value = ''; this._canvas?.focus({ preventScroll: true }); element.remove(); this._clientImeElement = null;
+        this._clientComposing = false; this._clientImePending = null; element.value = ''; this._canvas?.focus({ preventScroll: true }); element.remove(); this._clientImeElement = null;
     }
 
     // 포인터 이벤트로 입력 상태의 포인터 정보를 갱신한다. 논리 화면과 맞지 않으면 갱신하지 않는다.
@@ -1951,8 +1956,11 @@ export class Netstorm {
         this._clientInputPoll.recordKeyDown(event.code, this._input.keys.has(event.code) || event.repeat);
         this._input.keys.add(event.code);
         if (this._clientNativeInputEnabled && !this._clientComposing) {
+            const editing = event.target === this._clientImeElement && this._clientImeElement !== null;
+            if (editing && !event.isComposing) this._clientImePending = null;
             queueBrowserVirtualKeyEvent(this._clientInputQueue, event, this._input.pointer, false);
-            queueBrowserCharacterEvent(this._clientInputQueue, event, this._input.pointer);
+            const queued = queueBrowserCharacterEvent(this._clientInputQueue, event, this._input.pointer);
+            if (editing && queued && typeof event.key === 'string' && [...event.key].length === 1) this._markClientImePending(event.key);
         }
         // 조합 중 Enter 등은 기존 메뉴 명령으로도 중복 실행하지 않는다.
         if (this._clientNativeInputEnabled && (this._clientComposing || event.isComposing)) return;
@@ -1989,26 +1997,48 @@ export class Netstorm {
     // 키를 뗐을 때 눌린 키 집합에서 뺀다.
     _onKeyUp(event) {
         this._input.keys.delete(event.code);
+        if (event.target === this._clientImeElement && this._clientImePending?.text === event.key) this._clientImePending = null;
         if (this._clientNativeInputEnabled && !this._clientComposing) queueBrowserVirtualKeyEvent(this._clientInputQueue, event, this._input.pointer, true);
     }
 
     // 원본 입력을 사용하는 동안 조합 키를 일반 문자·가상 키 경로에서 제외한다.
-    _onCompositionStart() { if (this._clientNativeInputEnabled) this._clientComposing = true; }
+    _onCompositionStart() { if (this._clientNativeInputEnabled) { this._clientComposing = true; this._clientImePending = null; } }
 
-    // 확정 본문만 같은 원본 큐에 원자적으로 넣고 미지원·공간 부족은 진단한다.
+    // 같은 입력의 후속 beforeinput만 한 이벤트 턴 동안 중복 검사한다.
+    _markClientImePending(text) {
+        const pending = { text }; this._clientImePending = pending;
+        const view = this._root?.ownerDocument?.defaultView ?? globalThis;
+        view.setTimeout(() => { if (this._clientImePending === pending) this._clientImePending = null; }, 0);
+    }
+
+    // 확정 본문을 같은 원본 큐에 원자적으로 넣고 미지원·공간 부족은 진단한다.
+    _queueClientCommittedText(text) {
+        try {
+            const pointer = this._input.pointer;
+            if (!queueCommittedText(this._clientInputQueue, text, pointer.x | 0, pointer.y | 0)) throw new Error('확정 문자 입력 큐 공간 부족');
+            return true;
+        } catch (error) { reportGameError('composition', error, { state: this._state }); return false; }
+    }
+
+    // 확정된 조합 본문만 큐에 넣고 같은 후속 입력을 중복하지 않는다.
     _onCompositionEnd(event) {
         if (!this._clientComposing) return;
         this._clientComposing = false;
         if (!this._clientNativeInputEnabled || !event?.data) return;
-        try {
-            const pointer = this._input.pointer;
-            if (!queueCommittedText(this._clientInputQueue, event.data, pointer.x | 0, pointer.y | 0)) throw new Error('확정 문자 입력 큐 공간 부족');
-        } catch (error) { reportGameError('composition', error, { state: this._state }); }
+        if (this._queueClientCommittedText(event.data)) this._markClientImePending(event.data);
+    }
+
+    // 키다운 없이 삽입된 텍스트를 받고 이미 큐에 넣은 동일 입력은 건너뛴다.
+    _onClientBeforeInput(event) {
+        if (!this._clientNativeInputEnabled || this._clientComposing || event.isComposing || !event.data || !['insertText', 'insertReplacementText'].includes(event.inputType)) return;
+        event.preventDefault();
+        if (this._clientImePending?.text === event.data) { this._clientImePending = null; return; }
+        this._clientImePending = null; this._queueClientCommittedText(event.data);
     }
 
     // 포커스를 잃거나 탭이 숨겨질 때 눌린 키·버튼이 남지 않도록 입력 상태를 비우고, 메뉴 누름을 실행 없이 취소한다.
     _clearInput() {
-        this._clientComposing = false;
+        this._clientComposing = false; this._clientImePending = null;
         this._input.keys.clear();
         this._input.pointer.buttons = 0;
         this._input.pointer.inside = false;
