@@ -25350,9 +25350,67 @@
       "bytes": 9195,
       "lines": 91,
       "fixtureCommit": "be33646d3",
-      "webCommit": "worktree",
+      "webCommit": "7769cef7c",
       "cpppjBasis": {
         "cpppj/src/client/ClientRendererFrame.cpp": "c254e7716"
+      }
+    },
+    {
+      "id": "quick-help-html-x86",
+      "path": "cpppj/tests/fixtures/quick-help-html-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "producer": "tools/decomp_quick_help_html.py의 보호 원본 10.78 독립 관측",
+      "consumers": [
+        "webpj/tests/quick-help-info.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/quick-help-info.js"
+      ],
+      "unit": "WB04-E1049",
+      "doc": "docs/webpj-help-type-info-20261120.md",
+      "cpppjSources": [
+        "cpppj/src/client/QuickHelpHtml.cpp"
+      ],
+      "scope": "마나 그림 24행과 TYPE 정보 HTML 16행",
+      "text": true,
+      "sha256": "348a5d91dce8d8cc27348f64169e8baea5e0cb4942b22b3dc717814e9f629763",
+      "bytes": 43705,
+      "lines": 84,
+      "fixtureCommit": "e990ec835",
+      "webCommit": "83cce5a4e",
+      "cpppjBasis": {
+        "cpppj/src/client/QuickHelpHtml.cpp": "acc2813f6"
+      }
+    },
+    {
+      "id": "scenemusic-x86",
+      "path": "cpppj/tests/fixtures/scenemusic-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "producer": "tools/decomp_scenemusic_oracle.py의 보호 원본 10.78 독립 관측",
+      "consumers": [
+        "webpj/tests/scene-music-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/audio/scene-music.js"
+      ],
+      "unit": "WB04-E1059",
+      "doc": "docs/webpj-scene-music-20261120.md",
+      "cpppjSources": [
+        "cpppj/src/client/SoundSceneMusic.cpp"
+      ],
+      "scope": "장면 음악 선택·기한·날씨와 게임 난수 3,113행",
+      "text": true,
+      "sha256": "8b929913764b980ffff4d9746e8b00f700dd54ea9406d4638a9553aacb6ceef7",
+      "bytes": 4207293,
+      "lines": 9343,
+      "fixtureCommit": "27235ce9b",
+      "webCommit": "4f1b7e42e",
+      "cpppjBasis": {
+        "cpppj/src/client/SoundSceneMusic.cpp": "99b9d5e33"
       }
     }
   ]

@@ -107,9 +107,8 @@ test('xlat.korean: UTF-8·중복 없음·메뉴 라벨 전부 번역', () => {
     const untranslatable = new Set(['640 by 480', '800 by 600', '1024 by 768']);
     const missing = [...labels].filter((label) => !untranslatable.has(label) && !korean.translations.has(label));
     assert.deepEqual(missing, [], '번역이 없는 라벨');
-    // 번역표에는 코드가 쓰지 않는 원문이 없다(오타로 키가 어긋난 번역을 찾는다).
-    const unused = [...korean.translations.entries.keys()].filter((key) => !labels.has(key));
-    assert.deepEqual(unused, [], '코드에 없는 원문');
+    // 미션의 TYPE·분류 등은 원본 자산에서 동적으로 들어오므로 메뉴 집합으로 전체 번역표를 제한하지 않는다.
+    // 공통 유닛 명칭과 미션 서식의 값은 korean-mission.test.mjs에서 별도로 검사한다.
     // 글자 모양 표시(~i)는 번역문에도 남아 있어야 한다.
     assert.equal(korean.translate('General Help - ~iF1~.'), '일반 도움말 - ~iF1~.');
     assert.equal(korean.translate('Pass Server Diagnostic '), '서버 진단 통과');
