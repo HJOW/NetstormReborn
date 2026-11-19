@@ -844,8 +844,11 @@ export class Netstorm {
     _initializeClientGuide() {
         if (this._clientGuide || !this._gameData || !this._surfaceStorage || !this._clientGameplay || !this._clientPlayers) throw new Error('Client Guide의 중복 또는 공통 수명 누락');
         this._clientGuide = new ClientCampaignGuide(this._gameData, this._clientGameplay, this._clientPlayers, this._surfaceStorage);
+        // 선택된 이름 효과만 현재 World의 같은 Session에서 빌린다. World가 없으면 해당 효과를 요구한 위치에서 중단한다.
+        const fortSession = () => { if (!this._campaignWorld) throw new Error('Fort 현재 이름의 실제 Session 미설치'); return this._campaignWorld.session().bindFortCurrentName(); };
         this._clientFortName = new ClientFortCurrentName(this._clientFort, this._clientTemplates, this._gameData, this._clientGameplay, this._surfaceStorage,
-            { refreshTitle: () => this._refreshFortWindowTitle(), assertion: (line) => console.error(`Fort 현재 이름 원본 진단: ${line}`) });
+            { refreshTitle: () => this._refreshFortWindowTitle(), assertion: (line) => console.error(`Fort 현재 이름 원본 진단: ${line}`),
+                snapshot: () => fortSession().snapshot(), notify: (slot) => fortSession().notify(slot), state: (slot) => fortSession().state(slot) });
         this._clientGuide.bindTutorialInit({ templates: this._clientTemplates, local: this._clientLocal, subscriber: this._clientSubscriber, types: this._gameAssets.typeTable,
             selectFort: (name) => { this._selectCampaignFort(name); const bytes = this._clientFort.currentBytes(); return decodeWindows1252(bytes.subarray(0, bytes.indexOf(0))); } });
         this._clientGuide.bindLoop({ dialogsClear: () => !this._mainMenu?.dialog, gameSeconds: () => this._gameClock.gameSeconds(),

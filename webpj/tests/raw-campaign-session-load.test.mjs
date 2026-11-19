@@ -815,6 +815,7 @@ test('Netstorm Client World: 실제 앱 State7 부모와 State8 로컬 로그인
     assert.equal(sharedColors.colorSortInput, app._clientColorSort); assert.equal(sharedColors.ownerColorTables, app._clientColorSort.ownerTables);
     assert.equal(sharedColors.screenPalette(), app._clientPaletteScreen.palette());
     const services = { localLogin, soundNames: new SoundList(), carrierRequest: forbidden('전송'),
+        fortMission: { current: () => 0 }, production: { allocationBytes: (bytes) => bytes.fill(0xa5), effects: { configInt: () => 0 } },
         cameraCommit: (context) => { const pixels = context.camera.target().pixels; context.camera.applyPixelsToRendererAndSnapshot(pixels[0], pixels[1]); },
         surfaceDisplay: { suppressed: () => false, invalidate: () => {} },
         ownership: { refreshProduction: () => {}, themeMode: () => 1 }, assets: { postPop: { playImpactSound: () => {} }, queueCommand: () => {} },
@@ -824,7 +825,9 @@ test('Netstorm Client World: 실제 앱 State7 부모와 State8 로컬 로그인
         guide.begin('Tutorial1'); guide.initializeTutorial(); const request = guide.fortRequest();
         assert.deepEqual(guide.pending().take(), { command: 'LoadMissionFort', argument: 'BridgeTheGap' });
         app._runCampaignState7(services, { x: 1024, y: 768 }); world = app._campaignWorld;
-        const session = world.session(), state = app._clientLocal.state();
+        const session = world.session(), state = app._clientLocal.state(), fortNameHooks = session.bindFortCurrentName();
+        assert.throws(() => fortNameHooks.snapshot(), /설치 외곽 수명/);
+        assert.throws(() => fortNameHooks.notify(1), /설치 외곽 수명/);
         assert.ok(app._clientKencloud.globals().cache); assert.equal(new TextDecoder().decode(app._clientKencloud.paletteName().subarray(0, 8)), 'gifcloud');
         assert.equal(state.phase[0], 8); assert.equal(state.next[0], 9); assert.equal(request.consumed, true); assert.equal(world.connecting, true);
         assert.deepEqual([...app._clientGameplay.camera().target().limits], [3072, 2048]);
@@ -856,7 +859,24 @@ test('Netstorm Client World: 실제 앱 State7 부모와 State8 로컬 로그인
         assert.equal(world.completeLocalConnection(), true); assert.equal(session.localConnectionReady(), true);
         assert.equal(session.productionContext().ownerColorTables, app._clientColorSort.ownerTables);
         assert.equal(session.cursor().display.settings().sharedOwnerMaps, app._clientColorSort.ownerTables.tokens);
+        // 실제 Session의 현재 슬롯 State·읽기 전용 통지와 Battle 저장을 같은 앱 이름 장치가 사용한다.
+        const headers = new DataView(app._clientTemplates.headers().buffer), slot = app._clientGameplay.player.templateOwner;
+        headers.setUint32(slot * 20 + 8, 1, true);
+        const stateBytes = fortNameHooks.state(slot);
+        assert.equal(stateBytes.buffer, app._clientTemplates.state(slot).bytes.buffer);
+        fortNameHooks.notify(slot); fortNameHooks.snapshot();
+        assert.equal(fortSection(app._clientTemplates.template(slot), 'Money').length, 4);
+        // 쓰기 가능한 manager에서는 이름 변경이 실제 저장을 먼저 호출하고 미션 통지에서 중단한다.
+        headers.setUint32(slot * 20 + 8, 0, true);
+        const money = app._clientTemplates.createSection(slot, 'Money'); app._clientTemplates.writeSection(money, Uint8Array.of(0xff));
+        assert.throws(() => app._selectCampaignFort('BridgeTheGap'), /RawCampaignSession.cpp:1246/);
+        assert.equal(fortSection(app._clientTemplates.template(slot), 'Money').length, 4);
+        headers.setUint32(slot * 20 + 8, 1, true);
+        assert.throws(() => app._selectCampaignFort('BridgeTheGap'), /RawCampaignSession.cpp:1246/);
+        assert.equal(app._clientFort.current(), 'BridgeTheGap'); assert.equal(headers.getUint32(slot * 20 + 8, true), 0);
+        headers.setUint32(slot * 20 + 8, 1, true);
         guide.dispose(); app._releaseCampaignWorld(); assert.equal(app._campaignWorld, null); assert.equal(app._campaignWorldMissionToken, 0); assert.equal(app._surfaceStorage.borrowed, false);
+        assert.throws(() => fortNameHooks.snapshot(), /반납/);
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); }
 });
 
@@ -886,6 +906,23 @@ test('Netstorm Client Fort 이름: 실제 Guide와 창 제목', () => {
         assert.equal(app._root.ownerDocument.title, data.pathSpec('missionWindowName', title));
         assert.equal(guide.current().script.fortName(), 'BridgeTheGap');
     } finally { guide.dispose(); app._surfaceStorage.dispose(); }
+});
+
+// World가 없을 때 선택된 통지만 거부하고 그 전의 원본 이름·경로 쓰기는 유지한다.
+test('Netstorm Client Fort 이름: World 없이 선택된 통지는 실패 접두를 보존한다', () => {
+    const app = new Netstorm(); app._initializeClientRuntime(false);
+    const data = GameData.build({ files: new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)]]), language: 'english' });
+    app._gameData = data; app._root = { ownerDocument: { title: 'before' } }; app._initializeClientWorldStorage(game, data.files); app._initializeClientGuide();
+    const templates = app._clientTemplates, names = app._clientFort, slot = 1;
+    app._clientGameplay.player.templateOwner = slot;
+    templates.install(slot, { sections: Array.from({ length: SECTION_NAMES.length }, () => new Uint8Array()) }, 'd/Old.fort');
+    const headers = new DataView(templates.headers().buffer); headers.setUint32(slot * 20 + 8, 1, true);
+    names.currentBytes().set(Uint8Array.of(79, 108, 100, 0));
+    try {
+        assert.throws(() => app._selectCampaignFort('New'), /실제 Session 미설치/);
+        assert.equal(names.current(), 'New'); assert.equal(templates.name(slot), data.pathSpec('fortSpec', 'New'));
+        assert.equal(headers.getUint32(slot * 20 + 8, true), 0); assert.equal(app._root.ownerDocument.title, 'before');
+    } finally { app._clientGuide.dispose(); templates.clearAll(); app._surfaceStorage.dispose(); }
 });
 
 // 실제 Client Template manager에 같은 경로를 쓰고 선택된 Notify·Snapshot만 전달한다.

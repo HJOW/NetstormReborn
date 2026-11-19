@@ -1174,6 +1174,17 @@ export class RawCampaignSession {
     snapshotFort(slot) { this.#live().snapshotFort(slot); }
     // Battle은 Fort 전용 자식을 덧붙이지 않는 기존 본문에 연결한다.
     snapshotBattle(slot) { this.#live().snapshotBattle(slot); }
+    // 현재 이름 변경이 선택한 저장·통지·State를 같은 Session 수명에 연결한다.
+    bindFortCurrentName(hooks = {}) {
+        return { ...hooks,
+            // 설치 전에는 모드가 모두 꺼져 있어도 이름 변경의 저장 요청을 거부한다.
+            snapshot: () => { const owner = this.#live(); if (!owner.loaded) throw new Error('현재 이름 snapshot의 실제 설치 외곽 수명 위반'); this.#snapshotCurrent(); },
+            // 통지는 현재 선택 슬롯의 같은 Player Template 수명에 전달한다.
+            notify: (slot) => { const owner = this.#live(); if (!owner.loaded) throw new Error('현재 이름 Notify의 실제 설치 외곽 수명 위반'); owner.templateState.changed(slot); },
+            // State는 동기 호출 중 현재 저장소의 실제 바이트를 빌린다.
+            state: (slot) => this.#live().templateState.get(slot),
+        };
+    }
     // 현재 요청 상태를 먼저 준비하는 실제 로컬 간헐천이다.
     generateLocalGeysers() { this.#live().generateLocalGeysers(); }
     // 현재 장기 옵션/공간을 빌리는 실제 세계 간헐천이다.
