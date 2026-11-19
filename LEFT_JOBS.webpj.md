@@ -4,14 +4,14 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-19, 마지막 단위 WB04-E868)
+### 0.1 현재 값 (2026-11-19, 마지막 단위 WB04-E869)
 
 | 항목 | 현행 상태 |
 | --- | --- |
 | 실행·플레이 | 브라우저에서 ‘클릭하여 시작’, 메인 메뉴·캠페인/데모 목록·도움말·옵션·Credits와 개발용 지형 미리보기가 동작한다. Node 통합 검사에서 실제 Fort로 Session을 적재하고 내부 Login·Start·일부 이동과 건설을 확인했다. 브라우저의 `MissionBegin`·`StartDemo`에서 실제 월드로 들어가 플레이하는 기능은 미연결이다. |
 | 원본과의 동일성 | 영어 4:3 메뉴 M1 8장면은 cpppj 오라클과 알려진 구름 배경 등 차이 영역 밖에서 픽셀 차이 0이다. 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다. 실제 미션 L2·L3·L4, 자연 완주는 미검증이다. |
-| 현재 작업 | **M2의 4-D 진행 중.** 4D-3 typed Login 잔여를 이어가고 4D-4~4D-6에서 이미 확인된 프레임·튜토리얼 게이트·반납·GameWorld 경계를 실제 Client 수명으로 연결한다. E868은 cpppj 오라클의 고정 시각·Session 덤프 수집을 연결하고 실제 빈 월드를 확인했다. 다음은 Tutorial1 덤프 수집·실제 Client 호출과 Client 고리·진단 수명, 앱 메뉴·프레임 루프·스커미시 결과·저장 장치 및 나머지 공개 조회다. [E868](docs/webpj-cpp-oracle-session-dump-20261119.md) |
-| 전체 회귀 | E868 Node v26.13.0 전체 6,408건 통과(실패·취소·건너뜀 0). E867 Node v22.23.3 전체 6,405건 통과 뒤 v26 회귀 1/8회. fixture 824개 해시·파일 불일치/누락 0; 전체 Git 이력 재조회는 중단하고 이번 본체의 변경 여부와 대응표는 별도 확인했다. |
+| 현재 작업 | **M2의 4-D 진행 중.** 4D-3 typed Login 잔여를 이어가고 4D-4~4D-6에서 이미 확인된 프레임·튜토리얼 게이트·반납·GameWorld 경계를 실제 Client 수명으로 연결한다. E869는 고정 시각 cpppj Tutorial1 덤프·화면을 수집했다. 다음은 웹 덤프의 실제 Client 호출과 원본 대조, Client 고리·진단 수명, 앱 메뉴·프레임 루프·스커미시 결과·저장 장치 및 나머지 공개 조회다. [E869](docs/webpj-tutorial1-cpp-oracle-20261119.md) |
+| 전체 회귀 | E869 Node v26.13.0 전체 6,409건, E867 Node v22.23.3 전체 6,405건 통과(실패·취소·건너뜀 0). HJOW-Athlon의 새 작업 단위 주기: v26 0/4, v22 2/8. fixture 830개 해시·파일 불일치/누락 0; 전체 Git 이력 재조회는 중단하고 이번 본체의 변경 여부와 대응표는 별도 확인했다. |
 | 브라우저 검사 | 2026-11-17 Chromium 2/2. 갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체 확인. 최초 실행·진행 잠금/체크 및 저장 재실행은 E616에서 별도 Chromium 2/2로 확인했다. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
 
 **미션 식별.** 이전 공통 fixture의 `thewarbegins.fort`는 캠페인 1-1이다. 실제 `tutorial1`이 선택하는 Fort는 `BridgeTheGap`이며, 지형·섬을 E753에서 다시 대조했다. [미션명 정정](docs/webpj-session-login-shipped-forts-20261118.md) · [Tutorial1 지형 재검증](docs/webpj-tutorial1-terrain-recheck-20261118.md)
@@ -28,7 +28,7 @@
 | --- | --- | --- | --- |
 | 1~3 | M1·월드 선행 부품 | 완료 | — |
 | 4 | 4-A 자료·4-B 적재·4-C 전송·4-R 재기준선 | 완료. 4-C 통합 잔여는 4D-3 | — |
-| 4 | **4-D Session 조립·Tutorial1 Load/Start** | **54/85, L2 미완료** | 74 / 17,577 |
+| 4 | **4-D Session 조립·Tutorial1 Load/Start** | **55/85, L2 미완료** | 74 / 17,577 |
 | 5 | 5-A 렌더러·Draw | 44/46 | 3 / 533 |
 | 5 | 5-B 카메라·HUD·미니맵·커서 | 9/13 | 9 / 1,446 |
 | 5 | 5-C 화면 허브·미션 진입 | 0/6 → M2 | 10 / 5,770 |
@@ -54,7 +54,7 @@
 ### 0.4 기준선과 자료
 
 - **이식 기준선**은 cpppj 제품 1313(11.01) `225553df`다. 이후 변경 판정은 3.6절을 따른다. 별도 오라클 빌드는 HJOW-Athlon의 `extracted/webpj-oracle/225553df/Netstorm.exe`에 있다(SHA-256 `5b52d96d…b77eb46`, Git 제외).
-- **자료 추적**은 [PORT_MAP.tsv](webpj/PORT_MAP.tsv)와 [fixture manifest](webpj/tests/fixtures/manifest.json) 824항목을 기준으로 한다. 이식 자료는 cpppj 소스·fixture·문서를 사용한다.
+- **자료 추적**은 [PORT_MAP.tsv](webpj/PORT_MAP.tsv)와 [fixture manifest](webpj/tests/fixtures/manifest.json) 830항목을 기준으로 한다. 이식 자료는 cpppj 소스·fixture·문서를 사용한다.
 
 ### 0.5 단위 착수와 종료
 
@@ -62,7 +62,7 @@
 2. 대응표 검사와 기준선 뒤 변경을 확인한다. 3.1절의 단계 순서와 선행 조건에 맞춰 기준선 cpppj 코드, 기존 시험, fixture, 단위 문서를 읽는다. 큰 단위는 공개 API 경계로 나눈다.
 3. 원본/클론·오라클 수집·별도 창 실행에는 AGENTS.md의 확인·예외 규칙을 적용한다. 웹 이식에는 디컴파일 소스 분석이 필요 없다.
 4. 단위 문서에 근거 커밋·fixture/오라클·검사·실패와 교정·미연결 경계를 기록한다. 대응표의 web·base(8자리)·status·메모와 해당 manifest를 갱신한다. 현행 인계에는 현재 값·다음 작업·검증과 해당 체크만 갱신하고 완료 항목 상세는 정리 때 이관한다.
-5. Node v26 전체 회귀를 기본으로 하고 완료된 전체 회귀 8회마다 Node v22를 순차 실행한다. HJOW-Athlon에서 두 버전을 동시에 실행하지 않으며 v24는 호환을 가정한다. 신호 NaN 비트 대조 시험은 맨 위에 `import './nan-exact.mjs'`를 둔다.
+5. 각 작업 단위마다 해당 변경의 집중 검사와 연관 검사를 수행한다. HJOW-Athlon에서는 완료된 작업 단위 4회마다 Node v26 전체 회귀를, 8회마다 Node v22 전체 회귀를 수행한다. 두 버전의 전체 회귀가 함께 필요한 경우 순차 실행하며 동시에 실행하지 않는다. 다른 PC에서는 사용 가능한 최신 Node 버전으로 완료된 작업 단위 4회마다 전체 회귀를 수행한다. 필요하면 변경의 위험이나 통합 범위에 맞춰 추가 검사를 수행한다. 신호 NaN 비트 대조 시험은 맨 위에 `import './nan-exact.mjs'`를 둔다. (2026-11-19 사용자 지시)
 6. 완료 후 당일 최대 번호를 확인하고 `YYYYMMDD-NN WB 요약`으로 로컬 커밋한다. 기존 커밋의 Codex 공동 작성자 표기와 AGENTS.md의 push 금지 규칙을 따른다.
 
 ### 0.6 제품 공통 요구
@@ -109,11 +109,11 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 
 단계 안에서 선행 조건을 따라 위에서부터 진행한다. 막힌 사유를 기록하고 해당 단계의 다음 항목으로 간다. 4-D 전체가 선행 대기면 가능한 5-A·5-B를 병행한다. 완료 체크에 단위 링크를 붙이고 0.2절과 단계 머리글을 함께 갱신한다.
 
-#### 4-D Session 조립·Tutorial1 Load/Start (54/85)
+#### 4-D Session 조립·Tutorial1 Load/Start (55/85)
 
 **완료 기준은 L2다.** Tutorial1 Load/Start의 보고서·Session 덤프·첫 프레임 논리 화면을 cpppj 오라클과 대조한다. typed `Load()`와 실제 Fort Login/Ready, 일부 Start는 Node 검사에서 확인했다. Client·Native 장치와 브라우저 앱 수명은 이어서 연결한다. 기준선 구간 지도와 E633~E801의 완료 체크 및 단위 링크는 [E801 보관본 3.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261118-through-wb04-e801)에 있다.
 
-아래 cpppj 줄 번호는 `225553df`의 [RawCampaignSession.cpp](cpppj/src/client/RawCampaignSession.cpp) 기준이다. 44개 선행 완료와 4D-1a·1d 및 4D-2의 8개 완료를 합쳐 54개다. 단계 중간의 완료 검증은 해당 상위 범위의 근거로 둔다.
+아래 cpppj 줄 번호는 `225553df`의 [RawCampaignSession.cpp](cpppj/src/client/RawCampaignSession.cpp) 기준이다. 기존 54개 완료에 4D-9b의 cpppj Tutorial1 오라클 수집을 더해 55개다. 단계 중간의 완료 검증은 해당 상위 범위의 근거로 둔다.
 
 **4D-1 Session 외곽·snapshot.** 저장 writer, 현재 Core, 부모 callback, 생성자/Publish와 외곽 반납 앞단은 완료했다.
 
@@ -169,7 +169,7 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 **4D-9 웹 session-dump·오라클 시나리오**
 
 - [ ] **4D-9a SessionStateDump** — E865에서 판번호 1 순수 TSV 서식과 분산 SP 복호를 구현했고 E866~E867에서 실제 Session의 시계·난수·Kernel/Regular·풀·Player/동맹·SP·Graph·TotalMade를 수집했다. 실제 Client 수명과 덤프 호출 시점을 연결한다. [덤프 형식](docs/exe/cpp-session-state-dump-20261109.md) · [E865](docs/webpj-session-dump-format-20261119.md) · [E866](docs/webpj-session-dump-base-20261119.md) · [E867](docs/webpj-session-dump-world-20261119.md)
-- [ ] **4D-9b 오라클 시나리오** — E868에서 `tools/cpp-oracle.mjs`의 `session-dump` 단계·고정 프레임 인자와 결과 수집을 연결하고 실제 cpppj 빈 월드를 확인했다. Tutorial1 Load/Start를 수집한다. 창 실행에는 3.3절을 적용한다. [E868](docs/webpj-cpp-oracle-session-dump-20261119.md)
+- [x] **4D-9b 오라클 시나리오** — E868에서 `tools/cpp-oracle.mjs`의 `session-dump` 단계·고정 프레임 인자와 결과 수집을 연결했다. E869에서 고정 시각 Tutorial1의 실제 Load/Start 덤프·화면·보고서를 수집했다. 웹 비교는 4D-10에 남는다. [E868](docs/webpj-cpp-oracle-session-dump-20261119.md) · [E869](docs/webpj-tutorial1-cpp-oracle-20261119.md)
 
 **4D-10 재대조와 L2**
 

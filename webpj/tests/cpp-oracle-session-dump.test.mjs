@@ -13,6 +13,7 @@ test('cpppj 오라클: 고정 시각과 Session 덤프 파일을 전달하고 �
         assert.equal(exe, 'fake.exe');
         assert.equal(args[args.indexOf('--fixed-frame-ms') + 1], '25');
         assert.equal(args[args.indexOf('--fixed-unix-seconds') + 1], '946684800');
+        assert.equal(args[args.indexOf('--mission') + 1], 'Tutorial1');
         assert.equal(options.env.NETSTORM_CPP_NO_AUDIO, undefined);
         work = path.dirname(options.env.NETSTORM_USER_DATA);
         const steps = fs.readFileSync(args[args.indexOf('--ui-script') + 1], 'utf8').trim().split('\n');
@@ -27,7 +28,7 @@ test('cpppj 오라클: 고정 시각과 Session 덤프 파일을 전달하고 �
         return { status: 0, stdout: 'ok', stderr: '' };
     };
     const result = runCppScenario({ exe: 'fake.exe', gameDir: process.cwd(), shared: { settings: {}, fixedFrameMs: 25 }, execute,
-        scenario: { id: 'test', fixedUnixSeconds: 946684800, frames: 20, steps: [[10, 'snapshot', 'main'], [20, 'session-dump', 'report']] } });
+        scenario: { id: 'test', mission: 'Tutorial1', fixedUnixSeconds: 946684800, frames: 20, steps: [[10, 'snapshot', 'main'], [20, 'session-dump', 'report']] } });
     assert.deepEqual([...result.snapshots.main.bmp], [1, 2, 3]);
     assert.equal(result.dumps.report['tsv'].toString('utf8'), 'netstorm_session_dump\t1\nend\n');
     assert.equal(result.report, 'report\n'); assert.equal(fs.existsSync(work), false);
@@ -38,6 +39,7 @@ test('cpppj 오라클: 고정 시각·경로·결과 오류를 거부하고 정�
     const common = { exe: 'fake.exe', gameDir: process.cwd(), shared: {}, scenario: { id: 'test', steps: [[1, 'session-dump', 'dump']] } };
     assert.throws(() => runCppScenario({ ...common, scenario: { ...common.scenario, fixedFrameMs: 0 } }), /밀리초/);
     assert.throws(() => runCppScenario({ ...common, scenario: { ...common.scenario, fixedUnixSeconds: 1 } }), /Unix/);
+    assert.throws(() => runCppScenario({ ...common, scenario: { ...common.scenario, mission: '' } }), /미션 이름/);
     assert.throws(() => runCppScenario({ ...common, scenario: { ...common.scenario, id: '../escape' } }), /이름/);
     assert.throws(() => runCppScenario({ ...common, scenario: { ...common.scenario, steps: [[1, 'session-dump', '../escape']] } }), /이름/);
     assert.throws(() => runCppScenario({ ...common, scenario: { ...common.scenario, steps: [[1, 'session-dump', 'a'], [2, 'session-dump', 'a']] } }), /중복/);
@@ -53,4 +55,5 @@ test('cpppj 오라클: 고정 시각은 시나리오 수집 입력에 포함된�
     assert.notEqual(collectionInputs(base), collectionInputs({ ...base, fixedFrameMs: 25 }));
     assert.notEqual(collectionInputs(base), collectionInputs({ ...base, scenarios: [{ ...base.scenarios[0], fixedFrameMs: 25 }] }));
     assert.notEqual(collectionInputs(base), collectionInputs({ ...base, fixedUnixSeconds: 123 }));
+    assert.notEqual(collectionInputs(base), collectionInputs({ ...base, scenarios: [{ ...base.scenarios[0], mission: 'Tutorial1' }] }));
 });

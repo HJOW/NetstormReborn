@@ -74,8 +74,10 @@ function captureName(value) {
 export function runCppScenario({ exe, gameDir, shared, scenario, execute = spawnSync }) {
     const fixedFrameMs = scenario.fixedFrameMs ?? shared.fixedFrameMs;
     const fixedUnixSeconds = scenario.fixedUnixSeconds ?? shared.fixedUnixSeconds;
+    const mission = scenario.mission ?? shared.mission;
     if (fixedFrameMs !== undefined && (!Number.isInteger(fixedFrameMs) || fixedFrameMs < 1 || fixedFrameMs > 60000)) throw new RangeError('고정 프레임 밀리초 범위 오류');
     if (fixedUnixSeconds !== undefined && (fixedFrameMs === undefined || !Number.isInteger(fixedUnixSeconds) || fixedUnixSeconds < -2147483648 || fixedUnixSeconds > 2147483647)) throw new RangeError('고정 Unix 초 범위 또는 프레임 설정 오류');
+    if (mission !== undefined && (typeof mission !== 'string' || !mission || /[\x00-\x1f]/.test(mission))) throw new TypeError('오라클 미션 이름 오류');
     const work = fs.mkdtempSync(path.join(os.tmpdir(), `netstorm-oracle-${captureName(scenario.id)}-`));
     try {
         const userData = path.join(work, 'user');
@@ -98,6 +100,7 @@ export function runCppScenario({ exe, gameDir, shared, scenario, execute = spawn
         const args = ['--run', gameDir, '--window', '--mute-audio', '--frames', String(frames), '--set', settingsArgument({ ...(shared.settings ?? {}), ...(scenario.settings ?? {}) }), '--ui-script', stepsFile, '--ui-report', reportFile];
         if (fixedFrameMs !== undefined) args.push('--fixed-frame-ms', String(fixedFrameMs));
         if (fixedUnixSeconds !== undefined) args.push('--fixed-unix-seconds', String(fixedUnixSeconds));
+        if (mission !== undefined) args.push('--mission', mission);
         const env = { ...process.env, NETSTORM_USER_DATA: userData };
         delete env.NETSTORM_CPP_NO_AUDIO;
         const run = execute(exe, args, { cwd: path.dirname(exe), env, timeout: RUN_TIMEOUT_MS, encoding: 'utf8', windowsHide: false });
@@ -158,7 +161,7 @@ function main(argv) {
     const meta = {
         format: ORACLE_FORMAT,
         version: 1,
-        description: 'cpppj 기준선 실행 파일로 수집한 M1 메인 메뉴 오라클. 그림은 cpppj 논리 화면 캡처(BMP)를 무손실 팔레트 PNG 로 바꾼 것이다. tools/cpp-oracle.mjs 가 쓴다.',
+        description: 'cpppj 기준선 실행 파일로 수집한 오라클. 그림은 cpppj 논리 화면 캡처(BMP)를 무손실 팔레트 PNG 로 바꾼 것이다. tools/cpp-oracle.mjs 가 쓴다.',
         cpppjCommit: commit,
         exe: { file: path.basename(exe), sha256: sha256(exeBytes), bytes: exeBytes.length },
         scenarios: path.relative(REPO_ROOT, scenariosPath).replaceAll('\\', '/'),
