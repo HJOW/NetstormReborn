@@ -45,5 +45,20 @@ test('캠페인 목록에서 첫 Tutorial의 월드와 안내를 표시한다', 
   });
   expect(priest.sid).toBeGreaterThan(0); await page.mouse.click(priest.x, priest.y, { delay: 60 });
   await expect.poll(() => page.evaluate(() => window.netstorm._campaignWorld.selected())).toBe(priest.sid);
+  // 실제 좌클릭 이동 요청이 같은 로컬 Session 패킷에 도달하는지 확인한다.
+  const destination = await page.evaluate((sid) => {
+    const app = window.netstorm, session = app._campaignWorld.session(), slot = session.core().pool.slot(sid);
+    const raw = new DataView(slot.buffer, slot.byteOffset, slot.byteLength), point = app._clientGameplay.camera().snapshot().project(raw.getFloat32(14, true) + 2, raw.getFloat32(18, true));
+    const rect = app.canvas.getBoundingClientRect();
+    return { count: session.localConnectionPackets().length, startX: raw.getFloat32(14, true), startY: raw.getFloat32(18, true),
+      x: rect.left + point.x * rect.width / app._layout.logicalWidth, y: rect.top + point.y * rect.height / app._layout.logicalHeight };
+  }, priest.sid);
+  await page.mouse.click(destination.x, destination.y, { delay: 60 });
+  await expect.poll(() => page.evaluate(() => window.netstorm._campaignWorld.session().localConnectionPackets().length)).toBeGreaterThan(destination.count);
+  expect(await page.evaluate(() => window.netstorm._campaignWorld.session().localConnectionPackets().at(-1))).toBe(0x40);
+  await page.waitForFunction(({ sid, x, y }) => {
+    const bytes = window.netstorm._campaignWorld.session().core().pool.slot(sid), raw = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
+    return raw.getFloat32(14, true) !== x || raw.getFloat32(18, true) !== y;
+  }, { sid: priest.sid, x: destination.startX, y: destination.startY }, { timeout: 15000 });
   expect(errors).toEqual([]);
 });
