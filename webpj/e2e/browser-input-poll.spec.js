@@ -29,3 +29,17 @@ test('브라우저 포인터 재진입 보정', async ({ page }) => {
   });
   expect(result).toEqual([0x80010000, true]);
 });
+
+// 원본 입력을 활성화했을 때 실제 Canvas 버튼 사건이 앱 큐에 들어간다.
+test('브라우저 버튼 사건의 원본 큐 예약', async ({ page }) => {
+  await page.goto('/'); await page.waitForFunction(() => window.netstorm?.state === 'clickToStart');
+  await page.evaluate(() => { window.netstorm._clientNativeInputEnabled = true; });
+  const canvas = page.locator('canvas'), bounds = await canvas.boundingBox();
+  await page.mouse.move(bounds.x + bounds.width / 2, bounds.y + bounds.height / 2);
+  await page.mouse.down(); await page.mouse.up();
+  const events = await page.evaluate(() => {
+    const queue = window.netstorm._clientInputQueue; return [queue.pop(false), queue.pop(false), queue.empty];
+  });
+  expect(events[0].code).toBe(0x00010000); expect(events[1].code).toBe(0x80010000);
+  expect(events[0].x).toBe(events[1].x); expect(events[0].y).toBe(events[1].y); expect(events[2]).toBe(true);
+});

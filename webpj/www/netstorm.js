@@ -33,6 +33,7 @@ import { Settings, findSettingKey, getLocalStorage } from './platform/settings.j
 import { Progress, isProgressKey } from './platform/progress.js';
 import { reportGameError } from './platform/error-reporting.js';
 import { BrowserInputPoll } from './platform/browser-input-poll.js';
+import { queueBrowserMouseEvent } from './platform/browser-mouse-events.js';
 import { InputQueue } from './core/input-queue.js';
 import { GumpPointerBoundaryState, prepareGumpPointerBoundaryWithQueue } from './ui/gump-pointer-boundary.js';
 import { ClientFrameClock } from './core/client-frame-clock.js';
@@ -495,6 +496,8 @@ export class Netstorm {
         this._clientInputPoll = new BrowserInputPoll(() => this._input, () => this._layout, () => this._root?.ownerDocument?.hasFocus?.() ?? true);
         // 원본 40칸 입력 큐와 창 안팎 정적 기록은 같은 Client 수명이다.
         this._clientInputQueue = new InputQueue(); this._clientPointerBoundary = new GumpPointerBoundaryState();
+        // 원본 입력 소비자가 설치되기 전에는 독립 메뉴와 같은 사건을 중복 예약하지 않는다.
+        this._clientNativeInputEnabled = false;
         // 메인 메뉴 그리기 자원 묶음(buildMenuResources 결과)이다. 자산 적재 전에는 null 이며, 재시작해도 다시 받지 않는다.
         this._resources = null;
         // 게임 데이터 조회 객체(GameData: 파일 조회·설정 층·언어 용어표·Tell 섹션)다. 자산 적재 전에는 null 이며 재시작해도 다시 만들지 않는다.
@@ -643,6 +646,8 @@ export class Netstorm {
         this._clientInputPoll = new BrowserInputPoll(() => this._input, () => this._layout, () => this._root?.ownerDocument?.hasFocus?.() ?? true);
         // 원본 40칸 입력 큐와 창 안팎 정적 기록은 같은 Client 수명이다.
         this._clientInputQueue = new InputQueue(); this._clientPointerBoundary = new GumpPointerBoundaryState();
+        // 원본 입력 소비자가 설치되기 전에는 독립 메뉴와 같은 사건을 중복 예약하지 않는다.
+        this._clientNativeInputEnabled = false;
         this._audioStatus = 'none';
         // 저장된 설정을 읽는다(저장소를 쓸 수 없으면 기본값으로 계속). 호스트가 음량을 정했으면 저장하지 않고 우선 적용한다. (2026-10-29 WB03-F)
         const storage = getLocalStorage(doc.defaultView);
@@ -1853,6 +1858,7 @@ export class Netstorm {
         }
         this._updatePointer(event);
         this._clientInputPoll.recordMouseDown(event.button);
+        if (this._clientNativeInputEnabled && this._layout?.visible) queueBrowserMouseEvent(this._clientInputQueue, event, this._input.pointer, false);
         this._retryAudioOnGesture();
         const pointer = this._input.pointer;
         if (this._state === AppState.MAIN_MENU && this._mainMenu && event.button === 0 && pointer.inside) {
@@ -1872,6 +1878,7 @@ export class Netstorm {
     _onPointerUp(event) {
         this._updatePointer(event);
         this._input.pointer.buttons = event.buttons ?? 0;
+        if (this._clientNativeInputEnabled && this._layout?.visible) queueBrowserMouseEvent(this._clientInputQueue, event, this._input.pointer, true);
         if (this._state === AppState.MAIN_MENU && this._mainMenu && event.button === 0) {
             this._mainMenu.pointerUp(this._input.pointer.x, this._input.pointer.y);
         }
