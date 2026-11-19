@@ -236,6 +236,10 @@ target_sources(netstorm PRIVATE app/McpServer.cpp app/McpServer.h) # 4차 로컬
 target_sources(netstorm PRIVATE app/FrameBindingInspect.cpp app/FrameBindingInspect.h)
 target_sources(netstorm PRIVATE app/CanonMayPlaceInspect.cpp)
 add_executable(NetstormCpp app/main.cpp app/ProductVersion.rc) # 새 제품 버전11.01을 Windows 파일 속성에도 제공한다(사용자 요청).
+# ICO 파일을 교체하면 리소스 컴파일을 다시 수행한다. Visual Studio는 리소스 컴파일러의 파일 추적을 사용한다.
+set_property(SOURCE app/ProductVersion.rc APPEND PROPERTY OBJECT_DEPENDS
+    "${CMAKE_CURRENT_SOURCE_DIR}/app/Netstorm-32.ico"
+    "${CMAKE_CURRENT_SOURCE_DIR}/app/Netstorm-16.ico")
 # Windows 배포 이름을 맞추고 import library는 별도 이름으로 둔다. netstorm.lib와 겹치면 MSBuild가 입력을 출력으로 간주해 재링크를 생략한다.
 set_target_properties(NetstormCpp PROPERTIES OUTPUT_NAME Netstorm ARCHIVE_OUTPUT_NAME NetstormCpp)
 target_sources(NetstormCpp PRIVATE app/NetstormCpp.manifest) # 원본ANSI와 다른 Windows10/11의 프로세스 UTF-8 경로 호환 선언이다.

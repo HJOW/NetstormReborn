@@ -27,3 +27,8 @@ BEGIN
         VALUE "Translation", 0x0409, 1200
     END
 END
+
+// 원본 10.78의 32×32·16×16 이미지를 각각 원래 그룹 ID와 언어로 포함한다.
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+102 ICON "app/Netstorm-32.ico"
+144 ICON "app/Netstorm-16.ico"
