@@ -345,6 +345,8 @@ export class RawCampaignSession {
         o.production.refresh(o.playerState.templateOwner); o.productionSync.synchronize();
         return true;
     }
+    // 현재 Session의 실제 GumpForm 호스트를 같은 Client 수명에 빌려준다.
+    gumpFormHost() { const o = this.#live(); if (!o.gumpForms) throw new Error('Session의 실제 GumpForm 미설치'); return o.gumpForms; }
     // 현재 Session의 같은 Deck과 내용물 동기화를 설치 관문 뒤 직접 실행한다.
     synchronizeProductionContents() {
         const o = this.#live(); if (!o.loaded || !o.productionSync) throw new Error('설치 전 생산 패널 갱신'); o.productionSync.synchronize();

@@ -17,7 +17,7 @@ const ROOT_TOKEN = 1;
 export class ClientGumpRoot {
     // 생성·수명·사건·입력·출력 상태와 같은 노드·처리기를 보유한다.
     #create = new GumpCreateState(); #life = new GumpLifetimeState(); #event = new GumpEventState(); #inputState = new GumpInputState();
-    #nodes = new Map(); #handlers = new Map(); #destructors = new Map(); #attachers = new Map(); #broadcasters = new Map(); #idlers = new Map(); #drawers = new Map(); #nextToken = 2; #factory; #lifetime; #collection; #events; #input; #tree; #frame; #redrawDevice; #root = 0; #disposed = false;
+    #nodes = new Map(); #handlers = new Map(); #destructors = new Map(); #attachers = new Map(); #broadcasters = new Map(); #idlers = new Map(); #drawers = new Map(); #nextToken = 2; #factory; #lifetime; #collection; #events; #input; #tree; #frame; #redrawDevice; #formHost = null; #root = 0; #disposed = false;
 
     // 원본 등록표를 초기화하고 기본 루트를 생성한 뒤 현재 화면 크기를 적용한다.
     constructor(width, height, checking, redraw = null, diagnostic = null, project = null) {
@@ -50,6 +50,8 @@ export class ClientGumpRoot {
         });
         this.#lifetime = new GumpLifetime(this.#create, this.#life, { node,
             assertion: (expression, file, line) => { throw new Error(`Gump 원본 진단 ${file}:${line} ${expression}`); },
+            // 현재 Session의 같은 Form 호스트를 삭제 시점에 조회한다.
+            deleteForm: (form, flags) => { if (!this.#formHost?.isGumpForm(form)) throw new Error('Client Gump의 실제 Form 삭제 장치 누락'); this.#formHost.destroy(form, flags); },
             push: (token) => this.#tree.push(token),
             deletingDestructor: (token, flags) => {
                 const destroy = this.#destructors.get(token);
@@ -110,6 +112,36 @@ export class ClientGumpRoot {
     lifetime() { this.#live(); return this.#lifetime; }
     // 현재 토큰의 실제 기본 또는 파생 노드를 빌린다.
     node(token) { this.#live(); return this.#nodes.get(token) ?? null; }
+    // 현재 Session의 실제 GumpForm 호스트를 최초로 빌린다.
+    setFormHost(host) {
+        this.#live(); if (this.#formHost || host?.pool?.edition !== 'patch1078') throw new Error('Client Gump Form 호스트의 현재 수명 오류');
+        this.#formHost = host;
+    }
+    // 등록 ID와 실제 객체 SID를 같은 풀의 GumpForm으로 연결한다.
+    bindObject(token, object) {
+        this.#live(); const node = this.#nodes.get(token), host = this.#formHost;
+        if (!node || !host || node.flags & 0x40) throw new Error('Client Gump 객체 부착의 현재 수명 오류');
+        if (!object) return;
+        if (!Number.isInteger(object) || object < 0 || object > 0xffff || object >= host.pool.capacity) throw new RangeError('Client Gump 객체 SID 범위');
+        const form = host.create(2); host.setOwner(form, node.id); host.attach(form, object, 0);
+        node.flags = (node.flags | 0x40) >>> 0; node.object = object; node.form = form;
+    }
+    // 원본 등록 ID의 기본 가상 객체 삭제 통지를 같은 Gump 지연 삭제에 전달한다.
+    objectGone(owner, object) {
+        this.#live(); if (!Number.isInteger(owner) || owner < 0 || owner >= this.#create.entries.length) throw new RangeError('Client Gump 소유 등록 ID 범위');
+        const token = this.#create.entries[owner]; if (!token) throw new Error('Client Gump 소유 등록 토큰 누락');
+        void object; this.#lifetime.kill(token);
+    }
+    // World보다 먼저 살아 있는 Form 부착 노드를 지우고 실제 반납을 마친다.
+    releaseFormHost() {
+        this.#live(); if (!this.#formHost) return;
+        // Kill이 자식을 함께 예약하므로 매 방문 때 삭제 상태를 다시 확인한다.
+        for (const token of this.#create.entries) {
+            if (!token) continue; const node = this.#nodes.get(token);
+            if (node && (node.flags & 0x40) && !(node.flags & 0x10000)) this.#lifetime.kill(token);
+        }
+        this.#lifetime.cleanup(); this.#formHost = null;
+    }
     // 호출자가 소유한 실제 파생 노드를 등록 전 주소에 두고 처리기·소멸자·선택적 가상 부착·방송·idle을 연결한다.
     allocateDerived(node, handler, destructor, attacher = null, broadcaster = null, idler = null) {
         this.#live();

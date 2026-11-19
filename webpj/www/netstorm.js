@@ -1014,6 +1014,8 @@ export class Netstorm {
             return this._clientInputQueue;
         } }, services);
         services.assets.queueCommand = services.developerQueue;
+        // 객체 소멸 통지는 같은 Client의 현재 Gump 등록 ID에 전달한다.
+        services.gumpNotice = (owner, parent) => { if (!this._clientGump) throw new Error('미션 Gump 객체 통지 수명 누락'); this._clientGump.objectGone(owner, parent); };
         // AI 이름·난이도와 채팅은 같은 Client 설정·번역·Subscriber 기록을 읽는다.
         services.ai = { assertion: (expression) => console.error(`미션 AI 원본 진단: ${expression}`), allocationBytes: currentAllocationBytes, bridgeScratchBytes: currentAllocationBytes,
             blockingGumpOpen: () => this._clientGump.blockingPopups() };
@@ -1209,7 +1211,7 @@ export class Netstorm {
     // 현재 World의 Session을 반납하고 같은 미션 연결 대기 관문을 해제한다.
     _releaseCampaignWorld() {
         if (!this._campaignWorld) return;
-        this._campaignWorld.dispose(); this._campaignWorld = null; this._campaignWorldMissionToken = 0; this._campaignUserInput = null; this._campaignProduction = null; this._campaignCursor = CURSOR_NORMAL;
+        this._clientGump?.releaseFormHost(); this._campaignWorld.dispose(); this._campaignWorld = null; this._campaignWorldMissionToken = 0; this._campaignUserInput = null; this._campaignProduction = null; this._campaignCursor = CURSOR_NORMAL;
     }
 
     // 로그인된 현재 World와 Guide의 실제 미션 Start를 같은 Client 수명에 준비한다.
@@ -1246,7 +1248,7 @@ export class Netstorm {
     _prepareCampaignCursor() {
         const world = this._campaignWorld, gump = this._clientGump, resources = this._resources;
         if (!world || !world.session().localConnectionReady() || !this._campaignUserInput || !gump || !resources?.fonts || !this._clientInputPoll || !this._clientRenderer) throw new Error('미션 커서의 실제 Client 수명 누락');
-        const session = world.session(), cursor = session.cursor();
+        const session = world.session(), cursor = session.cursor(); gump.setFormHost(session.gumpFormHost());
         const client = { getRenderer: () => this._clientRenderer, fonts: () => this._resources.fonts,
             translate: (text) => this._resources.translate(text), poll: (code) => this._clientInputPoll.poll(code),
             getCursor: () => ({ set: (number) => { this._campaignCursor = number >>> 0; this._applyCursor(); } }) };

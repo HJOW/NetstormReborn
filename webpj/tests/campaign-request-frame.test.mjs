@@ -285,5 +285,19 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         assert.equal(drop.preview, 0); assert.equal(drop.lockDepth, 2); session.pumpLocalConnection();
         const actualBridges = session.world().objects().filter(({ object }) => object.type === session.core().bridgeState.bridgeType);
         assert.deepEqual(session.localConnectionPackets().slice(beforeConstruction), [0x3e]); assert.ok(actualBridges.length > beforeBridges);
+        // 실제 Session의 GumpForm이 같은 기술 SID에 부착되고 Gump 제거 시 반납된다.
+        const bound = gump.createBase(0, 10, 10, 1, () => 0); gump.attach(bound, 200, 200); gump.bindObject(bound, technology);
+        const form = gump.node(bound).form; assert.equal(session.gumpFormHost().parent(form), technology);
+        assert.equal(session.gumpFormHost().owner(form), gump.node(bound).id);
+        gump.remove(bound); assert.ok(session.core().pool.slot(form)[11] & 1);
+        // 실제 Form의 부모 삭제 통지는 등록 ID를 통해 같은 Gump를 지연 삭제한다.
+        const notified = gump.createBase(0, 10, 10, 1, () => 0); gump.attach(notified, 210, 210); gump.bindObject(notified, technology);
+        const notifiedForm = gump.node(notified).form; session.gumpFormHost().notify(notifiedForm);
+        assert.ok(gump.node(notified).flags & 0x10000); assert.ok(session.core().pool.slot(notifiedForm)[11] & 1);
+        gump.lifetime().cleanup(); assert.equal(gump.node(notified), null);
+        // World 반납 전에는 잔여 Form을 실제 삭제하고 새 대여를 허용한다.
+        const outstanding = gump.createBase(0, 10, 10, 1, () => 0); gump.attach(outstanding, 220, 220); gump.bindObject(outstanding, technology);
+        const outstandingForm = gump.node(outstanding).form; gump.releaseFormHost();
+        assert.equal(gump.node(outstanding), null); assert.ok(session.core().pool.slot(outstandingForm)[11] & 1); gump.setFormHost(session.gumpFormHost());
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); app._clientSoundDevice.dispose(); app._missionAudioAssets.dispose(); }
 });
