@@ -1260,12 +1260,12 @@ export class Netstorm {
         for (;;) {
             const next = queue.peek(); if (!next) break;
             const code = (next.code & 0x03ffffff) >>> 0, release = Boolean(next.code & InputCode.release);
-            const priestKey = code === 0x50 || code === 0x70 || code === 0x52 || code === 0x72;
-            if (code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !priestKey && code !== InputCode.leftButton && !(release && code === InputCode.rightButton)) break;
+            const selectionKey = code === 0x50 || code === 0x70 || code === 0x52 || code === 0x72 || code === 0x4e || code === 0x6e;
+            if (code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !selectionKey && code !== InputCode.leftButton && !(release && code === InputCode.rightButton)) break;
             const event = queue.pop(false);
             if (tutorial.event(event) || gump.input().route(event.code, event.x, event.y)) continue;
             if (code === InputCode.leftButton && !release && !this._mainMenu?.dialog) user.event(event);
-            else if ((code === MISSION_F4 || code === MISSION_F5 || priestKey) && !release && !this._mainMenu?.dialog) user.event(event);
+            else if ((code === MISSION_F4 || code === MISSION_F5 || selectionKey) && !release && !this._mainMenu?.dialog) user.event(event);
             else if (code === MISSION_VIEW_HOME || code === MISSION_VIEW_PRIEST) this._dispatchCampaignViewAction(event);
         }
     }
@@ -2432,7 +2432,7 @@ export class Netstorm {
         if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && (event.code === 'F4' || event.code === 'F5')) {
             event.preventDefault(); queueBrowserVirtualKeyEvent(this._clientInputQueue, event, this._input.pointer, false);
         }
-        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && !event.isComposing && !this._clientComposing && !event.ctrlKey && !event.altKey && !event.metaKey && /^[pr]$/iu.test(event.key ?? '')) queueBrowserCharacterEvent(this._clientInputQueue, event, this._input.pointer);
+        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && !event.isComposing && !this._clientComposing && !event.ctrlKey && !event.altKey && !event.metaKey && /^[npr]$/iu.test(event.key ?? '')) queueBrowserCharacterEvent(this._clientInputQueue, event, this._input.pointer);
         if (PREVENTED_KEYS.has(event.code)) event.preventDefault();
         this._retryAudioOnGesture();
         // 미리보기의 키 정책은 게임 명령과 분리한다. Escape는 메뉴로 돌아가며 방향키는 카메라만 바꾼다. (2026-11-02 WB03-AA)
