@@ -26,9 +26,21 @@ export class CampaignRendererDrawing {
     }
 
     // 원본 구름/날씨 선택을 같은 잠긴 Screen과 현재 카메라·색상에 전달한다.
-    background(_clip, flags, covered) {
+    background(clip, flags, covered) {
         if (!this.#mapClip) throw new Error('미션 Renderer 배경의 현재 수집 누락');
-        const { screen, camera, globals, clouds, files, config, random, denominator, tint } = this.#devices;
+        const { screen, camera, globals, clouds, files, config, random, denominator, tint, clearOutsideMap = false } = this.#devices;
+        // 아직 상단 원본 HUD가 없는 앱은 지도 밖 dirty를 검은 바탕으로 복구하고 UI를 다시 합성한다.
+        if (clearOutsideMap && !(flags & 4) && !covered) {
+            const map = this.#mapClip, black = screen.colors().basic[0];
+            const margins = [
+                { left: clip.left, top: clip.top, right: clip.right, bottom: map.top },
+                { left: clip.left, top: map.bottom, right: clip.right, bottom: clip.bottom },
+                { left: clip.left, top: map.top, right: map.left, bottom: map.bottom },
+                { left: map.right, top: map.top, right: clip.right, bottom: map.bottom },
+            ];
+            // 비어 있거나 역전된 영역은 화면 지우기 호출에서 제외한다.
+            for (const rect of margins) if (rect.left < rect.right && rect.top < rect.bottom) screen.clear(rect, black);
+        }
         const values = { mode: { get value() { return screen.flags; } }, hideGroups: globals.hideGroups(),
             tint: { get value() { return tint(); } }, black: { get value() { return screen.colors().basic[0]; } },
             cameraX: { get value() { return camera.pixels.x; } }, cameraY: { get value() { return camera.pixels.y; } }, denominator: { get value() { return denominator.current; } } };

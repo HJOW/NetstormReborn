@@ -170,5 +170,9 @@ test('한국어 Tutorial2의 안내 페이지를 표시한다', async ({ page })
   await page.waitForFunction((type) => window.netstorm._campaignWorld.session().production().contains(type), selectedType, { timeout: 15000 });
   await page.waitForFunction(() => window.netstorm._gameData.currentTell === 'D.' && Boolean(window.netstorm._mainMenu.dialog), null, { timeout: 30000 });
   expect(await page.evaluate(() => window.netstorm._mainMenu.dialog.content.styleText)).toContain('첫 무기');
+  // 자연 완공 후 상단 HUD 바깥에는 이동한 비용 글자의 잔상이 남지 않는다.
+  expect(await page.evaluate(() => { const screen = window.netstorm._clientPaletteScreen, pixels = screen.lock(), black = screen.colors().basic[0];
+    try { for (let y = 0; y < 28; y += 1) for (let x = 100; x < screen.width; x += 1) if (pixels[y * screen.pitch + x] !== black) return false; return true; }
+    finally { screen.unlock(); } })).toBe(true);
   await page.screenshot({ path: test.info().outputPath('korean-tutorial2-research.png') }); expect(errors).toEqual([]);
 });

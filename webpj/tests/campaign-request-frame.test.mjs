@@ -250,8 +250,14 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         screen.clear(fullClip, 55); drawing.collect(fullClip, 0); const sky = screen.lock();
         try { drawing.background(fullClip, 0, 0); assert.ok(sky.subarray(screen.pitch * 28).some((value) => value !== 55)); assert.equal(sky[0], 55); }
         finally { screen.unlock(); }
-        screen.clear(fullClip, 55); drawing.collect(fullClip, 4); const uiPixels = screen.lock(), beforeUi = uiPixels.slice();
-        try { drawing.background(fullClip, 4, 0); assert.deepEqual(uiPixels, beforeUi); } finally { screen.unlock(); }
+        // 원본 상단 HUD가 아직 없는 앱 모드는 지도 밖 이전 픽셀을 복구한다.
+        const appDrawing = new CampaignRendererDrawing({ world: app._campaignWorld, screen, camera: camera.snapshot(), globals: frameGlobals,
+            clouds: app._clientKencloud, files: data.files, config: data, random: app._clientRandom.game,
+            denominator: camera.denominator(), tint: () => 0, clearOutsideMap: true });
+        screen.clear(fullClip, 55); appDrawing.collect(fullClip, 0); appDrawing.background(fullClip, 0, 0);
+        const cleared = screen.lock(); try { assert.equal(cleared[0], screen.colors().basic[0]); } finally { screen.unlock(); }
+        screen.clear(fullClip, 55); appDrawing.collect(fullClip, 4); const uiPixels = screen.lock(), beforeUi = uiPixels.slice();
+        try { appDrawing.background(fullClip, 4, 0); assert.deepEqual(uiPixels, beforeUi); } finally { screen.unlock(); }
         // 시차 경로는 분모 객체의 현재 current 칸을 출력마다 다시 읽는다.
         const movingCamera = camera.snapshot().copy(); movingCamera.setPixels(90, 60);
         const parallaxScreen = new Proxy(screen, { get(target, key) { if (key === 'flags') return 0x18; const value = Reflect.get(target, key, target); return typeof value === 'function' ? value.bind(target) : value; } });
@@ -280,7 +286,12 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         const beforeCost = app._gameClock.gameSeconds(), costToken = production.ui.showSp(5000, 300, 320, 0), costNode = gump.node(costToken);
         const afterCost = app._gameClock.gameSeconds();
         assert.equal(costNode.vtable, 0x0050688c); assert.ok(costNode.head); assert.equal(costNode.acceleration, -2);
-        assert.ok(costNode.stamp >= beforeCost && costNode.stamp <= afterCost); gump.remove(costToken); assert.equal(gump.node(costToken), null);
+        assert.ok(costNode.stamp >= beforeCost && costNode.stamp <= afterCost);
+        // 비용 표시의 이전·현재 범위가 실제 Renderer dirty에 들어간다.
+        renderer.clearDirty(); const costBounds = gump.collection().bounds(costToken); gump.redraw(costToken, false);
+        assert.ok(renderer.cameraDirtyEntries().some((entry) => entry.rect.left === costBounds.left && entry.rect.top === costBounds.top));
+        gump.move(costToken, 300, 300); assert.ok(renderer.cameraDirtyEntries().some((entry) => entry.rect.top === 300));
+        gump.remove(costToken); assert.equal(gump.node(costToken), null);
         const bridges = () => { const finder = new RawContainedFinder(session.core().pool, session.productionFinder()); let count = 0;
             // 같은 기술 부모의 실제 내용물만 센다.
             for (let sid = finder.begin(technology); sid; sid = finder.next()) { const raw = session.core().pool.slot(sid); if ((raw[20] | (raw[21] << 8)) & 0x40) count += 1; }

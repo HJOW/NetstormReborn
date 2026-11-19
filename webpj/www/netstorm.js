@@ -38,6 +38,7 @@ import { SquidRenderer } from './render/squid-renderer.js';
 import { prepareRendererFrame } from './render/raw-renderer-prelude.js';
 import { appendRendererCloudDirty, refreshRendererCloudBackground } from './render/raw-renderer-clouds.js';
 import { CampaignRendererDrawing } from './render/campaign-renderer-drawing.js';
+import { GumpRedraw } from './render/gump-redraw.js';
 import { GumpDrawState, GumpPixelTarget, setGumpDrawClip } from './render/gump-draw.js';
 import { Settings, findSettingKey, getLocalStorage } from './platform/settings.js';
 import { Progress, isProgressKey } from './platform/progress.js';
@@ -941,7 +942,15 @@ export class Netstorm {
         if (this._clientGump || !this._layout || !this._clientGameplay) throw new Error('Client Gump의 중복 또는 공통 수명 누락');
         const gameplay = this._clientGameplay;
         this._clientGump = new ClientGumpRoot(this._layout.logicalWidth, this._layout.logicalHeight, () => gameplay.aiDebug().checking().value,
-            () => { this._displayDirty = true; }, (text) => { gameplay.aiDebug().assertionDetail().value = text; }, (object) => {
+            (token) => {
+                // 이동 전후 Gump 범위를 실제 Renderer dirty에 넣어 이전 픽셀도 복구한다.
+                const root = this._clientGump, world = this._campaignWorld, renderer = this._clientRenderer;
+                if (root && world && !world.connecting && renderer && root.node(token)) {
+                    new GumpRedraw(root.collection(), { node: (current) => root.node(current), map: () => world.mapView(),
+                        invalidate: (rect, flags) => renderer.invalidate(rect, flags) }).whole(token);
+                }
+                this._displayDirty = true;
+            }, (text) => { gameplay.aiDebug().assertionDetail().value = text; }, (object) => {
                 if (!this._surfaceStorage || !this._clientGameplay) throw new Error('월드 Gump 투영의 실제 Client 수명 누락');
                 return projectGumpObject(this._surfaceStorage.pool, this._clientGameplay.camera().snapshot(), object);
             });
@@ -1484,7 +1493,7 @@ export class Netstorm {
         if (!world || world.connecting || !screen || !renderer || !clouds || !game || !data || !gump || !this._clientRendererFrame || !this._clientRandom) throw new Error('미션 Renderer 출력의 현재 장치 수명 오류');
         const camera = game.camera();
         const drawing = new CampaignRendererDrawing({ world, screen, camera: camera.snapshot(), globals: this._clientRendererFrame,
-            clouds, files: data.files, config: data, random: this._clientRandom.game, denominator: camera.denominator(),
+            clouds, files: data.files, config: data, random: this._clientRandom.game, denominator: camera.denominator(), clearOutsideMap: true,
             tint: () => { throw new Error('미션 날씨색 장치 미연결'); }, hideBuildings: () => game.hideBuildings().value,
             uiCollect: (view, output, limit) => gump.collection().collect(view, output, limit),
             drawUi: (token, pixels, pitch, height, clip) => {
