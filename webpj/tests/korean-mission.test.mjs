@@ -69,5 +69,14 @@ test('한국어 미션 정보: 유닛 이름과 서식 토큰을 보존한다', 
         assert.deepEqual(translated.match(/%[sd]/g) ?? [], pattern.match(/%[sd]/g) ?? [], pattern);
         assert.deepEqual(translated.match(/~\[I[^\]]+\]/g) ?? [], pattern.match(/~\[I[^\]]+\]/g) ?? [], pattern);
     }
+    // 워크샾 생산 메뉴는 서식 인자와 그림, 줄바꿈을 보존한다.
+    const factoryPatterns = ['Current Production\n', 'No Production Yet.\n', 'View Current Production', 'Knowledge Available\n',
+        'Production Slots Available: %s\n', 'All Knowledge is in Production', 'Put Knowledge into Production', 'Upgrade costs %s%d~[IfortGump.3]', 'Salvage gains %d~[IfortGump.3]', 'Salvage costs %d~[IfortGump.3]'];
+    for (const pattern of factoryPatterns) {
+        const translated = table.translate(pattern); assert.notEqual(translated, pattern, pattern);
+        assert.deepEqual(translated.match(/%[sd]/g) ?? [], pattern.match(/%[sd]/g) ?? [], pattern);
+        assert.deepEqual(translated.match(/~\[I[^\]]+\]/g) ?? [], pattern.match(/~\[I[^\]]+\]/g) ?? [], pattern);
+        assert.equal(translated.endsWith('\n'), pattern.endsWith('\n'), pattern);
+    }
     assert.equal(table.translate('%sConstruct~.'), '%s건설~.'); assert.equal(table.translate('%sTemple'), '%s신전');
 });

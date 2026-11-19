@@ -147,7 +147,7 @@ test('한국어 Tutorial2의 안내 페이지를 표시한다', async ({ page })
   expect(workshopTarget).toBeTruthy(); await page.mouse.click(workshopTarget.x, workshopTarget.y, { delay: 60 });
   await page.waitForFunction(() => { const session = window.netstorm._campaignWorld.session(); return session.world().objects().some(({sid, object}) => object.type === 85 && object.owner === 1 && !(session.core().pool.slot(sid)[40] & 1)); }, null, { timeout: 120000 });
   await page.waitForFunction(() => window.netstorm._gameData.currentTell === 'C.' && Boolean(window.netstorm._mainMenu.dialog), null, { timeout: 30000 });
-  expect(await page.evaluate(() => window.netstorm._mainMenu.dialog.content.styleText)).toContain('생산');
+  expect(await page.evaluate(() => window.netstorm._mainMenu.dialog.content.styleText)).toContain('지식을 생산에 투입');
   await page.screenshot({ path: test.info().outputPath('korean-tutorial2-workshop-complete.png') });
   // 완성된 워크샾의 실제 적중 픽셀을 오른쪽 클릭한다.
   await clickLabel(page, '확인'); await page.waitForFunction(() => !window.netstorm._gameClock.paused(), null, { timeout: 15000 });
@@ -162,6 +162,7 @@ test('한국어 Tutorial2의 안내 페이지를 표시한다', async ({ page })
   await page.mouse.click(workshop.x, workshop.y, { button: 'right', delay: 60 });
   await page.waitForFunction((sid) => { const root = window.netstorm._clientGump; for (let token = root.root().child; token; token = root.node(token).next) if (root.node(token).command === 26 && root.node(token).object === sid) return true; return false; }, workshop.sid, { timeout: 10000 });
   const factoryRoot = await page.evaluate((sid) => { const root = window.netstorm._clientGump; for (let token = root.root().child; token; token = root.node(token).next) if (root.node(token).command === 26 && root.node(token).object === sid) return token; return 0; }, workshop.sid);
+  expect(await page.evaluate(() => window.netstorm._resources.translate('Put Knowledge into Production'))).toBe('지식을 생산에 투입');
   await page.screenshot({ path: test.info().outputPath('korean-tutorial2-factory-menu.png') });
   const knowledge = await clickMenuRow(factoryRoot, 1); expect(knowledge).toBeTruthy();
   const selectedType = await page.evaluate((token) => window.netstorm._clientGump.node(token).items[0].parameter >>> 16, knowledge);

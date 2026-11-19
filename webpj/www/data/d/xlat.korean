@@ -999,3 +999,71 @@ Whisper To
 ---
 귓속말
 ===
+
+***
+Current Production
+
+---
+현재 생산
+
+===
+
+***
+No Production Yet.
+
+---
+아직 생산 중인 항목이 없습니다.
+
+===
+
+***
+View Current Production
+---
+현재 생산 보기
+===
+
+***
+Knowledge Available
+
+---
+사용 가능한 지식
+
+===
+
+***
+Production Slots Available: %s
+
+---
+남은 생산 칸: %s
+
+===
+
+***
+All Knowledge is in Production
+---
+모든 지식을 생산 중입니다
+===
+
+***
+Put Knowledge into Production
+---
+지식을 생산에 투입
+===
+
+***
+Upgrade costs %s%d~[IfortGump.3]
+---
+업그레이드 비용 %s%d~[IfortGump.3]
+===
+
+***
+Salvage gains %d~[IfortGump.3]
+---
+회수 획득 %d~[IfortGump.3]
+===
+
+***
+Salvage costs %d~[IfortGump.3]
+---
+회수 비용 %d~[IfortGump.3]
+===
