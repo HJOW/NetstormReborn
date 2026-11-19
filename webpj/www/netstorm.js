@@ -42,7 +42,7 @@ import { BrowserInputPoll } from './platform/browser-input-poll.js';
 import { queueBrowserMouseEvent } from './platform/browser-mouse-events.js';
 import { queueBrowserVirtualKeyEvent, queueBrowserCharacterEvent } from './platform/browser-key-events.js';
 import { InputQueue } from './core/input-queue.js';
-import { queueCommittedText } from './core/display-text-input.js';
+import { hasExtendedDisplayText, queueCommittedText } from './core/display-text-input.js';
 import { GumpPointerBoundaryState, prepareGumpPointerBoundaryWithQueue } from './ui/gump-pointer-boundary.js';
 import { ClientFrameClock } from './core/client-frame-clock.js';
 import { ClientLocalStateGlobals } from './core/client-local-state-globals.js';
@@ -53,8 +53,9 @@ import { ClientHtmlWindowGlobals } from './core/client-html-window-globals.js';
 import { ClientConnectionGlobals } from './core/client-connection-globals.js';
 import { ClientConnectionActivityGlobals } from './core/client-connection-activity-globals.js';
 import { ClientChatWindowGlobals } from './core/client-chat-window-globals.js';
-import { bindCampaignAiClientServices, bindCampaignClientInputServices, bindCampaignOwnershipTheme, bindCampaignProductionRefresh, captureCampaignMissionStarting, runCampaignMissionStarting } from './core/campaign-client-services.js';
+import { bindCampaignAiClientServices, bindCampaignClientInputServices, bindCampaignOwnershipTheme, bindCampaignProductionRefresh, captureCampaignMissionStarting, makeCampaignMissionStartEffects, runCampaignMissionStarting } from './core/campaign-client-services.js';
 import { CHAT_RECORD_BYTES, RawChatChannels } from './core/raw-chat-channels.js';
+import { RawCampaignMissionStartBindings } from './core/raw-campaign-mission-start-bindings.js';
 import { ClientRandomGlobals } from './core/random.js';
 import { ClientSpGlobals } from './core/client-sp-globals.js';
 import { ClientSubscriberGlobals } from './core/client-subscriber-globals.js';
@@ -1132,6 +1133,21 @@ export class Netstorm {
     _releaseCampaignWorld() {
         if (!this._campaignWorld) return;
         this._campaignWorld.dispose(); this._campaignWorld = null; this._campaignWorldMissionToken = 0;
+    }
+
+    // 로그인된 현재 World와 Guide의 실제 미션 Start를 같은 Client 수명에 준비한다.
+    _prepareCampaignMissionStart() {
+        const world = this._campaignWorld, current = this._clientGuide?.current(), gump = this._clientGump, chat = this._clientChatWindows;
+        if (!world || !current || !gump || !chat || !world.session().localConnectionReady() || this._campaignWorldMissionToken !== current.runtime.saveToken || current.runtime.start) throw new Error('미션 Start의 현재 World·Guide·로그인 수명 오류');
+        const client = { time: () => this._gameClock.time(), renderer: () => this._clientRenderer,
+            menu: () => this._mainMenu ? { refresh: () => { this._mainMenu.dirty = true; this._displayDirty = true; } } : null };
+        const effects = makeCampaignMissionStartEffects(client, world, () => {
+            const token = chat.window.current; if (token) gump.events().bubble(token, 0x02000088, 0, 0);
+        });
+        effects.encodeDisplayText = (text) => displayTextCodec.encode(text); effects.hasExtendedDisplayText = hasExtendedDisplayText;
+        const session = world.session(), runtime = current.runtime;
+        const start = new RawCampaignMissionStartBindings(session, current.script, runtime.gate, runtime.state, session.missionStartSettings(), session.missionAiSettings(), effects);
+        runtime.start = start; return start;
     }
 
     // 게임을 정리한다. 프레임 예약·이벤트·관찰자·오디오·진행 중 로딩을 모두 해제하고 Canvas 를 제거한다.

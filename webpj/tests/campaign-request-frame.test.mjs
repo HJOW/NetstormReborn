@@ -90,6 +90,7 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         assert.equal(request.consumed, false); assert.equal(guide.pending().pending(), true); assert.ok(app._clientSoundPrepare);
         await app._clientSoundPrepare; app._onFrame(16);
         assert.equal(request.consumed, true); assert.equal(guide.pending().pending(), false);
+        assert.throws(() => app._prepareCampaignMissionStart(), /수명 오류/);
         assert.ok(app._missionLoadingWindow); assert.equal(app._mainMenu.dialog, app._missionLoadingWindow);
         app._mainMenu.render(new IndexedSurface(1024, 768));
         const session = app._campaignWorld.session();
@@ -105,5 +106,16 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         const beforeRenderer = app._clientRenderer; app._applyLayout();
         assert.equal(app._clientPaletteScreen.width, 1366); assert.notEqual(app._clientRenderer, beforeRenderer);
         assert.deepEqual(app._campaignWorld.mapView(), { left: 0, top: 28, right: 1366, bottom: 768 });
+        // 실제 Ready Session과 같은 Guide 상태의 Start를 현재 앱 장치로 준비한다.
+        assert.equal(app._campaignWorld.completeLocalConnection(), true);
+        app._campaignWorldMissionToken += 1; assert.throws(() => app._prepareCampaignMissionStart(), /수명 오류/); app._campaignWorldMissionToken -= 1;
+        const runtime = guide.current().runtime, start = app._prepareCampaignMissionStart();
+        assert.equal(runtime.start, start); assert.throws(() => app._prepareCampaignMissionStart(), /수명 오류/);
+        const notices = [], gump = app._clientGump;
+        const parent = gump.createBase(0, 20, 20, 1, (...event) => { notices.push(event.slice(0, 3)); return 0; });
+        const child = gump.createBase(0, 10, 10, 1, () => 0); gump.attach(parent, 0, 0); gump.attach(child, 0, 0, parent); app._clientChatWindows.window.current = child;
+        runtime.state.sequence = 3; start.start(); assert.equal(runtime.state.sequence, 4); assert.equal(runtime.gate.started, 1);
+        assert.ok(notices.some(([code, first, second]) => code === 0x02000088 && first === 0 && second === 0));
+        assert.equal(session.sp(session.localOwner()), Number(guide.current().script.get('myStartMoney')));
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); app._clientSoundDevice.dispose(); app._missionAudioAssets.dispose(); }
 });
