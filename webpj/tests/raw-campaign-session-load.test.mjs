@@ -5,6 +5,7 @@ import { createHash } from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
 import { RawCampaignSession } from '../www/core/raw-campaign-session.js';
+import { Netstorm } from '../www/netstorm.js';
 import { synchronizeProductionControlContents } from '../www/core/client-production-sync.js';
 import { runClientBridgeDecay } from '../www/core/client-bridge-decay.js';
 import { pollClientBattleCompletion } from '../www/core/client-battle-completion.js';
@@ -564,6 +565,21 @@ test('CampaignSession TheWarBegins: 덤프 공통 수집의 실제 Regular', () 
         assert.deepEqual([row.form, row.parent, row.event, row.payloadBits], [process.form, parent, 6700, 0x3e800000]);
         assert.ok(formatSessionStateDump(input).includes(`process\t${process.pid}\t${process.form}\t${parent}\nregular\t${process.pid}\t6700\t0\t1048576000\t`));
     } finally { s.dispose(); }
+});
+
+// 앱이 공통 시작에서 만든 SP·난수·시계를 실제 Session에 빌리고 반납 뒤에도 원래 값과 소유자를 유지한다.
+test('Netstorm Client 공통 수명: 실제 Session이 앱의 난수와 SP를 대여한다', () => {
+    const app = new Netstorm(); assert.throws(() => app._campaignSharedServices(), /공통 수명/);
+    app._initializeClientRuntime(false); const shared = app._campaignSharedServices(), sp = shared.spGlobals.store();
+    assert.equal(sp.initialized, true); assert.equal(shared.spGlobals.randomGlobals(), shared.randomGlobals);
+    sp.set(1, 0x42c80000); const before = [sp.offset, sp.get(1)];
+    const { s } = scene(shared);
+    try {
+        assert.equal(s.randomGlobals(), shared.randomGlobals); assert.equal(s.spStorage(), sp);
+        assert.equal(s.productionContext().sp, shared.spGlobals); assert.deepEqual([sp.offset, sp.get(1)], before);
+        assert.equal(shared.frameTime(), app._gameClock.time()); assert.equal(shared.paused(), false);
+    } finally { s.dispose(); }
+    assert.equal(app._campaignSharedServices().spGlobals.store(), sp); assert.deepEqual([sp.offset, sp.get(1)], before);
 });
 
 // 실제 월드 전체를 관측하고 Session이 초기화한 SP와 현재 원문·장부를 바꾸지 않는다.

@@ -32,6 +32,8 @@ import { Progress, isProgressKey } from './platform/progress.js';
 import { reportGameError } from './platform/error-reporting.js';
 import { ClientFrameClock } from './core/client-frame-clock.js';
 import { ClientLocalStateGlobals } from './core/client-local-state-globals.js';
+import { ClientRandomGlobals } from './core/random.js';
+import { ClientSpGlobals } from './core/client-sp-globals.js';
 import { ClientTimeSource } from './core/client-time-source.js';
 import { resetGameStorage } from './platform/reset-storage.js';
 import { createCanvasGlyphRasterizer } from './platform/glyph-rasterizer.js';
@@ -423,6 +425,8 @@ export class Netstorm {
         this._clock = new FrameClock();
         // Client 게임 시계와 보정 전역은 init에서 생성하고 destroy에서 반납한다.
         this._clientLocal = null; this._gameClock = null; this._hiddenGamePause = false;
+        // 같은 Client가 장기 소유하는 게임·CRT 난수와 SP 저장소다.
+        this._clientRandom = null; this._clientSp = null;
         // init 때 저장해 둔 루트 인라인 스타일이다. destroy 가 되돌린다.
         this._savedRootStyle = null;
         // 비동기 로딩 결과가 오래된 것인지 가리는 세대 번호다. destroy/재시도 때마다 올라간다.
@@ -571,16 +575,13 @@ export class Netstorm {
         const ctx = canvas.getContext('2d', { alpha: false });
         if (!ctx) throw new Error('Netstorm.init: Canvas 2D 컨텍스트를 만들 수 없습니다.');
 
+        // 원본처럼 공통 SP를 설정·화면 해석보다 먼저 초기화하고 실패 시 루트는 건드리지 않는다.
+        this._initializeClientRuntime(doc.hidden);
         this._root = root;
         this._canvas = canvas;
         this._ctx = ctx;
         this._abort = new AbortController();
         this._clock = new FrameClock();
-        // 게임 규칙 시계는 표시용 rAF 시계와 별도로 현재 Client 보정 상자를 공유한다.
-        this._clientLocal = new ClientLocalStateGlobals();
-        this._gameClock = new ClientFrameClock(new ClientTimeSource(), this._clientLocal.gameTicks());
-        this._hiddenGamePause = Boolean(doc.hidden);
-        if (this._hiddenGamePause) this._gameClock.pushGamePause();
         this._input = { pointer: { x: -1, y: -1, inside: false, buttons: 0, type: 'mouse' }, keys: new Set() };
         this._audioStatus = 'none';
         // 저장된 설정을 읽는다(저장소를 쓸 수 없으면 기본값으로 계속). 호스트가 음량을 정했으면 저장하지 않고 우선 적용한다. (2026-10-29 WB03-F)
@@ -622,6 +623,22 @@ export class Netstorm {
         return this;
     }
 
+    // 원본 공통 시작의 SP 초기화와 게임 시계 생성을 같은 Client 소유자로 연결한다.
+    _initializeClientRuntime(hidden) {
+        const source = new ClientTimeSource(), random = new ClientRandomGlobals();
+        const sp = new ClientSpGlobals(random, () => source.unixSeconds()); sp.store().initialize();
+        const local = new ClientLocalStateGlobals(), clock = new ClientFrameClock(source, local.gameTicks());
+        if (hidden) clock.pushGamePause();
+        this._clientRandom = random; this._clientSp = sp; this._clientLocal = local; this._gameClock = clock; this._hiddenGamePause = Boolean(hidden);
+    }
+
+    // 미션 조립은 현재 Client의 같은 난수·SP·보정·시계만 대여한다. 이 호출은 Session을 생성하지 않는다.
+    _campaignSharedServices() {
+        const clock = this._gameClock, random = this._clientRandom, sp = this._clientSp, local = this._clientLocal;
+        if (!clock || !random || !sp || !local) throw new Error('캠페인의 실제 Client 공통 수명 미설치');
+        return { randomGlobals: random, spGlobals: sp, localStateGlobals: local, unixSeconds: () => clock.unixSeconds(), frameTime: () => clock.time(), paused: () => clock.paused() };
+    }
+
     // 게임을 정리한다. 프레임 예약·이벤트·관찰자·오디오·진행 중 로딩을 모두 해제하고 Canvas 를 제거한다.
     // 여러 번 호출해도 안전하며, 이후 init 으로 다시 시작할 수 있다. 처음 골격의 destroy(div) 형태로 불러도 인자는 무시한다.
     // init 도중 실패한 반쪽 상태도 이 함수가 정리하므로 상태 이름이 아니라 루트 요소의 유무로 판단한다.
@@ -640,6 +657,7 @@ export class Netstorm {
         this._settings = null;
         this._progress = null;
         this._gameClock = null; this._clientLocal = null; this._hiddenGamePause = false;
+        this._clientSp = null; this._clientRandom = null;
         if (this._audio) {
             // 음악을 멈추고 문맥을 닫는다. 닫기에 실패해도 정리를 막지 않는다.
             this._audio.close();
