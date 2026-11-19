@@ -277,9 +277,10 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         // 실제 생산 유지 장치가 현재 기술 내용물에 다리를 공급한다.
         const production = app._campaignProduction, technology = session.currentTechnologyParent(); assert.ok(production?.ui); assert.ok(technology);
         // 같은 Client 비용 표시가 실제 텍스트와 시계로 생성되고 반납된다.
-        const costToken = production.ui.showSp(5000, 300, 320, 0), costNode = gump.node(costToken);
+        const beforeCost = app._gameClock.gameSeconds(), costToken = production.ui.showSp(5000, 300, 320, 0), costNode = gump.node(costToken);
+        const afterCost = app._gameClock.gameSeconds();
         assert.equal(costNode.vtable, 0x0050688c); assert.ok(costNode.head); assert.equal(costNode.acceleration, -2);
-        assert.equal(costNode.stamp, app._gameClock.gameSeconds()); gump.remove(costToken); assert.equal(gump.node(costToken), null);
+        assert.ok(costNode.stamp >= beforeCost && costNode.stamp <= afterCost); gump.remove(costToken); assert.equal(gump.node(costToken), null);
         const bridges = () => { const finder = new RawContainedFinder(session.core().pool, session.productionFinder()); let count = 0;
             // 같은 기술 부모의 실제 내용물만 센다.
             for (let sid = finder.begin(technology); sid; sid = finder.next()) { const raw = session.core().pool.slot(sid); if ((raw[20] | (raw[21] << 8)) & 0x40) count += 1; }
@@ -309,6 +310,10 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         assert.equal(app._mainMenu.dialog.topic, 'thunderFactoryType'); assert.ok(app._mainMenu.dialog.information); assert.ok(app._mainMenu.dialog.information.softLines.length);
         assert.equal(app._mainMenu.dialog.picture?.frameNumber ?? -1, game.types()[factoryType - 70].definition.helpFrame);
         app._mainMenu.setDialog(null);
+        // Factory의 정적 Help 토큰도 같은 실제 입력 큐에서 주제로 해석한다.
+        const researchTopic = app._clientChatWindows.store('researchHelp');
+        app._clientInputQueue.pushCommand(0x02000017, 0, researchTopic); app._runCampaignInputFrame();
+        assert.equal(app._mainMenu.dialog.topic, 'researchHelp'); app._mainMenu.setDialog(null);
         assert.throws(() => app._prepareCampaignProduction(), /수명 오류/);
         // 실제 앱 프레임은 월드를 표시하고 Tell을 그 위에 합성하며 닫은 뒤 DIB 원본을 복구한다.
         let presentations = 0; app._presenter.present = () => { presentations += 1; };

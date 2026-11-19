@@ -70,6 +70,8 @@ export class ClientProductionPanel {
     }
     // 실제 사제 메뉴 열기 장치는 같은 패널 수명에 연결되어 있다.
     openPriest(sid, event) { return this.#parts.openPriest?.(sid, event) ?? 0; }
+    // 실제 Factory 메뉴 열기도 같은 패널 수명에 전달한다.
+    openFactory(sid, event) { return this.#parts.openFactory?.(sid, event) ?? 0; }
     // 실제 건설 비용 표시를 같은 Client Gump 수명에 전달한다.
     showSp(cost, x, y, reference) { if (!this.#parts.showSp) throw new Error('생산 패널의 실제 비용 표시 미연결'); return this.#parts.showSp(cost, x, y, reference); }
     // 공통 수명이 자식과 실제 Form을 먼저 반납한다.

@@ -1396,16 +1396,19 @@ export class Netstorm {
             const selectionKey = code === 0x50 || code === 0x70 || code === 0x52 || code === 0x72 || code === 0x4e || code === 0x6e;
             const productionKey = 'qwaszyxe'.includes(String.fromCharCode(code).toLowerCase()) && code < 256;
             const cursorCancel = code === 0x1b, cursorRotate = code === 0x250000 || code === 0x270000;
-            if (code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && code !== InputCode.leftButton && code !== InputCode.rightButton) break;
+            if (code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && code !== InputCode.leftButton && code !== InputCode.rightButton) break;
             const event = queue.pop(false);
             if (tutorial.event(event) || gump.input().route(event.code, event.x, event.y)) continue;
             if (code === InputCode.leftButton && !release && !this._mainMenu?.dialog) user.event(event);
             else if ((code === MISSION_F4 || code === MISSION_F5 || selectionKey || productionKey || cursorCancel || cursorRotate || code === InputCode.rightButton) && !release && !this._mainMenu?.dialog) {
                 const picked = user.event(event);
-                if (code === InputCode.rightButton && picked) this._campaignProduction?.ui?.openPriest(picked, event);
+                if (code === InputCode.rightButton && picked) {
+                    const ui = this._campaignProduction?.ui; if (ui && !ui.openPriest(picked, event)) ui.openFactory(picked, event);
+                }
             }
             else if (code === 0x02000017 && !release && !this._mainMenu?.dialog) {
-                const type = event.y >>> 0, types = world.session().core().types;
+                const type = event.y >>> 0, types = world.session().core().types, staticTopic = this._clientChatWindows.strings.get(type);
+                if (staticTopic !== undefined) { this._closeCampaignPopups(); this._openHelp(staticTopic); continue; }
                 if (!type || type >= 256 || type >= types.length) throw new RangeError('생산 정보 Help TYPE 범위 오류');
                 const information = () => buildQuickHelpInfoHtml({ type: () => world.session().helpTypeInfo(type),
                     description: () => this._resources.translate(types[type].description), hitPoints: () => world.session().hitPoints().typeHitPoints(type),
@@ -1416,6 +1419,10 @@ export class Netstorm {
             else if (code === 0x02000060 && !release && !this._mainMenu?.dialog) {
                 // 원본 packed 인자의 상위 WORD는 TYPE, 하위 WORD는 사제 SID다.
                 const packed = event.y >>> 0; world.session().makePriestMenu({ tell: (name) => this._openTell(name) }).selectBuild(packed >>> 16, packed & 0xffff);
+            }
+            else if ((code === 0x03000080 || code === 0x03000032) && !release && !this._mainMenu?.dialog) {
+                // Factory 연구·업그레이드는 같은 packed 인자와 실제 Session 명령으로 전달한다.
+                const packed = event.y >>> 0; world.session().commandFactory(packed & 0xffff, event.code, packed);
             }
             else if (code === PRODUCTION_BRIDGE_COMMAND && !release && !this._mainMenu?.dialog) this._dispatchCampaignBridgeProduction(event);
             else if (code === MISSION_VIEW_HOME || code === MISSION_VIEW_PRIEST) this._dispatchCampaignViewAction(event);

@@ -55,7 +55,7 @@ test('한국어 Tutorial1 미션 메뉴와 브리핑을 표시한다', async ({ 
 
 // 두 번째 튜토리얼의 한국어 안내 페이지를 실제 미션에서 확인한다.
 test('한국어 Tutorial2의 안내 페이지를 표시한다', async ({ page }) => {
-  test.setTimeout(180000);
+  test.setTimeout(300000);
   const errors = []; page.on('pageerror', (error) => { errors.push(error.message); console.error('브라우저 예외:', error.message); });
   await page.addInitScript(() => {
     localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } }));
@@ -121,5 +121,53 @@ test('한국어 Tutorial2의 안내 페이지를 표시한다', async ({ page })
   await page.waitForFunction(() => { const session = window.netstorm._campaignWorld.session(); return session.world().objects().some(({sid, object}) => object.type === 123 && object.owner === 1 && !(session.core().pool.slot(sid)[40] & 1)); }, null, { timeout: 120000 });
   await page.waitForFunction(() => window.netstorm._gameData.currentTell === 'B.' && Boolean(window.netstorm._mainMenu.dialog), null, { timeout: 30000 });
   expect(await page.evaluate(() => window.netstorm._mainMenu.dialog.content.styleText)).toContain('신전 완성');
-  await page.screenshot({ path: test.info().outputPath('korean-tutorial2-temple-complete.png') }); expect(errors).toEqual([]);
+  await page.screenshot({ path: test.info().outputPath('korean-tutorial2-temple-complete.png') });
+  // 다음 안내를 닫고 같은 사제로 썬 워크샾을 건설한다.
+  await clickLabel(page, '다음'); await page.waitForFunction(() => window.netstorm._gameData.currentTell === 'B1.'); await clickLabel(page, '확인');
+  await page.waitForFunction(() => !window.netstorm._gameClock.paused(), null, { timeout: 15000 });
+  const movedPriest = await page.evaluate(() => { const app = window.netstorm, session = app._campaignWorld.session(), sid = session.findPriestParticipation(session.localOwner()), slot = session.core().pool.slot(sid), raw = new DataView(slot.buffer, slot.byteOffset, slot.byteLength);
+    const point = app._clientGameplay.camera().snapshot().project(raw.getFloat32(14, true), raw.getFloat32(18, true)), rect = app.canvas.getBoundingClientRect(); let hit = null;
+    // 완공된 신전과 겹칠 수 있으므로 현재 사제의 실제 적중 픽셀을 찾는다.
+    for (let y = Math.trunc(point.y) - 50; y <= Math.trunc(point.y) + 20 && !hit; y += 1) for (let x = Math.trunc(point.x) - 50; x <= Math.trunc(point.x) + 20; x += 1) {
+      if (app._campaignWorld.pick(x, y, 0) === sid) { hit = { x, y }; break; }
+    }
+    if (!hit) throw new Error('완공 뒤 사제의 적중 픽셀 없음');
+    return { sid, x: rect.left + hit.x * rect.width / app._layout.logicalWidth, y: rect.top + hit.y * rect.height / app._layout.logicalHeight }; });
+  await page.mouse.click(movedPriest.x, movedPriest.y, { button: 'right', delay: 60 });
+  await page.waitForFunction(() => { const root = window.netstorm._clientGump; for (let token = root.root().child; token; token = root.node(token).next) if (root.node(token).command === 26 && root.node(token).object) return true; return false; }, null, { timeout: 10000 });
+  const nextRoot = await page.evaluate(() => { const root = window.netstorm._clientGump; for (let token = root.root().child; token; token = root.node(token).next) if (root.node(token).command === 26 && root.node(token).object) return token; return 0; });
+  const nextConstruct = await clickMenuRow(nextRoot, 0), workshops = await clickMenuRow(nextConstruct, 1); expect(workshops).toBeTruthy();
+  await clickMenuRow(workshops, 0);
+  await page.waitForFunction(() => window.netstorm._campaignWorld.session().cursorDropSettings().type === 85, null, { timeout: 10000 });
+  let workshopTarget = null;
+  for (const [dx, dy] of [[60, 20], [-60, 20], [65, -35], [-65, -35], [35, 70], [-35, 70], [100, 35], [-100, 35], [0, 90], [0, -90]]) {
+    await page.mouse.move(movedPriest.x + dx, movedPriest.y + dy); await page.waitForTimeout(100);
+    if (await page.evaluate(() => Boolean(window.netstorm._campaignWorld.session().cursorDropSettings().legal))) { workshopTarget = { x: movedPriest.x + dx, y: movedPriest.y + dy }; break; }
+  }
+  expect(workshopTarget).toBeTruthy(); await page.mouse.click(workshopTarget.x, workshopTarget.y, { delay: 60 });
+  await page.waitForFunction(() => { const session = window.netstorm._campaignWorld.session(); return session.world().objects().some(({sid, object}) => object.type === 85 && object.owner === 1 && !(session.core().pool.slot(sid)[40] & 1)); }, null, { timeout: 120000 });
+  await page.waitForFunction(() => window.netstorm._gameData.currentTell === 'C.' && Boolean(window.netstorm._mainMenu.dialog), null, { timeout: 30000 });
+  expect(await page.evaluate(() => window.netstorm._mainMenu.dialog.content.styleText)).toContain('생산');
+  await page.screenshot({ path: test.info().outputPath('korean-tutorial2-workshop-complete.png') });
+  // 완성된 워크샾의 실제 적중 픽셀을 오른쪽 클릭한다.
+  await clickLabel(page, '확인'); await page.waitForFunction(() => !window.netstorm._gameClock.paused(), null, { timeout: 15000 });
+  const workshop = await page.evaluate(() => { const app = window.netstorm, session = app._campaignWorld.session(), found = session.world().objects().find(({object}) => object.type === 85 && object.owner === 1);
+    const slot = session.core().pool.slot(found.sid), raw = new DataView(slot.buffer, slot.byteOffset, slot.byteLength), point = app._clientGameplay.camera().snapshot().project(raw.getFloat32(14, true), raw.getFloat32(18, true)), rect = app.canvas.getBoundingClientRect(); let hit = null;
+    // 다른 객체와 겹치지 않고 실제 워크샾이 선택되는 픽셀을 찾는다.
+    for (let y = Math.trunc(point.y) - 100; y <= Math.trunc(point.y) + 30 && !hit; y += 2) for (let x = Math.trunc(point.x) - 100; x <= Math.trunc(point.x) + 30; x += 2) {
+      if (app._campaignWorld.pick(x, y, 0) === found.sid) { hit = { x, y }; break; }
+    }
+    if (!hit) throw new Error('완공된 워크샾의 적중 픽셀 없음');
+    return { sid: found.sid, x: rect.left + hit.x * rect.width / app._layout.logicalWidth, y: rect.top + hit.y * rect.height / app._layout.logicalHeight }; });
+  await page.mouse.click(workshop.x, workshop.y, { button: 'right', delay: 60 });
+  await page.waitForFunction((sid) => { const root = window.netstorm._clientGump; for (let token = root.root().child; token; token = root.node(token).next) if (root.node(token).command === 26 && root.node(token).object === sid) return true; return false; }, workshop.sid, { timeout: 10000 });
+  const factoryRoot = await page.evaluate((sid) => { const root = window.netstorm._clientGump; for (let token = root.root().child; token; token = root.node(token).next) if (root.node(token).command === 26 && root.node(token).object === sid) return token; return 0; }, workshop.sid);
+  await page.screenshot({ path: test.info().outputPath('korean-tutorial2-factory-menu.png') });
+  const knowledge = await clickMenuRow(factoryRoot, 1); expect(knowledge).toBeTruthy();
+  const selectedType = await page.evaluate((token) => window.netstorm._clientGump.node(token).items[0].parameter >>> 16, knowledge);
+  await clickMenuRow(knowledge, 0);
+  await page.waitForFunction((type) => window.netstorm._campaignWorld.session().production().contains(type), selectedType, { timeout: 15000 });
+  await page.waitForFunction(() => window.netstorm._gameData.currentTell === 'D.' && Boolean(window.netstorm._mainMenu.dialog), null, { timeout: 30000 });
+  expect(await page.evaluate(() => window.netstorm._mainMenu.dialog.content.styleText)).toContain('첫 무기');
+  await page.screenshot({ path: test.info().outputPath('korean-tutorial2-research.png') }); expect(errors).toEqual([]);
 });
