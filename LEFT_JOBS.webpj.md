@@ -69,6 +69,10 @@
 
 11.01 표기·Credits 세 번째 항목과 HJOW/AI 문구·`Copyright 2026 HJOW`, 시작 클릭 화면, 공개 루트 내 실행 자산, 외부 접속 문서화·유효성 검사 비활성화는 반영했다. Credits AI 문구는 사용자가 다시 지시할 때 수정한다. **15차 Reset All은 E863에서 구현·검증했다.** [제품 11.01](docs/webpj-product-1101-20261105.md) · [외부 접속](docs/webpj-external-access-20261105.md) · [초기화](docs/webpj-reset-all-20261119.md)
 
+<a id="favicon"></a>
+
+- [ ] **favicon(AGENTS 2026-11-19 추가 `11b16b77`).** 기존 게임 실행 파일 아이콘을 favicon으로 탑재한다. 원본은 `originals/Netstorm.exe`의 아이콘 그룹 144(16×16·4bpp)와 102(32×32·4bpp)다. 두 그림을 그대로 담은 `.ico`를 `webpj/www/favicon.ico`로 복사하고, cpppj·dotnetpj가 먼저 만든 공통 `.ico`가 있으면 재사용한다. `index.html`에는 하위 경로 배포에서도 맞도록 상대 경로 `<link rel="icon" href="favicon.ico">` 한 줄만 추가한다. 지금은 링크와 파일이 없어 브라우저 검사마다 `favicon.ico` 404를 예외로 기록했다. 완료 시 원본 바이트 대조 시험과 Chromium의 404 해소·탭 아이콘 표시를 확인한다. [공통 기준](LEFT_JOBS.md#exe-icon)
+
 <a id="korean-font-change"></a>
 
 ### 0.7 한국어 갈무리11
@@ -337,4 +341,4 @@ npm --prefix webpj run test:e2e
 
 **2026-11-18.** E801 직후 문서 전체를 보관본에 이관했다. 오래된 재개·중단 안내, E632 계획 견적, 단위별 진행 기록 및 이미 끝난 체크의 상세는 보관본에서 확인한다. 출하 Fort 로그인과 GameWorldInput 코드 이식을 완료 하위 항목으로 명시했다. 출하 Fort 로그인·월드 선택/미니맵 이동·세 운반 유닛의 Session 이동 집중 검사 3건이 통과했다. 상위 4-D와 입력 본체는 남은 검증을 마친 뒤 완료한다. [E801 정리 전 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261118-through-wb04-e801)
 
-현재 AGENTS.md 기준은 `faecb9cb`(15차 설정 초기화)와 `2c8ca3bf`(갈무리11·다른 언어 글꼴)까지 반영했다. 이전 이관 기록은 보관본의 날짜별 원문에서 확인한다.
+현재 AGENTS.md 기준은 `faecb9cb`(15차 설정 초기화), `2c8ca3bf`(갈무리11·다른 언어 글꼴), `d047bf9a`(cpppj·dotnetpj 실행 파일 아이콘, 웹 해당 없음)와 `11b16b77`(webpj favicon, [0.6절](#favicon))까지 반영했다. 이전 이관 기록은 보관본의 날짜별 원문에서 확인한다.

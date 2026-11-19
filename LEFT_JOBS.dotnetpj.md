@@ -48,6 +48,16 @@ AGENTS.md의 현행 지정은 갈무리11이다. cpppj 1322의 외부 비트맵 
 - [ ] `Netstorm.Game.csproj`와 `package-dotnetpj.ps1`의 복사·필수 파일·고지·안내를 맞춘다. 두 TTF와 `Galmuri11-LICENSE.txt`를 exe 옆 `fonts/`에 두고, R5 배포 전환 시 설정을 승계한다.
 - [ ] 작은 메뉴·도움말·브리핑과 영한 혼합 제목에서 일반/굵은 획·폭·기준선·줄 높이·잘림을 확인한다. 영어 `.chfnt`와 일본어 Noto Sans JP를 함께 대조한다.
 
+<a id="exe-icon"></a>
+
+### 0.4 실행 파일 아이콘 — DN 적용 대기
+
+AGENTS.md 2026-11-19 추가(`d047bf9a3`)로 `Netstorm.exe`의 아이콘은 기존 게임 실행 파일 아이콘과 같아야 한다. 원본은 `originals/Netstorm.exe`의 아이콘 그룹 102(32×32·4bpp)와 144(16×16·4bpp)이며 탐색기 파일 아이콘은 102다. 현재 `Netstorm.Game.csproj`에는 `ApplicationIcon`·아이콘 리소스가 없다. 빌드의 `.exe` 혼입 검사 때문에 cpppj처럼 원본 실행 파일을 실행 중에 읽을 수 없으므로, 추출한 `.ico`를 저장소 자산으로 쓴다. [공통 기준](LEFT_JOBS.md#exe-icon)
+
+- [ ] 원본 두 그룹을 그대로 담은 공통 `.ico`를 쓴다. cpppj나 webpj가 먼저 만들었으면 그 자산을 재사용하고, 없으면 만들어 생성 도구·해시를 단위 문서에 기록한다.
+- [ ] 현재 `Netstorm.exe`를 만드는 `Netstorm.Game.csproj`에 `ApplicationIcon`을 지정한다. DesktopGL 창·작업 표시줄 아이콘에 내장 리소스가 따로 필요한지는 사용하는 MonoGame 버전에서 확인한다. R5에서 새 경로가 `Netstorm.exe`를 이어받을 때 같은 설정을 승계한다.
+- [ ] 빌드된 exe의 아이콘 리소스를 원본 바이트와 대조하고, `package-dotnetpj.ps1` 산출 ZIP의 `Netstorm.exe`에도 적용됐는지 확인한다. 탐색기 표시는 사용자 확인으로 둔다.
+
 <a id="dotnet-stage-board"></a><a id="stage-criteria"></a>
 
 ## 1. 단계별 작업과 완료 기준
@@ -61,7 +71,7 @@ AGENTS.md의 현행 지정은 갈무리11이다. cpppj 1322의 외부 비트맵 
 | **R4 월드 세션 조립 → M1** | **R4-2·R4-4 진행 중.** 34경로(Early 6·Training 9·캠페인 16·데모 3)의 같은 시드 Load/Start `session-dump`가 cpppj와 일치해야 한다(L2). [R4 체크](#r4-detail) |
 | R5 월드 화면·카메라·HUD → D2 | 렌더러 수집·정렬·dirty/팔레트, 타입별 Draw와 효과, 카메라·전체화면 가장자리 스크롤, HUD·덱·미니맵·인벤토리. 진입 직후와 N프레임 뒤 34경로 L4a 차이 0 및 압축 해제 실행 후 `Netstorm.exe`와 배포 대상을 새 호스트로 넘긴다. |
 | R6 플레이·규칙·AI·음향 → M2/M3 | Tutorial1 → Early Missions → 1-1·1-2 순서로 입력·커서·선택·메뉴, 사제/경로/운반/수확, 건설/생산/경제/다리, 전투, 의식/승패, AI, 소리/음악/동영상, 채팅/경고를 연결한다. M2는 고정 입력열 L3와 대표 캡처 일치, M3는 1-1·1-2가 기존 경로 수준 이상으로 진행되는 것. M3 뒤 `NetstormLegacy`와 근사 검사를 제거한다. [선행 완료와 잔여](#r6-preports) |
-| R7 미션 전체·Edit·설정·배포 → M4 | 34경로 진입·진행·저장, Retry/Next/Abort, 데모 2주기, Edit 왕복 저장·Save as·Test Battle/복귀, `options.cfg` 시점·전체화면 재실행, A~F 중 C·D·F 판정. ZIP 전수 대조와 압축 해제 실행, `Netstorm.exe` 외 실행 파일 사용법 문서화. AGENTS 2026-11-19 추가 요구로 `Netstorm.exe` 아이콘은 기존 게임 실행 파일 아이콘과 동일해야 한다(새 경로가 exe를 이어받을 때 적용). |
+| R7 미션 전체·Edit·설정·배포 → M4 | 34경로 진입·진행·저장, Retry/Next/Abort, 데모 2주기, Edit 왕복 저장·Save as·Test Battle/복귀, `options.cfg` 시점·전체화면 재실행, A~F 중 C·D·F 판정. ZIP 전수 대조와 압축 해제 실행, `Netstorm.exe` 외 실행 파일 사용법 문서화. 배포본 `Netstorm.exe`의 아이콘이 원본 실행 파일 아이콘과 같은지 확인한다(AGENTS 2026-11-19 추가, [0.4](#exe-icon)). |
 | R8 AGENTS 4~15차 | 아래 차수별 요구에 도달할 때마다 기능을 검증한다. 공통 파일을 옮기는 과정에서 이미 들어온 부분도 실제 경로에서 확인한다. [요구사항](#dotnet-r8-requirements) |
 | R9 60/120 FPS | Frame Rate 60/75(원본)/120과 양보 대기의 프레임 시간 대조. 비행체 표시 보간은 cpppj D2 결정에 따른다. |
 | R10 Linux | DesktopGL와 파일 장치의 경로·권한·원자 저장을 확인한다. `$HOME/.netstorm/` 아래 `Saves/`·`CustomMaps/`·`logs/`를 사용한다. |
@@ -135,7 +145,7 @@ AGENTS.md의 현행 지정은 갈무리11이다. cpppj 1322의 외부 비트맵 
 
 ## 3. AGENTS 4~15차 — R8 반영 범위
 
-현행 AGENTS 변경은 갈무리11 지정 `2c8ca3bf8`과 15차 추가 `faecb9cbd`까지 확인했다. 아래는 새 경로 기준이다.
+현행 AGENTS 변경은 갈무리11 지정 `2c8ca3bf8`, 15차 추가 `faecb9cbd`, 실행 파일 아이콘 `d047bf9a3`([0.4](#exe-icon)), webpj favicon `11b16b778`(DN 해당 없음)까지 확인했다. 아래는 새 경로 기준이다.
 
 | 차수 | 처리 및 검증 |
 | --- | --- |
@@ -152,7 +162,7 @@ AGENTS.md의 현행 지정은 갈무리11이다. cpppj 1322의 외부 비트맵 
 | 14 QuickJS | quickjs-ng 엔진 탑재·자체 검사·라이선스 동봉. 추가 연동은 별도 사용자 결정 대상이다. [cpppj 엔진 계약](docs/exe/cpp-quickjs-engine-20261111.md) |
 | **15 Reset All** | **미착수.** Options 맨 아래에 Reset All을 제공한다. 취소 시 현재 설정·진행을 보존하고 확인 시 `options.cfg`를 포함한 설정·게임 진행을 초기화한 뒤 종료한다. 다시 실행해 최초 상태를 검증한다. 2026-11-19 소스 확인 기준으로 cpppj에도 아직 기준 구현이 없다. [AGENTS.md](AGENTS.md) |
 
-**공통 완료 사항.** 기존 배포의 `Netstorm.exe` 이름과 압축 스크립트, 11.01·Credits 3항목·HJOW/AI 크레딧 및 카피라이트(0.150·0.342), 폐기 클라이언트 유효성 검사 비활성·외부 접속 문서화(0.151). 새 소비자가 생기면 외부 접속 목록을 갱신한다. [배포 스크립트](dotnetpj/package-dotnetpj.ps1) · [외부 접속](docs/dotnet-external-endpoints-20261103.md)
+**공통 완료 사항.** 기존 배포의 `Netstorm.exe` 이름과 압축 스크립트, 11.01·Credits 3항목·HJOW/AI 크레딧 및 카피라이트(0.150·0.342), 폐기 클라이언트 유효성 검사 비활성·외부 접속 문서화(0.151). 새 소비자가 생기면 외부 접속 목록을 갱신한다. `Netstorm.exe`의 원본 아이콘은 아직 미완료다([0.4](#exe-icon)). [배포 스크립트](dotnetpj/package-dotnetpj.ps1) · [외부 접속](docs/dotnet-external-endpoints-20261103.md)
 
 <a id="resync-scope"></a><a id="cpppj-requests"></a><a id="dotnet-inventory"></a>
 
