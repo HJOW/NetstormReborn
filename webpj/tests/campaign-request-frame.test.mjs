@@ -40,6 +40,8 @@ import { StoneButtonGumpState } from '../www/ui/stone-button-gump.js';
 import { ScrollGumpState } from '../www/ui/scroll-gump.js';
 import { ScrollGumpWidgetState } from '../www/ui/scroll-gump-widgets.js';
 import { ScrollingTextGumpWidgetState } from '../www/ui/scrolling-text-gump-widgets.js';
+import { ClientGumpDecoration, createClientDecorationState } from '../www/ui/client-gump-decoration.js';
+import { ClientMenuGump } from '../www/ui/client-menu-gump.js';
 import { StyleTextFragmentKind } from '../www/ui/style-text-fragments.js';
 import { PriestPlacementAssets } from '../www/core/priest-placement-assets.js';
 import { RawCanonPixelShape } from '../www/core/raw-canon-pixel-shape.js';
@@ -486,5 +488,23 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
             scrollPixels.fill(255); gump.draw(child, draw, scrollTarget); assert.ok(scrollPixels.some((value) => value !== 255));
         }
         gump.remove(multiToken); scroll.close(); assert.equal(bufferText.styleState().fragments.size, 0);
+        // 같은 Client의 원본 세로 메뉴를 만들고 실제 항목 클릭·명령·소멸을 확인한다.
+        const commands = [], menuDecoration = new ClientGumpDecoration(gump, game, itemBackground, createClientDecorationState(92), () => 0, (rect) => app._clientRenderer.invalidate(rect, 0));
+        const menus = new ClientMenuGump(gump, { assets: game, fonts: app._resources.fonts, text: bufferText, background: itemBackground, decoration: menuDecoration, title: multi,
+            session, config: data, backgroundType: 92, foreground: screen.colors().basic[7], disabled: screen.colors().basic[8], shadow: screen.colors().basic[0],
+            sound: (name) => app._clientSoundPlayer.play(app._clientSoundNames.lookup(name), 0, 0, 0, 0, 0), command: (...args) => commands.push(args), invalidate: (rect) => app._clientRenderer.invalidate(rect, 0) });
+        const menuToken = menus.beginVertical(); menus.entry('Help', 0x02000017, 82); menus.attach({ x: 700, y: 400 }, menus.root());
+        const menuPixels = new Uint8Array(1366 * 768).fill(255); gump.draw(menuToken, draw, new GumpPixelTarget(menuPixels, 1366, 768, draw)); assert.ok(menuPixels.some((value) => value !== 255));
+        const menuBounds = gump.collection().bounds(menuToken), menuX = menuBounds.left + 8, menuY = menuBounds.top + 5;
+        gump.broadcast(0, menuX, menuY); assert.equal(gump.input().route(0x10000, menuX, menuY), menuToken);
+        assert.equal(commands[0][0], 0x02000017); gump.lifetime().cleanup(); assert.equal(gump.node(menuToken), null); scroll.close();
+        // 장식 메뉴의 실제 제목·본문·기술 Form과 공통 수명도 함께 확인한다.
+        const fancyToken = menus.beginFancy(); menus.title('Bridge'); menus.header('\nCost: ~i100~[I92.3]~.\n'); menus.entry('Help', 0x02000017, 82);
+        menus.idle(fancyToken, true); menus.reference(fancyToken, aboutItem.content); menus.attach({ x: 750, y: 420 }, menus.root());
+        const fancyNode = gump.node(fancyToken); assert.equal(session.gumpFormHost().parent(fancyNode.form), aboutItem.content);
+        const fancyPixels = new Uint8Array(1366 * 768).fill(255), fancyTarget = new GumpPixelTarget(fancyPixels, 1366, 768, draw);
+        // 장식·제목·항목은 별도 Gump 수집 항목으로 각각 출력한다.
+        for (const token of [fancyNode.fancy, fancyNode.title, fancyToken]) gump.draw(token, draw, fancyTarget);
+        assert.ok(fancyPixels.some((value) => value !== 255)); gump.remove(fancyToken); scroll.close(); assert.equal(bufferText.styleState().fragments.size, 0);
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); app._clientSoundDevice.dispose(); app._missionAudioAssets.dispose(); }
 });

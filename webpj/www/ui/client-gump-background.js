@@ -30,9 +30,11 @@ export class ClientGumpBackground {
         root.bindDraw(token, (current, target, clip) => this.draw(current, target, clip)); return token;
     }
     // 구분선처럼 배경에서 파생된 기존 노드도 같은 자산 생성자를 사용한다.
-    construct(token, width, height, flags, type, frame) { return this.#create.construct(token, width, height, flags, 1, type, frame); }
+    construct(token, width, height, flags, type, frame, createFlags = 1) { return this.#create.construct(token, width, height, flags, createFlags, type, frame); }
     // 구분선의 가상 출력에서도 같은 현재 표면과 클립을 사용한다.
     draw(token, target, clip) { this.#drawing(target, clip).draw(token); }
+    // 메뉴처럼 한 번의 출력 중 여러 배경 pass를 실행하는 기존 처리기에 장치를 빌려준다.
+    drawing(target, clip) { return this.#drawing(target, clip); }
     // 항목 장식 등 직접 배경 질감도 같은 실제 화면과 클립을 사용한다.
     texture(target, clip, rect, flags, type, frame) { this.#drawing(target, clip).texture(rect, flags, type, frame); }
     // Slider 손잡이처럼 전체 테두리가 있는 배경 사각형을 직접 그린다.
