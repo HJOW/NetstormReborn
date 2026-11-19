@@ -530,6 +530,19 @@ function fakeAudioContext() {
     };
 }
 
+// 원본 승리·패배 음악은 한 번만 재생하고 이전 소스의 지연 종료는 새 곡을 보존한다.
+test('AudioSystem: 결과 음악 단회 재생과 이전 소스 종료', async () => {
+    const context = fakeAudioContext(), audio = new AudioSystem(context);
+    for (const name of ['ser22.mus', 'fanfare.mus', 'defeat.mus']) await audio.loadMusic(name, new Uint8Array(4));
+    audio.playMusic('ser22.mus'); const menu = audio.musicSource; assert.equal(menu.loop, true);
+    audio.playMusic('FANFARE.MUS'); const fanfare = audio.musicSource; assert.equal(fanfare.loop, false);
+    menu.onended(); assert.equal(audio.musicSource, fanfare);
+    audio.playMusic('defeat.mus'); const defeat = audio.musicSource; assert.equal(defeat.loop, false);
+    fanfare.onended(); assert.equal(audio.musicSource, defeat);
+    defeat.onended(); assert.equal(audio.musicSource, null); assert.equal(audio.currentMusic, null);
+    assert.equal(audio.wantedMusic, 'defeat.mus'); audio.close();
+});
+
 // AudioSystem: 소리 끄기는 이후 효과음을 막고, 음악 끄기는 멈추되 곡을 기억해 다시 켜면 이어 재생하며, 음량 단계는 바로 증폭률이 된다. (2026-10-29 WB03-F)
 test('AudioSystem: 소리·음악 켜기/끄기와 음량 단계', async () => {
     const context = fakeAudioContext();

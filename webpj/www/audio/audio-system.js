@@ -1,7 +1,7 @@
 // 원본 소리 장치(DirectSound)의 효과음·음악 재생을 Web Audio 로 옮긴 모듈이다.
 // 음량: 원본 옵션 단계(1~5)를 1/100 dB 감쇠로 바꾸고(1=-40dB, 2=-20dB, 3=-10dB, 4=-5dB, 그 밖=0dB) 그 값을 증폭률로 쓴다.
 //       설정 없는 최초 실행의 기본값은 효과음·음악 모두 5(0dB)이다. 명시한 사용자 단계는 그대로 적용한다. (2026-11-16 WB04-E616)
-// 음악: 원본 음악 채널은 반복 플래그가 켜진 곡을 파일 끝에서 되감아 이어 재생하므로 AudioBufferSourceNode 의 loop 로 옮긴다.
+// 음악: 원본 음악 채널의 반복 플래그를 AudioBufferSourceNode 의 loop 로 옮긴다. 승리·패배 곡은 반복하지 않는다.
 //       메인 메뉴 곡은 ser22.mus(RIFF WAV PCM)이다.
 // 원본 효과음 버퍼는 DSBCAPS_GLOBALFOCUS 없이 만들어 창이 포커스를 잃으면 들리지 않는다. 웹에서는 탭이 숨겨질 때 suspend 로 대응한다.
 // 복원 기준: cpppj ClientAudio.cpp(VolumeFromStep)·SoundMusic.cpp·SoundSceneMusic.cpp. (2026-10-23 WB03-M1)
@@ -132,7 +132,7 @@ export class AudioSystem {
         return buffer;
     }
 
-    // 음악을 반복 재생한다. 같은 곡이 이미 재생 중이면 다시 시작하지 않는다(원본 Request 의 같은 이름 무시). 시작했으면 true.
+    // 음악을 재생한다. 승리·패배 곡은 한 번만 재생하며 같은 곡이 이미 재생 중이면 다시 시작하지 않는다. 시작했으면 true.
     // 음악이 꺼져 있으면 곡 이름만 기억하고(다시 켜면 재생) false 를 돌려준다.
     playMusic(name) {
         const key = String(name).toLowerCase();
@@ -145,11 +145,16 @@ export class AudioSystem {
         this._stopMusicSource();
         const source = this.context.createBufferSource();
         source.buffer = buffer;
-        source.loop = true;
+        source.loop = key !== 'fanfare.mus' && key !== 'defeat.mus';
         source.connect(this.musicGain);
-        source.start();
+        // 이전 소스의 지연 종료가 새 곡의 현재 상태를 지우지 않도록 동일 소스만 정리한다.
+        source.onended = () => {
+            if (this.musicSource !== source) return;
+            source.disconnect(); this.musicSource = null; this.currentMusic = null;
+        };
         this.musicSource = source;
         this.currentMusic = key;
+        source.start();
         return true;
     }
 
