@@ -57,6 +57,20 @@ export class InputQueue {
         if (this.#write === this.#read) this.#write = (this.#write + INPUT_QUEUE_CAPACITY - 1) % INPUT_QUEUE_CAPACITY;
     }
 
+    // 확정 본문은 남은 칸이 충분할 때만 전체 사건을 원래 순서로 넣는다.
+    tryPushBatch(events) {
+        if (!Array.isArray(events)) throw new TypeError('일괄 입력 사건 배열이 필요합니다.');
+        if (events.length > this.freeSlots) return false;
+        // JS 입력의 각 DWORD·좌표를 검증한 뒤에만 실제 큐를 바꾼다.
+        for (const event of events) { if (!event) throw new TypeError('일괄 입력 사건이 필요합니다.'); checkEvent(event.code, event.x, event.y); }
+        // 원본 Push를 사용해 고리의 현재 쓰기 위치와 순서를 유지한다.
+        for (const event of events) this.push(event.code, event.x, event.y);
+        return true;
+    }
+
+    // 고리의 빈 구분 칸을 제외한 현재 수용 가능 사건 수다.
+    get freeSlots() { return INPUT_QUEUE_CAPACITY - 1 - this.size; }
+
     // 00452fe0: 명령 사건을 예약한다. 코드는 0x0100ffff 만 남기고 명령 표시(0x02000000)를 붙여 같은 방식으로 넣는다.
     pushCommand(code, x, y) {
         checkEvent(code, x, y);
