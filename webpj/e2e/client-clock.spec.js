@@ -16,6 +16,14 @@ test('게임 시계는 앱 프레임과 같은 수명으로 생성되고 재시�
   expect(initial.camera).toEqual([4096 - initial.camera[2], 2816 - initial.camera[3], initial.camera[2], initial.camera[3], 2, 1]);
   expect(initial.palette).toEqual([1, true, true, true, true, true, 2304]);
   expect(await page.evaluate(() => [window.netstorm._clientGump.createState().count, window.netstorm._clientGump.root().width, window.netstorm._clientGump.root().height])).toEqual([1, initial.camera[2], initial.camera[3]]);
+  // 실제 Client Gump 트리의 자식에 입력을 전달하고 지연 삭제한다.
+  const gumpInput = await page.evaluate(() => {
+    const app = window.netstorm, owner = app._clientGump, events = [];
+    app._displayDirty = false; const token = owner.createBase(1, 20, 10, 0x401, (event) => { events.push(event); return 1; });
+    owner.attach(token, 10, 20); const routed = owner.input().route(42, 0, 0); owner.remove(token);
+    return [routed === token, events[0], owner.root().child, owner.createState().count, app._displayDirty];
+  });
+  expect(gumpInput).toEqual([true, 42, 0, 1, true]);
   // 화면 팔레트 변경이 실제 표시기의 같은 색 번호에 전달되는지 확인한 뒤 원래 색을 복구한다.
   const presentedColor = await page.evaluate(async () => {
     const app = window.netstorm, { GamePalette } = await import('/assets/palette.js');

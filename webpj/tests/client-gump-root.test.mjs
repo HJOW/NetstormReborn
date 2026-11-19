@@ -24,3 +24,24 @@ test('Client Gump 루트: 잘못된 Client 수명을 거부한다', () => {
     assert.throws(() => new ClientGumpRoot(10, 10, null), /진단 전역 누락/u);
     assert.throws(() => new ClientGumpRoot(0, 10, () => 0), /크기/u);
 });
+
+// 같은 실제 트리에 부착한 기본 노드가 입력을 받고 지연 삭제 뒤에는 받지 않는다.
+test('Client Gump 루트: 자식 부착·입력·지연 삭제가 같은 등록표를 쓴다', () => {
+    const redraw = [], events = [], owner = new ClientGumpRoot(100, 80, () => 0, (token, erase) => redraw.push([token, erase]));
+    const token = owner.createBase(1, 20, 10, 0x401, (event, first, second) => { events.push([event, first, second]); return 1; });
+    owner.attach(token, 10, 20); assert.equal(owner.root().child, token); assert.equal(owner.createState().count, 2);
+    assert.equal(owner.input().route(42, 3, 4), token); assert.deepEqual(events, [[42, 3, 4]]);
+    assert.ok(redraw.length > 0); owner.remove(token);
+    assert.equal(owner.root().child, 0); assert.equal(owner.createState().count, 1); assert.equal(owner.lifetimeState().killCount, 0);
+    assert.equal(owner.input().route(42, 3, 4), 0); assert.throws(() => owner.remove(token), /토큰/u);
+    owner.dispose();
+});
+
+// 실제 Client 진단이 켜져 있으면 부착의 상세 문자열을 같은 전역에 남기고 계속한다.
+test('Client Gump 루트: 부착 진단이 현재 Client 전역에 기록된다', () => {
+    const app = new Netstorm(); app._initializeClientRuntime(false); app._layout = { logicalWidth: 100, logicalHeight: 80 }; app._initializeClientGump();
+    app._clientGameplay.aiDebug().checking().value = 1;
+    const owner = app._clientGump, token = owner.createBase(0, 10, 10, 1, () => 0);
+    owner.attach(token, 0, 0); assert.equal(app._clientGameplay.aiDebug().assertionDetail().value, 'gt = 0');
+    owner.dispose();
+});

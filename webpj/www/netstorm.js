@@ -817,7 +817,8 @@ export class Netstorm {
     _initializeClientGump() {
         if (this._clientGump || !this._layout || !this._clientGameplay) throw new Error('Client Gump의 중복 또는 공통 수명 누락');
         const gameplay = this._clientGameplay;
-        this._clientGump = new ClientGumpRoot(this._layout.logicalWidth, this._layout.logicalHeight, () => gameplay.aiDebug().checking().value);
+        this._clientGump = new ClientGumpRoot(this._layout.logicalWidth, this._layout.logicalHeight, () => gameplay.aiDebug().checking().value,
+            () => { this._displayDirty = true; }, (text) => { gameplay.aiDebug().assertionDetail().value = text; });
     }
 
     // 현재 Fort·Guide·설정으로 원본 창 제목을 계산해 실제 문서에 적용한다.
