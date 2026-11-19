@@ -31,6 +31,7 @@ import { ClientProductionPanel } from '../www/ui/client-production-panel.js';
 import { ClientHudDivider } from '../www/ui/client-hud-divider.js';
 import { createClientProductionAssembly } from '../www/ui/client-production-assembly.js';
 import { GumpHelp, GumpHelpState } from '../www/ui/gump-help.js';
+import { ClientProductionAbout } from '../www/ui/client-production-about.js';
 import { StyleTextFragmentKind } from '../www/ui/style-text-fragments.js';
 import { PriestPlacementAssets } from '../www/core/priest-placement-assets.js';
 import { RawCanonPixelShape } from '../www/core/raw-canon-pixel-shape.js';
@@ -434,6 +435,19 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         assert.equal(gump.handle(completeToken, 0x020000f4, completeSlot, 0), 1); assert.equal(drop.preview, completeItem.content); cursor.cancel();
         const bridgeForm = gump.node(completeNode.bridge).form, budgetId = gump.node(completeNode.budget).id;
         complete.resize(700); assert.equal(completeNode.height, 620); assert.equal(gump.node(completeNode.bridge).form, bridgeForm); assert.equal(gump.node(completeNode.budget).id, budgetId);
-        complete.resize(768); assert.equal(completeNode.height, 688); complete.close();
+        complete.resize(768); assert.equal(completeNode.height, 688);
+        // 실제 기술 항목의 설명·비용·도움말을 원본 작성 순서로 수집한다.
+        const aboutCalls = [], aboutItem = gump.node(gump.node(completeNode.bridge).child), writer = {
+            begin: () => { aboutCalls.push(['begin']); return 99; }, root: () => gump.createState().collection.root,
+            idle: (...args) => aboutCalls.push(['idle', ...args]), reference: (...args) => aboutCalls.push(['reference', ...args]),
+            title: (value) => aboutCalls.push(['title', value]), header: (value) => aboutCalls.push(['header', value]),
+            entry: (...args) => aboutCalls.push(['entry', ...args]), attach: (...args) => aboutCalls.push(['attach', ...args]),
+        };
+        const about = new ClientProductionAbout(session, game, data, writer, { translate: (value) => app._resources.translate(value),
+            ownerName: (owner) => { const records = app._clientPlayers.records(), start = owner * 180 + 12, end = records.indexOf(0, start); return String.fromCharCode(...records.subarray(start, end)); },
+            helpWord: () => app._clientLocal.helpWord().get(), affordable: (sid) => itemDevice.affordable(sid), sound: (name) => aboutCalls.push(['sound', name]) });
+        assert.equal(about.open(aboutItem, { x: 12, y: 34 }), 1); assert.ok(aboutCalls.some(([kind, value]) => kind === 'title' && value));
+        assert.ok(aboutCalls.some(([kind, value]) => kind === 'header' && value.includes('Cost:'))); assert.ok(aboutCalls.some(([kind, _label, command]) => kind === 'entry' && command === 0x02000017));
+        assert.deepEqual(aboutCalls.at(-1), ['sound', 'opengump.wav']); complete.close();
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); app._clientSoundDevice.dispose(); app._missionAudioAssets.dispose(); }
 });
