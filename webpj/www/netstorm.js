@@ -27,6 +27,7 @@ import { KOREAN_BUNDLE, buildKoreanSupport } from './assets/korean-assets.js';
 import { KOREAN_FONT_FAMILY } from './assets/korean-font-config.js';
 import { AudioSystem, createAudioContext } from './audio/audio-system.js';
 import { SoundList } from './audio/sound-list.js';
+import { MissionAudioAssets } from './audio/mission-audio-assets.js';
 import { IndexedSurface } from './render/indexed-surface.js';
 import { IndexedPresenter, normalizeScaling } from './render/presenter.js';
 import { Screen, ScreenMode } from './render/screen.js';
@@ -530,6 +531,8 @@ export class Netstorm {
         this._clientImePending = null;
         // 메인 메뉴 그리기 자원 묶음(buildMenuResources 결과)이다. 자산 적재 전에는 null 이며, 재시작해도 다시 받지 않는다.
         this._resources = null;
+        // 같은 공개 자산 매니페스트와 현재 오디오의 미션 지연 적재 수명이다.
+        this._assetLoader = null; this._missionAudioAssets = null;
         // 게임 데이터 조회 객체(GameData: 파일 조회·설정 층·언어 용어표·Tell 섹션)다. 자산 적재 전에는 null 이며 재시작해도 다시 만들지 않는다.
         this._gameData = null;
         // 버튼 효과음 파일 바이트다. 오디오 문맥이 생기면 해독한다.
@@ -1138,6 +1141,7 @@ export class Netstorm {
         this._clientPaletteScreen = null; this._clientColorSort = null; this._clientRenderer = null; this._clientSurfaceDisplay = null;
         this._clientTemplates = null; this._clientPlayers = null; this._clientCoreData = null; this._clientGameplay = null; this._clientSubscriber = null;
         this._clientKernel = null; this._surfaceStorage = null; this._gameAssets = null;
+        this._missionAudioAssets?.dispose(); this._missionAudioAssets = null;
         if (this._audio) {
             // 음악을 멈추고 문맥을 닫는다. 닫기에 실패해도 정리를 막지 않는다.
             this._audio.close();
@@ -1224,6 +1228,7 @@ export class Netstorm {
                     options: { ...this._settings.snapshot(), ...this._progress.snapshot() },
                     onChange: (key, value) => this._onConfigWrite(key, value),
                 });
+                this._assetLoader = loader;
                 this._buttonSoundBytes = files.get(MENU_ASSET_PATHS.buttonSound) ?? null;
                 this._menuSoundBytes = files.get(MENU_SOUND_PATH) ?? null;
                 this._presenter?.setPalette(this._resources.palette.rgb);
@@ -1696,6 +1701,18 @@ export class Netstorm {
     }
 
     // ----- 오디오 -----
+
+    // 현재 매니페스트와 활성 재생기를 빌려 필요한 미션 음향 하나만 준비한다.
+    _missionAudioLoader() {
+        if (!this._assetLoader || !this._audio || this._audio.closed) throw new Error('미션 음향의 실제 자산·재생기 수명 누락');
+        if (!this._missionAudioAssets) this._missionAudioAssets = new MissionAudioAssets(this._assetLoader, this._audio);
+        return this._missionAudioAssets;
+    }
+
+    // 미션 효과음의 현재 원본 파일을 비동기로 받고 해독한다.
+    _prepareMissionSound(name) { return this._missionAudioLoader().loadSound(name); }
+    // 선택한 미션 음악 한 곡만 비동기로 받고 해독한다.
+    _prepareMissionMusic(name) { return this._missionAudioLoader().loadMusic(name); }
 
     // AudioContext 와 재생기(AudioSystem)를 만들고 재생 재개를 요청한다. 사용자 입력 처리 안에서 불러야 한다.
     // 문맥은 원본 표본 빈도(22,050Hz)로 만들고, 받은 효과음·음악을 해독해 둔다.
