@@ -562,3 +562,11 @@ test('Client 도움말 문구: 앱의 설정 갱신과 실제 캐시를 공유�
     value = ''; app._syncClientHelpWord(); assert.equal(cache.get(), 'Help');
     value = '정보'; app._syncClientHelpWord(); assert.equal(cache.get(), '정보'); assert.equal(cache.generation, 2);
 });
+
+// 앱 Client 수명은 State 정리와 도움말이 쓸 같은 NSInfo·팝업 저장소를 보유한다.
+test('Client 앱: NSInfo와 도움말 팝업의 장기 소유자', async () => {
+    const { Netstorm } = await import('../www/netstorm.js'); const app = new Netstorm(); app._initializeClientRuntime(false);
+    const info = app._clientNsInfo, popup = app._clientHelpPopup; assert.equal(info.zone, 0); assert.equal(popup.command, 0);
+    info.zone = 27; popup.mark(0x02000017, Uint8Array.of(65, 0)); assert.equal(app._clientNsInfo, info); assert.equal(app._clientHelpPopup, popup);
+    assert.equal(app._clientNsInfo.zone, 27); assert.deepEqual([...app._clientHelpPopup.argumentBytes()], [65]);
+});

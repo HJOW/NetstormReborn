@@ -50,6 +50,8 @@ import { hasExtendedDisplayText, queueCommittedText } from './core/display-text-
 import { GumpPointerBoundaryState, prepareGumpPointerBoundaryWithQueue } from './ui/gump-pointer-boundary.js';
 import { ClientFrameClock } from './core/client-frame-clock.js';
 import { ClientLocalStateGlobals } from './core/client-local-state-globals.js';
+import { ClientNsInfoGlobals } from './core/client-ns-info-globals.js';
+import { QuickHelpPopupState } from './ui/quick-help-popup-state.js';
 import { ClientKencloudGlobals } from './core/client-kencloud-globals.js';
 import { ClientColorSortInput } from './core/client-color-sort-input.js';
 import { MemoryColorMapFiles } from './core/color-map-files.js';
@@ -517,7 +519,7 @@ export class Netstorm {
         // 표시용 프레임 시계다.
         this._clock = new FrameClock();
         // Client 게임 시계와 보정 전역은 init에서 생성하고 destroy에서 반납한다.
-        this._clientLocal = null; this._gameClock = null; this._hiddenGamePause = false;
+        this._clientLocal = null; this._clientNsInfo = null; this._clientHelpPopup = null; this._gameClock = null; this._hiddenGamePause = false;
         // 같은 Client 수명의 구름·HTML과 연결표·연결 활동 전역이다.
         this._clientKencloud = null; this._clientHtml = null; this._clientConnections = null; this._clientConnectionActivity = null;
         // 같은 Client가 장기 소유하는 게임·CRT 난수와 SP 저장소다.
@@ -780,6 +782,7 @@ export class Netstorm {
         players.bindCoreData(coreData);
         initializeClientPlayerRecords({ gameplayGlobals: () => gameplay, playerRecords: () => players });
         if (hidden) clock.pushGamePause();
+        this._clientNsInfo = new ClientNsInfoGlobals(); this._clientHelpPopup = new QuickHelpPopupState();
         this._clientRandom = random; this._clientSp = sp; this._clientLocal = local; this._gameClock = clock; this._hiddenGamePause = Boolean(hidden);
         this._clientKencloud = cloud; this._clientHtml = html; this._clientConnections = connections; this._clientConnectionActivity = activity;
         this._clientSubscriber = subscriber; this._clientGameplay = gameplay; this._clientCoreData = coreData; this._clientPlayers = players; this._clientTemplates = templates; this._clientFort = fort;
@@ -1502,7 +1505,7 @@ export class Netstorm {
         this._clientKencloud = null; this._clientHtml = null; this._clientConnections = null; this._clientConnectionActivity = null;
         this._surfaceStorage?.dispose();
         this._clientSoundDevice?.dispose(); this._clientSoundDevice = null; this._clientSoundPlayer = null; this._clientSoundState = null; this._clientSoundPrepare = null;
-        this._gameClock = null; this._clientLocal = null; this._hiddenGamePause = false; this._clientSoundNames = null;
+        this._gameClock = null; this._clientLocal = null; this._clientNsInfo = null; this._clientHelpPopup = null; this._hiddenGamePause = false; this._clientSoundNames = null;
         this._clientSp = null; this._clientRandom = null;
         this._clientChatRecords = null; this._clientChatChannels = null; this._clientChatWindows = null;
         this._clientPaletteScreen = null; this._clientColorSort = null; this._clientRenderer = null; this._clientSurfaceDisplay = null; this._clientRendererFrame = null;
