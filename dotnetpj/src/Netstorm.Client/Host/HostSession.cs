@@ -2264,6 +2264,9 @@ public sealed partial class HostSession
         // 스프라이트 정기 분배를 AI 런타임 장치보다 나중에 둔다. 가상표가 겹치지 않으므로 순서는 결과에 닿지 않는다.
         // 2026-11-19 0.651에서 R4-4 스프라이트 정기용으로 추가했다.
         BuildSpriteRegularDevices(types);
+        // 매몰 정기 분배를 스프라이트 정기 분배보다 나중에 둔다. 가상표가 겹치지 않으므로 순서는 결과에 닿지 않는다.
+        // 2026-11-19 0.659에서 R4-4 매몰 정기용으로 추가했다. event0의 0 나머지는 같은 게임 난수를 소비한다.
+        BuildBuriedRegularDevices(types);
     }
 
     /// <summary>공장 정기 트리거 본체를 세션에 연결하고 지형 분배 Pop의 공장 갈고리로 등록한다.</summary>
@@ -3245,6 +3248,53 @@ public sealed partial class HostSession
     /// <summary>스프라이트 정기 분배 전에 사용하던 공통 정기 분배기다. 해제 순서는 스프라이트가 먼저다.</summary>
     /// <remarks>2026-11-19 0.651에서 R4-4 스프라이트 정기용으로 추가했다. 스프라이트 가상표가 아니면 이전 처리기로 넘긴다.</remarks>
     private RegularHandler? _beforeSpriteRegular;
+
+    /// <summary>오벨리스크 가상표 부모를 매몰 정기 본체에 분배하고 나머지는 이전 처리기로 넘긴다.</summary>
+    /// <param name="fallback">매몰이 맡지 않는 부모의 기존 처리기다. 없으면 payload를 돌려준다.</param>
+    /// <returns>같은 풀의 현재 가상표로 분배하는 처리기다.</returns>
+    /// <remarks>2026-11-19 0.659에서 R4-4 매몰 정기용으로 추가했다. 근거: cpppj client/RawSurfaceStorage.cpp 300행의 Native 분기 0x50a748이다.</remarks>
+    private RegularHandler RegularHandlerWithBuried(RegularHandler? fallback) => (sid, ev, count, payload) =>
+    {
+        if (RawBuriedRegular.Handles(Pool, sid))
+        {
+            SquidFrame frames = _terrainFrames ?? throw new InvalidOperationException("매몰 정기 프레임 미연결");
+            return new RawBuriedRegular(Pool, WorldFrames, frames, Game).Handle(sid, ev, count, payload);
+        }
+
+        return fallback?.Invoke(sid, ev, count, payload) ?? payload;
+    };
+
+    /// <summary>매몰 정기 분배 장치를 세션에 연결한다. Pop 분배는 기존 지형 경로를 그대로 쓴다.</summary>
+    /// <param name="types">같은 실제 TYPE 표다. 지형 Pop 장치와 같은 인스턴스여야 한다.</param>
+    /// <exception cref="InvalidOperationException">매몰 정기 분배의 프레임 장치가 미연결이다.</exception>
+    /// <exception cref="ArgumentException">매몰 정기 TYPE이 지형 Pop 장치와 다르다.</exception>
+    /// <remarks>2026-11-19 0.659에서 R4-4 매몰 정기용으로 추가했다. 근거: cpppj client/RawSurfaceStorage.cpp 193~195행의 BuriedRegular 조립과 300행의 분기다. event0의 0 나머지는 같은 게임 난수를 소비한다.</remarks>
+    private void BuildBuriedRegularDevices(IReadOnlyList<OriginalTypeRecord> types)
+    {
+        ArgumentNullException.ThrowIfNull(types);
+        if (_beforeBuriedRegular is not null)
+        {
+            throw new InvalidOperationException("매몰 정기 분배 장치 중복 연결");
+        }
+
+        SquidProcessHost processes = PlayerProcesses ?? throw new InvalidOperationException("매몰 정기 분배 프로세스 미연결");
+        if (_terrainFrames is null)
+        {
+            throw new InvalidOperationException("매몰 정기 프레임 미연결");
+        }
+
+        if (_terrainPopTypes is null || !ReferenceEquals(types, _terrainPopTypes))
+        {
+            throw new ArgumentException("매몰 정기 TYPE은 지형 Pop 장치와 같은 인스턴스여야 한다", nameof(types));
+        }
+
+        _beforeBuriedRegular = processes.Regular();
+        processes.SetRegularHandler(RegularHandlerWithBuried(_beforeBuriedRegular));
+    }
+
+    /// <summary>매몰 정기 분배 전에 사용하던 공통 정기 분배기다. 해제 순서는 매몰이 먼저다.</summary>
+    /// <remarks>2026-11-19 0.659에서 R4-4 매몰 정기용으로 추가했다. 오벨리스크 가상표가 아니면 이전 처리기로 넘긴다.</remarks>
+    private RegularHandler? _beforeBuriedRegular;
 
     /// <summary>같은 장기 풀·프레임·난수의 현재 조회로 공장 정기 사건을 실행한다.</summary>
     /// <param name="sid">처리할 공장 부모 번호다.</param>
