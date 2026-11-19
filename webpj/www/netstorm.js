@@ -53,6 +53,7 @@ import { ClientHtmlWindowGlobals } from './core/client-html-window-globals.js';
 import { ClientConnectionGlobals } from './core/client-connection-globals.js';
 import { ClientConnectionActivityGlobals } from './core/client-connection-activity-globals.js';
 import { ClientChatWindowGlobals } from './core/client-chat-window-globals.js';
+import { ClientRendererFrameGlobals } from './core/client-renderer-frame-globals.js';
 import { currentAllocationBytes } from './core/current-allocation-bytes.js';
 import { bindCampaignAiClientServices, bindCampaignClientInputServices, bindCampaignOwnershipTheme, bindCampaignProductionRefresh, captureCampaignMissionStarting, makeCampaignMissionStartEffects, runCampaignMissionStarting } from './core/campaign-client-services.js';
 import { CHAT_RECORD_BYTES, RawChatChannels } from './core/raw-chat-channels.js';
@@ -505,7 +506,7 @@ export class Netstorm {
         // 시작 팔레트와 최초 색 정렬 입력은 Client 수명 동안 같은 객체로 유지한다.
         this._clientPaletteScreen = null; this._clientColorSort = null;
         // 논리 화면에 대응하는 실제 Renderer와 월드 변경 영역 전달 장치다.
-        this._clientRenderer = null; this._clientSurfaceDisplay = null;
+        this._clientRenderer = null; this._clientSurfaceDisplay = null; this._clientRendererFrame = null;
         // 설치 폴더에 쓰지 않는 색표 캐시는 같은 페이지의 앱 재시작 사이에 유지한다.
         this._clientColorMapFiles = new MemoryColorMapFiles();
         // Client 공통 Player·Core·Template과 Subscriber는 Session보다 오래 산다.
@@ -757,6 +758,7 @@ export class Netstorm {
         this._clientSubscriber = subscriber; this._clientGameplay = gameplay; this._clientCoreData = coreData; this._clientPlayers = players; this._clientTemplates = templates; this._clientFort = fort;
         this._clientSoundNames = soundNames;
         this._clientChatRecords = chatRecords; this._clientChatChannels = chatChannels; this._clientChatWindows = new ClientChatWindowGlobals();
+        this._clientRendererFrame = new ClientRendererFrameGlobals();
     }
 
     // 현재 설정에서 구름 전역 옵션을 읽는다. 설정이나 Client가 아직 없으면 실제 초기화 시 다시 적용한다.
@@ -1225,7 +1227,7 @@ export class Netstorm {
         this._gameClock = null; this._clientLocal = null; this._hiddenGamePause = false; this._clientSoundNames = null;
         this._clientSp = null; this._clientRandom = null;
         this._clientChatRecords = null; this._clientChatChannels = null; this._clientChatWindows = null;
-        this._clientPaletteScreen = null; this._clientColorSort = null; this._clientRenderer = null; this._clientSurfaceDisplay = null;
+        this._clientPaletteScreen = null; this._clientColorSort = null; this._clientRenderer = null; this._clientSurfaceDisplay = null; this._clientRendererFrame = null;
         this._clientTemplates = null; this._clientPlayers = null; this._clientCoreData = null; this._clientGameplay = null; this._clientSubscriber = null;
         this._clientKernel = null; this._surfaceStorage = null; this._gameAssets = null;
         this._missionAudioAssets?.dispose(); this._missionAudioAssets = null;

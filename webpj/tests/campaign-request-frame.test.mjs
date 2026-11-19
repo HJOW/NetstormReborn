@@ -113,8 +113,10 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         assert.equal(app._clientRenderer.cameraRedraw.value, 1);
         // 같은 실제 앱의 레이아웃 변경이 새 Screen·Renderer와 현재 World 지도 범위에 순서대로 반영된다.
         app._root.clientWidth = 1366; app._root.clientHeight = 768; app._aspect = '16:9'; app._canvas = { style: {} }; app._applyCursor = () => {};
-        const beforeRenderer = app._clientRenderer; app._applyLayout();
+        const beforeRenderer = app._clientRenderer, frameGlobals = app._clientRendererFrame; frameGlobals.scan()[3] = 17; frameGlobals.cloudDirtyCount().value = 2;
+        app._applyLayout();
         assert.equal(app._clientPaletteScreen.width, 1366); assert.notEqual(app._clientRenderer, beforeRenderer);
+        assert.equal(app._clientRendererFrame, frameGlobals); assert.equal(frameGlobals.scan()[3], 17); assert.equal(frameGlobals.cloudDirtyCount().value, 2);
         assert.deepEqual(app._campaignWorld.mapView(), { left: 0, top: 28, right: 1366, bottom: 768 });
         assert.throws(() => app._prepareCampaignMissionStart(), /수명 오류/); assert.throws(() => app._prepareCampaignTutorial(), /수명 오류/);
         assert.doesNotThrow(() => session.checkMissionOutcome());
