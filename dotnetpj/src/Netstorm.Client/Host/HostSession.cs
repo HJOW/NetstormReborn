@@ -101,6 +101,10 @@ public sealed partial class HostSession
     /// 라이브 호스트 시작 흐름 연결은 월드 효과와 함께 다음 단위다.</remarks>
     public Dictionary<uint, uint> AiBrains { get; } = [];
 
+    /// <summary>세션이 소유한 실제 AI 본체 메모리다. 생성자·직접 명령·전략 본체가 같은 토큰을 공유한다.</summary>
+    /// <remarks>2026-11-19 0.638에서 R4-5 AI 직접 명령 세션 결선용으로 추가했다. 근거: cpppj src/client/RawCampaignSession.cpp 1001행의 aiMemory(첫 토큰 0x20000000)다. 원문은 할당 입력을 호스트 효과에서 받지만 DN 세션은 0으로 채운다. 본체는 풀 슬롯이 아니라 L2 세션 덤프에 직접 나가지 않는다.</remarks>
+    public RawAiBrainMemory AiBrainMemory { get; } = new(0x20000000u, static bytes => bytes.Clear());
+
     /// <summary>같은 Kernel·난수를 빌리고 저장소를 새로 만든다. 공유 SP·CRT 상자를 넘기면 미션 시작 때 재초기화하지 않고 그대로 쓴다.</summary>
     /// <param name="kernel">현재 Kernel.</param>
     /// <param name="game">게임 난수.</param>
@@ -244,6 +248,26 @@ public sealed partial class HostSession
                 throw new InvalidOperationException("인공지능 설정 없이 생성할 수 없다: " + owner);
             AiBrains[(uint)owner] = create.Create((uint)owner, settings);
         }
+    }
+
+    /// <summary>같은 현재 Player 기록과 세션 소유 본체로 직접 AI 지갑을 고정 30000으로 쓴다.</summary>
+    /// <remarks>2026-11-19 0.638에서 R4-5 AI 직접 명령 세션 결선용으로 추가했다. 근거: cpppj src/client/RawCampaignSession.cpp 4866행의 CrankAiMoney다. 기존 Credit·데모 하한·분산 SP를 쓰지 않는다.</remarks>
+    public void CrankAiMoney()
+    {
+        RawAiCommandState.CrankAiMoney(new AiCommandStateHooks { Players = () => PlayerRecords, Body = AiBrainMemory.Bytes });
+    }
+
+    /// <summary>같은 현재 Player 포인터와 세션 소유 본체를 각 원문 재조회 위치에 연결해 직접 AI 파라미터를 쓴다.</summary>
+    /// <param name="packed">소유자·선택기·값을 packed한 원문 인자다. 소유자 0은 아무것도 읽지 않고 반환한다.</param>
+    /// <remarks>2026-11-19 0.638에서 R4-5 AI 직접 명령 세션 결선용으로 추가했다. 근거: cpppj src/client/RawCampaignSession.cpp 4871행의 SetAiParameter다. 생성자·초기 전략 live 연결은 다음 단위다.</remarks>
+    public void SetAiParameter(uint packed)
+    {
+        if ((packed & 7u) == 0)
+        {
+            return;
+        }
+
+        RawAiCommandState.SetAiParameter(packed, new AiCommandStateHooks { Players = () => PlayerRecords, Body = AiBrainMemory.Bytes });
     }
 
     /// <summary>Player 기록의 이름 오프셋이다. RawPlayerParticipation과 같은 0xc다.</summary>
