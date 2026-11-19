@@ -13,6 +13,8 @@ import { buildMenuResources } from '../www/assets/menu-assets.js';
 import { MainMenuScreen } from '../www/ui/main-menu.js';
 import { IndexedSurface } from '../www/render/indexed-surface.js';
 import { IndexedPresenter } from '../www/render/presenter.js';
+import { AudioSystem } from '../www/audio/audio-system.js';
+import { Settings } from '../www/platform/settings.js';
 import { DATA_ROOT, readData, readDataMap } from './helpers.mjs';
 import { realCaptureAssets } from './capture-assets-support.mjs';
 
@@ -62,21 +64,27 @@ test('미션 요청 프레임: 현재 이미지 불일치와 미연결 전환을
 });
 
 // 실제 Tutorial1 Guide가 예약한 요청을 앱의 같은 State7·World·로컬 로그인에 전달한다.
-test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그인까지 도달한다', () => {
+test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그인까지 도달한다', async () => {
     const assets = realCaptureAssets(), game = new GameAssets(assets.table, assets.database, GamePalette.parse(readData('d/GIFCLOUD.COL')));
     const manifest = JSON.parse(fs.readFileSync(path.join(DATA_ROOT, 'manifest.json'), 'utf8'));
     const files = readDataMap(manifest.files.filter((entry) => entry.bundle === 'menu').map((entry) => entry.path));
     const data = GameData.build({ files, language: 'english' });
     const app = new Netstorm(); app._initializeClientRuntime(false); app._gameData = data;
+    // 실제 미션 재생기와 Web Audio 경계로 로그인 경로를 연결한다.
+    const node = () => ({ connect() {}, disconnect() {} });
+    const context = { destination: {}, createGain: () => ({ ...node(), gain: { value: 0 } }), createChannelSplitter: node, createChannelMerger: node,
+        createBufferSource: () => ({ ...node(), start() {}, stop() {} }), decodeAudioData: async (bytes) => ({ bytes: bytes.byteLength }) };
+    app._settings = new Settings(); app._audio = new AudioSystem(context);
+    app._assetLoader = { manifest: { files: manifest.files.filter((entry) => entry.path === 'sound/button.wav') },
+        loadFile: async (entry) => Uint8Array.from(fs.readFileSync(path.join(DATA_ROOT, ...entry.path.split('/')))) };
+    await app._prepareCampaignAudio();
     app._root = { ownerDocument: { title: 'before' } }; app._resources = buildMenuResources(files);
     app._layout = { logicalWidth: 1024, logicalHeight: 768, visible: false }; app._surface = new IndexedSurface(1024, 768); app._presenter = new IndexedPresenter(null);
     app._mainMenu = new MainMenuScreen({ resources: app._resources }); app._mainMenu.resize(1024, 768); app._initializeClientGump();
     app._initializeClientWorldStorage(game, data.files); app._syncClientCloudOptions(); app._initializeClientPalette(game); app._initializeClientPaletteCache(game); app._initializeClientGuide();
     app._canvas = {}; app._render = () => {}; app._startFrameLoop = () => {};
     const guide = app._clientGuide, events = [];
-    const services = { assets: { postPop: { playImpactSound: () => {} } },
-        sound: { wallSeconds: () => 0, play: () => {}, playOnceAt: () => {}, playLoopAt: () => {}, stop: () => {}, isPlaying: () => false },
-        ai: { assertion: (value) => { throw new Error(`AI 진단 ${value}`); }, participation: { addChat: () => {}, clearChat: () => {} } } };
+    const services = { ai: { assertion: (value) => { throw new Error(`AI 진단 ${value}`); }, participation: { addChat: () => {}, clearChat: () => {} } } };
     try {
         guide.begin('Tutorial1'); guide.run(); guide.run();
         const request = guide.fortRequest(); assert.equal(request.fort, 'BridgeTheGap'); assert.equal(guide.pending().pending(), true);
@@ -91,11 +99,13 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         for (let frame = 0; frame < 10 && !session.localConnectionReady(); frame += 1) app._onFrame(frame * 16);
         assert.equal(session.localConnectionReady(), true); assert.equal(session.world().storage, app._surfaceStorage);
         const camera = app._clientGameplay.camera(); assert.deepEqual(camera.rendererView().pixels, camera.snapshot().pixels);
+        const soundView = app._campaignSoundView(); assert.equal(soundView.cameraX, camera.snapshot().pixels.x); assert.equal(soundView.cameraY, camera.snapshot().pixels.y);
+        assert.deepEqual({ left: soundView.left, top: soundView.top, right: soundView.right, bottom: soundView.bottom }, app._campaignWorld.mapView());
         assert.equal(app._clientRenderer.cameraRedraw.value, 1);
         // 같은 실제 앱의 레이아웃 변경이 새 Screen·Renderer와 현재 World 지도 범위에 순서대로 반영된다.
         app._root.clientWidth = 1366; app._root.clientHeight = 768; app._aspect = '16:9'; app._canvas = { style: {} }; app._applyCursor = () => {};
         const beforeRenderer = app._clientRenderer; app._applyLayout();
         assert.equal(app._clientPaletteScreen.width, 1366); assert.notEqual(app._clientRenderer, beforeRenderer);
         assert.deepEqual(app._campaignWorld.mapView(), { left: 0, top: 28, right: 1366, bottom: 768 });
-    } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); }
+    } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); app._clientSoundDevice.dispose(); app._missionAudioAssets.dispose(); }
 });

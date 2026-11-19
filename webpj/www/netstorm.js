@@ -25,9 +25,11 @@ import {
 } from './assets/menu-assets.js';
 import { KOREAN_BUNDLE, buildKoreanSupport } from './assets/korean-assets.js';
 import { KOREAN_FONT_FAMILY } from './assets/korean-font-config.js';
-import { AudioSystem, createAudioContext } from './audio/audio-system.js';
+import { AudioSystem, createAudioContext, volumeStepToCentibels } from './audio/audio-system.js';
 import { SoundList } from './audio/sound-list.js';
 import { MissionAudioAssets } from './audio/mission-audio-assets.js';
+import { createSoundState, SoundPlayer } from './audio/sound-player.js';
+import { WebSoundDevice } from './audio/web-sound-device.js';
 import { IndexedSurface } from './render/indexed-surface.js';
 import { IndexedPresenter, normalizeScaling } from './render/presenter.js';
 import { Screen, ScreenMode } from './render/screen.js';
@@ -489,6 +491,8 @@ export class Netstorm {
         this._clientRandom = null; this._clientSp = null;
         // 미션 Session이 공유하는 효과음 이름표는 Client 수명에 소유한다.
         this._clientSoundNames = null;
+        // 현재 브라우저 효과음 장치와 원본 재생 전역·준비 중인 수명이다.
+        this._clientSoundState = null; this._clientSoundDevice = null; this._clientSoundPlayer = null; this._clientSoundPrepare = null;
         // 시작 팔레트와 최초 색 정렬 입력은 Client 수명 동안 같은 객체로 유지한다.
         this._clientPaletteScreen = null; this._clientColorSort = null;
         // 논리 화면에 대응하는 실제 Renderer와 월드 변경 영역 전달 장치다.
@@ -971,6 +975,12 @@ export class Netstorm {
             return this._clientInputQueue;
         } }, services);
         services.assets.queueCommand = services.developerQueue;
+        // 미션 효과음은 같은 Client 이름표와 현재 재생기에 전달한다.
+        const player = () => { if (!this._clientSoundPlayer) throw new Error('미션 효과음의 실제 재생기 미준비'); return this._clientSoundPlayer; };
+        services.sound = { wallSeconds: () => this._gameClock.wallSeconds(), play: (...args) => player().play(...args),
+            playOnceAt: (...args) => player().playOnceAt(...args), playLoopAt: (...args) => player().playLoopAt(...args),
+            stop: (...args) => player().stop(...args), isPlaying: (...args) => player().isPlaying(...args) };
+        services.assets.postPop.playImpactSound = (sound) => player().play(sound, 0, 0, 0, 0, 0);
         // Session 초기 카메라 요청을 같은 앱의 실제 화면·변경 표·Gump에 적용한다.
         services.cameraCommit = (context) => this._commitCampaignCamera(context);
         // 카메라 패킷은 도킹 영역이 아닌 현재 논리 Screen의 전체 크기를 읽는다.
@@ -1136,6 +1146,7 @@ export class Netstorm {
         this._clientConnections?.shutdownDevices();
         this._clientKencloud = null; this._clientHtml = null; this._clientConnections = null; this._clientConnectionActivity = null;
         this._surfaceStorage?.dispose();
+        this._clientSoundDevice?.dispose(); this._clientSoundDevice = null; this._clientSoundPlayer = null; this._clientSoundState = null; this._clientSoundPrepare = null;
         this._gameClock = null; this._clientLocal = null; this._hiddenGamePause = false; this._clientSoundNames = null;
         this._clientSp = null; this._clientRandom = null;
         this._clientPaletteScreen = null; this._clientColorSort = null; this._clientRenderer = null; this._clientSurfaceDisplay = null;
@@ -1446,10 +1457,10 @@ export class Netstorm {
         view.location.reload();
     }
 
-    // 설정 값이 바뀌었을 때 소리에 반영한다. 소리·음악·음량은 바로 적용되고, 바람 소리·좌우 교환·가장자리 스크롤·자동 데모·시작 팁은 값만 저장되며 해당 기능이 생길 때 쓰인다. (2026-10-29 WB03-F)
+    // 설정 값이 바뀌었을 때 소리·음악·음량과 미션 효과음의 좌우 교환을 바로 적용한다.
     // 바뀐 값은 게임 데이터 설정 층에도 옮겨 적어 두 곳이 어긋나지 않게 한다(되돌아오는 통지는 막는다). (2026-10-30 WB03-H)
     _onSettingChange(key) {
-        if (key === 'sound' || key === 'music' || key === 'soundVolume' || key === 'musicVolume') this._applySettings();
+        if (key === 'sound' || key === 'music' || key === 'soundVolume' || key === 'musicVolume' || key === 'swapLeftRightSpeakers') this._applySettings();
         const value = this._settings?.get(key);
         if (value !== undefined) this._gameData?.set(key, value, { silent: true });
         this._syncClientCloudOptions();
@@ -1486,6 +1497,7 @@ export class Netstorm {
         audio.setMusicVolumeStep(settings.get('musicVolume'));
         audio.setSoundEnabled(settings.get('sound') === 1);
         audio.setMusicEnabled(settings.get('music') === 1);
+        this._syncCampaignSoundSettings();
         if (settings.get('music') === 1) this._playMenuMusic();
     }
 
@@ -1701,6 +1713,51 @@ export class Netstorm {
     }
 
     // ----- 오디오 -----
+
+    // 원본 현재 소리 화면은 카메라 snapshot과 현재 미션 지도 영역을 사용한다.
+    _campaignSoundView() {
+        const screen = this._clientPaletteScreen, gameplay = this._clientGameplay;
+        if (!screen || !gameplay) throw new Error('미션 음향의 현재 화면·카메라 수명 누락');
+        const pixels = gameplay.camera().snapshot().pixels, clip = this._campaignWorld?.mapView() ?? { left: 0, top: 0, right: screen.width, bottom: screen.height };
+        return { cameraX: pixels.x, cameraY: pixels.y, left: clip.left, top: clip.top, right: clip.right, bottom: clip.bottom };
+    }
+
+    // 같은 재생 전역에 현재 효과음 옵션과 전체 음량을 적용한다.
+    _syncCampaignSoundSettings() {
+        const state = this._clientSoundState, player = this._clientSoundPlayer, settings = this._settings;
+        if (!state || !player || !settings) return;
+        state.enabled = Boolean(state.device && settings.get('sound') === 1);
+        state.swapSpeakers = settings.get('swapLeftRightSpeakers') === 1;
+        state.maxPlaying = this._gameData?.readInt('maxSimulSounds', 8).value ?? 8;
+        player.setMasterVolume(volumeStepToCentibels(settings.get('soundVolume')));
+    }
+
+    // 현재 Client에 실제 또는 비활성 효과음 장치를 한 번 준비하고 동시 요청은 공유한다.
+    async _prepareCampaignAudio() {
+        if (this._clientSoundPlayer) return this._clientSoundPlayer;
+        if (this._clientSoundPrepare) return this._clientSoundPrepare;
+        const audio = this._audio, names = this._clientSoundNames;
+        if (!names || !this._gameClock || !this._settings) throw new Error('미션 효과음의 실제 Client 수명 누락');
+        const task = (async () => {
+            if (audio && this.options.audio) await this._prepareMissionSounds();
+            if (this._audio !== audio || this._clientSoundNames !== names || !this._gameClock) throw new Error('미션 효과음 준비 중 Client 수명 변경');
+            const state = createSoundState(); state.currentView = () => this._campaignSoundView();
+            let device = null, hooks;
+            if (audio && this.options.audio) {
+                device = new WebSoundDevice(audio, this._missionAudioLoader()); hooks = device.hooks(); state.initialized = state.device = true;
+            } else {
+                // 오디오 미지원 또는 사용자가 오디오를 끈 경우 원본 noAudio 장치처럼 재생을 비활성화한다.
+                const unavailable = () => { throw new Error('비활성 효과음 장치 호출'); };
+                hooks = { status: unavailable, play: unavailable, setPosition: unavailable, setVolume: unavailable, setPan: unavailable, stop: unavailable,
+                    duplicate: () => ({ result: -1, buffer: 0 }), load: () => ({ buffer: 0, attenuation: 0 }) };
+            }
+            const player = new SoundPlayer(names, state, hooks, (expression, line) => console.error(`소리 진단 ${line}: ${expression}`));
+            this._clientSoundState = state; this._clientSoundDevice = device; this._clientSoundPlayer = player; this._syncCampaignSoundSettings();
+            return player;
+        })();
+        this._clientSoundPrepare = task;
+        try { return await task; } finally { if (this._clientSoundPrepare === task) this._clientSoundPrepare = null; }
+    }
 
     // 현재 매니페스트와 활성 재생기를 빌려 필요한 미션 음향 하나만 준비한다.
     _missionAudioLoader() {
