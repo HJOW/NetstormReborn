@@ -4,6 +4,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { manaPictureText, buildQuickHelpInfoHtml } from '../www/ui/quick-help-info.js';
 import { createParserState, createParserGlobals, parseHtml } from '../www/ui/html-text.js';
+import { renderHelpTopic } from '../www/ui/help-topic.js';
 
 // 보호 실행 파일에서 독립 캡처한 M행의 출력 바이트와 직접 비교한다.
 test('도움말 마나 그림: 원본 관측 24행과 일치한다', () => {
@@ -39,5 +40,23 @@ test('도움말 TYPE 정보: 원본 관측의 현재 필드와 HTML이 일치한
         const fields = expected.split('|'), stream = Buffer.from(fields[3], 'hex').toString('latin1'); assert.ok(stream.startsWith(html), input);
         const pane = fields[4].split(';')[0].slice('Pane,'.length);
         assert.equal(Buffer.from(parseHtml(html, createParserState(), createParserGlobals(), {}, 1024), 'latin1').toString('hex'), pane, input);
+        const [source, topic] = JSON.parse(input); const result = renderHelpTopic({ helpText: source, topic, substitute: identity, info: () => html });
+        assert.equal(Buffer.from(result.information, 'latin1').toString('hex'), pane, input);
     }
+});
+
+// 일치하지 않는 주제나 제공하지 않은 TYPE 정보는 새 패널을 만들지 않는다.
+test('도움말 TYPE 정보: 선택된 주제와 info 태그만 호출한다', () => {
+    let calls = 0; const info = () => { calls += 1; return '<h2>정보</h2>'; }, substitute = (value) => value;
+    const helpText = '<a name="first"><info>A</a><a name="second"><info>B</a>';
+    const result = renderHelpTopic({ helpText, topic: 'second', substitute, info });
+    assert.equal(calls, 1); assert.ok(result.information.includes('정보')); assert.ok(result.styleText.includes('B')); assert.ok(!result.styleText.includes('A'));
+    assert.equal(renderHelpTopic({ helpText, topic: 'second', substitute }).information, null);
+});
+
+// 정보 본문의 중첩 링크는 부모 주제의 링크 번호를 소비하지 않는다.
+test('도움말 TYPE 정보: 중첩 링크 뒤 부모 링크 번호를 보존한다', () => {
+    const result = renderHelpTopic({ helpText: '<a name="unit"><info><a href="#outer">Out</a></a>\n', topic: 'unit',
+        substitute: (value) => value, info: () => '<h2><a href="#inner">Title</a></h2>' });
+    assert.deepEqual(result.links.destinations, ['outer']); assert.equal(result.links.resolve(1), 'outer'); assert.ok(result.information.includes('Title'));
 });
