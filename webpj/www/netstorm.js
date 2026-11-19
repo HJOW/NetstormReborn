@@ -951,6 +951,11 @@ export class Netstorm {
             initializeRenderer: () => this._initializeClientRendererView(),
             // State7에서 현재 battlePal을 조회해 같은 Client 팔레트 전환을 실행한다.
             battlePalette: () => this._changeClientFortPalette(this._gameData.pathSpec('battlePal')),
+            // State7·13의 현재 HUD 모드를 같은 Client Gump 입력 트리에 숨김 포함으로 전달한다.
+            uiMode: (mode) => {
+                if (!this._clientGump || !this._clientLocal) throw new Error('로그인 HUD 모드의 실제 Client Gump 수명 누락');
+                this._clientGump.input().route(this._clientLocal.hudModeCommand().value, mode, 0, true);
+            },
             // 서버 포트는 공통 전역을, 다른 정수는 현재 설정과 기본값을 사용한다.
             configInt: (key, fallback) => {
                 if (!this._gameData || !this._clientGameplay) throw new Error('로그인 설정의 실제 Client 수명 누락');

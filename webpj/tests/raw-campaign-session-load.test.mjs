@@ -809,8 +809,9 @@ test('Netstorm Client World: 실제 앱 State7 부모와 State8 로컬 로그인
     const xlat = new XlatTable(fs.readFileSync(path.join(REPO_ROOT, 'webpj/translations/xlat.korean'), 'utf8'));
     app._gameData = data; app._root = { ownerDocument: { title: 'before' } }; app._resources = { translate: (text) => xlat.translate(text) }; app._initializeClientWorldStorage(game, data.files); app._initializeClientGuide();
     const guide = app._clientGuide; let world;
-    const localLogin = { uiMode: () => {}, startingProgress: () => {}, closeProgress: () => {} };
-    app._layout = { logicalWidth: 1024, logicalHeight: 768, visible: false }; app._surface = new IndexedSurface(1024, 768); app._presenter = new IndexedPresenter(null); app._syncClientCloudOptions();
+    const localLogin = { startingProgress: () => {}, closeProgress: () => {} };
+    app._layout = { logicalWidth: 1024, logicalHeight: 768, visible: false }; app._surface = new IndexedSurface(1024, 768); app._presenter = new IndexedPresenter(null); app._syncClientCloudOptions(); app._initializeClientGump();
+    const hudModes = [], hud = app._clientGump.createBase(0, 10, 10, 0x800, (event, mode) => { hudModes.push([event, mode]); return 1; }); app._clientGump.attach(hud, 0, 0);
     app._initializeClientPalette(game); app._initializeClientPaletteCache(game);
     const sharedColors = app._campaignSharedServices();
     assert.equal(sharedColors.colorSortInput, app._clientColorSort); assert.equal(sharedColors.ownerColorTables, app._clientColorSort.ownerTables);
@@ -858,6 +859,8 @@ test('Netstorm Client World: 실제 앱 State7 부모와 State8 로컬 로그인
         const owner = app._clientGameplay.player.battleOwner, record = app._clientPlayers.records().subarray(owner * 180 + 12, owner * 180 + 52);
         assert.equal(displayTextCodec.decode(record.subarray(0, record.indexOf(0))), '당신');
         assert.equal(world.completeLocalConnection(), true); assert.equal(session.localConnectionReady(), true);
+        assert.ok(hudModes.some(([event, mode]) => event === app._clientLocal.hudModeCommand().value && mode === 2));
+        assert.ok(hudModes.some(([event, mode]) => event === app._clientLocal.hudModeCommand().value && mode === 3));
         assert.equal(session.productionContext().ownerColorTables, app._clientColorSort.ownerTables);
         assert.equal(session.cursor().display.settings().sharedOwnerMaps, app._clientColorSort.ownerTables.tokens);
         // 실제 Session의 현재 슬롯 State·읽기 전용 통지와 Battle 저장을 같은 앱 이름 장치가 사용한다.
@@ -878,7 +881,7 @@ test('Netstorm Client World: 실제 앱 State7 부모와 State8 로컬 로그인
         headers.setUint32(slot * 20 + 8, 1, true);
         guide.dispose(); app._releaseCampaignWorld(); assert.equal(app._campaignWorld, null); assert.equal(app._campaignWorldMissionToken, 0); assert.equal(app._surfaceStorage.borrowed, false);
         assert.throws(() => fortNameHooks.snapshot(), /반납/);
-    } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); }
+    } finally { guide.dispose(); app._releaseCampaignWorld(); app._clientGump.dispose(); app._surfaceStorage.dispose(); }
 });
 
 // 누락된 미션 공장은 등록 설정을 반납하고 동일 Guide를 다시 사용할 수 있게 한다.

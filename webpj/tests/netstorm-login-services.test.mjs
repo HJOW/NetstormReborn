@@ -59,3 +59,21 @@ test('Netstorm Login 장치: 실제 화면과 Client 카메라 초기화', () =>
     app._layout = { logicalHeight: 768 };
     assert.throws(() => login.initializeRenderer(), /정수 크기/); assert.equal(revision.value, 1);
 });
+
+// 현재 HUD 명령과 모드는 실제 Gump의 숨김 노드 및 캡처에 원본 순서로 전달된다.
+test('Netstorm Login 장치: 같은 Client의 HUD 모드와 Gump 수명', () => {
+    const app = new Netstorm(), login = app._campaignLoginServices();
+    assert.throws(() => login.uiMode(2), /Gump 수명 누락/);
+    app._initializeClientRuntime(false); app._layout = { logicalWidth: 100, logicalHeight: 80 }; app._initializeClientGump();
+    const gump = app._clientGump, events = [];
+    const child = gump.createBase(0, 10, 10, 0x800, (event, first, second) => { events.push([event, first, second]); return 1; });
+    gump.attach(child, 0, 0); gump.node(child).flags &= ~1;
+    try {
+        app._clientLocal.hudModeCommand().value = 0x02000042;
+        login.uiMode(2); assert.deepEqual(events, [[0x02000042, 2, 0]]);
+        app._clientLocal.hudModeCommand().value = 0x02000043;
+        gump.input().capture(child); login.uiMode(3);
+        assert.deepEqual(events.at(-1), [0x02000043, 3, 0]); assert.equal(gump.lifetimeState().focus, 0);
+    } finally { gump.dispose(); }
+    assert.throws(() => login.uiMode(2), /반납한 Client Gump/);
+});
