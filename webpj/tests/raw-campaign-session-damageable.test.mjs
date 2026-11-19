@@ -84,3 +84,14 @@ test('Session Damageable: 두 표시 경계는 같은 현재 물리 span을 빌�
         o.damageableModules.postHooks.displayUpdate(sid); assert.equal(raw[36], 1); o.damageableModules.geyserHooks.update(sid); assert.equal(raw[36], 2); o.core.display.update = update;
     } finally { o.dispose(); }
 });
+
+// 실제 Session의 다리 약화가 같은 World 프레임 코드 배열을 읽고 원본 수명·표시를 갱신한다.
+test('Session Damageable: 실제 다리 프레임 표로 약화한다', () => {
+    const o = scene();
+    try {
+        const sid = o.world.create(o.core.bridgeState.bridgeType, 2), raw = o.core.pool.allocated(sid);
+        put(raw, 12, 56, 2); put(raw, 36, 0);
+        assert.doesNotThrow(() => o.damageablePost.weaken(sid));
+        assert.equal((raw[12] | (raw[13] << 8)) & 0x38, (o.state.damageablePostState.bridgeCrackLife - 1) * 8);
+    } finally { o.dispose(); }
+});

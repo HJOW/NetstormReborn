@@ -99,7 +99,8 @@ export class RawCampaignSessionDamageable {
         post.hasBridgeFall = (sid) => { this.#live(); return hasScheduledBridgeFall(c.processes, sid); }; post.notifySurface = notifySurface;
         post.displayUpdate = (sid) => { this.#live(); c.display.update(c.pool.physical(sid)); }; post.destroy = destroy;
         post.base = (sid, flags) => { this.#live(); o.world.commonDeletion.postDestroy(sid, flags); };
-        o.damageablePost = new RawDamageablePostDestroy(c.pool, c.hash, c.types, c.frames, o.hp, c.neighbors, o.state.damageablePostState, post);
+        // 다리 손상은 FrameCodeTable 객체가 아닌 같은 실제 표면의 프레임 코드 배열을 사용한다.
+        o.damageablePost = new RawDamageablePostDestroy(c.pool, c.hash, c.types, o.world.storage.codes, o.hp, c.neighbors, o.state.damageablePostState, post);
         const refresh = o.services.ownership.refreshProduction;
         const vortex = {
             islandNumber: (x, y) => { this.#live(); return o.ownership.islandNumber(x, y); }, islandExists: (island) => { this.#live(); return Boolean(o.islands.exists(island)); }, islandTemple: (island) => { this.#live(); return o.islands.temple(island); },
