@@ -118,8 +118,12 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         assert.ok(runtime.start && runtime.tutorial); assert.equal(runtime.state.sequence, 4); assert.equal(runtime.gate.started, 1);
         // 미구현 사건을 추월하지 않고 맨 앞 이동 통지만 현재 Guide와 Gump에 전달한다.
         const inputQueue = app._clientInputQueue; inputQueue.pushCommand(0x02000050, 1, 2); inputQueue.pushCommand(0x02000044, 3, 4);
-        app._dispatchCampaignMovementNotices(); assert.equal(inputQueue.size, 2); assert.equal(inputQueue.pop(false).code, 0x02000050);
-        app._dispatchCampaignMovementNotices(); assert.equal(inputQueue.empty, true);
+        app._runCampaignInputFrame(); assert.equal(inputQueue.size, 2); assert.equal(inputQueue.pop(false).code, 0x02000050);
+        app._runCampaignInputFrame(); assert.equal(inputQueue.empty, true);
+        // 실제 앱 포인터 폴링은 World의 현재 마우스 좌표를 입력 큐 처리 전에 갱신한다.
+        const pointerState = app._input.pointer, previousPointer = { ...pointerState };
+        Object.assign(pointerState, { inside: true, x: 123, y: 234, buttons: 0 }); app._runCampaignInputFrame();
+        assert.deepEqual(app._clientGameplay.selection.mouse, { x: 123, y: 234 }); Object.assign(pointerState, previousPointer);
         assert.ok(notices.some(([code, first, second]) => code === 0x02000088 && first === 0 && second === 0));
         assert.equal(session.sp(session.localOwner()), Number(guide.current().script.get('myStartMoney')));
         const camera = app._clientGameplay.camera(); assert.deepEqual(camera.rendererView().pixels, camera.snapshot().pixels);

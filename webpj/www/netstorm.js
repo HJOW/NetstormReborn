@@ -43,9 +43,9 @@ import { Settings, findSettingKey, getLocalStorage } from './platform/settings.j
 import { Progress, isProgressKey } from './platform/progress.js';
 import { reportGameError } from './platform/error-reporting.js';
 import { BrowserInputPoll } from './platform/browser-input-poll.js';
-import { browserMouseEvent, queueBrowserMouseEvent } from './platform/browser-mouse-events.js';
+import { queueBrowserMouseEvent } from './platform/browser-mouse-events.js';
 import { queueBrowserVirtualKeyEvent, queueBrowserCharacterEvent } from './platform/browser-key-events.js';
-import { InputQueue } from './core/input-queue.js';
+import { InputCode, InputQueue } from './core/input-queue.js';
 import { hasExtendedDisplayText, queueCommittedText } from './core/display-text-input.js';
 import { GumpPointerBoundaryState, prepareGumpPointerBoundaryWithQueue } from './ui/gump-pointer-boundary.js';
 import { ClientFrameClock } from './core/client-frame-clock.js';
@@ -1200,14 +1200,24 @@ export class Netstorm {
         return this._campaignUserInput;
     }
 
-    // 현재 큐 맨 앞의 이동점 통지만 Guide와 Gump에 순서대로 전달한다. 다른 사건은 건드리지 않는다.
-    _dispatchCampaignMovementNotices() {
-        const queue = this._clientInputQueue, tutorial = this._clientGuide?.current()?.runtime.tutorial, gump = this._clientGump;
-        if (!queue || !tutorial || !gump) throw new Error('미션 이동 통지의 현재 입력 수명 누락');
+    // 현재 포인터 폴링과 지원된 큐 사건을 Guide→Gump→World 순서로 처리한다.
+    _runCampaignInputFrame() {
+        const world = this._campaignWorld, queue = this._clientInputQueue, tutorial = this._clientGuide?.current()?.runtime.tutorial, gump = this._clientGump, user = this._campaignUserInput;
+        if (!world || !queue || !tutorial || !gump || !user) throw new Error('미션 입력 프레임의 현재 장치 수명 누락');
+        const mouse = this._prepareClientPointer(this.options.language === 'korean' ? 7 : 0);
+        tutorial.event(mouse);
+        const dialog = Boolean(this._mainMenu?.dialog), cursorActive = world.session().cursorDropSettings().lockDepth === 0;
+        const pointer = gump.notifyPointer(mouse, world.inputMode(), cursorActive, !dialog);
+        if (pointer.overlay === 0) this._campaignCursor = CURSOR_NORMAL;
+        if (!dialog) user.updateCursor(mouse);
         // 원본 큐의 순서를 지키며 미구현 사건 앞을 추월하지 않는다.
-        while (queue.peek()?.code === WORLD_DESTINATION_SELECTED_COMMAND) {
+        for (;;) {
+            const next = queue.peek(); if (!next) break;
+            const code = (next.code & 0x03ffffff) >>> 0, release = Boolean(next.code & InputCode.release);
+            if (code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== InputCode.leftButton && !(release && code === InputCode.rightButton)) break;
             const event = queue.pop(false);
-            if (!tutorial.event(event)) gump.input().route(event.code, event.x, event.y);
+            if (tutorial.event(event) || gump.input().route(event.code, event.x, event.y)) continue;
+            if (code === InputCode.leftButton && !release && !this._mainMenu?.dialog) user.event(event);
         }
     }
 
@@ -2310,11 +2320,9 @@ export class Netstorm {
         if (this._state === AppState.MAIN_MENU && this._mainMenu && (!this._campaignDisplayActive() || this._mainMenu.dialog) && event.button === 0 && pointer.inside) {
             this._mainMenu.pointerDown(pointer.x, pointer.y);
         }
-        // 전체 원본 입력 소비자 연결 전에는 미션 좌클릭만 같은 Gump와 월드 입력기에 전달한다.
+        // 전체 원본 입력 소비자 연결 전에는 미션 좌클릭을 같은 큐에 예약한다.
         if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && this._campaignUserInput && event.button === 0 && pointer.inside) {
-            const input = browserMouseEvent(event, pointer, false);
-            const tutorial = this._clientGuide?.current()?.runtime.tutorial;
-            if (tutorial && !tutorial.event(input) && !this._clientGump.input().route(input.code, input.x, input.y)) this._campaignUserInput.event(input);
+            queueBrowserMouseEvent(this._clientInputQueue, event, pointer, false);
         }
         if (this._state === AppState.TERRAIN_PREVIEW && event.button === 0 && pointer.inside) this._terrainPreview?.pointerDown(pointer.x, pointer.y);
     }
@@ -2334,6 +2342,7 @@ export class Netstorm {
         if (this._state === AppState.MAIN_MENU && this._mainMenu && (!this._campaignDisplayActive() || this._mainMenu.dialog) && event.button === 0) {
             this._mainMenu.pointerUp(this._input.pointer.x, this._input.pointer.y);
         }
+        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && this._campaignUserInput && event.button === 0) queueBrowserMouseEvent(this._clientInputQueue, event, this._input.pointer, true);
         if (event.button === 0) this._terrainPreview?.cancel();
     }
 
@@ -2534,7 +2543,7 @@ export class Netstorm {
         }
         // 원본 루프 8번의 Guide를 상태·패킷 처리 뒤, 입력 처리보다 먼저 실행한다.
         this._clientGuide?.run();
-        if (this._campaignDisplayActive()) this._dispatchCampaignMovementNotices();
+        if (this._campaignDisplayActive()) this._runCampaignInputFrame();
         if (this._state === AppState.MAIN_MENU) {
             // 원본 UserInput 은 매 프레임 마우스 위치를 폴링해 Gump 에 알린다. 그래서 포인터가 멈춰 있어도 그 아래에 새로 열린 펼침 메뉴 행이 바로 강조된다
             // (cpppj 오라클 help-popup/options-popup 관측). 브라우저는 포인터가 움직일 때만 사건을 주므로 마지막 포인터 위치를 매 프레임 다시 알린다. (2026-11-07 WB02-H)
