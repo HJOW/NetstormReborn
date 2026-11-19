@@ -75,3 +75,19 @@ test('Client Gump 루트: 실제 파생 루트 교체와 입력 분배', () => {
     assert.equal(owner.input().route(42, 0, 0), token); assert.deepEqual(events, [42]);
     owner.resize(120, 80); assert.equal(root.width, 120); owner.dispose(); assert.equal(state.entries[0], 0);
 });
+
+// 직접 부착과 공통 Move가 같은 실제 파생 부착 본체를 호출하고 기본 본체로 위임한다.
+test('Client Gump 루트: 파생 가상 부착과 공통 Move 분배', () => {
+    const redraw = [], calls = [], owner = new ClientGumpRoot(100, 80, () => 0, (token, erase) => redraw.push([token, erase]));
+    const node = new GumpBackgroundNode();
+    const token = owner.allocateDerived(node, () => 0, (value, flags) => owner.lifetime().deleteScalar(value, flags),
+        (value, x, y, parent, mode, bits) => { calls.push([value, x, y, parent, mode]); owner.attachBase(value, x, y, parent, mode, bits); });
+    const background = new GumpBackgroundCreate(owner.createState(), owner.factory(), () => 55, { node: (value) => owner.node(value) });
+    background.construct(token, 20, 10, 0, 1, 0, 0); owner.attach(token, 10, 20);
+    assert.deepEqual(calls[0], [token, 10, 20, owner.createState().entries[0], 0]);
+    assert.equal(owner.root().child, token); assert.equal(node.x, 10); assert.equal(node.y, 20);
+    owner.move(token, 30, 40); assert.deepEqual(calls[1], [token, 30, 40, 0, 0]);
+    assert.equal(node.x, 30); assert.equal(node.y, 40); assert.ok(redraw.length > 0);
+    assert.throws(() => owner.allocateDerived(new GumpBackgroundNode(), () => 0, () => {}, 3), /부착 계약/u);
+    owner.remove(token); assert.equal(owner.node(token), null); owner.dispose();
+});

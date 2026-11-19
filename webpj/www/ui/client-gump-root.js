@@ -15,7 +15,7 @@ const ROOT_TOKEN = 1;
 export class ClientGumpRoot {
     // 생성·수명·사건·입력 상태와 같은 노드·처리기를 보유한다.
     #create = new GumpCreateState(); #life = new GumpLifetimeState(); #event = new GumpEventState(); #inputState = new GumpInputState();
-    #nodes = new Map(); #handlers = new Map(); #destructors = new Map(); #nextToken = 2; #factory; #lifetime; #collection; #events; #input; #tree; #root = 0; #disposed = false;
+    #nodes = new Map(); #handlers = new Map(); #destructors = new Map(); #attachers = new Map(); #nextToken = 2; #factory; #lifetime; #collection; #events; #input; #tree; #root = 0; #disposed = false;
 
     // 원본 등록표를 초기화하고 기본 루트를 생성한 뒤 현재 화면 크기를 적용한다.
     constructor(width, height, checking, redraw = null, diagnostic = null) {
@@ -38,7 +38,7 @@ export class ClientGumpRoot {
         const treeState = new GumpTreeState(); treeState.checking = checking;
         this.#tree = new GumpTree(this.#create, treeState, { node,
             redraw: (token, erase) => { if (typeof redraw !== 'function') throw new Error('Client Gump 다시 그리기 장치 누락'); redraw(token, erase); },
-            push: (token) => this.#tree.push(token), attach: (...args) => this.#tree.attach(...args), kill: (token) => this.#lifetime.kill(token),
+            push: (token) => this.#tree.push(token), attach: (...args) => this.#attach(...args), kill: (token) => this.#lifetime.kill(token),
             diagnostic: (text) => { if (typeof diagnostic !== 'function') throw new Error('Client Gump 상세 진단 장치 누락'); diagnostic(text); },
         });
         this.#lifetime = new GumpLifetime(this.#create, this.#life, { node,
@@ -50,7 +50,7 @@ export class ClientGumpRoot {
                 if (this.#nodes.get(token)?.constructor !== GumpCreateNode) throw new Error('Client Gump 파생 소멸자 누락');
                 return this.#lifetime.deleteScalar(token, flags);
             },
-            release: (token) => { if (!this.#nodes.delete(token)) throw new Error('Client Gump 반납 대상 누락'); this.#handlers.delete(token); this.#destructors.delete(token); },
+            release: (token) => { if (!this.#nodes.delete(token)) throw new Error('Client Gump 반납 대상 누락'); this.#handlers.delete(token); this.#destructors.delete(token); this.#attachers.delete(token); },
         });
         this.#root = this.#factory.initializeRoot(); this.resize(width, height);
     }
@@ -71,14 +71,15 @@ export class ClientGumpRoot {
     lifetime() { this.#live(); return this.#lifetime; }
     // 현재 토큰의 실제 기본 또는 파생 노드를 빌린다.
     node(token) { this.#live(); return this.#nodes.get(token) ?? null; }
-    // 호출자가 소유한 실제 파생 노드를 등록 전 주소에 두고 처리기·소멸자를 연결한다.
-    allocateDerived(node, handler, destructor) {
+    // 호출자가 소유한 실제 파생 노드를 등록 전 주소에 두고 처리기·소멸자·선택적 가상 부착을 연결한다.
+    allocateDerived(node, handler, destructor, attacher = null) {
         this.#live();
         if (!(node instanceof GumpCreateNode) || node.constructor === GumpCreateNode || typeof handler !== 'function' || typeof destructor !== 'function') throw new TypeError('Client Gump 파생 노드·처리기·소멸자 계약');
+        if (attacher !== null && typeof attacher !== 'function') throw new TypeError('Client Gump 파생 부착 계약');
         if (this.#nextToken > 0xffffffff) throw new RangeError('Client Gump 주소 소진');
         // 같은 물리 노드를 서로 다른 토큰으로 중복 등록하지 않는다.
         for (const current of this.#nodes.values()) if (current === node) throw new Error('Client Gump 파생 노드 중복 할당');
-        const token = this.#nextToken++; this.#nodes.set(token, node); this.#handlers.set(token, handler); this.#destructors.set(token, destructor); return token;
+        const token = this.#nextToken++; this.#nodes.set(token, node); this.#handlers.set(token, handler); this.#destructors.set(token, destructor); if (attacher) this.#attachers.set(token, attacher); return token;
     }
     // 실제 기본 노드를 등록하고 고유 사건 처리기를 연결한다. 부착은 별도 호출이다.
     createBase(command, width, height, flags, handler) {
@@ -86,8 +87,14 @@ export class ClientGumpRoot {
         const token = this.#nextToken++; this.#nodes.set(token, new GumpCreateNode()); this.#handlers.set(token, handler);
         this.#factory.construct(token, command, width, height, flags); return token;
     }
-    // 등록된 노드를 같은 실제 트리의 지정 부모에 부착한다. 부모를 생략하면 루트다.
-    attach(token, x, y, parent = this.#root, mode = 0) { this.#live(); this.#tree.attach(token, x, y, parent, mode); }
+    // 파생 가상 부착이 있으면 같은 토큰으로 분배하고 없으면 실제 기본 본체를 호출한다.
+    #attach(token, ...args) { const attacher = this.#attachers.get(token); return attacher ? attacher(token, ...args) : this.#tree.attach(token, ...args); }
+    // 등록된 노드를 가상 부착으로 지정 부모에 연결한다. 부모를 생략하면 루트다.
+    attach(token, x, y, parent = this.#root, mode = 0) { this.#live(); this.#attach(token, x, y, parent, mode); }
+    // 파생 부착 본체가 재분배 없이 같은 공통 기본 부착을 호출한다.
+    attachBase(token, x, y, parent, mode, bits = {}) { this.#live(); this.#tree.attach(token, x, y, parent, mode, bits); }
+    // 원본 Move가 Push 뒤 실제 파생 가상 부착을 사용한다.
+    move(token, x, y, parent = 0) { this.#live(); this.#tree.move(token, x, y, parent); }
     // 같은 수명의 지연 삭제를 요청하고 현재 큐를 정리한다.
     remove(token) { this.#live(); this.#lifetime.kill(token); this.#lifetime.cleanup(); }
     // 임시 등록을 반환한 실제 새 루트로 공통 수명과 Client의 현재 별칭을 함께 바꾼다.
