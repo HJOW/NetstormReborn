@@ -59,7 +59,8 @@ function serveFile(req, res, filePath, err, stat) {
   stream.pipe(res);
 }
 
-const server = http.createServer((req, res) => {
+// 정적 요청을 처리한다. mountPath는 끝에 슬래시가 붙은 공개 경로다. (2026-11-19 WB04-E945)
+function serveRequest(req, res, mountPath) {
   // GET, HEAD 이외의 메서드는 허용하지 않음
   if (req.method !== 'GET' && req.method !== 'HEAD') {
     return sendError(res, 405, '405 Method Not Allowed');
@@ -76,8 +77,9 @@ const server = http.createServer((req, res) => {
   // 널 문자 차단
   if (urlPath.includes('\0')) return sendError(res, 400, '400 Bad Request');
 
-  // 경로 정규화 후 www 외부 접근(디렉토리 탈출) 차단
-  let filePath = path.normalize(path.join(WWW_ROOT, urlPath));
+  // 공개 경로 아래의 요청을 웹 루트에 매핑한 뒤 웹 루트 밖 접근을 차단한다.
+  if (!urlPath.startsWith(mountPath)) return sendError(res, 404, '404 Not Found');
+  let filePath = path.normalize(path.join(WWW_ROOT, urlPath.slice(mountPath.length)));
   if (filePath !== WWW_ROOT && !filePath.startsWith(WWW_ROOT + path.sep)) {
     return sendError(res, 403, '403 Forbidden');
   }
@@ -90,11 +92,22 @@ const server = http.createServer((req, res) => {
     }
     serveFile(req, res, filePath, err, stat);
   });
-});
+}
 
-// www 디렉토리가 없으면 생성
-fs.mkdirSync(WWW_ROOT, { recursive: true });
+// 웹 루트를 주어진 URL 경로 아래 제공하는 서버를 만든다. 포트와 바인딩 주소는 호출자가 정한다. (2026-11-19 WB04-E945)
+function createStaticServer(mountPath = '/') {
+  if (!mountPath.startsWith('/') || !mountPath.endsWith('/')) {
+    throw new RangeError('공개 경로는 슬래시로 시작하고 끝나야 합니다.');
+  }
+  return http.createServer((req, res) => serveRequest(req, res, mountPath));
+}
 
-server.listen(PORT, () => {
-  console.log(`Server started: http://localhost:${PORT}/ (root: ${WWW_ROOT})`);
-});
+if (require.main === module) {
+  // 기존 개발 실행은 www 디렉토리를 보장하고 기본 경로로 시작한다.
+  fs.mkdirSync(WWW_ROOT, { recursive: true });
+  createStaticServer().listen(PORT, () => {
+    console.log(`Server started: http://localhost:${PORT}/ (root: ${WWW_ROOT})`);
+  });
+}
+
+module.exports = { createStaticServer };

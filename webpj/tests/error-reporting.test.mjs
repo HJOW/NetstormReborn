@@ -4,15 +4,15 @@ import assert from 'node:assert/strict';
 import { Netstorm } from '../www/netstorm.js';
 import { reportGameError } from '../www/platform/error-reporting.js';
 
-// 콘솔 출력을 수집하고 검사 뒤 복원한다.
-async function captureErrors(action) {
-    const original = console.error;
+// 선택한 콘솔 수준의 출력을 수집하고 검사 뒤 복원한다. (2026-11-19 WB04-E945)
+async function captureErrors(action, level = 'error') {
+    const original = console[level];
     const entries = [];
-    console.error = (...args) => entries.push(args);
+    console[level] = (...args) => entries.push(args);
     try {
         await action(entries);
     } finally {
-        console.error = original;
+        console[level] = original;
     }
 }
 
@@ -137,7 +137,7 @@ test('한국어 자료 실패는 현재 적재 세대에서만 진행률과 진�
         assert.equal(entries[0][1].phase, 'korean-assets');
         assert.equal(entries[0][1].generation, 2);
         assert.equal(entries[0][2], error);
-    });
+    }, 'warn');
 });
 
 // 정책에 의한 오디오 활성화 실패가 앱을 중단하지 않고 진단에 남는지 확인한다. (2026-11-19 WB04-E944)

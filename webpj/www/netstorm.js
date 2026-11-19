@@ -1150,7 +1150,7 @@ export class Netstorm {
 
     // 현재 적재 세대에서 한국어 글꼴·번역을 준비하고, 실패하면 진단을 남기고 영어 자료로 대체한다.
     // 이전 세대의 응답과 진행률은 새 앱 수명에서 무시한다. (2026-11-19 WB04-E944)
-    async _loadKorean(loader, menuTotal, koreanTotal, generation) {
+    async _loadKorean(loader, menuTotal, koreanTotal, generation = this._loadGeneration) {
         try {
             const files = await loader.loadBundle(KOREAN_BUNDLE, (loaded) => {
                 if (generation === this._loadGeneration) this._loadProgress = { loaded: menuTotal + loaded, total: menuTotal + koreanTotal };
@@ -1159,7 +1159,10 @@ export class Netstorm {
             const document = this._root.ownerDocument;
             return await buildKoreanSupport(files, { createRasterizer: ({ regular, bold }) => createCanvasGlyphRasterizer({ document, regular, bold }) });
         } catch (error) {
-            if (generation === this._loadGeneration) reportGameError('korean-assets', error, { state: this._state, generation });
+            if (generation === this._loadGeneration) {
+                reportGameError('korean-assets', error, { state: this._state, generation },
+                    'Netstorm: 한국어 글꼴·번역표를 준비하지 못해 영어 메뉴로 계속합니다.');
+            }
             return null;
         }
     }
