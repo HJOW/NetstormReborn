@@ -76,3 +76,13 @@ test('TextEntry 확정 한글: 수평 잘라내기 뒤 선택과 화면 밖 선�
     assert.deepEqual(r.log.filter((entry) => entry[0] === 'drawText').map((entry) => decode(entry[1])), ['한글B']);
     assert.equal(r.log.filter((entry) => entry[0] === 'fill').length, 0);
 });
+
+// 확장 토큰의 숫자 바이트가 공백이어도 Console은 전체 단어를 전달한다.
+test('TextEntry 확정 한글: Console 자동완성의 문자 단위 역방향 탐색', () => {
+    const r = built({ console: true, complete: () => null }, ''), queue = new InputQueue();
+    queueCommittedText(queue, 'say:갈'); enter(queue, r.gump); r.root.autocomplete = 5; r.root.resetWord = 1; r.log.length = 0;
+    assert.equal(r.gump.handleConsole(1, 9, 0, 0), 1);
+    const call = r.log.find((entry) => entry[0] === 'complete');
+    const word = displayTextCodec.decode(Uint8Array.from(call[2], (character) => character.charCodeAt(0)));
+    assert.equal(word, '갈'); assert.equal(call[3], 4); assert.equal(r.root.wordStart, 4);
+});

@@ -419,14 +419,14 @@ export class TextEntryGump {
                     // null 은 이전 단어의 다음/이전 후보를 뜻한다.
                     let word = null;
                     if (node.resetWord) {
-                        node.wordStart = begin >>> 0; const data = buffer().data();
-                        // 공백/콜론 바로 뒤까지 단어 시작을 역방향으로 찾는다.
+                        node.wordStart = begin >>> 0; const data = buffer().data(), text = buffer().text(), extended = hasExtendedDisplayText(text);
+                        // 공백/콜론 바로 뒤까지 문자 경계로 역방향 탐색한다.
                         while (node.wordStart > 0) {
-                            const at = node.wordStart - 1;
+                            const at = extended ? previousDisplayText(text, node.wordStart) : node.wordStart - 1;
                             if (at >= data.length) throw new Error('Console 단어 선택 범위');
                             const letter = data[at];
-                            if (isSpace(letter) || letter === 0x3a) break;
-                            node.wordStart -= 1;
+                            if (node.wordStart - at === 1 && (isSpace(letter) || letter === 0x3a)) break;
+                            node.wordStart = at;
                         }
                         node.wordLength = ((begin >>> 0) - node.wordStart) >>> 0;
                         if (node.wordStart >= data.length) throw new Error('Console 단어 시작 범위');
