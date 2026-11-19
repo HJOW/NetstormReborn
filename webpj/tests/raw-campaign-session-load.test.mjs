@@ -41,6 +41,7 @@ import { RawChatChannels } from '../www/core/raw-chat-channels.js';
 import { QuickHelpPopupState } from '../www/ui/quick-help-popup-state.js';
 import { GameAssets } from '../www/assets/game-assets.js';
 import { GamePalette } from '../www/assets/palette.js';
+import { buildMenuResources } from '../www/assets/menu-assets.js';
 import { SECTION_NAMES, fortSection, parseFort } from '../www/assets/fort.js';
 import { ARCHIVE_PATH, GameData, SETUP_PATH } from '../www/assets/game-data.js';
 import { TaffArchive } from '../www/assets/taff.js';
@@ -65,6 +66,7 @@ import { makeCampaignMissionStartEffects, bindCampaignAiClientServices, bindCamp
 import { RawCampaignFactoryDisplay } from '../www/render/raw-campaign-factory-display.js';
 import { IndexedPresenter } from '../www/render/presenter.js';
 import { IndexedSurface } from '../www/render/indexed-surface.js';
+import { MainMenuScreen } from '../www/ui/main-menu.js';
 import { projectCameraCoordinates } from '../www/render/camera-view.js';
 import { cursorDisplayLogicalPalette } from '../www/render/raw-campaign-cursor-display.js';
 import { buildPaletteColorTable } from '../www/core/palette-colors.js';
@@ -89,7 +91,7 @@ import { GunProcess } from '../www/core/raw-gun-process.js';
 import { findAttachedProcess } from '../www/core/raw-wind-aviary-process.js';
 import { RawPathProcess } from '../www/core/raw-path-process.js';
 import { realCaptureAssets } from './capture-assets-support.mjs';
-import { loadOriginalForts, readData, REPO_ROOT } from './helpers.mjs';
+import { DATA_ROOT, loadOriginalForts, readData, readDataMap, REPO_ROOT } from './helpers.mjs';
 
 // 보호된 실제 TYPE·SHP·팔레트와 TheWarBegins Fort를 읽는다.
 const data = realCaptureAssets(), game = new GameAssets(data.table, data.database, GamePalette.parse(readData('d/GIFCLOUD.COL')));
@@ -774,16 +776,19 @@ test('Netstorm Client Guide: 앱 프레임에서 Tutorial 단계와 지연 요�
 // 앱이 현재 Guide Fort와 실제 공유 소유자로 GameWorld를 설치하고 Session 반납까지 관리한다.
 test('Netstorm Client World: 실제 Guide Fort 설치와 로컬 로그인 수명', () => {
     const app = new Netstorm(); app._initializeClientRuntime(false);
-    const data = GameData.build({ files: new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)]]), language: 'english' });
-    app._gameData = data; app._root = { ownerDocument: { title: 'before' } }; app._initializeClientWorldStorage(game, data.files); app._initializeClientGuide();
+    const manifest = JSON.parse(fs.readFileSync(path.join(DATA_ROOT, 'manifest.json'), 'utf8'));
+    const files = readDataMap(manifest.files.filter((item) => item.bundle === 'menu').map((item) => item.path));
+    const data = GameData.build({ files, language: 'english' });
+    app._gameData = data; app._root = { ownerDocument: { title: 'before' } }; app._resources = buildMenuResources(files);
+    app._initializeClientWorldStorage(game, data.files); app._initializeClientGuide();
     const guide = app._clientGuide; let world;
-    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {}, battlePalette: undefined };
-    app._layout = { logicalWidth: 1024, logicalHeight: 768 }; app._initializeClientRendererView();
+    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {} };
+    app._layout = { logicalWidth: 1024, logicalHeight: 768, visible: false }; app._surface = new IndexedSurface(1024, 768); app._presenter = new IndexedPresenter(null);
+    app._mainMenu = new MainMenuScreen({ resources: app._resources }); app._mainMenu.resize(1024, 768);
+    app._initializeClientPalette(game); app._initializeClientPaletteCache(game); app._initializeClientGump(); app._initializeClientRendererView();
     const services = { localLogin, carrierRequest: forbidden('전송'),
-        cameraCommit: (context) => { const pixels = context.camera.target().pixels; context.camera.applyPixelsToRendererAndSnapshot(pixels[0], pixels[1]); },
-        surfaceDisplay: { suppressed: () => false, invalidate: () => {} },
         install: { translateYou: () => Uint8Array.of(89, 111, 117, 0), setConfig: () => {}, refreshWindowTitle: () => {}, resetCamera: () => {} },
-        ownership: { refreshProduction: () => {}, themeMode: () => 1 }, assets: { postPop: { playImpactSound: () => {} }, queueCommand: () => {} },
+        assets: { postPop: { playImpactSound: () => {} } },
         sound: { wallSeconds: () => 0, play: forbidden('소리'), playOnceAt: forbidden('위치 소리'), playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false },
         ai: { assertion: forbidden('AI 진단'), participation: { addChat: () => {}, clearChat: () => {} } } };
     try {
@@ -794,10 +799,12 @@ test('Netstorm Client World: 실제 Guide Fort 설치와 로컬 로그인 수명
         world = app._installCampaignWorld(services, { x: 1024, y: 768 });
         assert.equal(app._campaignWorld, world); assert.equal(app._campaignWorldMissionToken, guide.current().runtime.saveToken);
         assert.equal(world.session().world().storage, app._surfaceStorage); assert.throws(() => app._installCampaignWorld(services, { x: 1024, y: 768 }), /단독 수명/);
-        world.startLocalConnection(); const session = world.session(); session.pumpLocalConnection(); session.pollLocalConnectionState(); session.pumpLocalConnection();
+        world.startLocalConnection(); assert.ok(app._mainMenu.dialog);
+        const session = world.session(); session.pumpLocalConnection(); session.pollLocalConnectionState(); session.pumpLocalConnection();
         assert.equal(world.completeLocalConnection(), true); assert.equal(session.localConnectionReady(), true); assert.equal(request.consumed, true);
+        assert.equal(app._clientRenderer.cameraRedraw.value, 1); assert.equal(app._mainMenu.dialog, null);
         guide.dispose(); app._releaseCampaignWorld(); assert.equal(app._campaignWorld, null); assert.equal(app._campaignWorldMissionToken, 0); assert.equal(app._surfaceStorage.borrowed, false);
-    } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); }
+    } finally { app._closeMissionLoading(); guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); }
 });
 
 // 실제 앱 Client State7 부모와 State8 접속이 같은 Guide·World·연결표를 사용한다.
