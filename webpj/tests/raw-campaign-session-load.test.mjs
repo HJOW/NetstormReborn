@@ -582,6 +582,23 @@ test('Netstorm Client 공통 수명: 실제 Session이 앱의 난수와 SP를 �
     assert.equal(app._campaignSharedServices().spGlobals.store(), sp); assert.deepEqual([sp.offset, sp.get(1)], before);
 });
 
+// 공통 Player·Core·Template과 Subscriber는 실제 Session 교체를 지나 같은 Client에서 유지된다.
+test('Netstorm Client 공통 수명: 실제 Session 교체와 Player·Template 소유자', () => {
+    const app = new Netstorm(); app._initializeClientRuntime(false); const shared = app._campaignSharedServices();
+    const { playerRecords: players, coreDataGlobals: core, templateStorage: templates, subscriberGlobals: subscriber, gameplayGlobals: gameplay } = shared;
+    assert.equal(players.initialized(), true); assert.equal(players.records().length, 1620); assert.equal(players.boundCoreData(), core); assert.equal(core.players, players.records());
+    assert.equal(gameplay.subscribers(), subscriber); subscriber.mySubscriber().value = 77;
+    const headers = templates.headers(), firstBase = players.base();
+    const first = scene(shared).s;
+    try { assert.equal(first.playerRecords(), players.records()); assert.equal(core.players, players.records()); assert.notEqual(players.base(), firstBase); }
+    finally { first.dispose(); }
+    assert.equal(gameplay.borrowed(), false); assert.equal(templates.headers(), headers); assert.equal(subscriber.mySubscriber().value, 77);
+    const second = scene(shared).s;
+    try { assert.equal(second.playerRecords(), players.records()); assert.equal(core.players, players.records()); assert.equal(templates.headers(), headers); assert.equal(subscriber.mySubscriber().value, 77); }
+    finally { second.dispose(); }
+    assert.equal(gameplay.borrowed(), false); assert.equal(app._campaignSharedServices().playerRecords, players);
+});
+
 // 실제 월드 전체를 관측하고 Session이 초기화한 SP와 현재 원문·장부를 바꾸지 않는다.
 test('CampaignSession TheWarBegins: 덤프의 실제 풀·Player·SP·Graph', () => {
     const random = new ClientRandomGlobals(), { s } = scene({ randomGlobals: random });

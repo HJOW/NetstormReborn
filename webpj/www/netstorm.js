@@ -34,6 +34,12 @@ import { ClientFrameClock } from './core/client-frame-clock.js';
 import { ClientLocalStateGlobals } from './core/client-local-state-globals.js';
 import { ClientRandomGlobals } from './core/random.js';
 import { ClientSpGlobals } from './core/client-sp-globals.js';
+import { ClientSubscriberGlobals } from './core/client-subscriber-globals.js';
+import { ClientGameplayGlobals } from './core/client-gameplay-globals.js';
+import { ClientCoreDataGlobals } from './core/client-core-data-globals.js';
+import { ClientPlayerRecords } from './core/client-player-records.js';
+import { initializeClientPlayerRecords } from './core/client-player-runtime.js';
+import { CampaignTemplateStorage } from './core/campaign-template-storage.js';
 import { ClientTimeSource } from './core/client-time-source.js';
 import { resetGameStorage } from './platform/reset-storage.js';
 import { createCanvasGlyphRasterizer } from './platform/glyph-rasterizer.js';
@@ -427,6 +433,8 @@ export class Netstorm {
         this._clientLocal = null; this._gameClock = null; this._hiddenGamePause = false;
         // 같은 Client가 장기 소유하는 게임·CRT 난수와 SP 저장소다.
         this._clientRandom = null; this._clientSp = null;
+        // Client 공통 Player·Core·Template과 Subscriber는 Session보다 오래 산다.
+        this._clientSubscriber = null; this._clientGameplay = null; this._clientCoreData = null; this._clientPlayers = null; this._clientTemplates = null;
         // init 때 저장해 둔 루트 인라인 스타일이다. destroy 가 되돌린다.
         this._savedRootStyle = null;
         // 비동기 로딩 결과가 오래된 것인지 가리는 세대 번호다. destroy/재시도 때마다 올라간다.
@@ -628,15 +636,22 @@ export class Netstorm {
         const source = new ClientTimeSource(), random = new ClientRandomGlobals();
         const sp = new ClientSpGlobals(random, () => source.unixSeconds()); sp.store().initialize();
         const local = new ClientLocalStateGlobals(), clock = new ClientFrameClock(source, local.gameTicks());
+        const subscriber = new ClientSubscriberGlobals(), gameplay = new ClientGameplayGlobals(subscriber);
+        const coreData = new ClientCoreDataGlobals(), players = new ClientPlayerRecords(), templates = new CampaignTemplateStorage();
+        players.bindCoreData(coreData);
+        initializeClientPlayerRecords({ gameplayGlobals: () => gameplay, playerRecords: () => players });
         if (hidden) clock.pushGamePause();
         this._clientRandom = random; this._clientSp = sp; this._clientLocal = local; this._gameClock = clock; this._hiddenGamePause = Boolean(hidden);
+        this._clientSubscriber = subscriber; this._clientGameplay = gameplay; this._clientCoreData = coreData; this._clientPlayers = players; this._clientTemplates = templates;
     }
 
-    // 미션 조립은 현재 Client의 같은 난수·SP·보정·시계만 대여한다. 이 호출은 Session을 생성하지 않는다.
+    // 미션 조립은 현재 Client의 난수·SP·Player·Core·Template·Subscriber와 시계를 대여한다. 이 호출은 Session을 생성하지 않는다.
     _campaignSharedServices() {
         const clock = this._gameClock, random = this._clientRandom, sp = this._clientSp, local = this._clientLocal;
-        if (!clock || !random || !sp || !local) throw new Error('캠페인의 실제 Client 공통 수명 미설치');
-        return { randomGlobals: random, spGlobals: sp, localStateGlobals: local, unixSeconds: () => clock.unixSeconds(), frameTime: () => clock.time(), paused: () => clock.paused() };
+        const subscriber = this._clientSubscriber, gameplay = this._clientGameplay, coreData = this._clientCoreData, players = this._clientPlayers, templates = this._clientTemplates;
+        if (!clock || !random || !sp || !local || !subscriber || !gameplay || !coreData || !players || !templates) throw new Error('캠페인의 실제 Client 공통 수명 미설치');
+        return { randomGlobals: random, spGlobals: sp, localStateGlobals: local, subscriberGlobals: subscriber, gameplayGlobals: gameplay, coreDataGlobals: coreData,
+            playerRecords: players, templateStorage: templates, unixSeconds: () => clock.unixSeconds(), frameTime: () => clock.time(), paused: () => clock.paused() };
     }
 
     // 게임을 정리한다. 프레임 예약·이벤트·관찰자·오디오·진행 중 로딩을 모두 해제하고 Canvas 를 제거한다.
@@ -658,6 +673,7 @@ export class Netstorm {
         this._progress = null;
         this._gameClock = null; this._clientLocal = null; this._hiddenGamePause = false;
         this._clientSp = null; this._clientRandom = null;
+        this._clientTemplates = null; this._clientPlayers = null; this._clientCoreData = null; this._clientGameplay = null; this._clientSubscriber = null;
         if (this._audio) {
             // 음악을 멈추고 문맥을 닫는다. 닫기에 실패해도 정리를 막지 않는다.
             this._audio.close();
