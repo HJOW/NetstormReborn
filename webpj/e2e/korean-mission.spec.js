@@ -73,5 +73,7 @@ test('한국어 Tutorial2의 안내 페이지를 표시한다', async ({ page })
   await clickLabel(page, '다음'); await page.waitForFunction(() => window.netstorm._gameData.currentTell === 'A1.');
   const next = await page.evaluate(() => window.netstorm._mainMenu.dialog.content.styleText);
   expect(next).toContain('신전'); expect(next).toContain('워크샾');
+  const pictures = await page.evaluate(() => window.netstorm._mainMenu.dialog.body.softLines.flatMap((line) => line.fragments).filter((fragment) => fragment.picture).map(({picture}) => ({ width: picture.width, height: picture.height })));
+  expect(pictures).toHaveLength(2); expect(pictures.every((picture) => picture.width > 0 && picture.height > 0)).toBe(true);
   await page.screenshot({ path: test.info().outputPath('korean-tutorial2-next.png') }); expect(errors).toEqual([]);
 });

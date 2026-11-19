@@ -15,7 +15,7 @@ import { ScrollingText } from './scroll-text.js';
 import { CURSOR_NORMAL } from './cursor.js';
 import { VerticalSlider } from './slider.js';
 import { parseStyleText } from './style-text.js';
-import { LinkTable, applyHtmlCondition, createParserGlobals, createParserState, parseHtml, prepareDialogContent } from './html-text.js';
+import { LinkTable, applyHtmlCondition, createParserGlobals, createParserState, htmlPictureText, parseHtml, prepareDialogContent } from './html-text.js';
 import { expandFileList } from './tell-lists.js';
 import { parseTellParameters } from './tell-parameters.js';
 import { parseScriptCommand } from './script-command.js';
@@ -127,7 +127,7 @@ export class TellWindow {
         // 본문 스타일 문자열을 조각으로 나눠 본문에 넣는다.
         // 글자 부호화는 한국어일 때 UTF-16 코드 단위(유니코드 글꼴), 영어일 때 Windows-1252 바이트(원본 글꼴)다. (2026-10-31 WB03-O)
         const encode = (text) => fonts.encode(text);
-        this.body.appendFragments(parseStyleText(content.styleText, this.body.defaultContext, colors, { encode, onUnsupported: (what, text) => this.onUnsupported?.(what, text) }));
+        this.body.appendFragments(parseStyleText(content.styleText, this.body.defaultContext, colors, { encode, resolvePicture: resources.resolvePicture, onUnsupported: (what, text) => this.onUnsupported?.(what, text) }));
         // 돌 버튼 목록이다(지시문 순서). 라벨은 번역을 거친 뒤 글자 크기에 맞춰진다. 라벨은 Tell 파일(`$Button=라벨,…`)의 문구이며 한국어 파일에서는 이미 한국어다. (2026-10-31 WB03-O: encode)
         this.buttons = (content.directives?.buttons ?? []).map((spec) => new StoneButton({ label: spec.label, command: { name: spec.command.name, argument: spec.command.argument, instant: spec.instant }, encode }));
         // 선택 목록이다. 항목이 없으면 null.
@@ -492,6 +492,7 @@ export function createTellWindow({ gameData, resources, name, screen, nowSeconds
             condition: (parserState, raw, closing) => applyHtmlCondition(parserState, raw, closing, (text) => gameData.substitute(text)),
             command: (parserState, raw) => inlineCommands.push(parseScriptCommand(raw)),
             link: (parserState, raw, closing) => links.text(raw, closing),
+            picture: (_state, raw) => htmlPictureText(raw),
             onUnsupported,
             ...hooks,
         };
