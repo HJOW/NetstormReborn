@@ -76,6 +76,11 @@ export class ClientMenuGump {
     // 현재 메뉴의 구분선과 항목 수는 기존 원본 작성기에서 처리한다.
     separator() { this.#controls.addSeparator(); }
     itemCount() { return this.#menu.itemCount(); }
+    // 현재 메뉴의 실제 토큰과 맞춤 전 폭을 객체 위치 계산에 제공한다.
+    current() { return this.#menu.current(); }
+    currentWidth() { const token = this.#menu.current(); if (!token) throw new Error('객체 메뉴의 현재 스택 누락'); return this.#root.node(token).baseWidth; }
+    // 현재 메뉴를 원본 Form으로 객체에 묶고 화면 좌표에 부착한다.
+    attachObject(object, x, y) { this.#menu.attachObjectCurrent(object, x, y); }
     // 현재 메뉴에 체크·포함·활성 상태를 가진 원본 항목을 쓴다.
     checked(checked, value, command, parameter, include = true, enabled = true) { this.#controls.addChecked(checked, value, command, parameter, include, enabled); }
     title(value) { this.#controls.addTitle(value); }

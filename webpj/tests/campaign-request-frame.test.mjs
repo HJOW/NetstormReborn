@@ -45,6 +45,7 @@ import { ScrollingTextGumpWidgetState } from '../www/ui/scrolling-text-gump-widg
 import { ClientGumpDecoration, createClientDecorationState } from '../www/ui/client-gump-decoration.js';
 import { ClientMenuGump } from '../www/ui/client-menu-gump.js';
 import { ClientPriestMenu } from '../www/ui/client-priest-menu.js';
+import { ClientPriestMenuOpen } from '../www/ui/client-priest-menu-open.js';
 import { ClientPlayerMenu } from '../www/ui/client-player-menu.js';
 import { ClientObjectMenu } from '../www/ui/client-object-menu.js';
 import { ClientObjectMenuInfo } from '../www/ui/client-object-menu-info.js';
@@ -600,6 +601,19 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         assert.ok(chainNode.items.slice(0, chainNode.itemCount).filter((item) => item.childId).length >= 2);
         menus.attach({ x: 750, y: 420 }, menus.root()); gump.remove(chainRoot); menus.close(); scroll.close();
         assert.equal(bufferText.styleState().fragments.size, 0);
+        // 원본 사제 선택 관문과 메뉴 열기를 실제 Form·화면 좌표에 함께 연결한다.
+        const openSounds = [], opener = new ClientPriestMenuOpen(app._campaignWorld, menus, summary, chainPriest, {
+            altar: () => { throw new Error('예상하지 않은 제단'); }, delegate: () => { throw new Error('예상하지 않은 제단 위임'); },
+            project: (x, y) => { const point = camera.snapshot().project(x, y); return [point.x, point.y]; },
+            content: (sid) => session.priests().carrier.findContained(sid, 1, 0, 0), range: (type) => session.core().types[type].range,
+            screenWidth: () => screen.width, sound: (value) => openSounds.push(value),
+        });
+        assert.equal(opener.supports(priest), true); assert.equal(opener.open(priest, { code: 0x20000, x: 750, y: 420 }), 1);
+        assert.deepEqual(openSounds, ['opengump.wav']); assert.equal(app._campaignWorld.selected(), priest);
+        let openToken = gump.node(gump.createState().collection.root).child;
+        while (openToken && gump.node(openToken).command !== 26) openToken = gump.node(openToken).next;
+        assert.ok(openToken); assert.equal(session.gumpFormHost().parent(gump.node(openToken).form), priest);
+        gump.remove(openToken); menus.close(); scroll.close(); assert.equal(bufferText.styleState().fragments.size, 0);
         // 실제 신전은 현재 환불과 회수 금지 전역을 읽어 원본의 신전 회수 안내를 만든다.
         const damageRoot = menus.beginFancy(); menus.title('Temple\n'); const priorDeny = app._clientGameplay.denySalvage().value;
         app._clientGameplay.denySalvage().value = 0; const damageSid = temple;
