@@ -809,7 +809,7 @@ test('Netstorm Client World: 실제 앱 State7 부모와 State8 로컬 로그인
     const xlat = new XlatTable(fs.readFileSync(path.join(REPO_ROOT, 'webpj/translations/xlat.korean'), 'utf8'));
     app._gameData = data; app._root = { ownerDocument: { title: 'before' } }; app._resources = { translate: (text) => xlat.translate(text) }; app._initializeClientWorldStorage(game, data.files); app._initializeClientGuide();
     const guide = app._clientGuide; let world;
-    const localLogin = { startingProgress: () => {}, closeProgress: () => {} };
+    const localLogin = { startingProgress: () => {}, progress: () => {}, closeProgress: () => {} };
     app._layout = { logicalWidth: 1024, logicalHeight: 768, visible: false }; app._surface = new IndexedSurface(1024, 768); app._presenter = new IndexedPresenter(null); app._syncClientCloudOptions(); app._initializeClientGump();
     const hudModes = [], hud = app._clientGump.createBase(0, 10, 10, 0x800, (event, mode) => { hudModes.push([event, mode]); return 1; }); app._clientGump.attach(hud, 0, 0);
     app._initializeClientPalette(game); app._initializeClientPaletteCache(game);

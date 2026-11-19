@@ -82,6 +82,7 @@ import { TerrainPreview } from './ui/terrain-preview.js';
 import { PopupMenu } from './ui/popup-menu.js';
 import { buildPopupItems } from './ui/option-menus.js';
 import { createTellWindow } from './ui/tell-window.js';
+import { createMissionLoadingWindow, missionLoginProgressText } from './ui/mission-loading-window.js';
 import { TELL_TIP_COMMAND, dispatchTellTip } from './ui/tell-tip.js';
 import { applyScriptConfig, parseScriptCommand } from './ui/script-command.js';
 import { dispatchHelpLink } from './ui/help-link.js';
@@ -498,6 +499,8 @@ export class Netstorm {
         this._clientGump = null;
         // 설치된 GameWorld와 그 월드를 빌리는 현재 미션 세대다.
         this._campaignWorld = null; this._campaignWorldMissionToken = 0;
+        // 현재 메뉴에 표시한 미션 진행 창의 소유 수명이다.
+        this._missionLoadingWindow = null;
         // init 때 저장해 둔 루트 인라인 스타일이다. destroy 가 되돌린다.
         this._savedRootStyle = null;
         // 비동기 로딩 결과가 오래된 것인지 가리는 세대 번호다. destroy/재시도 때마다 올라간다.
@@ -956,6 +959,10 @@ export class Netstorm {
                 if (!this._clientGump || !this._clientLocal) throw new Error('로그인 HUD 모드의 실제 Client Gump 수명 누락');
                 this._clientGump.input().route(this._clientLocal.hudModeCommand().value, mode, 0, true);
             },
+            // 미션 시작과 로그인 진행 문구는 같은 현재 메뉴의 진행 창을 사용한다.
+            startingProgress: () => { if (!this._resources) throw new Error('미션 진행 창의 실제 자원 수명 누락'); this._showMissionLoading(this._resources.translate('Starting Mission...')); },
+            progress: (kind, remaining) => { if (!this._resources) throw new Error('미션 진행 창의 실제 자원 수명 누락'); this._showMissionLoading(missionLoginProgressText(kind, remaining, (text) => this._resources.translate(text))); },
+            closeProgress: () => this._closeMissionLoading(),
             // 서버 포트는 공통 전역을, 다른 정수는 현재 설정과 기본값을 사용한다.
             configInt: (key, fallback) => {
                 if (!this._gameData || !this._clientGameplay) throw new Error('로그인 설정의 실제 Client 수명 누락');
@@ -980,6 +987,23 @@ export class Netstorm {
             // 원본 연결 진단을 브라우저 콘솔에 기록한다.
             log: (text) => console.info(text),
         };
+    }
+
+    // 현재 메뉴에 원본 본문·Cancel 메타를 가진 진행 창을 표시한다.
+    _showMissionLoading(message) {
+        const menu = this._mainMenu, resources = this._resources, data = this._gameData;
+        if (!menu || !resources || !data) throw new Error('미션 진행 창의 실제 메뉴·자원 수명 누락');
+        const next = createMissionLoadingWindow({ message, cancelText: resources.translate('Cancel'), resources, gameData: data,
+            screen: { width: menu.width, height: menu.height }, nowSeconds: this._frameSeconds, now: () => this._frameSeconds,
+            onCommand: (command) => this._onDialogCommand(command), onSound: () => this._audio?.playSound(BUTTON_SOUND_NAME) });
+        this._missionLoadingWindow?.close(); this._missionLoadingWindow = next; menu.setDialog(next); this._displayDirty = true;
+    }
+
+    // 다른 대화상자가 열린 경우에는 그 창을 건드리지 않고 진행 창 수명만 반납한다.
+    _closeMissionLoading() {
+        const window = this._missionLoadingWindow; if (!window) return;
+        window.close(); this._missionLoadingWindow = null;
+        if (this._mainMenu?.dialog === window) { this._mainMenu.setDialog(null); this._displayDirty = true; }
     }
 
     // 같은 실제 Client의 State7 부모에서 선택된 Fort World를 설치하고 State8 내부 접속을 건다.
@@ -1026,6 +1050,7 @@ export class Netstorm {
         this._resizeObserver?.disconnect();
         this._resizeObserver = null;
         this._mainMenu?.cancel();
+        this._closeMissionLoading();
         this._mainMenu = null;
         this._terrainPreview = null;
         this._settings = null;
