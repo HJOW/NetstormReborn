@@ -31,10 +31,10 @@ export class ClientTextGump {
         const root = this.#root; return new TextGump(root.createState(), this.#state, root.factory(), root.lifetime(), root.collection(), clip, this.#style, { node: (token) => root.node(token), baseNode: (token) => root.node(token) });
     }
     // 실제 한 줄 파생 노드의 가상 입력·출력·소멸을 등록한다.
-    allocate() {
+    allocate(idle = null) {
         const root = this.#root, node = new TextGumpNode(); let token = 0;
         token = root.allocateDerived(node, (event, first, second) => this.#baseHandle(token, event, first, second),
-            (current, flags) => this.#body().deleteScalar(current, flags), null, () => {});
+            (current, flags) => this.#body().deleteScalar(current, flags), null, () => {}, idle);
         root.bindDraw(token, (current, target, clip) => { const previous = this.#target; this.#target = target; try { this.#body(clip).draw(current); } finally { this.#target = previous; } });
         return token;
     }

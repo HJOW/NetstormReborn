@@ -23,6 +23,7 @@ import { ClientInventoryItem } from '../www/ui/client-inventory-item.js';
 import { ClientImageGump } from '../www/ui/client-image-gump.js';
 import { ClientTextGump } from '../www/ui/client-text-gump.js';
 import { makeClientTextMarkup } from '../www/ui/client-text-markup.js';
+import { ClientProductionBudget } from '../www/ui/client-production-budget.js';
 import { StyleTextFragmentKind } from '../www/ui/style-text-fragments.js';
 import { PriestPlacementAssets } from '../www/core/priest-placement-assets.js';
 import { RawCanonPixelShape } from '../www/core/raw-canon-pixel-shape.js';
@@ -356,5 +357,20 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         rich.clear(richToken); rich.style(richToken, '~3~E~w100');
         const plainPixels = new Uint8Array(1366 * 768).fill(255); gump.draw(richToken, draw, new GumpPixelTarget(plainPixels, 1366, 768, draw));
         assert.ok(richPixels.some((value, index) => value !== plainPixels[index])); rich.clear(richToken); assert.equal(fragments.size, 0); gump.remove(richToken);
+        // 실제 Session의 자본을 원본 100/10/1 단계로 표시하고 점멸 수명을 확인한다.
+        let budgetNow = 0, budgetChanges = 0, immediate = false;
+        const budgetText = new ClientTextGump(gump, app._resources.fonts, () => 0, makeClientTextMarkup(game, () => screen.colors(), () => pictureColors, () => {}));
+        const budget = new ClientProductionBudget(gump, budgetText, { now: () => budgetNow, money: () => session.sp(session.localOwner()), known: () => true,
+            fort: () => immediate, editor: () => false, backgroundType: () => 92, changed: () => { budgetChanges += 1; } });
+        const budgetPanel = gump.createBase(0, 80, 100, 1, () => 0); gump.attach(budgetPanel, 400, 400); const budgetToken = budget.create(budgetPanel);
+        const previousCash = session.sp(session.localOwner()); session.setSp(session.localOwner(), 2500); const cash = session.sp(session.localOwner());
+        gump.idle(); assert.equal(budget.amount(), 100); assert.ok(budgetChanges >= 2);
+        immediate = true; gump.idle(); assert.equal(budget.amount(), cash); immediate = false;
+        session.setSp(session.localOwner(), 2200); gump.idle(); assert.equal(budget.amount(), 2490);
+        session.setSp(session.localOwner(), 2170); gump.idle(); assert.equal(budget.amount(), 2390);
+        session.setSp(session.localOwner(), 2380); gump.idle(); assert.equal(budget.amount(), 2389);
+        session.setSp(session.localOwner(), cash); immediate = true; gump.idle(); assert.equal(budget.amount(), cash);
+        budget.flash(); budgetNow = 0.16; gump.idle(); assert.equal(gump.node(budgetToken).head, 0);
+        budgetNow = 0.32; gump.idle(); assert.notEqual(gump.node(budgetToken).head, 0); gump.remove(budgetPanel); session.setSp(session.localOwner(), previousCash);
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); app._clientSoundDevice.dispose(); app._missionAudioAssets.dispose(); }
 });
