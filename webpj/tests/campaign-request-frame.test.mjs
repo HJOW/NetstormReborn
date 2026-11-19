@@ -18,6 +18,8 @@ import { Settings } from '../www/platform/settings.js';
 import { CampaignRenderCollection } from '../www/render/campaign-render-collection.js';
 import { CampaignRendererDrawing } from '../www/render/campaign-renderer-drawing.js';
 import { RawContainedFinder } from '../www/core/raw-contained-finder.js';
+import { ClientInventoryGrid } from '../www/ui/client-inventory-grid.js';
+import { InventoryItemNode } from '../www/ui/inventory-gump.js';
 import { DATA_ROOT, readData, readDataMap } from './helpers.mjs';
 import { realCaptureAssets } from './capture-assets-support.mjs';
 
@@ -304,5 +306,18 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         const outstanding = gump.createBase(0, 10, 10, 1, () => 0); gump.attach(outstanding, 220, 220); gump.bindObject(outstanding, technology);
         const outstandingForm = gump.node(outstanding).form; gump.releaseFormHost();
         assert.equal(gump.node(outstanding), null); assert.ok(session.core().pool.slot(outstandingForm)[11] & 1); gump.setFormHost(session.gumpFormHost());
+        // 실제 기술 내용물을 공통 Gump 트리의 원본 생산 격자 항목으로 수집한다.
+        const gridState = { cursorPoint: { x: 260, y: 260 }, cursorFlags: 0x40 };
+        const grid = new ClientInventoryGrid(gump, session, gridState, {
+            now: () => app._gameClock.wallSeconds(), baseHandle: () => 0,
+            allocateItem: (size) => { assert.equal(size, 0xc0); const item = new InventoryItemNode(); return gump.allocateDerived(item, () => 0, (token, flags) => gump.lifetime().deleteScalar(token, flags)); },
+        });
+        const gridToken = grid.create(2, 2, 0x40), gridNode = gump.node(gridToken); gridNode.fixed = 1; gridNode.acceptedCursor = 0x40; gridNode.baseWidth = gridNode.width = 72; gridNode.baseHeight = gridNode.height = 72;
+        gump.bindObject(gridToken, technology); gump.attach(gridToken, 250, 250); let items = 0;
+        // 실제 내용물과 같은 풀에서 각 항목의 다리 플래그를 확인한다.
+        for (let item = gridNode.child; item; item = gump.node(item).next) { const raw = session.core().pool.slot(gump.node(item).content); assert.ok((raw[20] | (raw[21] << 8)) & 0x40); items += 1; }
+        assert.ok(items > 0); assert.equal(gump.handle(gridToken, 0x0200005f, 0, 0), 0x40);
+        assert.equal(gump.handle(gridToken, 0x0200003f, 0, 0), 1); gridState.cursorPoint.x = 322; assert.equal(gump.handle(gridToken, 0x0200003f, 0, 0), 0);
+        gump.remove(gridToken);
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); app._clientSoundDevice.dispose(); app._missionAudioAssets.dispose(); }
 });
