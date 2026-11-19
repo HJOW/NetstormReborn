@@ -661,3 +661,12 @@ test('본문 그림: fortGump 아이콘 해석 · 줄 안 배치 · 그리기 ·
     assert.equal(narrow.softLines.length, 2);
     assert.equal(narrow.softLines[1].fragments[0].picture !== undefined, true);
 });
+
+// TYPE 정보는 별도 상단 본문에 표시되고 일반 주제로 이동하면 초기 배치로 돌아간다.
+test('도움말 창: TYPE 정보 본문 배치·출력·주제 전환', () => {
+    const { window } = newHelp(); window.helpText = '<a name="unitType"><info>본문</a>\n<a name="other">Other</a>';
+    window.open('unitType', () => '<h2>Unit</h2>Hits: <c>101</c>');
+    assert.ok(window.information); assert.equal(window.frameRect.y, 153); assert.equal(window.information.x, window.x + 182); assert.equal(window.information.y, window.y + 15);
+    const surface = new IndexedSurface(1024, 768); window.draw(surface); assert.ok(surface.pixels.some((value) => value !== 0));
+    window.open('other'); assert.equal(window.information, null); assert.equal(window.frameRect.y, 17);
+});

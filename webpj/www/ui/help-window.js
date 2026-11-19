@@ -97,6 +97,8 @@ export class HelpWindow {
         this.links = null;
         // 본문(ScrollingText)과 스크롤바이다. 주제를 바꿀 때마다 새로 만든다(원본 SetText 가 자식을 지우고 다시 만듦).
         this.body = null;
+        // 현재 TYPE 정보 생성기와 별도 정보 본문이다.
+        this.informationFactory = null; this.information = null;
         // 본문을 누른 채 끄는 중이면 이전 y 이다. 아니면 null 이다(원본 dragY + notify 비트).
         this.dragY = null;
         // 단색 본문 칸의 색 번호이다(원본 nearestColor(55,51,54)).
@@ -138,8 +140,9 @@ export class HelpWindow {
         this.buttonLocals = [{ x: f32(offset), y: f32(bottom) }, { x: f32((offset + BUTTON_GAP) + widest), y: f32(bottom) }];
         // 본문 배경과 안쪽 칸의 지역 크기이다.
         const frameWidth = (HELP_WINDOW_WIDTH - BODY_SIDE_MARGIN) - BODY_SIDE_MARGIN;
-        const frameHeight = (((HELP_WINDOW_HEIGHT - BODY_TOP) - BODY_BOTTOM_GAP) - BODY_BOTTOM_GAP) - height;
-        this.frameRect = { x: f32(BODY_LEFT), y: f32(BODY_TOP), width: f32(frameWidth), height: f32(frameHeight) };
+        const top = this.information ? 153 : BODY_TOP;
+        const frameHeight = (((HELP_WINDOW_HEIGHT - top) - BODY_BOTTOM_GAP) - BODY_BOTTOM_GAP) - height;
+        this.frameRect = { x: f32(BODY_LEFT), y: f32(top), width: f32(frameWidth), height: f32(frameHeight) };
         this.innerRect = { x: f32(INNER_INSET), y: f32(INNER_INSET), width: f32((frameWidth - INNER_INSET) - INNER_INSET), height: f32((frameHeight - INNER_INSET) - INNER_INSET) };
         if (this.body) this._sizeBody();
     }
@@ -150,7 +153,8 @@ export class HelpWindow {
     }
 
     // 주제 하나를 요청한다(원본 QuickHelpRequest::Open): 방문 기록에 쌓고(마지막과 같으면 쌓지 않음) 본문을 바꾼다. (2026-10-30 WB03-G)
-    open(topic) {
+    open(topic, informationFactory = null) {
+        this.informationFactory = informationFactory;
         const last = this.history[this.history.length - 1];
         if (last === undefined || last.toLowerCase() !== topic.toLowerCase()) this.history.push(topic);
         this._show(topic);
@@ -158,9 +162,9 @@ export class HelpWindow {
 
     // 주제 본문을 만들어 보이는 본문으로 바꾼다(원본 QuickHelpWindow::Show). 스크롤은 맨 위로 돌아간다. (2026-10-30 WB03-G)
     _show(topic) {
-        let result = renderHelpTopic({ helpText: this.helpText, topic, substitute: this.substitute });
+        let result = renderHelpTopic({ helpText: this.helpText, topic, substitute: this.substitute, info: this.informationFactory });
         // 번역 파일에 주제가 없으면 영어 파일에서 찾는다(주제 단위 대체, 웹 적응). (2026-10-31 WB03-P)
-        if (!result.found && this.fallbackHelpText !== null) result = renderHelpTopic({ helpText: this.fallbackHelpText, topic, substitute: this.substitute });
+        if (!result.found && this.fallbackHelpText !== null) result = renderHelpTopic({ helpText: this.fallbackHelpText, topic, substitute: this.substitute, info: this.informationFactory });
         this.topic = topic;
         this.links = result.links;
         if (!result.found) this.onUnsupported?.(`도움말 주제 '${topic}'`, '도움말 파일에서 앵커를 찾지 못했습니다.');
@@ -175,8 +179,14 @@ export class HelpWindow {
         });
         body.attachSlider(slider);
         body.appendFragments(parseStyleText(result.styleText, context, colors, { encode: (text) => fonts.encode(text), resolvePicture: this.resources.resolvePicture, onUnsupported: (what, text) => this.onUnsupported?.(what, text) }));
-        this.body = body;
-        this._sizeBody();
+        this.body = body; this.information = null;
+        if (result.information !== null) {
+            const information = new ScrollingText(fonts, context);
+            information.setSize(253, 126);
+            information.appendFragments(parseStyleText(result.information, context, colors, { encode: (text) => fonts.encode(text), resolvePicture: this.resources.resolvePicture, onUnsupported: (what, text) => this.onUnsupported?.(what, text) }));
+            information.setScroll(0); this.information = information;
+        }
+        this._layout(); this._sizeBody();
         this.place();
         body.setScroll(0);
     }
@@ -190,7 +200,7 @@ export class HelpWindow {
         this.history.pop();
         const previous = this.history[this.history.length - 1];
         if (previous === undefined) this.closeWindow();
-        else this._show(previous);
+        else { this.informationFactory = null; this._show(previous); }
     }
 
     // 창을 닫고 호스트에 알린다. 이미 닫혔으면 아무것도 하지 않는다. (2026-10-30 WB03-G)
@@ -237,6 +247,7 @@ export class HelpWindow {
             this.body.y = this.inner.y;
             this.body.placeSlider();
         }
+        if (this.information) { this.information.x = f32(this.x + 182); this.information.y = f32(this.y + 15); }
         [this.backButton, this.okButton].forEach((button, index) => button.attach(f32(this.x + this.buttonLocals[index].x), f32(this.y + this.buttonLocals[index].y)));
     }
 
@@ -269,6 +280,7 @@ export class HelpWindow {
         for (let y = Math.max(0, inner.top); y < Math.min(surface.height, inner.bottom); y += 1) {
             surface.pixels.fill(this.backgroundColor, y * surface.width + Math.max(0, inner.left), y * surface.width + Math.min(surface.width, inner.right));
         }
+        this.information?.draw(surface, this.resources.fonts);
         this.body.draw(surface, this.resources.fonts);
         this.body.drawSlider(surface, this.resources);
         this.backButton.draw(surface, this.resources);
@@ -386,14 +398,14 @@ export class HelpWindow {
 
 // 도움말 창을 만든다. 도움말 파일은 설정 키 `Quick Help Spec`(`\d\help.<언어>`)의 경로에서 읽고 언어 파일이 없으면 영어 파일로 대체한다. 파일이 없으면 null 이다(원본: 로드 오류).
 // topic 은 처음 보일 주제 이름(F1 은 'F1Help')이다. 사용: const result = createHelpWindow({ gameData, resources, topic: 'F1Help', screen }); result.window?.fit(). (2026-10-30 WB03-G, 2026-10-31 WB03-P: 영어 도움말 파일 주제 단위 대체)
-export function createHelpWindow({ gameData, resources, topic = 'F1Help', screen, now = () => 0, onClose = null, onCommand = null, onExternal = null, onSound = null, onUnsupported = null }) {
+export function createHelpWindow({ gameData, resources, topic = 'F1Help', information = null, screen, now = () => 0, onClose = null, onCommand = null, onExternal = null, onSound = null, onUnsupported = null }) {
     const path = gameData.get('Quick Help Spec');
     const helpText = path ? gameData.readText(path) : null;
     if (helpText === null) return { window: null, missing: true, path };
     // 영어가 아닌 언어는 번역하지 않은 주제를 영어 도움말 파일에서 찾도록 영어 파일도 함께 넘긴다(같은 파일이거나 없으면 null). (2026-10-31 WB03-P)
     const english = gameData.readEnglishText(path);
     const window = new HelpWindow({ resources, helpText, fallbackHelpText: english !== helpText ? english : null, substitute: (text) => gameData.substitute(text), screen, now, onClose, onCommand, onExternal, onSound, onUnsupported });
-    window.open(topic);
+    window.open(topic, information);
     window.fit();
     window.place();
     return { window, missing: false, path };
