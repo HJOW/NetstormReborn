@@ -91,7 +91,7 @@ test('xlat.korean: UTF-8·중복 없음·메뉴 라벨 전부 번역', () => {
     assert.deepEqual([...bytes], [...new Uint8Array(fs.readFileSync(path.join(REPO_ROOT, 'webpj', 'translations', 'xlat.korean')))]);
     // 코드가 만들 수 있는 모든 라벨(원본 비교용 항목 포함)을 모은다.
     // 일반 도움말 창의 Back·OK 단추도 번역 키다(2026-10-31 WB03-O).
-    const labels = new Set([...MAIN_MENU_SLOTS.map((slot) => slot.label), MAIN_MENU_WINDOW_TITLE, 'Back', 'OK']);
+    const labels = new Set([...MAIN_MENU_SLOTS.map((slot) => slot.label), MAIN_MENU_WINDOW_TITLE, 'Back', 'OK', 'You']);
     const collect = (items) => {
         for (const item of items) {
             if (item.kind === 'separator') continue;
@@ -113,6 +113,7 @@ test('xlat.korean: UTF-8·중복 없음·메뉴 라벨 전부 번역', () => {
     // 글자 모양 표시(~i)는 번역문에도 남아 있어야 한다.
     assert.equal(korean.translate('General Help - ~iF1~.'), '일반 도움말 - ~iF1~.');
     assert.equal(korean.translate('Pass Server Diagnostic '), '서버 진단 통과');
+    assert.equal(korean.translate('You'), '당신');
 });
 
 // 글꼴 파일: 프로젝트 fonts/ 의 woff2 와 같은 바이트이고 woff2 서명을 가진다. (2026-10-31 WB03-N)

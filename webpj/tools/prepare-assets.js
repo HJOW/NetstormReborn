@@ -83,7 +83,7 @@ const ASSET_FILES = Object.freeze([
     { path: KOREAN_FONT_PATHS.regular, source: KOREAN_FONT_PATHS.regular, bundle: 'korean', use: '한국어 UI 글꼴 갈무리11 보통체(woff2)' },
     { path: KOREAN_FONT_PATHS.bold, source: KOREAN_FONT_PATHS.bold, bundle: 'korean', use: '한국어 UI 글꼴 갈무리11 굵은체(woff2)' },
     { path: KOREAN_FONT_PATHS.license, source: KOREAN_FONT_PATHS.license, bundle: 'korean', use: '갈무리11 글꼴 사용 허가. 글꼴과 함께 배포한다.' },
-    { path: 'd/xlat.korean', source: 'webpj/translations/xlat.korean', bundle: 'korean', use: '한국어 UI 문자열 번역표(원본 xlat 형식, UTF-8): 메인 메뉴 버튼·Help·Options 펼침 메뉴 라벨, 일반 도움말 창 Back·OK' },
+    { path: 'd/xlat.korean', source: 'webpj/translations/xlat.korean', bundle: 'korean', use: '한국어 UI 문자열 번역표(원본 xlat 형식, UTF-8): 메뉴·도움말 라벨과 미션 설치의 플레이어 이름' },
     ...KOREAN_LANGUAGE_FILES.map(({ name, use }) => ({ path: `d/${name}`, source: `webpj/translations/${name}`, bundle: 'korean', use })),
 ]);
 

@@ -55,6 +55,7 @@ import { ClientFortGlobals } from './core/client-fort-globals.js';
 import { ClientFortCurrentName } from './core/client-fort-current-name.js';
 import { refreshWindowTitle } from './core/window-title.js';
 import { decodeWindows1252 } from './assets/text-encoding.js';
+import { displayTextCodec } from './assets/display-text.js';
 import { CampaignSessionAssets } from './core/raw-campaign-session-owners.js';
 import { PriestPlacementAssets } from './core/priest-placement-assets.js';
 import { RawSurfaceStorage } from './core/raw-surface-storage.js';
@@ -743,6 +744,23 @@ export class Netstorm {
             time: () => this._gameClock.time(), wallSeconds: () => this._gameClock.wallSeconds() };
     }
 
+    // 월드 설치가 실제 번역·설정·현재 창 제목을 사용하도록 표시 바이트 경계를 연결한다.
+    _campaignInstallServices() {
+        return {
+            translateYou: () => {
+                if (!this._resources || !this._gameData) throw new Error('미션 설치의 실제 번역 자원 누락');
+                const encoded = displayTextCodec.encode(this._resources.translate('You'));
+                return Uint8Array.from([...encoded, 0]);
+            },
+            setConfig: (key, bytes) => {
+                if (!this._gameData || !(bytes instanceof Uint8Array)) throw new TypeError('미션 설정의 실제 저장소 또는 바이트 누락');
+                const end = bytes.indexOf(0); if (end < 0) throw new RangeError('미션 설정 문자열 NUL 누락');
+                this._gameData.set(key, displayTextCodec.decode(bytes.subarray(0, end)));
+            },
+            refreshWindowTitle: () => this._refreshFortWindowTitle(),
+        };
+    }
+
     // 같은 실제 Client의 State7 부모에서 선택된 Fort World를 설치하고 State8 내부 접속을 건다.
     _runCampaignState7(services, viewport) {
         const client = this._campaignStateClient(), request = this._clientGuide?.fortRequest();
@@ -761,7 +779,8 @@ export class Netstorm {
         const current = this._clientGuide?.current(), request = this._clientGuide?.fortRequest();
         if (this._campaignWorld || !current || !request || request.consumed || !this._gameAssets || !this._gameData) throw new Error('캠페인 World의 현재 Guide/요청 또는 단독 수명 계약 오류');
         const fort = parseFort(current.script.readFortImage(request.fort), createFortTypes(this._gameAssets.typeTable));
-        const world = new CampaignGameWorld(this._gameAssets, this._gameData.files, fort, request.fort, { ...services, ...this._campaignSharedServices() }, viewport);
+        const install = { ...this._campaignInstallServices(), ...services?.install };
+        const world = new CampaignGameWorld(this._gameAssets, this._gameData.files, fort, request.fort, { ...services, ...this._campaignSharedServices(), install }, viewport);
         this._campaignWorld = world; this._campaignWorldMissionToken = current.runtime.saveToken;
         return world;
     }

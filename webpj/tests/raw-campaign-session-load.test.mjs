@@ -45,6 +45,8 @@ import { SECTION_NAMES, fortSection, parseFort } from '../www/assets/fort.js';
 import { ARCHIVE_PATH, GameData, SETUP_PATH } from '../www/assets/game-data.js';
 import { TaffArchive } from '../www/assets/taff.js';
 import { decodeOriginalText, decodeWindows1252, encodeOriginalText } from '../www/assets/text-encoding.js';
+import { displayTextCodec } from '../www/assets/display-text.js';
+import { XlatTable } from '../www/assets/xlat.js';
 import { createFortTypes } from '../www/assets/type-flags.js';
 import { TypeTable } from '../www/assets/type-table.js';
 import { layoutFort, pieceFrameCodes } from '../www/assets/territory.js';
@@ -799,14 +801,14 @@ test('Netstorm Client World: 실제 Guide Fort 설치와 로컬 로그인 수명
 test('Netstorm Client World: 실제 앱 State7 부모와 State8 로컬 로그인', () => {
     const app = new Netstorm(); app._initializeClientRuntime(false);
     const data = GameData.build({ files: new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)]]), language: 'english' });
-    app._gameData = data; app._root = { ownerDocument: { title: 'before' } }; app._initializeClientWorldStorage(game, data.files); app._initializeClientGuide();
+    const xlat = new XlatTable(fs.readFileSync(path.join(REPO_ROOT, 'webpj/translations/xlat.korean'), 'utf8'));
+    app._gameData = data; app._root = { ownerDocument: { title: 'before' } }; app._resources = { translate: (text) => xlat.translate(text) }; app._initializeClientWorldStorage(game, data.files); app._initializeClientGuide();
     const guide = app._clientGuide; let world;
     const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => app._gameClock.wallSeconds(), clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {}, initializeRenderer: () => {}, uiMode: () => {}, startingProgress: () => {}, battlePalette: () => {}, closeProgress: () => {} };
     app._clientGameplay.camera().initializeNativeRenderer(1024, 768, 256, { value: 0 }, { value: 0 });
     const services = { localLogin, soundNames: new SoundList(), carrierRequest: forbidden('전송'),
         cameraCommit: (context) => { const pixels = context.camera.target().pixels; context.camera.applyPixelsToRendererAndSnapshot(pixels[0], pixels[1]); },
         surfaceDisplay: { suppressed: () => false, invalidate: () => {} },
-        install: { translateYou: () => Uint8Array.of(89, 111, 117, 0), setConfig: () => {}, refreshWindowTitle: () => {}, resetCamera: () => {} },
         ownership: { refreshProduction: () => {}, themeMode: () => 1 }, assets: { postPop: { playImpactSound: () => {} }, queueCommand: () => {} },
         sound: { wallSeconds: () => 0, play: forbidden('소리'), playOnceAt: forbidden('위치 소리'), playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false },
         ai: { assertion: forbidden('AI 진단'), participation: { addChat: () => {}, clearChat: () => {} } } };
@@ -828,6 +830,9 @@ test('Netstorm Client World: 실제 앱 State7 부모와 State8 로컬 로그인
             assert.deepEqual(order.splice(0), ['state', 'packet', 'guide']);
         }
         assert.equal(session.localConnectionReady(), true); assert.equal(world.connecting, true);
+        assert.equal(data.get('fort.mySubHandle'), '당신');
+        const owner = app._clientGameplay.player.battleOwner, record = app._clientPlayers.records().subarray(owner * 180 + 12, owner * 180 + 52);
+        assert.equal(displayTextCodec.decode(record.subarray(0, record.indexOf(0))), '당신');
         assert.equal(world.completeLocalConnection(), true); assert.equal(session.localConnectionReady(), true);
         guide.dispose(); app._releaseCampaignWorld(); assert.equal(app._campaignWorld, null); assert.equal(app._campaignWorldMissionToken, 0); assert.equal(app._surfaceStorage.borrowed, false);
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); }
