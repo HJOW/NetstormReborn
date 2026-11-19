@@ -29,6 +29,8 @@ import { ClientProductionSelection } from '../www/ui/client-production-selection
 import { ClientProductionHint } from '../www/ui/client-production-hint.js';
 import { ClientProductionPanel } from '../www/ui/client-production-panel.js';
 import { ClientHudDivider } from '../www/ui/client-hud-divider.js';
+import { createClientProductionAssembly } from '../www/ui/client-production-assembly.js';
+import { GumpHelp, GumpHelpState } from '../www/ui/gump-help.js';
 import { StyleTextFragmentKind } from '../www/ui/style-text-fragments.js';
 import { PriestPlacementAssets } from '../www/core/priest-placement-assets.js';
 import { RawCanonPixelShape } from '../www/core/raw-canon-pixel-shape.js';
@@ -413,5 +415,19 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         }
         assert.ok(panelHit); gump.input().route(0x10000, panelHit.x, panelHit.y); assert.equal(drop.preview, clickedItem.content); cursor.cancel();
         assembled.close(); assert.equal(gump.node(assembledToken), null); assert.throws(() => assembled.open(), /중복 생성/u);
+        // 실제 Client 색표·정책·글꼴을 쓰는 조립 공장도 같은 Session에서 생성한다.
+        const help = new GumpHelp(gump.createState(), new GumpHelpState(), { node: (token) => gump.node(token) });
+        const complete = createClientProductionAssembly(gump, session, game, app._resources.fonts, screen, app._clientColorSort, globals, production.panel, {
+            now: () => app._gameClock.wallSeconds(), translate: (value) => app._resources.translate(value),
+            sound: (name) => app._clientSoundPlayer.play(app._clientSoundNames.lookup(name), 0, 0, 0, 0, 0), tell: (section) => app._openTell(section),
+            about: () => { throw new Error('생산 정보 메뉴 미연결'); }, changed: () => app._clientRenderer.invalidateAll(), closePopups: () => app._closeCampaignPopups(),
+            poll: (code) => app._clientInputPoll.poll(code), cursor: (number) => { app._campaignCursor = number; },
+            baseHandle: (...args) => help.handle(...args), menuInstances: () => 0,
+        });
+        const completeToken = complete.open(), completeNode = complete.node(); assert.ok(gump.node(completeNode.bridge).child);
+        const completeItem = gump.node(gump.node(completeNode.bridge).child), completeSlot = session.core().pool.slot(completeItem.content)[23];
+        const completePixels = new Uint8Array(1366 * 768).fill(255); gump.draw(completeItem.child, draw, new GumpPixelTarget(completePixels, 1366, 768, draw));
+        assert.ok(completePixels.some((value) => value !== 255));
+        assert.equal(gump.handle(completeToken, 0x020000f4, completeSlot, 0), 1); assert.equal(drop.preview, completeItem.content); cursor.cancel(); complete.close();
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); app._clientSoundDevice.dispose(); app._missionAudioAssets.dispose(); }
 });
