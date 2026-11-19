@@ -6,6 +6,7 @@ import { RawCanonPixelShape } from '../www/core/raw-canon-pixel-shape.js';
 import { bindInventoryItemAssets } from '../www/ui/inventory-item-gump.js';
 import { decodeCanonType } from '../www/core/raw-canon-type.js';
 import { ClientImageGump } from '../www/ui/client-image-gump.js';
+import { ClientGumpBackground } from '../www/ui/client-gump-background.js';
 import { ClientGumpRoot } from '../www/ui/client-gump-root.js';
 import { GumpDrawState, GumpPixelTarget, setGumpDrawClip } from '../www/render/gump-draw.js';
 
@@ -42,5 +43,19 @@ test('Client 이미지 Gump: 실제 다리 SHP 출력·적중·삭제', () => {
         // 실제 출력된 픽셀의 부모 로컬 좌표를 같은 적중 장치로 확인한다.
         for (let y = 0; y < 200 && !found; y += 1) for (let x = 0; x < 200; x += 1) if (pixels[y * 200 + x] !== 255 && image.hit(token, x, y)) { found = true; break; }
         assert.equal(found, true); root.remove(token); assert.throws(() => image.hit(token, 0, 0), /저장소/u);
+    } finally { root.dispose(); scene.world.dispose(); }
+});
+
+// 실제 원본 패널 배경을 Client Gump 클립과 같은 픽셀에 출력한다.
+test('Client 배경 Gump: 실제 패널 SHP·클립·삭제', () => {
+    const scene = new CampaignCursorScene(), root = new ClientGumpRoot(200, 200, () => 0, () => {});
+    try {
+        const identity = Uint8Array.from({ length: 256 }, (_value, index) => index);
+        const background = new ClientGumpBackground(root, scene.assets, () => 0, () => ({ bright: identity, dark: identity }), () => ({ basic: new Uint8Array(9) }), () => 0);
+        const type = scene.assets.find('fortGump').block + 70, token = background.create(50, 50, 0x02000000, type, 2); root.attach(token, 20, 20);
+        const draw = new GumpDrawState(); setGumpDrawClip(draw, { left: 30, top: 30, right: 60, bottom: 60 });
+        const pixels = new Uint8Array(40000).fill(255); root.draw(token, draw, new GumpPixelTarget(pixels, 200, 200, draw));
+        assert.ok(pixels.some((value) => value !== 255)); assert.equal(pixels[10 * 200 + 10], 255); assert.equal(pixels[20 * 200 + 20], 255);
+        root.remove(token); assert.throws(() => root.draw(token, draw, new GumpPixelTarget(pixels, 200, 200, draw)), /토큰/u);
     } finally { root.dispose(); scene.world.dispose(); }
 });
