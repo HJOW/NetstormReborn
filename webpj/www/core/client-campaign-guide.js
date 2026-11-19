@@ -100,7 +100,7 @@ export class ClientCampaignGuide {
                 initialize: () => this.initializeTutorial(),
                 tellGlobal: (name, mode) => devices.tellGlobal(name, mode),
                 showStage: () => { const tutorial = this.#owned.runtime.value?.tutorial; if (!tutorial) throw new Error('Guide First의 현재 안내 연결 누락'); tutorial.tellStage(); },
-                start: () => { throw new Error('Guide 단계3 실제 World Start 연결 누락'); },
+                start: () => { const start = this.#owned.runtime.value?.start; if (!start) throw new Error('Guide 단계3 실제 World Start 연결 누락'); start.start(); },
                 frame: () => { const tutorial = this.#owned.runtime.value?.tutorial; if (!tutorial) throw new Error('Guide 프레임의 실제 미션 연결 누락'); tutorial.frame(); },
                 tellMission: (name) => { if (typeof devices.tellMission !== 'function') throw new Error('Guide 종료 안내의 실제 미션 Tell 연결 누락'); return devices.tellMission(name); },
                 closeTransient: () => { if (typeof devices.closeTransient !== 'function') throw new Error('Guide 팝업 닫기 연결 누락'); devices.closeTransient(); },

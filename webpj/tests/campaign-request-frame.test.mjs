@@ -97,9 +97,16 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         assert.ok(app._missionLoadingWindow); assert.equal(app._mainMenu.dialog, app._missionLoadingWindow);
         app._mainMenu.render(new IndexedSurface(1024, 768));
         const session = app._campaignWorld.session();
+        const notices = [], gump = app._clientGump;
+        const parent = gump.createBase(0, 20, 20, 1, (...event) => { notices.push(event.slice(0, 3)); return 0; });
+        const child = gump.createBase(0, 10, 10, 1, () => 0); gump.attach(parent, 0, 0); gump.attach(child, 0, 0, parent); app._clientChatWindows.window.current = child;
         // 실제 패킷·State는 앱 프레임에서만 진행하고 준비 전에는 Guide를 기다린다.
         for (let frame = 0; frame < 10 && !session.localConnectionReady(); frame += 1) app._onFrame(frame * 16);
         assert.equal(session.localConnectionReady(), true); assert.equal(session.world().storage, app._surfaceStorage);
+        const runtime = guide.current().runtime; assert.equal(app._campaignWorld.connecting, false);
+        assert.ok(runtime.start && runtime.tutorial); assert.equal(runtime.state.sequence, 4); assert.equal(runtime.gate.started, 1);
+        assert.ok(notices.some(([code, first, second]) => code === 0x02000088 && first === 0 && second === 0));
+        assert.equal(session.sp(session.localOwner()), Number(guide.current().script.get('myStartMoney')));
         const camera = app._clientGameplay.camera(); assert.deepEqual(camera.rendererView().pixels, camera.snapshot().pixels);
         const soundView = app._campaignSoundView(); assert.equal(soundView.cameraX, camera.snapshot().pixels.x); assert.equal(soundView.cameraY, camera.snapshot().pixels.y);
         assert.deepEqual({ left: soundView.left, top: soundView.top, right: soundView.right, bottom: soundView.bottom }, app._campaignWorld.mapView());
@@ -109,26 +116,15 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         const beforeRenderer = app._clientRenderer; app._applyLayout();
         assert.equal(app._clientPaletteScreen.width, 1366); assert.notEqual(app._clientRenderer, beforeRenderer);
         assert.deepEqual(app._campaignWorld.mapView(), { left: 0, top: 28, right: 1366, bottom: 768 });
-        // 실제 Ready Session과 같은 Guide 상태의 Start를 현재 앱 장치로 준비한다.
-        assert.equal(app._campaignWorld.completeLocalConnection(), true);
-        app._campaignWorldMissionToken += 1; assert.throws(() => app._prepareCampaignMissionStart(), /수명 오류/); app._campaignWorldMissionToken -= 1;
-        const runtime = guide.current().runtime, start = app._prepareCampaignMissionStart();
-        assert.equal(runtime.start, start); assert.throws(() => app._prepareCampaignMissionStart(), /수명 오류/);
-        const notices = [], gump = app._clientGump;
-        const parent = gump.createBase(0, 20, 20, 1, (...event) => { notices.push(event.slice(0, 3)); return 0; });
-        const child = gump.createBase(0, 10, 10, 1, () => 0); gump.attach(parent, 0, 0); gump.attach(child, 0, 0, parent); app._clientChatWindows.window.current = child;
-        runtime.state.sequence = 3; start.start(); assert.equal(runtime.state.sequence, 4); assert.equal(runtime.gate.started, 1);
-        assert.ok(notices.some(([code, first, second]) => code === 0x02000088 && first === 0 && second === 0));
-        assert.equal(session.sp(session.localOwner()), Number(guide.current().script.get('myStartMoney')));
+        assert.throws(() => app._prepareCampaignMissionStart(), /수명 오류/); assert.throws(() => app._prepareCampaignTutorial(), /수명 오류/);
         assert.doesNotThrow(() => session.checkMissionOutcome());
         const outcome = app._campaignGameplayServices().missionOutcome;
         assert.equal(outcome.section('A.'), true); assert.equal(outcome.tellBlocked(), true); app._mainMenu.setDialog(null);
         assert.equal(outcome.tellBlocked(), false); assert.equal(outcome.section('없는 안내'), false); assert.equal(outcome.demo(), runtime.gate.demo);
-        const tutorial = app._prepareCampaignTutorial(); assert.equal(runtime.tutorial, tutorial); assert.throws(() => app._prepareCampaignTutorial(), /수명 오류/);
-        // 같은 게이트의 10프레임 뒤 실제 A 안내가 열리고, 닫은 뒤 7프레임에 게임 시계가 재개된다.
-        for (let frame = 0; frame < 10; frame += 1) tutorial.frame();
+        // 같은 앱 프레임에서 실제 A 안내가 열리고 닫은 뒤 7프레임에 게임 시계가 재개된다.
+        for (let frame = 0; frame < 15 && !app._mainMenu.dialog; frame += 1) app._onFrame(200 + frame * 16);
         assert.ok(app._mainMenu.dialog); assert.equal(runtime.gate.scriptPaused, 1); assert.equal(app._gameClock.paused(), true);
-        app._mainMenu.setDialog(null); for (let frame = 0; frame < 7; frame += 1) tutorial.frame();
+        app._mainMenu.setDialog(null); for (let frame = 0; frame < 7; frame += 1) app._onFrame(500 + frame * 16);
         assert.equal(runtime.gate.scriptPaused, 0); assert.equal(app._gameClock.paused(), false);
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); app._clientSoundDevice.dispose(); app._missionAudioAssets.dispose(); }
 });

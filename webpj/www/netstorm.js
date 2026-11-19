@@ -2414,6 +2414,11 @@ export class Netstorm {
         // 원본 루프 4번: Poll 뒤 현재 World를 다시 조회해 같은 내부 전송을 진행한다. 완료 후 화면 설치는 별도 경계다.
         const packetWorld = this._campaignWorld;
         if (packetWorld && !packetWorld.session().connectionCallbackActive()) packetWorld.session().pumpLocalConnection();
+        // Ready인 같은 미션에 Start·Tutorial을 준비한 뒤 World 연결 관문을 연다.
+        const readyWorld = this._campaignWorld;
+        if (this._state === AppState.MAIN_MENU && readyWorld?.connecting && !readyWorld.session().connectionCallbackActive() && readyWorld.session().localConnectionReady()) {
+            this._prepareCampaignMissionStart(); this._prepareCampaignTutorial(); readyWorld.completeLocalConnection();
+        }
         // 원본 루프 8번의 Guide를 상태·패킷 처리 뒤, 입력 처리보다 먼저 실행한다.
         this._clientGuide?.run();
         if (this._state === AppState.MAIN_MENU) {
