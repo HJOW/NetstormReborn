@@ -66,7 +66,9 @@ import { cursorDisplayLogicalPalette } from '../www/render/raw-campaign-cursor-d
 import { buildPaletteColorTable } from '../www/core/palette-colors.js';
 import { createMissionFrameGateState, RawMissionFrameGate } from '../www/core/raw-mission-frame-gate.js';
 import { createMissionStartState } from '../www/core/raw-mission-start.js';
-import { MissionScript } from '../www/core/mission-script.js';
+import { MissionScript, createGuideMissionScript } from '../www/core/mission-script.js';
+import { CampaignGuideRuntime, releaseCampaignGuideMission } from '../www/core/campaign-guide-release.js';
+import { ClientState } from '../www/core/client-state.js';
 import { PacketConnection, RawPacketDispatch } from '../www/core/raw-packet-dispatch.js';
 import { ClientGameplayGlobals } from '../www/core/client-gameplay-globals.js';
 import { ClientConnectionGlobals } from '../www/core/client-connection-globals.js';
@@ -632,6 +634,45 @@ test('Netstorm Client 미션 자산: Tutorial1 스크립트와 실제 Session �
     assert.throws(() => mission.script, /반납/); assert.throws(() => mission.fort, /반납/); mission.dispose();
     assert.throws(() => app._prepareCampaignMission('NoSuchMission_4773'), /미션 스크립트 없음/);
     const again = app._prepareCampaignMission('Tutorial1'); assert.equal(again.script.fortName(), 'BridgeTheGap'); again.dispose();
+});
+
+// 실제 앱 Client와 살아 있는 Session을 빌린 Tutorial Guide의 전역·AI·Config 해제를 확인한다.
+test('Netstorm Client Guide: 실제 Session을 유지하며 Tutorial 전역을 반납한다', () => {
+    const app = new Netstorm(); app._initializeClientRuntime(false);
+    const data = GameData.build({ files: new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)]]), language: 'english' });
+    app._gameData = data; app._initializeClientWorldStorage(game, data.files);
+    const shared = app._campaignSharedServices(), gameplay = shared.gameplayGlobals, storage = shared.surfaceStorage;
+    const { s } = scene(shared, parseFort(entry.bytes, createFortTypes(game.typeTable)));
+    const nativeMission = { get value() { return storage.links.mission; }, set value(value) { storage.links.mission = Boolean(value); } };
+    const mission = { value: createGuideMissionScript(data, 'Tutorial1', nativeMission) }, runtime = { value: new CampaignGuideRuntime(mission.value, 0, 0, 1) };
+    const owned = { mission, runtime, request: { value: null }, restrictions: new Uint32Array(256), missionNumber: { value: 7 }, worldMissionToken: { value: 1 }, nativeMission };
+    const client = { gameplayGlobals: () => gameplay, playerRecords: () => shared.playerRecords, configuration: () => data };
+    gameplay.denySalvage().value = 9; gameplay.denyAscend().value = -1; runtime.value.gate.tutorialNumber = 3; runtime.value.gate.stage = 5;
+    try {
+        releaseCampaignGuideMission(client, new ClientState(), owned);
+        assert.equal(gameplay.denySalvage().value, 0); assert.equal(gameplay.denyAscend().value, 0);
+        assert.equal(owned.missionNumber.value, 0); assert.equal(owned.runtime.value, null); assert.equal(owned.mission.value, null);
+        assert.equal(storage.links.mission, false); assert.equal(gameplay.requireSession(), s); assert.equal(storage.borrowed, true);
+    } finally { mission.value?.dispose(); s.dispose(); storage.dispose(); }
+});
+
+// World가 없는 앱도 실제 Player 기록을 검사하고 예약된 Fort 요청과 같은 Client 전역을 반납한다.
+test('Netstorm Client Guide: World 없는 실제 Client 전역과 지연 요청 반납', () => {
+    const app = new Netstorm(); app._initializeClientRuntime(false);
+    const data = GameData.build({ files: new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)]]), language: 'english' });
+    app._gameData = data; app._initializeClientWorldStorage(game, data.files);
+    const shared = app._campaignSharedServices(), gameplay = shared.gameplayGlobals, storage = shared.surfaceStorage;
+    const nativeMission = { get value() { return storage.links.mission; }, set value(value) { storage.links.mission = Boolean(value); } };
+    const mission = { value: createGuideMissionScript(data, 'Tutorial1', nativeMission) }, runtime = { value: new CampaignGuideRuntime(mission.value, 0, 0, 2) };
+    const pending = new ClientState(); pending.post({ command: 'LoadMissionFort' });
+    const owned = { mission, runtime, request: { value: { fort: 'BridgeTheGap' } }, restrictions: new Uint32Array(256), missionNumber: { value: 3 }, worldMissionToken: { value: 2 }, nativeMission };
+    const client = { gameplayGlobals: () => gameplay, playerRecords: () => shared.playerRecords, configuration: () => data };
+    gameplay.denySalvage().value = 4; gameplay.denyAscend().value = 5;
+    try {
+        releaseCampaignGuideMission(client, pending, owned);
+        assert.equal(gameplay.denySalvage().value, 0); assert.equal(gameplay.denyAscend().value, 0);
+        assert.equal(pending.pending(), false); assert.equal(owned.request.value, null); assert.equal(owned.runtime.value, null); assert.equal(storage.links.mission, false);
+    } finally { mission.value?.dispose(); storage.dispose(); }
 });
 
 // 실제 월드 전체를 관측하고 Session이 초기화한 SP와 현재 원문·장부를 바꾸지 않는다.

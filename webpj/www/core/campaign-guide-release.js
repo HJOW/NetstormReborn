@@ -46,6 +46,15 @@ function removeCurrentGuideBrains(client) {
     }
 }
 
+// 실제 Client의 참조 상자와 독립 계약의 값형 필드를 현재 호출 시점에 읽는다.
+function guideGameField(game, name) {
+    const field = game[name]; return typeof field === 'function' ? field.call(game).value : field;
+}
+// 실제 Client 참조 상자의 값을 쓰며 독립 계약의 값형 필드도 같은 순서로 갱신한다.
+function writeGuideGameField(game, name, value) {
+    const field = game[name]; if (typeof field === 'function') field.call(game).value = value; else game[name] = value;
+}
+
 // 원본 Mission 필드와 그 필드를 빌리는 실행기를 한 객체에 보유한다. 생성은 번호·Start 효과를 앞당기지 않는다. (2026-11-15 WB04-E524)
 export class CampaignGuideRuntime {
     // 현재 World 설치를 같은 미션과 연결하는 호스트 토큰(게임 규칙 값이 아님)이다.
@@ -96,10 +105,10 @@ export function releaseCampaignGuideMission(client, pending, owned) {
         const gate = current.gate;
         // C++ 은 여섯 전역의 참조를 넘긴다. JS 는 현재 값을 읽고 쓰는 속성으로 같은 DWORD 를 빌린다.
         const state = {
-            get denySalvage() { return game.denySalvage; },
-            set denySalvage(value) { game.denySalvage = value; },
-            get denyAscend() { return game.denyAscend; },
-            set denyAscend(value) { game.denyAscend = value; },
+            get denySalvage() { return guideGameField(game, 'denySalvage'); },
+            set denySalvage(value) { writeGuideGameField(game, 'denySalvage', value); },
+            get denyAscend() { return guideGameField(game, 'denyAscend'); },
+            set denyAscend(value) { writeGuideGameField(game, 'denyAscend', value); },
             get missionNumber() { return missionNumber.value; },
             set missionNumber(value) { missionNumber.value = value; },
             get tutorialNumber() { return gate.tutorialNumber; },
