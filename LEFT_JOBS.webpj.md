@@ -4,14 +4,14 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-19, 마지막 단위 WB04-E893)
+### 0.1 현재 값 (2026-11-19, 마지막 단위 WB04-E894)
 
 | 항목 | 현행 상태 |
 | --- | --- |
 | 실행·플레이 | 브라우저에서 ‘클릭하여 시작’, 메인 메뉴·캠페인/데모 목록·도움말·옵션·Credits와 개발용 지형 미리보기가 동작한다. Node 통합 검사에서 실제 Fort로 Session을 적재하고 내부 Login·Start·일부 이동과 건설을 확인했다. 브라우저의 `MissionBegin`·`StartDemo`에서 실제 월드로 들어가 플레이하는 기능은 미연결이다. |
 | 원본과의 동일성 | 영어 4:3 메뉴 M1 8장면은 cpppj 오라클과 알려진 구름 배경 등 차이 영역 밖에서 픽셀 차이 0이다. 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다. 실제 미션 L2·L3·L4, 자연 완주는 미검증이다. |
 | 현재 작업 | **M2의 4-D 진행 중.** 앱의 공통 시계·난수·SP·Player·Template·월드 저장소와 Guide 생성/반납을 연결하고 독립 Session 적재를 확인했다. E893에서 내부 미션 전송의 실제 Session 수신 콜백 대여와 State 정리 관문을 연결했다. [내부 전송 콜백](docs/webpj-session-internal-callback-20261119.md) E892에서 Fort 이름의 원본 관측 876행 전부를 물리·콜백 변이·중단과 호출 순서로 대조했다. [전체 Fort 관측](docs/webpj-fort-name-observation-20261119.md) E891에서 manager 없는 편집 설정 경계 20행을 추가했다. [Fort 관측](docs/webpj-fort-name-editor-observation-20261119.md) E890에서 앱 프레임의 시각 고정 뒤 Guide를 호출해 실제 Tutorial1의 단계·지연 요청 관문을 확인했다. [앱 Guide 프레임](docs/webpj-app-guide-frame-20261119.md) E889에서 앱의 실제 Client 전역과 State7 부모·State8 내부 접속을 같은 Guide/World에 연결했다. [앱 State7](docs/webpj-app-state7-20261119.md) E888에서 앱이 같은 Guide의 Fort로 GameWorld를 소유하고 로컬 로그인·반납하는 경계를 검사했다. [앱 GameWorld](docs/webpj-app-game-world-20261119.md) E887에서 Guide 반복기를 실제 창·State 대기 조건과 Tutorial Init에 결합했다. E886은 Fort 요청을 Session 로컬 로그인까지 검사했다. [Guide 반복기](docs/webpj-app-guide-loop-20261119.md) 앱 메뉴/Kernel 프레임의 지연 요청 소비·패킷 Poll, 실제 Fort Snapshot/Notify 및 Tutorial1 L2가 남았다. [Tutorial Init](docs/webpj-app-tutorial-init-20261119.md) [앱 소유자](docs/webpj-app-world-storage-20261119.md) · [Guide](docs/webpj-app-campaign-guide-20261119.md) · [Fort 이름](docs/webpj-client-fort-name-20261119.md) · [Tutorial1 프레임 차이](docs/webpj-campaign-ownership-theme-20261119.md) |
-| 전체 회귀 | E893 Node v26.13.0 전체 6,441건, E891 Node v22.23.3 전체 6,439건 통과(실패·취소·건너뜀 0). E893 집중·연관 Node 검사 62건과 E892 원본 관측 전체 876행 및 연관 검사 통과; E891 집중 Node 검사 3건과 E890 집중·연관 검사 24건 통과; E889 Chromium 1건 통과. HJOW-Athlon의 작업 단위 주기: v26 0/4, v22 2/8. fixture 831개 해시·파일 불일치/누락 0; 전체 Git 이력 재조회는 중단하고 이번 본체의 변경 여부와 대응표는 별도 확인했다. |
+| 전체 회귀 | E893 Node v26.13.0 전체 6,441건, E891 Node v22.23.3 전체 6,439건 통과(실패·취소·건너뜀 0). E894 favicon Chromium 창·헤드리스 각 1건 통과; E893 집중·연관 Node 검사 62건과 E892 원본 관측 전체 876행 및 연관 검사 통과. HJOW-Athlon의 작업 단위 주기: v26 1/4, v22 3/8. fixture 831개 해시·파일 불일치/누락 0; 전체 Git 이력 재조회는 중단하고 이번 본체의 변경 여부와 대응표는 별도 확인했다. |
 | 브라우저 검사 | 2026-11-17 Chromium 2/2. 갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체 확인. 최초 실행·진행 잠금/체크 및 저장 재실행은 E616에서 별도 Chromium 2/2로 확인했다. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
 
 **미션 식별.** 이전 공통 fixture의 `thewarbegins.fort`는 캠페인 1-1이다. 실제 `tutorial1`이 선택하는 Fort는 `BridgeTheGap`이며, 지형·섬을 E753에서 다시 대조했다. [미션명 정정](docs/webpj-session-login-shipped-forts-20261118.md) · [Tutorial1 지형 재검증](docs/webpj-tutorial1-terrain-recheck-20261118.md)
@@ -71,7 +71,7 @@
 
 <a id="favicon"></a>
 
-- [ ] **favicon(AGENTS 2026-11-19 추가 `11b16b77`).** 기존 게임 실행 파일 아이콘을 favicon으로 탑재한다. 원본은 `originals/Netstorm.exe`의 아이콘 그룹 144(16×16·4bpp)와 102(32×32·4bpp)다. 두 그림을 그대로 담은 `.ico`를 `webpj/www/favicon.ico`로 복사하고, cpppj·dotnetpj가 먼저 만든 공통 `.ico`가 있으면 재사용한다. `index.html`에는 하위 경로 배포에서도 맞도록 상대 경로 `<link rel="icon" href="favicon.ico">` 한 줄만 추가한다. 지금은 링크와 파일이 없어 브라우저 검사마다 `favicon.ico` 404를 예외로 기록했다. 완료 시 원본 바이트 대조 시험과 Chromium의 404 해소·탭 아이콘 표시를 확인한다. [공통 기준](LEFT_JOBS.md#exe-icon)
+- [ ] **favicon 탭 시각 확인.** E894에서 공통 ICO를 복사하고 상대 경로 링크를 추가했다. 원본 두 이미지의 바이트 대조와 Chromium의 HTTP 200·해독을 확인했다. 탭 아이콘의 실제 표시는 컴퓨터 사용 도구의 창 소유자 오류로 아직 시각 확인하지 못했다. [작업·검증](docs/webpj-favicon-20261119.md) · [공통 기준](LEFT_JOBS.md#exe-icon)
 
 <a id="korean-font-change"></a>
 

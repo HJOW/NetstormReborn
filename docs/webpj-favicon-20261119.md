@@ -1,0 +1,7 @@
+# 웹 favicon 적용 (WB04-E894, 2026-11-19)
+
+cpppj 1323에서 추출한 `assets/Netstorm.ico`를 `webpj/www/favicon.ico`로 복사하고, `index.html`에 상대 경로 아이콘 링크를 추가했다. 하위 경로 배포에서도 링크는 문서 경로를 기준으로 해석된다.
+
+원본 `originals/Netstorm.exe`의 PE 리소스를 `pefile`로 읽어 그룹 102·144의 디렉터리와 각각 `RT_ICON` 1·2의 이미지 전체 744·296바이트를 웹 ICO와 비교했다. 모두 같고 공통 ICO와 웹 ICO도 바이트 단위로 같다. SHA-256은 `bd4c18c5cb5f42bc49a1de0c6d6623643fd5377f575e95a1de60a05f01e4f068`이다. 원본은 수정하지 않았다.
+
+Playwright Chromium에서 창 모드와 헤드리스로 각각 링크·HTTP 200·MIME·해시·브라우저 이미지 해독 검사를 통과했다. 자동 favicon 요청은 Playwright 페이지의 응답 이벤트로 관찰되지 않아 명시 요청으로 확인했다. 실제 탭의 아이콘을 눈으로 확인하려 했으나 컴퓨터 사용 도구가 보이는 Chromium 창에 연결할 때 창 소유자 오류를 반환했다. 탭 표시의 시각 확인은 아직 남아 있다.
