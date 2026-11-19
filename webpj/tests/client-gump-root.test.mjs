@@ -70,6 +70,16 @@ test('Client Gump 루트: 현재 표시 자식과 하위 재그리기', () => {
     owner.dispose(); assert.throws(() => owner.redrawRoots(), /반납한 Client Gump/);
 });
 
+// 파생 재그리기는 트리와 프레임에서 분배되고 기본 장치도 재귀 없이 호출한다.
+test('Client Gump 루트: 파생 재그리기 분배와 반납', () => {
+    const calls = [], owner = new ClientGumpRoot(100, 80, () => 0, (token, erase) => calls.push(['base', token, erase]));
+    const node = new GumpBackgroundNode(), token = owner.allocateDerived(node, () => 0, (current, flags) => owner.lifetime().deleteScalar(current, flags));
+    owner.factory().construct(token, 0, 10, 10, 1); owner.bindRedraw(token, (current, erase) => { calls.push(['derived', current, erase]); owner.redrawBase(current, erase); });
+    owner.attach(token, 10, 10); assert.deepEqual(calls.slice(-2), [['derived', token, false], ['base', token, false]]);
+    calls.length = 0; owner.redrawRoots(); assert.deepEqual(calls, [['derived', token, false], ['base', token, false]]);
+    owner.remove(token); assert.throws(() => owner.bindRedraw(token, () => {}), /토큰/u); owner.dispose();
+});
+
 // 원본 차단 조회는 직계 0x4000만 검사하고 닫기는 비삭제 직계만 Kill한다.
 test('Client Gump 루트: 직계 팝업 차단과 지연 닫기', () => {
     const owner = new ClientGumpRoot(100, 80, () => 0, () => {});
