@@ -35,6 +35,7 @@ import { ClientFrameClock } from './core/client-frame-clock.js';
 import { ClientLocalStateGlobals } from './core/client-local-state-globals.js';
 import { ClientKencloudGlobals } from './core/client-kencloud-globals.js';
 import { ClientColorSortInput } from './core/client-color-sort-input.js';
+import { MemoryColorMapFiles } from './core/color-map-files.js';
 import { ClientHtmlWindowGlobals } from './core/client-html-window-globals.js';
 import { ClientConnectionGlobals } from './core/client-connection-globals.js';
 import { ClientConnectionActivityGlobals } from './core/client-connection-activity-globals.js';
@@ -52,6 +53,7 @@ import { ClientMissionAssets } from './core/client-mission-assets.js';
 import { CampaignGameWorld } from './core/campaign-game-world.js';
 import { parseFort } from './assets/fort.js';
 import { createFortTypes } from './assets/type-flags.js';
+import { PATCH_TYPE_COUNT } from './assets/type-table.js';
 import { ClientCampaignGuide } from './core/client-campaign-guide.js';
 import { ClientFortGlobals } from './core/client-fort-globals.js';
 import { ClientFortCurrentName } from './core/client-fort-current-name.js';
@@ -460,6 +462,8 @@ export class Netstorm {
         this._clientRandom = null; this._clientSp = null;
         // 시작 팔레트와 최초 색 정렬 입력은 Client 수명 동안 같은 객체로 유지한다.
         this._clientPaletteScreen = null; this._clientColorSort = null;
+        // 설치 폴더에 쓰지 않는 색표 캐시는 같은 페이지의 앱 재시작 사이에 유지한다.
+        this._clientColorMapFiles = new MemoryColorMapFiles();
         // Client 공통 Player·Core·Template과 Subscriber는 Session보다 오래 산다.
         this._clientSubscriber = null; this._clientGameplay = null; this._clientCoreData = null; this._clientPlayers = null; this._clientTemplates = null;
         // 자산 적재 뒤 구성해 Session보다 오래 유지하는 월드 물리와 Kernel이다.
@@ -703,6 +707,17 @@ export class Netstorm {
         colors.captureWithPrimary(screen.logicalPalette());
         screen.bindColorSortInput(() => colors.logical);
         this._clientPaletteScreen = screen; this._clientColorSort = colors;
+    }
+
+    // 최초 TYPE 등록 뒤 같은 primary로 소유자 표와 9색표 캐시를 만들고 Screen 명암 조회에 연결한다.
+    _initializeClientPaletteCache(game) {
+        const screen = this._clientPaletteScreen, colors = this._clientColorSort, clouds = this._clientKencloud;
+        if (!screen || !colors || !clouds || !game || colors.mapsReady) throw new Error('Client 색표 캐시의 중복 또는 시작 수명 누락');
+        const bridge = game.typeNumber(game.find('bridge'));
+        colors.initializeCache(this._clientColorMapFiles, 'cache/!color.dat', screen.colors().basic[1], () => {
+            colors.ownerTables.initialize(colors.primary, PATCH_TYPE_COUNT, bridge, clouds.worldRedraw());
+        });
+        screen.bindColorMaps(() => ({ bright: colors.maps[4], dark: colors.maps[6] }));
     }
 
     // 같은 Client 설정·Player·월드 저장소에 Guide 수명을 연결한다.
@@ -972,6 +987,7 @@ export class Netstorm {
                 this._initializeClientWorldStorage(loadClientWorldAssets(this._gameData.files, palettePath), this._gameData.files);
             }
             if (!this._clientPaletteScreen) this._initializeClientPalette(this._gameAssets);
+            if (!this._clientColorSort.mapsReady) this._initializeClientPaletteCache(this._gameAssets);
             if (!this._clientGuide) this._initializeClientGuide();
             await this.options.prepare(this);
         } catch (error) {

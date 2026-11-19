@@ -50,7 +50,7 @@ test('현재 세대의 적재 실패를 보고하고 오류 상태를 유지한�
     await captureErrors(async (entries) => {
         const app = new Netstorm({ prepare: async () => { throw error; } });
         // 준비 훅의 오류만 검사하도록 앞선 자산·팔레트 단계가 끝난 상태를 둔다.
-        app._resources = {}; app._surfaceStorage = {}; app._clientGuide = {}; app._clientPaletteScreen = {};
+        app._resources = {}; app._surfaceStorage = {}; app._clientGuide = {}; app._clientPaletteScreen = {}; app._clientColorSort = { mapsReady: true };
         await app._load();
         assert.equal(app._state, 'error');
         assert.equal(app._loadError, error);
@@ -68,7 +68,7 @@ test('이전 적재 세대의 실패는 무시한다', async () => {
     await captureErrors(async (entries) => {
         const app = new Netstorm({ prepare: () => new Promise((resolve, reject) => { rejectPreparation = reject; }) });
         // 준비 훅이 실제로 대기하도록 앞선 적재 단계의 완료 상태를 둔다.
-        app._resources = {}; app._surfaceStorage = {}; app._clientGuide = {}; app._clientPaletteScreen = {};
+        app._resources = {}; app._surfaceStorage = {}; app._clientGuide = {}; app._clientPaletteScreen = {}; app._clientColorSort = { mapsReady: true };
         const loading = app._load();
         app._loadGeneration += 1;
         rejectPreparation(new Error('취소된 적재'));
