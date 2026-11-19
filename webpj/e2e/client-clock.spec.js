@@ -24,6 +24,17 @@ test('게임 시계는 앱 프레임과 같은 수명으로 생성되고 재시�
     return [routed === token, events[0], owner.root().child, owner.createState().count, app._displayDirty];
   });
   expect(gumpInput).toEqual([true, 42, 0, 1, true]);
+  // 배경 파생 생성기와 입력·소멸자는 같은 실제 노드 주소를 사용한다.
+  const derivedGump = await page.evaluate(async () => {
+    const { GumpBackgroundNode, GumpBackgroundCreate } = await import('/ui/gump-background-create.js');
+    const owner = window.netstorm._clientGump, node = new GumpBackgroundNode(), calls = [];
+    const token = owner.allocateDerived(node, (event) => { calls.push(event); return 1; }, (current, flags) => { calls.push('destroy'); return owner.lifetime().deleteScalar(current, flags); });
+    const background = new GumpBackgroundCreate(owner.createState(), owner.factory(), () => 55, { node: (current) => owner.node(current) });
+    background.construct(token, 20, 10, 0, 0x401, 0, 0); owner.attach(token, 10, 20);
+    const result = [owner.node(token) === node, owner.input().route(43, 0, 0) === token]; owner.remove(token);
+    return [...result, ...calls, owner.node(token) === null];
+  });
+  expect(derivedGump).toEqual([true, true, 43, 'destroy', true]);
   // 화면 팔레트 변경이 실제 표시기의 같은 색 번호에 전달되는지 확인한 뒤 원래 색을 복구한다.
   const presentedColor = await page.evaluate(async () => {
     const app = window.netstorm, { GamePalette } = await import('/assets/palette.js');

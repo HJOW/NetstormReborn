@@ -3,6 +3,8 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Netstorm } from '../www/netstorm.js';
 import { ClientGumpRoot } from '../www/ui/client-gump-root.js';
+import { GumpCreateNode } from '../www/ui/gump-create.js';
+import { GumpBackgroundCreate, GumpBackgroundNode } from '../www/ui/gump-background-create.js';
 
 // 등록 루트와 현재 입력 전역은 크기 변경에도 같은 객체이며 원본 삭제 큐로 반납한다.
 test('Client Gump 루트: 실제 등록표·크기·입력·삭제 수명', () => {
@@ -43,5 +45,20 @@ test('Client Gump 루트: 부착 진단이 현재 Client 전역에 기록된다'
     app._clientGameplay.aiDebug().checking().value = 1;
     const owner = app._clientGump, token = owner.createBase(0, 10, 10, 1, () => 0);
     owner.attach(token, 0, 0); assert.equal(app._clientGameplay.aiDebug().assertionDetail().value, 'gt = 0');
+    owner.dispose();
+});
+
+// 배경 파생 생성기와 입력·소멸자가 같은 실제 확장 노드를 사용한다.
+test('Client Gump 루트: 실제 파생 배경 노드의 생성·입력·소멸', () => {
+    const owner = new ClientGumpRoot(100, 80, () => 0, () => {}), node = new GumpBackgroundNode(), events = [];
+    const token = owner.allocateDerived(node, (event) => { events.push(event); return 1; }, (current, flags) => { events.push('destroy'); return owner.lifetime().deleteScalar(current, flags); });
+    assert.throws(() => owner.allocateDerived(node, () => 0, () => {}), /중복/u);
+    const background = new GumpBackgroundCreate(owner.createState(), owner.factory(), () => 55, { node: (current) => owner.node(current) });
+    background.construct(token, 20, 10, 0, 0x401, 0, 0); assert.equal(owner.node(token), node);
+    assert.equal(node.command, 55); owner.attach(token, 10, 20);
+    assert.equal(owner.input().route(42, 0, 0), token); owner.remove(token);
+    assert.deepEqual(events, [42, 'destroy']); assert.equal(owner.node(token), null); assert.equal(owner.createState().count, 1);
+    assert.throws(() => owner.allocateDerived(new GumpCreateNode(), () => 0, () => {}), /파생 노드/u);
+    assert.throws(() => owner.allocateDerived(new GumpBackgroundNode(), () => 0, null), /소멸자/u);
     owner.dispose();
 });
