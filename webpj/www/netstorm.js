@@ -761,8 +761,11 @@ export class Netstorm {
         const subscriber = this._clientSubscriber, gameplay = this._clientGameplay, coreData = this._clientCoreData, players = this._clientPlayers, templates = this._clientTemplates;
         if (!clock || !random || !sp || !local || !subscriber || !gameplay || !coreData || !players || !templates) throw new Error('캠페인의 실제 Client 공통 수명 미설치');
         const surface = this._surfaceStorage, kernel = this._clientKernel, request = this._clientGuide?.fortRequest();
+        const colors = this._clientColorSort, screen = this._clientPaletteScreen;
+        if (Boolean(colors) !== Boolean(screen) || (colors && !colors.mapsReady)) throw new Error('캠페인의 실제 Client 색표 수명 미설치');
         return { randomGlobals: random, spGlobals: sp, localStateGlobals: local, subscriberGlobals: subscriber, gameplayGlobals: gameplay, coreDataGlobals: coreData,
             playerRecords: players, templateStorage: templates, connectionActivityGlobals: this._clientConnectionActivity, connectionRegistry: this._clientConnections, connectionFrameNumber: () => clock.time().number, ...(surface && kernel ? { surfaceStorage: surface, processKernel: kernel } : {}),
+            ...(colors ? { colorSortInput: colors, ownerColorTables: colors.ownerTables, screenPalette: () => this._clientPaletteScreen.palette() } : {}),
             ...(this._clientGuide ? { missionRestrictions: this._clientGuide.restrictions(), missionOptions: gameplay.battleOptionsOwner() } : {}), ...(request ? { missionFortRequest: request } : {}),
             unixSeconds: () => clock.unixSeconds(), frameTime: () => clock.time(), paused: () => clock.paused() };
     }

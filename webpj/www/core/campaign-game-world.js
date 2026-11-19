@@ -58,10 +58,16 @@ export class CampaignGameWorld {
             this.#session = new RawCampaignSession(assets, files, fort, mission, input);
             this.#factoryDisplay = new RawCampaignFactoryDisplay(this.#session.core(), assets, (sid, frame) => this.#session.drawTemple(sid, frame), this.#gameplay.patchDiagnostic());
             if (services?.ownerColorTables) this.#factoryDisplay.bindOwnerColors(services.ownerColorTables);
-            const palette = new Uint8Array(1024), rgb = assets.palette.rgb;
-            // 같은 파일 팔레트를 원본 화면 장치의 BGRX 순서로 복사한다.
-            for (let index = 0; index < 256; index += 1) {
-                palette[index * 4] = rgb[index * 3 + 2]; palette[index * 4 + 1] = rgb[index * 3 + 1]; palette[index * 4 + 2] = rgb[index * 3];
+            let palette;
+            if (services?.screenPalette) {
+                palette = services.screenPalette();
+                if (!(palette instanceof Uint8Array) || palette.length !== 1024) throw new TypeError('World의 현재 Screen 팔레트 계약');
+            } else {
+                palette = new Uint8Array(1024); const rgb = assets.palette.rgb;
+                // 독립 호출자는 실제 파일 팔레트를 원본 화면 장치의 BGRX 순서로 복사한다.
+                for (let index = 0; index < 256; index += 1) {
+                    palette[index * 4] = rgb[index * 3 + 2]; palette[index * 4 + 1] = rgb[index * 3 + 1]; palette[index * 4 + 2] = rgb[index * 3];
+                }
             }
             const colors = services?.colorSortInput;
             this.#palette = palette.slice(); this.#colorSortLogical = colors?.mapsReady ? colors.logical : []; this.#colorSortMaps = colors?.mapsReady ? colors.maps : null;

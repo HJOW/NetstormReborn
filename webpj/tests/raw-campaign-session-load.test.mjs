@@ -806,6 +806,10 @@ test('Netstorm Client World: 실제 앱 State7 부모와 State8 로컬 로그인
     const guide = app._clientGuide; let world;
     const localLogin = { uiMode: () => {}, startingProgress: () => {}, battlePalette: () => {}, closeProgress: () => {} };
     app._layout = { logicalWidth: 1024, logicalHeight: 768 };
+    app._initializeClientPalette(game); app._initializeClientPaletteCache(game);
+    const sharedColors = app._campaignSharedServices();
+    assert.equal(sharedColors.colorSortInput, app._clientColorSort); assert.equal(sharedColors.ownerColorTables, app._clientColorSort.ownerTables);
+    assert.equal(sharedColors.screenPalette(), app._clientPaletteScreen.palette());
     const services = { localLogin, soundNames: new SoundList(), carrierRequest: forbidden('전송'),
         cameraCommit: (context) => { const pixels = context.camera.target().pixels; context.camera.applyPixelsToRendererAndSnapshot(pixels[0], pixels[1]); },
         surfaceDisplay: { suppressed: () => false, invalidate: () => {} },
@@ -836,6 +840,8 @@ test('Netstorm Client World: 실제 앱 State7 부모와 State8 로컬 로그인
         const owner = app._clientGameplay.player.battleOwner, record = app._clientPlayers.records().subarray(owner * 180 + 12, owner * 180 + 52);
         assert.equal(displayTextCodec.decode(record.subarray(0, record.indexOf(0))), '당신');
         assert.equal(world.completeLocalConnection(), true); assert.equal(session.localConnectionReady(), true);
+        assert.equal(session.productionContext().ownerColorTables, app._clientColorSort.ownerTables);
+        assert.equal(session.cursor().display.settings().sharedOwnerMaps, app._clientColorSort.ownerTables.tokens);
         guide.dispose(); app._releaseCampaignWorld(); assert.equal(app._campaignWorld, null); assert.equal(app._campaignWorldMissionToken, 0); assert.equal(app._surfaceStorage.borrowed, false);
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); }
 });
