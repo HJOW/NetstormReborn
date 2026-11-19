@@ -53,6 +53,7 @@ import { ClientHtmlWindowGlobals } from './core/client-html-window-globals.js';
 import { ClientConnectionGlobals } from './core/client-connection-globals.js';
 import { ClientConnectionActivityGlobals } from './core/client-connection-activity-globals.js';
 import { ClientChatWindowGlobals } from './core/client-chat-window-globals.js';
+import { currentAllocationBytes } from './core/current-allocation-bytes.js';
 import { bindCampaignAiClientServices, bindCampaignClientInputServices, bindCampaignOwnershipTheme, bindCampaignProductionRefresh, captureCampaignMissionStarting, makeCampaignMissionStartEffects, runCampaignMissionStarting } from './core/campaign-client-services.js';
 import { CHAT_RECORD_BYTES, RawChatChannels } from './core/raw-chat-channels.js';
 import { RawCampaignMissionStartBindings } from './core/raw-campaign-mission-start-bindings.js';
@@ -984,10 +985,20 @@ export class Netstorm {
         } }, services);
         services.assets.queueCommand = services.developerQueue;
         // AI 이름·난이도와 채팅은 같은 Client 설정·번역·Subscriber 기록을 읽는다.
-        services.ai = { assertion: (expression) => console.error(`미션 AI 원본 진단: ${expression}`) };
+        services.ai = { assertion: (expression) => console.error(`미션 AI 원본 진단: ${expression}`), allocationBytes: currentAllocationBytes,
+            blockingGumpOpen: () => this._clientGump.blockingPopups() };
         bindCampaignAiClientServices({ configuration: () => this._gameData, languageNumber: () => this.options.language === 'korean' ? 7 : 0,
             translate: (text) => this._resources.translate(text), encodeDisplayText: (text) => displayTextCodec.encode(text),
             decodeDisplayText: (bytes) => displayTextCodec.decode(bytes), chatChannels: () => this._clientChatChannels }, services.ai);
+        // 승패 안내와 AI·생산 할당은 같은 현재 미션·Gump와 웹 할당 바이트를 사용한다.
+        services.production = { allocationBytes: currentAllocationBytes };
+        services.missionOutcome = {
+            demo: () => this._clientGuide?.current()?.runtime.gate.demo ?? 0,
+            tellBlocked: () => Boolean(this._mainMenu?.dialog),
+            section: (name) => { const script = this._clientGuide?.current()?.script; return script?.section(name) != null && this._openTell(name); },
+            closeTransient: () => this._closeCampaignPopups(),
+            onSection: () => { const tutorial = this._clientGuide?.current()?.runtime.tutorial; if (!tutorial) throw new Error('미션 승패 안내의 실제 정지 장치 누락'); tutorial.gate().pauseForDialog(); },
+        };
         // 미션 효과음은 같은 Client 이름표와 현재 재생기에 전달한다.
         const player = () => { if (!this._clientSoundPlayer) throw new Error('미션 효과음의 실제 재생기 미준비'); return this._clientSoundPlayer; };
         services.sound = { wallSeconds: () => this._gameClock.wallSeconds(), play: (...args) => player().play(...args),
@@ -1014,6 +1025,12 @@ export class Netstorm {
             },
         };
         return services;
+    }
+
+    // 원본 Gump 팝업과 웹 메뉴의 현재 펼침 메뉴에 닫기를 요청한다.
+    _closeCampaignPopups() {
+        if (!this._clientGump) throw new Error('미션 팝업의 실제 Client Gump 누락');
+        this._clientGump.closePopups(); this._mainMenu?.closePopup();
     }
 
     // 원본 497960 카메라 적용 장치를 현재 앱 Screen·Renderer·World에 연결한다.
@@ -1124,7 +1141,9 @@ export class Netstorm {
         const ownership = { ...gameplay.ownership, ...services?.ownership };
         const assets = { ...gameplay.assets, ...services?.assets, postPop: { ...gameplay.assets.postPop, ...services?.assets?.postPop } };
         const ai = { ...gameplay.ai, ...services?.ai, names: { ...gameplay.ai.names, ...services?.ai?.names }, participation: { ...gameplay.ai.participation, ...services?.ai?.participation } };
-        const world = new CampaignGameWorld(this._gameAssets, this._gameData.files, fort, request.fort, { ...gameplay, ...services, ...this._campaignSharedServices(), install, localLogin, ownership, assets, ai }, viewport);
+        const production = { ...gameplay.production, ...services?.production, effects: { ...gameplay.production.effects, ...services?.production?.effects } };
+        const missionOutcome = { ...gameplay.missionOutcome, ...services?.missionOutcome };
+        const world = new CampaignGameWorld(this._gameAssets, this._gameData.files, fort, request.fort, { ...gameplay, ...services, ...this._campaignSharedServices(), install, localLogin, ownership, assets, ai, production, missionOutcome }, viewport);
         this._campaignWorld = world; this._campaignWorldMissionToken = current.runtime.saveToken;
         return world;
     }

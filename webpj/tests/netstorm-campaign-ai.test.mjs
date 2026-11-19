@@ -11,6 +11,7 @@ test('앱 미션 AI: 채팅·언어·이름·현재 난이도', () => {
     app._gameData = { getInt: (key) => values[key] ?? 0, pathSpec: () => 'Bot', substituteLocal: (text) => `${text}!` };
     app._resources = { translate: () => '사제' };
     const ai = app._campaignGameplayServices().ai, chat = app._clientChatRecords;
+    const allocation = Uint8Array.of(7, 8); ai.allocationBytes(allocation); assert.deepEqual([...allocation], [7, 8]);
     const translated = ai.names.translate('Priest');
     assert.equal(displayTextCodec.decode(Uint8Array.from(translated, (item) => item.charCodeAt(0))), '사제');
     assert.equal(ai.names.language(), 7); assert.equal(ai.names.substitute('Bot'), 'Bot!'); assert.equal(ai.defaultName(), 'Bot');

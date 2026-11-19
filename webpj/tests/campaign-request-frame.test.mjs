@@ -120,5 +120,9 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         runtime.state.sequence = 3; start.start(); assert.equal(runtime.state.sequence, 4); assert.equal(runtime.gate.started, 1);
         assert.ok(notices.some(([code, first, second]) => code === 0x02000088 && first === 0 && second === 0));
         assert.equal(session.sp(session.localOwner()), Number(guide.current().script.get('myStartMoney')));
+        assert.doesNotThrow(() => session.checkMissionOutcome());
+        const outcome = app._campaignGameplayServices().missionOutcome;
+        assert.equal(outcome.section('A.'), true); assert.equal(outcome.tellBlocked(), true); app._mainMenu.setDialog(null);
+        assert.equal(outcome.tellBlocked(), false); assert.equal(outcome.section('없는 안내'), false); assert.equal(outcome.demo(), runtime.gate.demo);
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); app._clientSoundDevice.dispose(); app._missionAudioAssets.dispose(); }
 });
