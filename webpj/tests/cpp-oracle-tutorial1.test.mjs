@@ -8,6 +8,7 @@ import { REPO_ROOT } from './helpers.mjs';
 import { BASELINE } from '../tools/port-map.mjs';
 import { collectionInputs, readScenarios } from '../tools/headless.mjs';
 import { readPng } from '../tools/image-files.mjs';
+import { compareSessionDumps } from '../tools/session-dump-compare.mjs';
 
 // 수집된 파일과 시나리오가 있는 고정 기준선 경로다.
 const root = path.join(REPO_ROOT, 'webpj', 'tests', 'fixtures', 'cpppj', 'candidate-225553df', 'tutorial1');
@@ -51,4 +52,16 @@ test('cpppj Tutorial1 오라클: 고정 시각 덤프와 논리 화면 보존', 
     assert.equal(normalizedHash(reportFile), result.report.sha256);
     const report = fs.readFileSync(reportFile, 'utf8');
     assert.match(report, /mission\tTutorial1\tTutorial\t826/); assert.match(report, /mission_start\t1\t4\t0/);
+});
+
+// 실제 cpppj 덤프의 SP 소유자 0만 명시적으로 제외하며 다른 소유자 차이는 숨기지 않는다.
+test('cpppj Tutorial1 덤프 비교: 비결정적 SP 소유자 0만 선택적으로 제외', () => {
+    const meta = JSON.parse(fs.readFileSync(path.join(oracle, 'oracle.json'), 'utf8'));
+    const source = fs.readFileSync(path.join(oracle, meta.results.tutorial1.dumps.load.file), 'utf8');
+    const changedZero = source.replace(/^(sp\t1\t\d+\t)\d+/m, (_match, prefix) => `${prefix}999999`);
+    assert.notEqual(changedZero, source);
+    assert.deepEqual(compareSessionDumps(source, changedZero).differences.map((entry) => entry.key), ['sp']);
+    assert.deepEqual(compareSessionDumps(source, changedZero, { ignoreSpOwnerZero: true }), { differences: [], ignored: ['sp.owner0'] });
+    const changedOwner = source.replace(/^(sp\t1\t\d+\t\d+\t)\d+/m, (_match, prefix) => `${prefix}999999`);
+    assert.deepEqual(compareSessionDumps(source, changedOwner, { ignoreSpOwnerZero: true }).differences.map((entry) => entry.key), ['sp']);
 });
