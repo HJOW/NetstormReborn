@@ -225,7 +225,11 @@ export function collectionInputs(data) {
         language: data.language ?? 'english',
         screen: data.screen ?? null,
         settings: data.settings ?? {},
-        scenarios: data.scenarios.map((scenario) => ({ id: scenario.id, settings: scenario.settings ?? {}, frames: scenario.frames ?? 0, steps: scenario.steps })),
+        ...(data.fixedFrameMs !== undefined ? { fixedFrameMs: data.fixedFrameMs } : {}),
+        ...(data.fixedUnixSeconds !== undefined ? { fixedUnixSeconds: data.fixedUnixSeconds } : {}),
+        scenarios: data.scenarios.map((scenario) => ({ id: scenario.id, settings: scenario.settings ?? {}, frames: scenario.frames ?? 0, steps: scenario.steps,
+            ...(scenario.fixedFrameMs !== undefined ? { fixedFrameMs: scenario.fixedFrameMs } : {}),
+            ...(scenario.fixedUnixSeconds !== undefined ? { fixedUnixSeconds: scenario.fixedUnixSeconds } : {}) })),
     });
 }
 

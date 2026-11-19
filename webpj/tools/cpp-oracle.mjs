@@ -64,38 +64,65 @@ export function settingsArgument(settings) {
     }).join(';');
 }
 
-// 시나리오 하나를 cpppj 로 실행한다. 반환: { args, snapshots: { 이름: { bmp(바이트) } }, report(문자열), stdout, stderr }. 실패하면 Error 이다. (2026-11-07 WB02-H)
-export function runCppScenario({ exe, gameDir, shared, scenario }) {
-    const work = fs.mkdtempSync(path.join(os.tmpdir(), `netstorm-oracle-${scenario.id}-`));
-    const userData = path.join(work, 'user');
-    fs.mkdirSync(userData);
-    const stepsFile = path.join(work, 'steps.tsv');
-    const reportFile = path.join(work, 'report.tsv');
-    const captures = {};
-    // 단계표를 cpppj 형식(프레임\t동작\t인자)으로 쓴다. snapshot 인자는 임시 BMP 절대 경로로 바꾼다.
-    const lines = scenario.steps.map(([frame, operation, argument = '']) => {
-        if (operation === 'snapshot') { captures[argument] = path.join(work, `${argument}.bmp`); return `${frame}\t${operation}\t${captures[argument]}`; }
-        return `${frame}\t${operation}\t${argument}`;
-    });
-    fs.writeFileSync(stepsFile, `${lines.join('\n')}\n`, 'utf8');
-    const frames = Math.max(scenario.frames ?? 0, ...scenario.steps.map(([frame]) => frame)) + 1;
-    const args = ['--run', gameDir, '--window', '--mute-audio', '--frames', String(frames), '--set', settingsArgument({ ...(shared.settings ?? {}), ...(scenario.settings ?? {}) }), '--ui-script', stepsFile, '--ui-report', reportFile];
-    const env = { ...process.env, NETSTORM_USER_DATA: userData };
-    delete env.NETSTORM_CPP_NO_AUDIO;
-    const run = spawnSync(exe, args, { cwd: path.dirname(exe), env, timeout: RUN_TIMEOUT_MS, encoding: 'utf8', windowsHide: false });
-    if (run.error) throw run.error;
-    if (run.status !== 0) throw new Error(`cpppj 종료 코드 ${run.status} (${scenario.id})\n${run.stderr}`);
-    const snapshots = {};
-    // 캡처마다 BMP 바이트를 읽는다.
-    for (const [name, file] of Object.entries(captures)) {
-        if (!fs.existsSync(file)) throw new Error(`cpppj 캡처 없음: ${name}`);
-        snapshots[name] = { bmp: fs.readFileSync(file) };
+// 파일명으로 쓰는 캡처 이름은 작업 폴더를 벗어나거나 Windows에서 해석이 달라지지 않아야 한다. (2026-11-19 WB04-E868)
+function captureName(value) {
+    if (typeof value !== 'string' || !value || value === '.' || value === '..' || /[\\/:*?"<>|\x00-\x1f]|[. ]$/.test(value)) throw new Error('오라클 캡처 이름 오류');
+    return value;
+}
+
+// 시나리오 하나를 cpppj 로 실행하고 BMP·Session TSV·보고서를 돌려준다. execute는 창 없는 검사에서 실행기를 대체한다. (2026-11-19 WB04-E868)
+export function runCppScenario({ exe, gameDir, shared, scenario, execute = spawnSync }) {
+    const fixedFrameMs = scenario.fixedFrameMs ?? shared.fixedFrameMs;
+    const fixedUnixSeconds = scenario.fixedUnixSeconds ?? shared.fixedUnixSeconds;
+    if (fixedFrameMs !== undefined && (!Number.isInteger(fixedFrameMs) || fixedFrameMs < 1 || fixedFrameMs > 60000)) throw new RangeError('고정 프레임 밀리초 범위 오류');
+    if (fixedUnixSeconds !== undefined && (fixedFrameMs === undefined || !Number.isInteger(fixedUnixSeconds) || fixedUnixSeconds < -2147483648 || fixedUnixSeconds > 2147483647)) throw new RangeError('고정 Unix 초 범위 또는 프레임 설정 오류');
+    const work = fs.mkdtempSync(path.join(os.tmpdir(), `netstorm-oracle-${captureName(scenario.id)}-`));
+    try {
+        const userData = path.join(work, 'user');
+        fs.mkdirSync(userData);
+        const stepsFile = path.join(work, 'steps.tsv');
+        const reportFile = path.join(work, 'report.tsv');
+        const captures = new Map(), dumpFiles = new Map();
+        // 단계표의 snapshot·session-dump 인자를 임시 작업 폴더 안의 절대 경로로 바꾼다.
+        const lines = scenario.steps.map(([frame, operation, argument = '']) => {
+            if (operation === 'snapshot' || operation === 'session-dump') {
+                const name = captureName(argument), target = operation === 'snapshot' ? captures : dumpFiles;
+                if (target.has(name)) throw new Error(`중복 오라클 캡처 이름: ${name}`);
+                const file = path.join(work, `${name}.${operation === 'snapshot' ? 'bmp' : 'session.tsv'}`);
+                target.set(name, file); return `${frame}\t${operation}\t${file}`;
+            }
+            return `${frame}\t${operation}\t${argument}`;
+        });
+        fs.writeFileSync(stepsFile, `${lines.join('\n')}\n`, 'utf8');
+        const frames = Math.max(scenario.frames ?? 0, ...scenario.steps.map(([frame]) => frame)) + 1;
+        const args = ['--run', gameDir, '--window', '--mute-audio', '--frames', String(frames), '--set', settingsArgument({ ...(shared.settings ?? {}), ...(scenario.settings ?? {}) }), '--ui-script', stepsFile, '--ui-report', reportFile];
+        if (fixedFrameMs !== undefined) args.push('--fixed-frame-ms', String(fixedFrameMs));
+        if (fixedUnixSeconds !== undefined) args.push('--fixed-unix-seconds', String(fixedUnixSeconds));
+        const env = { ...process.env, NETSTORM_USER_DATA: userData };
+        delete env.NETSTORM_CPP_NO_AUDIO;
+        const run = execute(exe, args, { cwd: path.dirname(exe), env, timeout: RUN_TIMEOUT_MS, encoding: 'utf8', windowsHide: false });
+        if (run.error) throw run.error;
+        if (run.status !== 0) throw new Error(`cpppj 종료 코드 ${run.status} (${scenario.id})\n${run.stderr}`);
+        const snapshots = {};
+        // 캡처마다 BMP 바이트를 읽는다.
+        for (const [name, file] of captures) {
+            if (!fs.existsSync(file)) throw new Error(`cpppj 캡처 없음: ${name}`);
+            Object.defineProperty(snapshots, name, { value: { bmp: fs.readFileSync(file) }, enumerable: true });
+        }
+        const dumps = {};
+        // 요청한 덤프는 파일 원문을 보존해 반환한다.
+        for (const [name, file] of dumpFiles) {
+            if (!fs.existsSync(file)) throw new Error(`cpppj Session 덤프 없음: ${name}`);
+            Object.defineProperty(dumps, name, { value: { tsv: fs.readFileSync(file) }, enumerable: true });
+        }
+        const report = fs.existsSync(reportFile) ? fs.readFileSync(reportFile, 'utf8') : '';
+        // 명령줄 기록에는 임시 경로 대신 자리 표시를 쓴다(PC 마다 다른 경로를 남기지 않기 위해).
+        const recorded = args.map((value) => (value === stepsFile ? '<steps.tsv>' : value === reportFile ? '<report.tsv>' : value === gameDir ? path.relative(REPO_ROOT, gameDir).replaceAll('\\', '/') : value));
+        return { args: recorded, snapshots, dumps, report, stdout: run.stdout, stderr: run.stderr };
+    } finally {
+        // 직접 만든 임시 작업 폴더만 성공·실패 모두 정리한다.
+        fs.rmSync(work, { recursive: true, force: true });
     }
-    const report = fs.existsSync(reportFile) ? fs.readFileSync(reportFile, 'utf8') : '';
-    fs.rmSync(work, { recursive: true, force: true });
-    // 명령줄 기록에는 임시 경로 대신 자리 표시를 쓴다(PC 마다 다른 경로를 남기지 않기 위해).
-    const recorded = args.map((value) => (value === stepsFile ? '<steps.tsv>' : value === reportFile ? '<report.tsv>' : value === gameDir ? path.relative(REPO_ROOT, gameDir).replaceAll('\\', '/') : value));
-    return { args: recorded, snapshots, report, stdout: run.stdout, stderr: run.stderr };
 }
 
 // 자료 폴더와 웹 자료 폴더의 같은 이름 파일을 대조한다. 반환: { gameFiles, gameTreeSha256, compared, mismatched[], missingInWeb(웹이 복사하지 않은 파일 수) }.
@@ -153,10 +180,16 @@ function main(argv) {
             const image = readBmp(bmp);
             const png = encodeIndexedPng(image);
             fs.writeFileSync(path.join(folder, `${name}.png`), png);
-            snapshots[name] = { png: `${scenario.id}/${name}.png`, pngSha256: sha256(png), bmpSha256: sha256(bmp), width: image.width, height: image.height };
+            Object.defineProperty(snapshots, name, { value: { png: `${scenario.id}/${name}.png`, pngSha256: sha256(png), bmpSha256: sha256(bmp), width: image.width, height: image.height }, enumerable: true });
+        }
+        const dumps = {};
+        // 요청된 Session TSV는 바이트 그대로 저장하고 메타에 해시를 남긴다.
+        for (const [name, { tsv }] of Object.entries(result.dumps)) {
+            fs.writeFileSync(path.join(folder, `${name}.tsv`), tsv);
+            Object.defineProperty(dumps, name, { value: { file: `${scenario.id}/${name}.tsv`, sha256: sha256(tsv) }, enumerable: true });
         }
         fs.writeFileSync(path.join(folder, 'report.txt'), result.report, 'utf8');
-        meta.results[scenario.id] = { args: result.args, snapshots, report: { file: `${scenario.id}/report.txt`, sha256: sha256(Buffer.from(result.report, 'utf8')) } };
+        meta.results[scenario.id] = { args: result.args, snapshots, ...(Object.keys(dumps).length ? { dumps } : {}), report: { file: `${scenario.id}/report.txt`, sha256: sha256(Buffer.from(result.report, 'utf8')) } };
         console.log(`${scenario.id}: 캡처 ${Object.keys(snapshots).length}개`);
     }
     fs.writeFileSync(metaPath, `${JSON.stringify(meta, null, 2)}\n`, 'utf8');
