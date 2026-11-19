@@ -569,6 +569,13 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         gump.broadcast(0, integratedX, integratedY); assert.equal(gump.input().route(0x10000, integratedX, integratedY), productionMenuToken);
         assert.equal(integratedCommands[0][0], 0x02000017); gump.lifetime().cleanup(); assert.equal(productionMenu.instances(), 0);
         assert.equal(productionMenu.open(aboutItem, { x: 750, y: 420 }), 1); productionMenu.close(); assert.equal(productionMenu.instances(), 0);
+        // 사제 건설 명령의 packed TYPE/SID는 현재 Session 커서의 실제 미리보기를 만든다.
+        const beforeBuildMoney = session.sp(session.localOwner()); session.setSp(session.localOwner(), 10000);
+        app._clientInputQueue.pushCommand(0x02000060, 0, (123 << 16) | priest); app._runCampaignInputFrame();
+        const builtPreview = session.cursorDropSettings().preview; assert.ok(builtPreview);
+        const previewSlot = session.core().pool.slot(builtPreview); assert.equal(new DataView(previewSlot.buffer, previewSlot.byteOffset, previewSlot.byteLength).getUint16(18, true), 123);
+        assert.equal(session.cursorDropSettings().costFlags, 0x160);
+        session.cursor().cancel(); session.setSp(session.localOwner(), beforeBuildMoney);
         // 같은 원본 회수 명령은 실제 로컬 패킷을 보내고 수신 전까지 월드를 바꾸지 않는다.
         const salvageSid = actualBridges.at(-1).sid, salvageFlags = session.core().pool.slot(salvageSid)[11], beforeSalvage = session.localConnectionPackets().length;
         const denied = app._clientGameplay.denySalvage().value; app._clientGameplay.denySalvage().value = 0;

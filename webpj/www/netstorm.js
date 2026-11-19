@@ -1386,7 +1386,7 @@ export class Netstorm {
             const selectionKey = code === 0x50 || code === 0x70 || code === 0x52 || code === 0x72 || code === 0x4e || code === 0x6e;
             const productionKey = 'qwaszyxe'.includes(String.fromCharCode(code).toLowerCase()) && code < 256;
             const cursorCancel = code === 0x1b, cursorRotate = code === 0x250000 || code === 0x270000;
-            if (code !== 0x02000017 && code !== 0x0200005d && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && code !== InputCode.leftButton && code !== InputCode.rightButton) break;
+            if (code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && code !== InputCode.leftButton && code !== InputCode.rightButton) break;
             const event = queue.pop(false);
             if (tutorial.event(event) || gump.input().route(event.code, event.x, event.y)) continue;
             if (code === InputCode.leftButton && !release && !this._mainMenu?.dialog) user.event(event);
@@ -1400,6 +1400,10 @@ export class Netstorm {
                 this._closeCampaignPopups(); this._openHelp(types[type].name.split('\0', 1)[0] + this._resources.translate('Type'), information, createQuickHelpPicture(this._gameAssets, type));
             }
             else if (code === 0x0200005d && !release && !this._mainMenu?.dialog) world.session().requestSalvage(event.y >>> 0);
+            else if (code === 0x02000060 && !release && !this._mainMenu?.dialog) {
+                // 원본 packed 인자의 상위 WORD는 TYPE, 하위 WORD는 사제 SID다.
+                const packed = event.y >>> 0; world.session().makePriestMenu({ tell: (name) => this._openTell(name) }).selectBuild(packed >>> 16, packed & 0xffff);
+            }
             else if (code === PRODUCTION_BRIDGE_COMMAND && !release && !this._mainMenu?.dialog) this._dispatchCampaignBridgeProduction(event);
             else if (code === MISSION_VIEW_HOME || code === MISSION_VIEW_PRIEST) this._dispatchCampaignViewAction(event);
         }
