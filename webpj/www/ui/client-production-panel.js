@@ -68,6 +68,8 @@ export class ClientProductionPanel {
         const node = this.node(), value = Math.fround(height - 80); if (node.baseHeight === value) return;
         node.baseHeight = node.height = value; this.#root.tree().push(this.#token); this.#root.attach(this.#token, 0, 0, this.#root.createState().collection.root, 0);
     }
+    // 실제 사제 메뉴 열기 장치는 같은 패널 수명에 연결되어 있다.
+    openPriest(sid, event) { return this.#parts.openPriest?.(sid, event) ?? 0; }
     // 공통 수명이 자식과 실제 Form을 먼저 반납한다.
     close() { this.#parts.close?.(); if (this.#token) { this.#root.remove(this.#token); this.#token = 0; } }
 }

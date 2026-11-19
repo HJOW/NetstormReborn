@@ -12,7 +12,7 @@ async function clickLabel(page, label) {
 }
 
 test('한국어 Tutorial1 미션 메뉴와 브리핑을 표시한다', async ({ page }) => {
-  const errors = []; page.on('pageerror', (error) => errors.push(error.message));
+  const errors = []; page.on('pageerror', (error) => { errors.push(error.message); console.error('브라우저 예외:', error.message); });
   await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } })));
   await page.setViewportSize({ width: 1280, height: 720 }); await page.goto('/?lang=ko&mute&aspect=4:3');
   await page.waitForFunction(() => window.netstorm?.state === 'clickToStart'); await page.locator('canvas').click();
@@ -55,7 +55,7 @@ test('한국어 Tutorial1 미션 메뉴와 브리핑을 표시한다', async ({ 
 
 // 두 번째 튜토리얼의 한국어 안내 페이지를 실제 미션에서 확인한다.
 test('한국어 Tutorial2의 안내 페이지를 표시한다', async ({ page }) => {
-  const errors = []; page.on('pageerror', (error) => errors.push(error.message));
+  const errors = []; page.on('pageerror', (error) => { errors.push(error.message); console.error('브라우저 예외:', error.message); });
   await page.addInitScript(() => {
     localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } }));
     localStorage.setItem('netstorm.progress', JSON.stringify({ version: 1, values: { DoneTutorial1: '1' } }));
@@ -75,5 +75,33 @@ test('한국어 Tutorial2의 안내 페이지를 표시한다', async ({ page })
   expect(next).toContain('신전'); expect(next).toContain('워크샾');
   const pictures = await page.evaluate(() => window.netstorm._mainMenu.dialog.body.softLines.flatMap((line) => line.fragments).filter((fragment) => fragment.picture).map(({picture}) => ({ width: picture.width, height: picture.height })));
   expect(pictures).toHaveLength(2); expect(pictures.every((picture) => picture.width > 0 && picture.height > 0)).toBe(true);
-  await page.screenshot({ path: test.info().outputPath('korean-tutorial2-next.png') }); expect(errors).toEqual([]);
+  await page.screenshot({ path: test.info().outputPath('korean-tutorial2-next.png') });
+  // 마지막 안내를 닫고 실제 사제 그림을 오른쪽 클릭한다.
+  await clickLabel(page, '다음'); await page.waitForFunction(() => window.netstorm._gameData.currentTell === 'A2.'); await clickLabel(page, '확인');
+  await page.waitForFunction(() => !window.netstorm._gameClock.paused(), null, { timeout: 15000 });
+  const priest = await page.evaluate(() => { const app = window.netstorm, session = app._campaignWorld.session(), sid = session.findPriestParticipation(session.localOwner());
+    const slot = session.core().pool.slot(sid), raw = new DataView(slot.buffer, slot.byteOffset, slot.byteLength), point = app._clientGameplay.camera().snapshot().project(raw.getFloat32(14, true), raw.getFloat32(18, true)), rect = app.canvas.getBoundingClientRect();
+    return { sid, x: rect.left + (point.x - 16) * rect.width / app._layout.logicalWidth, y: rect.top + (point.y - 11) * rect.height / app._layout.logicalHeight }; });
+  await page.mouse.click(priest.x, priest.y, { button: 'right', delay: 60 });
+  await page.waitForFunction(() => { const app = window.netstorm, root = app._clientGump; for (let token = root.root().child; token; token = root.node(token).next) if (root.node(token).command === 26 && root.node(token).object) return true; return false; }, null, { timeout: 10000 });
+  const rootMenu = await page.evaluate(() => { const root = window.netstorm._clientGump; for (let token = root.root().child; token; token = root.node(token).next) if (root.node(token).command === 26 && root.node(token).object) return token; return 0; });
+  expect(await page.evaluate((token) => window.netstorm._clientGump.node(token).object, rootMenu)).toBe(priest.sid);
+  await page.screenshot({ path: test.info().outputPath('korean-priest-menu.png') });
+  // 원본 메뉴 행을 실제 마우스로 눌러 건설 → 신전 → 윈드 신전을 선택한다.
+  const clickMenuRow = async (token, index) => {
+    const point = await page.evaluate(({ token, index }) => { const app = window.netstorm, root = app._clientGump, node = root.node(token), bounds = root.collection().bounds(token), rect = app.canvas.getBoundingClientRect();
+      return { child: node.items[index].childId ? root.createState().entries[node.items[index].childId] : 0,
+        x: rect.left + (bounds.left + 8) * rect.width / app._layout.logicalWidth,
+        y: rect.top + (bounds.top + node.offsets[index] + node.heights[index] / 2) * rect.height / app._layout.logicalHeight }; }, { token, index });
+    await page.mouse.move(point.x, point.y); await page.mouse.click(point.x, point.y, { delay: 60 });
+    if (point.child) await page.waitForFunction((child) => { const node = window.netstorm._clientGump.node(child); return node && (node.flags & 1) && !node.expanding; }, point.child, { timeout: 10000 });
+    return point.child;
+  };
+  const construct = await clickMenuRow(rootMenu, 0); expect(construct).toBeTruthy();
+  const temples = await clickMenuRow(construct, 0); expect(temples).toBeTruthy();
+  await clickMenuRow(temples, 0);
+  await page.waitForFunction(() => window.netstorm._campaignWorld.session().cursorDropSettings().preview !== 0, null, { timeout: 10000 });
+  const preview = await page.evaluate(() => { const session = window.netstorm._campaignWorld.session(), drop = session.cursorDropSettings(), slot = session.core().pool.slot(drop.preview);
+    return { type: new DataView(slot.buffer, slot.byteOffset, slot.byteLength).getUint16(18, true), costFlags: drop.costFlags }; });
+  expect(preview).toEqual({ type: 123, costFlags: 0x160 }); expect(errors).toEqual([]);
 });

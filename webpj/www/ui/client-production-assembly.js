@@ -60,5 +60,5 @@ export function createClientProductionAssembly(root, session, game, fonts, scree
     const divider = new ClientHudDivider(root, { background, backgroundColor: () => 35, dividerColor: () => 55, baseHandle: devices.baseHandle,
         closePopups: devices.closePopups, menuInstances: () => menu ? menu.instances() : devices.menuInstances(), poll: devices.poll, cursor: devices.cursor });
     return new ClientProductionPanel(root, session, { grid, background, divider, budget, selection,
-        technology: () => context.gameplay.player.playerKnown ? technology(context.gameplay.player.battleOwner) : 0, changed: devices.changed, close: () => menu?.close() }, globals, panel);
+        technology: () => context.gameplay.player.playerKnown ? technology(context.gameplay.player.battleOwner) : 0, changed: devices.changed, openPriest: (sid, event) => menu?.openPriest(sid, event) ?? 0, close: () => menu?.close() }, globals, panel);
 }

@@ -1312,6 +1312,16 @@ export class Netstorm {
             about: () => { throw new Error('생산 정보 메뉴 미연결'); },
             menu: { data: this._gameData, helpWord: () => this._clientLocal.helpWord().get(),
                 ownerName: (owner) => displayTextCodec.decode(Uint8Array.from(identity.nameForOwner(owner), (letter) => letter.charCodeAt(0))),
+                objectMenu: { world: this._campaignWorld, identity, staticText: (value) => this._clientChatWindows.store(value), tell: (name) => this._openTell(name),
+                    player: { translate: (value) => this._resources.translate(value), assertion: (value) => console.error(`Player 메뉴 진단: ${value}`),
+                        parseAddress: () => { throw new Error('Player 메뉴 주소 해석 미연결'); }, reliability: () => { throw new Error('Player 메뉴 메타맵 신뢰도 미연결'); },
+                        ignored: (subscriber) => this._clientChatWindows.ignored.includes(subscriber), whispered: () => {
+                            if (!this._clientChatWindows.window.current) return 0; throw new Error('Player 메뉴 현재 채팅 수신자 조회 미연결');
+                        } },
+                    open: { altar: () => { throw new Error('사제 메뉴 제단 조회 미연결'); }, delegate: () => { throw new Error('사제 메뉴 제단 위임 미연결'); },
+                        project: (x, y) => { const point = this._clientGameplay.camera().snapshot().project(x, y); return [point.x, point.y]; },
+                        content: (sid) => production.session.priests().carrier.findContained(sid, 1, 0, 0), range: (type) => production.session.core().types[type].range,
+                        screenWidth: () => this._clientPaletteScreen.width } },
                 command: (...args) => this._clientInputQueue.pushCommand(...args), invalidate: (rect) => this._clientRenderer.invalidate(rect, 0) },
             changed: () => { this._clientRenderer.invalidateAll(); this._displayDirty = true; }, closePopups: () => this._closeCampaignPopups(),
             poll: (code) => this._clientInputPoll.poll(code), cursor: (number) => { this._campaignCursor = number; this._applyCursor(); },
@@ -1390,7 +1400,10 @@ export class Netstorm {
             const event = queue.pop(false);
             if (tutorial.event(event) || gump.input().route(event.code, event.x, event.y)) continue;
             if (code === InputCode.leftButton && !release && !this._mainMenu?.dialog) user.event(event);
-            else if ((code === MISSION_F4 || code === MISSION_F5 || selectionKey || productionKey || cursorCancel || cursorRotate || (code === InputCode.rightButton && world.session().cursorDropSettings().lockDepth === 0)) && !release && !this._mainMenu?.dialog) user.event(event);
+            else if ((code === MISSION_F4 || code === MISSION_F5 || selectionKey || productionKey || cursorCancel || cursorRotate || code === InputCode.rightButton) && !release && !this._mainMenu?.dialog) {
+                const picked = user.event(event);
+                if (code === InputCode.rightButton && picked) this._campaignProduction?.ui?.openPriest(picked, event);
+            }
             else if (code === 0x02000017 && !release && !this._mainMenu?.dialog) {
                 const type = event.y >>> 0, types = world.session().core().types;
                 if (!type || type >= 256 || type >= types.length) throw new RangeError('생산 정보 Help TYPE 범위 오류');
