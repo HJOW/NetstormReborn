@@ -14,7 +14,8 @@ export class ClientTextGump {
     constructor(root, fonts, baseHandle, styleHooks = {}) {
         if (!root || !fonts || typeof baseHandle !== 'function') throw new TypeError('Client 글자 Gump의 실제 수명·글꼴 누락');
         this.#root = root; this.#fonts = fonts; this.#baseHandle = baseHandle;
-        const hooks = { ...styleHooks }; bindStyleTextFonts(hooks, new GumpText(fonts));
+        const hooks = typeof styleHooks === 'function' ? styleHooks(this.#styleState, () => this.#target) : { ...styleHooks };
+        bindStyleTextFonts(hooks, new GumpText(fonts));
         hooks.textDraw = (bytes, position, words) => {
             if (!this.#target) throw new Error('Client 글자 Gump의 현재 출력 표면 누락');
             new GumpTextDraw(fonts, makeGumpGlyphPixelHooks(this.#target, this.#colors)).draw(bytes, position, decodeGumpTextContext(words));

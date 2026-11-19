@@ -22,6 +22,8 @@ import { ClientInventoryGrid } from '../www/ui/client-inventory-grid.js';
 import { ClientInventoryItem } from '../www/ui/client-inventory-item.js';
 import { ClientImageGump } from '../www/ui/client-image-gump.js';
 import { ClientTextGump } from '../www/ui/client-text-gump.js';
+import { makeClientTextMarkup } from '../www/ui/client-text-markup.js';
+import { StyleTextFragmentKind } from '../www/ui/style-text-fragments.js';
 import { PriestPlacementAssets } from '../www/core/priest-placement-assets.js';
 import { RawCanonPixelShape } from '../www/core/raw-canon-pixel-shape.js';
 import { GumpDrawState, GumpPixelTarget, setGumpDrawClip } from '../www/render/gump-draw.js';
@@ -345,5 +347,14 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         text.construct(textToken, 0, 0, 0, 241); text.style(textToken, 'Storm Power'); text.fit(textToken); gump.attach(textToken, 350, 350);
         const textPixels = new Uint8Array(1366 * 768).fill(255); gump.draw(textToken, draw, new GumpPixelTarget(textPixels, 1366, 768, draw));
         assert.ok(textPixels.some((value) => value !== 255)); text.clear(textToken); assert.equal(gump.node(textToken).head, 0); gump.remove(textToken);
+        // 생산 예산의 실제 색·그림 명령을 한 줄 조각과 같은 화면에 출력하고 수명을 반납한다.
+        const pictureColors = Uint8Array.from({ length: 256 }, (_, index) => index);
+        const rich = new ClientTextGump(gump, app._resources.fonts, () => 0, makeClientTextMarkup(game, () => screen.colors(), () => pictureColors, () => { throw new Error('예산 문자열에 소리 없음'); }));
+        const richToken = rich.allocate(); rich.construct(richToken, 0, 0, 0, 241); rich.style(richToken, '~3~E~w100~[I92.3]'); rich.fit(richToken); gump.attach(richToken, 350, 350);
+        const fragments = rich.styleState().fragments; assert.equal([...fragments.values()].filter((part) => part.kind === StyleTextFragmentKind.EXTERNAL).length, 1);
+        const richPixels = new Uint8Array(1366 * 768).fill(255); gump.draw(richToken, draw, new GumpPixelTarget(richPixels, 1366, 768, draw));
+        rich.clear(richToken); rich.style(richToken, '~3~E~w100');
+        const plainPixels = new Uint8Array(1366 * 768).fill(255); gump.draw(richToken, draw, new GumpPixelTarget(plainPixels, 1366, 768, draw));
+        assert.ok(richPixels.some((value, index) => value !== plainPixels[index])); rich.clear(richToken); assert.equal(fragments.size, 0); gump.remove(richToken);
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); app._clientSoundDevice.dispose(); app._missionAudioAssets.dispose(); }
 });
