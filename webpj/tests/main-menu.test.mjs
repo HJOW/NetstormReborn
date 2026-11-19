@@ -197,7 +197,7 @@ test('원본 메인 메뉴 스크린샷 대조', (t) => {
     assert.ok(buttons < frameZeroButtons, `프레임1 ${buttons} < 프레임0 ${frameZeroButtons}`);
 });
 
-// WB01 화면 배치 계산의 기본 불변식을 확인한다(4:3 정확히 맞음, 16:9 와이드, 좌표 역변환).
+// 화면비별 논리 배치, 16:9 상한과 고DPI 입력 역변환을 확인한다. (2026-11-19 WB04-E943)
 test('화면 배치 계산', () => {
     const exact = computeLayout(1024, 768, 1, 'auto');
     assert.equal(exact.mode, '4:3');
@@ -205,10 +205,21 @@ test('화면 배치 계산', () => {
     assert.equal(exact.drawScaleX, 1);
     const wide = computeLayout(1920, 1080, 1, 'auto');
     assert.equal(wide.mode, '16:9');
-    assert.equal(wide.logicalWidth, 1366);
+    assert.equal(wide.logicalWidth, 1920);
+    assert.equal(wide.logicalHeight, 1080);
     assert.equal(wide.cssWidth, 1920);
-    const point = clientToLogical(960, 540, { left: 0, top: 0, width: 1920, height: 1080 }, 1366, 768);
-    assert.deepEqual(point, { x: 683, y: 384, inside: true });
+    const middle = computeLayout(1919, 1079, 1, 'auto');
+    assert.deepEqual([middle.logicalWidth, middle.logicalHeight], [1600, 900]);
+    const compact = computeLayout(1599, 899, 2, 'auto');
+    assert.deepEqual([compact.logicalWidth, compact.logicalHeight], [1366, 768]);
+    const highDpi = computeLayout(2560, 1440, 2, 'auto');
+    assert.deepEqual([highDpi.logicalWidth, highDpi.logicalHeight], [1920, 1080]);
+    assert.deepEqual([highDpi.canvasWidth, highDpi.canvasHeight], [5120, 2880]);
+    const forced = computeLayout(1920, 1080, 1, '16:10');
+    assert.deepEqual([forced.logicalWidth, forced.logicalHeight], [1228, 768]);
+    const point = clientToLogical(1280, 720, { left: 0, top: 0, width: highDpi.cssWidth, height: highDpi.cssHeight },
+        highDpi.logicalWidth, highDpi.logicalHeight);
+    assert.deepEqual(point, { x: 960, y: 540, inside: true });
 });
 
 // 원본 음량 단계 → 1/100 dB → 증폭률 변환을 확인한다.

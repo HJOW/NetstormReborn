@@ -36,3 +36,9 @@
 
 - 앱 수명에 연결하지 않았다(`PORT_MAP` session 0). 실제 `Screen` ↔ `Renderer` 출력(`Renderer.present(update)` → `Screen.update`)·`presenter.js` 연결은 `ClientRendererFrame`·`ClientMain` 단위에서 한다.
 - **`ClientRendererFrame` 선행 판정:** 기준선 소스(257줄)는 Client 본체·`RawMenuControls`(L, todo)·`ClientKencloudGlobals`(todo)·`TileGroupCollection`(todo)·`RawCampaignCursorDisplay`/`RawCampaignFactoryDisplay`(todo)·`GameWorld`(todo)·`ClientGameplayGlobals`(todo)를 직접 부른다. 5-A 목록의 같은 항목이지만 빈 성공 함수로 우회하지 않으므로 선행 단위(특히 `TileGroupCollection`·`ClientKencloudGlobals`)를 먼저 이식한 뒤 이어 간다.
+
+## 6. 브라우저의 와이드 논리 해상도
+
+2026-11-19 WB04-E943. 16:9 레이아웃은 CSS 기준으로 창에 들어가는 가장 큰 논리 크기를 사용한다. 후보는 1920×1080, 1600×900, 1366×768이다. 고정 단계는 창 크기를 조금씩 바꿀 때마다 논리 표면을 다시 할당하는 비용을 줄인다. 4:3은 1024×768, 16:10은 1228×768을 사용한다. 기기 픽셀 비율은 표시용 Canvas 크기와 입력 변환에 반영한다.
+
+Node v26의 화면 배치·표시·시계 연관 검사 72건과 Chromium 2건이 통과했다. 브라우저에서 1280×720 창을 1920×1080으로 확장했다가 줄여 실제 논리 표면, Canvas와 포인터 좌표를 대조했다. 전투 월드 카메라와 HUD의 와이드 배치는 후속 검증이 필요하다.

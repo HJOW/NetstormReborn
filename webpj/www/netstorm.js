@@ -100,12 +100,18 @@ const LOGICAL_HEIGHT = 768;
 
 // 지원하는 화면비 목록이다. name 은 설정·URL 에서 쓰는 이름, ratio 는 명목 가로세로비,
 // width/height 는 그 화면비에서의 논리 화면 크기(픽셀, 가로는 짝수)다.
-// 와이드 화면에서 UI 를 어떻게 배치하고 시야를 얼마나 넓힐지는 아직 정하지 않았으므로
-// 지금의 가로 크기는 임시 정책이며 16:9/16:10 지원 완료를 뜻하지 않는다. (2026-10-23 WB01)
+// 작거나 세로가 짧은 창의 기본 논리 크기다. 큰 16:9 창의 상위 크기는 WIDE_LOGICAL_SIZES에서 고른다. (2026-11-19 WB04-E943)
 export const SCREEN_MODES = Object.freeze([
     Object.freeze({ name: '4:3', ratio: 4 / 3, width: 1024, height: LOGICAL_HEIGHT }),
     Object.freeze({ name: '16:10', ratio: 16 / 10, width: 1228, height: LOGICAL_HEIGHT }),
     Object.freeze({ name: '16:9', ratio: 16 / 9, width: 1366, height: LOGICAL_HEIGHT }),
+]);
+
+// 16:9 창의 논리 크기 후보들이다. CSS 픽셀로 담을 수 있는 가장 큰 후보를 사용한다.
+// 고정 단계로 선택해 창을 세밀하게 조절할 때마다 논리 표면을 다시 만들지 않게 한다. (2026-11-19 WB04-E943)
+const WIDE_LOGICAL_SIZES = Object.freeze([
+    Object.freeze({ width: 1920, height: 1080 }),
+    Object.freeze({ width: 1600, height: 900 }),
 ]);
 
 // 컨테이너 비율에 가장 가까운 화면비를 자동으로 고르라는 설정값이다. (2026-10-23 WB01)
@@ -225,7 +231,7 @@ export function pickScreenMode(containerWidth, containerHeight, aspect = AUTO_AS
 
 // 컨테이너 크기·기기 픽셀 비율·화면비 설정에서 Canvas 배치를 계산한다. 입력이 같으면 결과도 같다.
 // 논리 좌표(logical*)·CSS 표시 크기(css*, left/top)·내부 픽셀 크기(canvas*)를 분리해 돌려준다.
-//  - 논리 좌표: 게임 코드가 그리는 좌표계. 화면비 모드가 정한다.
+//  - 논리 좌표: 게임 코드가 그리는 좌표계. 화면비와 창의 CSS 픽셀 크기로 결정한다.
 //  - CSS 표시 크기: 컨테이너 안에 비율을 유지하며 최대로 키운 크기. 기기 픽셀 경계에 맞춰 내림하고 가운데 정렬한다.
 //    비율 차이가 ASPECT_SNAP_TOLERANCE 이내이면 컨테이너를 빈틈없이 채운다.
 //  - 내부 픽셀 크기: 화면에 그려지는 기기 픽셀 크기와 같게 잡아 브라우저가 다시 늘리거나 줄이지 않게 한다(글자가 선명하다).
@@ -240,18 +246,23 @@ export function computeLayout(
 ) {
     const dpr = Number.isFinite(devicePixelRatio) && devicePixelRatio > 0 ? devicePixelRatio : 1;
     const mode = pickScreenMode(containerWidth, containerHeight, aspect);
+    // 고DPI 기기에서도 창의 CSS 크기에 맞춰 논리 좌표를 고른다. 기기 픽셀 배율은 Canvas 내부 크기에만 반영한다.
+    const wide = mode.name === '16:9' ? WIDE_LOGICAL_SIZES.find(
+        (size) => containerWidth >= size.width && containerHeight >= size.height,
+    ) : undefined;
+    const { width, height } = wide ?? mode;
     const hidden = {
         visible: false,
         mode: mode.name,
-        logicalWidth: mode.width,
-        logicalHeight: mode.height,
+        logicalWidth: width,
+        logicalHeight: height,
         scale: 0,
         cssWidth: 0,
         cssHeight: 0,
         left: 0,
         top: 0,
-        canvasWidth: mode.width,
-        canvasHeight: mode.height,
+        canvasWidth: width,
+        canvasHeight: height,
         drawScaleX: 1,
         drawScaleY: 1,
         devicePixelRatio: dpr,
@@ -259,8 +270,8 @@ export function computeLayout(
     if (!(containerWidth > 0) || !(containerHeight > 0)) return Object.freeze(hidden);
 
     // 가로·세로 각각 컨테이너를 채우는 데 필요한 배율(논리 픽셀 1개의 CSS 픽셀 수)이다.
-    const fillX = containerWidth / mode.width;
-    const fillY = containerHeight / mode.height;
+    const fillX = containerWidth / width;
+    const fillY = containerHeight / height;
     // 비율을 유지한 채 컨테이너 안에 논리 화면 전체가 들어가는 최대 배율이다.
     const scale = Math.min(fillX, fillY);
     let cssWidth;
@@ -271,8 +282,8 @@ export function computeLayout(
         cssHeight = floorPixel(containerHeight * dpr) / dpr;
     } else {
         // 기기 픽셀 경계로 내림해 가장자리가 흐려지거나 컨테이너를 넘지 않게 한다.
-        cssWidth = floorPixel(mode.width * scale * dpr) / dpr;
-        cssHeight = floorPixel(mode.height * scale * dpr) / dpr;
+        cssWidth = floorPixel(width * scale * dpr) / dpr;
+        cssHeight = floorPixel(height * scale * dpr) / dpr;
     }
     if (!(cssWidth > 0) || !(cssHeight > 0)) return Object.freeze(hidden);
 
@@ -288,8 +299,8 @@ export function computeLayout(
     return Object.freeze({
         visible: true,
         mode: mode.name,
-        logicalWidth: mode.width,
-        logicalHeight: mode.height,
+        logicalWidth: width,
+        logicalHeight: height,
         scale,
         cssWidth,
         cssHeight,
@@ -297,8 +308,8 @@ export function computeLayout(
         top: floorPixel(((containerHeight - cssHeight) / 2) * dpr) / dpr,
         canvasWidth,
         canvasHeight,
-        drawScaleX: canvasWidth / mode.width,
-        drawScaleY: canvasHeight / mode.height,
+        drawScaleX: canvasWidth / width,
+        drawScaleY: canvasHeight / height,
         devicePixelRatio: dpr,
     });
 }
