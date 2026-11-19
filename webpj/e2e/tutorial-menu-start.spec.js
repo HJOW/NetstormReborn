@@ -158,3 +158,32 @@ test('캠페인 목록에서 첫 Tutorial의 월드와 안내를 표시한다', 
   }, placement, { timeout: 15000 });
   expect(errors).toEqual([]);
 });
+
+// 같은 실제 캠페인 목록에서 두 번째 Tutorial의 로그인과 안내까지 이어진다.
+test('캠페인 목록에서 두 번째 Tutorial의 월드와 안내를 표시한다', async ({ page }) => {
+  const errors = []; page.on('pageerror', (error) => errors.push(error.message));
+  await page.addInitScript(() => {
+    localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } }));
+    localStorage.setItem('netstorm.progress', JSON.stringify({ version: 1, values: { DoneTutorial1: '1' } }));
+  });
+  await page.setViewportSize({ width: 1280, height: 720 }); await page.goto('/');
+  await page.waitForFunction(() => window.netstorm?.state === 'clickToStart'); await page.locator('canvas').click();
+  await page.waitForFunction(() => window.netstorm?.state === 'mainMenu');
+  await clickLabel(page, 'Campaign'); await clickLabel(page, 'Early Missions');
+  const second = await page.evaluate(() => window.netstorm._mainMenu.dialog.menu.items.find((item) => item.command?.name === 'MissionBegin' && item.command.argument === 'Tutorial2')?.label);
+  expect(second).toBeTruthy(); await clickLabel(page, second);
+  await page.waitForFunction(() => window.netstorm?._campaignDisplayActive() && window.netstorm._clientGuide.current()?.runtime.gate.started === 1, null, { timeout: 50000 });
+  await page.waitForFunction(() => Boolean(window.netstorm._mainMenu.dialog), null, { timeout: 15000 });
+  const state = await page.evaluate(() => ({ tutorial: window.netstorm._clientGuide.current().runtime.gate.tutorialNumber, frame: window.netstorm._clientRenderer.drawCount, paused: window.netstorm._gameClock.paused() }));
+  expect(state.tutorial).toBe(2); expect(state.frame).toBeGreaterThan(0); expect(state.paused).toBe(true);
+  // 두 번째 미션의 실제 여러 안내 페이지를 닫고 게임 시계·월드 프레임을 진행한다.
+  for (let pageIndex = 0; pageIndex < 8; pageIndex += 1) {
+    const label = await page.evaluate(() => window.netstorm._mainMenu.dialog?.buttons.at(-1)?.label ?? null);
+    if (label === null) break;
+    await clickLabel(page, label);
+  }
+  await page.waitForFunction(() => !window.netstorm._gameClock.paused(), null, { timeout: 15000 });
+  const started = await page.evaluate(() => window.netstorm._gameClock.time().game);
+  await page.waitForFunction((before) => window.netstorm._gameClock.time().game >= before + 5, started, { timeout: 15000 });
+  expect(errors).toEqual([]);
+});

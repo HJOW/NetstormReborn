@@ -1900,7 +1900,7 @@ export class Netstorm {
 
     // 대화상자에서 실행된 명령(버튼·목록 행·Timeout)을 처리한다. 원본처럼 먼저 대화상자를 닫고(OnExit 명령 실행) 명령을 실행한다.
     // `Tell,이름` 은 다음 대화상자를 열고, `DoNothing` 은 닫기만 한다. `Config,키=값` 은 설정을 쓰고 `TellTip,번호` 는 팁 창을 처리한다(2026-10-30 WB03-J).
-    // 첫 Tutorial의 MissionBegin은 현재 Guide로 연결한다. 그 밖의 미구현 명령은 안내만 남긴다.
+    // 연결된 Tutorial의 MissionBegin은 현재 Guide로 연결한다. 그 밖의 미구현 명령은 안내만 남긴다.
     _onDialogCommand(command) {
         const dialog = this._mainMenu?.dialog ?? null;
         const onExit = dialog ? dialog.close() : null;
@@ -1965,10 +1965,10 @@ export class Netstorm {
         else if (name !== 'donothing') console.info(`Netstorm: 대화상자 명령 '${command.name}' 은(는) 아직 구현되지 않았습니다.`, command);
     }
 
-    // 첫 Tutorial만 현재 Guide에 시작한다. 다른 미션과 기존 World 교체는 실제 수명 연결 전까지 거부한다.
+    // 앞의 두 Tutorial을 현재 Guide에 시작한다. 다른 미션과 기존 World 교체는 실제 수명 연결 전까지 거부한다.
     _beginCampaignFromDialog(argument) {
         const name = String(argument ?? '');
-        if (name.toLowerCase() !== 'tutorial1') { console.info(`Netstorm: 미션 '${name}' 은(는) 아직 연결되지 않았습니다.`); return false; }
+        if (!['tutorial1', 'tutorial2'].includes(name.toLowerCase())) { console.info(`Netstorm: 미션 '${name}' 은(는) 아직 연결되지 않았습니다.`); return false; }
         if (!this._clientGuide || this._state !== AppState.MAIN_MENU) throw new Error('미션 시작의 현재 Guide·메뉴 수명 누락');
         if (this._campaignWorld || this._clientGuide.current()) { console.warn('Netstorm: 현재 미션을 정리하기 전에는 새 미션을 시작할 수 없습니다.'); return false; }
         this._clientGuide.begin(name); return true;
