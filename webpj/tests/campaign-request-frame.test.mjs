@@ -44,6 +44,7 @@ import { ScrollGumpWidgetState } from '../www/ui/scroll-gump-widgets.js';
 import { ScrollingTextGumpWidgetState } from '../www/ui/scrolling-text-gump-widgets.js';
 import { ClientGumpDecoration, createClientDecorationState } from '../www/ui/client-gump-decoration.js';
 import { ClientMenuGump } from '../www/ui/client-menu-gump.js';
+import { ClientPriestMenu } from '../www/ui/client-priest-menu.js';
 import { StyleTextFragmentKind } from '../www/ui/style-text-fragments.js';
 import { PriestPlacementAssets } from '../www/core/priest-placement-assets.js';
 import { RawCanonPixelShape } from '../www/core/raw-canon-pixel-shape.js';
@@ -542,6 +543,15 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         assert.equal(gump.node(childMenu).items[0].command, 0x02000060); assert.equal(gump.node(childMenu).items[0].parameter, 0x007b0001);
         menus.attach({ x: 750, y: 420 }, menus.root()); gump.remove(parentMenu); menus.close(); scroll.close();
         assert.equal(gump.node(childMenu), null); assert.equal(bufferText.styleState().fragments.size, 0);
+        // 현재 사제의 실제 기술·자금과 중첩 작성기를 결합해 기본 객체 메뉴까지 순서대로 호출한다.
+        const priestRoot = menus.beginFancy(); menus.title('Priest\n'); const basePriests = [];
+        const priestMenu = new ClientPriestMenu(session, menus, { translate: (value) => app._resources.translate(value),
+            baseMenu: (sid) => basePriests.push(sid), tell: (value) => { throw new Error(value); } });
+        priestMenu.open(priest); assert.deepEqual(basePriests, [priest]);
+        const priestNode = gump.node(priestRoot); assert.ok(priestNode.itemCount > 0);
+        assert.ok(priestNode.items.slice(0, priestNode.itemCount).some((item) => item.childId));
+        menus.attach({ x: 750, y: 420 }, menus.root()); gump.remove(priestRoot); menus.close(); scroll.close();
+        assert.equal(bufferText.styleState().fragments.size, 0);
         // 실제 생산 정보가 작성한 장식 메뉴의 제목·비용·항목과 Form을 같은 공통 수명에서 확인한다.
         const integratedCommands = [], productionMenu = createClientProductionMenu(gump, session, game, data, app._resources.fonts, screen, app._clientColorSort, itemBackground, 92, {
             baseHandle: () => 0, sound: () => {}, translate: (value) => app._resources.translate(value),
