@@ -1,11 +1,11 @@
 // 원본 Editgump(VT 00508e10)의 실제 문자 편집 노드와 Console 파생(VT 00506a6c)을 공통 Gump/문자 버퍼에 연결한다(cpppj client/TextEntryGump.cpp/.h, 기준선 1f00a25a, 10.78 전용).
 // 실제 0x28 편집 버퍼(TextEntryBuffer)와 두 Slider 를 공유하며 원본의 현재 필드 재조회/사건 순서를 유지한다. 노드/버퍼/Slider/글꼴·픽셀 출력은 모두 호스트 훅이고 빈 성공 노드를 만들지 않는다.
-// 문자열 인자(span<const char>)는 NUL 로 끝나는 Uint8Array(또는 바이트 문자열)이며 훅이 받는 글 바이트도 같다. 기준선 뒤 K1 한국어 확장 토큰 변경은 이 파일에 없다(Buffer 쪽 기록 참고). 원본 10.78 독립 관측 2,292행은 tests/text-entry-gump-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E483 연결, 첫 실행 전체일치).
+// 문자열 인자(span<const char>)는 NUL 로 끝나는 Uint8Array(또는 바이트 문자열)이며 훅이 받는 글 바이트도 같다. 기준선 뒤 K1 한국어 확장 토큰의 입력·이동·삭제·붙여넣기와 스크롤 경계를 적용했고 출력 보정은 남았다. 원본 10.78 독립 관측 2,292행은 tests/text-entry-gump-native-fixtures.test.mjs 가 대조한다(2026-11-15 WB04-E483 연결, 첫 실행 전체일치).
 // 사용: const gump = new TextEntryGump(state, hooks); gump.construct(token, 200, 60, 'hello', fontToken, backgroundToken, color); gump.handle(token, 0x41, 0, 0)(문자 'A' 입력); gump.draw(token).
 // (2026-11-14 WB04-E439: RawMenuControls 선행 문자 편집 Gump 이식)
 import { GumpBackgroundNode } from './gump-background-create.js';
 import { cameraFtolLow } from '../render/camera-view.js';
-import { isCommittedTextInput, committedTextBytes, hasExtendedDisplayText, displayTextFloor, displayTextCeil, previousDisplayText, nextDisplayText } from '../core/display-text-input.js';
+import { isCommittedTextInput, committedTextBytes, hasExtendedDisplayText, displayTextFloor, displayTextCeil, previousDisplayText, nextDisplayText, displayTextLine } from '../core/display-text-input.js';
 
 // 원본 10.78 의 가상 표와 기본 Gump 비트다(표시/void/dead).
 const ENTRY_VTABLE = 0x508e10; const CONSOLE_VTABLE = 0x506a6c; const VISIBLE = 1; const VOID = 8; const DEAD = 0x10000;
@@ -217,6 +217,12 @@ export class TextEntryGump {
         const lines = buffer().lineCount();
         hooks.sliderRange(node.verticalSlider, 0, sub(lines, 1)); hooks.sliderPage(node.verticalSlider, rows); hooks.sliderPosition(node.verticalSlider, line);
         node.scrollLine = this.#slider(node.verticalSlider).position;
+        // 확정된 현재 줄의 열이 한글 토큰 중간이면 앞 경계로 되돌린다.
+        const currentLine = displayTextLine(buffer().text(), node.scrollLine);
+        if (hasExtendedDisplayText(currentLine)) {
+            node.scrollColumn = displayTextFloor(currentLine, Math.max(0, node.scrollColumn));
+            hooks.sliderPosition(node.horizontalSlider, node.scrollColumn);
+        }
         this.#redraw(token);
     }
 

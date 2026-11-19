@@ -57,3 +57,10 @@ test('TextEntry 확정 한글: 붙여넣기 한도·제외·선택 보존', () =
     const none = built({ clipboard: raw('한') }, 'A'); none.buffer().select(0, 1); none.root.maxLength = 4;
     none.gump.handle(1, 0x202d0000, 0, 0); assert.equal(text(none), 'A'); assert.deepEqual([none.buffer().state().selectionBegin, none.buffer().state().selectionEnd], [0, 1]);
 });
+
+// 실제 Slider가 확정한 한글 줄의 수평 열이 토큰 내부에 남지 않는다.
+test('TextEntry 확정 한글: 수평 스크롤을 현재 줄 문자 경계로 보정', () => {
+    const r = built({}, '', 8, 16), queue = new InputQueue(); queueCommittedText(queue, 'A한글B'); enter(queue, r.gump); r.log.length = 0;
+    r.gump.setScroll(1, 0, 3); assert.equal(r.root.scrollColumn, 1); assert.equal(r.sliderOf(201).position, 1);
+    assert.deepEqual(r.log.filter((entry) => entry[0] === 'sliderPosition' && entry[1] === 201), [['sliderPosition', 201, 3], ['sliderPosition', 201, 1]]);
+});

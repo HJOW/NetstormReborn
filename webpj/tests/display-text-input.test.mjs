@@ -3,7 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { InputQueue } from '../www/core/input-queue.js';
 import { displayTextCodec } from '../www/assets/display-text.js';
-import { isCommittedTextInput, committedTextBytes, makeCommittedTextEvents, queueCommittedText, hasExtendedDisplayText, displayTextFloor, displayTextCeil, previousDisplayText, nextDisplayText } from '../www/core/display-text-input.js';
+import { isCommittedTextInput, committedTextBytes, makeCommittedTextEvents, queueCommittedText, hasExtendedDisplayText, displayTextFloor, displayTextCeil, previousDisplayText, nextDisplayText, displayTextLine } from '../www/core/display-text-input.js';
 
 // ASCII/1252는 바이트 하나, 확장 문자는 한 태그이며 해당 바이트로 복원한다.
 test('확정 문자: 영어·1252·한국어 태그와 표시 바이트', () => {
@@ -35,4 +35,13 @@ test('확정 문자: 혼합 바이트 선택·이전·다음 경계', () => {
     const raw = Array.from(bytes, (byte) => String.fromCharCode(byte)).join(''); assert.equal(nextDisplayText(raw, 1), 5);
     assert.equal(hasExtendedDisplayText(Uint8Array.of(31, 255, 255, 255)), false); assert.equal(displayTextFloor(Uint8Array.of(31, 255, 255, 255), 2), 2);
     assert.throws(() => displayTextFloor(bytes, -1), /위치/u);
+});
+
+// 원본 줄 조회는 LF를 제외하고 없는 줄을 빈 범위로 반환한다.
+test('확정 문자: LF 줄 조회와 없는 줄', () => {
+    const bytes = displayTextCodec.encode('A한\n글B');
+    assert.equal(displayTextCodec.decode(displayTextLine(bytes, 0)), 'A한');
+    assert.equal(displayTextCodec.decode(displayTextLine(bytes, 1)), '글B');
+    assert.equal(displayTextLine(bytes, 2).length, 0); assert.equal(displayTextLine(bytes, -1).length, 0);
+    assert.throws(() => displayTextLine(bytes, 1.5), /번호/u);
 });

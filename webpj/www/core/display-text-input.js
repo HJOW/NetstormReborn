@@ -106,3 +106,16 @@ export function filterDisplayText(text, excluded, maximum) {
     }
     return Uint8Array.from(output);
 }
+
+// LF로 구분된 현재 줄의 원본 바이트만 빌린다. 없는 줄은 빈 배열이다.
+export function displayTextLine(text, line) {
+    const bytes = displayBytes(text);
+    if (!Number.isInteger(line)) throw new TypeError('표시 줄 번호 오류');
+    if (line < 0) return bytes.subarray(0, 0);
+    let begin = 0;
+    // 이전 줄의 LF를 순서대로 건너뛴다.
+    for (let index = 0; index < line; index++) {
+        const end = bytes.indexOf(10, begin); if (end < 0) return bytes.subarray(0, 0); begin = end + 1;
+    }
+    const end = bytes.indexOf(10, begin); return bytes.subarray(begin, end < 0 ? bytes.length : end);
+}
