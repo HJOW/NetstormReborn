@@ -45,6 +45,8 @@ export class ClientTextGump {
     deleteScalar(token, flags) { return this.#body().deleteScalar(token, flags); }
     // 파생 출력기가 현재 Gump 클립 안에서 같은 스타일 조각을 그린다.
     drawFragments(head, position) { if (!this.#target) throw new Error('Client 글자 Gump의 현재 출력 표면 누락'); return this.#style.draw(head, position); }
+    // 다중 줄 파생 출력도 같은 스타일 픽셀 표면을 재진입 안전하게 빌린다.
+    withTarget(target, draw) { if (!target || typeof draw !== 'function') throw new TypeError('Client 글자 Gump의 출력 장치 오류'); const previous = this.#target; this.#target = target; try { return draw(); } finally { this.#target = previous; } }
     // 원본 TextGump를 초기화하고 스타일·크기를 같은 조각 체인에 적용한다.
     construct(token, width, height, font, color) { return this.#body().construct(token, width, height, font, color); }
     // 현재 글꼴 인코딩과 노드의 실제 문맥으로 스타일 문자열을 추가한다.

@@ -33,6 +33,13 @@ import { createClientProductionAssembly } from '../www/ui/client-production-asse
 import { GumpHelp, GumpHelpState } from '../www/ui/gump-help.js';
 import { ClientProductionAbout } from '../www/ui/client-production-about.js';
 import { ClientStyleTextBuffers } from '../www/ui/client-style-text-buffers.js';
+import { ClientScrollingText } from '../www/ui/client-scrolling-text.js';
+import { ClientScrollControls } from '../www/ui/client-scroll-controls.js';
+import { ButtonGumpState } from '../www/ui/button-gump.js';
+import { StoneButtonGumpState } from '../www/ui/stone-button-gump.js';
+import { ScrollGumpState } from '../www/ui/scroll-gump.js';
+import { ScrollGumpWidgetState } from '../www/ui/scroll-gump-widgets.js';
+import { ScrollingTextGumpWidgetState } from '../www/ui/scrolling-text-gump-widgets.js';
 import { StyleTextFragmentKind } from '../www/ui/style-text-fragments.js';
 import { PriestPlacementAssets } from '../www/core/priest-placement-assets.js';
 import { RawCanonPixelShape } from '../www/core/raw-canon-pixel-shape.js';
@@ -451,12 +458,24 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         assert.ok(aboutCalls.some(([kind, value]) => kind === 'header' && value.includes('Cost:'))); assert.ok(aboutCalls.some(([kind, _label, command]) => kind === 'entry' && command === 0x02000017));
         assert.deepEqual(aboutCalls.at(-1), ['sound', 'opengump.wav']); complete.close();
         // 실제 한 줄 글자 소유자의 조각·그림과 글꼴을 다중 줄 버퍼에서도 공유한다.
-        let bufferPictures = null; const bufferText = new ClientTextGump(gump, app._resources.fonts, () => 0,
-            makeClientTextMarkup(game, () => screen.colors(), () => pictureColors, () => {}, undefined, (pictures) => { bufferPictures = pictures; }));
+        let bufferPictures = null, bufferMarkup = null; const bufferText = new ClientTextGump(gump, app._resources.fonts, () => 0,
+            makeClientTextMarkup(game, () => screen.colors(), () => pictureColors, () => {}, undefined, (pictures, markup) => { bufferPictures = pictures; bufferMarkup = markup; }));
         const buffers = new ClientStyleTextBuffers(bufferText, app._resources.fonts, bufferPictures), bufferToken = buffers.create(8), buffer = buffers.binding(bufferToken);
         const words = Uint32Array.of(0, 0, 241, 0, 0, 0, 1, 1); buffer.handler.appendPicture(buffers.pictures(), 92, 3);
         buffer.handler.appendText(Uint8Array.of(65, 10, 0), words); buffer.handler.layout(100);
         assert.equal(buffer.state.lineCount, 1); assert.ok(buffer.state.softCount > 0); assert.ok(buffer.handler.maximumWidth() > 0);
         buffers.destroy(bufferToken); assert.equal(bufferText.styleState().fragments.size, 0);
+        // 실제 글꼴·그림·숨긴 Slider가 있는 다중 줄 Gump를 생성하고 화면에 출력한다.
+        const buttonState = new ButtonGumpState(), stoneState = new StoneButtonGumpState(), scrollState = new ScrollGumpState();
+        Object.assign(buttonState, { valueEvent: 0x02000070, clickEvent: 0x0200002c, rightEvent: 0x02000012, repeatEvent: 0x0200002f, baseColor: 56 });
+        Object.assign(scrollState, { clickEvent: 0x0200002c, repeatEvent: 0x0200002f, stepEvent: 0x0200002e, changeEvent: 0x02000036 });
+        stoneState.color = 49; stoneState.palette = { black: 0, white: 1, edge: 2 };
+        const scroll = new ClientScrollControls(gump, { buttonState, stoneState, scrollState, widgetState: new ScrollGumpWidgetState(),
+            backgroundColor: () => 35, now: () => app._gameClock.wallSeconds(), poll: (code) => app._clientInputPoll.poll(code), sound: () => {}, baseEvent: () => 0 });
+        const scrollWidgetState = new ScrollingTextGumpWidgetState(); Object.assign(scrollWidgetState, { changeEvent: 0x02000036, stepEvent: 0x0200002e });
+        const multi = new ClientScrollingText(gump, app._resources.fonts, bufferText, buffers, scroll, bufferMarkup, scrollWidgetState, (number) => { app._campaignCursor = number; });
+        const multiToken = multi.allocate(); multi.construct(multiToken, 160, 60, 0, 241); gump.attach(multiToken, 600, 300); multi.style(multiToken, 'A~[I92.3]B\n');
+        const multiPixels = new Uint8Array(1366 * 768).fill(255); gump.draw(multiToken, draw, new GumpPixelTarget(multiPixels, 1366, 768, draw));
+        assert.ok(multiPixels.some((value) => value !== 255)); gump.remove(multiToken); scroll.close(); assert.equal(bufferText.styleState().fragments.size, 0);
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); app._clientSoundDevice.dispose(); app._missionAudioAssets.dispose(); }
 });

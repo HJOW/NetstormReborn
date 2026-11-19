@@ -15,8 +15,12 @@ export class ClientStyleTextBuffers {
     }
     // 실제 파생 그림 조각 생성기를 같은 버퍼 파서에 빌려준다.
     pictures() { return this.#pictures; }
-    // 등록 Gump 수와 별개인 새 버퍼를 생성한다.
-    create(maxLines) { if (this.#next > 0xffffffff) throw new RangeError('Client 글자 버퍼 토큰 소진'); const token = this.#next++; this.#store.construct(token, maxLines); this.#tokens.add(token); return token; }
+    // Gump 등록 수와 별개인 새 버퍼 토큰을 예약한다.
+    allocate() { if (this.#next > 0xffffffff) throw new RangeError('Client 글자 버퍼 토큰 소진'); const token = this.#next++; this.#tokens.add(token); return token; }
+    // 예약한 토큰에 원본 버퍼를 생성한다.
+    construct(token, maxLines) { if (!this.#tokens.has(token)) throw new Error('Client 글자 버퍼 예약 누락'); return this.#store.construct(token, maxLines); }
+    // 토큰 예약과 버퍼 생성을 함께 수행한다.
+    create(maxLines) { const token = this.allocate(); try { return this.construct(token, maxLines); } catch (error) { this.#tokens.delete(token); throw error; } }
     // 현재 실제 버퍼 상태와 처리기를 빌린다.
     binding(token) { return this.#store.binding(token); }
     // 소유 줄·복제 그림과 버퍼를 원본 순서로 반납한다.
