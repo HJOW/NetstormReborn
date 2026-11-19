@@ -28,6 +28,7 @@ import { resetClientClockSynchronization, resetClientStateZone, resetClientState
 import { StateWorldCleanupEffect } from '../www/core/raw-state-world-cleanup.js';
 import { ClientStateRuntimeRetirement } from '../www/core/client-state-runtime-retirement.js';
 import { cancelClientStateCursor, cleanupClientStateWorld, makeClientStateWorldHooks } from '../www/core/client-state-world-cleanup.js';
+import { formatPlayerMenuText } from '../www/core/raw-player-menu.js';
 import { bindClientStateWorldGlobals } from '../www/core/client-state-world-globals.js';
 import { ClientKencloudGlobals } from '../www/core/client-kencloud-globals.js';
 import { ClientHtmlWindowGlobals } from '../www/core/client-html-window-globals.js';
@@ -1598,6 +1599,15 @@ function runWorkshopConstruction(natural) {
             }
             assert.equal(findAttachedProcess(core.pool, workshop, 17), 0); assert.equal(findAttachedProcess(core.pool, workshop, 47), 0);
             assert.ok(events.some((event) => event[0] === 'loop')); assert.ok(events.some((event) => event[0] === 'stop'));
+            // 완공된 실제 워크샾의 메뉴는 같은 기술·Deck·비용을 조회해 연구 명령을 만든다.
+            if (!s.findTechnology(1, 128)) s.addTechnology(1, core.types[128].name);
+            const factoryEntries = [], factoryBase = []; let factoryMenuToken = 1;
+            const factoryMenu = s.makeFactoryMenu({ description: (type) => core.types[type].description, helpWord: () => 'Help',
+                format: formatPlayerMenuText, beginFancy: () => {}, title: () => {}, header: () => {}, takeMenu: () => factoryMenuToken++,
+                submenu: () => {}, item: (label, command, parameter, include, enabled) => factoryEntries.push({ label, command, parameter, include, enabled }),
+                baseMenu: (sid) => factoryBase.push(sid) });
+            factoryMenu.open(workshop); assert.deepEqual(factoryBase, [workshop]);
+            assert.ok(factoryEntries.some((entry) => entry.command === 0x03000080 && entry.parameter === ((128 << 16) | workshop) && entry.include && entry.enabled));
             assert.equal(s.production().contains(128), false); const prior = s.localConnectionPackets().length;
             assert.equal(s.selectFactoryKnowledge(workshop, 0x03000080, ((128 << 16) | workshop) >>> 0), 1);
             const predicted = s.priests().carrier.findContained(workshop, 16, 128, 0);

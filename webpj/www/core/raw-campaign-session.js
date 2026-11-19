@@ -36,6 +36,7 @@ import { RawPriestMenu, bindPriestMenuWorld, createPriestMenuState } from './raw
 import { RawPlayerMenu, createPlayerMenuState } from './raw-player-menu.js';
 import { RawObjectMenu, createObjectMenuState } from './raw-object-menu.js';
 import { RawCarrierMenu } from './raw-carrier-menu.js';
+import { RawFactoryMenu, createFactoryMenuState } from './raw-factory-menu.js';
 import { RawObjectMenuInfo, createObjectMenuInfoState } from './raw-object-menu-info.js';
 import { GunProcess, GunProcessFields } from './raw-gun-process.js';
 import { FlyerProcess, FlyerProcessFields, RawFlyerProcess } from './raw-flyer-process.js';
@@ -92,6 +93,8 @@ export class RawCampaignSession {
     #priestMenuState = createPriestMenuState();
     // Player 메뉴의 두 정적 문자열과 명령은 같은 Session에서 공유한다.
     #playerMenuState = createPlayerMenuState();
+    // Factory 메뉴의 현재 원본 타입·명령 목록이다.
+    #factoryMenuState = createFactoryMenuState();
     // 같은 Session의 운반체 입력 전역과 음향 장부다.
     #carrierInput = new RawCampaignSessionCarrierInput(() => this.#live());
 
@@ -1144,6 +1147,19 @@ export class RawCampaignSession {
             alliance: (owner, local) => { if (owner >= 9 || local >= 9) throw new RangeError('객체 정보 동맹 범위 오류'); return live().alliances[owner * 9 + local]; },
             groundImmobile: (sid) => live().priests.priestState.groundImmobile(sid), ownerStatus: (owner) => { if (owner >= 9) throw new RangeError('객체 정보 Player 범위 오류'); return live().players[owner * 180 + 0x50]; } };
         return new RawObjectMenuInfo(o.core.pool, o.core.types, classes, state, hooks);
+    }
+    // 현재 생산 Deck·기술·비용과 TYPE 에너지를 실제 Factory 메뉴에 결합한다.
+    makeFactoryMenu(input = {}) {
+        const o = this.#live(); if (!o.loaded || !o.production) throw new Error('실제 Session Factory 메뉴의 설치 수명 누락');
+        const live = () => this.#live(), mana = bindAiTypeRequiredEnergy(o.assets.game.typeTable.definitions, o.core.types);
+        const hooks = { ...input, localOwner: () => live().playerState.battleOwner, editor: () => live().globals.editor !== 0,
+            capacity: (sid) => live().production.factoryCapacity(sid), level: (sid) => live().assetModules.virtualCount(sid),
+            currentTechnology: () => live().player.currentTechnology(), technologyType: (parent, index) => {
+                const current = live(), sid = current.priests.carrier.findContained(parent, 4, 0, index); if (!sid) return 0;
+                const raw = current.core.pool.slot(sid); return raw[18] | (raw[19] << 8);
+            }, allowed: (type) => live().production.allowed(type), inProduction: (type) => live().production.contains(type),
+            cost: (type) => live().hp.typeCostUnits(type), money: (owner) => this.sp(owner), mana: (type) => { live(); return mana(type); } };
+        return new RawFactoryMenu(o.core.pool, o.core.types, o.contentFinder, o.constructionExcludedTypes, this.#factoryMenuState, hooks);
     }
     // 같은 옵션 저장소의 숨김 Player 바이트를 빌린다.
     hiddenPlayers() { return this.#live().hiddenPlayers; }
