@@ -761,6 +761,35 @@ export class Netstorm {
         };
     }
 
+    // 로컬 Login이 현재 Client의 설정·시계·진단과 표시 무효화를 직접 조회한다.
+    _campaignLoginServices() {
+        return {
+            // 서버 포트는 공통 전역을, 다른 정수는 현재 설정과 기본값을 사용한다.
+            configInt: (key, fallback) => {
+                if (!this._gameData || !this._clientGameplay) throw new Error('로그인 설정의 실제 Client 수명 누락');
+                return key === 'gameServerPort' ? this._clientGameplay.gameServerPort().value | 0 : this._gameData.readInt(key, fallback).value;
+            },
+            // 프레임 고정값과 달리 요청 순간의 벽시각과 게임 시각을 각각 읽는다.
+            wallSeconds: () => this._gameClock.wallSeconds(),
+            gameSeconds: () => this._gameClock.gameSeconds(),
+            // 브라우저에는 C 런타임 clock()이 없어 같은 Client의 단조 밀리초를 사용한다.
+            clock: () => this._gameClock.milliseconds(),
+            // 현재 메뉴와 최종 화면이 다시 그려지도록 표시한다.
+            refresh: () => { if (this._mainMenu) this._mainMenu.dirty = true; this._displayDirty = true; },
+            // 비전투·미션·대본 중단을 먼저 제외한 뒤 현재 Session의 전투 종료를 확인한다.
+            playerUiBusy: () => {
+                if (!this._surfaceStorage || !this._clientGameplay || !this._clientLocal) throw new Error('로그인 Player의 실제 Client 수명 누락');
+                if (!this._surfaceStorage.ownerMode.battle || this._clientGameplay.world.missionPost || this._clientLocal.scriptBreak().value) return false;
+                if (!this._campaignWorld) throw new Error('전투 종료 판정의 실제 World 누락');
+                return this._campaignWorld.session().battleFinished();
+            },
+            // Player 원문 진단을 출력하고 같은 표시 화면을 무효화한다.
+            playerNotice: (kind, owner, value) => { console.info(`Player UI ${kind} ${owner} ${value}`); if (this._mainMenu) this._mainMenu.dirty = true; this._displayDirty = true; },
+            // 원본 연결 진단을 브라우저 콘솔에 기록한다.
+            log: (text) => console.info(text),
+        };
+    }
+
     // 같은 실제 Client의 State7 부모에서 선택된 Fort World를 설치하고 State8 내부 접속을 건다.
     _runCampaignState7(services, viewport) {
         const client = this._campaignStateClient(), request = this._clientGuide?.fortRequest();
@@ -780,7 +809,8 @@ export class Netstorm {
         if (this._campaignWorld || !current || !request || request.consumed || !this._gameAssets || !this._gameData) throw new Error('캠페인 World의 현재 Guide/요청 또는 단독 수명 계약 오류');
         const fort = parseFort(current.script.readFortImage(request.fort), createFortTypes(this._gameAssets.typeTable));
         const install = { ...this._campaignInstallServices(), ...services?.install };
-        const world = new CampaignGameWorld(this._gameAssets, this._gameData.files, fort, request.fort, { ...services, ...this._campaignSharedServices(), install }, viewport);
+        const localLogin = services?.localLogin === null ? null : { ...this._campaignLoginServices(), ...services?.localLogin };
+        const world = new CampaignGameWorld(this._gameAssets, this._gameData.files, fort, request.fort, { ...services, ...this._campaignSharedServices(), install, localLogin }, viewport);
         this._campaignWorld = world; this._campaignWorldMissionToken = current.runtime.saveToken;
         return world;
     }

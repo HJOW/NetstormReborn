@@ -804,7 +804,7 @@ test('Netstorm Client World: 실제 앱 State7 부모와 State8 로컬 로그인
     const xlat = new XlatTable(fs.readFileSync(path.join(REPO_ROOT, 'webpj/translations/xlat.korean'), 'utf8'));
     app._gameData = data; app._root = { ownerDocument: { title: 'before' } }; app._resources = { translate: (text) => xlat.translate(text) }; app._initializeClientWorldStorage(game, data.files); app._initializeClientGuide();
     const guide = app._clientGuide; let world;
-    const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => app._gameClock.wallSeconds(), clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {}, initializeRenderer: () => {}, uiMode: () => {}, startingProgress: () => {}, battlePalette: () => {}, closeProgress: () => {} };
+    const localLogin = { initializeRenderer: () => {}, uiMode: () => {}, startingProgress: () => {}, battlePalette: () => {}, closeProgress: () => {} };
     app._clientGameplay.camera().initializeNativeRenderer(1024, 768, 256, { value: 0 }, { value: 0 });
     const services = { localLogin, soundNames: new SoundList(), carrierRequest: forbidden('전송'),
         cameraCommit: (context) => { const pixels = context.camera.target().pixels; context.camera.applyPixelsToRendererAndSnapshot(pixels[0], pixels[1]); },
