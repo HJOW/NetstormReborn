@@ -33,6 +33,7 @@ import { createClientProductionAssembly } from '../www/ui/client-production-asse
 import { GumpHelp, GumpHelpState } from '../www/ui/gump-help.js';
 import { ClientProductionAbout } from '../www/ui/client-production-about.js';
 import { createClientProductionMenu } from '../www/ui/client-production-menu.js';
+import { createQuickHelpPicture } from '../www/ui/quick-help-info.js';
 import { ClientStyleTextBuffers } from '../www/ui/client-style-text-buffers.js';
 import { ClientScrollingText } from '../www/ui/client-scrolling-text.js';
 import { ClientScrollControls } from '../www/ui/client-scroll-controls.js';
@@ -319,6 +320,9 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         // 실제 Session TYPE·요구 에너지와 현재 체력 장치를 도움말이 공유한다.
         const bridgeType = session.core().bridgeState.bridgeType, helpType = session.helpTypeInfo(bridgeType), bridgeRecord = session.core().types[bridgeType];
         assert.equal(helpType.theme, bridgeRecord.theme); assert.equal(helpType.flags1, bridgeRecord.flags1); assert.equal(helpType.cost, bridgeRecord.cost);
+        const helpPicture = createQuickHelpPicture(game, bridgeType), definition = game.types()[bridgeType - 70].definition;
+        assert.equal(helpPicture?.frameNumber ?? -1, definition.helpFrame); if (helpPicture) assert.equal(helpPicture.type, bridgeType);
+        assert.equal(createQuickHelpPicture(game, 109), null); assert.equal(createQuickHelpPicture(game, 161), null); assert.throws(() => createQuickHelpPicture(game, 188), /TYPE 범위/u);
         assert.equal(typeof helpType.mana, 'string'); assert.equal(typeof helpType.classification, 'string'); assert.equal(typeof session.hitPoints().typeHitPoints(bridgeType), 'number');
         assert.throws(() => session.helpTypeInfo(188), /TYPE 범위/u);
         const cursor = session.cursor(), drop = session.cursorDropSettings(); cursor.take(bridge, 0);

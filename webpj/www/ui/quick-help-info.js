@@ -56,3 +56,16 @@ export function buildQuickHelpInfoHtml(hooks, manaType = 103, manaFrames = null)
     const html = `${heading}${alignment}<br>${classification}<br>${hits}<br>${range}<br>${damage}<br>${cost}<br>${mana}<br>`;
     if (html.length >= 1024) throw new RangeError('도움말 정보 원본 1024바이트 초과'); return html;
 }
+
+// TYPE의 실제 Help 프레임과 SHP 기준점을 읽는다. 그림 제외 TYPE과 프레임 -1은 null이다.
+export function createQuickHelpPicture(game, type) {
+    if (!game || !Number.isInteger(type) || type < 0 || type >= 188) throw new RangeError('도움말 그림 TYPE 범위');
+    if (type < 70 || type - 70 >= game.types().length || type === 109 || type === 161) return null;
+    const view = game.typeTable.view(type), frameNumber = game.types()[type - 70].definition.helpFrame;
+    if (frameNumber === -1) return null;
+    const block = type - 70, frame = game.shapes.blocks[block].frames[frameNumber];
+    if (!frame) throw new RangeError('도움말 그림의 실제 SHP 프레임 누락');
+    const metrics = game.shapes.squidMetrics(block, frameNumber);
+    return { type, frameNumber, frame, image: frame.special ? null : game.shapes.decode(block, frameNumber),
+        hotspotX: Math.fround(metrics.hotspotX - view.hotspotX), hotspotY: Math.fround(metrics.hotspotY - view.hotspotY) };
+}
