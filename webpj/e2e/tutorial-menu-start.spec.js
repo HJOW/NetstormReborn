@@ -56,6 +56,7 @@ test('캠페인 목록에서 첫 Tutorial의 월드와 안내를 표시한다', 
   await page.mouse.click(destination.x, destination.y, { delay: 60 });
   await expect.poll(() => page.evaluate(() => window.netstorm._campaignWorld.session().localConnectionPackets().length)).toBeGreaterThan(destination.count);
   expect(await page.evaluate(() => window.netstorm._campaignWorld.session().localConnectionPackets().at(-1))).toBe(0x40);
+  await expect.poll(() => page.evaluate(() => window.netstorm._clientInputQueue.size)).toBe(0);
   await page.waitForFunction(({ sid, x, y }) => {
     const bytes = window.netstorm._campaignWorld.session().core().pool.slot(sid), raw = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength);
     return raw.getFloat32(14, true) !== x || raw.getFloat32(18, true) !== y;

@@ -66,6 +66,7 @@ import { CHAT_RECORD_BYTES, RawChatChannels } from './core/raw-chat-channels.js'
 import { RawCampaignMissionStartBindings } from './core/raw-campaign-mission-start-bindings.js';
 import { RawCampaignTutorialOneBindings } from './core/raw-campaign-tutorial-one-bindings.js';
 import { MISSION_RELOAD_COMMAND } from './core/mission-guide-input.js';
+import { WORLD_DESTINATION_SELECTED_COMMAND } from './core/raw-user-selection.js';
 import { ClientRandomGlobals } from './core/random.js';
 import { ClientSpGlobals } from './core/client-sp-globals.js';
 import { ClientSubscriberGlobals } from './core/client-subscriber-globals.js';
@@ -1199,6 +1200,17 @@ export class Netstorm {
         return this._campaignUserInput;
     }
 
+    // 현재 큐 맨 앞의 이동점 통지만 Guide와 Gump에 순서대로 전달한다. 다른 사건은 건드리지 않는다.
+    _dispatchCampaignMovementNotices() {
+        const queue = this._clientInputQueue, tutorial = this._clientGuide?.current()?.runtime.tutorial, gump = this._clientGump;
+        if (!queue || !tutorial || !gump) throw new Error('미션 이동 통지의 현재 입력 수명 누락');
+        // 원본 큐의 순서를 지키며 미구현 사건 앞을 추월하지 않는다.
+        while (queue.peek()?.code === WORLD_DESTINATION_SELECTED_COMMAND) {
+            const event = queue.pop(false);
+            if (!tutorial.event(event)) gump.input().route(event.code, event.x, event.y);
+        }
+    }
+
     // 같은 로그인 Session과 Start에 현재 안내·시계·입력·선택 장치를 연결한다.
     _prepareCampaignTutorial() {
         const world = this._campaignWorld, current = this._clientGuide?.current(), gump = this._clientGump, clock = this._gameClock;
@@ -2301,7 +2313,8 @@ export class Netstorm {
         // 전체 원본 입력 소비자 연결 전에는 미션 좌클릭만 같은 Gump와 월드 입력기에 전달한다.
         if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && this._campaignUserInput && event.button === 0 && pointer.inside) {
             const input = browserMouseEvent(event, pointer, false);
-            if (!this._clientGump.input().route(input.code, input.x, input.y)) this._campaignUserInput.event(input);
+            const tutorial = this._clientGuide?.current()?.runtime.tutorial;
+            if (tutorial && !tutorial.event(input) && !this._clientGump.input().route(input.code, input.x, input.y)) this._campaignUserInput.event(input);
         }
         if (this._state === AppState.TERRAIN_PREVIEW && event.button === 0 && pointer.inside) this._terrainPreview?.pointerDown(pointer.x, pointer.y);
     }
@@ -2521,6 +2534,7 @@ export class Netstorm {
         }
         // 원본 루프 8번의 Guide를 상태·패킷 처리 뒤, 입력 처리보다 먼저 실행한다.
         this._clientGuide?.run();
+        if (this._campaignDisplayActive()) this._dispatchCampaignMovementNotices();
         if (this._state === AppState.MAIN_MENU) {
             // 원본 UserInput 은 매 프레임 마우스 위치를 폴링해 Gump 에 알린다. 그래서 포인터가 멈춰 있어도 그 아래에 새로 열린 펼침 메뉴 행이 바로 강조된다
             // (cpppj 오라클 help-popup/options-popup 관측). 브라우저는 포인터가 움직일 때만 사건을 주므로 마지막 포인터 위치를 매 프레임 다시 알린다. (2026-11-07 WB02-H)

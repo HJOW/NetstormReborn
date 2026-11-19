@@ -91,6 +91,9 @@ export class InputQueue {
     // 꺼낼 사건이 없는지이다(읽기 칸 = 쓰기 칸).
     get empty() { return this.#read === this.#write; }
 
+    // 다음 사건을 소비하지 않고 사본으로 읽는다. 빈 큐는 null이다.
+    peek() { return this.empty ? null : { ...this.#events[this.#read] }; }
+
     // 꺼낼 수 있는 사건 수이다(진단용, 큐를 바꾸지 않는다).
     get size() { return (this.#write - this.#read + INPUT_QUEUE_CAPACITY) % INPUT_QUEUE_CAPACITY; }
 }

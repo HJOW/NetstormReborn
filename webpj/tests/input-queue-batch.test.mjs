@@ -20,3 +20,13 @@ test('입력 큐 일괄 예약: 감김·남은 칸·공간 부족과 검증 원�
     assert.equal(queue.size, 1); assert.equal(queue.pop(false).code, 7); assert.equal(queue.freeSlots, 39);
     assert.throws(() => queue.tryPushBatch(null), TypeError);
 });
+
+// 머리 조회는 원본 사건을 소비하거나 호출자에 저장소를 노출하지 않는다.
+test('입력 큐 머리 조회: 빈 큐·사본·원본 순서', () => {
+    const queue = new InputQueue(); assert.equal(queue.peek(), null);
+    queue.push(0x80010000, -3, 4); queue.pushCommand(0x02000044, 5, 6);
+    const first = queue.peek(); first.code = 0; assert.equal(queue.size, 2);
+    assert.deepEqual(queue.pop(false), { code: 0x80010000, x: -3, y: 4 });
+    assert.deepEqual(queue.peek(), { code: 0x02000044, x: 5, y: 6 }); assert.equal(queue.size, 1);
+    queue.pop(false); assert.equal(queue.peek(), null);
+});
