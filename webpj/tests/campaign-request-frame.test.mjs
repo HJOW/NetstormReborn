@@ -75,7 +75,6 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
     app._canvas = {}; app._render = () => {}; app._startFrameLoop = () => {};
     const guide = app._clientGuide, events = [];
     const services = { cameraCommit: (context) => { const pixels = context.camera.target().pixels; context.camera.applyPixelsToRendererAndSnapshot(pixels[0], pixels[1]); },
-        surfaceDisplay: { suppressed: () => false, invalidate: () => {} },
         assets: { postPop: { playImpactSound: () => {} } },
         sound: { wallSeconds: () => 0, play: () => {}, playOnceAt: () => {}, playLoopAt: () => {}, stop: () => {}, isPlaying: () => false },
         ai: { assertion: (value) => { throw new Error(`AI 진단 ${value}`); }, participation: { addChat: () => {}, clearChat: () => {} } } };

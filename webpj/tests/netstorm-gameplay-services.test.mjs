@@ -34,3 +34,22 @@ test('Netstorm 미션 장치: 현재 입력 큐와 명령 정수 폭', () => {
     assert.deepEqual(first.pop(false), { code: 0x03000075, x: -1, y: 2 });
     assert.deepEqual(second.pop(false), { code: 0x02000042, x: -1, y: -2 });
 });
+
+// 카메라는 현재 Screen을, 표면은 현재 Renderer의 전체·부분 변경 표를 사용한다.
+test('Netstorm 미션 장치: 화면 크기와 교체된 실제 변경 표', () => {
+    const app = new Netstorm(), services = app._campaignGameplayServices();
+    assert.throws(() => services.cameraScreenSize(), /Screen 수명 누락/);
+    assert.throws(() => services.surfaceDisplay.suppressed(), /Renderer 수명 누락/);
+    assert.throws(() => services.surfaceDisplay.invalidate({ left: 1, top: 1, right: 5, bottom: 5 }, 0), /Renderer 수명 누락/);
+    app._clientPaletteScreen = { width: 1024, height: 768 }; app._initializeClientRenderer(1024, 768);
+    const first = app._clientRenderer;
+    assert.deepEqual(services.cameraScreenSize(), { x: 1024, y: 768 }); assert.equal(services.surfaceDisplay.suppressed(), true);
+    first.clearDirty(); app._displayDirty = false;
+    services.surfaceDisplay.invalidate({ left: 1, top: 2, right: 5, bottom: 7 }, 4);
+    assert.equal(app._displayDirty, true); assert.deepEqual(first.cameraDirtyEntries(), [{ rect: { left: 1, top: 2, right: 5, bottom: 7 }, flags: 4 }]);
+    app._clientPaletteScreen = { width: 1366, height: 768 }; app._initializeClientRenderer(1366, 768);
+    const second = app._clientRenderer; assert.notEqual(second, first);
+    assert.deepEqual(services.cameraScreenSize(), { x: 1366, y: 768 }); assert.equal(services.surfaceDisplay.suppressed(), true);
+    second.clearDirty(); services.surfaceDisplay.invalidate({ left: 1025, top: 3, right: 1030, bottom: 9 }, 0);
+    assert.equal(second.cameraDirtyEntries().length, 1); assert.equal(first.cameraDirtyEntries().length, 1);
+});

@@ -30,6 +30,8 @@ import { SoundList } from './audio/sound-list.js';
 import { IndexedSurface } from './render/indexed-surface.js';
 import { IndexedPresenter, normalizeScaling } from './render/presenter.js';
 import { Screen, ScreenMode } from './render/screen.js';
+import { Renderer } from './render/renderer.js';
+import { SquidRenderer } from './render/squid-renderer.js';
 import { Settings, findSettingKey, getLocalStorage } from './platform/settings.js';
 import { Progress, isProgressKey } from './platform/progress.js';
 import { reportGameError } from './platform/error-reporting.js';
@@ -487,6 +489,8 @@ export class Netstorm {
         this._clientSoundNames = null;
         // 시작 팔레트와 최초 색 정렬 입력은 Client 수명 동안 같은 객체로 유지한다.
         this._clientPaletteScreen = null; this._clientColorSort = null;
+        // 논리 화면에 대응하는 실제 Renderer와 월드 변경 영역 전달 장치다.
+        this._clientRenderer = null; this._clientSurfaceDisplay = null;
         // 설치 폴더에 쓰지 않는 색표 캐시는 같은 페이지의 앱 재시작 사이에 유지한다.
         this._clientColorMapFiles = new MemoryColorMapFiles();
         // Client 공통 Player·Core·Template과 Subscriber는 Session보다 오래 산다.
@@ -768,6 +772,13 @@ export class Netstorm {
         if (!screen.setMode(ScreenMode.fallbackWindowed)) throw new Error('Client Screen의 창 모드 DIB 초기화 실패');
         screen.setClip(0, 0, screen.width, screen.height);
         this._clientPaletteScreen = screen; this._clientColorSort = colors;
+        this._initializeClientRenderer(screen.width, screen.height);
+    }
+
+    // 논리 화면 크기에 맞는 Renderer와 그 변경 표를 빌리는 월드 표시 장치를 함께 교체한다.
+    _initializeClientRenderer(width, height) {
+        const renderer = new Renderer(width, height);
+        this._clientRenderer = renderer; this._clientSurfaceDisplay = new SquidRenderer(renderer);
     }
 
     // 현재 Screen의 BGRX 색을 실제 표시기의 RGB 표로 전달하고 다음 화면 출력을 예약한다.
@@ -823,6 +834,7 @@ export class Netstorm {
         screen.loadPalette(palette, 0);
         if (!screen.setMode(mode)) throw new Error('Client Screen 크기 변경의 창 모드 초기화 실패');
         screen.setClip(0, 0, width, height); this._clientPaletteScreen = screen;
+        this._initializeClientRenderer(width, height);
     }
 
     // 같은 Client의 구름·파일·Screen·최초 색표를 사용해 원본 팔레트 전환 부모를 실행한다.
@@ -955,6 +967,23 @@ export class Netstorm {
             return this._clientInputQueue;
         } }, services);
         services.assets.queueCommand = services.developerQueue;
+        // 카메라 패킷은 도킹 영역이 아닌 현재 논리 Screen의 전체 크기를 읽는다.
+        services.cameraScreenSize = () => {
+            const screen = this._clientPaletteScreen;
+            if (!screen) throw new Error('미션 카메라의 실제 Screen 수명 누락');
+            return { x: screen.width, y: screen.height };
+        };
+        // 표면 변경은 크기 변경으로 교체된 현재 Renderer에도 같은 어댑터로 전달한다.
+        services.surfaceDisplay = {
+            suppressed: () => {
+                if (!this._clientSurfaceDisplay) throw new Error('미션 표면의 실제 Renderer 수명 누락');
+                return this._clientSurfaceDisplay.suppressed();
+            },
+            invalidate: (rect, flags) => {
+                if (!this._clientSurfaceDisplay) throw new Error('미션 표면의 실제 Renderer 수명 누락');
+                this._clientSurfaceDisplay.invalidate(rect, flags); this._displayDirty = true;
+            },
+        };
         return services;
     }
 
@@ -1086,7 +1115,7 @@ export class Netstorm {
         this._surfaceStorage?.dispose();
         this._gameClock = null; this._clientLocal = null; this._hiddenGamePause = false; this._clientSoundNames = null;
         this._clientSp = null; this._clientRandom = null;
-        this._clientPaletteScreen = null; this._clientColorSort = null;
+        this._clientPaletteScreen = null; this._clientColorSort = null; this._clientRenderer = null; this._clientSurfaceDisplay = null;
         this._clientTemplates = null; this._clientPlayers = null; this._clientCoreData = null; this._clientGameplay = null; this._clientSubscriber = null;
         this._clientKernel = null; this._surfaceStorage = null; this._gameAssets = null;
         if (this._audio) {
