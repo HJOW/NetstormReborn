@@ -311,7 +311,13 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         const finder = new RawContainedFinder(session.core().pool, session.productionFinder()); let bridge = 0;
         // 첫 실제 다리 슬롯을 고른다.
         for (let sid = finder.begin(technology); sid; sid = finder.next()) { const raw = session.core().pool.slot(sid); if ((raw[20] | (raw[21] << 8)) & 0x40) { bridge = sid; break; } }
-        assert.ok(bridge); const cursor = session.cursor(), drop = session.cursorDropSettings(); cursor.take(bridge, 0);
+        assert.ok(bridge);
+        // 실제 Session TYPE·요구 에너지와 현재 체력 장치를 도움말이 공유한다.
+        const bridgeType = session.core().bridgeState.bridgeType, helpType = session.helpTypeInfo(bridgeType), bridgeRecord = session.core().types[bridgeType];
+        assert.equal(helpType.theme, bridgeRecord.theme); assert.equal(helpType.flags1, bridgeRecord.flags1); assert.equal(helpType.cost, bridgeRecord.cost);
+        assert.equal(typeof helpType.mana, 'string'); assert.equal(typeof helpType.classification, 'string'); assert.equal(typeof session.hitPoints().typeHitPoints(bridgeType), 'number');
+        assert.throws(() => session.helpTypeInfo(188), /TYPE 범위/u);
+        const cursor = session.cursor(), drop = session.cursorDropSettings(); cursor.take(bridge, 0);
         assert.equal(drop.preview, bridge); assert.equal(drop.lockDepth, 0); assert.ok(cursor.lifecycle.previewCount > 0);
         const playerRecords = app._clientPlayers.records(); const temple = new DataView(playerRecords.buffer, playerRecords.byteOffset + session.localOwner() * 180 + 0x7c, 4).getUint32(0, true);
         const templeBytes = session.core().pool.slot(temple), templeRaw = new DataView(templeBytes.buffer, templeBytes.byteOffset, templeBytes.byteLength);

@@ -61,6 +61,8 @@ import { RawPriestLookup } from './raw-priest-lookup.js';
 import { drawCampaignTempleFrames } from './raw-campaign-session-building.js';
 import { drawRainVortex } from './raw-rain-vortex-draw.js';
 import { withdrawGameplayForState } from './client-gameplay-globals.js';
+import { bindAiTypeRequiredEnergy } from './raw-type-required-energy.js';
+import { typeString } from '../assets/type-table.js';
 
 // 분산 SP DWORD를 원본 단정도로 읽고 같은 비트 표현으로 쓴다.
 function spFloat(bits) { const data = new DataView(new ArrayBuffer(4)); data.setUint32(0, bits, true); return data.getFloat32(0, true); }
@@ -149,6 +151,17 @@ export class RawCampaignSession {
     }
     // 같은 현재 Session의 회수 요청을 원본 송신 처리기에 전달한다.
     requestSalvage(sid) { const owner = this.#live(); if (!owner.loaded || !owner.salvageCommand) throw new Error('미설치 Session의 실제 회수 요청'); owner.salvageCommand.request(sid); }
+    // 전용 도움말은 현재 TYPE·무기·피해 표와 같은 AST 요구 에너지를 조회한다.
+    helpTypeInfo(type) {
+        const owner = this.#live(), types = owner.core.types;
+        if (!owner.loaded || !Number.isInteger(type) || type < 0 || type >= types.length) throw new RangeError('전용 도움말의 설치·현재 TYPE 범위');
+        const current = types[type], asset = type >= 70 && type - 70 < owner.assets.game.types().length ? owner.assets.game.types()[type - 70] : null;
+        const classification = asset ? (typeString(asset.definition, 'class') ?? '').split('\0', 1)[0] : '';
+        if (classification.length > 23) throw new RangeError('전용 도움말 TYPE class 23바이트 초과');
+        return { theme: current.theme, flags1: current.flags1, flags2: current.flags2, cost: current.cost,
+            range: owner.gunTypes[type].range, damage: owner.hitTypes[type].damagePerSecond, classification,
+            mana: bindAiTypeRequiredEnergy(owner.assets.game.typeTable.definitions, types)(type) };
+    }
     // 같은 실제 풀의 HP 판정과 최대 HP 처리기를 빌린다.
     hitPoints() { return this.#live().hp; }
     // State 종료 위치에서 같은 실제 Process Host를 정리하고 정상 복귀 증빙을 발급한다.
