@@ -37,3 +37,54 @@ export function queueCommittedText(queue, text, x = 0, y = 0) {
     if (typeof queue?.tryPushBatch !== 'function') throw new TypeError('확정 입력의 실제 일괄 큐 필요');
     return queue.tryPushBatch(makeCommittedTextEvents(text, x, y));
 }
+
+// 바이트 문자열 또는 실제 Uint8Array를 현재 표시 바이트로 읽는다.
+function displayBytes(text) {
+    if (typeof text === 'string') return Uint8Array.from(text, (character) => character.charCodeAt(0) & 0xff);
+    if (text instanceof Uint8Array) return text;
+    throw new TypeError('표시 문자열의 바이트 필요');
+}
+
+// 현재 위치가 실제로 해독 가능한 네 바이트 확장 문자일 때만 폭 4를 반환한다.
+function displayWidth(bytes, at) {
+    if (at + 4 > bytes.length || bytes[at] !== EXTENDED_LEAD) return 1;
+    return [...displayTextCodec.decode(bytes.subarray(at, at + 4))].length === 1 ? 4 : 1;
+}
+
+// 표시 본문에 유효한 확장 문자가 하나라도 있는지 확인한다.
+export function hasExtendedDisplayText(text) {
+    const bytes = displayBytes(text);
+    // 원본은 모든 바이트 위치를 순서대로 확인한다.
+    for (let at = 0; at < bytes.length; at++) if (displayWidth(bytes, at) === 4) return true;
+    return false;
+}
+
+// 임의의 바이트 위치를 문자 앞 경계로 제한한다.
+export function displayTextFloor(text, position) {
+    const bytes = displayBytes(text);
+    if (!Number.isInteger(position) || position < 0) throw new RangeError('표시 문자 위치 오류');
+    position = Math.min(position, bytes.length); let at = 0;
+    // 앞 문자부터 폭을 더하며 대상이 토큰 내부면 토큰의 앞을 남긴다.
+    while (at < position) { const next = at + displayWidth(bytes, at); if (next > position) return at; at = next; }
+    return at;
+}
+
+// 임의의 바이트 위치를 문자 뒤 경계로 제한한다.
+export function displayTextCeil(text, position) {
+    const bytes = displayBytes(text);
+    if (!Number.isInteger(position) || position < 0) throw new RangeError('표시 문자 위치 오류');
+    position = Math.min(position, bytes.length); const floor = displayTextFloor(bytes, position);
+    return floor === position ? position : floor + displayWidth(bytes, floor);
+}
+
+// 현재 위치 앞의 완전한 문자 경계를 반환한다.
+export function previousDisplayText(text, position) {
+    const bytes = displayBytes(text), at = displayTextFloor(bytes, position);
+    return at ? displayTextFloor(bytes, at - 1) : 0;
+}
+
+// 현재 위치 뒤의 완전한 문자 경계를 반환한다.
+export function nextDisplayText(text, position) {
+    const bytes = displayBytes(text), at = displayTextFloor(bytes, position);
+    return at < bytes.length ? at + displayWidth(bytes, at) : at;
+}

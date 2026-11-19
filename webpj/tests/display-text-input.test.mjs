@@ -3,7 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { InputQueue } from '../www/core/input-queue.js';
 import { displayTextCodec } from '../www/assets/display-text.js';
-import { isCommittedTextInput, committedTextBytes, makeCommittedTextEvents, queueCommittedText } from '../www/core/display-text-input.js';
+import { isCommittedTextInput, committedTextBytes, makeCommittedTextEvents, queueCommittedText, hasExtendedDisplayText, displayTextFloor, displayTextCeil, previousDisplayText, nextDisplayText } from '../www/core/display-text-input.js';
 
 // ASCII/1252는 바이트 하나, 확장 문자는 한 태그이며 해당 바이트로 복원한다.
 test('확정 문자: 영어·1252·한국어 태그와 표시 바이트', () => {
@@ -24,4 +24,15 @@ test('확정 문자: 전체 검증과 용량 부족의 원자성', () => {
     assert.equal(queue.pop(false).code, 7); assert.equal(queueCommittedText(queue, '한A', 1, 2), true);
     assert.deepEqual(queue.pop(false), { code: 0x0100d55c, x: 1, y: 2 }); assert.deepEqual(queue.pop(false), { code: 65, x: 1, y: 2 });
     assert.equal(queue.empty, true); assert.throws(() => queueCommittedText(null, 'a'), /큐/u);
+});
+
+// 확장 바이트 내부의 커서와 선택을 한글 한 문자 경계로 유지한다.
+test('확정 문자: 혼합 바이트 선택·이전·다음 경계', () => {
+    const bytes = displayTextCodec.encode('A한글B'); assert.equal(bytes.length, 10); assert.equal(hasExtendedDisplayText(bytes), true);
+    assert.deepEqual([0, 1, 2, 4, 5, 8, 9, 10, 11].map((at) => displayTextFloor(bytes, at)), [0, 1, 1, 1, 5, 5, 9, 10, 10]);
+    assert.deepEqual([0, 1, 2, 4, 5, 8, 9, 10, 11].map((at) => displayTextCeil(bytes, at)), [0, 1, 5, 5, 5, 9, 9, 10, 10]);
+    assert.deepEqual([previousDisplayText(bytes, 9), previousDisplayText(bytes, 5), nextDisplayText(bytes, 1), nextDisplayText(bytes, 5)], [5, 1, 5, 9]);
+    const raw = Array.from(bytes, (byte) => String.fromCharCode(byte)).join(''); assert.equal(nextDisplayText(raw, 1), 5);
+    assert.equal(hasExtendedDisplayText(Uint8Array.of(31, 255, 255, 255)), false); assert.equal(displayTextFloor(Uint8Array.of(31, 255, 255, 255), 2), 2);
+    assert.throws(() => displayTextFloor(bytes, -1), /위치/u);
 });
