@@ -31,7 +31,9 @@ export class ClientStoneControls {
                 token = owner.allocateDerived(node, (event, first, second) => {
                     if (typeof devices.baseEvent !== 'function') throw new Error('돌 버튼 배경 기본 입력 미연결');
                     return devices.baseEvent(token, event, first, second);
-                }, (current, flags) => this.#deleteBase(current, flags)); this.#owned.add(token); return token;
+                }, (current, flags) => this.#deleteBase(current, flags));
+                if (devices.output?.background) owner.bindDraw(token, (current, target, clip) => devices.output.background.draw(current, target, clip));
+                this.#owned.add(token); return token;
             },
             attach: (...args) => owner.attach(...args), push: (token) => owner.tree().push(token), measure: devices.measure,
         });

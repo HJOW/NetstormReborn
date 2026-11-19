@@ -44,6 +44,7 @@ import { StyleTextFragmentKind } from '../www/ui/style-text-fragments.js';
 import { PriestPlacementAssets } from '../www/core/priest-placement-assets.js';
 import { RawCanonPixelShape } from '../www/core/raw-canon-pixel-shape.js';
 import { GumpDrawState, GumpPixelTarget, setGumpDrawClip } from '../www/render/gump-draw.js';
+import { GumpBackgroundAssets } from '../www/render/gump-background-draw.js';
 import { DATA_ROOT, readData, readDataMap } from './helpers.mjs';
 import { realCaptureAssets } from './capture-assets-support.mjs';
 
@@ -469,13 +470,21 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         const buttonState = new ButtonGumpState(), stoneState = new StoneButtonGumpState(), scrollState = new ScrollGumpState();
         Object.assign(buttonState, { valueEvent: 0x02000070, clickEvent: 0x0200002c, rightEvent: 0x02000012, repeatEvent: 0x0200002f, baseColor: 56 });
         Object.assign(scrollState, { clickEvent: 0x0200002c, repeatEvent: 0x0200002f, stepEvent: 0x0200002e, changeEvent: 0x02000036 });
-        stoneState.color = 49; stoneState.palette = { black: 0, white: 1, edge: 2 };
-        const scroll = new ClientScrollControls(gump, { buttonState, stoneState, scrollState, widgetState: new ScrollGumpWidgetState(),
-            backgroundColor: () => 35, now: () => app._gameClock.wallSeconds(), poll: (code) => app._clientInputPoll.poll(code), sound: () => {}, baseEvent: () => 0 });
+        stoneState.color = 49; stoneState.palette = { black: 0, white: 1, edge: 2 }; stoneState.backgroundType = 92; stoneState.backgroundFrame = 1;
+        const scrollAssets = new GumpBackgroundAssets(game), scrollWidget = new ScrollGumpWidgetState(); scrollWidget.defaultType = 92;
+        const scroll = new ClientScrollControls(gump, { buttonState, stoneState, scrollState, widgetState: scrollWidget,
+            backgroundColor: () => 35, type: (type) => scrollAssets.type(type), frame: (...args) => scrollAssets.frame(...args), output: { fonts: app._resources.fonts, background: itemBackground },
+            now: () => app._gameClock.wallSeconds(), poll: (code) => app._clientInputPoll.poll(code), sound: () => {}, baseEvent: () => 0 });
         const scrollWidgetState = new ScrollingTextGumpWidgetState(); Object.assign(scrollWidgetState, { changeEvent: 0x02000036, stepEvent: 0x0200002e });
         const multi = new ClientScrollingText(gump, app._resources.fonts, bufferText, buffers, scroll, bufferMarkup, scrollWidgetState, (number) => { app._campaignCursor = number; });
         const multiToken = multi.allocate(); multi.construct(multiToken, 160, 60, 0, 241); gump.attach(multiToken, 600, 300); multi.style(multiToken, 'A~[I92.3]B\n');
         const multiPixels = new Uint8Array(1366 * 768).fill(255); gump.draw(multiToken, draw, new GumpPixelTarget(multiPixels, 1366, 768, draw));
-        assert.ok(multiPixels.some((value) => value !== 255)); gump.remove(multiToken); scroll.close(); assert.equal(bufferText.styleState().fragments.size, 0);
+        assert.ok(multiPixels.some((value) => value !== 255)); multi.setSlider(multiToken, true);
+        const sliderNode = gump.node(gump.node(multiToken).slider), scrollPixels = new Uint8Array(1366 * 768).fill(255), scrollTarget = new GumpPixelTarget(scrollPixels, 1366, 768, draw);
+        // 두 화살표·돌 배경·손잡이는 각각 실제 픽셀을 남긴다.
+        for (const child of [sliderNode.decrement, gump.node(sliderNode.decrement).background, sliderNode.increment, sliderNode.thumb]) {
+            scrollPixels.fill(255); gump.draw(child, draw, scrollTarget); assert.ok(scrollPixels.some((value) => value !== 255));
+        }
+        gump.remove(multiToken); scroll.close(); assert.equal(bufferText.styleState().fragments.size, 0);
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); app._clientSoundDevice.dispose(); app._missionAudioAssets.dispose(); }
 });

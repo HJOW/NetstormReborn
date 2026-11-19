@@ -3,15 +3,18 @@
 import { ClientStoneControls } from './client-stone-controls.js';
 import { ScrollGump, ScrollGumpNode, ScrollGumpThumbNode } from './scroll-gump.js';
 import { ScrollGumpWidgets, ScrollGumpArrowNode } from './scroll-gump-widgets.js';
+import { GumpGlyphColorState, GumpTextDraw, makeGumpGlyphPixelHooks } from '../render/gump-text-draw.js';
 
 // 같은 Client 주소와 실제 Slider·돌 버튼 자식을 소유한다.
 export class ClientScrollControls {
     // 공통 소유자와 기존 원본 본체, 자신이 할당한 Slider·손잡이다.
-    #owner; #stones; #slider; #widgets; #owned = new Set();
+    #owner; #stones; #slider; #widgets; #owned = new Set(); #output; #colors = new GumpGlyphColorState();
     // 실제 장기 전역과 시간·입력·색·자산 장치를 빌린다.
     constructor(owner, devices) {
         if (!owner || !devices?.scrollState || !devices?.widgetState) throw new TypeError('Client Slider의 실제 소유자·상태 필요');
-        this.#owner = owner; this.#stones = new ClientStoneControls(owner, devices);
+        this.#owner = owner; this.#output = devices.output ?? null;
+        if (this.#output && (!this.#output.fonts || !this.#output.background)) throw new TypeError('Client Slider의 실제 출력 장치 누락');
+        this.#stones = new ClientStoneControls(owner, devices);
         const base = (token) => owner.node(token);
         const node = (token) => { const value = base(token); return value instanceof ScrollGumpNode ? value : null; };
         const thumb = (token) => { const value = base(token); return value instanceof ScrollGumpThumbNode ? value : null; };
@@ -22,12 +25,19 @@ export class ClientScrollControls {
         });
         this.#widgets = new ScrollGumpWidgets(owner.createState(), devices.widgetState, owner.factory(), this.#stones.backend(), this.#stones.background(), this.#slider, owner.lifetime(), {
             node, thumb, arrow, base, attach: (...args) => owner.attach(...args), allocate: (size) => {
-                if (size === 0x178) return this.#stones.allocate(new ScrollGumpArrowNode());
+                if (size === 0x178) {
+                    const child = this.#stones.allocate(new ScrollGumpArrowNode());
+                    if (this.#output) owner.bindDraw(child, (current, target) => this.#widgets.drawArrow(current, owner.collection(), new GumpTextDraw(this.#output.fonts, makeGumpGlyphPixelHooks(target, this.#colors)), target));
+                    return child;
+                }
                 if (size !== 0xd8) throw new RangeError('Slider 자식의 실제 할당 크기 오류');
                 const child = new ScrollGumpThumbNode(); let token = 0;
                 token = owner.allocateDerived(child, (event, first, second) => this.#slider.thumbHandle(token, event, first, second),
                     (current, flags) => this.#delete(current, flags), null,
                     (current, event, first, second) => this.#slider.thumbBroadcast(current, event, first, second));
+                if (this.#output) owner.bindDraw(token, (current, target, clip) => this.#widgets.drawThumb(current, owner.collection(), {
+                    draw: (value) => this.#output.background.draw(value, target, clip), background: (rect, flags, type, frame) => this.#output.background.paint(target, clip, rect, flags, type, frame),
+                }));
                 this.#owned.add(token); return token;
             },
         });
@@ -37,6 +47,7 @@ export class ClientScrollControls {
         const node = new ScrollGumpNode(); let token = 0;
         token = this.#owner.allocateDerived(node, (event, first, second) => this.#slider.handle(token, event, first, second),
             (current, flags) => this.#delete(current, flags), (current, x, y, parent, mode) => this.#slider.attach(current, x, y, parent, mode));
+        if (this.#output) this.#owner.bindDraw(token, () => {});
         this.#owned.add(token); return token;
     }
     // 현재 Slider 또는 손잡이의 실제 공통 scalar 삭제를 실행한다.

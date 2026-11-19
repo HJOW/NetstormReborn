@@ -39,4 +39,6 @@ export class ClientScrollingText {
     style(token, value) { this.#parser.parse(token, this.#fonts.encode(value)); }
     // 줄바꿈 없이 실제 내용과 여백에 맞춘다.
     fit(token, width = 0, height = 0) { this.#body.fitContent(token, width, height); }
+    // 현재 Slider 표시 여부를 원본 가상 부착으로 적용한다.
+    setSlider(token, enabled) { this.#widgets.setSlider(token, enabled ? 1 : 0); }
 }

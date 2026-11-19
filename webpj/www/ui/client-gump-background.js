@@ -35,4 +35,6 @@ export class ClientGumpBackground {
     draw(token, target, clip) { this.#drawing(target, clip).draw(token); }
     // 항목 장식 등 직접 배경 질감도 같은 실제 화면과 클립을 사용한다.
     texture(target, clip, rect, flags, type, frame) { this.#drawing(target, clip).texture(rect, flags, type, frame); }
+    // Slider 손잡이처럼 전체 테두리가 있는 배경 사각형을 직접 그린다.
+    paint(target, clip, rect, flags, type, frame) { this.#drawing(target, clip).background(rect, flags, type, frame); }
 }
