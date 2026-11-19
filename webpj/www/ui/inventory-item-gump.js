@@ -6,8 +6,10 @@
 //   hooks = { node(token)→InventoryItemNode, base(token)→GumpCreateNode, type(kind)→{ gumpFrame, frames }(frames = FrameCodeTable), baseAttach, clearChildren(token), cleanup(), robust(sid, allowDead), assertion(text), measure(kind, argument, explicitFrame)→{ bounds:{left,top,right,bottom} },
 //   walk(query, visit)(visit({ frame, x, y })), allocate(size)→token, image(token, kind, frame, mode), text(token), styledText(token, text), fitText(token), attach(token,x,y,parent,mode), costUnits(kind), money(owner)→float, position(token)→{x,y}, background(rect, flags, type, frame),
 //   local(token, event, first, second)→[x,y], knowledgeOpen(), imageHit(token, x, y), denied(first, flags), tell(text), forward(token, event, first, second), about(token, first, second) }(도달한 경계만 요구).
-// 실제 자산(TYPE 표·패턴 측정·디코더)에 연결하는 bindInventoryItemAssets 는 PriestPlacementAssets(todo) 이식 때 추가한다. 이 모듈은 DOM 을 쓰지 않는다. (2026-11-15 WB04-E473: 5-B InventoryItemGump 이식, 기준선 뒤 cpppj 변경 없음)
+// 실제 자산(TYPE 표·패턴 측정·디코더)은 bindInventoryItemAssets로 연결한다. 이 모듈은 DOM 을 쓰지 않는다. (2026-11-15 WB04-E473: 5-B InventoryItemGump 이식, 기준선 뒤 cpppj 변경 없음)
 import { cameraFtolLow } from '../render/camera-view.js';
+import { FrameCodeTable } from '../assets/terrain-tiles.js';
+import { decodeCanonType } from '../core/raw-canon-type.js';
 
 // 실제 원본 사건 DWORD(선택·우클릭·반복)와 자식 할당 크기(그림 0xb4, 글자 0xa4)이다.
 const CHOOSE = 0x02000008; const RIGHT = 0x02000018; const REPEAT = 0x02000107; const IMAGE_BYTES = 0xb4; const TEXT_BYTES = 0xa4;
@@ -130,4 +132,24 @@ export class InventoryItemGump {
         }
         return 0;
     }
+}
+
+// 현재 실제 자산의 Gump 프레임·코드, 픽셀 측정과 원본 Canon 순회만 항목에 연결한다.
+export function bindInventoryItemAssets(hooks, assets, geometry, measure) {
+    if (assets?.typeTable?.definitions?.length !== 116 || measure?.pool?.edition !== 'patch1078' || geometry?.frames?.length !== 188 || !geometry.geometry) throw new TypeError('생산 항목 실제 자산 판본 오류');
+    // 내장 타입은 Gump 프레임 0이며 그림 타입은 같은 현재 자산 정의를 읽는다.
+    hooks.type = (type) => {
+        type >>>= 0; if (type >= geometry.frames.length) throw new RangeError('생산 항목 실제 TYPE 프레임 범위 오류');
+        const frame = type < 70 ? 0 : assets.types()[type - 70].definition.gumpFrame;
+        return { gumpFrame: frame, frames: new FrameCodeTable(geometry.frames[type].frames) };
+    };
+    // 전체 패턴의 실제 SHP 픽셀 경계를 같은 측정기에서 얻는다.
+    hooks.measure = (type, argument, explicitFrame) => measure.measure(type, argument, 0, explicitFrame);
+    // 현재 타입의 원본 Canon 유효 칸을 원래 순서대로 모두 방문한다.
+    hooks.walk = (query, visit) => {
+        const type = query.type >>> 0; if (type >= geometry.frames.length) throw new RangeError('생산 항목 실제 decoder 타입 오류');
+        const meta = geometry.frames[type], current = geometry.geometry;
+        const decoder = decodeCanonType(meta.frames, meta.defaultFrame, current.patternTypes, query, current.decoderDiagnostics);
+        while (decoder.valid) { visit({ frame: decoder.frame, x: decoder.x, y: decoder.y }); decoder.advance(); }
+    };
 }
