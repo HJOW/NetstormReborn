@@ -1239,6 +1239,12 @@ export class Netstorm {
         clouds.cleanDirty(); renderer.present((rect) => screen.update(rect)); clouds.worldRedraw().value = 0;
     }
 
+    // 준비된 미션이 현재 메뉴 장면을 대신 표시하는지 확인한다.
+    _campaignDisplayActive() {
+        const world = this._campaignWorld;
+        return this._state === AppState.MAIN_MENU && Boolean(world && !world.connecting && !world.session().connectionCallbackActive());
+    }
+
     // 게임을 정리한다. 프레임 예약·이벤트·관찰자·오디오·진행 중 로딩을 모두 해제하고 Canvas 를 제거한다.
     // 여러 번 호출해도 안전하며, 이후 init 으로 다시 시작할 수 있다. 처음 골격의 destroy(div) 형태로 불러도 인자는 무시한다.
     // init 도중 실패한 반쪽 상태도 이 함수가 정리하므로 상태 이름이 아니라 루트 요소의 유무로 판단한다.
@@ -2250,7 +2256,7 @@ export class Netstorm {
         if (this._clientNativeInputEnabled && this._layout?.visible) queueBrowserMouseEvent(this._clientInputQueue, event, this._input.pointer, false);
         this._retryAudioOnGesture();
         const pointer = this._input.pointer;
-        if (this._state === AppState.MAIN_MENU && this._mainMenu && event.button === 0 && pointer.inside) {
+        if (this._state === AppState.MAIN_MENU && this._mainMenu && (!this._campaignDisplayActive() || this._mainMenu.dialog) && event.button === 0 && pointer.inside) {
             this._mainMenu.pointerDown(pointer.x, pointer.y);
         }
         if (this._state === AppState.TERRAIN_PREVIEW && event.button === 0 && pointer.inside) this._terrainPreview?.pointerDown(pointer.x, pointer.y);
@@ -2259,7 +2265,7 @@ export class Netstorm {
     // 포인터가 움직였을 때 좌표를 갱신하고, 메인 메뉴의 붙잡힌 버튼 모양을 갱신한다(원본 Broadcast). 포인터 아래 커서 모양은 다음 프레임의 _onFrame 이 고른다. (원본도 매 갱신마다 선택한다)
     _onPointerMove(event) {
         this._updatePointer(event);
-        if (this._state === AppState.MAIN_MENU && this._mainMenu) this._mainMenu.pointerMove(this._input.pointer.x, this._input.pointer.y);
+        if (this._state === AppState.MAIN_MENU && this._mainMenu && (!this._campaignDisplayActive() || this._mainMenu.dialog)) this._mainMenu.pointerMove(this._input.pointer.x, this._input.pointer.y);
         if (this._state === AppState.TERRAIN_PREVIEW) this._terrainPreview?.pointerMove(this._input.pointer.x, this._input.pointer.y);
     }
 
@@ -2268,7 +2274,7 @@ export class Netstorm {
         this._updatePointer(event);
         this._input.pointer.buttons = event.buttons ?? 0;
         if (this._clientNativeInputEnabled && this._layout?.visible) queueBrowserMouseEvent(this._clientInputQueue, event, this._input.pointer, true);
-        if (this._state === AppState.MAIN_MENU && this._mainMenu && event.button === 0) {
+        if (this._state === AppState.MAIN_MENU && this._mainMenu && (!this._campaignDisplayActive() || this._mainMenu.dialog) && event.button === 0) {
             this._mainMenu.pointerUp(this._input.pointer.x, this._input.pointer.y);
         }
         if (event.button === 0) this._terrainPreview?.cancel();
@@ -2475,7 +2481,7 @@ export class Netstorm {
             // 원본 UserInput 은 매 프레임 마우스 위치를 폴링해 Gump 에 알린다. 그래서 포인터가 멈춰 있어도 그 아래에 새로 열린 펼침 메뉴 행이 바로 강조된다
             // (cpppj 오라클 help-popup/options-popup 관측). 브라우저는 포인터가 움직일 때만 사건을 주므로 마지막 포인터 위치를 매 프레임 다시 알린다. (2026-11-07 WB02-H)
             const pointer = this._input.pointer;
-            if (this._mainMenu && pointer.inside) this._mainMenu.pointerMove(pointer.x, pointer.y);
+            if (this._mainMenu && pointer.inside && (!this._campaignDisplayActive() || this._mainMenu.dialog)) this._mainMenu.pointerMove(pointer.x, pointer.y);
             this._mainMenu?.update(this._frameSeconds);
             // 스크롤·창 열림/닫힘·키 입력으로 포인터 아래 내용이 바뀌었을 수 있으므로 커서를 다시 고른다(원본은 매 포인터 갱신마다 선택). (2026-10-31 WB03-L)
             this._applyCursor();
@@ -2496,6 +2502,16 @@ export class Netstorm {
         const layout = this._layout;
         if (!ctx || !layout?.visible) return;
         const { logicalWidth: width, logicalHeight: height, drawScaleX, drawScaleY } = layout;
+        if (this._campaignDisplayActive() && this._mainMenu && this._surface) {
+            // 기존 Tell 창은 별도 Gump 이식 전까지 실제 월드 위에 합성한다. 창이 있거나 바뀌면 이전 픽셀을 전체 복구한다.
+            const dialog = this._mainMenu.dialog;
+            if (dialog || this._mainMenu.dirty || this._displayDirty) this._clientRenderer.invalidateAll();
+            this._drawCampaignRendererFrame();
+            if (dialog) { dialog.draw(this._surface); this._presenter.present(ctx, this._surface, layout, true); }
+            this._mainMenu.dirty = false; this._displayDirty = false;
+            if (this.options.debug) { ctx.setTransform(drawScaleX, 0, 0, drawScaleY, 0, 0); this._drawDebug(ctx); }
+            return;
+        }
         if (this._state === AppState.TERRAIN_PREVIEW && this._terrainPreview && this._surface) {
             const changed = this._terrainPreview.dirty;
             if (!changed && !this._displayDirty && !this.options.debug) return;

@@ -185,5 +185,23 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
             app._mainMenu.setDialog(null); const beforeResume = visits; for (let frame = 0; frame < 7; frame += 1) app._onFrame(500 + frame * 16);
             assert.equal(visits, beforeResume + 7); assert.equal(runtime.gate.scriptPaused, 0); assert.equal(app._gameClock.paused(), false);
         } finally { app._clientKernel.remove(probe); }
+        // 실제 앱 프레임은 월드를 표시하고 Tell을 그 위에 합성하며 닫은 뒤 DIB 원본을 복구한다.
+        let presentations = 0; app._presenter.present = () => { presentations += 1; };
+        app._ctx = {}; app._layout = { ...app._layout, visible: true }; app._render = Netstorm.prototype._render.bind(app);
+        app._mainMenu.setDialog(null); app._onFrame(700); assert.ok(presentations > 0);
+        assert.equal(app._openTell('A.'), true); app._onFrame(716); assert.ok(app._mainMenu.dialog);
+        // DIB pitch에는 행 패딩이 있을 수 있으므로 실제 화면 열만 비교한다.
+        const differsFromScreen = () => { const bytes = screen.lock();
+            try { for (let y = 0; y < screen.height; y += 1) for (let x = 0; x < screen.width; x += 1) if (app._surface.pixels[y * screen.width + x] !== bytes[y * screen.pitch + x]) return true; return false; }
+            finally { screen.unlock(); } };
+        assert.equal(differsFromScreen(), true);
+        app._mainMenu.setDialog(null); app._onFrame(732);
+        assert.equal(differsFromScreen(), false); assert.equal(app._mainMenu.dirty, false);
+        // 미션에서는 가려진 메뉴 돌 버튼을 호출하지 않고 열린 Tell 창에는 포인터를 전달한다.
+        let downs = 0, ups = 0; app._mainMenu.pointerDown = () => { downs += 1; }; app._mainMenu.pointerUp = () => { ups += 1; };
+        app._canvas = { focus() {}, setPointerCapture() {}, getBoundingClientRect: () => ({ left: 0, top: 0, width: 1366, height: 768 }) };
+        app._retryAudioOnGesture = () => {}; const pointerEvent = { button: 0, buttons: 1, pointerId: 1, clientX: 100, clientY: 100 };
+        app._onPointerDown(pointerEvent); app._onPointerUp(pointerEvent); assert.equal(downs, 0); assert.equal(ups, 0);
+        assert.equal(app._openTell('A.'), true); app._onPointerDown(pointerEvent); app._onPointerUp(pointerEvent); assert.equal(downs, 1); assert.equal(ups, 1);
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); app._clientSoundDevice.dispose(); app._missionAudioAssets.dispose(); }
 });
