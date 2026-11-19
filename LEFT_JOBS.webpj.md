@@ -4,7 +4,7 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-19, 마지막 단위 WB04-E949)
+### 0.1 현재 값 (2026-11-19, 마지막 단위 WB04-E950)
 
 | 항목 | 현행 상태 |
 | --- | --- |
@@ -14,9 +14,9 @@
 | 전체 회귀 | E941 Node v26.13.0 전체 6,512건, E939 Node v22.23.3 전체 6,511건 통과(실패·취소·건너뜀 0). E941 실제 갈무리11 편집 Chromium 1건 통과; E940 편집 출력·원본 2,292행 포함 연관 Node 검사 46건 통과; E939 글꼴 측정·원본 2,292행 포함 연관 Node 검사 72건 통과; E938 Client TextEntry·원본 2,292행 포함 연관 Node 검사 63건 통과; E937 Client Slider·연관 Node 검사 51건 통과; E936 Client 돌 버튼·연관 Node 검사 27건 통과; E935 Gump idle·연관 Node 검사 49건 통과; E934 직접 텍스트·연관 Node 검사 15건과 Chromium 1건 통과; E933 IME 요소·연관 Node 검사 22건과 Chromium 1건 통과; E932 조합 사건·연관 Node 검사 14건과 합성 Chromium 1건 통과; E931 브라우저 문자 키·연관 Node 검사 10건과 Chromium 5건 통과; E930 Console 한글 단어·원본 2,292행 포함 Node 검사 28건 통과; E929 한글 출력 경계·원본 2,292행 포함 Node 검사 31건 통과; E928 한글 스크롤·원본 2,292행 포함 Node 검사 27건 통과; E927 확장 붙여넣기·원본 2,862행 포함 Node 검사 30건 통과; E926 한글 편집·원본 2,292행 포함 Node 검사 27건 통과; E925 표시 문자 경계·연관 Node 검사 7건 통과; E924 확정 문자·연관 Node 검사 24건 통과; E923 입력 큐·연관 Node 검사 17건 통과; E922 가상 키·연관 Node 검사 12건과 Chromium 4건 통과; E921 마우스 큐·연관 Node 검사 11건과 Chromium 3건 통과; E920 앱 포인터 경계·연관 Node 검사 20건과 Chromium 2건 통과; E919 브라우저 폴링·연관 Node 검사 18건과 Chromium 1건 통과; E918 포인터 통지·연관 Node 검사 36건 통과; E917 공통 방송·연관 Node 검사 17건 통과; E916 실제 구분선·연관 Node 검사 30건 통과; E915 가상 부착·연관 Node 검사 29건 통과; E914 HUD 등록 조회·연관 Node 검사 22건 통과; E913 실제 루트 교체·연관 Node 검사 36건과 Chromium 1건 통과; E912 원본 Uber 전체 160행·연관 Node 검사 28건 통과; E911 Uber/HUD·Gump 연관 Node 검사 24건 통과; E910 파생 Gump 연관 Node 검사 40건·Chromium 1건 통과; E909 Gump 연관 Node 검사 39건·Chromium 입력 1건 통과; E908 Gump 및 앱 연관 Node 검사 60건·Chromium 수명 1건 통과; E907 구름·팔레트 Node 검사 17건·실제 로그인 2건 및 Chromium 전환 1건 통과; E906 집중·연관 Node 검사 53건 및 Chromium 설정 쓰기 1건 통과; E905 집중·연관 Node 검사 47건 및 Chromium 화면비 전환 1건 통과; E904 집중·연관 Node 검사 84건 및 Chromium 실제 Canvas 1건 통과; E903 집중·연관 Node 검사 83건 및 Chromium 1건 통과; E902 집중·연관 Node 검사 42건 및 Chromium 1건 통과; E901 실제 로그인 2건·연관 Node 검사 22건 및 Chromium 1건 통과; E900 집중·연관 Node 검사 38건과 Chromium 1건 통과; E899 집중·연관 Node 검사 42건, 수동 적재 관련 Node v22 31건, Guide 로그인 2건과 Chromium 종료·재시작 1건 통과. 전체 회귀 중 선행 레이아웃 누락 시험 5건을 교정한 뒤 전부 재실행했다. E898 Node 관련 검사 37건·실제 로그인 1건·Chromium 1건 통과; E897 집중 검사 6건·실제 World 2건 통과; E896 Node 25건·실제 World 2건·Chromium 2건 및 cpppj 표시 바이트 11,683행 일치; E895 앱 프레임·상태 관련 검사 23건과 실제 Tutorial1 로그인을 포함한 Session 검사 126건 통과; E894 favicon Chromium 창·헤드리스 각 1건 통과; E893 집중·연관 Node 검사 62건과 E892 원본 관측 전체 876행 및 연관 검사 통과. HJOW-Athlon의 작업 단위 주기: v26 0/4, v22 2/8. fixture 832개 해시·파일 불일치/누락 0; 대응표 1,160행 오류 0을 확인했고 기존 cpppj 글꼴 관련 변경 검토 항목은 유지한다. |
 | 브라우저 검사 | 2026-11-17 Chromium 2/2. 갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체 확인. 최초 실행·진행 잠금/체크 및 저장 재실행은 E616에서 별도 Chromium 2/2로 확인했다. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
 
-**E949.** 앱이 효과음 이름표를 소유하고 같은 표를 실제 미션 Session에 대여한다. Web Audio 재생·위치 음향은 남았다. 4D-1c의 비미션 검증은 스커미시 후속이며, 4D-3의 나머지 앱·Native 수명을 이어간다. [이름표](docs/webpj-app-sound-list-20261119.md) · [E948 이름 수명](docs/webpj-app-fort-name-session-20261119.md) · [E947 시계](docs/webpj-app-clock-synchronization-20261119.md)
+**E950.** 지연 Fort 요청의 Poll 전 수명을 보존하는 처리기를 준비하고 실제 Tutorial1 Guide→State7→로그인 Ready를 검사했다. 앱 프레임 자동 호출·현재 World 반납·진행 창은 남았다. 4D-1c의 비미션 검증은 스커미시 후속이다. [요청 프레임](docs/webpj-campaign-request-frame-20261119.md) · [E949 이름표](docs/webpj-app-sound-list-20261119.md) · [E948 이름 수명](docs/webpj-app-fort-name-session-20261119.md)
 
-**E949 검증.** 실제 Session 교체·World 설치·로그인 3건과 연관 검사 10건 통과. E948 실제 앱 Session·이름 집중 검사 4건과 원본 876관측을 포함한 연관 검사 37건 통과. E947 Node v22.23.3 정기 전체 회귀 6,514건 통과(실패·취소·건너뜀 0). HJOW-Athlon 주기는 v22 2/8이며, v26 4/4 전체 회귀는 `extracted/webpj-e949-node26.log`에 실행 중이다. 결과 확인 뒤 주기를 갱신한다. 대응표는 1,160행 오류 0이다.
+**E950 검증.** 실제 Tutorial1 요청을 포함한 집중 검사 4건과 ClientState 검사 3건 통과. E949 실제 Session 교체·World 설치·로그인 3건과 연관 검사 10건 통과. E948 실제 앱 Session·이름 집중 검사 4건과 원본 876관측을 포함한 연관 검사 37건 통과. E947 Node v22.23.3 정기 전체 회귀 6,514건 통과(실패·취소·건너뜀 0). HJOW-Athlon 주기는 v22 3/8이며, v26 4/4 전체 회귀는 `extracted/webpj-e949-node26.log`에 실행 중이다. E950은 별도 신규 파일로 진행했고 결과 확인 뒤 v26 주기를 갱신한다.
 
 **E941 미완료 범위.** 앱의 FontSet·Gump 출력과 TextEntry 수명, 웹 입력 큐의 앱 프레임 소비, 실제 OS IME를 확인해야 한다. 미션 앱의 진행 창·프레임, HUD, Tutorial1 플레이 역시 미확인이다.
 
@@ -133,6 +133,8 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 **4D-2 typed Load 완료.** 건설·이동·AI·의식·파괴/주문·운반 투하/기도·배치/커서를 Session에 설치했다. 캠페인 1-1의 저장 객체 적재와 `loaded` 관문을 확인했다. [E697](docs/webpj-session-load-20261118.md)
 
 **4D-3 Login·로컬 연결·4-C 통합 시험.** 내부 Login → Load·명령 등록 → Ready → Start 순서를 실제 Session에서 확인했다.
+
+- **E950 선행:** 지연 요청의 Poll 전 수명과 실제 Guide→State7→Ready를 검사했다. 앱의 자동 호출·진행 창·기존 World 교체는 남았다. [요청 프레임](docs/webpj-campaign-request-frame-20261119.md)
 
 - [ ] **4D-3a RawCampaignSessionLogin** — typed 미션 Begin/Pump·내부 Ready 왕복과 행 base 뒤 32커밋 판정은 완료했다. E851은 진행 안내 장치를 실제 내부 로그인에 연결했고 E852는 Pump와 분리한 타이머 실행을 공개했다. 앱 메뉴의 지연 요청 소비와 로그인 완료 후 화면 설치·분리 타이머는 4D-6, 고정 수신기는 4D-8과 연계한다. E884~E892에서 Fort 이름 선택과 원본 관측 876행을 대조했고 E948에서 실제 앱 Session의 Snapshot·Notify·State를 연결했다. Guide Init은 E886에서, 앱 프레임의 Guide 실행은 E890에서 연결했고 앱 프레임의 요청 소비는 남았다. 나머지 31h 명령은 4D-3e에서 잇는다. `BeginGeneral`·`InitializeGeneral`·`LocalFort`의 필요 범위는 스커미시에서 판단한다. [E765](docs/webpj-session-login-commit-audit-20261118.md) · [E851](docs/webpj-client-login-progress-20261119.md) · [E852](docs/webpj-session-login-frame-timer-20261119.md) · [E948](docs/webpj-app-fort-name-session-20261119.md)
   - [x] **출하 Fort 로그인** — 일반 31종과 별도 데모 1종의 스크립트가 선택한 Fort를 실제 내부 Login/Ready까지 적재했다. 데모 모드 Start는 별도 확인 범위다. [E752](docs/webpj-session-login-shipped-forts-20261118.md)
