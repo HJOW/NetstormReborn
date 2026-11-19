@@ -103,7 +103,7 @@ const forbidden = (name) => () => { throw new Error(`외부 장치 미연결: ${
 function scene(overrides = {}, savedFort = fort) {
     const trace = [], queue = new InputQueue();
     const s = new RawCampaignSession(game, { read: forbidden('파일') }, savedFort, overrides.missionName ?? 'thewarbegins', {
-        unixSeconds: overrides.unixSeconds ?? (() => 1700000000), soundNames: new SoundList(), carrierRequest: overrides.carrierRequest ?? forbidden('전송'), deletion: { selected: () => 0, ...overrides.deletion },
+        unixSeconds: overrides.unixSeconds ?? (() => 1700000000), soundNames: overrides.soundNames ?? new SoundList(), carrierRequest: overrides.carrierRequest ?? forbidden('전송'), deletion: { selected: () => 0, ...overrides.deletion },
         install: { translateYou: () => Uint8Array.of(89, 111, 117, 0), setConfig: () => trace.push('config'), refreshWindowTitle: () => trace.push('title'), resetCamera: () => trace.push('camera'), ...overrides.install },
         ownership: { refreshProduction: () => trace.push('production'), themeMode: () => 0, ...overrides.ownership },
         assets: { postPop: { playImpactSound: () => trace.push('impact') }, queueCommand: (...args) => queue.pushCommand(...args) },
@@ -589,21 +589,22 @@ test('Netstorm Client 공통 수명: 실제 Session이 앱의 난수와 SP를 �
     assert.equal(app._campaignSharedServices().spGlobals.store(), sp); assert.deepEqual([sp.offset, sp.get(1)], before);
 });
 
-// 공통 Player·Core·Template과 Subscriber는 실제 Session 교체를 지나 같은 Client에서 유지된다.
+// 공통 Player·Core·Template·Subscriber와 효과음 이름표는 Session 교체를 지나 유지된다.
 test('Netstorm Client 공통 수명: 실제 Session 교체와 Player·Template 소유자', () => {
     const app = new Netstorm(); app._initializeClientRuntime(false); const shared = app._campaignSharedServices();
     const { playerRecords: players, coreDataGlobals: core, templateStorage: templates, subscriberGlobals: subscriber, gameplayGlobals: gameplay } = shared;
     assert.equal(players.initialized(), true); assert.equal(players.records().length, 1620); assert.equal(players.boundCoreData(), core); assert.equal(core.players, players.records());
     assert.equal(gameplay.subscribers(), subscriber); subscriber.mySubscriber().value = 77;
-    const headers = templates.headers(), firstBase = players.base();
+    const headers = templates.headers(), firstBase = players.base(), sounds = shared.soundNames, firstFree = sounds.firstFree;
+    assert.equal(sounds.name(sounds.fallback), 'nonexistant.wav');
     const first = scene(shared, parseFort(entry.bytes, createFortTypes(game.typeTable))).s;
-    try { assert.equal(first.playerRecords(), players.records()); assert.equal(core.players, players.records()); assert.notEqual(players.base(), firstBase); }
+    try { assert.equal(first.playerRecords(), players.records()); assert.equal(core.players, players.records()); assert.notEqual(players.base(), firstBase); assert.ok(sounds.firstFree > firstFree); }
     finally { first.dispose(); }
     assert.equal(gameplay.borrowed(), false); assert.equal(templates.headers(), headers); assert.equal(subscriber.mySubscriber().value, 77);
     const second = scene(shared, parseFort(entry.bytes, createFortTypes(game.typeTable))).s;
     try { assert.equal(second.playerRecords(), players.records()); assert.equal(core.players, players.records()); assert.equal(templates.headers(), headers); assert.equal(subscriber.mySubscriber().value, 77); }
     finally { second.dispose(); }
-    assert.equal(gameplay.borrowed(), false); assert.equal(app._campaignSharedServices().playerRecords, players);
+    assert.equal(gameplay.borrowed(), false); assert.equal(app._campaignSharedServices().playerRecords, players); assert.equal(app._campaignSharedServices().soundNames, sounds);
 });
 
 // 같은 앱 장기 월드 물리와 Kernel을 실제 Session이 빌리고 반납 뒤에도 소유자가 보존된다.
@@ -778,7 +779,7 @@ test('Netstorm Client World: 실제 Guide Fort 설치와 로컬 로그인 수명
     const guide = app._clientGuide; let world;
     const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {}, battlePalette: undefined };
     app._layout = { logicalWidth: 1024, logicalHeight: 768 }; app._initializeClientRendererView();
-    const services = { localLogin, soundNames: new SoundList(), carrierRequest: forbidden('전송'),
+    const services = { localLogin, carrierRequest: forbidden('전송'),
         cameraCommit: (context) => { const pixels = context.camera.target().pixels; context.camera.applyPixelsToRendererAndSnapshot(pixels[0], pixels[1]); },
         surfaceDisplay: { suppressed: () => false, invalidate: () => {} },
         install: { translateYou: () => Uint8Array.of(89, 111, 117, 0), setConfig: () => {}, refreshWindowTitle: () => {}, resetCamera: () => {} },
@@ -814,7 +815,7 @@ test('Netstorm Client World: 실제 앱 State7 부모와 State8 로컬 로그인
     const sharedColors = app._campaignSharedServices();
     assert.equal(sharedColors.colorSortInput, app._clientColorSort); assert.equal(sharedColors.ownerColorTables, app._clientColorSort.ownerTables);
     assert.equal(sharedColors.screenPalette(), app._clientPaletteScreen.palette());
-    const services = { localLogin, soundNames: new SoundList(), carrierRequest: forbidden('전송'),
+    const services = { localLogin, carrierRequest: forbidden('전송'),
         fortMission: { current: () => 0 }, production: { allocationBytes: (bytes) => bytes.fill(0xa5), effects: { configInt: () => 0 } },
         cameraCommit: (context) => { const pixels = context.camera.target().pixels; context.camera.applyPixelsToRendererAndSnapshot(pixels[0], pixels[1]); },
         surfaceDisplay: { suppressed: () => false, invalidate: () => {} },

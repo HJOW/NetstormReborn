@@ -26,6 +26,7 @@ import {
 import { KOREAN_BUNDLE, buildKoreanSupport } from './assets/korean-assets.js';
 import { KOREAN_FONT_FAMILY } from './assets/korean-font-config.js';
 import { AudioSystem, createAudioContext } from './audio/audio-system.js';
+import { SoundList } from './audio/sound-list.js';
 import { IndexedSurface } from './render/indexed-surface.js';
 import { IndexedPresenter, normalizeScaling } from './render/presenter.js';
 import { Screen, ScreenMode } from './render/screen.js';
@@ -481,6 +482,8 @@ export class Netstorm {
         this._clientKencloud = null; this._clientHtml = null; this._clientConnections = null; this._clientConnectionActivity = null;
         // 같은 Client가 장기 소유하는 게임·CRT 난수와 SP 저장소다.
         this._clientRandom = null; this._clientSp = null;
+        // 미션 Session이 공유하는 효과음 이름표는 Client 수명에 소유한다.
+        this._clientSoundNames = null;
         // 시작 팔레트와 최초 색 정렬 입력은 Client 수명 동안 같은 객체로 유지한다.
         this._clientPaletteScreen = null; this._clientColorSort = null;
         // 설치 폴더에 쓰지 않는 색표 캐시는 같은 페이지의 앱 재시작 사이에 유지한다.
@@ -720,12 +723,14 @@ export class Netstorm {
         const cloud = new ClientKencloudGlobals(), html = new ClientHtmlWindowGlobals(), connections = new ClientConnectionGlobals(local), activity = new ClientConnectionActivityGlobals();
         const subscriber = new ClientSubscriberGlobals(), gameplay = new ClientGameplayGlobals(subscriber), fort = new ClientFortGlobals();
         const coreData = new ClientCoreDataGlobals(), players = new ClientPlayerRecords(), templates = new CampaignTemplateStorage();
+        const soundNames = new SoundList(); soundNames.initialize();
         players.bindCoreData(coreData);
         initializeClientPlayerRecords({ gameplayGlobals: () => gameplay, playerRecords: () => players });
         if (hidden) clock.pushGamePause();
         this._clientRandom = random; this._clientSp = sp; this._clientLocal = local; this._gameClock = clock; this._hiddenGamePause = Boolean(hidden);
         this._clientKencloud = cloud; this._clientHtml = html; this._clientConnections = connections; this._clientConnectionActivity = activity;
         this._clientSubscriber = subscriber; this._clientGameplay = gameplay; this._clientCoreData = coreData; this._clientPlayers = players; this._clientTemplates = templates; this._clientFort = fort;
+        this._clientSoundNames = soundNames;
     }
 
     // 현재 설정에서 구름 전역 옵션을 읽는다. 설정이나 Client가 아직 없으면 실제 초기화 시 다시 적용한다.
@@ -895,11 +900,11 @@ export class Netstorm {
     _campaignSharedServices() {
         const clock = this._gameClock, random = this._clientRandom, sp = this._clientSp, local = this._clientLocal;
         const subscriber = this._clientSubscriber, gameplay = this._clientGameplay, coreData = this._clientCoreData, players = this._clientPlayers, templates = this._clientTemplates;
-        if (!clock || !random || !sp || !local || !subscriber || !gameplay || !coreData || !players || !templates) throw new Error('캠페인의 실제 Client 공통 수명 미설치');
+        if (!clock || !random || !sp || !local || !subscriber || !gameplay || !coreData || !players || !templates || !this._clientSoundNames) throw new Error('캠페인의 실제 Client 공통 수명 미설치');
         const surface = this._surfaceStorage, kernel = this._clientKernel, request = this._clientGuide?.fortRequest();
         const colors = this._clientColorSort, screen = this._clientPaletteScreen;
         if (Boolean(colors) !== Boolean(screen) || (colors && !colors.mapsReady)) throw new Error('캠페인의 실제 Client 색표 수명 미설치');
-        return { randomGlobals: random, spGlobals: sp, localStateGlobals: local, subscriberGlobals: subscriber, gameplayGlobals: gameplay, coreDataGlobals: coreData,
+        return { soundNames: this._clientSoundNames, randomGlobals: random, spGlobals: sp, localStateGlobals: local, subscriberGlobals: subscriber, gameplayGlobals: gameplay, coreDataGlobals: coreData,
             playerRecords: players, templateStorage: templates, connectionActivityGlobals: this._clientConnectionActivity, connectionRegistry: this._clientConnections, connectionFrameNumber: () => clock.time().number, ...(surface && kernel ? { surfaceStorage: surface, processKernel: kernel } : {}),
             ...(colors ? { colorSortInput: colors, ownerColorTables: colors.ownerTables, screenPalette: () => this._clientPaletteScreen.palette() } : {}),
             ...(this._clientGuide ? { missionRestrictions: this._clientGuide.restrictions(), missionOptions: gameplay.battleOptionsOwner() } : {}), ...(request ? { missionFortRequest: request } : {}),
@@ -1027,7 +1032,7 @@ export class Netstorm {
         this._clientConnections?.shutdownDevices();
         this._clientKencloud = null; this._clientHtml = null; this._clientConnections = null; this._clientConnectionActivity = null;
         this._surfaceStorage?.dispose();
-        this._gameClock = null; this._clientLocal = null; this._hiddenGamePause = false;
+        this._gameClock = null; this._clientLocal = null; this._hiddenGamePause = false; this._clientSoundNames = null;
         this._clientSp = null; this._clientRandom = null;
         this._clientPaletteScreen = null; this._clientColorSort = null;
         this._clientTemplates = null; this._clientPlayers = null; this._clientCoreData = null; this._clientGameplay = null; this._clientSubscriber = null;
