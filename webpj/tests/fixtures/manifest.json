@@ -25208,7 +25208,8 @@
       "required": true,
       "producer": "cpppj FortCurrentNameTests의 보호 10.78 x86 관측 876행",
       "consumers": [
-        "webpj/tests/raw-fort-current-name.test.mjs"
+        "webpj/tests/raw-fort-current-name.test.mjs",
+        "webpj/tests/fort-current-name-observation.test.mjs"
       ],
       "modules": [
         "webpj/www/core/raw-fort-current-name.js"
@@ -25218,7 +25219,7 @@
       "cpppjSources": [
         "cpppj/src/o/RawFortCurrentName.cpp"
       ],
-      "scope": "원본 현재 Fort 이름/manager setter의 독립 물리·호출 순서 관측 중 단독 경로 40행. 전체 876행 대조는 후속.",
+      "scope": "원본 현재 Fort 이름/manager setter의 독립 물리·콜백 변이·중단 및 호출 순서 876행 전부 대조.",
       "text": true,
       "sha256": "4c89096cbf763420fde7f95977c2d1d505ac01efb7c62f728a453c1de1869604",
       "bytes": 3951961,
