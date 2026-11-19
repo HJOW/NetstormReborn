@@ -119,6 +119,28 @@ export class ClientGumpRoot {
     broadcast(event, first, second) { this.#live(); this.#frame.broadcast(event, first, second); }
     // 같은 Client 수명의 원본 idle 표를 순서대로 처리한다.
     idle() { this.#live(); this.#frame.idle(); }
+    // 원본 차단 관문은 루트의 직계 자식에서 0x4000만 읽는다(숨김·삭제 대기도 포함).
+    blockingPopups() {
+        this.#live(); const seen = new Set();
+        // 현재 형제 링크를 따라가며 순환과 유효하지 않은 노드를 거부한다.
+        for (let token = this.root().child; token;) {
+            if (seen.has(token)) throw new Error('Client popup 형제 순환'); seen.add(token);
+            const node = this.node(token); if (!node) throw new Error('Client popup 토큰 누락');
+            if (node.flags & 0x4000) return true; token = node.next;
+        }
+        return false;
+    }
+    // 원본 팝업 닫기는 삭제 전 다음 형제를 저장하고 비삭제 직계 팝업만 Kill한다.
+    closePopups() {
+        this.#live(); const seen = new Set();
+        // Kill이 형제 링크를 바꾸어도 직전 저장한 다음 노드를 방문한다.
+        for (let token = this.root().child; token;) {
+            if (seen.has(token)) throw new Error('Client popup 형제 순환'); seen.add(token);
+            const node = this.node(token); if (!node) throw new Error('Client popup 토큰 누락'); const next = node.next;
+            if ((node.flags & 0x4000) && !(node.flags & 0x10000)) this.#lifetime.kill(token);
+            token = next;
+        }
+    }
     // 현재 루트 자식의 원본 visible·삭제 관문과 재귀 순서로 다시 그리기를 요청한다.
     redrawRoots() { this.#live(); this.#frame.redrawRoots(); }
     // 원본 포인터 단계처럼 창 안에서 선택적 overlay 다음 같은 사건을 방송한다.

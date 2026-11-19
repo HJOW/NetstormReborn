@@ -51,6 +51,21 @@ test('Client Gump 루트: 현재 표시 자식과 하위 재그리기', () => {
     owner.dispose(); assert.throws(() => owner.redrawRoots(), /반납한 Client Gump/);
 });
 
+// 원본 차단 조회는 직계 0x4000만 검사하고 닫기는 비삭제 직계만 Kill한다.
+test('Client Gump 루트: 직계 팝업 차단과 지연 닫기', () => {
+    const owner = new ClientGumpRoot(100, 80, () => 0, () => {});
+    const parent = owner.createBase(1, 20, 20, 1, () => 0), nested = owner.createBase(2, 5, 5, 1, () => 0);
+    const first = owner.createBase(3, 10, 10, 1, () => 0), second = owner.createBase(4, 10, 10, 1, () => 0);
+    owner.attach(parent, 0, 0); owner.attach(nested, 0, 0, parent); owner.node(nested).flags |= 0x4000;
+    assert.equal(owner.blockingPopups(), false);
+    owner.attach(first, 30, 0); owner.attach(second, 50, 0); owner.node(first).flags |= 0x4000; owner.node(second).flags = (owner.node(second).flags | 0x4000) & ~1;
+    assert.equal(owner.blockingPopups(), true); owner.closePopups();
+    assert.equal(owner.node(first).flags & 0x10000, 0x10000); assert.equal(owner.node(second).flags & 0x10000, 0x10000);
+    assert.equal(owner.node(nested).flags & 0x10000, 0); assert.equal(owner.lifetimeState().killCount, 2); assert.equal(owner.blockingPopups(), false);
+    owner.closePopups(); assert.equal(owner.lifetimeState().killCount, 2); owner.dispose();
+    assert.throws(() => owner.blockingPopups(), /반납/);
+});
+
 // 실제 Client 진단이 켜져 있으면 부착의 상세 문자열을 같은 전역에 남기고 계속한다.
 test('Client Gump 루트: 부착 진단이 현재 Client 전역에 기록된다', () => {
     const app = new Netstorm(); app._initializeClientRuntime(false); app._layout = { logicalWidth: 100, logicalHeight: 80 }; app._initializeClientGump();
