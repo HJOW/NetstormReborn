@@ -82,6 +82,12 @@ test('캠페인 목록에서 첫 Tutorial의 월드와 안내를 표시한다', 
   await page.waitForFunction((before) => window.netstorm._clientRenderer.drawCount > before, previewFrame, { timeout: 15000 });
   const previewCursor = await page.evaluate(() => ({ number: window.netstorm._wantedCursor(), css: window.netstorm.canvas.style.cursor }));
   expect([2, 3]).toContain(previewCursor.number); expect(previewCursor.css).toContain('url(');
+  // 오른쪽 버튼과 왼쪽 방향키는 같은 원본 커서의 방향을 각각 +2와 -2로 돌린다.
+  const initialDirection = await page.evaluate(() => window.netstorm._campaignWorld.session().cursorDropSettings().direction);
+  await page.mouse.click(destination.x, destination.y, { button: 'right', delay: 60 });
+  await expect.poll(() => page.evaluate(() => window.netstorm._campaignWorld.session().cursorDropSettings().direction)).toBe((initialDirection + 2) % 8);
+  await page.keyboard.press('ArrowLeft');
+  await expect.poll(() => page.evaluate(() => window.netstorm._campaignWorld.session().cursorDropSettings().direction)).toBe(initialDirection);
   await page.keyboard.press('Escape'); await expect.poll(() => page.evaluate(() => window.netstorm._campaignWorld.session().cursorDropSettings().preview)).toBe(0);
   // P/R은 같은 실제 사제를 선택하고 반복 입력은 사제 보기 명령을 큐에서 소비한다.
   await page.keyboard.press('p'); await expect.poll(() => page.evaluate(() => window.netstorm._campaignWorld.selected())).toBe(priest.sid);

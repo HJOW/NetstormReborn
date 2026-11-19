@@ -1337,12 +1337,12 @@ export class Netstorm {
             const code = (next.code & 0x03ffffff) >>> 0, release = Boolean(next.code & InputCode.release);
             const selectionKey = code === 0x50 || code === 0x70 || code === 0x52 || code === 0x72 || code === 0x4e || code === 0x6e;
             const productionKey = 'qwaszyxe'.includes(String.fromCharCode(code).toLowerCase()) && code < 256;
-            const cursorCancel = code === 0x1b;
-            if (code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !selectionKey && !productionKey && !cursorCancel && code !== InputCode.leftButton && !(release && code === InputCode.rightButton)) break;
+            const cursorCancel = code === 0x1b, cursorRotate = code === 0x250000 || code === 0x270000;
+            if (code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && code !== InputCode.leftButton && code !== InputCode.rightButton) break;
             const event = queue.pop(false);
             if (tutorial.event(event) || gump.input().route(event.code, event.x, event.y)) continue;
             if (code === InputCode.leftButton && !release && !this._mainMenu?.dialog) user.event(event);
-            else if ((code === MISSION_F4 || code === MISSION_F5 || selectionKey || productionKey || cursorCancel) && !release && !this._mainMenu?.dialog) user.event(event);
+            else if ((code === MISSION_F4 || code === MISSION_F5 || selectionKey || productionKey || cursorCancel || cursorRotate || (code === InputCode.rightButton && world.session().cursorDropSettings().lockDepth === 0)) && !release && !this._mainMenu?.dialog) user.event(event);
             else if (code === PRODUCTION_BRIDGE_COMMAND && !release && !this._mainMenu?.dialog) this._dispatchCampaignBridgeProduction(event);
             else if (code === MISSION_VIEW_HOME || code === MISSION_VIEW_PRIEST) this._dispatchCampaignViewAction(event);
         }
@@ -2448,7 +2448,7 @@ export class Netstorm {
             this._mainMenu.pointerDown(pointer.x, pointer.y);
         }
         // 전체 원본 입력 소비자 연결 전에는 미션 좌클릭을 같은 큐에 예약한다.
-        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && this._campaignUserInput && event.button === 0 && pointer.inside) {
+        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && this._campaignUserInput && (event.button === 0 || (event.button === 2 && this._campaignWorld.session().cursorDropSettings().lockDepth === 0)) && pointer.inside) {
             queueBrowserMouseEvent(this._clientInputQueue, event, pointer, false);
         }
         if (this._state === AppState.TERRAIN_PREVIEW && event.button === 0 && pointer.inside) this._terrainPreview?.pointerDown(pointer.x, pointer.y);
@@ -2469,7 +2469,7 @@ export class Netstorm {
         if (this._state === AppState.MAIN_MENU && this._mainMenu && (!this._campaignDisplayActive() || this._mainMenu.dialog) && event.button === 0) {
             this._mainMenu.pointerUp(this._input.pointer.x, this._input.pointer.y);
         }
-        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && this._campaignUserInput && event.button === 0) queueBrowserMouseEvent(this._clientInputQueue, event, this._input.pointer, true);
+        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && this._campaignUserInput && (event.button === 0 || event.button === 2)) queueBrowserMouseEvent(this._clientInputQueue, event, this._input.pointer, true);
         if (event.button === 0) this._terrainPreview?.cancel();
     }
 
@@ -2507,7 +2507,7 @@ export class Netstorm {
         }
         // 조합 중 Enter 등은 기존 메뉴 명령으로도 중복 실행하지 않는다.
         if (this._clientNativeInputEnabled && (this._clientComposing || event.isComposing)) return;
-        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && (event.code === 'F4' || event.code === 'F5')) {
+        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && (event.code === 'F4' || event.code === 'F5' || ((event.code === 'ArrowLeft' || event.code === 'ArrowRight') && this._campaignWorld.session().cursorDropSettings().lockDepth === 0))) {
             event.preventDefault(); queueBrowserVirtualKeyEvent(this._clientInputQueue, event, this._input.pointer, false);
         }
         if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && !event.isComposing && !this._clientComposing && !event.ctrlKey && !event.altKey && !event.metaKey && (/^[nprqwaszyxe]$/iu.test(event.key ?? '') || (event.key === 'Escape' && this._campaignWorld.session().cursorDropSettings().lockDepth === 0))) queueBrowserCharacterEvent(this._clientInputQueue, event, this._input.pointer);
