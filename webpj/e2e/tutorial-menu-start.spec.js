@@ -64,6 +64,9 @@ test('캠페인 목록에서 첫 Tutorial의 월드와 안내를 표시한다', 
   // 이동 첫 좌표만 관찰하고 끝내지 않고 발소리 단계까지 게임 시계와 프레임이 계속 진행되는지 확인한다.
   const movementTime = await page.evaluate(() => window.netstorm._gameClock.time().game);
   await page.waitForFunction((start) => window.netstorm._gameClock.time().game >= start + 2, movementTime, { timeout: 15000 });
+  // P/R은 같은 실제 사제를 선택하고 반복 입력은 사제 보기 명령을 큐에서 소비한다.
+  await page.keyboard.press('p'); await expect.poll(() => page.evaluate(() => window.netstorm._campaignWorld.selected())).toBe(priest.sid);
+  await page.keyboard.press('r'); await expect.poll(() => page.evaluate(() => window.netstorm._clientInputQueue.size)).toBe(0);
   // 화면 오른쪽 가장자리에 포인터를 두면 실제 카메라의 현재 X 원점이 이동한다.
   const edge = await page.evaluate(() => {
     const app = window.netstorm, rect = app.canvas.getBoundingClientRect();
@@ -76,6 +79,12 @@ test('캠페인 목록에서 첫 Tutorial의 월드와 안내를 표시한다', 
     const app = window.netstorm, rect = app.canvas.getBoundingClientRect();
     return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2, stage: app._clientGuide.current().runtime.gate.stage };
   });
+  await page.mouse.move(centered.x, centered.y); const priestPanned = await page.evaluate(() => window.netstorm._clientGameplay.camera().snapshot().pixels.x);
+  await page.keyboard.press('F5');
+  await expect.poll(() => page.evaluate(() => window.netstorm._clientGameplay.camera().snapshot().pixels.x), { timeout: 15000 }).toBeLessThan(priestPanned);
+  const priestView = await page.evaluate(() => window.netstorm._clientGameplay.camera().snapshot().pixels.x);
+  await page.mouse.move(edge.x, edge.y);
+  await expect.poll(() => page.evaluate(() => window.netstorm._clientGameplay.camera().snapshot().pixels.x), { timeout: 15000 }).toBeGreaterThan(priestView);
   await page.mouse.move(centered.x, centered.y); const panned = await page.evaluate(() => window.netstorm._clientGameplay.camera().snapshot().pixels.x);
   await page.keyboard.press('F4');
   await expect.poll(() => page.evaluate(() => window.netstorm._clientGuide.current().runtime.gate.stage), { timeout: 15000 }).toBe(centered.stage + 1);

@@ -267,6 +267,11 @@ export class CampaignGameWorld {
         const session = this.#live(); this.#cameraHome.width = this.#width; this.#cameraHome.height = this.#height;
         session.centerCameraOn(sid, this.#cameraHome, () => this.#commitCamera());
     }
+    // 원본 ViewYourPriest는 현재 참여 사제 또는 대체 대상의 위치를 같은 카메라로 본다.
+    viewYourPriest(owner) {
+        const session = this.#live(); this.#cameraHome.width = this.#width; this.#cameraHome.height = this.#height;
+        session.viewYourPriest(owner, this.#cameraHome, () => this.#commitCamera());
+    }
     // 같은 풀에서 다음 이동 유닛을 선택하고 원본 다중 선택과 카메라 순서를 유지한다.
     selectNextUnit(add) {
         const session = this.#live(); if (!this.#input) throw new Error('다음 유닛 선택의 실제 월드/입력 없음');
