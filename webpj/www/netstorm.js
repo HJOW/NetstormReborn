@@ -43,6 +43,10 @@ import { CampaignTemplateStorage } from './core/campaign-template-storage.js';
 import { loadClientWorldAssets } from './core/client-world-assets.js';
 import { ClientMissionAssets } from './core/client-mission-assets.js';
 import { ClientCampaignGuide } from './core/client-campaign-guide.js';
+import { ClientFortGlobals } from './core/client-fort-globals.js';
+import { ClientFortCurrentName } from './core/client-fort-current-name.js';
+import { refreshWindowTitle } from './core/window-title.js';
+import { decodeWindows1252 } from './assets/text-encoding.js';
 import { CampaignSessionAssets } from './core/raw-campaign-session-owners.js';
 import { PriestPlacementAssets } from './core/priest-placement-assets.js';
 import { RawSurfaceStorage } from './core/raw-surface-storage.js';
@@ -446,7 +450,7 @@ export class Netstorm {
         // 자산 적재 뒤 구성해 Session보다 오래 유지하는 월드 물리와 Kernel이다.
         this._gameAssets = null; this._surfaceStorage = null; this._clientKernel = null;
         // 실제 미션 Guide는 자산과 장기 저장소가 준비된 뒤 생성한다.
-        this._clientGuide = null;
+        this._clientGuide = null; this._clientFort = null; this._clientFortName = null;
         // init 때 저장해 둔 루트 인라인 스타일이다. destroy 가 되돌린다.
         this._savedRootStyle = null;
         // 비동기 로딩 결과가 오래된 것인지 가리는 세대 번호다. destroy/재시도 때마다 올라간다.
@@ -648,13 +652,13 @@ export class Netstorm {
         const source = new ClientTimeSource(), random = new ClientRandomGlobals();
         const sp = new ClientSpGlobals(random, () => source.unixSeconds()); sp.store().initialize();
         const local = new ClientLocalStateGlobals(), clock = new ClientFrameClock(source, local.gameTicks());
-        const subscriber = new ClientSubscriberGlobals(), gameplay = new ClientGameplayGlobals(subscriber);
+        const subscriber = new ClientSubscriberGlobals(), gameplay = new ClientGameplayGlobals(subscriber), fort = new ClientFortGlobals();
         const coreData = new ClientCoreDataGlobals(), players = new ClientPlayerRecords(), templates = new CampaignTemplateStorage();
         players.bindCoreData(coreData);
         initializeClientPlayerRecords({ gameplayGlobals: () => gameplay, playerRecords: () => players });
         if (hidden) clock.pushGamePause();
         this._clientRandom = random; this._clientSp = sp; this._clientLocal = local; this._gameClock = clock; this._hiddenGamePause = Boolean(hidden);
-        this._clientSubscriber = subscriber; this._clientGameplay = gameplay; this._clientCoreData = coreData; this._clientPlayers = players; this._clientTemplates = templates;
+        this._clientSubscriber = subscriber; this._clientGameplay = gameplay; this._clientCoreData = coreData; this._clientPlayers = players; this._clientTemplates = templates; this._clientFort = fort;
     }
 
     // 실제 게임 자산에서 장기 물리를 만들고 같은 Client 권한·시각·Kernel과 진단을 연결한다.
@@ -674,7 +678,26 @@ export class Netstorm {
     _initializeClientGuide() {
         if (this._clientGuide || !this._gameData || !this._surfaceStorage || !this._clientGameplay || !this._clientPlayers) throw new Error('Client Guide의 중복 또는 공통 수명 누락');
         this._clientGuide = new ClientCampaignGuide(this._gameData, this._clientGameplay, this._clientPlayers, this._surfaceStorage);
+        this._clientFortName = new ClientFortCurrentName(this._clientFort, this._clientTemplates, this._gameData, this._clientGameplay, this._surfaceStorage,
+            { refreshTitle: () => this._refreshFortWindowTitle(), assertion: (line) => console.error(`Fort 현재 이름 원본 진단: ${line}`) });
     }
+
+    // 현재 Fort·Guide·설정으로 원본 창 제목을 계산해 실제 문서에 적용한다.
+    _refreshFortWindowTitle() {
+        if (!this._root || !this._clientFort || !this._clientTemplates || !this._clientGameplay || !this._surfaceStorage || !this._gameData) throw new Error('Fort 제목의 실제 Client 수명 미설치');
+        const bytes = this._clientFort.currentBytes(), end = bytes.indexOf(0);
+        if (end < 0) throw new RangeError('Fort 제목의 현재 이름 NUL 범위');
+        const fortName = decodeWindows1252(bytes.subarray(0, end)), selected = this._clientGuide?.current(), owner = this._clientGameplay.player.templateOwner;
+        const headers = this._clientTemplates.headers(); if (owner >= 9) throw new RangeError('Fort 제목의 현재 Template 범위');
+        const view = new DataView(headers.buffer, headers.byteOffset + owner * 20, 20);
+        const state = { fortName, editor: this._clientGameplay.world.editor, mission: this._clientGameplay.world.missionPost,
+            templatePresent: view.getUint32(0, true) !== 0, templateReadOnly: view.getUint32(8, true) !== 0,
+            demo: selected?.runtime.gate.demo ?? 0, testBattle: selected?.runtime.mode64 ?? 0 };
+        refreshWindowTitle(state, { pathSpec: (key, argument) => this._gameData.pathSpec(key, argument), missionTitle: () => selected?.script.get('title') ?? '', setTitle: (title) => { this._root.ownerDocument.title = title; } });
+    }
+
+    // 같은 Client의 현재 Fort 이름 선택 부모를 실행한다. 실제 Guide Init이 호출할 경계다.
+    _selectCampaignFort(name) { if (!this._clientFortName) throw new Error('Client Fort 이름 장치 미설치'); this._clientFortName.set(name); }
 
     // 실제 앱 설정과 게임 자산에서 한 미션의 스크립트·Fort를 준비한다. 반환 소유자는 호출자가 반납한다.
     _prepareCampaignMission(name) {
@@ -712,7 +735,7 @@ export class Netstorm {
         this._settings = null;
         this._progress = null;
         // Guide를 먼저 반납하고 장기 Process 소유자는 TYPE·Kernel과 시계가 살아 있는 동안 반납한다.
-        this._clientGuide?.dispose(); this._clientGuide = null;
+        this._clientGuide?.dispose(); this._clientGuide = null; this._clientFortName = null; this._clientFort = null;
         this._surfaceStorage?.dispose();
         this._gameClock = null; this._clientLocal = null; this._hiddenGamePause = false;
         this._clientSp = null; this._clientRandom = null;

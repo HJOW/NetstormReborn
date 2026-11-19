@@ -41,7 +41,7 @@ import { RawChatChannels } from '../www/core/raw-chat-channels.js';
 import { QuickHelpPopupState } from '../www/ui/quick-help-popup-state.js';
 import { GameAssets } from '../www/assets/game-assets.js';
 import { GamePalette } from '../www/assets/palette.js';
-import { fortSection, parseFort } from '../www/assets/fort.js';
+import { SECTION_NAMES, fortSection, parseFort } from '../www/assets/fort.js';
 import { ARCHIVE_PATH, GameData, SETUP_PATH } from '../www/assets/game-data.js';
 import { TaffArchive } from '../www/assets/taff.js';
 import { decodeOriginalText, decodeWindows1252, encodeOriginalText } from '../www/assets/text-encoding.js';
@@ -69,6 +69,7 @@ import { createMissionStartState } from '../www/core/raw-mission-start.js';
 import { MissionScript, createGuideMissionScript } from '../www/core/mission-script.js';
 import { CampaignGuideRuntime, releaseCampaignGuideMission } from '../www/core/campaign-guide-release.js';
 import { ClientState } from '../www/core/client-state.js';
+import { ClientFortCurrentName } from '../www/core/client-fort-current-name.js';
 import { PacketConnection, RawPacketDispatch } from '../www/core/raw-packet-dispatch.js';
 import { ClientGameplayGlobals } from '../www/core/client-gameplay-globals.js';
 import { ClientConnectionGlobals } from '../www/core/client-connection-globals.js';
@@ -712,6 +713,37 @@ test('Netstorm Client Guide: 없는 미션과 다음 정상 생성', () => {
         assert.equal(guide.current(), null); assert.equal(app._surfaceStorage.links.mission, false); assert.equal(data.get('global.inMission'), '0');
         guide.begin('Tutorial1'); assert.equal(guide.current().script.name, 'Tutorial1');
     } finally { guide.dispose(); app._surfaceStorage.dispose(); }
+});
+
+// 실제 앱의 Client 이름 물리·설정·Guide·문서 제목을 단독 미션 경로로 연결한다.
+test('Netstorm Client Fort 이름: 실제 Guide와 창 제목', () => {
+    const app = new Netstorm(); app._initializeClientRuntime(false);
+    const data = GameData.build({ files: new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)]]), language: 'english' });
+    app._gameData = data; app._root = { ownerDocument: { title: 'before' } }; app._initializeClientWorldStorage(game, data.files); app._initializeClientGuide();
+    const guide = app._clientGuide, names = app._clientFort; guide.begin('Tutorial1');
+    try {
+        const title = guide.current().script.get('title'), before = names.catalogDirty().value;
+        app._selectCampaignFort('BridgeTheGap');
+        assert.equal(names.current(), 'BridgeTheGap'); assert.equal(names.catalogDirty().value, before + 1);
+        assert.equal(app._root.ownerDocument.title, data.pathSpec('missionWindowName', title));
+        assert.equal(guide.current().script.fortName(), 'BridgeTheGap');
+    } finally { guide.dispose(); app._surfaceStorage.dispose(); }
+});
+
+// 실제 Client Template manager에 같은 경로를 쓰고 선택된 Notify·Snapshot만 전달한다.
+test('Netstorm Client Fort 이름: 실제 Template manager 경로와 읽기 전용 선택', () => {
+    const app = new Netstorm(); app._initializeClientRuntime(false);
+    const data = GameData.build({ files: new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)]]), language: 'english' });
+    app._gameData = data; app._initializeClientWorldStorage(game, data.files);
+    const templates = app._clientTemplates, names = app._clientFort, gameplay = app._clientGameplay, calls = [];
+    gameplay.player.templateOwner = 1; templates.install(1, { sections: Array.from({ length: SECTION_NAMES.length }, () => new Uint8Array()) }, 'd/Old.fort');
+    new DataView(templates.headers().buffer).setUint32(20 + 8, 1, true); names.currentBytes().set(Uint8Array.of(79, 108, 100, 0));
+    const device = new ClientFortCurrentName(names, templates, data, gameplay, app._surfaceStorage,
+        { refreshTitle: () => calls.push('title'), snapshot: () => calls.push('snapshot'), notify: (slot) => calls.push(`notify:${slot}`), assertion: (line) => calls.push(`assert:${line}`) });
+    try {
+        device.set('New'); assert.equal(names.current(), 'New'); assert.equal(templates.name(1), data.pathSpec('fortSpec', 'New'));
+        assert.deepEqual(calls, ['notify:1', 'snapshot', 'title']); assert.equal(names.catalogDirty().value, 2);
+    } finally { templates.clearAll(); app._surfaceStorage.dispose(); }
 });
 
 // 실제 월드 전체를 관측하고 Session이 초기화한 SP와 현재 원문·장부를 바꾸지 않는다.
