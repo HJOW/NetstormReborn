@@ -56,6 +56,12 @@ export function bindCampaignClientInputServices(client, services) {
     services.developerQueue = (code, first, second) => client.input().pushCommand(code >>> 0, first | 0, second | 0);
 }
 
+// 지역 도장이 호출될 때마다 실제 Client 설정의 원문 키를 읽고, 키가 없으면 원본 기본값 1을 사용한다. (2026-11-19 WB04-E873)
+export function bindCampaignOwnershipTheme(client, services) {
+    services.ownership ??= {};
+    services.ownership.themeMode = () => client.configuration().readInt('theammode', 1).value >>> 0;
+}
+
 // 로그인 안내와 타이머가 선택한 시점의 Client 메뉴·시계·번역을 조회한다.
 export function bindCampaignLoginProgressServices(client, controls, login) {
     if (client.edition() !== 'patch1078') return;

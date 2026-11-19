@@ -4,14 +4,14 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-19, 마지막 단위 WB04-E872)
+### 0.1 현재 값 (2026-11-19, 마지막 단위 WB04-E873)
 
 | 항목 | 현행 상태 |
 | --- | --- |
 | 실행·플레이 | 브라우저에서 ‘클릭하여 시작’, 메인 메뉴·캠페인/데모 목록·도움말·옵션·Credits와 개발용 지형 미리보기가 동작한다. Node 통합 검사에서 실제 Fort로 Session을 적재하고 내부 Login·Start·일부 이동과 건설을 확인했다. 브라우저의 `MissionBegin`·`StartDemo`에서 실제 월드로 들어가 플레이하는 기능은 미연결이다. |
 | 원본과의 동일성 | 영어 4:3 메뉴 M1 8장면은 cpppj 오라클과 알려진 구름 배경 등 차이 영역 밖에서 픽셀 차이 0이다. 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다. 실제 미션 L2·L3·L4, 자연 완주는 미검증이다. |
-| 현재 작업 | **M2의 4-D 진행 중.** 4D-3 typed Login 잔여를 이어가고 4D-4~4D-6에서 이미 확인된 프레임·튜토리얼 게이트·반납·GameWorld 경계를 실제 Client 수명으로 연결한다. E872는 실제 Tutorial1 로그인·Start 뒤 지형을 cpppj와 비교해 방향·변형 코드 763개 일치, 프레임 번호 763개 차이를 확인했다. 같은 시계·난수 수명, 웹 덤프의 실제 Client 호출·원본 대조 및 앱 메뉴·프레임 루프가 남았다. [E872](docs/webpj-tutorial1-start-terrain-20261119.md) |
-| 전체 회귀 | E869 Node v26.13.0 전체 6,409건, E867 Node v22.23.3 전체 6,405건 통과(실패·취소·건너뜀 0). E872 집중·연관 검사 25건 통과. HJOW-Athlon의 작업 단위 주기: v26 3/4, v22 5/8. fixture 830개 해시·파일 불일치/누락 0; 전체 Git 이력 재조회는 중단하고 이번 본체의 변경 여부와 대응표는 별도 확인했다. |
+| 현재 작업 | **M2의 4-D 진행 중.** 4D-3 typed Login 잔여를 이어가고 4D-4~4D-6에서 이미 확인된 프레임·튜토리얼 게이트·반납·GameWorld 경계를 실제 Client 수명으로 연결한다. E873은 실제 `theammode` 기본값을 연결해 Tutorial1 지형 프레임 차이를 763개에서 45개로 줄였다. 같은 시계·난수 수명, 남은 경계 후보와 웹 덤프의 실제 Client 호출·원본 대조 및 앱 메뉴·프레임 루프가 남았다. [E873](docs/webpj-campaign-ownership-theme-20261119.md) |
+| 전체 회귀 | E873 Node v26.13.0 전체 6,415건, E867 Node v22.23.3 전체 6,405건 통과(실패·취소·건너뜀 0). E873 집중·연관 검사 39건 통과. HJOW-Athlon의 작업 단위 주기: v26 0/4, v22 6/8. fixture 830개 해시·파일 불일치/누락 0; 전체 Git 이력 재조회는 중단하고 이번 본체의 변경 여부와 대응표는 별도 확인했다. |
 | 브라우저 검사 | 2026-11-17 Chromium 2/2. 갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체 확인. 최초 실행·진행 잠금/체크 및 저장 재실행은 E616에서 별도 Chromium 2/2로 확인했다. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
 
 **미션 식별.** 이전 공통 fixture의 `thewarbegins.fort`는 캠페인 1-1이다. 실제 `tutorial1`이 선택하는 Fort는 `BridgeTheGap`이며, 지형·섬을 E753에서 다시 대조했다. [미션명 정정](docs/webpj-session-login-shipped-forts-20261118.md) · [Tutorial1 지형 재검증](docs/webpj-tutorial1-terrain-recheck-20261118.md)
@@ -174,7 +174,7 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 **4D-10 재대조와 L2**
 
 - [ ] **4D-10a 실제 소유자 재대조** — typed 선행 바인딩과 CampaignGuideRelease, ClientGameplayGlobals, GameAux·TypeNames·RawBombBlastBindings를 실제 Client/Session 및 Native 장기 경로로 확인한다. Archer·Motion/Path·Cursor·SoundProcess 소비자 검증은 6~8단계와 연계한다.
-- [ ] **4D-10b L2 판정** — E870에서 판번호 1 덤프의 행별 비교와 명시적 SP 소유자 0 제외를 구현했다. E871~E872에서 웹 Tutorial1 지형 763개 종류·좌표·영역과 방향·변형 코드가 cpppj와 일치하지만 프레임 번호는 다름을 확인했다. 같은 시점·난수에서 Tutorial1 Load/Start의 보고서·덤프·첫 프레임 논리 화면을 맞추고 실제 결선 단위를 대응표에서 `session`으로 올린다. [E870](docs/webpj-session-dump-compare-20261119.md) · [E871](docs/webpj-tutorial1-terrain-cpp-comparison-20261119.md) · [E872](docs/webpj-tutorial1-start-terrain-20261119.md)
+- [ ] **4D-10b L2 판정** — E870에서 판번호 1 덤프의 행별 비교와 명시적 SP 소유자 0 제외를 구현했다. E873에서 원본 테마 기본값을 맞추자 Tutorial1 안쪽 613개는 프레임까지 일치하고 경계 45개가 남았다. 같은 시점·난수에서 Tutorial1 Load/Start의 보고서·덤프·첫 프레임 논리 화면을 맞추고 실제 결선 단위를 대응표에서 `session`으로 올린다. [E870](docs/webpj-session-dump-compare-20261119.md) · [E873](docs/webpj-campaign-ownership-theme-20261119.md)
 
 
 #### 5-A 렌더러·Draw·시각 시스템 (44/46)

@@ -55,7 +55,7 @@ import { RawMissionAiSettings } from '../www/core/raw-mission-ai-settings.js';
 import { RawCampaignMissionStartBindings } from '../www/core/raw-campaign-mission-start-bindings.js';
 import { RawCampaignTutorialOneBindings } from '../www/core/raw-campaign-tutorial-one-bindings.js';
 import { CampaignGameWorld } from '../www/core/campaign-game-world.js';
-import { makeCampaignMissionStartEffects, bindCampaignAiClientServices, bindCampaignClientInputServices, bindCampaignLoginProgressServices, prepareCampaignMissionStarting, captureCampaignMissionStarting, runCampaignMissionStarting } from '../www/core/campaign-client-services.js';
+import { makeCampaignMissionStartEffects, bindCampaignAiClientServices, bindCampaignClientInputServices, bindCampaignOwnershipTheme, bindCampaignLoginProgressServices, prepareCampaignMissionStarting, captureCampaignMissionStarting, runCampaignMissionStarting } from '../www/core/campaign-client-services.js';
 import { RawCampaignFactoryDisplay } from '../www/render/raw-campaign-factory-display.js';
 import { projectCameraCoordinates } from '../www/render/camera-view.js';
 import { cursorDisplayLogicalPalette } from '../www/render/raw-campaign-cursor-display.js';
@@ -94,7 +94,7 @@ function scene(overrides = {}, savedFort = fort) {
     const s = new RawCampaignSession(game, { read: forbidden('파일') }, savedFort, overrides.missionName ?? 'thewarbegins', {
         unixSeconds: overrides.unixSeconds ?? (() => 1700000000), soundNames: new SoundList(), carrierRequest: overrides.carrierRequest ?? forbidden('전송'), deletion: { selected: () => 0, ...overrides.deletion },
         install: { translateYou: () => Uint8Array.of(89, 111, 117, 0), setConfig: () => trace.push('config'), refreshWindowTitle: () => trace.push('title'), resetCamera: () => trace.push('camera'), ...overrides.install },
-        ownership: { refreshProduction: () => trace.push('production'), themeMode: () => 0 },
+        ownership: { refreshProduction: () => trace.push('production'), themeMode: () => 0, ...overrides.ownership },
         assets: { postPop: { playImpactSound: () => trace.push('impact') }, queueCommand: (...args) => queue.pushCommand(...args) },
         templateStorage: overrides.templateStorage, playerRecords: overrides.playerRecords, coreDataGlobals: overrides.coreDataGlobals, subscriberGlobals: overrides.subscriberGlobals, missionFortRequest: overrides.missionFortRequest, missionSubscriber: overrides.missionSubscriber, missionOptions: overrides.missionOptions, fortMission: overrides.fortMission, fortBadges: overrides.fortBadges, production: overrides.production, newTechnology: overrides.newTechnology, localLogin: overrides.localLogin,
         ownerColorTables: overrides.ownerColorTables, gameplayGlobals: overrides.gameplayGlobals, surfaceStorage: overrides.surfaceStorage, processKernel: overrides.processKernel, localStateGlobals: overrides.localStateGlobals, connectionActivityGlobals: overrides.connectionActivityGlobals, connectionFrameNumber: overrides.connectionFrameNumber, connectionRegistry: overrides.connectionRegistry, cameraScreenSize: overrides.cameraScreenSize, cameraCommit: overrides.cameraCommit, developerQueue: overrides.developerQueue, motion: overrides.motion, randomGlobals: overrides.randomGlobals, spGlobals: overrides.spGlobals,
@@ -1374,7 +1374,10 @@ test('CampaignSession Tutorial1: 실제 로그인·Start 뒤 cpppj 지형 프레
         if (cells[0] === 'object' && (cells[2] === '97' || cells[2] === '121')) expected.set(`${cells[2]}:${cells[6]}:${cells[7]}`, Number(cells[5]));
     }
     const localLogin = { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, clock: () => 1234, log: () => {}, refresh: () => {}, playerUiBusy: () => false, playerNotice: () => {} };
-    const { s } = scene({ missionName: script.fortName(), localLogin, unixSeconds: () => 946684800, sound: { playOnceAt: () => {} },
+    const random = new ClientRandomGlobals(), services = {};
+    bindCampaignOwnershipTheme({ configuration: () => data }, services);
+    assert.equal(services.ownership.themeMode(), 1);
+    const { s } = scene({ missionName: script.fortName(), localLogin, randomGlobals: random, unixSeconds: () => 946684800, sound: { playOnceAt: () => {} }, ownership: services.ownership,
         ai: { participation: { addChat: () => {}, clearChat: () => {} } } }, input);
     try {
         s.startLocalConnection(); s.pumpLocalConnection(); assert.equal(s.pollLocalConnectionState(), true); s.pumpLocalConnection();
@@ -1411,8 +1414,38 @@ test('CampaignSession Tutorial1: 실제 로그인·Start 뒤 cpppj 지형 프레
             const first = table[value], second = table[expected.get(key)];
             return first && second && first.side === second.side && first.variant === second.variant && first.number === second.number && first.flags === second.flags;
         }).length;
-        t.diagnostic(`로그인·Start 뒤 지형 프레임 차이 ${differences.length}개, Start 중 변경 ${changedAtStart}개, 방향·변형 코드 일치 ${sameCode}개, 전체 코드 일치 ${sameFullCode}개`);
+        const interior = [...actual].filter(([key, value]) => {
+            const code = core.frames[Number(key.split(':', 1)[0])].codes[value];
+            return code?.side === 0x41 && code.variant === 0x41;
+        });
+        assert.equal(interior.length, 613);
+        assert.equal(interior.filter(([key, value]) => value !== expected.get(key)).length, 0);
+        const deltas = new Map();
+        // 같은 위치에서 cpppj 프레임과 웹 프레임의 차이를 집계한다.
+        for (const [key, value] of differences) {
+            const delta = expected.get(key) - value;
+            deltas.set(delta, (deltas.get(delta) ?? 0) + 1);
+        }
+        const commonDeltas = [...deltas].sort((first, second) => second[1] - first[1]).slice(0, 5);
+        const temples = s.world().objects().filter(({ object }) => object.type === 123).map(({ sid, object }) => ({ sid, owner: object.owner, theme: core.types[object.type].theme }));
+        t.diagnostic(`로그인·Start 뒤 지형 프레임 차이 ${differences.length}개, Start 중 변경 ${changedAtStart}개, 방향·변형 코드 일치 ${sameCode}개, 전체 코드 일치 ${sameFullCode}개, 난수 game=${random.game.state} crt=${random.crt.state}`);
+        t.diagnostic(`cpppj−웹 프레임 차이 상위: ${JSON.stringify(commonDeltas)}`);
+        t.diagnostic(`웹 TYPE 123 객체: ${JSON.stringify(temples)}`);
     } finally { s.dispose(); script.dispose(); }
+});
+
+// 같은 Client가 소유한 실제 설정을 매 호출 읽고, 키 누락의 기본 1과 부호 없는 원문 해석을 보존한다.
+test('CampaignClient 지역 테마: 실제 설정의 기본값과 현재 변경 조회', () => {
+    const files = new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)]]);
+    const data = GameData.build({ files, language: 'english' }); data.configuration.clear();
+    const services = { ownership: { marker: 7 } }; let current = data;
+    bindCampaignOwnershipTheme({ configuration: () => current }, services);
+    assert.equal(services.ownership.marker, 7); assert.equal(services.ownership.themeMode(), 1);
+    data.set('theammode', '0'); assert.equal(services.ownership.themeMode(), 0);
+    data.set('theammode', '-1'); assert.equal(services.ownership.themeMode(), 0xffffffff);
+    data.set('theammode', 'not-a-number'); assert.equal(services.ownership.themeMode(), 0);
+    current = GameData.build({ files, language: 'english' }); current.configuration.clear();
+    assert.equal(services.ownership.themeMode(), 1);
 });
 
 // 외곽 등록은 설치 전에 닫고 Load 뒤 같은 Session 연구 본체만 분배기에 연결한다.
