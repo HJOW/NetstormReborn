@@ -69,5 +69,5 @@ export class ClientProductionPanel {
         node.baseHeight = node.height = value; this.#root.tree().push(this.#token); this.#root.attach(this.#token, 0, 0, this.#root.createState().collection.root, 0);
     }
     // 공통 수명이 자식과 실제 Form을 먼저 반납한다.
-    close() { if (this.#token) { this.#root.remove(this.#token); this.#token = 0; } }
+    close() { this.#parts.close?.(); if (this.#token) { this.#root.remove(this.#token); this.#token = 0; } }
 }

@@ -277,6 +277,16 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         // 자동 공급 후 화면 격자도 같은 기술 내용물 개수로 갱신된다.
         let visibleBridges = 0; for (let token = gump.node(production.ui.node().bridge).child; token; token = gump.node(token).next) visibleBridges += 1;
         assert.equal(visibleBridges, bridges());
+        // 실제 앱의 생산 격자 우클릭은 같은 정보 메뉴와 Help 큐로 이어진다.
+        const appItem = gump.node(production.ui.node().bridge).child, appBounds = gump.collection().bounds(appItem);
+        const appX = (appBounds.left + appBounds.right) >> 1, appY = (appBounds.top + appBounds.bottom) >> 1;
+        assert.equal(gump.handle(appItem, 0x20000, appX, appY), 1);
+        let appMenu = gump.node(gump.createState().collection.root).child;
+        while (appMenu && gump.node(appMenu).command !== 26) appMenu = gump.node(appMenu).next;
+        assert.ok(appMenu); const appMenuBounds = gump.collection().bounds(appMenu), helpX = appMenuBounds.left + 8, helpY = appMenuBounds.top + 5;
+        gump.broadcast(0, helpX, helpY); assert.equal(gump.input().route(0x10000, helpX, helpY), appMenu);
+        app._runCampaignInputFrame(); assert.ok(app._mainMenu.dialog); assert.ok(app._mainMenu.dialog.topic.endsWith('Type'));
+        app._mainMenu.setDialog(null); gump.lifetime().cleanup();
         assert.throws(() => app._prepareCampaignProduction(), /수명 오류/);
         // 실제 앱 프레임은 월드를 표시하고 Tell을 그 위에 합성하며 닫은 뒤 DIB 원본을 복구한다.
         let presentations = 0; app._presenter.present = () => { presentations += 1; };

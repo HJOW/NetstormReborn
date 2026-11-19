@@ -94,6 +94,7 @@ import { ClientFortCurrentName } from './core/client-fort-current-name.js';
 import { refreshWindowTitle } from './core/window-title.js';
 import { decodeWindows1252, encodeWindows1252 } from './assets/text-encoding.js';
 import { displayTextCodec } from './assets/display-text.js';
+import { RawPlayerIdentity } from './core/raw-player-identity.js';
 import { CampaignSessionAssets } from './core/raw-campaign-session-owners.js';
 import { PriestPlacementAssets } from './core/priest-placement-assets.js';
 import { RawSurfaceStorage } from './core/raw-surface-storage.js';
@@ -1295,10 +1296,19 @@ export class Netstorm {
         const production = this._campaignProduction, root = this._clientGump, screen = this._clientPaletteScreen;
         if (!production || production.ui || !root || !screen || !this._clientColorSort || !this._gameAssets || !this._resources?.fonts || !this._clientSoundPlayer || !this._clientSoundNames) throw new Error('미션 생산 UI의 현재 수명 누락');
         const help = new GumpHelp(root.createState(), new GumpHelpState(), { node: (token) => root.node(token) });
+        const identity = new RawPlayerIdentity(this._clientPlayers.records(), new Uint8Array(0), this._clientChatRecords, {
+            localOwner: () => this._clientGameplay.player.battleOwner, subscriber: () => this._clientSubscriber.mySubscriber().value,
+            address: () => this._clientGameplay.localAddress().value, name: () => { const bytes = this._clientSubscriber.handle(), end = bytes.indexOf(0); return String.fromCharCode(...bytes.subarray(0, end)); },
+            battle: () => this._surfaceStorage.ownerMode.battle, editor: () => this._clientGameplay.world.editor !== 0,
+            metamap: () => this._surfaceStorage.ownerMode.challenge, unknownName: () => 'SOMEONE',
+        });
         const ui = createClientProductionAssembly(root, production.session, this._gameAssets, this._resources.fonts, screen, this._clientColorSort, this._clientProductionGlobals, production.panel, {
             now: () => this._gameClock.wallSeconds(), translate: (value) => this._resources.translate(value),
             sound: (name) => this._clientSoundPlayer.play(this._clientSoundNames.lookup(name), 0, 0, 0, 0, 0), tell: (section) => this._openTell(section),
-            about: () => { console.error('생산 항목 정보 메뉴가 아직 연결되지 않았습니다.'); return 0; },
+            about: () => { throw new Error('생산 정보 메뉴 미연결'); },
+            menu: { data: this._gameData, helpWord: () => this._clientLocal.helpWord().get(),
+                ownerName: (owner) => displayTextCodec.decode(Uint8Array.from(identity.nameForOwner(owner), (letter) => letter.charCodeAt(0))),
+                command: (...args) => this._clientInputQueue.pushCommand(...args), invalidate: (rect) => this._clientRenderer.invalidate(rect, 0) },
             changed: () => { this._clientRenderer.invalidateAll(); this._displayDirty = true; }, closePopups: () => this._closeCampaignPopups(),
             poll: (code) => this._clientInputPoll.poll(code), cursor: (number) => { this._campaignCursor = number; this._applyCursor(); },
             baseHandle: (...args) => help.handle(...args), menuInstances: () => this._mainMenu?.popup?.isOpen ? 1 : 0,
@@ -1372,11 +1382,16 @@ export class Netstorm {
             const selectionKey = code === 0x50 || code === 0x70 || code === 0x52 || code === 0x72 || code === 0x4e || code === 0x6e;
             const productionKey = 'qwaszyxe'.includes(String.fromCharCode(code).toLowerCase()) && code < 256;
             const cursorCancel = code === 0x1b, cursorRotate = code === 0x250000 || code === 0x270000;
-            if (code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && code !== InputCode.leftButton && code !== InputCode.rightButton) break;
+            if (code !== 0x02000017 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && code !== InputCode.leftButton && code !== InputCode.rightButton) break;
             const event = queue.pop(false);
             if (tutorial.event(event) || gump.input().route(event.code, event.x, event.y)) continue;
             if (code === InputCode.leftButton && !release && !this._mainMenu?.dialog) user.event(event);
             else if ((code === MISSION_F4 || code === MISSION_F5 || selectionKey || productionKey || cursorCancel || cursorRotate || (code === InputCode.rightButton && world.session().cursorDropSettings().lockDepth === 0)) && !release && !this._mainMenu?.dialog) user.event(event);
+            else if (code === 0x02000017 && !release && !this._mainMenu?.dialog) {
+                const type = event.y >>> 0, types = world.session().core().types;
+                if (!type || type >= 256 || type >= types.length) throw new RangeError('생산 정보 Help TYPE 범위 오류');
+                this._closeCampaignPopups(); this._openHelp(types[type].name.split('\0', 1)[0] + this._resources.translate('Type'));
+            }
             else if (code === PRODUCTION_BRIDGE_COMMAND && !release && !this._mainMenu?.dialog) this._dispatchCampaignBridgeProduction(event);
             else if (code === MISSION_VIEW_HOME || code === MISSION_VIEW_PRIEST) this._dispatchCampaignViewAction(event);
         }
@@ -2483,7 +2498,7 @@ export class Netstorm {
             this._mainMenu.pointerDown(pointer.x, pointer.y);
         }
         // 전체 원본 입력 소비자 연결 전에는 미션 좌클릭을 같은 큐에 예약한다.
-        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && this._campaignUserInput && (event.button === 0 || (event.button === 2 && this._campaignWorld.session().cursorDropSettings().lockDepth === 0)) && pointer.inside) {
+        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && this._campaignUserInput && (event.button === 0 || event.button === 2) && pointer.inside) {
             queueBrowserMouseEvent(this._clientInputQueue, event, pointer, false);
         }
         if (this._state === AppState.TERRAIN_PREVIEW && event.button === 0 && pointer.inside) this._terrainPreview?.pointerDown(pointer.x, pointer.y);

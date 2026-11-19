@@ -12,6 +12,7 @@ import { ClientProductionBudget } from './client-production-budget.js';
 import { ClientProductionHint } from './client-production-hint.js';
 import { ClientProductionSelection } from './client-production-selection.js';
 import { ClientProductionPanel } from './client-production-panel.js';
+import { createClientProductionMenu } from './client-production-menu.js';
 
 // 현재 Session·Client 자원과 실제 입력/표시 장치에서 생산 UI 소유자를 만든다.
 export function createClientProductionAssembly(root, session, game, fonts, screen, colors, globals, panel, devices) {
@@ -33,7 +34,7 @@ export function createClientProductionAssembly(root, session, game, fonts, scree
     const metadata = new PriestPlacementAssets(game.typeTable, game.shapes, core.types);
     const measure = new RawCanonPixelShape(core.pool, core.types, metadata.frames, metadata.shapes, metadata.hotspots, metadata.geometry, { scaleX: 16, scaleY: 11 });
     const point = { get x() { return cursor.screenX; }, get y() { return cursor.screenY; } }, gridState = { cursorPoint: point, get cursorFlags() { return cursor.inputFlags; } };
-    let lastType = 0, grid;
+    let lastType = 0, grid, menu = null;
     const itemState = { get localOwner() { return context.gameplay.player.battleOwner; }, get editor() { return context.gameplay.world.editor; },
         get stockEnabled() { return globals.stockEnabled; }, inputDisabled: 0, get lastType() { return lastType; }, set lastType(value) { lastType = value; },
         get bridgeType() { return globals.bridgeType; }, pixelsX: 16, pixelsY: 11, get backgroundType() { return globals.backgroundType; }, get backgroundFrame() { return globals.backgroundFrame; } };
@@ -42,7 +43,7 @@ export function createClientProductionAssembly(root, session, game, fonts, scree
         styledText: (token, value) => text.style(token, value), fitText: (token) => text.fit(token),
         background: (target, clip, ...args) => background.texture(target, clip, ...args),
         denied: (first, flags) => first === globals.policyFirst && (flags & 255) === globals.policyByte ? 1 : 0,
-        tell: devices.tell, about: devices.about,
+        tell: devices.tell, about: (token, x, y) => menu ? menu.open(root.node(token), { x, y }) : devices.about(token, x, y),
     });
     grid = new ClientInventoryGrid(root, session, gridState, { now: devices.now, baseHandle: devices.baseHandle, allocateItem: (size) => item.allocate(size) });
     // 현재 Player 기록의 기술 SID를 원본 비정렬 DWORD로 읽는다.
@@ -52,8 +53,12 @@ export function createClientProductionAssembly(root, session, game, fonts, scree
     };
     const selection = new ClientProductionSelection(session, item, { technology, templateOwner: () => context.gameplay.player.templateOwner,
         stock: () => globals.stockEnabled, failure: (empty, serial) => hint.show(empty, serial), flash: () => budget.flash(), sound: devices.sound, changed: devices.changed });
+    if (devices.menu) menu = createClientProductionMenu(root, session, game, devices.menu.data, fonts, screen, colors, background, globals.backgroundType, {
+        ...devices.menu, baseHandle: devices.baseHandle, sound: devices.sound, translate: devices.translate, affordable: (sid) => item.affordable(sid),
+        now: devices.now, poll: devices.poll, cursor: devices.cursor,
+    });
     const divider = new ClientHudDivider(root, { background, backgroundColor: () => 35, dividerColor: () => 55, baseHandle: devices.baseHandle,
-        closePopups: devices.closePopups, menuInstances: devices.menuInstances, poll: devices.poll, cursor: devices.cursor });
+        closePopups: devices.closePopups, menuInstances: () => menu ? menu.instances() : devices.menuInstances(), poll: devices.poll, cursor: devices.cursor });
     return new ClientProductionPanel(root, session, { grid, background, divider, budget, selection,
-        technology: () => context.gameplay.player.playerKnown ? technology(context.gameplay.player.battleOwner) : 0, changed: devices.changed }, globals, panel);
+        technology: () => context.gameplay.player.playerKnown ? technology(context.gameplay.player.battleOwner) : 0, changed: devices.changed, close: () => menu?.close() }, globals, panel);
 }
