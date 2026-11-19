@@ -295,6 +295,11 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         const notifiedForm = gump.node(notified).form; session.gumpFormHost().notify(notifiedForm);
         assert.ok(gump.node(notified).flags & 0x10000); assert.ok(session.core().pool.slot(notifiedForm)[11] & 1);
         gump.lifetime().cleanup(); assert.equal(gump.node(notified), null);
+        // 파생 가상 통지는 같은 등록 토큰과 실제 부모 SID를 받아 처리한다.
+        const derived = gump.createBase(0, 10, 10, 1, () => 0); gump.attach(derived, 215, 215); gump.bindObject(derived, technology);
+        const received = []; gump.bindObjectGone(derived, (token, object) => { received.push([token, object]); gump.lifetime().kill(token); });
+        session.gumpFormHost().notify(gump.node(derived).form); assert.deepEqual(received, [[derived, technology]]);
+        gump.lifetime().cleanup(); assert.throws(() => gump.bindObjectGone(derived, null), /토큰/u);
         // World 반납 전에는 잔여 Form을 실제 삭제하고 새 대여를 허용한다.
         const outstanding = gump.createBase(0, 10, 10, 1, () => 0); gump.attach(outstanding, 220, 220); gump.bindObject(outstanding, technology);
         const outstandingForm = gump.node(outstanding).form; gump.releaseFormHost();

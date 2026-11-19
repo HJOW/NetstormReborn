@@ -17,7 +17,7 @@ const ROOT_TOKEN = 1;
 export class ClientGumpRoot {
     // 생성·수명·사건·입력·출력 상태와 같은 노드·처리기를 보유한다.
     #create = new GumpCreateState(); #life = new GumpLifetimeState(); #event = new GumpEventState(); #inputState = new GumpInputState();
-    #nodes = new Map(); #handlers = new Map(); #destructors = new Map(); #attachers = new Map(); #broadcasters = new Map(); #idlers = new Map(); #drawers = new Map(); #nextToken = 2; #factory; #lifetime; #collection; #events; #input; #tree; #frame; #redrawDevice; #formHost = null; #root = 0; #disposed = false;
+    #nodes = new Map(); #handlers = new Map(); #destructors = new Map(); #attachers = new Map(); #broadcasters = new Map(); #idlers = new Map(); #drawers = new Map(); #objectGoneHandlers = new Map(); #nextToken = 2; #factory; #lifetime; #collection; #events; #input; #tree; #frame; #redrawDevice; #formHost = null; #root = 0; #disposed = false;
 
     // 원본 등록표를 초기화하고 기본 루트를 생성한 뒤 현재 화면 크기를 적용한다.
     constructor(width, height, checking, redraw = null, diagnostic = null, project = null) {
@@ -59,7 +59,7 @@ export class ClientGumpRoot {
                 if (this.#nodes.get(token)?.constructor !== GumpCreateNode) throw new Error('Client Gump 파생 소멸자 누락');
                 return this.#lifetime.deleteScalar(token, flags);
             },
-            release: (token) => { if (!this.#nodes.delete(token)) throw new Error('Client Gump 반납 대상 누락'); this.#handlers.delete(token); this.#destructors.delete(token); this.#attachers.delete(token); this.#broadcasters.delete(token); this.#idlers.delete(token); this.#drawers.delete(token); },
+            release: (token) => { if (!this.#nodes.delete(token)) throw new Error('Client Gump 반납 대상 누락'); this.#handlers.delete(token); this.#destructors.delete(token); this.#attachers.delete(token); this.#broadcasters.delete(token); this.#idlers.delete(token); this.#drawers.delete(token); this.#objectGoneHandlers.delete(token); },
         });
         this.#root = this.#factory.initializeRoot(); this.resize(width, height);
     }
@@ -126,11 +126,16 @@ export class ClientGumpRoot {
         const form = host.create(2); host.setOwner(form, node.id); host.attach(form, object, 0);
         node.flags = (node.flags | 0x40) >>> 0; node.object = object; node.form = form;
     }
-    // 원본 등록 ID의 기본 가상 객체 삭제 통지를 같은 Gump 지연 삭제에 전달한다.
+    // 파생 Gump의 가상 객체 소멸 통지를 등록하거나 기본 처리로 되돌린다.
+    bindObjectGone(token, handler) {
+        this.#live(); if (!this.#nodes.has(token) || (handler !== null && typeof handler !== 'function')) throw new TypeError('Client Gump 객체 통지 토큰 또는 처리기 오류');
+        if (handler === null) this.#objectGoneHandlers.delete(token); else this.#objectGoneHandlers.set(token, handler);
+    }
+    // 원본 등록 ID의 가상 객체 삭제 통지를 현재 파생 처리기 또는 기본 Kill에 전달한다.
     objectGone(owner, object) {
         this.#live(); if (!Number.isInteger(owner) || owner < 0 || owner >= this.#create.entries.length) throw new RangeError('Client Gump 소유 등록 ID 범위');
         const token = this.#create.entries[owner]; if (!token) throw new Error('Client Gump 소유 등록 토큰 누락');
-        void object; this.#lifetime.kill(token);
+        const handler = this.#objectGoneHandlers.get(token); if (handler) handler(token, object); else this.#lifetime.kill(token);
     }
     // World보다 먼저 살아 있는 Form 부착 노드를 지우고 실제 반납을 마친다.
     releaseFormHost() {
@@ -214,7 +219,7 @@ export class ClientGumpRoot {
     discardUnregistered(token) {
         this.#live(); const node = this.#nodes.get(token);
         if (!node || node.constructor === GumpCreateNode || this.#create.entries.includes(token) || node.parent || node.child || node.next || node.previous) throw new Error('Client Gump 미등록 반납 계약');
-        this.#nodes.delete(token); this.#handlers.delete(token); this.#destructors.delete(token); this.#attachers.delete(token); this.#broadcasters.delete(token); this.#idlers.delete(token); this.#drawers.delete(token);
+        this.#nodes.delete(token); this.#handlers.delete(token); this.#destructors.delete(token); this.#attachers.delete(token); this.#broadcasters.delete(token); this.#idlers.delete(token); this.#drawers.delete(token); this.#objectGoneHandlers.delete(token);
     }
     // 임시 등록을 반환한 실제 새 루트로 공통 수명과 Client의 현재 별칭을 함께 바꾼다.
     replaceRoot(token) { this.#live(); this.#lifetime.replaceRoot(token); this.#root = token >>> 0; }
