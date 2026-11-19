@@ -289,6 +289,7 @@ test('앱 커서 고르기: 상태·화면 밖·자원 없음', () => {
         _input: { pointer: { x: 10, y: 20, inside: true } },
         _resources: { cursors: { [CURSOR_NORMAL]: {}, [CURSOR_SCROLL]: {}, [CURSOR_LINK]: {} } },
         _mainMenu: { cursorAt: () => CURSOR_LINK },
+        _campaignDisplayActive: () => false,
         ...overrides,
     });
     assert.equal(wanted({}), CURSOR_LINK);
@@ -299,6 +300,10 @@ test('앱 커서 고르기: 상태·화면 밖·자원 없음', () => {
     assert.equal(wanted({ _input: { pointer: { x: 10, y: 20, inside: false } } }), CURSOR_NORMAL);
     // 그 번호의 자원이 없으면 기본이다.
     assert.equal(wanted({ _resources: { cursors: { [CURSOR_NORMAL]: {} } } }), CURSOR_NORMAL);
+    // 미션에서는 현재 게임 커서를 쓰고 안내창이 열리면 창의 커서 선택을 유지한다.
+    assert.equal(wanted({ _campaignDisplayActive: () => true, _campaignCursor: CURSOR_SCROLL }), CURSOR_SCROLL);
+    assert.equal(wanted({ _campaignDisplayActive: () => true, _campaignCursor: 999 }), CURSOR_NORMAL);
+    assert.equal(wanted({ _campaignDisplayActive: () => true, _campaignCursor: CURSOR_SCROLL, _mainMenu: { dialog: {}, cursorAt: () => CURSOR_LINK } }), CURSOR_LINK);
     // 메뉴에는 포인터 좌표가 그대로 전달된다.
     const seen = [];
     wanted({ _mainMenu: { cursorAt: (x, y) => { seen.push([x, y]); return CURSOR_SCROLL; } } });

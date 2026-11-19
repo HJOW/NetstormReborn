@@ -60,6 +60,8 @@ import { ClientChatWindowGlobals } from './core/client-chat-window-globals.js';
 import { ClientRendererFrameGlobals } from './core/client-renderer-frame-globals.js';
 import { currentAllocationBytes } from './core/current-allocation-bytes.js';
 import { bindCampaignAiClientServices, bindCampaignClientInputServices, bindCampaignOwnershipTheme, bindCampaignProductionRefresh, captureCampaignMissionStarting, makeCampaignMissionStartEffects, runCampaignMissionStarting } from './core/campaign-client-services.js';
+import { bindCampaignUserInputServices } from './core/campaign-user-input-services.js';
+import { CampaignUserInput } from './core/campaign-user-input.js';
 import { CHAT_RECORD_BYTES, RawChatChannels } from './core/raw-chat-channels.js';
 import { RawCampaignMissionStartBindings } from './core/raw-campaign-mission-start-bindings.js';
 import { RawCampaignTutorialOneBindings } from './core/raw-campaign-tutorial-one-bindings.js';
@@ -89,7 +91,7 @@ import { CampaignSessionAssets } from './core/raw-campaign-session-owners.js';
 import { PriestPlacementAssets } from './core/priest-placement-assets.js';
 import { RawSurfaceStorage } from './core/raw-surface-storage.js';
 import { Kernel } from './core/kernel.js';
-import { bindClientKernelDiagnostics } from './core/client-diagnostics.js';
+import { bindClientKernelDiagnostics, ClientTraceGlobals, traceClientObject } from './core/client-diagnostics.js';
 import { ClientTimeSource } from './core/client-time-source.js';
 import { resetGameStorage } from './platform/reset-storage.js';
 import { createCanvasGlyphRasterizer } from './platform/glyph-rasterizer.js';
@@ -517,13 +519,13 @@ export class Netstorm {
         // Client 공통 Player·Core·Template과 Subscriber는 Session보다 오래 산다.
         this._clientSubscriber = null; this._clientGameplay = null; this._clientCoreData = null; this._clientPlayers = null; this._clientTemplates = null;
         // 자산 적재 뒤 구성해 Session보다 오래 유지하는 월드 물리와 Kernel이다.
-        this._gameAssets = null; this._surfaceStorage = null; this._clientKernel = null;
+        this._gameAssets = null; this._surfaceStorage = null; this._clientKernel = null; this._clientTrace = null;
         // 실제 미션 Guide는 자산과 장기 저장소가 준비된 뒤 생성한다.
         this._clientGuide = null; this._clientFort = null; this._clientFortName = null;
         // 원본 공통 Gump 루트와 입력 전역은 Client 수명에 보유한다.
         this._clientGump = null;
         // 설치된 GameWorld와 그 월드를 빌리는 현재 미션 세대다.
-        this._campaignWorld = null; this._campaignWorldMissionToken = 0;
+        this._campaignWorld = null; this._campaignWorldMissionToken = 0; this._campaignUserInput = null; this._campaignCursor = CURSOR_NORMAL;
         // 현재 메뉴에 표시한 미션 진행 창의 소유 수명이다.
         this._missionLoadingWindow = null;
         // init 때 저장해 둔 루트 인라인 스타일이다. destroy 가 되돌린다.
@@ -747,6 +749,7 @@ export class Netstorm {
 
     // 원본 공통 시작의 SP 초기화와 게임 시계 생성을 같은 Client 소유자로 연결한다.
     _initializeClientRuntime(hidden) {
+        this._clientTrace = new ClientTraceGlobals();
         const source = new ClientTimeSource(), random = new ClientRandomGlobals();
         const sp = new ClientSpGlobals(random, () => source.unixSeconds()); sp.store().initialize();
         const local = new ClientLocalStateGlobals(), clock = new ClientFrameClock(source, local.gameTicks());
@@ -1163,7 +1166,7 @@ export class Netstorm {
     // 현재 World의 Session을 반납하고 같은 미션 연결 대기 관문을 해제한다.
     _releaseCampaignWorld() {
         if (!this._campaignWorld) return;
-        this._campaignWorld.dispose(); this._campaignWorld = null; this._campaignWorldMissionToken = 0;
+        this._campaignWorld.dispose(); this._campaignWorld = null; this._campaignWorldMissionToken = 0; this._campaignUserInput = null; this._campaignCursor = CURSOR_NORMAL;
     }
 
     // 로그인된 현재 World와 Guide의 실제 미션 Start를 같은 Client 수명에 준비한다.
@@ -1179,6 +1182,21 @@ export class Netstorm {
         const session = world.session(), runtime = current.runtime;
         const start = new RawCampaignMissionStartBindings(session, current.script, runtime.gate, runtime.state, session.missionStartSettings(), session.missionAiSettings(), effects);
         runtime.start = start; return start;
+    }
+
+    // 같은 로그인 World의 선택·강조·운반 입력기를 현재 Client 시계와 커서에 연결한다.
+    _prepareCampaignUserInput() {
+        const world = this._campaignWorld, current = this._clientGuide?.current(), clock = this._gameClock;
+        if (!world || !current || !clock || !this._gameData || !this._clientInputQueue || this._campaignUserInput || !world.session().localConnectionReady() || this._campaignWorldMissionToken !== current.runtime.saveToken) throw new Error('미션 사용자 입력의 현재 수명 오류');
+        const missing = (name) => { throw new Error(`미션 사용자 입력의 실제 ${name} 미연결`); };
+        const client = { paused: () => clock.paused(), traceObject: (sid) => {
+            if (!this._clientTrace || !this._surfaceStorage || !this._clientGameplay) throw new Error('미션 선택의 실제 객체 진단 수명 누락');
+            traceClientObject({ surfaceStorage: () => this._surfaceStorage, gameplayGlobals: () => this._clientGameplay }, this._clientTrace, sid);
+        },
+            drawNativePathMarker: () => missing('경로 진단 표시'), presentNativeCursorClear: () => missing('커서 즉시 출력') };
+        bindCampaignUserInputServices(client, world, (number) => { this._campaignCursor = number >>> 0; this._applyCursor(); }, (section) => this._openTell(section));
+        this._campaignUserInput = new CampaignUserInput(world, this._gameData, { paused: () => clock.paused(), queue: this._clientInputQueue });
+        return this._campaignUserInput;
     }
 
     // 같은 로그인 Session과 Start에 현재 안내·시계·입력·선택 장치를 연결한다.
@@ -1286,7 +1304,7 @@ export class Netstorm {
         this._clientChatRecords = null; this._clientChatChannels = null; this._clientChatWindows = null;
         this._clientPaletteScreen = null; this._clientColorSort = null; this._clientRenderer = null; this._clientSurfaceDisplay = null; this._clientRendererFrame = null;
         this._clientTemplates = null; this._clientPlayers = null; this._clientCoreData = null; this._clientGameplay = null; this._clientSubscriber = null;
-        this._clientKernel = null; this._surfaceStorage = null; this._gameAssets = null;
+        this._clientKernel = null; this._surfaceStorage = null; this._gameAssets = null; this._clientTrace = null;
         this._missionAudioAssets?.dispose(); this._missionAudioAssets = null;
         if (this._audio) {
             // 음악을 멈추고 문맥을 닫는다. 닫기에 실패해도 정리를 막지 않는다.
@@ -2101,6 +2119,7 @@ export class Netstorm {
     _wantedCursor() {
         const pointer = this._input.pointer;
         if (this._state !== AppState.MAIN_MENU || !this._mainMenu || !this._resources || !pointer.inside) return CURSOR_NORMAL;
+        if (this._campaignDisplayActive() && !this._mainMenu.dialog) return this._resources.cursors[this._campaignCursor] ? this._campaignCursor : CURSOR_NORMAL;
         const number = this._mainMenu.cursorAt(pointer.x, pointer.y);
         return this._resources.cursors[number] ? number : CURSOR_NORMAL;
     }
@@ -2493,7 +2512,7 @@ export class Netstorm {
         // Ready인 같은 미션에 Start·Tutorial을 준비한 뒤 World 연결 관문을 연다.
         const readyWorld = this._campaignWorld;
         if (this._state === AppState.MAIN_MENU && readyWorld?.connecting && !readyWorld.session().connectionCallbackActive() && readyWorld.session().localConnectionReady()) {
-            this._prepareCampaignMissionStart(); this._prepareCampaignTutorial(); readyWorld.completeLocalConnection();
+            this._prepareCampaignMissionStart(); this._prepareCampaignUserInput(); this._prepareCampaignTutorial(); readyWorld.completeLocalConnection();
         }
         // 원본 루프 8번의 Guide를 상태·패킷 처리 뒤, 입력 처리보다 먼저 실행한다.
         this._clientGuide?.run();
