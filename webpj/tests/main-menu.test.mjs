@@ -9,13 +9,14 @@ import { MENU_ASSET_PATHS, buildMenuResources, FORT_GUMP_BLOCK } from '../www/as
 import { ShapeDatabase } from '../www/assets/shapes.js';
 import { IndexedSurface } from '../www/render/indexed-surface.js';
 import { MainMenuScreen, titlePosition } from '../www/ui/main-menu.js';
+import { CURSOR_PATHS } from '../www/ui/cursor.js';
 import { StoneButton } from '../www/ui/stone-button.js';
 import { planGumpBackground, GumpBackgroundFlags, planButtonDraw } from '../www/render/gump-visual.js';
 import { centibelsToGain, volumeStepToCentibels } from '../www/audio/audio-system.js';
 import { clientToLogical, computeLayout } from '../www/netstorm.js';
 
 // 음악을 뺀 메인 메뉴 자원 묶음을 데이터 폴더에서 만든다(검사마다 공유). (2026-10-23 WB03-M1)
-const resources = buildMenuResources(readDataMap(Object.values(MENU_ASSET_PATHS).filter((assetPath) => assetPath !== MENU_ASSET_PATHS.music)));
+const resources = buildMenuResources(readDataMap([...new Set([...Object.values(MENU_ASSET_PATHS).filter((assetPath) => assetPath !== MENU_ASSET_PATHS.music), ...Object.values(CURSOR_PATHS)])]));
 
 // 메뉴를 만들어 배치한 뒤 라벨 → 화면 사각형 표를 돌려준다. (2026-10-23 WB03-M1)
 function layoutOf(width, height, includeAllButtons) {
