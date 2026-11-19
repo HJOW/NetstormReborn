@@ -163,8 +163,11 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
             clouds: app._clientKencloud, files: data.files, config: data, random: app._clientRandom.game,
             denominator: camera.denominator(), tint: () => 0 });
         app._layout = { ...app._layout, visible: false }; redraw.value = 1; const beforePresent = renderer.presentCount;
+        // 실제 Client 트리의 기본 Gump 출력기가 같은 Renderer kind 2와 DIB를 통과한다.
+        let uiDraws = 0; gump.bindDraw(parent, (_token, target) => { uiDraws += 1; target.fill({ left: 1, top: 1, right: 5, bottom: 5 }, 241); });
         app._drawCampaignRendererFrame();
         assert.ok(renderer.presentCount > beforePresent); assert.equal(redraw.value, 0); assert.equal(renderer.cameraDirtyEntries().length, 0);
+        assert.ok(uiDraws > 0); assert.equal(app._surface.pixels[1366 + 1], 241); gump.bindDraw(parent, null);
         assert.ok(app._surface.pixels.some((value) => value !== 0));
         // 빈 지면의 구름은 지도 영역에만, UI 전용 dirty는 배경을 건드리지 않는다.
         screen.clear(fullClip, 55); drawing.collect(fullClip, 0); const sky = screen.lock();

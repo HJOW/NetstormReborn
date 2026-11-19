@@ -41,6 +41,6 @@ export class CampaignRendererDrawing {
     // 같은 dirty 표면에 현재 목록을 원본 순서로 출력한다.
     submit(pixels, pitch, height, clip) {
         const { globals, drawUi, hideBuildings = 0 } = this.#devices;
-        this.#collection.submit(pixels, pitch, height, clip, { drawUi, hideGroups: () => globals.hideGroups().value, hideBuildings });
+        this.#collection.submit(pixels, pitch, height, clip, { drawUi: drawUi && ((token) => drawUi(token, pixels, pitch, height, clip)), hideGroups: () => globals.hideGroups().value, hideBuildings });
     }
 }

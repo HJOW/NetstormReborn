@@ -38,6 +38,7 @@ import { SquidRenderer } from './render/squid-renderer.js';
 import { prepareRendererFrame } from './render/raw-renderer-prelude.js';
 import { appendRendererCloudDirty, refreshRendererCloudBackground } from './render/raw-renderer-clouds.js';
 import { CampaignRendererDrawing } from './render/campaign-renderer-drawing.js';
+import { GumpDrawState, GumpPixelTarget, setGumpDrawClip } from './render/gump-draw.js';
 import { Settings, findSettingKey, getLocalStorage } from './platform/settings.js';
 import { Progress, isProgressKey } from './platform/progress.js';
 import { reportGameError } from './platform/error-reporting.js';
@@ -1227,12 +1228,17 @@ export class Netstorm {
     // 현재 미션의 준비·DIB 합성·구름 정리·표시를 원본 순서로 한 번 실행한다.
     _drawCampaignRendererFrame() {
         const world = this._campaignWorld, screen = this._clientPaletteScreen, renderer = this._clientRenderer;
-        const clouds = this._clientKencloud, game = this._clientGameplay, data = this._gameData;
-        if (!world || world.connecting || !screen || !renderer || !clouds || !game || !data || !this._clientRendererFrame || !this._clientRandom) throw new Error('미션 Renderer 출력의 현재 장치 수명 오류');
+        const clouds = this._clientKencloud, game = this._clientGameplay, data = this._gameData, gump = this._clientGump;
+        if (!world || world.connecting || !screen || !renderer || !clouds || !game || !data || !gump || !this._clientRendererFrame || !this._clientRandom) throw new Error('미션 Renderer 출력의 현재 장치 수명 오류');
         const camera = game.camera();
         const drawing = new CampaignRendererDrawing({ world, screen, camera: camera.snapshot(), globals: this._clientRendererFrame,
             clouds, files: data.files, config: data, random: this._clientRandom.game, denominator: camera.denominator(),
-            tint: () => { throw new Error('미션 날씨색 장치 미연결'); }, hideBuildings: () => game.hideBuildings().value });
+            tint: () => { throw new Error('미션 날씨색 장치 미연결'); }, hideBuildings: () => game.hideBuildings().value,
+            uiCollect: (view, output, limit) => gump.collection().collect(view, output, limit),
+            drawUi: (token, pixels, pitch, height, clip) => {
+                const state = new GumpDrawState(); setGumpDrawClip(state, clip);
+                gump.draw(token, state, new GumpPixelTarget(pixels, pitch, height, state));
+            } });
         this._prepareCampaignRendererFrame(); screen.setClip(0, 0, screen.width, screen.height);
         const pixels = screen.lock();
         try { renderer.draw(pixels, screen.pitch, 0, drawing); } finally { screen.unlock(); }
