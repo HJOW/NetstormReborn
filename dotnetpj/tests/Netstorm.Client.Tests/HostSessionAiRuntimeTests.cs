@@ -12,8 +12,8 @@ namespace Netstorm.Client.Tests;
 public sealed class HostSessionAiRuntimeTests
 {
     /// <summary>실제 자료로 장면을 만든다. 적재·틱 없이 풀은 비워 둔다.</summary>
-    /// <returns>세션이다. TYPE 표는 세션 장치와 같은 인스턴스다.</returns>
-    private static HostSession BuildScene()
+    /// <returns>세션과 같은 실제 TYPE 표다.</returns>
+    private static (HostSession Session, IReadOnlyList<OriginalTypeRecord> Types) BuildScene()
     {
         string? data = GameDataLocator.FindDataDirectory();
         Assert.NotNull(data);
@@ -34,7 +34,7 @@ public sealed class HostSessionAiRuntimeTests
             Assertion = _ => { },
         });
         session.BuildRegionOwnershipDevices(table.Types, () => 1u);
-        return session;
+        return (session, table.Types);
     }
 
     /// <summary>값을 리틀 엔디언으로 바이트에 쓴다. 0.650에서 추가했다.</summary>
@@ -60,7 +60,7 @@ public sealed class HostSessionAiRuntimeTests
     [Fact]
     public void AiRuntimeDevicesAreBuilt()
     {
-        HostSession session = BuildScene();
+        (HostSession session, _) = BuildScene();
         Assert.NotNull(session.AiPreparation);
         Assert.NotNull(session.AiStrategySetup);
         Assert.NotNull(session.AiObjects);
@@ -72,7 +72,7 @@ public sealed class HostSessionAiRuntimeTests
     [Fact]
     public void PrepareAndInitializeWithoutBrainReturnFalse()
     {
-        HostSession session = BuildScene();
+        (HostSession session, _) = BuildScene();
         Assert.False(session.PrepareAi(2));
         Assert.False(session.InitializeAi(2));
         Assert.Empty(session.AiRuntimeDiagnostics);
@@ -82,7 +82,7 @@ public sealed class HostSessionAiRuntimeTests
     [Fact]
     public void PrepareAiRunsUpdateAndScan()
     {
-        HostSession session = BuildScene();
+        (HostSession session, _) = BuildScene();
         uint brain = PrepareBrain(session, 1);
         // 소유자·0번 기록의 지역을 없음으로 두어 지역 경계 조회를 피한다.
         Put(session.PlayerRecords, 1 * 180 + 0x78, 127u);
@@ -96,7 +96,7 @@ public sealed class HostSessionAiRuntimeTests
     [Fact]
     public void PrepareAiAddsWalletDelta()
     {
-        HostSession session = BuildScene();
+        (HostSession session, _) = BuildScene();
         uint brain = PrepareBrain(session, 1);
         Put(session.PlayerRecords, 1 * 180 + 0x78, 127u);
         Put(session.PlayerRecords, 0 * 180 + 0x78, 127u);
@@ -116,7 +116,7 @@ public sealed class HostSessionAiRuntimeTests
     [Fact]
     public void SelectGoalUsesMapLimit()
     {
-        HostSession session = BuildScene();
+        (HostSession session, _) = BuildScene();
         uint brain = PrepareBrain(session, 1);
         Put(session.AiBrainMemory.Bytes(brain), 0x2d0, 0u);
         Put(session.AiBrainMemory.Bytes(brain), 0x2d8, 0u);
@@ -129,11 +129,39 @@ public sealed class HostSessionAiRuntimeTests
         Assert.Equal(4u, BinaryPrimitives.ReadUInt32LittleEndian(session.AiBrainMemory.Bytes(brain).AsSpan(0x2d4, 4)));
     }
 
+    /// <summary>신전이 있으면 그래프 번호를 읽는다. 표면 타입은 자신의 raw 번호를 쓴다.</summary>
+    [Fact]
+    public void PrepareAiReadsTempleGraph()
+    {
+        (HostSession session, IReadOnlyList<OriginalTypeRecord> types) = BuildScene();
+        types[40].Flags1 |= 0x800u;
+        int temple = session.Pool.Allocate(SidAllocation.Client);
+        session.Pool.AllocatedBytes(temple).Fill(0);
+        session.Pool.AllocatedBytes(temple)[10] = 40;
+        session.Pool.AllocatedBytes(temple)[34] = 0;
+        session.Pool.AllocatedBytes(temple)[30] = 5;
+        for (int i = 0; i < 4; i++)
+        {
+            session.AiIslands.Add(1, unchecked((byte)i));
+        }
+
+        session.AiIslands.Temple(3, unchecked((uint)temple));
+        Put(session.PlayerRecords, 1 * 180 + 0x78, 3u);
+        Put(session.PlayerRecords, 2 * 180 + 0x78, 127u);
+        Put(session.PlayerRecords, 0 * 180 + 0x78, 127u);
+        uint brain = PrepareBrain(session, 1);
+        Put(session.AiBrainMemory.Bytes(brain), 0x260, 1u);
+        Put(session.AiBrainMemory.Bytes(brain), 0x264, 2u);
+        Assert.True(session.PrepareAi(1));
+        Assert.Equal(5u, BinaryPrimitives.ReadUInt32LittleEndian(session.AiBrainMemory.Bytes(brain).AsSpan(0x298, 4)));
+        Assert.Equal(0u, BinaryPrimitives.ReadUInt32LittleEndian(session.AiBrainMemory.Bytes(brain).AsSpan(0x2a8, 4)));
+    }
+
     /// <summary>양쪽 지역이 없으면 초기는 258을 쓰지 않고 거짓으로 돌아간다.</summary>
     [Fact]
     public void InitializeAiSkipsWithoutRegions()
     {
-        HostSession session = BuildScene();
+        (HostSession session, _) = BuildScene();
         uint brain = PrepareBrain(session, 1);
         Put(session.PlayerRecords, 1 * 180 + 0x78, 127u);
         Assert.False(session.InitializeAi(1));
@@ -144,7 +172,7 @@ public sealed class HostSessionAiRuntimeTests
     [Fact]
     public void PrepareAiWritesEnemyBoundsCenter()
     {
-        HostSession session = BuildScene();
+        (HostSession session, _) = BuildScene();
         uint brain = PrepareBrain(session, 1);
         Put(session.PlayerRecords, 1 * 180 + 0x78, 3u);
         Put(session.PlayerRecords, 2 * 180 + 0x78, 4u);
@@ -167,7 +195,7 @@ public sealed class HostSessionAiRuntimeTests
     [Fact]
     public void InitializeAiWritesHomeBoundsAndFlag()
     {
-        HostSession session = BuildScene();
+        (HostSession session, _) = BuildScene();
         int technology = session.Pool.Allocate(SidAllocation.Client);
         session.Pool.AllocatedBytes(technology).Fill(0);
         Put(session.PlayerRecords, 1 * 180 + 0x78, 3u);

@@ -2935,6 +2935,15 @@ public sealed partial class HostSession
     /// <remarks>2026-11-19 0.653에서 추가했다. 지역 경계 조회가 같은 저장소를 공유한다.</remarks>
     private RawIslandRuntime? _aiIslands;
 
+    /// <summary>AI 그래프 조회 본체다. BuildAiRuntimeDevices로 연결하기 전에는 null이다.</summary>
+    /// <remarks>2026-11-19 0.657에서 추가했다. 준비·전략의 그래프 번호 조회가 같은 풀·표면을 공유한다.</remarks>
+    private RawAiGraph? _aiGraph;
+
+    /// <summary>AI 그래프 조회 본체를 빌려준다. 연결하기 전에는 예외다.</summary>
+    /// <returns>같은 풀·표면의 그래프 조회 본체다.</returns>
+    /// <remarks>2026-11-19 0.657에서 추가했다. L1에서 그래프 번호를 대조할 때 쓴다.</remarks>
+    public RawAiGraph AiGraph => _aiGraph ?? throw new InvalidOperationException("AI 그래프 조회 미연결");
+
     /// <summary>AI 통지·실행시간 로그 기록이다. 화면 로그 UI는 R6에서 잇는다.</summary>
     /// <remarks>2026-11-19 0.650에서 추가했다. L1에서 통지·느린 틱 순서를 대조할 때 쓴다.</remarks>
     private readonly List<string> _aiRuntimeLogs = [];
@@ -3008,11 +3017,11 @@ public sealed partial class HostSession
     /// <param name="types">같은 실제 TYPE 표다. 지형 Pop 장치와 같은 인스턴스여야 한다.</param>
     /// <exception cref="InvalidOperationException">AI 런타임의 화신·공장·프로세스·해시 장치가 미연결이다.</exception>
     /// <exception cref="ArgumentException">AI 런타임 TYPE이 지형 Pop 장치와 다르다.</exception>
-    /// <remarks>2026-11-19 0.650에서 R4-5 AI 런타임 결선용으로 추가했다. 근거: cpppj src/client/RawCampaignSession.cpp 2831~2870행의 통지·등록 조립과 2937~2943행의 전체 프레임 조립이다. 수집자·시설·부족스캔·사제·배치·다리·운반·경제·그래프·신전생산은 R6에서 잇는다. 분산 SP·자금·지도상한은 0.654에서 실제 저장소·독립 기본값으로 이었다. 지역 경계는 0.653에서 같은 섬 런타임으로 이었다. 매 프레임 호출도 R6 틱 결선에서 잇는다.</remarks>
+    /// <remarks>2026-11-19 0.650에서 R4-5 AI 런타임 결선용으로 추가했다. 근거: cpppj src/client/RawCampaignSession.cpp 2831~2870행의 통지·등록 조립과 2937~2943행의 전체 프레임 조립이다. 수집자·시설·부족스캔·사제·배치·다리·운반·경제·신전생산은 R6에서 잇는다. 분산 SP·자금·지도상한은 0.654에서 실제 저장소·독립 기본값으로 이었다. 지역 경계는 0.653에서 같은 섬 런타임으로, 그래프 조회는 0.657에서 같은 풀·표면으로 이었다. 매 프레임 호출도 R6 틱 결선에서 잇는다.</remarks>
     private void BuildAiRuntimeDevices(IReadOnlyList<OriginalTypeRecord> types)
     {
         ArgumentNullException.ThrowIfNull(types);
-        if (_aiPreparation is not null || _aiStrategySetup is not null || _aiObjects is not null || _aiWorld is not null || _aiRuntime is not null)
+        if (_aiPreparation is not null || _aiStrategySetup is not null || _aiObjects is not null || _aiWorld is not null || _aiRuntime is not null || _aiGraph is not null)
         {
             throw new InvalidOperationException("AI 런타임 장치 중복 연결");
         }
@@ -3041,6 +3050,15 @@ public sealed partial class HostSession
             Assertion = text => _aiRuntimeDiagnostics.Add("island:" + text),
         });
         _aiIslands = islands;
+        var graph = new RawAiGraph(Pool, types, hash.BorrowEntries(0), new AiGraphHooks
+        {
+            GraphReady = () => _worldGraph is not null,
+            FenceType = () => _fenceMarkerType.Value,
+            WindArcherType = () => unchecked((uint)FindTypeByName(types, "windArcher")),
+            GraphAssertion = (a, b, c) => _aiRuntimeDiagnostics.Add("graph:" + a + ":" + b + ":" + c),
+            Contained = _aiFinderState,
+        });
+        _aiGraph = graph;
         var preparation = new RawAiPreparation(AiBrainMemory, Pool, PlayerRecords, Alliances,
             new AiPreparationGlobals
             {
@@ -3061,7 +3079,7 @@ public sealed partial class HostSession
                     double dx = source[0] - target[0], dy = source[1] - target[1];
                     return Math.Sqrt(dx * dx + dy * dy);
                 },
-                Graph = _ => throw new InvalidOperationException("AI 준비 그래프 조회 미연결(R6)"),
+                Graph = sid => (_aiGraph ?? throw new InvalidOperationException("AI 그래프 조회 미연결")).GraphFor(sid),
                 RegionBounds = region => AiRegionBounds(islands, region),
                 StoredSp = owner => BitConverter.UInt32BitsToSingle(Sp.Get(owner)),
                 AddLocalSp = delta => (_fortHp ?? throw new InvalidOperationException("AI 준비 로컬 SP 보상 미연결")).AddSp(MissionPlayer.BattleOwner, delta),
