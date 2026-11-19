@@ -680,6 +680,8 @@ export class Netstorm {
         this._clientGuide = new ClientCampaignGuide(this._gameData, this._clientGameplay, this._clientPlayers, this._surfaceStorage);
         this._clientFortName = new ClientFortCurrentName(this._clientFort, this._clientTemplates, this._gameData, this._clientGameplay, this._surfaceStorage,
             { refreshTitle: () => this._refreshFortWindowTitle(), assertion: (line) => console.error(`Fort 현재 이름 원본 진단: ${line}`) });
+        this._clientGuide.bindTutorialInit({ templates: this._clientTemplates, local: this._clientLocal, subscriber: this._clientSubscriber, types: this._gameAssets.typeTable,
+            selectFort: (name) => { this._selectCampaignFort(name); const bytes = this._clientFort.currentBytes(); return decodeWindows1252(bytes.subarray(0, bytes.indexOf(0))); } });
     }
 
     // 현재 Fort·Guide·설정으로 원본 창 제목을 계산해 실제 문서에 적용한다.
@@ -710,10 +712,10 @@ export class Netstorm {
         const clock = this._gameClock, random = this._clientRandom, sp = this._clientSp, local = this._clientLocal;
         const subscriber = this._clientSubscriber, gameplay = this._clientGameplay, coreData = this._clientCoreData, players = this._clientPlayers, templates = this._clientTemplates;
         if (!clock || !random || !sp || !local || !subscriber || !gameplay || !coreData || !players || !templates) throw new Error('캠페인의 실제 Client 공통 수명 미설치');
-        const surface = this._surfaceStorage, kernel = this._clientKernel;
+        const surface = this._surfaceStorage, kernel = this._clientKernel, request = this._clientGuide?.fortRequest();
         return { randomGlobals: random, spGlobals: sp, localStateGlobals: local, subscriberGlobals: subscriber, gameplayGlobals: gameplay, coreDataGlobals: coreData,
             playerRecords: players, templateStorage: templates, ...(surface && kernel ? { surfaceStorage: surface, processKernel: kernel } : {}),
-            ...(this._clientGuide ? { missionRestrictions: this._clientGuide.restrictions() } : {}),
+            ...(this._clientGuide ? { missionRestrictions: this._clientGuide.restrictions(), missionOptions: gameplay.battleOptionsOwner() } : {}), ...(request ? { missionFortRequest: request } : {}),
             unixSeconds: () => clock.unixSeconds(), frameTime: () => clock.time(), paused: () => clock.paused() };
     }
 

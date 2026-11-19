@@ -4,14 +4,14 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-19, 마지막 단위 WB04-E885)
+### 0.1 현재 값 (2026-11-19, 마지막 단위 WB04-E886)
 
 | 항목 | 현행 상태 |
 | --- | --- |
 | 실행·플레이 | 브라우저에서 ‘클릭하여 시작’, 메인 메뉴·캠페인/데모 목록·도움말·옵션·Credits와 개발용 지형 미리보기가 동작한다. Node 통합 검사에서 실제 Fort로 Session을 적재하고 내부 Login·Start·일부 이동과 건설을 확인했다. 브라우저의 `MissionBegin`·`StartDemo`에서 실제 월드로 들어가 플레이하는 기능은 미연결이다. |
 | 원본과의 동일성 | 영어 4:3 메뉴 M1 8장면은 cpppj 오라클과 알려진 구름 배경 등 차이 영역 밖에서 픽셀 차이 0이다. 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다. 실제 미션 L2·L3·L4, 자연 완주는 미검증이다. |
-| 현재 작업 | **M2의 4-D 진행 중.** 앱의 공통 시계·난수·SP·Player·Template·월드 저장소와 Guide 생성/반납을 연결하고 독립 Session 적재를 확인했다. E885에서 실제 Client Fort 이름·Template·설정·문서 제목을 연결했다. Guide Init·지연 로드·앱 메뉴/Kernel 프레임, 원본 이름 관측 나머지 836행 및 Tutorial1 L2가 남았다. [앱 소유자](docs/webpj-app-world-storage-20261119.md) · [Guide](docs/webpj-app-campaign-guide-20261119.md) · [Fort 이름](docs/webpj-client-fort-name-20261119.md) · [Tutorial1 프레임 차이](docs/webpj-campaign-ownership-theme-20261119.md) |
-| 전체 회귀 | E885 Node v26.13.0 전체 6,434건, E883 Node v22.23.3 전체 6,429건 통과(실패·취소·건너뜀 0). E885 집중·연관 Node 검사 81건과 Chromium 2건 통과. HJOW-Athlon의 작업 단위 주기: v26 0/4, v22 2/8. fixture 831개 해시·파일 불일치/누락 0; 전체 Git 이력 재조회는 중단하고 이번 본체의 변경 여부와 대응표는 별도 확인했다. |
+| 현재 작업 | **M2의 4-D 진행 중.** 앱의 공통 시계·난수·SP·Player·Template·월드 저장소와 Guide 생성/반납을 연결하고 독립 Session 적재를 확인했다. E886에서 실제 Client의 Tutorial Init과 Fort 요청을 결합하고 Session 로컬 로그인까지 검사했다. 앱 메뉴/Kernel 프레임의 지연 요청 소비, 원본 이름 관측 나머지 836행 및 Tutorial1 L2가 남았다. [Tutorial Init](docs/webpj-app-tutorial-init-20261119.md) [앱 소유자](docs/webpj-app-world-storage-20261119.md) · [Guide](docs/webpj-app-campaign-guide-20261119.md) · [Fort 이름](docs/webpj-client-fort-name-20261119.md) · [Tutorial1 프레임 차이](docs/webpj-campaign-ownership-theme-20261119.md) |
+| 전체 회귀 | E885 Node v26.13.0 전체 6,434건, E883 Node v22.23.3 전체 6,429건 통과(실패·취소·건너뜀 0). E886 집중 Node 검사 5건, 연관 검사 38건과 Chromium 1건 통과. HJOW-Athlon의 작업 단위 주기: v26 1/4, v22 3/8. fixture 831개 해시·파일 불일치/누락 0; 전체 Git 이력 재조회는 중단하고 이번 본체의 변경 여부와 대응표는 별도 확인했다. |
 | 브라우저 검사 | 2026-11-17 Chromium 2/2. 갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체 확인. 최초 실행·진행 잠금/체크 및 저장 재실행은 E616에서 별도 Chromium 2/2로 확인했다. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
 
 **미션 식별.** 이전 공통 fixture의 `thewarbegins.fort`는 캠페인 1-1이다. 실제 `tutorial1`이 선택하는 Fort는 `BridgeTheGap`이며, 지형·섬을 E753에서 다시 대조했다. [미션명 정정](docs/webpj-session-login-shipped-forts-20261118.md) · [Tutorial1 지형 재검증](docs/webpj-tutorial1-terrain-recheck-20261118.md)
