@@ -218,9 +218,9 @@ test('외부 서비스 기능: 구 검증·진단·외부 실행·서버 전송�
     // 미연결 대화상자 명령은 안내만 한다(창·명령·팁 처리 없음).
     const calls = [];
     const dialog = { _openTell: (name) => calls.push(name), _runScriptCommand: () => calls.push('script'), _runTellTip: () => calls.push('tip') };
-    for (const name of ['TechnicalHelp', 'Zsend', 'StartDemo', 'MissionBegin']) Netstorm.prototype._runDialogCommand.call(dialog, { name, argument: 'x' });
+    for (const name of ['TechnicalHelp', 'Zsend', 'StartDemo']) Netstorm.prototype._runDialogCommand.call(dialog, { name, argument: 'x' });
     assert.deepEqual(calls, []);
-    assert.equal(info.mock.callCount(), 4);
+    assert.equal(info.mock.callCount(), 3);
     // `$Zsend`/`$Input` 지시문은 버튼·목록 행을 만들지 않고 미지원으로 알린다(구 서버 전송·입력 창 미구현).
     const unsupported = [];
     const content = prepareDialogContent('<h2>Server</h2>\n$Zsend=Send,Zsend,47\n$Input=Name,Config,name\n$Button=OK,Tell,Blank\n', { substitute: (text) => text, hooks: { onUnsupported: (what) => unsupported.push(what) } });

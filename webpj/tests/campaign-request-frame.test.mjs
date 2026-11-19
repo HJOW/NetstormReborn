@@ -86,12 +86,21 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
     app._canvas = {}; app._render = () => {}; app._startFrameLoop = () => {}; app._applyCursor = () => {};
     const guide = app._clientGuide;
     try {
-        guide.begin('Tutorial1');
+        // 실제 Campaign 목록의 Early Missions와 첫 Tutorial 행을 눌러 Guide를 시작한다.
+        app._setState(AppState.MAIN_MENU); assert.equal(app._openTell('UCampaign'), true);
+        const campaignPoint = app._mainMenu.controlPoint('Early Missions'); assert.ok(campaignPoint);
+        app._mainMenu.pointerDown(campaignPoint.x, campaignPoint.y);
+        const firstMission = app._mainMenu.dialog.menu.items.find((item) => item.command?.name === 'MissionBegin' && item.command.argument === 'Tutorial1');
+        assert.ok(firstMission); const missionPoint = app._mainMenu.controlPoint(firstMission.label); assert.ok(missionPoint);
+        app._mainMenu.pointerDown(missionPoint.x, missionPoint.y); assert.ok(guide.current());
+        const startedRuntime = guide.current().runtime;
+        assert.equal(app._beginCampaignFromDialog('Tutorial2'), false); assert.equal(app._beginCampaignFromDialog('Tutorial1'), false);
+        assert.equal(guide.current().runtime, startedRuntime);
         assert.ok(guide.current().script.section('A.').includes('NetStorm!')); assert.equal(app._openTell('A.'), true);
         assert.ok(app._mainMenu.dialog); app._mainMenu.setDialog(null);
         guide.run(); guide.run();
         const request = guide.fortRequest(); assert.equal(request.fort, 'BridgeTheGap'); assert.equal(guide.pending().pending(), true);
-        app._setState(AppState.MAIN_MENU); app._onFrame(0);
+        app._onFrame(0);
         assert.equal(request.consumed, false); assert.equal(guide.pending().pending(), true); assert.ok(app._clientSoundPrepare);
         await app._clientSoundPrepare; app._onFrame(16);
         assert.equal(request.consumed, true); assert.equal(guide.pending().pending(), false);
