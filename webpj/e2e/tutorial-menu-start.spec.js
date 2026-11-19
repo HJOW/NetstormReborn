@@ -217,3 +217,28 @@ for (let number = 3; number <= 6; number += 1) {
     expect(errors).toEqual([]);
   });
 }
+
+// 첫 일반 캠페인 미션도 실제 목록에서 열고 World를 진행한다.
+test('캠페인 목록에서 TheWarBegins 월드와 안내를 표시한다', async ({ page }) => {
+  const errors = []; page.on('pageerror', (error) => errors.push(error.message));
+  await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } })));
+  await page.setViewportSize({ width: 1280, height: 720 }); await page.goto('/');
+  await page.waitForFunction(() => window.netstorm?.state === 'clickToStart'); await page.locator('canvas').click();
+  await page.waitForFunction(() => window.netstorm?.state === 'mainMenu');
+  await clickLabel(page, 'Campaign'); await clickLabel(page, 'Struggle For Freedom');
+  const label = await page.evaluate(() => window.netstorm._mainMenu.dialog.menu.items.find((item) => item.command?.name === 'MissionBegin' && item.command.argument === 'TheWarBegins')?.label);
+  expect(label).toBeTruthy(); await clickLabel(page, label);
+  await page.waitForFunction(() => window.netstorm?._campaignDisplayActive() && window.netstorm._clientGuide.current()?.runtime.gate.started === 1, null, { timeout: 50000 });
+  await page.waitForFunction(() => Boolean(window.netstorm._mainMenu.dialog), null, { timeout: 15000 });
+  expect(await page.evaluate(() => window.netstorm._clientGuide.current().script.name.toLowerCase())).toBe('thewarbegins');
+  // 원본 브리핑 페이지를 닫고 실시간 월드 진행을 관찰한다.
+  for (let pageIndex = 0; pageIndex < 8; pageIndex += 1) {
+    const button = await page.evaluate(() => window.netstorm._mainMenu.dialog?.buttons.at(-1)?.label ?? null);
+    if (button === null) break;
+    await clickLabel(page, button);
+  }
+  await page.waitForFunction(() => !window.netstorm._gameClock.paused(), null, { timeout: 15000 });
+  const started = await page.evaluate(() => window.netstorm._gameClock.time().game);
+  await page.waitForFunction((before) => window.netstorm._gameClock.time().game >= before + 12, started, { timeout: 30000 });
+  expect(errors).toEqual([]);
+});
