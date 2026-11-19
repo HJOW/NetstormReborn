@@ -25077,16 +25077,21 @@
       "required": true,
       "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial1 실행",
       "consumers": [
-        "webpj/tests/cpp-oracle-tutorial1.test.mjs"
+        "webpj/tests/cpp-oracle-tutorial1.test.mjs",
+        "webpj/tests/raw-campaign-session-load.test.mjs"
       ],
       "modules": [
-        "webpj/www/core/session-state-dump.js"
+        "webpj/www/core/session-state-dump.js",
+        "webpj/www/core/raw-campaign-session.js",
+        "webpj/www/core/raw-surface-world.js"
       ],
       "unit": "WB04-E869",
       "doc": "docs/webpj-tutorial1-cpp-oracle-20261119.md",
       "cpppjSources": [
         "cpppj/src/client/SessionStateDump.cpp",
-        "cpppj/src/app/main.cpp"
+        "cpppj/src/app/main.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp",
+        "cpppj/src/client/RawSurfaceWorld.cpp"
       ],
       "scope": "90프레임 실제 Session 덤프",
       "text": true,
@@ -25097,7 +25102,9 @@
       "webCommit": "3cf7e97fa",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "c91d9b849",
-        "cpppj/src/app/main.cpp": "382ec33fe"
+        "cpppj/src/app/main.cpp": "382ec33fe",
+        "cpppj/src/client/RawCampaignSession.cpp": "382ec33fe",
+        "cpppj/src/client/RawSurfaceWorld.cpp": "c102cdbf3"
       }
     },
     {

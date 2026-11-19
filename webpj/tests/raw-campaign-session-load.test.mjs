@@ -2,6 +2,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
+import fs from 'node:fs';
+import path from 'node:path';
 import { RawCampaignSession } from '../www/core/raw-campaign-session.js';
 import { synchronizeProductionControlContents } from '../www/core/client-production-sync.js';
 import { runClientBridgeDecay } from '../www/core/client-bridge-decay.js';
@@ -76,7 +78,7 @@ import { GunProcess } from '../www/core/raw-gun-process.js';
 import { findAttachedProcess } from '../www/core/raw-wind-aviary-process.js';
 import { RawPathProcess } from '../www/core/raw-path-process.js';
 import { realCaptureAssets } from './capture-assets-support.mjs';
-import { loadOriginalForts, readData } from './helpers.mjs';
+import { loadOriginalForts, readData, REPO_ROOT } from './helpers.mjs';
 
 // 보호된 실제 TYPE·SHP·팔레트와 TheWarBegins Fort를 읽는다.
 const data = realCaptureAssets(), game = new GameAssets(data.table, data.database, GamePalette.parse(readData('d/GIFCLOUD.COL')));
@@ -1321,6 +1323,39 @@ test('CampaignSession Tutorial1: BridgeTheGap 실제 Session 지형', () => {
                 assert.deepEqual([actual.island, side(actual.side), Array.from(actual.record), actual.ordinal], [expected.island, side(expected.side), Array.from(expected.record), expected.ordinal], `${x},${y}`);
             }
         }
+    } finally { s.dispose(); }
+});
+
+// 같은 Tutorial1의 웹 적재 지형과 cpppj 90프레임 월드 원문에서 TYPE·좌표 비트·영역을 비교하고 프레임 차이는 따로 보고한다.
+test('CampaignSession Tutorial1: cpppj 오라클의 실제 지형 객체와 영역', (t) => {
+    const source = loadOriginalForts(archive).find((item) => item.source.toLowerCase() === 'tarc:\\d\\bridgethegap.fort');
+    const input = parseFort(source.bytes, createFortTypes(TypeTable.fromArchive(archive, decodeOriginalText)));
+    const fixture = path.join(REPO_ROOT, 'webpj', 'tests', 'fixtures', 'cpppj', 'candidate-225553df', 'tutorial1', 'oracle', 'tutorial1', 'load.tsv');
+    const lines = fs.readFileSync(fixture, 'utf8').replaceAll('\r\n', '\n').split('\n');
+    const slots = new Map(), expected = new Map();
+    // cpppj 덤프의 현재 슬롯 이미지를 SID로 찾아 자산 행의 영역 WORD를 함께 읽는다.
+    for (const line of lines) {
+        const cells = line.split('\t');
+        if (cells[0] === 'slot') slots.set(Number(cells[1]), Buffer.from(cells[2], 'hex'));
+        if (cells[0] === 'object' && (cells[2] === '97' || cells[2] === '121')) {
+            const raw = slots.get(Number(cells[1])); assert.ok(raw);
+            const key = `${cells[2]}:${cells[6]}:${cells[7]}:${raw.readUInt16LE(8)}`;
+            assert.equal(expected.has(key), false); expected.set(key, Number(cells[5]));
+        }
+    }
+    const { s } = scene({ missionName: 'BridgeTheGap', sound: { playOnceAt: () => {} } }, input);
+    try {
+        s.load(); const pool = s.core().pool, actual = new Map();
+        // 같은 웹 Session의 지면·가장자리 객체를 현재 풀 이미지에서 읽는다.
+        for (const item of s.world().objects()) {
+            const raw = pool.slot(item.sid); if (raw[10] !== 97 && raw[10] !== 121) continue;
+            const view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
+            const key = `${raw[10]}:${view.getUint32(14, true)}:${view.getUint32(18, true)}:${view.getUint16(8, true)}`;
+            assert.equal(actual.has(key), false); actual.set(key, view.getUint32(36, true));
+        }
+        assert.equal(expected.size, 763); assert.deepEqual([...actual.keys()].sort(), [...expected.keys()].sort());
+        const differences = [...actual].filter(([key, frame]) => frame !== expected.get(key));
+        t.diagnostic(`지형 프레임 차이 ${differences.length}개; 예: ${differences.slice(0, 3).map(([key, frame]) => `${key} 웹=${frame} cpppj=${expected.get(key)}`).join(', ')}`);
     } finally { s.dispose(); }
 });
 
