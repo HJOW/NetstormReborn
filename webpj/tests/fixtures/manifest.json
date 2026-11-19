@@ -25260,6 +25260,37 @@
         "cpppj/src/client/UberRootGump.cpp": "52cfee23d",
         "cpppj/src/client/UberRootGump.h": "52cfee23d"
       }
+    },
+    {
+      "id": "sound-spatial",
+      "path": "cpppj/tests/fixtures/soundplay-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "producer": "원본 PE 소리 위치 계산의 독립 관측(창·오디오 장치 실행 없음)",
+      "consumers": [
+        "webpj/tests/sound-spatial.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/audio/sound-spatial.js"
+      ],
+      "unit": "WB04-E960",
+      "doc": "docs/webpj-sound-spatial-20261119.md",
+      "cpppjSources": [
+        "cpppj/src/client/Sound.cpp",
+        "cpppj/src/client/Sound.h"
+      ],
+      "scope": "10.78 화면 투영 399행·위치 판정/좌우/음량 3360행. 재생 장치 Script와 다른 판본은 후속",
+      "text": true,
+      "sha256": "b2e2d5ad3a065fcd1659920e7ebf104610a298da91a47828ab74fd895e860861",
+      "bytes": 1934351,
+      "lines": 14479,
+      "fixtureCommit": "238ce2343",
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/Sound.cpp": "d445a5d04",
+        "cpppj/src/client/Sound.h": "d445a5d04"
+      }
     }
   ]
 }
