@@ -8,6 +8,11 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 import { FrameCodeTable } from '../www/assets/terrain-tiles.js';
+import { bindCampaignProductionRefresh } from '../www/core/campaign-client-services.js';
+import { GumpCreateNode, GumpCreateState } from '../www/ui/gump-create.js';
+import { GumpLifetimeState } from '../www/ui/gump-lifetime.js';
+import { GumpEventState, GumpEvents } from '../www/ui/gump-events.js';
+import { GumpInputState, GumpInput } from '../www/ui/gump-input.js';
 import { BridgeConnectState } from '../www/core/raw-bridge-connect.js';
 import { AssetPostPopState } from '../www/core/raw-asset-post-pop-state.js';
 import { RawCampaignOwnership } from '../www/core/raw-campaign-ownership.js';
@@ -93,6 +98,24 @@ test('RawCampaignOwnership: 같은 Core 와 첫 지역 — 신전 가상 소유�
     assert.equal(scene.modes.playerRegions[2], 127);
     assert.equal(get(scene.players, STRIDE + TEMPLE), sid);
     assert.equal(get(scene.players, STRIDE + REGION), 127);
+});
+
+// 실제 신전 소유권 변경과 PostPop 효과가 같은 Gump 입력의 숨김 포함·캡처 우선 경로를 쓴다.
+test('CampaignClient 생산 갱신: 신전 소유권과 PostPop이 같은 실제 Gump 입력을 사용한다', () => {
+    const create = new GumpCreateState(), life = new GumpLifetimeState(), nodes = new Map([[1, new GumpCreateNode()], [2, new GumpCreateNode()]]);
+    create.entries[0] = 1; nodes.get(1).child = 2; nodes.get(2).parent = 1;
+    const calls = [], handle = (token, event, first, second) => { calls.push([token, event, first, second]); return 1; };
+    const hooks = { node: (token) => nodes.get(token), filter: () => true, handle };
+    const events = new GumpEvents(create, life, new GumpEventState(), {}, hooks);
+    const input = new GumpInput(create, life, new GumpInputState(), {}, events, hooks);
+    const services = {}; bindCampaignProductionRefresh(input, services);
+    assert.equal(services.ownership.refreshProduction, services.assets.postPop.refreshProduction);
+    const scene = makeScene(); scene.effects.refreshProduction = services.ownership.refreshProduction;
+    const sid = scene.world.create(WIND_TEMPLE); bind(scene).setOwner(sid, 1);
+    assert.deepEqual(calls, [[2, 0x02000003, 0, 0]]);
+    calls.length = 0; input.capture(1); services.assets.postPop.refreshProduction();
+    assert.deepEqual(calls, [[1, 0x02000003, 0, 0]]); assert.equal(life.focus, 0);
+    assert.throws(() => bindCampaignProductionRefresh(null, {}), /Gump 입력/);
 });
 
 test('RawCampaignOwnership: 신전이 아닌 가상 표는 상위 분배기에 전달하고 신전 Owner 를 건드리지 않는다', () => {

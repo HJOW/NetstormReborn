@@ -4,14 +4,14 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-19, 마지막 단위 WB04-E874)
+### 0.1 현재 값 (2026-11-19, 마지막 단위 WB04-E875)
 
 | 항목 | 현행 상태 |
 | --- | --- |
 | 실행·플레이 | 브라우저에서 ‘클릭하여 시작’, 메인 메뉴·캠페인/데모 목록·도움말·옵션·Credits와 개발용 지형 미리보기가 동작한다. Node 통합 검사에서 실제 Fort로 Session을 적재하고 내부 Login·Start·일부 이동과 건설을 확인했다. 브라우저의 `MissionBegin`·`StartDemo`에서 실제 월드로 들어가 플레이하는 기능은 미연결이다. |
 | 원본과의 동일성 | 영어 4:3 메뉴 M1 8장면은 cpppj 오라클과 알려진 구름 배경 등 차이 영역 밖에서 픽셀 차이 0이다. 월드 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다. 실제 미션 L2·L3·L4, 자연 완주는 미검증이다. |
-| 현재 작업 | **M2의 4-D 진행 중.** 4D-3 typed Login 잔여를 이어가고 4D-4~4D-6에서 이미 확인된 프레임·튜토리얼 게이트·반납·GameWorld 경계를 실제 Client 수명으로 연결한다. E873은 실제 `theammode` 기본값을 연결해 Tutorial1 지형 프레임 차이를 763개에서 45개로 줄였다. E874에서 남은 45개 모두 같은 원소·방향·변형의 후보 구간에 속함을 확인했다. 같은 시계·난수 수명과 웹 덤프의 실제 Client 호출·원본 대조 및 앱 메뉴·프레임 루프가 남았다. [E873](docs/webpj-campaign-ownership-theme-20261119.md) · [E874](docs/webpj-tutorial1-border-candidates-20261119.md) |
-| 전체 회귀 | E873 Node v26.13.0 전체 6,415건, E867 Node v22.23.3 전체 6,405건 통과(실패·취소·건너뜀 0). E874 집중·연관 검사 46건 통과. HJOW-Athlon의 작업 단위 주기: v26 1/4, v22 7/8. fixture 830개 해시·파일 불일치/누락 0; 전체 Git 이력 재조회는 중단하고 이번 본체의 변경 여부와 대응표는 별도 확인했다. |
+| 현재 작업 | **M2의 4-D 진행 중.** 4D-3 typed Login 잔여를 이어가고 4D-4~4D-6에서 이미 확인된 프레임·튜토리얼 게이트·반납·GameWorld 경계를 실제 Client 수명으로 연결한다. E873은 실제 `theammode` 기본값을 연결해 Tutorial1 지형 프레임 차이를 763개에서 45개로 줄였다. E874에서 남은 45개 모두 같은 원소·방향·변형의 후보 구간에 속함을 확인했고, E875에서 신전 소유권·PostPop의 같은 생산 갱신 사건을 Gump 입력에 연결했다. 같은 시계·난수 수명과 웹 덤프의 실제 Client 호출·원본 대조 및 앱 메뉴·프레임 루프가 남았다. [E873](docs/webpj-campaign-ownership-theme-20261119.md) · [E874](docs/webpj-tutorial1-border-candidates-20261119.md) · [E875](docs/webpj-campaign-production-refresh-20261119.md) |
+| 전체 회귀 | E873 Node v26.13.0 전체 6,415건, E875 Node v22.23.3 전체 6,416건 통과(실패·취소·건너뜀 0). E875 집중·연관 검사 60건 통과. HJOW-Athlon의 작업 단위 주기: v26 2/4, v22 0/8. fixture 830개 해시·파일 불일치/누락 0; 전체 Git 이력 재조회는 중단하고 이번 본체의 변경 여부와 대응표는 별도 확인했다. |
 | 브라우저 검사 | 2026-11-17 Chromium 2/2. 갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체 확인. 최초 실행·진행 잠금/체크 및 저장 재실행은 E616에서 별도 Chromium 2/2로 확인했다. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
 
 **미션 식별.** 이전 공통 fixture의 `thewarbegins.fort`는 캠페인 1-1이다. 실제 `tutorial1`이 선택하는 Fort는 `BridgeTheGap`이며, 지형·섬을 E753에서 다시 대조했다. [미션명 정정](docs/webpj-session-login-shipped-forts-20261118.md) · [Tutorial1 지형 재검증](docs/webpj-tutorial1-terrain-recheck-20261118.md)
@@ -146,7 +146,7 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 **4D-6 GameWorld·Client 서비스**
 
 - [ ] **4D-6a GameWorld** — 지연 Session 소유·Login 시작/완료·현재 자산·팔레트·선택 효과까지 확인했다. GameWorld 프레임 및 단일 Kernel 준비·후처리와 State7 부모의 생성·State8 내부 로그인은 확인했다. E855에서 실제 GameWorld의 로그인 이후 연결 감시·타이머 프레임까지 검사했다. 실제 Client 소유·나머지 Poll/진행 안내·종료·전체 삭제·Renderer를 연결한다. 입력은 6단계에서 이어간다. [E790](docs/webpj-campaign-game-world-front-20261118.md) · [E793](docs/webpj-campaign-game-world-selection-20261118.md) · [E855](docs/webpj-game-world-login-frame-20261119.md)
-- [ ] **4D-6b Client 서비스** — CampaignClientServices의 단독 미션 Start 효과, AI 이름·채팅·난이도, State7 요청 준비·캡처 및 부모 Poll의 State8 연결을 실제 Session에 연결했다. 개발자 입력 예약은 실제 입력 고리에 연결했다. E851에서 로그인 진행 안내·타이머 창 장치를 같은 GameWorld 로그인에 연결했고 E856~E858에서 사용자 입력과 커서 Gump·Client 표시 장치를 연결했다. 실제 앱 메뉴·프레임 타이머·입력 장치, 나머지 Poll, 스커미시 준비와 건설 기록 장치가 남았다. [E837](docs/webpj-campaign-client-start-effects-20261119.md) · [E838](docs/webpj-campaign-client-ai-services-20261119.md) · [E839](docs/webpj-client-mission-starting-20261119.md) · [E840](docs/webpj-client-mission-parent-20261119.md) · [E841](docs/webpj-client-developer-input-20261119.md) · [E851](docs/webpj-client-login-progress-20261119.md) · [E856](docs/webpj-campaign-user-input-services-20261119.md) · [E857](docs/webpj-campaign-cursor-gumps-20261119.md) · [E858](docs/webpj-campaign-cursor-client-20261119.md)
+- [ ] **4D-6b Client 서비스** — CampaignClientServices의 단독 미션 Start 효과, AI 이름·채팅·난이도, State7 요청 준비·캡처 및 부모 Poll의 State8 연결을 실제 Session에 연결했다. 개발자 입력 예약은 실제 입력 고리에 연결했다. E851에서 로그인 진행 안내·타이머 창 장치를 같은 GameWorld 로그인에 연결했고 E856~E858에서 사용자 입력과 커서 Gump·Client 표시 장치를 연결했다. E875에서 신전 소유권·PostPop 생산 갱신 사건을 실제 Gump 입력에 연결했다. 실제 앱 메뉴·Gump 소유자·프레임 타이머·입력 장치, 나머지 Poll, 스커미시 준비와 건설 기록 장치가 남았다. [E837](docs/webpj-campaign-client-start-effects-20261119.md) · [E838](docs/webpj-campaign-client-ai-services-20261119.md) · [E839](docs/webpj-client-mission-starting-20261119.md) · [E840](docs/webpj-client-mission-parent-20261119.md) · [E841](docs/webpj-client-developer-input-20261119.md) · [E851](docs/webpj-client-login-progress-20261119.md) · [E856](docs/webpj-campaign-user-input-services-20261119.md) · [E857](docs/webpj-campaign-cursor-gumps-20261119.md) · [E858](docs/webpj-campaign-cursor-client-20261119.md) · [E875](docs/webpj-campaign-production-refresh-20261119.md)
 - [ ] **4D-6c Session 공개 조회·장치** — Start의 조회·기술·사제, 건설 운반, 생산 소유자, 커서·에너지·배치까지 확인했다. E848에서 운반체·Dude 이동 시작을 같은 경로/Kernel에 공개했고 E849~E850에서 Dude 부모·통지 조회와 실제 인구/경로, 속도별 시간표와 도착 삭제를 확인했다. 남은 조회/장치를 연결한다(4590..4619, 4643..4741, 6029..6032, 6076..6079, 6100..6114, 6316..6399). [E848](docs/webpj-session-public-movement-20261119.md) · [E849](docs/webpj-session-dude-public-20261119.md) · [E850](docs/webpj-session-dude-path-20261119.md)
 
 **4D-7 ClientMain·Client 전역**

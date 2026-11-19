@@ -62,6 +62,14 @@ export function bindCampaignOwnershipTheme(client, services) {
     services.ownership.themeMode = () => client.configuration().readInt('theammode', 1).value >>> 0;
 }
 
+// 신전 소유권과 자산 PostPop의 생산 갱신을 같은 Gump 입력 트리에 전달한다. 숨겨진 노드 포함과 캡처 우선은 원본 Route가 맡는다. (2026-11-19 WB04-E875)
+export function bindCampaignProductionRefresh(input, services) {
+    if (!input || typeof input.route !== 'function') throw new TypeError('생산 갱신의 실제 Gump 입력 미연결');
+    services.ownership ??= {}; services.assets ??= {}; services.assets.postPop ??= {};
+    const refresh = () => { input.route(0x02000003, 0, 0, true); };
+    services.ownership.refreshProduction = refresh; services.assets.postPop.refreshProduction = refresh;
+}
+
 // 로그인 안내와 타이머가 선택한 시점의 Client 메뉴·시계·번역을 조회한다.
 export function bindCampaignLoginProgressServices(client, controls, login) {
     if (client.edition() !== 'patch1078') return;
