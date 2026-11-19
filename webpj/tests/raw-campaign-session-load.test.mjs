@@ -2620,19 +2620,21 @@ test('CampaignSession TheWarBegins: 실제 Battle snapshot과 재적재', () => 
     } finally { second.s.dispose(); }
 });
 
-// 실제 Session의 Fort 모드 전역을 명시하고 저장 자식과 재적재를 확인한다.
-test('CampaignSession TheWarBegins: 실제 Fort 모드 snapshot', () => {
-    const storage = new CampaignTemplateStorage(), badges = new Uint8Array(28 * 220), gameplay = new ClientGameplayGlobals();
+// 기술 획득 콜백의 실제 Fort snapshot과 저장 자식 및 재적재를 확인한다.
+test('CampaignSession TheWarBegins: 기술 획득으로 실제 Fort 모드 snapshot과 재적재', () => {
+    const storage = new CampaignTemplateStorage(), badges = new Uint8Array(28 * 220), gameplay = new ClientGameplayGlobals(), events = [];
     new DataView(badges.buffer).setUint32(0, 7, true); new DataView(badges.buffer).setUint32(216, 3, true);
-    const options = { templateStorage: storage, gameplayGlobals: gameplay, fortBadges: { records: () => badges }, fortMission: { current: () => 0 }, production: { allocationBytes: (bytes) => bytes.fill(0xa5), effects: { configInt: () => 0 } } };
+    const options = { templateStorage: storage, gameplayGlobals: gameplay, fortBadges: { records: () => badges }, fortMission: { current: () => 0 }, production: { allocationBytes: (bytes) => bytes.fill(0xa5), effects: { configInt: () => 0 } },
+        newTechnology: { name: (type) => game.types()[type - 70].definition.name, configure: (key, value) => events.push([key, value]), format: (pattern, type) => pattern.replace('%d', String(type)), tell: (name) => events.push(['tell', name]) } };
     const first = scene(options); let saved, before;
     try {
         first.s.core().ownerMode.fort = true; first.s.core().ownerMode.battle = false; gameplay.player.fortMode = true; first.s.world().storage.links.battle = false;
-        first.s.load(); first.s.indicateTechnology(128); before = first.s.world().objects(); first.s.snapshotFort(1);
+        first.s.load(); before = first.s.world().objects(); first.s.learnNewTechnology(128);
         const value = storage.template(1);
         assert.ok(fortSection(value, 'Terr00').length > 1); assert.equal(fortSection(value, 'Territory').length, 120);
         assert.deepEqual([...fortSection(value, 'Badges')], [1, 7, 3]); assert.deepEqual([...fortSection(value, 'Technology')], [1, 128, 4]);
         assert.equal(fortSection(value, 'Money').length, 4); assert.ok(fortSection(value, 'TypeNames').length > 0);
+        assert.deepEqual(events, [['global.newTechName', 'suncannon'], ['global.newTechPic', '<!`"128.*`">'], ['tell', 'NewTech']]);
         saved = { ...value, sections: value.sections.map((bytes) => bytes.slice()) };
     } finally { first.s.dispose(); }
     const secondGameplay = new ClientGameplayGlobals(), second = scene({ ...options, gameplayGlobals: secondGameplay, templateStorage: new CampaignTemplateStorage() }, saved);

@@ -4,7 +4,7 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-19, 마지막 단위 WB04-E945)
+### 0.1 현재 값 (2026-11-19, 마지막 단위 WB04-E946)
 
 | 항목 | 현행 상태 |
 | --- | --- |
@@ -14,9 +14,9 @@
 | 전체 회귀 | E941 Node v26.13.0 전체 6,512건, E939 Node v22.23.3 전체 6,511건 통과(실패·취소·건너뜀 0). E941 실제 갈무리11 편집 Chromium 1건 통과; E940 편집 출력·원본 2,292행 포함 연관 Node 검사 46건 통과; E939 글꼴 측정·원본 2,292행 포함 연관 Node 검사 72건 통과; E938 Client TextEntry·원본 2,292행 포함 연관 Node 검사 63건 통과; E937 Client Slider·연관 Node 검사 51건 통과; E936 Client 돌 버튼·연관 Node 검사 27건 통과; E935 Gump idle·연관 Node 검사 49건 통과; E934 직접 텍스트·연관 Node 검사 15건과 Chromium 1건 통과; E933 IME 요소·연관 Node 검사 22건과 Chromium 1건 통과; E932 조합 사건·연관 Node 검사 14건과 합성 Chromium 1건 통과; E931 브라우저 문자 키·연관 Node 검사 10건과 Chromium 5건 통과; E930 Console 한글 단어·원본 2,292행 포함 Node 검사 28건 통과; E929 한글 출력 경계·원본 2,292행 포함 Node 검사 31건 통과; E928 한글 스크롤·원본 2,292행 포함 Node 검사 27건 통과; E927 확장 붙여넣기·원본 2,862행 포함 Node 검사 30건 통과; E926 한글 편집·원본 2,292행 포함 Node 검사 27건 통과; E925 표시 문자 경계·연관 Node 검사 7건 통과; E924 확정 문자·연관 Node 검사 24건 통과; E923 입력 큐·연관 Node 검사 17건 통과; E922 가상 키·연관 Node 검사 12건과 Chromium 4건 통과; E921 마우스 큐·연관 Node 검사 11건과 Chromium 3건 통과; E920 앱 포인터 경계·연관 Node 검사 20건과 Chromium 2건 통과; E919 브라우저 폴링·연관 Node 검사 18건과 Chromium 1건 통과; E918 포인터 통지·연관 Node 검사 36건 통과; E917 공통 방송·연관 Node 검사 17건 통과; E916 실제 구분선·연관 Node 검사 30건 통과; E915 가상 부착·연관 Node 검사 29건 통과; E914 HUD 등록 조회·연관 Node 검사 22건 통과; E913 실제 루트 교체·연관 Node 검사 36건과 Chromium 1건 통과; E912 원본 Uber 전체 160행·연관 Node 검사 28건 통과; E911 Uber/HUD·Gump 연관 Node 검사 24건 통과; E910 파생 Gump 연관 Node 검사 40건·Chromium 1건 통과; E909 Gump 연관 Node 검사 39건·Chromium 입력 1건 통과; E908 Gump 및 앱 연관 Node 검사 60건·Chromium 수명 1건 통과; E907 구름·팔레트 Node 검사 17건·실제 로그인 2건 및 Chromium 전환 1건 통과; E906 집중·연관 Node 검사 53건 및 Chromium 설정 쓰기 1건 통과; E905 집중·연관 Node 검사 47건 및 Chromium 화면비 전환 1건 통과; E904 집중·연관 Node 검사 84건 및 Chromium 실제 Canvas 1건 통과; E903 집중·연관 Node 검사 83건 및 Chromium 1건 통과; E902 집중·연관 Node 검사 42건 및 Chromium 1건 통과; E901 실제 로그인 2건·연관 Node 검사 22건 및 Chromium 1건 통과; E900 집중·연관 Node 검사 38건과 Chromium 1건 통과; E899 집중·연관 Node 검사 42건, 수동 적재 관련 Node v22 31건, Guide 로그인 2건과 Chromium 종료·재시작 1건 통과. 전체 회귀 중 선행 레이아웃 누락 시험 5건을 교정한 뒤 전부 재실행했다. E898 Node 관련 검사 37건·실제 로그인 1건·Chromium 1건 통과; E897 집중 검사 6건·실제 World 2건 통과; E896 Node 25건·실제 World 2건·Chromium 2건 및 cpppj 표시 바이트 11,683행 일치; E895 앱 프레임·상태 관련 검사 23건과 실제 Tutorial1 로그인을 포함한 Session 검사 126건 통과; E894 favicon Chromium 창·헤드리스 각 1건 통과; E893 집중·연관 Node 검사 62건과 E892 원본 관측 전체 876행 및 연관 검사 통과. HJOW-Athlon의 작업 단위 주기: v26 0/4, v22 2/8. fixture 832개 해시·파일 불일치/누락 0; 대응표 1,160행 오류 0을 확인했고 기존 cpppj 글꼴 관련 변경 검토 항목은 유지한다. |
 | 브라우저 검사 | 2026-11-17 Chromium 2/2. 갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체 확인. 최초 실행·진행 잠금/체크 및 저장 재실행은 E616에서 별도 Chromium 2/2로 확인했다. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
 
-**2026-11-19 일시 중지 인계.** 사용자 요청에 따라 E945의 검증·문서 반영·커밋 뒤 목표를 일시 중지한다. 하위 경로 배포의 시작 화면과 새로고침 후 음량 설정 복원을 확인했다. E942는 외부 링크 브라우저 검사, E943은 16:9 논리 해상도 확장, E944는 화면 관찰·선택 자원·오디오 진단을 반영했다. 재개 시 3절의 미완료 항목을 확인한다. [하위 경로 배포](docs/webpj-static-deployment-20261119.md) · [비동기 진단](docs/webpj-browser-error-reporting-20261119.md#비동기-브라우저-경계)
+**E946 재개.** Fort 모드에서 실제 기술 획득 콜백이 만든 snapshot과 1,875개 객체 재적재를 확인했다. `loaded` 이전 편집기 checkpoint는 웹 제외로 판정했다. 다음은 4D-1c의 비미션 스커미시 후속을 유지하고 4D-3의 선행 가능한 항목을 진행한다. [Fort 경계](docs/webpj-session-fort-snapshot-boundary-20261119.md)
 
-**E945 검증.** Node v26.13.0 전체 회귀 6,514건 통과(실패·취소·건너뜀 0). 1차 회귀에서 발견한 한국어 적재의 호환 문제 두 건은 수정하고 집중 26건 및 전체를 다시 실행했다. 하위 경로는 브라우저 4종, 기본 경로와 오류·언어는 Chromium 4건을 통과했다. 현재 HJOW-Athlon 작업 단위 주기는 v26 0/4, v22 6/8이다. 대응표는 1,160행 오류 0이다.
+**E946 검증.** 실제 Session 3건과 snapshot·CoreData 연관 검사 11건 통과. E945 Node v26.13.0 전체 회귀 6,514건 통과(실패·취소·건너뜀 0), 하위 경로 브라우저 4종과 기본 경로·오류·언어 Chromium 4건 통과. 현재 HJOW-Athlon 작업 단위 주기는 v26 1/4, v22 7/8이다. 대응표는 1,160행 오류 0이다.
 
 **E941 미완료 범위.** 앱의 FontSet·Gump 출력과 TextEntry 수명, 웹 입력 큐의 앱 프레임 소비, 실제 OS IME를 확인해야 한다. 미션 앱의 진행 창·프레임, HUD, Tutorial1 플레이 역시 미확인이다.
 
@@ -34,7 +34,7 @@
 | --- | --- | --- | --- |
 | 1~3 | M1·월드 선행 부품 | 완료 | — |
 | 4 | 4-A 자료·4-B 적재·4-C 전송·4-R 재기준선 | 완료. 4-C 통합 잔여는 4D-3 | — |
-| 4 | **4-D Session 조립·Tutorial1 Load/Start** | **55/85, L2 미완료** | 76 / 17,771 |
+| 4 | **4-D Session 조립·Tutorial1 Load/Start** | **56/85, L2 미완료** | 76 / 17,771 |
 | 5 | 5-A 렌더러·Draw | 44/46 | 3 / 533 |
 | 5 | 5-B 카메라·HUD·미니맵·커서 | 9/13 | 9 / 1,446 |
 | 5 | 5-C 화면 허브·미션 진입 | 0/6 → M2 | 10 / 6,033 |
@@ -119,15 +119,15 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 
 단계 안에서 선행 조건을 따라 위에서부터 진행한다. 막힌 사유를 기록하고 해당 단계의 다음 항목으로 간다. 4-D 전체가 선행 대기면 가능한 5-A·5-B를 병행한다. 완료 체크에 단위 링크를 붙이고 0.2절과 단계 머리글을 함께 갱신한다.
 
-#### 4-D Session 조립·Tutorial1 Load/Start (55/85)
+#### 4-D Session 조립·Tutorial1 Load/Start (56/85)
 
 **완료 기준은 L2다.** Tutorial1 Load/Start의 보고서·Session 덤프·첫 프레임 논리 화면을 cpppj 오라클과 대조한다. typed `Load()`와 실제 Fort Login/Ready, 일부 Start는 Node 검사에서 확인했다. Client·Native 장치와 브라우저 앱 수명은 이어서 연결한다. 기준선 구간 지도와 E633~E801의 완료 체크 및 단위 링크는 [E801 보관본 3.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261118-through-wb04-e801)에 있다.
 
-아래 cpppj 줄 번호는 `225553df`의 [RawCampaignSession.cpp](cpppj/src/client/RawCampaignSession.cpp) 기준이다. 기존 54개 완료에 4D-9b의 cpppj Tutorial1 오라클 수집을 더해 55개다. 단계 중간의 완료 검증은 해당 상위 범위의 근거로 둔다.
+아래 cpppj 줄 번호는 `225553df`의 [RawCampaignSession.cpp](cpppj/src/client/RawCampaignSession.cpp) 기준이다. E946에서 4D-1b를 완료해 56개다. 단계 중간의 완료 검증은 해당 상위 범위의 근거로 둔다.
 
 **4D-1 Session 외곽·snapshot.** 저장 writer, 현재 Core, 부모 callback, 생성자/Publish와 외곽 반납 앞단은 완료했다.
 
-- [ ] **4D-1b 전체 snapshot** — Battle 모드 재적재는 E698에서 확인했다. E829는 Fort 전역을 명시한 실제 Session snapshot·재적재를 확인했다. 준비된 Editor 설치·호출 수명은 미검증이며 웹 제외 범위와 함께 판정한다(SnapshotFort/WriteFortCoreDataBody 4488..4509, 5903..5982). [Battle snapshot](docs/webpj-session-battle-snapshot-20261118.md) · [Fort snapshot](docs/webpj-session-fort-snapshot-20261119.md)
+- [x] **4D-1b 전체 snapshot** — Battle 모드 재적재와 기술 획득 콜백의 Fort 모드 snapshot·재적재를 확인했다. `loaded` 이전의 준비된 Editor 설치·호출 수명은 Edit 제외 범위다(SnapshotFort/WriteFortCoreDataBody 4488..4509, 5903..5982). [Battle snapshot](docs/webpj-session-battle-snapshot-20261118.md) · [Fort 경계](docs/webpj-session-fort-snapshot-boundary-20261119.md)
 - [ ] **4D-1c 외곽 callback** — 기술 획득, 로컬·세계 간헐천, 단일 미션 너겟 관문은 실자료로 확인했다. `PlaceBattleNuggets`의 비미션 정상 생성은 12차 실제 스커미시 Session에서 검증한다(5761..5772).
 
 **4D-2 typed Load 완료.** 건설·이동·AI·의식·파괴/주문·운반 투하/기도·배치/커서를 Session에 설치했다. 캠페인 1-1의 저장 객체 적재와 `loaded` 관문을 확인했다. [E697](docs/webpj-session-load-20261118.md)
