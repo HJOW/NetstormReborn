@@ -649,6 +649,7 @@ export class Netstorm {
             root.appendChild(canvas);
             this._bindEvents();
             this._applyLayout();
+            this._initializeClientRendererView();
             if (this.options.autoFocus) canvas.focus({ preventScroll: true });
             this._startFrameLoop();
             this._load();
@@ -761,9 +762,19 @@ export class Netstorm {
         };
     }
 
+    // 현재 논리 화면과 Client 전역으로 카메라 Renderer·snapshot·한계를 원본 순서로 초기화한다.
+    _initializeClientRendererView() {
+        const layout = this._layout, game = this._clientGameplay, clouds = this._clientKencloud;
+        if (!layout || !game || !clouds) throw new Error('Renderer 초기화의 현재 화면 또는 Client 수명 누락');
+        if (!Number.isInteger(layout.logicalWidth) || !Number.isInteger(layout.logicalHeight)) throw new TypeError('Renderer 초기화의 논리 화면 정수 크기 누락');
+        game.camera().initializeNativeRenderer(layout.logicalWidth, layout.logicalHeight, game.worldCells().value, clouds.worldRedraw(), game.mapRevision());
+    }
+
     // 로컬 Login이 현재 Client의 설정·시계·진단과 표시 무효화를 직접 조회한다.
     _campaignLoginServices() {
         return {
+            // State7은 실제 화면 크기와 공유 카메라 전역을 다시 초기화한다.
+            initializeRenderer: () => this._initializeClientRendererView(),
             // 서버 포트는 공통 전역을, 다른 정수는 현재 설정과 기본값을 사용한다.
             configInt: (key, fallback) => {
                 if (!this._gameData || !this._clientGameplay) throw new Error('로그인 설정의 실제 Client 수명 누락');

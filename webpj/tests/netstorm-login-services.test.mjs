@@ -38,3 +38,24 @@ test('Netstorm Login 장치: Player UI의 현재 전투 완료 관문', () => {
     let finished = false; app._campaignWorld = { session: () => ({ battleFinished: () => finished }) };
     assert.equal(login.playerUiBusy(), false); finished = true; assert.equal(login.playerUiBusy(), true);
 });
+
+// 초기화는 호출 시점의 논리 화면·세계 크기와 같은 Client의 두 전역 상자를 사용한다.
+test('Netstorm Login 장치: 실제 화면과 Client 카메라 초기화', () => {
+    const app = new Netstorm(), login = app._campaignLoginServices();
+    assert.throws(() => login.initializeRenderer(), /수명 누락/);
+    app._initializeClientRuntime(false); app._layout = { logicalWidth: 1024, logicalHeight: 768 };
+    const camera = app._clientGameplay.camera(), redraw = app._clientKencloud.worldRedraw(), revision = app._clientGameplay.mapRevision();
+    revision.value = 0xffffffff; redraw.value = 8;
+    login.initializeRenderer();
+    assert.deepEqual([...camera.target().limits, ...camera.target().pixels, camera.target().zoom], [3072, 2048, 0, 0, 65536]);
+    assert.deepEqual([redraw.value, revision.value], [1, 0]);
+    assert.deepEqual(camera.snapshot().bytes, camera.rendererView().bytes);
+    app._layout = { logicalWidth: 1366, logicalHeight: 768 }; app._clientGameplay.worldCells().value = 128;
+    camera.requestPixels(20, 30); redraw.value = 0; login.initializeRenderer();
+    assert.deepEqual([...camera.target().limits, ...camera.target().pixels], [682, 640, 0, 0]);
+    assert.deepEqual([redraw.value, revision.value], [1, 1]);
+    app._layout = { logicalWidth: 0, logicalHeight: 768 };
+    assert.throws(() => login.initializeRenderer(), /화면 크기/); assert.equal(revision.value, 1);
+    app._layout = { logicalHeight: 768 };
+    assert.throws(() => login.initializeRenderer(), /정수 크기/); assert.equal(revision.value, 1);
+});
