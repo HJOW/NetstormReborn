@@ -43,7 +43,7 @@ import { Settings, findSettingKey, getLocalStorage } from './platform/settings.j
 import { Progress, isProgressKey } from './platform/progress.js';
 import { reportGameError } from './platform/error-reporting.js';
 import { BrowserInputPoll } from './platform/browser-input-poll.js';
-import { queueBrowserMouseEvent } from './platform/browser-mouse-events.js';
+import { browserMouseEvent, queueBrowserMouseEvent } from './platform/browser-mouse-events.js';
 import { queueBrowserVirtualKeyEvent, queueBrowserCharacterEvent } from './platform/browser-key-events.js';
 import { InputQueue } from './core/input-queue.js';
 import { hasExtendedDisplayText, queueCommittedText } from './core/display-text-input.js';
@@ -2297,6 +2297,11 @@ export class Netstorm {
         const pointer = this._input.pointer;
         if (this._state === AppState.MAIN_MENU && this._mainMenu && (!this._campaignDisplayActive() || this._mainMenu.dialog) && event.button === 0 && pointer.inside) {
             this._mainMenu.pointerDown(pointer.x, pointer.y);
+        }
+        // 전체 원본 입력 소비자 연결 전에는 미션 좌클릭만 같은 Gump와 월드 입력기에 전달한다.
+        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && this._campaignUserInput && event.button === 0 && pointer.inside) {
+            const input = browserMouseEvent(event, pointer, false);
+            if (!this._clientGump.input().route(input.code, input.x, input.y)) this._campaignUserInput.event(input);
         }
         if (this._state === AppState.TERRAIN_PREVIEW && event.button === 0 && pointer.inside) this._terrainPreview?.pointerDown(pointer.x, pointer.y);
     }

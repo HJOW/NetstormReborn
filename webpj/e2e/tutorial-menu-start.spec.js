@@ -28,5 +28,22 @@ test('캠페인 목록에서 첫 Tutorial의 월드와 안내를 표시한다', 
       visiblePixels: app._surface.pixels.some((pixel) => pixel !== 0) };
   });
   expect(state.frame).toBeGreaterThan(0); expect(state.paused).toBe(true); expect(state.width).toBe(1366); expect(state.visiblePixels).toBe(true);
+  // 첫 안내를 실제 버튼으로 닫고 월드의 사제 그림을 마우스로 선택한다.
+  // 여러 안내 페이지의 실제 버튼을 끝까지 누른다.
+  for (let pageIndex = 0; pageIndex < 8; pageIndex += 1) {
+    const label = await page.evaluate(() => window.netstorm._mainMenu.dialog?.buttons.at(-1)?.label ?? null);
+    if (label === null) break;
+    await clickLabel(page, label);
+  }
+  await page.waitForFunction(() => !window.netstorm._gameClock.paused(), null, { timeout: 15000 });
+  const priest = await page.evaluate(() => {
+    const app = window.netstorm, world = app._campaignWorld, session = world.session(), sid = session.findPriestParticipation(session.localOwner());
+    const slot = session.core().pool.slot(sid), raw = new DataView(slot.buffer, slot.byteOffset, slot.byteLength);
+    const point = app._clientGameplay.camera().snapshot().project(raw.getFloat32(14, true), raw.getFloat32(18, true));
+    const rect = app.canvas.getBoundingClientRect();
+    return { sid, x: rect.left + (point.x - 16) * rect.width / app._layout.logicalWidth, y: rect.top + (point.y - 11) * rect.height / app._layout.logicalHeight };
+  });
+  expect(priest.sid).toBeGreaterThan(0); await page.mouse.click(priest.x, priest.y, { delay: 60 });
+  await expect.poll(() => page.evaluate(() => window.netstorm._campaignWorld.selected())).toBe(priest.sid);
   expect(errors).toEqual([]);
 });

@@ -127,6 +127,10 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         const priest = session.findPriestParticipation(session.localOwner()); assert.ok(priest);
         app._campaignWorld.select(priest); assert.equal(app._campaignWorld.selected(), priest);
         app._campaignWorld.resetSelection(); assert.equal(app._campaignWorld.selected(), 0);
+        const priestSlot = session.core().pool.slot(priest), priestRaw = new DataView(priestSlot.buffer, priestSlot.byteOffset, priestSlot.byteLength);
+        const priestPoint = camera.snapshot().project(priestRaw.getFloat32(14, true), priestRaw.getFloat32(18, true));
+        app._campaignUserInput.event({ code: 0x00010000, x: priestPoint.x - 16, y: priestPoint.y - 11 });
+        assert.equal(app._campaignWorld.selected(), priest); app._campaignWorld.resetSelection();
         // 같은 실제 앱의 레이아웃 변경이 새 Screen·Renderer와 현재 World 지도 범위에 순서대로 반영된다.
         app._root.clientWidth = 1366; app._root.clientHeight = 768; app._aspect = '16:9'; app._canvas = { style: {} }; app._applyCursor = () => {};
         const beforeRenderer = app._clientRenderer, frameGlobals = app._clientRendererFrame; frameGlobals.scan()[3] = 17; frameGlobals.cloudDirtyCount().value = 2;
