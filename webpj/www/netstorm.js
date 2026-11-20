@@ -1789,6 +1789,9 @@ export class Netstorm {
             if (code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_F6 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !MISSION_VIEW_KEYS.has(code) && code !== MISSION_F9 && !TUTORIAL_NOTICE_COMMANDS.has(code) && !isGameMenuCommand(code) && !isSendMoneyCommand(code) && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && !gameTimeKey && code !== InputCode.leftButton && code !== InputCode.rightButton) break;
             const event = queue.pop(false);
             if (tutorial.event(event) || gump.input().route(event.code, event.x, event.y)) continue;
+            // 원본 UberGump(UI 밖 누름): Gump 가 소비하지 않은 좌·우 버튼 누름은 열린 팝업(우클릭 객체 메뉴 등)을 먼저 닫고 같은 사건을 월드로 진행한다.
+            // 이 닫기가 없으면 메뉴를 연 채 바깥을 클릭해도 메뉴가 남았다. (2026-11-21 WB04-E1135, 실제 미션 우클릭 시험에서 확인)
+            if (!release && (code === InputCode.leftButton || code === InputCode.rightButton) && !this._mainMenu?.dialog) this._closeCampaignPopups();
             if (code === InputCode.leftButton && !release && !this._mainMenu?.dialog) user.event(event);
             // 원본 UberGump: 지식 창이 열려 있으면 ESC 는 팝업만 닫는다. (2026-11-20 WB04-E1088)
             else if (cursorCancel && !release && !this._mainMenu?.dialog && this._campaignProduction?.ui?.knowledge()?.isOpen()) { this._campaignProduction.ui.knowledge().close(); this._displayDirty = true; }

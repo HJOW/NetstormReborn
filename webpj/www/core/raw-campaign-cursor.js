@@ -44,7 +44,10 @@ export class RawCampaignCursor {
         if (data.forms?.pool !== c.pool || data.contained?.pool !== c.pool || data.reward?.pool !== c.pool || data.construction?.pool !== c.pool ||
             typeof g.prepare !== 'function' || typeof g.moveBuilder !== 'function' || typeof g.playDrop !== 'function') throw new TypeError('실제 캠페인 커서 단일 월드/게임 연결 오류');
         this.#cursorState = data.currentState ?? new ClientCursorGlobals(); this.#life = this.#cursorState.lifecycle(); this.#placementState = this.#cursorState.placement(); this.#snap = this.#cursorState.snapToGrid();
-        if (data.cameraView) this.#placementState.sharedScreenOrigin = data.cameraView.pixels;
+        // 건설 미리보기·비용 표시는 카메라 픽셀 원점(+28/+32)을 [0]/[1] 로 읽는다. CameraView.pixels 접근자는 `{x, y}` 값 사본이라 공유 포인터로 쓰면 원점이 항상 0 이 되어
+        // 미리보기가 카메라 위치만큼 어긋나 그려졌다. 카메라 바이트의 같은 8바이트를 가리키는 살아 있는 Int32Array 를 쓴다(client-cursor-state-cleanup.js 와 같은 방식). (2026-11-21 WB04-E1135)
+        // 시험 대역처럼 bytes 가 없는 보기는 pixels 가 이미 Int32Array 인 경우만 그대로 쓴다.
+        if (data.cameraView) this.#placementState.sharedScreenOrigin = data.cameraView.bytes instanceof Uint8Array ? new Int32Array(data.cameraView.bytes.buffer, data.cameraView.bytes.byteOffset + 28, 2) : data.cameraView.pixels;
         const placementHooks = { ...g.placement };
         bindCursorPlacementAssets(placementHooks, data.assets, c.types, data.geometry);
         placementHooks.gumpAt = current(() => this.#effects.placement.gumpAt, 'Gump 위치 조회');

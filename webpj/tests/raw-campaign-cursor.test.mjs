@@ -7,6 +7,7 @@ import { InputCode } from '../www/core/input-queue.js';
 import { ClientCursorGlobals } from '../www/core/client-cursor-globals.js';
 import { SquidForms } from '../www/core/squid-forms.js';
 import { RawCursorPosition } from '../www/core/raw-cursor-position.js';
+import { CameraView } from '../www/render/camera-view.js';
 import { RegularProcess } from '../www/core/squid-process.js';
 import { readData } from './helpers.mjs';
 import { GamePalette, buildScreenPalette } from '../www/assets/palette.js';
@@ -126,4 +127,15 @@ test('CampaignCursor 명시 실패: 실제 가상 삭제 거부와 누락된 게
     const s = new CampaignCursorScene(); const form = s.form(84); s.world.destroy = () => false;
     assert.throws(() => s.cursor.placeLocal({ preview: form, x: 20, y: 21, argument: 0, direction: 0 }), /실제 커서 가상 삭제 거부/); assert.equal(s.sent.length, 0);
     const other = new CampaignCursorScene(); assert.throws(() => other.cursor.take(other.form(75), 0x100), /실제 Session 마나 소비자/); assert.equal(other.drop.type, 75); assert.ok(other.cursor.lifecycle.previewCount > 0);
+});
+
+// 실제 CameraView(pixels 접근자가 값 사본을 돌려주는 객체)를 연결해도 건설 미리보기의 화면 원점이 살아 있는 카메라 픽셀 원점을 따르는지 검사한다. (2026-11-21 WB04-E1135)
+// 시험 대역의 `{ pixels: Int32Array }` 는 이 차이를 가려 연결 결함(원점 항상 0 → 미리보기가 카메라 위치만큼 어긋남)을 놓쳤다.
+test('CampaignCursor 실제 CameraView: 화면 원점은 카메라 바이트의 픽셀 원점(+28/+32)을 살아 있게 따른다', () => {
+    const s = new CampaignCursorScene(); const view = new CameraView(); const cursor = s.make({ cameraView: view });
+    // 연결 직후 값과 이후 카메라 이동이 모두 반영된다(값 사본이면 항상 0 이다).
+    view.data.setInt32(28, 137, true); view.data.setInt32(32, 91, true);
+    assert.equal(cursor.placement.screenOriginX(), 137); assert.equal(cursor.placement.screenOriginY(), 91);
+    view.data.setInt32(28, -40, true); view.data.setInt32(32, 305, true);
+    assert.equal(cursor.placement.screenOriginX(), -40); assert.equal(cursor.placement.screenOriginY(), 305);
 });
