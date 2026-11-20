@@ -2,6 +2,7 @@ using Netstorm.Client.Host;
 using Netstorm.Client.Input;
 using Netstorm.Core.Original;
 using Netstorm.Core.Simulation;
+using System.Runtime.CompilerServices;
 
 // 현재 진단과 커서의 실제 장기 소유자 및 Session/Surface 공유를 검사한다.
 namespace Netstorm.Client.Tests;
@@ -9,6 +10,21 @@ namespace Netstorm.Client.Tests;
 /// <summary>원문 초기값·주소 정체성·옵션·실제 Runtime 대여 경계 검사다.</summary>
 public sealed class ClientAiDebugGlobalsTests
 {
+    /// <summary>JIT 지역변수의 우발적 생존을 피하고 실제 진단 소유자/뷰만 호출자에 넘긴다.</summary>
+    [MethodImpl(MethodImplOptions.NoInlining)]
+    private static (ClientAiDebugGlobals Owner, RawCheckingFlag View, WeakReference<HostSession> Session) ReleasedDiagnosticView()
+    {
+        var game = new ClientGameplayGlobals(); HostSession session = Session(game); return (game.AiDebug, new RawCheckingFlag(session.AiChecking), new(session));
+    }
+    /// <summary>진단 뷰와 장기 값만 남기면 이전 Session 전체는 회수할 수 있어야 한다.</summary>
+    [Fact]
+    public void DiagnosticViewDoesNotRetainOldSession()
+    {
+        var value = ReleasedDiagnosticView();
+        // finalizer와 모든 세대를 수집한 뒤에만 weak 대상의 실제 생존을 조회한다.
+        for (int index = 0; index < 3; index++) { GC.Collect(2, GCCollectionMode.Forced, true, true); GC.WaitForPendingFinalizers(); }
+        Assert.False(value.Session.TryGetTarget(out _)); value.Owner.Checking.Value = int.MinValue; Assert.Equal(0x80000000u, value.View.Read());
+    }
     /// <summary>같은 게임 전역을 사용하는 실제 세션이다.</summary>
     private static HostSession Session(ClientGameplayGlobals game, RawSurfaceStorage? storage = null) => new(new Kernel(), new GameRandom(17), new CrtRandom(23), sharedGameplay: game, pool: storage?.Pool);
     /// <summary>첫 Session 없이 실제 현재 물리와 시계/커널을 만든다.</summary>

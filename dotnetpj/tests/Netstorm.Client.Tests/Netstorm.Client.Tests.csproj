@@ -140,5 +140,8 @@
     <None Include="../../../cpppj/tests/fixtures/cursor-type-range-x86.tsv" Link="X86/cursor-type-range-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- 위치 판정·연관 지역·화면 준비573개 독립 원문 관찰이다. -->
     <None Include="../../../cpppj/tests/fixtures/cursor-placement-x86.tsv" Link="X86/cursor-placement-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- 현재 카메라64BYTE16관찰과 중심목표140입력을 원문 그대로 공유한다. -->
+    <None Include="../../../cpppj/tests/fixtures/camera-view-x86.tsv" Link="X86/camera-view-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/camera-center-x86.tsv" Link="X86/camera-center-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

@@ -146,7 +146,8 @@ public sealed class HostMissionBurning : IDisposable
         ObjectDisposedException.ThrowIf(_disposed, this);
         FrameState.CameraX = cameraX; FrameState.CameraY = cameraY; FrameState.Viewport = viewport; FrameState.InsetViewport = inset; _viewBound = true;
         Construction.FrameState.CameraX = cameraX; Construction.FrameState.CameraY = cameraY;
-        _session.Gameplay.ContentScreenOrigin[0] = unchecked((int)cameraX); _session.Gameplay.ContentScreenOrigin[1] = unchecked((int)cameraY);
+        // 같은 snapshot의 픽셀/월드/float 사본을 실제497490 본체로 함께 갱신한다.
+        RawCameraView.SetPixels(_session.Gameplay.Camera.Snapshot, unchecked((int)cameraX), unchecked((int)cameraY));
     }
     /// <summary>같은 Host의 연소를 먼저 없앤 뒤 외부 실제팔레트 메모리를 반납한다.</summary>
     public void Dispose()

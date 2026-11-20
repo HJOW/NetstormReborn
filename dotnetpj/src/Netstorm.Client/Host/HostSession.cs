@@ -142,7 +142,9 @@ public sealed partial class HostSession
         Crt = crt;
         ProcessTime = sharedProcessTime ?? new DoubleBox();
         Gameplay = sharedGameplay ?? sharedLocal?.Gameplay ?? sharedConnections?.LocalState.Gameplay ?? new ClientGameplayGlobals();
-        AiChecking.Bind(() => Gameplay.AiDebug.Checking.Value);
+        // 비소유 진단 뷰는 짧은 Session 전체 대신 같은 장기 진단 소유자만 보유한다.
+        ClientAiDebugGlobals checkingOwner = Gameplay.AiDebug;
+        AiChecking.Bind(() => checkingOwner.Checking.Value);
         LocalState = sharedLocal ?? sharedConnections?.LocalState ?? new ClientLocalStateGlobals(Gameplay, new AmbientSoundState());
         if (!ReferenceEquals(LocalState.Gameplay, Gameplay)) throw new ArgumentException("미션의 실제 Gameplay/LocalState 소유자 불일치", nameof(sharedLocal));
         Connections = sharedConnections ?? new ClientConnectionGlobals(LocalState);
