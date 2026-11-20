@@ -1127,3 +1127,5 @@ cpppj/src/o/RawMissionServerPackets.cpp	Netstorm.Net/MissionMetadataRegistration
 cpppj/src/o/RawMissionServerPackets.h	Netstorm.Net/MissionMetadataRegistration.cs	eeae45c69171943ad99db6c2930574ee7747ba76	port
 cpppj/src/o/RawMissionClientPackets.cpp	Netstorm.Core/Original/RawMissionPacketFields.cs	eeae45c69171943ad99db6c2930574ee7747ba76	port
 cpppj/src/o/RawMissionClientPackets.h	Netstorm.Core/Original/RawMissionPacketFields.cs	eeae45c69171943ad99db6c2930574ee7747ba76	port
+cpppj/src/o/RawStateBattleOptions.cpp	Netstorm.Core/Original/RawStateBattleOptions.cs	3f942573d0efb123777e1ee0956eae026ce394a6	port
+cpppj/src/o/RawStateBattleOptions.h	Netstorm.Core/Original/RawStateBattleOptions.cs	8912d1ed1f3d890f226cb10416d65f0b513013df	port

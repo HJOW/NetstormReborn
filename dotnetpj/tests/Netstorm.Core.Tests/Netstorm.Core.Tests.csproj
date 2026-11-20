@@ -482,4 +482,8 @@
   <ItemGroup>
     <None Include="../../../cpppj/tests/fixtures/mission-server-packets-x86.tsv" Link="X86/mission-server-packets-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 클라이언트8종의 독립157입력이며 먼저67h 전체 부모18입력을 대조한다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/mission-client-packets-x86.tsv" Link="X86/mission-client-packets-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
