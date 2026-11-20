@@ -6,7 +6,7 @@ namespace Netstorm.Client;
 /// <summary>사제 회복·HP·이동이 공유하는 ClientGameplayGlobals의 전역 소유 부분이다.</summary>
 /// <remarks>cpppj client/ClientGameplayGlobals의 GameAux/Authority/PatchSample/PatchDiagnostic 대응이다.
 /// 커서·선택·Runtime 대여 등 나머지 부분은 해당 규칙 이식 시 추가한다.</remarks>
-public sealed class ClientGameplayGlobals
+public sealed partial class ClientGameplayGlobals
 {
     /// <summary>같은 현재 사제TYPE·1/4HP·이동 역할을 소유한다.</summary>
     public RawGameAuxState GameAux { get; } = new();

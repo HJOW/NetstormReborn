@@ -27,6 +27,7 @@ public sealed partial class HostSession
     /// <summary>연소/공통 목록과 외부 팔레트보다 먼저 같은Form·Kernel 소유권을 반납한다.</summary>
     public void ReleaseConstructionWorld()
     {
+        EnsureRuntimeCanRelease();
         ReleaseConstructionProgressWorld();
         _worldConstruction?.Dispose(); _worldConstruction = null;
         if (_worldRendering is not null) _worldRendering.State.Palette = 0;

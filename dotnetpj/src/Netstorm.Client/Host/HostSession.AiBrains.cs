@@ -45,6 +45,7 @@ public sealed partial class HostSession
     /// <summary>미션이 종료되거나 시작에 실패했을 때 세션이 생성해 붙인 AI를 모두 해제한다. 0.641에서 추가했다.</summary>
     public void ReleaseMissionAiBrains()
     {
+        EnsureRuntimeCanRelease();
         // 현재 Player 기록을 조회하므로 초기 갱신이 실패해 AiBrains에 등록되지 않은 토큰도 해제한다.
         for (uint owner = 1; owner < PlayerParticipation.PlayerCount; owner++)
         {

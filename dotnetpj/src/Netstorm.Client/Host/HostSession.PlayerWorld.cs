@@ -139,6 +139,7 @@ public sealed partial class HostSession
     /// <summary>빌린 커널에서 이 세션의 실제 Host가 부착한 프로세스만 비우고 사제 대여를 반납한다.</summary>
     public void ReleasePlayerProcesses()
     {
+        EnsureRuntimeCanRelease();
         if (PlayerProcesses is not null) Kernel.DrainOwnedForShutdown(PlayerProcesses.Owns);
         ReleaseDependencyWorld();
         ReleaseFlareWorld();

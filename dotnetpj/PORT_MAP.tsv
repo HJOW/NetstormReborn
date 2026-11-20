@@ -1174,3 +1174,8 @@ cpppj/src/client/ClientConnectionGlobals.h	Netstorm.Client/ClientConnectionGloba
 cpppj/src/client/ClientConnectionGlobals.cpp	Netstorm.Client/ClientConnectionGlobals.cs	ec0b6e9733664abc2e214445840ce35947da90a2	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Client.Host/ClientHostGame.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
 cpppj/src/client/RawCampaignSessionLogin.inc	Netstorm.Client/Host/HostSession.cs	cea41eb0968ebabf6214e82ada598c5b5bdc7abf	port
+cpppj/src/client/ClientGameplayGlobals.h	Netstorm.Client/ClientGameplayGlobals.Runtime.cs	ae0e58b3ac0f34697eac6954cce7913a759247e3	port
+cpppj/src/client/ClientGameplayGlobals.cpp	Netstorm.Client/ClientGameplayGlobals.Runtime.cs	8d24d3e095ee9659595504ff81ad078b0147614b	port
+cpppj/src/client/ClientGameplayGlobals.cpp	Netstorm.Client/HostMissionRuntime.cs	8d24d3e095ee9659595504ff81ad078b0147614b	port
+cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.Runtime.cs	bda77381e54bc382937c720047ee4441086b46d7	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.Runtime.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port

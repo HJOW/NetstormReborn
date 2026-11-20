@@ -66,6 +66,8 @@ public sealed class ClientHostGame : Game
 
     /// <summary>--mission 진입으로 조립한 현재 미션 세션이다. 없으면 메뉴만 돈다.</summary>
     private HostSession? _missionSession;
+    /// <summary>완성한 실제 세션/같은 물리/음향·표시·UI 전체를 보유하는 현재 Runtime이다.</summary>
+    private HostMissionRuntime? _missionRuntime;
     private RawSurfaceStorage? _missionStorage;
 
     /// <summary>HTML과 상위 메뉴가 공유할 원본 80칸 스크립트 문자열 고리.</summary>
@@ -184,7 +186,9 @@ public sealed class ClientHostGame : Game
     {
         if (disposing)
         {
+            if (_missionRuntime is { } runtime && _gameplay.RuntimeCallActive(runtime.Session)) throw new InvalidOperationException("실제 Runtime 배송 종료 전 호스트 종료");
             _connections.ShutdownDevices();
+            _missionRuntime?.Dispose(); _missionRuntime = null;
             _missionSession?.ReleaseMissionAiBrains();
             _missionSession?.ReleasePlayerProcesses();
             _missionBurning?.Dispose();
@@ -315,6 +319,7 @@ public sealed class ClientHostGame : Game
     private HostSession StartMission(string mission, string handle)
     {
         if (_startup is null) throw new InvalidOperationException("미션 진입에 시작 화면 없음");
+        if (_missionRuntime is not null) throw new InvalidOperationException("기존 실제 Runtime 반납 전 미션 재시작");
         using var script = new MissionScript(_startup.Configuration, mission);
         RiftTypeTable types = MissionFortLoad.LoadTypeTable(_startup.Files);
         MissionFortLoadResult fort = MissionFortLoad.Load(_startup, mission);
@@ -522,6 +527,7 @@ public sealed class ClientHostGame : Game
                 difficulty: (owner, settings) => session.ResolveMissionAiDifficulty(difficulty, owner, settings));
             // 단일 미션의 첫 지역(+0x78)은 소용돌이→섬 소유자→첫 지역 사슬이 적재 중 기록한다(R6: 신전 Pop·postPop 표시와 함께).
             // 전투섬 배정 region 갈고리는 MP 전투 경로의 makeBattleIsland에서만 쓰므로 시작 흐름에서 직접 기록하지 않는다(0.477 정정).
+            _missionRuntime = HostMissionRuntime.Create(session, storage, pendingBurning!, _missionAudio!, _mainMenu!);
             _missionSession = session;
             _missionStorage = storage;
             _missionBurning = pendingBurning;

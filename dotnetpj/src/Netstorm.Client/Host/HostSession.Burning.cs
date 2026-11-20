@@ -91,6 +91,7 @@ public sealed partial class HostSession
     /// <summary>같은 Host가 살아 있고 외부 캡처/소리/팔레트 장치가 남아 있을 때 연소만 먼저 반납한다.</summary>
     public void ReleaseBurningWorld()
     {
+        EnsureRuntimeCanRelease();
         ReleaseConstructionWorld();
         _worldBurning?.Dispose(); _worldBurning = null; _worldDamageableBurning = null; _worldRendering = null;
     }
