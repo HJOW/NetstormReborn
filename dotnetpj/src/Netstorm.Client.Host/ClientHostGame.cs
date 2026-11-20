@@ -551,16 +551,16 @@ public sealed partial class ClientHostGame : Game
     /// <param name="gameTime">경과 시각.</param>
     protected override void Update(GameTime gameTime)
     {
-        _editor?.Poll();
-        _menuInput?.Tick();
-        _driver.BeginFrame(CaptureNativeFrame);
+        _driver.BeginFrame(PrepareNativeFrameInput);
+        PumpKeyboard();
+        PumpMouse();
+        if (_menuInput?.NotifyPointer(Poll(0xffff)) == 0) _cursor?.Set(GameCursor.Arrow);
+        if (_driver.ProcessInput()) { Exit(); return; }
+        if (_startup?.Configuration.Configuration.Changed == true) _startup.SaveOptions();
         if (_missionSession is not null)
         {
-            // 같은Client Frame.game은스크립트입력전에캡처했다. 미션은그주소를직접읽고Kernel만실행한다.
-            _missionSession.RunMissionFrame();
-            // R4-4 주변음 진행. cpppj ClientMain 602행의 순서(세션 틱 뒤·바람 앞)와 같이 같은 게임 난수를 먼저 소비한다.
-            // 실제 재생·모달·번쩍임은 R6 음향에서 이으며 여기서는 난수·기한·종류 진행만 한다. 메뉴에는 미션 경로가 없어 닿지 않는다.
-            // 2026-11-19 0.633에서 R4-4 정기 처리용으로 추가했다.
+            // 원문439aeb/439af0의주변음→바람은입력/설정저장뒤이며Kernel보다먼저같은난수를소비한다.
+            // 실제소리/모달/번쩍임과미션없는Client의장기Surface장치는후속연결범위다.
             RawAmbientSound.Step(_ambientSound, _gameRandom, new AmbientSoundHooks
             {
                 WallSeconds = () => _clientClock.Clock.WallSeconds(_clock.Milliseconds),
@@ -568,19 +568,13 @@ public sealed partial class ClientHostGame : Game
                 CurrentDialog = () => 0u,
                 Flash = _ => { },
             });
-            // R4-4 주변 바람 진행. cpppj ClientMain 602~603행의 순서(세션 틱 뒤·커널 전)와 같이 같은 게임 난수를 매 프레임 소비한다.
-            // 메뉴에는 미션 저장소가 없어 닿지 않으며 제품 기본(고정 끔)의 벽시계 틱에서도 같은 순서로 소비한다.
-            // 2026-11-19 0.632에서 R4-4 정기 처리용으로 추가했다.
             _missionStorage?.UpdateAmbientWind(_gameRandom);
         }
-        _missionAudio?.SetFrame(unchecked((uint)_clientClock.Frame.Value.Number));
-        _missionBurning?.PrepareFrame(_clientClock.Frame.Value.Game, unchecked((uint)_clientClock.Frame.Value.Number));
-        PumpKeyboard();
-        PumpMouse();
-        if (_menuInput?.NotifyPointer(Poll(0xffff)) == 0) _cursor?.Set(GameCursor.Arrow);
-        if (_driver.ProcessInput()) { Exit(); return; }
-        if (_startup?.Configuration.Configuration.Changed == true) _startup.SaveOptions();
+        // 원문439b13/439b18의지연삭제와Idle은현재입력뒤·Kernel준비앞에서실행한다.
         _menuInput?.FinishFrame();
+        _missionBurning?.PrepareFrame(_clientClock.Frame.Value.Game, unchecked((uint)_clientClock.Frame.Value.Number));
+        // 프레임캡처뒤고정한같은시각으로표시준비/주변난수소비를끝낸다음Kernel슬롯을순회한다.
+        _missionSession?.RunMissionFrame();
         if (_menuDirty && _gumpDrawing is not null && _startup is not null)
         { _startup.Draw(_driver.Screen); _gumpDrawing.Draw(); _menuDirty = false; }
         base.Update(gameTime);
