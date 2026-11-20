@@ -48,7 +48,9 @@ test('갈무리11 일반·굵은 글꼴과 한국어 메뉴', async ({ page }) =
   await expect.poll(() => page.evaluate(() => window.netstorm._gameData.currentTell)).toBe('Welcome2');
   await clickLabel(page, '메인 메뉴');
   await clickLabel(page, '옵션');
-  expect(await page.evaluate(() => window.netstorm._mainMenu.popup.levels[0].list.items[0].label)).toBe('소리 켜기');
+  // Options 목록은 E1095 뒤 Language(언어)가 맨 위이므로 첫 항목이 아니라 포함 여부로 확인한다. (2026-11-20 WB04-E1118: 낡은 첫 항목 기대값 정정)
+  const optionLabels = await page.evaluate(() => window.netstorm._mainMenu.popup.levels[0].list.items.map((item) => item.label));
+  expect(optionLabels[0]).toBe('언어'); expect(optionLabels).toContain('소리 켜기');
   await page.keyboard.press('Escape');
   await clickLabel(page, '도움말');
   await clickLabel(page, '일반 도움말 - F1');

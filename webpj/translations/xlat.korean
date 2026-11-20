@@ -1103,3 +1103,1209 @@ Hard
 ---
 어려움
 ===
+
+// 게임 메뉴 막대·Game/View/Options 항목·상태 안내(MessageGump)·미션 시작 진행 창이다. 키(원문)는 웹 코드의 translate 호출 문자열과 서식 글자까지 같아야 한다.
+// 색 코드가 들어가는 안내(접속·끊김·동맹 등)는 원본처럼 플레이어 색(b r w g m y l o)마다 원문이 따로라 색별로 모두 둔다. 응답 지연의 4번째 색은 u 이다. (2026-11-20 WB04-E1118)
+
+***
+Game
+---
+게임
+===
+
+***
+View
+---
+보기
+===
+
+***
+Players
+---
+플레이어
+===
+
+***
+About
+---
+정보
+===
+
+***
+Cheat
+---
+치트
+===
+
+***
+Review Mission Objectives - ~iF8~.
+---
+미션 목표 보기 - ~iF8~.
+===
+
+***
+Restart Mission
+---
+미션 다시 시작
+===
+
+***
+Leave Mission
+---
+미션 나가기
+===
+
+***
+Restart Demo
+---
+데모 다시 시작
+===
+
+***
+Exit Demo
+---
+데모 나가기
+===
+
+***
+Hide/Show chat - ~iF3~.
+---
+채팅 숨기기/보이기 - ~iF3~.
+===
+
+***
+Refresh Zones - ~iF9~.
+---
+존 새로 고침 - ~iF9~.
+===
+
+***
+Hide buildings - ~iF2~.
+---
+건물 숨기기 - ~iF2~.
+===
+
+***
+Hide/Show Island Themes - ~iShift F3~.
+---
+섬 테마 숨기기/보이기 - ~iShift F3~.
+===
+
+***
+View Home Temple - ~iF4~.
+---
+내 신전 보기 - ~iF4~.
+===
+
+***
+View Your Priest - ~iF5~.
+---
+내 사제 보기 - ~iF5~.
+===
+
+***
+View Netstorm Knowledge - ~iF6~.
+---
+NetStorm 지식 보기 - ~iF6~.
+===
+
+***
+Hide Island Ownership - ~iF7~.
+---
+섬 소유 표시 숨기기 - ~iF7~.
+===
+
+***
+View Player List - ~iF9~.
+---
+플레이어 목록 보기 - ~iF9~.
+===
+
+***
+Cursor Snap To Grid
+---
+커서를 격자에 맞추기
+===
+
+***
+Counterclockwise Piece Rotation - ~iC~.
+---
+조각 반시계 방향 회전 - ~iC~.
+===
+
+***
+Player List
+
+---
+플레이어 목록
+
+===
+
+***
+~E~wGame Paused!
+---
+~E~w게임 일시 정지!
+===
+
+***
+~E~yGame Time~r:~w %d:%02d:%02d
+---
+~E~y게임 시간~r:~w %d:%02d:%02d
+===
+
+***
+~E~wGame started!
+---
+~E~w게임 시작!
+===
+
+***
+~E~wGame completed!
+---
+~E~w게임 완료!
+===
+
+***
+~wServer not responding
+---
+~w서버 응답 없음
+===
+
+***
+~E~wResource Injection of %d sp was received
+---
+~E~w자원 주입: %d sp 수신
+===
+
+***
+~E~w%s is present
+---
+~E~w%s 접속
+===
+
+***
+~E~b%s~w has disconnected
+---
+~E~b%s~w 접속 끊김
+===
+
+***
+~E~b%s~w is present
+---
+~E~b%s~w 접속
+===
+
+***
+~E~b%s~w sent you %d Storm Power
+---
+~E~b%s~w 님이 보낸 스톰 파워: %d
+===
+
+***
+~E~b%s~w wishes to declare a Draw
+---
+~E~b%s~w 무승부 선언 요청
+===
+
+***
+~E~r%s~w has disconnected
+---
+~E~r%s~w 접속 끊김
+===
+
+***
+~E~r%s~w is present
+---
+~E~r%s~w 접속
+===
+
+***
+~E~r%s~w sent you %d Storm Power
+---
+~E~r%s~w 님이 보낸 스톰 파워: %d
+===
+
+***
+~E~r%s~w wishes to declare a Draw
+---
+~E~r%s~w 무승부 선언 요청
+===
+
+***
+~E~w%s~w has disconnected
+---
+~E~w%s~w 접속 끊김
+===
+
+***
+~E~w%s~w is present
+---
+~E~w%s~w 접속
+===
+
+***
+~E~w%s~w sent you %d Storm Power
+---
+~E~w%s~w 님이 보낸 스톰 파워: %d
+===
+
+***
+~E~w%s~w wishes to declare a Draw
+---
+~E~w%s~w 무승부 선언 요청
+===
+
+***
+~E~g%s~w has disconnected
+---
+~E~g%s~w 접속 끊김
+===
+
+***
+~E~g%s~w is present
+---
+~E~g%s~w 접속
+===
+
+***
+~E~g%s~w sent you %d Storm Power
+---
+~E~g%s~w 님이 보낸 스톰 파워: %d
+===
+
+***
+~E~g%s~w wishes to declare a Draw
+---
+~E~g%s~w 무승부 선언 요청
+===
+
+***
+~E~m%s~w has disconnected
+---
+~E~m%s~w 접속 끊김
+===
+
+***
+~E~m%s~w is present
+---
+~E~m%s~w 접속
+===
+
+***
+~E~m%s~w sent you %d Storm Power
+---
+~E~m%s~w 님이 보낸 스톰 파워: %d
+===
+
+***
+~E~m%s~w wishes to declare a Draw
+---
+~E~m%s~w 무승부 선언 요청
+===
+
+***
+~E~y%s~w has disconnected
+---
+~E~y%s~w 접속 끊김
+===
+
+***
+~E~y%s~w is present
+---
+~E~y%s~w 접속
+===
+
+***
+~E~y%s~w sent you %d Storm Power
+---
+~E~y%s~w 님이 보낸 스톰 파워: %d
+===
+
+***
+~E~y%s~w wishes to declare a Draw
+---
+~E~y%s~w 무승부 선언 요청
+===
+
+***
+~E~l%s~w has disconnected
+---
+~E~l%s~w 접속 끊김
+===
+
+***
+~E~l%s~w is present
+---
+~E~l%s~w 접속
+===
+
+***
+~E~l%s~w sent you %d Storm Power
+---
+~E~l%s~w 님이 보낸 스톰 파워: %d
+===
+
+***
+~E~l%s~w wishes to declare a Draw
+---
+~E~l%s~w 무승부 선언 요청
+===
+
+***
+~E~o%s~w has disconnected
+---
+~E~o%s~w 접속 끊김
+===
+
+***
+~E~o%s~w is present
+---
+~E~o%s~w 접속
+===
+
+***
+~E~o%s~w sent you %d Storm Power
+---
+~E~o%s~w 님이 보낸 스톰 파워: %d
+===
+
+***
+~E~o%s~w wishes to declare a Draw
+---
+~E~o%s~w 무승부 선언 요청
+===
+
+***
+~E~b%s~w not responding
+---
+~E~b%s~w 응답 없음
+===
+
+***
+~E~r%s~w not responding
+---
+~E~r%s~w 응답 없음
+===
+
+***
+~E~w%s~w not responding
+---
+~E~w%s~w 응답 없음
+===
+
+***
+~E~u%s~w not responding
+---
+~E~u%s~w 응답 없음
+===
+
+***
+~E~m%s~w not responding
+---
+~E~m%s~w 응답 없음
+===
+
+***
+~E~y%s~w not responding
+---
+~E~y%s~w 응답 없음
+===
+
+***
+~E~l%s~w not responding
+---
+~E~l%s~w 응답 없음
+===
+
+***
+~E~o%s~w not responding
+---
+~E~o%s~w 응답 없음
+===
+
+***
+~E~b%s~w and ~b%s~w have broken their Alliance
+---
+~E~b%s~w, ~b%s~w 동맹 해제
+===
+
+***
+~E~b%s~w and ~b%s~w are now Allies
+---
+~E~b%s~w, ~b%s~w 동맹 체결
+===
+
+***
+~E~b%s~w and ~r%s~w have broken their Alliance
+---
+~E~b%s~w, ~r%s~w 동맹 해제
+===
+
+***
+~E~b%s~w and ~r%s~w are now Allies
+---
+~E~b%s~w, ~r%s~w 동맹 체결
+===
+
+***
+~E~b%s~w and ~w%s~w have broken their Alliance
+---
+~E~b%s~w, ~w%s~w 동맹 해제
+===
+
+***
+~E~b%s~w and ~w%s~w are now Allies
+---
+~E~b%s~w, ~w%s~w 동맹 체결
+===
+
+***
+~E~b%s~w and ~g%s~w have broken their Alliance
+---
+~E~b%s~w, ~g%s~w 동맹 해제
+===
+
+***
+~E~b%s~w and ~g%s~w are now Allies
+---
+~E~b%s~w, ~g%s~w 동맹 체결
+===
+
+***
+~E~b%s~w and ~m%s~w have broken their Alliance
+---
+~E~b%s~w, ~m%s~w 동맹 해제
+===
+
+***
+~E~b%s~w and ~m%s~w are now Allies
+---
+~E~b%s~w, ~m%s~w 동맹 체결
+===
+
+***
+~E~b%s~w and ~y%s~w have broken their Alliance
+---
+~E~b%s~w, ~y%s~w 동맹 해제
+===
+
+***
+~E~b%s~w and ~y%s~w are now Allies
+---
+~E~b%s~w, ~y%s~w 동맹 체결
+===
+
+***
+~E~b%s~w and ~l%s~w have broken their Alliance
+---
+~E~b%s~w, ~l%s~w 동맹 해제
+===
+
+***
+~E~b%s~w and ~l%s~w are now Allies
+---
+~E~b%s~w, ~l%s~w 동맹 체결
+===
+
+***
+~E~b%s~w and ~o%s~w have broken their Alliance
+---
+~E~b%s~w, ~o%s~w 동맹 해제
+===
+
+***
+~E~b%s~w and ~o%s~w are now Allies
+---
+~E~b%s~w, ~o%s~w 동맹 체결
+===
+
+***
+~E~r%s~w and ~b%s~w have broken their Alliance
+---
+~E~r%s~w, ~b%s~w 동맹 해제
+===
+
+***
+~E~r%s~w and ~b%s~w are now Allies
+---
+~E~r%s~w, ~b%s~w 동맹 체결
+===
+
+***
+~E~r%s~w and ~r%s~w have broken their Alliance
+---
+~E~r%s~w, ~r%s~w 동맹 해제
+===
+
+***
+~E~r%s~w and ~r%s~w are now Allies
+---
+~E~r%s~w, ~r%s~w 동맹 체결
+===
+
+***
+~E~r%s~w and ~w%s~w have broken their Alliance
+---
+~E~r%s~w, ~w%s~w 동맹 해제
+===
+
+***
+~E~r%s~w and ~w%s~w are now Allies
+---
+~E~r%s~w, ~w%s~w 동맹 체결
+===
+
+***
+~E~r%s~w and ~g%s~w have broken their Alliance
+---
+~E~r%s~w, ~g%s~w 동맹 해제
+===
+
+***
+~E~r%s~w and ~g%s~w are now Allies
+---
+~E~r%s~w, ~g%s~w 동맹 체결
+===
+
+***
+~E~r%s~w and ~m%s~w have broken their Alliance
+---
+~E~r%s~w, ~m%s~w 동맹 해제
+===
+
+***
+~E~r%s~w and ~m%s~w are now Allies
+---
+~E~r%s~w, ~m%s~w 동맹 체결
+===
+
+***
+~E~r%s~w and ~y%s~w have broken their Alliance
+---
+~E~r%s~w, ~y%s~w 동맹 해제
+===
+
+***
+~E~r%s~w and ~y%s~w are now Allies
+---
+~E~r%s~w, ~y%s~w 동맹 체결
+===
+
+***
+~E~r%s~w and ~l%s~w have broken their Alliance
+---
+~E~r%s~w, ~l%s~w 동맹 해제
+===
+
+***
+~E~r%s~w and ~l%s~w are now Allies
+---
+~E~r%s~w, ~l%s~w 동맹 체결
+===
+
+***
+~E~r%s~w and ~o%s~w have broken their Alliance
+---
+~E~r%s~w, ~o%s~w 동맹 해제
+===
+
+***
+~E~r%s~w and ~o%s~w are now Allies
+---
+~E~r%s~w, ~o%s~w 동맹 체결
+===
+
+***
+~E~w%s~w and ~b%s~w have broken their Alliance
+---
+~E~w%s~w, ~b%s~w 동맹 해제
+===
+
+***
+~E~w%s~w and ~b%s~w are now Allies
+---
+~E~w%s~w, ~b%s~w 동맹 체결
+===
+
+***
+~E~w%s~w and ~r%s~w have broken their Alliance
+---
+~E~w%s~w, ~r%s~w 동맹 해제
+===
+
+***
+~E~w%s~w and ~r%s~w are now Allies
+---
+~E~w%s~w, ~r%s~w 동맹 체결
+===
+
+***
+~E~w%s~w and ~w%s~w have broken their Alliance
+---
+~E~w%s~w, ~w%s~w 동맹 해제
+===
+
+***
+~E~w%s~w and ~w%s~w are now Allies
+---
+~E~w%s~w, ~w%s~w 동맹 체결
+===
+
+***
+~E~w%s~w and ~g%s~w have broken their Alliance
+---
+~E~w%s~w, ~g%s~w 동맹 해제
+===
+
+***
+~E~w%s~w and ~g%s~w are now Allies
+---
+~E~w%s~w, ~g%s~w 동맹 체결
+===
+
+***
+~E~w%s~w and ~m%s~w have broken their Alliance
+---
+~E~w%s~w, ~m%s~w 동맹 해제
+===
+
+***
+~E~w%s~w and ~m%s~w are now Allies
+---
+~E~w%s~w, ~m%s~w 동맹 체결
+===
+
+***
+~E~w%s~w and ~y%s~w have broken their Alliance
+---
+~E~w%s~w, ~y%s~w 동맹 해제
+===
+
+***
+~E~w%s~w and ~y%s~w are now Allies
+---
+~E~w%s~w, ~y%s~w 동맹 체결
+===
+
+***
+~E~w%s~w and ~l%s~w have broken their Alliance
+---
+~E~w%s~w, ~l%s~w 동맹 해제
+===
+
+***
+~E~w%s~w and ~l%s~w are now Allies
+---
+~E~w%s~w, ~l%s~w 동맹 체결
+===
+
+***
+~E~w%s~w and ~o%s~w have broken their Alliance
+---
+~E~w%s~w, ~o%s~w 동맹 해제
+===
+
+***
+~E~w%s~w and ~o%s~w are now Allies
+---
+~E~w%s~w, ~o%s~w 동맹 체결
+===
+
+***
+~E~g%s~w and ~b%s~w have broken their Alliance
+---
+~E~g%s~w, ~b%s~w 동맹 해제
+===
+
+***
+~E~g%s~w and ~b%s~w are now Allies
+---
+~E~g%s~w, ~b%s~w 동맹 체결
+===
+
+***
+~E~g%s~w and ~r%s~w have broken their Alliance
+---
+~E~g%s~w, ~r%s~w 동맹 해제
+===
+
+***
+~E~g%s~w and ~r%s~w are now Allies
+---
+~E~g%s~w, ~r%s~w 동맹 체결
+===
+
+***
+~E~g%s~w and ~w%s~w have broken their Alliance
+---
+~E~g%s~w, ~w%s~w 동맹 해제
+===
+
+***
+~E~g%s~w and ~w%s~w are now Allies
+---
+~E~g%s~w, ~w%s~w 동맹 체결
+===
+
+***
+~E~g%s~w and ~g%s~w have broken their Alliance
+---
+~E~g%s~w, ~g%s~w 동맹 해제
+===
+
+***
+~E~g%s~w and ~g%s~w are now Allies
+---
+~E~g%s~w, ~g%s~w 동맹 체결
+===
+
+***
+~E~g%s~w and ~m%s~w have broken their Alliance
+---
+~E~g%s~w, ~m%s~w 동맹 해제
+===
+
+***
+~E~g%s~w and ~m%s~w are now Allies
+---
+~E~g%s~w, ~m%s~w 동맹 체결
+===
+
+***
+~E~g%s~w and ~y%s~w have broken their Alliance
+---
+~E~g%s~w, ~y%s~w 동맹 해제
+===
+
+***
+~E~g%s~w and ~y%s~w are now Allies
+---
+~E~g%s~w, ~y%s~w 동맹 체결
+===
+
+***
+~E~g%s~w and ~l%s~w have broken their Alliance
+---
+~E~g%s~w, ~l%s~w 동맹 해제
+===
+
+***
+~E~g%s~w and ~l%s~w are now Allies
+---
+~E~g%s~w, ~l%s~w 동맹 체결
+===
+
+***
+~E~g%s~w and ~o%s~w have broken their Alliance
+---
+~E~g%s~w, ~o%s~w 동맹 해제
+===
+
+***
+~E~g%s~w and ~o%s~w are now Allies
+---
+~E~g%s~w, ~o%s~w 동맹 체결
+===
+
+***
+~E~m%s~w and ~b%s~w have broken their Alliance
+---
+~E~m%s~w, ~b%s~w 동맹 해제
+===
+
+***
+~E~m%s~w and ~b%s~w are now Allies
+---
+~E~m%s~w, ~b%s~w 동맹 체결
+===
+
+***
+~E~m%s~w and ~r%s~w have broken their Alliance
+---
+~E~m%s~w, ~r%s~w 동맹 해제
+===
+
+***
+~E~m%s~w and ~r%s~w are now Allies
+---
+~E~m%s~w, ~r%s~w 동맹 체결
+===
+
+***
+~E~m%s~w and ~w%s~w have broken their Alliance
+---
+~E~m%s~w, ~w%s~w 동맹 해제
+===
+
+***
+~E~m%s~w and ~w%s~w are now Allies
+---
+~E~m%s~w, ~w%s~w 동맹 체결
+===
+
+***
+~E~m%s~w and ~g%s~w have broken their Alliance
+---
+~E~m%s~w, ~g%s~w 동맹 해제
+===
+
+***
+~E~m%s~w and ~g%s~w are now Allies
+---
+~E~m%s~w, ~g%s~w 동맹 체결
+===
+
+***
+~E~m%s~w and ~m%s~w have broken their Alliance
+---
+~E~m%s~w, ~m%s~w 동맹 해제
+===
+
+***
+~E~m%s~w and ~m%s~w are now Allies
+---
+~E~m%s~w, ~m%s~w 동맹 체결
+===
+
+***
+~E~m%s~w and ~y%s~w have broken their Alliance
+---
+~E~m%s~w, ~y%s~w 동맹 해제
+===
+
+***
+~E~m%s~w and ~y%s~w are now Allies
+---
+~E~m%s~w, ~y%s~w 동맹 체결
+===
+
+***
+~E~m%s~w and ~l%s~w have broken their Alliance
+---
+~E~m%s~w, ~l%s~w 동맹 해제
+===
+
+***
+~E~m%s~w and ~l%s~w are now Allies
+---
+~E~m%s~w, ~l%s~w 동맹 체결
+===
+
+***
+~E~m%s~w and ~o%s~w have broken their Alliance
+---
+~E~m%s~w, ~o%s~w 동맹 해제
+===
+
+***
+~E~m%s~w and ~o%s~w are now Allies
+---
+~E~m%s~w, ~o%s~w 동맹 체결
+===
+
+***
+~E~y%s~w and ~b%s~w have broken their Alliance
+---
+~E~y%s~w, ~b%s~w 동맹 해제
+===
+
+***
+~E~y%s~w and ~b%s~w are now Allies
+---
+~E~y%s~w, ~b%s~w 동맹 체결
+===
+
+***
+~E~y%s~w and ~r%s~w have broken their Alliance
+---
+~E~y%s~w, ~r%s~w 동맹 해제
+===
+
+***
+~E~y%s~w and ~r%s~w are now Allies
+---
+~E~y%s~w, ~r%s~w 동맹 체결
+===
+
+***
+~E~y%s~w and ~w%s~w have broken their Alliance
+---
+~E~y%s~w, ~w%s~w 동맹 해제
+===
+
+***
+~E~y%s~w and ~w%s~w are now Allies
+---
+~E~y%s~w, ~w%s~w 동맹 체결
+===
+
+***
+~E~y%s~w and ~g%s~w have broken their Alliance
+---
+~E~y%s~w, ~g%s~w 동맹 해제
+===
+
+***
+~E~y%s~w and ~g%s~w are now Allies
+---
+~E~y%s~w, ~g%s~w 동맹 체결
+===
+
+***
+~E~y%s~w and ~m%s~w have broken their Alliance
+---
+~E~y%s~w, ~m%s~w 동맹 해제
+===
+
+***
+~E~y%s~w and ~m%s~w are now Allies
+---
+~E~y%s~w, ~m%s~w 동맹 체결
+===
+
+***
+~E~y%s~w and ~y%s~w have broken their Alliance
+---
+~E~y%s~w, ~y%s~w 동맹 해제
+===
+
+***
+~E~y%s~w and ~y%s~w are now Allies
+---
+~E~y%s~w, ~y%s~w 동맹 체결
+===
+
+***
+~E~y%s~w and ~l%s~w have broken their Alliance
+---
+~E~y%s~w, ~l%s~w 동맹 해제
+===
+
+***
+~E~y%s~w and ~l%s~w are now Allies
+---
+~E~y%s~w, ~l%s~w 동맹 체결
+===
+
+***
+~E~y%s~w and ~o%s~w have broken their Alliance
+---
+~E~y%s~w, ~o%s~w 동맹 해제
+===
+
+***
+~E~y%s~w and ~o%s~w are now Allies
+---
+~E~y%s~w, ~o%s~w 동맹 체결
+===
+
+***
+~E~l%s~w and ~b%s~w have broken their Alliance
+---
+~E~l%s~w, ~b%s~w 동맹 해제
+===
+
+***
+~E~l%s~w and ~b%s~w are now Allies
+---
+~E~l%s~w, ~b%s~w 동맹 체결
+===
+
+***
+~E~l%s~w and ~r%s~w have broken their Alliance
+---
+~E~l%s~w, ~r%s~w 동맹 해제
+===
+
+***
+~E~l%s~w and ~r%s~w are now Allies
+---
+~E~l%s~w, ~r%s~w 동맹 체결
+===
+
+***
+~E~l%s~w and ~w%s~w have broken their Alliance
+---
+~E~l%s~w, ~w%s~w 동맹 해제
+===
+
+***
+~E~l%s~w and ~w%s~w are now Allies
+---
+~E~l%s~w, ~w%s~w 동맹 체결
+===
+
+***
+~E~l%s~w and ~g%s~w have broken their Alliance
+---
+~E~l%s~w, ~g%s~w 동맹 해제
+===
+
+***
+~E~l%s~w and ~g%s~w are now Allies
+---
+~E~l%s~w, ~g%s~w 동맹 체결
+===
+
+***
+~E~l%s~w and ~m%s~w have broken their Alliance
+---
+~E~l%s~w, ~m%s~w 동맹 해제
+===
+
+***
+~E~l%s~w and ~m%s~w are now Allies
+---
+~E~l%s~w, ~m%s~w 동맹 체결
+===
+
+***
+~E~l%s~w and ~y%s~w have broken their Alliance
+---
+~E~l%s~w, ~y%s~w 동맹 해제
+===
+
+***
+~E~l%s~w and ~y%s~w are now Allies
+---
+~E~l%s~w, ~y%s~w 동맹 체결
+===
+
+***
+~E~l%s~w and ~l%s~w have broken their Alliance
+---
+~E~l%s~w, ~l%s~w 동맹 해제
+===
+
+***
+~E~l%s~w and ~l%s~w are now Allies
+---
+~E~l%s~w, ~l%s~w 동맹 체결
+===
+
+***
+~E~l%s~w and ~o%s~w have broken their Alliance
+---
+~E~l%s~w, ~o%s~w 동맹 해제
+===
+
+***
+~E~l%s~w and ~o%s~w are now Allies
+---
+~E~l%s~w, ~o%s~w 동맹 체결
+===
+
+***
+~E~o%s~w and ~b%s~w have broken their Alliance
+---
+~E~o%s~w, ~b%s~w 동맹 해제
+===
+
+***
+~E~o%s~w and ~b%s~w are now Allies
+---
+~E~o%s~w, ~b%s~w 동맹 체결
+===
+
+***
+~E~o%s~w and ~r%s~w have broken their Alliance
+---
+~E~o%s~w, ~r%s~w 동맹 해제
+===
+
+***
+~E~o%s~w and ~r%s~w are now Allies
+---
+~E~o%s~w, ~r%s~w 동맹 체결
+===
+
+***
+~E~o%s~w and ~w%s~w have broken their Alliance
+---
+~E~o%s~w, ~w%s~w 동맹 해제
+===
+
+***
+~E~o%s~w and ~w%s~w are now Allies
+---
+~E~o%s~w, ~w%s~w 동맹 체결
+===
+
+***
+~E~o%s~w and ~g%s~w have broken their Alliance
+---
+~E~o%s~w, ~g%s~w 동맹 해제
+===
+
+***
+~E~o%s~w and ~g%s~w are now Allies
+---
+~E~o%s~w, ~g%s~w 동맹 체결
+===
+
+***
+~E~o%s~w and ~m%s~w have broken their Alliance
+---
+~E~o%s~w, ~m%s~w 동맹 해제
+===
+
+***
+~E~o%s~w and ~m%s~w are now Allies
+---
+~E~o%s~w, ~m%s~w 동맹 체결
+===
+
+***
+~E~o%s~w and ~y%s~w have broken their Alliance
+---
+~E~o%s~w, ~y%s~w 동맹 해제
+===
+
+***
+~E~o%s~w and ~y%s~w are now Allies
+---
+~E~o%s~w, ~y%s~w 동맹 체결
+===
+
+***
+~E~o%s~w and ~l%s~w have broken their Alliance
+---
+~E~o%s~w, ~l%s~w 동맹 해제
+===
+
+***
+~E~o%s~w and ~l%s~w are now Allies
+---
+~E~o%s~w, ~l%s~w 동맹 체결
+===
+
+***
+~E~o%s~w and ~o%s~w have broken their Alliance
+---
+~E~o%s~w, ~o%s~w 동맹 해제
+===
+
+***
+~E~o%s~w and ~o%s~w are now Allies
+---
+~E~o%s~w, ~o%s~w 동맹 체결
+===
+
+***
+Initializing.
+---
+초기화 중.
+===
+
+***
+Starting Mission...
+---
+미션 시작 중...
+===
+
+***
+Cancel
+---
+취소
+===
+
