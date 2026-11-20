@@ -10,6 +10,11 @@ public sealed partial class ClientHostGame
     private readonly ClientClockGlobals _clientClock;
     /// <summary>같은호스트의콘텐츠재연결이Native초기화를반복하지않게하는수명표식이다.</summary>
     private bool _nativePrefixInitialized;
+    /// <summary>고정시각전진뒤스크립트입력전의원문위치에서같은Client프레임을캡처한다.</summary>
+    private void CaptureNativeFrame()
+    {
+        if (_clientClock.Initialized) _clientClock.CaptureFrame(_clock.Milliseconds);
+    }
     /// <summary>팔레트뒤Clock값대입/보정연결/실제Player초기화를순서대로실행하고정상복귀뒤만완료를기록한다.</summary>
     private void InitializeNativePrefix()
     {

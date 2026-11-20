@@ -50,10 +50,12 @@ public sealed class HostFrameDriver
     }
 
     /// <summary>프레임 번호를 올리고 시각을 한 프레임 전진시킨 뒤 스크립트의 이번 프레임 입력 단계를 큐에 넣는다. 실제 입력 펌프보다 먼저 부른다.</summary>
-    public void BeginFrame()
+    /// <param name="captureBeforeInput">같은시각전진뒤스크립트관측전에실제Client프레임을고정하는선택장치다.</param>
+    public void BeginFrame(Action? captureBeforeInput = null)
     {
         Frame++;
         _clock?.Advance();
+        captureBeforeInput?.Invoke();
         _runner?.BeforeInput(Frame);
     }
 

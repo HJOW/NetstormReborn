@@ -331,7 +331,7 @@ public sealed partial class ClientHostGame : Game
         var storage = new RawSurfaceStorage(OriginalEdition.Patch1078);
         // 현재개발용일반미션부모가같은장기옵션을명시Reset한다. 전체Native로그인설치시원문부모위치로인계한다.
         RawMissionBattleOptions.Reset(OriginalEdition.Patch1078, _gameplay.BattleOptions);
-        var session = new HostSession(_kernel, _gameRandom, _crtRandom, sharedSp: _spGlobals.Store, sharedCrtBox: _spCrtBox, sharedGameplay: _gameplay, sharedLists: _sidLists, pool: storage.Pool, sharedLocal: _localState, sharedConnections: _connections, sharedPlayerRecords: _gameplay.PlayerRecords);
+        var session = new HostSession(_kernel, _gameRandom, _crtRandom, sharedSp: _spGlobals.Store, sharedCrtBox: _spCrtBox, sharedGameplay: _gameplay, sharedLists: _sidLists, pool: storage.Pool, sharedLocal: _localState, sharedConnections: _connections, sharedPlayerRecords: _gameplay.PlayerRecords, sharedProcessTime: _clientClock.GameTime);
         // 적재 실패에서도 이 호출이 만든 외부 연소장치만 반납한다.
         HostMissionBurning? pendingBurning = null;
         try
@@ -407,7 +407,7 @@ public sealed partial class ClientHostGame : Game
             // R4-2 그래프 per-Pop 번호 부여. 같은 호출의 공간 등록 뒤 영역 무효화·표면 추가와 ResetGraph가 실행된다.
             session.WireTerrainPostPopGraph();
             // 같은 Player·공통 Pop·프로세스에 실제 사제/보호막 후처리를 등록한다.
-            _missionAudio ??= new HostMissionAudio(_startup, Window.Handle, _options.MuteAudio, () => _clock.NowSeconds);
+            _missionAudio ??= new HostMissionAudio(_startup, Window.Handle, _options.MuteAudio, () => _clientClock.Clock.WallSeconds(_clock.Milliseconds));
             if (!OperatingSystem.IsWindows()) throw new PlatformNotSupportedException("현재 미션 연소 장치는 Windows 전용이다");
             session.BuildPriestWorldDevices(_missionAudio.BindPriest(session));
             // 건설 진행음도 같은 미션의 Sound47을 빌리므로 음향/사제 장치 설치 뒤 표시 장치를 조립한다.
@@ -553,18 +553,17 @@ public sealed partial class ClientHostGame : Game
     {
         _editor?.Poll();
         _menuInput?.Tick();
-        _driver.BeginFrame();
+        _driver.BeginFrame(CaptureNativeFrame);
         if (_missionSession is not null)
         {
-            // R4-2 공장 프레임 집계용 실제 공유 시각 전진과 커널 실행. 메뉴에는 미션 세션이 없어 닿지 않는다(0.629).
-            double step = _options.FixedFrameMs != 0 ? _options.FixedFrameMs / 1000.0 : gameTime.ElapsedGameTime.TotalSeconds;
-            _missionSession.AdvanceMissionFrame(step);
+            // 같은Client Frame.game은스크립트입력전에캡처했다. 미션은그주소를직접읽고Kernel만실행한다.
+            _missionSession.RunMissionFrame();
             // R4-4 주변음 진행. cpppj ClientMain 602행의 순서(세션 틱 뒤·바람 앞)와 같이 같은 게임 난수를 먼저 소비한다.
             // 실제 재생·모달·번쩍임은 R6 음향에서 이으며 여기서는 난수·기한·종류 진행만 한다. 메뉴에는 미션 경로가 없어 닿지 않는다.
             // 2026-11-19 0.633에서 R4-4 정기 처리용으로 추가했다.
             RawAmbientSound.Step(_ambientSound, _gameRandom, new AmbientSoundHooks
             {
-                WallSeconds = () => _clock.NowSeconds,
+                WallSeconds = () => _clientClock.Clock.WallSeconds(_clock.Milliseconds),
                 Sound = (_, _, _, _, _, _) => { },
                 CurrentDialog = () => 0u,
                 Flash = _ => { },
@@ -574,8 +573,8 @@ public sealed partial class ClientHostGame : Game
             // 2026-11-19 0.632에서 R4-4 정기 처리용으로 추가했다.
             _missionStorage?.UpdateAmbientWind(_gameRandom);
         }
-        _missionAudio?.SetFrame(unchecked((uint)_driver.Frame));
-        _missionBurning?.PrepareFrame(_clock.NowSeconds, unchecked((uint)_driver.Frame));
+        _missionAudio?.SetFrame(unchecked((uint)_clientClock.Frame.Value.Number));
+        _missionBurning?.PrepareFrame(_clientClock.Frame.Value.Game, unchecked((uint)_clientClock.Frame.Value.Number));
         PumpKeyboard();
         PumpMouse();
         if (_menuInput?.NotifyPointer(Poll(0xffff)) == 0) _cursor?.Set(GameCursor.Arrow);

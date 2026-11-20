@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-21 · 마지막 완료 0.721(Client메뉴전Clock/Player·집중63건·3실행주소세대개선) · 다음 0.722(실제Client Frame/게임시각연결) · 현재 단계 R4-2·R4-5 병행 · 전체 목표 미완료**
+**2026-11-21 · 마지막 완료 0.722(실제Client Frame/시각공유·집중95건·3시작 감사) · 다음 0.723(입력/주변음/바람/Kernel 원문 순서) · 현재 단계 R4-2·R4-5 병행 · 전체 목표 미완료**
 
 현행 인계는 이 문서가 기준이다. 0.600~0.635의 단위별 완료 문장, 단위마다 누적한 검사 수와 L2 보관 경로 나열은 [0.635 정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635)에 있다. 0.613까지의 경과, 파일 계열별 체크 목록과 옛 집계는 [0.613 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)에 있다. 단위별 근거는 `docs/dotnet-canon-0NNN-*.md`이다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
@@ -104,7 +104,7 @@
 75. **0.719 실제공장호출대여 — 완료.** 기존Take/Form장치를유지하는직접외곽pin과현재묶음/NULL우선순위·실제Host세공장연결지점·공개전실행중반납관문을연결했다. 중첩/부분효과/예외등집중Core9/Client76 합계85건통과·실제DN1-1종료0/덤프0.716전체동일·원본1392불변이다. [근거](docs/dotnet-canon-0719-20261120.md)
 76. **0.720 정기전체회귀/L2 — 완료.** Assets366/Core3349/Client1479 합계5194건통과·실패0·기존실장치음향1건미실행이다. 65실행종료0·DN31전체바이트/34지표0.716동일·원본1392불변이며M1은0/34다. [근거](docs/dotnet-canon-0720-20261120.md)
 77. **0.721 Client메뉴전Clock/Player초기화 — 완료.** 같은Clock객체생성자값대입/실제보정owner·Frame주소와known0 Player부모를팔레트뒤첫메뉴전에연결했다. 집중Core33/Client30 합계63건통과·실제3DN종료0·Player주소DWORD외모든행/지표0.720동일·원본1392불변이다. CPP주소세대차이는81920→40960이며실제State초기화는후속이다. [근거](docs/dotnet-canon-0721-20261121.md)
-78. **0.722 실제Client Frame/게임시각 — 다음.** 원문프레임위치에서같은Clock/Frame캡처와실제미션게임시각소비를이어간다. 장기ProcessHostStorage·Native WorldRuntime장치일원화·건설효과pin·전체로그인/상태/전송Root·Source의Editor/LAN/Meta재인계·일반건설/DropIsland·Carrier플레이효과·나머지AI/캡처·전용색표·R5월드뷰도남는다. 다음전체회귀는0.724다.
+78. **0.722 실제Client Frame/게임시각 — 완료.** 같은Frame.game의양방향상자·공유ProcessTime과캡처후Kernel실행을연결했다. 집중95건통과·실제3DN종료0·원본1392불변이다. 정확한2.25초캡처로주변정기/프레임값이변했고Surrounded의완전일치슬롯은1개감소했다. 차이를보존했으며실행순서/전체시각전이는후속이다. [근거](docs/dotnet-canon-0722-20261121.md) 다음0.723은입력→주변음→바람→표시준비→Kernel순서를복원한다. 장기ProcessHostStorage·Native WorldRuntime장치일원화·건설효과pin·전체로그인/상태/전송Root·Source의Editor/LAN/Meta재인계·일반건설/DropIsland·Carrier플레이효과·나머지AI/캡처·전용색표·R5월드뷰도남는다. 다음전체회귀는0.724다.
 57. **R4-2 나머지 차이와 R4-3~R4-8.** 농지 프레임, 전용 요새, 표시 등록, 그래프 번호, 장부를 처리한 뒤 R4-3~R4-8을 진행한다. 통합 조각을 마칠 때 같은 조건의 일괄 덤프로 M1 진척을확인한다. [R4 체크](#r4-detail)
 
 <a id="first-run"></a>

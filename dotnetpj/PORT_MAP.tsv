@@ -1201,3 +1201,5 @@ cpppj/src/client/ClientMain.cpp	Netstorm.Client/ClientClockGlobals.cs	635906357c
 cpppj/src/client/ClientMain.h	Netstorm.Client/ClientClockGlobals.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Client.Host/ClientHostGame.NativePrefix.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
 cpppj/src/client/ClientMain.h	Netstorm.Client.Host/ClientHostGame.NativePrefix.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
+cpppj/src/client/ClientMain.cpp	Netstorm.Client/Host/HostFrameDriver.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
+cpppj/src/client/ClientMain.h	Netstorm.Client/Host/HostFrameDriver.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port

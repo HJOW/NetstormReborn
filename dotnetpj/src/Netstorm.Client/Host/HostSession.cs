@@ -121,7 +121,7 @@ public sealed partial class HostSession
     /// <param name="sharedConnections">같은 LocalState를 빌리는 실제 장기 연결표다.</param>
     /// <param name="sharedPlayerRecords">명시제공시같은Core/Player단일고정뷰를빌린다.</param>
     /// <param name="adoptInitializedPlayers">앞선실제Native부모가완료한같은Player를재초기화없이인계받는다.</param>
-    public HostSession(Kernel kernel, GameRandom game, CrtRandom crt, int poolCapacity = 0, RawSpStore? sharedSp = null, UIntBox? sharedCrtBox = null, ClientGameplayGlobals? sharedGameplay = null, RawStateSidLists? sharedLists = null, RawSidPool? pool = null, ClientLocalStateGlobals? sharedLocal = null, ClientConnectionGlobals? sharedConnections = null, ClientPlayerRecords? sharedPlayerRecords = null, bool adoptInitializedPlayers = false)
+    public HostSession(Kernel kernel, GameRandom game, CrtRandom crt, int poolCapacity = 0, RawSpStore? sharedSp = null, UIntBox? sharedCrtBox = null, ClientGameplayGlobals? sharedGameplay = null, RawStateSidLists? sharedLists = null, RawSidPool? pool = null, ClientLocalStateGlobals? sharedLocal = null, ClientConnectionGlobals? sharedConnections = null, ClientPlayerRecords? sharedPlayerRecords = null, bool adoptInitializedPlayers = false, DoubleBox? sharedProcessTime = null)
     {
         ArgumentNullException.ThrowIfNull(kernel);
         ArgumentNullException.ThrowIfNull(game);
@@ -129,6 +129,7 @@ public sealed partial class HostSession
         Kernel = kernel;
         Game = game;
         Crt = crt;
+        ProcessTime = sharedProcessTime ?? new DoubleBox();
         Gameplay = sharedGameplay ?? sharedLocal?.Gameplay ?? sharedConnections?.LocalState.Gameplay ?? new ClientGameplayGlobals();
         LocalState = sharedLocal ?? sharedConnections?.LocalState ?? new ClientLocalStateGlobals(Gameplay, new AmbientSoundState());
         if (!ReferenceEquals(LocalState.Gameplay, Gameplay)) throw new ArgumentException("미션의 실제 Gameplay/LocalState 소유자 불일치", nameof(sharedLocal));

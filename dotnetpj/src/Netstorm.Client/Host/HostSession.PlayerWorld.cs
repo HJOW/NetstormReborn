@@ -30,7 +30,7 @@ public sealed partial class HostSession
     private RegularProcess? _reservedPlayerRegular;
 
     /// <summary>R4 초기 시각을 담는 실제 공유 상자다. 프레임 시계 갱신은 0.629의 미션 틱에서 전진한다.</summary>
-    public DoubleBox ProcessTime { get; } = new();
+    public DoubleBox ProcessTime { get; }
 
     /// <summary>R4-2 공장 프레임 집계용으로 실제 공유 시각을 전진시키고 커널을 한 번 실행한다.</summary>
     /// <param name="seconds">전진할 초다. 고정 프레임 모드에서는 프레임 밀리초를 초로 나눈 값이다.</param>
@@ -43,8 +43,11 @@ public sealed partial class HostSession
         }
 
         ProcessTime.Value += seconds;
-        Kernel.RunFrame();
+        RunMissionFrame();
     }
+
+    /// <summary>호출자가이미캡처한같은현재게임시각으로Kernel을한번실행한다. 시간대입/추가전진은하지않는다.</summary>
+    public void RunMissionFrame() => Kernel.RunFrame();
 
     /// <summary>화신의 실제 부모 체인·커널 등록을 처리하는 호스트다.</summary>
     public SquidProcessHost PlayerProcesses { get; private set; } = null!;

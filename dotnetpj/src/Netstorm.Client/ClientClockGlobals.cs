@@ -8,14 +8,24 @@ public sealed class ClientClockGlobals
 {
     /// <summary>같은실제0055b4ac와그backing을소유하는장기전역이다.</summary>
     private readonly ClientLocalStateGlobals _local;
+    /// <summary>같은FrameTime.game필드를읽고쓰는프로세스시각주소다.</summary>
+    private sealed class FrameGame(FrameTimeBox frame) : DoubleBox
+    {
+        /// <summary>같은실제프레임저장소를대여끝까지보유한다.</summary>
+        private readonly FrameTimeBox _frame = frame;
+        /// <summary>별도시각복사없이현재프레임의game을직접읽고쓴다.</summary>
+        public override double Value { get => _frame.Value.Game; set => _frame.Value.Game = value; }
+    }
     /// <summary>Client생성전에존재하고init full time에서도교체하지않는같은시계다.</summary>
     public GameClock Clock { get; } = new();
     /// <summary>시계내부프레임과구별되는Client의같은FrameTime주소다.</summary>
     public FrameTimeBox Frame { get; } = new();
+    /// <summary>같은실제Frame.game을빌리는안정된게임시각상자다.</summary>
+    public DoubleBox GameTime { get; }
     /// <summary>같은Client의명시초기화가정상복귀했는지다.</summary>
     public bool Initialized { get; private set; }
     /// <summary>현재값을읽거나초기화하지않고같은장기보정owner만보관한다.</summary>
-    public ClientClockGlobals(ClientLocalStateGlobals local) { ArgumentNullException.ThrowIfNull(local); _local = local; }
+    public ClientClockGlobals(ClientLocalStateGlobals local) { ArgumentNullException.ThrowIfNull(local); _local = local; GameTime = new FrameGame(Frame); }
     /// <summary>팔레트뒤원문위치에서한번호출한다. 시간값대입뒤같은실제보정주소를연결하고외부Frame값은보존한다.</summary>
     public void InitializeFullTime(uint milliseconds)
     {
