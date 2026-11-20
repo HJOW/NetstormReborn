@@ -636,6 +636,9 @@ cpppj/src/o/RawFactoryPostPop.cpp	Netstorm.Core/Original/RawFactoryPostPop.cs	e8
 cpppj/src/o/RawFactoryPostPop.h	Netstorm.Core/Original/RawFactoryPostPop.cs	e8b605b9bd432c691f73c468c7ef3444ab857be2	L1
 cpppj/src/o/RawFactoryRegular.cpp	Netstorm.Core/Original/RawFactoryRegular.cs	2c163c5e8e730e91f3a6042dd206521348c02f74	L1
 cpppj/src/o/RawFactoryRegular.h	Netstorm.Core/Original/RawFactoryRegular.cs	2c163c5e8e730e91f3a6042dd206521348c02f74	L1
+cpppj/src/o/RawFactoryResearch.cpp	Netstorm.Core/Original/RawFactoryUpgradeCommand.cs	3bccbbcb2ec19f6103b534b21b1ea30a209ea721	port
+cpppj/src/o/RawFactoryUpgradeCommand.cpp	Netstorm.Core/Original/RawFactoryUpgradeCommand.cs	3bccbbcb2ec19f6103b534b21b1ea30a209ea721	port
+cpppj/src/o/RawFactoryUpgradeCommand.h	Netstorm.Core/Original/RawFactoryUpgradeCommand.cs	3bccbbcb2ec19f6103b534b21b1ea30a209ea721	port
 cpppj/src/o/RawFarmCluster.cpp	Netstorm.Core/Original/RawFarmCluster.cs	da27e191b1459279170608224c4f60fdd84c3343	L1
 cpppj/src/o/RawFarmCluster.h	Netstorm.Core/Original/RawFarmCluster.cs	da27e191b1459279170608224c4f60fdd84c3343	L1
 cpppj/src/o/RawFenceCreate.cpp	Netstorm.Core/Original/RawFenceCreate.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
