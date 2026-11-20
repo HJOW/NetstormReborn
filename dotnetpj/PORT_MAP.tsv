@@ -1157,3 +1157,7 @@ cpppj/src/o/RawMissionSettingsPacket.h	Netstorm.Net/MissionSettingsRegistration.
 cpppj/src/o/RawLocalMissionState.h	Netstorm.Core/Original/LocalMissionStateTypes.cs	e064f1752d6e3526bd3e178d634cd7140c6525f1	port
 cpppj/src/o/RawLocalMissionState.h	Netstorm.Core/Original/RawLocalMissionState.cs	e064f1752d6e3526bd3e178d634cd7140c6525f1	port
 cpppj/src/o/RawLocalMissionState.cpp	Netstorm.Core/Original/RawLocalMissionState.cs	23b16b54f3600c302917f431869d1ee84bb85828	port
+cpppj/src/client/CompositeMissionTransport.h	Netstorm.Net/CompositeMissionTransport.cs	a76499e35e6792f6039adda9a29d6328ac46cba9	port
+cpppj/src/client/CompositeMissionTransport.cpp	Netstorm.Net/CompositeMissionTransport.cs	5756ffd5ff23335839974c3c6f2b2aacd7b35618	port
+cpppj/src/client/ClientPacketSources.h	Netstorm.Net/ClientPacketSources.cs	50a5a1845edc01699ee215001405e8404d43f92a	port
+cpppj/src/client/ClientPacketSources.cpp	Netstorm.Net/ClientPacketSources.cs	50a5a1845edc01699ee215001405e8404d43f92a	port
