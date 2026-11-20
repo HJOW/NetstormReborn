@@ -177,5 +177,53 @@ test('한국어 Tutorial2의 안내 페이지를 표시한다', async ({ page })
     finally { screen.unlock(); } });
   const shownTop = await topHash(); await page.evaluate(() => window.netstorm._clientRenderer.invalidateAll()); await page.waitForTimeout(400);
   expect(await topHash()).toBe(shownTop);
-  await page.screenshot({ path: test.info().outputPath('korean-tutorial2-research.png') }); expect(errors).toEqual([]);
+  await page.screenshot({ path: test.info().outputPath('korean-tutorial2-research.png') });
+  // D: 안내를 닫고 생산 격자의 썬 디스크 발사기를 왼쪽 클릭으로 집은 뒤 섬의 합법 위치에 내려놓는다.
+  await clickLabel(page, '다음'); await page.waitForFunction(() => window.netstorm._gameData.currentTell === 'D1.'); await clickLabel(page, '확인');
+  const archers = () => page.evaluate(() => window.netstorm._campaignWorld.session().world().objects().filter(({object}) => object.type === 71 && object.owner === 1).length);
+  // 현재 사제 주변에서 합법으로 판정되는 자리를 찾는다.
+  const findDrop = async (offsets) => {
+    const base = await page.evaluate(() => { const app = window.netstorm, session = app._campaignWorld.session(), sid = session.findPriestParticipation(session.localOwner()), slot = session.core().pool.slot(sid), raw = new DataView(slot.buffer, slot.byteOffset, slot.byteLength);
+      const point = app._clientGameplay.camera().snapshot().project(raw.getFloat32(14, true), raw.getFloat32(18, true)), rect = app.canvas.getBoundingClientRect();
+      return { x: rect.left + point.x * rect.width / app._layout.logicalWidth, y: rect.top + point.y * rect.height / app._layout.logicalHeight }; });
+    for (const [dx, dy] of offsets) {
+      await page.mouse.move(base.x + dx, base.y + dy); await page.waitForTimeout(100);
+      if (await page.evaluate(() => Boolean(window.netstorm._campaignWorld.session().cursorDropSettings().legal))) return { x: base.x + dx, y: base.y + dy };
+    }
+    return null;
+  };
+  // 생산 격자의 첫 항목을 누르고(실제 이미지 픽셀 적중) 합법 자리에 내려놓아 발사기 수가 하나 늘 때까지 기다린다.
+  const placeArcher = async (offsets) => {
+    await page.waitForFunction(() => !window.netstorm._gameClock.paused() && !window.netstorm._mainMenu.dialog, null, { timeout: 15000 });
+    const item = await page.evaluate(() => { const app = window.netstorm, root = app._clientGump, token = root.node(app._campaignProduction.ui.node().teleport).child, rect = app.canvas.getBoundingClientRect();
+      if (!token) return null; const bounds = root.collection().bounds(token);
+      return { x: rect.left + (bounds.left + bounds.right) / 2 * rect.width / app._layout.logicalWidth, y: rect.top + (bounds.top + bounds.bottom) / 2 * rect.height / app._layout.logicalHeight }; });
+    expect(item).toBeTruthy(); await page.mouse.move(item.x, item.y); await page.mouse.click(item.x, item.y, { delay: 60 });
+    await page.waitForFunction(() => window.netstorm._campaignWorld.session().cursorDropSettings().preview !== 0, null, { timeout: 5000 });
+    const spot = await findDrop(offsets); expect(spot).toBeTruthy();
+    const before = await archers(); await page.mouse.click(spot.x, spot.y, { delay: 60 }); await expect.poll(archers, { timeout: 15000 }).toBe(before + 1);
+  };
+  await placeArcher([[60, 20], [-60, 20], [65, -35], [-65, -35], [35, 70], [-35, 70], [100, 35], [-100, 35], [0, 90], [0, -90], [120, 0], [-120, 0]]);
+  await page.waitForFunction(() => window.netstorm._gameData.currentTell === 'E.' && Boolean(window.netstorm._mainMenu.dialog), null, { timeout: 30000 });
+  expect(await page.evaluate(() => window.netstorm._mainMenu.dialog.content.styleText)).toContain('무기 표시');
+  await page.screenshot({ path: test.info().outputPath('korean-tutorial2-weapon-range.png') });
+  // E: 두 번째 발사기를 내려놓으면 F(에너지)로 넘어간다. 발사기 완공 통지 명령이 입력 큐를 막지 않아야 두 번째 클릭이 전달된다.
+  await clickLabel(page, '확인'); await placeArcher([[-60, 20], [60, 20], [-90, -20], [90, -20], [0, 90], [0, -90], [-120, 40], [120, 40]]);
+  await page.waitForFunction(() => window.netstorm._gameData.currentTell === 'F.' && Boolean(window.netstorm._mainMenu.dialog), null, { timeout: 30000 });
+  expect(await page.evaluate(() => window.netstorm._mainMenu.dialog.content.styleText)).toContain('에너지');
+  await page.screenshot({ path: test.info().outputPath('korean-tutorial2-energy.png') });
+  // F: 에너지 안내의 다음 쪽을 닫고 완성된 신전을 왼쪽 클릭해 에너지 범위를 보인다. 몇 초 뒤 G(에너지, 세 번째)로 넘어간다.
+  await clickLabel(page, '다음'); await page.waitForFunction(() => window.netstorm._gameData.currentTell === 'F1.');
+  await clickLabel(page, '확인'); await page.waitForFunction(() => !window.netstorm._gameClock.paused() && !window.netstorm._mainMenu.dialog, null, { timeout: 15000 });
+  const temple = await page.evaluate(() => { const app = window.netstorm, session = app._campaignWorld.session(), found = session.world().objects().find(({object}) => object.type === 123 && object.owner === 1);
+    const slot = session.core().pool.slot(found.sid), raw = new DataView(slot.buffer, slot.byteOffset, slot.byteLength), point = app._clientGameplay.camera().snapshot().project(raw.getFloat32(14, true), raw.getFloat32(18, true)), rect = app.canvas.getBoundingClientRect(); let hit = null;
+    for (let y = Math.trunc(point.y) - 100; y <= Math.trunc(point.y) + 30 && !hit; y += 2) for (let x = Math.trunc(point.x) - 100; x <= Math.trunc(point.x) + 30; x += 2) { if (app._campaignWorld.pick(x, y, 0) === found.sid) { hit = { x, y }; break; } }
+    if (!hit) throw new Error('완공된 신전의 적중 픽셀 없음');
+    return { sid: found.sid, x: rect.left + hit.x * rect.width / app._layout.logicalWidth, y: rect.top + hit.y * rect.height / app._layout.logicalHeight }; });
+  await page.mouse.move(temple.x, temple.y); await page.mouse.click(temple.x, temple.y, { delay: 60 });
+  await expect.poll(() => page.evaluate(() => window.netstorm._campaignWorld.selected()), { timeout: 5000 }).toBe(temple.sid);
+  await page.screenshot({ path: test.info().outputPath('korean-tutorial2-temple-selected.png') });
+  await page.waitForFunction(() => window.netstorm._gameData.currentTell === 'G.' && Boolean(window.netstorm._mainMenu.dialog), null, { timeout: 30000 });
+  expect(await page.evaluate(() => window.netstorm._mainMenu.dialog.content.styleText)).toContain('에너지');
+  await page.screenshot({ path: test.info().outputPath('korean-tutorial2-g.png') }); expect(errors).toEqual([]);
 });
