@@ -480,6 +480,8 @@ cpppj/src/o/RawAiDeployment.cpp	Netstorm.Core/Original/RawAiDeployment.cs	3a0459
 cpppj/src/o/RawAiDeployment.h	Netstorm.Core/Original/RawAiDeployment.cs	3a0459751adcd933f0d8009b224a4b45f1c6fc65	port
 cpppj/src/o/RawAiEconomy.cpp	Netstorm.Core/Original/RawAiEconomy.cs	bb1dbd427f232659d229a3522ff425fd0e19cf4f	port
 cpppj/src/o/RawAiEconomy.h	Netstorm.Core/Original/RawAiEconomy.cs	bb1dbd427f232659d229a3522ff425fd0e19cf4f	port
+cpppj/src/o/RawAiFactoryProduction.cpp	Netstorm.Core/Original/RawAiFactoryProduction.cs	ffce9162d539368f6373f4c3757ae54371065cd4	port
+cpppj/src/o/RawAiFactoryProduction.h	Netstorm.Core/Original/RawAiFactoryProduction.cs	ffce9162d539368f6373f4c3757ae54371065cd4	port
 cpppj/src/o/RawAmbientWind.cpp	Netstorm.Core/Original/RawAmbientWind.cs	e5a198df450ae720da38f5110ebc611119ea2f38	L1
 cpppj/src/o/RawAmbientWind.h	Netstorm.Core/Original/RawAmbientWind.cs	e5a198df450ae720da38f5110ebc611119ea2f38	port
 cpppj/src/o/RawArcSpire.cpp	Netstorm.Core/Original/RawArcSpire.cs	9ed8bc636cac9d100dbddafa8b6b2d6efda971e6	L1
