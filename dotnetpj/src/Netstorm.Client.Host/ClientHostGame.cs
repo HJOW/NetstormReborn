@@ -102,7 +102,7 @@ public sealed partial class ClientHostGame : Game
     private readonly ClientGameplayGlobals _gameplay = new();
 
     /// <summary>미션 교체에서 배열을 다시 만들지 않는 실제 정적 SID 목록이다.</summary>
-    private readonly RawStateSidLists _sidLists = new();
+    private readonly RawStateSidLists _sidLists;
 
     /// <summary>메뉴 효과음의 MonoGame 장치 경계.</summary>
     private HostButtonSound? _buttonSound;
@@ -167,6 +167,7 @@ public sealed partial class ClientHostGame : Game
         _connections = new ClientConnectionGlobals(_localState);
         _clientClock = new ClientClockGlobals(_localState);
         _surfaceGlobals = new ClientSurfaceGlobals(_gameplay, _clientClock, _kernel, () => _clock.Milliseconds);
+        _sidLists = _surfaceGlobals.Storage.SidLists;
         // cpppj ClientMain 349행의 실제 공통 SP 초기화와 같은 위치다: 클라이언트 시작 때 1회만 reseed+초기화하고 미션 시작 때는 다시 하지 않는다(0.464, 원본 004391ed).
         // 세션 시작 흐름의 미션별 reseed는 원본에 없어 0.463에서 근본 원인으로 확정했다.
         _spGlobals = new ClientSpGlobals(_gameRandom, _spCrtBox, _spModeBox, () => _clock.UnixSeconds);

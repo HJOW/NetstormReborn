@@ -507,5 +507,7 @@
   <!-- State 부모294원문 관측을 같은 Core 소비자에서 전수 대조한다. -->
   <ItemGroup>
     <None Include="../../../cpppj/tests/fixtures/state-world-cleanup-x86.tsv" Link="X86/state-world-cleanup-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/state-zone-reset-x86.tsv" Link="X86/state-zone-reset-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/state-bridge-reset-x86.tsv" Link="X86/state-bridge-reset-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

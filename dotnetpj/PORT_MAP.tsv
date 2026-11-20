@@ -1217,3 +1217,9 @@ cpppj/src/client/ClientStateWorldGlobals.cpp	Netstorm.Client/ClientStateWorldGlo
 cpppj/src/client/ClientStateWorldGlobals.h	Netstorm.Client/ClientStateWorldGlobals.cs	539bba9a3fb684e1fc1e171cf302f643d268b27f	port
 cpppj/src/client/ClientGameplayGlobals.h	Netstorm.Client/ClientGameplayGlobals.State.cs	ae0e58b3ac0f34697eac6954cce7913a759247e3	port
 cpppj/src/o/RawGameAuxState.h	Netstorm.Core/Original/RawGameAuxState.State.cs	8defb347c7c894599f1c9ebf1ad7d55c98f35df0	port
+cpppj/src/o/RawStateBridgeReset.cpp	Netstorm.Core/Original/RawStateBridgeReset.cs	881b0ef71fd89f5a750e0a3b6b73a5244c3b5e00	port
+cpppj/src/o/RawStateBridgeReset.h	Netstorm.Core/Original/RawStateBridgeReset.cs	881b0ef71fd89f5a750e0a3b6b73a5244c3b5e00	port
+cpppj/src/o/RawStateZoneReset.cpp	Netstorm.Core/Original/RawStateZoneReset.cs	35041198c0de7cbfb9d5f9941b3fca4483add8b3	port
+cpppj/src/o/RawStateZoneReset.h	Netstorm.Core/Original/RawStateZoneReset.cs	35041198c0de7cbfb9d5f9941b3fca4483add8b3	port
+cpppj/src/client/ClientStateStorageCleanup.cpp	Netstorm.Client/ClientStateStorageCleanup.cs	899c934dcca17ce113218a4fe2a45ae059f22270	port
+cpppj/src/client/ClientStateStorageCleanup.h	Netstorm.Client/ClientStateStorageCleanup.cs	881b0ef71fd89f5a750e0a3b6b73a5244c3b5e00	port
