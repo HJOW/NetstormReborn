@@ -6,6 +6,7 @@
 //   driver.begin();   // 미션 State7(원본 StartScene(true))에서 한 번 부른다. 곡 하나를 골라 받는 대로 재생한다.
 //   driver.frame();   // 매 프레임(원본 SceneFrame). 곡 기한이 지나면 다음 원소 곡으로 넘긴다.
 //   driver.end();     // 미션을 떠날 때(원본 StartScene(false)). 메뉴 곡을 다시 요청하고 받아 둔 미션 곡을 놓는다.
+//   driver.request('sacrifice.mus'); // 미션 중 특정 곡 요청(원본 ClientAudio::RequestMusic, 희생 의식). (2026-11-20 WB04-E1120)
 // 원본과 다른 점(웹 적응):
 //  - 곡 길이는 파일을 열어 재는 대신 `MUSIC_DATA_BYTES` 표(각 곡 WAV data 청크 크기)로 같은 식에서 구한다. 시험이 실제 파일 머리와 대조한다.
 //  - 곡 선택 난수는 월드 난수열을 건드리지 않도록 호출자가 준 별도 난수를 쓴다(원본은 게임 난수를 한 번 쓴다).
@@ -63,6 +64,11 @@ export class SceneMusicDriver {
     // 매 프레임 불러 곡 기한이 지났으면 다음 원소 곡으로 넘긴다. 미션 장면이 아니면 아무 일도 없다. (2026-11-20 WB04-E1119)
     frame() {
         if (this.#active) this.#scene.frame();
+    }
+
+    // 미션 중 특정 곡을 요청한다(희생 의식의 sacrifice.mus 등). 같은 곡이거나 결과 곡 잠금·승리 관문에 걸리면 감독이 무시한다. 미션 장면이 아니면 아무 일도 없다. (2026-11-20 WB04-E1120)
+    request(name) {
+        if (this.#active) this.#scene.request(String(name));
     }
 
     // 미션을 떠날 때 불러 전투 밖 장면으로 돌려 메뉴 곡을 요청하고 받아 둔 미션 곡을 놓는다. 시작하지 않았으면 아무 일도 없다. (2026-11-20 WB04-E1119)

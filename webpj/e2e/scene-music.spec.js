@@ -43,6 +43,11 @@ test('미션 장면 음악: 원소 곡 재생·다음 곡 미리 받기·떠나�
   await page.waitForFunction((name) => window.netstorm._audio.music.has(name), afterNext, { timeout: 90000 });
   expect(await page.evaluate(() => [...window.netstorm._audio.music.keys()].sort())).toEqual(['ser22.mus', next, afterNext].sort());
   playing.current = next;
+  // 희생 의식이 쓰는 서비스(requestMusic)로 sacrifice.mus 를 요청하면 받아 해독해 그 곡이 현재 곡이 되고, 원소 곡 버퍼는 놓는다(E1120).
+  await page.evaluate(() => window.netstorm._campaignGameplayServices().requestMusic('sacrifice.mus'));
+  await page.waitForFunction(() => window.netstorm._audio.currentMusic === 'sacrifice.mus', null, { timeout: 60000 });
+  expect(await page.evaluate(() => [...window.netstorm._audio.music.keys()].sort())).toEqual(['sacrifice.mus', 'ser22.mus']);
+  playing.current = 'sacrifice.mus';
   // 미션 중 음악 설정을 껐다 켜도 메뉴 곡이 끼어들지 않는다.
   await page.evaluate(() => { window.netstorm._settings.set('music', 0); window.netstorm._settings.set('music', 1); });
   await page.waitForTimeout(500);

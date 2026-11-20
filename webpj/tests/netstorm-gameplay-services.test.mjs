@@ -74,3 +74,12 @@ test('Netstorm 미션 장치: 실제 화면의 카메라 적용', () => {
         assert.throws(() => services.cameraCommit({ camera: {} }), /수명 불일치/);
     } finally { gump.dispose(); }
 });
+
+// 희생 의식의 곡 요청은 현재 장면 음악 구동기로 가며, 구동기를 교체해도 다시 조회하고 구동기가 없으면(소리 끔) 던지지 않는다. (2026-11-20 WB04-E1120)
+test('Netstorm 미션 장치: 희생 의식 음악 요청은 현재 장면 음악 구동기로 간다', () => {
+    const app = new Netstorm(), services = app._campaignGameplayServices();
+    assert.doesNotThrow(() => services.requestMusic('sacrifice.mus'));
+    const first = [], second = []; app._sceneMusic = { request: (name) => first.push(name) };
+    services.requestMusic('sacrifice.mus'); app._sceneMusic = { request: (name) => second.push(name) }; services.requestMusic('other.mus');
+    assert.deepEqual(first, ['sacrifice.mus']); assert.deepEqual(second, ['other.mus']);
+});

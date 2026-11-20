@@ -125,3 +125,24 @@ test('필수 장치가 하나라도 없으면 거부한다', () => {
     assert.throws(() => new SceneMusicDriver({ ...base, audio: { music: [], playMusic: () => true } }), /장치 누락/u);
     assert.throws(() => new SceneMusicDriver({ ...base, weatherSound: 1 }), /장치 누락/u); assert.throws(() => new SceneMusicDriver(), /장치 누락/u);
 });
+
+test('request: 미션 중 희생 곡을 요청하면 받은 뒤 틀고 다음 원소 곡은 기한 뒤 이어 간다', async () => {
+    const f = fixture({ values: [2500] }); f.driver.begin(); await f.finish('sun22.mus'); await f.finish('wind22.mus');
+    f.driver.request('sacrifice.mus');
+    assert.equal(f.driver.selected, 'sacrifice.mus'); assert.equal(f.prepared.at(-1), 'sacrifice.mus'); assert.equal(f.audio.played.at(-1), 'sun22.mus', '받기 전에는 이전 곡이 계속된다');
+    await f.finish('sacrifice.mus');
+    assert.equal(f.audio.played.at(-1), 'sacrifice.mus');
+    // 희생 곡은 원소 곡이 아니므로 다음 곡을 미리 받지 않고 지난 원소 곡 버퍼는 놓는다. 메뉴 곡은 유지한다.
+    assert.deepEqual([...f.audio.music.keys()].sort(), [MENU_TRACK, 'sacrifice.mus'].sort());
+    // 같은 곡을 다시 요청해도 아무 일도 없다.
+    const count = f.prepared.length; f.driver.request('SACRIFICE.MUS'); assert.equal(f.prepared.length, count); assert.equal(f.audio.played.filter((name) => name === 'sacrifice.mus').length, 1);
+    // 기한은 희생 곡 길이(139.92초)를 따르고, 지나면 색인 순환의 다음 원소 곡(wind22.mus)으로 돌아간다.
+    f.clock.now = 100 + musicSeconds('sacrifice.mus') - 0.01; f.driver.frame(); assert.equal(f.driver.selected, 'sacrifice.mus');
+    f.clock.now = 100 + musicSeconds('sacrifice.mus'); f.driver.frame(); assert.equal(f.driver.selected, 'wind22.mus');
+});
+
+test('request: 승리 곡은 결과 상태가 아니면 무시하고 미션 장면이 아니면 아무 일도 없다', () => {
+    const idle = fixture(); idle.driver.request('sacrifice.mus'); assert.deepEqual(idle.prepared, []); assert.equal(idle.driver.selected, MENU_TRACK);
+    const f = fixture({ values: [0] }); f.driver.begin(); f.driver.request('fanfare.mus'); assert.equal(f.driver.selected, 'rain22.mus', '결과 상태 1 이 아니면 승리 곡 요청을 거른다');
+    f.driver.end(); const count = f.prepared.length; f.driver.request('sacrifice.mus'); assert.equal(f.prepared.length, count); assert.equal(f.driver.selected, MENU_TRACK);
+});
