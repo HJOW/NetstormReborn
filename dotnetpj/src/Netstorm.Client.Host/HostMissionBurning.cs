@@ -130,6 +130,7 @@ public sealed class HostMissionBurning : IDisposable
         };
         session.BuildBurningWorldDevices(FrameState, _palette, () => _frame, hooks, audio.BulfHurt);
         Construction = new(session, startup, screen, Capture, Dirty, () => _viewBound);
+        session.BuildFlareWorldDevices(audio.PlayEffectAt);
     }
     /// <summary>실제 프레임 준비 위치에서 현재 원문시각/프레임번호를 공급한다. 커널 실행은 수행하지 않는다.</summary>
     public void PrepareFrame(double now, uint frame)

@@ -151,6 +151,13 @@ public sealed class RegularProcess : SquidProcess
         _time = time;
     }
 
+    /// <summary>원문 예약 메모리의 placement 생성처럼 부착 전 객체에 실제 사건/payload 초기값을 쓴다. 이미 부착한 객체는 재초기화하지 않는다.</summary>
+    public void InitializeReserved(uint ev, float payload)
+    {
+        if (HostLink is not null || Form() != 0) throw new InvalidOperationException("부착된 Regular 예약 재초기화 불가");
+        _event = ev; _payload = payload; _count = 0; _time = 0; _shared = false;
+    }
+
     /// <summary>생성자·부착 콜백 뒤 event·payload·count를 보존하며 실제 기한만 덮어쓴다. 2026-11-07 F2d 프로세스 기본 이식에서 추가됐다.</summary>
     /// <param name="time">덮어쓸 기한이다.</param>
     public void SetNextTime(double time)

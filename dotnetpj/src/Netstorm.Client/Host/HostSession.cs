@@ -2596,6 +2596,12 @@ public sealed partial class HostSession
         {
             Emit = e =>
             {
+                // 실제ProcessForm 가상 통지는 같은Host가 Kernel/부모 수명을 정리해야 한다.
+                if (processes.IsProcessForm(e.Sid) && e.Effect is SquidDestroyEffect.PreDestroy or SquidDestroyEffect.PostDestroy
+                    or SquidDestroyEffect.ReleaseDependent or SquidDestroyEffect.DestroyDependent)
+                {
+                    processes.Hooks().Emit!(e); return;
+                }
                 switch (e.Effect)
                 {
                     case SquidDestroyEffect.PreDestroy:
@@ -3327,7 +3333,7 @@ public sealed partial class HostSession
             Advance = (parent, delta, flags) => new RawFrameAdvance(Pool, WorldFrames, _terrainFrames ?? throw new InvalidOperationException("세션 연결 프레임 미연결")).Advance(parent, delta, flags),
             Begin = (_, _) => throw new InvalidOperationException("호스트 공장 착공 실제 몸체 미연결(R6)"),
             Finish = _ => throw new InvalidOperationException("호스트 공장 완성 실제 몸체 미연결(R6)"),
-            Flare = (_, _, _) => throw new InvalidOperationException("호스트 공장 플레어 실제 몸체 미연결(R6)"),
+            Flare = (parent, count, ev) => WorldFlare.Spawn(parent, count, ev),
             Damageable = (parent, code, times, value) => fallback?.Invoke(parent, code, times, value) ?? value,
         };
         return RawFactoryRegular.Run(Pool, sid, @event, count, payload, hooks);

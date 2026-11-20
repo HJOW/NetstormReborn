@@ -72,6 +72,9 @@ public sealed class HostMissionAudio : IDisposable
     /// <summary>저HP 벌프의 실제 파일명/현재좌표를 같은 이름표·위치 재생기로 보낸다.</summary>
     public void BulfHurt(int sid, float x, float y) => _player.PlayOnceAt(x, y, _list.Lookup("bulfHurt.wav"), 0, 0);
 
+    /// <summary>플레어/건설의현재위치·실제이름·flags를같은원본재생기로전달한다. 음소거도원문관문을사용한다.</summary>
+    public void PlayEffectAt(float x, float y, string name, uint flags) => _player.PlayOnceAt(x, y, _list.Lookup(name), flags, 0);
+
     /// <summary>모든 미션 프로세스 반납 뒤 실제 장치·버퍼 소유권을 반납한다.</summary>
     public void Dispose() { if (OperatingSystem.IsWindows()) _device.Dispose(); }
 }
