@@ -65,6 +65,13 @@ export class ClientGameMenuBar {
             } });
         return new RawGameMenuBar(this.#state, bar).open();
     }
+    // 원본 `View Player List - F9`: 현재 Player 목록을 화면 중앙의 장식 메뉴로 연다(막대 없이 `RawGameMenus.players(true)` 만 사용). 열린 메뉴 토큰을 돌려주며 메타맵이면 0 이다.
+    openPlayerList() {
+        const devices = this.#devices, menus = {}; this.#menu.bindGameMenus({}, menus, devices.storeText);
+        Object.assign(menus, { global: (address) => devices.global(address), translate: (key) => devices.translate(key), config: (key) => devices.config(key), demo: () => devices.demo(),
+            player: (owner) => devices.player(owner), refreshPriest: (owner) => devices.refreshPriest(owner), playerMenu: (subscriber) => devices.playerMenu(subscriber), enabled: (code) => devices.enabled(code), configEnabled: (key) => devices.configEnabled?.(key) ?? true });
+        return new RawGameMenus(menus).players(true);
+    }
     // 열린 막대와 펼쳐진 하위 메뉴를 지운다. 열려 있지 않으면 아무것도 하지 않는다.
     close() {
         const token = this.token(); if (!token) return false;

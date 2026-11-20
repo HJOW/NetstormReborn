@@ -146,3 +146,18 @@ test('Leave Mission은 ABORT 확인 창을 거쳐 메인 메뉴로 돌아가고 
   await page.waitForFunction(() => Boolean(window.netstorm._mainMenu.dialog), null, { timeout: 15000 });
   expect(await page.evaluate(() => window.netstorm._lastCampaignMission.name)).toBe('Tutorial2'); expect(errors).toEqual([]);
 });
+
+test('F2·F8·F9 단축키가 건물 숨김·목표 보기·플레이어 목록을 메뉴와 같은 명령으로 실행한다', async ({ page }) => {
+  const errors = []; page.on('pageerror', (error) => errors.push(error.message));
+  await startTutorial(page); await page.locator('canvas').focus();
+  const hidden = () => page.evaluate(() => window.netstorm._clientGameplay.hideBuildings().value);
+  expect(await hidden()).toBe(0); await page.keyboard.press('F2'); await expect.poll(hidden).toBe(1); await page.keyboard.press('F2'); await expect.poll(hidden).toBe(0);
+  // F8 은 현재 미션의 첫 안내를 다시 보인다.
+  await page.keyboard.press('F8'); await page.waitForFunction(() => Boolean(window.netstorm._mainMenu.dialog), null, { timeout: 10000 });
+  for (let index = 0; index < 8; index += 1) { const label = await page.evaluate(() => window.netstorm._mainMenu.dialog?.buttons.at(-1)?.label ?? null); if (label === null) break; await clickLabel(page, label); }
+  await page.waitForFunction(() => !window.netstorm._mainMenu.dialog && !window.netstorm._gameClock.paused(), null, { timeout: 15000 });
+  // F9 는 플레이어 목록(장식 메뉴)을 화면 중앙에 열며 플레이어 한 줄이 있다.
+  await page.locator('canvas').focus(); await page.keyboard.press('F9');
+  await page.waitForFunction(() => { const root = window.netstorm._clientGump; for (let t = root.root().child; t; t = root.node(t).next) { const n = root.node(t); if (n.command === 26 && !n.object && (n.menuFlags & 0x800000) && n.itemCount >= 1) return true; } return false; }, null, { timeout: 10000 });
+  await page.screenshot({ path: test.info().outputPath('player-list.png') }); expect(errors).toEqual([]);
+});

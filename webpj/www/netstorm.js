@@ -70,7 +70,8 @@ import { RawContainedFinder } from './core/raw-contained-finder.js';
 import { PRODUCTION_BRIDGE_COMMAND } from './core/production-shortcuts.js';
 import { ProductionMaintenanceGlobals, ProductionMaintenancePanel } from './core/raw-production-maintenance.js';
 import { GameMenuActions } from './core/game-menu-actions.js';
-import { gameMenuCommandValue, isGameMenuCommand } from './core/game-menu-commands.js';
+import { gameMenuCommandValue, isGameMenuCommand, queuePlayerListKey } from './core/game-menu-commands.js';
+import { dispatchViewKeyInput } from './core/view-key-input.js';
 import { GameMenuButton } from './ui/game-menu-button.js';
 import { CHAT_RECORD_BYTES, RawChatChannels } from './core/raw-chat-channels.js';
 import { RawCampaignMissionStartBindings } from './core/raw-campaign-mission-start-bindings.js';
@@ -150,7 +151,10 @@ const MISSION_VIEW_HOME = 0x020000ae;
 const MISSION_VIEW_PRIEST = 0x020000b8;
 // ESC 게임 메뉴막대의 항목이 입력 큐로 보내는 명령 중 앱이 실제로 실행하는 것이다(목표 보기 0x91, 건물 숨김 0xf1, 설정 0x6d, 음량 0xe6·0xe7, 홈 0xae, 사제 보기 0xb8, Tell 0x95, 도움말 0x17, 미션 중단 0x8c·재시작 0x8d·전투 떠나기 0xc5).
 // 나머지 메뉴 명령은 입력 큐를 막지 않도록 소비하되 실행하지 않고 콘솔에 기록하며, 메뉴에서는 비활성으로 보인다. (2026-11-20 WB04-E1084)
-const WIRED_MENU_COMMANDS = new Set([0x02000091, 0x020000f1, 0x0200006d, 0x020000e6, 0x020000e7, 0x020000ae, 0x020000b8, 0x02000095, 0x02000017, 0x0200008c, 0x0200008d, 0x020000c5]);
+// F2(건물 숨김)·F3(Shift: 섬 테마)·F8(목표 보기) 가상 키와 F9(플레이어 목록) 가상 키다. 앞의 셋은 표시 키 분배기가, F9 는 명령 예약기가 처리한다. (2026-11-20 WB04-E1087)
+const MISSION_VIEW_KEYS = new Set([0x710000, 0x720000, 0x770000]);
+const MISSION_F9 = 0x780000;
+const WIRED_MENU_COMMANDS = new Set([0x020000f0, 0x02000091, 0x020000f1, 0x0200006d, 0x020000e6, 0x020000e7, 0x020000ae, 0x020000b8, 0x02000095, 0x02000017, 0x0200008c, 0x0200008d, 0x020000c5]);
 // Session이 Tutorial 판정용으로 입력 큐에 올리는 통지 명령이다(발사기 배치 0x030000b0·포함 0x030000b1, 기술 0x020000b5, 포획 0x020000d7, 상승 0x020000df; 전역 005429b4 등의 PE 초기값).
 // Tutorial 판정기(`tutorial.event`)가 각 명령을 받고 해당 단계가 쓰지 않으면 원본 주 루프처럼 그대로 버려진다. 큐 소비 보호 목록에 없으면 뒤의 클릭까지 막혀 모든 입력이 멈추므로 소비를 허용한다. (2026-11-20 WB04-E1083)
 const TUTORIAL_NOTICE_COMMANDS = new Set([0x030000b0, 0x030000b1, 0x020000b5, 0x020000d7, 0x020000df]);
@@ -1449,6 +1453,7 @@ export class Netstorm {
         if (code === 0x020000c5) return this._leaveCampaignMission();
         const text = () => { const value = this._clientChatWindows.strings.get(event.y >>> 0); return value === undefined ? '' : String(value); };
         if (code === 0x020000f1) { this._dispatchCampaignViewAction(event); this._clientRenderer.invalidateAll(); }
+        else if (code === 0x020000f0) { this._campaignProduction?.ui?.gameMenu()?.openPlayerList(); this._displayDirty = true; }
         else if (code === 0x0200006d) {
             // 설정 명령의 인자는 `키=값` 문자열이다. 설정 층의 키는 Settings 가 저장하고 그 밖의 키는 게임 데이터에 쓴다.
             const [key, value] = text().split('='); if (!key) return;
@@ -1457,10 +1462,29 @@ export class Netstorm {
         } else if (code === 0x020000e6 || code === 0x020000e7) this._settings?.set(code === 0x020000e6 ? 'soundVolume' : 'musicVolume', event.y | 0);
         else if (code === 0x02000095) {
             // Tell 명령은 섹션 이름이거나 `SetIslands(0|1)` 같은 원본 설정 호출이다.
-            const section = text(), islands = /^SetIslands\((\d)\)$/.exec(section);
-            if (islands) { this._gameData.set('theammode', Number(islands[1])); this._clientKencloud.worldRedraw().value = 1; this._displayDirty = true; } else this._openTell(section);
+            this._tellOrSetIslands(text());
         }
         return false;
+    }
+
+    // Tell 이름이 `SetIslands(0|1)` 이면 섬 테마 설정을 바꾸고 월드를 다시 그리며, 그 밖에는 Tell 창을 연다. 메뉴·표시 키가 같이 쓴다. (2026-11-20 WB04-E1087)
+    _tellOrSetIslands(section) {
+        const islands = /^SetIslands\((\d)\)$/.exec(section);
+        if (islands) { this._gameData.set('theammode', Number(islands[1])); this._clientKencloud.worldRedraw().value = 1; this._displayDirty = true; } else this._openTell(section);
+    }
+
+    // 표시 키 분배기가 읽고 쓰는 현재 표시 전역(원문 0059a8ac/0059a8b0)이다.
+    _viewKeyGlobals() {
+        const game = this._clientGameplay, redraw = this._clientKencloud.worldRedraw();
+        return { get hideBuildings() { return game.hideBuildings().value; }, set hideBuildings(value) { game.hideBuildings().value = value >>> 0; }, get redraw() { return redraw.value; }, set redraw(value) { redraw.value = value >>> 0; } };
+    }
+
+    // 표시 키 분배기의 실제 장치다. 배너(F7) 장치는 아직 없어 키를 큐에 넣지 않으므로 연결하지 않는다.
+    _viewKeyHooks() {
+        const game = this._clientGameplay, modes = this._surfaceStorage.ownerMode;
+        return { paused: () => this._gameClock.paused(), readInt: (key, holder) => { const found = this._gameData.readInt(key, holder.value); holder.value = found.value; return found.changed || this._gameData.get(key) != null; },
+            tell: (section) => this._tellOrSetIslands(section), queue: (command, first, second) => this._clientInputQueue.pushCommand(command, first, second),
+            fort: () => Boolean(this._campaignWorld?.session().core().bridgeState.mission), metamap: () => Boolean(modes.challenge), editor: () => Boolean(game.world.editor), highlight: (mode) => this._campaignWorld.highlight(mode) };
     }
 
     // 원본 생산 패널 idle 순서로 현재 내용물과 재고·다리 공급을 갱신한다.
@@ -1529,7 +1553,7 @@ export class Netstorm {
             const selectionKey = code === 0x50 || code === 0x70 || code === 0x52 || code === 0x72 || code === 0x4e || code === 0x6e;
             const productionKey = 'qwaszyxe'.includes(String.fromCharCode(code).toLowerCase()) && code < 256;
             const cursorCancel = code === 0x1b, cursorRotate = code === 0x250000 || code === 0x270000;
-            if (code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !TUTORIAL_NOTICE_COMMANDS.has(code) && !isGameMenuCommand(code) && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && code !== InputCode.leftButton && code !== InputCode.rightButton) break;
+            if (code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !MISSION_VIEW_KEYS.has(code) && code !== MISSION_F9 && !TUTORIAL_NOTICE_COMMANDS.has(code) && !isGameMenuCommand(code) && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && code !== InputCode.leftButton && code !== InputCode.rightButton) break;
             const event = queue.pop(false);
             if (tutorial.event(event) || gump.input().route(event.code, event.x, event.y)) continue;
             if (code === InputCode.leftButton && !release && !this._mainMenu?.dialog) user.event(event);
@@ -1561,6 +1585,8 @@ export class Netstorm {
             }
             else if (code === PRODUCTION_BRIDGE_COMMAND && !release && !this._mainMenu?.dialog) this._dispatchCampaignBridgeProduction(event);
             else if (code === MISSION_VIEW_HOME || code === MISSION_VIEW_PRIEST) this._dispatchCampaignViewAction(event);
+            // F2·Shift-F3·F8 은 표시 키 분배기, F9 는 플레이어 목록 명령 예약이다. 뗌은 소비만 한다. (2026-11-20 WB04-E1087)
+            else if (MISSION_VIEW_KEYS.has(code) || code === MISSION_F9) { if (!release && !this._mainMenu?.dialog) { if (code === MISSION_F9) queuePlayerListKey(event, this._clientInputQueue); else dispatchViewKeyInput(event, this._viewKeyGlobals(), this._viewKeyHooks()); } }
             else if (isGameMenuCommand(code) && !release && !this._mainMenu?.dialog) { if (this._dispatchCampaignMenuCommand(event)) break; }
         }
     }
@@ -2745,7 +2771,7 @@ export class Netstorm {
         }
         // 조합 중 Enter 등은 기존 메뉴 명령으로도 중복 실행하지 않는다.
         if (this._clientNativeInputEnabled && (this._clientComposing || event.isComposing)) return;
-        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && (event.code === 'F4' || event.code === 'F5' || ((event.code === 'ArrowLeft' || event.code === 'ArrowRight') && this._campaignWorld.session().cursorDropSettings().lockDepth === 0))) {
+        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && (event.code === 'F4' || event.code === 'F5' || event.code === 'F2' || event.code === 'F3' || event.code === 'F8' || event.code === 'F9' || ((event.code === 'ArrowLeft' || event.code === 'ArrowRight') && this._campaignWorld.session().cursorDropSettings().lockDepth === 0))) {
             event.preventDefault(); queueBrowserVirtualKeyEvent(this._clientInputQueue, event, this._input.pointer, false);
         }
         // ESC 는 조각을 들고 있으면 취소, 아니면 게임 메뉴막대 전환이므로 항상 큐에 넣고 입력 프레임이 판단한다. (2026-11-20 WB04-E1084)
