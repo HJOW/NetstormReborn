@@ -25,17 +25,16 @@ test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => { if (!localStorage.getItem('netstorm.settings')) localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } })); });
 });
 
-test('기본 판본의 Campaign 목록에는 Skirmish 항목이 없다', async ({ page }) => {
+test('주소에 ?skirmish=0 이 있으면 Campaign 목록에 Skirmish 항목이 없다', async ({ page }) => {
   const errors = []; page.on('pageerror', (error) => errors.push(error.message));
-  await openMain(page, '/?aspect=4:3'); await clickLabel(page, 'Campaign');
+  await openMain(page, '/?skirmish=0&aspect=4:3'); await clickLabel(page, 'Campaign');
   expect(await menuLabels(page)).not.toContain('Skirmish'); expect(await menuLabels(page)).toContain('Early Missions');
   expect(errors).toEqual([]);
 });
 
-test('?skirmish 판본에서 설정 화면 흐름과 저장·시작 호출이 동작한다', async ({ page }) => {
+test('기본 판본에서 Campaign 의 Skirmish 설정 화면 흐름과 저장이 동작한다', async ({ page }) => {
   const errors = []; page.on('pageerror', (error) => errors.push(error.message));
-  const warnings = []; page.on('console', (message) => { if (message.type() === 'warning') warnings.push(message.text()); });
-  await openMain(page, '/?skirmish&aspect=4:3'); await clickLabel(page, 'Campaign');
+  await openMain(page, '/?aspect=4:3'); await clickLabel(page, 'Campaign');
   expect(await menuLabels(page)).toContain('Skirmish');
   await clickLabel(page, 'Skirmish');
   expect(await menuLabels(page)).toEqual(['AI players: 1', 'AI 1: Normal / Enemy', 'Banned units: 0/5']); expect(await buttonLabels(page)).toEqual(['Start', 'Cancel']);
@@ -51,10 +50,7 @@ test('?skirmish 판본에서 설정 화면 흐름과 저장·시작 호출이 �
   // 설정은 로컬 저장소에 쓰인다(화면의 'AI 2' 는 소유자 3 이다).
   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('netstorm.settings')).values);
   expect(saved.skirmishAiCount).toBe(3); expect(saved.skirmishAi3Diff).toBe(3); expect(saved.skirmishAi3Ally).toBe(1); expect(saved.skirmishBans).toBe('windBattery,sunCannon');
-  // 월드 생성이 연결되기 전의 시작은 안내만 남기고 설정 화면을 그대로 둔다.
-  await clickLabel(page, 'Start'); await page.waitForTimeout(300);
-  expect(await menuLabels(page)).toContain('AI players: 3'); expect(warnings.some((text) => text.includes('스커미시'))).toBe(true);
-  // 취소는 Campaign 목록으로 돌아간다. 다시 열면 저장된 설정이 보인다.
+  // 시작은 skirmish-start.spec.js 가 확인한다. 취소는 Campaign 목록으로 돌아간다. 다시 열면 저장된 설정이 보인다.
   await clickLabel(page, 'Cancel'); expect(await menuLabels(page)).toContain('Early Missions');
   await clickLabel(page, 'Skirmish'); expect(await menuLabels(page)).toContain('AI 2: Hard / Ally');
   expect(errors).toEqual([]);
@@ -63,7 +59,7 @@ test('?skirmish 판본에서 설정 화면 흐름과 저장·시작 호출이 �
 test('한국어 화면의 스커미시 설정 화면이 번역되고 금지 유닛 이름이 한국어 번역표를 따른다', async ({ page }) => {
   test.setTimeout(90000);
   const errors = []; page.on('pageerror', (error) => errors.push(error.message));
-  await openMain(page, '/?skirmish&lang=ko&aspect=4:3'); await clickLabel(page, '캠페인');
+  await openMain(page, '/?lang=ko&aspect=4:3'); await clickLabel(page, '캠페인');
   expect(await menuLabels(page)).toContain('스커미시'); await clickLabel(page, '스커미시');
   expect(await menuLabels(page)).toContain('인공지능 수: 1'); expect(await buttonLabels(page)).toEqual(['시작', '취소']);
   await clickLabel(page, '금지 유닛: 0/5');

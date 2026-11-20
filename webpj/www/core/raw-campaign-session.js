@@ -28,6 +28,7 @@ import { receiveRitualChoice } from './raw-ritual-choice.js';
 import { executeDeveloperSettings } from './raw-campaign-developer-settings.js';
 import { executeDeveloperPlayers } from './raw-campaign-developer-players.js';
 import { executeDeveloperReports } from './raw-campaign-developer-reports.js';
+import { RawCampaignSessionSkirmish } from './raw-campaign-session-skirmish.js';
 import { executeDeveloperObjects } from './raw-campaign-developer-objects.js';
 import { executeDeveloperBridge } from './raw-campaign-developer-bridge.js';
 import { executeDeveloperSubscriber } from './raw-campaign-developer-subscriber.js';
@@ -1291,6 +1292,8 @@ export class RawCampaignSession {
     generateLocalGeysers() { this.#live().generateLocalGeysers(); }
     // 현재 장기 옵션/공간을 빌리는 실제 세계 간헐천이다.
     generateWorldGeysers() { this.#live().generateWorldGeysers(); }
+    // 12차 스커미시: 미션 Start 직전에 MP 시작 규칙으로 월드(중앙섬·참가자별 시작 섬)를 만든다. 계획(services.ai.skirmishWorld)이 없는 일반 미션은 아무 일도 하지 않는다. (2026-11-20 WB04-E1105)
+    buildSkirmishWorld() { new RawCampaignSessionSkirmish(this.#live()).buildSkirmishWorld(); }
     // Impl callback 슬롯과 실제 typed 배치 본문을 구별한다.
     placeBattleNuggets(rectangle, quantity) { this.#live().placeBattleNuggetsBody(rectangle, quantity); }
 

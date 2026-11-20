@@ -3,7 +3,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {
     Mt19937, SKIRMISH_BANNABLE, SKIRMISH_MAX_AI, SKIRMISH_MAX_BANS, SKIRMISH_START_ISLANDS, applySkirmishAction, buildSkirmishLaunch, buildSkirmishScreen,
-    createSkirmishSettings, isSkirmishMissionName, loadSkirmishSettings, makeSkirmishEmptyWorldFort, parseSkirmishTarget, saveSkirmishSettings,
+    createSkirmishFileSource, createSkirmishSettings, isSkirmishMissionName, loadSkirmishSettings, makeSkirmishEmptyWorldFort, makeSkirmishWorldPlan, parseSkirmishTarget, saveSkirmishSettings,
 } from '../www/core/skirmish-setup.js';
 import { AiDifficulty } from '../www/core/ai-difficulty.js';
 import { TERRITORY_PATTERNS } from '../www/assets/territory-patterns.js';
@@ -218,4 +218,29 @@ test('화면 본문: 시작/취소와 현재 값, 금지 표시와 쪽 이동, �
     assert.ok(has(buildSkirmishScreen(target('Patch1101.SkirmishBans(0)'), settings, 0, translate), 'Five units are banned'));
     // 후보 표는 27개이고 내부 타입 이름이 서로 다르다.
     assert.equal(SKIRMISH_BANNABLE.length, 27); assert.equal(new Set(SKIRMISH_BANNABLE.map((item) => item.type)).size, 27);
+});
+
+test('월드 계획: 시작 섬마다 fort 바이트를 묶고 하나라도 없으면 거부한다', () => {
+    const settings = createSkirmishSettings(); settings.aiCount = 3;
+    const launch = buildSkirmishLaunch(settings, 11);
+    const read = (fort) => Uint8Array.of(0x46, fort.length);
+    const plan = makeSkirmishWorldPlan(launch, read);
+    assert.equal(plan.islands.length, 4); assert.equal(plan.mapSize, launch.mapSize); assert.deepEqual([...plan.central], [...launch.central]);
+    plan.islands.forEach((island, index) => { assert.equal(island.fort, launch.islands[index].fort); assert.equal(island.territory, launch.islands[index].territory); assert.deepEqual([...island.bytes], [0x46, island.fort.length]); });
+    // 중앙섬 기록은 사본이라 계획을 고쳐도 시작 자료가 바뀌지 않는다.
+    plan.central[0] ^= 0xff; assert.notEqual(plan.central[0], launch.central[0]);
+    assert.throws(() => makeSkirmishWorldPlan(launch, (fort) => (fort === launch.islands[2].fort ? null : read(fort))), /읽을 수 없음/u);
+    assert.throws(() => makeSkirmishWorldPlan(launch, () => new Uint8Array(0)), /읽을 수 없음/u);
+    assert.throws(() => makeSkirmishWorldPlan({ ...launch, islands: [] }, read), /후보 부족/u);
+});
+
+test('가상 파일 source: 대본·빈 월드 fort 경로만 구분자·대소문자 무시로 서비스한다', () => {
+    const text = '[Header]\nA=1\n', bytes = [...Buffer.from(text, 'latin1')];
+    const empty = Uint8Array.of(1, 2, 3), source = createSkirmishFileSource(text, empty, '\\D\\Skirmish.english', '\\D\\Skirmish.fort');
+    assert.deepEqual([...source('\\D\\Skirmish.english')], bytes);
+    assert.deepEqual([...source('/d/SKIRMISH.English')], bytes);
+    assert.equal(source('\\D\\Skirmish.fort'), empty); assert.equal(source('/d/skirmish.FORT'), empty); assert.equal(source('d/skirmish.fort'), null);
+    for (const other of ['\\D\\tell.english', '\\D\\Skirmish2.fort', '', 'Skirmish.fort']) assert.equal(source(other), null, other);
+    // 비ASCII 문자는 하위 바이트만 남는다(대본은 ASCII 만 쓰므로 방어 동작이다).
+    assert.deepEqual([...createSkirmishFileSource('é', empty, 'a', 'b')('a')], [0xe9]);
 });

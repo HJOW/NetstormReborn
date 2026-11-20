@@ -35,9 +35,9 @@ export class ClientCampaignGuide {
         releaseCampaignGuideMission({ gameplayGlobals: () => this.#gameplay, playerRecords: () => this.#players, configuration: () => this.#data }, this.#pending, this.#owned);
     }
     // 공장은 Script 생성 뒤 판정하고 새 Runtime만 같은 Guide에 둔다. 실패한 생성은 등록 객체를 반납한다.
-    #create(name, demo, mode) {
+    #create(name, demo, mode, source = null) {
         if (this.#owned.mission.value || this.#owned.runtime.value) throw new Error('Guide 생성 전 현재 미션이 남아 있음');
-        const mission = createGuideMissionScript(this.#data, name, this.#owned.nativeMission); this.#owned.mission.value = mission;
+        const mission = createGuideMissionScript(this.#data, name, this.#owned.nativeMission, source); this.#owned.mission.value = mission;
         try {
             if (!mission.loaded) throw new Error(`미션 스크립트 없음: ${name}`);
             const type = asciiLower(mission.missionType());
@@ -118,9 +118,10 @@ export class ClientCampaignGuide {
     // 한 차례 Guide 반복을 실행한다. State나 창이 막으면 초기화를 앞당기지 않는다.
     run() { this.#live(); if (!this.#runner || !this.#tutorial) throw new Error('Guide 반복기의 실제 Client 장치 미설치'); this.#runner.run(); }
 
-    // 기존 미션의 종료·해제 뒤 새 미션을 만들며 단계 진행이나 World 생성은 앞당기지 않는다.
-    begin(name, demo = 0, mode = 0) {
-        this.#live(); beginGuideMission(name, { current: () => Boolean(this.#owned.runtime.value), finish: () => this.#finish(), release: () => this.#release(), create: (value) => this.#create(value, demo >>> 0, mode >>> 0) });
+    // 기존 미션의 종료·해제 뒤 새 미션을 만들며 단계 진행이나 World 생성은 앞당기지 않는다. source 는 선택적 명시 파일 읽기 함수 (경로) => 바이트|null 이며, 생략하면 이전 미션의 명시 source 를(없으면 기본 자산 읽기를) 이어 쓴다(원문 BeginMission 이 이전 FileSource 를 넘김). 12차 스커미시가 생성한 가상 대본·fort 를 읽게 하는 데 쓴다. (2026-11-20 WB04-E1105)
+    begin(name, demo = 0, mode = 0, source = null) {
+        this.#live(); const inherited = source ?? this.#owned.mission.value?.fileSource() ?? null;
+        beginGuideMission(name, { current: () => Boolean(this.#owned.runtime.value), finish: () => this.#finish(), release: () => this.#release(), create: (value) => this.#create(value, demo >>> 0, mode >>> 0, inherited) });
     }
     // 현재 미션을 종료 가상 호출 없이 반납하며 이후 새 미션을 만들 수 있다.
     close() { this.#live(); closeGuideMission({ current: () => Boolean(this.#owned.runtime.value), release: () => this.#release() }); }

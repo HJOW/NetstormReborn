@@ -332,5 +332,25 @@ export function makeSkirmishEmptyWorldFort(baseFort) {
     return Uint8Array.from(result);
 }
 
+// 월드 생성 단계가 쓰는 시작 계획을 만든다: 시작 섬마다 원본 fort 바이트를 함께 들고 있어 세션이 파일 시스템 없이 지역 Template 로 읽는다. readFort(fort 이름) 은 바이트 또는 없으면 null 이다.
+// 시작 섬 후보 fort 가 하나라도 없거나 빈 월드 fort 를 만들 수 없으면 오류이다. 사용: makeSkirmishWorldPlan(buildSkirmishLaunch(settings, seed), (fort) => files.get(`d/${fort}.fort`)). (2026-11-20 WB04-E1105)
+export function makeSkirmishWorldPlan(launch, readFort) {
+    if (!launch.islands.length) throw new Error('스커미시 시작 섬 후보 부족');
+    const islands = launch.islands.map((island) => {
+        const bytes = readFort(island.fort);
+        if (!bytes || !bytes.length) throw new Error(`스커미시 시작 섬 fort 를 읽을 수 없음: ${island.fort}`);
+        return { fort: island.fort, territory: island.territory, bytes };
+    });
+    return { islands, central: Uint8Array.from(launch.central), mapSize: launch.mapSize };
+}
+
+// 생성한 미션 대본·빈 월드 fort 만 서비스하는 가상 파일 읽기 함수를 만든다: (경로) => 바이트 | null. 경로 구분자와 대소문자는 무시하고 대본 경로와 fort 경로 외에는 null 이다(원문 SameSkirmishPath).
+// script 는 문자열(ASCII)이고 emptyWorld 는 makeSkirmishEmptyWorldFort 의 결과이다. (2026-11-20 WB04-E1105)
+export function createSkirmishFileSource(script, emptyWorld, scriptPath, fortPath) {
+    const key = (path) => String(path).replace(/\\/gu, '/').toLowerCase();
+    const scriptKey = key(scriptPath), fortKey = key(fortPath), scriptBytes = Uint8Array.from(String(script), (character) => character.charCodeAt(0) & 0xff);
+    return (path) => (key(path) === scriptKey ? scriptBytes : key(path) === fortKey ? emptyWorld : null);
+}
+
 // 이 이름이 생성 스커미시 미션인지 판정한다(대소문자 무시). (2026-11-20 WB04-E1101)
 export function isSkirmishMissionName(name) { return lower(name) === lower(SKIRMISH_MISSION_NAME); }

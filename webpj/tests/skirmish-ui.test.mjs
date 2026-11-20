@@ -88,6 +88,11 @@ test('앱 연결: 시작 함수가 없으면 시작하지 않고 설정 화면�
     assert.ok(menuLabels(app).includes('AI players: 1')); assert.equal(warnings.length, 1); assert.ok(warnings[0].includes('스커미시'));
 });
 
+test('앱 옵션: 스커미시는 기본으로 켜지고 원본 비교 모드에서는 꺼진다', () => {
+    assert.equal(new Netstorm().options.skirmish, true); assert.equal(new Netstorm({ originalComparison: true }).options.skirmish, false);
+    assert.equal(new Netstorm({ skirmish: false }).options.skirmish, false); assert.equal(new Netstorm({ originalComparison: true, skirmish: true }).options.skirmish, true);
+});
+
 test('앱 연결: 스커미시를 켜지 않으면 Campaign 목록에 항목이 없고 한국어는 번역된 화면이 열린다', () => {
     const off = makeApp({ skirmish: false }); off._openTell('UCampaign'); assert.equal(menuLabels(off).includes('Skirmish'), false);
     const korean = makeApp({ language: 'korean' }); korean._openTell('UCampaign'); assert.ok(menuLabels(korean).includes('스커미시'));

@@ -78,7 +78,10 @@ import { frameDue, frameRateChoices, normalizeFrameRate, parseFrameRateTarget } 
 import { dispatchScreenshotKey, encodeScreenshotGif, screenshotFileName, screenshotPrimaryPalette } from './core/screenshot-gif.js';
 import { languageChoices, languageOfChoice, parseLanguageTarget, savedLanguage } from './platform/language-choice.js';
 import { difficultyChoices, parseDifficultyTarget } from './core/difficulty-option.js';
-import { applySkirmishAction, buildSkirmishScreen, loadSkirmishSettings, parseSkirmishTarget, saveSkirmishSettings } from './core/skirmish-setup.js';
+import { SKIRMISH_MISSION_NAME, applySkirmishAction, buildSkirmishLaunch, buildSkirmishScreen, createSkirmishFileSource, isSkirmishMissionName, loadSkirmishSettings, makeSkirmishEmptyWorldFort, makeSkirmishWorldPlan, parseSkirmishTarget, saveSkirmishSettings } from './core/skirmish-setup.js';
+
+// 12차 스커미시의 시작 섬 fort 자료 묶음 이름이다(prepare-assets 의 'skirmish'). 시작할 때만 받는다. (2026-11-20 WB04-E1105)
+const SKIRMISH_BUNDLE = 'skirmish';
 import { dispatchViewKeyInput } from './core/view-key-input.js';
 import { GameMenuButton } from './ui/game-menu-button.js';
 import { CHAT_RECORD_BYTES, RawChatChannels } from './core/raw-chat-channels.js';
@@ -518,8 +521,8 @@ export class Netstorm {
             // Campaign 목록의 User Made Campaigns 행)를 원본처럼 보여 cpppj 오라클·원본 스크린샷과 같은 배치로 비교한다. 그 요소들의 동작(Edit·멀티플레이 등)은 여전히 구현하지 않는다.
             // 무브라우저 실행(tools/headless.mjs)의 오라클 비교 전용이며 기본값 false 이다. (2026-11-07 WB02-H)
             originalComparison: options.originalComparison ?? false,
-            // 12차 스커미시를 Campaign 목록에 보일지 여부이다. 월드 생성까지 연결되기 전에는 기본 false 이고 `?skirmish` 주소 옵션이나 검사가 켠다. (2026-11-20 WB04-E1102)
-            skirmish: options.skirmish ?? params.has('skirmish'),
+            // 12차 스커미시를 Campaign 목록에 보일지 여부이다. 월드 생성까지 연결돼(WB04-E1105) 기본 true 이며 원본 비교 모드이거나 주소에 `?skirmish=0` 이 있으면 숨긴다. (2026-11-20 WB04-E1102, WB04-E1105: 기본값을 켬)
+            skirmish: options.skirmish ?? (!(options.originalComparison ?? false) && params.get('skirmish') !== '0'),
             // 스커미시 시작 함수 (설정) => boolean 이다. 기본(null)은 앱의 미션 시작이며 아직 연결 전이면 안내만 남기고 false 를 돌려준다. 검사가 시작 호출만 받도록 바꿔 끼운다. (2026-11-20 WB04-E1102)
             startSkirmish: options.startSkirmish ?? null,
             // 호스트가 정한 음량 단계(1~5)이다. 없으면(null) 저장된 설정을 쓴다. 정하면 저장하지 않고 이번 실행에서만 우선한다. (2026-10-29 WB03-F)
@@ -590,6 +593,8 @@ export class Netstorm {
         this._lastFrameStamp = null;
         // Shift-F7 화면 저장의 파일 번호다. 저장할 때마다 먼저 증가한 값을 이름에 쓴다(원본 GifOutName 번호). (2026-11-20 WB04-E1100)
         this._screenshotCounter = 0;
+        // 12차 스커미시의 현재 월드 계획(시작 섬 fort 바이트·중앙섬 기록·맵 크기)이다. 스커미시가 아닌 미션을 시작하면 비운다. 세션이 미션 Start 때 services.ai.skirmishWorld 로 읽는다. (2026-11-20 WB04-E1105)
+        this._skirmishPlan = null;
         // 메인 메뉴 무활동(45초) 감시 상태다. armed 가 false 이면 다음 메인 메뉴 프레임에서 기한을 새로 잡는다. (2026-11-20 WB04-E1092)
         this._mainMenuActivity = { armed: false, deadline: 0, pointer: { x: 0, y: 0 } };
         // 실제 미션 Guide는 자산과 장기 저장소가 준비된 뒤 생성한다.
@@ -1127,7 +1132,9 @@ export class Netstorm {
         };
         // AI 이름·난이도와 채팅은 같은 Client 설정·번역·Subscriber 기록을 읽는다.
         services.ai = { assertion: (expression) => console.error(`미션 AI 원본 진단: ${expression}`), allocationBytes: currentAllocationBytes, bridgeScratchBytes: currentAllocationBytes,
-            blockingGumpOpen: () => this._clientGump.blockingPopups() };
+            blockingGumpOpen: () => this._clientGump.blockingPopups(),
+            // 12차 스커미시: 세션이 미션 Start 때 읽는 월드 계획이다(일반 미션은 null). (2026-11-20 WB04-E1105)
+            skirmishWorld: () => this._skirmishPlan };
         bindCampaignAiClientServices({ configuration: () => this._gameData, languageNumber: () => this.options.language === 'korean' ? 7 : 0,
             translate: (text) => this._resources.translate(text), encodeDisplayText: (text) => displayTextCodec.encode(text),
             decodeDisplayText: (bytes) => displayTextCodec.decode(bytes), chatChannels: () => this._clientChatChannels }, services.ai);
@@ -2270,11 +2277,38 @@ export class Netstorm {
         return buildSkirmishScreen(parsed, this._loadSkirmishSettings(), this._gameData.productLanguage === 'korean' ? 7 : 0, (text) => this._resources.translate(text));
     }
 
-    // 12차 스커미시: 설정으로 게임을 시작한다. 시작 함수(options.startSkirmish)가 없으면 아직 월드 생성과 연결되지 않았으므로 안내만 남기고 시작하지 않는다(E1104 이후 연결). 시작했으면 true 이다. (2026-11-20 WB04-E1102)
+    // 12차 스커미시: 설정으로 게임을 시작한다. 시작 함수(options.startSkirmish)가 있으면 그것을 부르고(검사용), 없으면 무작위 시작 자료를 만들어 시작 섬 fort 묶음을 받은 뒤 생성 미션을 시작한다(비동기).
+    // 메인 메뉴 밖이거나 필요한 자료·Guide 가 없거나 시작 섬 후보가 모자라면 안내만 남기고 false 이다. 시작을 예약했으면 true 이다. (2026-11-20 WB04-E1102, WB04-E1105: 실제 시작 연결)
     _startSkirmish(settings) {
         if (this.options.startSkirmish) return Boolean(this.options.startSkirmish(settings));
-        console.warn('Netstorm: 스커미시 시작은 아직 월드 생성과 연결되지 않았습니다.');
-        return false;
+        if (!this._assetLoader || !this._clientGuide || !this._gameData || this._state !== AppState.MAIN_MENU) { console.warn('Netstorm: 스커미시 시작에 필요한 자료·Guide·메인 메뉴가 없습니다.'); return false; }
+        const launch = buildSkirmishLaunch(settings, Math.floor(Math.random() * 0x100000000) >>> 0);
+        if (!launch.islands.length) { console.warn('Netstorm: 스커미시 시작 섬 후보가 모자랍니다.'); return false; }
+        this._beginSkirmish(launch).catch((error) => { reportGameError('skirmish-start', error, { state: this._state }); });
+        return true;
+    }
+
+    // 12차 스커미시: 시작 섬 fort 묶음을 받아 월드 계획과 가상 대본·빈 월드 fort 파일 읽기를 만들고 생성 미션 'Skirmish' 를 시작한다. 현재 미션이 있으면 먼저 떠난다. (2026-11-20 WB04-E1105)
+    async _beginSkirmish(launch) {
+        const generation = this._loadGeneration, files = await this._assetLoader.loadBundle(SKIRMISH_BUNDLE);
+        if (generation !== this._loadGeneration || !this._clientGuide || this._state !== AppState.MAIN_MENU) return false; // 받는 동안 앱이 다시 시작됐거나 메인 메뉴를 떠났으면 그만둔다.
+        const plan = makeSkirmishWorldPlan(launch, (fort) => files.get(`d/${fort}.fort`) ?? null);
+        const emptyWorld = makeSkirmishEmptyWorldFort(plan.islands[0].bytes);
+        if (!emptyWorld.length) throw new Error(`스커미시 빈 월드 fort 를 만들 수 없음: ${plan.islands[0].fort}`);
+        const data = this._gameData;
+        const source = createSkirmishFileSource(launch.script, emptyWorld, data.pathSpec('missionSpec', SKIRMISH_MISSION_NAME), data.pathSpec('fortSpec', SKIRMISH_MISSION_NAME));
+        if (this._campaignWorld || this._clientGuide.current()) this._leaveCampaignMission();
+        this._skirmishPlan = plan; this._markSkirmishRun(SKIRMISH_MISSION_NAME);
+        this._lastCampaignMission = { name: SKIRMISH_MISSION_NAME, demo: 0, mode: 0, source };
+        this._clientGuide.begin(SKIRMISH_MISSION_NAME, 0, 0, source);
+        return true;
+    }
+
+    // 12차 스커미시: 이번 미션이 생성 스커미시인지 설정(skirmishRun)에 적는다. AI 난이도와 세계 간헐천 예산이 이 값으로 AI별 설정·참가자 수를 쓴다. 스커미시가 아니면 이전 월드 계획도 비운다. (2026-11-20 WB04-E1105)
+    _markSkirmishRun(name) {
+        const skirmish = isSkirmishMissionName(name);
+        if (!skirmish) this._skirmishPlan = null;
+        this._gameData?.set('skirmishRun', skirmish ? '1' : '0', { silent: true });
     }
 
     // 시작 팁 창의 Prior Tip / Next Tip / OK 버튼(`TellTip,1|2|3`)을 처리한다(원본 TellTip). 현재 팁 번호는 `tipNumber` 설정이며, 바뀐 번호가 설정에 쓰여 저장된다.
@@ -2402,6 +2436,7 @@ export class Netstorm {
         if (!this._clientGuide || this._state !== AppState.MAIN_MENU) throw new Error('미션 시작의 현재 Guide·메뉴 수명 누락');
         // 현재 미션이 있으면 원본 MissionBegin 처럼 먼저 떠나고(Guide 닫기·월드 반납·메인 메뉴 복귀) 새 미션을 시작한다. (2026-11-20 WB04-E1085)
         if (this._campaignWorld || this._clientGuide.current()) this._leaveCampaignMission();
+        this._markSkirmishRun(name);
         this._lastCampaignMission = { name, demo: 0, mode: 0 }; this._clientGuide.begin(name); return true;
     }
 
@@ -2424,6 +2459,7 @@ export class Netstorm {
         if (!['demostormrages', 'guardmyback', 'dissolvedalliance'].includes(name.toLowerCase())) { console.info(`Netstorm: 데모 '${name}' 은(는) 아직 연결되지 않았습니다.`); return false; }
         if (!this._clientGuide || this._state !== AppState.MAIN_MENU) throw new Error('데모 시작의 현재 Guide·메뉴 수명 누락');
         if (this._campaignWorld || this._clientGuide.current()) this._leaveCampaignMission();
+        this._markSkirmishRun(name);
         this._lastCampaignMission = { name, demo: 1, mode: 0 }; this._clientGuide.begin(name, 1); return true;
     }
 
@@ -2437,7 +2473,7 @@ export class Netstorm {
     // 마지막으로 시작한 미션을 떠난 뒤 같은 이름·모드로 다시 시작한다(원본 `MissionRestart`/Reload). 기록이 없으면 아무것도 하지 않는다. 다시 시작했으면 true 다. (2026-11-20 WB04-E1085)
     _restartCampaignMission() {
         const last = this._lastCampaignMission; if (!last || !this._clientGuide) return false;
-        this._leaveCampaignMission(); this._clientGuide.begin(last.name, last.demo, last.mode); return true;
+        this._leaveCampaignMission(); this._clientGuide.begin(last.name, last.demo, last.mode, last.source ?? null); return true;
     }
 
     // 이미 받은 공개 자산으로 정적 지형을 연다. 플레이어/미션 상태·진행 저장·현재 미션 Config는 바꾸지 않는다.
