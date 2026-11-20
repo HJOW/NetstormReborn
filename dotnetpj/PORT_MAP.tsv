@@ -1086,3 +1086,10 @@ cpppj/src/zacket/LocalMissionTransport.h	Netstorm.Net/LocalMissionZone.cs	a76499
 cpppj/src/o/RawFactoryResearch.cpp	Netstorm.Core/Original/RawFactoryResearch.cs	7c51717d891821fde48ff241b7d206f533423004	port
 cpppj/src/o/RawFactoryResearch.h	Netstorm.Core/Original/RawFactoryResearch.cs	7c51717d891821fde48ff241b7d206f533423004	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.FactoryUpgradeCommand.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
+cpppj/src/o/RawProductionDeck.cpp	Netstorm.Core/Original/RawProductionDeck.cs	b37bd01a56f529cf65cf8b015ae888b094885d6d	port
+cpppj/src/o/RawProductionDeck.h	Netstorm.Core/Original/RawProductionDeck.cs	b37bd01a56f529cf65cf8b015ae888b094885d6d	port
+cpppj/src/o/RawProductionDeck.h	Netstorm.Core/Original/RawDeckDraw.cs	b37bd01a56f529cf65cf8b015ae888b094885d6d	port
+cpppj/src/o/RawDeckDraw.cpp	Netstorm.Core/Original/RawDeckDraw.cs	a192ea5cc912429b75e5512d62bcea03f4a89d0f	L1
+cpppj/src/o/RawDeckDraw.h	Netstorm.Core/Original/RawDeckDraw.cs	a192ea5cc912429b75e5512d62bcea03f4a89d0f	L1
+cpppj/src/o/RawPlayerLinksCleanup.cpp	Netstorm.Core/Original/RawPlayerLinksCleanup.cs	adb9739e6e1306bf49b3ae67e2c747f8abc17041	L1
+cpppj/src/o/RawPlayerLinksCleanup.h	Netstorm.Core/Original/RawPlayerLinksCleanup.cs	adb9739e6e1306bf49b3ae67e2c747f8abc17041	L1

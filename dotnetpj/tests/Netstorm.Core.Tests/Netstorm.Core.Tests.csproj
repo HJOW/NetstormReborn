@@ -1,5 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <!-- 원문 생산 Deck158행/직접 추첨582행과 Player 링크 정리162행을 독립 자료로 대조한다. -->
+    <None Include="../../../cpppj/tests/fixtures/production-deck-x86.tsv" Link="X86/production-deck-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/gem-reward-x86.tsv" Link="X86/gem-reward-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/player-links-cleanup-x86.tsv" Link="X86/player-links-cleanup-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- 공장 연구의 원본216입력·호출 순서·16바이트 송신 관측이다. -->
     <None Include="../../../cpppj/tests/fixtures/factory-research-x86.tsv" Link="X86/factory-research-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
