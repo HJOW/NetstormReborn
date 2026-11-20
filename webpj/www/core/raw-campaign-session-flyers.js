@@ -59,6 +59,16 @@ export class RawCampaignSessionFlyers {
         this.processHooks = hooks; this.processGlobals = { server: () => c.processState.server, now: () => c.processState.now, processType: () => o.gameplayGlobals.gameAux().flyerProcessType, checking: () => o.gameplayGlobals.aiDebug().checking().value };
         o.flyer = new RawFlyerProcess(c.pool, c.types, this.processGlobals, hooks);
         o.broadcastFlyerCommand = (parent, command) => { this.#live(); const packet = new Uint8Array(20); writeFlyerCommandPacket(packet, parent, command); o.tables.broadcast.sendMutable(packet); }; // 미작성+8/+16은 JS 할당 바이트이며 별도 payload 의미를 보장하지 않는다.
+        // 현재 부모에 붙은 비행 프로세스의 필드를 돌려준다(원본 `CurrentFlyerProcess`). 없으면 checking 과 상관없이 processSid 진단을 쓴 뒤 같은 0 슬롯을 조회한다. Rain 피격(ApplyFlyerHit 45fa39)과 86h 비행 명령이 쓴다.
+        // 이 연결이 없으면 맨 오 워 비행이 맞는 순간 'Rain 피격의 실제 CurrentFlyerProcess 설치 전 호출' 오류로 프레임이 멈췄다. (2026-11-20 WB04-E1122)
+        o.currentFlyerProcess = (parent, line) => {
+            this.#live(); const type = o.gameplayGlobals.gameAux().flyerProcessType;
+            if (!Number.isInteger(parent) || parent < 0 || parent > 65535 || parent >= c.pool.capacity) throw new RangeError('비행명령의 실제 DWORD 부모 SID 물리 범위');
+            const form = findAttachedProcess(c.pool, parent, type);
+            if (!form) o.world.storage.assertDisplay('processSid', '\\Ns\\O\\Flyer.cpp', line);
+            const process = c.processes.fromForm(form); if (!(process instanceof FlyerProcess)) throw new Error('비행명령의 현재 Form PID에 대한 실제 Flyer outer 미연결');
+            return process.fields;
+        };
         this.#bindFrame();
         const post = {
             allocateRainProcess: () => this.#allocateFlyer(), allocateSunProcess: () => this.#allocateFlyer(), // JS 필드 확보는 각각 같은112/136BYTE 이미지의 수명을 소유한다.

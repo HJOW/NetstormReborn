@@ -7,7 +7,7 @@ import { GamePalette } from '../www/assets/palette.js';
 import { typeNumber, typeString } from '../www/assets/type-table.js';
 import { SoundList } from '../www/audio/sound-list.js';
 import { RawCampaignSessionOwners } from '../www/core/raw-campaign-session-owners.js';
-import { RawFlyerProcess, RawFlyerPostPop } from '../www/core/raw-flyer-process.js';
+import { FlyerProcess, FlyerProcessFields, RawFlyerProcess, RawFlyerPostPop } from '../www/core/raw-flyer-process.js';
 import { RawFlyerFrame } from '../www/core/raw-flyer-frame.js';
 import { RawFlyerTarget } from '../www/core/raw-flyer-target.js';
 import { RawSunFlyerFrame } from '../www/core/raw-sun-flyer-frame.js';
@@ -44,5 +44,18 @@ test('Session Flyer 메타: 같은188TYPE의 speed 비트·소리·프레임 구
         for (const asset of game.types()) { const type = 70 + asset.block; const impact = typeString(asset.definition, 'impactSound'); const active = typeString(asset.definition, 'activeSound'); assert.deepEqual(m.postTypes[type], { speed: floatToBits(Math.fround(typeNumber(asset.definition, 'speed') ?? 0)), frames: o.core.frames[type].codes.length, impactSound: impact ? o.soundNames.lookup(impact) : 0, activeSound: active ? o.soundNames.lookup(active) : 0 }); assert.equal(m.windActiveSounds[type], active ? o.soundNames.lookup(active) : 0); }
         // 빈 TYPE까지 포함한 원문188칸을 순서대로 확인한다.
         for (let type = 0; type < 188; type += 1) { const table = o.core.frames[type]; assert.deepEqual(m.frameTypes[type], { range: o.gunTypes[type].range, sound: o.missileTypes[type].firingSound }); assert.deepEqual(m.bombTypes[type], { fallingFrames: table.run('A').count, explosionFirst: table.run('B').first, explosionEnd: table.run('B').count, sound: o.missileTypes[type].firingSound }); assert.equal(m.targetRanges[type], o.gunTypes[type].range); }
+    } finally { o.dispose(); }
+});
+
+// 현재 부모에 붙은 비행 프로세스의 필드를 돌려주는 연결(원본 CurrentFlyerProcess)이 설치되고, 붙은 Form 은 같은 필드를 돌려주며 범위 밖 부모는 거부한다. 이 연결이 없으면 Rain 피격이 오류로 프레임을 멈췄다. (2026-11-20 WB04-E1122)
+test('Session Flyer: currentFlyerProcess 가 부모에 붙은 현재 프로세스의 필드를 돌려준다', () => {
+    const o = owner();
+    try {
+        before(o); assert.equal(o.currentFlyerProcess, undefined); o.connectFlyer(); assert.equal(typeof o.currentFlyerProcess, 'function');
+        const type = o.gameplayGlobals.gameAux().flyerProcessType, parent = o.world.create(71, 2);
+        assert.throws(() => o.currentFlyerProcess(65536, 0x11e), /물리 범위/); assert.throws(() => o.currentFlyerProcess(o.core.pool.capacity, 0x11e), /물리 범위/); assert.throws(() => o.currentFlyerProcess(-1, 0x11e), /물리 범위/);
+        const fields = new FlyerProcessFields(), process = new FlyerProcess(o.flyer, fields);
+        assert.ok(o.core.processes.attach(process, type, parent, 0x50));
+        assert.equal(o.currentFlyerProcess(parent, 0x11e), fields);
     } finally { o.dispose(); }
 });

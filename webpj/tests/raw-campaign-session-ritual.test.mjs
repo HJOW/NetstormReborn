@@ -603,3 +603,14 @@ test('사제 의식 동작: 실제 K 프레임과 같은 Host에 604 공유 예�
         assert.equal(o.ritualModules.pendingRegular, null);
     } finally { o.dispose(); }
 });
+
+// AI 배치 평가의 장애물 후보 수집은 `{ x, y }` 점을 `[x, y]` 로 바꿔 넘긴다(원본 `Collect(owner,{point.x,point.y},capacity)`). 변환이 빠지면 좌표가 NaN 이 되어 DissolvedAlliance 같은 AI 미션이 몇 분 뒤 장애물 검색 범위 오류로 멈췄다. (2026-11-20 WB04-E1122)
+test('AI 배치 표적: 장애물 후보 수집에 { x, y } 점을 [x, y] 로 넘긴다', () => {
+    const o = scene(true, { carrierRequest: () => {}, deletion: { selected: () => 0 }, ai: { allocationBytes: (bytes) => bytes.fill(0) } });
+    try {
+        o.connectRitualDais(); o.connectRitualAltar(); o.connectDaisLifecycle(); o.connectDaisNotice(); o.connectSalvage(); o.connectCarrierMove(); o.connectAiMovement(); o.connectAiResourceChoice(); o.connectAiCarrierActions(); o.connectAiBuildSearch();
+        o.connectAiGroundTarget(); o.connectAiDropTargets();
+        const calls = []; o.gunBlocker.collect = (...args) => { calls.push(args); return [7, 8]; };
+        assert.deepEqual(o.motionRuntimeModules.aiDropTargetHooks.blockers(2, { x: 20.5, y: 30 }, 30), [7, 8]); assert.deepEqual(calls, [[2, [20.5, 30], 30]]);
+    } finally { o.dispose(); }
+});

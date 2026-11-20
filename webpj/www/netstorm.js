@@ -29,6 +29,7 @@ import { AudioSystem, createAudioContext, volumeStepToCentibels } from './audio/
 import { SoundList } from './audio/sound-list.js';
 import { MissionAudioAssets } from './audio/mission-audio-assets.js';
 import { SceneMusicDriver } from './audio/scene-music-driver.js';
+import { makePriestShieldNoticeHooks } from './core/sound-process.js';
 import { createSoundState, SoundPlayer } from './audio/sound-player.js';
 import { WebSoundDevice } from './audio/web-sound-device.js';
 import { IndexedSurface } from './render/indexed-surface.js';
@@ -111,7 +112,7 @@ import { ClientFortCurrentName } from './core/client-fort-current-name.js';
 import { refreshWindowTitle } from './core/window-title.js';
 import { decodeWindows1252, encodeWindows1252 } from './assets/text-encoding.js';
 import { displayTextCodec } from './assets/display-text.js';
-import { RawPlayerIdentity } from './core/raw-player-identity.js';
+import { PLAYER_IDENTITY_RECORD_SIZE, RawPlayerIdentity } from './core/raw-player-identity.js';
 import { buildQuickHelpInfoHtml, createQuickHelpPicture } from './ui/quick-help-info.js';
 import { CampaignSessionAssets } from './core/raw-campaign-session-owners.js';
 import { PriestPlacementAssets } from './core/priest-placement-assets.js';
@@ -1178,6 +1179,51 @@ export class Netstorm {
             negativeQuantity: () => console.error('로컬 간헐천 원본 진단: reps >= 0'),
             boundsAssertion: (code) => console.error(`Player 간헐천 범위 원본 진단: ${code}`) };
         services.assets.postPop.playImpactSound = (sound) => player().play(sound, 0, 0, 0, 0, 0);
+        // ----- 원본 CampaignClientServices 의 소리·안내 서비스(원문 priest.shield·unitLost·hit·carrierDropPopup·factory 진단·newTechnology). 연결이 없으면 해당 사건에서 '미연결' 오류로 프레임이 멈췄다. (2026-11-20 WB04-E1122)
+        // 사제 보호막 안내음은 이름 기반 전역 재생(우선 인자 1), 번역은 키 그대로(Xlat 으로 섹션 이름을 바꾸지 않음), Tell 은 위의 현재 안내 창이다.
+        const shieldTell = services.priest.shield.tell;
+        services.priest.shield = { ...makePriestShieldNoticeHooks({ playByName: (...args) => player().playByName(...args) }, {}), translate: (key) => key, tell: shieldTell };
+        // 사제 낙하음은 현재 위치의 priestFall.wav(반복 없음)이다.
+        services.priest.fallSound = (_sid, x, y) => { player().playNameAt(x, y, 'priestFall.wav', 0); };
+        // 공통 파괴 때 유닛 상실음은 전역 재생(반복 0·음량 0·좌우 0·우선 1·한도 0)이다.
+        services.unitLost = () => { player().playByName('unitLost.wav', 0, 0, 0, 1, 0); };
+        // 섬 피격 경고 사건은 종류 12 안내를 지운다(원본 removeMessage(12,0,0)). 이어서 경고음·Tell 이 따른다(세션이 공급).
+        services.hit = { general: { warningEvent: () => { this._campaignProduction?.ui?.warnings()?.remove(12, 0, 0); } } };
+        // Cast/Drop 비용 표시는 실제 생산 UI 의 떠다니는 SP 표시에 그린다.
+        services.carrierDropPopup = (cost, x, y, reference) => {
+            const ui = this._campaignProduction?.ui; if (!ui) throw new Error('Cast/Drop 비용표시의 실제 생산 UI 미설치');
+            ui.showSp(cost, x, y, reference);
+        };
+        // 중복 워크샾 경고는 채널 4 의 원본 문구와 정수 좌표를 같은 진단 로그에 쓴다. 별도 경고창은 만들지 않는다.
+        services.assets.factory = { ...services.assets.factory, warnDuplicate: (_sid, x, y) => { writeClientDiagnosticLog(this._clientTrace, 4, `WARNING!  Extra workshop destroyed at (${x | 0},${y | 0})\n`); } };
+        // 기술 획득(제단 의식 등): 이름은 현재 TYPE 설명의 번역, 설정은 같은 Config, 그림 서식의 %d 는 정수이며 안내는 현재 Tell 이다.
+        services.newTechnology = {
+            name: (type) => {
+                const types = this._campaignWorld?.session().core().types; if (!types || !this._resources) throw new Error('기술 획득 이름의 실제 TYPE·번역 수명 누락');
+                if (!Number.isInteger(type) || type < 0 || type >= types.length) throw new RangeError('기술 획득 이름의 현재 TYPE 범위');
+                return this._resources.translate(types[type].description);
+            },
+            configure: (key, value) => { if (!this._gameData) throw new Error('기술 획득 설정의 실제 저장소 누락'); this._gameData.set(key, String(value)); },
+            format: (pattern, value) => String(pattern).replace('%d', String(value | 0)),
+            tell: (section) => this._openTell(section),
+        };
+        // 포획·신전 상승 안내의 Player 이름은 owner 만 채운 새 식별 기록을 현재 Player·채팅 기록에서 풀어 낸다(원본 priestTakenName → ResolveClientChatIdentity). 못 찾으면 SOMEONE 이다.
+        // 이 연결이 없으면 사제가 포획되는 순간 '포획 안내 실제 Player 이름 미연결' 오류로 프레임이 멈췄다. (2026-11-20 WB04-E1122)
+        services.priestTakenName = (owner, currentName) => {
+            if (!this._clientPlayers || !this._clientChatRecords || !this._clientGameplay || !this._clientSubscriber || !this._surfaceStorage) throw new Error('포획 안내 Player 이름의 실제 Client 수명 누락');
+            const record = new Uint8Array(PLAYER_IDENTITY_RECORD_SIZE); RawPlayerIdentity.initialize(record, 0);
+            for (let byte = 0; byte < 4; byte += 1) record[byte] = (owner >>> (8 * byte)) & 0xff;
+            const identity = new RawPlayerIdentity(this._clientPlayers.records(), new Uint8Array(0), this._clientChatRecords, {
+                localOwner: () => this._clientGameplay.player.battleOwner, subscriber: () => this._clientSubscriber.mySubscriber().value,
+                address: () => this._clientGameplay.localAddress().value, name: () => currentName,
+                battle: () => this._surfaceStorage.ownerMode.battle, editor: () => this._clientGameplay.world.editor !== 0,
+                metamap: () => this._surfaceStorage.ownerMode.challenge, unknownName: () => 'SOMEONE',
+            });
+            if (!identity.resolve(record)) return 'SOMEONE';
+            let end = 8; while (end < 48 && record[end] !== 0) end += 1;
+            if (end === 48) throw new RangeError('포획 안내 Player 이름 NUL 누락');
+            return String.fromCharCode(...record.subarray(8, end));
+        };
         // Session 초기 카메라 요청을 같은 앱의 실제 화면·변경 표·Gump에 적용한다.
         services.cameraCommit = (context) => this._commitCampaignCamera(context);
         // 카메라 패킷은 도킹 영역이 아닌 현재 논리 Screen의 전체 크기를 읽는다.

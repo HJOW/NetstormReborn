@@ -299,7 +299,8 @@ export class RawCampaignSessionMotionRuntime {
             maxHitPoints: (sid) => { this.#live(); return o.hp.maxHitPoints(sid); },
             ground: (x, y, type, owner) => { this.#live(); return o.aiGroundTarget.find(x, y, type, owner); },
             gun: (x, y, type, direction, owner) => { this.#live(); return o.gunTarget.findTarget(x, y, type, direction, owner); },
-            blockers: (owner, point, capacity) => { this.#live(); return o.gunBlocker.collect(owner, point, capacity); },
+            // AI 배치 평가가 넘기는 점은 `{ x, y }` 이고 후보 수집은 `[x, y]` 를 받는다(원본 `Collect(owner,{point.x,point.y},capacity)`). 이 변환이 빠져 있으면 좌표가 NaN 이 되어 장애물 검색 정수 좌표 범위 오류로 프레임이 멈췄다. (2026-11-20 WB04-E1122)
+            blockers: (owner, point, capacity) => { this.#live(); return o.gunBlocker.collect(owner, [point.x, point.y], capacity); },
             center: (sid) => { this.#live(); const point = c.neighbors.center(sid); return { x: point[0], y: point[1] }; },
             assertion: (text, line) => { this.#live(); if (!o.services.ai.assertion) throw new Error(`AI 배치 표적 원본 진단 미연결 ${line}`); o.services.ai.assertion(text); },
         };
