@@ -1338,6 +1338,9 @@ export class Netstorm {
         // World 가 없어도(State7 도중 실패 등) 이미 시작한 장면 음악은 메뉴 곡으로 되돌린다. (2026-11-20 WB04-E1119)
         this._endSceneMusic();
         if (!this._campaignWorld) return;
+        // 원본 월드 정리 어댑터(UberGump 004b2df0)는 Session·UI·Kernel 을 반납하기 전에 초기 캡처 기한(005c8618)을 0 으로 쓴다. 이 값이 남으면 다음 미션의 Zone 설치가
+        // `!earlyCaptureTimer.isRunning()` 진단을 낸다(미션을 떠나고 곧바로 다른 미션을 시작할 때). (2026-11-20 WB04-E1121)
+        if (this._clientLocal) this._clientLocal.captureEnd().value = 0;
         this._gameMenuButton?.destroy(); this._gameMenuButton = null; this._releaseCampaignPause();
         this._campaignProduction?.ui?.close(); this._campaignProduction?.hud?.close(); this._clientGump?.releaseFormHost(); this._campaignWorld.dispose(); this._campaignWorld = null; this._campaignWorldMissionToken = 0; this._campaignUserInput = null; this._campaignProduction = null; this._campaignCursor = CURSOR_NORMAL;
     }
