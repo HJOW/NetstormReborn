@@ -48,7 +48,9 @@ public sealed partial class HostSession
             Update = sid => _terrainDisplay!.Update(Pool.Slot(sid)), Destroy = destroy, Sound = sound,
         });
         _beforeFlareRegular = PlayerProcesses.Regular();
-        PlayerProcesses.SetRegularHandler(flare.Handler(_beforeFlareRegular)); _worldFlare = flare; return flare;
+        // 기존Host의 처리기null 분기는 현재payload를 그대로 반환한다. 미설치 미션에도 같은 기본 의미를 유지한다.
+        RegularHandler previous = _beforeFlareRegular ?? ((_, _, _, payload) => payload);
+        PlayerProcesses.SetRegularHandler(flare.Handler(previous)); _worldFlare = flare; return flare;
     }
 
     /// <summary>원본nothrow 예약과 같이 실제 객체 확보 실패만false로 돌린다.</summary>

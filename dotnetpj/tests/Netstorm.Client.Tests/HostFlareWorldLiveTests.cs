@@ -9,6 +9,25 @@ namespace Netstorm.Client.Tests;
 /// <summary>원본 대조 플레어 본체를 실제 미션 장치로 호출하는 검사다.</summary>
 public sealed partial class HostPriestWorldLiveTests
 {
+    /// <summary>플레어 밖 부모는기존Host의처리기null 기본반환과명시처리기모두동일하게보존한다.</summary>
+    [Fact]
+    public void FlarePreservesBothDefaultAndCustomHostRegularFallback()
+    {
+        // 같은실제Host의두초기상태에서이전정기분배를관찰한다.
+        foreach (bool custom in new[] { false, true })
+        {
+            var (session, _) = Scene(); _ = session.BuildPlayerWorldHooks();
+            if (custom) session.PlayerProcesses.SetRegularHandler((_, ev, count, payload) => ev + count + payload);
+            session.BuildFlareWorldDevices((_, _, _, _) => throw new InvalidOperationException("선택되지않은플레어소리"));
+            try
+            {
+                int parent = session.BuildPlayerWorldHooks().Create!(70, 2);
+                Assert.Equal(custom ? 31.75f : .75f, session.PlayerProcesses.Regular()!(parent, 22, 9, .75f));
+            }
+            finally { session.ReleasePlayerProcesses(); }
+        }
+    }
+
     /// <summary>현재 억제·로딩 관문과 장기TYPE를 읽고 실제Regular 부착부터 마지막삭제까지 수행한다.</summary>
     [Fact, SupportedOSPlatform("windows")]
     public void ProductFlareUsesCurrentGatesRoleAndHostLifecycle()
