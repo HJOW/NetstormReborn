@@ -135,8 +135,10 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         const firstMission = app._mainMenu.dialog.menu.items.find((item) => item.command?.name === 'MissionBegin' && item.command.argument === 'Tutorial1');
         assert.ok(firstMission); const missionPoint = app._mainMenu.controlPoint(firstMission.label); assert.ok(missionPoint);
         app._mainMenu.pointerDown(missionPoint.x, missionPoint.y); assert.ok(guide.current());
-        const startedRuntime = guide.current().runtime;
-        assert.equal(app._beginCampaignFromDialog('Tutorial2'), false); assert.equal(app._beginCampaignFromDialog('Tutorial1'), false);
+        let startedRuntime = guide.current().runtime;
+        // 현재 미션이 있으면 먼저 떠난 뒤 새 미션을 시작한다(2026-11-20 WB04-E1085: 예전에는 거부했다). 마지막에 Tutorial1 로 되돌려 아래 흐름을 이어 간다.
+        assert.equal(app._beginCampaignFromDialog('Tutorial2'), true); assert.notEqual(guide.current().runtime, startedRuntime); assert.equal(app._lastCampaignMission.name, 'Tutorial2');
+        assert.equal(app._beginCampaignFromDialog('Tutorial1'), true); startedRuntime = guide.current().runtime; assert.equal(app._lastCampaignMission.name, 'Tutorial1');
         assert.equal(guide.current().runtime, startedRuntime);
         assert.ok(guide.current().script.section('A.').includes('NetStorm!')); assert.equal(app._openTell('A.'), true);
         assert.ok(app._mainMenu.dialog); app._mainMenu.setDialog(null);

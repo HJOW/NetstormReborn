@@ -13,7 +13,9 @@ async function clickLabel(page, label) {
 
 // Tutorial1 진입 → 안내 닫기 → 게임 시계 시작까지 진행한다. 소리·음악은 꺼 두어 설정 변경을 확인하기 쉽게 한다.
 async function startTutorial(page) {
-  await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } })));
+  await page.addInitScript(() => { localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } }));
+    // 두 번째 튜토리얼이 잠기지 않도록 첫 튜토리얼 완료 기록을 둔다.
+    localStorage.setItem('netstorm.progress', JSON.stringify({ version: 1, values: { DoneTutorial1: '1' } })); });
   await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/?aspect=4:3');
   await page.waitForFunction(() => window.netstorm?.state === 'clickToStart'); await page.locator('canvas').click();
   await page.waitForFunction(() => window.netstorm?.state === 'mainMenu'); await clickLabel(page, 'Campaign'); await clickLabel(page, 'Early Missions');
@@ -81,7 +83,7 @@ test('게임 메뉴막대의 Game·View·Options·About 항목이 원본 구성�
   const errors = []; page.on('pageerror', (error) => errors.push(error.message));
   await startTutorial(page); await page.locator('[data-netstorm="game-menu-button"]').click(); await page.waitForTimeout(300);
   const bar = (await barState(page)).token;
-  // Game: 목표 보기·재시작·나가기(Quit Game 은 웹 범위 밖). 재시작·나가기는 아직 연결하지 않아 비활성이다.
+  // Game: 목표 보기·재시작·나가기(Quit Game 은 웹 범위 밖).
   const game = await clickRow(page, bar, 0); expect(game).toBeTruthy();
   expect((await labelsOf(page, game)).filter(Boolean).map((text) => text.replace(/~i|~\./gu, ''))).toEqual(['Review Mission Objectives - F8', 'Restart Mission', 'Leave Mission']);
   // 목표 보기는 Tutorial 첫 안내를 다시 보인다.
@@ -107,4 +109,40 @@ test('게임 메뉴막대의 Game·View·Options·About 항목이 원본 구성�
   expect(aboutLabels.filter(Boolean).map((text) => text.replace(/~i|~\./gu, ''))).toEqual(['General Help - F1', 'Version']);
   await clickRow(page, about, aboutLabels.indexOf('Version')); await page.waitForFunction(() => Boolean(window.netstorm._mainMenu.dialog), null, { timeout: 10000 });
   await page.screenshot({ path: test.info().outputPath('game-menu-about.png') }); expect(errors).toEqual([]);
+});
+
+test('Leave Mission은 ABORT 확인 창을 거쳐 메인 메뉴로 돌아가고 다른 미션을 다시 시작하며 Restart Mission은 같은 미션을 새로 시작한다', async ({ page }) => {
+  test.setTimeout(240000);
+  const errors = []; page.on('pageerror', (error) => errors.push(error.message));
+  await startTutorial(page);
+  const first = await page.evaluate(() => ({ session: window.netstorm._campaignWorld.session().constructor.name, name: window.netstorm._lastCampaignMission?.name }));
+  expect(first.name).toBe('Tutorial1');
+  // Game → Leave Mission(행 3)은 ABORT 확인 창을 연다. 구분선을 포함한 행 번호는 작성기 기록과 같다.
+  let token = await ensureBar(page); const game = await clickRow(page, token, 0); const gameLabels = await labelsOf(page, game);
+  await clickRow(page, game, gameLabels.indexOf('Leave Mission')); await page.waitForFunction(() => Boolean(window.netstorm._mainMenu.dialog), null, { timeout: 10000 });
+  const abort = await page.evaluate(() => window.netstorm._mainMenu.dialog.buttons.map((button) => button.label)); expect(abort).toHaveLength(3);
+  await page.screenshot({ path: test.info().outputPath('game-menu-abort.png') });
+  // 세 번째 단추(미션 계속)는 창만 닫고 미션을 유지한다.
+  await clickLabel(page, abort[2]); await page.waitForFunction(() => !window.netstorm._mainMenu.dialog, null, { timeout: 10000 }); expect(await page.evaluate(() => window.netstorm._campaignDisplayActive())).toBe(true);
+  // 다시 Leave Mission → 첫 단추(메인 메뉴)로 미션을 떠난다.
+  token = await ensureBar(page); const again = await clickRow(page, token, 0); await clickRow(page, again, (await labelsOf(page, again)).indexOf('Leave Mission'));
+  await page.waitForFunction(() => Boolean(window.netstorm._mainMenu.dialog), null, { timeout: 10000 }); await clickLabel(page, abort[0]);
+  await page.waitForFunction(() => !window.netstorm._campaignWorld && !window.netstorm._clientGuide.current(), null, { timeout: 10000 });
+  expect(await page.evaluate(() => window.netstorm._campaignDisplayActive())).toBe(false); await expect(page.locator('[data-netstorm="game-menu-button"]')).toHaveCount(0);
+  await page.waitForTimeout(500); await page.screenshot({ path: test.info().outputPath('game-menu-main-menu.png') });
+  // 메인 메뉴에서 다른 미션을 처음처럼 다시 시작한다.
+  await clickLabel(page, 'Campaign'); await clickLabel(page, 'Early Missions');
+  const second = await page.evaluate(() => window.netstorm._mainMenu.dialog.menu.items.find((item) => item.command?.name === 'MissionBegin' && item.command.argument === 'Tutorial2')?.label);
+  expect(second).toBeTruthy(); await clickLabel(page, second);
+  await page.waitForFunction(() => window.netstorm?._campaignDisplayActive() && window.netstorm._clientGuide.current()?.runtime.gate.started === 1, null, { timeout: 50000 });
+  await page.waitForFunction(() => Boolean(window.netstorm._mainMenu.dialog), null, { timeout: 15000 });
+  for (let index = 0; index < 8; index += 1) { const label = await page.evaluate(() => window.netstorm._mainMenu.dialog?.buttons.at(-1)?.label ?? null); if (label === null) break; await clickLabel(page, label); }
+  await page.waitForFunction(() => !window.netstorm._gameClock.paused() && window.netstorm._campaignProduction?.ui?.gameMenu(), null, { timeout: 20000 });
+  expect(await page.evaluate(() => window.netstorm._lastCampaignMission.name)).toBe('Tutorial2');
+  // Restart Mission 은 같은 미션을 새 월드로 다시 시작한다.
+  const before = await page.evaluate(() => { window.__oldWorld = window.netstorm._campaignWorld; return true; }); expect(before).toBe(true);
+  token = await ensureBar(page); const game2 = await clickRow(page, token, 0); await clickRow(page, game2, (await labelsOf(page, game2)).indexOf('Restart Mission'));
+  await page.waitForFunction(() => window.netstorm._campaignWorld && window.netstorm._campaignWorld !== window.__oldWorld && window.netstorm._clientGuide.current()?.runtime.gate.started === 1, null, { timeout: 50000 });
+  await page.waitForFunction(() => Boolean(window.netstorm._mainMenu.dialog), null, { timeout: 15000 });
+  expect(await page.evaluate(() => window.netstorm._lastCampaignMission.name)).toBe('Tutorial2'); expect(errors).toEqual([]);
 });

@@ -75,7 +75,7 @@ import { GameMenuButton } from './ui/game-menu-button.js';
 import { CHAT_RECORD_BYTES, RawChatChannels } from './core/raw-chat-channels.js';
 import { RawCampaignMissionStartBindings } from './core/raw-campaign-mission-start-bindings.js';
 import { RawCampaignTutorialOneBindings } from './core/raw-campaign-tutorial-one-bindings.js';
-import { MISSION_RELOAD_COMMAND } from './core/mission-guide-input.js';
+import { MISSION_RELOAD_COMMAND, dispatchMissionAbort } from './core/mission-guide-input.js';
 import { WORLD_DESTINATION_SELECTED_COMMAND } from './core/raw-user-selection.js';
 import { ClientRandomGlobals } from './core/random.js';
 import { ClientSpGlobals } from './core/client-sp-globals.js';
@@ -148,9 +148,9 @@ const MISSION_F4 = 0x00730000;
 const MISSION_F5 = 0x00740000;
 const MISSION_VIEW_HOME = 0x020000ae;
 const MISSION_VIEW_PRIEST = 0x020000b8;
-// ESC 게임 메뉴막대의 항목이 입력 큐로 보내는 명령 중 앱이 실제로 실행하는 것이다(목표 보기 0x91, 건물 숨김 0xf1, 설정 0x6d, 음량 0xe6·0xe7, 홈 0xae, 사제 보기 0xb8, Tell 0x95, 도움말 0x17).
+// ESC 게임 메뉴막대의 항목이 입력 큐로 보내는 명령 중 앱이 실제로 실행하는 것이다(목표 보기 0x91, 건물 숨김 0xf1, 설정 0x6d, 음량 0xe6·0xe7, 홈 0xae, 사제 보기 0xb8, Tell 0x95, 도움말 0x17, 미션 중단 0x8c·재시작 0x8d·전투 떠나기 0xc5).
 // 나머지 메뉴 명령은 입력 큐를 막지 않도록 소비하되 실행하지 않고 콘솔에 기록하며, 메뉴에서는 비활성으로 보인다. (2026-11-20 WB04-E1084)
-const WIRED_MENU_COMMANDS = new Set([0x02000091, 0x020000f1, 0x0200006d, 0x020000e6, 0x020000e7, 0x020000ae, 0x020000b8, 0x02000095, 0x02000017]);
+const WIRED_MENU_COMMANDS = new Set([0x02000091, 0x020000f1, 0x0200006d, 0x020000e6, 0x020000e7, 0x020000ae, 0x020000b8, 0x02000095, 0x02000017, 0x0200008c, 0x0200008d, 0x020000c5]);
 // Session이 Tutorial 판정용으로 입력 큐에 올리는 통지 명령이다(발사기 배치 0x030000b0·포함 0x030000b1, 기술 0x020000b5, 포획 0x020000d7, 상승 0x020000df; 전역 005429b4 등의 PE 초기값).
 // Tutorial 판정기(`tutorial.event`)가 각 명령을 받고 해당 단계가 쓰지 않으면 원본 주 루프처럼 그대로 버려진다. 큐 소비 보호 목록에 없으면 뒤의 클릭까지 막혀 모든 입력이 멈추므로 소비를 허용한다. (2026-11-20 WB04-E1083)
 const TUTORIAL_NOTICE_COMMANDS = new Set([0x030000b0, 0x030000b1, 0x020000b5, 0x020000d7, 0x020000df]);
@@ -559,7 +559,7 @@ export class Netstorm {
         // 자산 적재 뒤 구성해 Session보다 오래 유지하는 월드 물리와 Kernel이다.
         this._gameAssets = null; this._surfaceStorage = null; this._clientKernel = null; this._clientTrace = null; this._clientProductionGlobals = null; this._campaignProduction = null;
         // 미니맵의 장기 dirty 상태와 색 전역은 Client 수명에 둔다. (2026-11-20 WB04-E1082)
-        this._clientMinimapState = null; this._clientMinimapGlobals = null; this._gameMenuButton = null;
+        this._clientMinimapState = null; this._clientMinimapGlobals = null; this._gameMenuButton = null; this._lastCampaignMission = null;
         // 실제 미션 Guide는 자산과 장기 저장소가 준비된 뒤 생성한다.
         this._clientGuide = null; this._clientFort = null; this._clientFortName = null;
         // 원본 공통 Gump 루트와 입력 전역은 Client 수명에 보유한다.
@@ -1442,7 +1442,11 @@ export class Netstorm {
     // 메뉴막대 항목이 입력 큐에 올린 명령을 실행한다. 연결되지 않은 명령은 큐를 막지 않도록 소비하고 콘솔에 기록한다(메뉴에서는 비활성이다).
     _dispatchCampaignMenuCommand(event) {
         const code = (event.code & 0x03ffffff) >>> 0;
-        if (!WIRED_MENU_COMMANDS.has(code)) { console.warn(`Netstorm: 게임 메뉴 명령 0x${code.toString(16)} 은(는) 아직 연결되지 않아 실행하지 않았습니다.`); return; }
+        if (!WIRED_MENU_COMMANDS.has(code)) { console.warn(`Netstorm: 게임 메뉴 명령 0x${code.toString(16)} 은(는) 아직 연결되지 않아 실행하지 않았습니다.`); return false; }
+        // 미션 중단(0x8c): 인자 0 은 ABORT 확인 창, 그 밖은 전투 떠나기 예약이다. 재시작(0x8d)·전투 떠나기(0xc5)는 월드를 반납하므로 true 를 돌려 입력 반복을 끝내게 한다. (2026-11-20 WB04-E1085)
+        if (code === 0x0200008c) { dispatchMissionAbort(event, this._clientInputQueue, (section) => this._openTell(section)); return false; }
+        if (code === 0x0200008d) return this._restartCampaignMission();
+        if (code === 0x020000c5) return this._leaveCampaignMission();
         const text = () => { const value = this._clientChatWindows.strings.get(event.y >>> 0); return value === undefined ? '' : String(value); };
         if (code === 0x020000f1) { this._dispatchCampaignViewAction(event); this._clientRenderer.invalidateAll(); }
         else if (code === 0x0200006d) {
@@ -1456,6 +1460,7 @@ export class Netstorm {
             const section = text(), islands = /^SetIslands\((\d)\)$/.exec(section);
             if (islands) { this._gameData.set('theammode', Number(islands[1])); this._clientKencloud.worldRedraw().value = 1; this._displayDirty = true; } else this._openTell(section);
         }
+        return false;
     }
 
     // 원본 생산 패널 idle 순서로 현재 내용물과 재고·다리 공급을 갱신한다.
@@ -1556,7 +1561,7 @@ export class Netstorm {
             }
             else if (code === PRODUCTION_BRIDGE_COMMAND && !release && !this._mainMenu?.dialog) this._dispatchCampaignBridgeProduction(event);
             else if (code === MISSION_VIEW_HOME || code === MISSION_VIEW_PRIEST) this._dispatchCampaignViewAction(event);
-            else if (isGameMenuCommand(code) && !release && !this._mainMenu?.dialog) this._dispatchCampaignMenuCommand(event);
+            else if (isGameMenuCommand(code) && !release && !this._mainMenu?.dialog) { if (this._dispatchCampaignMenuCommand(event)) break; }
         }
     }
 
@@ -2174,6 +2179,9 @@ export class Netstorm {
         else if (name === 'config') this._runScriptCommand(command);
         else if (name === 'telltip') this._runTellTip(command);
         else if (name === 'missionbegin') this._beginCampaignFromDialog(command.argument);
+        // 미션 나가기 확인(ABORT)·완료 창의 버튼이다: LeaveBattle·MissionAbort 는 메인 메뉴로, MissionRestart 는 같은 미션 다시 시작이다. (2026-11-20 WB04-E1085)
+        else if (name === 'leavebattle' || name === 'missionabort') this._leaveCampaignMission();
+        else if (name === 'missionrestart') this._restartCampaignMission();
         else if (name !== 'donothing') console.info(`Netstorm: 대화상자 명령 '${command.name}' 은(는) 아직 구현되지 않았습니다.`, command);
     }
 
@@ -2182,8 +2190,22 @@ export class Netstorm {
         const name = String(argument ?? '');
         if (!/^tutorial[1-6]$/iu.test(name) && !['thewarbegins', 'masterofwhirligigs', 'savetheisland', 'fragilefortune', 'thunderingpower', 'dissolvedalliance', 'thenoose', 'rainvsrain', 'runforit', 'guardmyback', 'surrounded', 'breakingthrough', 'totherescue', 'vicious', 'enemyterritory', 'finalconfrontation'].includes(name.toLowerCase())) { console.info(`Netstorm: 미션 '${name}' 은(는) 아직 연결되지 않았습니다.`); return false; }
         if (!this._clientGuide || this._state !== AppState.MAIN_MENU) throw new Error('미션 시작의 현재 Guide·메뉴 수명 누락');
-        if (this._campaignWorld || this._clientGuide.current()) { console.warn('Netstorm: 현재 미션을 정리하기 전에는 새 미션을 시작할 수 없습니다.'); return false; }
-        this._clientGuide.begin(name); return true;
+        // 현재 미션이 있으면 원본 MissionBegin 처럼 먼저 떠나고(Guide 닫기·월드 반납·메인 메뉴 복귀) 새 미션을 시작한다. (2026-11-20 WB04-E1085)
+        if (this._campaignWorld || this._clientGuide.current()) this._leaveCampaignMission();
+        this._lastCampaignMission = { name, demo: 0, mode: 0 }; this._clientGuide.begin(name); return true;
+    }
+
+    // 현재 단독 미션을 떠나 메인 메뉴로 돌아간다(원본 `LeaveBattle` 의 단독 미션 경로). Guide 미션을 닫고 HUD·월드·Session을 반납한 뒤 메인 메뉴 표면을 다시 그린다. 떠났으면 true 다. (2026-11-20 WB04-E1085)
+    _leaveCampaignMission() {
+        if (!this._campaignWorld && !this._clientGuide?.current()) return false;
+        this._closeCampaignPopups(); this._clientGuide?.close(); this._releaseCampaignWorld();
+        this._mainMenu?.setDialog(null); this._ensureSurface(); if (this._mainMenu) this._mainMenu.dirty = true; this._displayDirty = true; this._applyCursor(); return true;
+    }
+
+    // 마지막으로 시작한 미션을 떠난 뒤 같은 이름·모드로 다시 시작한다(원본 `MissionRestart`/Reload). 기록이 없으면 아무것도 하지 않는다. 다시 시작했으면 true 다. (2026-11-20 WB04-E1085)
+    _restartCampaignMission() {
+        const last = this._lastCampaignMission; if (!last || !this._clientGuide) return false;
+        this._leaveCampaignMission(); this._clientGuide.begin(last.name, last.demo, last.mode); return true;
     }
 
     // 이미 받은 공개 자산으로 정적 지형을 연다. 플레이어/미션 상태·진행 저장·현재 미션 Config는 바꾸지 않는다.

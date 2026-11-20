@@ -63,6 +63,8 @@ test('Uber HUD 정리: 자식을 모두 지우고 새 루트로 다시 설치할
     const { root, hud } = scene(); const first = hud.install(), uber = root.node(first), kids = [uber.vertical, uber.minimapDivider, uber.chatDivider, uber.minimap, uber.production];
     hud.close(); assert.equal(hud.token, 0); for (const token of kids) assert.equal(root.node(token), null);
     assert.ok(root.node(first) instanceof UberRootNode); hud.close();
+    // 자식을 지운 빈 Uber 루트가 다음 설치 전까지 받는 HUD 모드 사건은 도킹하지 않고 기본 처리(0)로 돌아가며, 지도 영역은 다시 전체 화면이다.
+    assert.equal(root.handle(first, 0x0200003d, 3, 0), 0); assert.deepEqual({ ...root.mapView() }, { left: 0, top: 0, right: 1024, bottom: 768 });
     // 새 설치는 원본처럼 새 Uber 루트로 교체하고 이전 루트를 반납한다.
     const second = hud.install(); assert.notEqual(second, first); assert.equal(root.node(first), null); assert.equal(root.createState().entries[0], second);
     hud.close(); root.dispose();

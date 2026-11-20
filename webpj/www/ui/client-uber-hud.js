@@ -18,7 +18,7 @@ const DIVIDER_BYTES = 0x11c, ROOT_BYTES = 0xc8;
 // 실제 Client 수명의 같은 Gump 루트에 HUD 틀을 만들고 지도 영역을 갱신한다.
 export class ClientUberHud {
     // 현재 루트·장치와 HudDock이 읽고 쓰는 실제 전역, 구분선 조회기와 현재 Uber 루트 토큰이다.
-    #root; #devices; #globals; #lookup; #token = 0; #previous = { width: 0, height: 0 };
+    #root; #devices; #globals; #lookup; #token = 0; #previous = { width: 0, height: 0 }; #closed = new Set();
     // 모든 장치를 확인하고 HudDock 전역을 현재 화면 크기로 초기화한다. 지도 사각형은 Gump 트리가 읽는 같은 객체를 쓴다.
     constructor(root, devices) {
         if (!root || !devices?.assets || !devices.panelGlobals || !devices.divider) throw new TypeError('Uber HUD의 실제 루트·자산·전역·구분선 필요');
@@ -82,7 +82,9 @@ export class ClientUberHud {
         if (bytes === ROOT_BYTES) {
             const node = new UberRootNode(); let token = 0;
             // 루트의 기본 방송은 원본에서 빈 본문이므로 방송 처리기는 아무것도 하지 않는다.
-            token = root.allocateDerived(node, (event, first, second) => this.#dock(token).handle(event, first, second), (current, flags) => root.lifetime().deleteScalar(current, flags), null, () => {});
+            // HUD 자식을 지운 빈 루트는 다음 미션이 교체하기 전까지 현재 루트로 남는다. 그 사이의 HUD 모드·크기 사건은 도킹하지 않고 기본 처리로 돌려보낸다. (2026-11-20 WB04-E1085)
+            token = root.allocateDerived(node, (event, first, second) => this.#closed.has(token) ? this.#devices.baseHandle(token, event, first, second) >>> 0 : this.#dock(token).handle(event, first, second),
+                (current, flags) => root.lifetime().deleteScalar(current, flags), null, () => {});
             return token;
         }
         if (bytes === DIVIDER_BYTES) return this.#devices.divider.allocate();
@@ -149,7 +151,9 @@ export class ClientUberHud {
                 if (child && !(child.flags & DEAD)) root.remove(token);
             }
         }
-        this.#devices.minimap?.dispose(); this.#token = 0;
+        this.#devices.minimap?.dispose(); this.#closed.add(this.#token); this.#token = 0;
+        // HUD 가 사라지면 지도 영역은 다시 전체 논리 화면이다(메인 메뉴 복귀 뒤 중앙 정렬 등이 같은 객체를 읽는다).
+        const create = root.createState(); Object.assign(root.mapView(), { left: 0, top: 0, right: create.screenWidth, bottom: create.screenHeight });
     }
     // 현재 HUD의 직계 자식 토큰과 도킹된 지도 영역을 한 번에 진단한다.
     report() {
