@@ -68,7 +68,8 @@ public sealed partial class ClientHostGame : Game
     private HostSession? _missionSession;
     /// <summary>완성한 실제 세션/같은 물리/음향·표시·UI 전체를 보유하는 현재 Runtime이다.</summary>
     private HostMissionRuntime? _missionRuntime;
-    private RawSurfaceStorage? _missionStorage;
+    /// <summary>미션/메뉴보다 오래 같은 표면과 프로세스 장치를 소유한다.</summary>
+    private readonly ClientSurfaceGlobals _surfaceGlobals;
 
     /// <summary>HTML과 상위 메뉴가 공유할 원본 80칸 스크립트 문자열 고리.</summary>
     private readonly ScriptStringRing _scriptStrings = new();
@@ -165,6 +166,7 @@ public sealed partial class ClientHostGame : Game
         _localState = new ClientLocalStateGlobals(_gameplay, _ambientSound);
         _connections = new ClientConnectionGlobals(_localState);
         _clientClock = new ClientClockGlobals(_localState);
+        _surfaceGlobals = new ClientSurfaceGlobals(_gameplay, _clientClock, _kernel, () => _clock.Milliseconds);
         // cpppj ClientMain 349행의 실제 공통 SP 초기화와 같은 위치다: 클라이언트 시작 때 1회만 reseed+초기화하고 미션 시작 때는 다시 하지 않는다(0.464, 원본 004391ed).
         // 세션 시작 흐름의 미션별 reseed는 원본에 없어 0.463에서 근본 원인으로 확정했다.
         _spGlobals = new ClientSpGlobals(_gameRandom, _spCrtBox, _spModeBox, () => _clock.UnixSeconds);
@@ -267,9 +269,9 @@ public sealed partial class ClientHostGame : Game
             _gumpDrawing = new HostGumpDrawing(_mainMenu, _htmlText, _htmlMenus, _driver.Screen, _textEntry);
             _driver.BindControlLocator(_mainMenu);
             _driver.BindInputHandler(_menuInput.Dispatch);
-            // 미션 월드가 없을 때의 world 0 덤프(머리·난수·Kernel)부터 맞춘다. world 1에서는 세션의 실제 미션 시각을 쓴다(0.631).
+            // 메뉴/미션모두같은Client Frame번호/게임시각을기록한다. world1의ProcessTime도같은Frame주소를빌린다.
             // 근거: cpppj SessionStateDump.cpp의 DumpSessionState(world 0 부분). (2026-11-10 L2·L3 장치에서 추가했다)
-            var sessionDump = new HostSessionDump(_kernel, _gameRandom, _crtRandom, () => _driver.Frame, () => 0ul);
+            var sessionDump = new HostSessionDump(_kernel, _gameRandom, _crtRandom, () => _clientClock.Frame.Value.Number, () => BitConverter.DoubleToUInt64Bits(_clientClock.Frame.Value.Game));
             // --mission 진입이면 세션 데이터를 조립해 world 1 덤프에 연결한다. 월드 본체 조립은 다음 단위다.
             // (2026-11-12 0.398에서 미션 시작 흐름으로 추가했다)
             if (!string.IsNullOrEmpty(_options.Mission) && _startup is not null)
@@ -327,8 +329,8 @@ public sealed partial class ClientHostGame : Game
         MissionPlayers players = MissionPlayers.Load(key => script.Get(key), fort.Fort, types, 6500);
         // 독립 일반 월드의 fresh 설치에서만 정적 목록의 기존 배열을 초기화한다.
         _sidLists.PrepareGeneralWorld();
-        // NativeStorage 전환(0.595): 미션 풀을 장기 저장소에서 빌린다. 세션이 저장소를 소유하고 풀 바이트·덤프는 별도 풀과 같다(근거 cpppj RawCampaignSession.cpp 991행).
-        var storage = new RawSurfaceStorage(OriginalEdition.Patch1078);
+        // 같은Client의장기Surface를빌린다. 미션시작마다Pool/권한/바람/프로세스시각을다시만들지않는다.
+        RawSurfaceStorage storage = _surfaceGlobals.Storage;
         // 현재개발용일반미션부모가같은장기옵션을명시Reset한다. 전체Native로그인설치시원문부모위치로인계한다.
         RawMissionBattleOptions.Reset(OriginalEdition.Patch1078, _gameplay.BattleOptions);
         var session = new HostSession(_kernel, _gameRandom, _crtRandom, sharedSp: _spGlobals.Store, sharedCrtBox: _spCrtBox, sharedGameplay: _gameplay, sharedLists: _sidLists, pool: storage.Pool, sharedLocal: _localState, sharedConnections: _connections, sharedPlayerRecords: _gameplay.PlayerRecords, sharedProcessTime: _clientClock.GameTime);
@@ -532,7 +534,6 @@ public sealed partial class ClientHostGame : Game
             // 전투섬 배정 region 갈고리는 MP 전투 경로의 makeBattleIsland에서만 쓰므로 시작 흐름에서 직접 기록하지 않는다(0.477 정정).
             _missionRuntime = HostMissionRuntime.Create(session, storage, pendingBurning!, _missionAudio!, _mainMenu!);
             _missionSession = session;
-            _missionStorage = storage;
             _missionBurning = pendingBurning;
             return session;
         }
@@ -557,10 +558,10 @@ public sealed partial class ClientHostGame : Game
         if (_menuInput?.NotifyPointer(Poll(0xffff)) == 0) _cursor?.Set(GameCursor.Arrow);
         if (_driver.ProcessInput()) { Exit(); return; }
         if (_startup?.Configuration.Configuration.Changed == true) _startup.SaveOptions();
-        if (_missionSession is not null)
+        if (_clientClock.Initialized)
         {
             // 원문439aeb/439af0의주변음→바람은입력/설정저장뒤이며Kernel보다먼저같은난수를소비한다.
-            // 실제소리/모달/번쩍임과미션없는Client의장기Surface장치는후속연결범위다.
+            // 같은장기바람은메뉴에서도진행한다. 실제소리/모달/번쩍임은후속연결범위다.
             RawAmbientSound.Step(_ambientSound, _gameRandom, new AmbientSoundHooks
             {
                 WallSeconds = () => _clientClock.Clock.WallSeconds(_clock.Milliseconds),
@@ -568,7 +569,7 @@ public sealed partial class ClientHostGame : Game
                 CurrentDialog = () => 0u,
                 Flash = _ => { },
             });
-            _missionStorage?.UpdateAmbientWind(_gameRandom);
+            _surfaceGlobals.Storage.UpdateAmbientWind(_gameRandom);
         }
         // 원문439b13/439b18의지연삭제와Idle은현재입력뒤·Kernel준비앞에서실행한다.
         _menuInput?.FinishFrame();

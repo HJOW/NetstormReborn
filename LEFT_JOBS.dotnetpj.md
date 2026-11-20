@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-21 · 마지막 완료 0.724(전체5204건·65시작·시계/순서 전수 감사) · 다음 0.725(실제Client 장기Surface/ProcessHostStorage 결선) · 현재 단계 R4-2·R4-5 병행 · 전체 목표 미완료**
+**2026-11-21 · 마지막 완료 0.725(실제Client 장기Surface·집중116건·4시작/메뉴시각) · 다음 0.726(장기ProcessHost 현재Runtime 대여/반납) · 현재 단계 R4-2·R4-5 병행 · 전체 목표 미완료**
 
 현행 인계는 이 문서가 기준이다. 0.600~0.635의 단위별 완료 문장, 단위마다 누적한 검사 수와 L2 보관 경로 나열은 [0.635 정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635)에 있다. 0.613까지의 경과, 파일 계열별 체크 목록과 옛 집계는 [0.613 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)에 있다. 단위별 근거는 `docs/dotnet-canon-0NNN-*.md`이다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
@@ -107,6 +107,7 @@
 78. **0.722 실제Client Frame/게임시각 — 완료.** 같은Frame.game의양방향상자·공유ProcessTime과캡처후Kernel실행을연결했다. 집중95건통과·실제3DN종료0·원본1392불변이다. 정확한2.25초캡처로주변정기/프레임값이변했고Surrounded의완전일치슬롯은1개감소했다. 차이를보존했으며실행순서/전체시각전이는후속이다. [근거](docs/dotnet-canon-0722-20261121.md) 다음0.723은입력→주변음→바람→표시준비→Kernel순서를복원한다. 장기ProcessHostStorage·Native WorldRuntime장치일원화·건설효과pin·전체로그인/상태/전송Root·Source의Editor/LAN/Meta재인계·일반건설/DropIsland·Carrier플레이효과·나머지AI/캡처·전용색표·R5월드뷰도남는다. 다음전체회귀는0.728다.
 79. **0.723 프레임 실행 순서 — 완료.** 실제호스트를Frame캡처/음향번호/메뉴Tick→입력→설정저장→주변음/바람→지연삭제/Idle→표시준비→Kernel순서로수정했다. 집중95건통과·대표3시작종료0·원본1392불변이다. 변경slot은모두프레임바이트이며Tutorial1완전일치슬롯이1개늘었다. 미션없는장기Surface/주변음·영화갱신잠금과나머지루프단계는후속이다. [근거](docs/dotnet-canon-0723-20261121.md)
 80. **0.724 정기전체회귀/L2 — 완료.** Assets366/Core3351/Client1487 합계5204건통과·실패0·기존실장치음향1건미실행이다. 65실행종료0·원본1392불변이며대표3관측은0.723전체바이트일치다. 0.720대비DN31경로의Player주소DWORD외전체Player몸체가같고슬롯168변경은모두프레임바이트다. 완전일치슬롯누적은2개감소했으며M1은0/34다. [근거](docs/dotnet-canon-0724-20261121.md) 다음0.725는실제Client장기Surface/같은권한·보조전역과ProcessHostStorage연결을진행한다.
+81. **0.725 실제Client 장기Surface — 완료.** 같은Gameplay권한/보조전역과Kernel/Frame·현재Graph시각을빌리는장기Surface를Root에설치했다. 메뉴의주변환경도진행하며world0시각상수0을실제Frame으로바꿨다. 최종집중116건통과·실제4시작종료0·대표3미션0.724전체바이트일치·메뉴90프레임2.25초·원본1392불변이다. [근거](docs/dotnet-canon-0725-20261121.md) 다음0.726은장기ProcessHost의현재Runtime대여/자식반납과TYPE소비자를연결한다. 전체State/자산재시작·메뉴Kernel/효과·나머지Native장치는후속이다.
 57. **R4-2 나머지 차이와 R4-3~R4-8.** 농지 프레임, 전용 요새, 표시 등록, 그래프 번호, 장부를 처리한 뒤 R4-3~R4-8을 진행한다. 통합 조각을 마칠 때 같은 조건의 일괄 덤프로 M1 진척을확인한다. [R4 체크](#r4-detail)
 
 <a id="first-run"></a>
