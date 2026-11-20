@@ -111,6 +111,12 @@ public sealed class ClientHostGame : Game
     /// <remarks>2026-11-19 0.633에서 R4-4 정기 처리용으로 추가했다. 근거: cpppj ClientMain 602행의 매 프레임 UpdateAmbientSound와 ClientLocalStateGlobals 146~147행의 최초 BSS 0이다. 실제 재생·모달·번쩍임은 R6 음향에서 잇는다.</remarks>
     private readonly AmbientSoundState _ambientSound = new();
 
+    /// <summary>모든 미션의 실제 State/Zone/Clock과 기존 저장모드/주변음 기한을 공유한다.</summary>
+    private readonly ClientLocalStateGlobals _localState;
+
+    /// <summary>같은 Client의 실제 Registry/동기화와 약한 Source 장부다.</summary>
+    private readonly ClientConnectionGlobals _connections;
+
     /// <summary>같은 미션 연소의 실제SHP/팔레트/소리 대여가 프로세스보다 오래 살아 있게 한다.</summary>
     private HostMissionBurning? _missionBurning;
 
@@ -154,6 +160,8 @@ public sealed class ClientHostGame : Game
         _startup = startup;
         _gameRandom = startup?.Random ?? new GameRandom();
         _clock = clock ?? new HostTimeSource();
+        _localState = new ClientLocalStateGlobals(_gameplay, _ambientSound);
+        _connections = new ClientConnectionGlobals(_localState);
         // cpppj ClientMain 349행의 실제 공통 SP 초기화와 같은 위치다: 클라이언트 시작 때 1회만 reseed+초기화하고 미션 시작 때는 다시 하지 않는다(0.464, 원본 004391ed).
         // 세션 시작 흐름의 미션별 reseed는 원본에 없어 0.463에서 근본 원인으로 확정했다.
         _spGlobals = new ClientSpGlobals(_gameRandom, _spCrtBox, _spModeBox, () => _clock.UnixSeconds);
@@ -176,6 +184,7 @@ public sealed class ClientHostGame : Game
     {
         if (disposing)
         {
+            _connections.ShutdownDevices();
             _missionSession?.ReleaseMissionAiBrains();
             _missionSession?.ReleasePlayerProcesses();
             _missionBurning?.Dispose();
@@ -314,7 +323,7 @@ public sealed class ClientHostGame : Game
         _sidLists.PrepareGeneralWorld();
         // NativeStorage 전환(0.595): 미션 풀을 장기 저장소에서 빌린다. 세션이 저장소를 소유하고 풀 바이트·덤프는 별도 풀과 같다(근거 cpppj RawCampaignSession.cpp 991행).
         var storage = new RawSurfaceStorage(OriginalEdition.Patch1078);
-        var session = new HostSession(_kernel, _gameRandom, _crtRandom, sharedSp: _spGlobals.Store, sharedCrtBox: _spCrtBox, sharedGameplay: _gameplay, sharedLists: _sidLists, pool: storage.Pool);
+        var session = new HostSession(_kernel, _gameRandom, _crtRandom, sharedSp: _spGlobals.Store, sharedCrtBox: _spCrtBox, sharedGameplay: _gameplay, sharedLists: _sidLists, pool: storage.Pool, sharedLocal: _localState, sharedConnections: _connections);
         // 적재 실패에서도 이 호출이 만든 외부 연소장치만 반납한다.
         HostMissionBurning? pendingBurning = null;
         try

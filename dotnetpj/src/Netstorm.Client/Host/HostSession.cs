@@ -116,7 +116,9 @@ public sealed partial class HostSession
     /// <remarks>2026-11-12 0.464에서 cpppj 공유 SP 경로와 같은 시작 1회 초기화를 잇려고 공유 빌림을 추가했다. 미션별 reseed는 원본에 없다.
     /// 2026-11-12 0.476에서 세션 설치 의미로 Graph 저장소를 ResetTable 초기 상태에 둔다(근거 cpppj RawSurfaceStorage.Acquire의 Graph ResetTable, o/RawGraphStorage.cpp). 0번 예약이 없으면 Rebuild의 임시 번호 0이 기존 graph-0과 충돌해 큰 맵에서 번호가 소진된다.
     /// 0.594에서 NativeStorage 풀 전환의 첫 단계로 외부 풀 빌림을 추가했다. 별도 풀 제거·세션 수명 일원화는 다음 단위다.</remarks>
-    public HostSession(Kernel kernel, GameRandom game, CrtRandom crt, int poolCapacity = 0, RawSpStore? sharedSp = null, UIntBox? sharedCrtBox = null, ClientGameplayGlobals? sharedGameplay = null, RawStateSidLists? sharedLists = null, RawSidPool? pool = null)
+    /// <param name="sharedLocal">같은 Client의 실제 상태/시계 전역이다. 독립 호출만 자체 초기값을 구성한다.</param>
+    /// <param name="sharedConnections">같은 LocalState를 빌리는 실제 장기 연결표다.</param>
+    public HostSession(Kernel kernel, GameRandom game, CrtRandom crt, int poolCapacity = 0, RawSpStore? sharedSp = null, UIntBox? sharedCrtBox = null, ClientGameplayGlobals? sharedGameplay = null, RawStateSidLists? sharedLists = null, RawSidPool? pool = null, ClientLocalStateGlobals? sharedLocal = null, ClientConnectionGlobals? sharedConnections = null)
     {
         ArgumentNullException.ThrowIfNull(kernel);
         ArgumentNullException.ThrowIfNull(game);
@@ -136,7 +138,11 @@ public sealed partial class HostSession
                     _aiConstructors.Remove(brain);
                 },
             });
-        Gameplay = sharedGameplay ?? new ClientGameplayGlobals();
+        Gameplay = sharedGameplay ?? sharedLocal?.Gameplay ?? sharedConnections?.LocalState.Gameplay ?? new ClientGameplayGlobals();
+        LocalState = sharedLocal ?? sharedConnections?.LocalState ?? new ClientLocalStateGlobals(Gameplay, new AmbientSoundState());
+        if (!ReferenceEquals(LocalState.Gameplay, Gameplay)) throw new ArgumentException("미션의 실제 Gameplay/LocalState 소유자 불일치", nameof(sharedLocal));
+        Connections = sharedConnections ?? new ClientConnectionGlobals(LocalState);
+        if (!ReferenceEquals(Connections.LocalState, LocalState)) throw new ArgumentException("미션의 실제 LocalState/Registry 소유자 불일치", nameof(sharedConnections));
         Pool = pool ?? new RawSidPool(poolCapacity <= 0 ? MissionPoolCapacity : poolCapacity, true, () => Gameplay.Authority.Server);
         if (pool is not null)
         {
@@ -712,6 +718,12 @@ public sealed partial class HostSession
 
     /// <summary>호스트보다 짧은 세션이 빌리는 같은 장기 게임 전역이다.</summary>
     public ClientGameplayGlobals Gameplay { get; }
+
+    /// <summary>State/로그인/Clock/플레어가 공유하는 같은 장기Client 저장소다.</summary>
+    public ClientLocalStateGlobals LocalState { get; }
+
+    /// <summary>같은 Client 동기화/실제 Registry와 약한 Source 장부다.</summary>
+    public ClientConnectionGlobals Connections { get; }
 
     /// <summary>사제 조회·후처리·회복이 공유하는 같은 미션 상태다.</summary>
     public Netstorm.Client.Mission.RawPriestWorldState PriestState { get; }

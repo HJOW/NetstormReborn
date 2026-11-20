@@ -13,8 +13,8 @@ public sealed partial class HostSession
     private RegularHandler? _beforeFlareRegular;
     /// <summary>예약 성공 뒤 실제 부착으로 소유권을 넘길 같은 객체다.</summary>
     private RegularProcess? _reservedFlareRegular;
-    /// <summary>원본005c85f0의 현재 로그인 종료/효과 억제 시각이다. 최초BSS0이며 후속 로그인/상태 writer도 같은 상자를 사용해야 한다.</summary>
-    public DoubleBox WorldLoginEnd { get; } = new();
+    /// <summary>원본005c85f0의 현재 로그인 종료/효과 억제 시각이다. 로그인/상태 writer와 같은 장기Client 상자를 빌린다.</summary>
+    public DoubleBox WorldLoginEnd => LocalState.LoginEnd;
     /// <summary>같은 실제 원문 플레어를 건설/업그레이드가 호출한다.</summary>
     public RawFlare WorldFlare => _worldFlare ?? throw new InvalidOperationException("호스트 플레어 미연결");
 

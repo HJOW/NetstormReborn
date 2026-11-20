@@ -1167,3 +1167,10 @@ cpppj/src/o/RawClockSynchronization.h	Netstorm.Net/ClockSynchronizationTypes.cs	
 cpppj/src/o/RawClockSynchronization.h	Netstorm.Net/RawClockSynchronization.cs	3f766a97f7c4d5b290c195754be66a7ee5b929be	port
 cpppj/src/o/RawClockSynchronization.cpp	Netstorm.Net/RawClockSynchronization.cs	899c934dcca17ce113218a4fe2a45ae059f22270	port
 cpppj/src/o/ParticleGradient.cpp	Netstorm.Net/RawClockSynchronization.cs	e6d976346d9f7cebb5af45aa19bb91a2b83d3294	port
+cpppj/src/client/ClientLocalStateGlobals.h	Netstorm.Client/ClientLocalStateGlobals.cs	c551d159d8ba9b69ab082e6f4adf3930667a1e98	port
+cpppj/src/client/ClientLocalStateGlobals.h	Netstorm.Client/Host/HostSession.cs	c551d159d8ba9b69ab082e6f4adf3930667a1e98	port
+cpppj/src/client/ClientLocalStateGlobals.h	Netstorm.Client/Host/HostSession.Flare.cs	c551d159d8ba9b69ab082e6f4adf3930667a1e98	port
+cpppj/src/client/ClientConnectionGlobals.h	Netstorm.Client/ClientConnectionGlobals.cs	ec0b6e9733664abc2e214445840ce35947da90a2	port
+cpppj/src/client/ClientConnectionGlobals.cpp	Netstorm.Client/ClientConnectionGlobals.cs	ec0b6e9733664abc2e214445840ce35947da90a2	port
+cpppj/src/client/ClientMain.cpp	Netstorm.Client.Host/ClientHostGame.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
+cpppj/src/client/RawCampaignSessionLogin.inc	Netstorm.Client/Host/HostSession.cs	cea41eb0968ebabf6214e82ada598c5b5bdc7abf	port
