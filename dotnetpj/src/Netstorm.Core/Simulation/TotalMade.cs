@@ -1,3 +1,6 @@
+using Netstorm.Core.Original;
+
+// 원본 집계·금지 표의 독립 입력과 실제 월드 대여를 같은 계산으로 처리한다.
 namespace Netstorm.Core.Simulation;
 
 /// <summary>원본 10.78 의 debug assert 를 진단으로 보고하는 종류(실제 진단이며 보고 뒤에도 계산은 계속한다).</summary>
@@ -39,6 +42,9 @@ public sealed class TotalMade
     /// <summary>타입 번호 → 플래그2. 부류 합산이 현재 값을 읽는다.</summary>
     private readonly uint[] _typeFlags2;
 
+    /// <summary>실제 월드에서는 현재 TYPE의 genus를 복제하지 않고 읽는다.</summary>
+    private readonly IReadOnlyList<OriginalTypeRecord>? _currentTypes;
+
     /// <summary>진단 보고 경계. 10.78 의 assert 에 실제로 닿았는데 비어 있으면 성공으로 숨기지 않고 예외를 낸다.</summary>
     private readonly Action<TotalMadeAssertion>? _assertion;
 
@@ -67,6 +73,24 @@ public sealed class TotalMade
         _assertion = assertion;
     }
 
+    /// <summary>같은 실제 TYPE·Pop 장부 세 표·장기 금지 표를 복사 없이 연결한다. 내용을 초기화하지 않는다.</summary>
+    public TotalMade(IReadOnlyList<OriginalTypeRecord> types, RawTotalMadeStorage storage, uint[] restrictions,
+        Action<TotalMadeAssertion>? assertion = null)
+    {
+        ArgumentNullException.ThrowIfNull(types); ArgumentNullException.ThrowIfNull(storage); ArgumentNullException.ThrowIfNull(restrictions);
+        if (types.Count != NativeTypeCount || restrictions.Length < InitializedEntries)
+            throw new ArgumentException("Totalmade 실제 TYPE/금지 표의 물리 크기 오류");
+        _typeFlags2 = []; _currentTypes = types; _assertion = assertion;
+        LocalCounts = storage.LocalCounts; LocalSecondaryCounts = storage.LocalSecondaryCounts; GlobalCounts = storage.GlobalCounts;
+        Restrictions = restrictions;
+    }
+
+    /// <summary>독립 입력의 표 크기 또는 실제 월드의 같은 현재 TYPE 수다.</summary>
+    private int TypeCount => _currentTypes?.Count ?? _typeFlags2.Length;
+
+    /// <summary>실제 TYPE가 바뀌면 같은 현재 레코드의 genus를 다시 읽는다.</summary>
+    private uint TypeGenus(int type) => _currentTypes is { } current ? current[type].Flags2 : _typeFlags2[type];
+
     /// <summary>
     /// 004c23c0: 0이 아니면 앞 255칸을 0(허용)으로, 0이면 1(금지)로 채운다. 허용 값은 금지 DWORD 로 뒤집어 저장한다.
     /// </summary>
@@ -90,7 +114,7 @@ public sealed class TotalMade
     /// </summary>
     private bool Valid(int type)
     {
-        if (type > 0 && type < _typeFlags2.Length) return true;
+        if (type > 0 && type < TypeCount) return true;
         Report(TotalMadeAssertion.InvalidType);
         return false;
     }
@@ -141,8 +165,8 @@ public sealed class TotalMade
         }
         uint total = 0;
         // 자산 타입마다 부류가 겹치면 누적 제작 수를 더한다(DWORD 감김).
-        for (int type = FirstAssetType; type < _typeFlags2.Length; type++)
-            if ((_typeFlags2[type] & genus) != 0) total = unchecked(total + LocalSecondaryCounts[type]);
+        for (int type = FirstAssetType; type < TypeCount; type++)
+            if ((TypeGenus(type) & genus) != 0) total = unchecked(total + LocalSecondaryCounts[type]);
         return unchecked((int)total);
     }
 

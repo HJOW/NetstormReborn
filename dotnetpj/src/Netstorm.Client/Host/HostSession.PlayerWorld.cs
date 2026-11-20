@@ -144,6 +144,7 @@ public sealed partial class HostSession
         ReleaseFlareWorld();
         ReleaseBurningWorld();
         ReleasePriestWorld();
+        ReleaseProductionWorld();
         _reservedPlayerRegular = null;
     }
 }

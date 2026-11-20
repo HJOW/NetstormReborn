@@ -351,7 +351,7 @@ public sealed class RawContentFormHost
     public bool Linked(int form) => RawFormLinked.Check(_pool, form, sid => RawContainedLink.CommonContainedParent(_pool, sid));
 
     /// <summary>분리 또는 생성 뒤 현재 장치/가상표를 읽고 선택한 부착 함수를 복귀까지 보유한다.</summary>
-    private void AttachCurrent(int form, int parent, uint flags)
+    public void AttachCurrent(int form, int parent, uint flags)
     {
         if (_reattach is { } selected) { selected(form, parent, flags); return; }
         uint table = BinaryPrimitives.ReadUInt32LittleEndian(_pool.Slot(form));

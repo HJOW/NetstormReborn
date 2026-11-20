@@ -8,7 +8,13 @@ namespace Netstorm.Core.Original;
 public sealed class ContainedCreateState
 {
     /// <summary>내용물(contained Form) 타입 번호. 원본 생성자는 이 타입만 받는다.</summary>
-    public uint ContainedType { get; set; } = 6;
+    public uint ContainedType { get => SharedContainedType?.Invoke() ?? _containedType; set => _containedType = value; }
+
+    /// <summary>현재 역할을 빌리지 않는 독립 입력의 기존 종류다.</summary>
+    private uint _containedType = 6;
+
+    /// <summary>실제 생성 위치에서 읽는 같은 현재 내용물 종류 DWORD다.</summary>
+    public Func<uint>? SharedContainedType { get; set; }
 
     /// <summary>다리 자산을 타입 표에서 찾는 번호. 이 타입이면 표면 통지를 부른다.</summary>
     public uint BridgeType { get; set; } = 82;

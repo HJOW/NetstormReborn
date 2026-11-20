@@ -146,7 +146,7 @@ public sealed class RawFactoryResearch
     }
 
     /// <summary>form0도 읽으며 flags 지역값과 각 위치의 현재 깊이·소유자 조회 순서를 보존한다.</summary>
-    private void ManaNotice(int parent, int form, uint reason)
+    public void ManaNotice(int parent, int form, uint reason)
     {
         uint flags = Read(form, 20, 1);
         if (Need(_state.LoadingDepth)() == 0 && (flags & 16u) != 0)

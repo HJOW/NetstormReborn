@@ -155,6 +155,9 @@ public sealed partial class HostSession
         TerrainCrt = sharedCrtBox ?? new();
         TerrainBookkeeping = new RawPostPopState(TotalMade);
         SidLists = sharedLists ?? new RawStateSidLists();
+        // 원문 Client의 고정 용량 목록을 공통 후처리와 생산 재계산이 복제 없이 공유한다.
+        TerrainBookkeeping.SharedFactories = SidLists.Factories;
+        TerrainBookkeeping.SharedProviders = SidLists.Providers;
         PriestState = new(GameAux.PriestTypeBox, GameAux);
         PriestState.Priests.SharedPriests = SidLists.Priests;
         PriestState.Regen.SharedPriestType = GameAux.PriestTypeBox;
@@ -1361,10 +1364,10 @@ public sealed partial class HostSession
         var containedHooks = new ContainedCreateHooks
         {
             NotifySurface = sid => _fortBuilding!.NotifySurface(sid),
-            Attach = (form, parent, flags) => _fortForms.Attach(form, parent, flags),
+            Attach = AttachWorldContainedForm,
         };
         RawContainedCreate.ConnectFactory(Pool, _fortFactory, containedHooks);
-        _fortContained = new RawContainedCreate(Pool, new ContainedCreateState(), containedHooks);
+        _fortContained = new RawContainedCreate(Pool, new ContainedCreateState { SharedContainedType = () => Gameplay.ContentFormTypeBox.Value }, containedHooks);
         _fortBuilding = building ?? new RawBuildingSpace(Pool, _terrainHash, types,
             new BuildingSpaceState { IslandType = TerrainGlobals.IslandType, BridgeType = 82 });
         _fortPop = new RawPop(Pool, _terrainHash, _terrainSpots);
@@ -2643,6 +2646,7 @@ public sealed partial class HostSession
             Selected = () => 0,
             UnpopForm = sid =>
             {
+                if (TryUnpopProductionContent(sid)) return;
                 if (_worldDependencies is { } dependencies && dependencies.IsDependForm(sid)) _fortFactory!.UnpopForm(sid);
                 else processes.UnpopForm(sid);
             },
@@ -3065,7 +3069,7 @@ public sealed partial class HostSession
         RawPlayerWorld player = _livePlayerWorld ?? throw new InvalidOperationException("AI 런타임 화신 미연결");
         RawSquidHash hash = _terrainHash ?? throw new InvalidOperationException("AI 런타임 해시 미연결");
         RawSquidReward hp = _fortHp ?? throw new InvalidOperationException("AI 런타임 HP 미연결");
-        _aiFinderState = new ContainedFinderState { SharedBoss = () => Gameplay.Authority.Boss };
+        _aiFinderState = SessionContainedFinder;
         var finder = new RawCarrierPreDestroy(Pool, _aiFinderState, new CarrierPreDestroyHooks
         {
             ValidateDamageable = (_, _) => throw new InvalidOperationException("AI 전략 사전 파괴 검증 미연결(R6)"),

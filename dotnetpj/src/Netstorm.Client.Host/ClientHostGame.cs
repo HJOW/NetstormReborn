@@ -395,6 +395,20 @@ public sealed class ClientHostGame : Game
             session.BuildPriestWorldDevices(_missionAudio.BindPriest(session));
             // 건설 진행음도 같은 미션의 Sound47을 빌리므로 음향/사제 장치 설치 뒤 표시 장치를 조립한다.
             pendingBurning = new HostMissionBurning(session, _startup, _driver.Screen, types.Types, worldDefinitions, popShapes, shpRaw, _missionAudio);
+            // 연구/기술 표시도 같은 실제 내용물·SP·Player Deck과 현재 Gump/입력 장치를 사용한다.
+            var productionUi = (_mainMenu ?? throw new InvalidOperationException("미션 생산의 실제 Gump 소유자 미연결")).Tree;
+            session.BuildProductionWorldDevices(new()
+            {
+                ConfigInt = key => _startup.Configuration.GetInt(key),
+                Gump = id => id < productionUi.Create.Entries.Length ? productionUi.Create.Entries[id]
+                    : throw new ArgumentOutOfRangeException(nameof(id), "생산 Gump 등록ID 물리 범위"),
+                Handle = (token, ev, first, second) =>
+                {
+                    _ = (productionUi.EventHooks.Handle ?? throw new InvalidOperationException("생산 실제 Gump 가상 처리 미연결"))(token, ev, first, second);
+                },
+                Command = (code, first, second) => _driver.Input.PushCommand(code, unchecked((int)first), unchecked((int)second)),
+                Log = (kind, text) => ErrorLog.Note($"미션 생산 종류{kind}: {text}"),
+            });
             // 지형 바인딩 조립. 세션 저장소를 묶고 생성 입력을 바인딩한다. 진단 저널 연결은 7차 로그 배선 단위에서 잇는다.
             session.TerrainDiagnostics.Context = _ => { };
             session.TerrainDiagnostics.Stamp = _ => { };

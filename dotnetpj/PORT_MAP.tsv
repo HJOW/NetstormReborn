@@ -1093,3 +1093,12 @@ cpppj/src/o/RawDeckDraw.cpp	Netstorm.Core/Original/RawDeckDraw.cs	a192ea5cc91242
 cpppj/src/o/RawDeckDraw.h	Netstorm.Core/Original/RawDeckDraw.cs	a192ea5cc912429b75e5512d62bcea03f4a89d0f	L1
 cpppj/src/o/RawPlayerLinksCleanup.cpp	Netstorm.Core/Original/RawPlayerLinksCleanup.cs	adb9739e6e1306bf49b3ae67e2c747f8abc17041	L1
 cpppj/src/o/RawPlayerLinksCleanup.h	Netstorm.Core/Original/RawPlayerLinksCleanup.cs	adb9739e6e1306bf49b3ae67e2c747f8abc17041	L1
+cpppj/src/o/RawProductionDeck.cpp	Netstorm.Core/Original/RawIndicateTechnology.cs	b37bd01a56f529cf65cf8b015ae888b094885d6d	port
+cpppj/src/o/RawProductionDeck.h	Netstorm.Core/Original/RawIndicateTechnology.cs	b37bd01a56f529cf65cf8b015ae888b094885d6d	port
+cpppj/src/client/RawCampaignProductionBindings.cpp	Netstorm.Client/Mission/RawCampaignProductionBindings.cs	1e8e43d9a4c54caa3f69a669e827b726cd331ef2	session
+cpppj/src/client/RawCampaignProductionBindings.h	Netstorm.Client/Mission/RawCampaignProductionBindings.cs	05d7cb57da06dc94bf78e6e80ce0a88d145cc77f	session
+cpppj/src/o/RawPlayerContentNotice.cpp	Netstorm.Core/Original/RawPlayerContentNotice.cs	0cb53facc0b10facfb712c628f65056ba1853009	session
+cpppj/src/o/RawPlayerContentNotice.h	Netstorm.Core/Original/RawPlayerContentNotice.cs	a942a75acbab696df410e83e20a5614a0733191a	session
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.Production.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	session
+cpppj/src/o/RawTotalMade.cpp	Netstorm.Core/Simulation/TotalMade.cs	0365fa99b72ea046ab397d980f1f15651c757855	port
+cpppj/src/o/RawTotalMade.h	Netstorm.Core/Simulation/TotalMade.cs	0365fa99b72ea046ab397d980f1f15651c757855	port
