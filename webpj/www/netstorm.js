@@ -2577,6 +2577,10 @@ export class Netstorm {
     // 현재 단독 미션을 떠나 메인 메뉴로 돌아간다(원본 `LeaveBattle` 의 단독 미션 경로). Guide 미션을 닫고 HUD·월드·Session을 반납한 뒤 메인 메뉴 표면을 다시 그린다. 떠났으면 true 다. (2026-11-20 WB04-E1085)
     _leaveCampaignMission() {
         if (!this._campaignWorld && !this._clientGuide?.current()) return false;
+        // 미션 관문이 안내 창 때문에 건 시계 정지(`gate.scriptPaused`)가 남은 채 떠나면 정지 깊이가 다음 미션까지 넘어가 새 미션의 시계가 멈춘 채 시작한다.
+        // 원본 State 정리의 ResumeGame(정지 중이면 한 단계 풀기)과 같이 이 미션이 건 한 단계를 먼저 되돌린다. (2026-11-21 WB04-E1132)
+        const gate = this._clientGuide?.current()?.runtime.gate;
+        if (gate?.scriptPaused) { this._gameClock?.popGamePause(); gate.scriptPaused = 0; }
         this._closeCampaignPopups(); this._clientGuide?.close(); this._releaseCampaignWorld();
         this._mainMenu?.setDialog(null); this._ensureSurface(); if (this._mainMenu) this._mainMenu.dirty = true; this._displayDirty = true; this._applyCursor(); return true;
     }
