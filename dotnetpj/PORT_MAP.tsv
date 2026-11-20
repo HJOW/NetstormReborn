@@ -1119,3 +1119,11 @@ cpppj/src/o/RawConnectionRegistry.h	Netstorm.Net/ConnectionDeviceLifetime.cs	575
 cpppj/src/o/RawTransportPolling.h	Netstorm.Net/RawConnectionRegistry.cs	783b12763e2a90f3e2a367440e8e47ad866e8686	port
 cpppj/src/zacket/LocalMissionTransport.cpp	Netstorm.Net/LocalMissionTransport.Runtime.cs	5756ffd5ff23335839974c3c6f2b2aacd7b35618	port
 cpppj/src/zacket/LocalMissionTransport.h	Netstorm.Net/LocalMissionTransport.Runtime.cs	5756ffd5ff23335839974c3c6f2b2aacd7b35618	port
+cpppj/src/o/RawMissionServerPackets.cpp	Netstorm.Core/Original/RawMissionServerPackets.cs	eeae45c69171943ad99db6c2930574ee7747ba76	port
+cpppj/src/o/RawMissionServerPackets.h	Netstorm.Core/Original/RawMissionServerPackets.cs	eeae45c69171943ad99db6c2930574ee7747ba76	port
+cpppj/src/o/RawMissionServerPackets.cpp	Netstorm.Core/Original/RawMissionPacketFields.cs	eeae45c69171943ad99db6c2930574ee7747ba76	port
+cpppj/src/o/RawMissionServerPackets.h	Netstorm.Core/Original/RawMissionPacketFields.cs	eeae45c69171943ad99db6c2930574ee7747ba76	port
+cpppj/src/o/RawMissionServerPackets.cpp	Netstorm.Net/MissionMetadataRegistration.cs	eeae45c69171943ad99db6c2930574ee7747ba76	port
+cpppj/src/o/RawMissionServerPackets.h	Netstorm.Net/MissionMetadataRegistration.cs	eeae45c69171943ad99db6c2930574ee7747ba76	port
+cpppj/src/o/RawMissionClientPackets.cpp	Netstorm.Core/Original/RawMissionPacketFields.cs	eeae45c69171943ad99db6c2930574ee7747ba76	port
+cpppj/src/o/RawMissionClientPackets.h	Netstorm.Core/Original/RawMissionPacketFields.cs	eeae45c69171943ad99db6c2930574ee7747ba76	port

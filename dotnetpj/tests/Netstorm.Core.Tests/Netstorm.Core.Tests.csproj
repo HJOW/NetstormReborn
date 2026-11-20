@@ -478,4 +478,8 @@
   <ItemGroup>
     <None Include="../../../cpppj/tests/fixtures/local-mission-transport-x86.tsv" Link="X86/local-mission-transport-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 원본 서버 Player160/metadata27 입력을 동일 Core 소비자에서 읽기 전용으로 대조한다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/mission-server-packets-x86.tsv" Link="X86/mission-server-packets-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
