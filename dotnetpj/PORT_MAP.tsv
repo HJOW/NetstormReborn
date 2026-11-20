@@ -1209,3 +1209,7 @@ cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/RawTypeTableStorag
 cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawTypeTableStorage.cs	14fd017c3b6ca87880374e044e3ac00bf0575c2e	port
 cpppj/src/client/RawProcessHostStorage.cpp	Netstorm.Core/Original/RawProcessHostStorage.Current.cs	417f22d2967decbf2ad3a587c2190b9efb93f772	port
 cpppj/src/client/RawProcessHostStorage.h	Netstorm.Core/Original/RawProcessHostStorage.Current.cs	417f22d2967decbf2ad3a587c2190b9efb93f772	port
+cpppj/src/o/RawStateWorldCleanup.cpp	Netstorm.Core/Original/RawStateWorldCleanup.cs	a18bf6117b1237749313fd118815840b7c2a2350	port
+cpppj/src/o/RawStateWorldCleanup.cpp	Netstorm.Core/Original/RawStateWorldCleanup.Globals.cs	a18bf6117b1237749313fd118815840b7c2a2350	port
+cpppj/src/o/RawStateWorldCleanup.h	Netstorm.Core/Original/RawStateWorldCleanup.cs	1e8e43d9a4c54caa3f69a669e827b726cd331ef2	port
+cpppj/src/o/RawStateWorldCleanup.h	Netstorm.Core/Original/RawStateWorldCleanup.Globals.cs	1e8e43d9a4c54caa3f69a669e827b726cd331ef2	port
