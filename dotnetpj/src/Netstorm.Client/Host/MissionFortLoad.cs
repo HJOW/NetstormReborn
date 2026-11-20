@@ -15,7 +15,11 @@ public sealed record MissionFortLoadResult(
     // 미션 종류(`missionType`)다.
     string MissionType,
     // 푼 요새 Template다.
-    FortTemplate Fort);
+    FortTemplate Fort)
+{
+    /// <summary>같은최초파일읽기의이미지/실제이름이다. manager설치가파일을두번읽지않고동일입력을사용한다.</summary>
+    public MissionFortSourceImage? SourceImage { get; init; }
+}
 
 /// <summary>호스트에서 미션 요새를 실제 파일 장치로 읽어 이식된 판독기로 푸는 적재 장치다.
 /// 근거: cpppj의 미션 진입 요새 적재(<c>MissionScript::FortPath</c> + <c>FortTemplate::Parse</c>, R4 조립의 첫 고리).
@@ -85,6 +89,6 @@ public static class MissionFortLoad
         MissionFortSourceImage image = script.FortFileReader()(fortName);
         RiftTypeTable types = LoadTypeTable(startup.Files);
         FortTemplate fort = FortTemplate.Parse(image.Image, types);
-        return new MissionFortLoadResult(mission, fortName, image.FileName, script.MissionType(), fort);
+        return new MissionFortLoadResult(mission, fortName, image.FileName, script.MissionType(), fort) { SourceImage = image };
     }
 }

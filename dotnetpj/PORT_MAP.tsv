@@ -1253,3 +1253,7 @@ cpppj/src/client/ClientRandomGlobals.h	Netstorm.Client/ClientStateResources.cs	d
 cpppj/src/client/RawMenuControls.h	Netstorm.Client/Host/HostPopupMenu.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
 cpppj/src/client/ClientAudio.cpp	Netstorm.Client.Host/HostMissionAudio.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/client/ClientAudio.h	Netstorm.Client.Host/HostMissionAudio.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.Templates.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
+cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.Templates.cs	bda77381e54bc382937c720047ee4441086b46d7	port
+cpppj/src/client/CurrentAllocationBytes.h	Netstorm.Client/ClientAllocationBytes.cs	c1b8fbf4155f92dd9319fe5fea3e1f69768b5348	port
+cpppj/src/client/MissionFortSource.h	Netstorm.Client/Host/MissionFortLoad.cs	d22a1b5817bef1b794b14e1d114827bc12cc162f	port

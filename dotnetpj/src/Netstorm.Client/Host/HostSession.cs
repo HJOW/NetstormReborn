@@ -122,11 +122,13 @@ public sealed partial class HostSession
     /// <param name="sharedPlayerRecords">명시제공시같은Core/Player단일고정뷰를빌린다.</param>
     /// <param name="adoptInitializedPlayers">앞선실제Native부모가완료한같은Player를재초기화없이인계받는다.</param>
     /// <param name="sharedPlayerProcesses">같은Client의Kernel/Frame에결합된장기Host저장소다. 독립조합만세션전용Host를만든다.</param>
-    public HostSession(Kernel kernel, GameRandom game, CrtRandom crt, int poolCapacity = 0, RawSpStore? sharedSp = null, UIntBox? sharedCrtBox = null, ClientGameplayGlobals? sharedGameplay = null, RawStateSidLists? sharedLists = null, RawSidPool? pool = null, ClientLocalStateGlobals? sharedLocal = null, ClientConnectionGlobals? sharedConnections = null, ClientPlayerRecords? sharedPlayerRecords = null, bool adoptInitializedPlayers = false, DoubleBox? sharedProcessTime = null, RawProcessHostStorage? sharedPlayerProcesses = null)
+    /// <param name="sharedTemplates">같은Client의실제manager9개와헤더를빌린다. 독립호출만Session수명의소유자를만든다.</param>
+    public HostSession(Kernel kernel, GameRandom game, CrtRandom crt, int poolCapacity = 0, RawSpStore? sharedSp = null, UIntBox? sharedCrtBox = null, ClientGameplayGlobals? sharedGameplay = null, RawStateSidLists? sharedLists = null, RawSidPool? pool = null, ClientLocalStateGlobals? sharedLocal = null, ClientConnectionGlobals? sharedConnections = null, ClientPlayerRecords? sharedPlayerRecords = null, bool adoptInitializedPlayers = false, DoubleBox? sharedProcessTime = null, RawProcessHostStorage? sharedPlayerProcesses = null, CampaignTemplateStorage? sharedTemplates = null)
     {
         ArgumentNullException.ThrowIfNull(kernel);
         ArgumentNullException.ThrowIfNull(game);
         ArgumentNullException.ThrowIfNull(crt);
+        Templates = sharedTemplates ?? new CampaignTemplateStorage();
         if (sharedPlayerProcesses is not null && (!sharedPlayerProcesses.HasDevices() || !sharedPlayerProcesses.UsesKernel(kernel)))
             throw new ArgumentException("실제Client의같은Kernel/Frame장치가필요한장기프로세스Host", nameof(sharedPlayerProcesses));
         _sharedPlayerProcesses = sharedPlayerProcesses;
@@ -695,9 +697,8 @@ public sealed partial class HostSession
     /// <remarks>2026-11-12 0.436에서 월드 적재 공유 저장소로 추가했다. 적재 본체 연결은 다음 단위다.</remarks>
     public RiftTypeFrames[] WorldFrames { get; } = EmptyWorldFrames();
 
-    /// <summary>세션이 소유한 현재 Template header 180바이트다. 월드 적재가 +8 DWORD를 직접 쓴다.</summary>
-    /// <remarks>2026-11-12 0.436에서 월드 적재 공유 저장소로 추가했다. 적재 본체 연결은 다음 단위다.</remarks>
-    public byte[] WorldTemplates { get; } = new byte[WorldTemplateBytes];
+    /// <summary>현재실제Template manager9개와같은180BYTE다. 월드적재의+8쓰기와State정리가동일물리를사용한다.</summary>
+    public byte[] WorldTemplates => Templates.HeaderStorage;
 
     /// <summary>세션이 소유한 월드 적재 전역이다. 구독자·편집·임무후 상태를 둔다.</summary>
     /// <remarks>2026-11-12 0.436에서 월드 적재 공유 저장소로 추가했다. 적재 본체 연결은 다음 단위다.</remarks>
@@ -2940,7 +2941,7 @@ public sealed partial class HostSession
     /// <param name="payload">전달 값이다.</param>
     /// <param name="fallback">선택된 조기 반환 이외의 이전 처리기다.</param>
     /// <returns>원문과 같은 반환 값이다.</returns>
-    /// <remarks>2026-11-19 0.643에서 R4-4 Player 정기용으로 추가했다. 근거: cpppj o/RawPlayerRegular.cpp 24~43행의 RunPlayerRegular다. 새 정기 예약 실패(new 40)는 관리 코드에서 일어나지 않으므로 예약은 항상 성공으로 두고 실제 부착 실패는 null 반환으로 잇는다. Template State는 세션 적재 header 180바이트에서 잇는다. DataManager 스트림·UI 통지는 R6에서 잇는다.</remarks>
+    /// <remarks>2026-11-19 0.643에서 R4-4 Player 정기용으로 추가했다. 근거: cpppj o/RawPlayerRegular.cpp 24~43행의 RunPlayerRegular다. 새 정기 예약 실패(new 40)는 관리 코드에서 일어나지 않으므로 예약은 항상 성공으로 두고 실제 부착 실패는 null 반환으로 잇는다. 실제manager의State getter/Notify와같은헤더를사용하고제품Runtime전체수명을pin한다. Native UI의나머지통지는R6에서잇는다.</remarks>
     private float RunPlayerRegularSession(int sid, uint @event, uint count, float payload, RegularHandler? fallback)
     {
         SquidProcessHost processes = PlayerProcesses ?? throw new InvalidOperationException("Player 정기 프로세스 미연결");
@@ -2950,17 +2951,9 @@ public sealed partial class HostSession
             Log = (group, text) => _playerRegularLogs.Add(group + ":" + text),
             ReserveRegular = static () => true,
             AddRegular = (parent, code, value) => { processes.AddRegular(parent, code, value); },
-            TemplateState = slot =>
-            {
-                // 9칸 header에서 해당 칸 20바이트를 빌린다. 범위를 벗어나면 원문 손상 입력 전에 거부한다.
-                if (slot > 8)
-                {
-                    throw new ArgumentOutOfRangeException(nameof(slot), slot, "Player Template 칸 번호 범위 오류");
-                }
-
-                return WorldTemplates.AsMemory(unchecked((int)slot) * 20, 20);
-            },
-            TemplateChanged = slot => _playerTemplateMarks.Add(slot),
+            TemplateState = CurrentPlayerTemplateState,
+            TemplateChanged = NotifyPlayerTemplateState,
+            TemplatePin = () => Gameplay.Borrowed() ? Gameplay.PinCurrentRuntime(this) : null,
         };
         return RawPlayerRegular.Run(Pool, MissionPlayer.BattleOwner, MissionPlayer.TemplateOwner, OwnerMode.Battle, sid, @event, count, payload, hooks);
     }

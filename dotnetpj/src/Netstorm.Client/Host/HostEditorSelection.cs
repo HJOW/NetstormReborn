@@ -44,7 +44,7 @@ public sealed class HostEditorSelection : IDisposable
             SerializationGlobals = sharedTemplates?.SerializationGlobals,
             SectionNames = sharedTemplates?.SectionNamesOwner,
             TypeCount = () => PatchTypeCount,
-            AllocationBytes = _ => throw new InvalidOperationException("맵 목록의 빈 State 미정 할당 바이트 미연결"),
+            AllocationBytes = ClientAllocationBytes.ReadCurrent,
             UserName = () => UserName,
             Translate = text => translation?.Translate(text) ?? text,
             EnumeratePaths = Workspace.Enumerate,

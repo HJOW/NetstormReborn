@@ -33,6 +33,9 @@ public sealed class MissionFortLoadTests
     {
         string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
         var startup = new HostStartupScene(data);
+        MissionFortLoadResult source = MissionFortLoad.Load(startup, "thewarbegins");
+        Assert.NotNull(source.SourceImage); Assert.Equal(source.FortPath, source.SourceImage.FileName);
+        Assert.Equal(startup.Files.ReadAllBytes(source.FortPath), source.SourceImage.Image);
         MissionFortLoadResult loaded = MissionFortLoad.Load(startup, "thewarbegins");
         Assert.Equal("thewarbegins", loaded.Mission);
         Assert.Equal("thewarbegins", loaded.FortName);

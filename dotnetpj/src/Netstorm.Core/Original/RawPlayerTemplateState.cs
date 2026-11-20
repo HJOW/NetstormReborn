@@ -237,6 +237,10 @@ public sealed class RawPlayerTemplateState
     /// <param name="slot">Template 슬롯.</param>
     /// <returns>현재 State 28바이트 이상.</returns>
     public Span<byte> Get(uint slot)
+        => GetMemory(slot).Span;
+
+    /// <summary>같은원문getter를실행하고현재실제State의Memory를반환한다. 호출자는manager/Runtime수명을빌림전체에유지한다.</summary>
+    public Memory<byte> GetMemory(uint slot)
     {
         if (_edition == OriginalEdition.Cd1072)
         {
@@ -308,7 +312,7 @@ public sealed class RawPlayerTemplateState
         {
             throw new ArgumentOutOfRangeException(null, "Player 현재State물리BYTE범위");
         }
-        return stream.Bytes.Span;
+        return stream.Bytes;
     }
 
     /// <summary>

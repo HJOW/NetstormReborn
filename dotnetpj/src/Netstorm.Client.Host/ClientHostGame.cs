@@ -170,11 +170,12 @@ public sealed partial class ClientHostGame : Game
         _surfaceGlobals = new ClientSurfaceGlobals(_gameplay, _clientClock, _kernel, () => _clock.Milliseconds);
         _sidLists = _surfaceGlobals.Storage.SidLists;
         BindStateResourceOwners();
-        LoadRootServerList();
         // cpppj ClientMain 349행의 실제 공통 SP 초기화와 같은 위치다: 클라이언트 시작 때 1회만 reseed+초기화하고 미션 시작 때는 다시 하지 않는다(0.464, 원본 004391ed).
         // 세션 시작 흐름의 미션별 reseed는 원본에 없어 0.463에서 근본 원인으로 확정했다.
         _spGlobals = new ClientSpGlobals(_gameRandom, _spCrtBox, _spModeBox, () => _clock.UnixSeconds);
         _spGlobals.Store.Initialize();
+        // 원문SP초기화정상복귀뒤서버파일을읽어잘못된목록의실패prefix도같이보존한다.
+        LoadRootServerList();
         _graphics = new GraphicsDeviceManager(this);
         Content.RootDirectory = "Content";
         // 고정 시각 모드(L2·L3 결정론 수집)에서는 따라잡기 Update를 끄고 그리기당 한 번씩만 틱한다.
@@ -344,7 +345,10 @@ public sealed partial class ClientHostGame : Game
         HostMissionBurning? pendingBurning = null;
         try
         {
-            session = new HostSession(_kernel, _gameRandom, _crtRandom, sharedSp: _spGlobals.Store, sharedCrtBox: _spCrtBox, sharedGameplay: _gameplay, sharedLists: _sidLists, pool: storage.Pool, sharedLocal: _localState, sharedConnections: _connections, sharedPlayerRecords: _gameplay.PlayerRecords, sharedProcessTime: _clientClock.GameTime, sharedPlayerProcesses: _surfaceGlobals.Processes);
+            session = new HostSession(_kernel, _gameRandom, _crtRandom, sharedSp: _spGlobals.Store, sharedCrtBox: _spCrtBox, sharedGameplay: _gameplay, sharedLists: _sidLists, pool: storage.Pool, sharedLocal: _localState, sharedConnections: _connections, sharedPlayerRecords: _gameplay.PlayerRecords, sharedProcessTime: _clientClock.GameTime, sharedPlayerProcesses: _surfaceGlobals.Processes, sharedTemplates: _stateResources.Templates);
+            // 개발용일반미션의실제manager1을최초읽기의같은이미지/경로로설치한다. Native로그인의지연파일선택은별도부모에서연결한다.
+            MissionFortSourceImage image = fort.SourceImage ?? throw new InvalidOperationException("현재미션의최초요새이미지미연결");
+            session.Templates.InstallFile(1, fort.Fort, image.Image, image.FileName, types.Types.Count);
             // 단독 바인딩 Zone을 먼저 설치한다. 조합 검사와 같은 입력(구독자 1·핸들 이름)이며 구독자·flags 0x08·이름을 둔다.
             // 이름·서브 갈고리는 실제 전송이 없어 기록만 하며 포트는 검사와 같은 값으로 둔다(실제 바인딩은 로컬 네트워크 단위에서 잇는다).
             var zone = new byte[LocalMissionZone.ZoneHead + LocalMissionZone.ZoneClient];
@@ -463,17 +467,14 @@ public sealed partial class ClientHostGame : Game
                 },
                 new FortWorldLoadHooks
                 {
-                    TemplatePresent = _ => true,
+                    TemplatePresent = session.Templates.HasManager,
                     Territory = slot =>
                     {
                         worldOrder.Add($"territory:{slot}");
                         // 실제 요새 Territory 120바이트를 읽는다. 섹션이 없으면 누락으로 거부한다.
-                        byte[] raw = fort.Fort.Territory;
-                        var stream = new FortTerritoryStream();
-                        stream.Set(raw, 0u, (uint)raw.Length);
-                        return stream;
+                        return session.Templates.SelectTerritory(slot);
                     },
-                    CurrentTemplate = _ => fort.Fort,
+                    CurrentTemplate = session.Templates.Template,
                     Assertion = _ => throw new InvalidOperationException("시작 흐름의 Territory 진단은 원본 분류와 불일치한다"),
                     LoadingDepthChanged = _ => throw new InvalidOperationException("시작 흐름은 깊이 효과를 요청하지 않는다"),
                     BuilderAssertion = _ => throw new InvalidOperationException("시작 흐름의 빌더 진단은 원본 분류와 불일치한다"),
@@ -512,7 +513,7 @@ public sealed partial class ClientHostGame : Game
                     CurrentTemplate = slot =>
                     {
                         worldOrder.Add($"template:{slot}");
-                        return fort.Fort;
+                        return session.Templates.Template(slot);
                     },
                     Objects = (fortTemplate, slot) =>
                     {

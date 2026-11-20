@@ -128,12 +128,7 @@ public sealed class ClientPlayerRecords
 
     /// <summary>현재 네이티브 힙의 실제 할당 입력만 복사하고 즉시 반납한다. 고정 검사는 명시 공급자로 대체한다.</summary>
     private static void CurrentAllocationBytes(Span<byte> destination)
-    {
-        if (destination.IsEmpty) return;
-        nint allocation = Marshal.AllocHGlobal(destination.Length);
-        try { byte[] bytes = new byte[destination.Length]; Marshal.Copy(allocation, bytes, 0, bytes.Length); bytes.CopyTo(destination); }
-        finally { Marshal.FreeHGlobal(allocation); }
-    }
+        => ClientAllocationBytes.ReadCurrent(destination);
 
     /// <summary>실제 허용된 폭만 확보하며 공장 입력 실패 시 주소를 소비하지 않는다.</summary>
     private uint Allocate(uint bytes, bool player)

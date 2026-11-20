@@ -79,7 +79,7 @@ public sealed class HostSessionPlayerTests
         Assert.NotNull(session.PlayerProcesses.FindEvent(sid, 2));
     }
 
-    /// <summary>사건 2를 세션 처리기로 보내면 Template 칸에 표시 비트를 세우고 0을 돌려준다.</summary>
+    /// <summary>사건2는현재실제manager의State에표시비트를쓰고헤더는보존한다.</summary>
     [Fact]
     public void PlayerRegularRoutesEventTwoThroughSession()
     {
@@ -89,9 +89,13 @@ public sealed class HostSessionPlayerTests
         Assert.NotNull(handler);
         uint slot = session.MissionPlayer.TemplateOwner;
         Assert.True(slot <= 8, "Template 칸 번호가 header 범위를 벗어났다");
+        session.Templates.Install(slot, TemplateStorageTestSupport.RealFort("thewarbegins"), "named");
+        BinaryPrimitives.WriteUInt32LittleEndian(session.WorldTemplates.AsSpan((int)slot * 20 + 8, 4), 1);
+        byte[] headers = session.WorldTemplates.ToArray();
         float result = handler(sid, 2, 1, 60.0f);
         Assert.Equal(0.0f, result);
-        Assert.NotEqual(0, session.WorldTemplates[unchecked((int)slot) * 20] & 4);
+        Assert.NotEqual(0, session.Templates.State(slot).Bytes.Span[0] & 4);
+        Assert.Equal(headers, session.WorldTemplates);
         Assert.Contains(slot, session.PlayerTemplateMarks);
     }
 

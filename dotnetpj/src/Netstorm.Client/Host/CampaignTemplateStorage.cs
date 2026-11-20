@@ -63,6 +63,9 @@ public sealed partial class CampaignTemplateStorage
     /// <summary>실제 180바이트 헤더를 같은 Player/로더에 공급한다. 사본이 아니다.</summary>
     public Memory<byte> Headers => _headers;
 
+    /// <summary>같은Session의기존배열API도사본없이동일180BYTE를빌리도록하는내부물리뷰다.</summary>
+    internal byte[] HeaderStorage => _headers;
+
     /// <summary>reader와 신규 초기화가 공유하는 Client 이름표 owner다.</summary>
     public ClientTemplateSectionNames SectionNamesOwner => _sectionNames;
 
@@ -78,6 +81,9 @@ public sealed partial class CampaignTemplateStorage
 
     /// <summary>현재 실제 manager 할당 수를 읽기만 한다.</summary>
     public int OwnedImages => _images.Count;
+
+    /// <summary>현재유효슬롯의실제managerDWORD가비영인지읽는다. 슬롯범위밖은Header의물리검사로그대로거부한다.</summary>
+    public bool HasManager(uint slot) => Read(Header(slot), 0) != 0;
 
     /// <summary>유효 슬롯의 현재 기록 20바이트를 빌린다.</summary>
     /// <param name="slot">0~8.</param>
