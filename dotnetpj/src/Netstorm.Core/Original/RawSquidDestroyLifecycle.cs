@@ -701,15 +701,15 @@ public sealed class RawSquidDestroyLifecycle
         // 원문 signed count가 양수일 때만 현재 포인터를 읽으며 같은 반복의 포인터에 압축한다.
         while (unchecked((int)index) < unchecked((int)list.Count))
         {
-            uint[] source = list.Entries;
+            Span<uint> source = list.Storage;
             if (index >= source.Length) throw new ArgumentOutOfRangeException(nameof(list), "PATCH 삭제 목록의 현재 DWORD 물리 부족");
-            uint value = source[index];
+            uint value = source[checked((int)index)];
             if (value == (uint)sid) removed = unchecked(removed + 1);
             else
             {
                 uint destination = unchecked(index - removed);
                 if (destination >= source.Length) throw new ArgumentOutOfRangeException(nameof(list), "PATCH 삭제 압축의 현재 DWORD 물리 부족");
-                source[destination] = value;
+                source[checked((int)destination)] = value;
             }
             index = unchecked(index + 1);
         }

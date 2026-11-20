@@ -52,21 +52,21 @@ public sealed class RawPriestPostPop
     private static void AppendUnique(RawPostPopList list, int sid)
     {
         uint used = list.Count;
-        if (unchecked((int)used) >= list.Entries.Length) return;
+        if (unchecked((int)used) >= list.Storage.Length) return;
         if (unchecked((int)used) > 0)
         {
-            uint[] storage = list.Entries; uint index = 0;
+            Span<uint> storage = list.Storage; uint index = 0;
             // 최초 양수 개수로 들어온 뒤 매번 현재 signed 개수와 비교한다.
             do
             {
                 if (index >= storage.Length) throw new ArgumentOutOfRangeException(nameof(list), "사제 목록 중복 검색 실제 범위 오류");
-                if (storage[index] == (uint)sid) return;
+                if (storage[checked((int)index)] == (uint)sid) return;
                 index++;
             } while (unchecked((int)index) < unchecked((int)list.Count));
         }
-        if (unchecked((int)used) < 0 || used >= list.Entries.Length)
+        if (unchecked((int)used) < 0 || used >= list.Storage.Length)
             throw new ArgumentOutOfRangeException(nameof(list), "사제 목록 실제 저장 범위 오류");
-        list.Entries[used] = (uint)sid; list.Count = unchecked(list.Count + 1u);
+        list.Storage[checked((int)used)] = (uint)sid; list.Count = unchecked(list.Count + 1u);
     }
 
     /// <summary>int/6 절삭·double50배·float 저장·현재 객체HP 나눗셈 순서로 payload를 계산한다.</summary>
@@ -101,7 +101,7 @@ public sealed class RawPriestPostPop
         if (raw[10] != InitialPriestType || BinaryPrimitives.ReadUInt32LittleEndian(raw) != 0x0050f210u)
             throw new ArgumentException("사제 postPop 가상 표·타입 불일치");
         RawPostPopList list = _state.GetPriests();
-        if (list.Count > list.Entries.Length) throw new ArgumentException("사제 목록 개수 오류");
+        if (list.Count > list.Storage.Length) throw new ArgumentException("사제 목록 개수 오류");
     }
 
     /// <summary>전체 PostPop 조합이 같은 풀의 접두인지 확인하는 참조다.</summary>

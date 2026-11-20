@@ -53,8 +53,8 @@ public sealed partial class RawAssetPostPop
         uint used = list.Count, capacity = list.Capacity;
         if (unchecked((int)used) >= unchecked((int)capacity)) return;
         if (unchecked((int)used) < 0) throw new ArgumentOutOfRangeException(nameof(list), "자산 목록의 음수 저장 위치");
-        uint[] storage = list.Entries; if (used >= storage.Length) throw new ArgumentOutOfRangeException(nameof(list), "자산 목록의 실제 저장 배열 범위 오류");
-        storage[used] = (uint)sid; list.Count = unchecked(list.Count + 1);
+        Span<uint> storage = list.Storage; if (used >= storage.Length) throw new ArgumentOutOfRangeException(nameof(list), "자산 목록의 실제 저장 배열 범위 오류");
+        storage[checked((int)used)] = (uint)sid; list.Count = unchecked(list.Count + 1);
     }
     /// <summary>WORD만 저장하고 그 뒤 현재 다리 TYPE가 선택한 통지를 실행한다.</summary>
     private void SetAssetWord(int sid, uint value)

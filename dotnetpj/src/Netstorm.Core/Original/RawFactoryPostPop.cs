@@ -449,7 +449,7 @@ public sealed class RawFactoryPostPop
             }
         }
 
-        list.Entries[checked((int)used)] = unchecked((uint)sid);
+        list.Storage[checked((int)used)] = unchecked((uint)sid);
         list.Count = unchecked(used + 1);
     }
 

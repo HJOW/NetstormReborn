@@ -20,12 +20,12 @@ public static class RawManaRegistration
         bool patch = edition == OriginalEdition.Patch1078, already = false; int count = unchecked((int)list.Count);
         if (count > 0)
         {
-            uint[] storage = list.Entries; int index = 0;
+            Span<uint> storage = list.Storage; int index = 0;
             // 최초 양수 count 뒤 첫 원소는 현재 count 재조회보다 먼저 검사한다.
             do
             {
                 if ((uint)index >= storage.Length) throw new ArgumentOutOfRangeException(nameof(list), "마나 공급원 검색의 실제 물리 범위 오류");
-                if (storage[index] == value) { already = true; break; } index++;
+                if (storage[checked((int)index)] == value) { already = true; break; } index++;
             } while (index < (patch ? count : unchecked((int)list.Count)));
         }
         if (patch && diagnostics.Checking && already)
@@ -39,9 +39,9 @@ public static class RawManaRegistration
             if (used < unchecked((int)capacity))
             {
                 if (used < 0) throw new ArgumentOutOfRangeException(nameof(list), "마나 공급원 음수 저장 인덱스 오류");
-                uint[] storage = list.Entries;
+                Span<uint> storage = list.Storage;
                 if ((uint)used >= storage.Length) throw new ArgumentOutOfRangeException(nameof(list), "마나 공급원 저장의 실제 물리 범위 오류");
-                storage[used] = value; list.Count = unchecked(list.Count + 1);
+                storage[checked((int)used)] = value; list.Count = unchecked(list.Count + 1);
             }
         }
         productionDirty = unchecked(productionDirty + 1);

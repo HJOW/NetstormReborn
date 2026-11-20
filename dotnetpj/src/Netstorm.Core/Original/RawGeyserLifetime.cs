@@ -107,14 +107,14 @@ public sealed class RawGeyserLifetime
         // AI 제거 효과 뒤의 현재 count/내용으로 모든 중복을 제거한다.
         for (uint i = 0; i < _geysers.Count; i++)
         {
-            uint value = _geysers.Entries[i];
+            uint value = _geysers.Storage[checked((int)i)];
             if (value == unchecked((uint)sid))
             {
                 removed++;
             }
             else
             {
-                _geysers.Entries[i - removed] = value;
+                _geysers.Storage[checked((int)(i - removed))] = value;
             }
         }
 
@@ -130,13 +130,13 @@ public sealed class RawGeyserLifetime
         // 앞선 store가 바꾼 현재 count/물리도 다음 반복에서 읽는다.
         while (unchecked((int)index) < unchecked((int)_geysers.Count))
         {
-            uint[] storage = _geysers.Entries;
+            Span<uint> storage = _geysers.Storage;
             if (index >= (uint)storage.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(sid), "Native 간헐천 제거의 현재 DWORD 물리 부족");
             }
 
-            uint value = storage[index];
+            uint value = storage[checked((int)index)];
             if (value == unchecked((uint)sid))
             {
                 removed++;
@@ -149,7 +149,7 @@ public sealed class RawGeyserLifetime
                     throw new ArgumentOutOfRangeException(nameof(sid), "Native 간헐천 압축의 현재 DWORD 물리 부족");
                 }
 
-                storage[destination] = value;
+                storage[checked((int)destination)] = value;
             }
 
             index++;

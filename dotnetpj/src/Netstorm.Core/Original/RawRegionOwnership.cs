@@ -374,13 +374,13 @@ public sealed class RawRegionOwnership
         // 원문 각 반복의 현재 count·현재 포인터를 사용한다.
         for (int index = 0; index < unchecked((int)list.Count); ++index)
         {
-            uint[] storage = list.Entries;
+            Span<uint> storage = list.Storage;
             if (index >= storage.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(list), "지역 Native 투표의 현재 DWORD 물리 부족");
             }
 
-            uint number = storage[index];
+            uint number = storage[checked((int)index)];
             if (number > 65535u)
             {
                 throw new ArgumentOutOfRangeException(nameof(list), "지역 Native 투표의 실제 DWORD SID 범위 오류");
@@ -467,13 +467,13 @@ public sealed class RawRegionOwnership
                 // 같은 소유자의 마지막 신전 테마가 남는다.
                 for (int index = 0; index < unchecked((int)_temples.Count); ++index)
                 {
-                    uint[] storage = _temples.Entries;
+                    Span<uint> storage = _temples.Storage;
                     if (index >= storage.Length)
                     {
                         throw new ArgumentOutOfRangeException(nameof(owner), "지역 Native 테마의 실제 DWORD 물리 부족");
                     }
 
-                    uint number = storage[index];
+                    uint number = storage[checked((int)index)];
                     if (number > 65535u)
                     {
                         throw new ArgumentOutOfRangeException(nameof(owner), "지역 Native 테마의 실제 DWORD SID 범위 오류");

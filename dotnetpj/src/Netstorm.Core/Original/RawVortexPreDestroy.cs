@@ -188,7 +188,7 @@ public sealed class RawVortexPreDestroy
             // 목록 개수만큼 같은 소유자의 outpost 좌표마다 지역 갱신을 부른다
             for (int index = 0; index < count; index++)
             {
-                uint value = _outposts.Entries[index];
+                uint value = _outposts.Storage[checked((int)index)];
                 // 풀을 벗어나거나 16비트를 넘는 번호는 쓰기 전에 거부한다
                 if (value >= (uint)_pool.Capacity || value > MaxSid16)
                 {
@@ -242,7 +242,7 @@ public sealed class RawVortexPreDestroy
         // 생존 항목은 최초 상대 순서를 유지한다. 개수 밖 값은 읽지도 쓰지도 않는다.
         for (uint index = 0; index < list.Count; index++)
         {
-            uint current = list.Entries[(int)index];
+            uint current = list.Storage[checked((int)((int)index))];
             // 삭제 번호와 같으면 세지 않고, 다르면 앞으로 당긴다
             if (current == (uint)sid)
             {
@@ -250,7 +250,7 @@ public sealed class RawVortexPreDestroy
             }
             else
             {
-                list.Entries[(int)(index - removed)] = current;
+                list.Storage[checked((int)((int)(index - removed)))] = current;
             }
         }
         list.Count -= removed;

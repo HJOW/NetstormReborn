@@ -55,13 +55,13 @@ public sealed partial class RawSurfaceStorage
         // count<=0이면 배열 포인터도 읽지 않는다.
         while (unchecked((int)index) < unchecked((int)list.Count))
         {
-            uint[] storage = list.Entries;
+            Span<uint> storage = list.Storage;
             if (index >= (uint)storage.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(sid), "Outpost 삭제 목록의 현재 DWORD 물리 부족");
             }
 
-            uint value = storage[index];
+            uint value = storage[checked((int)index)];
             if (value == unchecked((uint)sid))
             {
                 removed++;
@@ -74,7 +74,7 @@ public sealed partial class RawSurfaceStorage
                     throw new ArgumentOutOfRangeException(nameof(sid), "Outpost 삭제 압축의 현재 DWORD 물리 부족");
                 }
 
-                storage[destination] = value;
+                storage[checked((int)destination)] = value;
             }
 
             index++;

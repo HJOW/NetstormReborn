@@ -235,12 +235,12 @@ public sealed class RawFortPriestPreparation
         for (uint index = 0; unchecked((int)index) < unchecked((int)_priests.GetPriests().Count); ++index)
         {
             RawPostPopList list = _priests.GetPriests();
-            if (index >= (uint)list.Entries.Length)
+            if (index >= (uint)list.Storage.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(entries), "Fort 사제 준비 현재 목록 물리 범위");
             }
 
-            uint sid = list.Entries[(int)index];
+            uint sid = list.Storage[checked((int)((int)index))];
             ReadOnlySpan<byte> raw = Raw(sid);
             float x = BitConverter.UInt32BitsToSingle(Word(raw, 14));
             float y = BitConverter.UInt32BitsToSingle(Word(raw, 18));

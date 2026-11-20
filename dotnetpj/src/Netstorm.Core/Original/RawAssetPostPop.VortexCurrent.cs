@@ -11,19 +11,19 @@ public sealed partial class RawAssetPostPop
         if (unchecked((int)used) >= unchecked((int)capacity)) return;
         if (unchecked((int)used) > 0)
         {
-            uint[] storage = list.Entries; uint index = 0;
+            Span<uint> storage = list.Storage; uint index = 0;
             // 첫 항목은 최초 양수 count로 선택하고 이후 조건은 실제 현재 count를 읽는다.
             do
             {
                 if (index >= storage.Length) throw new ArgumentOutOfRangeException(nameof(list), "신전 중복 검색 물리 배열 범위 오류");
-                if (storage[index] == (uint)sid) return;
+                if (storage[checked((int)index)] == (uint)sid) return;
                 index++;
             } while (unchecked((int)index) < unchecked((int)list.Count));
         }
         if (unchecked((int)used) < 0) throw new ArgumentOutOfRangeException(nameof(list), "신전 목록 음수 저장 위치");
-        uint[] destination = list.Entries;
+        Span<uint> destination = list.Storage;
         if (used >= destination.Length) throw new ArgumentOutOfRangeException(nameof(list), "신전 목록 실제 저장 범위 오류");
-        destination[used] = (uint)sid; list.Count = unchecked(list.Count + 1);
+        destination[checked((int)used)] = (uint)sid; list.Count = unchecked(list.Count + 1);
     }
 
     /// <summary>실제 원문 Vortex.cpp 식/행을 전달한다. 복귀하면 현재 물리와 전역을 다시 읽는다.</summary>

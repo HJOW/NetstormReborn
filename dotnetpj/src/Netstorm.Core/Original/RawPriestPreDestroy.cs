@@ -188,11 +188,11 @@ public sealed class RawPriestPreDestroy
         // Native는 현재 signed count만 읽으며 음수면 저장소를 조회하지 않고 그대로 둔다.
         for (int index = 0; index < unchecked((int)list.Count); index++)
         {
-            uint[] entries = list.Entries;
+            Span<uint> entries = list.Storage;
             if ((uint)index >= entries.Length) throw new ArgumentOutOfRangeException(nameof(sid), "SID 목록 제거의 현재 물리 범위");
-            uint current = entries[index];
+            uint current = entries[checked((int)index)];
             if (current == (uint)sid) removed++;
-            else entries[index - removed] = current;
+            else entries[checked((int)(index - removed))] = current;
         }
         list.Count = unchecked(list.Count - removed);
     }

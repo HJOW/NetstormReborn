@@ -491,11 +491,11 @@ public sealed class RawIslandRuntime
         // 원본은 목록 count·SID·타입·좌표와 표면 단어를 매 반복 다시 읽고 빈·죽음 선택을 추가하지 않는다
         for (uint index = 0; unchecked((int)index) < unchecked((int)_residences.Count); index++)
         {
-            if (index >= (uint)_residences.Entries.Length)
+            if (index >= (uint)_residences.Storage.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(island), island, "IslandRuntime 현재 목록 저장소 부족");
             }
-            uint number = _residences.Entries[(int)index];
+            uint number = _residences.Storage[checked((int)((int)index))];
             if (number >= (uint)_pool.Capacity || number > 65535)
             {
                 throw new ArgumentOutOfRangeException(nameof(island), island, "IslandRuntime 거주 구역 SID 범위 오류");

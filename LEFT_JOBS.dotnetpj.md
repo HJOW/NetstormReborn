@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-20 · 마지막 완료 0.709(장기Player실제할당·Core별칭·집중14건) · 다음 0.710(현재공장목록/장기소비자) · 현재 단계 R4-2·R4-5 병행 · 전체 목표 미완료**
+**2026-11-20 · 마지막 완료 0.710(현재공장부분뷰·실제Owner·집중368건) · 다음 0.711(장기옵션/Core/Player소비자) · 현재 단계 R4-2·R4-5 병행 · 전체 목표 미완료**
 
 현행 인계는 이 문서가 기준이다. 0.600~0.635의 단위별 완료 문장, 단위마다 누적한 검사 수와 L2 보관 경로 나열은 [0.635 정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635)에 있다. 0.613까지의 경과, 파일 계열별 체크 목록과 옛 집계는 [0.613 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)에 있다. 단위별 근거는 `docs/dotnet-canon-0NNN-*.md`이다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
@@ -92,7 +92,8 @@
 63. **0.707 고정App수신기 선행부모 — 완료.** 52h직접수신/작성·중단/양수이유/확인선택과64h현재활동/typed등록·장기표를연결했다. 원본13+8+22입력과실제로컬큐/metadata/현재모드등집중23건통과다. 원본큰메뉴부모3행은후속이며fixture360개다. [근거](docs/dotnet-canon-0707-20261120.md)
 64. **0.708 정기 전체 회귀/L2 — 완료.** Assets366·Core3337·Client1425 합계5128건통과·실패0·기존실장치음향1건미실행이다.65실행종료0·DN31전체바이트/34지표0.704동일·원본1392불변이며M1은0/34다. [근거](docs/dotnet-canon-0708-20261120.md)
 65. **0.709 장기Player실제할당 — 완료.** 실제Player/factory주소·단일고정뷰대여·준비기록인계·현재Core슬롯/이전Core0관문과같은로그인카운터를옮겼다. CD172간격부모도현재base/행캡처순서로옮겼다. 기존PATCH원본202입력포함Core6/Client8 합계14건통과·fixture360개불변이다. 실제제품소비자는후속이다. [근거](docs/dotnet-canon-0709-20261120.md)
-66. **0.710 현재공장목록/장기소비자 — 다음.** 공장부분뷰와현재헤더getter를잇고장기Player/옵션/Core실제필드를제품소비자에연결한다. 이어고정App15수신기·전체로그인bridge/Root를설치한다. World/건설효과pin의Dispose·Source의Editor/LAN/Meta재인계·일반건설/DropIsland·Carrier플레이효과·나머지AI/캡처·전용색표·R5월드뷰도남는다.
+66. **0.710 현재공장목록 — 완료.** 실제Player+0/+4/+8현재getter와정확한공장부분뷰·같은Client/행재사용을연결했다. 기존16소비자를같은Storage로잇고실제공통Owner두행목록이동포함현재집중368건통과다. 실제DN1-1종료0/덤프0.708전체동일·원본1392불변이며fixture360개불변이다. 장기제품소비자전환은후속이다. [근거](docs/dotnet-canon-0710-20261120.md)
+67. **0.711 장기옵션/Core/Player소비자 — 다음.** 장기Player/옵션/Core실제필드를제품소비자에연결한다. 이어고정App15수신기·전체로그인bridge/Root를설치한다. World/건설효과pin의Dispose·Source의Editor/LAN/Meta재인계·일반건설/DropIsland·Carrier플레이효과·나머지AI/캡처·전용색표·R5월드뷰도남는다.
 57. **R4-2 나머지 차이와 R4-3~R4-8.** 농지 프레임, 전용 요새, 표시 등록, 그래프 번호, 장부를 처리한 뒤 R4-3~R4-8을 진행한다. 통합 조각을 마칠 때 같은 조건의 일괄 덤프로 M1 진척을확인한다. [R4 체크](#r4-detail)
 
 <a id="first-run"></a>

@@ -250,11 +250,11 @@ public sealed class RawFortFinishOwner
             // free·dead·void를 추가로 제외하지 않는다
             for (uint index = 0; unchecked((int)index) < unchecked((int)_residences.Count); index++)
             {
-                if (index >= (uint)_residences.Entries.Length)
+                if (index >= (uint)_residences.Storage.Length)
                 {
                     throw new ArgumentOutOfRangeException(nameof(owner), owner, "Fort residence 현재 목록 저장소 부족");
                 }
-                uint number = _residences.Entries[(int)index];
+                uint number = _residences.Storage[checked((int)((int)index))];
                 if (number >= (uint)_pool.Capacity)
                 {
                     throw new ArgumentOutOfRangeException(nameof(owner), owner, "Fort residence SID 범위 오류");

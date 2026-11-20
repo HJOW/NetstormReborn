@@ -180,17 +180,17 @@ public sealed class RawVortexOwner
                 // 현재 count와 각 SID·소유자·좌표를 효과 뒤에 다시 읽는다. free/dead 필터는 추가하지 않는다.
                 for (uint index = 0; unchecked((int)index) < unchecked((int)_outposts.Count); ++index)
                 {
-                    if (index >= (uint)_outposts.Entries.Length)
+                    if (index >= (uint)_outposts.Storage.Length)
                     {
                         throw new ArgumentOutOfRangeException(nameof(sid), "신전 Owner 현재 추가 목록 범위 오류");
                     }
 
-                    if (_outposts.Entries[(int)index] >= (uint)_pool.Capacity)
+                    if (_outposts.Storage[checked((int)((int)index))] >= (uint)_pool.Capacity)
                     {
                         throw new ArgumentOutOfRangeException(nameof(sid), "신전 Owner 현재 추가 목록 범위 오류");
                     }
 
-                    int other = (int)(ushort)_outposts.Entries[(int)index];
+                    int other = (int)(ushort)_outposts.Storage[checked((int)((int)index))];
                     if (_pool.Slot(other)[ownerOffset] == _pool.Slot(sid)[ownerOffset])
                     {
                         Need(_hooks.RegionOwnership, nameof(VortexOwnerHooks.RegionOwnership))(Position(_pool.Slot(other), 14), Position(_pool.Slot(other), 18));

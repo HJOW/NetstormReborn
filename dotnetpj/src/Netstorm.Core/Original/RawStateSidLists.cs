@@ -148,7 +148,7 @@ public sealed class RawStateSidLists
         // 기존 독립 일반 World의 새 목록 의미를 같은 주소에서 유지한다
         foreach (RawPostPopList list in new[] { Factories, Dudes, Outposts, Providers, Geysers, Priests, Residences, Temples })
         {
-            Array.Fill(list.Entries, 0u);
+            list.Storage.Clear();
             list.Count = 0;
         }
     }

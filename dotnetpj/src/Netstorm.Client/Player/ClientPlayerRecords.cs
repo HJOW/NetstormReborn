@@ -7,7 +7,7 @@ using Netstorm.Core.Original;
 namespace Netstorm.Client.Player;
 
 /// <summary>현재 opaque32 주소와 실제9행·공장 물리 및 단일 고정뷰 대여를 소유한다.</summary>
-/// <remarks>cpppj client/ClientPlayerRecords 대응이다. 공장 목록의 현재 getter 연결은 별도 소비자에서 수행한다.</remarks>
+/// <remarks>cpppj client/ClientPlayerRecords 대응이다. 고정뷰 대여가 같은 현재 공장 헤더와 후처리 목록을 연결한다.</remarks>
 public sealed class ClientPlayerRecords
 {
     /// <summary>실제 DWORD 배열의 바이트를 복사 없이 빌리는 관리 메모리다.</summary>
@@ -169,6 +169,13 @@ public sealed class ClientPlayerRecords
         return BinaryPrimitives.ReadUInt32LittleEndian(Memory(unchecked(_base + owner * Stride + offset), 4).Span);
     }
 
+    /// <summary>동일 현재 행의 정확한DWORD만 쓰며 주소/범위 검사는 실제 읽기 위치와 공유한다.</summary>
+    private void Write(uint owner, uint offset, uint value)
+    {
+        _ = Read(owner, offset);
+        BinaryPrimitives.WriteUInt32LittleEndian(Memory(unchecked(_base + owner * Stride + offset), 4).Span, value);
+    }
+
     /// <summary>현재 헤더의 용량→포인터 순서로 실제 공장 배열의 정확한 부분을 빌린다.</summary>
     public Span<uint> Factory(uint owner)
     {
@@ -208,6 +215,28 @@ public sealed class ClientPlayerRecords
         }
         /// <summary>현재 대여가 실제 기록을 소비할 수 있는지 조회한다.</summary>
         public bool Initialized { get { _ = Owner; return _initialized; } }
+        /// <summary>완료된 실제 Player의 현재+0/+4/+8과 같은 소유자/행 정체성을 후처리 목록에 연결한다.</summary>
+        public void BindFactory(RawPostPopList list, uint slot)
+        {
+            var owner = Owner;
+            if (!_initialized || slot >= 9) throw new InvalidOperationException("초기화되지 않은 Player factory 연결");
+            ArgumentNullException.ThrowIfNull(list);
+            list.BindCurrent(new PostPopListCurrentBinding
+            {
+                SpanStorage = () => owner.Factory(slot), Capacity = () => owner.Read(slot, 4),
+                ReadCount = () => owner.Read(slot, 8), WriteCount = value => owner.Write(slot, 8, value),
+                SourceOwner = owner, SourceSlot = slot,
+            });
+        }
+        /// <summary>같은 장기소유자/행이면 기존getter만 재사용하고 다른 목록의 중복 연결 거부를 유지한다.</summary>
+        public void ReuseOrBindFactory(RawPostPopList list, uint slot)
+        {
+            var owner = Owner;
+            if (!_initialized || slot >= 9) throw new InvalidOperationException("초기화되지 않은 Player factory 재사용");
+            ArgumentNullException.ThrowIfNull(list);
+            if (list.MatchesCurrentSource(owner, slot)) return;
+            BindFactory(list, slot);
+        }
         /// <summary>게임 저장소를 초기화하지 않고 단일 대여만 반납한다.</summary>
         public void Dispose() { if (_owner is not { } owner) return; _owner = null; owner._inUse = false; }
     }
