@@ -23,6 +23,10 @@
 - `e2e/mission-leave-pause.spec.js`(Chromium): Tutorial1 첫 안내 창이 열린 채 떠나면 시계 정지가 풀리고(수정 전에는 `paused: true` 가 남았다), 다시 시작해 창을 닫으면 4초 동안 게임 시각이 2초 넘게 흐른다.
 - 후반 4개 미션(`FinalConfrontation`·`Vicious`·`EnemyTerritory`·`bc9ssun_bars76`)을 8분씩 이어 돌리는 장시간 e2e 의 수정 전 3회 실패와 수정 뒤 결과는 LEFT_JOBS 0.1 절에 적었다.
 
+## 부록: 수정 뒤 중반 13개 미션 장시간 확인 (WB04-E1133)
+
+수정 뒤 캠페인 중반 13개 미션(`TheWarBegins`·`MasterOfWhirligigs`·`SaveTheIsland`·`FragileFortune`·`ThunderingPower`·`DissolvedAlliance`·`TheNoose`·`RainVsRain`·`RunForIt`·`GuardMyBack`·`Surrounded`·`BreakingThrough`·`ToTheRescue`)을 한 페이지에서 7분(420초)씩 이어 돌렸다(`NETSTORM_LONG_SECONDS=420 NETSTORM_LONG_ONLY=…`, 1.7시간). 모든 미션에서 게임 시계가 흘렀고 페이지 오류·콘솔 오류가 없었다. 앞 미션의 정지 깊이가 남아 다음 미션이 멈추는 증상은 다시 나타나지 않았다. 코드 변경 없이 확인 결과만 기록한 단위이다.
+
 ## 남은 것
 
 - 같은 모양의 누수 후보: 메뉴 정지(`_menuPauseDepth`)는 `_releaseCampaignPause` 가 이미 풀고, 탭 숨김 정지(`_hiddenGamePause`)는 가시성 복귀가 푼다. 그 밖의 `pushGamePause` 호출자(데모 종료 등 `onSection` 외)가 떠나기 경로에서 남는지는 정지 호출 기록 도구로 더 긴 실행에서 다시 본다.
