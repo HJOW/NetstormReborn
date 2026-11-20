@@ -70,7 +70,8 @@ import { RawContainedFinder } from './core/raw-contained-finder.js';
 import { PRODUCTION_BRIDGE_COMMAND } from './core/production-shortcuts.js';
 import { ProductionMaintenanceGlobals, ProductionMaintenancePanel } from './core/raw-production-maintenance.js';
 import { GameMenuActions } from './core/game-menu-actions.js';
-import { gameMenuCommandValue } from './core/game-menu-commands.js';
+import { gameMenuCommandValue, isGameMenuCommand } from './core/game-menu-commands.js';
+import { GameMenuButton } from './ui/game-menu-button.js';
 import { CHAT_RECORD_BYTES, RawChatChannels } from './core/raw-chat-channels.js';
 import { RawCampaignMissionStartBindings } from './core/raw-campaign-mission-start-bindings.js';
 import { RawCampaignTutorialOneBindings } from './core/raw-campaign-tutorial-one-bindings.js';
@@ -147,6 +148,9 @@ const MISSION_F4 = 0x00730000;
 const MISSION_F5 = 0x00740000;
 const MISSION_VIEW_HOME = 0x020000ae;
 const MISSION_VIEW_PRIEST = 0x020000b8;
+// ESC 게임 메뉴막대의 항목이 입력 큐로 보내는 명령 중 앱이 실제로 실행하는 것이다(목표 보기 0x91, 건물 숨김 0xf1, 설정 0x6d, 음량 0xe6·0xe7, 홈 0xae, 사제 보기 0xb8, Tell 0x95, 도움말 0x17).
+// 나머지 메뉴 명령은 입력 큐를 막지 않도록 소비하되 실행하지 않고 콘솔에 기록하며, 메뉴에서는 비활성으로 보인다. (2026-11-20 WB04-E1084)
+const WIRED_MENU_COMMANDS = new Set([0x02000091, 0x020000f1, 0x0200006d, 0x020000e6, 0x020000e7, 0x020000ae, 0x020000b8, 0x02000095, 0x02000017]);
 // Session이 Tutorial 판정용으로 입력 큐에 올리는 통지 명령이다(발사기 배치 0x030000b0·포함 0x030000b1, 기술 0x020000b5, 포획 0x020000d7, 상승 0x020000df; 전역 005429b4 등의 PE 초기값).
 // Tutorial 판정기(`tutorial.event`)가 각 명령을 받고 해당 단계가 쓰지 않으면 원본 주 루프처럼 그대로 버려진다. 큐 소비 보호 목록에 없으면 뒤의 클릭까지 막혀 모든 입력이 멈추므로 소비를 허용한다. (2026-11-20 WB04-E1083)
 const TUTORIAL_NOTICE_COMMANDS = new Set([0x030000b0, 0x030000b1, 0x020000b5, 0x020000d7, 0x020000df]);
@@ -215,6 +219,8 @@ const TEXTS = Object.freeze({
         clickToStart: 'Click to start',
         resetConfirm: 'Reset all settings and campaign progress? The game will reload.',
         resetFailed: 'Could not reset game data. Check storage access and try again.',
+        gameMenuButton: 'Menu',
+        gameMenuButtonTitle: 'Game menu (ESC)',
     }),
     korean: Object.freeze({
         title: 'NetStorm',
@@ -224,6 +230,8 @@ const TEXTS = Object.freeze({
         clickToStart: '클릭하여 시작',
         resetConfirm: '모든 설정과 캠페인 진행 상황을 초기화할까요? 게임을 다시 불러옵니다.',
         resetFailed: '게임 데이터를 초기화하지 못했습니다. 저장소 접근을 확인한 후 다시 시도하세요.',
+        gameMenuButton: '메뉴',
+        gameMenuButtonTitle: '게임 메뉴 (ESC)',
     }),
 });
 
@@ -551,7 +559,7 @@ export class Netstorm {
         // 자산 적재 뒤 구성해 Session보다 오래 유지하는 월드 물리와 Kernel이다.
         this._gameAssets = null; this._surfaceStorage = null; this._clientKernel = null; this._clientTrace = null; this._clientProductionGlobals = null; this._campaignProduction = null;
         // 미니맵의 장기 dirty 상태와 색 전역은 Client 수명에 둔다. (2026-11-20 WB04-E1082)
-        this._clientMinimapState = null; this._clientMinimapGlobals = null;
+        this._clientMinimapState = null; this._clientMinimapGlobals = null; this._gameMenuButton = null;
         // 실제 미션 Guide는 자산과 장기 저장소가 준비된 뒤 생성한다.
         this._clientGuide = null; this._clientFort = null; this._clientFortName = null;
         // 원본 공통 Gump 루트와 입력 전역은 Client 수명에 보유한다.
@@ -1252,6 +1260,7 @@ export class Netstorm {
     // 현재 World의 Session을 반납하고 같은 미션 연결 대기 관문을 해제한다.
     _releaseCampaignWorld() {
         if (!this._campaignWorld) return;
+        this._gameMenuButton?.destroy(); this._gameMenuButton = null;
         this._campaignProduction?.ui?.close(); this._campaignProduction?.hud?.close(); this._clientGump?.releaseFormHost(); this._campaignWorld.dispose(); this._campaignWorld = null; this._campaignWorldMissionToken = 0; this._campaignUserInput = null; this._campaignProduction = null; this._campaignCursor = CURSOR_NORMAL;
     }
 
@@ -1346,7 +1355,7 @@ export class Netstorm {
                         project: (x, y) => { const point = this._clientGameplay.camera().snapshot().project(x, y); return [point.x, point.y]; },
                         content: (sid) => production.session.priests().carrier.findContained(sid, 1, 0, 0), range: (type) => production.session.core().types[type].range,
                         screenWidth: () => this._clientPaletteScreen.width } },
-                command: (...args) => this._clientInputQueue.pushCommand(...args), invalidate: (rect) => this._clientRenderer.invalidate(rect, 0) },
+                command: (...args) => this._clientInputQueue.pushCommand(...args), invalidate: (rect) => this._clientRenderer.invalidate(rect, 0), gameMenu: this._campaignGameMenuDevices(production) },
             changed: () => { this._clientRenderer.invalidateAll(); this._displayDirty = true; }, closePopups: () => this._closeCampaignPopups(),
             poll: (code) => this._clientInputPoll.poll(code), cursor: (number) => { this._campaignCursor = number; this._applyCursor(); },
             baseHandle: (...args) => help.handle(...args), menuInstances: () => this._mainMenu?.popup?.isOpen ? 1 : 0,
@@ -1374,7 +1383,79 @@ export class Netstorm {
             finishResize: () => { this._clientKencloud.worldRedraw().value = 1; this._campaignWorld?.resize(this._layout.logicalWidth, this._layout.logicalHeight); this._clientRenderer.invalidateAll(); this._displayDirty = true; } });
         production.hud = hud; production.minimap = minimap; hud.install(); production.ui = ui;
         ui.finishInstall(); minimap.setPalette(screen.colors()); minimap.bindWorld(production.session.core());
+        // 웹 전용: 화면 우측 상단 버튼으로도 ESC 와 같은 게임 메뉴막대를 열고 닫는다. 버튼은 Canvas 위 DOM 요소라 열린 메뉴막대보다 항상 앞에 있다. (2026-11-20 WB04-E1084)
+        this._gameMenuButton?.destroy();
+        this._gameMenuButton = new GameMenuButton(this._root, { label: this.texts.gameMenuButton, title: this.texts.gameMenuButtonTitle, onClick: () => { this._toggleCampaignGameMenu(); this._canvas?.focus(); } });
+        this._gameMenuButton.layout(this._layout); this._gameMenuButton.show();
         return ui;
+    }
+
+    // ESC 게임 메뉴막대가 읽는 현재 게임 조회 장치다(원본 `CurrentGameMenuHooks`·`RawCampaignSession::BindGameMenus` 대응). 값은 모두 호출 시점에 다시 읽는다. (2026-11-20 WB04-E1084)
+    _campaignGameMenuDevices(production) {
+        const session = production.session;
+        return {
+            global: (address) => this._campaignMenuGlobal(address, production),
+            // 설정 층에 있는 키(소리·음량 등)는 Settings 가, 그 밖의 키(rotmode·theammode 등)는 게임 데이터가 현재 값을 가진다.
+            config: (key) => { const stored = this._settings?.get(key); return stored !== undefined ? Number(stored) | 0 : this._gameData.readInt(key, key === 'theammode' ? 1 : 0).value | 0; },
+            demo: () => Boolean(this._clientGuide?.current()?.runtime.gate.demo),
+            player: (owner) => session.playerRecords().subarray(owner * 180, owner * 180 + 180),
+            refreshPriest: (owner) => session.refreshPriestParticipation(owner),
+            // F7(배너 표시)의 소유 색표 재구성은 아직 연결하지 않아 비활성으로 둔다.
+            enabled: (code) => WIRED_MENU_COMMANDS.has(code >>> 0), configEnabled: (key) => key !== 'useBanners', storeText: (value) => this._clientChatWindows.store(value),
+            about: () => this._resources.translate('About'), technicalHelp: () => 0, width: () => this._layout.logicalWidth,
+        };
+    }
+
+    // 원본 전역 주소 식별자를 현재 앱의 값으로 바꾼다. 명령 전역 주소는 명령 ID를 돌려준다.
+    _campaignMenuGlobal(address, production) {
+        const commandId = gameMenuCommandValue(address); if (commandId !== null && commandId !== undefined) return commandId >>> 0;
+        const game = this._clientGameplay, modes = this._surfaceStorage.ownerMode, session = production.session;
+        switch (address) {
+        case 0x5c85a4: return game.world.editor ? 1 : 0;
+        case 0x594fa4: return game.world.missionPost ? 1 : 0;
+        case 0x594fbc: return modes.battle ? 1 : 0;
+        case 0x594fb8: return modes.fort ? 1 : 0;
+        case 0x594fc8: return modes.challenge ? 1 : 0;
+        case 0x594fa0: return session.core().bridgeState.mission ? 1 : 0;
+        case 0x59a8ac: return game.hideBuildings().value >>> 0;
+        case 0x540c70: return game.player.battleOwner >>> 0;
+        case 0x55b4b0: return this._gameClock.paused() ? 1 : 0;
+        // 웹 소리 장치는 사용자 시작 입력 뒤 항상 있으므로 소리 하위 메뉴는 활성이다.
+        case 0x5c7b14: return 1;
+        case 0x531900: return Number(this._settings?.get('soundVolume') ?? 5);
+        case 0x531904: return Number(this._settings?.get('musicVolume') ?? 5);
+        case 0x531860: return this._layout.logicalWidth;
+        case 0x531864: return this._layout.logicalHeight;
+        case 0x563e38: return this._clientGump.createState().collection.root;
+        default:
+            if (address > 0x52f81e && address < 0x52f827) return session.hiddenPlayers()[address - 0x52f81e] >>> 0;
+            throw new Error(`게임 메뉴의 미연결 전역: 0x${address.toString(16)}`);
+        }
+    }
+
+    // ESC 게임 메뉴막대를 열거나 닫는다(원본 `ToggleGameMenu`). 메뉴가 없는 화면이면 아무것도 하지 않는다. 우측 상단 버튼의 눌림 표시도 함께 맞춘다.
+    _toggleCampaignGameMenu() {
+        const bar = this._campaignProduction?.ui?.gameMenu(); if (!bar) return false;
+        const open = bar.toggle(); this._gameMenuButton?.setPressed(open); this._displayDirty = true; return open;
+    }
+
+    // 메뉴막대 항목이 입력 큐에 올린 명령을 실행한다. 연결되지 않은 명령은 큐를 막지 않도록 소비하고 콘솔에 기록한다(메뉴에서는 비활성이다).
+    _dispatchCampaignMenuCommand(event) {
+        const code = (event.code & 0x03ffffff) >>> 0;
+        if (!WIRED_MENU_COMMANDS.has(code)) { console.warn(`Netstorm: 게임 메뉴 명령 0x${code.toString(16)} 은(는) 아직 연결되지 않아 실행하지 않았습니다.`); return; }
+        const text = () => { const value = this._clientChatWindows.strings.get(event.y >>> 0); return value === undefined ? '' : String(value); };
+        if (code === 0x020000f1) { this._dispatchCampaignViewAction(event); this._clientRenderer.invalidateAll(); }
+        else if (code === 0x0200006d) {
+            // 설정 명령의 인자는 `키=값` 문자열이다. 설정 층의 키는 Settings 가 저장하고 그 밖의 키는 게임 데이터에 쓴다.
+            const [key, value] = text().split('='); if (!key) return;
+            if (this._settings?.get(key) !== undefined) this._settings.set(key, Number(value)); else this._gameData.set(key, Number(value));
+            this._displayDirty = true;
+        } else if (code === 0x020000e6 || code === 0x020000e7) this._settings?.set(code === 0x020000e6 ? 'soundVolume' : 'musicVolume', event.y | 0);
+        else if (code === 0x02000095) {
+            // Tell 명령은 섹션 이름이거나 `SetIslands(0|1)` 같은 원본 설정 호출이다.
+            const section = text(), islands = /^SetIslands\((\d)\)$/.exec(section);
+            if (islands) { this._gameData.set('theammode', Number(islands[1])); this._clientKencloud.worldRedraw().value = 1; this._displayDirty = true; } else this._openTell(section);
+        }
     }
 
     // 원본 생산 패널 idle 순서로 현재 내용물과 재고·다리 공급을 갱신한다.
@@ -1443,10 +1524,12 @@ export class Netstorm {
             const selectionKey = code === 0x50 || code === 0x70 || code === 0x52 || code === 0x72 || code === 0x4e || code === 0x6e;
             const productionKey = 'qwaszyxe'.includes(String.fromCharCode(code).toLowerCase()) && code < 256;
             const cursorCancel = code === 0x1b, cursorRotate = code === 0x250000 || code === 0x270000;
-            if (code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !TUTORIAL_NOTICE_COMMANDS.has(code) && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && code !== InputCode.leftButton && code !== InputCode.rightButton) break;
+            if (code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !TUTORIAL_NOTICE_COMMANDS.has(code) && !isGameMenuCommand(code) && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && code !== InputCode.leftButton && code !== InputCode.rightButton) break;
             const event = queue.pop(false);
             if (tutorial.event(event) || gump.input().route(event.code, event.x, event.y)) continue;
             if (code === InputCode.leftButton && !release && !this._mainMenu?.dialog) user.event(event);
+            // 원본 ESC: 선택을 먼저 정리하고 조각을 들고 있으면(커서 잠금 0) 취소, 아니면 가로 게임 메뉴막대를 열거나 닫는다. (2026-11-20 WB04-E1084)
+            else if (cursorCancel && !release && !this._mainMenu?.dialog && world.session().cursorDropSettings().lockDepth !== 0) { world.resetSelection(); this._toggleCampaignGameMenu(); }
             else if ((code === MISSION_F4 || code === MISSION_F5 || selectionKey || productionKey || cursorCancel || cursorRotate || code === InputCode.rightButton) && !release && !this._mainMenu?.dialog) {
                 const picked = user.event(event);
                 if (code === InputCode.rightButton && picked) {
@@ -1473,6 +1556,7 @@ export class Netstorm {
             }
             else if (code === PRODUCTION_BRIDGE_COMMAND && !release && !this._mainMenu?.dialog) this._dispatchCampaignBridgeProduction(event);
             else if (code === MISSION_VIEW_HOME || code === MISSION_VIEW_PRIEST) this._dispatchCampaignViewAction(event);
+            else if (isGameMenuCommand(code) && !release && !this._mainMenu?.dialog) this._dispatchCampaignMenuCommand(event);
         }
     }
 
@@ -2382,6 +2466,7 @@ export class Netstorm {
         style.left = `${next.left}px`;
         style.top = `${next.top}px`;
         style.visibility = next.visible ? 'visible' : 'hidden';
+        this._gameMenuButton?.layout(next);
         this._displayDirty = true;
         if (this._state === AppState.MAIN_MENU || this._state === AppState.TERRAIN_PREVIEW) this._ensureSurface();
         if (this._clientPaletteScreen) this._resizeClientPaletteScreen(next.logicalWidth, next.logicalHeight);
@@ -2641,7 +2726,8 @@ export class Netstorm {
         if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && (event.code === 'F4' || event.code === 'F5' || ((event.code === 'ArrowLeft' || event.code === 'ArrowRight') && this._campaignWorld.session().cursorDropSettings().lockDepth === 0))) {
             event.preventDefault(); queueBrowserVirtualKeyEvent(this._clientInputQueue, event, this._input.pointer, false);
         }
-        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && !event.isComposing && !this._clientComposing && !event.ctrlKey && !event.altKey && !event.metaKey && (/^[nprqwaszyxe]$/iu.test(event.key ?? '') || (event.key === 'Escape' && this._campaignWorld.session().cursorDropSettings().lockDepth === 0))) queueBrowserCharacterEvent(this._clientInputQueue, event, this._input.pointer);
+        // ESC 는 조각을 들고 있으면 취소, 아니면 게임 메뉴막대 전환이므로 항상 큐에 넣고 입력 프레임이 판단한다. (2026-11-20 WB04-E1084)
+        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && !event.isComposing && !this._clientComposing && !event.ctrlKey && !event.altKey && !event.metaKey && (/^[nprqwaszyxe]$/iu.test(event.key ?? '') || event.key === 'Escape')) queueBrowserCharacterEvent(this._clientInputQueue, event, this._input.pointer);
         if (PREVENTED_KEYS.has(event.code)) event.preventDefault();
         this._retryAudioOnGesture();
         // 미리보기의 키 정책은 게임 명령과 분리한다. Escape는 메뉴로 돌아가며 방향키는 카메라만 바꾼다. (2026-11-02 WB03-AA)

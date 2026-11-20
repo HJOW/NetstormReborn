@@ -9,6 +9,8 @@ import { MenuGumpControls, bindMenuGumpControlConfig } from './menu-gump-control
 import { MenuGumpWidgets, MenuGumpWidgetState } from './menu-gump-widgets.js';
 import { MenuGumpInput, MenuGumpInputState } from './menu-gump-input.js';
 import { MenuGumpDraw, MenuGumpDrawState, bindMenuGumpDrawAssets } from './menu-gump-draw.js';
+import { bindGameMenuBarControls } from '../core/raw-game-menu-bar.js';
+import { bindGameMenusControls } from './raw-game-menus.js';
 
 // 같은 Client의 실제 메뉴 노드·장식·제목과 controlled 스택을 소유한다.
 export class ClientMenuGump {
@@ -69,6 +71,13 @@ export class ClientMenuGump {
     instances() { return this.#state.instances; }
     closePopups() { this.#input.closePopups(); }
     beginVertical(flags = 0) { return this.#widgets.beginVertical(flags); }
+    // 게임 메뉴막대용 가로 controlled 메뉴를 시작한다(원본 00477a10). (2026-11-20 WB04-E1084)
+    beginHorizontal() { return this.#widgets.beginHorizontal(); }
+    // 같은 실제 가로/세로/항목/구분선 작성기를 게임 메뉴막대(barHooks)와 Game·View·Options·Players 부모(menusHooks)의 hooks 에 각각 연결한다. 두 부모의 item/submenu 인자가 달라 hooks 를 나눈다. storeText(문자열) 는 문자열 고리 토큰을 돌려준다. (2026-11-20 WB04-E1084)
+    bindGameMenus(barHooks, menusHooks, storeText) {
+        bindGameMenuBarControls(barHooks, this.#widgets, this.#controls, this.#menu, (token) => this.#root.node(token), storeText);
+        bindGameMenusControls(menusHooks, this.#widgets, this.#controls, this.#menu, storeText); menusHooks.node = (token) => this.#root.node(token);
+    }
     // 중첩 메뉴 작성을 마치고 현재 메뉴를 꺼내 부모 작성 상태로 돌아간다.
     takeCurrent() { return this.#menu.takeCurrent(); }
     // 현재 메뉴에 실제 자식 메뉴와 사용 가능 여부를 연결한다.

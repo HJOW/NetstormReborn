@@ -1042,6 +1042,8 @@ export class RawCampaignSession {
     }
     // 현재 Player의 실제 사제 또는 대체 참여 대상 SID를 조회한다.
     findPriestParticipation(owner) { return this.#live().priestParticipation.find(owner); }
+    // 게임 메뉴 Players 가 각 Player 행을 만들기 전에 사제 참여 기록을 갱신한다(원본 `priestParticipation->Refresh`). (2026-11-20 WB04-E1084)
+    refreshPriestParticipation(owner) { return this.#live().priestParticipation.refresh(owner); }
     // 현재 참여 조회가 고른 사제 또는 대체 대상의 위치로 이동한다.
     viewYourPriest(owner, state, apply) {
         const sid = this.#live().priestParticipation.find(owner);

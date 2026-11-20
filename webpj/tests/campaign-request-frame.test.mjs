@@ -119,7 +119,9 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
     app._settings = new Settings(); app._audio = new AudioSystem(context);
     app._assetLoader = { manifest: { files: manifest.files.filter((entry) => entry.path === 'sound/button.wav') },
         loadFile: async (entry) => Uint8Array.from(fs.readFileSync(path.join(DATA_ROOT, ...entry.path.split('/')))) };
-    app._root = { ownerDocument: { title: 'before' } }; app._resources = buildMenuResources(files);
+    // 미션 화면은 웹 전용 게임 메뉴 버튼(DOM)을 만들므로 가짜 루트가 최소 요소 생성·붙이기를 지원한다. (2026-11-20 WB04-E1084)
+    const fakeElement = () => ({ style: {}, attributes: {}, setAttribute(key, value) { this.attributes[key] = value; }, addEventListener() {}, removeEventListener() {}, remove() { this.removed = true; } });
+    app._root = { ownerDocument: { title: 'before', createElement: fakeElement }, appendChild() {}, clientWidth: 1024 }; app._resources = buildMenuResources(files);
     app._layout = { logicalWidth: 1024, logicalHeight: 768, visible: false }; app._surface = new IndexedSurface(1024, 768); app._presenter = new IndexedPresenter(null);
     app._mainMenu = new MainMenuScreen({ resources: app._resources }); app._mainMenu.resize(1024, 768); app._initializeClientGump();
     app._initializeClientWorldStorage(game, data.files); app._syncClientCloudOptions(); app._initializeClientPalette(game); app._initializeClientPaletteCache(game); app._initializeClientGuide();
@@ -196,6 +198,8 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         assert.equal(app._campaignCameraDevice(), cameraDevice);
         // 실제 Uber HUD 도킹 뒤의 지도 영역은 세로 구분선(x80, 폭5) 오른쪽 전체다(2026-11-20 WB04-E1082: 예전 임시 상단 28 값에서 교체).
         assert.deepEqual(app._campaignWorld.mapView(), { left: 85, top: 0, right: 1366, bottom: 768 });
+        // 웹 전용 게임 메뉴 버튼은 화면 크기 변경 뒤 새 Canvas 오른쪽 위에 맞춰진다.
+        assert.equal(app._gameMenuButton.element.style.display, 'block'); assert.equal(app._gameMenuButton.element.style.right, '8px');
         assert.deepEqual(app._clientGump.mapView(), app._campaignWorld.mapView());
         app._campaignWorld.takeChanged(); app._campaignWorld.cameraApplied(); assert.equal(app._campaignWorld.takeChanged(), true);
         // 현재 Screen의 모드 변경과 강제 갱신은 같은 구름 큐에 각 한 칸씩 넣고 실제 Renderer의 이전 dirty를 전체 화면으로 교체한다.
