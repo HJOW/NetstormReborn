@@ -1,0 +1,61 @@
+[Header]
+missiontype="tutorial"
+
+missionnumber=9
+moregeysers=1
+
+mystartmoney=10000
+mytech="sunFence;windBattery;sunArcher"
+myallylist=""
+
+title="썬 바리케이드"
+
+ai2name="공격 공작"
+ai2tech="windBattery;rainBattery;thunderBattery;windArcher;sunArcher;sunCannon;thunderCannon;rainCannon;thunderBlocker"
+ai2startmoney=10000
+ai2GeysersAttachments=2
+ai2Collectors=5
+ai2TimeBetweenMoves=4
+
+[Options]
+
+[A.]
+<h2>썬 바리케이드</h2>
+<i>~y"좋은 공격을 시작하기 전에 방어가 튼튼한지 확인하세요"<br>
+신중한 님버스인</i>
+<p>~w잡았습니다! 움직이지 못하는 사제 둘레로 다리를 돌려 놓았고 그 다리는 부술 수 없습니다. 하지만 이제 문제가 있습니다. 서두르다 보니 무기를 제대로 정비하지 못했습니다.. 거의 아무것도 없는 상태입니다. 골렘이 사제를 집을 때까지 다리를 지켜 낼 수만 있다면.......
+<p>~B~E~r목표:~.~B~w  적 사제를 희생시키세요
+
+$Button=사용 가능한 기술,ShowTechnology,55
+$Button=시작하자!,DoNothing,0
+</?>
+
+[ai2priestcaptured]
+<h2>잡았다!</h2>
+때로는 다양한 기술보다 단순한 유닛을 영리하게 쓰는 편이 낫습니다.
+<p>공격 공작의 섬을 부술 필요는 없습니다(자신을 증명하고 싶다면 모르지만). 마음껏 희생시키세요!
+
+[ai2templedead]
+<h2>!신전 파괴!</h2>
+<p>~w님버스의 세계가 당신의 발아래에서 흔들립니다. 극도로 제한된 기술만으로 신전을 부순 일은 전설로 남을 것입니다!
+
+[succeeded][badteamdead]
+<h2>성공</h2>
+<p>~w불가능해 보이던 일을 해냈고 그 과정에서 아주 쓸모 있는 기술도 익혔습니다!
+<$Config,Done{mission.fileName}=1>
+$Button=훈련 메뉴,MissionBegin,BC1Menu76
+<p>
+$Button=다시 시작,Tell,TryAgain
+<p>
+$Button=미션 나가기,MissionAbort,0
+
+[Failed]
+<h2>실패</h2>
+<p>적이 너무 강했던 모양입니다....
+$Button=훈련 메뉴,MissionBegin,BC1Menu76
+<p>
+$Button=다시 시작,Tell,TryAgain
+<p>
+$Button=미션 나가기,MissionAbort,0
+
+[END]

@@ -2555,6 +2555,86 @@
       "size": 2461,
       "sha256": "160fe880c0268ba72622f81dd04327b75e86c690f31d708de72354d43d1de7ac",
       "use": "한국어 캠페인 미션 대본(UTF-8): 원본 FinalConfrontation.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
+    },
+    {
+      "path": "d/DemoStormRages.korean",
+      "source": "webpj/translations/DemoStormRages.korean",
+      "bundle": "korean",
+      "size": 735,
+      "sha256": "b2181b0f33aec122b2ca18665b730797cd97089f798f7ab72ac825ffdfd93582",
+      "use": "한국어 캠페인 미션 대본(UTF-8): 원본 DemoStormRages.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
+    },
+    {
+      "path": "d/bc1menu76.korean",
+      "source": "webpj/translations/bc1menu76.korean",
+      "bundle": "korean",
+      "size": 1069,
+      "sha256": "5e5dcf40db0a20a0e7105814ba4a77f3b37ca272b011b0529eb9c6a6d337d9de",
+      "use": "한국어 캠페인 미션 대본(UTF-8): 원본 bc1menu76.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
+    },
+    {
+      "path": "d/bc2bridging76.korean",
+      "source": "webpj/translations/bc2bridging76.korean",
+      "bundle": "korean",
+      "size": 2161,
+      "sha256": "29475e2c4b708d5e4462e7c97de9eccb53647809d9a1b47fb6f875eb8d60e80d",
+      "use": "한국어 캠페인 미션 대본(UTF-8): 원본 bc2bridging76.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
+    },
+    {
+      "path": "d/bc3acid_bar76.korean",
+      "source": "webpj/translations/bc3acid_bar76.korean",
+      "bundle": "korean",
+      "size": 2588,
+      "sha256": "44ad21ea3a21671c98eed6b5abbf56bee5b051e65e44b29535efda4c3278d1c8",
+      "use": "한국어 캠페인 미션 대본(UTF-8): 원본 bc3acid_bar76.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
+    },
+    {
+      "path": "d/bc4bow_rush76.korean",
+      "source": "webpj/translations/bc4bow_rush76.korean",
+      "bundle": "korean",
+      "size": 2219,
+      "sha256": "7ce30868d0df7089a3297bb7d1d7d2ef17d0298eb6352b8b33e82777faf3642a",
+      "use": "한국어 캠페인 미션 대본(UTF-8): 원본 bc4bow_rush76.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
+    },
+    {
+      "path": "d/bc5walkers76.korean",
+      "source": "webpj/translations/bc5walkers76.korean",
+      "bundle": "korean",
+      "size": 2098,
+      "sha256": "eefab610b73f59d6400df83045abf0d5241a69bbc47e3828b19f05ee37e538f8",
+      "use": "한국어 캠페인 미션 대본(UTF-8): 원본 bc5walkers76.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
+    },
+    {
+      "path": "d/bc6mows76.korean",
+      "source": "webpj/translations/bc6mows76.korean",
+      "bundle": "korean",
+      "size": 3087,
+      "sha256": "754b3a40e823cf4e0904e281f6680206bcbd7f73bcef65c827e454c7fe430d14",
+      "use": "한국어 캠페인 미션 대본(UTF-8): 원본 bc6mows76.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
+    },
+    {
+      "path": "d/bc7sun_bars76.korean",
+      "source": "webpj/translations/bc7sun_bars76.korean",
+      "bundle": "korean",
+      "size": 2463,
+      "sha256": "d55946a3c273767a9e9124fa119d730347d6fd1688ed63e9dd34d0fbfac61168",
+      "use": "한국어 캠페인 미션 대본(UTF-8): 원본 bc7sun_bars76.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
+    },
+    {
+      "path": "d/bc8fury76.korean",
+      "source": "webpj/translations/bc8fury76.korean",
+      "bundle": "korean",
+      "size": 3345,
+      "sha256": "58bd9adf197f561a26860305eb475a24dde07e1e885b0293ad93253d1ac04567",
+      "use": "한국어 캠페인 미션 대본(UTF-8): 원본 bc8fury76.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
+    },
+    {
+      "path": "d/bc9ssun_bars76.korean",
+      "source": "webpj/translations/bc9ssun_bars76.korean",
+      "bundle": "korean",
+      "size": 2064,
+      "sha256": "757b75f879f47f92932eb5954adc60c76f803409fd9b34c416e08faf71eeb30e",
+      "use": "한국어 캠페인 미션 대본(UTF-8): 원본 bc9ssun_bars76.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
     }
   ]
 }

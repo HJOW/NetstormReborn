@@ -120,11 +120,11 @@ test('한국어 Tutorial6: 실행 설정과 단계별 명령은 원본과 같다
 });
 
 // 번역 파일이 아직 없는 다음 튜토리얼은 기존 영어 대체 경로를 유지한다.
-test('한국어 미션: 번역하지 않은 bc1menu76은 영어 원문으로 대체한다', () => {
+test('한국어 미션: 번역하지 않은 개발용 미션 huge 는 영어 원문으로 대체한다', () => {
     const manifest = JSON.parse(fs.readFileSync(path.join(DATA_ROOT, 'manifest.json'), 'utf8'));
     const files = readDataMap(manifest.files.filter((entry) => entry.bundle === 'menu' || entry.bundle === 'korean').map((entry) => entry.path));
-    const data = GameData.build({ files, language: 'korean' }), mission = new MissionScript(data, 'bc1menu76');
-    try { assert.ok(mission.loaded); assert.match(mission.section('A.'), /[A-Za-z]{4}/); assert.doesNotMatch(mission.section('A.'), /[가-힣]/u); }
+    const data = GameData.build({ files, language: 'korean' }), mission = new MissionScript(data, 'huge');
+    try { assert.ok(mission.loaded); assert.equal(mission.get('missionType'), 'Tutorial'); assert.equal(mission.get('myTech'), 'all'); assert.doesNotMatch(mission.get('title') ?? '', /[가-힣]/u); }
     finally { mission.dispose(); }
 });
 
@@ -178,9 +178,15 @@ test('한국어 캠페인 미션 대본: 실행 설정·섹션·명령은 원본
         try {
             assert.match(mission.get('title'), /[가-힣]/u, `${name} 제목`);
             // 적 이름(aiName·aiNName)은 원문과 같은 개수이고 모두 한글이다.
-            assert.equal(enemyNames(source).length, enemyNames(original).length, `${name} 적 이름 개수`); assert.ok(enemyNames(source).length > 0);
+            assert.equal(enemyNames(source).length, enemyNames(original).length, `${name} 적 이름 개수`);
             for (const enemy of enemyNames(source)) assert.match(enemy, /[가-힣]/u, `${name} 적 이름 ${enemy}`);
-            for (const section of ['A.', 'Succeeded', 'Failed']) { const body = mission.section(section); assert.match(body, /[가-힣]/u, `${name} ${section}`); assert.doesNotMatch(body.replace(/<[^>]*>|\$Button=[^\r\n]*|\{[^}]*\}/g, ''), /[A-Za-z]{4,}/u, `${name} ${section} 영어 잔재`); }
+            // 원문에 있는 안내 구간(대소문자 무시)마다 한글이 있고 태그·버튼·치환·화면에 영어로 나오는 메뉴 이름(Build Outpost·Shift·NetStorm) 밖에 영어 단어(4글자 이상)가 남지 않는다.
+            const present = ['A.', 'Succeeded', 'Failed', 'Demo'].filter((wanted) => sections(original).some((have) => have.toLowerCase() === wanted.toLowerCase()));
+            assert.ok(present.length >= 1, `${name} 안내 구간`);
+            for (const section of present) { const body = mission.section(section); assert.match(body, /[가-힣]/u, `${name} ${section}`); assert.doesNotMatch(body.replace(/<[^>]*>|\$(?:Button|Timeout)=[^\r\n]*|\{[^}]*\}|Build Outpost|Shift|NetStorm/g, ''), /[A-Za-z]{4,}/u, `${name} ${section} 영어 잔재`); }
+            // 단추가 다른 대소문자의 미션 이름(BC6Mows76 등)을 불러도 같은 한국어 대본이 적재된다.
+            const other = new MissionScript(data, name.toUpperCase());
+            try { assert.match(other.get('title'), /[가-힣]/u, `${name} 대문자 이름`); } finally { other.dispose(); }
         } finally { mission.dispose(); }
     }
 });

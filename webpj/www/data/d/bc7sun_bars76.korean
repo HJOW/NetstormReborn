@@ -1,0 +1,96 @@
+[Header]
+missiontype="tutorial"
+
+missionnumber=7
+moregeysers=1
+
+mystartmoney=20000
+mytech="windBattery;sunFence"
+myallylist=""
+
+title="썬 바리케이드"
+
+ai2name="아이스 경"
+ai2tech="rainCannon;rainBattery"
+ai2startmoney=999999
+ai2geyserattachments=0
+ai2collectors=1
+ai2timebetweenmoves= 2
+ai2allylist="3;4;5"
+ai2color=lightblue
+ai2bridgedrawrate= 2
+ai2stuffRefreshRate=1
+
+ai3name="보텍스 경"
+ai3tech="windArcher;windBattery"
+ai3startmoney=999999
+ai3geyserattachments=0
+ai3collectors=1
+ai3timebetweenmoves= 2
+ai3allylist="2;4;5"
+ai3color=Green
+ai3bridgedrawrate= 2
+ai3stuffRefreshRate=1
+
+ai4name="썬더 백작"
+ai4tech="thunderCannon;thunderBattery"
+ai4startmoney=999999
+ai4geyserattachments=0
+ai4collectors=1
+ai4timebetweenmoves= 2
+ai4allylist="2;3;5"
+ai4color=Purple
+ai4bridgedrawrate= 2
+ai4stuffRefreshRate=1
+
+ai5name="썬 씨"
+ai5tech="sunCannon;windBattery;sunArcher"
+ai5startmoney=999999
+ai5geyserattachments=0
+ai5collectors=1
+ai5timebetweenmoves= 2
+ai5allylist="2;3;4"
+ai5color=Yellow
+ai5bridgedrawrate= 2
+ai5stuffRefreshRate=1
+
+[Options]
+
+[A.]
+<h2>썬 바리케이드</h2>
+<i>~y"좋은 공격을 하려면 먼저 방어가 튼튼한지 확인해야 합니다"<br>
+-님버스의 국방 장관</i>
+<p>~w패배에 분노한 적들이 재빨리 다시 모여 공격합니다. 이제 맨 오 워를 만들 수 없고 당신은 포위되었습니다. 동맹에게 구원 요청을 보냈고 그들이 오고 있으니, 그때까지 버틸 수 있기를 바랄 뿐입니다....
+<p>~B~E~r목표:~.~B~w  썬 바리케이드로 방어해 5분 동안 신전이 파괴되지 않게 하세요.
+<p>~B~E~o힌트:~.~B~w  적이 쏠 대상을 먼저 하나 내어 준 뒤 그 앞에 썬 바리케이드를 놓아 보세요...
+<p><!"sunfence.*">
+<p>"썬 바리케이드"
+
+$Button=사용 가능한 기술,ShowTechnology,55
+$Button=시작하자!,DoNothing,0
+</?>
+
+[@300]
+<h2>수신 메시지</h2>
+<p>~y도착했습니다!
+<p>-동맹군
+<p>~w도전을 마쳤습니다!
+<$Config,Done{mission.fileName}=1>
+$Button=훈련 메뉴,MissionBegin,BC1Menu
+<p>
+$Button=다시 시작,Tell,TryAgain
+$Button=끝장내자!,MissionBegin,BC8Fury76
+<p>
+$Button=미션 나가기,MissionAbort,0
+
+
+[Failed][ai1templedead]
+<h2>실패...</h2>
+<p>적이 방어선을 뚫었습니다. 동맹군은 무너진 섬과 사라진 사제만 보게 됩니다.
+$Button=훈련 메뉴,MissionBegin,BC1Menu76
+<p>
+$Button=다시 시작,Tell,TryAgain
+<p>
+$Button=미션 나가기,MissionAbort,0
+
+[END]

@@ -1,0 +1,57 @@
+[Header]
+missiontype="tutorial"
+
+denysalvage=1
+missionnumber=5
+moregeysers=0
+
+mystartmoney=0
+mytech=""
+myallylist=""
+
+title="죽음의 다리"
+
+ai2name="승산 없는 군주"
+ai2tech=""
+ai2startmoney=0
+
+[Options]
+
+[A.]
+<h2>죽음의 다리</h2>
+<i>~y"보통 마지막에 고르는 쪽이 의외로 놀라울 수 있습니다"<br>
+-벌프 동조자</i>
+<p>~w사악한 군주와의 싸움 끝에 두 사람 모두 아주 아슬아슬한 처지가 되었지만, 당신이 유리합니다. 그의 사제가 움직이지 못하게 되었기 때문입니다... 노란 구체 안에서 사악한 군주의 웃음소리가 들립니다:
+<p>
+~o~B~E"하하하, 내 다리 방어를 뚫고 워커를 보내는 건 불가능하다!"
+<p>
+~.~B~w과연 그럴까요?
+<p>~B~E~r목표:~.~B~w  운반 유닛을 다리 너머로 걸어가게 해 사제를 데려오세요. 각 워커가 무엇을 할 수 있는지 감을 잡기 위한 연습입니다.
+<p>~B~E~o힌트:~.~B~w  ~jShift 선택~w으로 한꺼번에 보낼 수 있지만 이렇게는 모두에게 사제를 집으라고 명령할 수 없습니다. 하나씩 보내면 운반 유닛의 강점과 약점이 더 뚜렷하게 보입니다.
+<p>     <!"sunwalker.*">          <!"bulf.*">        <!"windwalker.*">                     <!"rainwalker.*">
+<p>"골렘"<!"mana.11">     "벌프"<!"mana.10">      "세일 스케이터"<!"mana.8">      "크리스탈 크랩"<!"mana.9">
+$Button=사용 가능한 기술,ShowTechnology,55
+$Button=시작하자!,DoNothing,0
+</?>
+
+[succeeded][ai2priestcaptured]
+<h2>~o안 돼애애애애애애!!!!</h2>
+<p>~w걸어서 곧장 다가가 그의 사제를 포획하자 사악한 군주가 비명을 지릅니다. 불가능한 일은 없습니다!"
+<$Config,Done{mission.fileName}=1>
+$Button=훈련 메뉴,MissionBegin,BC1Menu76
+<p>
+$Button=다시 시작,Tell,TryAgain
+$Button=다음,MissionBegin,BC6Mows76
+<p>
+$Button=미션 나가기,MissionAbort,0
+
+[Failed]
+<h2>어어...</h2>
+<p>어떻게?!
+$Button=훈련 메뉴,MissionBegin,BC1Menu76
+<p>
+$Button=다시 시작,Tell,TryAgain
+<p>
+$Button=미션 나가기,MissionAbort,0
+
+[END]
