@@ -1,0 +1,82 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+myStartMoney = 5000
+myTech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;rainBattery;windBattery;thunderBattery"
+
+ai2Name = "썬의 군주"
+ai2Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunAviary;sunCannon"
+ai2StartMoney = 3000
+ai2GeyserAttachments = 2
+ai2Collectors = 3
+ai2TimeBetweenMoves = 4
+ai2AllyList = "3;4;5"
+ai2color = red
+
+ai3Name = "썬더의 군주"
+ai3Tech = "sunWalker;thunderBattery;thunderBlocker;thunderCannon;bulf;thunderArcher"
+ai3StartMoney = 3000
+ai3GeyserAttachments = 2
+ai3Collectors = 4
+ai3TimeBetweenMoves = 3
+ai3AllyList = "2;4;5"
+ai3Color = yellow
+
+ai4Name = "윈드의 군주"
+ai4Tech = "sunWalker;windBattery;windWalker;windAviary;windArcher;windBalloon;windBlocker"
+ai4StartMoney = 2000
+ai4GeyserAttachments = 2
+ai4Collectors = 4
+ai4TimeBetweenMoves = 4
+ai4AllyList = "2;3;5"
+ai4Color = orange
+
+ai5Name = "레인의 군주"
+ai5Tech = "sunWalker;rainBattery;rainCannon;rainAviary;rainBalloon;rainBlocker;rainWalker"
+ai5StartMoney = 0
+ai5GeyserAttachments = 2
+ai5Collectors = 3
+ai5TimeBetweenMoves = 4
+ai5AllyList = "2;3;4"
+ai5Color = white
+
+title="포위!"
+
+[Options]
+
+[A.]
+<h2>포위!</h2>
+<i>"하지만 님버스에 영원한 평화가 온다면 우리는 대체 무엇으로 시간을 보내겠습니까?"<br>
+--인툼 루카트, 전쟁 대신</i>
+<p>
+당신의 거듭된 승리에 분노한 썬, 윈드, 레인, 썬더의 어둠의 군주들이
+기습 공격을 해 왔습니다. 모든 지혜를 짜내 그들을 쓰러뜨려야 합니다!
+
+$Button=지식 보기,ShowTechnology,55
+$Button=미션 시작,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>성공!</h2>
+<p>
+당신의 군사적 천재성으로 불가능한 일을 이루었습니다! 거대한 기습
+공격을 막아 내고 환상적인 승리를 거두었습니다!
+님버스의 하늘을 누가 다스리는지 모두에게 알리세요!
+<$Config,Done{mission.fileName}=1>
+$Button=미션 나가기,MissionAbort,1
+$Button=다음 미션,MissionBegin,BreakingThrough
+
+
+[Failed]
+<h2>실패!</h2>
+<p>
+어둠의 군주들이 마침내 님버스 하늘에서 당신의 놀라운 약진을
+멈춰 세웠습니다. 이제부터 당신은 어둠의 부하가 되어
+병들고 잔혹한 어둠의 군주들의 명령을 따라야 합니다.
+$Button=계속,Tell,TryAgain
+
+
+[END]

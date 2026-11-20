@@ -1,0 +1,73 @@
+[Header]
+missionType = "Tutorial"
+
+loadFort = "BreakingThrough"
+
+missionNumber = 1
+moreGeysers = 0
+
+myStartMoney = 0
+// Very important to start your money at 0 so that you can't stop the priest's capture.
+myTech = "sunWalker;rainBattery;rainCannon;rainBlocker;rainWalker;sunArcher;sunAviary;sunBlocker"
+
+aiName = "윈드 왕자"
+aiTech = "sunWalker;windBattery;windArcher;windAviary;windBlocker"
+aiStartMoney = 4000
+aiGeyserAttachments = 3
+aiCollectors = 4
+aiTimeBetweenMoves = 4
+aiAbility = "!SACRIFICE_ENEMY_PRIEST"
+
+title="돌파!"
+
+[Options]
+
+[A.]
+<h2>돌파!</h2>
+<i>"적에게 전쟁의 손길을 얹으십시오.
+그의 몸에 그 자신의 피를 부으십시오."
+--카스파르 그렐린, 님버스의 대사제
+</i>
+<p>
+당신의 대사제가 큰 위험에 처했습니다. 어둠의 윈드 왕자에게
+사로잡히기 직전입니다!
+<p>
+첩자들은 윈드 신전에서 고통에 찬 비명이 들렸다고 하며
+많은 이들이 어둠의 왕자가 과거에 벌인 사악한 실험을 이야기합니다.
+
+$Button=다음,Tell,A1.
+
+[A1.]
+<h2>돌파!</h2>
+<p>
+당신이 다스리는 동안에는 어떤 사제도 해를 입을 수 없음을
+추종자들에게 보여 주세요.
+<p>
+적의 방어선을 돌파해 사로잡힌 사제를 구출한 뒤
+복수로 적 사제를 없애세요!
+
+$Button=지식 보기,ShowTechnology,55
+$Button=미션 시작,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>성공!</h2>
+<p>
+사제가 무사히 백성에게 돌아왔습니다! 그리고 어둠의 왕자의 군단은
+산산이 부서졌습니다. 당신 제국의 성직자를 건드린 자들의
+운명이 이러합니다!
+<$Config,Done{mission.fileName}=1>
+$Button=미션 나가기,MissionAbort,1
+$Button=다음 미션,MissionBegin,ToTheRescue
+
+
+[Failed]
+<h2>실패!</h2>
+<p>
+어둠의 왕자가 당신의 사제를 희생시켰습니다. 백성은 사랑하는 성직자를
+위해 통곡하고 곧 당신의 부주의에 대한 복수를 맹세하며
+당신을 찾아옵니다.
+$Button=계속,Tell,TryAgain
+
+
+[END]

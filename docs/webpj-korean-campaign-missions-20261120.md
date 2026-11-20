@@ -8,6 +8,7 @@
 | --- | --- | --- |
 | WB04-E1112 | TheWarBegins(전쟁의 시작!)·MasterOfWhirligigs(훨리기그의 지배자)·SaveTheIsland(섬을 구하라!)·FragileFortune(위태로운 보물!) | 적 이름: 간수·훨리기그의 지배자·썬더 백작·윈드 왕자 |
 | WB04-E1113 | ThunderingPower(천둥 같은 힘!)·DissolvedAlliance(깨어진 동맹!)·TheNoose(올가미)·RainVsRain(레인 대 레인!) | 적 이름(`aiName`·`aiNName`): 썬더의 기사·맨 오 워 후작·플레이어·썬더 왕자·레인 공작·레인의 시종장·레인 왕자. ThunderingPower 는 시간 쪽지(`[@20]`~`[@900]`)와 항복·승리 분기를 모두 옮겼다 |
+| WB04-E1114 | RunForIt(도망쳐라!)·GuardMyBack(내 등을 지켜 줘)·Surrounded(포위!)·BreakingThrough(돌파!) | 적 이름: 레인의 군주·썬의 대신·썬더 후작·레인의 기사·썬의 군주·썬더의 군주·윈드의 군주·윈드 왕자(+ 데모용 `플레이어`). GuardMyBack 의 대신 전갈(`[Ai2TempleHalf]`·`[Ai3TempleDead]`·`[Ai4TempleDead]`)·`[ai2PriestDead][Failed]`·`[Demo]` 구간과 원문 개발 주석(영어)은 그대로 두었다. 원문 `ai3Name` 은 닫는 따옴표가 없지만 번역본은 닫았다(시험이 허용) |
 
 ## 번역 규칙
 

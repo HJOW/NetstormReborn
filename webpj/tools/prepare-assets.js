@@ -61,7 +61,7 @@ const SKIRMISH_FORTS = Object.freeze(['FWOS9', 'Imp1', 'Imp3', 'LCA', 'Razorianw
 // 한국어 언어 자료 파일 목록이다(웹 판본에서 닿는 Tell 섹션·캠페인 목록·용어표). 원본 영어 파일과 같은 이름에서 확장자만 `.korean` 이다.
 // tell.korean 은 번역한 섹션만 담은 부분 파일이라 없는 섹션은 영어로 대체된다. 검사(tests/korean-tell.test.mjs)가 영어 원문과 구조를 대조한다. (2026-10-31 WB03-O)
 // 한국어로 옮긴 캠페인 미션 대본 이름이다(core/korean-assets.js 의 KOREAN_CAMPAIGN_MISSIONS 와 같아야 하며 tests/korean.test.mjs 가 매니페스트로 확인한다). 한 단위마다 번역한 미션을 더한다. (2026-11-20 WB04-E1112)
-const KOREAN_CAMPAIGN_MISSIONS = Object.freeze(['TheWarBegins', 'MasterOfWhirligigs', 'SaveTheIsland', 'FragileFortune', 'ThunderingPower', 'DissolvedAlliance', 'TheNoose', 'RainVsRain']);
+const KOREAN_CAMPAIGN_MISSIONS = Object.freeze(['TheWarBegins', 'MasterOfWhirligigs', 'SaveTheIsland', 'FragileFortune', 'ThunderingPower', 'DissolvedAlliance', 'TheNoose', 'RainVsRain', 'RunForIt', 'GuardMyBack', 'Surrounded', 'BreakingThrough']);
 
 const KOREAN_LANGUAGE_FILES = Object.freeze([
     { name: 'tell.korean', use: '한국어 Tell 대화상자 본문(UTF-8, 부분 번역): 환영·팁·캠페인·크레딧·데모·버전·기술 지원 섹션과 팁 목록' },

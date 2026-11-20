@@ -2491,6 +2491,38 @@
       "size": 1732,
       "sha256": "7e54e1d72f0fd1a19fb50381a51cce7421dbd85b191185909b22245f1a68be85",
       "use": "한국어 캠페인 미션 대본(UTF-8): 원본 RainVsRain.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
+    },
+    {
+      "path": "d/RunForIt.korean",
+      "source": "webpj/translations/RunForIt.korean",
+      "bundle": "korean",
+      "size": 2181,
+      "sha256": "d76fe6617b4ad82dc9f89c54eb025d0d46410e5d7fa46404779db44c7fa69ca3",
+      "use": "한국어 캠페인 미션 대본(UTF-8): 원본 RunForIt.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
+    },
+    {
+      "path": "d/GuardMyBack.korean",
+      "source": "webpj/translations/GuardMyBack.korean",
+      "bundle": "korean",
+      "size": 3614,
+      "sha256": "8b9e8216173d63da7d42bfaec9119115fb176088014c5267c50d61b3a221e62b",
+      "use": "한국어 캠페인 미션 대본(UTF-8): 원본 GuardMyBack.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
+    },
+    {
+      "path": "d/Surrounded.korean",
+      "source": "webpj/translations/Surrounded.korean",
+      "bundle": "korean",
+      "size": 2364,
+      "sha256": "1300a2bb73b35a72d0092ef1cebe8a6fc9e468581752fd4faffee1d61bf295b8",
+      "use": "한국어 캠페인 미션 대본(UTF-8): 원본 Surrounded.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
+    },
+    {
+      "path": "d/BreakingThrough.korean",
+      "source": "webpj/translations/BreakingThrough.korean",
+      "bundle": "korean",
+      "size": 2020,
+      "sha256": "c0298a3dbb303b98942a7c9b8adda2b3b0609a313b050dd5d0fc5af3725d6df6",
+      "use": "한국어 캠페인 미션 대본(UTF-8): 원본 BreakingThrough.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
     }
   ]
 }

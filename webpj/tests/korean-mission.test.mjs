@@ -163,7 +163,8 @@ test('한국어 캠페인 미션 대본: 실행 설정·섹션·명령은 원본
     const sections = (text) => [...text.matchAll(/^\[([^\]]+)\]/gm)].map((match) => match[1]);
     const commands = (text) => [...text.matchAll(/^\$Button=[^,]*,([^\r\n]+)|(<\$[^>]+>)/gm)].map((match) => match[1] ?? match[2]);
     const pictures = (text) => [...text.matchAll(/<!"[^>]+>/g)].map((match) => match[0]);
-    const enemyNames = (text) => [...text.matchAll(/^ai\d*Name\s*=\s*"([^"]*)"/gim)].map((match) => match[1]);
+    // 원문 GuardMyBack 의 ai3Name 은 닫는 따옴표가 없으므로 닫는 따옴표는 있어도 없어도 된다.
+    const enemyNames = (text) => [...text.matchAll(/^ai\d*Name\s*=\s*"([^"\r\n]*)"?/gim)].map((match) => match[1]);
     const data = GameData.build({ files, language: 'korean' });
     assert.ok(KOREAN_CAMPAIGN_MISSIONS.length >= 4);
     for (const name of KOREAN_CAMPAIGN_MISSIONS) {
