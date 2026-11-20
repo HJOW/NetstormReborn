@@ -1267,3 +1267,5 @@ cpppj/src/client/RawUserHighlight.cpp	Netstorm.Client/Input/RawUserHighlight.cs	
 cpppj/src/client/RawUserHighlight.h	Netstorm.Client/Input/RawUserHighlight.cs	8c10b36a227d04c5947c15a69eff79d04876ba8a	port
 cpppj/src/client/ClientUserSelectionGlobals.cpp	Netstorm.Client/ClientUserSelectionGlobals.cs	32fe196f3ff26df1f70e93eda26b53028f4a6bc0	port
 cpppj/src/client/ClientUserSelectionGlobals.h	Netstorm.Client/ClientUserSelectionGlobals.cs	b006db45303b93f4a66931b0ee4fb9250dfb455e	port
+cpppj/src/client/RawUserSelection.cpp	Netstorm.Client/Input/RawUserSelection.cs	99ff1a5f4a46e8a65e4d8040b5d8f4a18980aef4	port
+cpppj/src/client/RawUserSelection.h	Netstorm.Client/Input/RawUserSelection.cs	99ff1a5f4a46e8a65e4d8040b5d8f4a18980aef4	port

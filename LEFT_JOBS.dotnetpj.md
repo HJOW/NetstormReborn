@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-21 · 사용자 재개 지시로 진행 중 · 마지막 완료0.745(장기 선택/강조178입력·집중31건 통과) · 다음0.746 선택·다중 정리 부모와 원본 대조 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6 병행) · cpppj 제품1323 / 11.01 · 전체 목표 미완료**
+**2026-11-21 · 사용자 재개 지시로 진행 중 · 마지막 완료0.746(선택1916입력/기존강조178입력·집중28건 통과) · 다음0.747 객체 선택 표시와 실제 Clear 연결 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6 병행) · cpppj 제품1323 / 11.01 · 전체 목표 미완료**
 
 현행 인계는 이 문서가 기준이다. 단위별 근거는 `docs/dotnet-canon-0NNN-*.md`이다. 0.645~0.732의 단위별 완료 문장, 0.640 회귀 점검 상세, 0.546~0.676 완료 기록 원문은 [0.732 정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0732)에 있다. 0.600~0.635는 [0.635 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635), 0.613까지의 경과와 파일 계열별 체크 목록은 [0.613 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)에 있다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
@@ -22,9 +22,9 @@
 
 **재개 순서(2026-11-21).** 0.744 전체5,318검사와 같은 빌드65시작·원본/빌드 해시·전수 바이트 감사를 완료했다. [0.744 근거](docs/dotnet-canon-0744-20261121.md)
 
-1. **0.746 선택·다중 정리 부모와 원본 대조.** 0.745에서 장기 ClientUserSelectionGlobals/RawUserHighlight와 State의 실제005caf34 개수 공유를 완료했다. 원본178입력의 모든 사건/현재전역·신규8건 포함 집중31건·대표3시작 종료0/0.744 전체바이트 일치·원본1392파일 불변이다. [0.745](docs/dotnet-canon-0745-20261121.md). 다음은 RawUserSelection의 Select/Clear/다중 토글·확장·이동/기억·재조회 부모를 이식하고 원본 fixture로 대조한다. 이어서 객체+7c 선택 표시/VT 표와 ClientUserSelectionCleanup의 실제 현재 Session/동일Pool 표시를 잇는다. 미션 없는 count0/음수 경로는 Runtime을 요구하지 않는다. 이후 커서/채팅·UI/음향·음악/저장/옵션 기본 장치와 전체Root 상태 호출을 잇는다. 0.742 전체State 실제효과분배/Root호출경계·0.743 첫메뉴 장기자산표는 완료했지만 실제 기본 장치 설치는 남았다. 미연결효과는 도달 위치에서 명시 실패하며 전체Native 메뉴/로그인/State 완료를 뜻하지 않는다. non-mine Notify의 실제DataManager 저장과 비Session Notify 추출부모, NSInfo HUD/메타UI/Root reply 저장도 후속이다. RawFileName 나머지 조회·BaseFile 고리 소비/ClientStaticStrings는 해당 소비자에서 잇는다.
+1. **0.747 객체 선택 표시와 실제 Clear 연결.** 0.746에서 RawUserSelection의 선택/Clear/다중 토글·확장·이동/기억·재조회 부모와1916원본입력 대조를 완료했다. 기존강조178입력 포함 집중28건·대표3시작 종료0/0.744 전체바이트 일치·원본1392파일 불변이다. [0.746](docs/dotnet-canon-0746-20261121.md). 다음은 객체+7c 선택 표시/83VT 표·내용물 미리보기와 ClientUserSelectionCleanup의 실제 현재 Session/동일Pool 표시를 잇는다. 미션 없는 count0/음수 자연 경로는 Runtime을 요구하지 않는다. 이후 커서/채팅·UI/음향·음악/저장/옵션 기본 장치와 전체Root 상태 호출을 잇는다. 0.742 전체State 실제효과분배/Root호출경계·0.743 첫메뉴 자산표·0.745장기선택/강조/State개수는 완료했지만 실제 기본 장치 설치는 남았다. 미연결효과는 도달 위치에서 명시 실패하며 전체Native 메뉴/로그인/State 완료를 뜻하지 않는다. non-mine Notify의 실제DataManager 저장과 비Session Notify 추출부모, NSInfo HUD/메타UI/Root reply 저장도 후속이다. RawFileName 나머지 조회·BaseFile 고리 소비/ClientStaticStrings는 해당 소비자에서 잇는다.
 2. **같은 작업 줄기.** MetaZone 원문 본체124입력은0.734, 실제Client표/현재Runtime pin·설치된가상분배전달은0.735 완료다. 현재 HostSession의 전체 Native World 자산 가상 삭제 분배 설치는 아직 미연결이며 일반 삭제의 Pre/Post 완료로 대신하지 않는다. [0.733](docs/dotnet-canon-0733-20261121.md) · [0.734](docs/dotnet-canon-0734-20261121.md) · [0.735](docs/dotnet-canon-0735-20261121.md). 이어서 [R4 체크](#r4-detail)→R11과 후순위 요구사항을 진행한다. 다음 정기 전체 회귀는0.748이다.
-3. **사용자 제외 검사 유지.** 실제 포획/희생·특정 적 공격·시나리오 승리는 재현하지 않고 사용자 수동 확인으로 남긴다. 원본1,392파일의 마지막 불변 확인은0.745 대표3시작이다(전체65시작은0.744).
+3. **사용자 제외 검사 유지.** 실제 포획/희생·특정 적 공격·시나리오 승리는 재현하지 않고 사용자 수동 확인으로 남긴다. 원본1,392파일의 마지막 불변 확인은0.746 대표3시작이다(전체65시작은0.744).
 
 **최근 완료 요약(0.639~0.745).** 단위별 완료 문장과 집중 검사 수는 보관본과 각 단위 문서에 있다. 완료 범위와 남은 일의 기준은 1.1·1.2절 체크 항목이다.
 

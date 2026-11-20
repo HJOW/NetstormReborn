@@ -89,6 +89,9 @@ public sealed class ClientUserSelectionGlobals
     /// <summary>강조 본체도 별도 값 사본 없이 같은 필드를 빌린다.</summary>
     public UserHighlightState HighlightState() => new() { Mode = Mode, SelectedSid = Selected, MouseType = MouseType, MouseX = MouseX, MouseY = MouseY };
 
+    /// <summary>선택 본체는 같은 필드와 각 반복 시점의 현재 배열을 빌린다.</summary>
+    public UserSelectionState SelectionState() => new() { Selected = Selected, MouseType = MouseType, RememberedPoint = Remembered, MultipleCount = MultipleCount, CurrentMultiple = () => Multiple };
+
     /// <summary>signed 좌표/개수를 포함해 전체 DWORD 비트를 반환한다.</summary>
     public uint ReadDword(Field field) => field switch
     {

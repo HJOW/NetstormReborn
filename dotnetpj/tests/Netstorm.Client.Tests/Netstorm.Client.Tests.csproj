@@ -127,5 +127,10 @@
   <!-- 강조 모드와 ResetMouse의 원본178입력을 사본 없이 연결한다. -->
   <ItemGroup>
     <None Include="../../../cpppj/tests/fixtures/user-highlight-x86.tsv" Link="X86/user-highlight-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- 단일1074/Clear87/ESC154/다중601개 독립 입력의 원문 기대값이다. -->
+    <None Include="../../../cpppj/tests/fixtures/user-selection-x86.tsv" Link="X86/user-selection-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/user-selection-clear-x86.tsv" Link="X86/user-selection-clear-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/escape-selection-x86.tsv" Link="X86/escape-selection-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/multiple-selection-x86.tsv" Link="X86/multiple-selection-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>
