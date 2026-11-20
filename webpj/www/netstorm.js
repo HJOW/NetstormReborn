@@ -154,7 +154,7 @@ const MISSION_VIEW_PRIEST = 0x020000b8;
 // ESC 게임 메뉴막대의 항목이 입력 큐로 보내는 명령 중 앱이 실제로 실행하는 것이다(목표 보기 0x91, 건물 숨김 0xf1, 설정 0x6d, 음량 0xe6·0xe7, 홈 0xae, 사제 보기 0xb8, Tell 0x95, 도움말 0x17, 미션 중단 0x8c·재시작 0x8d·전투 떠나기 0xc5).
 // 나머지 메뉴 명령은 입력 큐를 막지 않도록 소비하되 실행하지 않고 콘솔에 기록하며, 메뉴에서는 비활성으로 보인다. (2026-11-20 WB04-E1084)
 // F2(건물 숨김)·F3(Shift: 섬 테마)·F8(목표 보기) 가상 키와 F9(플레이어 목록) 가상 키다. 앞의 셋은 표시 키 분배기가, F9 는 명령 예약기가 처리한다. (2026-11-20 WB04-E1087)
-const MISSION_VIEW_KEYS = new Set([0x710000, 0x720000, 0x770000]);
+const MISSION_VIEW_KEYS = new Set([0x710000, 0x720000, 0x760000, 0x770000]);
 const MISSION_F9 = 0x780000;
 // F6 은 선택 키 분배기가 지식 창 명령(0x020000a0)을 예약하는 가상 키다. (2026-11-20 WB04-E1088)
 const MISSION_F6 = 0x750000;
@@ -1408,12 +1408,15 @@ export class Netstorm {
         return {
             global: (address) => this._campaignMenuGlobal(address, production),
             // 설정 층에 있는 키(소리·음량 등)는 Settings 가, 그 밖의 키(rotmode·theammode 등)는 게임 데이터가 현재 값을 가진다.
-            config: (key) => { const stored = this._settings?.get(key); return stored !== undefined ? Number(stored) | 0 : this._gameData.readInt(key, key === 'theammode' ? 1 : 0).value | 0; },
+            config: (key) => {
+                // 섬 소유자 표식(useBanners)의 현재 값은 원본 5319c0 처럼 소유자 색표 저장소가 가진다. (2026-11-20 WB04-E1090)
+                if (key === 'useBanners') return this._clientColorSort.ownerTables.enabled | 0;
+                const stored = this._settings?.get(key); return stored !== undefined ? Number(stored) | 0 : this._gameData.readInt(key, key === 'theammode' ? 1 : 0).value | 0;
+            },
             demo: () => Boolean(this._clientGuide?.current()?.runtime.gate.demo),
             player: (owner) => session.playerRecords().subarray(owner * 180, owner * 180 + 180),
             refreshPriest: (owner) => session.refreshPriestParticipation(owner),
-            // F7(배너 표시)의 소유 색표 재구성은 아직 연결하지 않아 비활성으로 둔다.
-            enabled: (code) => WIRED_MENU_COMMANDS.has(code >>> 0), configEnabled: (key) => key !== 'useBanners', storeText: (value) => this._clientChatWindows.store(value),
+            enabled: (code) => WIRED_MENU_COMMANDS.has(code >>> 0), configEnabled: () => true, storeText: (value) => this._clientChatWindows.store(value),
             about: () => this._resources.translate('About'), technicalHelp: () => 0, width: () => this._layout.logicalWidth,
         };
     }
@@ -1527,7 +1530,7 @@ export class Netstorm {
         else if (code === 0x0200006d) {
             // 설정 명령의 인자는 `키=값` 문자열이다. 설정 층의 키는 Settings 가 저장하고 그 밖의 키는 게임 데이터에 쓴다.
             const [key, value] = text().split('='); if (!key) return;
-            if (this._settings?.get(key) !== undefined) this._settings.set(key, Number(value)); else this._gameData.set(key, Number(value));
+            this._applyCampaignConfig(key, Number(value));
             this._displayDirty = true;
         } else if (code === 0x020000e6 || code === 0x020000e7) this._settings?.set(code === 0x020000e6 ? 'soundVolume' : 'musicVolume', event.y | 0);
         else if (code === 0x02000095) {
@@ -1535,6 +1538,12 @@ export class Netstorm {
             this._tellOrSetIslands(text());
         }
         return false;
+    }
+
+    // 메뉴·표시 키가 쓰는 설정 한 줄을 적용한다. 설정 층의 키는 Settings 가, 그 밖은 게임 데이터가 저장하며, 섬 소유자 표식(useBanners)은 소유자 색표를 다시 만들고 월드를 다시 그린다(원본 `onChanged` → 43bc40 `InterpretOwnerColorOptions`). (2026-11-20 WB04-E1090)
+    _applyCampaignConfig(key, value) {
+        if (this._settings?.get(key) !== undefined) this._settings.set(key, value); else this._gameData.set(key, value);
+        if (key === 'useBanners') { this._clientColorSort.ownerTables.setEnabled(value >>> 0, this._clientKencloud.worldRedraw()); this._clientRenderer.invalidateAll(); }
     }
 
     // Tell 이름이 `SetIslands(0|1)` 이면 섬 테마 설정을 바꾸고 월드를 다시 그리며, 그 밖에는 Tell 창을 연다. 메뉴·표시 키가 같이 쓴다. (2026-11-20 WB04-E1087)
@@ -1549,11 +1558,12 @@ export class Netstorm {
         return { get hideBuildings() { return game.hideBuildings().value; }, set hideBuildings(value) { game.hideBuildings().value = value >>> 0; }, get redraw() { return redraw.value; }, set redraw(value) { redraw.value = value >>> 0; } };
     }
 
-    // 표시 키 분배기의 실제 장치다. 배너(F7) 장치는 아직 없어 키를 큐에 넣지 않으므로 연결하지 않는다.
+    // 표시 키 분배기의 실제 장치다. F7 은 소유자 색표 저장소의 useBanners 를 뒤집고(`_applyCampaignConfig`) 월드를 다시 그린다. (2026-11-20 WB04-E1090)
     _viewKeyHooks() {
         const game = this._clientGameplay, modes = this._surfaceStorage.ownerMode;
         return { paused: () => this._gameClock.paused(), readInt: (key, holder) => { const found = this._gameData.readInt(key, holder.value); holder.value = found.value; return found.changed || this._gameData.get(key) != null; },
             tell: (section) => this._tellOrSetIslands(section), queue: (command, first, second) => this._clientInputQueue.pushCommand(command, first, second),
+            useBanners: () => this._clientColorSort.ownerTables.enabled, writeBanners: (value) => this._applyCampaignConfig('useBanners', value),
             fort: () => Boolean(this._campaignWorld?.session().core().bridgeState.mission), metamap: () => Boolean(modes.challenge), editor: () => Boolean(game.world.editor), highlight: (mode) => this._campaignWorld.highlight(mode) };
     }
 
@@ -2843,7 +2853,7 @@ export class Netstorm {
         }
         // 조합 중 Enter 등은 기존 메뉴 명령으로도 중복 실행하지 않는다.
         if (this._clientNativeInputEnabled && (this._clientComposing || event.isComposing)) return;
-        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && (event.code === 'F4' || event.code === 'F5' || event.code === 'F6' || event.code === 'F2' || event.code === 'F3' || event.code === 'F8' || event.code === 'F9' || ((event.code === 'ArrowLeft' || event.code === 'ArrowRight') && this._campaignWorld.session().cursorDropSettings().lockDepth === 0))) {
+        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && (event.code === 'F4' || event.code === 'F5' || event.code === 'F6' || event.code === 'F2' || event.code === 'F3' || event.code === 'F7' || event.code === 'F8' || event.code === 'F9' || ((event.code === 'ArrowLeft' || event.code === 'ArrowRight') && this._campaignWorld.session().cursorDropSettings().lockDepth === 0))) {
             event.preventDefault(); queueBrowserVirtualKeyEvent(this._clientInputQueue, event, this._input.pointer, false);
         }
         // ESC 는 조각을 들고 있으면 취소, 아니면 게임 메뉴막대 전환이므로 항상 큐에 넣고 입력 프레임이 판단한다. (2026-11-20 WB04-E1084)
