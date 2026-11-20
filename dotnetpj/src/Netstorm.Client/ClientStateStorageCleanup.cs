@@ -24,6 +24,22 @@ public sealed class ClientStateStorageCleanup
     public void ResetClockSynchronization() => RawClockSyncReset.Reset(_local.ClockSynchronization);
     /// <summary>004bfd60의 같은 Zone 앞6BYTE만 지우고 인접WORD는 유지한다.</summary>
     public void ResetZone() => RawStateZoneReset.Reset(_local.Zone.Span);
+    /// <summary>같은 실제 메타구역 표를 정리하고 비영 마커 삭제에서만 현재 전체 Runtime을 pin한다.</summary>
+    public void ClearMetaZones()
+    {
+        RawMetaZoneCleanup.ClearRecords(_local.MetaFirstReset, _local.MetaZoneRecords, index =>
+            RawMetaZoneCleanup.ClearMarker(_local.MetaZoneRecords, index, (sid, flags) =>
+            {
+                var game = _surface.Gameplay;
+                var session = game.RequireSession();
+                using IDisposable pin = game.PinCurrentRuntime(session);
+                if (!ReferenceEquals(session.Pool, _surface.Storage.Pool) || !ReferenceEquals(session.LocalState, _local))
+                    throw new InvalidOperationException("메타구역 삭제의 현재 Session/Pool/Client 불일치");
+                if (sid >= _surface.Storage.Pool.Capacity || sid > ushort.MaxValue)
+                    throw new ArgumentOutOfRangeException(nameof(sid), "메타구역 DWORD SID의 현재 Pool 물리 범위");
+                _ = session.DestroyForState((int)sid, flags);
+            }));
+    }
     /// <summary>실제 World 대여 반납 뒤004af170의 Pool·기록·실패점만 정리한다.</summary>
     public void ResetPool(int capacity = 0)
     {
