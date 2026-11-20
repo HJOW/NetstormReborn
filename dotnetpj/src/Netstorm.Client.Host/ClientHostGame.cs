@@ -392,8 +392,9 @@ public sealed class ClientHostGame : Game
             // 같은 Player·공통 Pop·프로세스에 실제 사제/보호막 후처리를 등록한다.
             _missionAudio ??= new HostMissionAudio(_startup, Window.Handle, _options.MuteAudio, () => _clock.NowSeconds);
             if (!OperatingSystem.IsWindows()) throw new PlatformNotSupportedException("현재 미션 연소 장치는 Windows 전용이다");
-            pendingBurning = new HostMissionBurning(session, _startup, _driver.Screen, types.Types, worldDefinitions, popShapes, shpRaw, _missionAudio);
             session.BuildPriestWorldDevices(_missionAudio.BindPriest(session));
+            // 건설 진행음도 같은 미션의 Sound47을 빌리므로 음향/사제 장치 설치 뒤 표시 장치를 조립한다.
+            pendingBurning = new HostMissionBurning(session, _startup, _driver.Screen, types.Types, worldDefinitions, popShapes, shpRaw, _missionAudio);
             // 지형 바인딩 조립. 세션 저장소를 묶고 생성 입력을 바인딩한다. 진단 저널 연결은 7차 로그 배선 단위에서 잇는다.
             session.TerrainDiagnostics.Context = _ => { };
             session.TerrainDiagnostics.Stamp = _ => { };
