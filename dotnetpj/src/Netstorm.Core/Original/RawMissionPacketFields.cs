@@ -49,6 +49,15 @@ public static class RawMissionPacketFields
         }
     }
 
+    /// <summary>40a450은 두 송신 진단 뒤 현재 이름BYTE/이미지WORD로 길이WORD만 확정한다.</summary>
+    public static void ObserveLogin(Memory<byte> packet, uint sending, Action<string, string, uint>? assertion = null)
+    {
+        if (sending == 0) return;
+        if (Get(packet.Span, 12, 1) == 255) Need(assertion)("len != (unsigned char)-1", "\\Ns\\O\\_p_packets.cpp", 0x611);
+        if (Get(packet.Span, 13) == uint.MaxValue) Need(assertion)("fortFileSize != (int)-1", "\\Ns\\O\\_p_packets.cpp", 0x612);
+        Put(packet.Span, 2, Get(packet.Span, 12, 1) + Get(packet.Span, 13, 2) + 17, 2);
+    }
+
     /// <summary>0040b110은 송신의 len!=-1 진단 뒤 현재 lowWORD+10만 기록한다.</summary>
     public static void ObserveMetadata(Memory<byte> packet, uint sending, Action<string>? assertion = null)
     {

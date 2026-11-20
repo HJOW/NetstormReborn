@@ -486,4 +486,9 @@
   <ItemGroup>
     <None Include="../../../cpppj/tests/fixtures/mission-client-packets-x86.tsv" Link="X86/mission-client-packets-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 로그인48입력과 타이머1984입력 중 먼저 같은 Player 집계394입력을 읽기 전용으로 대조한다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/mission-login-x86.tsv" Link="X86/mission-login-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/mission-login-timer-x86.tsv" Link="X86/mission-login-timer-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
