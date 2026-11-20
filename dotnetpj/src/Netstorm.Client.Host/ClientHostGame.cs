@@ -328,6 +328,8 @@ public sealed class ClientHostGame : Game
         _sidLists.PrepareGeneralWorld();
         // NativeStorage 전환(0.595): 미션 풀을 장기 저장소에서 빌린다. 세션이 저장소를 소유하고 풀 바이트·덤프는 별도 풀과 같다(근거 cpppj RawCampaignSession.cpp 991행).
         var storage = new RawSurfaceStorage(OriginalEdition.Patch1078);
+        // 현재개발용일반미션부모가같은장기옵션을명시Reset한다. 전체Native로그인설치시원문부모위치로인계한다.
+        RawMissionBattleOptions.Reset(OriginalEdition.Patch1078, _gameplay.BattleOptions);
         var session = new HostSession(_kernel, _gameRandom, _crtRandom, sharedSp: _spGlobals.Store, sharedCrtBox: _spCrtBox, sharedGameplay: _gameplay, sharedLists: _sidLists, pool: storage.Pool, sharedLocal: _localState, sharedConnections: _connections);
         // 적재 실패에서도 이 호출이 만든 외부 연소장치만 반납한다.
         HostMissionBurning? pendingBurning = null;

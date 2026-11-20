@@ -169,7 +169,7 @@ public sealed class PlayerParticipation
     private readonly uint[] _allies;
 
     /// <summary>Chat 숨김 표시 9개(0052f81e). 현재 값을 호출 시점에 읽는다.</summary>
-    private readonly byte[] _hidden;
+    private readonly Memory<byte> _hidden;
 
     /// <summary>현재 전역 상태. 효과 뒤에도 다시 읽는다.</summary>
     private readonly PlayerParticipationState _state;
@@ -189,10 +189,15 @@ public sealed class PlayerParticipation
     /// <param name="state">현재 전역 상태(공유).</param>
     /// <param name="hooks">외부 효과 경계.</param>
     public PlayerParticipation(byte[] players, uint[] allies, byte[] hidden, PlayerParticipationState state, PlayerParticipationHooks hooks)
+        : this(players, allies, (Memory<byte>)(hidden ?? throw new ArgumentNullException(nameof(hidden))), state, hooks)
+    {
+    }
+
+    /// <summary>실제옵션안의같은9바이트부분뷰를빌리고플레이어/동맹/효과저장소를공유한다.</summary>
+    public PlayerParticipation(byte[] players, uint[] allies, Memory<byte> hidden, PlayerParticipationState state, PlayerParticipationHooks hooks)
     {
         ArgumentNullException.ThrowIfNull(players);
         ArgumentNullException.ThrowIfNull(allies);
-        ArgumentNullException.ThrowIfNull(hidden);
         ArgumentNullException.ThrowIfNull(state);
         ArgumentNullException.ThrowIfNull(hooks);
         if (players.Length != PlayerStride * PlayerCount || allies.Length != PlayerCount * PlayerCount || hidden.Length != PlayerCount)
@@ -338,7 +343,7 @@ public sealed class PlayerParticipation
             if (_allies[LocalOwner() * PlayerCount + player] != 0 && _allies[player * PlayerCount + LocalOwner()] != 0)
                 Require(_hooks.AddChat)(Read(player, SubscriberOffset), Name(player), 0x40);
             if (Metamap()) Require(_hooks.Assertion)(PlayerParticipationAssertion.MetamapMode);
-            if (_hidden[player] != 0) Require(_hooks.AddChat)(Read(player, SubscriberOffset), Name(player), 0x80);
+            if (_hidden.Span[checked((int)player)] != 0) Require(_hooks.AddChat)(Read(player, SubscriberOffset), Name(player), 0x80);
         }
     }
 

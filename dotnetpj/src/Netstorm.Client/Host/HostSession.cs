@@ -61,8 +61,8 @@ public sealed partial class HostSession
     /// <summary>세션이 소유한 Player 9기록 원문이다. Start 순서에서 RawPlayerParticipation과 같은 버퍼를 쓴다.</summary>
     public byte[] PlayerRecords { get; } = new byte[PlayerRecordBytes];
 
-    /// <summary>세션이 소유한 Chat 숨김 9바이트다. Start 순서에서 같은 버퍼를 쓴다.</summary>
-    public byte[] HiddenPlayers { get; } = new byte[9];
+    /// <summary>같은Client의옵션+3e에있는현재Chat숨김9바이트다. 참여/로그인과복사없이공유한다.</summary>
+    public Memory<byte> HiddenPlayers => Gameplay.HiddenPlayers;
 
     /// <summary>세션이 소유한 동맹 81 DWORD다. Start 순서에서 같은 버퍼를 쓴다.</summary>
     public uint[] Alliances { get; } = new uint[AllianceDwords];
@@ -126,6 +126,14 @@ public sealed partial class HostSession
         Kernel = kernel;
         Game = game;
         Crt = crt;
+        Gameplay = sharedGameplay ?? sharedLocal?.Gameplay ?? sharedConnections?.LocalState.Gameplay ?? new ClientGameplayGlobals();
+        LocalState = sharedLocal ?? sharedConnections?.LocalState ?? new ClientLocalStateGlobals(Gameplay, new AmbientSoundState());
+        if (!ReferenceEquals(LocalState.Gameplay, Gameplay)) throw new ArgumentException("미션의 실제 Gameplay/LocalState 소유자 불일치", nameof(sharedLocal));
+        Connections = sharedConnections ?? new ClientConnectionGlobals(LocalState);
+        if (!ReferenceEquals(Connections.LocalState, LocalState)) throw new ArgumentException("미션의 실제 LocalState/Registry 소유자 불일치", nameof(sharedConnections));
+        // 기존 독립 조합 호출만 새전역에미션기본옵션을준비한다. 빌린제품전역은명시미션부모가Reset한다.
+        if (sharedGameplay is null && sharedLocal is null && sharedConnections is null)
+            RawMissionBattleOptions.Reset(OriginalEdition.Patch1078, BattleOptions);
         _aiParticipation = new PlayerParticipation(
             PlayerRecords, Alliances, HiddenPlayers,
             new Netstorm.Core.Simulation.PlayerParticipationState(),
@@ -138,11 +146,6 @@ public sealed partial class HostSession
                     _aiConstructors.Remove(brain);
                 },
             });
-        Gameplay = sharedGameplay ?? sharedLocal?.Gameplay ?? sharedConnections?.LocalState.Gameplay ?? new ClientGameplayGlobals();
-        LocalState = sharedLocal ?? sharedConnections?.LocalState ?? new ClientLocalStateGlobals(Gameplay, new AmbientSoundState());
-        if (!ReferenceEquals(LocalState.Gameplay, Gameplay)) throw new ArgumentException("미션의 실제 Gameplay/LocalState 소유자 불일치", nameof(sharedLocal));
-        Connections = sharedConnections ?? new ClientConnectionGlobals(LocalState);
-        if (!ReferenceEquals(Connections.LocalState, LocalState)) throw new ArgumentException("미션의 실제 LocalState/Registry 소유자 불일치", nameof(sharedConnections));
         Pool = pool ?? new RawSidPool(poolCapacity <= 0 ? MissionPoolCapacity : poolCapacity, true, () => Gameplay.Authority.Server);
         if (pool is not null)
         {
@@ -748,23 +751,13 @@ public sealed partial class HostSession
         Mission = true,
     };
 
-    /// <summary>세션이 소유한 87바이트 전투 옵션이다. 미션 기본값으로 초기화한다.</summary>
+    /// <summary>같은Client가장기소유하는현재87바이트전투옵션이다. 세션교체는값을초기화하지않는다.</summary>
     /// <remarks>2026-11-12 0.453에서 지형 바인딩 입력 결선용으로 추가했다. 근거: cpppj RawMissionBattleOptions(ResetMissionBattleOptions).</remarks>
-    public byte[] BattleOptions { get; } = CreateBattleOptions();
+    public byte[] BattleOptions => Gameplay.BattleOptions;
 
     /// <summary>세션이 소유한 AI 진단 checking DWORD 뷰의 장기 값이다. 생성 Growth가 같은 값을 읽는다.</summary>
     /// <remarks>2026-11-12 0.453에서 지형 바인딩 입력 결선용으로 추가했다. 근거: cpppj ClientGameplayGlobals AiDebug().Checking().</remarks>
     public RawCheckingFlag AiChecking { get; } = new();
-
-    /// <summary>미션 기본 87바이트 전투 옵션을 만든다.</summary>
-    /// <returns>초기화된 87바이트 배열이다.</returns>
-    /// <remarks>2026-11-12 0.453에서 지형 바인딩 입력 결선용으로 추가했다.</remarks>
-    private static byte[] CreateBattleOptions()
-    {
-        var options = new byte[87];
-        RawMissionBattleOptions.Reset(OriginalEdition.Patch1078, options);
-        return options;
-    }
 
     /// <summary>세션 장기 전역에서 지형 생성 입력을 묶는다. 원문 terrainGeneration 15종의 세션 소유 결선이다.</summary>
     /// <returns>세션 상자·기록을 공유하는 입력 묶음이다. 같은 인스턴스(GenerationInputs)를 돌려준다.</returns>
@@ -3654,7 +3647,7 @@ public sealed partial class HostSession
 
     /// <summary>덤프용 Player 관측을 만든다. Start 순서 전까지 0이다.</summary>
     public SessionDumpPlayers DumpPlayers() =>
-        new((byte[])PlayerRecords.Clone(), (byte[])HiddenPlayers.Clone(), (uint[])Alliances.Clone());
+        new((byte[])PlayerRecords.Clone(), HiddenPlayers.ToArray(), (uint[])Alliances.Clone());
 
     /// <summary>덤프용 SP 관측을 만든다. 초기화 전에는 대시 9칸으로 나간다.</summary>
     public SessionDumpSp DumpSp() =>

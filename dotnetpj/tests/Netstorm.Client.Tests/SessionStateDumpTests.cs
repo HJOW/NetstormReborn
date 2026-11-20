@@ -199,7 +199,7 @@ public sealed class SessionStateDumpTests
     {
         var session = new HostSession(new Kernel(), new GameRandom(), new CrtRandom());
         session.PlayerRecords[0] = 0xAB;
-        session.HiddenPlayers[2] = 7;
+        session.HiddenPlayers.Span[2] = 7;
         session.Alliances[0] = 7;
         session.Alliances[80] = 1;
         session.TotalMade.LocalCounts[5] = 3;

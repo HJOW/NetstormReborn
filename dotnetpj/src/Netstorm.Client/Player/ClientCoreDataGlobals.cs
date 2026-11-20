@@ -21,7 +21,7 @@ public sealed class ClientCoreDataGlobals
     private Memory<byte> _players;
 
     /// <summary>실제 한 DWORD다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
-    private uint _active;
+    public UIntBox ActiveBox { get; } = new();
 
     /// <summary>새 Client에서만 현재 NULL·active 0·실제 9기록·별도 lastKnown을 한 번 구성한다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
     public ClientCoreDataGlobals()
@@ -40,8 +40,8 @@ public sealed class ClientCoreDataGlobals
     /// <summary>실제 한 DWORD다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
     public uint Active
     {
-        get => _active;
-        set => _active = value;
+        get => ActiveBox.Value;
+        set => ActiveBox.Value = value;
     }
 
     /// <summary>같은 고정 캐시 10바이트를 빌린다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
@@ -77,7 +77,7 @@ public sealed class ClientCoreDataGlobals
             TemplateOwner = player.TemplateOwner,
             BattleOwner = player.BattleOwner,
             PlayerKnown = player.PlayerKnown,
-            Active = _active,
+            Active = ActiveBox.Value,
             Metamap = metamap,
             Current = _current,
             Cached = _cached,
@@ -105,7 +105,7 @@ public sealed class ClientCoreDataGlobals
         player.TemplateOwner = borrowed.TemplateOwner;
         player.BattleOwner = borrowed.BattleOwner;
         player.PlayerKnown = borrowed.PlayerKnown;
-        _active = borrowed.Active;
+        ActiveBox.Value = borrowed.Active;
         _current = borrowed.Current;
     }
 
@@ -124,7 +124,7 @@ public sealed class ClientCoreDataGlobals
         player.TemplateOwner = borrowed.TemplateOwner;
         player.BattleOwner = borrowed.BattleOwner;
         player.PlayerKnown = borrowed.PlayerKnown;
-        _active = borrowed.Active;
+        ActiveBox.Value = borrowed.Active;
         _current = borrowed.Current;
     }
 }
