@@ -2242,6 +2242,7 @@ public sealed partial class HostSession
         _vortexAssetCarrier = carrier;
         _vortexAssetPostPop = body;
         terrainPostPop.SetAssetPostPop(body);
+        _livePostPop?.SetAssetPostPop(body);
         // 간헐천 정기 분배를 공장 분배보다 먼저 둔다. 공장 사슬이 간헐천 사슬을 감싸므로 해제 순서는 공장이 먼저다.
         // 2026-11-19 0.634에서 R4-4 간헐천 정기용으로 추가했다.
         BuildGeyserRegularDevices(types);
@@ -2311,6 +2312,7 @@ public sealed partial class HostSession
         var body = new RawFactoryPostPop(Pool, hash, types, WorldFrames, terrainPostPop, carrier, state, hooks);
         _factoryPostPop = body;
         terrainPostPop.SetFactoryPostPop(body);
+        _livePostPop?.SetFactoryPostPop(body);
         _beforeFactoryRegular = processes.Regular();
         processes.SetRegularHandler(RegularHandlerWithFactory(_beforeFactoryRegular));
     }
@@ -2698,6 +2700,7 @@ public sealed partial class HostSession
         _fencePostPop = postPop;
         RawPostPop terrainPostPop = _terrainPostPop ?? throw new InvalidOperationException("펜스 후처리 지형 분배 미연결");
         terrainPostPop.SetFencePostPop(postPop);
+        _livePostPop?.SetFencePostPop(postPop);
         var regular = new RawFenceRegular(Pool, WorldFrames, frames, new FenceRegularHooks
         {
             Neighbor = (sid, direction) => neighbors.Neighbor(sid, direction),

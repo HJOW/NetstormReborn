@@ -20,6 +20,10 @@ public sealed class HostMissionAudio : IDisposable
     private readonly Func<double> _wallSeconds;
     /// <summary>미션마다 새 프로세스 상태를 빌리되 마지막 연결만 현재 프레임을 갱신한다.</summary>
     private SoundProcessState? _processState;
+    /// <summary>현재 미션의 보호막과 건설이 공유하는 실제 소리 프로세스 생성기다.</summary>
+    private SoundProcessSystem? _soundProcesses;
+    /// <summary>다른 세션의 소리 프로세스를 빌리지 않도록 현재 실제 미션을 식별한다.</summary>
+    private HostSession? _soundSession;
 
     /// <summary>실제 파일 경계를 조립하고 음소거가 아니며 옵션이 켜진 Windows에서만 장치를 연다.</summary>
     public HostMissionAudio(HostStartupScene startup, nint window, bool muted, Func<double> wallSeconds)
@@ -49,6 +53,7 @@ public sealed class HostMissionAudio : IDisposable
         };
         var system = new SoundProcessSystem(session.PlayerProcesses, _processState,
             SoundProcessSystem.MakeSoundProcessHooks(_player, _wallSeconds));
+        _soundProcesses = system; _soundSession = session;
         var shield = new PriestShieldHooks
         {
             // cpppj 조립과 같이 실제 Add에서 관리 객체를 할당하며 선행 예약은 성공 관문이다.
@@ -74,6 +79,31 @@ public sealed class HostMissionAudio : IDisposable
 
     /// <summary>플레어/건설의현재위치·실제이름·flags를같은원본재생기로전달한다. 음소거도원문관문을사용한다.</summary>
     public void PlayEffectAt(float x, float y, string name, uint flags) => _player.PlayOnceAt(x, y, _list.Lookup(name), flags, 0);
+
+    /// <summary>같은 실제47번 프로세스·이름표·위치/전역 재생기를 건설 진행에 빌린다.</summary>
+    public ConstructionProcessHooks ConstructionHooks(HostSession session, IReadOnlyList<RiftTypeDefinition> definitions)
+    {
+        ArgumentNullException.ThrowIfNull(session); ArgumentNullException.ThrowIfNull(definitions);
+        if (!ReferenceEquals(session, _soundSession) || _soundProcesses is null)
+            throw new InvalidOperationException("건설 소리는 같은 미션의 소리 프로세스 연결이 필요합니다");
+        SoundProcessSystem sounds = _soundProcesses;
+        return new()
+        {
+            LoadSound = _list.Lookup, ReserveSound = static () => true,
+            AttachSound = (parent, sound, alternate, flags) =>
+            {
+                if (sounds.Add(parent, sound, alternate, flags) is null) throw new InvalidOperationException("건설 실제 진행음 부착 실패");
+            },
+            PlayAt = PlayEffectAt,
+            ReadySound = type =>
+            {
+                if (type < 70 || type - 70 >= definitions.Count) throw new ArgumentOutOfRangeException(nameof(type), "건설 준비 소리 TYPE 오류");
+                string? name = definitions[(int)type - 70].String("buildDoneSound");
+                return string.IsNullOrEmpty(name) ? 0 : _list.Lookup(name);
+            },
+            Play = sound => _player.Play(sound, 0, 0, 0, 0, 0),
+        };
+    }
 
     /// <summary>모든 미션 프로세스 반납 뒤 실제 장치·버퍼 소유권을 반납한다.</summary>
     public void Dispose() { if (OperatingSystem.IsWindows()) _device.Dispose(); }

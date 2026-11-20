@@ -305,6 +305,8 @@ public sealed class ConstructionProcess : SquidProcess
     {
         _logic = logic; Fields = fields.Copy();
     }
+    /// <summary>같은Kernel의 다른 건설 owner를 보존하도록 현재 진행 본체의 정체성을 확인한다.</summary>
+    public bool BelongsTo(RawConstructionProcess logic) => ReferenceEquals(_logic, logic);
     /// <summary>Kill 후 등록 여부는 미리 읽은Host·PID로 확인하며 제거된 멤버를 다시 읽지 않는다.</summary>
     public override void RunFrame()
     {

@@ -53,7 +53,7 @@ public sealed partial class HostSession
     private PlayerWorldHooks BindLivePlayerWorld()
     {
         if (_livePlayerHooks is not null) return _livePlayerHooks;
-        if (_fortFactory is null || _playerOwner is null || _terrainHash is null
+        if (_fortFactory is null || _fortBuilding is null || _playerOwner is null || _terrainHash is null
             || _terrainSpots is null || _terrainDisplay is null || _terrainPopTypes is null)
             throw new InvalidOperationException("Player 월드 장치는 요새 객체 장치 뒤에 연결해야 한다");
 
@@ -65,8 +65,14 @@ public sealed partial class HostSession
         var inner = new RawPostPop(Pool, types, TerrainBookkeeping);
         // 실제 호스트의 같은 현재 TYPE를 빌리되 최초 비용 snapshot은 별도로 보존한다.
         inner.BindCurrentTypes(types);
+        // 전용 장치가 먼저 준비된 경우도 같은 실제 후처리 본체를 빌린다.
+        if (_vortexAssetPostPop is not null) inner.SetAssetPostPop(_vortexAssetPostPop);
+        if (_factoryPostPop is not null) inner.SetFactoryPostPop(_factoryPostPop);
+        if (_fencePostPop is not null) inner.SetFencePostPop(_fencePostPop);
         var pop = new RawPop(Pool, hash, _terrainSpots, display, inner);
         var unpop = new RawUnpop(Pool, hash, _terrainSpots, display);
+        // 요새/지형과 같은 실제 건물 옆면을 공유해 신규 건물의 공간 등록과 완료 재등록을 처리한다.
+        pop.SetBuildingSide(_fortBuilding); unpop.SetBuildingSide(_fortBuilding);
         _livePostPop = inner; _livePop = pop; _liveUnpop = unpop;
         _liveFrame = new SquidFrame(Pool, types, SquidFrameBinding.MakeSquidFrameHooks(Pool, types, display, unpop, pop));
         _liveFrame.BindCurrentTypes(types);

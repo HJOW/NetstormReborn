@@ -129,7 +129,7 @@ public sealed class HostMissionBurning : IDisposable
             Release = static _ => { }, // 실제관리배열/등록/Kernel이 소유버퍼와객체를 반납한다.
         };
         session.BuildBurningWorldDevices(FrameState, _palette, () => _frame, hooks, audio.BulfHurt);
-        Construction = new(session, startup, screen, Capture, Dirty, () => _viewBound);
+        Construction = new(session, startup, screen, Capture, Dirty, () => _viewBound, audio, definitions);
         session.BuildFlareWorldDevices(audio.PlayEffectAt);
     }
     /// <summary>실제 프레임 준비 위치에서 현재 원문시각/프레임번호를 공급한다. 커널 실행은 수행하지 않는다.</summary>

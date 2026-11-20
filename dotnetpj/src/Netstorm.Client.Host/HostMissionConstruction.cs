@@ -29,10 +29,12 @@ public sealed class HostMissionConstruction : IDisposable
     /// <summary>이미 연결한 공통 목록과 캡처를 빌리고 실제COL의 두 색 띠·화면 출력을 조립한다.</summary>
     [SupportedOSPlatform("windows")]
     public HostMissionConstruction(HostSession session, HostStartupScene startup, Screen screen,
-        RawShapeToBuffer capture, DirtyRegions dirty, Func<bool> viewBound)
+        RawShapeToBuffer capture, DirtyRegions dirty, Func<bool> viewBound,
+        HostMissionAudio audio, IReadOnlyList<RiftTypeDefinition> definitions)
     {
         ArgumentNullException.ThrowIfNull(session); ArgumentNullException.ThrowIfNull(startup); ArgumentNullException.ThrowIfNull(screen);
         ArgumentNullException.ThrowIfNull(capture); ArgumentNullException.ThrowIfNull(dirty); ArgumentNullException.ThrowIfNull(viewBound);
+        ArgumentNullException.ThrowIfNull(audio); ArgumentNullException.ThrowIfNull(definitions);
         if (!OperatingSystem.IsWindows()) throw new PlatformNotSupportedException("현재 건설 팔레트 메모리는 Windows 전용이다");
         _session = session; _screen = screen; _viewBound = viewBound; _memory = new();
         var visual = new ConstructionVisualHooks
@@ -67,6 +69,9 @@ public sealed class HostMissionConstruction : IDisposable
         {
             Invalidate = rect => dirty.Add(new(rect.Left, rect.Top, rect.Right, rect.Bottom)), Draw = Draw,
         });
+        ConstructionProcessHooks progress = audio.ConstructionHooks(session, definitions);
+        progress.Refresh = () => dirty.Add(new(0, 0, screen.Width, screen.Height));
+        session.BuildConstructionProgressWorldDevices(progress);
     }
 
     /// <summary>원본 blit 요청을 현재 화면의 끝을 제외하는clip에 제출하고255 투명 픽셀을 보존한다.</summary>
