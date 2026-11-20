@@ -432,4 +432,8 @@
     <None Include="../../../cpppj/tests/fixtures/flare-x86.tsv" Link="X86/flare-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/bomb-status-flare-x86.tsv" Link="X86/bomb-status-flare-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 세 원본PE의 건설 프로세스 전체2868행을 불변 자료로 공유한다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/constructionprocess-x86.tsv" Link="X86/constructionprocess-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

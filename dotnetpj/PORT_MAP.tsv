@@ -593,6 +593,8 @@ cpppj/src/o/RawConstructionLifetime.cpp	Netstorm.Core/Original/RawRenderRegistry
 cpppj/src/o/RawConstructionLifetime.h	Netstorm.Core/Original/RawConstructionLifetime.cs	3e6286eb8bab56d6cbf26b35d567ab410ac1afde	L1
 cpppj/src/o/RawConstructionLifetime.h	Netstorm.Core/Original/RawRenderRegistry.cs	3e6286eb8bab56d6cbf26b35d567ab410ac1afde	L1
 cpppj/src/o/RawConstructionLocal.h	Netstorm.Core/Original/RawAiDeployment.cs	3a0459751adcd933f0d8009b224a4b45f1c6fc65	port
+cpppj/src/o/RawConstructionProcess.cpp	Netstorm.Core/Original/RawConstructionProcess.cs	c649f855d7f19a87fe78fb5abd14d0024db57544	port
+cpppj/src/o/RawConstructionProcess.h	Netstorm.Core/Original/RawConstructionProcess.cs	c649f855d7f19a87fe78fb5abd14d0024db57544	port
 cpppj/src/o/RawConstructionVisual.h	Netstorm.Core/Original/ConstructionVisualFields.cs	5389347d381dbdfbbbfc67f540ed3d5bf702f412	port
 cpppj/src/o/RawConstructionVisual.h	Netstorm.Core/Original/ConstructionVisualImage.cs	5389347d381dbdfbbbfc67f540ed3d5bf702f412	port
 cpppj/src/o/RawConstructionVisual.h	Netstorm.Core/Original/RawRenderRegistry.cs	5389347d381dbdfbbbfc67f540ed3d5bf702f412	port
