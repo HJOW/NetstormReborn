@@ -1,0 +1,66 @@
+[Header]
+missionType = "Tutorial"
+aid=1
+
+missionNumber = 1
+
+myStartMoney = 3000
+myTech = "sunWalker;rainBattery;sunAviary;sunCannon"
+
+aiName = "간수"
+aiTech = "sunWalker;windBattery;sunArcher"
+aiStartMoney = 0
+aiGeyserAttachments = 1
+aiCollectors = 1
+aiTimeBetweenMoves = 6
+aiAbility="!ENCIRCLE_ENEMY_ISLAND;!USE_PRIEST_TO_COLLECT"
+
+title="전쟁의 시작!"
+
+[A.]
+<h2>전쟁의 시작!</h2>
+<p>
+<i>"어둠과 폭정은 우리의 족쇄에 채워진 자물쇠입니다. 열쇠가 될 용기는
+누구에게 있습니까?"
+--빛의 탄식</i>
+<p>
+님버스의 백성을 정복해 노예로 만든 어둠의 군주들은
+이제 하늘의 도전받지 않는 통치자가 되었습니다.
+<p>
+그들은 당신의 섬에 경비병을 세우고 사제를 사슬로 묶었지만
+과감한 습격으로 성직자를 풀어 냈습니다! 지금이 속박에서 벗어나
+님버스 전체를 위해 일격을 가할 기회입니다!
+
+$Button=지식 보기,ShowTechnology,55
+$Button=미션 시작,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>성공!</h2>
+<p>
+당신의 섬이 이제 자유를 되찾았습니다!
+<p>
+다음 단계는 자유를 사랑하는 더 많은 섬을
+당신의 깃발 아래 모으는 것입니다.
+<p>
+뒤에 많은 지도자가 있어야만
+어둠의 세력을 무너뜨리고 없앨 수 있습니다!
+<$Config,Done{mission.fileName}=1>
+$Button=미션 나가기,MissionAbort,1
+$Button=다음 미션,MissionBegin,MasterOfWhirligigs
+
+
+[Failed]
+<h2>실패!</h2>
+<p>
+기습 공격이 실패했습니다!
+<p>
+어둠의 세력은 두 번째에는 그리 방심하지 않을 것입니다. 그들은
+여자 셋 중 하나를 섬에서 내던지고 서른다섯 살 아래의 남자는 모두
+끌고 가 강제 노동을 시키라고 명령합니다.
+<p>
+당신의 유일한 자유의 기회는 손에 잡히지 않는 바람처럼 스쳐 지나갔습니다.
+$Button=계속,Tell,TryAgain
+
+
+[END]

@@ -2427,6 +2427,38 @@
       "size": 256,
       "sha256": "400f45484bb56f9c5343f78cbdad452709adfc3ad10a1f7f312eed40c141f330",
       "use": "한국어 캠페인 목록 파일(UTF-8): 원본 offical6.english 의 제목·소개·미션 이름(명령·치환 키는 원문 그대로)"
+    },
+    {
+      "path": "d/TheWarBegins.korean",
+      "source": "webpj/translations/TheWarBegins.korean",
+      "bundle": "korean",
+      "size": 1903,
+      "sha256": "6df5664779b48006fa9a892c752c0f0ac5c60bf84ce67444e584beb6fce6ff47",
+      "use": "한국어 캠페인 미션 대본(UTF-8): 원본 TheWarBegins.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
+    },
+    {
+      "path": "d/MasterOfWhirligigs.korean",
+      "source": "webpj/translations/MasterOfWhirligigs.korean",
+      "bundle": "korean",
+      "size": 1914,
+      "sha256": "fb24e5c9dea832020b80a0d2ab7a5669b2d96f54b72fce1993eb54791f062dd7",
+      "use": "한국어 캠페인 미션 대본(UTF-8): 원본 MasterOfWhirligigs.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
+    },
+    {
+      "path": "d/SaveTheIsland.korean",
+      "source": "webpj/translations/SaveTheIsland.korean",
+      "bundle": "korean",
+      "size": 1865,
+      "sha256": "3bbed0bbcc05aada5c5d61fc0458edc9b5830c36f052f7871021df24b83e7beb",
+      "use": "한국어 캠페인 미션 대본(UTF-8): 원본 SaveTheIsland.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
+    },
+    {
+      "path": "d/FragileFortune.korean",
+      "source": "webpj/translations/FragileFortune.korean",
+      "bundle": "korean",
+      "size": 1954,
+      "sha256": "27ae6aeee45928492c13d6f950eb572f13a232c3465132f72829e7c6a8452255",
+      "use": "한국어 캠페인 미션 대본(UTF-8): 원본 FragileFortune.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
     }
   ]
 }

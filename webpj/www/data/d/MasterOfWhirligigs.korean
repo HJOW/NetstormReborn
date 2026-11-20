@@ -1,0 +1,63 @@
+[Header]
+missionType = "Tutorial"
+aid=1
+
+missionNumber = 1
+
+myStartMoney = 2000
+myTech = "sunWalker;windBattery;sunArcher;sunCannon"
+
+aiName = "훨리기그의 지배자"
+aiTech = "sunWalker;rainBattery;sunAviary"
+aiStartMoney = 2000
+aiGeyserAttachments = 1
+aiCollectors = 1
+aiTimeBetweenMoves = 6
+aiAbility="!CONCENTRATE_FIRE;!REPEAT_SUCCESSFUL_DROPS"
+
+title="훨리기그의 지배자"
+
+[A.]
+<h2>훨리기그의 지배자</h2>
+<p>
+<i>"님버스 전쟁의 조상과 기원은 님버스의 전쟁입니다."
+--갈트루프 엔딕스, 역사학자</i>
+<p>
+어둠의 군주들은 당신의 섬이 약하다고 믿습니다.
+그들은 당신의 땅을 빼앗고 백성을 노예로 삼으려고
+훨리기그의 지배자를 보냈습니다.
+<p>
+적들은 당신이 무능하다고 생각합니다. 그들의 사악한 대사제를
+포획해 퓨리에게 희생시켜 그들이 틀렸음을 보여 주세요.
+
+$Button=지식 보기,ShowTechnology,55
+$Button=미션 시작,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>성공!</h2>
+<p>
+이 잔혹하고 포악한 공격으로부터 당신은 백성을 훌륭하게
+지켜 냈습니다! 이른바 훨리기그의 "지배자"라는 자의
+대사제를 포획해 도살했습니다. 이제 누가 진정한
+지배자인지 분명하지 않습니까?
+<$Config,Done{mission.fileName}=1>
+$Button=미션 나가기,MissionAbort,1
+$Button=다음 미션,MissionBegin,SaveTheIsland
+
+
+[Failed]
+<h2>실패!</h2>
+<p>
+이 전투에서 적 사제를 포획하지 못했습니다.
+<p>
+훨리기그의 지배자가 당신의 군대를 초토화했습니다. 어둠의 군주들이
+당신에 대해 옳았던 것 같습니다.
+<p>
+이제 당신은 어둠의 군주들의 제국에서 하찮은 부하가 되고
+당신의 백성은 사슬에 묶인 채 겨우 목숨을 이으며 숨을 쉴 때마다
+당신의 한심한 이름을 저주할 것입니다.
+$Button=계속,Tell,TryAgain
+
+
+[END]

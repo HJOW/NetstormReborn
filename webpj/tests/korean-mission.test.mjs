@@ -9,6 +9,7 @@ import { decodeOriginalText } from '../www/assets/text-encoding.js';
 import { GameData } from '../www/assets/game-data.js';
 import { MissionScript } from '../www/core/mission-script.js';
 import { XlatTable } from '../www/assets/xlat.js';
+import { KOREAN_CAMPAIGN_MISSIONS } from '../www/assets/korean-assets.js';
 
 // 원본과 동일한 실행 키·단계·명령을 유지하고 안내만 한국어로 출력한다.
 test('한국어 Tutorial1: 실행 설정과 단계별 명령은 원본과 같다', () => {
@@ -119,10 +120,10 @@ test('한국어 Tutorial6: 실행 설정과 단계별 명령은 원본과 같다
 });
 
 // 번역 파일이 아직 없는 다음 튜토리얼은 기존 영어 대체 경로를 유지한다.
-test('한국어 미션: 번역하지 않은 TheWarBegins는 영어 원문으로 대체한다', () => {
+test('한국어 미션: 번역하지 않은 FinalConfrontation은 영어 원문으로 대체한다', () => {
     const manifest = JSON.parse(fs.readFileSync(path.join(DATA_ROOT, 'manifest.json'), 'utf8'));
     const files = readDataMap(manifest.files.filter((entry) => entry.bundle === 'menu' || entry.bundle === 'korean').map((entry) => entry.path));
-    const data = GameData.build({ files, language: 'korean' }), mission = new MissionScript(data, 'TheWarBegins');
+    const data = GameData.build({ files, language: 'korean' }), mission = new MissionScript(data, 'FinalConfrontation');
     try { assert.ok(mission.loaded); assert.match(mission.section('A.'), /[A-Za-z]{4}/); assert.doesNotMatch(mission.section('A.'), /[가-힣]/u); }
     finally { mission.dispose(); }
 });
@@ -151,4 +152,30 @@ test('한국어 미션 정보: 유닛 이름과 서식 토큰을 보존한다', 
         assert.equal(translated.endsWith('\n'), pattern.endsWith('\n'), pattern);
     }
     assert.equal(table.translate('%sConstruct~.'), '%s건설~.'); assert.equal(table.translate('%sTemple'), '%s신전');
+});
+
+// 한국어로 옮긴 캠페인 미션 대본마다 원본과 같은 실행 설정(제목·적 이름만 번역)·섹션 순서·버튼/설정 명령을 유지하고 한국어 미션 설정으로 읽히는지 본다. (2026-11-20 WB04-E1112)
+test('한국어 캠페인 미션 대본: 실행 설정·섹션·명령은 원본과 같고 안내·제목·적 이름만 한국어이다', () => {
+    const manifest = JSON.parse(fs.readFileSync(path.join(DATA_ROOT, 'manifest.json'), 'utf8'));
+    const files = readDataMap(manifest.files.filter((entry) => entry.bundle === 'menu' || entry.bundle === 'korean').map((entry) => entry.path));
+    const archive = new TaffArchive(readData('netstorm.tarc'));
+    const header = (text) => text.split(/^\[(?!Header\])/m)[0].split(/\r?\n/).filter((line) => line.trim() && !/^(title|aiName)\s*=/i.test(line)).join('\n');
+    const sections = (text) => [...text.matchAll(/^\[([^\]]+)\]/gm)].map((match) => match[1]);
+    const commands = (text) => [...text.matchAll(/^\$Button=[^,]*,([^\r\n]+)|(<\$[^>]+>)/gm)].map((match) => match[1] ?? match[2]);
+    const pictures = (text) => [...text.matchAll(/<!"[^>]+>/g)].map((match) => match[0]);
+    const data = GameData.build({ files, language: 'korean' });
+    assert.ok(KOREAN_CAMPAIGN_MISSIONS.length >= 4);
+    for (const name of KOREAN_CAMPAIGN_MISSIONS) {
+        const source = fs.readFileSync(path.join(REPO_ROOT, `webpj/translations/${name}.korean`), 'utf8');
+        assert.equal(decodeOriginalText(files.get(`d/${name}.korean`)), source, name);
+        const original = decodeOriginalText(archive.read(`\\d\\${name}.english`));
+        assert.equal(header(source), header(original), `${name} 머리글`); assert.deepEqual(sections(source), sections(original), `${name} 섹션`);
+        assert.deepEqual(commands(source), commands(original), `${name} 명령`); assert.deepEqual(pictures(source), pictures(original), `${name} 그림`);
+        // 제목과 적 이름은 한국어이고 영어 문자 단어가 남지 않는다.
+        const mission = new MissionScript(data, name);
+        try {
+            assert.match(mission.get('title'), /[가-힣]/u, `${name} 제목`); assert.match(mission.get('aiName'), /[가-힣]/u, `${name} 적 이름`);
+            for (const section of ['A.', 'Succeeded', 'Failed']) { const body = mission.section(section); assert.match(body, /[가-힣]/u, `${name} ${section}`); assert.doesNotMatch(body.replace(/<[^>]*>|\$Button=[^\r\n]*|\{[^}]*\}/g, ''), /[A-Za-z]{4,}/u, `${name} ${section} 영어 잔재`); }
+        } finally { mission.dispose(); }
+    }
 });
