@@ -1112,3 +1112,8 @@ cpppj/src/o/RawCarrierContentNotice.cpp	Netstorm.Core/Original/RawCarrierContent
 cpppj/src/o/RawCarrierContentNotice.h	Netstorm.Core/Original/RawCarrierContentNotice.cs	39280bfc24df26a8589aa566557b7bcfe43e3bf3	port
 cpppj/src/o/RawPacketCopy.cpp	Netstorm.Net/RawPacketCopy.cs	b9cb1abf46965bd8ac7c935497ba75ee70dac6c3	port
 cpppj/src/o/RawPacketCopy.h	Netstorm.Net/RawPacketCopy.cs	b9cb1abf46965bd8ac7c935497ba75ee70dac6c3	port
+cpppj/src/o/RawConnectionRegistry.cpp	Netstorm.Net/RawConnectionRegistry.cs	5756ffd5ff23335839974c3c6f2b2aacd7b35618	port
+cpppj/src/o/RawConnectionRegistry.cpp	Netstorm.Net/ConnectionDeviceLifetime.cs	5756ffd5ff23335839974c3c6f2b2aacd7b35618	port
+cpppj/src/o/RawConnectionRegistry.h	Netstorm.Net/RawConnectionRegistry.cs	5756ffd5ff23335839974c3c6f2b2aacd7b35618	port
+cpppj/src/o/RawConnectionRegistry.h	Netstorm.Net/ConnectionDeviceLifetime.cs	5756ffd5ff23335839974c3c6f2b2aacd7b35618	port
+cpppj/src/o/RawTransportPolling.h	Netstorm.Net/RawConnectionRegistry.cs	783b12763e2a90f3e2a367440e8e47ad866e8686	port

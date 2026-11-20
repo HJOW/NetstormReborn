@@ -469,4 +469,9 @@
   <ItemGroup>
     <None Include="Fixtures/packet-copy-x86.tsv" Link="X86/packet-copy-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 같은원문등록288/정리580입력을한소비자에연결한다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/connection-registration-x86.tsv" Link="X86/connection-registration-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/connection-cleanup-x86.tsv" Link="X86/connection-cleanup-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

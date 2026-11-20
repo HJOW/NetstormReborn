@@ -1,7 +1,7 @@
 // 로컬 연결의 닫힘·해제·전체 정리를 공유한다.
 // 근거: cpppj `src/o/RawConnectionCleanup.h`·`RawConnectionCleanup.cpp`(004df440·004df520·004e2940·004e29c0·004e2a10·004e2a00).
-// 등록 표(`ConnectionRegistration`)와 같은 전역·훅을 쓰며 분배기 호출은 3차 로컬 구현 때 잇는다.
-// 2026-11-11 멀티플레이 사전 구현에서 추가했다. 지시대로 검사는 건너뛴다.
+// 같은 전역·훅을 실제 RawConnectionRegistry에서 사용한다.제품 양끝/Poll은 후속이다.
+// 기존 사전 구현을0.690에서 원본580입력·현재값/미설치 효과로 대조한다.
 
 namespace Netstorm.Net;
 
@@ -77,11 +77,9 @@ public static class ConnectionCleanup
     /// <param name="connection">닫을 연결이다. 호출자가 소유한다.</param>
     /// <param name="destroy">깊이 0일 때 부를 파괴 효과다.</param>
     /// <param name="release">깊이 0일 때 부를 반납 효과다.</param>
-    public static void DeferConnectionClose(PacketConnection connection, Action destroy, Action release)
+    public static void DeferConnectionClose(PacketConnection connection, Action? destroy, Action? release)
     {
         ArgumentNullException.ThrowIfNull(connection);
-        ArgumentNullException.ThrowIfNull(destroy);
-        ArgumentNullException.ThrowIfNull(release);
         uint depth = connection.Depth;
         connection.Flags |= ClosedFlag;
         if (depth == 0u)

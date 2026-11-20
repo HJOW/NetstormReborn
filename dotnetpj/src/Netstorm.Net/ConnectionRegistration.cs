@@ -1,7 +1,7 @@
 // 로컬 연결의 송수신기·대기 등록과 재배치를 공유한다.
 // 근거: cpppj `src/o/RawConnectionRegistration.h`·`RawConnectionRegistration.cpp`(004e2870·004df4f0·004e27b0).
-// 정리 본체(`RawConnectionCleanup.h` 함수들) 연결은 3차 로컬 구현 때 잇는다. 정리 전역·훅 모양은 이 단위에 둔다.
-// 2026-11-11 멀티플레이 사전 구현에서 추가했다. 지시대로 검사는 건너뛴다.
+// 실제 RawConnectionRegistry가 같은 등록/정리 본체를 사용하며 제품 양끝/Poll은 후속이다.
+// 기존 사전 구현을0.690에서 원본288입력·현재값/반납과 대조한다.
 
 namespace Netstorm.Net;
 
@@ -10,23 +10,43 @@ namespace Netstorm.Net;
 // 정리 표가 함께 쓰는 동기화 수다. 원본 참조 대신 같은 보관자를 둔다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.
 public sealed class ConnectionSyncState
 {
+    /// <summary>독립 소유자의 실제 동기화DWORD다.</summary>
+    private uint _synchronization;
+    /// <summary>독립 소유자의 실제 대기 개수DWORD다.</summary>
+    private uint _pendingCount;
+    /// <summary>빌린 현재 동기화 주소의 읽기다.</summary>
+    private readonly Func<uint>? _readSynchronization;
+    /// <summary>빌린 같은 동기화 주소의 쓰기다.</summary>
+    private readonly Action<uint>? _writeSynchronization;
+    /// <summary>Registry가 직접 소유한 현재 대기 개수의 읽기다.</summary>
+    private readonly Func<uint>? _readPendingCount;
+    /// <summary>Registry의 같은 대기 개수에 대한 쓰기다.</summary>
+    private readonly Action<uint>? _writePendingCount;
+    /// <summary>기존 독립 보관자의BSS0을 만든다.</summary>
+    public ConnectionSyncState() { }
+    /// <summary>동기화와 개수의 서로 다른 실제 소유 주소를 복사 없이 빌린다.</summary>
+    internal ConnectionSyncState(Func<uint> readSynchronization, Action<uint> writeSynchronization, Func<uint> readPendingCount, Action<uint> writePendingCount)
+    {
+        _readSynchronization = readSynchronization; _writeSynchronization = writeSynchronization;
+        _readPendingCount = readPendingCount; _writePendingCount = writePendingCount;
+    }
     /// <summary>005c8bf4의 서버 동기화 값이다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    public uint Synchronization;
+    public uint Synchronization { get => _readSynchronization?.Invoke() ?? _synchronization; set { if (_writeSynchronization is { } write) write(value); else _synchronization = value; } }
 
     /// <summary>00543604의 대기 개수 DWORD다. 줄 때 unsigned 감김을 그대로 둔다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    public uint PendingCount;
+    public uint PendingCount { get => _readPendingCount?.Invoke() ?? _pendingCount; set { if (_writePendingCount is { } write) write(value); else _pendingCount = value; } }
 }
 
 // 정리 표의 같은 저장소다. 22칸 송수신·버퍼와 32칸 대기를 본다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.
 public sealed class ConnectionCleanupGlobals
 {
-    /// <summary>005e4a18의 송수신 22칸이다. 0번은 쓰지 않는다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
+    /// <summary>005e4a18의 송수신22칸이다.전체정리는0번도방문한다.</summary>
     public uint[] Transceivers { get; }
 
     /// <summary>005e4a70의 버퍼 22칸이다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
     public uint[] Buffers { get; }
 
-    /// <summary>005e46f0의 대기 32칸이다. 0번은 비워 둔다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
+    /// <summary>005e46f0의 대기32칸이다.새accept는1..31을쓰고전체정리는0칸도방문한다.</summary>
     public uint[] Pending { get; }
 
     /// <summary>같은 동기화 보관자다. 호출자가 소유하며 세션 수명과 같이 둔다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
