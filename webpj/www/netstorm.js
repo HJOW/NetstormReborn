@@ -75,6 +75,7 @@ import { KnowledgeMenuKind } from './core/raw-knowledge-menu.js';
 import { readGameTimeSeconds } from './core/game-time-display.js';
 import { idleMainMenuActivity } from './core/main-menu-activity.js';
 import { frameDue, frameRateChoices, normalizeFrameRate, parseFrameRateTarget } from './core/frame-rate-option.js';
+import { languageChoices, languageOfChoice, parseLanguageTarget, savedLanguage } from './platform/language-choice.js';
 import { dispatchViewKeyInput } from './core/view-key-input.js';
 import { GameMenuButton } from './ui/game-menu-button.js';
 import { CHAT_RECORD_BYTES, RawChatChannels } from './core/raw-chat-channels.js';
@@ -500,7 +501,7 @@ export class Netstorm {
         const requestedAspect = options.aspect ?? params.get('aspect') ?? AUTO_ASPECT;
         // 확정된 옵션 모음이다.
         this.options = {
-            language: normalizeLanguage(options.language ?? params.get('lang') ?? globalThis.navigator?.language),
+            language: normalizeLanguage(options.language ?? params.get('lang') ?? savedLanguage(globalThis.localStorage) ?? globalThis.navigator?.language),
             debug: options.debug ?? params.has('debug'),
             previewMap: options.previewMap ?? (params.has('map') ? params.get('map') || 'savetheisland' : null),
             fillWindow: options.fillWindow ?? true,
@@ -520,6 +521,8 @@ export class Netstorm {
             // 바깥 링크를 여는 함수 (문서, 판정 결과) => 열었으면 true 이다. 기본(null)은 platform/external-opener.js 의 새 탭/창 열기이다.
             // 무브라우저 실행(tools/headless.mjs)과 검사가 실제 탭을 열지 않도록 바꿔 끼운다. (2026-11-07 WB03-AD)
             openExternal: options.openExternal ?? null,
+            // 언어를 바꾼 뒤 페이지를 다시 불러오는 함수 () => void 이다. 기본(null)은 location.reload 이며 검사가 실제 다시 불러오기 없이 호출만 받도록 바꿔 끼운다. (2026-11-20 WB04-E1095)
+            reload: options.reload ?? null,
             prepare: options.prepare ?? (async () => {}),
             onStateChange: options.onStateChange ?? null,
             onMenuCommand: options.onMenuCommand ?? null,
@@ -837,6 +840,17 @@ export class Netstorm {
     // 현재 설정에서 구름 전역 옵션을 읽는다. 설정이나 Client가 아직 없으면 실제 초기화 시 다시 적용한다.
     _syncClientCloudOptions() {
         if (this._clientKencloud && this._gameData) this._clientKencloud.readOptions(this._gameData);
+    }
+
+    // 옵션 메뉴 Language 선택을 적용한다. 선택을 설정(`language`)에 저장하고 주소의 `lang` 매개변수를 같은 출처 기록 교체(history.replaceState)로 지워(저장한 선택을 가리지 않게) 페이지를 다시 불러 새 언어 묶음으로 시작한다. 주소 이동(location.href·assign)은 외부 접속 감사가 금지하므로 쓰지 않는다. 현재 언어와 같으면 false 다. 다시 불러오는 방식은 options.reload() 로 바꿀 수 있다(검사용). (2026-11-20 WB04-E1095)
+    _chooseLanguage(number) {
+        const language = languageOfChoice(number);
+        if (language === null || language === this.options.language) return false;
+        this._settings?.set('language', number);
+        const view = this._view(), params = new URLSearchParams(view.location.search);
+        if (params.has('lang')) { params.delete('lang'); const query = params.toString(); view.history.replaceState(null, '', `${view.location.pathname}${query ? `?${query}` : ''}${view.location.hash}`); }
+        (this.options.reload ?? (() => view.location.reload()))();
+        return true;
     }
 
     // 현재 설정의 useBanners(섬 소유자 표식 숨김)를 소유자 색표 저장소에 적용한다(원본 `Client::InterpretOwnerColorOptions` → `SetEnabled(GetInt("useBanners"))`). 설정에 값이 없으면 원본 Config 처럼 0 이라 소유자 색 표식(섬 테두리 파랑 등)을 보인다. 색표 준비 전이면 무시된다. (2026-11-20 WB04-E1093)
@@ -1426,7 +1440,7 @@ export class Netstorm {
             },
             demo: () => Boolean(this._clientGuide?.current()?.runtime.gate.demo),
             // 옵션 메뉴 Frame Rate 하위 항목(60·75·120 FPS)이다. (2026-11-20 WB04-E1094)
-            frameRates: () => frameRateChoices(this._settings?.get('maxFPS')),
+            frameRates: () => frameRateChoices(this._settings?.get('maxFPS')), languages: () => languageChoices(this.options.language),
             player: (owner) => session.playerRecords().subarray(owner * 180, owner * 180 + 180),
             refreshPriest: (owner) => session.refreshPriestParticipation(owner),
             enabled: (code) => WIRED_MENU_COMMANDS.has(code >>> 0), configEnabled: () => true, storeText: (value) => this._clientChatWindows.store(value),
@@ -2042,7 +2056,7 @@ export class Netstorm {
     _openPopup(target, point) {
         if (!this._mainMenu || !this._resources || !this._settings) return false;
         // 원본 비교 모드는 웹이 빼는 원본 항목도 만든다. Technical Help 는 원본 가용성 판정대로 비활성이다(웹에는 기술 도움말 프로그램이 없음). (2026-11-07 WB02-H)
-        const items = buildPopupItems(target, this._settings, { translate: this._resources.translate, includeAll: this.options.originalComparison, technicalHelpAvailable: false });
+        const items = buildPopupItems(target, this._settings, { translate: this._resources.translate, includeAll: this.options.originalComparison, technicalHelpAvailable: false, language: this.options.language });
         if (!items) {
             console.warn(`Netstorm: 알 수 없는 펼침 메뉴 '${target}' 입니다.`);
             return false;
@@ -2152,6 +2166,9 @@ export class Netstorm {
         // 옵션 메뉴 Frame Rate 항목의 대상(`Patch1101.SetFrameRate(n)`)은 창을 열지 않고 maxFPS 설정에 써서 바로 반영한다(cpppj 후순위 F1). (2026-11-20 WB04-E1094)
         const frameRate = parseFrameRateTarget(name);
         if (frameRate !== null) { this._settings?.set('maxFPS', frameRate); this._displayDirty = true; return true; }
+        // 언어 선택(`Patch1101.SetLanguage(n)`)은 설정에 저장하고 페이지를 다시 불러 적용한다. 이미 그 언어이면 아무것도 하지 않는다. (2026-11-20 WB04-E1095)
+        const languageChoice = parseLanguageTarget(name);
+        if (languageChoice !== null) return this._chooseLanguage(languageChoice);
         const result = createTellWindow({
             gameData: this._gameData,
             resources: this._resources,

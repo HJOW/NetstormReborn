@@ -35,13 +35,13 @@ test('프레임 처리 판단: 첫 프레임은 항상 처리하고 상한 간�
     last = 0; handled = 0; for (let step = 1; step <= 120; step += 1) { const now = step * 1000 / 120; if (frameDue(now, last, 120)) { handled += 1; last = now; } } assert.equal(handled, 120);
 });
 
-test('메인 메뉴 Options: 웹 항목에는 Frame Rate 하위 목록이 맨 앞에 있고 원본 비교 항목에는 없다', () => {
+test('메인 메뉴 Options: 웹 항목에는 Frame Rate 하위 목록이 있고 원본 비교 항목에는 없다', () => {
     const settings = new Settings();
-    const web = buildOptionsItems(settings), first = web[0];
+    const web = buildOptionsItems(settings), first = web.find((item) => item.label === 'Frame Rate');
     assert.equal(first.kind, 'submenu'); assert.equal(first.label, 'Frame Rate');
     assert.deepEqual(first.items.map((item) => [item.label, item.checked, item.command.name, item.command.argument]),
         [['60 FPS', false, 'Tell', 'Patch1101.SetFrameRate(60)'], ['75 FPS (Original)', true, 'Tell', 'Patch1101.SetFrameRate(75)'], ['120 FPS', false, 'Tell', 'Patch1101.SetFrameRate(120)']]);
     // 설정을 바꾸면 체크가 따라가고, 원본 스크린샷 비교용 includeAll 항목에는 만들지 않는다.
-    settings.set('maxFPS', 120); assert.deepEqual(buildOptionsItems(settings)[0].items.map((item) => item.checked), [false, false, true]);
+    settings.set('maxFPS', 120); assert.deepEqual(buildOptionsItems(settings).find((item) => item.label === 'Frame Rate').items.map((item) => item.checked), [false, false, true]);
     assert.equal(buildOptionsItems(settings, { includeAll: true }).some((item) => item.label === 'Frame Rate'), false);
 });

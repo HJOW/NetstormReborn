@@ -37,6 +37,8 @@ export const SETTING_DEFINITIONS = Object.freeze({
     useBanners: Object.freeze({ kind: 'toggle', fallback: 0 }),
     // 프레임 상한(maxFPS, 60·75·120 선택)이다. 키가 없거나 0 이면 원본 기본 75 로 해석한다(core/frame-rate-option.js). (2026-11-20 WB04-E1094)
     maxFPS: Object.freeze({ kind: 'integer', fallback: 0 }),
+    // 언어 선택이다. 0 은 자동(?lang, 없으면 브라우저 언어), 1 은 English, 2 는 한국어이며 옵션 메뉴 Language 가 쓰고 다시 불러 적용한다(platform/language-choice.js). (2026-11-20 WB04-E1095)
+    language: Object.freeze({ kind: 'integer', fallback: 0 }),
     welcomeGiven: Object.freeze({ kind: 'toggle', fallback: 0 }),
     tipNumber: Object.freeze({ kind: 'integer', fallback: 0 }),
 });

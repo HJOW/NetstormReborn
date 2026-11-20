@@ -83,6 +83,12 @@ export class RawGameMenus {
     options() {
         const hooks = this.#hooks; need(hooks.vertical, '게임 메뉴의 세로 작성 연결 누락')();
         const separator = need(hooks.separator, '게임 메뉴의 구분선 연결 누락');
+        // 언어(Language) 하위 메뉴다. 항목 이름은 각 언어 자신의 표기이며 선택은 Tell 대상 `Patch1101.SetLanguage(n)` 으로 가서 앱이 설정에 쓰고 다시 불러 적용한다(cpppj 6차 한국어). 장치가 없으면 만들지 않는다. (2026-11-20 WB04-E1095)
+        if (typeof hooks.languages === 'function') {
+            hooks.vertical();
+            for (const choice of hooks.languages()) this.#check(choice.checked, choice.label, C.tell, `Patch1101.SetLanguage(${choice.number})`);
+            need(hooks.submenu, '게임 메뉴의 하위 작성 연결 누락')(this.#text('Language'), hooks.take(), 1, 0);
+        }
         // 프레임 상한(Frame Rate) 하위 메뉴다. 선택은 Tell 대상 `Patch1101.SetFrameRate(n)` 이며 앱이 maxFPS 설정에 쓴다(cpppj 후순위 F1). 장치가 없으면 만들지 않는다. (2026-11-20 WB04-E1094)
         if (typeof hooks.frameRates === 'function') {
             hooks.vertical();
