@@ -98,6 +98,21 @@ export class SoundPlayer {
         this.#state.masterVolume = volume; if (!this.#state.initialized) return;
         this.#each((entry) => { const buffer = this.#get(entry, SOUND_FIELD.buffer); if (buffer && buffer !== SILENT_SOUND_BUFFER) this.#hooks.setVolume(buffer, (this.#get(entry, SOUND_FIELD.volume) - this.#get(entry, SOUND_FIELD.attenuation) + volume) | 0); });
     }
+    // 원본 `SoundMusic::PushMute` 의 효과음 쪽이다. 보류 깊이가 0 이면 현재 전체 음량을 예약해 두고 최소 음량(-10000)으로 낮춘 뒤 깊이를 올린다. 깊이가 있는 동안 음량 변경은 예약만 한다. 일시정지 메뉴가 쓴다. (2026-11-20 WB04-E1089)
+    pushMute() {
+        const state = this.#state;
+        if (!state.volumeHoldDepth) { state.pendingMasterVolume = state.masterVolume; this.setMasterVolume(-10000); }
+        state.volumeHoldDepth = (state.volumeHoldDepth + 1) | 0;
+    }
+    // 원본 `PopMute` 의 효과음 쪽이다. 양수 깊이만 줄이고 0 이 되면 예약한 전체 음량을 복원한다. 깊이가 0 이하이면 아무 일도 없다. (2026-11-20 WB04-E1089)
+    popMute() {
+        const state = this.#state;
+        if (state.volumeHoldDepth <= 0) return;
+        state.volumeHoldDepth = (state.volumeHoldDepth - 1) | 0;
+        if (!state.volumeHoldDepth) this.setMasterVolume(state.pendingMasterVolume);
+    }
+    // 현재 음소거 보류 깊이다(시험·정리용). (2026-11-20 WB04-E1089)
+    muteDepth() { return this.#state.volumeHoldDepth; }
     // 파일이 미적재일 때만 이름에 해당하는 실제 장치 버퍼와 감쇠를 등록한다.
     preload(name) {
         const entry = this.#list.lookup(name);

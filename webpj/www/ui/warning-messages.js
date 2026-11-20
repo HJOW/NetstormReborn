@@ -65,7 +65,8 @@ export class WarningMessages {
         this.#board = new MessageBoard(this.#state, { suppressed, lookup: (serial) => this.lookup(serial), kill: (token) => { c.lifetime.kill(token); c.changed(); },
             createText: (kind, player, parameter, source) => {
                 if (!SUPPORTED.has(kind)) throw new Error('다른 원본 메시지 생성자 미연결');
-                const token = c.token(); const node = new WarningNode(); this.#messages.set(token, node);
+                // 실제 Client Gump 루트처럼 파생 노드를 등록할 때 노드 객체가 필요한 호출자는 common.allocate(node)로 토큰을 받는다. 없으면 원문처럼 토큰만 먼저 받는다. (2026-11-20 WB04-E1089)
+                const node = new WarningNode(); const token = typeof c.allocate === 'function' ? c.allocate(node) : c.token(); this.#messages.set(token, node);
                 try { this.#message.construct(token, kind, player, parameter, source); }
                 catch (error) { if (node.textConstructed) c.lifetime.destroy(token); else this.#messages.delete(token); throw error; }
                 return { token, serial: node.serial, kind, player, parameter };

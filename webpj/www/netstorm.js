@@ -72,6 +72,7 @@ import { ProductionMaintenanceGlobals, ProductionMaintenancePanel } from './core
 import { GameMenuActions } from './core/game-menu-actions.js';
 import { gameMenuCommandValue, isGameMenuCommand, queuePlayerListKey } from './core/game-menu-commands.js';
 import { KnowledgeMenuKind } from './core/raw-knowledge-menu.js';
+import { readGameTimeSeconds } from './core/game-time-display.js';
 import { dispatchViewKeyInput } from './core/view-key-input.js';
 import { GameMenuButton } from './ui/game-menu-button.js';
 import { CHAT_RECORD_BYTES, RawChatChannels } from './core/raw-chat-channels.js';
@@ -159,7 +160,7 @@ const MISSION_F9 = 0x780000;
 const MISSION_F6 = 0x750000;
 // 지식 창 명령 세 개다: ShowTechnology(Storm 카드, F6), ShowTecSideMenu(Storm/World 선택), ShowTecMenu2(World 카드). (2026-11-20 WB04-E1088)
 const KNOWLEDGE_COMMANDS = new Set([0x020000a0, 0x02000132, 0x02000133]);
-const WIRED_MENU_COMMANDS = new Set([0x020000f0, 0x02000091, 0x020000f1, 0x0200006d, 0x020000e6, 0x020000e7, 0x020000ae, 0x020000b8, 0x02000095, 0x02000017, 0x0200008c, 0x0200008d, 0x020000c5, 0x020000a0, 0x02000132, 0x02000133]);
+const WIRED_MENU_COMMANDS = new Set([0x020000f0, 0x02000091, 0x020000f1, 0x0200006d, 0x020000e6, 0x020000e7, 0x020000ae, 0x020000b8, 0x02000095, 0x02000017, 0x0200008c, 0x0200008d, 0x020000c5, 0x020000a0, 0x02000132, 0x02000133, 0x020000cf]);
 // Session이 Tutorial 판정용으로 입력 큐에 올리는 통지 명령이다(발사기 배치 0x030000b0·포함 0x030000b1, 기술 0x020000b5, 포획 0x020000d7, 상승 0x020000df; 전역 005429b4 등의 PE 초기값).
 // Tutorial 판정기(`tutorial.event`)가 각 명령을 받고 해당 단계가 쓰지 않으면 원본 주 루프처럼 그대로 버려진다. 큐 소비 보호 목록에 없으면 뒤의 클릭까지 막혀 모든 입력이 멈추므로 소비를 허용한다. (2026-11-20 WB04-E1083)
 const TUTORIAL_NOTICE_COMMANDS = new Set([0x030000b0, 0x030000b1, 0x020000b5, 0x020000d7, 0x020000df]);
@@ -569,6 +570,8 @@ export class Netstorm {
         this._gameAssets = null; this._surfaceStorage = null; this._clientKernel = null; this._clientTrace = null; this._clientProductionGlobals = null; this._campaignProduction = null;
         // 미니맵의 장기 dirty 상태와 색 전역은 Client 수명에 둔다. (2026-11-20 WB04-E1082)
         this._clientMinimapState = null; this._clientMinimapGlobals = null; this._gameMenuButton = null; this._lastCampaignMission = null;
+        // 게임 메뉴(Pause)가 올린 게임 시계 정지·음소거 깊이다. 미션을 떠날 때 되돌린다. (2026-11-20 WB04-E1089)
+        this._menuPauseDepth = 0; this._menuMuteDepth = 0;
         // 실제 미션 Guide는 자산과 장기 저장소가 준비된 뒤 생성한다.
         this._clientGuide = null; this._clientFort = null; this._clientFortName = null;
         // 원본 공통 Gump 루트와 입력 전역은 Client 수명에 보유한다.
@@ -1269,7 +1272,7 @@ export class Netstorm {
     // 현재 World의 Session을 반납하고 같은 미션 연결 대기 관문을 해제한다.
     _releaseCampaignWorld() {
         if (!this._campaignWorld) return;
-        this._gameMenuButton?.destroy(); this._gameMenuButton = null;
+        this._gameMenuButton?.destroy(); this._gameMenuButton = null; this._releaseCampaignPause();
         this._campaignProduction?.ui?.close(); this._campaignProduction?.hud?.close(); this._clientGump?.releaseFormHost(); this._campaignWorld.dispose(); this._campaignWorld = null; this._campaignWorldMissionToken = 0; this._campaignUserInput = null; this._campaignProduction = null; this._campaignCursor = CURSOR_NORMAL;
     }
 
@@ -1364,7 +1367,7 @@ export class Netstorm {
                         project: (x, y) => { const point = this._clientGameplay.camera().snapshot().project(x, y); return [point.x, point.y]; },
                         content: (sid) => production.session.priests().carrier.findContained(sid, 1, 0, 0), range: (type) => production.session.core().types[type].range,
                         screenWidth: () => this._clientPaletteScreen.width } },
-                command: (...args) => this._clientInputQueue.pushCommand(...args), invalidate: (rect) => this._clientRenderer.invalidate(rect, 0), gameMenu: this._campaignGameMenuDevices(production), knowledge: this._campaignKnowledgeDevices() },
+                command: (...args) => this._clientInputQueue.pushCommand(...args), invalidate: (rect) => this._clientRenderer.invalidate(rect, 0), gameMenu: this._campaignGameMenuDevices(production), knowledge: this._campaignKnowledgeDevices(), warnings: this._campaignWarningDevices(production) },
             changed: () => { this._clientRenderer.invalidateAll(); this._displayDirty = true; }, closePopups: () => this._closeCampaignPopups(),
             poll: (code) => this._clientInputPoll.poll(code), cursor: (number) => { this._campaignCursor = number; this._applyCursor(); },
             baseHandle: (...args) => help.handle(...args), menuInstances: () => this._mainMenu?.popup?.isOpen ? 1 : 0,
@@ -1442,6 +1445,54 @@ export class Netstorm {
         }
     }
 
+    // 오른쪽 위 경고·상태 안내가 읽는 벽 시각·억제·화면 크기와 메시지 이름·모드 조회 장치다(cpppj `UberGump` 의 `pauseContext`·`EnableWarnings`). 값은 호출 시점에 다시 읽는다. 메타맵 참가자 이름은 웹 제외 범위라 연결하지 않는다. (2026-11-20 WB04-E1089)
+    _campaignWarningDevices(production) {
+        const session = production.session, empty = new Uint8Array(1), game = () => this._clientGameplay;
+        const meta = () => { throw new Error('웹 제외 메타맵 참가자 이름 미연결'); };
+        return { now: () => this._gameClock.wallSeconds(), suppressed: () => Boolean(game().world.missionPost),
+            view: () => ({ width: this._layout.logicalWidth, height: this._layout.logicalHeight, palette: this._clientPaletteScreen.colors() }),
+            context: { challenge: () => this._surfaceStorage.ownerMode.challenge ? 1 : 0, battle: () => this._surfaceStorage.ownerMode.battle ? 1 : 0,
+                playerName: (owner) => { if (owner > 0 && owner < 9) session.playerRecords().subarray(owner * 180 + 12, owner * 180 + 44); },
+                playerText: (owner) => owner <= 0 || owner >= 9 ? empty : session.playerRecords().subarray(owner * 180 + 12, owner * 180 + 44),
+                challengePlayerName: meta, challengePlayerText: meta,
+                gameTimeSeconds: () => readGameTimeSeconds(game().battleClockStamp(), () => game().battleClockOrigin().value, () => Math.trunc(performance.now())) } };
+    }
+
+    // 게임 메뉴 Pause(Shift-F9)를 실행한다. 원본 `GameMenuActions` 의 Pause 분기가 정지 여부를 읽어 시계·소리를 멈추거나 되돌리고 'Game Paused!' 안내를 만들거나 지운다. 정지·음소거 깊이는 미션을 떠날 때 되돌리도록 센다. (2026-11-20 WB04-E1089)
+    _dispatchCampaignPause(event) {
+        const game = this._clientGameplay, clock = this._gameClock, warnings = this._campaignProduction?.ui?.warnings(), world = this._campaignWorld;
+        if (!game || !clock || !warnings || !world || !this._clientKencloud) throw new Error('일시정지의 현재 장치 수명 누락');
+        const read = (address) => {
+            if (address === 0x00594fa4) return game.world.missionPost ? 1 : 0;
+            if (address === 0x005c85a4) return game.world.editor ? 1 : 0;
+            throw new Error('일시정지의 미연결 전역');
+        };
+        const actions = new GameMenuActions({ read, hideBuildings: game.hideBuildings(), redraw: this._clientKencloud.worldRedraw() }, {
+            command: (address) => gameMenuCommandValue(address), paused: () => clock.paused(),
+            status: (kind, owner, enabled, parameter, text) => {
+                if (kind !== 11 || owner || parameter || text) throw new Error('다른 메뉴 상태 안내 분기 미연결');
+                warnings.pauseStatus(enabled !== 0);
+            },
+            cancelCursor: () => world.session().cursor().cancel(),
+            pauseClock: () => { clock.pushGamePause(); this._menuPauseDepth += 1; }, resumeClock: () => { clock.popGamePause(); this._menuPauseDepth = Math.max(0, this._menuPauseDepth - 1); },
+            muteSound: () => this._setCampaignMute(true), resumeSound: () => this._setCampaignMute(false),
+        });
+        actions.handle(event.code, event.x, event.y);
+    }
+
+    // 효과음 재생기와 음악 음량 노드를 함께 음소거하거나 되돌린다(원본 PushMute/PopMute). 깊이를 세어 미션 반납 때 남은 만큼 되돌린다. (2026-11-20 WB04-E1089)
+    _setCampaignMute(on) {
+        if (on) { this._clientSoundPlayer?.pushMute(); this._audio?.pushMute(); this._menuMuteDepth += 1; return; }
+        if (this._menuMuteDepth <= 0) return;
+        this._clientSoundPlayer?.popMute(); this._audio?.popMute(); this._menuMuteDepth -= 1;
+    }
+
+    // 게임 메뉴가 올려 둔 일시정지·음소거를 모두 되돌린다. 미션을 떠나도 다음 미션의 시계·소리가 멈춘 채 남지 않게 한다. (2026-11-20 WB04-E1089)
+    _releaseCampaignPause() {
+        while (this._menuPauseDepth > 0) { this._gameClock?.popGamePause(); this._menuPauseDepth -= 1; }
+        while (this._menuMuteDepth > 0) this._setCampaignMute(false);
+    }
+
     // F6 지식 창이 읽는 현재 화면 크기·언어·번역·정적 문자열·팝업 표식 장치다(원본 `RawMenuControls::OpenKnowledge` 의 호출자 몫). 값은 호출 시점에 다시 읽는다. (2026-11-20 WB04-E1088)
     _campaignKnowledgeDevices() {
         return { width: () => this._layout.logicalWidth, height: () => this._layout.logicalHeight, language: () => this.options.language === 'korean' ? 7 : 0,
@@ -1469,7 +1520,8 @@ export class Netstorm {
         if (code === 0x0200008d) return this._restartCampaignMission();
         if (code === 0x020000c5) return this._leaveCampaignMission();
         const text = () => { const value = this._clientChatWindows.strings.get(event.y >>> 0); return value === undefined ? '' : String(value); };
-        if (KNOWLEDGE_COMMANDS.has(code)) this._openCampaignKnowledge(code === 0x02000132 ? KnowledgeMenuKind.Side : code === 0x02000133 ? KnowledgeMenuKind.World : KnowledgeMenuKind.Storm);
+        if (code === 0x020000cf) { this._dispatchCampaignPause(event); this._displayDirty = true; }
+        else if (KNOWLEDGE_COMMANDS.has(code)) this._openCampaignKnowledge(code === 0x02000132 ? KnowledgeMenuKind.Side : code === 0x02000133 ? KnowledgeMenuKind.World : KnowledgeMenuKind.Storm);
         else if (code === 0x020000f1) { this._dispatchCampaignViewAction(event); this._clientRenderer.invalidateAll(); }
         else if (code === 0x020000f0) { this._campaignProduction?.ui?.gameMenu()?.openPlayerList(); this._displayDirty = true; }
         else if (code === 0x0200006d) {

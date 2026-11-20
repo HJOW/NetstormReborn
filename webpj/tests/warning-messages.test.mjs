@@ -105,3 +105,12 @@ test('Report: C++ 표준 스트림의 17자리 수치 fixture와 부호0·동률
     // 기대값은 별도 C++ 프로그램이 출력했으며 JS 알고리즘으로 만들지 않았다.
     for (const line of data) { const [bits, expected] = line.split('\t'); const bytes = Buffer.alloc(8); bytes.writeBigUInt64LE(BigInt(`0x${bits}`)); node.deadline = bytes.readDoubleLE(); assert.equal(r.rows()[0].deadlineText, expected, bits); }
 });
+
+test('common.allocate 가 있으면 새 파생 노드 객체를 넘기고 돌려받은 토큰으로 등록한다(Client 루트 연결, 2026-11-20 WB04-E1089)', () => {
+    const seen = []; const r = warningScene({ allocate: (node) => { seen.push(node); return 700 + seen.length; } });
+    r.messages.pauseStatus(true);
+    assert.equal(seen.length, 1); assert.equal(r.rows().length, 1); assert.equal(r.rows()[0].token, 701); assert.equal(r.messages.node(701), seen[0]);
+    assert.equal(r.rows()[0].source, '~E~wGame Paused!');
+    // allocate 가 없으면 원문처럼 토큰 공급기(common.token)만 쓴다.
+    const plain = warningScene(); plain.messages.pauseStatus(true); assert.equal(plain.rows()[0].token, 100);
+});

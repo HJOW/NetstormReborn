@@ -57,12 +57,12 @@ export function createClientProductionAssembly(root, session, game, fonts, scree
         stock: () => globals.stockEnabled, failure: (empty, serial) => hint.show(empty, serial), flash: () => budget.flash(), sound: devices.sound, changed: devices.changed });
     if (devices.menu) menu = createClientProductionMenu(root, session, game, devices.menu.data, fonts, screen, colors, background, globals.backgroundType, {
         ...devices.menu, baseHandle: devices.baseHandle, sound: devices.sound, translate: devices.translate, affordable: (sid) => item.affordable(sid),
-        now: devices.now, poll: devices.poll, cursor: devices.cursor,
+        now: devices.now, poll: devices.poll, cursor: devices.cursor, changed: devices.changed,
     });
     const divider = new ClientHudDivider(root, { background, backgroundColor: () => 35, dividerColor: () => 55, baseHandle: devices.baseHandle,
         closePopups: devices.closePopups, menuInstances: () => menu ? menu.instances() : devices.menuInstances(), poll: devices.poll, cursor: devices.cursor });
     return new ClientProductionPanel(root, session, { grid, background, divider, budget, selection,
-        technology: () => context.gameplay.player.playerKnown ? technology(context.gameplay.player.battleOwner) : 0, changed: devices.changed, openPriest: (sid, event) => menu?.openPriest(sid, event) ?? 0, openFactory: (sid, event) => menu?.openFactory(sid, event) ?? 0, openObject: (sid, event) => menu?.openObject(sid, event) ?? 0, gameMenu: menu?.gameMenu ?? null, knowledge: menu?.knowledge ?? null,
+        technology: () => context.gameplay.player.playerKnown ? technology(context.gameplay.player.battleOwner) : 0, changed: devices.changed, openPriest: (sid, event) => menu?.openPriest(sid, event) ?? 0, openFactory: (sid, event) => menu?.openFactory(sid, event) ?? 0, openObject: (sid, event) => menu?.openObject(sid, event) ?? 0, gameMenu: menu?.gameMenu ?? null, knowledge: menu?.knowledge ?? null, warnings: menu?.warnings ?? null,
         showSp: (cost, x, y, reference) => { if (!floating) throw new Error('생산 UI의 실제 비용 표시 미연결'); return floating.showSp(cost, x, y, reference); },
         close: () => { floating?.close(); menu?.close(); } }, globals, panel);
 }

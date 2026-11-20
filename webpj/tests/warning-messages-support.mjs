@@ -23,7 +23,7 @@ export function warningScene(options = {}) {
     // 실제 Warning 가상 소멸자는 같은 TextGump의 scalar 몸체와 공통 free로 내려간다.
     s.lifeHooks.deletingDestructor = (token, flags) => { if (messages?.node(token)) messages.deleteScalar(token, flags); else previousDestructor(token, flags); };
     s.lifeHooks.release = (token) => { s.released.push(token); if (messages?.node(token)) messages.release(token); else s.nodes.delete(token); };
-    const common = { create: s.create, life: s.lifeState, collection: s.collection, tree, lifetime: s.lifetime, token: () => next++, node: lookup, changed: () => { state.changed += 1; } };
+    const common = { create: s.create, life: s.lifeState, collection: s.collection, tree, lifetime: s.lifetime, token: () => next++, node: lookup, changed: () => { state.changed += 1; }, allocate: options.allocate };
     const menus = { textBackend: () => s.single, styleBackend: () => s.style, setExternalGumps: (slot, provider) => providers.set(slot, provider), setPalette: (palette) => { state.palettes.push(palette); bindStyleTextPalette(s.styleHooks, palette); } };
     const context = { challenge: options.challenge ?? (() => 0), playerName: (owner) => state.names.push(owner), translate: options.translate ?? ((text) => text), gameTimeSeconds: () => 123,
         battle: () => 1, playerText: (owner) => Uint8Array.from(Buffer.from(`P${owner}\0`)), challengePlayerText: (owner) => Uint8Array.from(Buffer.from(`C${owner}\0`)) };

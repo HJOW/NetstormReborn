@@ -91,6 +91,8 @@ export class ClientProductionPanel {
     gameMenu() { return this.#parts.gameMenu ?? null; }
     // 같은 메뉴 작성기가 만든 F6 지식 창 장치를 돌려준다. 장치가 없으면 null이다. (2026-11-20 WB04-E1088)
     knowledge() { return this.#parts.knowledge ?? null; }
+    // 오른쪽 위 경고·상태 안내(Game Paused! 등) 장치를 돌려준다. 장치가 없으면 null이다. (2026-11-20 WB04-E1089)
+    warnings() { return this.#parts.warnings ?? null; }
     // 실제 건설 비용 표시를 같은 Client Gump 수명에 전달한다.
     showSp(cost, x, y, reference) { if (!this.#parts.showSp) throw new Error('생산 패널의 실제 비용 표시 미연결'); return this.#parts.showSp(cost, x, y, reference); }
     // 공통 수명이 자식과 실제 Form을 먼저 반납한다.

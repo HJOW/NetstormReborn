@@ -77,6 +77,8 @@ export class AudioSystem {
         this.musicEnabled = true;
         // 재생하기로 요청받은 음악 이름(소문자)이다. 음악이 꺼진 동안에도 기억한다. 없으면 null. (2026-10-29 WB03-F)
         this.wantedMusic = null;
+        // 음소거 보류 깊이와 해제 때 복원할 음악 음량(증폭률)이다. 일시정지 메뉴의 PushMute/PopMute 가 쓴다. (2026-11-20 WB04-E1089)
+        this.musicMuteDepth = 0; this.pendingMusicGain = 1;
     }
 
     // 효과음 음량 단계(1~5)를 바꾼다. 재생 중인 소리에도 바로 적용된다(원본 SetMasterVolume). (2026-10-29 WB03-F)
@@ -84,9 +86,24 @@ export class AudioSystem {
         this.soundGain.gain.value = centibelsToGain(volumeStepToCentibels(step));
     }
 
-    // 음악 음량 단계(1~5)를 바꾼다. 재생 중인 음악에도 바로 적용된다. (2026-10-29 WB03-F)
+    // 음악 음량 단계(1~5)를 바꾼다. 재생 중인 음악에도 바로 적용된다. 음소거 중이면 해제할 때 적용하도록 예약만 한다(원본 SoundMusic::SetVolume 의 보류). (2026-10-29 WB03-F, 2026-11-20 WB04-E1089)
     setMusicVolumeStep(step) {
-        this.musicGain.gain.value = centibelsToGain(volumeStepToCentibels(step));
+        const gain = centibelsToGain(volumeStepToCentibels(step));
+        if (this.musicMuteDepth > 0) { this.pendingMusicGain = gain; return; }
+        this.musicGain.gain.value = gain;
+    }
+
+    // 원본 `SoundMusic::PushMute` 의 음악 쪽이다. 깊이가 0 이면 현재 음량을 예약하고 음악을 무음(0)으로 낮춘 뒤 깊이를 올린다. 일시정지 메뉴가 쓰며 짝이 되는 popMute 가 복원한다. (2026-11-20 WB04-E1089)
+    pushMute() {
+        if (this.musicMuteDepth === 0) { this.pendingMusicGain = this.musicGain.gain.value; this.musicGain.gain.value = 0; }
+        this.musicMuteDepth += 1;
+    }
+
+    // 원본 `PopMute` 의 음악 쪽이다. 양수 깊이만 줄이고 0 이 되면 예약한 음량을 복원한다. 깊이가 0 이하이면 아무 일도 없다. (2026-11-20 WB04-E1089)
+    popMute() {
+        if (this.musicMuteDepth <= 0) return;
+        this.musicMuteDepth -= 1;
+        if (this.musicMuteDepth === 0) this.musicGain.gain.value = this.pendingMusicGain;
     }
 
     // 효과음을 켜거나 끈다. 끄면 이후 playSound 는 소리를 내지 않는다(이미 재생 중인 짧은 소리는 끝까지 난다). (2026-10-29 WB03-F)
