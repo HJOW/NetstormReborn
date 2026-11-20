@@ -427,4 +427,9 @@
     <None Include="../../../cpppj/tests/fixtures/arc-spire-x86.tsv" Link="X86/arc-spire-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/acid-fence-x86.tsv" Link="X86/acid-fence-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 플레어의 원본139행과 주문 방향60행을 같은 불변 자료로 대조한다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/flare-x86.tsv" Link="X86/flare-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/bomb-status-flare-x86.tsv" Link="X86/bomb-status-flare-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

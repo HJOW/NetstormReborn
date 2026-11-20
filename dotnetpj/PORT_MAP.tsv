@@ -659,6 +659,8 @@ cpppj/src/o/RawFenceRebuild.cpp	Netstorm.Core/Original/RawFenceRebuild.cs	bd2941
 cpppj/src/o/RawFenceRebuild.h	Netstorm.Core/Original/RawFenceRebuild.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/o/RawFenceRegular.cpp	Netstorm.Core/Original/RawFenceRegular.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/o/RawFenceRegular.h	Netstorm.Core/Original/RawFenceRegular.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/o/RawFlare.cpp	Netstorm.Core/Original/RawFlare.cs	79bae615d13f7ad0fcb91c33c279dfa0a496d97f	L1
+cpppj/src/o/RawFlare.h	Netstorm.Core/Original/RawFlare.cs	79bae615d13f7ad0fcb91c33c279dfa0a496d97f	L1
 cpppj/src/o/RawFlyerPreDestroy.cpp	Netstorm.Core/Original/RawFlyerPreDestroy.cs	0e66d91ba40ac55542ec2e2747b68e406c27de43	L1
 cpppj/src/o/RawForcefieldLifecycle.cpp	Netstorm.Core/Original/RawForcefieldLifecycle.cs	7313ba1c6a0e4984b434bb562c7335d4383bb075	port
 cpppj/src/o/RawForcefieldLifecycle.h	Netstorm.Core/Original/RawForcefieldLifecycle.cs	7313ba1c6a0e4984b434bb562c7335d4383bb075	port
