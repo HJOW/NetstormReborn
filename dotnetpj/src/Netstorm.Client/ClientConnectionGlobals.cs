@@ -13,6 +13,8 @@ public sealed class ClientConnectionGlobals
     public RawConnectionRegistry Registry { get; } = new();
     /// <summary>실제 Source만 약하게 식별하는 같은 Client 장부다.</summary>
     public ClientPacketSources PacketSources { get; } = new();
+    /// <summary>같은 Client 수명의 활동/Zone stamp/Heartbeat 상태다.</summary>
+    public ClientConnectionActivityGlobals Activity { get; } = new();
     /// <summary>실제 동기화/Source 장치를 빌리며 표본/시각/소켓/난수/성공 상태를 변경하지 않는다.</summary>
     public ClientConnectionGlobals(ClientLocalStateGlobals local)
     {

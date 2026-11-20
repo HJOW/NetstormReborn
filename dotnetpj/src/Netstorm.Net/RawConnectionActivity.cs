@@ -1,7 +1,7 @@
 // 로컬 연결의 활성 시각·프레임 표와 0x64 수신 몸체의 사전 구현을 공유한다.
 // 근거: cpppj `src/o/RawConnectionActivity.h`·`RawConnectionActivity.cpp`(004b6180).
-// 분배기 등록(`RegisterConnectionActivity`)은 `RawPacketDispatch` 이식과 함께 3차 로컬 구현 때 잇는다.
-// 2026-11-11 멀티플레이 사전 구현에서 추가했다. 지시대로 검사는 건너뛴다.
+// 같은 실제 분배기/등록표에 typed 수신 또는 기존 Native F를 연결한다.
+// 2026-11-11 사전 구현을0.707에서 현재값/등록/부분 쓰기와 대조한다.
 
 namespace Netstorm.Net;
 
@@ -51,6 +51,9 @@ public sealed class ConnectionActivityHooks
 
     /// <summary>004d3090 (2, sender, 0, 0) 또는 (1, 0, 0, 0) 지우기 어댑터다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
     public Action<uint, uint>? EraseStatus { get; set; }
+
+    /// <summary>원문 함수 객체처럼 등록 시 각 callable 값을 복사한다.</summary>
+    internal ConnectionActivityHooks Copy() => (ConnectionActivityHooks)MemberwiseClone();
 }
 
 // packet payload·연결을 보지 않는 004b6180 Timer 수신 몸체다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.
@@ -62,7 +65,7 @@ public sealed class RawConnectionActivity
     /// <summary>wall·프레임·서버·지우기 효과다. 설치 때 모두 묶는다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
     private readonly ConnectionActivityHooks _hooks;
 
-    /// <summary>같은 표·같은 효과로 활성 수신 몸체를 만든다. 분배기 등록은 3차 로컬 구현 때 잇는다.</summary>
+    /// <summary>같은 표와 함수객체 값으로 활성 수신 몸체를 만든다. 현재 등록 장치가 이 몸체를 호출한다.</summary>
     /// <param name="tables">빌릴 22칸 표다.</param>
     /// <param name="hooks">묶을 외부 효과다. 모두 필수다.</param>
     /// <exception cref="ArgumentException">같은 표·별개 저장소·필수 효과 누락이다.</exception>
@@ -76,7 +79,7 @@ public sealed class RawConnectionActivity
         }
 
         _tables = tables;
-        _hooks = hooks;
+        _hooks = hooks.Copy();
     }
 
     /// <summary>전달보다 wall·frame 캡처를 먼저 쓰는 순서로 한 칸을 적는다. sender 범위 밖은 거부한다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
@@ -128,7 +131,7 @@ public sealed class RawConnectionActivity
 
 /// <summary>연결 활성 0x64 Timer 수신의 Native 대여 판정이다.
 /// 근거: cpppj `src/o/RawConnectionActivity.cpp`의 `RegisterConnectionActivity` 앞부분(실제 Native F가 있으면 같은 값만 대여한다).
-/// 분배기 호출(`RegisterCanonical`·`Observe`·`Version`·`Register`)은 `RawPacketDispatch` 이식과 함께 3차 로컬 구현 때 잇는다.
+/// 같은 분배기의 실제 Native 대여 또는 typed 등록을 수행한다.
 /// 2026-11-11 0.366에서 cpppj HEAD(`eeae45c69`)의 대여 분기를 반영했다.</summary>
 public static class ConnectionActivityRegistration
 {
@@ -147,7 +150,7 @@ public static class ConnectionActivityRegistration
     /// <summary>대여가 요구하는 선언 길이다. 기존 PE 길이 표의 현재값이다.</summary>
     public const ushort ExpectedLength = 5;
 
-    /// <summary>같은 metadata의 Native 수신을 대여할지 판정한다. 대여할 수 없으면 일반 등록 경로(3차)로 돌려보낸다.</summary>
+    /// <summary>같은 metadata의 Native 수신을 대여할지 판정한다. 대여할 수 없으면 현재 typed 등록 경로로 돌려보낸다.</summary>
     /// <param name="table">읽을 패킷 등록 표다.</param>
     /// <param name="borrowed">대여한 표준 수신 한 쌍이다. 대여할 수 없으면 null이다.</param>
     /// <returns>같은 값을 대여하면 참이다.</returns>
@@ -172,4 +175,12 @@ public static class ConnectionActivityRegistration
         borrowed = receiver;
         return true;
     }
+    /// <summary>현재 원본64h 등록을 같은 분배기에 설치하거나 기존 Native F의 같은 값만 대여한다.</summary>
+    public static void Register(RawPacketDispatch dispatch, RawConnectionActivity activity)
+    {
+        ArgumentNullException.ThrowIfNull(dispatch); ArgumentNullException.ThrowIfNull(activity);
+        if (TryBorrowTimerReceiver(dispatch.Registrations, out var receiver)) { dispatch.RegisterCanonical(ActivityType, receiver); return; }
+        dispatch.Observe(ActivityType, static _ => { }); dispatch.Version(ActivityType, ExpectedVersion, ExpectedMismatch); dispatch.Register(ActivityType, (sender, _, _) => activity.Receive(unchecked((int)sender)));
+    }
+
 }

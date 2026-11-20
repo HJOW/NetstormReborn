@@ -1179,3 +1179,6 @@ cpppj/src/client/ClientGameplayGlobals.cpp	Netstorm.Client/ClientGameplayGlobals
 cpppj/src/client/ClientGameplayGlobals.cpp	Netstorm.Client/HostMissionRuntime.cs	8d24d3e095ee9659595504ff81ad078b0147614b	port
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.Runtime.cs	bda77381e54bc382937c720047ee4441086b46d7	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.Runtime.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
+cpppj/src/client/RawBattleLeave.h	Netstorm.Client/RawBattleLeave.cs	3f766a97f7c4d5b290c195754be66a7ee5b929be	port
+cpppj/src/client/RawBattleLeave.cpp	Netstorm.Client/RawBattleLeave.cs	eeae45c69171943ad99db6c2930574ee7747ba76	port
+cpppj/src/client/ClientConnectionActivityGlobals.h	Netstorm.Client/ClientConnectionActivityGlobals.cs	37dcdfc2c46445a7c29b23b20921f86ee62fea6f	port

@@ -114,4 +114,10 @@
     <None Include="../../../cpppj/tests/fixtures/pathprocesstype-x86.tsv" Link="X86/pathprocesstype-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/priestworldevents-x86.tsv" Link="X86/priestworldevents-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 전투 이탈/중단/이유의 최초 원본16/8/22행을 한 Client 소비자에 연결한다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/battle-leave-x86.tsv" Link="X86/battle-leave-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/battle-abort-state-x86.tsv" Link="X86/battle-abort-state-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/battle-leave-reason-x86.tsv" Link="X86/battle-leave-reason-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
