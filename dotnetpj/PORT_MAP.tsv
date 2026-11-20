@@ -1207,3 +1207,5 @@ cpppj/src/client/ClientMain.cpp	Netstorm.Client/ClientSurfaceGlobals.cs	63590635
 cpppj/src/client/ClientMain.h	Netstorm.Client/ClientSurfaceGlobals.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
 cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/RawTypeTableStorage.cs	14fd017c3b6ca87880374e044e3ac00bf0575c2e	port
 cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawTypeTableStorage.cs	14fd017c3b6ca87880374e044e3ac00bf0575c2e	port
+cpppj/src/client/RawProcessHostStorage.cpp	Netstorm.Core/Original/RawProcessHostStorage.Current.cs	417f22d2967decbf2ad3a587c2190b9efb93f772	port
+cpppj/src/client/RawProcessHostStorage.h	Netstorm.Core/Original/RawProcessHostStorage.Current.cs	417f22d2967decbf2ad3a587c2190b9efb93f772	port

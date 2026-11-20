@@ -4,7 +4,7 @@ namespace Netstorm.Core.Original;
 // 프로세스 호스트 저장소 모듈을 담는 네임스페이스다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.
 
 // 실행 모듈을 복제하지 않고 실제 공통 Host의 수명만 소유하는 저장소 껍데기다. Host 본체·현재 대여·legacy 회수·소멸 반납은 Host 본체 단위에서 잇는다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.
-public sealed class RawProcessHostStorage
+public sealed partial class RawProcessHostStorage
 {
     /// <summary>실제 물리 배열은 외부 저장소가 소유한다. 같은 풀이다. 2026-11-07 F2d 프로세스 호스트 저장소 껍데기 이식에서 추가됐다.</summary>
     private readonly RawSidPool _pool;
@@ -36,8 +36,6 @@ public sealed class RawProcessHostStorage
     /// <summary>현재 World 처리기만 빌리며 실제 반납 증빙의 발급 위치를 소유한다. 2026-11-07 F2d 호스트 대여 이식에서 추가됐다.</summary>
     private SquidProcessHost? _host;
 
-    /// <summary>현재 짧은 대여만 조회하며 월드를 숨겨서 붙잡지 않는다. 2026-11-07 F2d 호스트 대여 이식에서 추가됐다.</summary>
-    private ProcessHostRuntimeBindings? _current;
 
     /// <summary>외부 raw 커널의 월드를 장기 소유하지 않고 현재 가상 회수 경계만 조회한다. 호출자가 반환 대리자를 쥐고 있어야 산다. 2026-11-07 F2d 호스트 대여 이식에서 추가됐다.</summary>
     private WeakReference<Action<int>>? _legacyReclaim;
@@ -91,6 +89,9 @@ public sealed class RawProcessHostStorage
             return;
         }
 
+        if (CurrentRuntime() is not null || (_legacyReclaim is not null && _legacyReclaim.TryGetTarget(out _)))
+            throw new ArgumentException("현재대여중장기프로세스장치교체금지");
+
         if (_kernel is not null && (!ReferenceEquals(_kernel, kernel) || !ReferenceEquals(_clock, clock) || !ReferenceEquals(_pollType, pollType)))
         {
             throw new ArgumentException("프로세스 호스트의 같은 장기 커널·시각 장치 계약 위반");
@@ -129,7 +130,7 @@ public sealed class RawProcessHostStorage
     /// <returns>같은 장기 호스트다.</returns>
     public SquidProcessHost Host()
     {
-        _host ??= new SquidProcessHost(_pool, _types, Kernel(), State(), () => _current);
+        _host ??= new SquidProcessHost(_pool, _types, Kernel(), State(), () => CurrentRuntime());
         return _host;
     }
 
@@ -143,7 +144,7 @@ public sealed class RawProcessHostStorage
             return;
         }
 
-        ProcessHostRuntimeBindings? runtime = _current;
+        ProcessHostRuntimeBindings? runtime = CurrentRuntime();
         Action<SquidDestroyEvent>? emit = runtime?.Asset?.Emit;
         if (runtime is null || emit is null)
         {
@@ -162,7 +163,7 @@ public sealed class RawProcessHostStorage
     public Action<int> BindLegacyAllocationReclaim(Action<int> reclaim)
     {
         ArgumentNullException.ThrowIfNull(reclaim);
-        if (_current is not null || (_legacyReclaim is not null && _legacyReclaim.TryGetTarget(out _)))
+        if (CurrentRuntime() is not null || (_legacyReclaim is not null && _legacyReclaim.TryGetTarget(out _)))
         {
             throw new ArgumentException("SID legacy 회수의 단일 현재 월드 대여 계약 위반", nameof(reclaim));
         }
@@ -176,7 +177,7 @@ public sealed class RawProcessHostStorage
     /// <returns>현재 대여다.</returns>
     public Use Bind(ProcessHostRuntimeBindings? runtime)
     {
-        if (runtime is null || runtime.Destroy is null || !ReferenceEquals(runtime.Destroy.Pool, _pool) || _current is not null ||
+        if (runtime is null || runtime.Destroy is null || !ReferenceEquals(runtime.Destroy.Pool, _pool) || CurrentRuntime() is not null ||
             (_legacyReclaim is not null && _legacyReclaim.TryGetTarget(out _)))
         {
             throw new ArgumentException("프로세스 호스트의 실제 현재 월드 단일 대여 계약 위반", nameof(runtime));
@@ -207,13 +208,13 @@ public sealed class RawProcessHostStorage
         {
             _owner = owner;
             _runtime = runtime;
-            owner._current = runtime;
+            owner._current = new WeakReference<ProcessHostRuntimeBindings>(runtime);
         }
 
         /// <summary>현재 자기 처리기만 반납하며 커널을 실행하거나 비우지 않는다. 2026-11-07 F2d 호스트 대여 이식에서 추가됐다.</summary>
         public void Dispose()
         {
-            if (_owner is not null && ReferenceEquals(_owner._current, _runtime))
+            if (_owner is not null && ReferenceEquals(_owner.CurrentRuntime(), _runtime))
             {
                 _owner._current = null;
             }
@@ -225,7 +226,7 @@ public sealed class RawProcessHostStorage
         /// <summary>현재 월드의 생성 실패·일반 종료에서 자기 대여가 만든 객체만 반납한다. 이전 Native 잔류는 건드리지 않는다. 2026-11-07 F2d 호스트 대여 이식에서 추가됐다.</summary>
         public void DrainOwnedForShutdown()
         {
-            if (_owner is not null && ReferenceEquals(_owner._current, _runtime))
+            if (_owner is not null && ReferenceEquals(_owner.CurrentRuntime(), _runtime))
             {
                 _owner.Host().DrainRuntimeBindings(_runtime!);
             }
@@ -235,7 +236,7 @@ public sealed class RawProcessHostStorage
         /// <returns>정상 복귀 증빙이다.</returns>
         public ClearPass ClearForState()
         {
-            if (_owner is null || !ReferenceEquals(_owner._current, _runtime))
+            if (_owner is null || !ReferenceEquals(_owner.CurrentRuntime(), _runtime))
             {
                 throw new InvalidOperationException("현재 프로세스 호스트 대여 없는 Native Clear");
             }
@@ -254,7 +255,7 @@ public sealed class RawProcessHostStorage
         public Returned ReturnForState(ClearPass pass)
         {
             ArgumentNullException.ThrowIfNull(pass);
-            if (_owner is null || !ReferenceEquals(pass.Owner, _owner) || !ReferenceEquals(pass.Runtime, _runtime) || !ReferenceEquals(_owner._current, _runtime))
+            if (_owner is null || !ReferenceEquals(pass.Owner, _owner) || !ReferenceEquals(pass.Runtime, _runtime) || !ReferenceEquals(_owner.CurrentRuntime(), _runtime))
             {
                 throw new ArgumentException("Native Clear의 같은 프로세스 호스트 대여 증빙 필요", nameof(pass));
             }
@@ -284,13 +285,11 @@ public sealed class RawProcessHostStorage
     }
 
     /// <summary>같은 실제 커널 Clear 정상 복귀의 이동 전용 증빙이다. 2026-11-07 F2d 호스트 대여 이식에서 추가됐다.</summary>
-    public sealed class ClearPass
+    public sealed partial class ClearPass
     {
         /// <summary>발급한 실제 저장소다. 2026-11-07 F2d 호스트 대여 이식에서 추가됐다.</summary>
         internal RawProcessHostStorage Owner { get; }
 
-        /// <summary>발급 위치의 런타임 묶음이다. 2026-11-07 F2d 호스트 대여 이식에서 추가됐다.</summary>
-        internal ProcessHostRuntimeBindings Runtime { get; }
 
         /// <summary>소비됐는지다. 2026-11-07 F2d 호스트 대여 이식에서 추가됐다.</summary>
         internal bool Consumed { get; private set; }
@@ -301,7 +300,7 @@ public sealed class RawProcessHostStorage
         internal ClearPass(RawProcessHostStorage owner, ProcessHostRuntimeBindings runtime)
         {
             Owner = owner;
-            Runtime = runtime;
+            _runtime = new WeakReference<ProcessHostRuntimeBindings>(runtime);
         }
 
         /// <summary>증빙을 소비한다. 2026-11-07 F2d 호스트 대여 이식에서 추가됐다.</summary>

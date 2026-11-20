@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-21 · 마지막 완료 0.726(장기Host 대여/TYPE물리·집중177건·3시작 불변) · 다음 0.727(현재Runtime/정리증빙 약한 소유 대조) · 현재 단계 R4-2·R4-5 병행 · 전체 목표 미완료**
+**2026-11-21 · 마지막 완료 0.727(장기Host weak현재/증빙·집중210건·3시작 불변) · 다음 0.728(정기전체회귀/65시작) · 현재 단계 R4-2·R4-5 병행 · 전체 목표 미완료**
 
 현행 인계는 이 문서가 기준이다. 0.600~0.635의 단위별 완료 문장, 단위마다 누적한 검사 수와 L2 보관 경로 나열은 [0.635 정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635)에 있다. 0.613까지의 경과, 파일 계열별 체크 목록과 옛 집계는 [0.613 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)에 있다. 단위별 근거는 `docs/dotnet-canon-0NNN-*.md`이다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
@@ -109,6 +109,7 @@
 80. **0.724 정기전체회귀/L2 — 완료.** Assets366/Core3351/Client1487 합계5204건통과·실패0·기존실장치음향1건미실행이다. 65실행종료0·원본1392불변이며대표3관측은0.723전체바이트일치다. 0.720대비DN31경로의Player주소DWORD외전체Player몸체가같고슬롯168변경은모두프레임바이트다. 완전일치슬롯누적은2개감소했으며M1은0/34다. [근거](docs/dotnet-canon-0724-20261121.md) 다음0.725는실제Client장기Surface/같은권한·보조전역과ProcessHostStorage연결을진행한다.
 81. **0.725 실제Client 장기Surface — 완료.** 같은Gameplay권한/보조전역과Kernel/Frame·현재Graph시각을빌리는장기Surface를Root에설치했다. 메뉴의주변환경도진행하며world0시각상수0을실제Frame으로바꿨다. 최종집중116건통과·실제4시작종료0·대표3미션0.724전체바이트일치·메뉴90프레임2.25초·원본1392불변이다. [근거](docs/dotnet-canon-0725-20261121.md) 다음0.726은장기ProcessHost의현재Runtime대여/자식반납과TYPE소비자를연결한다. 전체State/자산재시작·메뉴Kernel/효과·나머지Native장치는후속이다.
 82. **0.726 실제 장기Host Runtime — 완료.** 실제외부장치/동일Kernel선행관문·현재Runtime Bind·같은장기Host선택과현재대여프로세스만정리한뒤Use반납을연결했다. Root/AI의TYPE를같은실제배열소유저장소와보상/HP부분뷰로통일했다. 초기List뷰거부4건을실제물리로고쳐최종Core52/Client125 합계177건통과다. 실제3시작종료0·0.725전체바이트일치·원본1392불변이다. [근거](docs/dotnet-canon-0726-20261121.md) 다음0.727은장기Host current_/ClearPass의원문weak소유와장치재결합관문을보완한다. 전체Native장치/State등은남으며전체회귀는0.728이다.
+83. **0.727 장기Host의weak Runtime — 완료.** current_와ClearPass를원문weak_ptr처럼약하게조회하고Use/호출snapshot의강한대여를유지했다. 동일주소재확인은보존하고현재/legacy대여중실제장치교체를거부한다. 검사풀입력교정뒤Core85/Client125 합계210건통과·실제3시작종료0·0.726전체바이트일치·원본1392불변이다. [근거](docs/dotnet-canon-0727-20261121.md) 다음0.728은정기전체검사/65시작이며전체Native장치/State등은남는다.
 57. **R4-2 나머지 차이와 R4-3~R4-8.** 농지 프레임, 전용 요새, 표시 등록, 그래프 번호, 장부를 처리한 뒤 R4-3~R4-8을 진행한다. 통합 조각을 마칠 때 같은 조건의 일괄 덤프로 M1 진척을확인한다. [R4 체크](#r4-detail)
 
 <a id="first-run"></a>
