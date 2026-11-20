@@ -444,4 +444,8 @@
   <ItemGroup>
     <None Include="../../../cpppj/tests/fixtures/constructionvisual-x86.tsv" Link="X86/constructionvisual-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 세 원본PE의 건설 프레임 전체/부분/중간1317행을 공유한다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/constructionframe-x86.tsv" Link="X86/constructionframe-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
