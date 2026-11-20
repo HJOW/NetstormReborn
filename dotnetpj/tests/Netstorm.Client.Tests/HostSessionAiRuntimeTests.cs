@@ -67,6 +67,112 @@ public sealed class HostSessionAiRuntimeTests
         Assert.NotNull(session.AiWorld);
         Assert.NotNull(session.AiRuntime);
         Assert.Same(session.Sp, session.AiEconomy.Store);
+        Assert.Same(session.Pool, session.AiFactories.Pool);
+    }
+
+    /// <summary>실제 풀의 명시 0 슬롯을 준비한다. 게임 생성 효과 대신 검사 입력을 만드는 함수다.</summary>
+    private static int EmptySlot(HostSession session, byte type)
+    {
+        int sid = session.Pool.Allocate(SidAllocation.Client);
+        session.Pool.AllocatedBytes(sid).Clear();
+        session.Pool.AllocatedBytes(sid)[10] = type;
+        return sid;
+    }
+
+    /// <summary>현재 Player 기술·known 내용물·시설 큐를 같은 메모리에 준비한다.</summary>
+    private static (uint Brain, int Technology, int Factory) PrepareFactoryBrain(HostSession session, IReadOnlyList<OriginalTypeRecord> types, uint owner)
+    {
+        uint brain = PrepareBrain(session, owner);
+        int technology = EmptySlot(session, 0);
+        int factory = EmptySlot(session, 85);
+        // 실제 연결기가 방문할 기존 기술 조각은 원본 생성자로 가상표·링크 배치를 준비한다.
+        int known = new RawSquidFactory(session.Pool, types).CreateContained(2u);
+        Put(session.Pool.AllocatedBytes(factory), 0, 0x509148);
+        BinaryPrimitives.WriteUInt16LittleEndian(session.Pool.AllocatedBytes(known).Slice(18, 2), 100);
+        BinaryPrimitives.WriteUInt16LittleEndian(session.Pool.AllocatedBytes(known).Slice(20, 2), 4);
+        BinaryPrimitives.WriteUInt16LittleEndian(session.Pool.AllocatedBytes(technology).Slice(6, 2), (ushort)known);
+        types[100].Theme = types[85].Theme;
+        types[100].Flags2 &= ~0x800u;
+        session.MissionPlayer.PlayerKnown = 1;
+        session.MissionPlayer.BattleOwner = 1;
+        Put(session.PlayerRecords, (int)owner * 180 + 0x9c, (uint)technology);
+        byte[] body = session.AiBrainMemory.Bytes(brain);
+        Put(body, 0x294, (uint)factory);
+        Put(body, 0x298, 7);
+        Put(body, 0x2cc, 1);
+        Put(body, 0x2d8, 1200);
+        Put(body, 0x228, BitConverter.SingleToUInt32Bits(1.25f));
+        uint pending = session.AiBrainMemory.Allocate(16);
+        Put(body, 0x30c, pending);
+        Put(body, 0x310, 4);
+        Put(body, 0x314, 1);
+        Put(session.AiBrainMemory.Bytes(pending), 0, (uint)factory);
+        Put(body, 0x318, session.AiBrainMemory.Allocate(16));
+        Put(body, 0x31c, 4);
+        session.ProcessTime.Value = 10;
+        return (brain, technology, factory);
+    }
+
+    /// <summary>brain 없는 시설 관리는 실제 난수·풀을 바꾸지 않고 범위 밖 owner를 거부한다.</summary>
+    [Fact]
+    public void FactoriesWithoutBrainPreserveRandomAndRejectInvalidOwner()
+    {
+        (HostSession session, _) = BuildScene();
+        uint before = session.Game.State();
+        Assert.False(session.ManageAiFactories(2));
+        Assert.Equal(before, session.Game.State());
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.ManageAiFactories(0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.ManageAiFactories(9));
+    }
+
+    /// <summary>실제 전략·내용물 생성기로 생산을 넣고 비로컬 AI일 때 기술 부모에도 teleport 항목을 만든다.</summary>
+    [Theory]
+    [InlineData(1u, 0)]
+    [InlineData(2u, 1)]
+    public void FactoriesRegisterActualProductsAndDeadline(uint owner, int teleports)
+    {
+        (HostSession session, IReadOnlyList<OriginalTypeRecord> types) = BuildScene();
+        (uint brain, int technology, int factory) = PrepareFactoryBrain(session, types, owner);
+        Put(session.AiBrainMemory.Bytes(brain), 0xb00, 1);
+        Assert.True(session.ManageAiFactories(owner));
+        Assert.Equal(1, session.AiFactories.CountProducts(factory));
+        Assert.Equal(teleports, RawContainedFinder.CountContained(session.Pool, new ContainedFinderState(), technology, 8, 100));
+        byte[] body = session.AiBrainMemory.Bytes(brain);
+        Assert.Equal(1u, BinaryPrimitives.ReadUInt32LittleEndian(body.AsSpan(0x314, 4)));
+        Assert.Equal(11.25, BitConverter.UInt64BitsToDouble(BinaryPrimitives.ReadUInt64LittleEndian(body.AsSpan(0x5a8, 8))));
+        Assert.Contains(session.AiRuntimeLogs, text => text.Contains(":factory:AddedProduct:100"));
+        // 같은 시각 재호출은 생각 기한을 통과하지 못하므로 실제 생산을 중복하지 않는다.
+        Assert.True(session.ManageAiFactories(owner));
+        Assert.Equal(1, session.AiFactories.CountProducts(factory));
+    }
+
+    /// <summary>실제 시설 아닌 가상표를 level80으로 해석하지 않으며 큐·생산을 보존한다.</summary>
+    [Fact]
+    public void FactoriesRejectUnsupportedVirtualLevelBeforeAdding()
+    {
+        (HostSession session, IReadOnlyList<OriginalTypeRecord> types) = BuildScene();
+        (uint brain, _, int factory) = PrepareFactoryBrain(session, types, 2);
+        Put(session.Pool.AllocatedBytes(factory), 0, 0x12345678);
+        Assert.Throws<InvalidOperationException>(() => session.ManageAiFactories(2));
+        Assert.Equal(0, session.AiFactories.CountProducts(factory));
+        Assert.Equal(1u, BinaryPrimitives.ReadUInt32LittleEndian(session.AiBrainMemory.Bytes(brain).AsSpan(0x314, 4)));
+    }
+
+    /// <summary>업그레이드 실제 요청 미연결은 명시 오류이며 대기 큐·기한을 소비하지 않는다.</summary>
+    [Fact]
+    public void FactoriesSelectedUpgradeKeepsQueueUntilRealCommandIsConnected()
+    {
+        (HostSession session, IReadOnlyList<OriginalTypeRecord> types) = BuildScene();
+        (uint brain, _, int factory) = PrepareFactoryBrain(session, types, 2);
+        byte[] body = session.AiBrainMemory.Bytes(brain);
+        Put(body, 0x314, 0);
+        Put(body, 0x320, 1);
+        uint queue = BinaryPrimitives.ReadUInt32LittleEndian(body.AsSpan(0x318, 4));
+        Put(session.AiBrainMemory.Bytes(queue), 0, (uint)factory);
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.ManageAiFactories(2));
+        Assert.Contains("업그레이드 요청 미연결", error.Message);
+        Assert.Equal(1u, BinaryPrimitives.ReadUInt32LittleEndian(body.AsSpan(0x320, 4)));
+        Assert.Equal(0ul, BinaryPrimitives.ReadUInt64LittleEndian(body.AsSpan(0x5a8, 8)));
     }
 
     /// <summary>brain이 없으면 준비·초기는 거짓으로 돌아간다.</summary>

@@ -3037,7 +3037,7 @@ public sealed partial class HostSession
         RawPlayerWorld player = _livePlayerWorld ?? throw new InvalidOperationException("AI 런타임 화신 미연결");
         RawSquidHash hash = _terrainHash ?? throw new InvalidOperationException("AI 런타임 해시 미연결");
         RawSquidReward hp = _fortHp ?? throw new InvalidOperationException("AI 런타임 HP 미연결");
-        _aiFinderState = new ContainedFinderState();
+        _aiFinderState = new ContainedFinderState { SharedBoss = () => Gameplay.Authority.Boss };
         var finder = new RawCarrierPreDestroy(Pool, _aiFinderState, new CarrierPreDestroyHooks
         {
             ValidateDamageable = (_, _) => throw new InvalidOperationException("AI 전략 사전 파괴 검증 미연결(R6)"),
@@ -3136,6 +3136,7 @@ public sealed partial class HostSession
                 Demo = () => _aiDemo() != 0,
             });
         BuildAiEconomyDevice();
+        BuildAiFactoryDevice(types, player, strategy);
         var runtime = new RawAiRuntime(AiBrainMemory, PlayerRecords,
             new AiRuntimeGlobals
             {
@@ -3149,7 +3150,7 @@ public sealed partial class HostSession
                 Prepare = brain => preparation.Update(brain),
                 SelectGoal = brain => strategy.SelectGoal(brain),
                 Collectors = _ => throw new InvalidOperationException("AI 수집자 행동 미연결(R6)"),
-                Factories = _ => throw new InvalidOperationException("AI 시설 행동 미연결(R6)"),
+                Factories = brain => AiFactories.Manage(brain),
                 DryScan = _ => throw new InvalidOperationException("AI 부족좌표 스캔 미연결(R6)"),
                 DryNotice = (_, _, _) => throw new InvalidOperationException("AI 부족좌표 통지 미연결(R6)"),
                 Priest = (_, _) => throw new InvalidOperationException("AI 사제 행동 미연결(R6)"),

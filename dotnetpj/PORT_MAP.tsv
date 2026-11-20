@@ -205,6 +205,7 @@ cpppj/src/client/RawCampaignParticles.h	Netstorm.Client.Host/HostMissionBurning.
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client.Host/HostMissionAudio.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client.Host/HostMissionBurning.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.AiEconomy.cs	bb1dbd427f232659d229a3522ff425fd0e19cf4f	session
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.AiFactories.cs	f2765db7c1ee0e36937e99deab50b4cc20b4e98e	session
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.Burning.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.PlayerWorld.cs	b43574aea7f7f56a6d761b0fd50846017c84cd5a	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.PriestWorld.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
