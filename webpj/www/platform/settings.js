@@ -33,6 +33,8 @@ export const SETTING_DEFINITIONS = Object.freeze({
     edgeScroll: Object.freeze({ kind: 'toggle', fallback: 1 }),
     autoDemo: Object.freeze({ kind: 'toggle', fallback: 1 }),
     tellTips: Object.freeze({ kind: 'toggle', fallback: 1 }),
+    // 섬 소유자 표식 숨김(F7·View 메뉴)이다. 설정에 키가 없으면 원본 Config GetInt 처럼 0(소유자 색 표식을 보임)이다. (2026-11-20 WB04-E1093)
+    useBanners: Object.freeze({ kind: 'toggle', fallback: 0 }),
     welcomeGiven: Object.freeze({ kind: 'toggle', fallback: 0 }),
     tipNumber: Object.freeze({ kind: 'integer', fallback: 0 }),
 });

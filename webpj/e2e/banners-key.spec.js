@@ -58,9 +58,13 @@ test('F7 은 섬 소유자 표식을 뒤집고 월드를 다시 그리며 메뉴
   const errors = []; page.on('pageerror', (error) => errors.push(error.message)); page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
   await startTutorial(page);
   const first = await bannerState(page);
+  // 설정에 값이 없으면 원본 Config 처럼 0 이라 섬 소유자 색 표식을 보이는 것이 기본이다(원본 스크린샷의 파란 섬 테두리).
+  expect(first.banners).toBe(0);
   // 전체 다시 그리기 요청 횟수를 센다(프레임이 월드 다시 그리기 값을 바로 소비하므로 값 대신 요청을 센다).
   await page.evaluate(() => { const renderer = window.netstorm._clientRenderer, original = renderer.invalidateAll.bind(renderer); window.__redraws = 0; renderer.invalidateAll = (...args) => { window.__redraws += 1; return original(...args); }; });
   await page.keyboard.press('F7'); await page.waitForTimeout(500);
+  // 바뀐 값은 설정 저장소에도 남는다(원본 options.cfg 대응).
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('netstorm.settings')).values.useBanners)).toBe(1);
   const toggled = await bannerState(page); expect(toggled.banners).toBe(first.banners === 0 ? 1 : 0); expect(toggled.redraws).toBeGreaterThan(0);
   await page.keyboard.press('F7'); await page.waitForTimeout(500);
   expect((await bannerState(page)).banners).toBe(first.banners);

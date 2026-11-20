@@ -836,6 +836,11 @@ export class Netstorm {
         if (this._clientKencloud && this._gameData) this._clientKencloud.readOptions(this._gameData);
     }
 
+    // 현재 설정의 useBanners(섬 소유자 표식 숨김)를 소유자 색표 저장소에 적용한다(원본 `Client::InterpretOwnerColorOptions` → `SetEnabled(GetInt("useBanners"))`). 설정에 값이 없으면 원본 Config 처럼 0 이라 소유자 색 표식(섬 테두리 파랑 등)을 보인다. 색표 준비 전이면 무시된다. (2026-11-20 WB04-E1093)
+    _syncClientOwnerColorOptions() {
+        if (this._clientColorSort && this._gameData && this._clientKencloud) this._clientColorSort.ownerTables.setEnabled(this._gameData.readInt('useBanners', 0).value >>> 0, this._clientKencloud.worldRedraw());
+    }
+
     // 실제 게임 자산에서 장기 물리를 만들고 같은 Client 권한·시각·Kernel과 진단을 연결한다.
     _initializeClientWorldStorage(game, files) {
         if (this._surfaceStorage || !this._clientGameplay || !this._gameClock) throw new Error('Client 월드 저장소의 중복 또는 공통 수명 누락');
@@ -1543,10 +1548,10 @@ export class Netstorm {
         return false;
     }
 
-    // 메뉴·표시 키가 쓰는 설정 한 줄을 적용한다. 설정 층의 키는 Settings 가, 그 밖은 게임 데이터가 저장하며, 섬 소유자 표식(useBanners)은 소유자 색표를 다시 만들고 월드를 다시 그린다(원본 `onChanged` → 43bc40 `InterpretOwnerColorOptions`). (2026-11-20 WB04-E1090)
+    // 메뉴·표시 키가 쓰는 설정 한 줄을 적용한다. 설정 층의 키는 Settings 가, 그 밖은 게임 데이터가 저장하며 두 쓰기 모두 설정 변경 통지(`_onSettingChange`·`_onConfigWrite`)에서 소유자 색표(useBanners) 등을 다시 동기한다(원본 `onChanged`). 섬 소유자 표식은 월드도 다시 그린다. (2026-11-20 WB04-E1090, WB04-E1093: 설정 키 승격과 통지 동기로 정리)
     _applyCampaignConfig(key, value) {
         if (this._settings?.get(key) !== undefined) this._settings.set(key, value); else this._gameData.set(key, value);
-        if (key === 'useBanners') { this._clientColorSort.ownerTables.setEnabled(value >>> 0, this._clientKencloud.worldRedraw()); this._clientRenderer.invalidateAll(); }
+        if (key === 'useBanners') this._clientRenderer.invalidateAll();
     }
 
     // Tell 이름이 `SetIslands(0|1)` 이면 섬 테마 설정을 바꾸고 월드를 다시 그리며, 그 밖에는 Tell 창을 연다. 메뉴·표시 키가 같이 쓴다. (2026-11-20 WB04-E1087)
@@ -1884,6 +1889,7 @@ export class Netstorm {
             this._syncClientCloudOptions(); this._syncClientHelpWord();
             if (!this._clientPaletteScreen) this._initializeClientPalette(this._gameAssets);
             if (!this._clientColorSort.mapsReady) this._initializeClientPaletteCache(this._gameAssets);
+            this._syncClientOwnerColorOptions();
             if (!this._clientGump) this._initializeClientGump();
             if (!this._clientGuide) this._initializeClientGuide();
             await this.options.prepare(this);
@@ -2093,13 +2099,13 @@ export class Netstorm {
         if (key === 'sound' || key === 'music' || key === 'soundVolume' || key === 'musicVolume' || key === 'swapLeftRightSpeakers') this._applySettings();
         const value = this._settings?.get(key);
         if (value !== undefined) this._gameData?.set(key, value, { silent: true });
-        this._syncClientCloudOptions(); this._syncClientHelpWord();
+        this._syncClientCloudOptions(); this._syncClientHelpWord(); this._syncClientOwnerColorOptions();
     }
 
     // 게임 데이터 설정 층에 쓴 값을 저장소로 옮긴다(원본에서는 메인 루프가 변경 표시를 보고 options.cfg 를 저장한다). 진행 값(`Done*`)은 진행 저장소에,
     // 설정 키(대소문자 무시)는 설정 저장소에 넣어 로컬 저장소에 바로 저장한다. 그 밖의 값(`global.` 실행 중 값 등)은 저장하지 않는다. (2026-10-30 WB03-H)
     _onConfigWrite(key, value) {
-        this._syncClientCloudOptions(); this._syncClientHelpWord();
+        this._syncClientCloudOptions(); this._syncClientHelpWord(); this._syncClientOwnerColorOptions();
         if (isProgressKey(key)) {
             this._progress?.set(key, value);
             return;
