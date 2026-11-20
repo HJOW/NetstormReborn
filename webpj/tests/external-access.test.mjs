@@ -218,7 +218,8 @@ test('외부 서비스 기능: 구 검증·진단·외부 실행·서버 전송�
     }
     // 미연결 대화상자 명령은 안내만 한다(창·명령·팁 처리 없음).
     const calls = [];
-    const dialog = { _openTell: (name) => calls.push(name), _runScriptCommand: () => calls.push('script'), _runTellTip: () => calls.push('tip') };
+    // 송금·동맹 단추 이름 해석(`_queueDialogPlayerCommand`, E1126)은 입력 큐가 없는 이 대역에서는 아무것도 올리지 않는다. 외부 서비스 이름(TechnicalHelp·Zsend)은 거기서도 걸리지 않아야 한다.
+    const dialog = { _openTell: (name) => calls.push(name), _runScriptCommand: () => calls.push('script'), _runTellTip: () => calls.push('tip'), _queueDialogPlayerCommand: Netstorm.prototype._queueDialogPlayerCommand };
     for (const name of ['TechnicalHelp', 'Zsend']) Netstorm.prototype._runDialogCommand.call(dialog, { name, argument: 'x' });
     assert.deepEqual(calls, []);
     assert.equal(info.mock.callCount(), 2);

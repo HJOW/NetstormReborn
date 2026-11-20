@@ -7,6 +7,8 @@ import { objectMenuSlots } from '../render/object-menu-slots.js';
 
 // 원본 공통 열기와 두 작성 몸체의 가상 주소다.
 const COMMON_OPEN = 0x004adb30, DAMAGEABLE = 0x0044cbd0, PLAIN = 0x004b1270;
+// 파생 객체 메뉴 본체(+a8)의 일곱 주소이다: Meltdown·상태 변경·Dig Up/Turn To Spell·도움말·Storm Power·회수 개수·신전 AI 메뉴(+a8 4dcca0). 열기(+ac)는 공통이다. (2026-11-20 WB04-E1127)
+const VARIANTS = new Set([0x0041c210, 0x00422000, 0x00462390, 0x00462550, 0x00485600, 0x0048eca0, 0x004dcca0]);
 
 // 현재 World의 공통 객체 메뉴를 같은 Client 메뉴 작성기에 연다.
 export class ClientObjectMenuOpen {
@@ -34,10 +36,11 @@ export class ClientObjectMenuOpen {
         const slots = this.#slots(sid);
         if (slots?.populate === DAMAGEABLE) return this.#objects.openDamageable(sid);
         if (slots?.populate === PLAIN) return this.#objects.open(sid);
+        if (VARIANTS.has(slots?.populate)) return this.#objects.openVariant(sid, slots.populate);
         throw new Error('공통 객체 메뉴의 작성 주소 미연결');
     }
     // 공통 열기(+ac 004adb30)이고 연결한 두 작성 몸체 중 하나이면 true 다.
-    supports(sid) { const slots = this.#slots(sid); return Boolean(slots) && slots.open === COMMON_OPEN && (slots.populate === DAMAGEABLE || slots.populate === PLAIN); }
+    supports(sid) { const slots = this.#slots(sid); return Boolean(slots) && slots.open === COMMON_OPEN && (slots.populate === DAMAGEABLE || slots.populate === PLAIN || VARIANTS.has(slots.populate)); }
     // 건설 중 거부·제단 위임 뒤 메뉴를 열고 열릴 때만 원본 효과음을 재생한다.
     open(sid, event) {
         if (!this.supports(sid)) throw new Error('공통 객체 외 메뉴는 아직 미연결');

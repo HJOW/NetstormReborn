@@ -36,6 +36,7 @@ import { executeDeveloperDevices } from './raw-campaign-developer-devices.js';
 import { RawPriestMenu, bindPriestMenuWorld, createPriestMenuState } from './raw-priest-menu.js';
 import { RawPlayerMenu, createPlayerMenuState } from './raw-player-menu.js';
 import { RawObjectMenu, createObjectMenuState } from './raw-object-menu.js';
+import { RawObjectMenuVariants, objectMenuVariantCommandValue } from './raw-object-menu-variants.js';
 import { RawCarrierMenu } from './raw-carrier-menu.js';
 import { RawFactoryMenu, createFactoryMenuState } from './raw-factory-menu.js';
 import { KnowledgeMenuKind, showKnowledgeMenu, showKnowledgeSideMenu, showWorldKnowledgeMenu } from './raw-knowledge-menu.js';
@@ -1143,6 +1144,30 @@ export class RawCampaignSession {
             salvageRefund: (sid, type, count) => this.#live().hp.salvageRefund(sid, type, count | 0),
             ownerSubscriber: (owner) => identity.subscriberForOwner(owner), playerMenu: (subscriber) => players.open(subscriber) };
         return new RawObjectMenu(o.core.pool, o.core.types, state, hooks);
+    }
+    // 신전(AI 메뉴 4dcca0)·배터리(Meltdown 41c210)·발전기(Storm Power 485600)·상태 변경(422000)·도움말(462550)·회수 개수(48eca0) 같은 파생 객체 메뉴 본체를 만든다(원본 `RawObjectMenuVariants`).
+    // 이 연결이 없으면 해당 객체를 우클릭해도 메뉴가 열리지 않았다. 게임 값은 현재 Session 에서 읽고, 항목·머리말·공통 메뉴 작성(object/damageable/salvage)은 호출자의 UI 가 공급한다. (2026-11-20 WB04-E1127)
+    makeObjectMenuVariants(input = {}) {
+        const o = this.#live(); if (!o.loaded) throw new Error('실제 Session 파생 객체 메뉴의 설치 수명 누락');
+        const live = () => this.#live(), item = input.item;
+        const hooks = { ...input,
+            // CHEAT Dig Up 은 편집 밖에서 숨기고 편집 안의 원문 조건은 그대로 전달한다.
+            item: (label, command, parameter, include, enabled) => {
+                if (typeof item !== 'function') throw new Error('파생 객체 메뉴의 실제 항목 작성기 없음');
+                item(label, command, parameter, !live().globals.editor && command === objectMenuVariantCommandValue(0x5427ac) ? 0 : include, enabled);
+            },
+            global: (address) => {
+                const code = objectMenuVariantCommandValue(address); if (code !== null) return code;
+                const state = live();
+                switch (address) { case 0x594fa4: return state.globals.missionPost ? 1 : 0; case 0x5c85a4: return state.globals.editor ? 1 : 0; case 0x55a480: return state.playerState.special ? 1 : 0; case 0x540c70: return state.playerState.battleOwner; default: throw new Error('파생 객체 메뉴 현재 전역 미연결'); }
+            },
+            localOwner: () => live().playerState.battleOwner, maximumHp: (sid) => live().hp.maxHitPoints(sid),
+            eventZero: (sid) => live().core.processes.findEvent(sid, 0) !== null,
+            hasBrain: (sid) => { const state = live(), owner = state.core.pool.slot(sid)[34]; if (owner >= 9) throw new RangeError('신전 메뉴 Player 범위'); const at = owner * 180 + 0xb0; return owner !== 0 && (state.players[at] | state.players[at + 1] | state.players[at + 2] | state.players[at + 3]) !== 0; },
+            // AI 디버그 메뉴는 checking 진단이 켜진 때만 열리는 개발자 기능이다. 꺼져 있으면 효과 없이 돌아가고 켜져 있으면 미연결을 알린다.
+            aiMenu: () => { if (live().gameplayGlobals.aiDebug().checking().value !== 0) throw new Error('AI 디버그 객체 메뉴 미연결'); },
+            count: (sid) => live().assetModules.virtualCount(sid) };
+        return new RawObjectMenuVariants(o.core.pool, hooks);
     }
     // 실제 운반물 내용·프로세스·위치·자금과 기본 객체 메뉴를 같은 Session에서 조회한다.
     makeCarrierMenu(input = {}) {
