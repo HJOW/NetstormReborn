@@ -161,6 +161,7 @@ public sealed partial class ClientHostGame : Game
         _driver = driver;
         _options = options;
         _startup = startup;
+        InterpretNsInfoOptions();
         _gameRandom = startup?.Random ?? new GameRandom();
         _clock = clock ?? new HostTimeSource();
         _localState = new ClientLocalStateGlobals(_gameplay, _ambientSound);

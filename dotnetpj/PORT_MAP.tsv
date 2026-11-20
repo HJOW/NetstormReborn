@@ -1233,3 +1233,10 @@ cpppj/src/o/RawMetaZoneCleanup.cpp	Netstorm.Core/Original/RawMetaZoneCleanup.cs	
 cpppj/src/o/RawMetaZoneCleanup.h	Netstorm.Core/Original/RawMetaZoneCleanup.cs	35041198c0de7cbfb9d5f9941b3fca4483add8b3	port
 cpppj/src/client/ClientStateStorageCleanup.cpp	Netstorm.Client/Host/HostSession.StateDeletion.cs	899c934dcca17ce113218a4fe2a45ae059f22270	port
 cpppj/src/client/ClientStateStorageCleanup.h	Netstorm.Client/Host/HostSession.StateDeletion.cs	881b0ef71fd89f5a750e0a3b6b73a5244c3b5e00	port
+cpppj/src/client/ClientNsInfoGlobals.cpp	Netstorm.Client/ClientNsInfoGlobals.cs	d97301dc5ffef7abd58a701a06efa1dc9151fd77	port
+cpppj/src/client/ClientNsInfoGlobals.h	Netstorm.Client/ClientNsInfoGlobals.cs	080c977d6be0b1c19cde69ac844b03f3d4e23b7c	port
+cpppj/src/client/RootServerEndpoint.cpp	Netstorm.Client/RootServerEndpoint.cs	6bff48b8bdd33350fd809c7a6a1b62eff4b4a8e4	port
+cpppj/src/client/RootServerEndpoint.h	Netstorm.Client/RootServerEndpoint.cs	6bff48b8bdd33350fd809c7a6a1b62eff4b4a8e4	port
+cpppj/src/client/ClientMain.cpp	Netstorm.Client/ClientNsInfoGlobals.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
+cpppj/src/client/ClientMain.cpp	Netstorm.Client.Host/ClientHostGame.NsInfo.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
+cpppj/src/client/ClientMain.h	Netstorm.Client.Host/ClientHostGame.NsInfo.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
