@@ -2349,6 +2349,14 @@
       "use": "한국어 다섯번째 튜토리얼 대본(UTF-8): 원본 실행 설정과 안내·미션 완료 명령 유지"
     },
     {
+      "path": "d/Tutorial6.korean",
+      "source": "webpj/translations/Tutorial6.korean",
+      "bundle": "korean",
+      "size": 7771,
+      "sha256": "30921970d43b588d68b2f840e48ff957516ebf6afde277c10baf7889c1e2a257",
+      "use": "한국어 여섯번째 튜토리얼 대본(UTF-8): 원본 실행 설정과 안내·미션 완료 명령 유지"
+    },
+    {
       "path": "d/help.korean",
       "source": "webpj/translations/help.korean",
       "bundle": "korean",
