@@ -465,4 +465,8 @@
   <ItemGroup>
     <None Include="../../../cpppj/tests/fixtures/carrier-content-notice-x86.tsv" Link="X86/carrier-content-notice-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- DN 도구가 독립 원본 기계어로 관측한 패킷 복제4836입력을 공유한다. -->
+  <ItemGroup>
+    <None Include="Fixtures/packet-copy-x86.tsv" Link="X86/packet-copy-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

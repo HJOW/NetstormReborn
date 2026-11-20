@@ -1110,3 +1110,5 @@ cpppj/src/o/RawPacketFrame.h	Netstorm.Net/RawPacketFrame.cs	6c4a981c5c5c102a69f0
 cpppj/src/o/RawFactoryResearch.cpp	Netstorm.Net/FactoryResearchRegistration.cs	7c51717d891821fde48ff241b7d206f533423004	port
 cpppj/src/o/RawCarrierContentNotice.cpp	Netstorm.Core/Original/RawCarrierContentNotice.cs	39280bfc24df26a8589aa566557b7bcfe43e3bf3	port
 cpppj/src/o/RawCarrierContentNotice.h	Netstorm.Core/Original/RawCarrierContentNotice.cs	39280bfc24df26a8589aa566557b7bcfe43e3bf3	port
+cpppj/src/o/RawPacketCopy.cpp	Netstorm.Net/RawPacketCopy.cs	b9cb1abf46965bd8ac7c935497ba75ee70dac6c3	port
+cpppj/src/o/RawPacketCopy.h	Netstorm.Net/RawPacketCopy.cs	b9cb1abf46965bd8ac7c935497ba75ee70dac6c3	port
