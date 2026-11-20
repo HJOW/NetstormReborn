@@ -29,3 +29,23 @@ export function openExternalLink(document, link) {
         return false;
     }
 }
+
+// 만든 바이트 파일(화면 저장 GIF 등)을 브라우저 내려받기로 저장한다. 같은 출처에서 만든 Blob 주소를 숨은 `<a download>` 로 누른 뒤 곧 반납한다. 외부 접속이 아니다.
+// 반환: 내려받기를 시작했으면 true, 문서·Blob 이 없거나 예외가 났으면 false 이다. 사용: downloadBytes(root.ownerDocument, 'pic0.gif', bytes, 'image/gif'). (2026-11-20 WB04-E1100)
+export function downloadBytes(document, fileName, bytes, mime = 'application/octet-stream') {
+    if (typeof document?.createElement !== 'function' || typeof globalThis.Blob !== 'function' || typeof globalThis.URL?.createObjectURL !== 'function') return false;
+    let address = null;
+    try {
+        address = globalThis.URL.createObjectURL(new globalThis.Blob([bytes], { type: mime }));
+        const anchor = document.createElement('a');
+        anchor.href = address; anchor.download = String(fileName);
+        anchor.click();
+        return true;
+    } catch (error) {
+        console.warn('파일을 내려받지 못했습니다.', error);
+        return false;
+    } finally {
+        // 내려받기가 시작된 뒤 주소를 반납한다. 시작 전에 반납하면 일부 브라우저가 실패하므로 한 박자 늦춘다.
+        if (address) globalThis.setTimeout?.(() => globalThis.URL.revokeObjectURL(address), 1000);
+    }
+}

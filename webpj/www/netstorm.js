@@ -75,6 +75,7 @@ import { KnowledgeMenuKind } from './core/raw-knowledge-menu.js';
 import { dispatchGameTimeKey, readGameTimeSeconds } from './core/game-time-display.js';
 import { idleMainMenuActivity } from './core/main-menu-activity.js';
 import { frameDue, frameRateChoices, normalizeFrameRate, parseFrameRateTarget } from './core/frame-rate-option.js';
+import { dispatchScreenshotKey, encodeScreenshotGif, screenshotFileName, screenshotPrimaryPalette } from './core/screenshot-gif.js';
 import { languageChoices, languageOfChoice, parseLanguageTarget, savedLanguage } from './platform/language-choice.js';
 import { difficultyChoices, parseDifficultyTarget } from './core/difficulty-option.js';
 import { dispatchViewKeyInput } from './core/view-key-input.js';
@@ -137,7 +138,7 @@ import { TELL_TIP_COMMAND, dispatchTellTip } from './ui/tell-tip.js';
 import { applyScriptConfig, parseScriptCommand } from './ui/script-command.js';
 import { dispatchHelpLink } from './ui/help-link.js';
 import { resolveExternalLink } from './ui/external-link.js';
-import { openExternalLink } from './platform/external-opener.js';
+import { downloadBytes, openExternalLink } from './platform/external-opener.js';
 import { configParseLong } from './assets/config.js';
 import { HelpWindow, createHelpWindow } from './ui/help-window.js';
 import { CURSOR_NORMAL, applyCursorStyle, buildCursorCss } from './ui/cursor.js';
@@ -524,6 +525,8 @@ export class Netstorm {
             openExternal: options.openExternal ?? null,
             // 언어를 바꾼 뒤 페이지를 다시 불러오는 함수 () => void 이다. 기본(null)은 location.reload 이며 검사가 실제 다시 불러오기 없이 호출만 받도록 바꿔 끼운다. (2026-11-20 WB04-E1095)
             reload: options.reload ?? null,
+            // 화면 저장 GIF 를 내려받는 함수 (문서, 이름, 바이트, 형식) => boolean 이다. 기본(null)은 platform/external-opener.js 의 downloadBytes 이며 검사가 실제 내려받기 없이 바이트만 받도록 바꿔 끼운다. (2026-11-20 WB04-E1100)
+            download: options.download ?? null,
             prepare: options.prepare ?? (async () => {}),
             onStateChange: options.onStateChange ?? null,
             onMenuCommand: options.onMenuCommand ?? null,
@@ -580,6 +583,8 @@ export class Netstorm {
         this._menuPauseDepth = 0; this._menuMuteDepth = 0;
         // 마지막으로 처리한 프레임의 rAF 시각(ms)이다. 프레임 상한 판단에 쓴다. (2026-11-20 WB04-E1094)
         this._lastFrameStamp = null;
+        // Shift-F7 화면 저장의 파일 번호다. 저장할 때마다 먼저 증가한 값을 이름에 쓴다(원본 GifOutName 번호). (2026-11-20 WB04-E1100)
+        this._screenshotCounter = 0;
         // 메인 메뉴 무활동(45초) 감시 상태다. armed 가 false 이면 다음 메인 메뉴 프레임에서 기한을 새로 잡는다. (2026-11-20 WB04-E1092)
         this._mainMenuActivity = { armed: false, deadline: 0, pointer: { x: 0, y: 0 } };
         // 실제 미션 Guide는 자산과 장기 저장소가 준비된 뒤 생성한다.
@@ -852,6 +857,18 @@ export class Netstorm {
         if (params.has('lang')) { params.delete('lang'); const query = params.toString(); view.history.replaceState(null, '', `${view.location.pathname}${query ? `?${query}` : ''}${view.location.hash}`); }
         (this.options.reload ?? (() => view.location.reload()))();
         return true;
+    }
+
+    // 현재 논리 화면(8비트 팔레트 인덱스)을 GIF87a 로 인코딩해 브라우저 내려받기로 저장한다(원본 `Client::SaveGifScreenshot`). 팔레트는 현재 flash·날씨가 아니라 고정 primary 표의 RGB 이다. 번호는 저장마다 하나씩 올린다. (2026-11-20 WB04-E1100)
+    _saveScreenshot() {
+        const screen = this._clientPaletteScreen, colors = this._clientColorSort;
+        if (!screen || !colors?.primary) throw new Error('화면 저장의 현재 화면·primary 팔레트 누락');
+        const pixels = screen.lock();
+        try {
+            const bytes = encodeScreenshotGif(screen.width, screen.height, screen.pitch, pixels, screenshotPrimaryPalette(colors.primary.bytes));
+            const name = screenshotFileName(this._screenshotCounter); this._screenshotCounter = (this._screenshotCounter + 1) >>> 0;
+            (this.options.download ?? downloadBytes)(this._root?.ownerDocument ?? null, name, bytes, 'image/gif');
+        } finally { screen.unlock(); }
     }
 
     // 현재 설정의 useBanners(섬 소유자 표식 숨김)를 소유자 색표 저장소에 적용한다(원본 `Client::InterpretOwnerColorOptions` → `SetEnabled(GetInt("useBanners"))`). 설정에 값이 없으면 원본 Config 처럼 0 이라 소유자 색 표식(섬 테두리 파랑 등)을 보인다. 색표 준비 전이면 무시된다. (2026-11-20 WB04-E1093)
@@ -1698,7 +1715,7 @@ export class Netstorm {
             // T/t: 게임 시간 표시 켜기·끄기다. 정지 중에는 바꾸지 않고(원본 정지 관문) 안내는 Kernel 프레임 뒤에 만든다. (2026-11-20 WB04-E1097)
             else if (gameTimeKey) { if (!release && !this._mainMenu?.dialog) dispatchGameTimeKey(event, this._clientGameplay.showGameTime(), () => this._gameClock.paused()); }
             // F2·Shift-F3·F8 은 표시 키 분배기, F9 는 플레이어 목록 명령 예약이다. 뗌은 소비만 한다. (2026-11-20 WB04-E1087)
-            else if (MISSION_VIEW_KEYS.has(code) || code === MISSION_F9) { if (!release && !this._mainMenu?.dialog) { if (code === MISSION_F9) queuePlayerListKey(event, this._clientInputQueue); else dispatchViewKeyInput(event, this._viewKeyGlobals(), this._viewKeyHooks()); } }
+            else if (MISSION_VIEW_KEYS.has(code) || code === MISSION_F9) { if (!release && !this._mainMenu?.dialog) { if (code === MISSION_F9) queuePlayerListKey(event, this._clientInputQueue); else if (dispatchScreenshotKey(event, () => this._saveScreenshot(), (section) => { this._openTell(section); })) { /* Shift-F7 은 화면 저장만 하고 일반 F7 표식 토글로 가지 않는다. */ } else dispatchViewKeyInput(event, this._viewKeyGlobals(), this._viewKeyHooks()); } }
             else if (isGameMenuCommand(code) && !release && !this._mainMenu?.dialog) { if (this._dispatchCampaignMenuCommand(event)) break; }
         }
     }

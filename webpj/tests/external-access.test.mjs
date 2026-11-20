@@ -83,7 +83,8 @@ test('외부 접속 소스 감사: 네트워크 API 는 같은 출처 자산 요
     // 도움말 창 공장의 `window` 는 HelpWindow 지역 변수이며 window.open(topic) 은 첫 주제 열기이다(브라우저 창 열기 아님).
     assert.deepEqual(windowOpen, ['ui/help-window.js']);
     // 바깥 주소를 여는 앵커 요소(createElement('a'))는 열기 장치 한 파일에서만 만든다(WB03-AD). 다른 곳의 링크 열기·이동은 금지 패턴이 막는다.
-    assert.deepEqual(anchorUsers, ['platform/external-opener.js']);
+    // 같은 파일 안에서 링크 열기와 화면 저장 내려받기(downloadBytes, 같은 출처 Blob) 두 곳이 앵커를 만들므로 파일 단위로 중복을 지우고 비교한다. (2026-11-20 WB04-E1100)
+    assert.deepEqual([...new Set(anchorUsers)], ['platform/external-opener.js']);
     assert.match(fs.readFileSync(path.join(WWW_ROOT, 'ui', 'help-window.js'), 'utf8'), /const window = new HelpWindow\(/);
     // 시작 문서는 바깥 스크립트·스타일·글꼴을 부르지 않는다.
     const html = fs.readFileSync(path.join(WWW_ROOT, 'index.html'), 'utf8');
