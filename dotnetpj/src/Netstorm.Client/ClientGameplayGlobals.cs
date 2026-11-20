@@ -14,6 +14,9 @@ public sealed class ClientGameplayGlobals
     /// <summary>현재 서버와 boss를 같은 주소에서 읽고 쓰는 소유자다.</summary>
     public RawAuthorityState Authority { get; } = new();
 
+    /// <summary>00541250의 최초126이며 공장 고정프레임과 연구/업그레이드가 공유하는 현재 아웃포스트 TYPE다.</summary>
+    public UIntBox OutpostTypeBox { get; } = new() { Value = 126 };
+
     /// <summary>00540cb8의 최초 DWORD6이다. 사제 표본 쓰기 후 마지막 값을 미션 반납 뒤에도 보존한다.</summary>
     public UIntBox PatchSample { get; } = new() { Value = 6 };
 

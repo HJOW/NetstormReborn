@@ -210,11 +210,13 @@ cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.AiEcono
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.AiFactories.cs	f2765db7c1ee0e36937e99deab50b4cc20b4e98e	session
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.Burning.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.ConstructionProgress.cs	cc18cc6ba27bffffe2cbb1330ad087e5a0f5f427	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.FactoryUpgrade.cs	2195b1e2662f8fb97cf5ada6e6bbd8c2b75c65c6	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.Flare.cs	f42a384847f203b5739da79358504baf78ab5b44	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.PlayerWorld.cs	b43574aea7f7f56a6d761b0fd50846017c84cd5a	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.PriestWorld.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Mission/RawCampaignSession.cs	800ff40cdf869f9e36a256a180397e48ac156702	port
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.ConstructionProgress.cs	cc18cc6ba27bffffe2cbb1330ad087e5a0f5f427	port
+cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.FactoryUpgrade.cs	2195b1e2662f8fb97cf5ada6e6bbd8c2b75c65c6	port
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.Flare.cs	f42a384847f203b5739da79358504baf78ab5b44	port
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Mission/RawCampaignSession.cs	4ee213870fe6716f970ee9df7c5c1effd7f85c13	port
 cpppj/src/client/RawChatChannels.cpp	Netstorm.Client/Chat/RawChatChannels.cs	65bc3e0c7019fd3a9265703f30daac9b8fbab373	L1
@@ -254,6 +256,7 @@ cpppj/src/client/RawSurfaceContent.cpp	Netstorm.Core/Original/RawSurfaceStorage.
 cpppj/src/client/RawSurfaceContent.cpp	Netstorm.Core/Original/RawSurfaceStorage.Reward.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/client/RawSurfaceDamageable.cpp	Netstorm.Core/Original/RawSurfaceStorage.Damageable.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/client/RawSurfaceDeletion.cpp	Netstorm.Core/Original/RawSurfaceStorage.Deletion.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/client/RawSurfaceDepend.cpp	Netstorm.Client/Host/HostSession.Dependencies.cs	2195b1e2662f8fb97cf5ada6e6bbd8c2b75c65c6	port
 cpppj/src/client/RawSurfaceFence.cpp	Netstorm.Core/Original/RawSurfaceStorage.Fence.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/client/RawSurfaceFence.cpp	Netstorm.Core/Original/RawSurfaceStorage.FenceClear.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/client/RawSurfaceFence.cpp	Netstorm.Core/Original/RawSurfaceStorage.FenceCreate.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port

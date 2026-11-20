@@ -245,16 +245,25 @@ public sealed partial class RawSurfaceStorage
         // TYPE/owner/상태를 읽지 않고 실제 현재 가상표만 선택한다.
         ReadOnlySpan<byte> raw = Pool.Slot(receiver);
         uint table = (uint)(raw[0] | (raw[1] << 8) | (raw[2] << 16) | (raw[3] << 24));
-        foreach (NativeAssetDeletionEntry entry in NativeAssetDeletionEntries)
+        if (TryGetAssetDependencyMethod(table, out _))
         {
-            if (entry.Table == table)
-            {
-                EmitDefaultAssetEffect(new SquidDestroyEvent(SquidDestroyEffect.ReleaseDependent, receiver, parent, value));
-                return true;
-            }
+            EmitDefaultAssetEffect(new SquidDestroyEvent(SquidDestroyEffect.ReleaseDependent, receiver, parent, value));
+            return true;
         }
 
         return false;
+    }
+
+    /// <summary>같은 보호83개 VT 표에서 실제+34 진입점을 조회한다. 상태/TYPE/owner를 추가로 검사하지 않는다.</summary>
+    public static bool TryGetAssetDependencyMethod(uint table, out uint method)
+    {
+        // 장기 분배와 세션 연결이 같은 읽기 전용 원본 메타데이터를 사용한다.
+        foreach (NativeAssetDeletionEntry entry in NativeAssetDeletionEntries)
+        {
+            if (entry.Table != table) continue;
+            method = entry.Notice; return true;
+        }
+        method = 0; return false;
     }
 
     /// <summary>효과를 호출하는 시점의 VT를 읽으며 TYPE/owner/상태로 가상 선택을 바꾸지 않는다. 0.573에서 추가됐다.</summary>

@@ -2309,7 +2309,8 @@ public sealed partial class HostSession
             UpdateState = sid => _terrainDisplay!.Update(Pool.Slot(sid)),
         };
         hooks = RawFactoryPostPop.MakeFactoryPostPopHooks(Pool, frames, hooks);
-        var body = new RawFactoryPostPop(Pool, hash, types, WorldFrames, terrainPostPop, carrier, state, hooks);
+        var body = new RawFactoryPostPop(Pool, hash, types, WorldFrames, terrainPostPop, carrier, state, hooks,
+            new() { CurrentFixedFrame = () => Gameplay.OutpostTypeBox.Value });
         _factoryPostPop = body;
         terrainPostPop.SetFactoryPostPop(body);
         _livePostPop?.SetFactoryPostPop(body);
@@ -2590,6 +2591,13 @@ public sealed partial class HostSession
     /// <remarks>2026-11-19 0.650에서 펜스 결선에서 분리했다. 근거: cpppj o/RawFencePostPop.cpp·o/RawFenceCreate.cpp의 가상+10 삭제다. Pre/Post는 같은 몸체의 깊이로 닫고 종속은 같은 몸체로 재귀한다. 단일 미션의 송신은 기록만 하며 선택 해제는 화면이 없어 생략한다. 전송·통지 일치는 R4-6 전송 결선에서 대조한다.</remarks>
     private Action<int, uint> BuildSessionDestroy(string name, SquidProcessHost processes)
     {
+        SquidDestroyHooks hooks = BuildSessionDestroyHooks(name, processes);
+        return (sid, flags) => processes.Destroy().Destroy(sid, flags, hooks);
+    }
+
+    /// <summary>공통 삭제의 같은 실제 효과를 감시 쌍에도 빌려 프로세스와 양방향Form 수명을 보존한다.</summary>
+    private SquidDestroyHooks BuildSessionDestroyHooks(string name, SquidProcessHost processes)
+    {
         ArgumentException.ThrowIfNullOrEmpty(name);
         ArgumentNullException.ThrowIfNull(processes);
         RawSquidDestroy body = processes.Destroy();
@@ -2598,6 +2606,13 @@ public sealed partial class HostSession
         {
             Emit = e =>
             {
+                // 감시 클래스의 실제 가상 통지를 공통깊이 완료로 축약하지 않는다.
+                if (_worldDependencies is { } dependencies && dependencies.IsDependForm(e.Sid)
+                    && e.Effect is SquidDestroyEffect.PreDestroy or SquidDestroyEffect.PostDestroy
+                        or SquidDestroyEffect.ReleaseDependent or SquidDestroyEffect.DestroyDependent)
+                {
+                    dependencies.Hooks().Emit!(e); return;
+                }
                 // 실제ProcessForm 가상 통지는 같은Host가 Kernel/부모 수명을 정리해야 한다.
                 if (processes.IsProcessForm(e.Sid) && e.Effect is SquidDestroyEffect.PreDestroy or SquidDestroyEffect.PostDestroy
                     or SquidDestroyEffect.ReleaseDependent or SquidDestroyEffect.DestroyDependent)
@@ -2626,9 +2641,13 @@ public sealed partial class HostSession
                 }
             },
             Selected = () => 0,
-            UnpopForm = sid => processes.UnpopForm(sid),
+            UnpopForm = sid =>
+            {
+                if (_worldDependencies is { } dependencies && dependencies.IsDependForm(sid)) _fortFactory!.UnpopForm(sid);
+                else processes.UnpopForm(sid);
+            },
         };
-        return (sid, flags) => body.Destroy(sid, flags, hooks!);
+        return hooks;
     }
 
     /// <summary>펜스 후처리·정기 본체와 이웃·표식·연결선·재생성 장치를 세션에 연결한다.</summary>
@@ -3334,8 +3353,8 @@ public sealed partial class HostSession
             },
             Frame = (parent, value, flags) => (_terrainFrames ?? throw new InvalidOperationException("세션 연결 프레임 미연결")).Set(parent, value, flags),
             Advance = (parent, delta, flags) => new RawFrameAdvance(Pool, WorldFrames, _terrainFrames ?? throw new InvalidOperationException("세션 연결 프레임 미연결")).Advance(parent, delta, flags),
-            Begin = (_, _) => throw new InvalidOperationException("호스트 공장 착공 실제 몸체 미연결(R6)"),
-            Finish = _ => throw new InvalidOperationException("호스트 공장 완성 실제 몸체 미연결(R6)"),
+            Begin = (parent, duration) => WorldFactoryUpgrade.Begin(parent, duration),
+            Finish = parent => WorldFactoryUpgrade.Finish(parent),
             Flare = (parent, count, ev) => WorldFlare.Spawn(parent, count, ev),
             Damageable = (parent, code, times, value) => fallback?.Invoke(parent, code, times, value) ?? value,
         };

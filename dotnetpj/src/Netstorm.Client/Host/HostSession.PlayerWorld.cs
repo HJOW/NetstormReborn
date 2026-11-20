@@ -140,6 +140,7 @@ public sealed partial class HostSession
     public void ReleasePlayerProcesses()
     {
         if (PlayerProcesses is not null) Kernel.DrainOwnedForShutdown(PlayerProcesses.Owns);
+        ReleaseDependencyWorld();
         ReleaseFlareWorld();
         ReleaseBurningWorld();
         ReleasePriestWorld();

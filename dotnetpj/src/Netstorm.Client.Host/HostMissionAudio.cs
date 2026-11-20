@@ -105,6 +105,17 @@ public sealed class HostMissionAudio : IDisposable
         };
     }
 
+    /// <summary>같은 이름표/실제재생기로 업그레이드 위치음과priority1 전역완료음을 연결한다.</summary>
+    public FactoryUpgradeHooks FactoryUpgradeHooks(Action<uint, string> log)
+    {
+        ArgumentNullException.ThrowIfNull(log);
+        return new()
+        {
+            SoundAt = (x, y, name) => PlayEffectAt(x, y, name, 0),
+            Sound = name => _player.Play(_list.Lookup(name), 0, 0, 0, 1, 0), Log = log,
+        };
+    }
+
     /// <summary>모든 미션 프로세스 반납 뒤 실제 장치·버퍼 소유권을 반납한다.</summary>
     public void Dispose() { if (OperatingSystem.IsWindows()) _device.Dispose(); }
 }
