@@ -37,6 +37,7 @@ import { RawPlayerMenu, createPlayerMenuState } from './raw-player-menu.js';
 import { RawObjectMenu, createObjectMenuState } from './raw-object-menu.js';
 import { RawCarrierMenu } from './raw-carrier-menu.js';
 import { RawFactoryMenu, createFactoryMenuState } from './raw-factory-menu.js';
+import { KnowledgeMenuKind, showKnowledgeMenu, showKnowledgeSideMenu, showWorldKnowledgeMenu } from './raw-knowledge-menu.js';
 import { RawObjectMenuInfo, createObjectMenuInfoState } from './raw-object-menu-info.js';
 import { GunProcess, GunProcessFields } from './raw-gun-process.js';
 import { FlyerProcess, FlyerProcessFields, RawFlyerProcess } from './raw-flyer-process.js';
@@ -1162,6 +1163,22 @@ export class RawCampaignSession {
             }, allowed: (type) => live().production.allowed(type), inProduction: (type) => live().production.contains(type),
             cost: (type) => live().hp.typeCostUnits(type), money: (owner) => this.sp(owner), mana: (type) => { live(); return mana(type); } };
         return new RawFactoryMenu(o.core.pool, o.core.types, o.contentFinder, o.constructionExcludedTypes, this.#factoryMenuState, hooks);
+    }
+    // 현재 Player가 알려져 있고 메타맵이 아닐 때만 지식 창(F6 View Netstorm Knowledge)을 열 수 있는지 알려 준다. 원본 `UserInput` 의 PlayerKnown·challenge 관문이다. (2026-11-20 WB04-E1088)
+    knowledgeAvailable() { const o = this.#live(); return Boolean(o.loaded && o.playerState.playerKnown && !o.core.ownerMode.challenge); }
+    // 원본 ShowTechnology(Storm 카드)·World 카드·선택 메뉴를 현재 Session의 기술·마나·생산·제외 목록에 결합해 연다(cpppj `RawCampaignSession::ShowKnowledge`). hooks 에는 실제 UI 작성 장치(translate·begin·node·title·separator·item·attach·push·pop·width·height·position·mark)를 담고, 게임 조회(blocked·cancel·currentTechnology·owns·mana·inProduction·excluded)는 여기서 채운다. 만든 메뉴 토큰 배열을 돌려준다. (2026-11-20 WB04-E1088)
+    showKnowledge(state, input = {}, kind = KnowledgeMenuKind.Storm) {
+        const o = this.#live(); if (!o.loaded) throw new Error('설치 전 실제 지식 창 요청');
+        const live = () => this.#live(), mana = bindAiTypeRequiredEnergy(o.assets.game.typeTable.definitions, o.core.types);
+        state.templeProduct = o.templeProduct;
+        const hooks = { ...input, blocked: () => Boolean(live().core.ownerMode.challenge), cancel: () => this.cursor().cancel(),
+            currentTechnology: () => live().player.currentTechnology(),
+            owns: (parent, type) => { if (parent > 65535) throw new RangeError('지식 창 기술 부모 SID 범위'); return Boolean(live().priests.carrier.findContained(parent, 4, type, 0)); },
+            mana: (type) => { live(); return mana(type); }, inProduction: (type) => live().production.contains(type),
+            excluded: (type) => live().constructionExcludedTypes.items().includes(type) };
+        if (kind === KnowledgeMenuKind.Side) return showKnowledgeSideMenu(state, hooks);
+        if (kind === KnowledgeMenuKind.World) return showWorldKnowledgeMenu(o.core.types, state, hooks);
+        return showKnowledgeMenu(o.core.types, state, hooks);
     }
     // 같은 옵션 저장소의 숨김 Player 바이트를 빌린다.
     hiddenPlayers() { return this.#live().hiddenPlayers; }

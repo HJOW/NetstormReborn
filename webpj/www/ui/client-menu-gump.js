@@ -78,6 +78,26 @@ export class ClientMenuGump {
         bindGameMenuBarControls(barHooks, this.#widgets, this.#controls, this.#menu, (token) => this.#root.node(token), storeText);
         bindGameMenusControls(menusHooks, this.#widgets, this.#controls, this.#menu, storeText); menusHooks.node = (token) => this.#root.node(token);
     }
+    // 지식 창(원본 ShowTechnology 카드·선택 메뉴)이 쓰는 작성 장치 묶음을 만든다(cpppj `RawMenuControls::OpenKnowledge` 의 hooks). `begin` 은 첫 카드를 만들기 직전에만 기존 팝업을 닫고 정리하며, `item` 의 문자열 인자 'themeHelp' 는 `storeText` 로 정적 문자열 토큰으로 바꾼다. 카드는 모두 같은 루트의 팝업이다. `mark`·`translate`·`description` 은 호출자가 채운다. (2026-11-20 WB04-E1088)
+    knowledgeWriter(storeText) {
+        if (typeof storeText !== 'function') throw new TypeError('지식 창 정적 문자열 저장 장치 누락');
+        const root = this.#root; let created = 0, help = 0;
+        return {
+            // 첫 카드 직전에만 기존 팝업을 닫고 수명을 정리한 뒤 세로 controlled 메뉴를 시작한다.
+            begin: () => { if (!created++) { this.#input.closePopups(); root.lifetime().cleanup(); } return this.#widgets.beginVertical(0); },
+            node: (token) => { const node = root.node(token); if (!node) throw new Error('지식 카드 현재 노드 없음'); return node; },
+            title: (text) => this.#controls.addTitle(text), separator: () => this.#controls.addSeparator(),
+            item: (text, command, parameter, enabled) => {
+                let value = parameter;
+                if (typeof parameter === 'string') { if (parameter !== 'themeHelp') throw new Error('지식 창 정적 도움말 문자열 계약'); help ||= storeText('themeHelp'); value = help; }
+                this.#controls.addText(text, command, value, true, enabled, false);
+            },
+            attach: (x, y) => this.#menu.attachCurrent(x, y, root.createState().collection.root),
+            push: (token) => root.tree().push(token), pop: (token) => { const node = root.node(token); root.attach(token, node.x, node.y, 0, 0); },
+            width: (token, value) => this.#menu.setWidth(token, value), height: (token, value) => this.#menu.setHeight(token, value),
+            position: (token) => root.collection().position(token),
+        };
+    }
     // 중첩 메뉴 작성을 마치고 현재 메뉴를 꺼내 부모 작성 상태로 돌아간다.
     takeCurrent() { return this.#menu.takeCurrent(); }
     // 현재 메뉴에 실제 자식 메뉴와 사용 가능 여부를 연결한다.
@@ -98,6 +118,8 @@ export class ClientMenuGump {
     idle(token, enabled) { this.#widgets.setIdle(token, enabled); }
     reference(token, object) { this.#widgets.reference(token, object); }
     root() { return this.#root.createState().collection.root; }
+    // 토큰의 현재 메뉴 노드를 던지지 않고 조회한다(없으면 null). 지식 창이 열려 있는지 판단하는 데 쓴다. (2026-11-20 WB04-E1088)
+    nodeOf(token) { return this.#root.node(token) ?? null; }
     attach(point, parent) { this.#menu.attachCurrent(point.x, point.y, parent); }
     // 열린 메뉴와 생성 중 미등록 메뉴를 같은 공통 수명에서 반납한다.
     close() {

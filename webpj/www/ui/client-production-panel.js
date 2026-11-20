@@ -89,6 +89,8 @@ export class ClientProductionPanel {
     openFactory(sid, event) { return this.#parts.openFactory?.(sid, event) ?? 0; }
     // 같은 메뉴 작성기가 만든 가로 게임 메뉴막대(ESC)를 돌려준다. 장치가 없으면 null이다. (2026-11-20 WB04-E1084)
     gameMenu() { return this.#parts.gameMenu ?? null; }
+    // 같은 메뉴 작성기가 만든 F6 지식 창 장치를 돌려준다. 장치가 없으면 null이다. (2026-11-20 WB04-E1088)
+    knowledge() { return this.#parts.knowledge ?? null; }
     // 실제 건설 비용 표시를 같은 Client Gump 수명에 전달한다.
     showSp(cost, x, y, reference) { if (!this.#parts.showSp) throw new Error('생산 패널의 실제 비용 표시 미연결'); return this.#parts.showSp(cost, x, y, reference); }
     // 공통 수명이 자식과 실제 Form을 먼저 반납한다.

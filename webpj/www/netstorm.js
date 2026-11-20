@@ -71,6 +71,7 @@ import { PRODUCTION_BRIDGE_COMMAND } from './core/production-shortcuts.js';
 import { ProductionMaintenanceGlobals, ProductionMaintenancePanel } from './core/raw-production-maintenance.js';
 import { GameMenuActions } from './core/game-menu-actions.js';
 import { gameMenuCommandValue, isGameMenuCommand, queuePlayerListKey } from './core/game-menu-commands.js';
+import { KnowledgeMenuKind } from './core/raw-knowledge-menu.js';
 import { dispatchViewKeyInput } from './core/view-key-input.js';
 import { GameMenuButton } from './ui/game-menu-button.js';
 import { CHAT_RECORD_BYTES, RawChatChannels } from './core/raw-chat-channels.js';
@@ -154,7 +155,11 @@ const MISSION_VIEW_PRIEST = 0x020000b8;
 // F2(건물 숨김)·F3(Shift: 섬 테마)·F8(목표 보기) 가상 키와 F9(플레이어 목록) 가상 키다. 앞의 셋은 표시 키 분배기가, F9 는 명령 예약기가 처리한다. (2026-11-20 WB04-E1087)
 const MISSION_VIEW_KEYS = new Set([0x710000, 0x720000, 0x770000]);
 const MISSION_F9 = 0x780000;
-const WIRED_MENU_COMMANDS = new Set([0x020000f0, 0x02000091, 0x020000f1, 0x0200006d, 0x020000e6, 0x020000e7, 0x020000ae, 0x020000b8, 0x02000095, 0x02000017, 0x0200008c, 0x0200008d, 0x020000c5]);
+// F6 은 선택 키 분배기가 지식 창 명령(0x020000a0)을 예약하는 가상 키다. (2026-11-20 WB04-E1088)
+const MISSION_F6 = 0x750000;
+// 지식 창 명령 세 개다: ShowTechnology(Storm 카드, F6), ShowTecSideMenu(Storm/World 선택), ShowTecMenu2(World 카드). (2026-11-20 WB04-E1088)
+const KNOWLEDGE_COMMANDS = new Set([0x020000a0, 0x02000132, 0x02000133]);
+const WIRED_MENU_COMMANDS = new Set([0x020000f0, 0x02000091, 0x020000f1, 0x0200006d, 0x020000e6, 0x020000e7, 0x020000ae, 0x020000b8, 0x02000095, 0x02000017, 0x0200008c, 0x0200008d, 0x020000c5, 0x020000a0, 0x02000132, 0x02000133]);
 // Session이 Tutorial 판정용으로 입력 큐에 올리는 통지 명령이다(발사기 배치 0x030000b0·포함 0x030000b1, 기술 0x020000b5, 포획 0x020000d7, 상승 0x020000df; 전역 005429b4 등의 PE 초기값).
 // Tutorial 판정기(`tutorial.event`)가 각 명령을 받고 해당 단계가 쓰지 않으면 원본 주 루프처럼 그대로 버려진다. 큐 소비 보호 목록에 없으면 뒤의 클릭까지 막혀 모든 입력이 멈추므로 소비를 허용한다. (2026-11-20 WB04-E1083)
 const TUTORIAL_NOTICE_COMMANDS = new Set([0x030000b0, 0x030000b1, 0x020000b5, 0x020000d7, 0x020000df]);
@@ -1359,7 +1364,7 @@ export class Netstorm {
                         project: (x, y) => { const point = this._clientGameplay.camera().snapshot().project(x, y); return [point.x, point.y]; },
                         content: (sid) => production.session.priests().carrier.findContained(sid, 1, 0, 0), range: (type) => production.session.core().types[type].range,
                         screenWidth: () => this._clientPaletteScreen.width } },
-                command: (...args) => this._clientInputQueue.pushCommand(...args), invalidate: (rect) => this._clientRenderer.invalidate(rect, 0), gameMenu: this._campaignGameMenuDevices(production) },
+                command: (...args) => this._clientInputQueue.pushCommand(...args), invalidate: (rect) => this._clientRenderer.invalidate(rect, 0), gameMenu: this._campaignGameMenuDevices(production), knowledge: this._campaignKnowledgeDevices() },
             changed: () => { this._clientRenderer.invalidateAll(); this._displayDirty = true; }, closePopups: () => this._closeCampaignPopups(),
             poll: (code) => this._clientInputPoll.poll(code), cursor: (number) => { this._campaignCursor = number; this._applyCursor(); },
             baseHandle: (...args) => help.handle(...args), menuInstances: () => this._mainMenu?.popup?.isOpen ? 1 : 0,
@@ -1437,6 +1442,18 @@ export class Netstorm {
         }
     }
 
+    // F6 지식 창이 읽는 현재 화면 크기·언어·번역·정적 문자열·팝업 표식 장치다(원본 `RawMenuControls::OpenKnowledge` 의 호출자 몫). 값은 호출 시점에 다시 읽는다. (2026-11-20 WB04-E1088)
+    _campaignKnowledgeDevices() {
+        return { width: () => this._layout.logicalWidth, height: () => this._layout.logicalHeight, language: () => this.options.language === 'korean' ? 7 : 0,
+            storeText: (value) => this._clientChatWindows.store(value), mark: (command) => this._clientHelpPopup.mark(command) };
+    }
+
+    // 지식 창(Storm 카드·World 카드·선택 메뉴)을 연다. Player 가 알려지지 않았거나 메타맵이면 열지 않는다. 열었으면 true. (2026-11-20 WB04-E1088)
+    _openCampaignKnowledge(kind) {
+        const knowledge = this._campaignProduction?.ui?.knowledge(); if (!knowledge) return false;
+        const opened = knowledge.open(kind); this._clientRenderer.invalidateAll(); this._displayDirty = true; return opened;
+    }
+
     // ESC 게임 메뉴막대를 열거나 닫는다(원본 `ToggleGameMenu`). 메뉴가 없는 화면이면 아무것도 하지 않는다. 우측 상단 버튼의 눌림 표시도 함께 맞춘다.
     _toggleCampaignGameMenu() {
         const bar = this._campaignProduction?.ui?.gameMenu(); if (!bar) return false;
@@ -1452,7 +1469,8 @@ export class Netstorm {
         if (code === 0x0200008d) return this._restartCampaignMission();
         if (code === 0x020000c5) return this._leaveCampaignMission();
         const text = () => { const value = this._clientChatWindows.strings.get(event.y >>> 0); return value === undefined ? '' : String(value); };
-        if (code === 0x020000f1) { this._dispatchCampaignViewAction(event); this._clientRenderer.invalidateAll(); }
+        if (KNOWLEDGE_COMMANDS.has(code)) this._openCampaignKnowledge(code === 0x02000132 ? KnowledgeMenuKind.Side : code === 0x02000133 ? KnowledgeMenuKind.World : KnowledgeMenuKind.Storm);
+        else if (code === 0x020000f1) { this._dispatchCampaignViewAction(event); this._clientRenderer.invalidateAll(); }
         else if (code === 0x020000f0) { this._campaignProduction?.ui?.gameMenu()?.openPlayerList(); this._displayDirty = true; }
         else if (code === 0x0200006d) {
             // 설정 명령의 인자는 `키=값` 문자열이다. 설정 층의 키는 Settings 가 저장하고 그 밖의 키는 게임 데이터에 쓴다.
@@ -1553,13 +1571,15 @@ export class Netstorm {
             const selectionKey = code === 0x50 || code === 0x70 || code === 0x52 || code === 0x72 || code === 0x4e || code === 0x6e;
             const productionKey = 'qwaszyxe'.includes(String.fromCharCode(code).toLowerCase()) && code < 256;
             const cursorCancel = code === 0x1b, cursorRotate = code === 0x250000 || code === 0x270000;
-            if (code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !MISSION_VIEW_KEYS.has(code) && code !== MISSION_F9 && !TUTORIAL_NOTICE_COMMANDS.has(code) && !isGameMenuCommand(code) && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && code !== InputCode.leftButton && code !== InputCode.rightButton) break;
+            if (code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_F6 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !MISSION_VIEW_KEYS.has(code) && code !== MISSION_F9 && !TUTORIAL_NOTICE_COMMANDS.has(code) && !isGameMenuCommand(code) && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && code !== InputCode.leftButton && code !== InputCode.rightButton) break;
             const event = queue.pop(false);
             if (tutorial.event(event) || gump.input().route(event.code, event.x, event.y)) continue;
             if (code === InputCode.leftButton && !release && !this._mainMenu?.dialog) user.event(event);
+            // 원본 UberGump: 지식 창이 열려 있으면 ESC 는 팝업만 닫는다. (2026-11-20 WB04-E1088)
+            else if (cursorCancel && !release && !this._mainMenu?.dialog && this._campaignProduction?.ui?.knowledge()?.isOpen()) { this._campaignProduction.ui.knowledge().close(); this._displayDirty = true; }
             // 원본 ESC: 선택을 먼저 정리하고 조각을 들고 있으면(커서 잠금 0) 취소, 아니면 가로 게임 메뉴막대를 열거나 닫는다. (2026-11-20 WB04-E1084)
             else if (cursorCancel && !release && !this._mainMenu?.dialog && world.session().cursorDropSettings().lockDepth !== 0) { world.resetSelection(); this._toggleCampaignGameMenu(); }
-            else if ((code === MISSION_F4 || code === MISSION_F5 || selectionKey || productionKey || cursorCancel || cursorRotate || code === InputCode.rightButton) && !release && !this._mainMenu?.dialog) {
+            else if ((code === MISSION_F4 || code === MISSION_F5 || code === MISSION_F6 || selectionKey || productionKey || cursorCancel || cursorRotate || code === InputCode.rightButton) && !release && !this._mainMenu?.dialog) {
                 const picked = user.event(event);
                 if (code === InputCode.rightButton && picked) {
                     const ui = this._campaignProduction?.ui; if (ui && !ui.openPriest(picked, event) && !ui.openFactory(picked, event)) ui.openObject(picked, event);
@@ -2771,7 +2791,7 @@ export class Netstorm {
         }
         // 조합 중 Enter 등은 기존 메뉴 명령으로도 중복 실행하지 않는다.
         if (this._clientNativeInputEnabled && (this._clientComposing || event.isComposing)) return;
-        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && (event.code === 'F4' || event.code === 'F5' || event.code === 'F2' || event.code === 'F3' || event.code === 'F8' || event.code === 'F9' || ((event.code === 'ArrowLeft' || event.code === 'ArrowRight') && this._campaignWorld.session().cursorDropSettings().lockDepth === 0))) {
+        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && (event.code === 'F4' || event.code === 'F5' || event.code === 'F6' || event.code === 'F2' || event.code === 'F3' || event.code === 'F8' || event.code === 'F9' || ((event.code === 'ArrowLeft' || event.code === 'ArrowRight') && this._campaignWorld.session().cursorDropSettings().lockDepth === 0))) {
             event.preventDefault(); queueBrowserVirtualKeyEvent(this._clientInputQueue, event, this._input.pointer, false);
         }
         // ESC 는 조각을 들고 있으면 취소, 아니면 게임 메뉴막대 전환이므로 항상 큐에 넣고 입력 프레임이 판단한다. (2026-11-20 WB04-E1084)
