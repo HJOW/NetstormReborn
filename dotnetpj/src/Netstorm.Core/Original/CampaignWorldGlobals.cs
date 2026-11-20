@@ -1,3 +1,6 @@
+using System.Buffers.Binary;
+using System.Runtime.InteropServices;
+
 // 실제 미션 새 login의 저장 월드 부모 전역을 generic Fort 메뉴 부모와 별도 몸체로 연결한다.
 namespace Netstorm.Core.Original;
 
@@ -6,12 +9,31 @@ namespace Netstorm.Core.Original;
 // 외부 DWORD 저장소를 빌리는 상자다. 2026-11-07 F2d 캠페인 월드 적재 이식에서 추가됐다.
 public sealed class UIntBox
 {
-    /// <summary>같은 DWORD의 실제 물리 값이다. 값 속성과 ref 소비자가 함께 읽고 쓴다.</summary>
+    /// <summary>자체 소유 DWORD이며 외부 저장소를 빌리지 않을 때 사용한다.</summary>
     private uint _value;
-    /// <summary>빌린 DWORD 값이다. 2026-11-07 F2d 캠페인 월드 적재 이식에서 추가됐다.</summary>
-    public uint Value { get => _value; set => _value = value; }
-    /// <summary>원문 참조형 부모가 사본 없이 같은 DWORD를 증감할 때만 빌리는 주소다.</summary>
-    internal ref uint Storage => ref _value;
+    /// <summary>상태 블록 안의 같은 실제4바이트를 복사 없이 빌린다.</summary>
+    private readonly Memory<byte>? _borrowed;
+    /// <summary>기존 독립 DWORD 소유자를 생성한다.</summary>
+    public UIntBox() { }
+    /// <summary>정확히4바이트인 외부 DWORD를 빌린다. 호출자는 저장소를 같은 수명으로 유지한다.</summary>
+    public UIntBox(Memory<byte> storage)
+    {
+        if (storage.Length != 4) throw new ArgumentException("외부 DWORD는 정확히4바이트여야 함", nameof(storage));
+        _borrowed = storage;
+    }
+    /// <summary>같은 자체 값 또는 빌린 little-endian DWORD를 즉시 읽고 쓴다.</summary>
+    public uint Value
+    {
+        get => _borrowed is { } storage ? BinaryPrimitives.ReadUInt32LittleEndian(storage.Span) : _value;
+        set { if (_borrowed is { } storage) BinaryPrimitives.WriteUInt32LittleEndian(storage.Span, value); else _value = value; }
+    }
+    /// <summary>기존 ref 소비자도 같은 실제 DWORD를 증감한다. 지원 플랫폼은 little-endian이다.</summary>
+    internal ref uint Storage
+    {
+        get { if (_borrowed is { } storage) return ref MemoryMarshal.Cast<byte, uint>(storage.Span)[0]; return ref _value; }
+    }
+    /// <summary>호출자가 요구한 상태 블록 DWORD와 같은 실제 저장소인지 확인한다.</summary>
+    internal bool MatchesStorage(Memory<byte> storage) => _borrowed is { } memory && memory.Equals(storage);
 }
 
 // 외부 signed DWORD 저장소를 빌리는 상자다. 원문 `std::int32_t&amp;` 빌림을 옮긴다. 2026-11-07 F2d 지형 생성 입력 이식에서 추가됐다.

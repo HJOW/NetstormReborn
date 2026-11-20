@@ -496,4 +496,8 @@
     <None Include="../../../cpppj/tests/fixtures/mission-battle-options-x86.tsv" Link="X86/mission-battle-options-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/mission-settings-packet-x86.tsv" Link="X86/mission-settings-packet-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 원본 상태 전이33입력의 전체720바이트와 외부 효과를 한 소비자에서 대조한다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/local-mission-state-x86.tsv" Link="X86/local-mission-state-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
