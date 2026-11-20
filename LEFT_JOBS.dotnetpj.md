@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-21 · 사용자 재개 지시로 진행 중 · 마지막 완료0.749(커서수명1575입력·집중36건 통과) · 다음0.750 위치 판정/준비 본체와 원문 대조 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6 병행) · cpppj 제품1323 / 11.01 · 전체 목표 미완료**
+**2026-11-21 · 사용자 재개 지시로 진행 중 · 마지막 완료0.750(커서위치573입력·집중48건 통과) · 다음0.751 실제 커서/진단 소유자와 현재 checking 공유 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6 병행) · cpppj 제품1323 / 11.01 · 전체 목표 미완료**
 
 현행 인계는 이 문서가 기준이다. 단위별 근거는 `docs/dotnet-canon-0NNN-*.md`이다. 0.645~0.732의 단위별 완료 문장, 0.640 회귀 점검 상세, 0.546~0.676 완료 기록 원문은 [0.732 정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0732)에 있다. 0.600~0.635는 [0.635 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635), 0.613까지의 경과와 파일 계열별 체크 목록은 [0.613 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)에 있다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
@@ -22,11 +22,11 @@
 
 **재개 순서(2026-11-21).** 0.748 전체5,343검사와 같은 빌드65시작·원본/빌드 해시·전수 바이트 감사를 완료했다. [0.748 근거](docs/dotnet-canon-0748-20261121.md)
 
-1. **0.750 위치 판정/준비 본체와 원문 대조.** 0.749에서 커서 공유 데이터/고정 소유자·RawCursorLifecycle Take/Cancel/Activate·실제 자산 어댑터와1575원본입력 대조를 완료했다. 신규7건 포함 집중36건·대표3시작 종료0/0.748 전체바이트 일치·원본1392파일 불변이다. [0.749](docs/dotnet-canon-0749-20261121.md). 다음은 RawCursorPlacement Query/SourceAllowed/Prepare와 원문 대조다. 이후 Gameplay의 실제 커서/checking 소유자·Client/렌더러/초기 Cancel 장치를 잇는다. 빈 커서도 실제 Project/dirty 준비를 생략하지 않는다. RawCursorDrop/호출자 전체와 실제 채팅·UI/음향·음악/저장/옵션 기본 장치, 전체Root 상태 호출도 남았다. 0.742 State 효과/Root경계·0.743 자산표·0.745~0.747 선택/실제Clear·0.749독립 커서수명은 완료했지만 전체Native 메뉴/로그인/State는 미완료다. non-mine Notify의 실제DataManager 저장과 비Session Notify 추출부모, NSInfo HUD/메타UI/Root reply 저장도 후속이다. RawFileName 나머지 조회·BaseFile 고리 소비/ClientStaticStrings는 해당 소비자에서 잇는다.
+1. **0.751 실제 커서/진단 소유자와 현재 checking 공유.** 0.750에서 RawCursorPlacement Query/SourceAllowed/Prepare·실제 Canon/SHP 어댑터와573원본입력 대조를 완료했다. 신규5건 포함 집중48건·대표3시작 종료0/0.748 전체바이트 일치·원본1392파일 불변이다. [0.750](docs/dotnet-canon-0750-20261121.md). 다음은 Gameplay의 실제 커서/AI 진단 소유자와 Session/Surface의 현재 checking 공유다. 이후 실제 Camera/Renderer·Client/초기 Cancel 장치를 잇는다. 빈 커서도 실제 Project/dirty 준비를 생략하지 않는다. RawCursorDrop/호출자 전체와 실제 채팅·UI/음향·음악/저장/옵션 기본 장치, 전체Root 상태 호출도 남았다. 0.742 State 효과/Root경계·0.743 자산표·0.745~0.747 선택/실제Clear·0.749~0.750독립 커서수명/위치는 완료했지만 전체Native 메뉴/로그인/State는 미완료다. non-mine Notify의 실제DataManager 저장과 비Session Notify 추출부모, NSInfo HUD/메타UI/Root reply 저장도 후속이다. RawFileName 나머지 조회·BaseFile 고리 소비/ClientStaticStrings는 해당 소비자에서 잇는다.
 2. **같은 작업 줄기.** MetaZone 원문 본체124입력은0.734, 실제Client표/현재Runtime pin·설치된가상분배전달은0.735 완료다. 현재 HostSession의 전체 Native World 자산 가상 삭제 분배 설치는 아직 미연결이며 일반 삭제의 Pre/Post 완료로 대신하지 않는다. [0.733](docs/dotnet-canon-0733-20261121.md) · [0.734](docs/dotnet-canon-0734-20261121.md) · [0.735](docs/dotnet-canon-0735-20261121.md). 이어서 [R4 체크](#r4-detail)→R11과 후순위 요구사항을 진행한다. 다음 정기 전체 회귀는0.752이다.
-3. **사용자 제외 검사 유지.** 실제 포획/희생·특정 적 공격·시나리오 승리는 재현하지 않고 사용자 수동 확인으로 남긴다. 원본1,392파일의 마지막 불변 확인은0.749 대표3시작이다(전체65시작은0.748).
+3. **사용자 제외 검사 유지.** 실제 포획/희생·특정 적 공격·시나리오 승리는 재현하지 않고 사용자 수동 확인으로 남긴다. 원본1,392파일의 마지막 불변 확인은0.750 대표3시작이다(전체65시작은0.748).
 
-**최근 완료 요약(0.639~0.749).** 단위별 완료 문장과 집중 검사 수는 보관본과 각 단위 문서에 있다. 완료 범위와 남은 일의 기준은 1.1·1.2절 체크 항목이다.
+**최근 완료 요약(0.639~0.750).** 단위별 완료 문장과 집중 검사 수는 보관본과 각 단위 문서에 있다. 완료 범위와 남은 일의 기준은 1.1·1.2절 체크 항목이다.
 
 | 주제 | 단위 | 핵심 | 남은 일 |
 | --- | --- | --- | --- |
@@ -39,7 +39,7 @@
 | Client 프레임·장기 Host | 0.721~0.723·0.725~0.727 | Clock/Frame 공유, 프레임 실행 순서, 장기 Surface·Host Runtime | R4-6 |
 | Native State 정리·저장소·반납 | 0.729~0.731·0.733~0.735 | State 정리 부모(원문294행), 실제 전역·저장소·장기SID, 실제 자식 증빙/Runtime 반납·제품 Surface 대여, MetaZone 본체/실제Client표·Runtime삭제경계 | 위2번, R4-6 |
 | Root 자원·장기 자산표·선택 | 0.737~0.739·0.741~0.743·0.745~0.747 | NSInfo/서버 목록·장면 음악·Template/State 공유·State 효과분배/Root경계·첫메뉴 자산표·선택/강조/실제Clear/Root커서 | 나머지 기본 장치와 월드 표시 설치, R4-6 |
-| 커서 데이터·수명 본체 | 0.749 | 고정 배열/데이터·Take/Cancel/Activate·자산 어댑터·1575원본입력 | 위치 판정/Prepare·실제 소유자/checking/렌더러와 Root Cancel |
+| 커서 데이터·수명·위치 본체 | 0.749~0.750 | 고정 배열/데이터·Take/Cancel/Activate·Query/SourceAllowed/Prepare·실제 자산/Canon/SHP·2148원본입력 | 실제 소유자/checking/Camera/렌더러와 Root Cancel·Drop/호출자 |
 | 정기 전체 회귀·L2 | 0.644부터 4단위마다(0.736까지) | 매회 실패 0·65실행 종료 0·원본 불변·M1 0/34 유지. 수집으로 드러난 미연결·순서 회귀를 0.644(AI 색 프레임·펜스)·0.680(플레어 분배)·0.684(시작 음향 순서)·0.688(Carrier 통지)에서 교정. 전체 검사 4,686건(0.644) → 5,259건(0.736) | 다음0.752 |
 
 <a id="first-run"></a>

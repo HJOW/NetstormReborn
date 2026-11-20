@@ -138,5 +138,7 @@
     <None Include="../../../cpppj/tests/fixtures/cursor-lifecycle-x86.tsv" Link="X86/cursor-lifecycle-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/cursor-cancel-checking-x86.tsv" Link="X86/cursor-cancel-checking-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/cursor-type-range-x86.tsv" Link="X86/cursor-type-range-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- 위치 판정·연관 지역·화면 준비573개 독립 원문 관찰이다. -->
+    <None Include="../../../cpppj/tests/fixtures/cursor-placement-x86.tsv" Link="X86/cursor-placement-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

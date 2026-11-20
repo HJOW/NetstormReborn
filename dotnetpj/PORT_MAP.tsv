@@ -1282,3 +1282,6 @@ cpppj/src/client/ClientCursorGlobals.h	Netstorm.Client/ClientCursorGlobals.cs	0b
 cpppj/src/client/RawCursorLifecycle.cpp	Netstorm.Client/Input/RawCursorLifecycle.cs	0b720831a2bcee2f86d7124e70983a7b3029ec84	port
 cpppj/src/client/RawCursorLifecycle.h	Netstorm.Client/Input/RawCursorLifecycle.cs	0b720831a2bcee2f86d7124e70983a7b3029ec84	port
 cpppj/src/client/RawCursorLifecycle.cpp	Netstorm.Client.Host/HostCursorLifecycleAssets.cs	0b720831a2bcee2f86d7124e70983a7b3029ec84	port
+cpppj/src/client/RawCursorPlacement.cpp	Netstorm.Client/Input/RawCursorPlacement.cs	167866d9c40cc4b5d6260ceb11934b4a2a218177	port
+cpppj/src/client/RawCursorPlacement.h	Netstorm.Client/Input/RawCursorPlacement.cs	e210c755978df59fd316edb922b7938ebe8540c7	port
+cpppj/src/client/RawCursorPlacement.cpp	Netstorm.Client.Host/HostCursorPlacementAssets.cs	167866d9c40cc4b5d6260ceb11934b4a2a218177	port

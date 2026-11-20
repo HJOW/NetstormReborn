@@ -35,7 +35,11 @@ public sealed class CursorPlacementState
     /// <summary>독립 입력의 현재 화면 원점 Y다.</summary>
     public int ScreenOriginY { get; set; }
     /// <summary>55a308의 현재 NUL 종료 설명에 대응한다.</summary>
-    public string Description { get; set; } = "";
+    public string Description { get => _description; set => _description = value; }
+    /// <summary>설명 callback이 원문 string 참조와 같은 저장 위치를 갱신하도록 보관한다.</summary>
+    private string _description = "";
+    /// <summary>설명 callback에 현재 문구의 실제 저장 위치를 전달한다.</summary>
+    internal ref string DescriptionReference => ref _description;
     /// <summary>실제59a91c/920의 같은 현재2칸을 빌린다. 미지정 독립 입력만 자체 원점을 쓴다.</summary>
     public ReadOnlyMemory<int>? SharedScreenOrigin { get; set; }
     /// <summary>소비 시점의 실제 X를 조회한다.</summary>
