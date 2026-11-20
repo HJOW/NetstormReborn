@@ -1538,7 +1538,7 @@ export class Netstorm {
             else if ((code === MISSION_F4 || code === MISSION_F5 || selectionKey || productionKey || cursorCancel || cursorRotate || code === InputCode.rightButton) && !release && !this._mainMenu?.dialog) {
                 const picked = user.event(event);
                 if (code === InputCode.rightButton && picked) {
-                    const ui = this._campaignProduction?.ui; if (ui && !ui.openPriest(picked, event)) ui.openFactory(picked, event);
+                    const ui = this._campaignProduction?.ui; if (ui && !ui.openPriest(picked, event) && !ui.openFactory(picked, event)) ui.openObject(picked, event);
                 }
             }
             else if (code === 0x02000017 && !release && !this._mainMenu?.dialog) {

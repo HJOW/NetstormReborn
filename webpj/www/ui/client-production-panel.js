@@ -83,6 +83,8 @@ export class ClientProductionPanel {
     }
     // 실제 사제 메뉴 열기 장치는 같은 패널 수명에 연결되어 있다.
     openPriest(sid, event) { return this.#parts.openPriest?.(sid, event) ?? 0; }
+    // 공통 객체(발사기 같은 건물) 메뉴 열기도 같은 패널 수명에 전달한다. (2026-11-20 WB04-E1086)
+    openObject(sid, event) { return this.#parts.openObject?.(sid, event) ?? 0; }
     // 실제 Factory 메뉴 열기도 같은 패널 수명에 전달한다.
     openFactory(sid, event) { return this.#parts.openFactory?.(sid, event) ?? 0; }
     // 같은 메뉴 작성기가 만든 가로 게임 메뉴막대(ESC)를 돌려준다. 장치가 없으면 null이다. (2026-11-20 WB04-E1084)

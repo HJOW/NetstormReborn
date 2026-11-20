@@ -22,6 +22,7 @@ import { ClientPriestMenuOpen } from './client-priest-menu-open.js';
 import { ClientFactoryMenu } from './client-factory-menu.js';
 import { ClientFactoryMenuOpen } from './client-factory-menu-open.js';
 import { ClientGameMenuBar } from './client-game-menu-bar.js';
+import { ClientObjectMenuOpen } from './client-object-menu-open.js';
 
 // Session·원본 자산과 실제 입력·출력 장치를 빌리고 생성한 메뉴를 반납할 수 있게 한다.
 export function createClientProductionMenu(root, session, game, data, fonts, screen, colors, background, backgroundType, devices) {
@@ -44,7 +45,7 @@ export function createClientProductionMenu(root, session, game, data, fonts, scr
         foreground: screen.colors().basic[7], disabled: screen.colors().basic[8], shadow: screen.colors().basic[0],
         sound: devices.sound, command: devices.command, invalidate: devices.invalidate });
     const about = new ClientProductionAbout(session, game, data, menu, devices);
-    let priestOpen = null, factoryOpen = null, playerOpen = null;
+    let priestOpen = null, factoryOpen = null, playerOpen = null, objectOpen = null;
     if (devices.objectMenu) {
         const current = devices.objectMenu, player = new ClientPlayerMenu(session, current.identity, menu, current.player);
         const objects = new ClientObjectMenu(session, current.identity, player, menu, data, { translate: devices.translate, helpWord: devices.helpWord, staticText: current.staticText });
@@ -54,12 +55,15 @@ export function createClientProductionMenu(root, session, game, data, fonts, scr
         priestOpen = new ClientPriestMenuOpen(current.world, menu, summary, priest, { ...current.open, sound: devices.sound });
         const factory = new ClientFactoryMenu(session, menu, objects, { translate: devices.translate, helpWord: devices.helpWord, staticText: current.staticText });
         factoryOpen = new ClientFactoryMenuOpen(current.world, menu, summary, factory, devices.sound);
+        // 사제·Factory 가 아닌 공통 객체(발사기 같은 건물)의 회수 포함 메뉴다. (2026-11-20 WB04-E1086)
+        objectOpen = new ClientObjectMenuOpen(current.world, menu, summary, objects, { ...current.open, sound: devices.sound });
     }
     // 원본 가로 게임 메뉴막대(ESC)는 같은 메뉴 작성기와 Player 하위 메뉴를 쓴다. 현재 게임 조회 장치가 없으면 만들지 않는다. (2026-11-20 WB04-E1084)
     const gameMenu = devices.gameMenu ? new ClientGameMenuBar(root, menu, { ...devices.gameMenu, translate: devices.translate,
         playerMenu: (subscriber) => { if (!playerOpen) throw new Error('게임 메뉴막대의 Player 하위 장치 미연결'); return playerOpen(subscriber); } }) : null;
     return { gameMenu, open: (item, point) => about.open(item, point), openPriest: (sid, event) => priestOpen?.supports(sid) ? priestOpen.open(sid, event) : 0,
         openFactory: (sid, event) => factoryOpen?.supports(sid) ? factoryOpen.open(sid, event) : 0,
+        openObject: (sid, event) => objectOpen?.supports(sid) ? objectOpen.open(sid, event) : 0,
         instances: () => menu.instances(), closePopups: () => menu.closePopups(),
         close: () => { gameMenu?.close(); menu.close(); scroll.close(); } };
 }

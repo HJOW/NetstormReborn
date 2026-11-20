@@ -55,7 +55,7 @@ test('한국어 Tutorial1 미션 메뉴와 브리핑을 표시한다', async ({ 
 
 // 두 번째 튜토리얼의 한국어 안내 페이지를 실제 미션에서 확인한다.
 test('한국어 Tutorial2의 안내 페이지를 표시한다', async ({ page }) => {
-  test.setTimeout(300000);
+  test.setTimeout(420000);
   const errors = []; page.on('pageerror', (error) => { errors.push(error.message); console.error('브라우저 예외:', error.message); });
   await page.addInitScript(() => {
     localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } }));
@@ -195,10 +195,13 @@ test('한국어 Tutorial2의 안내 페이지를 표시한다', async ({ page })
   // 생산 격자의 첫 항목을 누르고(실제 이미지 픽셀 적중) 합법 자리에 내려놓아 발사기 수가 하나 늘 때까지 기다린다.
   const placeArcher = async (offsets) => {
     await page.waitForFunction(() => !window.netstorm._gameClock.paused() && !window.netstorm._mainMenu.dialog, null, { timeout: 15000 });
+    // 처음 세 개 뒤에는 생산 보충 시간이 지나야 다음 항목의 대기 표식(0x100)이 풀리므로 풀릴 때까지 기다린다.
+    await page.waitForFunction(() => { const app = window.netstorm, root = app._clientGump, token = root.node(app._campaignProduction.ui.node().teleport).child; if (!token) return false; const raw = app._campaignWorld.session().core().pool.slot(root.node(token).content); return !((raw[20] | (raw[21] << 8)) & 0x100); }, null, { timeout: 240000 });
     const item = await page.evaluate(() => { const app = window.netstorm, root = app._clientGump, token = root.node(app._campaignProduction.ui.node().teleport).child, rect = app.canvas.getBoundingClientRect();
       if (!token) return null; const bounds = root.collection().bounds(token);
       return { x: rect.left + (bounds.left + bounds.right) / 2 * rect.width / app._layout.logicalWidth, y: rect.top + (bounds.top + bounds.bottom) / 2 * rect.height / app._layout.logicalHeight }; });
     expect(item).toBeTruthy(); await page.mouse.move(item.x, item.y); await page.mouse.click(item.x, item.y, { delay: 60 });
+    await page.waitForTimeout(300);
     await page.waitForFunction(() => window.netstorm._campaignWorld.session().cursorDropSettings().preview !== 0, null, { timeout: 5000 });
     const spot = await findDrop(offsets); expect(spot).toBeTruthy();
     const before = await archers(); await page.mouse.click(spot.x, spot.y, { delay: 60 }); await expect.poll(archers, { timeout: 15000 }).toBe(before + 1);
@@ -225,5 +228,36 @@ test('한국어 Tutorial2의 안내 페이지를 표시한다', async ({ page })
   await page.screenshot({ path: test.info().outputPath('korean-tutorial2-temple-selected.png') });
   await page.waitForFunction(() => window.netstorm._gameData.currentTell === 'G.' && Boolean(window.netstorm._mainMenu.dialog), null, { timeout: 30000 });
   expect(await page.evaluate(() => window.netstorm._mainMenu.dialog.content.styleText)).toContain('에너지');
-  await page.screenshot({ path: test.info().outputPath('korean-tutorial2-g.png') }); expect(errors).toEqual([]);
+  await page.screenshot({ path: test.info().outputPath('korean-tutorial2-g.png') });
+  // G: 발사기를 두 개 더 내려놓으면 H(에너지 소비)로 넘어간다. 자리는 사제 주변 고리 위의 여러 후보에서 합법 판정으로 찾는다.
+  const ring = []; for (const radius of [50, 80, 110, 140, 170]) for (let angle = 0; angle < 360; angle += 30) ring.push([Math.round(Math.cos(angle * Math.PI / 180) * radius), Math.round(Math.sin(angle * Math.PI / 180) * radius * 0.7)]);
+  await clickLabel(page, '확인'); await placeArcher(ring); await placeArcher(ring.slice().reverse());
+  await page.waitForFunction(() => window.netstorm._gameData.currentTell === 'H.' && Boolean(window.netstorm._mainMenu.dialog), null, { timeout: 30000 });
+  expect(await page.evaluate(() => window.netstorm._mainMenu.dialog.content.styleText)).toContain('에너지');
+  await page.screenshot({ path: test.info().outputPath('korean-tutorial2-h.png') });
+  // H: 에너지는 건설할 때만 쓰인다는 안내 뒤 H1(회수)로 간다. 완성된 발사기를 오른쪽 클릭해 Salvage 를 고른다.
+  await clickLabel(page, '다음'); await page.waitForFunction(() => window.netstorm._gameData.currentTell === 'H1.');
+  await clickLabel(page, '확인'); await page.waitForFunction(() => !window.netstorm._gameClock.paused() && !window.netstorm._mainMenu.dialog, null, { timeout: 15000 });
+  const archer = await page.evaluate(() => { const app = window.netstorm, session = app._campaignWorld.session(), found = session.world().objects().find(({object}) => object.type === 71 && object.owner === 1);
+    const slot = session.core().pool.slot(found.sid), raw = new DataView(slot.buffer, slot.byteOffset, slot.byteLength), point = app._clientGameplay.camera().snapshot().project(raw.getFloat32(14, true), raw.getFloat32(18, true)), rect = app.canvas.getBoundingClientRect(); let hit = null;
+    for (let y = Math.trunc(point.y) - 60; y <= Math.trunc(point.y) + 20 && !hit; y += 1) for (let x = Math.trunc(point.x) - 60; x <= Math.trunc(point.x) + 20; x += 1) { if (app._campaignWorld.pick(x, y, 0) === found.sid) { hit = { x, y }; break; } }
+    if (!hit) throw new Error('발사기의 적중 픽셀 없음'); return { sid: found.sid, x: rect.left + hit.x * rect.width / app._layout.logicalWidth, y: rect.top + hit.y * rect.height / app._layout.logicalHeight }; });
+  await page.mouse.click(archer.x, archer.y, { button: 'right', delay: 60 }); await page.waitForTimeout(800);
+  // 공통 객체 메뉴에는 회수(Salvage) 행이 있다. 원본 회수 명령(0x0200005d)을 가진 행을 눌러 발사기를 회수한다.
+  await page.waitForFunction(() => { const root = window.netstorm._clientGump; for (let t = root.root().child; t; t = root.node(t).next) if (root.node(t).command === 26 && root.node(t).object) return true; return false; }, null, { timeout: 10000 });
+  const archerMenu = await page.evaluate(() => { const root = window.netstorm._clientGump; for (let t = root.root().child; t; t = root.node(t).next) if (root.node(t).command === 26 && root.node(t).object) return t; return 0; });
+  const salvageRow = await page.evaluate((token) => { const node = window.netstorm._clientGump.node(token); for (let index = 0; index < node.itemCount; index += 1) if ((node.items[index].command >>> 0) === 0x0200005d) return index; return -1; }, archerMenu);
+  expect(salvageRow).toBeGreaterThanOrEqual(0); expect(await page.evaluate((token) => window.netstorm._clientGump.node(token).object, archerMenu)).toBe(archer.sid);
+  await page.screenshot({ path: test.info().outputPath('korean-tutorial2-archer-menu.png') });
+  await page.evaluate((token) => { window.__salvageBefore = window.netstorm._campaignWorld.session().world().objects().filter(({object}) => object.type === 71 && object.owner === 1).length; }, archerMenu);
+  await clickMenuRow(archerMenu, salvageRow);
+  // H 단계는 회수 완료 뒤 시간이 지나면 I(미션 완료)로 넘어간다.
+  await page.waitForFunction(() => window.netstorm._gameData.currentTell === 'I.' && Boolean(window.netstorm._mainMenu.dialog), null, { timeout: 60000 });
+  expect(await page.evaluate(() => window.netstorm._mainMenu.dialog.content.styleText)).toContain('튜토리얼');
+  await page.screenshot({ path: test.info().outputPath('korean-tutorial2-complete.png') });
+  // 완료 창의 다음 튜토리얼 단추는 현재 미션을 떠나 Tutorial3 을 시작한다.
+  const buttons = await page.evaluate(() => window.netstorm._mainMenu.dialog.buttons.map((button) => button.label)); expect(buttons.length).toBe(2);
+  await clickLabel(page, buttons[1]);
+  await page.waitForFunction(() => window.netstorm._lastCampaignMission?.name === 'Tutorial3' && window.netstorm._campaignWorld && window.netstorm._clientGuide.current(), null, { timeout: 60000 });
+  expect(errors).toEqual([]);
 });
