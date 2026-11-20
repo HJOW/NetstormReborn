@@ -50,7 +50,7 @@ test('게임 중 ESC 메뉴 Options 에도 같은 Frame Rate 하위 메뉴가 �
   await page.waitForFunction(() => Boolean(window.netstorm._mainMenu.dialog), null, { timeout: 15000 });
   for (let index = 0; index < 8; index += 1) { const label = await page.evaluate(() => window.netstorm._mainMenu.dialog?.buttons.at(-1)?.label ?? null); if (label === null) break; await clickLabel(page, label); }
   await page.waitForFunction(() => !window.netstorm._gameClock.paused() && window.netstorm._campaignProduction?.ui?.gameMenu(), null, { timeout: 20000 });
-  // ESC 막대의 Options 하위 맨 앞에 Language·Frame Rate 가 있고 세 항목 중 75 에 체크가 있다.
+  // ESC 막대의 Options 하위 맨 앞에 Language·Frame Rate·Difficulty 가 있고 세 항목 중 75 에 체크가 있다.
   await page.locator('[data-netstorm="game-menu-button"]').click(); await page.waitForTimeout(300);
   const labelsOf = (token) => page.evaluate((current) => window.netstorm._campaignProduction.ui.gameMenu().labels(current), token);
   const rowPoint = (token, row) => page.evaluate(({ current, index }) => {
@@ -65,7 +65,7 @@ test('게임 중 ESC 메뉴 Options 에도 같은 Frame Rate 하위 메뉴가 �
   };
   const bar = await page.evaluate(() => window.netstorm._campaignProduction.ui.gameMenu().token()), top = await labelsOf(bar);
   const options = await clickRow(bar, top.findIndex((label) => /Options/u.test(label))), optionLabels = await labelsOf(options);
-  expect(optionLabels.slice(0, 2)).toEqual(['Language', 'Frame Rate']);
+  expect(optionLabels.slice(0, 3)).toEqual(['Language', 'Frame Rate', 'Difficulty']);
   const rates = await clickRow(options, 1), rateLabels = await labelsOf(rates);
   expect(rateLabels).toEqual(['60 FPS', '75 FPS (Original)', '120 FPS']);
   await clickRow(rates, 0); await page.waitForTimeout(500);

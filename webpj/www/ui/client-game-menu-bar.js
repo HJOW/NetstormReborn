@@ -44,6 +44,8 @@ export class ClientGameMenuBar {
         if (typeof devices.frameRates === 'function') menus.frameRates = () => devices.frameRates();
         // 언어(Language) 하위 메뉴 항목 장치다. 없으면 하위 메뉴를 만들지 않는다. (2026-11-20 WB04-E1095)
         if (typeof devices.languages === 'function') menus.languages = () => devices.languages();
+        // 난이도(Difficulty) 하위 메뉴 항목 장치다. 없으면 하위 메뉴를 만들지 않는다. (2026-11-20 WB04-E1096)
+        if (typeof devices.difficulties === 'function') menus.difficulties = () => devices.difficulties();
         const parents = new RawGameMenus(menus);
         // 막대 자체의 현재 조회·번역·하위 부모 경계다. Edit·Cheat 는 웹 범위 밖이라 읽기 값이 0 이다.
         Object.assign(bar, { prepare: () => devices.prepare?.(), translate: (key) => devices.translate(key), about: () => devices.about(), technicalHelp: () => devices.technicalHelp(),

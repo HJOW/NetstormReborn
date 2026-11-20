@@ -76,6 +76,7 @@ import { readGameTimeSeconds } from './core/game-time-display.js';
 import { idleMainMenuActivity } from './core/main-menu-activity.js';
 import { frameDue, frameRateChoices, normalizeFrameRate, parseFrameRateTarget } from './core/frame-rate-option.js';
 import { languageChoices, languageOfChoice, parseLanguageTarget, savedLanguage } from './platform/language-choice.js';
+import { difficultyChoices, parseDifficultyTarget } from './core/difficulty-option.js';
 import { dispatchViewKeyInput } from './core/view-key-input.js';
 import { GameMenuButton } from './ui/game-menu-button.js';
 import { CHAT_RECORD_BYTES, RawChatChannels } from './core/raw-chat-channels.js';
@@ -1440,7 +1441,7 @@ export class Netstorm {
             },
             demo: () => Boolean(this._clientGuide?.current()?.runtime.gate.demo),
             // 옵션 메뉴 Frame Rate 하위 항목(60·75·120 FPS)이다. (2026-11-20 WB04-E1094)
-            frameRates: () => frameRateChoices(this._settings?.get('maxFPS')), languages: () => languageChoices(this.options.language),
+            frameRates: () => frameRateChoices(this._settings?.get('maxFPS')), languages: () => languageChoices(this.options.language), difficulties: () => difficultyChoices(this._settings?.get('difficulty')),
             player: (owner) => session.playerRecords().subarray(owner * 180, owner * 180 + 180),
             refreshPriest: (owner) => session.refreshPriestParticipation(owner),
             enabled: (code) => WIRED_MENU_COMMANDS.has(code >>> 0), configEnabled: () => true, storeText: (value) => this._clientChatWindows.store(value),
@@ -2169,6 +2170,9 @@ export class Netstorm {
         // 언어 선택(`Patch1101.SetLanguage(n)`)은 설정에 저장하고 페이지를 다시 불러 적용한다. 이미 그 언어이면 아무것도 하지 않는다. (2026-11-20 WB04-E1095)
         const languageChoice = parseLanguageTarget(name);
         if (languageChoice !== null) return this._chooseLanguage(languageChoice);
+        // 난이도 선택(`Patch1101.SetDifficulty(n)`)은 창 없이 difficulty 설정에 써서 저장한다. 새 미션의 적 AI 생성 때 적용된다. (2026-11-20 WB04-E1096)
+        const difficulty = parseDifficultyTarget(name);
+        if (difficulty !== null) { this._settings?.set('difficulty', difficulty); this._displayDirty = true; return true; }
         const result = createTellWindow({
             gameData: this._gameData,
             resources: this._resources,

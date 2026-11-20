@@ -11,6 +11,7 @@
 
 import { frameRateChoices } from '../core/frame-rate-option.js';
 import { languageChoices } from '../platform/language-choice.js';
+import { difficultyChoices } from '../core/difficulty-option.js';
 
 // 메뉴 항목 정의 도우미들이다. (2026-10-29 WB03-F)
 const command = (name, argument) => Object.freeze({ name, argument });
@@ -39,6 +40,11 @@ function languageItems(language) {
     return languageChoices(language).map((choice) => check(choice.label, choice.checked, 'Tell', `Patch1101.SetLanguage(${choice.number})`));
 }
 
+// 난이도(Difficulty) 하위 목록이다. Easy·Normal·Hard 중 현재 난이도(없으면 보통)에 표시가 붙고, 누르면 Tell 대상 `Patch1101.SetDifficulty(n)` 이 된다. 라벨은 번역 대상이다. (2026-11-20 WB04-E1096)
+function difficultyItems(settings) {
+    return difficultyChoices(settings.get('difficulty')).map((choice) => check(choice.label, choice.checked, 'Tell', `Patch1101.SetDifficulty(${choice.number})`));
+}
+
 // 해상도 하위 목록(원본 세 값)이다. 웹에서는 만들지 않으며 스크린샷 비교(includeAll)에서만 쓴다. 현재 값은 1024 by 768 이다. (2026-10-29 WB03-F)
 function resolutionItems() {
     return [
@@ -63,7 +69,7 @@ function joinGroups(groups) {
 // includeAll 이 참이면 원본 항목(Direct Draw·Resolution·Pause·Pass Server Diagnostic)도 만든다. 원본 메인 메뉴 상태: 서버 진단 미통과, 일시정지 아님. (2026-10-29 WB03-F)
 export function buildOptionsItems(settings, { includeAll = false, language = 'english' } = {}) {
     return joinGroups([
-        includeAll ? [text('Direct Draw / Full Screen', 'Tell', 'DirectDrawManager'), { kind: 'submenu', label: 'Resolution', items: resolutionItems() }] : [{ kind: 'submenu', label: 'Language', items: languageItems(language) }, { kind: 'submenu', label: 'Frame Rate', items: frameRateItems(settings) }],
+        includeAll ? [text('Direct Draw / Full Screen', 'Tell', 'DirectDrawManager'), { kind: 'submenu', label: 'Resolution', items: resolutionItems() }] : [{ kind: 'submenu', label: 'Language', items: languageItems(language) }, { kind: 'submenu', label: 'Frame Rate', items: frameRateItems(settings) }, { kind: 'submenu', label: 'Difficulty', items: difficultyItems(settings) }],
         [
             toggle(settings, 'sound', 'Sound On'),
             toggle(settings, 'music', 'Play Music'),

@@ -39,6 +39,8 @@ export const SETTING_DEFINITIONS = Object.freeze({
     maxFPS: Object.freeze({ kind: 'integer', fallback: 0 }),
     // 언어 선택이다. 0 은 자동(?lang, 없으면 브라우저 언어), 1 은 English, 2 는 한국어이며 옵션 메뉴 Language 가 쓰고 다시 불러 적용한다(platform/language-choice.js). (2026-11-20 WB04-E1095)
     language: Object.freeze({ kind: 'integer', fallback: 0 }),
+    // 적 AI 난이도다. 1 쉬움·2 보통·3 어려움이며 키가 없거나 0 이면 보통으로 해석한다(core/difficulty-option.js·ai-difficulty.js). 새 미션의 적 AI 생성 때 읽힌다. (2026-11-20 WB04-E1096)
+    difficulty: Object.freeze({ kind: 'integer', fallback: 0 }),
     welcomeGiven: Object.freeze({ kind: 'toggle', fallback: 0 }),
     tipNumber: Object.freeze({ kind: 'integer', fallback: 0 }),
 });
