@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-20 · 마지막 완료 0.707(52h/64h선행부모·원본43입력·집중23건) · 다음 0.708(정기 전체 회귀/L2) · 현재 단계 R4-2·R4-5 병행 · 전체 목표 미완료**
+**2026-11-20 · 마지막 완료 0.708(전체5128건·65실행·원본1392불변) · 다음 0.709(장기Player실제할당) · 현재 단계 R4-2·R4-5 병행 · 전체 목표 미완료**
 
 현행 인계는 이 문서가 기준이다. 0.600~0.635의 단위별 완료 문장, 단위마다 누적한 검사 수와 L2 보관 경로 나열은 [0.635 정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635)에 있다. 0.613까지의 경과, 파일 계열별 체크 목록과 옛 집계는 [0.613 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)에 있다. 단위별 근거는 `docs/dotnet-canon-0NNN-*.md`이다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
@@ -20,8 +20,8 @@
 - **0.639.** 미션 시작 `CreateAiBrains` live 연결(실제 `Construct`·첫 지역·신전 조회·색 변경·사제 조회의 세션 결선)과 brain 행 대조를 연결했다. L1 집중 27건 + Core AI 28건 통과. [0.639](docs/dotnet-canon-0639-20261119.md)
 - **0.644.** 4단위 주기 정기 전체 회귀(Assets 366·Core 2,979·Client 1,341 합계 4,686 통과·실패 0)와 31경로 시작 상태 일괄 덤프(DN 종료 0이 31/31)를 마쳤다. 일괄 수집에서 드러난 AI 색 프레임·펜스 표식/실드 생성·연결선/표식 삭제 미연결을 실제 경로로 이었다. 신규 집중 3건 통과. M1은 0/34 유지(cpp_only 997·dn_only 21 잔여). [0.644](docs/dotnet-canon-0644-20261119.md)
 - **0.645.** AI 준비 본체(`RawAiPreparation`, 원문 00416eb0) 이식을 마쳤다. 적 재선택·데모 기한·취약 사제 목표·SP 가산·초기 등록·수량 판정이 원문 순서와 같다. Release 빌드와 Core 집중 10건 통과. 세션 런타임 결선은 후속에서 잇는다. [0.645](docs/dotnet-canon-0645-20261119.md)
-- **검사 기준선.** 마지막 정기 전체 회귀는0.704이다(Assets366·Core3337·Client1396 합계5099건 통과·실패0·소리 실장치1건 미실행). 기본 검사는 `NETSTORM_DATA` 없이 실행한다. 다음 정기 전체 회귀는4단위 주기에 따라0.708이다. [0.704 정기 회귀](docs/dotnet-canon-0704-20261120.md) · [0.640 후속 점검](#regression-audit-0640)
-- **L2 기준선.** 최신 일괄 수집은 `extracted/dotnet-l2-0704/`다. 일반31경로 양쪽·데모CPP3경로의65실행 모두 종료0·원본1392파일 불변이다. DN 일반31경로의 전체 덤프 바이트와34경로 지표가0.700과 같다. M1은 **0/34**, cpp_only997·dn_only21이며 DN 데모 진입은 미연결이다. CPP 변동은 알려진 소유자0 SP칸뿐이다. 정기·object·AI·전용슬롯·농지/공장 뒤 SID 차이를 계속 처리한다. [0.704 결과](docs/dotnet-canon-0704-20261120.md) · [격차 분석](docs/dotnet-l2-0606-20261117.md)
+- **검사 기준선.** 마지막 정기 전체 회귀는0.708이다(Assets366·Core3337·Client1425 합계5128건 통과·실패0·소리 실장치1건 미실행). 기본 검사는 `NETSTORM_DATA` 없이 실행한다. 다음 정기 전체 회귀는4단위 주기에 따라0.712이다. [0.708 정기 회귀](docs/dotnet-canon-0708-20261120.md) · [0.640 후속 점검](#regression-audit-0640)
+- **L2 기준선.** 최신 일괄 수집은 `extracted/dotnet-l2-0708/`다. 일반31경로 양쪽·데모CPP3경로의65실행 모두 종료0·원본1392파일 불변이다. DN 일반31경로의 전체 덤프 바이트와34경로 지표가0.704와 같다. M1은 **0/34**, cpp_only997·dn_only21이며 DN 데모 진입은 미연결이다. CPP 변동은 알려진 소유자0 SP칸뿐이다. 정기·object·AI·전용슬롯·농지/공장 뒤 SID 차이를 계속 처리한다. [0.708 결과](docs/dotnet-canon-0708-20261120.md) · [격차 분석](docs/dotnet-l2-0606-20261117.md)
 
 <a id="now"></a><a id="09-바로-다음-작업"></a><a id="r4-board"></a>
 
@@ -90,7 +90,8 @@
 61. **0.705 장기Client전역과실제소비자 — 완료.** 실제State5블록/Zone/Clock와Registry/Source를장기소유하고기존저장모드/주변음/플레어기한을같은물리로연결했다. 두실제HostSession의소유자보존·현재동기화/실제Source종료등집중12건통과다. 실제DN1-1시작종료0·덤프전체바이트0.704일치·원본1392불변을확인했다. 전체로그인/제품Clock프레임설치는후속이다. [근거](docs/dotnet-canon-0705-20261120.md)
 62. **0.706 실제Runtime대여 — 완료.** 현재실제HostSession/동일Pool저장소/장치묶음의준비대여·weak공개·배송pin과실행중반납관문을연결했다. 중첩/예외/GC/이전세션·현재소유자검사를집중18건통과했다. 실제DN1-1시작종료0·덤프전체바이트0.704일치·원본1392불변이다. World/PostPop/건설효과각자pin의전달/Dispose는후속이다. [근거](docs/dotnet-canon-0706-20261120.md)
 63. **0.707 고정App수신기 선행부모 — 완료.** 52h직접수신/작성·중단/양수이유/확인선택과64h현재활동/typed등록·장기표를연결했다. 원본13+8+22입력과실제로컬큐/metadata/현재모드등집중23건통과다. 원본큰메뉴부모3행은후속이며fixture360개다. [근거](docs/dotnet-canon-0707-20261120.md)
-64. **0.708 정기 전체 회귀/L2 — 다음.** 전체Release와34경로65실행을0.704와대조한다. 이후고정App15수신기·장기Player/옵션/Core실제필드와전체로그인bridge/Root설치를진행한다. World/건설효과pin의Dispose·Source의Editor/LAN/Meta재인계·일반건설/DropIsland·Carrier플레이효과·나머지AI/캡처·전용색표·R5월드뷰도 남는다.
+64. **0.708 정기 전체 회귀/L2 — 완료.** Assets366·Core3337·Client1425 합계5128건통과·실패0·기존실장치음향1건미실행이다.65실행종료0·DN31전체바이트/34지표0.704동일·원본1392불변이며M1은0/34다. [근거](docs/dotnet-canon-0708-20261120.md)
+65. **0.709 장기Player실제할당 — 다음.** 원본Player/factory단일소유자·고정뷰대여·실제Core별칭·같은로그인카운터와CD172간격부모를옮긴다. 이어현재공장목록·장기옵션/Core필드·고정App15수신기·전체로그인bridge/Root설치를진행한다. World/건설효과pin의Dispose·Source의Editor/LAN/Meta재인계·일반건설/DropIsland·Carrier플레이효과·나머지AI/캡처·전용색표·R5월드뷰도남는다.
 57. **R4-2 나머지 차이와 R4-3~R4-8.** 농지 프레임, 전용 요새, 표시 등록, 그래프 번호, 장부를 처리한 뒤 R4-3~R4-8을 진행한다. 통합 조각을 마칠 때 같은 조건의 일괄 덤프로 M1 진척을확인한다. [R4 체크](#r4-detail)
 
 <a id="first-run"></a>
@@ -242,7 +243,7 @@ AGENTS.md 2026-11-19 추가(`d047bf9a3`)로 `Netstorm.exe`의 아이콘은 기�
 
 - **cpppj 1322가 현행 제품.** 0.606의 오라클 재빌드 기준도 1322다. 마지막으로 문서화한 변경 분류는 0.530의 1312·1313이다. `979d65b5d..HEAD`의 `cpppj/src` 변경 23파일 중 PORT_MAP과 겹치는 것은 7파일이다(2026-11-19 확인). 겹치는 파일은 `BitmapFont.cpp/.h`(1322 글꼴), `ClientMain.cpp`, `LocalTcpTransport.cpp`·`LocalUdpTransport.cpp`·`LocalMissionTransport.cpp/.h`(1320 미션 전환)다. 해당 소비자를 옮길 때 재대조를 마친 뒤 PORT_MAP 기준 커밋을 올린다. 1314(최초 실행)는 0.2, 1322는 0.3과 함께 반영한다. [1312·1313 처분](docs/dotnet-ai-alliance-delta-20261115.md) · [1320](docs/exe/cpp-mission-transition-1320-20261117.md) · [cpppj 현행](LEFT_JOBS.md)
 - **기존 재대조 규칙.** CPP 소스는 커밋된 HEAD를 사용한다. 해당 소비자를 옮길 때 바뀐 cpp 소스·fixture·검사를 함께 확인하고, cpppj 테스트 자동 플레이와 관전 경계는 R5/R6에서 잇는다. [오라클 자동 플레이](docs/testing/cpp-autoplay-test-guide.md)
-- **현재 집계(2026-11-20, 0.704 완료 감사).** PORT_MAP 물리1,169줄(데이터1,164행, L1 481·port676·session7), 연결 fixture357개다. 현행 cpppj1,239개 소스 단위 중487개 대응·752개 미대응(83,882줄)이다. 대응 수는 `tools/port_inventory.py`가 인식한 단위 기준이며 기존 대응의 미이식 분기·호스트 결선은 별도다. 원자료는 `extracted/dotnet-0704/port-inventory.tsv`와 `.log`다.
+- **현재 집계(2026-11-20, 0.708 완료 감사).** PORT_MAP 물리1,184줄(데이터1,179행, L1 481·port691·session7), 연결 fixture360개다. 현행 cpppj1,239개 소스 단위 중492개 대응·747개 미대응(83,140줄)이다. 대응 수는 `tools/port_inventory.py`가 인식한 단위 기준이며 기존 대응의 미이식 분기·호스트 결선은 별도다. 원자료는 `extracted/dotnet-0708/port-inventory.tsv`와 `.log`다.
 - **파일 계열 목록.** 현행 [PORT_MAP](dotnetpj/PORT_MAP.tsv)과 `python -X utf8 tools/port_inventory.py --families dn`을 사용한다. 예전 단계 배정 및 대응 파일의 미완 부분은 [보관본 2.4~2.7](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)에서 찾는다. 단위 작업은 해당 계열이나 큰 파일 하나를 옮기고 검사·호스트 결선까지 확인한다.
 - **cpppj 전달 항목.** 상태 덤프와 고정 시각 요청은 해결됐다. fixture 헤더·모듈 연결 상태표, `GraphTests` 슬롯 열 범위와 `ClearProcesses` 뒤 정기 조회 진단의 이전 요청은 보관본 1.4에 있다. 변경이 필요하면 사용자에게 전달한다.
 
@@ -254,7 +255,7 @@ AGENTS.md 2026-11-19 추가(`d047bf9a3`)로 `Netstorm.exe`의 아이콘은 기�
 - **사용자 확인.** L5와 전체 화면/청취, 실제 사제 포획·희생·특정 적 공격·승리·MP/LAN, 공격형 공중 3종 실제 생산/조작은 사용자 확인 범위다. 창 실행은 AGENTS.md의 명시 확인·예외 PC 규칙을 따른다. Windows 10에서 통과하면 Windows 11 실기와 사용자 관찰만 남은 상태에서도 다음 단계로 진행한다. 물리 DPI·4K FSR·UAC는 R8 이후, `DSERR_NODRIVER` 실장치 재검사는 출력 장치가 있는 PC에서 한다. [소리 장치 기록](docs/dotnet-sound-device-20261114.md) · [공통 실행 범위](LEFT_JOBS.md#rules-verify)
 - **공통 기능 경계.** CHEAT 메뉴는 Edit에서만 표시한다. 연녹색 직사각형 분석은 보류다. 폐기된 인터넷 master/root·검증·ping/진단은 비활성 상태를 유지한다. 도움말 링크와 LAN은 해당 사용자가 선택한 경로를 따른다. [공통 계약](LEFT_JOBS.md#rules-verify)
 - **오라클과 자료.** `cpppj/build/bin/Release/Netstorm.exe`를 PowerShell에서 빌드한다. 실행은 `extracted/dotnet-oracle-data/` 사본과 분리한 사용자 루트로 진행하며 `originals/` 해시를 전후 확인한다. 0.606의 VM 소프트웨어 GPU 환경은 [재측정 기록](docs/dotnet-l2-0606-20261117.md)에 있다. 일반 덤프 비교와 최초 실행 검증의 옵션을 구별한다.
-- **검사 명령.** `dotnet build dotnetpj/Netstorm.sln -c Release`, `dotnet test dotnetpj/Netstorm.sln -c Release`, `python -X utf8 dotnetpj/tools/cpp_sync.py`를 쓴다. 실제 TYPE 검사는 기본 데이터 또는 `NETSTORM_DATA`로 선택한 보호 자료 사본을 읽는다. 2026-11-19 사용자 지시로 정기 전체 회귀는 4단위당 1회만 수행한다(다음 0.708). fixture는 사본 없이 한 소비자 프로젝트에 링크하고 `cpp_sync.py --update --add`로 매니페스트에 등록한다. GUI 명령·변이 검사·등록 규칙 전문은 보관본 6.1에 있다. [L2 도구](docs/dotnet-l2-batch-20261114.md) · [L4a 도구](dotnetpj/tools/l4a_compare.ps1) · [덤프 형식](docs/exe/cpp-session-state-dump-20261109.md)
+- **검사 명령.** `dotnet build dotnetpj/Netstorm.sln -c Release`, `dotnet test dotnetpj/Netstorm.sln -c Release`, `python -X utf8 dotnetpj/tools/cpp_sync.py`를 쓴다. 실제 TYPE 검사는 기본 데이터 또는 `NETSTORM_DATA`로 선택한 보호 자료 사본을 읽는다. 2026-11-19 사용자 지시로 정기 전체 회귀는 4단위당 1회만 수행한다(다음 0.712). fixture는 사본 없이 한 소비자 프로젝트에 링크하고 `cpp_sync.py --update --add`로 매니페스트에 등록한다. GUI 명령·변이 검사·등록 규칙 전문은 보관본 6.1에 있다. [L2 도구](docs/dotnet-l2-batch-20261114.md) · [L4a 도구](dotnetpj/tools/l4a_compare.ps1) · [덤프 형식](docs/exe/cpp-session-state-dump-20261109.md)
 - **착수·보호·커밋.** AGENTS.md·LEFT_JOBS.md와 이 문서, git status/log를 확인한다. dotnetpj 이식에 디컴파일은 필요 없다. AGENTS.md·기존 원본/CD 파일·README 개요·기존 fixture를 보호한다. 작업 단위마다 진행판·체크와 단위 문서를 갱신하고 해당 파일만 `YYYYMMDD-NN DN 요약`으로 로컬 커밋한다. push 금지. 새 코드·문서는 UTF-8, AGENTS 범위의 코드 주석은 설명·사용법부터 한국어로 적는다. 작업 트리 줄바꿈은 본문 LF, 보관본 CRLF다.
 
 <a id="regression-audit-0640"></a>
