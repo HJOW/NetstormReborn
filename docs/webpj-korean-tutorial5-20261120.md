@@ -1,0 +1,13 @@
+# 한국어 다섯 번째 튜토리얼 (WB04-E1110)
+
+다섯 번째 튜토리얼 `Tutorial5`(교묘한 방어)의 모든 단계 안내·버튼과 실패 안내(`VortexDestroyed`·`FactoryDestroyed`)를 한국어로 옮기고 웹 한국어 묶음에 포함했다. 영어 원문과 실행 Header(Fort `SubtleDefense`, 허용 기술, 시작 돈·기술), 섹션 순서(`A.`~`G.`와 `A1.`·`C1.`·`D1.`·`F1.`·두 실패 섹션), 버튼·설정 명령, 원본 그림 태그(`thunderCannon.*`·`sunAviary.*`·`buried.*`)를 비교해 같음을 확인했다.
+
+## 구현
+
+- [Tutorial5.korean](../webpj/translations/Tutorial5.korean): 제목 `교묘한 방어`, 단계 제목·안내·인용구·버튼을 번역했다. 건물·유닛 이름은 사용자 지정 용어표와 같다(썬더 캐논·훨리베이스·훨리기그·스톤 타워·썬 캐논·썬 디스크 발사기·윈드 제네레이터·오벨리스크·골렘·제단). 용어표에 없어 화면에 영어로 나오는 메뉴 항목(`Cast Devastation`·`Meltdown!`·`Restart Mission`과 `Game` 메뉴)은 영어 그대로 두었다.
+- [prepare-assets.js](../webpj/tools/prepare-assets.js)의 한국어 언어 파일 목록과 [korean-assets.js](../webpj/www/assets/korean-assets.js)의 `KOREAN_LANGUAGE_PATHS`에 `Tutorial5.korean`을 더했고 `node webpj/tools/prepare-assets.js`로 `www/data/d/`에 복사했다. 한국어 언어일 때만 받는다.
+
+## 검증
+
+- `tests/korean-mission.test.mjs`에 Tutorial5 시험을 더했다: 복사본이 번역 원본과 같고, 영어 원문과 Header(제목 제외, 첫 안내 섹션 앞까지)·섹션 이름 순서·버튼/설정 명령·그림 태그가 같으며, 한국어 미션 설정에서 `loadFort`·`tutorialNumber`·제목·`A.`·`G.` 섹션을 읽는다. 아직 번역하지 않은 다음 튜토리얼(Tutorial6)은 영어 대체 경로를 유지함을 새 기준으로 확인한다. 한국어 묶음 목록과 외부 접속 감사도 통과한다.
+- 실제 Chromium에서 이 미션을 끝까지 진행하는 화면 확인은 하지 않았다(미션 자연 진행은 사용자 확인 범위).
