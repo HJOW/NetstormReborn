@@ -1163,6 +1163,8 @@ export class Netstorm {
         services.sound = { wallSeconds: () => this._gameClock.wallSeconds(), play: (...args) => player().play(...args),
             playOnceAt: (...args) => player().playOnceAt(...args), playLoopAt: (...args) => player().playLoopAt(...args),
             stop: (...args) => player().stop(...args), isPlaying: (...args) => player().isPlaying(...args) };
+        // 내용물 너겟 삭제는 같은 실제 입력 큐와 위치 효과음(guy.wav)을 사용한다(원문 CampaignClientServices contentLifetime). AI 가 너겟을 나르는 스커미시에서 처음 쓰인다. (2026-11-20 WB04-E1106)
+        services.contentLifetime = { localNotice: (command) => { this._clientInputQueue.pushCommand(command, 0, 0); }, sound: (x, y) => { player().playNameAt(x, y, 'guy.wav', 0); } };
         // 이동 경로의 발소리는 같은 Client 위치 음향으로 원본 반복·우선순위 0을 전달한다.
         services.motion = { path: { stepSound: (_sid, x, y, sound) => player().playOnceAt(x, y, sound, 0, 0) } };
         // 건설 확정·간헐천은 같은 현재 설정·벽시계·Renderer와 원본 진단 출력을 사용한다.
