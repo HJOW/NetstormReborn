@@ -642,6 +642,8 @@ cpppj/src/o/RawDataManagerSelection.cpp	Netstorm.Core/Original/RawDataManagerSel
 cpppj/src/o/RawDataManagerSelection.h	Netstorm.Core/Original/RawDataManagerSelection.cs	d48ea75609a1fe57db3acee4e28167de1723651b	L1
 cpppj/src/o/RawDependCreate.cpp	Netstorm.Core/Original/RawDependCreate.cs	c0907232690d13a58eb28e2ffe46af83cc2454ec	L1
 cpppj/src/o/RawDependCreate.h	Netstorm.Core/Original/RawDependCreate.cs	c0907232690d13a58eb28e2ffe46af83cc2454ec	port
+cpppj/src/o/RawFactoryDraw.cpp	Netstorm.Core/Original/RawFactoryDraw.cs	6f4aea9287b6abc34c6b1b1ee79bcfbdb2d0a0e0	L1
+cpppj/src/o/RawFactoryDraw.h	Netstorm.Core/Original/RawFactoryDraw.cs	6f4aea9287b6abc34c6b1b1ee79bcfbdb2d0a0e0	L1
 cpppj/src/o/RawFactoryPostPop.cpp	Netstorm.Core/Original/RawFactoryPostPop.cs	e8b605b9bd432c691f73c468c7ef3444ab857be2	L1
 cpppj/src/o/RawFactoryPostPop.h	Netstorm.Core/Original/RawFactoryPostPop.cs	e8b605b9bd432c691f73c468c7ef3444ab857be2	L1
 cpppj/src/o/RawFactoryRegular.cpp	Netstorm.Core/Original/RawFactoryRegular.cs	2c163c5e8e730e91f3a6042dd206521348c02f74	L1

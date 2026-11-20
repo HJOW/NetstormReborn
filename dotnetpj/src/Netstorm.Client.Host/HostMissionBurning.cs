@@ -48,6 +48,8 @@ public sealed class HostMissionBurning : IDisposable
         // 전용 표는 일반 항등/색띠로 대신하지 않는다. 실제 Client 공통색표 owner가 후속 연결된다.
         foreach (int type in new[] { 82, 155, 111, 141, 137, 94, 97 }) tokens[type] = 2;
         var colors = OwnerColorMapBuilder.BuildStandardOwnerColorMaps(0, session.BridgeState.BridgeType);
+        var factory = new RawFactoryDraw(session.Pool, session.WorldFrames);
+        var database = new Netstorm.Client.Display.ShapeDatabase(shp);
         var captureState = new ShapeToBufferState
         {
             AddTypeHotspot = true, OwnerTypeMaps = tokens,
@@ -61,16 +63,24 @@ public sealed class HostMissionBurning : IDisposable
             MainFrame = sid =>
             {
                 ReadOnlySpan<byte> raw = session.Pool.Slot(sid);
+                if (factory.Handles(sid)) return factory.MainFrame(sid);
                 if (!RawPlainUnitCapture.Matches(raw)) throw new InvalidOperationException("연소 다른 파생의 실제 주그림 캡처 미연결(R5)");
                 return definitions[raw[10] - 70].SpecialFrames.BaseFrame;
             },
-            Additional = (sid, _, _, _) =>
+            Additional = (sid, image, x, y) =>
             {
+                if (factory.Handles(sid))
+                {
+                    factory.Additional(sid, x, y, (px, py, type, frame) =>
+                        VfxDraw.DrawShape(image.Pixels, image.Width, image.Height, database, checked((int)type) - 70, frame,
+                            px, py, new(0, 0, image.Width - 1, image.Height - 1)));
+                    return;
+                }
                 if (!RawPlainUnitCapture.Matches(session.Pool.Slot(sid))) throw new InvalidOperationException("연소 다른 파생의 실제 추가그림 캡처 미연결(R5)");
                 // 이13개 VT의+a4=41c100은 원문 빈ret8이다.
             },
         };
-        Capture = new(session.Pool, types, shapes, new Netstorm.Client.Display.ShapeDatabase(shp), captureState);
+        Capture = new(session.Pool, types, shapes, database, captureState);
         BurningFrameHooks frame = BurningFrameCapture.Make(Capture, session.Pool, new() { StopSound = audio.StopEffect });
         Func<int, ConstructionVisualImage> actualCapture = frame.Capture!;
         frame.Capture = sid =>
