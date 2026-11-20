@@ -336,6 +336,8 @@ public sealed partial class ClientHostGame : Game
         MissionPlayers players = MissionPlayers.Load(key => script.Get(key), fort.Fort, types, 6500);
         // 독립 일반 월드의 fresh 설치에서만 정적 목록의 기존 배열을 초기화한다.
         _sidLists.PrepareGeneralWorld();
+        // 기존 일반 World의 fresh 입력만 준비한다. Native prepared 대여/반납은 장기 선택을 유지한다.
+        _gameplay.Selection.ResetForGeneralWorld();
         // 같은Client의장기Surface를빌린다. 미션시작마다Pool/권한/바람/프로세스시각을다시만들지않는다.
         RawSurfaceStorage storage = _surfaceGlobals.Storage;
         // 현재개발용일반미션부모가같은장기옵션을명시Reset한다. 전체Native로그인설치시원문부모위치로인계한다.

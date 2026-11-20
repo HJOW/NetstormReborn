@@ -14,6 +14,9 @@ public sealed partial class ClientGameplayGlobals
     /// <summary>현재 서버와 boss를 같은 주소에서 읽고 쓰는 소유자다.</summary>
     public RawAuthorityState Authority { get; } = new();
 
+    /// <summary>선택·강조·P/R 입력과 State 목록 정리가 공유하는 장기 실제 전역이다.</summary>
+    public ClientUserSelectionGlobals Selection { get; } = new();
+
     /// <summary>00541250의 최초126이며 공장 고정프레임과 연구/업그레이드가 공유하는 현재 아웃포스트 TYPE다.</summary>
     public UIntBox OutpostTypeBox { get; } = new() { Value = 126 };
 

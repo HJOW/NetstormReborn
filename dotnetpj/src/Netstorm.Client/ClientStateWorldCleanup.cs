@@ -51,10 +51,10 @@ public static class ClientStateWorldCleanup
 
     /// <summary>같은실제소유자검증뒤원문부모를실행한다. 실패한경우이미완료된효과와부분바이트는되돌리지않는다.</summary>
     public static void Cleanup(uint reason, ClientStateWorldContext context, ClientSurfaceGlobals surface,
-        ClientSpGlobals sp, IntBox multipleSelectionCount, ClientStateWorldDevices devices)
+        ClientSpGlobals sp, ClientStateWorldDevices devices)
     {
         ArgumentNullException.ThrowIfNull(context); ArgumentNullException.ThrowIfNull(surface); ArgumentNullException.ThrowIfNull(sp);
-        ArgumentNullException.ThrowIfNull(multipleSelectionCount); ArgumentNullException.ThrowIfNull(devices);
+        ArgumentNullException.ThrowIfNull(devices);
         if (!ReferenceEquals(context.Surface, surface.Storage) || !ReferenceEquals(context.Gameplay, surface.Gameplay))
             throw new ArgumentException("전체State정리의같은실제Client/Surface필요", nameof(surface));
         var game = surface.Gameplay;
@@ -66,7 +66,7 @@ public static class ClientStateWorldCleanup
         }
         StateWorldCleanupGlobals globals = ClientStateWorldGlobals.Bind(context);
         var runtime = new ClientStateRuntimeRetirement(surface);
-        var physical = new ClientStateStorageCleanup(surface, context.Local, multipleSelectionCount);
+        var physical = new ClientStateStorageCleanup(surface, context.Local, game.Selection.MultipleCount);
         RawStateWorldCleanup.CleanupStateWorld(reason, globals, new()
         {
             Disconnect = owner => context.Connections.Registry.Disconnect(unchecked((int)owner)),

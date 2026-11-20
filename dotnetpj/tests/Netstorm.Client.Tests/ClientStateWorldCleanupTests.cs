@@ -72,7 +72,7 @@ public sealed class ClientStateWorldCleanupTests
         /// <summary>같은장기저장소만가리키는현재뷰를반환한다.</summary>
         public ClientStateWorldContext Context() => Resources.Context(Surface, Local, Connections, Cloud, NsInfo);
         /// <summary>실제부모를호출하며다른저장소나시각사본을만들지않는다.</summary>
-        public void Cleanup(ClientStateWorldDevices devices, uint reason = 1) => ClientStateWorldCleanup.Cleanup(reason, Context(), Surface, Sp, Resources.MultipleSelectionCount, devices);
+        public void Cleanup(ClientStateWorldDevices devices, uint reason = 1) => ClientStateWorldCleanup.Cleanup(reason, Context(), Surface, Sp, devices);
         /// <summary>복원대기UI경계는명시사건으로제공하고채팅/장면음악은실제본체를호출한다.</summary>
         public ClientStateWorldDevices Devices() => new()
         {
@@ -93,7 +93,7 @@ public sealed class ClientStateWorldCleanupTests
     public void FirstMenuUsesRealOwnersAndKeepsMusicBeforeBattleReset(bool battle)
     {
         var scene = new Scene(); uint oldBase = scene.Game.PlayerRecords.Base; scene.Surface.Storage.OwnerMode.Battle = battle;
-        scene.Local.ZoneStorage.Span.Fill(0xa5); scene.Resources.MultipleSelectionCount.Value = 17;
+        scene.Local.ZoneStorage.Span.Fill(0xa5); scene.Game.Selection.MultipleCount.Value = 17; scene.Game.Selection.PriestSelections.Value = 0xdeadbeef;
         scene.Cleanup(scene.Devices());
         Assert.NotEqual(oldBase, scene.Game.PlayerRecords.Base); Assert.True(scene.Game.PlayerRecords.Initialized);
         Assert.Equal(1u, scene.Game.Player.PlayerKnown); Assert.False(scene.Game.CoreData.Current.IsEmpty); Assert.False(scene.Surface.Storage.OwnerMode.Battle);
@@ -104,7 +104,7 @@ public sealed class ClientStateWorldCleanupTests
         Assert.Equal(7.5 + scene.Surface.Storage.BridgeDecayPeriod, scene.Surface.Storage.BridgeDecayScan.Next); Assert.Equal(15000, scene.Surface.Storage.BridgeDecayScan.First);
         Assert.Equal(7.5, scene.Clock.Frame.Value.Game); Assert.Equal(55ul, scene.Clock.Frame.Value.Number); Assert.Equal(3, scene.ClockReads);
         Assert.True(scene.Events.IndexOf("kill") < scene.Events.IndexOf("cleanup")); Assert.True(scene.Events.IndexOf("cleanup") < scene.Events.IndexOf("uber"));
-        Assert.False(scene.Game.Authority.Server); Assert.False(scene.Game.Authority.Boss); Assert.Equal(0, scene.Resources.MultipleSelectionCount.Value);
+        Assert.False(scene.Game.Authority.Server); Assert.False(scene.Game.Authority.Boss); Assert.Equal(0, scene.Game.Selection.MultipleCount.Value); Assert.Equal(0xdeadbeefu, scene.Game.Selection.PriestSelections.Value);
     }
 
     /// <summary>최초커서장치누락은그위치에서실패하며이후전역을정리한것처럼보이지않는다.</summary>
@@ -142,7 +142,7 @@ public sealed class ClientStateWorldCleanupTests
     {
         var scene = new Scene(); var game = new ClientGameplayGlobals(); var local = new ClientLocalStateGlobals(game, new()); var other = new ClientSurfaceGlobals(game, new(local), new(), () => 0);
         scene.Game.FullDeckBox.Value = 71;
-        Assert.Throws<ArgumentException>(() => ClientStateWorldCleanup.Cleanup(1, scene.Context(), other, scene.Sp, scene.Resources.MultipleSelectionCount, scene.Devices()));
+        Assert.Throws<ArgumentException>(() => ClientStateWorldCleanup.Cleanup(1, scene.Context(), other, scene.Sp, scene.Devices()));
         Assert.Equal(71u, scene.Game.FullDeckBox.Value); Assert.Empty(scene.Events); Assert.Equal(0, scene.ClockReads);
     }
 

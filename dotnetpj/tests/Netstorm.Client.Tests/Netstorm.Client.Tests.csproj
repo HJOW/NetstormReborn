@@ -124,4 +124,8 @@
     <None Include="../../../cpppj/tests/fixtures/battle-abort-state-x86.tsv" Link="X86/battle-abort-state-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/battle-leave-reason-x86.tsv" Link="X86/battle-leave-reason-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 강조 모드와 ResetMouse의 원본178입력을 사본 없이 연결한다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/user-highlight-x86.tsv" Link="X86/user-highlight-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
