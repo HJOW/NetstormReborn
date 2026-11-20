@@ -80,6 +80,9 @@ public sealed class LocalMissionTransport : IDisposable
     /// <summary>수신 프레임을 같은 등록표에 분배하는 경계다.</summary>
     private FrameDispatch? _dispatch;
 
+    /// <summary>같은 운반 소유 배열을 복사 없이 원문 관찰기/분배기에 빌리는 관리 입구다.</summary>
+    private Func<Memory<byte>, bool>? _mutableDispatch;
+
     /// <summary>이미 닫혔는지다.</summary>
     private bool _disposed;
 
@@ -196,6 +199,20 @@ public sealed class LocalMissionTransport : IDisposable
     public void RegisterDispatch(FrameDispatch dispatch)
     {
         _dispatch = dispatch ?? throw new ArgumentNullException(nameof(dispatch));
+        _mutableDispatch = null;
+    }
+
+    /// <summary>실제 큐 소유 버퍼를 같은 현재 mutable 프레임 분배기에 연결한다.</summary>
+    public void RegisterMutableDispatch(Func<Memory<byte>, bool> dispatch)
+    {
+        _mutableDispatch = dispatch ?? throw new ArgumentNullException(nameof(dispatch)); _dispatch = null;
+    }
+
+    /// <summary>선택한 현재 입구를 한 번 보존하고 같은 완성 배열만 전달한다.</summary>
+    private bool DeliverFrame(byte[] frame)
+    {
+        Func<Memory<byte>, bool>? selected = _mutableDispatch;
+        return selected is not null ? selected(frame) : _dispatch?.Invoke(frame) == true;
     }
 
     /// <summary>등록된 연결을 번호순으로 읽고 같은 등록표에 분배한다.</summary>
@@ -208,7 +225,7 @@ public sealed class LocalMissionTransport : IDisposable
         while (_toServer.Count > 0)
         {
             byte[] frame = _toServer.Dequeue();
-            if (_dispatch?.Invoke(frame) == true)
+            if (DeliverFrame(frame))
             {
                 count++;
             }
@@ -216,7 +233,7 @@ public sealed class LocalMissionTransport : IDisposable
         while (_toClient.Count > 0)
         {
             byte[] frame = _toClient.Dequeue();
-            if (_dispatch?.Invoke(frame) == true)
+            if (DeliverFrame(frame))
             {
                 count++;
             }
@@ -235,6 +252,7 @@ public sealed class LocalMissionTransport : IDisposable
         _open = false;
         _toServer.Clear();
         _toClient.Clear();
+        _dispatch = null; _mutableDispatch = null;
     }
 }
 

@@ -50,6 +50,8 @@ public sealed partial class HostSession
     public RawCampaignProductionBindings WorldProduction => _worldProduction ?? throw new InvalidOperationException("호스트 생산 재계산 미연결");
     /// <summary>같은 실제 연구 입력/수신/부모 통지다.</summary>
     public RawFactoryResearch WorldResearch => _worldResearch ?? throw new InvalidOperationException("호스트 시설 연구 미연결");
+    /// <summary>설치된 같은 연구/업그레이드 수신을 실제 공유 패킷 표에 등록한다.대여/반납은 전송 owner가 맡는다.</summary>
+    public void RegisterFactoryResearchCommands(Netstorm.Net.RawPacketDispatch dispatch) => Netstorm.Net.FactoryResearchRegistration.Register(dispatch, WorldResearch);
     /// <summary>생산/AI의 현재 내용물 상태를 하나만 만들고 같은 역할/권한/진단 전역을 연결한다.</summary>
     private ContainedFinderState SessionContainedFinder
     {

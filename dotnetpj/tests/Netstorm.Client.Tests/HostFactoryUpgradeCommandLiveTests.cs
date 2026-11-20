@@ -25,12 +25,16 @@ public sealed partial class HostPriestWorldLiveTests
             Broadcast = packet => broadcasts.Add(packet.ToArray()), Log = (kind, text) => logs.Add((kind, text)),
         });
         Assert.Same(session.Pool, command.Pool); double requestedAt = session.ProcessTime.Value;
-        wire.RegisterDispatch(packet => { command.Receive(packet.ToArray()); return true; });
+        session.BuildProductionWorldDevices(ProductionDevices()); var table = new PacketRegistrationTable(OriginalEdition.Patch1078);
+        using PacketRegistrationLease lease = table.BindSession(session); var recorded = new List<byte[]>();
+        RawPacketDispatch dispatch = ProductionPacketDispatch(session, table, recorded); session.RegisterFactoryResearchCommands(dispatch);
+        var connection = new PacketConnection { Sender = uint.MaxValue }; wire.RegisterMutableDispatch(packet => dispatch.DispatchFrame(connection, packet));
         command.Request(parent);
         Assert.Equal(1, wire.QueuedFrames()); Assert.Equal(5000f, BitConverter.UInt32BitsToSingle(session.Sp.Get(1)));
         RegularProcess waiting = Assert.IsType<RegularProcess>(session.PlayerProcesses.FindEvent(parent, 4));
         Assert.Equal(20f, waiting.Payload()); Assert.Equal(requestedAt, waiting.Time());
         Assert.Equal(1, wire.Poll()); Assert.Equal(0, wire.QueuedFrames());
+        Assert.Single(recorded); Assert.Equal(0u, connection.Depth); Assert.False(table.ConnectionCallbackActive());
         Assert.Equal(5000f - session.Reward.TypeCostUnits(85), BitConverter.UInt32BitsToSingle(session.Sp.Get(1)));
         byte[] original = Assert.Single(broadcasts); Assert.Equal(0, original[6]); Assert.Equal(1, original[7]);
         Assert.Equal(requestedAt + 15, BitConverter.ToDouble(original, 8)); Assert.Equal((4u, "new ftUPGRADE sharedRegPro\n"), Assert.Single(logs));
@@ -39,7 +43,7 @@ public sealed partial class HostPriestWorldLiveTests
         session.Kernel.RunFrame(); Assert.Equal(1u, upgrading.Count()); Assert.NotEqual(0, UpgradePicture(session, parent));
         scene.Visuals.PrepareFrame(requestedAt + 15.1, 2); session.AdvanceMissionFrame(15.1);
         Assert.Equal(1, session.Pool.Slot(parent)[11] >> 5); Assert.False(session.WorldFactoryUpgrade.IsUpgrading(parent));
-        session.ReleasePlayerProcesses();
+        lease.Detach(); Assert.Null(table.Registration(0x58).Receive); session.ReleasePlayerProcesses();
         Assert.Throws<InvalidOperationException>(() => session.WorldFactoryUpgradeCommand);
     }
 

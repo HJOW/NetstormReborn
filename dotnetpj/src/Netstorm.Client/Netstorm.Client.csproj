@@ -5,5 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\Netstorm.Core\Netstorm.Core.csproj" />
+    <!-- 실제 내부 미션의 공유 패킷 분배/등록을 사용한다. -->
+    <ProjectReference Include="..\Netstorm.Net\Netstorm.Net.csproj" />
   </ItemGroup>
 </Project>

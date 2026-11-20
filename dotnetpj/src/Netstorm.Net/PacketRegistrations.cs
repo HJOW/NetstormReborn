@@ -1,8 +1,8 @@
 // 패킷 등록 표와 세션 대여의 사전 구현을 공유한다.
 // 근거: cpppj `src/o/PacketRegistrationTable.h`·`PacketRegistrationTable.cpp`, `src/o/RawPacketLengths.h`,
 //   `src/o/RawPacketDispatch.h`(등록·수신·연결 종류 선언만).
-// 분배기 본체(`RawPacketDispatch`)·지연 큐(`RawPacketDelayQueue`)·구성 자료(`RawConstructionData`) 연결은 3차 로컬 구현 때 잇는다.
-// 2026-11-11 멀티플레이 사전 구현에서 추가했다. 지시대로 검사는 건너뛴다.
+// 분배기/연구 등록은 같은 Net 모듈을 사용하며 실제 지연 FIFO와 구성 자료 연결은 후속이다.
+// 2026-11-11 사전 구현을 바탕으로 0.687에서 공유 값 snapshot과 결정적 콜백 반납을 검증한다.
 using Netstorm.Core.Original;
 
 namespace Netstorm.Net;
@@ -55,458 +55,250 @@ internal static class PacketLengths
     ];
 }
 
-// 연결 한 개의 플래그·송신자·시각·깊이·주소다. 지연 큐는 3차에서 실제 형으로 바꾼다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.
+/// <summary>원문 단일 연결에서 읽고 쓰는 필드와 현재 지연 FIFO 경계다.</summary>
 public sealed class PacketConnection
 {
-    /// <summary>+0x34 플래그다. bit 0x40은 서버 연결에서만 쓴다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
+    /// <summary>+34의 현재 연결 비트다.40은 닫힘이다.</summary>
     public uint Flags { get; set; }
-
-    /// <summary>+0x40 처리자 첫 DWORD 송신자다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
+    /// <summary>+40의 현재 송신자다.</summary>
     public uint Sender { get; set; }
-
-    /// <summary>+0x44 일반 패킷 받은 시각 DWORD다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
+    /// <summary>+44의 일반 수신 시각이다.</summary>
     public uint Received { get; set; }
-
-    /// <summary>+0x48 타입 6 패킷 받은 시각 DWORD다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
+    /// <summary>+48의6번 별도 수신 시각이다.</summary>
     public uint Heartbeat { get; set; }
-
-    /// <summary>+0x8c 콜백 깊이다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
+    /// <summary>+8c의 현재 콜백 중첩 깊이다.</summary>
     public uint Depth { get; set; }
-
-    /// <summary>지연 큐 배치 여부다. 참이면 송신 때 지연 큐에 넣는다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
+    /// <summary>실제 지연 큐 설치 표시다.큐가 없는데 선택되면 명시 실패한다.</summary>
     public bool Delayed { get; set; }
-
-    /// <summary>+0x4c..5f 상대 주소 20바이트다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
+    /// <summary>+4c의 같은 현재 주소20바이트다.</summary>
     public byte[] Address { get; } = new byte[20];
-
-    /// <summary>+74..88 링 owner다. 3차에서 실제 지연 큐 형으로 바꾼다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    public object? DelayQueue { get; set; }
+    /// <summary>별도 원문 지연 FIFO의 실제 enqueue다.내부 미션에는 임의 설치하지 않는다.</summary>
+    public PacketDelayEnqueue? DelayQueue { get; set; }
 }
 
-// 패킷 수신 함수 F와 원본 주소의 한 쌍이다. NULL이면 분배기 기본 처리를 쓴다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.
+/// <summary>선택한 고정 F와 같은 연결·원문 버퍼를 실제 FIFO에 넘긴다.</summary>
+public delegate int PacketDelayEnqueue(PacketConnection connection, CanonicalPacketReceiver? receiver,
+    RawPacketDispatch dispatch, ReadOnlyMemory<byte> packet, int delay);
+
+/// <summary>원문 함수 정체성과 장기 본문만 보관하며 현재 타입으로 다른 F를 다시 선택하지 않는다.</summary>
 public sealed class CanonicalPacketReceiver
 {
-    /// <summary>원본 함수 주소 식별자다. 호스트 함수 포인터 캐스팅용이 아니다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
+    /// <summary>함수 주소 정체성 표식이며 역참조하지 않는다.</summary>
     public uint NativeEntry { get; }
-
-    /// <summary>받을 수신 본체다. 송신자·연결·packet을 그대로 받는다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    public Action<uint, PacketConnection?, ReadOnlySpan<byte>> Receive { get; }
-
-    /// <summary>원본 주소와 수신 본체로 한 쌍을 만든다.</summary>
-    /// <param name="nativeEntry">원본 함수 주소 식별자다.</param>
-    /// <param name="receive">받을 수신 본체다.</param>
-    public CanonicalPacketReceiver(uint nativeEntry, Action<uint, PacketConnection?, ReadOnlySpan<byte>> receive)
+    /// <summary>같은 고정 본문과 장기 데이터다.</summary>
+    public Action<uint, PacketConnection?, ReadOnlyMemory<byte>> Receive { get; }
+    /// <summary>실제 비영 주소 정체성과 비NULL 본문만 받는다.</summary>
+    public CanonicalPacketReceiver(uint nativeEntry, Action<uint, PacketConnection?, ReadOnlyMemory<byte>> receive)
     {
         ArgumentNullException.ThrowIfNull(receive);
-        NativeEntry = nativeEntry;
-        Receive = receive;
+        if (nativeEntry == 0) throw new ArgumentOutOfRangeException(nameof(nativeEntry));
+        NativeEntry = nativeEntry; Receive = receive;
     }
-
-    /// <summary>수신 본체를 그대로 부른다. 버전·observer·기록·깊이 검증은 분배기 쪽에서 한다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    /// <param name="sender">보낸 소유자 번호다.</param>
-    /// <param name="connection">부를 연결이다. 없으면 null이다.</param>
-    /// <param name="packet">부를 packet이다.</param>
-    public void Invoke(uint sender, PacketConnection? connection, ReadOnlySpan<byte> packet) => Receive(sender, connection, packet);
+    /// <summary>검증/시각/기록/깊이를 추가하지 않고 저장된 F만 호출한다.</summary>
+    public void Invoke(uint sender, PacketConnection? connection, ReadOnlyMemory<byte> packet) => Receive(sender, connection, packet);
 }
 
-// 한 타입의 receiver·observer·길이·버전·대여 상태를 함께 둔다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.
+/// <summary>등록 한 칸의 함수/정책 값이다.값 복사로 snapshot하고 공개 칸의 주소는 유지한다.</summary>
+internal readonly record struct PacketRegistrationData
+{
+    /// <summary>등록 세대의 약한 실제 대여다.</summary>
+    public WeakReference<PacketRegistrationLease>? Lease { get; init; }
+    /// <summary>세션 대여 등록인지 구별한다.</summary>
+    public bool Leased { get; init; }
+    /// <summary>실제 연결이 있는 일반 수신 입구다.</summary>
+    public Action<uint, PacketConnection, ReadOnlyMemory<byte>>? Receive { get; init; }
+    /// <summary>원문의 nullable 연결 직접 입구다.</summary>
+    public Action<uint, PacketConnection?, ReadOnlyMemory<byte>>? Direct { get; init; }
+    /// <summary>지연 배송이 보관할 검토된 장기 F다.</summary>
+    public CanonicalPacketReceiver? Canonical { get; init; }
+    /// <summary>방향만 사용하는 기존 관찰기다.</summary>
+    public Action<uint>? Observer { get; init; }
+    /// <summary>같은 실제 mutable 패킷을 받는 관찰기다.</summary>
+    public Action<Memory<byte>, uint>? PacketObserver { get; init; }
+    /// <summary>선언 WORD 비교 길이다.ffff는 가변이다.</summary>
+    public ushort Length { get; init; }
+    /// <summary>등록된 프로토콜 BYTE다.</summary>
+    public byte Version { get; init; }
+    /// <summary>높은 버전4/1·낮은 버전8/2의 종료/무시 정책이다.</summary>
+    public byte Mismatch { get; init; }
+}
+
+/// <summary>실제 공유 표의 안정된 한 칸이다.세대 복원도 이 객체의 값만 바꾼다.</summary>
 public sealed class PacketRegistration
 {
-    /// <summary>대여 중인 세션 owner pin이다. 없으면 비어 있다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    public WeakReference<PacketRegistrationLease>? RegistrationLease { get; set; }
-
-    /// <summary>세션 대여 여부다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    public bool Leased { get; set; }
-
-    /// <summary>처리 본체다. 송신자·연결·읽기 packet을 받는다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    public Action<uint, PacketConnection, ReadOnlySpan<byte>>? Receive { get; set; }
-
-    /// <summary>직접 호출 본체다. R 연결 호출이며 NULL 연결을 허용한다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    public Action<uint, PacketConnection?, ReadOnlySpan<byte>>? DirectReceive { get; set; }
-
-    /// <summary>표준 F 수신 한 쌍이다. 없으면 일반 분배를 쓴다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    public CanonicalPacketReceiver? CanonicalReceive { get; set; }
-
-    /// <summary>받은 알림만 보는 observer다. 분배기에서는 부르지 않는다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    public Action<uint>? Observer { get; set; }
-
-    /// <summary>가변 packet을 보는 observer다. mutable this를 받는 송신 쪽에서만 쓴다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    public Action<byte[], uint>? PacketObserver { get; set; }
-
-    /// <summary>선언 길이다. 0xffff면 길이 검사를 하지 않는다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    public ushort Length { get; set; } = 0xffff;
-
-    /// <summary>등록 버전이다. incoming bit 0x80은 버전을 가린다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    public byte Version { get; set; }
-
-    /// <summary>불일치 모드다. 0이면 모두 분배한다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    public byte Mismatch { get; set; }
-
-    /// <summary>등록된 observer에 packet·송신을 알린다. 대여 pin을 먼저 잡는다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    /// <param name="packet">알릴 packet이다. 호출자가 소유한다.</param>
-    /// <param name="sending">알릴 송신 구분값이다.</param>
-    public void NotifyObserver(byte[] packet, uint sending)
+    /// <summary>호스트 대리자/정책의 원자적 값 복사다.새 슬롯은 가변 길이다.</summary>
+    internal PacketRegistrationData Data { get; set; } = new() { Length = ushort.MaxValue };
+    /// <summary>기존 Net 등록 소비자의 같은 약한 세대 속성이다.</summary>
+    public WeakReference<PacketRegistrationLease>? RegistrationLease { get => Data.Lease; set => Data = Data with { Lease = value }; }
+    /// <summary>기존 Net 등록 소비자의 같은 대여 비트다.</summary>
+    public bool Leased { get => Data.Leased; set => Data = Data with { Leased = value }; }
+    /// <summary>실제 일반 수신 본문이다.</summary>
+    public Action<uint, PacketConnection, ReadOnlyMemory<byte>>? Receive { get => Data.Receive; set => Data = Data with { Receive = value }; }
+    /// <summary>nullable 연결을 지원하는 직접 수신 본문이다.</summary>
+    public Action<uint, PacketConnection?, ReadOnlyMemory<byte>>? DirectReceive { get => Data.Direct; set => Data = Data with { Direct = value }; }
+    /// <summary>현재 장기 고정 F다.</summary>
+    public CanonicalPacketReceiver? CanonicalReceive { get => Data.Canonical; set => Data = Data with { Canonical = value }; }
+    /// <summary>현재 방향 전용 관찰기다.</summary>
+    public Action<uint>? Observer { get => Data.Observer; set => Data = Data with { Observer = value }; }
+    /// <summary>현재 패킷 관찰기다.</summary>
+    public Action<Memory<byte>, uint>? PacketObserver { get => Data.PacketObserver; set => Data = Data with { PacketObserver = value }; }
+    /// <summary>선언 WORD 비교 길이다.</summary>
+    public ushort Length { get => Data.Length; set => Data = Data with { Length = value }; }
+    /// <summary>현재 프로토콜 BYTE다.</summary>
+    public byte Version { get => Data.Version; set => Data = Data with { Version = value }; }
+    /// <summary>현재 불일치 정책 BYTE다.</summary>
+    public byte Mismatch { get => Data.Mismatch; set => Data = Data with { Mismatch = value }; }
+    /// <summary>현재 대여 등록이면 실제 세션 전체를 콜백 복귀까지 강하게 빌린다.</summary>
+    public IDisposable? Pin()
     {
-        ArgumentNullException.ThrowIfNull(packet);
-        _ = Pin();
-        Action<byte[], uint>? withPacket = PacketObserver;
-        if (withPacket is not null)
-        {
-            withPacket(packet, sending);
-            return;
-        }
-
-        Observer?.Invoke(sending);
-    }
-
-    /// <summary>이 등록을 쓴 세션 owner를 pin한다. 대여가 아니면 빈 값을 돌려준다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    /// <returns>세션 owner pin이다.</returns>
-    /// <exception cref="InvalidOperationException">이미 반납한 대여·끊긴 owner의 pin이다.</exception>
-    public object? Pin()
-    {
-        if (!Leased)
-        {
-            return null;
-        }
-
-        PacketRegistrationLease? lease = null;
-        if (RegistrationLease is not null && !RegistrationLease.TryGetTarget(out lease))
-        {
-            throw new InvalidOperationException("이미 반납한 패킷 등록의 콜백 pin");
-        }
-
-        if (lease is null)
-        {
-            throw new InvalidOperationException("이미 반납한 패킷 등록의 콜백 pin");
-        }
-
+        PacketRegistrationData data = Data;
+        if (!data.Leased) return null;
+        if (data.Lease is null || !data.Lease.TryGetTarget(out PacketRegistrationLease? lease))
+            throw new InvalidOperationException("이미 반납된 패킷 등록 세대의 콜백");
         return lease.Pin();
     }
+    /// <summary>한 종류의 관찰기만 선택하고 자기 재등록 중에도 이미 읽은 함수를 유지한다.</summary>
+    public void NotifyObserver(Memory<byte> packet, uint sending)
+    {
+        using IDisposable? pin = Pin(); Action<Memory<byte>, uint>? selected = Data.PacketObserver;
+        if (selected is not null) selected(packet, sending);
+        else { Action<uint>? direction = Data.Observer; direction?.Invoke(sending); }
+    }
+    /// <summary>원문의 값 복사 관찰 항목으로 같은 세대/대리자만 보존한다.</summary>
+    internal PacketRegistration Snapshot() => new() { Data = Data };
 }
 
-// 256 타입 등록 표와 세션 대여를 함께 둔다. backend now·close 훅은 분배기 쪽에서 받는다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.
+/// <summary>cpppj PacketRegistrationTable의 실제 공유 표와 세대별 부분 복원이다.</summary>
 public sealed class PacketRegistrationTable
 {
-    /// <summary>같은 256 등록 표다. 0번은 NULL 대여이며 호스트 256개까지만 읽는다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
+    /// <summary>호스트256칸은 고정하며 원문 접근은0..LastType만 허용한다.</summary>
     private readonly PacketRegistration[] _entries = new PacketRegistration[256];
-
-    /// <summary>판본별 마지막 타입이다. PATCH 137·CD 126이다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    private readonly uint _lastType;
-
-    /// <summary>활성 대여의 약한 참조다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
+    /// <summary>현재 활성 세대의 약한 실제 대여다.</summary>
     private WeakReference<PacketRegistrationLease>? _current;
-
-    /// <summary>반납 중 대여의 약한 참조다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
+    /// <summary>반납했지만 콜백이 복귀하지 않은 실제 대여다.</summary>
     private WeakReference<PacketRegistrationLease>? _retiring;
-
-    /// <summary>활성 대여의 같은 인스턴스 비교용이다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    private PacketRegistrationLease? _currentIdentity;
-
-    /// <summary>판본별 길이 표로 0..마지막 타입 길이를 채우고 나머지는 비워 둔다.</summary>
-    /// <param name="edition">쓸 판본이다. 마지막 타입을 가른다.</param>
+    /// <summary>주소 비교를 대신하는 현재 세대 번호다.수명 owner의 대용이 아니다.</summary>
+    private long _currentIdentity;
+    /// <summary>같은 표 안에서만 전진하는 세대 번호다.</summary>
+    private long _nextIdentity;
+    /// <summary>PATCH137/CD126의 실제 마지막 타입이다.</summary>
+    private readonly uint _lastType;
+    /// <summary>다른 backend가 공유 표의 판본을 검증하는 실제 마지막 타입이다.</summary>
+    public uint LastType() => _lastType;
+    /// <summary>판본별 길이만 처음 복사하고 함수/버전은0으로 둔다.</summary>
     public PacketRegistrationTable(OriginalEdition edition)
     {
         _lastType = edition == OriginalEdition.Patch1078 ? 137u : 126u;
-        ushort[] lengths = edition == OriginalEdition.Patch1078 ? PacketLengths.Patch : PacketLengths.Cd;
-        // 판본별 타입 개수만큼 길이를 두고 나머지는 비운 표를 둔다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.
-        for (int type = 0; type < _entries.Length; ++type)
-        {
-            _entries[type] = new PacketRegistration { Length = type <= (int)_lastType ? lengths[type] : (ushort)0xffff };
-        }
+        ReadOnlySpan<ushort> lengths = edition == OriginalEdition.Patch1078 ? PacketLengths.Patch : PacketLengths.Cd;
+        // 물리 슬롯은 한 번 만들고 실제 길이는 판본 한도까지만 복사한다.
+        for (int index = 0; index < _entries.Length; index++)
+            _entries[index] = new() { Data = new() { Length = index <= _lastType ? lengths[index] : ushort.MaxValue } };
     }
-
-    /// <summary>지정 타입의 현재 등록을 읽는다. 0..마지막 타입만 받는다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    /// <param name="type">읽을 타입 번호다.</param>
-    /// <exception cref="ArgumentOutOfRangeException">타입 할당 범위 오류다.</exception>
-    public PacketRegistration Registration(uint type)
-    {
-        if (type > _lastType)
-        {
-            throw new ArgumentOutOfRangeException(nameof(type), type, "패킷 등록 표 할당 범위 오류");
-        }
-
-        return _entries[(int)type];
-    }
-
-    /// <summary>판본별 마지막 타입 번호다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    /// <returns>마지막 타입 번호다.</returns>
-    public uint LastType() => _lastType;
-
-    /// <summary>0..마지막 타입의 receiver·observer를 비우고 길이·owner 표는 둔다. 대여·콜백 중에는 멈춘다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    /// <exception cref="InvalidOperationException">세션 대여·콜백 중 초기화다.</exception>
+    /// <summary>0번 NULL 관찰 슬롯을 허용하며 호스트 물리폭으로 Native 범위를 늘리지 않는다.</summary>
+    public PacketRegistration Registration(uint type) => type <= _lastType ? _entries[type]
+        : throw new ArgumentOutOfRangeException(nameof(type), "패킷 표의 원문 할당 범위 밖");
+    /// <summary>실제 활성/반납 세대의 콜백 실행 수를 함께 확인한다.</summary>
+    public bool ConnectionCallbackActive() => Calls(_current) || Calls(_retiring);
+    /// <summary>약한 대여가 살아 있고 실제 콜백 수가 비영인지 확인한다.</summary>
+    private static bool Calls(WeakReference<PacketRegistrationLease>? source) => source is not null && source.TryGetTarget(out PacketRegistrationLease? lease) && lease.Calls != 0;
+    /// <summary>길이표와 공개 슬롯 주소를 유지하며 함수/버전만 초기화한다.</summary>
     public void ResetCallbacks()
     {
-        if (_currentIdentity is not null || ConnectionCallbackActive())
-        {
-            throw new InvalidOperationException("세션 대여·콜백 중 패킷 등록 초기화");
-        }
-
-        // 마지막 타입까지 함수·버전을 지우고 길이·owner 표만 남긴다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.
-        for (uint type = 0u; type <= _lastType; ++type)
-        {
-            ushort length = _entries[(int)type].Length;
-            _entries[(int)type] = new PacketRegistration { Length = length };
-        }
+        if (_currentIdentity != 0 || ConnectionCallbackActive()) throw new InvalidOperationException("세션 대여/콜백 실행 중 패킷 표 초기화 금지");
+        // 원문 last+1개 슬롯의 길이는 보존한다.
+        for (uint type = 0; type <= _lastType; type++) _entries[type].Data = new() { Length = _entries[type].Length };
     }
-
-    /// <summary>활성·반납 중 대여에 걸린 콜백이 있는지 본다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    /// <returns>걸린 콜백이 있으면 참이다.</returns>
-    public bool ConnectionCallbackActive()
-    {
-        PacketRegistrationLease? current = null;
-        PacketRegistrationLease? retiring = null;
-        if (_current is not null)
-        {
-            _current.TryGetTarget(out current);
-        }
-
-        if (_retiring is not null)
-        {
-            _retiring.TryGetTarget(out retiring);
-        }
-
-        return (current is not null && current.Calls > 0) || (retiring is not null && retiring.Calls > 0);
-    }
-
-    /// <summary>세션 owner를 받아 대여를 건다. 중복·반납 중 콜백이 있으면 멈춘다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    /// <param name="owner">묶을 세션 owner다.</param>
-    /// <exception cref="ArgumentNullException">묶을 세션 owner 누락이다.</exception>
-    /// <exception cref="InvalidOperationException">세션 중복·반납 중 대여다.</exception>
+    /// <summary>snapshot 확보 뒤에만 새 세대를 공개하고 실제 세션 전체 owner를 약하게 빌린다.</summary>
     public PacketRegistrationLease BindSession(object owner)
     {
         ArgumentNullException.ThrowIfNull(owner);
-        if (_currentIdentity is not null)
-        {
-            throw new InvalidOperationException("패킷 등록 세션 중복 대여");
-        }
-
-        if (_retiring is not null && _retiring.TryGetTarget(out PacketRegistrationLease? retiring) && retiring is not null && retiring.Calls > 0)
-        {
-            throw new InvalidOperationException("반납 세션 콜백 중 패킷 등록 대여");
-        }
-
-        var lease = new PacketRegistrationLease(this, owner);
-        _current = new WeakReference<PacketRegistrationLease>(lease);
-        _currentIdentity = lease;
-        return lease;
+        if (_currentIdentity != 0 || Calls(_retiring)) throw new InvalidOperationException("패킷 세션 중복 대여 또는 이전 콜백 미복귀");
+        var lease = new PacketRegistrationLease(this, owner, checked(_nextIdentity + 1), _entries.Select(entry => entry.Data).ToArray());
+        _nextIdentity = lease.Identity; _current = new(lease, true); _currentIdentity = lease.Identity; return lease;
     }
-
-    /// <summary>타입 등록 API를 건드리면 활성 대여에 표시하고 핀한다. 비활성 때는 대여 표시를 지운다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    /// <param name="type">건드린 타입 번호다.</param>
-    /// <exception cref="InvalidOperationException">반납 뒤·반납 중 콜백의 등록 변경이다.</exception>
+    /// <summary>등록 API가 실제로 바꾼 슬롯과 같은 세대 pin만 기록한다.</summary>
     internal void Touch(uint type)
     {
-        if (_current is not null && _current.TryGetTarget(out PacketRegistrationLease? current) && current is not null && current.Active)
+        PacketRegistration entry = Registration(type);
+        if (_current is not null && _current.TryGetTarget(out PacketRegistrationLease? current) && current.Active)
         {
-            current.Touch(type);
-            _entries[(int)type].RegistrationLease = new WeakReference<PacketRegistrationLease>(current);
-            _entries[(int)type].Leased = true;
-            return;
+            current.Touched[type] = true; entry.Data = entry.Data with { Lease = _current, Leased = true }; return;
         }
-
-        if (_currentIdentity is not null)
-        {
-            throw new InvalidOperationException("반납 뒤 대여 정리의 패킷 등록 변경");
-        }
-
-        if (_retiring is not null && _retiring.TryGetTarget(out PacketRegistrationLease? retiring) && retiring is not null && retiring.Calls > 0)
-        {
-            throw new InvalidOperationException("반납 중 콜백의 패킷 등록 변경");
-        }
-
-        _entries[(int)type].RegistrationLease = null;
-        _entries[(int)type].Leased = false;
+        if (_currentIdentity != 0 || Calls(_retiring)) throw new InvalidOperationException("반납 중 또는 반납 콜백 안의 패킷 표 수정 금지");
+        entry.Data = entry.Data with { Lease = null, Leased = false };
     }
-
-    /// <summary>표준 F 등록의 baseline을 저장한다. 활성 대여에만 snapshot을 남긴다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    /// <param name="type">저장할 타입 번호다.</param>
-    /// <exception cref="InvalidOperationException">표준 F 없음·반납 뒤·반납 중 콜백의 baseline 저장이다.</exception>
+    /// <summary>장기 고정 F의 실제 현재 정책을 세션 복원 snapshot에도 보존한다.</summary>
     internal void PersistCanonicalBaseline(uint type)
     {
-        if (_entries[(int)type].CanonicalReceive is null)
-        {
-            throw new InvalidOperationException("표준 F 없는 패킷 baseline 저장");
-        }
-
-        PacketRegistrationLease? current = null;
-        if (_current is not null)
-        {
-            _current.TryGetTarget(out current);
-        }
-
-        if (_currentIdentity is not null && (current is null || !current.Active))
-        {
-            throw new InvalidOperationException("반납 뒤 대여의 패킷 baseline 저장");
-        }
-
-        if (current is null && ConnectionCallbackActive())
-        {
-            throw new InvalidOperationException("반납 중 콜백의 패킷 baseline 저장");
-        }
-
-        PacketRegistration selected = _entries[(int)type];
-        selected.RegistrationLease = null;
-        selected.Leased = false;
-        PacketRegistration previous = selected;
-        if (current is not null)
-        {
-            current.SaveBaseline((int)type, previous);
-            current.Touch(type);
-        }
-
-        _entries[(int)type] = selected;
+        PacketRegistration entry = Registration(type);
+        if (entry.CanonicalReceive is null) throw new InvalidOperationException("고정 F 없는 패킷 baseline 승격 거부");
+        PacketRegistrationLease? current = null; _current?.TryGetTarget(out current);
+        if ((_currentIdentity != 0 && (current is null || !current.Active)) || (current is null && ConnectionCallbackActive()))
+            throw new InvalidOperationException("반납 중 패킷 baseline 변경 금지");
+        PacketRegistrationData selected = entry.Data with { Lease = null, Leased = false };
+        if (current is not null) { current.Previous[type] = selected; current.Touched[type] = true; }
+        entry.Data = selected;
     }
-
-    /// <summary>반납 때 활성 대여 자리를 비우고 바꾼 항목을 되돌린다. 대여 쪽에서만 부른다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    /// <param name="lease">빠지는 대여다.</param>
-    /// <param name="previous">되돌릴 snapshot 표다.</param>
-    /// <param name="touched">바꾼 항목 표시다.</param>
-    internal void DetachLease(PacketRegistrationLease lease, PacketRegistration[] previous, bool[] touched)
+    /// <summary>자기 세대만 할당 없는 값 교환으로 복원하며 실행 중 반납 세대는 따로 추적한다.</summary>
+    internal void Detach(PacketRegistrationLease lease)
     {
-        if (!ReferenceEquals(_currentIdentity, lease))
+        if (_currentIdentity != lease.Identity) return;
+        // 바꾸지 않은 슬롯과 다른 전역 표는 보존한다.
+        for (uint type = 1; type <= _lastType; type++)
         {
-            return;
+            if (!lease.Touched[type]) continue;
+            PacketRegistrationData current = _entries[type].Data; _entries[type].Data = lease.Previous[type]; lease.Previous[type] = current;
         }
-
-        // 바꾼 항목만 이전 snapshot과 바꾼다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.
-        for (uint type = 1u; type <= _lastType; ++type)
-        {
-            if ((int)type < touched.Length && touched[(int)type])
-            {
-                PacketRegistration current = _entries[(int)type];
-                _entries[(int)type] = previous[(int)type];
-                previous[(int)type] = current;
-            }
-        }
-
-        _retiring = new WeakReference<PacketRegistrationLease>(lease);
-        _current = null;
-        _currentIdentity = null;
+        _retiring = _current; _current = null; _currentIdentity = 0;
     }
-
-    /// <summary>전체 256 등록 표의 얕은 사본이다. 대여 snapshot용이다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    /// <returns>표 사본이다.</returns>
-    internal PacketRegistration[] SnapshotEntries() => (PacketRegistration[])_entries.Clone();
 }
 
-// 세션 owner와 표를 함께 묶는 대여다. 반납하면 바꾼 항목을 되돌린다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.
-public sealed class PacketRegistrationLease
+/// <summary>실제 세션 owner의 약한 대여와 실행 중 강한 pin을 관리한다.사용 후 Dispose한다.</summary>
+public sealed class PacketRegistrationLease : IDisposable
 {
-    /// <summary>묶은 표다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
+    /// <summary>backend보다 먼저 사라지지 않는 실제 공유 표다.</summary>
     private readonly PacketRegistrationTable _table;
-
-    /// <summary>묶은 세션 owner의 약한 참조다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
+    /// <summary>등록만으로 실제 세션을 붙잡지 않는 약한 owner다.</summary>
     private readonly WeakReference<object> _owner;
-
-    /// <summary>바꾼 항목의 되돌리기 snapshot 256개다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    private readonly PacketRegistration[] _previous = new PacketRegistration[256];
-
-    /// <summary>바꾼 항목 표시 256비트다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    private readonly bool[] _touched = new bool[256];
-
-    /// <summary>걸린 콜백 수다. 0이 아니면 반납·초기화를 막는다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
+    /// <summary>자기 세대 비교용 번호다.</summary>
+    internal long Identity { get; }
+    /// <summary>대여 시작 때의 모든 값이다.반납은 touched만 복원한다.</summary>
+    internal PacketRegistrationData[] Previous { get; }
+    /// <summary>실제로 등록 API가 변경한 칸이다.</summary>
+    internal bool[] Touched { get; } = new bool[256];
+    /// <summary>최외곽까지 유지되는 현재 실제 콜백 수다.</summary>
     internal int Calls { get; private set; }
-
-    /// <summary>활성 여부다. 거짓이면 다시 쓸 수 없다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    public bool Active { get; private set; } = true;
-
-    /// <summary>표와 owner로 대여를 건다. 표 쪽에서만 만든다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    /// <param name="table">묶을 표다.</param>
-    /// <param name="owner">묶을 세션 owner다.</param>
-    internal PacketRegistrationLease(PacketRegistrationTable table, object owner)
+    /// <summary>반납된 대여의 콜백 재호출을 거부한다.</summary>
+    public bool Active { get; private set; }
+    /// <summary>표가 준비한 snapshot과 실제 owner만 받는다.</summary>
+    internal PacketRegistrationLease(PacketRegistrationTable table, object owner, long identity, PacketRegistrationData[] previous)
+    { _table = table; _owner = new(owner); Identity = identity; Previous = previous; Active = true; }
+    /// <summary>명시 반납을 놓친 관리 객체도 자기 세대만 정리한다.</summary>
+    ~PacketRegistrationLease() => Detach();
+    /// <summary>함수 실행 없이 자기 세대의 변경 슬롯만 한 번 복원한다.</summary>
+    public void Detach() { if (!Active) return; Active = false; _table.Detach(this); }
+    /// <summary>실제 owner가 살아 있을 때만 콜백 실행 수와 두 강한 참조를 확보한다.</summary>
+    public IDisposable Pin()
     {
-        _table = table;
-        _owner = new WeakReference<object>(owner);
-        _previous = table.SnapshotEntries();
-    }
-
-    /// <summary>빠질 때 바꾼 항목을 되돌리고 표에서 빠진다. 두 번 불러도 한 번만 돈다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    public void Detach()
-    {
-        if (!Active)
-        {
-            return;
-        }
-
-        Active = false;
-        _table.DetachLease(this, _previous, _touched);
-    }
-
-    /// <summary>버려지면 표에서 빠진다. 결정적 반납은 <see cref="Detach"/>를 쓴다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    ~PacketRegistrationLease()
-    {
-        try
-        {
-            Detach();
-        }
-        catch
-        {
-        }
-    }
-
-    /// <summary>세션 owner와 함께 콜백 pin을 잡는다. 반납 뒤·끊긴 owner면 멈춘다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    /// <returns>콜백 pin이다.</returns>
-    /// <exception cref="InvalidOperationException">반납·끊긴 owner의 pin이다.</exception>
-    public object Pin()
-    {
-        if (!Active)
-        {
-            throw new InvalidOperationException("반납한 세션 대여의 콜백 pin");
-        }
-
-        if (!_owner.TryGetTarget(out object? owner) || owner is null)
-        {
-            throw new InvalidOperationException("세션 owner 끊긴 패킷 등록의 pin");
-        }
-
+        if (!Active || !_owner.TryGetTarget(out object? owner)) throw new InvalidOperationException("반납됐거나 실제 세션보다 오래 남은 패킷 등록");
         return new CallbackPin(this, owner);
     }
-
-    /// <summary>baseline 저장 때 이전 항목을 둔다. 표 쪽에서만 부른다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    /// <param name="type">둘 위치다.</param>
-    /// <param name="previous">둘 이전 항목이다.</param>
-    internal void SaveBaseline(int type, PacketRegistration previous) => _previous[type] = previous;
-
-    /// <summary>바꾼 항목 표시를 둔다. 표 쪽에서만 부른다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-    /// <param name="type">표시할 타입 번호다.</param>
-    internal void Touch(uint type) => _touched[(int)type] = true;
-
-    /// <summary>콜백 pin이다. 살아 있는 동안 Calls를 올리고, 버리면 내린다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
+    /// <summary>반납 뒤 finalizer 재호출을 생략한다.</summary>
+    public void Dispose() { Detach(); GC.SuppressFinalize(this); }
+    /// <summary>실제 세션과 대여를 함께 유지하고 owner 반납 전에 실행 수를 내린다.</summary>
     private sealed class CallbackPin : IDisposable
     {
-        /// <summary>묶은 대여다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-        private readonly PacketRegistrationLease _lease;
-
-        /// <summary>함께 잡은 세션 owner다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-        private readonly object _owner;
-
-        /// <summary>버렸는지다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-        private bool _disposed;
-
-        /// <summary>pin을 잡고 Calls를 올린다.</summary>
-        /// <param name="lease">묶을 대여다.</param>
-        /// <param name="owner">함께 잡을 세션 owner다.</param>
-        public CallbackPin(PacketRegistrationLease lease, object owner)
-        {
-            _lease = lease;
-            _owner = owner;
-            ++lease.Calls;
-        }
-
-        /// <summary>pin을 놓고 Calls를 내린다. 두 번 불러도 한 번만 돈다.</summary>
+        /// <summary>현재 실행 중인 같은 대여다.</summary>
+        private PacketRegistrationLease? _lease;
+        /// <summary>실행이 끝날 때까지 필요한 실제 세션 전체다.</summary>
+        private object? _owner;
+        /// <summary>두 참조를 먼저 보관한 뒤 실행 수를 올린다.</summary>
+        public CallbackPin(PacketRegistrationLease lease, object owner) { _lease = lease; _owner = owner; lease.Calls++; }
+        /// <summary>중복 반납을 허용하고 owner를 놓기 전에 실행 수를 내린다.</summary>
         public void Dispose()
         {
-            if (_disposed)
-            {
-                return;
-            }
-
-            _disposed = true;
-            --_lease.Calls;
-            GC.SuppressFinalize(this);
+            if (_lease is not { } lease) return;
+            lease.Calls--; _lease = null; GC.KeepAlive(_owner); _owner = null;
         }
-
-        /// <summary>버리지 않고 버려지면 Calls를 내린다. 2026-11-11 멀티플레이 사전 구현에서 추가됐다.</summary>
-        ~CallbackPin() => --_lease.Calls;
     }
 }

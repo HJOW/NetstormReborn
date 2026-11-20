@@ -1102,3 +1102,9 @@ cpppj/src/o/RawPlayerContentNotice.h	Netstorm.Core/Original/RawPlayerContentNoti
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.Production.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	session
 cpppj/src/o/RawTotalMade.cpp	Netstorm.Core/Simulation/TotalMade.cs	0365fa99b72ea046ab397d980f1f15651c757855	port
 cpppj/src/o/RawTotalMade.h	Netstorm.Core/Simulation/TotalMade.cs	0365fa99b72ea046ab397d980f1f15651c757855	port
+cpppj/src/o/RawPacketDispatch.cpp	Netstorm.Net/RawPacketDispatch.cs	ec0b6e9733664abc2e214445840ce35947da90a2	port
+cpppj/src/o/RawPacketDispatch.h	Netstorm.Net/RawPacketDispatch.cs	ec0b6e9733664abc2e214445840ce35947da90a2	port
+cpppj/src/o/RawPacketDispatch.h	Netstorm.Net/PacketRegistrations.cs	ec0b6e9733664abc2e214445840ce35947da90a2	port
+cpppj/src/o/RawPacketFrame.cpp	Netstorm.Net/RawPacketFrame.cs	ec0b6e9733664abc2e214445840ce35947da90a2	port
+cpppj/src/o/RawPacketFrame.h	Netstorm.Net/RawPacketFrame.cs	6c4a981c5c5c102a69f0afc5462cb465108ad411	port
+cpppj/src/o/RawFactoryResearch.cpp	Netstorm.Net/FactoryResearchRegistration.cs	7c51717d891821fde48ff241b7d206f533423004	port
