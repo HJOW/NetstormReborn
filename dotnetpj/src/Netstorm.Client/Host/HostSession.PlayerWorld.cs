@@ -21,6 +21,10 @@ public sealed partial class HostSession
     private RawUnpop? _liveUnpop;
     /// <summary>현재 프레임의 표시·공간 효과를 같은 실제 장치로 전달한다.</summary>
     private SquidFrame? _liveFrame;
+    /// <summary>같은실제삭제/공장/Regular/전송을소유하는현재프로세스대여다. Host는약하게조회한다.</summary>
+    private ProcessHostRuntimeBindings? _playerProcessRuntime;
+    /// <summary>같은Host의현재대여선택칸이다. 외부에남은묶음참조와관계없이명시반납한다.</summary>
+    private WeakReference<ProcessHostRuntimeBindings>? _playerProcessCurrent;
 
     /// <summary>원문 할당 관문에서 확보해 다음 부착에 넘기는 실제 객체다.</summary>
     private RegularProcess? _reservedPlayerRegular;
@@ -77,9 +81,18 @@ public sealed partial class HostSession
         _liveFrame = new SquidFrame(Pool, types, SquidFrameBinding.MakeSquidFrameHooks(Pool, types, display, unpop, pop));
         _liveFrame.BindCurrentTypes(types);
         var destroy = new RawSquidDestroy(Pool, unpop, types);
-        PlayerProcesses = new SquidProcessHost(Pool, types, Kernel, destroy,
-            new SquidProcessState { SharedNow = ProcessTime });
-        PlayerProcesses.BindFormFactory(factory);
+        Func<IDisposable>? pin = _runtimePin;
+        var runtime = new ProcessHostRuntimeBindings
+        {
+            Destroy = destroy, Factory = factory, PostPopDepth = () => TerrainBookkeeping.Depth,
+            Assertion = (expression, file, line) => throw new InvalidOperationException($"프로세스 원본 진단: {expression} {file}:{line}"),
+            Pin = pin is null ? null : () => pin(),
+        };
+        var current = new WeakReference<ProcessHostRuntimeBindings>(runtime);
+        PlayerProcesses = new SquidProcessHost(Pool, types, Kernel, new SquidProcessState { SharedNow = ProcessTime },
+            () => current.TryGetTarget(out ProcessHostRuntimeBindings? selected) ? selected : null);
+        _playerProcessRuntime = runtime;
+        _playerProcessCurrent = current;
         BindWorldPopParent();
         var hooks = new PlayerWorldHooks
         {
@@ -147,5 +160,7 @@ public sealed partial class HostSession
         ReleasePriestWorld();
         ReleaseProductionWorld();
         _reservedPlayerRegular = null;
+        _playerProcessCurrent?.SetTarget(null!); _playerProcessCurrent = null;
+        _playerProcessRuntime = null;
     }
 }

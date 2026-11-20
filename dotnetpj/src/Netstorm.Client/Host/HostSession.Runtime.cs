@@ -21,6 +21,7 @@ public sealed partial class HostSession
     {
         _runtimePin = pin;
         Func<object?>? current = pin is null ? null : () => pin();
+        if (_playerProcessRuntime is { } processes) processes.Pin = current;
         // 현재살아있는실제부모만갱신하며이전호출이이미보유한대여는건드리지않는다.
         for (int index = _runtimePostPops.Count - 1; index >= 0; index--)
         {
@@ -31,5 +32,9 @@ public sealed partial class HostSession
     /// <summary>현재 실제 전체 owner를 선택된 하위 호출 끝까지 보유한다.</summary>
     public IDisposable PinRuntime() => (_runtimePin ?? throw new InvalidOperationException("세션의 실제 Runtime 대여 미공개"))();
     /// <summary>배송 중 실제 Pool/Player/장치를 명시 반납하는 전체 정리를 거부한다.</summary>
-    private void EnsureRuntimeCanRelease() { if (Gameplay.RuntimeCallActive(this)) throw new InvalidOperationException("실제 Runtime 배송 종료 전 월드 반납"); }
+    private void EnsureRuntimeCanRelease()
+    {
+        if (Gameplay.RuntimeCallActive(this) || _playerProcessRuntime is { ActiveCalls: not 0 })
+            throw new InvalidOperationException("실제 Runtime 배송 종료 전 월드 반납");
+    }
 }
