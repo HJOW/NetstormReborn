@@ -1275,3 +1275,10 @@ cpppj/src/o/SelectionVtables.inc	Netstorm.Core/Original/OriginalSelectionVtables
 cpppj/src/client/ClientUserSelectionCleanup.cpp	Netstorm.Client/ClientUserSelectionCleanup.cs	815fbd67e3d1ed889d6f39d4ededa373c96a6ff8	port
 cpppj/src/client/ClientUserSelectionCleanup.h	Netstorm.Client/ClientUserSelectionCleanup.cs	815fbd67e3d1ed889d6f39d4ededa373c96a6ff8	port
 cpppj/src/client/ClientUserSelectionCleanup.cpp	Netstorm.Client.Host/ClientHostGame.Selection.cs	815fbd67e3d1ed889d6f39d4ededa373c96a6ff8	port
+cpppj/src/client/RawCursorDrop.h	Netstorm.Client/Input/CursorDropState.cs	46e65408f60df4594cba9e6019a965cbb5601196	port
+cpppj/src/client/RawCursorLifecycle.h	Netstorm.Client/Input/CursorLifecycleState.cs	0b720831a2bcee2f86d7124e70983a7b3029ec84	port
+cpppj/src/client/RawCursorPlacement.h	Netstorm.Client/Input/CursorPlacementState.cs	e210c755978df59fd316edb922b7938ebe8540c7	port
+cpppj/src/client/ClientCursorGlobals.h	Netstorm.Client/ClientCursorGlobals.cs	0b720831a2bcee2f86d7124e70983a7b3029ec84	port
+cpppj/src/client/RawCursorLifecycle.cpp	Netstorm.Client/Input/RawCursorLifecycle.cs	0b720831a2bcee2f86d7124e70983a7b3029ec84	port
+cpppj/src/client/RawCursorLifecycle.h	Netstorm.Client/Input/RawCursorLifecycle.cs	0b720831a2bcee2f86d7124e70983a7b3029ec84	port
+cpppj/src/client/RawCursorLifecycle.cpp	Netstorm.Client.Host/HostCursorLifecycleAssets.cs	0b720831a2bcee2f86d7124e70983a7b3029ec84	port
