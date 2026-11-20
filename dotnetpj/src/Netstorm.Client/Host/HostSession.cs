@@ -893,7 +893,7 @@ public sealed partial class HostSession
         {
             throw new ArgumentException("지형 Pop 외부 점유지 크기 오류", nameof(spots));
         }
-        _terrainFactory = factory ?? new RawSquidFactory(Pool, types);
+        _terrainFactory = TrackFactoryRuntime(factory ?? new RawSquidFactory(Pool, types));
         if (factory is null)
         {
             BindFactoryHitPoints(_terrainFactory, types);
@@ -1361,7 +1361,7 @@ public sealed partial class HostSession
         {
             throw new ArgumentException("요새 객체 외부 건물 공간의 풀·해시 불일치", nameof(building));
         }
-        _fortFactory = factory ?? new RawSquidFactory(Pool, types);
+        _fortFactory = TrackFactoryRuntime(factory ?? new RawSquidFactory(Pool, types));
         if (factory is null)
         {
             BindFactoryHitPoints(_fortFactory, types);

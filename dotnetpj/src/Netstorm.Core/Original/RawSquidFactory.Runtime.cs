@@ -27,6 +27,14 @@ public sealed partial class RawSquidFactory
     private Func<IRawUnpop>? _currentUnpop;
     /// <summary>이전 World를 장기 공장이 소유하지 않게 하는 현재 대여다.</summary>
     private WeakReference<SquidFactoryRuntimeBindings>? _runtimeBinding;
+    /// <summary>현재World묶음이없는직접소유경로의실제외곽대여다. 공간/Form장치는교체하지않는다.</summary>
+    private Func<object?>? _directRuntimePin;
+    /// <summary>준비단계도포함한실제공간/Form호출수다. 게임상태나원본카운터가아니다.</summary>
+    private ulong _activeRuntimeCalls;
+    /// <summary>호출자의명시자식반납관문이읽는같은현재실행수다.</summary>
+    public ulong ActiveRuntimeCalls => _activeRuntimeCalls;
+    /// <summary>직접장치를쓰는호출자의실제수명만연결한다. 선택된Native묶음의pin은항상그대로사용한다.</summary>
+    public void BindDirectRuntimePin(Func<object?>? pin) => _directRuntimePin = pin;
 
     /// <summary>실제 장기 Unpop getter만 연결하며 아직 공간/UI를 조회하지 않는다.</summary>
     public void BindUnpop(Func<IRawUnpop> unpop) => _currentUnpop = unpop ?? throw new ArgumentNullException(nameof(unpop));
@@ -63,23 +71,29 @@ public sealed partial class RawSquidFactory
         private readonly RawSquidFactory _factory;
         /// <summary>실제 외곽 owner를 호출 끝까지 쥐는 강한 참조다.</summary>
         private object? _owner;
+        /// <summary>직접경로에도실행수/대여를정확히한번만반납한다.</summary>
+        private bool _disposed;
         /// <summary>현재 실제 장치 대여다. 호출 끝에 null로 소비한다.</summary>
         public SquidFactoryRuntimeBindings? Runtime { get; private set; }
         /// <summary>pin을 먼저 실행하고 같은 대여의 실제 호출 수를 늘린다.</summary>
         public FactoryRuntimeCall(RawSquidFactory factory, SquidFactoryRuntimeBindings? runtime)
         {
-            _factory = factory; Runtime = runtime; _owner = runtime?.Pin?.Invoke();
+            if (factory._activeRuntimeCalls == ulong.MaxValue) throw new OverflowException("공장 Runtime 호출 수 넘침");
+            _factory = factory; Runtime = runtime; _owner = (runtime is null ? factory._directRuntimePin : runtime.Pin)?.Invoke();
+            factory._activeRuntimeCalls++;
             if (runtime is not null) runtime.ActiveCalls = unchecked(runtime.ActiveCalls + 1);
         }
         /// <summary>마지막 복귀 뒤 일반 소유자는 보유만 끝내고 표시된 호출 대여를 한 번 반납한다.</summary>
         public void Dispose()
         {
+            if (_disposed) return; _disposed = true;
             if (Runtime is { } runtime)
             {
                 runtime.ActiveCalls = unchecked(runtime.ActiveCalls - 1);
                 if (runtime.ActiveCalls == 0 && runtime.ReleaseRequested && ReferenceEquals(_factory.CurrentRuntime(), runtime)) _factory._runtimeBinding = null;
                 Runtime = null;
             }
+            _factory._activeRuntimeCalls--;
             object? owner = _owner; _owner = null; RawRuntimePin.Release(owner);
         }
     }

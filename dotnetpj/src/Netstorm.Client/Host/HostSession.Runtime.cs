@@ -10,6 +10,15 @@ public sealed partial class HostSession
     private Func<IDisposable>? _runtimePin;
     /// <summary>직접생성한후처리부모의약한장부다. 이전그래프/최소AI부모의수명을늘리지않는다.</summary>
     private readonly List<WeakReference<RawPostPop>> _runtimePostPops = [];
+    /// <summary>현재Session이직접빌린실제공장의약한장부다. 장기공장장치를복제하지않는다.</summary>
+    private readonly List<WeakReference<RawSquidFactory>> _runtimeFactories = [];
+    /// <summary>같은Pool공장의기존장치를유지한채직접호출수명만현재외곽owner에연결한다.</summary>
+    private RawSquidFactory TrackFactoryRuntime(RawSquidFactory factory)
+    {
+        if (!ReferenceEquals(factory.Pool, Pool)) throw new ArgumentException("공장 대여의 실제 Pool 불일치", nameof(factory));
+        _runtimeFactories.Add(new(factory)); Func<IDisposable>? pin = _runtimePin;
+        factory.BindDirectRuntimePin(pin is null ? null : () => pin()); return factory;
+    }
     /// <summary>실제새부모에현재함수사본을전달하고이후공개/반납갱신대상으로기록한다.</summary>
     private RawPostPop TrackPostPopRuntime(RawPostPop body)
     {
@@ -22,6 +31,12 @@ public sealed partial class HostSession
         _runtimePin = pin;
         Func<object?>? current = pin is null ? null : () => pin();
         if (_playerProcessRuntime is { } processes) processes.Pin = current;
+        // 동일공장을여러부모가빌리더라도같은함수값만전달하고기존공간/분리장치는유지한다.
+        for (int index = _runtimeFactories.Count - 1; index >= 0; index--)
+        {
+            if (_runtimeFactories[index].TryGetTarget(out RawSquidFactory? factory)) factory.BindDirectRuntimePin(current);
+            else _runtimeFactories.RemoveAt(index);
+        }
         // 현재살아있는실제부모만갱신하며이전호출이이미보유한대여는건드리지않는다.
         for (int index = _runtimePostPops.Count - 1; index >= 0; index--)
         {
@@ -36,5 +51,9 @@ public sealed partial class HostSession
     {
         if (Gameplay.RuntimeCallActive(this) || _playerProcessRuntime is { ActiveCalls: not 0 })
             throw new InvalidOperationException("실제 Runtime 배송 종료 전 월드 반납");
+        // 외곽owner공개전에도실제기존공장효과가진행중이면자식장치를먼저반납하지않는다.
+        foreach (WeakReference<RawSquidFactory> reference in _runtimeFactories)
+            if (reference.TryGetTarget(out RawSquidFactory? factory) && factory.ActiveRuntimeCalls != 0)
+                throw new InvalidOperationException("실제 공장 효과 종료 전 월드 반납");
     }
 }

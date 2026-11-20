@@ -198,7 +198,7 @@ public sealed partial class HostSession
         }
 
         // 같은 세션 풀에 두는 최소 live 공장으로 화신 생성과 내용물 생성을 함께 잇는다.
-        var factory = new RawSquidFactory(Pool, types);
+        var factory = TrackFactoryRuntime(new RawSquidFactory(Pool, types));
         RawPlayerWorld livePlayer = player ?? BuildMinimalAiPlayer(factory, types);
         RawContainedCreate liveContained = contained ?? BuildMinimalAiContained(factory);
         ContainedFinderState liveFinder = finderState ?? new ContainedFinderState();
