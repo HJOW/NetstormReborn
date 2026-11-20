@@ -192,8 +192,8 @@ public sealed partial class ClientHostGame : Game
         {
             if (_missionRuntime is { } runtime && _gameplay.RuntimeCallActive(runtime.Session)) throw new InvalidOperationException("실제 Runtime 배송 종료 전 호스트 종료");
             _connections.ShutdownDevices();
-            _missionRuntime?.Dispose(); _missionRuntime = null;
             _missionSession?.ReleasePlayerRecordViews();
+            _missionRuntime?.Dispose(); _missionRuntime = null;
             _missionBurning?.Dispose();
             _missionAudio?.Dispose();
             _htmlWindows?.CloseAll();
@@ -334,11 +334,14 @@ public sealed partial class ClientHostGame : Game
         RawSurfaceStorage storage = _surfaceGlobals.Storage;
         // 현재개발용일반미션부모가같은장기옵션을명시Reset한다. 전체Native로그인설치시원문부모위치로인계한다.
         RawMissionBattleOptions.Reset(OriginalEdition.Patch1078, _gameplay.BattleOptions);
-        var session = new HostSession(_kernel, _gameRandom, _crtRandom, sharedSp: _spGlobals.Store, sharedCrtBox: _spCrtBox, sharedGameplay: _gameplay, sharedLists: _sidLists, pool: storage.Pool, sharedLocal: _localState, sharedConnections: _connections, sharedPlayerRecords: _gameplay.PlayerRecords, sharedProcessTime: _clientClock.GameTime, sharedPlayerProcesses: _surfaceGlobals.Processes);
+        // 적재 도중의 실패와 완성된 Runtime 모두 같은 실제 Surface 대여를 유지한다.
+        RawSurfaceStorage.Use? pendingSurface = storage.AcquirePrepared();
+        HostSession? session = null;
         // 적재 실패에서도 이 호출이 만든 외부 연소장치만 반납한다.
         HostMissionBurning? pendingBurning = null;
         try
         {
+            session = new HostSession(_kernel, _gameRandom, _crtRandom, sharedSp: _spGlobals.Store, sharedCrtBox: _spCrtBox, sharedGameplay: _gameplay, sharedLists: _sidLists, pool: storage.Pool, sharedLocal: _localState, sharedConnections: _connections, sharedPlayerRecords: _gameplay.PlayerRecords, sharedProcessTime: _clientClock.GameTime, sharedPlayerProcesses: _surfaceGlobals.Processes);
             // 단독 바인딩 Zone을 먼저 설치한다. 조합 검사와 같은 입력(구독자 1·핸들 이름)이며 구독자·flags 0x08·이름을 둔다.
             // 이름·서브 갈고리는 실제 전송이 없어 기록만 하며 포트는 검사와 같은 값으로 둔다(실제 바인딩은 로컬 네트워크 단위에서 잇는다).
             var zone = new byte[LocalMissionZone.ZoneHead + LocalMissionZone.ZoneClient];
@@ -533,7 +536,8 @@ public sealed partial class ClientHostGame : Game
                 difficulty: (owner, settings) => session.ResolveMissionAiDifficulty(difficulty, owner, settings));
             // 단일 미션의 첫 지역(+0x78)은 소용돌이→섬 소유자→첫 지역 사슬이 적재 중 기록한다(R6: 신전 Pop·postPop 표시와 함께).
             // 전투섬 배정 region 갈고리는 MP 전투 경로의 makeBattleIsland에서만 쓰므로 시작 흐름에서 직접 기록하지 않는다(0.477 정정).
-            _missionRuntime = HostMissionRuntime.Create(session, storage, pendingBurning!, _missionAudio!, _mainMenu!);
+            _missionRuntime = HostMissionRuntime.CreatePrepared(session, storage, pendingSurface, pendingBurning!, _missionAudio!, _mainMenu!);
+            pendingSurface = null;
             _missionSession = session;
             _missionBurning = pendingBurning;
             return session;
@@ -541,8 +545,9 @@ public sealed partial class ClientHostGame : Game
         catch
         {
             // 적재 중 예외에서도 같은 Host 프로세스를 장치보다 먼저 반납한다.
-            session.ReleasePlayerRecordViews();
+            session?.ReleasePlayerRecordViews();
             pendingBurning?.Dispose();
+            pendingSurface?.Dispose();
             throw;
         }
     }

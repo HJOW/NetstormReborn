@@ -169,8 +169,11 @@ public sealed partial class HostSession
     {
         EnsureRuntimeCanRelease();
         // 장기Host의다른Runtime/Native잔류는보존하고현재대여가붙인프로세스만반납한다.
-        if (_playerProcessUse is not null) _playerProcessUse.DrainOwnedForShutdown();
-        else if (PlayerProcesses is not null) Kernel.DrainOwnedForShutdown(PlayerProcesses.Owns);
+        if (!ProcessBindingsReturned())
+        {
+            if (_playerProcessUse is not null) _playerProcessUse.DrainOwnedForShutdown();
+            else if (PlayerProcesses is not null) Kernel.DrainOwnedForShutdown(PlayerProcesses.Owns);
+        }
         ReleaseDependencyWorld();
         ReleaseFlareWorld();
         ReleaseBurningWorld();

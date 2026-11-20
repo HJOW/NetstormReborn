@@ -49,8 +49,9 @@ public sealed partial class HostSession
     private void ReleaseDependencyWorld()
     {
         if (_worldDependencies is not { } dependencies) return;
+        // 일반 종료는 현재 Form을 직접 해제한다. Native 반납 뒤에는 뒤따르는 Pool 초기화가 슬롯을 반납한다.
         // 상대Form이먼저삭제되어도매차례현재물리슬롯의free비트와실제VT를확인한다.
-        for (int sid = RawSidPool.FirstOrdinary; sid < Pool.Capacity; sid++)
+        for (int sid = RawSidPool.FirstOrdinary; !ProcessBindingsReturned() && sid < Pool.Capacity; sid++)
         {
             if ((Pool.Slot(sid)[11] & 1) == 0 && dependencies.IsDependForm(sid)) dependencies.Destroy(sid, 0x10);
         }

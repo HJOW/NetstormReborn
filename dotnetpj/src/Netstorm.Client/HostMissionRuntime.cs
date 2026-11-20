@@ -18,6 +18,8 @@ public sealed class HostMissionRuntime : IDisposable
     private readonly ConnectionDeviceLifetime _lifetime;
     /// <summary>같은 현재 Gameplay의 준비된 대여다.</summary>
     private ClientGameplayGlobals.GameplayRuntimeUse? _use;
+    /// <summary>적재 시작부터 실제 자식 반납까지 같은 Surface 물리를 잠그는 단일 대여다.</summary>
+    private RawSurfaceStorage.Use? _surfaceUse;
     /// <summary>실제 마지막 참조 뒤 공개 반납을 마쳤는지다.</summary>
     public bool Released { get; private set; }
     /// <summary>외부 소유자가 구성되기 전에는 현재 Session을 공개하지 않는다.</summary>
@@ -35,16 +37,32 @@ public sealed class HostMissionRuntime : IDisposable
         var runtime = new HostMissionRuntime(session, storage, actualDevices);
         try
         {
-            runtime._use = session.Gameplay.AcquirePrepared(); runtime._use.Publish(session); session.Gameplay.BindRuntimeOwner(session, runtime); return runtime;
+            runtime._surfaceUse = storage.AcquirePrepared(); runtime.Publish(); return runtime;
         }
         catch { runtime.Dispose(); throw; }
     }
+    /// <summary>적재 전에 확보한 같은 실제 Surface 대여의 소유권을 완성된 Runtime에 인계한다.</summary>
+    public static HostMissionRuntime CreatePrepared(HostSession session, RawSurfaceStorage storage, RawSurfaceStorage.Use surfaceUse, params object[] actualDevices)
+    {
+        ArgumentNullException.ThrowIfNull(surfaceUse);
+        if (!surfaceUse.Uses(storage)) throw new ArgumentException("Runtime에 인계할 같은 실제 Surface 대여 필요", nameof(surfaceUse));
+        var runtime = new HostMissionRuntime(session, storage, actualDevices);
+        try { runtime.Publish(); runtime._surfaceUse = surfaceUse; return runtime; }
+        catch { runtime.Dispose(); throw; }
+    }
+    /// <summary>준비된 실제 전체 owner의 같은 Gameplay 대여와 weak 공개만 설치한다.</summary>
+    private void Publish()
+    {
+        _use = Session.Gameplay.AcquirePrepared(); _use.Publish(Session); Session.Gameplay.BindRuntimeOwner(Session, this);
+    }
+    /// <summary>Native 자식 증빙과 Core0 뒤에 모든 Player 소비자를 먼저 반납하고 외곽 수명을 끝낸다.</summary>
+    public void RetireForState() { Session.ReleasePlayerRecordViewsForState(); Dispose(); }
     /// <summary>현재 실제 owner의 같은 장치 전체를 배송 끝까지 보유한다.</summary>
     internal ConnectionDevicePin Pin() => _lifetime.Pin();
     /// <summary>실제 호출이 모두 끝난 뒤 같은 공개/대여를 반납하고 장치 참조 수명을 마친다.</summary>
     private void Finish()
     {
-        try { _use?.Dispose(); _use = null; Released = true; }
+        try { _use?.Dispose(); _use = null; _surfaceUse?.Dispose(); _surfaceUse = null; Released = true; }
         finally { GC.KeepAlive(_devices); GC.KeepAlive(Storage); GC.KeepAlive(Session); }
     }
     /// <summary>외부 owner만 반납한다. 호출 대여가 있으면 마지막 복귀까지 실제 반납을 미룬다.</summary>

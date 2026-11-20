@@ -72,6 +72,9 @@ public sealed partial class RawSurfaceStorage
             _storage = storage;
         }
 
+        /// <summary>현재 살아 있는 같은 Surface 대여만 외곽 Runtime에 인계하도록 정체성을 검사한다.</summary>
+        public bool Uses(RawSurfaceStorage storage) => ReferenceEquals(_storage, storage);
+
         /// <summary>월드의 모든 모듈을 반납한 뒤 대여만 해제한다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.</summary>
         public void Dispose()
         {

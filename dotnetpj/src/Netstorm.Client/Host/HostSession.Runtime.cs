@@ -46,6 +46,8 @@ public sealed partial class HostSession
     }
     /// <summary>현재 실제 전체 owner를 선택된 하위 호출 끝까지 보유한다.</summary>
     public IDisposable PinRuntime() => (_runtimePin ?? throw new InvalidOperationException("세션의 실제 Runtime 대여 미공개"))();
+    /// <summary>전체 State 자식을 실행하기 전에 같은 실제 배송·프로세스·공장 호출 관문을 확인한다.</summary>
+    internal void EnsureStateRuntimeIdle() => EnsureRuntimeCanRelease();
     /// <summary>배송 중 실제 Pool/Player/장치를 명시 반납하는 전체 정리를 거부한다.</summary>
     private void EnsureRuntimeCanRelease()
     {

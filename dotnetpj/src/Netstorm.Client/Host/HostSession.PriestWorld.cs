@@ -191,7 +191,7 @@ public sealed partial class HostSession
     private void ReleasePriestWorld()
     {
         if (_priests is null) return;
-        PlayerProcesses.SetRegularHandler(_beforePriestRegular);
+        if (!ProcessBindingsReturned()) PlayerProcesses.SetRegularHandler(_beforePriestRegular);
         _priests.Dispose(); _priests = null; _beforePriestRegular = null;
     }
 }

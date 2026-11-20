@@ -75,7 +75,7 @@ public sealed partial class HostSession
     private void ReleaseFlareWorld()
     {
         if (_worldFlare is null) return;
-        PlayerProcesses.SetRegularHandler(_beforeFlareRegular);
+        if (!ProcessBindingsReturned()) PlayerProcesses.SetRegularHandler(_beforeFlareRegular);
         _beforeFlareRegular = null; _reservedFlareRegular = null; _worldFlare = null;
     }
 }
