@@ -20,6 +20,8 @@ public sealed partial class ClientGameplayGlobals
     public Memory<byte> HiddenPlayers => BattleOptions.AsMemory(0x3e, 9);
     /// <summary>현재Core/active/캐시/메타데이터와Player빌린슬롯의실제장기소유자다.</summary>
     public ClientCoreDataGlobals CoreData { get; } = new();
+    /// <summary>현재known·전투/Template소유자·Player역할을모든세션이같은주소로빌린다.</summary>
+    public PlayerWorldState Player { get; } = new();
     /// <summary>현재Player/factory와같은두로그인카운터·기존Deck저장소를소유한다.</summary>
     public ClientPlayerRecords PlayerRecords { get; }
 }

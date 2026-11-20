@@ -1,4 +1,5 @@
 using System.Buffers.Binary;
+using Netstorm.Client.Player;
 using Netstorm.Assets;
 using Netstorm.Client.Automation;
 using Netstorm.Core.Display;
@@ -58,14 +59,14 @@ public sealed partial class HostSession
     /// <summary>세션이 쓰는 오브젝트 풀이다. 빌린 풀이 없으면 세션 전용으로 만든다. 싱글 플레이는 로컬이 서버다. 0.594에서 외부 풀 빌림을 추가했다.</summary>
     public RawSidPool Pool { get; }
 
-    /// <summary>세션이 소유한 Player 9기록 원문이다. Start 순서에서 RawPlayerParticipation과 같은 버퍼를 쓴다.</summary>
-    public byte[] PlayerRecords { get; } = new byte[PlayerRecordBytes];
+    /// <summary>실제장기Player9기록을고정뷰수명동안빌린다. 독립조합만자체배열을소유한다.</summary>
+    public byte[] PlayerRecords => !_playerRecordsReleased ? _playerRecords : throw new ObjectDisposedException(nameof(HostSession), "Player고정뷰반납후조회");
 
     /// <summary>같은Client의옵션+3e에있는현재Chat숨김9바이트다. 참여/로그인과복사없이공유한다.</summary>
     public Memory<byte> HiddenPlayers => Gameplay.HiddenPlayers;
 
-    /// <summary>세션이 소유한 동맹 81 DWORD다. Start 순서에서 같은 버퍼를 쓴다.</summary>
-    public uint[] Alliances { get; } = new uint[AllianceDwords];
+    /// <summary>같은실제장기동맹81DWORD를빌린다. 독립조합만자체표를소유한다.</summary>
+    public uint[] Alliances => !_playerRecordsReleased ? _alliances : throw new ObjectDisposedException(nameof(HostSession), "Player동맹고정뷰반납후조회");
 
     /// <summary>SP 초기화의 재시드 공급이다. 없으면 시작 SP 지정이 거부된다.</summary>
     /// <remarks>2026-11-12 0.395에서 StartPlayerSp 연결로 추가했다. 실제 공급(RawGameRandomSeed 사슬)은 미션 시작 흐름에서 잇는다.</remarks>
@@ -118,7 +119,9 @@ public sealed partial class HostSession
     /// 0.594에서 NativeStorage 풀 전환의 첫 단계로 외부 풀 빌림을 추가했다. 별도 풀 제거·세션 수명 일원화는 다음 단위다.</remarks>
     /// <param name="sharedLocal">같은 Client의 실제 상태/시계 전역이다. 독립 호출만 자체 초기값을 구성한다.</param>
     /// <param name="sharedConnections">같은 LocalState를 빌리는 실제 장기 연결표다.</param>
-    public HostSession(Kernel kernel, GameRandom game, CrtRandom crt, int poolCapacity = 0, RawSpStore? sharedSp = null, UIntBox? sharedCrtBox = null, ClientGameplayGlobals? sharedGameplay = null, RawStateSidLists? sharedLists = null, RawSidPool? pool = null, ClientLocalStateGlobals? sharedLocal = null, ClientConnectionGlobals? sharedConnections = null)
+    /// <param name="sharedPlayerRecords">명시제공시같은Core/Player단일고정뷰를빌린다.</param>
+    /// <param name="adoptInitializedPlayers">앞선실제Native부모가완료한같은Player를재초기화없이인계받는다.</param>
+    public HostSession(Kernel kernel, GameRandom game, CrtRandom crt, int poolCapacity = 0, RawSpStore? sharedSp = null, UIntBox? sharedCrtBox = null, ClientGameplayGlobals? sharedGameplay = null, RawStateSidLists? sharedLists = null, RawSidPool? pool = null, ClientLocalStateGlobals? sharedLocal = null, ClientConnectionGlobals? sharedConnections = null, ClientPlayerRecords? sharedPlayerRecords = null, bool adoptInitializedPlayers = false)
     {
         ArgumentNullException.ThrowIfNull(kernel);
         ArgumentNullException.ThrowIfNull(game);
@@ -134,18 +137,6 @@ public sealed partial class HostSession
         // 기존 독립 조합 호출만 새전역에미션기본옵션을준비한다. 빌린제품전역은명시미션부모가Reset한다.
         if (sharedGameplay is null && sharedLocal is null && sharedConnections is null)
             RawMissionBattleOptions.Reset(OriginalEdition.Patch1078, BattleOptions);
-        _aiParticipation = new PlayerParticipation(
-            PlayerRecords, Alliances, HiddenPlayers,
-            new Netstorm.Core.Simulation.PlayerParticipationState(),
-            new Netstorm.Core.Simulation.PlayerParticipationHooks
-            {
-                DestructBrain = brain => AiConstructorFor(brain).Destruct(brain),
-                FreeBrain = brain =>
-                {
-                    AiConstructorFor(brain).FreeBody(brain);
-                    _aiConstructors.Remove(brain);
-                },
-            });
         Pool = pool ?? new RawSidPool(poolCapacity <= 0 ? MissionPoolCapacity : poolCapacity, true, () => Gameplay.Authority.Server);
         if (pool is not null)
         {
@@ -160,19 +151,41 @@ public sealed partial class HostSession
                 throw new ArgumentException("개발 호스트가 빌리는 외부 풀의 크기 오류", nameof(pool));
             }
         }
-        Sp = sharedSp ?? new RawSpStore(Game, () => _spReseed is not null ? _spReseed() : throw new InvalidOperationException("SP 재시드 미연결"));
-        TerrainCrt = sharedCrtBox ?? new();
-        TerrainBookkeeping = new RawPostPopState(TotalMade);
-        SidLists = sharedLists ?? new RawStateSidLists();
-        // 원문 Client의 고정 용량 목록을 공통 후처리와 생산 재계산이 복제 없이 공유한다.
-        TerrainBookkeeping.SharedFactories = SidLists.Factories;
-        TerrainBookkeeping.SharedProviders = SidLists.Providers;
-        PriestState = new(GameAux.PriestTypeBox, GameAux);
-        PriestState.Priests.SharedPriests = SidLists.Priests;
-        PriestState.Regen.SharedPriestType = GameAux.PriestTypeBox;
-        PriestState.Regen.Patch.SharedSample = Gameplay.PatchSample;
-        PriestState.Regen.Patch.SharedChangedSample = Gameplay.PatchDiagnostic;
-        RawGraphStorage.ResetTable(Graph);
+        AcquirePlayerRecordViews(sharedPlayerRecords, adoptInitializedPlayers);
+        try
+        {
+            _aiParticipation = new PlayerParticipation(
+                PlayerRecords, Alliances, HiddenPlayers,
+                new Netstorm.Core.Simulation.PlayerParticipationState(),
+                new Netstorm.Core.Simulation.PlayerParticipationHooks
+                {
+                    DestructBrain = brain => AiConstructorFor(brain).Destruct(brain),
+                    FreeBrain = brain =>
+                    {
+                        AiConstructorFor(brain).FreeBody(brain);
+                        _aiConstructors.Remove(brain);
+                    },
+                });
+            Sp = sharedSp ?? new RawSpStore(Game, () => _spReseed is not null ? _spReseed() : throw new InvalidOperationException("SP 재시드 미연결"));
+            TerrainCrt = sharedCrtBox ?? new();
+            TerrainBookkeeping = new RawPostPopState(TotalMade);
+            BindPlayerFactoryViews();
+            SidLists = sharedLists ?? new RawStateSidLists();
+            // 원문 Client의 고정 용량 목록을 공통 후처리와 생산 재계산이 복제 없이 공유한다.
+            TerrainBookkeeping.SharedFactories = SidLists.Factories;
+            TerrainBookkeeping.SharedProviders = SidLists.Providers;
+            PriestState = new(GameAux.PriestTypeBox, GameAux);
+            PriestState.Priests.SharedPriests = SidLists.Priests;
+            PriestState.Regen.SharedPriestType = GameAux.PriestTypeBox;
+            PriestState.Regen.Patch.SharedSample = Gameplay.PatchSample;
+            PriestState.Regen.Patch.SharedChangedSample = Gameplay.PatchDiagnostic;
+            RawGraphStorage.ResetTable(Graph);
+        }
+        catch
+        {
+            _playerRecordsUse?.Dispose(); _playerRecordsUse = null;
+            throw;
+        }
     }
 
     /// <summary>SP 초기화의 재시드 공급을 연결한다. 미션 시작 흐름에서 실제 사슬로 잇는다.</summary>
@@ -626,13 +639,13 @@ public sealed partial class HostSession
     }
 
     /// <summary>세션이 센 로그인 요새 순서 수다. 원본 로그인의 fortCount와 같으며 첫 로그인에 0을 둔다.</summary>
-    public uint FortCount { get; private set; }
+    public uint FortCount { get => FortCountBox.Value; private set => FortCountBox.Value = value; }
 
     /// <summary>세션이 마지막에 새 요새를 받은 Player 번호다. 원본 로그인의 lastLoginPlayer와 같다.</summary>
-    public uint LastLoginPlayer { get; private set; }
+    public uint LastLoginPlayer { get => LastLoginPlayerBox.Value; private set => LastLoginPlayerBox.Value = value; }
 
     /// <summary>세션이 공유하는 현재 Player 상태다. Zone 설치가 소유자를 정하고 이름 확정이 전투 소유자를 읽는다.</summary>
-    public PlayerWorldState MissionPlayer { get; } = new();
+    public PlayerWorldState MissionPlayer => Gameplay.Player;
 
     /// <summary>세션이 공유하는 현재 mySubHandle NUL 저장소다. 이름 채우기가 쓰고 이름 확정이 읽는다.</summary>
     public byte[] HandleBuffer { get; } = new byte[64];

@@ -189,8 +189,7 @@ public sealed class ClientHostGame : Game
             if (_missionRuntime is { } runtime && _gameplay.RuntimeCallActive(runtime.Session)) throw new InvalidOperationException("실제 Runtime 배송 종료 전 호스트 종료");
             _connections.ShutdownDevices();
             _missionRuntime?.Dispose(); _missionRuntime = null;
-            _missionSession?.ReleaseMissionAiBrains();
-            _missionSession?.ReleasePlayerProcesses();
+            _missionSession?.ReleasePlayerRecordViews();
             _missionBurning?.Dispose();
             _missionAudio?.Dispose();
             _htmlWindows?.CloseAll();
@@ -330,7 +329,7 @@ public sealed class ClientHostGame : Game
         var storage = new RawSurfaceStorage(OriginalEdition.Patch1078);
         // 현재개발용일반미션부모가같은장기옵션을명시Reset한다. 전체Native로그인설치시원문부모위치로인계한다.
         RawMissionBattleOptions.Reset(OriginalEdition.Patch1078, _gameplay.BattleOptions);
-        var session = new HostSession(_kernel, _gameRandom, _crtRandom, sharedSp: _spGlobals.Store, sharedCrtBox: _spCrtBox, sharedGameplay: _gameplay, sharedLists: _sidLists, pool: storage.Pool, sharedLocal: _localState, sharedConnections: _connections);
+        var session = new HostSession(_kernel, _gameRandom, _crtRandom, sharedSp: _spGlobals.Store, sharedCrtBox: _spCrtBox, sharedGameplay: _gameplay, sharedLists: _sidLists, pool: storage.Pool, sharedLocal: _localState, sharedConnections: _connections, sharedPlayerRecords: _gameplay.PlayerRecords);
         // 적재 실패에서도 이 호출이 만든 외부 연소장치만 반납한다.
         HostMissionBurning? pendingBurning = null;
         try
@@ -538,8 +537,7 @@ public sealed class ClientHostGame : Game
         catch
         {
             // 적재 중 예외에서도 같은 Host 프로세스를 장치보다 먼저 반납한다.
-            session.ReleaseMissionAiBrains();
-            session.ReleasePlayerProcesses();
+            session.ReleasePlayerRecordViews();
             pendingBurning?.Dispose();
             throw;
         }

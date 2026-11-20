@@ -1185,3 +1185,5 @@ cpppj/src/client/ClientConnectionActivityGlobals.h	Netstorm.Client/ClientConnect
 cpppj/src/client/ClientPlayerRecords.cpp	Netstorm.Client/Player/ClientPlayerRecords.cs	b9b67b6132fe14f9bee39673cdae81c5d6392e6d	port
 cpppj/src/client/ClientPlayerRecords.h	Netstorm.Client/Player/ClientPlayerRecords.cs	b9b67b6132fe14f9bee39673cdae81c5d6392e6d	port
 cpppj/src/client/ClientGameplayGlobals.h	Netstorm.Client/ClientGameplayGlobals.Login.cs	ae0e58b3ac0f34697eac6954cce7913a759247e3	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.PlayerRecords.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
+cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.PlayerRecords.cs	bda77381e54bc382937c720047ee4441086b46d7	port
