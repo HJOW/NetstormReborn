@@ -2523,6 +2523,38 @@
       "size": 2020,
       "sha256": "c0298a3dbb303b98942a7c9b8adda2b3b0609a313b050dd5d0fc5af3725d6df6",
       "use": "한국어 캠페인 미션 대본(UTF-8): 원본 BreakingThrough.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
+    },
+    {
+      "path": "d/ToTheRescue.korean",
+      "source": "webpj/translations/ToTheRescue.korean",
+      "bundle": "korean",
+      "size": 2755,
+      "sha256": "b9ad92d41527411539f59fd3438cf1166d43a7d1155442591e7a827870739059",
+      "use": "한국어 캠페인 미션 대본(UTF-8): 원본 ToTheRescue.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
+    },
+    {
+      "path": "d/Vicious.korean",
+      "source": "webpj/translations/Vicious.korean",
+      "bundle": "korean",
+      "size": 1885,
+      "sha256": "cde9f1cf0f0c7dee873b4096f0055deeeae642d929c5d84407a92779f70c6a52",
+      "use": "한국어 캠페인 미션 대본(UTF-8): 원본 Vicious.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
+    },
+    {
+      "path": "d/EnemyTerritory.korean",
+      "source": "webpj/translations/EnemyTerritory.korean",
+      "bundle": "korean",
+      "size": 2697,
+      "sha256": "1c0108fe178b844770540676221affd704af1680e850311a50c161cb3a0d837e",
+      "use": "한국어 캠페인 미션 대본(UTF-8): 원본 EnemyTerritory.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
+    },
+    {
+      "path": "d/FinalConfrontation.korean",
+      "source": "webpj/translations/FinalConfrontation.korean",
+      "bundle": "korean",
+      "size": 2461,
+      "sha256": "160fe880c0268ba72622f81dd04327b75e86c690f31d708de72354d43d1de7ac",
+      "use": "한국어 캠페인 미션 대본(UTF-8): 원본 FinalConfrontation.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
     }
   ]
 }

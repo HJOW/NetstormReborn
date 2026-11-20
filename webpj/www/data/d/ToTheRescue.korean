@@ -1,0 +1,105 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+
+myStartMoney = 4600
+myTech = "sunWalker;rainBattery;rainWalker;rainCannon;sunArcher;sunFence"
+
+// Your beleaguered ally...
+ai2Name = "체로크 총독"
+ai2Tech = "sunWalker;rainBattery;rainBlocker;rainBalloon"
+ai2StartMoney = 0
+ai2GeyserAttachments = 2
+ai2Collectors = 3
+ai2Ability = "!COLLECT_STORM_POWER"
+ai2TimeBetweenMoves = 3
+ai2AllyList = 1
+ai2Color = purple
+
+// Lower-left enemy
+ai3Name = "썬더 왕자"
+ai3Tech = "sunWalker;thunderBattery;thunderCannon;thunderBlocker;sunBlocker"
+ai3StartMoney = 2000
+ai3GeyserAttachments = 2
+ai3Collectors = 3
+ai3TimeBetweenMoves = 3
+ai3AllyList = 4
+ai3Enemy = 2
+ai3Color = red
+
+ai4Name = "썬더 공작"
+ai4Tech = "sunWalker;sunBalloon;thunderBattery;thunderCannon;thunderBlocker;sunarcher"
+ai4StartMoney = 2000
+ai4GeyserAttachments = 2
+ai4Collectors = 2
+ai4TimeBetweenMoves = 3
+ai4AllyList = 3
+ai4Enemy = 2
+ai4Color = orange
+
+title="구출 작전!"
+
+[A.]
+<h2>구출 작전!</h2>
+<i>"친구를 위해, 그리고 헌신을 위해,
+먼지투성이 바다에서 올라와
+피 흘리는 난투 속으로 뛰어드십시오."
+--님버스의 서
+</i>
+<p>
+체로크 섬의 총독에게서 기구로 구조 신호가 왔습니다.
+<p>
+<i>우리가 공격을 받고 있습니다!
+<p>
+스톰 파워를 찾아 항해하던 중 적의 섬 두 개가 해를 등지고
+우리를 덮쳤습니다.
+<p>
+자원이 바닥났고 벌써 많은 이가 죽었습니다.
+
+$Button=다음,Tell,A1.
+
+[A1.]
+<h2>구출 작전!</h2>
+<p>
+체로크 섬이 파괴되면 다른 총독들이 당신을 따르기를 두려워하고
+심지어 적에게 넘어갈 수도 있습니다.
+<p>
+공격자들을 두들겨 체로크 섬을 구해 이 신뢰의 위기를 막으세요!
+
+$Button=지식 보기,ShowTechnology,55
+$Button=미션 시작,DoNothing,0
+
+
+[@120]
+체로크 섬의 총독에게서 전갈이 도착했습니다:
+<p>
+<i>
+위대한 루터 왕의 말을 기억하십시오. "결국 우리가 기억하는 것은
+적들의 행동이 아니라 친구들의 무행동이다."
+</i>
+
+
+[Succeeded][BadTeamDead]
+<h2>성공!</h2>
+<p>
+체로크 섬을 구했습니다! 총독이 승리의 연회에 당신을
+따뜻하게 맞이합니다. 당신 제국의 모든 총독이 참석해
+영원한 충성을 맹세합니다.
+<$Config,Done{mission.fileName}=1>
+$Button=미션 나가기,MissionAbort,1
+$Button=다음 미션,MissionBegin,Vicious
+
+
+[Failed][Ai2PriestDead]
+<h2>실패!</h2>
+<p>
+체로크 섬을 구하려던 시도가 실패했습니다.
+<p>
+당신 제국의 다른 섬 총독들은 자신들을 지켜 주지 못하는 당신의 무능에
+겁을 먹습니다. 그들의 지지가 없으면 당신의 제국은
+적에게 꿰뚫리고 짓밟힙니다.
+$Button=계속,Tell,TryAgain
+
+
+[END]

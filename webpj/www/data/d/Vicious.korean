@@ -1,0 +1,62 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+
+myStartMoney = 7000
+myTech = "sunWalker;thunderBattery;rainBattery;rainFence;sunFence;sunCannon;thunderFence;thunderBlocker;thunderArcher"
+
+aiName = "퓨리의 공작"
+aiTech = "rainWalker;rainBattery;windBattery;thunderBattery;sunArcher;sunCannon;windArcher;rainCannon;thunderCannon"
+aiStartMoney = 10000
+aiGeyserAttachments = 4
+aiCollectors = 4
+aiTimeBetweenMoves = 2
+
+title = "잔혹한 힘!"
+
+[A.]
+<h2>잔혹한 힘!</h2>
+<i>"그리고 섬들은 어둡고 귀먹은 하늘을 향해 제 상처를 울부짖었다."<br>
+--님버스의 서</i>
+<p>
+적이 "스톰의 섬"이라 부르는 끔찍한 괴물을 만들어 냈습니다.
+윈드, 레인, 썬더를 한데 모아 막을 수 없는 힘을 만든 곳입니다.
+<p>
+이 요새는 각 속성의 잔혹하고 해로운 모든 것을 상징하며
+지금 당신을 향해 다가오고 있습니다.
+
+$Button=다음,Tell,A1.
+
+[A1.]
+<h2>잔혹한 힘!</h2>
+<p>
+공격은 새 무기 개발 시설을 지으려는 예정지를 겨냥합니다.
+그곳에 짓는 시설은 무장이 가벼우므로 시제품 무기로 공격자를
+막아 내고 그의 사제를 없애야 합니다!
+
+$Button=지식 보기,ShowTechnology,55
+$Button=미션 시작,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>성공!</h2>
+<p>
+기적처럼 스톰의 섬을 물리쳤습니다! 이제 님버스를 군림할 준비가
+되었습니다. 어둠의 군주들을 이번에 영원히 정복할 수 있을까요?
+<$Config,Done{mission.fileName}=1>
+$Button=미션 나가기,MissionAbort,1
+$Button=다음 미션,MissionBegin,EnemyTerritory
+
+
+[Failed]
+<h2>실패!</h2>
+<p>
+스톰의 섬이 당신의 군대를 짓밟아 너덜너덜하게 만들었습니다.
+<p>
+그들이 우리의 새 무기 설계도를 훔쳐 갔고 그것으로 우리 제국을
+무너뜨릴 것입니다!
+$Button=계속,Tell,TryAgain
+
+
+[END]

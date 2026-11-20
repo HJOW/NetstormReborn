@@ -1,0 +1,96 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+
+allowAnyCapture = 1
+
+myStartMoney = 10000
+myTech = "sunWalker;windBattery;windWalker;windArcher;sunBlocker;sunAviary;sunCannon"
+
+aiMoneyRechargeRate = 8    // One sun cannon per minute
+
+// The guy you're saving
+ai2Name = "배신자"
+ai2Tech = "sunWalker"
+ai2StartMoney = 0
+ai2TimeBetweenMoves = 4
+ai2AllyList = "1"
+ai2Ability = "!COLLECT_STORM_POWER;!ATTACH_TO_ENEMY_ISLAND;!ENCIRCLE_ENEMY_ISLAND"
+ai2Color = white
+
+ai3Name = "윈드 공작"
+ai3Tech = "sunWalker;sunArcher;sunCannon;windBattery;windAviary;windBlocker;windArcher"
+ai3StartMoney = 6000
+ai3TimeBetweenMoves = 4
+ai3AllyList = "4"
+ai3Ability = "!ATTACH_TO_ENEMY_ISLAND;!ENCIRCLE_ENEMY_ISLAND"
+ai3Color = red
+
+ai4Name = "레인 공작"
+ai4Tech = "sunWalker;sunArcher;sunCannon;rainBattery;rainCannon;rainAviary;rainBlocker"
+ai4StartMoney = 6000
+ai4TimeBetweenMoves = 4
+ai4AllyList = "3"
+ai4Ability = "!ATTACH_TO_ENEMY_ISLAND;!ENCIRCLE_ENEMY_ISLAND"
+ai4Color = orange
+
+title="적진!"
+
+[Options]
+
+[A.]
+<h2>적진!</h2>
+<i>"내 유일한 친구는 내 적의 적들뿐입니다."<br>
+--세틴 호르크 사령관</i>
+<p>
+적 가운데 배신한 사제가 있습니다! 썬더 공작의 부하 한 명이
+적진 안에서 구출되기를 바랍니다. 그의 섬은 적의 방어선 근처에 있습니다.
+<p>
+방어선을 뚫고 그의 작은 섬에서 그를 구출하세요. 그는 적 제국의 심장부로
+이어지는 지키는 이 없는 비밀 길을 알고 있다고 합니다!
+
+$Button=지식 보기,ShowTechnology,55
+$Button=미션 시작,DoNothing,0
+
+[Ai2PriestCaptured]
+<h2>구출!</h2>
+<p>
+<i>"제때 와 주셔서 정말 다행입니다. 저를 당신의 섬에 내려놓아
+안전하게 데려가 주십시오. 그러면 비밀 계획을
+알려 드리겠습니다!"
+</i>
+$Button=계속,DoNothing,0
+
+
+[Succeeded][Ai2PriestSaved]
+<h2>성공!</h2>
+<p>
+배신자를 당신의 섬으로 데려왔습니다!
+<p>
+그는 적의 영토를 통과하는 비밀 길을 알려 줍니다. 이 길로 어둠의 제국의
+심장부를 곧바로 칠 수 있습니다. 궁극의 승리가 눈앞일지도 모릅니다!
+
+<$Config,Done{mission.fileName}=1>
+
+$Button=미션 나가기,MissionAbort,1
+$Button=다음 미션,MissionBegin,FinalConfrontation
+
+[Ai2PriestDead]
+<h2>실패!</h2>
+<p>
+적이 배신한 사제를 죽였습니다. 그의 비밀이 없으면
+어둠의 제국의 심장부를 결코 뚫지 못합니다!
+$Button=계속,Tell,TryAgain
+
+
+[Failed]
+<h2>실패!</h2>
+<p>
+적이 당신의 섬을 짓밟고 당신의 사제를 죽였습니다.
+<p>
+배신자가 줄 수 있었던 핵심 정보가 없으면 결코 성공하지 못합니다!
+$Button=계속,Tell,TryAgain
+
+
+[END]

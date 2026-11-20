@@ -120,10 +120,10 @@ test('한국어 Tutorial6: 실행 설정과 단계별 명령은 원본과 같다
 });
 
 // 번역 파일이 아직 없는 다음 튜토리얼은 기존 영어 대체 경로를 유지한다.
-test('한국어 미션: 번역하지 않은 FinalConfrontation은 영어 원문으로 대체한다', () => {
+test('한국어 미션: 번역하지 않은 bc1menu76은 영어 원문으로 대체한다', () => {
     const manifest = JSON.parse(fs.readFileSync(path.join(DATA_ROOT, 'manifest.json'), 'utf8'));
     const files = readDataMap(manifest.files.filter((entry) => entry.bundle === 'menu' || entry.bundle === 'korean').map((entry) => entry.path));
-    const data = GameData.build({ files, language: 'korean' }), mission = new MissionScript(data, 'FinalConfrontation');
+    const data = GameData.build({ files, language: 'korean' }), mission = new MissionScript(data, 'bc1menu76');
     try { assert.ok(mission.loaded); assert.match(mission.section('A.'), /[A-Za-z]{4}/); assert.doesNotMatch(mission.section('A.'), /[가-힣]/u); }
     finally { mission.dispose(); }
 });
