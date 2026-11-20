@@ -27,11 +27,11 @@
 - `tests/netstorm-gameplay-services.test.mjs`: 보호막 안내음·번역, 유닛 상실음, 낙하음, 섬 피격 경고 사건(생산 UI 없을 때 포함), Cast/Drop 비용 표시, 중복 워크샾 진단 문구, 기술 획득 이름·설정·서식·안내, 포획 이름(전투/비전투·로컬·SOMEONE)을 확인한다.
 - `tests/raw-campaign-session-ritual.test.mjs`: 장애물 후보 수집에 `[x, y]` 가 넘어감(변환을 지우면 실패함을 확인).
 - `tests/raw-campaign-session-flyers.test.mjs`: `currentFlyerProcess` 가 설치되고 붙은 프로세스의 필드를 돌려주며 범위 밖 부모를 거부함.
-- 새 `e2e/campaign-long-run.spec.js`(Chromium): 환경 변수 `NETSTORM_LONG_SECONDS` 를 정한 실행에서만 돌며 캠페인 16개를 미션마다 그 시간(초)만큼 진행하고, 시계를 멈추는 쪽지·안내 창은 계속 닫으며, 페이지 오류 0 과 시계 진행을 확인한다.
-- 조사 결과: 수정 뒤 캠페인 16개 모두 150~180초 진행에서 오류가 없었다(수정 전 4개 미션이 위 오류로 멈춤).
+- 새 `e2e/campaign-long-run.spec.js`(Chromium): 환경 변수 `NETSTORM_LONG_SECONDS` 를 정한 실행에서만 돌며 캠페인 31개(초급 6·세 묶음 16·훈련 9)를 미션마다 그 시간(초)만큼 진행하고, 시계를 멈추는 쪽지·안내 창은 계속 닫으며, 페이지 오류 0 과 시계 진행을 확인한다.
+- 조사 결과: 수정 뒤 캠페인 16개 모두 150~180초 진행에서 오류가 없었다(수정 전 4개 미션이 위 오류로 멈춤). 이어서 Early Missions 6개와 Priest Training 9개도 미션마다 100초씩 진행해 오류 0, 시계 정상 진행을 확인했다(E1123, 35.6분). 이로써 캠페인 목록의 31개 미션이 모두 100초 이상 오류 없이 도는 것이 확인됐고, 시험(`campaign-long-run`)도 31개 전체로 넓혔다.
 
 ## 남은 경계
 
 - 이 조사도 사람이 조작하지 않는 상태(AI 만 움직이는 구간)다. 플레이어의 방어·공격과 승패 처리, 미션 목표 수행은 사용자 확인 범위다.
 - `services.refreshSp`(희생 의식의 외부 SP 정규화)·`carrierContent`·`chatReceive`·`removeConnectionStatus` 등 멀티플레이·편집과 관련된 서비스는 이 조사에서 쓰이지 않아 연결하지 않았다. 해당 경로를 쓰는 미션이 드러나면 같은 방식으로 잇는다.
-- Priest Training(9개) 미션의 장시간 진행과 스커미시 난이도별 장시간 진행은 확인하지 않았다.
+- 스커미시의 난이도·AI 수별 장시간 진행(E1106~E1107에서 어려움 AI 1명 5분)과 데모 목록(Demo 메뉴)의 장시간 진행은 아직 이 방식으로 확인하지 않았다.
