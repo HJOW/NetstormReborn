@@ -16,19 +16,23 @@ async function clickLabel(page, label) {
 function rng(seed) { let s = seed >>> 0; return () => { s = (Math.imul(s, 1664525) + 1013904223) >>> 0; return s / 4294967296; }; }
 // 미션 화면에서 쓰는 단축키와 임의 키이다.
 const KEYS = ['p', 'r', 'n', 'q', 'w', 'a', 's', 'z', 'y', 'x', 'e', 'Escape', 'F2', 'F3', 'F4', 'F5', 'F6', 'F8', 'F9', 'Shift+F9', 't', 'Shift+F3', 'c', 'Tab', 'Enter', 'Space', 'h', 'ArrowUp', 'ArrowLeft'];
-for (const scenario of [{ name: 'campaign-1-1', seed: 11 }, { name: 'skirmish-3', seed: 22 }, { name: 'campaign-1-1-b', seed: 33 }]) {
+// 몽키를 돌릴 미션을 고른다. NETSTORM_MONKEY_MISSION='묶음:미션,묶음:미션' (예: 'Complete Victory:FinalConfrontation')을 정하면 기본 3조합 대신 그 미션들만 돈다.
+// 정하지 않으면 기존대로 campaign-1-1·skirmish-3·campaign-1-1-b 를 돈다. (2026-11-21 WB04-E1134)
+const PICKED = (process.env.NETSTORM_MONKEY_MISSION ?? '').split(',').map((text) => text.trim()).filter(Boolean).map((text, index) => { const [group, mission] = text.split(':'); return { name: `campaign-${mission}`, seed: 44 + index * 11, group, mission }; });
+const SCENARIOS = PICKED.length > 0 ? PICKED : [{ name: 'campaign-1-1', seed: 11 }, { name: 'skirmish-3', seed: 22 }, { name: 'campaign-1-1-b', seed: 33 }];
+for (const scenario of SCENARIOS) {
   test(`monkey ${scenario.name}`, async ({ page }) => {
     test.skip(!(SECONDS > 0), 'NETSTORM_MONKEY_SECONDS 를 설정한 실행에서만 돈다');
     test.setTimeout((SECONDS + 150) * 1000);
     const errors = []; page.on('pageerror', (error) => errors.push(error.stack ?? error.message)); page.on('console', (message) => { if (message.type() === 'error' && !message.text().includes('Islandlist.cpp:676')) errors.push(message.text()); });
     const settings = { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0, skirmishAiCount: 3 };
-    await page.addInitScript((v) => { localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: v })); const done = {}; for (const k of ['Tutorial1','Tutorial2','Tutorial3','Tutorial4','Tutorial5','Tutorial6']) done['Done' + k] = '1'; localStorage.setItem('netstorm.progress', JSON.stringify({ version: 1, values: done })); }, settings);
+    await page.addInitScript(({ v, all }) => { localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: v })); const done = {}; for (const k of ['Tutorial1','Tutorial2','Tutorial3','Tutorial4','Tutorial5','Tutorial6', ...(all ? ['TheWarBegins','MasterOfWhirligigs','SaveTheIsland','FragileFortune','ThunderingPower','DissolvedAlliance','TheNoose','RainVsRain','RunForIt','GuardMyBack','Surrounded','BreakingThrough','ToTheRescue','Vicious','EnemyTerritory','FinalConfrontation','bc1menu76','bc2bridging76','bc3acid_bar76','bc4bow_rush76','bc5walkers76','bc6mows76','bc7sun_bars76','bc8fury76','bc9ssun_bars76'] : [])]) done['Done' + k] = '1'; localStorage.setItem('netstorm.progress', JSON.stringify({ version: 1, values: done })); }, { v: settings, all: Boolean(scenario.mission) });
     await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/?aspect=4:3');
     await page.waitForFunction(() => window.netstorm?.state === 'clickToStart'); await page.locator('canvas').click();
     await page.waitForFunction(() => window.netstorm?.state === 'mainMenu');
     await clickLabel(page, 'Campaign');
     if (scenario.name.startsWith('skirmish')) { await clickLabel(page, 'Skirmish'); await clickLabel(page, 'Start'); }
-    else { await clickLabel(page, 'Struggle For Freedom'); const label = await page.evaluate(() => window.netstorm._mainMenu.dialog.menu.items.find((item) => item.command?.name === 'MissionBegin' && item.command.argument === 'TheWarBegins')?.label); await clickLabel(page, label); }
+    else { await clickLabel(page, scenario.group ?? 'Struggle For Freedom'); const label = await page.evaluate((name) => window.netstorm._mainMenu.dialog.menu.items.find((item) => item.command?.name === 'MissionBegin' && item.command.argument === name)?.label, scenario.mission ?? 'TheWarBegins'); await clickLabel(page, label); }
     await page.waitForFunction(() => window.netstorm?._campaignDisplayActive() && window.netstorm._clientGuide.current()?.runtime.gate.started === 1, null, { timeout: 120000 });
     for (let i = 0; i < 6; i += 1) { const l = await page.evaluate(() => window.netstorm._mainMenu.dialog?.buttons?.at(-1)?.label ?? null); if (l === null) break; await clickLabel(page, l); await page.waitForTimeout(400); }
     const next = rng(scenario.seed), actions = []; let stuck = null;

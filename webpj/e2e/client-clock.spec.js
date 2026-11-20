@@ -12,8 +12,8 @@ test('게임 시계는 앱 프레임과 같은 수명으로 생성되고 재시�
       camera: [...camera.target().limits, app._layout.logicalWidth, app._layout.logicalHeight, app._clientKencloud.worldRedraw().value, app._clientGameplay.mapRevision().value], palette: [app._clientPaletteScreen.paletteLoaded.value, app._clientColorSort.captured, app._clientColorSort.primary.constructed, app._clientColorSort.logical.every((color, index) => color === app._clientPaletteScreen.logicalPalette()[index]), app._clientColorSort.mapsReady, app._clientColorSort.ownerTables.ready, app._clientColorMapFiles.read('cache/!color.dat').length] };
   });
   expect(initial.frames).toBeGreaterThanOrEqual(2); expect(initial.sameTicks).toBe(0); expect(initial.spInitialized).toBe(true); expect(initial.playersInitialized).toBe(true); expect(initial.surface).toBe(true); expect(initial.shared).toBe(true);
-  // Renderer 초기화 뒤 소유자 색표 등록이 같은 redraw 값을 한 번 더 증가시킨다.
-  expect(initial.camera).toEqual([4096 - initial.camera[2], 2816 - initial.camera[3], initial.camera[2], initial.camera[3], 2, 1]);
+  // Renderer 초기화 뒤 소유자 색표 등록이 같은 redraw 값을 한 번 더 증가시키고, 설정의 useBanners 기본값 0(PE 초기값 1에서 바뀜)을 적용하는 소유자 표식 옵션이 한 번 더 증가시켜 3이다. (2026-11-21 WB04-E1134, 20261120-46 이후 기대값 갱신)
+  expect(initial.camera).toEqual([4096 - initial.camera[2], 2816 - initial.camera[3], initial.camera[2], initial.camera[3], 3, 1]);
   expect(initial.palette).toEqual([1, true, true, true, true, true, 2304]);
   expect(await page.evaluate(() => [window.netstorm._clientGump.createState().count, window.netstorm._clientGump.root().width, window.netstorm._clientGump.root().height])).toEqual([1, initial.camera[2], initial.camera[3]]);
   // 실제 Client Gump 트리의 자식에 입력을 전달하고 지연 삭제한다.

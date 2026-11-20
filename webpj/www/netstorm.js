@@ -3340,7 +3340,9 @@ export class Netstorm {
             this._applyCursor();
         }
         // 원본 Kernel 단계에서 같은 현재 World를 준비하고 단일 Client Kernel을 실행한다.
-        if (this._campaignDisplayActive()) { this._runCampaignProductionFrame(); this._clientGump.idle(); this._runCampaignKernelFrame(); this._campaignProduction?.hud?.refresh(); }
+        // 원본 메인 루프는 Gump Idle(464170) 앞에서 죽은 Gump 정리(004662b0 cleanupGumps)를 매 프레임 한 번 실행한다. 이 정리가 없으면 만료된 안내(Game Time 등)가 Kill 큐에만 쌓이고 등록표에서 빠지지 않아
+        // 개수가 999 한도에 닿으면 "Gump 원본 개수 한도 초과" 로 게임이 멈춘다. (2026-11-21 WB04-E1134, 몽키 시험의 Vicious 3분 진행에서 발견)
+        if (this._campaignDisplayActive()) { this._runCampaignProductionFrame(); this._clientGump.lifetime().cleanup(); this._clientGump.idle(); this._runCampaignKernelFrame(); this._campaignProduction?.hud?.refresh(); }
         this._syncDialogToMapView();
         this._render(now);
         this._startFrameLoop();
