@@ -227,9 +227,16 @@ public sealed class RawConstructionProcess
 
     /// <summary>같은 풀의 보상 장치로 최대HP를 연결하며 다른 효과는 사본으로 보존한다.</summary>
     public static ConstructionProcessHooks MakeRewardHooks(RawSidPool pool, RawSquidReward reward, ConstructionProcessHooks hooks)
+        => MakeHooks(pool, reward, null, hooks);
+
+    /// <summary>같은 풀의 실제 보상·선택적 밀어내기를 연결하고 나머지 효과는 사본으로 보존한다.</summary>
+    public static ConstructionProcessHooks MakeHooks(RawSidPool pool, RawSquidReward reward, RawConstructionEffects? effects, ConstructionProcessHooks hooks)
     {
-        if (!ReferenceEquals(pool, reward.Pool)) throw new ArgumentException("건설 프로세스 어댑터의 풀 연결 오류");
-        ConstructionProcessHooks result = hooks.Copy(); result.MaxHitPoints = reward.MaxHitPoints; return result;
+        if (!ReferenceEquals(pool, reward.Pool) || (effects is not null && !ReferenceEquals(pool, effects.Pool)))
+            throw new ArgumentException("건설 프로세스 어댑터의 풀 연결 오류");
+        ConstructionProcessHooks result = hooks.Copy(); result.MaxHitPoints = reward.MaxHitPoints;
+        if (effects is not null) result.Push = (x, y, type, owner) => { _ = effects.Displace(x, y, type, owner); };
+        return result;
     }
     /// <summary>실제 월드 조립의 풀 동일성 확인용이다.</summary>
     public RawSidPool Pool => _pool;

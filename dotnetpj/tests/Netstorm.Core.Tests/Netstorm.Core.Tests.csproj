@@ -436,4 +436,8 @@
   <ItemGroup>
     <None Include="../../../cpppj/tests/fixtures/constructionprocess-x86.tsv" Link="X86/constructionprocess-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 세 원본PE의 건설 밀어내기·섬 정리3534행을 읽기 전용으로 대조한다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/constructioneffects-x86.tsv" Link="X86/constructioneffects-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
