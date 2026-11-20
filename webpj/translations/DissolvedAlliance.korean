@@ -1,0 +1,68 @@
+[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+myStartMoney = 4000
+myTech = "sunWalker;windArcher;windBlocker;windBattery;windWalker;windBalloon;windAviary;sunBlocker;sunAviary;sunCannon"
+
+ai1Name = "플레이어"
+ai1Tech = "sunWalker;windBattery;windBlocker;windWalker;windArcher;windBalloon;windAviary;sunBlocker;sunAviary;sunCannon"
+ai1TimeBetweenMoves = 3
+
+ai2Name = "썬더 왕자"
+ai2Tech = "sunWalker;sunArcher;thunderBattery;thunderCannon;thunderBlocker;sunAviary"
+ai2StartMoney = 6000
+ai2TimeBetweenMoves = 5
+ai2AllyList = "3"
+
+ai3Name = "레인 공작"
+ai3Tech = "sunWalker;sunArcher;sunCannon"
+ai3StartMoney = 2000
+ai3TimeBetweenMoves = 4
+ai3AllyList = "2"
+ai3Ability = "!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS;!REPEAT_SUCCESSFUL_DROPS"
+
+demoRestartTimer = 360
+
+title="깨어진 동맹!"
+
+[Options]
+
+[A.]
+<h2>깨어진 동맹!</h2>
+<i>"그의 말은 기름보다 매끄러웠으나 가시와 독이 있었습니다."
+--프로모스 아브레스크, 님버스의 시인</i>
+<p>
+당신의 동맹인 레인 공작이 어둠의 썬더 왕자와의 격렬한 전투 한가운데에서
+배신했습니다! 이제 당신은 사방이 막혔습니다.
+<p>
+전세를 뒤집어 배신자 공작을 군홧발로 짓밟으세요! 그리고
+어둠의 썬더 왕자에게 당신의 필연적인 승리를 아무도 막을 수 없음을
+가르쳐 주세요.
+
+$Button=지식 보기,ShowTechnology,55
+$Button=미션 시작,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>성공!</h2>
+<p>
+배신자 공작이 무너졌습니다! 어둠의 썬더 왕자와 맺은 그의
+어리석은 동맹을 깨뜨렸습니다.
+당신의 제국 곳곳의 배신자들에게 교훈이 되기를!
+<$Config,Done{mission.fileName}=1>
+$Button=미션 나가기,MissionAbort,1
+$Button=다음 미션,MissionBegin,TheNoose
+
+
+[Failed]
+<h2>실패!</h2>
+<p>
+어둠의 썬더 왕자와 그의 새 친구 레인 공작의 손에 굴욕적인
+패배를 당했습니다. 그들의 연합군이 당신의 섬을 짓밟고 약탈하는 동안
+당신은 초라하고 무력하게 지켜볼 뿐입니다.
+$Button=계속,Tell,TryAgain
+
+[END]

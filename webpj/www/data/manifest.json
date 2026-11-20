@@ -2459,6 +2459,38 @@
       "size": 1954,
       "sha256": "27ae6aeee45928492c13d6f950eb572f13a232c3465132f72829e7c6a8452255",
       "use": "한국어 캠페인 미션 대본(UTF-8): 원본 FragileFortune.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
+    },
+    {
+      "path": "d/ThunderingPower.korean",
+      "source": "webpj/translations/ThunderingPower.korean",
+      "bundle": "korean",
+      "size": 5426,
+      "sha256": "609ba9bc25a8acabd8eade92fdcff4fec9403231eb7f8124429e4044dc50215c",
+      "use": "한국어 캠페인 미션 대본(UTF-8): 원본 ThunderingPower.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
+    },
+    {
+      "path": "d/DissolvedAlliance.korean",
+      "source": "webpj/translations/DissolvedAlliance.korean",
+      "bundle": "korean",
+      "size": 2117,
+      "sha256": "fd2f19c3cf62d39517e8c2aba088b20ba64b56df5ae4505789b0c59b00334f84",
+      "use": "한국어 캠페인 미션 대본(UTF-8): 원본 DissolvedAlliance.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
+    },
+    {
+      "path": "d/TheNoose.korean",
+      "source": "webpj/translations/TheNoose.korean",
+      "bundle": "korean",
+      "size": 2103,
+      "sha256": "1d8814e360f494b5d458483583607be313af67917d86655260b46ee9f5fc5f4d",
+      "use": "한국어 캠페인 미션 대본(UTF-8): 원본 TheNoose.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
+    },
+    {
+      "path": "d/RainVsRain.korean",
+      "source": "webpj/translations/RainVsRain.korean",
+      "bundle": "korean",
+      "size": 1732,
+      "sha256": "7e54e1d72f0fd1a19fb50381a51cce7421dbd85b191185909b22245f1a68be85",
+      "use": "한국어 캠페인 미션 대본(UTF-8): 원본 RainVsRain.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
     }
   ]
 }

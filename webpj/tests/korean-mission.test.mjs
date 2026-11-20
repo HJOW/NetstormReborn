@@ -159,10 +159,11 @@ test('한국어 캠페인 미션 대본: 실행 설정·섹션·명령은 원본
     const manifest = JSON.parse(fs.readFileSync(path.join(DATA_ROOT, 'manifest.json'), 'utf8'));
     const files = readDataMap(manifest.files.filter((entry) => entry.bundle === 'menu' || entry.bundle === 'korean').map((entry) => entry.path));
     const archive = new TaffArchive(readData('netstorm.tarc'));
-    const header = (text) => text.split(/^\[(?!Header\])/m)[0].split(/\r?\n/).filter((line) => line.trim() && !/^(title|aiName)\s*=/i.test(line)).join('\n');
+    const header = (text) => text.split(/^\[(?!Header\])/m)[0].split(/\r?\n/).filter((line) => line.trim() && !/^(title|ai\d*Name)\s*=/i.test(line)).join('\n');
     const sections = (text) => [...text.matchAll(/^\[([^\]]+)\]/gm)].map((match) => match[1]);
     const commands = (text) => [...text.matchAll(/^\$Button=[^,]*,([^\r\n]+)|(<\$[^>]+>)/gm)].map((match) => match[1] ?? match[2]);
     const pictures = (text) => [...text.matchAll(/<!"[^>]+>/g)].map((match) => match[0]);
+    const enemyNames = (text) => [...text.matchAll(/^ai\d*Name\s*=\s*"([^"]*)"/gim)].map((match) => match[1]);
     const data = GameData.build({ files, language: 'korean' });
     assert.ok(KOREAN_CAMPAIGN_MISSIONS.length >= 4);
     for (const name of KOREAN_CAMPAIGN_MISSIONS) {
@@ -174,7 +175,10 @@ test('한국어 캠페인 미션 대본: 실행 설정·섹션·명령은 원본
         // 제목과 적 이름은 한국어이고 영어 문자 단어가 남지 않는다.
         const mission = new MissionScript(data, name);
         try {
-            assert.match(mission.get('title'), /[가-힣]/u, `${name} 제목`); assert.match(mission.get('aiName'), /[가-힣]/u, `${name} 적 이름`);
+            assert.match(mission.get('title'), /[가-힣]/u, `${name} 제목`);
+            // 적 이름(aiName·aiNName)은 원문과 같은 개수이고 모두 한글이다.
+            assert.equal(enemyNames(source).length, enemyNames(original).length, `${name} 적 이름 개수`); assert.ok(enemyNames(source).length > 0);
+            for (const enemy of enemyNames(source)) assert.match(enemy, /[가-힣]/u, `${name} 적 이름 ${enemy}`);
             for (const section of ['A.', 'Succeeded', 'Failed']) { const body = mission.section(section); assert.match(body, /[가-힣]/u, `${name} ${section}`); assert.doesNotMatch(body.replace(/<[^>]*>|\$Button=[^\r\n]*|\{[^}]*\}/g, ''), /[A-Za-z]{4,}/u, `${name} ${section} 영어 잔재`); }
         } finally { mission.dispose(); }
     }
