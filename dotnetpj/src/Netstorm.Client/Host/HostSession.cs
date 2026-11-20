@@ -1170,7 +1170,7 @@ public sealed partial class HostSession
             NotifySurface = sid => (_fortBuilding ?? throw new InvalidOperationException("세션 연결 표면 통지 미연결(R6)")).NotifySurface(sid),
         });
         // 세션 지형 Pop의 공통 후처리 분배기다. 섬·표면 접두를 같은 세션 장치에 잇고 그 밖의 파생은 R6에서 잇는다.
-        _terrainPostPop = new RawPostPop(Pool, types, TerrainBookkeeping, null, sid => _islandConnections.Connect(sid));
+        _terrainPostPop = TrackPostPopRuntime(new RawPostPop(Pool, types, TerrainBookkeeping, null, sid => _islandConnections.Connect(sid)));
         if (Pool.Edition == OriginalEdition.Patch1078)
         {
             _terrainPostPop.BindCurrentTypes(types);
@@ -1656,7 +1656,7 @@ public sealed partial class HostSession
             Checking = new RawCheckingFlag(() => AiChecking.Read()),
             Assertion = (expression, file, line) => throw new InvalidOperationException($"세션 그래프 원본 진단: {expression} {file}:{line}"),
         });
-        _terrainPostPop = new RawPostPop(Pool, _terrainPopTypes, TerrainBookkeeping, _worldGraph, sid => _islandConnections.Connect(sid));
+        _terrainPostPop = TrackPostPopRuntime(new RawPostPop(Pool, _terrainPopTypes, TerrainBookkeeping, _worldGraph, sid => _islandConnections.Connect(sid)));
         if (Pool.Edition == OriginalEdition.Patch1078)
         {
             _terrainPostPop.BindCurrentTypes(_terrainPopTypes);
@@ -3630,7 +3630,7 @@ public sealed partial class HostSession
             Pool, IslandHash, IslandRecords, IslandModes, IslandResidences,
             () => IslandChanged, value => IslandChanged = value,
             () => IslandRevision, value => IslandRevision = value, islandHooks);
-        var inner = new RawPostPop(Pool, types, new RawPostPopState { Suppressed = true });
+        var inner = TrackPostPopRuntime(new RawPostPop(Pool, types, new RawPostPopState { Suppressed = true }));
         var player = ReferenceEquals(playerHooks, _livePlayerHooks)
             ? PlayerWorld
             : new RawPlayerWorld(Pool, inner, PlayerRecords, MissionPlayer, playerHooks);

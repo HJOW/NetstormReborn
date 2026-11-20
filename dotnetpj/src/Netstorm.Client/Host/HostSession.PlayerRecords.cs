@@ -80,6 +80,7 @@ public sealed partial class HostSession
     public void ReleasePlayerRecordViews()
     {
         EnsureRuntimeCanRelease(); if (_playerRecordsReleased) return;
+        BindRuntimePin(null);
         ReleaseMissionAiBrains();
         ReleaseConstructionWorld();
         ReleasePlayerProcesses();

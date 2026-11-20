@@ -103,7 +103,7 @@ public sealed partial class HostSession
         // 같은 실제 자산과 현재 TYPE에서 생성자·초기 갱신이 읽는 에너지 문자열을 만든다.
         Func<uint, string> energy = AiTypeRequiredEnergy.BindAiTypeRequiredEnergy(types, definitions);
         // 생성자가 같은 PATCH 풀·Player 9기록을 읽는 최소 부모다. 화신 공장 장치는 아직 잇지 않아 빈 갈고리다.
-        var createPlayer = new RawPlayerWorld(Pool, new RawPostPop(Pool, types, new RawPostPopState()), PlayerRecords, MissionPlayer, new PlayerWorldHooks());
+        var createPlayer = new RawPlayerWorld(Pool, TrackPostPopRuntime(new RawPostPop(Pool, types, new RawPostPopState())), PlayerRecords, MissionPlayer, new PlayerWorldHooks());
         // 섬 조회가 같은 세션 기록·모드·목록·해시를 읽는 부모다. 거주 구역 owner는 실제 세션 지정으로 잇는다.
         // 0.644에서 거주 구역 owner를 실제 지정으로 이었다. 근거: cpppj ClientConstructionRegions.cpp 68행의 setResidenceOwner다.
         RawIslandRuntime islands = BuildIslands(new IslandRuntimeHooks
@@ -250,7 +250,7 @@ public sealed partial class HostSession
             throw new ArgumentException("AI 최소 화신의 실제 공장 풀 불일치", nameof(factory));
         }
 
-        return new RawPlayerWorld(Pool, new RawPostPop(Pool, types, new RawPostPopState()), PlayerRecords, MissionPlayer, new PlayerWorldHooks
+        return new RawPlayerWorld(Pool, TrackPostPopRuntime(new RawPostPop(Pool, types, new RawPostPopState())), PlayerRecords, MissionPlayer, new PlayerWorldHooks
         {
             Assertion = _ => throw new InvalidOperationException("AI 최소 화신의 실제 진단 미연결"),
             Find = (_, _, _) => 0,

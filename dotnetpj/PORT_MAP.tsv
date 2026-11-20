@@ -1191,3 +1191,5 @@ cpppj/src/client/NativeLoginPacketReceivers.cpp	Netstorm.Client/NativeLoginPacke
 cpppj/src/client/NativeLoginPacketReceivers.h	Netstorm.Client/NativeLoginPacketReceivers.cs	eeae45c69171943ad99db6c2930574ee7747ba76	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.FixedLoginPackets.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.FixedLoginPackets.cs	bda77381e54bc382937c720047ee4441086b46d7	port
+cpppj/src/client/RawSurfaceWorld.cpp	Netstorm.Client/Host/HostSession.Runtime.cs	c102cdbf36fca4e8661d0699ea2ce5f2f44b2934	port
+cpppj/src/client/RawSurfaceWorld.h	Netstorm.Client/Host/HostSession.Runtime.cs	14fd017c3b6ca87880374e044e3ac00bf0575c2e	port

@@ -62,7 +62,7 @@ public sealed partial class HostSession
         var owner = _playerOwner;
         var hash = _terrainHash;
         var display = _terrainDisplay;
-        var inner = new RawPostPop(Pool, types, TerrainBookkeeping);
+        var inner = TrackPostPopRuntime(new RawPostPop(Pool, types, TerrainBookkeeping));
         // 실제 호스트의 같은 현재 TYPE를 빌리되 최초 비용 snapshot은 별도로 보존한다.
         inner.BindCurrentTypes(types);
         // 전용 장치가 먼저 준비된 경우도 같은 실제 후처리 본체를 빌린다.
