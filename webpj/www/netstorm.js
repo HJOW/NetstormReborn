@@ -72,7 +72,7 @@ import { ProductionMaintenanceGlobals, ProductionMaintenancePanel } from './core
 import { GameMenuActions } from './core/game-menu-actions.js';
 import { gameMenuCommandValue, isGameMenuCommand, queuePlayerListKey } from './core/game-menu-commands.js';
 import { KnowledgeMenuKind } from './core/raw-knowledge-menu.js';
-import { readGameTimeSeconds } from './core/game-time-display.js';
+import { dispatchGameTimeKey, readGameTimeSeconds } from './core/game-time-display.js';
 import { idleMainMenuActivity } from './core/main-menu-activity.js';
 import { frameDue, frameRateChoices, normalizeFrameRate, parseFrameRateTarget } from './core/frame-rate-option.js';
 import { languageChoices, languageOfChoice, parseLanguageTarget, savedLanguage } from './platform/language-choice.js';
@@ -1481,7 +1481,7 @@ export class Netstorm {
         const session = production.session, empty = new Uint8Array(1), game = () => this._clientGameplay;
         const meta = () => { throw new Error('웹 제외 메타맵 참가자 이름 미연결'); };
         return { now: () => this._gameClock.wallSeconds(), suppressed: () => Boolean(game().world.missionPost),
-            view: () => ({ width: this._layout.logicalWidth, height: this._layout.logicalHeight, palette: this._clientPaletteScreen.colors() }),
+            view: () => ({ width: this._layout.logicalWidth, height: this._layout.logicalHeight, palette: this._clientPaletteScreen.colors(), inset: this._gameMenuButton?.logicalInset(this._layout.logicalWidth) ?? 0 }),
             context: { challenge: () => this._surfaceStorage.ownerMode.challenge ? 1 : 0, battle: () => this._surfaceStorage.ownerMode.battle ? 1 : 0,
                 playerName: (owner) => { if (owner > 0 && owner < 9) session.playerRecords().subarray(owner * 180 + 12, owner * 180 + 44); },
                 playerText: (owner) => owner <= 0 || owner >= 9 ? empty : session.playerRecords().subarray(owner * 180 + 12, owner * 180 + 44),
@@ -1660,8 +1660,8 @@ export class Netstorm {
             const code = (next.code & 0x03ffffff) >>> 0, release = Boolean(next.code & InputCode.release);
             const selectionKey = code === 0x50 || code === 0x70 || code === 0x52 || code === 0x72 || code === 0x4e || code === 0x6e;
             const productionKey = 'qwaszyxe'.includes(String.fromCharCode(code).toLowerCase()) && code < 256;
-            const cursorCancel = code === 0x1b, cursorRotate = code === 0x250000 || code === 0x270000;
-            if (code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_F6 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !MISSION_VIEW_KEYS.has(code) && code !== MISSION_F9 && !TUTORIAL_NOTICE_COMMANDS.has(code) && !isGameMenuCommand(code) && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && code !== InputCode.leftButton && code !== InputCode.rightButton) break;
+            const cursorCancel = code === 0x1b, cursorRotate = code === 0x250000 || code === 0x270000, gameTimeKey = code === 0x54 || code === 0x74;
+            if (code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_F6 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !MISSION_VIEW_KEYS.has(code) && code !== MISSION_F9 && !TUTORIAL_NOTICE_COMMANDS.has(code) && !isGameMenuCommand(code) && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && !gameTimeKey && code !== InputCode.leftButton && code !== InputCode.rightButton) break;
             const event = queue.pop(false);
             if (tutorial.event(event) || gump.input().route(event.code, event.x, event.y)) continue;
             if (code === InputCode.leftButton && !release && !this._mainMenu?.dialog) user.event(event);
@@ -1695,6 +1695,8 @@ export class Netstorm {
             }
             else if (code === PRODUCTION_BRIDGE_COMMAND && !release && !this._mainMenu?.dialog) this._dispatchCampaignBridgeProduction(event);
             else if (code === MISSION_VIEW_HOME || code === MISSION_VIEW_PRIEST) this._dispatchCampaignViewAction(event);
+            // T/t: 게임 시간 표시 켜기·끄기다. 정지 중에는 바꾸지 않고(원본 정지 관문) 안내는 Kernel 프레임 뒤에 만든다. (2026-11-20 WB04-E1097)
+            else if (gameTimeKey) { if (!release && !this._mainMenu?.dialog) dispatchGameTimeKey(event, this._clientGameplay.showGameTime(), () => this._gameClock.paused()); }
             // F2·Shift-F3·F8 은 표시 키 분배기, F9 는 플레이어 목록 명령 예약이다. 뗌은 소비만 한다. (2026-11-20 WB04-E1087)
             else if (MISSION_VIEW_KEYS.has(code) || code === MISSION_F9) { if (!release && !this._mainMenu?.dialog) { if (code === MISSION_F9) queuePlayerListKey(event, this._clientInputQueue); else dispatchViewKeyInput(event, this._viewKeyGlobals(), this._viewKeyHooks()); } }
             else if (isGameMenuCommand(code) && !release && !this._mainMenu?.dialog) { if (this._dispatchCampaignMenuCommand(event)) break; }
@@ -1724,6 +1726,8 @@ export class Netstorm {
         const world = this._campaignWorld, kernel = this._clientKernel;
         if (!world || !kernel || world.connecting || world.session().connectionCallbackActive()) throw new Error('미션 Kernel 프레임의 현재 World·Kernel 수명 오류');
         world.prepareKernelFrame(); kernel.runFrame(); world.finishKernelFrame();
+        // 원본 `00439b43..64`: 전투 모드이고 T 키로 켠 게임 시간 표시 값이 있으면 매 프레임 Game Time 안내(종류 16, 0.1초 기한)를 같은 20칸 표에 요청한다. (2026-11-20 WB04-E1097)
+        if (this._surfaceStorage.ownerMode.battle && this._clientGameplay.showGameTime().value) this._campaignProduction?.ui?.warnings()?.gameTimeStatus();
     }
 
     // 현재 미션의 실제 화면·구름·카메라·Gump에 원본 Renderer의 표시 전 준비를 연결한다.
@@ -2919,7 +2923,7 @@ export class Netstorm {
             event.preventDefault(); queueBrowserVirtualKeyEvent(this._clientInputQueue, event, this._input.pointer, false);
         }
         // ESC 는 조각을 들고 있으면 취소, 아니면 게임 메뉴막대 전환이므로 항상 큐에 넣고 입력 프레임이 판단한다. (2026-11-20 WB04-E1084)
-        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && !event.isComposing && !this._clientComposing && !event.ctrlKey && !event.altKey && !event.metaKey && (/^[nprqwaszyxe]$/iu.test(event.key ?? '') || event.key === 'Escape')) queueBrowserCharacterEvent(this._clientInputQueue, event, this._input.pointer);
+        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && !event.isComposing && !this._clientComposing && !event.ctrlKey && !event.altKey && !event.metaKey && (/^[nprqwaszyxet]$/iu.test(event.key ?? '') || event.key === 'Escape')) queueBrowserCharacterEvent(this._clientInputQueue, event, this._input.pointer);
         if (PREVENTED_KEYS.has(event.code)) event.preventDefault();
         this._retryAudioOnGesture();
         // 미리보기의 키 정책은 게임 명령과 분리한다. Escape는 메뉴로 돌아가며 방향키는 카메라만 바꾼다. (2026-11-02 WB03-AA)

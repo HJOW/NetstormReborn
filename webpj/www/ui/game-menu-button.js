@@ -32,6 +32,12 @@ export class GameMenuButton {
         const style = this.#button.style, right = layout.left + layout.cssWidth;
         style.left = 'auto'; style.right = `${Math.max(0, this.#root.clientWidth - right + MARGIN)}px`; style.top = `${layout.top + MARGIN}px`;
     }
+    // 버튼이 보일 때 Canvas 오른쪽 끝에서 차지하는 폭을 논리 픽셀로 돌려준다(버튼 폭 + 오른쪽 간격 + 안내와의 간격). 숨겨져 있거나 크기를 알 수 없으면 0 이다. 상단 경고 안내가 버튼 뒤로 가려지지 않게 비우는 데 쓴다. (2026-11-20 WB04-E1097)
+    logicalInset(logicalWidth) {
+        if (!this.#layout || this.#button.style.display === 'none' || !(this.#layout.cssWidth > 0)) return 0;
+        const width = this.#button.getBoundingClientRect?.().width ?? 0;
+        return width > 0 ? Math.ceil((width + MARGIN + 6) * logicalWidth / this.#layout.cssWidth) : 0;
+    }
     // 버튼을 보인다.
     show() { this.#button.style.display = 'block'; if (this.#layout) this.layout(this.#layout); }
     // 버튼을 숨긴다.

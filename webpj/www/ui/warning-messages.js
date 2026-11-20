@@ -81,10 +81,10 @@ export class WarningMessages {
     node(token) { return this.#messages.get(token) ?? null; }
     // 부모가 공통 Gump를 먼저 정리한 뒤 Draw 대여와 파생 저장소만 반납한다.
     destroy() { this.#menus.setExternalGumps(DRAW_SLOT, {}); this.#messages.clear(); }
-    // 실제 팔레트/현재 화면과 같은 root의 크기만 갱신한다. 이미 저장된 글자 문맥은 바꾸지 않는다.
-    setView(width, height, palette) {
-        width |= 0; height |= 0; if (width <= 0 || height <= 0) throw new TypeError('Warning 화면 크기 오류');
-        this.#menus.setPalette(palette); this.#state.screenWidth = width; this.#common.create.screenWidth = width; this.#common.create.screenHeight = height;
+    // 실제 팔레트/현재 화면과 같은 root의 크기만 갱신한다. 이미 저장된 글자 문맥은 바꾸지 않는다. inset 은 웹 전용으로 오른쪽 끝에서 안내를 띄울 간격(논리 픽셀)이며 우측 상단 버튼이 안내를 가리지 않게 한다(기본 0, 원문과 같음). (2026-11-20 WB04-E1097)
+    setView(width, height, palette, inset = 0) {
+        width |= 0; height |= 0; inset = Math.max(0, inset | 0); if (width <= 0 || height <= 0) throw new TypeError('Warning 화면 크기 오류');
+        this.#menus.setPalette(palette); this.#state.screenWidth = width - inset; this.#common.create.screenWidth = width; this.#common.create.screenHeight = height;
         const root = this.#common.create.entries[0]; if (root) { const node = this.#common.node(root); node.baseWidth = node.width = Math.fround(width); node.baseHeight = node.height = Math.fround(height); }
     }
     // 원문 Warning(kind17/player0/enabled1/parameter0)을 같은 표에 요청한다.

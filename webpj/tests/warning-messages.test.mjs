@@ -114,3 +114,11 @@ test('common.allocate 가 있으면 새 파생 노드 객체를 넘기고 돌려
     // allocate 가 없으면 원문처럼 토큰 공급기(common.token)만 쓴다.
     const plain = warningScene(); plain.messages.pauseStatus(true); assert.equal(plain.rows()[0].token, 100);
 });
+
+test('setView 의 inset 은 안내를 오른쪽 끝에서 그만큼 안쪽에 띄우되 등록표 화면 폭은 바꾸지 않는다(웹 우측 상단 버튼, 2026-11-20 WB04-E1097)', () => {
+    const plain = warningScene(); plain.messages.add('~E~yInset'); const baseX = plain.rows()[0].x;
+    const shifted = warningScene(); shifted.messages.setView(640, 480, shifted.palette, 40); shifted.messages.add('~E~yInset');
+    assert.equal(shifted.rows()[0].x, baseX - 40); assert.equal(shifted.create.screenWidth, 640);
+    // 음수·소수 inset 은 0 이상의 정수로 정리하고 기본값은 원문과 같다.
+    const odd = warningScene(); odd.messages.setView(640, 480, odd.palette, -5); odd.messages.add('~E~yInset'); assert.equal(odd.rows()[0].x, baseX);
+});

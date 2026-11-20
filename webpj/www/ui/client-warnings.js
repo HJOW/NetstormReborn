@@ -1,6 +1,7 @@
 // 미션 화면 오른쪽 위에 쌓이는 경고·상태 안내(Game Paused!·Game Time·Warning 문장·SP 수신 등)를 실제 Client Gump 루트와 글자 장치에 연결한다.
 // 근거: cpppj `UberGump` 의 `warnings_`(`RawButtonControls::EnableWarnings` → `WarningMessages`)와 `MessageGumpHooks pauseContext`.
 // 사용: const warnings = new ClientWarnings(root, text, fonts, { now, sound, translate, context, suppressed, view, changed });
+// devices.view() 는 { width, height, palette, inset(선택) } 이며 inset 은 오른쪽 끝에서 비울 논리 픽셀(웹 우측 상단 버튼 폭)이다.
 //   warnings.pauseStatus(true/false) → 'Game Paused!' 안내를 만들거나 지운다(원본 Pause 메뉴 명령의 상태 표시, 종류 11).
 //   warnings.add(문장)·addNull()·gameTimeStatus()·battleStatus(kind, player, parameter)·remove(kind, player, parameter) → 같은 20칸 표에 요청.
 //   warnings.hasMessages()·report()·close() → 살아 있는 안내 확인, 원문 TSV 보고, 미션 반납 때 정리.
@@ -36,7 +37,7 @@ export class ClientWarnings {
         return result;
     }
     // 안내를 만들기 전에 현재 논리 화면 크기를 원본처럼 안내 처리기에 알린다(`SetView`).
-    #view() { const view = this.#devices.view(); this.#messages.setView(view.width, view.height, view.palette); }
+    #view() { const view = this.#devices.view(); this.#messages.setView(view.width, view.height, view.palette, view.inset ?? 0); }
     // 원본 Warning(종류 17) 문장을 요청한다.
     add(text) { this.#view(); this.#messages.add(text); this.#devices.changed(); }
     // 원본 NULL 문장을 요청한다.
