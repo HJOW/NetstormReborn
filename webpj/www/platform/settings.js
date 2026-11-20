@@ -19,7 +19,7 @@ export const VOLUME_STEP_MAX = 5;
 export const INTEGER_MIN = -2147483648;
 export const INTEGER_MAX = 2147483647;
 
-// 설정 키 정의이다. kind 는 'toggle'(0/1)·'volume'(1~5)·'integer'(부호 있는 32비트 정수), fallback 은 기본값이다.
+// 설정 키 정의이다. kind 는 'toggle'(0/1)·'volume'(1~5)·'integer'(부호 있는 32비트 정수)·'text'(영숫자·밑줄·쉼표만의 짧은 문자열), fallback 은 기본값이다.
 // 기본값은 options.cfg 없는 원본 최초 실행과 cpppj1314의 해석값을 따른다:
 //  - 소리·음악·바람 소리·가장자리 스크롤·자동 데모·시작 팁은 켜짐, 좌우 스피커 교환은 꺼짐, 효과음·음악 음량은 모두 5. 기존 저장값은 load에서 우선한다. (2026-11-16 WB04-E616)
 //  - welcomeGiven(첫 실행 환영 창을 이미 보여 줬는가, 원본 setup.cfg 기본 0)과 tipNumber(다음에 보일 시작 팁 번호, 원본 setup.cfg 기본 0)는 시작 창이 쓴다. (2026-10-30 WB03-J)
@@ -43,7 +43,17 @@ export const SETTING_DEFINITIONS = Object.freeze({
     difficulty: Object.freeze({ kind: 'integer', fallback: 0 }),
     welcomeGiven: Object.freeze({ kind: 'toggle', fallback: 0 }),
     tipNumber: Object.freeze({ kind: 'integer', fallback: 0 }),
+    // 12차 스커미시 설정이다(core/skirmish-setup.js 의 loadSkirmishSettings 가 읽는 키 이름과 같다): AI 수(1~7), 소유자 2~8 AI 의 난이도(1 쉬움·2 보통·3 어려움)와 동맹(0/1), 금지 유닛 이름 목록(쉼표 구분, 최대 5개). (2026-11-20 WB04-E1102)
+    skirmishAiCount: Object.freeze({ kind: 'integer', fallback: 1 }),
+    ...Object.fromEntries(Array.from({ length: 7 }, (_, index) => index + 2).flatMap((owner) => [
+        [`skirmishAi${owner}Diff`, Object.freeze({ kind: 'integer', fallback: 2 })],
+        [`skirmishAi${owner}Ally`, Object.freeze({ kind: 'toggle', fallback: 0 })],
+    ])),
+    skirmishBans: Object.freeze({ kind: 'text', fallback: '' }),
 });
+
+// 'text' 종류가 받는 문자열의 최대 길이이다(금지 유닛 5개의 이름과 쉼표가 충분히 들어간다). (2026-11-20 WB04-E1102)
+export const TEXT_MAX_LENGTH = 200;
 
 // 설정 키 이름을 대소문자 무시로 정식 이름(SETTING_DEFINITIONS 의 키)으로 바꾼다. 설정 키가 아니면 null 이다.
 // 게임 데이터 설정 층은 키의 대소문자를 가리지 않으므로, 그쪽에서 쓰인 이름(`SOUND` 등)을 이 모듈의 키로 되돌릴 때 쓴다. (2026-10-30 WB03-H)
@@ -62,6 +72,7 @@ export function normalizeSetting(key, value) {
         if (value === false || value === 0 || value === '0') return 0;
         return null;
     }
+    if (definition.kind === 'text') return typeof value === 'string' && value.length <= TEXT_MAX_LENGTH && /^[A-Za-z0-9_,]*$/u.test(value) ? value : null;
     if (definition.kind === 'integer') {
         const integer = typeof value === 'string' && /^-?\d+$/.test(value) ? Number(value) : value;
         return Number.isInteger(integer) && integer >= INTEGER_MIN && integer <= INTEGER_MAX ? integer : null;

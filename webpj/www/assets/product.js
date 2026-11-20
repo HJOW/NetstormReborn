@@ -32,6 +32,14 @@ export const PRODUCT_CREDITS_TARGET = `${PRODUCT_CREDITS_OBJECT}.Credits`;
 // 세 번째 행을 덧붙일 원본 Tell 섹션 이름이다(메인 메뉴 Credits 버튼의 대상, 대소문자 무시 비교). (2026-11-05 WB03-AC)
 const CREDITS_SECTION = 'credits';
 
+// 12차 스커미시: 설정 화면의 첫 Tell 대상(`Patch1101.Skirmish`)과 Campaign 목록(UCampaign)의 항목 이름이다. cpppj ProductTellBody 와 같다. (2026-11-20 WB04-E1102)
+export const PRODUCT_SKIRMISH_TARGET = `${PRODUCT_CREDITS_OBJECT}.Skirmish`;
+export const PRODUCT_SKIRMISH_LABELS = Object.freeze({ english: 'Skirmish', korean: '스커미시' });
+// Skirmish 항목을 덧붙일 원본 Tell 섹션 이름이다(메인 메뉴 Campaign 버튼의 대상, 대소문자 무시 비교). (2026-11-20 WB04-E1102)
+const CAMPAIGN_SECTION = 'ucampaign';
+// 스커미시 화면 Tell 섹션의 자리 틀이다. 실제 본문은 앱이 설정으로 만들지만 Tell 이름 조회(`Patch1101.SkirmishCount` 등)가 섹션을 찾도록 같은 이름의 섹션이 있어야 한다(cpppj kPatchCredits). (2026-11-20 WB04-E1102)
+const SKIRMISH_SECTIONS = ['[Skirmish]', '<h2>Skirmish</h2>', '[SkirmishCount]', '<h2>Skirmish</h2>', '[SkirmishAi]', '<h2>Skirmish</h2>', '[SkirmishBans]', '<h2>Skirmish</h2>', ''].join('\n');
+
 // 제품 Credits 를 제공하는 언어(파일 확장자 이름)별 목록 행 이름이다. 영어는 AGENTS.md 가 정한 표기 그대로이고,
 // 한국어는 기존 한국어 Tell 의 "NetStorm 10.72 패치 크레딧" 번역 규칙을 따른다. 없는 언어는 영어를 쓴다. (2026-11-05 WB03-AC)
 export const PRODUCT_CREDITS_LABELS = Object.freeze({
@@ -99,7 +107,7 @@ function productLanguage(language) {
 // 언어의 제품 Credits 섹션 원문(`[Credits]` 머리 포함)을 돌려준다. 등록 설정 객체 Patch1101 의 버퍼로 쓴다.
 // 사용: new Config(registry, PRODUCT_CREDITS_OBJECT).append(productCreditsText('korean')). (2026-11-05 WB03-AC)
 export function productCreditsText(language) {
-    return PRODUCT_CREDITS_SECTIONS[productLanguage(language)];
+    return PRODUCT_CREDITS_SECTIONS[productLanguage(language)] + SKIRMISH_SECTIONS;
 }
 
 // 언어의 세 번째 Credits 목록 행 이름을 돌려준다. (2026-11-05 WB03-AC)
@@ -110,7 +118,14 @@ export function productCreditsLabel(language) {
 // 메인 Credits 섹션 본문에 세 번째 행 하나만 덧붙인 본문을 돌려준다. 다른 섹션이거나, 본문에 이미 제품 대상이 있으면(중복 확장 방지) 원문 그대로이다.
 // target 은 지역 인자를 뗀 Tell 섹션 이름이며 대소문자를 무시해 비교한다(원본 Tell 이름 비교 규칙). 원본 두 행·Cancel 버튼은 그대로 둔다.
 // 사용: productTellBody('Credits', 원본본문, 'english') → 원본본문 + "\n$Menu=Netstorm 11.01 Patch Credits,Tell,Patch1101.Credits\n". (2026-11-05 WB03-AC)
-export function productTellBody(target, body, language) {
-    if (asciiLower(String(target)) !== CREDITS_SECTION || body.includes(PRODUCT_CREDITS_TARGET)) return body;
+// 12차 스커미시: skirmish 가 참이면 Campaign 목록(UCampaign)에도 Skirmish 항목을 원문 목록과 첫 버튼 사이에 한 번만 넣는다(cpppj ProductTellBody). 스커미시를 켜지 않은 판본은 원문 그대로이다. (2026-11-20 WB04-E1102)
+export function productTellBody(target, body, language, { skirmish = false } = {}) {
+    const lower = asciiLower(String(target));
+    if (skirmish && lower === CAMPAIGN_SECTION) {
+        if (body.includes(PRODUCT_SKIRMISH_TARGET)) return body;
+        const entry = `$Menu=${PRODUCT_SKIRMISH_LABELS[productLanguage(language)]},Tell,${PRODUCT_SKIRMISH_TARGET}\n`, back = body.indexOf('$Button=');
+        return back === -1 ? `${body}${entry}` : `${body.slice(0, back)}${entry}${body.slice(back)}`;
+    }
+    if (lower !== CREDITS_SECTION || body.includes(PRODUCT_CREDITS_TARGET)) return body;
     return `${body}\n$Menu=${productCreditsLabel(language)},Tell,${PRODUCT_CREDITS_TARGET}\n`;
 }

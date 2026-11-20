@@ -467,7 +467,8 @@ export class TellWindow {
 // excludedLists 는 파일 목록 메뉴에서 뺄 목록 객체 이름 배열이다. 생략하면 웹 판본 제외 목록(tell-lists.js WEB_EXCLUDED_LIST_OBJECTS)이며,
 // cpppj 오라클과 비교하는 원본 비교 모드는 빈 배열을 넘겨 원본처럼 모든 행(User Made Campaigns 포함)을 만든다. (2026-11-07 WB02-H)
 // missionSection은 현재 미션 본문 조회이며 suppressWindow는 창 없이 첫 변환의 명령만 처리한다.
-export function createTellWindow({ gameData, resources, name, screen, nowSeconds = 0, now = () => 0, onCommand = null, onLink = null, onSound = null, onUnsupported = null, onTrace = null, hooks = {}, excludedLists = undefined, missionSection = null, suppressWindow = false }) {
+// bodyFor 는 선택적 본문 대체 함수 (대상 전체 이름, 제품 표기를 적용한 본문) => 문자열|null 이다. 문자열이면 그 본문으로 창을 만든다(12차 스커미시 설정 화면). (2026-11-20 WB04-E1102)
+export function createTellWindow({ bodyFor = null, gameData, resources, name, screen, nowSeconds = 0, now = () => 0, onCommand = null, onLink = null, onSound = null, onUnsupported = null, onTrace = null, hooks = {}, excludedLists = undefined, missionSection = null, suppressWindow = false }) {
     const inlineCommands = [];
     if (asciiLower(name) === 'blank') return { window: null, empty: false, missing: false, blank: true, inlineCommands };
     // 지역 인자 객체이다. 같은 이름의 바깥 객체는 일시적으로 가려지고 본문 처리 뒤 내려간다.
@@ -483,7 +484,9 @@ export function createTellWindow({ gameData, resources, name, screen, nowSeconds
         const found = gameData.findTellSection(sectionName, missionSection);
         if (found === null) return { window: null, empty: false, missing: true, blank: false, inlineCommands };
         // 제품 표기(메인 Credits 의 세 번째 Patch Credits 행)를 원문 본문에 적용한다. 같은 HTML 창·메뉴·입력 경로를 그대로 쓴다(cpppj UberGump 의 ProductTellBody 자리). (2026-11-05 WB03-AC)
-        const body = gameData.presentTellBody(sectionName, found);
+        // bodyFor(대상 전체 이름, 제품 표기를 적용한 본문)이 문자열을 돌려주면 그 본문을 쓴다(12차 스커미시 화면처럼 앱 상태로 만드는 본문). (2026-11-20 WB04-E1102)
+        const presented = gameData.presentTellBody(sectionName, found);
+        const body = bodyFor ? (bodyFor(name, presented) ?? presented) : presented;
         // 본문 변환·지시문 추출에 쓰는 훅이다: `@`·`#` 파일 목록은 설정 객체를 등록해 행을 만들고, 조건 태그는 설정 값으로 평가하며,
         // 스크립트 명령은 모아 두고, 링크는 링크 표에 모으며, 지원하지 않는 기능은 onUnsupported 로 알린다.
         const links = new LinkTable();

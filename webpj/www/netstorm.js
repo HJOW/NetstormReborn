@@ -78,6 +78,7 @@ import { frameDue, frameRateChoices, normalizeFrameRate, parseFrameRateTarget } 
 import { dispatchScreenshotKey, encodeScreenshotGif, screenshotFileName, screenshotPrimaryPalette } from './core/screenshot-gif.js';
 import { languageChoices, languageOfChoice, parseLanguageTarget, savedLanguage } from './platform/language-choice.js';
 import { difficultyChoices, parseDifficultyTarget } from './core/difficulty-option.js';
+import { applySkirmishAction, buildSkirmishScreen, loadSkirmishSettings, parseSkirmishTarget, saveSkirmishSettings } from './core/skirmish-setup.js';
 import { dispatchViewKeyInput } from './core/view-key-input.js';
 import { GameMenuButton } from './ui/game-menu-button.js';
 import { CHAT_RECORD_BYTES, RawChatChannels } from './core/raw-chat-channels.js';
@@ -517,6 +518,10 @@ export class Netstorm {
             // Campaign 목록의 User Made Campaigns 행)를 원본처럼 보여 cpppj 오라클·원본 스크린샷과 같은 배치로 비교한다. 그 요소들의 동작(Edit·멀티플레이 등)은 여전히 구현하지 않는다.
             // 무브라우저 실행(tools/headless.mjs)의 오라클 비교 전용이며 기본값 false 이다. (2026-11-07 WB02-H)
             originalComparison: options.originalComparison ?? false,
+            // 12차 스커미시를 Campaign 목록에 보일지 여부이다. 월드 생성까지 연결되기 전에는 기본 false 이고 `?skirmish` 주소 옵션이나 검사가 켠다. (2026-11-20 WB04-E1102)
+            skirmish: options.skirmish ?? params.has('skirmish'),
+            // 스커미시 시작 함수 (설정) => boolean 이다. 기본(null)은 앱의 미션 시작이며 아직 연결 전이면 안내만 남기고 false 를 돌려준다. 검사가 시작 호출만 받도록 바꿔 끼운다. (2026-11-20 WB04-E1102)
+            startSkirmish: options.startSkirmish ?? null,
             // 호스트가 정한 음량 단계(1~5)이다. 없으면(null) 저장된 설정을 쓴다. 정하면 저장하지 않고 이번 실행에서만 우선한다. (2026-10-29 WB03-F)
             soundVolume: options.soundVolume ?? null,
             musicVolume: options.musicVolume ?? null,
@@ -1914,6 +1919,7 @@ export class Netstorm {
                     language: this.options.language,
                     options: { ...this._settings.snapshot(), ...this._progress.snapshot() },
                     onChange: (key, value) => this._onConfigWrite(key, value),
+                    skirmish: this.options.skirmish,
                 });
                 this._assetLoader = loader;
                 this._buttonSoundBytes = files.get(MENU_ASSET_PATHS.buttonSound) ?? null;
@@ -2194,7 +2200,17 @@ export class Netstorm {
         // 난이도 선택(`Patch1101.SetDifficulty(n)`)은 창 없이 difficulty 설정에 써서 저장한다. 새 미션의 적 AI 생성 때 적용된다. (2026-11-20 WB04-E1096)
         const difficulty = parseDifficultyTarget(name);
         if (difficulty !== null) { this._settings?.set('difficulty', difficulty); this._displayDirty = true; return true; }
+        // 스커미시 설정 변경(`Patch1101.SkirmishSet(...)`)은 창 없이 설정에 쓰고 알맞은 화면을 다시 연다. 시작(`Patch1101.SkirmishStart`)은 창 없이 미션 시작으로 간다(cpppj UberGump TryTell). (2026-11-20 WB04-E1102)
+        const skirmish = parseSkirmishTarget(name);
+        if (skirmish.kind === 'set' || skirmish.kind === 'start') {
+            const settings = this._loadSkirmishSettings();
+            // 시작하지 못했으면(월드 생성 미연결·후보 부족) 단추가 닫은 설정 첫 화면을 다시 열어 사용자가 화면 밖으로 떨어지지 않게 한다. (2026-11-20 WB04-E1102)
+            if (skirmish.kind === 'start') { if (this._startSkirmish(settings)) return true; this._openTell('Patch1101.Skirmish'); return false; }
+            const next = applySkirmishAction(settings, skirmish.args); this._storeSkirmishSettings(settings);
+            return this._openTell(next, { suppressWindow });
+        }
         const result = createTellWindow({
+            bodyFor: (target, presented) => this._skirmishScreenBody(target) ?? presented,
             gameData: this._gameData,
             resources: this._resources,
             name,
@@ -2233,6 +2249,31 @@ export class Netstorm {
             return true;
         }
         console.info(`Netstorm: 스크립트 명령 '${command.name}' 은(는) 아직 구현되지 않았습니다.`, command);
+        return false;
+    }
+
+    // 12차 스커미시: 설정 저장소에서 현재 스커미시 설정(AI 수·AI별 난이도/동맹·금지 유닛)을 읽는다. 값이 없거나 범위 밖이면 기본값이다. (2026-11-20 WB04-E1102)
+    _loadSkirmishSettings() {
+        return loadSkirmishSettings((key) => String(this._settings?.get(key) ?? ''));
+    }
+
+    // 12차 스커미시: 설정을 설정 저장소에 쓴다(바뀐 값만 저장·통지된다). (2026-11-20 WB04-E1102)
+    _storeSkirmishSettings(settings) {
+        saveSkirmishSettings((key, value) => { this._settings?.set(key, value); }, settings);
+    }
+
+    // 12차 스커미시: 대상이 설정 화면(첫 화면·AI 수·AI 한 명·금지 유닛)이면 현재 설정과 언어로 만든 Tell 본문을, 아니면 null 을 돌려준다.
+    // 금지 유닛 이름은 메뉴 번역표(한국어 xlat)로 번역한다. 언어 번호는 원문 규칙(0 영어, 7 한국어)이다. (2026-11-20 WB04-E1102)
+    _skirmishScreenBody(target) {
+        const parsed = parseSkirmishTarget(target);
+        if (!['main', 'count', 'ai', 'bans'].includes(parsed.kind) || !this._gameData || !this._resources) return null;
+        return buildSkirmishScreen(parsed, this._loadSkirmishSettings(), this._gameData.productLanguage === 'korean' ? 7 : 0, (text) => this._resources.translate(text));
+    }
+
+    // 12차 스커미시: 설정으로 게임을 시작한다. 시작 함수(options.startSkirmish)가 없으면 아직 월드 생성과 연결되지 않았으므로 안내만 남기고 시작하지 않는다(E1104 이후 연결). 시작했으면 true 이다. (2026-11-20 WB04-E1102)
+    _startSkirmish(settings) {
+        if (this.options.startSkirmish) return Boolean(this.options.startSkirmish(settings));
+        console.warn('Netstorm: 스커미시 시작은 아직 월드 생성과 연결되지 않았습니다.');
         return false;
     }
 

@@ -42,11 +42,14 @@ export class GameData {
     // 파일 조회 계층과 언어를 받아 설정 객체 층을 구성한다. 직접 부르기보다 GameData.build 를 쓴다.
     // onChange(키, 값)는 set() 으로 값을 쓸 때마다 불리는 선택적 통지 훅이다(저장 연결용).
     // product 는 제품 표기(11.01 버전 줄·Patch1101 Credits 객체·세 번째 Credits 행) 적용 여부이며 기본값 true 이다. (2026-11-05 WB03-AC)
-    constructor({ files, language = FALLBACK_LANGUAGE, options = {}, onChange = null, product = true }) {
+    // skirmish 는 12차 스커미시를 Campaign 목록에 보일지 여부이며 기본값 false 이다(제품 표기일 때만 의미가 있다). (2026-11-20 WB04-E1102)
+    constructor({ files, language = FALLBACK_LANGUAGE, options = {}, onChange = null, product = true, skirmish = false }) {
         // 값 쓰기 통지 훅이다. 호스트가 값을 저장소에 옮기는 데 쓴다. 없으면 통지하지 않는다. (2026-10-30 WB03-H)
         this.onChange = onChange;
         // 제품 표기 적용 여부이다. false 이면 원본 10.78 표기 그대로이다(원본 대조 검사용). (2026-11-05 WB03-AC)
         this.product = Boolean(product);
+        // 스커미시 항목 표시 여부이다. 월드 생성까지 연결된 판본에서만 켠다. (2026-11-20 WB04-E1102)
+        this.skirmish = Boolean(skirmish);
         // 파일 조회 계층이다.
         this.files = files;
         // 현재 언어 이름이다(파일 확장자로 쓰임). 'english' 이외는 대응 파일이 없으면 영어 파일로 대체한다.
@@ -80,7 +83,7 @@ export class GameData {
 
     // 데이터 폴더 파일 Map(경로 → 바이트)으로 GameData 를 만든다. netstorm.tarc 는 아카이브로 등록하고 모든 파일은 느슨한 파일로도 등록한다.
     // files 에 아카이브나 setup.cfg 가 없으면 어떤 파일이 빠졌는지 알리는 오류를 던진다. product 는 생성자와 같다. (2026-11-05 WB03-AC: product 전달)
-    static build({ files, language = FALLBACK_LANGUAGE, options = {}, onChange = null, product = true }) {
+    static build({ files, language = FALLBACK_LANGUAGE, options = {}, onChange = null, product = true, skirmish = false }) {
         const archiveBytes = files.get(ARCHIVE_PATH);
         if (!archiveBytes) throw new Error(`필수 자산이 없습니다: ${ARCHIVE_PATH}`);
         if (!files.get(SETUP_PATH)) throw new Error(`필수 자산이 없습니다: ${SETUP_PATH}`);
@@ -88,7 +91,7 @@ export class GameData {
         loose.delete(ARCHIVE_PATH);
         const gameFiles = new GameFiles({ loose });
         gameFiles.addArchive(archiveBytes);
-        return new GameData({ files: gameFiles, language, options, onChange, product });
+        return new GameData({ files: gameFiles, language, options, onChange, product, skirmish });
     }
 
     // 제품 표기 문구에 쓸 언어이다. 현재 언어의 tell 파일이 실제로 있으면 현재 언어, 없어 영어로 대체되는 경우는 영어이다.
@@ -102,7 +105,7 @@ export class GameData {
     // name 은 지역 인자를 뗀 섹션 이름이다. tellSection/findTellSection 의 원문 조회 결과는 바꾸지 않는다(원본 자료 대조 유지).
     // 사용: const body = data.presentTellBody('Credits', data.findTellSection('Credits')). (2026-11-05 WB03-AC)
     presentTellBody(name, body) {
-        return this.product ? productTellBody(name, body, this.productLanguage) : body;
+        return this.product ? productTellBody(name, body, this.productLanguage, { skirmish: this.skirmish }) : body;
     }
 
     // 전역 설정 버퍼를 원본 시작 순서(00441790 → 00440e00)대로 채운다. options 는 웹 사용자 설정(키 → 값)이며 setup.cfg 보다 앞에 놓여 우선한다.

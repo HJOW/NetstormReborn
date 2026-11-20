@@ -49,7 +49,16 @@ test('설정: 기본값·값 검증·토글·통지', () => {
     const changes = [];
     const settings = new Settings({ onChange: (key, value, previous) => changes.push([key, value, previous]) });
     // (2026-10-30 WB03-J: 시작 창이 쓰는 welcomeGiven·tipNumber 를 기본값 0 으로 추가했다. 원본 setup.cfg 기본값과 같다.)
-    assert.deepEqual(settings.snapshot(), { sound: 1, music: 1, playWind: 1, swapLeftRightSpeakers: 0, soundVolume: 5, musicVolume: 5, edgeScroll: 1, autoDemo: 1, tellTips: 1, useBanners: 0, maxFPS: 0, language: 0, difficulty: 0, welcomeGiven: 0, tipNumber: 0 });
+    // (2026-11-20 WB04-E1102: 스커미시 설정 키 16개와 text 종류를 더했다.)
+    const skirmish = { skirmishAiCount: 1, skirmishBans: '' };
+    for (let owner = 2; owner <= 8; owner += 1) { skirmish[`skirmishAi${owner}Diff`] = 2; skirmish[`skirmishAi${owner}Ally`] = 0; }
+    assert.deepEqual(settings.snapshot(), { sound: 1, music: 1, playWind: 1, swapLeftRightSpeakers: 0, soundVolume: 5, musicVolume: 5, edgeScroll: 1, autoDemo: 1, tellTips: 1, useBanners: 0, maxFPS: 0, language: 0, difficulty: 0, welcomeGiven: 0, tipNumber: 0, ...skirmish });
+    // text 종류는 영숫자·밑줄·쉼표만의 200자 이하 문자열을 받는다.
+    assert.equal(normalizeSetting('skirmishBans', 'outpost,sunCannon'), 'outpost,sunCannon');
+    assert.equal(normalizeSetting('skirmishBans', ''), '');
+    assert.equal(normalizeSetting('skirmishBans', 'a b'), null); assert.equal(normalizeSetting('skirmishBans', 'x'.repeat(201)), null); assert.equal(normalizeSetting('skirmishBans', 5), null);
+    assert.equal(normalizeSetting('skirmishBans', 'x'.repeat(200)), 'x'.repeat(200));
+    assert.equal(normalizeSetting('skirmishAi3Ally', '1'), 1); assert.equal(normalizeSetting('skirmishAi9Ally', 1), null); assert.equal(normalizeSetting('skirmishAi8Diff', '3'), 3);
     // 토글은 0/1 만 받고 참/거짓·'0'/'1' 도 받는다. 그 밖의 값은 거부한다.
     assert.equal(normalizeSetting('sound', true), 1);
     assert.equal(normalizeSetting('sound', '0'), 0);
@@ -72,7 +81,7 @@ test('설정: 기본값·값 검증·토글·통지', () => {
     assert.equal(settings.toggle('soundVolume'), null);
     assert.deepEqual(changes, [['soundVolume', 4, 5], ['music', 0, 1], ['music', 1, 0]]);
     // 알려진 모든 키가 정의되어 있다(옵션 메뉴가 쓰는 키 9개 + 시작 창이 쓰는 키 2개 + 섬 소유자 표식 키 1개 + 프레임 상한 키 1개 + 언어 키 1개 + 난이도 키 1개; 2026-11-20 WB04-E1093~E1096).
-    assert.equal(Object.keys(SETTING_DEFINITIONS).length, 15);
+    assert.equal(Object.keys(SETTING_DEFINITIONS).length, 31); // 기본 15개 + 스커미시 16개(E1102)
     // 정수 설정(tipNumber)은 부호 있는 32비트 범위의 정수와 십진 문자열만 받는다. (2026-10-30 WB03-J)
     assert.equal(normalizeSetting('tipNumber', 15), 15);
     assert.equal(normalizeSetting('tipNumber', '-7'), -7);
