@@ -259,6 +259,10 @@ public sealed class RawPlayerParticipation
 
     /// <summary>이 몸체가 쓰는 Player 기록이다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
     public Memory<byte> Players => _players;
+    /// <summary>같은Session의방향별표인지연결부모가검증할수있게실제배열을빌린다.</summary>
+    public uint[] Alliances => _allies;
+    /// <summary>같은옵션+3e의숨김부분뷰인지연결부모가검증한다.</summary>
+    public Memory<byte> Hidden => _hidden;
 
     /// <summary>다섯 현재 조회를 모두 공급한다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
     /// <param name="reads">바인딩할 getter 묶음이다.</param>

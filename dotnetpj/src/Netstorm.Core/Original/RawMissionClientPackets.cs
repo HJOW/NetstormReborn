@@ -158,6 +158,12 @@ public sealed class RawMissionClientPackets
             || !state.Hidden.Equals((ReadOnlyMemory<byte>)state.BattleOptions.Slice(0x3e, 9))) throw new ArgumentException("미션 수신의 같은 실제 Player/현재 전역 크기·별칭 오류");
         _players = players; _participation = participation; _sp = sp; _state = state; _hooks = hooks;
     }
+    /// <summary>같은Session의실제Player물리인지연결부모가검증할수있게빌린다.</summary>
+    public Memory<byte> Players => _players;
+    /// <summary>현재Player상태의같은소유자를빌린다.</summary>
+    public PlayerWorldState PlayerState => _state.Player;
+    /// <summary>현재87바이트옵션의같은주소를빌린다.</summary>
+    public Memory<byte> BattleOptions => _state.BattleOptions;
     /// <summary>현재 Player 필드의 실제 폭만 읽는다.</summary>
     private uint Read(uint owner, int offset, int width = 4)
     {

@@ -73,6 +73,8 @@ public sealed class RawMissionServerPackets
         _players = players; _state = state; _hooks = hooks;
     }
 
+    /// <summary>같은Session의실제Player물리인지연결부모가검증할수있게빌린다.</summary>
+    public Memory<byte> Players => _players;
     /// <summary>각 Player 번호 조회에서 현재 메타맵 진단을 수행하고 낮은BYTE를 반환한다.</summary>
     private uint Owner(uint owner)
     {

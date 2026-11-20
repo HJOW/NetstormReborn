@@ -83,6 +83,7 @@ public sealed partial class HostSession
         ReleaseMissionAiBrains();
         ReleaseConstructionWorld();
         ReleasePlayerProcesses();
+        _fixedLoginModules = null; _fixedAllianceParticipation = null; _fixedAllianceEffects = null;
         _playerRecordsUse?.Dispose(); _playerRecordsUse = null; _playerRecordsReleased = true;
     }
 }

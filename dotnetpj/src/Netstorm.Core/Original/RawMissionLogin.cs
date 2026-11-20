@@ -24,6 +24,10 @@ public sealed class RawMissionLogin<TConnection> where TConnection : class
         if (players.Length != 1620 || !players.Equals(participation.Players) || globals.ZoneAddress.Length != 6 || globals.BattleOptions.Length != 87 || globals.CachedCoreData.Length != 10) throw new ArgumentException("미션 로그인 실제 Player/Zone/옵션 크기·소유 오류");
         _players = players; _participation = participation; _globals = globals; _hooks = hooks; _counts = new(OriginalEdition.Patch1078, players);
     }
+    /// <summary>같은Session의실제Player물리인지연결부모가검증할수있게빌린다.</summary>
+    public Memory<byte> Players => _players;
+    /// <summary>현재장기옵션의같은주소를빌린다.</summary>
+    public ReadOnlyMemory<byte> BattleOptions => _globals.BattleOptions;
     /// <summary>Player0을 포함한 실제 현재 필드를 원문 폭대로 읽는다.</summary>
     private uint Read(uint owner, int offset, int width = 4)
     {
