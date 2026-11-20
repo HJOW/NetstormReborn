@@ -48,7 +48,10 @@ test('Session 섬: 생성 때 기존 기록을 Reset하지 않고 현재 Client 
         o.connectIslandsAndPriests(); assert.deepEqual(bytes, before); assert.equal(o.worldRedraw, kencloud.worldRedraw()); const island = o.islands.add(1, 2);
         o.islands.setBounds(island, { left: 1, top: 1, right: 20, bottom: 20 }); kencloud.worldRedraw().value = 41; o.revision = 9;
         o.islands.setOwner(island, 2); assert.equal(kencloud.worldRedraw().value, 42); assert.equal(o.revision, 1); assert.equal(o.gameplayGlobals.mapRevision().value, 1); assert.equal(o.finishState.playerRegions[2], island); assert.equal(bytes[18], 0x9a); assert.equal(bytes[19], 0xbc);
-        assert.throws(() => o.islands.owner(99), /1189/);
+        // 없는 섬 번호는 원본 Client 처럼 정확한 식과 원본 파일·행으로 진단을 표시하고 계속한다(예전에는 '미연결 1189' 오류로 프레임이 멈췄다). (2026-11-20 WB04-E1124)
+        const shown = [], original = o.world.storage.assertDisplay.bind(o.world.storage); o.world.storage.assertDisplay = (...args) => { shown.push(args); };
+        try { assert.doesNotThrow(() => o.islands.owner(99)); } finally { o.world.storage.assertDisplay = original; }
+        assert.equal(shown.length, 1); assert.equal(shown[0][0], 'exists( islandId )'); assert.equal(shown[0][1], '\\Ns\\O\\Islandlist.cpp'); assert.ok(shown[0][2] > 0);
     } finally { o.dispose(); }
 });
 

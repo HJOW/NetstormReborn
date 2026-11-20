@@ -30,7 +30,10 @@ export class RawCampaignSessionPriests {
         if (this.#disposed || !o.tables.ready || this.#started) throw new Error('Session 섬/사제의 초기화 전/반복 결선');
         this.#started = true;
         o.islands = new RawIslandRuntime(c.pool, c.hash, o.islandBytes, o.finishState, s.assetState.currentResidences(), o.worldRedraw, reference(o, 'revision'), {
-            setResidenceOwner: (sid, owner) => requireModule(o, 'ownership', '섬 소유권').setOwner(sid, owner), assertion: missing(1189),
+            setResidenceOwner: (sid, owner) => requireModule(o, 'ownership', '섬 소유권').setOwner(sid, owner),
+            // 섬 목록 진단(`bcr.isValid()`·`exists( islandId )`)은 원본 Client(ClientConstructionGlobals::Islands)처럼 정확한 식과 원본 파일·행으로 표시하고 계속한다.
+            // 이 연결이 없으면 7명 AI 스커미시에서 30초쯤 뒤 '실제 세션 하위 소비자 미연결: RawCampaignSession.cpp:1189' 로 프레임이 멈췄다. (2026-11-20 WB04-E1124)
+            assertionAt: (expression, line) => o.world.storage.assertDisplay(expression, '\\Ns\\O\\Islandlist.cpp', line),
         });
         const e = { ...services.priest, shield: { ...services.priest.shield }, regen: { ...services.priest.regen } }; this.effects = e;
         e.forcefieldAssertion = (expression, file, line) => {
