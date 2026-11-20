@@ -31,7 +31,8 @@ public sealed class HostEditorSelection : IDisposable
     /// 실제 파일·설정·스크립트 큐와 Tell 표시 장치를 빌린다. <paramref name="workspace"/>를 생략하면 시작 자산 폴더의 형제 작업본을 쓰며,
     /// 주어진 작업본의 소유권은 이 선택기가 넘겨받아 <see cref="Dispose"/>에서 반납한다.
     /// </summary>
-    public HostEditorSelection(HostStartupScene startup, ScriptStringRing strings, Action<string> tell, uint[]? next = null, EditorCatalogWorkspace? workspace = null)
+    /// <param name="sharedTemplates">실제Client의직렬화버전/이름표를목록의두임시manager가함께빌린다. null인독립호출만자체owner를쓴다.</param>
+    public HostEditorSelection(HostStartupScene startup, ScriptStringRing strings, Action<string> tell, uint[]? next = null, EditorCatalogWorkspace? workspace = null, CampaignTemplateStorage? sharedTemplates = null)
     {
         _startup = startup; _strings = strings; _tell = tell; State = new FortSelectionGlobals(next);
         Workspace = workspace ?? new EditorCatalogWorkspace(startup.Files);
@@ -40,6 +41,8 @@ public sealed class HostEditorSelection : IDisposable
         var translation = bytes == null ? null : Netstorm.Assets.XlatTable.FromFileBytes(bytes);
         Catalog = new SoloMapCatalog(startup.Files, startup.Configuration, new SoloMapCatalogEffects
         {
+            SerializationGlobals = sharedTemplates?.SerializationGlobals,
+            SectionNames = sharedTemplates?.SectionNamesOwner,
             TypeCount = () => PatchTypeCount,
             AllocationBytes = _ => throw new InvalidOperationException("맵 목록의 빈 State 미정 할당 바이트 미연결"),
             UserName = () => UserName,

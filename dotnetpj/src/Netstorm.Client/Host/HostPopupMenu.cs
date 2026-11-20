@@ -27,9 +27,12 @@ public sealed class HostPopupMenu
     /// <summary>음향 장치 준비 판정이다. 거짓이면 소리 행을 사용 안 함으로 그린다.</summary>
     private readonly Func<bool> _soundReady;
 
+    /// <summary>실제State와전용Help Back/지식카드가공유하는같은마지막도움말표식이다.</summary>
+    public QuickHelpPopupState PopupState { get; }
+
     /// <summary>같은 공통 Gump 트리와 메뉴 수명·화면을 사용한다.</summary>
-    public HostPopupMenu(HostMainMenu root, HostHtmlWindows windows, HostHtmlMenus menus, Screen screen, HostStartupScene startup, Action changed, Action applyAudio, ScriptStringRing strings, Func<bool>? soundReady = null)
-    { _root = root; _windows = windows; _menus = menus; _screen = screen; _startup = startup; _changed = changed; _applyAudio = applyAudio; _strings = strings ?? throw new ArgumentNullException(nameof(strings)); _soundReady = soundReady ?? (() => true); }
+    public HostPopupMenu(HostMainMenu root, HostHtmlWindows windows, HostHtmlMenus menus, Screen screen, HostStartupScene startup, Action changed, Action applyAudio, ScriptStringRing strings, Func<bool>? soundReady = null, QuickHelpPopupState? popupState = null)
+    { _root = root; _windows = windows; _menus = menus; _screen = screen; _startup = startup; _changed = changed; _applyAudio = applyAudio; _strings = strings ?? throw new ArgumentNullException(nameof(strings)); _soundReady = soundReady ?? (() => true); PopupState = popupState ?? new(); }
 
     /// <summary>Help·설정 팝업을 같은 Gump에 부착한다. 하위 메뉴는 원문처럼 미리 만들어 부모 행에 붙인다.</summary>
     public bool Open(string name)

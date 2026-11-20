@@ -1244,3 +1244,12 @@ cpppj/src/client/RootServerListDisk.cpp	Netstorm.Client.Host/RootServerListDisk.
 cpppj/src/client/RootServerListDisk.h	Netstorm.Client.Host/RootServerListDisk.cs	d97301dc5ffef7abd58a701a06efa1dc9151fd77	port
 cpppj/src/o/RawFileName.cpp	Netstorm.Assets/RawFileName.cs	c2d292277d843ecc690a11787b8892afad5143f2	port
 cpppj/src/o/RawFileName.h	Netstorm.Assets/RawFileName.cs	c2d292277d843ecc690a11787b8892afad5143f2	port
+cpppj/src/client/SoundSceneMusic.cpp	Netstorm.Client/Audio/SceneMusic.cs	99b9d5e332d20a8962b8ef206f1bb6e807be36fc	port
+cpppj/src/client/SoundSceneMusic.h	Netstorm.Client/Audio/SceneMusic.cs	99b9d5e332d20a8962b8ef206f1bb6e807be36fc	port
+cpppj/src/client/ClientStateWorldGlobals.cpp	Netstorm.Client.Host/ClientHostGame.StateResources.cs	d5c033e159a9d35c278bb82c9866a5a7b0b7f353	port
+cpppj/src/client/ClientStateWorldGlobals.h	Netstorm.Client.Host/ClientHostGame.StateResources.cs	539bba9a3fb684e1fc1e171cf302f643d268b27f	port
+cpppj/src/client/ClientMain.cpp	Netstorm.Client.Host/ClientHostGame.StateResources.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
+cpppj/src/client/ClientRandomGlobals.h	Netstorm.Client/ClientStateResources.cs	d207940cd190bbf84cba9e7d024e84b137aad5dd	port
+cpppj/src/client/RawMenuControls.h	Netstorm.Client/Host/HostPopupMenu.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
+cpppj/src/client/ClientAudio.cpp	Netstorm.Client.Host/HostMissionAudio.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
+cpppj/src/client/ClientAudio.h	Netstorm.Client.Host/HostMissionAudio.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port

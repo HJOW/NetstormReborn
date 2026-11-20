@@ -169,6 +169,7 @@ public sealed partial class ClientHostGame : Game
         _clientClock = new ClientClockGlobals(_localState);
         _surfaceGlobals = new ClientSurfaceGlobals(_gameplay, _clientClock, _kernel, () => _clock.Milliseconds);
         _sidLists = _surfaceGlobals.Storage.SidLists;
+        BindStateResourceOwners();
         LoadRootServerList();
         // cpppj ClientMain 349행의 실제 공통 SP 초기화와 같은 위치다: 클라이언트 시작 때 1회만 reseed+초기화하고 미션 시작 때는 다시 하지 않는다(0.464, 원본 004391ed).
         // 세션 시작 흐름의 미션별 reseed는 원본에 없어 0.463에서 근본 원인으로 확정했다.
@@ -260,9 +261,9 @@ public sealed partial class ClientHostGame : Game
                 name => Debug.WriteLine("HTML 메타 명령 미연결: " + name));
             _menuInput = new HostMenuInput(_mainMenu, _htmlWindows, _htmlFactory, _driver.Input, _scriptStrings,
                 () => _menuDirty = true, action => throw new InvalidOperationException("메뉴 상위 명령 미연결: " + action));
-            _menuInput.BindPopup(new HostPopupMenu(_mainMenu, _htmlWindows, _htmlMenus, _driver.Screen, _startup, () => _menuDirty = true, _buttonSound.ApplyOptions, _scriptStrings, () => !_options.MuteAudio));
+            _menuInput.BindPopup(new HostPopupMenu(_mainMenu, _htmlWindows, _htmlMenus, _driver.Screen, _startup, () => _menuDirty = true, _buttonSound.ApplyOptions, _scriptStrings, () => !_options.MuteAudio, _stateResources.Popup));
             _menuInput.BindScreenMode(() => _driver.Screen.Flags, ChangeScreenMode, AcceptScreenMode);
-            _editor = new HostEditorSelection(_startup, _scriptStrings, _menuInput.ShowTell);
+            _editor = new HostEditorSelection(_startup, _scriptStrings, _menuInput.ShowTell, sharedTemplates: _stateResources.Templates);
             _htmlFactory.BindMapCatalog(_editor.Catalog, _htmlMenus, _scriptStrings, () => _editor.CurrentName, () => _editor.PendingName);
             _menuInput.BindEditor(_editor);
             var fortConfirmation = new HostFortNameConfirmation(_startup, _mainMenu, _textEntry, _driver.Input, _scriptStrings, _editor.Workspace, _menuInput.ShowTell);
@@ -415,7 +416,7 @@ public sealed partial class ClientHostGame : Game
             // R4-2 그래프 per-Pop 번호 부여. 같은 호출의 공간 등록 뒤 영역 무효화·표면 추가와 ResetGraph가 실행된다.
             session.WireTerrainPostPopGraph();
             // 같은 Player·공통 Pop·프로세스에 실제 사제/보호막 후처리를 등록한다.
-            _missionAudio ??= new HostMissionAudio(_startup, Window.Handle, _options.MuteAudio, () => _clientClock.Clock.WallSeconds(_clock.Milliseconds));
+            _missionAudio ??= new HostMissionAudio(_startup, Window.Handle, _options.MuteAudio, () => _clientClock.Clock.WallSeconds(_clock.Milliseconds), _stateResources.Music);
             if (!OperatingSystem.IsWindows()) throw new PlatformNotSupportedException("현재 미션 연소 장치는 Windows 전용이다");
             session.BuildPriestWorldDevices(_missionAudio.BindPriest(session));
             // 건설 진행음도 같은 미션의 Sound47을 빌리므로 음향/사제 장치 설치 뒤 표시 장치를 조립한다.

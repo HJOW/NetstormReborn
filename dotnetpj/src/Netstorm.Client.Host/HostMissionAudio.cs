@@ -25,10 +25,14 @@ public sealed class HostMissionAudio : IDisposable
     /// <summary>다른 세션의 소리 프로세스를 빌리지 않도록 현재 실제 미션을 식별한다.</summary>
     private HostSession? _soundSession;
 
+    /// <summary>장치보다오래사는실제장면음악상태다. State의songEnd쓰기와동일8BYTE를사용한다.</summary>
+    public SceneMusicState Scene { get; }
+
     /// <summary>실제 파일 경계를 조립하고 음소거가 아니며 옵션이 켜진 Windows에서만 장치를 연다.</summary>
-    public HostMissionAudio(HostStartupScene startup, nint window, bool muted, Func<double> wallSeconds)
+    public HostMissionAudio(HostStartupScene startup, nint window, bool muted, Func<double> wallSeconds, SceneMusicState? scene = null)
     {
         ArgumentNullException.ThrowIfNull(startup); ArgumentNullException.ThrowIfNull(wallSeconds);
+        Scene = scene ?? new SceneMusicState();
         if (!OperatingSystem.IsWindows()) throw new PlatformNotSupportedException("현재 미션 소리 장치는 Windows 전용이다");
         _wallSeconds = wallSeconds; _list.Initialize();
         _state.Enabled = !muted && startup.Configuration.GetInt("sound") != 0;

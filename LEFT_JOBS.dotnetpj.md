@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-21 · 사용자 재개 지시로 진행 중 · 마지막 완료0.738(실제 서버 목록 파일/경로 고리·집중29건/원문352입력 통과) · 다음0.739 Root 장기 소유자/State 컨텍스트 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6 병행) · cpppj 제품1323 / 11.01 · 전체 목표 미완료**
+**2026-11-21 · 사용자 재개 지시로 진행 중 · 마지막 완료0.739(State 장기자원/장면음악감독·집중26건/원문9339입력 통과) · 다음0.740 정기 전체 회귀/65시작 감사 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6 병행) · cpppj 제품1323 / 11.01 · 전체 목표 미완료**
 
 현행 인계는 이 문서가 기준이다. 단위별 근거는 `docs/dotnet-canon-0NNN-*.md`이다. 0.645~0.732의 단위별 완료 문장, 0.640 회귀 점검 상세, 0.546~0.676 완료 기록 원문은 [0.732 정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0732)에 있다. 0.600~0.635는 [0.635 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635), 0.613까지의 경과와 파일 계열별 체크 목록은 [0.613 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)에 있다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
@@ -22,9 +22,9 @@
 
 **재개 순서(2026-11-21).** 0.736 전체5,259검사와 같은 빌드65시작·원본/빌드 해시·전수 바이트 감사를 완료했다. [0.736 근거](docs/dotnet-canon-0736-20261121.md)
 
-1. **0.739 Root 장기 소유자/State 컨텍스트.** 0.737 NSInfo/서버 레코드와 실제 호스트 장기 소유자·초기 옵션3값에 이어,0.738에서 같은 목록의 사용자 Saves 우선 읽기/저장과 실제 시작 호출을 연결했다. 빈 파일/열기 실패/행BYTE·LF·NUL·설치 불변/파일명 고리를 신규10건 포함 집중29건으로 검증했고 원문formatter352입력 전체256BYTE도 일치했다. 대표3시작 종료0/0.736 전체 바이트 일치·원본1,392파일 불변이다. [0.737](docs/dotnet-canon-0737-20261121.md) · [0.738](docs/dotnet-canon-0738-20261121.md). 다음은 Template/팝업/seed/장면 음악 소유자와 전체 State 컨텍스트를 연결하고 전체 State/UI/로그인을 진행한다. NSInfo HUD·메타 UI/Root reply의 저장 호출은 아직 미연결이다. RawFileName은 Format/조회만 이식했으며 Device/Name/Directory/Full과 BaseFile 읽기 정책의 같은 고리 소비·ClientStaticStrings 일원화는 해당 소비자에서 이어간다.
+1. **0.740 정기 전체 회귀/65시작 감사.** 0.737 NSInfo/0.738 서버목록 사용자파일/파일명고리에 이어0.739에서 실제Host의Template·팝업·Coreseed·장면음악장기자원과State컨텍스트를설치했다. Edit목록의버전/이름표·실제음향Scene도같은owner다. 음악감독은세판본9339원문입력일치·신규13건포함집중26건통과,대표3시작종료0/0.736전체바이트일치·원본1392파일불변이다. [0.738](docs/dotnet-canon-0738-20261121.md) · [0.739](docs/dotnet-canon-0739-20261121.md). 다음0.740에서전체검사/동일빌드65시작과전수해시·덤프를감사한다. 이후0.741은실제Template manager/PlayerState getter·Notify와Session WorldTemplates를함께일원화한다. 현재Player정기는State대신개발용header를빌리므로manager없이header만공유하면안된다. 실제음악선택/채널/스트리밍·최초Start/매Frame/날씨/결과DWORD·Player상태,전체State/UI/로그인과NSInfo HUD/메타UI/Root reply저장은후속이다. RawFileName은Format/조회만이식했으며나머지조회·BaseFile고리소비/ClientStaticStrings는해당소비자에서잇는다.
 2. **같은 작업 줄기.** MetaZone 원문 본체124입력은0.734, 실제Client표/현재Runtime pin·설치된가상분배전달은0.735 완료다. 현재 HostSession의 전체 Native World 자산 가상 삭제 분배 설치는 아직 미연결이며 일반 삭제의 Pre/Post 완료로 대신하지 않는다. [0.733](docs/dotnet-canon-0733-20261121.md) · [0.734](docs/dotnet-canon-0734-20261121.md) · [0.735](docs/dotnet-canon-0735-20261121.md). 이어서 [R4 체크](#r4-detail)→R11과 후순위 요구사항을 진행한다. 다음 정기 전체 회귀는0.740이다.
-3. **사용자 제외 검사 유지.** 실제 포획/희생·특정 적 공격·시나리오 승리는 재현하지 않고 사용자 수동 확인으로 남긴다. 원본1,392파일의 마지막 불변 확인은0.738 대표3시작이다(전체65시작은0.736).
+3. **사용자 제외 검사 유지.** 실제 포획/희생·특정 적 공격·시나리오 승리는 재현하지 않고 사용자 수동 확인으로 남긴다. 원본1,392파일의 마지막 불변 확인은0.739 대표3시작이다(전체65시작은0.736).
 
 **최근 완료 요약(0.639~0.732).** 단위별 완료 문장과 집중 검사 수는 보관본과 각 단위 문서에 있다. 완료 범위와 남은 일의 기준은 1.1·1.2절 체크 항목이다.
 
