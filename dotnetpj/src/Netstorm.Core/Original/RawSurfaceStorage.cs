@@ -62,7 +62,7 @@ public sealed partial class RawSurfaceStorage
     public RawTypeTableStorage Types { get; } = new();
 
     /// <summary>자산보다 짧고 모든 Session보다 긴 프레임 배열이다. 2026-11-07 F2d 저장소 풀 생성에서 추가됐다.</summary>
-    public List<RiftTypeFrames> Frames { get; } = [];
+    public RawFrameTableStorage Frames { get; } = new();
 
     /// <summary>자산보다 짧고 모든 Session보다 긴 셰이프 배열이다. 2026-11-07 F2d 저장소 풀 생성에서 추가됐다.</summary>
     public List<SquidDisplayShape> Shapes { get; } = [];
@@ -180,10 +180,17 @@ public sealed partial class RawSurfaceStorage
     /// <param name="assetSource">실제 최초 자산 owner다. 명시하지 않은 독립 저장소는 로딩 비용 owner를 합성하지 않는다.</param>
     public RawSurfaceStorage(OriginalEdition edition, IReadOnlyList<OriginalTypeRecord> inputTypes, IReadOnlyList<RiftTypeFrames> inputFrames, IReadOnlyList<SquidDisplayShape> inputShapes, RawAuthorityState? authority = null, RawGameAuxState? gameAux = null, IRawSurfaceAssetSource? assetSource = null)
         : this(edition, authority, gameAux)
+        => InitializeAssetTables(inputTypes, inputFrames, inputShapes, assetSource);
+
+    /// <summary>미리구성한BSS/장기주소를바꾸지않고원문생성자의실제자산초기화를한번실행한다. 이후Session대여는같은표를사용한다.</summary>
+    public void InitializeAssetTables(IReadOnlyList<OriginalTypeRecord> inputTypes, IReadOnlyList<RiftTypeFrames> inputFrames,
+        IReadOnlyList<SquidDisplayShape> inputShapes, IRawSurfaceAssetSource? assetSource = null)
     {
         ArgumentNullException.ThrowIfNull(inputTypes);
         ArgumentNullException.ThrowIfNull(inputFrames);
         ArgumentNullException.ThrowIfNull(inputShapes);
+        if (_assetTablesInitialized || Types.Count != 0 || Frames.Count != 0 || Shapes.Count != 0 || Codes.Count != 0)
+            throw new InvalidOperationException("실제장기자산표중복초기화");
         if (inputFrames.Count != inputTypes.Count || inputShapes.Count != inputTypes.Count)
         {
             throw new ArgumentException("실제 월드 저장소의 자산 배열 크기 불일치");
@@ -201,6 +208,7 @@ public sealed partial class RawSurfaceStorage
         {
             Codes.Add([.. Frames[type].Codes]);
         }
+        _assetTablesInitialized = true;
     }
 
     /// <summary>Client 전역·Session과 같은 실제 서버·권한 주소의 정체성이다. 2026-11-07 F2d 서피스 저장소 껍데기 이식에서 추가됐다.</summary>

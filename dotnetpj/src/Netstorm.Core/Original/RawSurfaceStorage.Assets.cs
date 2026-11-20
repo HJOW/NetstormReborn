@@ -12,7 +12,9 @@ public interface IRawSurfaceAssetSource
 public sealed partial class RawSurfaceStorage
 {
     /// <summary>호출자가 명시 전달한 실제 최초 자산 owner다. 자산 사본이 있다는 이유로 합성하지 않는다.</summary>
-    private readonly IRawSurfaceAssetSource? _assetSource;
+    private IRawSurfaceAssetSource? _assetSource;
+    /// <summary>빈 표도 원문 최초 초기화 완료와 미설치를 구분하는 호스트 수명 표식이다.</summary>
+    private bool _assetTablesInitialized;
 
     /// <summary>실제 최초 자산 정체성이며 독립 typed 저장소는 null이다. 조회 자체는 TYPE/파일을 읽지 않는다.</summary>
     public IRawSurfaceAssetSource? Source() => _assetSource;

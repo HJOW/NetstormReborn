@@ -123,11 +123,16 @@ public sealed partial class HostSession
     /// <param name="adoptInitializedPlayers">앞선실제Native부모가완료한같은Player를재초기화없이인계받는다.</param>
     /// <param name="sharedPlayerProcesses">같은Client의Kernel/Frame에결합된장기Host저장소다. 독립조합만세션전용Host를만든다.</param>
     /// <param name="sharedTemplates">같은Client의실제manager9개와헤더를빌린다. 독립호출만Session수명의소유자를만든다.</param>
-    public HostSession(Kernel kernel, GameRandom game, CrtRandom crt, int poolCapacity = 0, RawSpStore? sharedSp = null, UIntBox? sharedCrtBox = null, ClientGameplayGlobals? sharedGameplay = null, RawStateSidLists? sharedLists = null, RawSidPool? pool = null, ClientLocalStateGlobals? sharedLocal = null, ClientConnectionGlobals? sharedConnections = null, ClientPlayerRecords? sharedPlayerRecords = null, bool adoptInitializedPlayers = false, DoubleBox? sharedProcessTime = null, RawProcessHostStorage? sharedPlayerProcesses = null, CampaignTemplateStorage? sharedTemplates = null)
+    /// <param name="sharedWorldFrames">첫 메뉴 전에 준비한 동일 물리 프레임 배열이다. 빌린 표는 세션에서 다시 채우지 않는다.</param>
+    public HostSession(Kernel kernel, GameRandom game, CrtRandom crt, int poolCapacity = 0, RawSpStore? sharedSp = null, UIntBox? sharedCrtBox = null, ClientGameplayGlobals? sharedGameplay = null, RawStateSidLists? sharedLists = null, RawSidPool? pool = null, ClientLocalStateGlobals? sharedLocal = null, ClientConnectionGlobals? sharedConnections = null, ClientPlayerRecords? sharedPlayerRecords = null, bool adoptInitializedPlayers = false, DoubleBox? sharedProcessTime = null, RawProcessHostStorage? sharedPlayerProcesses = null, CampaignTemplateStorage? sharedTemplates = null, RiftTypeFrames[]? sharedWorldFrames = null)
     {
         ArgumentNullException.ThrowIfNull(kernel);
         ArgumentNullException.ThrowIfNull(game);
         ArgumentNullException.ThrowIfNull(crt);
+        if (sharedWorldFrames is not null && (sharedWorldFrames.Length != WorldFrameCount || sharedWorldFrames.Any(frame => frame is null)))
+            throw new ArgumentException("동일188슬롯의실제프레임표필요", nameof(sharedWorldFrames));
+        _borrowedWorldFrames = sharedWorldFrames is not null;
+        WorldFrames = sharedWorldFrames ?? WorldFrameTables.Create([]);
         Templates = sharedTemplates ?? new CampaignTemplateStorage();
         if (sharedPlayerProcesses is not null && (!sharedPlayerProcesses.HasDevices() || !sharedPlayerProcesses.UsesKernel(kernel)))
             throw new ArgumentException("실제Client의같은Kernel/Frame장치가필요한장기프로세스Host", nameof(sharedPlayerProcesses));
@@ -695,7 +700,10 @@ public sealed partial class HostSession
 
     /// <summary>세션이 소유한 같은 TYPE 프레임 표다. 실제 타입 적재 단위에서 채우기 전까지 빈 표다.</summary>
     /// <remarks>2026-11-12 0.436에서 월드 적재 공유 저장소로 추가했다. 적재 본체 연결은 다음 단위다.</remarks>
-    public RiftTypeFrames[] WorldFrames { get; } = EmptyWorldFrames();
+    public RiftTypeFrames[] WorldFrames { get; }
+
+    /// <summary>장기 표를 빌린 세션은 최초 자산을 다시 설치하지 않는다.</summary>
+    private readonly bool _borrowedWorldFrames;
 
     /// <summary>현재실제Template manager9개와같은180BYTE다. 월드적재의+8쓰기와State정리가동일물리를사용한다.</summary>
     public byte[] WorldTemplates => Templates.HeaderStorage;
@@ -3528,22 +3536,6 @@ public sealed partial class HostSession
         }
     }
 
-    /// <summary>빈 프레임 표 188개를 만든다. 검사 하네스의 LoadScene과 같은 공유 빈 표다.</summary>
-    /// <returns>프레임 표다.</returns>
-    /// <remarks>2026-11-12 0.436에서 월드 적재 공유 저장소로 추가했다.</remarks>
-    private static RiftTypeFrames[] EmptyWorldFrames()
-    {
-        var frames = new RiftTypeFrames[WorldFrameCount];
-        var empty = new RiftTypeFrames([]);
-        // 모든 칸을 빈 표로 채우는 반복문이다.
-        for (int index = 0; index < frames.Length; ++index)
-        {
-            frames[index] = empty;
-        }
-
-        return frames;
-    }
-
     /// <summary>타입 정의의 클러스터 코드를 세션 프레임 표에 채운다. 자산 번호 = 70 + 적재 순서다.</summary>
     /// <param name="definitions">로딩 순서와 같은 타입 정의 목록이다.</param>
     /// <remarks>2026-11-12 0.442에서 실제 타입 채우기로 추가했다. 자산 밖 번호(0~69·186~187)는 빈 표로 둔다.
@@ -3551,20 +3543,8 @@ public sealed partial class HostSession
     public void FillWorldFrames(IReadOnlyList<RiftTypeDefinition> definitions)
     {
         ArgumentNullException.ThrowIfNull(definitions);
-        if (RiftTypeTable.FirstAssetTypeNumber + definitions.Count > WorldFrames.Length)
-            throw new ArgumentOutOfRangeException(nameof(definitions), "타입 정의가 프레임 표 폭을 넘는다");
-        // 적재 순서마다 클러스터 코드를 해당 자산 번호 칸에 두는 반복문이다.
-        for (int index = 0; index < definitions.Count; ++index)
-        {
-            var codes = new RiftFrameCode[definitions[index].Clusters.Count];
-            // 클러스터 선언 순서대로 코드를 옮기는 반복문이다.
-            for (int code = 0; code < codes.Length; ++code)
-            {
-                codes[code] = definitions[index].Clusters[code].Code;
-            }
-
-            WorldFrames[RiftTypeTable.FirstAssetTypeNumber + index] = new RiftTypeFrames(codes);
-        }
+        if (_borrowedWorldFrames) throw new InvalidOperationException("장기프레임표를빌린Session의재설치");
+        WorldFrameTables.Fill(WorldFrames, definitions);
     }
 
     /// <summary>월드 적재의 로딩 깊이 공유 값이다. Territory·Money·Meta가 함께 읽고 쓴다.</summary>

@@ -238,6 +238,7 @@ public sealed partial class ClientHostGame : Game
             InitializeNativePrefix();
             _buttonSound = new HostButtonSound(_startup);
             _cursor = new HostOriginalCursor(_startup);
+            PrepareNativeAssetTables();
             _mainMenu = new HostMainMenu(_startup, _driver.Screen, new GumpButtonTreeHooks
             {
                 Now = () => _clock.NowSeconds,
@@ -329,8 +330,9 @@ public sealed partial class ClientHostGame : Game
         if (_startup is null) throw new InvalidOperationException("미션 진입에 시작 화면 없음");
         if (_missionRuntime is not null) throw new InvalidOperationException("기존 실제 Runtime 반납 전 미션 재시작");
         using var script = new MissionScript(_startup.Configuration, mission);
-        RiftTypeTable types = MissionFortLoad.LoadTypeTable(_startup.Files);
-        MissionFortLoadResult fort = MissionFortLoad.Load(_startup, mission);
+        HostAssetTables assets = AssetTables;
+        RiftTypeTable types = assets.TypeTable;
+        MissionFortLoadResult fort = MissionFortLoad.Load(_startup, mission, types);
         MissionPlayers players = MissionPlayers.Load(key => script.Get(key), fort.Fort, types, 6500);
         // 독립 일반 월드의 fresh 설치에서만 정적 목록의 기존 배열을 초기화한다.
         _sidLists.PrepareGeneralWorld();
@@ -345,7 +347,7 @@ public sealed partial class ClientHostGame : Game
         HostMissionBurning? pendingBurning = null;
         try
         {
-            session = new HostSession(_kernel, _gameRandom, _crtRandom, sharedSp: _spGlobals.Store, sharedCrtBox: _spCrtBox, sharedGameplay: _gameplay, sharedLists: _sidLists, pool: storage.Pool, sharedLocal: _localState, sharedConnections: _connections, sharedPlayerRecords: _gameplay.PlayerRecords, sharedProcessTime: _clientClock.GameTime, sharedPlayerProcesses: _surfaceGlobals.Processes, sharedTemplates: _stateResources.Templates);
+            session = new HostSession(_kernel, _gameRandom, _crtRandom, sharedSp: _spGlobals.Store, sharedCrtBox: _spCrtBox, sharedGameplay: _gameplay, sharedLists: _sidLists, pool: storage.Pool, sharedLocal: _localState, sharedConnections: _connections, sharedPlayerRecords: _gameplay.PlayerRecords, sharedProcessTime: _clientClock.GameTime, sharedPlayerProcesses: _surfaceGlobals.Processes, sharedTemplates: _stateResources.Templates, sharedWorldFrames: assets.Frames);
             // 개발용일반미션의실제manager1을최초읽기의같은이미지/경로로설치한다. Native로그인의지연파일선택은별도부모에서연결한다.
             MissionFortSourceImage image = fort.SourceImage ?? throw new InvalidOperationException("현재미션의최초요새이미지미연결");
             session.Templates.InstallFile(1, fort.Fort, image.Image, image.FileName, types.Types.Count);
@@ -399,14 +401,11 @@ public sealed partial class ClientHostGame : Game
             session.FillHandleName(translated);
             session.WriteBattleName();
             // 월드 적재를 세션 공유 저장소로 실행한다. 번역·설정·지형 생성·화신 생성은 실제로 연결하고 객체·장부·카메라 실제 효과는 월드 조립 단위에서 잇는다.
-            IReadOnlyList<RiftTypeDefinition> worldDefinitions = MissionFortLoad.LoadTypeDefinitions(_startup.Files);
-            session.FillWorldFrames(worldDefinitions);
+            IReadOnlyList<RiftTypeDefinition> worldDefinitions = assets.Definitions;
             // 지형 Pop 공간 등록 장치. SHP 실측 크기로 해시 단계를 정한다(cpppj SquidRenderer::Shapes, 0.466).
-            byte[] shpRaw = _startup.Files.ReadAllBytes("d/_shapes.shp");
-            var shpDb = new Netstorm.Assets.ShapeDatabase(shpRaw);
-            List<SquidDisplayShape> popShapes = TerrainDisplayShapes.Build(worldDefinitions, shpDb);
-            // NativeStorage 일원화(0.596): 미션 표를 장기 저장소에 넣어 공장 일원화의 바탕을 둔다. 저장소는 독립 사본을 소유한다.
-            InstallMissionStorageTables(storage, types.Types, session.WorldFrames, popShapes);
+            byte[] shpRaw = assets.ShapeImage;
+            List<SquidDisplayShape> popShapes = assets.Shapes;
+            // 첫 메뉴 전에 준비한 장기 TYPE/Frame/SHP를 미션 공장과 공간 장치도 그대로 빌린다.
             session.BuildTerrainPopDevices(storage.Types, popShapes, storage.FactoryExecutor(), storage.Hash, storage.Spots);
             // 요새 객체 적재 장치. 지형 Pop과 같은 해시·spots·표시를 공유한다(cpppj RawCampaignWorldRuntime, 0.467).
             // 공장·실행기 일원화(0.597·0.599): 두 장치의 생성 공장과 건물 공간을 저장소 실행기로 통일한다. 표는 0.596에서 저장소에 넣었다.

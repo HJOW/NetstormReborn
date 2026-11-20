@@ -1259,3 +1259,7 @@ cpppj/src/client/CurrentAllocationBytes.h	Netstorm.Client/ClientAllocationBytes.
 cpppj/src/client/MissionFortSource.h	Netstorm.Client/Host/MissionFortLoad.cs	d22a1b5817bef1b794b14e1d114827bc12cc162f	port
 cpppj/src/client/ClientStateWorldCleanup.cpp	Netstorm.Client/ClientStateWorldCleanup.cs	93d891ac8a1d3205ee73a30033094086c71cf730	port
 cpppj/src/client/ClientStateWorldCleanup.h	Netstorm.Client/ClientStateWorldCleanup.cs	93d891ac8a1d3205ee73a30033094086c71cf730	port
+cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/RawFrameTableStorage.cs	14fd017c3b6ca87880374e044e3ac00bf0575c2e	port
+cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Client/Host/WorldFrameTables.cs	14fd017c3b6ca87880374e044e3ac00bf0575c2e	port
+cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Client.Host/HostAssetTables.cs	14fd017c3b6ca87880374e044e3ac00bf0575c2e	port
+cpppj/src/client/ClientMain.cpp	Netstorm.Client.Host/ClientHostGame.Assets.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port

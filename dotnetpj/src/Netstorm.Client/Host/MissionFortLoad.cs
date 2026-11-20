@@ -78,8 +78,9 @@ public static class MissionFortLoad
     /// <summary>시작 화면의 같은 설정·파일 장치로 미션 스크립트를 열고 요새를 읽어 푼다.</summary>
     /// <param name="startup">같은 파일 시스템과 Config를 보유한 시작 화면.</param>
     /// <param name="mission">고를 미션 이름.</param>
+    /// <param name="sharedTypes">준비된 최초 자산 TYPE다. 독립 판독만 자체 표를 읽는다.</param>
     /// <returns>스크립트 정보와 푼 Template.</returns>
-    public static MissionFortLoadResult Load(HostStartupScene startup, string mission)
+    public static MissionFortLoadResult Load(HostStartupScene startup, string mission, RiftTypeTable? sharedTypes = null)
     {
         ArgumentNullException.ThrowIfNull(startup);
         ArgumentException.ThrowIfNullOrEmpty(mission);
@@ -87,7 +88,8 @@ public static class MissionFortLoad
         if (!script.Loaded) throw new InvalidDataException("미션 스크립트가 없다: " + mission);
         string fortName = script.FortName();
         MissionFortSourceImage image = script.FortFileReader()(fortName);
-        RiftTypeTable types = LoadTypeTable(startup.Files);
+        RiftTypeTable types = sharedTypes ?? LoadTypeTable(startup.Files);
+        if (types.Edition != OriginalEdition.Patch1078) throw new ArgumentException("미션요새의10.78최초TYPE표필요", nameof(sharedTypes));
         FortTemplate fort = FortTemplate.Parse(image.Image, types);
         return new MissionFortLoadResult(mission, fortName, image.FileName, script.MissionType(), fort) { SourceImage = image };
     }
