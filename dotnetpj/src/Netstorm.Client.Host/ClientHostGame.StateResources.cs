@@ -21,4 +21,12 @@ public sealed partial class ClientHostGame
         if (_startup is not { } startup) return;
         _stateWorldGlobals = ClientStateWorldGlobals.Bind(_stateResources.Context(_surfaceGlobals, _localState, _connections, startup.Cloud, _nsInfoGlobals));
     }
+
+    /// <summary>실제같은Root자원으로전체Native State정리를호출한다. 아직설치되지않은UI/음향/저장장치는선택위치에서실패한다.</summary>
+    public void CleanupNativeWorld(uint reason, ClientStateWorldDevices devices)
+    {
+        var startup = _startup ?? throw new InvalidOperationException("전체State정리의실제시작자산미설치");
+        ClientStateWorldCleanup.Cleanup(reason, _stateResources.Context(_surfaceGlobals, _localState, _connections, startup.Cloud, _nsInfoGlobals),
+            _surfaceGlobals, _spGlobals, _stateResources.MultipleSelectionCount, devices);
+    }
 }

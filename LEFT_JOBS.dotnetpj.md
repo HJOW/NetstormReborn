@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-21 · 사용자 재개 지시로 진행 중 · 마지막 완료0.741(실제Template/Player State·Session공유/집중81건 통과) · 다음0.742 전체State 효과 분배·Root 연결 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6 병행) · cpppj 제품1323 / 11.01 · 전체 목표 미완료**
+**2026-11-21 · 사용자 재개 지시로 진행 중 · 마지막 완료0.742(전체State 실제효과분배/Root호출경계·집중42건 통과) · 다음0.743 첫메뉴 장기 TYPE/프레임/셰이프 준비 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6 병행) · cpppj 제품1323 / 11.01 · 전체 목표 미완료**
 
 현행 인계는 이 문서가 기준이다. 단위별 근거는 `docs/dotnet-canon-0NNN-*.md`이다. 0.645~0.732의 단위별 완료 문장, 0.640 회귀 점검 상세, 0.546~0.676 완료 기록 원문은 [0.732 정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0732)에 있다. 0.600~0.635는 [0.635 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635), 0.613까지의 경과와 파일 계열별 체크 목록은 [0.613 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)에 있다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
@@ -22,9 +22,9 @@
 
 **재개 순서(2026-11-21).** 0.740 전체5,297검사와 같은 빌드65시작·원본/빌드 해시·전수 바이트 감사를 완료했다. [0.740 근거](docs/dotnet-canon-0740-20261121.md)
 
-1. **0.742 전체State 효과 분배·Root 연결.** 0.741에서 실제Template manager/State getter·Notify와Session헤더를공유했다. 최초MissionFortSourceImage로manager1을설치하고Territory/현재Template도같은저장소를쓴다. Player정기의헤더표시비트를실제State로옮겼으며현재Runtime을pin한다. 같은현재할당BYTE를Player/빈State/Edit목록에공급하고서버목록읽기를SP초기화뒤로옮겼다. 신규6건포함집중81건·대표3시작종료0/0.740전체바이트일치·원본1392파일불변이다. [0.741](docs/dotnet-canon-0741-20261121.md). 다음은전체State정리의실제효과분배/Root설치를잇는다. non-mine Notify의실제DataManager파일저장은미연결선택시명시실패다. CPP의비Session Notify추출차이는extracted/dotnet-0741/player-state-cpp-delta.diff에있으며현재Get/클래스Changed의의미는같다. 실제음악장치·최초Start/매Frame/날씨/결과DWORD·Player상태,전체State/UI/로그인과NSInfo HUD/메타UI/Root reply저장은후속이다. RawFileName의나머지조회·BaseFile고리소비/ClientStaticStrings는해당소비자에서잇는다.
+1. **0.743 첫메뉴 장기 TYPE/프레임/셰이프 준비.** 0.741의실제Template/State·Session공유에이어0.742전체State부모의실제연결/시계/SP/AI·사제/Core/Template/Kernel·Runtime증빙/Pool/목록/Player/Zone분배와ClientHostGame호출경계를연결했다. 신규7건포함집중42건·대표3시작종료0/0.740전체바이트일치·원본1392파일불변이다. [0.742](docs/dotnet-canon-0742-20261121.md). 다음은CPP ClientMain.cpp:442 MakeRawSurfaceStorage처럼메뉴전실제TYPE/프레임/셰이프표를설치하고미션은같은표를재사용하게한다. 현재는미션시작에서만표를설치한다. 그뒤커서/채팅/UI/음향·음악/저장/옵션기본장치와전체Root상태호출을잇는다. 미연결효과는도달위치에서명시실패하며현재호출경계만으로전체Native메뉴/로그인/State완료를뜻하지않는다. non-mine Notify의실제DataManager저장과비Session Notify추출부모,NSInfo HUD/메타UI/Root reply저장도후속이다. RawFileName나머지조회·BaseFile고리소비/ClientStaticStrings는해당소비자에서잇는다.
 2. **같은 작업 줄기.** MetaZone 원문 본체124입력은0.734, 실제Client표/현재Runtime pin·설치된가상분배전달은0.735 완료다. 현재 HostSession의 전체 Native World 자산 가상 삭제 분배 설치는 아직 미연결이며 일반 삭제의 Pre/Post 완료로 대신하지 않는다. [0.733](docs/dotnet-canon-0733-20261121.md) · [0.734](docs/dotnet-canon-0734-20261121.md) · [0.735](docs/dotnet-canon-0735-20261121.md). 이어서 [R4 체크](#r4-detail)→R11과 후순위 요구사항을 진행한다. 다음 정기 전체 회귀는0.744이다.
-3. **사용자 제외 검사 유지.** 실제 포획/희생·특정 적 공격·시나리오 승리는 재현하지 않고 사용자 수동 확인으로 남긴다. 원본1,392파일의 마지막 불변 확인은0.741 대표3시작이다(전체65시작은0.740).
+3. **사용자 제외 검사 유지.** 실제 포획/희생·특정 적 공격·시나리오 승리는 재현하지 않고 사용자 수동 확인으로 남긴다. 원본1,392파일의 마지막 불변 확인은0.742 대표3시작이다(전체65시작은0.740).
 
 **최근 완료 요약(0.639~0.732).** 단위별 완료 문장과 집중 검사 수는 보관본과 각 단위 문서에 있다. 완료 범위와 남은 일의 기준은 1.1·1.2절 체크 항목이다.
 

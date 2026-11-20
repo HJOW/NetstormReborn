@@ -22,6 +22,9 @@ public sealed class ClientSurfaceGlobals
     /// <summary>프레임캐시를진행하지않고호출시점의같은GameClock/보정/정지값을읽는다.</summary>
     public double GameSeconds() => Clock.Clock.GameSeconds(_milliseconds());
 
+    /// <summary>Frame캐시를사용하지않고선택시점의실제Client밀리초로벽시각을읽는다.</summary>
+    public double WallSeconds() => Clock.Clock.WallSeconds(_milliseconds());
+
     /// <summary>현재 게임값을 초기화하지 않고 실제 권한/보조 전역과 Kernel/Frame/그래프 시각을 연결한다.</summary>
     public ClientSurfaceGlobals(ClientGameplayGlobals gameplay, ClientClockGlobals clock, Kernel kernel, Func<uint> milliseconds)
     {

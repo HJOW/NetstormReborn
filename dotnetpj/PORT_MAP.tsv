@@ -1257,3 +1257,5 @@ cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.Templat
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.Templates.cs	bda77381e54bc382937c720047ee4441086b46d7	port
 cpppj/src/client/CurrentAllocationBytes.h	Netstorm.Client/ClientAllocationBytes.cs	c1b8fbf4155f92dd9319fe5fea3e1f69768b5348	port
 cpppj/src/client/MissionFortSource.h	Netstorm.Client/Host/MissionFortLoad.cs	d22a1b5817bef1b794b14e1d114827bc12cc162f	port
+cpppj/src/client/ClientStateWorldCleanup.cpp	Netstorm.Client/ClientStateWorldCleanup.cs	93d891ac8a1d3205ee73a30033094086c71cf730	port
+cpppj/src/client/ClientStateWorldCleanup.h	Netstorm.Client/ClientStateWorldCleanup.cs	93d891ac8a1d3205ee73a30033094086c71cf730	port
