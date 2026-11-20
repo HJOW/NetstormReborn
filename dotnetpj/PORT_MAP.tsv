@@ -1129,3 +1129,9 @@ cpppj/src/o/RawMissionClientPackets.cpp	Netstorm.Core/Original/RawMissionPacketF
 cpppj/src/o/RawMissionClientPackets.h	Netstorm.Core/Original/RawMissionPacketFields.cs	eeae45c69171943ad99db6c2930574ee7747ba76	port
 cpppj/src/o/RawStateBattleOptions.cpp	Netstorm.Core/Original/RawStateBattleOptions.cs	3f942573d0efb123777e1ee0956eae026ce394a6	port
 cpppj/src/o/RawStateBattleOptions.h	Netstorm.Core/Original/RawStateBattleOptions.cs	8912d1ed1f3d890f226cb10416d65f0b513013df	port
+cpppj/src/o/RawMissionClientPackets.cpp	Netstorm.Core/Original/RawMissionClientPackets.cs	eeae45c69171943ad99db6c2930574ee7747ba76	port
+cpppj/src/o/RawMissionClientPackets.h	Netstorm.Core/Original/RawMissionClientPackets.cs	eeae45c69171943ad99db6c2930574ee7747ba76	port
+cpppj/src/o/RawMissionClientPackets.cpp	Netstorm.Net/MissionClientPacketRegistration.cs	eeae45c69171943ad99db6c2930574ee7747ba76	port
+cpppj/src/o/RawMissionClientPackets.h	Netstorm.Net/MissionClientPacketRegistration.cs	eeae45c69171943ad99db6c2930574ee7747ba76	port
+cpppj/src/o/RawMissionLogin.cpp	Netstorm.Core/Original/RawMissionReady.cs	cea41eb0968ebabf6214e82ada598c5b5bdc7abf	port
+cpppj/src/o/RawMissionLogin.h	Netstorm.Core/Original/RawMissionReady.cs	cea41eb0968ebabf6214e82ada598c5b5bdc7abf	port

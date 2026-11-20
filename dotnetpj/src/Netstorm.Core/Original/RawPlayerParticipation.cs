@@ -218,8 +218,8 @@ public sealed class RawPlayerParticipation
     /// <summary>한쪽 방향만 바뀔 수 있는 원본 81 DWORD다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
     private readonly uint[] _allies;
 
-    /// <summary>현재 9개 숨김 표시다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
-    private readonly byte[] _hidden;
+    /// <summary>현재 옵션 저장소 안의 같은 9개 숨김 표시를 사본 없이 빌린다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
+    private readonly Memory<byte> _hidden;
 
     /// <summary>효과 callback 이후에도 다시 읽는 현재 전역이다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
     private readonly PlayerParticipationState _state;
@@ -240,10 +240,9 @@ public sealed class RawPlayerParticipation
     /// <param name="state">현재 전역이다.</param>
     /// <param name="hooks">외부 효과 묶음이다.</param>
     /// <exception cref="ArgumentException">Player 참여 초기화의 PATCH 저장소 크기 오류다.</exception>
-    public RawPlayerParticipation(OriginalEdition edition, Memory<byte> players, uint[] allies, byte[] hidden, PlayerParticipationState state, PlayerParticipationHooks hooks)
+    public RawPlayerParticipation(OriginalEdition edition, Memory<byte> players, uint[] allies, Memory<byte> hidden, PlayerParticipationState state, PlayerParticipationHooks hooks)
     {
         ArgumentNullException.ThrowIfNull(allies);
-        ArgumentNullException.ThrowIfNull(hidden);
         ArgumentNullException.ThrowIfNull(state);
         ArgumentNullException.ThrowIfNull(hooks);
         if (edition != OriginalEdition.Patch1078 || players.Length != Stride * Count || allies.Length != Count * Count || hidden.Length != Count)
@@ -341,7 +340,7 @@ public sealed class RawPlayerParticipation
                 Require(_hooks.Assertion)(PlayerParticipationAssertion.MetamapMode);
             }
 
-            if (_hidden[(int)player] != 0)
+            if (_hidden.Span[(int)player] != 0)
             {
                 Require(_hooks.AddChat)(Read(player, SubscriberOffset), Name(player), 0x80u);
             }
