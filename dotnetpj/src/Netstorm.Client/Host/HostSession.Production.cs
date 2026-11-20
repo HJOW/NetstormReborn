@@ -23,6 +23,8 @@ public sealed class CampaignProductionDevices
     public Action<uint, ReadOnlyMemory<byte>>? Send { get; set; }
     /// <summary>선택된 researchHelp 절의 실제 모드별 도움말 UI다.</summary>
     public Action<string, uint>? ResearchHelp { get; set; }
+    /// <summary>같은 Carrier의 실제 번개/음향/예약/공간 장치다.미설치 효과는 선택 시 실패한다.</summary>
+    public CarrierContentNoticeHooks? CarrierContent { get; set; }
 }
 
 /// <summary>RawCampaignSession.cpp의 생산/연구와 같은 현재 부모 통지를 조립한다.</summary>
@@ -38,6 +40,8 @@ public sealed partial class HostSession
     private RawFactoryResearch? _worldResearch;
     /// <summary>현재 같은 SP와 실제 Gump를 사용하는 Player 통지다.</summary>
     private RawPlayerContentNotice? _worldPlayerContent;
+    /// <summary>현재 로딩/저장·사제 역할과 같은 Carrier 내용물 가상 통지다.</summary>
+    private RawCarrierContentNotice? _worldCarrierContent;
     /// <summary>현재 실제 정렬 부착과 같은 부모 제거 통지다.</summary>
     private RawContentFormHost? _worldContentForms;
     /// <summary>AI와 생산이 함께 사용하는 현재 내용물 역할/권한 뷰다.</summary>
@@ -50,6 +54,10 @@ public sealed partial class HostSession
     public RawCampaignProductionBindings WorldProduction => _worldProduction ?? throw new InvalidOperationException("호스트 생산 재계산 미연결");
     /// <summary>같은 실제 연구 입력/수신/부모 통지다.</summary>
     public RawFactoryResearch WorldResearch => _worldResearch ?? throw new InvalidOperationException("호스트 시설 연구 미연결");
+    /// <summary>현재 같은 Carrier 내용물 본체를 실제 통지 소비자에게 빌린다.</summary>
+    public RawCarrierContentNotice WorldCarrierContent => _worldCarrierContent ?? throw new InvalidOperationException("호스트 Carrier 내용물 통지 미연결");
+    /// <summary>요새 적재·연구와 같은 실제 내용물 생성/정렬 부착을 월드 소비자에게 빌린다.</summary>
+    public RawContainedCreate WorldContentCreate => _fortContained ?? throw new InvalidOperationException("호스트 실제 내용물 생성 미연결");
     /// <summary>설치된 같은 연구/업그레이드 수신을 실제 공유 패킷 표에 등록한다.대여/반납은 전송 owner가 맡는다.</summary>
     public void RegisterFactoryResearchCommands(Netstorm.Net.RawPacketDispatch dispatch) => Netstorm.Net.FactoryResearchRegistration.Register(dispatch, WorldResearch);
     /// <summary>생산/AI의 현재 내용물 상태를 하나만 만들고 같은 역할/권한/진단 전역을 연결한다.</summary>
@@ -103,6 +111,16 @@ public sealed partial class HostSession
                 GumpFormType = () => Gameplay.GumpFormTypeBox.Value, ContentEvent = () => Gameplay.ContentEventBox.Value,
             }, new() { Money = owner => BitConverter.UInt32BitsToSingle(Sp.Get(owner)), Gump = gump, Handle = handle });
             var parentNotice = new RawContentParentNotice(Pool, NotifyProductionParentContent);
+            CarrierContentNoticeHooks carrierEffects = devices.CarrierContent?.Copy() ?? new();
+            carrierEffects.CheckCarrier ??= parent => { _ = PriestWorld.CheckCarrier(parent); };
+            carrierEffects.TypeAt ??= FindWorldTypeAt;
+            var carrierNotice = new RawCarrierContentNotice(Pool, types, new()
+            {
+                SavedGame = () => Gameplay.SavedGameBox.Value, LoadingDepth = () => _worldLoadingDepth,
+                BombBlocked = () => Gameplay.ContentBombBlockedBox.Value, LocalOwner = () => MissionPlayer.BattleOwner,
+                PriestType = () => GameAux.PriestTypeBox.Value, FreeSoundBlockerType = () => GameAux.RainWalkerTypeBox.Value,
+                CameraX = () => Gameplay.ContentScreenOrigin[0], CameraY = () => Gameplay.ContentScreenOrigin[1],
+            }, carrierEffects);
             var contentState = new ContentFormState { ContentType = () => Gameplay.ContentFormTypeBox.Value,
                 Assertion = (text, file, line) => throw new InvalidOperationException($"내용물 부착 원본 진단: {text} {file}:{line}") };
             contentState.InBattleFlag.Bind(() => OwnerMode.Battle); contentState.CheckingLinksFlag.Bind(() => AiChecking.Read() != 0);
@@ -136,7 +154,7 @@ public sealed partial class HostSession
                 Assertion = text => throw new InvalidOperationException($"연구 원본 진단: {text}"),
             });
             _worldProductionDeck = deck; _worldProductionTotals = totals; _worldProduction = production;
-            _worldPlayerContent = playerNotice; _worldContentForms = forms; _worldResearch = research;
+            _worldPlayerContent = playerNotice; _worldCarrierContent = carrierNotice; _worldContentForms = forms; _worldResearch = research;
             return production;
         }
         catch { deck.Dispose(); throw; }
@@ -148,6 +166,7 @@ public sealed partial class HostSession
         if (entry == 0x453b50) { WorldResearch.Notice(parent, form, reason); return; }
         if (entry == 0x475220) { WorldResearch.ManaNotice(parent, form, reason); return; }
         if (entry == 0x490750) { (_worldPlayerContent ?? throw new InvalidOperationException("호스트 실제 Player 내용물 통지 미연결")).Notify(parent, (uint)form, reason); return; }
+        if (entry == 0x429560) { WorldCarrierContent.Notice(parent, form, reason); return; }
         throw new InvalidOperationException($"현재 내용물 부모의 실제 가상24 미연결: 0x{entry:X8}");
     }
     /// <summary>기존 생성기를 유지하며 실제 내용물 가상 부착을 현재 설치된 정렬/통지 장치로 보낸다.</summary>
@@ -168,6 +187,6 @@ public sealed partial class HostSession
         if (_worldProductionDeck is not { } deck) return;
         if (!deck.PlayerLinksReturnedForState) deck.ReturnPlayerLinksForState(deck.CleanupPlayerLinksForState(() => PlayerRecords));
         deck.Dispose(); _worldProductionDeck = null; _worldProductionTotals = null; _worldProduction = null;
-        _worldResearch = null; _worldPlayerContent = null; _worldContentForms = null; _worldProductionFinder = null;
+        _worldResearch = null; _worldPlayerContent = null; _worldCarrierContent = null; _worldContentForms = null; _worldProductionFinder = null;
     }
 }

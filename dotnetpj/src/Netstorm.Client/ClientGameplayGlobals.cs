@@ -35,6 +35,12 @@ public sealed class ClientGameplayGlobals
     public UIntBox ContentRemovalEventBox { get; } = new() { Value = 0x02000039 };
     /// <summary>005c89c4의 현재 조건부 SP 검사 횟수다.</summary>
     public UIntBox ContentMoneyChecksBox { get; } = new();
+    /// <summary>005c85d4의 현재 저장 게임 관문이다.복원 흐름과 내용물 통지가 공유한다.</summary>
+    public BoolBox SavedGameBox { get; } = new();
+    /// <summary>005453e8의 현재 폭탄 획득 시각 효과 억제 DWORD다.</summary>
+    public UIntBox ContentBombBlockedBox { get; } = new();
+    /// <summary>내용물 화면 투영이 읽는 현재59a91c/920의 두 픽셀 원점이다.</summary>
+    public int[] ContentScreenOrigin { get; } = new int[2];
 
     /// <summary>00540cb8의 최초 DWORD6이다. 사제 표본 쓰기 후 마지막 값을 미션 반납 뒤에도 보존한다.</summary>
     public UIntBox PatchSample { get; } = new() { Value = 6 };

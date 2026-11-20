@@ -461,4 +461,8 @@
   <ItemGroup>
     <None Include="../../../cpppj/tests/fixtures/constructionframe-x86.tsv" Link="X86/constructionframe-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- Carrier 내용물의 독립 원본1731입력과 전체 슬롯을 읽기 전용으로 공유한다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/carrier-content-notice-x86.tsv" Link="X86/carrier-content-notice-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

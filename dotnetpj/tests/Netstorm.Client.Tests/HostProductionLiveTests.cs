@@ -76,6 +76,22 @@ public sealed partial class HostPriestWorldLiveTests
         session.SetWorldLoadingDepth(0); session.WorldProduction.RefreshCurrent(); Assert.True(session.WorldProduction.Contains(71));
         Assert.Throws<InvalidOperationException>(() => session.BuildProductionWorldDevices(ProductionDevices()));
     }
+    /// <summary>실제 사제 부모의 정렬 부착이 현재 로딩/저장 접두를 통과하고 카메라를 같은 전역으로 전달한다.</summary>
+    [Fact, SupportedOSPlatform("windows")]
+    public void ProductCarrierAttachmentUsesCurrentLoadingAndSavedGameGuards()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+        using var scene = new BurningContext(); HostSession session = scene.Session;
+        int parent = PlacePriest(session, scene.Types); session.BuildProductionWorldDevices(ProductionDevices());
+        Assert.True(session.WorldCarrierContent.Handles(parent)); session.SetWorldLoadingDepth(1);
+        session.WorldContentCreate.Create(parent, 71, 0, 16, 16, 0);
+        int first = BinaryPrimitives.ReadUInt16LittleEndian(session.Pool.Slot(parent)[6..]); Assert.NotEqual(0, first);
+        session.SetWorldLoadingDepth(0); session.Gameplay.SavedGameBox.Value = true;
+        session.WorldContentCreate.Create(parent, 72, 0, 16, 16, 0);
+        first = BinaryPrimitives.ReadUInt16LittleEndian(session.Pool.Slot(parent)[6..]);
+        Assert.NotEqual(0, BinaryPrimitives.ReadUInt16LittleEndian(session.Pool.Slot(first)[4..]));
+        scene.Visuals.SetView(13, 17, new(0, 0, 1024, 768)); Assert.Equal(new[] { 13, 17 }, session.Gameplay.ContentScreenOrigin);
+    }
     /// <summary>실제 기술 부모의 GumpForm을 현재 등록 표/사건으로 통지하고 동일 SP 접두·장부/역할을 공유한다.</summary>
     [Fact, SupportedOSPlatform("windows")]
     public void ProductTechnologyUsesPlayerSpPrefixAndCurrentGumpNotification()

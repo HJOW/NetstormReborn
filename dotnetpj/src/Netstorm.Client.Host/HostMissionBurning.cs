@@ -146,6 +146,7 @@ public sealed class HostMissionBurning : IDisposable
         ObjectDisposedException.ThrowIf(_disposed, this);
         FrameState.CameraX = cameraX; FrameState.CameraY = cameraY; FrameState.Viewport = viewport; FrameState.InsetViewport = inset; _viewBound = true;
         Construction.FrameState.CameraX = cameraX; Construction.FrameState.CameraY = cameraY;
+        _session.Gameplay.ContentScreenOrigin[0] = unchecked((int)cameraX); _session.Gameplay.ContentScreenOrigin[1] = unchecked((int)cameraY);
     }
     /// <summary>같은 Host의 연소를 먼저 없앤 뒤 외부 실제팔레트 메모리를 반납한다.</summary>
     public void Dispose()
