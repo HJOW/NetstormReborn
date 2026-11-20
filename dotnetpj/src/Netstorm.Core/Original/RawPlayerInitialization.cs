@@ -22,11 +22,20 @@ public static class PlayerInitializationValues
 // 실제 두 카운터와 현재 32비트 Player 주소 슬롯을 빌린다. 2026-11-07 F2d Player 이식에서 추가됐다.
 public sealed class PlayerInitializationGlobals
 {
+    /// <summary>독립 입력 또는 같은 실제 두 DWORD를 빌려 카운터를 공유한다.</summary>
+    public PlayerInitializationGlobals(UIntBox? fortCount = null, UIntBox? lastLoginPlayer = null)
+    {
+        FortCountBox = fortCount ?? new(); LastLoginPlayerBox = lastLoginPlayer ?? new();
+    }
+    /// <summary>초기화·로그인이 공유하는 같은 현재 DWORD다.</summary>
+    public UIntBox FortCountBox { get; }
+    /// <summary>초기화·로그인이 공유하는 같은 마지막 플레이어 DWORD다.</summary>
+    public UIntBox LastLoginPlayerBox { get; }
     /// <summary>첫 현재 base 적재 뒤 0을 쓰는 로그인 요새 수다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
-    public uint FortCount { get; set; }
+    public uint FortCount { get => FortCountBox.Value; set => FortCountBox.Value = value; }
 
     /// <summary>그다음 0을 쓰는 마지막 로그인 Player다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
-    public uint LastLoginPlayer { get; set; }
+    public uint LastLoginPlayer { get => LastLoginPlayerBox.Value; set => LastLoginPlayerBox.Value = value; }
 
     /// <summary>현재 주소를 각 원문 적재 위치에서 순수 조회한다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
     public Func<uint>? PlayerBase { get; set; }
@@ -60,6 +69,35 @@ public sealed class PlayerInitializationHooks
 // Player 전체 초기화를 복원한 정적 클래스다. 2026-11-07 F2d Player 이식에서 추가됐다.
 public static class RawPlayerInitialization
 {
+    /// <summary>CD00406200의387DWORD0·172간격과 각 free 뒤 현재base,행캡처·동맹 인자 순서를 보존한다.</summary>
+    public static void InitializeCdPlayerRecords(PlayerInitializationGlobals globals, PlayerInitializationHooks hooks)
+    {
+        ArgumentNullException.ThrowIfNull(globals); ArgumentNullException.ThrowIfNull(hooks);
+        uint current = Need(globals.PlayerBase)(); globals.FortCount = 0; globals.LastLoginPlayer = 0;
+        if (current != 0)
+        {
+            // 마지막 freeFactory 복귀 뒤에도 현재 주소를 읽어 freePlayers 인자로 쓴다.
+            for (uint owner = 0; owner < 9; owner++)
+            {
+                Need(hooks.FreeFactory)(Read(hooks, unchecked(current + owner * 172)));
+                current = Need(globals.PlayerBase)();
+            }
+            Need(hooks.FreePlayers)(current); Need(globals.WritePlayerBase)(0);
+        }
+        uint allocated = Need(hooks.MallocPlayers)(1548); Need(globals.WritePlayerBase)(allocated);
+        // REP는 현재 전역이 바뀌어도 잡은 반환 주소의387DWORD에 쓴다.
+        for (uint word = 0; word < 387; word++) Write(hooks, unchecked(allocated + word * 4), 0);
+        // new 전에 캡처한 행과 new 뒤의 현재 자기 마스크 주소를 구별한다.
+        for (uint owner = 0; owner < 9; owner++)
+        {
+            uint offset = owner * 172, record = unchecked(Need(globals.PlayerBase)() + offset);
+            uint factory = Need(hooks.NewFactory)(120);
+            Write(hooks, record, factory); Write(hooks, unchecked(record + 4), 30); Write(hooks, unchecked(record + 0x70), 127);
+            Write(hooks, unchecked(record + 8), 0); Write(hooks, unchecked(record + 0x2c), 0);
+            uint mask = 1u << (int)owner; Write(hooks, unchecked(Need(globals.PlayerBase)() + offset + 0x54), mask);
+            Need(hooks.Alliance)(owner, mask);
+        }
+    }
     /// <summary>
     /// 이전 공장 9개→이전 Player→NULL→malloc·405 DWORD 0→각 행·신규·동맹 순서를 실행한다.
     /// </summary>
