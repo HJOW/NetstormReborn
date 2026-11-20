@@ -46,11 +46,29 @@ test('한국어 Tutorial2: 실행 설정과 단계별 명령은 원본과 같다
     finally { mission.dispose(); }
 });
 
-// 번역 파일이 아직 없는 다음 튜토리얼은 기존 영어 대체 경로를 유지한다.
-test('한국어 미션: 번역하지 않은 Tutorial3은 영어 원문으로 대체한다', () => {
+// 세 번째 튜토리얼도 단계·명령·그림의 원본 순서와 실행 설정을 보존한다.
+test('한국어 Tutorial3: 실행 설정과 단계별 명령은 원본과 같다', () => {
     const manifest = JSON.parse(fs.readFileSync(path.join(DATA_ROOT, 'manifest.json'), 'utf8'));
     const files = readDataMap(manifest.files.filter((entry) => entry.bundle === 'menu' || entry.bundle === 'korean').map((entry) => entry.path));
+    const source = fs.readFileSync(path.join(REPO_ROOT, 'webpj/translations/Tutorial3.korean'), 'utf8');
+    assert.equal(decodeOriginalText(files.get('d/Tutorial3.korean')), source);
+    const archive = new TaffArchive(readData('netstorm.tarc')), original = decodeOriginalText(archive.read('\\d\\Tutorial3.english'));
+    const header = (text) => text.split('[Options]')[0].split(/\r?\n/).filter((line) => line.trim() && !/^title\s*=/i.test(line)).join('\n');
+    const sections = (text) => [...text.matchAll(/^\[([^\]]+)\]/gm)].map((match) => match[1]);
+    const commands = (text) => [...text.matchAll(/^\$Button=[^,]*,([^\r\n]+)|(<\$[^>]+>)/gm)].map((match) => match[1] ?? match[2]);
+    const pictures = (text) => [...text.matchAll(/<!"[^>]+>/g)].map((match) => match[0]);
+    assert.equal(header(source), header(original)); assert.deepEqual(sections(source), sections(original));
+    assert.deepEqual(commands(source), commands(original)); assert.deepEqual(pictures(source), pictures(original));
     const data = GameData.build({ files, language: 'korean' }), mission = new MissionScript(data, 'Tutorial3');
+    try { assert.equal(mission.get('loadFort'), 'CaptureThePriest'); assert.equal(mission.get('tutorialNumber'), '3'); assert.match(mission.get('title'), /사제 포획/u); assert.match(mission.section('A.'), /골렘/u); assert.match(mission.section('H.'), /튜토리얼/u); }
+    finally { mission.dispose(); }
+});
+
+// 번역 파일이 아직 없는 다음 튜토리얼은 기존 영어 대체 경로를 유지한다.
+test('한국어 미션: 번역하지 않은 Tutorial4는 영어 원문으로 대체한다', () => {
+    const manifest = JSON.parse(fs.readFileSync(path.join(DATA_ROOT, 'manifest.json'), 'utf8'));
+    const files = readDataMap(manifest.files.filter((entry) => entry.bundle === 'menu' || entry.bundle === 'korean').map((entry) => entry.path));
+    const data = GameData.build({ files, language: 'korean' }), mission = new MissionScript(data, 'Tutorial4');
     try { assert.ok(mission.loaded); assert.match(mission.section('A.'), /[A-Za-z]{4}/); assert.doesNotMatch(mission.section('A.'), /[가-힣]/u); }
     finally { mission.dispose(); }
 });

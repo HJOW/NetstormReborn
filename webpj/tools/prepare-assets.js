@@ -65,6 +65,7 @@ const KOREAN_LANGUAGE_FILES = Object.freeze([
     { name: 'config.korean', use: '한국어 용어표(UTF-8): 워크샾·신전·사제 같은 이름 용어와 기본 확인 단추 OkButton' },
     { name: 'Tutorial1.korean', use: '한국어 첫 튜토리얼 대본(UTF-8): 원본 실행 설정과 안내·미션 완료 명령 유지' },
     { name: 'Tutorial2.korean', use: '한국어 두 번째 튜토리얼 대본(UTF-8): 원본 실행 설정과 안내·미션 완료 명령 유지' },
+    { name: 'Tutorial3.korean', use: '한국어 세 번째 튜토리얼 대본(UTF-8): 원본 실행 설정과 안내·미션 완료 명령 유지' },
     { name: 'help.korean', use: '한국어 F1 도움말(UTF-8, 번역 앵커 126개: 본문 104개와 별칭 22개): 번역하지 않은 주제(serverHelp·map)는 영어 help.english 에서 주제 단위로 대체된다(2026-10-31 WB03-P, 2026-11-01 WB03-Q, WB03-R, WB03-S)' },
     ...['offical1', 'offical2', 'offical2sep', 'offical3', 'offical4', 'offical5', 'offical5sep', 'offical6'].map((name) => ({
         name: `${name}.korean`,
