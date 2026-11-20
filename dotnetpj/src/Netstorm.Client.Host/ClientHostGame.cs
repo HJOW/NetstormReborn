@@ -169,6 +169,7 @@ public sealed partial class ClientHostGame : Game
         _clientClock = new ClientClockGlobals(_localState);
         _surfaceGlobals = new ClientSurfaceGlobals(_gameplay, _clientClock, _kernel, () => _clock.Milliseconds);
         _sidLists = _surfaceGlobals.Storage.SidLists;
+        LoadRootServerList();
         // cpppj ClientMain 349행의 실제 공통 SP 초기화와 같은 위치다: 클라이언트 시작 때 1회만 reseed+초기화하고 미션 시작 때는 다시 하지 않는다(0.464, 원본 004391ed).
         // 세션 시작 흐름의 미션별 reseed는 원본에 없어 0.463에서 근본 원인으로 확정했다.
         _spGlobals = new ClientSpGlobals(_gameRandom, _spCrtBox, _spModeBox, () => _clock.UnixSeconds);

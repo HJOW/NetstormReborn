@@ -8,6 +8,17 @@ public sealed partial class ClientHostGame
     private readonly ClientNsInfoGlobals _nsInfoGlobals = new();
     /// <summary>현재 실제 같은 NSInfo 소유자만 조회하며 표 초기화/통신을 실행하지 않는다.</summary>
     public ClientNsInfoGlobals NsInfoGlobals => _nsInfoGlobals;
+    /// <summary>같은 NSInfo/설정/파일 장치의 실제 서버 목록 파일 소비자다. 자료 없는 호스트에서는 없다.</summary>
+    private RootServerListDisk? _rootServerList;
+    /// <summary>실제 물리 장치 준비 뒤 첫 메뉴 전에 한 번 같은 현재 목록을 읽는다.</summary>
+    private void LoadRootServerList()
+    {
+        if (_startup is not { } startup) return;
+        _rootServerList = new RootServerListDisk(_nsInfoGlobals, startup.Files, startup.Configuration);
+        _rootServerList.Load();
+    }
+    /// <summary>현재 서버 목록을 사용자 Saves에 저장한다. 실제 Root reply/메타 UI의 선택 호출에서 사용하는 경계다.</summary>
+    public void SaveRootServerList() => (_rootServerList ?? throw new InvalidOperationException("현재 서버 목록 파일 장치 미연결")).Save();
     /// <summary>실제 시작 설정이 있으면 같은 세 DWORD만 해석한다. 자료 없는 화면 호스트는 현재값을 유지한다.</summary>
     private void InterpretNsInfoOptions()
     {

@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-21 · 사용자 재개 지시로 진행 중 · 마지막 완료0.737(NSInfo/실제 호스트 소유자·집중30건 통과) · 다음0.738 서버 목록 파일·Root 소유자 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6 병행) · cpppj 제품1323 / 11.01 · 전체 목표 미완료**
+**2026-11-21 · 사용자 재개 지시로 진행 중 · 마지막 완료0.738(실제 서버 목록 파일/경로 고리·집중29건/원문352입력 통과) · 다음0.739 Root 장기 소유자/State 컨텍스트 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6 병행) · cpppj 제품1323 / 11.01 · 전체 목표 미완료**
 
 현행 인계는 이 문서가 기준이다. 단위별 근거는 `docs/dotnet-canon-0NNN-*.md`이다. 0.645~0.732의 단위별 완료 문장, 0.640 회귀 점검 상세, 0.546~0.676 완료 기록 원문은 [0.732 정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0732)에 있다. 0.600~0.635는 [0.635 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635), 0.613까지의 경과와 파일 계열별 체크 목록은 [0.613 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)에 있다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
@@ -22,9 +22,9 @@
 
 **재개 순서(2026-11-21).** 0.736 전체5,259검사와 같은 빌드65시작·원본/빌드 해시·전수 바이트 감사를 완료했다. [0.736 근거](docs/dotnet-canon-0736-20261121.md)
 
-1. **0.738 서버 목록 파일·Root 소유자.** 0.737에서 NSInfo/서버 레코드 판독과 실제 ClientHostGame의 장기 소유자·초기 옵션3값을 연결했다. 신규15건 포함 집중30건·대표3시작 종료0/0.736 전체 바이트 일치·원본1,392파일 불변이다. [0.737](docs/dotnet-canon-0737-20261121.md). 다음은 RootServerListDisk.cpp의 같은 NSInfo 목록/사용자 Saves 경로 읽기·저장 연결이다. 서버 목록 파일과 NSInfo HUD·메타 UI·전체 State의 같은 zone 컨텍스트 연결은 아직 미완료다. 이어서 Template/팝업/seed/장면 음악 소유자와 전체 State/UI/로그인을 진행한다. extracted/dotnet-0737/ 초안은 제품에 적용했으며 실제 최종본은 dotnetpj/src 및 tests다.
+1. **0.739 Root 장기 소유자/State 컨텍스트.** 0.737 NSInfo/서버 레코드와 실제 호스트 장기 소유자·초기 옵션3값에 이어,0.738에서 같은 목록의 사용자 Saves 우선 읽기/저장과 실제 시작 호출을 연결했다. 빈 파일/열기 실패/행BYTE·LF·NUL·설치 불변/파일명 고리를 신규10건 포함 집중29건으로 검증했고 원문formatter352입력 전체256BYTE도 일치했다. 대표3시작 종료0/0.736 전체 바이트 일치·원본1,392파일 불변이다. [0.737](docs/dotnet-canon-0737-20261121.md) · [0.738](docs/dotnet-canon-0738-20261121.md). 다음은 Template/팝업/seed/장면 음악 소유자와 전체 State 컨텍스트를 연결하고 전체 State/UI/로그인을 진행한다. NSInfo HUD·메타 UI/Root reply의 저장 호출은 아직 미연결이다. RawFileName은 Format/조회만 이식했으며 Device/Name/Directory/Full과 BaseFile 읽기 정책의 같은 고리 소비·ClientStaticStrings 일원화는 해당 소비자에서 이어간다.
 2. **같은 작업 줄기.** MetaZone 원문 본체124입력은0.734, 실제Client표/현재Runtime pin·설치된가상분배전달은0.735 완료다. 현재 HostSession의 전체 Native World 자산 가상 삭제 분배 설치는 아직 미연결이며 일반 삭제의 Pre/Post 완료로 대신하지 않는다. [0.733](docs/dotnet-canon-0733-20261121.md) · [0.734](docs/dotnet-canon-0734-20261121.md) · [0.735](docs/dotnet-canon-0735-20261121.md). 이어서 [R4 체크](#r4-detail)→R11과 후순위 요구사항을 진행한다. 다음 정기 전체 회귀는0.740이다.
-3. **사용자 제외 검사 유지.** 실제 포획/희생·특정 적 공격·시나리오 승리는 재현하지 않고 사용자 수동 확인으로 남긴다. 원본1,392파일의 마지막 불변 확인은0.737 대표3시작이다(전체65시작은0.736).
+3. **사용자 제외 검사 유지.** 실제 포획/희생·특정 적 공격·시나리오 승리는 재현하지 않고 사용자 수동 확인으로 남긴다. 원본1,392파일의 마지막 불변 확인은0.738 대표3시작이다(전체65시작은0.736).
 
 **최근 완료 요약(0.639~0.732).** 단위별 완료 문장과 집중 검사 수는 보관본과 각 단위 문서에 있다. 완료 범위와 남은 일의 기준은 1.1·1.2절 체크 항목이다.
 
@@ -121,7 +121,7 @@ AGENTS.md 2026-11-19 추가(`d047bf9a3`)로 `Netstorm.exe`의 아이콘은 기�
   - 완료(패킷·로그인 본체, 0.689~0.703): 패킷 복제/소유, 실제 연결표와 Source pin, 로컬 양끝/현재 ID Poll·Zone 별칭, 서버 Player/metadata, 옵션 전체 부모, 클라이언트 8종 수신/등록·Ready writer, 전체 로그인/재접속/현재 집계, 전체 타이머/진행 문구, 옵션 파생/설정 패킷, 로컬 상태 전이/확정, 내부 Source와 단일 ID 순회, Clock 동기화/Reset.
   - 완료(장기 소유자, 0.705~0.719): 장기 Client 전역·연결표와 기존 저장 모드·주변음·플레어 기한 공유(0.705), 실제 Runtime 준비 대여/공개/배송 pin(0.706), 52h·64h 선행 부모(0.707), 장기 Player 할당·공장 목록·옵션/Core/Player 전역(0.709~0.711), 호출 대여 명시 반납(0.713), Player/동맹 고정뷰(0.714), 고정 App 수신기·Session 엔트리 분배(0.715), 후처리·Process·공장의 현재 Runtime pin(0.717~0.719).
   - 완료(Client 프레임·State, 0.721~0.731): 메뉴 전 Clock/Player 초기화와 같은 Frame·게임 시각(0.721~0.722), 프레임 실행 순서 복원(0.723), 장기 Surface(0.725), 장기 Host Runtime·TYPE 물리 배열·weak 소유(0.726~0.727), Native State 정리 부모(0.729), 실제 State 전역·장기 월드(0.730), State 저장소 자식·장기 SID(0.731), 실제 자식 증빙·Core0 뒤 Runtime 반납과 제품 Surface 준비 대여(0.733), MetaZone 원문 부모·마커124입력(0.734), 실제Client표/현재Runtime pin·설치된가상삭제분배전달(0.735), NSInfo/서버 바이트 판독과 실제 호스트 소유자·옵션3값(0.737).
-  - 남음: MetaZone의전체NativeWorld자산가상삭제분배설치(원문본체/Client표/pin경계는0.734~0.735완료), 실제 Root의 Template/팝업/NSInfo HUD·목록 파일/seed/장면 음악·UI/음향/Pool·전체 State 설치, 전체 로그인/제품 Root 등록과 제품 Clock 프레임 설치, World/건설 효과 pin 전달, Source의 Editor/LAN/Meta 재인계, 원본 큰 메뉴 부모 3행(0.707), 앞선 Native 초기화 주소 세대와 전체 bridge(0.714), Native WorldRuntime 장치 일원화, 미션 없는 장기 Surface/주변음·영화 갱신 잠금과 나머지 루프 단계(0.723), 메뉴 Kernel/효과·전체 State/자산 재시작(0.725).
+  - 남음: MetaZone의전체NativeWorld자산가상삭제분배설치(원문본체/Client표/pin경계는0.734~0.735완료), 실제 Root의 Template/팝업/NSInfo HUD/seed/장면 음악·UI/음향/Pool·전체 State 설치(목록 파일/실제 시작은0.738완료,Root reply/UI 저장 호출은후속), 전체 로그인/제품 Root 등록과 제품 Clock 프레임 설치, World/건설 효과 pin 전달, Source의 Editor/LAN/Meta 재인계, 원본 큰 메뉴 부모 3행(0.707), 앞선 Native 초기화 주소 세대와 전체 bridge(0.714), Native WorldRuntime 장치 일원화, 미션 없는 장기 Surface/주변음·영화 갱신 잠금과 나머지 루프 단계(0.723), 메뉴 Kernel/효과·전체 State/자산 재시작(0.725).
 - [ ] **R4-7 데모와 보류 검사.** `StartDemo` 3경로 덤프, `player-world-x86.tsv` 1,680행, F3에서 미룬 Fort/지형 바인딩·미션 Fort 경로·로그인 객체 전송·미션 재적재 검사를 잇는다.
 - [ ] **R4-8 M1 판정.** 같은 시드·고정 프레임·빈 사용자 루트로 34/34 상태 일치. 로드 뒤 프레임 진행에서만 생기는 차이는 cpp 후속 프레임 덤프로 입증한 뒤 R6으로 넘긴다.
 

@@ -1240,3 +1240,7 @@ cpppj/src/client/RootServerEndpoint.h	Netstorm.Client/RootServerEndpoint.cs	6bff
 cpppj/src/client/ClientMain.cpp	Netstorm.Client/ClientNsInfoGlobals.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Client.Host/ClientHostGame.NsInfo.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
 cpppj/src/client/ClientMain.h	Netstorm.Client.Host/ClientHostGame.NsInfo.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
+cpppj/src/client/RootServerListDisk.cpp	Netstorm.Client.Host/RootServerListDisk.cs	d97301dc5ffef7abd58a701a06efa1dc9151fd77	port
+cpppj/src/client/RootServerListDisk.h	Netstorm.Client.Host/RootServerListDisk.cs	d97301dc5ffef7abd58a701a06efa1dc9151fd77	port
+cpppj/src/o/RawFileName.cpp	Netstorm.Assets/RawFileName.cs	c2d292277d843ecc690a11787b8892afad5143f2	port
+cpppj/src/o/RawFileName.h	Netstorm.Assets/RawFileName.cs	c2d292277d843ecc690a11787b8892afad5143f2	port

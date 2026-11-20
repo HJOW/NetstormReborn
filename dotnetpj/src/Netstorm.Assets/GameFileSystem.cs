@@ -27,6 +27,9 @@ public sealed class GameFileSystem
     /// <summary>아카이브 파일 확장자 패턴 (원본은 데이터 폴더에서 "*.tarc" 를 찾아 모두 등록한다)</summary>
     private const string ArchivePattern = "*.tarc";
 
+    /// <summary>같은 파일 장치와 저장 소비자가 공유하는 원문 BYTE 경로 출력 고리다. 조회만으로 작성하지 않는다.</summary>
+    public RawFileName FileNameOwner { get; } = new();
+
     /// <summary>원본 데이터 폴더 (netstorm.tarc 가 있는 곳)</summary>
     public string BaseDirectory { get; }
 
