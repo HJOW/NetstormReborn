@@ -21,11 +21,11 @@ const peRows = fixture('html-solo-command-names-pe.tsv');
 const nameRows = fixture('knowledge-world-names-x86.tsv');
 // 이름이 없을 때 원본이 돌려주는 값이다. (2026-11-15 WB04-E538)
 const NOT_FOUND = 0xffffffff;
-// 원본 PE 43개 중 이 표가 전역 주소로 직접 아는 수(23)와 이름으로 아는 수(29)이다. 나머지 이름 14개(아래 UNOWNED)는 UberGump DialogScriptCode 의 다른 해석기가 소유한다. (2026-11-15 WB04-E538)
+// 원본 PE 43개 중 이 표가 전역 주소로 직접 아는 수(23)와 이름으로 아는 수(29)이다. 나머지 이름 12개(아래 UNOWNED, E1126 에서 송금 두 이름이 이 표로 옮겨짐)는 UberGump DialogScriptCode 의 다른 해석기가 소유한다. (2026-11-15 WB04-E538)
 const BY_ADDRESS = 23;
-const BY_NAME = 29;
+const BY_NAME = 31; // E1126: 송금 이름표(SendBucks·SendAllBucks)를 이 해석기에 더해 29 → 31
 // 이 표가 모르는(UberGump 의 Tell·Config·MissionBegin·SetOwner 등 다른 해석기가 소유하는) 원본 이름 14개이다. (2026-11-15 WB04-E538)
-const UNOWNED = ['Config', 'DoNothing', 'MissionAbort', 'MissionBegin', 'MissionRestart', 'MoveDialog', 'Salvage', 'SendAllBucks', 'SendBucks', 'SetOwner', 'StartDemo', 'Tell', 'ViewSpot', 'Warning'];
+const UNOWNED = ['Config', 'DoNothing', 'MissionAbort', 'MissionBegin', 'MissionRestart', 'MoveDialog', 'Salvage', 'SetOwner', 'StartDemo', 'Tell', 'ViewSpot', 'Warning'];
 
 // UberGump DialogScriptCode 의 끝부분과 같은 순서이다: 기술 창 이름을 먼저 보고 없으면 게임 메뉴 표를 본다(나머지 해석기는 이 시험의 이름과 무관). (2026-11-15 WB04-E538)
 const resolve = (name) => { const knowledge = knowledgeScriptCode(name); return knowledge !== NOT_FOUND ? knowledge : gameMenuScriptCode(name); };
@@ -212,4 +212,11 @@ test('ESC/F9 키 판정: ESC 는 전체 코드 비교(수정키 무시)이고 F9
         assert.ok(event.code === code && event.x === 0 && event.y === 0, code.toString(16));
     }
     assert.equal(queue.empty, true);
+});
+
+// 안내 창 `$Button=예,SendAllBucks,…` 같은 송금 단추 이름이 명령 번호로 해석되어야 단추가 입력 큐에 명령을 올린다(해석 못 하면 단추가 아무 일도 하지 않았다). (2026-11-20 WB04-E1126)
+test('버튼 명령 이름: 송금 여섯 이름이 대소문자 무시로 원본 명령 번호가 된다', async () => {
+    const { gameMenuScriptCode } = await import('../www/core/game-menu-commands.js');
+    const expected = { Send300Bucks: 0x02000120, Send700Bucks: 0x02000108, SendBucks: 0x020000ec, SendXBucks: 0x02000100, SendAllBucks2: 0x0200012b, SendAllBucks: 0x02000118 };
+    for (const [name, code] of Object.entries(expected)) { assert.equal(gameMenuScriptCode(name), code, name); assert.equal(gameMenuScriptCode(name.toUpperCase()), code, name); }
 });

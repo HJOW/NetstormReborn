@@ -148,3 +148,15 @@ test('Netstorm 미션 장치: 포획 안내 Player 이름은 owner 로 현재 Pl
     assert.equal(services.priestTakenName(7, 'Me'), 'SOMEONE'); battle = 0; assert.equal(services.priestTakenName(2, 'Me'), 'SOMEONE');
     gameplay.player.battleOwner = 4; assert.equal(services.priestTakenName(4, 'Me'), 'Me');
 });
+
+// 안내 창 단추의 송금·동맹 이름은 원본 이름표의 명령 번호로 입력 큐에 올라가고(대상은 두 인자에 같게), 다른 이름은 건드리지 않는다. (2026-11-20 WB04-E1126)
+test('Netstorm 안내 창 단추: 송금·동맹 이름을 명령 번호로 입력 큐에 올린다', () => {
+    const app = new Netstorm(); app._clientInputQueue = new InputQueue();
+    assert.equal(app._queueDialogPlayerCommand({ name: 'SendAllBucks', argument: ' 2 ' }), true); assert.deepEqual(app._clientInputQueue.pop(false), { code: 0x02000118, x: 2, y: 2 });
+    assert.equal(app._queueDialogPlayerCommand({ name: 'sendbucks', argument: '7' }), true); assert.deepEqual(app._clientInputQueue.pop(false), { code: 0x020000ec, x: 7, y: 7 });
+    assert.equal(app._queueDialogPlayerCommand({ name: 'ConfirmAlliance', argument: '5' }), true); assert.deepEqual(app._clientInputQueue.pop(false), { code: 0x0200007e, x: 5, y: 5 });
+    assert.equal(app._queueDialogPlayerCommand({ name: 'RequestAlliance', argument: 'oops' }), true); assert.deepEqual(app._clientInputQueue.pop(false), { code: 0x020000fb, x: 0, y: 0 });
+    // 다른 이름이거나 큐가 없으면 아무것도 올리지 않는다.
+    assert.equal(app._queueDialogPlayerCommand({ name: 'Tell', argument: 'x' }), false); assert.equal(app._clientInputQueue.peek(), null);
+    app._clientInputQueue = null; assert.equal(app._queueDialogPlayerCommand({ name: 'SendAllBucks', argument: '2' }), false);
+});

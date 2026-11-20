@@ -334,6 +334,24 @@ export class RawCampaignSession {
         if (!this.#login) throw new Error('실제 로컬 Login 전송 없는 원본 패킷 송신');
         this.#login.send(target, packet);
     }
+    // 송금 입력(고정 300/700/1000·All·X 확인)이 같은 현재 SP·Player·AI 지갑·로컬 송신을 빌리는 장치 묶음이다(원본 `RawCampaignSession::MoneyInputHooks`).
+    // 로컬 SP 는 암호화 저장소의 float 이고, 연결 Player(플래그 1)에게는 11바이트 송금 packet 을, AI(플래그 0x20)에게는 지갑 가산을 한다. 편집 모드는 잔액 검사를 건너뛴다.
+    // 호출 앞에 미션이 설치돼 있어야 하며 numberDialog·askAll 은 호출자(앱)가 더한다. (2026-11-20 WB04-E1126)
+    moneyInputHooks() {
+        const o = this.#live(); if (!o.loaded) throw new Error('송금의 현재 세션 미설치');
+        const view = new DataView(new ArrayBuffer(4)), floatOf = (bits) => { view.setUint32(0, bits >>> 0, true); return view.getFloat32(0, true); };
+        const local = () => o.playerState.battleOwner, stored = () => floatOf(o.sp.get(local()));
+        const addOwner = (owner, amount) => this.#addMoney(owner, amount);
+        return {
+            local, known: () => o.playerState.playerKnown, editor: () => o.globals.editor, mission: () => o.globals.missionPost,
+            checking: () => o.gameplayGlobals.aiDebug().checking().value,
+            money: () => (o.playerState.playerKnown ? stored() : 0), canAfford: (amount) => Boolean(o.globals.editor) || amount <= stored(),
+            flags: (owner) => { if (owner >= 9) throw new RangeError('송금 대상 Player 범위'); const at = owner * 180 + 0x50; return (o.players[at] | (o.players[at + 1] << 8) | (o.players[at + 2] << 16) | (o.players[at + 3] << 24)) >>> 0; },
+            addOwner, addLocal: (amount) => addOwner(local(), amount), wallet: (owner, amount) => { o.hp.creditWallet(owner, amount); },
+            send: (packet) => this.sendLocalPacket(9, packet),
+            assertionAt: (expression, file, line) => { const report = o.services.ai?.assertion; if (!report) throw new Error(`송금 현재 원문 진단 장치 미연결: ${file}:${line}`); report(expression); },
+        };
+    }
     // 같은 현재 Login의 mutable 관찰기와 송신 큐를 UI에 제공한다.
     sendMutableLocalPacket(target, packet) { this.#live().constructionModules.sendChatMutable(target, packet); }
     // 단일 또는 자기 제외 대상에게 같은 실제 원격 Tell 패킷을 전달한다.

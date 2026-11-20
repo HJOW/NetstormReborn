@@ -341,3 +341,48 @@ export class RawPlayerParticipation {
         }
     }
 }
+
+// 동맹 요청 입력의 네 명령(요청 fb·해제 fa·확인 7e·무승부 선언 db)과 보내는 packet 종류(0x77·0x79·0x78·0x6f)이다. (2026-11-20 WB04-E1126)
+const ALLIANCE_INPUT_MESSAGES = new Map([[0x020000fb, 0x77], [0x020000fa, 0x79], [0x0200007e, 0x78], [0x020000db, 0x6f]]);
+// 입력 명령의 상위 입력 플래그를 지우는 마스크와 뗌 비트이다. (2026-11-20 WB04-E1126)
+const INPUT_KEY_MASK = 0x03ffffff;
+const INPUT_RELEASE = 0x80000000;
+
+// 동맹 요청 입력(원본 `HandleAllianceRequestInput`)이다. 네 명령이 아니면 false, 뗌이면 효과 없이 true 이다.
+// 요청(fb)만 대상마다 60초 창에서 세 번을 넘으면 `AllianceSpam(제한,색,이름)` 안내를 띄우고 packet 을 보내지 않는다(해제·확인·무승부에는 제한이 없다).
+// 그 밖에는 6바이트 packet {1, 종류, 6, 0, 로컬 owner, 무승부면 1 아니면 대상}을 서버(9)로 보낸다.
+// 인자: eventCode(상위 플래그 포함 명령), target(signed 대상 owner), state(AllianceRequestState), players(9×180 Player 기록), hooks = { clock() → uint32 밀리초, localOwner(), send(packet), tell(문자열) }.
+// 요청 제한은 대상 범위 검사보다 먼저 갱신하고(원본 순서), 시계는 owner 마다 따로 부른다. (2026-11-20 WB04-E1126: 동맹 입력 처리기 이식)
+export function handleAllianceRequestInput(eventCode, target, state, players, hooks) {
+    const command = (eventCode & INPUT_KEY_MASK) >>> 0, message = ALLIANCE_INPUT_MESSAGES.get(command);
+    if (message === undefined) return false;
+    if ((eventCode & INPUT_RELEASE) !== 0) return true;
+    const need = (device) => { if (typeof device !== 'function') throw new Error('Player 참여 초기화의 실제 외부효과 미연결'); return device; };
+    if (command === 0x020000fb) {
+        if (!state.initialized) {
+            // 최초 요청은 아홉 칸의 시작 시계를 각각 한 번씩 읽어 저장하고 counter 를 0 으로 만든다. sampled 는 쓰지 않는다.
+            for (let owner = 0; owner < COUNT; owner += 1) { state.clocks[owner][1] = need(hooks.clock)() >>> 0; state.counters[owner] = 0; }
+            state.initialized = 1;
+        } else {
+            // 이후 요청은 현재 시계를 sampled 에 먼저 쓰고 signed 감김 차이를 1000 으로 나눈 정수초가 창을 넘으면 시작 시계와 counter 를 다시 잡는다.
+            for (let owner = 0; owner < COUNT; owner += 1) {
+                const pair = state.clocks[owner]; pair[0] = need(hooks.clock)() >>> 0;
+                const elapsed = Math.trunc(((pair[0] - pair[1]) | 0) / 1000);
+                if (elapsed >= state.windowSeconds) { pair[1] = need(hooks.clock)() >>> 0; state.counters[owner] = 0; }
+            }
+        }
+        const limit = state.limit;
+        if (target < 1 || target > 8) return true;
+        const count = (state.counters[target] + 1) >>> 0; state.counters[target] = count;
+        if ((count | 0) > limit) {
+            const offset = target * STRIDE + 12;
+            if (offset + 32 > players.length) throw new RangeError('동맹 요청 안내의 현재 Player 이름 물리 범위');
+            let length = 0; while (length < 32 && players[offset + length]) length += 1;
+            if (length === 32) throw new RangeError('동맹 요청 안내의 현재 이름 NUL 부족');
+            let name = ''; for (let index = 0; index < length; index += 1) name += String.fromCharCode(players[offset + index]);
+            need(hooks.tell)(`AllianceSpam(${limit},${allianceTellColor(target)},${name})`); return true;
+        }
+    }
+    need(hooks.send)(Uint8Array.of(1, message, 6, 0, need(hooks.localOwner)() & 0xff, command === 0x020000db ? 1 : target & 0xff));
+    return true;
+}

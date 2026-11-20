@@ -27,6 +27,7 @@ import { PLAY_INTRO_COMMAND } from './intro-menu.js';
 import { scenarioEffectScriptCode } from './scenario-effect-input.js';
 import { scenarioObjectScriptCode } from './scenario-object-input.js';
 import { vortexCommandScriptCode } from './vortex-command-input.js';
+import { sendMoneyScriptCode } from './send-money-input.js';
 import { SHOW_TEC_MENU2_COMMAND, SHOW_TEC_SIDE_MENU_COMMAND } from './raw-knowledge-menu.js';
 
 // 이름이 없을 때 원본이 돌려주는 값이다. (2026-11-15 WB04-E538)
@@ -174,7 +175,7 @@ export function gameMenuScriptCode(name) {
     // 각 입력 모듈의 이름표를 원문 순서대로 조회한다.
     for (const lookup of [makeAiCommandScriptCode, aiUtilityCommandScriptCode, createAtScriptCode, drawWaterScriptCode, aiDebugCommandScriptCode,
         createHelpListScriptCode, presentationCommandScriptCode, utilityCommandScriptCode, configurationCommandScriptCode, scenarioEffectScriptCode,
-        scenarioObjectScriptCode, vortexCommandScriptCode]) {
+        scenarioObjectScriptCode, vortexCommandScriptCode, sendMoneyScriptCode]) {
         const code = lookup(name);
         if (code !== NOT_FOUND) return code;
     }

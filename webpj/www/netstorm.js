@@ -30,6 +30,8 @@ import { SoundList } from './audio/sound-list.js';
 import { MissionAudioAssets } from './audio/mission-audio-assets.js';
 import { SceneMusicDriver } from './audio/scene-music-driver.js';
 import { makePriestShieldNoticeHooks } from './core/sound-process.js';
+import { dispatchSendMoneyInput, isSendMoneyCommand, sendMoneyScriptCode } from './core/send-money-input.js';
+import { handleAllianceRequestInput } from './core/raw-player-participation.js';
 import { createSoundState, SoundPlayer } from './audio/sound-player.js';
 import { WebSoundDevice } from './audio/web-sound-device.js';
 import { IndexedSurface } from './render/indexed-surface.js';
@@ -72,7 +74,7 @@ import { RawContainedFinder } from './core/raw-contained-finder.js';
 import { PRODUCTION_BRIDGE_COMMAND } from './core/production-shortcuts.js';
 import { ProductionMaintenanceGlobals, ProductionMaintenancePanel } from './core/raw-production-maintenance.js';
 import { GameMenuActions } from './core/game-menu-actions.js';
-import { gameMenuCommandValue, isGameMenuCommand, queuePlayerListKey } from './core/game-menu-commands.js';
+import { gameMenuCommandValue, gameMenuScriptCode, isGameMenuCommand, queuePlayerListKey } from './core/game-menu-commands.js';
 import { KnowledgeMenuKind } from './core/raw-knowledge-menu.js';
 import { dispatchGameTimeKey, readGameTimeSeconds } from './core/game-time-display.js';
 import { idleMainMenuActivity } from './core/main-menu-activity.js';
@@ -171,6 +173,8 @@ const MISSION_F9 = 0x780000;
 const MISSION_F6 = 0x750000;
 // 지식 창 명령 세 개다: ShowTechnology(Storm 카드, F6), ShowTecSideMenu(Storm/World 선택), ShowTecMenu2(World 카드). (2026-11-20 WB04-E1088)
 const KNOWLEDGE_COMMANDS = new Set([0x020000a0, 0x02000132, 0x02000133]);
+// 동맹 요청 입력이 처리하는 네 명령(요청 fb·해제 fa·확인 7e·무승부 선언 db)이다. (2026-11-20 WB04-E1126)
+const ALLIANCE_INPUT_COMMANDS = new Set([0x020000fb, 0x020000fa, 0x0200007e, 0x020000db]);
 const WIRED_MENU_COMMANDS = new Set([0x020000f0, 0x02000091, 0x020000f1, 0x0200006d, 0x020000e6, 0x020000e7, 0x020000ae, 0x020000b8, 0x02000095, 0x02000017, 0x0200008c, 0x0200008d, 0x020000c5, 0x020000a0, 0x02000132, 0x02000133, 0x020000cf]);
 // Session이 Tutorial 판정용으로 입력 큐에 올리는 통지 명령이다(발사기 배치 0x030000b0·포함 0x030000b1, 기술 0x020000b5, 포획 0x020000d7, 상승 0x020000df; 전역 005429b4 등의 PE 초기값).
 // Tutorial 판정기(`tutorial.event`)가 각 명령을 받고 해당 단계가 쓰지 않으면 원본 주 루프처럼 그대로 버려진다. 큐 소비 보호 목록에 없으면 뒤의 클릭까지 막혀 모든 입력이 멈추므로 소비를 허용한다. (2026-11-20 WB04-E1083)
@@ -1631,9 +1635,29 @@ export class Netstorm {
         const open = bar.toggle(); this._gameMenuButton?.setPressed(open); this._displayDirty = true; return open;
     }
 
+    // 송금 명령을 현재 세션의 경제 장치로 실행한다(원본 UberGump 의 송금 일반 입력). X 는 숫자 입력 창이 필요한데 웹은 원본 이름 대화창(편집 전용 SaveFortNameDialog)을 옮기지 않아 아직 연결하지 못했다.
+    // 모두 보내기는 `asksend(대상)` 확인 안내 창을 띄우고 그 단추가 모두 보내기 명령을 다시 올린다. (2026-11-20 WB04-E1126)
+    _dispatchCampaignSendMoney(event) {
+        const world = this._campaignWorld; if (!world) throw new Error('송금 일반 입력의 실제 월드 없음');
+        const hooks = { ...world.session().moneyInputHooks(),
+            numberDialog: () => { console.warn('Netstorm: Send X 숫자 입력 창은 아직 연결되지 않아 실행하지 않았습니다.'); },
+            askAll: (target) => { this._openTell(`asksend(${target})`); } };
+        dispatchSendMoneyInput(event, hooks); this._clientRenderer.invalidateAll(); this._displayDirty = true;
+    }
+
+    // 동맹 요청·해제·확인·무승부 선언 입력을 처리한다(원본 HandleAllianceRequestInput). 보내는 packet 은 현재 로컬 서버(9)의 mutable 송신 경계로 간다. (2026-11-20 WB04-E1126)
+    _dispatchCampaignAlliance(event) {
+        const world = this._campaignWorld; if (!world || !this._clientPlayers || !this._clientChatWindows || !this._clientGameplay) throw new Error('동맹 입력의 실제 월드·Player·채팅 수명 누락');
+        handleAllianceRequestInput(event.code, event.y | 0, this._clientChatWindows.allianceRequests, this._clientPlayers.records(), {
+            clock: () => Math.trunc(performance.now()) >>> 0, localOwner: () => this._clientGameplay.player.battleOwner,
+            send: (packet) => world.session().sendMutableLocalPacket(9, packet), tell: (text) => this._openTell(text) });
+    }
+
     // 메뉴막대 항목이 입력 큐에 올린 명령을 실행한다. 연결되지 않은 명령은 큐를 막지 않도록 소비하고 콘솔에 기록한다(메뉴에서는 비활성이다).
     _dispatchCampaignMenuCommand(event) {
         const code = (event.code & 0x03ffffff) >>> 0;
+        // Player 메뉴의 동맹 요청·해제와 안내 창의 확인·무승부 선언은 입력 처리기가 packet 을 서버(9)로 보낸다. (2026-11-20 WB04-E1126)
+        if (ALLIANCE_INPUT_COMMANDS.has(code)) { this._dispatchCampaignAlliance(event); return false; }
         if (!WIRED_MENU_COMMANDS.has(code)) { console.warn(`Netstorm: 게임 메뉴 명령 0x${code.toString(16)} 은(는) 아직 연결되지 않아 실행하지 않았습니다.`); return false; }
         // 미션 중단(0x8c): 인자 0 은 ABORT 확인 창, 그 밖은 전투 떠나기 예약이다. 재시작(0x8d)·전투 떠나기(0xc5)는 월드를 반납하므로 true 를 돌려 입력 반복을 끝내게 한다. (2026-11-20 WB04-E1085)
         if (code === 0x0200008c) { dispatchMissionAbort(event, this._clientInputQueue, (section) => this._openTell(section)); return false; }
@@ -1750,7 +1774,7 @@ export class Netstorm {
             const selectionKey = code === 0x50 || code === 0x70 || code === 0x52 || code === 0x72 || code === 0x4e || code === 0x6e;
             const productionKey = 'qwaszyxe'.includes(String.fromCharCode(code).toLowerCase()) && code < 256;
             const cursorCancel = code === 0x1b, cursorRotate = code === 0x250000 || code === 0x270000, gameTimeKey = code === 0x54 || code === 0x74;
-            if (code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_F6 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !MISSION_VIEW_KEYS.has(code) && code !== MISSION_F9 && !TUTORIAL_NOTICE_COMMANDS.has(code) && !isGameMenuCommand(code) && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && !gameTimeKey && code !== InputCode.leftButton && code !== InputCode.rightButton) break;
+            if (code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_F6 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !MISSION_VIEW_KEYS.has(code) && code !== MISSION_F9 && !TUTORIAL_NOTICE_COMMANDS.has(code) && !isGameMenuCommand(code) && !isSendMoneyCommand(code) && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && !gameTimeKey && code !== InputCode.leftButton && code !== InputCode.rightButton) break;
             const event = queue.pop(false);
             if (tutorial.event(event) || gump.input().route(event.code, event.x, event.y)) continue;
             if (code === InputCode.leftButton && !release && !this._mainMenu?.dialog) user.event(event);
@@ -1789,6 +1813,8 @@ export class Netstorm {
             // F2·Shift-F3·F8 은 표시 키 분배기, F9 는 플레이어 목록 명령 예약이다. 뗌은 소비만 한다. (2026-11-20 WB04-E1087)
             else if (MISSION_VIEW_KEYS.has(code) || code === MISSION_F9) { if (!release && !this._mainMenu?.dialog) { if (code === MISSION_F9) queuePlayerListKey(event, this._clientInputQueue); else if (dispatchScreenshotKey(event, () => this._saveScreenshot(), (section) => { this._openTell(section); })) { /* Shift-F7 은 화면 저장만 하고 일반 F7 표식 토글로 가지 않는다. */ } else dispatchViewKeyInput(event, this._viewKeyGlobals(), this._viewKeyHooks()); } }
             else if (isGameMenuCommand(code) && !release && !this._mainMenu?.dialog) { if (this._dispatchCampaignMenuCommand(event)) break; }
+            // Player 메뉴·안내 창의 송금 명령(고정 300/700/1000·All·X)이다. 뗌과 열린 창 뒤의 입력은 소비만 한다. (2026-11-20 WB04-E1126)
+            else if (isSendMoneyCommand(code)) { if (!release && !this._mainMenu?.dialog) this._dispatchCampaignSendMoney(event); }
         }
     }
 
@@ -2486,7 +2512,17 @@ export class Netstorm {
         // 미션 나가기 확인(ABORT)·완료 창의 버튼이다: LeaveBattle·MissionAbort 는 메인 메뉴로, MissionRestart 는 같은 미션 다시 시작이다. (2026-11-20 WB04-E1085)
         else if (name === 'leavebattle' || name === 'missionabort') this._leaveCampaignMission();
         else if (name === 'missionrestart') this._restartCampaignMission();
+        // 안내 창 단추의 송금(SendAllBucks 등)·동맹(ConfirmAlliance 등) 이름은 원본 이름표로 명령 번호를 얻어 입력 큐에 올린다. 인자(대상 owner)는 정수로 읽어 두 인자에 같게 싣는다. (2026-11-20 WB04-E1126)
+        else if (this._queueDialogPlayerCommand(command)) return;
         else if (name !== 'donothing') console.info(`Netstorm: 대화상자 명령 '${command.name}' 은(는) 아직 구현되지 않았습니다.`, command);
+    }
+
+    // 대화상자 단추 명령이 송금·동맹 이름이면 명령 번호로 바꿔 입력 큐에 올리고 true 를 돌려준다. 그 밖의 이름은 false 이다. (2026-11-20 WB04-E1126)
+    _queueDialogPlayerCommand(command) {
+        const name = String(command.name), code = sendMoneyScriptCode(name) !== 0xffffffff ? sendMoneyScriptCode(name) : (['requestalliance', 'breakalliance', 'confirmalliance', 'declaredraw'].includes(name.toLowerCase()) ? gameMenuScriptCode(name) : 0xffffffff);
+        if (code === 0xffffffff || !this._clientInputQueue) return false;
+        const target = Number.parseInt(String(command.argument ?? '').trim(), 10) | 0;
+        this._clientInputQueue.pushCommand(code, target, target); return true;
     }
 
     // Tutorial 1~6과 연결된 캠페인 미션을 현재 Guide에 시작한다. 다른 미션과 기존 World 교체는 실제 수명 연결 전까지 거부한다.
