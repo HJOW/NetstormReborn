@@ -500,4 +500,8 @@
   <ItemGroup>
     <None Include="../../../cpppj/tests/fixtures/local-mission-state-x86.tsv" Link="X86/local-mission-state-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 같은 실제 연결/응답/보정 세 DWORD의 원본64입력과 인접96바이트를 대조한다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/clock-sync-reset-x86.tsv" Link="X86/clock-sync-reset-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

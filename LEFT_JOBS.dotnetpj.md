@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-20 · 마지막 완료 0.702(내부Source/coordinator·집중29건) · 다음 0.703(Clock 동기화) · 현재 단계 R4-2·R4-5 병행 · 전체 목표 미완료**
+**2026-11-20 · 마지막 완료 0.703(Clock 동기화·원본Reset64입력·집중25건) · 다음 0.704(정기 전체 회귀/L2) · 현재 단계 R4-2·R4-5 병행 · 전체 목표 미완료**
 
 현행 인계는 이 문서가 기준이다. 0.600~0.635의 단위별 완료 문장, 단위마다 누적한 검사 수와 L2 보관 경로 나열은 [0.635 정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635)에 있다. 0.613까지의 경과, 파일 계열별 체크 목록과 옛 집계는 [0.613 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)에 있다. 단위별 근거는 `docs/dotnet-canon-0NNN-*.md`이다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
@@ -85,7 +85,8 @@
 56. **0.700 정기 전체 회귀/L2 — 완료.** Assets366·Core3294·Client1396 합계5056건통과·실패0·기존실장치음향1건미실행이다.65실행종료0·DN31경로전체바이트/34경로지표가0.696과같으며원본1392파일불변이다. M1은0/34다. [근거](docs/dotnet-canon-0700-20261120.md)
 57. **0.701 로컬 미션 상태 전이 — 완료.** 실제 다섯144바이트와immediate+84 메뉴창의같은DWORD를빌려State7~10/13/14·Poll/Run·전체블록확정·비동기수신큐를이식했다. 원본33입력의720바이트/전역/타이머/Core/효과와추가별칭/재진입/일반전투를집중26건통과했다. fixture356개이며제품Root설치는후속이다. [근거](docs/dotnet-canon-0701-20261120.md)
 58. **0.702 장기Source/coordinator 내부 분기 — 완료.** 같은실제Registry/등록표/내부양끝과호출/노드대여·약한Source배송·현재ID단일순회/이전Source종료를연결했다. 집중현재29건통과이며실제내부로그인/응답·콜백중반납/예외복귀를확인했다. Editor/LAN/Meta·재인계는후속이다. [근거](docs/dotnet-canon-0702-20261120.md)
-59. **0.703 Clock 동기화 — 다음.** 같은실제Client의연결/응답/보정DWORD·70표본과서버/Commander등록·수신/표본송신·빠른절반평균을이식한다. 장기전역/제품Root와입력/도움말·일반건설/DropIsland·Carrier플레이효과·나머지AI/캡처·전용색표·R5월드뷰도 남는다.
+59. **0.703 Clock 동기화 — 완료.** 같은실제연결/응답/보정DWORD·70표본과서버/Commander등록·수신·표본송신·빠른절반평균을이식했다. 원본Reset64입력과현재표본/기한/주소snapshot·고정F·실제시계/Registry공유를집중현재25건통과했다. NULL주소의빈메모리변환오류도교정했다. fixture357개이며제품Root설치는후속이다. [근거](docs/dotnet-canon-0703-20261120.md)
+60. **0.704 정기 전체 회귀/L2 — 다음.** 전체Release검사와34경로65실행을0.700과대조한다. 이후장기Client전역·제품Root와입력/도움말을연결한다. Source의Editor/LAN/Meta재인계·일반건설/DropIsland·Carrier플레이효과·나머지AI/캡처·전용색표·R5월드뷰도 남는다.
 57. **R4-2 나머지 차이와 R4-3~R4-8.** 농지 프레임, 전용 요새, 표시 등록, 그래프 번호, 장부를 처리한 뒤 R4-3~R4-8을 진행한다. 통합 조각을 마칠 때 같은 조건의 일괄 덤프로 M1 진척을확인한다. [R4 체크](#r4-detail)
 
 <a id="first-run"></a>

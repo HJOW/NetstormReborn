@@ -1161,3 +1161,9 @@ cpppj/src/client/CompositeMissionTransport.h	Netstorm.Net/CompositeMissionTransp
 cpppj/src/client/CompositeMissionTransport.cpp	Netstorm.Net/CompositeMissionTransport.cs	5756ffd5ff23335839974c3c6f2b2aacd7b35618	port
 cpppj/src/client/ClientPacketSources.h	Netstorm.Net/ClientPacketSources.cs	50a5a1845edc01699ee215001405e8404d43f92a	port
 cpppj/src/client/ClientPacketSources.cpp	Netstorm.Net/ClientPacketSources.cs	50a5a1845edc01699ee215001405e8404d43f92a	port
+cpppj/src/o/RawClockSyncReset.h	Netstorm.Core/Original/RawClockSyncReset.cs	adb9739e6e1306bf49b3ae67e2c747f8abc17041	port
+cpppj/src/o/RawClockSyncReset.cpp	Netstorm.Core/Original/RawClockSyncReset.cs	adb9739e6e1306bf49b3ae67e2c747f8abc17041	port
+cpppj/src/o/RawClockSynchronization.h	Netstorm.Net/ClockSynchronizationTypes.cs	3f766a97f7c4d5b290c195754be66a7ee5b929be	port
+cpppj/src/o/RawClockSynchronization.h	Netstorm.Net/RawClockSynchronization.cs	3f766a97f7c4d5b290c195754be66a7ee5b929be	port
+cpppj/src/o/RawClockSynchronization.cpp	Netstorm.Net/RawClockSynchronization.cs	899c934dcca17ce113218a4fe2a45ae059f22270	port
+cpppj/src/o/ParticleGradient.cpp	Netstorm.Net/RawClockSynchronization.cs	e6d976346d9f7cebb5af45aa19bb91a2b83d3294	port

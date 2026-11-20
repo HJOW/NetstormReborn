@@ -24,6 +24,12 @@ public sealed class ConnectionSyncState
     private readonly Action<uint>? _writePendingCount;
     /// <summary>기존 독립 보관자의BSS0을 만든다.</summary>
     public ConnectionSyncState() { }
+    /// <summary>같은 Client 동기화DWORD를 공개 읽기/쓰기 장치로 빌린다. 대기 개수는 독립 소유한다.</summary>
+    public ConnectionSyncState(Func<uint> readSynchronization, Action<uint> writeSynchronization)
+    {
+        ArgumentNullException.ThrowIfNull(readSynchronization); ArgumentNullException.ThrowIfNull(writeSynchronization);
+        _readSynchronization = readSynchronization; _writeSynchronization = writeSynchronization;
+    }
     /// <summary>동기화와 개수의 서로 다른 실제 소유 주소를 복사 없이 빌린다.</summary>
     internal ConnectionSyncState(Func<uint> readSynchronization, Action<uint> writeSynchronization, Func<uint> readPendingCount, Action<uint> writePendingCount)
     {
