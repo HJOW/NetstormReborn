@@ -60,6 +60,7 @@ GENERATORS = (
     "gen_original_constructors.py",
     "gen_original_unpop_vtables.py",
     "gen_original_pop_vtables.py",
+    "gen_original_selection_vtables.py",
 )
 
 

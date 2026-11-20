@@ -15,8 +15,8 @@ public sealed class ClientStateWorldDevices
     public Action? CancelCursor { get; init; }
     /// <summary>같은100×48BYTE점유채팅행의실제ResetOccupied다.</summary>
     public Action? ResetChatChannels { get; init; }
-    /// <summary>같은선택/커서/장기목록을원문폭으로정리하는실제부모다.</summary>
-    public Action? ClearUserSelection { get; init; }
+    /// <summary>실제 선택/강조 부모가 선택할 현재 하드웨어/소프트웨어 커서 종류다.</summary>
+    public Action<uint>? SelectCursor { get; init; }
     /// <summary>같은공통Gump등록표의실제Kill이다.</summary>
     public Action? KillGumps { get; init; }
     /// <summary>같은공통Gump등록표의실제Cleanup이다.</summary>
@@ -49,9 +49,9 @@ public static class ClientStateWorldCleanup
     /// <summary>미선택장치를미리요구하지않고선택된실제자식만해당위치에서검증한다.</summary>
     private static T Need<T>(T? value) where T : Delegate => value ?? throw new InvalidOperationException("전체State정리의선택된실제외부장치누락");
 
-    /// <summary>같은실제소유자검증뒤원문부모를실행한다. 실패한경우이미완료된효과와부분바이트는되돌리지않는다.</summary>
+    /// <summary>같은실제소유자검증뒤원문부모를실행한다. Root는현재실제커서를직접제공하며독립장치입력보다우선한다. 실패한부분쓰기는되돌리지않는다.</summary>
     public static void Cleanup(uint reason, ClientStateWorldContext context, ClientSurfaceGlobals surface,
-        ClientSpGlobals sp, ClientStateWorldDevices devices)
+        ClientSpGlobals sp, ClientStateWorldDevices devices, Action<uint>? selectCursor = null)
     {
         ArgumentNullException.ThrowIfNull(context); ArgumentNullException.ThrowIfNull(surface); ArgumentNullException.ThrowIfNull(sp);
         ArgumentNullException.ThrowIfNull(devices);
@@ -96,7 +96,7 @@ public static class ClientStateWorldCleanup
                     case StateWorldCleanupEffect.ClearTemplates: context.Templates.ClearAll(); return;
                     case StateWorldCleanupEffect.LeaveMetamap: Need(devices.LeaveMetamap)(); return;
                     case StateWorldCleanupEffect.Clear445140: Need(devices.ResetChatChannels)(); return;
-                    case StateWorldCleanupEffect.ClearCursor: Need(devices.ClearUserSelection)(); return;
+                    case StateWorldCleanupEffect.ClearCursor: ClientUserSelectionCleanup.Clear(game, surface.Storage, selectCursor ?? devices.SelectCursor); return;
                     case StateWorldCleanupEffect.ClearPlayerLinks: runtime.ClearPlayerLinks(); return;
                     case StateWorldCleanupEffect.ClearKernel: runtime.ClearKernel(); return;
                     case StateWorldCleanupEffect.KillGumps: Need(devices.KillGumps)(); return;

@@ -72,12 +72,12 @@ public sealed class ClientStateWorldCleanupTests
         /// <summary>같은장기저장소만가리키는현재뷰를반환한다.</summary>
         public ClientStateWorldContext Context() => Resources.Context(Surface, Local, Connections, Cloud, NsInfo);
         /// <summary>실제부모를호출하며다른저장소나시각사본을만들지않는다.</summary>
-        public void Cleanup(ClientStateWorldDevices devices, uint reason = 1) => ClientStateWorldCleanup.Cleanup(reason, Context(), Surface, Sp, devices);
+        public void Cleanup(ClientStateWorldDevices devices, uint reason = 1, Action<uint>? selectCursor = null) => ClientStateWorldCleanup.Cleanup(reason, Context(), Surface, Sp, devices, selectCursor);
         /// <summary>복원대기UI경계는명시사건으로제공하고채팅/장면음악은실제본체를호출한다.</summary>
         public ClientStateWorldDevices Devices() => new()
         {
             CancelCursor = () => Events.Add("cursor"), ResetChatChannels = () => { Events.Add("chat"); Chat.ResetOccupied(); },
-            ClearUserSelection = () => Events.Add("selection"), KillGumps = () => Events.Add("kill"), CleanupGumps = () => Events.Add("cleanup"), ReplaceUber = () => Events.Add("uber"),
+            SelectCursor = cursor => Events.Add("select-cursor:" + cursor), KillGumps = () => Events.Add("kill"), CleanupGumps = () => Events.Add("cleanup"), ReplaceUber = () => Events.Add("uber"),
             RefreshSp = () => Events.Add("sp"), RetireRuntime = () => throw new IOException("무Runtime에서owner반납선택"),
             LeaveMetamap = () => throw new IOException("비메타에서Leave선택"), SaveFort = _ => throw new IOException("빈manager에서Save선택"), SaveBattle = _ => throw new IOException("초기phase에서전투Save선택"),
             Assertion = line => throw new IOException("정상모드에서진단:" + line),
@@ -94,7 +94,8 @@ public sealed class ClientStateWorldCleanupTests
     {
         var scene = new Scene(); uint oldBase = scene.Game.PlayerRecords.Base; scene.Surface.Storage.OwnerMode.Battle = battle;
         scene.Local.ZoneStorage.Span.Fill(0xa5); scene.Game.Selection.MultipleCount.Value = 17; scene.Game.Selection.PriestSelections.Value = 0xdeadbeef;
-        scene.Cleanup(scene.Devices());
+        scene.Game.Selection.Mode.Value = 9; scene.Game.Selection.Selected.Value = 0xfedcba98; scene.Game.Selection.MouseType.Value = 0x89abcdef;
+        scene.Cleanup(scene.Devices(), selectCursor: cursor => scene.Events.Add("root-cursor:" + cursor));
         Assert.NotEqual(oldBase, scene.Game.PlayerRecords.Base); Assert.True(scene.Game.PlayerRecords.Initialized);
         Assert.Equal(1u, scene.Game.Player.PlayerKnown); Assert.False(scene.Game.CoreData.Current.IsEmpty); Assert.False(scene.Surface.Storage.OwnerMode.Battle);
         Assert.Equal(0xabcd0000u, scene.Resources.FortCoreSeed.Value); Assert.Equal(0u, scene.Resources.Popup.Command); Assert.Equal("preserved", scene.Resources.Popup.Argument());
@@ -105,6 +106,7 @@ public sealed class ClientStateWorldCleanupTests
         Assert.Equal(7.5, scene.Clock.Frame.Value.Game); Assert.Equal(55ul, scene.Clock.Frame.Value.Number); Assert.Equal(3, scene.ClockReads);
         Assert.True(scene.Events.IndexOf("kill") < scene.Events.IndexOf("cleanup")); Assert.True(scene.Events.IndexOf("cleanup") < scene.Events.IndexOf("uber"));
         Assert.False(scene.Game.Authority.Server); Assert.False(scene.Game.Authority.Boss); Assert.Equal(0, scene.Game.Selection.MultipleCount.Value); Assert.Equal(0xdeadbeefu, scene.Game.Selection.PriestSelections.Value);
+        Assert.Equal(0u, scene.Game.Selection.Mode.Value); Assert.Equal(0u, scene.Game.Selection.Selected.Value); Assert.Equal(0u, scene.Game.Selection.MouseType.Value); Assert.Contains("root-cursor:1", scene.Events); Assert.DoesNotContain("select-cursor:1", scene.Events);
     }
 
     /// <summary>최초커서장치누락은그위치에서실패하며이후전역을정리한것처럼보이지않는다.</summary>

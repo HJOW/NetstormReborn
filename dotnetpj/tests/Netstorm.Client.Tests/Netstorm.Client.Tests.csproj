@@ -132,5 +132,7 @@
     <None Include="../../../cpppj/tests/fixtures/user-selection-clear-x86.tsv" Link="X86/user-selection-clear-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/escape-selection-x86.tsv" Link="X86/escape-selection-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/multiple-selection-x86.tsv" Link="X86/multiple-selection-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- 선택+7c/83VT·사정거리·내용물 표시의5600개 독립 관찰이다. -->
+    <None Include="../../../cpppj/tests/fixtures/squid-selection-x86.tsv" Link="X86/squid-selection-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>
