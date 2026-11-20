@@ -266,15 +266,16 @@ public sealed class RawPacketDispatchTests
     [Fact]
     public void LocalPollPassesOwnedMutableFrameToRealAggregateObserver()
     {
-        var scene = new Scene(); scene.Register(0x58); Memory<byte> delivered = default; byte[] input = Aggregate(Packet());
-        scene.Dispatch.ObservePacket(0x58, (packet, _) =>
+        var scene = new Scene(); byte[] input = Packet(); byte[]? delivered = null;
+        using var wire = new LocalMissionTransport(new byte[1620], () => true, scene.Hooks, registrations: scene.Table);
+        wire.RegisterLogin((_, _, _) => throw new InvalidOperationException("프레임검사에없는로그인")); wire.Open("127.0.0.1", 6799); Assert.Equal(0, wire.Poll()); wire.AssignConnection(-1, 1);
+        scene.Register(0x58); wire.Dispatch.ObservePacket(0x58, (packet, direction) =>
         {
-            Assert.True(packet.Equals(delivered.Slice(4, 16))); packet.Span[4] = 0x7b;
+            Assert.Equal(0u, direction); Assert.True(System.Runtime.InteropServices.MemoryMarshal.TryGetArray((ReadOnlyMemory<byte>)packet, out ArraySegment<byte> segment));
+            Assert.Equal(4, segment.Offset); Assert.Equal(16, segment.Count); delivered = segment.Array; Assert.NotNull(delivered); Assert.Equal(4, delivered[1]); packet.Span[4] = 0x7b;
         });
-        using var wire = new LocalMissionTransport(); wire.Open("127.0.0.1", 6799); wire.AssignConnection(-1, 1);
-        wire.RegisterMutableDispatch(frame => { delivered = frame; return scene.Dispatch.DispatchFrame(scene.Connection, frame); });
-        Assert.True(wire.Send(9, input)); Assert.Equal(1, wire.QueuedFrames()); Assert.Equal(1, wire.Poll()); Assert.Equal(0, wire.QueuedFrames());
-        Assert.Equal(0x7b, delivered.Span[8]); Assert.Equal(0, input[8]); Assert.Equal(0u, scene.Connection.Depth);
-        wire.RegisterDispatch(_ => false); Assert.True(wire.Send(9, input)); Assert.Equal(0, wire.Poll());
+        Assert.True(wire.Send(9, input)); Assert.Equal(0, wire.QueuedFrames()); wire.Flush(); Assert.Equal(1, wire.QueuedFrames()); Assert.Equal(1, wire.Poll()); Assert.Equal(0, wire.QueuedFrames());
+        Assert.NotNull(delivered); Assert.Equal(0x7b, delivered[8]); Assert.Equal(0, input[4]); Assert.Equal(0u, wire.Server.Depth);
+        wire.Dispatch.Register(0x58, null); Assert.True(wire.Send(9, input)); wire.Flush(); Assert.Equal(1, wire.Poll());
     }
 }

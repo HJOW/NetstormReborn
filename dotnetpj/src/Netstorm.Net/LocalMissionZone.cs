@@ -1,7 +1,7 @@
-// 로컬 미션 Zone 설치의 사전 구현을 공유한다.
+// 로컬 미션의 같은 실제 Zone/Player 기억장치와 현재값 설치를 공유한다.
 // 근거: cpppj `src/zacket/LocalMissionTransport.h`·`LocalMissionTransport.cpp`의 `InstallLocalMissionZone`.
-// 세션 연결(F3)에서 실제 분배기·CoreData 별칭과 잇기 전까지 단독으로만 둔다.
-// 2026-11-10 멀티플레이 사전 구현에서 추가했다. 지시대로 검사는 건너뛴다.
+// 현재 개수와 CoreData 별칭은0.691에서 원본 대조한다.제품Root설치는후속이다.
+// 기존 사전 구현을 독립 원본66입력과 같은 운반 장치 검증으로 보완한다.
 using Netstorm.Core.Original;
 
 namespace Netstorm.Net;
@@ -47,8 +47,8 @@ public sealed class LocalMissionZoneGlobals
     /// <summary>메타맵 여부다. 참이면 현재 CoreData를 캐시 사본으로 둔다. 2026-11-10 멀티플레이 사전 구현에서 추가됐다.</summary>
     public bool Metamap { get; set; }
 
-    /// <summary>현재 CoreData 10바이트다. 세션 연결 전까지 사본으로 두며 별칭은 잇지 않는다. 2026-11-10 멀티플레이 사전 구현에서 추가됐다.</summary>
-    public byte[] CurrentCoreData { get; set; } = new byte[10];
+    /// <summary>현재 실제 Player 또는 캐시의 같은10바이트 별칭이다.대여 owner와 함께 사용한다.</summary>
+    public Memory<byte> CurrentCoreData { get; set; }
 
     /// <summary>메타맵에서 읽을 캐시 CoreData 10바이트다. 2026-11-10 멀티플레이 사전 구현에서 추가됐다.</summary>
     public byte[] CachedCoreData { get; set; } = new byte[10];
@@ -88,7 +88,7 @@ public static class LocalMissionZone
     /// <summary>Player 한 기록의 바이트 수다. 2026-11-10 멀티플레이 사전 구현에서 추가됐다.</summary>
     public const int PlayerBytes = 180;
 
-    /// <summary>PATCH 004b51e0의 Zone 512·네 슬롯 작성과 0040a1e0의 86바이트 길이 확정을 둔다. 세션 연결 전까지 단독 설치만 쓴다.</summary>
+    /// <summary>PATCH004b4be0의 현재Zone 설치와 양수owner0048f3b0의 Player정보 쓰기다.입력 기억장치는 반환된CoreData 별칭과 같은 수명으로 유지한다.</summary>
     /// <param name="zone">읽을 Zone 바이트다. 15바이트 이상이어야 한다.</param>
     /// <param name="players">쓸 9개 Player 바이트다. 1620바이트여야 한다.</param>
     /// <param name="player">갱신할 현재 Player 상태다.</param>
@@ -98,111 +98,43 @@ public static class LocalMissionZone
     /// <exception cref="ArgumentException">Zone·Player 크기 부족, 클라이언트 수·소유자 범위 오류다.</exception>
     /// <exception cref="ArgumentOutOfRangeException">Zone 슬롯이 버퍼를 넘는다.</exception>
     /// <exception cref="InvalidOperationException">필수 효과가 묶이지 않았다.</exception>
-    public static void Install(
-        ReadOnlySpan<byte> zone,
-        Span<byte> players,
-        PlayerWorldState player,
-        LocalMissionZoneGlobals globals,
-        LocalMissionZoneHooks hooks,
-        uint port)
+    public static void Install(ReadOnlyMemory<byte> zone, Memory<byte> players, PlayerWorldState player, LocalMissionZoneGlobals globals, LocalMissionZoneHooks hooks, uint port)
     {
-        ArgumentNullException.ThrowIfNull(player);
-        ArgumentNullException.ThrowIfNull(globals);
-        ArgumentNullException.ThrowIfNull(hooks);
-        if (players.Length != PlayerCount * PlayerBytes || zone.Length < ZoneHead)
-        {
-            throw new ArgumentException("로컬 Zone 설치의 Player9·Zone 크기 부족");
-        }
-
-        int clients = zone[14];
-        if (clients <= 0 || clients > 8)
-        {
-            Need(hooks.Assertion)("numClients > 0 && numClients < 9");
-        }
-
-        if (ZoneHead + (long)clients * ZoneClient > zone.Length)
-        {
-            throw new ArgumentOutOfRangeException(nameof(zone), "로컬 Zone 설치의 client 기록 범위 부족");
-        }
-
-        globals.Server = true;
-        globals.Boss = true;
-        globals.ActiveStamp = globals.PendingStamp;
-        globals.ActiveZoneWord = Read(zone, 10);
-        globals.ZoneFlags = Read(zone, 4);
-        if (globals.AdjustZoneFlags && !globals.MissionWorld)
-        {
-            globals.ZoneFlags = (globals.ZoneFlags & ~0x3fu) | ((uint)globals.ZoneFlagOverride & 0x3fu);
-        }
-
-        if (globals.EarlyCaptureEnd != 0.0)
-        {
-            Need(hooks.Assertion)("!earlyCaptureTimer.isRunning()");
-        }
-
-        int timeout = Need(hooks.LoginTimeout)();
-        int delay = unchecked((int)(unchecked((uint)timeout) + 120u));
-        globals.EarlyCaptureEnd = delay + Need(hooks.Seconds)();
-
-        // Zone의 클라이언트 수만큼 Player 기록·이름표를 방문한다.
-        for (uint index = 0; index < (uint)clients; ++index)
+        ArgumentNullException.ThrowIfNull(player); ArgumentNullException.ThrowIfNull(globals); ArgumentNullException.ThrowIfNull(hooks);
+        if (players.Length != PlayerCount * PlayerBytes || zone.Length < ZoneHead) throw new ArgumentException("로컬 Zone 실제Player9/헤더부족");
+        int clients = zone.Span[14];
+        if (clients == 0 || clients > 8) Need(hooks.Assertion)("numClients > 0 && numClients < 9");
+        if (ZoneHead + (long)clients * ZoneClient > zone.Length) throw new ArgumentOutOfRangeException(nameof(zone), "로컬 Zone 실제client기록부족");
+        globals.Server = true; globals.Boss = true; globals.ActiveStamp = globals.PendingStamp; globals.ActiveZoneWord = Read(zone.Span, 10); globals.ZoneFlags = Read(zone.Span, 4);
+        if (globals.AdjustZoneFlags && !globals.MissionWorld) globals.ZoneFlags = (globals.ZoneFlags & ~0x3fu) | ((uint)globals.ZoneFlagOverride & 0x3fu);
+        if (globals.EarlyCaptureEnd != 0) Need(hooks.Assertion)("!earlyCaptureTimer.isRunning()");
+        int timeout = Need(hooks.LoginTimeout)(); int delay = unchecked((int)(unchecked((uint)timeout) + 120u)); globals.EarlyCaptureEnd = (double)delay + Need(hooks.Seconds)();
+        // 이름통지가개수/구독자를바꾸면현재Zone을각원문위치에서다시읽는다.
+        for (uint index = 0; index < zone.Span[14]; index++)
         {
             int offset = ZoneHead + (int)index * ZoneClient;
-            if (offset + ZoneClient > zone.Length)
-            {
-                throw new ArgumentOutOfRangeException(nameof(zone), "로컬 Zone 설치의 client 슬롯 범위 부족");
-            }
-
-            if (Read(zone, offset + 1) == 0u)
-            {
-                Need(hooks.Assertion)("zac->subId");
-            }
-
-            uint owner = (uint)zone[offset] + 1u;
-            if (owner < 1u || owner >= (uint)PlayerCount)
-            {
-                throw new ArgumentOutOfRangeException(nameof(zone), "로컬 Zone 설치의 Player 번호 초과");
-            }
-
+            if (offset + ZoneClient > zone.Length) throw new ArgumentOutOfRangeException(nameof(zone), "현재로컬Zone실제슬롯부족");
+            if (Read(zone.Span, offset + 1) == 0) Need(hooks.Assertion)("zac->subId");
+            uint owner = (uint)zone.Span[offset] + 1;
+            if (owner < 1 || owner >= PlayerCount) throw new ArgumentOutOfRangeException(nameof(zone), "로컬Zone실제Player번호초과");
             int record = (int)owner * PlayerBytes;
-            if (Read(zone, offset + 1) == globals.MySubscriber)
+            if (Read(zone.Span, offset + 1) == globals.MySubscriber)
             {
-                player.TemplateOwner = owner;
-                player.BattleOwner = owner;
-                player.PlayerKnown = 1u;
+                player.TemplateOwner = player.BattleOwner = owner; player.PlayerKnown = 1;
                 if (globals.Metamap)
                 {
-                    if (globals.CachedCoreData.Length != 10)
-                    {
-                        throw new ArgumentException("로컬 Zone 설치의 metamap coreData 10바이트 부족");
-                    }
-
-                    globals.CurrentCoreData = (byte[])globals.CachedCoreData.Clone();
+                    if (globals.CachedCoreData.Length != 10) throw new ArgumentException("실제metamap CoreData10바이트부족");
+                    globals.CurrentCoreData = globals.CachedCoreData;
                 }
-                else
-                {
-                    // 세션 연결 전까지 별칭 대신 사본을 둔다. 실제 분배기 연결 때 같은 span 별칭으로 바꾼다.
-                    globals.CurrentCoreData = players.Slice(record + 0x6c, 10).ToArray();
-                }
-
-                Put(players, record + 0x50, Read(players, record + 0x50) | 8u);
+                else globals.CurrentCoreData = players.Slice(record + 0x6c, 10);
+                Put(players.Span, record + 0x50, Read(players.Span, record + 0x50) | 8u);
             }
-
-            Copy(players, record + 12, Text(zone, offset + 9));
-            Need(hooks.StoreName)(Read(zone, offset + 1), Text(players, record + 12));
-            Put(players, record + 0x2c, Read(zone, offset + 1));
-            if (Read(players, record + 0x2c) == 0u)
-            {
-                Need(hooks.Assertion)("p->subscriberId");
-            }
-
-            Copy(players, record + 0x30, Text(zone, offset + 41));
-            if ((zone[offset + 5] & 1u) != 0u)
-            {
-                Put(players, record + 0x50, Read(players, record + 0x50) | 0x200u);
-            }
+            Copy(players.Span, record + 12, Text(zone.Span, offset + 9)); Need(hooks.StoreName)(Read(zone.Span, offset + 1), Text(players.Span, record + 12));
+            Put(players.Span, record + 0x2c, Read(zone.Span, offset + 1));
+            if (Read(players.Span, record + 0x2c) == 0) Need(hooks.Assertion)("p->subscriberId");
+            Copy(players.Span, record + 0x30, Text(zone.Span, offset + 41));
+            if ((zone.Span[offset + 5] & 1) != 0) Put(players.Span, record + 0x50, Read(players.Span, record + 0x50) | 0x200u);
         }
-
         Need(hooks.Serve)(port);
     }
 

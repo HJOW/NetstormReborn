@@ -17,20 +17,18 @@ public sealed partial class HostPriestWorldLiveTests
         if (!OperatingSystem.IsWindows()) return;
         using var scene = new BurningContext(); HostSession session = scene.Session; int parent = UpgradeFactory(scene);
         session.Gameplay.Authority.Boss = true; session.Sp.Set(1, BitConverter.SingleToUInt32Bits(5000));
-        using var wire = new LocalMissionTransport(); wire.Open("127.0.0.1", 6799); wire.AssignConnection(-1, 1);
+        var table = new PacketRegistrationTable(OriginalEdition.Patch1078); var recorded = new List<byte[]>(); using var wire = ProductionTransport(session, table, recorded);
         var broadcasts = new List<byte[]>(); var logs = new List<(uint Kind, string Text)>();
         RawFactoryUpgradeCommand command = session.BuildFactoryUpgradeCommandWorldDevices(new()
         {
-            Send = (channel, packet) => Assert.True(wire.Send(unchecked((int)channel), packet.Span)),
+            Send = (channel, packet) => Assert.True(wire.Send(unchecked((int)channel), packet)),
             Broadcast = packet => broadcasts.Add(packet.ToArray()), Log = (kind, text) => logs.Add((kind, text)),
         });
         Assert.Same(session.Pool, command.Pool); double requestedAt = session.ProcessTime.Value;
-        session.BuildProductionWorldDevices(ProductionDevices()); var table = new PacketRegistrationTable(OriginalEdition.Patch1078);
-        using PacketRegistrationLease lease = table.BindSession(session); var recorded = new List<byte[]>();
-        RawPacketDispatch dispatch = ProductionPacketDispatch(session, table, recorded); session.RegisterFactoryResearchCommands(dispatch);
-        var connection = new PacketConnection { Sender = uint.MaxValue }; wire.RegisterMutableDispatch(packet => dispatch.DispatchFrame(connection, packet));
+        session.BuildProductionWorldDevices(ProductionDevices()); using PacketRegistrationLease lease = table.BindSession(session);
+        RawPacketDispatch dispatch = wire.Dispatch; session.RegisterFactoryResearchCommands(dispatch); PacketConnection connection = wire.Server;
         command.Request(parent);
-        Assert.Equal(1, wire.QueuedFrames()); Assert.Equal(5000f, BitConverter.UInt32BitsToSingle(session.Sp.Get(1)));
+        Assert.Equal(0, wire.QueuedFrames()); Assert.Equal(5000f, BitConverter.UInt32BitsToSingle(session.Sp.Get(1))); wire.Flush(); Assert.Equal(1, wire.QueuedFrames());
         RegularProcess waiting = Assert.IsType<RegularProcess>(session.PlayerProcesses.FindEvent(parent, 4));
         Assert.Equal(20f, waiting.Payload()); Assert.Equal(requestedAt, waiting.Time());
         Assert.Equal(1, wire.Poll()); Assert.Equal(0, wire.QueuedFrames());

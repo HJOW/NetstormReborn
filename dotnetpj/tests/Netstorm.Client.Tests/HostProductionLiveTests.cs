@@ -19,13 +19,20 @@ public sealed partial class HostPriestWorldLiveTests
         ResearchHelp = (key, mode) => { Assert.Equal("researchHelp", key); Assert.Equal(1u, mode); },
     };
     /// <summary>같은 현재 세션 시계/실제 수신 기록과 예상 밖 연결 종료 진단을 Net 분배기에 제공한다.</summary>
-    private static RawPacketDispatch ProductionPacketDispatch(HostSession session, PacketRegistrationTable table, List<byte[]> recorded) => new(OriginalEdition.Patch1078, new()
+    private static PacketDispatchHooks ProductionPacketHooks(HostSession session, List<byte[]> recorded) => new()
     {
         Now = () => unchecked((uint)(session.ProcessTime.Value * 1000)), Record = (_, packet, length) =>
         { Assert.Equal(length, BinaryPrimitives.ReadUInt16LittleEndian(packet.Span[2..])); recorded.Add(packet.ToArray()); },
         Terminate = _ => throw new InvalidOperationException("생산 검사에서 잘못된 패킷 종료"),
         Close = _ => throw new InvalidOperationException("생산 검사에서 예상 밖 연결 닫힘"), Release = _ => throw new InvalidOperationException("생산 검사에서 예상 밖 연결 반납"),
-    }, table);
+    };
+    /// <summary>같은실제양끝/현재표를만들고Poll이수락한서버노드만owner1로재배치한다.</summary>
+    private static LocalMissionTransport ProductionTransport(HostSession session, PacketRegistrationTable table, List<byte[]> recorded)
+    {
+        var wire = new LocalMissionTransport(session.PlayerRecords, () => true, ProductionPacketHooks(session, recorded), registrations: table);
+        wire.RegisterLogin((_, _, _) => throw new InvalidOperationException("생산검사에없는로그인수신")); wire.Open("127.0.0.1", 6799);
+        Assert.False(wire.HasPending()); Assert.Equal(0, wire.Poll()); Assert.True(wire.HasPending()); wire.AssignConnection(-1, 1); return wire;
+    }
     /// <summary>실제 예측 내용물→로컬 큐→서버 수신→예측 삭제/서버 생성과 Deck/dirty 갱신을 한 경로로 실행한다.</summary>
     [Fact, SupportedOSPlatform("windows")]
     public void ProductResearchPredictionAndServerReceiveUseSameContentsDeckAndDirty()
@@ -36,13 +43,12 @@ public sealed partial class HostPriestWorldLiveTests
         Assert.Same(session.SidLists.Providers, session.TerrainBookkeeping.Providers);
         Assert.Contains((uint)parent, session.TerrainBookkeeping.Factories.Items().ToArray());
         Assert.Equal(1u, session.MissionPlayer.TemplateOwner);
-        session.Gameplay.Authority.Boss = true; using var wire = new LocalMissionTransport(); wire.Open("127.0.0.1", 6799); wire.AssignConnection(-1, 1);
-        session.BuildProductionWorldDevices(ProductionDevices((channel, packet) => Assert.True(wire.Send((int)channel, packet.Span))));
-        var table = new PacketRegistrationTable(OriginalEdition.Patch1078); using PacketRegistrationLease lease = table.BindSession(session);
-        var recorded = new List<byte[]>(); RawPacketDispatch dispatch = ProductionPacketDispatch(session, table, recorded);
-        session.RegisterFactoryResearchCommands(dispatch); var connection = new PacketConnection { Sender = 1 };
+        session.Gameplay.Authority.Boss = true; var table = new PacketRegistrationTable(OriginalEdition.Patch1078); var recorded = new List<byte[]>();
+        using var wire = ProductionTransport(session, table, recorded);
+        session.BuildProductionWorldDevices(ProductionDevices((channel, packet) => Assert.True(wire.Send((int)channel, packet))));
+        using PacketRegistrationLease lease = table.BindSession(session); RawPacketDispatch dispatch = wire.Dispatch;
+        session.RegisterFactoryResearchCommands(dispatch); PacketConnection connection = wire.Server;
         Assert.Equal(1, dispatch.Registration(0x58).Version); Assert.Equal(16, dispatch.Registration(0x58).Length); Assert.NotNull(dispatch.Registration(0x58).Observer);
-        wire.RegisterMutableDispatch(packet => dispatch.DispatchFrame(connection, packet));
         uint before = session.ProductionDirty; var finder = new RawCarrierPreDestroy(session.Pool, new(), new()
         {
             ValidateDamageable = (_, _) => throw new InvalidOperationException("조회 검사에서 삭제 준비"),
@@ -50,7 +56,7 @@ public sealed partial class HostPriestWorldLiveTests
         });
         Assert.Equal(1u, session.WorldResearch.Input(parent, 0x03000080, (71u << 16) | (uint)parent));
         int predicted = finder.FindContained(parent, 16, 71, 0); Assert.InRange(predicted, 5, 14999);
-        Assert.Equal(before + 1, session.ProductionDirty); Assert.True(session.WorldProduction.Contains(71)); Assert.Equal(1, wire.QueuedFrames());
+        Assert.Equal(before + 1, session.ProductionDirty); Assert.True(session.WorldProduction.Contains(71)); Assert.Equal(0, wire.QueuedFrames()); wire.Flush(); Assert.Equal(1, wire.QueuedFrames());
         Assert.Equal(1, wire.Poll()); int server = finder.FindContained(parent, 16, 71, 0);
         Assert.NotEqual(predicted, server); Assert.True(server >= 15000); Assert.Equal(1, session.Pool.Slot(predicted)[11] & 1);
         Assert.Contains(session.WorldPackets, packet => packet.Length > 6 && BinaryPrimitives.ReadUInt16LittleEndian(packet.AsSpan(4)) == server);
