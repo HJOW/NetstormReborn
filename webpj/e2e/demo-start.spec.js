@@ -121,3 +121,25 @@ for (const [index, name] of [[1, 'GuardMyBack'], [2, 'DissolvedAlliance']]) {
     expect(errors).toEqual([]);
   });
 }
+
+// 데모는 `demoRestartTimer`(360초) 기한이 지나면 원본처럼 같은 데모를 처음부터 다시 시작한다(MissionReload 예약 → Leave → 같은 이름·모드로 시작). 기한은 시험에서 앞당긴다. (2026-11-20 WB04-E1125)
+test('데모 종료 기한이 지나면 같은 데모를 새 월드로 다시 시작한다', async ({ page }) => {
+  test.setTimeout(240000);
+  const errors = []; page.on('pageerror', (error) => errors.push(error.message)); page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
+  await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } })));
+  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/?aspect=4:3');
+  await page.waitForFunction(() => window.netstorm?.state === 'clickToStart'); await page.locator('canvas').click();
+  await page.waitForFunction(() => window.netstorm?.state === 'mainMenu'); await clickLabel(page, 'Demo');
+  const label = await page.evaluate(() => window.netstorm._mainMenu.dialog.menu.items.find((item) => item.command?.name === 'StartDemo' && item.command.argument === 'DemoStormRages')?.label);
+  await clickLabel(page, label);
+  await page.waitForFunction(() => window.netstorm?._campaignDisplayActive() && window.netstorm._clientGuide.current()?.runtime.gate.started === 1, null, { timeout: 90000 });
+  // 시작 직후의 데모 종료 기한은 시작 시각 + 360초 이다.
+  const first = await page.evaluate(() => { const app = window.netstorm, gate = app._clientGuide.current().runtime.gate; window.__firstWorld = app._campaignWorld; return { end: gate.demoEndSeconds, now: app._gameClock.gameSeconds() }; });
+  expect(first.end - first.now).toBeGreaterThan(300); expect(first.end - first.now).toBeLessThanOrEqual(360);
+  // 기한을 곧 지나게 하면 새 월드로 같은 데모가 다시 시작하고 기한이 새로 잡힌다.
+  await page.evaluate(() => { const app = window.netstorm; app._clientGuide.current().runtime.gate.demoEndSeconds = app._gameClock.gameSeconds() + 1; });
+  await page.waitForFunction(() => window.netstorm._campaignWorld && window.netstorm._campaignWorld !== window.__firstWorld && window.netstorm._campaignDisplayActive() && window.netstorm._clientGuide.current()?.runtime.gate.started === 1, null, { timeout: 90000 });
+  const second = await page.evaluate(() => { const app = window.netstorm, gate = app._clientGuide.current().runtime.gate; return { name: app._lastCampaignMission.name, demo: gate.demo, end: gate.demoEndSeconds, now: app._gameClock.gameSeconds() }; });
+  expect(second.name).toBe('DemoStormRages'); expect(second.demo).toBe(1); expect(second.end - second.now).toBeGreaterThan(300); expect(second.end - second.now).toBeLessThanOrEqual(360);
+  expect(errors).toEqual([]);
+});

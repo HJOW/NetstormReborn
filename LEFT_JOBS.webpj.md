@@ -6,14 +6,14 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-20, 마지막 단위 WB04-E1124)
+### 0.1 현재 값 (2026-11-20, 마지막 단위 WB04-E1125)
 
 | 항목 | 현행 상태 |
 | --- | --- |
 | 실행·플레이 | 브라우저에서 ‘클릭하여 시작’, 메인 메뉴·캠페인/데모 목록·도움말·옵션·Credits와 개발용 지형 미리보기가 동작한다. **미션 진입:** Early Missions(Tutorial1~6)와 세 캠페인 묶음(Struggle For Freedom·A Nation Rises·Complete Victory)의 미션을 목록에서 시작해 브리핑·안내를 보고 월드가 진행된다. **조작:** Tutorial1·2에서 사제 선택·이동, 가장자리 스크롤, F4·F5·P/R·N, 생산 격자 클릭과 단축키·회전·다리 배치, 사제 우클릭 → 윈드 신전 건설·완공, 워크샾 우클릭 생산 메뉴의 무기 생산, 생산 격자의 발사기를 집어 두 개 배치하고 신전을 선택해 Tutorial2를 시작부터 완료 창과 Tutorial3 시작까지 자연 진행으로 확인했다(발사기 우클릭 → Salvage 포함). **게임 메뉴:** ESC 또는 화면 우측 상단 버튼(웹 전용)으로 Game·View·Options·Players·About 가로 메뉴막대를 열고 닫으며 목표 보기·건물 숨김·소리 설정·음량·Version이 실행되고, Leave Mission(ABORT 확인 창)으로 메인 메뉴로 돌아가 다른 미션을 다시 시작하며 Restart Mission으로 같은 미션을 새로 시작한다. F2(건물 숨김)·F8(목표 보기)·Shift-F3(섬 테마)·F9(플레이어 목록) 단축키도 동작하며, Shift-F7은 현재 화면을 `picN.gif`로 내려받는다. **HUD 틀:** 실제 Uber 루트가 세로·미니맵·채팅 구분선, 좌측 사이드바(SP·생산 덱)와 하단 미니맵 칸을 원본 위치로 도킹하고 지도 영역이 `{85,0,W,H}`다(4:3 하단 85×82픽셀이 원본 스크린샷과 일치, 16:9·16:10·1920×1080과 창 크기 변경 확인). **미완성:** 지식(NSInfo) 패널·채팅 창 공장, 미니맵 클릭·드래그 실사용, 나머지 객체 메뉴·채팅과 미션 자연 완주, 메뉴의 정지·지식·플레이어 목록은 남았다. |
 | 원본과의 동일성 | 영어 4:3 메뉴 M1 8장면은 cpppj 오라클과 알려진 구름 배경 등 차이 영역 밖에서 픽셀 차이 0이다. 월드·UI 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다(최근 원본 공통 메뉴 788행·Factory 메뉴 39행·Uber 루트 160행·장면 음악 3,113행 등). 좌측 HUD 틀의 하단(미니맵 구분선·세로 구분선 아랫부분·미니맵 칸) 85×82픽셀은 원본 스크린샷과 완전히 일치한다. 실제 미션의 L2(Tutorial1 시작 상태 덤프)·L3·L4 화면 비교와 자연 완주는 미검증이다. |
 | 현재 작업 | **게임 플레이 중 UI 구현 단계.** 4-D 후반(GameWorld·Client 서비스)과 5-A·5-B·6·8단계 항목을 미션 앱 프레임 위에서 병행한다. Renderer·Gump 트리·입력 큐·생산 패널·객체 메뉴·도움말·음향이 실제 Tutorial 화면에 연결돼 있다. 순서는 아래 [다음 작업](#next)을 따른다. |
-| 전체 회귀 | **E1123 Node 26.13.0 전체 회귀 6,682건 모두 통과**(로그 `extracted/webpj-e1123-node26.log`, 648초). 직전 Node 22.23.3 전체 회귀는 E1119의 6,673건이다(로그 `extracted/webpj-e1119-node22.log`). E1120~E1122는 장면 음악·게임플레이 서비스·Flyer·의식·건설 Node 관련 시험을, Chromium `scene-music`·`all-missions-start`(31개 미션)·`campaign-long-run`(캠페인 16개 150~180초, 초급·훈련 15개 100초 조사)을 통과했다. E1124는 사제 세션 Node 시험 12건과 Chromium 스커미시 4조합 300초 진행을 통과했다. HJOW-Athlon 주기는 E1123의 v26 전체 회귀 뒤 v26 1/4, v22는 E1119 뒤 완료 5단위로 5/8이다(**3단위 뒤 Node v26 전체 회귀, 3단위 뒤 Node v22 전체 회귀가 필요**). |
+| 전체 회귀 | **E1123 Node 26.13.0 전체 회귀 6,682건 모두 통과**(로그 `extracted/webpj-e1123-node26.log`, 648초). 직전 Node 22.23.3 전체 회귀는 E1119의 6,673건이다(로그 `extracted/webpj-e1119-node22.log`). E1120~E1122는 장면 음악·게임플레이 서비스·Flyer·의식·건설 Node 관련 시험을, Chromium `scene-music`·`all-missions-start`(31개 미션)·`campaign-long-run`(캠페인 16개 150~180초, 초급·훈련 15개 100초 조사)을 통과했다. E1124는 사제 세션 Node 시험 12건과 Chromium 스커미시 4조합 300초 진행을 통과했다. E1125는 Chromium 데모 시험 6건(새 재시작 시험 포함)을 통과했다. HJOW-Athlon 주기는 E1123의 v26 전체 회귀 뒤 v26 2/4, v22는 E1119 뒤 완료 6단위로 6/8이다(**2단위 뒤 Node v26 전체 회귀, 2단위 뒤 Node v22 전체 회귀가 필요**). |
 | 브라우저 검사 | 메뉴: 2026-11-17 Chromium 2/2(갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체). 최초 실행·진행 잠금/체크·저장 재실행은 E616 Chromium 2/2. 미션 화면은 단위마다 Chromium으로 확인한다(최근 E1082 좌측 HUD 틀·화면 크기 변경 2/2, 한국어 Tutorial2 전체 흐름). [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
 
 <a id="next"></a>
@@ -32,7 +32,7 @@
 
 <a id="e951-e1081"></a>
 
-#### E951~E1124 진행 요약
+#### E951~E1125 진행 요약
 
 단위별 완료 문단·검증 수·회귀 이력은 [E1081 정리 전 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261120-through-wb04-e1081)의 0.1절과 각 단위 문서에 있다.
 
@@ -55,7 +55,7 @@
 
 ### 0.2 단계 진행판
 
-`n/m`은 상위 체크 수이며 보관한 완료 항목을 포함한다. 상위 항목 안의 완료 부분은 중복 가산하지 않는다. 남은 단위와 줄 수는 `PORT_MAP.tsv`의 partial·todo 기준이며 partial에는 파일 전체 줄 수를 센다. E951~E1124는 대부분 상위 항목 안의 부분 진행이라 체크 수는 바뀌지 않았다. E1082 뒤 재집계에서는 남은 145단위·33,562줄이 같았고(`UberHud.inc` todo→partial), E1094에서 `FrameRateOption`이 todo→port가 되어 144단위·33,538줄이 됐으며, E1098 재판정([docs](docs/webpj-port-map-rejudge-20261120.md))에서 `HelpLinkPolicy`가 partial→port가 되어 143단위·33,448줄, E1099 후속 재판정에서 `Sound`·`SoundDevice`(옛 메모가 낡음)가 partial→port가 되어 141단위·32,252줄, E1100에서 `GifScreenshot`(화면 저장, 81줄 + 헤더 33줄)이 todo→port가 되어 140단위·32,138줄, E1101에서 `SkirmishSetup`·`SkirmishStartIslands`(440줄)가 todo→port가 되어 138단위·31,698줄, E1104에서 `RawIslandPartition`·`RawCentralIsland`·`RawBattleIsland`(188줄)가 todo→port가 되어 135단위·31,510줄이다.
+`n/m`은 상위 체크 수이며 보관한 완료 항목을 포함한다. 상위 항목 안의 완료 부분은 중복 가산하지 않는다. 남은 단위와 줄 수는 `PORT_MAP.tsv`의 partial·todo 기준이며 partial에는 파일 전체 줄 수를 센다. E951~E1125는 대부분 상위 항목 안의 부분 진행이라 체크 수는 바뀌지 않았다. E1082 뒤 재집계에서는 남은 145단위·33,562줄이 같았고(`UberHud.inc` todo→partial), E1094에서 `FrameRateOption`이 todo→port가 되어 144단위·33,538줄이 됐으며, E1098 재판정([docs](docs/webpj-port-map-rejudge-20261120.md))에서 `HelpLinkPolicy`가 partial→port가 되어 143단위·33,448줄, E1099 후속 재판정에서 `Sound`·`SoundDevice`(옛 메모가 낡음)가 partial→port가 되어 141단위·32,252줄, E1100에서 `GifScreenshot`(화면 저장, 81줄 + 헤더 33줄)이 todo→port가 되어 140단위·32,138줄, E1101에서 `SkirmishSetup`·`SkirmishStartIslands`(440줄)가 todo→port가 되어 138단위·31,698줄, E1104에서 `RawIslandPartition`·`RawCentralIsland`·`RawBattleIsland`(188줄)가 todo→port가 되어 135단위·31,510줄이다.
 
 | 순서 | 단계 | 체크·상태 | 남은 단위 / 줄 |
 | --- | --- | --- | --- |
@@ -136,7 +136,7 @@ E896에서 실제 미션 설치의 You→당신 번역과 Player 표시 바이�
 | E703~E774 | 실제 typed Login/Ready·Start, 출하 스크립트 32종의 Fort 로그인, 같은 Session의 사제·골렘·벌룬 이동과 워크샾 배치·격리 완공. [Login](docs/webpj-session-login-ready-20261118.md) · [Start](docs/webpj-session-mission-start-20261118.md) · [워크샾](docs/webpj-workshop-isolated-completion-20261118.md) |
 | E775~E801 | Session 카메라·입자·튜토리얼 게이트, AI/Player/Process 반납 경계, 지연 GameWorld·팔레트·자산 보기·선택. World 입력 부품과 UserInput 폴링·단축키·우클릭까지 연결. [공통 게이트](docs/webpj-session-tutorial-gate-20261118.md) · [지연 GameWorld](docs/webpj-campaign-game-world-front-20261118.md) · [입력](docs/webpj-campaign-selection-keys-20261118.md) |
 | E802~E950 | 입력 클릭·NB20 취소, GameWorld 프레임·세 운반 유닛 도착, 워크샾 Kernel 완공·연구 동기화, 전투 완료 관문, Client 진단·프레임 시계, Session 덤프 형식과 오라클 시나리오(4D-9b), 앱 Guide·State7·Gump 루트·팔레트·Screen·입력 큐·TextEntry/IME·갈무리11 편집, Reset All(E863), 16:9 최대 1920×1080(E943), 하위 경로 배포(E945). [E1081 보관본 0.1·3.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261120-through-wb04-e1081) |
-| E951~E1124 | 미션 앱 프레임의 로딩·Start, 음향, Renderer·Gump 출력, 브라우저 입력·카메라, Tutorial·세 캠페인 묶음 진입, 생산 패널·건설, 객체 메뉴·도움말, 한국어 Tutorial1·2. [0.1절 요약](#e951-e1081) |
+| E951~E1125 | 미션 앱 프레임의 로딩·Start, 음향, Renderer·Gump 출력, 브라우저 입력·카메라, Tutorial·세 캠페인 묶음 진입, 생산 패널·건설, 객체 메뉴·도움말, 한국어 Tutorial1·2. [0.1절 요약](#e951-e1081) |
 
 ## 3. 남은 작업과 실행 순서
 
@@ -283,9 +283,9 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 - [ ] **동영상** — 인트로 제공 범위를 판정하고 RawMovieControls·MoviePlayback·MoviePcmOutput·MovieLifecycle·SmackerDecoder를 브라우저 디코더에 맞춘다.
 - [ ] **도움말·Tell** — QuickHelpHtml/Control/Window/Request, HtmlConditionEffect·HtmlLinkText·TellFileMenus·HelpLinkPolicy·ExternalHelpClient·RawNsInfoContext의 남은 계약. E1046·E1048~E1055에서 생산 메뉴 Help·TYPE 정보 본문·요구 에너지 그림·도움말 그림을 연결했다.
 - [ ] **글자·설정·그림** — BitmapFont·KoreanResources·ClientOptionsDisk·GifImage의 웹 적응·남은 부분과 1322 글꼴 변경 영향. GifScreenshot(Shift-F7 화면 저장)은 E1100에서 브라우저 내려받기로 완료했다. [화면 저장](docs/webpj-screenshot-gif-20261120.md)
-- [ ] **미션 수명** — 튜토리얼/정지·Retry/Next/Abort·메뉴 복귀와 실제 진행 저장, 데모 360초 반복·Auto-Demo를 확인한다.
+- [ ] **미션 수명** — 튜토리얼/정지·Retry/Next/Abort·메뉴 복귀와 실제 진행 저장을 확인한다. 데모 360초 반복은 E1125, Auto-Demo는 E1092에서 확인했다. [데모 재시작](docs/webpj-demo-restart-20261120.md)
 - [ ] **적응 fixture** — 3.8절의 오디오·글꼴·렌더러·음악 관측을 판정한다.
-- [ ] **M4** — 일반 31 + 데모 3경로의 진입·진행·저장과 한국어 미션 문구를 확인한다. 자연 완주는 1절의 사용자 확인 범위다. E1121에서 캠페인 목록의 31개 미션(Early 6·세 묶음 16·Priest Training 9) 전부가 한 페이지에서 연달아 시작되고 초반이 오류 없이 진행됨을 Chromium으로 확인했다([모든 미션 시작](docs/webpj-all-missions-start-20261120.md)). E1122에서 캠페인 16개를 미션마다 150~180초 진행해 AI 시점의 미연결 서비스·좌표 오류 네 가지(보호막 안내음, AI 장애물 후보 점, Rain 비행 피격, 포획 이름)를 찾아 고쳤고 원본 CampaignClientServices 의 소리·안내 서비스 여섯 개도 연결했다([장시간 진행](docs/webpj-mission-services-long-run-20261120.md)). E1123에서 Early Missions·Priest Training 15개도 100초씩 오류 없이 진행함을 확인해 캠페인 목록 31개가 모두 장시간 진행을 통과했다. E1124에서 스커미시 AI 7명 장시간 진행의 섬 목록 진단 미연결 오류를 고치고 네 조합이 300초 오류 없이 도는 것을 확인했다([스커미시 장시간](docs/webpj-mission-services-long-run-20261120.md)). 데모 3경로·저장·자연 완주·한국어 전체 확인이 남았다.
+- [ ] **M4** — 일반 31 + 데모 3경로의 진입·진행·저장과 한국어 미션 문구를 확인한다. 자연 완주는 1절의 사용자 확인 범위다. E1121에서 캠페인 목록의 31개 미션(Early 6·세 묶음 16·Priest Training 9) 전부가 한 페이지에서 연달아 시작되고 초반이 오류 없이 진행됨을 Chromium으로 확인했다([모든 미션 시작](docs/webpj-all-missions-start-20261120.md)). E1122에서 캠페인 16개를 미션마다 150~180초 진행해 AI 시점의 미연결 서비스·좌표 오류 네 가지(보호막 안내음, AI 장애물 후보 점, Rain 비행 피격, 포획 이름)를 찾아 고쳤고 원본 CampaignClientServices 의 소리·안내 서비스 여섯 개도 연결했다([장시간 진행](docs/webpj-mission-services-long-run-20261120.md)). E1123에서 Early Missions·Priest Training 15개도 100초씩 오류 없이 진행함을 확인해 캠페인 목록 31개가 모두 장시간 진행을 통과했다. E1124에서 스커미시 AI 7명 장시간 진행의 섬 목록 진단 미연결 오류를 고치고 네 조합이 300초 오류 없이 도는 것을 확인했다([스커미시 장시간](docs/webpj-mission-services-long-run-20261120.md)). E1125에서 Demo 목록 세 데모를 420초 진행하고 `demoRestartTimer` 360초 재시작이 새 월드로 같은 데모를 다시 시작함을 시험으로 확인했다([데모 재시작](docs/webpj-demo-restart-20261120.md)). 진행 저장·자연 완주·한국어 전체 확인이 남았다.
 
 ### 3.2 실행 순서와 남은 마일스톤
 
