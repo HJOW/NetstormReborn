@@ -491,4 +491,9 @@
     <None Include="../../../cpppj/tests/fixtures/mission-login-x86.tsv" Link="X86/mission-login-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/mission-login-timer-x86.tsv" Link="X86/mission-login-timer-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 옵션 파생3305입력과 설정 송수신164입력을 한 Core 소비자에 읽기 전용으로 연결한다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/mission-battle-options-x86.tsv" Link="X86/mission-battle-options-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/mission-settings-packet-x86.tsv" Link="X86/mission-settings-packet-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
