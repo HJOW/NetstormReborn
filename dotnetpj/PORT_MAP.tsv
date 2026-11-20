@@ -437,6 +437,8 @@ cpppj/src/o/Config.cpp	Netstorm.Core/Original/Config.cs	b05073df6f9b8dae3afe492a
 cpppj/src/o/Config.h	Netstorm.Core/Original/Config.cs	b05073df6f9b8dae3afe492ab5dc969361f25c51	L1
 cpppj/src/o/ConfigInterface.cpp	Netstorm.Core/Original/ConfigInterface.cs	760e5ec3cf0013ac2817daefbd8a099461033832	port
 cpppj/src/o/ConfigInterface.h	Netstorm.Core/Original/ConfigInterface.cs	760e5ec3cf0013ac2817daefbd8a099461033832	port
+cpppj/src/o/ConstructionVisualSystem.cpp	Netstorm.Core/Original/ConstructionVisualSystem.cs	58061d74f3375ebd839fb7c3067783085ff62767	port
+cpppj/src/o/ConstructionVisualSystem.h	Netstorm.Core/Original/ConstructionVisualSystem.cs	58061d74f3375ebd839fb7c3067783085ff62767	port
 cpppj/src/o/ContentFormHost.cpp	Netstorm.Core/Original/RawContentFormHost.cs	d5a23c9990c041dff2feb50ba1fd26a5ac0da440	L1
 cpppj/src/o/ContentFormHost.h	Netstorm.Core/Original/RawContentFormHost.cs	d5a23c9990c041dff2feb50ba1fd26a5ac0da440	port
 cpppj/src/o/ContentFormLifetime.cpp	Netstorm.Core/Original/RawContentLifetime.cs	ab104ac38c44689527bcc7a4da4c9c8b25e55773	L1
