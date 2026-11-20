@@ -33,7 +33,7 @@ public sealed class GameClock
     private const double MillisecondSeconds = 0.001;
 
     /// <summary>시작 밀리초 기준이다. 2026-11-07 F2d 게임 시계 이식에서 추가됐다.</summary>
-    private readonly uint _origin;
+    private uint _origin;
 
     /// <summary>실제 장기 소유자에서 빌린 보정 DWORD를 읽는 장치다. null이면 기존 0 보정을 유지한다. 2026-11-07 F2d 게임 시계 이식에서 추가됐다.</summary>
     private Func<uint>? _synchronizationTicks;
@@ -58,6 +58,13 @@ public sealed class GameClock
     public GameClock(uint originMilliseconds = 0u)
     {
         _origin = originMilliseconds;
+    }
+
+    /// <summary>원문 *clock=GameClock(ms)처럼같은객체에생성자값을대입한다. 공유시계주소를유지하며이전보정참조/정지/내부프레임을반납한다.</summary>
+    public void Initialize(uint originMilliseconds)
+    {
+        _origin = originMilliseconds; _synchronizationTicks = null; _synchronizationOwner = null;
+        _pauseDepth = 0; _pausedGame = 0; _pausedTotal = 0; _frame = default;
     }
 
     /// <summary>원본 나눗셈·나머지 순서대로 초를 계산한다. 시작 밀리초와의 차이는 원본 부호 없는 32비트 연산이다. 2026-11-07 F2d 게임 시계 이식에서 추가됐다.</summary>

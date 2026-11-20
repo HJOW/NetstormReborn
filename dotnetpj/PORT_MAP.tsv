@@ -1195,3 +1195,9 @@ cpppj/src/client/RawSurfaceWorld.cpp	Netstorm.Client/Host/HostSession.Runtime.cs
 cpppj/src/client/RawSurfaceWorld.h	Netstorm.Client/Host/HostSession.Runtime.cs	14fd017c3b6ca87880374e044e3ac00bf0575c2e	port
 cpppj/src/client/RawSurfaceWorld.cpp	Netstorm.Client/Host/HostSession.PlayerWorld.cs	c102cdbf36fca4e8661d0699ea2ce5f2f44b2934	port
 cpppj/src/client/RawSurfaceWorld.h	Netstorm.Client/Host/HostSession.PlayerWorld.cs	14fd017c3b6ca87880374e044e3ac00bf0575c2e	port
+cpppj/src/client/ClientPlayerRuntime.cpp	Netstorm.Client/Player/ClientPlayerRuntime.cs	b9b67b6132fe14f9bee39673cdae81c5d6392e6d	port
+cpppj/src/client/ClientPlayerRuntime.h	Netstorm.Client/Player/ClientPlayerRuntime.cs	b6bc3e0558fa7ebff2a3fe3e9a89337681b0dac6	port
+cpppj/src/client/ClientMain.cpp	Netstorm.Client/ClientClockGlobals.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
+cpppj/src/client/ClientMain.h	Netstorm.Client/ClientClockGlobals.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
+cpppj/src/client/ClientMain.cpp	Netstorm.Client.Host/ClientHostGame.NativePrefix.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
+cpppj/src/client/ClientMain.h	Netstorm.Client.Host/ClientHostGame.NativePrefix.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port

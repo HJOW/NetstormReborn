@@ -20,7 +20,7 @@ namespace Netstorm.Client.Host;
 /// 실제 타이틀 화면을 표시할 수 있으며 메뉴·세션 조립은 아직 남아 있다.
 /// 근거: cpppj/src/app/main.cpp 의 --run 고리, Screen.cpp 의 창 복사, InputEvent.cpp 의 창 프로시저 넣기. (R1-2a, 2026-10-28)
 /// </summary>
-public sealed class ClientHostGame : Game
+public sealed partial class ClientHostGame : Game
 {
     /// <summary>전체화면 전환 키. 입력 큐에는 넣지 않고 호스트가 가로챈다.</summary>
     private const Keys FullscreenKey = Keys.F11;
@@ -164,6 +164,7 @@ public sealed class ClientHostGame : Game
         _clock = clock ?? new HostTimeSource();
         _localState = new ClientLocalStateGlobals(_gameplay, _ambientSound);
         _connections = new ClientConnectionGlobals(_localState);
+        _clientClock = new ClientClockGlobals(_localState);
         // cpppj ClientMain 349행의 실제 공통 SP 초기화와 같은 위치다: 클라이언트 시작 때 1회만 reseed+초기화하고 미션 시작 때는 다시 하지 않는다(0.464, 원본 004391ed).
         // 세션 시작 흐름의 미션별 reseed는 원본에 없어 0.463에서 근본 원인으로 확정했다.
         _spGlobals = new ClientSpGlobals(_gameRandom, _spCrtBox, _spModeBox, () => _clock.UnixSeconds);
@@ -227,6 +228,7 @@ public sealed class ClientHostGame : Game
         else
         {
             _startup.Draw(_driver.Screen);
+            InitializeNativePrefix();
             _buttonSound = new HostButtonSound(_startup);
             _cursor = new HostOriginalCursor(_startup);
             _mainMenu = new HostMainMenu(_startup, _driver.Screen, new GumpButtonTreeHooks
