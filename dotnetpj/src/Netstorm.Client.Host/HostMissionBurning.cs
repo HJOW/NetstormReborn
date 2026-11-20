@@ -30,6 +30,8 @@ public sealed class HostMissionBurning : IDisposable
     public DirtyRegions Dirty { get; }
     /// <summary>같은 실제SHP/현재raw 캡처를 원본대조와 후속 소비자에 빌린다.</summary>
     public RawShapeToBuffer Capture { get; }
+    /// <summary>같은 실제 캡처·dirty 큐와 공통 표시 목록을 공유하는 건설 장치다.</summary>
+    public HostMissionConstruction Construction { get; }
 
     /// <summary>같은 실제 타입/프레임·COL·SHP·소리장치를 세션의 단일연소 owner에 연결한다.</summary>
     [SupportedOSPlatform("windows")]
@@ -127,24 +129,26 @@ public sealed class HostMissionBurning : IDisposable
             Release = static _ => { }, // 실제관리배열/등록/Kernel이 소유버퍼와객체를 반납한다.
         };
         session.BuildBurningWorldDevices(FrameState, _palette, () => _frame, hooks, audio.BulfHurt);
+        Construction = new(session, startup, screen, Capture, Dirty, () => _viewBound);
     }
     /// <summary>실제 프레임 준비 위치에서 현재 원문시각/프레임번호를 공급한다. 커널 실행은 수행하지 않는다.</summary>
     public void PrepareFrame(double now, uint frame)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
         if (!double.IsFinite(now)) throw new ArgumentOutOfRangeException(nameof(now), "연소 현재 게임시각 오류");
-        FrameState.Now = now; _frame = frame;
+        FrameState.Now = now; Construction.FrameState.Now = now; _frame = frame;
     }
     /// <summary>R5가 실제 카메라/월드viewport를 준비한 뒤 호출한다. 전체화면 크기를 임의 월드뷰로 쓰지 않는다.</summary>
     public void SetView(float cameraX, float cameraY, DisplayRect viewport, bool inset = false)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
         FrameState.CameraX = cameraX; FrameState.CameraY = cameraY; FrameState.Viewport = viewport; FrameState.InsetViewport = inset; _viewBound = true;
+        Construction.FrameState.CameraX = cameraX; Construction.FrameState.CameraY = cameraY;
     }
     /// <summary>같은 Host의 연소를 먼저 없앤 뒤 외부 실제팔레트 메모리를 반납한다.</summary>
     public void Dispose()
     {
         if (_disposed) return;
-        _session.ReleaseBurningWorld(); if (OperatingSystem.IsWindows()) _memory.Dispose(); _disposed = true;
+        Construction.Dispose(); _session.ReleaseBurningWorld(); if (OperatingSystem.IsWindows()) _memory.Dispose(); _disposed = true;
     }
 }

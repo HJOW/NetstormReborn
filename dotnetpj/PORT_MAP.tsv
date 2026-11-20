@@ -201,7 +201,9 @@ cpppj/src/client/RawBackgroundGifControls.cpp	Netstorm.Client/Gump/BackgroundGif
 cpppj/src/client/RawCameraView.cpp	Netstorm.Client/Audio/SoundGeometry.cs	0c24d0181e17933b23f8dbbd4ef84874a26939f2	port
 cpppj/src/client/RawCameraView.h	Netstorm.Client/Audio/SoundGeometry.cs	0c24d0181e17933b23f8dbbd4ef84874a26939f2	port
 cpppj/src/client/RawCampaignParticles.cpp	Netstorm.Client.Host/HostMissionBurning.cs	247855746f40366e6c45c9c2b97dc378f0cb8bf8	port
+cpppj/src/client/RawCampaignParticles.cpp	Netstorm.Client.Host/HostMissionConstruction.cs	b7a4c8f4177912a91809b7e150aab49fa813e2b3	port
 cpppj/src/client/RawCampaignParticles.h	Netstorm.Client.Host/HostMissionBurning.cs	247855746f40366e6c45c9c2b97dc378f0cb8bf8	port
+cpppj/src/client/RawCampaignParticles.h	Netstorm.Client.Host/HostMissionConstruction.cs	b7a4c8f4177912a91809b7e150aab49fa813e2b3	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client.Host/HostMissionAudio.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client.Host/HostMissionBurning.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.AiEconomy.cs	bb1dbd427f232659d229a3522ff425fd0e19cf4f	session
