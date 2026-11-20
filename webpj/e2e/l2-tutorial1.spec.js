@@ -38,6 +38,10 @@ test('Tutorial1 시작 직후 Session 덤프가 cpppj 기준선과 알려진 시
   const first = await page.evaluate(() => window.netstorm._mainMenu.dialog.menu.items.find((item) => item.command?.name === 'MissionBegin' && item.command.argument === 'Tutorial1')?.label);
   await clickLabel(page, first);
   await page.waitForFunction(() => window.netstorm?._campaignDisplayActive() && window.netstorm._clientGuide.current()?.runtime.gate.started === 1, null, { timeout: 60000 });
+  // 첫 안내 창("NetStorm!")은 cpppj 기준 화면(load.png)처럼 왼쪽 HUD(85px)를 뺀 지도 영역의 가운데에 놓인다: 창 왼쪽 x 가 85 + (939 - 폭) / 2 이다. (2026-11-21 WB04-E1130)
+  await page.waitForFunction(() => Boolean(window.netstorm._mainMenu.dialog?.content), null, { timeout: 15000 });
+  const placed = await page.evaluate(() => { const dialog = window.netstorm._mainMenu.dialog; return { x: dialog.x, width: dialog.baseWidth }; });
+  expect(Math.abs(placed.x - (85 + (939 - placed.width) / 2))).toBeLessThan(1);
   const web = (await page.evaluate(() => window.netstorm.sessionDump())).replaceAll('\r\n', '\n');
   const reference = fs.readFileSync(path.join(__dirname, '..', 'tests', 'fixtures', 'cpppj', 'candidate-225553df', 'tutorial1', 'oracle', 'tutorial1', 'load.tsv'), 'utf8').replaceAll('\r\n', '\n');
   // 행 단위: 허용한 행 밖의 차이·누락·추가가 없다.

@@ -77,6 +77,8 @@ export class TellWindow {
         this.content = content;
         // 논리 화면 크기 { width, height } 이다. 대화상자는 이 화면(보기 영역) 가운데에 놓인다.
         this.screen = screen;
+        // 미션 중이면 왼쪽 HUD 도킹으로 지도 영역이 바뀔 때 앱이 이 창을 새 영역 가운데로 다시 놓는다(`screen` 을 바꾸고 `place()` 를 부른다). (2026-11-21 WB04-E1130)
+        this.followsMapView = true;
         // 호출자가 요청한 폭·높이이다(원본 +0x21c0·+0x21c4). Tell 은 둘 다 0 이다.
         this.requested = requested;
         // 명령 실행 콜백이다.
@@ -269,11 +271,12 @@ export class TellWindow {
         this.height = f32(baseHeight * this.scale);
     }
 
-    // 화면 가운데에 놓고 자식의 화면 위치를 정한다(원본 Fit 끝: 보기 영역 가운데). 보기 영역은 논리 화면 전체이다.
+    // 보기 영역 가운데에 놓고 자식의 화면 위치를 정한다(원본 Fit 끝: 보기 영역 가운데). 보기 영역은 메인 메뉴에서는 논리 화면 전체이고, 미션에서는 왼쪽 HUD 를 뺀 지도 영역
+    // (`screen.left`·`screen.top` 이 영역의 왼쪽 위 모서리이고 `screen.width`·`height` 가 크기)이다. 원본 스크린샷에서 미션 안내 창이 HUD 오른쪽 영역의 가운데에 놓인다. (2026-11-21 WB04-E1130)
     // 자식 화면 위치는 부모 위치 + 지역 위치를 float32 로 더한 값이다. 화면 크기가 바뀌면 다시 부른다.
     place() {
-        this.x = f32((this.screen.width - this.baseWidth) * 0.5);
-        this.y = f32((this.screen.height - this.baseHeight) * 0.5);
+        this.x = f32((this.screen.left ?? 0) + (this.screen.width - this.baseWidth) * 0.5);
+        this.y = f32((this.screen.top ?? 0) + (this.screen.height - this.baseHeight) * 0.5);
         this.body.x = f32(this.x + this.bodyLocal.x);
         this.body.y = f32(this.y + this.bodyLocal.y);
         // 스크롤바가 있으면 본문 오른쪽 가장자리에 붙이고 높이를 본문 높이에 맞춘다(원본 본문 Attach). (2026-10-31 WB03-K)

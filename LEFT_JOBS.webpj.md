@@ -6,14 +6,14 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-21, 마지막 단위 WB04-E1129)
+### 0.1 현재 값 (2026-11-21, 마지막 단위 WB04-E1130)
 
 | 항목 | 현행 상태 |
 | --- | --- |
 | 실행·플레이 | 브라우저에서 ‘클릭하여 시작’, 메인 메뉴·캠페인/데모 목록·도움말·옵션·Credits와 개발용 지형 미리보기가 동작한다. **미션 진입:** Early Missions(Tutorial1~6)와 세 캠페인 묶음(Struggle For Freedom·A Nation Rises·Complete Victory)의 미션을 목록에서 시작해 브리핑·안내를 보고 월드가 진행된다. **조작:** Tutorial1·2에서 사제 선택·이동, 가장자리 스크롤, F4·F5·P/R·N, 생산 격자 클릭과 단축키·회전·다리 배치, 사제 우클릭 → 윈드 신전 건설·완공, 워크샾 우클릭 생산 메뉴의 무기 생산, 생산 격자의 발사기를 집어 두 개 배치하고 신전을 선택해 Tutorial2를 시작부터 완료 창과 Tutorial3 시작까지 자연 진행으로 확인했다(발사기 우클릭 → Salvage 포함). **게임 메뉴:** ESC 또는 화면 우측 상단 버튼(웹 전용)으로 Game·View·Options·Players·About 가로 메뉴막대를 열고 닫으며 목표 보기·건물 숨김·소리 설정·음량·Version이 실행되고, Leave Mission(ABORT 확인 창)으로 메인 메뉴로 돌아가 다른 미션을 다시 시작하며 Restart Mission으로 같은 미션을 새로 시작한다. F2(건물 숨김)·F8(목표 보기)·Shift-F3(섬 테마)·F9(플레이어 목록) 단축키도 동작하며, Shift-F7은 현재 화면을 `picN.gif`로 내려받는다. **HUD 틀:** 실제 Uber 루트가 세로·미니맵·채팅 구분선, 좌측 사이드바(SP·생산 덱)와 하단 미니맵 칸을 원본 위치로 도킹하고 지도 영역이 `{85,0,W,H}`다(4:3 하단 85×82픽셀이 원본 스크린샷과 일치, 16:9·16:10·1920×1080과 창 크기 변경 확인). **미완성:** 지식(NSInfo) 패널·채팅 창 공장, 미니맵 클릭·드래그 실사용, 나머지 객체 메뉴·채팅과 미션 자연 완주, 메뉴의 정지·지식·플레이어 목록은 남았다. |
 | 원본과의 동일성 | 영어 4:3 메뉴 M1 8장면은 cpppj 오라클과 알려진 구름 배경 등 차이 영역 밖에서 픽셀 차이 0이다. 월드·UI 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다(최근 원본 공통 메뉴 788행·Factory 메뉴 39행·Uber 루트 160행·장면 음악 3,113행 등). 좌측 HUD 틀의 하단(미니맵 구분선·세로 구분선 아랫부분·미니맵 칸) 85×82픽셀은 원본 스크린샷과 완전히 일치한다. 실제 미션의 L2(Tutorial1 시작 상태 덤프)·L3·L4 화면 비교와 자연 완주는 미검증이다. |
 | 현재 작업 | **게임 플레이 중 UI 구현 단계.** 4-D 후반(GameWorld·Client 서비스)과 5-A·5-B·6·8단계 항목을 미션 앱 프레임 위에서 병행한다. Renderer·Gump 트리·입력 큐·생산 패널·객체 메뉴·도움말·음향이 실제 Tutorial 화면에 연결돼 있다. 순서는 아래 [다음 작업](#next)을 따른다. |
-| 전체 회귀 | **E1127 Node 26.13.0 전체 회귀 6,690건 모두 통과**(재실행 로그 `extracted/webpj-e1127-node26-rerun.log`, 576초). 첫 실행(`webpj-e1127-node26.log`)과 **Node 22.23.3 전체 회귀**(`webpj-e1127-node22.log`)는 6,690건 중 6,689건이 통과하고 1건(`external-access`)이 실패했다. 원인은 E1126 에서 대화 명령 처리에 더한 `_queueDialogPlayerCommand` 가 시험용 가짜 객체에 없던 것이며(코드 결함이 아닌 시험 대역 누락) 시험 대역을 고쳐 파일 단위로 통과를 확인했고 v26 은 전체를 다시 돌려 통과했다. v22 는 같은 수정 뒤 전체 재실행은 하지 않았다(다음 v22 주기에 확인). E1120~E1127 은 장면 음악·게임플레이 서비스·Flyer·의식·송금·동맹·객체 메뉴 Node 시험과 Chromium `scene-music`·`all-missions-start`·`campaign-long-run`·`skirmish-long-run`·`player-menu-actions`·`object-menu-variants` 등을 통과했다. E1128 은 시험만 더했고 E1129 는 앱에 검사 전용 `sessionDump()` 를 더했다(Chromium L2 시험 6회 연속 통과). HJOW-Athlon 주기는 E1127 의 v26 전체 회귀 뒤 v26 2/4, v22 는 E1127 뒤 2/8 로 보되 v22 의 수정 뒤 재실행이 남았다(**2단위 뒤 Node v26 전체 회귀, 다음 v22 주기에 전체 회귀가 필요**). |
+| 전체 회귀 | **E1130 Node 26.13.0 전체 회귀 6,691건 모두 통과**(로그 `extracted/webpj-e1130-node26.log`, 667초). 직전 **E1127 Node 26.13.0 전체 회귀 6,690건 모두 통과**(재실행 로그 `extracted/webpj-e1127-node26-rerun.log`, 576초). 첫 실행(`webpj-e1127-node26.log`)과 **Node 22.23.3 전체 회귀**(`webpj-e1127-node22.log`)는 6,690건 중 6,689건이 통과하고 1건(`external-access`)이 실패했다. 원인은 E1126 에서 대화 명령 처리에 더한 `_queueDialogPlayerCommand` 가 시험용 가짜 객체에 없던 것이며(코드 결함이 아닌 시험 대역 누락) 시험 대역을 고쳐 파일 단위로 통과를 확인했고 v26 은 전체를 다시 돌려 통과했다. v22 는 같은 수정 뒤 전체 재실행은 하지 않았다(다음 v22 주기에 확인). E1120~E1127 은 장면 음악·게임플레이 서비스·Flyer·의식·송금·동맹·객체 메뉴 Node 시험과 Chromium `scene-music`·`all-missions-start`·`campaign-long-run`·`skirmish-long-run`·`player-menu-actions`·`object-menu-variants` 등을 통과했다. E1128 은 시험만 더했고 E1129 는 앱에 검사 전용 `sessionDump()` 를 더했다(Chromium L2 시험 6회 연속 통과). E1130 은 미션 안내 창을 HUD 를 뺀 지도 영역 가운데로 옮겼다(Node `dialog` 16건·Chromium `l2-tutorial1` 2회·`tutorial-menu-start`·`english-tutorial2`·`korean-mission`·`pause-menu`·`demo-start` 33건 통과, 전체 Node 회귀 6,691건 통과). HJOW-Athlon 주기는 E1130 의 v26 전체 회귀로 v26 0/4 로 돌아갔고, v22 는 E1127 뒤 3/8 로 보되 v22 의 수정 뒤 재실행이 남았다(**4단위 뒤 Node v26 전체 회귀, v22 는 5단위 안에 전체 회귀 필요**). |
 | 브라우저 검사 | 메뉴: 2026-11-17 Chromium 2/2(갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체). 최초 실행·진행 잠금/체크·저장 재실행은 E616 Chromium 2/2. 미션 화면은 단위마다 Chromium으로 확인한다(최근 E1082 좌측 HUD 틀·화면 크기 변경 2/2, 한국어 Tutorial2 전체 흐름). [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
 
 <a id="next"></a>
@@ -32,7 +32,7 @@
 
 <a id="e951-e1081"></a>
 
-#### E951~E1129 진행 요약
+#### E951~E1130 진행 요약
 
 단위별 완료 문단·검증 수·회귀 이력은 [E1081 정리 전 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261120-through-wb04-e1081)의 0.1절과 각 단위 문서에 있다.
 
@@ -136,7 +136,7 @@ E896에서 실제 미션 설치의 You→당신 번역과 Player 표시 바이�
 | E703~E774 | 실제 typed Login/Ready·Start, 출하 스크립트 32종의 Fort 로그인, 같은 Session의 사제·골렘·벌룬 이동과 워크샾 배치·격리 완공. [Login](docs/webpj-session-login-ready-20261118.md) · [Start](docs/webpj-session-mission-start-20261118.md) · [워크샾](docs/webpj-workshop-isolated-completion-20261118.md) |
 | E775~E801 | Session 카메라·입자·튜토리얼 게이트, AI/Player/Process 반납 경계, 지연 GameWorld·팔레트·자산 보기·선택. World 입력 부품과 UserInput 폴링·단축키·우클릭까지 연결. [공통 게이트](docs/webpj-session-tutorial-gate-20261118.md) · [지연 GameWorld](docs/webpj-campaign-game-world-front-20261118.md) · [입력](docs/webpj-campaign-selection-keys-20261118.md) |
 | E802~E950 | 입력 클릭·NB20 취소, GameWorld 프레임·세 운반 유닛 도착, 워크샾 Kernel 완공·연구 동기화, 전투 완료 관문, Client 진단·프레임 시계, Session 덤프 형식과 오라클 시나리오(4D-9b), 앱 Guide·State7·Gump 루트·팔레트·Screen·입력 큐·TextEntry/IME·갈무리11 편집, Reset All(E863), 16:9 최대 1920×1080(E943), 하위 경로 배포(E945). [E1081 보관본 0.1·3.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261120-through-wb04-e1081) |
-| E951~E1129 | 미션 앱 프레임의 로딩·Start, 음향, Renderer·Gump 출력, 브라우저 입력·카메라, Tutorial·세 캠페인 묶음 진입, 생산 패널·건설, 객체 메뉴·도움말, 한국어 Tutorial1·2. [0.1절 요약](#e951-e1081) |
+| E951~E1130 | 미션 앱 프레임의 로딩·Start, 음향, Renderer·Gump 출력, 브라우저 입력·카메라, Tutorial·세 캠페인 묶음 진입, 생산 패널·건설, 객체 메뉴·도움말, 한국어 Tutorial1·2, 안내 창 지도 영역 배치. [0.1절 요약](#e951-e1081) |
 
 ## 3. 남은 작업과 실행 순서
 
@@ -225,7 +225,7 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 **4D-10 재대조와 L2**
 
 - [ ] **4D-10a 실제 소유자 재대조** — E882에서 CampaignGuideRelease의 실제 Client 금지값 참조와 Session 보유·무World 해제를 확인했다. 남은 typed 선행 바인딩과 ClientGameplayGlobals, GameAux·TypeNames·RawBombBlastBindings를 실제 Client/Session 및 Native 장기 경로로 확인한다. Archer·Motion/Path·Cursor·SoundProcess 소비자 검증은 6~8단계와 연계한다. [E882](docs/webpj-client-guide-release-20261119.md)
-- [ ] **4D-10b L2 판정** — E1129에서 실제 앱의 `sessionDump()` 로 Tutorial1 시작 직후 덤프를 cpppj 기준선과 대조해 `kernel`·`alliances`·`graph`·`totals`·SP(오프셋·소유자 0 제외)·슬롯 원문이 시간 의존 값(시계·난수·정기 시각·풀 해시·애니메이션 프레임·앰비언트 바람 객체)을 빼고 같음을 시험(`e2e/l2-tutorial1.spec.js`)으로 고정했다. 남음: 고정 시각 실행 모드로 행 전체 일치, `later.tsv` L3·첫 프레임 논리 화면, Player 기록 앞 4바이트·Player 1 +0x68 원인 규명. [E1129](docs/webpj-l2-tutorial1-20261121.md) · E870에서 판번호 1 덤프의 행별 비교와 명시적 SP 소유자 0 제외를 구현했다. E873에서 원본 테마 기본값을 맞추자 Tutorial1 안쪽 613개는 프레임까지 일치하고 경계 45개가 남았다. E874에서 이 차이는 모두 같은 방향·변형의 해당 원소 후보 구간 내에 있음을 확인했다. 같은 시점·난수에서 Tutorial1 Load/Start의 보고서·덤프·첫 프레임 논리 화면을 맞추고 실제 결선 단위를 대응표에서 `session`으로 올린다. [E870](docs/webpj-session-dump-compare-20261119.md) · [E873](docs/webpj-campaign-ownership-theme-20261119.md) · [E874](docs/webpj-tutorial1-border-candidates-20261119.md)
+- [ ] **4D-10b L2 판정** — E1129에서 실제 앱의 `sessionDump()` 로 Tutorial1 시작 직후 덤프를 cpppj 기준선과 대조해 `kernel`·`alliances`·`graph`·`totals`·SP(오프셋·소유자 0 제외)·슬롯 원문이 시간 의존 값(시계·난수·정기 시각·풀 해시·애니메이션 프레임·앰비언트 바람 객체)을 빼고 같음을 시험(`e2e/l2-tutorial1.spec.js`)으로 고정했다. E1130에서 첫 안내 창(`NetStorm!`)과 브리핑 같은 미션 안내 창을 `load.png`·원본 스크린샷처럼 HUD 를 뺀 지도 영역(x 85..1024) 가운데로 옮겼다. 남음: 고정 시각 실행 모드로 행 전체 일치, `later.tsv` L3·첫 프레임 논리 화면(미션 로딩 창 위치 `{85,0,W,H}`·도움말 창 가운데 배치 확인 포함), Player 기록 앞 4바이트·Player 1 +0x68 원인 규명. [E1129](docs/webpj-l2-tutorial1-20261121.md) · [E1130](docs/webpj-tell-window-map-view-20261121.md) · E870에서 판번호 1 덤프의 행별 비교와 명시적 SP 소유자 0 제외를 구현했다. E873에서 원본 테마 기본값을 맞추자 Tutorial1 안쪽 613개는 프레임까지 일치하고 경계 45개가 남았다. E874에서 이 차이는 모두 같은 방향·변형의 해당 원소 후보 구간 내에 있음을 확인했다. 같은 시점·난수에서 Tutorial1 Load/Start의 보고서·덤프·첫 프레임 논리 화면을 맞추고 실제 결선 단위를 대응표에서 `session`으로 올린다. [E870](docs/webpj-session-dump-compare-20261119.md) · [E873](docs/webpj-campaign-ownership-theme-20261119.md) · [E874](docs/webpj-tutorial1-border-candidates-20261119.md)
 
 
 #### 5-A 렌더러·Draw·시각 시스템 (44/46)

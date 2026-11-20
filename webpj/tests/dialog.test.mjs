@@ -561,3 +561,20 @@ test('원본 스크린샷 대조: Credits·Demo·Campaign 목록·본문·버튼
         assert.ok(regionDiff(rendered, shot, info.title, best.originX, best.originY) <= 6, `${name} 본문 평균 차이`);
     }
 });
+
+// 미션 중 안내 창 배치: `screen.left`·`screen.top` 이 있으면 그 영역(왼쪽 HUD 85px 를 뺀 지도 영역 85..1024)의 가운데에 놓인다. 없으면 화면 전체 가운데이다(기존 동작). (2026-11-21 WB04-E1130)
+test('안내 창은 screen 영역의 왼쪽 위 모서리를 더해 지도 영역 가운데에 놓인다', () => {
+    const { window: full } = renderDialog('Credits', 1024, 768, { original: true });
+    const [width, height] = [full.baseWidth, full.baseHeight];
+    // 화면 전체 배치(기존): left/top 이 없어도 가운데이다.
+    assert.equal(full.x, (1024 - width) * 0.5); assert.equal(full.y, (768 - height) * 0.5);
+    assert.equal(full.followsMapView, true);
+    // 지도 영역 {left 85, top 0, 폭 939, 높이 768} 로 바꿔 다시 놓으면 x 가 85 만큼 오른쪽으로 간다.
+    full.screen = { left: 85, top: 0, width: 939, height: 768 }; full.place();
+    assert.equal(full.x, 85 + (939 - width) * 0.5); assert.equal(full.y, (768 - height) * 0.5);
+    // 자식(본문)도 같은 이동을 따른다.
+    assert.equal(full.body.x, full.x + full.bodyLocal.x);
+    // top 도 더해진다.
+    full.screen = { left: 0, top: 40, width: 1024, height: 700 }; full.place();
+    assert.equal(full.y, 40 + (700 - height) * 0.5);
+});

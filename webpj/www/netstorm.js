@@ -2311,6 +2311,9 @@ export class Netstorm {
             const next = applySkirmishAction(settings, skirmish.args); this._storeSkirmishSettings(settings);
             return this._openTell(next, { suppressWindow });
         }
+        // 미션 중에는 안내 창이 왼쪽 HUD 를 뺀 지도 영역의 가운데에 놓인다(원본 스크린샷의 Briefing·Success 창). 메인 메뉴에서는 화면 전체이다. (2026-11-21 WB04-E1130)
+        const view = this._campaignDisplayActive() ? this._campaignWorld.mapView() : null;
+        const tellScreen = view ? { left: view.left, top: view.top, width: view.right - view.left, height: view.bottom - view.top } : { width: this._mainMenu.width, height: this._mainMenu.height };
         const result = createTellWindow({
             bodyFor: (target, presented) => this._skirmishScreenBody(target) ?? presented,
             gameData: this._gameData,
@@ -2318,7 +2321,7 @@ export class Netstorm {
             name,
             missionSection: (section) => this._clientGuide?.current()?.script.section(section) ?? null,
             suppressWindow,
-            screen: { width: this._mainMenu.width, height: this._mainMenu.height },
+            screen: tellScreen,
             nowSeconds: this._frameSeconds,
             now: () => this._frameSeconds,
             onCommand: (command) => this._onDialogCommand(command),
@@ -3331,8 +3334,20 @@ export class Netstorm {
         }
         // 원본 Kernel 단계에서 같은 현재 World를 준비하고 단일 Client Kernel을 실행한다.
         if (this._campaignDisplayActive()) { this._runCampaignProductionFrame(); this._clientGump.idle(); this._runCampaignKernelFrame(); this._campaignProduction?.hud?.refresh(); }
+        this._syncDialogToMapView();
         this._render(now);
         this._startFrameLoop();
+    }
+
+    // 미션 화면(HUD 도킹으로 지도 영역이 왼쪽 85px 줄어든 상태)이 준비된 뒤 이미 열려 있던 안내 창을 같은 지도 영역의 가운데로 다시 놓는다. 튜토리얼 첫 안내 창은 HUD 도킹보다 먼저 열리므로 화면 전체 가운데에 놓였다가 어긋났다.
+    // 안내 창(TellWindow)만 대상이다(도움말 창 등은 자체 위치 규칙을 쓴다). (2026-11-21 WB04-E1130)
+    _syncDialogToMapView() {
+        const dialog = this._mainMenu?.dialog;
+        if (!dialog?.followsMapView || !this._campaignDisplayActive()) return;
+        const view = this._campaignWorld.mapView(), screen = dialog.screen;
+        const wanted = { left: view.left, top: view.top, width: view.right - view.left, height: view.bottom - view.top };
+        if ((screen.left ?? 0) === wanted.left && (screen.top ?? 0) === wanted.top && screen.width === wanted.width && screen.height === wanted.height) return;
+        dialog.screen = wanted; dialog.place(); this._mainMenu.dirty = true; this._displayDirty = true;
     }
 
     // ----- 그리기 -----
