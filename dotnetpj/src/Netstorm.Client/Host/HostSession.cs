@@ -689,7 +689,7 @@ public sealed partial class HostSession
 
     /// <summary>세션이 소유한 지도 리비전 공유 값이다. 패치판 owner 변경이 1로 둔다.</summary>
     /// <remarks>2026-11-12 0.436에서 월드 적재 공유 저장소로 추가했다. 런타임 갈고리 읽기로 쓴다.</remarks>
-    public uint IslandRevision { get; set; }
+    public uint IslandRevision { get => Gameplay.MapRevision.Value; set => Gameplay.MapRevision.Value = value; }
 
     /// <summary>세션이 소유한 같은 TYPE 프레임 표다. 실제 타입 적재 단위에서 채우기 전까지 빈 표다.</summary>
     /// <remarks>2026-11-12 0.436에서 월드 적재 공유 저장소로 추가했다. 적재 본체 연결은 다음 단위다.</remarks>
@@ -701,7 +701,7 @@ public sealed partial class HostSession
 
     /// <summary>세션이 소유한 월드 적재 전역이다. 구독자·편집·임무후 상태를 둔다.</summary>
     /// <remarks>2026-11-12 0.436에서 월드 적재 공유 저장소로 추가했다. 적재 본체 연결은 다음 단위다.</remarks>
-    public CampaignWorldGlobals WorldGlobals { get; } = new();
+    public CampaignWorldGlobals WorldGlobals => Gameplay.World;
 
     /// <summary>세션이 소유한 지형 문자 mapping 전역이다. 초기 지면·경계 타입과 지역 없음 값을 둔다.</summary>
     /// <remarks>2026-11-12 0.444에서 지형 상태 저장소로 추가했다. 바인딩·생성 연결은 다음 단위다.</remarks>
