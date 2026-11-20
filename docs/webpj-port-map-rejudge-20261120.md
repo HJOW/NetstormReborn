@@ -51,9 +51,11 @@
 | `RawSurfaceRitual.cpp` | core/raw-priest-world-bindings.js, core/raw-campaign-asset-bindings.js, core/raw-campaign-session-devastation.js, core/raw-altar-sacrifice.js, core/raw-dais-lifecycle.js | partial |
 | `RawSurfaceVortex.cpp` | core/raw-campaign-asset-bindings.js, core/raw-campaign-session-devastation.js | partial |
 
+- **Sound·SoundDevice(partial→port, E1099).** 옛 메모의 "Web Audio 장치와 Session 연결은 남음"이 낡았다. 앱이 SoundPlayer·이름표·감쇠 파일 선택과 `WebSoundDevice`를 미션과 소리 설정에 연결해 효과음을 내며(E957~E966) 10.78 독립 관측 2128행(`sound-player.test.mjs`)과 장치 시험(`web-sound-device.test.mjs`·Chromium)이 확인한다.
+
 ## 집계
 
-todo 75 → 44, partial 69 → 99, port 878 → 879(`HelpLinkPolicy`). 이식 대상 1,022단위 중 port 879(86.0%)다. 남은 단위는 partial과 todo의 합으로 144 → 143단위, 줄은 33,538 → 33,448줄이다(partial에는 파일 전체 줄 수를 센다). 이번 재판정은 "웹 코드가 전혀 없다"는 오판을 바로잡는 것이어서 남은 양 자체는 거의 줄지 않았다.
+todo 75 → 44, partial 69 → 97, port 878 → 881(`HelpLinkPolicy`·`Sound`·`SoundDevice`). 이식 대상 1,022단위 중 port 881(86.2%)다. 남은 단위는 partial과 todo의 합으로 144 → 141단위, 줄은 33,538 → 32,252줄이다(partial에는 파일 전체 줄 수를 센다). 이번 재판정은 "웹 코드가 전혀 없다"는 오판을 바로잡는 것이어서 남은 양 자체는 거의 줄지 않았다.
 
 ## 아직 todo인 44행(웹 대응을 확인하지 못함)
 

@@ -6,7 +6,7 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-20, 마지막 단위 WB04-E1098)
+### 0.1 현재 값 (2026-11-20, 마지막 단위 WB04-E1099)
 
 | 항목 | 현행 상태 |
 | --- | --- |
@@ -31,7 +31,7 @@
 
 <a id="e951-e1081"></a>
 
-#### E951~E1098 진행 요약
+#### E951~E1099 진행 요약
 
 단위별 완료 문단·검증 수·회귀 이력은 [E1081 정리 전 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261120-through-wb04-e1081)의 0.1절과 각 단위 문서에 있다.
 
@@ -53,7 +53,7 @@
 
 ### 0.2 단계 진행판
 
-`n/m`은 상위 체크 수이며 보관한 완료 항목을 포함한다. 상위 항목 안의 완료 부분은 중복 가산하지 않는다. 남은 단위와 줄 수는 `PORT_MAP.tsv`의 partial·todo 기준이며 partial에는 파일 전체 줄 수를 센다. E951~E1098은 대부분 상위 항목 안의 부분 진행이라 체크 수는 바뀌지 않았다. E1082 뒤 재집계에서는 남은 145단위·33,562줄이 같았고(`UberHud.inc` todo→partial), E1094에서 `FrameRateOption`이 todo→port가 되어 144단위·33,538줄이 됐으며, E1098 재판정([docs](docs/webpj-port-map-rejudge-20261120.md))에서 `HelpLinkPolicy`가 partial→port가 되어 143단위·33,448줄이다.
+`n/m`은 상위 체크 수이며 보관한 완료 항목을 포함한다. 상위 항목 안의 완료 부분은 중복 가산하지 않는다. 남은 단위와 줄 수는 `PORT_MAP.tsv`의 partial·todo 기준이며 partial에는 파일 전체 줄 수를 센다. E951~E1099는 대부분 상위 항목 안의 부분 진행이라 체크 수는 바뀌지 않았다. E1082 뒤 재집계에서는 남은 145단위·33,562줄이 같았고(`UberHud.inc` todo→partial), E1094에서 `FrameRateOption`이 todo→port가 되어 144단위·33,538줄이 됐으며, E1098 재판정([docs](docs/webpj-port-map-rejudge-20261120.md))에서 `HelpLinkPolicy`가 partial→port가 되어 143단위·33,448줄, E1099 후속 재판정에서 `Sound`·`SoundDevice`(옛 메모가 낡음)가 partial→port가 되어 141단위·32,252줄이다.
 
 | 순서 | 단계 | 체크·상태 | 남은 단위 / 줄 |
 | --- | --- | --- | --- |
@@ -65,14 +65,14 @@
 | 5 | 5-C 화면 허브·미션 진입 | 0/6 → M2 | 10 / 6,033 |
 | 6 | 입력·게임 메뉴·경제·건설 | 1/8 → M3 | 7 / 913 |
 | 7 | 전투·의식·AI | 0/6 | 3 / 97 |
-| 8 | 미션 수명·대본·오디오·도움말 | 0/9 → M4 | 29 / 5,889 |
+| 8 | 미션 수명·대본·오디오·도움말 | 0/9 → M4 | 27 / 4,693 |
 | 9 | 표시 품질·브라우저/OS·배포 | E945 하위 경로·설정 복원 검증, M5 미완료 | 1 / 41 |
 | 10 | AGENTS 후순위 웹 요구 | 일부 선행, 3.7절 참조 | 5 / 725 |
-| **합계** | | | **143 / 33,448** |
+| **합계** | | | **141 / 32,252** |
 
 ### 0.3 이식량
 
-기준선 `225553df`의 이식 대상 1,022단위는 **port 879(86.0%)·partial 99·todo 44**이다(2026-11-20 E1098 재판정 뒤 재집계: RawSurface 29행·Dialog 2행이 todo→partial, `HelpLinkPolicy`가 partial→port). 제외 138단위를 합하면 대응표 1,160행이다. 앱 수명 연결을 뜻하는 `session`과 오라클 대조를 뜻하는 `oracle`은 0이다.
+기준선 `225553df`의 이식 대상 1,022단위는 **port 881(86.2%)·partial 97·todo 44**이다(2026-11-20 E1098~E1099 재판정 뒤 재집계: RawSurface 29행·Dialog 2행이 todo→partial, `HelpLinkPolicy`·`Sound`·`SoundDevice`가 partial→port). 제외 138단위를 합하면 대응표 1,160행이다. 앱 수명 연결을 뜻하는 `session`과 오라클 대조를 뜻하는 `oracle`은 0이다.
 
 | 범위 | port / 대상 | partial | todo |
 | --- | --- | --- | --- |
@@ -80,7 +80,7 @@
 | `client/` 세션·UI·표시 | 312 / 447 | 63 | 72 |
 | `zacket/` 내부 미션 전송 | 1 / 1 | 0 | 0 |
 
-남은 143단위 중 기존 기준선은 74단위/28,010줄, 재기준선 추가분은 69단위/5,438줄이다. E854에서 `UberReconnect`의 단독 감시를, E884에서 단독 미션의 Fort 이름 선택 두 단위를 이식 대상으로 재분류했다. 재기준선 분류·영역별 상세는 [E801 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261118-through-wb04-e801)과 `python -X utf8 tools/port_inventory.py --families wb`에서 확인한다.
+남은 141단위 중 기존 기준선은 72단위/26,814줄, 재기준선 추가분은 69단위/5,438줄이다. E854에서 `UberReconnect`의 단독 감시를, E884에서 단독 미션의 Fort 이름 선택 두 단위를 이식 대상으로 재분류했다. 재기준선 분류·영역별 상세는 [E801 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261118-through-wb04-e801)과 `python -X utf8 tools/port_inventory.py --families wb`에서 확인한다.
 
 ### 0.4 기준선과 자료
 
@@ -134,7 +134,7 @@ E896에서 실제 미션 설치의 You→당신 번역과 Player 표시 바이�
 | E703~E774 | 실제 typed Login/Ready·Start, 출하 스크립트 32종의 Fort 로그인, 같은 Session의 사제·골렘·벌룬 이동과 워크샾 배치·격리 완공. [Login](docs/webpj-session-login-ready-20261118.md) · [Start](docs/webpj-session-mission-start-20261118.md) · [워크샾](docs/webpj-workshop-isolated-completion-20261118.md) |
 | E775~E801 | Session 카메라·입자·튜토리얼 게이트, AI/Player/Process 반납 경계, 지연 GameWorld·팔레트·자산 보기·선택. World 입력 부품과 UserInput 폴링·단축키·우클릭까지 연결. [공통 게이트](docs/webpj-session-tutorial-gate-20261118.md) · [지연 GameWorld](docs/webpj-campaign-game-world-front-20261118.md) · [입력](docs/webpj-campaign-selection-keys-20261118.md) |
 | E802~E950 | 입력 클릭·NB20 취소, GameWorld 프레임·세 운반 유닛 도착, 워크샾 Kernel 완공·연구 동기화, 전투 완료 관문, Client 진단·프레임 시계, Session 덤프 형식과 오라클 시나리오(4D-9b), 앱 Guide·State7·Gump 루트·팔레트·Screen·입력 큐·TextEntry/IME·갈무리11 편집, Reset All(E863), 16:9 최대 1920×1080(E943), 하위 경로 배포(E945). [E1081 보관본 0.1·3.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261120-through-wb04-e1081) |
-| E951~E1098 | 미션 앱 프레임의 로딩·Start, 음향, Renderer·Gump 출력, 브라우저 입력·카메라, Tutorial·세 캠페인 묶음 진입, 생산 패널·건설, 객체 메뉴·도움말, 한국어 Tutorial1·2. [0.1절 요약](#e951-e1081) |
+| E951~E1099 | 미션 앱 프레임의 로딩·Start, 음향, Renderer·Gump 출력, 브라우저 입력·카메라, Tutorial·세 캠페인 묶음 진입, 생산 패널·건설, 객체 메뉴·도움말, 한국어 Tutorial1·2. [0.1절 요약](#e951-e1081) |
 
 ## 3. 남은 작업과 실행 순서
 
