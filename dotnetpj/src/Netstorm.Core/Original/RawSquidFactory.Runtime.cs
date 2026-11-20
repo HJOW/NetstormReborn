@@ -71,7 +71,7 @@ public sealed partial class RawSquidFactory
             _factory = factory; Runtime = runtime; _owner = runtime?.Pin?.Invoke();
             if (runtime is not null) runtime.ActiveCalls = unchecked(runtime.ActiveCalls + 1);
         }
-        /// <summary>owner의 Dispose를 대신 부르지 않고 마지막 복귀 뒤 대여/강한 참조만 놓는다.</summary>
+        /// <summary>마지막 복귀 뒤 일반 소유자는 보유만 끝내고 표시된 호출 대여를 한 번 반납한다.</summary>
         public void Dispose()
         {
             if (Runtime is { } runtime)
@@ -80,7 +80,7 @@ public sealed partial class RawSquidFactory
                 if (runtime.ActiveCalls == 0 && runtime.ReleaseRequested && ReferenceEquals(_factory.CurrentRuntime(), runtime)) _factory._runtimeBinding = null;
                 Runtime = null;
             }
-            GC.KeepAlive(_owner); _owner = null;
+            object? owner = _owner; _owner = null; RawRuntimePin.Release(owner);
         }
     }
 }

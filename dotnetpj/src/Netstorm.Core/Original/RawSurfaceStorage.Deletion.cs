@@ -204,7 +204,7 @@ public sealed partial class RawSurfaceStorage
                     }
                     finally
                     {
-                        GC.KeepAlive(owner);
+                        RawRuntimePin.Release(owner);
                     }
                 },
             };

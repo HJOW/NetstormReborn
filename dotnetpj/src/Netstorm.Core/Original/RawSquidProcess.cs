@@ -223,8 +223,9 @@ public sealed class RuntimeCallGuard : IDisposable
             --_runtime.ActiveCalls;
             _runtime = null;
         }
-        // C++ shared_ptr 반납과 같이 실제 호출이 끝난 뒤 참조만 놓는다. 소유자의 Dispose를 대신 호출하지 않는다.
-        GC.KeepAlive(_owner);
+        // 실제 호출 수를 먼저 반납하고 일반 소유자와 구별한 명시 호출 대여만 반납한다.
+        object? owner = _owner;
         _owner = null;
+        RawRuntimePin.Release(owner);
     }
 }

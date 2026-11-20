@@ -186,6 +186,6 @@ public sealed partial class RawPostPop
                 throw new InvalidOperationException("현재 가상 후처리 몸체 미복원");
             PostPop(sid, flags);
         }
-        finally { GC.KeepAlive(owner); }
+        finally { RawRuntimePin.Release(owner); }
     }
 }

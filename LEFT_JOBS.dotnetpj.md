@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-20 · 마지막 완료 0.712(전체5151건·65실행·원본1392불변) · 다음 0.713(Runtime호출대여명시반납) · 현재 단계 R4-2·R4-5 병행 · 전체 목표 미완료**
+**2026-11-20 · 마지막 완료 0.713(Runtime대여반납·집중152건) · 다음 0.714(실제Player/동맹고정뷰소비자) · 현재 단계 R4-2·R4-5 병행 · 전체 목표 미완료**
 
 현행 인계는 이 문서가 기준이다. 0.600~0.635의 단위별 완료 문장, 단위마다 누적한 검사 수와 L2 보관 경로 나열은 [0.635 정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635)에 있다. 0.613까지의 경과, 파일 계열별 체크 목록과 옛 집계는 [0.613 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)에 있다. 단위별 근거는 `docs/dotnet-canon-0NNN-*.md`이다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
@@ -95,7 +95,8 @@
 66. **0.710 현재공장목록 — 완료.** 실제Player+0/+4/+8현재getter와정확한공장부분뷰·같은Client/행재사용을연결했다. 기존16소비자를같은Storage로잇고실제공통Owner두행목록이동포함현재집중368건통과다. 실제DN1-1종료0/덤프0.708전체동일·원본1392불변이며fixture360개불변이다. 장기제품소비자전환은후속이다. [근거](docs/dotnet-canon-0710-20261120.md)
 67. **0.711 장기옵션/Core/Player전역 — 완료.** 같은87바이트옵션과숨김9바이트를실제Session/참여/덤프에잇고명시미션Reset과세션대여를분리했다. 장기Core/Player소유자와동일Deck·Core active/밀도실제상자도연결했다. 집중144건통과·실제DN1-1종료0/덤프0.708전체동일·원본1392불변이다. 실제SessionPlayer고정뷰전환은후속이다. [근거](docs/dotnet-canon-0711-20261120.md)
 68. **0.712 정기전체회귀/L2 — 완료.** Assets366·Core3340·Client1445 합계5151건통과·실패0·기존실장치음향1건미실행이다.65실행종료0·DN31전체바이트/34지표0.708동일·원본1392불변이며M1은0/34다. [근거](docs/dotnet-canon-0712-20261120.md)
-69. **0.713 Runtime호출대여명시반납 — 다음.** 실제Native수신기설치의선행조건으로World/PostPop/공장/Process/표시/전송등에서짧은명시호출대여만반납한다. 일반IDisposable소유자는대신Dispose하면안된다. 이후실제Player/동맹고정뷰소비자·고정App15수신기·전체로그인bridge/Root와World/건설효과pin결선을잇는다. Source의Editor/LAN/Meta재인계·일반건설/DropIsland·Carrier플레이효과·나머지AI/캡처·전용색표·R5월드뷰도남는다.
+69. **0.713 Runtime호출대여명시반납 — 완료.** marker로실제호출대여만구별해PostPop/Process/Factory/표시/전송/큰효과끝에반납하고일반IDisposable소유자보유를유지했다. 실제중첩HostRuntime/예외/현재대여검사포함집중현재152건통과·실제DN1-1종료0/덤프0.712전체동일·원본1392불변이다. Host소비자pin결선은후속이다. [근거](docs/dotnet-canon-0713-20261120.md)
+70. **0.714 실제Player/동맹고정뷰소비자 — 다음.** 같은장기Player상태/Core0·단일대여/초기화또는준비인계·실제배열/동맹/카운터/공장헤더를HostSession/Root에연결한다. 이어고정App15수신기·전체로그인bridge/Root와기존월드/건설효과pin결선을잇는다. Source의Editor/LAN/Meta재인계·일반건설/DropIsland·Carrier플레이효과·나머지AI/캡처·전용색표·R5월드뷰도남는다.
 57. **R4-2 나머지 차이와 R4-3~R4-8.** 농지 프레임, 전용 요새, 표시 등록, 그래프 번호, 장부를 처리한 뒤 R4-3~R4-8을 진행한다. 통합 조각을 마칠 때 같은 조건의 일괄 덤프로 M1 진척을확인한다. [R4 체크](#r4-detail)
 
 <a id="first-run"></a>

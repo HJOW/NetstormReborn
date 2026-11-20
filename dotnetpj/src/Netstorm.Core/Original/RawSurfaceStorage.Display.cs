@@ -65,28 +65,28 @@ public sealed partial class RawSurfaceStorage
             Func<SquidDisplayView> read = (current is null ? _displayDevices.View : current.View) ?? throw new InvalidOperationException("표면 표시의 현재 카메라/지도 장치 미연결");
             return read() ?? throw new InvalidOperationException("표면 표시의 현재 뷰 값 누락");
         }
-        finally { GC.KeepAlive(owner); }
+        finally { RawRuntimePin.Release(owner); }
     }
     /// <summary>같은 현재 전체 갱신 관문만 읽고 실행 중 대여/Runtime을 유지한다.</summary>
     public bool DisplaySuppressed()
     {
         RawSurfaceDisplayBindings? current = DisplayRuntime(); object? owner = current?.Pin?.Invoke();
         try { return ((current is null ? _displayDevices.Suppressed : current.Suppressed) ?? throw new InvalidOperationException("표면 표시의 실제 전체 갱신 관문 미연결"))(); }
-        finally { GC.KeepAlive(owner); }
+        finally { RawRuntimePin.Release(owner); }
     }
     /// <summary>실제 dirty 장치에 정확한 영역/플래그를 전달한다.</summary>
     public void InvalidateDisplay(DisplayRect rectangle, uint flags)
     {
         RawSurfaceDisplayBindings? current = DisplayRuntime(); object? owner = current?.Pin?.Invoke();
         try { ((current is null ? _displayDevices.Invalidate : current.Invalidate) ?? throw new InvalidOperationException("표면 표시의 실제 dirty 장치 미연결"))(rectangle, flags); }
-        finally { GC.KeepAlive(owner); }
+        finally { RawRuntimePin.Release(owner); }
     }
     /// <summary>현재 World가 실제 설치한 메타 장치만 우선하며 없으면 실제 Client 장치를 선택한다.</summary>
     public void RefreshMetaDisplay(ReadOnlySpan<byte> raw)
     {
         RawSurfaceDisplayBindings? current = DisplayRuntime(); bool selected = current?.MetaRefresh is not null; object? owner = selected ? current!.Pin?.Invoke() : null;
         try { ((selected ? current!.MetaRefresh : _displayDevices.MetaRefresh) ?? throw new InvalidOperationException("현재 메타 표시의 실제 파생 갱신 장치 미연결"))(raw); }
-        finally { GC.KeepAlive(owner); }
+        finally { RawRuntimePin.Release(owner); }
     }
     /// <summary>원문에서 선택한 현재 World의 기존 changed 관찰만 알리고 게임 효과/성공을 대신하지 않는다.</summary>
     public void NoteChanged()
@@ -94,7 +94,7 @@ public sealed partial class RawSurfaceStorage
         RawSurfaceDisplayBindings? current = DisplayRuntime(); if (current?.Changed is null) return;
         object? owner = current.Pin?.Invoke();
         try { (current.Changed ?? throw new InvalidOperationException("현재 World의 선택된 changed 관찰 미연결"))(); }
-        finally { GC.KeepAlive(owner); }
+        finally { RawRuntimePin.Release(owner); }
     }
     /// <summary>현재 장치가 있을 때만 한 표시 실행기를 구성하고 새 World/대여를 만들지 않는다.</summary>
     public SquidDisplay DisplayExecutor()

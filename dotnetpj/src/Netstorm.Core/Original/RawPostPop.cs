@@ -509,7 +509,7 @@ public sealed partial class RawPostPop : IRawPopPostPop
             // 연결한 파생도 공통 몸체를 통해 깊이를 정확히 한 번 줄였는지 확인한다.
             if (_state.Depth != before) throw new InvalidOperationException("postPop Activate 공통 깊이 불일치");
         }
-        finally { GC.KeepAlive(owner); }
+        finally { RawRuntimePin.Release(owner); }
     }
 
     /// <summary>공통 몸체. 명시적인 직접 호출은 깊이를 한 단계 감소시킨다.</summary>

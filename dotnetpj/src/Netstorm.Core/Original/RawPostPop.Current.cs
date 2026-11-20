@@ -100,6 +100,6 @@ public sealed partial class RawPostPop
             RecheckSelection = () => { Action? recheck = _selectionRecheck ?? _defaultDevices.RecheckSelection; if (recheck is not null) recheck(); else if (_state.PendingPlacement) throw new InvalidOperationException("공통 후처리 실제 선택 재검사 미연결"); },
         };
         try { RawSquidPostPopParent.Run(_pool, sid, flags, ref _state.ActivationDepth, hooks); }
-        finally { GC.KeepAlive(owner); }
+        finally { RawRuntimePin.Release(owner); }
     }
 }

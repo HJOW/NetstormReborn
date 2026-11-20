@@ -93,21 +93,21 @@ public sealed partial class RawSurfaceStorage
         if (_transmissionDevices.Connected is { } native) return native(target);
         var current = PopRuntime(); if (current?.Connected is null) throw new InvalidOperationException("독립 Squid의 현재 Player 장치 미연결");
         object? owner = current.Pin?.Invoke();
-        try { return NeedTransmission(current.Connected)(target); } finally { GC.KeepAlive(owner); }
+        try { return NeedTransmission(current.Connected)(target); } finally { RawRuntimePin.Release(owner); }
     }
     /// <summary>writer 반환 크기를 유지하고 선택된 실제 typed 방송만 pin한다.</summary>
     private void BroadcastTypedTransmission(ReadOnlyMemory<byte> packet)
     {
         var current = PopRuntime(); if (current?.Broadcast is null) throw new InvalidOperationException("독립 Squid의 실제 방송 관측 미연결");
         object? owner = current.Pin?.Invoke();
-        try { NeedTransmission(current.Broadcast)(packet); } finally { GC.KeepAlive(owner); }
+        try { NeedTransmission(current.Broadcast)(packet); } finally { RawRuntimePin.Release(owner); }
     }
     /// <summary>선택된 실제 typed 대상에 같은 반환 크기를 전달한다.</summary>
     private void SendTypedTransmission(int target, ReadOnlyMemory<byte> packet)
     {
         var current = PopRuntime(); if (current?.Send is null) throw new InvalidOperationException("독립 Squid의 실제 대상 송신 미연결");
         object? owner = current.Pin?.Invoke();
-        try { NeedTransmission(current.Send)(target, packet); } finally { GC.KeepAlive(owner); }
+        try { NeedTransmission(current.Send)(target, packet); } finally { RawRuntimePin.Release(owner); }
     }
     /// <summary>선택된 외부 Host writer만 우선하고 없으면 같은 장기 Host의 실제 PID를 조회한다.</summary>
     private int WriteCurrentProcessPacket(int form, Span<byte> packet, uint argument)
@@ -115,7 +115,7 @@ public sealed partial class RawSurfaceStorage
         var current = PopRuntime();
         if (current?.ProcessPacket is null) return Processes().Host().WriteFormPacket(form, argument, packet, GameAux().SquidTransmission);
         object? owner = current.Pin?.Invoke();
-        try { return NeedTransmission(current.ProcessPacket)(form, packet, argument); } finally { GC.KeepAlive(owner); }
+        try { return NeedTransmission(current.ProcessPacket)(form, packet, argument); } finally { RawRuntimePin.Release(owner); }
     }
     /// <summary>공간/장부 뒤 현재 실제 Pop writer가 있으면 선택하고 없으면 같은 장기 writer를 사용한다.</summary>
     public void TransmitPop(int sid, uint flags)
@@ -123,7 +123,7 @@ public sealed partial class RawSurfaceStorage
         var current = PopRuntime();
         if (current?.Transmit is null) { TransmissionExecutor().Pop(sid, flags); return; }
         object? owner = current.Pin?.Invoke();
-        try { NeedTransmission(current.Transmit)(sid, flags); } finally { GC.KeepAlive(owner); }
+        try { NeedTransmission(current.Transmit)(sid, flags); } finally { RawRuntimePin.Release(owner); }
     }
     /// <summary>signed 반환 범위를 확인하고 양수일 때만 실제 Native 방송에 전체 예약을 전달한다.</summary>
     public void BroadcastProcessForm(int length)

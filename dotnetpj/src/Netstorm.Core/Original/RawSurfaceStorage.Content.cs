@@ -185,7 +185,7 @@ public sealed partial class RawSurfaceStorage
                     }
                     finally
                     {
-                        GC.KeepAlive(owner);
+                        RawRuntimePin.Release(owner);
                     }
                 });
             body.BindCurrentTypes(Types);
@@ -258,7 +258,7 @@ public sealed partial class RawSurfaceStorage
                 }
                 finally
                 {
-                    GC.KeepAlive(owner);
+                    RawRuntimePin.Release(owner);
                 }
             });
         notice.Notice(parent, form, reason);

@@ -1,4 +1,5 @@
 using Netstorm.Client.Host;
+using Netstorm.Core.Original;
 using Netstorm.Net;
 
 // 장기 Gameplay의 weak 공개와 배송 중 실제 전체 Runtime 보유를 구별한다.
@@ -76,7 +77,7 @@ public sealed partial class ClientGameplayGlobals
         }
     }
     /// <summary>실제 전체 Runtime을 보유한 후 호출 수를 올리고 마지막 자식 참조보다 먼저 호출 수를 반납한다.</summary>
-    private sealed class RuntimeCall : IDisposable
+    private sealed class RuntimeCall : IRawRuntimeLease
     {
         /// <summary>실제 호출 수를 보유하는 같은 장기 Gameplay다.</summary>
         private ClientGameplayGlobals? _globals;
