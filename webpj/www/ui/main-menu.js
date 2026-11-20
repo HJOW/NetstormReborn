@@ -159,9 +159,12 @@ export class MainMenuScreen {
     }
 
     // 대화상자를 현재 논리 화면 크기에 맞춰 다시 배치한다(화면 크기가 바뀌었거나 방금 열린 경우). (2026-10-28 WB03-D)
+    // 대화상자가 자기 보기 영역의 왼쪽 위 모서리(`screen.left`·`screen.top`, 미션의 지도 영역처럼 HUD 를 뺀 영역)를 이미 갖고 있으면 그 모서리를 지키고 오른쪽·아래 끝만 현재 논리 화면 끝에 맞춘다.
+    // 이렇게 하지 않으면 열리는 순간마다 영역이 화면 전체로 되돌아간다. (2026-11-21 WB04-E1131)
     _fitDialog() {
         if (!this.dialog || this.width === 0) return;
-        this.dialog.screen = { width: this.width, height: this.height };
+        const area = this.dialog.screen, left = area?.left ?? 0, top = area?.top ?? 0;
+        this.dialog.screen = left || top ? { left, top, width: this.width - left, height: this.height - top } : { width: this.width, height: this.height };
         this.dialog.fit();
         this.dialog.place();
     }

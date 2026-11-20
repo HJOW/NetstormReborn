@@ -43,6 +43,12 @@ test('미션 진행 창: 앱 로그인 장치의 실제 메뉴 표시·교체·�
     const login = app._campaignLoginServices();
     login.startingProgress(); const first = app._mainMenu.dialog;
     assert.ok(first.content.styleText.includes('Starting Mission...')); assert.equal(first.buttons[0].command.name, 'LeaveBattle');
+    // 시작 안내는 원본 State7 처럼 왼쪽 85px 를 뺀 영역 가운데에 놓이고, 화면 크기가 바뀌어도 영역의 왼쪽 위 모서리를 지킨다. (2026-11-21 WB04-E1131)
+    assert.deepEqual(first.screen, { left: 85, top: 0, width: 1024 - 85, height: 768 });
+    assert.equal(first.x, 85 + ((1024 - 85) - first.baseWidth) * 0.5);
+    app._mainMenu.resize(1280, 720);
+    assert.deepEqual(first.screen, { left: 85, top: 0, width: 1280 - 85, height: 720 }); assert.equal(first.x, 85 + ((1280 - 85) - first.baseWidth) * 0.5);
+    app._mainMenu.resize(1024, 768);
     app._mainMenu.render(new IndexedSurface(1024, 768));
     login.progress(LocalMissionProgress.MissionStarting, 0); const second = app._mainMenu.dialog;
     assert.notEqual(second, first); assert.equal(first.closed, true); assert.ok(second.content.styleText.includes('Initializing.'));

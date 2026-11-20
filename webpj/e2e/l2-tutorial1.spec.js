@@ -36,12 +36,21 @@ test('Tutorial1 시작 직후 Session 덤프가 cpppj 기준선과 알려진 시
   await page.waitForFunction(() => window.netstorm?.state === 'mainMenu');
   await clickLabel(page, 'Campaign'); await clickLabel(page, 'Early Missions');
   const first = await page.evaluate(() => window.netstorm._mainMenu.dialog.menu.items.find((item) => item.command?.name === 'MissionBegin' && item.command.argument === 'Tutorial1')?.label);
+  // 미션 진행 창("Starting Mission...")이 뜨는 순간의 위치를 기록해 둔다: cpppj State7 처럼 왼쪽 85px 를 뺀 영역 가운데여야 한다. (2026-11-21 WB04-E1131)
+  await page.evaluate(() => {
+    const app = window.netstorm, original = app._showMissionLoading.bind(app); window.__loadingShown = [];
+    app._showMissionLoading = (message, view) => { original(message, view); const dialog = app._missionLoadingWindow; window.__loadingShown.push({ message, left: view?.left ?? 0, right: view?.right ?? 1024, x: dialog.x, width: dialog.baseWidth }); };
+  });
   await clickLabel(page, first);
   await page.waitForFunction(() => window.netstorm?._campaignDisplayActive() && window.netstorm._clientGuide.current()?.runtime.gate.started === 1, null, { timeout: 60000 });
   // 첫 안내 창("NetStorm!")은 cpppj 기준 화면(load.png)처럼 왼쪽 HUD(85px)를 뺀 지도 영역의 가운데에 놓인다: 창 왼쪽 x 가 85 + (939 - 폭) / 2 이다. (2026-11-21 WB04-E1130)
   await page.waitForFunction(() => Boolean(window.netstorm._mainMenu.dialog?.content), null, { timeout: 15000 });
   const placed = await page.evaluate(() => { const dialog = window.netstorm._mainMenu.dialog; return { x: dialog.x, width: dialog.baseWidth }; });
   expect(Math.abs(placed.x - (85 + (939 - placed.width) / 2))).toBeLessThan(1);
+  // 시작 안내(`startingProgress`)는 영역 {85,0,W,H} 이고, 로그인 진행 문구(`progress`)는 그 시점의 Gump 지도 영역(HUD 도킹 전 전체 화면)이다. 어느 쪽이든 창은 자기 영역 가운데에 있어야 하고 시작 안내는 한 번 이상 있어야 한다.
+  const loading = await page.evaluate(() => window.__loadingShown);
+  expect(loading.some((entry) => entry.left === 85)).toBe(true);
+  for (const entry of loading) expect(Math.abs(entry.x - (entry.left + (entry.right - entry.left - entry.width) / 2))).toBeLessThan(1);
   const web = (await page.evaluate(() => window.netstorm.sessionDump())).replaceAll('\r\n', '\n');
   const reference = fs.readFileSync(path.join(__dirname, '..', 'tests', 'fixtures', 'cpppj', 'candidate-225553df', 'tutorial1', 'oracle', 'tutorial1', 'load.tsv'), 'utf8').replaceAll('\r\n', '\n');
   // 행 단위: 허용한 행 밖의 차이·누락·추가가 없다.

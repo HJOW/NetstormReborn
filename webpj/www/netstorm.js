@@ -1305,8 +1305,9 @@ export class Netstorm {
                 this._clientGump.input().route(this._clientLocal.hudModeCommand().value, mode, 0, true);
             },
             // 미션 시작과 로그인 진행 문구는 같은 현재 메뉴의 진행 창을 사용한다.
-            startingProgress: () => { if (!this._resources) throw new Error('미션 진행 창의 실제 자원 수명 누락'); this._showMissionLoading(this._resources.translate('Starting Mission...')); },
-            progress: (kind, remaining) => { if (!this._resources) throw new Error('미션 진행 창의 실제 자원 수명 누락'); this._showMissionLoading(missionLoginProgressText(kind, remaining, (text) => this._resources.translate(text))); },
+            // 시작 안내("Starting Mission...")는 원본 State7 처럼 지도 영역이 곧 HUD 를 뺄 것을 알고 왼쪽 85px 를 뺀 영역({85, 0, 너비, 높이}) 가운데에 놓는다. 로그인 진행 문구는 그 시점의 현재 지도 영역을 쓴다. (2026-11-21 WB04-E1131)
+            startingProgress: () => { if (!this._resources) throw new Error('미션 진행 창의 실제 자원 수명 누락'); this._showMissionLoading(this._resources.translate('Starting Mission...'), { left: 85, top: 0, right: this._mainMenu?.width ?? 0, bottom: this._mainMenu?.height ?? 0 }); },
+            progress: (kind, remaining) => { if (!this._resources) throw new Error('미션 진행 창의 실제 자원 수명 누락'); this._showMissionLoading(missionLoginProgressText(kind, remaining, (text) => this._resources.translate(text)), this._clientGump?.mapView() ?? null); },
             closeProgress: () => this._closeMissionLoading(),
             // 서버 포트는 공통 전역을, 다른 정수는 현재 설정과 기본값을 사용한다.
             configInt: (key, fallback) => {
@@ -1334,12 +1335,14 @@ export class Netstorm {
         };
     }
 
-    // 현재 메뉴에 원본 본문·Cancel 메타를 가진 진행 창을 표시한다.
-    _showMissionLoading(message) {
+    // 현재 메뉴에 원본 본문·Cancel 메타를 가진 진행 창을 표시한다. `view` 는 창을 가운데에 놓을 보기 영역 `{ left, top, right, bottom }` 이고 없으면 화면 전체이다.
+    // 원본 State7 의 시작 안내는 `{85, 0, 너비, 높이}`, 로그인 진행 문구는 그 시점의 현재 지도 영역(Gump 의 mapView)이다. (2026-11-21 WB04-E1131)
+    _showMissionLoading(message, view = null) {
         const menu = this._mainMenu, resources = this._resources, data = this._gameData;
         if (!menu || !resources || !data) throw new Error('미션 진행 창의 실제 메뉴·자원 수명 누락');
+        const area = view ? { left: view.left, top: view.top, width: view.right - view.left, height: view.bottom - view.top } : { width: menu.width, height: menu.height };
         const next = createMissionLoadingWindow({ message, cancelText: resources.translate('Cancel'), resources, gameData: data,
-            screen: { width: menu.width, height: menu.height }, nowSeconds: this._frameSeconds, now: () => this._frameSeconds,
+            screen: area, nowSeconds: this._frameSeconds, now: () => this._frameSeconds,
             onCommand: (command) => this._onDialogCommand(command), onSound: () => this._audio?.playSound(BUTTON_SOUND_NAME) });
         this._missionLoadingWindow?.close(); this._missionLoadingWindow = next; menu.setDialog(next); this._displayDirty = true;
     }
