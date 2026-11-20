@@ -31,7 +31,11 @@ public sealed class ClientSurfaceGlobals
         ArgumentNullException.ThrowIfNull(gameplay); ArgumentNullException.ThrowIfNull(clock); ArgumentNullException.ThrowIfNull(kernel); ArgumentNullException.ThrowIfNull(milliseconds);
         Gameplay = gameplay; Clock = clock; Kernel = kernel; _milliseconds = milliseconds;
         Storage = new RawSurfaceStorage(OriginalEdition.Patch1078, gameplay.Authority, gameplay.GameAux);
+        Storage.BindChecking(new(() => gameplay.AiDebug.Checking.Value));
         Processes.BindDevices(kernel, clock.Frame);
         Storage.BindGraphClock(GameSeconds);
     }
+
+    /// <summary>첫 World 전에 같은 Client 상세 owner와 실제 중앙 로그 장치를 연결한다.</summary>
+    public void BindDisplayDiagnostics(Action<string, string, uint> assertion) => Storage.BindDisplayDiagnostics(Gameplay.AiDebug.AssertionDetail, assertion);
 }

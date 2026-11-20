@@ -12,6 +12,8 @@ public sealed partial class ClientGameplayGlobals
     {
         PlayerRecords = new(productionDeckStorage: ProductionDeckStorage);
         PlayerRecords.BindCoreData(CoreData);
+        // Session 이전부터 같은 현재 checking DWORD를 커서가 직접 빌린다.
+        CursorGlobals.Lifecycle.Checking = new(() => AiDebug.Checking.Value);
     }
 
     /// <summary>0052f7e0의같은87바이트이며명시Reset/수신writer만값을쓴다.</summary>

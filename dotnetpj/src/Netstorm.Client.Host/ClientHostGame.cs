@@ -162,12 +162,14 @@ public sealed partial class ClientHostGame : Game
         _options = options;
         _startup = startup;
         InterpretNsInfoOptions();
+        if (_startup is { } diagnosticStartup) _gameplay.AiDebug.ReadOptions(diagnosticStartup.Configuration);
         _gameRandom = startup?.Random ?? new GameRandom();
         _clock = clock ?? new HostTimeSource();
         _localState = new ClientLocalStateGlobals(_gameplay, _ambientSound);
         _connections = new ClientConnectionGlobals(_localState);
         _clientClock = new ClientClockGlobals(_localState);
         _surfaceGlobals = new ClientSurfaceGlobals(_gameplay, _clientClock, _kernel, () => _clock.Milliseconds);
+        _surfaceGlobals.BindDisplayDiagnostics(ErrorLog.RecordAssertion);
         _sidLists = _surfaceGlobals.Storage.SidLists;
         BindStateResourceOwners();
         // cpppj ClientMain 349행의 실제 공통 SP 초기화와 같은 위치다: 클라이언트 시작 때 1회만 reseed+초기화하고 미션 시작 때는 다시 하지 않는다(0.464, 원본 004391ed).
@@ -338,6 +340,7 @@ public sealed partial class ClientHostGame : Game
         _sidLists.PrepareGeneralWorld();
         // 기존 일반 World의 fresh 입력만 준비한다. Native prepared 대여/반납은 장기 선택을 유지한다.
         _gameplay.Selection.ResetForGeneralWorld();
+        _gameplay.ResetCursorForGeneralWorld();
         // 같은Client의장기Surface를빌린다. 미션시작마다Pool/권한/바람/프로세스시각을다시만들지않는다.
         RawSurfaceStorage storage = _surfaceGlobals.Storage;
         // 현재개발용일반미션부모가같은장기옵션을명시Reset한다. 전체Native로그인설치시원문부모위치로인계한다.

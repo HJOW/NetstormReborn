@@ -142,6 +142,7 @@ public sealed partial class HostSession
         Crt = crt;
         ProcessTime = sharedProcessTime ?? new DoubleBox();
         Gameplay = sharedGameplay ?? sharedLocal?.Gameplay ?? sharedConnections?.LocalState.Gameplay ?? new ClientGameplayGlobals();
+        AiChecking.Bind(() => Gameplay.AiDebug.Checking.Value);
         LocalState = sharedLocal ?? sharedConnections?.LocalState ?? new ClientLocalStateGlobals(Gameplay, new AmbientSoundState());
         if (!ReferenceEquals(LocalState.Gameplay, Gameplay)) throw new ArgumentException("미션의 실제 Gameplay/LocalState 소유자 불일치", nameof(sharedLocal));
         Connections = sharedConnections ?? new ClientConnectionGlobals(LocalState);
@@ -782,7 +783,7 @@ public sealed partial class HostSession
     /// <remarks>2026-11-12 0.453에서 지형 바인딩 입력 결선용으로 추가했다. 근거: cpppj RawMissionBattleOptions(ResetMissionBattleOptions).</remarks>
     public byte[] BattleOptions => Gameplay.BattleOptions;
 
-    /// <summary>세션이 소유한 AI 진단 checking DWORD 뷰의 장기 값이다. 생성 Growth가 같은 값을 읽는다.</summary>
+    /// <summary>실제 Gameplay의 현재 AI checking DWORD를 빌리는 뷰다. 독립 검사만 명시 Set/Bind로 자체 입력을 선택한다.</summary>
     /// <remarks>2026-11-12 0.453에서 지형 바인딩 입력 결선용으로 추가했다. 근거: cpppj ClientGameplayGlobals AiDebug().Checking().</remarks>
     public RawCheckingFlag AiChecking { get; } = new();
 
