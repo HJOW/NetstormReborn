@@ -6,14 +6,14 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-20, 마지막 단위 WB04-E1091)
+### 0.1 현재 값 (2026-11-20, 마지막 단위 WB04-E1092)
 
 | 항목 | 현행 상태 |
 | --- | --- |
 | 실행·플레이 | 브라우저에서 ‘클릭하여 시작’, 메인 메뉴·캠페인/데모 목록·도움말·옵션·Credits와 개발용 지형 미리보기가 동작한다. **미션 진입:** Early Missions(Tutorial1~6)와 세 캠페인 묶음(Struggle For Freedom·A Nation Rises·Complete Victory)의 미션을 목록에서 시작해 브리핑·안내를 보고 월드가 진행된다. **조작:** Tutorial1·2에서 사제 선택·이동, 가장자리 스크롤, F4·F5·P/R·N, 생산 격자 클릭과 단축키·회전·다리 배치, 사제 우클릭 → 윈드 신전 건설·완공, 워크샾 우클릭 생산 메뉴의 무기 생산, 생산 격자의 발사기를 집어 두 개 배치하고 신전을 선택해 Tutorial2를 시작부터 완료 창과 Tutorial3 시작까지 자연 진행으로 확인했다(발사기 우클릭 → Salvage 포함). **게임 메뉴:** ESC 또는 화면 우측 상단 버튼(웹 전용)으로 Game·View·Options·Players·About 가로 메뉴막대를 열고 닫으며 목표 보기·건물 숨김·소리 설정·음량·Version이 실행되고, Leave Mission(ABORT 확인 창)으로 메인 메뉴로 돌아가 다른 미션을 다시 시작하며 Restart Mission으로 같은 미션을 새로 시작한다. F2(건물 숨김)·F8(목표 보기)·Shift-F3(섬 테마)·F9(플레이어 목록) 단축키도 동작한다. **HUD 틀:** 실제 Uber 루트가 세로·미니맵·채팅 구분선, 좌측 사이드바(SP·생산 덱)와 하단 미니맵 칸을 원본 위치로 도킹하고 지도 영역이 `{85,0,W,H}`다(4:3 하단 85×82픽셀이 원본 스크린샷과 일치, 16:9·16:10·1920×1080과 창 크기 변경 확인). **미완성:** 지식(NSInfo) 패널·채팅 창 공장, 미니맵 클릭·드래그 실사용, 나머지 객체 메뉴·채팅과 미션 자연 완주, 메뉴의 정지·지식·플레이어 목록은 남았다. |
 | 원본과의 동일성 | 영어 4:3 메뉴 M1 8장면은 cpppj 오라클과 알려진 구름 배경 등 차이 영역 밖에서 픽셀 차이 0이다. 월드·UI 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다(최근 원본 공통 메뉴 788행·Factory 메뉴 39행·Uber 루트 160행·장면 음악 3,113행 등). 좌측 HUD 틀의 하단(미니맵 구분선·세로 구분선 아랫부분·미니맵 칸) 85×82픽셀은 원본 스크린샷과 완전히 일치한다. 실제 미션의 L2(Tutorial1 시작 상태 덤프)·L3·L4 화면 비교와 자연 완주는 미검증이다. |
 | 현재 작업 | **게임 플레이 중 UI 구현 단계.** 4-D 후반(GameWorld·Client 서비스)과 5-A·5-B·6·8단계 항목을 미션 앱 프레임 위에서 병행한다. Renderer·Gump 트리·입력 큐·생산 패널·객체 메뉴·도움말·음향이 실제 Tutorial 화면에 연결돼 있다. 순서는 아래 [다음 작업](#next)을 따른다. |
-| 전체 회귀 | **E1088 Node 26.13.0 전체 회귀 6,599건 모두 통과**(로그 `extracted/webpj-e1088-node26.log`)했고, E1089는 관련 Node 시험 6개 파일 33건과 영향 Chromium 5개 파일 14건(Pause·지식 창·게임 메뉴막대·좌측 HUD·한국어 Tutorial2; 로그 `extracted/webpj-e1089-chromium.log`), E1090은 Chromium 게임 메뉴막대·F7 5건과 관련 Node 시험을 통과했다. E1091은 영어 Tutorial2 전체 흐름 Chromium 1건(1.6분, 완료 기록 확인 포함; 로그 `extracted/webpj-e1091-english-tutorial2b.log`)을 통과했다(앱 코드 변경 없음). 직전 Node 22.23.3 전체 회귀는 E1087의 6,593건 통과(`extracted/webpj-e1087-node22.log`)다. HJOW-Athlon 주기는 E1088의 v26 전체 회귀 뒤 v26 3/4, v22는 E1087 뒤 완료 4단위로 4/8이다(**4단위 뒤 Node v22 전체 회귀, 1단위 뒤 Node v26 전체 회귀가 필요**). 2026-11-20 정리 때 대응표 1,160행 오류 0을 확인했다. |
+| 전체 회귀 | **E1092 Node 26.13.0 전체 회귀 6,602건 중 6,601건 통과·1건 실패**(외부 접속 시험이 `StartDemo`를 미연결 명령의 예로 쓰고 있었음)였고, 연결한 명령에 맞게 시험을 고친 뒤 해당 파일 5건이 통과했다. 로그는 `extracted/webpj-e1092-node26.log`다. 같은 단위의 Chromium은 데모 5건과 Auto-Demo 영향 스위트 9건(`extracted/webpj-e1092-chromium.log`)을 통과했다. 직전 Node 22.23.3 전체 회귀는 E1087의 6,593건 통과(`extracted/webpj-e1087-node22.log`)다. HJOW-Athlon 주기는 E1092의 v26 전체 회귀 뒤 v26 0/4, v22는 E1087 뒤 완료 5단위로 5/8이다(**3단위 뒤 Node v22 전체 회귀가 필요**). 2026-11-20 정리 때 대응표 1,160행 오류 0을 확인했다. |
 | 브라우저 검사 | 메뉴: 2026-11-17 Chromium 2/2(갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체). 최초 실행·진행 잠금/체크·저장 재실행은 E616 Chromium 2/2. 미션 화면은 단위마다 Chromium으로 확인한다(최근 E1082 좌측 HUD 틀·화면 크기 변경 2/2, 한국어 Tutorial2 전체 흐름). [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
 
 <a id="next"></a>
@@ -31,7 +31,7 @@
 
 <a id="e951-e1081"></a>
 
-#### E951~E1091 진행 요약
+#### E951~E1092 진행 요약
 
 단위별 완료 문단·검증 수·회귀 이력은 [E1081 정리 전 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261120-through-wb04-e1081)의 0.1절과 각 단위 문서에 있다.
 
@@ -41,7 +41,7 @@
 | 음향·음악 | E957, E959~E966, E997, E1059, E1061 | 효과음·음악 공개 자산과 선별 적재, 원본 위치 음향·SoundPlayer, 감쇠 파일 선택, Web Audio 장치, 효과음 218개 사전 해독, 앱 설정·Session 재생·재생 수, 경로 발소리, 장면 음악 선택, 결과 음악 1회 재생 | 음악 채널·앱 연결, 실제 청취, Wind Noise | [SoundPlayer](docs/webpj-sound-player-20261119.md) · [Web Audio](docs/webpj-web-sound-device-20261119.md) · [앱 음향](docs/webpj-app-campaign-audio-20261119.md) · [장면 음악](docs/webpj-scene-music-20261120.md) |
 | AI·채팅·Tell·승패 | E967, E969, E971~E973, E1058 | AI 이름·난이도·채팅 기록, 채팅 창 전역 대여, 미션 Tell 조회, Gump 팝업 차단·닫기, 승패 안내·AI/생산 할당, State 정리용 NSInfo·도움말 팝업 저장소 | 채팅 창 공장, 실제 State 정리·World 교체, 실제 승패 | [AI](docs/webpj-app-campaign-ai-20261120.md) · [Tell](docs/webpj-app-mission-tell-20261120.md) · [승패](docs/webpj-app-mission-outcome-20261120.md) · [State 소유자](docs/webpj-app-state-cleanup-owners-20261120.md) |
 | Renderer·화면 | E977~E989, E1081~E1082 | Renderer 전역 소유, 원본 수집 범위 90행, 지면·객체·입자·커서 수집·정렬·출력, Screen DIB·구름 합성, 표시 준비·Present, 미션 화면·Tell 합성, Gump 수집·출력·월드 부착 투영, Gump 이동 dirty로 비용 표시 잔상 제거, 도킹된 지도 영역 `{85,0,W,H}` | 지식·채팅 HUD 공장, Kencloud·구름 차이 | [출력](docs/webpj-campaign-renderer-drawing-20261120.md) · [Present](docs/webpj-app-renderer-present-20261120.md) · [Gump 제출](docs/webpj-app-renderer-gump-submission-20261120.md) · [화면 갱신](docs/webpj-gump-redraw-cost-trails-20261120.md) |
-| 미션 진입 | E985~E986, E1010~E1016 | 캠페인 목록의 Tutorial1~6과 세 캠페인 묶음 미션 진입·브리핑·게임 시계 진행, 대포·다리 프레임 자료 오류와 섬 공격 Tell 경계 수정 | 미션별 목표 수행·승리·자연 완주 | [Tutorial 시작](docs/webpj-browser-tutorial-menu-start-20261120.md) · [Tutorial3~6](docs/webpj-browser-tutorial-three-six-20261120.md) · [첫 캠페인](docs/webpj-browser-first-campaign-20261120.md) · [마지막 묶음](docs/webpj-browser-final-campaign-group-20261120.md) |
+| 미션 진입 | E985~E986, E1010~E1016, E1092 | 캠페인 목록의 Tutorial1~6과 세 캠페인 묶음 미션 진입·브리핑·게임 시계 진행, 대포·다리 프레임 자료 오류와 섬 공격 Tell 경계 수정, Demo 목록의 세 데모 시작(StartDemo)·메인 메뉴 45초 무활동 Auto-Demo | 미션별 목표 수행·승리·자연 완주 | [데모](docs/webpj-demo-start-20261120.md) · [Tutorial 시작](docs/webpj-browser-tutorial-menu-start-20261120.md) · [Tutorial3~6](docs/webpj-browser-tutorial-three-six-20261120.md) · [첫 캠페인](docs/webpj-browser-first-campaign-20261120.md) · [마지막 묶음](docs/webpj-browser-final-campaign-group-20261120.md) |
 | 입력·카메라 | E990~E1001, E1009, E1084 | 선택·강조·운반 입력기, 좌클릭 선택·이동, 포인터 폴링·이동점 통지, 가장자리 스크롤·카메라 장치, F4·ViewHome·P/R·F5·N, Player 정기 로그, 조각 회전, ESC 게임 메뉴 토글과 메뉴 명령 소비 | 여러 유닛 순환, 메뉴 명령 나머지 | [포인터](docs/webpj-app-mission-pointer-frame-20261120.md) · [가장자리](docs/webpj-app-edge-scroll-frame-20261120.md) · [사제 키](docs/webpj-browser-priest-shortcuts-20261120.md) · [회전](docs/webpj-browser-cursor-rotation-20261120.md) |
 | 생산·건설 | E1002~E1008, E1019~E1022, E1026~E1036, E1047, E1074, E1076~E1079, E1083, E1086 | 생산 유지·다리 공급, 커서·생산 단축키, 다리 배치, 생산 격자·항목·예산, 생산 패널 조립·크기·앱 설치, 실패 안내, 회수 명령, 비용 표시, Factory 메뉴와 생산·업그레이드 명령, 발사기 배치·회수(Tutorial2 D~I 완주)와 입력 큐의 Tutorial 통지 명령 소비 | 연속 배치·자연 완주, 연구 명령 소비 | [생산 패널](docs/webpj-client-production-panel-20261120.md) · [다리 배치](docs/webpj-browser-bridge-placement-20261120.md) · [비용 표시](docs/webpj-app-floating-sp-20261120.md) · [워크샾 생산](docs/webpj-browser-tutorial2-factory-20261120.md) |
 | HUD 틀 | E1082 | 실제 Uber 루트 교체 설치·HUD 모드 3 도킹(세로·미니맵·채팅 구분선, 좌측 사이드바 80폭, 하단 미니맵 80×75)·화면 크기 변경 재배치·월드 해제 정리, 이식해 둔 미니맵을 Gump 루트에 연결(월드 Pop/Unpop dirty·카메라 중심·이동 입력), 생산 패널의 Construct/Open 분리, 지도 영역 공유 | 지식(NSInfo)·채팅 창 공장, 미니맵 클릭·드래그 실사용, ESC 게임 메뉴 상단 바 | [좌측 HUD 틀](docs/webpj-uber-hud-left-dock-20261120.md) |
@@ -53,7 +53,7 @@
 
 ### 0.2 단계 진행판
 
-`n/m`은 상위 체크 수이며 보관한 완료 항목을 포함한다. 상위 항목 안의 완료 부분은 중복 가산하지 않는다. 남은 단위와 줄 수는 `PORT_MAP.tsv`의 partial·todo 기준이며 partial에는 파일 전체 줄 수를 센다. E951~E1091은 대부분 상위 항목 안의 부분 진행이라 체크 수는 바뀌지 않았고, E1082 뒤 재집계에서도 남은 145단위·33,562줄이 같다(`UberHud.inc` todo→partial).
+`n/m`은 상위 체크 수이며 보관한 완료 항목을 포함한다. 상위 항목 안의 완료 부분은 중복 가산하지 않는다. 남은 단위와 줄 수는 `PORT_MAP.tsv`의 partial·todo 기준이며 partial에는 파일 전체 줄 수를 센다. E951~E1092는 대부분 상위 항목 안의 부분 진행이라 체크 수는 바뀌지 않았고, E1082 뒤 재집계에서도 남은 145단위·33,562줄이 같다(`UberHud.inc` todo→partial).
 
 | 순서 | 단계 | 체크·상태 | 남은 단위 / 줄 |
 | --- | --- | --- | --- |
@@ -134,7 +134,7 @@ E896에서 실제 미션 설치의 You→당신 번역과 Player 표시 바이�
 | E703~E774 | 실제 typed Login/Ready·Start, 출하 스크립트 32종의 Fort 로그인, 같은 Session의 사제·골렘·벌룬 이동과 워크샾 배치·격리 완공. [Login](docs/webpj-session-login-ready-20261118.md) · [Start](docs/webpj-session-mission-start-20261118.md) · [워크샾](docs/webpj-workshop-isolated-completion-20261118.md) |
 | E775~E801 | Session 카메라·입자·튜토리얼 게이트, AI/Player/Process 반납 경계, 지연 GameWorld·팔레트·자산 보기·선택. World 입력 부품과 UserInput 폴링·단축키·우클릭까지 연결. [공통 게이트](docs/webpj-session-tutorial-gate-20261118.md) · [지연 GameWorld](docs/webpj-campaign-game-world-front-20261118.md) · [입력](docs/webpj-campaign-selection-keys-20261118.md) |
 | E802~E950 | 입력 클릭·NB20 취소, GameWorld 프레임·세 운반 유닛 도착, 워크샾 Kernel 완공·연구 동기화, 전투 완료 관문, Client 진단·프레임 시계, Session 덤프 형식과 오라클 시나리오(4D-9b), 앱 Guide·State7·Gump 루트·팔레트·Screen·입력 큐·TextEntry/IME·갈무리11 편집, Reset All(E863), 16:9 최대 1920×1080(E943), 하위 경로 배포(E945). [E1081 보관본 0.1·3.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261120-through-wb04-e1081) |
-| E951~E1091 | 미션 앱 프레임의 로딩·Start, 음향, Renderer·Gump 출력, 브라우저 입력·카메라, Tutorial·세 캠페인 묶음 진입, 생산 패널·건설, 객체 메뉴·도움말, 한국어 Tutorial1·2. [0.1절 요약](#e951-e1081) |
+| E951~E1092 | 미션 앱 프레임의 로딩·Start, 음향, Renderer·Gump 출력, 브라우저 입력·카메라, Tutorial·세 캠페인 묶음 진입, 생산 패널·건설, 객체 메뉴·도움말, 한국어 Tutorial1·2. [0.1절 요약](#e951-e1081) |
 
 ## 3. 남은 작업과 실행 순서
 

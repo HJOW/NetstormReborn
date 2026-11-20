@@ -73,6 +73,7 @@ import { GameMenuActions } from './core/game-menu-actions.js';
 import { gameMenuCommandValue, isGameMenuCommand, queuePlayerListKey } from './core/game-menu-commands.js';
 import { KnowledgeMenuKind } from './core/raw-knowledge-menu.js';
 import { readGameTimeSeconds } from './core/game-time-display.js';
+import { idleMainMenuActivity } from './core/main-menu-activity.js';
 import { dispatchViewKeyInput } from './core/view-key-input.js';
 import { GameMenuButton } from './ui/game-menu-button.js';
 import { CHAT_RECORD_BYTES, RawChatChannels } from './core/raw-chat-channels.js';
@@ -572,6 +573,8 @@ export class Netstorm {
         this._clientMinimapState = null; this._clientMinimapGlobals = null; this._gameMenuButton = null; this._lastCampaignMission = null;
         // 게임 메뉴(Pause)가 올린 게임 시계 정지·음소거 깊이다. 미션을 떠날 때 되돌린다. (2026-11-20 WB04-E1089)
         this._menuPauseDepth = 0; this._menuMuteDepth = 0;
+        // 메인 메뉴 무활동(45초) 감시 상태다. armed 가 false 이면 다음 메인 메뉴 프레임에서 기한을 새로 잡는다. (2026-11-20 WB04-E1092)
+        this._mainMenuActivity = { armed: false, deadline: 0, pointer: { x: 0, y: 0 } };
         // 실제 미션 Guide는 자산과 장기 저장소가 준비된 뒤 생성한다.
         this._clientGuide = null; this._clientFort = null; this._clientFortName = null;
         // 원본 공통 Gump 루트와 입력 전역은 Client 수명에 보유한다.
@@ -2287,6 +2290,8 @@ export class Netstorm {
         else if (name === 'config') this._runScriptCommand(command);
         else if (name === 'telltip') this._runTellTip(command);
         else if (name === 'missionbegin') this._beginCampaignFromDialog(command.argument);
+        // 데모 선택 창(Demoville)의 항목이다: 같은 Guide 에 데모 표시를 켜고 시작한다. (2026-11-20 WB04-E1092)
+        else if (name === 'startdemo') this._beginCampaignDemo(command.argument);
         // 미션 나가기 확인(ABORT)·완료 창의 버튼이다: LeaveBattle·MissionAbort 는 메인 메뉴로, MissionRestart 는 같은 미션 다시 시작이다. (2026-11-20 WB04-E1085)
         else if (name === 'leavebattle' || name === 'missionabort') this._leaveCampaignMission();
         else if (name === 'missionrestart') this._restartCampaignMission();
@@ -2301,6 +2306,28 @@ export class Netstorm {
         // 현재 미션이 있으면 원본 MissionBegin 처럼 먼저 떠나고(Guide 닫기·월드 반납·메인 메뉴 복귀) 새 미션을 시작한다. (2026-11-20 WB04-E1085)
         if (this._campaignWorld || this._clientGuide.current()) this._leaveCampaignMission();
         this._lastCampaignMission = { name, demo: 0, mode: 0 }; this._clientGuide.begin(name); return true;
+    }
+
+    // 메인 메뉴를 45초 동안 건드리지 않으면 Auto-Demo 옵션이 켜진 경우 DemoStormRages 데모를 시작한다(원본 `004cee80` 무활동 감시). 대화창·펼침 메뉴가 열려 있거나 포인터가 움직이면 기한을 다시 잡고, 미션 중에는 감시를 해제해 돌아올 때 새로 잡는다. (2026-11-20 WB04-E1092)
+    _idleMainMenuActivity() {
+        const menu = this._mainMenu, settings = this._settings, state = this._mainMenuActivity;
+        if (!menu || !settings || this._campaignDisplayActive()) { state.armed = false; return; }
+        const now = () => this._frameSeconds, here = this._input.pointer;
+        if (!state.armed) { state.armed = true; state.deadline = now() + 45; state.pointer = { x: here.x, y: here.y }; }
+        let demo = false;
+        idleMainMenuActivity(state, () => settings.get('autoDemo') === 1, () => menu.dialog ? 1 : 0, () => this._input.pointer, () => menu.dialog ? 1 : 0, 0,
+            { popup: () => Boolean(menu.popup?.isOpen), now, queue: () => { demo = true; }, kill: () => {} });
+        // 큐 예약 뒤 같은 프레임에서 데모를 시작한다(원본은 입력 큐에 StartDemo 를 올린다). 재무장해 데모 뒤 메인 메뉴로 돌아오면 45초를 다시 센다.
+        if (demo) { state.armed = false; this._beginCampaignDemo('DemoStormRages'); }
+    }
+
+    // 데모 미션(Demoville 의 DemoStormRages·GuardMyBack·DissolvedAlliance)을 데모 표시(1)로 시작한다(원본 `UberGump` 의 StartDemo → `BeginMission(이름, 1)`). 현재 미션이 있으면 먼저 떠난다. 연결하지 않은 이름은 안내만 남긴다. (2026-11-20 WB04-E1092)
+    _beginCampaignDemo(argument) {
+        const name = String(argument ?? '');
+        if (!['demostormrages', 'guardmyback', 'dissolvedalliance'].includes(name.toLowerCase())) { console.info(`Netstorm: 데모 '${name}' 은(는) 아직 연결되지 않았습니다.`); return false; }
+        if (!this._clientGuide || this._state !== AppState.MAIN_MENU) throw new Error('데모 시작의 현재 Guide·메뉴 수명 누락');
+        if (this._campaignWorld || this._clientGuide.current()) this._leaveCampaignMission();
+        this._lastCampaignMission = { name, demo: 1, mode: 0 }; this._clientGuide.begin(name, 1); return true;
     }
 
     // 현재 단독 미션을 떠나 메인 메뉴로 돌아간다(원본 `LeaveBattle` 의 단독 미션 경로). Guide 미션을 닫고 HUD·월드·Session을 반납한 뒤 메인 메뉴 표면을 다시 그린다. 떠났으면 true 다. (2026-11-20 WB04-E1085)
@@ -3031,6 +3058,7 @@ export class Netstorm {
             const pointer = this._input.pointer;
             if (this._mainMenu && pointer.inside && (!this._campaignDisplayActive() || this._mainMenu.dialog)) this._mainMenu.pointerMove(pointer.x, pointer.y);
             this._mainMenu?.update(this._frameSeconds);
+            this._idleMainMenuActivity();
             // 스크롤·창 열림/닫힘·키 입력으로 포인터 아래 내용이 바뀌었을 수 있으므로 커서를 다시 고른다(원본은 매 포인터 갱신마다 선택). (2026-10-31 WB03-L)
             this._applyCursor();
         }
