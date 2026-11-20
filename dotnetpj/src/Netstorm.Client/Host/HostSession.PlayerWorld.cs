@@ -23,6 +23,10 @@ public sealed partial class HostSession
     private SquidFrame? _liveFrame;
     /// <summary>같은실제삭제/공장/Regular/전송을소유하는현재프로세스대여다. Host는약하게조회한다.</summary>
     private ProcessHostRuntimeBindings? _playerProcessRuntime;
+    /// <summary>같은Client Kernel/Frame과현재TYPE를빌리는장기프로세스저장소다. 독립조합만null이다.</summary>
+    private readonly RawProcessHostStorage? _sharedPlayerProcesses;
+    /// <summary>현재실제Runtime이단독으로빌린장기Host의반납권한이다.</summary>
+    private RawProcessHostStorage.Use? _playerProcessUse;
     /// <summary>같은Host의현재대여선택칸이다. 외부에남은묶음참조와관계없이명시반납한다.</summary>
     private WeakReference<ProcessHostRuntimeBindings>? _playerProcessCurrent;
 
@@ -91,11 +95,19 @@ public sealed partial class HostSession
             Assertion = (expression, file, line) => throw new InvalidOperationException($"프로세스 원본 진단: {expression} {file}:{line}"),
             Pin = pin is null ? null : () => pin(),
         };
-        var current = new WeakReference<ProcessHostRuntimeBindings>(runtime);
-        PlayerProcesses = new SquidProcessHost(Pool, types, Kernel, new SquidProcessState { SharedNow = ProcessTime },
-            () => current.TryGetTarget(out ProcessHostRuntimeBindings? selected) ? selected : null);
+        if (_sharedPlayerProcesses is null)
+        {
+            var current = new WeakReference<ProcessHostRuntimeBindings>(runtime);
+            PlayerProcesses = new SquidProcessHost(Pool, types, Kernel, new SquidProcessState { SharedNow = ProcessTime },
+                () => current.TryGetTarget(out ProcessHostRuntimeBindings? selected) ? selected : null);
+            _playerProcessCurrent = current;
+        }
+        else
+        {
+            _playerProcessUse = _sharedPlayerProcesses.Bind(runtime);
+            PlayerProcesses = _sharedPlayerProcesses.Host();
+        }
         _playerProcessRuntime = runtime;
-        _playerProcessCurrent = current;
         BindWorldPopParent();
         var hooks = new PlayerWorldHooks
         {
@@ -156,13 +168,16 @@ public sealed partial class HostSession
     public void ReleasePlayerProcesses()
     {
         EnsureRuntimeCanRelease();
-        if (PlayerProcesses is not null) Kernel.DrainOwnedForShutdown(PlayerProcesses.Owns);
+        // 장기Host의다른Runtime/Native잔류는보존하고현재대여가붙인프로세스만반납한다.
+        if (_playerProcessUse is not null) _playerProcessUse.DrainOwnedForShutdown();
+        else if (PlayerProcesses is not null) Kernel.DrainOwnedForShutdown(PlayerProcesses.Owns);
         ReleaseDependencyWorld();
         ReleaseFlareWorld();
         ReleaseBurningWorld();
         ReleasePriestWorld();
         ReleaseProductionWorld();
         _reservedPlayerRegular = null;
+        _playerProcessUse?.Dispose(); _playerProcessUse = null;
         _playerProcessCurrent?.SetTarget(null!); _playerProcessCurrent = null;
         _playerProcessRuntime = null;
     }

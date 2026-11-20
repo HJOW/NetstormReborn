@@ -15,11 +15,18 @@ public sealed class HostPostPopRuntimeTests
     /// <summary>반납시에실제Core부모의현재pin이분리됐는지확인한다.</summary>
     private static void AssertUnpinned(RawPostPop parent) => Assert.Null(typeof(RawPostPop).GetField("_runtimePin", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(parent));
     /// <summary>제품과같은실자산표/프레임/형상을실제Host에공급한다.</summary>
-    internal static IReadOnlyList<OriginalTypeRecord> Build(HostSession session)
+    internal static IReadOnlyList<OriginalTypeRecord> Build(HostSession session, RawSurfaceStorage? storage = null)
     {
         string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data); var startup = new HostStartupScene(data);
         IReadOnlyList<RiftTypeDefinition> definitions = MissionFortLoad.LoadTypeDefinitions(startup.Files); session.FillWorldFrames(definitions);
         RiftTypeTable table = MissionFortLoad.LoadTypeTable(startup.Files); var shapes = TerrainDisplayShapes.Build(definitions, new ShapeDatabase(startup.Files.ReadAllBytes("d/_shapes.shp")));
+        if (storage is not null)
+        {
+            if (storage.Types.Count == 0) ClientHostGame.InstallMissionStorageTables(storage, table.Types, session.WorldFrames, shapes);
+            session.BuildTerrainPopDevices(storage.Types, storage.Shapes, storage.FactoryExecutor(), storage.Hash, storage.Spots);
+            session.BuildFortObjectDevices(storage.Types, storage.Frames, storage.FactoryExecutor(), storage.BuildingExecutor());
+            session.BuildIslandPostPopDevices(storage.Types, storage.Frames); return storage.Types;
+        }
         session.BuildTerrainPopDevices(table.Types, shapes); session.BuildFortObjectDevices(table.Types, session.WorldFrames);
         session.BuildIslandPostPopDevices(table.Types, session.WorldFrames); return table.Types;
     }

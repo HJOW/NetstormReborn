@@ -295,6 +295,7 @@ public sealed class RawSquidReward
         {
             OriginalTypeRecord[] array => new(array),
             ArraySegment<OriginalTypeRecord> segment => segment,
+            RawTypeTableStorage storage => storage.PhysicalView,
             _ => throw new ArgumentException("보상 현재 TYPE는 실제 물리 배열/뷰가 필요하다"),
         };
         _currentTypes = selected;

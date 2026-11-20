@@ -333,7 +333,7 @@ public sealed partial class ClientHostGame : Game
         RawSurfaceStorage storage = _surfaceGlobals.Storage;
         // 현재개발용일반미션부모가같은장기옵션을명시Reset한다. 전체Native로그인설치시원문부모위치로인계한다.
         RawMissionBattleOptions.Reset(OriginalEdition.Patch1078, _gameplay.BattleOptions);
-        var session = new HostSession(_kernel, _gameRandom, _crtRandom, sharedSp: _spGlobals.Store, sharedCrtBox: _spCrtBox, sharedGameplay: _gameplay, sharedLists: _sidLists, pool: storage.Pool, sharedLocal: _localState, sharedConnections: _connections, sharedPlayerRecords: _gameplay.PlayerRecords, sharedProcessTime: _clientClock.GameTime);
+        var session = new HostSession(_kernel, _gameRandom, _crtRandom, sharedSp: _spGlobals.Store, sharedCrtBox: _spCrtBox, sharedGameplay: _gameplay, sharedLists: _sidLists, pool: storage.Pool, sharedLocal: _localState, sharedConnections: _connections, sharedPlayerRecords: _gameplay.PlayerRecords, sharedProcessTime: _clientClock.GameTime, sharedPlayerProcesses: _surfaceGlobals.Processes);
         // 적재 실패에서도 이 호출이 만든 외부 연소장치만 반납한다.
         HostMissionBurning? pendingBurning = null;
         try
@@ -396,16 +396,16 @@ public sealed partial class ClientHostGame : Game
             List<SquidDisplayShape> popShapes = TerrainDisplayShapes.Build(worldDefinitions, shpDb);
             // NativeStorage 일원화(0.596): 미션 표를 장기 저장소에 넣어 공장 일원화의 바탕을 둔다. 저장소는 독립 사본을 소유한다.
             InstallMissionStorageTables(storage, types.Types, session.WorldFrames, popShapes);
-            session.BuildTerrainPopDevices(types.Types, popShapes, storage.FactoryExecutor(), storage.Hash, storage.Spots);
+            session.BuildTerrainPopDevices(storage.Types, popShapes, storage.FactoryExecutor(), storage.Hash, storage.Spots);
             // 요새 객체 적재 장치. 지형 Pop과 같은 해시·spots·표시를 공유한다(cpppj RawCampaignWorldRuntime, 0.467).
             // 공장·실행기 일원화(0.597·0.599): 두 장치의 생성 공장과 건물 공간을 저장소 실행기로 통일한다. 표는 0.596에서 저장소에 넣었다.
             // 건물 공간의 섬 타입은 세션 지형 값으로 맞춘다(HasIsland 판정에 쓴다).
             storage.BuildingSpaceState.IslandType = session.TerrainGlobals.IslandType;
-            session.BuildFortObjectDevices(types.Types, session.WorldFrames, storage.FactoryExecutor(), storage.BuildingExecutor());
+            session.BuildFortObjectDevices(storage.Types, session.WorldFrames, storage.FactoryExecutor(), storage.BuildingExecutor());
             // R4-2 적재 중 postPop용 섬 후처리 서비스 설치. 호출 연결·깊이 흐름은 0.602~0.604에서 이었다.
-            session.BuildIslandPostPopDevices(types.Types, session.WorldFrames);
+            session.BuildIslandPostPopDevices(storage.Types, session.WorldFrames);
             // 월드 그래프 재구성 장치. 같은 해시·spots·프레임 표를 공유한다(cpppj RawCampaignWorldRuntime 65·83행, 0.470).
-            session.BuildWorldGraphDevices(types.Types);
+            session.BuildWorldGraphDevices(storage.Types);
             // R4-2 그래프 per-Pop 번호 부여. 같은 호출의 공간 등록 뒤 영역 무효화·표면 추가와 ResetGraph가 실행된다.
             session.WireTerrainPostPopGraph();
             // 같은 Player·공통 Pop·프로세스에 실제 사제/보호막 후처리를 등록한다.
@@ -413,7 +413,7 @@ public sealed partial class ClientHostGame : Game
             if (!OperatingSystem.IsWindows()) throw new PlatformNotSupportedException("현재 미션 연소 장치는 Windows 전용이다");
             session.BuildPriestWorldDevices(_missionAudio.BindPriest(session));
             // 건설 진행음도 같은 미션의 Sound47을 빌리므로 음향/사제 장치 설치 뒤 표시 장치를 조립한다.
-            pendingBurning = new HostMissionBurning(session, _startup, _driver.Screen, types.Types, worldDefinitions, popShapes, shpRaw, _missionAudio);
+            pendingBurning = new HostMissionBurning(session, _startup, _driver.Screen, storage.Types, worldDefinitions, popShapes, shpRaw, _missionAudio);
             // 연구/기술 표시도 같은 실제 내용물·SP·Player Deck과 현재 Gump/입력 장치를 사용한다.
             var productionUi = (_mainMenu ?? throw new InvalidOperationException("미션 생산의 실제 Gump 소유자 미연결")).Tree;
             session.BuildProductionWorldDevices(new()
@@ -431,17 +431,17 @@ public sealed partial class ClientHostGame : Game
             // 지형 바인딩 조립. 세션 저장소를 묶고 생성 입력을 바인딩한다. 진단 저널 연결은 7차 로그 배선 단위에서 잇는다.
             session.TerrainDiagnostics.Context = _ => { };
             session.TerrainDiagnostics.Stamp = _ => { };
-            var terrainBinding = session.BuildTerrainBinding(types.Types, session.TerrainDiagnostics, new IslandRuntimeHooks
+            var terrainBinding = session.BuildTerrainBinding(storage.Types, session.TerrainDiagnostics, new IslandRuntimeHooks
             {
                 SetResidenceOwner = (_, _) => throw new InvalidOperationException("시작 흐름은 Residence owner를 요청하지 않는다"),
                 Assertion = _ => throw new InvalidOperationException("시작 흐름의 Runtime 진단은 원본 분류와 불일치한다"),
             });
             // 농지 군집 배치 실결선. Generate 현장의 빈 place를 실제 파이프라인·단일·군집으로 잇는다.
             // 근거: cpppj RawCampaignSession.cpp 1826~1858행과 RawNormalTerrainWorldBinding.cpp 36~40행이다. (2026-11-18 0.614)
-            session.BuildFarmPlacementDevices(types.Types, worldDefinitions, popShapes);
+            session.BuildFarmPlacementDevices(storage.Types, worldDefinitions, popShapes);
             // 지역 칠하기·소유권 투표 실결선. 요새 적재 중 신전 배치가 투표·도장을 일으킨다.
             // 근거: cpppj RawCampaignSession.cpp 1266~1267행의 ownership 조립이다. (2026-11-18 0.619)
-            session.BuildRegionOwnershipDevices(types.Types, () =>
+            session.BuildRegionOwnershipDevices(storage.Types, () =>
             {
                 int mode = 1;
                 _startup.Configuration.ReadInt("theammode", ref mode);
@@ -483,7 +483,7 @@ public sealed partial class ClientHostGame : Game
                     PopulateIsland = (_, _) => { },
                     RebuildGraph = mode => session.RebuildWorldGraph(mode),
                 },
-                types.Types,
+                storage.Types,
                 // 화신 생성·소유자·찾기의 실제 장치 연결. 공간 Pop 기록과 예약 갈고리는 R6에서 잇는다(0.475).
                 session.BuildPlayerWorldHooks(),
                 new CampaignWorldLoadHooks
@@ -500,7 +500,7 @@ public sealed partial class ClientHostGame : Game
                     {
                         worldOrder.Add($"generate:{region}");
                         // 실제 지형 생성과 농지 군집 배치 실결선. 빈 place 대신 세션 군집을 실행한다.
-                        terrainBinding.GenerateOriginal(state.Owner, state.Bounds, region, session.Game, session.TerrainCrt, session.BuildTerrainStampHooks(types.Types), (area, farmRegion, quantity) => session.PlaceFarm(area, farmRegion, quantity));
+                        terrainBinding.GenerateOriginal(state.Owner, state.Bounds, region, session.Game, session.TerrainCrt, session.BuildTerrainStampHooks(storage.Types), (area, farmRegion, quantity) => session.PlaceFarm(area, farmRegion, quantity));
                     },
                     CurrentTemplate = slot =>
                     {

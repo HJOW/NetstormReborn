@@ -59,7 +59,7 @@ public sealed partial class RawSurfaceStorage
     public float BridgeDecayPeriod { get; set; } = BridgeDecayPeriodDefault;
 
     /// <summary>같은 수정 가능한 전역 TYPE이며 Session마다 원본 파일로 덮어쓰지 않는다. 2026-11-07 F2d 저장소 풀 생성에서 추가됐다.</summary>
-    public List<OriginalTypeRecord> Types { get; } = [];
+    public RawTypeTableStorage Types { get; } = new();
 
     /// <summary>자산보다 짧고 모든 Session보다 긴 프레임 배열이다. 2026-11-07 F2d 저장소 풀 생성에서 추가됐다.</summary>
     public List<RiftTypeFrames> Frames { get; } = [];

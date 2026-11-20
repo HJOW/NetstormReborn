@@ -74,6 +74,7 @@ public static class RawRiftHitPoints
     {
         OriginalTypeRecord[] array => new(array),
         ArraySegment<OriginalTypeRecord> segment => segment,
+            RawTypeTableStorage storage => storage.PhysicalView,
         _ => throw new InvalidOperationException("TYPE HP의 서로 다른 물리 표 주소 연결"),
     };
 

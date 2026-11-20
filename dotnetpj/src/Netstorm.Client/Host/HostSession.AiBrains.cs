@@ -349,8 +349,9 @@ public sealed partial class HostSession
         ArgumentNullException.ThrowIfNull(table);
         ArgumentNullException.ThrowIfNull(definitions);
         ArgumentNullException.ThrowIfNull(defaultName);
+        // 기술이름조회표와구별해실제월드가빌린같은현재TYPE물리를사용한다.
         AiCreateHooks hooks = BuildLiveAiCreateHooks(
-            table.Types, definitions,
+            _terrainPopTypes ?? table.Types, definitions,
             typeTable: table,
             player: _livePlayerWorld,
             contained: _fortContained,

@@ -121,11 +121,15 @@ public sealed partial class HostSession
     /// <param name="sharedConnections">같은 LocalState를 빌리는 실제 장기 연결표다.</param>
     /// <param name="sharedPlayerRecords">명시제공시같은Core/Player단일고정뷰를빌린다.</param>
     /// <param name="adoptInitializedPlayers">앞선실제Native부모가완료한같은Player를재초기화없이인계받는다.</param>
-    public HostSession(Kernel kernel, GameRandom game, CrtRandom crt, int poolCapacity = 0, RawSpStore? sharedSp = null, UIntBox? sharedCrtBox = null, ClientGameplayGlobals? sharedGameplay = null, RawStateSidLists? sharedLists = null, RawSidPool? pool = null, ClientLocalStateGlobals? sharedLocal = null, ClientConnectionGlobals? sharedConnections = null, ClientPlayerRecords? sharedPlayerRecords = null, bool adoptInitializedPlayers = false, DoubleBox? sharedProcessTime = null)
+    /// <param name="sharedPlayerProcesses">같은Client의Kernel/Frame에결합된장기Host저장소다. 독립조합만세션전용Host를만든다.</param>
+    public HostSession(Kernel kernel, GameRandom game, CrtRandom crt, int poolCapacity = 0, RawSpStore? sharedSp = null, UIntBox? sharedCrtBox = null, ClientGameplayGlobals? sharedGameplay = null, RawStateSidLists? sharedLists = null, RawSidPool? pool = null, ClientLocalStateGlobals? sharedLocal = null, ClientConnectionGlobals? sharedConnections = null, ClientPlayerRecords? sharedPlayerRecords = null, bool adoptInitializedPlayers = false, DoubleBox? sharedProcessTime = null, RawProcessHostStorage? sharedPlayerProcesses = null)
     {
         ArgumentNullException.ThrowIfNull(kernel);
         ArgumentNullException.ThrowIfNull(game);
         ArgumentNullException.ThrowIfNull(crt);
+        if (sharedPlayerProcesses is not null && (!sharedPlayerProcesses.HasDevices() || !sharedPlayerProcesses.UsesKernel(kernel)))
+            throw new ArgumentException("실제Client의같은Kernel/Frame장치가필요한장기프로세스Host", nameof(sharedPlayerProcesses));
+        _sharedPlayerProcesses = sharedPlayerProcesses;
         Kernel = kernel;
         Game = game;
         Crt = crt;
