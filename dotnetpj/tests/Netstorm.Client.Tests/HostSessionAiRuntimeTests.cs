@@ -66,6 +66,7 @@ public sealed class HostSessionAiRuntimeTests
         Assert.NotNull(session.AiObjects);
         Assert.NotNull(session.AiWorld);
         Assert.NotNull(session.AiRuntime);
+        Assert.Same(session.Sp, session.AiEconomy.Store);
     }
 
     /// <summary>brain이 없으면 준비·초기는 거짓으로 돌아간다.</summary>
@@ -76,6 +77,87 @@ public sealed class HostSessionAiRuntimeTests
         Assert.False(session.PrepareAi(2));
         Assert.False(session.InitializeAi(2));
         Assert.Empty(session.AiRuntimeDiagnostics);
+    }
+
+    /// <summary>brain이 없으면 SP 초기화·난수 소비 없이 돌아가고 범위 밖 소유자는 거부한다.</summary>
+    [Fact]
+    public void EconomyWithoutBrainPreservesRandomAndRejectsInvalidOwner()
+    {
+        (HostSession session, _) = BuildScene();
+        uint before = session.Game.State();
+        Assert.False(session.ReconcileAiEconomy(2));
+        Assert.Equal(before, session.Game.State());
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.ReconcileAiEconomy(0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.ReconcileAiEconomy(9));
+    }
+
+    /// <summary>매초 지원금을 같은 brain 지갑과 실제 SP에 쓰며 같은 시각에는 중복 지원하지 않는다.</summary>
+    [Fact]
+    public void EconomyUpdatesSessionWalletAndSpOncePerDeadline()
+    {
+        (HostSession session, _) = BuildScene();
+        uint brain = PrepareBrain(session, 1);
+        Put(session.AiBrainMemory.Bytes(brain), 0x264, 2);
+        Put(session.AiBrainMemory.Bytes(brain), 0x290, 100);
+        Put(session.AiBrainMemory.Bytes(brain), 0x24c, 500);
+        session.ProcessTime.Value = 10;
+        session.BindSpReseed(() => 0x12345678u);
+        Assert.True(session.ReconcileAiEconomy(1));
+        Assert.Equal(BitConverter.SingleToUInt32Bits(500f), session.Sp.Get(1));
+        Assert.True(session.ReconcileAiEconomy(1));
+        Assert.Equal(BitConverter.SingleToUInt32Bits(500f), session.Sp.Get(1));
+        session.ProcessTime.Value = 11;
+        Assert.True(session.ReconcileAiEconomy(1));
+        Assert.Equal(BitConverter.SingleToUInt32Bits(1000f), session.Sp.Get(1));
+    }
+
+    /// <summary>참여 마스크와 현재 공유 상태의 조합을 판정한다. 포획 행동 재현 없이 메모리 입력만 대조한다.</summary>
+    [Theory]
+    [InlineData(0x22, 1u, 2300f)]
+    [InlineData(0x02, 1u, 2300f)]
+    [InlineData(0x20, 1u, 2300f)]
+    [InlineData(0x00, 1u, 500f)]
+    [InlineData(0x22, 2u, 500f)]
+    [InlineData(0x22, 0u, 500f)]
+    public void EconomyReadsCurrentParticipationAndSharedPriestState(int flags, uint state, float expected)
+    {
+        (HostSession session, _) = BuildScene();
+        uint brain = PrepareBrain(session, 1);
+        Put(session.AiBrainMemory.Bytes(brain), 0x264, 2);
+        Put(session.AiBrainMemory.Bytes(brain), 0x290, 100);
+        Put(session.AiBrainMemory.Bytes(brain), 0x24c, 500);
+        session.PlayerRecords[2 * 180 + 0x50] = (byte)flags;
+        var shared = new uint[9];
+        shared[2] = state;
+        session.PriestState.Priests.SharedOwnerState = shared;
+        session.BindSpReseed(() => 0x12345678u);
+        Assert.True(session.ReconcileAiEconomy(1));
+        Assert.Equal(BitConverter.SingleToUInt32Bits(expected), session.Sp.Get(1));
+        // 같은 시각에 공유 상태를 바꿔도 새 getter는 즉시 변경값을 읽는다.
+        shared[2] = 0;
+        Put(session.AiBrainMemory.Bytes(brain), 0x2d8, 7);
+        Assert.True(session.ReconcileAiEconomy(1));
+        Assert.Equal(BitConverter.SingleToUInt32Bits(7f), session.Sp.Get(1));
+    }
+
+    /// <summary>조립 뒤 바인딩한 현재 데모 값을 다시 읽고 지원 때만 하한을 적용한다.</summary>
+    [Fact]
+    public void EconomyUsesLiveDemoGetter()
+    {
+        (HostSession session, _) = BuildScene();
+        uint brain = PrepareBrain(session, 1);
+        Put(session.AiBrainMemory.Bytes(brain), 0x264, 2);
+        Put(session.AiBrainMemory.Bytes(brain), 0x24c, 1);
+        session.BindSpReseed(() => 0x12345678u);
+        uint demo = 0;
+        session.BindAiDemo(() => demo);
+        Assert.True(session.ReconcileAiEconomy(1));
+        Assert.Equal(BitConverter.SingleToUInt32Bits(1f), session.Sp.Get(1));
+        demo = 3;
+        session.ProcessTime.Value = 1;
+        Assert.True(session.ReconcileAiEconomy(1));
+        Assert.Equal(BitConverter.SingleToUInt32Bits(1190f), session.Sp.Get(1));
+        Assert.Throws<ArgumentNullException>(() => session.BindAiDemo(null!));
     }
 
     /// <summary>적·지역이 없으면 준비는 진단·초기 스캔까지만 진행한다.</summary>

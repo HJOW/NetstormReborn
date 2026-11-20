@@ -3020,7 +3020,7 @@ public sealed partial class HostSession
     /// <param name="types">같은 실제 TYPE 표다. 지형 Pop 장치와 같은 인스턴스여야 한다.</param>
     /// <exception cref="InvalidOperationException">AI 런타임의 화신·공장·프로세스·해시 장치가 미연결이다.</exception>
     /// <exception cref="ArgumentException">AI 런타임 TYPE이 지형 Pop 장치와 다르다.</exception>
-    /// <remarks>2026-11-19 0.650에서 R4-5 AI 런타임 결선용으로 추가했다. 근거: cpppj src/client/RawCampaignSession.cpp 2831~2870행의 통지·등록 조립과 2937~2943행의 전체 프레임 조립이다. 수집자·시설·부족스캔·사제·배치·다리·운반·경제·신전생산은 R6에서 잇는다. 분산 SP·자금·지도상한은 0.654에서 실제 저장소·독립 기본값으로 이었다. 지역 경계는 0.653에서 같은 섬 런타임으로, 그래프 조회는 0.657에서 같은 풀·표면으로 이었다. 매 프레임 호출도 R6 틱 결선에서 잇는다.</remarks>
+    /// <remarks>2026-11-19 0.650에서 R4-5 AI 런타임 결선용으로 추가했다. 근거: cpppj src/client/RawCampaignSession.cpp 2831~2870행의 통지·등록 조립과 2937~2943행의 전체 프레임 조립이다. 수집자·시설·부족스캔·사제·배치·다리·운반은 후속에서 잇는다. 분산 SP·자금·지도상한은 0.654, 신전 생산은 0.658, 경제 세션 연결은 0.662에서 이었다. 지역 경계는 0.653에서 같은 섬 런타임으로, 그래프 조회는 0.657에서 같은 풀·표면으로 이었다. 매 프레임 호출도 후속 틱 결선에서 잇는다.</remarks>
     private void BuildAiRuntimeDevices(IReadOnlyList<OriginalTypeRecord> types)
     {
         ArgumentNullException.ThrowIfNull(types);
@@ -3086,7 +3086,7 @@ public sealed partial class HostSession
                 RegionBounds = region => AiRegionBounds(islands, region),
                 StoredSp = owner => BitConverter.UInt32BitsToSingle(Sp.Get(owner)),
                 AddLocalSp = delta => (_fortHp ?? throw new InvalidOperationException("AI 준비 로컬 SP 보상 미연결")).AddSp(MissionPlayer.BattleOwner, delta),
-                Demo = () => 0u,
+                Demo = () => _aiDemo(),
                 KnowledgeOpen = () => false,
                 BlockingGumpOpen = () => false,
                 InitialScan = token => (_aiWorld ?? throw new InvalidOperationException("AI 초기 전체 등록 미연결")).FullScan(token),
@@ -3133,8 +3133,9 @@ public sealed partial class HostSession
                 Temple = region => islands.Temple(region),
                 Destroy = (sid, flags) => destroy(sid, flags),
                 Assertion = text => _aiRuntimeDiagnostics.Add("strategy:" + text),
-                Demo = () => false,
+                Demo = () => _aiDemo() != 0,
             });
+        BuildAiEconomyDevice();
         var runtime = new RawAiRuntime(AiBrainMemory, PlayerRecords,
             new AiRuntimeGlobals
             {
@@ -3155,7 +3156,7 @@ public sealed partial class HostSession
                 Drops = _ => throw new InvalidOperationException("AI 배치 행동 미연결(R6)"),
                 Bridges = _ => throw new InvalidOperationException("AI 다리 행동 미연결(R6)"),
                 Carriers = _ => throw new InvalidOperationException("AI 운반 행동 미연결(R6)"),
-                Economy = _ => throw new InvalidOperationException("AI 경제 행동 미연결(R6)"),
+                Economy = brain => AiEconomy.Reconcile(brain),
                 Money = owner => BitConverter.UInt32BitsToSingle(Sp.Get(owner)),
                 Wall = () => ProcessTime.Value,
                 Took = (brain, elapsed) => _aiRuntimeLogs.Add(brain + ":took:" + elapsed),

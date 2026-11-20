@@ -204,6 +204,7 @@ cpppj/src/client/RawCampaignParticles.cpp	Netstorm.Client.Host/HostMissionBurnin
 cpppj/src/client/RawCampaignParticles.h	Netstorm.Client.Host/HostMissionBurning.cs	247855746f40366e6c45c9c2b97dc378f0cb8bf8	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client.Host/HostMissionAudio.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client.Host/HostMissionBurning.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.AiEconomy.cs	bb1dbd427f232659d229a3522ff425fd0e19cf4f	session
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.Burning.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.PlayerWorld.cs	b43574aea7f7f56a6d761b0fd50846017c84cd5a	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.PriestWorld.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
@@ -477,6 +478,8 @@ cpppj/src/o/RawAiCreate.cpp	Netstorm.Core/Original/RawAiCreate.cs	382ec33feca7a4
 cpppj/src/o/RawAiCreate.h	Netstorm.Core/Original/RawAiCreate.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	L1
 cpppj/src/o/RawAiDeployment.cpp	Netstorm.Core/Original/RawAiDeployment.cs	3a0459751adcd933f0d8009b224a4b45f1c6fc65	port
 cpppj/src/o/RawAiDeployment.h	Netstorm.Core/Original/RawAiDeployment.cs	3a0459751adcd933f0d8009b224a4b45f1c6fc65	port
+cpppj/src/o/RawAiEconomy.cpp	Netstorm.Core/Original/RawAiEconomy.cs	bb1dbd427f232659d229a3522ff425fd0e19cf4f	port
+cpppj/src/o/RawAiEconomy.h	Netstorm.Core/Original/RawAiEconomy.cs	bb1dbd427f232659d229a3522ff425fd0e19cf4f	port
 cpppj/src/o/RawAmbientWind.cpp	Netstorm.Core/Original/RawAmbientWind.cs	e5a198df450ae720da38f5110ebc611119ea2f38	L1
 cpppj/src/o/RawAmbientWind.h	Netstorm.Core/Original/RawAmbientWind.cs	e5a198df450ae720da38f5110ebc611119ea2f38	port
 cpppj/src/o/RawArcSpire.cpp	Netstorm.Core/Original/RawArcSpire.cs	9ed8bc636cac9d100dbddafa8b6b2d6efda971e6	L1
