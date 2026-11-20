@@ -31,6 +31,7 @@ import { MissionAudioAssets } from './audio/mission-audio-assets.js';
 import { SceneMusicDriver } from './audio/scene-music-driver.js';
 import { makePriestShieldNoticeHooks } from './core/sound-process.js';
 import { dispatchSendMoneyInput, isSendMoneyCommand, sendMoneyScriptCode } from './core/send-money-input.js';
+import { captureSessionStateDump, formatSessionStateDump } from './core/session-state-dump.js';
 import { handleAllianceRequestInput } from './core/raw-player-participation.js';
 import { createSoundState, SoundPlayer } from './audio/sound-player.js';
 import { WebSoundDevice } from './audio/web-sound-device.js';
@@ -1633,6 +1634,14 @@ export class Netstorm {
     _toggleCampaignGameMenu() {
         const bar = this._campaignProduction?.ui?.gameMenu(); if (!bar) return false;
         const open = bar.toggle(); this._gameMenuButton?.setPressed(open); this._displayDirty = true; return open;
+    }
+
+    // 현재 Client 의 시각·난수·Kernel 과 미션 월드(있으면)의 풀·Player·SP·Graph·장부를 판번호 1 TSV 로 돌려준다(원본 `UberGump::SessionStateDump`, 검사 전용).
+    // 월드가 없으면 `world 0` 덤프이다. cpppj 오라클 덤프와 `tools/session-dump-compare.mjs` 로 L2·L3 대조에 쓴다. 상태를 바꾸지 않고 난수도 쓰지 않는다. (2026-11-21 WB04-E1129)
+    sessionDump() {
+        const clock = this._gameClock, random = this._clientRandom; if (!clock || !random) throw new Error('Session 덤프의 현재 시계·난수 수명 누락');
+        const session = this._campaignWorld?.session() ?? null, kernel = session ? session.core().kernel : this._clientKernel;
+        return formatSessionStateDump(captureSessionStateDump(session ? session.core().pool.edition : 'patch1078', clock.time(), random, kernel, session));
     }
 
     // 송금 명령을 현재 세션의 경제 장치로 실행한다(원본 UberGump 의 송금 일반 입력). X 는 숫자 입력 창이 필요한데 웹은 원본 이름 대화창(편집 전용 SaveFortNameDialog)을 옮기지 않아 아직 연결하지 못했다.
