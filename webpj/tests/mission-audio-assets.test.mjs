@@ -105,3 +105,18 @@ test('미션 음향: 실제 효과음 전체 준비와 음악 분리', async () 
     assert.equal(count, names.length); assert.ok(names.every((name) => audio.sounds.has(name)));
     assert.ok(requests.length > 0 && requests.every((name) => name.startsWith('sound/')));
 });
+
+// 해독한 음악 한 곡을 놓으면 재생기 표와 해독 사본이 모두 비워져 다시 요청할 때 새로 받고, 없는 곡·반납 뒤에도 안전하다. (2026-11-20 WB04-E1119)
+test('미션 음향: 음악 한 곡 놓기(releaseMusic)는 해독 사본까지 비우고 다시 받게 한다', async () => {
+    const { loader, requests } = diskLoader(), { audio, decoded } = audioFixture(); await loader.loadManifest(); requests.length = 0;
+    const assets = new MissionAudioAssets(loader, audio);
+    const first = await assets.loadMusic('fanfare.mus'); assert.equal(audio.music.get('fanfare.mus'), first);
+    await assets.loadMusic('defeat.mus'); assert.deepEqual(requests, ['music/fanfare.mus', 'music/defeat.mus']);
+    assets.releaseMusic('FANFARE.mus'); assert.equal(audio.music.has('fanfare.mus'), false); assert.equal(audio.music.has('defeat.mus'), true);
+    // 해독 사본도 놓았으므로 같은 곡을 다시 받고 해독하며, 다른 곡은 그대로 캐시를 쓴다.
+    const second = await assets.loadMusic('fanfare.mus'); assert.notEqual(second, first); assert.equal(decoded.length, 3);
+    await assets.loadMusic('defeat.mus'); assert.deepEqual(requests, ['music/fanfare.mus', 'music/defeat.mus', 'music/fanfare.mus']);
+    // 등록되지 않은 곡·표에 없는 곡은 아무 일도 없고, 잘못된 이름은 거부하며, 반납한 뒤에도 던지지 않는다.
+    assets.releaseMusic('anticipation.mus'); assets.releaseMusic('nothing.mus'); assert.throws(() => assets.releaseMusic('../fanfare.mus'), /파일 이름 오류/);
+    assets.dispose(); assert.doesNotThrow(() => assets.releaseMusic('defeat.mus')); assert.equal(audio.music.has('defeat.mus'), false);
+});

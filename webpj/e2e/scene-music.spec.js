@@ -1,0 +1,55 @@
+// 미션이 시작되면 메인 메뉴 곡 대신 원소 곡(wind22·rain22·thu22·sun22)이 재생되고, 다음 곡을 미리 받아 두며, 미션을 떠나면 메뉴 곡으로 돌아가는지 실제 Chromium 에서 확인한다.
+// 소리를 들을 수는 없으므로 재생기의 현재 곡·해독 표·구동기 상태를 읽는다. (2026-11-20 WB04-E1119)
+const { test, expect } = require('@playwright/test');
+
+// 실제 돌 버튼의 논리 좌표를 브라우저 마우스로 누른다.
+async function clickLabel(page, label) {
+  await page.waitForFunction((text) => Boolean(window.netstorm?._mainMenu?.controlPoint(text)), label, { timeout: 15000 });
+  const point = await page.evaluate((text) => {
+    const app = window.netstorm, logical = app._mainMenu.controlPoint(text), rect = app.canvas.getBoundingClientRect();
+    return { x: rect.left + logical.x * rect.width / app._mainMenu.width, y: rect.top + logical.y * rect.height / app._mainMenu.height };
+  }, label);
+  await page.mouse.click(point.x, point.y, { delay: 60 });
+}
+
+test('미션 장면 음악: 원소 곡 재생·다음 곡 미리 받기·떠나면 메뉴 곡 복귀', async ({ page }) => {
+  test.setTimeout(180000);
+  const errors = []; page.on('pageerror', (error) => errors.push(error.message)); page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
+  await page.addInitScript(() => { localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 1, music: 1 } }));
+    localStorage.setItem('netstorm.progress', JSON.stringify({ version: 1, values: { DoneTutorial1: '1' } })); });
+  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/?aspect=4:3');
+  await page.waitForFunction(() => window.netstorm?.state === 'clickToStart'); await page.locator('canvas').click();
+  await page.waitForFunction(() => window.netstorm?.state === 'mainMenu');
+  // 메뉴 곡이 먼저 재생된다.
+  await page.waitForFunction(() => window.netstorm._audio?.currentMusic === 'ser22.mus', null, { timeout: 60000 });
+  await clickLabel(page, 'Campaign'); await clickLabel(page, 'Early Missions');
+  const first = await page.evaluate(() => window.netstorm._mainMenu.dialog.menu.items.find((item) => item.command?.name === 'MissionBegin' && item.command.argument === 'Tutorial1')?.label);
+  expect(first).toBeTruthy(); await clickLabel(page, first);
+  await page.waitForFunction(() => window.netstorm?._campaignDisplayActive() && window.netstorm._clientGuide.current()?.runtime.gate.started === 1, null, { timeout: 50000 });
+  // 원소 곡을 받아 해독해 재생하면 메뉴 곡 대신 그 곡이 현재 곡이다.
+  const tracks = ['wind22.mus', 'rain22.mus', 'thu22.mus', 'sun22.mus'];
+  await page.waitForFunction((list) => window.netstorm._sceneMusic?.active && list.includes(window.netstorm._audio.currentMusic), tracks, { timeout: 90000 });
+  const playing = await page.evaluate(() => ({ current: window.netstorm._audio.currentMusic, selected: window.netstorm._sceneMusic.selected, state: window.netstorm._audio.context.state }));
+  expect(playing.current).toBe(playing.selected); expect(playing.state).toBe('running');
+  // 다음 원소 곡을 미리 받아 두면 해독 표에 메뉴 곡과 현재·다음 곡만 남는다(쓰지 않는 곡은 놓는다).
+  const next = tracks[(tracks.indexOf(playing.current) + 1) % 4];
+  await page.waitForFunction((name) => window.netstorm._audio.music.has(name), next, { timeout: 90000 });
+  expect(await page.evaluate(() => [...window.netstorm._audio.music.keys()].sort())).toEqual(['ser22.mus', playing.current, next].sort());
+  // 벽시계를 곡 길이보다 크게 앞으로 보내면 곡 기한이 지나 다음 원소 곡으로 넘어가고, 지난 곡은 놓으며 그다음 곡을 미리 받는다.
+  await page.evaluate(() => { const clock = window.netstorm._gameClock, original = clock.wallSeconds.bind(clock); window.__restoreWall = () => { delete clock.wallSeconds; }; clock.wallSeconds = () => original() + 1000; });
+  await page.waitForFunction((name) => window.netstorm._audio.currentMusic === name, next, { timeout: 30000 });
+  await page.evaluate(() => window.__restoreWall());
+  const afterNext = tracks[(tracks.indexOf(next) + 1) % 4];
+  await page.waitForFunction((name) => window.netstorm._audio.music.has(name), afterNext, { timeout: 90000 });
+  expect(await page.evaluate(() => [...window.netstorm._audio.music.keys()].sort())).toEqual(['ser22.mus', next, afterNext].sort());
+  playing.current = next;
+  // 미션 중 음악 설정을 껐다 켜도 메뉴 곡이 끼어들지 않는다.
+  await page.evaluate(() => { window.netstorm._settings.set('music', 0); window.netstorm._settings.set('music', 1); });
+  await page.waitForTimeout(500);
+  expect(await page.evaluate(() => window.netstorm._audio.currentMusic)).toBe(playing.current);
+  // 미션을 떠나면 메뉴 곡으로 돌아가고 미션 곡은 놓는다.
+  await page.evaluate(() => window.netstorm._leaveCampaignMission());
+  await page.waitForFunction(() => window.netstorm._audio.currentMusic === 'ser22.mus' && !window.netstorm._sceneMusic, null, { timeout: 30000 });
+  expect(await page.evaluate(() => [...window.netstorm._audio.music.keys()])).toEqual(['ser22.mus']);
+  expect(errors).toEqual([]);
+});

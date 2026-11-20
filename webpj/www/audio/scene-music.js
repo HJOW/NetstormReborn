@@ -1,7 +1,7 @@
 // 원본 10.78 장면별 음악 선택·기한·날씨 효과를 현재 Client 경계에 연결한다.
 
-// 원본 원소 곡·팔레트·날씨 효과음 표다.
-const TRACKS = Object.freeze(['wind22.mus', 'rain22.mus', 'thu22.mus', 'sun22.mus']);
+// 원본 원소 곡·팔레트·날씨 효과음 표다. 곡 표는 앱의 장면 음악 구동기가 다음 곡 미리 받기에 쓰도록 내보낸다. (2026-11-20 WB04-E1119)
+export const TRACKS = Object.freeze(['wind22.mus', 'rain22.mus', 'thu22.mus', 'sun22.mus']);
 const PALETTES = Object.freeze(['windy.col', 'rainy.col', 'thundery.col', 'sunny.col']);
 const WEATHER = Object.freeze(['', '', 'thunderCrack.wav', '']);
 const MENU = 'ser22.mus', SACRIFICE = 'sacrifice.mus', ANTICIPATION = 'anticipation.mus', FANFARE = 'fanfare.mus', DEFEAT = 'defeat.mus';

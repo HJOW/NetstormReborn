@@ -28,6 +28,7 @@ import { KOREAN_FONT_FAMILY } from './assets/korean-font-config.js';
 import { AudioSystem, createAudioContext, volumeStepToCentibels } from './audio/audio-system.js';
 import { SoundList } from './audio/sound-list.js';
 import { MissionAudioAssets } from './audio/mission-audio-assets.js';
+import { SceneMusicDriver } from './audio/scene-music-driver.js';
 import { createSoundState, SoundPlayer } from './audio/sound-player.js';
 import { WebSoundDevice } from './audio/web-sound-device.js';
 import { IndexedSurface } from './render/indexed-surface.js';
@@ -651,6 +652,8 @@ export class Netstorm {
         this._loadProgress = { loaded: 0, total: 0 };
         // Web Audio 재생기(AudioSystem)다. '클릭하여 시작' 입력 안에서 만든다.
         this._audio = null;
+        // 미션 장면 음악 구동기다. 미션 State7 에서 만들어 원소 곡을 순환하고 미션을 떠나면 비운다. (2026-11-20 WB04-E1119)
+        this._sceneMusic = null;
         // 8비트 색 번호 화면 버퍼(논리 크기)다.
         this._surface = null;
         // 8비트 화면 표시기다.
@@ -1301,6 +1304,8 @@ export class Netstorm {
         if (!request || this._campaignWorld) throw new Error('캠페인 State7의 현재 요청 또는 World 수명 오류');
         runCampaignMissionStarting(client, () => {
             captureCampaignMissionStarting(client, request);
+            // 원본 State7 의 전투 장면 음악 시작(StartScene(true))이다. World 설치보다 앞이다. (2026-11-20 WB04-E1119)
+            this._beginSceneMusic();
             const world = this._installCampaignWorld(services, viewport); world.prepareLocalConnectionForState();
         }, (address, port) => {
             if (!this._campaignWorld) throw new Error('캠페인 State8의 현재 World 없음');
@@ -1328,6 +1333,8 @@ export class Netstorm {
 
     // 현재 World의 Session을 반납하고 같은 미션 연결 대기 관문을 해제한다.
     _releaseCampaignWorld() {
+        // World 가 없어도(State7 도중 실패 등) 이미 시작한 장면 음악은 메뉴 곡으로 되돌린다. (2026-11-20 WB04-E1119)
+        this._endSceneMusic();
         if (!this._campaignWorld) return;
         this._gameMenuButton?.destroy(); this._gameMenuButton = null; this._releaseCampaignPause();
         this._campaignProduction?.ui?.close(); this._campaignProduction?.hud?.close(); this._clientGump?.releaseFormHost(); this._campaignWorld.dispose(); this._campaignWorld = null; this._campaignWorldMissionToken = 0; this._campaignUserInput = null; this._campaignProduction = null; this._campaignCursor = CURSOR_NORMAL;
@@ -2680,9 +2687,33 @@ export class Netstorm {
             });
     }
 
+    // 미션 State7 에서 장면 음악 구동기를 만들고 원소 곡 순환을 시작한다(원본 StartScene(true)). 재생기가 없거나 오디오를 끈 실행이면 아무 일도 없다.
+    // 곡 선택 난수는 월드 난수열을 건드리지 않도록 따로 쓴다. 곡 받기 실패는 오류로 기록하되 게임은 계속한다. (2026-11-20 WB04-E1119)
+    _beginSceneMusic() {
+        const audio = this._audio;
+        if (!audio || audio.closed || !this.options.audio || !this._gameClock || !this._assetLoader) return;
+        this._endSceneMusic();
+        const loader = this._missionAudioLoader();
+        this._sceneMusic = new SceneMusicDriver({
+            audio, prepare: (name) => loader.loadMusic(name), release: (name) => loader.releaseMusic(name),
+            wallSeconds: () => this._gameClock.wallSeconds(), random: { next: (limit) => Math.floor(Math.random() * limit) },
+            weatherSound: (name) => { audio.playSound(name); }, onError: (error, name) => { if (this._audio === audio) reportGameError('scene-music', error, { state: this._state, asset: name }); },
+        });
+        this._sceneMusic.begin();
+    }
+
+    // 미션을 떠날 때 장면 음악 구동기를 끝내고 메뉴 곡으로 돌아간 뒤 비운다. 시작하지 않았으면 아무 일도 없다. (2026-11-20 WB04-E1119)
+    _endSceneMusic() {
+        const driver = this._sceneMusic;
+        if (!driver) return;
+        this._sceneMusic = null;
+        driver.end();
+    }
+
     // 메인 메뉴이고 음악이 해독돼 있으면 메뉴 곡(ser22.mus)을 반복 재생한다(원본 SceneMusic Start: 전투 밖 곡). (2026-10-23 WB03-M1)
     _playMenuMusic() {
-        if (this._state !== AppState.MAIN_MENU || !this._audio) return;
+        // 미션 장면 음악이 도는 동안에는 메뉴 곡을 다시 틀지 않는다(미션 중에도 상태는 메인 메뉴다). (2026-11-20 WB04-E1119)
+        if (this._state !== AppState.MAIN_MENU || !this._audio || this._sceneMusic?.active) return;
         if (this._musicStatus !== 'ready' && this._musicStatus !== 'playing') return;
         if (this._audio.playMusic(MENU_MUSIC_NAME)) this._musicStatus = 'playing';
     }
@@ -3177,6 +3208,8 @@ export class Netstorm {
         } else if (stateWorld && !stateWorld.session().connectionCallbackActive()) stateWorld.session().pollLocalConnectionState();
         // 원본 루프 3번: 자연 종료한 버퍼를 포함해 패킷 처리 전에 현재 재생 수를 갱신한다.
         this._clientSoundPlayer?.recount();
+        // 원본 SceneFrame(469f60): 미션 장면 음악의 곡 기한을 확인해 다음 원소 곡으로 넘긴다. (2026-11-20 WB04-E1119)
+        this._sceneMusic?.frame();
         // 원본 루프 4번: Poll 뒤 현재 World를 다시 조회해 같은 내부 전송을 진행한다. 완료 후 화면 설치는 별도 경계다.
         const packetWorld = this._campaignWorld;
         if (packetWorld && !packetWorld.session().connectionCallbackActive()) packetWorld.session().pumpLocalConnection();

@@ -100,6 +100,13 @@ export class MissionAudioAssets {
     }
     // 선택된 음악 한 곡만 읽고 해독한다. 재생과 곡 선택은 호출자가 맡는다.
     loadMusic(name) { return this.#load('music', name); }
+    // 해독해 둔 음악 한 곡을 놓아 메모리를 돌려준다. 곡 하나가 해독 뒤 35MB 안팎이라 미션 장면 음악이 곡을 바꿀 때마다 쓰지 않는 곡을 놓는다.
+    // 재생 중인 소스는 자체 참조를 가지므로 끊기지 않고, 받는 중인 요청이나 등록된 적 없는 곡은 건드리지 않으며 반납한 뒤에도 안전하다. (2026-11-20 WB04-E1119)
+    releaseMusic(name) {
+        const key = soundKey(name, '.mus'), entry = this.#entries.get(`music::${key}`);
+        this.#audio.music.delete(key);
+        if (entry) this.#decoded.delete(entry.path.toLowerCase());
+    }
     // 반납 후 진행 중인 다운로드·해독 결과가 재생기에 등록되지 않도록 한다.
     dispose() { this.#disposed = true; this.#pending.clear(); this.#decoded.clear(); }
 }
