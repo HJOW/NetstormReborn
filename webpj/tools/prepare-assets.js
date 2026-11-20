@@ -38,6 +38,7 @@ const BUNDLES = Object.freeze({
     'menu-music': '메인 메뉴 음악(크기가 커서 화면 표시를 막지 않고 뒤에서 받음)',
     'mission-sound': '미션 효과음 원본(메뉴에 포함된 두 효과음 제외, 미션 재생 준비용)',
     'mission-music': '미션 장면 음악 원본(메인 메뉴 음악 제외, 미션 재생 준비용)',
+    skirmish: '12차 스커미시 시작 섬 후보 fort 12개(원본 d/*.fort 그대로, 스커미시를 시작할 때만 받음; 2026-11-20 WB04-E1103)',
     korean: '한국어 지원(갈무리11 글꼴 woff2·UI 번역표 xlat.korean·Tell 본문 tell.korean·캠페인 목록 offical*.korean·용어표 config.korean). 언어가 한국어일 때만 받는다(2026-10-31 WB03-N, WB03-O)',
 });
 
@@ -53,6 +54,9 @@ const FONT_FILES = Object.freeze(
         '!Arial.normal.12.0.chfnt', '!Arial.italic.12.0.chfnt', '!Arial.bold.12.0.chfnt', '!Arial.strikeout.12.0.chfnt', '!Arial.underline.12.0.chfnt',
     ].map((name) => `d/${name}`),
 );
+
+// 12차 스커미시의 시작 섬 후보 fort 이름 목록이다. core/skirmish-setup.js 의 SKIRMISH_START_ISLANDS 의 fort 이름 12개와 같아야 한다(검사: tests/skirmish-fort-bundle.test.mjs). (2026-11-20 WB04-E1103)
+const SKIRMISH_FORTS = Object.freeze(['FWOS9', 'Imp1', 'Imp3', 'LCA', 'Razorianwar6', 'Thundere', 'TpVpath', 'school5', 'sh3_n_2', 'sw_m2', 'tnron42', 'tnron51']);
 
 // 한국어 언어 자료 파일 목록이다(웹 판본에서 닿는 Tell 섹션·캠페인 목록·용어표). 원본 영어 파일과 같은 이름에서 확장자만 `.korean` 이다.
 // tell.korean 은 번역한 섹션만 담은 부분 파일이라 없는 섹션은 영어로 대체된다. 검사(tests/korean-tell.test.mjs)가 영어 원문과 구조를 대조한다. (2026-10-31 WB03-O)
@@ -108,6 +112,7 @@ const ASSET_FILES = Object.freeze([
     { path: 'music/ser22.mus', bundle: 'menu-music', use: '메인 메뉴(전투 밖) 음악, RIFF WAV PCM' },
     ...missionAudioFiles('sound', '.wav', new Set(['button.wav', 'opensubgump.wav']), 'mission-sound'),
     ...missionAudioFiles('music', '.mus', new Set(['ser22.mus']), 'mission-music'),
+    ...SKIRMISH_FORTS.map((name) => ({ path: `d/${name}.fort`, bundle: 'skirmish', use: '12차 스커미시 시작 섬 후보 fort(원본 단일 소유자 영역 패턴 3x3 이하, 변환 없이 복사)' })),
     { path: KOREAN_FONT_PATHS.regular, source: KOREAN_FONT_PATHS.regular, bundle: 'korean', use: '한국어 UI 글꼴 갈무리11 보통체(woff2)' },
     { path: KOREAN_FONT_PATHS.bold, source: KOREAN_FONT_PATHS.bold, bundle: 'korean', use: '한국어 UI 글꼴 갈무리11 굵은체(woff2)' },
     { path: KOREAN_FONT_PATHS.license, source: KOREAN_FONT_PATHS.license, bundle: 'korean', use: '갈무리11 글꼴 사용 허가. 글꼴과 함께 배포한다.' },
