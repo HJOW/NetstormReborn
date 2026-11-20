@@ -54,6 +54,7 @@ public sealed partial class HostSession
         {
             if ((Pool.Slot(sid)[11] & 1) == 0 && dependencies.IsDependForm(sid)) dependencies.Destroy(sid, 0x10);
         }
+        ReleaseFactoryUpgradeCommandWorld();
         _worldFactoryUpgrade = null; _worldDependencies = null;
     }
 }

@@ -1083,3 +1083,6 @@ cpppj/src/zacket/LocalMissionTransport.cpp	Netstorm.Net/LocalMissionTransport.cs
 cpppj/src/zacket/LocalMissionTransport.cpp	Netstorm.Net/LocalMissionZone.cs	50a5a1845edc01699ee215001405e8404d43f92a	port
 cpppj/src/zacket/LocalMissionTransport.h	Netstorm.Net/LocalMissionTransport.cs	108f76cc814769142a03e6923cb59966d76216b4	port
 cpppj/src/zacket/LocalMissionTransport.h	Netstorm.Net/LocalMissionZone.cs	a76499e35e6792f6039adda9a29d6328ac46cba9	port
+cpppj/src/o/RawFactoryResearch.cpp	Netstorm.Core/Original/RawFactoryResearch.cs	7c51717d891821fde48ff241b7d206f533423004	port
+cpppj/src/o/RawFactoryResearch.h	Netstorm.Core/Original/RawFactoryResearch.cs	7c51717d891821fde48ff241b7d206f533423004	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.FactoryUpgradeCommand.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port

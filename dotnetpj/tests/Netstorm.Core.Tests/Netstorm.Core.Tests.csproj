@@ -1,4 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <!-- 공장 연구의 원본216입력·호출 순서·16바이트 송신 관측이다. -->
+    <None Include="../../../cpppj/tests/fixtures/factory-research-x86.tsv" Link="X86/factory-research-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
   <!-- 게임 규칙·화면 계산 등 Core 테스트 (xUnit v3). MonoGame 없이 헤드리스로 실행한다 -->
   <PropertyGroup>
     <!-- xUnit v3 테스트 프로젝트는 실행 파일로 빌드한다 -->

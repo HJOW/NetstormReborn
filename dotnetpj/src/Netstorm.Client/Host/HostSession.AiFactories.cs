@@ -52,7 +52,7 @@ public sealed partial class HostSession
                     }
                     return (uint)(raw[RawSidPool.StateOffset] >> 5);
                 },
-                Upgrade = _ => throw new InvalidOperationException("AI 시설 실제 업그레이드 요청 미연결"),
+                Upgrade = parent => WorldFactoryUpgradeCommand.Request(parent),
                 Demo = () => _aiDemo() != 0,
                 Log = (brain, action, type) => _aiRuntimeLogs.Add(brain + ":factory:" + action + ":" + type),
             });
