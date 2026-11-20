@@ -1229,3 +1229,5 @@ cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.StateRu
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.StateRuntime.cs	bda77381e54bc382937c720047ee4441086b46d7	port
 cpppj/src/client/RawSurfaceWorld.cpp	Netstorm.Client/Host/HostSession.StateRuntime.cs	c102cdbf36fca4e8661d0699ea2ce5f2f44b2934	port
 cpppj/src/client/RawSurfaceWorld.h	Netstorm.Client/Host/HostSession.StateRuntime.cs	14fd017c3b6ca87880374e044e3ac00bf0575c2e	port
+cpppj/src/o/RawMetaZoneCleanup.cpp	Netstorm.Core/Original/RawMetaZoneCleanup.cs	35041198c0de7cbfb9d5f9941b3fca4483add8b3	port
+cpppj/src/o/RawMetaZoneCleanup.h	Netstorm.Core/Original/RawMetaZoneCleanup.cs	35041198c0de7cbfb9d5f9941b3fca4483add8b3	port

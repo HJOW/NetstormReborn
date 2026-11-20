@@ -1,5 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <!-- 메타구역 부모38입력·마커86입력의 독립 x86 전체 물리와 호출 관측이다. -->
+    <None Include="../../../cpppj/tests/fixtures/meta-zone-cleanup-x86.tsv" Link="X86/meta-zone-cleanup-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/meta-zone-marker-x86.tsv" Link="X86/meta-zone-marker-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- REA로 보호 PE에서 독립 추출한 두 판본의 전체 패킷 길이265 WORD다. -->
     <None Include="../../../cpppj/tests/fixtures/packet-lengths-pe.tsv" Link="X86/packet-lengths-pe.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- 같은 현재 생산 재계산242입력과 Player 내용물 통지88입력의 독립 원문 관측이다. -->

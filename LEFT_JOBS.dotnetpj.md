@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-21 · 사용자 재개 지시로 진행 중 · 마지막 완료 0.733(실제 Runtime State 반납·Surface 대여, 집중87건 통과) · 다음 0.734 MetaZone 선택 삭제·Root 소유자 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6 병행) · cpppj 제품 1323 / 11.01 · 전체 목표 미완료**
+**2026-11-21 · 사용자 재개 지시로 진행 중 · 마지막 완료 0.734(MetaZone 원문 본체124입력·집중9건 통과) · 다음 0.735 실제 MetaZone 선택 삭제·Root 소유자 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6 병행) · cpppj 제품 1323 / 11.01 · 전체 목표 미완료**
 
 현행 인계는 이 문서가 기준이다. 단위별 근거는 `docs/dotnet-canon-0NNN-*.md`이다. 0.645~0.732의 단위별 완료 문장, 0.640 회귀 점검 상세, 0.546~0.676 완료 기록 원문은 [0.732 정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0732)에 있다. 0.600~0.635는 [0.635 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635), 0.613까지의 경과와 파일 계열별 체크 목록은 [0.613 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)에 있다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
@@ -23,7 +23,7 @@
 **재개 순서(2026-11-21 재개).** 같은 빌드6파일을 확인한 뒤0.732의65시작과0.728 전체 바이트/지표·0.731 대표3·최종5,233검사 감사를 완료했다. [0.732 근거](docs/dotnet-canon-0732-20261121.md)
 
 1. **0.732 완료.** 65시작 모두 종료0·원본1,392파일과 실행 빌드6파일 불변이다. DN31경로 전체 덤프 바이트·34경로 지표가0.728과 같고0.731 대표3경로 바이트도 일치한다. `audit.py` 종료0이며 M1은0/34·cpp_only997·dn_only21을 유지한다. 다음 정기 전체 회귀는0.736이다.
-2. **0.733 완료 → 다음0.734.** 실제 AI/Player 링크/단일 Kernel.Clear 증빙·known0/Core0 뒤 반납 조정자와 제품 Surface 준비 대여를 연결했다. 집중87건·대표3시작 종료0/0.732 전체 바이트 일치·원본1,392파일 불변이다. [0.733](docs/dotnet-canon-0733-20261121.md). 다음은 MetaZone 선택 삭제와 실제 Root의 Template/팝업/NSInfo/seed/장면 음악 소유자다.
+2. **0.733 완료.** 실제 AI/Player 링크/단일 Kernel.Clear 증빙·known0/Core0 뒤 반납 조정자와 제품 Surface 준비 대여를 연결했다. 집중87건·대표3시작 종료0/0.732 전체 바이트 일치·원본1,392파일 불변이다. [0.733](docs/dotnet-canon-0733-20261121.md). 0.734에서 MetaZone 원문 부모·마커 본체124입력과 집중9건을 검증했다. [0.734](docs/dotnet-canon-0734-20261121.md). 다음0.735는 실제 Client 표/flag와 현재 Runtime pin·실제 가상 삭제 연결, 이어서 Root Template/팝업/NSInfo/seed/장면 음악 소유자다. HostSession의 전체 Native World 삭제 분배는 아직 미연결이므로 기존 일반 삭제의 Pre/Post 완료로 대신하지 않는다.
 3. **같은 작업 줄기.** MetaZone 선택 삭제, 실제 Root의 Template/팝업/NSInfo/seed/장면 음악 소유자, 전체 State/UI/로그인 연결이 남았다. 0.730 전역 어댑터와 0.731 저장소 자식의 이식·집중 검사를 Root 전체 연결로 간주하지 않는다. 이어서 [R4 체크](#r4-detail) → R11과 후순위 요구사항(0.2~0.4, 3절)을 진행한다.
 4. **사용자 제외 검사 유지.** 실제 포획/희생·특정 적 공격·시나리오 승리는 재현하지 않고 사용자 수동 확인으로 남긴다. 원본 1,392파일의 마지막 불변 확인은 0.732의65시작 수집이다.
 
@@ -38,7 +38,7 @@
 | 로그인·전송·Client 전역 | 0.689~0.691·0.693~0.695·0.697~0.699·0.701~0.703·0.705·0.707·0.715 | 패킷·연결표·Poll·로그인/재접속·옵션·상태 전이·Clock과 장기 Client 전역 | R4-6 |
 | Runtime·Player 장기 수명 | 0.706·0.709~0.711·0.713·0.714·0.717~0.719 | 실제 Runtime 대여/반납, 장기 Player·Core·옵션 전역, 현재 Runtime pin | R4-6 |
 | Client 프레임·장기 Host | 0.721~0.723·0.725~0.727 | Clock/Frame 공유, 프레임 실행 순서, 장기 Surface·Host Runtime | R4-6 |
-| Native State 정리·저장소·반납 | 0.729~0.731·0.733 | State 정리 부모(원문294행), 실제 전역·저장소·장기SID, 실제 자식 증빙/Runtime 반납·제품 Surface 대여 | 위2·3번, R4-6 |
+| Native State 정리·저장소·반납 | 0.729~0.731·0.733~0.734 | State 정리 부모(원문294행), 실제 전역·저장소·장기SID, 실제 자식 증빙/Runtime 반납·제품 Surface 대여, MetaZone 본체 | 위2·3번, R4-6 |
 | 정기 전체 회귀·L2 | 0.644부터 4단위마다(0.732까지) | 매회 실패 0·65실행 종료 0·원본 불변·M1 0/34 유지. 수집으로 드러난 미연결·순서 회귀를 0.644(AI 색 프레임·펜스)·0.680(플레어 분배)·0.684(시작 음향 순서)·0.688(Carrier 통지)에서 교정. 전체 검사 4,686건(0.644) → 5,233건(0.732) | 다음0.736 |
 
 <a id="first-run"></a>
@@ -121,8 +121,8 @@ AGENTS.md 2026-11-19 추가(`d047bf9a3`)로 `Netstorm.exe`의 아이콘은 기�
 - [ ] **R4-6 내부 로그인·전송·Client 전역.** 메뉴 핸들 출처와 이름 꼬리 16~19바이트, 로컬 Login→Ready→Start 실제 패킷, 요새 이미지·`Bind*`·State 수명을 연결한다. 실제 handshake 검사와 메뉴/`--mission`의 진입 덤프를 대조한다.
   - 완료(패킷·로그인 본체, 0.689~0.703): 패킷 복제/소유, 실제 연결표와 Source pin, 로컬 양끝/현재 ID Poll·Zone 별칭, 서버 Player/metadata, 옵션 전체 부모, 클라이언트 8종 수신/등록·Ready writer, 전체 로그인/재접속/현재 집계, 전체 타이머/진행 문구, 옵션 파생/설정 패킷, 로컬 상태 전이/확정, 내부 Source와 단일 ID 순회, Clock 동기화/Reset.
   - 완료(장기 소유자, 0.705~0.719): 장기 Client 전역·연결표와 기존 저장 모드·주변음·플레어 기한 공유(0.705), 실제 Runtime 준비 대여/공개/배송 pin(0.706), 52h·64h 선행 부모(0.707), 장기 Player 할당·공장 목록·옵션/Core/Player 전역(0.709~0.711), 호출 대여 명시 반납(0.713), Player/동맹 고정뷰(0.714), 고정 App 수신기·Session 엔트리 분배(0.715), 후처리·Process·공장의 현재 Runtime pin(0.717~0.719).
-  - 완료(Client 프레임·State, 0.721~0.731): 메뉴 전 Clock/Player 초기화와 같은 Frame·게임 시각(0.721~0.722), 프레임 실행 순서 복원(0.723), 장기 Surface(0.725), 장기 Host Runtime·TYPE 물리 배열·weak 소유(0.726~0.727), Native State 정리 부모(0.729), 실제 State 전역·장기 월드(0.730), State 저장소 자식·장기 SID(0.731), 실제 자식 증빙·Core0 뒤 Runtime 반납과 제품 Surface 준비 대여(0.733).
-  - 남음: MetaZone 선택 삭제(다음0.734), 실제 Root의 Template/팝업/NSInfo/seed/장면 음악·UI/음향/Pool·전체 State 설치, 전체 로그인/제품 Root 등록과 제품 Clock 프레임 설치, World/건설 효과 pin 전달, Source의 Editor/LAN/Meta 재인계, 원본 큰 메뉴 부모 3행(0.707), 앞선 Native 초기화 주소 세대와 전체 bridge(0.714), Native WorldRuntime 장치 일원화, 미션 없는 장기 Surface/주변음·영화 갱신 잠금과 나머지 루프 단계(0.723), 메뉴 Kernel/효과·전체 State/자산 재시작(0.725).
+  - 완료(Client 프레임·State, 0.721~0.731): 메뉴 전 Clock/Player 초기화와 같은 Frame·게임 시각(0.721~0.722), 프레임 실행 순서 복원(0.723), 장기 Surface(0.725), 장기 Host Runtime·TYPE 물리 배열·weak 소유(0.726~0.727), Native State 정리 부모(0.729), 실제 State 전역·장기 월드(0.730), State 저장소 자식·장기 SID(0.731), 실제 자식 증빙·Core0 뒤 Runtime 반납과 제품 Surface 준비 대여(0.733), MetaZone 원문 부모·마커124입력(0.734).
+  - 남음: MetaZone 실제 선택 삭제(다음0.735, 원문 본체는0.734 완료), 실제 Root의 Template/팝업/NSInfo/seed/장면 음악·UI/음향/Pool·전체 State 설치, 전체 로그인/제품 Root 등록과 제품 Clock 프레임 설치, World/건설 효과 pin 전달, Source의 Editor/LAN/Meta 재인계, 원본 큰 메뉴 부모 3행(0.707), 앞선 Native 초기화 주소 세대와 전체 bridge(0.714), Native WorldRuntime 장치 일원화, 미션 없는 장기 Surface/주변음·영화 갱신 잠금과 나머지 루프 단계(0.723), 메뉴 Kernel/효과·전체 State/자산 재시작(0.725).
 - [ ] **R4-7 데모와 보류 검사.** `StartDemo` 3경로 덤프, `player-world-x86.tsv` 1,680행, F3에서 미룬 Fort/지형 바인딩·미션 Fort 경로·로그인 객체 전송·미션 재적재 검사를 잇는다.
 - [ ] **R4-8 M1 판정.** 같은 시드·고정 프레임·빈 사용자 루트로 34/34 상태 일치. 로드 뒤 프레임 진행에서만 생기는 차이는 cpp 후속 프레임 덤프로 입증한 뒤 R6으로 넘긴다.
 
@@ -199,7 +199,7 @@ AGENTS.md 2026-11-19 추가(`d047bf9a3`)로 `Netstorm.exe`의 아이콘은 기�
 
 - **cpppj 1323이 현행 제품.** 0.606의 오라클 재빌드 기준은 1322다(1323은 아이콘 리소스만 추가). 마지막으로 문서화한 변경 분류는 0.530의 1312·1313이다. `979d65b5d..HEAD`의 `cpppj/src` 변경 26파일 중 PORT_MAP과 겹치는 것은 11파일이며, 그중 6파일은 이미 변경 뒤 커밋을 base로 재대조했다(2026-11-21 확인). base가 변경보다 앞선 5파일은 `BitmapFont.cpp/.h`(1322 글꼴), `ClientMain.cpp`의 일부 행(1322), `LocalTcpTransport.cpp`·`LocalUdpTransport.cpp`(1320 미션 전환)다. 해당 소비자를 옮길 때 재대조를 마친 뒤 PORT_MAP 기준 커밋을 올린다. 1314(최초 실행)는 0.2, 1322는 0.3, 1323은 0.4와 함께 반영한다. [1312·1313 처분](docs/dotnet-ai-alliance-delta-20261115.md) · [1320](docs/exe/cpp-mission-transition-1320-20261117.md) · [cpppj 현행](LEFT_JOBS.md)
 - **기존 재대조 규칙.** CPP 소스는 커밋된 HEAD를 사용한다. 해당 소비자를 옮길 때 바뀐 cpp 소스·fixture·검사를 함께 확인하고, cpppj 테스트 자동 플레이와 관전 경계는 R5/R6에서 잇는다. [오라클 자동 플레이](docs/testing/cpp-autoplay-test-guide.md)
-- **현재 집계(2026-11-21, 0.732 전체 검사).** PORT_MAP 물리 1,225줄(데이터 1,220행, port 732·L1 481·session 7), 연결 fixture 363개다. 현행 cpppj 1,239개 소스 단위(169,296줄) 중 499개(86,773줄) 대응·740개(82,523줄) 미대응이다. 대응 수는 `tools/port_inventory.py`가 인식한 단위 기준이며 파일별 부분 이식을 포함하므로 기존 대응의 미이식 분기·호스트 결선이나 게임 플레이 완료를 뜻하지 않는다. 원자료는 `extracted/dotnet-0732/port-inventory.tsv`와 `.log`다.
+- **현재 집계(2026-11-21, 0.732 전체 검사).** PORT_MAP 물리 1,225줄(데이터 1,220행, port 732·L1 481·session 7), 연결 fixture365개다(0.734에서 원문2개 추가, 기존363개 해시 불변). 현행 cpppj 1,239개 소스 단위(169,296줄) 중 499개(86,773줄) 대응·740개(82,523줄) 미대응이다. 대응 수는 `tools/port_inventory.py`가 인식한 단위 기준이며 파일별 부분 이식을 포함하므로 기존 대응의 미이식 분기·호스트 결선이나 게임 플레이 완료를 뜻하지 않는다. 원자료는 `extracted/dotnet-0732/port-inventory.tsv`와 `.log`다.
 - **파일 계열 목록.** 현행 [PORT_MAP](dotnetpj/PORT_MAP.tsv)과 `python -X utf8 tools/port_inventory.py --families dn`을 사용한다. 예전 단계 배정 및 대응 파일의 미완 부분은 [보관본 2.4~2.7](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)에서 찾는다. 단위 작업은 해당 계열이나 큰 파일 하나를 옮기고 검사·호스트 결선까지 확인한다.
 - **cpppj 전달 항목.** 상태 덤프와 고정 시각 요청은 해결됐다. fixture 헤더·모듈 연결 상태표, `GraphTests` 슬롯 열 범위와 `ClearProcesses` 뒤 정기 조회 진단의 이전 요청은 보관본 1.4에 있다. 변경이 필요하면 사용자에게 전달한다.
 
@@ -231,7 +231,7 @@ AGENTS.md 2026-11-19 추가(`d047bf9a3`)로 `Netstorm.exe`의 아이콘은 기�
 | 0.637~0.665 | 2026-11-19~20 | 직접 AI 명령, AI 생성·초기 갱신·준비·전략·프레임·통지·등록·수집자·그래프·경제·배치·시설 생산, 장식·Player·스프라이트·매몰 정기 |
 | 0.666~0.688 | 2026-11-20 | 업그레이드·연구·생산 Deck, 플레어·건설 진행/표시/실제 장치, 공유 패킷 분배·연구 운반 |
 | 0.689~0.720 | 2026-11-20 | 내부 로그인·전송·Client 전역, 장기 Runtime/Player 수명과 현재 Runtime pin |
-| 0.721~0.733 | 2026-11-21 | Client 프레임·장기 Surface/Host, Native State 정리·저장소·실제 Runtime 반납, 0.732 전체 검사·65시작 전수 감사 |
+| 0.721~0.734 | 2026-11-21 | Client 프레임·장기 Surface/Host, Native State 정리·저장소·실제 Runtime 반납·MetaZone 본체, 0.732 전체 검사·65시작 전수 감사 |
 
 정기 전체 회귀·일괄 덤프는 0.644부터 4단위마다(0.644·0.652·0.656·0.660·0.664 … 0.728) 수행했다. 단위별 근거는 `docs/dotnet-*.md`와 Git 기록에 있다.
 
