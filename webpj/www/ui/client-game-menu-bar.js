@@ -40,6 +40,8 @@ export class ClientGameMenuBar {
         // Game·View·Options·Players 부모의 현재 게임 경계다.
         Object.assign(menus, { global: (address) => devices.global(address), translate: (key) => devices.translate(key), config: (key) => devices.config(key), demo: () => devices.demo(),
             player: (owner) => devices.player(owner), refreshPriest: (owner) => devices.refreshPriest(owner), playerMenu: (subscriber) => devices.playerMenu(subscriber), enabled: (code) => devices.enabled(code), configEnabled: (key) => devices.configEnabled?.(key) ?? true });
+        // 프레임 상한(Frame Rate) 하위 메뉴 항목 장치다. 없으면 하위 메뉴를 만들지 않는다. (2026-11-20 WB04-E1094)
+        if (typeof devices.frameRates === 'function') menus.frameRates = () => devices.frameRates();
         const parents = new RawGameMenus(menus);
         // 막대 자체의 현재 조회·번역·하위 부모 경계다. Edit·Cheat 는 웹 범위 밖이라 읽기 값이 0 이다.
         Object.assign(bar, { prepare: () => devices.prepare?.(), translate: (key) => devices.translate(key), about: () => devices.about(), technicalHelp: () => devices.technicalHelp(),

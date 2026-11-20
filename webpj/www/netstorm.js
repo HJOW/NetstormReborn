@@ -74,6 +74,7 @@ import { gameMenuCommandValue, isGameMenuCommand, queuePlayerListKey } from './c
 import { KnowledgeMenuKind } from './core/raw-knowledge-menu.js';
 import { readGameTimeSeconds } from './core/game-time-display.js';
 import { idleMainMenuActivity } from './core/main-menu-activity.js';
+import { frameDue, frameRateChoices, normalizeFrameRate, parseFrameRateTarget } from './core/frame-rate-option.js';
 import { dispatchViewKeyInput } from './core/view-key-input.js';
 import { GameMenuButton } from './ui/game-menu-button.js';
 import { CHAT_RECORD_BYTES, RawChatChannels } from './core/raw-chat-channels.js';
@@ -573,6 +574,8 @@ export class Netstorm {
         this._clientMinimapState = null; this._clientMinimapGlobals = null; this._gameMenuButton = null; this._lastCampaignMission = null;
         // 게임 메뉴(Pause)가 올린 게임 시계 정지·음소거 깊이다. 미션을 떠날 때 되돌린다. (2026-11-20 WB04-E1089)
         this._menuPauseDepth = 0; this._menuMuteDepth = 0;
+        // 마지막으로 처리한 프레임의 rAF 시각(ms)이다. 프레임 상한 판단에 쓴다. (2026-11-20 WB04-E1094)
+        this._lastFrameStamp = null;
         // 메인 메뉴 무활동(45초) 감시 상태다. armed 가 false 이면 다음 메인 메뉴 프레임에서 기한을 새로 잡는다. (2026-11-20 WB04-E1092)
         this._mainMenuActivity = { armed: false, deadline: 0, pointer: { x: 0, y: 0 } };
         // 실제 미션 Guide는 자산과 장기 저장소가 준비된 뒤 생성한다.
@@ -1422,6 +1425,8 @@ export class Netstorm {
                 const stored = this._settings?.get(key); return stored !== undefined ? Number(stored) | 0 : this._gameData.readInt(key, key === 'theammode' ? 1 : 0).value | 0;
             },
             demo: () => Boolean(this._clientGuide?.current()?.runtime.gate.demo),
+            // 옵션 메뉴 Frame Rate 하위 항목(60·75·120 FPS)이다. (2026-11-20 WB04-E1094)
+            frameRates: () => frameRateChoices(this._settings?.get('maxFPS')),
             player: (owner) => session.playerRecords().subarray(owner * 180, owner * 180 + 180),
             refreshPriest: (owner) => session.refreshPriestParticipation(owner),
             enabled: (code) => WIRED_MENU_COMMANDS.has(code >>> 0), configEnabled: () => true, storeText: (value) => this._clientChatWindows.store(value),
@@ -2144,6 +2149,9 @@ export class Netstorm {
     // (2026-10-28 WB03-D, 2026-10-30 WB03-J: Blank·지역 인자·본문 스크립트 명령 추가, 2026-10-31 WB03-K: 링크·스크롤바 연결)
     _openTell(name, { suppressWindow = false } = {}) {
         if (!this._mainMenu || !this._gameData || !this._resources) return false;
+        // 옵션 메뉴 Frame Rate 항목의 대상(`Patch1101.SetFrameRate(n)`)은 창을 열지 않고 maxFPS 설정에 써서 바로 반영한다(cpppj 후순위 F1). (2026-11-20 WB04-E1094)
+        const frameRate = parseFrameRateTarget(name);
+        if (frameRate !== null) { this._settings?.set('maxFPS', frameRate); this._displayDirty = true; return true; }
         const result = createTellWindow({
             gameData: this._gameData,
             resources: this._resources,
@@ -3032,6 +3040,9 @@ export class Netstorm {
     _onFrame(now) {
         this._frameHandle = 0;
         if (!this._canvas) return;
+        // 원본 프레임 상한(maxFPS, 기본 75)보다 빠르게 오는 표시 주기(rAF)는 건너뛰고 다음 기회에 처리한다. 60Hz 표시에서는 상한이 걸리지 않는다. (2026-11-20 WB04-E1094)
+        if (!frameDue(now, this._lastFrameStamp, normalizeFrameRate(this._settings?.get('maxFPS')))) { this._startFrameLoop(); return; }
+        this._lastFrameStamp = now;
         // 원본 Client 순서대로 화면 입력과 갱신 전에 같은 게임 프레임을 고정한다.
         this._gameClock?.captureFrame();
         this._clock.tick(now);

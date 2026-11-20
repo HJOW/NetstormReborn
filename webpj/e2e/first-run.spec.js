@@ -44,7 +44,7 @@ test('최초 실행과 기존 사용자 설정·진행의 재실행', async ({ p
   await clickLabel(page, 'Main Menu');
   expect(await page.evaluate(() => window.netstorm._mainMenu.dialog)).toBeNull();
   expect(await page.evaluate(() => window.netstorm._settings.snapshot())).toEqual({ sound: 1, music: 1, playWind: 1, swapLeftRightSpeakers: 0,
-    soundVolume: 5, musicVolume: 5, edgeScroll: 1, autoDemo: 1, tellTips: 1, useBanners: 0, welcomeGiven: 1, tipNumber: 0 });
+    soundVolume: 5, musicVolume: 5, edgeScroll: 1, autoDemo: 1, tellTips: 1, useBanners: 0, maxFPS: 0, welcomeGiven: 1, tipNumber: 0 });
   // 효과음·음악 하위 메뉴의 실제 체크를 읽고 기존 사용자 값 3·2를 UI로 저장한다.
   for (const [label, selected] of [['Sound Effect Volume', 'Volume 3'], ['Music Volume', 'Volume 2']]) {
     await clickLabel(page, 'Options');

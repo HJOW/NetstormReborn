@@ -83,6 +83,12 @@ export class RawGameMenus {
     options() {
         const hooks = this.#hooks; need(hooks.vertical, '게임 메뉴의 세로 작성 연결 누락')();
         const separator = need(hooks.separator, '게임 메뉴의 구분선 연결 누락');
+        // 프레임 상한(Frame Rate) 하위 메뉴다. 선택은 Tell 대상 `Patch1101.SetFrameRate(n)` 이며 앱이 maxFPS 설정에 쓴다(cpppj 후순위 F1). 장치가 없으면 만들지 않는다. (2026-11-20 WB04-E1094)
+        if (typeof hooks.frameRates === 'function') {
+            hooks.vertical();
+            for (const rate of hooks.frameRates()) this.#check(rate.checked, rate.label, C.tell, `Patch1101.SetFrameRate(${rate.number})`);
+            need(hooks.submenu, '게임 메뉴의 하위 작성 연결 누락')(this.#text('Frame Rate'), hooks.take(), 1, 0); separator();
+        }
         this.#toggle('sound', 'Sound On', G.soundDevice); this.#toggle('music', 'Play Music', G.soundDevice); this.#toggle('playWind', 'Wind Noise', G.soundDevice); this.#toggle('swapLeftRightSpeakers', 'Speaker Swap L/R', G.soundDevice);
         // 각 음량 하위는 현재 전역을 매 행 조회하고 제목 번역 뒤 현재 장치 활성을 읽는다.
         for (let channel = 0; channel < 2; channel += 1) {

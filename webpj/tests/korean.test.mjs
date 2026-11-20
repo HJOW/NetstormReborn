@@ -104,7 +104,8 @@ test('xlat.korean: UTF-8·중복 없음·메뉴 라벨 전부 번역', () => {
     collect(buildOptionsItems(settings));
     collect(buildHelpItems({ includeAll: true }));
     // 숫자만 있는 해상도 라벨(640 by 480 …)은 번역하지 않는다.
-    const untranslatable = new Set(['640 by 480', '800 by 600', '1024 by 768']);
+    // 프레임 상한 항목('60 FPS' 등)은 cpppj 처럼 각 선택지 자신의 표기를 쓰고 번역하지 않는다(제목 'Frame Rate' 는 번역한다). (2026-11-20 WB04-E1094)
+    const untranslatable = new Set(['640 by 480', '800 by 600', '1024 by 768', '60 FPS', '75 FPS (Original)', '120 FPS']);
     const missing = [...labels].filter((label) => !untranslatable.has(label) && !korean.translations.has(label));
     assert.deepEqual(missing, [], '번역이 없는 라벨');
     // 미션의 TYPE·분류 등은 원본 자산에서 동적으로 들어오므로 메뉴 집합으로 전체 번역표를 제한하지 않는다.
@@ -336,15 +337,15 @@ test('buildPopupItems: translate 로 Options·Help 라벨을 번역하고 구조
         assert.equal(item.checked, plain[index].checked);
     });
     assert.deepEqual(translated.filter((item) => item.kind !== 'separator').map((item) => item.label), [
-        '소리 켜기', '음악 재생', '바람 소리', '스피커 좌우 바꾸기', '효과음 음량', '음악 음량', '전체 화면 가장자리 스크롤', '자동 데모', '시작 시 팁 표시', '모두 초기화',
+        '프레임 속도', '소리 켜기', '음악 재생', '바람 소리', '스피커 좌우 바꾸기', '효과음 음량', '음악 음량', '전체 화면 가장자리 스크롤', '자동 데모', '시작 시 팁 표시', '모두 초기화',
     ]);
     // 하위 음량 목록도 번역되고 현재 단계 체크는 그대로다.
-    const volume = translated.find((item) => item.kind === 'submenu');
+    const volume = translated.find((item) => item.kind === 'submenu' && item.label === '효과음 음량');
     assert.deepEqual(volume.items.map((item) => item.label), ['음량 1', '음량 2', '음량 3', '음량 4', '음량 5']);
-    assert.deepEqual(volume.items.map((item) => item.checked), plain.find((item) => item.kind === 'submenu').items.map((item) => item.checked));
+    assert.deepEqual(volume.items.map((item) => item.checked), plain.find((item) => item.kind === 'submenu' && item.label === 'Sound Effect Volume').items.map((item) => item.checked));
     assert.deepEqual(buildPopupItems('help', settings, { translate: korean.translate }).map((item) => item.label), ['일반 도움말 - ~iF1~.', '버전']);
     // 원문은 바뀌지 않고, 모르는 대상은 null 이며, translate 가 없으면 영어 그대로다.
-    assert.equal(plain[0].label, 'Sound On');
+    assert.equal(plain[0].label, 'Frame Rate'); assert.equal(plain.find((item) => item.kind === 'check').label, 'Sound On');
     assert.equal(buildPopupItems('nothing', settings, { translate: korean.translate }), null);
     assert.equal(buildPopupItems('help', settings)[0].label, 'General Help - ~iF1~.');
 });
@@ -370,9 +371,9 @@ test('PopupMenu: 한국어 Options 메뉴 크기·그리기·명령 실행', () 
     popup.draw(surface);
     const before = surface.pixels.slice();
     assert.ok(before.some((value) => value !== 0));
-    // 첫 행(소리 켜기) 가운데를 누르면 영어와 같은 명령이 실행된다.
-    const bounds = list.bounds();
-    popup.pointerDown(bounds.left + 20, bounds.top + 8);
+    // '소리 켜기' 행 가운데를 누르면 영어와 같은 명령이 실행된다(맨 앞은 하위 메뉴 Frame Rate 이므로 행 위치를 찾아서 누른다).
+    const row = list.controlPoint('소리 켜기');
+    popup.pointerDown(row.x, row.y);
     assert.deepEqual(commands.map((command) => [command.name, command.argument]), [['Toggle', 'sound']]);
 });
 
@@ -501,7 +502,7 @@ test('Netstorm 연결: 한국어 묶음 적재와 실패 시 영어로 계속, �
     }
     assert.equal(warnings.length, 2);
     // 한국어 펼침 메뉴: Options 를 열면 라벨이 한국어이고 영어 자원에서는 영어다.
-    for (const [resources, first] of [[koreanResources, '소리 켜기'], [englishResources, 'Sound On']]) {
+    for (const [resources, first] of [[koreanResources, '프레임 속도'], [englishResources, 'Frame Rate']]) {
         const screen = new MainMenuScreen({ resources });
         screen.resize(1024, 768);
         const menuApp = new Netstorm();

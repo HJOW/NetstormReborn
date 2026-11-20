@@ -49,7 +49,7 @@ test('설정: 기본값·값 검증·토글·통지', () => {
     const changes = [];
     const settings = new Settings({ onChange: (key, value, previous) => changes.push([key, value, previous]) });
     // (2026-10-30 WB03-J: 시작 창이 쓰는 welcomeGiven·tipNumber 를 기본값 0 으로 추가했다. 원본 setup.cfg 기본값과 같다.)
-    assert.deepEqual(settings.snapshot(), { sound: 1, music: 1, playWind: 1, swapLeftRightSpeakers: 0, soundVolume: 5, musicVolume: 5, edgeScroll: 1, autoDemo: 1, tellTips: 1, useBanners: 0, welcomeGiven: 0, tipNumber: 0 });
+    assert.deepEqual(settings.snapshot(), { sound: 1, music: 1, playWind: 1, swapLeftRightSpeakers: 0, soundVolume: 5, musicVolume: 5, edgeScroll: 1, autoDemo: 1, tellTips: 1, useBanners: 0, maxFPS: 0, welcomeGiven: 0, tipNumber: 0 });
     // 토글은 0/1 만 받고 참/거짓·'0'/'1' 도 받는다. 그 밖의 값은 거부한다.
     assert.equal(normalizeSetting('sound', true), 1);
     assert.equal(normalizeSetting('sound', '0'), 0);
@@ -71,8 +71,8 @@ test('설정: 기본값·값 검증·토글·통지', () => {
     assert.equal(settings.toggle('music'), 1);
     assert.equal(settings.toggle('soundVolume'), null);
     assert.deepEqual(changes, [['soundVolume', 4, 5], ['music', 0, 1], ['music', 1, 0]]);
-    // 알려진 모든 키가 정의되어 있다(옵션 메뉴가 쓰는 키 9개 + 시작 창이 쓰는 키 2개 + 섬 소유자 표식 키 1개; 2026-11-20 WB04-E1093).
-    assert.equal(Object.keys(SETTING_DEFINITIONS).length, 12);
+    // 알려진 모든 키가 정의되어 있다(옵션 메뉴가 쓰는 키 9개 + 시작 창이 쓰는 키 2개 + 섬 소유자 표식 키 1개 + 프레임 상한 키 1개; 2026-11-20 WB04-E1093·E1094).
+    assert.equal(Object.keys(SETTING_DEFINITIONS).length, 13);
     // 정수 설정(tipNumber)은 부호 있는 32비트 범위의 정수와 십진 문자열만 받는다. (2026-10-30 WB03-J)
     assert.equal(normalizeSetting('tipNumber', 15), 15);
     assert.equal(normalizeSetting('tipNumber', '-7'), -7);
@@ -152,7 +152,7 @@ test('펼침 메뉴 항목: 웹 항목과 원본 전체 항목, 켜짐 표시', 
     const settings = new Settings();
     const labels = (items) => items.map((item) => (item.kind === 'separator' ? '---' : item.label));
     assert.deepEqual(labels(buildOptionsItems(settings)), [
-        'Sound On', 'Play Music', 'Wind Noise', 'Speaker Swap L/R', 'Sound Effect Volume', 'Music Volume', '---', 'Edge Scroll in Fullscreen', 'Auto-Demo', 'Tell Tips at Startup', '---', 'Reset All',
+        'Frame Rate', '---', 'Sound On', 'Play Music', 'Wind Noise', 'Speaker Swap L/R', 'Sound Effect Volume', 'Music Volume', '---', 'Edge Scroll in Fullscreen', 'Auto-Demo', 'Tell Tips at Startup', '---', 'Reset All',
     ]);
     assert.deepEqual(labels(buildOptionsItems(settings, { includeAll: true })), [
         'Direct Draw / Full Screen', 'Resolution', '---', 'Sound On', 'Play Music', 'Wind Noise', 'Speaker Swap L/R', 'Sound Effect Volume', 'Music Volume', '---',
@@ -167,12 +167,12 @@ test('펼침 메뉴 항목: 웹 항목과 원본 전체 항목, 켜짐 표시', 
     // 설정을 바꾸면 표시와 음량 하위 목록의 현재 단계가 따라간다.
     settings.set('sound', 0);
     settings.set('musicVolume', 4);
-    const options = buildOptionsItems(settings);
-    assert.equal(options[0].checked, false);
+    const options = buildOptionsItems(settings), soundOn = options.find((item) => item.label === 'Sound On');
+    assert.equal(soundOn.checked, false);
     const musicVolume = options.find((item) => item.label === 'Music Volume');
     assert.deepEqual(musicVolume.items.map((item) => [item.label, item.checked]), [['Volume 1', false], ['Volume 2', false], ['Volume 3', false], ['Volume 4', true], ['Volume 5', false]]);
     assert.deepEqual(musicVolume.items[3].command, { name: 'Volume', argument: 'musicVolume=4' });
-    assert.deepEqual(options[0].command, { name: 'Toggle', argument: 'sound' });
+    assert.deepEqual(soundOn.command, { name: 'Toggle', argument: 'sound' });
     assert.deepEqual(buildHelpItems()[1].command, { name: 'Tell', argument: 'About' });
 });
 
