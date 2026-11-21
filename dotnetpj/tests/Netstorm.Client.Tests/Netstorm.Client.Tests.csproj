@@ -164,5 +164,7 @@
     <None Include="../../../cpppj/tests/fixtures/chat-packet-x86.tsv" Link="X86/chat-packet-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- 일반 헤더 뒤의189개 연속 자동완성 원문 상태를 그대로 공유한다. -->
     <None Include="../../../cpppj/tests/fixtures/chat-completion-x86.tsv" Link="X86/chat-completion-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- 일반 헤더 뒤의1980입력×두x87정밀도 기하3960관측을 원문 그대로 공유한다. -->
+    <None Include="../../../cpppj/tests/fixtures/hud-chat-geometry-x86.tsv" Link="X86/hud-chat-geometry-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

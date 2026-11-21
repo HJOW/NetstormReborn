@@ -264,6 +264,7 @@ public sealed partial class ClientHostGame : Game
             _textEntry = new HostTextEntry(_mainMenu, _htmlWindows, _htmlText, _driver.Screen,
                 () => _clock.NowSeconds, (_, _) => _menuDirty = true);
             InitializeNativeChatEditing();
+            InitializeNativeChatGeometry();
             _htmlMenus = new HostHtmlMenus(_mainMenu, _htmlWindows, _htmlText, _startup, _driver.Screen, (_, _) => _menuDirty = true);
             _htmlMenus.BindInput(_driver.Input, _buttonSound.PlayByName, (_, _) => _menuDirty = true);
             _htmlFactory = new HostHtmlFactory(_mainMenu, _htmlWindows, _htmlMenus, _startup, _driver.Screen, _driver.Input,
@@ -598,6 +599,8 @@ public sealed partial class ClientHostGame : Game
         _missionSession?.RunMissionFrame();
         if (_menuDirty && _gumpDrawing is not null && _startup is not null)
         { _startup.Draw(_driver.Screen); _gumpDrawing.Draw(); _menuDirty = false; }
+        // 원문439b96처럼 현재 그리기 뒤 같은 Chat 입력줄 전환 요청을 한 번 소비한다.
+        ConsumeNativeChatInputToggle();
         base.Update(gameTime);
     }
 

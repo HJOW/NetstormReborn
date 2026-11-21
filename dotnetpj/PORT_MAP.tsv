@@ -1343,3 +1343,7 @@ cpppj/src/client/SystemNewsTime.cpp	Netstorm.Client/Chat/SystemNewsTime.cs	8efc7
 cpppj/src/client/ClientChatRuntime.cpp	Netstorm.Client/ClientChatWindowRuntime.cs	c0f7843ae3e8ec3e48369836e1d57d371f6488d6	port
 cpppj/src/client/RawMenuChat.inc	Netstorm.Client/ClientChatWindowRuntime.cs	cf3babe1a6b47c4b959eb44af38560e80f023095	port
 cpppj/src/client/RawMenuChat.inc	Netstorm.Client/Host/HostTextEntry.cs	cf3babe1a6b47c4b959eb44af38560e80f023095	port
+cpppj/src/client/HudChatGeometry.h	Netstorm.Client/Gump/HudChatGeometry.cs	6df0f316b2c17a95a409b410b21030ed3bb5b17b	port
+cpppj/src/client/HudChatGeometry.cpp	Netstorm.Client/Gump/HudChatGeometry.cs	6df0f316b2c17a95a409b410b21030ed3bb5b17b	port
+cpppj/src/client/RawMenuChat.inc	Netstorm.Client.Host/ClientHostGame.ChatGeometry.cs	cf3babe1a6b47c4b959eb44af38560e80f023095	port
+cpppj/src/client/ClientMain.cpp	Netstorm.Client.Host/ClientHostGame.ChatGeometry.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
