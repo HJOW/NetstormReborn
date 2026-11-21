@@ -252,26 +252,33 @@ public static class ChatPacketBody
     /// <param name="packet">고를 패킷 물리다. 호출자가 소유한다.</param>
     /// <param name="sending">송신 중이면 0이 아니다.</param>
     /// <param name="assertion">부를 원문 진단이다. 도달한 분기마다 필수로 요구한다.</param>
-    public static void ObserveChatPacket(byte[] packet, uint sending, Action<uint> assertion)
+    public static void ObserveChatPacket(byte[] packet, uint sending, Action<uint>? assertion)
     {
         ArgumentNullException.ThrowIfNull(packet);
-        ArgumentNullException.ThrowIfNull(assertion);
+        ObserveChatPacket(packet.AsMemory(), sending, assertion);
+    }
+
+    /// <summary>같은 mutable 부분 물리를 관찰한다.미송신/정상 필드에서는 진단 장치를 요구하지 않는다.</summary>
+    public static void ObserveChatPacket(Memory<byte> packet, uint sending, Action<uint>? assertion)
+    {
         if (sending == 0u)
         {
             return;
         }
 
-        if (Read(packet, 10, 2) == 0xffffu)
+        Span<byte> bytes = packet.Span;
+        if (Read(bytes, 10, 2) == 0xffffu)
         {
             Need(assertion)(0x81du);
         }
 
-        if (Read(packet, 14, 1) == 0xffu)
+        if (Read(bytes, 14, 1) == 0xffu)
         {
             Need(assertion)(0x81fu);
         }
 
-        uint length = Read(packet, 14, 1) * 4u + Read(packet, 12, 2) + Read(packet, 10, 2) + 15u;
-        Put(packet, 2, length, 2);
+        // bufferLen은 원문 zero-extend 후-1 비교가 도달 불가이므로 추가 진단을 넣지 않는다.
+        uint length = Read(bytes, 14, 1) * 4u + Read(bytes, 12, 2) + Read(bytes, 10, 2) + 15u;
+        Put(bytes, 2, length, 2);
     }
 }
