@@ -31,7 +31,7 @@ public sealed class TextEntryGumpNativeTests
     /// <summary>표시 장치에서만 빈BYTE를-로 관측한다.</summary>
     private static string VisibleHex(ReadOnlySpan<byte> value) => value.IsEmpty ? "-" : Hex(value);
     /// <summary>물리 가드와 해제 상태를 포함하는 독립 입력 블록.</summary>
-    private sealed class Block
+    internal sealed class Block
     {
         /// <summary>원문 요청 폭.</summary>
         public uint Nominal;
@@ -41,7 +41,7 @@ public sealed class TextEntryGumpNativeTests
         public byte[] Bytes = [];
     }
     /// <summary>원문13입력 열만 소유한 명시 외부 장치.기대상태를 주입하지 않는다.</summary>
-    private sealed class Scene
+    internal class Scene
     {
         /// <summary>기본/TextEntry/Console이 같은 실제 객체다.</summary>
         public ConsoleGumpNode Node { get; } = new();
@@ -93,7 +93,7 @@ public sealed class TextEntryGumpNativeTests
         /// <summary>현재 자식의 크기/위치/값11DWORD다.</summary>
         public static string ChildFields(ScrollGumpNode n) => Pack(n.Vtable, n.Flags, n.Serial, Bits(n.Scale), Bits(n.BaseWidth), Bits(n.BaseHeight), Bits(n.Width), Bits(n.Height), Bits(n.X), Bits(n.Y), unchecked((uint)n.Position));
         /// <summary>현재 실제 기본 주소다.</summary>
-        private GumpCreateNode? Base(uint token) => token switch { Entry => Node, Vertical => V, Horizontal => H, _ => null };
+        protected virtual GumpCreateNode? Base(uint token) => token switch { Entry => Node, Vertical => V, Horizontal => H, _ => null };
         /// <summary>도달한 실제 Slider만 반환한다.</summary>
         private ScrollGumpNode Slider(uint token) => token switch { Vertical => V, Horizontal => H, _ => throw new ArgumentException("장치 Slider 주소") };
         /// <summary>현재 블록/내부 주소+16가드의 순수 뷰다.</summary>
@@ -101,9 +101,9 @@ public sealed class TextEntryGumpNativeTests
         /// <summary>원문과 같은 고정 주소 순서로 물리 메모리를 확보한다.</summary>
         private uint Allocate(uint size) { uint address = 0x01010000 + _next++ * 0x10000; Blocks.Add(address, new() { Nominal = size, Live = 1, Bytes = Enumerable.Repeat(_fill, checked((int)size + 16)).ToArray() }); return address; }
         /// <summary>장치 관측에만 추가한다.</summary>
-        private void Event(string name, params uint[] values) => _trace.Add(values.Length == 0 ? name : name + ":" + Pack(values));
+        protected void Event(string name, params uint[] values) => _trace.Add(values.Length == 0 ? name : name + ":" + Pack(values));
         /// <summary>원시 문자열/64비트 관측을 부호 변환 없이 추가한다.</summary>
-        private void Words(string name, params string[] values) => _trace.Add(name + ":" + string.Join(':', values));
+        protected void Words(string name, params string[] values) => _trace.Add(name + ":" + string.Join(':', values));
         /// <summary>현재 장치 호출의 순수 관측.</summary>
         public string Trace() => _trace.Count == 0 ? "-" : string.Join(';', _trace);
         /// <summary>반납 블록과 가드도 포함한 현재 메모리 관측.</summary>
