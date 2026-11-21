@@ -56,13 +56,21 @@ public sealed partial class RawPathProcess : SquidProcess
     /// <summary>같은 Pool/부모 종류를 확인하고 해당 파생의 기존 프로세스 제거 뒤 실제 Host에 소유권을 넘긴다.</summary>
     public static RawPathProcess? Attach(SquidProcessHost host, RawPathProcess process, int parent, uint flags = 0, int form = 0)
     {
-        if (process is null || !ReferenceEquals(host.Pool(), process._pool)) throw new ArgumentException("경로 부착 Pool 불일치");
-        byte kind = process._pool.Slot(parent)[10];
-        if (process._priest && kind != process._state.PriestType) throw new ArgumentException("사제 경로 부모TYPE");
-        if (process._dude && kind != process._state.DudeType) throw new ArgumentException("Dude24 경로 부모TYPE");
-        if (process._worm && kind != process._state.SunWalkerType && kind != process._state.EmptyType) throw new ArgumentException("웜40 부모TYPE");
-        uint type = process.MovementType(); if (process._flying || process._balloon || process._walker) RawProcessRemoval.RemoveAttached(host, parent, type);
-        return (RawPathProcess?)host.Attach(process, type, parent, flags, form);
+        if (process is null) throw new ArgumentException("경로 부착 Pool 불일치"); bool transferred = false;
+        try
+        {
+            if (!ReferenceEquals(host.Pool(), process._pool)) throw new ArgumentException("경로 부착 Pool 불일치"); byte kind = process._pool.Slot(parent)[10];
+            if (process._priest && kind != process._state.PriestType) throw new ArgumentException("사제 경로 부모TYPE");
+            if (process._dude && kind != process._state.DudeType) throw new ArgumentException("Dude24 경로 부모TYPE");
+            if (process._worm && kind != process._state.SunWalkerType && kind != process._state.EmptyType) throw new ArgumentException("웜40 부모TYPE");
+            uint type = process.MovementType(); if (process._flying || process._balloon || process._walker) RawProcessRemoval.RemoveAttached(host, parent, type);
+            transferred = true; return (RawPathProcess?)host.Attach(process, type, parent, flags, form);
+        }
+        finally
+        {
+            // 원문 unique_ptr 인자의 소유권을 Host에 넘기기 전 실패하면 즉시 파생 수명을 닫는다.
+            if (!transferred) process.Dispose();
+        }
     }
     /// <summary>실제 Host 부착 뒤 같은 base Form/부모 DWORD를 동기화한다.</summary>
     public override void OnAttached() => Runtime.SetAttachment((ushort)Form(), (ushort)Parent());

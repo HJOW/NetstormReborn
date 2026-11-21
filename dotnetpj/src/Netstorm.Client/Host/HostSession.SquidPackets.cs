@@ -45,12 +45,14 @@ public sealed partial class HostSession
             CheckingDead = new(() => AiChecking.Read()), InMetamapMode = () => OwnerMode.Challenge, Boss = () => Gameplay.Authority.Boss,
         }, new() { Command = (code, first, second) => FixedPacketNeed(_squidPacketEffects?.Command)(code, first, second), Assertion = storage.AssertDisplay });
         BindDaisPacketTransmission();
+        BindPathSearchDevices(storage);
     }
     /// <summary>실제 프로세스 수명이 끝날 때 수신 전용 이름/외부 효과/종속 UI의 참조를 함께 반납한다.</summary>
     private void ReleaseSquidPacketDevices()
     {
         _squidPacketStorage = null; _squidPacketNames = null; _squidPacketEffects = null; _squidPacketUi = null;
         _daisPacketTransmission = null;
+        ReleasePathSearchDevices();
     }
     /// <summary>번호 선택 시점의 현재 TYPE를 읽는다.</summary>
     private OriginalTypeRecord SquidPacketType(uint type) => _terrainPopTypes is { } types && type < types.Count ? types[(int)type]

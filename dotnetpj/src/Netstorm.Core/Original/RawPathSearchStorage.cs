@@ -18,6 +18,9 @@ public sealed class RawPathSearchState
     /// <summary>패치 PE 초기값 6이다. 5면 방향 전제 3번을 5로 바꾼다. CD에는 이 분기가 없다. 2026-11-07 F2d 저장소 물리 자료형 이식에서 추가됐다.</summary>
     public int PolicySelector { get; set; } = 6;
 
+    /// <summary>실제 Client의 같은005318ec owner다. 연결 시 검색마다 현재 DWORD를 읽고 독립 signed 입력은 보존한다.</summary>
+    public UIntBox? SharedPolicySelector { get; set; }
+
     /// <summary>대각선은 양옆 직선 방향의 허용 비트가 필요하다. 2026-11-07 F2d 저장소 물리 자료형 이식에서 추가됐다.</summary>
     public uint[] DirectionPrerequisite { get; } = [0u, 5u, 0u, 20u, 0u, 80u, 0u, 65u];
 

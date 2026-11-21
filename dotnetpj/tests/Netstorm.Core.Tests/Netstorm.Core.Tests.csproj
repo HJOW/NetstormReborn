@@ -1,5 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <!-- 실제 BFS/역추적644개와 Init64개의 두 보호 PE 독립 관측을 공유한다. -->
+    <None Include="../../../cpppj/tests/fixtures/pathsearch-x86.tsv" Link="X86/pathsearch-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/pathinit-x86.tsv" Link="X86/pathinit-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/pathstart-x86.tsv" Link="X86/pathstart-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/pathcleanup-x86.tsv" Link="X86/pathcleanup-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
     <!-- 경로 파생 프레임/정지·도착·애니메이션의 기존 독립 PE 입력을 단일 소비자로 읽는다. -->
     <None Include="../../../cpppj/tests/fixtures/walker-path-x86.tsv" Link="X86/walker-path-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/bulf-path-x86.tsv" Link="X86/bulf-path-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
