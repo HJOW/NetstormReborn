@@ -147,5 +147,10 @@
     <None Include="../../../cpppj/tests/fixtures/renderer-present-dirty-x86.tsv" Link="X86/renderer-present-dirty-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- manager 생성/설정/랭크의 원본644입력을 사본 없이 공유한다. -->
     <None Include="../../../cpppj/tests/fixtures/chat-manager-prefix-x86.tsv" Link="X86/chat-manager-prefix-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- 점 명령 등록/정적표/초기 Issue의 독립 원문을 같은 Client 소비자에 연결한다. -->
+    <None Include="../../../cpppj/tests/fixtures/dot-command-register-x86.tsv" Link="X86/dot-command-register-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/dot-command-register-v2-x86.tsv" Link="X86/dot-command-register-v2-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/dot-command-static-image.hex" Link="X86/dot-command-static-image.hex" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/issue-commands-x86.tsv" Link="X86/issue-commands-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

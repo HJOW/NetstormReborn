@@ -1314,3 +1314,11 @@ cpppj/src/o/RawChatManagerPrefix.h	Netstorm.Core/Original/RawChatManagerPrefix.c
 cpppj/src/o/RawChatManagerPrefix.cpp	Netstorm.Core/Original/RawChatManagerPrefix.cs	2ede402738f34e759293df90663c01f4efdd5604	port
 cpppj/src/client/ClientChatManagerGlobals.h	Netstorm.Client/ClientChatManagerGlobals.cs	3667594cde709036189e41f5afbd1d82b770afbf	port
 cpppj/src/client/ClientChatManagerGlobals.cpp	Netstorm.Client/ClientChatManagerGlobals.cs	3667594cde709036189e41f5afbd1d82b770afbf	port
+cpppj/src/client/RawDotCommandRegister.h	Netstorm.Client/Scripting/RawDotCommandRegister.cs	d207940cd190bbf84cba9e7d024e84b137aad5dd	port
+cpppj/src/client/RawDotCommandRegister.cpp	Netstorm.Client/Scripting/RawDotCommandRegister.cs	d207940cd190bbf84cba9e7d024e84b137aad5dd	port
+cpppj/src/client/RawIssueCommands.h	Netstorm.Client/Scripting/RawIssueCommands.cs	890219ac6a95eb4489d52f238b81c1671bfdd8d3	port
+cpppj/src/client/RawIssueCommands.cpp	Netstorm.Client/Scripting/RawIssueCommands.cs	890219ac6a95eb4489d52f238b81c1671bfdd8d3	port
+cpppj/src/client/ClientDotCommandGlobals.h	Netstorm.Client/ClientDotCommandGlobals.cs	14ec2759c288b04a2d9c0a436e859f60abf1647b	port
+cpppj/src/client/ClientDotCommandGlobals.cpp	Netstorm.Client/ClientDotCommandGlobals.cs	14ec2759c288b04a2d9c0a436e859f60abf1647b	port
+cpppj/src/client/RawDotCommandDispatch.h	Netstorm.Client/ClientDotCommandGlobals.cs	13ea2e60219d8009f0b2cd6ca5dc615056402f54	port
+cpppj/src/client/ClientChatRuntime.cpp	Netstorm.Client/ClientChatRuntime.cs	c0f7843ae3e8ec3e48369836e1d57d371f6488d6	port

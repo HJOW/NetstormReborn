@@ -245,6 +245,7 @@ public sealed partial class ClientHostGame : Game
             _cursor = new HostOriginalCursor(_startup);
             PrepareNativeAssetTables();
             PrepareNativeRenderer();
+            InitializeNativeChat();
             _mainMenu = new HostMainMenu(_startup, _driver.Screen, new GumpButtonTreeHooks
             {
                 Now = () => _clock.NowSeconds,
