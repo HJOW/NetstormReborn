@@ -7,7 +7,7 @@ namespace Netstorm.Client.Host; // 실제 HTML 본문의 다중 줄·슬라이�
 
 /// <summary>공통 Gump 트리와 실제 글꼴에 HTML 다중 줄 본문·스크롤 자식을 조립한다.
 /// 그림 TYPE과 커서·이름 소리는 별도 장치이며 선택 시 제공받는다.</summary>
-public sealed class HostHtmlText
+public sealed partial class HostHtmlText
 {
     /// <summary>같은 공통 등록·입력·수명.</summary>
     private readonly GumpButtonTree _tree;
@@ -62,10 +62,12 @@ public sealed class HostHtmlText
         styleHooks.TextDraw = (bytes, position, context) =>
             (_activeText ?? throw new InvalidOperationException("HTML 본문 실제 출력 문맥 없음"))
                 .Draw(bytes, position, GumpText.DecodeGumpTextContext(context));
-        var pictures = new Markup(Fragments, new(), new()); Markup.BindMarkup(styleHooks, pictures);
-        var markupHooks = new StyleTextMarkupHooks { Sound = sound };
+        var pictures = new Markup(Fragments, _pictureState, _pictureHooks); Markup.BindMarkup(styleHooks, pictures);
+        _pictureHooks.Color = () => (_activePicture?.Color ?? throw new InvalidOperationException("본문 그림 실제 출력 색표 문맥 없음"))();
+        _pictureHooks.Shape = request => (_activePicture?.Shape ?? throw new InvalidOperationException("본문 그림 실제 출력 표면 문맥 없음"))(request);
+        var markupHooks = _markupHooks; markupHooks.Sound = sound;
         StyleTextMarkup.BindStyleTextMarkupPalette(markupHooks, screen.Colors());
-        var commands = new StyleTextMarkup(Fragments, pictures, new(), markupHooks); commands.Hooks(styleHooks);
+        var commands = new StyleTextMarkup(Fragments, pictures, _markupState, markupHooks); commands.Hooks(styleHooks);
         var style = Style = new StyleText(Fragments, styleHooks); var bufferHooks = new StyleTextBufferHooks();
         StyleTextBuffer.BindStyleTextBufferFonts(bufferHooks, font); StyleTextBuffer.BindStyleTextBufferMarkup(bufferHooks, pictures);
         Buffers = new StyleTextBufferStore(Fragments, style, bufferHooks, token =>
@@ -150,9 +152,9 @@ public sealed class HostHtmlText
         {
             GumpDraw.SetGumpDrawClip(_clip, new(0, 0, _screen.Width, _screen.Height));
             var target = new GumpPixelTarget(pixels, _screen.Pitch, _screen.Height, _clip);
-            _activeText = new GumpTextDraw(_tree.Fonts, GumpTextDraw.MakeGumpGlyphPixelHooks(target, new()));
+            var colors = new GumpGlyphColorState(); _activeText = new GumpTextDraw(_tree.Fonts, GumpTextDraw.MakeGumpGlyphPixelHooks(target, colors));
             var draw = new GumpDraw(_tree.Collection, _clip, new() { Draw = Text.Draw });
-            draw.Draw(token);
+            WithPictureDraw(target, colors.VfxColors, () => draw.Draw(token));
         }
         finally { _activeText = null; _screen.Unlock(); }
         _screen.Update(_tree.Collection.Bounds(token));

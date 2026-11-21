@@ -76,11 +76,11 @@ public sealed class HostGumpDrawing
                         background.Draw(token); break;
                 }
             } });
-            _text.WithTextDraw(glyph, () =>
+            _text.WithTextDraw(glyph, () => _text.WithPictureDraw(target, colors.VfxColors, () =>
             {
                 // 수집된 모든 표시 항목을 같은 정렬 결과의 순서대로 한 번씩 분배한다.
                 for (int i = 0; i < count; i++) dispatch.Draw(entries[i].Token);
-            });
+            }));
         }
         finally { _screen.Unlock(); }
         _screen.Update(view);

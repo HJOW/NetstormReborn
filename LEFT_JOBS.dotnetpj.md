@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-21 · 사용자 재개 지시로 진행 중 · 마지막 완료0.772(전체5457검사/동일빌드65시작) · 다음0.773 실제 Chat UI 공장 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6 병행) · cpppj 제품1323 / 11.01 · 전체 목표 미완료**
+**2026-11-21 · 사용자 재개 지시로 진행 중 · 마지막 완료0.773(실제 스타일 그림 자산/출력) · 다음0.774 실제 Chat UI 공장 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6 병행) · cpppj 제품1323 / 11.01 · 전체 목표 미완료**
 
 현행 인계는 이 문서가 기준이다. 단위별 근거는 `docs/dotnet-canon-0NNN-*.md`이다. 0.645~0.732의 단위별 완료 문장, 0.640 회귀 점검 상세, 0.546~0.676 완료 기록 원문은 [0.732 정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0732)에 있다. 0.600~0.635는 [0.635 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635), 0.613까지의 경과와 파일 계열별 체크 목록은 [0.613 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)에 있다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
@@ -20,13 +20,13 @@
 
 ### 0.1 재개 순서와 최근 완료 요약
 
-**재개 순서(2026-11-21).** 0.772 정기 전체 회귀5457건·동일빌드65시작 모두 통과했다. 원본1392파일/빌드6파일 불변, DN31경로 전체바이트와34경로 지표0.768일치·0.771대표3바이트 일치·기존394fixture 전수 유지다. M1은0/34 유지다. [0.772 근거](docs/dotnet-canon-0772-20261121.md)
+**재개 순서(2026-11-21).** 0.773에서 Chat helper 선행 공통 그림 자산/출력을 연결했다. 신규3건 포함 집중68건 통과·자산116개와 모든 논리 프레임의 독립 판독 대조·실제 본문/메뉴 아이콘 출력·대표3시작 종료0/0.772 전체바이트 일치·원본1392파일 불변·기존394fixture 전수 유지다. [0.773 근거](docs/dotnet-canon-0773-20261121.md)
 
-1. **0.773 실제 공통 Chat UI 공장.** ChatWindow 전체 부모(0.770)와 기하/표시·실제 Host 프레임말 요청(0.769)을 같은 실제 공통 Tree/Console/로그/메뉴에 설치한다. 전체 자식 가상 분배·Enter의 Root 입력 호출자와 제출 소비자, 현재 전송/수신 설치를 잇는다. HTML 자식 추적/공유 로그 반납과 공통 도움말 문자열 소유권은0.771 완료다. 일반 조합/명시 패킷/Host flow는0.766, 장기 공유 상태/뉴스 부모/실제 편집기 대상·완성은0.767 완료다. 공유 로그의 실제 UI 공장 설치와 뉴스 수신 호출도 남았다. 앞선 단위의 원문 본체와 실제 장기 소유자를 재사용한다. 이어 나머지 Root 기본 장치를 연결한다. Native Frame/Root UI 수집·그리기와 실제 지도 provider, 전체 커서 효과/Drop/Previews/Position 호출자, SavedCameraKey/무효점·CameraCommit/Present/Pan은 남았다. 실제 MapViewRect가 없는 HostMainMenu는 뷰 소비에서 명시 실패한다. 전체 Native 시작의 intro/장면음악/나머지 지도 초기화와 Guide Init, 음향/저장/옵션/전체 EnergySupply, non-mine Notify의 실제 DataManager/추출 부모, NSInfo HUD/메타UI/Root reply 저장도 후속이다. RawFileName 나머지 조회·BaseFile 고리·ClientStaticStrings는 해당 소비자에서 잇는다.
+1. **0.774 실제 공통 Chat UI 공장.** ChatWindow 전체 부모(0.770)와 기하/표시·실제 Host 프레임말 요청(0.769)을 같은 실제 공통 Tree/Console/로그/메뉴에 설치한다. 전체 자식 가상 분배·Enter의 Root 입력 호출자와 제출 소비자, 현재 전송/수신 설치를 잇는다. HTML 자식 추적/공유 로그 반납과 공통 도움말 문자열 소유권은0.771, 실제 그림 자산/본문·메뉴 출력은0.773 완료다. 공장 초안4개는 extracted/dotnet-0772/에 보존했고 제품 미적용/미검증이다. Native 색표7 getter/zone 옵션 변경 부모와 세션 자산 InBattle 최초 상태도 후속에서 원문과 맞춘다. 일반 조합/명시 패킷/Host flow는0.766, 장기 공유 상태/뉴스 부모/실제 편집기 대상·완성은0.767 완료다. 공유 로그의 실제 UI 공장 설치와 뉴스 수신 호출도 남았다. 앞선 단위의 원문 본체와 실제 장기 소유자를 재사용한다. 이어 나머지 Root 기본 장치를 연결한다. Native Frame/Root UI 수집·그리기와 실제 지도 provider, 전체 커서 효과/Drop/Previews/Position 호출자, SavedCameraKey/무효점·CameraCommit/Present/Pan은 남았다. 실제 MapViewRect가 없는 HostMainMenu는 뷰 소비에서 명시 실패한다. 전체 Native 시작의 intro/장면음악/나머지 지도 초기화와 Guide Init, 음향/저장/옵션/전체 EnergySupply, non-mine Notify의 실제 DataManager/추출 부모, NSInfo HUD/메타UI/Root reply 저장도 후속이다. RawFileName 나머지 조회·BaseFile 고리·ClientStaticStrings는 해당 소비자에서 잇는다.
 2. **같은 작업 줄기.** MetaZone 원문 본체124입력은0.734, 실제Client표/현재Runtime pin·설치된가상분배전달은0.735 완료다. 현재 HostSession의 전체 Native World 자산 가상 삭제 분배 설치는 아직 미연결이며 일반 삭제의 Pre/Post 완료로 대신하지 않는다. [0.733](docs/dotnet-canon-0733-20261121.md) · [0.734](docs/dotnet-canon-0734-20261121.md) · [0.735](docs/dotnet-canon-0735-20261121.md). 이어서 [R4 체크](#r4-detail)→R11과 후순위 요구사항을 진행한다. 다음 정기 전체 회귀는0.776이다.
-3. **사용자 제외 검사 유지.** 실제 포획/희생·특정 적 공격·시나리오 승리는 재현하지 않고 사용자 수동 확인으로 남긴다. 원본1,392파일의 마지막 불변 확인은0.772 전체65시작이다.
+3. **사용자 제외 검사 유지.** 실제 포획/희생·특정 적 공격·시나리오 승리는 재현하지 않고 사용자 수동 확인으로 남긴다. 원본1,392파일의 마지막 불변 확인은0.773 대표3시작이며 전체65시작은0.772이다.
 
-**최근 완료 요약(0.639~0.772).** 단위별 완료 문장과 집중 검사 수는 보관본과 각 단위 문서에 있다. 완료 범위와 남은 일의 기준은 1.1·1.2절 체크 항목이다.
+**최근 완료 요약(0.639~0.773).** 단위별 완료 문장과 집중 검사 수는 보관본과 각 단위 문서에 있다. 완료 범위와 남은 일의 기준은 1.1·1.2절 체크 항목이다.
 
 | 주제 | 단위 | 핵심 | 남은 일 |
 | --- | --- | --- | --- |
@@ -55,6 +55,7 @@
 | 실제 Chat 기하/프레임 요청 | 0.769 | 같은네자식/3960관측·실제Tree/로그·프레임말 전환소비 | 전체창/가상분배·Enter Root입력 |
 | ChatWindow 전체 부모 | 0.770 | 같은실제Console/버퍼·생성/입력/helper/수명·180관측/166부분집합/기존2292유지 | 실제 UI 공장/소유권·자식분배/Enter·송수신 |
 | 공통 UI 소유권/문자열 | 0.771 | 같은Tree/실제Console 하위 owner·61100000 소유 문자열·548758 반납 | 전체Chat 공장/가상분배·Root입력/송수신 |
+| 실제 스타일 그림 자산/출력 | 0.773 | 최초TYPE188/자산116·같은본문/메뉴·실제8비트 그림 출력 | Native색표7/옵션변경 부모·전체Chat 공장 |
 | 정기 전체 회귀·L2 | 0.644부터 4단위마다(0.772까지) | 매회 실패 0·65실행 종료 0·원본 불변·M1 0/34 유지. 수집으로 드러난 미연결·순서 회귀를 0.644(AI 색 프레임·펜스)·0.680(플레어 분배)·0.684(시작 음향 순서)·0.688(Carrier 통지)에서 교정. 전체 검사 4,686건(0.644) → 5,457건(0.772) | 다음0.776 |
 
 <a id="first-run"></a>
@@ -152,6 +153,7 @@ AGENTS.md 2026-11-19 추가(`d047bf9a3`)로 `Netstorm.exe`의 아이콘은 기�
   - 완료(실제 Chat 기하/프레임 요청,0.769): 같은 네자식/3960관측과 실제 Host Tree/로그/현재모드·프레임말 전환 요청이다. 전체 창/자식 가상분배와 Enter의 Root 입력 호출자는 남았다. [0.769](docs/dotnet-canon-0769-20261121.md)
   - 완료(ChatWindow 전체 부모,0.770): 같은 실제 Console/버퍼의 생성/입력/helper/수명과180관측/기본166부분집합·기존2292유지다. 실제 공통 UI 공장/소유권·자식 가상분배/Enter Root와 송수신은 남았다. [0.770](docs/dotnet-canon-0770-20261121.md)
   - 완료(공통 UI 소유권/문자열,0.771): 같은Tree의 중첩/예외 owner·실제Console 하위 자식/문자열 scalar 반납·548758 공유 로그 반납 추적이다. 전체 Chat 공장/가상분배·Root 입력/송수신은 남았다. [0.771](docs/dotnet-canon-0771-20261121.md)
+  - 완료(실제 스타일 그림 자산/출력,0.773): 같은 최초TYPE/정의/SHP·본문/controlled 메뉴와 실제 픽셀/색표 문맥이다. Native 색표7/옵션 변경 부모와 전체Chat 공장/입력·송수신은 남았다. [0.773](docs/dotnet-canon-0773-20261121.md)
   - 완료(독립 커서 데이터·수명,0.749): Take/Cancel/Activate와 자산 어댑터·고정 데이터의1575원본입력 대조다. 실제 Gameplay 커서/checking owner와 위치 준비/렌더러/Root Cancel 설치는 위 남은 범위다. [0.749](docs/dotnet-canon-0749-20261121.md)
 - [ ] **R4-7 데모와 보류 검사.** `StartDemo` 3경로 덤프, `player-world-x86.tsv` 1,680행, F3에서 미룬 Fort/지형 바인딩·미션 Fort 경로·로그인 객체 전송·미션 재적재 검사를 잇는다.
 - [ ] **R4-8 M1 판정.** 같은 시드·고정 프레임·빈 사용자 루트로 34/34 상태 일치. 로드 뒤 프레임 진행에서만 생기는 차이는 cpp 후속 프레임 덤프로 입증한 뒤 R6으로 넘긴다.
@@ -174,7 +176,7 @@ AGENTS.md 2026-11-19 추가(`d047bf9a3`)로 `Netstorm.exe`의 아이콘은 기�
 
 ### 1.3 앞 단계에서 이월한 작업
 
-- [ ] **R3 UI.** `ParseDialogPage`·`ConfigOverwriteAndQueueLifetime` 잔여와 MessageGump, 맵/파일/기술 목록·Guide·모달·명령 소유자, HTML 그림과 QuickHelp TYPE/AST, Console/클립보드/Save as/숫자 창/ChatWindow, 배경 GIF 노드·창, 하위 화면 라벨과 실제 명령 소비.
+- [ ] **R3 UI.** `ParseDialogPage`·`ConfigOverwriteAndQueueLifetime` 잔여와 MessageGump, 맵/파일/기술 목록·Guide·모달·명령 소유자, QuickHelp TYPE/AST, Console/클립보드/Save as/숫자 창/ChatWindow, 배경 GIF 노드·창, 하위 화면 라벨과 실제 명령 소비. HTML/스타일 그림의 실제 자산/본문·메뉴 출력은0.773 완료이며 Native 색표7/옵션 변경 부모는 후속이다.
 - [ ] **R2 화면 통합.** 실자산·그리기 결선과 구름 카메라·시간 이동·dirty 갱신·구름 파일 fallback(R5). 빠른 물리 입력 이력과 옵션 변경 중 소리 수명은 R6.
 - [ ] **파일·호스트 경계.** `--set` 중복 처리 차이, `MatchDisk` 절대/긴 경로, Linux `WriteAtomic`·`ReadOnly`, 이름 정규화·옛 인코딩, Fort 이름/Template 소유자·Save as는 해당 소비자를 옮길 때 대조한다. CD 슬롯 폭·경계의 하네스와 기존 단위의 예외·할당·복사 경계는 보관본 2.6과 단위 문서를 참조한다.
 

@@ -1352,3 +1352,7 @@ cpppj/src/client/ChatWindow.cpp	Netstorm.Client/Gump/ChatWindow.cs	09fd17306b6cb
 cpppj/src/client/RawMenuControls.cpp	Netstorm.Client/Gump/GumpButtonTree.Ownership.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
 cpppj/src/client/RawMenuChat.inc	Netstorm.Client/Host/HostHtmlWindows.cs	cf3babe1a6b47c4b959eb44af38560e80f023095	port
 cpppj/src/client/RawMenuChat.inc	Netstorm.Client/Host/HostHtmlText.cs	cf3babe1a6b47c4b959eb44af38560e80f023095	port
+cpppj/src/client/Markup.cpp	Netstorm.Client/Gump/MarkupGameAssets.cs	169ceadd5b816330874eaa86661a91f76b762080	port
+cpppj/src/client/StyleTextMarkup.cpp	Netstorm.Client/Gump/MarkupGameAssets.cs	b810ebe013128fcac1387008b58ff956c220d2b9	port
+cpppj/src/client/RawMenuControls.cpp	Netstorm.Client/Host/HostHtmlText.Pictures.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
+cpppj/src/client/RawMenuControls.cpp	Netstorm.Client.Host/ClientHostGame.TextPictures.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
