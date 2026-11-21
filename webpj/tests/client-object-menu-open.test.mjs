@@ -13,10 +13,10 @@ function scene(vtable) {
     // 원본 풀의 클라이언트 번호 5 를 실제로 확보한 뒤 슬롯 바이트를 쓴다.
     const pool = new SidPool(24000, { server: true }), sid = pool.allocate(2), raw = pool.allocated(sid); new DataView(raw.buffer, raw.byteOffset, raw.byteLength).setUint32(0, vtable, true); raw[10] = 3; raw[40] = 0;
     const types = Array.from({ length: 188 }, () => ({ flags2: 0, range: 1 })), calls = [];
-    const world = { session: () => ({ core: () => ({ pool, types }) }) };
+    const world = { session: () => ({ core: () => ({ pool, types }) }), openSelectionMenu: (object, event, archer, common) => { calls.push(['selection', object, archer]); return common(object, event); } };
     const writer = { beginFancy: () => calls.push('fancy'), currentWidth: () => 100, attachObject: (object, x, y) => calls.push(['attach', object, x, y]) };
     const summary = { summary: (object) => calls.push(['summary', object]) };
-    const objects = { open: (object) => calls.push(['open', object]), openDamageable: (object) => calls.push(['damageable', object]), openVariant: (object, populate) => calls.push(['variant', object, populate]) };
+    const objects = { open: (object) => calls.push(['open', object]), openDamageable: (object) => calls.push(['damageable', object]), openVariant: (object, populate) => calls.push(['variant', object, populate]), openCarrier: (object) => calls.push(['carrier', object]) };
     const devices = { altar: () => 0, delegate: () => 0, project: () => [10, 10], content: () => 0, range: () => 1, screenWidth: () => 1024, sound: (name) => calls.push(['sound', name]) };
     return { opener: new ClientObjectMenuOpen(world, writer, summary, objects, devices), calls, sid, raw };
 }
@@ -37,13 +37,29 @@ test('공통 객체 열기: Factory·사제 같은 다른 가상 표와 빈 SID 
 });
 
 // 신전(4dcca0)·배터리(41c210)·발전기(485600) 같은 파생 본체는 공통 열기(+ac 4adb30)에서 파생 작성(openVariant)을 쓴다. 이전에는 지원하지 않아 우클릭해도 메뉴가 열리지 않았다. (2026-11-20 WB04-E1127)
-test('공통 객체 열기: 파생 본체 일곱 주소는 파생 작성을 쓰고 열기가 다른 파생(Archer 41e660 등)은 계속 지원하지 않는다', () => {
+test('공통 객체 열기: 파생 본체 일곱 주소는 파생 작성을 쓴다', () => {
     for (const populate of [0x0041c210, 0x00422000, 0x00462390, 0x00462550, 0x00485600, 0x0048eca0, 0x004dcca0]) {
         const vtable = table(populate, 0x004adb30); assert.ok(vtable, `슬롯 ${populate.toString(16)}`);
         const variant = scene(vtable); assert.equal(variant.opener.supports(variant.sid), true, populate.toString(16));
         assert.equal(variant.opener.open(variant.sid, { code: 0x20000, x: 5, y: 6 }), 1); assert.deepEqual(variant.calls.find((call) => call[0] === 'variant'), ['variant', variant.sid, populate]);
         assert.deepEqual(variant.calls.map((call) => Array.isArray(call) ? call[0] : call), ['fancy', 'summary', 'variant', 'attach', 'sound']);
     }
-    // Archer·Detonate 계열(+a8 420b30, +ac 41e660)은 열기가 달라 이 열기에서 지원하지 않는다.
-    const archer = scene(table(0x00420b30, 0x0041e660)); assert.equal(archer.opener.supports(archer.sid), false);
+});
+
+// Archer(+a8 420b30 Detonate!, +ac 41e660)는 같은 선택 관문(archer=true)을 지난 뒤 공통 열기로 파생 작성을 쓴다. 이전에는 열기가 달라 우클릭해도 메뉴가 열리지 않았다. (2026-11-21 WB04-E1138)
+test('공통 객체 열기: Archer(41e660)는 선택 관문(archer)을 지나 파생 작성(420b30)으로 열린다', () => {
+    const archer = scene(table(0x00420b30, 0x0041e660)); assert.equal(archer.opener.supports(archer.sid), true);
+    assert.equal(archer.opener.open(archer.sid, { code: 0x20000, x: 7, y: 8 }), 1);
+    assert.deepEqual(archer.calls.map((call) => Array.isArray(call) ? call[0] : call), ['selection', 'fancy', 'summary', 'variant', 'attach', 'sound']);
+    assert.deepEqual(archer.calls[0], ['selection', archer.sid, true]); assert.deepEqual(archer.calls.find((call) => call[0] === 'variant'), ['variant', archer.sid, 0x00420b30]);
+});
+
+// 운반체(Bulf·Walker, +a8 4288f0, +ac 4268c0)는 같은 선택 관문(archer=false)을 지난 뒤 공통 열기로 운반체 작성(openCarrier)을 쓴다. (2026-11-21 WB04-E1138)
+test('공통 객체 열기: 운반체(4268c0)는 선택 관문(carrier)을 지나 운반체 작성(4288f0)으로 열린다', () => {
+    const carrier = scene(table(0x004288f0, 0x004268c0)); assert.equal(carrier.opener.supports(carrier.sid), true);
+    assert.equal(carrier.opener.open(carrier.sid, { code: 0x20000, x: 9, y: 10 }), 1);
+    assert.deepEqual(carrier.calls.map((call) => Array.isArray(call) ? call[0] : call), ['selection', 'fancy', 'summary', 'carrier', 'attach', 'sound']);
+    assert.deepEqual(carrier.calls[0], ['selection', carrier.sid, false]);
+    // 건설 중(+28 bit0)인 운반체는 선택 관문 뒤 열기에서 거부되어 메뉴·효과음이 없다.
+    const building = scene(table(0x004288f0, 0x004268c0)); building.raw[40] = 1; assert.equal(building.opener.open(building.sid, { code: 0, x: 1, y: 1 }), 0); assert.equal(building.calls.some((call) => call === 'sound'), false);
 });
