@@ -52,6 +52,7 @@ import { BrowserInputPoll } from './platform/browser-input-poll.js';
 import { queueBrowserMouseEvent } from './platform/browser-mouse-events.js';
 import { queueBrowserVirtualKeyEvent, queueBrowserCharacterEvent } from './platform/browser-key-events.js';
 import { DETONATE_BOMB_COMMAND, dispatchDetonateInput } from './core/detonate-input.js';
+import { dispatchRotationKeyInput } from './core/rotation-key-input.js';
 import { VORTEX_COMMANDS, dispatchVortexCommandInput } from './core/vortex-command-input.js';
 import { dispatchScenarioObjectInput, isScenarioObjectCommand } from './core/scenario-object-input.js';
 import { InputCode, InputQueue } from './core/input-queue.js';
@@ -896,6 +897,13 @@ export class Netstorm {
     // 현재 설정의 useBanners(섬 소유자 표식 숨김)를 소유자 색표 저장소에 적용한다(원본 `Client::InterpretOwnerColorOptions` → `SetEnabled(GetInt("useBanners"))`). 설정에 값이 없으면 원본 Config 처럼 0 이라 소유자 색 표식(섬 테두리 파랑 등)을 보인다. 색표 준비 전이면 무시된다. (2026-11-20 WB04-E1093)
     _syncClientOwnerColorOptions() {
         if (this._clientColorSort && this._gameData && this._clientKencloud) this._clientColorSort.ownerTables.setEnabled(this._gameData.readInt('useBanners', 0).value >>> 0, this._clientKencloud.worldRedraw());
+    }
+
+    // 원본 InterpretCursorOptions(cpppj Client::InterpretCursorOptions): 설정을 해석할 때마다 회전 방향을 0 으로 먼저 쓰고 `rotmode` 를 읽는다(누락이면 0, 부호 있는 전체 비트 보존).
+    // 설정(옵션 메뉴 "Counterclockwise Piece Rotation"·C 키)이 바뀌어도 회전 방향 전역이 갱신되지 않아 반시계 회전이 동작하지 않았다. (2026-11-21 WB04-E1151)
+    _syncClientCursorOptions() {
+        const globals = this._clientGameplay?.cursorGlobals?.(); if (!globals || !this._gameData) return;
+        globals.rotationMode().value = this._gameData.readInt('rotmode', 0).value >>> 0;
     }
 
     // 실제 게임 자산에서 장기 물리를 만들고 같은 Client 권한·시각·Kernel과 진단을 연결한다.
@@ -1793,11 +1801,12 @@ export class Netstorm {
             const code = (next.code & 0x03ffffff) >>> 0, release = Boolean(next.code & InputCode.release);
             // 선택 키: P/R(사제)·N(다음 운반체)·H(집으로 점프, 원본 도움말 "F4 or H Jump to your Home Temple"). H 가 빠져 있어 F4 만 집으로 점프했다. (2026-11-21 WB04-E1146)
             // 객체 가상 6c 로 가는 명령: 신전 세 명령·시나리오 객체 다섯 명령(MakeMine·InflictDamage·DestroyPiece·TurnToObelisk·Meltdown)·DetonateBomb. 큐에서 소비하지 못하면 이후 입력이 막힌다. (2026-11-21 WB04-E1150)
+            const rotationKey = code === 0x43 || code === 0x63;
             const objectCommand = VORTEX_COMMANDS.includes(code) || isScenarioObjectCommand(code) || code === DETONATE_BOMB_COMMAND;
             const selectionKey = code === 0x50 || code === 0x70 || code === 0x52 || code === 0x72 || code === 0x4e || code === 0x6e || code === 0x48 || code === 0x68;
             const productionKey = 'qwaszyxe'.includes(String.fromCharCode(code).toLowerCase()) && code < 256;
             const cursorCancel = code === 0x1b, cursorRotate = code === 0x250000 || code === 0x270000, gameTimeKey = code === 0x54 || code === 0x74;
-            const unsupported = (code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_F6 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !MISSION_VIEW_KEYS.has(code) && code !== MISSION_F9 && !TUTORIAL_NOTICE_COMMANDS.has(code) && !isGameMenuCommand(code) && !isSendMoneyCommand(code) && !objectCommand && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && !gameTimeKey && code !== InputCode.leftButton && code !== InputCode.rightButton);
+            const unsupported = (code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_F6 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !MISSION_VIEW_KEYS.has(code) && code !== MISSION_F9 && !TUTORIAL_NOTICE_COMMANDS.has(code) && !isGameMenuCommand(code) && !isSendMoneyCommand(code) && !objectCommand && !rotationKey && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && !gameTimeKey && code !== InputCode.leftButton && code !== InputCode.rightButton);
             if (unsupported) {
                 // 미구현 사건 앞을 추월하지 않는다. 다만 처리하지 못하는 사건이 3초(벽 시각) 넘게 큐 머리에 남으면 이후 모든 입력이 영구히 막히므로 오류로 기록하고 버린다. (2026-11-21 WB04-E1150)
                 const key = `${next.code}:${next.x}:${next.y}`, wall = this._gameClock.wallSeconds();
@@ -1841,6 +1850,15 @@ export class Netstorm {
                 const packed = event.y >>> 0; world.session().commandFactory(packed & 0xffff, event.code, packed);
             }
             else if (code === PRODUCTION_BRIDGE_COMMAND && !release && !this._mainMenu?.dialog) this._dispatchCampaignBridgeProduction(event);
+            else if (rotationKey) {
+                // 원본 C/c 키: 회전 방향을 반전해 설정(rotmode)에 기록한다(정지 중이면 소비만). 대화창이 열려 있으면 처리하지 않는다. (2026-11-21 WB04-E1151)
+                if (!this._mainMenu?.dialog) {
+                    const rotation = this._clientGameplay.cursorGlobals().rotationMode();
+                    dispatchRotationKeyInput(event, { get mode() { return rotation.value >>> 0; }, set mode(value) { rotation.value = value >>> 0; } },
+                        { paused: () => this._gameClock.paused(), configure: (assignment) => applyScriptConfig(assignment, (key, value) => this._applyCampaignConfig(key, value)) });
+                    this._displayDirty = true;
+                }
+            }
             else if (objectCommand) {
                 // 원본 UberGump 의 일반 입력 순서(신전 → 시나리오 객체 → Detonate)로 현재 객체의 가상 6c 에 전달한다. 반환값은 다음 입력에 쓰지 않는다.
                 const session = world.session();
@@ -2071,7 +2089,7 @@ export class Netstorm {
             this._syncClientCloudOptions(); this._syncClientHelpWord();
             if (!this._clientPaletteScreen) this._initializeClientPalette(this._gameAssets);
             if (!this._clientColorSort.mapsReady) this._initializeClientPaletteCache(this._gameAssets);
-            this._syncClientOwnerColorOptions();
+            this._syncClientOwnerColorOptions(); this._syncClientCursorOptions();
             if (!this._clientGump) this._initializeClientGump();
             if (!this._clientGuide) this._initializeClientGuide();
             await this.options.prepare(this);
@@ -2281,13 +2299,13 @@ export class Netstorm {
         if (key === 'sound' || key === 'music' || key === 'soundVolume' || key === 'musicVolume' || key === 'swapLeftRightSpeakers') this._applySettings();
         const value = this._settings?.get(key);
         if (value !== undefined) this._gameData?.set(key, value, { silent: true });
-        this._syncClientCloudOptions(); this._syncClientHelpWord(); this._syncClientOwnerColorOptions();
+        this._syncClientCloudOptions(); this._syncClientHelpWord(); this._syncClientOwnerColorOptions(); this._syncClientCursorOptions();
     }
 
     // 게임 데이터 설정 층에 쓴 값을 저장소로 옮긴다(원본에서는 메인 루프가 변경 표시를 보고 options.cfg 를 저장한다). 진행 값(`Done*`)은 진행 저장소에,
     // 설정 키(대소문자 무시)는 설정 저장소에 넣어 로컬 저장소에 바로 저장한다. 그 밖의 값(`global.` 실행 중 값 등)은 저장하지 않는다. (2026-10-30 WB03-H)
     _onConfigWrite(key, value) {
-        this._syncClientCloudOptions(); this._syncClientHelpWord(); this._syncClientOwnerColorOptions();
+        this._syncClientCloudOptions(); this._syncClientHelpWord(); this._syncClientOwnerColorOptions(); this._syncClientCursorOptions();
         if (isProgressKey(key)) {
             this._progress?.set(key, value);
             return;
@@ -2303,7 +2321,7 @@ export class Netstorm {
         if (!data || !this._settings || !this._progress) return;
         // 설정과 진행 값을 하나씩 옮긴다.
         for (const [key, value] of Object.entries({ ...this._settings.snapshot(), ...this._progress.snapshot() })) data.set(key, value, { silent: true });
-        this._syncClientCloudOptions(); this._syncClientHelpWord();
+        this._syncClientCloudOptions(); this._syncClientHelpWord(); this._syncClientCursorOptions();
     }
 
     // 현재 설정(소리 켜짐·음악 켜짐·음량 단계)을 재생기에 적용한다. 음악을 다시 켠 경우 메인 메뉴 곡을 이어 재생한다. (2026-10-29 WB03-F)
@@ -3187,7 +3205,7 @@ export class Netstorm {
         }
         // 문자 키 허용 목록에 H(집으로 점프)를 더했다. 전에는 H 가 큐에 들어가지 않아 F4 만 집으로 점프했다. (2026-11-21 WB04-E1146)
         // ESC 는 조각을 들고 있으면 취소, 아니면 게임 메뉴막대 전환이므로 항상 큐에 넣고 입력 프레임이 판단한다. (2026-11-20 WB04-E1084)
-        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && !event.isComposing && !this._clientComposing && !event.ctrlKey && !event.altKey && !event.metaKey && (/^[hnprqwaszyxet]$/iu.test(event.key ?? '') || event.key === 'Escape')) queueBrowserCharacterEvent(this._clientInputQueue, event, this._input.pointer);
+        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && !event.isComposing && !this._clientComposing && !event.ctrlKey && !event.altKey && !event.metaKey && (/^[chnprqwaszyxet]$/iu.test(event.key ?? '') || event.key === 'Escape')) queueBrowserCharacterEvent(this._clientInputQueue, event, this._input.pointer);
         if (PREVENTED_KEYS.has(event.code)) event.preventDefault();
         this._retryAudioOnGesture();
         // 미리보기의 키 정책은 게임 명령과 분리한다. Escape는 메뉴로 돌아가며 방향키는 카메라만 바꾼다. (2026-11-02 WB03-AA)

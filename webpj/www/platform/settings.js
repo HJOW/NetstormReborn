@@ -35,6 +35,8 @@ export const SETTING_DEFINITIONS = Object.freeze({
     tellTips: Object.freeze({ kind: 'toggle', fallback: 1 }),
     // 섬 소유자 표식 숨김(F7·View 메뉴)이다. 설정에 키가 없으면 원본 Config GetInt 처럼 0(소유자 색 표식을 보임)이다. (2026-11-20 WB04-E1093)
     useBanners: Object.freeze({ kind: 'toggle', fallback: 0 }),
+    // 반시계 방향 조각 회전(옵션 메뉴 Counterclockwise Piece Rotation·C 키)이다. 원본 options.cfg 의 rotmode 이며 키가 없으면 0(시계 방향)이다. 저장되지 않아 재시작하면 사라지던 것을 설정 키로 올렸다. (2026-11-21 WB04-E1151)
+    rotmode: Object.freeze({ kind: 'toggle', fallback: 0 }),
     // 프레임 상한(maxFPS, 60·75·120 선택)이다. 키가 없거나 0 이면 원본 기본 75 로 해석한다(core/frame-rate-option.js). (2026-11-20 WB04-E1094)
     maxFPS: Object.freeze({ kind: 'integer', fallback: 0 }),
     // 언어 선택이다. 0 은 자동(?lang, 없으면 브라우저 언어), 1 은 English, 2 는 한국어이며 옵션 메뉴 Language 가 쓰고 다시 불러 적용한다(platform/language-choice.js). (2026-11-20 WB04-E1095)

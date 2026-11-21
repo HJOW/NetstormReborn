@@ -45,7 +45,7 @@ test('최초 실행과 기존 사용자 설정·진행의 재실행', async ({ p
   expect(await page.evaluate(() => window.netstorm._mainMenu.dialog)).toBeNull();
   // 스커미시 설정(skirmish*)은 스커미시 화면이 저장한 기본값이 항상 채워지므로 이 시험의 비교에서 뺀다. (2026-11-21 WB04-E1134)
   expect(await page.evaluate(() => Object.fromEntries(Object.entries(window.netstorm._settings.snapshot()).filter(([key]) => !key.startsWith('skirmish'))))).toEqual({ sound: 1, music: 1, playWind: 1, swapLeftRightSpeakers: 0,
-    soundVolume: 5, musicVolume: 5, edgeScroll: 1, autoDemo: 1, tellTips: 1, useBanners: 0, maxFPS: 0, language: 0, difficulty: 0, welcomeGiven: 1, tipNumber: 0 });
+    soundVolume: 5, musicVolume: 5, edgeScroll: 1, autoDemo: 1, tellTips: 1, useBanners: 0, rotmode: 0, maxFPS: 0, language: 0, difficulty: 0, welcomeGiven: 1, tipNumber: 0 });
   // 효과음·음악 하위 메뉴의 실제 체크를 읽고 기존 사용자 값 3·2를 UI로 저장한다.
   for (const [label, selected] of [['Sound Effect Volume', 'Volume 3'], ['Music Volume', 'Volume 2']]) {
     await clickLabel(page, 'Options');

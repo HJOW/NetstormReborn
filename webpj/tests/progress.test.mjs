@@ -185,6 +185,17 @@ test('findSettingKey: 대소문자 무시로 설정 키만 찾는다', () => {
     assert.equal(findSettingKey(''), null);
 });
 
+// 반시계 방향 조각 회전(rotmode)은 저장되는 설정 키이다: 대소문자 무시로 찾고 0/1 로만 받으며 기본 0(시계 방향)이다. 옵션 토글·C 키 값이 재시작 뒤에도 남는다. (2026-11-21 WB04-E1151)
+test('rotmode: 저장되는 토글 설정 키(기본 0)이다', () => {
+    assert.equal(findSettingKey('ROTMODE'), 'rotmode');
+    const storage = { map: new Map(), getItem(key) { return this.map.get(key) ?? null; }, setItem(key, value) { this.map.set(key, String(value)); }, removeItem(key) { this.map.delete(key); } };
+    const settings = new Settings({ storage });
+    assert.equal(settings.get('rotmode'), 0);
+    assert.equal(settings.set('rotmode', '1'), true);
+    assert.equal(new Settings({ storage }).get('rotmode'), 1);
+    assert.equal(settings.set('rotmode', 2), false);
+});
+
 // 새 게임 데이터를 만든다(Tell 목록이 설정 객체를 등록하므로 검사마다 따로 만든다). (2026-10-30 WB03-H)
 function newData(options = {}, onChange = null) {
     return GameData.build({ files, language: 'english', options: { soundVolume: 3, musicVolume: 2, ...options }, onChange });
