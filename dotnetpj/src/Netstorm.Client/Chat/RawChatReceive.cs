@@ -136,6 +136,12 @@ public static class ChatReceiveBody
     public static void ReceiveChatPacket(uint chat, byte[] packet, ChatReceiveHooks hooks)
     {
         ArgumentNullException.ThrowIfNull(packet);
+        ReceiveChatPacket(chat, packet.AsSpan(), hooks);
+    }
+
+    /// <summary>호출자가 소유한 부분 버퍼를 복사하지 않고 읽고 고친다. 콜백 뒤에는 같은 현재 물리를 다시 읽는다.</summary>
+    public static void ReceiveChatPacket(uint chat, Span<byte> packet, ChatReceiveHooks hooks)
+    {
         ArgumentNullException.ThrowIfNull(hooks);
         uint Global(uint address) => Need(hooks.Read)(address);
         if (Read(packet, 0, 1) > 3u)
@@ -267,6 +273,12 @@ public static class ChatReceiveBody
     public static void DispatchChatPacket(byte[] packet, ChatReceiveHooks hooks)
     {
         ArgumentNullException.ThrowIfNull(packet);
+        DispatchChatPacket(packet.AsSpan(), hooks);
+    }
+
+    /// <summary>현재 창이 없으면 빈 부분 버퍼도 읽지 않는다. 창이 있으면 같은 물리를 수신 본체에 빌린다.</summary>
+    public static void DispatchChatPacket(Span<byte> packet, ChatReceiveHooks hooks)
+    {
         ArgumentNullException.ThrowIfNull(hooks);
         uint chat = Need(hooks.Read)(0x548740u);
         if (chat != 0u)

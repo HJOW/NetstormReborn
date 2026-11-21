@@ -171,5 +171,7 @@
     <None Include="../../../cpppj/tests/fixtures/chat-window-base-x86.tsv" Link="X86/chat-window-base-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- 일반 헤더 뒤의 원문 중계132관측을 사본 없이 같은 실제 패킷/마스크에 대조한다. -->
     <None Include="../../../cpppj/tests/fixtures/chat-relay-x86.tsv" Link="X86/chat-relay-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- 일반 헤더 뒤의 수신 원문238관측을 실제 전체 패킷/효과 순서로 대조한다. -->
+    <None Include="../../../cpppj/tests/fixtures/chat-receive-x86.tsv" Link="X86/chat-receive-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>
