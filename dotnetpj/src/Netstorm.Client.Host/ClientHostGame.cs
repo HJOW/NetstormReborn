@@ -212,6 +212,7 @@ public sealed partial class ClientHostGame : Game
             _buttonSound?.Dispose();
             ReleaseNativeRenderer();
             _cursor?.Dispose();
+            _packetRecord?.Dispose();
         }
         base.Dispose(disposing);
     }

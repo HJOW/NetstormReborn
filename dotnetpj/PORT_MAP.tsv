@@ -1371,3 +1371,7 @@ cpppj/src/client/UberHud.inc	Netstorm.Client/Host/HostChatReceive.cs	16431ec18a3
 cpppj/src/client/UberHud.inc	Netstorm.Client.Host/ClientHostGame.ChatReceive.cs	16431ec18a3f7518d7aaa55929b280ab1cc6a8fb	port
 cpppj/src/client/UberHud.inc	Netstorm.Client.Host/HostMissionAudio.cs	16431ec18a3f7518d7aaa55929b280ab1cc6a8fb	port
 cpppj/src/client/UberGump.cpp	Netstorm.Client/Host/HostHtmlWindows.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
+cpppj/src/client/ClientPacketRecord.cpp	Netstorm.Client.Host/ClientPacketRecord.cs	af1fbf6c134c1d525b30898d4f8917d5787e1f30	port
+cpppj/src/client/ClientPacketRecord.h	Netstorm.Client.Host/ClientPacketRecord.cs	af1fbf6c134c1d525b30898d4f8917d5787e1f30	port
+cpppj/src/client/ClientMain.cpp	Netstorm.Client.Host/ClientHostGame.PacketRecord.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
+cpppj/src/client/ClientMain.h	Netstorm.Client.Host/ClientHostGame.PacketRecord.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
