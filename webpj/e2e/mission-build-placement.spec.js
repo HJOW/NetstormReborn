@@ -4,6 +4,11 @@
 // 신전은 이미 신전을 가진 미션(The War Begins!)에서는 원본처럼 비활성이라 신전이 없는 Tutorial2 에서, 워크샾·제단은 The War Begins! 에서 확인한다.
 const { test, expect } = require('@playwright/test');
 
+// 화면비를 환경 변수 NETSTORM_E2E_ASPECT('4:3' 기본, '16:9', '16:10')로 고른다. 화면비별 브라우저 크기이다. 예: `$env:NETSTORM_E2E_ASPECT='16:9'; npx playwright test e2e/mission-build-placement.spec.js`. (2026-11-21 WB04-E1143)
+const ASPECT = process.env.NETSTORM_E2E_ASPECT ?? '4:3';
+const VIEWPORTS = { '4:3': { width: 1024, height: 768 }, '16:9': { width: 1280, height: 720 }, '16:10': { width: 1280, height: 800 } };
+if (!VIEWPORTS[ASPECT]) throw new Error(`지원하지 않는 화면비 ${ASPECT}`);
+
 // 실제 돌 버튼의 논리 좌표를 브라우저 마우스 좌표로 바꿔 누른다.
 async function clickLabel(page, label) {
   await page.waitForFunction((text) => Boolean(window.netstorm?._mainMenu?.controlPoint(text)), label, { timeout: 30000 });
@@ -20,7 +25,7 @@ async function startMission(page, group, mission) {
     localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } }));
     const done = {}; for (const name of ['Tutorial1', 'Tutorial2', 'Tutorial3', 'Tutorial4', 'Tutorial5', 'Tutorial6']) done[`Done${name}`] = '1'; localStorage.setItem('netstorm.progress', JSON.stringify({ version: 1, values: done }));
   });
-  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/?aspect=4:3');
+  await page.setViewportSize(VIEWPORTS[ASPECT]); await page.goto(`/?aspect=${ASPECT}`);
   await page.waitForFunction(() => window.netstorm?.state === 'clickToStart'); await page.locator('canvas').click();
   await page.waitForFunction(() => window.netstorm?.state === 'mainMenu');
   await clickLabel(page, 'Campaign'); await clickLabel(page, group);
@@ -30,11 +35,14 @@ async function startMission(page, group, mission) {
   await closeDialogs(page);
 }
 
-// 열려 있는 안내 창을 마지막(주) 단추로 모두 닫고 시계가 흐를 때까지 기다린다.
+// 열려 있는 안내 창을 마지막(주) 단추로 닫고, 창이 없고 게임 시계가 흐를 때까지 반복한다. 안내 창 사이의 짧은 빈 순간(다음 창이 곧 열림)에 끝나지 않도록
+// 창이 없어도 시계가 멈춰 있으면 기다린다. 화면비에 따라 프레임 타이밍이 달라 한 번 훑는 방식은 16:9 에서 멈춘 채 끝났다. (2026-11-21 WB04-E1143)
 async function closeDialogs(page) {
-  for (let index = 0; index < 10; index += 1) {
-    const button = await page.evaluate(() => window.netstorm._mainMenu.dialog?.buttons?.at(-1)?.label ?? null);
-    if (button === null) break; await clickLabel(page, button); await page.waitForTimeout(500);
+  for (let index = 0; index < 40; index += 1) {
+    const state = await page.evaluate(() => ({ button: window.netstorm._mainMenu.dialog?.buttons?.at(-1)?.label ?? null, paused: window.netstorm._gameClock.paused() }));
+    if (state.button !== null) { await clickLabel(page, state.button); await page.waitForTimeout(500); continue; }
+    if (!state.paused) { await page.waitForTimeout(400); if (!(await page.evaluate(() => window.netstorm._gameClock.paused() || Boolean(window.netstorm._mainMenu.dialog)))) return; continue; }
+    await page.waitForTimeout(500);
   }
   await page.waitForFunction(() => !window.netstorm._gameClock.paused(), null, { timeout: 20000 });
 }
@@ -69,28 +77,34 @@ async function pickBuilding(page, path) {
   return { priest, type };
 }
 
-// 캔버스에서 미리보기 테두리(흰색 또는 빨간색 1픽셀 선)의 바깥 범위를 읽는다. 맵 영역(x≥85)만 보며, 눈 지형의 흩어진 순백 픽셀을 피하려고
-// 가로로 80픽셀 넘게, 또는 세로로 50픽셀 넘게 이어진 선만 센다(변 하나가 지형에 가려져도 나머지 변으로 범위를 잡는다).
+// 논리 화면 버퍼(팔레트 번호)에서 미리보기 테두리(흰색 basic[7]·빨간색 basic[1] 1픽셀 선, 원본 goodColor/badColor)의 바깥 범위를 논리 좌표로 읽는다. 맵 영역(x≥85)만 본다.
+// 표시 캔버스는 화면비에 따라 줄어들어 선 색이 번지므로(16:9 등) 번지지 않는 버퍼를 쓴다. 지형의 흩어진 같은 색을 피하려고 가로 80픽셀·세로 50픽셀 넘게 같은 번호가 이어진 선만 센다.
+// (변 하나가 지형에 가려져도 나머지 변으로 범위를 잡는다.) 마우스 좌표도 논리 좌표로 돌려 함께 반환한다. (2026-11-21 WB04-E1143)
 const previewBox = (page) => page.evaluate(() => {
-  const canvas = window.netstorm.canvas, data = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data; let minX = 1e9, minY = 1e9, maxX = -1, maxY = -1, count = 0;
-  const isBox = (x, y) => { const at = (y * canvas.width + x) * 4, r = data[at], g = data[at + 1], b = data[at + 2]; return (r === 255 && g === 255 && b === 255) || (r > 180 && g < 60 && b < 60); };
-  // 한 줄(가로 또는 세로)에서 최소 길이 이상 이어진 구간의 양 끝을 범위에 더한다.
+  const app = window.netstorm, surface = app._surface, width = surface.width, height = surface.height, data = surface.pixels, basic = app._clientPaletteScreen.colors().basic, good = basic[7] & 255, bad = basic[1] & 255; let minX = 1e9, minY = 1e9, maxX = -1, maxY = -1, count = 0;
+  // 상자 색이 아닌 번호는 -1 로 보아 같은 번호가 길게 이어진 지형·HUD 영역을 상자로 오인하지 않는다.
+  const at = (x, y) => { const value = data[y * width + x]; return value === good || value === bad ? value : -1; };
+  // 한 줄(가로 또는 세로)에서 같은 번호가 minRun 이상 이어진 구간의 양 끝을 범위에 더한다.
   const take = (fixed, from, length, minRun, horizontal) => {
-    let run = 0;
-    for (let at = from; at <= length; at += 1) {
-      if (at < length && (horizontal ? isBox(at, fixed) : isBox(fixed, at))) { run += 1; continue; }
-      if (run >= minRun) {
-        count += run; const start = at - run, end = at - 1;
+    let run = 0, last = -1;
+    for (let index = from; index <= length; index += 1) {
+      const value = index < length ? (horizontal ? at(index, fixed) : at(fixed, index)) : -2;
+      if (value === last) { run += 1; continue; }
+      if (run >= minRun && last !== -1) {
+        count += run; const start = index - run, end = index - 1;
         if (horizontal) { minX = Math.min(minX, start); maxX = Math.max(maxX, end); minY = Math.min(minY, fixed); maxY = Math.max(maxY, fixed); }
         else { minY = Math.min(minY, start); maxY = Math.max(maxY, end); minX = Math.min(minX, fixed); maxX = Math.max(maxX, fixed); }
       }
-      run = 0;
+      run = 1; last = value;
     }
   };
-  for (let y = 0; y < canvas.height; y += 1) take(y, 85, canvas.width, 80, true);
-  for (let x = 85; x < canvas.width; x += 1) take(x, 0, canvas.height, 50, false);
+  for (let y = 0; y < height; y += 1) take(y, 85, width, 80, true);
+  for (let x = 85; x < width; x += 1) take(x, 0, height, 50, false);
   return { count, minX, minY, maxX, maxY };
 });
+
+// 브라우저(CSS) 좌표를 논리 화면 좌표로 바꾼다.
+const toLogical = (page, point) => page.evaluate(({ x, y }) => { const app = window.netstorm, rect = app.canvas.getBoundingClientRect(); return { x: (x - rect.left) * app._layout.logicalWidth / rect.width, y: (y - rect.top) * app._layout.logicalHeight / rect.height }; }, point);
 
 // 사제 주변을 훑어 유효한 자리를 찾고, 그 자리에서 미리보기 테두리 중심이 마우스에 가까운지 확인한 뒤 클릭해 건물이 하나 늘고 완성되는지 본다.
 async function placeAndBuild(page, name, { priest, type }, outputPath) {
@@ -104,9 +118,9 @@ async function placeAndBuild(page, name, { priest, type }, outputPath) {
     if (await legal()) { spot = { x, y }; box = await previewBox(page); break; }
   }
   expect(spot, `${name} 유효한 건설 자리`).toBeTruthy(); expect(box.count, `${name} 미리보기 테두리 가로선 픽셀 ${JSON.stringify(box)}`).toBeGreaterThan(60);
-  const centerX = (box.minX + box.maxX) / 2, centerY = (box.minY + box.maxY) / 2;
-  expect(Math.abs(centerX - spot.x), `${name} 미리보기 가로 위치(마우스 ${spot.x}, 중심 ${centerX})`).toBeLessThan(140);
-  expect(Math.abs(centerY - spot.y), `${name} 미리보기 세로 위치(마우스 ${spot.y}, 중심 ${centerY})`).toBeLessThan(140);
+  const centerX = (box.minX + box.maxX) / 2, centerY = (box.minY + box.maxY) / 2, mouse = await toLogical(page, spot);
+  expect(Math.abs(centerX - mouse.x), `${name} 미리보기 가로 위치(마우스 ${mouse.x}, 중심 ${centerX})`).toBeLessThan(140);
+  expect(Math.abs(centerY - mouse.y), `${name} 미리보기 세로 위치(마우스 ${mouse.y}, 중심 ${centerY})`).toBeLessThan(140);
   // 근본 확인: 미리보기·비용 표시가 쓰는 화면 원점이 살아 있는 카메라 픽셀 원점과 같아야 한다(값 사본이면 항상 0).
   const origin = await page.evaluate(() => { const app = window.netstorm, placement = app._clientGameplay.cursorGlobals().placement(), pixels = app._clientGameplay.camera().snapshot().pixels; return { placement: [placement.screenOriginX(), placement.screenOriginY()], camera: [pixels.x, pixels.y] }; });
   expect(origin.placement, `${name} 화면 원점`).toEqual(origin.camera);
@@ -180,10 +194,12 @@ test('The War Begins!: 비활성 Temple 행에도 하위 메뉴 표식이 어두
   await page.mouse.move(row.x, row.y); await page.mouse.click(row.x, row.y, { delay: 60 });
   await page.waitForFunction((child) => { const node = window.netstorm._clientGump.node(child); return node && (node.flags & 1) && !node.expanding; }, row.child, { timeout: 10000 }); await page.waitForTimeout(400);
   // 첫 행(Temple)에서 어두운 갈색 픽셀이 가로로 퍼진 범위를 잰다. 글자만이면 약 40, 표식까지 있으면 약 49픽셀이다.
+  // 논리 화면 버퍼에서 어두운 갈색 이름 색 (47,24,17) 의 팔레트 번호만 센다(표시 캔버스는 화면비에 따라 줄어 색이 번진다). (2026-11-21 WB04-E1143)
   const span = await page.evaluate((child) => {
-    const app = window.netstorm, r = app._clientGump, node = r.node(child), bounds = r.collection().bounds(child), canvas = app.canvas, data = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data;
+    const app = window.netstorm, r = app._clientGump, node = r.node(child), bounds = r.collection().bounds(child), surface = app._surface;
+    const dim = app._clientPaletteScreen.colors().named.find((color) => color.red === 47 && color.green === 24 && color.blue === 17).index & 255;
     const top = Math.round(bounds.top + node.offsets[0]), bottom = Math.round(top + node.heights[0]); let minX = 1e9, maxX = -1;
-    for (let y = top; y < bottom; y += 1) for (let x = Math.round(bounds.left); x < Math.round(bounds.right); x += 1) { const at = (y * canvas.width + x) * 4; if (data[at] < 80 && data[at + 1] < 50 && data[at + 2] < 40) { if (x < minX) minX = x; if (x > maxX) maxX = x; } }
+    for (let y = top; y < bottom; y += 1) for (let x = Math.round(bounds.left); x < Math.round(bounds.right); x += 1) { if (surface.pixels[y * surface.width + x] === dim) { if (x < minX) minX = x; if (x > maxX) maxX = x; } }
     return maxX - minX;
   }, row.child);
   expect(span, 'Temple 행 어두운 픽셀 가로 범위(글자 + 표식)').toBeGreaterThanOrEqual(46);
