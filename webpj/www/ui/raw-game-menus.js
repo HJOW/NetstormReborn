@@ -132,7 +132,8 @@ export class RawGameMenus {
             // 원본은 후속 번역·하위 효과 전에 체크를 저장한다. 이름은 +c 의 최대 32BYTE 첫 NUL 까지다.
             const checked = word(player, 0x50) & 0x21; let length = 0; while (length < 32 && player[0xc + length]) length += 1;
             if (length === 32) throw new RangeError('원본 Player 이름의 NUL 누락');
-            const label = String.fromCharCode(...player.subarray(0xc, 0xc + length));
+            // 이름 바이트는 한국어·일본어 확장 문자를 4바이트 시퀀스로 담은 표시 부호화이므로 장치가 있으면 디코딩한다(없으면 원문 바이트 그대로의 Latin-1 문자열). (2026-11-21 WB04-E1166: 한국어 이름이 깨져 보였다)
+            const nameBytes = player.subarray(0xc, 0xc + length), label = typeof hooks.decodeName === 'function' ? hooks.decodeName(nameBytes) : String.fromCharCode(...nameBytes);
             const enabled = this.#global(G.observer + owner) === 0, child = need(hooks.playerMenu, '게임 메뉴의 Player 하위 연결 누락')(word(player, 0x2c));
             hooks.submenu(label, child, enabled ? 1 : 0, checked);
         }

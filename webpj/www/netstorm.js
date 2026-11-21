@@ -1566,6 +1566,8 @@ export class Netstorm {
             // 옵션 메뉴 Frame Rate 하위 항목(60·75·120 FPS)이다. (2026-11-20 WB04-E1094)
             frameRates: () => frameRateChoices(this._settings?.get('maxFPS')), languages: () => languageChoices(this.options.language), difficulties: () => difficultyChoices(this._settings?.get('difficulty')),
             player: (owner) => session.playerRecords().subarray(owner * 180, owner * 180 + 180),
+            // Player 이름은 표시 부호화 바이트이므로 한국어 이름이 깨지지 않게 디코딩한다. (2026-11-21 WB04-E1166)
+            decodeName: (bytes) => displayTextCodec.decode(Uint8Array.from(bytes)),
             refreshPriest: (owner) => session.refreshPriestParticipation(owner),
             enabled: (code) => WIRED_MENU_COMMANDS.has(code >>> 0), configEnabled: () => true, storeText: (value) => this._clientChatWindows.store(value),
             about: () => this._resources.translate('About'), technicalHelp: () => 0, width: () => this._layout.logicalWidth,

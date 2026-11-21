@@ -39,7 +39,9 @@ export class ClientGameMenuBar {
         }
         // Game·View·Options·Players 부모의 현재 게임 경계다.
         Object.assign(menus, { global: (address) => devices.global(address), translate: (key) => devices.translate(key), config: (key) => devices.config(key), demo: () => devices.demo(),
-            player: (owner) => devices.player(owner), refreshPriest: (owner) => devices.refreshPriest(owner), playerMenu: (subscriber) => devices.playerMenu(subscriber), enabled: (code) => devices.enabled(code), configEnabled: (key) => devices.configEnabled?.(key) ?? true });
+            player: (owner) => devices.player(owner), refreshPriest: (owner) => devices.refreshPriest(owner), playerMenu: (subscriber) => devices.playerMenu(subscriber), enabled: (code) => devices.enabled(code), configEnabled: (key) => devices.configEnabled?.(key) ?? true,
+            // 선택 장치: Player 이름 바이트를 표시 문자열로 바꾼다(한국어·일본어 확장 문자). (2026-11-21 WB04-E1166)
+            ...(typeof devices.decodeName === 'function' ? { decodeName: (bytes) => devices.decodeName(bytes) } : {}) });
         // 프레임 상한(Frame Rate) 하위 메뉴 항목 장치다. 없으면 하위 메뉴를 만들지 않는다. (2026-11-20 WB04-E1094)
         if (typeof devices.frameRates === 'function') menus.frameRates = () => devices.frameRates();
         // 언어(Language) 하위 메뉴 항목 장치다. 없으면 하위 메뉴를 만들지 않는다. (2026-11-20 WB04-E1095)
@@ -75,7 +77,9 @@ export class ClientGameMenuBar {
     openPlayerList() {
         const devices = this.#devices, menus = {}; this.#menu.bindGameMenus({}, menus, devices.storeText);
         Object.assign(menus, { global: (address) => devices.global(address), translate: (key) => devices.translate(key), config: (key) => devices.config(key), demo: () => devices.demo(),
-            player: (owner) => devices.player(owner), refreshPriest: (owner) => devices.refreshPriest(owner), playerMenu: (subscriber) => devices.playerMenu(subscriber), enabled: (code) => devices.enabled(code), configEnabled: (key) => devices.configEnabled?.(key) ?? true });
+            player: (owner) => devices.player(owner), refreshPriest: (owner) => devices.refreshPriest(owner), playerMenu: (subscriber) => devices.playerMenu(subscriber), enabled: (code) => devices.enabled(code), configEnabled: (key) => devices.configEnabled?.(key) ?? true,
+            // 선택 장치: Player 이름 바이트를 표시 문자열로 바꾼다(한국어·일본어 확장 문자). (2026-11-21 WB04-E1166)
+            ...(typeof devices.decodeName === 'function' ? { decodeName: (bytes) => devices.decodeName(bytes) } : {}) });
         return new RawGameMenus(menus).players(true);
     }
     // 열린 막대와 펼쳐진 하위 메뉴를 지운다. 열려 있지 않으면 아무것도 하지 않는다.
