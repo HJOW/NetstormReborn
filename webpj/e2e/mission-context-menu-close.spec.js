@@ -2,6 +2,11 @@
 // 원본 UberGump 는 Gump 가 소비하지 않은 좌·우 버튼 누름을 팝업 닫기로 처리한 뒤 같은 사건을 월드로 넘긴다. 연결 전에는 메뉴를 연 채 바깥을 눌러도 메뉴가 남았다.
 const { test, expect } = require('@playwright/test');
 
+// 화면비를 환경 변수 NETSTORM_E2E_ASPECT('4:3' 기본, '16:9', '16:10')로 고른다. 화면비별 브라우저 크기이다. (2026-11-21 WB04-E1144)
+const ASPECT = process.env.NETSTORM_E2E_ASPECT ?? '4:3';
+const VIEWPORTS = { '4:3': { width: 1024, height: 768 }, '16:9': { width: 1280, height: 720 }, '16:10': { width: 1280, height: 800 } };
+if (!VIEWPORTS[ASPECT]) throw new Error(`지원하지 않는 화면비 ${ASPECT}`);
+
 // 실제 돌 버튼의 논리 좌표를 브라우저 마우스 좌표로 바꿔 누른다.
 async function clickLabel(page, label) {
   await page.waitForFunction((text) => Boolean(window.netstorm?._mainMenu?.controlPoint(text)), label, { timeout: 30000 });
@@ -19,7 +24,7 @@ test('우클릭 컨텍스트 메뉴는 바깥을 좌·우클릭하면 닫히고 
     localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } }));
     const done = {}; for (const name of ['Tutorial1', 'Tutorial2', 'Tutorial3', 'Tutorial4', 'Tutorial5', 'Tutorial6']) done[`Done${name}`] = '1'; localStorage.setItem('netstorm.progress', JSON.stringify({ version: 1, values: done }));
   });
-  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/?aspect=4:3');
+  await page.setViewportSize(VIEWPORTS[ASPECT]); await page.goto(`/?aspect=${ASPECT}`);
   await page.waitForFunction(() => window.netstorm?.state === 'clickToStart'); await page.locator('canvas').click();
   await page.waitForFunction(() => window.netstorm?.state === 'mainMenu');
   // The War Begins! 를 시작하고 안내 창을 모두 닫는다.
