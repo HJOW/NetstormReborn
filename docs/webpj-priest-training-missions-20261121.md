@@ -22,6 +22,10 @@
 - 장시간 진행(`campaign-long-run.spec.js`, E1158): Priest Training 아홉 미션을 150초씩 이어 진행해(26분) 오류 없이 통과했다. 이 e2e 도 `autoDemo: 0` 과 실제 대본 이름 확인을 더해 Auto-Demo 에 속지 않는다.
 - 객체 우클릭 전수 점검 추가: bc8fury76·bc9ssun_bars76 도 선택 가능한 모든 객체가 메뉴를 열었고 오류가 없었다(bc6mows76 은 큰 장면에서 조사용 픽셀 스캔이 시간 초과, 게임 오류 아님).
 
+## 몽키 점검 (E1165)
+
+무작위 클릭·키·메뉴 조작(`monkey.spec.js`, 시드 고정)을 Priest Training 세 미션(bc2bridging76·bc3acid_bar76·bc7sun_bars76)과 The War Begins! 에서 150초씩 돌려 오류·입력 먹통 없이 통과했다(10.6분). 키 목록에 새로 연결한 U·D·숫자·Shift+숫자·Pause·Ctrl-F5 를 더했고 `autoDemo: 0` 으로 미션이 시작되지 않았을 때 Auto-Demo 가 대신 도는 거짓 진행을 막는다.
+
 ## 성능 참고 (E1160, 헤드리스 Chromium 4:3)
 
 큰 장면에서 우클릭 전수 점검이 시간 초과(bc6mows76·FinalConfrontation)된 것이 게임 성능 문제인지 확인했다. 점검 스크립트가 객체 종류마다 화면 전체(약 2만 지점)에 `world.pick` 을 부르는 방식이라 느린 것이었다.
