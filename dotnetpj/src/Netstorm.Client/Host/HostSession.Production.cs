@@ -44,6 +44,8 @@ public sealed partial class HostSession
     private RawCarrierContentNotice? _worldCarrierContent;
     /// <summary>현재 실제 정렬 부착과 같은 부모 제거 통지다.</summary>
     private RawContentFormHost? _worldContentForms;
+    /// <summary>같은 생산 Form과 자산 수신이 현재 UI 통지에 공유하는 실제 종속 종단이다.</summary>
+    private RawSquidContainedUnpop? _worldContentDetach;
     /// <summary>AI와 생산이 함께 사용하는 현재 내용물 역할/권한 뷰다.</summary>
     private ContainedFinderState? _worldProductionFinder;
     /// <summary>현재 생산 Deck을 빌린다. 반납 뒤에는 기존 Player에 접근하지 않는다.</summary>
@@ -156,7 +158,7 @@ public sealed partial class HostSession
                 Assertion = text => throw new InvalidOperationException($"연구 원본 진단: {text}"),
             });
             _worldProductionDeck = deck; _worldProductionTotals = totals; _worldProduction = production;
-            _worldPlayerContent = playerNotice; _worldCarrierContent = carrierNotice; _worldContentForms = forms; _worldResearch = research;
+            _worldPlayerContent = playerNotice; _worldCarrierContent = carrierNotice; _worldContentForms = forms; _worldContentDetach = detach; _worldResearch = research;
             return production;
         }
         catch { deck.Dispose(); throw; }
@@ -189,6 +191,6 @@ public sealed partial class HostSession
         if (_worldProductionDeck is not { } deck) return;
         if (!deck.PlayerLinksReturnedForState) deck.ReturnPlayerLinksForState(deck.CleanupPlayerLinksForState(() => PlayerRecords));
         deck.Dispose(); _worldProductionDeck = null; _worldProductionTotals = null; _worldProduction = null;
-        _worldResearch = null; _worldPlayerContent = null; _worldCarrierContent = null; _worldContentForms = null; _worldProductionFinder = null;
+        _worldResearch = null; _worldPlayerContent = null; _worldCarrierContent = null; _worldContentForms = null; _worldContentDetach = null; _worldProductionFinder = null;
     }
 }

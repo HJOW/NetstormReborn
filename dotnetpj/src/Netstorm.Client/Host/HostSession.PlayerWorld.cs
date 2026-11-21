@@ -179,6 +179,7 @@ public sealed partial class HostSession
         ReleaseBurningWorld();
         ReleasePriestWorld();
         ReleaseProductionWorld();
+        ReleaseSquidPacketDevices();
         _reservedPlayerRegular = null;
         _playerProcessUse?.Dispose(); _playerProcessUse = null;
         _playerProcessCurrent?.SetTarget(null!); _playerProcessCurrent = null;

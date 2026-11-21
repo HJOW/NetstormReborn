@@ -1402,3 +1402,12 @@ cpppj/src/o/RawSquidVerification.h	Netstorm.Core/Original/RawSquidVerification.c
 cpppj/src/o/RawSquidCompressedReceive.cpp	Netstorm.Core/Original/RawSquidCompressedReceive.cs	96904de5937963c5a55989f70272d7362b2ce210	port
 cpppj/src/o/RawSquidCompressedReceive.h	Netstorm.Core/Original/RawSquidCompressedReceive.cs	96904de5937963c5a55989f70272d7362b2ce210	port
 cpppj/src/o/RawSquidWord.h	Netstorm.Core/Original/RawSquidWord.cs	36dbd6600acf8f002073a9acc39faea106387cf6	port
+cpppj/src/o/RawSquidName.cpp	Netstorm.Core/Original/RawSquidName.cs	8ee7666b4782554ff743204e2a067ebaab2ed2c7	port
+cpppj/src/o/RawSquidName.h	Netstorm.Core/Original/RawSquidName.cs	8ee7666b4782554ff743204e2a067ebaab2ed2c7	port
+cpppj/src/o/SquidNameVtables.inc	Netstorm.Core/Original/RawSquidName.Entries.cs	9388cd633d44b69329f7e60f2b1bee9c17b1c66d	port
+cpppj/src/client/RawSurfaceWorld.cpp	Netstorm.Core/Original/RawSquidBaseAttach.cs	c102cdbf36fca4e8661d0699ea2ce5f2f44b2934	port
+cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSquidBaseAttach.cs	14fd017c3b6ca87880374e044e3ac00bf0575c2e	port
+cpppj/src/client/RawSurfaceWorld.cpp	Netstorm.Core/Original/RawSurfaceWorld.Attach.cs	c102cdbf36fca4e8661d0699ea2ce5f2f44b2934	port
+cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceWorld.Attach.cs	14fd017c3b6ca87880374e044e3ac00bf0575c2e	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.SquidPackets.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
+cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.SquidPackets.cs	bda77381e54bc382937c720047ee4441086b46d7	port
