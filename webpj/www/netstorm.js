@@ -53,6 +53,8 @@ import { queueBrowserMouseEvent } from './platform/browser-mouse-events.js';
 import { queueBrowserVirtualKeyEvent, queueBrowserCharacterEvent } from './platform/browser-key-events.js';
 import { DETONATE_BOMB_COMMAND, dispatchDetonateInput } from './core/detonate-input.js';
 import { dispatchRotationKeyInput } from './core/rotation-key-input.js';
+import { dispatchConstructionHistoryKey, dispatchLostPositionKey, initializeConstructionHistory } from './core/construction-history-key.js';
+import { captureSavedCameraCenter, dispatchSavedCameraKey, initializeSavedCameraPositions } from './core/saved-camera-key.js';
 import { VORTEX_COMMANDS, dispatchVortexCommandInput } from './core/vortex-command-input.js';
 import { dispatchScenarioObjectInput, isScenarioObjectCommand } from './core/scenario-object-input.js';
 import { InputCode, InputQueue } from './core/input-queue.js';
@@ -270,6 +272,10 @@ const FONT_FAMILY = `"${KOREAN_FONT_FAMILY}", "Malgun Gothic", "Segoe UI", monos
 
 // 게임 Canvas 가 포커스를 가졌을 때 브라우저의 기본 동작(스크롤 등)을 막을 키 코드 집합이다.
 // 게임 루트가 입력을 소유하는 범위로만 한정하며, Tab 은 키보드 이동을 막지 않도록 제외한다. (2026-10-23 WB01)
+// 저장 화면 위치 키(숫자 0~9, Shift+숫자의 영어 기호 `)!@#$%^&*(`)의 문자 코드 집합이다. 원본 입력 루프의 같은 키를 TAB·U 와 함께 카메라 키로 분류한다. (2026-11-21 WB04-E1154)
+const SAVED_CAMERA_CHARACTERS = '0123456789!@#$%^&*()';
+const SAVED_CAMERA_CODES = new Set([...SAVED_CAMERA_CHARACTERS].map((character) => character.charCodeAt(0)));
+
 const PREVENTED_KEYS = new Set([
     'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space', 'PageUp', 'PageDown', 'Home', 'End',
 ]);
@@ -846,6 +852,8 @@ export class Netstorm {
         const local = new ClientLocalStateGlobals(), clock = new ClientFrameClock(source, local.gameTicks());
         const cloud = new ClientKencloudGlobals(), html = new ClientHtmlWindowGlobals(), connections = new ClientConnectionGlobals(local), activity = new ClientConnectionActivityGlobals();
         const subscriber = new ClientSubscriberGlobals(), gameplay = new ClientGameplayGlobals(subscriber), fort = new ClientFortGlobals();
+        // 원본 ClientMain 의 최초 초기화(00439928·0043994c): 저장 화면 위치 10칸과 최근 건설 위치 5칸을 무효 좌표(-10000)로 쓴다. 미션·Renderer 교체에서는 다시 쓰지 않는다. 초기화가 없으면 저장하지 않은 숫자 키가 (0, 0) 으로 이동했다. (2026-11-21 WB04-E1154)
+        initializeSavedCameraPositions(gameplay.camera().savedPositions()); initializeConstructionHistory(gameplay.camera().constructionHistory());
         const chatRecords = new Uint8Array(CHAT_RECORD_BYTES), chatChannels = new RawChatChannels(chatRecords, () => subscriber.mySubscriber().value);
         const coreData = new ClientCoreDataGlobals(), players = new ClientPlayerRecords(), templates = new CampaignTemplateStorage();
         const soundNames = new SoundList(); soundNames.initialize();
@@ -1781,6 +1789,26 @@ export class Netstorm {
         actions.handle(event.code, event.x, event.y);
     }
 
+    // TAB(최근 건설 위치 순환)·U(최근 손실 위치로 이동)·숫자 키(저장한 화면 위치 호출)·Shift+숫자(현재 화면 중심 저장)를 원본 UberGump 의 순서대로 현재 카메라 전역에 전달한다(cpppj UberGump.cpp 1740~1757행).
+    // 이력·저장 칸·손실 좌표는 Client 장기 전역이며 미션이 바뀌어도 이어진다. 정지 중이면 소비만 하고, 저장은 선택음 뒤의 현재 지도 중심을 쓴다. 카메라 이동은 미니맵 클릭과 같은 중심 요청이다. (2026-11-21 WB04-E1154: 세 분배기가 앱에 연결돼 있지 않아 TAB·U·숫자 키가 동작하지 않았다)
+    _dispatchCampaignCameraKey(event) {
+        const game = this._clientGameplay, world = this._campaignWorld, camera = game.camera();
+        const paused = () => this._gameClock.paused(), cells = () => game.worldCells().value;
+        const center = (x, y) => { world.centerCamera(x, y); this._clientRenderer.invalidateAll(); };
+        const lost = game.gameAux().lostPosition();
+        if (dispatchConstructionHistoryKey(event, camera.constructionHistory(), cells, { paused, center })) return true;
+        if (dispatchLostPositionKey(event, () => lost[0], () => lost[1], cells, { paused, center })) return true;
+        return dispatchSavedCameraKey(event, camera.savedPositions(), {
+            paused, center, language: () => (this.options.language === 'korean' ? 7 : 0),
+            sound: () => { this._clientSoundPlayer.play(this._clientSoundNames.lookup('select.wav'), 0, 0, 0, 0, 0); },
+            // 선택음 뒤의 현재 지도 영역과 렌더러 시점으로 지도 중심(칸 좌표)을 구한다. 칸 크기는 카메라 상태의 정수 칸 픽셀(+8·+12)을 float 으로 본 값이다.
+            capture: () => {
+                const view = camera.rendererView(), map = world.mapView(), bits = new DataView(new ArrayBuffer(4)), cellBits = (offset) => { bits.setFloat32(0, view.data.getInt32(offset, true), true); return bits.getUint32(0, true); };
+                return captureSavedCameraCenter({ pixels: [view.pixels.x, view.pixels.y], cellFloatBits: [cellBits(8), cellBits(12)] }, [map.left, map.top, map.right, map.bottom]);
+            },
+        });
+    }
+
     // 현재 포인터 폴링과 지원된 큐 사건을 Guide→Gump→World 순서로 처리한다.
     _runCampaignInputFrame() {
         const world = this._campaignWorld, queue = this._clientInputQueue, tutorial = this._clientGuide?.current()?.runtime.tutorial, gump = this._clientGump, user = this._campaignUserInput;
@@ -1802,11 +1830,13 @@ export class Netstorm {
             // 선택 키: P/R(사제)·N(다음 운반체)·H(집으로 점프, 원본 도움말 "F4 or H Jump to your Home Temple"). H 가 빠져 있어 F4 만 집으로 점프했다. (2026-11-21 WB04-E1146)
             // 객체 가상 6c 로 가는 명령: 신전 세 명령·시나리오 객체 다섯 명령(MakeMine·InflictDamage·DestroyPiece·TurnToObelisk·Meltdown)·DetonateBomb. 큐에서 소비하지 못하면 이후 입력이 막힌다. (2026-11-21 WB04-E1150)
             const rotationKey = code === 0x43 || code === 0x63;
+            // 카메라 키: TAB(9)·U(0x55/0x75)·저장 화면 위치 숫자/기호. 수정키는 `next.code` 의 높은 비트이며 `code` 에는 없다. (2026-11-21 WB04-E1154)
+            const cameraKey = code === 9 || code === 0x55 || code === 0x75 || SAVED_CAMERA_CODES.has(code);
             const objectCommand = VORTEX_COMMANDS.includes(code) || isScenarioObjectCommand(code) || code === DETONATE_BOMB_COMMAND;
             const selectionKey = code === 0x50 || code === 0x70 || code === 0x52 || code === 0x72 || code === 0x4e || code === 0x6e || code === 0x48 || code === 0x68;
             const productionKey = 'qwaszyxe'.includes(String.fromCharCode(code).toLowerCase()) && code < 256;
             const cursorCancel = code === 0x1b, cursorRotate = code === 0x250000 || code === 0x270000, gameTimeKey = code === 0x54 || code === 0x74;
-            const unsupported = (code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_F6 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !MISSION_VIEW_KEYS.has(code) && code !== MISSION_F9 && !TUTORIAL_NOTICE_COMMANDS.has(code) && !isGameMenuCommand(code) && !isSendMoneyCommand(code) && !objectCommand && !rotationKey && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && !gameTimeKey && code !== InputCode.leftButton && code !== InputCode.rightButton);
+            const unsupported = (code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_F6 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !MISSION_VIEW_KEYS.has(code) && code !== MISSION_F9 && !TUTORIAL_NOTICE_COMMANDS.has(code) && !isGameMenuCommand(code) && !isSendMoneyCommand(code) && !objectCommand && !rotationKey && !cameraKey && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && !gameTimeKey && code !== InputCode.leftButton && code !== InputCode.rightButton);
             if (unsupported) {
                 // 미구현 사건 앞을 추월하지 않는다. 다만 처리하지 못하는 사건이 3초(벽 시각) 넘게 큐 머리에 남으면 이후 모든 입력이 영구히 막히므로 오류로 기록하고 버린다. (2026-11-21 WB04-E1150)
                 const key = `${next.code}:${next.x}:${next.y}`, wall = this._gameClock.wallSeconds();
@@ -1850,6 +1880,10 @@ export class Netstorm {
                 const packed = event.y >>> 0; world.session().commandFactory(packed & 0xffff, event.code, packed);
             }
             else if (code === PRODUCTION_BRIDGE_COMMAND && !release && !this._mainMenu?.dialog) this._dispatchCampaignBridgeProduction(event);
+            else if (cameraKey) {
+                // 대화창이 열려 있으면 처리하지 않는다. 키 뗌은 분배기가 소비하지 않고 큐에서는 그대로 버린다.
+                if (!release && !this._mainMenu?.dialog) { this._dispatchCampaignCameraKey(event); this._displayDirty = true; }
+            }
             else if (rotationKey) {
                 // 원본 C/c 키: 회전 방향을 반전해 설정(rotmode)에 기록한다(정지 중이면 소비만). 대화창이 열려 있으면 처리하지 않는다. (2026-11-21 WB04-E1151)
                 if (!this._mainMenu?.dialog) {
@@ -3205,7 +3239,16 @@ export class Netstorm {
         }
         // 문자 키 허용 목록에 H(집으로 점프)를 더했다. 전에는 H 가 큐에 들어가지 않아 F4 만 집으로 점프했다. (2026-11-21 WB04-E1146)
         // ESC 는 조각을 들고 있으면 취소, 아니면 게임 메뉴막대 전환이므로 항상 큐에 넣고 입력 프레임이 판단한다. (2026-11-20 WB04-E1084)
-        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && !event.isComposing && !this._clientComposing && !event.ctrlKey && !event.altKey && !event.metaKey && (/^[chnprqwaszyxet]$/iu.test(event.key ?? '') || event.key === 'Escape')) queueBrowserCharacterEvent(this._clientInputQueue, event, this._input.pointer);
+        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && !event.isComposing && !this._clientComposing && !event.ctrlKey && !event.altKey && !event.metaKey && (/^[chnprqwaszyxetu]$/iu.test(event.key ?? '') || event.key === 'Escape')) queueBrowserCharacterEvent(this._clientInputQueue, event, this._input.pointer);
+        // TAB 과 숫자 줄(0~9, Shift 는 영어 기호 표 `)!@#$%^&*(`)이다. 숫자는 키보드 배열과 무관하게 Digit 코드로 원본 문자 코드를 만들고, TAB 은 브라우저 포커스 이동을 막는다. (2026-11-21 WB04-E1154)
+        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && !event.isComposing && !this._clientComposing && !event.ctrlKey && !event.altKey && !event.metaKey && !event.repeat) {
+            const digit = /^Digit([0-9])$/u.exec(event.code ?? '');
+            if (event.code === 'Tab') { event.preventDefault(); queueBrowserCharacterEvent(this._clientInputQueue, event, this._input.pointer); }
+            else if (digit) {
+                const index = Number(digit[1]), character = event.shiftKey ? SAVED_CAMERA_CHARACTERS[10 + (index + 9) % 10] : SAVED_CAMERA_CHARACTERS[index];
+                this._clientInputQueue.push(((character.charCodeAt(0) | (event.shiftKey ? InputCode.shift : 0)) >>> 0), this._input.pointer.x | 0, this._input.pointer.y | 0);
+            }
+        }
         if (PREVENTED_KEYS.has(event.code)) event.preventDefault();
         this._retryAudioOnGesture();
         // 미리보기의 키 정책은 게임 명령과 분리한다. Escape는 메뉴로 돌아가며 방향키는 카메라만 바꾼다. (2026-11-02 WB03-AA)
