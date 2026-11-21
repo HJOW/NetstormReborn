@@ -12,6 +12,7 @@
 // 이 모듈은 DOM 을 쓰지 않는다. (2026-11-15 WB04-E469: 5-B UberGumpCamera 이식, 기준선 뒤 cpppj 변경 없음)
 import { parseViewSpot } from '../core/camera-home.js';
 import { processEdgeScroll, requestCameraDelta } from '../core/raw-edge-scroll.js';
+import { processCameraPan } from '../core/raw-camera-pan.js';
 import { commitCameraTarget } from '../render/raw-camera-commit.js';
 import { presentCameraTarget } from '../render/raw-camera-present.js';
 import { ScreenMode } from '../render/screen.js';
@@ -35,6 +36,8 @@ export class UberGumpCamera {
     #enabled = 1;
     #speed = 20;
     #since = 0;
+    // 005318xx 의 `scrollWhileMouseOut`(창 밖에서도 Alt/가운데 버튼 이동을 허용) 설정값이다. 누락 시 현재 값을 유지한다. (2026-11-21 WB04-E1145)
+    #scrollWhileMouseOut = 0;
     // processEdgeScroll 이 제자리에서 바꾸는 상태이다. 초기화 비트는 GumpPointerBoundaryState 와, 최초 시각은 이 객체의 같은 멤버와 공유한다(복사본이 아님).
     #edgeState;
 
@@ -80,6 +83,26 @@ export class UberGumpCamera {
         const menu = this.#host.gameMenuState();
         processEdgeScroll(this.#edgeState, { enabled, dialog: this.#host.buttons().currentDialog(), menuSerial: menu ? menu.menuSerial : 0, borderX: border.x, borderY: border.y,
             width: screen.width, height: screen.height, x: mouse.x, y: mouse.y, speed: this.#speed, wall: client.time().wall }, hooks);
+    }
+
+    // 원본 4d6b54 의 Alt/가운데 버튼 카메라 이동이다. Alt 또는 가운데 버튼을 누른 동안 포인터가 지도 영역 중심에서 떨어진 만큼 그 쪽으로 카메라 목표를 옮긴다(Shift 를 함께 누르면 한 축만).
+    // 이동 경로가 처리한 프레임(true)에는 호출자가 큐의 사건을 일반 입력으로 나누지 않고 버려야 한다(원본·cpppj UberGump::PollCameraPan 과 같다). 목표만 쓰고 실제 적용은 Present 뒤(applyCameraFrame)이다.
+    // mouse = { code, x, y }(현재 포인터 폴링 사건: Alt 폴링 결과). 지도 영역은 월드의 현재 mapView 이며 없으면 전체 화면이다. (2026-11-21 WB04-E1145: 웹 앱 미연결이던 ALT 스크롤 연결)
+    pollCameraPan(mouse) {
+        const client = this.#host.client;
+        this.#scrollWhileMouseOut = client.configuration().readInt('scrollWhileMouseOut', this.#scrollWhileMouseOut).value | 0;
+        const screen = client.screen(); const world = this.#host.world();
+        const view = world ? world.mapView() : { left: 0, top: 0, right: screen.width, bottom: screen.height };
+        const buttons = this.#host.buttons();
+        const hooks = {
+            poll: (code) => client.poll(code),
+            // 창 밖 이동 허용 설정·대화상자(현재 대화창 또는 팝업)·활성 여부·화면 크기·지도 영역을 호출마다 다시 읽는다.
+            globals: () => ({ scrollWhileMouseOut: this.#scrollWhileMouseOut, dialog: buttons.currentDialog() || (buttons.blockingGumpOpen() ? 1 : 0), active: client.active() ? 1 : 0,
+                clientWidth: screen.width, clientHeight: screen.height, viewX: view.left, viewY: view.top, viewWidth: (view.right - view.left) | 0, viewHeight: (view.bottom - view.top) | 0 }),
+            closePopups: () => { buttons.requestClosePopups(); },
+            request: (dx, dy) => { const camera = client.gameplay().camera(); requestCameraDelta(camera.rendererView(), camera.target(), client.screen().height, dx, dy, client.localState().metaRebuild()); },
+        };
+        return processCameraPan(mouse, hooks);
     }
 
     // 497960 의 실제 장치/dirty/두 setter 를 같은 현재 Client 에서 실행한다. 표시/음향 공개 시점은 호출자가 소유한다. (2026-11-15 WB04-E469)

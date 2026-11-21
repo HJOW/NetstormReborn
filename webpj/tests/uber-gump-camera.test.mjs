@@ -233,3 +233,32 @@ test('Present 말미: 화면 크기는 호출 시작의 사본이라 flip 이 �
     // 100칸×16−640=960 (갱신된 1024 를 쓰면 576).
     assert.deepEqual([...s.camera.target().pixels], [960, 100]);
 });
+
+// 원본 4d6b54: Alt(또는 가운데 버튼)를 누른 동안 포인터가 지도 중심에서 떨어진 만큼 카메라 목표를 옮긴다. 이전에는 앱에 연결되지 않아 ALT 스크롤이 동작하지 않았다. (2026-11-21 WB04-E1145)
+test('Alt/가운데 버튼 카메라 이동: 누른 동안 포인터 쪽으로 목표를 옮기고 뗌·대화상자·창 밖에서는 이동 경로를 쓰지 않는다', () => {
+    // Alt 를 누름(포인터 폴링 사건에 release 비트 없음): 지도 중심(320,240)에서 오른쪽으로 280 떨어진 포인터는 /8 로 35 만큼 목표 x 를 늘린다.
+    const pan = scene({ pixels: [1000, 800], width: 640, height: 480 });
+    assert.equal(pan.uber.pollCameraPan({ code: 0, x: 600, y: 240 }), true);
+    assert.deepEqual([...pan.camera.target().pixels], [1035, 800]);
+    // Shift 를 함께 누르면(폴링에 release 없음) 절댓값이 큰 한 축만 남는다. 아래 +80(y=320)·오른쪽 +280 이면 x 만 움직인다.
+    const shift = scene({ pixels: [1000, 800], width: 640, height: 480 }); shift.state.polls.set(SHIFT, 0);
+    assert.equal(shift.uber.pollCameraPan({ code: 0, x: 600, y: 320 }), true); assert.deepEqual([...shift.camera.target().pixels], [1035, 800]);
+    // 눌린 것이 없으면(포인터 폴링·가운데 버튼 모두 release) 이동 경로가 아니다(false)이고 목표도 그대로이다.
+    const idle = scene({ pixels: [1000, 800], width: 640, height: 480 }); idle.state.polls.set(InputCode.middleButton, InputCode.release);
+    assert.equal(idle.uber.pollCameraPan({ code: InputCode.release, x: 600, y: 240 }), false); assert.deepEqual([...idle.camera.target().pixels], [0, 0]); // 요청이 없으면 목표는 처음 값 그대로이다.
+    // 가운데 버튼만 눌러도 이동한다(포인터 폴링은 release).
+    const middle = scene({ pixels: [1000, 800], width: 640, height: 480 }); middle.state.polls.set(InputCode.middleButton, 0);
+    assert.equal(middle.uber.pollCameraPan({ code: InputCode.release, x: 600, y: 240 }), true); assert.deepEqual([...middle.camera.target().pixels], [1035, 800]);
+    // 대화상자가 열려 있으면 이동 경로가 아니다. 창 밖 포인터는 scrollWhileMouseOut 설정이 꺼져 있으면 이동하지 않고, 켜면 이동한다.
+    const dialog = scene({ pixels: [1000, 800], width: 640, height: 480 }); dialog.state.dialog = 1;
+    assert.equal(dialog.uber.pollCameraPan({ code: 0, x: 600, y: 240 }), false); assert.deepEqual([...dialog.camera.target().pixels], [0, 0]);
+    const outside = scene({ pixels: [1000, 800], width: 640, height: 480 });
+    assert.equal(outside.uber.pollCameraPan({ code: InputCode.outside, x: 600, y: 240 }), false);
+    const allowed = scene({ pixels: [1000, 800], width: 640, height: 480, config: { scrollWhileMouseOut: 1 } });
+    assert.equal(allowed.uber.pollCameraPan({ code: InputCode.outside, x: 600, y: 240 }), true); assert.deepEqual([...allowed.camera.target().pixels], [1035, 800]);
+    // 이동하면 팝업을 먼저 닫는다.
+    assert.ok(pan.log.some((entry) => entry[0] === 'close'));
+    // 설치된 월드가 있으면 지도 영역(HUD 를 뺀 오른쪽)의 중심과 폭을 기준으로 한다: 왼쪽 100 을 뺀 540 폭이면 중심은 370 이다.
+    const world = scene({ pixels: [1000, 800], width: 640, height: 480 }); world.state.world = fakeWorld(world.log, { left: 100, top: 0, right: 640, bottom: 480 });
+    assert.equal(world.uber.pollCameraPan({ code: 0, x: 640, y: 240 }), true); assert.notDeepEqual([...world.camera.target().pixels], [0, 0]);
+});

@@ -1781,9 +1781,12 @@ export class Netstorm {
         const pointer = gump.notifyPointer(mouse, world.inputMode(), cursorActive, !dialog);
         if (pointer.overlay === 0) this._campaignCursor = CURSOR_NORMAL;
         if (!dialog) user.updateCursor(mouse);
+        // 원본 4d6b54: Alt 또는 가운데 버튼을 누른 동안 포인터 쪽으로 카메라를 옮기고, 이 프레임의 큐 사건은 일반 입력으로 나누지 않고 버린다. (2026-11-21 WB04-E1145)
+        const cameraPan = this._campaignCameraDevice().pollCameraPan(mouse);
         // 원본 큐의 순서를 지키며 미구현 사건 앞을 추월하지 않는다.
         for (;;) {
             const next = queue.peek(); if (!next) break;
+            if (cameraPan) { queue.pop(false); continue; }
             const code = (next.code & 0x03ffffff) >>> 0, release = Boolean(next.code & InputCode.release);
             const selectionKey = code === 0x50 || code === 0x70 || code === 0x52 || code === 0x72 || code === 0x4e || code === 0x6e;
             const productionKey = 'qwaszyxe'.includes(String.fromCharCode(code).toLowerCase()) && code < 256;
