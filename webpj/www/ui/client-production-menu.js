@@ -43,8 +43,11 @@ export function createClientProductionMenu(root, session, game, data, fonts, scr
     const titleState = new ScrollingTextGumpWidgetState(); Object.assign(titleState, { changeEvent: 0x02000036, stepEvent: 0x0200002e });
     const title = new ClientScrollingText(root, fonts, text, buffers, scroll, markup, titleState, devices.cursor);
     const decoration = new ClientGumpDecoration(root, game, background, createClientDecorationState(backgroundType), devices.baseHandle, devices.invalidate);
+    const dimColor = screen.colors().named.find((color) => color.red === 47 && color.green === 24 && color.blue === 17);
+    if (!dimColor) throw new Error('메뉴 원본 비활성/그림자 색 전역 없음');
     const menu = new ClientMenuGump(root, { assets: game, fonts, text, background, decoration, title, session, config: data, backgroundType,
-        foreground: screen.colors().basic[7], disabled: screen.colors().basic[8], shadow: screen.colors().basic[0],
+        // 원본(005c78d0)·cpppj RawMenuControls 는 메뉴 비활성 글자(하위 메뉴 `›` 포함)와 그림자 색을 같은 어두운 갈색 이름 색 (47,24,17) 로 둔다. 회색(basic[8])을 쓰면 비활성 `›` 가 석판 배경에 묻혀 보이지 않았다. (2026-11-21 WB04-E1136)
+        foreground: screen.colors().basic[7], disabled: dimColor.index, shadow: dimColor.index,
         sound: devices.sound, command: devices.command, invalidate: devices.invalidate });
     const about = new ClientProductionAbout(session, game, data, menu, devices);
     let priestOpen = null, factoryOpen = null, playerOpen = null, objectOpen = null;

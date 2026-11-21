@@ -123,3 +123,32 @@ test('The War Begins!: 사제가 제단을 짓는 위치 지정이 마우스를 
   await placeAndBuild(page, '제단', await pickBuilding(page, [2]), test.info().outputPath('build-preview-altar.png'));
   expect(errors).toEqual([]);
 });
+
+// 신전이 이미 있으면 Construct 하위 메뉴의 Temple 행은 원본처럼 비활성(어두운 갈색)이며, 원본은 그 행에도 어두운 하위 메뉴 표식 '›' 를 그린다. (2026-11-21 WB04-E1136)
+// 비활성 색을 회색(basic[8])으로 쓰던 때는 표식이 석판 배경에 묻혀 글자 폭(약 40픽셀)까지만 어두운 픽셀이 있었다.
+test('The War Begins!: 비활성 Temple 행에도 하위 메뉴 표식이 어두운 색으로 그려진다', async ({ page }) => {
+  test.setTimeout(240000); const errors = collectErrors(page);
+  await startMission(page, 'Struggle For Freedom', 'TheWarBegins');
+  const priest = await page.evaluate(() => {
+    const app = window.netstorm, world = app._campaignWorld, session = world.session(), sid = session.findPriestParticipation(session.localOwner()), hits = [];
+    for (let y = 10; y < 760; y += 3) for (let x = 90; x < 1020; x += 3) if (world.pick(x, y, 0) === sid) hits.push([x, y]);
+    const rect = app.canvas.getBoundingClientRect(), hit = hits[Math.floor(hits.length / 2)];
+    return { sid, x: rect.left + hit[0] * rect.width / app._layout.logicalWidth, y: rect.top + hit[1] * rect.height / app._layout.logicalHeight };
+  });
+  await page.mouse.click(priest.x, priest.y, { button: 'right', delay: 60 });
+  await page.waitForFunction((sid) => { const root = window.netstorm._clientGump; for (let token = root.root().child; token; token = root.node(token).next) if (root.node(token).command === 26 && root.node(token).object === sid) return true; return false; }, priest.sid, { timeout: 10000 });
+  const root = await page.evaluate((sid) => { const r = window.netstorm._clientGump; for (let token = r.root().child; token; token = r.node(token).next) if (r.node(token).command === 26 && r.node(token).object === sid) return token; return 0; }, priest.sid);
+  const row = await page.evaluate((token) => { const app = window.netstorm, r = app._clientGump, node = r.node(token), bounds = r.collection().bounds(token), rect = app.canvas.getBoundingClientRect();
+    return { x: rect.left + (bounds.left + 8) * rect.width / app._layout.logicalWidth, y: rect.top + (bounds.top + node.offsets[0] + node.heights[0] / 2) * rect.height / app._layout.logicalHeight, child: node.items[0].childId ? r.createState().entries[node.items[0].childId] : 0 }; }, root);
+  await page.mouse.move(row.x, row.y); await page.mouse.click(row.x, row.y, { delay: 60 });
+  await page.waitForFunction((child) => { const node = window.netstorm._clientGump.node(child); return node && (node.flags & 1) && !node.expanding; }, row.child, { timeout: 10000 }); await page.waitForTimeout(400);
+  // 첫 행(Temple)에서 어두운 갈색 픽셀이 가로로 퍼진 범위를 잰다. 글자만이면 약 40, 표식까지 있으면 약 49픽셀이다.
+  const span = await page.evaluate((child) => {
+    const app = window.netstorm, r = app._clientGump, node = r.node(child), bounds = r.collection().bounds(child), canvas = app.canvas, data = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data;
+    const top = Math.round(bounds.top + node.offsets[0]), bottom = Math.round(top + node.heights[0]); let minX = 1e9, maxX = -1;
+    for (let y = top; y < bottom; y += 1) for (let x = Math.round(bounds.left); x < Math.round(bounds.right); x += 1) { const at = (y * canvas.width + x) * 4; if (data[at] < 80 && data[at + 1] < 50 && data[at + 2] < 40) { if (x < minX) minX = x; if (x > maxX) maxX = x; } }
+    return maxX - minX;
+  }, row.child);
+  expect(span, 'Temple 행 어두운 픽셀 가로 범위(글자 + 표식)').toBeGreaterThanOrEqual(46);
+  expect(errors).toEqual([]);
+});
