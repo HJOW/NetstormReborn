@@ -10,6 +10,10 @@ public sealed partial class ClientHostGame
     private readonly ClientSubscriberGlobals _subscriberGlobals = new();
     /// <summary>현재 구독자 getter와 Chat4800BYTE를 소유하며 Session 교체로 다시 만들지 않는다.</summary>
     private readonly ClientChatGlobals _chatGlobals;
+    /// <summary>현재 manager와 미초기화 할당의 실제 장기 소유자다. 공통 시작 초기화는 별도 호출자다.</summary>
+    private readonly ClientChatManagerGlobals _chatManagerGlobals = new();
+    /// <summary>같은 manager current/할당을 빌리며 조회 자체는 초기화하지 않는다.</summary>
+    public ClientChatManagerGlobals ChatManagerGlobals => _chatManagerGlobals;
     /// <summary>World/Init/전송 소비자가 빌릴 실제 Client 구독자 주소다.</summary>
     public ClientSubscriberGlobals SubscriberGlobals => _subscriberGlobals;
     /// <summary>미션 유무와 관계없이 실제 MySubscriber의 현재 전체 DWORD를 읽는다.</summary>
