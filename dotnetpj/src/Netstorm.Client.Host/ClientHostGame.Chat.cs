@@ -44,6 +44,36 @@ public sealed partial class ClientHostGame
     }
     /// <summary>명시 manager/가변 원문 BYTE 입력을 설치한 실제 제출 부모로 전달한다.</summary>
     public void SubmitNativeChat(uint manager, ReadOnlySpan<byte> input) => (_nativeChatSubmit ?? throw new InvalidOperationException("실제 Chat 제출 장치 미설치")).Submit(manager, input);
+    /// <summary>실제 현재 Player/표면/Chat과 동기 이름 getter를 사용하는 대상 조회 부모다.</summary>
+    private ClientChatIdentityRuntime? _nativeChatIdentity;
+    /// <summary>대상 검사 binding에서 받은 같은 현재 표시 BYTE 번역이다.</summary>
+    private Func<string, string>? _nativeChatRecipientTranslate;
+    /// <summary>현재 이름/번역과 실제 Root의 같은 Identity 저장소를 연결한다. CS 장치는 메타 분기에서만 필요하다.</summary>
+    public void BindNativeChatRecipients(Func<string> currentName, Func<string, string> translate, Func<byte[]>? metaRecords = null)
+    {
+        ArgumentNullException.ThrowIfNull(translate);
+        var identity = new ClientChatIdentityRuntime(_gameplay, _surfaceGlobals, _subscriberGlobals, _chatGlobals, currentName, metaRecords);
+        _nativeChatIdentity = identity; _nativeChatRecipientTranslate = translate;
+    }
+    /// <summary>설치한 같은 현재 Identity에60BYTE 지역을 전달한다.</summary>
+    public bool ResolveNativeChatIdentity(byte[] record) => (_nativeChatIdentity ?? throw new InvalidOperationException("실제 Chat Identity 미설치")).Resolve(record);
+    /// <summary>현재 manager와 실제 대상/번역을 원문 표시 전용 검사에 연결한다.</summary>
+    public bool CheckNativeChatRecipients(string? text)
+    {
+        var identity = _nativeChatIdentity ?? throw new InvalidOperationException("실제 Chat 대상 조회 미설치");
+        var translate = _nativeChatRecipientTranslate ?? throw new InvalidOperationException("실제 Chat 대상 번역 미설치");
+        return Netstorm.Client.Chat.ChatRecipients.CheckChatRecipients(_chatManagerGlobals.Current.Value, text, GC.AllocateUninitializedArray<byte>(60), new() { Resolve = identity.Resolve, Translate = translate });
+    }
+    /// <summary>실제 Root 대상 조회를 먼저 설치하고 같은 장치/Identity로 제출 부모를 연결한다.</summary>
+    public void BindNativeChatSubmit(ClientChatSubmitDevices devices, Func<string> currentName, Func<string, string> translate, Func<byte[]>? metaRecords = null)
+    {
+        ArgumentNullException.ThrowIfNull(devices); BindNativeChatRecipients(currentName, translate, metaRecords);
+        BindNativeChatSubmit(new ClientChatSubmitDevices
+        {
+            Resolve = ResolveNativeChatIdentity, Translate = translate, Assertion = devices.Assertion, SetInputVisible = devices.SetInputVisible,
+            Flash = devices.Flash, Sound = devices.Sound, MenuCommand = devices.MenuCommand, Message = devices.Message, PrintChat = devices.PrintChat, DiagnosticLog = devices.DiagnosticLog,
+        });
+    }
     /// <summary>World/Init/전송 소비자가 빌릴 실제 Client 구독자 주소다.</summary>
     public ClientSubscriberGlobals SubscriberGlobals => _subscriberGlobals;
     /// <summary>미션 유무와 관계없이 실제 MySubscriber의 현재 전체 DWORD를 읽는다.</summary>

@@ -8,4 +8,6 @@ public sealed partial class ClientGameplayGlobals
 {
     /// <summary>005cab30의 BSS0이다. 명령/Session/모드 교체로 초기화하지 않으며 공급 판정도 이 상자를 사용해야 한다.</summary>
     public UIntBox UserCheat { get; } = new();
+    /// <summary>005953fc의 현재 로컬 주소 BSS0이며 Identity/객체 메뉴가 같은 값을 빌린다. 실제 주소 writer는 후순위 LAN이다.</summary>
+    public UIntBox LocalAddress { get; } = new();
 }

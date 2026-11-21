@@ -1332,3 +1332,7 @@ cpppj/src/client/ClientChatWindowGlobals.h	Netstorm.Client/ClientChatWindowGloba
 cpppj/src/client/ChatWindow.h	Netstorm.Client/ClientChatWindowGlobals.cs	09fd17306b6cb4c9a6b0ab1dc29a4f556bba3890	port
 cpppj/src/o/RawEnergySupply.h	Netstorm.Client/ClientGameplayGlobals.Chat.cs	504a92a85e78b8e7eddf006d8b9f0211bf28105a	port
 cpppj/src/client/ClientGameplayGlobals.h	Netstorm.Client/ClientGameplayGlobals.Chat.cs	ae0e58b3ac0f34697eac6954cce7913a759247e3	port
+cpppj/src/client/ChatRecipients.h	Netstorm.Client/Chat/ChatRecipients.cs	325d19a08720f4232ab01a45ba8d32ec437bec68	port
+cpppj/src/client/ChatRecipients.cpp	Netstorm.Client/Chat/ChatRecipients.cs	325d19a08720f4232ab01a45ba8d32ec437bec68	port
+cpppj/src/client/ClientChatRuntime.cpp	Netstorm.Client/ClientChatIdentityRuntime.cs	c0f7843ae3e8ec3e48369836e1d57d371f6488d6	port
+cpppj/src/client/ClientChatRuntime.cpp	Netstorm.Client.Host/ClientHostGame.Chat.cs	c0f7843ae3e8ec3e48369836e1d57d371f6488d6	port
