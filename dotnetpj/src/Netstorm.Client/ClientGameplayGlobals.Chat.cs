@@ -1,0 +1,11 @@
+using Netstorm.Core.Original;
+
+// Chat 명령과 후속 Mana 공급 모듈이 같은 장기 치트 DWORD를 빌린다.
+namespace Netstorm.Client;
+
+/// <summary>전체 EnergySupplyState 이식에 앞서 현재005cab30의 실제 주소를 유지한다.</summary>
+public sealed partial class ClientGameplayGlobals
+{
+    /// <summary>005cab30의 BSS0이다. 명령/Session/모드 교체로 초기화하지 않으며 공급 판정도 이 상자를 사용해야 한다.</summary>
+    public UIntBox UserCheat { get; } = new();
+}

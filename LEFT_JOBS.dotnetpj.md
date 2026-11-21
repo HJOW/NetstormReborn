@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-21 · 사용자 재개 지시로 진행 중 · 마지막 완료0.762(Chat 제출383입력/실제 수신자 배열·집중14건 통과) · 다음0.763 형식 명령/실제 제출 분배 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6 병행) · cpppj 제품1323 / 11.01 · 전체 목표 미완료**
+**2026-11-21 · 사용자 재개 지시로 진행 중 · 마지막 완료0.763(실제 형식/제출 분배·문화권 교정·집중31건 통과) · 다음0.764 정기 전체 회귀/동일 빌드65시작 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6 병행) · cpppj 제품1323 / 11.01 · 전체 목표 미완료**
 
 현행 인계는 이 문서가 기준이다. 단위별 근거는 `docs/dotnet-canon-0NNN-*.md`이다. 0.645~0.732의 단위별 완료 문장, 0.640 회귀 점검 상세, 0.546~0.676 완료 기록 원문은 [0.732 정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0732)에 있다. 0.600~0.635는 [0.635 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635), 0.613까지의 경과와 파일 계열별 체크 목록은 [0.613 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)에 있다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
@@ -22,11 +22,11 @@
 
 **재개 순서(2026-11-21).** 0.760 전체5,405검사와 같은 빌드65시작·원본/빌드 해시·전수 바이트 감사를 완료했다. [0.760 근거](docs/dotnet-canon-0760-20261121.md)
 
-1. **0.763 형식 명령과 실제 제출→DotCommand 분배 장치.** 0.762에서 RawChatSubmit의 인접4097BYTE/현재100행·수신자32슬롯 확장/반납과 actual owner.MakeSubmitHooks를 연결했다. 원문383전체 물리/trace·신규4건 포함 집중14건·대표3시작 종료0/전체바이트0.760일치·원본1392파일 불변이다. [0.762](docs/dotnet-canon-0762-20261121.md). 다음은 실제 현재 manager/Subscriber/캡처/Config의 형식 명령과 같은 제출/분배 부모다. 일반 message/패킷·ChatWindow/Console 전체는 남았다. 0.761의 고정512분배/이름 뷰/owner 검색과0.760 전체5405검사/65시작은 유지한다. 0.759에서 RawDotCommandRegister/최초 say 표·Issue 네 등록과 실제 Host의 같은 Chat manager 초기화를 연결했다. 등록258지원관측/음수외부4·Issue122·정적2568BYTE/신규7건 포함 집중17건·대표3시작 종료0/전체바이트0.756일치·원본1392파일 불변이다. [0.759](docs/dotnet-canon-0759-20261121.md). 0.758의 manager 생성/설정/랭크644입력/실제 할당과0.757의 Subscriber/Handle/Chat4800BYTE·Root 정리는 유지한다. 이어서 실제 DotCommand Dispatch/Chat 제출·창/UI·랭크 Core/TYPE 장치와 나머지 Root 기본 장치를 잇는다. 전체 Native 시작의 intro/장면음악/나머지 지도 초기화와 Init004c3290 Guide 결선은 남았다. 0.755에서 실제 Host Renderer/Camera 초기화·구름 opaque token/단일 redraw 상자·표면 현재 getter·ClientCursorStateCleanup/Root Cancel을 연결했다. 신규7건 포함 집중56건과 단언 정리1건·대표3시작 종료0/0.752 전체바이트 일치·원본1392파일 불변이다. [0.755](docs/dotnet-canon-0755-20261121.md). 0.756 전체 회귀/65시작은 완료했다. 이어 실제 채팅/UI/음향·음악/저장/옵션 기본 장치와 전체Root 상태를 잇는다. Native Frame/Root UI 수집·그리기 및 실제 지도 provider는 미연결이다. HostMainMenu에는 RawButtonControls MapViewRect가 없으므로 실제 뷰 소비에서 명시 실패하며 화면 전체로 대체하지 않는다. 빈 커서의 실제 Project/dirty 준비는 연결됐으나 선택된 전체 커서 효과·RawCursorDrop/Previews/Position 호출자는 남았다. SavedCameraKey 처리/명시 무효점 초기화·CameraCommit/Present/Pan 전체도 남았다. non-mine Notify의 실제DataManager 저장과 비Session Notify 추출부모, NSInfo HUD/메타UI/Root reply 저장도 후속이다. RawFileName 나머지 조회·BaseFile 고리 소비/ClientStaticStrings는 해당 소비자에서 잇는다.
+1. **0.764 정기 전체 회귀와 동일 빌드65시작.** 0.763에서 실제 현재 두DWORD/캡처/UTF8 Config의 형식 wrapper와 같은 제출→DotCommand 선택 장치 부모·005cab30/Chat root/Host binding API를 연결했다. 기존 문화권 음수 표식 유입을 재현/교정했고 신규8건 포함 최종31검사·대표3시작 종료0/전체바이트0.760일치·원본1392파일 불변이다. [0.763](docs/dotnet-canon-0763-20261121.md). 일반 message/패킷·ChatWindow/Console 공유로그/완성/UI·전체 EnergySupply와 API를 실제 소비할 UI 호출자는 남았다. 전체 회귀 뒤 실제 Identity/일반 전달/창과 나머지 Root 기본 장치를 잇는다. 0.761의512분배/이름 뷰와0.762의383제출/실제 수신자 배열은 유지한다. 0.759에서 RawDotCommandRegister/최초 say 표·Issue 네 등록과 실제 Host의 같은 Chat manager 초기화를 연결했다. 등록258지원관측/음수외부4·Issue122·정적2568BYTE/신규7건 포함 집중17건·대표3시작 종료0/전체바이트0.756일치·원본1392파일 불변이다. [0.759](docs/dotnet-canon-0759-20261121.md). 0.758의 manager 생성/설정/랭크644입력/실제 할당과0.757의 Subscriber/Handle/Chat4800BYTE·Root 정리는 유지한다. 이어서 실제 DotCommand Dispatch/Chat 제출·창/UI·랭크 Core/TYPE 장치와 나머지 Root 기본 장치를 잇는다. 전체 Native 시작의 intro/장면음악/나머지 지도 초기화와 Init004c3290 Guide 결선은 남았다. 0.755에서 실제 Host Renderer/Camera 초기화·구름 opaque token/단일 redraw 상자·표면 현재 getter·ClientCursorStateCleanup/Root Cancel을 연결했다. 신규7건 포함 집중56건과 단언 정리1건·대표3시작 종료0/0.752 전체바이트 일치·원본1392파일 불변이다. [0.755](docs/dotnet-canon-0755-20261121.md). 0.756 전체 회귀/65시작은 완료했다. 이어 실제 채팅/UI/음향·음악/저장/옵션 기본 장치와 전체Root 상태를 잇는다. Native Frame/Root UI 수집·그리기 및 실제 지도 provider는 미연결이다. HostMainMenu에는 RawButtonControls MapViewRect가 없으므로 실제 뷰 소비에서 명시 실패하며 화면 전체로 대체하지 않는다. 빈 커서의 실제 Project/dirty 준비는 연결됐으나 선택된 전체 커서 효과·RawCursorDrop/Previews/Position 호출자는 남았다. SavedCameraKey 처리/명시 무효점 초기화·CameraCommit/Present/Pan 전체도 남았다. non-mine Notify의 실제DataManager 저장과 비Session Notify 추출부모, NSInfo HUD/메타UI/Root reply 저장도 후속이다. RawFileName 나머지 조회·BaseFile 고리 소비/ClientStaticStrings는 해당 소비자에서 잇는다.
 2. **같은 작업 줄기.** MetaZone 원문 본체124입력은0.734, 실제Client표/현재Runtime pin·설치된가상분배전달은0.735 완료다. 현재 HostSession의 전체 Native World 자산 가상 삭제 분배 설치는 아직 미연결이며 일반 삭제의 Pre/Post 완료로 대신하지 않는다. [0.733](docs/dotnet-canon-0733-20261121.md) · [0.734](docs/dotnet-canon-0734-20261121.md) · [0.735](docs/dotnet-canon-0735-20261121.md). 이어서 [R4 체크](#r4-detail)→R11과 후순위 요구사항을 진행한다. 다음 정기 전체 회귀는0.764이다.
-3. **사용자 제외 검사 유지.** 실제 포획/희생·특정 적 공격·시나리오 승리는 재현하지 않고 사용자 수동 확인으로 남긴다. 원본1,392파일의 마지막 불변 확인은0.762 대표3시작이다(전체65시작은0.760).
+3. **사용자 제외 검사 유지.** 실제 포획/희생·특정 적 공격·시나리오 승리는 재현하지 않고 사용자 수동 확인으로 남긴다. 원본1,392파일의 마지막 불변 확인은0.763 대표3시작이다(전체65시작은0.760).
 
-**최근 완료 요약(0.639~0.762).** 단위별 완료 문장과 집중 검사 수는 보관본과 각 단위 문서에 있다. 완료 범위와 남은 일의 기준은 1.1·1.2절 체크 항목이다.
+**최근 완료 요약(0.639~0.763).** 단위별 완료 문장과 집중 검사 수는 보관본과 각 단위 문서에 있다. 완료 범위와 남은 일의 기준은 1.1·1.2절 체크 항목이다.
 
 | 주제 | 단위 | 핵심 | 남은 일 |
 | --- | --- | --- | --- |
@@ -48,6 +48,7 @@
 | 실제 명령표/Chat 시작 | 0.759 | 등록258지원/음수외부4·Issue122·최초 say 전체표·실제 Host 초기화 | 실제 Dispatch/제출·창/UI·전체 Native 시작 |
 | 점 명령 분배/장기 검색 | 0.761 | 고정 문법512입력·같은 표/검색 owner.Dispatch·중첩 separator/현재 이름 뷰 | Chat 제출/창/UI·실제 명령 효과 |
 | Chat 제출/수신자 배열 | 0.762 | 대상/본문 인접4097BYTE·383입력·실제 owner 확장/반납·100수신자 | 실제 제출/형식 부모·일반 전달/창/UI |
+| 실제 형식/제출 분배 부모 | 0.763 | 두상자/캡처/UTF8 설정·Issue/메뉴/say/오류 경계·문화권 키 교정·Host API | 실제 Identity/메시지/창UI·나머지Root장치 |
 | 정기 전체 회귀·L2 | 0.644부터 4단위마다(0.760까지) | 매회 실패 0·65실행 종료 0·원본 불변·M1 0/34 유지. 수집으로 드러난 미연결·순서 회귀를 0.644(AI 색 프레임·펜스)·0.680(플레어 분배)·0.684(시작 음향 순서)·0.688(Carrier 통지)에서 교정. 전체 검사 4,686건(0.644) → 5,405건(0.760) | 다음0.764 |
 
 <a id="first-run"></a>
@@ -138,6 +139,7 @@ AGENTS.md 2026-11-19 추가(`d047bf9a3`)로 `Netstorm.exe`의 아이콘은 기�
   - 완료(실제 명령표/Chat 시작,0.759): 같은 say/count1 인접표와 Issue/Chat 등록·실제 Host manager 초기화다. Dispatch/제출/전체 UI와 전체 Native 시작은 남았다. [0.759](docs/dotnet-canon-0759-20261121.md)
   - 완료(점 명령 분배,0.761): 원문512와 같은 owner 표/장기 검색·중첩 separator·현재 오류 이름 뷰다. 실제 Chat 제출/창과 명령 효과 장치는 남았다. [0.761](docs/dotnet-canon-0761-20261121.md)
   - 완료(Chat 제출/수신자,0.762): 원문383의 인접 캡처/현재 기록과 실제 owner의 확장/반납 장치다. 실제 형식/제출 부모·일반 전달/창/UI는 남았다. [0.762](docs/dotnet-canon-0762-20261121.md)
+  - 완료(실제 형식/제출 부모,0.763): 같은 두상자/캡처/설정·제출→분배 선택 장치와005cab30/Chat root/Host API·문화권 키 교정이다. 실제 Identity/메시지/창UI와 나머지Root는 남았다. [0.763](docs/dotnet-canon-0763-20261121.md)
   - 완료(독립 커서 데이터·수명,0.749): Take/Cancel/Activate와 자산 어댑터·고정 데이터의1575원본입력 대조다. 실제 Gameplay 커서/checking owner와 위치 준비/렌더러/Root Cancel 설치는 위 남은 범위다. [0.749](docs/dotnet-canon-0749-20261121.md)
 - [ ] **R4-7 데모와 보류 검사.** `StartDemo` 3경로 덤프, `player-world-x86.tsv` 1,680행, F3에서 미룬 Fort/지형 바인딩·미션 Fort 경로·로그인 객체 전송·미션 재적재 검사를 잇는다.
 - [ ] **R4-8 M1 판정.** 같은 시드·고정 프레임·빈 사용자 루트로 34/34 상태 일치. 로드 뒤 프레임 진행에서만 생기는 차이는 cpp 후속 프레임 덤프로 입증한 뒤 R6으로 넘긴다.

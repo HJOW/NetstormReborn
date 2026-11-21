@@ -1327,3 +1327,8 @@ cpppj/src/client/RawDotCommandDispatch.cpp	Netstorm.Client/Scripting/RawDotComma
 cpppj/src/client/ClientChatRuntime.cpp	Netstorm.Client/ClientDotCommandGlobals.cs	c0f7843ae3e8ec3e48369836e1d57d371f6488d6	port
 cpppj/src/client/RawChatSubmit.h	Netstorm.Client/Chat/RawChatSubmit.cs	7120a0151d5f02297230385eedd86a3cfa14c8ee	port
 cpppj/src/client/RawChatSubmit.cpp	Netstorm.Client/Chat/RawChatSubmit.cs	7120a0151d5f02297230385eedd86a3cfa14c8ee	port
+cpppj/src/client/ClientChatRuntime.cpp	Netstorm.Client/ClientChatSubmitRuntime.cs	c0f7843ae3e8ec3e48369836e1d57d371f6488d6	port
+cpppj/src/client/ClientChatWindowGlobals.h	Netstorm.Client/ClientChatWindowGlobals.cs	3f766a97f7c4d5b290c195754be66a7ee5b929be	port
+cpppj/src/client/ChatWindow.h	Netstorm.Client/ClientChatWindowGlobals.cs	09fd17306b6cb4c9a6b0ab1dc29a4f556bba3890	port
+cpppj/src/o/RawEnergySupply.h	Netstorm.Client/ClientGameplayGlobals.Chat.cs	504a92a85e78b8e7eddf006d8b9f0211bf28105a	port
+cpppj/src/client/ClientGameplayGlobals.h	Netstorm.Client/ClientGameplayGlobals.Chat.cs	ae0e58b3ac0f34697eac6954cce7913a759247e3	port

@@ -39,4 +39,15 @@ public static class RawIssueCommands
         }
         return null;
     }
+    /// <summary>실제005cab30 상자를 빌리며 flash/desc callback이 바꾼 값을 지역 사본으로 덮지 않는다.</summary>
+    public static uint? InvokeIssueCommand(uint callback, string? argument, UIntBox cheat, IssueCommandHooks hooks)
+    {
+        if (callback == 0x4d5360)
+        {
+            if (argument is null) throw new ArgumentException("cheatorama 원문의 실제 인자 포인터 없음", nameof(argument));
+            if (unchecked((uint)ConfigNumbers.ParseLong(RawTextToken.Read(argument).Text)) == CheatValue) cheat.Value = CheatValue;
+            return 0;
+        }
+        uint unused = 0; return InvokeIssueCommand(callback, argument, ref unused, hooks);
+    }
 }

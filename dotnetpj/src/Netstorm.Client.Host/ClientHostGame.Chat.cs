@@ -30,6 +30,20 @@ public sealed partial class ClientHostGame
             line => ErrorLog.RecordAssertion("Chat 원문 진단", ".\\Chat.cpp", line));
         _nativeChatInitialized = true;
     }
+    /// <summary>실제 현재 Chat root의 장기 슬롯이며 나머지 창/공유 로그는 후속이다.</summary>
+    private readonly ClientChatWindowGlobals _chatWindowGlobals = new();
+    /// <summary>같은 실제 root 슬롯을 UI 공장/표시가 빌린다.</summary>
+    public ClientChatWindowGlobals ChatWindowGlobals => _chatWindowGlobals;
+    /// <summary>실제 UI/Identity 장치를 제공한 뒤만 생성되는 제출 부모다.</summary>
+    private ClientChatSubmitRuntime? _nativeChatSubmit;
+    /// <summary>실제 UI의 Identity/번역/선택 장치와 같은 Root 소유자로 제출 부모를 설치한다.</summary>
+    public void BindNativeChatSubmit(ClientChatSubmitDevices devices)
+    {
+        var startup = _startup ?? throw new InvalidOperationException("Chat 제출의 실제 시작 설정 미설치");
+        _nativeChatSubmit = new(_chatManagerGlobals, _dotCommandGlobals, _subscriberGlobals, _gameplay, _chatGlobals, _chatWindowGlobals, startup.Configuration, devices);
+    }
+    /// <summary>명시 manager/가변 원문 BYTE 입력을 설치한 실제 제출 부모로 전달한다.</summary>
+    public void SubmitNativeChat(uint manager, ReadOnlySpan<byte> input) => (_nativeChatSubmit ?? throw new InvalidOperationException("실제 Chat 제출 장치 미설치")).Submit(manager, input);
     /// <summary>World/Init/전송 소비자가 빌릴 실제 Client 구독자 주소다.</summary>
     public ClientSubscriberGlobals SubscriberGlobals => _subscriberGlobals;
     /// <summary>미션 유무와 관계없이 실제 MySubscriber의 현재 전체 DWORD를 읽는다.</summary>

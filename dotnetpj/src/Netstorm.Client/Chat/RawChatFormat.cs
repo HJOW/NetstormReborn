@@ -2,6 +2,8 @@
 // 근거: cpppj `src/client/RawChatFormat.h`·`RawChatFormat.cpp`(0042d160·0042ddf0·0042def0).
 // 2026-11-11 F3 채팅 형식 본체 이식에서 추가됐다.
 using System.Text;
+using System.Globalization;
+using Netstorm.Core.Original;
 
 namespace Netstorm.Client.Chat;
 
@@ -17,11 +19,21 @@ public static class RawChatFormat
 // 형식 읽기·쓰기가 함께 보는 매니저 번호·구독자 번호다. 2026-11-11 F3 채팅 형식 본체 이식에서 추가됐다.
 public sealed class ChatFormatGlobals
 {
-    /// <summary>현재 매니저 번호다. 0이면 진단을 먼저 부른다. 2026-11-11 F3 채팅 형식 본체 이식에서 추가됐다.</summary>
-    public uint Current { get; set; }
-
-    /// <summary>부호 있는 10진 ID 키용 구독자 번호다. 2026-11-11 F3 채팅 형식 본체 이식에서 추가됐다.</summary>
-    public uint Subscriber { get; set; }
+    /// <summary>현재 manager의 실제 주소 또는 독립 입력 상자다.</summary>
+    private readonly UIntBox _current;
+    /// <summary>현재 Subscriber의 실제 주소 또는 독립 입력 상자다.</summary>
+    private readonly UIntBox _subscriber;
+    /// <summary>기존 독립0/0 값을 그대로 구성한다.</summary>
+    public ChatFormatGlobals() : this(new(), new()) { }
+    /// <summary>실제 장기 두DWORD를 값 사본 없이 빌리며 초기화하지 않는다.</summary>
+    public ChatFormatGlobals(UIntBox current, UIntBox subscriber)
+    {
+        _current = current ?? throw new ArgumentNullException(nameof(current)); _subscriber = subscriber ?? throw new ArgumentNullException(nameof(subscriber));
+    }
+    /// <summary>현재 manager 번호다. 본문 재조회와 외부 쓰기도 같은 상자를 사용한다.</summary>
+    public uint Current { get => _current.Value; set => _current.Value = value; }
+    /// <summary>현재 signed 십진 키를 만드는 같은 Subscriber DWORD다.</summary>
+    public uint Subscriber { get => _subscriber.Value; set => _subscriber.Value = value; }
 }
 
 // 형식 읽기·쓰기가 부르는 외부 효과 묶음이다. 2026-11-11 F3 채팅 형식 본체 이식에서 추가됐다.
@@ -214,7 +226,8 @@ public static class ChatFormatBody
         }
 
         bytes[terminal] = 0;
-        string key = unchecked((int)globals.Subscriber) + (front ? "chatFormat2" : "chatFormat");
+        // 원문 std::to_string의 signed 십진 키에 관리 문화권의 음수 표식을 섞지 않는다.
+        string key = unchecked((int)globals.Subscriber).ToString(CultureInfo.InvariantCulture) + (front ? "chatFormat2" : "chatFormat");
         Need(hooks.WriteConfig)(key, Text(capture));
         return 0u;
     }
