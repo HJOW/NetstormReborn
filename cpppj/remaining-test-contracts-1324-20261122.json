@@ -1,0 +1,3874 @@
+{
+  "unit": 1324,
+  "date": "2026-11-22",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "status": "complete-test-contract-repair",
+  "productChanges": false,
+  "initial": {
+    "selected": 752,
+    "passed": 741,
+    "failedCases": 11,
+    "failures": [
+      {
+        "group": "guide",
+        "name": "CampaignNativeFortContinuation_ActualCoreReadSeedAndLocalIntegrity"
+      },
+      {
+        "group": "guide",
+        "name": "CampaignNativeFortContinuation_RejectsWrongModeOriginAndUnpreparedBorrow"
+      },
+      {
+        "group": "menu",
+        "name": "RewardTypeNumber_ActualSessionsBorrowSameCurrentOwnerWithoutLoad"
+      },
+      {
+        "group": "menu",
+        "name": "LoadedCostTable_ActualSessionsKeepOriginalAssetCostsAcrossMutableWorldReuse"
+      },
+      {
+        "group": "menu",
+        "name": "RegularCurrent_ActualSessionNumbersAndHostSurviveWorldReuse"
+      },
+      {
+        "group": "menu",
+        "name": "DaisCheckingParents_DepthDiagnosticsReturnCurrentRuntimeValue"
+      },
+      {
+        "group": "file",
+        "name": "CampaignMotion_ActualWarBeginsPriestPathArrival"
+      },
+      {
+        "group": "file",
+        "name": "CampaignMotion_ActualMasterOfWhirligigsLocalPriestPath"
+      },
+      {
+        "group": "file",
+        "name": "RawSurfaceWorld_RuntimeSharesStorageAndCurrentDispatch"
+      },
+      {
+        "group": "file",
+        "name": "ExistingEditorAfterCheckpoint_LiveRequestAndCommandReads"
+      },
+      {
+        "group": "file",
+        "name": "CampaignMotion_ActualMasterOfWhirligigsInitialization"
+      }
+    ]
+  },
+  "repair": {
+    "passedCases": 11,
+    "failedCases": 0,
+    "raw": "extracted/cpp-remaining-tests-1324",
+    "sourceFiles": [
+      "cpppj/tests/CampaignNativeFortContinuationTests.inc",
+      "cpppj/tests/CampaignObjectMenuTests.cpp",
+      "cpppj/tests/DaisCheckingParentsTests.cpp",
+      "cpppj/tests/ExistingEditorAfterCheckpointTests.cpp",
+      "cpppj/tests/RawSurfaceWorldTests.cpp",
+      "cpppj/tests/CampaignInstallSupport.h"
+    ]
+  },
+  "executables": {
+    "guide": {
+      "path": "cpppj\\build\\bin\\Release\\netstorm_guide_fort_request_tests.exe",
+      "sha256": "5900c6243ea0025f4108ac355a9a2fd313b9b3e14f7fc6a64c480dcad0b29bb8",
+      "bytes": 10854912,
+      "mtimeUtc": "2026-11-21T15:31:38.713715+00:00"
+    },
+    "menu": {
+      "path": "cpppj\\build\\bin\\Release\\netstorm_menu_session_tests.exe",
+      "sha256": "89b11ffd159c795eb21246b35c18b4c7883edccd3db790a1c236a24ebe3b00f9",
+      "bytes": 11768832,
+      "mtimeUtc": "2026-11-21T15:34:53.528490+00:00"
+    },
+    "popup": {
+      "path": "cpppj\\build\\bin\\Release\\netstorm_main_popup_tests.exe",
+      "sha256": "ef03a3381fcd481e185fe4230e080ef9c23eebc68f7d8f2b69d03d12bb46817a",
+      "bytes": 11912704,
+      "mtimeUtc": "2026-11-21T15:36:35.596781+00:00"
+    },
+    "file": {
+      "path": "cpppj\\build\\bin\\Release\\netstorm_file_tests.exe",
+      "sha256": "73264cd3ff00affe9c5742f65e51978634aebcfffbacd39ddc9f33f031e7dc2b",
+      "bytes": 14179840,
+      "mtimeUtc": "2026-11-21T15:45:03.593721+00:00"
+    }
+  },
+  "protected": {
+    "files": 2808,
+    "initialRunsUnchanged": true
+  },
+  "priorPop1321DuplicateNames": 0,
+  "m8SelectedSuite": "running-separately",
+  "exclusions": [
+    "MP/LAN/Join",
+    "specific-enemy-combat",
+    "priest-capture-sacrifice",
+    "aircraft-specific-construction-production-action",
+    "user-confirmation-only",
+    "CampaignSaveGoMain_ActualManagerGateAndSelectedBattleStop"
+  ],
+  "selectedCases": [
+    {
+      "group": "guide",
+      "name": "GuideFortRequest_Native144",
+      "source": "cpppj/tests/GuideFortRequestTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "FortSubscriberChange_Native54",
+      "source": "cpppj/tests/GuideFortRequestTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "FortSubscriberChange_PartialEffectsAndShortCircuit",
+      "source": "cpppj/tests/GuideFortRequestTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "ExistingEditorFort_MissionReturnWithoutEditorCheckpoint",
+      "source": "cpppj/tests/GuideFortRequestTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "MissionFortRequest_Native144",
+      "source": "cpppj/tests/MissionFortRequestTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "MissionFortRequest_OwnedImageAndCurrentFields",
+      "source": "cpppj/tests/MissionFortRequestTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "ExistingEditorInstallOuter_IndependentNativeProjection",
+      "source": "cpppj/tests/ExistingEditorInstallOuterTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "ExistingEditorInstallOuter_RequiredAndPartialBoundaries",
+      "source": "cpppj/tests/ExistingEditorInstallOuterTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_DeferPreservesExistingOwnerAndDefaultStages",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_DeferRejectsCampaignMode",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_NormalReadFalseKeepsInvalidBranch",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_FirstNotifyUsesActualWriterBeforeSubscriber",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_FileTailThenActualWorldChatBoundary",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_CoreWriteNaturalGateKeepsActualStorage",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_CoreWriteManagerDiagnosticBeforeGate",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_CoreWriteMetamapDiagnosticBeforeGate",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_ActualCurrentNameSelectsWorkingFile",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_ActualChatRuntimeAdvancesWorldAndSnapshot",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_ActualPlayerUiCompletesAndReloads",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_ActualCustomTest01PlayerUiAndFile",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_AdoptsNativePlayersAndPreservesCoreUntilNextCleanup",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_UiScopeCommitsOnlyAfterActualStateReturn",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_UiTailFailureKeepsPublicAccessClosed",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_UiTailCannotCommitEarlyReturnOrImmediate",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_PreparedCtorPreservesSameClientState",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_PreparedCtorKeepsSharedIslandAndChunkData",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_PreparedCtorAndLateFailureKeepSelectionGlobals",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_PreparedCtorRejectsIncompleteOwnersBeforeBorrow",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_PreparedAuthorityUsesSameClientOwnerWithoutTrueWrites",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_PreparedAuthoritySurvivesPartialConstructorFailure",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_FullDeckOwnerPreparedConsumersAndRelease",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_FullDeckOwnerPreservesConstructorAndLateFailure",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_FullDeckOwnerOrdinaryEditorCompatibility",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_CameraPreparedCtorAndReleasePreserveCurrentOwner",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_CameraPreparedCtorFailureKeepsOwner",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_StateAuxPreparedCtorAndLateFailurePreserveCurrentOwner",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "GameAux_PreparedCtorAndReleaseKeepAllCurrentFields",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "GameAux_PreparedCtorLateFailureReleasesLeaseWithoutReset",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_CursorDataPreparedBorrowAndReleasePreserveCurrentValues",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_CursorDataPreparedFailureKeepsOwner",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorPrefix_ActualDeckBeforeCheckpointAndScopeRetirement",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorPrefix_FailureClosesScopeWithoutPublishingRuntime",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorPrefix_RequiresPreparedOwnerAndCurrentFortState",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_InputFactoriesStayClosedUntilActualStateCommit",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "EditorDeferredFile_EmptyAndStaleProjectionUseFinalRawFile",
+      "source": "cpppj/tests/EditorDeferredFileTests.inc"
+    },
+    {
+      "group": "guide",
+      "name": "EditorDeferredFile_SignatureAndObjectErrorsKeepNativeBoundaries",
+      "source": "cpppj/tests/EditorDeferredFileTests.inc"
+    },
+    {
+      "group": "guide",
+      "name": "EditorDefaultName_ActualSessionContinuesIntoExistingCheckpoint",
+      "source": "cpppj/tests/EditorDefaultNameSessionTests.inc"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignNewFort_ActualDataOwnersAndSavedFileBeforeWorld",
+      "source": "cpppj/tests/CampaignNewFortTests.inc"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignNewFort_FirstTitleFailureKeepsOnlyNativePrefix",
+      "source": "cpppj/tests/CampaignNewFortTests.inc"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignNewFort_EmptyWorldCheckpointStateCommitAndAddIslandQueue",
+      "source": "cpppj/tests/CampaignNewFortTests.inc"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignNewFort_ConfigReceivesTerminatedOriginalHandle",
+      "source": "cpppj/tests/CampaignNewFortConfigTests.inc"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignEditorIsland_ActualPreviewChoicesAndRejectedDrop",
+      "source": "cpppj/tests/CampaignEditorIslandTests.inc"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignEditorIsland_ActualWorldPopulationGraphAndTerritory",
+      "source": "cpppj/tests/CampaignEditorIslandTests.inc"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignIslandBitmap_ActualEditorMapChoiceAndSharedOwners",
+      "source": "cpppj/tests/CampaignIslandBitmapTests.inc"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignIslandBitmap_NewFortEmptyMapAndRealCandidate",
+      "source": "cpppj/tests/CampaignIslandBitmapTests.inc"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignEditorImage_ActualMapAndCroppedChoicesUseSameSession",
+      "source": "cpppj/tests/CampaignEditorImageTests.inc"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignEditorIslandMotion_ActualSessionPreviewColorAndReadOnlyWorld",
+      "source": "cpppj/tests/CampaignEditorIslandMotionTests.inc"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignEditorGraphNative_SameNativeCandidatePlacementMembershipAndLedger",
+      "source": "cpppj/tests/CampaignEditorGraphNativeTests.inc"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignEditorGraphWorld_TwoActualIslandsJoinOwnerCutAndRebuild",
+      "source": "cpppj/tests/CampaignEditorGraphWorldTests.inc"
+    },
+    {
+      "group": "guide",
+      "name": "EditorInvalidFile_RepeatedRejectsReachCurrentValidFile",
+      "source": "cpppj/tests/EditorInvalidFileTests.inc"
+    },
+    {
+      "group": "guide",
+      "name": "EditorInvalidFile_DefaultRejectThenMissingCreatesActualNewFort",
+      "source": "cpppj/tests/EditorInvalidFileTests.inc"
+    },
+    {
+      "group": "guide",
+      "name": "EditorInvalidFile_ClearFailureKeepsSuppressionAndDoesNotSelect",
+      "source": "cpppj/tests/EditorInvalidFileTests.inc"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_DeferredCleanupSelectsSharedCursor",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_ActualProductionFormsInsideInstallScope",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_EditorWireQueuesNegativeSenderConstructionMoveAndSalvage",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_EditorWireReadsCurrentChargeGateWithoutSenderNormalization",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_EditorWireRejectsOwnedRegistrationBeforePublishing",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_EditorWireRejectsForeignPlayersAndLoginBeforeBorrow",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_ActivityWireUsesClientNineAndRetiresOnlyReceive",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_ActivityCollisionPreservesAllPriorRegistrations",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorPrefix_State2SharesActualDeckAndCommit",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_GuideReleaseClearsSameNativeMissionBeforeEditor",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_GuideReleaseKeepsPartialEffectsOnConfigNotificationFailure",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_GuideLifetimeSurvivesPreparedCtorUntilSelectedLateClose",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_SameNameKeepsGuideAndSelectsMissionOutside",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignSaveGoMain_NoThenYesUsesActualFullFortWriter",
+      "source": "cpppj/tests/CampaignSaveGoMainTests.inc"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignSaveGoMain_ReadOnlyStillSnapshotsBeforeNextState",
+      "source": "cpppj/tests/CampaignSaveGoMainTests.inc"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignNoWorldProduction_AdoptsActualClientDeckBeforePrefix",
+      "source": "cpppj/tests/CampaignSaveGoMainTests.inc"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignSaveGoMain_ActualFileSharingFailureKeepsStateAndAllowsRetry",
+      "source": "cpppj/tests/CampaignSaveGoMainTests.inc"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignExistingEditorCheckpoint_CurrentGuideHandoffUsesActualSubscriber",
+      "source": "cpppj/tests/CampaignExistingEditorCheckpointTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignNativeFortContinuation_ActualNonEditorWorldCommitsAfterPriests",
+      "source": "cpppj/tests/CampaignNativeFortContinuationTests.inc"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignNativeFortContinuation_ActualGuideEarlyReturnKeepsPriorPhase",
+      "source": "cpppj/tests/CampaignNativeFortContinuationTests.inc"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignNativeFortContinuation_ActualCoreReadSeedAndLocalIntegrity",
+      "source": "cpppj/tests/CampaignNativeFortContinuationTests.inc"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignNativeFortContinuation_RejectsWrongModeOriginAndUnpreparedBorrow",
+      "source": "cpppj/tests/CampaignNativeFortContinuationTests.inc"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignFortFrameLease_ActualGameWorldClosesUntilStateCommit",
+      "source": "cpppj/tests/CampaignFortFrameLeaseTests.inc"
+    },
+    {
+      "group": "guide",
+      "name": "FortPriestPreparation_Native13ActualParentAndListHelpers",
+      "source": "cpppj/tests/FortPriestPreparationTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "FortPriestPreparation_SelectedFailureKeepsEarlierTechnologyEffects",
+      "source": "cpppj/tests/FortPriestPreparationTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignWorldLoad_PatchNativeParentRequestsAndFullCurrentBytes",
+      "source": "cpppj/tests/CampaignWorldLoadTests.cpp"
+    },
+    {
+      "group": "guide",
+      "name": "CampaignWorldLoad_CdNativeParentRequestsAndFullCurrentBytes",
+      "source": "cpppj/tests/CampaignWorldLoadTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "RawMenuControls_HelpActualTreePixelsAndOutsideInput",
+      "source": "cpppj/tests/RawMenuControlsTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "RawMenuControls_OwnedHelpStringsDriveRealMenuAndRelease",
+      "source": "cpppj/tests/RawMenuControlsTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "RawMenuControls_HelpActualHistoryButtonsAndReopen",
+      "source": "cpppj/tests/RawMenuControlsTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "RawMenuControls_HelpActualTypeInfoAndImage",
+      "source": "cpppj/tests/RawMenuControlsTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "RawMenuControls_FloatingSpActualPixelsAndLifetime",
+      "source": "cpppj/tests/RawMenuControlsTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "RawMenuControls_CommonTreeInputAndDisabledItem",
+      "source": "cpppj/tests/RawMenuControlsTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "RawMenuControls_CheatDirectChildAndCommand",
+      "source": "cpppj/tests/RawMenuControlsTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "RawMenuControls_CommandPointChoosesVisibleSameLabelChild",
+      "source": "cpppj/tests/RawMenuControlsTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "RawMenuControls_HorizontalPointAndDeferredReplace",
+      "source": "cpppj/tests/RawMenuControlsTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "RawMenuControls_FancySubmenuPixelsAndCleanup",
+      "source": "cpppj/tests/RawMenuControlsTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "RawMenuControls_ObjectMenuCommandsAndCurrentConfig",
+      "source": "cpppj/tests/RawMenuControlsTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "RawMenuControls_MissionLoadingUsesSharedTreeAndCancel",
+      "source": "cpppj/tests/RawMenuControlsTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "RawMenuControls_MinimapBeforeSessionAndAcrossWorldBindings",
+      "source": "cpppj/tests/RawMenuControlsTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "RawMenuControls_MinimapPaletteUsesSharedClientRevision",
+      "source": "cpppj/tests/RawMenuControlsTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "RawMenuControls_MinimapReplacementKeepsCurrentWorldNotifications",
+      "source": "cpppj/tests/RawMenuControlsTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "RawMenuEditorIslandWindow_ActualExistingAndFreshWorldFullInputLifecycle",
+      "source": "cpppj/tests/RawMenuEditorIslandWindowTests.inc"
+    },
+    {
+      "group": "popup",
+      "name": "RawMenuEditorIslandWindow_ReferencesPartialConstructionAndRootDragRetirement",
+      "source": "cpppj/tests/RawMenuEditorIslandWindowTests.inc"
+    },
+    {
+      "group": "popup",
+      "name": "RawMenuControls_UnifiedDirtyCollectionAndDrawingLifetime",
+      "source": "cpppj/tests/RawMenuControlsTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "RawMenuControls_DerivedDirtyRectanglesPreserveFullPixels",
+      "source": "cpppj/tests/RawMenuControlsTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "MinimapDirty_ActualRefreshClickAndDragPreserveFullPixels",
+      "source": "cpppj/tests/RawMinimapDirtyTests.inc"
+    },
+    {
+      "group": "popup",
+      "name": "MinimapDirty_HiddenAndMoveModesUseCurrentVisibility",
+      "source": "cpppj/tests/RawMinimapDirtyTests.inc"
+    },
+    {
+      "group": "popup",
+      "name": "MinimapDirty_ContentAndOwnerChangesReachActualPixels",
+      "source": "cpppj/tests/RawMinimapDirtyTests.inc"
+    },
+    {
+      "group": "popup",
+      "name": "RawMenuControls_UrlInputSharesActualHelpScriptAndExternal",
+      "source": "cpppj/tests/RawMenuControlsTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "RawMenuControls_MainLayoutNineButtonsWithIntro",
+      "source": "cpppj/tests/RawMenuMainPopupTests.inc"
+    },
+    {
+      "group": "popup",
+      "name": "RawMenuControls_MainParentModalPreserveAndKill",
+      "source": "cpppj/tests/RawMenuMainPopupTests.inc"
+    },
+    {
+      "group": "popup",
+      "name": "RawMenuControls_MainParentActivityRealIdleAndPopup",
+      "source": "cpppj/tests/RawMenuMainPopupTests.inc"
+    },
+    {
+      "group": "popup",
+      "name": "RawMenuControls_MainParentConstructionFailureReleasesAndRebuilds",
+      "source": "cpppj/tests/RawMenuMainPopupTests.inc"
+    },
+    {
+      "group": "popup",
+      "name": "RawMenuControls_MainLayoutMeasuredWidthAndSixResolutions",
+      "source": "cpppj/tests/RawMenuMainPopupTests.inc"
+    },
+    {
+      "group": "popup",
+      "name": "RawMenuControls_MainPopupHelpModalSelectionAndRetirement",
+      "source": "cpppj/tests/RawMenuMainPopupTests.inc"
+    },
+    {
+      "group": "popup",
+      "name": "RawMenuControls_MainPopupOptionsNativeSubmenuAndOutsideClose",
+      "source": "cpppj/tests/RawMenuMainPopupTests.inc"
+    },
+    {
+      "group": "popup",
+      "name": "RawMenuControls_StaticHelpTokensResolveWithoutScriptRing",
+      "source": "cpppj/tests/RawMenuControlsTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "GameMenus_Native918",
+      "source": "cpppj/tests/GameMenusTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "PlayerListMenu_Native530",
+      "source": "cpppj/tests/GameMenusTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "PlayerListMenu_QueuesF9AndShiftPause",
+      "source": "cpppj/tests/GameMenusTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "GameMenus_OptionsLanguageSubmenuOnlyWithCompatibilityLanguages",
+      "source": "cpppj/tests/GameMenusTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "GameMenus_OptionsPostProcessEntriesOnlyWhenEnabled",
+      "source": "cpppj/tests/GameMenusTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "GameMenuActions_Native610CurrentBodyAndPartialEffects",
+      "source": "cpppj/tests/GameMenuActionsTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "GameMenuActions_UnhandledReleaseAndRequiredEffects",
+      "source": "cpppj/tests/GameMenuActionsTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "GameMenuBar_Native510",
+      "source": "cpppj/tests/GameMenuBarTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "GameMenuBar_MissingChildIsExplicit",
+      "source": "cpppj/tests/GameMenuBarTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "HtmlWindowFactoryClient_ActualTellParamLifetimeZeroSizeAndSuppressedModes",
+      "source": "cpppj/tests/HtmlWindowFactoryClientTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "HtmlWindowFactoryClient_ActualTellMissingEmptyAndExceptionScope",
+      "source": "cpppj/tests/HtmlWindowFactoryClientTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "HtmlWindowFactoryClient_ActualTellMenuClickAndDeferredExitAcrossRecompose",
+      "source": "cpppj/tests/HtmlWindowFactoryClientTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "HtmlWindowFactoryClient_ActualTellButtonPointNestedCountsAndPreservedParent",
+      "source": "cpppj/tests/HtmlWindowFactoryClientTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "HtmlWindowFactoryClient_ActualOfficialArchiveFileFinderAndMenus",
+      "source": "cpppj/tests/HtmlWindowFactoryClientTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "HtmlWindowFactoryClient_ActualBackgroundAcrossWindowsAndSuppressedParsing",
+      "source": "cpppj/tests/HtmlWindowFactoryClientTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "HtmlWindowFactoryClient_ActualConfigFallbackBodyModalAndQueue",
+      "source": "cpppj/tests/HtmlWindowFactoryClientTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "HtmlWindowFactoryClient_ActualImmediateLinksTwoPassAndKillBeforeCleanup",
+      "source": "cpppj/tests/HtmlWindowFactoryClientTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "HtmlWindowFactoryClient_ActualSameParserHiddenStateAcrossPasses",
+      "source": "cpppj/tests/HtmlWindowFactoryClientTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "HtmlWindowFactoryClient_ActualEmptyDummyAndSuppressedParserEffects",
+      "source": "cpppj/tests/HtmlWindowFactoryClientTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "HtmlWindowFactoryClient_ActualNestedModalDepthAndInputRestoration",
+      "source": "cpppj/tests/HtmlWindowFactoryClientTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "HtmlWindowFactoryClient_ThreeDialogsEveryRemovalOrderKeepsCurrentInputAndExit",
+      "source": "cpppj/tests/HtmlWindowFactoryClientTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "HtmlWindowFactoryClient_PartialButtonsAndReservedMenuFailureCleanup",
+      "source": "cpppj/tests/HtmlWindowFactoryClientTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "HtmlWindowFactoryClient_ActualLongBodyScrollingAndPixels",
+      "source": "cpppj/tests/HtmlWindowFactoryClientTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "HtmlWindowFactoryClient_SelectedMissingServicesRejectAndCleanup",
+      "source": "cpppj/tests/HtmlWindowFactoryClientTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "MissionLoadingClient_ActualOwnerFactoryReuseQueueAndCleanup",
+      "source": "cpppj/tests/HtmlWindowFactoryClientTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "MissionLoadingClient_ReusedParentReadsCurrentView",
+      "source": "cpppj/tests/HtmlWindowFactoryClientTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "MissionLoadingClient_FactoryEffectChangesCurrentCreatedOwner",
+      "source": "cpppj/tests/HtmlWindowFactoryClientTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "HtmlWindowFactoryClient_DynamicArchiveLooseConfigWriterAndParamLifetime",
+      "source": "cpppj/tests/HtmlWindowFactoryClientTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "HtmlWindowFactoryClient_DynamicConfigReadFailureReleasesTemporaryOwners",
+      "source": "cpppj/tests/HtmlWindowFactoryClientTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "HtmlWindowFactory_IndependentWholeNativeAndCurrentEffects",
+      "source": "cpppj/tests/HtmlWindowFactoryTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "GumpInput_Native1078",
+      "source": "cpppj/tests/GumpInputTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "GumpInput_NativeCd",
+      "source": "cpppj/tests/GumpInputTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "GumpInput_Native1037",
+      "source": "cpppj/tests/GumpInputTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "GumpInput_CreateCaptureDialogLifetimeIntegration",
+      "source": "cpppj/tests/GumpInputTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "GumpInput_CaptureCurrentValueAndNoFallback",
+      "source": "cpppj/tests/GumpInputTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "GumpInput_OverlayActualPickParentsAndZeroReturn",
+      "source": "cpppj/tests/GumpInputTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "GumpInput_DialogCapacityBeforeDuplicate",
+      "source": "cpppj/tests/GumpInputTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "GumpInput_Contracts",
+      "source": "cpppj/tests/GumpInputTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "GumpInput_CallbackExceptionKeepsWrites",
+      "source": "cpppj/tests/GumpInputTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "GumpLifetime_PatchNative",
+      "source": "cpppj/tests/GumpLifetimeTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "GumpLifetime_CdNative",
+      "source": "cpppj/tests/GumpLifetimeTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "GumpLifetime_AdditionalNative",
+      "source": "cpppj/tests/GumpLifetimeTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "GumpLifetime_CreateTreeKillCleanupAndReuse",
+      "source": "cpppj/tests/GumpLifetimeTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "GumpLifetime_TreeReplacementDefersDestruction",
+      "source": "cpppj/tests/GumpLifetimeTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "GumpLifetime_BaseDoesNotUnregisterOrRemoveDialogs",
+      "source": "cpppj/tests/GumpLifetimeTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "GumpLifetime_CdIdleCapacity",
+      "source": "cpppj/tests/GumpLifetimeTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "GumpLifetime_ContractsAndCycles",
+      "source": "cpppj/tests/GumpLifetimeTests.cpp"
+    },
+    {
+      "group": "popup",
+      "name": "GumpLifetime_CallbackExceptionKeepsWrittenState",
+      "source": "cpppj/tests/GumpLifetimeTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CampaignKnowledge_ActualSessionAndMenuTree",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CampaignHelp_ActualCurrentTypeInfo",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CampaignObjectMenus_ActualChainAndBuildSelection",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CampaignObjectMenus_ActualRefundAndUninstalledGuard",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CampaignObjectMenus_ActualCommonOpenUsesCurrentWorld",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CampaignObjectMenus_ActualObjectFormBindingAndClose",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CampaignObjectMenus_ActualParentDeletionAndDeferredUiCleanup",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CampaignFloatingSp_ActualReferenceAndUiCleanup",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CampaignFloatingSp_ParentDeletionKeepsDeferredUiLifetime",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CampaignFloatingSp_ProjectCurrentObjectAndCameraWithoutSidTruncation",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CampaignObjectMenus_ActualSummaryUsesCurrentIdentityAndAlliance",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CampaignObjectMenus_CurrentCountVtable_BaseLevelIgnoresTypeConstructorPair",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CampaignObjectMenus_CurrentCountVtable_AltarDelegatesToCurrentDaisCount",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CampaignObjectMenus_CurrentCountVtable_UnknownTableFailsAndReopens",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CampaignObjectMenus_NestedCurrentCountVtable_TypedDaisUsesItsCurrentVirtualEntry",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CampaignObjectMenus_NestedCurrentCountVtable_CycleFailsAndUnwindsForNextMenu",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CampaignUserSelection_SamePoolMarksRegularAndManaNotice",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CampaignUserSelection_CurrentMissionDemoBlocksBeforeSelectionEffects",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "GameWorldUserSelection_CurrentMissionDemoKeepsResetAndClearDistinct",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "GameWorldEditorOwner_RightClickUsesWorldRedrawAndKeepsMinimapDirty",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "GameWorldEditorPrimary_ActualInputFollowsPreservedSelection",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "GameWorldPointerModes_EmptyPickupCancelAndPollingCoordinates",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CampaignPointerMenu_ActualReturnSoundAndDirectSpecialTrace",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CampaignContentPreview_RealNoticeCreatePopAndExpiry",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CampaignContentPreview_RealNuggetInitialRegulars",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CampaignNuggetRegular_ActualAnimationAndFallLifecycle",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CampaignFactory_WorkshopDuplicatePreservesWarningAndDeletesOld",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CampaignEditorCheatMenu_ActualSessionCommonAndGemVisibility",
+      "source": "cpppj/tests/CampaignEditorCheatMenuTests.inc"
+    },
+    {
+      "group": "menu",
+      "name": "StateGameUi_GameAndViewUseCurrentMissionEditorAndDemo",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "StateGameUi_OptionsCurrentConfigDeviceAndDisplayFlags",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "StateGameBarUi_ActualChildrenTrackingAndAboutReleaseTogether",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "ObjectMenu_NativeBase478",
+      "source": "cpppj/tests/ObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "ObjectMenu_NativeDamageable478",
+      "source": "cpppj/tests/ObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "ObjectMenu_NativeSalvage478",
+      "source": "cpppj/tests/ObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "ObjectMenu_RequiresReachedDependencies",
+      "source": "cpppj/tests/ObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "ObjectMenu_HelpWordReadUsesCurrentCacheAtItemTime",
+      "source": "cpppj/tests/ObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "FloatingSpGump_Native426",
+      "source": "cpppj/tests/FloatingSpGumpTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "GumpCollection_PatchNative",
+      "source": "cpppj/tests/GumpCollectionTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "GumpCollection_CdNative",
+      "source": "cpppj/tests/GumpCollectionTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "GumpCollection_AdditionalNative",
+      "source": "cpppj/tests/GumpCollectionTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "GumpCollection_PerRootLimitAndSafeBuffer",
+      "source": "cpppj/tests/GumpCollectionTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "GumpCollection_RejectsDamagedLinksAndMissingProjection",
+      "source": "cpppj/tests/GumpCollectionTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "GumpCollection_CommonSubmissionIntegration",
+      "source": "cpppj/tests/GumpCollectionTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "GumpTree_PatchNative",
+      "source": "cpppj/tests/GumpTreeTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "GumpTree_CdNative",
+      "source": "cpppj/tests/GumpTreeTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "GumpTree_AdditionalNative",
+      "source": "cpppj/tests/GumpTreeTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "GumpTree_CreatedAttachPushCollectionDraw",
+      "source": "cpppj/tests/GumpTreeTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "GumpTree_RealVirtualChildReflow",
+      "source": "cpppj/tests/GumpTreeTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "GumpTree_DepthChangesReachCollection",
+      "source": "cpppj/tests/GumpTreeTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "GumpTree_ContractsAndCycles",
+      "source": "cpppj/tests/GumpTreeTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "GumpTree_CallbackExceptionKeepsWrittenState",
+      "source": "cpppj/tests/GumpTreeTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CameraView_Native16WholeImageAndProjection",
+      "source": "cpppj/tests/CameraViewTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CameraView_BssExplicitInitializeTargetSnapshotAndDenominatorStayDistinct",
+      "source": "cpppj/tests/CameraViewTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CameraView_FirstMenuActualPrepareRequeriesSnapshotAndRenderer",
+      "source": "cpppj/tests/CameraViewTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CameraView_PlacementCostRequeriesSharedPixelsAfterDirtyEffect",
+      "source": "cpppj/tests/CameraViewTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CameraView_WorldSetterAssertionRequeriesCurrentFieldsAfterAllStores",
+      "source": "cpppj/tests/CameraViewTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CameraCenter_Native140PreservesCurrentViewsAndOnlyWritesTarget",
+      "source": "cpppj/tests/CameraCenterTests.inc"
+    },
+    {
+      "group": "menu",
+      "name": "EditorPrimarySelection_ReplaysNativeHeldSidAndLateOwner",
+      "source": "cpppj/tests/ObjectOwnerCommandsTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "EditorPrimarySelection_UnselectedHooksAndReachedFailure",
+      "source": "cpppj/tests/ObjectOwnerCommandsTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "ObjectOwnerCommand_ReplaysNative256LateModeAndHeldSid",
+      "source": "cpppj/tests/ObjectOwnerCommandsTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "ObjectOwnerCommand_ReleaseUnknownAndReachedMissingEffects",
+      "source": "cpppj/tests/ObjectOwnerCommandsTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "RawBridgeEditor_ReplaysNativeWholePoolTraceAndRandom",
+      "source": "cpppj/tests/RawBridgeEditorTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "RawBridgeEditor_ReplaysNativeCycle120",
+      "source": "cpppj/tests/RawBridgeEditorTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "RawBridgeEditor_CycleCachesFrameAndRequeriesFlags",
+      "source": "cpppj/tests/RawBridgeEditorTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "RawBridgeEditor_PreservesPartialWriteAndUnsupportedNoop",
+      "source": "cpppj/tests/RawBridgeEditorTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "RawBridgeEditor_OneReplaysNative240AndPreservesOtherSlots",
+      "source": "cpppj/tests/RawBridgeEditorTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "RawBridgeEditor_OneRejectsNonEditorBeforeSidAndPreservesPartialWrite",
+      "source": "cpppj/tests/RawBridgeEditorTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "PointerMenuParent_ReplaysNativeOpen8",
+      "source": "cpppj/tests/PointerMenuParentTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "PointerMenuParent_ReplaysNativeSpecialTrace36",
+      "source": "cpppj/tests/PointerMenuParentTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "PointerMenuParent_OnlyReachedHooksAreRequired",
+      "source": "cpppj/tests/PointerMenuParentTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "LostPositionKey_ActualSessionDeletionWritesCurrentClientCamera",
+      "source": "cpppj/tests/LostPositionOwnerTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "QuickHelpList_Native142ParentOrderAndFailurePrefixes",
+      "source": "cpppj/tests/QuickHelpListTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "QuickHelpList_Native128GeneralGuideGumpReleasePauseConsole",
+      "source": "cpppj/tests/QuickHelpListTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "QuickHelpList_Native21NamesAndRealStringQueue",
+      "source": "cpppj/tests/QuickHelpListTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "QuickHelpList_AbsentHelpFirstNulAndReachedBounds",
+      "source": "cpppj/tests/QuickHelpListTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "QuickHelpListDisk_BinaryRPlusBPreservesTailAndSharedFileRing",
+      "source": "cpppj/tests/QuickHelpListTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "QuickHelpListDisk_FailedOpenDestructAndSameDeviceReuse",
+      "source": "cpppj/tests/QuickHelpListTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "QuickHelpListIntegration_NativeHtmlBytesAndDeferredKill",
+      "source": "cpppj/tests/QuickHelpListIntegrationTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "QuickHelpListIntegration_FailedStreamRetiresCallbackKeepsOriginalToken",
+      "source": "cpppj/tests/QuickHelpListIntegrationTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "DrawWater_Native76FullFinderProjectionRectPixelsAndMutations",
+      "source": "cpppj/tests/DrawWaterTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "DrawWater_Native384GeneralInputAndFullDwordStores",
+      "source": "cpppj/tests/DrawWaterTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "DrawWater_Native9NamesCurrentQueueAndNoDefaultMenuAlias",
+      "source": "cpppj/tests/DrawWaterTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "DrawWater_LongOwnerAndDisabledNoDeviceNoViewportDivision",
+      "source": "cpppj/tests/DrawWaterTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "DrawWater_PostSceneIndependentOfDirtyAndScreenClip",
+      "source": "cpppj/tests/DrawWaterTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "PathMarker_ThreeShrinkingCellRectanglesFollowOriginalOrder",
+      "source": "cpppj/tests/DrawWaterTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "PathMarker_WrapsSignedDwordWithoutUndefinedBehavior",
+      "source": "cpppj/tests/DrawWaterTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "RendererDiagnostics_Native252WholePixelsAndCurrentBodies",
+      "source": "cpppj/tests/RendererDiagnosticsTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "RendererDiagnostics_DisabledAndLongOwnerNoSyntheticActivation",
+      "source": "cpppj/tests/RendererDiagnosticsTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "RendererDiagnostics_SharedPathWorkSurvivesSearchOwnerReplacement",
+      "source": "cpppj/tests/RendererDiagnosticsTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "RendererDiagnostics_Native576KeyGatesFullDwordAndPositionLog",
+      "source": "cpppj/tests/RendererDiagnosticsTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "rawPathSearch_native_bfs_and_compression",
+      "source": "cpppj/tests/RawPathSearchTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "rawPathSearch_current_surface_alias",
+      "source": "cpppj/tests/RawPathSearchTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "rawPathSearch_init_uses_current_surface_before_search",
+      "source": "cpppj/tests/RawPathSearchTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "rawPathSearch_kernel_moves_and_arrives_in_same_space",
+      "source": "cpppj/tests/RawPathSearchTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "rawPathSearch_native_initialization_pipeline",
+      "source": "cpppj/tests/RawPathSearchTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "rawPathSearch_shared_diagnostic_current_value_and_edition",
+      "source": "cpppj/tests/RawPathSearchTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "FactoryTakeDiagnostics_ActualSessionUsesSameStorageDetail",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "SquidPopParent_ActualSessionLateFrameLookup",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "SquidActivate_ActualSessionUsesCurrentServiceAfterPostPop",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "RiftShapeAccess_ActualSessionRetainsInputFrameAndLoadedCost",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "PostPopCurrent_ActualSessionUsesCurrentOwnerAndRememberedSelection",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "FactoryParentCurrent_ActualSessionRedispatchesCountAfterCommon",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "FactoryGlobalsCurrent_ActualTimersShareClientAcrossSessions",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "FactoryGlobalsCurrent_ActualFrameHelperReadsSharedTypeAfterCommon",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "AssetParentsCurrent_ActualSessionUsesSharedListsAndRealRegulars",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "BuildingNotifyCurrent_ActualSessionReadsCurrentTypeAndService",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "AssetFenceCurrent_ActualSessionCreatesOnlySelectedRegulars",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "AssetTailCurrent_ActualSessionSharesGrowthAndNuggetRegulars",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "VortexCurrent_ActualSessionDiagnosticWritesCurrentPlayerRecord",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "PostPrefixCurrent_ActualSessionBridgeNoFirstAndForcefieldRegulars",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "BuriedRuneCurrent_ActualSessionVtablesAndRuneRegular",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "PlayerParentCurrent_ActualSessionPhysicalLinkAndInitialRegular",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "PlayerParentCurrent_ActualSessionDiagnosticReturnAndTypedCreate",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "DudeParentCurrent_ActualSessionPhysicalVtableAndCurrentPopulationFrame",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "IslandCurrent_ActualSessionNonFirstPhysicalVtablesUseCommon",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "IslandCurrent_ActualSessionMissingUpperLeftDiagnosisReturnsToCommon",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "IslandCurrent_ActualWorldRecordsSupportDetailWithSharedTypeWas",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "NuggetMenuCurrent_ActualSessionSchedulesSuccessorWithActualVtable",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "NuggetTypeNumber_ActualSessionChoiceGetterReadsCurrentNuggetOwner",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "RuneTypeNumber_ActualSessionChoiceGetterReadsCurrentDaisOwner",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "RewardTypeNumber_ActualSessionsBorrowSameCurrentOwnerWithoutLoad",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "LoadedCostTable_ActualSessionsKeepOriginalAssetCostsAcrossMutableWorldReuse",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "ForcefieldRegularCurrent_ActualSessionUsesVtableAndCurrentClientDiagnostic",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "ForcefieldRegularCurrent_ActualSessionSearchesWithCurrentWorldTypes",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "RewardCurrentTypes_ActualSessionSharesWorldTableForHpAndPriestGenus",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "PriestPostPopCurrent_ActualSessionVirtualPrefixListRegularAndMobileQuery",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "DaisClassCurrent_ActualSessionDispatchesReadOnlyRegularsByVtable",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "RuneSharedCurrent_ActualSessionPreflightUsesCurrentRuneOwnerWithoutEffects",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "FormConstructorCurrent_ActualTeleportUsesSelectedSlotConstructorThenCommon",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "PathConstructorCurrent_ActualTeleportUsesAliasedTypeFunctionWithoutStartingPath",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "PathConstructorCurrent_ActualSessionCreatesFixedClassesWithoutInitOrAttach",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CursorConstructorCurrent_ActualTeleportUsesFixedBodyAndItsCurrentAttachType",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "AssetConstructorCurrent_ActualTeleportUsesFunctionAddressWithoutRetypingOrAllocation",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "AssetConstructorCurrent_ActualFactoryUsesClientDiagnosticBeforePhysicalDaisStore",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "PopWorldBounds_ActualSessionUsesSameCurrentClientSizeAsCursorAndCamera",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "RegularCurrent_ActualSessionNumbersAndHostSurviveWorldReuse",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "RegularCurrent_ActualPopUsesCurrentTypeAndKeepsOneEffectReservation",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "RegularCurrent_ActualSharedConstructorUsesClientDiagnosticThenCurrentType",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "BuildingObjectUi_FourWorkshopsUseCurrentOwnerLevelMoneyAndEditor",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "BuildingObjectUi_WorkshopClickInsufficientFundsAndCycleCurrentFrame",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "BuildingObjectUi_GeneratorsUseStrictHalfHpAndMissionOwnerGates",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "BuildingObjectUi_ConstructionBlocksMenusWithoutAllocatingForms",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "ProductionObjectUi_FourThemesKeepDuplicateRowsAndDistinctSlots",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "ProductionObjectUi_DisallowedExcludedAndAllProducedRemainDifferent",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "ProductionObjectUi_ClientPredictionAndServerGapsUseFirstMatchingForm",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "ProductionObjectUi_SalvageUsesCurrentOwnerEditorDenyAndConfirmation",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "StateObjectUi_EmptyAltarStatusHeadersAndLevelClampReleaseMenus",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "StateObjectUi_EditorDestroyClickReleasesPairAndPopupWithoutTransmission",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "BuildingUpgradeUi_FourThemesCompleteAndReopenAtEveryLevel",
+      "source": "cpppj/tests/CampaignObjectMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CursorObjectPickup_ReplaysNative96LateTypeWordAndFlags",
+      "source": "cpppj/tests/CursorObjectPickupTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CursorObjectPickup_PreservesUnpopAndFormOnReachedFailure",
+      "source": "cpppj/tests/CursorObjectPickupTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CreateAt_Native580ParentsPreserveCurrentStateAndFloatBits",
+      "source": "cpppj/tests/CreateAtTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CreateAt_ReachedParentFailuresKeepEarlierEffects",
+      "source": "cpppj/tests/CreateAtTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CreateAt_FrameFieldRetainsFirstCountsKindsAndRejectsPointers",
+      "source": "cpppj/tests/CreateAtTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CreateAt_Native408GeneralInputKeepsGuideGumpReleaseAndModes",
+      "source": "cpppj/tests/CreateAtInputTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CreateAt_Native15NamesFirstNulAndCurrentScriptStringQueue",
+      "source": "cpppj/tests/CreateAtInputTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CreateAt_OnlyReachedParentAndThrowingActualCallback",
+      "source": "cpppj/tests/CreateAtInputTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CurrentCountGetter_BaseLevelAllStatesAndReservedSlotsAreReadOnly",
+      "source": "cpppj/tests/CurrentCountGetterTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CurrentCountGetter_DaisCurrentTypesDirectionsAndBoundariesHaveNoEffects",
+      "source": "cpppj/tests/CurrentCountGetterTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CurrentCountGetter_TypeAndFrameBoundsFailWithoutWritesOrEffects",
+      "source": "cpppj/tests/CurrentCountGetterTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CurrentLevelSetter_PhysicalFreeAndReservedSlotsPreservePoolLists",
+      "source": "cpppj/tests/CurrentCountGetterTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "CurrentLevelSetter_DiagnosticReleaseKeepsCurrentByteAndWrittenPrefix",
+      "source": "cpppj/tests/CurrentCountGetterTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "DaisCheckingParents_CanBridgeCurrentFinderAndMetadataAfterDiagnostic",
+      "source": "cpppj/tests/DaisCheckingParentsTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "DaisCheckingParents_DeadParentDiagnosticPrecedesCurrentHeadRead",
+      "source": "cpppj/tests/DaisCheckingParentsTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "DaisCheckingParents_CanBridgeCurrentAllianceAndCdNoPatchDiagnostic",
+      "source": "cpppj/tests/DaisCheckingParentsTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "DaisCheckingParents_BridgeUsesCurrentBossAndNullPathDiagnosticReturns",
+      "source": "cpppj/tests/DaisCheckingParentsTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "DaisCheckingParents_DepthDiagnosticsReturnCurrentRuntimeValue",
+      "source": "cpppj/tests/DaisCheckingParentsTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "DaisCheckingParents_StageUsesOneVirtualCountAndSavedInitialFrame",
+      "source": "cpppj/tests/DaisCheckingParentsTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "DaisClassCurrent_RegularKeepsVtableFunctionIdentity",
+      "source": "cpppj/tests/DaisCheckingParentsTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "DaisClassCurrent_CountKeepsEditionSpecificPlayerDestination",
+      "source": "cpppj/tests/DaisCheckingParentsTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "DaisClassCurrent_LifecycleLazyDevicesAndPartialPlayerCleanup",
+      "source": "cpppj/tests/DaisCheckingParentsTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "RuneSharedCurrent_TempleLookupReadsTypeAfterVirtualCount",
+      "source": "cpppj/tests/DaisCheckingParentsTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "TempleHelperCurrent_ReadOnlyPriestLookupAndBossUseBoundOwner",
+      "source": "cpppj/tests/DaisCheckingParentsTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "TempleHelperCurrent_PatchEarlyReturnSkipsUnusedDevicesAndInvalidPriest",
+      "source": "cpppj/tests/DaisCheckingParentsTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "UserSelection_NativeThreeArgumentsAndCurrentEffects",
+      "source": "cpppj/tests/UserSelectionTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "UserSelection_LazyBoundariesAndWrittenPrefix",
+      "source": "cpppj/tests/UserSelectionTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "UserSelection_EditionAndTypeContract",
+      "source": "cpppj/tests/UserSelectionTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "UserSelection_ClearNativeEnabledAndCurrentEffects",
+      "source": "cpppj/tests/UserSelectionTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "UserSelection_ClearLazyBoundaryAndWrittenPrefix",
+      "source": "cpppj/tests/UserSelectionTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "UserSelection_EscapeNative154MatchesZeroSelection",
+      "source": "cpppj/tests/UserSelectionTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "UserSelection_EscapeRecognizesNativeEventKindAndRelease",
+      "source": "cpppj/tests/UserSelectionTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "UserSelectionGlobals_NativeDwordBitsAndDistinctRawMouse",
+      "source": "cpppj/tests/UserSelectionTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "UserSelectionGlobals_FirstMenuClearKeepsMouseTypeAndNegativeCountTail",
+      "source": "cpppj/tests/UserSelectionTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "UserSelectionGlobals_DisabledClearPreservesAllCurrentDwords",
+      "source": "cpppj/tests/UserSelectionTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "UserSelectionGlobals_CurrentMultipleGetterSurvivesReallocationAndCountChanges",
+      "source": "cpppj/tests/UserSelectionTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "UserSelectionGlobals_WideDwordCandidatesAreNotTruncatedToSid",
+      "source": "cpppj/tests/UserSelectionTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "UserSelectionGlobals_LateArrayFailureKeepsWrittenPrefix",
+      "source": "cpppj/tests/UserSelectionTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "UserSelectionGlobals_PreparedLifetimeAndLateHighlightFailureKeepCurrentOwner",
+      "source": "cpppj/tests/UserSelectionTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "FactoryMenu_Native39FullOpen",
+      "source": "cpppj/tests/FactoryMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "FactoryMenu_Native32Mana5Slots",
+      "source": "cpppj/tests/FactoryMenuTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "ObjectMenuInfo_NativeWholeParentsAndStringHelpers",
+      "source": "cpppj/tests/ObjectMenuInfoTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "ObjectMenuInfo_SelectedBoundariesAndEditionContract",
+      "source": "cpppj/tests/ObjectMenuInfoTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "ObjectCommand_Native160Inputs",
+      "source": "cpppj/tests/ObjectCommandTests.cpp"
+    },
+    {
+      "group": "menu",
+      "name": "ObjectCommand_CurrentModeAndLazyBoundaries",
+      "source": "cpppj/tests/ObjectCommandTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "BaseFile_SecondaryReplaysIndependentNativeRegistration27",
+      "source": "cpppj/tests/BaseFileSecondaryTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "BaseFile_SecondaryReadPriorityAndSeparateArchiveOnlyViews",
+      "source": "cpppj/tests/BaseFileSecondaryTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "BaseFile_SecondaryAutomaticRegistrationAndFinderPreserveNativeOrder",
+      "source": "cpppj/tests/BaseFileSecondaryTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "BaseFile_MatchDiskNonPatternKeepsNativeFileSpecContract",
+      "source": "cpppj/tests/BaseFileSecondaryTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "BaseFile_MatchDiskActualVirtualDirectoryAndRawWildcardPrefix",
+      "source": "cpppj/tests/BaseFileSecondaryTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "BaseFile_SecondaryClientUsesActualPoolForTechnicalHelp",
+      "source": "cpppj/tests/BaseFileSecondaryTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "BaseFile_AbsoluteMissingRequeriesActualPrimaryAndSecondarySources",
+      "source": "cpppj/tests/BaseFileSecondaryTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "BaseFile_ReadPolicyReplaysIndependentNative1024",
+      "source": "cpppj/tests/BaseFileReadPolicyTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "BaseFile_ReadPolicyEmptyFileIsSuccessAndMissingLookupIsExplicit",
+      "source": "cpppj/tests/BaseFileReadPolicyTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "Taff_IndexAndFlags_AreReadFromHeader",
+      "source": "cpppj/tests/RecoveryTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "Config_FirstMatchAndQuotedComments_ArePreserved",
+      "source": "cpppj/tests/RecoveryTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "Config_EncodedSignatureAndWindows1252_AreDecoded",
+      "source": "cpppj/tests/RecoveryTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "Xlat_DuplicateAndIncompleteBlocks_AreHandled",
+      "source": "cpppj/tests/RecoveryTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "GameClock_NestedPauseAndWrap_AreReproduced",
+      "source": "cpppj/tests/RecoveryTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "Kernel_MutationUsesLiveSlots_InOriginalOrder",
+      "source": "cpppj/tests/RecoveryTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "Gump_StoneCaptureAndInputBoundaries",
+      "source": "cpppj/tests/MenuTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "Gump_MenuRowsAndSceneChange",
+      "source": "cpppj/tests/MenuTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "Dialog_ConditionsAndQuotedCommandArguments",
+      "source": "cpppj/tests/MenuTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "State_OneDeferredTransitionPerInputBatch",
+      "source": "cpppj/tests/MenuTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "Gif_IndicesInterlaceTransparencyAndTruncation",
+      "source": "cpppj/tests/MenuTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "Renderer_OwnedBackgroundAndReplacement",
+      "source": "cpppj/tests/MenuTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "BaseFile_WildcardCampaignDiscovery",
+      "source": "cpppj/tests/MenuTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "BaseFile_FileFinderDiskArchiveSecondaryOrderAndFirstDuplicate",
+      "source": "cpppj/tests/MenuTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FileProbe_Native640SourcesFirstDeviceSlotSearchLifetimeAndNoPayload",
+      "source": "cpppj/tests/FileProbeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FileProbe_ActualUnicodeMetadataTruncatedLooseAndSecondarySources",
+      "source": "cpppj/tests/FileProbeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FileProbe_ActualWildcardUsesVirtualDirectoryAndKeepsRawPrefixLifetime",
+      "source": "cpppj/tests/FileProbeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FileProbe_LookupExceptionClosesSameActiveSearchAndKeepsDeviceSlot",
+      "source": "cpppj/tests/FileProbeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ClientKencloudGlobals_PhysicalGlobalsAndAddressLifetime",
+      "source": "cpppj/tests/ClientKencloudGlobalsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ClientKencloudGlobals_ActualFileAndNative400SeedRandom",
+      "source": "cpppj/tests/ClientKencloudGlobalsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ClientKencloudGlobals_MissingAndWrongSizeUseActualFallback",
+      "source": "cpppj/tests/ClientKencloudGlobalsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ClientKencloudGlobals_FallbackDivideFaultPreservesPrefix",
+      "source": "cpppj/tests/ClientKencloudGlobalsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ClientKencloudGlobals_ActualConfigCallbackAndPureOwner",
+      "source": "cpppj/tests/ClientKencloudGlobalsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ClientKencloudGlobals_ActualTransitionUsesSameGlobalsAndDeviceOrder",
+      "source": "cpppj/tests/ClientKencloudGlobalsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ClientKencloudGlobals_ActualUpdateAndDirtyUseSameMemory",
+      "source": "cpppj/tests/ClientKencloudGlobalsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ClientKencloudGlobals_ProbeMetadataBeforeLooseDecodeAndPropagatesTruncation",
+      "source": "cpppj/tests/ClientKencloudGlobalsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "BackgroundGifClient_ActualDefaultPathFactoryAndConcurrentStorage",
+      "source": "cpppj/tests/BackgroundGifClientTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "BackgroundGifClient_AllProtectedAssetsIndependentNativePixels",
+      "source": "cpppj/tests/BackgroundGifClientTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "BackgroundGifClient_IndependentNativeDescriptorAndInterlaceVariants",
+      "source": "cpppj/tests/BackgroundGifClientTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "BackgroundGifClient_ActualCommonPixelsBaseDimensionsAndClip",
+      "source": "cpppj/tests/BackgroundGifClientTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "BackgroundGifClient_CommonInputPreservesRawQueueTripletAndRetirement",
+      "source": "cpppj/tests/BackgroundGifClientTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "BackgroundGifClient_MissingFilePartialDecodeAndPageLifetime",
+      "source": "cpppj/tests/BackgroundGifClientTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "BackgroundGifClient_ProbeMetadataAndCurrentSecondaryKeepDecodeFailureLifetime",
+      "source": "cpppj/tests/BackgroundGifClientTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "BackgroundGifClient_MainMenuStoneTexturePressedClipAndPitch",
+      "source": "cpppj/tests/MainMenuPaintTests.inc"
+    },
+    {
+      "group": "file",
+      "name": "GifScreenshot_Native135InputsAndCurrentPause",
+      "source": "cpppj/tests/GifScreenshotTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "GifScreenshot_EncoderPalettePaddingAndDictionaryReset",
+      "source": "cpppj/tests/GifScreenshotTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "GifScreenshot_WriteFailureUnlocksWithoutSuccessLog",
+      "source": "cpppj/tests/GifScreenshotTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "GifScreenshot_Native256PrimaryPaletteRecords",
+      "source": "cpppj/tests/GifScreenshotTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "GifScreenshot_DefaultFileNamespaceAndAbsoluteOverride",
+      "source": "cpppj/tests/GifScreenshotTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "GifScreenshot_ActualClientMetadataCollisionUsesOneProbeAndKeepsCounterOnStop",
+      "source": "cpppj/tests/GifScreenshotTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "QuickHelpFileRead_ActualClientArchiveReadsCurrentPayloadAndKeepsSnapshotApi",
+      "source": "cpppj/tests/QuickHelpFileReadTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "QuickHelpFileRead_ActualClientTruncatedEncryptedFileFailsAfterCloseAndCanRetry",
+      "source": "cpppj/tests/QuickHelpFileReadTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "QuickHelpFileRead_ActualClientSecondaryRootRefreshAndUnicodeDirectName",
+      "source": "cpppj/tests/QuickHelpFileReadTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "QuickHelpWindow_CurrentBackgroundGlobalsForEachChild",
+      "source": "cpppj/tests/QuickHelpWindowTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "QuickHelpWindow_Native98",
+      "source": "cpppj/tests/QuickHelpWindowTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "QuickHelpFileRead_Native62WholeReadExtraTwoLfNulAndConstructorCache",
+      "source": "cpppj/tests/QuickHelpWindowTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "QuickHelpFileRead_ActualClientSuccessfulCacheRetainsFirstBytesAndSingleLf",
+      "source": "cpppj/tests/QuickHelpWindowTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "QuickHelpFileRead_ActualMissingThrowsBeforeCacheAndEmptyFileCanRetry",
+      "source": "cpppj/tests/QuickHelpWindowTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "KoreanIntegration_ActualHelpCacheReloadsAcrossLanguageInvalidation",
+      "source": "cpppj/tests/QuickHelpWindowTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "StartupIo_ClientConstructorDoesNotReadArchiveBeforeSetupSearch",
+      "source": "cpppj/tests/StartupIoTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "StartupIo_ActualClientSelectsParentAndNeverLoadsPoisonedEntryArchive",
+      "source": "cpppj/tests/StartupIoTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "StartupIo_SelectedBadArchiveStillFailsAfterSetupAndCdBoundary",
+      "source": "cpppj/tests/StartupIoTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "StartupIo_IndependentClientArchiveLookupsLoadOneSnapshot",
+      "source": "cpppj/tests/StartupIoTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "StartupIo_DeferredCatalogIsValidThroughConstCopy",
+      "source": "cpppj/tests/StartupIoTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "StartupIo_DirectDiskAndStartupStyleProbeDoNotConsumeDeferredCatalog",
+      "source": "cpppj/tests/StartupIoTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "NativeShapeFile_SharedViewSurvivesCopiesMovesAndLastOwner",
+      "source": "cpppj/tests/NativeShapeFileTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "NativeShapeFile_FailedMapsAndParserReleaseTheirOwnResources",
+      "source": "cpppj/tests/NativeShapeFileTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "NativeShapeFile_UnicodeRootsAndArchiveSelectionKeepDirectMapBoundary",
+      "source": "cpppj/tests/NativeShapeFileTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "NativeShapeFile_ActualOriginalGameAssetsMatchLegacyStorage",
+      "source": "cpppj/tests/NativeShapeFileTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "TypeParser_PreservesCodesAndSpecialFrameOrder",
+      "source": "cpppj/tests/AssetTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "TypeLoadOrder_MatchesEditionLengths",
+      "source": "cpppj/tests/AssetTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "TypeParser_RejectsIncompleteOrInvalidDefinitions",
+      "source": "cpppj/tests/AssetTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ShapeDatabase_PreservesTransparencyAndSharedFrames",
+      "source": "cpppj/tests/AssetTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ShapeDatabase_RejectsBrokenTablesAndRuns",
+      "source": "cpppj/tests/AssetTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "GamePalette_ReadsBothOriginalFormats",
+      "source": "cpppj/tests/AssetTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "VFXDraw_MatchesBothOriginalX86Editions",
+      "source": "cpppj/tests/AssetTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FontCacheNative_CurrentArchiveAndOriginalSignatureBoundary",
+      "source": "cpppj/tests/FontCacheNativeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FontCacheNative_ActualStoreGeneratesPersistsAndReloadsSameGlyphBytes",
+      "source": "cpppj/tests/FontCacheNativeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FontCacheNative_RawAcpDiskAndArchivePreserveUnicodeRoot",
+      "source": "cpppj/tests/FontCacheNativeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FontCacheNative_WriteUnavailableAndProtectedRootsKeepGeneratedData",
+      "source": "cpppj/tests/FontCacheNativeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "Renderer_DecodedImagesRetireExplicitlyAtShapeAddressReuse",
+      "source": "cpppj/tests/PresentationFontRenderCacheTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "PresentationFontRebuild_ActualFontStoreDrawsNewGlyphAtReusedAddress",
+      "source": "cpppj/tests/PresentationFontRenderCacheTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ReadOnlyFileMap_Native72ArgumentsAssertionsAndResume",
+      "source": "cpppj/tests/ReadOnlyFileMapTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ReadOnlyFileMap_HostHandlesPreserveAll64Bits",
+      "source": "cpppj/tests/ReadOnlyFileMapTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "TypeLiveFileRead_Native47FixedCallFormatterAndWholeReadLifetime",
+      "source": "cpppj/tests/TypeLiveFileReadTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "TypeLiveFileRead_CurrentEncryptedArchivePreservesSnapshotApi",
+      "source": "cpppj/tests/TypeLiveFileReadTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "TypeLiveFileRead_CurrentDiskAndSecondaryUnicodeRoots",
+      "source": "cpppj/tests/TypeLiveFileReadTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "TypeLiveFileRead_RequiredMissingEmptyAndSyntaxFailureReleaseThenRetry",
+      "source": "cpppj/tests/TypeLiveFileReadTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "TypeLiveFileRead_TruncatedEncryptedArchiveRejectsAfterCloseAndKeepsTypedOpenFailure",
+      "source": "cpppj/tests/TypeLiveFileReadTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "GifFileRead_Native56ExactZeroDimensionsDecodeAndCleanup",
+      "source": "cpppj/tests/GifFileReadTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "GifFileRead_CurrentEncryptedArchiveKeepsLegacySnapshot",
+      "source": "cpppj/tests/GifFileReadTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "GifFileRead_ValidDimensionsRemainBeforeInvalidLzwFailure",
+      "source": "cpppj/tests/GifFileReadTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "GifFileRead_KencloudCurrentArchiveUsesExistingPixelsAnd512Contract",
+      "source": "cpppj/tests/GifFileReadTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "PaletteFileRead_Native92DirectWritesPrefixAndFileLifetime",
+      "source": "cpppj/tests/PaletteFileReadTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "PaletteFileRead_CurrentArchiveAndLooseRgbPreserveSnapshotAndReservedBytes",
+      "source": "cpppj/tests/PaletteFileReadTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "PaletteFileRead_MissingAndBadLengthStopBeforeApplyWithExistingSaved",
+      "source": "cpppj/tests/PaletteFileReadTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ScreenPaletteApply_FirstPePrefixFixture",
+      "source": "cpppj/tests/ScreenPaletteApplyTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ScreenPaletteApply_NaturalSkipAndRequiredDevices",
+      "source": "cpppj/tests/ScreenPaletteApplyTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "TitleBitmapLifetime_Native33SharedDimensionsPaintAndCleanup",
+      "source": "cpppj/tests/TitleBitmapLifetimeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "TitleBitmapLifetime_State42Requests41AndRestoresPaletteAfterSplash",
+      "source": "cpppj/tests/TitleBitmapLifetimeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "TitleBitmapLifetime_ActualRelativePathsReadSelectedUnicodeInstall",
+      "source": "cpppj/tests/TitleBitmapLifetimeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "GumpCheckingParents_NativeOverlay320AndBase48",
+      "source": "cpppj/tests/GumpCheckingParentsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "GumpCheckingParents_ActualOverlayCurrentViewAndBounds",
+      "source": "cpppj/tests/GumpCheckingParentsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "RawButtonControls_ActualDirtyRectAndStructuralBoundaries",
+      "source": "cpppj/tests/RawButtonControlsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "RawButtonControls_CaptureUsesRawTreeAndParentSerial",
+      "source": "cpppj/tests/RawButtonControlsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "RawButtonControls_DrawReadsCurrentChildAndButtonState",
+      "source": "cpppj/tests/RawButtonControlsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "RawButtonControls_DrawMatchesNativeConstructorFixture",
+      "source": "cpppj/tests/RawButtonControlsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "RawButtonControls_PageReplacementReusesRegistryAndKeepsSerial",
+      "source": "cpppj/tests/RawButtonControlsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "RawButtonControls_CurrentRegisteredDirectHandle",
+      "source": "cpppj/tests/RawButtonControlsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "RawButtonControls_RouteAndSerialStayDistinctAcrossDeletion",
+      "source": "cpppj/tests/RawButtonControlsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "RawButtonControls_RetiredPageStopsInputBeforeCleanup",
+      "source": "cpppj/tests/RawButtonControlsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "TechnicalHelp_Native84AvailabilityLaunchAndPartialOutputs",
+      "source": "cpppj/tests/TechnicalHelpTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "TechnicalHelp_Native64ExternalFileSourcesAndFailurePreservation",
+      "source": "cpppj/tests/TechnicalHelpTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "TechnicalHelp_Native28ExternalRootJoin",
+      "source": "cpppj/tests/TechnicalHelpTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "TechnicalHelp_SelectedMissingDevicesReleaseAndCd",
+      "source": "cpppj/tests/TechnicalHelpTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ShapeToBuffer_PatchNativePlainPixels",
+      "source": "cpppj/tests/ShapeToBufferTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ShapeToBuffer_CdNativePlainPixelsAndFallback",
+      "source": "cpppj/tests/ShapeToBufferTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ShapeToBuffer_FactoryNative200Pixels",
+      "source": "cpppj/tests/ShapeToBufferTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ShapeToBuffer_SupportNative162Pixels",
+      "source": "cpppj/tests/ShapeToBufferTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ShapeToBuffer_ThunderCannonNative333Pixels",
+      "source": "cpppj/tests/ShapeToBufferTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ThunderCannonCapture_RejectsOtherVtableAndInvalidFrame",
+      "source": "cpppj/tests/ShapeToBufferTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ShapeToBuffer_SunAviaryNative384Pixels",
+      "source": "cpppj/tests/ShapeToBufferTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "SunAviaryCapture_ExactVtableAndSuppressedDraw",
+      "source": "cpppj/tests/ShapeToBufferTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ShapeToBuffer_GeyserNative459Pixels",
+      "source": "cpppj/tests/ShapeToBufferTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "GeyserCapture_ExactVtableAndCurrentFrame",
+      "source": "cpppj/tests/ShapeToBufferTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AmbientWind_ActualBurningFrameReadsOwnerAfterConstruction",
+      "source": "cpppj/tests/BurningFrameTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "RawFormLinked_Native120WholeChainAndReadOnlyBytes",
+      "source": "cpppj/tests/RawFormLinkedTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "RawFormLinked_CurrentPoolAfterParentAndExplicitCycle",
+      "source": "cpppj/tests/RawFormLinkedTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "RawFormLinked_ProcessGetterKeepsWordAndIgnoresStateType",
+      "source": "cpppj/tests/RawFormLinkedTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionProcess_ReplaysOriginals",
+      "source": "cpppj/tests/ConstructionProcessTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionProcess_ReplaysCd",
+      "source": "cpppj/tests/ConstructionProcessTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionProcess_ReplaysExtra1037",
+      "source": "cpppj/tests/ConstructionProcessTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionProcess_RejectsMissingHooksAndForeignHost",
+      "source": "cpppj/tests/ConstructionProcessTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionProcess_AllocationFailuresKeepOriginalEffects",
+      "source": "cpppj/tests/ConstructionProcessTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionProcess_DurationSelectsDefaultTimeAndSound",
+      "source": "cpppj/tests/ConstructionProcessTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionProcess_CompleteRequiresVoidBeforeClearingAbstract",
+      "source": "cpppj/tests/ConstructionProcessTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionProcess_NoticeAdapterStartsDefaultConstruction",
+      "source": "cpppj/tests/ConstructionProcessTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionProcess_ActualHostRunsToCompletion",
+      "source": "cpppj/tests/ConstructionProcessTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionProcess_ActualHostSkipsSecondKillAfterRemoval",
+      "source": "cpppj/tests/ConstructionProcessTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionProcess_ActualHostQuickBuildAndNonBossKeepsProcess",
+      "source": "cpppj/tests/ConstructionProcessTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionProcess_DeadParentAndForeignPoolAdapters",
+      "source": "cpppj/tests/ConstructionProcessTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionProcess_SharedBossRecheckedDuringActualCompletion",
+      "source": "cpppj/tests/ConstructionProcessTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionProcess_FormParentNative64DiagnosticPrefix",
+      "source": "cpppj/tests/ConstructionProcessTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionProcess_ActualHostCurrentFormDiagnosisAndResume",
+      "source": "cpppj/tests/ConstructionProcessTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "CursorLifecycle_NativeTakeCancelAndActivate565",
+      "source": "cpppj/tests/CursorLifecycleTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "CursorLifecycle_SharedMenuDropBindingsAndGuards",
+      "source": "cpppj/tests/CursorLifecycleTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "CursorLifecycle_ProtectedAssetsAndActualText",
+      "source": "cpppj/tests/CursorLifecycleTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "CursorLifecycle_NativeTypeNumberAndRange",
+      "source": "cpppj/tests/CursorLifecycleTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "CursorLifecycle_ActualAssetTypeRangeDuringTake",
+      "source": "cpppj/tests/CursorLifecycleTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "CursorLifecycle_NativeCancelCurrentCheckingAndDiagnosticReturn156",
+      "source": "cpppj/tests/CursorLifecycleTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "CursorLifecycle_CurrentClientCheckingSurvivesResetAndSelectedMissingDiagnostic",
+      "source": "cpppj/tests/CursorLifecycleTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FenceTypeParent_NativeFullParents432",
+      "source": "cpppj/tests/FenceTypeParentTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FenceTypeParent_DiagnosticReturnUsesActualChildrenAndSameRaw",
+      "source": "cpppj/tests/FenceTypeParentTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FenceTypeParent_SelectedBoundariesAndDwordTypeWidth",
+      "source": "cpppj/tests/FenceTypeParentTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FenceLifetime_NativeClearRefreshAndPre207",
+      "source": "cpppj/tests/FenceLifetimeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FenceLifetime_GuardsAndSamePool",
+      "source": "cpppj/tests/FenceLifetimeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FenceCreate_NativeMarkers106",
+      "source": "cpppj/tests/FenceCreateTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FenceCreate_NativeShields306",
+      "source": "cpppj/tests/FenceCreateTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FenceCreate_NativeRebuild166",
+      "source": "cpppj/tests/FenceCreateTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FenceCreate_RequiredBoundariesAndPartialWrites",
+      "source": "cpppj/tests/FenceCreateTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "GunAngle_Native518",
+      "source": "cpppj/tests/GunAngleTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "GunAngle_InvalidNegativeIndex",
+      "source": "cpppj/tests/GunAngleTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "GunAngle_NativeCheckingPrefix384",
+      "source": "cpppj/tests/GunAngleTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "GunAngle_CurrentCheckingAndNegativeReadBoundary",
+      "source": "cpppj/tests/GunAngleTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "SquidDisplayLive_DiagnosticReturnRequeriesCurrentTypeAndCoordinates",
+      "source": "cpppj/tests/SquidDisplayLiveTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "SquidDisplayLive_ThreeArgumentDetailBeforeDiagnosticAndFixedFrame",
+      "source": "cpppj/tests/SquidDisplayLiveTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "SquidDisplayLive_SuppressionFollowsParentAndInvalidTypeDetail",
+      "source": "cpppj/tests/SquidDisplayLiveTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "SquidDisplayLive_ActualStorageAndClientDetailSurviveWorldView",
+      "source": "cpppj/tests/SquidDisplayLiveTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "VortexDisplay_PatchActualPE",
+      "source": "cpppj/tests/VortexDisplayTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "VortexDisplay_CdActualPE",
+      "source": "cpppj/tests/VortexDisplayTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "GumpAttachDiagnostic_NativeSignedTypeAndLimit432",
+      "source": "cpppj/tests/GumpAttachDiagnosticTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "GumpAttachDiagnostic_ActualAttachUsesCurrentFieldsAfterWriter",
+      "source": "cpppj/tests/GumpAttachDiagnosticTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "GumpAttachDiagnostic_SelectedWriterAndExistingCdBody",
+      "source": "cpppj/tests/GumpAttachDiagnosticTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetPostPop_PatchNativeBodies",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetPostPop_CdNativeBodies",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetPostPop_DirectDamageableCarrierRegistration",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetPostPop_MissingEffectsBeforeMutation",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetPostPop_PatchSharedPlayerRecordsNativeBodies",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetPostPop_CdSharedPlayerRecordsNativeBodies",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetPostPop_PlayerRecordBindingRejectsWrongSize",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetPostPop_PatchMutablePlayerNativeRecords",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetPostPop_CdMutablePlayerNativeRecords",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetPostPop_SharedAuthorityReplaysBothNativeBodies",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetPostPop_ServerAuthorityIsIndependentFromBattleView",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetPostPop_ServerAuthorityRecheckedAfterFrameLookup",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetFenceCurrent_BlockerNative96Rows",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetFenceCurrent_TwoFenceNativePostPop100Rows",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetFenceCurrent_NoFirstSkipsUnboundDevicesAndType",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetFenceCurrent_BlockerNonServerOrLoadingSkipsNotify",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetFenceCurrent_BlockerMissingSelectedNotifyStopsBeforeParent",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetFenceCurrent_BlockerNoticeMutationKeepsPhysicalLife",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetFenceCurrent_BlockerAliasesIgnoreExtraAtNotifyGate",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetFenceCurrent_Extra9SkipsUnboundReservation",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetFenceCurrent_FailedReserveSkipsMissingRegularAfterLifeMutation",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetFenceCurrent_MissingReserveStopsAtSelectedBoundary",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetFenceCurrent_MissingRegularPreservesSuccessfulReserve",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetFenceCurrent_ReserveMutationDoesNotRecheckExtraGate",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetFenceCurrent_RegularFailureKeepsReserveAndWrites",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetFenceCurrent_BadTypeAtParentKeepsEarlierRegular",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetTailCurrent_ActualVirtualNoFirstSkipsFrontTypeCheck",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetTailCurrent_MissingWholeBodyFailsAtDispatch",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetTailCurrent_GrowingNativePostPop212Rows",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetTailCurrent_GrowingFailedReserveSkipsTypeAndConstructor",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetTailCurrent_GrowingReadsCurrentFramesBeforeMissingConstructor",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetTailCurrent_NuggetAllocationFailureSkipsRandomAndConstruct",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetTailCurrent_NuggetLateMissingRandomKeepsLookupAndAllocation",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AssetTailCurrent_NuggetLateMissingConstructorKeepsRandomAndWrites",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "VortexCurrent_NativeDiagnosticsAndReturn936Rows",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "VortexCurrent_BothEditionExisting528Rows",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "VortexCurrent_NoFirstSkipsUnboundDevicesAndType",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "VortexCurrent_MissingOwnerDiagnosticFollowsCommon",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "VortexCurrent_MissingIslandDiagnosticKeepsListsAndFrame",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "VortexCurrent_MissingSoundKeepsParentAndCounter",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "VortexCurrent_MissingBridgeNoticeKeepsZeroWordBeforePlayer",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "VortexCurrent_BoundUniqueStoresCurrentListsAndKeepsDuplicatesOut",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "VortexCurrent_SignedFullUniqueListSkipsStorage",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "VortexCurrent_NegativeUniqueStoreFailsAfterEarlierEffects",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "VortexCurrent_SelectedDwordAndTypeRejectOnlyAfterLists",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "VortexCurrent_MissingPlacementClearKeepsBothLists",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "VortexCurrent_OwnerEffectChangesBossBeforeIteration",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "VortexCurrent_MissingDestroyKeepsRegistrationAndOwner",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "VortexCurrent_IteratorKeepsNextCachedBeforeDestroyEffect",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "VortexCurrent_ExistingContentSkipsCreateButNeedsRefresh",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "VortexCurrent_MissingContentCreateKeepsLookupAndBaseWrites",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "VortexCurrent_WrapperUsesPhysicalFrameAfterCommonExtra8",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "VortexCurrent_RegistrationChangesLoadingBeforeContentGate",
+      "source": "cpppj/tests/AssetPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "canon_type_patch_x86",
+      "source": "cpppj/tests/CanonTypeDecoderTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "canon_type_cd_x86",
+      "source": "cpppj/tests/CanonTypeDecoderTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "canon_type_1037_x86",
+      "source": "cpppj/tests/CanonTypeDecoderTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "canon_type_tables_precedence_and_guards",
+      "source": "cpppj/tests/CanonTypeDecoderTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "CanonChecking_NativeFrameDiagnosticAndReturn156",
+      "source": "cpppj/tests/CanonTypeDecoderTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "CanonChecking_CurrentOwnerAcrossPatternAdvance",
+      "source": "cpppj/tests/CanonTypeDecoderTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionAssets_ActualNativeCanonOwnsEveryProtectedFrameWithoutWorld",
+      "source": "cpppj/tests/ConstructionOwnerAssetsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionAssets_CurrentCanonDiagnosticsSurviveLeaseAndOwnerChanges",
+      "source": "cpppj/tests/ConstructionOwnerAssetsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionAssets_RejectMissingNativeOrSourceWithoutChangingTypedContract",
+      "source": "cpppj/tests/ConstructionOwnerAssetsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "PlayerGeyserBounds_DeferredConstructionRequiresPlayersOnlyWhenSelected",
+      "source": "cpppj/tests/ConstructionPlayerLifetimeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "LocalGeyser_DeferredConstructionPreservesSelectedGuardAndPartialEffects",
+      "source": "cpppj/tests/ConstructionPlayerLifetimeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "CampaignConstruction_DeferredReaderUsesActualClientOwnerWithoutEagerAllocation",
+      "source": "cpppj/tests/ConstructionPlayerLifetimeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionConfirm_ReplaysOriginals",
+      "source": "cpppj/tests/ConstructionConfirmTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionConfirm_ReplaysCd",
+      "source": "cpppj/tests/ConstructionConfirmTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionConfirm_ReplaysExtra1037",
+      "source": "cpppj/tests/ConstructionConfirmTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionConfirm_CreatesServerSidsThatPlacementUses",
+      "source": "cpppj/tests/ConstructionConfirmTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionConfirm_RejectsBadInputsAndRecordsFirstSid",
+      "source": "cpppj/tests/ConstructionConfirmTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionConfirm_SharedFullDeckReadsCurrentDword",
+      "source": "cpppj/tests/ConstructionConfirmTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "CanonConsumers_ConstructionConfirmBeforeAllocation",
+      "source": "cpppj/tests/ConstructionConfirmTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionClear_ReplaysOriginals",
+      "source": "cpppj/tests/ConstructionClearTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionClear_ReplaysCd",
+      "source": "cpppj/tests/ConstructionClearTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionClear_ReplaysExtra1037",
+      "source": "cpppj/tests/ConstructionClearTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionClear_ComputesCellAreaWithClampAndValidity",
+      "source": "cpppj/tests/ConstructionClearTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionClear_RemovesOnePredictionPerCell",
+      "source": "cpppj/tests/ConstructionClearTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionClear_ReplacesLocalPredictionWithConfirmedPieces",
+      "source": "cpppj/tests/ConstructionClearTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionClear_SharedBossControlsForeignTypeCandidate",
+      "source": "cpppj/tests/ConstructionClearTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "CanonConsumers_ConstructionClearBeforeFinder",
+      "source": "cpppj/tests/ConstructionClearTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionLocal_ReplaysOriginals",
+      "source": "cpppj/tests/ConstructionLocalTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionLocal_ReplaysCd",
+      "source": "cpppj/tests/ConstructionLocalTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionLocal_ReplaysExtra1037",
+      "source": "cpppj/tests/ConstructionLocalTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionLocal_RejectsInvalidInputs",
+      "source": "cpppj/tests/ConstructionLocalTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionLocal_CapturesFormValuesAndReadsCurrentFlags",
+      "source": "cpppj/tests/ConstructionLocalTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionLocal_ConnectsFactoryBasePlacementAndQuality",
+      "source": "cpppj/tests/ConstructionLocalTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "CanonConsumers_ConstructionLocalAfterPreviewCleanup",
+      "source": "cpppj/tests/ConstructionLocalTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionRequest_ReplaysOriginals",
+      "source": "cpppj/tests/ConstructionRequestTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionRequest_ReplaysCd",
+      "source": "cpppj/tests/ConstructionRequestTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionRequest_ReplaysExtra1037",
+      "source": "cpppj/tests/ConstructionRequestTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionRequest_RejectsInvalidInputsBeforeEffects",
+      "source": "cpppj/tests/ConstructionRequestTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionRequest_ReadsCurrentFlagsAfterConfirm",
+      "source": "cpppj/tests/ConstructionRequestTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ConstructionRequest_ConnectsPipelineConfirmAndNotice",
+      "source": "cpppj/tests/ConstructionRequestTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "CanonConsumers_ConstructionRequestAfterMayPlace",
+      "source": "cpppj/tests/ConstructionRequestTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "IslandBuilder_ReplaysBothNativeFullStorage",
+      "source": "cpppj/tests/IslandBuilderTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "IslandBuilder_LiveWorldChunkRuntimeAndGrowthConsumer",
+      "source": "cpppj/tests/IslandBuilderTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "IslandBuilder_RejectsMissingPhysicalStorageAndEffects",
+      "source": "cpppj/tests/IslandBuilderTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "CanonConsumers_IslandBuilderBeforeChunkWrites",
+      "source": "cpppj/tests/IslandBuilderTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FortWorldLoad_ReplaysBothNativeParentAndTerritory",
+      "source": "cpppj/tests/FortWorldLoadTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FortWorldLoad_RejectsForeignPoolMissingChildAndTruncatedTerritory",
+      "source": "cpppj/tests/FortWorldLoadTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "CanonConsumers_FortLoaderBeforeWorldGeneration",
+      "source": "cpppj/tests/FortWorldLoadTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "PlayerGeyserBounds_RejectsMissingAssertion",
+      "source": "cpppj/tests/PlayerGeyserBoundsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "CanonConsumers_PlayerGeyserPatternDimensions",
+      "source": "cpppj/tests/PlayerGeyserBoundsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "PlayerGeyserBounds_IndependentPeFixture",
+      "source": "cpppj/tests/PlayerGeyserBoundsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "PlayerGeyserBounds_CurrentBaseReplaysIndependent439",
+      "source": "cpppj/tests/PlayerGeyserBoundsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "PlayerGeyserBounds_CurrentBaseAndSelectedThisHaveDifferentLifetimes",
+      "source": "cpppj/tests/PlayerGeyserBoundsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "PlayerGeyserBounds_DeferredOwnerReplaysIndependent439",
+      "source": "cpppj/tests/PlayerGeyserBoundsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "CampaignMotion_ActualWarBeginsPriestPathArrival",
+      "source": "cpppj/tests/CampaignMotionTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "CampaignMotion_ActualMasterOfWhirligigsLocalPriestPath",
+      "source": "cpppj/tests/CampaignMotionTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "CampaignMotion_BaseLevelKeepsLowBitsAfterAssertion",
+      "source": "cpppj/tests/CampaignMotionTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "CampaignMotion_ReplaysActualLevelNativeBothEditions",
+      "source": "cpppj/tests/CampaignMotionTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "factoryPostPop_native_body_and_dynamic_finder",
+      "source": "cpppj/tests/FactoryPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "factoryPostPop_requires_effects_and_same_pool",
+      "source": "cpppj/tests/FactoryPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "factoryPostPop_actual_frame_effect_and_pool_contract",
+      "source": "cpppj/tests/FactoryPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "factoryPostPop_level_diagnostic_return_and_current_service",
+      "source": "cpppj/tests/FactoryPostPopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "GraphReferenceChecking_ReplaysNativeBothEditions",
+      "source": "cpppj/tests/GraphReferenceCheckingTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "GraphReferenceChecking_ActualRegionUsesCurrentRecordsAndNextSlots",
+      "source": "cpppj/tests/GraphReferenceCheckingTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "GraphReferenceChecking_MissingSelectedDiagnosticKeepsFirstWriteBoundary",
+      "source": "cpppj/tests/GraphReferenceCheckingTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "player_anchor_patch_x86",
+      "source": "cpppj/tests/PlayerPlacementAnchorTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "player_anchor_cd_x86",
+      "source": "cpppj/tests/PlayerPlacementAnchorTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "player_anchor_1037_x86",
+      "source": "cpppj/tests/PlayerPlacementAnchorTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "player_anchor_owner_bookkeeping_permission_and_terrain",
+      "source": "cpppj/tests/PlayerPlacementAnchorTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "player_anchor_required_data_and_lazy_guards",
+      "source": "cpppj/tests/PlayerPlacementAnchorTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "player_anchor_shared_full_deck_current_candidates",
+      "source": "cpppj/tests/PlayerPlacementAnchorTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "GraphSentinelChecking_ReplaysNativeFreeAndCurrentSentinel",
+      "source": "cpppj/tests/GraphSentinelCheckingTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "GraphSentinelChecking_MissingServicePreservesRecord",
+      "source": "cpppj/tests/GraphSentinelCheckingTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "SurfaceNeighborCurrent_ReplaysExistingNativeFootprintsAndFilters",
+      "source": "cpppj/tests/SurfaceNeighborCurrentTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "SurfaceNeighborCurrent_ReplaysNativeMutationDuringWalk",
+      "source": "cpppj/tests/SurfaceNeighborCurrentTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "RawSurfaceWorld_PausedRegularResumesWithClientGameClock",
+      "source": "cpppj/tests/RawSurfaceWorldTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "RawSurfaceWorld_HardBridgeAndPendingMissionTeardown",
+      "source": "cpppj/tests/RawSurfaceWorldTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "RawSurfaceWorld_DisplaySuppressionAndDeviceReplacement",
+      "source": "cpppj/tests/RawSurfaceWorldTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "RawSurfaceWorld_InvalidLoadRejectedBeforeAllocation",
+      "source": "cpppj/tests/RawSurfaceWorldTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "RawSurfaceWorld_RuntimeSharesStorageAndCurrentDispatch",
+      "source": "cpppj/tests/RawSurfaceWorldTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "RawSurfaceWorld_RuntimeRejectsIncompleteOrLateBinding",
+      "source": "cpppj/tests/RawSurfaceWorldTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "RawSurfaceWorld_CampaignFinishPreservesParentGraph",
+      "source": "cpppj/tests/RawSurfaceWorldTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "BridgeDecayRuntime_MenuStorageCurrentGatesAndIdentity",
+      "source": "cpppj/tests/RawSurfaceWorldTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "BridgeDecayRuntime_ActualWorldScanCrackAndDeletion",
+      "source": "cpppj/tests/RawSurfaceWorldTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "BridgeDecayRuntime_ImmediateAuthorityAndEditorDestroyModes",
+      "source": "cpppj/tests/RawSurfaceWorldTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "BoardAngleChecking_ReplaysNativeRealFmodAndCurrentGate",
+      "source": "cpppj/tests/BoardAngleCheckingTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "BoardAngleChecking_StorageViewUsesCurrentOwnerAndOriginalDiagnostic",
+      "source": "cpppj/tests/BoardAngleCheckingTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "BoardAngleChecking_MissingSelectedServiceHasExactBoundary",
+      "source": "cpppj/tests/BoardAngleCheckingTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AmbientWind_ReplaysNativeCpuSequencesAndSharedRandom",
+      "source": "cpppj/tests/AmbientWindTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AmbientWind_StoragePreservesStateAcrossWorldLeases",
+      "source": "cpppj/tests/AmbientWindTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AmbientSound_ReplaysNativeCpuWithResetAndWindOrder",
+      "source": "cpppj/tests/AmbientSoundTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AmbientSound_ActualNoAudioClientUsesSameOwnerAndNameTable",
+      "source": "cpppj/tests/AmbientSoundTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "AmbientSound_ExistingEditorTailSharesDeadlineAndCurrentClock",
+      "source": "cpppj/tests/AmbientSoundTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ExistingEditorAfterCheckpoint_FullBlocksCommitThenNextPollFour",
+      "source": "cpppj/tests/ExistingEditorAfterCheckpointTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ExistingEditorAfterCheckpoint_LiveRequestAndCommandReads",
+      "source": "cpppj/tests/ExistingEditorAfterCheckpointTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ExistingEditorAfterCheckpoint_ImmediateAndPartialFailureStayDistinct",
+      "source": "cpppj/tests/ExistingEditorAfterCheckpointTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ExistingEditorAfterCheckpoint_ActualClientOwnsBlocksAndDeadline",
+      "source": "cpppj/tests/ExistingEditorAfterCheckpointTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ClientAudio_WeatherHooksPreservePaletteAndTintOrder",
+      "source": "cpppj/tests/ClientAudioTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ClientAudio_RejectsIncompletePaletteHooks",
+      "source": "cpppj/tests/ClientAudioTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ClientAudio_VolumeStepFollowsOriginalJumpTable",
+      "source": "cpppj/tests/ClientAudioTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ClientAudio_PreloadLoadsOnlyUnloadedEntries",
+      "source": "cpppj/tests/ClientAudioTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ClientAudio_SceneRunsWithoutDevice",
+      "source": "cpppj/tests/ClientAudioTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ClientAudio_WriteSongEndBitsPreservesCurrentOwnerAndOtherEffects",
+      "source": "cpppj/tests/ClientAudioTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ClientAudio_SharedGameRandomMatchesNativeStartSeeds",
+      "source": "cpppj/tests/ClientAudioTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ClientAudio_SharedRandomInterleavesCurrentSpState",
+      "source": "cpppj/tests/ClientAudioTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ClientAudio_ActualClientWithoutDeviceUsesGameGlobals",
+      "source": "cpppj/tests/ClientAudioTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ClientAudio_SharedRandomFailedConstructionKeepsSeed",
+      "source": "cpppj/tests/ClientAudioTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "MonitorTime_ReplaysNativeTimerAndCurrentCallbacks",
+      "source": "cpppj/tests/MonitorTimeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "MonitorTime_ReplaysNativeTemporaryFormatAndCurrentManager",
+      "source": "cpppj/tests/MonitorTimeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "MonitorTime_TemporaryFailureKeepsOriginalPartialWrite",
+      "source": "cpppj/tests/MonitorTimeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "MonitorTime_ActualClientOptionsAndDeadlineLifetime",
+      "source": "cpppj/tests/MonitorTimeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "PaletteFrameChecking_ReplaysNativeCpuAndUnreachableAssertion",
+      "source": "cpppj/tests/PaletteFrameCheckingTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "PaletteFlash_MatchesThreeNativeBodies",
+      "source": "cpppj/tests/PaletteFlashTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "PaletteFlash_PausedGameAndModeChangesUseWallClock",
+      "source": "cpppj/tests/PaletteFlashTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "PaletteFlash_CancelRestoresLatestSavedScreenPalette",
+      "source": "cpppj/tests/PaletteFlashTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "PaletteFlash_RejectsIncompleteHooksAndInvalidRange",
+      "source": "cpppj/tests/PaletteFlashTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "PaletteFrameChecking_ActualClientClockKernelAndFormRetirement",
+      "source": "cpppj/tests/ThunderProcessTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ManaRegistration_ActualClientSessionDefaultDiagnosticAndProviderOwner",
+      "source": "cpppj/tests/DamageableBurningSessionTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "MoneyConfirmChecking_ActualClientSessionAiWallet",
+      "source": "cpppj/tests/DamageableBurningSessionTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FactoryTakeChecking_ActualClientSessionCurrentTypeAndContainedCaller",
+      "source": "cpppj/tests/DamageableBurningSessionTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ManaRegistration_PatchNativeDuplicateResumeAndCurrentCounter",
+      "source": "cpppj/tests/ManaRegistrationTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ManaRegistration_CdNativeSignedCapacityAndNoDiagnostic",
+      "source": "cpppj/tests/ManaRegistrationTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ManaRegistration_FirstSearchPrecedesNextCurrentCountRead",
+      "source": "cpppj/tests/ManaRegistrationTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ManaRegistration_SelectedDevicesAndPartialEffects",
+      "source": "cpppj/tests/ManaRegistrationTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "ManaRegistration_ActualClientWorldCurrentOwnerAndPostPopContinuation",
+      "source": "cpppj/tests/ManaRegistrationTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "MoneyConfirmChecking_NativeAiAndUnselected432",
+      "source": "cpppj/tests/MoneyConfirmCheckingTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "MoneyConfirmChecking_SelectedDevicesAndPartialEffects",
+      "source": "cpppj/tests/MoneyConfirmCheckingTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "PathHaltChecking_NativeParentAndActualRetarget2288",
+      "source": "cpppj/tests/PathHaltCheckingTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "PathHaltChecking_SelectedDevicesAndDiagnosticResume",
+      "source": "cpppj/tests/PathHaltCheckingTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "rawPathRuntime_native_constructor",
+      "source": "cpppj/tests/RawPathRuntimeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "rawPathRuntime_ActualWalkShapes1170",
+      "source": "cpppj/tests/RawPathRuntimeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "rawPathRuntime_native_prepare",
+      "source": "cpppj/tests/RawPathRuntimeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "rawPathRuntime_native_step",
+      "source": "cpppj/tests/RawPathRuntimeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "rawPathRuntime_reject_invalid",
+      "source": "cpppj/tests/RawPathRuntimeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "rawPathProcess_native_frame",
+      "source": "cpppj/tests/RawPathRuntimeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "rawPathProcess_native_arrival",
+      "source": "cpppj/tests/RawPathRuntimeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "rawPathProcess_missing_search_and_pool",
+      "source": "cpppj/tests/RawPathRuntimeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "rawProcessRemoval_saved_next_and_original_flags",
+      "source": "cpppj/tests/RawPathRuntimeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "rawProcessRemoval_native_mixed_form_filter",
+      "source": "cpppj/tests/RawPathRuntimeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "rawProcessRemoval_missing_process_guard",
+      "source": "cpppj/tests/RawPathRuntimeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "PathHaltChecking_ActualClientHostDeletionAndCurrentDiagnostic",
+      "source": "cpppj/tests/RawPathRuntimeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "PathArrivalChecking_ActualClientHostDeletionAndBlockedClear",
+      "source": "cpppj/tests/RawPathRuntimeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "PathArrivalChecking_ActualHostZeroFormAndParentDiagnosticResume",
+      "source": "cpppj/tests/RawPathRuntimeTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "PathRetarget_NativeEffectsCurrentParentsAndDeletion",
+      "source": "cpppj/tests/PathRetargetTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "PathRetarget_LazyBoundariesAndEdition",
+      "source": "cpppj/tests/PathRetargetTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "PathArrivalChecking_NativeParentAndActualFinder860",
+      "source": "cpppj/tests/PathArrivalCheckingTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "PathArrivalChecking_SelectedDiagnosticAndPartialEffects",
+      "source": "cpppj/tests/PathArrivalCheckingTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "SquidUnpopChecking_NativeParentAndActualSide1300",
+      "source": "cpppj/tests/SquidUnpopCheckingTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "SquidUnpopChecking_SelectedDiagnosticPreservesPartialEffects",
+      "source": "cpppj/tests/SquidUnpopCheckingTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "SquidUnpopChecking_ActualClientWorldCurrentDiagnosticAndSavedSpot",
+      "source": "cpppj/tests/SquidUnpopCheckingTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FactoryTakeChecking_VoidAndLiveContainedUseActualUnpop",
+      "source": "cpppj/tests/SquidContainedUnpopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FactoryTakeChecking_VoidDiagnosticCanResumeContainedUnpop",
+      "source": "cpppj/tests/SquidContainedUnpopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FactoryTakeChecking_DeadParentKeepsLinksAndPostTakeWritesBeforeDiagnostic",
+      "source": "cpppj/tests/SquidContainedUnpopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FactoryTakeChecking_PostTakeReadsCurrentTypeAndPreservesWriteOrder",
+      "source": "cpppj/tests/SquidContainedUnpopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FactoryTakeChecking_CurrentConstructorAndStateAfterUnpop",
+      "source": "cpppj/tests/SquidContainedUnpopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FactoryTakeChecking_InitialConstructorCanBeRepairedByActualUnpop",
+      "source": "cpppj/tests/SquidContainedUnpopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FactoryTakeChecking_SelectedMissingDevicesPreservePartialEffects",
+      "source": "cpppj/tests/SquidContainedUnpopTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FactoryTakeDiagnostics_SidAssertionResumesPhysicalClientSlot",
+      "source": "cpppj/tests/FactoryTakeDiagnosticsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FactoryTakeDiagnostics_OutOfPoolDiagnosesBeforeHostRangeFailure",
+      "source": "cpppj/tests/FactoryTakeDiagnosticsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FactoryTakeDiagnostics_MismatchCopiesNamesThenResumesCurrentConstructor",
+      "source": "cpppj/tests/FactoryTakeDiagnosticsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FactoryTakeDiagnostics_CurrentDeviceCanRebindDuringBothCallbacks",
+      "source": "cpppj/tests/FactoryTakeDiagnosticsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FactoryTakeDiagnostics_SelectedMissingWritersPreservePriorEffects",
+      "source": "cpppj/tests/FactoryTakeDiagnosticsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FactoryTakeDiagnostics_AssertionAbortKeepsCopiedDetailAndOldType",
+      "source": "cpppj/tests/FactoryTakeDiagnosticsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "FactoryTakeDiagnostics_ActualWorldsShareClientDetailOwner",
+      "source": "cpppj/tests/FactoryTakeDiagnosticsTests.cpp"
+    },
+    {
+      "group": "file",
+      "name": "CampaignMotion_ActualMasterOfWhirligigsInitialization",
+      "source": "cpppj/tests/CampaignMotionTests.cpp"
+    }
+  ]
+}

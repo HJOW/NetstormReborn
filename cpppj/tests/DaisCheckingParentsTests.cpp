@@ -1,5 +1,6 @@
 // 다이스 자격·진단 복귀·읽기 getter만 검사한다. 실제 의식/포획/희생/전투/성공 이동은 실행하지 않는다.
 #include "RawSceneSupport.h"
+#include "FormTypeInputs.h" // ProcessForm 생성에도 원본 TYPE의 실제 네 Form 생성자 주소를 공급한다.
 #include "o/RawDaisRegular.h"
 #include "o/RawDaisLifecycle.h"
 #include "o/RawGameAuxState.h"
@@ -40,7 +41,7 @@ struct DaisParentScene { // 합성 입력의 변경과 제품이 요청한 진�
         hooks.search=[this](RawPathRuntime&,Sid,RawPathPoint,RawPathPoint,std::uint32_t) { Forbidden(); };hooks.clearBlocked=[this](Sid,RawPathPoint,std::uint32_t,std::uint32_t) { Forbidden(); };hooks.cleanup=[this](RawPathRuntime&,Sid,std::uint32_t) { Forbidden(); }; // 경로 검색/정리도 실행 금지다.
         return std::make_unique<RawPathProcess>(pool,hash,types,frames,shapes,spots,pathState,std::move(hooks),true);
     }
-    explicit DaisParentScene(OriginalEdition edition=OriginalEdition::Patch1078):pool(edition,24000),types(Patch() ? 188U : 171U),frames(types.size(),RiftTypeFrames({})),shapes(types.size()) { // 같은 원문 의존 생성자만 연결하며 게임 루프를 열지 않는다.
+    explicit DaisParentScene(OriginalEdition edition=OriginalEdition::Patch1078):pool(edition,24000),types(::netstorm::test::MakeFormTypeInputs(Patch() ? 188U : 171U)),frames(types.size(),RiftTypeFrames({})),shapes(types.size()) { // 같은 원문 의존 생성자만 연결하며 게임 루프를 열지 않는다.
         for (const auto type:{74U,158U,164U,165U,166U}) { // 자격·StagePoint 조회가 읽는 합성 코드/핫스폿만 준비한다.
             types[type].footX=types[type].footY=type==165 ? 3 : 1;types[type].maxHitPoints=200;std::vector<FrameCode> codes(180,FrameCode{'I','P',1,0});
             if (type==164) codes[1].side='M';frames[type]=RiftTypeFrames(std::move(codes));shapes[type].loaded=true;shapes[type].frameCount=180;shapes[type].frames.resize(180); // 기본 제단 방향I와 거부 방향M을 구분한다.

@@ -116,6 +116,7 @@ struct InstallScene {
     std::array<std::uint8_t,64> handle{}; // 현재 이름을 쓸 실제 저장소다.
     std::array<std::uint8_t,4> translated{'Y','o','u',0}; // 검사 경계의 명시 영어 번역 입력이다.
     std::vector<std::string> external; // 실제 UI/소리/전송 요청의 검사 관찰 기록이다.
+    std::vector<std::vector<std::uint8_t>> squidPackets; // 같은 현재 writer의 로컬 바이트를 보관한다. 네트워크 연결은 만들지 않는다.
     std::unique_ptr<RawCampaignWorldRuntime> runtime; // 위 실제 하위를 단일 캠페인 부모에 연결한다.
 
     // 보호 자료를 읽기 전용으로 사용하며 모든 필수 후처리를 첫 생성 전에 등록한다.
@@ -292,6 +293,7 @@ struct InstallScene {
             throw std::logic_error("캠페인 현재 Kernel의 다른 실제 Regular 부모 미연결: TYPE"+
                 std::to_string(core.pool.Slot(sid)[10])+" event"+std::to_string(event));
         }))));
+        worldHooks.squidPacket=[this](std::span<const std::uint8_t> packet) { CHECK(!packet.empty());squidPackets.emplace_back(packet.begin(),packet.end()); }; // 일반 Pop/삭제의 현재 방송 경계도 관찰하되 외부 UI 순서와 구별한다.
         worldHooks.transmit=assetBindings->Transmission();worldHooks.walkerFall=[this](Sid sid) { return priests->FallWalker(sid); };
         worldHooks.bridgeEffect=[](const BridgeLifecycleEvent&) { throw std::logic_error("공통 설치/이동 검사 장면의 다리 파편/소리 경계 미연결"); }; // 필수 경계를 명시하며 실제 파편 검사는 같은 Session에서 수행한다.
         worldHooks.loadingDepth=[this](std::uint32_t depth) { objectState.loadingDepth=depth;carrierState.loadingDepth=depth;priests->SetLoadingDepth(depth);assetBindings->SetLoadingDepth(depth); };
@@ -300,6 +302,12 @@ struct InstallScene {
         pipeline=std::make_unique<RawCanonPlacementPipeline>(core.pool,core.hash,CanonPlacementPipelineData{core.types,metadata.frames,core.shapes,metadata.hotspots,core.spots,core.hash.Entries(0),{}},core.bookkeeping,additional,contentFinder,placement);
         NormalTerrainDiagnostics diagnostics{InstallForbidden<void,TerrainContextAssertion>(),InstallForbidden<void,TerrainStampAssertion>(),InstallForbidden<void,SquidRegionAssert>(),InstallForbidden<void,FarmClusterAssertion>(),InstallForbidden<void,TerrainFarmPostpassAssertion>()};
         normal=std::make_unique<RawNormalTerrainWorldBinding>(world,chunks,*islands,random,crt,terrainGlobals,stamp,randomPlacement,farm,piece,*pipeline,hp,*carrier,std::move(diagnostics));
+        auto& terrainAux=*world.Storage()->GameAux(); // 실제 표면의 장기 지형/군도 전역을 생성 부모와 군집이 함께 빌린다.
+        normal->BindGenerationInputs({terrainAux.TerrainEnabled(),core.ownerMode.battle,core.bridgeState.mission,
+            [] { return std::uint8_t{0}; },InstallForbidden<std::int32_t>(),terrainAux.WorldGeyserMargin(),
+            terrainAux.ArchipelagoMinimum(),terrainAux.ArchipelagoMaximum(),terrainAux.ArchipelagoPercent(),terrainAux.Archipelago(),
+            InstallForbidden<std::uint32_t,std::int32_t>(),InstallForbidden<ChunkRect,std::int32_t,std::span<const std::uint8_t,6>>(),
+            InstallForbidden<void,std::int32_t>(),{}}); // 일반 미션 입력이다. 군도 전용 효과가 선택되면 성공으로 대신하지 않고 중단한다.
         finish=std::make_unique<RawFortFinishOwner>(core.pool,core.types,assetState.residences,finishState,FortFinishOwnerHooks{InstallForbidden<FortRandomRectangle,std::int32_t>(),InstallForbidden<double>(),InstallForbidden<std::uint32_t,GameRandom&,const FortRandomPlaceRequest&>(),InstallForbidden<void>()});
         ContainedCreateHooks contentHooks;contentHooks.notifySurface=[this](Sid sid) { core.building.NotifySurface(sid); };
         contentForms=std::make_unique<ContentFormHost>(core.pool,core.types,[this](Sid,Sid,std::uint32_t) { external.push_back("내용물 부모 통지"); });

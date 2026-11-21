@@ -72,9 +72,10 @@ TEST_CASE(ExistingEditorAfterCheckpoint_LiveRequestAndCommandReads) {
         ApplyExistingEditorAfterCheckpoint(scene.owner,scene.input,scene.effects);const auto reserved=scene.input.Pop(false);CHECK(reserved.code==0x03000123U && reserved.x==0 && reserved.y==0);
     }
     {
-        TailStateScene scene;scene.effects.requestMusic=[&](auto) { scene.owner.Blocks()[3][0]=6; };scene.effects.battleOver=[] {};
-        CHECK(TailRejects([&] { ApplyExistingEditorAfterCheckpoint(scene.owner,scene.input,scene.effects); }));
-        CHECK(scene.owner.ActivityEnd()==110.5 && scene.owner.Blocks()[4][0]==0 && scene.input.Empty()); //BattleOver를 정상 Editor 완료로 포장하지 않는다.
+        TailStateScene scene;std::uint32_t battleOverCalls{}; // 실제 BattleOver 경계의 발화만 세며 전투/승패는 실행하지 않는다.
+        scene.effects.requestMusic=[&](auto) { scene.owner.Blocks()[3][0]=6; };scene.effects.battleOver=[&] { ++battleOverCalls; };
+        ApplyExistingEditorAfterCheckpoint(scene.owner,scene.input,scene.effects);CHECK(battleOverCalls==1);
+        CHECK(scene.owner.ActivityEnd()==110.5 && scene.owner.Blocks()[4][0]==0 && scene.input.Empty()); // BattleOver의 정상 반환 뒤에도 Editor의 다음4·palette·빈섬 예약은 실행하지 않는다.
     }
 }
 

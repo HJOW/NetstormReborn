@@ -73,10 +73,10 @@ TEST_CASE(CampaignNativeFortContinuation_ActualCoreReadSeedAndLocalIntegrity) {
             CHECK(titles==2 && session.IslandCount()>0 && session.ExistingEditorCheckpointReady());
             const auto core=std::span<const std::uint8_t>(observed);CHECK(core.size()==10 && core[0]==3 && core[1]==0 && core[2]==5 && core[3]==0 && core[4]==(corrupt ? 1 : 2) && core[5]==0x71 && core[9]==0x75);
             CHECK(observedActive==1 && observedSeed==0xa55a1234U);
-            CHECK(observedDiagnostic==(corrupt ? 0U : 6U) && session.Core().bookkeeping.depth==0);
+            CHECK(observedDiagnostic==(corrupt ? 0x13579bdfU : 6U) && session.Core().bookkeeping.depth==0);
             CHECK(!client.GameplayGlobals()->world.editor && !client.GameplayGlobals()->world.missionPost);
         },true,nullptr,{},[&](Client& client,RawCampaignSessionServices& services) {
-            services.adoptMainMenuFort=true;storage=services.templateStorage;client.LocalStateGlobals()->State().current[0]=2;
+            services.adoptMainMenuFort=true;storage=services.templateStorage;client.LocalStateGlobals()->State().current[0]=2;client.GameplayGlobals()->PatchSample()=0x13579bdfU; // 불일치는 현재 표본을 진단 DWORD에 복사한다. 초기값과 다른 명시 입력으로 복사를 확인한다.
             services.install.resetCamera=[&client,&observed,&observedActive,&observedSeed,&observedDiagnostic] { const auto core=client.CoreDataGlobals()->Current();std::copy_n(core.begin(),10,observed.begin());observedActive=client.CoreDataGlobals()->Active();observedSeed=client.RandomGlobals()->FortCoreSeed();observedDiagnostic=client.GameplayGlobals()->PatchDiagnostic(); }; // 실제 사제 후처리 뒤/새 CoreWrite 전의 외부 카메라 호출 위치에서 읽기만 한다.
             client.GameplayGlobals()->world.editor=0;client.GameplayGlobals()->world.missionPost=false;client.GameplayGlobals()->FullDeck()=0;
         });
@@ -91,7 +91,7 @@ TEST_CASE(CampaignNativeFortContinuation_RejectsWrongModeOriginAndUnpreparedBorr
             services.adoptMainMenuFort=choice!=1;client.LocalStateGlobals()->State().current[0]=choice==2 ? 3 : 2;
             if (choice!=0) { client.GameplayGlobals()->world.editor=0;client.GameplayGlobals()->world.missionPost=false; }
         }); }catch (const std::logic_error& error) {
-            const std::string_view message(error.what());rejected=choice<2 ? message=="준비된 Editor의 실제 prefix 모드/Player 불일치" : message=="State3 continuation의 같은 준비된 비멀티 Fort/State1·2 계약";
+            const std::string_view message(error.what());rejected=choice<2 ? message=="준비된 Editor의 실제 prefix 모드/Player 불일치" : message=="State3/일반 복귀의 같은 준비된 Fort/State1·2·6 계약";
         }
         CHECK(rejected);
     }

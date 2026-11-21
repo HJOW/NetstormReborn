@@ -153,7 +153,9 @@ TEST_CASE(RawSurfaceWorld_RuntimeSharesStorageAndCurrentDispatch) {
         input.shapes[type]={1,true,{SquidDisplayFrame{20,16,8,12,1,1}}};
         auto world=input.Make(edition);auto core=world->Core();const auto originalHooks=core.forms.Hooks();Sid selected{};
         std::vector<std::uint32_t> depths;std::uint32_t writes=0,sends=0,regulars=0;
+        std::vector<std::vector<std::uint8_t>> broadcasts; // 실제 로컬 Squid writer 출력만 관찰하며 소켓/MP 연결을 만들지 않는다.
         RawWorldRuntimeHooks hooks;hooks.assets=core.surfaces.Hooks();hooks.assets.selected=[&] { return selected; };
+        hooks.squidPacket=[&](std::span<const std::uint8_t> packet) { CHECK(!packet.empty());broadcasts.emplace_back(packet.begin(),packet.end()); }; // PATCH의 공통 Pop/삭제 방송을 관찰한다. CD의 기존 별도 경로는 이 장치를 호출하지 않는다.
         hooks.destroy=[&](Sid sid,std::uint32_t flags,const SquidDestroyHooks& effects) { return core.virtualDestroy.Destroy(sid,flags,effects); };
         hooks.regular=[&](Sid,std::uint32_t event,std::uint32_t count,float payload) { CHECK(event==77 && count==0 && payload==0.25F);++regulars;return 0.0F; };
         hooks.transmit={[&](SquidProcess& process,bool changed) { CHECK(changed && core.pool.Slot(process.Form())[11]&4);++writes;return 8; },
@@ -171,7 +173,7 @@ TEST_CASE(RawSurfaceWorld_RuntimeSharesStorageAndCurrentDispatch) {
         auto* timer=core.processes.AddRegular(object,77,0.25F,0);CHECK(timer && writes==1 && sends==1 && core.kernel.Size()==1);
         world->RunFrame({1,1,1,1},false);CHECK(regulars==1 && core.kernel.Size()==0);
         world->Unpop(object,0);CHECK(world->Objects().empty());world->Repop(object,0x40);CHECK(world->Objects().size()==1);
-        CHECK(world->Destroy(object) && world->Objects().empty());world->ClearProcesses();
+        CHECK(world->Destroy(object) && world->Objects().empty());CHECK(broadcasts.empty()==(edition==OriginalEdition::Cd1072));world->ClearProcesses();
     }
 }
 // 필수 경계 누락/늦은 설치는 이미 존재하는 공간/객체/예약을 바꾸지 않는다.
