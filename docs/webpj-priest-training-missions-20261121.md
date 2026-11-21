@@ -19,6 +19,9 @@
 - 한국어 대본 `bc*76.korean` 도 이제 해당 미션에서 쓰인다(한국어 모드에서 시작).
 - 객체 우클릭 메뉴 전수 점검(미션마다 객체 종류의 대표 하나를 우클릭, 임시 조사): The War Begins!·Surrounded·Vicious 와 Priest Training bc1·bc5 에서 선택 가능한 모든 객체가 메뉴를 열었고 콘솔 오류가 없었다.
 
+- 장시간 진행(`campaign-long-run.spec.js`, E1158): Priest Training 아홉 미션을 150초씩 이어 진행해(26분) 오류 없이 통과했다. 이 e2e 도 `autoDemo: 0` 과 실제 대본 이름 확인을 더해 Auto-Demo 에 속지 않는다.
+- 객체 우클릭 전수 점검 추가: bc8fury76·bc9ssun_bars76 도 선택 가능한 모든 객체가 메뉴를 열었고 오류가 없었다(bc6mows76 은 큰 장면에서 조사용 픽셀 스캔이 시간 초과, 게임 오류 아님).
+
 ## 남은 것
 
 - Priest Training 미션을 끝까지 하는 흐름(승패 안내 뒤 `Again!`·`Next Mission` 등)은 이 단위에서 확인하지 않았다. 대본의 성공/실패 구역은 E1152 의 승패 흐름과 같은 경로를 쓴다.

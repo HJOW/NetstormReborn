@@ -29,7 +29,7 @@ test('캠페인 31개 미션을 미션마다 길게 진행해도 오류가 없�
   // 오류는 스택까지 모아 어느 경로에서 났는지 알 수 있게 한다.
   const errors = []; page.on('pageerror', (error) => errors.push(error.stack ?? error.message)); page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
   await page.addInitScript((names) => {
-    localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } }));
+    localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0, autoDemo: 0 } }));
     const done = {}; for (const name of names) done[`Done${name}`] = '1'; localStorage.setItem('netstorm.progress', JSON.stringify({ version: 1, values: done }));
   }, MISSIONS);
   await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/?aspect=4:3');
@@ -57,6 +57,8 @@ test('캠페인 31개 미션을 미션마다 길게 진행해도 오류가 없�
       await page.evaluate((name) => { window.__currentMission = name; }, mission.name);
       await clickLabel(page, 'Campaign'); await clickLabel(page, group); await clickLabel(page, mission.label);
       await page.waitForFunction(() => window.netstorm?._campaignDisplayActive() && window.netstorm._clientGuide.current()?.runtime.gate.started === 1, null, { timeout: 60000 });
+      // 요청한 미션의 대본이 실제로 도는지 확인한다(미연결 미션은 시작되지 않고 Auto-Demo 가 대신 돌 수 있다). (2026-11-21 WB04-E1158)
+      expect(await page.evaluate(() => ({ script: window.netstorm._clientGuide.current()?.script?.name?.toLowerCase(), demo: window.netstorm._clientGuide.current()?.runtime.gate.demo })), mission.name).toEqual({ script: mission.name.toLowerCase(), demo: 0 });
       // 진행하는 동안 1초마다 안내·쪽지 창이 떠 있으면 마지막 단추로 닫는다(시계를 멈추는 창이 뜨는 미션이 있다).
       const before = await page.evaluate(() => window.netstorm._gameClock.gameSeconds());
       for (let tick = 0; tick < SECONDS; tick += 1) {
