@@ -1,5 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <!-- Windows CPP Source의 CS 저장float102개와 초기화/크기3개의 관찰이며 독립 PE 자료와 구별한다. -->
+    <None Update="Fixtures/challenge-geometry-cpp.tsv" TargetPath="X86/challenge-geometry-cpp.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
     <!-- 메타구역 부모38입력·마커86입력의 독립 x86 전체 물리와 호출 관측이다. -->
     <None Include="../../../cpppj/tests/fixtures/meta-zone-cleanup-x86.tsv" Link="X86/meta-zone-cleanup-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/meta-zone-marker-x86.tsv" Link="X86/meta-zone-marker-x86.tsv" CopyToOutputDirectory="PreserveNewest" />

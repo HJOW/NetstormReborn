@@ -1388,3 +1388,8 @@ cpppj/src/o/RawTechnologyTypesPacket.cpp	Netstorm.Core/Original/RawTechnologyTyp
 cpppj/src/o/RawTechnologyTypesPacket.h	Netstorm.Core/Original/RawTechnologyTypesPacket.cs	3f766a97f7c4d5b290c195754be66a7ee5b929be	port
 cpppj/src/o/RawTechnologyTypesPacket.cpp	Netstorm.Client/ClientTechnologyPacketDefaults.cs	3f766a97f7c4d5b290c195754be66a7ee5b929be	port
 cpppj/src/client/ClientCampaignTransport.cpp	Netstorm.Client/ClientTechnologyPacketDefaults.cs	8defb347c7c894599f1c9ebf1ad7d55c98f35df0	port
+cpppj/src/o/RawChallengeState.cpp	Netstorm.Core/Original/RawChallengeState.cs	6c50644e6130630715d4221d356ef4908de7a2c5	port
+cpppj/src/o/RawChallengeState.h	Netstorm.Core/Original/RawChallengeState.cs	6c50644e6130630715d4221d356ef4908de7a2c5	port
+cpppj/src/client/ClientChallengeGlobals.cpp	Netstorm.Client/ClientChallengeGlobals.cs	230528e31fc1c239b5d1251a729b99041bf45d9e	port
+cpppj/src/client/ClientChallengeGlobals.h	Netstorm.Client/ClientChallengeGlobals.cs	230528e31fc1c239b5d1251a729b99041bf45d9e	port
+cpppj/src/client/ClientCampaignTransport.cpp	Netstorm.Client/ClientChallengePacketDefaults.cs	8defb347c7c894599f1c9ebf1ad7d55c98f35df0	port
