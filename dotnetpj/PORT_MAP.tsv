@@ -1322,3 +1322,6 @@ cpppj/src/client/ClientDotCommandGlobals.h	Netstorm.Client/ClientDotCommandGloba
 cpppj/src/client/ClientDotCommandGlobals.cpp	Netstorm.Client/ClientDotCommandGlobals.cs	14ec2759c288b04a2d9c0a436e859f60abf1647b	port
 cpppj/src/client/RawDotCommandDispatch.h	Netstorm.Client/ClientDotCommandGlobals.cs	13ea2e60219d8009f0b2cd6ca5dc615056402f54	port
 cpppj/src/client/ClientChatRuntime.cpp	Netstorm.Client/ClientChatRuntime.cs	c0f7843ae3e8ec3e48369836e1d57d371f6488d6	port
+cpppj/src/client/RawDotCommandDispatch.h	Netstorm.Client/Scripting/RawDotCommandDispatch.cs	13ea2e60219d8009f0b2cd6ca5dc615056402f54	port
+cpppj/src/client/RawDotCommandDispatch.cpp	Netstorm.Client/Scripting/RawDotCommandDispatch.cs	13ea2e60219d8009f0b2cd6ca5dc615056402f54	port
+cpppj/src/client/ClientChatRuntime.cpp	Netstorm.Client/ClientDotCommandGlobals.cs	c0f7843ae3e8ec3e48369836e1d57d371f6488d6	port

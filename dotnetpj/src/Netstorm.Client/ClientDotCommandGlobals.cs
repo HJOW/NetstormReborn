@@ -27,4 +27,6 @@ public sealed class ClientDotCommandGlobals
     }
     /// <summary>같은 현재 count/표시를 검증된 등록 본체에 전달하며 표를 재구성하지 않는다.</summary>
     public uint Register(ReadOnlySpan<byte> name, uint callback, uint flag, DotCommandRegisterHooks? hooks = null) => RawDotCommandRegister.RegisterDotCommand(Bytes, name, callback, flag, hooks);
+    /// <summary>같은 인접 표와 장기 검색 상태를 실제 분배 본체에 넘긴다. 호출자 장치는 선택된 위치에서만 요구한다.</summary>
+    public uint Dispatch(Span<byte> input, DotCommandDispatchHooks hooks) => RawDotCommandDispatch.DispatchDotCommand(Bytes, DispatchState, input, hooks);
 }
