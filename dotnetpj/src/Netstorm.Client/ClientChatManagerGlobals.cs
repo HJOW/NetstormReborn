@@ -69,4 +69,10 @@ public sealed class ClientChatManagerGlobals
     {
         Memory = token => Bytes(token), Allocate = AllocateRecipientBuffer, Release = ReleaseRecipientBuffer,
     };
+    /// <summary>패킷의 자기 추가도 같은 실제 수신자 확장/반납 본체에 연결한다. 전역/송수신은 호출자가 설치한다.</summary>
+    public ChatPacketHooks MakePacketHooks() => new()
+    {
+        Memory = Bytes, AddRecipient = (manager, subscriber) => RawChatSubmit.AddChatRecipient(manager, subscriber, MakeSubmitHooks()),
+    };
+
 }

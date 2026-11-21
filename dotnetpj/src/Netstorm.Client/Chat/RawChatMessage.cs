@@ -2,6 +2,7 @@
 // 근거: cpppj `src/client/RawChatMessage.h`·`RawChatMessage.cpp`(0042f1e0·0042dc30·0042d640).
 // 2026-11-11 F3 채팅 본문 조합 이식에서 추가됐다.
 using System.Text;
+using Netstorm.Core.Original;
 
 namespace Netstorm.Client.Chat;
 
@@ -20,11 +21,22 @@ public static class RawChatMessage
 // 채팅 본문 조합이 함께 보는 현재 매니저·구독자 번호다. 2026-11-11 F3 채팅 본문 조합 이식에서 추가됐다.
 public sealed class ChatMessageGlobals
 {
-    /// <summary>현재 매니저 번호다. say의 선행 관문과 wrapper 호출에 쓴다. 2026-11-11 F3 채팅 본문 조합 이식에서 추가됐다.</summary>
-    public uint Current { get; set; }
+    /// <summary>현재 manager의 실제 주소 또는 독립 입력 상자다.</summary>
+    private readonly UIntBox _current;
+    /// <summary>현재 Subscriber의 실제 주소 또는 독립 입력 상자다.</summary>
+    private readonly UIntBox _subscriber;
+    /// <summary>기존 독립0/0 입력 계약을 유지한다.</summary>
+    public ChatMessageGlobals() : this(new(), new()) { }
+    /// <summary>실제 같은 두DWORD를 빌리며 조회나 생성으로 값을 바꾸지 않는다.</summary>
+    public ChatMessageGlobals(UIntBox current, UIntBox subscriber)
+    {
+        _current = current ?? throw new ArgumentNullException(nameof(current)); _subscriber = subscriber ?? throw new ArgumentNullException(nameof(subscriber));
+    }
+    /// <summary>say의 각 현재 manager 읽기와 외부 쓰기를 같은 상자에 전달한다.</summary>
+    public uint Current { get => _current.Value; set => _current.Value = value; }
+    /// <summary>첫 비자기 수신자 검색의 현재 Subscriber DWORD다.</summary>
+    public uint Subscriber { get => _subscriber.Value; set => _subscriber.Value = value; }
 
-    /// <summary>현재 구독자 번호다. 첫 비자기 수신자를 찾을 때 읽는다. 2026-11-11 F3 채팅 본문 조합 이식에서 추가됐다.</summary>
-    public uint Subscriber { get; set; }
 }
 
 // 바이트 구간에 제자리로 쓰는 채팅 이름 서식 효과 형식이다. 2026-11-11 F3 채팅 본문 조합 이식에서 추가됐다.

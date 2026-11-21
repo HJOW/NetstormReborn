@@ -1336,3 +1336,4 @@ cpppj/src/client/ChatRecipients.h	Netstorm.Client/Chat/ChatRecipients.cs	325d19a
 cpppj/src/client/ChatRecipients.cpp	Netstorm.Client/Chat/ChatRecipients.cs	325d19a08720f4232ab01a45ba8d32ec437bec68	port
 cpppj/src/client/ClientChatRuntime.cpp	Netstorm.Client/ClientChatIdentityRuntime.cs	c0f7843ae3e8ec3e48369836e1d57d371f6488d6	port
 cpppj/src/client/ClientChatRuntime.cpp	Netstorm.Client.Host/ClientHostGame.Chat.cs	c0f7843ae3e8ec3e48369836e1d57d371f6488d6	port
+cpppj/src/client/ClientChatRuntime.cpp	Netstorm.Client/ClientChatMessageRuntime.cs	c0f7843ae3e8ec3e48369836e1d57d371f6488d6	port

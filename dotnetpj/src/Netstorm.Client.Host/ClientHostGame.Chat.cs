@@ -74,6 +74,22 @@ public sealed partial class ClientHostGame
             Flash = devices.Flash, Sound = devices.Sound, MenuCommand = devices.MenuCommand, Message = devices.Message, PrintChat = devices.PrintChat, DiagnosticLog = devices.DiagnosticLog,
         });
     }
+    /// <summary>같은 Root의 일반 메시지 부모이며 UI 설치 이후만 사용한다.</summary>
+    private ClientChatMessageRuntime? _nativeChatMessage;
+    /// <summary>현재 이름/대상·일반 조합/명시 패킷 장치·제출을 같은 Root 소유자로 한 번에 연결한다.</summary>
+    public void BindNativeChatFlow(ClientChatSubmitDevices devices, Func<string> currentName, Func<string, string> translate, ChatPacketHooks packet, Func<byte[]>? metaRecords = null)
+    {
+        ArgumentNullException.ThrowIfNull(devices); ArgumentNullException.ThrowIfNull(packet); BindNativeChatRecipients(currentName, translate, metaRecords);
+        var message = new ClientChatMessageRuntime(_chatManagerGlobals, _subscriberGlobals, _nativeChatIdentity!, currentName, packet, _chatWindowGlobals, devices.SetInputVisible);
+        BindNativeChatSubmit(new ClientChatSubmitDevices
+        {
+            Resolve = ResolveNativeChatIdentity, Translate = translate, Assertion = devices.Assertion, SetInputVisible = devices.SetInputVisible,
+            Flash = devices.Flash, Sound = devices.Sound, MenuCommand = devices.MenuCommand, Message = message.Say, PrintChat = devices.PrintChat, DiagnosticLog = devices.DiagnosticLog,
+        });
+        _nativeChatMessage = message;
+    }
+    /// <summary>설치된 같은 일반 say/패킷 부모를 UI가 직접 부를 수 있다.</summary>
+    public uint SayNativeChatMessage(ReadOnlySpan<byte> input) => (_nativeChatMessage ?? throw new InvalidOperationException("실제 일반 Chat 메시지 미설치")).Say(input);
     /// <summary>World/Init/전송 소비자가 빌릴 실제 Client 구독자 주소다.</summary>
     public ClientSubscriberGlobals SubscriberGlobals => _subscriberGlobals;
     /// <summary>미션 유무와 관계없이 실제 MySubscriber의 현재 전체 DWORD를 읽는다.</summary>

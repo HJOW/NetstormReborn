@@ -2,6 +2,7 @@
 // 근거: cpppj `src/client/RawChatPacket.h`·`RawChatPacket.cpp`(0042d280·0040a8d0).
 // 2026-11-11 F3 채팅 패킷 본체 이식에서 추가됐다.
 using System.Text;
+using System.Globalization;
 
 namespace Netstorm.Client.Chat;
 
@@ -140,9 +141,8 @@ public static class ChatPacketBody
         bool empty = Text(name).Length == 0;
         bool found = false;
         byte[] target = Memory(recipients);
-        uint count = Read(target, 0);
         // 현재 개수와 실제 배열에서 자기 구독자 중복을 찾는 반복문이다. 2026-11-11 F3 채팅 패킷 본체 이식에서 추가됐다.
-        for (uint index = 0u; unchecked((int)index) < unchecked((int)count); ++index)
+        for (uint index = 0u; unchecked((int)index) < unchecked((int)Read(target, 0)); ++index)
         {
             if (Read(Memory(Read(target, 8)), unchecked((int)(index * 4u))) == Global(RawChatPacket.SubscriberAddress))
             {
@@ -166,7 +166,7 @@ public static class ChatPacketBody
                 flags |= 0x100u;
             }
 
-            battleText = unchecked((int)flags).ToString();
+            battleText = unchecked((int)flags).ToString(CultureInfo.InvariantCulture);
             while (battleText.Length < 3)
             {
                 battleText = "0" + battleText;
