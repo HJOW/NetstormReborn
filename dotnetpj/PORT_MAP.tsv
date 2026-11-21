@@ -1474,3 +1474,15 @@ cpppj/src/o/RawConstructionPlace.h	Netstorm.Core/Original/RawConstructionPlace.c
 cpppj/src/o/RawPathCleanup.cpp	Netstorm.Client/Host/HostSession.PathCleanup.cs	0d82e448de8ce679357cda8042bbc8226b8ed1b2	port
 cpppj/src/o/RawPathCleanup.h	Netstorm.Client/Host/HostSession.PathCleanup.cs	0d82e448de8ce679357cda8042bbc8226b8ed1b2	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.PathCleanup.cs	baf141ebe8d2893459a1b18ea74a6caa88504468	port
+cpppj/src/o/RawPriestHalt.cpp	Netstorm.Core/Original/RawPriestHalt.cs	ab9361f11f2bc7618251f17d047f6d601c5c08fc	port
+cpppj/src/o/RawPriestHalt.h	Netstorm.Core/Original/RawPriestHalt.cs	ab9361f11f2bc7618251f17d047f6d601c5c08fc	port
+cpppj/src/o/RawCarrierArrival.cpp	Netstorm.Core/Original/RawCarrierArrival.cs	0d82e448de8ce679357cda8042bbc8226b8ed1b2	port
+cpppj/src/o/RawCarrierArrival.cpp	Netstorm.Core/Original/RawCarrierArrival.State.cs	0d82e448de8ce679357cda8042bbc8226b8ed1b2	port
+cpppj/src/o/RawCarrierArrival.h	Netstorm.Core/Original/RawCarrierArrival.cs	0d82e448de8ce679357cda8042bbc8226b8ed1b2	port
+cpppj/src/o/RawCarrierArrival.h	Netstorm.Core/Original/RawCarrierArrival.State.cs	0d82e448de8ce679357cda8042bbc8226b8ed1b2	port
+cpppj/src/o/RawPriestArrival.cpp	Netstorm.Core/Original/RawPriestArrival.cs	ab9361f11f2bc7618251f17d047f6d601c5c08fc	port
+cpppj/src/o/RawPriestArrival.h	Netstorm.Core/Original/RawPriestArrival.cs	ab9361f11f2bc7618251f17d047f6d601c5c08fc	port
+cpppj/src/client/RawCampaignMotionBindings.cpp	Netstorm.Client/Host/HostSession.PathParents.cs	ab3ef43d3685245aeaad8ecf53d55de4a1b92a97	port
+cpppj/src/client/RawCampaignMotionBindings.h	Netstorm.Client/Host/HostSession.PathParents.cs	ab3ef43d3685245aeaad8ecf53d55de4a1b92a97	port
+cpppj/src/client/RawCampaignPathBindings.cpp	Netstorm.Client/Host/HostSession.PathParents.cs	2b5ee903c78defa10dbde959a63db11cb4adf8b7	port
+cpppj/src/client/RawCampaignPathBindings.h	Netstorm.Client/Host/HostSession.PathParents.cs	5318fdd6a88cbf71e5248a42a30f902a860ca3dd	port

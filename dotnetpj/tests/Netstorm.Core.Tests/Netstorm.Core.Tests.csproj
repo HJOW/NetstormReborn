@@ -1,5 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <!-- 두 원본 정지864/도착406행 중 PATCH635행을 실제 기존HP/공간/내용물과 대조한다. CD의HP 하위는 별도 미지원이다. -->
+    <None Include="../../../cpppj/tests/fixtures/priesthalt-x86.tsv" Link="X86/priesthalt-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/carrierarrival-x86.tsv" Link="X86/carrierarrival-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
     <!-- 기존 세 PE 자료의 환불216·잔액48·가산24관측을 같은 Core 소비자에서 대조한다. -->
     <None Include="../../../cpppj/tests/fixtures/constructionplace-x86.tsv" Link="X86/constructionplace-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>

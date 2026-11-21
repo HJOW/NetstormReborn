@@ -57,6 +57,7 @@ public sealed partial class HostSession
         _daisPacketTransmission = null;
         ReleasePathSearchDevices();
         ReleaseConstructionRefundDevices();
+        ReleasePathParentDevices();
     }
     /// <summary>번호 선택 시점의 현재 TYPE를 읽는다.</summary>
     private OriginalTypeRecord SquidPacketType(uint type) => _terrainPopTypes is { } types && type < types.Count ? types[(int)type]
