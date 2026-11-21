@@ -81,8 +81,8 @@ def float_bits(text):
 
 
 def parse_dump(path):
-    """session-dump 한 파일에서 소유자별 객체 수·SP·AI 토큰을 읽는다."""
-    owners, sp, brains, frame = {}, {}, {}, None
+    """session-dump 한 파일에서 객체 수·SP·AI 토큰과 선택 본문 진단을 읽는다."""
+    owners, sp, brains, ai_state, frame = {}, {}, {}, {}, None
     # 탭 구분 행을 첫 열 이름으로 나눠 필요한 행만 해석한다.
     for line in path.read_text(encoding='ascii', errors='replace').splitlines():
         row = line.split('\t')
@@ -99,7 +99,19 @@ def parse_dump(path):
             # 값 칸은 소유자 0~8의 float 비트다.
             for owner, value in enumerate(row[3:12]):
                 sp[owner] = round(float_bits(value), 1)
-    return {'frame': frame, 'objects_by_owner': owners, 'sp': sp, 'ai_owners': sorted(owner for owner, token in brains.items() if token)}
+        elif row[0] == 'ai' and len(row) == 37:
+            # SessionStateDump의 고정 DWORD 원문 순서다. 이전 덤프에는 ai 행이 없으므로 기존 요약은 그대로다.
+            fields = ('initialized', 'initial_scan', 'stopped', 'enemy', 'capabilities', 'wallet_bits', 'goal', 'reserve', 'desired_collectors', 'collectors', 'own_graph', 'enemy_graph', 'priest', 'enemy_priest', 'temple', 'enemy_temple', 'collectors_ready', 'geysers_ready', 'build_type', 'search_count', 'search_done', 'bridge_target', 'bridge_restart', 'bridge_path_step')
+            values = dict(zip(fields, map(int, row[3:27])))
+            values['token'] = int(row[2])
+            values['wallet'] = struct.unpack('<i', struct.pack('<I', values['wallet_bits']))[0]
+            # 기한은 모든 64비트를 보존한다. JSON 소비자가 필요할 때 double로 해석하며 NaN도 손실시키지 않는다.
+            values['deadline_bits'] = {f'{offset:x}': int(value) for offset, value in zip((0x5a8, 0x5b0, 0x5b8, 0x5c0, 0x5c8, 0x5d0, 0x5d8, 0x5e0, 0x5e8, 0x630), row[27:37])}
+            ai_state[int(row[1])] = values
+    result = {'frame': frame, 'objects_by_owner': owners, 'sp': sp, 'ai_owners': sorted(owner for owner, token in brains.items() if token)}
+    if ai_state:
+        result['ai_state'] = ai_state
+    return result
 
 
 def parse_reports(path):

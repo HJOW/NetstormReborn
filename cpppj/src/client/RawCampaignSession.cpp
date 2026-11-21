@@ -4867,6 +4867,16 @@ void RawCampaignSession::CrankAiMoney() {
     if (!impl_->loaded) throw std::logic_error("AI 직접 명령의 실제 Session 미설치");
     o::CrankAiMoney({[this] { return std::span<const std::uint8_t>(impl_->players); },[this](auto token) { return impl_->aiMemory.Bytes(token); }});
 }
+// 덤프가 원래 Player+b0와 같은 장기 AI 메모리를 직접 읽게 하며 생성/준비/행동을 호출하지 않는다.
+std::span<const std::uint8_t> RawCampaignSession::AiBrainBytes(std::uint32_t owner) const {
+    if (owner<1 || owner>=9 || impl_->players.size()!=9U*180U) throw std::out_of_range("AI 관측의 실제 Player 범위 오류");
+    const auto token=Read(impl_->players,owner*180U+0xb0); // 실제 현재 Player가 보유한 본문 핸들이다.
+    if (!token) return {};
+    if (!impl_->aiMemory.Contains(token)) throw std::logic_error("AI 관측의 현재 Player 본문 수명 불일치");
+    const auto body=std::as_const(impl_->aiMemory).Bytes(token); // 살아 있는 동일 본문을 읽기 전용으로 빌리며 사본을 만들지 않는다.
+    if (body.size()!=o::RawAiBrainConstructor::kBytes || Read(body,0x260)!=owner) throw std::logic_error("AI 관측의 실제 본문 크기/소유자 불일치");
+    return body;
+}
 // 같은 현재 Player 포인터와 생존0xb08 본체를 각 원문 재조회 위치에 연결한다.
 void RawCampaignSession::SetAiParameter(std::uint32_t packed) {
     if (!(packed&7U)) return; //원문 owner0은 현재 Player/실제 Runtime을 읽기 전에 반환한다.

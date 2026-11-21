@@ -1,6 +1,8 @@
 // 실제 Session/World 상태 덤프(검사 전용 관측). 형식은 docs/exe/cpp-session-state-dump-20261109.md를 따른다.
 // 2026-11-09: webpj/dotnetpj의 L2·L3 대조용 cpppj Session 덤프 요청으로 추가했다. 읽기만 하며 게임 상태를 바꾸지 않는다.
 #include "client/SessionStateDump.h"
+#include "client/CampaignTestPlay.h" // 자동 플레이에서만 선택 진단 ai 행을 추가하고 일반 L2/L3 덤프 바이트를 보존한다.
+#include "o/RawAiBrain.h" // 실제 AI 본문의 원본 크기와 관측 계약이다.
 #include "client/ClientMain.h"
 #include "client/ClientRandomGlobals.h"
 #include "client/RawCampaignSession.h"
@@ -11,6 +13,7 @@
 #include "o/SpStore.h"
 #include "o/SquidPostPop.h"
 #include "o/SquidProcess.h"
+#include <array> // 선택 AI 진단의 DWORD/QWORD 원문 위치 표다.
 #include <bit>
 #include <sstream>
 #include <stdexcept>
@@ -106,6 +109,22 @@ std::string FormatSessionStateDump(const SessionStateDumpInput& input) {
     for (std::size_t type=0;type<input.totalLocal.size();++type) {
         if (input.totalLocal[type] || input.totalBuilt[type] || input.totalGlobal[type]) out<<"totalmade\t"<<type<<'\t'<<input.totalLocal[type]<<'\t'<<input.totalBuilt[type]<<'\t'<<input.totalGlobal[type]<<'\n';
     }
+    // 테스트 자동 플레이의 선택 관측만 덧붙인다. 기존 행과 일반 덤프의 판번호/바이트는 바꾸지 않는다.
+    for (const auto& ai:input.ais) {
+        if (!patch || ai.owner<1 || ai.owner>=9 || !ai.token || ai.body.size()!=o::RawAiBrainConstructor::kBytes ||
+            input.players.size()!=9U*kPlayerBytes || ReadLittle(input.players,ai.owner*kPlayerBytes+0xb0,4)!=ai.token || ReadLittle(ai.body,0x260,4)!=ai.owner)
+            throw std::invalid_argument("Session AI 관측의 실제 본문/Player 계약 오류");
+        out<<"ai\t"<<ai.owner<<'\t'<<ai.token;
+        // 원본 initialized/scan/stop/enemy/flags/wallet/goal/예산/수량/그래프/사제/신전/검색 상태를 지정 순서로 읽는다.
+        constexpr std::array<std::size_t,24> fields{0x258,0x25c,0x254,0x264,0x248,0x2d8,0x2d4,0x290,0x234,0x2e4,0x298,0x2ac,0x29c,0x2a0,0x294,0x2a8,0x2cc,0x2d0,0x394,0x5a0,0x5a4,0x3cc,0x3d8,0x5f0};
+        // DWORD는 원본 비트를 십진수로 내보낸다. signed 지갑과 목표 미정 float도 소비자가 같은 비트로 해석한다.
+        for (const auto offset:fields) out<<'\t'<<ReadLittle(ai.body,offset,4);
+        // 다음 행동의 실제 QWORD 기한을 double 비트 그대로 보존한다(전체 행동/생산/사제/검색/운반/건설/다리 재고).
+        constexpr std::array<std::size_t,10> deadlines{0x5a8,0x5b0,0x5b8,0x5c0,0x5c8,0x5d0,0x5d8,0x5e0,0x5e8,0x630};
+        // 두 DWORD를 낮은 쪽부터 합쳐 64비트 기한 한 칸으로 쓴다.
+        for (const auto offset:deadlines) out<<'\t'<<(std::uint64_t(ReadLittle(ai.body,offset+4,4))<<32|ReadLittle(ai.body,offset,4));
+        out<<'\n';
+    }
     out<<"end\n";
     return out.str();
 }
@@ -132,6 +151,15 @@ std::string DumpSessionState(Client& client,RawCampaignSession* session) {
     input.edition=pool.Edition();input.poolBytes=pool.Bytes();input.poolCapacity=pool.Capacity();input.stride=pool.Layout().stride;
     input.freeCount=pool.FreeCount();input.firstFreeServer=pool.FirstFree(false).value;input.firstFreeClient=pool.FirstFree(true).value;input.predictableCursor=pool.PredictableCursor();
     input.players=session->PlayerRecords();input.hiddenPlayers=session->HiddenPlayers();input.alliances=session->Alliances();
+    // 명령줄 테스트 AI가 활성일 때만 살아 있는 현재 본문을 읽고, 일반 상태 덤프의 L2/L3 기준은 유지한다.
+    if (ConfiguredCampaignTestPlay().Active()) {
+        // 실제 Player1..8의 현재 핸들 순서대로 관측한다. 본문이 없는 Player에 가짜 행을 만들지 않는다.
+        for (std::uint32_t owner=1;owner<9;++owner) {
+            const auto body=session->AiBrainBytes(owner); // 이 호출은 수명/크기를 확인할 뿐 AI를 실행하지 않는다.
+            if (!body.empty()) input.ais.push_back({owner,ReadLittle(input.players,owner*kPlayerBytes+0xb0,4),body});
+        }
+    }
+
     const auto& sp=session->SpStore();input.spInitialized=sp.Initialized();input.spOffset=sp.Offset();input.spPools=sp.Pools();input.spPermutation=sp.Permutation();
     input.graph=core.graph.Records();
     auto& bookkeeping=core.bookkeeping; // TotalCost는 같은 장기 비용 DWORD의 쓰기 참조만 제공하므로 값만 복사해 읽는다.

@@ -113,3 +113,29 @@ TEST_CASE(SessionStateDump_WithoutWorldAndInitializedSp) {
     CHECK(FormatSessionStateDump(world).find("\nsp\t1\t"+std::to_string(store.Offset())+"\t0\t1065353216\t0\t")!=std::string::npos);
     world.poolBytes=world.poolBytes.first(10);CHECK(Throws([&] { static_cast<void>(FormatSessionStateDump(world)); }));
 }
+
+// AI 선택 진단은 기존 덤프 바이트에 한 행만 더하며 본문/Player가 다르면 가짜 관측을 거부한다.
+TEST_CASE(SessionStateDump_OptionalAiReadsRawBodyWithoutChangingExistingRows) {
+    DumpScene scene(o::OriginalEdition::Patch1078); // 일반 덤프와 비교하는 같은 입력 장면이다.
+    constexpr std::uint32_t token=0x20000000U; // 실제 32비트 본문 핸들 형식의 독립 검사값이다.
+    std::vector<std::uint8_t> body(0xb08); // 원문 크기를 가진 독립 AI 관측 입력이다.
+    PutLittle(scene.players,180+0xb0,token,4);PutLittle(body,0x260,1,4);
+    PutLittle(body,0x258,1,4);PutLittle(body,0x25c,1,4);PutLittle(body,0x264,2,4);PutLittle(body,0x248,0x1234,4);PutLittle(body,0x2d8,0xfffffff6U,4);
+    PutLittle(body,0x5a8,0x11223344U,4);PutLittle(body,0x5ac,0x55667788U,4);
+    const auto baseline=FormatSessionStateDump(scene.input); // AI를 요청하지 않으면 기존 판번호/행이 그대로다.
+    scene.input.ais.push_back({1,token,body});const auto diagnostic=FormatSessionStateDump(scene.input);
+    const auto at=diagnostic.find("\nai\t1\t536870912\t1\t1\t0\t2\t4660\t4294967286\t"); // 상태/적/기능/음수 지갑 비트를 별도 기대값으로 확인한다.
+    CHECK(at!=std::string::npos && CountRows(diagnostic,"ai\t")==1);
+    const auto end=diagnostic.find('\n',at+1); // 추가 행 한 개만 제거하면 일반 덤프와 전체 바이트가 같아야 한다.
+    CHECK(end!=std::string::npos && diagnostic.substr(0,at)+diagnostic.substr(end)==baseline);
+    CHECK(diagnostic.find("\t6153737367135073092\t0\t0\t0\t0\t0\t0\t0\t0\t0\nend\n")!=std::string::npos);
+    CHECK(scene.pool.Slot(scene.asset)[26]==44 && scene.pool.Slot(scene.asset)[27]==1); // 서식은 게임 HP를 수정하지 않는다.
+    scene.input.ais[0].body=std::span<const std::uint8_t>(body).first(0xb07);
+    CHECK(Throws([&] { static_cast<void>(FormatSessionStateDump(scene.input)); }));
+    scene.input.ais[0].body=body;scene.input.ais[0].token=token+1;
+    CHECK(Throws([&] { static_cast<void>(FormatSessionStateDump(scene.input)); }));
+    scene.input.ais[0].token=token;PutLittle(body,0x260,2,4);
+    CHECK(Throws([&] { static_cast<void>(FormatSessionStateDump(scene.input)); }));
+    PutLittle(body,0x260,1,4);scene.input.ais[0].owner=9;
+    CHECK(Throws([&] { static_cast<void>(FormatSessionStateDump(scene.input)); }));
+}

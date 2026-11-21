@@ -82,6 +82,7 @@ python -X utf8 tools/cpp_campaign_batch.py --missions TheWarBegins,GuardMyBack -
 | `ai_diagnostics` | 콘솔의 `AI 원본 진단` 횟수. 0이 정상이며 아니면 원문 불변식 위반 후보로 기록한다. |
 | `camera_moves` | 관전 카메라 이동 횟수(`battle`/`ritual`). `ritual`이 1 이상이면 그 실행에서 사제 희생 의식이 있었다는 뜻이다. |
 | `dumps[]` | 프레임별 `ai_owners`(AI가 붙은 소유자), `objects_by_owner`(소유자별 객체 수: 섬·다리·건물·유닛 포함), `sp`(소유자별 SP). 아군 AI가 일하면 로컬 소유자 객체 수가 늘고 SP가 오르내린다. |
+| `dumps[].ai_state` | 1326부터 테스트 자동 플레이에서만 현재 실제 AI 본문 관측을 추가한다. `initialized`(+258), `enemy`(+264), signed `wallet`(+2d8), `goal`(+2d4), 그래프·사제·신전·검색/다리 상태·`deadline_bits`를 쓴다. 일반 `session-dump`의 기존 바이트는 유지한다. 원문 위치와 한계는 [1326 문서](../exe/cpp-autoplay-ai-diagnostics-1326-20261122.md)를 따른다. |
 | `reports[]` | 프레임별 `page`(현재 안내/화면 이름), `paused`, `mission_progress`(`Done<미션>` 설정 값) |
 | `outcome` / `outcome_frame` | `victory`: `Done<미션>`≠0 또는 page가 `BadTeamDead`/`Succeeded`/`Success`. `defeat`: page가 `GoodTeamDead`/`Failed`/`Ai<N>PriestDead`·`Ai<N>TempleDead`. page가 `Ai2PriestSaved`/`VictoryNote`여도 승리다. 그 외 `undecided`. 프레임은 처음 관측된 보고 시점(덤프 주기 단위)이다. |
 

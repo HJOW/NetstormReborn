@@ -73,3 +73,16 @@ ASCII·LF·탭 구분이다. 숫자는 별도 표시가 없으면 10진 부호 �
 - 단위 시험(`netstorm_pop_context_tests`, 통합 `netstorm_tests`에도 등록): `SessionStateDumpTests.cpp` 4건(순수 서식·분산 SP 복호가 `ScrambledSpStore::Get`과 같은 비트이며 회전 뒤 유지·FNV-1a 64 공개 시험값·판본별 필드 폭·free 슬롯 생략·world 0) 통과, `ClientTimeSourceTests.cpp` 2건(기본 OS 시계·고정 모드 전진/감김/유닉스 초/거부) 통과.
 - 실제 실행(HJOW-Athlon, AGENTS.md 예외 호스트): 메인 메뉴 `world 0` 덤프, 1-1 미션 덤프(위 3절 표). 고정 시각 모드 소요는 메뉴 61프레임 1.0초, 미션 61프레임 2.4초였다.
 - 최초 실패와 교정: ① `main.cpp`에서 private `UberGump::InputSession()`을 직접 불러 C2248 → 공개 `SessionStateDump()` 추가. ② 시험 파일의 지역 `Throws` 누락 C3861 → 다른 시험 파일과 같은 지역 도우미 추가. ③ 고정 시각 첫 판은 가상 시계를 메인 루프에서만 전진시켜, 시작 타이틀 그림의 벽시각 대기(`TitleBitmapLifetime`의 `for(;;){ if (end<=wall()) break; pump(); … }`)가 실제 OS 입력이 들어올 때까지 돌아 메뉴 시작 28.6초·미션 6분 이상/시간 초과가 났다 → `PumpMessages()`마다 가상 시계를 한 프레임 전진하도록 고쳐 결정론과 속도를 함께 맞췄다.
+
+## 5. 테스트 자동 플레이의 선택 AI 진단 (1326, 2026-11-22)
+
+일반 L2/L3 덤프의 판번호와 전체 바이트는 유지한다. 테스트 자동 플레이 설정(`ConfiguredCampaignTestPlay().Active()`)이 켜진 실행에서만 기존 `end` 직전에 `ai` 행을 덧붙인다. 이는 일반 판번호 1 비교 입력에 넣지 않는 선택 진단이며, 기존 행의 열이나 의미를 바꾸지 않는다. 자동 플레이를 끈 실행끼리의 기존 덤프 대조에는 영향이 없다.
+
+`ai`의 열은 소유자, 실제 Player+b0 토큰, 아래 DWORD 24개, 아래 QWORD 기한 10개 순서다. DWORD·QWORD는 원문 비트를 부호 없는 10진수로 출력하고, 지갑은 signed32로 재해석한다. QWORD 기한은 double 비트이며 게임 시각과 비교할 때만 double로 재해석한다.
+
+- DWORD 위치: `258,25c,254,264,248,2d8,2d4,290,234,2e4,298,2ac,29c,2a0,294,2a8,2cc,2d0,394,5a0,5a4,3cc,3d8,5f0`(16진).
+- QWORD 위치: `5a8,5b0,5b8,5c0,5c8,5d0,5d8,5e0,5e8,630`(16진).
+
+소유자1..8만 순서대로 읽고 토큰0은 생략한다. 현재 Player 토큰이 실제 장기 AI 메모리에 없거나 본문 크기/소유자가 다르면 명시 오류로 거부한다. 원문 본문 생성·준비·프레임·난수·SP 쓰기를 실행하지 않는다. 관련 구현·정체 조사와 검증 범위는 [1326](cpp-autoplay-ai-diagnostics-1326-20261122.md)에 기록한다.
+
+자동 플레이 JSON의 `bridge_target`은+3cc(현재 다리 표적 SID), `bridge_path_step`은+5f0(다리 경로 단계)다. 초기 관측 도구의 `bridge_step`/`bridge_path` 키를 의미에 맞게 이름만 교정했으며 원시 `ai` 행의 위치·열·바이트는 그대로다.

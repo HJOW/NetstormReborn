@@ -2,6 +2,7 @@
 #include "o/RawDamageableHit.h"
 #include <bit>
 #include <stdexcept>
+#include <sstream> // 미연결 피해의 실제 SID/TYPE/가상 진입을 오류 로그에 보존한다.
 #include <utility>
 
 namespace netstorm::o {
@@ -60,7 +61,12 @@ GunHitHooks MakeDamageableGunHitHooks(const RawDamageableHit& damage,std::span<c
         if (!victim.value || victim.value>=pool.Capacity()) throw std::out_of_range("일반 피해 분배 SID 오류");const auto table=ReadHit(pool.Slot(victim),0);std::uint32_t entry=0;
         // raw의 현재 vtable와 일치하는 실제 진입만 사용한다.
         for (const auto& item:hitEntries) if (item.vtable==table) { entry=item.address;break; }
-        if (entry==(patch ? 0x44c8e0U : 0x462300U)) { damage.Hit(victim,amount,owner,attacker);return; }if (entry==(patch ? 0x4add10U : 0x4aeda0U)) { damage.BaseHit(victim,amount,owner,attacker);return; }if (!fallback) throw std::logic_error("다른 파생 실제 피해 미복원");fallback(victim,amount,owner,attacker);
+        if (entry==(patch ? 0x44c8e0U : 0x462300U)) { damage.Hit(victim,amount,owner,attacker);return; }if (entry==(patch ? 0x4add10U : 0x4aeda0U)) { damage.BaseHit(victim,amount,owner,attacker);return; }if (!fallback) {
+            std::ostringstream message; // 기존 엄격한 오류에 호출 당시의 실제 표적과 공격 정보를 덧붙인다.
+            message<<"다른 파생 실제 피해 미복원: 표적 SID="<<victim.value<<" TYPE="<<unsigned(pool.Slot(victim)[10])<<" VT=0x"<<std::hex<<table<<" +98=0x"<<entry<<std::dec<<" 공격 SID="<<attacker.value<<" TYPE=";
+            if (attacker.value && attacker.value<pool.Capacity()) message<<unsigned(pool.Slot(attacker)[10]);else message<<"없음/물리범위밖";
+            throw std::logic_error(message.str());
+        }fallback(victim,amount,owner,attacker);
     };return hooks;
 }
 // 현재 burning 판정 객체의 수명은 이 callback보다 오래 유지해야 한다.

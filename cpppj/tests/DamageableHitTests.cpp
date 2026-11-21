@@ -93,3 +93,15 @@ TEST_CASE(DamageableHit_CurrentVtableDispatchAndFallback) {
         fallback.damage=[&fallbackCalls](Sid victim,std::int32_t amount,std::uint8_t owner,Sid attacker) { CHECK(victim==kSource && amount==24 && owner==2 && attacker==Sid{60});++fallbackCalls; };auto hooks=MakeDamageableGunHitHooks(damage,entries,std::move(fallback));hooks.damage(kSource,24,2,Sid{60});CHECK(Get(scene.pool.Slot(kSource),26,scene.patch ? 4U : 2U)==126 && !fallbackCalls);Put(scene.pool.AllocatedBytes(kSource),0,0xdead1234);hooks.damage(kSource,24,2,Sid{60});CHECK(fallbackCalls==1 && Get(scene.pool.Slot(kSource),26,scene.patch ? 4U : 2U)==126);
     }
 }
+
+// 알 수 없는 파생 본체는 여전히 실패하며 로그가 실제 표적/공격자와 원본 가상 진입을 식별한다.
+TEST_CASE(DamageableHit_MissingDerivedKeepsStrictFailureAndContext) {
+    HitScene scene(OriginalEdition::Patch1078);auto row=HitRows().front();scene.Prepare(row); // 기존 독립 입력의 실제 풀/타입만 빌린다.
+    RawDamageableHit damage(scene.pool,scene.types,scene.state,{}); // 미연결 분배가 HP 몸체를 실행해서는 안 된다.
+    const std::array<DamageableHitEntry,1> entries{{{0x11319800U,0x00448b70U}}}; // 제단의 알려진 +98을 일반 몸체로 대체하지 않는 분배 입력이다.
+    const auto before=Hex(scene.pool.Slot(kSource));auto hooks=MakeDamageableGunHitHooks(damage,entries,{});
+    std::string message; // 최상위 로그가 받을 정확한 예외 문맥이다.
+    try { hooks.damage(kSource,24,2,Sid{60}); } catch (const std::logic_error& error) { message=error.what(); }
+    CHECK(message.find("다른 파생 실제 피해 미복원: 표적 SID=50 TYPE=71 VT=0x11319800 +98=0x448b70 공격 SID=60 TYPE=128")!=std::string::npos);
+    CHECK(Hex(scene.pool.Slot(kSource))==before && scene.events.empty());
+}

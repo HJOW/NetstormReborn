@@ -26,6 +26,12 @@ struct SessionDumpProcess {
     std::uint64_t timeBits{}; // 다음 실행 시각 double의 비트다.
 };
 
+// AI 관측 한 행의 현재 소유자/핸들과 실제 읽기 전용 본문이다. span의 수명은 덤프 서식 호출까지 유지한다.
+struct SessionDumpAi {
+    std::uint32_t owner{},token{}; // 실제 Player 번호와 Player+b0의 장기 AI 본문 핸들이다.
+    std::span<const std::uint8_t> body; // RawAiBrainMemory가 소유하는 실제 0xb08 BYTE다. 본문 생성/수정은 하지 않는다.
+};
+
 // 순수 서식 함수가 읽는 입력이다. 모든 span은 호출 동안만 살아 있으면 되며 사본을 보관하지 않는다. (2026-11-09 추가)
 struct SessionStateDumpInput {
     o::OriginalEdition edition{o::OriginalEdition::Patch1078}; // 슬롯 필드 배치(소유자/프레임/HP 폭)를 고르는 판본이다.
@@ -38,6 +44,7 @@ struct SessionStateDumpInput {
     std::size_t kernelSize{}; // Kernel 등록 수다.
     std::uint32_t kernelCapacity{}; // Kernel 끝 번호다.
     std::vector<SessionDumpProcess> processes; // pid 오름차순 프로세스 목록이다.
+    std::vector<SessionDumpAi> ais; // 명시적으로 요청한 AI 진단 행이다. 비어 있으면 기존 덤프 바이트를 그대로 유지한다.
     std::span<const std::uint8_t> players; // Player 9기록 원문(9×180)이다.
     std::span<const std::uint8_t> hiddenPlayers; // Chat 숨김 BYTE 9개다.
     std::span<const std::uint32_t> alliances; // 방향별 동맹 9×9 DWORD다.
