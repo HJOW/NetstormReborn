@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-21 · 사용자 재개 지시로 진행 중 · 마지막 완료0.776(전체5467검사/동일빌드65시작) · 다음0.777 실제Client41h 수신 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6 병행) · cpppj 제품1323 / 11.01 · 전체 목표 미완료**
+**2026-11-21 · 사용자 재개 지시로 진행 중 · 마지막 완료0.777(장기Client41h 수신 바인딩) · 다음0.778 UI수신 원문/부분물리 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6 병행) · cpppj 제품1323 / 11.01 · 전체 목표 미완료**
 
 현행 인계는 이 문서가 기준이다. 단위별 근거는 `docs/dotnet-canon-0NNN-*.md`이다. 0.645~0.732의 단위별 완료 문장, 0.640 회귀 점검 상세, 0.546~0.676 완료 기록 원문은 [0.732 정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0732)에 있다. 0.600~0.635는 [0.635 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635), 0.613까지의 경과와 파일 계열별 체크 목록은 [0.613 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)에 있다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
@@ -20,13 +20,13 @@
 
 ### 0.1 재개 순서와 최근 완료 요약
 
-**재개 순서(2026-11-21).** 0.776 정기 전체 회귀5467건·동일빌드65시작 모두 통과했다. 원본1392파일/빌드6파일 불변, DN31경로 전체바이트와34경로 지표0.772일치·0.775대표3바이트 일치·기존395fixture 전수 유지다. M1은0/34 유지다. [0.776 근거](docs/dotnet-canon-0776-20261121.md)
+**재개 순서(2026-11-21).** 0.777에서 같은 장기 Client41h 수신 바인딩을 검증했다. 신규3건 포함 집중23건 첫 통과·실제 내부Source/Registry/Player의 원격200/자기100 전달·대표3시작 종료0/0.776 전체바이트 일치·원본1392파일 불변·기존395fixture 전수 유지다. [0.777 근거](docs/dotnet-canon-0777-20261121.md)
 
-1. **0.777 실제 Client41h 수신.** 장기 Client의 같은 Registry/Player/마스크를 이용하는 고정 receiver를 검증한다. 정적 검토는 extracted/dotnet-0776/next-0777.md, 미검증 초안3개는 같은 폴더의 ClientChatPacketReceiver.cs.draft·ClientChatPacketReceiverTests.cs.draft·RawChatReceive.cs.draft다. 제품에는 미적용이다. 다음은 UI 수신 부모의 부분 물리/원문238관측과 Root 입력/제출·실제 연결이다. Root에는 공통 RawPacketDispatch/PacketRegistrationTable 설치 부모가 아직 없어 그 연결도 필요하다. 기존 NativeLoginPacketReceivers API도 실제 MonoGame Root의 설치 호출은 없다. HostSession의 실제 송신 부모도 미연결이며 구 경로 Mission.RawCampaignSession의 미연결 sendChatMutable 입구로 대신하지 않는다. Native Root/HUD 창 생성·Enter 호출자/제출 소비자·현재 송수신 설치와 뉴스 수신 호출은 남았다. 같은 실제 공장/자식 분배·Host 수명은0.774, 선행 그림은0.773, 소유권/문자열은0.771 완료다. Native 색표7 getter/zone 옵션 변경 부모와 세션 자산 InBattle 최초 상태도 원문과 맞춘다. 앞선 단위의 원문 본체와 실제 장기 소유자를 재사용한다. 이어 Native Frame/Root UI 수집·그리기와 실제 지도 provider, 전체 커서 효과/Drop/Previews/Position 호출자, SavedCameraKey/무효점·CameraCommit/Present/Pan을 연결한다. 실제 MapViewRect가 없는 HostMainMenu는 뷰 소비에서 명시 실패한다. 전체 Native 시작의 intro/장면음악/나머지 지도 초기화와 Guide Init, 음향/저장/옵션/전체 EnergySupply, non-mine Notify의 실제 DataManager/추출 부모, NSInfo HUD/메타UI/Root reply 저장도 후속이다. RawFileName 나머지 조회·BaseFile 고리·ClientStaticStrings는 해당 소비자에서 잇는다.
+1. **0.778 UI 수신 원문/부분 물리.** 먼저 기존 수신 본체를 원문238관측에 전수 대조하고 같은 mutable 부분 물리 입구를 연결한다. 검사 초안은 extracted/dotnet-0777/ChatReceiveNativeTests.cs.draft, 본체 초안은 extracted/dotnet-0776/RawChatReceive.cs.draft이며 제품 미적용/미검증이다. 이어 실제 Root 수신/제출/입력과 연결·공통 Dispatcher/송신 부모를 잇는다. 장기 Client41h의 같은 현재 소유자/실제Registry 바인딩은0.777 완료다. Root에는 공통 RawPacketDispatch/PacketRegistrationTable 설치 부모가 아직 없어 그 연결도 필요하다. 기존 NativeLoginPacketReceivers API도 실제 MonoGame Root의 설치 호출은 없다. HostSession의 실제 송신 부모도 미연결이며 구 경로 Mission.RawCampaignSession의 미연결 sendChatMutable 입구로 대신하지 않는다. Native Root/HUD 창 생성·Enter 호출자/제출 소비자·현재 송수신 설치와 뉴스 수신 호출은 남았다. 같은 실제 공장/자식 분배·Host 수명은0.774, 선행 그림은0.773, 소유권/문자열은0.771 완료다. Native 색표7 getter/zone 옵션 변경 부모와 세션 자산 InBattle 최초 상태도 원문과 맞춘다. 앞선 단위의 원문 본체와 실제 장기 소유자를 재사용한다. 이어 Native Frame/Root UI 수집·그리기와 실제 지도 provider, 전체 커서 효과/Drop/Previews/Position 호출자, SavedCameraKey/무효점·CameraCommit/Present/Pan을 연결한다. 실제 MapViewRect가 없는 HostMainMenu는 뷰 소비에서 명시 실패한다. 전체 Native 시작의 intro/장면음악/나머지 지도 초기화와 Guide Init, 음향/저장/옵션/전체 EnergySupply, non-mine Notify의 실제 DataManager/추출 부모, NSInfo HUD/메타UI/Root reply 저장도 후속이다. RawFileName 나머지 조회·BaseFile 고리·ClientStaticStrings는 해당 소비자에서 잇는다.
 2. **같은 작업 줄기.** MetaZone 원문 본체124입력은0.734, 실제Client표/현재Runtime pin·설치된가상분배전달은0.735 완료다. 현재 HostSession의 전체 Native World 자산 가상 삭제 분배 설치는 아직 미연결이며 일반 삭제의 Pre/Post 완료로 대신하지 않는다. [0.733](docs/dotnet-canon-0733-20261121.md) · [0.734](docs/dotnet-canon-0734-20261121.md) · [0.735](docs/dotnet-canon-0735-20261121.md). 이어서 [R4 체크](#r4-detail)→R11과 후순위 요구사항을 진행한다. 다음 정기 전체 회귀는0.780이다.
-3. **사용자 제외 검사 유지.** 실제 포획/희생·특정 적 공격·시나리오 승리는 재현하지 않고 사용자 수동 확인으로 남긴다. 원본1,392파일의 마지막 불변 확인은0.776 전체65시작이다.
+3. **사용자 제외 검사 유지.** 실제 포획/희생·특정 적 공격·시나리오 승리는 재현하지 않고 사용자 수동 확인으로 남긴다. 원본1,392파일의 마지막 불변 확인은0.777 대표3시작이며 전체65시작은0.776이다.
 
-**최근 완료 요약(0.639~0.776).** 단위별 완료 문장과 집중 검사 수는 보관본과 각 단위 문서에 있다. 완료 범위와 남은 일의 기준은 1.1·1.2절 체크 항목이다.
+**최근 완료 요약(0.639~0.777).** 단위별 완료 문장과 집중 검사 수는 보관본과 각 단위 문서에 있다. 완료 범위와 남은 일의 기준은 1.1·1.2절 체크 항목이다.
 
 | 주제 | 단위 | 핵심 | 남은 일 |
 | --- | --- | --- | --- |
@@ -58,6 +58,7 @@
 | 실제 스타일 그림 자산/출력 | 0.773 | 최초TYPE188/자산116·같은본문/메뉴·실제8비트 그림 출력 | Native색표7/옵션변경 부모·전체Chat 공장 |
 | 전체 실제 Chat 공장/가상 분배 | 0.774 | 같은Console/공유로그/그림/메뉴·Host 설치·자식 부착/입력/수명 | NativeRoot 창생성/입력·제출/전송/수신 |
 | Chat 중계/고정등록·관찰 | 0.775 | 원문132·같은mutable패킷/마스크·42dc90 F/observer·현재재조회 | 실제Client41h/연결·UI수신·Root입력/제출 |
+| 장기 Client41h 수신 바인딩 | 0.777 | 같은현재Client/Registry/Player/마스크·실제내부Source 전달 | MonoGame Root의 Dispatcher/수신·입력/제출/송신 부모 |
 | 정기 전체 회귀·L2 | 0.644부터 4단위마다(0.776까지) | 매회 실패 0·65실행 종료 0·원본 불변·M1 0/34 유지. 수집으로 드러난 미연결·순서 회귀를 0.644(AI 색 프레임·펜스)·0.680(플레어 분배)·0.684(시작 음향 순서)·0.688(Carrier 통지)에서 교정. 전체 검사 4,686건(0.644) → 5,467건(0.776) | 다음0.780 |
 
 <a id="first-run"></a>
@@ -158,6 +159,7 @@ AGENTS.md 2026-11-19 추가(`d047bf9a3`)로 `Netstorm.exe`의 아이콘은 기�
   - 완료(실제 스타일 그림 자산/출력,0.773): 같은 최초TYPE/정의/SHP·본문/controlled 메뉴와 실제 픽셀/색표 문맥이다. Native 색표7/옵션 변경 부모와 전체Chat 공장/입력·송수신은 남았다. [0.773](docs/dotnet-canon-0773-20261121.md)
   - 완료(전체 실제 Chat 공장/가상 분배,0.774): 같은Tree/Console/로그/그림/controlled 메뉴의 전체 공장·Host 설치·가상 입력/부착/소멸이다. 실제 NativeRoot/HUD 창 생성·입력/제출 소비자와 송수신은 남았다. [0.774](docs/dotnet-canon-0774-20261121.md)
   - 완료(Chat 중계/고정등록·관찰,0.775): 원문132와 같은mutable 패킷/마스크·42dc90 F/observer·현재 재조회다. 실제 Client41h receiver/연결·UI 수신과 Root 입력/제출은 남았다. [0.775](docs/dotnet-canon-0775-20261121.md)
+  - 완료(장기 Client41h 수신 바인딩,0.777): 같은 현재 Registry/Player/마스크·실제 내부Source 원격/로컬 전달이다. MonoGame Root의 Dispatcher 부모·UI 수신/입력·제출/송신은 남았다. [0.777](docs/dotnet-canon-0777-20261121.md)
   - 완료(독립 커서 데이터·수명,0.749): Take/Cancel/Activate와 자산 어댑터·고정 데이터의1575원본입력 대조다. 실제 Gameplay 커서/checking owner와 위치 준비/렌더러/Root Cancel 설치는 위 남은 범위다. [0.749](docs/dotnet-canon-0749-20261121.md)
 - [ ] **R4-7 데모와 보류 검사.** `StartDemo` 3경로 덤프, `player-world-x86.tsv` 1,680행, F3에서 미룬 Fort/지형 바인딩·미션 Fort 경로·로그인 객체 전송·미션 재적재 검사를 잇는다.
 - [ ] **R4-8 M1 판정.** 같은 시드·고정 프레임·빈 사용자 루트로 34/34 상태 일치. 로드 뒤 프레임 진행에서만 생기는 차이는 cpp 후속 프레임 덤프로 입증한 뒤 R6으로 넘긴다.

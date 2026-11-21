@@ -1363,3 +1363,5 @@ cpppj/src/client/UberHud.inc	Netstorm.Client.Host/ClientHostGame.ChatWindows.cs	
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.Chat.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
 cpppj/src/client/RawChatRelay.cpp	Netstorm.Client/Chat/RawChatRelay.cs	eeae45c69171943ad99db6c2930574ee7747ba76	port
 cpppj/src/client/RawChatRelay.h	Netstorm.Client/Chat/RawChatRelay.cs	16431ec18a3f7518d7aaa55929b280ab1cc6a8fb	port
+cpppj/src/client/ClientChatPacketReceiver.cpp	Netstorm.Client/ClientChatPacketReceiver.cs	16431ec18a3f7518d7aaa55929b280ab1cc6a8fb	port
+cpppj/src/client/ClientChatPacketReceiver.h	Netstorm.Client/ClientChatPacketReceiver.cs	16431ec18a3f7518d7aaa55929b280ab1cc6a8fb	port
