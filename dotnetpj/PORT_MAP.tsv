@@ -1378,3 +1378,9 @@ cpppj/src/client/ClientMain.h	Netstorm.Client.Host/ClientHostGame.PacketRecord.c
 cpppj/src/client/ClientCampaignTransport.cpp	Netstorm.Client/ClientPacketDefaultObservers.cs	8defb347c7c894599f1c9ebf1ad7d55c98f35df0	port
 cpppj/src/o/RawGameAuxState.h	Netstorm.Core/Original/RawGameAuxState.Network.cs	8defb347c7c894599f1c9ebf1ad7d55c98f35df0	port
 cpppj/src/client/ClientCampaignTransport.cpp	Netstorm.Client/ClientMissionPacketDefaults.cs	8defb347c7c894599f1c9ebf1ad7d55c98f35df0	port
+cpppj/src/client/ClientCampaignTransport.cpp	Netstorm.Client/ClientVariablePacketObservers.cs	8defb347c7c894599f1c9ebf1ad7d55c98f35df0	port
+cpppj/src/o/RawConstructionPacket.cpp	Netstorm.Client/ClientVariablePacketObservers.cs	77a0c3a47d5e54547da7fb0bb242161c3cd8020b	port
+cpppj/src/o/RawPathData.cpp	Netstorm.Client/ClientVariablePacketObservers.cs	2b5ee903c78defa10dbde959a63db11cb4adf8b7	port
+cpppj/src/o/RawSquidCompressedReceive.cpp	Netstorm.Client/ClientVariablePacketObservers.cs	96904de5937963c5a55989f70272d7362b2ce210	port
+cpppj/src/o/RawBombEffect.cpp	Netstorm.Client/ClientVariablePacketObservers.cs	01ec27ae5da707128e6efeb718a1fe0563f0ceb3	port
+cpppj/src/o/RawBombTimerPacket.cpp	Netstorm.Client/ClientVariablePacketObservers.cs	2b5ee903c78defa10dbde959a63db11cb4adf8b7	port
