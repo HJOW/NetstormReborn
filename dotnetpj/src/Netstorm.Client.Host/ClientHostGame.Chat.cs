@@ -90,6 +90,32 @@ public sealed partial class ClientHostGame
     }
     /// <summary>설치된 같은 일반 say/패킷 부모를 UI가 직접 부를 수 있다.</summary>
     public uint SayNativeChatMessage(ReadOnlySpan<byte> input) => (_nativeChatMessage ?? throw new InvalidOperationException("실제 일반 Chat 메시지 미설치")).Say(input);
+    /// <summary>같은 실제 장기 완성/로그/뉴스 부모다.표시 창 교체로 다시 만들지 않는다.</summary>
+    private ClientChatWindowRuntime? _nativeChatEditing;
+    /// <summary>현재 실제64BYTE Handle의 첫NUL 앞을 좁은 BYTE 문자열로 빌린다.</summary>
+    private string CurrentNativeChatName()
+    {
+        byte[] bytes = _subscriberGlobals.Handle; int end = bytes.AsSpan().IndexOf((byte)0); if (end < 0) throw new InvalidOperationException("Chat 현재 Handle의 실제 NUL 없음"); return System.Text.Encoding.Latin1.GetString(bytes, 0, end);
+    }
+    /// <summary>같은 현재 언어표의 UTF8 번역을 기존 표시 BYTE 경계에서만 변환한다.</summary>
+    private string TranslateNativeChatText(string source)
+    {
+        var startup = _startup ?? throw new InvalidOperationException("Chat 현재 번역의 실제 설정 미설치"); string language = startup.Configuration.Configuration.Get("currentLanguage") ?? "english";
+        byte[]? bytes = startup.Files.TryReadAllBytes("d/xlat." + language); var table = bytes is null ? null : Netstorm.Assets.XlatTable.FromFileBytes(bytes);
+        return System.Text.Encoding.Latin1.GetString(Netstorm.Core.Original.ExtendedText.EncodeDisplayText(table?.Translate(source) ?? source));
+    }
+    /// <summary>이미 생성한 실제 TextEntry에 같은 Root Identity/완성을 연결한다.창/패킷 생성은 하지 않는다.</summary>
+    private void InitializeNativeChatEditing()
+    {
+        BindNativeChatRecipients(CurrentNativeChatName, TranslateNativeChatText);
+        _nativeChatEditing ??= new(_chatWindowGlobals, _chatGlobals, TranslateNativeChatText, line => ErrorLog.RecordAssertion("Chat 원문 진단", ".\\Chat.cpp", line));
+        (_textEntry ?? throw new InvalidOperationException("Chat의 실제 TextEntry 미설치")).BindChatEditing(
+            text => CheckNativeChatRecipients(System.Text.Encoding.Latin1.GetString(text)), _nativeChatEditing.CompleteEntry);
+    }
+    /// <summary>실제 현재 서버/설정의 뉴스 시각을 같은 장기 DWORD에 읽는다.</summary>
+    public void LoadNativeChatNewsTime() => (_nativeChatEditing ?? throw new InvalidOperationException("Chat 뉴스 부모 미설치")).LoadNewsTime(_nsInfoGlobals, (_startup ?? throw new InvalidOperationException("Chat 뉴스 설정 미설치")).Configuration);
+    /// <summary>같은 실제 서버/설정으로 수신한 뉴스 시각을 넘기며 저장 시점은 일반 writer에 맡긴다.</summary>
+    public void SaveNativeChatNewsTime() => (_nativeChatEditing ?? throw new InvalidOperationException("Chat 뉴스 부모 미설치")).SaveNewsTime(_nsInfoGlobals, (_startup ?? throw new InvalidOperationException("Chat 뉴스 설정 미설치")).Configuration);
     /// <summary>World/Init/전송 소비자가 빌릴 실제 Client 구독자 주소다.</summary>
     public ClientSubscriberGlobals SubscriberGlobals => _subscriberGlobals;
     /// <summary>미션 유무와 관계없이 실제 MySubscriber의 현재 전체 DWORD를 읽는다.</summary>

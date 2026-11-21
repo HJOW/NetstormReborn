@@ -1337,3 +1337,9 @@ cpppj/src/client/ChatRecipients.cpp	Netstorm.Client/Chat/ChatRecipients.cs	325d1
 cpppj/src/client/ClientChatRuntime.cpp	Netstorm.Client/ClientChatIdentityRuntime.cs	c0f7843ae3e8ec3e48369836e1d57d371f6488d6	port
 cpppj/src/client/ClientChatRuntime.cpp	Netstorm.Client.Host/ClientHostGame.Chat.cs	c0f7843ae3e8ec3e48369836e1d57d371f6488d6	port
 cpppj/src/client/ClientChatRuntime.cpp	Netstorm.Client/ClientChatMessageRuntime.cs	c0f7843ae3e8ec3e48369836e1d57d371f6488d6	port
+cpppj/src/client/ChatWindow.h	Netstorm.Client/Chat/ChatWindowState.cs	09fd17306b6cb4c9a6b0ab1dc29a4f556bba3890	port
+cpppj/src/client/SystemNewsTime.h	Netstorm.Client/Chat/SystemNewsTime.cs	8efc76eb4034eebae91db18dc3707e2496aea969	port
+cpppj/src/client/SystemNewsTime.cpp	Netstorm.Client/Chat/SystemNewsTime.cs	8efc76eb4034eebae91db18dc3707e2496aea969	port
+cpppj/src/client/ClientChatRuntime.cpp	Netstorm.Client/ClientChatWindowRuntime.cs	c0f7843ae3e8ec3e48369836e1d57d371f6488d6	port
+cpppj/src/client/RawMenuChat.inc	Netstorm.Client/ClientChatWindowRuntime.cs	cf3babe1a6b47c4b959eb44af38560e80f023095	port
+cpppj/src/client/RawMenuChat.inc	Netstorm.Client/Host/HostTextEntry.cs	cf3babe1a6b47c4b959eb44af38560e80f023095	port

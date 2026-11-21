@@ -19,9 +19,9 @@ public sealed partial class ClientHostGame
     }
     /// <summary>현재 서버 목록을 사용자 Saves에 저장한다. 실제 Root reply/메타 UI의 선택 호출에서 사용하는 경계다.</summary>
     public void SaveRootServerList() => (_rootServerList ?? throw new InvalidOperationException("현재 서버 목록 파일 장치 미연결")).Save();
-    /// <summary>실제 시작 설정이 있으면 같은 세 DWORD만 해석한다. 자료 없는 화면 호스트는 현재값을 유지한다.</summary>
+    /// <summary>실제 시작 설정에서 같은 NSInfo 세DWORD와 Chat 입력 전환 요청을 읽으며 자료 없으면 현재값을 유지한다.</summary>
     private void InterpretNsInfoOptions()
     {
-        if (_startup is { } startup) _nsInfoGlobals.ReadOptions(startup.Configuration);
+        if (_startup is { } startup) { _nsInfoGlobals.ReadOptions(startup.Configuration); _chatWindowGlobals.ReadOptions(startup.Configuration); }
     }
 }

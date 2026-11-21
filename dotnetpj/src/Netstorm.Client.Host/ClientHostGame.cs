@@ -263,6 +263,7 @@ public sealed partial class ClientHostGame : Game
             _htmlText.Bind(_htmlWindows);
             _textEntry = new HostTextEntry(_mainMenu, _htmlWindows, _htmlText, _driver.Screen,
                 () => _clock.NowSeconds, (_, _) => _menuDirty = true);
+            InitializeNativeChatEditing();
             _htmlMenus = new HostHtmlMenus(_mainMenu, _htmlWindows, _htmlText, _startup, _driver.Screen, (_, _) => _menuDirty = true);
             _htmlMenus.BindInput(_driver.Input, _buttonSound.PlayByName, (_, _) => _menuDirty = true);
             _htmlFactory = new HostHtmlFactory(_mainMenu, _htmlWindows, _htmlMenus, _startup, _driver.Screen, _driver.Input,

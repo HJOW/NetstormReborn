@@ -10,6 +10,8 @@ public sealed class HostTextEntry : IDisposable
     private readonly GumpButtonTree _tree;
     private readonly HostHtmlWindows _windows;
     private readonly TextEntryStorage _storage;
+    /// <summary>이미 생성한 같은 편집기에도 실제 Chat 대상/완성 장치를 설치하는 공유 경계다.</summary>
+    private readonly TextEntryGumpHooks _hooks;
     private readonly HashSet<uint> _buffers = [];
     private uint _nextBuffer = 0x70000000;
     private GumpTextDraw? _drawText;
@@ -39,6 +41,7 @@ public sealed class HostTextEntry : IDisposable
             Position = _tree.Collection.Position, AllocateBytes = _storage.Allocate, ReleaseBytes = _storage.Release, Bytes = _storage.Bytes,
             DestructBase = _tree.Lifetime.DestructBase, Assertion = line => throw new InvalidOperationException("TextEntry 원본 진단: " + line)
         };
+        _hooks = hooks;
         TextEntryGumpNode Node(uint token) => _tree.Node(token) as TextEntryGumpNode ?? throw new InvalidOperationException("문자 입력창 노드 없음");
         hooks.Measure = (uint token, ReadOnlySpan<byte> bytes, int length) => { int width = 0, height = 0; metrics.Measure(bytes, GumpText.DecodeGumpTextContext(Node(token).TextContext), ref width, ref height, length); return (width, height); };
         hooks.DrawBackground = token => (_drawBackground ?? throw new InvalidOperationException("문자 배경 출력 문맥 없음")).Draw(token);
@@ -53,6 +56,12 @@ public sealed class HostTextEntry : IDisposable
         var drawHooks = new GumpDrawHooks { Draw = _ => throw new InvalidOperationException("문자 외 Gump 출력 경계") };
         TextEntryGump.BindTextEntryGump(_tree.TreeHooks, _tree.EventHooks, _tree.InputHooks, _tree.FrameHooks, drawHooks,
             _tree.LifetimeHooks, token => _tree.Node(token) is TextEntryGumpNode ? Entry : null, token => _tree.LifetimeHooks.Release!(token));
+    }
+
+    /// <summary>같은 실제 편집기를 교체하지 않고 현재 Chat 대상 검사와 자동완성 경계를 설치한다.</summary>
+    public void BindChatEditing(TextEntryRecipient recipient, TextEntryComplete complete)
+    {
+        ArgumentNullException.ThrowIfNull(recipient); ArgumentNullException.ThrowIfNull(complete); _hooks.Recipient = recipient; _hooks.Complete = complete;
     }
 
     private uint Allocate(int size)
