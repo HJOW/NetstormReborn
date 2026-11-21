@@ -157,6 +157,7 @@ std::uint32_t RawGameMenus::Options() const {
     Need(hooks_.separator)();
     if (!Global(0x594fb8) && !Global(0x594fc8)) Toggle("rotmode","Counterclockwise Piece Rotation - ~iC~.");
     else { std::int32_t passed=0;Need(hooks_.readInt)("passedDiags",passed);label=Text("Pass Server Diagnostic ");Check(std::bit_cast<std::uint32_t>(passed),label,0x542948,std::string("ChangeFirewall")); }
+    if (hooks_.resetAllOption) { Need(hooks_.separator)();Item("Reset All",0x542948,std::string("Patch1101.ResetAll")); } // 15차: 최하단 항목은 초기화를 직접 실행하지 않고 같은 Tell 확인 창을 연다.
     return Need(hooks_.take)();
 }
 // Players는현재Player/사제/관전상태를읽으며각하위는기존전체RawPlayerMenu를사용한다.

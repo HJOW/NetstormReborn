@@ -654,7 +654,11 @@ o::Config& UberGump::Script(std::string_view name) {
 // 현재 Client의 같은 전체 HTML 장치를 Tell과 미션 안내가 공유한다.
 RawHtmlWindowContext UberGump::LoadingHtmlContext(ScreenRect mapView) { // 미션 안내의 실제 전체 HTML 경계를 같은 장기 소유자에 연결한다.
     htmlMapView_=mapView;RawHtmlWindowContext context;context.globals=client_.HtmlWindowGlobals();context.wallSeconds=[this] { return client_.WallSeconds(); };
-    context.queue=[this](auto command,auto first,auto second) { client_.Input().Push(command,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)); };context.link=[this](auto token) { rawButtons_->Menus()->ActivateHtmlWindowLink(token); };
+    context.queue=[this](auto command,auto first,auto second) {
+        if ((command&0x03ffffffU)==0x02000095U && first==second && resetAllConfirmationSerial_ && CurrentDialogSerial()==resetAllConfirmationSerial_
+            && o::AsciiLower(scriptStrings_.Resolve(second))=="patch1101.resetallconfirmed") resetAllSubmission_=second; // 15차: 실제 확인 버튼이 부모 Kill 전에 제출한 현재 문자열 토큰만 기억한다.
+        client_.Input().Push(command,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second));
+    };context.link=[this](auto token) { rawButtons_->Menus()->ActivateHtmlWindowLink(token); };
     context.metadata.commands={DialogScriptCode,[](auto name) { std::clog<<"HTML 메타 명령 미연결: "<<name<<'\n'; }};context.metadata.strings=&scriptStrings_;context.metadata.maps=mapCatalog_.get();context.metadata.fileSpec=&mapFileSpec_;context.metadata.fileMenus=fileMenus_;
     context.metadata.currentMap=[this]() -> std::string_view { htmlCurrentFortName_=mission_ ? missionRuntime_ && missionRuntime_->guided ? std::string(client_.FortGlobals()->Current()) : mission_->FortName() : std::string{};return htmlCurrentFortName_; };context.metadata.fallbackMap=[this]() -> std::string_view { return client_.FortGlobals()->Pending(); };
     context.metadata.send=[this](auto first,auto second,auto third) { SendHtmlZsend(first,second,third,[this](auto target,auto packet) { static_cast<void>(client_.ConnectionGlobals()->SendMutable(target,packet,client_.PlayerRecords()->Records())); }); }; //NULL연결은원문처럼아무송신도하지않으며월드/임의새접속/직접수신우회를추가하지않는다.
@@ -789,6 +793,7 @@ void UberGump::Tell(std::string target, bool briefing) {
 // 원본004cf730은 phase와 무관하게 현재 Mission의 설정에서 전체 target을 조회한다.
 bool UberGump::TryTell(std::string target,bool briefing,bool* windowCreated,std::uint32_t suppress) {
     if (windowCreated) *windowCreated=false;
+    if (o::AsciiLower(target)!="patch1101.resetallconfirmed") { resetAllSubmission_.reset();resetAllConfirmationSerial_=0; } // 15차: 다른 Tell/취소는 이전 확인 창과 제출을 재사용하지 않는다.
     if (o::AsciiLower(target)=="blank") {
         popup_.clear();ClearPage(); //원문 Blank는 같은 HTML을 닫으며 Native 장치/연결/현재 State 분배기를 반납하지 않는다.
         if (client_.LocalStateGlobals()->State().current[0]==3) { state_.phase=ClientPhase::MainMenu;pageName_="main";RebuildControls();Compose();return true; } //원문 Blank의 실제 메인 부모는 뒤 Tips가 열리기 전에 구성한다. Native 공통 State 확정은 이 callback 밖에서 수행한다.
@@ -796,6 +801,7 @@ bool UberGump::TryTell(std::string target,bool briefing,bool* windowCreated,std:
         else { state_.phase=ClientPhase::MainMenu;pageName_="main";page_={};input_.Cancel();RefreshWindowTitle(); }
         client_.Pause(false);RebuildControls();return true;
     }
+    if (o::AsciiLower(target)=="patch1101.resetallconfirmed") return true; // 15차: 직접 Tell/검사 호출은 확인 버튼 제출이 아니므로 초기화하지 않는다. 실제 토큰은 일반 Tell 입력에서만 소비한다.
     if (const auto rate=ParseFrameRateTarget(target)) { client_.Configuration().SetInt("maxFPS",*rate);client_.ApplyPresentationOptions();return true; } // 후순위 F1: 프레임 상한을 저장하고 바로 반영한다.
     if (const auto skirmish=ParseSkirmishTarget(target);skirmish.kind==SkirmishScreen::Set || skirmish.kind==SkirmishScreen::Start) { // 12차 스커미시: 설정 변경과 시작은 창 본문 없이 먼저 처리한다.
         auto settings=CurrentSkirmishSettings();
@@ -810,6 +816,7 @@ bool UberGump::TryTell(std::string target,bool briefing,bool* windowCreated,std:
         });
     if (!result.found) return false;rebuild_=true;
     if (!result.serial) return true; // 빈 부모/창 생략은 기존 표시 부모나 phase를 교체하지 않는다.
+    if (o::AsciiLower(target)=="patch1101.resetall") resetAllConfirmationSerial_=result.serial; // 15차: 실제 생성된 확인 부모의 serial만 제출 원천으로 허용한다.
     lastTellTarget_=target; // 5차: 실제 창을 만든 섹션만 기억한다(맵 목록 스크롤의 재표시 대상).
     state_.phase=briefing ? ClientPhase::Briefing : ClientPhase::Dialog;pageName_=o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(client_.HtmlWindowGlobals()->tell.current.data()),std::char_traits<char>::length(client_.HtmlWindowGlobals()->tell.current.data())});popup_.clear();
     if (mission_ && !(missionRuntime_ && missionRuntime_->tutorial)) client_.Pause(true);
@@ -1243,7 +1250,7 @@ void UberGump::OpenMainMenuPopup(bool options) {
     auto& menus=*rawButtons_->Menus();menus.SetPalette(client_.GetScreen().Colors());
     menus.OpenMainMenuPopup(anchor,options,[&](const auto& widgets,const auto& controls,const auto& menu) {
         auto hooks=CurrentGameMenuHooks();BindGameMenusControls(hooks,widgets,controls,menu,[this](auto text) { return scriptStrings_.Store(text); });
-        if (options) return RawGameMenus(std::move(hooks)).Options();
+        if (options) { hooks.resetAllOption=true;return RawGameMenus(std::move(hooks)).Options(); } // 15차: 메인 Options에만 설정·진행 초기화 확인 항목을 노출한다.
         widgets.BeginVertical(0);
         const auto topic=scriptStrings_.Store("F1Help");if (topic>0x0fffffffU) throw std::overflow_error("메인 Help 주제 별칭 소진"); // 원본 문자열 포인터를 TYPE<256과 혼동하지 않는 기존 Help 별칭 계약이다.
         controls.AddText(hooks.translate("General Help - ~iF1~."),0x02000017U,0x70000000U|topic,true,true,false);
@@ -1421,6 +1428,7 @@ void UberGump::OpenMenu(std::string name) {
         add("Tell Tips at Startup", "Toggle", "tellTips", config.GetInt("tellTips") != 0);
         if (client_.PostProcessAvailable()) { add("Anti-Aliasing", "Toggle", "antiAliasing", config.GetInt("antiAliasing") != 0);add("FSR 1.0 Upscaling", "Toggle", "fsr1", config.GetInt("fsr1") != 0); } // 7차: 후처리 장치가 있을 때만 보인다.
         add("Pass Server Diagnostic", "", "", false, false);
+        if (!world_) add("Reset All","Tell","Patch1101.ResetAll"); // 15차: CD/호스트 보조 메인의 Options에서도 마지막 행은 같은 확인 Tell을 사용한다.
     } else if (popup_ == "resolution") {
         for (const auto& size:kScreenResolutionChoices) { // 두1280폭도 높이까지 대조하고 ESC와 같은 원본 경고→Yes/No→저장/종료 흐름을 사용한다.
             const auto width=std::to_string(size[0]),height=std::to_string(size[1]);
@@ -1559,7 +1567,12 @@ void UberGump::Event(InputEvent event) {
     }
     if (transitionCode==0x02000095U) { if (!(event.code&InputCode::kRelease)) {
         const auto token=std::bit_cast<std::uint32_t>(event.y);const auto literal=objectMenus_ ? objectMenus_->StaticText(token) : std::nullopt; // 정적 원문 포인터와 Script 고리 토큰을 서로의 저장소로 잘못 해석하지 않는다.
-        const auto name=std::string(literal ? *literal : scriptStrings_.Resolve(token));static_cast<void>(TryTell(name));
+        const auto name=std::string(literal ? *literal : scriptStrings_.Resolve(token));
+        if (o::AsciiLower(name)=="patch1101.resetallconfirmed") { // 15차: HTML 버튼의 queue→Kill 뒤에도 같은 제출 토큰만 한 번 소비한다.
+            const bool submitted=resetAllSubmission_ && *resetAllSubmission_==token;resetAllSubmission_.reset();
+            if (submitted) client_.ResetAllSettingsAndClose();return;
+        }
+        static_cast<void>(TryTell(name));
     }return; } // Help Back과 객체 메뉴 Tell도 같은 실제 HTML 경로로 돌아간다.
     if (IsSendMoneyCommand(transitionCode)) {
         if (event.code&InputCode::kRelease) return; // 원문 공통 뗌 관문은 현재 월드/하위 장치 조회보다 먼저다.
@@ -1873,6 +1886,8 @@ bool UberGump::Input() {
         const auto event=client_.Input().Pop(false);if (cameraPan) continue; //Windows10/11 호환 Alt+Enter는 기존 WM_SYSKEYDOWN이 직접 처리하므로 일반 Enter/건설로 중복 전달하지 않는다.
         Event(event);if (quit_) return true;SyncTellPresentation(); //QuitApp의 즉시1반환 뒤 남은 큐/표시 합성을 실행하지 않는다.
     }
+    resetAllSubmission_.reset(); // 15차: 같은 일반 입력 큐에서 소비되지 않은 확인 제출은 다음 프레임/ESC 이후로 넘기지 않는다.
+    if (resetAllConfirmationSerial_ && CurrentDialogSerial()!=resetAllConfirmationSerial_) resetAllConfirmationSerial_=0; // 닫거나 다른 모달로 바뀐 확인 부모는 다음 입력에서 사용할 수 없다.
     if (input_.Move({mouse.x, mouse.y}, (mouse.code & InputCode::kOutside) == 0)) rebuild_ = true;
     if (world_ && world_->TakeChanged()) rebuild_=true;
     if (rebuild_) Compose();

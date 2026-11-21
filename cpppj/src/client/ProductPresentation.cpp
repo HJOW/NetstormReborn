@@ -23,6 +23,13 @@ $Button=Cancel,Tell,Blank
 <$Config,difficulty={param.1}>
 <$MenuJustClosed,0>
 
+[ResetAll]
+<h2>Reset All</h2>
+<p>Reset all settings and campaign progress?<br>
+The game will close after resetting.
+$Button=Reset All,Tell,Patch1101.ResetAllConfirmed
+$Button=Cancel,Tell,Blank
+
 [Skirmish]
 <h2>Skirmish</h2>
 [SkirmishCount]
@@ -77,6 +84,10 @@ std::string ProductTellBody(std::string_view target,std::string_view original,st
     const bool korean=language==7U,japanese=language==5U; // 원문 언어 번호(LanguageOptions.h의 한국어 7, 일본어 5)다.
     if (korean && o::AsciiLower(target)==o::AsciiLower(kProductCreditsTarget)) return std::string(kPatchCreditsKorean); // 한국어의 새 항목 본문은 고정 번역본이다.
     if (japanese && o::AsciiLower(target)==o::AsciiLower(kProductCreditsTarget)) return std::string(kPatchCreditsJapanese); // 11차 일본어: 같은 구성의 고정 번역본이다.
+    if (o::AsciiLower(target)=="patch1101.resetall") { // 15차: 원문 HTML 창·일반 Tell 링크를 세 UI 언어에서 공유한다.
+        if (korean) return "<h2>설정 초기화</h2>\n<p>모든 설정과 캠페인 진행 상황을 초기화하시겠습니까?<br>초기화 후 게임을 종료합니다.\n$Button=초기화,Tell,Patch1101.ResetAllConfirmed\n$Button=취소,Tell,Blank\n";
+        if (japanese) return "<h2>すべてリセット</h2>\n<p>設定とキャンペーンの<br>進行状況をすべて<br>リセットしますか？<br>リセット後に<br>ゲームを終了します。\n$Button=リセット,Tell,Patch1101.ResetAllConfirmed\n$Button=キャンセル,Tell,Blank\n";
+    }
     std::string body(original);
     if (o::AsciiLower(target)=="ucampaign") { // 12차 스커미시: Campaign 목록에 Skirmish 항목을 더한다(원문 목록과 Back 버튼 사이).
         const std::string entry=std::string("$Menu=")+(korean ? "스커미시" : japanese ? "スカーミッシュ" : "Skirmish")+",Tell,Patch1101.Skirmish\n";

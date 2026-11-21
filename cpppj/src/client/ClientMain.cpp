@@ -38,6 +38,7 @@
 #include "client/ClientBuildReplay.h" // 현재 재생 전역을 메뉴/Session 생성 전에 구성한다.
 #include "client/ClientOptionsFile.h"
 #include "client/ClientOptionsDisk.h"
+#include "client/ResetAllSettings.h" // 15차: 확인된 설정 초기화는 사용자 홈의 명시 파일만 변경한다.
 #include "client/StartupFiles.h"
 #include "platform/Utf8Path.h"
 #include "platform/LegacyRegistryValue.h" // Config의 {&경로}를 같은 프로세스의 실제 레지스트리 기본값 조회에 연결한다.
@@ -708,7 +709,16 @@ void Client::ApplyAudioOptions() {
 // 원본 00441d10·00441de0의 경로 인자는 빈 문자열(00540cec)·"d"(00540cf8)·"options.cfg"다.
 // 원본은 게임 폴더를 작업 폴더로 바꾸고 d\options.cfg를 연다. cpppj는 같은 위치를 절대 경로로 연다.
 void Client::SaveOptions() {
+    if (settingsResetPending_) return; // 15차: 초기화 직후의 종료 프레임이 옛 메모리 설정과 진행을 복원하지 않게 한다.
     SaveClientOptionsInGameDirectory(configuration_,options_.gameDirectory,staticStrings_->FileNames(),options_.userData ? options_.userData->OptionsFile() : std::filesystem::path{}); //441d10의 한 칸 작성/지역 복사를 실제 저장 전에 수행한다. 5차: 사용자 홈 정책이면 실제 쓰기 위치만 Saves의 options.cfg다.
+}
+
+// 15차의 확정 동작은 파일 초기화 성공 뒤에만 자동 저장을 차단하고 기존 WM_CLOSE 종료 경로를 예약한다.
+void Client::ResetAllSettingsAndClose() {
+    if (!options_.userData) throw std::logic_error("설정 초기화에는 사용자 데이터 루트가 필요합니다");
+    ResetAllUserSettings(*options_.userData);
+    settingsResetPending_=true;
+    if (window_) RequestClose(); // 창 없는 검사는 같은 파일·저장 관문만 확인하고 스레드 메시지를 합성하지 않는다.
 }
 
 // 원본 00436e40은 CRT remove를 부른다. UberGump 004cebf0의 버튼 사건에만 연결되는 함수다.

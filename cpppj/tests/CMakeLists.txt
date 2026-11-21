@@ -3925,3 +3925,9 @@ add_executable(netstorm_campaign_test_play_tests FocusedTestMain.cpp CampaignTes
 target_link_libraries(netstorm_campaign_test_play_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_campaign_test_play_tests)
 target_compile_definitions(netstorm_campaign_test_play_tests PRIVATE ${_netstorm_menu_session_definitions})
+
+# 15차: 사용자 설정·진행 초기화와 재시작·메뉴 확인 흐름의 창 없는 집중 검사다(1325).
+target_sources(netstorm_tests PRIVATE ResetAllSettingsTests.cpp)
+add_executable(netstorm_reset_all_tests FocusedTestMain.cpp ResetAllSettingsTests.cpp)
+target_link_libraries(netstorm_reset_all_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_reset_all_tests)

@@ -1,0 +1,205 @@
+{
+  "unit": 1325,
+  "date": "2026-11-22",
+  "host": "HJOW-Athlon",
+  "product_version": "11.01",
+  "focused_tests": {
+    "unique_cases": 6,
+    "passed": 6
+  },
+  "gui_unique_paths": 8,
+  "gui_extra_japanese_cancel_rerun": 1,
+  "runs": [
+    {
+      "name": "cancel",
+      "args": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+        "--window",
+        "--frames",
+        "80",
+        "--fixed-frame-ms",
+        "25",
+        "--no-audio",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\cancel.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\cancel-report.tsv"
+      ],
+      "exit_code": 0,
+      "seconds": 1.0038745403289795,
+      "exe_sha256": "6a3f5b0b04401f2a5e7044b458ad1bd021680aaddbe375332922e4fe153d09f7"
+    },
+    {
+      "name": "escape",
+      "args": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+        "--window",
+        "--frames",
+        "60",
+        "--fixed-frame-ms",
+        "25",
+        "--no-audio",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\escape.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\escape-report.tsv"
+      ],
+      "exit_code": 0,
+      "seconds": 0.7606768608093262,
+      "exe_sha256": "6a3f5b0b04401f2a5e7044b458ad1bd021680aaddbe375332922e4fe153d09f7"
+    },
+    {
+      "name": "confirm",
+      "args": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+        "--window",
+        "--frames",
+        "100000",
+        "--fixed-frame-ms",
+        "25",
+        "--no-audio",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\confirm.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\confirm-report.tsv"
+      ],
+      "exit_code": 0,
+      "seconds": 0.6558282375335693,
+      "exe_sha256": "6a3f5b0b04401f2a5e7044b458ad1bd021680aaddbe375332922e4fe153d09f7"
+    },
+    {
+      "name": "restart",
+      "args": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+        "--window",
+        "--frames",
+        "60",
+        "--fixed-frame-ms",
+        "25",
+        "--no-audio",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\restart.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\restart-report.tsv"
+      ],
+      "exit_code": 0,
+      "seconds": 0.5560867786407471,
+      "exe_sha256": "6a3f5b0b04401f2a5e7044b458ad1bd021680aaddbe375332922e4fe153d09f7"
+    },
+    {
+      "name": "ko-cancel",
+      "args": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+        "--window",
+        "--frames",
+        "60",
+        "--fixed-frame-ms",
+        "25",
+        "--no-audio",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\ko-cancel.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\ko-cancel-report.tsv"
+      ],
+      "exit_code": 0,
+      "seconds": 0.6696174144744873,
+      "exe_sha256": "6a3f5b0b04401f2a5e7044b458ad1bd021680aaddbe375332922e4fe153d09f7"
+    },
+    {
+      "name": "ko-confirm",
+      "args": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+        "--window",
+        "--frames",
+        "100000",
+        "--fixed-frame-ms",
+        "25",
+        "--no-audio",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\ko-confirm.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\ko-confirm-report.tsv"
+      ],
+      "exit_code": 0,
+      "seconds": 1.3261897563934326,
+      "exe_sha256": "82be43aa8e3b63974cd23de2f3b0dfe5b7d49176ea3bb1b263ecaaf39ecb6346"
+    },
+    {
+      "name": "ja-cancel",
+      "args": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+        "--window",
+        "--frames",
+        "60",
+        "--fixed-frame-ms",
+        "25",
+        "--no-audio",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\ja-cancel.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\ja-cancel-report.tsv"
+      ],
+      "exit_code": 0,
+      "seconds": 2.2032980918884277,
+      "exe_sha256": "82be43aa8e3b63974cd23de2f3b0dfe5b7d49176ea3bb1b263ecaaf39ecb6346"
+    },
+    {
+      "name": "ja-confirm",
+      "args": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+        "--window",
+        "--frames",
+        "100000",
+        "--fixed-frame-ms",
+        "25",
+        "--no-audio",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\ja-confirm.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\ja-confirm-report.tsv"
+      ],
+      "exit_code": 0,
+      "seconds": 1.9546055793762207,
+      "exe_sha256": "82be43aa8e3b63974cd23de2f3b0dfe5b7d49176ea3bb1b263ecaaf39ecb6346"
+    }
+  ],
+  "installation_copy": {
+    "file_count": 1393,
+    "names_and_sha256_unchanged": true
+  },
+  "confirmation_files": {
+    "options_bytes_after_process_exit": 0,
+    "checkpoint_removed": true,
+    "server_cache_removed": true,
+    "maps_and_log_preserved": true
+  },
+  "legacy_options_remain": true,
+  "restart_has_no_Done_keys": true,
+  "kept_user_files": {
+    "CustomMaps/keep.fort": "fort",
+    "CustomMaps/keep.english": "scenario",
+    "logs/keep.log": "log",
+    "Saves/keep.txt": "unrelated"
+  },
+  "korean_and_japanese_options_empty_after_exit": true,
+  "initial_failure_evidence": "extracted\\cpp-reset-all-1325\\first-failures.json",
+  "japanese_initial_clipping": "extracted\\cpp-reset-all-1325\\first-ja-confirm-clipped.bmp",
+  "screens": "docs\\screens\\cpp-reset-all-1325-20261122",
+  "scope": "독립 사용자 루트의 메뉴·설정 초기화만 검증. 실제 사용자 Saved Games·미션 플레이·MP 실행은 수행하지 않음."
+}

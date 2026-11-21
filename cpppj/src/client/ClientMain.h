@@ -121,6 +121,10 @@ public:
     // 원본 00436e40 ↔ CD 00487720: UberGump의 버튼 사건에서 전체화면 시작 표시 파일을 지운다.
     // 기본 메뉴의 활성 버튼 사건에 연결한다. 일반 종료에서는 부르지 않는다.
     void ClearFullScreenState();
+    // 15차: 사용자 설정·캠페인 진행·체크포인트를 초기화하고 정상 종료를 요청한다. 설치 자료는 바꾸지 않는다.
+    void ResetAllSettingsAndClose();
+    // 초기화 뒤 종료까지 옛 설정 자동 저장을 막는 현재 상태다.
+    bool SettingsResetPending() const { return settingsResetPending_; }
     // 메뉴/브리핑 UI가 보유한 게임 시간 정지만 변경한다. 같은 요청은 중첩하지 않고 다른 소유자의 정지를 해제하지 않는다.
     void Pause(bool paused);
     // 원본00460df0의 중첩 정지 한 깊이를 보유한다. 미션의 scriptPaused가 중복 요청을 막아야 한다.
@@ -477,6 +481,7 @@ private:
     bool activatedByClick_{};          // DAT_0054dee4
     // nonClientClick_: 비 클라이언트 클릭 여부.
     bool nonClientClick_{};            // DAT_0054dee0
+    bool settingsResetPending_{}; // Reset All 성공 뒤 종료까지 기존 메모리 설정을 디스크에 다시 쓰지 않는 관문이다.
     // closing_: 창 또는 프로세스 종료 처리를 진행 중인지.
     bool closing_{};                   // DAT_0054dee8
     // frames_: 타입별 프레임 자료.

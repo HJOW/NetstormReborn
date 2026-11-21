@@ -2,6 +2,7 @@
 # (ClientMain·UserInput·Gump 계열·Screen·Renderer·Sound·State·Mission 등)
 # 다시 만든 파일을 아래 목록에 더한다. 파일 이름은 SOURCE_MAP.md 의 "cpppj 경로"를 따른다.
 target_sources(netstorm PRIVATE
+    ResetAllSettings.cpp ResetAllSettings.h # 15차: 사용자 설정·진행의 명시 파일 초기화와 안전 경계다.
     NativeConstructionPacketReceivers.cpp NativeConstructionPacketReceivers.h #같은 실제 건설계8F의 장기 기본표와 Native Session 대여다.
     NativeLoginPacketReceivers.cpp NativeLoginPacketReceivers.h #실제 Login/연결15행과 기존67h·Chat의 같은 F 대여다.
     NativeGameplayPacketReceivers.cpp NativeGameplayPacketReceivers.h #남은26F의 같은 본문과 Native 대여다.
