@@ -16,3 +16,18 @@
 ## 시험
 
 - `e2e/mission-hotkeys.spec.js`: F3 → 지도 아래쪽이 줄고, 다시 F3 → 원래 아래쪽, 그리고 연결되지 않은 명령 경고가 없어야 통과한다. 연결을 빼면 실패한다.
+
+## 채팅 창 조립 설계 메모 (E1161, 다음 단위용)
+
+`ui/chat-window.js`(`ChatWindow`, 원문 0043f820/00431ee0)는 이식돼 있고 노드 생성·부착·로그 추가·입력 처리·도우미 메뉴까지 가지고 있다. 앱에 올리려면 호스트 훅 약 50개를 실제 부품에 연결해야 한다.
+
+| 훅 묶음 | 필요한 것 | 앱에 있는 대응 부품(후보) |
+| --- | --- | --- |
+| 노드 접근 `chat`·`base`·`console`·`text`·`buffer` | `ChatWindow` 루트(0x13c)·Console(0x128)·ScrollingText(0xd8)·Helper(0x170)·Background(0xb8) 노드 클래스를 같은 Gump 저장소(`root.node(token)`)에 등록 | `ui/text-entry-gump.js`(`TextEntryGumpNode`·`ConsoleGumpNode`), `ui/scrolling-text-gump-widgets.js`, `ui/client-text-entry-controls.js`(편집기·버퍼·Slider 조립) |
+| 생성 `allocate`·`constructBase`·`constructHelper`·`constructBackground`·`constructScrolling`·`console` | Gump 토큰 할당(`create.entries`)과 각 생성자 | `ClientTextEntryControls.allocate()/construct()`, `ClientScrollControls` |
+| 편집 `entry`(`constructConsole`·`copyText`·`setText`)·`replaceBuffer`·`sharedBuffer`·`bufferAppendCallback`·`setSlider`·`setScrollable`·`requestScroll`·`relativeScroll` | 한 줄 입력과 로그 버퍼 | `ui/text-entry-gump.js`·`text-entry-storage.js`·`client-scroll-controls.js` |
+| 부착·표시 `attach`·`geometry`·`requestBottom`·`frameHeight`·`frameCount` | `HudChatGeometry`(이식됨)와 HUD 의 `chatVisible`/`chatInput` | `ui/hud-chat-geometry.js`, `ui/client-uber-hud.js` 의 stub(`chatVisible: () => {}`) 교체 |
+| 메뉴 `menu*`·`help`·`title`·`translate` | 도우미 `>` 메뉴(수신자 선택) | `ui/chat-recipients.js`, 기존 메뉴 작성기 |
+| 송신·수신 `sendChat`·`resolve`·`recipient`·`log`·`appendLog` | 단독 미션에서는 로컬 기록만 의미가 있다 | `ui/raw-chat-submit.js`, `ui/raw-chat-receive.js`, `core/client-chat-runtime.js`(Client 장기 owner 와 연결) |
+
+권장 순서: (1) `ClientTextEntryControls`/`ClientScrollControls` 로 Console·ScrollingText 노드를 만드는 훅을 먼저 묶고 `ChatWindow.create()` 한 번만 통과시킨다(Node 시험). (2) HUD 의 `chatVisible/chatInput` 을 실제 창의 표시 비트로 교체한다. (3) 단독 미션의 알림 문구(예: `Our Priest has been Immobilized`)를 `appendLog` 로 흘린다. (4) F3 e2e 에 로그 한 줄과 입력줄 표시 확인을 더한다. 원본 단독 미션 스크린샷에는 채팅 영역이 보이지 않으므로(기본은 숨김) 비교 자료는 직접 F3 를 눌러 캡처해야 한다.
