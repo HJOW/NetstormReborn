@@ -204,6 +204,7 @@ public sealed partial class ClientHostGame : Game
             _missionRuntime?.Dispose(); _missionRuntime = null;
             _missionBurning?.Dispose();
             _missionAudio?.Dispose();
+            _nativeChatWindows?.Dispose();
             _htmlWindows?.CloseAll();
             _editor?.Dispose();
             _textEntry?.Dispose();
@@ -268,6 +269,7 @@ public sealed partial class ClientHostGame : Game
             InitializeNativeChatGeometry();
             _htmlMenus = new HostHtmlMenus(_mainMenu, _htmlWindows, _htmlText, _startup, _driver.Screen, (_, _) => _menuDirty = true);
             _htmlMenus.BindInput(_driver.Input, _buttonSound.PlayByName, (_, _) => _menuDirty = true);
+            InitializeNativeChatWindows();
             _htmlFactory = new HostHtmlFactory(_mainMenu, _htmlWindows, _htmlMenus, _startup, _driver.Screen, _driver.Input,
                 _scriptStrings, () => _clock.NowSeconds, _ => 0,
                 name => Debug.WriteLine("HTML 메타 명령 미연결: " + name));
