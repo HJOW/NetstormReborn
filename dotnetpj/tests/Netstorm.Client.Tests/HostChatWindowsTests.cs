@@ -19,6 +19,10 @@ public sealed class HostChatWindowsTests
     {
         /// <summary>동일 실제 팔레트/8비트 화면이다.</summary>
         public readonly Screen Screen;
+        /// <summary>수신 옵션/HTML 생성기가 공유하는 실제 시작 설정이다.</summary>
+        public readonly HostStartupScene Startup;
+        /// <summary>같은 HTML/controlled 메뉴가 사용하는 실제 사건 큐다.</summary>
+        public readonly InputQueue Queue = new();
         /// <summary>같은 실제 메뉴와 공통 노드 트리다.</summary>
         public readonly HostMainMenu Menu;
         /// <summary>비교할 기존 HTML 닫기 소유자다.</summary>
@@ -48,9 +52,9 @@ public sealed class HostChatWindowsTests
         /// <summary>기존 장치를 조립하고 실제 TYPE/SHP 프레임을 사용한다.</summary>
         public Scene(bool submit = true)
         {
-            string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data); var startup = new HostStartupScene(data); Screen = new(1024, 768); Assert.True(Screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); startup.Draw(Screen);
+            string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data); var startup = Startup = new HostStartupScene(data); Screen = new(1024, 768); Assert.True(Screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); startup.Draw(Screen);
             Menu = new(startup, Screen, new() { Now = () => 1, Poll = _ => default, Sound = () => { }, Redraw = (_, _) => { }, HandleBase = (_, _, _, _) => 0 });
-            var queue = new InputQueue(); Html = new(Menu, queue, () => 1, _ => { }); Text = new(Menu, Html, Screen, _ => default, (_, _) => { }, _ => { }, _ => { }); Text.Bind(Html); Entry = new(Menu, Html, Text, Screen, () => 1, (_, _) => { }); Menus = new(Menu, Html, Text, startup, Screen, (_, _) => { }); Menus.BindInput(queue, _ => { }, (_, _) => { }); Drawing = new(Menu, Text, Menus, Screen, Entry);
+            var queue = Queue; Html = new(Menu, queue, () => 1, _ => { }); Html.BindParser(startup, _ => { }); Text = new(Menu, Html, Screen, _ => default, (_, _) => { }, _ => { }, _ => { }); Text.Bind(Html); Entry = new(Menu, Html, Text, Screen, () => 1, (_, _) => { }); Menus = new(Menu, Html, Text, startup, Screen, (_, _) => { }); Menus.BindInput(queue, _ => { }, (_, _) => { }); Drawing = new(Menu, Text, Menus, Screen, Entry);
             _assets = new(startup, new(OriginalEdition.Patch1078)); _shapes = new(_assets.ShapeImage); var pictures = new MarkupGameAssets(_assets.TypeTable, _assets.Definitions, _shapes); byte[] pictureColors = SpriteColorMapBuilder.BuildSpriteColorMaps(Screen.LogicalPalette).Shadow; Text.BindPictures(pictures, () => pictureColors, startup.Configuration);
             var runtime = new ClientChatWindowRuntime(Globals, new(OriginalEdition.Patch1078, () => 100), value => value);
             var geometry = new HudChatGeometry(new() { Chat = token => Tree.Node(token) as HudChatNode, Node = Tree.Node, BaseAttach = Tree.Tree.Attach, Push = Tree.Tree.Push,
@@ -93,5 +97,65 @@ public sealed class HostChatWindowsTests
     public void MissingSubmissionFailsOnlyAfterRealEnter()
     {
         using var scene = new Scene(false); uint root = scene.Chat.Create(); var node = Assert.IsType<HudChatNode>(scene.Tree.Node(root)); var console = Assert.IsType<ConsoleGumpNode>(scene.Tree.Node(node.Console)); uint payload = scene.Globals.Store("hello"); scene.Tree.InputHooks.Handle!(root, 0x02000115, 0, payload); Assert.Equal("hello", scene.Entry.ReadEntryText(node.Console)); Assert.Throws<InvalidOperationException>(() => scene.Tree.EventHooks.Handle!(root, 0x02000038, console.Serial, 0)); Assert.Empty(scene.Sent); Assert.Equal(root, scene.Globals.Current.Value);
+    }
+
+    /// <summary>실제 비정렬 패킷 필드를 지정 폭으로 기록한다.</summary>
+    private static void Put(Span<byte> bytes, int at, uint value, int width = 4)
+    {
+        // 지정한 실제 필드 밖의 바이트를 보존한다.
+        for (int index = 0; index < width; index++) bytes[at + index] = (byte)(value >> (index * 8));
+    }
+
+    /// <summary>고정41h 수신기에서 같은 실제 창/공유 로그/버튼으로 전달하고 현재 무시 목록을 적용한다.</summary>
+    [Fact]
+    public void ActualPacketReceiverAppendsSharedLogAndPulsesRegisteredButton()
+    {
+        using var scene = new Scene(); var subscribers = new ClientSubscriberGlobals(); subscribers.MySubscriber.Value = 100;
+        var game = new ClientGameplayGlobals(subscribers); var local = new ClientLocalStateGlobals(game, new()); var connections = new ClientConnectionGlobals(local);
+        var surface = new ClientSurfaceGlobals(game, new(local), new Kernel(), () => 1000); game.Authority.Server = false;
+        var identity = new ClientChatIdentityRuntime(game, surface, subscribers, new(OriginalEdition.Patch1078, () => 100), () => "Youpson");
+        var sounds = new List<string>(); var receiver = new HostChatReceive(game, surface, subscribers, scene.Globals, scene.Startup.Configuration, sender => identity.FindSenderOwner(sender), scene.Tree, scene.Screen, scene.Chat,
+            () => throw new InvalidOperationException("비전투에서 미선택 월드"), new() { Sound = sounds.Add });
+        var dispatch = new Netstorm.Net.RawPacketDispatch(OriginalEdition.Patch1078, new() { Now = () => 100, Record = (_, _, _) => { }, Terminate = _ => { }, Close = _ => { }, Release = _ => { } });
+        ClientChatPacketReceiver.Install(game, surface, connections, scene.Globals, dispatch, receiver.Receive);
+        dispatch.InvokeDirect(0x41, 9, null, ReadOnlyMemory<byte>.Empty); Assert.Equal(0u, game.PlayerRecords.Base);
+        uint root = scene.Chat.Create(); uint alert = scene.Tree.AddStone(20, 20, "Chat\0"u8.ToArray(), 10, 10); var button = Assert.IsType<StoneButtonGumpNode>(scene.Tree.Node(alert));
+        scene.Tree.ChatAlertId.Value = button.Id; byte[] all = Enumerable.Repeat((byte)0xd3, 48).ToArray(); Memory<byte> packet = all.AsMemory(5, 36);
+        Put(packet.Span, 0, 1, 1); Put(packet.Span, 5, 1, 1); Put(packet.Span, 6, 100); Put(packet.Span, 10, 0, 2); Put(packet.Span, 12, 7, 2); "hello\n!"u8.CopyTo(packet.Span[15..]);
+        dispatch.InvokeDirect(0x41, 9, null, packet); Assert.Equal(1, scene.Globals.Log.LineCount); Assert.Equal(0, packet.Span[21]); Assert.Empty(sounds); Assert.Contains(alert, scene.Tree.LifeState.Idle); Assert.Equal(0x10u, button.ButtonFlags & 0x10);
+        Put(packet.Span, 6, 200); dispatch.InvokeDirect(0x41, 9, null, packet); Assert.Equal(2, scene.Globals.Log.LineCount); Assert.Equal(new[] { "newChatMessage.wav" }, sounds);
+        scene.Globals.Ignored.Add(200); dispatch.InvokeDirect(0x41, 9, null, packet); Assert.Equal(2, scene.Globals.Log.LineCount); Assert.Single(sounds);
+        Assert.Equal(root, scene.Globals.Current.Value); Assert.Equal(0u, game.PlayerRecords.Base); Assert.All(all.Take(5), value => Assert.Equal(0xd3, value)); Assert.All(all.Skip(41), value => Assert.Equal(0xd3, value));
+        button.ButtonFlags &= ~0x10u; scene.Tree.Lifetime.SetIdle(alert, false); button.Pressed = 1; Assert.False(scene.Tree.PulseRegisteredIfIdle(button.Id)); button.Pressed = 0; button.Value = 1; Assert.False(scene.Tree.PulseRegisteredIfIdle(button.Id)); button.Value = 0;
+        uint saved = scene.Tree.Create.Entries[button.Id]; scene.Tree.Create.Entries[button.Id] = 0;
+        try { Assert.False(scene.Tree.PulseRegisteredIfIdle(button.Id)); } finally { scene.Tree.Create.Entries[button.Id] = saved; }
+        Assert.Throws<ArgumentOutOfRangeException>(() => scene.Tree.PulseRegisteredIfIdle(1000));
+    }
+
+    /// <summary>실제 원문 옵션0을 누락과 구별하고 뉴스 저장 후의 현재 본문을 같은 HTML 창으로 전달한다.</summary>
+    [Fact]
+    public void ActualReceptionUsesZeroOptionsAndCurrentNewsMapView()
+    {
+        using var scene = new Scene(); var subscribers = new ClientSubscriberGlobals(); var game = new ClientGameplayGlobals(subscribers); var local = new ClientLocalStateGlobals(game, new());
+        var surface = new ClientSurfaceGlobals(game, new(local), new Kernel(), () => 1000); surface.Storage.OwnerMode.Battle = true;
+        var identity = new ClientChatIdentityRuntime(game, surface, subscribers, new(OriginalEdition.Patch1078, () => 100), () => "Youpson");
+        var factory = new HostHtmlFactory(scene.Menu, scene.Html, scene.Menus, scene.Startup, scene.Screen, scene.Queue, new(), () => 1, _ => 0, _ => { });
+        uint root = scene.Chat.Create(); byte[] packet = new byte[64]; Put(packet, 0, 1, 1); Put(packet, 5, 1, 1); Put(packet, 6, 100); Put(packet, 10, 0, 2); Put(packet, 12, 9, 2); "008hello\0"u8.CopyTo(packet.AsSpan(15));
+        // 숨김 메시지도 전체10옵션을 조회한다. 실제 값0을 모두 등록한다.
+        foreach (string key in RawChatReceive.OptionKeys) scene.Startup.Configuration.Set(key, "0");
+        int saved = 0, mapReads = 0; uint newsSerial = 0; ScreenRect map = new(100, 80, 900, 680);
+        var receiver = new HostChatReceive(game, surface, subscribers, scene.Globals, scene.Startup.Configuration, sender => identity.FindSenderOwner(sender), scene.Tree, scene.Screen, scene.Chat,
+            () => throw new InvalidOperationException("숨김에서 미선택 관계표"), new()
+            {
+                SaveNewsTime = () => { saved++; Assert.Equal(9u, scene.Globals.NewsTime.Value); "changed\0"u8.CopyTo(packet.AsSpan(24)); },
+                News = (text, width, height) => { Assert.Equal("changed", text); Assert.Equal(400u, width); Assert.Equal(30u, height); scene.Html.SetMapView(() => { mapReads++; return map; }); newsSerial = factory.Factory.Show(text, 0, width, height); },
+            });
+        receiver.Receive(packet); Assert.Equal(0, scene.Globals.Log.LineCount);
+        scene.Startup.Configuration.Set(RawChatReceive.OptionKeys[^1], ""); Assert.Throws<InvalidOperationException>(() => receiver.Receive(packet)); scene.Startup.Configuration.Set(RawChatReceive.OptionKeys[^1], "0");
+        Put(packet, 5, 0x81, 1); Put(packet, 6, 0); Put(packet, 10, 9, 2); Put(packet, 12, 8, 2); packet[15] = 1; Put(packet, 19, 9); "before!\0"u8.CopyTo(packet.AsSpan(24));
+        receiver.Receive(packet); Assert.Equal(1, saved); Assert.True(mapReads > 0); uint news = scene.Tree.Reference(newsSerial); var window = Assert.IsType<HtmlWindowGumpNode>(scene.Tree.Node(news)); Assert.Equal((800 - window.BaseWidth) * .5f + 100, window.X); Assert.Equal((600 - window.BaseHeight) * .5f + 80, window.Y); Assert.Equal(root, scene.Globals.Current.Value);
+        int previousReads = mapReads; receiver.Receive(packet); Assert.Equal(1, saved); Assert.Equal(previousReads, mapReads);
+        map = new(150, 100, 850, 600); scene.Tree.TreeHooks.Attach!(news, 0, 0, scene.Tree.Create.Entries[0], 0); Assert.Equal((700 - window.BaseWidth) * .5f + 150, window.X); Assert.Equal((500 - window.BaseHeight) * .5f + 100, window.Y);
+        uint followup = scene.Tree.Reference(factory.Factory.Show("followup", 0, 400, 30)); var normal = Assert.IsType<HtmlWindowGumpNode>(scene.Tree.Node(followup)); Assert.Equal((700 - normal.BaseWidth) * .5f + 150, normal.X); Assert.Equal((500 - normal.BaseHeight) * .5f + 100, normal.Y); factory.Dispose();
     }
 }

@@ -242,6 +242,8 @@ public sealed partial class ClientHostGame : Game
         {
             _startup.Draw(_driver.Screen);
             InitializeNativePrefix();
+            // 채팅과 미션이 같은 장기 WorldAudio를 첫 메뉴 전부터 사용한다.
+            _missionAudio ??= new HostMissionAudio(_startup, Window.Handle, _options.MuteAudio, () => _clientClock.Clock.WallSeconds(_clock.Milliseconds), _stateResources.Music);
             _buttonSound = new HostButtonSound(_startup);
             _cursor = new HostOriginalCursor(_startup);
             PrepareNativeAssetTables();
@@ -273,6 +275,7 @@ public sealed partial class ClientHostGame : Game
             _htmlFactory = new HostHtmlFactory(_mainMenu, _htmlWindows, _htmlMenus, _startup, _driver.Screen, _driver.Input,
                 _scriptStrings, () => _clock.NowSeconds, _ => 0,
                 name => Debug.WriteLine("HTML 메타 명령 미연결: " + name));
+            InitializeNativeChatReceive();
             _menuInput = new HostMenuInput(_mainMenu, _htmlWindows, _htmlFactory, _driver.Input, _scriptStrings,
                 () => _menuDirty = true, action => throw new InvalidOperationException("메뉴 상위 명령 미연결: " + action));
             _menuInput.BindPopup(new HostPopupMenu(_mainMenu, _htmlWindows, _htmlMenus, _driver.Screen, _startup, () => _menuDirty = true, _buttonSound.ApplyOptions, _scriptStrings, () => !_options.MuteAudio, _stateResources.Popup));
@@ -434,7 +437,7 @@ public sealed partial class ClientHostGame : Game
             // R4-2 그래프 per-Pop 번호 부여. 같은 호출의 공간 등록 뒤 영역 무효화·표면 추가와 ResetGraph가 실행된다.
             session.WireTerrainPostPopGraph();
             // 같은 Player·공통 Pop·프로세스에 실제 사제/보호막 후처리를 등록한다.
-            _missionAudio ??= new HostMissionAudio(_startup, Window.Handle, _options.MuteAudio, () => _clientClock.Clock.WallSeconds(_clock.Milliseconds), _stateResources.Music);
+            if (_missionAudio is null) throw new InvalidOperationException("미션의 실제 장기 WorldAudio 미설치");
             if (!OperatingSystem.IsWindows()) throw new PlatformNotSupportedException("현재 미션 연소 장치는 Windows 전용이다");
             session.BuildPriestWorldDevices(_missionAudio.BindPriest(session));
             // 건설 진행음도 같은 미션의 Sound47을 빌리므로 음향/사제 장치 설치 뒤 표시 장치를 조립한다.

@@ -22,6 +22,8 @@ public sealed class HostHtmlWindows
     private HtmlWindowFit? _fit;
     /// <summary>전체 창 배치와 같은 메뉴 스택을 연결할 현재 경계.</summary>
     private HtmlWindowFitHooks? _fitHooks;
+    /// <summary>현재 HTML 문맥이 빌리는 지도 뷰다. 같은 소유자의 후속 부착도 현재 공급자를 읽는다.</summary>
+    private Func<ScreenRect>? _fitMapView;
     /// <summary>부분 생성된 controlled 메뉴를 정리할 실제 스택.</summary>
     private MenuGump? _menus;
     /// <summary>같은 실제 부모의 링크와 파서 전역을 소유하는 장치.</summary>
@@ -115,9 +117,10 @@ public sealed class HostHtmlWindows
         ArgumentNullException.ThrowIfNull(text); ArgumentNullException.ThrowIfNull(screen); ArgumentNullException.ThrowIfNull(mapView);
         if (_fit is not null) throw new InvalidOperationException("HTML 전체 배치가 이미 연결되었다");
         if (!text.BelongsTo(this)) throw new ArgumentException("다른 HTML 소유자의 본문", nameof(text));
+        _fitMapView = mapView;
         uint Read(uint address)
         {
-            ScreenRect view = mapView();
+            ScreenRect view = (_fitMapView ?? throw new InvalidOperationException("HTML 현재 지도 영역 미설치"))();
             return address switch
             {
                 0x531860 or 0x5c78f0 => unchecked((uint)screen.Width),
@@ -138,6 +141,14 @@ public sealed class HostHtmlWindows
         _fitHooks = hooks;
         _fit = new HtmlWindowFit(hooks);
         HtmlWindowFit.BindHtmlWindowFit(_tree.TreeHooks, token => _constructed.Contains(token) ? _fit : null);
+    }
+
+    /// <summary>LoadingHtmlContext처럼 현재 지도 문맥을 교체한다. 이미 만든 창의 후속 부착도 같은 현재 영역을 읽는다.</summary>
+    public void SetMapView(Func<ScreenRect> mapView)
+    {
+        ArgumentNullException.ThrowIfNull(mapView);
+        if (_fit is null) throw new InvalidOperationException("HTML 실제 배치 미설치");
+        _fitMapView = mapView;
     }
 
     /// <summary>HTML 열 배치와 실패 중인 메뉴 정리가 같은 controlled 메뉴 스택을 사용하게 한다.</summary>

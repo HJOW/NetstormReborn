@@ -84,6 +84,9 @@ public sealed class HostMissionAudio : IDisposable
     /// <summary>플레어/건설의현재위치·실제이름·flags를같은원본재생기로전달한다. 음소거도원문관문을사용한다.</summary>
     public void PlayEffectAt(float x, float y, string name, uint flags) => _player.PlayOnceAt(x, y, _list.Lookup(name), flags, 0);
 
+    /// <summary>Chat 등 위치 없는 전역 요청을 같은 장기 이름표/원문 재생기에 우선순위0으로 전달한다.</summary>
+    public void PlayGlobal(string name) => _player.Play(_list.Lookup(name), 0, 0, 0, 0, 0);
+
     /// <summary>같은 실제47번 프로세스·이름표·위치/전역 재생기를 건설 진행에 빌린다.</summary>
     public ConstructionProcessHooks ConstructionHooks(HostSession session, IReadOnlyList<RiftTypeDefinition> definitions)
     {
