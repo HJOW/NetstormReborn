@@ -4,6 +4,8 @@ namespace Netstorm.Core.Original;
 /// <summary>cpppj/src/o/RawGameAuxState.h의 네트워크 공용 장기 저장소다.</summary>
 public sealed partial class RawGameAuxState
 {
+    /// <summary>005451f8의 최초BSS0인 NUL 종료 기술 사용 목록이다. 월드 교체로 재생성하지 않는다.</summary>
+    public byte[] TypeUse { get; } = new byte[256];
     /// <summary>32h의 실제7DWORD 초기값이다. Session/World 교체에서 다시 만들거나 초기화하지 않는다.</summary>
     public uint[] MissionSettings { get; } = [1, 0, 0, 0, 0, 1, 8];
     /// <summary>0052ed54/55의 현재 메시지/프로토콜 BYTE다. 보호10.78의 최초0c/1을 한 번 구성한다.</summary>

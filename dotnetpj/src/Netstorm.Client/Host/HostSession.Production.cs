@@ -52,6 +52,8 @@ public sealed partial class HostSession
     public TotalMadeView WorldProductionTotals => _worldProductionTotals ?? throw new InvalidOperationException("호스트 생산 금지 표 미연결");
     /// <summary>같은 실제 생산 재계산과 슬롯 집계다.</summary>
     public RawCampaignProductionBindings WorldProduction => _worldProduction ?? throw new InvalidOperationException("호스트 생산 재계산 미연결");
+    /// <summary>현재 생산/Player 부모로 기술을 표시한다. loaded/known/TYPE/phase의 새 관문을 추가하지 않는다.</summary>
+    public void IndicateTechnology(uint type) => WorldProduction.IndicateTechnology(type);
     /// <summary>같은 실제 연구 입력/수신/부모 통지다.</summary>
     public RawFactoryResearch WorldResearch => _worldResearch ?? throw new InvalidOperationException("호스트 시설 연구 미연결");
     /// <summary>현재 같은 Carrier 내용물 본체를 실제 통지 소비자에게 빌린다.</summary>

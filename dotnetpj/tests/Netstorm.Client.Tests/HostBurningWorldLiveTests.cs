@@ -33,9 +33,9 @@ public sealed partial class HostPriestWorldLiveTests
         public List<string> Messages { get; } = [];
         /// <summary>사제효과를 먼저 값복사한 뒤에도 후행연소 owner를 찾게 구성한다.</summary>
         [SupportedOSPlatform("windows")]
-        public BurningContext(Action<int>? overrideRegen = null)
+        public BurningContext(Action<int>? overrideRegen = null, ClientSurfaceGlobals? sharedSurface = null)
         {
-            (Session, Types) = Scene(); string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+            (Session, Types) = Scene(sharedSurface); string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
             var startup = new HostStartupScene(data); Audio = new(startup, 0, true, static () => 0);
             RawPriestWorldEffects effects = Audio.BindPriest(Session);
             effects.Shield.Translate = key => key; effects.Shield.Tell = Messages.Add; effects.Regen.Damageable = overrideRegen;
