@@ -137,3 +137,16 @@ test('번역해서는 안 되는 도움말 주제 접미사 Type 은 번역표�
         assert.ok(korean.has(key)); assert.ok(korean.translate(key).includes(`~E~${first}%s~w`) && korean.translate(key).includes(`~${second}%s~w`));
     }
 });
+
+// 운반체 메뉴·파생 객체 메뉴의 번역 요청 원문은 소스의 문자열 리터럴에서 뽑는다(새 문구를 더하면 번역표에도 있어야 한다). 소스의 \n 은 줄바꿈으로 바꾼다. (2026-11-21 WB04-E1140)
+function sourceKeys(file) {
+    const source = fs.readFileSync(path.join(REPO_ROOT, 'webpj', file), 'utf8'), keys = new Set(), pattern = /(?:#format|format|translate)\)?\('((?:[^'\\]|\\.)*)'/g;
+    for (const match of source.matchAll(pattern)) keys.add(match[1].replace(/\\n/g, '\n').replace(/\\'/g, "'"));
+    return keys;
+}
+test('운반체 메뉴와 파생 객체 메뉴가 요청하는 문구는 한국어 번역표에 모두 있다', () => {
+    const carrier = sourceKeys('www/core/raw-carrier-menu.js'), variants = sourceKeys('www/core/raw-object-menu-variants.js');
+    assert.ok(carrier.size >= 6 && variants.size >= 2, `소스에서 뽑은 문구 수 ${carrier.size}/${variants.size}`);
+    assert.deepEqual(untranslated(carrier), []); assert.deepEqual(untranslated(variants), []);
+    assert.equal(korean.translate('Carrying: ~i%s~.\n'), '운반 중: ~i%s~.\n'); assert.equal(korean.translate('About %s'), '%s 정보'); assert.equal(korean.translate('Meltdown!'), '멜트다운!');
+});
