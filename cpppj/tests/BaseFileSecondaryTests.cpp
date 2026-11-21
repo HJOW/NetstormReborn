@@ -104,10 +104,10 @@ TEST_CASE(BaseFile_MatchDiskActualVirtualDirectoryAndRawWildcardPrefix) {
     CHECK(leaves.size()==3 && files.MatchDisk("d/*.bin")==leaves);std::vector<std::string> expected; // '/' 패턴은 원문처럼 하위 폴더 접두를 반환하지 않는다.
     for (const auto& leaf:leaves) expected.push_back("d\\"+leaf); // native 상대 접두만 같은 OS 이름 앞에 유지한다.
     CHECK(files.MatchDisk("d\\*.bin")==expected && files.MatchDisk("d\\missing-*.bin").empty());
-    auto absolute=root/L"d/*.bin";absolute.make_preferred();const auto absolutePattern=TaffUtf8(absolute);const auto drive=TaffUtf8(absolute.root_name());std::string rooted=absolutePattern.substr(drive.size()); // 현재 게임 드라이브의 루트 상대 패턴은 호출자 CWD 드라이브에 종속되지 않는다.
+    auto absolute=root/L"d/*.bin";absolute.make_preferred();const auto absolutePattern=TaffUtf8(absolute);const auto drive=TaffUtf8(absolute.root_name());std::string rooted="\\d\\*.bin"; // NB08 이후 드라이브 없는 루트 패턴은 현재 게임 폴더의 하위 경로다. OS 드라이브 루트와 구별한다.
     const std::array<std::string,3> patterns{{absolutePattern,rooted,drive+"d\\*.bin"}};
     for (const auto& pattern:patterns) { const auto slash=pattern.find_last_of('\\');expected.clear();for (const auto& leaf:leaves) expected.push_back(pattern.substr(0,slash+1)+leaf);CHECK(files.MatchDisk(pattern)==expected); } // 절대/루트상대/같은드라이브상대의 OS 해석과 반환 접두를 함께 확인한다.
-    CHECK(std::filesystem::current_path()==hostDirectory && files.FileNameOwner()->Index()==0);
+    CHECK(files.MatchDisk(absolutePattern.substr(drive.size())).empty());CHECK(std::filesystem::current_path()==hostDirectory && files.FileNameOwner()->Index()==0);
 }
 
 // Run/창/외부 실행 없이 실제 Client의 기본/보조 등록과 Help source4의 이름 판정을 연결한다.

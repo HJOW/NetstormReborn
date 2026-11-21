@@ -1,0 +1,1305 @@
+{
+  "unit": 1327,
+  "product": 1326,
+  "version": "11.01",
+  "date": "2026-11-22",
+  "host": "HJOW-Athlon",
+  "sourceCommit": "c3c82cb43",
+  "gameCodeChanged": false,
+  "passed": true,
+  "lastDecompile": {
+    "host": "HJOW-Athlon",
+    "client": "2026-11-03",
+    "root": "2026-11-07",
+    "rerun": false
+  },
+  "releaseBuild": {
+    "exitCode": 0,
+    "log": "extracted/cpp-resume-20261121/build-final-targets.log"
+  },
+  "package": {
+    "path": "extracted/cpp-m8-1327/NetstormReborn-11.01-cpppj.zip",
+    "bytes": 205883413,
+    "sha256": "b8d7f37d9b649db46760ae02cea4140e36bc1954d6aa5b166433a85abaeb5a05",
+    "verification": {
+      "zip": "extracted\\cpp-m8-1327\\NetstormReborn-11.01-cpppj.zip",
+      "entries": 1437,
+      "verified": 1430,
+      "generated": 4,
+      "runtime": 3,
+      "directories": 0,
+      "mismatches": [],
+      "unmapped": [],
+      "missingRequired": [],
+      "forbidden": [],
+      "fontSignaturesInExe": [],
+      "buildInfo": {
+        "Netstorm.exe": {
+          "sha256": "82be43aa8e3b63974cd23de2f3b0dfe5b7d49176ea3bb1b263ecaaf39ecb6346",
+          "recordedInBuildInfo": true
+        },
+        "R.exe": {
+          "sha256": "0cca5186d807f89867dd1d0c7de9d15af7db10ee8389dce97029a631b86aee0f",
+          "recordedInBuildInfo": true
+        }
+      },
+      "extract": {
+        "files": 1437,
+        "expectedFiles": 1437,
+        "bytes": 245609854,
+        "expectedBytes": 245609854
+      },
+      "passed": true
+    },
+    "filesUnchangedAfterAllRuns": 1437
+  },
+  "entries": {
+    "unique": 34,
+    "normal": 31,
+    "demos": 3,
+    "initialPassed": 28,
+    "startToolRetriesPassed": 6,
+    "finalPassed": 34,
+    "runs": [
+      {
+        "mission": "Tutorial1",
+        "group": "Early Missions",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": false,
+        "summary": "extracted/cpp-m8-1327/entries/mission-/Tutorial1/summary.json"
+      },
+      {
+        "mission": "Tutorial2",
+        "group": "Early Missions",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": false,
+        "summary": "extracted/cpp-m8-1327/entries/mission-/Tutorial2/summary.json"
+      },
+      {
+        "mission": "Tutorial3",
+        "group": "Early Missions",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": false,
+        "summary": "extracted/cpp-m8-1327/entries/mission-/Tutorial3/summary.json"
+      },
+      {
+        "mission": "Tutorial4",
+        "group": "Early Missions",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": false,
+        "summary": "extracted/cpp-m8-1327/entries/mission-/Tutorial4/summary.json"
+      },
+      {
+        "mission": "Tutorial5",
+        "group": "Early Missions",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": false,
+        "summary": "extracted/cpp-m8-1327/entries/mission-/Tutorial5/summary.json"
+      },
+      {
+        "mission": "Tutorial6",
+        "group": "Early Missions",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": false,
+        "summary": "extracted/cpp-m8-1327/entries/mission-/Tutorial6/summary.json"
+      },
+      {
+        "mission": "bc1menu76",
+        "group": "Priest Training",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": false,
+        "summary": "extracted/cpp-m8-1327/entries/mission-/bc1menu76/summary.json"
+      },
+      {
+        "mission": "bc2bridging76",
+        "group": "Priest Training",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": true,
+        "summary": "extracted/cpp-m8-1327/entries-retry/bc2bridging76/summary.json"
+      },
+      {
+        "mission": "bc3acid_bar76",
+        "group": "Priest Training",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": true,
+        "summary": "extracted/cpp-m8-1327/entries-retry/bc3acid_bar76/summary.json"
+      },
+      {
+        "mission": "bc4bow_rush76",
+        "group": "Priest Training",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": true,
+        "summary": "extracted/cpp-m8-1327/entries-retry/bc4bow_rush76/summary.json"
+      },
+      {
+        "mission": "bc5walkers76",
+        "group": "Priest Training",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": true,
+        "summary": "extracted/cpp-m8-1327/entries-retry/bc5walkers76/summary.json"
+      },
+      {
+        "mission": "bc6mows76",
+        "group": "Priest Training",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": true,
+        "summary": "extracted/cpp-m8-1327/entries-retry/bc6mows76/summary.json"
+      },
+      {
+        "mission": "bc7sun_bars76",
+        "group": "Priest Training",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": false,
+        "summary": "extracted/cpp-m8-1327/entries/mission-/bc7sun_bars76/summary.json"
+      },
+      {
+        "mission": "bc8fury76",
+        "group": "Priest Training",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": true,
+        "summary": "extracted/cpp-m8-1327/entries-retry/bc8fury76/summary.json"
+      },
+      {
+        "mission": "bc9ssun_bars76",
+        "group": "Priest Training",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": false,
+        "summary": "extracted/cpp-m8-1327/entries/mission-/bc9ssun_bars76/summary.json"
+      },
+      {
+        "mission": "TheWarBegins",
+        "group": "Campaign 1",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": false,
+        "summary": "extracted/cpp-m8-1327/entries/mission-/TheWarBegins/summary.json"
+      },
+      {
+        "mission": "MasterOfWhirligigs",
+        "group": "Campaign 1",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": false,
+        "summary": "extracted/cpp-m8-1327/entries/mission-/MasterOfWhirligigs/summary.json"
+      },
+      {
+        "mission": "SaveTheIsland",
+        "group": "Campaign 1",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": false,
+        "summary": "extracted/cpp-m8-1327/entries/mission-/SaveTheIsland/summary.json"
+      },
+      {
+        "mission": "FragileFortune",
+        "group": "Campaign 1",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": false,
+        "summary": "extracted/cpp-m8-1327/entries/mission-/FragileFortune/summary.json"
+      },
+      {
+        "mission": "ThunderingPower",
+        "group": "Campaign 1",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": false,
+        "summary": "extracted/cpp-m8-1327/entries/mission-/ThunderingPower/summary.json"
+      },
+      {
+        "mission": "DissolvedAlliance",
+        "group": "Campaign 1",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": false,
+        "summary": "extracted/cpp-m8-1327/entries/mission-/DissolvedAlliance/summary.json"
+      },
+      {
+        "mission": "TheNoose",
+        "group": "Campaign 2",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": false,
+        "summary": "extracted/cpp-m8-1327/entries/mission-/TheNoose/summary.json"
+      },
+      {
+        "mission": "RainVsRain",
+        "group": "Campaign 2",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": false,
+        "summary": "extracted/cpp-m8-1327/entries/mission-/RainVsRain/summary.json"
+      },
+      {
+        "mission": "RunForIt",
+        "group": "Campaign 2",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": false,
+        "summary": "extracted/cpp-m8-1327/entries/mission-/RunForIt/summary.json"
+      },
+      {
+        "mission": "GuardMyBack",
+        "group": "Campaign 2",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": false,
+        "summary": "extracted/cpp-m8-1327/entries/mission-/GuardMyBack/summary.json"
+      },
+      {
+        "mission": "Surrounded",
+        "group": "Campaign 2",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": false,
+        "summary": "extracted/cpp-m8-1327/entries/mission-/Surrounded/summary.json"
+      },
+      {
+        "mission": "BreakingThrough",
+        "group": "Campaign 3",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": false,
+        "summary": "extracted/cpp-m8-1327/entries/mission-/BreakingThrough/summary.json"
+      },
+      {
+        "mission": "ToTheRescue",
+        "group": "Campaign 3",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": false,
+        "summary": "extracted/cpp-m8-1327/entries/mission-/ToTheRescue/summary.json"
+      },
+      {
+        "mission": "Vicious",
+        "group": "Campaign 3",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": false,
+        "summary": "extracted/cpp-m8-1327/entries/mission-/Vicious/summary.json"
+      },
+      {
+        "mission": "EnemyTerritory",
+        "group": "Campaign 3",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": false,
+        "summary": "extracted/cpp-m8-1327/entries/mission-/EnemyTerritory/summary.json"
+      },
+      {
+        "mission": "FinalConfrontation",
+        "group": "Campaign 3",
+        "demo": false,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": false,
+        "summary": "extracted/cpp-m8-1327/entries/mission-/FinalConfrontation/summary.json"
+      },
+      {
+        "mission": "DemoStormRages",
+        "group": "Demo",
+        "demo": true,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": false,
+        "summary": "extracted/cpp-m8-1327/entries/demo-/DemoStormRages/summary.json"
+      },
+      {
+        "mission": "GuardMyBack",
+        "group": "Demo",
+        "demo": true,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": false,
+        "summary": "extracted/cpp-m8-1327/entries/demo-/GuardMyBack/summary.json"
+      },
+      {
+        "mission": "DissolvedAlliance",
+        "group": "Demo",
+        "demo": true,
+        "passed": true,
+        "exitCode": 0,
+        "errorLogs": 0,
+        "dataUnchanged": true,
+        "retriedStartInstructions": false,
+        "summary": "extracted/cpp-m8-1327/entries/demo-/DissolvedAlliance/summary.json"
+      }
+    ]
+  },
+  "gui": {
+    "unit": 1327,
+    "date": "2026-11-22",
+    "host": "HJOW-Athlon",
+    "passed": true,
+    "unique_GUI_paths": 4,
+    "all_exit_codes_zero": true,
+    "all_error_logs_zero": true,
+    "product_changed": false,
+    "tools_changed": false,
+    "launch_cwd": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-m8-1327\\unz\\NetstormReborn-cpppj",
+    "isolated_profiles": true,
+    "game_file_count": 1361,
+    "package_files_after_GUI": 1437,
+    "package_matches_ZIP_after_GUI": true,
+    "screenshots_visually_checked": true,
+    "runs": [
+      {
+        "kind": "credits",
+        "language": "english",
+        "summary": "extracted\\cpp-m8-1327\\run-english\\summary.json",
+        "passed": true,
+        "exit_code": 0,
+        "game_sha256_unchanged": true,
+        "error_log_files": 0,
+        "credits_entries": 3,
+        "credits_version": "11.01",
+        "HJOW_AI_Copyright2026_in_display_body": true,
+        "screenshots_visually_checked": [
+          "extracted\\cpp-m8-1327\\run-english\\credits-1101.png"
+        ],
+        "exe_sha256": "82be43aa8e3b63974cd23de2f3b0dfe5b7d49176ea3bb1b263ecaaf39ecb6346"
+      },
+      {
+        "kind": "credits",
+        "language": "korean",
+        "summary": "extracted\\cpp-m8-1327\\run-korean\\summary.json",
+        "passed": true,
+        "exit_code": 0,
+        "game_sha256_unchanged": true,
+        "error_log_files": 0,
+        "credits_entries": 3,
+        "credits_version": "11.01",
+        "HJOW_AI_Copyright2026_in_display_body": true,
+        "screenshots_visually_checked": [
+          "extracted\\cpp-m8-1327\\run-korean\\credits-1101.png"
+        ],
+        "exe_sha256": "82be43aa8e3b63974cd23de2f3b0dfe5b7d49176ea3bb1b263ecaaf39ecb6346"
+      },
+      {
+        "kind": "credits",
+        "language": "japanese",
+        "summary": "extracted\\cpp-m8-1327\\run-japanese\\summary.json",
+        "passed": true,
+        "exit_code": 0,
+        "game_sha256_unchanged": true,
+        "error_log_files": 0,
+        "credits_entries": 3,
+        "credits_version": "11.01",
+        "HJOW_AI_Copyright2026_in_display_body": true,
+        "screenshots_visually_checked": [
+          "extracted\\cpp-m8-1327\\run-japanese\\credits-1101.png"
+        ],
+        "exe_sha256": "82be43aa8e3b63974cd23de2f3b0dfe5b7d49176ea3bb1b263ecaaf39ecb6346"
+      },
+      {
+        "kind": "skirmish",
+        "language": "english",
+        "summary": "extracted\\cpp-m8-1327\\run-skirmish\\summary.json",
+        "passed": true,
+        "exit_code": 0,
+        "game_sha256_unchanged": true,
+        "error_log_files": 0,
+        "AI_count": 3,
+        "banned_units": [
+          "outpost"
+        ],
+        "AI_1": "Hard/Ally",
+        "AI_2": "Easy/Enemy",
+        "AI_3": "Normal/Enemy",
+        "phase_after_90_frames": 4,
+        "paused": 0,
+        "screenshots_visually_checked": [
+          "extracted\\cpp-m8-1327\\run-skirmish\\setup-final.png",
+          "extracted\\cpp-m8-1327\\run-skirmish\\bans-2-outpost.png",
+          "extracted\\cpp-m8-1327\\run-skirmish\\ingame.png"
+        ],
+        "exe_sha256": "82be43aa8e3b63974cd23de2f3b0dfe5b7d49176ea3bb1b263ecaaf39ecb6346"
+      }
+    ],
+    "limits": "메뉴와 스커미시 진입·90프레임 대기만 확인. 실제 사제 포획/희생·특정 적 공격·승리·MP는 검증하지 않음. root의 전체34진입과 독립된 네 GUI 경로 결과다."
+  },
+  "quickJsSelftest": {
+    "passed": true,
+    "checks": 6,
+    "exitCode": 0
+  },
+  "peAudit": {
+    "imports": [
+      {
+        "artifact": {
+          "bytes": 16093696,
+          "path": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+          "sha256": "82be43aa8e3b63974cd23de2f3b0dfe5b7d49176ea3bb1b263ecaaf39ecb6346"
+        },
+        "evidenceId": "ev_c7c0b5f41ba50daa0251a2754a4fe13878d193f0ce583ae61673801bedeacadf",
+        "coverage": {
+          "delay_imports": 0,
+          "examined_dlls": 28,
+          "imports": 589,
+          "reason": null,
+          "status": "complete"
+        },
+        "dlls": [
+          "WS2_32.dll",
+          "VERSION.dll",
+          "WINMM.dll",
+          "d3d11.dll",
+          "D3DCOMPILER_47.dll",
+          "SHELL32.dll",
+          "ole32.dll",
+          "MMDevAPI.DLL",
+          "USER32.dll",
+          "GDI32.dll",
+          "dwmapi.dll",
+          "ADVAPI32.dll",
+          "IMM32.dll",
+          "KERNEL32.dll",
+          "MSVCP140.dll",
+          "VCRUNTIME140.dll",
+          "VCRUNTIME140_1.dll",
+          "api-ms-win-crt-stdio-l1-1-0.dll",
+          "api-ms-win-crt-filesystem-l1-1-0.dll",
+          "api-ms-win-crt-heap-l1-1-0.dll",
+          "api-ms-win-crt-runtime-l1-1-0.dll",
+          "api-ms-win-crt-convert-l1-1-0.dll",
+          "api-ms-win-crt-environment-l1-1-0.dll",
+          "api-ms-win-crt-string-l1-1-0.dll",
+          "api-ms-win-crt-math-l1-1-0.dll",
+          "api-ms-win-crt-time-l1-1-0.dll",
+          "api-ms-win-crt-utility-l1-1-0.dll",
+          "api-ms-win-crt-locale-l1-1-0.dll"
+        ],
+        "blocked": []
+      },
+      {
+        "artifact": {
+          "bytes": 688640,
+          "path": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\R.exe",
+          "sha256": "0cca5186d807f89867dd1d0c7de9d15af7db10ee8389dce97029a631b86aee0f"
+        },
+        "evidenceId": "ev_f26262788cca71f8645b985b27d6a17597ff5ed84b0819dc49a4b6ff3298dc1a",
+        "coverage": {
+          "delay_imports": 0,
+          "examined_dlls": 21,
+          "imports": 243,
+          "reason": null,
+          "status": "complete"
+        },
+        "dlls": [
+          "WS2_32.dll",
+          "IPHLPAPI.DLL",
+          "WINMM.dll",
+          "SHELL32.dll",
+          "ole32.dll",
+          "USER32.dll",
+          "ADVAPI32.dll",
+          "KERNEL32.dll",
+          "MSVCP140.dll",
+          "VCRUNTIME140.dll",
+          "VCRUNTIME140_1.dll",
+          "api-ms-win-crt-heap-l1-1-0.dll",
+          "api-ms-win-crt-stdio-l1-1-0.dll",
+          "api-ms-win-crt-string-l1-1-0.dll",
+          "api-ms-win-crt-environment-l1-1-0.dll",
+          "api-ms-win-crt-runtime-l1-1-0.dll",
+          "api-ms-win-crt-math-l1-1-0.dll",
+          "api-ms-win-crt-convert-l1-1-0.dll",
+          "api-ms-win-crt-filesystem-l1-1-0.dll",
+          "api-ms-win-crt-time-l1-1-0.dll",
+          "api-ms-win-crt-locale-l1-1-0.dll"
+        ],
+        "blocked": []
+      }
+    ],
+    "icons": [
+      {
+        "type": 3,
+        "id": 1,
+        "language": 1033,
+        "sha256": "db57efd65baa4c2dd6f9e05ac3fd457d97dc565b8aad89f4819cc2f45d1747ff",
+        "originalMatch": true
+      },
+      {
+        "type": 3,
+        "id": 2,
+        "language": 1033,
+        "sha256": "4fe9dca65591ed0fac432df16fe0a13e0041de5735a121491e2e7d90bb1346d7",
+        "originalMatch": true
+      },
+      {
+        "type": 14,
+        "id": 102,
+        "language": 1033,
+        "sha256": "a0c9d012e2bf6b2fe05c2d97cb5594d97cf2f539e97935c12abd7a3562f4d9bf",
+        "originalMatch": true
+      },
+      {
+        "type": 14,
+        "id": 144,
+        "language": 1033,
+        "sha256": "6bcce1250099cc08d574211b3debabb0244cd2641f6d960538e7ddc97d319164",
+        "originalMatch": true
+      }
+    ],
+    "method": "REA portable static PE inspection; runtime network behavior is not observed",
+    "iconEvidenceId": "ev_afea9835b5b56feec6d00d850eb9c28bd78da5d94efadaab1149a9305a8fd97b",
+    "passed": true
+  },
+  "sourceAudit": {
+    "date": "2026-11-22",
+    "host": "HJOW-Athlon",
+    "kind": "읽기전용 정적 소스 관문 감사",
+    "baseline_commit": "09f9f34d53b17d942f4268d88dd510ea753573e3",
+    "baseline_product": 1310,
+    "head_at_audit": "a65a2b81ef21cce8e7e47dc209827e398619e984",
+    "scope": {
+      "tracked_changed_cpppj_src_files": 48,
+      "untracked_cpppj_src_files": [
+        "cpppj/src/client/ResetAllSettings.cpp",
+        "cpppj/src/client/ResetAllSettings.h"
+      ],
+      "tracked_added_text_lines": 983,
+      "tracked_removed_text_lines": 90,
+      "working_patch_sha256": "77e1c1f450146a3ce60f2320130ac8cbe9bd7e24dc8ffb744971fa8b78bf14a0",
+      "all_added_lines_including_untracked": 1027,
+      "new_os_network_or_url_or_host_registration_matches": [],
+      "new_checking_lines": [],
+      "source_file_deltas": [
+        {
+          "path": "cpppj/src/CMakeLists.txt",
+          "added": 15,
+          "removed": 1
+        },
+        {
+          "path": "cpppj/src/app/Netstorm-16.ico",
+          "added": null,
+          "removed": null
+        },
+        {
+          "path": "cpppj/src/app/Netstorm-32.ico",
+          "added": null,
+          "removed": null
+        },
+        {
+          "path": "cpppj/src/app/ProductVersion.rc",
+          "added": 5,
+          "removed": 0
+        },
+        {
+          "path": "cpppj/src/app/main.cpp",
+          "added": 11,
+          "removed": 0
+        },
+        {
+          "path": "cpppj/src/client/BitmapFont.cpp",
+          "added": 45,
+          "removed": 3
+        },
+        {
+          "path": "cpppj/src/client/BitmapFont.h",
+          "added": 7,
+          "removed": 6
+        },
+        {
+          "path": "cpppj/src/client/CMakeLists.txt",
+          "added": 5,
+          "removed": 0
+        },
+        {
+          "path": "cpppj/src/client/CampaignTestPlay.cpp",
+          "added": 117,
+          "removed": 0
+        },
+        {
+          "path": "cpppj/src/client/CampaignTestPlay.h",
+          "added": 59,
+          "removed": 0
+        },
+        {
+          "path": "cpppj/src/client/CampaignTestSpectator.cpp",
+          "added": 81,
+          "removed": 0
+        },
+        {
+          "path": "cpppj/src/client/CampaignTestSpectator.h",
+          "added": 67,
+          "removed": 0
+        },
+        {
+          "path": "cpppj/src/client/ClientAudio.cpp",
+          "added": 16,
+          "removed": 0
+        },
+        {
+          "path": "cpppj/src/client/ClientAudio.h",
+          "added": 12,
+          "removed": 3
+        },
+        {
+          "path": "cpppj/src/client/ClientMain.cpp",
+          "added": 18,
+          "removed": 18
+        },
+        {
+          "path": "cpppj/src/client/ClientMain.h",
+          "added": 6,
+          "removed": 1
+        },
+        {
+          "path": "cpppj/src/client/CompositeMissionTransport.cpp",
+          "added": 4,
+          "removed": 4
+        },
+        {
+          "path": "cpppj/src/client/EditorLocalTransport.cpp",
+          "added": 17,
+          "removed": 4
+        },
+        {
+          "path": "cpppj/src/client/EditorLocalTransport.h",
+          "added": 2,
+          "removed": 0
+        },
+        {
+          "path": "cpppj/src/client/EmbeddedBitmapFont.cpp",
+          "added": 139,
+          "removed": 0
+        },
+        {
+          "path": "cpppj/src/client/EmbeddedBitmapFont.h",
+          "added": 35,
+          "removed": 0
+        },
+        {
+          "path": "cpppj/src/client/KoreanFontSettings.cpp.in",
+          "added": 9,
+          "removed": 0
+        },
+        {
+          "path": "cpppj/src/client/KoreanFontSettings.h",
+          "added": 9,
+          "removed": 0
+        },
+        {
+          "path": "cpppj/src/client/KoreanResources.cpp",
+          "added": 7,
+          "removed": 12
+        },
+        {
+          "path": "cpppj/src/client/KoreanResources.h",
+          "added": 3,
+          "removed": 3
+        },
+        {
+          "path": "cpppj/src/client/LocalTcpTransport.cpp",
+          "added": 1,
+          "removed": 1
+        },
+        {
+          "path": "cpppj/src/client/LocalUdpTransport.cpp",
+          "added": 1,
+          "removed": 1
+        },
+        {
+          "path": "cpppj/src/client/ProductPresentation.cpp",
+          "added": 11,
+          "removed": 0
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignHitBindings.cpp",
+          "added": 13,
+          "removed": 4
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignMissionStartBindings.cpp",
+          "added": 47,
+          "removed": 3
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignMissionStartBindings.h",
+          "added": 13,
+          "removed": 0
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.cpp",
+          "added": 16,
+          "removed": 3
+        },
+        {
+          "path": "cpppj/src/client/RawCampaignSession.h",
+          "added": 2,
+          "removed": 0
+        },
+        {
+          "path": "cpppj/src/client/RawGameMenus.cpp",
+          "added": 1,
+          "removed": 0
+        },
+        {
+          "path": "cpppj/src/client/RawGameMenus.h",
+          "added": 1,
+          "removed": 0
+        },
+        {
+          "path": "cpppj/src/client/SessionStateDump.cpp",
+          "added": 28,
+          "removed": 0
+        },
+        {
+          "path": "cpppj/src/client/SessionStateDump.h",
+          "added": 7,
+          "removed": 0
+        },
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "added": 82,
+          "removed": 13
+        },
+        {
+          "path": "cpppj/src/client/UberGump.h",
+          "added": 2,
+          "removed": 0
+        },
+        {
+          "path": "cpppj/src/o/AiAllianceSide.h",
+          "added": 27,
+          "removed": 0
+        },
+        {
+          "path": "cpppj/src/o/CMakeLists.txt",
+          "added": 1,
+          "removed": 1
+        },
+        {
+          "path": "cpppj/src/o/RawAiCreate.cpp",
+          "added": 1,
+          "removed": 1
+        },
+        {
+          "path": "cpppj/src/o/RawAiCreate.h",
+          "added": 3,
+          "removed": 2
+        },
+        {
+          "path": "cpppj/src/o/RawConnectionRegistry.cpp",
+          "added": 13,
+          "removed": 2
+        },
+        {
+          "path": "cpppj/src/o/RawConnectionRegistry.h",
+          "added": 6,
+          "removed": 1
+        },
+        {
+          "path": "cpppj/src/o/RawDamageableHit.cpp",
+          "added": 7,
+          "removed": 1
+        },
+        {
+          "path": "cpppj/src/zacket/LocalMissionTransport.cpp",
+          "added": 10,
+          "removed": 2
+        },
+        {
+          "path": "cpppj/src/zacket/LocalMissionTransport.h",
+          "added": 1,
+          "removed": 0
+        }
+      ],
+      "source_hashes": {
+        "cpppj/src/CMakeLists.txt": "8ee363921584da727246819da8759a80fcd589d7fa693fc2deebde53e04185f2",
+        "cpppj/src/app/Netstorm-16.ico": "01c8779ca0d8c4cea3a99aca97894397ff6322952952493339423d5aaf15577b",
+        "cpppj/src/app/Netstorm-32.ico": "d029cb8a03d113afecb5b868b46e1ae967d99e569f303c04ebe6adc5b0d47a8e",
+        "cpppj/src/app/ProductVersion.rc": "3c3744ae48d542b72441f87597ac206d663066cfb992e046d823f5141f43143d",
+        "cpppj/src/app/main.cpp": "e2d6235b81cfd1825715dcdd2c9530d507be59ea74ca4d21e911509d07d8b02f",
+        "cpppj/src/client/BitmapFont.cpp": "0224bf5c59099e977fd4c0e988f5516de21ccda1eae9aeff241dbe6dedbfac5f",
+        "cpppj/src/client/BitmapFont.h": "5d8af9909f368a9c631500d96fc6c7466a0976bac4ce9ba2b6e613218338180b",
+        "cpppj/src/client/CMakeLists.txt": "4a9d5ff48e602f916a4cb7e17c71f0da769e9c251cdbf9a424d5b88008eca665",
+        "cpppj/src/client/CampaignTestPlay.cpp": "76a7f25984d8cafcc1606260601256e76b8ee0b8f19a1abcf2fe14ac4a82cd1c",
+        "cpppj/src/client/CampaignTestPlay.h": "eed79318d78f56580e021b1bffb77c79041355d337ca9bc6361329927718add7",
+        "cpppj/src/client/CampaignTestSpectator.cpp": "e5aa1437815a798ad8e2ad44306c848290af8ff8fda5ac4ac0b3cf9b07471b2e",
+        "cpppj/src/client/CampaignTestSpectator.h": "bf0b14d85a0bdf8374bc98945eb61b87f99dd67d076831bed0d3aceaf9bc1d2e",
+        "cpppj/src/client/ClientAudio.cpp": "0bee4b78964feef96d8cba936d7dd02cb1735090f0b598b4c52bcdfb9e7d831d",
+        "cpppj/src/client/ClientAudio.h": "3570605832e0cd66340f156cc6ffb57d96b7975db6146623bb0429d62c6a8694",
+        "cpppj/src/client/ClientMain.cpp": "99f137e516849f97f3e7108fada276da1a0e725c66115eeddbbc8df1dffdbfcf",
+        "cpppj/src/client/ClientMain.h": "f6b813178fad6e17dd563e40495d91331d1b6f8c724ba6551831cc3a1df984ee",
+        "cpppj/src/client/CompositeMissionTransport.cpp": "49fe3dd0578048046481482c7deb93a34a73173a1e5ea99bb345fde1bb62c0f4",
+        "cpppj/src/client/EditorLocalTransport.cpp": "1fb89745c67f290aec35b9885f8ac904b6f096e1cc10f13aa374e1c8b2d46fc8",
+        "cpppj/src/client/EditorLocalTransport.h": "a1b9feed9113e201eb8f5ab845aa48c928ae9d569f67cd46e0ad9bd31465ccb9",
+        "cpppj/src/client/EmbeddedBitmapFont.cpp": "de48c0921c1f1e84cb3825cdb0b07c3476e1af27e481cad32929dddf7945cbcf",
+        "cpppj/src/client/EmbeddedBitmapFont.h": "ac1bf158b750c5fa45c997e75673b47cebbb83709d1e416fb71ae84b7f93534c",
+        "cpppj/src/client/KoreanFontSettings.cpp.in": "05f903af9368dbe4d08679d1f7ee268f504f1ddff8d951e0aa1d4c43d25d848a",
+        "cpppj/src/client/KoreanFontSettings.h": "85566bcf6365e4b091d2c426276856d913c39f650edd53f7f6f7d286d1e83e9d",
+        "cpppj/src/client/KoreanResources.cpp": "b0e1962abc989f4c6708133db2fa1ef576004af0b8fd0674c35701f108669407",
+        "cpppj/src/client/KoreanResources.h": "cae49f6747e496beb10c65519dc9f2dd6ed6ab72abfa1885cee6259a13a392e5",
+        "cpppj/src/client/LocalTcpTransport.cpp": "579568252dcd903b76d71bc349e82eb5105c455a36a8d11ff5aafd5539d58c68",
+        "cpppj/src/client/LocalUdpTransport.cpp": "3d8e5a14fa47f752102822f4253d35575db7ac15c946e6fd7bc4fddcfcb99c09",
+        "cpppj/src/client/ProductPresentation.cpp": "480e7d2a0031ecd5780c91c45f1b1296b2d0c00380d78468a5c0a85c6561463a",
+        "cpppj/src/client/RawCampaignHitBindings.cpp": "d98b320c6edc2658c4282cf79a46096d71bfc4b548c6bc8a87d3d45dd7750d4a",
+        "cpppj/src/client/RawCampaignMissionStartBindings.cpp": "51e1c75f36d2dd612634438c64b9f2b5bb0d7d1854727ff5a0c4116a5ac0873a",
+        "cpppj/src/client/RawCampaignMissionStartBindings.h": "39b4cf5b0f42d7472c1e5de00f091a1213d3dbc3e057862fc6bc04a4341777f2",
+        "cpppj/src/client/RawCampaignSession.cpp": "b6629952f3cc8b63bd1fb1117ab2e871352c832dcf47e1c500d9139ba9320592",
+        "cpppj/src/client/RawCampaignSession.h": "269cbdb0b19c883a1e6cadbec1624e65f530ee1cc33603cd4d9a96c01deb198f",
+        "cpppj/src/client/RawGameMenus.cpp": "ff2bb49fd8dcc61cdbc46c970deb73f726eef5fa339608ea07f934b35344a98f",
+        "cpppj/src/client/RawGameMenus.h": "5e5bf5b8e777f198a31e4269ed59fb27fbe959436206fe85c5c382ab915a3af4",
+        "cpppj/src/client/ResetAllSettings.cpp": "ecdc6d39ed37e8e7047fd6f5fe5bf3a02ee0e8057f7b2f9443e2c1f952108cc0",
+        "cpppj/src/client/ResetAllSettings.h": "a25b107fb3b01df104362aacc01154f5c68586ce18e41a27e9be7cfd679653dd",
+        "cpppj/src/client/SessionStateDump.cpp": "79e6bf7a61f3261528640590982e42bd7ba413fe9d0caab9f09d69d89bfeea62",
+        "cpppj/src/client/SessionStateDump.h": "9bc0bd0509bc8d67603d6b56f596edb4efb5999bf715c9e43d006e008c82f0dc",
+        "cpppj/src/client/UberGump.cpp": "c1144ff3bee4b7387722c13accf51da1a93f3c1c6a90d2478c8179bf10b7a0dd",
+        "cpppj/src/client/UberGump.h": "a427f323925cc1b2be85db50ca3c72d7666bc098b0e2c0414b08af6950c9a9ae",
+        "cpppj/src/o/AiAllianceSide.h": "6f48f8aba057d4a2d9bf0c0f6a3f4682a86e9080ca6c953b7d4d117a86f0a313",
+        "cpppj/src/o/CMakeLists.txt": "dfb39acc7fbf8274248c475d8eaeaa417db3a82435ddc49ca0df6fd919280ce6",
+        "cpppj/src/o/RawAiCreate.cpp": "f4a2c39f152481abde02c045b4c241378799e32efe1fe525380f8e4d5db63339",
+        "cpppj/src/o/RawAiCreate.h": "2f3caebf54259fd725bb0b493119952f14d302af3bf7fb23552b813271193228",
+        "cpppj/src/o/RawConnectionRegistry.cpp": "6957a0a4e30637fa3c206ce440394154e7e69c9fe700f5854174746633976b1d",
+        "cpppj/src/o/RawConnectionRegistry.h": "41da26baba1edf5720d71ec520f150034e57baf687160b0380b7b52fdec97c24",
+        "cpppj/src/o/RawDamageableHit.cpp": "ab87426ca2a82ac13e2fa3ece0924019b54dd146de0403c806f963cd2fcd810c",
+        "cpppj/src/zacket/LocalMissionTransport.cpp": "fdf1274c895dba9987484c7b7a6b51efadcd4257c23bdb811d12148b1ae01580",
+        "cpppj/src/zacket/LocalMissionTransport.h": "520ec217961f0c97dc612c5ba3b804f8b346c2e53c9dbe6e1521103fb7703de6"
+      },
+      "explicit_host_registration_search": {
+        "root": "cpppj/src",
+        "patterns": [
+          "JS_NewCFunction",
+          "JS_SetProperty",
+          "JS_SetModuleLoaderFunc",
+          "JS_SetContextOpaque",
+          "JS_SetRuntimeOpaque"
+        ],
+        "matches": 0,
+        "note": "전체 소스 검색. 게임/파일/네트워크 host 함수 추가가 없다는 보조 관측이며 엔진 상류 내장 구현과 구별함"
+      }
+    },
+    "findings": [
+      {
+        "id": "new-external",
+        "status": "pass-within-static-scope",
+        "observation": "추가 행과 신규 ResetAllSettings2파일의 OS 접속/이름해석/URL/JS host 등록 호출 후보0. TCP/UDP/Editor/내부전송4곳의 기존 노드 flush/수신 callback과 Registry 직접 호출만 추가. 새 외부 주소/공식서버 접속 소비자 없음."
+      },
+      {
+        "id": "new-checking",
+        "status": "pass-within-static-scope",
+        "observation": "기준09f9f34d5 대비 cpppj/src 추가행의 checking 소비자0. 새 미연결 checking 소비자 발견 없음."
+      },
+      {
+        "id": "legacy-online-validation",
+        "status": "pass-within-static-scope",
+        "observation": "UberEditor 제품 조립의 referenceValidationNotice=false 유지. TCP/UDP 폐기7f/80 직접/집합 송수신 차단 및 R 등록 생략 유지."
+      },
+      {
+        "id": "lan-first-ipv4",
+        "status": "pass-within-static-scope",
+        "observation": "명시 hostname은 OS gethostbyname 첫 IPv4만 사용, 첫 주소가 loopback/RFC1918/link-local 아니면 거부. 숫자 IPv4도 실제connect 전에 동일 제한. 뒤 사설 주소 재검색 없음. R도 같은 해석기/실접속 범위 유지."
+      },
+      {
+        "id": "quickjs-host-access",
+        "status": "pass-within-static-scope",
+        "observation": "ScriptEngine/플랫폼/상류 빌드구성은 기준이후 변경 없음. quickjs-libc 제외, JS_NewContext 기반. cpppj/src에 JS_NewCFunction·JS_SetProperty·JS_SetModuleLoaderFunc 등록 없음. 게임 상태·파일·네트워크 API 비노출 유지."
+      }
+    ],
+    "policy_sources": [
+      {
+        "path": "cpppj/src/client/UberEditor.inc",
+        "lines": [
+          224
+        ],
+        "working_sha256": "fab48750fa5f9bc0eea98424a0b6ae01aa6cbb5a556eba0086975d31c3fc4a9d",
+        "git_delta_from_baseline": false,
+        "observation": "제품 MainMenu 조립 referenceValidationNotice=false"
+      },
+      {
+        "path": "cpppj/src/client/NativeMainMenuState.cpp",
+        "lines": [
+          44
+        ],
+        "working_sha256": "b0caacb2a99d86980b11332c29fd4556955e969d1e342ce453b1c638d6994d9f",
+        "git_delta_from_baseline": false,
+        "observation": "legacy 검증 안내는 위 false 관문으로 생략"
+      },
+      {
+        "path": "cpppj/src/client/LocalTcpTransport.cpp",
+        "lines": [
+          46,
+          48,
+          64,
+          157,
+          181,
+          187,
+          214,
+          277,
+          289,
+          291,
+          293
+        ],
+        "working_sha256": "579568252dcd903b76d71bc349e82eb5105c455a36a8d11ff5aafd5539d58c68",
+        "git_delta_from_baseline": true,
+        "observation": "loopback/RFC1918/link-local 제한 및 폐기7f/80 송수신/집합 차단. 변경157은 같은 노드 flush/수신 callback"
+      },
+      {
+        "path": "cpppj/src/client/LocalUdpTransport.cpp",
+        "lines": [
+          30,
+          87,
+          104,
+          106,
+          119,
+          142
+        ],
+        "working_sha256": "3d8e5a14fa47f752102822f4253d35575db7ac15c946e6fd7bc4fddcfcb99c09",
+        "git_delta_from_baseline": true,
+        "observation": "폐기7f/80 직접/집합 차단과 기존 자기hostname OS조회. 변경87은 같은 노드 직접 수신 callback"
+      },
+      {
+        "path": "cpppj/src/platform/LanIpv4Name.cpp",
+        "lines": [
+          26,
+          32,
+          37,
+          39,
+          41,
+          42
+        ],
+        "working_sha256": "b7b79d0e03e79a49756e37b56c7efed70e2595864663d3f5d2dc143646cdf58e",
+        "git_delta_from_baseline": false,
+        "observation": "OS gethostbyname의 h_addr_list[0]만 복사하고 로컬 IPv4 아니면 거부, 뒤 주소 재탐색 없음"
+      },
+      {
+        "path": "cpppj/src/root/SocketDevice.cpp",
+        "lines": [
+          21,
+          57,
+          88,
+          98,
+          103
+        ],
+        "working_sha256": "a80c93631994f9c3e87690f16061cd66a04debd719b98ab874ec2c8f12854457",
+        "git_delta_from_baseline": false,
+        "observation": "R의 실제 connect/accept/datagram을 같은 LAN IPv4 범위로 제한"
+      },
+      {
+        "path": "cpppj/src/root/LocalAddressDevice.cpp",
+        "lines": [
+          35
+        ],
+        "working_sha256": "438a7e40c1841aa929cb925ce52ebda9e1cb4bc9bb452312c1268c8e8c7a893e",
+        "git_delta_from_baseline": false,
+        "observation": "R의 명시 이름도 같은 ResolveLanIpv4Name 사용"
+      },
+      {
+        "path": "cpppj/src/root/PacketRegistration.cpp",
+        "lines": [
+          130
+        ],
+        "working_sha256": "0cd64d185a7786cd0eec74b970d5e37c6c3ce13f04ade59551daffebeb338d7c",
+        "git_delta_from_baseline": false,
+        "observation": "R 폐기7f/80 observer/수신/송신 등록 생략"
+      },
+      {
+        "path": "cpppj/src/zacket/LocalMissionTransport.cpp",
+        "lines": [
+          16,
+          121,
+          183,
+          224,
+          237
+        ],
+        "working_sha256": "fdf1274c895dba9987484c7b7a6b51efadcd4257c23bdb811d12148b1ae01580",
+        "git_delta_from_baseline": true,
+        "observation": "내부 queue 전송 폐기 검증 패킷 차단 유지, 기존 같은 노드 flush/수신만 추가"
+      },
+      {
+        "path": "cpppj/src/client/EditorLocalTransport.cpp",
+        "lines": [
+          31,
+          142,
+          184
+        ],
+        "working_sha256": "1fb89745c67f290aec35b9885f8ac904b6f096e1cc10f13aa374e1c8b2d46fc8",
+        "git_delta_from_baseline": true,
+        "observation": "Editor 실제 내부 큐 끝을 직접 flush/수신, 외부 socket/주소 생성 아님"
+      },
+      {
+        "path": "cpppj/src/o/RawConnectionRegistry.cpp",
+        "lines": [
+          54,
+          80,
+          85
+        ],
+        "working_sha256": "6957a0a4e30637fa3c206ce440394154e7e69c9fe700f5854174746633976b1d",
+        "git_delta_from_baseline": true,
+        "observation": "기존 토큰 물리노드의 callable pin/직접 flush/receive, 주소해석/새 접속 없음"
+      },
+      {
+        "path": "cpppj/src/platform/ScriptEngine.cpp",
+        "lines": [
+          211,
+          241,
+          280
+        ],
+        "working_sha256": "b2bf82ba77f117da4f037ab344f148c2b4996876485981e2144104edeed4ef5a",
+        "git_delta_from_baseline": false,
+        "observation": "JS_NewContext와 global strict 평가만. 게임상태/파일/네트워크 host 함수/모듈 loader 등록 없음"
+      },
+      {
+        "path": "cpppj/src/platform/CMakeLists.txt",
+        "lines": [
+          25,
+          27,
+          29
+        ],
+        "working_sha256": "f726bae6135444f5e398f09e24cd245177f6fe7943989799373c9bb00a0cb795",
+        "git_delta_from_baseline": false,
+        "observation": "같은 ScriptEngine과 NetstormQuickJs 정적 링크"
+      },
+      {
+        "path": "cpppj/third_party/quickjs-ng/CMakeLists.txt",
+        "lines": [
+          12,
+          13,
+          14,
+          15,
+          16
+        ],
+        "working_sha256": "2271992cf41a0e2d8fae7348dbf8426d6c48494c6423b81fd0f504221c6af6f9",
+        "git_delta_from_baseline": false,
+        "observation": "quickjs/dtoa/libregexp/libunicode만 빌드, quickjs-libc 제외"
+      },
+      {
+        "path": "cpppj/src/client/HelpLinkPolicy.cpp",
+        "lines": [],
+        "working_sha256": "a46bc06b9e4c40fc6d68e170acc557b4a1528523912a2ca7c2c3a738b1a5e994",
+        "git_delta_from_baseline": false,
+        "observation": "기존 사용자 선택 외부 도움말 정책이며 변경 없음"
+      },
+      {
+        "path": "cpppj/src/client/ExternalHelpClient.cpp",
+        "lines": [],
+        "working_sha256": "c77df04291134d2a03a480480011de3d4906a949ac95760ed1153d173b03a9f7",
+        "git_delta_from_baseline": false,
+        "observation": "기존 사용자 선택 도움말 실행 경계이며 변경 없음"
+      },
+      {
+        "path": "cpppj/src/client/UberGump.cpp",
+        "working_sha256": "c1144ff3bee4b7387722c13accf51da1a93f3c1c6a90d2478c8179bf10b7a0dd",
+        "git_delta_from_baseline": true,
+        "observation": "최종 추가 정적 검토는 final_followup_audit의 관측행/판정 참조"
+      },
+      {
+        "path": "cpppj/src/client/UberGump.h",
+        "working_sha256": "a427f323925cc1b2be85db50ca3c72d7666bc098b0e2c0414b08af6950c9a9ae",
+        "git_delta_from_baseline": true,
+        "observation": "최종 추가 정적 검토는 final_followup_audit의 관측행/판정 참조"
+      },
+      {
+        "path": "cpppj/src/client/ProductPresentation.cpp",
+        "working_sha256": "480e7d2a0031ecd5780c91c45f1b1296b2d0c00380d78468a5c0a85c6561463a",
+        "git_delta_from_baseline": true,
+        "observation": "최종 추가 정적 검토는 final_followup_audit의 관측행/판정 참조"
+      }
+    ],
+    "limitations": [
+      "정적 소스 대조 범위의 판정이며 새 PE import/문자열 또는 실제 네트워크 관측을 수행하지 않았다.",
+      "OS DNS/hosts/LLMNR에 의한 명시 hostname 조회 가능성은 기존 정책과 같다. 모든 외부망 패킷 부재를 주장하지 않는다.",
+      "기존 사용자 선택 도움말 링크/OS URL 실행 경계는 변경 없음이며 자동 공식서버 연결과 구별한다.",
+      "정규식 후보0만으로 간접 호출 전체 부재를 증명하지 않는다. 기존 전송 장치 변경은 수명/같은 노드 callback을 별도 원문 맥락으로 확인했다.",
+      "제품 소스/보호 파일 수정·빌드·게임/서버/MP 실행은 이 감사에서 수행하지 않았다. 빌드 동결 중 읽기만 했다."
+    ],
+    "final_followup_audit": {
+      "changed_existing_sources": [
+        "cpppj/src/client/ProductPresentation.cpp",
+        "cpppj/src/client/UberGump.cpp"
+      ],
+      "new_delta_source_files": [
+        "cpppj/src/client/UberGump.h"
+      ],
+      "all_other_source_hashes_unchanged": true,
+      "scope": "직전 감사 이후 초기화 확인 입력 큐 토큰/serial과 일본어 확인창 BR 추가만 재검토",
+      "observations": [
+        {
+          "path": "cpppj/src/client/UberGump.cpp",
+          "lines": [
+            658,
+            659,
+            796,
+            819,
+            1572,
+            1889,
+            1890
+          ],
+          "conclusion": "실제 확인창 serial/일반 Tell 제출 토큰의 일회성 수명 보관·취소/ESC/모달교체시폐기. 기존입력큐/초기화API만호출하며 외부접속/checking추가없음"
+        },
+        {
+          "path": "cpppj/src/client/UberGump.h",
+          "lines": [
+            307,
+            308
+          ],
+          "conclusion": "위확인serial과optional토큰의보관멤버2개이며OS/전송장치없음"
+        },
+        {
+          "path": "cpppj/src/client/ProductPresentation.cpp",
+          "lines": [
+            89
+          ],
+          "conclusion": "일본어확인본문에BR줄바꿈추가. 링크/버튼동작은기존Tell초기화/취소와동일하며외부URL없음"
+        }
+      ],
+      "result": "정적범위 통과",
+      "product_modified_by_auditor": false,
+      "build_or_game_or_network_run_by_auditor": false
+    }
+  },
+  "protectedFilesUnchanged": 2808,
+  "contracts": {
+    "record": "cpppj/remaining-test-contracts-1324-20261122.json",
+    "initialSelected": 752,
+    "originalFailuresRepaired": 11,
+    "m8SelectedSuite": {
+      "status": "completed-with-one-test-contract-correction",
+      "sameBuildRun": {
+        "total": 752,
+        "passed": 751,
+        "failedCases": [
+          {
+            "group": "file",
+            "name": "BaseFile_MatchDiskActualVirtualDirectoryAndRawWildcardPrefix"
+          }
+        ],
+        "executablesChanged": [],
+        "protectedFiles": 2808,
+        "changed": []
+      },
+      "singleRetest": {
+        "name": "BaseFile_MatchDiskActualVirtualDirectoryAndRawWildcardPrefix",
+        "exitCode": 0,
+        "exeSha256": "69a32a41cb8c886b84f677d9066991bad7546f4ac2f498037179c61972801bba",
+        "protectedFiles": 2808,
+        "changed": []
+      },
+      "fullSuiteRepeated": false,
+      "productChanges": false,
+      "sourceFile": "cpppj/tests/BaseFileSecondaryTests.cpp",
+      "basis": "NB08 / 4edec13c5 / FileSpecQuery.cpp:25 virtual-game-root",
+      "raw": "extracted/cpp-remaining-tests-1324/after-all + after-nb08"
+    },
+    "priorPop1321DuplicateNames": 0
+  },
+  "exclusions": [
+    "실제 포획/희생/특정 공격/승리의 1-1~1-5·스커미시 밖 재현",
+    "MP/LAN 실행",
+    "사용자 직접 확인·물리 환경",
+    "CD10.72·선택 보류"
+  ]
+}

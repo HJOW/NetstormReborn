@@ -100,7 +100,34 @@
     "initialRunsUnchanged": true
   },
   "priorPop1321DuplicateNames": 0,
-  "m8SelectedSuite": "running-separately",
+  "m8SelectedSuite": {
+    "status": "completed-with-one-test-contract-correction",
+    "sameBuildRun": {
+      "total": 752,
+      "passed": 751,
+      "failedCases": [
+        {
+          "group": "file",
+          "name": "BaseFile_MatchDiskActualVirtualDirectoryAndRawWildcardPrefix"
+        }
+      ],
+      "executablesChanged": [],
+      "protectedFiles": 2808,
+      "changed": []
+    },
+    "singleRetest": {
+      "name": "BaseFile_MatchDiskActualVirtualDirectoryAndRawWildcardPrefix",
+      "exitCode": 0,
+      "exeSha256": "69a32a41cb8c886b84f677d9066991bad7546f4ac2f498037179c61972801bba",
+      "protectedFiles": 2808,
+      "changed": []
+    },
+    "fullSuiteRepeated": false,
+    "productChanges": false,
+    "sourceFile": "cpppj/tests/BaseFileSecondaryTests.cpp",
+    "basis": "NB08 / 4edec13c5 / FileSpecQuery.cpp:25 virtual-game-root",
+    "raw": "extracted/cpp-remaining-tests-1324/after-all + after-nb08"
+  },
   "exclusions": [
     "MP/LAN/Join",
     "specific-enemy-combat",

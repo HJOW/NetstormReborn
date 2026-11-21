@@ -33,14 +33,24 @@
 
 최초6건은 `after-guide-menu/summary.json`, file의 마지막4건은 `after-file-final/summary.json`, PATCH/CD 공통 runtime1건은 `after-cd-dispatch.log`·`after-cd-dispatch-exit.json`에 있다. CD 추가 단언의 교정 전 반례는 `after-file/`에 보존했다. 빌드 로그는 `extracted/cpp-resume-20261121/build-final-targets.log`와 `extracted/cpp-remaining-tests-1324/file-rebuild.log`다.
 
-| 최신 실행 파일 | SHA-256 |
+| 선정752 일괄에 사용한 실행 파일 | SHA-256 |
 | --- | --- |
 | `guide_fort_request` | `5900c6243ea0025f4108ac355a9a2fd313b9b3e14f7fc6a64c480dcad0b29bb8` |
 | `menu_session` | `89b11ffd159c795eb21246b35c18b4c7883edccd3db790a1c236a24ebe3b00f9` |
 | `main_popup` | `ef03a3381fcd481e185fe4230e080ef9c23eebc68f7d8f2b69d03d12bb46817a` |
 | `file` | `73264cd3ff00affe9c5742f65e51978634aebcfffbacd39ddc9f33f031e7dc2b` |
 
-검사 계약 교정1324는 완료다. **같은 최신 빌드의 선정752건 일괄은 M8 관문 검증으로 진행 중**이며 이 단위의 완료와 구별한다. 1321의 기존325개 이름과 교집합0을 확인했으며 다시 실행하지 않는다. 기존752관측이나 이11건 통과를 전체 솔루션 통과로 확대하지 않는다. [기계 판독 기록](../../cpppj/remaining-test-contracts-1324-20261122.json)에 선정 목록·최초 실패·현행 exe 정체성과 범위를 담았다.
+검사 계약 교정1324는 완료다. 같은 최신 빌드의 선정752건은 아래 M8 후속에서 별도로 판정했다. 1321의 기존325개 이름과 교집합0을 확인했으며 다시 실행하지 않는다. 기존752관측이나 이11건 통과를 전체 솔루션 통과로 확대하지 않는다. [기계 판독 기록](../../cpppj/remaining-test-contracts-1324-20261122.json)에 선정 목록·최초 실패·현행 exe 정체성과 범위를 담았다.
+
+## M8 후속 — 같은 빌드752관측과 NB08 검사 교정
+
+위 네 exe로 선정752건을 한 번 실행해 **751통과·1실패**를 확인했다. 실행 전후 네 exe의 SHA-256과 보호2,808파일은 모두 같았다. 전체/실패 원시는 `extracted/cpp-remaining-tests-1324/after-all/summary.json`·`progress.json`·검사별 로그다. 전체 솔루션이나 전체 대상 전수 결과로 확대하지 않는다.
+
+실패는 `BaseFile_MatchDiskActualVirtualDirectoryAndRawWildcardPrefix`의 드라이브 없는 루트 경로 기대였다. `FileSpecQuery.cpp:25`와 `4edec13c5`의 NB08 수정은 `\D\x`를 가상 게임 폴더 아래에서 찾는다. 이전 exe는 그 수정 전 빌드여서 검사의 옛 OS 드라이브 루트 기대가 통과했으나, 현재 제품은 절대 경로에서 드라이브만 제거한 패턴을 게임 폴더에 다시 붙인다.
+
+`BaseFileSecondaryTests.cpp`의 루트 입력을 실제 가상 게임 경로 `\d\*.bin`으로 교정했다. 절대·같은 드라이브 상대 경로의 기대는 유지하고, 드라이브만 뺀 OS 루트 경로로 게임 폴더 밖의 파일을 읽지 않는 빈 결과도 확인한다. 제품 경로 처리나 원문 fixture는 바꾸지 않았다.
+
+`netstorm_file_tests`만 증분 빌드 종료0 뒤 **해당1건을 재실행해 통과**, stderr0과 보호2,808파일 불변을 확인했다. 이때 file exe의 SHA-256은 `69a32a41cb8c886b84f677d9066991bad7546f4ac2f498037179c61972801bba`다. 전체 당시 file SHA `73264cd3…`와 구별하며752 전체를 반복하지 않았다. 결과는 **같은 빌드752:751통과1실패 → NB08 현재 경로 계약 검사 교정 후 해당1통과**다. 후속 원시는 `file-nb08-rebuild.log`·`file-nb08-rebuild-exit.json`·`after-nb08/summary.json`이다.
 
 ## 보호와 범위
 
