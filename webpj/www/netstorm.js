@@ -78,7 +78,7 @@ import { bindCampaignUserInputServices } from './core/campaign-user-input-servic
 import { CampaignUserInput } from './core/campaign-user-input.js';
 import { makeCampaignCursorClientEffects } from './core/campaign-cursor-client-effects.js';
 import { RawContainedFinder } from './core/raw-contained-finder.js';
-import { PRODUCTION_BRIDGE_COMMAND } from './core/production-shortcuts.js';
+import { PRODUCTION_BRIDGE_COMMAND, PRODUCTION_REPEAT_COMMAND } from './core/production-shortcuts.js';
 import { ProductionMaintenanceGlobals, ProductionMaintenancePanel } from './core/raw-production-maintenance.js';
 import { GameMenuActions } from './core/game-menu-actions.js';
 import { gameMenuCommandValue, gameMenuScriptCode, isGameMenuCommand, queuePlayerListKey } from './core/game-menu-commands.js';
@@ -1834,9 +1834,9 @@ export class Netstorm {
             const cameraKey = code === 9 || code === 0x55 || code === 0x75 || SAVED_CAMERA_CODES.has(code);
             const objectCommand = VORTEX_COMMANDS.includes(code) || isScenarioObjectCommand(code) || code === DETONATE_BOMB_COMMAND;
             const selectionKey = code === 0x50 || code === 0x70 || code === 0x52 || code === 0x72 || code === 0x4e || code === 0x6e || code === 0x48 || code === 0x68;
-            const productionKey = 'qwaszyxe'.includes(String.fromCharCode(code).toLowerCase()) && code < 256;
+            const productionKey = 'qwaszyxed'.includes(String.fromCharCode(code).toLowerCase()) && code < 256;
             const cursorCancel = code === 0x1b, cursorRotate = code === 0x250000 || code === 0x270000, gameTimeKey = code === 0x54 || code === 0x74;
-            const unsupported = (code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_F6 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !MISSION_VIEW_KEYS.has(code) && code !== MISSION_F9 && !TUTORIAL_NOTICE_COMMANDS.has(code) && !isGameMenuCommand(code) && !isSendMoneyCommand(code) && !objectCommand && !rotationKey && !cameraKey && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && !gameTimeKey && code !== InputCode.leftButton && code !== InputCode.rightButton);
+            const unsupported = (code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== PRODUCTION_REPEAT_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_F6 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !MISSION_VIEW_KEYS.has(code) && code !== MISSION_F9 && !TUTORIAL_NOTICE_COMMANDS.has(code) && !isGameMenuCommand(code) && !isSendMoneyCommand(code) && !objectCommand && !rotationKey && !cameraKey && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && !gameTimeKey && code !== InputCode.leftButton && code !== InputCode.rightButton);
             if (unsupported) {
                 // 미구현 사건 앞을 추월하지 않는다. 다만 처리하지 못하는 사건이 3초(벽 시각) 넘게 큐 머리에 남으면 이후 모든 입력이 영구히 막히므로 오류로 기록하고 버린다. (2026-11-21 WB04-E1150)
                 const key = `${next.code}:${next.x}:${next.y}`, wall = this._gameClock.wallSeconds();
@@ -3239,7 +3239,7 @@ export class Netstorm {
         }
         // 문자 키 허용 목록에 H(집으로 점프)를 더했다. 전에는 H 가 큐에 들어가지 않아 F4 만 집으로 점프했다. (2026-11-21 WB04-E1146)
         // ESC 는 조각을 들고 있으면 취소, 아니면 게임 메뉴막대 전환이므로 항상 큐에 넣고 입력 프레임이 판단한다. (2026-11-20 WB04-E1084)
-        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && !event.isComposing && !this._clientComposing && !event.ctrlKey && !event.altKey && !event.metaKey && (/^[chnprqwaszyxetu]$/iu.test(event.key ?? '') || event.key === 'Escape')) queueBrowserCharacterEvent(this._clientInputQueue, event, this._input.pointer);
+        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && !event.isComposing && !this._clientComposing && !event.ctrlKey && !event.altKey && !event.metaKey && (/^[chnprqwaszyxetud]$/iu.test(event.key ?? '') || event.key === 'Escape')) queueBrowserCharacterEvent(this._clientInputQueue, event, this._input.pointer);
         // TAB 과 숫자 줄(0~9, Shift 는 영어 기호 표 `)!@#$%^&*(`)이다. 숫자는 키보드 배열과 무관하게 Digit 코드로 원본 문자 코드를 만들고, TAB 은 브라우저 포커스 이동을 막는다. (2026-11-21 WB04-E1154)
         if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && !event.isComposing && !this._clientComposing && !event.ctrlKey && !event.altKey && !event.metaKey && !event.repeat) {
             const digit = /^Digit([0-9])$/u.exec(event.code ?? '');
