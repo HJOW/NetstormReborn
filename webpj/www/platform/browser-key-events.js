@@ -8,6 +8,8 @@ const VIRTUAL_KEYS = new Map([
     ['PageUp', 0x21], ['PageDown', 0x22], ['End', 0x23], ['Home', 0x24],
     ['ArrowLeft', 0x25], ['ArrowUp', 0x26], ['ArrowRight', 0x27], ['ArrowDown', 0x28], ['Insert', 0x2d], ['Delete', 0x2e],
     ['ShiftLeft', 0x10], ['ShiftRight', 0x10], ['ControlLeft', 0x11], ['ControlRight', 0x11], ['AltLeft', 0x12], ['AltRight', 0x12],
+    // Pause 키(VK_PAUSE 0x13)이다. 원본 도움말의 "Shift-F9 or the Pause button". (2026-11-21 WB04-E1163)
+    ['Pause', 0x13],
 ]);
 
 // 입력된 비문자 키와 수정자, 같은 현재 포인터 좌표를 원본 큐에 넣는다.

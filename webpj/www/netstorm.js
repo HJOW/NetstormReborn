@@ -53,6 +53,7 @@ import { queueBrowserMouseEvent } from './platform/browser-mouse-events.js';
 import { queueBrowserVirtualKeyEvent, queueBrowserCharacterEvent } from './platform/browser-key-events.js';
 import { DETONATE_BOMB_COMMAND, dispatchDetonateInput } from './core/detonate-input.js';
 import { dispatchRotationKeyInput } from './core/rotation-key-input.js';
+import { dispatchPauseKeyInput } from './core/pause-key-input.js';
 import { dispatchConstructionHistoryKey, dispatchLostPositionKey, initializeConstructionHistory } from './core/construction-history-key.js';
 import { captureSavedCameraCenter, dispatchSavedCameraKey, initializeSavedCameraPositions } from './core/saved-camera-key.js';
 import { VORTEX_COMMANDS, dispatchVortexCommandInput } from './core/vortex-command-input.js';
@@ -275,6 +276,10 @@ const FONT_FAMILY = `"${KOREAN_FONT_FAMILY}", "Malgun Gothic", "Segoe UI", monos
 // 저장 화면 위치 키(숫자 0~9, Shift+숫자의 영어 기호 `)!@#$%^&*(`)의 문자 코드 집합이다. 원본 입력 루프의 같은 키를 TAB·U 와 함께 카메라 키로 분류한다. (2026-11-21 WB04-E1154)
 const SAVED_CAMERA_CHARACTERS = '0123456789!@#$%^&*()';
 const SAVED_CAMERA_CODES = new Set([...SAVED_CAMERA_CHARACTERS].map((character) => character.charCodeAt(0)));
+
+// Pause 가상 키(0x13)를 16비트 왼쪽으로 민 입력 코드와 일반 Pause 명령(게임 메뉴 Pause 와 같은 0x020000cf)이다. (2026-11-21 WB04-E1163)
+const PAUSE_KEY_CODE = 0x130000;
+const PAUSE_COMMAND = 0x020000cf;
 
 const PREVENTED_KEYS = new Set([
     'ArrowUp', 'ArrowDown', 'ArrowLeft', 'ArrowRight', 'Space', 'PageUp', 'PageDown', 'Home', 'End',
@@ -1838,7 +1843,7 @@ export class Netstorm {
             const selectionKey = code === 0x50 || code === 0x70 || code === 0x52 || code === 0x72 || code === 0x4e || code === 0x6e || code === 0x48 || code === 0x68;
             const productionKey = 'qwaszyxed'.includes(String.fromCharCode(code).toLowerCase()) && code < 256;
             const cursorCancel = code === 0x1b, cursorRotate = code === 0x250000 || code === 0x270000, gameTimeKey = code === 0x54 || code === 0x74;
-            const unsupported = (code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== PRODUCTION_REPEAT_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_F6 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !MISSION_VIEW_KEYS.has(code) && code !== MISSION_F9 && !TUTORIAL_NOTICE_COMMANDS.has(code) && !isGameMenuCommand(code) && !isSendMoneyCommand(code) && !objectCommand && !rotationKey && !cameraKey && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && !gameTimeKey && code !== InputCode.leftButton && code !== InputCode.rightButton);
+            const unsupported = (code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== PRODUCTION_REPEAT_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_F6 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !MISSION_VIEW_KEYS.has(code) && code !== MISSION_F9 && !TUTORIAL_NOTICE_COMMANDS.has(code) && !isGameMenuCommand(code) && !isSendMoneyCommand(code) && !objectCommand && !rotationKey && !cameraKey && code !== PAUSE_KEY_CODE && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && !gameTimeKey && code !== InputCode.leftButton && code !== InputCode.rightButton);
             if (unsupported) {
                 // 미구현 사건 앞을 추월하지 않는다. 다만 처리하지 못하는 사건이 3초(벽 시각) 넘게 큐 머리에 남으면 이후 모든 입력이 영구히 막히므로 오류로 기록하고 버린다. (2026-11-21 WB04-E1150)
                 const key = `${next.code}:${next.x}:${next.y}`, wall = this._gameClock.wallSeconds();
@@ -1882,6 +1887,10 @@ export class Netstorm {
                 const packed = event.y >>> 0; world.session().commandFactory(packed & 0xffff, event.code, packed);
             }
             else if (code === PRODUCTION_BRIDGE_COMMAND && !release && !this._mainMenu?.dialog) this._dispatchCampaignBridgeProduction(event);
+            else if (code === PAUSE_KEY_CODE) {
+                // 원본 Pause 가상 키: 현재 일반 Pause 명령을 큐에 예약한다(대화창이 열려 있으면 처리하지 않는다). 예약된 명령은 게임 메뉴 Pause 와 같은 경로로 시계를 멈추거나 푼다. (2026-11-21 WB04-E1163)
+                if (!release && !this._mainMenu?.dialog) dispatchPauseKeyInput(event, { command: () => PAUSE_COMMAND, queue: (command, first, second) => { this._clientInputQueue.pushCommand(command, first, second); } });
+            }
             else if (cameraKey) {
                 // 대화창이 열려 있으면 처리하지 않는다. 키 뗌은 분배기가 소비하지 않고 큐에서는 그대로 버린다.
                 if (!release && !this._mainMenu?.dialog) { this._dispatchCampaignCameraKey(event); this._displayDirty = true; }
@@ -3236,7 +3245,7 @@ export class Netstorm {
         }
         // 조합 중 Enter 등은 기존 메뉴 명령으로도 중복 실행하지 않는다.
         if (this._clientNativeInputEnabled && (this._clientComposing || event.isComposing)) return;
-        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && (event.code === 'F4' || event.code === 'F5' || event.code === 'F6' || event.code === 'F2' || event.code === 'F3' || event.code === 'F7' || event.code === 'F8' || event.code === 'F9' || ((event.code === 'ArrowLeft' || event.code === 'ArrowRight') && this._campaignWorld.session().cursorDropSettings().lockDepth === 0))) {
+        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && (event.code === 'F4' || event.code === 'F5' || event.code === 'F6' || event.code === 'F2' || event.code === 'F3' || event.code === 'F7' || event.code === 'F8' || event.code === 'F9' || event.code === 'Pause' || ((event.code === 'ArrowLeft' || event.code === 'ArrowRight') && this._campaignWorld.session().cursorDropSettings().lockDepth === 0))) {
             event.preventDefault(); queueBrowserVirtualKeyEvent(this._clientInputQueue, event, this._input.pointer, false);
         }
         // 문자 키 허용 목록에 H(집으로 점프)를 더했다. 전에는 H 가 큐에 들어가지 않아 F4 만 집으로 점프했다. (2026-11-21 WB04-E1146)

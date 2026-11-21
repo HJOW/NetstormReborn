@@ -72,6 +72,21 @@ test('Shift-F9 는 게임을 멈추고 Game Paused! 를 띄우며 한 번 더 �
   expect(errors).toEqual([]);
 });
 
+// Pause 키(원본 도움말 "Shift-F9 or the Pause button")도 같은 정지를 걸고 푼다. 연결 전에는 Pause 키가 입력 큐에 들어가지 않아 아무 일도 없었다. (2026-11-21 WB04-E1163)
+test('Pause 키는 Shift-F9 와 같이 게임을 멈추고 다시 누르면 푼다', async ({ page }) => {
+  const errors = []; page.on('pageerror', (error) => errors.push(error.message)); page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
+  await startTutorial(page);
+  expect((await pauseState(page)).paused).toBe(false);
+  await page.keyboard.press('Pause');
+  await page.waitForFunction(() => window.netstorm._gameClock.paused(), null, { timeout: 10000 }); await page.waitForTimeout(400);
+  const paused = await pauseState(page); expect(paused.shown).toBe(true); expect(paused.report).toContain('~E~wGame Paused!'); expect(paused.depth).toBe(1);
+  await page.waitForTimeout(700); expect((await pauseState(page)).seconds).toBe(paused.seconds);
+  await page.keyboard.press('Pause');
+  await page.waitForFunction(() => !window.netstorm._gameClock.paused(), null, { timeout: 10000 }); await page.waitForTimeout(400);
+  const resumed = await pauseState(page); expect(resumed.shown).toBe(false); expect(resumed.depth).toBe(0);
+  expect(errors).toEqual([]);
+});
+
 test('게임 메뉴 Options 의 Pause 항목이 같은 정지를 걸고 미션을 떠나면 남은 정지가 풀린다', async ({ page }) => {
   const errors = []; page.on('pageerror', (error) => errors.push(error.message));
   await startTutorial(page);
