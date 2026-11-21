@@ -26,6 +26,29 @@ export const CHEAT_ALL_TECHNOLOGY_COMMAND = 0x02000028;
 // 원문 492b60/493210/4938c0 의 별도 일반 명령만 선택하며 기본 메뉴는 Storm 을 유지한다. (2026-11-15 WB04-E537)
 export const KnowledgeMenuKind = Object.freeze({ Storm: 0, World: 1, Side: 2 });
 
+// 원본 strlen 이 읽는 바이트 수이다. 한글처럼 ASCII 가 아닌 글자는 원본 문자 집합(한국어 CP949)에서 2바이트로 센다. (2026-11-21 WB04-E1142)
+export function displayByteLength(text) {
+    let length = 0;
+    for (const letter of String(text)) length += letter.codePointAt(0) < 0x80 ? 1 : 2;
+    return length;
+}
+
+// 카드 이름을 두 줄로 나눈다. 바이트 길이가 8 을 넘고 위치 1 보다 뒤에 공백/하이픈이 있으면 가장 뒤의 것부터 한 번만 자른다(첫 줄을 다시 줄이지 않는다).
+// 영어 이름은 글자 수와 바이트 수가 같고, 한국어 이름은 글자당 2바이트라 5글자만 넘어도 나뉘어 칸 폭(약 72픽셀)에 들어간다. 이전에는 글자 수로 재서 8글자 이하 한국어 이름이 나뉘지 않아 칸에서 잘렸다.
+// (2026-11-21 WB04-E1142)
+export function splitKnowledgeName(description) {
+    let first = String(description), second = '', splitName = false;
+    for (let split = first.length; split > 0; split -= 1) {
+        if (split < first.length && (first[split] === ' ' || first[split] === '-') && split > 1 && displayByteLength(first) > 8) {
+            second = first.slice(split + 1);
+            first = first.slice(0, split);
+            splitName = true;
+            break;
+        }
+    }
+    return { first, second, splitName };
+}
+
 // 화면/언어/아이콘 치수와 원본 타입/명령 전역의 기본값이다(00531860/64·00540cbc/cc0·00542384/0054126c/00542754). 언어 3 은 설명 줄을 비운다. (2026-11-15 WB04-E537)
 export function createKnowledgeMenuState(overrides = {}) {
     return { width: 640, height: 480, iconWidth: 65, iconHeight: 60, language: 1, templeProduct: 133, helpCommand: 0x02000017, ...overrides };
@@ -94,18 +117,8 @@ function showKnowledgeThemeMenu(types, state, hooks, world) {
             const record = records[index - 4];
             theme = types[record.type].theme >>> 0;
             need(hooks.item)(`~[I${record.type}.${record.available ? '#' : '&'}]`, state.helpCommand, record.type, true);
-            let first = record.description;
-            let second = '';
-            let splitName = false;
-            // 원본은 마지막 공백/하이픈부터 역순으로 한 번만 자르고 첫 줄을 다시 줄이지 않는다.
-            for (let split = first.length; split > 0; split -= 1) {
-                if (split < first.length && (first[split] === ' ' || first[split] === '-') && split > 1 && first.length > 8) {
-                    second = first.slice(split + 1);
-                    first = first.slice(0, split);
-                    splitName = true;
-                    break;
-                }
-            }
+            // 원본은 마지막 공백/하이픈부터 역순으로 한 번만 자르고 첫 줄을 다시 줄이지 않는다. 길이는 바이트 수로 잰다(splitKnowledgeName).
+            const { first, second, splitName } = splitKnowledgeName(record.description);
             if (need(hooks.excluded)(record.type)) {
                 need(hooks.item)(need(hooks.translate)('~y~EExcluded'), state.helpCommand, record.type, record.available);
                 need(hooks.item)('', state.helpCommand, record.type, record.available);

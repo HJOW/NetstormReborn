@@ -10,7 +10,7 @@ import { REPO_ROOT } from './helpers.mjs';
 import { InputQueue } from '../www/core/input-queue.js';
 import { ScriptStringRing, queueScriptCommand } from '../www/ui/script-command.js';
 import { floatToBits, readRows } from './raw-support.mjs';
-import { CHEAT_ALL_TECHNOLOGY_COMMAND, SHOW_TEC_MENU2_COMMAND, SHOW_TEC_SIDE_MENU_COMMAND, SHOW_TECHNOLOGY_COMMAND, createKnowledgeMenuState, knowledgeScriptCode, showKnowledgeMenu, showKnowledgeSideMenu, showWorldKnowledgeMenu } from '../www/core/raw-knowledge-menu.js';
+import { displayByteLength, splitKnowledgeName, CHEAT_ALL_TECHNOLOGY_COMMAND, SHOW_TEC_MENU2_COMMAND, SHOW_TEC_SIDE_MENU_COMMAND, SHOW_TECHNOLOGY_COMMAND, createKnowledgeMenuState, knowledgeScriptCode, showKnowledgeMenu, showKnowledgeSideMenu, showWorldKnowledgeMenu } from '../www/core/raw-knowledge-menu.js';
 
 // 원본 관측 fixture 이다. 없으면 해당 검사를 건너뛴다. (2026-11-15 WB04-E537)
 const fixture = (name) => readRows(path.join(REPO_ROOT, 'cpppj', 'tests', 'fixtures', name));
@@ -209,4 +209,16 @@ test('지식 창 이름→큐 계약: ShowTechnology 이름은 기존 파서와 
     queueScriptCommand('ShowTechnology,0', queue, strings, { lookup: knowledgeScriptCode, unknown: () => { throw new Error('등록된 이름이 미등록으로 진단됨'); } });
     const event = queue.pop(false);
     assert.ok(event.code === SHOW_TECHNOLOGY_COMMAND && event.x === 0 && event.y === 0 && queue.empty);
+});
+
+// 한국어 카드 이름: 원본 strlen 은 바이트 수라 한글은 글자당 2바이트로 센다. 글자 수로 재면 8글자 이하 이름이 나뉘지 않아 칸(약 72픽셀)에서 잘렸다. (2026-11-21 WB04-E1142)
+test('지식 카드 이름 분할: 한글은 2바이트로 세어 5글자만 넘어도 마지막 공백에서 나눈다', () => {
+    assert.equal(displayByteLength('Wind Generator'), 14); assert.equal(displayByteLength('윈드 제네레이터'), 15); assert.equal(displayByteLength('썬 캐논'), 7);
+    assert.deepEqual(splitKnowledgeName('윈드 제네레이터'), { first: '윈드', second: '제네레이터', splitName: true });
+    assert.deepEqual(splitKnowledgeName('아이스 캐논'), { first: '아이스', second: '캐논', splitName: true });
+    assert.deepEqual(splitKnowledgeName('썬 캐논'), { first: '썬 캐논', second: '', splitName: false });        // 7바이트라 나누지 않는다.
+    assert.deepEqual(splitKnowledgeName('벌프'), { first: '벌프', second: '', splitName: false });
+    assert.deepEqual(splitKnowledgeName('크로스보우'), { first: '크로스보우', second: '', splitName: false });   // 공백이 없으면 나눌 수 없다.
+    // 영어는 글자 수와 바이트 수가 같아 기존 경계(8 이하 불분할, 위치 1 의 공백 불분할)가 그대로이다.
+    assert.deepEqual(splitKnowledgeName('ab cd-ef'), { first: 'ab cd-ef', second: '', splitName: false }); assert.deepEqual(splitKnowledgeName('ab cd-efg'), { first: 'ab cd', second: 'efg', splitName: true });
 });
