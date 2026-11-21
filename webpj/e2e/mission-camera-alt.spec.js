@@ -53,5 +53,21 @@ test('The War Begins!: Alt 를 누르면 포인터 쪽으로 화면이 움직이
   await page.keyboard.press('F4'); await page.waitForTimeout(800); const home = await camera();
   await page.keyboard.press('F5'); await page.waitForTimeout(800); const priest = await camera();
   expect(home, 'F4 와 F5 는 다른 위치').not.toEqual(priest);
+  // 원본 도움말: F4 또는 H 는 집으로 점프한다. 멀리 옮긴 뒤 H 를 누르면 F4 와 같은 위치로 돌아온다. (2026-11-21 WB04-E1146: H 가 선택 키 목록에 빠져 동작하지 않았음)
+  await page.mouse.move(center.x, center.y); await page.keyboard.down('Alt'); await page.mouse.move(center.x + viewport.width * 0.4, center.y + viewport.height * 0.35); await page.waitForTimeout(1200); await page.keyboard.up('Alt'); await page.mouse.move(center.x, center.y); await page.waitForTimeout(300);
+  expect(await camera(), 'Alt 로 멀리 옮김').not.toEqual(home);
+  await page.keyboard.press('h'); await page.waitForTimeout(800); expect(await camera(), 'H 는 F4 와 같은 집').toEqual(home);
+  // P 를 한 번 누르면 사제 선택, 두 번 누르면 사제 위치로 이동한다. 멀리 옮긴 뒤 확인한다.
+  const selected = () => page.evaluate(() => window.netstorm._clientGameplay.selection.selected);
+  await page.mouse.move(center.x, center.y); await page.keyboard.down('Alt'); await page.mouse.move(center.x + viewport.width * 0.4, center.y + viewport.height * 0.35); await page.waitForTimeout(1200); await page.keyboard.up('Alt'); await page.mouse.move(center.x, center.y); await page.waitForTimeout(300);
+  const far = await camera(); await page.keyboard.press('p'); await page.waitForTimeout(500);
+  expect(await selected(), 'P 한 번: 사제 선택').toBeGreaterThan(0); expect(await camera(), 'P 한 번은 화면을 옮기지 않는다').toEqual(far);
+  await page.keyboard.press('p'); await page.waitForTimeout(800); expect(await camera(), 'P 두 번: 사제 위치').toEqual(priest);
+  // Q·E 는 다리 조각을 커서로 쥐고(미리보기 생성), Esc 는 취소한다.
+  const held = () => page.evaluate(() => window.netstorm._campaignWorld.session().cursorDropSettings().preview !== 0);
+  await page.keyboard.press('Escape'); await page.waitForTimeout(300);
+  await page.keyboard.press('q'); await page.waitForTimeout(500); expect(await held(), 'Q 로 다리 조각 쥐기').toBe(true);
+  await page.keyboard.press('Escape'); await page.waitForTimeout(400); expect(await held(), 'Esc 취소').toBe(false);
+  await page.keyboard.press('e'); await page.waitForTimeout(500); expect(await held(), 'E 로 마지막 다리 칸 쥐기').toBe(true);
   expect(errors).toEqual([]);
 });
