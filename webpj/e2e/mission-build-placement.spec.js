@@ -150,6 +150,14 @@ test('The War Begins!: 사제가 제단을 짓는 위치 지정이 마우스를 
   expect(target, '완성된 제단과 받침').toBeTruthy();
   await page.mouse.move(target.x, target.y); await page.mouse.click(target.x, target.y, { button: 'right', delay: 60 });
   await page.waitForFunction((sid) => { const root = window.netstorm._clientGump; for (let token = root.root().child; token; token = root.node(token).next) if (root.node(token).command === 26 && root.node(token).object === sid) return true; return false; }, target.altar, { timeout: 10000 });
+  // 메뉴의 회수(Salvage, 명령 0x0200005d) 행을 실제로 누르면 제단과 받침이 모두 사라진다. (2026-11-21 WB04-E1139)
+  const row = await page.evaluate((sid) => { const root = window.netstorm._clientGump, rect = window.netstorm.canvas.getBoundingClientRect();
+    for (let token = root.root().child; token; token = root.node(token).next) { const node = root.node(token); if (node.command !== 26 || node.object !== sid) continue; const bounds = root.collection().bounds(token);
+      for (let index = 0; index < node.itemCount; index += 1) if (node.items[index].command === 0x0200005d) return { x: rect.left + (bounds.left + 12) * rect.width / window.netstorm._layout.logicalWidth, y: rect.top + (bounds.top + node.offsets[index] + node.heights[index] / 2) * rect.height / window.netstorm._layout.logicalHeight }; }
+    return null; }, target.altar);
+  expect(row, '회수 행').toBeTruthy(); await page.mouse.move(row.x, row.y); await page.mouse.click(row.x, row.y, { delay: 60 });
+  const remaining = () => page.evaluate(() => { const app = window.netstorm, types = app._gameAssets.types(); return app._campaignWorld.session().world().objects().filter(({ object }) => object.owner === 1 && /^(altar|dais)$/.test(types[object.type - 70]?.assetName)).length; });
+  await expect.poll(remaining, { timeout: 15000, message: '제단 회수' }).toBe(0);
   expect(errors).toEqual([]);
 });
 
@@ -179,5 +187,33 @@ test('The War Begins!: 비활성 Temple 행에도 하위 메뉴 표식이 어두
     return maxX - minX;
   }, row.child);
   expect(span, 'Temple 행 어두운 픽셀 가로 범위(글자 + 표식)').toBeGreaterThanOrEqual(46);
+  expect(errors).toEqual([]);
+});
+
+// 왼쪽 HUD 의 다리 조각을 실제 마우스로 집어 지도에 놓는다. 조각을 쥐면 미리보기가 마우스를 따르고(화면 원점이 카메라 원점과 같음), 유효한 자리에서 누르면 내 다리 조각이 놓인다. (2026-11-21 WB04-E1139)
+test('The War Begins!: HUD 다리 조각을 집어 놓는 위치 지정이 마우스를 따르고 조각이 놓인다', async ({ page }) => {
+  test.setTimeout(300000); const errors = collectErrors(page);
+  await startMission(page, 'Struggle For Freedom', 'TheWarBegins');
+  const item = await page.evaluate(() => { const app = window.netstorm, root = app._clientGump, first = root.node(app._campaignProduction.ui.node().bridge).child, bounds = root.collection().bounds(first), rect = app.canvas.getBoundingClientRect();
+    return { x: rect.left + (bounds.left + bounds.right) / 2 * rect.width / app._layout.logicalWidth, y: rect.top + (bounds.top + bounds.bottom) / 2 * rect.height / app._layout.logicalHeight }; });
+  await page.mouse.move(item.x, item.y); await page.mouse.click(item.x, item.y, { delay: 60 });
+  await page.waitForFunction(() => window.netstorm._campaignWorld.session().cursorDropSettings().preview !== 0, null, { timeout: 10000 });
+  const type = await page.evaluate(() => window.netstorm._campaignWorld.session().cursorDropSettings().type); expect(type, '쥔 조각 종류').toBeGreaterThan(0);
+  // 신전 둘레를 안쪽 고리부터 훑어 유효한 자리를 찾는다.
+  const temple = await page.evaluate(() => { const app = window.netstorm, world = app._campaignWorld, session = world.session(), types = app._gameAssets.types(), found = session.world().objects().find(({ object }) => object.owner === 1 && types[object.type - 70]?.assetName === 'rainVortex'); const hits = [];
+    for (let y = 10; y < 760; y += 3) for (let x = 90; x < 1020; x += 3) if (world.pick(x, y, 0) === found.sid) hits.push([x, y]); const rect = app.canvas.getBoundingClientRect(), hit = hits[Math.floor(hits.length / 2)]; return { x: rect.left + hit[0], y: rect.top + hit[1] }; });
+  const legal = () => page.evaluate(() => Boolean(window.netstorm._campaignWorld.session().cursorDropSettings().legal));
+  let spot = null;
+  for (let radius = 40; radius <= 320 && !spot; radius += 20) for (let angle = 0; angle < 360 && !spot; angle += 20) {
+    const x = temple.x + Math.round(radius * Math.cos(angle * Math.PI / 180)), y = temple.y + Math.round(radius * 0.75 * Math.sin(angle * Math.PI / 180)); if (x < 100 || x > 1000 || y < 30 || y > 740) continue;
+    await page.mouse.move(x, y); await page.waitForTimeout(90); if (await legal()) spot = { x, y };
+  }
+  expect(spot, '유효한 다리 조각 자리').toBeTruthy();
+  // 미리보기가 쓰는 화면 원점이 살아 있는 카메라 픽셀 원점과 같아야 한다(E1135 원인).
+  const origin = await page.evaluate(() => { const app = window.netstorm, placement = app._clientGameplay.cursorGlobals().placement(), pixels = app._clientGameplay.camera().snapshot().pixels; return { placement: [placement.screenOriginX(), placement.screenOriginY()], camera: [pixels.x, pixels.y] }; });
+  expect(origin.placement, '다리 조각 화면 원점').toEqual(origin.camera);
+  const count = () => page.evaluate((target) => window.netstorm._campaignWorld.session().world().objects().filter(({ object }) => object.owner === 1 && object.type === target).length, type);
+  const before = await count(); await page.mouse.click(spot.x, spot.y, { delay: 60 });
+  await expect.poll(count, { timeout: 15000, message: '다리 조각 배치' }).toBeGreaterThan(before);
   expect(errors).toEqual([]);
 });
