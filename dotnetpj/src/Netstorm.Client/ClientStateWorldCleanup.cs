@@ -51,7 +51,7 @@ public static class ClientStateWorldCleanup
 
     /// <summary>같은실제소유자검증뒤원문부모를실행한다. Root는현재실제커서를직접제공하며독립장치입력보다우선한다. 실패한부분쓰기는되돌리지않는다.</summary>
     public static void Cleanup(uint reason, ClientStateWorldContext context, ClientSurfaceGlobals surface,
-        ClientSpGlobals sp, ClientStateWorldDevices devices, Action<uint>? selectCursor = null)
+        ClientSpGlobals sp, ClientStateWorldDevices devices, Action<uint>? selectCursor = null, Action? cancelCursor = null)
     {
         ArgumentNullException.ThrowIfNull(context); ArgumentNullException.ThrowIfNull(surface); ArgumentNullException.ThrowIfNull(sp);
         ArgumentNullException.ThrowIfNull(devices);
@@ -88,7 +88,7 @@ public static class ClientStateWorldCleanup
                     case StateWorldCleanupEffect.EndConnections: context.Connections.Registry.EndPlayers(game.Authority.Server ? 1u : 0u); return;
                     case StateWorldCleanupEffect.ResumeGame: Need(devices.ResumeGame)(); return;
                     case StateWorldCleanupEffect.ResumeAudio: Need(devices.ResumeAudio)(); return;
-                    case StateWorldCleanupEffect.Clear446e70: Need(devices.CancelCursor)(); return;
+                    case StateWorldCleanupEffect.Clear446e70: Need(cancelCursor ?? devices.CancelCursor)(); return;
                     case StateWorldCleanupEffect.Clear4c1f20: physical.ResetClockSynchronization(); return;
                     case StateWorldCleanupEffect.ResetClock: surface.Clock.Clock.Reset(); return;
                     case StateWorldCleanupEffect.Clear42b1b0: physical.ClearMetaZones(); return;

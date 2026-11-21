@@ -1300,3 +1300,9 @@ cpppj/src/client/Renderer.cpp	Netstorm.Client/Display/Renderer.cs	5a2cd047486b18
 cpppj/src/client/Renderer.h	Netstorm.Client/Display/Renderer.cs	731c9dee99fdaf98338fc54f33c9d62a886251f6	port
 cpppj/src/client/Renderer.h	Netstorm.Client/Display/RenderScene.cs	731c9dee99fdaf98338fc54f33c9d62a886251f6	port
 cpppj/src/client/DrawSort.cpp	Netstorm.Client/Display/Renderer.cs	225f2322cf7936604306b6534fd4edf18f246c12	port
+cpppj/src/client/ClientCursorStateCleanup.cpp	Netstorm.Client/ClientCursorStateCleanup.cs	76e3c4531cc94206f4342e8c16db948eb4917cef	port
+cpppj/src/client/ClientCursorStateCleanup.h	Netstorm.Client/ClientCursorStateCleanup.cs	76e3c4531cc94206f4342e8c16db948eb4917cef	port
+cpppj/src/client/ClientRendererFrame.cpp	Netstorm.Client/ClientRendererDevices.cs	c254e7716b2d70b1d9a882503f45e6783ccd213d	port
+cpppj/src/client/CampaignCursorClientEffects.cpp	Netstorm.Client/ClientRendererDevices.cs	b234f02e14fbdd224e8d19491114f16a56ae28ab	port
+cpppj/src/client/ClientCursorStateCleanup.cpp	Netstorm.Client/ClientRendererDevices.cs	76e3c4531cc94206f4342e8c16db948eb4917cef	port
+cpppj/src/client/ClientMain.cpp	Netstorm.Client.Host/ClientHostGame.Renderer.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port

@@ -6,4 +6,6 @@ public sealed partial class ClientGameplayGlobals
 {
     /// <summary>World/Session/호스트 화면 교체로 다시 만들지 않는 실제 카메라 소유자다.</summary>
     public ClientCameraGlobals Camera { get; } = new();
+    /// <summary>00531928의 현재 signed 세계 크기이며 PE 최초256을 장기 보존한다.</summary>
+    public Netstorm.Core.Original.IntBox WorldCells { get; } = new() { Value = 256 };
 }

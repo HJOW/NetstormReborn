@@ -109,6 +109,16 @@ public sealed class ClientStateWorldCleanupTests
         Assert.Equal(0u, scene.Game.Selection.Mode.Value); Assert.Equal(0u, scene.Game.Selection.Selected.Value); Assert.Equal(0u, scene.Game.Selection.MouseType.Value); Assert.Contains("root-cursor:1", scene.Events); Assert.DoesNotContain("select-cursor:1", scene.Events);
     }
 
+    /// <summary>실제 Root 취소가 독립 장치보다 우선하며 같은 전체 부모 위치에서 실제 Prepare/dirty를 실행한다.</summary>
+    [Fact]
+    public void RootCancelOverridesStandaloneDeviceAndUsesActualRenderer()
+    {
+        var scene = new Scene(); var renderer = new Renderer(128, 96); var devices = new ClientRendererDevices(scene.Game, scene.Surface, scene.Cloud, () => renderer, () => throw new IOException("빈취소중지도조회금지"));
+        devices.InitializeCamera(128, 96); devices.BindSurfaceDisplay(); renderer.Draw(new byte[128 * 96], 128); renderer.Present(_ => { }); RawCameraView.SetWorld(scene.Game.Camera.Snapshot, 5, 5); scene.Game.Cursor.X = scene.Game.Cursor.Y = 10;
+        ClientStateWorldCleanup.Cleanup(1, scene.Context(), scene.Surface, scene.Sp, scene.Devices(), cancelCursor: () => { scene.Events.Add("real-cursor"); devices.CancelCursor(new()); });
+        Assert.Contains("real-cursor", scene.Events); Assert.DoesNotContain("cursor", scene.Events); Assert.NotEmpty(renderer.CameraDirtyEntries); Assert.Equal(1u, scene.Game.Cursor.LockDepth); Assert.DoesNotContain(scene.Game.CursorGlobals.Lifecycle.Previews, sid => sid != 0);
+    }
+
     /// <summary>최초커서장치누락은그위치에서실패하며이후전역을정리한것처럼보이지않는다.</summary>
     [Fact]
     public void MissingCursorFailsAtSelectedPrefix()

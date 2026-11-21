@@ -207,6 +207,7 @@ public sealed partial class ClientHostGame : Game
             _textEntry?.Dispose();
             _htmlFactory?.Dispose();
             _buttonSound?.Dispose();
+            ReleaseNativeRenderer();
             _cursor?.Dispose();
         }
         base.Dispose(disposing);
@@ -241,6 +242,7 @@ public sealed partial class ClientHostGame : Game
             _buttonSound = new HostButtonSound(_startup);
             _cursor = new HostOriginalCursor(_startup);
             PrepareNativeAssetTables();
+            PrepareNativeRenderer();
             _mainMenu = new HostMainMenu(_startup, _driver.Screen, new GumpButtonTreeHooks
             {
                 Now = () => _clock.NowSeconds,

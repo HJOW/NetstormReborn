@@ -15,7 +15,7 @@ namespace Netstorm.Client.Display;
 /// 0.381에서 추가했다(구름 L4a 차이 해소). C#에서 달라진 모양: ① cpppj의 <c>CurrentAllocationBytes</c>(실제 힙의 미초기화 내용 복사)는 결정적이지 않아
 /// 기본을 0으로 둔다(<paramref name="allocation"/>으로 채움을 바꿀 수 있다). ② 구름 파일 읽기는 cpppj의 <c>ReadBackgroundGifFile</c>(입력 길이 선계산·치수 선행 쓰기·Decode 중 파일 수명)
 /// 대신 <c>GameFileSystem</c> 전체 읽기 → <see cref="GifImage.DecodeBackgroundGif"/>로 옮겼다. 정상 경로의 색 번호·512 판정·반납 순서는 같고 부분 실패 경로의 중간 효과만 다르다.
-/// ③ 렌더러 존재 토큰(<see cref="RendererToken"/>)과 전체 다시 그리기 요청(<see cref="WorldRedraw"/>)은 값만 둔다(Renderer 이식은 R5, cpppj <c>BindRenderer</c>는 그때 옮긴다).
+/// ③ 실제 Renderer는 BindRenderer의 opaque32 토큰으로 연결하고 전체 redraw는 같은 UIntBox를 직접 빌린다.
 /// </remarks>
 public sealed class ClientKencloudGlobals
 {
@@ -83,11 +83,26 @@ public sealed class ClientKencloudGlobals
     /// <summary>같은 연속 전역·옵션·행표를 빌린 원문 전역 묶음이다.</summary>
     private readonly KencloudGlobals _globals;
 
-    /// <summary>현재 렌더러의 존재 토큰(0이면 없음)이다. Renderer 이식(R5) 전까지는 값만 둔다.</summary>
+    /// <summary>현재 실제 장치의 opaque32 값이며0은 없음이다. 독립 검사만 명시 값을 제공한다.</summary>
     public uint RendererToken { get; set; }
 
+    /// <summary>같은 실제 장치의 정체성이며 명시 반납까지 유지한다.</summary>
+    private Renderer? _renderer;
+    /// <summary>CPP와 같은 최초 주소 토큰이며 호스트 포인터를 DWORD로 자르지 않는다.</summary>
+    private uint _nextRendererToken = 0x3b000000;
+    /// <summary>0059a8b0의 단일 장기 DWORD 주소를 카메라/State/구름이 함께 빌린다.</summary>
+    public UIntBox WorldRedrawBox { get; } = new();
+
     /// <summary>0059a8b0 월드 전체 다시 그리기 요청이며 팔레트 전환 뒤 렌더러가 있으면 1이 된다.</summary>
-    public uint WorldRedraw { get; set; }
+    public uint WorldRedraw { get => WorldRedrawBox.Value; set => WorldRedrawBox.Value = value; }
+
+    /// <summary>동일 장치는 조기 반환하고 실제 교체/반납 위치에서만 원문 토큰을 갱신한다.</summary>
+    public void BindRenderer(Renderer? renderer)
+    {
+        if (ReferenceEquals(renderer, _renderer)) return; _renderer = renderer;
+        if (renderer is null) { RendererToken = 0; return; }
+        if (_nextRendererToken > 0xffffe000) throw new OverflowException("현재Renderer주소토큰소진"); RendererToken = _nextRendererToken; _nextRendererToken = unchecked(_nextRendererToken + 0x1000);
+    }
 
     /// <summary>PE 최초값과 BSS 0만 구성하며 파일·난수·구름 생성을 실행하지 않는다.</summary>
     /// <param name="allocation">새 블록 내용을 채우는 장치다. null이면 0이다(원문은 미초기화 힙 내용을 복사하지만 결정적이지 않아 0으로 둔다).</param>
