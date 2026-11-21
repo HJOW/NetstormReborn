@@ -6,11 +6,8 @@ namespace Netstorm.Core.Original;
 // 부모의 종속 체인에 들어 있는 form과 부착 대상 객체다. 부착은 Host 본체 단위에서 잇는다. 2026-11-07 F2d 프로세스 기본 이식에서 추가됐다.
 public class SquidProcess : BaseProcess
 {
-    /// <summary>커널 프로세스와 연결된 객체 Form의 SID다. 부착 전에는 0이다. Host 본체 단위에서 붙인다. 2026-11-07 F2d 프로세스 기본 이식에서 추가됐다.</summary>
-    private int _form = 0;
-
-    /// <summary>부착·통지 대상인 부모 객체 또는 부모 SID다. 부착 전에는 0이다. Host 본체 단위에서 붙인다. 2026-11-07 F2d 프로세스 기본 이식에서 추가됐다.</summary>
-    private int _parent = 0;
+    /// <summary>같은 실제 Form/부모 필드다. 부착 부모가 참조로 쓰므로 모든 콜백과 부분 실패에서 현재 값이 즉시 보인다.</summary>
+    internal BaseProcessAttachFields AttachFields { get; } = new();
 
     /// <summary>커널의 프로세스 등록 번호다. 부착 전에는 0이다. Host가 Kill 뒤 등록 여부를 물을 때 쓴다. Host 본체 단위에서 붙인다. 2026-11-07 F2d 프로세스 기본 이식에서 추가됐다.</summary>
     private uint _pid = 0u;
@@ -34,18 +31,18 @@ public class SquidProcess : BaseProcess
     /// <param name="pid">쓸 커널 등록 번호다.</param>
     internal void SetIdentity(int form, int parent, uint pid)
     {
-        _form = form;
-        _parent = parent;
+        AttachFields.Form = form;
+        AttachFields.Parent = parent;
         _pid = pid;
     }
 
     /// <summary>부모의 종속 체인에 들어 있는 form이다. 부착 전에는 0이다. 2026-11-07 F2d 프로세스 기본 이식에서 추가됐다.</summary>
     /// <returns>Form SID다.</returns>
-    public int Form() => _form;
+    public int Form() => AttachFields.Form;
 
     /// <summary>부착·통지 대상인 부모 객체 또는 부모 SID다. 부착 전에는 0이다. 2026-11-07 F2d 프로세스 기본 이식에서 추가됐다.</summary>
     /// <returns>부모 SID다.</returns>
-    public int Parent() => _parent;
+    public int Parent() => AttachFields.Parent;
 
     /// <summary>form 삭제 직전의 가상 통지다. 원본 base는 빈 함수다. 2026-11-07 F2d 프로세스 기본 이식에서 추가됐다.</summary>
     /// <param name="flags">삭제 플래그다.</param>

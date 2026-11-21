@@ -8,7 +8,7 @@ namespace Netstorm.Core.Original;
 /// 기준 판본은 10.78 뿐이다.
 /// 근거: cpppj/src/o/RawPathAnimation.cpp (W03 삭제·수명 아홉째 조각, 2026-10-21).
 /// </summary>
-public static class RawPathAnimation
+public sealed partial class RawPathAnimation
 {
     /// <summary>
     /// 프레임 코드의 방향 문자를 읽는다(원본 RawPathAnimation::Side).

@@ -21,7 +21,7 @@ public static class RawPathSurface
     /// <exception cref="ArgumentOutOfRangeException">BFS 표면 좌표 오류다.</exception>
     public static int Cell(float value)
     {
-        double adjusted = value + CellBias;
+        double adjusted = (double)value + CellBias;
         if (!double.IsFinite(adjusted) || adjusted < -2147483648.0 || adjusted > 2147483647.0)
         {
             throw new ArgumentOutOfRangeException(nameof(value), value, "BFS 표면 좌표 오류");

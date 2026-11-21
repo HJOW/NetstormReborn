@@ -834,7 +834,6 @@ public sealed partial class SquidProcessHost
         {
             process.HostLink = this;
             process.RuntimeLink = _currentRuntime?.Invoke();
-            uint pid = 0u;
             var hooks = new BaseProcessAttachHooks
             {
                 TypeEnd = () => ProcessTypeEnd(),
@@ -857,7 +856,8 @@ public sealed partial class SquidProcessHost
                     }
 
                     uint assigned = owned ? _kernel.Add(process) : _kernel.AddRef(process);
-                    pid = assigned;
+                    // 원문 참조 필드와 PID는 Create/Attach/OnAttached 콜백 전에 같은 객체에 공개된다.
+                    process.SetIdentity(process.Form(), process.Parent(), assigned);
                     return assigned;
                 },
                 Create = allocationFlags => CreateOrTakeForm(allocationFlags == 2u ? ClientForm : 0u, 0),
@@ -866,14 +866,7 @@ public sealed partial class SquidProcessHost
                 Attach = (selected, into, popFlags) => AttachForm(selected, into, popFlags),
                 OnAttached = () => process.OnAttached(),
             };
-            var fields = new BaseProcessAttachFields();
-            bool attached = RawBaseProcessAttach.Attach(_pool, fields, processType, parent, form, flags, hooks);
-            if (attached)
-            {
-                process.SetIdentity(fields.Form, fields.Parent, pid);
-            }
-
-            return attached;
+            return RawBaseProcessAttach.Attach(_pool, process.AttachFields, processType, parent, form, flags, hooks);
         }
     }
 

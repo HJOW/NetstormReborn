@@ -1,11 +1,22 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <!-- 경로 파생 프레임/정지·도착·애니메이션의 기존 독립 PE 입력을 단일 소비자로 읽는다. -->
+    <None Include="../../../cpppj/tests/fixtures/walker-path-x86.tsv" Link="X86/walker-path-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/bulf-path-x86.tsv" Link="X86/bulf-path-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/balloon-path-x86.tsv" Link="X86/balloon-path-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/path-halt-parent-hardware-x86.tsv" Link="X86/path-halt-parent-hardware-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/path-arrival-parent-hardware-x86.tsv" Link="X86/path-arrival-parent-hardware-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/pathanimation-x86.tsv" Link="X86/pathanimation-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/pathprepare-x86.tsv" Link="X86/pathprepare-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/process-removal-filter-x86.tsv" Link="X86/process-removal-filter-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
     <!-- 두 보호 PE의 경로 writer768관측이며 전체2048BYTE stale buffer를 직접 비교한다. -->
     <None Include="../../../cpppj/tests/fixtures/pathdata-x86.tsv" Link="X86/pathdata-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- 경로 생성/시간/보간216관측과 PATCH8종 생성자32개 전체 이미지의 기존 독립 원문 자료다. -->
     <None Include="../../../cpppj/tests/fixtures/pathruntime-x86.tsv" Link="X86/pathruntime-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/path-constructor-x86.tsv" Link="X86/path-constructor-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
-    <!-- 같은 비행 Runtime의 생성/Init27관측만 사용하며 Process 프레임63관측은 후속이다. -->
+    <!-- 비행 Runtime 생성/Init27관측과 실제 Process 프레임63관측을 모두 사용한다. -->
     <None Include="../../../cpppj/tests/fixtures/flypath-x86.tsv" Link="X86/flypath-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
   <ItemGroup>
