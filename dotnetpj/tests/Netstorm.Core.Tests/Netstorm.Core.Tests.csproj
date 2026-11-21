@@ -1,5 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <!-- 두 보호 PE의 경로 writer768관측이며 전체2048BYTE stale buffer를 직접 비교한다. -->
+    <None Include="../../../cpppj/tests/fixtures/pathdata-x86.tsv" Link="X86/pathdata-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- 경로 생성/시간/보간216관측과 PATCH8종 생성자32개 전체 이미지의 기존 독립 원문 자료다. -->
     <None Include="../../../cpppj/tests/fixtures/pathruntime-x86.tsv" Link="X86/pathruntime-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/path-constructor-x86.tsv" Link="X86/path-constructor-x86.tsv" CopyToOutputDirectory="PreserveNewest" />

@@ -1422,3 +1422,9 @@ cpppj/src/client/RawProcessHostStorage.cpp	Netstorm.Client/Host/HostSession.Play
 cpppj/src/client/RawProcessHostStorage.h	Netstorm.Client/Host/HostSession.PlayerWorld.cs	417f22d2967decbf2ad3a587c2190b9efb93f772	port
 cpppj/src/o/RawPathRuntime.cpp	Netstorm.Core/Original/RawPathRuntime.cs	8a555c997b02e2488d61d580670e584c07d9be4b	port
 cpppj/src/o/RawPathRuntime.h	Netstorm.Core/Original/RawPathRuntime.cs	5318fdd6a88cbf71e5248a42a30f902a860ca3dd	port
+cpppj/src/o/RawPathData.cpp	Netstorm.Core/Original/RawPathData.cs	2b5ee903c78defa10dbde959a63db11cb4adf8b7	port
+cpppj/src/o/RawPathData.cpp	Netstorm.Core/Original/RawPathData.Current.cs	2b5ee903c78defa10dbde959a63db11cb4adf8b7	port
+cpppj/src/o/RawPathData.cpp	Netstorm.Core/Original/RawPathData.Read.cs	2b5ee903c78defa10dbde959a63db11cb4adf8b7	port
+cpppj/src/o/RawPathData.h	Netstorm.Core/Original/RawPathData.cs	2b5ee903c78defa10dbde959a63db11cb4adf8b7	port
+cpppj/src/o/RawPathData.h	Netstorm.Core/Original/RawPathData.Current.cs	2b5ee903c78defa10dbde959a63db11cb4adf8b7	port
+cpppj/src/o/RawPathData.h	Netstorm.Core/Original/RawPathData.Read.cs	2b5ee903c78defa10dbde959a63db11cb4adf8b7	port
