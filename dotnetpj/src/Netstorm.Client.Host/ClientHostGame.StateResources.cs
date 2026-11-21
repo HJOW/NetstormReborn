@@ -27,6 +27,6 @@ public sealed partial class ClientHostGame
     {
         var startup = _startup ?? throw new InvalidOperationException("전체State정리의실제시작자산미설치");
         ClientStateWorldCleanup.Cleanup(reason, _stateResources.Context(_surfaceGlobals, _localState, _connections, startup.Cloud, _nsInfoGlobals),
-            _surfaceGlobals, _spGlobals, devices, SelectNativeCursor, () => CancelNativeCursorForState());
+            _surfaceGlobals, _spGlobals, devices, SelectNativeCursor, () => CancelNativeCursorForState(), () => ChatChannels.ResetOccupied());
     }
 }

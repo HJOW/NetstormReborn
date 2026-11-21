@@ -49,9 +49,9 @@ public static class ClientStateWorldCleanup
     /// <summary>미선택장치를미리요구하지않고선택된실제자식만해당위치에서검증한다.</summary>
     private static T Need<T>(T? value) where T : Delegate => value ?? throw new InvalidOperationException("전체State정리의선택된실제외부장치누락");
 
-    /// <summary>같은실제소유자검증뒤원문부모를실행한다. Root는현재실제커서를직접제공하며독립장치입력보다우선한다. 실패한부분쓰기는되돌리지않는다.</summary>
+    /// <summary>같은실제소유자검증뒤원문부모를실행한다. Root는현재실제커서/채팅을직접제공하며독립장치입력보다우선한다. 실패한부분쓰기는되돌리지않는다.</summary>
     public static void Cleanup(uint reason, ClientStateWorldContext context, ClientSurfaceGlobals surface,
-        ClientSpGlobals sp, ClientStateWorldDevices devices, Action<uint>? selectCursor = null, Action? cancelCursor = null)
+        ClientSpGlobals sp, ClientStateWorldDevices devices, Action<uint>? selectCursor = null, Action? cancelCursor = null, Action? resetChatChannels = null)
     {
         ArgumentNullException.ThrowIfNull(context); ArgumentNullException.ThrowIfNull(surface); ArgumentNullException.ThrowIfNull(sp);
         ArgumentNullException.ThrowIfNull(devices);
@@ -95,7 +95,7 @@ public static class ClientStateWorldCleanup
                     case StateWorldCleanupEffect.RefreshSp: Need(devices.RefreshSp)(); return;
                     case StateWorldCleanupEffect.ClearTemplates: context.Templates.ClearAll(); return;
                     case StateWorldCleanupEffect.LeaveMetamap: Need(devices.LeaveMetamap)(); return;
-                    case StateWorldCleanupEffect.Clear445140: Need(devices.ResetChatChannels)(); return;
+                    case StateWorldCleanupEffect.Clear445140: Need(resetChatChannels ?? devices.ResetChatChannels)(); return;
                     case StateWorldCleanupEffect.ClearCursor: ClientUserSelectionCleanup.Clear(game, surface.Storage, selectCursor ?? devices.SelectCursor); return;
                     case StateWorldCleanupEffect.ClearPlayerLinks: runtime.ClearPlayerLinks(); return;
                     case StateWorldCleanupEffect.ClearKernel: runtime.ClearKernel(); return;

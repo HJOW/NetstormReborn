@@ -142,6 +142,7 @@ public sealed partial class HostSession
         Crt = crt;
         ProcessTime = sharedProcessTime ?? new DoubleBox();
         Gameplay = sharedGameplay ?? sharedLocal?.Gameplay ?? sharedConnections?.LocalState.Gameplay ?? new ClientGameplayGlobals();
+        HandleBuffer = Gameplay.Subscribers?.Handle ?? new byte[64];
         // 비소유 진단 뷰는 짧은 Session 전체 대신 같은 장기 진단 소유자만 보유한다.
         ClientAiDebugGlobals checkingOwner = Gameplay.AiDebug;
         AiChecking.Bind(() => checkingOwner.Checking.Value);
@@ -662,8 +663,8 @@ public sealed partial class HostSession
     /// <summary>세션이 공유하는 현재 Player 상태다. Zone 설치가 소유자를 정하고 이름 확정이 전투 소유자를 읽는다.</summary>
     public PlayerWorldState MissionPlayer => Gameplay.Player;
 
-    /// <summary>세션이 공유하는 현재 mySubHandle NUL 저장소다. 이름 채우기가 쓰고 이름 확정이 읽는다.</summary>
-    public byte[] HandleBuffer { get; } = new byte[64];
+    /// <summary>실제 Client Subscriber의 같은 Handle64BYTE를 빌린다. 독립 조합만 Session별 fallback을 만들며 첫NUL 뒤 꼬리를 보존한다.</summary>
+    public byte[] HandleBuffer { get; }
 
     /// <summary>월드 적재가 읽는 같은 TYPE 프레임 표 개수다. PATCH 188이며 CD 171은 후속 단위에서 잇는다.</summary>
     /// <remarks>2026-11-12 0.436에서 월드 적재 공유 저장소로 추가했다. 실제 타입 적재 단위에서 표를 채운다.</remarks>

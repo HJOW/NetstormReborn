@@ -1306,3 +1306,7 @@ cpppj/src/client/ClientRendererFrame.cpp	Netstorm.Client/ClientRendererDevices.c
 cpppj/src/client/CampaignCursorClientEffects.cpp	Netstorm.Client/ClientRendererDevices.cs	b234f02e14fbdd224e8d19491114f16a56ae28ab	port
 cpppj/src/client/ClientCursorStateCleanup.cpp	Netstorm.Client/ClientRendererDevices.cs	76e3c4531cc94206f4342e8c16db948eb4917cef	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Client.Host/ClientHostGame.Renderer.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
+cpppj/src/client/ClientSubscriberGlobals.h	Netstorm.Client/ClientSubscriberGlobals.cs	bed549ff50d543c5040243e32f5e63d8a6f741d7	port
+cpppj/src/client/ClientMain.cpp	Netstorm.Client/ClientChatGlobals.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
+cpppj/src/client/ClientMain.cpp	Netstorm.Client.Host/ClientHostGame.Chat.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
+cpppj/src/client/ClientGameplayGlobals.cpp	Netstorm.Client/ClientGameplayGlobals.Login.cs	8d24d3e095ee9659595504ff81ad078b0147614b	port

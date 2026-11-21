@@ -7,7 +7,7 @@ namespace Netstorm.Client;
 public sealed partial class ClientGameplayGlobals
 {
     /// <summary>현재 두 Subscriber·편집·미션 후처리 모드의 같은 소유자다.</summary>
-    public CampaignWorldGlobals World { get; } = new();
+    public CampaignWorldGlobals World { get; }
     /// <summary>005949d4의 같은 미니맵 갱신 DWORD이며 실제 지형 소비자가 직접 쓴다.</summary>
     public UIntBox MapRevision { get; } = new();
     /// <summary>0059a8ac의 현재 건물 숨김 DWORD이며 State 정리로 같은 값을 쓴다.</summary>

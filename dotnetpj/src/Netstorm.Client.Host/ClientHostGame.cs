@@ -99,7 +99,7 @@ public sealed partial class ClientHostGame : Game
     private readonly ClientSpGlobals _spGlobals;
 
     /// <summary>미션 교체에서도 같은 현재 TYPE·권한·표본·진단 주소를 유지한다.</summary>
-    private readonly ClientGameplayGlobals _gameplay = new();
+    private readonly ClientGameplayGlobals _gameplay;
 
     /// <summary>미션 교체에서 배열을 다시 만들지 않는 실제 정적 SID 목록이다.</summary>
     private readonly RawStateSidLists _sidLists;
@@ -161,6 +161,8 @@ public sealed partial class ClientHostGame : Game
         _driver = driver;
         _options = options;
         _startup = startup;
+        _gameplay = new(_subscriberGlobals);
+        _chatGlobals = new(OriginalEdition.Patch1078, () => _subscriberGlobals.MySubscriber.Value);
         InterpretNsInfoOptions();
         if (_startup is { } diagnosticStartup) _gameplay.AiDebug.ReadOptions(diagnosticStartup.Configuration);
         _gameRandom = startup?.Random ?? new GameRandom();

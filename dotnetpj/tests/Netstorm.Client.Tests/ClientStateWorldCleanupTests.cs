@@ -119,6 +119,21 @@ public sealed class ClientStateWorldCleanupTests
         Assert.Contains("real-cursor", scene.Events); Assert.DoesNotContain("cursor", scene.Events); Assert.NotEmpty(renderer.CameraDirtyEntries); Assert.Equal(1u, scene.Game.Cursor.LockDepth); Assert.DoesNotContain(scene.Game.CursorGlobals.Lifecycle.Previews, sid => sid != 0);
     }
 
+    /// <summary>Root 채팅 소유자가 독립 장치보다 우선하며 점유 행 전체만 지우고 빈 행 꼬리는 유지한다.</summary>
+    [Fact]
+    public void RootChatResetUsesActualRecordsAndPreservesUnoccupiedTails()
+    {
+        var scene = new Scene(); var chat = new ClientChatGlobals(OriginalEdition.Patch1078, () => throw new IOException("점유정리중구독자조회금지"));
+        chat.Records.AsSpan().Fill(0xa5);
+        // 모든 행을 빈 ID로 두고 두 끝 근처의 점유 행만 별도로 표시한다.
+        for (int index = 0; index < RawChatChannels.Count; index++) BinaryPrimitives.WriteUInt32LittleEndian(chat.Records.AsSpan(index * RawChatChannels.Stride + 0x2c, 4), 0);
+        BinaryPrimitives.WriteUInt32LittleEndian(chat.Records.AsSpan(3 * RawChatChannels.Stride + 0x2c, 4), 0x80000000); BinaryPrimitives.WriteUInt32LittleEndian(chat.Records.AsSpan(99 * RawChatChannels.Stride + 0x2c, 4), uint.MaxValue);
+        byte[] empty = chat.Records[..RawChatChannels.Stride];
+        ClientStateWorldCleanup.Cleanup(1, scene.Context(), scene.Surface, scene.Sp, scene.Devices(), resetChatChannels: () => { scene.Events.Add("root-chat"); chat.Channels.ResetOccupied(); });
+        Assert.Contains("root-chat", scene.Events); Assert.DoesNotContain("chat", scene.Events); Assert.Equal(empty, chat.Records[..RawChatChannels.Stride]); Assert.Equal((byte)0x71, scene.ChatBytes[0]);
+        Assert.All(chat.Records.AsSpan(3 * RawChatChannels.Stride, RawChatChannels.Stride).ToArray(), value => Assert.Equal(0, value)); Assert.All(chat.Records.AsSpan(99 * RawChatChannels.Stride, RawChatChannels.Stride).ToArray(), value => Assert.Equal(0, value)); Assert.True(scene.Events.IndexOf("root-chat") < scene.Events.IndexOf("kill"));
+    }
+
     /// <summary>최초커서장치누락은그위치에서실패하며이후전역을정리한것처럼보이지않는다.</summary>
     [Fact]
     public void MissingCursorFailsAtSelectedPrefix()
