@@ -149,14 +149,16 @@ test('영어 Tutorial2를 시작부터 완료 창과 Tutorial3 시작까지 진�
     return null;
   };
   // 생산 격자의 첫 항목을 누르고(실제 이미지 픽셀 적중) 합법 자리에 내려놓아 발사기 수가 하나 늘 때까지 기다린다.
-  const placeArcher = async (offsets) => {
+  // useKey 가 참이면 생산 격자 항목을 누르는 대신 D 키(마지막으로 고른 생산 항목 다시 쥐기, 원문 getlastitem)로 같은 종류를 쥔다. (2026-11-21 WB04-E1162)
+  const placeArcher = async (offsets, useKey = false) => {
     await page.waitForFunction(() => !window.netstorm._gameClock.paused() && !window.netstorm._mainMenu.dialog, null, { timeout: 15000 });
     // 처음 세 개 뒤에는 생산 보충 시간이 지나야 다음 항목의 대기 표식(0x100)이 풀리므로 풀릴 때까지 기다린다.
     await page.waitForFunction(() => { const app = window.netstorm, root = app._clientGump, token = root.node(app._campaignProduction.ui.node().teleport).child; if (!token) return false; const raw = app._campaignWorld.session().core().pool.slot(root.node(token).content); return !((raw[20] | (raw[21] << 8)) & 0x100); }, null, { timeout: 240000 });
     const item = await page.evaluate(() => { const app = window.netstorm, root = app._clientGump, token = root.node(app._campaignProduction.ui.node().teleport).child, rect = app.canvas.getBoundingClientRect();
       if (!token) return null; const bounds = root.collection().bounds(token);
       return { x: rect.left + (bounds.left + bounds.right) / 2 * rect.width / app._layout.logicalWidth, y: rect.top + (bounds.top + bounds.bottom) / 2 * rect.height / app._layout.logicalHeight }; });
-    expect(item).toBeTruthy(); await page.mouse.move(item.x, item.y); await page.mouse.click(item.x, item.y, { delay: 60 });
+    expect(item).toBeTruthy(); await page.mouse.move(item.x, item.y);
+    if (useKey) { expect(await page.evaluate(() => window.netstorm._campaignWorld.session().cursorDropSettings().preview), 'D 전에는 아무것도 쥐고 있지 않다').toBe(0); await page.keyboard.press('d'); } else await page.mouse.click(item.x, item.y, { delay: 60 });
     await page.waitForTimeout(300);
     await page.waitForFunction(() => window.netstorm._campaignWorld.session().cursorDropSettings().preview !== 0, null, { timeout: 5000 });
     const spot = await findDrop(offsets); expect(spot).toBeTruthy();
@@ -166,7 +168,7 @@ test('영어 Tutorial2를 시작부터 완료 창과 Tutorial3 시작까지 진�
   await page.waitForFunction(() => window.netstorm._gameData.currentTell === 'E.' && Boolean(window.netstorm._mainMenu.dialog), null, { timeout: 30000 });
   await page.screenshot({ path: test.info().outputPath('english-tutorial2-weapon-range.png') });
   // E: 두 번째 발사기를 내려놓으면 F(에너지)로 넘어간다. 발사기 완공 통지 명령이 입력 큐를 막지 않아야 두 번째 클릭이 전달된다.
-  await clickLast(page); await placeArcher([[-60, 20], [60, 20], [-90, -20], [90, -20], [0, 90], [0, -90], [-120, 40], [120, 40]]);
+  await clickLast(page); await placeArcher([[-60, 20], [60, 20], [-90, -20], [90, -20], [0, 90], [0, -90], [-120, 40], [120, 40]], true);
   await page.waitForFunction(() => window.netstorm._gameData.currentTell === 'F.' && Boolean(window.netstorm._mainMenu.dialog), null, { timeout: 30000 });
   await page.screenshot({ path: test.info().outputPath('english-tutorial2-energy.png') });
   // F: 에너지 안내의 다음 쪽을 닫고 완성된 신전을 왼쪽 클릭해 에너지 범위를 보인다. 몇 초 뒤 G(에너지, 세 번째)로 넘어간다.
