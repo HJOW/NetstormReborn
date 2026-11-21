@@ -3,7 +3,7 @@ namespace Netstorm.Core.Original;
 /// <summary>
 /// 0040eaf0·CD 0045b670의 실제 표면 번호를 같은 hash0에서 조회한다
 /// (cpppj <c>o/RawPathSearch.cpp</c>의 자유 함수 <c>RawPathSurfaceAt</c>와 그 안의 도우미 <c>Cell</c>·<c>Inside</c>).
-/// 점 정의(<c>RawPathPoint</c>)는 기존 <c>RawSquidPoolReset.cs</c>의 것을 빌린다.
+/// 점 정의(<c>RawPathPoint</c>)는 같은 <c>RawPathRuntime.cs</c>의 변경 가능한 두 float를 빌린다.
 /// BFS 거리·대기열·그래프 조회는 옮기지 않았다.
 /// </summary>
 /// <remarks>2026-11-04 F2c-11에서 추가했다. 섬 목록의 거주 구역 owner 전파가 유일한 소비자이며 전체 탐색기는 R6에서 잇는다.</remarks>

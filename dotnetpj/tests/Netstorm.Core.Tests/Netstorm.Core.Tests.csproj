@@ -1,5 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <!-- 경로 생성/시간/보간216관측과 PATCH8종 생성자32개 전체 이미지의 기존 독립 원문 자료다. -->
+    <None Include="../../../cpppj/tests/fixtures/pathruntime-x86.tsv" Link="X86/pathruntime-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/path-constructor-x86.tsv" Link="X86/path-constructor-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- 같은 비행 Runtime의 생성/Init27관측만 사용하며 Process 프레임63관측은 후속이다. -->
+    <None Include="../../../cpppj/tests/fixtures/flypath-x86.tsv" Link="X86/flypath-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
     <!-- Windows CPP Source의 CS 저장float102개와 초기화/크기3개의 관찰이며 독립 PE 자료와 구별한다. -->
     <None Update="Fixtures/challenge-geometry-cpp.tsv" TargetPath="X86/challenge-geometry-cpp.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>

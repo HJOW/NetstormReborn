@@ -1,20 +1,6 @@
 namespace Netstorm.Core.Original;
 
 /// <summary>
-/// 경로에 저장되는 두 float 좌표다. 런타임의 double 좌표와 섞지 않는다.
-/// 원본 <c>o/RawPathRuntime.h</c>의 <c>RawPathPoint</c>이며, 경로 런타임 본체를 옮길 때 그 파일로 옮긴다.
-/// 근거: cpppj/src/o/RawPathRuntime.h (R0-4 신규 이식, 2026-10-28).
-/// </summary>
-public struct RawPathPoint
-{
-    /// <summary>X 좌표.</summary>
-    public float X;
-
-    /// <summary>Y 좌표.</summary>
-    public float Y;
-}
-
-/// <summary>
 /// 월드 SID 풀 정리 부모(원본 004af170/CD 004aaa70)를 기존 실제 저장소와 실패점에 연결한다.
 /// 하위 SID Reset과 부모의 추가 기록·좌표 효과를 구별한다. 실패점은 손실 위치·미사일 이전점 등 다른 -10000 필드와 별개다.
 /// 근거: cpppj/src/o/RawSquidPoolReset.h (R0-4 신규 이식, 2026-10-28).

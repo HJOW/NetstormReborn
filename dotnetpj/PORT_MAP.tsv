@@ -1420,3 +1420,5 @@ cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.DaisPac
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.DaisPackets.cs	bda77381e54bc382937c720047ee4441086b46d7	port
 cpppj/src/client/RawProcessHostStorage.cpp	Netstorm.Client/Host/HostSession.PlayerWorld.cs	417f22d2967decbf2ad3a587c2190b9efb93f772	port
 cpppj/src/client/RawProcessHostStorage.h	Netstorm.Client/Host/HostSession.PlayerWorld.cs	417f22d2967decbf2ad3a587c2190b9efb93f772	port
+cpppj/src/o/RawPathRuntime.cpp	Netstorm.Core/Original/RawPathRuntime.cs	8a555c997b02e2488d61d580670e584c07d9be4b	port
+cpppj/src/o/RawPathRuntime.h	Netstorm.Core/Original/RawPathRuntime.cs	5318fdd6a88cbf71e5248a42a30f902a860ca3dd	port
