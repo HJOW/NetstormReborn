@@ -133,6 +133,12 @@ public sealed class HostHtmlText
         uint token = _nextBuffer++; _bufferTokens.Add(token); return token;
     }
 
+    /// <summary>이미 같은 Store가 생성한 Client 공유 상태를 실제 반납 추적에도 연결한다.</summary>
+    public void TrackBorrowedBuffer(uint token, StyleTextBufferState state)
+    {
+        ArgumentNullException.ThrowIfNull(state); if (!ReferenceEquals(Buffers.Binding(token).State, state)) throw new ArgumentException("공유 로그의 실제 버퍼 저장소 불일치", nameof(state)); if (!_bufferTokens.Add(token)) throw new ArgumentException("이미 추적한 공유 로그 토큰", nameof(token));
+    }
+
     /// <summary>현재 본문만 실제 글꼴과 화면 클립으로 출력한다. 호출자는 다른 Gump와의 표시 순서를 정한다.</summary>
     /// <param name="token">같은 트리에 생성·부착된 다중 줄 본문 토큰.</param>
     public void Draw(uint token)

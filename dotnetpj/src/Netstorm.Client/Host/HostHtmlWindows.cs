@@ -94,7 +94,9 @@ public sealed class HostHtmlWindows
     /// <param name="token">현재 공통 저장소의 새 자식 토큰.</param>
     public void TrackChild(uint token)
     {
-        if (token == 0 || _tree.Node(token) is null || !_owned.Add(token)) throw new ArgumentException("HTML 소유 새 자식 토큰 필요", nameof(token));
+        if (token == 0 || _tree.Node(token) is null) throw new ArgumentException("HTML 소유 새 자식 토큰 필요", nameof(token));
+        if (_tree.NodeOwner(token) is { } owner && !ReferenceEquals(owner, this)) return;
+        if (!_owned.Add(token)) throw new ArgumentException("HTML 소유 새 자식 토큰 필요", nameof(token));
     }
 
     /// <summary>실제 다중 줄 생성·파싱과 스크롤 소유자를 연결한다. 각 콜백은 같은 공통 저장소를 사용해야 한다.</summary>

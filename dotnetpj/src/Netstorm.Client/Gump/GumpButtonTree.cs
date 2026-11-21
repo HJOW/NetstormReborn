@@ -21,7 +21,7 @@ public sealed class GumpButtonTreeHooks
 
 /// <summary>실제 돌 버튼·배경·공통 Gump 등록표와 입력/수명을 같은 노드 저장소로 조립한다.
 /// 근거: cpppj/src/client/RawButtonControls.cpp의 공통 트리와 StoneButtonGump 연결.</summary>
-public sealed class GumpButtonTree
+public sealed partial class GumpButtonTree
 {
     /// <summary>실제 모든 기본·파생 노드의 안정된 소유 저장소.</summary>
     private readonly Dictionary<uint, GumpCreateNode> _nodes = [];
@@ -89,7 +89,7 @@ public sealed class GumpButtonTree
         ArgumentNullException.ThrowIfNull(node);
         if (_nodes.Values.Any(existing => ReferenceEquals(existing, node))) throw new ArgumentException("이미 소유한 Gump 객체", nameof(node));
         if (_nextToken == uint.MaxValue) throw new OverflowException("Gump 토큰 소진");
-        uint token = ++_nextToken; _nodes.Add(token, node); return token;
+        uint token = ++_nextToken; _nodes.Add(token, node); if (_activeOwner is not null) _nodeOwners.Add(token, _activeOwner); return token;
     }
 
     /// <summary>등록 전 생성 실패의 노드만 실제 저장소에서 반납한다. 등록된 노드는 자식 우선 수명으로 삭제해야 한다.</summary>
@@ -100,7 +100,7 @@ public sealed class GumpButtonTree
         GumpCreateNode node = _nodes[token];
         if (Create.Entries.Contains(token) || node.Vtable != 0 || node.Parent != 0 || node.Child != 0 || node.Next != 0)
             throw new InvalidOperationException("생성되거나 연결된 Gump는 공통 수명으로 삭제해야 한다");
-        _nodes.Remove(token);
+        _nodes.Remove(token); _nodeOwners.Remove(token);
     }
 
     /// <summary>현재 등록표에서 serial이 같은 실제 노드를 찾는다. 죽음 표시와 실제 반납을 구분한다.</summary>
@@ -155,7 +155,7 @@ public sealed class GumpButtonTree
             Kill = token => Lifetime!.Kill(token) };
         var lifeHooks = LifetimeHooks = new GumpLifetimeHooks { Node = Node, Push = treeHooks.Push,
             DeletingDestructor = (token, flags) => Lifetime!.DeleteScalar(token, flags),
-            Release = token => { if (!_nodes.Remove(token)) throw new InvalidOperationException("Gump 저장소 반납 불일치"); } };
+            Release = token => { if (_helpStrings.Remove(token)) return; if (!_nodes.Remove(token)) throw new InvalidOperationException("Gump 저장소 반납 불일치"); _nodeOwners.Remove(token); } };
         StoneButtonGump.BindStoneButtonGump(treeHooks, lifeHooks, token => Node(token) is StoneButtonGumpNode ? Stones : null);
         Tree = new(Create, new() { MapView = new(0, 0, width, height) }, treeHooks);
         Lifetime = new(Create, LifeState, lifeHooks);

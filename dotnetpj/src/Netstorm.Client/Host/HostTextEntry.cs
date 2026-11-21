@@ -84,6 +84,14 @@ public sealed class HostTextEntry : IDisposable
         uint token = _tree.AllocateNode(new TextEntryGumpNode()); _windows.TrackChild(token); return token;
     }
 
+    /// <summary>현재 공통 생성 범위 소유권으로 미생성 실제 Console을 할당한다.</summary>
+    public uint AllocateConsole()
+    {
+        uint token = _tree.AllocateNode(new ConsoleGumpNode()); _windows.TrackChild(token); return token;
+    }
+    /// <summary>같은 실제 Console+108이 참조하는 편집 버퍼를 복사 없이 조회한다.</summary>
+    public TextEntryBuffer? FindBuffer(uint token) => _storage.Find(token);
+
     /// <summary>실제 편집 입력의 전체 버퍼 본문을 Latin1 문자열로 읽는다.</summary>
     /// <param name="entryToken">문자 입력 Gump 토큰이다.</param>
     /// <returns>Latin1 해독 본문이다.</returns>
