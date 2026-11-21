@@ -1393,3 +1393,12 @@ cpppj/src/o/RawChallengeState.h	Netstorm.Core/Original/RawChallengeState.cs	6c50
 cpppj/src/client/ClientChallengeGlobals.cpp	Netstorm.Client/ClientChallengeGlobals.cs	230528e31fc1c239b5d1251a729b99041bf45d9e	port
 cpppj/src/client/ClientChallengeGlobals.h	Netstorm.Client/ClientChallengeGlobals.cs	230528e31fc1c239b5d1251a729b99041bf45d9e	port
 cpppj/src/client/ClientCampaignTransport.cpp	Netstorm.Client/ClientChallengePacketDefaults.cs	8defb347c7c894599f1c9ebf1ad7d55c98f35df0	port
+cpppj/src/o/RawSquidReceive.cpp	Netstorm.Core/Original/RawSquidReceive.cs	8ee7666b4782554ff743204e2a067ebaab2ed2c7	port
+cpppj/src/o/RawSquidReceive.h	Netstorm.Core/Original/RawSquidReceive.cs	8ee7666b4782554ff743204e2a067ebaab2ed2c7	port
+cpppj/src/o/RawSquidMutationReceive.cpp	Netstorm.Core/Original/RawSquidMutationReceive.cs	541624a91439623c5faeaf8fcc4b6283e93bbb0a	port
+cpppj/src/o/RawSquidMutationReceive.h	Netstorm.Core/Original/RawSquidMutationReceive.cs	541624a91439623c5faeaf8fcc4b6283e93bbb0a	port
+cpppj/src/o/RawSquidVerification.cpp	Netstorm.Core/Original/RawSquidVerification.cs	147d4a394bf99defcdc6988a963c9cf5ff4d3451	port
+cpppj/src/o/RawSquidVerification.h	Netstorm.Core/Original/RawSquidVerification.cs	147d4a394bf99defcdc6988a963c9cf5ff4d3451	port
+cpppj/src/o/RawSquidCompressedReceive.cpp	Netstorm.Core/Original/RawSquidCompressedReceive.cs	96904de5937963c5a55989f70272d7362b2ce210	port
+cpppj/src/o/RawSquidCompressedReceive.h	Netstorm.Core/Original/RawSquidCompressedReceive.cs	96904de5937963c5a55989f70272d7362b2ce210	port
+cpppj/src/o/RawSquidWord.h	Netstorm.Core/Original/RawSquidWord.cs	36dbd6600acf8f002073a9acc39faea106387cf6	port

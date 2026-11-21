@@ -4,6 +4,12 @@ namespace Netstorm.Core.Original;
 /// <summary>cpppj/src/o/RawGameAuxState.h의 네트워크 공용 장기 저장소다.</summary>
 public sealed partial class RawGameAuxState
 {
+    /// <summary>0054d4d8의 최초BSS0이며 객체 수신과 검증 시작/종료가 같은 현재DWORD를 쓴다.</summary>
+    public UIntBox VerifySidBox { get; } = new();
+    /// <summary>0054d4dc의 별도BSS0이며 검증 간격의 현재 순회 위치다.</summary>
+    public UIntBox PreviousVerifySidBox { get; } = new();
+    /// <summary>0054d4e4의 최초BSS0이며 Take 전 TYPE와 정상 수신 종료0을 공유한다.</summary>
+    public UIntBox SupportTypeWasBox { get; } = new();
     /// <summary>005451f8의 최초BSS0인 NUL 종료 기술 사용 목록이다. 월드 교체로 재생성하지 않는다.</summary>
     public byte[] TypeUse { get; } = new byte[256];
     /// <summary>32h의 실제7DWORD 초기값이다. Session/World 교체에서 다시 만들거나 초기화하지 않는다.</summary>
