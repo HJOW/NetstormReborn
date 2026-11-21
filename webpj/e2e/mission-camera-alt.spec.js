@@ -63,6 +63,11 @@ test('The War Begins!: Alt 를 누르면 포인터 쪽으로 화면이 움직이
   const far = await camera(); await page.keyboard.press('p'); await page.waitForTimeout(500);
   expect(await selected(), 'P 한 번: 사제 선택').toBeGreaterThan(0); expect(await camera(), 'P 한 번은 화면을 옮기지 않는다').toEqual(far);
   await page.keyboard.press('p'); await page.waitForTimeout(800); expect(await camera(), 'P 두 번: 사제 위치').toEqual(priest);
+  // 가운데(휠) 버튼도 Alt 와 같다(원본 도움말). 집으로 돌아간 뒤 가운데 버튼을 누른 채 포인터를 옮기면 그 쪽으로 움직이고 선택은 바뀌지 않는다. (2026-11-21 WB04-E1148)
+  await page.keyboard.press('F4'); await page.waitForTimeout(600); const homeAgain = await camera(); const selectedBefore = await selected();
+  await page.mouse.move(center.x, center.y); await page.mouse.down({ button: 'middle' }); await page.mouse.move(center.x + viewport.width * 0.3, center.y + viewport.height * 0.25, { steps: 5 }); await page.waitForTimeout(1000); await page.mouse.up({ button: 'middle' });
+  const viaMiddle = await camera(); expect(viaMiddle[0], '가운데 버튼 오른쪽').toBeGreaterThan(homeAgain[0]); expect(viaMiddle[1], '가운데 버튼 아래').toBeGreaterThan(homeAgain[1]); expect(await selected(), '가운데 버튼은 선택을 바꾸지 않는다').toBe(selectedBefore);
+  await page.keyboard.press('F5'); await page.waitForTimeout(600);
   // Q·E 는 다리 조각을 커서로 쥐고(미리보기 생성), Esc 는 취소한다.
   const held = () => page.evaluate(() => window.netstorm._campaignWorld.session().cursorDropSettings().preview !== 0);
   await page.keyboard.press('Escape'); await page.waitForTimeout(300);
