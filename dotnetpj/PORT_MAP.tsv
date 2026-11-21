@@ -1376,3 +1376,5 @@ cpppj/src/client/ClientPacketRecord.h	Netstorm.Client.Host/ClientPacketRecord.cs
 cpppj/src/client/ClientMain.cpp	Netstorm.Client.Host/ClientHostGame.PacketRecord.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
 cpppj/src/client/ClientMain.h	Netstorm.Client.Host/ClientHostGame.PacketRecord.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
 cpppj/src/client/ClientCampaignTransport.cpp	Netstorm.Client/ClientPacketDefaultObservers.cs	8defb347c7c894599f1c9ebf1ad7d55c98f35df0	port
+cpppj/src/o/RawGameAuxState.h	Netstorm.Core/Original/RawGameAuxState.Network.cs	8defb347c7c894599f1c9ebf1ad7d55c98f35df0	port
+cpppj/src/client/ClientCampaignTransport.cpp	Netstorm.Client/ClientMissionPacketDefaults.cs	8defb347c7c894599f1c9ebf1ad7d55c98f35df0	port
