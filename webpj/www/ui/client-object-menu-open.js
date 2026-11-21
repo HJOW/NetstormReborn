@@ -17,10 +17,11 @@ export class ClientObjectMenuOpen {
     constructor(world, writer, summary, objects, devices) {
         if (!world?.session || !writer || !summary?.summary || typeof objects?.open !== 'function' || typeof objects?.openDamageable !== 'function' || !devices ||
             ['beginFancy', 'currentWidth', 'attachObject'].some((name) => typeof writer[name] !== 'function') ||
-            ['altar', 'delegate', 'project', 'content', 'range', 'screenWidth', 'sound'].some((name) => typeof devices[name] !== 'function')) throw new TypeError('공통 객체 메뉴 열기의 실제 World·Client 장치 누락');
+            ['altar', 'project', 'content', 'range', 'screenWidth', 'sound'].some((name) => typeof devices[name] !== 'function')) throw new TypeError('공통 객체 메뉴 열기의 실제 World·Client 장치 누락');
         this.#world = world; this.#sound = devices.sound; this.#objects = objects; const core = world.session().core();
         this.#opener = new RawObjectMenuOpen(core.pool, core.types, {
-            altar: devices.altar, delegate: devices.delegate, beginFancy: () => writer.beginFancy(), summary: (sid) => summary.summary(sid),
+            // 제단 받침(dais)의 열기는 같은 좌표 제단의 가상 열기(+ac)로 위임한다. 제단의 열기도 공통 열기(004adb30)이므로 같은 몸체를 다시 부른다. (2026-11-21 WB04-E1137)
+            altar: devices.altar, delegate: (altar, event) => this.#delegate(altar, event), beginFancy: () => writer.beginFancy(), summary: (sid) => summary.summary(sid),
             populate: (sid) => this.#populate(sid), project: devices.project, content: devices.content, range: devices.range,
             menuWidth: () => writer.currentWidth(), screenWidth: devices.screenWidth, attach: (sid, x, y) => writer.attachObject(sid, x, y),
         });
@@ -30,6 +31,11 @@ export class ClientObjectMenuOpen {
         const pool = this.#world.session().core().pool; if (!sid || sid >= pool.capacity) return null;
         const raw = pool.slot(sid), table = new DataView(raw.buffer, raw.byteOffset, raw.byteLength).getUint32(0, true);
         try { return objectMenuSlots(table); } catch (error) { if (error instanceof RangeError) return null; throw error; }
+    }
+    // 위임 대상 제단의 열기가 공통 열기일 때만 같은 몸체로 연다. 다른 열기 주소면 임의 메뉴로 바꾸지 않고 거부한다.
+    #delegate(altar, event) {
+        if (this.#slots(altar)?.open !== COMMON_OPEN) throw new Error('제단 위임의 열기 주소 미연결');
+        return this.#opener.open(altar, event);
     }
     // 같은 슬롯의 작성 주소에 따라 Damageable(회수 포함) 또는 일반 객체 메뉴를 쓴다.
     #populate(sid) {

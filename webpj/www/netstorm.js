@@ -1486,7 +1486,9 @@ export class Netstorm {
                         ignored: (subscriber) => this._clientChatWindows.ignored.includes(subscriber), whispered: () => {
                             if (!this._clientChatWindows.window.current) return 0; throw new Error('Player 메뉴 현재 채팅 수신자 조회 미연결');
                         } },
-                    open: { altar: () => { throw new Error('사제 메뉴 제단 조회 미연결'); }, delegate: () => { throw new Error('사제 메뉴 제단 위임 미연결'); },
+                    // 제단 받침(dais)은 같은 좌표의 제단(altar)을 찾아 그 메뉴로 위임한다(원본 447930). 제단 TYPE 은 게임 보조 상태의 값이다. 위임 자체는 객체 메뉴 열기가 같은 몸체로 처리한다. (2026-11-21 WB04-E1137)
+                    open: { altar: (sid) => { const session = production.session, raw = session.core().pool.slot(sid), view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength), world = session.world(); return world.find(view.getFloat32(14, true), view.getFloat32(18, true), world.storage.gameAux.altarType); },
+                        delegate: () => { throw new Error('사제 메뉴 제단 위임 미연결'); },
                         project: (x, y) => { const point = this._clientGameplay.camera().snapshot().project(x, y); return [point.x, point.y]; },
                         content: (sid) => production.session.priests().carrier.findContained(sid, 1, 0, 0), range: (type) => production.session.core().types[type].range,
                         screenWidth: () => this._clientPaletteScreen.width } },

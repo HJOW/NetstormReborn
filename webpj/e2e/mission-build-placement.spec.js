@@ -69,13 +69,26 @@ async function pickBuilding(page, path) {
   return { priest, type };
 }
 
-// 캔버스에서 미리보기 테두리(흰색 또는 빨간색 1픽셀 선)의 바깥 범위를 읽는다. 맵 영역(x≥85)만 본다.
+// 캔버스에서 미리보기 테두리(흰색 또는 빨간색 1픽셀 선)의 바깥 범위를 읽는다. 맵 영역(x≥85)만 보며, 눈 지형의 흩어진 순백 픽셀을 피하려고
+// 가로로 80픽셀 넘게, 또는 세로로 50픽셀 넘게 이어진 선만 센다(변 하나가 지형에 가려져도 나머지 변으로 범위를 잡는다).
 const previewBox = (page) => page.evaluate(() => {
   const canvas = window.netstorm.canvas, data = canvas.getContext('2d').getImageData(0, 0, canvas.width, canvas.height).data; let minX = 1e9, minY = 1e9, maxX = -1, maxY = -1, count = 0;
-  for (let y = 0; y < canvas.height; y += 1) for (let x = 85; x < canvas.width; x += 1) {
-    const at = (y * canvas.width + x) * 4, r = data[at], g = data[at + 1], b = data[at + 2];
-    if ((r === 255 && g === 255 && b === 255) || (r > 180 && g < 60 && b < 60)) { count += 1; if (x < minX) minX = x; if (x > maxX) maxX = x; if (y < minY) minY = y; if (y > maxY) maxY = y; }
-  }
+  const isBox = (x, y) => { const at = (y * canvas.width + x) * 4, r = data[at], g = data[at + 1], b = data[at + 2]; return (r === 255 && g === 255 && b === 255) || (r > 180 && g < 60 && b < 60); };
+  // 한 줄(가로 또는 세로)에서 최소 길이 이상 이어진 구간의 양 끝을 범위에 더한다.
+  const take = (fixed, from, length, minRun, horizontal) => {
+    let run = 0;
+    for (let at = from; at <= length; at += 1) {
+      if (at < length && (horizontal ? isBox(at, fixed) : isBox(fixed, at))) { run += 1; continue; }
+      if (run >= minRun) {
+        count += run; const start = at - run, end = at - 1;
+        if (horizontal) { minX = Math.min(minX, start); maxX = Math.max(maxX, end); minY = Math.min(minY, fixed); maxY = Math.max(maxY, fixed); }
+        else { minY = Math.min(minY, start); maxY = Math.max(maxY, end); minX = Math.min(minX, fixed); maxX = Math.max(maxX, fixed); }
+      }
+      run = 0;
+    }
+  };
+  for (let y = 0; y < canvas.height; y += 1) take(y, 85, canvas.width, 80, true);
+  for (let x = 85; x < canvas.width; x += 1) take(x, 0, canvas.height, 50, false);
   return { count, minX, minY, maxX, maxY };
 });
 
@@ -90,10 +103,13 @@ async function placeAndBuild(page, name, { priest, type }, outputPath) {
     await page.mouse.move(x, y); await page.waitForTimeout(120);
     if (await legal()) { spot = { x, y }; box = await previewBox(page); break; }
   }
-  expect(spot, `${name} 유효한 건설 자리`).toBeTruthy(); expect(box.count, `${name} 미리보기 테두리 픽셀`).toBeGreaterThan(60);
+  expect(spot, `${name} 유효한 건설 자리`).toBeTruthy(); expect(box.count, `${name} 미리보기 테두리 가로선 픽셀 ${JSON.stringify(box)}`).toBeGreaterThan(60);
   const centerX = (box.minX + box.maxX) / 2, centerY = (box.minY + box.maxY) / 2;
-  expect(Math.abs(centerX - spot.x), `${name} 미리보기 가로 위치(마우스 ${spot.x}, 중심 ${centerX})`).toBeLessThan(110);
-  expect(Math.abs(centerY - spot.y), `${name} 미리보기 세로 위치(마우스 ${spot.y}, 중심 ${centerY})`).toBeLessThan(110);
+  expect(Math.abs(centerX - spot.x), `${name} 미리보기 가로 위치(마우스 ${spot.x}, 중심 ${centerX})`).toBeLessThan(140);
+  expect(Math.abs(centerY - spot.y), `${name} 미리보기 세로 위치(마우스 ${spot.y}, 중심 ${centerY})`).toBeLessThan(140);
+  // 근본 확인: 미리보기·비용 표시가 쓰는 화면 원점이 살아 있는 카메라 픽셀 원점과 같아야 한다(값 사본이면 항상 0).
+  const origin = await page.evaluate(() => { const app = window.netstorm, placement = app._clientGameplay.cursorGlobals().placement(), pixels = app._clientGameplay.camera().snapshot().pixels; return { placement: [placement.screenOriginX(), placement.screenOriginY()], camera: [pixels.x, pixels.y] }; });
+  expect(origin.placement, `${name} 화면 원점`).toEqual(origin.camera);
   await page.screenshot({ path: outputPath });
   const countOf = () => page.evaluate((target) => window.netstorm._campaignWorld.session().world().objects().filter(({ object }) => object.owner === 1 && object.type === target).length, type);
   const before = await countOf(); await page.mouse.click(spot.x, spot.y, { delay: 60 });
@@ -121,6 +137,19 @@ test('The War Begins!: 사제가 제단을 짓는 위치 지정이 마우스를 
   await startMission(page, 'Struggle For Freedom', 'TheWarBegins');
   // 시작 3000 으로도 제단(500)은 지을 수 있다. 워크샾은 이 미션의 작은 섬에서 배치 규칙상 자리가 없어 Tutorial2 에서 확인한다.
   await placeAndBuild(page, '제단', await pickBuilding(page, [2]), test.info().outputPath('build-preview-altar.png'));
+  // 완성된 제단을 실제로 우클릭한다. 화면에서 맨 앞에 잡히는 것은 제단 받침(dais)이며 원본처럼 같은 좌표의 제단(altar) 메뉴로 위임해 열려야 한다. (2026-11-21 WB04-E1137)
+  // 위임 훅이 미연결이던 때는 받침을 우클릭하면 예외가 나 메뉴가 열리지 않았다.
+  const target = await page.evaluate(() => {
+    const app = window.netstorm, world = app._campaignWorld, session = world.session(), types = app._gameAssets.types();
+    const mine = (name) => session.world().objects().find(({ object }) => object.owner === 1 && types[object.type - 70]?.assetName === name);
+    const dais = mine('dais'), altar = mine('altar'); if (!dais || !altar) return null;
+    const hits = []; for (let y = 10; y < 760; y += 2) for (let x = 90; x < 1020; x += 2) if (world.pick(x, y, 0) === dais.sid) hits.push([x, y]);
+    const rect = app.canvas.getBoundingClientRect(), hit = hits[Math.floor(hits.length / 2)];
+    return { altar: altar.sid, x: rect.left + hit[0] * rect.width / app._layout.logicalWidth, y: rect.top + hit[1] * rect.height / app._layout.logicalHeight };
+  });
+  expect(target, '완성된 제단과 받침').toBeTruthy();
+  await page.mouse.move(target.x, target.y); await page.mouse.click(target.x, target.y, { button: 'right', delay: 60 });
+  await page.waitForFunction((sid) => { const root = window.netstorm._clientGump; for (let token = root.root().child; token; token = root.node(token).next) if (root.node(token).command === 26 && root.node(token).object === sid) return true; return false; }, target.altar, { timeout: 10000 });
   expect(errors).toEqual([]);
 });
 
