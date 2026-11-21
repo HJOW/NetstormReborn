@@ -17,6 +17,8 @@ public sealed record HostSquidPacketEffects
     public Func<(int Width, int Height)>? ScreenSize { get; init; }
     /// <summary>독립 typed 수명에서 이미 작성한 실제 Form 패킷을 전달한다. Native는 장기 전송 장치를 직접 사용한다.</summary>
     public Action<ReadOnlyMemory<byte>>? FormPacket { get; init; }
+    /// <summary>건설 환불의 실제6ch 송신이다. 설치 전 양수 환불은 통지 위치에서 명시 실패한다.</summary>
+    public Action<uint, ConstructionMoneyNotice>? ConstructionMoney { get; init; }
 }
 
 /// <summary>고정F가 같은 객체/압축/검증 본체를 직접 선택하는 실제 Host 부분이다.</summary>
@@ -46,6 +48,7 @@ public sealed partial class HostSession
         }, new() { Command = (code, first, second) => FixedPacketNeed(_squidPacketEffects?.Command)(code, first, second), Assertion = storage.AssertDisplay });
         BindDaisPacketTransmission();
         BindPathSearchDevices(storage);
+        BindConstructionRefundDevices();
     }
     /// <summary>실제 프로세스 수명이 끝날 때 수신 전용 이름/외부 효과/종속 UI의 참조를 함께 반납한다.</summary>
     private void ReleaseSquidPacketDevices()
@@ -53,6 +56,7 @@ public sealed partial class HostSession
         _squidPacketStorage = null; _squidPacketNames = null; _squidPacketEffects = null; _squidPacketUi = null;
         _daisPacketTransmission = null;
         ReleasePathSearchDevices();
+        ReleaseConstructionRefundDevices();
     }
     /// <summary>번호 선택 시점의 현재 TYPE를 읽는다.</summary>
     private OriginalTypeRecord SquidPacketType(uint type) => _terrainPopTypes is { } types && type < types.Count ? types[(int)type]

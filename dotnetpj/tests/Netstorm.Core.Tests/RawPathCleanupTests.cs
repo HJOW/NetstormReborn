@@ -94,4 +94,33 @@ public sealed class RawPathCleanupTests
         }
         Assert.True(count > 500); Assert.True(queries > 250);
     }
+    /// <summary>전체 어댑터가 기존 조회/환불/Host를 실제로 호출하며 다른 풀을 효과 전에 거부한다.</summary>
+    [Fact]
+    public void CleanupAdapterUsesSameActualRefundAndProcessHost()
+    {
+        var scene = new CleanupScene(OriginalEdition.Patch1078, [2, 1, 0, 0, 1, 0, 0, 0]);
+        var finder = new ContainedFinderState();
+        var carrier = new RawCarrierPreDestroy(scene.Pool, finder, new() { ValidateDamageable = (_, _) => throw new InvalidOperationException(), DamageablePre = (_, _) => throw new InvalidOperationException(), DependentFound = () => throw new InvalidOperationException() });
+        var anchor = new RawPlayerPlacementAnchor(scene.Pool, scene.Types, scene.Hash.BorrowEntries(0), new(), new(), finder, new() { GraphReady = 1 });
+        var unpop = new RawUnpop(scene.Pool, scene.Hash, new byte[65536]);
+        var host = new SquidProcessHost(scene.Pool, scene.Types, new Kernel(), new RawSquidDestroy(scene.Pool, unpop, scene.Types), new());
+        var effects = new List<string>(); scene.Types[128].Cost = 27.9f;
+        var place = new RawConstructionPlace(scene.Pool, scene.Types, new() { LocalPlayer = 1 }, new()
+        {
+            StoredSp = _ => throw new InvalidOperationException("환불에서 잔액을 읽으면 안 됩니다"), AddLocalSp = delta => effects.Add($"add:{delta}"),
+            AddPlayerSp = (_, _) => throw new InvalidOperationException("다른 Player 가산"), SendMoney = (player, notice) => effects.Add($"send:{player}:{notice.Amount}"),
+        });
+        var hooks = new PathCleanupHooks
+        {
+            ReserveShared = () => throw new InvalidOperationException("먼 helper 예약 금지"), Ritual = (_, _, _) => throw new InvalidOperationException("의식 후보 없음"),
+            Destroy = (sid, flags) => { Assert.Equal(6, sid); Assert.Equal(0u, flags); effects.Add("destroy"); },
+        };
+        PathCleanupHooks actual = RawPathCleanup.MakeHooks(scene.Pool, carrier, anchor, host, place, hooks);
+        var cleanup = new RawPathCleanup(scene.Pool, scene.Hash, scene.Types, scene.State, actual);
+        cleanup.AfterSpatial(scene.Runtime, 5); Assert.Equal(new[] { "add:27", "send:1:27", "destroy" }, effects);
+        // 같은 실제 Host의 공유 정기는 Kernel과 부모 Form에 실제로 등록된다.
+        actual.AddShared!(6, 0x1a2c, 1); Assert.Equal(0x1a2cu, host.FindEvent(6, 0x1a2c)!.Event());
+        var otherPool = new RawSidPool(24000); Assert.Throws<ArgumentException>(() => RawPathCleanup.MakeHooks(otherPool, carrier, anchor, host, place, hooks));
+        Assert.Equal(3, effects.Count);
+    }
 }

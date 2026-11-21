@@ -85,4 +85,10 @@ public sealed class RawPathCleanup
             }
         }
     }
+    /// <summary>cpppj MakePathCleanupHooks처럼 같은 carrier/anchor/Host/건설 환불만 연결하고 예약·의식·삭제 경계는 유지한다.</summary>
+    public static PathCleanupHooks MakeHooks(RawSidPool pool, RawCarrierPreDestroy carrier, RawPlayerPlacementAnchor anchor, SquidProcessHost host, RawConstructionPlace place, PathCleanupHooks hooks)
+    {
+        if (!ReferenceEquals(pool, carrier.Pool) || !ReferenceEquals(pool, anchor.Pool) || !ReferenceEquals(pool, host.Pool()) || !ReferenceEquals(pool, place.Pool)) throw new ArgumentException("cleanup 하위 모듈 SID 풀 불일치");
+        return hooks with { Contained = (sid, mask, kind, index) => carrier.FindContained(sid, mask, kind, index), GraphFor = sid => anchor.GraphFor(unchecked((uint)sid)), AddShared = (sid, ev, payload) => host.AddSharedRegular(sid, ev, payload), Refund = place.Refund };
+    }
 }

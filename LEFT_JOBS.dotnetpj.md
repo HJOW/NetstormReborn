@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-21 · 사용자 요청으로0.797 문서·커밋 후 목표 일시 중지 · 마지막 완료0.797(경로 탐색/시작/정리 하위와 실제 Host 검색 공유) · 다음0.798 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6) · cpppj 제품1323 / 11.01 · 전체 목표 미완료**
+**2026-11-22 · 사용자 요청으로 개발 재개 · 마지막 완료0.798(건설 환불·경로 정리 하위 어댑터와 실제 Host SP 공유) · 다음0.799 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6) · cpppj 제품1326 / 11.01 · 전체 목표 미완료**
 
 현행 인계는 이 문서가 기준이다. 단위별 근거는 `docs/dotnet-canon-0NNN-*.md`이다. 0.733~0.797의 단위별 재개 연쇄·주제별 표 행과 1.1절 R4-6 단위별 완료 문장 원문은 [0.797 정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0797)에, 0.645~0.732의 단위별 완료 문장, 0.640 회귀 점검 상세, 0.546~0.676 완료 기록 원문은 [0.732 정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0732)에 있다. 0.600~0.635는 [0.635 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635), 0.613까지의 경과와 파일 계열별 체크 목록은 [0.613 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)에 있다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
@@ -20,12 +20,13 @@
 
 ### 0.1 재개 순서와 최근 완료 요약
 
-**일시 중지 인계(2026-11-21).** 사용자 요청에 따라 0.797(경로 탐색/시작/정리 하위와 실제 Host 검색 공유)을 마치고 문서·커밋 후 목표를 일시 중지했다. 새 지시 전에는 개발을 재개하지 않는다. 0.797은 관련 190건 통과·실패 0, 신규 7검사, 독립 2,696관측, 대표 3시작의 전체 덤프/지표가 0.796과 같음, 원본 1,392파일·0.796 전체 해시 장부와 기존 409자료 불변(413자료 등록)을 확인했다. M1 0/34와 전체 목표 미완료는 같다. CD Host 72입력·Start 256과 1037 애니메이션 2016관측은 미검증이다. [0.797 근거](docs/dotnet-canon-0797-20261121.md) · 상세 API/주의: `extracted/dotnet-0797/next-0798.md`
+**재개 인계(2026-11-22).** 0.798은 건설 Refund/Money/AddMoney 최소 본체와 동일 풀 carrier/anchor/Host/place의 전체 Cleanup 하위 어댑터를 완료했다. 실제 세션의 현재 SP/PlayerKnown/로컬 번호/너겟 TYPE를 공유한다. 집중 Core14·Client62 합계76건 통과·실패0, 신규6건, 독립 PE288호출, 대표3시작 전체 덤프/지표0.796과 동일, 원본1,392파일 불변이다. 414자료의 기존413항목/머리말을 보존했다. 전체 게임 목표와 M1 0/34는 같다. [0.798 근거](docs/dotnet-canon-0798-20261122.md)
 
-1. **0.798 — 경로 전체 정리 어댑터와 부모 Halt·도착, 실제 Host/Motion 연결.** C#에 RawConstructionPlace가 없으므로 실제 환불과 `MakePathCleanupHooks`의 같은 carrier/anchor/host/place 연결부터 한다. 이어 PriestHalt/Arrival·CarrierArrival과 같은 Host/Motion·30h를 잇는다. 다른 SquidReward 환불이나 no-op으로 대체하지 않는다. 실제 Source·자료·API·검증 제한은 `extracted/dotnet-0797/next-0798.md`와 0.797 단위 문서에 있으며, Source 계약 검사와 독립 PE 관측·실제 세션 연결을 구별한다.
+1. **0.799 — 부모 Halt·도착과 실제 Host/Motion 연결.** RawPriestHalt/RawPriestArrival·RawCarrierArrival 및 필요한 하위를 이식한 뒤 같은 Host/Motion·30h를 잇는다. Cleanup 하위 어댑터는 `RawPathCleanup.MakeHooks`·`HostSession.BuildPathCleanupWorldDevices`가 있으며 실제 상위 설치 호출은 아직 없다. `RawConstructionPlace`는 환불/잔액/가산만 지원하며 전체 배치·거부·비용부족 부모는 남았다. 예약·의식·전체 가상 삭제·6ch 실제 운반을 빈 성공이나 일반 삭제로 대신하지 않는다. CD Host72·Start256,10.37 애니메이션2016관측의 미검증은 유지한다. 이전 메모 `extracted/dotnet-0797/next-0798.md`의 "C# 환불 없음"은0.798에서 해결됐으며 나머지 API 주의는 유효하다.
+
 2. **NativeGameplay 26F 고정 수신 나머지.** 현재 API `BindSquidPacketDevices`·`ReceiveFixedGameplayPacket`에 2c/7a/4a/4b/6a/7e/33/34/70의 9개 entry가 실제 본체로 연결됐다([0.790](docs/dotnet-canon-0790-20261121.md)·0.791). 나머지 17고정 본문과 전체 26F 설치/Bind 검증, Root의 실제 언어/이름/ScreenSize/FormPacket/수신 장치 공급, 같은 Host의 파생 수신/변경/전체 가상 삭제를 현재 Runtime·저장소 전송 관문과 함께 잇는다. 검토한 26행·본문·누락 하위 모듈과 기존 독립 Path writer 자료 범위는 `extracted/dotnet-0788/next-0789.md`에 있다. 순수 observer·명목상 등록이나 구 `Mission.RawCampaignSession`·일반 삭제 Pre/Post로 결선을 대신하지 않는다.
 3. **R4-6 나머지와 R4 마감.** 위 둘 다음은 [1.1절 R4-6 남음](#r4-detail)의 전송·수신, Root 장치·UI, 표시·입력, 시작·수명 묶음을 잇고 R4-2~R4-5의 일치 대조, R4-7·R4-8(M1)로 넘어간다. 이어서 R5~R11과 후순위 요구사항(3절)을 진행한다. 다음 정기 전체 회귀는 0.800이다.
-4. **사용자 제외 검사 유지.** 실제 포획/희생·특정 적 공격·시나리오 승리는 재현하지 않고 사용자 수동 확인으로 남긴다. 원본 1,392파일의 마지막 불변 확인은 0.797 대표 3시작과 0.796 전체 해시 장부 대조다.
+4. **사용자 검사 범위(2026-11-22).** 캠페인1-1~1-5·스커미시에 한해 아군 AI 활성화로 포획/희생·특정 적 공격·시나리오 승리를 재현할 수 있다. 그 밖의 스테이지 해당 검사는 사용자 수동 확인으로 남긴다. 단순 진입/대기/생산/건설 검사는 진행한다. DN 자동 플레이의 실제 연결은 아직 없다. 원본1,392파일의 마지막 불변 확인은0.798 대표3시작과0.796 전체 해시 장부 대조다.
 
 **최근 완료 요약(0.639~0.797).** 단위별 완료 문장과 집중 검사 수는 보관본과 각 단위 문서에 있다. 완료 범위와 남은 일의 기준은 1.1·1.2절 체크 항목이다.
 
@@ -44,7 +45,7 @@
 | Chat 계열 | 0.757~0.759·0.761~0.763·0.765~0.767·0.769~0.771·0.773~0.775·0.777 | 실제 Subscriber·Chat 4800BYTE, manager·명령표·Chat 시작, 점 명령 분배, 제출·수신자·형식/제출 부모, Identity·일반 메시지/패킷, ChatWindow 상태·기하·전체 부모·공장/가상 분배, 공통 UI 소유권, 스타일 그림 출력, 중계·고정 등록, 장기 Client41h 수신 바인딩 | NativeRoot/HUD 창 생성·Enter, 공통 41h 전송 설치, 제출/송신 부모, Chat 명령 효과 |
 | Root 수신·전송 관찰기 | 0.778~0.779·0.781~0.783·0.785~0.787 | UI 수신 원문·실제 Root UI 수신(뉴스·알림), 장기 패킷 기록/Root 소유자, 기본 18행·송신 관찰기, 장기 설정/버전 응답, 3f/30/7a/5f/7d 관찰기, 69h 장기 목록, 장기 CS/7bh | 전체 기본 설치 부모, Root Source/Record/Sent, 435220 요청 reset, NativeMapView 공급자 |
 | 객체 패킷 수신·Host entry | 0.789~0.791 | 수신/변경/검증/압축/WORD 하위 본체, 실제 이름 83표·부착, Host 2c/7a/4a/4b·6a/7e/33/34/70의 실제 본문 9개 | 나머지 17본문·전체 26F, Root ScreenSize/FormPacket·수신 설치 |
-| 경로 Runtime·Data·본체·탐색 | 0.793~0.795·0.797 | 경로 Runtime·독립 관측, Data typed/Native 버퍼, Process 8종·전송 분배, BFS 탐색·Start/Cleanup 본체와 Host 검색 공유 | 전체 Cleanup 어댑터·건설 환불, PriestHalt/Arrival·CarrierArrival, 실제 Host/Motion·30h |
+| 경로 Runtime·Data·본체·탐색 | 0.793~0.795·0.797~0.798 | 경로 Runtime·독립 관측, Data typed/Native 버퍼, Process 8종·전송 분배, BFS 탐색·Start/Cleanup 본체·Host 검색 공유, 건설 환불·Cleanup 하위 어댑터와 실제 SP 공유 | PriestHalt/Arrival·CarrierArrival, 전체 상위 설치와 실제 Host/Motion·30h |
 | 정기 전체 회귀·L2 | 0.644부터 4단위마다(0.796까지) | 매회 실패 0·65실행 종료 0·원본 불변·M1 0/34 유지. 수집으로 드러난 미연결·순서 회귀를 0.644(AI 색 프레임·펜스)·0.680(플레어 분배)·0.684(시작 음향 순서)·0.688(Carrier 통지)에서 교정. 전체 검사 4,686건(0.644) → 5,663건(0.796) | 다음0.800 |
 
 <a id="first-run"></a>
@@ -136,7 +137,8 @@ AGENTS.md 2026-11-19 추가(`d047bf9a3`)로 `Netstorm.exe`의 아이콘은 기�
   - 완료(경로, 0.793~0.797): 경로 Runtime 하위와 독립 216/32/27관측(0.793), Data typed 768·Native 384 버퍼와 장기 헤더(0.794), Process 8종·Host·Kernel·전송 분배와 Host 부착 순서 교정(0.795), RawPathSearch/Start/Cleanup 본체(BFS 탐색/역추적·장기 Work·현재 진단)와 Host 검색 공유(0.797). [0.795](docs/dotnet-canon-0795-20261121.md) · [0.797](docs/dotnet-canon-0797-20261121.md)
   - 남음(전송·수신, 근거 `cpppj/src/client/ClientCampaignTransport.cpp`): 전체 `NativeGameplay26F` 설치·Bind 검증과 나머지 17고정 본문, 공통 41h가 `Root.ReceiveNativePacketChat`을 부르는 전송 설치, 전체 InstallClientPacketDefaults/MakeClientCampaignTransport 부모와 Carrier/Construction/Meta 고정 F 설치, Root의 실제 Source/Record/Sent·송신/제출, 전체 435220 옵션 부모의 Requested만 0으로 재설정하는 호출(FILE/enabled를 닫는 동작으로 대신하지 않음), NativeLoginPacketReceivers의 실제 MonoGame Root 설치 호출, HostSession 실제 송신 부모(구 `Mission.RawCampaignSession`의 sendChatMutable 입구로 대신하지 않음), 나머지 순수 observer/장기 수신, 장기 CS/7bh의 나머지 Meta/UI/투영/배열 소비자와 Root 생성 부모.
   - 남음(Root 장치·UI): Root의 언어/이름/ScreenSize/FormPacket/수신 장치 공급, NativeRoot/HUD 창 생성·Enter와 알림 등록 ID의 실제 HUD 작성자, NSInfo HUD/메타 UI/Root reply 저장, 장면음악 장치·UI/음향/Pool·전체 State 설치, NativeMapView 공급자(없는 동안 뉴스의 해당 분기는 명시 실패), Native 색표 7 getter/zone 옵션 변경 부모, 세션 자산 InBattle 최초 상태, Chat 실제 명령 효과.
-  - 남음(월드·경로): 전체 Cleanup 어댑터·RawConstructionPlace 환불, PriestHalt/Arrival·CarrierArrival, 같은 Host의 Path/Motion·30h, MetaZone의 전체 Native World 자산 가상 삭제 분배 설치(원문 본체/Client표/pin 경계는 0.734~0.735 완료, 일반 삭제 Pre/Post로 대신하지 않음), World/건설 효과 pin 전달.
+  - 완료(건설 환불·정리 하위,0.798): RawConstructionPlace의Refund/Money/AddMoney, 같은carrier/anchor/Host/place 어댑터·실제Host SP/현재Player 공유. 집중76건·독립288호출·대표3시작 불변. [0.798](docs/dotnet-canon-0798-20261122.md)
+  - 남음(월드·경로): Cleanup의실제상위설치·예약/의식/6ch·전체가상삭제장치, PriestHalt/Arrival·CarrierArrival, 같은 Host의 Path/Motion·30h, MetaZone의 전체 Native World 자산 가상 삭제 분배 설치(원문 본체/Client표/pin 경계는 0.734~0.735 완료, 일반 삭제 Pre/Post로 대신하지 않음), World/건설 효과 pin 전달.
   - 남음(표시·입력): Native Frame/Root UI 수집·그리기와 실제 지도 provider, 전체 커서 효과/Drop/Previews/Position 호출자, SavedCameraKey/무효점·CameraCommit/Present/Pan(실제 MapViewRect가 없는 HostMainMenu는 뷰 소비에서 명시 실패).
   - 남음(시작·수명): 전체 로그인/제품 Root 등록과 제품 Clock 프레임 설치, 전체 Native 시작의 intro/장면음악/나머지 지도 초기화와 Guide Init, 나머지 음향/저장/옵션/전체 EnergySupply, non-mine Notify의 실제 DataManager/추출 부모, Source의 Editor/LAN/Meta 재인계, 원본 큰 메뉴 부모 3행(0.707), 앞선 Native 초기화 주소 세대와 전체 bridge(0.714), Native WorldRuntime 장치 일원화, 미션 없는 장기 Surface/주변음·영화 갱신 잠금과 나머지 루프 단계(0.723), 메뉴 Kernel/효과·전체 State/자산 재시작(0.725), RawFileName 나머지 조회·BaseFile 고리·ClientStaticStrings의 소비자.
 - [ ] **R4-7 데모와 보류 검사.** `StartDemo` 3경로 덤프, `player-world-x86.tsv` 1,680행, F3에서 미룬 Fort/지형 바인딩·미션 Fort 경로·로그인 객체 전송·미션 재적재 검사를 잇는다.
@@ -172,7 +174,7 @@ AGENTS.md 2026-11-19 추가(`d047bf9a3`)로 `Netstorm.exe`의 아이콘은 기�
 - **D1(사용자 결정).** cpppj HEAD의 요구사항 코드가 공통 파일에 섞여 있으면 함께 옮긴다. 기본 영어·보통·75 FPS·4:3 창 모드에서 원본 동작을 먼저 대조하고 후순위 기능은 R8에서 검증한다. 파일 장치는 사용자 루트 정책을 초기 이식부터 적용한다.
 - **D2(사용자 결정).** 새 경로가 `Netstorm.exe`를 이어받고 완료 후 기존 경로를 제거한다. 적용 시점인 R5 전환/R6 삭제는 기존 에이전트 해석이다. 기존 경로의 `settings.json`은 새 경로로 가져오지 않는다. 근사 검사는 해당 코드와 함께 은퇴시키고 L1 대조로 확보한 검사는 새 모듈에서 잇는다.
 - **D3~D5(사용자 결정).** R8에서 로컬 MCP와 한국어·일본어 화면을 검증한다. Linux는 `$HOME/.netstorm/` 아래에 저장한다. Template 판독·433 Fort 왕복 검사의 기존 결정은 [Template 계획](docs/dotnet-template-storage-plan-20261101.md)에 있다.
-- **사용자 지시.** 정기 전체 회귀는 4단위당 1회만 수행한다(2026-11-19). 실제 포획/희생·특정 적 공격·시나리오 승리는 사용자 요청대로 재현하지 않고 사용자 수동 확인으로 둔다.
+- **사용자 지시.** 정기 전체 회귀는 4단위당 1회만 수행한다(2026-11-19). 포획/희생·특정 적 공격·승리 재현은2026-11-22 지시로캠페인1-1~1-5·스커미시에서만아군AI 활성화로허용하며나머지는사용자수동확인으로둔다.
 
 <a id="original-parity-plan"></a>
 
@@ -205,7 +207,7 @@ AGENTS.md 2026-11-19 추가(`d047bf9a3`)로 `Netstorm.exe`의 아이콘은 기�
 | 12 스커미시 | Campaign에서 시작/취소, 적 수·AI별 난이도/동맹, 금지 유닛 최대 5개(Outpost 포함). 멀티플레이 규칙의 임의 섬·간헐천. [cpppj 스커미시](docs/exe/cpp-skirmish-sk-20261111.md) |
 | 13 일본어 | 외부 Noto Sans JP, 일본어 UI와 본문 영어 대체. 번역 범위는 cpppj D3. [cpppj 일본어](docs/exe/cpp-japanese-l1-l3-20261111.md) |
 | 14 QuickJS | quickjs-ng 엔진 탑재·자체 검사·라이선스 동봉. 추가 연동은 별도 사용자 결정 대상이다. [cpppj 엔진 계약](docs/exe/cpp-quickjs-engine-20261111.md) |
-| **15 Reset All** | **미착수.** Options 맨 아래에 Reset All을 제공한다. 취소 시 현재 설정·진행을 보존하고 확인 시 `options.cfg`를 포함한 설정·게임 진행을 초기화한 뒤 종료한다. 다시 실행해 최초 상태를 검증한다. 2026-11-21 소스 재확인에서도 cpppj에 아직 기준 구현이 없다. [AGENTS.md](AGENTS.md) |
+| **15 Reset All** | **미착수.** Options 맨 아래에 Reset All을 제공한다. 취소 시 현재 설정·진행을 보존하고 확인 시 `options.cfg`를 포함한 설정·게임 진행을 초기화한 뒤 종료한다. 다시 실행해 최초 상태를 검증한다. cpppj1325에서 확인/취소·초기화·종료와 최초 상태 복원을 구현했다(2026-11-22). DN은 해당 Source를 옮길 때 대조한다. [AGENTS.md](AGENTS.md) |
 
 **공통 완료 사항.** 기존 배포의 `Netstorm.exe` 이름과 압축 스크립트, 11.01·Credits 3항목·HJOW/AI 크레딧 및 카피라이트(0.150·0.342), 폐기 클라이언트 유효성 검사 비활성·외부 접속 문서화(0.151). 새 소비자가 생기면 외부 접속 목록을 갱신한다. `Netstorm.exe`의 원본 아이콘은 아직 미완료다([0.4](#exe-icon)). [배포 스크립트](dotnetpj/package-dotnetpj.ps1) · [외부 접속](docs/dotnet-external-endpoints-20261103.md)
 
@@ -213,9 +215,9 @@ AGENTS.md 2026-11-19 추가(`d047bf9a3`)로 `Netstorm.exe`의 아이콘은 기�
 
 ## 4. cpppj 동기화와 이식 목록
 
-- **cpppj 1323이 현행 제품.** 0.606의 오라클 재빌드 기준은 1322다(1323은 아이콘 리소스만 추가). 마지막으로 문서화한 변경 분류는 0.530의 1312·1313이다. `979d65b5d..HEAD`의 `cpppj/src` 변경 26파일 중 PORT_MAP과 겹치는 것은 14파일이며, 그중 9파일은 이미 변경 뒤 커밋을 base로 재대조했다(2026-11-21 0.797 정리 때 행별 `git merge-base --is-ancestor`로 재확인). base가 변경보다 앞선 5파일은 `BitmapFont.cpp/.h`(1322 글꼴), `ClientMain.cpp`의 일부 행(1322), `LocalTcpTransport.cpp`·`LocalUdpTransport.cpp`(1320 미션 전환)다. 해당 소비자를 옮길 때 재대조를 마친 뒤 PORT_MAP 기준 커밋을 올린다. 1314(최초 실행)는 0.2, 1322는 0.3, 1323은 0.4와 함께 반영한다. [1312·1313 처분](docs/dotnet-ai-alliance-delta-20261115.md) · [1320](docs/exe/cpp-mission-transition-1320-20261117.md) · [cpppj 현행](LEFT_JOBS.md)
+- **cpppj1326이 현행 제품(1327 검증 관문).** 1325의Reset All과1326의테스트AI 피해문맥이 추가됐으며 해당 소비자 이식 시 재대조한다. DN 제품 기준 동기화는 아직1323이다. 0.606의 오라클 재빌드 기준은 1322다(1323은 아이콘 리소스만 추가). 마지막으로 문서화한 변경 분류는 0.530의 1312·1313이다. `979d65b5d..HEAD`의 `cpppj/src` 변경 26파일 중 PORT_MAP과 겹치는 것은 14파일이며, 그중 9파일은 이미 변경 뒤 커밋을 base로 재대조했다(2026-11-21 0.797 정리 때 행별 `git merge-base --is-ancestor`로 재확인). base가 변경보다 앞선 5파일은 `BitmapFont.cpp/.h`(1322 글꼴), `ClientMain.cpp`의 일부 행(1322), `LocalTcpTransport.cpp`·`LocalUdpTransport.cpp`(1320 미션 전환)다. 해당 소비자를 옮길 때 재대조를 마친 뒤 PORT_MAP 기준 커밋을 올린다. 1314(최초 실행)는 0.2, 1322는 0.3, 1323은 0.4와 함께 반영한다. [1312·1313 처분](docs/dotnet-ai-alliance-delta-20261115.md) · [1320](docs/exe/cpp-mission-transition-1320-20261117.md) · [cpppj 현행](LEFT_JOBS.md)
 - **기존 재대조 규칙.** CPP 소스는 커밋된 HEAD를 사용한다. 해당 소비자를 옮길 때 바뀐 cpp 소스·fixture·검사를 함께 확인하고, cpppj 테스트 자동 플레이와 관전 경계는 R5/R6에서 잇는다. [오라클 자동 플레이](docs/testing/cpp-autoplay-test-guide.md)
-- **현재 집계(2026-11-21,0.797).** PORT_MAP 물리1471줄(자료1466행,port978·L1 481·session7), 연결fixture413개다. 현행 cpppj1239개 소스 단위169296줄 중580개99681줄 대응·659개69615줄 미대응이다. 부분 이식을 포함하므로 전체 분기·호스트 결선이나 플레이 완료를 뜻하지 않는다. 기존409자료의 항목/머리말/해시/행 수와 이전 대응 행을 보존했다. 근거는 extracted/dotnet-0797/port-inventory.tsv·metadata-summary.json이다.
+- **현재 집계(2026-11-22,0.798).** PORT_MAP 물리1476줄(자료1471행,port983·L1 481·session7), 연결fixture414개다. 아래 소스 줄 집계는0.797 기준이며0.798은부분이식5쌍을추가했다. 현행 cpppj1239개 소스 단위169296줄 중580개99681줄 대응·659개69615줄 미대응이다. 부분 이식을 포함하므로 전체 분기·호스트 결선이나 플레이 완료를 뜻하지 않는다. 기존409자료의 항목/머리말/해시/행 수와 이전 대응 행을 보존했다. 근거는 extracted/dotnet-0797/port-inventory.tsv·metadata-summary.json이다.
 - **파일 계열 목록.** 현행 [PORT_MAP](dotnetpj/PORT_MAP.tsv)과 `python -X utf8 tools/port_inventory.py --families dn`을 사용한다. 예전 단계 배정 및 대응 파일의 미완 부분은 [보관본 2.4~2.7](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)에서 찾는다. 단위 작업은 해당 계열이나 큰 파일 하나를 옮기고 검사·호스트 결선까지 확인한다.
 - **cpppj 전달 항목.** 상태 덤프와 고정 시각 요청은 해결됐다. fixture 헤더·모듈 연결 상태표, `GraphTests` 슬롯 열 범위와 `ClearProcesses` 뒤 정기 조회 진단의 이전 요청은 보관본 1.4에 있다. 변경이 필요하면 사용자에게 전달한다.
 
@@ -224,7 +226,7 @@ AGENTS.md 2026-11-19 추가(`d047bf9a3`)로 `Netstorm.exe`의 아이콘은 기�
 ## 5. 검증과 작업 규칙
 
 - **L1** 원본 x86 fixture, **L2** 시작 상태 덤프, **L3** 고정 시계·입력열 뒤 상태 해시, **L4a** 논리 화면 픽셀, **L4b** 소리 시점·곡 선택, **L5** 자연 완주·저장·재실행. 파일 이식·집중 검사·실제 세션 결선·전체 일치를 각각 기록한다. `snapshot`과 `snapshot-output`을 구별하고 실행 근거에 SHA·시드·고정 시각·프레임·스크립트·옵션을 남긴다.
-- **사용자 확인.** L5와 전체 화면/청취, 실제 사제 포획·희생·특정 적 공격·승리·MP/LAN, 공격형 공중 3종 실제 생산/조작은 사용자 확인 범위다. 창 실행은 AGENTS.md의 명시 확인·예외 PC 규칙을 따른다. Windows 10에서 통과하면 Windows 11 실기와 사용자 관찰만 남은 상태에서도 다음 단계로 진행한다. 물리 DPI·4K FSR·UAC는 R8 이후, `DSERR_NODRIVER` 실장치 재검사는 출력 장치가 있는 PC에서 한다. [소리 장치 기록](docs/dotnet-sound-device-20261114.md) · [공통 실행 범위](LEFT_JOBS.md#rules-verify)
+- **사용자 확인.** L5와 전체 화면/청취·MP/LAN·공격형 공중3종 실제 생산/조작은 사용자 확인 범위다. 포획·희생·특정 적 공격·승리는 캠페인1-1~1-5·스커미시에 한해 아군AI 활성화로 테스트할 수 있고 다른 미션은 사용자 확인으로 남긴다(2026-11-22). 창 실행은 AGENTS.md의 명시 확인·예외 PC 규칙을 따른다. Windows 10에서 통과하면 Windows 11 실기와 사용자 관찰만 남은 상태에서도 다음 단계로 진행한다. 물리 DPI·4K FSR·UAC는 R8 이후, `DSERR_NODRIVER` 실장치 재검사는 출력 장치가 있는 PC에서 한다. [소리 장치 기록](docs/dotnet-sound-device-20261114.md) · [공통 실행 범위](LEFT_JOBS.md#rules-verify)
 - **공통 기능 경계.** CHEAT 메뉴는 Edit에서만 표시한다. 연녹색 직사각형 분석은 보류다. 폐기된 인터넷 master/root·검증·ping/진단은 비활성 상태를 유지한다. 도움말 링크와 LAN은 해당 사용자가 선택한 경로를 따른다. [공통 계약](LEFT_JOBS.md#rules-verify)
 - **오라클과 자료.** `cpppj/build/bin/Release/Netstorm.exe`를 PowerShell에서 빌드한다. 실행은 `extracted/dotnet-oracle-data/` 사본과 분리한 사용자 루트로 진행하며 `originals/` 해시를 전후 확인한다. 0.606의 VM 소프트웨어 GPU 환경은 [재측정 기록](docs/dotnet-l2-0606-20261117.md)에 있다. 일반 덤프 비교와 최초 실행 검증의 옵션을 구별한다.
 - **검사 명령.** `dotnet build dotnetpj/Netstorm.sln -c Release`, `dotnet test dotnetpj/Netstorm.sln -c Release`, `python -X utf8 dotnetpj/tools/cpp_sync.py`를 쓴다. 실제 TYPE 검사는 기본 데이터 또는 `NETSTORM_DATA`로 선택한 보호 자료 사본을 읽는다. 2026-11-19 사용자 지시로 정기 전체 회귀는 4단위당 1회만 수행한다(0.796 완료 뒤 다음0.800). fixture는 사본 없이 한 소비자 프로젝트에 링크하고 `cpp_sync.py --update --add`로 매니페스트에 등록한다. GUI 명령·변이 검사·등록 규칙 전문은 보관본 6.1에 있다. [L2 도구](docs/dotnet-l2-batch-20261114.md) · [L4a 도구](dotnetpj/tools/l4a_compare.ps1) · [덤프 형식](docs/exe/cpp-session-state-dump-20261109.md)
@@ -250,6 +252,7 @@ AGENTS.md 2026-11-19 추가(`d047bf9a3`)로 `Netstorm.exe`의 아이콘은 기�
 | 0.721~0.737 | 2026-11-21 | Client 프레임·장기 Surface/Host, Native State 정리·저장소·실제 Runtime 반납·MetaZone 본체/Client삭제경계·NSInfo 호스트 소유자, 0.736 전체 검사·65시작 전수 감사 |
 | 0.738~0.755 | 2026-11-21 | Root 자원·장기 자산표·선택, 커서 데이터·수명·위치, 카메라 snapshot, Renderer 소유자·출력과 실제 Host 표시 장치 |
 | 0.757~0.787 | 2026-11-21 | Chat 계열(Subscriber·manager·명령표·제출·Identity·ChatWindow·공장·중계·41h 수신), Root UI 수신·패킷 기록·기본 관찰기·버전 응답·장기 CS/7bh |
+| 0.798 | 2026-11-22 | 건설 환불·잔액·가산, 경로 정리 하위 어댑터·실제Host SP 공유, 독립288관측·집중76건·대표3시작 불변 |
 | 0.789~0.797 | 2026-11-21 | 객체 패킷 수신 하위·Host 고정 본문 9개, 경로 Runtime·Data·Process·탐색/시작/정리 하위, 0.796 전체 검사·65시작 수집 |
 
 정기 전체 회귀·일괄 덤프는 0.644부터 4단위마다(0.644·0.652·0.656·0.660·0.664 … 0.728 … 0.796) 수행했다. 단위별 근거는 `docs/dotnet-*.md`와 Git 기록에 있다.

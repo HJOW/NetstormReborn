@@ -1469,3 +1469,8 @@ cpppj/src/o/RawPathCleanup.h	Netstorm.Core/Original/RawPathCleanup.cs	0d82e448de
 cpppj/src/o/RawPathCleanup.h	Netstorm.Core/Original/RawPathCleanup.State.cs	0d82e448de8ce679357cda8042bbc8226b8ed1b2	port
 cpppj/src/client/RawCampaignPathBindings.cpp	Netstorm.Client/Host/HostSession.PathSearch.cs	2b5ee903c78defa10dbde959a63db11cb4adf8b7	port
 cpppj/src/client/RawCampaignPathBindings.h	Netstorm.Client/Host/HostSession.PathSearch.cs	5318fdd6a88cbf71e5248a42a30f902a860ca3dd	port
+cpppj/src/o/RawConstructionPlace.cpp	Netstorm.Core/Original/RawConstructionPlace.cs	ed29febb166d93babcd8d0ba4efc01616dc6aea8	port
+cpppj/src/o/RawConstructionPlace.h	Netstorm.Core/Original/RawConstructionPlace.cs	ed29febb166d93babcd8d0ba4efc01616dc6aea8	port
+cpppj/src/o/RawPathCleanup.cpp	Netstorm.Client/Host/HostSession.PathCleanup.cs	0d82e448de8ce679357cda8042bbc8226b8ed1b2	port
+cpppj/src/o/RawPathCleanup.h	Netstorm.Client/Host/HostSession.PathCleanup.cs	0d82e448de8ce679357cda8042bbc8226b8ed1b2	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.PathCleanup.cs	baf141ebe8d2893459a1b18ea74a6caa88504468	port
