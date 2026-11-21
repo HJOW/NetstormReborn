@@ -182,7 +182,7 @@ const MISSION_F6 = 0x750000;
 const KNOWLEDGE_COMMANDS = new Set([0x020000a0, 0x02000132, 0x02000133]);
 // 동맹 요청 입력이 처리하는 네 명령(요청 fb·해제 fa·확인 7e·무승부 선언 db)이다. (2026-11-20 WB04-E1126)
 const ALLIANCE_INPUT_COMMANDS = new Set([0x020000fb, 0x020000fa, 0x0200007e, 0x020000db]);
-const WIRED_MENU_COMMANDS = new Set([0x020000f0, 0x02000091, 0x020000f1, 0x0200006d, 0x020000e6, 0x020000e7, 0x020000ae, 0x020000b8, 0x02000095, 0x02000017, 0x0200008c, 0x0200008d, 0x020000c5, 0x020000a0, 0x02000132, 0x02000133, 0x020000cf]);
+const WIRED_MENU_COMMANDS = new Set([0x020000f0, 0x02000091, 0x020000f1, 0x0200006d, 0x020000e6, 0x020000e7, 0x020000ae, 0x020000b8, 0x02000095, 0x02000017, 0x0200008c, 0x0200008d, 0x020000c5, 0x020000a0, 0x02000132, 0x02000133, 0x020000cf, 0x02000088]);
 // Session이 Tutorial 판정용으로 입력 큐에 올리는 통지 명령이다(발사기 배치 0x030000b0·포함 0x030000b1, 기술 0x020000b5, 포획 0x020000d7, 상승 0x020000df; 전역 005429b4 등의 PE 초기값).
 // Tutorial 판정기(`tutorial.event`)가 각 명령을 받고 해당 단계가 쓰지 않으면 원본 주 루프처럼 그대로 버려진다. 큐 소비 보호 목록에 없으면 뒤의 클릭까지 막혀 모든 입력이 멈추므로 소비를 허용한다. (2026-11-20 WB04-E1083)
 const TUTORIAL_NOTICE_COMMANDS = new Set([0x030000b0, 0x030000b1, 0x020000b5, 0x020000d7, 0x020000df]);
@@ -1694,6 +1694,8 @@ export class Netstorm {
         if (!WIRED_MENU_COMMANDS.has(code)) { console.warn(`Netstorm: 게임 메뉴 명령 0x${code.toString(16)} 은(는) 아직 연결되지 않아 실행하지 않았습니다.`); return false; }
         // 미션 중단(0x8c): 인자 0 은 ABORT 확인 창, 그 밖은 전투 떠나기 예약이다. 재시작(0x8d)·전투 떠나기(0xc5)는 월드를 반납하므로 true 를 돌려 입력 반복을 끝내게 한다. (2026-11-20 WB04-E1085)
         if (code === 0x0200008c) { dispatchMissionAbort(event, this._clientInputQueue, (section) => this._openTell(section)); return false; }
+        // 하단 채팅 창 숨김/표시(F3·View 메뉴, 0x02000088)는 이 입력 프레임의 Gump 전달(`gump.input().route`)이 Uber 루트 도킹에서 이미 구분선을 옮긴다. 여기서는 다시 옮기지 않고(두 번 옮기면 되돌아간다) 지도 영역이 바뀌었으므로 다시 그리기만 한다. (2026-11-21 WB04-E1159)
+        if (code === 0x02000088) { this._clientRenderer.invalidateAll(); this._displayDirty = true; return false; }
         if (code === 0x0200008d) return this._restartCampaignMission();
         if (code === 0x020000c5) return this._leaveCampaignMission();
         const text = () => { const value = this._clientChatWindows.strings.get(event.y >>> 0); return value === undefined ? '' : String(value); };

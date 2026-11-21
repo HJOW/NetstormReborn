@@ -1,5 +1,5 @@
 // 원본 도움말 키 목록 중 미션에서 동작해야 하는 단축키(F1 일반 도움말·F2 건물 숨김·Shift-F3 섬 테마·F8 목표 보기·Ctrl-F5 사제/운반체 선택)를 실제 Chromium 에서 확인한다. (2026-11-21 WB04-E1155)
-// F3(채팅 창 숨김/표시)은 채팅 창이 아직 없어 제외한다(LEFT_JOBS 의 채팅 창 공장).
+// F3(채팅 창 숨김/표시)은 하단 채팅 구분선이 올라와 지도 영역이 줄고 다시 내려가는지만 확인한다. 채팅 창 안의 배경·기록·입력줄은 아직 없다(LEFT_JOBS 의 채팅 창 공장). (2026-11-21 WB04-E1159)
 const { test, expect } = require('@playwright/test');
 
 // 화면비를 환경 변수 NETSTORM_E2E_ASPECT('4:3' 기본, '16:9', '16:10')로 고른다.
@@ -38,7 +38,7 @@ async function startWarBegins(page) {
 }
 
 // 새 페이지의 오류를 모은다.
-function collectErrors(page) { const errors = []; page.on('pageerror', (error) => errors.push(error.stack ?? error.message)); page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); }); return errors; }
+function collectErrors(page) { const errors = []; page.on('pageerror', (error) => errors.push(error.stack ?? error.message)); page.on('console', (message) => { if (message.type() === 'error' || (message.type() === 'warning' && message.text().includes('아직 연결되지 않아'))) errors.push(message.text()); }); return errors; }
 
 test('The War Begins!: F1 도움말·F2 건물 숨김·Shift-F3 섬 테마·F8 목표 보기·Ctrl-F5 선택이 동작한다', async ({ page }) => {
   test.setTimeout(300000); const errors = collectErrors(page); await startWarBegins(page);
@@ -47,6 +47,10 @@ test('The War Begins!: F1 도움말·F2 건물 숨김·Shift-F3 섬 테마·F8 �
   // F1: 일반 도움말 창이 열린다(게임은 멈추지 않는다).
   await page.keyboard.press('F1'); await expect.poll(async () => (await state()).dialog, { timeout: 5000, message: 'F1 도움말' }).toBe('HelpWindow'); expect((await state()).paused, 'F1 도움말은 시계를 멈추지 않는다').toBe(false);
   await page.evaluate(() => window.netstorm._mainMenu.dialog.closeWindow()); await expect.poll(async () => (await state()).dialog).toBeNull();
+  // F3: 하단 채팅 구분선이 올라와 지도 영역의 아래쪽이 줄고, 한 번 더 누르면 화면 아래로 돌아간다. 연결되지 않은 명령 경고가 없어야 한다.
+  const mapBottom = () => page.evaluate(() => window.netstorm._campaignWorld.mapView().bottom); const fullBottom = await mapBottom();
+  await page.keyboard.press('F3'); await expect.poll(mapBottom, { timeout: 5000, message: 'F3 채팅 영역 표시' }).toBeLessThan(fullBottom);
+  await page.keyboard.press('F3'); await expect.poll(mapBottom, { timeout: 5000, message: 'F3 채팅 영역 숨김' }).toBe(fullBottom);
   // F2: 건물 숨김이 켜지고 한 번 더 누르면 꺼진다.
   await page.keyboard.press('F2'); await expect.poll(async () => (await state()).hide, { message: 'F2 켬' }).toBe(1);
   await page.keyboard.press('F2'); await expect.poll(async () => (await state()).hide, { message: 'F2 끔' }).toBe(0);
