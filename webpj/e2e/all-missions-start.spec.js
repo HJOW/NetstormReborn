@@ -22,7 +22,7 @@ test('모든 캠페인 미션을 연달아 시작해 오류 없이 진행한다'
   test.setTimeout(900000);
   const errors = []; page.on('pageerror', (error) => errors.push(error.message)); page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
   await page.addInitScript((names) => {
-    localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } }));
+    localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0, autoDemo: 0 } }));
     const done = {}; for (const name of names) done[`Done${name}`] = '1'; localStorage.setItem('netstorm.progress', JSON.stringify({ version: 1, values: done }));
   }, MISSIONS);
   await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/?aspect=4:3');
@@ -51,6 +51,8 @@ test('모든 캠페인 미션을 연달아 시작해 오류 없이 진행한다'
       const before = await page.evaluate(() => window.netstorm._gameClock.gameSeconds()); await page.waitForTimeout(4000);
       const after = await page.evaluate(() => ({ seconds: window.netstorm._gameClock.gameSeconds(), paused: window.netstorm._gameClock.paused() }));
       expect(after.paused, mission.name).toBe(false); expect(after.seconds - before, mission.name).toBeGreaterThan(2);
+      // 요청한 미션의 대본이 실제로 돌고 있는지 확인한다(미연결 미션은 시작되지 않고 메인 메뉴에서 45초 뒤 Auto-Demo 가 대신 돌아 시계만 흐를 수 있다). (2026-11-21 WB04-E1156)
+      expect(await page.evaluate(() => ({ script: window.netstorm._clientGuide.current()?.script?.name?.toLowerCase(), demo: window.netstorm._clientGuide.current()?.runtime.gate.demo })), mission.name).toEqual({ script: mission.name.toLowerCase(), demo: 0 });
       started.push(mission.name);
     }
   }
