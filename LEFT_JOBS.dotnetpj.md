@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-21 · 사용자 재개 지시로 진행 중 · 마지막 완료0.753(카메라156입력·진단 뷰 수명·집중45건 통과) · 다음0.754 실제 Renderer 소유자/그리기/출력 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6 병행) · cpppj 제품1323 / 11.01 · 전체 목표 미완료**
+**2026-11-21 · 사용자 재개 지시로 진행 중 · 마지막 완료0.754(Renderer288입력·집중37건 통과) · 다음0.755 실제 호스트 장치/Root Cancel · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6 병행) · cpppj 제품1323 / 11.01 · 전체 목표 미완료**
 
 현행 인계는 이 문서가 기준이다. 단위별 근거는 `docs/dotnet-canon-0NNN-*.md`이다. 0.645~0.732의 단위별 완료 문장, 0.640 회귀 점검 상세, 0.546~0.676 완료 기록 원문은 [0.732 정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0732)에 있다. 0.600~0.635는 [0.635 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635), 0.613까지의 경과와 파일 계열별 체크 목록은 [0.613 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)에 있다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
@@ -22,11 +22,11 @@
 
 **재개 순서(2026-11-21).** 0.752 전체5,361검사와 같은 빌드65시작·원본/빌드 해시·전수 바이트 감사를 완료했다. [0.752 근거](docs/dotnet-canon-0752-20261121.md)
 
-1. **0.754 실제 Renderer 소유자/그리기/출력.** 0.753에서 RawCameraView/ClientCameraGlobals·실제 Gameplay snapshot 공유·연소 뷰 setter를 연결하고156원문관찰을 대조했다. 진단 뷰가 Session을 붙잡는 문제를 재현·교정했다. 신규8건 포함 집중45건·대표3시작 종료0/0.752 전체바이트 일치·원본1392파일 불변이다. [0.753](docs/dotnet-canon-0753-20261121.md). 다음은 기존 Display/DirtyRegions와 RendererDraw를 사용하는 실제 Renderer 소유자와 그리기/출력이다. 이어 실제 Camera 초기화/표면 표시 장치·ClientCursorStateCleanup/Root Cancel을 잇는다. HostMainMenu에는 아직 실제 RawButtonControls MapViewRect가 없으므로 화면 전체를 실제 지도 영역으로 임의 대체하지 않는다. 빈 커서도 실제 Project/dirty 준비를 생략하지 않는다. RawCursorDrop/호출자 전체와 실제 채팅·UI/음향·음악/저장/옵션 기본 장치, 전체Root 상태 호출도 남았다. SavedCameraKey 처리·명시 무효점 초기화·CameraCommit/Present/Pan 전체도 남았다. 전체Native 메뉴/로그인/State는 미완료다. non-mine Notify의 실제DataManager 저장과 비Session Notify 추출부모, NSInfo HUD/메타UI/Root reply 저장도 후속이다. RawFileName 나머지 조회·BaseFile 고리 소비/ClientStaticStrings는 해당 소비자에서 잇는다.
+1. **0.755 실제 호스트 장치와 Root Cancel.** 0.754에서 기존 dirty/합성/정렬/글리프를 사용하는 Renderer 소유자와 실제 버퍼 그리기/출력을 이식했다. 원문288출력·신규11건 포함 집중37검사·대표3시작 종료0/0.752 전체바이트 일치·원본1392파일 불변이다. [0.754](docs/dotnet-canon-0754-20261121.md). 다음은 실제 Host Renderer/Camera 초기화/표면 표시 장치와 ClientCursorStateCleanup/Root Cancel이다. Hash.BorrowEntries(0)는 같은 ushort 물리를 제공하며 Cloud.WorldRedraw auto property를 카메라가 임시 사본으로 쓰지 않도록 같은 owner 연결을 마련한다. HostMainMenu에는 실제 RawButtonControls MapViewRect가 없으므로 화면 전체를 실제 지도 영역으로 임의 대체하지 않는다. Native Frame/Root UI 수집·그리기와 전체State는 여전히 미완료다. 빈 커서도 실제 Project/dirty 준비를 생략하지 않는다. RawCursorDrop/호출자·채팅/UI/음향·음악/저장/옵션 기본 장치, SavedCameraKey 처리/명시 무효점 초기화·CameraCommit/Present/Pan 전체도 남았다. non-mine Notify의 실제DataManager 저장과 비Session Notify 추출부모, NSInfo HUD/메타UI/Root reply 저장도 후속이다. RawFileName 나머지 조회·BaseFile 고리 소비/ClientStaticStrings는 해당 소비자에서 잇는다.
 2. **같은 작업 줄기.** MetaZone 원문 본체124입력은0.734, 실제Client표/현재Runtime pin·설치된가상분배전달은0.735 완료다. 현재 HostSession의 전체 Native World 자산 가상 삭제 분배 설치는 아직 미연결이며 일반 삭제의 Pre/Post 완료로 대신하지 않는다. [0.733](docs/dotnet-canon-0733-20261121.md) · [0.734](docs/dotnet-canon-0734-20261121.md) · [0.735](docs/dotnet-canon-0735-20261121.md). 이어서 [R4 체크](#r4-detail)→R11과 후순위 요구사항을 진행한다. 다음 정기 전체 회귀는0.756이다.
-3. **사용자 제외 검사 유지.** 실제 포획/희생·특정 적 공격·시나리오 승리는 재현하지 않고 사용자 수동 확인으로 남긴다. 원본1,392파일의 마지막 불변 확인은0.753 대표3시작이다(전체65시작은0.752).
+3. **사용자 제외 검사 유지.** 실제 포획/희생·특정 적 공격·시나리오 승리는 재현하지 않고 사용자 수동 확인으로 남긴다. 원본1,392파일의 마지막 불변 확인은0.754 대표3시작이다(전체65시작은0.752).
 
-**최근 완료 요약(0.639~0.753).** 단위별 완료 문장과 집중 검사 수는 보관본과 각 단위 문서에 있다. 완료 범위와 남은 일의 기준은 1.1·1.2절 체크 항목이다.
+**최근 완료 요약(0.639~0.754).** 단위별 완료 문장과 집중 검사 수는 보관본과 각 단위 문서에 있다. 완료 범위와 남은 일의 기준은 1.1·1.2절 체크 항목이다.
 
 | 주제 | 단위 | 핵심 | 남은 일 |
 | --- | --- | --- | --- |
@@ -41,6 +41,7 @@
 | Root 자원·장기 자산표·선택 | 0.737~0.739·0.741~0.743·0.745~0.747 | NSInfo/서버 목록·장면 음악·Template/State 공유·State 효과분배/Root경계·첫메뉴 자산표·선택/강조/실제Clear/Root커서 | 나머지 기본 장치와 월드 표시 설치, R4-6 |
 | 커서 데이터·수명·위치·실제 진단 | 0.749~0.751 | 고정 배열/데이터·Take/Cancel/Activate·Query/SourceAllowed/Prepare·실제 자산/Canon/SHP·2148원본입력·실제 Gameplay/Session/Surface 현재 checking 공유 | 실제 Camera/렌더러와 Root Cancel·Drop/호출자 |
 | 카메라·실제 snapshot | 0.753 |16DWORD/목표/분모·실제 Gameplay/커서/내용물/연소 뷰 공유·156관찰·진단 뷰 Session 수명 교정 | Renderer 초기화/그리기/표면 장치·Root Cancel·CameraCommit/입력 |
+| Renderer 소유자·그리기·출력 | 0.754 | 장면/캐시/dirty·Native submit 재조회·선행 출력요청 소비·288원문출력·빈 Cancel 실제 Prepare 검증 | 실제 Host/Native Frame/표면 장치·Root Cancel 연결 |
 | 정기 전체 회귀·L2 | 0.644부터 4단위마다(0.752까지) | 매회 실패 0·65실행 종료 0·원본 불변·M1 0/34 유지. 수집으로 드러난 미연결·순서 회귀를 0.644(AI 색 프레임·펜스)·0.680(플레어 분배)·0.684(시작 음향 순서)·0.688(Carrier 통지)에서 교정. 전체 검사 4,686건(0.644) → 5,361건(0.752) | 다음0.756 |
 
 <a id="first-run"></a>

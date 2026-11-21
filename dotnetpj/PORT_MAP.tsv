@@ -1296,3 +1296,7 @@ cpppj/src/client/ClientCameraGlobals.h	Netstorm.Client/ClientCameraGlobals.cs	aa
 cpppj/src/o/RawConstructionHistory.h	Netstorm.Core/Original/ConstructionHistoryState.cs	059527a86eff6f4cd969ccff4ec3201df2568ec5	port
 cpppj/src/client/SavedCameraKey.h	Netstorm.Client/Input/SavedCameraPositions.cs	aae2f0ab21675a6f7ed51a2d9bdd2d6b522acfdb	port
 cpppj/src/client/ClientGameplayGlobals.h	Netstorm.Client/ClientGameplayGlobals.Camera.cs	ae0e58b3ac0f34697eac6954cce7913a759247e3	port
+cpppj/src/client/Renderer.cpp	Netstorm.Client/Display/Renderer.cs	5a2cd047486b18fb1d3978f8bbd4b1dee6924413	port
+cpppj/src/client/Renderer.h	Netstorm.Client/Display/Renderer.cs	731c9dee99fdaf98338fc54f33c9d62a886251f6	port
+cpppj/src/client/Renderer.h	Netstorm.Client/Display/RenderScene.cs	731c9dee99fdaf98338fc54f33c9d62a886251f6	port
+cpppj/src/client/DrawSort.cpp	Netstorm.Client/Display/Renderer.cs	225f2322cf7936604306b6534fd4edf18f246c12	port
