@@ -68,6 +68,7 @@ import { RawTutorialLater } from './raw-tutorial-later.js';
 import { RawPriestLookup } from './raw-priest-lookup.js';
 import { drawCampaignTempleFrames } from './raw-campaign-session-building.js';
 import { drawRainVortex } from './raw-rain-vortex-draw.js';
+import { RawObjectConversion, makeObjectConversionHooks, objectConversionBody } from './raw-object-conversion.js';
 import { withdrawGameplayForState } from './client-gameplay-globals.js';
 import { bindAiTypeRequiredEnergy } from './raw-type-required-energy.js';
 import { typeString } from '../assets/type-table.js';
@@ -370,6 +371,32 @@ export class RawCampaignSession {
     registerFactoryResearchCommands(dispatch) {
         const o = this.#live(); if (!o.loaded || !o.factoryResearch) throw new Error('미설치 Session의 연구 수신 등록');
         registerFactoryResearchCommand(dispatch, o.factoryResearch);
+    }
+    // 공통 객체 명령(원본 가상 6c 입력)이다(cpppj RawCampaignSession::CommandObject). 순서: 네 신전 VT 의 4dbac0(WipeOut·Ascend·Descend)을 공통 부모보다 먼저, 제네레이터(VT 501ea0)의
+    // Meltdown(0x030000f8) 요청, 비석/주문 객체 전환(0x030000ce), 그 밖은 공통 객체 명령(소유자·피해·삭제·진단)이다. 처리 1/미처리 0 을 돌려준다. 메뉴의 Detonate!·Meltdown!·Ascend 같은 항목이
+    // 입력 큐에서 이 함수로 이어진다. 연결 전에는 이런 명령이 큐 머리에서 소비되지 않아 이후 모든 입력이 막혔다. (2026-11-21 WB04-E1150)
+    commandObject(parent, command, parameter = 0) {
+        const o = this.#live(); if (!o.loaded || !o.objectCommand) throw new Error('설치 전 공통 객체 명령');
+        const raw = o.core.pool.slot(parent), table = new DataView(raw.buffer, raw.byteOffset, raw.byteLength).getUint32(0, true);
+        // 네 신전 VT(rain/sun/wind/thunder)의 4dbac0 은 공통 객체 부모보다 먼저 실행한다.
+        if (table === 0x5196f0 || table === 0x5197a8 || table === 0x519860 || table === 0x519918) {
+            if (!o.vortexModules) throw new Error('신전 명령의 실제 Vortex 미설치'); return o.vortexModules.command(parent, command, parameter);
+        }
+        // 제네레이터 Meltdown: 41c290 은 void 이며 요청을 보낸 뒤 공통 부모를 부르고 UI 에는 1 을 돌려준다.
+        if (table === 0x501ea0 && ((command & 0x03ffffff) >>> 0) === 0x030000f8) {
+            if (!o.meltdown) throw new Error('실제 제네레이터 Meltdown 미설치'); o.meltdown.command(parent, command, (sid, code) => { o.objectCommand.command(sid, code); }); return 1;
+        }
+        const body = objectConversionBody(table);
+        if (!body) return o.objectCommand.command(parent, command);
+        // 비석/주문 객체 전환은 같은 SID 를 재사용한다.
+        const definitions = o.assets.game.types();
+        const floatBits = (value) => { const view = new DataView(new ArrayBuffer(4)); view.setFloat32(0, value, true); return view.getUint32(0, true); };
+        const hooks = makeObjectConversionHooks(o.core.pool, o.core.factory, {
+            unpop: (sid, flags) => o.world.unpop(sid, flags), repop: (sid, flags) => o.world.repop(sid, flags),
+            defaultFrame: (type) => { if (type < 70 || type - 70 >= definitions.length) throw new RangeError('전환 뒤 현재 기본 프레임 TYPE 범위'); return floatBits(definitions[type - 70].definition.defaultFrame); },
+            base: (sid, code) => o.objectCommand.command(sid, code),
+        }, (expression) => { if (typeof o.services.ai?.assertion !== 'function') throw new Error('객체 전환 현재 타입 변경 진단 장치 미연결'); o.services.ai.assertion(expression); });
+        return new RawObjectConversion(o.core.pool, () => o.gemRewardState.buriedType, hooks).command(parent, command, body);
     }
     // 현재 Factory 가상 표를 확인하고 같은 입력 본체에 원문 명령과 인자를 전달한다.
     commandFactory(parent, code, parameter) {

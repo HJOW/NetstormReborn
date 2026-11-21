@@ -51,6 +51,9 @@ import { reportGameError } from './platform/error-reporting.js';
 import { BrowserInputPoll } from './platform/browser-input-poll.js';
 import { queueBrowserMouseEvent } from './platform/browser-mouse-events.js';
 import { queueBrowserVirtualKeyEvent, queueBrowserCharacterEvent } from './platform/browser-key-events.js';
+import { DETONATE_BOMB_COMMAND, dispatchDetonateInput } from './core/detonate-input.js';
+import { VORTEX_COMMANDS, dispatchVortexCommandInput } from './core/vortex-command-input.js';
+import { dispatchScenarioObjectInput, isScenarioObjectCommand } from './core/scenario-object-input.js';
 import { InputCode, InputQueue } from './core/input-queue.js';
 import { hasExtendedDisplayText, queueCommittedText } from './core/display-text-input.js';
 import { GumpPointerBoundaryState, prepareGumpPointerBoundaryWithQueue } from './ui/gump-pointer-boundary.js';
@@ -1789,10 +1792,20 @@ export class Netstorm {
             if (cameraPan) { queue.pop(false); continue; }
             const code = (next.code & 0x03ffffff) >>> 0, release = Boolean(next.code & InputCode.release);
             // 선택 키: P/R(사제)·N(다음 운반체)·H(집으로 점프, 원본 도움말 "F4 or H Jump to your Home Temple"). H 가 빠져 있어 F4 만 집으로 점프했다. (2026-11-21 WB04-E1146)
+            // 객체 가상 6c 로 가는 명령: 신전 세 명령·시나리오 객체 다섯 명령(MakeMine·InflictDamage·DestroyPiece·TurnToObelisk·Meltdown)·DetonateBomb. 큐에서 소비하지 못하면 이후 입력이 막힌다. (2026-11-21 WB04-E1150)
+            const objectCommand = VORTEX_COMMANDS.includes(code) || isScenarioObjectCommand(code) || code === DETONATE_BOMB_COMMAND;
             const selectionKey = code === 0x50 || code === 0x70 || code === 0x52 || code === 0x72 || code === 0x4e || code === 0x6e || code === 0x48 || code === 0x68;
             const productionKey = 'qwaszyxe'.includes(String.fromCharCode(code).toLowerCase()) && code < 256;
             const cursorCancel = code === 0x1b, cursorRotate = code === 0x250000 || code === 0x270000, gameTimeKey = code === 0x54 || code === 0x74;
-            if (code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_F6 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !MISSION_VIEW_KEYS.has(code) && code !== MISSION_F9 && !TUTORIAL_NOTICE_COMMANDS.has(code) && !isGameMenuCommand(code) && !isSendMoneyCommand(code) && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && !gameTimeKey && code !== InputCode.leftButton && code !== InputCode.rightButton) break;
+            const unsupported = (code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_F6 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !MISSION_VIEW_KEYS.has(code) && code !== MISSION_F9 && !TUTORIAL_NOTICE_COMMANDS.has(code) && !isGameMenuCommand(code) && !isSendMoneyCommand(code) && !objectCommand && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && !gameTimeKey && code !== InputCode.leftButton && code !== InputCode.rightButton);
+            if (unsupported) {
+                // 미구현 사건 앞을 추월하지 않는다. 다만 처리하지 못하는 사건이 3초(벽 시각) 넘게 큐 머리에 남으면 이후 모든 입력이 영구히 막히므로 오류로 기록하고 버린다. (2026-11-21 WB04-E1150)
+                const key = `${next.code}:${next.x}:${next.y}`, wall = this._gameClock.wallSeconds();
+                if (this._stalledInput?.key !== key) this._stalledInput = { key, since: wall };
+                else if (wall - this._stalledInput.since > 3) { console.error(`미구현 입력 사건을 버립니다: 0x${(next.code >>> 0).toString(16)} (${next.x}, ${next.y})`); queue.pop(false); this._stalledInput = null; continue; }
+                break;
+            }
+            this._stalledInput = null;
             const event = queue.pop(false);
             if (tutorial.event(event) || gump.input().route(event.code, event.x, event.y)) continue;
             // 원본 UberGump(UI 밖 누름): Gump 가 소비하지 않은 좌·우 버튼 누름은 열린 팝업(우클릭 객체 메뉴 등)을 먼저 닫고 같은 사건을 월드로 진행한다.
@@ -1828,6 +1841,14 @@ export class Netstorm {
                 const packed = event.y >>> 0; world.session().commandFactory(packed & 0xffff, event.code, packed);
             }
             else if (code === PRODUCTION_BRIDGE_COMMAND && !release && !this._mainMenu?.dialog) this._dispatchCampaignBridgeProduction(event);
+            else if (objectCommand) {
+                // 원본 UberGump 의 일반 입력 순서(신전 → 시나리오 객체 → Detonate)로 현재 객체의 가상 6c 에 전달한다. 반환값은 다음 입력에 쓰지 않는다.
+                const session = world.session();
+                dispatchVortexCommandInput(event, (target, command, parameter) => { session.commandObject(target, command, parameter); })
+                    || dispatchScenarioObjectInput(event, (target, command) => { session.commandObject(target, command); })
+                    || dispatchDetonateInput(event, (target, command) => { session.commandObject(target, command); });
+                this._displayDirty = true;
+            }
             else if (code === MISSION_VIEW_HOME || code === MISSION_VIEW_PRIEST) this._dispatchCampaignViewAction(event);
             // T/t: 게임 시간 표시 켜기·끄기다. 정지 중에는 바꾸지 않고(원본 정지 관문) 안내는 Kernel 프레임 뒤에 만든다. (2026-11-20 WB04-E1097)
             else if (gameTimeKey) { if (!release && !this._mainMenu?.dialog) dispatchGameTimeKey(event, this._clientGameplay.showGameTime(), () => this._gameClock.paused()); }
