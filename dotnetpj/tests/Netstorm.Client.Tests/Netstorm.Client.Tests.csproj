@@ -154,5 +154,7 @@
     <None Include="../../../cpppj/tests/fixtures/issue-commands-x86.tsv" Link="X86/issue-commands-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- 일반 헤더1행과512개 독립 점 명령 분배 관측을 사본 없이 공유한다. -->
     <None Include="../../../cpppj/tests/fixtures/dot-command-dispatch-x86.tsv" Link="X86/dot-command-dispatch-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- 일반 헤더1행과383개 실제 제출/수신자 관측을 사본 없이 연결한다. -->
+    <None Include="../../../cpppj/tests/fixtures/chat-submit-x86.tsv" Link="X86/chat-submit-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

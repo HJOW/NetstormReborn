@@ -64,4 +64,9 @@ public sealed class ClientChatManagerGlobals
     {
         Allocate = Allocate, Memory = token => Bytes(token),
     });
+    /// <summary>같은 할당 소유자의 실제 수신자 memory/확장/반납만 연결하며 나머지 제출 장치는 호출자가 제공한다.</summary>
+    public ChatSubmitHooks MakeSubmitHooks() => new()
+    {
+        Memory = token => Bytes(token), Allocate = AllocateRecipientBuffer, Release = ReleaseRecipientBuffer,
+    };
 }
