@@ -33,3 +33,17 @@ E1138 에서 운반체(Bulf·Walker)와 파생 객체 메뉴를 앱에 연결하
 
 - 제단 업그레이드·`Get 5,000` 등 HTML 기술 목록 문구(`Upgrade Altar to Level %d` 외 4개)는 화면이 아직 앱에 없어 번역을 넣지 않았다.
 - 운반체가 내용물을 실을 때의 `운반 중`·`내려놓기` 항목은 문구만 번역했고 실제 화면 확인은 하지 않았다.
+
+## 추가 번역 (WB04-E1141)
+
+게임 안 메뉴·창 소스의 번역 요청 문자열을 일괄로 뽑아 번역표와 대조해(임시 점검 스크립트) 남은 14개를 더했다. 개발자 치트 전용 `CHEAT Set Owner` 만 번역하지 않는다.
+
+| 영어 원문(키) | 한국어 | 쓰이는 곳 |
+| --- | --- | --- |
+| `~y~EExcluded` | `~y~E제외됨` | F6 지식 메뉴 |
+| `~y~[I%d.*]Invisible!~.\n` / `…Paralyzed!~.\n` | `…투명!~.\n` / `…마비!~.\n` | 객체 정보 |
+| `Version: ~i%d.%d~.\n` / `Reliability: ~i%d%%~.\n` / `Games Played: ~i%d~.\n` / `View Player Info` | `버전` / `신뢰도` / `플레이한 게임` / `플레이어 정보 보기` | Player 정보 |
+| `%s (Level %d)` / `ADVANCE TO RANK %d!!` / `Altar at Max %sLevel` / `Upgrade Altar to Level %d` / `Get 5,000 ~[IfortGump.3]` | `%s (%d단계)` / `%d 랭크로 승급!!` / `제단 최대 %s단계` / `제단 %d단계로 업그레이드` / `5,000 ~[IfortGump.3] 받기` | 기술 목록(화면 미연결) |
+| `Chat Helper` / `Chat Window` | `채팅 도우미` / `채팅 창` | 채팅(화면 미연결) |
+
+- `tests/korean-ingame.test.mjs` 에 위 소스 파일들의 문구가 모두 번역표에 있는지 보는 시험을 더했다.

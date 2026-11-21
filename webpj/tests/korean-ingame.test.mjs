@@ -150,3 +150,11 @@ test('운반체 메뉴와 파생 객체 메뉴가 요청하는 문구는 한국�
     assert.deepEqual(untranslated(carrier), []); assert.deepEqual(untranslated(variants), []);
     assert.equal(korean.translate('Carrying: ~i%s~.\n'), '운반 중: ~i%s~.\n'); assert.equal(korean.translate('About %s'), '%s 정보'); assert.equal(korean.translate('Meltdown!'), '멜트다운!');
 });
+
+// 객체 정보(투명·마비)·지식 메뉴·플레이어 정보·제단 업그레이드 기술 목록·채팅 이름의 번역 요청 원문도 번역표에 있어야 한다. 개발자 치트 전용 `CHEAT Set Owner`(raw-object-menu.js)는 대상 밖이다. (2026-11-21 WB04-E1141)
+test('객체 정보·지식·플레이어 정보·기술 목록·채팅 이름 문구는 한국어 번역표에 모두 있다', () => {
+    for (const file of ['www/core/raw-object-menu-info.js', 'www/core/raw-knowledge-menu.js', 'www/core/raw-player-menu.js', 'www/ui/technology-list-menu.js', 'www/ui/chat-window.js', 'www/ui/uber-root-gump.js']) {
+        const keys = sourceKeys(file); assert.ok(keys.size >= 1, `${file} 에서 뽑은 문구 수`); assert.deepEqual(untranslated(keys), [], file);
+    }
+    assert.equal(korean.translate('Upgrade Altar to Level %d'), '제단 %d단계로 업그레이드'); assert.equal(korean.translate('~y~[I%d.*]Paralyzed!~.\n'), '~y~[I%d.*]마비!~.\n');
+});

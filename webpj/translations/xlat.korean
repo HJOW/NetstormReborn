@@ -2374,3 +2374,98 @@ for %s%d~[IfortGump.3]
 ---
 비용 %s%d~[IfortGump.3]
 ===
+
+// (2026-11-21 WB04-E1141: 객체 정보(투명·마비)·지식 메뉴 제외·플레이어 정보·제단 업그레이드 기술 목록·채팅 창 이름 문구. 번역 문구는 개발자 검수 대상이다.)
+***
+~y~EExcluded
+---
+~y~E제외됨
+===
+
+***
+~y~[I%d.*]Invisible!~.
+
+---
+~y~[I%d.*]투명!~.
+
+===
+
+***
+~y~[I%d.*]Paralyzed!~.
+
+---
+~y~[I%d.*]마비!~.
+
+===
+
+***
+Version: ~i%d.%d~.
+
+---
+버전: ~i%d.%d~.
+
+===
+
+***
+Reliability: ~i%d%%~.
+
+---
+신뢰도: ~i%d%%~.
+
+===
+
+***
+Games Played: ~i%d~.
+
+---
+플레이한 게임: ~i%d~.
+
+===
+
+***
+View Player Info
+---
+플레이어 정보 보기
+===
+
+***
+%s (Level %d)
+---
+%s (%d단계)
+===
+
+***
+ADVANCE TO RANK %d!!
+---
+%d 랭크로 승급!!
+===
+
+***
+Altar at Max %sLevel
+---
+제단 최대 %s단계
+===
+
+***
+Upgrade Altar to Level %d
+---
+제단 %d단계로 업그레이드
+===
+
+***
+Get 5,000 ~[IfortGump.3]
+---
+5,000 ~[IfortGump.3] 받기
+===
+
+***
+Chat Helper
+---
+채팅 도우미
+===
+
+***
+Chat Window
+---
+채팅 창
+===
