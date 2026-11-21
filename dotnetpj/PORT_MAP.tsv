@@ -1411,3 +1411,12 @@ cpppj/src/client/RawSurfaceWorld.cpp	Netstorm.Core/Original/RawSurfaceWorld.Atta
 cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceWorld.Attach.cs	14fd017c3b6ca87880374e044e3ac00bf0575c2e	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.SquidPackets.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.SquidPackets.cs	bda77381e54bc382937c720047ee4441086b46d7	port
+cpppj/src/o/RawDaisProcessData.cpp	Netstorm.Core/Original/RawDaisProcessData.cs	3f766a97f7c4d5b290c195754be66a7ee5b929be	port
+cpppj/src/o/RawDaisProcessData.h	Netstorm.Core/Original/RawDaisProcessData.cs	3f766a97f7c4d5b290c195754be66a7ee5b929be	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Core/Original/RawDaisTransmission.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
+cpppj/src/o/RawRemoteTellPacket.cpp	Netstorm.Core/Original/RawRemoteTellPacket.cs	5851f6fa06bab6fb3553af020191fe84f1bca135	port
+cpppj/src/o/RawRemoteTellPacket.h	Netstorm.Core/Original/RawRemoteTellPacket.cs	5851f6fa06bab6fb3553af020191fe84f1bca135	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.DaisPackets.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
+cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.DaisPackets.cs	bda77381e54bc382937c720047ee4441086b46d7	port
+cpppj/src/client/RawProcessHostStorage.cpp	Netstorm.Client/Host/HostSession.PlayerWorld.cs	417f22d2967decbf2ad3a587c2190b9efb93f772	port
+cpppj/src/client/RawProcessHostStorage.h	Netstorm.Client/Host/HostSession.PlayerWorld.cs	417f22d2967decbf2ad3a587c2190b9efb93f772	port

@@ -98,7 +98,13 @@ public sealed partial class HostSession
         if (_sharedPlayerProcesses is null)
         {
             var current = new WeakReference<ProcessHostRuntimeBindings>(runtime);
-            PlayerProcesses = new SquidProcessHost(Pool, types, Kernel, new SquidProcessState { SharedNow = ProcessTime },
+            PlayerProcesses = new SquidProcessHost(Pool, types, Kernel, new SquidProcessState
+            {
+                SharedNow = ProcessTime, SharedAuthority = Gameplay.Authority, SharedPollType = GameAux.GeyserTypeBox,
+                CurrentProcessFormType = GameAux.ProcessFormTypeBox, CurrentRegularType = GameAux.RegularProcessTypeBox,
+                CurrentSharedRegularType = GameAux.SharedRegularProcessTypeBox, CurrentProcessTypeEnd = GameAux.ProcessTypeEndBox,
+                CurrentFireAnimationType = GameAux.FireAnimationProcessTypeBox, CurrentRotateAnimationType = GameAux.RotateAnimationProcessTypeBox,
+            },
                 () => current.TryGetTarget(out ProcessHostRuntimeBindings? selected) ? selected : null);
             _playerProcessCurrent = current;
         }

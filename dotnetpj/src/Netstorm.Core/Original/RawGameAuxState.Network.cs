@@ -4,6 +4,10 @@ namespace Netstorm.Core.Original;
 /// <summary>cpppj/src/o/RawGameAuxState.h의 네트워크 공용 장기 저장소다.</summary>
 public sealed partial class RawGameAuxState
 {
+    /// <summary>00541158의 최초58이며 신규 DaisProcess 부착에서 읽는 같은 장기 DWORD다.</summary>
+    public UIntBox DaisProcessTypeBox { get; } = new() { Value = 58 };
+    /// <summary>00532690/91의 현재 메시지6a/프로토콜1 BYTE다. 일반 준비/World 교체에서 초기화하지 않는다.</summary>
+    public byte[] DaisProcessHeader { get; } = [0x6a, 1];
     /// <summary>0054d4d8의 최초BSS0이며 객체 수신과 검증 시작/종료가 같은 현재DWORD를 쓴다.</summary>
     public UIntBox VerifySidBox { get; } = new();
     /// <summary>0054d4dc의 별도BSS0이며 검증 간격의 현재 순회 위치다.</summary>

@@ -13,6 +13,10 @@ public sealed record HostSquidPacketEffects
     public Action<int, string>? Log { get; init; }
     /// <summary>현재 종속 UI의 명령을 실제 입력 큐로 전달한다.</summary>
     public Action<uint, uint, uint>? Command { get; init; }
+    /// <summary>카메라 수신이 원문 위치에서 조회하는 현재 논리 화면 크기다.</summary>
+    public Func<(int Width, int Height)>? ScreenSize { get; init; }
+    /// <summary>독립 typed 수명에서 이미 작성한 실제 Form 패킷을 전달한다. Native는 장기 전송 장치를 직접 사용한다.</summary>
+    public Action<ReadOnlyMemory<byte>>? FormPacket { get; init; }
 }
 
 /// <summary>고정F가 같은 객체/압축/검증 본체를 직접 선택하는 실제 Host 부분이다.</summary>
@@ -40,11 +44,13 @@ public sealed partial class HostSession
             ContentFormType = Gameplay.ContentFormTypeBox, GumpFormType = Gameplay.GumpFormTypeBox, UiEvent = Gameplay.ContentRemovalEventBox,
             CheckingDead = new(() => AiChecking.Read()), InMetamapMode = () => OwnerMode.Challenge, Boss = () => Gameplay.Authority.Boss,
         }, new() { Command = (code, first, second) => FixedPacketNeed(_squidPacketEffects?.Command)(code, first, second), Assertion = storage.AssertDisplay });
+        BindDaisPacketTransmission();
     }
     /// <summary>실제 프로세스 수명이 끝날 때 수신 전용 이름/외부 효과/종속 UI의 참조를 함께 반납한다.</summary>
     private void ReleaseSquidPacketDevices()
     {
         _squidPacketStorage = null; _squidPacketNames = null; _squidPacketEffects = null; _squidPacketUi = null;
+        _daisPacketTransmission = null;
     }
     /// <summary>번호 선택 시점의 현재 TYPE를 읽는다.</summary>
     private OriginalTypeRecord SquidPacketType(uint type) => _terrainPopTypes is { } types && type < types.Count ? types[(int)type]
@@ -121,6 +127,13 @@ public sealed partial class HostSession
         switch (entry)
         {
             case 0x433c30: ReceiveSquidPacket(packet); return;
+            case 0x44a280: ReceiveDaisPacket(packet); return;
+            case 0x497030: _ = PlayerProcesses.ReceiveSharedRegular(packet.Span); return;
+            case 0x4a71c0: ReceivePositionPacket(packet); return;
+            case 0x4333f0:
+                float y = BinaryPrimitives.ReadSingleLittleEndian(packet.Span.Slice(8, 4)), x = BinaryPrimitives.ReadSingleLittleEndian(packet.Span.Slice(4, 4));
+                var size = FixedPacketNeed(_squidPacketEffects?.ScreenSize)(); Gameplay.Camera.RequestCenter(x, y, size.Width, size.Height, LocalState.MetaRebuild); return;
+            case 0x4cf980: RawRemoteTellPacket.Receive(packet, text => FixedPacketNeed(_squidPacketEffects?.Tell)(text)); return;
             case 0x434080:
                 RawSurfaceStorage storage = FixedPacketNeed(_squidPacketStorage);
                 byte[] image = RawSquidCompressedReceive.Decode(packet, GameAux.SquidTransmission, new()
