@@ -5,7 +5,7 @@ using Netstorm.Core.Simulation;
 // 현재 VT의 실제 원문 주소와 장기 Host/자원 정기의 결선을 독립 PE 자료로 확인한다.
 namespace Netstorm.Core.Tests;
 
-/// <summary>World 없는 기본16/피해14 VT와 실제 예약/현재 사건/미설치 경계를 검사한다.</summary>
+/// <summary>PE 자료의 기본13/피해14 VT와 실제 예약/현재 사건/미설치 경계를 검사한다. Source 기본3종은 이 자료 밖이다.</summary>
 public sealed class NativeSurfaceDefaultRegularTests
 {
     /// <summary>보호 PE의 실제83VT 행을 정수로 읽는다. C# 분배 표를 기대값으로 사용하지 않는다.</summary>
@@ -13,8 +13,8 @@ public sealed class NativeSurfaceDefaultRegularTests
         .Where(line => line.Length > 0 && line[0] != '#').Select(line => line.Split('\t').Select(uint.Parse).ToArray());
     /// <summary>실제 +5c가00496e70인 PE 행만 검사 입력으로 제공한다.</summary>
     public static IEnumerable<object[]> BaseTables() => VtableRows().Where(row => row[1] == 0x496e70).Select(row => new object[] { row[0] });
-    /// <summary>실제 Damageable 함수 표시가 있는 PE 행만 검사 입력으로 제공한다.</summary>
-    public static IEnumerable<object[]> DamageableTables() => VtableRows().Where(row => row[3] == 1).Select(row => new object[] { row[0] });
+    /// <summary>가상98과 별개로 실제 +5c=0044b900인14개 PE 행을 입력으로 제공한다.</summary>
+    public static IEnumerable<object[]> DamageableTables() => VtableRows().Where(row => row[1] == 0x44b900).Select(row => new object[] { row[0] });
 
     /// <summary>현재 Native 장치/표시를 갖지만 World를 대여하지 않는 실제 저장소를 만든다.</summary>
     private static RawSurfaceStorage Storage()
@@ -36,7 +36,7 @@ public sealed class NativeSurfaceDefaultRegularTests
         raw[10] = 74; BinaryPrimitives.WriteUInt32LittleEndian(raw, table); return sid;
     }
 
-    /// <summary>독립 PE의 실제 기본16VT만 사건/count/TYPE와 무관하게 float 비트를 반환한다.</summary>
+    /// <summary>이 독립 PE 자료에 포함된 기본13VT는 사건/count/TYPE와 무관하게 float 비트를 반환한다.</summary>
     [Theory, MemberData(nameof(BaseTables))]
     public void PeBaseVtablesReturnPayloadBitsWithoutWorld(uint table)
     {

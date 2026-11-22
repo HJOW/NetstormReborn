@@ -123,6 +123,8 @@ public sealed partial class HostSession
             _playerProcessClock = _sharedPlayerProcesses.State();
         }
         _playerProcessRuntime = runtime;
+        if (_surfaceStorage is { } nativeStorage && nativeStorage.UsesNativeTransmissionDevices())
+            BindNativeProcessFormDeletion(nativeStorage, runtime);
         BindWorldPopParent();
         var hooks = new PlayerWorldHooks
         {
@@ -156,6 +158,30 @@ public sealed partial class HostSession
         inner.SetPlayerPostPop(_livePlayerWorld);
         _livePlayerHooks = hooks;
         return hooks;
+    }
+
+    /// <summary>현재 Native Runtime의 알려진 ProcessForm 가상 삭제를 실제 Host 본체에 연결한다. 전체 자산 분배는 BindWorldDeletion이 뒤에 설치한다.</summary>
+    private void BindNativeProcessFormDeletion(RawSurfaceStorage storage, ProcessHostRuntimeBindings runtime)
+    {
+        SquidProcessHost processes = PlayerProcesses;
+        SquidDestroyHooks forms = processes.Hooks();
+        SquidDestroyHooks assets = storage.DefaultProcessAssetHooks();
+        runtime.Asset = new()
+        {
+            SelectedRaw = assets.SelectedRaw, Selected = assets.Selected, UnpopForm = assets.UnpopForm,
+            Emit = effect =>
+            {
+                // 실제 전송/선택 정리는 이미 설치한 같은 Client 장치를 사용한다.
+                if (effect.Effect is SquidDestroyEffect.Transmit or SquidDestroyEffect.ClearSelection)
+                {
+                    assets.Emit!(effect); return;
+                }
+                // 알려진 ProcessForm의 실제 가상 Pre/Post·부모 통지·삭제만 기존 Host가 수행한다.
+                if (!processes.IsProcessForm(effect.Sid))
+                    throw new InvalidOperationException("현재 Native Runtime의 비 ProcessForm 전체 가상 삭제 분배 미연결");
+                forms.Emit!(effect);
+            },
+        };
     }
 
     /// <summary>원문 Regular 할당 성공 여부를 실제 관리 객체 할당으로 결정한다.</summary>
