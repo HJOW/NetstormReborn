@@ -1698,3 +1698,7 @@ cpppj/src/o/RawSunAviaryProcess.h	Netstorm.Core/Original/SunAviaryProcess.cs	2c7
 cpppj/src/o/RawAviaryProcessData.cpp	Netstorm.Core/Original/RawAviaryProcessData.cs	2c7ac45db4210bb8146952ae4517363962c26aea	port
 cpppj/src/o/RawAviaryProcessData.h	Netstorm.Core/Original/RawAviaryProcessData.cs	2c7ac45db4210bb8146952ae4517363962c26aea	port
 cpppj/src/o/RawGameAuxState.h	Netstorm.Core/Original/RawGameAuxState.Aviary.cs	2c7ac45db4210bb8146952ae4517363962c26aea	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.SunAviaryPackets.cs	e3d3e7d92bebf8ae75d2488161cfcc934fbdaaf1	port
+cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.SunAviaryPackets.cs	e3d3e7d92bebf8ae75d2488161cfcc934fbdaaf1	port
+cpppj/src/client/NativeGameplayPacketReceivers.cpp	Netstorm.Client/NativeGameplayPacketReceivers.SunAviary.cs	e3d3e7d92bebf8ae75d2488161cfcc934fbdaaf1	port
+cpppj/src/client/NativeGameplayPacketReceivers.h	Netstorm.Client/NativeGameplayPacketReceivers.SunAviary.cs	e3d3e7d92bebf8ae75d2488161cfcc934fbdaaf1	port

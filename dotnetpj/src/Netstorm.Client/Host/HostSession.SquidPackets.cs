@@ -27,6 +27,8 @@ public sealed record HostSquidPacketEffects
     public GunProcessHooks? Gun { get; init; }
     /// <summary>공통 비행의 실제 큰 Frame/Notify/홈 통지/파편 장치다. 최초 구성에서 함수 값을 복사한다.</summary>
     public FlyerProcessHooks? Flyer { get; init; }
+    /// <summary>훨리베이스의 실제 할당/큰 공간·음향 장치다. 최초 구성에서 함수 값을 복사한다.</summary>
+    public SunAviaryProcessHooks? SunAviary { get; init; }
 }
 
 /// <summary>고정F가 같은 객체/압축/검증 본체를 직접 선택하는 실제 Host 부분이다.</summary>
@@ -60,6 +62,7 @@ public sealed partial class HostSession
         BindGeyserMinedDevices();
         BindGunProcessDevices();
         BindFlyerProcessDevices();
+        BindSunAviaryProcessDevices();
     }
     /// <summary>실제 프로세스 수명이 끝날 때 수신 전용 이름/외부 효과/종속 UI의 참조를 함께 반납한다.</summary>
     private void ReleaseSquidPacketDevices()
@@ -73,6 +76,7 @@ public sealed partial class HostSession
         ReleaseGeyserMinedDevices();
         ReleaseGunProcessDevices();
         ReleaseFlyerProcessDevices();
+        ReleaseSunAviaryProcessDevices();
         _developerEffects = null;
     }
     /// <summary>번호 선택 시점의 현재 TYPE를 읽는다.</summary>
@@ -152,6 +156,7 @@ public sealed partial class HostSession
         if (_playerRecordsReleased || ProcessBindingsReturned() || _playerProcessRuntime is null) throw new ObjectDisposedException(nameof(HostSession), "고정 gameplay의 실제 World 반납 뒤 호출");
         switch (entry)
         {
+            case 0x45e410: ReceiveSunAviaryPacket(packet); return;
             case 0x45e2b0: ReceiveFlyerPacket(packet); return;
             case 0x426490: ReceiveFlyerCommand(packet); return;
             case 0x46a0c0: ReceiveGunPacket(packet); return;
