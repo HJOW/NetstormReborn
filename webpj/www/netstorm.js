@@ -86,6 +86,7 @@ import { ClientRendererFrameGlobals } from './core/client-renderer-frame-globals
 import { currentAllocationBytes } from './core/current-allocation-bytes.js';
 import { bindCampaignAiClientServices, bindCampaignClientInputServices, bindCampaignOwnershipTheme, bindCampaignProductionRefresh, captureCampaignMissionStarting, makeCampaignMissionStartEffects, runCampaignMissionStarting } from './core/campaign-client-services.js';
 import { bindCampaignUserInputServices } from './core/campaign-user-input-services.js';
+import { applyThemeTechnology } from './core/get-technology-input.js';
 import { CampaignUserInput } from './core/campaign-user-input.js';
 import { makeCampaignCursorClientEffects } from './core/campaign-cursor-client-effects.js';
 import { RawContainedFinder } from './core/raw-contained-finder.js';
@@ -2645,6 +2646,16 @@ export class Netstorm {
         return result.window !== null;
     }
 
+    // 현재 미션 Session 에 선택한 원소(theme)의 기술을 모두 지급한다(원본 UberGump 의 CheatAllTechnology 입력 0x02000028 → ApplyThemeTechnology). 미션 월드가 없으면 안내만 남기고 지급하지 않는다(원본은 logic_error).
+    // 지급한 기술은 다음 프레임의 생산 내용물 갱신(`updateProductionContents`)이 생산 패널에 반영한다(원본의 `rebuild_`). (2026-11-22 WB04-E1189)
+    _applyThemeTechnology(theme) {
+        const world = this._campaignWorld;
+        if (!world) { console.warn('Netstorm: CheatAllTechnology 는 미션 월드가 있을 때만 기술을 지급합니다.'); return false; }
+        applyThemeTechnology(world.session(), theme);
+        this._clientRenderer?.invalidateAll(); this._displayDirty = true;
+        return true;
+    }
+
     // 스크립트 명령(본문의 `<$이름,인자>` 와 버튼 명령 공통) 하나를 실행한다. Config 는 `키=값` 을 게임 데이터 설정에 쓰고(설정·진행 저장소로 이어짐), Warning 은 콘솔에 남긴다.
     // 아직 연결하지 않은 명령은 안내만 한다. 실행했으면 true 이다. (2026-10-30 WB03-J)
     _runScriptCommand(command) {
@@ -2657,6 +2668,8 @@ export class Netstorm {
             console.warn(`Netstorm: ${command.argument}`);
             return true;
         }
+        // `<$CheatAllTechnology,원소>`: 선택한 원소(0 바람·1 비·2 천둥·3 태양)의 기술을 모두 지급한다. Fury War(bc8fury76)의 원소 선택 단추와 AI 사제 희생 안내가 쓴다. (2026-11-22 WB04-E1189)
+        if (name === 'cheatalltechnology') return this._applyThemeTechnology(Number.parseInt(String(command.argument ?? '').trim(), 10) | 0);
         console.info(`Netstorm: 스크립트 명령 '${command.name}' 은(는) 아직 구현되지 않았습니다.`, command);
         return false;
     }
