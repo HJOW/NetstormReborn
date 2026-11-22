@@ -182,6 +182,30 @@ public sealed class NativeProcessSerializationTests
         finally { kernel.DrainOwnedForShutdown(); }
     }
 
+    /// <summary>실제 훨리베이스 flags8 부착/Kernel/현재 헤더와 같은 Native 전체 상태 패킷을 연결한다.</summary>
+    [Fact]
+    public void AttachedSunAviaryUsesCurrentNativeHeaderAndSameHostFields()
+    {
+        int sends = 0; var storage = Storage(_ => sends++); int parent = storage.Pool.Allocate(SidAllocation.Server); storage.Pool.RawSlot(parent).Clear(); storage.Pool.RawSlot(parent)[10] = 72;
+        var kernel = new Kernel(16); storage.Processes().BindDevices(kernel, new FrameTimeBox()); SquidProcessHost host = storage.Processes().Host();
+        var body = new RawSunAviaryProcess(storage.Pool, new(() => true, () => 0, () => 42, storage.GameAux().SunAviaryProcessTypeBox, storage.GameAux().SunFlyerTypeBox), new()
+        {
+            SetFrame = (sid, frame) => BinaryPrimitives.WriteInt32LittleEndian(storage.Pool.RawSlot(sid)[36..], frame), Sound = (_, _, name) => Assert.Equal("apStart.wav", name),
+        });
+        var fields = new SunAviaryProcessFields(0xa5); body.Initialize(fields); var process = new SunAviaryProcess(body, fields);
+        try
+        {
+            Assert.Same(process, host.Attach(process, storage.GameAux().SunAviaryProcessTypeBox.Value, parent, 8)); Assert.Equal(1, sends); Assert.Equal(0, process.Fields.Dirty()); Assert.Equal(process.Form(), process.Fields.Form()); Assert.Equal(parent, process.Fields.Parent()); Assert.Equal(0xff, fields.Dirty());
+            byte[] common = storage.GameAux().SquidTransmission.Buffer; Assert.Equal(25, BinaryPrimitives.ReadUInt16LittleEndian(common.AsSpan(2))); Assert.Equal(1, common[0]); Assert.Equal(0x38, common[1]);
+            kernel.RunFrame(); Assert.Equal(8u, process.Fields.Stage()); Assert.Equal(27u, BinaryPrimitives.ReadUInt32LittleEndian(storage.Pool.Slot(parent)[36..]));
+            byte[] header = storage.GameAux().SunAviaryHeader; header[0] = 0x73; header[1] = 0x81; storage.GameAux().SunAviaryProcessTypeBox.Value = 44; storage.GameAux().SunFlyerTypeBox.Value = 111; storage.GameAux().ResetForGeneralWorld();
+            Assert.Same(header, storage.GameAux().SunAviaryHeader); Assert.Equal(44u, storage.GameAux().SunAviaryProcessTypeBox.Value); Assert.Equal(111u, storage.GameAux().SunFlyerTypeBox.Value);
+            byte[] packet = Enumerable.Repeat((byte)0xa7, 2048).ToArray(); Assert.Equal(25, host.WriteFormPacket(process.Form(), 1, packet, storage.GameAux().SquidTransmission)); Assert.Equal(0x81, packet[0]); Assert.Equal(0x73, packet[1]); Assert.Equal(0xa7, packet[25]);
+            var copy = new SunAviaryProcessFields(); Assert.Equal((uint)parent, RawAviaryProcessData.Read(copy.Bytes, packet)); Assert.Equal(42, copy.Time()); Assert.Equal(8u, copy.Stage()); Assert.Equal(1, sends); Assert.Same(process, host.FromForm(process.Form())); Assert.Same(process, kernel.Get(kernel.Find(process)));
+        }
+        finally { kernel.DrainOwnedForShutdown(); }
+    }
+
     /// <summary>실제 건설 부착/현재 헤더/일반 준비 보존과 같은 Host 전체 FormPacket을 새 codec에 연결한다.</summary>
     [Fact]
     public void AttachedConstructionUsesCurrentHeaderAndSameNativeFormPacket()

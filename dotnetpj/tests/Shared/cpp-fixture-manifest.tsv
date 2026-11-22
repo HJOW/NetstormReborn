@@ -462,3 +462,5 @@ gun-notify-checking-x86.tsv	e7a26f78b6f2994cb373051b7fa0e3ebf73a5d636619bd1f6afa
 gunprocess-x86.tsv	d13077033f5e3154e9109a93e7350ce4cbf33b365d03b297db95fa7159c058e7	2996	cpppj	Core
 flyer-postpop-x86.tsv	111beec5675ad2fcd8edc4fd2fb7b5dbe2c129d8b3c796f58b68ec3a7c8d456f	1422	cpppj	Core
 sun-flyer-postpop-x86.tsv	c7693afd860973b51efad4321894bbfddec6eb058dea041dac0e56307ca22bda	391	cpppj	Core
+sun-aviary-notice-x86.tsv	a29498cf3a5305910f1c41f516facaa0b6febb8c91739bfab6711fd1a43bd21d	128	cpppj	Core
+sun-aviary-x86.tsv	e64841e232f3ea3b79eba3fba4d21656277a9b4dd05766f1ff1e77414cb6d0db	1735	cpppj	Core
