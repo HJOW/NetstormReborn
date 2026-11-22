@@ -63,6 +63,8 @@ public sealed partial class GumpButtonTree
     public GumpModal Modal { get; }
     /// <summary>프레임별 등록 버튼의 idle과 통지.</summary>
     public GumpFrame Frame { get; }
+    /// <summary>같은 공통 수집/정렬에 참여하는 외부 UI의 출력 소유 등록이다.</summary>
+    public GumpExternalDrawing ExternalDrawing { get; } = new();
     /// <summary>생성과 출력이 공유하는 실제 배경 자산.</summary>
     private readonly GumpBackgroundAssets _assets;
     /// <summary>공통 출력기가 같은 실제 배경 자산을 사용한다.</summary>

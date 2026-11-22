@@ -194,4 +194,8 @@
     <None Include="../../../cpppj/tests/fixtures/minimap-geometry-x86.tsv" Link="X86/minimap-geometry-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/minimap-blit-x86.tsv" Link="X86/minimap-blit-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 기본 Gump의 요청/가시성/지도 제한1474관측을 기존 실제 위치 본체와 대조한다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/gump-redraw-x86.tsv" Link="X86/gump-redraw-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

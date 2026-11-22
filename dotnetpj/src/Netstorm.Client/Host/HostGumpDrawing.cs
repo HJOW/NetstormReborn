@@ -26,7 +26,7 @@ public sealed class HostGumpDrawing
     public HostGumpDrawing(HostMainMenu menu, HostHtmlText text, HostHtmlMenus menus, Screen screen, HostTextEntry? entry = null)
     { _menu = menu ?? throw new ArgumentNullException(nameof(menu)); _text = text ?? throw new ArgumentNullException(nameof(text)); _menus = menus ?? throw new ArgumentNullException(nameof(menus)); _screen = screen ?? throw new ArgumentNullException(nameof(screen)); _entry = entry;
         var tree = menu.Tree; _single = new TextGump(tree.Create, new(), tree.Factory, tree.Lifetime, tree.Collection, text.Clip, text.Style,
-            new() { Node = token => tree.Node(token) as TextGumpNode, BaseNode = tree.Node }); }
+            new() { Node = token => tree.Node(token) as TextGumpNode ?? tree.ExternalDrawing.Text(token), BaseNode = tree.Node }); }
 
     /// <summary>현재 표시 트리를 수집하고 원본 정렬 뒤 각 노드를 같은 픽셀·클립 문맥에서 출력한다.</summary>
     public void Draw()
@@ -54,6 +54,7 @@ public sealed class HostGumpDrawing
                 background, glyph, _text.Style, _menus.Layout, menuHooks);
             var dispatch = new GumpDraw(tree.Collection, clip, new() { Draw = token =>
             {
+                if (tree.ExternalDrawing.TryDraw(token, target, colors, background)) return;
                 switch (tree.Node(token))
                 {
                     case MenuGumpNode: menuDraw.Draw(token); break;

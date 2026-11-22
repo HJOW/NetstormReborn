@@ -1561,3 +1561,12 @@ cpppj/src/client/MinimapGeometry.h	Netstorm.Client/Gump/MinimapGeometry.cs	560df
 cpppj/src/o/RawMetadisplayDirty.h	Netstorm.Core/Original/RawMetadisplayDirty.cs	bae8b702b3f400c2a08d75fbb0806db9662ecb4d	port
 cpppj/src/o/RawMinimapRaster.cpp	Netstorm.Core/Original/RawMinimapRaster.cs	560df210e1d9ce5c7d413f53bf67d28e105e80ce	port
 cpppj/src/o/RawMinimapRaster.h	Netstorm.Core/Original/RawMinimapRaster.cs	560df210e1d9ce5c7d413f53bf67d28e105e80ce	port
+cpppj/src/client/GumpRedraw.h	Netstorm.Client/Gump/GumpRedraw.cs	350ebc500902ce2b8c352858877afea2450be9b0	port
+cpppj/src/client/GumpRedraw.cpp	Netstorm.Client/Gump/GumpRedraw.cs	350ebc500902ce2b8c352858877afea2450be9b0	port
+cpppj/src/client/RawMenuControls.h	Netstorm.Client/Gump/GumpExternalDrawing.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
+cpppj/src/client/RawMenuControls.cpp	Netstorm.Client/Gump/GumpExternalDrawing.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
+cpppj/src/client/RawMinimapControls.h	Netstorm.Client/Gump/RawMinimapControls.cs	c48b163b70fb909007a453a8dcc23580d61b1049	port
+cpppj/src/client/RawMinimapControls.cpp	Netstorm.Client/Gump/RawMinimapControls.cs	e60133d56cc9b89272477b4a314ac5c0677baa16	port
+cpppj/src/client/RawMenuControls.h	Netstorm.Client/Gump/GumpButtonTree.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
+cpppj/src/client/RawMenuControls.h	Netstorm.Client/Host/HostGumpDrawing.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
+cpppj/src/client/RawMenuControls.cpp	Netstorm.Client/Host/HostGumpDrawing.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port

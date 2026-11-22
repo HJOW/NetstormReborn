@@ -4,6 +4,12 @@ namespace Netstorm.Core.Original;
 /// <summary>두 판본의 현재 공간 부모를 같은 실제 Pool/Hash/점유/표시에 연결한다.</summary>
 public sealed partial class RawUnpop
 {
+    /// <summary>현재 대여자만 미니맵 통지를 반납하며 후속으로 설치한 다른 큐는 보존한다.</summary>
+    public bool ReleaseMinimapQueue(IRawMinimapQueue? expected)
+    {
+        if (expected is null || !ReferenceEquals(expected, _minimap)) return false;
+        _minimap = null; return true;
+    }
     /// <summary>같은 Client의 현재 TYPE/checking과 원문 진단 장치다.</summary>
     private SquidUnpopDiagnostics _diagnostics = new();
     /// <summary>선택한 실제 공통 종속 분리다. 미연결을 빈 성공으로 대체하지 않는다.</summary>
