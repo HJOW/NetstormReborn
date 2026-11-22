@@ -1507,9 +1507,9 @@ export class Netstorm {
                 objectMenu: { world: this._campaignWorld, identity, staticText: (value) => this._clientChatWindows.store(value), tell: (name) => this._openTell(name),
                     player: { translate: (value) => this._resources.translate(value), assertion: (value) => console.error(`Player 메뉴 진단: ${value}`),
                         parseAddress: () => { throw new Error('Player 메뉴 주소 해석 미연결'); }, reliability: () => { throw new Error('Player 메뉴 메타맵 신뢰도 미연결'); },
-                        ignored: (subscriber) => this._clientChatWindows.ignored.includes(subscriber), whispered: () => {
-                            if (!this._clientChatWindows.window.current) return 0; throw new Error('Player 메뉴 현재 채팅 수신자 조회 미연결');
-                        } },
+                        ignored: (subscriber) => this._clientChatWindows.ignored.includes(subscriber),
+                        // 현재 채팅 입력줄의 수신자 접두에 그 Player 이름이 들어 있으면 1 이다(원본 0042e9e0). 채팅 창이 없으면 0 이다. 단독 미션 Players 메뉴는 자기 자신 행에서만 이 값을 읽고 쓰지 않는다. (2026-11-22 WB04-E1169)
+                        whispered: (subscriber) => { const chat = this._campaignProduction?.ui?.chat(); return chat?.current() ? (chat.containsRecipient(identity.nameForSubscriber(subscriber)) ? 1 : 0) : 0; } },
                     // 제단 받침(dais)은 같은 좌표의 제단(altar)을 찾아 그 메뉴로 위임한다(원본 447930). 제단 TYPE 은 게임 보조 상태의 값이다. 위임 자체는 객체 메뉴 열기가 같은 몸체로 처리한다. (2026-11-21 WB04-E1137)
                     open: { altar: (sid) => { const session = production.session, raw = session.core().pool.slot(sid), view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength), world = session.world(); return world.find(view.getFloat32(14, true), view.getFloat32(18, true), world.storage.gameAux.altarType); },
                         delegate: () => { throw new Error('사제 메뉴 제단 위임 미연결'); },
@@ -1518,7 +1518,10 @@ export class Netstorm {
                         screenWidth: () => this._clientPaletteScreen.width } },
                 command: (...args) => this._clientInputQueue.pushCommand(...args), invalidate: (rect) => this._clientRenderer.invalidate(rect, 0), gameMenu: this._campaignGameMenuDevices(production), knowledge: this._campaignKnowledgeDevices(), warnings: this._campaignWarningDevices(production),
                 // Players ▸ Send Money ▸ Send X 숫자 입력 창의 확정 장치(원본 004c9350)이다. (2026-11-22 WB04-E1168)
-                sendMoney: { confirm: (target, text) => confirmSendMoney(target, text, this._campaignWorld.session().moneyInputHooks()) } },
+                sendMoney: { confirm: (target, text) => confirmSendMoney(target, text, this._campaignWorld.session().moneyInputHooks()) },
+                // 미션 화면 아래 채팅 창(F3)의 Client 장기 상태와 현재 값 조회 장치이다. 로컬 단독 미션은 수신자·서버 전송이 없어 입력은 로그에 되울린다. (2026-11-22 WB04-E1169)
+                chat: { globals: this._clientChatWindows, config: (key) => { const stored = this._settings?.get(key); return stored !== undefined ? Number(stored) | 0 : this._gameData.readInt(key, 0).value | 0; },
+                    read: (address) => address === 0x5cae94 ? this._input.pointer.x | 0 : address === 0x5cae98 ? this._input.pointer.y | 0 : address === 0x548714 ? 0 : this._campaignMenuGlobal(address, production) } },
             changed: () => { this._clientRenderer.invalidateAll(); this._displayDirty = true; }, closePopups: () => this._closeCampaignPopups(),
             poll: (code) => this._clientInputPoll.poll(code), cursor: (number) => { this._campaignCursor = number; this._applyCursor(); },
             baseHandle: (...args) => help.handle(...args), menuInstances: () => this._mainMenu?.popup?.isOpen ? 1 : 0,
@@ -1539,6 +1542,8 @@ export class Netstorm {
             center: (x, y) => world.centerCamera(x, y), move: (x, y) => world.moveFromMinimap(x, y), inputMode: () => world.inputMode(), poll: () => this._clientInputPoll.poll(0xffff),
             baseHandle: devices.baseHandle, changed: devices.changed });
         const hud = new ClientUberHud(root, { assets: this._gameAssets, panelGlobals: this._clientProductionGlobals, divider, minimap,
+            // 채팅 창은 생산 UI 조립이 만든 `ui.chat()` 이다(Uber 루트가 생산 패널 뒤에 `createChat` 을 부른다). (2026-11-22 WB04-E1169)
+            chat: { create: () => ui.chat().create(), setVisible: (visible) => ui?.chat()?.setVisible(visible), setInput: (visible) => ui?.chat()?.setInput(visible) },
             fullDeck: () => this._clientGameplay.fullDeck(), mapRevision: () => this._clientGameplay.mapRevision(),
             createMinimap: () => minimap.create(),
             createProduction: () => { ui = createClientProductionAssembly(root, production.session, this._gameAssets, this._resources.fonts, screen, this._clientColorSort, this._clientProductionGlobals, production.panel, devices); return ui.construct(); },

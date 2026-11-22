@@ -19,6 +19,8 @@ export class ClientStyleTextBuffers {
     allocate() { if (this.#next > 0xffffffff) throw new RangeError('Client 글자 버퍼 토큰 소진'); const token = this.#next++; this.#tokens.add(token); return token; }
     // 예약한 토큰에 원본 버퍼를 생성한다.
     construct(token, maxLines) { if (!this.#tokens.has(token)) throw new Error('Client 글자 버퍼 예약 누락'); return this.#store.construct(token, maxLines); }
+    // Client 전역 상태(채팅 공유 로그 `0x548758`)를 새 토큰의 버퍼로 빌려 생성한다. 외부 상태는 반납(`destroy`) 때까지 살아 있어야 한다. (2026-11-22 WB04-E1169)
+    constructBorrowed(token, state, maxLines) { token >>>= 0; if (!token || this.#tokens.has(token)) throw new Error('Client 글자 버퍼 외부 토큰 중복'); this.#tokens.add(token); try { return this.#store.constructBorrowed(token, state, maxLines); } catch (error) { this.#tokens.delete(token); throw error; } }
     // 토큰 예약과 버퍼 생성을 함께 수행한다.
     create(maxLines) { const token = this.allocate(); try { return this.construct(token, maxLines); } catch (error) { this.#tokens.delete(token); throw error; } }
     // 현재 실제 버퍼 상태와 처리기를 빌린다.

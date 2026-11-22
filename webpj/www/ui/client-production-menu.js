@@ -26,6 +26,7 @@ import { ClientObjectMenuOpen } from './client-object-menu-open.js';
 import { ClientKnowledgeMenu } from './client-knowledge-menu.js';
 import { ClientWarnings } from './client-warnings.js';
 import { ClientMoneyDialog } from './client-money-dialog.js';
+import { ClientChatWindow } from './client-chat-window.js';
 
 // Session·원본 자산과 실제 입력·출력 장치를 빌리고 생성한 메뉴를 반납할 수 있게 한다.
 export function createClientProductionMenu(root, session, game, data, fonts, screen, colors, background, backgroundType, devices) {
@@ -74,10 +75,14 @@ export function createClientProductionMenu(root, session, game, data, fonts, scr
     // Players ▸ Send Money ▸ Send X 의 숫자 입력 창(Send X Storm Power)이다. 확정 장치(원본 004c9350)가 없으면 만들지 않는다. (2026-11-22 WB04-E1168)
     const sendMoney = devices.sendMoney ? new ClientMoneyDialog(root, game, fonts, screen, { text, decoration, background, backgroundType },
         { now: devices.now, poll: devices.poll, sound: devices.sound, baseHandle: devices.baseHandle, translate: devices.translate, confirm: devices.sendMoney.confirm, changed: devices.changed }) : null;
-    return { gameMenu, knowledge, warnings, open: (item, point) => about.open(item, point), openPriest: (sid, event) => priestOpen?.supports(sid) ? priestOpen.open(sid, event) : 0,
+    // 미션 화면 아래의 채팅 창(F3)이다. 로그·입력줄·도우미를 만들고 HUD 가 표시를 전환한다. 장치가 없으면 만들지 않는다. (2026-11-22 WB04-E1169)
+    const chat = devices.chat ? new ClientChatWindow(root, game, fonts, screen, { scrolling: title, buffers, background, menu, globals: devices.chat.globals, backgroundType },
+        { now: devices.now, poll: devices.poll, sound: devices.sound, baseHandle: devices.baseHandle, translate: devices.translate, changed: devices.changed, config: devices.chat.config,
+            read: devices.chat.read, recipient: devices.chat.recipient, sendChat: devices.chat.sendChat, resolve: devices.chat.resolve, log: devices.chat.log }) : null;
+    return { gameMenu, knowledge, warnings, chat, open: (item, point) => about.open(item, point), openPriest: (sid, event) => priestOpen?.supports(sid) ? priestOpen.open(sid, event) : 0,
         openFactory: (sid, event) => factoryOpen?.supports(sid) ? factoryOpen.open(sid, event) : 0,
         openObject: (sid, event) => objectOpen?.supports(sid) ? objectOpen.open(sid, event) : 0,
         instances: () => menu.instances(), closePopups: () => menu.closePopups(),
         sendMoney: sendMoney ? { open: (target) => sendMoney.open(target), current: () => sendMoney.current(), text: () => sendMoney.text() } : null,
-        close: () => { sendMoney?.close(); warnings?.close(); gameMenu?.close(); menu.close(); scroll.close(); } };
+        close: () => { chat?.close(); sendMoney?.close(); warnings?.close(); gameMenu?.close(); menu.close(); scroll.close(); } };
 }

@@ -49,8 +49,8 @@ export class ClientUberHud {
             resolveSerial: (serial) => this.#lookup.reference(serial), bubble: (...args) => root.events().bubble(...args), closePopups: () => devices.closePopups(),
             invalidate: (left, top, width, height, flags) => devices.invalidate({ left, top, right: (left + width) | 0, bottom: (top + height) | 0 }, flags),
             finishResize: () => devices.finishResize(), baseHandle: (event, first, second) => devices.baseHandle(token, event, first, second),
-            // 채팅 창 공장이 앱에 연결되기 전에는 표시 전환이 바꿀 실제 창이 없으므로 구분선 이동만 수행한다.
-            chatVisible: () => {}, chatInput: () => {},
+            // 채팅 창 장치(`devices.chat`)가 있으면 구분선 전환이 실제 창의 도우미·입력줄 표시를 바꾼다(원본 `SetHelperVisible`/`SetInputVisible`). 없으면 구분선 이동만 수행한다. (2026-11-22 WB04-E1169)
+            chatVisible: (visible) => devices.chat?.setVisible(visible), chatInput: (visible) => devices.chat?.setInput(visible),
         });
     }
     // 원본 전역 읽기다. 앱 값만 돌려주고 모르는 주소는 거부한다.
@@ -101,6 +101,9 @@ export class ClientUberHud {
             attach: (child, x, y, parent, mode) => root.attach(child, x, y, parent, mode), move: (token, x, y, parent) => root.move(token, x, y, parent),
             push: (token) => root.tree().push(token), registerSlave: (master, slave, flags) => devices.divider.registerSlave(master, slave, flags),
             createMinimap: () => devices.createMinimap(), createProduction: () => devices.createProduction(),
+            // 채팅 창 공장(`createChat`)과 번역·도움말 훅이다. 장치가 없으면 채팅 자식·도움말·기술 접두 갱신을 함께 건너뛴다. type 은 원본처럼 TYPE 범위만 검사한다. (2026-11-22 WB04-E1169)
+            ...(devices.chat ? { type: (value) => { if ((value >>> 0) >= devices.assets.types().length) throw new RangeError('전체 Uber 실제 TYPE 범위'); return (0x100000 + (value >>> 0)) >>> 0; },
+                createChat: () => devices.chat.create(), translate: (text) => text, help: () => {}, helpWord: () => {}, refreshTechnology: () => {} } : {}),
             cleanup: () => root.lifetime().cleanup(), kill: (token) => root.lifetime().kill(token), replaceRoot: (token) => root.replaceRoot(token),
         };
     }

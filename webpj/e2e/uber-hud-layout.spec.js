@@ -42,7 +42,8 @@ test('4:3 Tutorial1의 좌측 HUD 틀은 원본 위치로 도킹되고 하단 �
   await startTutorial(page, { width: 1024, height: 768 }, '/?aspect=4:3');
   const hud = await readHud(page);
   expect(hud).toEqual({ layout: [1024, 768], map: { left: 85, top: 0, right: 1024, bottom: 768 }, vertical: [80, 0, 5, 768], minimapDivider: [0, 688, 80, 5], chatDivider: [85, 768, 939, 5],
-    minimap: [0, 693, 80, 75], production: [0, 0, 80, 688], knowledge: 0, chat: 0, rootIsHud: true });
+    minimap: [0, 693, 80, 75], production: [0, 0, 80, 688], knowledge: 0, chat: hud.chat, rootIsHud: true });
+  expect(hud.chat, '채팅 창 root(E1169 이후 실제 창)').toBeGreaterThan(0);
   // 원본 10.78 스크린샷(게임 영역은 오프셋 4,32)의 하단 구분선·세로 구분선 아랫부분·미니맵 칸 85×82 픽셀과 모두 같아야 한다.
   const png = fs.readFileSync(path.join(__dirname, '..', '..', 'screenShots', 'Bridge the Gap - Started.png')).toString('base64');
   await page.waitForTimeout(500);

@@ -43,4 +43,14 @@ export class ClientScrollingText {
     requestScroll(token, position) { this.#body.requestScroll(token, position); }
     // 현재 Slider 표시 여부를 원본 가상 부착으로 적용한다.
     setSlider(token, enabled) { this.#widgets.setSlider(token, enabled ? 1 : 0); }
+    // 현재 맨 아래 보기 여부(원본 `AtBottom`, 내용 높이 − 기본 높이 − 10 이하가 현재 위치)이다. 채팅 창이 로그를 추가하기 전 판정에 쓴다. (2026-11-22 WB04-E1169)
+    atBottom(token) { return this.#body.atBottom(token); }
+    // 맨 아래 보기를 다음 그리기 때 적용하도록 요청한다(원본 `RequestBottom`, extra 는 저장만 한다). (2026-11-22 WB04-E1169)
+    requestBottom(token, extra = 0) { this.#body.requestBottom(token, extra); }
+    // 현재 위치에서 delta 만큼 상대 스크롤을 요청한다(음수는 0 으로 제한). (2026-11-22 WB04-E1169)
+    requestRelativeScroll(token, delta) { this.#body.requestRelativeScroll(token, delta); }
+    // 스크롤 가능 비트의 최하위 비트를 바꾼다(원본 `SetScrollable`, 끄면서 Slider 만 켜져 있으면 Slider 도 끈다). (2026-11-22 WB04-E1169)
+    setScrollable(token, value) { this.#widgets.setScrollable(token, value); }
+    // 현재 소유 버퍼를 놓고 다른 버퍼 토큰으로 바꾼다(원본 `ReplaceBuffer`, 채팅 창이 공유 로그 버퍼를 빌려 쓰게 한다). (2026-11-22 WB04-E1169)
+    replaceBuffer(token, buffer, owns) { this.#widgets.replaceBuffer(token, buffer, owns); }
 }
