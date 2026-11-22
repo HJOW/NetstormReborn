@@ -266,6 +266,7 @@ public sealed partial class ClientHostGame : Game
                 cursor => _cursor.Set((GameCursor)cursor), _buttonSound.PlayByName);
             _htmlText.Bind(_htmlWindows);
             InitializeNativeTextPictures();
+            InitializeNativeProductionContext();
             _textEntry = new HostTextEntry(_mainMenu, _htmlWindows, _htmlText, _driver.Screen,
                 () => _clock.NowSeconds, (_, _) => _menuDirty = true);
             InitializeNativeChatEditing();

@@ -25,6 +25,8 @@ public sealed class CampaignProductionDevices
     public Action<string, uint>? ResearchHelp { get; set; }
     /// <summary>같은 Carrier의 실제 번개/음향/예약/공간 장치다.미설치 효과는 선택 시 실패한다.</summary>
     public CarrierContentNoticeHooks? CarrierContent { get; set; }
+    /// <summary>같은 실제 Session 커서 부모의 Cancel이다. 설치 전 호출은 별도 관문이 거부한다.</summary>
+    public Action? CancelCursor { get; set; }
 }
 
 /// <summary>RawCampaignSession.cpp의 생산/연구와 같은 현재 부모 통지를 조립한다.</summary>
@@ -106,6 +108,7 @@ public sealed partial class HostSession
                 new() { Mission = () => BridgeState.Mission, FullDeck = () => Gameplay.FullDeckBox.Value,
                     FreeTechnologyType = () => Gameplay.FreeTechnologyTypeBox.Value, TempleProduct = () => GameAux.TempleProductTypeBox.Value },
                 new() { ConfigInt = config, ModeAssertion = () => throw new InvalidOperationException("생산 원본 진단: inFortMode || inBattleMode") });
+            RawProductionSync sync = CreateProductionSync(player, deck, carrier, create, types, finder);
             var playerNotice = new RawPlayerContentNotice(Pool, new()
             {
                 CursorA = () => Sp.OffsetCurrent, CursorB = () => unchecked((uint)Sp.TrackingOffsetCurrent.Value),
@@ -158,6 +161,7 @@ public sealed partial class HostSession
                 Assertion = text => throw new InvalidOperationException($"연구 원본 진단: {text}"),
             });
             _worldProductionDeck = deck; _worldProductionTotals = totals; _worldProduction = production;
+            _worldProductionSync = sync; _productionCancelCursor = devices.CancelCursor;
             _worldPlayerContent = playerNotice; _worldCarrierContent = carrierNotice; _worldContentForms = forms; _worldContentDetach = detach; _worldResearch = research;
             return production;
         }
@@ -191,6 +195,7 @@ public sealed partial class HostSession
         if (_worldProductionDeck is not { } deck) return;
         if (!deck.PlayerLinksReturnedForState) deck.ReturnPlayerLinksForState(deck.CleanupPlayerLinksForState(() => PlayerRecords));
         deck.Dispose(); _worldProductionDeck = null; _worldProductionTotals = null; _worldProduction = null;
+        _worldProductionSync = null; _productionCancelCursor = null;
         _worldResearch = null; _worldPlayerContent = null; _worldCarrierContent = null; _worldContentForms = null; _worldContentDetach = null; _worldProductionFinder = null;
     }
 }

@@ -1633,3 +1633,8 @@ cpppj/src/client/ClientColorMapFile.cpp	Netstorm.Client/Display/ClientColorSortI
 cpppj/src/client/ClientMain.cpp	Netstorm.Game/HostStartupColorMaps.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.ColorMaps.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Client/Host/HostStartupScene.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	port
+cpppj/src/client/ClientProductionSync.cpp	Netstorm.Client/ClientProductionSync.cs	b37bd01a56f529cf65cf8b015ae888b094885d6d	port
+cpppj/src/client/ClientProductionSync.h	Netstorm.Client/ClientProductionSync.cs	b37bd01a56f529cf65cf8b015ae888b094885d6d	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.ProductionSync.cs	baf141ebe8d2893459a1b18ea74a6caa88504468	port
+cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.ProductionSync.cs	baf141ebe8d2893459a1b18ea74a6caa88504468	port
+cpppj/src/client/UberHud.inc	Netstorm.Game/ClientHostGame.ColorMaps.cs	16431ec18a3f7518d7aaa55929b280ab1cc6a8fb	port
