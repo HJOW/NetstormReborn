@@ -200,3 +200,31 @@ test('채팅: 입력줄에 붙여넣기가 들어간다', async ({ page }) => {
   expect(await paste('pasted\r\ntext')).toBe(true); await page.waitForTimeout(500); expect(await input()).toBe('Hi pasted text');
   expect(errors).toEqual([]);
 });
+
+// 도우미 메뉴 명령: 삽입(0x02000115)은 입력줄에 글을 넣고, 설정 대입(0x0200006d)은 채팅 옵션을 바꾸며, Edit Format(0x02000105)은 큐를 막지 않고 소비된다. 이전에는 이 명령들이 미구현 사건으로 큐를 3초 막고 오류와 함께 버려졌다. (2026-11-22 WB04-E1177)
+test('채팅 도우미 명령: 삽입·설정 대입이 처리되고 입력 큐를 막지 않는다', async ({ page }) => {
+  test.setTimeout(300000);
+  const errors = []; page.on('pageerror', (error) => errors.push(error.stack ?? error.message)); page.on('console', (message) => { if (['error', 'warning'].includes(message.type()) && !/willReadFrequently/u.test(message.text())) errors.push(message.text()); });
+  await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0, autoDemo: 0, skirmishAiCount: 3, skirmishAi2Ally: 0, skirmishAi3Ally: 0, skirmishAi4Ally: 0 } })));
+  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/?aspect=4:3&lang=en');
+  await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 60000 }); await page.locator('canvas').click();
+  await page.waitForFunction(() => window.netstorm?.state === 'mainMenu', null, { timeout: 60000 });
+  await clickLabel(page, 'Campaign'); await clickLabel(page, 'Skirmish'); await clickLabel(page, 'Start');
+  await page.waitForFunction(() => window.netstorm?._campaignDisplayActive() && window.netstorm._clientGuide.current()?.runtime.gate.started === 1, null, { timeout: 120000 });
+  await clickLabel(page, 'Go!'); await page.waitForTimeout(2000); await page.locator('canvas').focus();
+  const send = (code, text) => page.evaluate(({ code, text }) => { const app = window.netstorm; app._clientInputQueue.pushCommand(code, 0, text === null ? 0 : app._clientChatWindows.store(text)); }, { code, text });
+  const state = () => page.evaluate(() => { const app = window.netstorm; return { input: app._campaignProduction.ui.chat().inputText(), option: app._chatOption('ShowChatWindow'), head: app._clientInputQueue.peek()?.code ?? null }; });
+  await page.keyboard.press('Enter'); await page.waitForTimeout(400); await page.keyboard.type('Hi '); await page.waitForTimeout(300);
+  expect((await state()).option).toBe(1);
+  // 삽입: 입력줄 글 뒤에 문자열이 붙는다.
+  await send(0x02000115, '~g'); await page.waitForTimeout(500); expect(await state()).toMatchObject({ input: 'Hi ~g', head: null });
+  // 설정 대입: 키=값 문자열이 채팅 옵션을 바꾼다.
+  await send(0x0200006d, 'ShowChatWindow=0'); await page.waitForTimeout(500); expect(await state()).toMatchObject({ option: 0, head: null });
+  await send(0x0200006d, 'ShowChatWindow=1'); await page.waitForTimeout(500); expect(await state()).toMatchObject({ option: 1, head: null });
+  // Edit Back/Front Format 은 대화창이 없어 안내만 하고 큐를 막지 않는다.
+  await send(0x02000105, null); await page.waitForTimeout(500); expect((await state()).head).toBeNull();
+  await send(0x02000106, null); await page.waitForTimeout(500); expect((await state()).head).toBeNull();
+  // 뒤따르는 키 입력이 평소처럼 입력줄로 간다.
+  await page.keyboard.type('ok'); await page.waitForTimeout(400); expect((await state()).input).toBe('Hi ~gok');
+  expect(errors).toEqual([]);
+});

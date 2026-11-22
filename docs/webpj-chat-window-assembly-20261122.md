@@ -54,3 +54,9 @@
 - `netstorm.js`의 `_onPaste`가 문서 `paste` 사건을 받아, 채팅 입력줄이 보이거나 Send X 숫자 창이 열려 있을 때만 클립보드 본문을 가로챈다(줄바꿈·탭은 공백으로 바꾸고 128자로 자름). 본문은 IME 확정과 같은 `queueCommittedText`로 입력 큐에 올라 입력줄의 길이·금지 문자 규칙(Send X 는 숫자만)이 그대로 적용된다. 입력창이 없으면 `defaultPrevented`가 false 라 기본 동작에 맡긴다. 편집기의 `Paste`(선택 교체·`FilterDisplayText`)가 아니라 문자 입력 경로이므로 선택 영역 교체 의미는 같은 규칙(선택된 글자는 첫 문자가 대체)을 따른다.
 - 일곱 번째 e2e 시험: 숨은 동안 붙여넣기는 가로채지 않고, `Hi ` 입력 뒤 `pasted
 text` 붙여넣기는 `Hi pasted text`가 된다. 복사(Ctrl+C)는 아직 연결하지 않았다(브라우저 클립보드 쓰기 필요). 영향 e2e 25건 통과(`extracted/webpj-e1175-e2e.log`).
+
+## 도우미 메뉴 명령(E1177)
+
+- 도우미 `>` 메뉴의 항목은 명령을 입력 큐에 올린다: 삽입(`0x02000115`, 둘째 인자 = 채팅 문자열 토큰 — 색·스타일·`Copy`·`Paste` 등), 설정 대입(`0x0200006d`, `키=값` 문자열 — Chat Effects/Chat Controls 체크 항목), Edit Back/Front Format(`0x02000105/106`), 수신자 추가·제거(`0x02000027/101`)와 재부착(`0x020000a6`). 입력 프레임의 허용 목록에 없어서 이 명령들은 큐 머리에 남아 3초 뒤 `미구현 입력 사건을 버립니다` 오류와 함께 버려지고 그동안 뒤의 입력이 막혔다(메뉴 항목을 누르는 순간 드러남).
+- `netstorm.js`: 이 일곱 코드를 `CHAT_HELPER_COMMANDS`로 허용했다. 삽입·수신자·재부착은 앞선 Gump 입력(`route`)에서 채팅 창이 처리하고(`ChatWindow.handle`), 남는 설정 대입은 `applyScriptConfig`로 `_applyCampaignConfig`에 써서 채팅 옵션(`_chatOption`)과 서식 설정이 바뀌며, Edit Format 은 대화창이 없어 콘솔 안내만 하고 큐를 막지 않는다.
+- 여덟 번째 e2e 시험: `Hi ` 뒤 삽입 `~g` → `Hi ~g`, `ShowChatWindow=0/1` 설정 대입이 옵션을 바꾸고, Edit Format 이 큐 머리에 남지 않으며, 이어지는 문자 입력이 평소처럼 들어간다. 오류·경고 0.

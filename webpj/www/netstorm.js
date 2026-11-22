@@ -33,6 +33,8 @@ import { makePriestShieldNoticeHooks } from './core/sound-process.js';
 import { confirmSendMoney, dispatchSendMoneyInput, isSendMoneyCommand, sendMoneyScriptCode } from './core/send-money-input.js';
 import { dispatchChatInputKey } from './ui/hud-chat-geometry.js';
 // 채팅 표시 옵션 열 개의 원문 키(오타 포함)이다. 값이 없으면 웹은 켜짐(1)을 기본으로 둔다. (2026-11-22 WB04-E1172)
+// 채팅 도우미 메뉴가 입력 큐에 올리는 명령이다: 삽입(0x02000115, 채팅 창이 처리)·설정 대입(0x0200006d)·Edit Back/Front Format(0x02000105/106)·수신자 추가/제거(0x02000027/101)·재부착(0x020000a6, 채팅 창이 처리). 이 목록 밖의 미구현 명령은 큐를 막으므로 여기 올려 소비한다. (2026-11-22 WB04-E1177)
+const CHAT_HELPER_COMMANDS = new Set([0x02000115, 0x0200006d, 0x02000105, 0x02000106, 0x02000027, 0x02000101, 0x020000a6]);
 const CHAT_OPTION_KEYS = new Set(['ShowBattle', 'ShowEveryone', 'ShowAllies', 'ShowObserver', 'ShowWisper', 'ShowMyAllies', 'ShowMyEmenys', 'ShowMyNeutrals', 'ShowChatWindow', 'PlaySoundMessage']);
 import { ClientChatManagerGlobals, makeClientChatPacketHooks } from './core/client-chat-manager-globals.js';
 import { ClientDotCommandGlobals } from './ui/dot-command-globals.js';
@@ -1974,7 +1976,7 @@ export class Netstorm {
             const selectionKey = code === 0x50 || code === 0x70 || code === 0x52 || code === 0x72 || code === 0x4e || code === 0x6e || code === 0x48 || code === 0x68;
             const productionKey = 'qwaszyxed'.includes(String.fromCharCode(code).toLowerCase()) && code < 256;
             const cursorCancel = code === 0x1b, cursorRotate = code === 0x250000 || code === 0x270000, gameTimeKey = code === 0x54 || code === 0x74;
-            const unsupported = (code !== 13 && code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== PRODUCTION_REPEAT_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_F6 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !MISSION_VIEW_KEYS.has(code) && code !== MISSION_F9 && !TUTORIAL_NOTICE_COMMANDS.has(code) && !isGameMenuCommand(code) && !isSendMoneyCommand(code) && !objectCommand && !rotationKey && !cameraKey && code !== PAUSE_KEY_CODE && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && !gameTimeKey && code !== InputCode.leftButton && code !== InputCode.rightButton);
+            const unsupported = (code !== 13 && !CHAT_HELPER_COMMANDS.has(code) && code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== PRODUCTION_REPEAT_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_F6 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !MISSION_VIEW_KEYS.has(code) && code !== MISSION_F9 && !TUTORIAL_NOTICE_COMMANDS.has(code) && !isGameMenuCommand(code) && !isSendMoneyCommand(code) && !objectCommand && !rotationKey && !cameraKey && code !== PAUSE_KEY_CODE && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && !gameTimeKey && code !== InputCode.leftButton && code !== InputCode.rightButton);
             if (unsupported) {
                 // 미구현 사건 앞을 추월하지 않는다. 다만 처리하지 못하는 사건이 3초(벽 시각) 넘게 큐 머리에 남으면 이후 모든 입력이 영구히 막히므로 오류로 기록하고 버린다. (2026-11-21 WB04-E1150)
                 const key = `${next.code}:${next.x}:${next.y}`, wall = this._gameClock.wallSeconds();
@@ -2007,6 +2009,11 @@ export class Netstorm {
                     description: () => this._resources.translate(types[type].description), hitPoints: () => world.session().hitPoints().typeHitPoints(type),
                     translate: (text) => this._resources.translate(text), substitute: (text) => this._gameData.substitute(text), config: (key) => this._gameData.get(key) ?? '' });
                 this._closeCampaignPopups(); this._openHelp(types[type].name.split('\0', 1)[0] + this._resources.translate('Type'), information, createQuickHelpPicture(this._gameAssets, type));
+            }
+            // 채팅 도우미 명령 중 채팅 창이 처리하지 않은 것: 설정 대입은 `키=값` 문자열(둘째 인자가 채팅 문자열 토큰)을 설정에 쓰고, 서식 편집(Edit Back/Front Format)은 웹에서 아직 대화창이 없어 안내만 남긴다. (2026-11-22 WB04-E1177)
+            else if (CHAT_HELPER_COMMANDS.has(code) && !release) {
+                if (code === 0x0200006d) { const assignment = this._clientChatWindows.strings.get(event.y >>> 0); if (assignment === undefined) throw new Error('채팅 설정 대입의 문자열 토큰 없음'); applyScriptConfig(assignment, (key, value) => this._applyCampaignConfig(key, value)); this._displayDirty = true; }
+                else if (code === 0x02000105 || code === 0x02000106) console.info('Netstorm: 채팅 Edit Back/Front Format 대화창은 아직 연결하지 않았습니다. 입력줄에 .front/.back 점 명령을 쓰세요.');
             }
             // 문자 Enter: 채팅 입력줄이 보이지 않으면 입력줄을 보이고 채팅 구분선을 올린다(원본 `OpenChatInput`). 이미 보이면 입력줄이 먼저 처리한다. (2026-11-22 WB04-E1170)
             else if (code === 13 && !release && !this._mainMenu?.dialog) { const chatWindow = this._campaignProduction?.ui?.chat(); if (chatWindow) { dispatchChatInputKey(event, () => (chatWindow.inputVisible() ? 1 : 0), () => chatWindow.setInput(true), () => chatWindow.open()); this._displayDirty = true; } }
