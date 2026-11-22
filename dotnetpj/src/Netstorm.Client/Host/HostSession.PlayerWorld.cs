@@ -23,6 +23,10 @@ public sealed partial class HostSession
     private SquidFrame? _liveFrame;
     /// <summary>같은실제삭제/공장/Regular/전송을소유하는현재프로세스대여다. Host는약하게조회한다.</summary>
     private ProcessHostRuntimeBindings? _playerProcessRuntime;
+    /// <summary>현재 Host가 실제로 빌리는 같은 시계/권한 객체다. 경로가 별도 상태를 만들지 않게 보관한다.</summary>
+    private SquidProcessState? _playerProcessClock;
+    /// <summary>설치된 실제 Host의 상태를 빌리며 미설치/반납 뒤에는 거부한다.</summary>
+    public SquidProcessState PlayerProcessClock => _playerProcessClock ?? throw new InvalidOperationException("현재 Host 시계 미설치 또는 반납");
     /// <summary>같은Client Kernel/Frame과현재TYPE를빌리는장기프로세스저장소다. 독립조합만null이다.</summary>
     private readonly RawProcessHostStorage? _sharedPlayerProcesses;
     /// <summary>현재실제Runtime이단독으로빌린장기Host의반납권한이다.</summary>
@@ -98,20 +102,23 @@ public sealed partial class HostSession
         if (_sharedPlayerProcesses is null)
         {
             var current = new WeakReference<ProcessHostRuntimeBindings>(runtime);
-            PlayerProcesses = new SquidProcessHost(Pool, types, Kernel, new SquidProcessState
+            var clock = new SquidProcessState
             {
                 SharedNow = ProcessTime, SharedAuthority = Gameplay.Authority, SharedPollType = GameAux.GeyserTypeBox,
                 CurrentProcessFormType = GameAux.ProcessFormTypeBox, CurrentRegularType = GameAux.RegularProcessTypeBox,
                 CurrentSharedRegularType = GameAux.SharedRegularProcessTypeBox, CurrentProcessTypeEnd = GameAux.ProcessTypeEndBox,
                 CurrentFireAnimationType = GameAux.FireAnimationProcessTypeBox, CurrentRotateAnimationType = GameAux.RotateAnimationProcessTypeBox,
-            },
+            };
+            PlayerProcesses = new SquidProcessHost(Pool, types, Kernel, clock,
                 () => current.TryGetTarget(out ProcessHostRuntimeBindings? selected) ? selected : null);
+            _playerProcessClock = clock;
             _playerProcessCurrent = current;
         }
         else
         {
             _playerProcessUse = _sharedPlayerProcesses.Bind(runtime);
             PlayerProcesses = _sharedPlayerProcesses.Host();
+            _playerProcessClock = _sharedPlayerProcesses.State();
         }
         _playerProcessRuntime = runtime;
         BindWorldPopParent();
@@ -190,5 +197,6 @@ public sealed partial class HostSession
         _playerProcessUse?.Dispose(); _playerProcessUse = null;
         _playerProcessCurrent?.SetTarget(null!); _playerProcessCurrent = null;
         _playerProcessRuntime = null;
+        _playerProcessClock = null;
     }
 }

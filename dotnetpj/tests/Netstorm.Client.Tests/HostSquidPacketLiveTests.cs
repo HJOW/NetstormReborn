@@ -10,11 +10,11 @@ namespace Netstorm.Client.Tests;
 public sealed partial class HostPriestWorldLiveTests
 {
     /// <summary>같은 실제 Surface와 미션 공장/사제 공간을 수신 전에 구성한다.</summary>
-    private static (HostSession Session, IReadOnlyList<OriginalTypeRecord> Types, ClientSurfaceGlobals Surface) SquidPacketScene()
+    private static (HostSession Session, IReadOnlyList<OriginalTypeRecord> Types, ClientSurfaceGlobals Surface) SquidPacketScene(RawSurfaceTransmissionDevices? transmission = null)
     {
         var game = new ClientGameplayGlobals(); game.Authority.Server = true;
-        var local = new ClientLocalStateGlobals(game, new()); var surface = new ClientSurfaceGlobals(game, new(local), new Kernel(), () => 0);
-        var (session, types) = Scene(surface); session.BuildPriestWorldDevices();
+        var local = new ClientLocalStateGlobals(game, new()); var surface = new ClientSurfaceGlobals(game, new(local), new Kernel(), () => 0, transmission);
+        var (session, types) = Scene(surface, initializeSurfaceAssets: transmission is not null); session.BuildPriestWorldDevices();
         surface.Storage.BindDisplayDiagnostics(new(), (text, file, line) => throw new InvalidOperationException($"객체 패킷 진단:{text} {file}:{line:x}"));
         return (session, types, surface);
     }

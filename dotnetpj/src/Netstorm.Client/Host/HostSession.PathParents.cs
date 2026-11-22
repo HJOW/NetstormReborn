@@ -22,11 +22,12 @@ public sealed partial class HostSession
     /// <summary>실제 사제 도착 본체이며 미설치/반납 뒤에는 실패한다.</summary>
     public RawPriestArrival PathPriestArrival => FixedPacketNeed(_pathPriestArrival);
     /// <summary>실제 공통 공간·현재 모드/권한/TYPE와 사제 HP/Carrier를 정지 부모에 연결한다.</summary>
-    public RawPriestHalt BuildPriestHaltWorldDevices(PriestHaltHooks effects)
+    public RawPriestHalt BuildPriestHaltWorldDevices(PriestHaltHooks effects, PriestHaltState? state = null)
     {
         if (_pathPriestHalt is not null) throw new InvalidOperationException("사제 Halt 중복 설치");
-        _ = PathSearch; RawPriestHalt result = new(Pool, FixedPacketNeed(_terrainHash), FixedPacketNeed(_terrainPopTypes), FixedPacketNeed(_terrainSpots), PriestWorld.CarrierCheck, PriestWorld.PriestState, Reward,
-            new() { SharedBattle = () => BattleActive() != 0, SharedBoss = () => Gameplay.Authority.Boss, SharedCarrierType = GameAux.RainWalkerTypeBox, SharedNuggetCarrierType = GameAux.EmptyCarrierTypeBox },
+        _ = PathSearch; state ??= new();
+        state.SharedBattle = () => BattleActive() != 0; state.SharedBoss = () => Gameplay.Authority.Boss; state.SharedCarrierType = GameAux.RainWalkerTypeBox; state.SharedNuggetCarrierType = GameAux.EmptyCarrierTypeBox;
+        RawPriestHalt result = new(Pool, FixedPacketNeed(_terrainHash), FixedPacketNeed(_terrainPopTypes), FixedPacketNeed(_terrainSpots), PriestWorld.CarrierCheck, PriestWorld.PriestState, Reward, state,
             effects with { Unpop = UnpopWorldObject, Pop = PopWorldObject });
         _pathPriestHalt = result; return result;
     }
@@ -35,6 +36,7 @@ public sealed partial class HostSession
     {
         if (_playerRecordsReleased || ProcessBindingsReturned() || _playerProcessRuntime is null) throw new ObjectDisposedException(nameof(HostSession));
         if (parent < 5 || parent >= Pool.Capacity) throw new ArgumentOutOfRangeException(nameof(parent));
+        if (_pathStart is not null) return CurrentBoundPath(parent)?.Runtime;
         ReadOnlySpan<byte> raw = Pool.Slot(parent); uint movement = PriestWorld.MovementProcessType(raw[10]);
         // Source의복원된실제부모생성자만허용한다.187의전용부모는전체PathBindings와함께후속으로잇는다.
         (uint Table, uint Movement) expected = raw[10] switch
@@ -85,5 +87,5 @@ public sealed partial class HostSession
         _pathPriestArrival = result; return result;
     }
     /// <summary>실제 프로세스를 먼저 정리한 뒤 부모/현재조회기의 참조만 반납한다.</summary>
-    private void ReleasePathParentDevices() { _pathPriestHalt = null; _pathCarrierArrival = null; _pathPriestArrival = null; _pathParentLookup = null; }
+    private void ReleasePathParentDevices() { _pathPriestHalt = null; _pathCarrierArrival = null; _pathPriestArrival = null; _pathParentLookup = null; _motionTerrain = null; }
 }

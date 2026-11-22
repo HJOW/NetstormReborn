@@ -12,7 +12,7 @@ namespace Netstorm.Client.Tests;
 public sealed partial class HostPriestWorldLiveTests
 {
     /// <summary>실자산과 시작 때 초기화한 SP·장기 목록을 같은 세션에 연결한다. 공유 표면 지정 시 제품처럼 같은 풀/게임/해시/점유 지도를 빌린다.</summary>
-    private static (HostSession Session, IReadOnlyList<OriginalTypeRecord> Types) Scene(ClientSurfaceGlobals? sharedSurface = null)
+    private static (HostSession Session, IReadOnlyList<OriginalTypeRecord> Types) Scene(ClientSurfaceGlobals? sharedSurface = null, bool initializeSurfaceAssets = false)
     {
         string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
         var startup = new HostStartupScene(data); var random = new GameRandom(1);
@@ -25,9 +25,14 @@ public sealed partial class HostPriestWorldLiveTests
         IReadOnlyList<RiftTypeDefinition> definitions = MissionFortLoad.LoadTypeDefinitions(startup.Files);
         session.FillWorldFrames(definitions); RiftTypeTable table = MissionFortLoad.LoadTypeTable(startup.Files);
         var shapes = TerrainDisplayShapes.Build(definitions, new ShapeDatabase(startup.Files.ReadAllBytes("d/_shapes.shp")));
-        session.BuildTerrainPopDevices(table.Types, shapes, hash: sharedSurface?.Storage.Hash, spots: sharedSurface?.Storage.Spots); session.BuildFortObjectDevices(table.Types, session.WorldFrames);
-        session.BuildWorldGraphDevices(table.Types);
-        return (session, table.Types);
+        IReadOnlyList<OriginalTypeRecord> types = table.Types;
+        if (initializeSurfaceAssets)
+        {
+            Assert.NotNull(sharedSurface); sharedSurface.Storage.InitializeAssetTables(types, session.WorldFrames, shapes); types = sharedSurface.Storage.Types;
+        }
+        session.BuildTerrainPopDevices(types, shapes, hash: sharedSurface?.Storage.Hash, spots: sharedSurface?.Storage.Spots); session.BuildFortObjectDevices(types, session.WorldFrames);
+        session.BuildWorldGraphDevices(types);
+        return (session, types);
     }
 
     /// <summary>실제 지형 도장으로 지면을 만들고 같은 공장/소유자/Pop으로 사제를 등록한다.</summary>

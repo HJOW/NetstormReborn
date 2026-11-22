@@ -6,11 +6,15 @@ public sealed class PathCleanupState
 {
     /// <summary>현재 helper/너겟 삭제 권한이다.</summary>
     public bool Boss { get; set; } = true;
+    /// <summary>실제 Client의 현재 권한을 정리 효과 사이에서 다시 읽는다.</summary>
+    public Func<bool>? SharedBoss { get; set; }
+    /// <summary>독립 입력 또는 같은 장기 권한을 원문 소비 위치에서 읽는다.</summary>
+    public bool CurrentBoss() => SharedBoss?.Invoke() ?? Boss;
     /// <summary>현재 원문 shouldDestroy 진단 뷰다.</summary>
     public RawCheckingFlag Checking { get; set; } = new();
     /// <summary>의식 장소를 찾는 현재 사제TYPE다.</summary>
     public uint PriestType { get; set; } = 158;
-    /// <summary>현재 제단TYPE다.</summary>
+    /// <summary>현재 다이스 TYPE다.</summary>
     public uint DaisType { get; set; } = 165;
     /// <summary>현재 아웃포스트TYPE도 반환 장소로 인정한다.</summary>
     public uint OutpostType { get; set; } = 126;

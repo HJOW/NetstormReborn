@@ -1486,3 +1486,13 @@ cpppj/src/client/RawCampaignMotionBindings.cpp	Netstorm.Client/Host/HostSession.
 cpppj/src/client/RawCampaignMotionBindings.h	Netstorm.Client/Host/HostSession.PathParents.cs	ab3ef43d3685245aeaad8ecf53d55de4a1b92a97	port
 cpppj/src/client/RawCampaignPathBindings.cpp	Netstorm.Client/Host/HostSession.PathParents.cs	2b5ee903c78defa10dbde959a63db11cb4adf8b7	port
 cpppj/src/client/RawCampaignPathBindings.h	Netstorm.Client/Host/HostSession.PathParents.cs	5318fdd6a88cbf71e5248a42a30f902a860ca3dd	port
+cpppj/src/client/RawCampaignPathBindings.cpp	Netstorm.Client/Host/HostSession.Paths.cs	2b5ee903c78defa10dbde959a63db11cb4adf8b7	port
+cpppj/src/client/RawCampaignPathBindings.cpp	Netstorm.Client/Host/HostSession.PathCommands.cs	2b5ee903c78defa10dbde959a63db11cb4adf8b7	port
+cpppj/src/client/RawCampaignPathBindings.cpp	Netstorm.Client/Host/HostSession.PathPackets.cs	2b5ee903c78defa10dbde959a63db11cb4adf8b7	port
+cpppj/src/client/RawCampaignMotionBindings.cpp	Netstorm.Client/Host/HostSession.Motion.cs	ab3ef43d3685245aeaad8ecf53d55de4a1b92a97	port
+cpppj/src/client/RawCampaignPathBindings.h	Netstorm.Client/Host/HostSession.Paths.cs	5318fdd6a88cbf71e5248a42a30f902a860ca3dd	port
+cpppj/src/client/RawCampaignPathBindings.h	Netstorm.Client/Host/HostSession.PathCommands.cs	5318fdd6a88cbf71e5248a42a30f902a860ca3dd	port
+cpppj/src/client/RawCampaignPathBindings.h	Netstorm.Client/Host/HostSession.PathPackets.cs	5318fdd6a88cbf71e5248a42a30f902a860ca3dd	port
+cpppj/src/client/RawCampaignMotionBindings.h	Netstorm.Client/Host/HostSession.Motion.cs	ab3ef43d3685245aeaad8ecf53d55de4a1b92a97	port
+cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/RawSurfaceStorage.Path.cs	14fd017c3b6ca87880374e044e3ac00bf0575c2e	port
+cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceStorage.Path.cs	14fd017c3b6ca87880374e044e3ac00bf0575c2e	port

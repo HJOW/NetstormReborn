@@ -71,11 +71,11 @@ public sealed class RawPathCleanup
         if (Pool.Edition == OriginalEdition.Patch1078 && (Pool.Slot(parent)[11] & 2) == 0)
         {
             RawPathPoint point = RawPathSlot.Position(Pool, parent); int place = ReturnPlaceAt(point.X, point.Y), nugget = _hooks.Contained!(parent, NuggetMask, _state.CurrentNuggetType(), 0);
-            if (place != 0 && nugget != 0 && Owner(place) == Owner(parent)) { uint parentGraph = _hooks.GraphFor!(parent), placeGraph = _hooks.GraphFor(place); if (placeGraph == parentGraph && _state.Boss) _hooks.Destroy!(nugget, 0); }
+            if (place != 0 && nugget != 0 && Owner(place) == Owner(parent)) { uint parentGraph = _hooks.GraphFor!(parent), placeGraph = _hooks.GraphFor(place); if (placeGraph == parentGraph && _state.CurrentBoss()) _hooks.Destroy!(nugget, 0); }
         }
         if (Pool.Slot(parent)[10] == _state.PriestType) { RawPathPoint point = RawPathSlot.Position(Pool, parent); int temple = NearbyType(point.X, point.Y, 2, _state.DaisType); if (temple != 0 && (Extra(temple) & 8) == 0) _hooks.Ritual!(temple, parent, 0); }
         uint remaining = runtime.Helper;
-        if (_state.Boss && remaining != 0)
+        if (_state.CurrentBoss() && remaining != 0)
         {
             if (remaining >= Pool.Capacity) throw new ArgumentOutOfRangeException(nameof(runtime), "cleanup 남은 helper SID 범위"); int target = (ushort)remaining;
             if ((Pool.Slot(target)[11] & 1) == 0)

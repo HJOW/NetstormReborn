@@ -55,6 +55,7 @@ public sealed partial class HostSession
     {
         _squidPacketStorage = null; _squidPacketNames = null; _squidPacketEffects = null; _squidPacketUi = null;
         _daisPacketTransmission = null;
+        ReleasePathDevices();
         ReleasePathSearchDevices();
         ReleaseConstructionRefundDevices();
         ReleasePathParentDevices();
@@ -133,6 +134,7 @@ public sealed partial class HostSession
         if (_playerRecordsReleased || ProcessBindingsReturned() || _playerProcessRuntime is null) throw new ObjectDisposedException(nameof(HostSession), "고정 gameplay의 실제 World 반납 뒤 호출");
         switch (entry)
         {
+            case 0x489ee0: ReceivePathPacket(packet); return;
             case 0x433c30: ReceiveSquidPacket(packet); return;
             case 0x44a280: ReceiveDaisPacket(packet); return;
             case 0x497030: _ = PlayerProcesses.ReceiveSharedRegular(packet.Span); return;

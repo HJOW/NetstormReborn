@@ -25,13 +25,14 @@ public sealed class ClientSurfaceGlobals
     /// <summary>Frame캐시를사용하지않고선택시점의실제Client밀리초로벽시각을읽는다.</summary>
     public double WallSeconds() => Clock.Clock.WallSeconds(_milliseconds());
 
-    /// <summary>현재 게임값을 초기화하지 않고 실제 권한/보조 전역과 Kernel/Frame/그래프 시각을 연결한다.</summary>
-    public ClientSurfaceGlobals(ClientGameplayGlobals gameplay, ClientClockGlobals clock, Kernel kernel, Func<uint> milliseconds)
+    /// <summary>현재 게임값을 초기화하지 않고 실제 권한/보조 전역과 Kernel/Frame/그래프 시각을 연결한다. Native 송신 장치는 첫 Host 생성 전에 설치한다.</summary>
+    public ClientSurfaceGlobals(ClientGameplayGlobals gameplay, ClientClockGlobals clock, Kernel kernel, Func<uint> milliseconds, RawSurfaceTransmissionDevices? transmission = null)
     {
         ArgumentNullException.ThrowIfNull(gameplay); ArgumentNullException.ThrowIfNull(clock); ArgumentNullException.ThrowIfNull(kernel); ArgumentNullException.ThrowIfNull(milliseconds);
         Gameplay = gameplay; Clock = clock; Kernel = kernel; _milliseconds = milliseconds;
         Storage = new RawSurfaceStorage(OriginalEdition.Patch1078, gameplay.Authority, gameplay.GameAux);
         Storage.BindChecking(new(() => gameplay.AiDebug.Checking.Value));
+        if (transmission is not null) Storage.BindTransmissionDevices(transmission);
         Processes.BindDevices(kernel, clock.Frame);
         Storage.BindGraphClock(GameSeconds);
     }

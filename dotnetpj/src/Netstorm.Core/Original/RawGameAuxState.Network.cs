@@ -6,6 +6,8 @@ public sealed partial class RawGameAuxState
 {
     /// <summary>0052edce/cf·00544c50의 같은 장기 Path 헤더다. World 교체/Reset에서 새로 만들지 않는다.</summary>
     public RawPathDataHeader PathPacketHeader { get; } = new();
+    /// <summary>00540c68의 현재 경로 로그 수준이다. 최초99이며 월드/세션 교체나 일반 Reset으로 바꾸지 않는다.</summary>
+    public int PathTraceLevel { get; set; } = 99;
     /// <summary>00541158의 최초58이며 신규 DaisProcess 부착에서 읽는 같은 장기 DWORD다.</summary>
     public UIntBox DaisProcessTypeBox { get; } = new() { Value = 58 };
     /// <summary>00532690/91의 현재 메시지6a/프로토콜1 BYTE다. 일반 준비/World 교체에서 초기화하지 않는다.</summary>
