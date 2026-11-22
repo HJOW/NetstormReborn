@@ -14,7 +14,7 @@ cpppj `client/AssetDeletionVtables.inc` 는 10.78 PE 의 자산 생성자 83개�
 
 시험: `tests/asset-deletion-vtables.test.mjs`(원문 표를 읽어 대조, 없는 환경에서는 건너뜀), 교차 확인 소스 등록 `tests/fixtures/manifest.json`(`src-asset-deletion-vtables`).
 
-## 남은 것
+## 남은 것 (E1221 에서 닫음)
 
-- 통지 열(VT+34)은 원문에서 `NotifyAssetDependency`(Native 전용: `RawCampaignSession.cpp` ReleaseDependent·홈 통지·`RawSurfaceDepend.cpp` 감시)만 쓴다. 웹은 typed 경로를 따라 훨리베이스(`0x509930`)·맨 오 워(`0x5099e8`) 홈 통지만 `raw-campaign-session-flyers.js` 에 가지고, 데빌메이커 홈(`0x509aa0`)은 비행 정리(`raw-flyer-frame.js` `parentDying`)가 데빌 자신(바람 TYPE)을 건너뛰어 도달하지 않는다. flags 0 삭제 세 VT 와 데빌메이커 홈 통지를 웹이 실제로 받는 경로가 있는지는 자연 진행에서 다시 확인할 수 있다.
-- 표를 소비하는 `RawSurfaceAssetDeletion.cpp` 는 별도 partial 행이다(Bind*Runtime 대여·장기 소유 구조 재대조).
+- 통지 열(VT+34)은 E1215 에서 `raw-campaign-session-runtime.js` 의 `dependencyNotice` 가 원문 분류(자산 flags0 삭제 세 표·비행장 홈 셋·나머지 자산/Depend·Gump·Content Form 빈 반환·Process Form PID 통지)로 처리하게 했고, 세 번째 시험이 83행 모두의 분류를 원문 표와 대조한다. 데빌메이커 홈(`0x509aa0`)은 비행 정리(`raw-flyer-frame.js` `parentDying`)가 바람 비행체를 건너뛰어 실제로는 도달하지 않는다.
+- 같은 날의 실제 앱 탐침에서 83개 VT 중 가상 삭제가 '미연결'이던 17종은 E1215 에서 연결했다(멀티플레이 전용 Outpost `0x509210` 만 웹 제외). 자세한 경위는 [docs/webpj-native-surface-audit-20261122.md](webpj-native-surface-audit-20261122.md).

@@ -90,3 +90,17 @@ test('AssetDeletionVtables: 전처리/후처리 묶음이 웹 삭제 자격 함�
         image(o, sid, 163, 0x509b98); assert.equal(k.bomb(sid), true); assert.deepEqual([find(0x509b98)[1], find(0x509b98)[2]], [0x4b0950, 0x4b0840]);
     } finally { o.dispose(); }
 });
+
+test('AssetDeletionVtables: 통지 열(VT+34)의 83행이 웹 의존 통지 분류(삭제·홈 통지·빈 반환)와 일대일이다(E1221)', { skip: !rows && '원문 표 없음' }, () => {
+    const o = owner(); try {
+        before(o); const sid = o.core.pool.allocate(2); const calls = [];
+        const destroy = o.world.destroy; const notify = o.core.processes.notifyDependency; const flyers = o.flyerModules;
+        o.world.destroy = (...args) => { calls.push('destroy'); }; o.core.processes.notifyDependency = () => { calls.push('notify'); }; o.flyerModules = { frameHooks: { homeNotice: () => { calls.push('home'); } } };
+        const expected = new Map([[0x41c100, []], [0x48f0a0, ['destroy']], [0x45b4a0, ['home']], [0x45b5b0, ['home']], [0x45b680, ['home']]]);
+        for (const [vt, , , notice] of rows) {
+            image(o, sid, 83, vt); calls.length = 0; o.worldHooks.dependencyNotice(sid, 8, 9);
+            assert.deepEqual(calls, expected.get(notice), `${hex(vt)} 통지 ${hex(notice)}`);
+        }
+        o.world.destroy = destroy; o.core.processes.notifyDependency = notify; o.flyerModules = flyers;
+    } finally { o.dispose(); }
+});
