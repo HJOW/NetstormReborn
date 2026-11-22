@@ -3,6 +3,8 @@
     <!-- 실제 파편 생성/Frame/Draw980개와 수명216개의 독립 PE 관측을 읽기 전용으로 공유한다. -->
     <!-- 원본 Player 고유 Pre의 독립 격리 관측은 Core 한 소비자에만 읽기 전용으로 연결한다. -->
     <None Include="../../../cpppj/tests/fixtures/player-pre-destroy-x86.tsv" Link="X86/player-pre-destroy-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- 원본 두 지갑 함수의 독립2520관측을 같은 Core 소비자에서 읽는다. -->
+    <None Include="../../../cpppj/tests/fixtures/ai-wallet-x86.tsv" Link="X86/ai-wallet-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/shrapnel-frame-x86.tsv" Link="X86/shrapnel-frame-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/shrapnel-lifetime-x86.tsv" Link="X86/shrapnel-lifetime-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>

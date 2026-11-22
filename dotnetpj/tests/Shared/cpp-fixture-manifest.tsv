@@ -11,6 +11,7 @@ ai-brain-x86.tsv	53aecd3e635d5743ea07091d863d6db7fb328daa8181b7a5769b78a233087fa
 ai-command-state-x86.tsv	fe6a534535c6d2ac05a125787df3901a629516d51f048323004e9e8b0a183675	1940	cpppj	Core
 ai-initial-update-theme5-x86.tsv	e6ec842056c6df0dc8ec294dc5454775e36ccb2069f996936bf48ccaf2ba77c3	16	cpppj	Core
 ai-initial-update-x86.tsv	8784606de578d467f5ab2fbedc05662044782accf770ce9eb9ba1b18665a059d	134	cpppj	Core
+ai-wallet-x86.tsv	c842f5c847a5e4076ea3a4dd7ce4ea0e22e88e6d0b4d982f6d25d9f9791a7e29	2520	cpppj	Core
 ambient-wind-hardware-x86.tsv	8d653588b6e676c85f7cd292677699df4a3702bb6ab268b5697caea19b04c999	1920	cpppj	Core
 arc-spire-x86.tsv	6eb5d0a42837bce4b373884d808adb93e95c93d9044929de687d62ff9436568a	665	cpppj	Core
 asset-owner-current-local-x86.tsv	daa7b30762b24f9a3b71759ea6c63ea1efc126d5c46aee0c452af645b7cd3e0f	128	cpppj	Core

@@ -135,6 +135,10 @@ public sealed partial class HostSession
         ValidateSharedSurface(sharedSurface, kernel, sharedGameplay, sharedLists, pool, sharedPlayerProcesses, sharedTemplates, sharedProcessTime, sharedLocal, sharedConnections);
         _surfaceStorage = sharedSurface?.Storage;
         sharedPlayerProcesses ??= sharedSurface?.Processes;
+        // 같은 Surface의 장기 장치는 같은 Player base를 읽으므로 생략된 기록도 실제 owner를 빌린다.
+        sharedPlayerRecords ??= sharedSurface?.Gameplay.PlayerRecords;
+        if (sharedSurface is not null && !ReferenceEquals(sharedPlayerRecords, sharedSurface.Gameplay.PlayerRecords))
+            throw new ArgumentException("공유 Surface와 Host의 실제 Player 기록 owner 불일치", nameof(sharedPlayerRecords));
         _borrowedWorldFrames = sharedWorldFrames is not null;
         WorldFrames = sharedWorldFrames ?? WorldFrameTables.Create([]);
         Templates = sharedTemplates ?? new CampaignTemplateStorage();
