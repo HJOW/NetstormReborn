@@ -33,7 +33,7 @@ import { makePriestShieldNoticeHooks } from './core/sound-process.js';
 import { confirmSendMoney, dispatchSendMoneyInput, isSendMoneyCommand, sendMoneyScriptCode } from './core/send-money-input.js';
 import { dispatchChatInputKey } from './ui/hud-chat-geometry.js';
 // 채팅 표시 옵션 열 개의 원문 키(오타 포함)이다. 값이 없으면 웹은 켜짐(1)을 기본으로 둔다. (2026-11-22 WB04-E1172)
-// 채팅 도우미 메뉴가 입력 큐에 올리는 명령이다: 삽입(0x02000115, 채팅 창이 처리)·설정 대입(0x0200006d)·Edit Back/Front Format(0x02000105/106)·수신자 추가/제거(0x02000027/101)·재부착(0x020000a6, 채팅 창이 처리). 이 목록 밖의 미구현 명령은 큐를 막으므로 여기 올려 소비한다. (2026-11-22 WB04-E1177)
+// 채팅 도우미 메뉴가 입력 큐에 올리는 명령이다: 삽입(0x02000115, 채팅 창이 처리)·설정 대입(0x0200006d)·Edit Back/Front Format(0x02000105/106, E1179 부터 서식 입력 창을 연다)·수신자 추가/제거(0x02000027/101)·재부착(0x020000a6, 채팅 창이 처리). 이 목록 밖의 미구현 명령은 큐를 막으므로 여기 올려 소비한다. (2026-11-22 WB04-E1177)
 const CHAT_HELPER_COMMANDS = new Set([0x02000115, 0x0200006d, 0x02000105, 0x02000106, 0x02000027, 0x02000101, 0x020000a6]);
 const CHAT_OPTION_KEYS = new Set(['ShowBattle', 'ShowEveryone', 'ShowAllies', 'ShowObserver', 'ShowWisper', 'ShowMyAllies', 'ShowMyEmenys', 'ShowMyNeutrals', 'ShowChatWindow', 'PlaySoundMessage']);
 import { ClientChatManagerGlobals, makeClientChatPacketHooks } from './core/client-chat-manager-globals.js';
@@ -144,6 +144,7 @@ import { resetGameStorage } from './platform/reset-storage.js';
 import { createCanvasGlyphRasterizer } from './platform/glyph-rasterizer.js';
 import { MainMenuScreen } from './ui/main-menu.js';
 import { ClientGumpRoot } from './ui/client-gump-root.js';
+import { CHAT_FORMAT_COPY_LIMIT, CHAT_FORMAT_FRONT_VTABLE, chatFormatKey } from './ui/chat-format-dialog.js';
 import { GumpHelp, GumpHelpState } from './ui/gump-help.js';
 import { createClientProductionAssembly } from './ui/client-production-assembly.js';
 import { ClientGumpBackground } from './ui/client-gump-background.js';
@@ -1534,6 +1535,8 @@ export class Netstorm {
                 command: (...args) => this._clientInputQueue.pushCommand(...args), invalidate: (rect) => this._clientRenderer.invalidate(rect, 0), gameMenu: this._campaignGameMenuDevices(production), knowledge: this._campaignKnowledgeDevices(), warnings: this._campaignWarningDevices(production),
                 // Players ▸ Send Money ▸ Send X 숫자 입력 창의 확정 장치(원본 004c9350)이다. (2026-11-22 WB04-E1168)
                 sendMoney: { confirm: (target, text) => confirmSendMoney(target, text, this._campaignWorld.session().moneyInputHooks()) },
+                // 채팅 도우미 ▸ Format ▸ Edit Back/Front Format 입력 창의 확정 장치(원문 0x4c9600/0x4c9680)이다. (2026-11-22 WB04-E1179)
+                chatFormat: { confirm: (mode, text, vtable) => this._confirmChatFormat(vtable, text) },
                 // 미션 화면 아래 채팅 창(F3)의 Client 장기 상태와 현재 값 조회 장치이다. 로컬 단독 미션은 수신자·서버 전송이 없어 입력은 로그에 되울린다. (2026-11-22 WB04-E1169)
                 chat: this._campaignChatDevices(production, () => ui) },
             changed: () => { this._clientRenderer.invalidateAll(); this._displayDirty = true; }, closePopups: () => this._closeCampaignPopups(),
@@ -1777,7 +1780,26 @@ export class Netstorm {
 
     // 미션 화면에서 Gump 모달 입력 창(Send X 숫자 창)이 열려 있으면 그 토큰을, 아니면 0 을 돌려준다. 열려 있는 동안 키보드·마우스 입력은 모두 이 창이 받는다. (2026-11-22 WB04-E1168)
     _campaignInputDialogOpen() {
-        return this._campaignDisplayActive() ? (this._campaignProduction?.ui?.sendMoney?.()?.current() ?? 0) : 0;
+        const ui = this._campaignProduction?.ui;
+        // Send X 숫자 창과 채팅 서식 입력 창(E1179) 중 열려 있는 쪽의 토큰이다.
+        return this._campaignDisplayActive() ? ((ui?.sendMoney?.()?.current() ?? 0) || (ui?.chatFormat?.()?.current() ?? 0)) : 0;
+    }
+
+    // 채팅 도우미의 Edit Back/Front Format 입력 창을 연다(원문 0x4d4580/0x4d48f0). 초기 문자열은 현재 설정 `<구독자>chatFormat`(Back)·`chatFormat2`(Front)이고, 열려 있던 도우미 메뉴는 닫는다. (2026-11-22 WB04-E1179)
+    _openChatFormat(front) {
+        const dialog = this._campaignProduction?.ui?.chatFormat?.(); if (!dialog) throw new Error('채팅 서식 창의 실제 장치 미연결');
+        const client = this._campaignChatClient(), stored = client.configuration().get(chatFormatKey(client.currentSubscriber(), front)) ?? '';
+        const initial = Array.from(client.encodeDisplayText(String(stored)), (byte) => String.fromCharCode(byte)).join('');
+        this._closeCampaignPopups(); dialog.open(front, initial); this._displayDirty = true;
+    }
+
+    // 서식 창의 OK/Enter 확정이다(원문 0x4c9600/0x4c9680): 입력 문자열을 300바이트 한도로 복사해 설정 `<구독자>chatFormat`(Back)·`chatFormat2`(Front)에 쓰고 chat manager 를 다시 초기화하며 항상 1 을 돌려준다.
+    // 원문의 복사(GetText)는 길이+1 이 한도를 넘으면 -1 로 거부하고 출력 지역 변수를 건드리지 않아 쓰레기가 저장되지만, 웹은 쓰레기를 재현하지 않고 빈 값을 쓴다. (2026-11-22 WB04-E1179)
+    _confirmChatFormat(vtable, text) {
+        const front = (vtable >>> 0) === CHAT_FORMAT_FRONT_VTABLE, client = this._campaignChatClient();
+        const value = text.length + 1 > CHAT_FORMAT_COPY_LIMIT ? '' : text;
+        client.configuration().set(chatFormatKey(client.currentSubscriber(), front), client.decodeDisplayText(Uint8Array.from(value, (letter) => letter.charCodeAt(0) & 0xff)));
+        initializeClientChatManager(client); return 1;
     }
 
     // 채팅 입력줄이 지금 보이는지이다(미션 화면에서 입력줄이 보이는 동안 문자 키는 이 입력줄로 간다). 모달 입력 창과 달리 마우스는 월드로 간다. (2026-11-22 WB04-E1170)
@@ -2016,7 +2038,8 @@ export class Netstorm {
             // 채팅 도우미 명령 중 채팅 창이 처리하지 않은 것: 설정 대입은 `키=값` 문자열(둘째 인자가 채팅 문자열 토큰)을 설정에 쓰고, 서식 편집(Edit Back/Front Format)은 웹에서 아직 대화창이 없어 안내만 남긴다. (2026-11-22 WB04-E1177)
             else if (CHAT_HELPER_COMMANDS.has(code) && !release) {
                 if (code === 0x0200006d) { const assignment = this._clientChatWindows.strings.get(event.y >>> 0); if (assignment === undefined) throw new Error('채팅 설정 대입의 문자열 토큰 없음'); applyScriptConfig(assignment, (key, value) => this._applyCampaignConfig(key, value)); this._displayDirty = true; }
-                else if (code === 0x02000105 || code === 0x02000106) console.info('Netstorm: 채팅 Edit Back/Front Format 대화창은 아직 연결하지 않았습니다. 입력줄에 .front/.back 점 명령을 쓰세요.');
+                // Edit Back Format(0x02000105)·Edit Front Format(0x02000106)은 원본 서식 입력 창을 연다. (2026-11-22 WB04-E1179)
+                else if (code === 0x02000105 || code === 0x02000106) this._openChatFormat(code === 0x02000106);
             }
             // 문자 Enter: 채팅 입력줄이 보이지 않으면 입력줄을 보이고 채팅 구분선을 올린다(원본 `OpenChatInput`). 이미 보이면 입력줄이 먼저 처리한다. (2026-11-22 WB04-E1170)
             else if (code === 13 && !release && !this._mainMenu?.dialog) { const chatWindow = this._campaignProduction?.ui?.chat(); if (chatWindow) { dispatchChatInputKey(event, () => (chatWindow.inputVisible() ? 1 : 0), () => chatWindow.setInput(true), () => chatWindow.open()); this._displayDirty = true; } }

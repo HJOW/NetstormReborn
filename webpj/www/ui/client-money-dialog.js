@@ -1,6 +1,7 @@
 // 실제 미션 Client 에 송금 숫자 입력 창(Send X Storm Power)을 조립한다. 공통 장식 틀·숫자 입력창·테두리·제목 글자·OK/Cancel 돌 버튼을 같은 Gump 트리에 만들고 모달로 올린다(cpppj `RawMenuControls::ShowSendMoneyDialog`/`RawMenuSaveFort.inc`).
 // 사용: const dialog = new ClientMoneyDialog(root, game, fonts, screen, { text, decoration, background, backgroundType }, devices); const token = dialog.open(대상 owner); dialog.close().
-//   devices = { now(), poll(), sound(이름), baseHandle(토큰, 사건, 첫 값, 둘째 값), translate(문자열), confirm(대상 owner, 입력 문자열) → 0/1 (원본 004c9350 송금 확정), changed() }.
+//   devices = { now(), poll(), sound(이름), baseHandle(토큰, 사건, 첫 값, 둘째 값), translate(문자열), confirm(대상 owner, 입력 문자열, 창 vtable) → 0/1 (원본 004c9350 송금 확정), changed() }.
+// parts.format 이 참이면 같은 조립으로 채팅 서식 입력 창(`Edit Back/Front Format`, ChatFormatDialog)을 만든다: dialog.openFormat(front, 초기 문자열)로 열고 confirm(1, 입력 문자열, vtable)이 서식 확정(원문 0x4c9600/0x4c9680)을 맡으며 vtable 이 Back/Front 를 가른다. (2026-11-22 WB04-E1179)
 // 입력 창은 한 번에 하나만 열고(열려 있으면 거부), 닫히면 입력창·돌 버튼의 소유 객체를 정리한다. 키보드 사건은 앱 입력 프레임이 Gump 입력(`root.input().route`)으로 보내며 이 모듈은 출력·수명·확정만 맡는다.
 // (2026-11-22 WB04-E1168: Send X 숫자 입력 창 앱 연결로 추가)
 import { ClientTextEntryControls, createMixedGumpTextMeasure } from './client-text-entry-controls.js';
@@ -12,6 +13,7 @@ import { ScrollGumpState } from './scroll-gump.js';
 import { ScrollGumpWidgetState } from './scroll-gump-widgets.js';
 import { TextEntryGumpNode, TextEntryGumpState } from './text-entry-gump.js';
 import { SaveFortNameDialog, SaveFortNameDialogNode } from './save-fort-name-dialog.js';
+import { ChatFormatDialog } from './chat-format-dialog.js';
 import { GumpBackgroundNode } from './gump-background-create.js';
 import { GumpBackgroundAssets } from '../render/gump-background-draw.js';
 import { displayTextCodec } from '../assets/display-text.js';
@@ -78,7 +80,8 @@ export class ClientMoneyDialog {
         // 입력창 출력은 출력 시점의 표면으로 매번 새로 만든다(앱의 Gump 출력은 항목마다 표면을 넘긴다).
         this.#entries = new ClientTextEntryControls(root, { ...shared, entryState, fonts,
             drawBackground: (token) => this.#active().drawBackground(token), drawText: (...args) => this.#active().drawText(...args), fill: (...args) => this.#active().fill(...args) });
-        this.#dialog = new SaveFortNameDialog(root.createState(), this.#hooks());
+        // 서식 창은 송금 숫자 창과 같은 부모 노드·장치를 쓰는 형제 창이다. (2026-11-22 WB04-E1179)
+        this.#dialog = parts.format ? new ChatFormatDialog(root.createState(), this.#hooks()) : new SaveFortNameDialog(root.createState(), this.#hooks());
     }
     // 지금 출력 중인 입력창 출력 장치이다(출력 밖에서 불리면 거부).
     #active() { if (!this.#output) throw new Error('송금 숫자 창의 현재 출력 표면 누락'); return this.#output; }
@@ -112,6 +115,8 @@ export class ClientMoneyDialog {
             decoration: (token, width, height) => this.#decoration.construct(token, width, height),
             textEntry: (token, width, height, text) => this.#entries.construct(token, width, height, text, 0, 0, colors().basic[5]),
             excluded: (token, text) => this.#entries.backend().setExcluded(token, text),
+            // 입력창 가로 표시 필드(원문 00451c60)이다: 이미 붙은 입력창이면 가상 Push 뒤 같은 위치로 재부착한다. (2026-11-22 WB04-E1179)
+            horizontal: (token, value) => this.#entries.backend().setHorizontal(token, value),
             background: (token, width, height) => this.#background.construct(token, width, height, BORDER_FLAGS, this.#backgroundType, 0, 1),
             // 제목은 창 기본 폭의 0.8 에 높이 20, 그림자 글꼴 3·밝은 글자 색의 한 조각이다.
             title: (token, text, width) => { this.#text.construct(token, width, 20, TITLE_FONT, colors().basic[7]); this.#root.node(token).textContext[0] = TITLE_FLAGS; this.#text.style(token, text); },
@@ -121,7 +126,7 @@ export class ClientMoneyDialog {
             modal: (token) => { setModal(root, token); devices.changed(); }, kill: (token) => { root.lifetime().kill(token); this.#current = 0; devices.changed(); },
             accept: (token) => {
                 const node = root.node(token), entry = root.node(node.entry); const buffer = this.#entries.storage().find(entry.buffer); if (!buffer) throw new Error('송금 숫자 창의 실제 문자 저장소 없음');
-                const target = node.fortMode >>> 0; return devices.confirm(target, buffer.text()) ? 1 : 0;
+                const target = node.fortMode >>> 0; return devices.confirm(target, buffer.text(), node.vtable >>> 0) ? 1 : 0;
             },
             cancel: (token) => (root.node(token).canCancel ? 1 : 0),
             baseHandle: (token, event, first, second) => devices.baseHandle(token, event, first, second), translate: (text) => devices.translate(text),
@@ -147,6 +152,14 @@ export class ClientMoneyDialog {
         // 이미 지워진 이전 창의 토큰은 소유 목록에서 뺀다.
         for (const token of [...this.#owned]) if (!this.#root.node(token)) this.#owned.delete(token);
         try { this.#current = this.#dialog.showMoney(target); this.#devices.changed(); return this.#current; }
+        catch (error) { this.#current = 0; this.close(); throw error; }
+    }
+    // 채팅 서식 입력 창을 연다(parts.format 으로 만든 경우만). front 가 참이면 Front, 거짓이면 Back 이며 초기 문자열은 현재 설정 값이다. 이미 열려 있으면 거부하고 기존 창 토큰을 돌려준다. 만들다 실패하면 부분 객체를 정리한 뒤 오류를 다시 던진다. (2026-11-22 WB04-E1179)
+    openFormat(front, initialText) {
+        if (!(this.#dialog instanceof ChatFormatDialog)) throw new Error('채팅 서식 창이 아닌 대화창에서 서식 열기 요청');
+        const existing = this.current(); if (existing) return existing;
+        for (const token of [...this.#owned]) if (!this.#root.node(token)) this.#owned.delete(token);
+        try { this.#current = this.#dialog.show(front, initialText); this.#devices.changed(); return this.#current; }
         catch (error) { this.#current = 0; this.close(); throw error; }
     }
     // 열린 창과 소유 객체를 정리한다(미션을 떠나거나 부분 생성이 실패한 경우). 이미 정리됐으면 아무것도 하지 않는다.

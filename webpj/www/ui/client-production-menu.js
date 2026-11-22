@@ -75,6 +75,9 @@ export function createClientProductionMenu(root, session, game, data, fonts, scr
     // Players ▸ Send Money ▸ Send X 의 숫자 입력 창(Send X Storm Power)이다. 확정 장치(원본 004c9350)가 없으면 만들지 않는다. (2026-11-22 WB04-E1168)
     const sendMoney = devices.sendMoney ? new ClientMoneyDialog(root, game, fonts, screen, { text, decoration, background, backgroundType },
         { now: devices.now, poll: devices.poll, sound: devices.sound, baseHandle: devices.baseHandle, translate: devices.translate, confirm: devices.sendMoney.confirm, changed: devices.changed }) : null;
+    // 채팅 도우미 ▸ Format ▸ Edit Back/Front Format 입력 창이다(송금 숫자 창과 같은 조립). 확정 장치가 없으면 만들지 않는다. (2026-11-22 WB04-E1179)
+    const chatFormat = devices.chatFormat ? new ClientMoneyDialog(root, game, fonts, screen, { text, decoration, background, backgroundType, format: true },
+        { now: devices.now, poll: devices.poll, sound: devices.sound, baseHandle: devices.baseHandle, translate: devices.translate, confirm: devices.chatFormat.confirm, changed: devices.changed }) : null;
     // 미션 화면 아래의 채팅 창(F3)이다. 로그·입력줄·도우미를 만들고 HUD 가 표시를 전환한다. 장치가 없으면 만들지 않는다. (2026-11-22 WB04-E1169)
     const chat = devices.chat ? new ClientChatWindow(root, game, fonts, screen, { scrolling: title, buffers, background, menu, globals: devices.chat.globals, backgroundType },
         { now: devices.now, poll: devices.poll, sound: devices.sound, baseHandle: devices.baseHandle, translate: devices.translate, changed: devices.changed, config: devices.chat.config,
@@ -86,5 +89,6 @@ export function createClientProductionMenu(root, session, game, data, fonts, scr
         openObject: (sid, event) => objectOpen?.supports(sid) ? objectOpen.open(sid, event) : 0,
         instances: () => menu.instances(), closePopups: () => menu.closePopups(),
         sendMoney: sendMoney ? { open: (target) => sendMoney.open(target), current: () => sendMoney.current(), text: () => sendMoney.text() } : null,
-        close: () => { chat?.close(); sendMoney?.close(); warnings?.close(); gameMenu?.close(); menu.close(); scroll.close(); } };
+        chatFormat: chatFormat ? { open: (front, text) => chatFormat.openFormat(front, text), current: () => chatFormat.current(), text: () => chatFormat.text() } : null,
+        close: () => { chat?.close(); chatFormat?.close(); sendMoney?.close(); warnings?.close(); gameMenu?.close(); menu.close(); scroll.close(); } };
 }

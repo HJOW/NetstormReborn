@@ -221,9 +221,6 @@ test('채팅 도우미 명령: 삽입·설정 대입이 처리되고 입력 큐�
   // 설정 대입: 키=값 문자열이 채팅 옵션을 바꾼다.
   await send(0x0200006d, 'ShowChatWindow=0'); await page.waitForTimeout(500); expect(await state()).toMatchObject({ option: 0, head: null });
   await send(0x0200006d, 'ShowChatWindow=1'); await page.waitForTimeout(500); expect(await state()).toMatchObject({ option: 1, head: null });
-  // Edit Back/Front Format 은 대화창이 없어 안내만 하고 큐를 막지 않는다.
-  await send(0x02000105, null); await page.waitForTimeout(500); expect((await state()).head).toBeNull();
-  await send(0x02000106, null); await page.waitForTimeout(500); expect((await state()).head).toBeNull();
   // 뒤따르는 키 입력이 평소처럼 입력줄로 간다.
   await page.keyboard.type('ok'); await page.waitForTimeout(400); expect((await state()).input).toBe('Hi ~gok');
   expect(errors).toEqual([]);
@@ -252,5 +249,42 @@ test('채팅: 입력줄 복사·잘라내기와 도우미 Paste 가 클립보드
   // 도우미 Paste 삽입: 사본이 입력줄에 들어간다.
   await page.evaluate(() => { const app = window.netstorm; app._clientInputQueue.pushCommand(0x02000115, 0, app._clientChatWindows.store('paste')); }); await page.waitForTimeout(500);
   expect(await state()).toEqual({ input: 'copy me', clip: 'copy me' });
+  expect(errors).toEqual([]);
+});
+
+// Edit Back/Front Format: 도우미 명령(0x02000105/106)이 서식 입력 창을 열고, 글자는 창의 입력창으로만 가며(채팅 입력줄은 그대로), Enter 가 `<구독자>chatFormat`·`chatFormat2` 설정에 저장하고 창을 닫으며 다시 열면 저장값이 초기 문자열이다. (2026-11-22 WB04-E1179)
+test('채팅: Edit Back/Front Format 입력 창이 열리고 확정하면 서식 설정이 저장된다', async ({ page }) => {
+  test.setTimeout(300000);
+  const errors = []; page.on('pageerror', (error) => errors.push(error.stack ?? error.message)); page.on('console', (message) => { if (['error', 'warning'].includes(message.type()) && !/willReadFrequently/u.test(message.text())) errors.push(message.text()); });
+  await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0, autoDemo: 0, skirmishAiCount: 3, skirmishAi2Ally: 0, skirmishAi3Ally: 0, skirmishAi4Ally: 0 } })));
+  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/?aspect=4:3&lang=en');
+  await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 60000 }); await page.locator('canvas').click();
+  await page.waitForFunction(() => window.netstorm?.state === 'mainMenu', null, { timeout: 60000 });
+  await clickLabel(page, 'Campaign'); await clickLabel(page, 'Skirmish'); await clickLabel(page, 'Start');
+  await page.waitForFunction(() => window.netstorm?._campaignDisplayActive() && window.netstorm._clientGuide.current()?.runtime.gate.started === 1, null, { timeout: 120000 });
+  await clickLabel(page, 'Go!'); await page.waitForTimeout(2000); await page.locator('canvas').focus();
+  const send = (code) => page.evaluate((value) => { window.netstorm._clientInputQueue.pushCommand(value, 0, 0); }, code);
+  const state = () => page.evaluate(() => {
+    const app = window.netstorm, ui = app._campaignProduction.ui, token = ui.chatFormat().current(), subscriber = app._clientSubscriber.mySubscriber().value | 0;
+    const rect = token ? app._clientGump.collection().bounds(token) : null;
+    return { open: token !== 0, text: ui.chatFormat().text(), chat: ui.chat().inputText(), back: app._gameData.get(`${subscriber}chatFormat`) ?? null, front: app._gameData.get(`${subscriber}chatFormat2`) ?? null, head: app._clientInputQueue.peek()?.code ?? null, rect };
+  });
+  await page.keyboard.press('Enter'); await page.waitForTimeout(400); await page.keyboard.type('Hi'); await page.waitForTimeout(300);
+  expect(await state()).toMatchObject({ open: false, chat: 'Hi', back: null, front: null });
+  // Edit Back Format: 창이 화면 가운데에 열리고 초기 문자열은 빈 설정이다. 글자는 창으로만 간다.
+  await send(0x02000105); await page.waitForTimeout(600);
+  let current = await state(); expect(current).toMatchObject({ open: true, text: '', chat: 'Hi', head: null });
+  expect(current.rect.left).toBeGreaterThan(200); expect(current.rect.right).toBeLessThan(824); expect(current.rect.bottom - current.rect.top).toBeGreaterThan(80);
+  await page.keyboard.type('abc ~g'); await page.waitForTimeout(500); expect(await state()).toMatchObject({ open: true, text: 'abc ~g', chat: 'Hi' });
+  await page.keyboard.press('Enter'); await page.waitForTimeout(700);
+  expect(await state()).toMatchObject({ open: false, chat: 'Hi', back: 'abc ~g', front: null });
+  // Edit Front Format 은 `chatFormat2` 에 저장하고, 다시 연 Back 창의 초기 문자열은 저장값이다.
+  await send(0x02000106); await page.waitForTimeout(600); expect(await state()).toMatchObject({ open: true, text: '', chat: 'Hi' });
+  await page.keyboard.type('[F]'); await page.waitForTimeout(400); await page.keyboard.press('Enter'); await page.waitForTimeout(700);
+  expect(await state()).toMatchObject({ open: false, back: 'abc ~g', front: '[F]' });
+  await send(0x02000105); await page.waitForTimeout(600); expect(await state()).toMatchObject({ open: true, text: 'abc ~g' });
+  await page.keyboard.press('Enter'); await page.waitForTimeout(700); expect((await state()).open).toBe(false);
+  // 닫힌 뒤 키 입력은 채팅 입력줄로 돌아간다.
+  await page.keyboard.type('!'); await page.waitForTimeout(400); expect((await state()).chat).toBe('Hi!');
   expect(errors).toEqual([]);
 });

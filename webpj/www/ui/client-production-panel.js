@@ -95,6 +95,8 @@ export class ClientProductionPanel {
     warnings() { return this.#parts.warnings ?? null; }
     // Players ▸ Send Money ▸ Send X 숫자 입력 창 장치를 돌려준다. 확정 장치가 없으면 null이다. (2026-11-22 WB04-E1168)
     sendMoney() { return this.#parts.sendMoney ?? null; }
+    // 채팅 도우미의 Edit Back/Front Format 입력 창 장치를 돌려준다. 확정 장치가 없으면 null이다. (2026-11-22 WB04-E1179)
+    chatFormat() { return this.#parts.chatFormat ?? null; }
     // 미션 화면 아래 채팅 창(F3) 장치를 돌려준다. 장치가 없으면 null이다. (2026-11-22 WB04-E1169)
     chat() { return this.#parts.chat ?? null; }
     // 실제 건설 비용 표시를 같은 Client Gump 수명에 전달한다.
