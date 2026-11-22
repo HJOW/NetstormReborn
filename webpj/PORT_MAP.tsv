@@ -74,7 +74,7 @@ cpppj/src/client/ClientMetaPacketReceivers.cpp	exclude-mp			-	[mp-meta-front]
 cpppj/src/client/ClientMetaPlayerMenu.cpp	exclude-mp			-	[rebaseline-mp]
 cpppj/src/client/ClientMetaPointerInput.cpp	exclude-mp			-	[rebaseline-mp]
 cpppj/src/client/ClientMetaSpriteDraw.cpp	exclude-mp			-	[rebaseline-mp]
-cpppj/src/client/ClientMetaSpriteRefresh.cpp	port			todo	[rebaseline-port]
+cpppj/src/client/ClientMetaSpriteRefresh.cpp	exclude-mp			-	[mp-meta-sprite]
 cpppj/src/client/ClientNsInfoGlobals.cpp	port	www/core/client-ns-info-globals.js	080c977d	port	[client-default] WB04-E444 ClientNsInfoGlobals(PE 정적 초기값 종류 6/37/60·zone 형식 0x50c894·이름 버퍼 80바이트·loadServerNames 개행 분할·CR 제거·256바이트 행 상한 RangeError/기존 목록 유지·resolveServerName LAN 번역(80바이트 경계·NUL 뒤 기존 바이트 보존)/유효 행 세미콜론 사이 79바이트/무효 선택 보존) 이식. 기준선 뒤 7커밋(080c977d6 등: 메타 루트·UDP 검색·서버 목록 저장/체크섬·참가자 정렬 40칸·passedDiags·루트 방송 포트·메타 메뉴 명령 칸·UpsertServer/SetServerValue)은 온라인 멀티플레이 몫이라 웹 제외(3.6 ①)로 판정해 base 를 080c977d 로 올림. 전용 PE fixture 없음(소스 계약·손 계산 값); 남음: RawNsInfoContext 연결
 cpppj/src/client/ClientOptionsDisk.cpp	adapt	www/platform/settings.js;www/platform/progress.js	1f00a25a	partial	[adapt-options] options.cfg 키를 브라우저 저장소에 보관(웹 대체) / WB04-E272: 판정 유지 — 디스크 options.cfg 읽기/쓰기는 웹 제외, 키 보관만 settings.js
 cpppj/src/client/ClientOptionsFile.cpp	adapt	www/platform/settings.js	1f00a25a	port	[adapt-options] WB04-E272: options.cfg 디스크 저장·CP1252 XOR/UTF-8 BOM 인코딩 웹 제외(옵션은 브라우저 저장소). 원문 인코딩은 config-interface·original-text 시험
@@ -278,7 +278,7 @@ cpppj/src/client/NativeMetaSail.cpp	exclude-mp			-	[rebaseline-mp]
 cpppj/src/client/NativeMetaSailError.cpp	exclude-mp			-	[rebaseline-mp]
 cpppj/src/client/NativeMetaScene.cpp	exclude-mp			-	[rebaseline-mp]
 cpppj/src/client/NativeMetaSpriteDraw.cpp	exclude-mp			-	[rebaseline-mp]
-cpppj/src/client/NativeMetaSpriteRefresh.cpp	port			todo	[rebaseline-port]
+cpppj/src/client/NativeMetaSpriteRefresh.cpp	exclude-mp			-	[mp-meta-sprite]
 cpppj/src/client/NativeMetaState.cpp	exclude-mp			-	[rebaseline-mp]
 cpppj/src/client/NativeNsInfoInput.cpp	exclude-mp			-	[mp-nsinfo]
 cpppj/src/client/NativePlayerInfoInput.cpp	exclude-mp			-	[mp-nsinfo]

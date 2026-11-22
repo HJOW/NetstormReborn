@@ -6,14 +6,14 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-22, 마지막 단위 WB04-E1202)
+### 0.1 현재 값 (2026-11-22, 마지막 단위 WB04-E1203)
 
 | 항목 | 현행 상태 |
 | --- | --- |
 | 실행·플레이 | 브라우저에서 ‘클릭하여 시작’, 메인 메뉴·캠페인/데모 목록·도움말·옵션·Credits와 개발용 지형 미리보기가 동작한다. **미션:** 캠페인 목록 31개(Early Missions 6·세 캠페인 묶음 16·Priest Training 9)와 데모 3개가 시작되고, 장시간 진행과 임의 조작(몽키) 시험에서 오류·먹통이 없다. Campaign ▸ Skirmish는 무작위 섬·간헐천 월드에서 AI와 진행된다. Tutorial2는 시작부터 완료 창·Tutorial3 시작까지 자연 진행으로 확인했고, 승패 안내 뒤 흐름(Continue·Replay Mission·Leave/Next Mission·진행 저장)도 확인했다. **조작:** 사제 선택·이동, 가장자리·Alt·가운데 버튼 스크롤, 미니맵 클릭·끌기, 생산 격자 클릭·단축키(D 포함)·조각 회전(C·회전 방향 옵션)·다리 배치, 사제·워크샾·제단·신전·배터리·발전기·운반체 우클릭 메뉴와 회수, 객체 명령(Detonate·Meltdown·신전 명령), 화면 위치 키(F4/H·F5·TAB·U·Shift+숫자 저장/숫자 복귀)가 동작한다. **게임 메뉴:** ESC 또는 화면 우측 상단 버튼(웹 전용)으로 Game·View·Options·Players·About 메뉴막대를 열고, Leave/Restart Mission(ABORT 확인 창), F2·F6·F7·F8·F9·Shift-F3·T, Pause(Shift-F9·Pause 키·메뉴), Shift-F7 화면 GIF 저장, Players 메뉴의 송금(Send X 숫자 입력 창 포함)·동맹이 실행된다. **HUD 틀:** 실제 Uber 루트가 세로·미니맵·채팅 구분선, 좌측 사이드바(SP·생산 덱)와 하단 미니맵 칸을 원본 위치로 도킹하고 지도 영역이 `{85,0,W,H}`다(4:3 하단 85×82픽셀이 원본 스크린샷과 일치, 16:9·16:10·1920×1080과 창 크기 변경 확인). **채팅 창:** F3로 채팅 영역이 보이고 로그 줄이 색과 함께 그려지며(E1169), Enter로 입력줄을 열어 문자를 치고 제출하면 로컬 서버를 거쳐 `You> 본문` 줄이 로그에 나오며 `.clear` 같은 점 명령이 실행되고 빈 Enter로 닫는다(E1170·E1172). **미완성:** 채팅 이름 완성(Tab)·`.flash` 섬광 효과·미션 알림이 채팅 로그로 가는 원천 확인(지식 NSInfo 패널은 멀티/메타 준비 창이라 웹 범위 밖, E1171), 나머지 객체 메뉴(Factory 파생·특수 대상·채팅 분기), 다른 미션의 목표 수행과 자연 완주(Players 하위의 Ignore chat·Whisper To·정보 보기는 단독 미션에서 나오지 않아 웹 범위 밖, E1167). |
 | 원본과의 동일성 | 영어 4:3 메뉴 M1 8장면은 cpppj 오라클과 알려진 구름 배경 등 차이 영역 밖에서 픽셀 차이 0이다. 월드·UI 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다(최근 원본 공통 메뉴 788행·Factory 메뉴 39행·Uber 루트 160행·장면 음악 3,113행 등). 좌측 HUD 틀의 하단(미니맵 구분선·세로 구분선 아랫부분·미니맵 칸) 85×82픽셀은 원본 스크린샷과 완전히 일치한다. 메뉴 비활성 색·안내 창 위치·지식 카드 이름 줄 나눔·Wind Noise 무동작은 원본 기준으로 맞췄다. Tutorial1 시작 직후 Session 덤프는 시간 의존 값을 빼고 cpppj 기준선과 구조가 같다(E1129). 고정 시각 L2·L3·L4 화면 비교와 자연 완주는 미검증이다. |
-| 현재 작업 | **게임 플레이 중 UI 구현 단계.** 4-D 후반(GameWorld·Client 서비스)과 5-A·5-B·6·8단계 항목을 미션 앱 프레임 위에서 병행한다. Renderer·Gump 트리·입력 큐·생산 패널·객체 메뉴·도움말·음향이 실제 미션 화면에 연결돼 있고, 최근 단위(E1139~E1202)는 원본 도움말 조작키·우클릭 메뉴·승패 흐름의 실사용 점검과 앱에 연결되지 않은 모듈 분류(E1150·E1163)로 빈칸을 메웠다. 순서는 아래 [다음 작업](#next)을 따른다. |
-| 전체 회귀 | **Node 26.13.0:** E1201 전체 6,732건 모두 통과(로그 `extracted/webpj-e1201-node26.log`, 832초). 직전 E1200 전체 6,732건 중 6,731건 통과·1건 실패(새 원본 관측 시험 두 개를 이식 추적 목록 `tests/fixtures/manifest.json` 에 등록하지 않아 `fixture-manifest.test` 실패, E1201 에서 두 항목을 등록해 해결하고 그 시험 7건 통과; 로그 `extracted/webpj-e1200-node26.log`, 423초). 직전 전체 통과: v26 E1195 전체 6,728건 모두 통과(로그 `extracted/webpj-e1195-node26.log`, 433초). **Node 22.23.3:** E1195 전체 6,728건 모두 통과(로그 `extracted/webpj-e1195-node22.log`, 488초). 이전: v26 E1190 6,728건, v22 E1186 6,723건 통과. **(이전 기록)** Node 22.23.3: E1186 전체 6,723건 모두 통과(로그 `extracted/webpj-e1186-node22.log`, 722초). 직전 v26 E1182 6,719건 중 6,717건 통과·2건 실패(E1179 가 `translations/xlat.korean` 을 고치고 `node webpj/tools/prepare-assets.js` 로 복사본·매니페스트를 갱신하지 않아 `assets.test`·`korean.test` 실패, E1183 에서 갱신해 두 파일 27건 통과, 전체 재실행은 다음 회귀 때; 로그 `extracted/webpj-e1182-node26.log`, 614초). 직전 전체 통과: E1178 6,710건(로그 `extracted/webpj-e1178-node26.log`, 554초; E1174·E1170도 6,710건 통과). **Node 22.23.3:** E1178 전체 6,710건 모두 통과(로그 `extracted/webpj-e1178-node22.log`, 624초; E1170도 6,710건 통과). 이전: v26 E1166 6,702건·v22 E1161 6,702건. **e2e:** E1147 전체 `npx playwright test` 100건 통과·8건 건너뜀(옵트인 장시간, 로그 `extracted/webpj-e1147-e2e-all.log`, 39분). 이후 단위는 새 e2e와 관련 e2e를 단위마다 돌렸다. **HJOW-Athlon 주기(0.5절 5):** v26 1/4(E1202)·v22 6/8(E1196~E1202) — **4단위 뒤 Node v26·v22 전체 회귀**를 순차로 돈다. E1127 첫 실행의 `external-access` 1건 실패(시험 대역 누락)는 v26 재실행과 이후 v22 전체 회귀(E1130·E1138·E1145·E1153·E1161)에서 해소됐다. E1127~E1161의 회귀 이력은 [E1166 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261121-through-wb04-e1166)에 있다. |
+| 현재 작업 | **게임 플레이 중 UI 구현 단계.** 4-D 후반(GameWorld·Client 서비스)과 5-A·5-B·6·8단계 항목을 미션 앱 프레임 위에서 병행한다. Renderer·Gump 트리·입력 큐·생산 패널·객체 메뉴·도움말·음향이 실제 미션 화면에 연결돼 있고, 최근 단위(E1139~E1203)는 원본 도움말 조작키·우클릭 메뉴·승패 흐름의 실사용 점검과 앱에 연결되지 않은 모듈 분류(E1150·E1163)로 빈칸을 메웠다. 순서는 아래 [다음 작업](#next)을 따른다. |
+| 전체 회귀 | **Node 26.13.0:** E1201 전체 6,732건 모두 통과(로그 `extracted/webpj-e1201-node26.log`, 832초). 직전 E1200 전체 6,732건 중 6,731건 통과·1건 실패(새 원본 관측 시험 두 개를 이식 추적 목록 `tests/fixtures/manifest.json` 에 등록하지 않아 `fixture-manifest.test` 실패, E1201 에서 두 항목을 등록해 해결하고 그 시험 7건 통과; 로그 `extracted/webpj-e1200-node26.log`, 423초). 직전 전체 통과: v26 E1195 전체 6,728건 모두 통과(로그 `extracted/webpj-e1195-node26.log`, 433초). **Node 22.23.3:** E1195 전체 6,728건 모두 통과(로그 `extracted/webpj-e1195-node22.log`, 488초). 이전: v26 E1190 6,728건, v22 E1186 6,723건 통과. **(이전 기록)** Node 22.23.3: E1186 전체 6,723건 모두 통과(로그 `extracted/webpj-e1186-node22.log`, 722초). 직전 v26 E1182 6,719건 중 6,717건 통과·2건 실패(E1179 가 `translations/xlat.korean` 을 고치고 `node webpj/tools/prepare-assets.js` 로 복사본·매니페스트를 갱신하지 않아 `assets.test`·`korean.test` 실패, E1183 에서 갱신해 두 파일 27건 통과, 전체 재실행은 다음 회귀 때; 로그 `extracted/webpj-e1182-node26.log`, 614초). 직전 전체 통과: E1178 6,710건(로그 `extracted/webpj-e1178-node26.log`, 554초; E1174·E1170도 6,710건 통과). **Node 22.23.3:** E1178 전체 6,710건 모두 통과(로그 `extracted/webpj-e1178-node22.log`, 624초; E1170도 6,710건 통과). 이전: v26 E1166 6,702건·v22 E1161 6,702건. **e2e:** E1147 전체 `npx playwright test` 100건 통과·8건 건너뜀(옵트인 장시간, 로그 `extracted/webpj-e1147-e2e-all.log`, 39분). 이후 단위는 새 e2e와 관련 e2e를 단위마다 돌렸다. **HJOW-Athlon 주기(0.5절 5):** v26 2/4(E1202~E1203)·v22 7/8(E1196~E1203) — **4단위 뒤 Node v26·v22 전체 회귀**를 순차로 돈다. E1127 첫 실행의 `external-access` 1건 실패(시험 대역 누락)는 v26 재실행과 이후 v22 전체 회귀(E1130·E1138·E1145·E1153·E1161)에서 해소됐다. E1127~E1161의 회귀 이력은 [E1166 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261121-through-wb04-e1166)에 있다. |
 | 브라우저 검사 | 미션 화면은 단위마다 Chromium e2e로 확인한다(최근 전체 실행 E1147, 16:9·16:10 건설·메뉴 E1143~E1144, 한국어 Players 메뉴 E1166). 메뉴는 2026-11-17 Chromium 2/2(갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체), 최초 실행·진행 잠금/체크·저장 재실행은 E616 Chromium 2/2. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
 
 <a id="next"></a>
@@ -70,13 +70,13 @@
 | 4 | **4-D Session 조립·Tutorial1 Load/Start** | **56/85, L2 미완료** | 64 / 16,583 |
 | 5 | 5-A 렌더러·Draw | 44/46 | 3 / 533 |
 | 5 | 5-B 카메라·HUD·미니맵·커서 | 9/13 | 7 / 1,186 |
-| 5 | 5-C 화면 허브·미션 진입 | 1/6 → M2 | 8 / 6,018 |
+| 5 | 5-C 화면 허브·미션 진입 | 1/6 → M2 | 6 / 5,897 |
 | 6 | 입력·게임 메뉴·경제·건설 | 2/8 → M3 | 4 / 718 |
 | 7 | 전투·의식·AI | 3/6 | 0 / 0 |
 | 8 | 미션 수명·대본·오디오·도움말 | 2/9 → M4 | 14 / 3,348 |
 | 9 | 표시 품질·브라우저/OS·배포 | E945 하위 경로·설정 복원 검증, M5 미완료 | 1 / 41 |
 | 10 | AGENTS 후순위 웹 요구 | 일부 선행, 3.7절 참조 | 3 / 285 |
-| **합계** | | | **104 / 28,712** |
+| **합계** | | | **102 / 28,591** |
 
 ### 0.3 이식량
 
@@ -88,7 +88,7 @@
 | `client/` 세션·UI·표시 | 315 / 445 | 66 | 64 |
 | `zacket/` 내부 미션 전송 | 1 / 1 | 0 | 0 |
 
-남은 104단위 중 기존 기준선은 54단위/25,351줄, 재기준선 추가분은 50단위/3,361줄이다. E854에서 `UberReconnect`의 단독 감시를, E884에서 단독 미션의 Fort 이름 선택 두 단위를 이식 대상으로 재분류했다. 재기준선 분류·영역별 상세는 [E801 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261118-through-wb04-e801)과 `python -X utf8 tools/port_inventory.py --families wb`에서 확인한다.
+남은 102단위 중 기존 기준선은 54단위/25,351줄, 재기준선 추가분은 48단위/3,240줄이다. E854에서 `UberReconnect`의 단독 감시를, E884에서 단독 미션의 Fort 이름 선택 두 단위를 이식 대상으로 재분류했다. 재기준선 분류·영역별 상세는 [E801 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261118-through-wb04-e801)과 `python -X utf8 tools/port_inventory.py --families wb`에서 확인한다.
 
 ### 0.4 기준선과 자료
 
@@ -232,7 +232,7 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 - [ ] **4D-7b 메인 루프 단독 단계**
   - 남음: 실제 앱 미션·Kernel 프레임, 전투 자원 프레임·재접속 저장의 단독 도달, ClientDiagnostics 잔여와 고리·진단의 실제 Client 수명, 나머지 오류/예외 로깅.
   - 완료: 로그인 타이머·연결 활동 패킷·연결 감시 뒤 타이머 순서(E852~E854), 임시 문자열 고리·정수 서식·trace/console/Chat 경계(E859~E861), Kernel 소진 진단(E864), 공유 프레임 시계·보정과 앱 프레임·탭 숨김 정지(E876~E877). [E852](docs/webpj-session-login-frame-timer-20261119.md) · [E861](docs/webpj-client-diagnostics-20261119.md) · [E877](docs/webpj-app-frame-clock-20261119.md)
-- [ ] **4D-7c 메타 단독 앞단** — ClientMetaPacketReceivers·ClientChallengeGlobals·NativeMetaConnectedState는 메타(챌린지) 전용이라 **멀티/메타 제외로 판정**했다([E1188](docs/webpj-meta-front-scope-20261122.md)). 남음: MetaMenuType/NotifyPlayerResults(`RawCampaignSession.cpp` 4620..4642)의 단독 도달 판정. ClientMetaSpriteRefresh·NativeMetaSpriteRefresh는 5-C와 확인한다.
+- [ ] **4D-7c 메타 단독 앞단** — ClientMetaPacketReceivers·ClientChallengeGlobals·NativeMetaConnectedState는 메타(챌린지) 전용이라 **멀티/메타 제외로 판정**했다([E1188](docs/webpj-meta-front-scope-20261122.md)). 남음: MetaMenuType/NotifyPlayerResults(`RawCampaignSession.cpp` 4620..4642)의 단독 도달 판정. ClientMetaSpriteRefresh·NativeMetaSpriteRefresh는 단독 미션에 Sprite 객체가 없어 제외로 판정했다([E1203](docs/webpj-meta-sprite-scope-20261122.md)).
 - [ ] **4D-7d Client 렌더러 프레임 전역** — 채팅·HTML·점 명령 전역 이식과 ClientRendererFrameGlobals의 앱 소유·화면 크기 변경 수명(E977)은 마쳤다. 수집/출력 사용은 5-A ClientRendererFrame의 ClientRendererFrameGlobals 확인과 함께 마무리한다. [E977](docs/webpj-app-renderer-frame-owner-20261120.md) · [E496](docs/webpj-renderer-cloud-queue-20261115.md)
 
 **4D-8 Native(10.78 Client) 분기.** 실제 cpppj 오라클은 시작 때 RawSurfaceStorage에 Native 장치를 결합한다. typed Session과 같은 상태를 비교하려면 실제 Client 소유자 아래 Native 경계를 함께 맞춰야 한다.
