@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-22 · 사용자 요청으로 개발 재개 · 마지막 완료0.804(전체5698회귀·같은 빌드65시작·원본/자료 불변 감사) · 다음0.805 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6) · cpppj 제품1326 / 11.01 · 전체 목표 미완료**
+**2026-11-22 · 사용자 요청으로 개발 재개 · 마지막 완료0.805(Host 부착 예외 소유권·독립 공장 진단 교정) · 다음0.806 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6) · cpppj 제품1326 / 11.01 · 전체 목표 미완료**
 
 현행 인계는 이 문서가 기준이다. 단위별 근거는 `docs/dotnet-canon-0NNN-*.md`이다. 0.733~0.797의 단위별 재개 연쇄·주제별 표 행과 1.1절 R4-6 단위별 완료 문장 원문은 [0.797 정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0797)에, 0.645~0.732의 단위별 완료 문장, 0.640 회귀 점검 상세, 0.546~0.676 완료 기록 원문은 [0.732 정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0732)에 있다. 0.600~0.635는 [0.635 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635), 0.613까지의 경과와 파일 계열별 체크 목록은 [0.613 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)에 있다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
@@ -20,15 +20,15 @@
 
 ### 0.1 재개 순서와 최근 완료 요약
 
-**재개 인계(2026-11-22).** 0.804 전체5,698통과/실패0, 기존이름보존/+17,같은빌드65시작종료0,DN31전체바이트/34지표·원본1,392파일/417자료/대응표불변을확인했다. M1은0/34이며전체목표는미완료다. 대기중Source대조로Kernel소유권인계후예외의DN중복Dispose차이를확인했다. 다음0.805에서해당공통Host경계를먼저교정하고나머지10고정본문/26F·Root를잇는다. [0.804](docs/dotnet-canon-0804-20261122.md)
+**재개 인계(2026-11-22).** 0.805에서 공통 Host 부착의 Kernel 인계 전후 소유권과 독립 공장의 현재 진단 공급을 교정했다. 수정 전 차이6건을 재현했고 신규10건을 포함한 Core101·Client97건이 통과했다. 같은 최종 빌드 대표3시작은0.804 전체 덤프/지표와 같고 실행6파일·원본1,392파일·등록417자료/대응표가 불변이다. 정기 전체는0.804의5,698통과/실패0, 다음은0.808이다. M1은0/34이며 전체 목표는 미완료다. [0.805](docs/dotnet-canon-0805-20261122.md)
 
-1. **0.805 — 공통 Host 부착 예외 소유권 교정.** cpppj SquidProcess.cpp167~196의unique_ptr은Kernel.Add호출에서인계되고그뒤예외도Kernel소유다. DN RawSquidProcessHost.Attach는모든예외에Dispose해Source와다르다. 등록전/Kernel인계/등록후실패를명시marker로구별한다. Kernel.Find로대신판정하면실제slot0소유권을놓친다. 기존AttachFailureKeepsEarlierRegistration검사이름·등록/할당부분효과를보존하고Source에맞는보존/외곽소멸을추가한다. 상세근거/다음31h전체본문은extracted/dotnet-0804/next-0805.md를따른다. 그뒤나머지10본문과전체26F/Root장치를잇는다. 다음정기전체는0.808이다.
+1. **0.806 — 31h 전체 개발자 수신과 실제 실행 본문.** 공통 부착 예외 소유권은0.805에서 완료했다. 다음은 RawDeveloperCommandPacket의 첫NUL/+8/선언DWORD 무시/송신74b 진단 뒤 현재lowWORD+8과 RawCampaignSession.ExecuteDeveloperCommand의 전체 분기를 같은 실제 Host에 연결한다. callback 하나만 등록한 상태를 전체 본문 완료로 세지 않는다. 같은 장기 MissionSettings/QuickBuild/Vortex·Player·Subscriber·TYPE/SHP·게임시각/다리 스캔·입력/가상 피해 경계를 사용한다. 상세 Source 메모는extracted/dotnet-0804/next-0805.md다. 그뒤 나머지9본문과 전체26F/Root 장치를 잇는다. 다음 정기 전체는0.808이다.
 
 2. **NativeGameplay 26F 고정 수신 나머지.** 현재 API `BindSquidPacketDevices`·`ReceiveFixedGameplayPacket`에 2c/7a/4a/4b/6a/7e/33/34/70/30/2d/2e/65/53/62/5b의 16개 entry가 실제 본체로 연결됐다([0.790](docs/dotnet-canon-0790-20261121.md)·0.791·[0.801](docs/dotnet-canon-0801-20261122.md)). 나머지 10고정 본문과 전체 26F 설치/Bind 검증, Root의 실제 언어/이름/ScreenSize/FormPacket/수신 장치 공급, 같은 Host의 파생 수신/변경/전체 가상 삭제를 현재 Runtime·저장소 전송 관문과 함께 잇는다. 검토한 26행·본문·누락 하위 모듈과 기존 독립 Path writer 자료 범위는 `extracted/dotnet-0788/next-0789.md`에 있다. 순수 observer·명목상 등록이나 구 `Mission.RawCampaignSession`·일반 삭제 Pre/Post로 결선을 대신하지 않는다.
 3. **R4-6 나머지와 R4 마감.** 위 둘 다음은 [1.1절 R4-6 남음](#r4-detail)의 전송·수신, Root 장치·UI, 표시·입력, 시작·수명 묶음을 잇고 R4-2~R4-5의 일치 대조, R4-7·R4-8(M1)로 넘어간다. 이어서 R5~R11과 후순위 요구사항(3절)을 진행한다. 다음 정기 전체 회귀는 0.808이다.
 4. **사용자 검사 범위(2026-11-22).** 캠페인1-1~1-5·스커미시에 한해 아군 AI 활성화로 포획/희생·특정 적 공격·시나리오 승리를 재현할 수 있다. 그 밖의 스테이지 해당 검사는 사용자 수동 확인으로 남긴다. 단순 진입/대기/생산/건설 검사는 진행한다. DN 자동 플레이의 실제 연결은 아직 없다. 원본1,392파일의 마지막 불변 확인은0.804 전체65시작과0.800 전체 해시 장부 대조다.
 
-**최근 완료 요약(0.639~0.804).** 단위별 완료 문장과 집중 검사 수는 보관본과 각 단위 문서에 있다. 완료 범위와 남은 일의 기준은 1.1·1.2절 체크 항목이다.
+**최근 완료 요약(0.639~0.805).** 단위별 완료 문장과 집중 검사 수는 보관본과 각 단위 문서에 있다. 완료 범위와 남은 일의 기준은 1.1·1.2절 체크 항목이다.
 
 | 주제 | 단위 | 핵심 | 남은 일 |
 | --- | --- | --- | --- |

@@ -745,13 +745,22 @@ public sealed partial class SquidProcessHost
         return _kernel.Get(pid) as SquidProcess;
     }
 
-    /// <summary>인자 계산 뒤 현재 번호를 읽고 실제 선택 장치만 요구한다. 지정 슬롯의 Take 반환은 원문처럼 무시하고 원래 SID를 후단에 사용한다. 부착 본체 단위에서 소비한다. 2026-11-07 F2d 프로세스 호스트 조회 이식에서 추가됐다.</summary>
-    /// <param name="flags">원문 플래그다.</param>
-    /// <param name="form">고를 Form SID다. 0이면 신규 생성이다.</param>
-    /// <returns>쓸 Form SID다.</returns>
+    /// <summary>같은 직접 TYPE snapshot과 현재 Host 진단을 갖춘 독립 공장을 만든다. 실제 공장 대여 연결은 별도로 유지한다.</summary>
+    /// <returns>현재 Pool, TYPE 및 assertion 장치를 공유하는 독립 공장이다.</returns>
+    private RawSquidFactory IndependentFormFactory()
+    {
+        var factory = new RawSquidFactory(_pool, _types);
+        factory.BindDiagnostics(new() { Types = _types, Assertion = _state.Assertion });
+        return factory;
+    }
+
+    /// <summary>인자 계산 뒤 현재 Form 번호를 읽고 같은 현재 공장 또는 진단을 갖춘 독립 공장을 선택한다.</summary>
+    /// <param name="flags">client Form 할당을 선택하는 현재 플래그다.</param>
+    /// <param name="form">0이면 생성하고 나머지는 지정 슬롯을 Take한다.</param>
+    /// <returns>원문처럼 Take 반환과 구별한 원래 Form SID다.</returns>
     internal int CreateOrTakeForm(uint flags, int form)
     {
-        RawSquidFactory factory = FormFactory() ?? new RawSquidFactory(_pool, _types);
+        RawSquidFactory factory = FormFactory() ?? IndependentFormFactory();
         if (!ReferenceEquals(factory.Pool, _pool))
         {
             throw new ArgumentException("ProcessForm 공장의 실제 Pool 불일치");
@@ -768,7 +777,7 @@ public sealed partial class SquidProcessHost
     }
 
     /// <summary>C++ 소유권을 가진 신규 입력도 같은 원문 부모에 전달한다. 동일 포인터는 해제 후 재수신으로 넘긴다. 2026-11-07 F2d 프로세스 호스트 부착 본체 이식에서 추가됐다.</summary>
-    /// <param name="process">부를 프로세스다. 실패하면 소멸 효과를 실행한다.</param>
+    /// <param name="process">부를 신규 소유 프로세스다. Kernel 인계 전 실패만 즉시 소멸시킨다.</param>
     /// <param name="processType">부착할 프로세스 타입 번호다.</param>
     /// <param name="parent">부를 부모 SID다.</param>
     /// <param name="flags">원문 플래그다.</param>
@@ -782,20 +791,20 @@ public sealed partial class SquidProcessHost
             return Reattach(process, processType, parent, flags, form);
         }
 
-        bool attached;
+        bool attached, transferred = false;
         try
         {
-            attached = AttachBase(process, processType, parent, flags, form, true);
+            attached = AttachBase(process, processType, parent, flags, form, true, () => transferred = true);
         }
         catch
         {
-            process.Dispose();
+            if (!transferred) process.Dispose();
             throw;
         }
 
         if (!attached)
         {
-            process.Dispose();
+            if (!transferred) process.Dispose();
             return null;
         }
 
@@ -827,8 +836,9 @@ public sealed partial class SquidProcessHost
     /// <param name="flags">원문 플래그다.</param>
     /// <param name="form">고를 Form SID다. 0이면 신규 생성이다.</param>
     /// <param name="owned">커널 등록을 새 소유로 넘기면 참이다.</param>
+    /// <param name="transferOwnership">소유 인자를 Kernel.Add에 넘기는 바로 그 시점을 통지한다. 등록 뒤 부분 효과를 되돌리지 않는다.</param>
     /// <returns>부착했으면 참이다.</returns>
-    private bool AttachBase(SquidProcess process, uint processType, int parent, uint flags, int form, bool owned)
+    private bool AttachBase(SquidProcess process, uint processType, int parent, uint flags, int form, bool owned, Action? transferOwnership = null)
     {
         using (var call = new RuntimeCallGuard(_currentRuntime?.Invoke()))
         {
@@ -855,6 +865,8 @@ public sealed partial class SquidProcessHost
                         _state.TypeRotation = unchecked((_state.TypeRotation + 1u) % (uint)TypeCount());
                     }
 
+                    // C++ unique_ptr은 Add 인자로 이동된다. Kernel 내부 실패의 소멸도 이 시점부터 Kernel 책임이다.
+                    if (owned) transferOwnership?.Invoke();
                     uint assigned = owned ? _kernel.Add(process) : _kernel.AddRef(process);
                     // 원문 참조 필드와 PID는 Create/Attach/OnAttached 콜백 전에 같은 객체에 공개된다.
                     process.SetIdentity(process.Form(), process.Parent(), assigned);
@@ -1045,7 +1057,7 @@ public sealed partial class SquidProcessHost
             SquidProcess? selected = null;
             Action<int, int, uint> attach = (attachForm, attachParent, attachFlags) =>
             {
-                RawSquidFactory factory = FormFactory() ?? new RawSquidFactory(_pool, _types);
+                RawSquidFactory factory = FormFactory() ?? IndependentFormFactory();
                 factory.AttachForm(attachForm, attachParent, attachFlags);
             };
             var hooks = new ProcessAttachHooks
