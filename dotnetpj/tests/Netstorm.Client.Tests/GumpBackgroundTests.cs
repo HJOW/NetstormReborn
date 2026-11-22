@@ -84,9 +84,12 @@ public sealed class GumpBackgroundTests
         var screen = new Screen(640, 480); byte[] col = new byte[776];
         // 파일 입력은 회색 계조이며 기대표는 이전 파일 결과의 보존만 검사한다.
         for (int i = 0; i < 256; i++) col[8 + i * 3] = col[9 + i * 3] = col[10 + i * 3] = (byte)i;
-        screen.LoadPalette(new GamePalette(col)); GumpShadeMaps saved = screen.ShadeMaps(); screen.SetPalette(80, 1, [new(200, 200, 200, 0)], true); screen.SetPalette(0, 256, null, true);
-        Assert.Equal(saved.Bright, screen.ShadeMaps().Bright); Assert.Equal(saved.Dark, screen.ShadeMaps().Dark);
-        col[8 + 80 * 3] = col[9 + 80 * 3] = col[10 + 80 * 3] = 250; screen.LoadPalette(new GamePalette(col)); Assert.False(saved.Bright.SequenceEqual(screen.ShadeMaps().Bright) && saved.Dark.SequenceEqual(screen.ShadeMaps().Dark));
+        screen.LoadPalette(new GamePalette(col)); GumpShadeMaps saved = screen.ShadeMaps();
+        // 같은 화면 내부 배열은 파일 갱신에도 유지되므로 비교할 이전 BYTE를 별도로 보존한다.
+        byte[] previousBright = saved.Bright.ToArray(), previousDark = saved.Dark.ToArray();
+        screen.SetPalette(80, 1, [new(200, 200, 200, 0)], true); screen.SetPalette(0, 256, null, true);
+        Assert.Same(saved, screen.ShadeMaps()); Assert.Equal(previousBright, screen.ShadeMaps().Bright); Assert.Equal(previousDark, screen.ShadeMaps().Dark);
+        col[8 + 80 * 3] = col[9 + 80 * 3] = col[10 + 80 * 3] = 250; screen.LoadPalette(new GamePalette(col)); Assert.Same(saved, screen.ShadeMaps()); Assert.False(previousBright.SequenceEqual(screen.ShadeMaps().Bright) && previousDark.SequenceEqual(screen.ShadeMaps().Dark));
     }
 
     /// <summary>안전 API의 역전/fill 경로·과대한/감기는 타일 반복을 거부한다.</summary>
