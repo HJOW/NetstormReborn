@@ -2707,7 +2707,10 @@ export class Netstorm {
             return true;
         }
         if (name === 'warning') {
-            console.warn(`Netstorm: ${command.argument}`);
+            // 미션 HUD 가 있으면 오른쪽 위 경고 표시에 올린다(원본 UberGump 의 Warning 명령 → warnings_->Add). 인자의 `~B~E~y` 같은 서식 부호는 경고판이 해석한다. PriestImmobile·islandUnderAttack·WarnPriestTaken·
+            // WarnYourPriestTaken·WarnNeutralPriestTaken·AllianceBroken 안내 섹션이 이 명령 한 줄뿐이라, 이전에는 콘솔에만 남아 미션 중 경고 문구가 화면에 나오지 않았다. HUD 가 없으면(메뉴 등) 콘솔에만 남긴다. (2026-11-22 WB04-E1228)
+            const board = this._campaignProduction?.ui?.warnings();
+            if (board) { board.add(String(command.argument ?? '')); this._displayDirty = true; } else console.warn(`Netstorm: ${command.argument}`);
             return true;
         }
         // `<$ViewSpot,(가로x세로)>`: 미션 시작 카메라를 그 칸으로 옮긴다(RunForIt 의 [Init]). Init 은 월드가 생기기 전에 열리므로 좌표를 맡겨 두었다가 월드가 도는 첫 입력 프레임에 적용한다(원본은 명령 큐에 넣어 이어지는 입력에서 처리). (2026-11-22 WB04-E1190)

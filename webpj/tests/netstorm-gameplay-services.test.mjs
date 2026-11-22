@@ -190,3 +190,14 @@ test('Netstorm 미션 장치: 전체 Fort snapshot 의 Mission 읽기 장치와 
     assert.throws(() => services.fortMission.field(8, 0x58), /수명 만료/); assert.throws(() => services.fortMission.field(7, 0x5c), RangeError); assert.throws(() => services.fortMission.assertion(), /원문 이름 진단/);
 });
 
+// 스크립트 명령 Warning: 미션 HUD 의 경고판이 있으면 그 문구를 올리고(서식 부호 포함 그대로), 없으면 콘솔에만 남긴다. (2026-11-22 WB04-E1228)
+test('Netstorm 스크립트 명령: Warning 은 HUD 경고판에 올리고 HUD 가 없으면 콘솔에 남긴다', () => {
+    const app = new Netstorm(), added = [], warnings = [], warn = console.warn;
+    try {
+        console.warn = (text) => warnings.push(text);
+        assert.equal(app._runScriptCommand({ name: 'Warning', argument: '~B~E~yOur Priest has been Immobilized' }), true); assert.deepEqual(added, []); assert.equal(warnings.length, 1);
+        app._campaignProduction = { ui: { warnings: () => ({ add: (text) => added.push(text) }) } };
+        assert.equal(app._runScriptCommand({ name: 'warning', argument: '~B~E~yOur Island Is Under Attack' }), true); assert.deepEqual(added, ['~B~E~yOur Island Is Under Attack']); assert.equal(warnings.length, 1);
+    } finally { console.warn = warn; }
+});
+
