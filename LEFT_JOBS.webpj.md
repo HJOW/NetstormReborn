@@ -348,7 +348,7 @@ M1은 메뉴 관문을 통과했다. 4-D의 Tutorial1 L2 → 5-A/5-B·5-C의 Tut
 
 ### 3.6 cpppj 변경 재반영
 
-대응표 검사에서 행 base 이후 변경을 확인한다. ① 웹 영향 없음, ② 웹 재반영, ③ 해당 소비 단계에서 처리로 판정한다. ②는 별도 단위로 반영하고 ③은 대상 단계에 남긴다. 판정 근거를 대응표와 단위 문서에 기록한다. 2026-11-21 정리 때 다시 돌린 `node webpj/tools/port-map.mjs` 보고도 5행(대응표 밖 새 파일 3개 별도)이다. 1322(`635906357`)의 BitmapFont·ClientMain·KoreanResources·UberGump 4행과 새 EmbeddedBitmapFont·KoreanFontSettings 파일의 웹 영향을 함께 판정한다. SoundMusicSelection 행은 base가 기준선보다 앞선 `50ca1acf`(2026-10-10)로 적혀 기준선 이전 두 커밋(`225f2322c`·`07885f694`)이 보고된다. 다음 대응표 갱신 때 base를 확인해 바로잡는다.
+대응표 검사에서 행 base 이후 변경을 확인한다. ① 웹 영향 없음, ② 웹 재반영, ③ 해당 소비 단계에서 처리로 판정한다. ②는 별도 단위로 반영하고 ③은 대상 단계에 남긴다. 판정 근거를 대응표와 단위 문서에 기록한다. 2026-11-21 정리 때 다시 돌린 `node webpj/tools/port-map.mjs` 보고도 5행(대응표 밖 새 파일 3개 별도)이다. 1322(`635906357`)의 BitmapFont·ClientMain·KoreanResources·UberGump 4행과 새 EmbeddedBitmapFont·KoreanFontSettings 파일의 웹 영향을 함께 판정한다. SoundMusicSelection 행의 base는 기준선보다 앞선 `50ca1acf`였으나 그 뒤 두 커밋(`225f2322c`·`07885f694`)이 `SoundMusicSelection.h`의 주석·멤버 설명만 바꾼 것을 확인해(웹 영향 없음) 2026-11-22에 base를 `225553df`로 바로잡았다.
 
 | 처리 단계 | 남은 판정·연결 |
 | --- | --- |
