@@ -1614,3 +1614,11 @@ cpppj/src/client/ClientColorSortInput.cpp	Netstorm.Client/Display/ClientColorSor
 cpppj/src/client/ClientColorMapFile.cpp	Netstorm.Client/Display/ClientColorSortInput.cs	b601503d0edaceed695568b843ef20b828463968	port
 cpppj/src/o/RawBaseFileIO.h	Netstorm.Core/Original/RawBaseFileIO.cs	1c1bb7eeaf46628579f795098f95afef915c3e51	port
 cpppj/src/o/RawBaseFileIO.cpp	Netstorm.Core/Original/RawBaseFileIO.cs	1c1bb7eeaf46628579f795098f95afef915c3e51	port
+cpppj/src/o/RawFileName.cpp	Netstorm.Assets/RawFileName.Device.cs	c2d292277d843ecc690a11787b8892afad5143f2	port
+cpppj/src/o/RawFileName.h	Netstorm.Assets/RawFileName.Device.cs	c2d292277d843ecc690a11787b8892afad5143f2	port
+cpppj/src/o/FileSpecQuery.cpp	Netstorm.Assets/FileSpecQuery.cs	4edec13c531303dc1c51d3a91e33bf1cf7022f60	port
+cpppj/src/o/FileSpecQuery.h	Netstorm.Assets/FileSpecQuery.cs	f8b20e8ffff45638ee2191854b3971655b2d82cd	port
+cpppj/src/o/FileSpecQuery.cpp	Netstorm.Assets/FileSpecQuery.Windows.cs	4edec13c531303dc1c51d3a91e33bf1cf7022f60	port
+cpppj/src/o/RawBaseFileOpenPolicy.cpp	Netstorm.Core/Original/RawBaseFileOpenPolicy.cs	88d0b4a733c6f3ad259952070a624e6bccafc6e5	port
+cpppj/src/o/RawBaseFileOpenPolicy.h	Netstorm.Core/Original/RawBaseFileOpenPolicy.cs	88d0b4a733c6f3ad259952070a624e6bccafc6e5	port
+cpppj/src/o/RawBaseFileReadPolicy.cpp	Netstorm.Core/Original/RawBaseFileOpenPolicy.cs	d12766b6c2c872764640a95903c5c07bc3a6c87c	port

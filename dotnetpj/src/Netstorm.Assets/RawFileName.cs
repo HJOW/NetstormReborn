@@ -8,7 +8,7 @@ namespace Netstorm.Assets;
 public readonly record struct FileNamePart(int Kind, ReadOnlyMemory<byte> Text);
 
 /// <summary>cpppj o/RawFileName의 10×256BYTE 출력 수명과 Format(459c60) 본체다. OS 경로 정규화를 하지 않는다.</summary>
-public sealed class RawFileName
+public sealed partial class RawFileName
 {
     /// <summary>열 번째 후속 호출에서 같은 물리가 덮이는 최초 BSS0 출력 고리다.</summary>
     private readonly byte[][] _buffers = Enumerable.Range(0, 10).Select(_ => new byte[256]).ToArray();

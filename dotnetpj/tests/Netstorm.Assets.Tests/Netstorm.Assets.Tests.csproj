@@ -1,4 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <!-- 장치 고리32/전체 파일 열기1364의 독립 원문 관측이다. -->
+    <None Include="../../../cpppj/tests/fixtures/file-name-device-x86.tsv" Link="X86/file-name-device-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/basefile-open-policy-x86.tsv" Link="X86/basefile-open-policy-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
   <!-- 원본 포맷 로더 테스트 (xUnit v3). 저장소의 클론 데이터를 사용하며 누락은 실패다. -->
   <PropertyGroup>
     <!-- xUnit v3 테스트 프로젝트는 실행 파일로 빌드한다 -->

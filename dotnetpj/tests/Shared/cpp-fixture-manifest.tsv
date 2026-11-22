@@ -454,3 +454,5 @@ colorsort-cache-parent-x86.tsv	6c798d40024bd57c7b0c07712238938b193c6aea5efc885d9
 colorsort-fixed-input-x86.tsv	70684bfd514b29e981d67faa4d2abc6cababcc5ed275b22f495f58e41d65813f	6	cpppj	Client
 basefile-io-x86.tsv	0cd66ec887a04a8539ce74efb3f0b63a7f9a8e0f488b40f72b71785e4d808f8c	322	cpppj	Core
 basefile-read-key-x86.tsv	e2c9072d49f8946152535de57a526913311a56cbdc6749c5df3c48ba89d19f82	235	cpppj	Core
+file-name-device-x86.tsv	861219c034b010426940b649c5c8e9b20da7d2c1051404da7da977b3a8e37089	32	cpppj	Assets
+basefile-open-policy-x86.tsv	4db519605387abc0f14be39734fab0f65ee24d29e35ad9dfca3b3a8337fe97ca	1364	cpppj	Assets
