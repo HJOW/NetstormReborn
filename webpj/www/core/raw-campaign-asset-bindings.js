@@ -27,6 +27,7 @@ import { GunProcess, RawGunProcess, createGunProcess } from './raw-gun-process.j
 import { rawPathSurfaceAt } from './raw-path-surface.js';
 import { RawSquidFinder } from './raw-squid-finder.js';
 import { RawSquidLevel } from './raw-squid-level.js';
+import { snapRegionCoordinate } from './raw-region-ownership.js';
 
 // 일반 세계의 noIsland 번호, 10.78 의 TYPE 표 길이, Player 한 기록의 BYTE 폭과 기록 수, Player 번호 상한이다. (2026-11-15 WB04-E561)
 const NO_ISLAND = 127;
@@ -182,8 +183,10 @@ export class RawCampaignAssetBindings {
     // 실제 getter 0046f530 은 plain 절삭한 hash 0 단계 칸을 읽고 bridge/없음이면 127 이다. (2026-11-15 WB04-E561)
     #islandNumber(x, y) {
         const core = this.#core;
-        const cellX = truncate(x);
-        const cellY = truncate(y);
+        // 원문 0046f530 은 좌표에 0041d7a0 의 편향 snap(0.99999 를 더해 절삭)을 먼저 적용한 뒤 plain 절삭으로 hash 0 칸을 읽는다. (2026-11-22 WB04-E1219)
+        truncate(x); truncate(y); // 비유한/범위 밖 좌표는 snap 보다 먼저 같은 오류로 거부한다.
+        const cellX = truncate(snapRegionCoordinate(x));
+        const cellY = truncate(snapRegionCoordinate(y));
         if (cellX < 0 || cellY < 0 || cellX >= 256 || cellY >= 256) return NO_ISLAND;
         const sid = core.hash.cell(0, cellX, cellY);
         if (!sid) return NO_ISLAND;

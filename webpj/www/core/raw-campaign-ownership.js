@@ -16,6 +16,7 @@ import { createCanonPlacementTerrainState, RawCanonPlacementTerrain } from './ra
 import { RawRegionPaint, makeRegionPaintOwnershipHooks } from './raw-region-paint.js';
 import { RawRegionOwnership, makeTerrainRegionOwnershipHooks } from './raw-region-ownership.js';
 import { RawVortexOwner } from './raw-vortex-owner.js';
+import { snapRegionCoordinate } from './raw-region-ownership.js';
 
 // 신전 Owner 생성자가 요구하는 Player 한 칸 폭과 9칸 수이다. 9 Player 기록 전체 크기 검사는 RawVortexOwner 와 RawIslandRuntime 이 수행한다. (2026-11-15 WB04-E518)
 const REQUIRED_EFFECTS = Object.freeze(['otherOwner', 'refreshProduction', 'themeMode', 'missingIsland']);
@@ -85,7 +86,8 @@ class OwnershipBody {
 
     // plain getter 는 float 를 먼저 원본 정수로 변환하고 현재 hash0 를 조회한다. 결과는 signed 32비트이다. (2026-11-15 WB04-E518)
     islandNumber(x, y) {
-        return this.getter.regionAt(truncateCoordinate(x), truncateCoordinate(y)) | 0;
+        // 원문 0046f530 은 좌표에 0041d7a0 의 편향 snap(0.99999 를 더해 절삭)을 먼저 적용한 뒤 plain 절삭으로 지형 칸을 읽는다. (2026-11-22 WB04-E1219: 이전에는 snap 이 빠져 소수 좌표의 칸이 한 칸 달랐다)
+        return this.getter.regionAt(truncateCoordinate(snapRegionCoordinate(x)), truncateCoordinate(snapRegionCoordinate(y))) | 0;
     }
 }
 

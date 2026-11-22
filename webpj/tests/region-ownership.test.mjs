@@ -298,3 +298,10 @@ test('region-ownership: snap 편향 칸 경계와 Native 신전 테마 순회의
     ownership.updateNative(1, 2);
     assert.deepEqual(events, ['0:0', '2:0']);
 });
+
+test('지역 snap: 섬 번호 조회 앞의 좌표 편향(0041d7a0)은 0.99999 를 더해 0 쪽으로 절삭한다(E1219)', async () => {
+    const { snapRegionCoordinate } = await import('../www/core/raw-region-ownership.js');
+    // 정수 좌표는 그대로, 소수 좌표는 올림에 가깝게 절삭되며 float 로 저장된다. 음수 소수는 0 쪽이다.
+    assert.deepEqual([10, 24.5, 25.9, 0.00001, 0.5, -0.5, -1, 255.5].map(snapRegionCoordinate), [10, 25, 26, 0, 1, 0, 0, 256]);
+    assert.throws(() => snapRegionCoordinate(Number.NaN), RangeError); assert.throws(() => snapRegionCoordinate(3e9), RangeError);
+});

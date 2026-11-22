@@ -651,7 +651,7 @@ test('RawCampaignAssetBindings: 섬 번호 getter 가 표면 genus·다리·지�
     assert.equal(scene.islands.temple(1), temple);
     assert.equal(scene.bindings.regular.handle(temple, 3, 3, 0), 0);
     assert.deepEqual(requests, [[temple, 1]]);
-    // 좌표를 지도 밖/빈 칸/다리 칸으로 옮기면 127 이다. 소수 좌표는 먼저 절삭한다.
+    // 좌표를 지도 밖/빈 칸/다리 칸으로 옮기면 127 이다. 소수 좌표는 먼저 편향 snap 뒤 절삭한다.
     const move = (x, y) => {
         const raw = core.pool.allocated(temple);
         const view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
@@ -664,7 +664,10 @@ test('RawCampaignAssetBindings: 섬 번호 getter 가 표면 genus·다리·지�
         scene.bindings.regular.handle(temple, 3, 3, 0);
         return requests[0][1];
     };
-    assert.equal(ask(25.9, 25.9), 1);
+    // 원문 0046f530 은 좌표에 0041d7a0 의 0.99999 편향 snap 을 먼저 적용해 소수 좌표는 올림에 가깝게 절삭한다(24.5→25, 25.9→26). 정수 좌표는 그대로이다. (2026-11-22 WB04-E1219)
+    assert.equal(ask(25, 25), 1);
+    assert.equal(ask(24.5, 24.5), 1);
+    assert.equal(ask(25.9, 25.9), 127);
     assert.equal(ask(10, 25), 127);
     assert.equal(ask(-1, 25), 127);
     assert.equal(ask(25, -1), 127);

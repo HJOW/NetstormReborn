@@ -260,6 +260,11 @@ export class RawRegionOwnership {
     }
 }
 
+// 섬 번호 조회(0046f530)가 맨 앞에서 부르는 0041d7a0 의 좌표 한 칸 snap 이다: double 로 0.99999 편향을 더해 0 쪽으로 절삭한 정수를 float 에 저장한다. 같은 snap 을 지역 getter·자산 섬 번호가 함께 쓴다. (2026-11-22 WB04-E1219)
+export function snapRegionCoordinate(value) {
+    return Math.fround(truncate(value + SNAP_BIAS));
+}
+
 // 기존 지역 getter 앞에 원본 0.99999 float 편향 snap 을 연결한다: double 정밀도로 편향을 더해 0 쪽으로 절삭한 정수를 float 에 저장하고 그 정수로 지형에 묻는다. 다른 풀이면 거부한다. (2026-11-10 WB04-E249)
 export function makeTerrainRegionOwnershipHooks(pool, terrain, hooks) {
     if (pool !== terrain?.pool) throw new TypeError('지역 소유/지형 SID 풀이 다릅니다');
