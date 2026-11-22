@@ -25412,6 +25412,64 @@
       "cpppjBasis": {
         "cpppj/src/client/SoundSceneMusic.cpp": "99b9d5e33"
       }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E1199",
+      "id": "detonate-input",
+      "path": "cpppj/tests/fixtures/detonate-input-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: DetonateBomb 일반 입력(4d6eca..4da477)의 사건 코드·대상 y·객체 칸별 객체 가상 6c 호출 흔적과 호출 뒤 객체 50바이트(768행)",
+      "consumers": [
+        "webpj/tests/detonate-input-native.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/detonate-input.js"
+      ],
+      "doc": "docs/webpj-detonate-gettech-fixtures-20261122.md",
+      "cpppjSources": [
+        "cpppj/src/client/DetonateInput.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 768행 전부 사용(객체 칸·변형은 웹 분배기가 보지 않는 열이라 흔적만 대조)",
+      "text": true,
+      "sha256": "1d4188dcad5180c1167817600d3a67c282126ebcb321de8086ee78a841f3df03",
+      "bytes": 106989,
+      "lines": 769,
+      "fixtureCommit": "246dd7ce6",
+      "webCommit": "c62e62045",
+      "cpppjBasis": {
+        "cpppj/src/client/DetonateInput.cpp": "246dd7ce6"
+      }
+    },
+    {
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": false,
+      "unit": "WB04-E1200",
+      "id": "get-technology-input",
+      "path": "cpppj/tests/fixtures/get-technology-input-x86.tsv",
+      "producer": "cpppj 독립 PE 관측: GetTechnology 일반 입력(542970 → 492a30)의 사건 코드·둘째 값·편집기/미션 표식별 기술 지급 호출 흔적·완료·스택 변화(48행)",
+      "consumers": [
+        "webpj/tests/get-technology-input-native.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/get-technology-input.js"
+      ],
+      "doc": "docs/webpj-detonate-gettech-fixtures-20261122.md",
+      "cpppjSources": [
+        "cpppj/src/client/ThemeTechnologyCommand.cpp"
+      ],
+      "scope": "10.78 전용 단일 판본 48행 전부 사용",
+      "text": true,
+      "sha256": "251d45e816ba20c2a02e5510be34d6910b679115b2f16a69f0228d1a9388bc51",
+      "bytes": 2468,
+      "lines": 49,
+      "fixtureCommit": "7435a502c",
+      "webCommit": "158e2b5c2",
+      "cpppjBasis": {
+        "cpppj/src/client/ThemeTechnologyCommand.cpp": "7435a502c"
+      }
     }
   ]
 }
