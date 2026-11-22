@@ -84,7 +84,9 @@ export function createClientProductionMenu(root, session, game, data, fonts, scr
             read: devices.chat.read, recipient: devices.chat.recipient, sendChat: devices.chat.sendChat, resolve: devices.chat.resolve, log: devices.chat.log,
             dotCommands: devices.chat.dotCommands, complete: devices.chat.complete, refreshTechnology: devices.chat.refreshTechnology,
             clipboardRead: devices.chat.clipboardRead, clipboardWrite: devices.chat.clipboardWrite }) : null;
-    return { gameMenu, knowledge, warnings, chat, open: (item, point) => about.open(item, point), openPriest: (sid, event) => priestOpen?.supports(sid) ? priestOpen.open(sid, event) : 0,
+    // 우클릭 빠른 도움말 팝업(원본 BaseHelp: 세로 메뉴 시작→제목→Help 항목→현재 루트에 부착)을 같은 메뉴 작성기로 만드는 장치이다. (2026-11-22 WB04-E1236)
+    const helpMenu = { begin: (flags) => menu.beginVertical(flags), title: (value) => menu.title(value), entry: (value, command, topic) => menu.entry(value, command, topic, true, true, false), attach: (x, y, parent) => menu.attach({ x, y }, parent) };
+    return { helpMenu, gameMenu, knowledge, warnings, chat, open: (item, point) => about.open(item, point), openPriest: (sid, event) => priestOpen?.supports(sid) ? priestOpen.open(sid, event) : 0,
         openFactory: (sid, event) => factoryOpen?.supports(sid) ? factoryOpen.open(sid, event) : 0,
         openObject: (sid, event) => objectOpen?.supports(sid) ? objectOpen.open(sid, event) : 0,
         instances: () => menu.instances(), closePopups: () => menu.closePopups(),

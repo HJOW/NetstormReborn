@@ -16,7 +16,7 @@ const ROOT_TOKEN = 1;
 // 하나의 Client 수명에서 기본 루트와 입력 전역의 실제 소유권을 유지한다.
 export class ClientGumpRoot {
     // 생성·수명·사건·입력·출력 상태와 같은 노드·처리기를 보유한다.
-    #create = new GumpCreateState(); #life = new GumpLifetimeState(); #event = new GumpEventState(); #inputState = new GumpInputState();
+    #textRelease = null; #create = new GumpCreateState(); #life = new GumpLifetimeState(); #event = new GumpEventState(); #inputState = new GumpInputState();
     #nodes = new Map(); #handlers = new Map(); #destructors = new Map(); #attachers = new Map(); #broadcasters = new Map(); #idlers = new Map(); #drawers = new Map(); #redrawHandlers = new Map(); #objectGoneHandlers = new Map(); #nextToken = 2; #treeState; #factory; #lifetime; #collection; #events; #input; #tree; #frame; #redrawDevice; #formHost = null; #root = 0; #disposed = false;
 
     // 원본 등록표를 초기화하고 기본 루트를 생성한 뒤 현재 화면 크기를 적용한다.
@@ -59,7 +59,8 @@ export class ClientGumpRoot {
                 if (this.#nodes.get(token)?.constructor !== GumpCreateNode) throw new Error('Client Gump 파생 소멸자 누락');
                 return this.#lifetime.deleteScalar(token, flags);
             },
-            release: (token) => { if (!this.#nodes.delete(token)) throw new Error('Client Gump 반납 대상 누락'); this.#handlers.delete(token); this.#destructors.delete(token); this.#attachers.delete(token); this.#broadcasters.delete(token); this.#idlers.delete(token); this.#drawers.delete(token); this.#redrawHandlers.delete(token); this.#objectGoneHandlers.delete(token); },
+            // 원본 한 release 콜백은 노드 저장소와 소유 문자열(도움말 문구·주제 이름 포인터)을 같이 반납한다. 노드가 아닌 토큰은 문자열 반납 장치(bindTextRelease)가 맡는다. (2026-11-22 WB04-E1236)
+            release: (token) => { if (!this.#nodes.has(token) && this.#textRelease?.(token)) return; if (!this.#nodes.delete(token)) throw new Error('Client Gump 반납 대상 누락'); this.#handlers.delete(token); this.#destructors.delete(token); this.#attachers.delete(token); this.#broadcasters.delete(token); this.#idlers.delete(token); this.#drawers.delete(token); this.#redrawHandlers.delete(token); this.#objectGoneHandlers.delete(token); },
         });
         this.#root = this.#factory.initializeRoot(); this.resize(width, height);
     }
@@ -148,6 +149,8 @@ export class ClientGumpRoot {
         const handler = this.#objectGoneHandlers.get(token); if (handler) handler(token, object); else this.#lifetime.kill(token);
     }
     // World보다 먼저 살아 있는 Form 부착 노드를 지우고 실제 반납을 마친다.
+    // 노드가 소유한 도움말 문자열 포인터를 반납하는 장치를 등록한다: (포인터) => 반납했으면 true. 노드 삭제 때 문구·주제 포인터가 이 장치로 간다. (2026-11-22 WB04-E1236)
+    bindTextRelease(release) { this.#live(); if (typeof release !== 'function') throw new TypeError('Gump 문자열 반납 장치 필요'); this.#textRelease = release; }
     releaseFormHost() {
         this.#live(); if (!this.#formHost) return;
         // Kill이 자식을 함께 예약하므로 매 방문 때 삭제 상태를 다시 확인한다.

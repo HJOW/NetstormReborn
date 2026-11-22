@@ -1543,7 +1543,16 @@ export class Netstorm {
     _prepareCampaignProductionUi() {
         const production = this._campaignProduction, root = this._clientGump, screen = this._clientPaletteScreen;
         if (!production || production.ui || !root || !screen || !this._clientColorSort || !this._gameAssets || !this._resources?.fonts || !this._clientSoundPlayer || !this._clientSoundNames) throw new Error('미션 생산 UI의 현재 수명 누락');
-        const help = new GumpHelp(root.createState(), new GumpHelpState(), { node: (token) => root.node(token) });
+        // 우클릭 빠른 도움말(원본 RawMenuControls::BaseHelp): 노드의 대체 글자 포인터(주제 이름)가 있으면 제목+Help 항목 팝업을 연다. 항목은 F1 도움말 명령(0x02000017)에 주제 문자열 토큰을 실어 보낸다. (2026-11-22 WB04-E1236)
+        const helpState = new GumpHelpState(); helpState.body = 0x61000002; helpState.event = 0x02000017;
+        root.bindTextRelease((pointer) => Boolean(this._helpStrings?.delete(pointer))); // 노드 삭제 때 문구·주제 포인터를 반납한다(원본 GumpLifetime::DestructBase).
+        const helpMenu = () => { const writer = production.ui?.helpMenu(); if (!writer) throw new Error('우클릭 도움말의 메뉴 작성기 미연결'); return writer; };
+        const help = new GumpHelp(root.createState(), helpState, {
+            node: (token) => root.node(token), text: (pointer) => this._helpString(pointer),
+            beginMenu: (flags) => helpMenu().begin(flags), title: (pointer) => helpMenu().title(this._helpString(pointer)),
+            entry: (body, command, topic) => helpMenu().entry(this._helpString(body), command, this._clientChatWindows.store(topic)),
+            attachMenu: (x, y, parent) => helpMenu().attach(x, y, parent), sound: (name) => this._clientSoundPlayer.play(this._clientSoundNames.lookup(name), 0, 0, 0, 0, 0),
+        });
         const identity = new RawPlayerIdentity(this._clientPlayers.records(), new Uint8Array(0), this._clientChatRecords, {
             localOwner: () => this._clientGameplay.player.battleOwner, subscriber: () => this._clientSubscriber.mySubscriber().value,
             address: () => this._clientGameplay.localAddress().value, name: () => { const bytes = this._clientSubscriber.handle(), end = bytes.indexOf(0); return String.fromCharCode(...bytes.subarray(0, end)); },
@@ -1577,7 +1586,7 @@ export class Netstorm {
                 chat: this._campaignChatDevices(production, () => ui) },
             changed: () => { this._clientRenderer.invalidateAll(); this._displayDirty = true; }, closePopups: () => this._closeCampaignPopups(),
             poll: (code) => this._clientInputPoll.poll(code), cursor: (number) => { this._campaignCursor = number; this._applyCursor(); },
-            baseHandle: (...args) => help.handle(...args), menuInstances: () => this._mainMenu?.popup?.isOpen ? 1 : 0,
+            setNodeHelp: (token, text, word) => this._setNodeHelp(token, text, word), baseHandle: (...args) => help.handle(...args), menuInstances: () => this._mainMenu?.popup?.isOpen ? 1 : 0,
         };
         // 원본 `InstallHud` 순서: 전체 Uber 루트가 세로·미니맵·채팅 구분선과 미니맵·생산 패널을 만들고 모드 3으로 도킹해 지도 영역을 정한다. (2026-11-20 WB04-E1082)
         let ui = null;
@@ -1593,8 +1602,8 @@ export class Netstorm {
                 return { camera: [data.getUint32(0, true), data.getUint32(4, true)], viewport: { left: map.left, top: map.top, right: map.right, bottom: map.bottom }, pixelsX: data.getInt32(8, true), pixelsY: data.getInt32(12, true) };
             },
             center: (x, y) => world.centerCamera(x, y), move: (x, y) => world.moveFromMinimap(x, y), inputMode: () => world.inputMode(), poll: () => this._clientInputPoll.poll(0xffff),
-            baseHandle: devices.baseHandle, changed: devices.changed });
-        const hud = new ClientUberHud(root, { assets: this._gameAssets, panelGlobals: this._clientProductionGlobals, divider, minimap,
+            baseHandle: devices.baseHandle, changed: devices.changed, setNodeHelp: devices.setNodeHelp });
+        const hud = new ClientUberHud(root, { setNodeHelp: devices.setNodeHelp, translate: devices.translate, assets: this._gameAssets, panelGlobals: this._clientProductionGlobals, divider, minimap,
             // 채팅 창은 생산 UI 조립이 만든 `ui.chat()` 이다(Uber 루트가 생산 패널 뒤에 `createChat` 을 부른다). (2026-11-22 WB04-E1169)
             chat: { create: () => ui.chat().create(), setVisible: (visible) => ui?.chat()?.setVisible(visible), setInput: (visible) => ui?.chat()?.setInput(visible), refreshTechnology: () => ui.chat().refreshTechnology() },
             fullDeck: () => this._clientGameplay.fullDeck(), mapRevision: () => this._clientGameplay.mapRevision(),
@@ -2793,6 +2802,22 @@ export class Netstorm {
 
     // 일반 도움말 창을 열어 메인 메뉴 위에 올린다(원본 F1Help: 메인 메뉴 Help 목록의 General Help 행과 F1 키). 이미 열려 있으면 그 창에서 주제만 첫 주제로 되돌린다.
     // 도움말 파일(`Quick Help Spec`)이 없으면 원본처럼 오류 로그만 남기고 열지 않는다. 바깥 주소 링크는 `_openExternalAddress` 로 새 탭/창에 연다(2026-11-07 WB03-AD, 그 전에는 콘솔 안내만). 열었으면 true 를 돌려준다. (2026-10-30 WB03-G)
+    // 노드의 도움말 문구(text=false) 또는 주제 이름(word=true) 포인터를 새 문자열 토큰으로 바꾼다(원본 SetNodeHelp: 이전 문자열을 반납하고 0x61000000 대 토큰을 새로 받는다). null 이면 포인터를 지운다. (2026-11-22 WB04-E1236)
+    _setNodeHelp(token, text, word) {
+        const node = this._clientGump?.node(token); if (!node) throw new Error('도움말 실제 노드 없음');
+        const strings = this._helpStrings ??= new Map(), key = word ? 'alternateTextPointer' : 'textPointer';
+        strings.delete(node[key]); node[key] = 0; if (text === null) return;
+        this._nextHelpString = (this._nextHelpString ?? 0x61000100) + 1; if (this._nextHelpString > 0x61ffffff) throw new Error('도움말 문자열 주소 영역 소진');
+        strings.set(this._nextHelpString, String(text)); node[key] = this._nextHelpString;
+    }
+
+    // 도움말 포인터/토큰의 문자열이다(원본 HelpText): 0x61000002 는 현재 helpWord 캐시(없으면 번역한 "Help"), 0x61000001 은 themeHelp, 0x61000003 은 F1Help, 그 밖은 SetNodeHelp 가 저장한 문자열이다. (2026-11-22 WB04-E1236)
+    _helpString(pointer) {
+        if (!pointer) return ''; if (pointer === 0x61000001) return 'themeHelp'; if (pointer === 0x61000003) return 'F1Help';
+        if (pointer === 0x61000002) return this._clientLocal?.helpWord().get() ?? this._resources.translate('Help');
+        const text = this._helpStrings?.get(pointer); if (text === undefined) throw new Error('도움말 문자열 토큰 없음'); return text;
+    }
+
     // 현재 미션 월드의 TYPE 하나에 대한 도움말 정보 패널 생성기와 그림이다(F1 생산 정보와 링크 이동이 같이 쓴다). 월드가 없으면 호출하지 않는다. (2026-11-22 WB04-E1229)
     _helpTypeDisplay(type) {
         const world = this._campaignWorld, types = world.session().core().types;

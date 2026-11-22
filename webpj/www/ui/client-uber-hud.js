@@ -103,7 +103,7 @@ export class ClientUberHud {
             createMinimap: () => devices.createMinimap(), createProduction: () => devices.createProduction(),
             // 채팅 창 공장(`createChat`)과 번역·도움말 훅이다. 장치가 없으면 채팅 자식·도움말·기술 접두 갱신을 함께 건너뛴다. type 은 원본처럼 TYPE 범위만 검사한다. (2026-11-22 WB04-E1169)
             ...(devices.chat ? { type: (value) => { if ((value >>> 0) >= devices.assets.types().length) throw new RangeError('전체 Uber 실제 TYPE 범위'); return (0x100000 + (value >>> 0)) >>> 0; },
-                createChat: () => devices.chat.create(), translate: (text) => text, help: () => {}, helpWord: () => {}, refreshTechnology: () => devices.chat.refreshTechnology?.() } : {}),
+                createChat: () => devices.chat.create(), translate: (text) => devices.translate ? devices.translate(text) : text, help: (token, text) => devices.setNodeHelp?.(token, text, false), helpWord: (token, word) => devices.setNodeHelp?.(token, word, true), refreshTechnology: () => devices.chat.refreshTechnology?.() } : {}),
             cleanup: () => root.lifetime().cleanup(), kill: (token) => root.lifetime().kill(token), replaceRoot: (token) => root.replaceRoot(token),
         };
     }

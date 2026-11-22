@@ -32,7 +32,8 @@ export class ClientMinimap {
         // 도움말 문자열은 우클릭 도움말 메뉴 장치가 연결될 때까지 포인터로 만들지 않고 값만 기억한다.
         const menus = {
             registerExternalGumps: () => 1, unregisterExternalGumps: () => {},
-            setHelpText: (token, text) => { if (token === self.#token) self.#helpText = text; }, setHelpWord: (token, word) => { if (token === self.#token) self.#helpWord = word; },
+            // 이 훅은 미니맵 노드를 만드는 도중(construct, 아직 #token 대입 전)에 불리므로 토큰 일치를 검사하지 않는다. 이전 검사는 항상 거짓이라 문구가 기록되지 않았다. (2026-11-22 WB04-E1236)
+            setHelpText: (token, text) => { self.#helpText = text; devices.setNodeHelp?.(token, text, false); }, setHelpWord: (token, word) => { self.#helpWord = word; devices.setNodeHelp?.(token, word, true); },
             baseHandle: (token, event, first, second) => devices.baseHandle(token, event, first, second),
         };
         this.#control = new RawMinimapControls(tree, menus, devices.storage, devices.dirty, devices.globals, devices);

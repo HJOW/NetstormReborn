@@ -59,6 +59,8 @@ export class ClientProductionPanel {
         n.teleport = parts.grid.create(1, 6, 8); child = root.node(n.teleport); child.baseHeight = child.height = 250; child.acceptedCursor = 8; child.alignFlags |= 1; root.attach(n.teleport, 0, 26 + slots * 18, this.#token, 0);
         n.bottom = parts.background.create(40, n.baseHeight, 0x02000000, globals.backgroundType, globals.panelFrame); child = root.node(n.bottom); child.alignFlags |= 1; child.baseHeight = child.height = 250; root.attach(n.bottom, 0, root.node(n.teleport).y, this.#token, 0);
         n.separator = parts.divider.allocate(); parts.divider.construct(n.separator, 0, 40, 5, 0x02a00000, globals.backgroundType, globals.backgroundFrame); root.node(n.separator).alignFlags |= 1; root.attach(n.separator, 0, 21, this.#token, 0);
+        // 원본 RawProductionControls 179~186: 스톰 파워 표시와 생산 창(격자·가운데·아래 배경)의 우클릭 도움말 문구와 주제 이름이다. (2026-11-22 WB04-E1236)
+        if (parts.help) { parts.help(n.budget, 'Storm Power Available', 'moneyGump'); for (const token of [n.bridge, n.middle, n.bottom]) parts.help(token, 'Production Window', 'teleportView'); }
         globals.rootSerial = n.serial; return this.#token;
     }
     // 원본 HUD 모드 명령(0200003d)의 생산 패널 처리다. 두 격자를 현재 기술에 연결하고 모드 1이면 현재 내용물을 동기화한다.
@@ -93,6 +95,8 @@ export class ClientProductionPanel {
     knowledge() { return this.#parts.knowledge ?? null; }
     // 오른쪽 위 경고·상태 안내(Game Paused! 등) 장치를 돌려준다. 장치가 없으면 null이다. (2026-11-20 WB04-E1089)
     warnings() { return this.#parts.warnings ?? null; }
+    // 우클릭 빠른 도움말 팝업 작성기이다(없으면 null). (2026-11-22 WB04-E1236)
+    helpMenu() { return this.#parts.helpMenu ?? null; }
     // Players ▸ Send Money ▸ Send X 숫자 입력 창 장치를 돌려준다. 확정 장치가 없으면 null이다. (2026-11-22 WB04-E1168)
     sendMoney() { return this.#parts.sendMoney ?? null; }
     // 채팅 도우미의 Edit Back/Front Format 입력 창 장치를 돌려준다. 확정 장치가 없으면 null이다. (2026-11-22 WB04-E1179)

@@ -193,3 +193,35 @@ test('The War Begins!: F1 은 열린 안내 창을 도움말로 바꾸지 않는
   expect(errors).toEqual([]);
 });
 
+// HUD 우클릭 빠른 도움말(원본 BaseHelp): 미니맵("Sky Overview")·스톰 파워 표시·생산 창을 우클릭하면 제목과 Help 항목 팝업이 열리고, Help 를 누르면 `minimapGumpHelp` 같은 주제의 도움말 창이 열린다. 이전에는 노드에 도움말 문자열이 없어 아무 반응이 없었다. (2026-11-22 WB04-E1236)
+test('The War Begins!: HUD 우클릭 도움말 팝업이 열리고 Help 항목이 해당 주제 도움말을 연다', async ({ page }) => {
+  test.setTimeout(300000);
+  const errors = []; await startWarBegins(page, errors);
+  const targets = [['minimap', 'Sky Overview', 'minimapGumpHelp'], ['budget', 'Storm Power Available', 'moneyGumpHelp'], ['bridge', 'Production Window', 'teleportViewHelp']];
+  for (const [name, title, topic] of targets) {
+    // 노드의 도움말 문구·주제 이름이 설정돼 있고, 같은 노드를 우클릭하면 팝업이 열린다.
+    const opened = await page.evaluate(({ name }) => {
+      const app = window.netstorm, root = app._clientGump, production = app._campaignProduction, n = production.ui.node();
+      const token = name === 'minimap' ? production.minimap.token : n[name], node = root.node(token), position = root.collection().position(token);
+      const result = { title: app._helpString(node.textPointer), word: app._helpString(node.alternateTextPointer) };
+      root.closePopups(); const handled = root.handle(token, 0x00020000, position.x + 5, position.y + 5);
+      let menu = null; for (let t = root.root().child; t; t = root.node(t).next) { const child = root.node(t); if (child.command === 26) menu = t; }
+      const items = menu ? root.node(menu).items.filter((item) => item && item.command !== undefined).map((item) => ({ command: item.command, parameter: item.parameter })) : [];
+      return { ...result, handled, popup: root.blockingPopups(), items };
+    }, { name });
+    expect(opened.title, `${name} 제목`).toBe(title); expect(opened.handled, `${name} 우클릭 처리`).toBe(1); expect(opened.popup, `${name} 팝업`).toBe(true);
+    // Help 항목은 F1 도움말 명령(0x02000017)에 주제 문자열 토큰을 싣는다: 같은 명령을 올려 해당 주제의 도움말 창이 열리는지 본다.
+    const help = opened.items.find((item) => (item.command & 0x03ffffff) === 0x02000017);
+    expect(help, `${name} Help 항목`).toBeTruthy();
+    await page.evaluate(() => window.netstorm._closeCampaignPopups());
+    await page.evaluate((item) => window.netstorm._clientInputQueue.pushCommand(item.command, 0, item.parameter), help);
+    await expect.poll(() => page.evaluate(() => window.netstorm._mainMenu.dialog?.topic ?? null), { timeout: 5000, message: `${name} 도움말 주제` }).toBe(topic);
+    await page.evaluate(() => window.netstorm._mainMenu.setDialog(null));
+  }
+  // 실제 마우스 우클릭도 같은 팝업을 연다(미니맵).
+  const spot = await page.evaluate(() => { const app = window.netstorm, root = app._clientGump, token = app._campaignProduction.minimap.token, position = root.collection().position(token), node = root.node(token), rect = app.canvas.getBoundingClientRect();
+    root.closePopups(); return { x: rect.left + (position.x + node.width / 2) * rect.width / app._layout.logicalWidth, y: rect.top + (position.y + node.height / 2) * rect.height / app._layout.logicalHeight }; });
+  await page.mouse.move(spot.x, spot.y); await page.mouse.click(spot.x, spot.y, { button: 'right', delay: 60 });
+  await expect.poll(() => page.evaluate(() => window.netstorm._clientGump.blockingPopups()), { timeout: 5000, message: '실제 우클릭 도움말 팝업' }).toBe(true);
+  expect(errors).toEqual([]);
+});
