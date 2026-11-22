@@ -12,10 +12,10 @@
 
 - **등록:** 64종 모두 웹 분배기에 수신기가 등록돼 있다(실행 중 등록 표 70종).
 - **선언 길이·버전:** 64행 모두 원문 표의 선언 길이와 일치하고 버전은 1이다.
-- **observer:** 원문의 observer 는 `Empty`(표식만 있는 빈 observer) 대부분과 실제 변형을 하는 일곱 종류(`Login`·`Client`·`Path`·`Developer`·`Construction`·`Effect`·`Timer`·`Meltdown`)이다. 웹은 `Empty`와 일부(Login 0x27·Effect 0x5f·Meltdown 0x75·Timer 0x7d)를 분배기에 observer 로 등록하지 않는다. 실제 변형이 있는 네 종은 가변 길이 패킷의 송신 때 선언 길이를 확정하는 일이며, 웹은 송신 지점이 대신한다: Meltdown 은 `raw-campaign-session-meltdown.js`가 `RawMeltdown.finalizePacket`을, Timer 는 `raw-campaign-session-transmission.js`가 `finalizeBombTimerPacket`을 호출한다. **Effect(0x5f)·Login(0x27)의 송신 확정은 웹 송신 지점에서 찾지 못했다**(단독 로컬 수신은 선언 길이 `0xffff` 가변이라 파싱에 영향이 없고 e2e 오류도 없었다).
-- **결론:** 등록·길이·버전은 대응이 확인됐고 observer 네 종만 확정되지 않아 네 행을 `todo`에서 `partial`(웹 모듈 표기)로 올렸다. 완료로 세지 않으므로 남은 양은 그대로다(118단위·29,882줄).
+- **observer:** 원문의 observer 는 `Empty`(표식만 있는 빈 observer) 대부분과 실제 변형을 하는 일곱 종류(`Login`·`Client`·`Path`·`Developer`·`Construction`·`Effect`·`Timer`·`Meltdown`)이다. 웹은 `Empty`와 일부(Login 0x27·Effect 0x5f·Meltdown 0x75·Timer 0x7d)를 분배기에 observer 로 등록하지 않는다. 실제 변형이 있는 네 종은 가변 길이 패킷의 송신 때 선언 길이를 확정하는 일이며, 웹은 송신 지점이 대신한다: Meltdown 은 `raw-campaign-session-meltdown.js`가 `RawMeltdown.finalizePacket`을, Timer 는 `raw-campaign-session-transmission.js`가 `finalizeBombTimerPacket`을 호출한다. Effect(0x5f)는 `raw-campaign-session-devastation.js` 의 송신 지점이 `finalizeBombEffectPacket`(대상 수에 맞춰 선언 길이를 쓰되 100 초과는 거부하는 변형)으로, Login(0x27)은 `raw-mission-login-packets.js` 의 sendFort 길이 observer 로 대신한다(E1194 에서 확인).
+- **결론(E1194 갱신):** 등록·길이·버전은 실행으로 확인했고 observer 네 종도 웹 송신 지점에 대응이 있어 네 행을 `port`로 닫았다. 남은 양은 118단위·29,882줄 → 114단위·29,576줄이다(집계 도구 기준).
 
 ## 남은 점
 
-- Effect·Login observer 의 송신 확정이 단독 웹에서 필요한지(폭탄 효과 송신 패킷, 로그인 패킷의 선언 길이)를 원본 관측과 대조해 닫는다.
+- Effect observer 는 원문(`observeBombEffectPacket`, 수 제한 없음)과 웹 송신 지점의 `finalizeBombEffectPacket`(100 초과 거부)이 서로 다른 변형이다. 단독 미션의 폭탄 효과 대상은 100 이하라 영향이 없다고 보고 닫았지만 100 초과 대상 입력으로는 확인하지 않았다.
 - 점검에 쓴 진단은 임시 코드였고 되돌렸다. 같은 점검이 필요하면 `RawPacketDispatch.prototype.validate` 래핑(console.error 한 줄)으로 다시 만들 수 있다.
