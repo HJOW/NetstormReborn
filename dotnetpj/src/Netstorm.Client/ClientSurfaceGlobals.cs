@@ -4,7 +4,7 @@ using Netstorm.Core.Original;
 namespace Netstorm.Client;
 
 /// <summary>미션 전에 만들고 미션 반납 뒤에도 유지하는 실제 Surface 소유자다.</summary>
-public sealed class ClientSurfaceGlobals
+public sealed partial class ClientSurfaceGlobals
 {
     /// <summary>Graph의각조회위치에서현재Client밀리초를읽는실제장치다.</summary>
     private readonly Func<uint> _milliseconds;

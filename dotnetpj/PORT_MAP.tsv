@@ -1532,3 +1532,6 @@ cpppj/src/client/RawCampaignSession.cpp	Netstorm.Game/HostMissionShrapnel.cs	5bf
 cpppj/src/client/RawCampaignParticles.cpp	Netstorm.Game/HostMissionShrapnel.cs	5bfd5c8df4aa5a8645ddfdf286fe168e16cd155f	port
 cpppj/src/client/RawCampaignParticles.h	Netstorm.Game/HostMissionShrapnel.cs	5bfd5c8df4aa5a8645ddfdf286fe168e16cd155f	port
 cpppj/src/o/SquidFormDispatch.cpp	Netstorm.Client/Host/HostSession.StateDeletion.cs	5bfd5c8df4aa5a8645ddfdf286fe168e16cd155f	port
+cpppj/src/o/RawPlayerWorld.cpp	Netstorm.Core/Original/RawPlayerWorld.PreDestroy.cs	51e4f872962055d47727169a60383ff8639810aa	port
+cpppj/src/o/RawPlayerWorld.h	Netstorm.Core/Original/RawPlayerWorld.PreDestroy.cs	51e4f872962055d47727169a60383ff8639810aa	port
+cpppj/src/client/RawSurfaceRegistryDeletion.cpp	Netstorm.Client/ClientSurfaceGlobals.PlayerDeletion.cs	51e4f872962055d47727169a60383ff8639810aa	port

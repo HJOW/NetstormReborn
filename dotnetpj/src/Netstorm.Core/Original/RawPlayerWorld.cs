@@ -39,7 +39,7 @@ public sealed class PlayerWorldHooks
 }
 
 // 현재 Player 9기록에 Technology 부모 SID를 직접 기록하며 별도 Player 복사본을 만들지 않는다. 2026-11-07 F2d Player 이식에서 추가됐다.
-public sealed class RawPlayerWorld
+public sealed partial class RawPlayerWorld
 {
     /// <summary>실제 Player 한 기록 크기다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
     private const int Stride = 0xb4;
