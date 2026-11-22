@@ -153,6 +153,35 @@ public sealed class NativeProcessSerializationTests
         kernel.DrainOwnedForShutdown();
     }
 
+    /// <summary>기본 표 flags8 부착 뒤 Rain 전문화와 같은 Kernel/현재 Native writer의 전체45BYTE를 확인한다.</summary>
+    [Fact]
+    public void AttachedFlyerUsesActualConstructorOrderKernelAndCurrentNativeWriter()
+    {
+        int sends = 0, frames = 0; var storage = Storage(_ => sends++); int parent = storage.Pool.Allocate(SidAllocation.Server); storage.Pool.RawSlot(parent).Clear(); storage.Pool.RawSlot(parent)[10] = 144;
+        var kernel = new Kernel(16); storage.Processes().BindDevices(kernel, new FrameTimeBox()); SquidProcessHost host = storage.Processes().Host(); FlyerProcess? process = null; var events = new List<string>();
+        var body = new RawFlyerProcess(storage.Pool, storage.Types, new(() => true, () => 42, storage.GameAux().FlyerProcessTypeBox), new()
+        {
+            Attach = (fields, into, type, flags) =>
+            {
+                Assert.NotNull(process); Assert.Same(process.Fields, fields); Assert.Equal(0x509cc8u, BinaryPrimitives.ReadUInt32LittleEndian(fields.Bytes)); Assert.Equal(8u, flags);
+                Assert.Same(process, host.Attach(process, type, into, flags));
+            },
+            Frame = fields => { Assert.Same(process!.Fields, fields); frames++; }, Notify = (_, message, first, second) => events.Add($"notify:{message}:{first}:{second}"), ParentDying = _ => events.Add("parent"),
+        });
+        process = new(body, new FlyerProcessFields(0xa5)); body.Construct(process.Fields, (ushort)parent, 23, 0x3f400000, 0.5f);
+        try
+        {
+            Assert.Equal(1, sends); Assert.Equal(31, storage.Pool.Slot(process.Form())[10]); Assert.Equal(process.Form(), process.Fields.Form()); Assert.Equal(parent, process.Fields.Parent()); Assert.Equal(0, process.Fields.Bytes[8]);
+            byte[] common = storage.GameAux().SquidTransmission.Buffer; Assert.Equal(45, BinaryPrimitives.ReadUInt16LittleEndian(common.AsSpan(2))); Assert.Equal(1, common[0]); Assert.Equal(0x39, common[1]);
+            RawFlyerProcess.SpecializeRain(process.Fields); kernel.RunFrame(); Assert.Equal(1, frames); process.Notify(2, 3, 4); process.OnParentDying(parent); Assert.Equal(new[] { "notify:2:3:4", "parent" }, events);
+            storage.GameAux().FlyerProcessHeader[0] = 0x73; storage.GameAux().FlyerProcessHeader[1] = 0x81; storage.GameAux().FlyerProcessTypeBox.Value = 44; storage.GameAux().ResetForGeneralWorld(); Assert.Equal(44u, storage.GameAux().FlyerProcessTypeBox.Value);
+            byte[] packet = Enumerable.Repeat((byte)0xa7, 64).ToArray(); Assert.Equal(45, host.WriteFormPacket(process.Form(), 1, packet, storage.GameAux().SquidTransmission)); Assert.Equal(0x81, packet[0]); Assert.Equal(0x73, packet[1]); Assert.Equal(0xa7, packet[45]);
+            var copy = new FlyerProcessFields(); RawFlyerProcess.InitializeReceived(copy, 1); Assert.Equal((uint)parent, RawFlyerProcess.ReadData(copy, packet)); Assert.Equal(23, copy.Home()); Assert.Equal(42, BinaryPrimitives.ReadDoubleLittleEndian(copy.Bytes.AsSpan(32)));
+            Assert.Same(process, host.FromForm(process.Form())); Assert.Same(process, kernel.Get(kernel.Find(process))); Assert.Equal(1, sends);
+        }
+        finally { kernel.DrainOwnedForShutdown(); }
+    }
+
     /// <summary>실제 건설 부착/현재 헤더/일반 준비 보존과 같은 Host 전체 FormPacket을 새 codec에 연결한다.</summary>
     [Fact]
     public void AttachedConstructionUsesCurrentHeaderAndSameNativeFormPacket()

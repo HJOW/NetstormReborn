@@ -592,4 +592,8 @@
     <None Include="../../../cpppj/tests/fixtures/gunprocess-x86.tsv" Link="X86/gunprocess-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/gun-notify-checking-x86.tsv" Link="X86/gun-notify-checking-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 공통 비행 C/B/W1092관측을 소비하고 같은 파일의 P329는 후속으로 남긴다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/flyer-postpop-x86.tsv" Link="X86/flyer-postpop-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

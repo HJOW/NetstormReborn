@@ -1672,3 +1672,12 @@ cpppj/src/client/RawCampaignAssetBindings.cpp	Netstorm.Client/Host/HostSession.G
 cpppj/src/client/RawCampaignAssetBindings.h	Netstorm.Client/Host/HostSession.GunPackets.cs	879c61b201397a84d7c8dde01179da3e6f207951	port
 cpppj/src/client/NativeGameplayPacketReceivers.cpp	Netstorm.Client/NativeGameplayPacketReceivers.Gun.cs	879c61b201397a84d7c8dde01179da3e6f207951	port
 cpppj/src/client/NativeGameplayPacketReceivers.h	Netstorm.Client/NativeGameplayPacketReceivers.Gun.cs	879c61b201397a84d7c8dde01179da3e6f207951	port
+cpppj/src/o/RawFlyerProcess.cpp	Netstorm.Core/Original/RawFlyerProcess.cs	a44b76be436c542d24865bbffe690b4e5c6bdb64	port
+cpppj/src/o/RawFlyerProcess.h	Netstorm.Core/Original/RawFlyerProcess.cs	a44b76be436c542d24865bbffe690b4e5c6bdb64	port
+cpppj/src/o/RawFlyerProcess.cpp	Netstorm.Core/Original/RawFlyerProcess.Data.cs	a44b76be436c542d24865bbffe690b4e5c6bdb64	port
+cpppj/src/o/RawFlyerProcess.h	Netstorm.Core/Original/RawFlyerProcess.Data.cs	a44b76be436c542d24865bbffe690b4e5c6bdb64	port
+cpppj/src/o/RawFlyerProcess.cpp	Netstorm.Core/Original/FlyerProcess.cs	a44b76be436c542d24865bbffe690b4e5c6bdb64	port
+cpppj/src/o/RawFlyerProcess.h	Netstorm.Core/Original/FlyerProcess.cs	a44b76be436c542d24865bbffe690b4e5c6bdb64	port
+cpppj/src/o/RawWindFlyer.cpp	Netstorm.Core/Original/RawFlyerProcess.Data.cs	a44b76be436c542d24865bbffe690b4e5c6bdb64	port
+cpppj/src/o/RawWindFlyer.h	Netstorm.Core/Original/RawFlyerProcess.Data.cs	a44b76be436c542d24865bbffe690b4e5c6bdb64	port
+cpppj/src/o/RawGameAuxState.h	Netstorm.Core/Original/RawGameAuxState.Flyer.cs	a44b76be436c542d24865bbffe690b4e5c6bdb64	port
