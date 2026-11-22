@@ -122,3 +122,17 @@ test('Session 마나 예약: 누락/지연 불일치 거부·같은 객체 소�
     } finally { o.dispose(); }
     assert.equal(o.manaPendingRegular, null); assert.throws(() => hooks.reserveRegular(), /반납/);
 });
+
+test('Session 마나 주기: frameZero 는 Rift SHP 접근으로 프레임 0 을 읽고 비정상 TYPE 은 frameCheck 진단을 표시한 뒤 계속한다(E1218)', () => {
+    const { o } = scene(); try {
+        const hooks = o.arrivalModules.regularHooks; const type = 105; const shape = o.core.shapes[type]; const record = o.core.types[type];
+        const file = '..' + String.fromCharCode(92) + 'o' + String.fromCharCode(92) + 'rifttype.h'; const shown = []; o.world.storage.bindDisplayDiagnostics({ value: '' }, (...args) => shown.push(args));
+        // 정상: 진단 없이 현재 SHP 의 프레임 0 이다.
+        const frames = shape.frames; assert.ok(frames?.length > 0, '시험 TYPE 의 SHP 프레임'); assert.equal(hooks.frameZero(type), frames[0]); assert.deepEqual(shown, []);
+        // 해제 표식이면 진단을 표시하고도 같은 프레임 0 을 돌려준다.
+        const saved = record.maxHitPoints; record.maxHitPoints = -0x22222223; assert.equal(hooks.frameZero(type), frames[0]); record.maxHitPoints = saved;
+        assert.deepEqual(shown, [['frameCheck( abstract, frame, false )', file, 0xe1]]);
+        // SHP 가 적재되지 않았으면 진단 뒤 실제 SHP 범위 오류이다.
+        const loaded = shape.loaded; shape.loaded = false; assert.throws(() => hooks.frameZero(type), /실제 SHP 범위/); shape.loaded = loaded; assert.equal(shown.length, 2);
+    } finally { o.dispose(); }
+});

@@ -26,7 +26,7 @@ cpppj 의 `client/RawSurface*.cpp`·`ClientConstruction*.cpp` 는 "Native 장기
 
 - **DestroyPatch 진단 열두 지점**(Squid 삭제의 `AssertPatch` 0x24d·0x269·0x276·0x27d·0x280·0x27e·0x28f·0x2a2·0x2a9·0x15c·0x15d·0x123)과 `SquidDestroyLifecycle` 0x771: 원문은 표시 후 계속, 웹 `squid-destroy.js` 는 같은 지점에서 오류 중단. 식을 표로 옮겨 `assertDisplay` 로 바꾸는 단위가 필요하다(`RawSurfaceDeletion`·`RawSurfaceLifetime` 행).
 - `rememberPlacement` 미연결(`RawSurfaceDeletion`). (적재 중 unit-lost 억제 두 전역은 E1216 에서 `raw-campaign-session-contents.js` 가 현재 적재 깊이·fort 모드에 연결했다.)
-- **Mana frameZero 훅**(비정상 SHP 에서 진단 후 계속), **Reward refreshSp**(SP 가산 뒤 표시 갱신), **Vortex islandNumber 편향**(`kSnapBias`)의 원본 여부 확인(`RawSurfaceMana`·`RawSurfaceReward`·`RawSurfaceVortex`).
+- **Reward refreshSp**(SP 가산 뒤 표시 갱신), **Vortex islandNumber 편향**(`kSnapBias`)의 원본 여부 확인(`RawSurfaceReward`·`RawSurfaceVortex`). (Mana frameZero 훅은 E1218 에서 `raw-campaign-session-arrivals.js` 에 연결했다.)
 - **타깃(0x130)·활성화(0x206)·타이머 패킷(0xcc/0xe6) 진단**: cpppj typed 와 웹이 같은 오류 중단이며 원문 헤더는 복귀 가능한 진단이라 적는다(원문 식 문자열을 PE 에서 읽어야 한다).
 
 ## 방법 메모

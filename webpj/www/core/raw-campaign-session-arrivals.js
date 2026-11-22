@@ -8,6 +8,7 @@ import { removeAttachedProcesses } from './raw-process-removal.js';
 import { RawCursorPosition } from './raw-cursor-position.js';
 import { RegularProcess } from './squid-process.js';
 import { projectCameraCoordinates } from '../render/camera-view.js';
+import { readRiftShapeFrame } from './raw-rift-shape-access.js';
 
 // 같은 실제 World/Host와 도착 처리기 세 개의 지역 소유권을 묶는다.
 export class RawCampaignSessionArrivals {
@@ -51,6 +52,16 @@ export class RawCampaignSessionArrivals {
             unpop: (sid, flags) => { this.#live(); o.world.unpop(sid, flags); },
             pop: (sid, x, y, flags) => { this.#live(); o.world.pop(sid, x, y, flags); },
             destroy: (sid, flags) => { this.#live(); o.world.destroy(sid, flags); },
+            // 원문(RawSurfaceMana Native 결선)처럼 저장한 TYPE 의 프레임 0 SHP 를 Rift SHP 접근(00419850)으로 읽는다: 범위 밖·미적재·해제/미초기화 표식이면 오류 상세와 frameCheck 진단을 표시한 뒤 현재 SHP 의 프레임 0 을 계속 쓰고, 그 SHP 가 실제로 없을 때만 호스트 오류이다. (2026-11-22 WB04-E1218: 이전에는 진단 없이 오류로 중단했다)
+            frameZero: (type) => {
+                this.#live(); const storage = o.world.storage; const shape = c.shapes[type]; const record = c.types[type];
+                readRiftShapeFrame({ token: type, flags1: record.flags1, frameCount: shape.frameCount, loaded: shape.loaded, header: record.maxHitPoints }, 0, 0, {
+                    typeNumber: (view) => view.token, frameError: (number, frame, abstract) => storage.recordDisplayFrameError(number, frame, abstract),
+                    assertion: (expression, file, line) => storage.assertDisplay(expression, file, line),
+                    shape: (selected, frame) => { const current = c.shapes[selected]; if (!current.loaded || frame < 0 || frame >= (current.frames?.length ?? 0)) throw new RangeError('Fountain 진단 복귀 뒤 실제 SHP 범위'); return [0, 0]; },
+                });
+                const header = c.shapes[type].frames?.[0]; if (!header) throw new RangeError('Fountain 진단 복귀 뒤 실제 SHP 프레임 0 없음'); return header;
+            },
         };
         this.regularHooks = regular; o.manaRegular = o.localManaRegular = new RawManaBoltRegular(c.pool, c.types, c.frames, c.shapes, o.manaArrival, s.manaRegularState, regular);
         this.#ready = true;
