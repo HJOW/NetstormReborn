@@ -206,7 +206,9 @@ const ALLIANCE_INPUT_COMMANDS = new Set([0x020000fb, 0x020000fa, 0x0200007e, 0x0
 const WIRED_MENU_COMMANDS = new Set([0x020000f0, 0x02000091, 0x020000f1, 0x0200006d, 0x020000e6, 0x020000e7, 0x020000ae, 0x020000b8, 0x02000095, 0x02000017, 0x0200008c, 0x0200008d, 0x020000c5, 0x020000a0, 0x02000132, 0x02000133, 0x020000cf, 0x02000088, 0x0200009f]);
 // Session이 Tutorial 판정용으로 입력 큐에 올리는 통지 명령이다(발사기 배치 0x030000b0·포함 0x030000b1, 기술 0x020000b5, 포획 0x020000d7, 상승 0x020000df; 전역 005429b4 등의 PE 초기값).
 // Tutorial 판정기(`tutorial.event`)가 각 명령을 받고 해당 단계가 쓰지 않으면 원본 주 루프처럼 그대로 버려진다. 큐 소비 보호 목록에 없으면 뒤의 클릭까지 막혀 모든 입력이 멈추므로 소비를 허용한다. (2026-11-20 WB04-E1083)
-const TUTORIAL_NOTICE_COMMANDS = new Set([0x030000b0, 0x030000b1, 0x020000b5, 0x020000d7, 0x020000df]);
+// 여기에 0x020000b4(내 너겟이 신전에 납품돼 소비될 때 — Early Mission 3 단계 A·6 단계 B 의 진행 조건), 0x030000b2(Cast/Drop 요청 성공 통지), 0x02000039(Gump 형 종속 form 이 있는 contained 해제의 UpdateContents)도 포함한다.
+// 세 코드는 Session 이 큐에 올리지만 허용 목록에 없어, 큐 머리에서 3초 동안 모든 입력을 막은 뒤 "미구현 입력 사건을 버립니다" 로 버려졌고 두 튜토리얼 단계는 진행하지 못했다. (2026-11-22 WB04-E1231)
+const TUTORIAL_NOTICE_COMMANDS = new Set([0x030000b0, 0x030000b1, 0x020000b5, 0x020000d7, 0x020000df, 0x020000b4, 0x030000b2, 0x02000039]);
 
 // 지원하는 화면비 목록이다. name 은 설정·URL 에서 쓰는 이름, ratio 는 명목 가로세로비,
 // width/height 는 그 화면비에서의 논리 화면 크기(픽셀, 가로는 짝수)다.
@@ -2909,6 +2911,8 @@ export class Netstorm {
         // 데모 선택 창(Demoville)의 항목이다: 같은 Guide 에 데모 표시를 켜고 시작한다. (2026-11-20 WB04-E1092)
         else if (name === 'startdemo') this._beginCampaignDemo(command.argument);
         // 미션 나가기 확인(ABORT)·완료 창의 버튼이다: LeaveBattle·MissionAbort 는 메인 메뉴로, MissionRestart 는 같은 미션 다시 시작이다. (2026-11-20 WB04-E1085)
+        // MissionAbort 단추는 미션 중이면 원본처럼 명령 큐로 보낸다(인자 0 은 ABORT 확인 창 Main Menu/Replay Mission/Continue Mission, 그 밖은 LeaveBattle 예약). 이전에는 인자를 무시하고 곧바로 미션을 떠났다. (2026-11-22 WB04-E1231)
+        else if (name === 'missionabort' && this._campaignWorld && this._clientInputQueue) { const argument = Number.parseInt(String(command.argument ?? '').trim(), 10) | 0; this._clientInputQueue.pushCommand(0x0200008c, argument, argument); }
         else if (name === 'leavebattle' || name === 'missionabort') this._leaveCampaignMission();
         else if (name === 'missionrestart') this._restartCampaignMission();
         // 안내 창 단추의 송금(SendAllBucks 등)·동맹(ConfirmAlliance 등) 이름은 원본 이름표로 명령 번호를 얻어 입력 큐에 올린다. 인자(대상 owner)는 정수로 읽어 두 인자에 같게 싣는다. (2026-11-20 WB04-E1126)

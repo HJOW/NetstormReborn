@@ -130,3 +130,32 @@ test('The War Begins!: 도움말의 *Type 링크 이동에서도 TYPE 정보 패
   expect(errors).toEqual([]);
 });
 
+// Session 이 큐에 올리는 통지 명령(내 너겟 납품 0x020000b4·Cast/Drop 성공 0x030000b2·UpdateContents 0x02000039)이 허용 목록에 없어 3초 동안 모든 입력을 막고 오류로 버려졌다. 이제 큐 머리에서 바로 소비되고 뒤의 입력이 막히지 않는다. (2026-11-22 WB04-E1231)
+test('The War Begins!: 세션 통지 명령 세 종류가 입력을 막지 않고 바로 소비된다', async ({ page }) => {
+  test.setTimeout(300000);
+  const errors = []; const ids = await startWarBegins(page, errors);
+  for (const [name, code] of [['내 너겟 납품', 0x020000b4], ['Cast/Drop 성공', 0x030000b2], ['UpdateContents', 0x02000039]]) {
+    await page.evaluate((value) => window.netstorm._clientInputQueue.pushCommand(value, 0, 0), code);
+    await expect.poll(() => head(page), { timeout: 1500, message: `${name} 통지가 3초 대기 없이 소비되어야 한다` }).toBeNull();
+  }
+  await page.keyboard.press('p'); await page.waitForTimeout(500);
+  expect(await page.evaluate(() => window.netstorm._clientGameplay.selection.selected), '통지 뒤 P 선택').toBe(ids.priest);
+  expect(errors).toEqual([]);
+});
+
+// Tell 단추 `MissionAbort,0`(Priest Training 성공·시간초과 창의 Leave Missions 등)은 원본처럼 곧바로 떠나지 않고 ABORT 확인 창(Main Menu·Replay Mission·Continue Mission)을 연다. (2026-11-22 WB04-E1231)
+test('The War Begins!: MissionAbort,0 단추는 ABORT 확인 창을 열고 Continue Mission 으로 계속할 수 있다', async ({ page }) => {
+  test.setTimeout(300000);
+  const errors = []; await startWarBegins(page, errors);
+  await page.evaluate(() => window.netstorm._runDialogCommand({ name: 'MissionAbort', argument: '0' }));
+  await expect.poll(() => page.evaluate(() => window.netstorm._mainMenu.dialog?.buttons?.map((button) => button.label) ?? null), { timeout: 5000, message: 'ABORT 확인 창' }).toEqual(['Main Menu', 'Replay Mission', 'Continue Mission']);
+  expect(await page.evaluate(() => Boolean(window.netstorm._campaignWorld)), '확인 전에는 미션이 계속된다').toBe(true);
+  await clickLabel(page, 'Continue Mission');
+  await expect.poll(() => page.evaluate(() => window.netstorm._mainMenu.dialog), { timeout: 5000 }).toBeNull();
+  expect(await page.evaluate(() => Boolean(window.netstorm._campaignWorld)), 'Continue 뒤 미션 유지').toBe(true);
+  // 인자 1 은 곧바로 떠난다(LeaveBattle 예약).
+  await page.evaluate(() => window.netstorm._runDialogCommand({ name: 'MissionAbort', argument: '1' }));
+  await expect.poll(() => page.evaluate(() => Boolean(window.netstorm._campaignWorld)), { timeout: 8000, message: 'MissionAbort,1 이탈' }).toBe(false);
+  expect(errors).toEqual([]);
+});
+
