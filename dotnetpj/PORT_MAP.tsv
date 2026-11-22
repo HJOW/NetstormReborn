@@ -1645,3 +1645,5 @@ cpppj/src/o/RawPlayerRegular.cpp	Netstorm.Core/Original/RawPlayerRegular.cs	f726
 cpppj/src/o/RawPlayerRegular.h	Netstorm.Core/Original/RawPlayerRegular.cs	f7262ff00279349518698b151f7bc1173d8ae25a	port
 cpppj/src/client/RawProcessHostStorage.cpp	Netstorm.Core/Original/RawProcessHostStorage.Defaults.cs	43faa0b9f0a95fddb45e9a0cfd2370d2075f1822	port
 cpppj/src/client/RawProcessHostStorage.h	Netstorm.Core/Original/RawProcessHostStorage.Defaults.cs	43faa0b9f0a95fddb45e9a0cfd2370d2075f1822	port
+cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/RawSurfaceStorage.Regular.cs	c6134ce044225860a03aeb43634680f389701951	port
+cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceStorage.Regular.cs	c6134ce044225860a03aeb43634680f389701951	port

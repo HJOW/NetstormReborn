@@ -356,7 +356,11 @@ public sealed partial class RawSurfaceStorage
         {
             var processes = new RawProcessHostStorage(Pool, Types, Authority(), GameAux().GeyserTypeBox, GameAux());
             // 같은 장기 공장/깊이 장치를 먼저 보관하되 실제 Host와 Kernel은 소비 시점에 만든다.
-            if (UsesNativeTransmissionDevices()) processes.BindFormFactoryDefaults(FactoryExecutor, () => PostPopState.Depth);
+            if (UsesNativeTransmissionDevices())
+            {
+                processes.BindFormFactoryDefaults(FactoryExecutor, () => PostPopState.Depth);
+                processes.BindLifecycleDefaults(BaseDestroy, HandleDefaultRegular, () => ProcessFormDispatch().Hooks());
+            }
             _processes = processes;
         }
         return _processes;

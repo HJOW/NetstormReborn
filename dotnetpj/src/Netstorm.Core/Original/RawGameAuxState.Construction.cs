@@ -10,6 +10,8 @@ public sealed partial class RawGameAuxState
     public UIntBox IslandStumpTypeBox { get; } = new() { Value = 96 };
     /// <summary>005410e8의 최초30이며 생성/수신/볼텍스가 함께 읽을 진행 프로세스 TYPE다.</summary>
     public UIntBox ConstructionProcessTypeBox { get; } = new() { Value = 30 };
+    /// <summary>005326c4의 최초6700이며 추상 건물의 실제 건설 재시도 사건을 매 비교 위치에서 읽는다.</summary>
+    public uint ConstructionRegularEvent { get; set; } = 6700;
     /// <summary>0055a49c의 최초BSS0이며 비영이면 현재 건설을 즉시 완료한다.</summary>
     public UIntBox QuickBuildBox { get; } = new();
     /// <summary>0055a498의 최초BSS0이며 비영이면 신전genus 건설만 즉시 완료한다.</summary>
