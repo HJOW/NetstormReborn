@@ -144,6 +144,7 @@ import { resetGameStorage } from './platform/reset-storage.js';
 import { createCanvasGlyphRasterizer } from './platform/glyph-rasterizer.js';
 import { MainMenuScreen } from './ui/main-menu.js';
 import { ClientGumpRoot } from './ui/client-gump-root.js';
+import { TITLE_SCREEN_COUNT, titleScreenIndexAt, titleScreenOrigin, titleScreenRgba } from './ui/title-screens.js';
 import { CHAT_FORMAT_COPY_LIMIT, CHAT_FORMAT_FRONT_VTABLE, chatFormatKey } from './ui/chat-format-dialog.js';
 import { GumpHelp, GumpHelpState } from './ui/gump-help.js';
 import { createClientProductionAssembly } from './ui/client-production-assembly.js';
@@ -246,6 +247,8 @@ export const AppState = Object.freeze({
     LOADING: 'loading',
     ERROR: 'error',
     CLICK_TO_START: 'clickToStart',
+    // 클릭하여 시작 뒤 메인 메뉴 전에 보이는 시작 title 그림 세 장(원본 4ab3e0)이다. 입력이 있으면 건너뛴다. (2026-11-22 WB04-E1184)
+    TITLE: 'title',
     MAIN_MENU: 'mainMenu',
     // 게임 규칙 없이 지면·절벽·받침을 점검하는 개발용 정적 화면이다. (2026-11-02 WB03-AA)
     TERRAIN_PREVIEW: 'terrainPreview',
@@ -554,6 +557,9 @@ export class Netstorm {
             // Campaign 목록의 User Made Campaigns 행)를 원본처럼 보여 cpppj 오라클·원본 스크린샷과 같은 배치로 비교한다. 그 요소들의 동작(Edit·멀티플레이 등)은 여전히 구현하지 않는다.
             // 무브라우저 실행(tools/headless.mjs)의 오라클 비교 전용이며 기본값 false 이다. (2026-11-07 WB02-H)
             originalComparison: options.originalComparison ?? false,
+            // 시작 title 그림(원본 4ab3e0: title0·title6·title7 을 3초씩, 입력하면 건너뜀)을 클릭하여 시작 뒤에 보일지 여부이다. 기본은 켜짐이며 원본 비교 모드·개발용 지형 미리보기(?map=)·자동화 브라우저(navigator.webdriver)에서는 기본으로 건너뛰고,
+            // 주소 `?title=1` 이면 항상 켜고 `?title=0` 이면 항상 끈다. (2026-11-22 WB04-E1184)
+            titleScreens: options.titleScreens ?? (params.get('title') === '1' || (params.get('title') !== '0' && !(options.originalComparison ?? false) && !params.has('map') && !globalThis.navigator?.webdriver)),
             // 12차 스커미시를 Campaign 목록에 보일지 여부이다. 월드 생성까지 연결돼(WB04-E1105) 기본 true 이며 원본 비교 모드이거나 주소에 `?skirmish=0` 이 있으면 숨긴다. (2026-11-20 WB04-E1102, WB04-E1105: 기본값을 켬)
             skirmish: options.skirmish ?? (!(options.originalComparison ?? false) && params.get('skirmish') !== '0'),
             // 스커미시 시작 함수 (설정) => boolean 이다. 기본(null)은 앱의 미션 시작이며 아직 연결 전이면 안내만 남기고 false 를 돌려준다. 검사가 시작 호출만 받도록 바꿔 끼운다. (2026-11-20 WB04-E1102)
@@ -664,6 +670,8 @@ export class Netstorm {
         this._clientImePending = null;
         // 메인 메뉴 그리기 자원 묶음(buildMenuResources 결과)이다. 자산 적재 전에는 null 이며, 재시작해도 다시 받지 않는다.
         this._resources = null;
+        // 시작 title 그림의 표시 시작 시각(밀리초, 첫 그리기 때 정해짐)과 그림별 RGBA 캔버스 캐시이다. (2026-11-22 WB04-E1184)
+        this._titleStartedAt = null; this._titleBitmaps = [];
         // 같은 공개 자산 매니페스트와 현재 오디오의 미션 지연 적재 수명이다.
         this._assetLoader = null; this._missionAudioAssets = null;
         // 게임 데이터 조회 객체(GameData: 파일 조회·설정 층·언어 용어표·Tell 섹션)다. 자산 적재 전에는 null 이며 재시작해도 다시 만들지 않는다.
@@ -2374,15 +2382,48 @@ export class Netstorm {
     _activate() {
         if (this._state === AppState.ERROR) {
             this._load();
+        } else if (this._state === AppState.TITLE) {
+            // 시작 title 그림 중의 입력은 남은 그림을 건너뛴다(원본 waitTitleBitmap 이 입력 때 true 를 돌려주는 흐름). (2026-11-22 WB04-E1184)
+            this._finishTitleScreens();
         } else if (this._state === AppState.CLICK_TO_START) {
             this._unlockAudio();
-            this._enterMainMenu();
+            // 시작 title 그림이 켜져 있으면 먼저 보이고(입력하면 건너뜀), 아니면 바로 메인 메뉴로 간다. (2026-11-22 WB04-E1184)
+            if (this.options.titleScreens && this._resources?.titleScreens) this._enterTitleScreens(); else this._enterMainMenu();
             // 개발용 맵도 클릭/오디오 활성화 관문 뒤에만 연다. 없는 맵은 메뉴를 유지하며 원인을 알린다. (2026-11-02 WB03-AA)
             if (this.options.previewMap) {
                 try { this.previewMap(this.options.previewMap); }
                 catch (error) { console.warn('Netstorm: 지형 미리보기를 열지 못했습니다.', error); }
             }
         }
+    }
+
+    // 시작 title 그림 표시를 시작한다(원본 4ab3e0). 첫 그림부터 3초씩 보이고, 클릭·키 입력이 있거나 세 장이 끝나면 `_finishTitleScreens` 가 메인 메뉴로 보낸다. (2026-11-22 WB04-E1184)
+    _enterTitleScreens() {
+        this._titleStartedAt = null; this._titleBitmaps = [];
+        this._setState(AppState.TITLE);
+        this._displayDirty = true;
+    }
+
+    // 시작 title 그림을 끝내고 메인 메뉴로 간다(입력으로 건너뛰거나 세 장이 모두 끝났을 때). 이미 메인 메뉴이면 아무것도 하지 않는다. (2026-11-22 WB04-E1184)
+    _finishTitleScreens() {
+        if (this._state !== AppState.TITLE) return;
+        this._titleStartedAt = null; this._titleBitmaps = [];
+        this._enterMainMenu();
+    }
+
+    // 시작 title 그림의 현재 장을 검은 화면 가운데에 그린다. 첫 프레임에서 시작 시각을 잡고 경과 시간으로 장을 고르며 세 장이 끝나면 메인 메뉴로 간다. 그림은 처음 쓸 때 한 번만 RGBA 캔버스로 만든다. (2026-11-22 WB04-E1184)
+    _drawTitleScreen(ctx, width, height, now) {
+        if (this._titleStartedAt === null || this._titleStartedAt === undefined) this._titleStartedAt = now;
+        const index = titleScreenIndexAt(now - this._titleStartedAt), screens = this._resources?.titleScreens;
+        if (index >= TITLE_SCREEN_COUNT || !screens) { this._finishTitleScreens(); return; }
+        let bitmap = this._titleBitmaps[index];
+        if (!bitmap) {
+            const image = screens[index].image, canvas = this._root.ownerDocument.createElement('canvas'); canvas.width = image.width; canvas.height = image.height;
+            canvas.getContext('2d').putImageData(new ImageData(titleScreenRgba(screens[index]), image.width, image.height), 0, 0);
+            bitmap = this._titleBitmaps[index] = canvas;
+        }
+        const origin = titleScreenOrigin(width, height, bitmap.width, bitmap.height);
+        ctx.drawImage(bitmap, origin.x, origin.y);
     }
 
     // 메인 메뉴로 들어간다. 메뉴 화면을 만들고(처음 한 번) 현재 논리 크기로 배치하며, 창 제목과 메뉴 음악을 원본처럼 맞춘다.
@@ -3405,6 +3446,8 @@ export class Netstorm {
     _onKeyDown(event) {
         this._clientInputPoll.recordKeyDown(event.code, this._input.keys.has(event.code) || event.repeat);
         this._input.keys.add(event.code);
+        // 시작 title 그림 중에는 아무 키나 누르면 남은 그림을 건너뛴다(자동 반복은 무시). (2026-11-22 WB04-E1184)
+        if (this._state === AppState.TITLE) { if (!event.repeat) this._finishTitleScreens(); return; }
         // Gump 입력 창(Send X 숫자 창)이 열려 있으면 모든 키를 그 창의 입력으로 보낸다(게임 단축키·TAB·숫자 화면 저장으로 새지 않는다). (2026-11-22 WB04-E1168)
         if (!this._clientNativeInputEnabled && this._campaignInputDialogOpen()) { this._queueCampaignDialogKey(event, false); this._retryAudioOnGesture(); return; }
         // 채팅 입력줄이 보이는 동안 문자 키는 입력줄로 간다(게임 단축키로 새지 않는다). (2026-11-22 WB04-E1170)
@@ -3713,6 +3756,9 @@ export class Netstorm {
                 break;
             case AppState.CLICK_TO_START:
                 this._drawClickToStart(ctx, width, height, now);
+                break;
+            case AppState.TITLE:
+                this._drawTitleScreen(ctx, width, height, now);
                 break;
             default:
                 break;

@@ -37,6 +37,46 @@
       "use": "메인 메뉴 타이틀 그림(backgroundGifSpec + titleMenu)"
     },
     {
+      "path": "d/title0.gif",
+      "source": "assets/game-data/d/title0.gif",
+      "bundle": "menu",
+      "size": 8640,
+      "sha256": "b54403d4a9c86316b440fba4640e75993a392294d168c0464ae3f4e34a968557",
+      "use": "시작 title 그림 첫째(원문 title0.gif, 640x480, 팔레트 TITLE00.COL)"
+    },
+    {
+      "path": "d/title6.gif",
+      "source": "assets/game-data/d/title6.gif",
+      "bundle": "menu",
+      "size": 26382,
+      "sha256": "1edfb3bfe901462f63022c31370bc1c37e7ae991a47ffa01b66cd1c1034236de",
+      "use": "시작 title 그림 둘째(원문 title6.gif, 640x480, 팔레트 TITLE06.COL)"
+    },
+    {
+      "path": "d/TITLE7.GIF",
+      "source": "assets/game-data/d/TITLE7.GIF",
+      "bundle": "menu",
+      "size": 139094,
+      "sha256": "07b0f832431c2d4a359d61fc81b9fd6d3daccfd1cd7d9fa51de5b07b56b040ac",
+      "use": "시작 title 그림 셋째(원문 title7.gif, 640x480, 팔레트 TITLE06.COL 그대로)"
+    },
+    {
+      "path": "d/TITLE00.COL",
+      "source": "assets/game-data/d/TITLE00.COL",
+      "bundle": "menu",
+      "size": 776,
+      "sha256": "badb71f96021c49621150881569f62f8943336bdc1a9a07fbb27f7aa4b7aba18",
+      "use": "시작 title 첫째 그림의 팔레트(원문 title00.col)"
+    },
+    {
+      "path": "d/TITLE06.COL",
+      "source": "assets/game-data/d/TITLE06.COL",
+      "bundle": "menu",
+      "size": 776,
+      "sha256": "d099060552aff1381243e68ffa2e6308b397f7622950ad352f434e7d53500a1b",
+      "use": "시작 title 둘째·셋째 그림의 팔레트(원문 title06.col)"
+    },
+    {
       "path": "d/_shapes.shp",
       "source": "assets/game-data/d/_shapes.shp",
       "bundle": "menu",

@@ -96,6 +96,12 @@ const ASSET_FILES = Object.freeze([
     { path: 'd/GIFCLOUD.COL', bundle: 'menu', use: '기본 게임 팔레트(setup.cfg fortPal="gifcloud", GamePalSpec)' },
     { path: 'd/Gifcloud.gif', bundle: 'menu', use: '메인 메뉴 구름 배경(setup.cfg CloudFileSpec, 512x512)' },
     { path: 'd/titleMenu.gif', bundle: 'menu', use: '메인 메뉴 타이틀 그림(backgroundGifSpec + titleMenu)' },
+    // 시작 title 그림 세 장(원문 4ab3e0)과 그 팔레트 두 개이다. 클릭하여 시작 뒤 3초씩 보인다. (2026-11-22 WB04-E1184)
+    { path: 'd/title0.gif', bundle: 'menu', use: '시작 title 그림 첫째(원문 title0.gif, 640x480, 팔레트 TITLE00.COL)' },
+    { path: 'd/title6.gif', bundle: 'menu', use: '시작 title 그림 둘째(원문 title6.gif, 640x480, 팔레트 TITLE06.COL)' },
+    { path: 'd/TITLE7.GIF', bundle: 'menu', use: '시작 title 그림 셋째(원문 title7.gif, 640x480, 팔레트 TITLE06.COL 그대로)' },
+    { path: 'd/TITLE00.COL', bundle: 'menu', use: '시작 title 첫째 그림의 팔레트(원문 title00.col)' },
+    { path: 'd/TITLE06.COL', bundle: 'menu', use: '시작 title 둘째·셋째 그림의 팔레트(원문 title06.col)' },
     { path: 'd/_shapes.shp', bundle: 'menu', use: '셰이프 데이터베이스(fortGump 블록 22 프레임 1 = 돌 버튼 질감)' },
     ...FONT_FILES.map((fontPath) => ({ path: fontPath, bundle: 'menu', use: '원본 비트맵 글꼴 캐시(슬롯·스타일별, 슬롯 0 보통 = 돌 버튼 라벨, 그 밖 = 대화상자 제목·본문·목록 글자)' })),
     { path: 'cursors/RT_CURSOR_8.bin', bundle: 'menu', use: '원본 기본 커서 번호 1(흰 화살표, 핫스폿 10,6)' },

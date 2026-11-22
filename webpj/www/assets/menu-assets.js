@@ -41,6 +41,13 @@ export const MENU_ASSET_PATHS = Object.freeze({
     music: 'music/ser22.mus',
 });
 
+// 시작 title 그림 세 장과 팔레트의 데이터 폴더 기준 경로이다(원문 4ab3e0: title0+title00.col → title6+title06.col → title7 은 title06.col 그대로). 원본 파일 이름의 대소문자를 그대로 쓴다. 문자열 경로 표(MENU_ASSET_PATHS)와 섞이지 않게 따로 둔다. (2026-11-22 WB04-E1184)
+export const TITLE_SCREEN_ASSETS = Object.freeze([
+    Object.freeze({ gif: 'd/title0.gif', palette: 'd/TITLE00.COL' }),
+    Object.freeze({ gif: 'd/title6.gif', palette: 'd/TITLE06.COL' }),
+    Object.freeze({ gif: 'd/TITLE7.GIF', palette: 'd/TITLE06.COL' }),
+]);
+
 // 효과음·음악을 재생기에 등록할 때 쓰는 원본 이름이다. (2026-10-23 WB03-M1)
 export const BUTTON_SOUND_NAME = 'button.wav';
 export const MENU_MUSIC_NAME = 'ser22.mus';
@@ -117,7 +124,7 @@ function requireFile(files, path) {
 
 // 내려받은 파일 Map(경로 → Uint8Array)으로 메인 메뉴 그리기 자원 묶음을 만든다.
 // palette 는 원본 화면 팔레트 규칙(0번 검정·255번 흰색 고정)을 적용한 화면 팔레트다.
-// 반환: { palette, shadeMaps, buttonPalette, textContexts, font, clouds(512×512 아니면 null), title, texture, textureMetrics, cursor, cursors }
+// 반환: { palette, shadeMaps, buttonPalette, textContexts, font, clouds(512×512 아니면 null), title, titleScreens(시작 title 그림 세 장, 없으면 null), texture, textureMetrics, cursor, cursors }
 // cursor 는 기본 커서(번호 1)이고 cursors 는 번호 → 해독한 원본 커서의 표(번호 1~18)이다.
 // 사용: new MainMenuScreen({ resources: buildMenuResources(files) }) (2026-10-23 WB03-M1, 2026-10-31 WB03-L: cursors 추가)
 // korean 은 한국어 지원(assets/korean-assets.js buildKoreanSupport 결과 { translate, unicode })이다. 없으면 영어: translate 는 원문 그대로, 글꼴 묶음은 원본 비트맵 글꼴만 쓴다.
@@ -151,6 +158,10 @@ export function buildMenuResources(files, korean = null) {
         resolvePicture: createMenuPictureResolver(files, shapes),
         clouds: clouds.width === CLOUD_IMAGE_SIZE && clouds.height === CLOUD_IMAGE_SIZE ? clouds : null,
         title: decodeGif(requireFile(files, MENU_ASSET_PATHS.title)),
+        // 시작 title 그림 세 장(해독한 색 번호 그림 + 화면 팔레트)이다. 파일이 하나라도 없으면 null 이며 앱은 그때 title 장면을 건너뛴다(옛 자산 묶음·오라클 도구와의 호환). (2026-11-22 WB04-E1184)
+        titleScreens: TITLE_SCREEN_ASSETS.every((screen) => files.get(screen.gif) && files.get(screen.palette)) ? Object.freeze(TITLE_SCREEN_ASSETS.map((screen) => Object.freeze({
+            image: decodeGif(files.get(screen.gif)), palette: buildScreenPalette(GamePalette.parse(files.get(screen.palette))),
+        }))) : null,
         texture: shapes.decode(FORT_GUMP_BLOCK, STONE_BUTTON_TEXTURE_FRAME),
         textureMetrics: shapes.squidMetrics(FORT_GUMP_BLOCK, STONE_BUTTON_TEXTURE_FRAME),
         cursor: cursors[CURSOR_NORMAL],
