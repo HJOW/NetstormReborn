@@ -28,11 +28,21 @@ test('Session GemReward: 같은 두 몸체/지역 상태와 선행·반복·반�
 });
 
 test('Session GemReward: 할당/벽시각은 함수 값 사본이고 mismatch는 현재 로그 장치다', () => {
-    const calls = []; const o = scene({ production: { allocationBytes: (raw) => { calls.push(['fill', raw.length]); raw.fill(0x5a); } }, sound: { wallSeconds: () => 123 } }); try { const h = o.gemModules.rewardHooks; o.services.production.allocationBytes = forbidden; o.services.sound.wallSeconds = forbidden; const raw = new Uint8Array(4); h.fill(raw); assert.deepEqual([...raw], [90, 90, 90, 90]); assert.equal(h.deck.wallSeconds(), 123); o.services.player.log = (...args) => calls.push(['log', ...args]); h.deck.mismatch(0xfffffffe, 0xffffffff); assert.deepEqual(calls, [['fill', 4], ['log', 0x1d, 'Deck chance mismatch. -2!=-1\n']]); assert.throws(() => h.assertion(0xf6), /보상 진단 246/); assert.throws(() => h.deckAssertion('Capacity'), /실제 진단 미연결/); } finally { o.dispose(); }
+    const calls = []; const o = scene({ production: { allocationBytes: (raw) => { calls.push(['fill', raw.length]); raw.fill(0x5a); } }, sound: { wallSeconds: () => 123 } }); try { const h = o.gemModules.rewardHooks; o.services.production.allocationBytes = forbidden; o.services.sound.wallSeconds = forbidden; const raw = new Uint8Array(4); h.fill(raw); assert.deepEqual([...raw], [90, 90, 90, 90]); assert.equal(h.deck.wallSeconds(), 123); o.services.player.log = (...args) => calls.push(['log', ...args]); h.deck.mismatch(0xfffffffe, 0xffffffff); assert.deepEqual(calls, [['fill', 4], ['log', 0x1d, 'Deck chance mismatch. -2!=-1\n']]); // 표시 진단 장치가 없으면 진단 지점에서 명시 실패하고, 장치를 연결하면 원문 식·파일·행을 표시한 뒤 정상 복귀한다(E1207).
+    assert.throws(() => h.assertion(0xf6), /진단 장치 미연결/);
+    const events = []; o.world.storage.bindDisplayDiagnostics({ value: '' }, (...args) => events.push(args));
+    h.assertion(0xf6); h.assertion(0x104); h.assertion(0x10a); h.deck.assertion(0xe5); for (let kind = 0; kind < 6; kind += 1) h.deckAssertion(kind);
+    const gem = '\\Ns\\O\\Gem.cpp', deck = '\\Ns\\O\\Deck.cpp';
+    assert.deepEqual(events, [['0', gem, 0xf6], ['type', gem, 0x104], ['buriedSquid.getType() == buriedType && !buriedSquid.isFree()', gem, 0x10a], ['isOpen()', deck, 0xe5],
+        ['entry[i].type != type', deck, 0x64], ['totalEntries < MAX_ENTRIES', deck, 0x66], ['type==_type', deck, 0x2d], ['chance==_chance', deck, 0x2e], ['power==_power', deck, 0x2f], ['numRemaining==_numRemaining', deck, 0x30]]);
+    assert.throws(() => h.deckAssertion(6), /종류 범위/); assert.throws(() => h.deckAssertion('Capacity'), /종류 범위/);
+    o.dispose(); assert.throws(() => h.assertion(0xf6), /반납/); } finally { o.dispose(); }
 });
 
 test('Session GemReward: 실제 추첨이 같은 현재 TYPE/제외 목록과 게임 난수를 사용한다', () => {
-    const o = scene({ production: { allocationBytes: (raw) => raw.fill(0) }, sound: { wallSeconds: () => 123 } }); try { singleCandidate(o); const seed = o.random.state; assert.equal(o.gemReward.choose(5), 78); assert.notEqual(o.random.state, seed); o.constructionExcludedTypes.entries = [78]; o.constructionExcludedTypes.count = 1; const after = o.random.state; assert.throws(() => o.gemReward.choose(5), /보상 진단 260/); assert.equal(o.random.state, after); o.constructionExcludedTypes.count = 0; assert.equal(o.gemReward.choose(5), 78); } finally { o.dispose(); }
+    const o = scene({ production: { allocationBytes: (raw) => raw.fill(0) }, sound: { wallSeconds: () => 123 } }); try { singleCandidate(o); const seed = o.random.state; assert.equal(o.gemReward.choose(5), 78); assert.notEqual(o.random.state, seed); o.constructionExcludedTypes.entries = [78]; o.constructionExcludedTypes.count = 1; const after = o.random.state; assert.throws(() => o.gemReward.choose(5), /진단 장치 미연결/); assert.equal(o.random.state, after);
+        // 후보가 없으면 원문처럼 `type` 진단(Gem.cpp 0x104)을 표시한 뒤 0 을 돌려주며 난수를 소비하지 않는다(E1207).
+        const events = []; o.world.storage.bindDisplayDiagnostics({ value: '' }, (...args) => events.push(args)); assert.equal(o.gemReward.choose(5), 0); assert.deepEqual(events, [['type', String.fromCharCode(92) + 'Ns' + String.fromCharCode(92) + 'O' + String.fromCharCode(92) + 'Gem.cpp', 0x104]]); assert.equal(o.random.state, after); o.constructionExcludedTypes.count = 0; assert.equal(o.gemReward.choose(5), 78); } finally { o.dispose(); }
 });
 
 test('Session Buried: 현재 boss/로딩/Bridge 참조와 후설치 보상 선택을 읽는다', () => {

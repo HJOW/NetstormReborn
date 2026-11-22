@@ -3,6 +3,11 @@
 import { RawGemReward } from './raw-gem-reward.js';
 import { RawBuriedPostPop } from './raw-buried-post-pop.js';
 
+// Deck 목록 추가 진단 여섯 개의 [식, 행]이다. 순서는 DeckAssertion(DuplicateType..RemainingTruncated)과 같고 파일은 \Ns\O\Deck.cpp 이다. (2026-11-22 WB04-E1207)
+const DECK_APPEND_ASSERTIONS = Object.freeze([
+    ['entry[i].type != type', 0x64], ['totalEntries < MAX_ENTRIES', 0x66], ['type==_type', 0x2d], ['chance==_chance', 0x2e], ['power==_power', 0x2f], ['numRemaining==_numRemaining', 0x30],
+].map((row) => Object.freeze(row)));
+
 // 독립 typed의 보상 추첨/공개와 최초 Buried 공통 장부/예약을 같은 현재 World에 연결한다.
 export class RawCampaignSessionGems {
     // 부분 실패/반복/반납과 실제 Buried 등록 여부다.
@@ -19,12 +24,21 @@ export class RawCampaignSessionGems {
         if (this.#disposed || !o.fenceModules?.ready || this.#started || o.gemReward || o.buriedPostPop) throw new Error('Session GemReward의 초기화 전/반복 결선'); this.#started = true;
         // Source의 두 std::function 대입은 생성 시의 실제 장치를 복사한다.
         const fill = o.services.production.allocationBytes; const wallSeconds = o.services.sound.wallSeconds;
-        const diagnostic = (line) => { this.#live(); throw new Error(`원본 Gem/Deck.cpp 보상 진단 ${line}`); };
+        // 원문(ClientConstructionGlobals::GemReward)처럼 현재 표시 진단 장치로 식·파일·행을 보여 주고 정상 복귀한다. 장치가 없으면 storage 가 명시 오류를 낸다. (2026-11-22 WB04-E1207: 이전에는 오류를 던져 진행이 멈췄다)
+        const display = (expression, file, line) => { this.#live(); o.world.storage.assertDisplay(expression, file, line); };
+        // Gem.cpp 세 진단의 식이다: 0xf6 `0`, 0x104 `type`, 그 밖(0x10a)은 묻힌 Squid 검사식이다.
+        const diagnostic = (line) => display(line === 0xf6 ? '0' : line === 0x104 ? 'type' : 'buriedSquid.getType() == buriedType && !buriedSquid.isFree()', '\\Ns\\O\\Gem.cpp', line);
+        // Deck.cpp 열림 검사(`isOpen()`)와 목록 추가 여섯 진단(DeckAssertion 순서: 중복 TYPE·용량·TYPE/확률/위력/잔량 절단)의 식과 행이다(44f290/44f160).
+        const deckOpen = (line) => display('isOpen()', '\\Ns\\O\\Deck.cpp', line);
+        const deckAppend = (kind) => {
+            if (!Number.isInteger(kind) || kind < 0 || kind >= DECK_APPEND_ASSERTIONS.length) throw new RangeError('Deck 목록 추가 진단 종류 범위');
+            display(DECK_APPEND_ASSERTIONS[kind][0], '\\Ns\\O\\Deck.cpp', DECK_APPEND_ASSERTIONS[kind][1]);
+        };
         const hooks = {
             fill: typeof fill === 'function' ? (raw) => { this.#live(); fill(raw); } : null,
-            assertion: diagnostic, deckAssertion: (kind) => { this.#live(); throw new Error(`Gem 보상 Deck 실제 진단 미연결 ${kind}`); }, // 원문 SessionMissing이다.
+            assertion: diagnostic, deckAssertion: deckAppend,
             deck: {
-                wallSeconds: typeof wallSeconds === 'function' ? () => { this.#live(); return wallSeconds(); } : null, assertion: diagnostic,
+                wallSeconds: typeof wallSeconds === 'function' ? () => { this.#live(); return wallSeconds(); } : null, assertion: deckOpen,
                 mismatch: (stored, current) => { this.#live(); if (typeof o.services.player.log !== 'function') throw new Error('Deck 실제1d 로그 미연결'); o.services.player.log(0x1d, `Deck chance mismatch. ${stored | 0}!=${current | 0}\n`); }, // 현재 장치에 signed 두 값과 원문 줄바꿈을 보낸다.
             },
             create: (type, flags) => { this.#live(); return o.world.create(type, flags); }, pop: (sid, x, y, flags) => { this.#live(); o.world.pop(sid, x, y, flags); }, destroy: (sid, flags) => { this.#live(); o.world.destroy(sid, flags); }, // 실제 가상 생성/공간/삭제다.

@@ -104,10 +104,12 @@ export class RawCampaignSessionDamageable {
         const refresh = o.services.ownership.refreshProduction;
         const vortex = {
             islandNumber: (x, y) => { this.#live(); return o.ownership.islandNumber(x, y); }, islandExists: (island) => { this.#live(); return Boolean(o.islands.exists(island)); }, islandTemple: (island) => { this.#live(); return o.islands.temple(island); },
-            clearIslandTemple: (island) => { this.#live(); if (!o.islands.exists(island)) throw new Error('신전 삭제의 실제 섬 부재 진단'); o.islands.setTemple(island, 0); need(o.services.ownership.refreshProduction, '신전 삭제의 실제 생산 갱신 미연결')(); },
+            // 원문(ClientConstructionGlobals::VortexPre)처럼 섬이 없으면 Vortex.cpp 0x16f 진단을 표시하고 계속한다. (2026-11-22 WB04-E1207: 이전에는 오류를 던졌다)
+            clearIslandTemple: (island) => { this.#live(); if (!o.islands.exists(island)) o.world.storage.assertDisplay('islandList.exists( islandId )', '\\Ns\\O\\Vortex.cpp', 0x16f); o.islands.setTemple(island, 0); need(o.services.ownership.refreshProduction, '신전 삭제의 실제 생산 갱신 미연결')(); },
             islandOwner: (island, owner) => { this.#live(); o.islands.setOwner(island, owner); }, regionOwnership: (x, y) => { this.#live(); o.ownership.updateRegion(x, y); },
             damageablePre: (sid, flags) => { this.#live(); o.damageablePre.preDestroy(sid, flags); }, refreshProduction: () => { this.#live(); need(refresh, '신전 삭제 후 실제 생산 갱신 미연결')(); },
-            assertion: (line) => { this.#live(); throw new Error(`Session 신전 삭제 진단 미연결 ${line}`); },
+            // 0x2ab 는 섬 존재, 그 밖(0x2ac)은 섬의 신전 SID 일치 검사식이며 표시 후 계속한다. (2026-11-22 WB04-E1207)
+            assertion: (line) => { this.#live(); o.world.storage.assertDisplay(line === 0x2ab ? 'islandList.exists( islandId )' : 'islandList.getVortexSid( islandId ) == getSid()', '\\Ns\\O\\Vortex.cpp', line); },
         };
         this.vortexHooks = vortex;
         o.vortexPre = new RawVortexPreDestroy(c.pool, o.players, o.state.assetState.currentTemples(), o.state.assetState.currentResidences(), o.state.assetState.currentOutposts(), () => o.objectState.loadingDepth, vortex);

@@ -71,7 +71,12 @@ test('Session Damageable: 피해 Regular는 같은 실제 Host 객체에 초기 
 });
 
 test('Session Damageable: 신전 삭제의 섬 비움은 실제 목록을 수정한 뒤 현재 생산 갱신을 부른다', () => {
-    const calls = []; const o = scene({ ownership: { refreshProduction: () => calls.push('initial') } }); try { const h = o.damageableModules.vortexHooks; assert.throws(() => h.clearIslandTemple(1), /섬 부재/); const exists = o.islands.exists; const set = o.islands.setTemple; o.islands.exists = () => true; o.islands.setTemple = (index, value) => calls.push([index, value]); o.services.ownership.refreshProduction = () => calls.push('current'); h.clearIslandTemple(2); h.refreshProduction(); assert.deepEqual(calls, [[2, 0], 'current', 'initial']); o.islands.exists = exists; o.islands.setTemple = set; } finally { o.dispose(); }
+    const calls = []; const o = scene({ ownership: { refreshProduction: () => calls.push('initial') } }); try { const h = o.damageableModules.vortexHooks; const events = []; assert.throws(() => h.clearIslandTemple(1), /진단 장치 미연결/);
+    // 원문처럼 섬이 없으면 Vortex.cpp 0x16f 진단을 표시한 뒤 정상 복귀해 섬 비움과 생산 갱신을 계속한다(E1207). 신전 삭제 진단 두 종류도 같은 장치에 표시한다.
+    o.world.storage.bindDisplayDiagnostics({ value: '' }, (...args) => events.push(args)); const lines = []; const setBefore = o.islands.setTemple; o.islands.setTemple = (index, value) => lines.push([index, value]); h.clearIslandTemple(1); o.islands.setTemple = setBefore;
+    h.assertion(0x2ab); h.assertion(0x2ac); const vortex = '\\Ns\\O\\Vortex.cpp';
+    assert.deepEqual(events, [['islandList.exists( islandId )', vortex, 0x16f], ['islandList.exists( islandId )', vortex, 0x2ab], ['islandList.getVortexSid( islandId ) == getSid()', vortex, 0x2ac]]); assert.deepEqual(lines, [[1, 0]]); assert.deepEqual(calls, ['initial']);
+    const exists = o.islands.exists; const set = o.islands.setTemple; o.islands.exists = () => true; o.islands.setTemple = (index, value) => calls.push([index, value]); o.services.ownership.refreshProduction = () => calls.push('current'); h.clearIslandTemple(2); h.refreshProduction(); assert.deepEqual(calls, ['initial', [2, 0], 'current', 'initial']); o.islands.exists = exists; o.islands.setTemple = set; } finally { o.dispose(); }
 });
 
 test('Session Damageable: 간헐천 기본 프레임은 실제 자산의 현재 TYPE이고 AI0 목록은 미설치 본체를 요구하지 않는다', () => {
