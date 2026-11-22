@@ -3779,6 +3779,8 @@ export class Netstorm {
         if (this._campaignDisplayActive()) { this._runCampaignProductionFrame(); this._clientGump.lifetime().cleanup(); this._clientGump.idle(); this._runCampaignKernelFrame(); this._campaignProduction?.hud?.refresh(); }
         this._syncDialogToMapView();
         this._render(now);
+        // 원본 주 루프 13번(439c33): 화면을 그린 뒤 Player 결과 알림을 한다. known 이고 전투 모드일 때만 Session 이 필요하다. (2026-11-22 WB04-E1233)
+        if (this._campaignDisplayActive() && this._clientGameplay.player.playerKnown && this._surfaceStorage.ownerMode.battle) this._campaignWorld.session().notifyPlayerResults();
         this._startFrameLoop();
     }
 

@@ -159,3 +159,21 @@ test('The War Begins!: MissionAbort,0 단추는 ABORT 확인 창을 열고 Conti
   expect(errors).toEqual([]);
 });
 
+// 프레임 끝 Player 결과 알림(원본 NotifyPlayerResults): 로컬 Player 기록의 대기 결과(+0xa0)가 2/3 이면 제단 등급(+0x71)을 올리고 'AltarUpgrade' 안내를 연 뒤 대기 값을 지운다. 앱이 이 호출을 하지 않아 제단 승급 안내가 한 번도 뜨지 않았다. (2026-11-22 WB04-E1233)
+test('The War Begins!: 대기 중인 제단 승급 결과가 AltarUpgrade 안내와 제단 등급으로 소비된다', async ({ page }) => {
+  test.setTimeout(300000);
+  const errors = []; await startWarBegins(page, errors);
+  const before = await page.evaluate(() => {
+    const app = window.netstorm, session = app._campaignWorld.session(), owner = session.localOwner(), players = session.playerRecords(); const record = players.subarray(owner * 180, owner * 180 + 180);
+    window.__tells = []; const open = app._openTell.bind(app); app._openTell = (name, options) => { window.__tells.push(name); return open(name, options); };
+    // 기술 링크(+0x9c)가 없으면 원문처럼 소비하지 않으므로 현재 기술 부모를 흉내 내는 대신 이미 있는 값을 확인한다.
+    return { owner, link: record[0x9c] | (record[0x9d] << 8) | (record[0x9e] << 16) | (record[0x9f] << 24), grade: record[0x71] };
+  });
+  expect(before.link, '기술 링크(+0x9c)').not.toBe(0);
+  await page.evaluate(() => { const session = window.netstorm._campaignWorld.session(), owner = session.localOwner(), record = session.playerRecords().subarray(owner * 180, owner * 180 + 180); record[0xa0] = 2; record[0xa1] = 0; record[0xa2] = 0; record[0xa3] = 0; });
+  await expect.poll(() => page.evaluate(() => window.__tells.includes('AltarUpgrade')), { timeout: 5000, message: 'AltarUpgrade 안내' }).toBe(true);
+  const after = await page.evaluate(() => { const session = window.netstorm._campaignWorld.session(), owner = session.localOwner(), record = session.playerRecords().subarray(owner * 180, owner * 180 + 180); return { grade: record[0x71], pending: record[0xa0] }; });
+  expect(after, '등급 상승과 대기 값 소거').toEqual({ grade: Math.max(1, before.grade), pending: 0 });
+  expect(errors).toEqual([]);
+});
+

@@ -9,6 +9,7 @@ import { makeNormalTerrainFarmWorldHooks } from './raw-normal-terrain-world-bind
 import { RawFortFinishOwner } from './raw-fort-finish-owner.js';
 import { placeBattleNuggets } from './raw-battle-nugget-placement.js';
 import { runBattleResourceFrame } from './raw-battle-resource-frame.js';
+import { coreTechnologyWeight, notifyPendingPlayerResult } from './raw-player-notification.js';
 import { RawSquidFinder } from './raw-squid-finder.js';
 import { RawCursorPosition } from './raw-cursor-position.js';
 import { RawCarrierDropPoint } from './raw-carrier-drop-point.js';
@@ -103,6 +104,29 @@ export function runCampaignBattleResources(owner, send) {
         aux, loginEnd: () => owner.loginEnd, now: () => owner.core.processState.now, boss: () => owner.state.assetState.readBoss(), battle: () => owner.core.ownerMode.battle,
         single: () => owner.globals.missionPost, editor: () => owner.globals.editor, owner: () => owner.playerState.battleOwner, options: owner.battleOptions, players: () => owner.players,
     }, hooks);
+}
+// 원문 RawCampaignSession::NotifyPlayerResults(00490da0): 프레임 끝에서 로컬 Player 기록의 대기 결과(+0xa0)를 소비한다 — 제단 승급(2/3: +0x71 최대화와 'AltarUpgrade' 안내), 포획한 기술 TYPE 의 획득,
+// 너겟/무섬 TYPE 의 Core 합계 판정과 기술 지급. 같은 실제 Player 기록·기술 부모·내용물 검색·Dais 의 포획 지급·의식 뒤 갱신을 빌리며 별도 사본을 만들지 않는다. 앱이 이 호출을 하지 않아 'AltarUpgrade' 안내와 포획 기술 획득이
+// 한 번도 일어나지 않았다. (2026-11-22 WB04-E1233)
+export function notifyCampaignPlayerResults(owner) {
+    notifyPendingPlayerResult({
+        global: (address) => {
+            switch (address) {
+                case 0x595344: return owner.playerState.playerKnown; case 0x594fbc: return owner.core.ownerMode.battle ? 1 : 0; case 0x540c70: return owner.playerState.battleOwner;
+                case 0x5411cc: return owner.daisState.noIslandType; case 0x5412c0: return owner.daisState.currentNuggetType;
+                default: throw new RangeError('Player 알림의 다른 전역 주소');
+            }
+        },
+        players: () => owner.players, technology: () => owner.player.currentTechnology(),
+        weight: (core) => coreTechnologyWeight(core, {
+            count: () => owner.core.types.length,
+            type: (index) => { if (index < 0 || index >= owner.core.types.length) throw new RangeError('Core 기술 합계의 현재 TYPE 범위'); const record = owner.core.types[index]; return { bit: record.techBitIndex, level: record.level }; },
+        }),
+        contained: (parent, mask, kind, index) => { if (parent > 65535 || parent >= owner.core.pool.capacity) throw new RangeError('Player 알림의 현재 기술 부모 SID 범위'); return owner.priests.carrier.findContained(parent, mask, kind, index); },
+        tell: (key) => { if (typeof owner.services.priest.shield.tell !== 'function') throw new Error('Player 알림의 실제 Tell 장치 미연결'); owner.services.priest.shield.tell(key); },
+        grant: (type, target) => { owner.daisRegular.grantCapturedType(type, target); },
+        refresh: () => { if (!owner.refreshLocalRitual) throw new Error('Player 알림의 실제 Core/CoreData/snapshot 갱신 미연결'); owner.refreshLocalRitual(); },
+    });
 }
 // 원문5761..5771 typed: 단독 진단/지역 seed/현재 TYPE를 실제 같은 공간의 단일 배치에 넘긴다.
 export function placeCampaignBattleNuggets(owner, rectangle, quantity) {
