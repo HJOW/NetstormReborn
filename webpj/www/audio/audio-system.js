@@ -106,12 +106,18 @@ export class AudioSystem {
         if (this.musicMuteDepth === 0) this.musicGain.gain.value = this.pendingMusicGain;
     }
 
-    // 효과음을 켜거나 끈다. 끄면 이후 playSound 는 소리를 내지 않는다(이미 재생 중인 짧은 소리는 끝까지 난다). (2026-10-29 WB03-F)
+    // 소리(Sound On)를 켜거나 끈다. 끄면 이후 playSound 는 소리를 내지 않고(이미 재생 중인 짧은 소리는 끝까지 난다) 재생 중인 음악도 멈춘다.
+    // 원본 ReinterpretClientAudioOptions(4355df..435680)는 소리 옵션이 꺼지면 장치를 닫아 음악까지 무음이 되고, 다시 켜면 장치를 열고 현재 곡(Select)을 처음부터 다시 재생한다.
+    // 요청받은 곡 이름(wantedMusic)은 꺼진 동안에도 남는다. 같은 값을 다시 넣는 호출(옵션 갱신마다 부른다)은 재생 중인 음악을 건드리지 않는다.
+    // (2026-10-29 WB03-F, 2026-11-23 WB04-E1239: 끄면 음악도 무음, 켜면 현재 곡을 처음부터)
     setSoundEnabled(enabled) {
-        this.soundEnabled = Boolean(enabled);
+        const next = Boolean(enabled), previous = this.soundEnabled;
+        this.soundEnabled = next;
+        if (!next) this._stopMusicSource();
+        else if (!previous && this.musicEnabled && this.wantedMusic) this.playMusic(this.wantedMusic);
     }
 
-    // 음악을 켜거나 끈다. 끄면 재생 중인 곡을 멈추고, 다시 켜면 마지막으로 요청받은 곡을 처음부터 반복 재생한다(원본도 음악 장치를 다시 시작한다). (2026-10-29 WB03-F)
+    // 음악을 켜거나 끈다. 끄면 재생 중인 곡을 멈추고, 다시 켜면 마지막으로 요청받은 곡을 처음부터 반복 재생한다(원본도 음악 장치를 다시 시작한다). 소리가 꺼져 있으면 곡은 켜 둔 채 기억만 한다. (2026-10-29 WB03-F)
     setMusicEnabled(enabled) {
         this.musicEnabled = Boolean(enabled);
         if (!this.musicEnabled) this._stopMusicSource();
@@ -150,12 +156,12 @@ export class AudioSystem {
     }
 
     // 음악을 재생한다. 승리·패배 곡은 한 번만 재생하며 같은 곡이 이미 재생 중이면 다시 시작하지 않는다. 시작했으면 true.
-    // 음악이 꺼져 있으면 곡 이름만 기억하고(다시 켜면 재생) false 를 돌려준다.
+    // 음악이 꺼져 있거나 소리(Sound On)가 꺼져 있으면 곡 이름만 기억하고(다시 켜면 재생) false 를 돌려준다. (2026-11-23 WB04-E1239: 소리가 꺼진 동안도 기억만)
     playMusic(name) {
         const key = String(name).toLowerCase();
         if (this.closed) return false;
         this.wantedMusic = key;
-        if (!this.musicEnabled) return false;
+        if (!this.musicEnabled || !this.soundEnabled) return false;
         if (this.currentMusic === key && this.musicSource) return true;
         const buffer = this.music.get(key);
         if (!buffer) return false;

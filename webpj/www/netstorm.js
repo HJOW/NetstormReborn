@@ -3222,7 +3222,9 @@ export class Netstorm {
         this._sceneMusic = new SceneMusicDriver({
             audio, prepare: (name) => loader.loadMusic(name), release: (name) => loader.releaseMusic(name),
             wallSeconds: () => this._gameClock.wallSeconds(), random: { next: (limit) => Math.floor(Math.random() * limit) },
-            weatherSound: (name) => { audio.playSound(name); }, onError: (error, name) => { if (this._audio === audio) reportGameError('scene-music', error, { state: this._state, asset: name }); },
+            // 날씨(천둥) 효과음은 원본 MakeSceneMusicHooks 처럼 SoundPlayer::PlayByName(이름, 0,0,0,0,0)을 거친다. 그래야 게임 메뉴 음소거(PushMute)·소리 옵션·동시 재생 한도가 같이 적용된다. (2026-11-23 WB04-E1239)
+            weatherSound: (name) => { try { this._clientSoundPlayer?.playByName(name, 0, 0, 0, 0, 0); } catch (error) { if (this._audio === audio) reportGameError('scene-music', error, { state: this._state, asset: name }); } },
+            onError: (error, name) => { if (this._audio === audio) reportGameError('scene-music', error, { state: this._state, asset: name }); },
         });
         this._sceneMusic.begin();
     }

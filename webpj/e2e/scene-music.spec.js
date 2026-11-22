@@ -52,6 +52,23 @@ test('미션 장면 음악: 원소 곡 재생·다음 곡 미리 받기·떠나�
   await page.evaluate(() => { window.netstorm._settings.set('music', 0); window.netstorm._settings.set('music', 1); });
   await page.waitForTimeout(500);
   expect(await page.evaluate(() => window.netstorm._audio.currentMusic)).toBe(playing.current);
+  // 미션 중 소리(Sound On)를 끄면 원본은 장치를 닫아 음악도 무음이 되고, 다시 켜면 현재 곡을 처음부터 재생한다(E1239).
+  await page.evaluate(() => window.netstorm._settings.set('sound', 0));
+  await page.waitForFunction(() => window.netstorm._audio.currentMusic === null, null, { timeout: 10000 });
+  expect(await page.evaluate(() => window.netstorm._audio.wantedMusic)).toBe(playing.current);
+  await page.evaluate(() => window.netstorm._settings.set('sound', 1));
+  await page.waitForFunction((name) => window.netstorm._audio.currentMusic === name, playing.current, { timeout: 10000 });
+  // 천둥 곡이 시작되면 날씨 효과음은 audio.playSound 가 아니라 미션 SoundPlayer 의 playByName(이름,0,0,0,0,0)을 거친다(게임 메뉴 음소거·동시 재생 한도 적용, E1239).
+  // 난수 0.3 → 시작 색인 1 → 다음 곡 색인 2(thu22.mus)이다.
+  const thunder = await page.evaluate(() => {
+    const app = window.netstorm, player = app._clientSoundPlayer, calls = [], direct = [], play = player.playByName.bind(player), raw = app._audio.playSound.bind(app._audio), random = Math.random;
+    player.playByName = (...args) => { calls.push(args); return play(...args); };
+    app._audio.playSound = (...args) => { direct.push(args[0]); return raw(...args); };
+    Math.random = () => 0.3;
+    try { app._beginSceneMusic(); } finally { Math.random = random; delete player.playByName; delete app._audio.playSound; }
+    return { calls, direct, selected: app._sceneMusic.selected };
+  });
+  expect(thunder.selected).toBe('thu22.mus'); expect(thunder.calls).toEqual([['thunderCrack.wav', 0, 0, 0, 0, 0]]); expect(thunder.direct).toEqual([]);
   // 미션을 떠나면 메뉴 곡으로 돌아가고 미션 곡은 놓는다.
   await page.evaluate(() => window.netstorm._leaveCampaignMission());
   await page.waitForFunction(() => window.netstorm._audio.currentMusic === 'ser22.mus' && !window.netstorm._sceneMusic, null, { timeout: 30000 });
