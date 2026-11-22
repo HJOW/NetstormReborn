@@ -1713,3 +1713,5 @@ cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.RainAvi
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.RainAviaryPackets.cs	1f9e94a4b10c21fa18d8798978756e3caefd1845	port
 cpppj/src/client/NativeGameplayPacketReceivers.cpp	Netstorm.Client/NativeGameplayPacketReceivers.RainAviary.cs	1f9e94a4b10c21fa18d8798978756e3caefd1845	port
 cpppj/src/client/NativeGameplayPacketReceivers.h	Netstorm.Client/NativeGameplayPacketReceivers.RainAviary.cs	1f9e94a4b10c21fa18d8798978756e3caefd1845	port
+cpppj/src/o/RawWindAviaryState.cpp	Netstorm.Core/Original/RawWindAviaryState.cs	a71bd7453aec8929a4c9b8420eb386262fdb32c3	port
+cpppj/src/o/RawWindAviaryState.h	Netstorm.Core/Original/RawWindAviaryState.cs	a71bd7453aec8929a4c9b8420eb386262fdb32c3	port
