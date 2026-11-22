@@ -62,7 +62,8 @@ export class ClientChatWindow {
         this.#stones = new ClientStoneControls(root, { ...shared, measure: (token, label, context, output, maximum) => { const [width, height] = this.#measure(label, decodeGumpTextContext(context), maximum | 0); output.width = width; output.height = height; } });
         this.#entries = new ClientTextEntryControls(root, { ...shared, entryState, fonts,
             drawBackground: (token) => this.#active().drawBackground(token), drawText: (...args) => this.#active().drawText(...args), fill: (...args) => this.#active().fill(...args),
-            recipient: (text) => this.#recipient(text), ...(typeof devices.complete === 'function' ? { complete: devices.complete } : {}) });
+            recipient: (text) => this.#recipient(text), ...(typeof devices.complete === 'function' ? { complete: devices.complete } : {}),
+            ...(typeof devices.clipboardRead === 'function' ? { clipboardRead: devices.clipboardRead, clipboardWrite: devices.clipboardWrite } : {}) });
         // 로그 자식이 빌려 쓸 Client 장기 공유 버퍼를 한 번 만든다(이미 있으면 같은 토큰을 쓴다).
         try { parts.buffers.constructBorrowed(SHARED_LOG, parts.globals.log, LOG_LINES); } catch (error) { if (!/중복/u.test(error.message)) throw error; }
         this.#geometry = new HudChatGeometry({

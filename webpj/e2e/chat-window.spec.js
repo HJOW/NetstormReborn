@@ -228,3 +228,29 @@ test('채팅 도우미 명령: 삽입·설정 대입이 처리되고 입력 큐�
   await page.keyboard.type('ok'); await page.waitForTimeout(400); expect((await state()).input).toBe('Hi ~gok');
   expect(errors).toEqual([]);
 });
+
+// 복사·잘라내기: 입력줄에서 Ctrl+Insert(원본 편집기의 복사 키)로 복사하면 앱 클립보드 사본에 본문이 들어가고, Shift+Home 선택 뒤 Shift+Delete 는 잘라내며, 도우미 `Paste` 삽입이 사본을 입력줄에 넣는다. (2026-11-22 WB04-E1178)
+test('채팅: 입력줄 복사·잘라내기와 도우미 Paste 가 클립보드 사본을 쓴다', async ({ page, context }) => {
+  test.setTimeout(300000);
+  await context.grantPermissions(['clipboard-read', 'clipboard-write']);
+  const errors = []; page.on('pageerror', (error) => errors.push(error.stack ?? error.message)); page.on('console', (message) => { if (['error', 'warning'].includes(message.type()) && !/willReadFrequently/u.test(message.text())) errors.push(message.text()); });
+  await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0, autoDemo: 0, skirmishAiCount: 3, skirmishAi2Ally: 0, skirmishAi3Ally: 0, skirmishAi4Ally: 0 } })));
+  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/?aspect=4:3&lang=en');
+  await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 60000 }); await page.locator('canvas').click();
+  await page.waitForFunction(() => window.netstorm?.state === 'mainMenu', null, { timeout: 60000 });
+  await clickLabel(page, 'Campaign'); await clickLabel(page, 'Skirmish'); await clickLabel(page, 'Start');
+  await page.waitForFunction(() => window.netstorm?._campaignDisplayActive() && window.netstorm._clientGuide.current()?.runtime.gate.started === 1, null, { timeout: 120000 });
+  await clickLabel(page, 'Go!'); await page.waitForTimeout(2000); await page.locator('canvas').focus();
+  const state = () => page.evaluate(() => ({ input: window.netstorm._campaignProduction.ui.chat().inputText(), clip: window.netstorm._chatClipboard ?? null }));
+  await page.keyboard.press('Enter'); await page.waitForTimeout(400); await page.keyboard.type('copy me'); await page.waitForTimeout(300);
+  // 원본 편집기의 복사 키 Ctrl+Insert(선택이 없으면 전체): 입력줄은 그대로이고 사본에 본문이 들어간다.
+  await page.keyboard.press('Control+Insert'); await page.waitForTimeout(500);
+  expect(await state()).toEqual({ input: 'copy me', clip: 'copy me' });
+  expect(await page.evaluate(() => navigator.clipboard.readText())).toBe('copy me');
+  // Shift+Home 으로 줄 처음까지 고른 뒤 Shift+Delete 로 잘라내기: 입력줄이 비고 사본은 유지된다.
+  await page.keyboard.press('Shift+Home'); await page.keyboard.press('Shift+Delete'); await page.waitForTimeout(500); expect(await state()).toEqual({ input: '', clip: 'copy me' });
+  // 도우미 Paste 삽입: 사본이 입력줄에 들어간다.
+  await page.evaluate(() => { const app = window.netstorm; app._clientInputQueue.pushCommand(0x02000115, 0, app._clientChatWindows.store('paste')); }); await page.waitForTimeout(500);
+  expect(await state()).toEqual({ input: 'copy me', clip: 'copy me' });
+  expect(errors).toEqual([]);
+});

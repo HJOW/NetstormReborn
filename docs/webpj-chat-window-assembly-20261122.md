@@ -60,3 +60,16 @@ text` 붙여넣기는 `Hi pasted text`가 된다. 복사(Ctrl+C)는 아직 연�
 - 도우미 `>` 메뉴의 항목은 명령을 입력 큐에 올린다: 삽입(`0x02000115`, 둘째 인자 = 채팅 문자열 토큰 — 색·스타일·`Copy`·`Paste` 등), 설정 대입(`0x0200006d`, `키=값` 문자열 — Chat Effects/Chat Controls 체크 항목), Edit Back/Front Format(`0x02000105/106`), 수신자 추가·제거(`0x02000027/101`)와 재부착(`0x020000a6`). 입력 프레임의 허용 목록에 없어서 이 명령들은 큐 머리에 남아 3초 뒤 `미구현 입력 사건을 버립니다` 오류와 함께 버려지고 그동안 뒤의 입력이 막혔다(메뉴 항목을 누르는 순간 드러남).
 - `netstorm.js`: 이 일곱 코드를 `CHAT_HELPER_COMMANDS`로 허용했다. 삽입·수신자·재부착은 앞선 Gump 입력(`route`)에서 채팅 창이 처리하고(`ChatWindow.handle`), 남는 설정 대입은 `applyScriptConfig`로 `_applyCampaignConfig`에 써서 채팅 옵션(`_chatOption`)과 서식 설정이 바뀌며, Edit Format 은 대화창이 없어 콘솔 안내만 하고 큐를 막지 않는다.
 - 여덟 번째 e2e 시험: `Hi ` 뒤 삽입 `~g` → `Hi ~g`, `ShowChatWindow=0/1` 설정 대입이 옵션을 바꾸고, Edit Format 이 큐 머리에 남지 않으며, 이어지는 문자 입력이 평소처럼 들어간다. 오류·경고 0.
+
+## 복사·잘라내기·클립보드(E1178)
+
+- **원본 키는 Ctrl+Insert·Shift+Insert·Shift+Delete이다.** 원본 글자 입력창(`ui/text-entry-gump.js` 0x2d0000/0x2e0000 분기)은 Ctrl+C·Ctrl+X·Ctrl+A를 처리하지 않는다. 복사는 Ctrl+Insert(선택이 없으면 `buffer().copy()`가 전체를 복사), 붙여넣기는 Shift+Insert, 잘라내기는 Shift+Delete이다. 그래서 웹도 원본 키를 그대로 쓰고 브라우저 관용 키(Ctrl+C/X/A)는 덧붙이지 않는다(처음 시도한 Ctrl+C/X 매핑은 편집기가 문자 3·24를 받지 않아 동작하지 않았다). Ctrl+V 붙여넣기는 E1175의 브라우저 `paste` 사건 경로가 계속 맡는다.
+- **`netstorm.js`:** `_isChatTextKey`가 Ctrl+Insert와 `Insert`(Shift+Insert)를 입력줄 키로 받고(브라우저 기본 동작은 막고 가상 키 입력 큐로 올림), `_chatClipboardWrite`(편집기 `clipboardWrite` 장치)가 선택 바이트를 표시 부호화(`displayTextCodec`)로 해독해 앱 사본 `_chatClipboard`에 두고 브라우저 `navigator.clipboard.writeText`에도 쓴다(사용자 제스처 안에서만 허용되며 실패해도 사본은 남는다). `_chatClipboardRead`(`clipboardRead` 장치)는 앱 사본을 256바이트 NUL 문자열로 채운다(브라우저 읽기는 비동기라 사본만 쓴다). `_onPaste`도 붙여넣은 본문을 같은 사본에 기록해 이후 도우미 `Paste`가 그것을 넣는다.
+- **장치 전달:** `ClientChatWindow`가 `clipboardRead/Write`를 입력 편집기(`ChatWindow`)에 넘기고, 생산 메뉴가 같은 장치를 채팅 창 조립으로 전달한다. 도우미 메뉴의 `Copy`·`Paste` 삽입은 `ChatWindow.handle`이 `buffer.copy()/paste()`로 이 장치를 부른다.
+- **시험:** `e2e/chat-window.spec.js` 아홉 번째 시험: `copy me` 입력 → Ctrl+Insert 로 앱 사본과 브라우저 클립보드가 `copy me` → Shift+Home 선택 뒤 Shift+Delete 로 입력줄이 비고 사본은 유지 → 도우미 `Paste` 삽입(`0x02000115`)으로 `copy me` 복원. 오류·경고 0. 영향 e2e 14건(채팅 9·Send X 2·Players 메뉴 1·HUD 2) 통과.
+
+### Edit Back/Front Format 대화창 원본 조사(E1178 부수 조사, 미구현)
+
+- 도우미 `Edit Back Format`·`Edit Front Format` 항목의 명령 값은 데이터 칸 `0x542b08`·`0x542b0c`가 가진다(값 `0x02000105`·`0x02000106`, 코드에는 상수로 나오지 않고 `cmp ebp,[0x542b08]`처럼 이 칸과 비교한다). 입력 명령 처리부(`Netstorm.exe` 0x4d89c8/0x4d89e1, 같은 분배표의 `0x542af4`·`0x542b04`·`0x542aa8` 항목 곁)는 `0x4d4580(0,1)`·`0x4d48f0(0,1)`을 부른다.
+- `0x4d4580(0,1)`은 0xd8바이트 객체를 만들어 생성자 `0x4d42b0`을 부르고 Uber 루트(`0x563e38`)에 화면 중앙(`0x5c78f0/0x5c78f4` 화면 크기 − 객체 크기)으로 부착한다(vtable `+0x20`). 이 생성자(vtable `0x517dd0`)는 설정 키 `chatFormat`(`%d%s` 형식, 앞에 `0x540c74` 값을 붙임)에서 기본값을 읽고 `Please type your back format.` 안내(번역 호출 `0x4de9a0`)를 단 모달 글자 입력창 + 단추를 만든다. `0x4d48f0(0,1)`은 쌍둥이 `0x4d4620`(vtable `0x517e38`)을 부르며 설정 키 `chatFormat2`·안내 `Please type your front format.`를 쓴다. 두 생성자 모두 기반 `0x487500`(모달 창 기반)을 부르고 0x110바이트 글자 입력창(0xd0 멤버)·단추(0xc4 멤버)를 만든다.
+- 이 대화창은 `SaveFortNameDialog`와 같은 계열의 모달 한 장(글자 입력창 + 확인/취소 단추)이므로, 이식은 E1168 `ClientMoneyDialog` 조립(`setModal`·`ClientTextEntryControls`·`ClientStoneControls`)을 따라 새 단위로 한다. 남은 확인점: 확정 때 `chatFormat`/`chatFormat2` 설정 키에 저장되는 방식과 입력줄 `.front/.back` 점 명령(0x42e... 분배표)의 같은 저장소 사용 여부, 최대 길이(0x1f 글자 제한 등).

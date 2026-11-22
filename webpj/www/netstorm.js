@@ -1758,6 +1758,7 @@ export class Netstorm {
         return { globals: this._clientChatWindows, dotCommands: this._clientDotCommands, config: (key) => this._chatOption(key),
             read: (address) => address === 0x5cae94 ? this._input.pointer.x | 0 : address === 0x5cae98 ? this._input.pointer.y | 0 : address === 0x563e38 ? this._clientGump.createState().entries[0] : address === 0x548714 ? this._clientChatManager.current().value : this._campaignMenuGlobal(address, production),
             recipient: context.recipient, sendChat: context.sendChat, resolve: context.resolve, complete: context.editor.complete,
+            clipboardRead: (bytes) => this._chatClipboardRead(bytes), clipboardWrite: (bytes) => this._chatClipboardWrite(bytes),
             refreshTechnology: () => refreshClientChatRankPrefix(client, this._gameAssets, surface) };
     }
 
@@ -1786,8 +1787,10 @@ export class Netstorm {
 
     // 입력줄이 받는 문자 키인지이다: 한 글자(Shift 만 허용)와 Backspace·Delete·Enter·좌우·Home·End. 그 밖의 키(F 키·ESC 등)는 평소 단축키 경로를 쓴다. (2026-11-22 WB04-E1170)
     _isChatTextKey(event) {
-        if (event.ctrlKey || event.altKey || event.metaKey || event.isComposing) return false;
-        return (typeof event.key === 'string' && event.key.length === 1) || ['Backspace', 'Delete', 'Enter', 'ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key);
+        if (event.altKey || event.metaKey || event.isComposing) return false;
+        // 원본 편집기의 클립보드 키는 Ctrl+Insert(복사, 선택이 없으면 전체)·Shift+Insert(붙여넣기)·Shift+Delete(잘라내기)이다(text-entry-gump.js). Ctrl+C/X/A 는 원본에 없다. Ctrl+V 는 브라우저 paste 사건(`_onPaste`)이 맡는다. (2026-11-22 WB04-E1178)
+        if (event.ctrlKey) return event.code === 'Insert' && !event.shiftKey;
+        return (typeof event.key === 'string' && event.key.length === 1) || ['Backspace', 'Delete', 'Insert', 'Enter', 'ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key);
     }
 
     // 입력 창이 열린 동안의 키 하나를 원본 입력 큐에 올린다(printable 문자·Backspace·Enter·방향/Home/End/Delete 가상 키). 브라우저 기본 동작과 게임 단축키로는 보내지 않는다.
@@ -1795,7 +1798,7 @@ export class Netstorm {
     _queueCampaignDialogKey(event, released) {
         if (event.isComposing || this._clientComposing || !this._clientInputQueue) return;
         const pointer = this._input.pointer;
-        if (event.key === 'Tab' || event.key === 'Backspace' || event.key === 'Enter' || event.key === 'Escape' || event.key === ' ' || (typeof event.key === 'string' && event.key.length === 1) || /^(?:Arrow|Home|End|Delete)/u.test(event.key ?? '')) event.preventDefault();
+        if (event.key === 'Tab' || event.key === 'Backspace' || event.key === 'Enter' || event.key === 'Escape' || event.key === ' ' || (typeof event.key === 'string' && event.key.length === 1) || /^(?:Arrow|Home|End|Delete|Insert)/u.test(event.key ?? '')) event.preventDefault();
         queueBrowserVirtualKeyEvent(this._clientInputQueue, event, pointer, released);
         if (!released) queueBrowserCharacterEvent(this._clientInputQueue, event, pointer);
     }
@@ -3437,12 +3440,25 @@ export class Netstorm {
         if (dialog.wheel(event.deltaY)) this._mainMenu.dirty = true;
     }
 
+    // 채팅 입력줄 편집기의 복사 장치이다(원본 clipboardWrite): 선택(없으면 전체) 바이트를 표시 부호화에서 해독해 앱 사본에 두고 브라우저 클립보드에도 쓴다(사용자 제스처 안에서만 허용되며 실패해도 사본은 남는다). (2026-11-22 WB04-E1178)
+    _chatClipboardWrite(bytes) {
+        const end = bytes.indexOf(0), text = displayTextCodec.decode(bytes.subarray(0, end < 0 ? bytes.length : end));
+        this._chatClipboard = text; try { globalThis.navigator?.clipboard?.writeText?.(text)?.catch?.(() => {}); } catch { /* 클립보드 쓰기를 못 해도 앱 사본으로 계속한다. */ }
+    }
+
+    // 도우미 `Paste` 항목·편집기 붙여넣기가 읽는 클립보드 사본이다(마지막 복사·붙여넣기 본문). 브라우저 클립보드는 비동기라 동기 읽기 장치는 앱 사본만 쓴다. 256바이트 NUL 문자열로 채운다. (2026-11-22 WB04-E1178)
+    _chatClipboardRead(bytes) {
+        const encoded = displayTextCodec.encode(this._chatClipboard ?? ''), length = Math.min(encoded.length, bytes.length - 1);
+        bytes.fill(0, 0, Math.min(bytes.length, 256)); bytes.set(encoded.subarray(0, length)); bytes[length] = 0;
+    }
+
     // 붙여넣기 사건을 활성 입력창(채팅 입력줄·Send X 숫자 창)의 확정 문자로 바꿔 입력 큐에 올린다. 한 줄 입력이므로 줄바꿈은 공백으로 바꾸고 원본 입력줄 한도(128)로 자른다. 입력창이 없으면 기본 동작에 맡긴다.
     // 입력줄의 길이·금지 문자 규칙은 문자 입력 경로가 그대로 적용한다. (2026-11-22 WB04-E1175)
     _onPaste(event) {
         if (this._clientNativeInputEnabled || !(this._campaignInputDialogOpen() || this._campaignChatInputActive())) return;
         const text = String(event.clipboardData?.getData('text/plain') ?? '').replace(/[\r\n\t]+/gu, ' ').slice(0, 128);
         event.preventDefault(); if (!text) return;
+        this._chatClipboard = text;
         const pointer = this._input.pointer;
         try { if (!queueCommittedText(this._clientInputQueue, text, pointer.x | 0, pointer.y | 0)) throw new Error('붙여넣기 입력 큐 공간 부족'); } catch (error) { reportGameError('paste', error, { state: this._state }); }
     }

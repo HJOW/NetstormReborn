@@ -79,7 +79,8 @@ export function createClientProductionMenu(root, session, game, data, fonts, scr
     const chat = devices.chat ? new ClientChatWindow(root, game, fonts, screen, { scrolling: title, buffers, background, menu, globals: devices.chat.globals, backgroundType },
         { now: devices.now, poll: devices.poll, sound: devices.sound, baseHandle: devices.baseHandle, translate: devices.translate, changed: devices.changed, config: devices.chat.config,
             read: devices.chat.read, recipient: devices.chat.recipient, sendChat: devices.chat.sendChat, resolve: devices.chat.resolve, log: devices.chat.log,
-            dotCommands: devices.chat.dotCommands, complete: devices.chat.complete, refreshTechnology: devices.chat.refreshTechnology }) : null;
+            dotCommands: devices.chat.dotCommands, complete: devices.chat.complete, refreshTechnology: devices.chat.refreshTechnology,
+            clipboardRead: devices.chat.clipboardRead, clipboardWrite: devices.chat.clipboardWrite }) : null;
     return { gameMenu, knowledge, warnings, chat, open: (item, point) => about.open(item, point), openPriest: (sid, event) => priestOpen?.supports(sid) ? priestOpen.open(sid, event) : 0,
         openFactory: (sid, event) => factoryOpen?.supports(sid) ? factoryOpen.open(sid, event) : 0,
         openObject: (sid, event) => objectOpen?.supports(sid) ? objectOpen.open(sid, event) : 0,
