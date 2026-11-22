@@ -408,6 +408,10 @@ export class RawSurfaceWorld {
         // 장기 현재 번호를 두 번 읽고 같은 World 의 공통 생성자/진단을 사용한다.
         this.#dependencies.bindCreation(this.#factory, () => aux.dependFormType, assertion);
         this.#dependencies.bindUnpop((sid) => this.#factory.unpopForm(sid));
+        // 원문 Native 의 조회/제거 시작 진단(Squidfinder.cpp 0x158): 점검 모드이고 메타맵이 아니며 부모가 dead 인데 boss 가 아니면 표시한 뒤 계속한다. 이 연결로 Depend 조회/제거/통지가 원문 진단을 표시 후 계속하는 모드가 된다. (2026-11-22 WB04-E1217)
+        this.#dependencies.bindNativeFind((parent) => {
+            if (checking() && !storage.ownerMode.challenge && (pool.slot(parent)[11] & 2) && !authority.boss) assertion('inMetamapMode || !cont.isDead() || boss || yesIKnowThatIShouldntLookInsideMyselfDuringADestroy', '\\Ns\\O\\Squidfinder.cpp', 0x158);
+        });
         const decay = {
             destroy: (sid, flags) => { void this.destroy(sid, flags); },
             notifySurface: (sid) => this.#building.notifySurface(sid),

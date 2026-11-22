@@ -79,6 +79,8 @@ export class DependFormHost {
     #factory = null;
     #dependType = null;
     #creationAssertion = null;
+    // Native 연결의 FormFinder 시작 진단이다(null 이면 독립 오류 계약). (2026-11-22 WB04-E1217)
+    #beforeFind = null;
 
     // 다른 풀의 삭제기를 거부한다.
     constructor(pool, destroy, { notice = null, fallback = {}, transmit = null } = {}) {
@@ -107,6 +109,12 @@ export class DependFormHost {
         this.#factory = factory;
         this.#dependType = dependType;
         this.#creationAssertion = assertion;
+    }
+
+    // 실제 World(원문 Native)가 연결하면 조회/제거/통지가 원문 진단을 표시하고 계속한다. beforeFind(parent)는 FormFinder 시작 진단(Squidfinder.cpp 0x158)이다. 연결하지 않은 독립 입력은 기존 오류 계약을 유지한다. (2026-11-22 WB04-E1217)
+    bindNativeFind(beforeFind) {
+        if (beforeFind !== null && typeof beforeFind !== 'function') throw new TypeError('DependForm 조회 진단은 함수여야 합니다.');
+        this.#beforeFind = beforeFind;
     }
 
     // 검색/금지 비교와 각 Create 가 읽는 현재 전체 Depend TYPE 이다.
@@ -140,6 +148,18 @@ export class DependFormHost {
             if (parent < 5 || parent >= pool.capacity || parent === pool.layout.predictableFirst || (pool.slot(parent)[STATE] & FREE)) throw new Error('DependForm 부모 상태 오류');
         }
         if (watcher === watched || pool.slot(watcher)[TYPE] === this.#currentDependType() || pool.slot(watched)[TYPE] < FIRST_ASSET_TYPE) throw new Error('DependForm 감시 대상 타입 오류');
+    }
+
+    // Native remove 의 다섯 진단(Squid.cpp 0xb48 watcher 유효·0xb49 watched 유효·0xb4b watcher 가 Depend 아님·0xb4c watched 가 Form 아님·0xb4e 서로 다름)을 순서대로 표시하고 FormFinder 시작 진단을 부른다. 표시 장치가 없으면 명시 오류이다. (2026-11-22 WB04-E1217)
+    #nativeRemoveChecks(watcher, watched) {
+        const pool = this.#pool; const assertion = this.#creationAssertion;
+        if (typeof assertion !== 'function') throw new Error('Native Depend 제거의 실제 진단 미연결');
+        if (!watcher || watcher >= pool.capacity) assertion('watcher.isValid()', SQUID_CPP, 0xb48);
+        if (!watched || watched >= pool.capacity) assertion('watched.isValid()', SQUID_CPP, 0xb49);
+        if (pool.slot(watcher)[TYPE] === this.#currentDependType()) assertion('watcher.getType() != dependFormType', SQUID_CPP, 0xb4b);
+        if (pool.slot(watched)[TYPE] < FIRST_ASSET_TYPE) assertion('!watched.isForm()', SQUID_CPP, 0xb4c);
+        if (watcher === watched) assertion('watcherSid != watchedSid', SQUID_CPP, 0xb4e);
+        this.#beforeFind(watched);
     }
 
     // 004b1510: watcher 쪽을 먼저 만들고 부착한다. 공장이 없으면 삭제기의 TYPE 표로 독립 공장을 만든다(고정 VT 경로를 추가하지 않음).
@@ -183,10 +203,11 @@ export class DependFormHost {
         return partner ? this.#forms.parent(partner) : 0;
     }
 
-    // watched 의 체인에서 현재 Depend TYPE 이고 상대 부모가 watcher 인 첫 Form 이 있는지 본다(free/dead/void 필터 없음).
+    // watched 의 체인에서 현재 Depend TYPE 이고 상대 부모가 watcher 인 첫 Form 이 있는지 본다(free/dead/void 필터 없음). Native 연결에서는 범위 확인 대신 FormFinder 시작 진단을 먼저 표시한다.
     has(watched, watcher) {
         const pool = this.#pool;
-        if (!watched || watched >= pool.capacity) throw new RangeError('DependForm 조회 부모 번호 오류');
+        if (this.#beforeFind) this.#beforeFind(watched);
+        else if (!watched || watched >= pool.capacity) throw new RangeError('DependForm 조회 부모 번호 오류');
         const visited = new Set();
         let current = word(pool.slot(watched), HEAD);
         // 후보를 판정하기 전에 next 를 저장한다.
@@ -203,9 +224,10 @@ export class DependFormHost {
     // watched 가 dead 면 아무것도 하지 않고, 아니면 맞는 모든 감시 Form 을 같은 삭제기로 지운다(삭제가 슬롯을 반납해도 저장한 next 로 계속).
     remove(watcher, watched, flags = 0) {
         const pool = this.#pool;
-        if (!watched || watched >= pool.capacity) throw new RangeError('DependForm 제거 부모 번호 오류');
+        if (!this.#beforeFind && (!watched || watched >= pool.capacity)) throw new RangeError('DependForm 제거 부모 번호 오류');
         if (pool.slot(watched)[STATE] & DEAD) return;
-        this.#parents(watcher, watched);
+        if (this.#beforeFind) this.#nativeRemoveChecks(watcher, watched); // 원문은 인자 이상을 오류로 바꾸지 않고 표시한 뒤 현재 필드로 계속한다.
+        else this.#parents(watcher, watched);
         const visited = new Set();
         let current = word(pool.slot(watched), HEAD);
         // next 를 먼저 저장하고 맞는 Form 을 지운다.
@@ -228,7 +250,11 @@ export class DependFormHost {
             if (typeof this.#notice !== 'function') throw new Error('DependForm watcher 통지 경계 필요');
             this.#notice(parent, watched, form);
         }
-        if (word(this.#pool.slot(form), WATCHED)) throw new Error('DependForm 통지 뒤 watchedFid 오류');
+        if (word(this.#pool.slot(form), WATCHED)) {
+            // Native 연결의 진단은 표시 뒤 정상 복귀한다(Squid.cpp 0xadf). 독립 입력은 기존처럼 중단한다.
+            if (this.#beforeFind && typeof this.#creationAssertion === 'function') this.#creationAssertion('watchedFid == 0', SQUID_CPP, 0xadf);
+            else throw new Error('DependForm 통지 뒤 watchedFid 오류');
+        }
     }
 
     // 가상 +0x10: 공통 삭제(상대 먼저 삭제→자신 Unpop→SID 반납)를 같은 훅으로 실행한다.
