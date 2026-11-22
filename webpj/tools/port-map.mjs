@@ -51,6 +51,8 @@ const REBASELINE_CLASSES = JSON.parse(fs.readFileSync(path.join(REPO_ROOT, 'webp
 // 각 규칙의 reason 은 근거(cpppj 머리 주석·CMake 주석·호출 위치)를 줄여 쓴 것이며 상세는 docs/webpj-port-map-20261106.md 3절에 있다.
 // 단독 미션이 실제로 지나는 코드는 이름이 멀티플레이 같아도 port 다(LEFT_JOBS.webpj.md 1절 경계). (2026-11-06 WB02-G)
 export const RULES = Object.freeze([
+    // 지식(NSInfo) 준비 창의 메타 배치·플레이어 입력·버튼 그리기는 멀티플레이/메타맵 준비 창 전용이다. 단독 미션에서는 부착이 화면 배치 없이 끝나고 원본 단독 미션 화면에도 없다(docs/webpj-nsinfo-scope-20261122.md). (2026-11-22 WB04-E1176)
+    { id: 'mp-nsinfo', class: 'exclude-mp', names: ['HudNsInfoMeta', 'HudPlayerButtonDraw', 'NativeNsInfoInput', 'NativePlayerInfoInput'], reason: 'NSInfo(멀티/메타 준비 창)의 메타 배치·플레이어 입력·버튼 그리기. 단독 미션에서는 화면에 나오지 않는다(E1171)' },
     { id: 'rebaseline-port', class: 'port', keys: REBASELINE_CLASSES.port, reason: '후보 기준선의 단독 공통 또는 스커미시 이식 경로(E498~E505)' },
     { id: 'rebaseline-adapt', class: 'adapt', keys: REBASELINE_CLASSES.adapt, reason: '후보 기준선의 웹 플랫폼 대체 경계(E498~E505)' },
     { id: 'rebaseline-edit', class: 'exclude-edit', keys: REBASELINE_CLASSES['exclude-edit'], reason: '후보 기준선의 편집기 전용 경로(E498~E505)' },

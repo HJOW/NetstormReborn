@@ -196,8 +196,8 @@ cpppj/src/client/HudDividerInput.cpp	port	www/ui/hud-divider-input.js	1f00a25a	p
 cpppj/src/client/HudDock.cpp	port	www/ui/hud-dock.js	1f00a25a	port	[client-default] WB04-E470: HUD divider(HudDividerNode 0x11c·HudDividerGump 생성/슬레이브 10칸 등록/재배치 1·2·4·8 관계)와 HudDock(표준 배치 등록·HUD 모드 1/3/4·채팅 토글/크기·이동/크기 변경의 지도 영역 갱신)을 이식, 원본 2,150행 첫 실행 전체일치, 독립 시험 10건, 기준선 뒤 변경 없음. 실제 Uber 필드 연결(HudDockNodeView)은 UberHud/UberRootGump 이식 때 함수 형태 nodes 로 연결. / WB04-E1082: 지식 패널 공장이 앱에 연결되기 전에는 지식 토큰 0이므로 HUD 모드 1/3/4의 지식 플래그 쓰기만 건너뛴다(그 밖의 순서·값은 동일)
 cpppj/src/client/HudNsInfo.cpp	port	www/ui/hud-ns-info.js	1f00a25a	port	[client-default] WB04-E444 HudNsInfo(attach: 기본 부착→현재 배경 Push→폭/높이(float32 기본 크기·배경 표시 크기=기본×배경 배율 float32, 축마다 현재 배경 재조회)→배경 부착(0,0,token,0)→메타맵·플레이어 인식 둘 다 켜져야 전체 배치·값 객체/조회 함수 모두 소비 시점 직접 읽기·생성자 TypeError/저장소·배경 없음 Error) 이식. WB04-E488: 원본 10.78 독립 관측 310행(8노드 raw 전체·전역·호출 순서·부분 중단 8행)을 tests/hud-nsinfo-native-fixtures.test.mjs 가 첫 실행 전체일치로 대조(이전의 "전용 PE fixture 없음"은 오기였다); 기준선 뒤 변경 없음; 남음: 메타맵 전체 배치 본문(0047ea71 이후)
 cpppj/src/client/HudNsInfoCreate.cpp	port	www/ui/hud-ns-info-create.js	1f00a25a	port	[client-default] WB04-E444 HudNsInfoCreate(createHidden→construct 전체 자식 생성 순서: 배경→명단(스크롤·textFlags |8·scrollable/slider)→제목(zone 형식·서버 이름 formatZone·parseScroll)→위/아래 구분선→BattleInfo(22쌍 [0,1]·모드 2·세 글)→플레이어 8개(스크롤 글·16×15 특수 버튼 +ac|6·마스터 글·Start 돌·TYPE 0 진단 1912)·종류 signed BYTE 부호 확장·visible 비트는 명단/제목/구분선/전투만 끔·0x800·할당 실패 시 하위 생성자 생략과 0 토큰 부착 거부·attachPlayer/attachBattle 공통 부착 뒤 메타 관문) 이식. WB04-E493: 원본 10.78 독립 관측 170행(다섯 생성의 전체 할당 블록·문자열·전역·호출 순서·부분 중단 50행)을 tests/hud-nsinfo-create-native-fixtures.test.mjs 가 첫 실행 전체일치로 대조(이전의 "전용 PE fixture 없음"은 오기였다); 기준선 뒤 변경 없음; 남음: 메타맵 전체 배치·RawNsInfoContext 연결
-cpppj/src/client/HudNsInfoMeta.cpp	port			todo	[rebaseline-port]
-cpppj/src/client/HudPlayerButtonDraw.cpp	port			todo	[rebaseline-port]
+cpppj/src/client/HudNsInfoMeta.cpp	exclude-mp			-	[mp-nsinfo]
+cpppj/src/client/HudPlayerButtonDraw.cpp	exclude-mp			-	[mp-nsinfo]
 cpppj/src/client/ImageGump.cpp	port	www/ui/image-gump.js;www/ui/client-image-gump.js	1f00a25a	port	[client-default] WB04-E441 ImageGump(construct 공통 기본 생성+종류 3·setFrame 헤더 폭/높이 float32 기본 크기+배율 표시 크기·기준점=(헤더−TYPE) float32·draw 단위 배율 비트 검사/모드 4 그림자 색표(오프셋·단위 y-1)/모드 1·2 선택·비활성 색표/owner 색표(owner>0, 단위+모드 8 이면 생략)/ftol 기준점·16.16 배율·hit 요청 ftol 검사점·기준점·attach 위임)와 bindImageGumpAssets(TYPE 70부터→SHP 블록·실제 Squid 헤더·프레임 수=클러스터×(0x440000 이면 2))·ImageGumpPixelTarget(색표 공급자 복사·일반/배율 VFX·특수 프레임 생략·200×200 적중 버퍼 클램프/보정) 이식. 전용 PE fixture 없음(소스 계약·손 계산·실제 TypeTable/SHP/GumpPixelTarget); 기준선 뒤 변경 없음; 남음: 생산 아이콘 창 연결
 cpppj/src/client/IndexedBitmapFile.cpp	exclude-host			-	[host-capture]
 cpppj/src/client/InputEvent.cpp	port	www/core/input-queue.js	225553df	port	[client-default] WB04-C3(40칸 입력 큐) / WB04-E507 3.6③ / E923: 확정 문자 원자적 일괄 삽입과 여유 칸을 구현했다. 브라우저 확정 문자 연결은 잔여.
@@ -280,8 +280,8 @@ cpppj/src/client/NativeMetaScene.cpp	exclude-mp			-	[rebaseline-mp]
 cpppj/src/client/NativeMetaSpriteDraw.cpp	exclude-mp			-	[rebaseline-mp]
 cpppj/src/client/NativeMetaSpriteRefresh.cpp	port			todo	[rebaseline-port]
 cpppj/src/client/NativeMetaState.cpp	exclude-mp			-	[rebaseline-mp]
-cpppj/src/client/NativeNsInfoInput.cpp	port			todo	[rebaseline-port]
-cpppj/src/client/NativePlayerInfoInput.cpp	port			todo	[rebaseline-port]
+cpppj/src/client/NativeNsInfoInput.cpp	exclude-mp			-	[mp-nsinfo]
+cpppj/src/client/NativePlayerInfoInput.cpp	exclude-mp			-	[mp-nsinfo]
 cpppj/src/client/NativeShapeFile.cpp	adapt	www/assets/shapes.js	1f00a25a	port	[adapt-file] SHP 읽기(웹 대체) / WB04-E272: ShapeDatabase 가 GameFiles 바이트 위에서 view 를 만듦. 직접 map 수명 웹 제외
 cpppj/src/client/NativeSpring3d.cpp	exclude-mp			-	[rebaseline-mp]
 cpppj/src/client/NewFortManagerDevices.cpp	exclude-edit		a328ac1f	-	[edit-new-fort] 3.6①(a328ac1f): 사용자 홈 UTF-8 경로 변환(Edit 작업본)

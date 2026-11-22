@@ -14,3 +14,7 @@ Uber 루트의 `createKnowledge`가 만드는 NSInfo(원문 0047ca50 계열, `ui
 - 인계의 "지식(NSInfo) 패널 공장" 항목을 웹 범위 밖으로 닫는다. `HudNsInfoMeta`·`NativePlayerInfoInput`·`NativeNsInfoInput`·`HudPlayerButtonDraw`의 "단독 경로 확인"도 같은 이유로 대상이 아니다(메타 전용). 이미 이식된 `ui/hud-ns-info*.js`는 소스 계약 시험으로 남기고 앱에는 연결하지 않는다.
 - 멀티플레이 UI를 구현하게 되면 그때 `createKnowledge`와 메타 Player 메뉴(`View Player Info`, [E1167](webpj-player-menu-reachability-20261122.md))를 함께 연결한다.
 - 기준선 뒤 cpppj 변경 없음(`HudNsInfo.cpp`·`UberHud.inc`).
+
+## 대응표 정리(E1176)
+
+- 위 판정에 따라 `tools/port-map.mjs`에 `mp-nsinfo`(exclude-mp) 규칙을 재기준선 규칙 앞에 더해 `HudNsInfoMeta`·`HudPlayerButtonDraw`·`NativeNsInfoInput`·`NativePlayerInfoInput` 네 단위(407줄)를 이식 대상 todo에서 제외로 옮겼다. 재기준선 문서([E498~E505](webpj-rebaseline-meta-20261115.md))가 "5-B·6에서 단독 경로를 확인"으로 남겼던 항목이며, 공유 슬롯 계산 `RawBattleOptionSlots`는 이식 대상으로 유지한다. `tests/port-map.test.mjs`의 후보 신규 단위 분류 시험은 이 네 키의 예외를 명시한다. 남은 양은 137단위·31,863줄 → 133단위·31,456줄이다.
