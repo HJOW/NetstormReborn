@@ -103,5 +103,5 @@ public sealed class ShrapnelFrameHooks
     /// <summary>소진을 실제41bf10(this,0)에 전달한다.</summary>
     public Action? RemoveForm { get; set; }
     /// <summary>함수 사본을 보관하고 캡처한 같은 외부 장치는 빌린다.</summary>
-    internal ShrapnelFrameHooks Copy() => new() { Reserve = Reserve, Release = Release, Invalidate = Invalidate, Pixel = Pixel, RemoveForm = RemoveForm };
+    public ShrapnelFrameHooks Copy() => new() { Reserve = Reserve, Release = Release, Invalidate = Invalidate, Pixel = Pixel, RemoveForm = RemoveForm };
 }

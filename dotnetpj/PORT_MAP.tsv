@@ -1525,3 +1525,10 @@ cpppj/src/o/ShrapnelVisualSystem.cpp	Netstorm.Core/Original/ShrapnelVisualSystem
 cpppj/src/o/RawPlainWorkshopCapture.h	Netstorm.Core/Original/RawPlainBuildingCapture.cs	59ed435c26d274be5bc028572c4fc15b592cfd29	port
 cpppj/src/o/RawPlainWorkshopCapture.cpp	Netstorm.Core/Original/RawPlainBuildingCapture.cs	59ed435c26d274be5bc028572c4fc15b592cfd29	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Core/Original/RawPlainBuildingCapture.cs	59ed435c26d274be5bc028572c4fc15b592cfd29	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.Shrapnel.cs	5bfd5c8df4aa5a8645ddfdf286fe168e16cd155f	port
+cpppj/src/client/RawCampaignParticles.cpp	Netstorm.Client/Host/HostSession.Shrapnel.cs	5bfd5c8df4aa5a8645ddfdf286fe168e16cd155f	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.DropIsland.cs	5bfd5c8df4aa5a8645ddfdf286fe168e16cd155f	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Game/HostMissionShrapnel.cs	5bfd5c8df4aa5a8645ddfdf286fe168e16cd155f	port
+cpppj/src/client/RawCampaignParticles.cpp	Netstorm.Game/HostMissionShrapnel.cs	5bfd5c8df4aa5a8645ddfdf286fe168e16cd155f	port
+cpppj/src/client/RawCampaignParticles.h	Netstorm.Game/HostMissionShrapnel.cs	5bfd5c8df4aa5a8645ddfdf286fe168e16cd155f	port
+cpppj/src/o/SquidFormDispatch.cpp	Netstorm.Client/Host/HostSession.StateDeletion.cs	5bfd5c8df4aa5a8645ddfdf286fe168e16cd155f	port

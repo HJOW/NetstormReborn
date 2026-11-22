@@ -32,7 +32,7 @@ public sealed class ShrapnelLifetimeHooks
     /// <summary>같은두난수와시각의실제Prepare를호출한다.</summary>
     public Action<ShrapnelFrameFields, ShrapnelKind>? Prepare { get; set; }
     /// <summary>경계함수는값복사하고같은장치의수명은빌린다.</summary>
-    internal ShrapnelLifetimeHooks Copy() => new() { Reserve = Reserve, Create = Create, Pop = Pop, Attach = Attach, Depend = Depend, Capture = Capture, Prepare = Prepare };
+    public ShrapnelLifetimeHooks Copy() => new() { Reserve = Reserve, Create = Create, Pop = Pop, Attach = Attach, Depend = Depend, Capture = Capture, Prepare = Prepare };
 }
 
 /// <summary>PATCH004604a0·세파생/공통소멸의실제몸체다.</summary>

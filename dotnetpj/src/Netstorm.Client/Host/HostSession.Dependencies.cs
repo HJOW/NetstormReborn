@@ -22,12 +22,15 @@ public sealed partial class HostSession
         dependencies.BindCreation(_fortFactory!, GameAux.DependFormTypeBox,
             (expression, file, line) => throw new InvalidOperationException($"감시 생성 원본 진단: {expression} {file}:{line}"));
         dependencies.BindUnpop(_fortFactory!.UnpopForm);
-        dependencies.BindVirtualDestroy(BuildSessionDestroy("감시 가상 삭제", processes), parent =>
-        {
-            if (AiChecking.Read() != 0 && !OwnerMode.Challenge && (Pool.Slot(parent)[11] & 2) != 0 && !Gameplay.Authority.Boss)
-                throw new InvalidOperationException("감시 조회 원본 진단: inMetamapMode || !cont.isDead() || boss || yesIKnowThatIShouldntLookInsideMyselfDuringADestroy \\Ns\\O\\Squidfinder.cpp:0x158");
-        });
+        dependencies.BindVirtualDestroy(BuildSessionDestroy("감시 가상 삭제", processes), BeforeWorldDependencyFind);
         _worldDependencies = dependencies; return dependencies;
+    }
+
+    /// <summary>감시 조회 직전 같은 현재 checking/모드/서버와 부모 dead 비트를 읽는다.</summary>
+    private void BeforeWorldDependencyFind(int parent)
+    {
+        if (AiChecking.Read() != 0 && !OwnerMode.Challenge && (Pool.Slot(parent)[11] & 2) != 0 && !Gameplay.Authority.Boss)
+            throw new InvalidOperationException("감시 조회 원본 진단: inMetamapMode || !cont.isDead() || boss || yesIKnowThatIShouldntLookInsideMyselfDuringADestroy \\Ns\\O\\Squidfinder.cpp:0x158");
     }
 
     /// <summary>현재VT의실제+34를선택한다. 원본 빈ret8은 인자/소유자/서버를읽지않는다.</summary>
@@ -37,7 +40,13 @@ public sealed partial class HostSession
         if (RawSurfaceStorage.TryGetAssetDependencyMethod(table, out uint method))
         {
             if (method == 0x0041c100) return;
-            if (method == 0x0048f0a0) { BuildSessionDestroy("감시 자산", PlayerProcesses)(watcher, 0); return; }
+            if (method == 0x0048f0a0)
+            {
+                // 실제 파편 더미110의 통지는 같은 월드의 전체 가상10을 실행한다.
+                if (table == 0x50eb98 && _worldShrapnel is not null) DestroyWorldObject(watcher, 0);
+                else BuildSessionDestroy("감시 자산", PlayerProcesses)(watcher, 0);
+                return;
+            }
             throw new InvalidOperationException($"감시 자산의 실제 홈 통지 미연결: 0x{method:X8}");
         }
         if (table is 0x512110 or 0x512188 or 0x512208) return;

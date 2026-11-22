@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-22 · 사용자 요청으로 개발 재개 · 마지막 완료0.810(건물 캡처2,577·35h 작성336관측·집중98통과·대표3시작) · 다음0.811 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6) · cpppj 제품1326 / 11.01 · 전체 목표 미완료**
+**2026-11-22 · 사용자 요청으로 개발 재개 · 마지막 완료0.811(실제 파편·35h 본문/삭제 결선·집중219통과·대표3시작) · 다음0.812 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6) · cpppj 제품1326 / 11.01 · 전체 목표 미완료**
 
 현행 인계는 이 문서가 기준이다. 단위별 근거는 `docs/dotnet-canon-0NNN-*.md`이다. 0.733~0.797의 단위별 재개 연쇄·주제별 표 행과 1.1절 R4-6 단위별 완료 문장 원문은 [0.797 정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0797)에, 0.645~0.732의 단위별 완료 문장, 0.640 회귀 점검 상세, 0.546~0.676 완료 기록 원문은 [0.732 정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0732)에 있다. 0.600~0.635는 [0.635 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635), 0.613까지의 경과와 파일 계열별 체크 목록은 [0.613 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)에 있다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
@@ -19,15 +19,15 @@
 
 ### 0.1 재개 순서와 최근 완료 요약
 
-**재개 인계(2026-11-22).** 0.810에서 섬 조각95/157을 포함한 건물17쌍의 실제 Game 캡처 누락을 연결해 독립2,577입력 전체 픽셀이 일치했다. 기존 Net의35h 작성기는 이미 있어 중복 구현 없이 독립336관측과 원격 전용 방송을 검증했다. 신규Client8포함 Core29/Client69, 합계98통과·Release 빌드 오류0이며 같은 새 Game 대표3시작의 전체덤프/지표·원본1,392파일은0.808/0.809와 같고 실행6파일이 불변이다. 자료425/대응1522행이다. 파편 본체는0.809 완료, 실제 파편 Host/Game 장치·전체 가상 삭제와35h 수신은 다음0.811에 남는다. 현재17/26·M1 0/34이며 마지막 전체0.808은5,744통과/실패0, 다음 정기 전체는0.812다. [0.810](docs/dotnet-canon-0810-20261122.md)
+**재개 인계(2026-11-22).** 0.811에서 같은 Host/공장/Pop/감시/WorldRendering·실제 Game 캡처/dirty/clip/픽셀에 파편16을 연결했다.35h의46e940은 현재16.16 입력/건설 준비·장기 억제/그루터기·Variant2/낙하음/전체 삭제/FallWalker·기존20BYTE 원격 방송을 실행한다. BindWorldDeletion은 같은 현재 Host의 실제 삭제 본체/깊이를 확인해 State와 Runtime.Asset에 기존 분배기를 설치한다. 신규Client11을 포함 Core54/Client165, 합계219통과·대표3시작 종료0/전체덤프와지표0.808동일·원본1392/실행6불변이다. 자료425/대응1529행. 검사의 표면/더미5클래스 조립은 실제 기존 본체지만 일반 Root의 전체 Native 삭제 설치를 완료한 것은 아니다. 현재18/26·M1 0/34이며 다음0.812는 정기 전체 회귀, 그 뒤 전체 삭제/Root와 나머지8본문을 계속한다. [0.811](docs/dotnet-canon-0811-20261122.md)
 
-1. **0.811 — 실제 파편 Host/전체 삭제와35h 섬 정리.** 0.809의 전체 파편 본체/수명과0.810의 실제 건물 캡처·기존20BYTE 작성 검증은 완료했다. 같은 WorldRendering/공장/Pop/감시·게임난수/CRT/현재 시각·실제 캡처/카메라/픽셀 장치에 설치한다. 감시 쌍의 BuildSessionDestroy라는 일반 Pre/Post를 전체 가상 삭제로 대신하지 않는다. 기존 장기 Storage의 DestroyAsset/ProcessFormDispatch/CommonDeletion을 현재 Runtime/Root에 연결할 때 같은 풀·공장·Host·삭제 깊이와 실제 파생 장치를 확인한다. Source AddShrapnel은 별도 시각/카메라 갱신 없이 bad_alloc만 null로 바꾸므로 프레임 준비 순서도 보존한다. 이어46e940의 현재16.16 좌표/flags/owner와 PrepareBuilding→DropIsland, 장기 IslandDropBlocked/IslandStumpType·Authority/BridgeState·Variant2/낙하 음향/전체 삭제/FallWalker/검증한20BYTE 원격 전송을 연결한다. 현재 private 밀어내기 본체는Displace 전용이므로 그대로 완료로 세지 않는다. 재개 검토는extracted/dotnet-0810/next-0811.md와0.809/next-0810.md다. 나머지9본문/전체26F·Root를 계속하며 다음 정기 전체는0.812다.
+1. **0.812 — 정기 전체 회귀 후 전체 Native 삭제/Root 계속.** 0.811의 실제 파편 Host/Game·35h 부모/장치는 완료했다. 먼저 같은 최종 제품으로 전체 Assets/Core/Client와65시작·원본 전체해시/자료/검사 이름을0.808에 대조한다. 다음0.813부터 기존 장기 Storage의 DestroyAsset/ProcessFormDispatch/CommonDeletion을 실제 현재 Runtime/Root에 설치한다. 현행 일반 typed Host는 별도 현재 RawSquidDestroy를 대여하고 Storage Native 기본은 전송/진단 계약을 요구하므로 두 삭제 깊이를 같은 것으로 간주하지 않는다. 검사의5클래스 조립을 일반 제품 전체 삭제로 복사하거나 일반 Pre/Post 완료로 대체하지 않는다. 실제 파생·선택/UI·AI·음향·송수신·복귀 진단과 같은 풀/공장/Host/깊이 공급을 확인한다. 새 BindWorldDeletion은 동일 본체를 검증하며 기존 Meta 전용 BindStateDeletion과 구별한다. 소진/캡처 실패 정리는 Runtime.Asset도 필요하다. 상세 재개는extracted/dotnet-0811/next-0812.md다.
 
-2. **NativeGameplay 26F 고정 수신 나머지.** 현재 API `BindSquidPacketDevices`·`ReceiveFixedGameplayPacket`에 2c/7a/4a/4b/6a/7e/33/34/70/30/2d/2e/65/53/62/5b/31의17개 entry가 실제 본체로 연결됐다([0.790](docs/dotnet-canon-0790-20261121.md)·0.791·[0.801](docs/dotnet-canon-0801-20261122.md)·[0.806](docs/dotnet-canon-0806-20261122.md)). 나머지9고정 본문(35/38/39/3a/3b/3c/73/74/86)과 전체26F 설치/Bind 검증, Root의 실제 언어/이름/ScreenSize/FormPacket/수신 장치 공급, 같은 Host의 파생 수신/변경/전체 가상 삭제를 현재 Runtime·저장소 전송 관문과 함께 잇는다. Dude 전용PostPop·사제 보호막/낙하 음향 등 기존 큰 경계도 실제 설치해야 한다. 검토한26행·본문·누락 하위 모듈과 기존 독립Path writer 자료는extracted/dotnet-0788/next-0789.md에 있다. 순수observer나 구Mission세션·일반삭제Pre/Post로 결선을 대신하지 않는다.
+2. **NativeGameplay 26F 고정 수신 나머지.** 현재 API `BindSquidPacketDevices`·`ReceiveFixedGameplayPacket`에 2c/7a/4a/4b/6a/7e/33/34/70/30/2d/2e/65/53/62/5b/31/35의18개 entry가 실제 본체로 연결됐다([0.790](docs/dotnet-canon-0790-20261121.md)·0.791·[0.801](docs/dotnet-canon-0801-20261122.md)·[0.806](docs/dotnet-canon-0806-20261122.md)). 나머지8고정 본문(38/39/3a/3b/3c/73/74/86)과 전체26F 설치/Bind 검증, Root의 실제 언어/이름/ScreenSize/FormPacket/수신 장치 공급, 같은 Host의 파생 수신/변경/전체 가상 삭제를 현재 Runtime·저장소 전송 관문과 함께 잇는다. Dude 전용PostPop·사제 보호막/낙하 음향 등 기존 큰 경계도 실제 설치해야 한다. 검토한26행·본문·누락 하위 모듈과 기존 독립Path writer 자료는extracted/dotnet-0788/next-0789.md에 있다. 순수observer나 구Mission세션·일반삭제Pre/Post로 결선을 대신하지 않는다.
 3. **R4-6 나머지와 R4 마감.** 위 둘 다음은 [1.1절 R4-6 남음](#r4-detail)의 전송·수신, Root 장치·UI, 표시·입력, 시작·수명 묶음을 잇고 R4-2~R4-5의 일치 대조, R4-7·R4-8(M1)로 넘어간다. 이어서 R5~R11과 후순위 요구사항(3절)을 진행한다. 다음 정기 전체 회귀는0.812다.
-4. **사용자 검사 범위(2026-11-22).** 캠페인1-1~1-5·스커미시에 한해 아군 AI 활성화로 포획/희생·특정 적 공격·시나리오 승리를 재현할 수 있다. 그 밖의 스테이지 해당 검사는 사용자 수동 확인으로 남긴다. 단순 진입/대기/생산/건설 검사는 진행한다. DN 자동 플레이의 실제 연결은 아직 없다. 원본1,392파일은0.810 대표3시작 전후와0.808 전체 장부 대조에서 불변이다. 마지막 전체65시작은0.808이다.
+4. **사용자 검사 범위(2026-11-22).** 캠페인1-1~1-5·스커미시에 한해 아군 AI 활성화로 포획/희생·특정 적 공격·시나리오 승리를 재현할 수 있다. 그 밖의 스테이지 해당 검사는 사용자 수동 확인으로 남긴다. 단순 진입/대기/생산/건설 검사는 진행한다. DN 자동 플레이의 실제 연결은 아직 없다. 원본1,392파일은0.811 대표3시작 전후와0.808 전체 장부 대조에서 불변이다. 마지막 전체65시작은0.808이다.
 
-**최근 완료 요약(0.639~0.810).** 단위별 완료 문장과 집중 검사 수는 보관본과 각 단위 문서에 있다. 완료 범위와 남은 일의 기준은 1.1·1.2절 체크 항목이다.
+**최근 완료 요약(0.639~0.811).** 단위별 완료 문장과 집중 검사 수는 보관본과 각 단위 문서에 있다. 완료 범위와 남은 일의 기준은 1.1·1.2절 체크 항목이다.
 
 | 주제 | 단위 | 핵심 | 남은 일 |
 | --- | --- | --- | --- |
@@ -35,7 +35,7 @@
 | 정기 처리 | 0.642·0.643·0.651·0.659 | 장식·Player·스프라이트·매몰 정기 본체와 세션 분배 | R4-4 |
 | 업그레이드·연구·생산 Deck | 0.666·0.667·0.682·0.683·0.685~0.687 | 업그레이드 요청/완료, 연구·생산 Deck·기술 표시의 실제 세션 연결, 58h 분배·연구 운반 | R4-5, [1.2](#r6-preports) |
 | 플레어·건설 | 0.669~0.671·0.673~0.675·0.677~0.679·0.681 | 플레어·건설 진행/표시 본체와 제품 장치·음향 | 1.2 |
-| 파편 선행 | 0.809~0.810 | 전체 Frame/Lifetime/System·실제 Host/Kernel/감시 쌍·독립1,196관측과 실제 Game 건물 캡처2,577/기존35h 작성336관측 일치 | 실제 Host/Game 파편 설치·전체 삭제/35h, 1.1 |
+| 파편·35h | 0.809~0.811 | 전체 본체/수명·독립1196관측·건물 캡처2577/기존 작성336관측·실제 Host/Game 파편/섬 정리와 같은 삭제 분배 설치 API | 일반 Root 전체 Native 삭제·캡처/월드 뷰와 나머지 고정 수신, 1.1 |
 | 로그인·전송·Client 전역 | 0.689~0.691·0.693~0.695·0.697~0.699·0.701~0.703·0.705·0.707·0.715 | 패킷·연결표·Poll·로그인/재접속·옵션·상태 전이·Clock과 장기 Client 전역 | R4-6 |
 | Runtime·Player 장기 수명 | 0.706·0.709~0.711·0.713·0.714·0.717~0.719 | 실제 Runtime 대여/반납, 장기 Player·Core·옵션 전역, 현재 Runtime pin | R4-6 |
 | Client 프레임·장기 Host | 0.721~0.723·0.725~0.727 | Clock/Frame 공유, 프레임 실행 순서, 장기 Surface·Host Runtime | R4-6 |
@@ -44,7 +44,7 @@
 | 커서·카메라·Renderer·Host 표시 | 0.749~0.751·0.753~0.755 | 커서 고정 데이터·수명·위치와 현재 checking 공유, 카메라 16DWORD·실제 snapshot, Renderer 장면/캐시/dirty·Native submit·288원문 출력, Renderer 공개·Camera 초기화·구름 token·현재 Surface·Root 실제 Cancel | Native Frame/Root UI/지도 provider, 전체 커서 효과/입력, CameraCommit/Present |
 | Chat 계열 | 0.757~0.759·0.761~0.763·0.765~0.767·0.769~0.771·0.773~0.775·0.777 | 실제 Subscriber·Chat 4800BYTE, manager·명령표·Chat 시작, 점 명령 분배, 제출·수신자·형식/제출 부모, Identity·일반 메시지/패킷, ChatWindow 상태·기하·전체 부모·공장/가상 분배, 공통 UI 소유권, 스타일 그림 출력, 중계·고정 등록, 장기 Client41h 수신 바인딩 | NativeRoot/HUD 창 생성·Enter, 공통 41h 전송 설치, 제출/송신 부모, Chat 명령 효과 |
 | Root 수신·전송 관찰기 | 0.778~0.779·0.781~0.783·0.785~0.787 | UI 수신 원문·실제 Root UI 수신(뉴스·알림), 장기 패킷 기록/Root 소유자, 기본 18행·송신 관찰기, 장기 설정/버전 응답, 3f/30/7a/5f/7d 관찰기, 69h 장기 목록, 장기 CS/7bh | 전체 기본 설치 부모, Root Source/Record/Sent, 435220 요청 reset, NativeMapView 공급자 |
-| 객체 패킷 수신·Host entry | 0.789~0.791·0.802~0.803·0.806 | 수신/변경/검증/압축/WORD 하위 본체, 실제 이름 83표·부착, Host 2c/7a/4a/4b·6a/7e/33/34/70의 실제 본문9개와변경/삭제5개·채집5bh·전체 개발자31h | 나머지9본문·전체 26F, Root ScreenSize/FormPacket·수신 설치 |
+| 객체 패킷 수신·Host entry | 0.789~0.791·0.802~0.803·0.806·0.811 | 수신/변경/검증/압축/WORD 하위 본체, 실제 이름 83표·부착, Host 2c/7a/4a/4b·6a/7e/33/34/70의 실제 본문9개와변경/삭제5개·채집5bh·전체 개발자31h·섬 정리35h | 나머지8본문·전체 26F, Root ScreenSize/FormPacket·수신 설치 |
 | 경로 Runtime·Data·본체·탐색 | 0.793~0.795·0.797~0.799·0.801 | 경로 Runtime·독립 관측, Data typed/Native 버퍼, Process 8종·전송 분배, BFS 탐색·Start/Cleanup 본체·Host 검색 공유, 건설 환불·Cleanup 하위·실제 SP 공유와 Halt/Arrival 본체·Host 부모 조립과전체Path/Start/Motion·30h | 제품Root전체장치설치와가상삭제 |
 | 정기 전체 회귀·L2 | 0.644부터 4단위마다(0.808까지) | 매회 실패 0·65실행 종료 0·원본 불변·M1 0/34 유지. 수집으로 드러난 미연결·순서 회귀를 0.644(AI 색 프레임·펜스)·0.680(플레어 분배)·0.684(시작 음향 순서)·0.688(Carrier 통지)에서 교정. 전체 검사 4,686건(0.644) → 5,744건(0.808) | 다음0.812 |
 

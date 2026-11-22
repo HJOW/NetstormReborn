@@ -32,6 +32,8 @@ public sealed class HostMissionBurning : IDisposable
     public RawShapeToBuffer Capture { get; }
     /// <summary>같은 실제 캡처·dirty 큐와 공통 표시 목록을 공유하는 건설 장치다.</summary>
     public HostMissionConstruction Construction { get; }
+    /// <summary>같은 현재 캡처/dirty/표면을 사용하는 실제 파편 장치다.</summary>
+    public HostMissionShrapnel Shrapnel { get; }
 
     /// <summary>같은 실제 타입/프레임·COL·SHP·소리장치를 세션의 단일연소 owner에 연결한다.</summary>
     [SupportedOSPlatform("windows")]
@@ -133,13 +135,14 @@ public sealed class HostMissionBurning : IDisposable
         Construction = new(session, startup, screen, Capture, Dirty, () => _viewBound, audio, definitions);
         session.BuildFlareWorldDevices(audio.PlayEffectAt);
         session.BuildFactoryUpgradeWorldDevices(audio.FactoryUpgradeHooks((kind, text) => ErrorLog.Note($"미션 업그레이드 종류{kind}: {text}")));
+        Shrapnel = new(session, screen, Capture, Dirty, () => _viewBound, audio);
     }
     /// <summary>실제 프레임 준비 위치에서 현재 원문시각/프레임번호를 공급한다. 커널 실행은 수행하지 않는다.</summary>
     public void PrepareFrame(double now, uint frame)
     {
         ObjectDisposedException.ThrowIf(_disposed, this);
         if (!double.IsFinite(now)) throw new ArgumentOutOfRangeException(nameof(now), "연소 현재 게임시각 오류");
-        FrameState.Now = now; Construction.FrameState.Now = now; _frame = frame;
+        FrameState.Now = now; Construction.FrameState.Now = now; Shrapnel.FrameState.Now = now; _frame = frame;
     }
     /// <summary>R5가 실제 카메라/월드viewport를 준비한 뒤 호출한다. 전체화면 크기를 임의 월드뷰로 쓰지 않는다.</summary>
     public void SetView(float cameraX, float cameraY, DisplayRect viewport, bool inset = false)
@@ -147,6 +150,7 @@ public sealed class HostMissionBurning : IDisposable
         ObjectDisposedException.ThrowIf(_disposed, this);
         FrameState.CameraX = cameraX; FrameState.CameraY = cameraY; FrameState.Viewport = viewport; FrameState.InsetViewport = inset; _viewBound = true;
         Construction.FrameState.CameraX = cameraX; Construction.FrameState.CameraY = cameraY;
+        Shrapnel.FrameState.CameraX = cameraX; Shrapnel.FrameState.CameraY = cameraY;
         // 같은 snapshot의 픽셀/월드/float 사본을 실제497490 본체로 함께 갱신한다.
         RawCameraView.SetPixels(_session.Gameplay.Camera.Snapshot, unchecked((int)cameraX), unchecked((int)cameraY));
     }
@@ -154,6 +158,6 @@ public sealed class HostMissionBurning : IDisposable
     public void Dispose()
     {
         if (_disposed) return;
-        Construction.Dispose(); _session.ReleaseBurningWorld(); if (OperatingSystem.IsWindows()) _memory.Dispose(); _disposed = true;
+        Shrapnel.Dispose(); Construction.Dispose(); _session.ReleaseBurningWorld(); if (OperatingSystem.IsWindows()) _memory.Dispose(); _disposed = true;
     }
 }

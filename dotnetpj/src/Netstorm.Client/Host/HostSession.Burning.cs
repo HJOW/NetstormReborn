@@ -92,6 +92,8 @@ public sealed partial class HostSession
     public void ReleaseBurningWorld()
     {
         EnsureRuntimeCanRelease();
+        ReleaseDropIslandWorld();
+        ReleaseShrapnelWorld();
         ReleaseConstructionWorld();
         _worldBurning?.Dispose(); _worldBurning = null; _worldDamageableBurning = null; _worldRendering = null;
     }

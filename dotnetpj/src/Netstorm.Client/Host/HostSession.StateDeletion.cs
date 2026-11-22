@@ -26,4 +26,19 @@ public sealed partial class HostSession
         if (_playerRecordsReleased || ProcessBindingsReturned()) throw new InvalidOperationException("State 반납 뒤 실제 가상 삭제 금지");
         return (_stateDeletion ?? throw new InvalidOperationException("State의 실제 Native World 가상 삭제 분배 미연결")).Destroy(sid, flags);
     }
+
+    /// <summary>파편/건설도 State와 같은 실제 전체 가상10 분배를 사용한다. 미설치를 일반 Pre/Post로 대체하지 않는다.</summary>
+    public void DestroyWorldObject(int sid, uint flags) => _ = DestroyForState(sid, flags);
+
+    /// <summary>같은 Host의 소진/실패 정리도 현재 전체 가상 분배로 보낸다. State 전용 설치와 구별한다.</summary>
+    public void BindWorldDeletion(RawSquidFormDispatch dispatch)
+    {
+        ArgumentNullException.ThrowIfNull(dispatch);
+        EnsureRuntimeCanRelease();
+        ProcessHostRuntimeBindings runtime = _playerProcessRuntime ?? throw new InvalidOperationException("월드 전체 삭제의 실제 프로세스 Runtime 미연결");
+        if (!ReferenceEquals(dispatch.DestroyBody, runtime.Destroy)) throw new ArgumentException("월드 전체 삭제의 실제 Host 삭제 본체/깊이 불일치", nameof(dispatch));
+        BindStateDeletion(dispatch);
+        runtime.Asset = dispatch.Hooks();
+        if (_worldDependencies is { } dependencies) dependencies.BindVirtualDestroy(DestroyWorldObject, BeforeWorldDependencyFind);
+    }
 }

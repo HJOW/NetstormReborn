@@ -77,6 +77,9 @@ public sealed class RawSquidFormDispatch
     /// <summary>월드·클라이언트가 같은 분배기를 공유하는지 확인할 때 쓴다.</summary>
     public RawSidPool Pool => _pool;
 
+    /// <summary>현재 Host와 같은 삭제 깊이/Unpop 본체인지 설치 위치에서 확인한다.</summary>
+    public RawSquidDestroy DestroyBody => _destroy;
+
     /// <summary>
     /// 가상 몸체의 효과·Unpop 두 경계가 함께 있어야 완전한 Form 등록으로 인정한다.
     /// 다른 풀·타입 범위 밖·중복 등록은 슬롯을 바꾸기 전에 거부한다.
