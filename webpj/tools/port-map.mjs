@@ -109,6 +109,8 @@ export const RULES = Object.freeze([
     { id: 'host-capture', class: 'exclude-host', names: ['RawCaptureSequence', 'ClientCaptureSequence', 'CaptureInput', 'RawIndexedBitmap', 'IndexedBitmapFile'], reason: '연속 화면 8비트 BMP 파일 저장(Capture 명령)' },
     { id: 'legacy-spatial', class: 'exclude-legacy', names: ['SquidSpatial'], reason: 'raw 풀 이전의 옛 std::map 공간 등록 모델. cpppj production 소비자는 없고(CMake 등록과 SpatialTests·PopTests 마지막 시험뿐) 같은 갱신은 SquidPop/SquidUnpop(raw 풀)이 대체해 웹은 raw 구현을 이식했다. 삭제하지 않은 옛 시험 fixture(spatial-x86)는 웹 대조에 쓰지 않는다' },
     { id: 'adapt-screen', class: 'adapt', names: ['Screen', 'ScreenPresentation', 'Cursor', 'ParticlePaletteMemory', 'GumpPointerBoundary', 'WindowTitle', 'TextClipboard'], reason: '화면 장치·표시 확대·하드웨어 커서·OS 입력 폴링·창 제목·클립보드. 웹은 Canvas/DOM 으로 대체' },
+    // 인트로 영상(CD 전용 Smacker, 10.78 설치본에는 없음)은 사용자가 웹 빌드에서 제외하기로 정했다(2026-11-22 WB04-E1202, docs/webpj-intro-movie-decision-20261122.md). 재생·수명·PCM 출력·Smacker 해독·영상 Gump 가 모두 이 영상을 위한 것이다.
+    { id: 'exclude-movie', class: 'exclude-host', names: ['RawMovieControls', 'MoviePlayback', 'MoviePcmOutput', 'MovieLifecycle', 'SmackerDecoder'], reason: 'CD 전용 인트로 영상 재생(Smacker). 웹 빌드에서 영상 제외로 결정(E1202)' },
     { id: 'adapt-sound', class: 'adapt', names: ['ClientAudio', 'SoundDevice', 'SoundMusicFile', 'SoundMusicRuntime', 'MoviePcmOutput', 'MovieTimer', 'SmackerDecoder', 'MovieLifecycle'], reason: 'DirectSound·WAVE 파일·음악 스레드·Smacker 디코더/PCM 출력. 웹은 Web Audio·영상 요소로 대체' },
     {
         id: 'adapt-file', class: 'adapt',
