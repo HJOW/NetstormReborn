@@ -621,4 +621,7 @@
   <ItemGroup>
     <None Include="../../../cpppj/tests/fixtures/sun-flyer-postpop-x86.tsv" Link="X86/sun-flyer-postpop-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/gunanimation-x86.tsv" Link="X86/gunanimation-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

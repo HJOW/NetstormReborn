@@ -1728,3 +1728,12 @@ cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.WindAvi
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.WindAviaryPackets.cs	1cdae36281dca2ce5d00b8d06dcabbf736994dfe	port
 cpppj/src/client/NativeGameplayPacketReceivers.cpp	Netstorm.Client/NativeGameplayPacketReceivers.WindAviary.cs	1cdae36281dca2ce5d00b8d06dcabbf736994dfe	port
 cpppj/src/client/NativeGameplayPacketReceivers.h	Netstorm.Client/NativeGameplayPacketReceivers.WindAviary.cs	1cdae36281dca2ce5d00b8d06dcabbf736994dfe	port
+cpppj/src/o/RawGunAnimation.cpp	Netstorm.Core/Original/RawGunAnimation.cs	831d58ce51c6a60dbf1a1603f1feda93d49f13ce	port
+cpppj/src/o/RawGunAnimation.h	Netstorm.Core/Original/RawGunAnimation.cs	831d58ce51c6a60dbf1a1603f1feda93d49f13ce	port
+cpppj/src/o/RawGunAnimation.cpp	Netstorm.Core/Original/RawGunAnimation.Data.cs	831d58ce51c6a60dbf1a1603f1feda93d49f13ce	port
+cpppj/src/o/RawGunAnimation.h	Netstorm.Core/Original/RawGunAnimation.Data.cs	831d58ce51c6a60dbf1a1603f1feda93d49f13ce	port
+cpppj/src/o/RawGunAnimation.cpp	Netstorm.Core/Original/RawGunAnimation.Types.cs	831d58ce51c6a60dbf1a1603f1feda93d49f13ce	port
+cpppj/src/o/RawGunAnimation.h	Netstorm.Core/Original/RawGunAnimation.Types.cs	831d58ce51c6a60dbf1a1603f1feda93d49f13ce	port
+cpppj/src/o/RawGunAnimation.cpp	Netstorm.Core/Original/GunAnimation.cs	831d58ce51c6a60dbf1a1603f1feda93d49f13ce	port
+cpppj/src/o/RawGunAnimation.h	Netstorm.Core/Original/GunAnimation.cs	831d58ce51c6a60dbf1a1603f1feda93d49f13ce	port
+cpppj/src/o/RawGameAuxState.h	Netstorm.Core/Original/RawGameAuxState.GunAnimation.cs	831d58ce51c6a60dbf1a1603f1feda93d49f13ce	port

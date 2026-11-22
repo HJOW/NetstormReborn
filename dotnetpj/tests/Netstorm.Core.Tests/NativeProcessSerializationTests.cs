@@ -8,6 +8,17 @@ namespace Netstorm.Core.Tests;
 /// <summary>기존 Dais/Path 본체를 실제 장기 저장소 기본 전송으로 호출한다.</summary>
 public sealed class NativeProcessSerializationTests
 {
+    /// <summary>실제총애니메이션VT가현재두헤더를고르고일반준비가역할/헤더를보존한다.</summary>
+    [Fact]
+    public void GunAnimationUsesCurrentNativeHeaderAndSameFormWriter()
+    {
+        var storage = Storage(); SquidProcessHost host = storage.Processes().Host(); int parent = storage.Pool.Allocate(SidAllocation.Server); storage.Pool.RawSlot(parent).Clear(); storage.Pool.RawSlot(parent)[10] = 128;
+        var state = new GunAnimationState { Now = 10, CurrentSunCannonType = storage.GameAux().SunCannonTypeBox }; var logic = new RawGunAnimation(storage.Pool, storage.Types, state, new()); var fields = new GunAnimationFields(0xa5); logic.Initialize(fields, GunAnimationKind.SunFire, 77, 78); var process = new GunAnimation(logic, fields, GunAnimationKind.SunFire);
+        Assert.Same(process, host.Attach(process, host.AnimationProcessType(true), parent, 0x10)); byte[] fire = storage.GameAux().FireAnimationHeader, rotate = storage.GameAux().RotateAnimationHeader; fire[0] = 0x73; fire[1] = 0x81; rotate[0] = 0x74; rotate[1] = 0x82; storage.GameAux().SunCannonTypeBox.Value = 77; storage.GameAux().ResetForGeneralWorld();
+        Assert.Same(fire, storage.GameAux().FireAnimationHeader); Assert.Same(rotate, storage.GameAux().RotateAnimationHeader); Assert.Equal(77u, storage.GameAux().SunCannonTypeBox.Value); byte[] packet = Enumerable.Repeat((byte)0xa7, 2048).ToArray();
+        Assert.Equal(25, host.WriteFormPacket(process.Form(), 1, packet, storage.GameAux().SquidTransmission)); Assert.Equal(0x81, packet[0]); Assert.Equal(0x73, packet[1]); Assert.Equal((uint)parent, BinaryPrimitives.ReadUInt32LittleEndian(packet.AsSpan(9))); Assert.Equal(0xa7, packet[25]);
+        BinaryPrimitives.WriteUInt32LittleEndian(process.Fields.Bytes, 0x50b260); Assert.Equal(25, host.WriteFormPacket(process.Form(), 1, packet, storage.GameAux().SquidTransmission)); Assert.Equal(0x82, packet[0]); Assert.Equal(0x74, packet[1]); Assert.Equal((uint)process.Form(), BinaryPrimitives.ReadUInt32LittleEndian(packet.AsSpan(4))); storage.Processes().Kernel().DrainOwnedForShutdown();
+    }
     /// <summary>표/진단과 실제 전송 콜백을 갖는 장기 저장소다. World는 만들지 않는다.</summary>
     private static RawSurfaceStorage Storage(Action<Memory<byte>>? broadcast = null)
     {
