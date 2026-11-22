@@ -70,7 +70,7 @@ function boundsOf(x, y, width, height) {
 // 입력은 pointerDown/pointerMove/pointerUp/cancel/keyDown/wheel, 시간은 update(초)로 넘긴다. 메인 메뉴의 dialog 자리에 그대로 넣을 수 있는 같은 모양(fit·place·draw·pointer*·cancel·update·close·screen)을 가진다.
 // onClose()는 창이 닫힐 때(OK·첫 주제의 Back·창 밖 누름), onCommand({ name, argument })는 `cmd:` 링크, onExternal(주소)은 바깥 주소 링크, onSound('button')은 돌 버튼·화살표를 누를 때 불린다. (2026-10-30 WB03-G)
 export class HelpWindow {
-    constructor({ resources, helpText, fallbackHelpText = null, substitute = (text) => text, screen, now = () => 0, onClose = null, onCommand = null, onExternal = null, onSound = null, onUnsupported = null }) {
+    constructor({ resources, helpText, fallbackHelpText = null, substitute = (text) => text, screen, now = () => 0, resolveType = null, onClose = null, onCommand = null, onExternal = null, onSound = null, onUnsupported = null }) {
         // 그리기 자원 묶음이다(fonts·colors·panel·texture·palette 등).
         this.resources = resources;
         // 도움말 파일 전체 문자열이다.
@@ -83,6 +83,8 @@ export class HelpWindow {
         this.screen = screen;
         // 시계(초)이다. 화살표 반복 이동 기한에 쓴다.
         this.now = now;
+        // 주제 이름으로 TYPE 정보 패널·그림을 찾는 호스트 함수이다: (주제) => { information, picture } | null. 링크 이동·Back 처럼 호출자가 정보를 주지 않은 요청에서 원본 QuickHelpRequest::Open(0, 주제)의 TYPE 이름 조회를 대신한다. (2026-11-22 WB04-E1229)
+        this.resolveType = resolveType;
         this.onClose = onClose;
         this.onCommand = onCommand;
         this.onExternal = onExternal;
@@ -153,7 +155,9 @@ export class HelpWindow {
     }
 
     // 주제 하나를 요청한다(원본 QuickHelpRequest::Open): 방문 기록에 쌓고(마지막과 같으면 쌓지 않음) 본문을 바꾼다. (2026-10-30 WB03-G)
+    // 정보 생성기·그림을 주지 않으면(링크 이동 등) 원본처럼 주제 이름으로 TYPE 을 조회해 정보 패널·그림을 채운다(조회 실패는 정보 없음). (2026-11-22 WB04-E1229)
     open(topic, informationFactory = null, picture = null) {
+        if (!informationFactory && !picture && this.resolveType) { const found = this.resolveType(topic); if (found) { informationFactory = found.information ?? null; picture = found.picture ?? null; } }
         this.informationFactory = informationFactory; this.picture = picture;
         const last = this.history[this.history.length - 1];
         if (last === undefined || last.toLowerCase() !== topic.toLowerCase()) this.history.push(topic);
@@ -200,7 +204,7 @@ export class HelpWindow {
         this.history.pop();
         const previous = this.history[this.history.length - 1];
         if (previous === undefined) this.closeWindow();
-        else { this.informationFactory = null; this.picture = null; this._show(previous); }
+        else { const found = this.resolveType?.(previous) ?? null; this.informationFactory = found?.information ?? null; this.picture = found?.picture ?? null; this._show(previous); }
     }
 
     // 창을 닫고 호스트에 알린다. 이미 닫혔으면 아무것도 하지 않는다. (2026-10-30 WB03-G)
@@ -405,13 +409,13 @@ export class HelpWindow {
 
 // 도움말 창을 만든다. 도움말 파일은 설정 키 `Quick Help Spec`(`\d\help.<언어>`)의 경로에서 읽고 언어 파일이 없으면 영어 파일로 대체한다. 파일이 없으면 null 이다(원본: 로드 오류).
 // topic 은 처음 보일 주제 이름(F1 은 'F1Help')이다. 사용: const result = createHelpWindow({ gameData, resources, topic: 'F1Help', screen }); result.window?.fit(). (2026-10-30 WB03-G, 2026-10-31 WB03-P: 영어 도움말 파일 주제 단위 대체)
-export function createHelpWindow({ gameData, resources, topic = 'F1Help', information = null, picture = null, screen, now = () => 0, onClose = null, onCommand = null, onExternal = null, onSound = null, onUnsupported = null }) {
+export function createHelpWindow({ gameData, resources, topic = 'F1Help', information = null, picture = null, screen, now = () => 0, resolveType = null, onClose = null, onCommand = null, onExternal = null, onSound = null, onUnsupported = null }) {
     const path = gameData.get('Quick Help Spec');
     const helpText = path ? gameData.readText(path) : null;
     if (helpText === null) return { window: null, missing: true, path };
     // 영어가 아닌 언어는 번역하지 않은 주제를 영어 도움말 파일에서 찾도록 영어 파일도 함께 넘긴다(같은 파일이거나 없으면 null). (2026-10-31 WB03-P)
     const english = gameData.readEnglishText(path);
-    const window = new HelpWindow({ resources, helpText, fallbackHelpText: english !== helpText ? english : null, substitute: (text) => gameData.substitute(text), screen, now, onClose, onCommand, onExternal, onSound, onUnsupported });
+    const window = new HelpWindow({ resources, helpText, fallbackHelpText: english !== helpText ? english : null, substitute: (text) => gameData.substitute(text), screen, now, resolveType, onClose, onCommand, onExternal, onSound, onUnsupported });
     window.open(topic, information, picture);
     window.fit();
     window.place();

@@ -2065,10 +2065,8 @@ export class Netstorm {
                 const type = event.y >>> 0, types = world.session().core().types, staticTopic = this._clientChatWindows.strings.get(type);
                 if (staticTopic !== undefined) { this._closeCampaignPopups(); this._openHelp(staticTopic); continue; }
                 if (!type || type >= 256 || type >= types.length) throw new RangeError('생산 정보 Help TYPE 범위 오류');
-                const information = () => buildQuickHelpInfoHtml({ type: () => world.session().helpTypeInfo(type),
-                    description: () => this._resources.translate(types[type].description), hitPoints: () => world.session().hitPoints().typeHitPoints(type),
-                    translate: (text) => this._resources.translate(text), substitute: (text) => this._gameData.substitute(text), config: (key) => this._gameData.get(key) ?? '' });
-                this._closeCampaignPopups(); this._openHelp(types[type].name.split('\0', 1)[0] + this._resources.translate('Type'), information, createQuickHelpPicture(this._gameAssets, type));
+                const display = this._helpTypeDisplay(type);
+                this._closeCampaignPopups(); this._openHelp(types[type].name.split('\0', 1)[0] + this._resources.translate('Type'), display.information, display.picture);
             }
             // 채팅 도우미 명령 중 채팅 창이 처리하지 않은 것: 설정 대입은 `키=값` 문자열(둘째 인자가 채팅 문자열 토큰)을 설정에 쓰고, 서식 편집(Edit Back/Front Format)은 웹에서 아직 대화창이 없어 안내만 남긴다. (2026-11-22 WB04-E1177)
             else if (CHAT_HELPER_COMMANDS.has(code) && !release) {
@@ -2789,6 +2787,28 @@ export class Netstorm {
 
     // 일반 도움말 창을 열어 메인 메뉴 위에 올린다(원본 F1Help: 메인 메뉴 Help 목록의 General Help 행과 F1 키). 이미 열려 있으면 그 창에서 주제만 첫 주제로 되돌린다.
     // 도움말 파일(`Quick Help Spec`)이 없으면 원본처럼 오류 로그만 남기고 열지 않는다. 바깥 주소 링크는 `_openExternalAddress` 로 새 탭/창에 연다(2026-11-07 WB03-AD, 그 전에는 콘솔 안내만). 열었으면 true 를 돌려준다. (2026-10-30 WB03-G)
+    // 현재 미션 월드의 TYPE 하나에 대한 도움말 정보 패널 생성기와 그림이다(F1 생산 정보와 링크 이동이 같이 쓴다). 월드가 없으면 호출하지 않는다. (2026-11-22 WB04-E1229)
+    _helpTypeDisplay(type) {
+        const world = this._campaignWorld, types = world.session().core().types;
+        const information = () => buildQuickHelpInfoHtml({ type: () => world.session().helpTypeInfo(type),
+            description: () => this._resources.translate(types[type].description), hitPoints: () => world.session().hitPoints().typeHitPoints(type),
+            translate: (text) => this._resources.translate(text), substitute: (text) => this._gameData.substitute(text), config: (key) => this._gameData.get(key) ?? '' });
+        return { information, picture: createQuickHelpPicture(this._gameAssets, type) };
+    }
+
+    // 도움말 주제 이름으로 TYPE 정보를 찾는다(원본 QuickHelpRequest::Open(0, 주제)): 끝의 `type`·`help` 를 차례로 떼고 `%s`·`sun%s`·`wind%s` 이름을 TYPE 표에서 대소문자 없이 찾아, 찾으면(번호 1 이상) 정보 패널·그림을 만든다.
+    // 찾지 못하면(원본은 TYPE 0) 정보 없이 본문만 보인다. 미션 월드가 없으면(메인 메뉴 도움말) 월드 밖 TYPE 읽기(ReadAssetQuickHelpType)가 아직 없어 null 이다. 어떤 주제에서도 던지지 않는다. (2026-11-22 WB04-E1229)
+    _resolveHelpType(topic) {
+        const world = this._campaignWorld; if (!world || !this._resources || !this._gameData || !this._gameAssets) return null;
+        let stem = String(topic ?? '').split('\0', 1)[0]; if (!stem || stem.length >= 80) return null;
+        for (const suffix of ['type', 'help']) if (stem.length >= suffix.length && stem.slice(-suffix.length).toLowerCase() === suffix) stem = stem.slice(0, -suffix.length);
+        const types = world.session().core().types, nameOf = (record) => String(record.name ?? '').split('\0', 1)[0].toLowerCase();
+        let found = -1;
+        for (const pattern of [stem, `sun${stem}`, `wind${stem}`]) { found = types.findIndex((record) => nameOf(record) === pattern.toLowerCase()); if (found >= 0) break; }
+        if (found < 1 || found >= 256 || found >= types.length) return null;
+        return this._helpTypeDisplay(found);
+    }
+
     _openHelp(topic, information = null, picture = null) {
         if (!this._mainMenu || !this._gameData || !this._resources) return false;
         const open = this._mainMenu.dialog;
@@ -2803,6 +2823,7 @@ export class Netstorm {
             topic, information, picture,
             screen: { width: this._mainMenu.width, height: this._mainMenu.height },
             now: () => this._frameSeconds,
+            resolveType: (name) => this._resolveHelpType(name),
             onClose: () => {
                 if (this._mainMenu?.dialog === result.window) this._mainMenu.setDialog(null);
                 this._displayDirty = true;

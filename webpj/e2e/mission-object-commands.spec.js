@@ -111,3 +111,22 @@ test('The War Begins!: 브리핑의 Review Knowledge 단추가 지식 창을 열
   expect(errors).toEqual([]);
 });
 
+// 도움말 링크 이동(`#priestType` 같은 *Type 주제)에서 주제 이름으로 TYPE 을 조회해 정보 패널(Hits/Range/Cost 표)과 유닛 그림이 붙는다. 이전에는 링크 이동·Back 이 정보와 그림을 지워 본문만 나왔다. (2026-11-22 WB04-E1229)
+test('The War Begins!: 도움말의 *Type 링크 이동에서도 TYPE 정보 패널과 그림이 나온다', async ({ page }) => {
+  test.setTimeout(300000);
+  const errors = []; await startWarBegins(page, errors);
+  const result = await page.evaluate(() => {
+    const app = window.netstorm; app._openHelp('F1Help'); const help = app._mainMenu.dialog;
+    const before = { info: typeof help.informationFactory, picture: help.picture !== null };
+    app._openHelp('priestType'); const linked = { topic: help.topic, info: typeof help.informationFactory, picture: help.picture !== null, html: typeof help.informationFactory === 'function' ? String(help.informationFactory()).slice(0, 300) : '' };
+    app._openHelp('campaignHelp'); const plain = { info: typeof help.informationFactory, picture: help.picture !== null };
+    help.back(); const back = { topic: help.topic, info: typeof help.informationFactory, picture: help.picture !== null };
+    return { before, linked, plain, back };
+  });
+  expect(result.before, '링크 전 F1Help').toEqual({ info: 'object', picture: false });
+  expect(result.linked.topic).toBe('priestType'); expect(result.linked.info, 'priestType 정보 패널').toBe('function'); expect(result.linked.picture, 'priestType 그림').toBe(true);
+  expect(result.plain, '*Type 이 아닌 주제는 정보 없음').toEqual({ info: 'object', picture: false });
+  expect(result.back, 'Back 은 priestType 을 다시 조회').toEqual({ topic: 'priestType', info: 'function', picture: true });
+  expect(errors).toEqual([]);
+});
+

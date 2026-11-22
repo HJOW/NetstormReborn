@@ -673,3 +673,19 @@ test('도움말 창: TYPE 정보 본문 배치·출력·주제 전환', () => {
     window.open('other'); assert.equal(window.information, null); assert.equal(window.picture, null); assert.equal(window.frameRect.y, 17);
     window.open('unitType', () => '<h2>Unit</h2>'); assert.ok(window.information); assert.equal(window.frameRect.y, 17);
 });
+
+// 도움말 창의 TYPE 조회(원본 QuickHelpRequest::Open(0, 주제)): 정보 생성기·그림을 주지 않은 요청(링크 이동·Back)은 호스트 resolveType 으로 주제 이름의 TYPE 정보를 다시 찾고, 직접 준 요청은 조회하지 않으며, 조회 실패는 정보 없음이다. (2026-11-22 WB04-E1229)
+test('도움말 창: 링크 이동·Back 은 주제 이름으로 TYPE 정보 패널·그림을 다시 찾는다', () => {
+    const { window } = newHelp(); const asked = [];
+    window.resolveType = (topic) => { asked.push(topic); return topic === 'campaignHelp' ? { information: () => `정보:${topic}`, picture: { id: 7 } } : null; };
+    // 링크로 이동하면(정보를 주지 않은 요청) 조회한 정보와 그림이 붙는다.
+    const link = findLink(window, 'campaignHelp'); window.pointerDown(link.x, link.y); window.pointerUp(link.x, link.y);
+    assert.equal(window.topic, 'campaignHelp'); assert.equal(window.informationFactory(), '정보:campaignHelp'); assert.deepEqual(window.picture, { id: 7 });
+    // Back 은 이전 주제(F1Help)를 다시 조회하고, 조회 실패(null)는 정보 없음이다.
+    window.back(); assert.equal(window.topic, 'F1Help'); assert.equal(window.informationFactory, null); assert.equal(window.picture, null); assert.deepEqual(asked, ['campaignHelp', 'F1Help']);
+    // 정보 생성기를 직접 준 요청은 조회하지 않는다.
+    asked.length = 0; window.open('campaignHelp', () => 'F1 정보', { id: 1 }); assert.deepEqual(asked, []); assert.equal(window.informationFactory(), 'F1 정보');
+    // 조회 장치가 없으면 이전처럼 정보 없이 연다.
+    window.resolveType = null; window.open('F1Help'); assert.equal(window.informationFactory, null); assert.equal(window.picture, null);
+});
+
