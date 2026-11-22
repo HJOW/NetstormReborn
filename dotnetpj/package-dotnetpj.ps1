@@ -67,7 +67,7 @@ $DotnetRoot = $PSScriptRoot
 # 저장소 최상위 폴더다. LICENSE 와 git 정보를 여기서 찾는다. (2026-10-23 신규)
 $RepoRoot = Split-Path -Parent $DotnetRoot
 
-# 게시할 게임 프로젝트 파일이다. 어셈블리 이름은 Netstorm, 출력은 WinExe 이다. (2026-10-23 신규)
+# 게시할 유일한 게임 프로젝트다. Netstorm.Client를 실행하고 Netstorm.exe를 출력한다.
 $GameProject = Join-Path $DotnetRoot 'src\Netstorm.Game\Netstorm.Game.csproj'
 
 # 게시 대상 런타임 식별자다. Windows 10/11 x64 만 지원한다(리눅스는 후순위, AGENTS.md). (2026-10-23 신규)
@@ -96,22 +96,21 @@ $RequiredPublishEntries = @(
     'Netstorm.exe', 'Netstorm.dll', 'Netstorm.deps.json', 'Netstorm.runtimeconfig.json',
     'SDL2.dll', 'openal.dll',
     'game-data/netstorm.tarc', 'game-data/d/_shapes.shp', 'game-data/d/GIFCLOUD.COL',
-    'fonts/D2Coding-Ver1.3.2-20180524-all.ttc')
+    'fonts/Galmuri11Bitmap-Regular-2.40.4.ttf', 'fonts/Galmuri11Bitmap-Bold-2.40.4.ttf', 'fonts/Galmuri11-LICENSE.txt')
 
 # 자체 포함 게시일 때 추가로 필요한 파일이다. .NET 런타임의 핵심 라이브러리가 들어 있는지 본다. (2026-10-23 신규)
 $RequiredSelfContainedEntries = @('coreclr.dll', 'hostfxr.dll')
 
 # 글꼴 폴더에서 찾아 함께 넣을 라이선스 전문 파일 후보 이름이다. 저장소에 전문이 추가되면 자동으로 포함된다.
 # (2026-10-23 SIL OFL 은 글꼴을 재배포할 때 전문을 함께 주어야 하는데 현재 저장소에 전문 파일이 없어 후보만 열어 둠)
-$FontLicenseCandidates = @('OFL.txt', 'OFL-1.1.txt', 'D2Coding-LICENSE.txt', 'LICENSE.txt')
+$FontLicenseCandidates = @('Galmuri11-LICENSE.txt')
 
-# D2Coding 글꼴의 고지문이다. 글꼴 파일 내부 name 표(저작권 0번, 라이선스 설명 13번, 라이선스 주소 14번)에서 그대로 옮겼다.
-# (2026-10-23 글꼴 파일 D2Coding-Ver1.3.2-20180524-all.ttc 를 직접 읽어 확인한 문구)
+# 배포하는 외부 갈무리11 두 글꼴의 실제 동봉 라이선스 고지다.
 $FontNoticeLines = @(
-    'D2Coding  (fonts/D2Coding-Ver1.3.2-20180524-all.ttc, Version 1.3.2; Build 20180524)',
-    '  Copyright (c) 2015-2016 NHN Corporation. All rights reserved. Font designed by FONTRIX Inc.',
+    'Galmuri11Bitmap (Regular/Bold 2.40.4, fonts/)',
+    '  Copyright (c) 2019–2025 Lee Minseo (quiple@quiple.dev)',
     '  This Font Software is licensed under the SIL Open Font License, Version 1.1.',
-    '  License URL embedded in the font: http://dev.naver.com/wiki/nanumfont/index.php/OpenFontLicense',
+    '  Full license: fonts/Galmuri11-LICENSE.txt and licenses/Galmuri11-LICENSE.txt',
     '  SIL OFL 1.1 official site: https://openfontlicense.org')
 
 # ----------------------------------------------------------------------------------------------
@@ -387,25 +386,25 @@ function New-ReadmeText {
         '[실행 방법]',
         '1. 압축을 풀고 Netstorm.exe 를 실행합니다.',
         '2. 시작 옵션은 명령 프롬프트나 바로가기의 대상 뒤에 붙입니다.',
-        '     Netstorm.exe --language korean     한국어 (english 로 바꾸면 영어)',
-        '     Netstorm.exe --windowed            이번 실행만 창 모드',
+        '     Netstorm.exe --set "currentLanguage=english"   현재 영어 경로',
+        '     Netstorm.exe --window              이번 실행만 창 모드',
         '     Netstorm.exe --fullscreen          이번 실행만 전체화면',
-        '     Netstorm.exe --window 1280x960     창 크기 지정',
+        '     Netstorm.exe --window --width 1280 --height 960   창 크기 지정',
         '',
         '[필요 환경]',
         '- Windows 10 / 11 (64비트)',
         $runtimeKo,
         '',
         '[설정]',
-        '- 화면·소리 설정은 %APPDATA%\NetstormReborn\settings.json 에 저장되며, 설정을 이 폴더에 쓰지 않습니다.',
-        '  설정을 초기화하려면 그 파일을 지우세요.',
+        '- 현재 설정은 game-data\d\options.cfg 에 기록합니다. 사용자 홈 저장 전환은 후속 작업입니다.',
+        '- 구 근사 플레이 경로는 제거됐습니다. 현재는 메뉴와 개발용 미션 진입까지이며 월드 플레이는 미완료입니다.',
         '',
         '[폴더 구성]',
         '  Netstorm.exe     게임 실행 파일',
         '  *.dll, *.json         게임 라이브러리와 실행 설정',
         '  SDL2.dll, openal.dll  MonoGame 이 쓰는 창/소리 라이브러리',
         '  game-data\            게임 데이터 (원본 Netstorm 10.78에서 옮긴 그래픽, 지도, 미션, 소리)',
-        '  fonts\                한국어 글꼴 D2Coding',
+        '  fonts\                외부 갈무리11 글꼴/라이선스 (한국어 화면 결선은 후속 작업)',
         '  licenses\             제3자 구성 요소 라이선스',
         '  BUILD_INFO.txt        이 배포판을 만든 소스와 실행 파일 정보',
         '  LICENSE.txt           라이선스',
@@ -415,10 +414,10 @@ function New-ReadmeText {
         '',
         '[How to run]',
         '1. Extract the archive and run Netstorm.exe.',
-        '2. Options (append to the command line): --language korean|english, --windowed, --fullscreen, --window 1280x960.',
+        '2. Options: --set "currentLanguage=english", --window, --fullscreen, --width 1280 --height 960.',
         $runtimeEn,
-        '4. Screen/sound settings are stored in %APPDATA%\NetstormReborn\settings.json, not in this folder. Delete that file to reset.',
-        '5. Requires Windows 10/11 x64. This is a work-in-progress clone; multiplayer is not included.')
+        '4. Settings currently use game-data\d\options.cfg. Moving writes to the user home is pending.',
+        '5. Requires Windows 10/11 x64. The former approximate game was removed; menus and development mission entry work, world gameplay is pending.')
     return (($lines -join "`r`n") + "`r`n")
 }
 
@@ -598,13 +597,13 @@ try {
     foreach ($candidate in $FontLicenseCandidates) {
         $candidatePath = Join-Path $RepoRoot (Join-Path 'fonts' $candidate)
         if (Test-Path -LiteralPath $candidatePath -PathType Leaf) {
-            Add-FileItem -Items $items -Entry ($PackageRootName + '/licenses/D2Coding-' + $candidate) -Source $candidatePath
+            Add-FileItem -Items $items -Entry ($PackageRootName + '/licenses/' + $candidate) -Source $candidatePath
             $fontLicenseFound = $true
             break
         }
     }
     if (-not $fontLicenseFound) {
-        Write-Warning 'fonts 폴더에 SIL OFL 라이선스 전문 파일(OFL.txt 등)이 없어 고지문(THIRD_PARTY_NOTICES.txt)만 넣습니다.'
+        Write-Warning 'fonts 폴더에 갈무리11 라이선스 전문이 없어 고지문만 넣습니다.'
     }
 
     Add-TextItem -Items $items -Entry ($PackageRootName + '/README.txt') -Text (New-ReadmeText -EmbedRuntime ([bool]$SelfContained))

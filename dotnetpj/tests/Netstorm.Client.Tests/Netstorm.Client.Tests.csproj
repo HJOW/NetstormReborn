@@ -16,7 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Netstorm.Client\Netstorm.Client.csproj" />
     <!-- 창 없는 Windows GDI 글꼴 생성 경계도 검사한다. MonoGame 그래픽 장치는 생성하지 않는다. -->
-    <ProjectReference Include="..\..\src\Netstorm.Client.Host\Netstorm.Client.Host.csproj" />
+    <ProjectReference Include="..\..\src\Netstorm.Game\Netstorm.Game.csproj" />
     <!-- Zone 설치 등 Start 순서 원형의 조합 검증에 실제 전송 모듈을 쓴다. 제품 전환에 쓰지 않는다. -->
     <ProjectReference Include="..\..\src\Netstorm.Net\Netstorm.Net.csproj" />
   </ItemGroup>

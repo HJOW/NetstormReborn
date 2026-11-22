@@ -146,7 +146,7 @@ public sealed class HostOptions
 
     /// <summary>사용법을 돌려준다. 오류 종료 때 그대로 출력한다.</summary>
     public static string Usage() =>
-        "사용법: NetstormClientHost [--window|--fullscreen] [--width N] [--height N] [--fps N] [--frames N] [--fixed-frame-ms N] [--fixed-unix-seconds S] [--ui-script steps.tsv] [--ui-report report.tsv] [--mute-audio] [--mission name] [--handle name] [--set \"k=v;k=v...\"]";
+        "사용법: Netstorm.exe [--window|--fullscreen] [--width N] [--height N] [--fps N] [--frames N] [--fixed-frame-ms N] [--fixed-unix-seconds S] [--ui-script steps.tsv] [--ui-report report.tsv] [--mute-audio] [--mission name] [--handle name] [--set \"k=v;k=v...\"]";
 
     /// <summary>고정 시각 프레임 밀리초(1~60000)를 읽는다.</summary>
     private static uint TakeFixedFrameMs(string[] args, ref int index)

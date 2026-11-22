@@ -133,7 +133,7 @@ def capture(engine, mission, demo, directory, seed, host_exe=None):
         prefix = f"5\tscript-command\tStartDemo,{mission}\n"
     steps.write_text((prefix if engine == "cpp" else "") + f"90\tsession-dump\t{dump.as_posix()}\n", encoding="utf-8")
     executable = ROOT / ("cpppj/build/bin/Release/Netstorm.exe" if engine == "cpp" else
-                         "dotnetpj/src/Netstorm.Client.Host/bin/Release/net10.0/Netstorm.Client.Host.exe")
+                         "dotnetpj/src/Netstorm.Game/bin/Release/net10.0/Netstorm.exe")
     data = ROOT / "extracted/dotnet-oracle-data"
     if engine == "dn" and host_exe is not None:
         executable = Path(host_exe)

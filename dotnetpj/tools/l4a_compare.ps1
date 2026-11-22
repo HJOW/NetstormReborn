@@ -99,8 +99,8 @@ if (-not (Test-Path (Join-Path $dataDir 'cursors'))) {
 
 $before = Get-OriginalsHash
 $cppExe = Join-Path $root 'cpppj\build\bin\Release\Netstorm.exe'
-$dnProject = Join-Path $root 'dotnetpj\src\Netstorm.Client.Host\Netstorm.Client.Host.csproj'
-$dnExe = Join-Path $root 'dotnetpj\src\Netstorm.Client.Host\bin\Release\net10.0\Netstorm.Client.Host.exe'
+$dnProject = Join-Path $root 'dotnetpj\src\Netstorm.Game\Netstorm.Game.csproj'
+$dnExe = Join-Path $root 'dotnetpj\src\Netstorm.Game\bin\Release\net10.0\Netstorm.exe'
 
 if ($Build) {
     dotnet build $dnProject -c Release --nologo -v q

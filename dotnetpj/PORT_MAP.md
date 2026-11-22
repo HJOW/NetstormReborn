@@ -44,7 +44,7 @@ cpppj의 파일·클래스·함수 경계와 이름을 따른다. 이름이 같�
 | --- | --- | --- |
 | `src/o/*` | `Netstorm.Core/Original/` | 기존 55파일을 유지한다. 파일 이름은 `Raw` 접두 여부까지 cpppj 이름의 CamelCase를 따르되, 기존 이름은 바꾸지 않는다 |
 | `src/client/*` 중 플랫폼 독립 | `Netstorm.Client/` (새 프로젝트, MonoGame 참조 금지) | `Screen.cpp` → `Screen.cs`처럼 같은 이름. 하위 폴더는 영역별(`Display/`, `Gump/`, `Hud/`, `Session/`, `Input/`, `Sound/`, `Editor/`)로 두되 네임스페이스는 `Netstorm.Client.<영역>`이다 |
-| `src/client`의 Win32·GDI·DirectDraw·WINMM 부분 | `Netstorm.Game/Host/` | MonoGame/OS 대체 경계. cpppj와 다른 점과 이유를 한국어 주석에 쓴다 |
+| `src/client`의 Win32·GDI·DirectDraw·WINMM 부분 | `Netstorm.Game/` | MonoGame/OS 대체 경계. cpppj와 다른 점과 이유를 한국어 주석에 쓴다 |
 | `src/platform/*`, `src/zacket/*` | `Netstorm.Client` 또는 `Netstorm.Net` | `Bitmap`·`FileOutput` 등은 .NET 파일/이미지 API로 대체 |
 | `src/app/main.cpp`의 검사 인자 | `Netstorm.Game/Program.cs` | `--run`·`--window`·`--frames`·`--set`·`--mission`·`--ui-script`·`--ui-report`·`--screenshot` 등 같은 이름 |
 
@@ -58,7 +58,7 @@ cpppj의 파일·클래스·함수 경계와 이름을 따른다. 이름이 같�
 
 | 단계 | cpppj 파일군 | 목적지 |
 | --- | --- | --- |
-| R1 | `Screen`, `ScreenPaletteApply`, `ScreenResolutions`, `ScreenPresentation`, `InputEvent`, `UserInput`의 큐, `ClientMain`의 루프 골격 | `Netstorm.Client/Display`, `Netstorm.Client/Input`, `Netstorm.Game/Host` |
+| R1 | `Screen`, `ScreenPaletteApply`, `ScreenResolutions`, `ScreenPresentation`, `InputEvent`, `UserInput`의 큐, `ClientMain`의 루프 골격 | `Netstorm.Client/Display`, `Netstorm.Client/Input`, `Netstorm.Game` |
 | R2 | `VFXDraw`·`VFXMappedDraw`·`VFXLine`·`VFXTransform`, `RawShapeToBuffer`, `SpriteDraw`, `*ColorMaps`, `Palette*`, `RawColorSort*`, `BitmapFont`, `GifImage`, `RawImage` | `Netstorm.Client/Display` |
 | R3 | `Gump*`(약 15개), 위젯류, `UberGump`·`UberRootGump`, `NativeMainMenuState`, Tell·Dialog·StyleText·Markup·QuickHelp, `Cursor` | `Netstorm.Client/Gump` |
 | R4 | `RawCampaignSession*`, `RawSurfaceWorld`·`RawSurfaceStorage`, `State`, `Mission*`, 미구현 `Raw*` 월드 모듈 | `Netstorm.Client/Session`, `Netstorm.Core/Original` |

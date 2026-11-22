@@ -143,7 +143,7 @@
 | --- | --- |
 | 원본 아이콘 | `originals/Netstorm.exe`(SHA-256 `a305414cfe0b9449…`)에 RT_GROUP_ICON 2개가 있고 언어는 1033이다. **102(0x66)**는 32×32·4bpp(16색) 1장(RT_ICON 1, 744바이트), **144(0x90)**는 16×16·4bpp 1장(RT_ICON 2, 296바이트)이다. 탐색기의 파일 아이콘은 첫 그룹인 102다. 원본 `R.exe`는 리소스 디렉터리가 없어 아이콘이 없다. |
 | cpppj | `cpppj/src/app/ProductVersion.rc`에 원본 그룹과 같은 102·144 및 언어 1033을 지정했다. 창 아이콘은 `ClientMain.cpp`에서 게임 폴더의 원본 `Netstorm.exe`를 자료로 열어 같은 ID를 읽는다. |
-| dotnetpj | `Netstorm.Game.csproj`(AssemblyName `Netstorm`, DesktopGL)에 `ApplicationIcon`·아이콘 리소스가 없다. 빌드가 게임 데이터의 `.exe` 혼입을 오류로 막으므로 cpppj처럼 원본 실행 파일을 실행 중에 읽을 수 없다. [DN 인계](LEFT_JOBS.dotnetpj.md#exe-icon) |
+| dotnetpj | 0.807에서 직역 호스트가 `Netstorm.Game`/`Netstorm.exe`를 승계하고 공통 ICO를 `ApplicationIcon`으로 지정했다. 실제 EXE의 두 원시 아이콘이 공통 ICO와 바이트 일치한다. 배포 ZIP과 DesktopGL 창·작업 표시줄 확인 범위는 [DN 인계](LEFT_JOBS.dotnetpj.md#exe-icon)를 따른다. |
 | webpj | `webpj/www/index.html`에 아이콘 링크가 없고 `favicon.ico`도 없다. 지금까지의 브라우저 검증 문서는 `favicon.ico` 404를 예외로 기록했다. [WB 인계](LEFT_JOBS.webpj.md#favicon) |
 
 - [x] **공통 아이콘 자산.** [assets/Netstorm.ico](assets/Netstorm.ico)에 원본 RT_ICON의 32×32·16×16 4bpp 이미지를 모두 담았다. [추출 도구·SHA-256](docs/exe/cpp-exe-icon-1323-20261119.md)

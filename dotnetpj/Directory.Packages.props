@@ -6,8 +6,6 @@
   <ItemGroup>
     <!-- 게임 프레임워크 (OpenGL 기반, Windows·Linux 공용) -->
     <PackageVersion Include="MonoGame.Framework.DesktopGL" Version="3.8.5.1" />
-    <!-- 런타임 TTF 글꼴 렌더링 (한글 D2Coding) -->
-    <PackageVersion Include="FontStashSharp.MonoGame" Version="1.6.1" />
     <!-- 테스트 -->
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
     <PackageVersion Include="xunit.v3" Version="3.2.2" />
