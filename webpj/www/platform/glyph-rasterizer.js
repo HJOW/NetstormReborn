@@ -9,10 +9,14 @@
 import { KOREAN_FONT_FAMILY } from '../assets/korean-font-config.js';
 export const GLYPH_FONT_FAMILY = KOREAN_FONT_FAMILY;
 
+// 굵은 글꼴(Galmuri11-Bold)이 갖지 않는 글자의 대체 글꼴 등록 이름이다. 제공된 굵은 파일에는 일반 파일에 있는 글자 가운데 라틴 확장·그리스·키릴·가나·한자·호환 자모·일부 기호 등 8천여 자가 없다(두 파일의 cmap 대조).
+// 같은 일반 파일을 다른 이름으로 weight 범위 '100 900' 로 등록하면 굵게 요청해도 합성 굵기 없이 일반 글리프가 쓰인다. 원본 복원 cpppj 1322(BitmapFont::ExtendedGlyph)도 굵은 글꼴에 없는 문자를 같은 갈무리11 일반 파일에서 찾고 시스템 대체나 합성 굵기를 쓰지 않는다. (2026-11-23 WB04-E1244)
+export const GLYPH_FALLBACK_FONT_FAMILY = `${KOREAN_FONT_FAMILY}Regular`;
+
 // 글자 그림 주변에 더하는 여백(픽셀)이다. 기울임·굵은 글씨로 칸 밖으로 삐져나오는 부분을 담는다. (2026-10-31 WB03-N)
 const CANVAS_MARGIN_EM = 1;
 
-// 보통체·굵은체 sfnt 바이트로 FontFace 두 개를 등록하고 불러온 뒤 래스터라이저를 돌려준다. document 는 글꼴을 등록할 문서이다.
+// 보통체·굵은체 sfnt 바이트로 FontFace 두 개(와 굵은체 대체용 보조 FontFace 하나)를 등록하고 불러온 뒤 래스터라이저를 돌려준다. document 는 글꼴을 등록할 문서이다.
 // 글꼴을 불러오지 못하면 FontFace.load() 가 던지는 오류를 그대로 전달한다(호출자가 영어로 대체한다).
 // 사용: const rasterizer = await createCanvasGlyphRasterizer({ document, regular, bold }); (2026-10-31 WB03-N)
 export async function createCanvasGlyphRasterizer({ document, regular, bold }) {
@@ -20,9 +24,11 @@ export async function createCanvasGlyphRasterizer({ document, regular, bold }) {
     const FontFaceClass = view.FontFace ?? globalThis.FontFace;
     if (typeof FontFaceClass !== 'function') throw new Error('이 브라우저는 FontFace 를 지원하지 않습니다.');
     // 보통체(400)와 굵은체(700)를 같은 이름으로 등록한다. 글자를 그릴 때 font 문자열의 굵기로 고른다.
+    // 세 번째는 굵은체에 없는 글자를 일반 글리프로 대체하는 보조 이름이다(모든 굵기 범위라 합성 굵기가 없다). (2026-11-23 WB04-E1244)
     const faces = [
         new FontFaceClass(GLYPH_FONT_FAMILY, regular, { weight: '400', style: 'normal' }),
         new FontFaceClass(GLYPH_FONT_FAMILY, bold, { weight: '700', style: 'normal' }),
+        new FontFaceClass(GLYPH_FALLBACK_FONT_FAMILY, regular, { weight: '100 900', style: 'normal' }),
     ];
     await Promise.all(faces.map((face) => face.load()));
     // 불러온 글꼴을 문서에 등록한다(캔버스가 이름으로 찾는다).
@@ -35,7 +41,9 @@ export async function createCanvasGlyphRasterizer({ document, regular, bold }) {
         // 글자 칸의 왼쪽 위(펜 x = 0, 줄 맨 위 y = 0)에서 기준선은 spec.ascent 아래에 둔다.
         glyph(codePoint, spec) {
             const character = String.fromCodePoint(codePoint);
-            const font = `${spec.italic ? 'italic ' : ''}${spec.bold ? 700 : 400} ${spec.emSize}px "${GLYPH_FONT_FAMILY}"`;
+            // 굵게는 굵은체를 먼저 쓰고 그 파일에 없는 글자만 일반 글리프(보조 이름)로 대체한다. 보통체는 한 이름만 쓴다. (2026-11-23 WB04-E1244)
+            const families = spec.bold ? `"${GLYPH_FONT_FAMILY}", "${GLYPH_FALLBACK_FONT_FAMILY}"` : `"${GLYPH_FONT_FAMILY}"`;
+            const font = `${spec.italic ? 'italic ' : ''}${spec.bold ? 700 : 400} ${spec.emSize}px ${families}`;
             context.font = font;
             const advance = Math.max(0, Math.round(context.measureText(character).width));
             const margin = Math.ceil(spec.emSize * CANVAS_MARGIN_EM);

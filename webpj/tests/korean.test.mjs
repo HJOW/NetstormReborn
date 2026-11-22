@@ -454,8 +454,9 @@ function fakeDocument() {
 test('createCanvasGlyphRasterizer: 글꼴 등록·글자 그림 자르기·위치·전진 폭·정리', async () => {
     const env = fakeDocument();
     const rasterizer = await createCanvasGlyphRasterizer({ document: env.document, regular: Uint8Array.of(1), bold: Uint8Array.of(2) });
-    assert.deepEqual(env.faces.map((face) => [face.family, face.descriptors.weight, face.data[0], face.loaded]), [['Galmuri11', '400', 1, true], ['Galmuri11', '700', 2, true]]);
-    assert.equal(env.added.length, 2);
+    // 세 번째는 굵은 글꼴에 없는 글자를 일반 글리프로 대체하는 보조 이름이다(같은 일반 파일, 모든 굵기 범위). (2026-11-23 WB04-E1244)
+    assert.deepEqual(env.faces.map((face) => [face.family, face.descriptors.weight, face.data[0], face.loaded]), [['Galmuri11', '400', 1, true], ['Galmuri11', '700', 2, true], ['Galmuri11Regular', '100 900', 1, true]]);
+    assert.equal(env.added.length, 3);
     const spec = { emSize: 13, bold: false, italic: false, ascent: 11, height: 14 };
     const hangul = rasterizer.glyph(0xac00, spec);
     // 한글은 em 만큼 전진한다. 상자는 펜 기준 (1, -4) 에서 3×4 이고, 기준선은 줄 맨 위에서 ascent(11) 아래이므로 줄 맨 위 기준 상자 위치는 y = 11 - 4 = 7 이다.
@@ -464,7 +465,7 @@ test('createCanvasGlyphRasterizer: 글꼴 등록·글자 그림 자르기·위�
     // 영문은 em 의 절반(6.5 → 7)으로 전진한다. 굵게·기울임은 글꼴 문자열에 반영된다.
     const latin = rasterizer.glyph(0x41, { ...spec, bold: true, italic: true });
     assert.equal(latin.advance, 7);
-    assert.equal(env.calls[env.calls.length - 1].font, 'italic 700 13px "Galmuri11"');
+    assert.equal(env.calls[env.calls.length - 1].font, 'italic 700 13px "Galmuri11", "Galmuri11Regular"');
     assert.equal(env.calls[0].font, '400 13px "Galmuri11"');
     // 공백은 그림이 없고 전진 폭만 있다. 이전 글자의 그림이 남아 있으면 안 된다.
     const space = rasterizer.glyph(0x20, spec);
