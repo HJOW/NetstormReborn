@@ -8,6 +8,15 @@ namespace Netstorm.Core.Tests;
 /// <summary>기존 Dais/Path 본체를 실제 장기 저장소 기본 전송으로 호출한다.</summary>
 public sealed class NativeProcessSerializationTests
 {
+    /// <summary>아처88BYTE도같은Native공통writer/현재헤더/식별자를쓰며비접두각상태는전송하지않는다.</summary>
+    [Fact]
+    public void ArcherAnimationUsesSameCurrentNativePrefixWithoutSendingAngles()
+    {
+        var storage = Storage(); SquidProcessHost host = storage.Processes().Host(); int parent = storage.Pool.Allocate(SidAllocation.Server); storage.Pool.RawSlot(parent).Clear(); storage.Pool.RawSlot(parent)[10] = 71; ArcherTypeData[] data = Enumerable.Range(0, 188).Select(_ => new ArcherTypeData(20,40)).ToArray(); var logic = new RawArcherAnimation(storage.Pool, storage.Types, data, new() { Now = 10 }, new()); var fields = new ArcherAnimationFields(0xa5); logic.Initialize(fields, true, 77, 78); PutArcherNative(fields.Bytes, 64, 0x7fc12345); var process = new ArcherAnimation(logic, fields, true);
+        Assert.Same(process, host.Attach(process, host.AnimationProcessType(true), parent, 0x10)); storage.GameAux().FireAnimationHeader[0] = 0x73; storage.GameAux().FireAnimationHeader[1] = 0x81; byte[] packet = Enumerable.Repeat((byte)0xa7, 2048).ToArray(); Assert.Equal(25, host.WriteFormPacket(process.Form(), 1, packet, storage.GameAux().SquidTransmission)); Assert.Equal(0x81, packet[0]); Assert.Equal(0x73, packet[1]); Assert.Equal((uint)process.Form(), BinaryPrimitives.ReadUInt32LittleEndian(packet.AsSpan(4))); Assert.Equal((uint)parent, BinaryPrimitives.ReadUInt32LittleEndian(packet.AsSpan(9))); Assert.Equal(0xa7, packet[25]); Assert.Equal(0x7fc12345u, BinaryPrimitives.ReadUInt32LittleEndian(process.Fields.Bytes.AsSpan(64))); storage.Processes().Kernel().DrainOwnedForShutdown();
+    }
+    /// <summary>Native아처검사의선택DWORD 입력만쓴다.</summary>
+    private static void PutArcherNative(Span<byte> raw, int at, uint value) => BinaryPrimitives.WriteUInt32LittleEndian(raw[at..], value);
     /// <summary>실제총애니메이션VT가현재두헤더를고르고일반준비가역할/헤더를보존한다.</summary>
     [Fact]
     public void GunAnimationUsesCurrentNativeHeaderAndSameFormWriter()

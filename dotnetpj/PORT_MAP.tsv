@@ -1737,3 +1737,11 @@ cpppj/src/o/RawGunAnimation.h	Netstorm.Core/Original/RawGunAnimation.Types.cs	83
 cpppj/src/o/RawGunAnimation.cpp	Netstorm.Core/Original/GunAnimation.cs	831d58ce51c6a60dbf1a1603f1feda93d49f13ce	port
 cpppj/src/o/RawGunAnimation.h	Netstorm.Core/Original/GunAnimation.cs	831d58ce51c6a60dbf1a1603f1feda93d49f13ce	port
 cpppj/src/o/RawGameAuxState.h	Netstorm.Core/Original/RawGameAuxState.GunAnimation.cs	831d58ce51c6a60dbf1a1603f1feda93d49f13ce	port
+cpppj/src/o/RawArcherAnimation.cpp	Netstorm.Core/Original/RawArcherAnimation.cs	6a12e1060cbec19f85bb3e3c11a0ca4d9d62b3a8	port
+cpppj/src/o/RawArcherAnimation.h	Netstorm.Core/Original/RawArcherAnimation.cs	6a12e1060cbec19f85bb3e3c11a0ca4d9d62b3a8	port
+cpppj/src/o/RawArcherAnimation.cpp	Netstorm.Core/Original/RawArcherAnimation.Types.cs	6a12e1060cbec19f85bb3e3c11a0ca4d9d62b3a8	port
+cpppj/src/o/RawArcherAnimation.h	Netstorm.Core/Original/RawArcherAnimation.Types.cs	6a12e1060cbec19f85bb3e3c11a0ca4d9d62b3a8	port
+cpppj/src/o/RawArcherAnimation.cpp	Netstorm.Core/Original/RawArcherAnimation.Fire.cs	6a12e1060cbec19f85bb3e3c11a0ca4d9d62b3a8	port
+cpppj/src/o/RawArcherAnimation.h	Netstorm.Core/Original/RawArcherAnimation.Fire.cs	6a12e1060cbec19f85bb3e3c11a0ca4d9d62b3a8	port
+cpppj/src/o/RawArcherAnimation.cpp	Netstorm.Core/Original/ArcherAnimation.cs	6a12e1060cbec19f85bb3e3c11a0ca4d9d62b3a8	port
+cpppj/src/o/RawArcherAnimation.h	Netstorm.Core/Original/ArcherAnimation.cs	6a12e1060cbec19f85bb3e3c11a0ca4d9d62b3a8	port
