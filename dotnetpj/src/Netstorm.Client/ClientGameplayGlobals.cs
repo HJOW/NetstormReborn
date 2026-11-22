@@ -29,7 +29,7 @@ public sealed partial class ClientGameplayGlobals
     /// <summary>005412bc의 무료 기술 역할이며 최초 Mog153이다.</summary>
     public UIntBox FreeTechnologyTypeBox { get; } = new() { Value = 153 };
     /// <summary>00541088의 현재 내용물 Form 역할이며 최초6이다.</summary>
-    public UIntBox ContentFormTypeBox { get; } = new() { Value = 6 };
+    public UIntBox ContentFormTypeBox => ProductionFinder.ContainedTypeBox;
     /// <summary>0054107c의 현재 GumpForm 역할이며 최초3이다.</summary>
     public UIntBox GumpFormTypeBox { get; } = new() { Value = 3 };
     /// <summary>005427bc의 현재 Player 내용물 통지 사건이다.</summary>

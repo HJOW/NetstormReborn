@@ -12,10 +12,10 @@ public sealed class ContainedFinderState
     public bool Boss { get; set; } = true;
 
     /// <summary>후보 바이트와 비교하는 타입 번호(원본 00541088). 기본값은 6 이다.</summary>
-    public uint ContainedType { get => SharedContainedType?.Invoke() ?? _containedType; set => _containedType = value; }
+    public uint ContainedType { get => SharedContainedType?.Invoke() ?? ContainedTypeBox.Value; set => ContainedTypeBox.Value = value; }
 
-    /// <summary>독립 입력의 기존 내용물 종류다. 실제 월드는 현재 역할 getter를 사용한다.</summary>
-    private uint _containedType = 6;
+    /// <summary>Source containedType의 같은 실제 DWORD다. 장기 생성기/검색의 읽기와 쓰기가 이 주소 하나를 빌린다.</summary>
+    public UIntBox ContainedTypeBox { get; } = new() { Value = 6 };
 
     /// <summary>후보마다 읽는 같은 현재 내용물 종류 DWORD다.</summary>
     public Func<uint>? SharedContainedType { get; set; }

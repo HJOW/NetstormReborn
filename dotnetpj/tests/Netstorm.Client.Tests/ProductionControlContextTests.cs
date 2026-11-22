@@ -9,6 +9,16 @@ namespace Netstorm.Client.Tests; // 실제 생산 문맥/검색 owner와 Session
 /// <summary>준비 대여·현재 전역·장기 참조의 실제 공유 경계를 확인한다.</summary>
 public sealed class ProductionControlContextTests
 {
+    /// <summary>Source 실제 DWORD의 양방향 쓰기와 순회 중 현재 BYTE 비교를 확인한다.</summary>
+    [Fact]
+    public void FinderAndFactoryRoleUseOneWritableWordDuringCurrentWalk()
+    {
+        var game = new ClientGameplayGlobals(); var role = game.ContentFormTypeBox; Assert.Same(role, game.ProductionFinder.ContainedTypeBox); game.ProductionFinder.ContainedType = 199; Assert.Equal(199u, role.Value); role.Value = 6; Assert.Equal(6u, game.ProductionFinder.ContainedType);
+        var pool = new RawSidPool(24000); var parent = InventoryRawSupport.Raw(pool, 50); System.Buffers.Binary.BinaryPrimitives.WriteUInt16LittleEndian(parent[6..], 100); var first = InventoryRawSupport.Raw(pool, 100); first[10] = 6; System.Buffers.Binary.BinaryPrimitives.WriteUInt16LittleEndian(first[4..], 101); var second = InventoryRawSupport.Raw(pool, 101); second[10] = 199; System.Buffers.Binary.BinaryPrimitives.WriteUInt16LittleEndian(second[4..], 0);
+        var cursor = new RawContainedFinder(pool, game.ProductionFinder); Assert.Equal(100, cursor.Begin(50)); game.ProductionFinder.ContainedType = 199; Assert.Equal(199u, role.Value); Assert.Equal(101, cursor.Next()); Assert.Equal(0, cursor.Next());
+        role.Value = 0x100000c7; Assert.Equal(0, cursor.Begin(50)); game.ResetProductionFinderForGeneralWorld(); Assert.Same(role, game.ContentFormTypeBox); Assert.Same(role, game.ProductionFinder.ContainedTypeBox); Assert.Equal(6u, role.Value); Assert.Equal(100, cursor.Begin(50));
+        var independent = new ContainedFinderState { SharedContainedType = () => 77 }; independent.ContainedType = 88; Assert.Equal(77u, independent.ContainedType); Assert.Equal(88u, independent.ContainedTypeBox.Value); independent.SharedContainedType = null; Assert.Equal(88u, independent.ContainedType);
+    }
     /// <summary>현재 장기 전역을 빌리는 최소 실제 세션이다.</summary>
     private static HostSession Session(ClientGameplayGlobals game) => new(new Kernel(), new GameRandom(17), new CrtRandom(23), sharedGameplay: game);
     /// <summary>검색 뷰만 남긴 경우 이전 Session 전체가 회수되는지 확인할 입력이다.</summary>

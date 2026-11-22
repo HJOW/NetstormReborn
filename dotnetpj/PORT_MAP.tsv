@@ -1599,3 +1599,11 @@ cpppj/src/client/OwnerColorTableState.cpp	Netstorm.Client/Display/OwnerColorTabl
 cpppj/src/client/ProductionControlContext.h	Netstorm.Client/ProductionControlContext.cs	0dbfd0c8f6259b83f47e1711c9e9154bae28e0ef	port
 cpppj/src/client/ClientGameplayGlobals.h	Netstorm.Client/ClientGameplayGlobals.Production.cs	ae0e58b3ac0f34697eac6954cce7913a759247e3	port
 cpppj/src/client/ClientGameplayGlobals.cpp	Netstorm.Client/ClientGameplayGlobals.Production.cs	8d24d3e095ee9659595504ff81ad078b0147614b	port
+cpppj/src/client/RawProductionControls.h	Netstorm.Client/Host/HostProductionWindows.cs	b601503d0edaceed695568b843ef20b828463968	port
+cpppj/src/client/RawProductionControls.cpp	Netstorm.Client/Host/HostProductionWindows.cs	4ee69f4f8f38835ce5b48213e55d98e162636aba	port
+cpppj/src/client/RawProductionControls.cpp	Netstorm.Client/Host/HostProductionWindows.Children.cs	4ee69f4f8f38835ce5b48213e55d98e162636aba	port
+cpppj/src/client/RawProductionControls.cpp	Netstorm.Client/Host/HostProductionWindows.Root.cs	4ee69f4f8f38835ce5b48213e55d98e162636aba	port
+cpppj/src/client/RawProductionControls.cpp	Netstorm.Client/Host/HostProductionWindows.Events.cs	4ee69f4f8f38835ce5b48213e55d98e162636aba	port
+cpppj/src/client/RawProductionControls.cpp	Netstorm.Client/Host/HostProductionWindows.Drawing.cs	4ee69f4f8f38835ce5b48213e55d98e162636aba	port
+cpppj/src/client/RawMenuControls.h	Netstorm.Client/Host/HostHtmlText.Production.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
+cpppj/src/client/RawMenuControls.cpp	Netstorm.Client/Host/HostHtmlText.Production.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port

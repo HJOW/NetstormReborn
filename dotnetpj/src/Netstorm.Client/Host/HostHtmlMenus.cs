@@ -92,4 +92,10 @@ public sealed class HostHtmlMenus
         MenuGumpInput.BindMenuGumpInput(_tree.EventHooks, _tree.InputHooks, _tree.FrameHooks,
             token => _tree.Node(token) is MenuGumpNode ? _input : null);
     }
+
+    /// <summary>Source RequestClosePopups의 실제 sticky 메뉴 정리 뒤 같은 UI 구조 변경을 통지한다.</summary>
+    public void RequestClosePopups(Action changed)
+    {
+        ArgumentNullException.ThrowIfNull(changed); (_input ?? throw new InvalidOperationException("현재 공통 메뉴 입력 미연결")).ClosePopups(); changed();
+    }
 }

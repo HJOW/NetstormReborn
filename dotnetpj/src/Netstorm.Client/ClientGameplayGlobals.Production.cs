@@ -10,12 +10,12 @@ public sealed partial class ClientGameplayGlobals
     /// <summary>Session 전체 대신 같은 장기 권한/TYPE/checking owner만 연결한다.</summary>
     private void BindProductionFinder()
     {
-        RawAuthorityState authority = Authority; UIntBox contentType = ContentFormTypeBox; ClientAiDebugGlobals debug = AiDebug;
-        ProductionFinder.SharedBoss = () => authority.Boss; ProductionFinder.SharedContainedType = () => contentType.Value; ProductionFinder.CheckingDead = new(() => debug.Checking.Value);
+        RawAuthorityState authority = Authority; ClientAiDebugGlobals debug = AiDebug;
+        ProductionFinder.SharedBoss = () => authority.Boss; ProductionFinder.SharedContainedType = null; ProductionFinder.CheckingDead = new(() => debug.Checking.Value);
     }
     /// <summary>일반 fresh World에서만 원문 finder 기본값을 같은 주소에 쓰며 prepared 대여/반납은 호출하지 않는다.</summary>
     public void ResetProductionFinderForGeneralWorld()
     {
-        ProductionFinder.Boss = true; ProductionFinder.ContainedType = 6; ContentFormTypeBox.Value = 6; ProductionFinder.Assertion = null; BindProductionFinder();
+        ProductionFinder.Boss = true; ProductionFinder.ContainedType = 6; ProductionFinder.Assertion = null; BindProductionFinder();
     }
 }

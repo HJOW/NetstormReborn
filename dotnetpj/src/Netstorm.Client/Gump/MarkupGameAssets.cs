@@ -20,6 +20,10 @@ public sealed class MarkupGameAssets
     public int TypeCount => _types.Types.Count;
     /// <summary>현재 월드 사본과 구별하는 동일 최초 TYPE 표의 읽기 전용 주소다.</summary>
     public IReadOnlyList<OriginalTypeRecord> LoadedTypes => _types.Types;
+    /// <summary>같은 공통 UI의 생산/측정도 최초 정의를 복사 없이 빌린다.</summary>
+    internal IReadOnlyList<RiftTypeDefinition> Definitions => _definitions;
+    /// <summary>같은 실제 SHP 저장소를 추가 UI에 빌린다. 새 파일 적재나 사본을 만들지 않는다.</summary>
+    internal ShapeDatabase Shapes => _shapes;
     /// <summary>원문 내장 슬롯과 자산 슬롯의 경계다.</summary>
     private const int FirstAssetType = 70;
     /// <summary>현재 로딩 순서의 원문 기준점/논리 수와 물리 블록만 한 번 연결한다.</summary>
