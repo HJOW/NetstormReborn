@@ -1685,3 +1685,7 @@ cpppj/src/o/RawFlyerProcess.cpp	Netstorm.Core/Original/RawFlyerPostPop.cs	98bb14
 cpppj/src/o/RawFlyerProcess.h	Netstorm.Core/Original/RawFlyerPostPop.cs	98bb14e19a393874127ec2ef7486e91788b30234	port
 cpppj/src/o/SquidPostPop.cpp	Netstorm.Core/Original/RawPostPop.Flyer.cs	98bb14e19a393874127ec2ef7486e91788b30234	port
 cpppj/src/o/SquidPostPop.h	Netstorm.Core/Original/RawPostPop.Flyer.cs	98bb14e19a393874127ec2ef7486e91788b30234	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.FlyerPackets.cs	5fd474c2d4a71e882285e79f97a8e868cf041324	port
+cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.FlyerPackets.cs	5fd474c2d4a71e882285e79f97a8e868cf041324	port
+cpppj/src/client/NativeGameplayPacketReceivers.cpp	Netstorm.Client/NativeGameplayPacketReceivers.Flyer.cs	5fd474c2d4a71e882285e79f97a8e868cf041324	port
+cpppj/src/client/NativeGameplayPacketReceivers.h	Netstorm.Client/NativeGameplayPacketReceivers.Flyer.cs	5fd474c2d4a71e882285e79f97a8e868cf041324	port
