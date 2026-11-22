@@ -151,7 +151,7 @@ public sealed partial class RawSquidForms
     /// 같은 풀 판본에서 타입의 생성자가 기록하는 실제 가상 표를 돌려준다. 공장도 같은 표를 빌린다.
     /// </summary>
     /// <param name="type">내장 Form 타입 번호.</param>
-    internal uint Vtable(uint type)
+    public uint Vtable(uint type)
     {
         // 고정된 네 타입만 이 몸체가 만들 수 있다
         int index = Array.IndexOf(Types, type);

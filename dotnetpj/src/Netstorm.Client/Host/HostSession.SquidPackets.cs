@@ -19,6 +19,8 @@ public sealed record HostSquidPacketEffects
     public Action<ReadOnlyMemory<byte>>? FormPacket { get; init; }
     /// <summary>건설 환불의 실제6ch 송신이다. 설치 전 양수 환불은 통지 위치에서 명시 실패한다.</summary>
     public Action<uint, ConstructionMoneyNotice>? ConstructionMoney { get; init; }
+    /// <summary>같은 실제 월드의 전체 가상10 삭제 분배다. 일반 삭제 Pre/Post로 대신할 수 없다.</summary>
+    public Action<int, uint>? VirtualDestroy { get; init; }
 }
 
 /// <summary>고정F가 같은 객체/압축/검증 본체를 직접 선택하는 실제 Host 부분이다.</summary>
@@ -64,7 +66,10 @@ public sealed partial class HostSession
     private OriginalTypeRecord SquidPacketType(uint type) => _terrainPopTypes is { } types && type < types.Count ? types[(int)type]
         : throw new ArgumentOutOfRangeException(nameof(type), "객체 수신의 현재 TYPE 물리 범위");
     /// <summary>현재 실제 슬롯의 TYPE 디버그 이름만 선택한다.</summary>
-    private string SquidPacketTypeName(int sid) => SquidPacketType(Pool.Slot(sid)[10]).Name;
+    private string SquidPacketTypeName(int sid)
+    {
+        string name = SquidPacketType(Pool.Slot(sid)[10]).Name; int nul = name.IndexOf('\0'); return nul < 0 ? name : name[..nul];
+    }
     /// <summary>48f110→42b300의 같은 현재 Core 장부와 진단 뒤 현재 techBitIndex를 읽는다.</summary>
     private bool SquidPacketHasTechnology(uint owner, uint type)
     {
@@ -134,6 +139,11 @@ public sealed partial class HostSession
         if (_playerRecordsReleased || ProcessBindingsReturned() || _playerProcessRuntime is null) throw new ObjectDisposedException(nameof(HostSession), "고정 gameplay의 실제 World 반납 뒤 호출");
         switch (entry)
         {
+            case 0x4327b0:
+            case 0x433170:
+            case 0x432850: ReceiveSquidMutationPacket(entry, packet); return;
+            case 0x4436b0: RawSquidMutationReceive.ReceiveRemoteDeleted(Pool, packet, (sid, flags) => FixedPacketNeed(_squidPacketEffects?.VirtualDestroy)(sid, flags)); return;
+            case 0x433120: RawSquidMutationReceive.ReceiveRemoteDeletedMany(Pool, packet, (sid, flags) => FixedPacketNeed(_squidPacketEffects?.VirtualDestroy)(sid, flags)); return;
             case 0x489ee0: ReceivePathPacket(packet); return;
             case 0x433c30: ReceiveSquidPacket(packet); return;
             case 0x44a280: ReceiveDaisPacket(packet); return;

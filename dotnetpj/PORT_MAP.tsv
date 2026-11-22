@@ -1496,3 +1496,5 @@ cpppj/src/client/RawCampaignPathBindings.h	Netstorm.Client/Host/HostSession.Path
 cpppj/src/client/RawCampaignMotionBindings.h	Netstorm.Client/Host/HostSession.Motion.cs	ab3ef43d3685245aeaad8ecf53d55de4a1b92a97	port
 cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/RawSurfaceStorage.Path.cs	14fd017c3b6ca87880374e044e3ac00bf0575c2e	port
 cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceStorage.Path.cs	14fd017c3b6ca87880374e044e3ac00bf0575c2e	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.SquidMutations.cs	baf141ebe8d2893459a1b18ea74a6caa88504468	port
+cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.SquidMutations.cs	baf141ebe8d2893459a1b18ea74a6caa88504468	port

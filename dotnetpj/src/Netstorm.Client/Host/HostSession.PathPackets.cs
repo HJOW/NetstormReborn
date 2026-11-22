@@ -23,7 +23,7 @@ public sealed partial class HostSession
         int form = PathPacketWord(packet, 4); if (form == 0 || form >= Pool.Capacity) throw new ArgumentOutOfRangeException(nameof(packet), "Path 수신 Form 물리 범위");
         if ((Pool.Slot(form)[11] & 1) == 0)
         {
-            string name = SquidPacketType(Pool.Slot(form)[10]).Name; byte[] detail = Encoding.UTF8.GetBytes($"Receiving an invalid update for a path process. Client thinks the form is a {name}.\n");
+            string name = SquidPacketTypeName(form); byte[] detail = Encoding.UTF8.GetBytes($"Receiving an invalid update for a path process. Client thinks the form is a {name}.\n");
             storage.RecordAssertionDetail(Encoding.UTF8.GetString(detail.AsSpan(0, Math.Min(255, detail.Length)))); storage.AssertDisplay("0", @"\Ns\O\Pathprocess.cpp", 0x24f); return;
         }
         int parent = PathPacketWord(packet, 6); if (parent >= Pool.Capacity) throw new ArgumentOutOfRangeException(nameof(packet), "Path 수신 부모 물리 범위");
