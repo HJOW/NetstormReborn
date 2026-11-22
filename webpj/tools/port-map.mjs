@@ -54,6 +54,8 @@ export const RULES = Object.freeze([
     // 지식(NSInfo) 준비 창의 메타 배치·플레이어 입력·버튼 그리기는 멀티플레이/메타맵 준비 창 전용이다. 단독 미션에서는 부착이 화면 배치 없이 끝나고 원본 단독 미션 화면에도 없다(docs/webpj-nsinfo-scope-20261122.md). (2026-11-22 WB04-E1176)
     { id: 'mp-nsinfo', class: 'exclude-mp', names: ['HudNsInfoMeta', 'HudPlayerButtonDraw', 'NativeNsInfoInput', 'NativePlayerInfoInput', 'RawNsInfoContext'], reason: 'NSInfo(멀티/메타 준비 창)의 메타 배치·플레이어 입력·버튼 그리기·생성 문맥. 단독 미션에서는 화면에 나오지 않는다(E1171·E1182)' },
     // 실제 소켓(TCP/UDP) 연결의 지연 FIFO·`lag` 분포는 멀티플레이 전용이다. 내부(단독) 미션은 큐를 설치하지 않는다(cpppj ClientCampaignTransport.cpp:322, 웹 core/client-campaign-transport.js 가 이미 웹 제외로 기록). (2026-11-22 WB04-E1187)
+    // 메타(챌린지) 앞단: CS 장기 포인터·메타 참가자/전투 수신기 등록·접속 상태 28~33은 메타 목록에서만 쓰인다. 단독 미션은 CS 를 만들지 않으며(웹 core/raw-campaign-session-login-front.js 가 메타 CS 를 거부) 그 수신기가 받을 메타 패킷도 로컬 서버가 보내지 않는다(docs/webpj-meta-front-scope-20261122.md). (2026-11-22 WB04-E1188)
+    { id: 'mp-meta-front', class: 'exclude-mp', names: ['ClientChallengeGlobals', 'ClientMetaPacketReceivers', 'NativeMetaConnectedState'], reason: '메타(챌린지) CS 포인터·메타 참가자/전투 수신기 등록·접속 상태 28~33. 단독은 CS 가 항상 0 이다(E1188)' },
     { id: 'mp-packet-delay', class: 'exclude-mp', names: ['RawPacketDelay'], reason: '실소켓 연결 지연 FIFO·lag 분포. 내부 미션에는 큐를 설치하지 않는다(E1187)' },
     { id: 'rebaseline-port', class: 'port', keys: REBASELINE_CLASSES.port, reason: '후보 기준선의 단독 공통 또는 스커미시 이식 경로(E498~E505)' },
     { id: 'rebaseline-adapt', class: 'adapt', keys: REBASELINE_CLASSES.adapt, reason: '후보 기준선의 웹 플랫폼 대체 경계(E498~E505)' },
