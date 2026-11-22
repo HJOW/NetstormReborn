@@ -1761,3 +1761,10 @@ cpppj/src/o/RawIceCannonFire.cpp	Netstorm.Core/Original/RawIceCannonFire.cs	b242
 cpppj/src/o/RawIceCannonFire.h	Netstorm.Core/Original/RawIceCannonFire.cs	b242648ab490a50e52d03dc87ba4c898f2629a72	port
 cpppj/src/o/RawIceCannonFire.cpp	Netstorm.Core/Original/IceCannonFire.cs	b242648ab490a50e52d03dc87ba4c898f2629a72	port
 cpppj/src/o/RawIceCannonFire.h	Netstorm.Core/Original/IceCannonFire.cs	b242648ab490a50e52d03dc87ba4c898f2629a72	port
+cpppj/src/o/RawMissile.cpp	Netstorm.Core/Original/RawMissile.cs	1d30e38413000f93a892474ac5842058d13f7c4c	port
+cpppj/src/o/RawMissile.h	Netstorm.Core/Original/RawMissile.cs	1d30e38413000f93a892474ac5842058d13f7c4c	port
+cpppj/src/o/RawMissile.cpp	Netstorm.Core/Original/RawMissile.Frame.cs	1d30e38413000f93a892474ac5842058d13f7c4c	port
+cpppj/src/o/RawMissile.h	Netstorm.Core/Original/RawMissile.Types.cs	1d30e38413000f93a892474ac5842058d13f7c4c	port
+cpppj/src/o/RawMissile.h	Netstorm.Core/Original/RawMissile.Hooks.cs	1d30e38413000f93a892474ac5842058d13f7c4c	port
+cpppj/src/o/RawMissile.cpp	Netstorm.Core/Original/Missile.cs	1d30e38413000f93a892474ac5842058d13f7c4c	port
+cpppj/src/o/RawMissile.h	Netstorm.Core/Original/Missile.cs	1d30e38413000f93a892474ac5842058d13f7c4c	port
