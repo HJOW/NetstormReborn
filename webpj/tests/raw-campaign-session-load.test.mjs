@@ -3306,3 +3306,16 @@ test('CampaignSession TheWarBegins: 개발자 그림 진단 패킷', () => {
         assert.deepEqual(logs[0], [29, `0: hx=${header.hotspotX} hy=${header.hotspotY} w=${header.width} h=${header.height} wx=${header.muzzleX} wy=${header.muzzleY}\n`]);
     } finally { s.dispose(); }
 });
+
+test('Session 희생 메뉴: 설치 전에는 거부하고 미션에서는 조용히 돌아오며 비미션에서만 SacrificeMenu Tell 을 연다(E1223)', () => {
+    const gameplay = new ClientGameplayGlobals(); const { s } = scene({ gameplayGlobals: gameplay });
+    try {
+        const tells = []; assert.throws(() => s.showSacrificeMenu(100, (text) => tells.push(text)), /설치 전/);
+        s.load(); const sid = s.world().create(83, 0); // 가상 80 의 현재 VT 가 있는 실제 자산이다.
+        // 미션(missionPost)에서는 대상이나 Tell 장치가 없어도 레벨/문자열/UI 를 조회하지 않고 돌아온다.
+        gameplay.world.missionPost = 1; s.showSacrificeMenu(sid, (text) => tells.push(text)); s.showSacrificeMenu(0, null); assert.deepEqual(tells, []);
+        // 비미션: 범위 밖 대상·Tell 없음은 거부하고, 정상이면 `SacrificeMenu(대상,레벨,업그레이드)` 한 줄을 Tell 로 연다.
+        gameplay.world.missionPost = 0; assert.throws(() => s.showSacrificeMenu(0, () => {}), /대상 SID 범위/); assert.throws(() => s.showSacrificeMenu(sid, null), /Tell 미연결/);
+        s.showSacrificeMenu(sid, (text) => tells.push(text)); assert.equal(tells.length, 1); assert.equal(tells[0], `SacrificeMenu(${sid},0,1)`); // 새 자산은 레벨 0 이라 업그레이드 가능(레벨<3)이다.
+    } finally { s.dispose(); }
+});

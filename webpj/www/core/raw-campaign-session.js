@@ -358,6 +358,17 @@ export class RawCampaignSession {
     sendMutableLocalPacket(target, packet) { this.#live().constructionModules.sendChatMutable(target, packet); }
     // 단일 또는 자기 제외 대상에게 같은 실제 원격 Tell 패킷을 전달한다.
     sendPlayerTell(owner, section, others = false) { this.#live().constructionModules.sendRemoteTell(owner, section, others); }
+    // 원문(RawCampaignSession::ShowSacrificeMenu): 미션에서는 레벨/문자열/UI 를 조회하지 않고 바로 돌아오며, 비미션에서만 대상의 현재 레벨과 업그레이드 가능 여부로 `SacrificeMenu(대상,레벨,업그레이드)` Tell 을 연다.
+    // 이전에는 이 메서드가 없어 단독 미션에서 사제를 제단에 보내면 '희생의 실제 메뉴 부모 미연결' 오류로 중단됐다. (2026-11-22 WB04-E1223)
+    showSacrificeMenu(target, tell) {
+        const o = this.#live(); if (!o.loaded) throw new Error('설치 전 의식 선택 창 요청');
+        if (o.globals.missionPost) return;
+        if (!target || target > 65535 || target >= o.core.pool.capacity) throw new RangeError('의식 선택 창의 실제 대상 SID 범위');
+        const level = o.rewardCount(target) | 0; const canUpgrade = level < 3 ? 1 : 0; const text = `SacrificeMenu(${target | 0},${level},${canUpgrade})`;
+        if (text.length >= 256) throw new RangeError('원문 의식 선택 창256BYTE 서식 범위');
+        if (typeof tell !== 'function') throw new Error('의식 선택의 같은 실제 Tell 미연결');
+        tell(text);
+    }
     // 원본처럼 설치·상태14·현재 Player와 연결 비트를 모두 확인한다.
     localConnectionReady() {
         const o = this.#live(); if (!this.#login || !o.loaded || o.localStateGlobals.state().phase[0] !== 14 || !o.playerState.playerKnown) return false;

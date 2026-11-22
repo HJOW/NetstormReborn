@@ -19,6 +19,7 @@ cpppj 의 `client/RawSurface*.cpp`·`ClientConstruction*.cpp` 는 "Native 장기
 | E1215 | `raw-campaign-session-deletion.js` | 실제 앱 탐침에서 `'다른 실제 자산 가상 삭제 미연결'` 17종 → 거주 구역(0x50f540: 공통 Pre·목록 제거+공통 Post)·Player(0x50ee08: 이전 포인터/상태 정리 전처리)·주문 폭발 효과 열 개·0x50c9f0·0x50cc08·0x50db78(공통 Pre/Post)을 원문 분배표대로 연결. 남은 것은 멀티플레이 전용 Outpost 하나 |
 | E1215 | `raw-campaign-session-runtime.js` | 의존 통지(`dependencyNotice`)를 감시자 VT 별 원문 분류로 교체: Factory 업그레이드 그림(건물과 같은 TYPE) 같은 자산 감시자는 flags 0 으로 삭제, 비행장 홈은 홈 통지, 나머지 자산·Depend/Gump/Content Form 은 빈 반환, Process Form 만 PID 통지 |
 | E1215 | `raw-campaign-session-state.js` | 보호막 Regular 상태의 `checking` 연결(점검 모드의 Dais.cpp 0x479 진단) |
+| E1223 | `raw-campaign-session.js` | `showSacrificeMenu` 추가(원문 ShowSacrificeMenu: 미션에서는 즉시 반환, 비미션에서만 `SacrificeMenu(대상,레벨,업그레이드)` Tell) — 이전에는 단독 미션에서 사제를 제단에 보내면 '희생의 실제 메뉴 부모 미연결' 오류로 중단됐다 |
 | E1219 | `raw-region-ownership.js`·`raw-campaign-ownership.js`·`raw-campaign-asset-bindings.js` | 섬 번호 조회(PE 0046f530)가 좌표에 0041d7a0 편향 snap(0.99999 를 더해 0 쪽 절삭)을 먼저 적용함을 역어셈블로 확인하고 웹 두 getter 에 `snapRegionCoordinate` 적용(소수 좌표의 칸이 달랐다). Reward refreshSp 는 HUD 예산 글자가 매 프레임 SP 를 읽어 무해로 확인 |
 | E1218 | `raw-campaign-session-arrivals.js` | 마나 볼트 주기의 frameZero 훅을 Rift SHP 접근(frameCheck 진단 후 계속)에 연결 |
 | E1217 | `depend-form-host.js`·`raw-surface-world.js` | DependFormHost 의 Native 진단 모드(`bindNativeFind`, World 가 결선): remove 인자 이상 다섯(Squid.cpp 0xb48·0xb49·0xb4b·0xb4c·0xb4e)·has/remove 시작 진단(Squidfinder.cpp 0x158)·notify 뒤 watchedFid≠0(0xadf)을 표시 후 계속 |
@@ -34,3 +35,12 @@ cpppj 의 `client/RawSurface*.cpp`·`ClientConstruction*.cpp` 는 "Native 장기
 
 - 실제 앱 탐침: 미션을 시작한 뒤 `window.netstorm._campaignWorld.session().world()` 로 TYPE 별 `create`→`destroy` 를 시도해 오류 문구를 모았다(임시 Playwright spec, 확인 뒤 삭제). 좌표 없이 만든 자산은 `Damageable 해방 좌표 범위 오류` 가 나오는 탐침 부작용이므로 제외한다.
 - 읽기 전용 에이전트 네 개가 `RawSurface*` 스물세 파일의 훅 대응을 나눠 대조했고, 위 고친 것/닫지 못한 차이는 그 보고를 코드로 다시 확인한 뒤 반영했다(확인하지 못한 항목은 보고에서 '미확인'으로 표시).
+
+## Client 상태·입력 계열 감사 (E1223)
+
+읽기 전용 에이전트 두 개가 `ClientState*`·`Campaign*Services`·`UserInput`·`FortCurrentName*`·`RawPacketFrame`·`RawPeerWorldSync`·`RawClockSynchronization`·`ClientDiagnostics`·`SessionStateDump`·`ClientRendererFrameGlobals`·`*BuildReplay`·`UberReconnect` 를 대조했다(결과는 PORT_MAP 해당 행에 기록).
+
+- **닫은 행**: CampaignUserInputServices(희생 메뉴 훅을 고친 뒤)·UserInput·FortCurrentNameDevices·RawFortCurrentName·RawPacketFrame·RawPeerWorldSync·ClientDiagnostics·SessionStateDump·ClientRendererFrameGlobals.
+- **State 정리 다섯 행**(WorldCleanup·WorldGlobals·StorageCleanup·RuntimeRetirement·UserSelectionCleanup): 코드 이식은 동등하나 앱이 `cleanupClientStateWorld` 를 부르지 않는다. 웹은 미션 이탈을 `_leaveCampaignMission`→`_releaseCampaignWorld` 의 일반 수명으로 처리하고 초기화는 다음 대여(`storage.acquire`→`#freshGeneralInputs`, gameplay `#fresh`)에서 한다. 이 부모를 앱에 연결하려면 `interpretStateOptions`·`audio.writeSongEndBits`·`killGumps`/`replaceUber`/`leaveMetamap`/`refreshSp`/`retireRuntime` 등 앱에 없는 장치가 먼저 필요하다. 이탈 시 원문만 하는 효과(ownerMode 재설정, MapRevision+1, ChatChannels.resetOccupied, 이탈 시점 선택 해제 통지, 정지 깊이 반복 해제)의 영향 확인이 남았다.
+- **UberReconnect**: 앱이 `pollClientConnectionHealth` 를 부르지 않아 하트비트가 실행되지 않는다(단독 미션 관측 가능성 미확인).
+- **BuildReplay 두 행**: 개발자 전용 재생(읽기·키·Process)이 웹에 없다.
