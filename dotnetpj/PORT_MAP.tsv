@@ -1607,3 +1607,8 @@ cpppj/src/client/RawProductionControls.cpp	Netstorm.Client/Host/HostProductionWi
 cpppj/src/client/RawProductionControls.cpp	Netstorm.Client/Host/HostProductionWindows.Drawing.cs	4ee69f4f8f38835ce5b48213e55d98e162636aba	port
 cpppj/src/client/RawMenuControls.h	Netstorm.Client/Host/HostHtmlText.Production.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
 cpppj/src/client/RawMenuControls.cpp	Netstorm.Client/Host/HostHtmlText.Production.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
+cpppj/src/o/RawColorMapCache.h	Netstorm.Core/Original/RawColorMapCache.cs	d207940cd190bbf84cba9e7d024e84b137aad5dd	port
+cpppj/src/o/RawColorMapCache.cpp	Netstorm.Core/Original/RawColorMapCache.cs	d207940cd190bbf84cba9e7d024e84b137aad5dd	port
+cpppj/src/client/ClientColorSortInput.h	Netstorm.Client/Display/ClientColorSortInput.cs	b601503d0edaceed695568b843ef20b828463968	port
+cpppj/src/client/ClientColorSortInput.cpp	Netstorm.Client/Display/ClientColorSortInput.cs	b601503d0edaceed695568b843ef20b828463968	port
+cpppj/src/client/ClientColorMapFile.cpp	Netstorm.Client/Display/ClientColorSortInput.cs	b601503d0edaceed695568b843ef20b828463968	port

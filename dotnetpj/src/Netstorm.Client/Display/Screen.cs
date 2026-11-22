@@ -65,7 +65,13 @@ public sealed class Screen
     private PaletteColorTable _colors = new();
 
     /// <summary>파일 팔레트에서 계산한 밝음·어두움 색 번호 변환표.</summary>
-    private GumpShadeMaps _shadeMaps = new();
+    private readonly GumpShadeMaps _shadeMaps = new();
+
+    /// <summary>같은 장기 Client의 최초 RGB 입력을 매조회에서 빌린다.</summary>
+    private Func<ReadOnlyMemory<uint>>? _colorSortInput;
+
+    /// <summary>초기 캐시 이후 같은9표의 밝음/어두움 행을 빌린다.</summary>
+    private Func<GumpShadeMaps>? _currentColorMaps;
 
     /// <summary>논리 화면을 만든다. 모든 픽셀은 0번 색, 팔레트는 검정이며 모드는 아직 정해지지 않았다(flags 0).</summary>
     /// <param name="width">논리 폭(양수).</param>
@@ -208,7 +214,7 @@ public sealed class Screen
         SetPalette(0, PaletteSize, null, true);
         // 파일 로더에서만 색 표를 다시 계산한다. 일시 팔레트 효과(SetPalette·번개)는 표를 바꾸지 않는다
         _colors = PaletteColors.BuildPaletteColorTable(_logical, patch1078);
-        _shadeMaps = PaletteShade.BuildGumpShadeMaps(_logical);
+        StoreShadeMaps(_currentColorMaps is not null ? _currentColorMaps() : PaletteShade.BuildGumpShadeMaps(_colorSortInput is not null ? _colorSortInput().Span : _logical));
     }
 
     /// <summary>현재 논리 팔레트에서 RGB와 가장 가까운 색 번호를 찾는다. <see cref="SetPalette"/>(apply=false)로 준비한 논리 팔레트도 반영한다.</summary>
@@ -221,7 +227,26 @@ public sealed class Screen
     public PaletteColorTable Colors() => _colors;
 
     /// <summary>파일 팔레트에서 계산한 밝음·어두움 색 번호 변환표.</summary>
-    public GumpShadeMaps ShadeMaps() => _shadeMaps;
+    public GumpShadeMaps ShadeMaps()
+    {
+        if (_currentColorMaps is not null) StoreShadeMaps(_currentColorMaps()); return _shadeMaps;
+    }
+
+    /// <summary>Source의 배열 멤버 값 대입처럼 같은 화면 내부 두 행에 복사한다.</summary>
+    private void StoreShadeMaps(GumpShadeMaps source)
+    {
+        if (source.Bright.Length != 256 || source.Dark.Length != 256) throw new ArgumentException("Screen 명암 두256BYTE 계약");
+        source.Bright.CopyTo(_shadeMaps.Bright, 0); source.Dark.CopyTo(_shadeMaps.Dark, 0);
+    }
+
+    /// <summary>화면 교체 뒤에도 같은 최초 입력 owner를 연결하며 현재 팔레트를 재캡처하지 않는다.</summary>
+    public void BindColorSortInput(Func<ReadOnlyMemory<uint>> current) => _colorSortInput = current ?? throw new ArgumentNullException(nameof(current));
+
+    /// <summary>실제 캐시 준비 뒤 같은 현재9표 getter를 연결하고 밝음/어두움 참조를 갱신한다.</summary>
+    public void BindColorMaps(Func<GumpShadeMaps> current)
+    {
+        _currentColorMaps = current ?? throw new ArgumentNullException(nameof(current)); StoreShadeMaps(_currentColorMaps());
+    }
 
     /// <summary>현재 논리 팔레트에서 날씨 RGB 네 색(바람·비·천둥·해)에 가장 가까운 번호를 찾는다. 팔레트 로더의 저장 별칭이 아니라 계산 도우미다.</summary>
     public uint[] WeatherTints()

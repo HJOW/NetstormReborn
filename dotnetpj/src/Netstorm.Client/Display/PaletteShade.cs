@@ -6,6 +6,16 @@ namespace Netstorm.Client.Display;
 /// </summary>
 public sealed class GumpShadeMaps
 {
+    /// <summary>원문 기본 값형의 두256BYTE0 행을 만든다.</summary>
+    public GumpShadeMaps() { }
+
+    /// <summary>원문의 GumpShadeMaps{bright,dark} 값 복사처럼 같은 현재 두 행을 복사한다.</summary>
+    public GumpShadeMaps(ReadOnlySpan<byte> bright, ReadOnlySpan<byte> dark)
+    {
+        if (bright.Length != 256 || dark.Length != 256) throw new ArgumentException("Gump 명암 두256BYTE 계약");
+        bright.CopyTo(Bright); dark.CopyTo(Dark);
+    }
+
     /// <summary>밝은 쪽 목표 색 번호 256개.</summary>
     public byte[] Bright { get; } = new byte[256];
 
