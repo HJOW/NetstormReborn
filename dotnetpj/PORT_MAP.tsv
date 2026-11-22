@@ -1514,3 +1514,11 @@ cpppj/src/o/RawDeveloperCommandPacket.cpp	Netstorm.Core/Original/RawDeveloperCom
 cpppj/src/o/RawDeveloperCommandPacket.cpp	Netstorm.Net/DeveloperCommandRegistration.cs	29f2ebcd6988df6ccf4f07fe008f6d634ca5dd72	port
 cpppj/src/o/RawDeveloperCommandPacket.h	Netstorm.Core/Original/RawDeveloperCommandPacket.cs	29f2ebcd6988df6ccf4f07fe008f6d634ca5dd72	port
 cpppj/src/o/RawDeveloperCommandPacket.h	Netstorm.Net/DeveloperCommandRegistration.cs	29f2ebcd6988df6ccf4f07fe008f6d634ca5dd72	port
+cpppj/src/o/RawShrapnelFrame.h	Netstorm.Core/Original/ShrapnelFrameFields.cs	049910e263288454ffbba2fc487a141a8a5178c4	port
+cpppj/src/o/RawFieryTailFrame.h	Netstorm.Core/Original/ShrapnelFrameFields.cs	049910e263288454ffbba2fc487a141a8a5178c4	port
+cpppj/src/o/RawShrapnelFrame.h	Netstorm.Core/Original/RawShrapnelFrame.cs	049910e263288454ffbba2fc487a141a8a5178c4	port
+cpppj/src/o/RawShrapnelFrame.cpp	Netstorm.Core/Original/RawShrapnelFrame.cs	049910e263288454ffbba2fc487a141a8a5178c4	port
+cpppj/src/o/RawShrapnelLifetime.h	Netstorm.Core/Original/RawShrapnelLifetime.cs	049910e263288454ffbba2fc487a141a8a5178c4	port
+cpppj/src/o/RawShrapnelLifetime.cpp	Netstorm.Core/Original/RawShrapnelLifetime.cs	049910e263288454ffbba2fc487a141a8a5178c4	port
+cpppj/src/o/ShrapnelVisualSystem.h	Netstorm.Core/Original/ShrapnelVisualSystem.cs	049910e263288454ffbba2fc487a141a8a5178c4	port
+cpppj/src/o/ShrapnelVisualSystem.cpp	Netstorm.Core/Original/ShrapnelVisualSystem.cs	049910e263288454ffbba2fc487a141a8a5178c4	port
