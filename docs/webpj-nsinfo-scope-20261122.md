@@ -18,3 +18,7 @@ Uber 루트의 `createKnowledge`가 만드는 NSInfo(원문 0047ca50 계열, `ui
 ## 대응표 정리(E1176)
 
 - 위 판정에 따라 `tools/port-map.mjs`에 `mp-nsinfo`(exclude-mp) 규칙을 재기준선 규칙 앞에 더해 `HudNsInfoMeta`·`HudPlayerButtonDraw`·`NativeNsInfoInput`·`NativePlayerInfoInput` 네 단위(407줄)를 이식 대상 todo에서 제외로 옮겼다. 재기준선 문서([E498~E505](webpj-rebaseline-meta-20261115.md))가 "5-B·6에서 단독 경로를 확인"으로 남겼던 항목이며, 공유 슬롯 계산 `RawBattleOptionSlots`는 이식 대상으로 유지한다. `tests/port-map.test.mjs`의 후보 신규 단위 분류 시험은 이 네 키의 예외를 명시한다. 남은 양은 137단위·31,863줄 → 133단위·31,456줄이다.
+
+## RawNsInfoContext 추가 정리(E1182)
+
+- `RawNsInfoContext.h`(NSInfo 전체 생성에 Client 전역·공유 문자열 고리·Player 메뉴 훅을 빌려주는 문맥 구조체, 33줄)는 위 판정의 `createKnowledge` 생성 문맥일 뿐이라 같은 이유로 웹 범위 밖이다. `tools/port-map.mjs`의 `mp-nsinfo` 규칙 이름 목록에 더해 이식 대상 todo 에서 제외(`exclude-mp`)로 옮겼고(`tests/port-map.test.mjs`의 예외 목록도 다섯 키로 늘림), 남은 양은 131단위·31,366줄 → 130단위·31,333줄이다.
