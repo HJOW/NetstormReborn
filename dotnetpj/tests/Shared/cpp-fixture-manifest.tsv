@@ -452,3 +452,5 @@ vortex-pre-x86.tsv	027a0d1edeb5d6c96d82980c3be92ce18cdc0bc8bc83c48002e22e7d952cc
 walker-path-x86.tsv	bf133ee926e5bb99a274285ffaa21465a65859f375944b95919b5907d3790006	348	cpppj	Core
 colorsort-cache-parent-x86.tsv	6c798d40024bd57c7b0c07712238938b193c6aea5efc885d9c89ae99415bc3e6	130	cpppj	Client
 colorsort-fixed-input-x86.tsv	70684bfd514b29e981d67faa4d2abc6cababcc5ed275b22f495f58e41d65813f	6	cpppj	Client
+basefile-io-x86.tsv	0cd66ec887a04a8539ce74efb3f0b63a7f9a8e0f488b40f72b71785e4d808f8c	322	cpppj	Core
+basefile-read-key-x86.tsv	e2c9072d49f8946152535de57a526913311a56cbdc6749c5df3c48ba89d19f82	235	cpppj	Core

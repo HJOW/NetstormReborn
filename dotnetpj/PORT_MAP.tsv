@@ -1612,3 +1612,5 @@ cpppj/src/o/RawColorMapCache.cpp	Netstorm.Core/Original/RawColorMapCache.cs	d207
 cpppj/src/client/ClientColorSortInput.h	Netstorm.Client/Display/ClientColorSortInput.cs	b601503d0edaceed695568b843ef20b828463968	port
 cpppj/src/client/ClientColorSortInput.cpp	Netstorm.Client/Display/ClientColorSortInput.cs	b601503d0edaceed695568b843ef20b828463968	port
 cpppj/src/client/ClientColorMapFile.cpp	Netstorm.Client/Display/ClientColorSortInput.cs	b601503d0edaceed695568b843ef20b828463968	port
+cpppj/src/o/RawBaseFileIO.h	Netstorm.Core/Original/RawBaseFileIO.cs	1c1bb7eeaf46628579f795098f95afef915c3e51	port
+cpppj/src/o/RawBaseFileIO.cpp	Netstorm.Core/Original/RawBaseFileIO.cs	1c1bb7eeaf46628579f795098f95afef915c3e51	port
