@@ -28,6 +28,8 @@ public sealed class UberRootNode : GumpCreateNode
 /// <summary>실제 원본 전역과 전체 자식 공장/가상 수명만 빌린다. 등록표나 노드를 복제하지 않는다.</summary>
 public sealed class UberRootHooks
 {
+    /// <summary>전체 부모 조립에서 함수 슬롯 사본만 만들고 같은 실제 callback/상태 owner는 공유한다.</summary>
+    internal UberRootHooks CopyDevices() => (UberRootHooks)MemberwiseClone();
     /// <summary>같은 고정 this의 실제 파생.</summary>
     public Func<uint, UberRootNode?>? Node { get; set; }
     /// <summary>실제 세 구분선의 같은 확장 객체.</summary>

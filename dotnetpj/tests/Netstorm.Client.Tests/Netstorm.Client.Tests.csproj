@@ -177,6 +177,8 @@
     <None Include="../../../cpppj/tests/fixtures/hud-chat-geometry-x86.tsv" Link="X86/hud-chat-geometry-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- HUD 생성/슬레이브/중첩 배치의 독립 원본 기계어2150관측을 같은 파일로 공유한다. -->
     <None Include="../../../cpppj/tests/fixtures/hud-dock-geometry-x86.tsv" Link="X86/hud-dock-geometry-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- 구분선 입력/방송의 원본13398관측을 같은 공통 처리기와 대조한다. -->
+    <None Include="../../../cpppj/tests/fixtures/hud-divider-input-x86.tsv" Link="X86/hud-divider-input-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- 전체 Uber 생성/교체의 독립 원본160관측을 단일 링크로 공유한다. -->
     <None Include="../../../cpppj/tests/fixtures/uber-root-x86.tsv" Link="X86/uber-root-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- 전체180관측과 이름/후보열을 제외한 기본166부분집합의 원문을 사본 없이 공유한다. -->

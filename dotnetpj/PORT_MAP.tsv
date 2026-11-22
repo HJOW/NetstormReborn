@@ -1550,3 +1550,9 @@ cpppj/src/client/HudDock.cpp	Netstorm.Client/Gump/HudDock.cs	53a1ebf945ea66c5554
 cpppj/src/client/UberRootGump.h	Netstorm.Client/Gump/UberRootState.cs	52cfee23d6440b89b7961bc8d6269b4aa1098038	port
 cpppj/src/client/UberRootGump.h	Netstorm.Client/Gump/UberRootGump.cs	52cfee23d6440b89b7961bc8d6269b4aa1098038	port
 cpppj/src/client/UberRootGump.cpp	Netstorm.Client/Gump/UberRootGump.cs	52cfee23d6440b89b7961bc8d6269b4aa1098038	port
+cpppj/src/client/HudDividerInput.h	Netstorm.Client/Gump/HudDividerInput.cs	d2dd9fcb0a3322ae249a23ada4a9b1d29cc923d0	port
+cpppj/src/client/HudDividerInput.cpp	Netstorm.Client/Gump/HudDividerInput.cs	d2dd9fcb0a3322ae249a23ada4a9b1d29cc923d0	port
+cpppj/src/client/RawUberRootControls.h	Netstorm.Client/Gump/RawUberRootControls.cs	52cfee23d6440b89b7961bc8d6269b4aa1098038	port
+cpppj/src/client/RawUberRootControls.cpp	Netstorm.Client/Gump/RawUberRootControls.cs	52cfee23d6440b89b7961bc8d6269b4aa1098038	port
+cpppj/src/client/RawUberRootControls.cpp	Netstorm.Client/Gump/HudDockState.cs	52cfee23d6440b89b7961bc8d6269b4aa1098038	port
+cpppj/src/client/RawUberRootControls.cpp	Netstorm.Client/Gump/UberRootState.cs	52cfee23d6440b89b7961bc8d6269b4aa1098038	port

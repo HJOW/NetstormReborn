@@ -84,11 +84,15 @@ public sealed class HudDockGlobals
     public uint FullRefresh { get => _fullRefresh.Value; set => _fullRefresh.Value = value; }
     /// <summary>00542674의 숨기기 전 채팅 구분선 Y.</summary>
     public float SavedChatY { get; set; }
+    /// <summary>전체 UI 조립이 동일한 화면/지도 트리 owner를 빌리는지 값 변경 없이 확인한다.</summary>
+    internal bool BorrowsView(GumpCreateState create, GumpTreeState tree) => ReferenceEquals(_create, create) && ReferenceEquals(_tree, tree);
 }
 
 /// <summary>같은 기본/파생 노드와 실제 가상 호출·현재 화면 효과를 공급하는 경계다.</summary>
 public sealed class HudDockHooks
 {
+    /// <summary>C++ 장치 구조체의 값 복사처럼 함수 슬롯만 복사하고 실제 callback/상태 owner는 공유한다.</summary>
+    internal HudDockHooks CopyDevices() => (HudDockHooks)MemberwiseClone();
     /// <summary>현재 공통 기본 노드.</summary>
     public Func<uint, GumpCreateNode?>? Node { get; set; }
     /// <summary>같은 객체의 구분선 확장.</summary>
