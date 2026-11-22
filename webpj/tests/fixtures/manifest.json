@@ -25470,6 +25470,36 @@
       "cpppjBasis": {
         "cpppj/src/client/ThemeTechnologyCommand.cpp": "7435a502c"
       }
+    },
+    {
+      "id": "src-asset-deletion-vtables",
+      "path": "cpppj/src/client/AssetDeletionVtables.inc",
+      "kind": "source",
+      "edition": "10.78",
+      "required": false,
+      "producer": "cpppj 복원 소스(PE 생성자 83개의 VT+14/+18/+34 표)",
+      "consumers": [
+        "webpj/tests/asset-deletion-vtables.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/raw-campaign-session-deletion.js",
+        "webpj/www/core/squid-vtables.js"
+      ],
+      "unit": "WB04-E1209",
+      "doc": "docs/webpj-asset-deletion-vtables-20261122.md",
+      "cpppjSources": [
+        "cpppj/src/client/AssetDeletionVtables.inc"
+      ],
+      "scope": "83개 가상 표와 전처리/후처리 묶음·부모 삭제 통지 열 구성 교차 확인",
+      "text": null,
+      "sha256": null,
+      "bytes": null,
+      "lines": null,
+      "fixtureCommit": "9c11dd728",
+      "webCommit": "6eba76ad2",
+      "cpppjBasis": {
+        "cpppj/src/client/AssetDeletionVtables.inc": "9c11dd728"
+      }
     }
   ]
 }
