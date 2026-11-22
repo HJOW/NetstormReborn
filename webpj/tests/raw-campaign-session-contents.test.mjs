@@ -126,3 +126,13 @@ test('Session Contents: 포획 소리는 현재 이름표와 전역 재생의6�
         o.services.sound.play = null; assert.throws(() => h.sound('enemyPriestCaptured.wav'), /전역 음향 미연결/); assert.equal(calls.length, 1);
     } finally { o.dispose(); }
 });
+
+test('Session 내용물: unit-lost 억제 두 전역은 현재 적재 깊이와 fort 모드를 따른다(E1216)', () => {
+    const o = scene(); try {
+        const state = o.world.deletionState; assert.equal(state.unitLostSuppressed1, false); assert.equal(state.unitLostSuppressed2, false);
+        o.objectState.loadingDepth = 2; assert.equal(state.unitLostSuppressed1, true); o.objectState.loadingDepth = 0; assert.equal(state.unitLostSuppressed1, false);
+        o.core.ownerMode.fort = true; assert.equal(state.unitLostSuppressed2, true); o.core.ownerMode.fort = false; assert.equal(state.unitLostSuppressed2, false);
+        // 독립 입력이 값을 쓰면 그 값이 현재 값을 덮는다.
+        state.unitLostSuppressed1 = true; o.objectState.loadingDepth = 0; assert.equal(state.unitLostSuppressed1, true);
+    } finally { o.dispose(); }
+});

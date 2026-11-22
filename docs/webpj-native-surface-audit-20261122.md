@@ -19,11 +19,12 @@ cpppj 의 `client/RawSurface*.cpp`·`ClientConstruction*.cpp` 는 "Native 장기
 | E1215 | `raw-campaign-session-deletion.js` | 실제 앱 탐침에서 `'다른 실제 자산 가상 삭제 미연결'` 17종 → 거주 구역(0x50f540: 공통 Pre·목록 제거+공통 Post)·Player(0x50ee08: 이전 포인터/상태 정리 전처리)·주문 폭발 효과 열 개·0x50c9f0·0x50cc08·0x50db78(공통 Pre/Post)을 원문 분배표대로 연결. 남은 것은 멀티플레이 전용 Outpost 하나 |
 | E1215 | `raw-campaign-session-runtime.js` | 의존 통지(`dependencyNotice`)를 감시자 VT 별 원문 분류로 교체: Factory 업그레이드 그림(건물과 같은 TYPE) 같은 자산 감시자는 flags 0 으로 삭제, 비행장 홈은 홈 통지, 나머지 자산·Depend/Gump/Content Form 은 빈 반환, Process Form 만 PID 통지 |
 | E1215 | `raw-campaign-session-state.js` | 보호막 Regular 상태의 `checking` 연결(점검 모드의 Dais.cpp 0x479 진단) |
+| E1216 | `raw-campaign-session-contents.js` | unit-lost 소리/좌표 억제 두 전역(`unitLostSuppressed1/2`)을 현재 적재 깊이(≠0)와 fort 모드에 연결 — 이전에는 항상 false 라 적재 중 삭제되는 로컬 유닛도 손실 소리와 좌표를 남겼다 |
 
 ## 닫지 못한 차이 (PORT_MAP 해당 행에 기록)
 
 - **DestroyPatch 진단 열두 지점**(Squid 삭제의 `AssertPatch` 0x24d·0x269·0x276·0x27d·0x280·0x27e·0x28f·0x2a2·0x2a9·0x15c·0x15d·0x123)과 `SquidDestroyLifecycle` 0x771: 원문은 표시 후 계속, 웹 `squid-destroy.js` 는 같은 지점에서 오류 중단. 식을 표로 옮겨 `assertDisplay` 로 바꾸는 단위가 필요하다(`RawSurfaceDeletion`·`RawSurfaceLifetime` 행).
-- **적재 중 unit-lost 억제**(`unitLostSuppressed`)가 웹에서 설정되지 않음, `rememberPlacement` 미연결(`RawSurfaceDeletion`).
+- `rememberPlacement` 미연결(`RawSurfaceDeletion`). (적재 중 unit-lost 억제 두 전역은 E1216 에서 `raw-campaign-session-contents.js` 가 현재 적재 깊이·fort 모드에 연결했다.)
 - **DependFormHost 진단**: notify 뒤 `watchedFid≠0`(Squid.cpp 0xadf), remove 인자 이상(0xb48·0xb49·0xb4b·0xb4c·0xb4e), FormFinder 시작 진단(Squidfinder.cpp 0x158)(`RawSurfaceDepend`).
 - **Mana frameZero 훅**(비정상 SHP 에서 진단 후 계속), **Reward refreshSp**(SP 가산 뒤 표시 갱신), **Vortex islandNumber 편향**(`kSnapBias`)의 원본 여부 확인(`RawSurfaceMana`·`RawSurfaceReward`·`RawSurfaceVortex`).
 - **타깃(0x130)·활성화(0x206)·타이머 패킷(0xcc/0xe6) 진단**: cpppj typed 와 웹이 같은 오류 중단이며 원문 헤더는 복귀 가능한 진단이라 적는다(원문 식 문자열을 PE 에서 읽어야 한다).

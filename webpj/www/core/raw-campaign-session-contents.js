@@ -49,6 +49,10 @@ export class RawCampaignSessionContents {
         if (!o.services.unitLost) o.services.unitLost = missing(3025);
         o.world.bindDeletion(o.hp, o.worldHooks.assets.selected, makeCampaignDeletionEffects(o.worldHooks.assets, o.services.unitLost));
         o.world.deletionState.silentType = 147;
+        // 원문 Native(RawSurfaceStorage::RestoreDeletionGlobals)처럼 unit-lost 소리/좌표 기록의 두 억제 전역을 현재 값에 연결한다: 적재 깊이(005c89b8)가 0 이 아니거나 fort 모드이면 억제한다.
+        // 이전에는 두 값이 항상 false 라 Fort/템플릿 적재 중 삭제되는 로컬 유닛도 손실 소리와 좌표를 남겼다. 쓰기는 독립 입력용으로 값을 덮는다. (2026-11-22 WB04-E1216)
+        const suppressed = (key, read) => { let override = null; Object.defineProperty(o.world.deletionState, key, { configurable: true, enumerable: true, get: () => (override === null ? read() : override), set: (value) => { override = value; } }); };
+        suppressed('unitLostSuppressed1', () => (o.objectState.loadingDepth >>> 0) !== 0); suppressed('unitLostSuppressed2', () => Boolean(c.ownerMode.fort));
         const hooks = { ...o.services.playerContent, money: (owner) => { this.#live(); return spFloat(o.sp.get(owner)); } };
         if (!hooks.gump) hooks.gump = missing(3030); if (!hooks.handle) hooks.handle = missing(3030);
         const reads = bindSpStoreNotice(o.sp); const patch = o.priestState.regen.patch;
