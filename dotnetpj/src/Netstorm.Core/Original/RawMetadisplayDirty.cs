@@ -85,8 +85,18 @@ public sealed class MetadisplayDirtyState
     /// <summary>큐의 유효 칸 수(0~100).</summary>
     public int Count;
 
-    /// <summary>0 이 아니면 다음 Refresh 가 64×64 전체 셀을 다시 그린다(큐 포화 등).</summary>
-    public uint FullRefresh;
+    /// <summary>독립 큐가 소유하는 전체 갱신 값이다. 공유 전역이 있으면 읽거나 쓰지 않는다.</summary>
+    private uint _fullRefresh;
+
+    /// <summary>실제 HUD/섬/신전의005949d4를 복사 없이 빌린다. 독립 검사에서는 null로 자체 값을 쓴다.</summary>
+    public UIntBox? SharedFullRefresh { get; set; }
+
+    /// <summary>0이 아니면64×64 전체를 다시 그린다. 공유 전역 연결 시 현재 같은DWORD를 즉시 읽고 쓴다.</summary>
+    public uint FullRefresh
+    {
+        get => SharedFullRefresh?.Value ?? _fullRefresh;
+        set { if (SharedFullRefresh is { } shared) shared.Value = value; else _fullRefresh = value; }
+    }
 
     /// <summary>카메라·사각형 static 초기화 비트(1·2).</summary>
     public uint Initialized;

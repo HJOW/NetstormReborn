@@ -189,4 +189,9 @@
     <!-- 일반 헤더 뒤의 수신 원문238관측을 실제 전체 패킷/효과 순서로 대조한다. -->
     <None Include="../../../cpppj/tests/fixtures/chat-receive-x86.tsv" Link="X86/chat-receive-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 실제 미니맵 기하와 평면 블릿의 기존 독립 관측을 이 소비자에서만 읽는다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/minimap-geometry-x86.tsv" Link="X86/minimap-geometry-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/minimap-blit-x86.tsv" Link="X86/minimap-blit-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
