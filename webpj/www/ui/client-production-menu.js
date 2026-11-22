@@ -25,6 +25,7 @@ import { ClientGameMenuBar } from './client-game-menu-bar.js';
 import { ClientObjectMenuOpen } from './client-object-menu-open.js';
 import { ClientKnowledgeMenu } from './client-knowledge-menu.js';
 import { ClientWarnings } from './client-warnings.js';
+import { ClientMoneyDialog } from './client-money-dialog.js';
 
 // Session·원본 자산과 실제 입력·출력 장치를 빌리고 생성한 메뉴를 반납할 수 있게 한다.
 export function createClientProductionMenu(root, session, game, data, fonts, screen, colors, background, backgroundType, devices) {
@@ -39,7 +40,7 @@ export function createClientProductionMenu(root, session, game, data, fonts, scr
     stoneState.backgroundType = backgroundType; stoneState.backgroundFrame = 1; widgetState.defaultType = backgroundType;
     const scroll = new ClientScrollControls(root, { buttonState, stoneState, scrollState, widgetState, backgroundColor: () => 35,
         type: (type) => assets.type(type), frame: (...args) => assets.frame(...args), output: { fonts, background },
-        now: devices.now, poll: devices.poll, sound: devices.sound, baseEvent: devices.baseHandle });
+        now: devices.now, poll: devices.poll, sound: () => devices.sound('button.wav'), baseEvent: devices.baseHandle }); // Gump 버튼 본체는 인자 없이 소리를 요청하므로 원본 button.wav 이름을 채운다. (2026-11-22 WB04-E1168)
     const titleState = new ScrollingTextGumpWidgetState(); Object.assign(titleState, { changeEvent: 0x02000036, stepEvent: 0x0200002e });
     const title = new ClientScrollingText(root, fonts, text, buffers, scroll, markup, titleState, devices.cursor);
     const decoration = new ClientGumpDecoration(root, game, background, createClientDecorationState(backgroundType), devices.baseHandle, devices.invalidate);
@@ -70,9 +71,13 @@ export function createClientProductionMenu(root, session, game, data, fonts, scr
     const knowledge = devices.knowledge ? new ClientKnowledgeMenu(session, menu, { ...devices.knowledge, translate: devices.translate }) : null;
     // 오른쪽 위 경고·상태 안내(Game Paused!·Game Time·Warning)도 같은 글자 장치로 만든다. 장치가 없으면 만들지 않는다. (2026-11-20 WB04-E1089)
     const warnings = devices.warnings ? new ClientWarnings(root, text, fonts, { changed: devices.changed, ...devices.warnings, translate: devices.translate, sound: () => devices.sound('newWarnMessage.wav') }) : null;
+    // Players ▸ Send Money ▸ Send X 의 숫자 입력 창(Send X Storm Power)이다. 확정 장치(원본 004c9350)가 없으면 만들지 않는다. (2026-11-22 WB04-E1168)
+    const sendMoney = devices.sendMoney ? new ClientMoneyDialog(root, game, fonts, screen, { text, decoration, background, backgroundType },
+        { now: devices.now, poll: devices.poll, sound: devices.sound, baseHandle: devices.baseHandle, translate: devices.translate, confirm: devices.sendMoney.confirm, changed: devices.changed }) : null;
     return { gameMenu, knowledge, warnings, open: (item, point) => about.open(item, point), openPriest: (sid, event) => priestOpen?.supports(sid) ? priestOpen.open(sid, event) : 0,
         openFactory: (sid, event) => factoryOpen?.supports(sid) ? factoryOpen.open(sid, event) : 0,
         openObject: (sid, event) => objectOpen?.supports(sid) ? objectOpen.open(sid, event) : 0,
         instances: () => menu.instances(), closePopups: () => menu.closePopups(),
-        close: () => { warnings?.close(); gameMenu?.close(); menu.close(); scroll.close(); } };
+        sendMoney: sendMoney ? { open: (target) => sendMoney.open(target), current: () => sendMoney.current(), text: () => sendMoney.text() } : null,
+        close: () => { sendMoney?.close(); warnings?.close(); gameMenu?.close(); menu.close(); scroll.close(); } };
 }

@@ -9,18 +9,17 @@ import { displayTextCodec } from '../assets/display-text.js';
 import { encodeUtf16Units } from '../assets/text-encoding.js';
 import { hasExtendedDisplayText } from '../core/display-text-input.js';
 
-// 같은 실제 글꼴과 현재 Gump 문맥으로 원본 바이트 또는 확장 표시 문자를 측정한다.
-export function createClientTextMeasure(owner, fonts) {
-    if (!owner || typeof fonts?.measureFont !== 'function') throw new TypeError('Client TextEntry 실제 글꼴 저장소 필요');
+// 원본 바이트와 네 바이트 확장 표시 문자가 섞인 글자의 [폭, 높이]를 해석된 글자 문맥으로 측정한다. 사용: createMixedGumpTextMeasure(fonts)(바이트, 해석된 문맥, 길이 -1).
+// TextEntry 와 돌 버튼 라벨이 같은 측정을 쓴다. (2026-11-22 WB04-E1168: 돌 버튼 한국어 라벨 측정을 위해 입력창 측정에서 분리)
+export function createMixedGumpTextMeasure(fonts) {
+    if (typeof fonts?.measureFont !== 'function') throw new TypeError('혼합 글자 측정의 실제 글꼴 저장소 필요');
     const text = new GumpText(fonts);
-    return (token, bytes, length = -1) => {
-        const node = owner.node(token); if (!(node instanceof TextEntryGumpNode)) throw new Error('TextEntry 글꼴 측정 노드 없음');
+    return (bytes, context, length = -1) => {
         if (!(bytes instanceof Uint8Array)) throw new TypeError('TextEntry 측정 바이트 필요');
         length |= 0; let count = length;
         if (length === -1) { count = bytes.indexOf(0); if (count < 0) throw new RangeError('Gump 글자 범위에 NUL 종료 필요'); }
         if (count > bytes.length) throw new RangeError('Gump 글자 측정 길이 범위 초과');
         const selected = bytes.subarray(0, Math.max(0, count));
-        const context = decodeGumpTextContext(node.textContext);
         if (!hasExtendedDisplayText(selected)) {
             const result = text.measure(bytes, context, undefined, length); return [result.width, result.height];
         }
@@ -38,6 +37,16 @@ export function createClientTextMeasure(owner, fonts) {
         if (start < selected.length) add(selected.subarray(start));
         if (context.flags & 2) { width = (width + context.shadowX) | 0; height = (height + context.shadowY) | 0; }
         return [width, height];
+    };
+}
+
+// 같은 실제 글꼴과 현재 Gump 문맥으로 원본 바이트 또는 확장 표시 문자를 측정한다.
+export function createClientTextMeasure(owner, fonts) {
+    if (!owner || typeof fonts?.measureFont !== 'function') throw new TypeError('Client TextEntry 실제 글꼴 저장소 필요');
+    const measure = createMixedGumpTextMeasure(fonts);
+    return (token, bytes, length = -1) => {
+        const node = owner.node(token); if (!(node instanceof TextEntryGumpNode)) throw new Error('TextEntry 글꼴 측정 노드 없음');
+        return measure(bytes, decodeGumpTextContext(node.textContext), length);
     };
 }
 

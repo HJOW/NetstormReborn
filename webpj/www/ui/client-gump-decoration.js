@@ -16,10 +16,12 @@ export class ClientGumpDecoration {
         const drawing = { draw: (token) => { if (!this.#active) throw new Error('Client 장식의 현재 배경 표면 누락'); background.draw(token, this.#active.target, this.#active.clip); } };
         this.#decoration = new GumpDecoration(root.createState(), state, factory, drawing, root.collection(), root.lifetime(), hooks);
     }
-    // 실제 파생 노드의 출력·확장 재그리기·소멸을 공통 루트에 등록한다.
-    allocate() {
-        const root = this.#root, node = new GumpDecorationNode(); let token = 0;
-        token = root.allocateDerived(node, (event, first, second) => this.#baseHandle(token, event, first, second),
+    // 실제 파생 노드의 출력·확장 재그리기·소멸을 공통 루트에 등록한다. 장식 노드에서 파생한 클래스(입력 창 부모 등)와 그 가상 입력 처리기(토큰, 사건, 첫 값, 둘째 값)를 고르면 기본 Help 대신 그 처리기를 쓴다.
+    // (2026-11-22 WB04-E1168: 송금 숫자 입력 창 부모를 같은 장식 출력으로 만들기 위해 파생 노드·처리기 선택 추가)
+    allocate(NodeClass = GumpDecorationNode, handler = null) {
+        if (typeof NodeClass !== 'function' || !(new NodeClass() instanceof GumpDecorationNode) || (handler !== null && typeof handler !== 'function')) throw new TypeError('Client 장식 Gump 파생 노드·처리기 계약');
+        const root = this.#root, node = new NodeClass(); let token = 0;
+        token = root.allocateDerived(node, (event, first, second) => (handler ?? this.#baseHandle)(token, event, first, second),
             (current, flags) => this.#decoration.deleteScalar(current, flags), null, () => {});
         root.bindRedraw(token, (current, erase) => this.#decoration.redraw(current, erase));
         root.bindDraw(token, (current, target, clip) => { const previous = this.#active; this.#active = { target, clip, raster: new GumpDecorationPixelTarget(target, this.#assets).hooks({}) }; try { this.#decoration.draw(current); } finally { this.#active = previous; } });

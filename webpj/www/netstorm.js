@@ -30,7 +30,7 @@ import { SoundList } from './audio/sound-list.js';
 import { MissionAudioAssets } from './audio/mission-audio-assets.js';
 import { SceneMusicDriver } from './audio/scene-music-driver.js';
 import { makePriestShieldNoticeHooks } from './core/sound-process.js';
-import { dispatchSendMoneyInput, isSendMoneyCommand, sendMoneyScriptCode } from './core/send-money-input.js';
+import { confirmSendMoney, dispatchSendMoneyInput, isSendMoneyCommand, sendMoneyScriptCode } from './core/send-money-input.js';
 import { captureSessionStateDump, formatSessionStateDump } from './core/session-state-dump.js';
 import { handleAllianceRequestInput } from './core/raw-player-participation.js';
 import { createSoundState, SoundPlayer } from './audio/sound-player.js';
@@ -1516,7 +1516,9 @@ export class Netstorm {
                         project: (x, y) => { const point = this._clientGameplay.camera().snapshot().project(x, y); return [point.x, point.y]; },
                         content: (sid) => production.session.priests().carrier.findContained(sid, 1, 0, 0), range: (type) => production.session.core().types[type].range,
                         screenWidth: () => this._clientPaletteScreen.width } },
-                command: (...args) => this._clientInputQueue.pushCommand(...args), invalidate: (rect) => this._clientRenderer.invalidate(rect, 0), gameMenu: this._campaignGameMenuDevices(production), knowledge: this._campaignKnowledgeDevices(), warnings: this._campaignWarningDevices(production) },
+                command: (...args) => this._clientInputQueue.pushCommand(...args), invalidate: (rect) => this._clientRenderer.invalidate(rect, 0), gameMenu: this._campaignGameMenuDevices(production), knowledge: this._campaignKnowledgeDevices(), warnings: this._campaignWarningDevices(production),
+                // Players ▸ Send Money ▸ Send X 숫자 입력 창의 확정 장치(원본 004c9350)이다. (2026-11-22 WB04-E1168)
+                sendMoney: { confirm: (target, text) => confirmSendMoney(target, text, this._campaignWorld.session().moneyInputHooks()) } },
             changed: () => { this._clientRenderer.invalidateAll(); this._displayDirty = true; }, closePopups: () => this._closeCampaignPopups(),
             poll: (code) => this._clientInputPoll.poll(code), cursor: (number) => { this._campaignCursor = number; this._applyCursor(); },
             baseHandle: (...args) => help.handle(...args), menuInstances: () => this._mainMenu?.popup?.isOpen ? 1 : 0,
@@ -1675,12 +1677,27 @@ export class Netstorm {
         return formatSessionStateDump(captureSessionStateDump(session ? session.core().pool.edition : 'patch1078', clock.time(), random, kernel, session));
     }
 
-    // 송금 명령을 현재 세션의 경제 장치로 실행한다(원본 UberGump 의 송금 일반 입력). X 는 숫자 입력 창이 필요한데 웹은 원본 이름 대화창(편집 전용 SaveFortNameDialog)을 옮기지 않아 아직 연결하지 못했다.
-    // 모두 보내기는 `asksend(대상)` 확인 안내 창을 띄우고 그 단추가 모두 보내기 명령을 다시 올린다. (2026-11-20 WB04-E1126)
+    // 미션 화면에서 Gump 모달 입력 창(Send X 숫자 창)이 열려 있으면 그 토큰을, 아니면 0 을 돌려준다. 열려 있는 동안 키보드·마우스 입력은 모두 이 창이 받는다. (2026-11-22 WB04-E1168)
+    _campaignInputDialogOpen() {
+        return this._campaignDisplayActive() ? (this._campaignProduction?.ui?.sendMoney?.()?.current() ?? 0) : 0;
+    }
+
+    // 입력 창이 열린 동안의 키 하나를 원본 입력 큐에 올린다(printable 문자·Backspace·Enter·방향/Home/End/Delete 가상 키). 브라우저 기본 동작과 게임 단축키로는 보내지 않는다.
+    // 한글 등 조합 중인 입력은 이 경로가 아니라 IME 경로가 맡는다. (2026-11-22 WB04-E1168)
+    _queueCampaignDialogKey(event, released) {
+        if (event.isComposing || this._clientComposing || !this._clientInputQueue) return;
+        const pointer = this._input.pointer;
+        if (event.key === 'Tab' || event.key === 'Backspace' || event.key === 'Enter' || event.key === 'Escape' || event.key === ' ' || (typeof event.key === 'string' && event.key.length === 1) || /^(?:Arrow|Home|End|Delete)/u.test(event.key ?? '')) event.preventDefault();
+        queueBrowserVirtualKeyEvent(this._clientInputQueue, event, pointer, released);
+        if (!released) queueBrowserCharacterEvent(this._clientInputQueue, event, pointer);
+    }
+
+    // 송금 명령을 현재 세션의 경제 장치로 실행한다(원본 UberGump 의 송금 일반 입력). X 는 숫자 입력 창(Send X Storm Power, 원본 SaveFortNameDialog::ShowMoney)을 모달로 열고 OK/Enter 가 확정(원본 004c9350)한다.
+    // 모두 보내기는 `asksend(대상)` 확인 안내 창을 띄우고 그 단추가 모두 보내기 명령을 다시 올린다. (2026-11-20 WB04-E1126, 2026-11-22 WB04-E1168: Send X 숫자 입력 창 연결)
     _dispatchCampaignSendMoney(event) {
         const world = this._campaignWorld; if (!world) throw new Error('송금 일반 입력의 실제 월드 없음');
         const hooks = { ...world.session().moneyInputHooks(),
-            numberDialog: () => { console.warn('Netstorm: Send X 숫자 입력 창은 아직 연결되지 않아 실행하지 않았습니다.'); },
+            numberDialog: (target) => { const dialog = this._campaignProduction?.ui?.sendMoney?.(); if (!dialog) throw new Error('송금 숫자 입력 창의 실제 장치 미연결'); this._closeCampaignPopups(); dialog.open(target); this._displayDirty = true; },
             askAll: (target) => { this._openTell(`asksend(${target})`); } };
         dispatchSendMoneyInput(event, hooks); this._clientRenderer.invalidateAll(); this._displayDirty = true;
     }
@@ -1835,6 +1852,8 @@ export class Netstorm {
         for (;;) {
             const next = queue.peek(); if (!next) break;
             if (cameraPan) { queue.pop(false); continue; }
+            // Send X 숫자 창 같은 Gump 모달이 열려 있으면 모든 사건이 그 창으로만 가고 월드·단축키로는 가지 않는다(원본의 모달 dialog 우선 전달). (2026-11-22 WB04-E1168)
+            if (this._campaignInputDialogOpen()) { const modal = queue.pop(false); gump.input().route(modal.code, modal.x, modal.y); this._displayDirty = true; continue; }
             const code = (next.code & 0x03ffffff) >>> 0, release = Boolean(next.code & InputCode.release);
             // 선택 키: P/R(사제)·N(다음 운반체)·H(집으로 점프, 원본 도움말 "F4 or H Jump to your Home Temple"). H 가 빠져 있어 F4 만 집으로 점프했다. (2026-11-21 WB04-E1146)
             // 객체 가상 6c 로 가는 명령: 신전 세 명령·시나리오 객체 다섯 명령(MakeMine·InflictDamage·DestroyPiece·TurnToObelisk·Meltdown)·DetonateBomb. 큐에서 소비하지 못하면 이후 입력이 막힌다. (2026-11-21 WB04-E1150)
@@ -3238,6 +3257,8 @@ export class Netstorm {
     _onKeyDown(event) {
         this._clientInputPoll.recordKeyDown(event.code, this._input.keys.has(event.code) || event.repeat);
         this._input.keys.add(event.code);
+        // Gump 입력 창(Send X 숫자 창)이 열려 있으면 모든 키를 그 창의 입력으로 보낸다(게임 단축키·TAB·숫자 화면 저장으로 새지 않는다). (2026-11-22 WB04-E1168)
+        if (!this._clientNativeInputEnabled && this._campaignInputDialogOpen()) { this._queueCampaignDialogKey(event, false); this._retryAudioOnGesture(); return; }
         if (this._clientNativeInputEnabled && !this._clientComposing) {
             const editing = event.target === this._clientImeElement && this._clientImeElement !== null;
             if (editing && !event.isComposing) this._clientImePending = null;
@@ -3296,6 +3317,7 @@ export class Netstorm {
     _onKeyUp(event) {
         this._input.keys.delete(event.code);
         if (event.target === this._clientImeElement && this._clientImePending?.text === event.key) this._clientImePending = null;
+        if (!this._clientNativeInputEnabled && this._campaignInputDialogOpen()) { this._queueCampaignDialogKey(event, true); return; }
         if (this._clientNativeInputEnabled && !this._clientComposing) queueBrowserVirtualKeyEvent(this._clientInputQueue, event, this._input.pointer, true);
         else if (this._campaignDisplayActive() && (event.code === 'F4' || event.code === 'F5')) queueBrowserVirtualKeyEvent(this._clientInputQueue, event, this._input.pointer, true);
     }

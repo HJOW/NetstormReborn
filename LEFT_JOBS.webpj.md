@@ -6,23 +6,23 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-22, 마지막 단위 WB04-E1167)
+### 0.1 현재 값 (2026-11-22, 마지막 단위 WB04-E1168)
 
 | 항목 | 현행 상태 |
 | --- | --- |
-| 실행·플레이 | 브라우저에서 ‘클릭하여 시작’, 메인 메뉴·캠페인/데모 목록·도움말·옵션·Credits와 개발용 지형 미리보기가 동작한다. **미션:** 캠페인 목록 31개(Early Missions 6·세 캠페인 묶음 16·Priest Training 9)와 데모 3개가 시작되고, 장시간 진행과 임의 조작(몽키) 시험에서 오류·먹통이 없다. Campaign ▸ Skirmish는 무작위 섬·간헐천 월드에서 AI와 진행된다. Tutorial2는 시작부터 완료 창·Tutorial3 시작까지 자연 진행으로 확인했고, 승패 안내 뒤 흐름(Continue·Replay Mission·Leave/Next Mission·진행 저장)도 확인했다. **조작:** 사제 선택·이동, 가장자리·Alt·가운데 버튼 스크롤, 미니맵 클릭·끌기, 생산 격자 클릭·단축키(D 포함)·조각 회전(C·회전 방향 옵션)·다리 배치, 사제·워크샾·제단·신전·배터리·발전기·운반체 우클릭 메뉴와 회수, 객체 명령(Detonate·Meltdown·신전 명령), 화면 위치 키(F4/H·F5·TAB·U·Shift+숫자 저장/숫자 복귀)가 동작한다. **게임 메뉴:** ESC 또는 화면 우측 상단 버튼(웹 전용)으로 Game·View·Options·Players·About 메뉴막대를 열고, Leave/Restart Mission(ABORT 확인 창), F2·F6·F7·F8·F9·Shift-F3·T, Pause(Shift-F9·Pause 키·메뉴), Shift-F7 화면 GIF 저장, Players 메뉴의 송금·동맹이 실행된다. **HUD 틀:** 실제 Uber 루트가 세로·미니맵·채팅 구분선, 좌측 사이드바(SP·생산 덱)와 하단 미니맵 칸을 원본 위치로 도킹하고 지도 영역이 `{85,0,W,H}`다(4:3 하단 85×82픽셀이 원본 스크린샷과 일치, 16:9·16:10·1920×1080과 창 크기 변경 확인). **미완성:** 지식(NSInfo) HUD 패널과 채팅 창 내용물(F3은 구분선 전환만), 나머지 객체 메뉴(Factory 파생·특수 대상·채팅 분기)와 Players 하위의 Send X 숫자 창(Ignore chat·Whisper To·정보 보기는 단독 미션에서 나오지 않아 웹 범위 밖, E1167), 다른 미션의 목표 수행과 자연 완주. |
+| 실행·플레이 | 브라우저에서 ‘클릭하여 시작’, 메인 메뉴·캠페인/데모 목록·도움말·옵션·Credits와 개발용 지형 미리보기가 동작한다. **미션:** 캠페인 목록 31개(Early Missions 6·세 캠페인 묶음 16·Priest Training 9)와 데모 3개가 시작되고, 장시간 진행과 임의 조작(몽키) 시험에서 오류·먹통이 없다. Campaign ▸ Skirmish는 무작위 섬·간헐천 월드에서 AI와 진행된다. Tutorial2는 시작부터 완료 창·Tutorial3 시작까지 자연 진행으로 확인했고, 승패 안내 뒤 흐름(Continue·Replay Mission·Leave/Next Mission·진행 저장)도 확인했다. **조작:** 사제 선택·이동, 가장자리·Alt·가운데 버튼 스크롤, 미니맵 클릭·끌기, 생산 격자 클릭·단축키(D 포함)·조각 회전(C·회전 방향 옵션)·다리 배치, 사제·워크샾·제단·신전·배터리·발전기·운반체 우클릭 메뉴와 회수, 객체 명령(Detonate·Meltdown·신전 명령), 화면 위치 키(F4/H·F5·TAB·U·Shift+숫자 저장/숫자 복귀)가 동작한다. **게임 메뉴:** ESC 또는 화면 우측 상단 버튼(웹 전용)으로 Game·View·Options·Players·About 메뉴막대를 열고, Leave/Restart Mission(ABORT 확인 창), F2·F6·F7·F8·F9·Shift-F3·T, Pause(Shift-F9·Pause 키·메뉴), Shift-F7 화면 GIF 저장, Players 메뉴의 송금(Send X 숫자 입력 창 포함)·동맹이 실행된다. **HUD 틀:** 실제 Uber 루트가 세로·미니맵·채팅 구분선, 좌측 사이드바(SP·생산 덱)와 하단 미니맵 칸을 원본 위치로 도킹하고 지도 영역이 `{85,0,W,H}`다(4:3 하단 85×82픽셀이 원본 스크린샷과 일치, 16:9·16:10·1920×1080과 창 크기 변경 확인). **미완성:** 지식(NSInfo) HUD 패널과 채팅 창 내용물(F3은 구분선 전환만), 나머지 객체 메뉴(Factory 파생·특수 대상·채팅 분기), 다른 미션의 목표 수행과 자연 완주(Players 하위의 Ignore chat·Whisper To·정보 보기는 단독 미션에서 나오지 않아 웹 범위 밖, E1167). |
 | 원본과의 동일성 | 영어 4:3 메뉴 M1 8장면은 cpppj 오라클과 알려진 구름 배경 등 차이 영역 밖에서 픽셀 차이 0이다. 월드·UI 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다(최근 원본 공통 메뉴 788행·Factory 메뉴 39행·Uber 루트 160행·장면 음악 3,113행 등). 좌측 HUD 틀의 하단(미니맵 구분선·세로 구분선 아랫부분·미니맵 칸) 85×82픽셀은 원본 스크린샷과 완전히 일치한다. 메뉴 비활성 색·안내 창 위치·지식 카드 이름 줄 나눔·Wind Noise 무동작은 원본 기준으로 맞췄다. Tutorial1 시작 직후 Session 덤프는 시간 의존 값을 빼고 cpppj 기준선과 구조가 같다(E1129). 고정 시각 L2·L3·L4 화면 비교와 자연 완주는 미검증이다. |
-| 현재 작업 | **게임 플레이 중 UI 구현 단계.** 4-D 후반(GameWorld·Client 서비스)과 5-A·5-B·6·8단계 항목을 미션 앱 프레임 위에서 병행한다. Renderer·Gump 트리·입력 큐·생산 패널·객체 메뉴·도움말·음향이 실제 미션 화면에 연결돼 있고, 최근 단위(E1139~E1167)는 원본 도움말 조작키·우클릭 메뉴·승패 흐름의 실사용 점검과 앱에 연결되지 않은 모듈 분류(E1150·E1163)로 빈칸을 메웠다. 순서는 아래 [다음 작업](#next)을 따른다. |
-| 전체 회귀 | **Node 26.13.0:** E1166 전체 6,702건 모두 통과(로그 `extracted/webpj-e1166-node26.log`, 669초). **Node 22.23.3:** E1161 전체 6,702건 모두 통과(로그 `extracted/webpj-e1161-node22.log`, 879초). **e2e:** E1147 전체 `npx playwright test` 100건 통과·8건 건너뜀(옵트인 장시간, 로그 `extracted/webpj-e1147-e2e-all.log`, 39분). 이후 단위는 새 e2e와 관련 e2e를 단위마다 돌렸다. **HJOW-Athlon 주기(0.5절 5):** v26 1/4(E1167 뒤), v22 5/8(E1162~E1167) — **4단위 뒤 Node v26·v22 전체 회귀**를 순차로 돈다. E1127 첫 실행의 `external-access` 1건 실패(시험 대역 누락)는 v26 재실행과 이후 v22 전체 회귀(E1130·E1138·E1145·E1153·E1161)에서 해소됐다. E1127~E1161의 회귀 이력은 [E1166 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261121-through-wb04-e1166)에 있다. |
+| 현재 작업 | **게임 플레이 중 UI 구현 단계.** 4-D 후반(GameWorld·Client 서비스)과 5-A·5-B·6·8단계 항목을 미션 앱 프레임 위에서 병행한다. Renderer·Gump 트리·입력 큐·생산 패널·객체 메뉴·도움말·음향이 실제 미션 화면에 연결돼 있고, 최근 단위(E1139~E1168)는 원본 도움말 조작키·우클릭 메뉴·승패 흐름의 실사용 점검과 앱에 연결되지 않은 모듈 분류(E1150·E1163)로 빈칸을 메웠다. 순서는 아래 [다음 작업](#next)을 따른다. |
+| 전체 회귀 | **Node 26.13.0:** E1166 전체 6,702건 모두 통과(로그 `extracted/webpj-e1166-node26.log`, 669초). **Node 22.23.3:** E1161 전체 6,702건 모두 통과(로그 `extracted/webpj-e1161-node22.log`, 879초). **e2e:** E1147 전체 `npx playwright test` 100건 통과·8건 건너뜀(옵트인 장시간, 로그 `extracted/webpj-e1147-e2e-all.log`, 39분). 이후 단위는 새 e2e와 관련 e2e를 단위마다 돌렸다. **HJOW-Athlon 주기(0.5절 5):** v26 2/4(E1168 뒤), v22 6/8(E1162~E1168) — **4단위 뒤 Node v26·v22 전체 회귀**를 순차로 돈다. E1127 첫 실행의 `external-access` 1건 실패(시험 대역 누락)는 v26 재실행과 이후 v22 전체 회귀(E1130·E1138·E1145·E1153·E1161)에서 해소됐다. E1127~E1161의 회귀 이력은 [E1166 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261121-through-wb04-e1166)에 있다. |
 | 브라우저 검사 | 미션 화면은 단위마다 Chromium e2e로 확인한다(최근 전체 실행 E1147, 16:9·16:10 건설·메뉴 E1143~E1144, 한국어 Players 메뉴 E1166). 메뉴는 2026-11-17 Chromium 2/2(갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체), 최초 실행·진행 잠금/체크·저장 재실행은 E616 Chromium 2/2. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
 
 <a id="next"></a>
 
 #### 다음 작업
 
-1. **게임 메뉴 나머지.** Players 하위 메뉴의 **Send X 숫자 창**을 잇는다(송금·모두 보내기·동맹 요청/해제/확인·무승부는 [E1126](docs/webpj-player-menu-actions-20261120.md)). `Ignore chat`·`Whisper To`·`View Player Info`는 원본 Player 메뉴가 단독 미션에서 만들지 않아 웹 범위 밖이다([E1167 도달성 판정](docs/webpj-player-menu-reachability-20261122.md), `e2e/player-menu-items.spec.js`). Send X 창은 원본이 `SaveFortNameDialog::ShowMoney`(장식 틀·숫자 입력·OK/Cancel 모달)를 쓰므로 앱 미션 화면의 글자 입력창(`ClientTextEntryControls`)·모달 등록·키보드→입력창 경로가 먼저 필요하고, 같은 기반이 채팅 창(3번)에도 쓰인다. 원본 도움말의 조작키는 모두 연결·확인했다(Alt 스크롤 E1145, H E1146, 가운데 버튼 E1148, C E1151, TAB·U·Shift+숫자/숫자 E1154, D·F1·F2·Shift-F3·F8·Ctrl-F5 E1155·E1162, F3 구분선 E1159, Pause 키 E1163). [조작키 대조](docs/webpj-alt-scroll-keys-20261121.md) · [화면 위치 키](docs/webpj-camera-keys-20261121.md) · [D 키·단축키](docs/webpj-production-d-key-20261121.md) · [게임 메뉴막대](docs/webpj-game-menu-bar-20261120.md)
+1. **게임 메뉴 나머지 — 완료(E1167~E1168).** Players 하위 항목 중 `Ignore chat`·`Whisper To`·`View Player Info`는 단독 미션에서 나오지 않아 웹 범위 밖이고([E1167](docs/webpj-player-menu-reachability-20261122.md)), **Send X 숫자 입력 창**은 모달·글자 입력창·키보드 경로와 함께 앱 미션에 연결했다([E1168](docs/webpj-send-money-dialog-20261122.md), `e2e/send-money-dialog.spec.js`). 송금·모두 보내기·동맹은 [E1126](docs/webpj-player-menu-actions-20261120.md), 원본 도움말 조작키는 모두 연결·확인했다([조작키 대조](docs/webpj-alt-scroll-keys-20261121.md) · [게임 메뉴막대](docs/webpj-game-menu-bar-20261120.md)). 채팅 창 내용물(F3)은 3번에서 잇는다.
 2. **다른 미션의 목표 수행.** Tutorial2([E1086](docs/webpj-tutorial2-complete-20261120.md))처럼 Tutorial1·3~6과 세 캠페인 묶음 미션의 단계별 목표를 수행해 승리·완료 창까지 이어 보고, 남는 객체 메뉴(Factory 파생·특수 대상·채팅 분기, Archer 실제 우클릭·운반체 Carrying/Drop)와 입력 공백을 메운다. 승패 안내 뒤 흐름은 [E1152](docs/webpj-mission-outcome-flow-20261121.md)·[E1161](docs/webpj-idle-outcome-20261121.md)에서 확인했다. 앱에 연결되지 않은 나머지 모듈은 [E1163 분류표](docs/webpj-pause-key-unwired-modules-20261121.md)에 이어 사용자 기능과 직결된 것부터 확인한다(3.8절 입력·장치). 자연 완주는 1절 사용자 확인 범위다.
-3. **Uber HUD 나머지.** 이식된 `ui/chat-window.js`(`ChatWindow`)의 호스트 훅 약 50개를 실제 부품에 묶어 Uber 루트의 `createChat`에 연결하고, HUD의 `chatVisible`/`chatInput` stub을 실제 창 표시 비트로 바꿔 채팅 표시 전환·수신·제출 경로를 잇는다(권장 순서는 [F3 채팅 설계 메모](docs/webpj-chat-toggle-f3-20261121.md), 5-B·5-C·3.8절 채팅 허브). 지식(NSInfo) 패널은 `createKnowledge`와 HudNsInfoMeta·NativePlayerInfoInput·NativeNsInfoInput·HudPlayerButtonDraw의 단독 경로를 확인한다. E1163은 `ui/hud-ns-info*.js`를 멀티플레이/메타 전용으로 분류했으므로 단독 미션에 필요한 범위부터 판정한다. 미니맵 클릭·끌기(E1128)·ESC 게임 메뉴 상단 바(E1084)·좌측 도킹(E1082)은 끝났다.
+3. **Uber HUD 나머지.** 이식된 `ui/chat-window.js`(`ChatWindow`)의 호스트 훅 약 50개를 실제 부품에 묶어(Gump 글자 입력창·모달·키보드→입력창 경로는 E1168 `ui/client-money-dialog.js`에서 미션 앱에 처음 연결했으므로 같은 조립을 참고한다) Uber 루트의 `createChat`에 연결하고, HUD의 `chatVisible`/`chatInput` stub을 실제 창 표시 비트로 바꿔 채팅 표시 전환·수신·제출 경로를 잇는다(권장 순서는 [F3 채팅 설계 메모](docs/webpj-chat-toggle-f3-20261121.md), 5-B·5-C·3.8절 채팅 허브). 지식(NSInfo) 패널은 `createKnowledge`와 HudNsInfoMeta·NativePlayerInfoInput·NativeNsInfoInput·HudPlayerButtonDraw의 단독 경로를 확인한다. E1163은 `ui/hud-ns-info*.js`를 멀티플레이/메타 전용으로 분류했으므로 단독 미션에 필요한 범위부터 판정한다. 미니맵 클릭·끌기(E1128)·ESC 게임 메뉴 상단 바(E1084)·좌측 도킹(E1082)은 끝났다.
 4. **나머지 번역.** 게임 안 메뉴·객체 우클릭·지식 창의 번역 누락은 없다(E1166 수집, 소스 기준 누락은 개발자 치트 `CHEAT Set Owner`뿐). 번역 호출 자체가 없는 생산 창 도움말·미니맵 도움말·채팅 채널 이름의 고정 영어와 한국어 미션의 실제 화면 확인이 남았다(8단계·3.7절 6차). [게임 안 문구](docs/webpj-korean-ingame-xlat-20261120.md) · [한국어 이름](docs/webpj-korean-player-names-20261121.md)
 5. **4-D 완료 기준 L2.** Tutorial1 Load/Start의 보고서·덤프·첫 프레임 논리 화면 대조(4D-10b)는 계속 4-D의 완료 기준이다. 시작 직후 덤프의 구조 일치는 [E1129](docs/webpj-l2-tutorial1-20261121.md)에서 확인했고 고정 시각 모드·L3·첫 프레임 화면 대조가 남았다.
 6. **12차 스커미시 나머지.** 설정·화면·시작·월드 생성·금지 유닛과 난이도별 건설 속도는 E1101~E1107·E1149에서 연결·확인했다(3.7절 12차). AI의 생산·공격 단계(수 분 이상)·개별 난이도/동맹의 N프레임 동작, 실제 전투로 사제가 죽을 때의 승패 안내, 비미션 너겟 보충(4D-1c)을 확인한다(자연 완주는 1절 사용자 확인 범위). [게임 진행](docs/webpj-skirmish-play-20261120.md) · [난이도 진행](docs/webpj-skirmish-difficulty-20261121.md)
@@ -46,7 +46,7 @@
 | 입력·카메라 | E990~E1001, E1009, E1084 | 선택·이동·포인터 폴링, 가장자리 스크롤·카메라 키(F4·P/R·F5·N), 조각 회전, ESC 메뉴 토글 | 여러 유닛 순환(Ctrl-F5·N은 사제 1명 상태로 확인) | [포인터](docs/webpj-app-mission-pointer-frame-20261120.md) · [사제 키](docs/webpj-browser-priest-shortcuts-20261120.md) |
 | 생산·건설 | E1002~E1008, E1019~E1022, E1026~E1036, E1047, E1074, E1076~E1079, E1083, E1086 | 생산 패널·단축키·다리 배치, 회수·비용 표시, Factory 생산·업그레이드, Tutorial2 발사기 배치·회수 | 연속 배치·자연 완주 | [생산 패널](docs/webpj-client-production-panel-20261120.md) · [워크샾 생산](docs/webpj-browser-tutorial2-factory-20261120.md) |
 | HUD 틀 | E1082, E1128 | Uber 루트 HUD 모드 3 도킹·화면 크기 변경 재배치, 미니맵 Gump와 클릭·끌기 e2e | 지식(NSInfo)·채팅 창 공장 | [좌측 HUD 틀](docs/webpj-uber-hud-left-dock-20261120.md) |
-| 게임 메뉴 | E1084~E1085, E1087~E1090, E1093~E1097, E1100, E1167 | ESC 메뉴막대·우측 상단 버튼, Leave/Restart, F6·F7·F9·T, Pause, Frame Rate·Language·Difficulty, Shift-F7 GIF, Players 하위 항목 실측(채팅·정보 항목은 단독 미션 도달 불가) | 채팅 창 내용물, Send X 숫자 창 | [게임 메뉴막대](docs/webpj-game-menu-bar-20261120.md) · [Players 도달성](docs/webpj-player-menu-reachability-20261122.md) |
+| 게임 메뉴 | E1084~E1085, E1087~E1090, E1093~E1097, E1100, E1167~E1168 | ESC 메뉴막대·우측 상단 버튼, Leave/Restart, F6·F7·F9·T, Pause, Frame Rate·Language·Difficulty, Shift-F7 GIF, Players 하위 항목 실측(채팅·정보 항목은 단독 미션 도달 불가), Send X 숫자 입력 창(모달·글자 입력창) | 채팅 창 내용물 | [게임 메뉴막대](docs/webpj-game-menu-bar-20261120.md) · [Send X 창](docs/webpj-send-money-dialog-20261122.md) |
 | 스커미시(12차) | E1101~E1107 | 설정 화면·저장, 시작 섬·섬 생성 부모, 세션 월드 생성·앱 시작, AI 진행·금지 유닛 | AI 생산·공격, 실제 전투 승패·너겟 | [시작과 월드 생성](docs/webpj-skirmish-start-20261120.md) · [게임 진행](docs/webpj-skirmish-play-20261120.md) |
 | Gump·메뉴 UI | E1017~E1018, E1023~E1025, E1037~E1045, E1064~E1072, E1075, E1086 | Form 통지, 글자·Slider 출력, 중첩 메뉴, 사제·Player·공통 객체·운반체 메뉴, 신전 건설·완공 | 파생 +ac 객체 메뉴, 채팅 분기 | [Client 메뉴](docs/webpj-client-menu-gump-20261120.md) · [사제 우클릭](docs/webpj-browser-priest-menu-20261120.md) |
 | 도움말 | E1046, E1048~E1055 | 생산 Help, TYPE 정보 창, 요구 에너지·도움말 그림 | 타입별 원본 화면 비교 | [앱 TYPE](docs/webpj-app-help-type-info-20261120.md) |
@@ -60,7 +60,7 @@
 
 ### 0.2 단계 진행판
 
-`n/m`은 상위 체크 수이며 보관한 완료 항목을 포함한다. 상위 항목 안의 완료 부분은 중복 가산하지 않는다. 남은 단위와 줄 수는 `PORT_MAP.tsv`의 partial·todo 기준이며 partial에는 파일 전체 줄 수를 센다. E951~E1166은 대부분 상위 항목 안의 부분 진행이라 체크 수가 바뀌지 않았고, 2026-11-21 정리에서 8단계 **미션 수명**을 확인 범위가 채워진 것으로 판정해 8단계가 1/9가 됐다. 남은 양은 E1104 뒤 135단위·31,510줄이며 2026-11-21 정리 때 `node webpj/tools/port-map.mjs`와 `python -X utf8 tools/port_inventory.py` 재집계로 같음을 확인했다. E1082~E1104의 단위별 증감(`UberHud.inc` todo→partial, `FrameRateOption`·`HelpLinkPolicy`·`Sound`·`SoundDevice`·`GifScreenshot`·`SkirmishSetup`·`SkirmishStartIslands`·섬 생성 부모 셋 →port)은 [E1166 보관본 0.2절](LEFT_JOBS.webpj.old.md#archive-webpj-20261121-through-wb04-e1166)에 있다.
+`n/m`은 상위 체크 수이며 보관한 완료 항목을 포함한다. 상위 항목 안의 완료 부분은 중복 가산하지 않는다. 남은 단위와 줄 수는 `PORT_MAP.tsv`의 partial·todo 기준이며 partial에는 파일 전체 줄 수를 센다. E951~E1166은 대부분 상위 항목 안의 부분 진행이라 체크 수가 바뀌지 않았고, 2026-11-21 정리에서 8단계 **미션 수명**을 확인 범위가 채워진 것으로 판정해 8단계가 1/9가 됐다. 남은 양은 E1168 뒤 137단위·31,863줄이다(E1168에서 `SaveFortNameDialog`·`RawMenuSaveFort`를 편집 전용 제외에서 이식 대상 partial 두 단위로 옮겨 135단위·31,510줄에서 늘었다). `node webpj/tools/port-map.mjs`와 `python -X utf8 tools/port_inventory.py` 재집계로 확인했다. E1082~E1104의 단위별 증감(`UberHud.inc` todo→partial, `FrameRateOption`·`HelpLinkPolicy`·`Sound`·`SoundDevice`·`GifScreenshot`·`SkirmishSetup`·`SkirmishStartIslands`·섬 생성 부모 셋 →port)은 [E1166 보관본 0.2절](LEFT_JOBS.webpj.old.md#archive-webpj-20261121-through-wb04-e1166)에 있다.
 
 | 순서 | 단계 | 체크·상태 | 남은 단위 / 줄 |
 | --- | --- | --- | --- |
@@ -69,25 +69,25 @@
 | 4 | **4-D Session 조립·Tutorial1 Load/Start** | **56/85, L2 미완료** | 73 / 17,583 |
 | 5 | 5-A 렌더러·Draw | 44/46 | 3 / 533 |
 | 5 | 5-B 카메라·HUD·미니맵·커서 | 9/13 | 9 / 1,446 |
-| 5 | 5-C 화면 허브·미션 진입 | 0/6 → M2 | 10 / 6,033 |
+| 5 | 5-C 화면 허브·미션 진입 | 0/6 → M2 | 12 / 6,386 |
 | 6 | 입력·게임 메뉴·경제·건설 | 1/8 → M3 | 7 / 913 |
 | 7 | 전투·의식·AI | 0/6 | 3 / 97 |
 | 8 | 미션 수명·대본·오디오·도움말 | 1/9 → M4 | 26 / 4,579 |
 | 9 | 표시 품질·브라우저/OS·배포 | E945 하위 경로·설정 복원 검증, M5 미완료 | 1 / 41 |
 | 10 | AGENTS 후순위 웹 요구 | 일부 선행, 3.7절 참조 | 3 / 285 |
-| **합계** | | | **135 / 31,510** |
+| **합계** | | | **137 / 31,863** |
 
 ### 0.3 이식량
 
-기준선 `225553df`의 이식 대상 1,022단위는 **port 887(86.8%)·partial 97·todo 38**이다(2026-11-21 재집계, E1104 뒤 변동 없음). 제외 138단위를 합하면 대응표 1,160행이다. 앱 수명 연결을 뜻하는 `session`과 오라클 대조를 뜻하는 `oracle`은 0이다. E1098~E1104의 재판정 내역(RawSurface 29행·Dialog 2행 todo→partial 등)은 [E1166 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261121-through-wb04-e1166)에 있다.
+기준선 `225553df`의 이식 대상 1,024단위는 **port 887(86.6%)·partial 99·todo 38**이다(2026-11-22 재집계, E1168에서 편집 전용 제외 두 단위를 송금 숫자 창 이식 대상 partial 로 옮김). 제외 136단위를 합하면 대응표 1,160행이다. 앱 수명 연결을 뜻하는 `session`과 오라클 대조를 뜻하는 `oracle`은 0이다. E1098~E1104의 재판정 내역(RawSurface 29행·Dialog 2행 todo→partial 등)은 [E1166 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261121-through-wb04-e1166)에 있다.
 
 | 범위 | port / 대상 | partial | todo |
 | --- | --- | --- | --- |
 | `o/` 월드·규칙 | 567 / 574 | 6 | 1 |
-| `client/` 세션·UI·표시 | 315 / 447 | 63 | 69 |
+| `client/` 세션·UI·표시 | 315 / 449 | 65 | 69 |
 | `zacket/` 내부 미션 전송 | 1 / 1 | 0 | 0 |
 
-남은 135단위 중 기존 기준선은 71단위/26,700줄, 재기준선 추가분은 64단위/4,810줄이다. E854에서 `UberReconnect`의 단독 감시를, E884에서 단독 미션의 Fort 이름 선택 두 단위를 이식 대상으로 재분류했다. 재기준선 분류·영역별 상세는 [E801 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261118-through-wb04-e801)과 `python -X utf8 tools/port_inventory.py --families wb`에서 확인한다.
+남은 137단위 중 기존 기준선은 73단위/27,053줄, 재기준선 추가분은 64단위/4,810줄이다. E854에서 `UberReconnect`의 단독 감시를, E884에서 단독 미션의 Fort 이름 선택 두 단위를 이식 대상으로 재분류했다. 재기준선 분류·영역별 상세는 [E801 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261118-through-wb04-e801)과 `python -X utf8 tools/port_inventory.py --families wb`에서 확인한다.
 
 ### 0.4 기준선과 자료
 
@@ -287,7 +287,7 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 #### 6 입력·게임 메뉴·사제/운반·경제·건설 (1/8)
 
 - [ ] **입력 본체** — UserInput의 상위 메뉴·브라우저 이벤트와 특수 진단의 실제 로그 장치를 연결한다. 폴링·우클릭·단축키·실제 후보 선택 및 일반·이동 모드 좌클릭을 확인했다. NB20의 실제 조각 취득→P 취소는 Session에서 검증했다. [E802](docs/webpj-campaign-user-input-movement-click-20261118.md) · [E803](docs/webpj-campaign-user-input-primary-click-20261118.md) · [E804](docs/webpj-nb20-real-cursor-cancel-20261118.md) GameWorldInput 코드 이식(선택/강조·미니맵 이동과 객체 메뉴·이동 커서, 대응표 `GameWorldInput.inc` `port`)은 완료했다. [E795](docs/webpj-campaign-game-world-input-20261118.md) · [E796](docs/webpj-campaign-game-world-menu-cursor-20261118.md)
-- [ ] **게임 메뉴** — E1084에서 RawGameMenuBar·RawGameMenus(웹 범위)를 실제 Client 메뉴 작성기에 연결해 ESC 가로 메뉴막대와 우측 상단 토글 버튼, Game·View·Options·Players·About 하위와 연결된 명령을 완성했다([게임 메뉴막대](docs/webpj-game-menu-bar-20261120.md)). 이후 Restart/Leave(E1085)·F9 플레이어 목록(E1087)·F6 지식 창(E1088)·Pause(E1089·E1163)·F7 표식(E1090)·송금·동맹(E1126)·F3 구분선 전환(E1159)·한국어 Player 이름(E1166)을 연결했다. 남음: 채팅 창 내용물(F3), Player 메뉴의 Send X 숫자 창(Ignore chat·Whisper To·정보 보기는 단독 미션 도달 불가로 웹 범위 밖, E1167).
+- [ ] **게임 메뉴** — E1084에서 RawGameMenuBar·RawGameMenus(웹 범위)를 실제 Client 메뉴 작성기에 연결해 ESC 가로 메뉴막대와 우측 상단 토글 버튼, Game·View·Options·Players·About 하위와 연결된 명령을 완성했다([게임 메뉴막대](docs/webpj-game-menu-bar-20261120.md)). 이후 Restart/Leave(E1085)·F9 플레이어 목록(E1087)·F6 지식 창(E1088)·Pause(E1089·E1163)·F7 표식(E1090)·송금·동맹(E1126)·F3 구분선 전환(E1159)·한국어 Player 이름(E1166)을 연결했다. Player 메뉴의 Send X 숫자 입력 창(E1168, [송금 창](docs/webpj-send-money-dialog-20261122.md))과 Ignore chat·Whisper To·정보 보기의 웹 범위 판정(단독 미션 도달 불가, E1167)을 마쳤다. 남음: 채팅 창 내용물(F3).
 - [ ] **객체 우클릭 메뉴** — CampaignObjectMenuClient의 건물·운반체·특수 대상 메뉴와 소유자 명령 연결.
   - 완료: 중첩 메뉴와 사제·Player·공통 객체·운반체 메뉴, 사제 우클릭 건설(E1064~E1072), 워크샾 우클릭 생산·업그레이드(E1076~E1079), 신전(AI 메뉴·지식)·배터리(Meltdown!)·발전기(Storm Power) 등 파생 본체 일곱 주소(E1127), UI 밖 좌·우 누름으로 팝업 닫기(E1135), 비활성 하위 행의 `›`와 메뉴 비활성·그림자 색 (47,24,17)(E1136), 제단 받침 우클릭의 같은 좌표 제단 조회·위임(`Altar Level I`, E1137), 운반체(Bulf·Walker, 열기 4268c0)·Archer 계열(열기 41e660) 우클릭 열기(E1138).
   - 남음: Factory 파생의 나머지, 특수 대상 메뉴와 채팅 분기, Archer 유닛 실제 우클릭과 운반체 Carrying/Drop 항목 확인.

@@ -73,9 +73,11 @@ export const RULES = Object.freeze([
     { id: 'campaign-snapshot-writers', class: 'port', names: ['RawFortMoneySave', 'RawFortMissionSave', 'RawFortBadgesSave', 'RawFortCoreWrite'], reason: 'RawCampaignSession.cpp5924..5982의 캠페인 공용 전체 snapshot 자식이다. 편집기 Save as UI/파일 저장과 구별한다(E633)' },
     // Battle snapshot의 CoreData가 같은 인라인 SP writer를 공유한다(WB04-E634, 4D-1b 선행).
     { id: 'campaign-core-sp-write', class: 'port', names: ['RawFortSpWrite'], reason: 'RawCampaignSession.cpp4504..4507의 공용 CoreData child이며 같은 실제 stream/게임 난수로 SP를 직렬화한다(E634)' },
+    // 단독 Players ▸ Send Money ▸ Send X 의 숫자 입력 창이 입력 창 부모(SaveFortNameDialog::ShowMoney/Buttons/Handle)와 그 조립(RawMenuSaveFort.inc)을 공유한다. Save as·설명·HTML Input·Scenario 입력은 편집기 전용이라 이식하지 않는다. (2026-11-22 WB04-E1168)
+    { id: 'campaign-send-money-dialog', class: 'port', names: ['RawMenuSaveFort', 'SaveFortNameDialog'], reason: '단독 Send X 숫자 입력 창(Send X Storm Power)이 SaveFortNameDialog 의 ShowMoney·Buttons·Handle 과 RawMenuSaveFort 조립을 공유한다. 편집용 Save as·설명·HTML $Input·Scenario 입력은 제외' },
     {
         id: 'edit-fort-save', class: 'exclude-edit',
-        names: ['RawFortObjectSave', 'RawFortObjectsSave', 'RawFortRegionSave', 'RawFortContentSave', 'RawFortTerritorySave', 'RawFortSnapshotBasics', 'RawFortSnapshotParent', 'RawFortMoneySave', 'RawFortMissionSave', 'RawFortBadgesSave', 'RawFortCoreWrite', 'RawFortSpWrite', 'RawFortSubscriberWrite', 'RawDataManagerFileSave', 'RawMenuSaveFort', 'SaveFortNameDialog'],
+        names: ['RawFortObjectSave', 'RawFortObjectsSave', 'RawFortRegionSave', 'RawFortContentSave', 'RawFortTerritorySave', 'RawFortSnapshotBasics', 'RawFortSnapshotParent', 'RawFortMoneySave', 'RawFortMissionSave', 'RawFortBadgesSave', 'RawFortCoreWrite', 'RawFortSpWrite', 'RawFortSubscriberWrite', 'RawDataManagerFileSave'],
         reason: 'Fort 저장(Save as)·snapshot writer. Battle snapshot·CoreData 기록은 일반 전투(MP)와 공유한다',
     },
     // 신전 상승도004bd600을 호출한다. 같은 파일의004b5ec0 회복만 ExistingEditor 전용으로 남긴다. (2026-11-16 WB04-E588)
