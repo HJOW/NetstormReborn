@@ -1,12 +1,8 @@
 # LEFT_JOBS — cpppj 현행 상태와 남은 작업
 
-**제품 1326 / 11.01 · 정리 2026-11-22(HJOW-Athlon) · 마지막 단위1327(M8 완료) · 다음 번호1328(추가 요청 시) · 마지막 디컴파일 HJOW-Athlon · 자동 진행 범위 마감, 사용자 확인·기존 CD/선택 보류 유지**
+**제품 1326 / 11.01 · 정리 2026-11-23(HJOW-Athlon) · 마지막 단위1327(M8 완료) · 다음 번호1328(추가 요청 시) · 마지막 디컴파일 HJOW-Athlon · 자동 진행 범위 마감, 사용자 확인·기존 CD/선택 보류 유지**
 
-현재 상태·남은 작업·유효한 규칙만 유지한다. 단위별 경과와 만료된 지시는 [1310 시점 전체 보관본](LEFT_JOBS.old.md#archive-20261114-through-1310), 개별 구현·검증은 아래 근거 문서를 따른다. [dotnetpj](LEFT_JOBS.dotnetpj.md)·[webpj](LEFT_JOBS.webpj.md)는 각 인계 문서가 기준이다. 2026-11-16 최초 상태 분석을 세 인계 문서에 먼저 반영했고, 후속 사용자 요청으로 cpppj1314를 완료했다. 이번 CP 단위에서는 DN/WB 코드·인계 문서를 수정하지 않았다.
-
-**2026-11-17 원격 병합 완료:** 로컬 `08eb810e4`의 dotnetpj 작업과 원격 `62acf42ea`의 webpj 작업을 충돌 없이 병합했다. webpj 신규 Session 집중 검사 21건 통과(Node v26.13.1). 각 프로젝트의 남은 작업과 일시 중지 상태는 각 인계 문서를 따른다.
-
-**2026-11-19 AGENTS 아이콘 요구:** cpppj 1323에서 `Netstorm.exe`와 재사용용 공통 ICO에 원본 아이콘 두 크기를 반영했다. dotnetpj 실행 파일과 webpj favicon 적용은 각 프로젝트 인계에서 진행한다. [0.8절](#exe-icon)
+현재 상태·남은 작업·유효한 규칙만 유지한다. 1314~1327의 단위별 상태 설명과 끝난 세부는 [1327 시점 전체 보관본](LEFT_JOBS.old.md#archive-20261123-through-1327), 그 이전 경과와 만료된 지시는 [1310 시점 전체 보관본](LEFT_JOBS.old.md#archive-20261114-through-1310), 개별 구현·검증은 아래 근거 문서를 따른다. [dotnetpj](LEFT_JOBS.dotnetpj.md)·[webpj](LEFT_JOBS.webpj.md)는 각 인계 문서가 기준이다.
 
 <a id="now"></a>
 
@@ -14,25 +10,16 @@
 
 ### 0.1 다음 행동
 
-**2026-11-22 마감:**1324~1327을 완료했다. Reset All·선택 AI 본문/피해 진단, 잔여 검사 계약과 최신 M8을 마쳤다. 최신 선정752는751통과·1실패 뒤 NB08 검사1건만 교정해 통과, 새 ZIP1,437항목/배포38경로(34진입+3언어Credits+스커미시)·보호2,808파일 불변을 확인했다. 기존 사용자 확인·MP 실행·CD/선택 보류는 유지한다. 사용자 `TODO.md` 변경은 사용자 커밋 `a65a2b81e`이며 작업 커밋에 포함하지 않았다. [1327 보고](docs/exe/cpp-m8-final-gate-1327-20261122.md).
+**현재 자동 진행 작업 없음.** 2026-11-22의1324~1327로 자동 진행 범위를 마감했다. 추가 제보·사용자 선택/보류 해제가 오면 아래 해당 행부터 재개하고 새 단위 번호는1328을 쓴다. 기존 사용자 확인·MP 실행 제외·CD/선택 보류는 유지한다.
 
 | 구분 | 상태와 다음 행동 |
 | --- | --- |
-| **최신 M8 관문1327** | **완료.** 제품1326 Release·ZIP1,437항목 전수/압축 해제·전체34진입·3언어Credits/스커미시4경로·QuickJS6/6·아이콘/외부 정적 감사·배포/보호 불변을 확인했다. [보고](docs/exe/cpp-m8-final-gate-1327-20261122.md)·[JSON](cpppj/m8-final-gate-1327-20261122.json). |
-| **잔여 검사 계약1324** | **완료.** 기존exe 선정752건 중741통과·11실패, 장기 Template/지형 생성/출력 관찰 장치와 현행 State6/진단 기대값을 교정해 최신 최초11실패11/11 통과. 원문/제품/fixture 유지. 최신752는751통과·NB08 검사1실패 뒤 해당1건 교정 통과(전체 반복 없음). [1327](docs/exe/cpp-m8-final-gate-1327-20261122.md). [근거](docs/exe/cpp-remaining-test-contracts-1324-20261122.md). |
-| **AI 정체 조사1326** | **자동 범위 완료.** 테스트에서만 실제 AI 본문을 관측하고 일반 덤프 바이트를 보존했다. SessionDump5/5·피해5/5, 1-3/1-4 각600초 종료0·AI진단0. 초기화/프레임 미연결은 아니며1-3 후반은 자원 우선 연결 실패 재시도 대기,1-4 돈 누적 정체는 이번 범위 미재현이다. 3-1 옛 오류는 제단 수정 전 로그이며 새 파생 누락으로 확정하지 않는다. 임의 전략 변경 없이 사용자 자연 플레이/동일성 확인을 유지한다. [근거](docs/exe/cpp-autoplay-ai-diagnostics-1326-20261122.md). |
-| **설정 초기화1325** | **완료.** 메인 Options 최하단 Reset All·세 언어 확인 창, 실제 HTML 제출 토큰만 확정·취소/ESC/직접 Tell 보존, 사용자 설정/진행 초기화 후 정상 종료·최초 상태 재실행을 확인했다. 집중6/6·고유GUI8경로 통과. 커스텀맵/로그/설치 파일 보존. [근거](docs/exe/cpp-reset-all-1325-20261122.md). |
-| **실행 파일 아이콘 1323** | **cpppj 완료.** Release `Netstorm.exe`에 원본 그룹 102(32×32)·144(16×16)를 넣었다. 리소스 바이트 대조와 Windows 로드 검사를 통과했다. [공통 ICO](assets/Netstorm.ico) · [0.8절](#exe-icon) |
-| **한국어 갈무리11 전환1322** | **cpppj 완료.** 외부 일반/굵은 TTF의 실제 단색 비트맵을 읽고 글꼴명·파일명을 공통 JSON/상수로 분리했다. 관련47/47, 실제 메뉴·도움말·브리핑/영어 대조·압축 해제본 실행5회 종료0, ZIP1,437항목·보호2,807파일 불변 확인. DN/WB는 별도 구현 대기다. [0.7절](#korean-font-change)·[근거/화면](docs/exe/cpp-korean-galmuri-1322-20261117.md). |
-| **Pop 검사 기준선1321** | **선정325건 확인 완료.** 초기324통과·1실패(2단언)는 일반 Sprite `0050cc08` 지원 누락 기대값이 원인이었다. 원문 주소 기록/제품 지원과 대조해 검사만 교정하고 해당1건 통과. 기존 fixture988파일 불변, 제품1320 유지. 전체1175건/옛 실패24건이 모두 해결됐다는 판정은 하지 않는다. [범위·결과](docs/exe/cpp-pop-test-baseline-1321-20261117.md). |
-| **Next Missions 종료 제보1320** | **수정 완료.** 사용자 로그 `20261117003804.log`의 이전 연결 flush 오류를 실제 Replay에서도 재현했다. 원문처럼 이전 노드의 flush와 type2 종료 수신을 실제 장치로 전달해 번호 재사용까지 교정했다. 새4/4·미션 진입119/119, 실제 Replay2회·한국어/영어1-1→1-2→1-1·오류 로그0·자료 불변. 실제 승리 창의 버튼 클릭은 사용자 확인이다. [근거](docs/exe/cpp-mission-transition-1320-20261117.md). |
-| **한국어 유닛 정보1315** | **완료(2026-11-17 제보).** 내부 주제 접미사 `Type`의 `종류` 오역을 교정했다. 실제 한국어 사제 우클릭 정보·F1과 영어 대조 실행, 정보 앵커76개·관련40검사 통과. 번역표 변경은 게임 재시작 후 반영된다. [원인/검증/화면](docs/exe/cpp-korean-unit-help-1315-20261117.md). |
-| **미션 진입 검사1316** | **완료.** 검사 장치가 World 교체마다 새 Template owner를 만들던 문제를 실제 Client와 같은 장기 owner 공유로 교정했다. 기대값/제품 코드 유지, 집중2/2·전체115/115 통과. [근거](docs/exe/cpp-mission-parent-tests-1316-20261117.md). |
-| **다음 AI 작업** | **현재 자동 진행 작업 없음.1324~1327 완료.** 추가 제보·사용자 선택/보류 해제 시 관련 행부터 재개한다.1321의 선정325는 반복하지 않았고 새752와 교집합0이다. MP/공중3종 전용·사용자 직접 확인 제외는 유지한다. DN/WB 자체 구현은 각 인계 범위다. |
-| **최초 실행 상태1314** | **완료(2026-11-16).** 음량 기본값5·5와 메뉴/보고서의 동일 해석을 교정했다. Welcome→Welcome2→메뉴, 최초 캠페인 잠금·완료 입력별 체크/해금, Options·저장/재실행·전체화면 재실행을 **집중48건·제품GUI13회**로 확인했다. 기존 사용자3·2는 보존한다. [0.6절](#first-run)·[구현/검증](docs/exe/cpp-first-run-1314-20261116.md). analyzeManager 무옵션은1317 완료, DN/WB는 각 인계 범위다. |
-| **이전 M8 배포 관문1311** | 제품1310의 과거 Release·ZIP1,436항목·배포5경로 기준이다. 현재 기준은1327이며 [3절](#final-gate)에 둘을 구별했다. |
-| **테스트 자동 플레이 1312** | **완료(2026-11-14 사용자 요청).** 명령줄 전용 `--test-autoplay`·`--test-ally-ai`·`--test-enemy-ai`·`--test-start-sp`·`--test-enemy-start-sp`로 **캠페인·스커미시**에서 로컬 플레이어에도 원본 데모 분기와 같은 AI를 붙여 자동 플레이한다(무인자 일반 실행·options.cfg·메뉴에는 없음). 실제 1-1에서 아군 어려움·적 쉬움·SP 20000으로 **승리(`BadTeamDead`) 재현**, 스커미시 실행 확인. 사람이 지켜볼 수 있게 **관전 카메라**(`--test-follow-battle`, 프리셋 포함: 주요 전투 위치, 희생 의식 중에는 제단으로 이동)도 넣었다. 11차 동맹 AI 난이도 판정도 보정했다. **플레이 결과 재현이 필요한 AI는 먼저 [AI 에이전트용 사용 안내](docs/testing/cpp-autoplay-test-guide.md)를 읽고 [실행 도구](tools/cpp_campaign_autoplay.py)를 쓴다.** [구현 근거](docs/exe/cpp-campaign-test-play-20261114.md). **1313 일괄 실행(사용자 지시로 3-x·2-5 제외, 캠페인 1·2의 10개):** 승리5(1-1·1-2·1-5·2-2·2-3)·패배1(2-1)·미결4(1-3·1-4·1-6·2-4). 2-4는 **제단 총기 피격 미복원으로 비정상 종료 → 수정, 재실행 완주**. **1326 후속 완료:** 실제 AI 본문/기한 관측으로 초기화·프레임 미연결이 아님을 확인했다.1-3은 자원 우선 연결 재시도 대기,1-4 정체는 이번600초 범위 미재현이다.3-1은 제단 분배 수정 전 로그로 새 파생 누락 판정 근거가 없다. 희생 의식 카메라·전체 자연 플레이/원본 전략 동일성은 사용자 확인이다. [1326](docs/exe/cpp-autoplay-ai-diagnostics-1326-20261122.md). [결과 7절](docs/exe/cpp-campaign-test-play-20261114.md#7-캠페인-전체-자동-플레이-실행-1313-2026-11-14-후속). |
+| 최신 기준 | 제품1326 Release·**M8 관문1327 통과**. 완료 묶음과 근거는 [1절](#done), 관문 수치는 [3절](#final-gate), 검사 기준선은 [4.2절](#baselines)이다. 1321의 선정325는 반복하지 않았고 1327의 선정752와 교집합0이다. |
+| 사용자 확인·결정 | [0.3](#user-checks)의 플레이·MP·물리 환경 확인은 AI 실행 범위 밖이다. [0.2](#decisions) D1~D7은 결정 전까지 권고 범위를 유지한다. |
 | **CD10.72 복원 C3~C5** | **사용자 보류(2026-11-14). 재개 지시 전 진행하지 않는다.** 메뉴·CDDir 저장 후 재실행은1309에서 확인했다. 1310의 Start/AI 설정은 순수 몸체만 검증했고 실제 Session/Guide/SP/AI 생성자에는 미연결이다. 첫 튜토리얼 차단은 `RawMenuHtml.inc:3`의 PATCH 전용 HTML 검사다. [보류 인계·재개 지점](docs/exe/cpp-cd1072-deferred-20261114.md). |
+| AI 자동 플레이 정체 | 1326으로 자동 범위 완료. 초기화/프레임 미연결은 아니다.1-3 후반은 자원 우선 연결 실패 재시도 대기,1-4 돈 누적 정체는600초 범위 미재현,3-1 옛 오류는 제단 수정 전 로그라 새 파생 누락으로 확정하지 않는다. 임의 전략 변경 없이 사용자 자연 플레이/동일성 확인을 유지한다. [1326](docs/exe/cpp-autoplay-ai-diagnostics-1326-20261122.md). |
+| 테스트 자동 플레이 | **플레이 결과 재현이 필요한 AI는 먼저 [AI 에이전트용 사용 안내](docs/testing/cpp-autoplay-test-guide.md)를 읽고 [실행 도구](tools/cpp_campaign_autoplay.py)를 쓴다.** 명령줄 전용 `--test-autoplay`·`--test-ally-ai`·`--test-enemy-ai`·`--test-start-sp`·`--test-enemy-start-sp`·`--test-follow-battle`이며 허용 범위는 [5절](#rules-verify)이다. 1313 일괄 실행 결과는 [결과 7절](docs/exe/cpp-campaign-test-play-20261114.md#7-캠페인-전체-자동-플레이-실행-1313-2026-11-14-후속). |
+| DN/WB 후속 | 최초 실행은 DN만 남음([0.6](#first-run)), 한국어 글꼴 화면 적용은 DN만 남음([0.7](#korean-font-change)), 아이콘은 DN 창 표시·WB 탭 시각 확인만 남음([0.8](#exe-icon)). 각 인계 문서에서 진행하며 CP 단위에서는 DN/WB 코드·인계를 수정하지 않는다. |
 | 선택/추가 제보 | 비행체 표시 보간·번역·QuickJS 추가 연동은 D2·D3·D7 결정 뒤 진행한다. 새 재현 자료가 오면 해당 NB 행을 다시 연다. |
 
 <a id="decisions"></a>
@@ -64,6 +51,8 @@
 | 알려진 버그 | NB03/05/09/10/11/18/19/22/23의 실제 조작·장시간·MP·교전 확인. 건별 조건은 [현황표](docs/exe/cpp-known-bugs-status-20261111.md)를 따른다. |
 | 난이도·스커미시 | AI 속도 체감·게임 중 변경 반영, 금지 유닛의 AI 적용·동맹/전투/승패·유닛 이름·MP 규칙 섬 배치 체감. |
 | 화면·설치 | 60/120FPS 소리 동기, 실물4K/FSR·활성 전체화면·다른 모니터/DPI·앱 전환·청취, 실제 Program Files/UAC·CD·Windows11/ARM. |
+| 미션 흐름·관전 | 실제 승리 창의 Next Missions 버튼 클릭(1320), 테스트 자동 플레이 관전 카메라의 희생 의식 중 제단 이동·전체 자연 플레이/원본 전략 동일성(1312·1326). |
+| 아이콘 | cpppj 배포 ZIP 압축 해제본의 탐색기 아이콘 표시([0.8](#exe-icon)). |
 
 <a id="stages"></a>
 
@@ -94,7 +83,7 @@
 
 | 항목 | 현재 기준 |
 | --- | --- |
-| 제품 | **1326 / 11.01**. Reset All1325와 테스트 선택 AI 본문/피해 문맥1326을 포함한다. 관련10/10·실제1-3/1-4 각600초 종료0.1325는 새6/6·GUI8경로 완료다. 과거 아이콘1323 기준: 원본 실행 파일 아이콘 적용, NetstormCpp/NetstormRoot Release 빌드 및 아이콘 리소스 대조 통과. [1323 결과](docs/exe/cpp-exe-icon-1323-20261119.md). 한국어 글꼴 검사47/47·GUI5회는 [1322 결과](docs/exe/cpp-korean-galmuri-1322-20261117.md), 미션 전환119/119는 1320 기준이다. |
+| 제품 | **1326 / 11.01**. Reset All1325와 테스트 선택 AI 본문/피해 문맥1326을 포함한다(1326 관련10/10·실제1-3/1-4 각600초 종료0, 1325 새6/6·GUI8경로). 이전 단위의 기준값(아이콘1323 리소스 대조·글꼴1322 관련47/47·미션 전환1320 119/119)은 [1절](#done) 근거 문서를 따른다. |
 | 실행·플레이 | 10.78 메뉴·미션·스커미시 플레이 가능. CD는 메뉴만 확인했고 튜토리얼/플레이 미완료다. 전체 원본 동일성은 미확정이다. |
 | ZIP·전체 검사 | **1327 M8 통과**(제품1326). ZIP1,437항목·배포38고유경로(일반31+데모3+언어Credits3+스커미시1)·QuickJS6/6·배포1,437/보호2,808불변. 최신 전체34진입은1327이며 전체 솔루션 전수 통과로 확대하지 않는다. 최신 선정752는751통과·NB08 검사1실패 뒤 해당1건 교정 통과. [1327](docs/exe/cpp-m8-final-gate-1327-20261122.md). |
 | 디컴파일 | Client 양판본2026-11-03·R전용2026-11-07, 모두 **HJOW-Athlon(192.168.0.94)**. 이후 원문 변경·재디컴파일 없음. [기록](docs/exe/cpp-decompilation-20261103.md). |
@@ -102,60 +91,47 @@
 
 <a id="first-run"></a>
 
-### 0.6 최초 실행 상태 — cpppj1314 완료(2026-11-16)
+### 0.6 최초 실행 상태 — cpppj1314 완료, DN 적용 대기
 
-사용자 커밋 `4040c1029`로 `originals/d/options.cfg`·`originals/fullscreenStateFile.dat`가 제거됐다. **원래 처음 설치 시 없는 파일이므로 복원하지 않는다.** [원본 분석](docs/exe/original-first-run-20261116.md)이 최초 기준이고 [cpppj1314 구현·제품 화면6장·검증](docs/exe/cpp-first-run-1314-20261116.md)이 이번 완료 근거다. 기존 스크린샷의 완료 기록·옛 옵션을 기본값으로 삼지 않는다.
+사용자 커밋 `4040c1029`로 `originals/d/options.cfg`·`originals/fullscreenStateFile.dat`가 제거됐다. **원래 처음 설치 시 없는 파일이므로 복원하지 않는다.** 기존 스크린샷의 완료 기록·옛 옵션을 기본값으로 삼지 않는다. 기준은 [원본 분석](docs/exe/original-first-run-20261116.md), 완료 근거는 [cpppj1314 구현·제품 화면·검증](docs/exe/cpp-first-run-1314-20261116.md)과 [analyzeManager1317](docs/exe/analyze-manager-first-run-1317-20261117.md)이다.
 
-- **시작창(실제 관찰):** 메뉴 버튼 전 `NetStorm` Welcome(OK) → Welcome2(Play Early Missions / Main Menu). Welcome2가 열릴 때 `welcomeGiven=1`을 저장한다. 최초에는 Tips로 대체하지 않는다.
-- **Struggle For Freedom:** 원본과 제품 모두 1번만 선택 가능, 2~6번 비활성, 모두 체크 없음이며 2번 클릭 무반응을 확인했다. 자기 `Done*`는 체크, 직전 `Done*`는 해금(1번은 상수1)이다. 제품의 완료 입력1~6 누적 사본6회도 확인했으며 실제 미션 클리어로 기록하지 않는다.
-- **Options:** 소리·음악·바람·가장자리 스크롤·Auto-Demo·시작 팁 ON, 스피커 교환 OFF, **효과음5·음악5**다. `ClientAudioOptions`의 옛3·2를 교정했고 `ReadClientAudioOptions`의 같은 읽기 몸체를 Client·메뉴·보고서가 쓴다.800×600을 유지하며 기존 사용자3·2도 유지한다. 기본 전체화면 첫/재실행 flags139/139·종료0, 폐기 검증 비활성 유지. 원본 캡처용1024×768을 기본값으로 가져오지 않았다.
-- **보호/검증:** HJOW-Athlon, 마지막 전체 디컴파일 호스트와 일치하며 디컴파일 소스·기존 fixture 변경 없음. 보호1,817파일·실행 자료 사본1,392파일 불변, 관찰 게임 종료 확인. 관련 집중48건·제품GUI13회 통과. 당시 mission_entry의 별도 실패는1316에서 검사 owner 교정으로 해결했고,1320 기준119/119 통과다.
-
-- [x] 최초 상태 원본 분석·화면 근거·세 LEFT_JOBS 기록(앞선 공통 문서 단위).
-- [x] **cpppj1314:** 빈 사용자 루트/무옵션 사본의 시작 안내·잠금·옵션과 저장/재실행·전체화면 재실행을 확인했다. 기존 사용자 설정·진행은 초기화하지 않는다. 별도 사용자 파일의 완료 입력 검증은 실제 승리와 구별한다.
-- [x] **analyzeManager 공통 후속1317:** 없는 `options.cfg`는 관찰 사본에만 네 화면/경로 키를 생성한다. 기존 옵션·setup 기본값과 원본 옵션 부재를 보존한다. 단위 검사114통과·1기존 건너뜀·MCP 기본 검사 통과(게임 실행 없음). [근거](docs/exe/analyze-manager-first-run-1317-20261117.md).
-- [ ] **DN/WB 적용:** cpppj 확정 커밋 뒤 같은 시작창·잠금/체크·해당 Options·저장 수명을 반영한다. DN은 빈 사용자 홈, WB는 두 localStorage 키가 없는 독립 저장소로 비교하며 웹 제외 기능은 유지한다. 각 인계 문서에도 미완료 항목으로 기록했다.
+- **기준 동작.** Welcome(OK) → Welcome2(Play Early Missions / Main Menu) → 메뉴. Welcome2가 열릴 때 `welcomeGiven=1`을 저장하며 최초에는 Tips로 대체하지 않는다. Struggle For Freedom은 1번만 선택 가능하고 모두 체크가 없다. 자기 `Done*`는 체크, 직전 `Done*`는 해금이다(1번은 상수1). Options는 소리·음악·바람·가장자리 스크롤·Auto-Demo·시작 팁 ON, 스피커 교환 OFF, **효과음5·음악5**, 800×600·전체화면 요청이다. 원본 캡처용1024×768을 기본값으로 가져오지 않으며 기존 사용자 설정·진행(예: 음량3·2)은 초기화하지 않는다.
+- [x] **cpppj1314·analyzeManager1317.** 빈 사용자 루트/무옵션 사본의 시작 안내·잠금·옵션과 저장/재실행·전체화면 재실행을 집중48건·제품GUI13회로 확인했다. analyzeManager는 없는 `options.cfg`의 관찰 사본에만 네 화면/경로 키를 만든다(단위114통과).
+- [x] **WB 적용.** webpj E616에서 반영하고 Chromium 2/2로 확인했다. [webpj 최초 실행](docs/webpj-first-run-20261116.md)
+- [ ] **DN 적용.** 빈 사용자 홈에서 같은 시작창·잠금/체크·Options·저장 수명을 반영한다. [DN 인계 0.2](LEFT_JOBS.dotnetpj.md#first-run)
 
 <a id="korean-font-change"></a>
 
-### 0.7 한국어 글꼴 변경 — cpppj1322 완료, DN/WB 구현 대기(2026-11-17)
+### 0.7 한국어 글꼴 — 갈무리11: cpppj1322·webpj 적용 완료, DN 화면 적용 대기
 
-작은 게임 글씨에서 D2Coding이 깨져 보인다는 제보로 세 프로젝트 모두 갈무리11을 사용한다. 앞선 문서 인계 뒤 사용자의 cpppj 즉시 적용 지시로 **cpppj의 교체·상수 분리·빌드·관련47검사·제품 화면·배포 검증을1322에서 완료했다**([근거](docs/exe/cpp-korean-galmuri-1322-20261117.md)). DN/WB는 각 인계의 구현 대기를 유지하며 이번 CP 단위에서 수정하지 않았다. 이 사용자 지시가 AGENTS.md의 D2Coding 지정과 기존 유지/업그레이드 계획보다 우선하며 AGENTS.md는 수정하지 않는다.
+작은 게임 글씨에서 D2Coding이 깨져 보인다는 제보로 세 프로젝트 모두 갈무리11을 사용한다. 이 사용자 지시가 AGENTS.md의 이전 D2Coding 지정과 기존 유지/업그레이드 계획보다 우선했으며(현재 AGENTS.md도 갈무리11 지정) AGENTS.md는 수정하지 않는다.
 
-| 대상 | 제공 파일과 적용 기준 |
+| 대상 | 제공 파일과 상태 |
 | --- | --- |
-| cpppj·dotnetpj | `fonts/Galmuri11Bitmap-Regular-2.40.4.ttf`·`fonts/Galmuri11Bitmap-Bold-2.40.4.ttf`. 두 TTF의 내부 family는 `Galmuri11Bitmap`, 스타일은 각각 Regular·Bold로 확인했다. 실행 파일 옆 `fonts/`에서 외부 파일로 읽는다. |
-| webpj | `fonts/Galmuri11.woff2`·`fonts/Galmuri11-Bold.woff2`를 `webpj/www/data/fonts/`로 복사해 FontFace에 등록한다. 제공된 WOFF2를 사용한다. |
+| cpppj | `fonts/Galmuri11Bitmap-Regular-2.40.4.ttf`·`fonts/Galmuri11Bitmap-Bold-2.40.4.ttf`(내부 family `Galmuri11Bitmap`)를 실행 파일 옆 `fonts/`에서 읽는다. GDI가 TTF를 등록하지 못해 `EmbeddedBitmapFont`로 외부 EBDT/EBLC를 직접 읽고, 굵은 파일에 없는 글자는 같은 일반 파일로 대체한다. 글꼴명·파일명은 `cpppj/assets/korean-font.json` → CMake 생성 상수(`kKoreanFontFamily` 등)로 파일 탐색·FontStore·배포 스크립트·ZIP 검사가 공유한다. **1322 완료**(관련47/47·실제GUI5회, 파일 바이트 내장0). [근거/화면](docs/exe/cpp-korean-galmuri-1322-20261117.md) |
+| dotnetpj | 같은 두 TTF. 0.807에서 배포·ZIP 배치와 D2Coding 배포 의존 제거를 마쳤다. `KoreanFontFamily` 상수·8비트 출력 적용·작은 글씨 확인이 남았다. [DN 인계](LEFT_JOBS.dotnetpj.md#korean-font-change) |
+| webpj | `fonts/Galmuri11.woff2`·`fonts/Galmuri11-Bold.woff2`를 `webpj/www/data/fonts/`로 복사해 FontFace에 등록한다. 메뉴·도움말과 Tutorial1 실제 미션 브리핑에서 확인했다. 한국어 큰 슬롯의 굵기 규칙 차이는 WB 결정 대기다. [WB 인계](LEFT_JOBS.webpj.md#korean-font-change) |
 | 라이선스 | `fonts/Galmuri11-LICENSE.txt`를 각 배포판에 글꼴과 함께 포함한다. |
-
-- [x] **cpppj 글꼴명 상수 분리1322:** `cpppj/assets/korean-font.json`의 family·일반/굵은 파일명·라이선스를 수정하고 다시 빌드한다. CMake가 `kKoreanFontFamily` 등 상수를 생성하며 파일 탐색·FontStore·배포 스크립트·ZIP 검사가 같은 설정을 사용한다. DN/WB도 각 구현에서 같은 원칙으로 상수를 분리한다.
-- [x] **cpppj 로딩·배포1322:** GDI가 제공 TTF를 등록하지 못해 실제로 굴림체를 고르는 문제를 확인하고 `EmbeddedBitmapFont`로 외부 EBDT/EBLC를 직접 읽었다. 일반/굵은 원형을 사용하며 굵은 파일에 없는 옛 자모42자 등은 같은 일반 파일로 대체한다. 두 TTF와 라이선스를 exe 밖 `fonts/`에 배포하며 파일 바이트 내장0·ZIP 전수/압축 해제 실행을 확인했다.
-- [x] **cpppj 작은 글씨 검증1322:** 슬롯12/13/14/20은 원래 11픽셀 획·12픽셀 칸, 슬롯48은 정수3배다. 실제800×600 메뉴/옵션/혼합 제목·1024×768 도움말/브리핑에서 획·줄바꿈·잘림을 확인했다. 영어 캐시 바이트 보존과 일본어 GDI 출력도 관련47검사에 포함한다. 다른 DPI/물리 출력은 기존 사용자 확인 범위다.
-- [ ] **DN/WB 후속:** [dotnetpj 전환 인계](LEFT_JOBS.dotnetpj.md#korean-font-change)와 [webpj 전환 인계](LEFT_JOBS.webpj.md#korean-font-change)에 기록한 플랫폼별 구현·배포·검증을 수행한다. 글꼴 교체 완료 판정은 각 프로젝트에서 따로 갱신한다.
 
 <a id="exe-icon"></a>
 
-### 0.8 실행 파일 아이콘·webpj favicon — cpppj 1323 완료(2026-11-19)
+### 0.8 실행 파일 아이콘·webpj favicon — cpppj1323·DN0.807·WB E894 적용, 시각 확인 남음
 
-사용자 커밋 `d047bf9a3`은 cpppj·dotnetpj의 `Netstorm.exe` 아이콘이 기존 게임 실행 파일 아이콘과 같아야 한다는 요구를 AGENTS.md에 추가했다. 이어서 `11b16b778`은 같은 아이콘을 webpj favicon으로 탑재하라는 요구를 추가했다. 아래 원본 자료는 2026-11-19 HJOW-Athlon에서 PE 리소스 디렉터리를 정적으로 읽어 확인했다. 게임은 실행하지 않았고 원본 파일은 바뀌지 않았다.
+사용자 커밋 `d047bf9a3`(cpppj·dotnetpj `Netstorm.exe`)과 `11b16b778`(webpj favicon)의 요구다. 기준은 원본 `originals/Netstorm.exe`(SHA-256 `a305414cfe0b9449…`)의 RT_GROUP_ICON **102(0x66)** 32×32·4bpp(탐색기 파일 아이콘)와 **144(0x90)** 16×16·4bpp, 언어1033이다. 원본 `R.exe`에는 아이콘이 없다. 두 이미지를 공통 [assets/Netstorm.ico](assets/Netstorm.ico)에 담았다. [추출 도구·SHA-256](docs/exe/cpp-exe-icon-1323-20261119.md)
 
-| 항목 | 확인 결과 |
+| 대상 | 상태 |
 | --- | --- |
-| 원본 아이콘 | `originals/Netstorm.exe`(SHA-256 `a305414cfe0b9449…`)에 RT_GROUP_ICON 2개가 있고 언어는 1033이다. **102(0x66)**는 32×32·4bpp(16색) 1장(RT_ICON 1, 744바이트), **144(0x90)**는 16×16·4bpp 1장(RT_ICON 2, 296바이트)이다. 탐색기의 파일 아이콘은 첫 그룹인 102다. 원본 `R.exe`는 리소스 디렉터리가 없어 아이콘이 없다. |
-| cpppj | `cpppj/src/app/ProductVersion.rc`에 원본 그룹과 같은 102·144 및 언어 1033을 지정했다. 창 아이콘은 `ClientMain.cpp`에서 게임 폴더의 원본 `Netstorm.exe`를 자료로 열어 같은 ID를 읽는다. |
-| dotnetpj | 0.807에서 직역 호스트가 `Netstorm.Game`/`Netstorm.exe`를 승계하고 공통 ICO를 `ApplicationIcon`으로 지정했다. 실제 EXE의 두 원시 아이콘이 공통 ICO와 바이트 일치한다. 배포 ZIP과 DesktopGL 창·작업 표시줄 확인 범위는 [DN 인계](LEFT_JOBS.dotnetpj.md#exe-icon)를 따른다. |
-| webpj | `webpj/www/index.html`에 아이콘 링크가 없고 `favicon.ico`도 없다. 지금까지의 브라우저 검증 문서는 `favicon.ico` 404를 예외로 기록했다. [WB 인계](LEFT_JOBS.webpj.md#favicon) |
+| cpppj | `cpppj/src/app/ProductVersion.rc`에 102·144/1033을 지정하고, 창 아이콘은 `ClientMain.cpp`에서 게임 폴더의 원본 `Netstorm.exe`를 자료로 열어 같은 ID를 읽는다. Release PE 바이트 대조·Windows 추출 API·배포 `-DryRun` 통과(1323). |
+| dotnetpj | 0.807에서 `Netstorm.Game`/`Netstorm.exe`의 `ApplicationIcon`으로 공통 ICO를 지정하고 EXE·ZIP의 두 원시 아이콘 바이트 일치를 확인했다. DesktopGL 창·작업 표시줄 확인이 남았다. [DN 인계](LEFT_JOBS.dotnetpj.md#exe-icon) |
+| webpj | E894에서 `webpj/www/favicon.ico`와 상대 경로 링크를 넣고 바이트 대조·Chromium HTTP 200·해독을 확인했다. 탭 그림의 시각 확인이 남았다. [WB 인계](LEFT_JOBS.webpj.md#favicon) |
 
-- [x] **공통 아이콘 자산.** [assets/Netstorm.ico](assets/Netstorm.ico)에 원본 RT_ICON의 32×32·16×16 4bpp 이미지를 모두 담았다. [추출 도구·SHA-256](docs/exe/cpp-exe-icon-1323-20261119.md)
-- [x] **cpppj.** x64 Release의 `Netstorm.exe`에서 두 그룹과 이미지의 ID·언어·바이트가 원본과 일치했다. Windows 추출 API 검사와 배포 스크립트 `-DryRun`도 통과했다.
-- [ ] **사용자 확인.** 배포 ZIP 압축 해제본의 탐색기 아이콘 표시를 확인한다.
-- [ ] **dotnetpj·webpj.** 각 인계 문서의 체크를 따른다.
+- [ ] **사용자 확인.** cpppj 배포 ZIP 압축 해제본의 탐색기 아이콘 표시를 확인한다(0.3).
 
 <a id="done"></a>
 
 ## 1. 완료 묶음과 근거
 
-이미 마감한 구현을 다시 만들지 않는다. 상세 단위 이력·주소 목록은 [전체 보관본](LEFT_JOBS.old.md#archive-20261114-through-1310)에 있다.
+이미 마감한 구현을 다시 만들지 않는다. 1314~1327의 단위별 상태 설명은 [1327 보관본](LEFT_JOBS.old.md#archive-20261123-through-1327), 그 이전 단위 이력·주소 목록은 [1310 보관본](LEFT_JOBS.old.md#archive-20261114-through-1310)에 있다.
 
 | 묶음 | 요약·근거 |
 | --- | --- |
@@ -204,22 +180,11 @@
 
 ZIP: `extracted/cpp-m8-1327/NetstormReborn-11.01-cpppj.zip`(205,883,413바이트), SHA-256 `b8d7f37d9b649db46760ae02cea4140e36bc1954d6aa5b166433a85abaeb5a05`.
 
-현재 자동 진행 가능한 잔여는 없다. 아래1311은 당시 제품의 보관 기준이며 사용자 직접 확인·CD/선택 보류·전체 솔루션/원본 전체 동일성 미판정은 유지한다.
+현재 자동 진행 가능한 잔여는 없다. 사용자 직접 확인·CD/선택 보류·전체 솔루션/원본 전체 동일성 미판정은 유지한다.
 
 ### 3.1 이전 관문1311 — 제품1310 기준
 
-확정1310의 [최종 보고](docs/exe/cpp-m8-final-gate-1310-20261114.md)·[기계 판독 결과](cpppj/m8-final-gate-20261114.json)가 기준이다. 제품 코드는 바뀌지 않았다.
-
-| 항목 | 결과 |
-| --- | --- |
-| 빌드·ZIP | Release NetstormCpp·NetstormRoot 종료0. ZIP1,436항목(원천1,429·생성4·런타임3) 대조, 누락/금지/실행 파일 내 글꼴0. QuickJS 라이선스·출처 포함. |
-| 배포본 실행 | 영어·한국어·일본어 메뉴/11.01 Credits, 일반 미션 thewarbegins·AI3 스커미시 진입/대기 **5경로 종료0·오류 로그0**. QuickJS 자체 검사6/6. |
-| 불변·외부 감사 | 실행 뒤 배포1,436파일·보호1,821파일 불변. 두 PE의 WinINet/WinHTTP/URLMon0, 폐기 검증 비활성·LAN 정책 유지, 새 네트워크/미연결 checking 소비자0. |
-| 범위 | 전체34경로/전체 솔루션 검사는 재집계하지 않았다. 기존 실패·5절의 사용자 확인/실행 제외를 유지한다. CD 추가 실행 없음. |
-
-ZIP: `extracted/cpp-m8-1310/NetstormReborn-11.01-cpppj.zip`(209,724,870바이트), SHA-256 `0a94b7f11a39bef8b1c702ddaa6a6ae70cc816224db16dea98ebbdf94485c66e`.
-
-**1311 관문과 이후 요청된 최초 상태1314·한국어 정보1315·미션 전환1320·한국어 글꼴1322 작업은 각각 완료했다. CD·선택 작업의 기존 보류는 유지한다.** 1322의 새 ZIP/압축 해제본 한국어 실행 뒤 최신 전체 M8도1327에서 완료했다. 과거 결과는 [1294~1297](docs/exe/cpp-m8-final-gate-1294-20261111.md)에 있다.
+제품1310의 Release·ZIP1,436항목·배포5경로 관문이며 제품 코드는 바뀌지 않았다. 결과 표와 ZIP 해시(`extracted/cpp-m8-1310/NetstormReborn-11.01-cpppj.zip`)는 [최종 보고](docs/exe/cpp-m8-final-gate-1310-20261114.md)·[기계 판독 결과](cpppj/m8-final-gate-20261114.json)와 [1327 보관본](LEFT_JOBS.old.md#archive-20261123-through-1327)의 3.1절에 있다. 그 뒤 요청된 1314~1326 작업과 최신 관문1327은 모두 완료했다. 더 이전 결과는 [1294~1297](docs/exe/cpp-m8-final-gate-1294-20261111.md)에 있다.
 
 <a id="contracts"></a>
 
@@ -284,6 +249,8 @@ cmake --build cpppj/build --config Release --target NetstormCpp NetstormRoot --p
 
 ## 7. 근거·보관
 
-[1310 전체 보관본](LEFT_JOBS.old.md#archive-20261114-through-1310)에는 정리 전 문서 전체를 원문 바이트로 보존했다. 단위1302~1310의 경과·끝난 작업 상세·AGENTS 변경 이력표·낡은 다음 지시는 이쪽으로 옮겼다. 기존 보관본은 수정하지 않았다.
+[1327 전체 보관본](LEFT_JOBS.old.md#archive-20261123-through-1327)에는 2026-11-23 정리 직전 문서 전체를 원문 바이트로 보존했다. 0.1의 1314~1327 단위별 상태 행, 0.6~0.8의 완료 세부(최초 실행 관찰·글꼴 로딩/검증 체크·아이콘 리소스 표), 3.1 이전 관문1311 표, 머리의 2026-11-17 원격 병합·2026-11-19 아이콘 요구 안내는 이쪽에서 찾는다. 단위1302~1310의 경과·끝난 작업 상세·AGENTS 변경 이력표·낡은 다음 지시는 [1310 전체 보관본](LEFT_JOBS.old.md#archive-20261114-through-1310)에 있다. 기존 보관본은 수정하지 않았다.
+
+**2026-11-23 정리 기록.** 바로잡은 것: 0.6의 WB 최초 실행 적용(E616 완료, DN만 남음), 0.7의 WB 갈무리11(적용·확인 완료, DN 화면 적용만 남음), 0.8의 webpj favicon(E894에서 `favicon.ico`·링크 추가, 탭 시각 확인만 남음). 흩어져 있던 1320 승리 창 버튼·1312 관전 카메라·탐색기 아이콘 확인은 0.3으로 모았다. cpppj 소스·제품·디컴파일 기준은 그대로다(마지막 `cpppj/src` 변경 `baf141ebe`=1326, AGENTS.md 마지막 변경 `11b16b778`).
 
 주요 기준: [SOURCE_MAP](cpppj/SOURCE_MAP.md)·[디컴파일 신뢰도](docs/exe/decompile-reliability.md)·[제품](docs/exe/cpp-product-1101-20261101.md)·[미션 대응](docs/gameplay/demo-campaign-map.md)·[MCP/session dump](docs/exe/cpp-session-state-dump-20261109.md). DN/WB 요청·상태는 각 인계 문서를 따른다. AGENTS.md는 수정하지 않으며 현행1~15차·DN/WB4~15차 범위는 각 프로젝트에서 유지한다.
