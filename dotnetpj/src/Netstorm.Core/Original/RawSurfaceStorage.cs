@@ -358,6 +358,12 @@ public sealed partial class RawSurfaceStorage
             // 같은 장기 공장/깊이 장치를 먼저 보관하되 실제 Host와 Kernel은 소비 시점에 만든다.
             if (UsesNativeTransmissionDevices())
             {
+                processes.BindFormTransmissionDefaults(new()
+                {
+                    WriteData = (process, changed) => WriteDefaultForm(process, changed, 0),
+                    WriteFullData = (process, force) => WriteDefaultForm(process, false, force),
+                    Packet = CurrentProcessFormPacket, Transmit = BroadcastProcessForm,
+                }, AssertDisplay);
                 processes.BindFormFactoryDefaults(FactoryExecutor, () => PostPopState.Depth);
                 processes.BindLifecycleDefaults(BaseDestroy, HandleDefaultRegular, () => ProcessFormDispatch().Hooks());
             }

@@ -1,7 +1,7 @@
 // 장기 저장소의 실제 Path 파생 writer를 현재 원문 헤더·버퍼·진단에 연결한다.
 namespace Netstorm.Core.Original;
 
-/// <summary>cpppj RawSurfaceStorage.SerializeProcessForm의 Path 분기다. 다른 파생은 기존 전송 체인이 담당한다.</summary>
+/// <summary>cpppj RawSurfaceStorage.SerializeProcessForm의 Path 분기다. Native 기본 writer와 기존 세션 체인이 같은 본체를 사용한다.</summary>
 public sealed partial class RawSurfaceStorage
 {
     /// <summary>현재 실제 경로의 Native 본문만 쓴다. Form/Parent/count 선행 자격 검사나 자체 송신을 추가하지 않는다.</summary>
