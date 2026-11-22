@@ -42,3 +42,8 @@
 - **표시 옵션 기본값 결정:** `ShowBattle`·`ShowEveryone`·`ShowAllies`·`ShowObserver`·`ShowWisper`·`ShowMyAllies`·`ShowMyEmenys`·`ShowMyNeutrals`·`ShowChatWindow`·`PlaySoundMessage` 열 개는 원본 `setup.cfg`·아카이브에 기본값이 없다. `Netstorm.exe`를 역분석(capstone)해 보니 키 문자열의 코드 참조는 수신 함수(0x42ed30, `ReadInt` 0x441270 호출)와 도우미 메뉴 토글뿐이고, `ReadInt`는 키가 없으면 0을 돌려주며 출력 변수를 건드리지 않고, 수신 함수의 열 개 지역 변수는 초기화하지 않는다. 즉 원본에서 값이 없으면 스택 잔여값이라 정의된 기본값이 없다. 웹은 모두 **켜짐(1)** 을 기본으로 두고 설정·`<$config>`로 바뀐 값이 있으면 그것을 쓴다(`_chatOption`).
 - **버그 수정 두 건:** 메시지 조합의 이름 getter는 문자열이고 패킷의 현재 이름만 NUL 포함 바이트이며(처음엔 둘 다 바이트를 넘겨 `name.indexOf` 오류), 수신 발신자 해석(`findClientChatSenderOwner`)은 getter가 아니라 이름 값을 받는다.
 - **시험:** `e2e/chat-window.spec.js` 네 번째 시험(Chromium): chat manager 초기화 → Enter·`hello team`·Enter 로 로그 한 줄(`lineCount` 1, 입력줄은 남고 입력은 비워짐, 첫 줄에 글자 픽셀) → 둘째 줄 → `.clear` 로 0줄 → 빈 Enter 로 입력줄 닫힘. 오류·경고 0. 영향 e2e 묶음 결과는 아래 인계/커밋 기록 참조.
+
+## 점검(E1173)
+
+- `e2e/chat-window.spec.js` 다섯 번째 시험: `EVERYONE: team` 을 제출하면 본문만 로그 한 줄이 되고 접두 `EVERYONE:` 가 입력줄에 남는다(cpppj 문서 `cpp-chat-live-message`의 `EVERYONE: team` → `You> team`·접두 유지와 같다). `.front ~g` 는 줄을 만들지 않는 점 명령이고 이어지는 본문이 둘째 줄이 된다. 입력줄 왼쪽 `>` 도우미를 누르면 원본 Chat Helper 메뉴(`Chat Helper:` 제목, Format·Chat Effects·Chat Controls·Insert·Copy·Paste)가 Gump 팝업으로 뜨고 메뉴 밖을 누르면 닫힌다. 영향 e2e 묶음 27건 통과(앞 단위).
+- Tab 이름 완성은 실행했으나 입력이 바뀌지 않았다: 완성 후보는 채팅 기록 100행(`_clientChatRecords`)의 이름이고 단독 미션에서는 채널 참가자가 비어 있다(AI 참가 등록 `ai.participation.addChat`의 호출 시점은 확인하지 않음). 후보 원천은 남은 일이다.

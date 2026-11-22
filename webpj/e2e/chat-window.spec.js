@@ -133,3 +133,31 @@ test('채팅 송수신: 제출한 줄이 You> 로그가 되고 점 명령 .clear
   await page.keyboard.press('Enter'); await page.waitForTimeout(500); expect((await chat()).visible).toBe(false);
   expect(errors).toEqual([]);
 });
+
+// 채널 접두·서식 점 명령·도우미 메뉴: `EVERYONE: team` 은 접두 `EVERYONE:` 를 입력줄에 남기고 본문만 로그가 되며, `.front ~g` 는 줄을 만들지 않는 점 명령이고, 도우미 `>` 를 누르면 원본 Chat Helper 메뉴가 뜬다. (2026-11-22 WB04-E1172)
+test('채팅: 채널 접두가 남고 서식 점 명령은 줄을 만들지 않으며 도우미 메뉴가 열린다', async ({ page }) => {
+  test.setTimeout(300000);
+  const errors = []; page.on('pageerror', (error) => errors.push(error.stack ?? error.message)); page.on('console', (message) => { if (['error', 'warning'].includes(message.type()) && !/willReadFrequently/u.test(message.text())) errors.push(message.text()); });
+  await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0, autoDemo: 0, skirmishAiCount: 3, skirmishAi2Ally: 0, skirmishAi3Ally: 0, skirmishAi4Ally: 0 } })));
+  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/?aspect=4:3&lang=en');
+  await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 60000 }); await page.locator('canvas').click();
+  await page.waitForFunction(() => window.netstorm?.state === 'mainMenu', null, { timeout: 60000 });
+  await clickLabel(page, 'Campaign'); await clickLabel(page, 'Skirmish'); await clickLabel(page, 'Start');
+  await page.waitForFunction(() => window.netstorm?._campaignDisplayActive() && window.netstorm._clientGuide.current()?.runtime.gate.started === 1, null, { timeout: 120000 });
+  await clickLabel(page, 'Go!'); await page.waitForTimeout(2000); await page.locator('canvas').focus();
+  const chat = () => page.evaluate(() => { const app = window.netstorm, ui = app._campaignProduction.ui.chat(); return { lines: app._clientChatWindows.log.lineCount, input: ui.inputText(), popup: app._clientGump.blockingPopups() }; });
+  await page.keyboard.press('Enter'); await page.waitForTimeout(400);
+  // 채널 접두: 본문만 로그가 되고 접두는 입력줄에 남는다.
+  await page.keyboard.type('EVERYONE: team'); await page.keyboard.press('Enter'); await page.waitForTimeout(900); expect(await chat()).toMatchObject({ lines: 1, input: 'EVERYONE:' });
+  // 서식 점 명령은 줄을 만들지 않고 다음 본문부터 서식이 적용된다.
+  await page.keyboard.type('.front ~g'); await page.keyboard.press('Enter'); await page.waitForTimeout(700); expect((await chat()).lines).toBe(1);
+  await page.keyboard.type('green text'); await page.keyboard.press('Enter'); await page.waitForTimeout(700); expect((await chat()).lines).toBe(2);
+  // 도우미 `>` 를 누르면 Chat Helper 메뉴(Gump 팝업)가 열린다.
+  const helper = await page.evaluate(() => { const app = window.netstorm, b = app._campaignProduction.ui.chat().report().helper.bounds, rect = app.canvas.getBoundingClientRect(); return { x: rect.left + (b.left + b.right) / 2 * rect.width / app._layout.logicalWidth, y: rect.top + (b.top + b.bottom) / 2 * rect.height / app._layout.logicalHeight }; });
+  expect((await chat()).popup).toBe(false);
+  await page.mouse.move(helper.x, helper.y); await page.mouse.down(); await page.waitForTimeout(100); await page.mouse.up(); await page.waitForTimeout(800);
+  expect((await chat()).popup, 'Chat Helper 메뉴').toBe(true);
+  // 메뉴 밖을 누르면 닫힌다.
+  await page.mouse.click(600, 300); await page.waitForTimeout(600); expect((await chat()).popup).toBe(false);
+  expect(errors).toEqual([]);
+});
