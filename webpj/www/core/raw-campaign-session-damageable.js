@@ -20,6 +20,11 @@ import { ShrapnelKind } from './raw-shrapnel-frame.js';
 
 // 도달한 실제 하위만 요구하고 빈 성공을 만들지 않는다.
 function need(value, message) { if (!value) throw new Error(message); return value; }
+// Dude.cpp 진단을 원문(RawSurfaceStorage::DudeAssert)과 같은 식·파일·행으로 표시하고 계속한다: 0xde `!s.isDead() && !s.isFree()`, 0x127 `walkSid`, 0x9c `task == taskFALL`, 그 밖은 `0`. (2026-11-22 WB04-E1211)
+function dudeAssertion(owner, line) {
+    const expression = line === 0xde ? '!s.isDead() && !s.isFree()' : line === 0x127 ? 'walkSid' : line === 0x9c ? 'task == taskFALL' : '0';
+    owner.world.storage.assertDisplay(expression, '.\\Dude.cpp', line);
+}
 // 현재 비정렬 좌표를 단정도 그대로 읽는다.
 function coordinate(raw, offset) { return new DataView(raw.buffer, raw.byteOffset + offset, 4).getFloat32(0, true); }
 // 원문 상수float 비트를 수로 해석한다.
@@ -48,12 +53,12 @@ export class RawCampaignSessionDamageable {
         o.dudeSpawn = new RawDudeSpawn(c.pool, c.factory, c.owner, this.spawnState, { pop });
         o.dudePostPop = new RawDudePostPop(c.pool, c.frames, this.spawnState, { ...makeDudePostPopHooks(c.pool, c.frame, c.postPop), notifySurface }, () => c.bridgeState.bridgeType);
         c.postPop.setBody('dude', o.dudePostPop); this.#dudeRegistered = true;
-        o.dudeTask = new RawDudeTask(c.pool, { clock: c.processState, bridgeType: c.bridgeState.bridgeType }, makeDudeTaskHostHooks(c.pool, c.processes, { notifySurface }));
+        o.dudeTask = new RawDudeTask(c.pool, { clock: c.processState, bridgeType: c.bridgeState.bridgeType }, makeDudeTaskHostHooks(c.pool, c.processes, { notifySurface, assertion: () => { this.#live(); dudeAssertion(o, 0x9c); } })); // 낙하 교체 진단은 원문(RawSurfaceStorage::DudeTask)처럼 표시 후 계속한다. (2026-11-22 WB04-E1211)
         const task = (sid, event, delay) => { this.#live(); o.dudeTask.set(sid, event, delay); };
         const behavior = {
             task, movementType: (type) => { this.#live(); return o.priests.movementProcessType(type); }, find, destroy,
             basePostDestroy: (sid, flags) => { this.#live(); o.world.commonDeletion.postDestroy(sid, flags); },
-            assertion: (line) => { this.#live(); throw new Error(`원본 Dude.cpp 부모 진단 ${line}`); },
+            assertion: (line) => { this.#live(); dudeAssertion(o, line); }, // 원문 DudeAssert 와 같이 표시한 뒤 계속한다. (2026-11-22 WB04-E1211: 이전에는 오류를 던졌다)
         };
         this.behaviorHooks = behavior; this.behaviorState = { checking: () => o.gameplayGlobals.aiDebug().checking().value, population: o.dudePopulation };
         o.dudeBehavior = new RawDudeBehavior(c.pool, c.spots, this.behaviorState, behavior);
@@ -63,7 +68,7 @@ export class RawCampaignSessionDamageable {
             move: (sid, point, quickly) => { this.#live(); return o.hits.dudes.move(sid, [point.x, point.y], quickly); },
             setFrame: (sid, frame, flags) => { this.#live(); c.frame.set(sid, frame, flags); },
             unpop: (sid, flags) => { this.#live(); o.world.unpop(sid, flags); }, pop: (sid, point, flags) => pop(sid, point.x, point.y, flags), destroy,
-            assertion: (line) => { this.#live(); throw new Error(`원본 Dude.cpp 정기 진단 ${line}`); },
+            assertion: (line) => { this.#live(); dudeAssertion(o, line); }, // 부모 진단과 같은 DudeAssert 이다. (2026-11-22 WB04-E1211)
         };
         this.regularHooks = regular; this.regularState = { checking: () => o.gameplayGlobals.aiDebug().checking().value, providers: c.bookkeeping.currentProviders(), get providerIndex() { return o.dudeProviderIndex; }, set providerIndex(value) { o.dudeProviderIndex = value | 0; }, pollEvent: 0x1a2b, pathType: 24 };
         o.dudeRegular = new RawDudeRegular(c.pool, c.frames, o.random, this.regularState, regular);

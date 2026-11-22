@@ -92,7 +92,9 @@ test('Session Player Regular: 실제 최초 Regular와 같은 Host로 두 사건
         assert.equal(o.playerRegular.handle(sid, 1, 0, 5), 5); assert.deepEqual(events, []); assert.equal(o.playerRegular.handle(sid, 1, 1, 5), 5); assert.deepEqual(events, [[29, 'SORE LOSER TEST: '], [29, 'NOT STARTING YET.\n']]);
         o.core.ownerMode.battle = true; assert.equal(o.playerRegular.handle(sid, 1, 1, 5), 0); assert.equal(o.core.processes.findEvent(sid, 2).payload, 60);
         template(o, 1, new Uint8Array(28)); put(o.headers, 20 + 8, 1); assert.equal(o.playerRegular.handle(sid, 2, 1, 60), 0); assert.equal(o.templateStorage.state(1).bytes[0], 4);
-        assert.throws(() => o.playerRegular.handle(sid, 99, 1, 0), /1250/);
+        // 알 수 없는 사건은 원문처럼 Player.cpp 0x41d `0` 진단을 표시한 뒤 payload 를 그대로 돌려준다(E1211). 장치가 없으면 진단 지점에서 명시 실패한다.
+        assert.throws(() => o.playerRegular.handle(sid, 99, 1, 0), /진단 장치 미연결/); const shown = []; o.world.storage.bindDisplayDiagnostics({ value: '' }, (...args) => shown.push(args));
+        assert.equal(o.playerRegular.handle(sid, 99, 1, 7), 7); assert.deepEqual(shown, [['0', String.fromCharCode(92) + 'Ns' + String.fromCharCode(92) + 'O' + String.fromCharCode(92) + 'Player.cpp', 0x41d]]);
     } finally { o.dispose(); }
 });
 

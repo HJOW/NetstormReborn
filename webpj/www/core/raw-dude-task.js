@@ -38,7 +38,8 @@ export class RawDudeTask {
     #state;
     #hooks;
 
-    // state = { clock: { now: 현재 double 게임 시각 }, bridgeType?: 82 }, hooks = { taskRegular(sid), addTaskRegular(sid, event), notifySurface(sid) } 이다. (2026-11-08 WB04-E76)
+    // state = { clock: { now: 현재 double 게임 시각 }, bridgeType?: 82 }, hooks = { taskRegular(sid), addTaskRegular(sid, event), notifySurface(sid), assertion?() } 이다.
+    // assertion 은 낙하 교체 진단(Dude.cpp 0x9c)을 표시한 뒤 정상 복귀하는 선택 훅이다. (2026-11-08 WB04-E76; assertion 은 2026-11-22 WB04-E1211)
     constructor(pool, state, hooks) {
         if (pool?.edition !== 'patch1078') throw new TypeError('Dude task 는 PATCH 전용입니다');
         if (!state || !state.clock) throw new TypeError('Dude task 의 현재 시계가 필요합니다');
@@ -64,7 +65,11 @@ export class RawDudeTask {
         if (!Number.isFinite(wait) || !Number.isFinite(now)) throw new RangeError('Dude task 유한 시각 입력 오류');
         const previous = raw[TASK_WORD] | (raw[TASK_WORD + 1] << 8);
         const task = event >>> 0;
-        if (previous === FALL_TASK && task !== FALL_TASK) throw new DudeTaskFallAssertError();
+        // 낙하 교체 진단: 실제 PATCH(Native) 결선이 `assertion` 훅을 주면 표시 뒤 정상 복귀해 계속하고(원문 DudeAssert 0x9c), 없는 독립 입력은 기존처럼 중단한다. (2026-11-22 WB04-E1211)
+        if (previous === FALL_TASK && task !== FALL_TASK) {
+            if (typeof this.#hooks.assertion !== 'function') throw new DudeTaskFallAssertError();
+            this.#hooks.assertion();
+        }
         let regular = need(this.#hooks.taskRegular, 'Dude task 현재 Regular 조회 미연결')(sid);
         if (!regular) {
             regular = need(this.#hooks.addTaskRegular, 'Dude task 실제 Regular 생성 미연결')(sid, task);

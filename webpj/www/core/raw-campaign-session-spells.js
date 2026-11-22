@@ -9,6 +9,8 @@ import { typeNumber } from '../assets/type-table.js';
 
 // 현재 선택된 실제 부모/장치가 없으면 그 위치에서 거부한다.
 function need(value, message) { if (!value) throw new Error(message); return value; }
+// 애시드 송신 뒤 네 진단의 줄 번호와 원문 식이다(Periodicharmer.cpp). (2026-11-22 WB04-E1211)
+const ACID_SEND_ASSERTIONS = new Map([[0x2fa, 'zd.victimSid == s.getSid()'], [0x2fb, 'zd.aSid == getSid()'], [0x2fc, 'zd.bSid == otherPole.getSid()'], [0x2fd, 'zd.xOriented == xOriented']]);
 
 // 세 원문 생성 구간의 값형 훅과 독립 typed 역할을 함께 보관한다.
 export class RawCampaignSessionSpells {
@@ -75,7 +77,11 @@ export class RawCampaignSessionSpells {
             },
             damage: (victim, amount, owner, attacker) => { this.#live(); need(damage, '애시드 현재 피해 몸체 미연결')(victim, amount | 0, owner & 0xff, attacker); }, // 생성 시 고른 같은 DamageHooks의 signed 피해/소유자 BYTE를 사용한다.
             broadcast: (packet) => { this.#live(); o.tables.broadcast.send(packet); }, // 같은 wire를 현재 기존 방송 관문으로 보낸다.
-            assertion: (line) => { this.#live(); throw new Error(`Session 애시드 실제 진단 미연결 ${line}`); }, // 미연결 Source 진단은 선택된 지점에서 명시 오류다.
+            // 원문(RawSurfaceAttack Native 결선)처럼 송신 뒤 네 진단(Periodicharmer.cpp 0x2fa..0x2fd)을 표시하고 계속한다. 다른 줄은 원문도 선택하지 않아 오류다. (2026-11-22 WB04-E1211: 이전에는 오류를 던졌다)
+            assertion: (line) => {
+                this.#live(); const expression = ACID_SEND_ASSERTIONS.get(line); if (!expression) throw new Error(`애시드 다른 송신 후 진단 ${line}`);
+                o.world.storage.assertDisplay(expression, '\\Ns\\O\\Periodicharmer.cpp', line);
+            },
             setFrame: (sid, frame, flags) => { this.#live(); c.frame.set(sid, frame, flags); }, // 전용 애니메이션의 현재 프레임을 실제 표시 몸체에 보낸다.
         };
         this.fenceState = { get boss() { return o.state.assetState.readBoss(); }, get editor() { return o.globals.editor; }, get localOwner() { return o.playerState.battleOwner; } };

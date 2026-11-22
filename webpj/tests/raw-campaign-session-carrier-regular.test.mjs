@@ -104,3 +104,11 @@ test('Session CarrierRegular: 새 task는 부착 효과의 event/count를 보존
 test('Session CarrierRegular: 실제 만료 부모 삭제가 같은 타이머의 Host/Kernel 수명을 함께 반납한다', () => {
     const o = scene({ deletion: { selected: () => 0, emit: forbidden } }); try { const parent = o.world.create(152, 2); const h = o.carrierRegularModules.hooks; h.allocateTimer(); const timer = o.pendingContentPreview; h.constructTimer(parent, 0.2); const form = timer.form; const pid = timer.pid; const fields = timer.fields; o.core.processState.now = fields.deadline(); timer.runFrame(); assert.equal(o.core.processes.fromForm(form), null); assert.equal(o.core.processes.isRegistered(pid, timer), false); assert.notEqual(o.core.pool.slot(parent)[11] & 1, 0); assert.equal(get(fields.bytes, 0), 0x5019ec); assert.equal(get(fields.bytes, 8), 0xffffcfc7); } finally { o.dispose(); }
 });
+
+test('Session Carrier: 내용물 타이머 부모 진단은 원문처럼 Baseprocess.cpp 0xa4 를 표시한 뒤 계속한다(E1211)', () => {
+    const o = scene(); try {
+        const h = o.carrierRegularModules.previewHooks; const bs = String.fromCharCode(92);
+        assert.throws(() => h.assertion(), /진단 장치 미연결/); const shown = []; o.world.storage.bindDisplayDiagnostics({ value: '' }, (...args) => shown.push(args)); h.assertion();
+        assert.deepEqual(shown, [['parent->getHead() != 0', bs + 'Ns' + bs + 'O' + bs + 'Baseprocess.cpp', 0xa4]]);
+    } finally { o.dispose(); }
+});

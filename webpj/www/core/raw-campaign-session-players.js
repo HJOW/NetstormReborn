@@ -43,7 +43,8 @@ export class RawCampaignSessionPlayers {
             replace: (slot, bytes) => o.templateStorage.initializeState(slot, bytes),
         });
         o.templateState.bindMinimumSize((slot, minimum) => o.templateStorage.ensureStateSize(slot, minimum));
-        const regularHooks = { ...services.player, assertion: missing(1250) };
+        // 원문(RawSurfaceStorage::BindPlayerRuntime)처럼 알 수 없는 사건의 Player.cpp 0x41d 진단(`0`)을 표시한 뒤 계속한다. (2026-11-22 WB04-E1211: 이전에는 오류를 던졌다)
+        const regularHooks = { ...services.player, assertion: () => o.world.storage.assertDisplay('0', '\\Ns\\O\\Player.cpp', 0x41d) };
         if (!regularHooks.log) regularHooks.log = missing(1251);
         regularHooks.reserveRegular = () => true; regularHooks.addRegular = (sid, event, payload) => check(c.processes.addRegular(sid, event, payload));
         regularHooks.templateState = (slot) => o.templateState.get(slot); regularHooks.templateChanged = (slot) => o.templateState.changed(slot);

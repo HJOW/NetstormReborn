@@ -25,6 +25,12 @@ function coordinate(raw, offset) { return new DataView(raw.buffer, raw.byteOffse
 function floatBits(value) { const raw = new DataView(new ArrayBuffer(4)); raw.setFloat32(0, value, true); return raw.getUint32(0, true); }
 // 선택된 하위/Host가 없으면 그 위치에서 명시적으로 거부한다.
 function need(value, message) { if (!value) throw new Error(message); return value; }
+// 더스트 데빌(Wind 플라이어) 진단 두 개를 원문(RawSurfaceAttack Native 결선)처럼 표시하고 계속한다: Baseprocess.cpp 0xa4 `parent->getHead() != 0`, Flyer.cpp 0x19e `period == WIND_FLYER_ATTACK_TIME`.
+// 다른 줄 번호는 원문도 선택하지 않으므로 오류로 거부한다. (2026-11-22 WB04-E1211: 이전에는 두 진단 모두 오류를 던졌다)
+function windAssertion(owner, line) {
+    if (line !== 0xa4 && line !== 0x19e) throw new Error(`더스트 데빌 다른 원문 진단 ${line}`);
+    owner.world.storage.assertDisplay(line === 0xa4 ? 'parent->getHead() != 0' : 'period == WIND_FLYER_ATTACK_TIME', line === 0xa4 ? '\\Ns\\O\\Baseprocess.cpp' : '\\Ns\\O\\Flyer.cpp', line);
+}
 
 // 같은 현재 Host·프레임·표적/후처리를 기존 몸체에 연결하는 독립 typed 대여 수명이다.
 export class RawCampaignSessionFlyers {
@@ -153,7 +159,7 @@ export class RawCampaignSessionFlyers {
         this.sunGlobals = { boss: () => s.assetState.readBoss(), paused: () => o.flyerPaused, now: () => c.processState.now, bombType: () => o.sunBombType };
         o.flyerFrame = new RawFlyerFrame(c.pool, c.types, this.frameTypes, s.soundState.typeFrames.subarray(0, c.types.length), this.frameGlobals, hooks); o.sunFlyerFrame = new RawSunFlyerFrame(c.pool, c.shapes, this.bombTypes, this.sunGlobals, sun);
         const damage = o.hits.damageHooks({}).damage;
-        const wind = { runCount: (sid) => this.#runCount(sid), assertion: (line) => { this.#live(); throw new Error(`Wind Flyer 실제 진단 미연결 ${line}`); }, damageable: (sid, event, count, value) => { this.#live(); return o.assetBindings.regular.damageableHandle(sid, event, count, value); }, destroy: hooks.destroy, sound: hooks.sound, mayTarget: hooks.mayTarget,
+        const wind = { runCount: (sid) => this.#runCount(sid), assertion: (line) => { this.#live(); windAssertion(o, line); }, damageable: (sid, event, count, value) => { this.#live(); return o.assetBindings.regular.damageableHandle(sid, event, count, value); }, destroy: hooks.destroy, sound: hooks.sound, mayTarget: hooks.mayTarget,
             damageRate: (sid, target) => { this.#live(); const type = o.hitTypes[c.pool.slot(sid)[10]]; return type.specialFlyerDamage && (c.types[c.pool.slot(target)[10]].flags2 & 0x120000) ? type.flyerDamagePerSecond : type.damagePerSecond; }, // 같은 현재 표의 대공 피해다.
             damage: (target, amount, owner, source) => { this.#live(); need(damage, 'Wind Flyer 현재 피해 미연결')(target, amount | 0, owner & 0xff, source); }, weaken: (sid) => { this.#live(); o.damageableModules.preparePost(); o.damageablePost.weaken(sid); } }; // 현재 피해 함수 값과 후처리 준비다.
         this.windActiveSounds = new Uint32Array(c.types.length);

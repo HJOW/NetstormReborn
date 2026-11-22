@@ -59,3 +59,12 @@ test('Session Flyer: currentFlyerProcess 가 부모에 붙은 현재 프로세�
         assert.equal(o.currentFlyerProcess(parent, 0x11e), fields);
     } finally { o.dispose(); }
 });
+
+test('Session Flyer: 더스트 데빌 진단 두 개는 원문 식·파일·행으로 표시한 뒤 계속하고 다른 줄은 거부한다(E1211)', () => {
+    const o = owner(); try {
+        before(o); o.connectFlyer(); const h = o.flyerModules.windHooks; const bs = String.fromCharCode(92);
+        assert.throws(() => h.assertion(0xa4), /진단 장치 미연결/); const shown = []; o.world.storage.bindDisplayDiagnostics({ value: '' }, (...args) => shown.push(args));
+        h.assertion(0xa4); h.assertion(0x19e); assert.throws(() => h.assertion(0x123), /다른 원문 진단/);
+        assert.deepEqual(shown, [['parent->getHead() != 0', bs + 'Ns' + bs + 'O' + bs + 'Baseprocess.cpp', 0xa4], ['period == WIND_FLYER_ATTACK_TIME', bs + 'Ns' + bs + 'O' + bs + 'Flyer.cpp', 0x19e]]);
+    } finally { o.dispose(); }
+});

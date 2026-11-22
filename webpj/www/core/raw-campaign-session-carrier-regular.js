@@ -83,7 +83,8 @@ export class RawCampaignSessionCarrierRegular {
                 o.pendingContentPreview = null; c.processes.attach(pending, type, parent, flags);
             },
             destroy: (sid, flags) => { this.#live(); o.world.destroy(sid, flags); }, // 만료한 부모의 현재 가상 삭제다.
-            assertion: () => { this.#live(); throw new Error('Session 내용물 타이머 실제 진단 미연결'); }, // 원문 SessionMissing 진단이다.
+            // 원문(RawSurfaceCarrier Native 결선)처럼 부모의 머리 Form 부재 진단(Baseprocess.cpp 0xa4)을 표시하고 캡처한 부모를 계속 쓴다. (2026-11-22 WB04-E1211: 이전에는 오류를 던졌다)
+            assertion: () => { this.#live(); o.world.storage.assertDisplay('parent->getHead() != 0', '\\Ns\\O\\Baseprocess.cpp', 0xa4); },
         };
         o.contentPreviewProcess = new RawContentPreviewProcess(c.pool, { now: () => c.processState.now, processType: () => o.state.soundState.currentType() }, preview); this.previewHooks = preview;
         const hooks = {

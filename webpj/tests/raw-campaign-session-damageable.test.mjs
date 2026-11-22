@@ -100,3 +100,23 @@ test('Session Damageable: 실제 다리 프레임 표로 약화한다', () => {
         assert.equal((raw[12] | (raw[13] << 8)) & 0x38, (o.state.damageablePostState.bridgeCrackLife - 1) * 8);
     } finally { o.dispose(); }
 });
+
+test('Session Damageable: Dude 부모/정기 진단은 원문 DudeAssert 와 같은 식·행으로 표시한 뒤 계속한다(E1211)', () => {
+    const o = scene(); try {
+        const m = o.damageableModules; const file = '.' + String.fromCharCode(92) + 'Dude.cpp';
+        assert.throws(() => m.behaviorHooks.assertion(0xde), /진단 장치 미연결/); const shown = []; o.world.storage.bindDisplayDiagnostics({ value: '' }, (...args) => shown.push(args));
+        for (const line of [0xde, 0x127, 0x9c, 0x153]) { m.behaviorHooks.assertion(line); m.regularHooks.assertion(line); }
+        const expected = [['!s.isDead() && !s.isFree()', 0xde], ['walkSid', 0x127], ['task == taskFALL', 0x9c], ['0', 0x153]].flatMap(([expression, line]) => [[expression, file, line], [expression, file, line]]);
+        assert.deepEqual(shown, expected);
+    } finally { o.dispose(); }
+});
+
+test('Session Damageable: Dude 낙하 task 교체는 원문처럼 진단(Dude.cpp 0x9c)을 표시한 뒤 새 task 를 계속 쓴다(E1211)', () => {
+    const o = scene(); try {
+        const sid = o.world.create(83, 0); const raw = o.core.pool.physical(sid); raw[12] = 0x05; raw[13] = 0x51; // 낙하(0x5105) 중인 task WORD 이다.
+        assert.throws(() => o.dudeTask.set(sid, 0x5100, 0.5), /진단 장치 미연결/); assert.equal(o.core.pool.slot(sid)[12] | (o.core.pool.slot(sid)[13] << 8), 0x5105, '진단 실패 앞에서는 task WORD 를 쓰지 않는다');
+        const shown = []; o.world.storage.bindDisplayDiagnostics({ value: '' }, (...args) => shown.push(args)); o.dudeTask.set(sid, 0x5100, 0.5);
+        assert.deepEqual(shown, [['task == taskFALL', '.' + String.fromCharCode(92) + 'Dude.cpp', 0x9c]]); assert.equal(o.core.pool.slot(sid)[12] | (o.core.pool.slot(sid)[13] << 8), 0x5100);
+        assert.ok(o.core.processes.findEvent(sid, 0x5100), '새 task Regular 가 같은 Host 에 부착된다');
+    } finally { o.dispose(); }
+});
