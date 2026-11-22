@@ -177,3 +177,19 @@ test('The War Begins!: 대기 중인 제단 승급 결과가 AltarUpgrade 안내
   expect(errors).toEqual([]);
 });
 
+// F1 은 열린 Tell·확인 창을 도움말로 바꿔치우지 않는다(원본 OpenQuickHelpWindow 는 모달이 도움말이 아니면 열지 않는다). 창이 없으면 도움말이 열리고, 도움말이 열려 있으면 그대로 도움말이다. (2026-11-22 WB04-E1235)
+test('The War Begins!: F1 은 열린 안내 창을 도움말로 바꾸지 않는다', async ({ page }) => {
+  test.setTimeout(300000);
+  const errors = []; await startWarBegins(page, errors);
+  const kind = () => page.evaluate(() => window.netstorm._mainMenu.dialog?.constructor.name ?? null);
+  await page.evaluate(() => window.netstorm._openTell('ABORT'));
+  expect(await kind(), 'ABORT 확인 창').toBe('TellWindow');
+  await page.keyboard.press('F1'); await page.waitForTimeout(400);
+  expect(await kind(), 'F1 뒤에도 확인 창').toBe('TellWindow');
+  await page.evaluate(() => window.netstorm._mainMenu.setDialog(null)); await page.keyboard.press('F1');
+  await expect.poll(kind, { timeout: 3000, message: '창이 없으면 도움말' }).toBe('HelpWindow');
+  await page.keyboard.press('F1'); await page.waitForTimeout(300);
+  expect(await kind(), '도움말이 열린 채 F1').toBe('HelpWindow');
+  expect(errors).toEqual([]);
+});
+

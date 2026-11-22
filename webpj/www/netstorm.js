@@ -3581,7 +3581,9 @@ export class Netstorm {
         if (this._state === AppState.MAIN_MENU && this._mainMenu) {
             if (event.code === 'F1') {
                 event.preventDefault();
-                if (!event.repeat) this._openHelp('F1Help');
+                // 원본 OpenQuickHelpWindow(QuickHelpControl.cpp:50~53)는 현재 모달이 도움말이 아니면(Tell·브리핑·확인 창이 열려 있으면) 열지 않고, 열 때 먼저 팝업을 닫는다.
+                // 이전에는 열린 Tell 창을 $OnExit 없이 도움말로 바꿔치웠다. (2026-11-22 WB04-E1235)
+                if (!event.repeat && (!this._mainMenu.dialog || this._mainMenu.dialog instanceof HelpWindow)) { this._mainMenu.closePopup?.(); this._openHelp('F1Help'); }
             } else if (this._mainMenu.dialog instanceof HelpWindow && this._mainMenu.dialog.keyDown(event.code)) {
                 this._mainMenu.dirty = true;
             }
