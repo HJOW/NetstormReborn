@@ -212,6 +212,26 @@ test('DamageableHit: 계약 — 현재 raw vtable 의 실제 BaseHit 진입으�
     assert.ok(fallbackCalls === 1 && get(scene.pool.slot(SOURCE), 26) === 126);
 });
 
+test('DamageableHit: 계약 — 다른 vtable 인데 fallback 이 없으면 표적·가상 진입·공격 정보를 담은 오류로 알린다(cpppj 1326 진단 문구, WB04-E1241)', { skip: !rows && '원본 fixture 없음' }, () => {
+    const scene = new HitScene();
+    const row = [...rows[0]];
+    row[1] = '0'; row[2] = '150'; row[3] = '24'; row[4] = '0'; row[5] = '0'; row[10] = '1'; row[11] = '0'; row[12] = '0'; row[13] = '0';
+    scene.prepare(row);
+    const damage = scene.assemble();
+    const hooks = makeDamageableGunHitHooks(damage, [{ vtable: 0x11319800, address: 0x4add10 }], {});
+    put(scene.pool.allocated(SOURCE), 0, 0xdead1234);
+    const victimType = scene.pool.slot(SOURCE)[10], attackerType = scene.pool.slot(ATTACKER)[10];
+    // 실제 공격자: 두 SID 와 TYPE·가상 표 주소(진입 0)가 문구에 그대로 들어간다.
+    assert.throws(() => hooks.damage(SOURCE, 24, 2, ATTACKER), (error) => error instanceof Error
+        && error.message === `다른 파생 실제 피해 미복원: 표적 SID=${SOURCE} TYPE=${victimType} VT=0xdead1234 +98=0x0 공격 SID=${ATTACKER} TYPE=${attackerType}`);
+    // 공격자가 없거나(0) 풀 밖이면 TYPE 자리에 '없음/물리범위밖'이 들어간다.
+    for (const attacker of [0, CAPACITY, CAPACITY + 7]) {
+        assert.throws(() => hooks.damage(SOURCE, 24, 2, attacker), (error) => error.message === `다른 파생 실제 피해 미복원: 표적 SID=${SOURCE} TYPE=${victimType} VT=0xdead1234 +98=0x0 공격 SID=${attacker} TYPE=없음/물리범위밖`);
+    }
+    // 표적 쪽 분배 오류(SID 0·풀 밖)는 기존 범위 오류 그대로다.
+    assert.throws(() => hooks.damage(0, 24, 2, ATTACKER), RangeError);
+});
+
 test('DamageableHit: 계약 — 섬+다리 genus(6) 지면의 섬 번호는 +8 WORD 대신 −1 이다(원본 관측에 없는 분기, cpppj 원문 계약)', { skip: !rows && '원본 fixture 없음' }, () => {
     // 경고 마감 0 과 실제 시각 5 초에서 주 섬 번호가 −1 이면 경고하고 0 이면 하지 않는다(지면 WORD 는 0).
     const fiveBits = new DataView(new ArrayBuffer(8));

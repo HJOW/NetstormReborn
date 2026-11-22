@@ -224,7 +224,12 @@ export function makeDamageableGunHitHooks(damage, entries, hooks = {}) {
             }
             if (entry === HIT_ENTRY) { damage.hit(victim, amount, owner, attacker); return; }
             if (entry === BASE_HIT_ENTRY) { damage.baseHit(victim, amount, owner, attacker); return; }
-            if (typeof fallback !== 'function') throw new Error('다른 파생 실제 피해 미복원');
+            if (typeof fallback !== 'function') {
+                // 기존 엄격한 오류에 호출 당시의 실제 표적·가상 진입·공격 정보를 덧붙여 로그만으로 원인을 추적하게 한다(cpppj 1326 RawDamageableHit 진단과 같은 문구). 공격자가 없거나 풀 밖이면 '없음/물리범위밖'이다.
+                // (2026-11-23 WB04-E1241: cpppj 1326 변경 ② 재반영)
+                const attackerType = attacker && attacker < pool.capacity ? pool.slot(attacker)[TYPE_AT] : '없음/물리범위밖';
+                throw new Error(`다른 파생 실제 피해 미복원: 표적 SID=${victim} TYPE=${pool.slot(victim)[TYPE_AT]} VT=0x${(vtable >>> 0).toString(16)} +98=0x${(entry >>> 0).toString(16)} 공격 SID=${attacker} TYPE=${attackerType}`);
+            }
             fallback(victim, amount, owner, attacker);
         }
     };
