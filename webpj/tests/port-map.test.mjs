@@ -96,7 +96,7 @@ test('이식 대응표: 후보 신규 단위 경로별 분류', () => {
     });
     // 후보의 각 경로가 의도한 규칙에 먼저 일치하는지 확인한다.
     // 재기준선 뒤 E1171·E1176 판정으로 멀티/메타 준비 창(NSInfo) 네 단위는 앞선 `mp-nsinfo` 규칙이 먼저 맞아 `exclude-mp` 가 된다(docs/webpj-nsinfo-scope-20261122.md).
-    const overridden = new Map(['client/HudNsInfoMeta', 'client/HudPlayerButtonDraw', 'client/NativeNsInfoInput', 'client/NativePlayerInfoInput', 'client/RawNsInfoContext'].map((key) => [key, 'exclude-mp']));
+    const overridden = new Map(['client/HudNsInfoMeta', 'client/HudPlayerButtonDraw', 'client/NativeNsInfoInput', 'client/NativePlayerInfoInput', 'client/RawNsInfoContext', 'o/RawPacketDelay'].map((key) => [key, 'exclude-mp']));
     for (const [key, expected] of classified) assert.equal(classify(key)?.class, overridden.get(key) ?? expected, key);
     assert.deepEqual(['client/NativeFortSaveVirtual', 'client/ClientMetaSpriteRefresh', 'client/NativeMetaSpriteRefresh', 'client/SkirmishSetup', 'client/UberReconnect', 'client/ClientTimeSource'].map((key) => classify(key)?.class), ['port', 'port', 'port', 'port', 'port', 'adapt']);
     // 두 기준선을 읽을 수 있으면 목록이 추가 단위 전체와 정확히 같은지 확인한다.
