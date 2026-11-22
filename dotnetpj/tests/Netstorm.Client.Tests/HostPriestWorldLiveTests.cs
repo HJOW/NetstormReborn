@@ -12,7 +12,7 @@ namespace Netstorm.Client.Tests;
 public sealed partial class HostPriestWorldLiveTests
 {
     /// <summary>실자산과 시작 때 초기화한 SP·장기 목록을 같은 세션에 연결한다. 공유 표면 지정 시 제품처럼 같은 풀/게임/해시/점유 지도를 빌린다.</summary>
-    private static (HostSession Session, IReadOnlyList<OriginalTypeRecord> Types) Scene(ClientSurfaceGlobals? sharedSurface = null, bool initializeSurfaceAssets = false)
+    private static (HostSession Session, IReadOnlyList<OriginalTypeRecord> Types) Scene(ClientSurfaceGlobals? sharedSurface = null, bool initializeSurfaceAssets = false, Action<List<SquidDisplayShape>>? inspectShapes = null)
     {
         string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
         var startup = new HostStartupScene(data); var random = new GameRandom(1);
@@ -25,6 +25,8 @@ public sealed partial class HostPriestWorldLiveTests
         IReadOnlyList<RiftTypeDefinition> definitions = MissionFortLoad.LoadTypeDefinitions(startup.Files);
         session.FillWorldFrames(definitions); RiftTypeTable table = MissionFortLoad.LoadTypeTable(startup.Files);
         var shapes = TerrainDisplayShapes.Build(definitions, new ShapeDatabase(startup.Files.ReadAllBytes("d/_shapes.shp")));
+        // 실제Host가빌릴동일SHP목록을검사에서관찰하며별도복사표를만들지않는다.
+        inspectShapes?.Invoke(shapes);
         IReadOnlyList<OriginalTypeRecord> types = table.Types;
         if (initializeSurfaceAssets)
         {

@@ -13,6 +13,8 @@ public sealed partial class HostSession
     private ProcessFormTransmission? _flyerPacketTransmission;
     /// <summary>현재 실제 nondead Form 조회 본체다.</summary>
     private RawContainedLookup? _flyerProcessLookup;
+    /// <summary>실제생성자가현재Attach에서소비할같은할당예약객체다.</summary>
+    private FlyerProcess? _reservedFlyerProcess;
     /// <summary>같은 큰 Frame/후속 생산도 현재 실제 본체를 빌린다. 반납 뒤는 실패한다.</summary>
     public RawFlyerProcess FlyerBody => FixedPacketNeed(_flyerProcess);
     /// <summary>선택한 DWORD만 원문 소비 위치에서 읽고 실제 물리 부족을 거부한다.</summary>
@@ -38,11 +40,19 @@ public sealed partial class HostSession
         {
             Assertion = DiagnoseFlyerBody, FindProcess = (parent, type) => (ushort)FixedPacketNeed(_flyerProcessLookup).Find(parent, type),
             Fields = form => (PlayerProcesses.FromForm(form) as FlyerProcess ?? throw new InvalidOperationException("비행 Form의 현재 PID/원문 미연결")).Fields,
-            Attach = (_, _, _, _) => throw new InvalidOperationException("비행 생성자의 실제 할당 예약 미연결"),
+            Attach = AttachReservedFlyerProcess,
             Frame = fields => FixedPacketNeed(input.Frame)(fields), Notify = (fields, message, first, second) => FixedPacketNeed(input.Notify)(fields, message, first, second),
             ParentDying = fields => FixedPacketNeed(input.ParentDying)(fields), Pieces = parent => FixedPacketNeed(input.Pieces)(parent), Destroy = (parent, flags) => DestroyWorldObject(parent, flags),
         });
         BindFlyerPacketTransmission(storage);
+    }
+    /// <summary>현재예약과같은이미지만같은Host로소유권을넘기며단독생성호출은거부한다.</summary>
+    private void AttachReservedFlyerProcess(FlyerProcessFields fields, ushort parent, uint type, uint flags)
+    {
+        FlyerProcess current = _reservedFlyerProcess ?? throw new InvalidOperationException("비행 생성자의 실제 할당 예약 미연결");
+        if (!ReferenceEquals(current.Fields, fields)) throw new InvalidOperationException("비행 생성의 현재예약/원문이미지 불일치");
+        _reservedFlyerProcess = null;
+        if (PlayerProcesses.Attach(current, type, parent, flags) is null) throw new InvalidOperationException("비행 생성의 실제Host 부분부착실패 경계");
     }
     /// <summary>Native는 같은2048BYTE/현재 헤더를 사용하고 typed는 기존64BYTE/최초 헤더와 다른 파생 전송을 보존한다.</summary>
     private void BindFlyerPacketTransmission(RawSurfaceStorage storage)
@@ -116,5 +126,5 @@ public sealed partial class HostSession
         if (line == 0) return; FlyerProcessFields fields = CurrentFlyerProcess(FlyerPacketDword(packet, 4), line); FlyerBody.Command(fields, command);
     }
     /// <summary>실제 Kernel/Host 정리 뒤에 같은 비행 본체/조회/전송 참조만 반납한다.</summary>
-    private void ReleaseFlyerProcessDevices() { _flyerProcess = null; _flyerProcessLookup = null; _flyerPacketTransmission = null; }
+    private void ReleaseFlyerProcessDevices() { _reservedFlyerProcess?.Dispose(); _reservedFlyerProcess = null; _flyerProcess = null; _flyerProcessLookup = null; _flyerPacketTransmission = null; }
 }

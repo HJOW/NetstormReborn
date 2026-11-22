@@ -31,6 +31,12 @@ public sealed record HostSquidPacketEffects
     public SunAviaryProcessHooks? SunAviary { get; init; }
     /// <summary>맨 오 워 풀의 실제 할당/큰 공간·음향 장치다. 최초 구성에서 함수 값을 복사한다.</summary>
     public RainAviaryProcessHooks? RainAviary { get; init; }
+    /// <summary>데빌메이커의실제할당/큰공간장치다. 최초구성에서함수값을복사한다.</summary>
+    public WindAviaryHooks? WindAviary { get; init; }
+    /// <summary>비행생성의실제caller할당바이트또는NULL이며Wind는104BYTE를요구한다.</summary>
+    public Func<int, byte[]?>? FlyerAllocation { get; init; }
+    /// <summary>같은현재Dude속도표에서현재SID TYPE의float속도를읽는장치다.</summary>
+    public Func<ushort, float>? FlyerSpeed { get; init; }
 }
 
 /// <summary>고정F가 같은 객체/압축/검증 본체를 직접 선택하는 실제 Host 부분이다.</summary>
@@ -66,6 +72,7 @@ public sealed partial class HostSession
         BindFlyerProcessDevices();
         BindSunAviaryProcessDevices();
         BindRainAviaryProcessDevices();
+        BindWindAviaryProcessDevices();
     }
     /// <summary>실제 프로세스 수명이 끝날 때 수신 전용 이름/외부 효과/종속 UI의 참조를 함께 반납한다.</summary>
     private void ReleaseSquidPacketDevices()
@@ -81,6 +88,7 @@ public sealed partial class HostSession
         ReleaseFlyerProcessDevices();
         ReleaseSunAviaryProcessDevices();
         ReleaseRainAviaryProcessDevices();
+        ReleaseWindAviaryProcessDevices();
         _developerEffects = null;
     }
     /// <summary>번호 선택 시점의 현재 TYPE를 읽는다.</summary>
@@ -162,6 +170,7 @@ public sealed partial class HostSession
         {
             case 0x45e410: ReceiveSunAviaryPacket(packet); return;
             case 0x45e5d0: ReceiveRainAviaryPacket(packet); return;
+            case 0x45e4f0: ReceiveWindAviaryPacket(packet); return;
             case 0x45e2b0: ReceiveFlyerPacket(packet); return;
             case 0x426490: ReceiveFlyerCommand(packet); return;
             case 0x46a0c0: ReceiveGunPacket(packet); return;
