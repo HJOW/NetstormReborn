@@ -1,4 +1,4 @@
-# 채팅 창 조립: 만들기·F3 표시·로그 출력(E1169)과 입력줄 키 경로(E1170)
+# 채팅 창 조립: 만들기·F3 표시·로그 출력(E1169), 입력줄 키 경로(E1170), 제출·수신(E1172)
 
 미션 화면 아래의 채팅 영역(F3)은 구분선만 오르내리고 안은 검은 띠였다([E1159](webpj-chat-toggle-f3-20261121.md)). 이식돼 있던 `ChatWindow`(원문 0043f820/00431ee0)와 `HudChatGeometry`를 실제 Client Gump 트리에 조립해 **창이 만들어지고, F3로 보이며, 로그 줄이 색과 함께 그려지게** 했다. E1168의 글자 입력창·모달 기반 위에서 같은 방식으로 조립했다.
 
@@ -32,3 +32,13 @@
 ## 시험(E1170)
 
 - `e2e/chat-window.spec.js` 세 번째 시험(Chromium): 시작은 입력줄 숨김(지도 영역 768) → Enter 로 입력줄이 보이고 지도 영역이 672 로 줄어듦 → `qwa1 hello` 를 치면 입력줄 글자가 되고 입력 큐는 비며 카메라(화면 위치 저장 숫자 `1`)와 생산 단축키가 반응하지 않음 → Backspace 두 번으로 `qwa1 hel` → Enter 제출로 줄이 비워지고 입력줄은 남음 → 빈 Enter 로 숨음 → 다시 열고 ESC 가 게임 메뉴막대를 엶. 오류·경고 0.
+
+## 제출·수신(E1172)
+
+- **원본 파이프라인 연결:** `_campaignChatDevices`(`netstorm.js`)가 원본 `MakeChatContext`처럼 `core/client-chat-runtime.js`의 `bindClientChatRecipients`(수신자 해석·이름 완성 장치)·`bindClientChatMessage`(`say` 조합·41h 패킷 송신)·`bindClientChatSubmit`(대상 해석 → 점 명령 분배 → say)을 묶어 `ClientChatWindow`에 넘긴다. Client 수명에 채팅 manager 전역(`ClientChatManagerGlobals`)과 점 명령 전역(`ClientDotCommandGlobals`)을 만들고, 최초 한 번 issue 명령 네 개(`flash`·`flash`·`desc`·`cheatorama`)와 chat manager를 초기화한다. 점 명령 전역은 채팅 창의 `clear`/`quit` 등록과 제출 분배가 같은 표를 쓴다.
+- **송신 경로:** 전투 모드(미션)이면 `sendChatPacket`이 패킷을 로컬 서버(9)로 보내고(`session.sendMutableLocalPacket`), 세션이 41h로 되돌리면 `services.chatReceive`(새로 연결) → `_receiveCampaignChat` → 원본 `dispatchChatPacket`이 무시·채널·관계·옵션 관문을 거쳐 `You> 본문` 줄을 로그에 더한다(발신자 아이콘 접두 포함). 전송 장치가 없을 때만 로컬 대체(`localReceive`)가 같은 수신으로 간다.
+- **`ReadChatGlobal`:** 관계표(0x595200 이후 81칸)·숨김 Player(0x52f81e 이후)·구독자·전투 소유자·모드 세 개·채팅 창 상태·manager·메시지 색(이름 팔레트 33)·종류(0x41)를 앱 값으로 읽는다. 알림 Gump serial(0x5ca92c)은 아직 0이다.
+- **점 명령:** 창 쪽 효과 `chatGeometryBackend`/`invokeChatCommand`/`printChat`을 `ClientChatWindow`에 더했다. `.clear`(0x42f680)는 로그를 비우고 맨 아래로 간다(`ClientScrollingText.replaceText`·`requestBottom`). `.quit`(0x42e520)는 게임 종료라 웹에서는 콘솔 안내만 한다. 서식·issue 명령은 분배기가 처리한다(`.flash` 섬광은 콘솔 안내뿐이며 Kencloud 연결은 남음).
+- **표시 옵션 기본값 결정:** `ShowBattle`·`ShowEveryone`·`ShowAllies`·`ShowObserver`·`ShowWisper`·`ShowMyAllies`·`ShowMyEmenys`·`ShowMyNeutrals`·`ShowChatWindow`·`PlaySoundMessage` 열 개는 원본 `setup.cfg`·아카이브에 기본값이 없다. `Netstorm.exe`를 역분석(capstone)해 보니 키 문자열의 코드 참조는 수신 함수(0x42ed30, `ReadInt` 0x441270 호출)와 도우미 메뉴 토글뿐이고, `ReadInt`는 키가 없으면 0을 돌려주며 출력 변수를 건드리지 않고, 수신 함수의 열 개 지역 변수는 초기화하지 않는다. 즉 원본에서 값이 없으면 스택 잔여값이라 정의된 기본값이 없다. 웹은 모두 **켜짐(1)** 을 기본으로 두고 설정·`<$config>`로 바뀐 값이 있으면 그것을 쓴다(`_chatOption`).
+- **버그 수정 두 건:** 메시지 조합의 이름 getter는 문자열이고 패킷의 현재 이름만 NUL 포함 바이트이며(처음엔 둘 다 바이트를 넘겨 `name.indexOf` 오류), 수신 발신자 해석(`findClientChatSenderOwner`)은 getter가 아니라 이름 값을 받는다.
+- **시험:** `e2e/chat-window.spec.js` 네 번째 시험(Chromium): chat manager 초기화 → Enter·`hello team`·Enter 로 로그 한 줄(`lineCount` 1, 입력줄은 남고 입력은 비워짐, 첫 줄에 글자 픽셀) → 둘째 줄 → `.clear` 로 0줄 → 빈 Enter 로 입력줄 닫힘. 오류·경고 0. 영향 e2e 묶음 결과는 아래 인계/커밋 기록 참조.

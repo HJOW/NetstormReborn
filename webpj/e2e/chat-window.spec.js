@@ -105,3 +105,31 @@ test('채팅 입력줄: Enter 로 열리고 문자만 입력줄로 가며 빈 En
   expect(await page.evaluate(() => window.netstorm._campaignProduction.ui.gameMenu().isOpen())).toBe(true);
   expect(errors).toEqual([]);
 });
+
+// 송수신: 입력줄 제출이 원본 파이프라인(대상 해석→점 명령 분배→say→41h 패킷)을 타고 로컬 서버(9)를 거쳐 되돌아와 `You> 본문` 줄이 되고, `.clear` 가 로그를 비운다. (2026-11-22 WB04-E1172)
+test('채팅 송수신: 제출한 줄이 You> 로그가 되고 점 명령 .clear 가 비운다', async ({ page }) => {
+  test.setTimeout(300000);
+  const errors = []; page.on('pageerror', (error) => errors.push(error.stack ?? error.message)); page.on('console', (message) => { if (['error', 'warning'].includes(message.type()) && !/willReadFrequently/u.test(message.text())) errors.push(message.text()); });
+  await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0, autoDemo: 0, skirmishAiCount: 3, skirmishAi2Ally: 0, skirmishAi3Ally: 0, skirmishAi4Ally: 0 } })));
+  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/?aspect=4:3&lang=en');
+  await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 60000 }); await page.locator('canvas').click();
+  await page.waitForFunction(() => window.netstorm?.state === 'mainMenu', null, { timeout: 60000 });
+  await clickLabel(page, 'Campaign'); await clickLabel(page, 'Skirmish'); await clickLabel(page, 'Start');
+  await page.waitForFunction(() => window.netstorm?._campaignDisplayActive() && window.netstorm._clientGuide.current()?.runtime.gate.started === 1, null, { timeout: 120000 });
+  await clickLabel(page, 'Go!'); await page.waitForTimeout(2000); await page.locator('canvas').focus();
+  const chat = () => page.evaluate(() => { const app = window.netstorm, ui = app._campaignProduction.ui.chat(); return { lines: app._clientChatWindows.log.lineCount, visible: ui.inputVisible(), input: ui.inputText(), manager: app._clientChatManager.current().value, mapBottom: app._clientGump.mapView().bottom }; });
+  expect((await chat()).manager, 'chat manager 초기화').toBeGreaterThan(0); expect((await chat()).lines).toBe(0);
+
+  // 제출: Enter 로 열고 쓰고 Enter. 로컬 서버를 거쳐 한 줄이 로그에 쌓인다(입력줄은 남고 입력은 비워진다).
+  await page.keyboard.press('Enter'); await page.waitForTimeout(400); await page.keyboard.type('hello team'); await page.keyboard.press('Enter'); await page.waitForTimeout(1000);
+  expect(await chat()).toMatchObject({ lines: 1, visible: true, input: '', mapBottom: 672 });
+  // 로그 줄이 실제로 그려진다(첫 줄 영역에 글자 픽셀).
+  expect((await ink(page, { left: 90, top: 680, right: 300, bottom: 693 })).other, '`You> hello team` 줄').toBeGreaterThan(60);
+  // 두 번째 줄도 쌓인다.
+  await page.keyboard.type('second line'); await page.keyboard.press('Enter'); await page.waitForTimeout(800); expect((await chat()).lines).toBe(2);
+  // 점 명령 .clear: 로그가 비워진다(제출한 점 명령 자체는 로그에 남지 않는다).
+  await page.keyboard.type('.clear'); await page.keyboard.press('Enter'); await page.waitForTimeout(800); expect(await chat()).toMatchObject({ lines: 0, visible: true, input: '' });
+  // 빈 Enter 는 입력줄을 닫는다.
+  await page.keyboard.press('Enter'); await page.waitForTimeout(500); expect((await chat()).visible).toBe(false);
+  expect(errors).toEqual([]);
+});

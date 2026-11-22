@@ -43,6 +43,8 @@ export class ClientScrollingText {
     requestScroll(token, position) { this.#body.requestScroll(token, position); }
     // 현재 Slider 표시 여부를 원본 가상 부착으로 적용한다.
     setSlider(token, enabled) { this.#widgets.setSlider(token, enabled ? 1 : 0); }
+    // 로그 본문 전체를 바이트 문자열로 바꾼다(원본 `ReplaceText`, 점 명령 `.clear` 가 빈 문자열로 비운다). (2026-11-22 WB04-E1172)
+    replaceText(token, bytes, metadata = 0) { this.#body.replaceText(token, bytes, metadata); }
     // 현재 맨 아래 보기 여부(원본 `AtBottom`, 내용 높이 − 기본 높이 − 10 이하가 현재 위치)이다. 채팅 창이 로그를 추가하기 전 판정에 쓴다. (2026-11-22 WB04-E1169)
     atBottom(token) { return this.#body.atBottom(token); }
     // 맨 아래 보기를 다음 그리기 때 적용하도록 요청한다(원본 `RequestBottom`, extra 는 저장만 한다). (2026-11-22 WB04-E1169)

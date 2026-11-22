@@ -49,6 +49,7 @@ export class ClientChatWindow {
         if (!root || !game || !fonts || !screen || !parts?.scrolling || !parts?.buffers || !parts?.background || !parts?.menu || !parts?.globals || !Number.isInteger(parts.backgroundType) || !devices ||
             ['now', 'poll', 'sound', 'baseHandle', 'translate', 'changed', 'config'].some((name) => typeof devices[name] !== 'function')) throw new TypeError('채팅 창의 실제 장치 누락');
         this.#root = root; this.#game = game; this.#fonts = fonts; this.#screen = screen; this.#parts = parts; this.#devices = devices; this.#backgroundType = parts.backgroundType;
+        if (devices.dotCommands) this.#dot = devices.dotCommands; // Client 장기 점 명령 표(제출 분배와 같은 표)이다. (2026-11-22 WB04-E1172)
         const colors = screen.colors(), assets = new GumpBackgroundAssets(game); this.#measure = createMixedGumpTextMeasure(fonts);
         const buttonState = new ButtonGumpState(), stoneState = new StoneButtonGumpState(), scrollState = new ScrollGumpState(), widgetState = new ScrollGumpWidgetState(), entryState = new TextEntryGumpState();
         Object.assign(buttonState, { valueEvent: 0x02000070, clickEvent: 0x0200002c, rightEvent: 0x02000012, repeatEvent: 0x0200002f, baseColor: 56 });
@@ -61,7 +62,7 @@ export class ClientChatWindow {
         this.#stones = new ClientStoneControls(root, { ...shared, measure: (token, label, context, output, maximum) => { const [width, height] = this.#measure(label, decodeGumpTextContext(context), maximum | 0); output.width = width; output.height = height; } });
         this.#entries = new ClientTextEntryControls(root, { ...shared, entryState, fonts,
             drawBackground: (token) => this.#active().drawBackground(token), drawText: (...args) => this.#active().drawText(...args), fill: (...args) => this.#active().fill(...args),
-            recipient: (text) => this.#recipient(text) });
+            recipient: (text) => this.#recipient(text), ...(typeof devices.complete === 'function' ? { complete: devices.complete } : {}) });
         // 로그 자식이 빌려 쓸 Client 장기 공유 버퍼를 한 번 만든다(이미 있으면 같은 토큰을 쓴다).
         try { parts.buffers.constructBorrowed(SHARED_LOG, parts.globals.log, LOG_LINES); } catch (error) { if (!/중복/u.test(error.message)) throw error; }
         this.#geometry = new HudChatGeometry({
@@ -152,7 +153,7 @@ export class ClientChatWindow {
             frameCount: (type) => { const list = types(); return type < 70 || type - 70 >= list.length ? 0 : list[type - 70].definition.clusters.length; },
             frameHeight: (type, frame) => { const asset = types()[type - 70], header = this.#game.shapes.squidHeader(asset.block, frame); return (((header[0x1a] | (header[0x1b] << 8)) << 16) >> 16); },
             requestScroll: (token, value) => scrolling.requestScroll(token, value), relativeScroll: (token, value) => scrolling.requestRelativeScroll(token, value), requestBottom: (token) => scrolling.requestBottom(token),
-            atBottom: (token) => scrolling.atBottom(token), appendLog: (token, text) => scrolling.style(token, text),
+            atBottom: (token) => scrolling.atBottom(token), appendLog: (token, text) => scrolling.style(token, displayTextCodec.decode(Uint8Array.from(text, (letter) => letter.charCodeAt(0) & 0xff))),
             baseHandle: (token, event, first, second) => devices.baseHandle(token, event, first, second), bubble: (...args) => root.events().bubble(...args),
             recipient: (text) => this.#recipient(text),
             sendChat: (manager, text) => { if (typeof devices.sendChat === 'function') devices.sendChat(manager, text); else this.#submitLocal(text); },
@@ -173,6 +174,22 @@ export class ClientChatWindow {
         const line = String(text).split(NEWLINE, 1)[0], colon = line.indexOf(':'), body = (colon >= 0 ? line.slice(colon + 1) : line).trim();
         if (body === '') this.setInput(false);
     }
+    // 제출 처리(`bindClientChatSubmit`)가 입력줄 표시를 바꾸려고 빌리는 기하 본체이다. (2026-11-22 WB04-E1172)
+    chatGeometryBackend() { return this.#geometry; }
+    // 채팅 점 명령의 창 쪽 효과이다(원본 `InvokeChatCommand`): `.clear`(0x42f680)는 로그를 비우고 맨 아래로 가며, `.quit`(0x42e520)는 게임 종료라 웹에서는 아무것도 하지 않는다(콘솔 안내). 결과는 항상 0 이다. (2026-11-22 WB04-E1172)
+    invokeChatCommand(callback) {
+        if (callback === 0x42f680) {
+            const token = this.current();
+            if (token) { const child = this.#root.node(token).text; this.#parts.scrolling.replaceText(child, Uint8Array.of(0), 0); this.#parts.scrolling.requestBottom(child); this.#devices.changed(); }
+            return 0;
+        }
+        if (callback === 0x42e520) { console.info('Netstorm: 채팅 .quit 은 웹에서 게임을 끝내지 않습니다.'); return 0; }
+        throw new Error('채팅 지원하지 않는 원문 callback');
+    }
+    // 채팅 로그에 오류·안내 문구를 바로 찍는다(원본 `PrintChat`). 창이 없으면 무시한다. (2026-11-22 WB04-E1172)
+    printChat(text) { this.appendLog(text); }
+    // 채팅 순위 접두 갱신(원본 `RefreshClientChatRankPrefix`)을 장치에 맡긴다. 장치가 없으면 아무것도 하지 않는다. (2026-11-22 WB04-E1172)
+    refreshTechnology() { this.#devices.refreshTechnology?.(); }
     // 채팅 창 root 를 만든다(Uber 루트의 `createChat`). 이미 있는 root 는 새로 만들지 않고 거부한다. (2026-11-22 WB04-E1169)
     create() { const token = this.#window.create(); this.#devices.changed(); return token; }
     // 현재 root 토큰이다(없으면 0).

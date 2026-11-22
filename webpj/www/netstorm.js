@@ -32,6 +32,13 @@ import { SceneMusicDriver } from './audio/scene-music-driver.js';
 import { makePriestShieldNoticeHooks } from './core/sound-process.js';
 import { confirmSendMoney, dispatchSendMoneyInput, isSendMoneyCommand, sendMoneyScriptCode } from './core/send-money-input.js';
 import { dispatchChatInputKey } from './ui/hud-chat-geometry.js';
+// 채팅 표시 옵션 열 개의 원문 키(오타 포함)이다. 값이 없으면 웹은 켜짐(1)을 기본으로 둔다. (2026-11-22 WB04-E1172)
+const CHAT_OPTION_KEYS = new Set(['ShowBattle', 'ShowEveryone', 'ShowAllies', 'ShowObserver', 'ShowWisper', 'ShowMyAllies', 'ShowMyEmenys', 'ShowMyNeutrals', 'ShowChatWindow', 'PlaySoundMessage']);
+import { ClientChatManagerGlobals, makeClientChatPacketHooks } from './core/client-chat-manager-globals.js';
+import { ClientDotCommandGlobals } from './ui/dot-command-globals.js';
+import { createRawChatWindowContext } from './ui/raw-chat-window-context.js';
+import { dispatchChatPacket } from './ui/raw-chat-receive.js';
+import { bindClientChatMessage, bindClientChatRecipients, bindClientChatSubmit, findClientChatSenderOwner, initializeClientChatManager, initializeClientIssueCommands, refreshClientChatRankPrefix } from './core/client-chat-runtime.js';
 import { captureSessionStateDump, formatSessionStateDump } from './core/session-state-dump.js';
 import { handleAllianceRequestInput } from './core/raw-player-participation.js';
 import { createSoundState, SoundPlayer } from './audio/sound-player.js';
@@ -594,6 +601,8 @@ export class Netstorm {
         this._clientRandom = null; this._clientSp = null;
         // 같은 Client가 소유하는 원본 채팅 채널 100기록과 그 연산이다.
         this._clientChatRecords = null; this._clientChatChannels = null; this._clientChatWindows = null;
+        // 채팅 manager 전역·점 명령 전역(제출 분배가 같은 표를 쓴다)과 최초 초기화 여부이다. (2026-11-22 WB04-E1172)
+        this._clientChatManager = null; this._clientDotCommands = null; this._clientChatInitialized = false;
         // 미션 Session이 공유하는 효과음 이름표는 Client 수명에 소유한다.
         this._clientSoundNames = null;
         // 현재 브라우저 효과음 장치와 원본 재생 전역·준비 중인 수명이다.
@@ -872,6 +881,7 @@ export class Netstorm {
         this._clientSubscriber = subscriber; this._clientGameplay = gameplay; this._clientCoreData = coreData; this._clientPlayers = players; this._clientTemplates = templates; this._clientFort = fort;
         this._clientSoundNames = soundNames;
         this._clientChatRecords = chatRecords; this._clientChatChannels = chatChannels; this._clientChatWindows = new ClientChatWindowGlobals();
+        this._clientChatManager = new ClientChatManagerGlobals(); this._clientDotCommands = new ClientDotCommandGlobals(); this._clientChatInitialized = false;
         this._clientRendererFrame = new ClientRendererFrameGlobals();
     }
 
@@ -1174,6 +1184,8 @@ export class Netstorm {
             decodeDisplayText: (bytes) => displayTextCodec.decode(bytes), chatChannels: () => this._clientChatChannels }, services.ai);
         // 섬 피격·사제 방어와 생산 자금 안내는 같은 현재 Tell 창을 사용한다.
         services.factoryTell = (section) => this._openTell(section);
+        // 로컬 서버가 41h 채팅 패킷을 되돌릴 때 받는 현재 UI 수신이다(채팅 창이 없으면 무시). (2026-11-22 WB04-E1172)
+        services.chatReceive = (packet) => this._receiveCampaignChat(packet);
         services.priest = { shield: { tell: (section) => this._openTell(section) } };
         // 승패 안내와 AI·생산 할당은 같은 현재 미션·Gump와 웹 할당 바이트를 사용한다.
         services.production = { allocationBytes: currentAllocationBytes, effects: {
@@ -1429,7 +1441,7 @@ export class Netstorm {
         const world = this._campaignWorld, current = this._clientGuide?.current(), gump = this._clientGump, chat = this._clientChatWindows;
         if (!world || !current || !gump || !chat || !world.session().localConnectionReady() || this._campaignWorldMissionToken !== current.runtime.saveToken || current.runtime.start) throw new Error('미션 Start의 현재 World·Guide·로그인 수명 오류');
         const client = { time: () => this._gameClock.time(), renderer: () => this._clientRenderer,
-            menu: () => this._mainMenu ? { refresh: () => { this._mainMenu.dirty = true; this._displayDirty = true; } } : null };
+            menu: () => this._mainMenu ? { refresh: () => { this._mainMenu.dirty = true; this._displayDirty = true; }, receiveNativePacketChat: (packet) => this._receiveCampaignChat(packet) } : null };
         const effects = makeCampaignMissionStartEffects(client, world, () => {
             const token = chat.window.current; if (token) gump.events().bubble(token, 0x02000088, 0, 0);
         });
@@ -1521,8 +1533,7 @@ export class Netstorm {
                 // Players ▸ Send Money ▸ Send X 숫자 입력 창의 확정 장치(원본 004c9350)이다. (2026-11-22 WB04-E1168)
                 sendMoney: { confirm: (target, text) => confirmSendMoney(target, text, this._campaignWorld.session().moneyInputHooks()) },
                 // 미션 화면 아래 채팅 창(F3)의 Client 장기 상태와 현재 값 조회 장치이다. 로컬 단독 미션은 수신자·서버 전송이 없어 입력은 로그에 되울린다. (2026-11-22 WB04-E1169)
-                chat: { globals: this._clientChatWindows, config: (key) => { const stored = this._settings?.get(key); return stored !== undefined ? Number(stored) | 0 : this._gameData.readInt(key, 0).value | 0; },
-                    read: (address) => address === 0x5cae94 ? this._input.pointer.x | 0 : address === 0x5cae98 ? this._input.pointer.y | 0 : address === 0x548714 ? 0 : this._campaignMenuGlobal(address, production) } },
+                chat: this._campaignChatDevices(production, () => ui) },
             changed: () => { this._clientRenderer.invalidateAll(); this._displayDirty = true; }, closePopups: () => this._closeCampaignPopups(),
             poll: (code) => this._clientInputPoll.poll(code), cursor: (number) => { this._campaignCursor = number; this._applyCursor(); },
             baseHandle: (...args) => help.handle(...args), menuInstances: () => this._mainMenu?.popup?.isOpen ? 1 : 0,
@@ -1544,7 +1555,7 @@ export class Netstorm {
             baseHandle: devices.baseHandle, changed: devices.changed });
         const hud = new ClientUberHud(root, { assets: this._gameAssets, panelGlobals: this._clientProductionGlobals, divider, minimap,
             // 채팅 창은 생산 UI 조립이 만든 `ui.chat()` 이다(Uber 루트가 생산 패널 뒤에 `createChat` 을 부른다). (2026-11-22 WB04-E1169)
-            chat: { create: () => ui.chat().create(), setVisible: (visible) => ui?.chat()?.setVisible(visible), setInput: (visible) => ui?.chat()?.setInput(visible) },
+            chat: { create: () => ui.chat().create(), setVisible: (visible) => ui?.chat()?.setVisible(visible), setInput: (visible) => ui?.chat()?.setInput(visible), refreshTechnology: () => ui.chat().refreshTechnology() },
             fullDeck: () => this._clientGameplay.fullDeck(), mapRevision: () => this._clientGameplay.mapRevision(),
             createMinimap: () => minimap.create(),
             createProduction: () => { ui = createClientProductionAssembly(root, production.session, this._gameAssets, this._resources.fonts, screen, this._clientColorSort, this._clientProductionGlobals, production.panel, devices); return ui.construct(); },
@@ -1681,6 +1692,84 @@ export class Netstorm {
         const clock = this._gameClock, random = this._clientRandom; if (!clock || !random) throw new Error('Session 덤프의 현재 시계·난수 수명 누락');
         const session = this._campaignWorld?.session() ?? null, kernel = session ? session.core().kernel : this._clientKernel;
         return formatSessionStateDump(captureSessionStateDump(session ? session.core().pool.edition : 'patch1078', clock.time(), random, kernel, session));
+    }
+
+    // 채팅 제출·수신이 빌리는 Client 조회 묶음이다(원본 Client 의 chat/설정/번역/소리 접근자를 앱의 장기 객체에 묶는다). 값은 호출할 때마다 현재 객체에서 읽는다. (2026-11-22 WB04-E1172)
+    _campaignChatClient() {
+        const self = this;
+        return {
+            chatManagerGlobals: () => self._clientChatManager, coreDataGlobals: () => self._clientCoreData, currentSubscriber: () => self._clientSubscriber.mySubscriber().value >>> 0,
+            gameplayGlobals: () => self._clientGameplay, chatRecords: () => self._clientChatRecords, chatWindowGlobals: () => self._clientChatWindows, dotCommandGlobals: () => self._clientDotCommands,
+            configuration: () => ({ get: (key) => self._gameData.get(key), set: (key, value) => self._gameData.set(key, value) }),
+            translate: (text) => self._resources.translate(text), encodeDisplayText: (text) => displayTextCodec.encode(text), decodeDisplayText: (bytes) => displayTextCodec.decode(bytes),
+            writeDiagnosticLog: (level, text) => console.info(`Netstorm: ${String(text).trim()}`), nsInfoGlobals: () => self._clientNsInfo,
+            worldAudio: () => ({ sounds: () => ({ playByName: (name) => self._clientSoundPlayer.play(self._clientSoundNames.lookup(name), 0, 0, 0, 0, 0) }) }),
+            requestThunderFlash: (brightness) => { console.info(`Netstorm: 채팅 .flash(${brightness}) 번개 섬광은 아직 연결하지 않았습니다.`); },
+            menu: () => ({ receiveNativePacketChat: (packet) => self._receiveCampaignChat(packet) }),
+        };
+    }
+
+    // 원본 `ReadChatGlobal`: 채팅 송수신이 읽는 원문 전역 주소의 현재 값이다(관계표·숨김 Player·모드·manager·색·종류). 연결하지 않은 주소는 거부한다. (2026-11-22 WB04-E1172)
+    _readChatGlobal(address) {
+        const modes = this._surfaceStorage.ownerMode, window = this._clientChatWindows.window;
+        if (address >= 0x595200 && address < 0x595200 + 81 * 4 && !(address & 3)) return this._clientPlayers.alliances()[(address - 0x595200) / 4] >>> 0;
+        if (address >= 0x52f81e && address < 0x52f827) { if (!this._campaignWorld) throw new Error('채팅 관계 관전자의 현재 월드 없음'); return this._campaignWorld.session().hiddenPlayers()[address - 0x52f81e] >>> 0; }
+        switch (address) {
+        case 0x540c74: return this._clientSubscriber.mySubscriber().value >>> 0;
+        case 0x540c70: return this._clientGameplay.player.battleOwner >>> 0;
+        case 0x594fb8: return Number(modes.fort); case 0x594fbc: return Number(modes.battle); case 0x594fc8: return Number(modes.challenge);
+        case 0x548740: return window.current >>> 0; case 0x548710: return this._clientChatWindows.receivedMask >>> 0; case 0x548748: return this._clientChatWindows.newsTime >>> 0;
+        case 0x548714: return this._clientChatManager.current().value >>> 0;
+        case 0x5ca92c: return 0; // 알림 Gump serial(PulseRegisteredIfIdle)은 아직 연결하지 않았다.
+        case 0x5b5dd8: return this._screenColors().named[33].index >>> 0;
+        case 0x52edf6: return 0x41; case 0x544c5c: return 0;
+        default: throw new RangeError(`실제 Chat 전역 조회 미연결: ${address.toString(16)}`);
+        }
+    }
+
+    // 현재 화면 팔레트의 색표이다(채팅 색 조회에 쓴다).
+    _screenColors() { return this._clientPaletteScreen.colors(); }
+
+    // 채팅 표시 옵션(`ShowBattle` 등 열 개)과 효과 옵션의 현재 값이다. 원본은 이 키에 기본값이 없고 값이 없으면 스택 잔여값을 읽으므로(Netstorm.exe 0x42ed30 역분석: 지역 변수를 초기화하지 않음) 웹은 모두 켜진 1 을 기본으로 둔다. (2026-11-22 WB04-E1172)
+    _chatOption(key) {
+        const stored = this._settings?.get(key) ?? this._gameData.get(key);
+        if (stored === undefined || stored === null || stored === '') return CHAT_OPTION_KEYS.has(key) ? 1 : 0;
+        return Number.parseInt(String(stored), 10) | 0;
+    }
+
+    // 미션 채팅 창의 제출·수신·옵션 장치 묶음이다(원본 `UberGump::MakeChatContext`). 제출은 원본 파이프라인(대상 해석→점 명령 분배→say→패킷)을 쓰고, 단독 미션은 로컬 서버(9)를 거쳐 41h 수신으로 돌아와 로그에 나온다. (2026-11-22 WB04-E1172)
+    _campaignChatDevices(production, getUi) {
+        const client = this._campaignChatClient(), surface = this._surfaceStorage;
+        // Client 수명에 한 번만 점 명령 네 개와 chat manager 를 초기화한다.
+        if (!this._clientChatInitialized) { initializeClientIssueCommands(client); initializeClientChatManager(client); this._clientChatInitialized = true; }
+        const byteString = (text) => Array.from(displayTextCodec.encode(text), (byte) => String.fromCharCode(byte)).join('');
+        const nameText = () => { const bytes = this._clientSubscriber.handle(), end = bytes.indexOf(0); return String.fromCharCode(...bytes.subarray(0, end < 0 ? bytes.length : end)); };
+        const nameBytes = () => Uint8Array.from([...nameText()].map((letter) => letter.charCodeAt(0) & 0xff).concat(0));
+        const context = createRawChatWindowContext({ translate: (text) => byteString(this._resources.translate(text)) });
+        bindClientChatRecipients(context, client, surface, nameText);
+        const packet = { ...makeClientChatPacketHooks(this._clientChatManager), currentName: nameBytes, read: (address) => this._readChatGlobal(address),
+            send: (target, bytes) => { if (!this._campaignWorld) throw new Error('일반 Chat 송신의 현재 실제 월드 없음'); this._campaignWorld.session().sendMutableLocalPacket(target, bytes); },
+            log: (level, text) => console.info(`Netstorm: ${String(text).trim()}`), zeroAddress: () => {}, localReceive: (bytes) => this._receiveCampaignChat(bytes) };
+        bindClientChatMessage(context, client, surface, nameText, packet); // 이름 getter 는 문자열이고, 패킷의 현재 이름만 NUL 포함 바이트이다.
+        const menus = { chatGeometryBackend: () => getUi().chat().chatGeometryBackend(), invokeChatCommand: (callback) => getUi().chat().invokeChatCommand(callback), printChat: (text) => getUi().chat().printChat(text) };
+        bindClientChatSubmit(context, client, menus);
+        return { globals: this._clientChatWindows, dotCommands: this._clientDotCommands, config: (key) => this._chatOption(key),
+            read: (address) => address === 0x5cae94 ? this._input.pointer.x | 0 : address === 0x5cae98 ? this._input.pointer.y | 0 : address === 0x563e38 ? this._clientGump.createState().entries[0] : address === 0x548714 ? this._clientChatManager.current().value : this._campaignMenuGlobal(address, production),
+            recipient: context.recipient, sendChat: context.sendChat, resolve: context.resolve, complete: context.editor.complete,
+            refreshTechnology: () => refreshClientChatRankPrefix(client, this._gameAssets, surface) };
+    }
+
+    // 41h 채팅 패킷 수신이다(원본 `ReceiveNativePacketChat`): 무시·채널·관계 옵션을 거쳐 로그에 줄을 더하고 필요하면 채팅 영역을 연다. 채팅 창이 없으면 아무것도 하지 않는다. (2026-11-22 WB04-E1172)
+    _receiveCampaignChat(packet) {
+        const chat = this._campaignProduction?.ui?.chat(); if (!chat?.current()) return;
+        const client = this._campaignChatClient(), name = () => { const bytes = this._clientSubscriber.handle(), end = bytes.indexOf(0); return String.fromCharCode(...bytes.subarray(0, end < 0 ? bytes.length : end)); };
+        dispatchChatPacket(packet, {
+            read: (address) => this._readChatGlobal(address), ignored: (subscriber) => this._clientChatWindows.ignored.includes(subscriber), config: (key) => this._chatOption(key),
+            owner: (subscriber) => findClientChatSenderOwner(client, this._surfaceStorage, name(), subscriber), wake: () => {}, sound: (file) => this._clientSoundPlayer?.play(this._clientSoundNames.lookup(file), 0, 0, 0, 0, 0),
+            append: (token, text, context) => chat.appendLog(text, context), show: () => chat.open(), log: (level, text) => console.info(`Netstorm: ${String(text).trim()}`),
+            setNewsTime: (stamp) => { this._clientChatWindows.newsTime = stamp >>> 0; }, news: (text) => console.info('Netstorm: 서버 뉴스는 웹에서 표시하지 않습니다.', text),
+        });
+        this._displayDirty = true;
     }
 
     // 미션 화면에서 Gump 모달 입력 창(Send X 숫자 창)이 열려 있으면 그 토큰을, 아니면 0 을 돌려준다. 열려 있는 동안 키보드·마우스 입력은 모두 이 창이 받는다. (2026-11-22 WB04-E1168)
@@ -2072,6 +2161,7 @@ export class Netstorm {
         this._gameClock = null; this._clientLocal = null; this._clientNsInfo = null; this._clientHelpPopup = null; this._hiddenGamePause = false; this._clientSoundNames = null;
         this._clientSp = null; this._clientRandom = null;
         this._clientChatRecords = null; this._clientChatChannels = null; this._clientChatWindows = null;
+        this._clientChatManager = null; this._clientDotCommands = null; this._clientChatInitialized = false;
         this._clientPaletteScreen = null; this._clientColorSort = null; this._clientRenderer = null; this._clientSurfaceDisplay = null; this._clientRendererFrame = null;
         this._clientTemplates = null; this._clientPlayers = null; this._clientCoreData = null; this._clientGameplay = null; this._clientSubscriber = null;
         this._clientKernel = null; this._surfaceStorage = null; this._gameAssets = null; this._clientTrace = null; this._clientProductionGlobals = null; this._campaignCamera = null; this._clientMinimapState = null; this._clientMinimapGlobals = null;

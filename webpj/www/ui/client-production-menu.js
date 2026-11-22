@@ -78,7 +78,8 @@ export function createClientProductionMenu(root, session, game, data, fonts, scr
     // 미션 화면 아래의 채팅 창(F3)이다. 로그·입력줄·도우미를 만들고 HUD 가 표시를 전환한다. 장치가 없으면 만들지 않는다. (2026-11-22 WB04-E1169)
     const chat = devices.chat ? new ClientChatWindow(root, game, fonts, screen, { scrolling: title, buffers, background, menu, globals: devices.chat.globals, backgroundType },
         { now: devices.now, poll: devices.poll, sound: devices.sound, baseHandle: devices.baseHandle, translate: devices.translate, changed: devices.changed, config: devices.chat.config,
-            read: devices.chat.read, recipient: devices.chat.recipient, sendChat: devices.chat.sendChat, resolve: devices.chat.resolve, log: devices.chat.log }) : null;
+            read: devices.chat.read, recipient: devices.chat.recipient, sendChat: devices.chat.sendChat, resolve: devices.chat.resolve, log: devices.chat.log,
+            dotCommands: devices.chat.dotCommands, complete: devices.chat.complete, refreshTechnology: devices.chat.refreshTechnology }) : null;
     return { gameMenu, knowledge, warnings, chat, open: (item, point) => about.open(item, point), openPriest: (sid, event) => priestOpen?.supports(sid) ? priestOpen.open(sid, event) : 0,
         openFactory: (sid, event) => factoryOpen?.supports(sid) ? factoryOpen.open(sid, event) : 0,
         openObject: (sid, event) => objectOpen?.supports(sid) ? objectOpen.open(sid, event) : 0,
