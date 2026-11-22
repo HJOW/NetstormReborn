@@ -2288,8 +2288,8 @@
       "path": "d/xlat.korean",
       "source": "webpj/translations/xlat.korean",
       "bundle": "korean",
-      "size": 26427,
-      "sha256": "0fd4e0fd07f327a6b82eda0a88423cac47a5d3674aa05febf24b883b3f401520",
+      "size": 26579,
+      "sha256": "47c03a32aaa6d4ff622e1c0a11a4c5b692bcf298a7d6357afd12fc34ee041caa",
       "use": "한국어 UI 문자열 번역표(원본 xlat 형식, UTF-8): 메뉴·도움말 라벨과 미션 설치의 플레이어 이름"
     },
     {
