@@ -22,7 +22,7 @@ public enum GameFileSource
 /// 경로는 대소문자와 구분자(\ /)를 무시하며, 원본 경로 표기("\D\x.fort", ".\d\x.fort")를 그대로 받는다.
 /// 분석 근거: docs/formats/vfs.md
 /// </summary>
-public sealed class GameFileSystem
+public sealed partial class GameFileSystem
 {
     /// <summary>아카이브 파일 확장자 패턴 (원본은 데이터 폴더에서 "*.tarc" 를 찾아 모두 등록한다)</summary>
     private const string ArchivePattern = "*.tarc";

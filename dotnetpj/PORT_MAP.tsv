@@ -1622,3 +1622,11 @@ cpppj/src/o/FileSpecQuery.cpp	Netstorm.Assets/FileSpecQuery.Windows.cs	4edec13c5
 cpppj/src/o/RawBaseFileOpenPolicy.cpp	Netstorm.Core/Original/RawBaseFileOpenPolicy.cs	88d0b4a733c6f3ad259952070a624e6bccafc6e5	port
 cpppj/src/o/RawBaseFileOpenPolicy.h	Netstorm.Core/Original/RawBaseFileOpenPolicy.cs	88d0b4a733c6f3ad259952070a624e6bccafc6e5	port
 cpppj/src/o/RawBaseFileReadPolicy.cpp	Netstorm.Core/Original/RawBaseFileOpenPolicy.cs	d12766b6c2c872764640a95903c5c07bc3a6c87c	port
+cpppj/src/o/BaseFile.cpp	Netstorm.Assets/GameFileSystem.OpenMetadata.cs	0444b4b6c163de9b6ee48fbbc8e17a7e9b2bbd19	port
+cpppj/src/o/BaseFile.h	Netstorm.Assets/GameFileSystem.OpenMetadata.cs	1d5b1f43700cd3c74f048bf791c460bc2f23f154	port
+cpppj/src/o/BaseFile.cpp	Netstorm.Assets/TaffArchive.cs	0444b4b6c163de9b6ee48fbbc8e17a7e9b2bbd19	port
+cpppj/src/o/BaseFile.h	Netstorm.Assets/TaffArchive.cs	1d5b1f43700cd3c74f048bf791c460bc2f23f154	port
+cpppj/src/o/BaseFile.cpp	Netstorm.Core/Original/RawBaseFileEnvironment.cs	0444b4b6c163de9b6ee48fbbc8e17a7e9b2bbd19	port
+cpppj/src/o/BaseFile.h	Netstorm.Core/Original/RawBaseFileEnvironment.cs	1d5b1f43700cd3c74f048bf791c460bc2f23f154	port
+cpppj/src/client/ClientColorMapFile.cpp	Netstorm.Game/WindowsBaseFileDevice.cs	b601503d0edaceed695568b843ef20b828463968	port
+cpppj/src/client/ClientColorMapFile.cpp	Netstorm.Client/Display/ClientColorSortInput.File.cs	b601503d0edaceed695568b843ef20b828463968	port

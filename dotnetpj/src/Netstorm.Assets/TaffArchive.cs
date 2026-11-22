@@ -36,6 +36,8 @@ public sealed class TaffArchive
     private readonly byte[] _raw;
     /// <summary>_dataOffset: TAFF 항목의 오프셋에 더할 아카이브 데이터 시작 위치.</summary>
     private readonly int _dataOffset;
+    /// <summary>등록 때 읽은 헤더 flags 원문DWORD다.</summary>
+    private readonly uint _flags;
     /// <summary>_byName: 이름으로 항목을 찾는 조회 사전.</summary>
     private readonly Dictionary<string, TaffEntry> _byName;
 
@@ -44,6 +46,15 @@ public sealed class TaffArchive
 
     /// <summary>디렉터리 순서대로 나열한 엔트리 목록</summary>
     public IReadOnlyList<TaffEntry> Entries { get; }
+
+    /// <summary>등록한 실제 파일 이름이다. 메모리 전용 생성은 실제 디스크 출처가 없다.</summary>
+    public string? SourcePath { get; private init; }
+
+    /// <summary>등록한 데이터 시작 DWORD이며 payload를 다시 읽지 않는다.</summary>
+    public uint DataOffset => unchecked((uint)_dataOffset);
+
+    /// <summary>등록한 원문 헤더 flags다. 실제 FILE의 키 선택은 bit1을 사용한다.</summary>
+    public uint Flags => _flags;
 
     /// <summary>메모리에 올린 아카이브 바이트로부터 만든다</summary>
     /// <param name="raw">아카이브 파일 전체 내용</param>
@@ -60,6 +71,7 @@ public sealed class TaffArchive
         int count = ReadInt32(OffsetEntryCount);
         int pos = ReadInt32(OffsetDirectory);
         _dataOffset = ReadInt32(OffsetData);
+        _flags = BinaryPrimitives.ReadUInt32LittleEndian(raw.AsSpan(0x18, 4));
 
         var entries = new List<TaffEntry>(count);
         _byName = new Dictionary<string, TaffEntry>(count, StringComparer.OrdinalIgnoreCase);
@@ -81,7 +93,7 @@ public sealed class TaffArchive
 
     /// <summary>파일에서 아카이브를 연다</summary>
     /// <param name="path">netstorm.tarc 경로</param>
-    public static TaffArchive Open(string path) => new(File.ReadAllBytes(path));
+    public static TaffArchive Open(string path) => new(File.ReadAllBytes(path)) { SourcePath = Path.GetFullPath(path) };
 
     /// <summary>엔트리의 복호화된 데이터를 돌려준다</summary>
     /// <param name="entry">읽을 엔트리</param>
