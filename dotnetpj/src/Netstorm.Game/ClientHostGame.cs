@@ -180,6 +180,7 @@ public sealed partial class ClientHostGame : Game
         {
             owner.Storage.BindSerializationGlobals(_stateResources.Templates.SerializationGlobals);
             owner.BindDisplayDiagnostics(ErrorLog.RecordAssertion);
+            owner.BindNativeTransmission(_connections, ClearNativeUserSelection);
         });
         _sidLists = _surfaceGlobals.Storage.SidLists;
         BindStateResourceOwners();
@@ -267,6 +268,7 @@ public sealed partial class ClientHostGame : Game
             _htmlText.Bind(_htmlWindows);
             InitializeNativeTextPictures();
             InitializeNativeProductionContext();
+            BindNativeMapView(() => (_mainMenu ?? throw new InvalidOperationException("현재 지도 영역의 실제 메뉴 owner 미설치")).CurrentMapView);
             _textEntry = new HostTextEntry(_mainMenu, _htmlWindows, _htmlText, _driver.Screen,
                 () => _clock.NowSeconds, (_, _) => _menuDirty = true);
             InitializeNativeChatEditing();

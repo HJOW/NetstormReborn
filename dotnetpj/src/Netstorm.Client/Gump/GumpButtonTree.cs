@@ -161,7 +161,8 @@ public sealed partial class GumpButtonTree
             DeletingDestructor = (token, flags) => Lifetime!.DeleteScalar(token, flags),
             Release = token => { if (_helpStrings.Remove(token)) return; if (!_nodes.Remove(token)) throw new InvalidOperationException("Gump 저장소 반납 불일치"); _nodeOwners.Remove(token); } };
         StoneButtonGump.BindStoneButtonGump(treeHooks, lifeHooks, token => Node(token) is StoneButtonGumpNode ? Stones : null);
-        TreeState = new() { MapView = new(0, 0, width, height) };
+        // RawButtonControls의 지도 사각형은 최초 BSS0이며 실제 HUD 도킹이 같은 값을 작성한다.
+        TreeState = new();
         Tree = new(Create, TreeState, treeHooks);
         Lifetime = new(Create, LifeState, lifeHooks);
         var eventsHooks = EventHooks = new GumpEventHooks { Node = Node, Handle = hooks.HandleBase };

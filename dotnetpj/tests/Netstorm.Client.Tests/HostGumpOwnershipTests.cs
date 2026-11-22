@@ -37,6 +37,17 @@ public sealed class HostGumpOwnershipTests
         /// <summary>기존 HTML과 실제 편집 버퍼 잔여를 정상 수명으로 반납한다.</summary>
         public void Dispose() { Windows.CloseAll(); Entry.Dispose(); }
     }
+    /// <summary>메뉴·공통 정렬·HUD가 원본 BSS0에서 시작한 같은 현재 지도 사각형을 읽고 쓴다.</summary>
+    [Fact]
+    public void CurrentMapViewBorrowsSameDockAndAlignmentStorage()
+    {
+        using var scene = new Scene(); Assert.Equal(default(ScreenRect), scene.Menu.CurrentMapView);
+        var dock = new HudDockGlobals(scene.Tree.Create, scene.Tree.TreeState, new(), new());
+        dock.MapRect = new(85, 7, 1024, 672); Assert.Equal(dock.MapRect, scene.Menu.CurrentMapView);
+        scene.Tree.TreeState.MapView = new(103, 11, 900, 599); Assert.Equal(scene.Tree.TreeState.MapView, dock.MapRect);
+        Assert.Equal(dock.MapRect, scene.Menu.CurrentMapView);
+        scene.Tree.Create.ScreenWidth = 1920; Assert.Equal(new ScreenRect(103, 11, 900, 599), scene.Menu.CurrentMapView);
+    }
     /// <summary>다른 창의 실제 Console/Slider/화살표가 HTML 닫기에서 보존되고 자기 수명에서만 반납된다.</summary>
     [Fact]
     public void ActualConsoleAndNestedChildrenSurviveHtmlClose()
