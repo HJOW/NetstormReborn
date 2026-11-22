@@ -8,6 +8,12 @@ namespace Netstorm.Core.Tests;
 /// <summary>기존 Dais/Path 본체를 실제 장기 저장소 기본 전송으로 호출한다.</summary>
 public sealed class NativeProcessSerializationTests
 {
+    /// <summary>실제CannonFire의현재VT/헤더/식별자와원문코너외각필드를Native공통전송에연결한다.</summary>
+    [Fact]
+    public void CannonFireUsesCurrentNativeHeaderAndSameActualForm()
+    {
+        var storage=Storage();SquidProcessHost host=storage.Processes().Host();int parent=storage.Pool.Allocate(SidAllocation.Server);storage.Pool.RawSlot(parent).Clear();storage.Pool.RawSlot(parent)[10]=131;PriestPlainCanonType[] frames=Enumerable.Range(0,188).Select(_=>new PriestPlainCanonType()).ToArray();var logic=new RawCannonFire(storage.Pool,storage.Types,frames,new(){Now=10},new());var fields=new GunAnimationFields(0xa5);logic.Initialize(fields,77,78);var process=new CannonFire(logic,fields);Assert.Same(process,host.Attach(process,host.AnimationProcessType(true),parent,0x10));storage.GameAux().FireAnimationHeader[0]=0x73;storage.GameAux().FireAnimationHeader[1]=0x81;byte[] packet=Enumerable.Repeat((byte)0xa7,2048).ToArray();Assert.Equal(25,host.WriteFormPacket(process.Form(),1,packet,storage.GameAux().SquidTransmission));Assert.Equal(0x81,packet[0]);Assert.Equal(0x73,packet[1]);Assert.Equal((uint)process.Form(),BinaryPrimitives.ReadUInt32LittleEndian(packet.AsSpan(4)));Assert.Equal((uint)parent,BinaryPrimitives.ReadUInt32LittleEndian(packet.AsSpan(9)));Assert.Equal(0xa7,packet[25]);Assert.Equal(0xa5,process.Fields.Bytes[60]);storage.Processes().Kernel().DrainOwnedForShutdown();
+    }
     /// <summary>아처88BYTE도같은Native공통writer/현재헤더/식별자를쓰며비접두각상태는전송하지않는다.</summary>
     [Fact]
     public void ArcherAnimationUsesSameCurrentNativePrefixWithoutSendingAngles()

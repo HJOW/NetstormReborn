@@ -473,3 +473,5 @@ wind-circle-frame-x86.tsv	213cd92056e7700bb505a3a65bdcda1895f0742c70def5e5d80e8c
 wind-circle-point-x86.tsv	10148eb52d02372c31c404c811279d25c1bc08c3bd2b35f017c2ca9b2fbd119c	232	cpppj	Core
 gunanimation-x86.tsv	7ed89da7895a89b1d65efcbdbef0bddbc5855d525ef51b30d17305b3c7145d6f	2560	cpppj	Core
 gunarcher-x86.tsv	7882627526d66a7b5084902407788f83170f5c3da27745dfec0a3aa0cb77ab2b	1690	cpppj	Core
+cannon-fire-x86.tsv	b1090cbf8edc90b391c170a323ba0797163b572262c1ba527b2cf16236ab2e3a	5534	cpppj	Core
+vander-fire-x86.tsv	be3c685abe10d7deaa88d0a7d1436855b377d3eed439743d6c9c3aa862f20d81	417	cpppj	Core

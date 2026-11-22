@@ -1745,3 +1745,11 @@ cpppj/src/o/RawArcherAnimation.cpp	Netstorm.Core/Original/RawArcherAnimation.Fir
 cpppj/src/o/RawArcherAnimation.h	Netstorm.Core/Original/RawArcherAnimation.Fire.cs	6a12e1060cbec19f85bb3e3c11a0ca4d9d62b3a8	port
 cpppj/src/o/RawArcherAnimation.cpp	Netstorm.Core/Original/ArcherAnimation.cs	6a12e1060cbec19f85bb3e3c11a0ca4d9d62b3a8	port
 cpppj/src/o/RawArcherAnimation.h	Netstorm.Core/Original/ArcherAnimation.cs	6a12e1060cbec19f85bb3e3c11a0ca4d9d62b3a8	port
+cpppj/src/o/RawCannonFire.cpp	Netstorm.Core/Original/RawCannonFire.cs	ad02e6aee1722822ebb85d73cb35da5e11e23f00	port
+cpppj/src/o/RawCannonFire.h	Netstorm.Core/Original/RawCannonFire.cs	ad02e6aee1722822ebb85d73cb35da5e11e23f00	port
+cpppj/src/o/RawCannonFire.cpp	Netstorm.Core/Original/RawCannonFire.Types.cs	ad02e6aee1722822ebb85d73cb35da5e11e23f00	port
+cpppj/src/o/RawCannonFire.h	Netstorm.Core/Original/RawCannonFire.Types.cs	ad02e6aee1722822ebb85d73cb35da5e11e23f00	port
+cpppj/src/o/RawCannonFire.cpp	Netstorm.Core/Original/CannonFire.cs	ad02e6aee1722822ebb85d73cb35da5e11e23f00	port
+cpppj/src/o/RawCannonFire.h	Netstorm.Core/Original/CannonFire.cs	ad02e6aee1722822ebb85d73cb35da5e11e23f00	port
+cpppj/src/o/RawLightningLifetime.cpp	Netstorm.Core/Original/RawLightningCreate.cs	ad02e6aee1722822ebb85d73cb35da5e11e23f00	port
+cpppj/src/o/RawLightningLifetime.h	Netstorm.Core/Original/RawLightningCreate.cs	ad02e6aee1722822ebb85d73cb35da5e11e23f00	port

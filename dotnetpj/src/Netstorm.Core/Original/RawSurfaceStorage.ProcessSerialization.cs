@@ -56,6 +56,11 @@ public sealed partial class RawSurfaceStorage
             byte[] header = RawGunAnimation.UsesFirePacket(archerAnimation.Fields.Bytes) ? GameAux().FireAnimationHeader : GameAux().RotateAnimationHeader;
             return archerAnimation.WritePacket(buffer.Span, parentChanged, force != 0, header[1], header[0]);
         }
+        if (process is CannonFire cannonFire)
+        {
+            byte[] header = RawGunAnimation.UsesFirePacket(cannonFire.Fields.Bytes) ? GameAux().FireAnimationHeader : GameAux().RotateAnimationHeader;
+            return cannonFire.WritePacket(buffer.Span, parentChanged, force != 0, header[1], header[0]);
+        }
         if (process is RawPathProcess path) return SerializePathProcess(path, buffer);
         throw new InvalidOperationException("선택된 ProcessForm의 실제 파생 writer 미연결");
     }
