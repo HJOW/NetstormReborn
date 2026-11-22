@@ -12,6 +12,8 @@ public sealed partial class RawGameAuxState
     public UIntBox ConstructionProcessTypeBox { get; } = new() { Value = 30 };
     /// <summary>005326c4의 최초6700이며 추상 건물의 실제 건설 재시도 사건을 매 비교 위치에서 읽는다.</summary>
     public uint ConstructionRegularEvent { get; set; } = 6700;
+    /// <summary>005325b8/b9의 최초37/1이며 일반 월드 준비로 초기화하지 않는 현재 메시지/프로토콜 BYTE다.</summary>
+    public byte[] ConstructionHeader { get; } = [0x37, 1];
     /// <summary>0055a49c의 최초BSS0이며 비영이면 현재 건설을 즉시 완료한다.</summary>
     public UIntBox QuickBuildBox { get; } = new();
     /// <summary>0055a498의 최초BSS0이며 비영이면 신전genus 건설만 즉시 완료한다.</summary>

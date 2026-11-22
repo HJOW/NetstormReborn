@@ -16,6 +16,11 @@ public sealed partial class RawSurfaceStorage
             byte[] header = GameAux().DaisProcessHeader;
             return dais.WritePacket(buffer.Span, parentChanged, force != 0, header[1], header[0]);
         }
+        if (process is ConstructionProcess construction)
+        {
+            byte[] header = GameAux().ConstructionHeader;
+            return RawConstructionData.WriteProcess(construction, buffer.Span, parentChanged, force != 0, new() { Protocol = header[1], Message = header[0] });
+        }
         if (process is RawPathProcess path) return SerializePathProcess(path, buffer);
         throw new InvalidOperationException("선택된 ProcessForm의 실제 파생 writer 미연결");
     }

@@ -1,5 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <!-- 건설 상태 쓰기/읽기/수신/실제 래퍼의 세 PE×1780 기존 독립 관측을 사본 없이 연결한다. -->
+    <None Include="../../../cpppj/tests/fixtures/constructiondata-x86.tsv" Link="X86/constructiondata-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
     <!-- 실제83VT의 +5c/+98를 읽은 기존 독립 PE 자료로 기본/피해 정기 분배를 대조한다. -->
     <None Include="../../../cpppj/tests/fixtures/damageable-regular-tables-x86.tsv" Link="X86/damageable-regular-tables-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>

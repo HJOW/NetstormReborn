@@ -129,4 +129,24 @@ public sealed class NativeProcessSerializationTests
         Assert.Equal((uint)dais.Form(), BinaryPrimitives.ReadUInt32LittleEndian(packet.AsSpan(4)));
         Assert.Equal((uint)parent, BinaryPrimitives.ReadUInt32LittleEndian(packet.AsSpan(9))); Assert.Equal(0xa5, packet[21]); Assert.Equal(1, sends);
     }
+
+    /// <summary>실제 건설 부착/현재 헤더/일반 준비 보존과 같은 Host 전체 FormPacket을 새 codec에 연결한다.</summary>
+    [Fact]
+    public void AttachedConstructionUsesCurrentHeaderAndSameNativeFormPacket()
+    {
+        int sends = 0; var storage = Storage(_ => sends++); SquidProcessHost host = storage.Processes().Host();
+        int parent = storage.Pool.Allocate(SidAllocation.Server); storage.Pool.RawSlot(parent).Clear(); storage.Pool.RawSlot(parent)[10] = 74;
+        RawConstructionProcess logic = RawConstructionDataTests.Logic(storage.Pool, storage.Types, new(), host);
+        var process = new ConstructionProcess(logic, new() { Dirty = 255, Start = 1, End = 8, Sound = 77, Additional = 0x5a });
+        Assert.Same(process, host.Attach(process, storage.GameAux().ConstructionProcessTypeBox.Value, parent, 0x80));
+        Assert.Equal(1, sends); Assert.Equal(0, process.Fields.Dirty);
+        byte[] buffer = storage.GameAux().SquidTransmission.Buffer; Assert.Equal(1, buffer[0]); Assert.Equal(0x37, buffer[1]);
+        var copy = new ConstructionProcessFields(); Assert.Equal((uint)parent, RawConstructionData.Read(copy, buffer)); Assert.Equal(1, copy.Start); Assert.Equal(8, copy.End); Assert.Equal(0x5a, copy.Additional);
+        byte[] header = storage.GameAux().ConstructionHeader; header[0] = 0x73; header[1] = 0x81; storage.GameAux().ResetForGeneralWorld();
+        Assert.Same(header, storage.GameAux().ConstructionHeader); Assert.Equal(new byte[] { 0x73, 0x81 }, header);
+        byte[] target = Enumerable.Repeat((byte)0xa5, 2048).ToArray();
+        Assert.Equal(30, host.WriteFormPacket(process.Form(), 1, target, storage.GameAux().SquidTransmission));
+        Assert.Equal(0x81, target[0]); Assert.Equal(0x73, target[1]); Assert.Equal((uint)process.Form(), BinaryPrimitives.ReadUInt32LittleEndian(target.AsSpan(4)));
+        Assert.Equal((uint)parent, BinaryPrimitives.ReadUInt32LittleEndian(target.AsSpan(9))); Assert.Equal(0xa5, target[30]); Assert.Equal(1, sends);
+    }
 }

@@ -1651,3 +1651,7 @@ cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/RawSurfaceStorage.
 cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceStorage.ProcessSerialization.cs	555d3a2e29f9e4a3114673ad03072c2c9f2e3d56	port
 cpppj/src/o/SquidProcess.cpp	Netstorm.Client/Host/HostSession.PlayerWorld.cs	7416ebf2e4183b90892ca3600ea7d25cca26df41	port
 cpppj/src/o/SquidProcess.h	Netstorm.Client/Host/HostSession.PlayerWorld.cs	7416ebf2e4183b90892ca3600ea7d25cca26df41	port
+cpppj/src/o/RawConstructionData.cpp	Netstorm.Core/Original/RawConstructionData.cs	0b8defee49a6b171708e0995ff1a2ee0652006f7	port
+cpppj/src/o/RawConstructionData.h	Netstorm.Core/Original/RawConstructionData.cs	0b8defee49a6b171708e0995ff1a2ee0652006f7	port
+cpppj/src/o/RawPacketDispatch.cpp	Netstorm.Net/RawConstructionDataRegistration.cs	0b8defee49a6b171708e0995ff1a2ee0652006f7	port
+cpppj/src/o/RawPacketDispatch.h	Netstorm.Net/RawConstructionDataRegistration.cs	0b8defee49a6b171708e0995ff1a2ee0652006f7	port
