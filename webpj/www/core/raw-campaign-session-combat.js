@@ -72,7 +72,10 @@ export class RawCampaignSessionCombat {
         };
         e.missile = o.hits.missileHooks(o.gunHit, s.missileState, e.missile);
         e.missile.damage ??= o.hits.damageHooks({}).damage;
-        this.ricochetHooks = { angles: o.world.storage.angleDiagnostics(), initialPointBytes: e.ricochetPointBytes,
+        // 변위 0 반사(투사체가 출발점에서 움직이지 않은 채 맞은 경우)에서 원본은 점 계산이 쓰지 않은 호출자 지역 8바이트(미초기화 스택)를 그대로 읽는다. 값이 비결정이라 서비스(cpppj 는 현재 프로세스 메모리)가 있으면 그것을 쓰고,
+        // 웹에는 그런 장치가 없어 앱 서비스가 없을 때는 0 점(valid 판정 실패 → 반사 없음)을 공급한다. 임의의 성공 좌표를 만들지 않으며, 장치 미연결 오류로 프레임 루프가 멈추던 것을 막는다. (2026-11-22 WB04-E1226)
+        const zeroPointBytes = (bytes) => { bytes.fill(0); };
+        this.ricochetHooks = { angles: o.world.storage.angleDiagnostics(), initialPointBytes: e.ricochetPointBytes ?? zeroPointBytes,
             createProjectile: (request) => {
                 if (!o.combat) throw new Error('아이스 반사 실제 Missile 설치 전 생성');
                 if (!createMissile(c.processes, o.combat.missile, request)) throw new Error('아이스 반사 실제 Host 부착 실패');

@@ -101,6 +101,21 @@ test('Session Archer 실제 입자: 불꽃11·아이스 냉각21·빔이 같은 
     assert.equal(o.core.kernel.size, 0);
 });
 
+test('Session 아이스 반사: 앱 서비스에 변위0 지역점 장치가 없으면 0점(무효)을 공급해 오류 없이 반사만 건너뛴다(E1226)', () => {
+    // 앱(netstorm.js)은 ricochetPointBytes 를 공급하지 않는다. 이전에는 변위0 반사에서 '현재 지역점 8BYTE 입력 미연결' 오류가 프레임 루프를 멈췄다.
+    const o = scene({});
+    try {
+        const source = actor(o, 130); const c = o.core; const before = c.kernel.size;
+        const request = { firing: source, target: 0, speed: 5, displayType: 130, effectType: 0, targetPosition: [25, 20], targetCenter: [-10000, -10000], ricochet: 1, firingPosition: [20, 20] };
+        o.combatModules.ricochetHooks.createProjectile(request); assert.equal(c.kernel.size, before + 1);
+        let missile = null; for (let pid = 1; pid <= c.kernel.capacity; ++pid) { const p = c.kernel.get(pid); if (p instanceof MissileProcess) { missile = p; break; } }
+        assert.ok(missile);
+        const bytes = Uint8Array.of(1, 2, 3, 4, 5, 6, 7, 8); o.combatModules.ricochetHooks.initialPointBytes(bytes); assert.deepEqual([...bytes], [0, 0, 0, 0, 0, 0, 0, 0]);
+        // 변위0 반사: 점이 유효하지 않아 다음 반사탄을 만들지 않고 오류 없이 돌아온다.
+        o.random.setState(55); o.combatModules.effects.missile.ricochet(missile.fields); assert.equal(c.kernel.size, before + 1);
+    } finally { o.dispose(); }
+});
+
 test('Session 아이스 반사: 같은 현재 Missile에 실제 표시/ProcessForm을 만들며 프레임/교전은 시작하지 않는다', () => {
     // 변위0에서 원문이 읽는 지역8BYTE를 명시 입력한다. 조준/게임 난수를 대체하지 않는다.
     const pointReads = []; const o = scene({ archer: { ricochetPointBytes: (bytes) => { pointReads.push(bytes.length); const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength); view.setFloat32(0, 30, true); view.setFloat32(4, 25, true); } } });
