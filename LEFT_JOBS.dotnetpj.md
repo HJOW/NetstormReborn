@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-22 · 사용자 요청으로 개발 재개 · 마지막 완료0.817(HUD 도킹 본체/공유 지도 상태·2150관측·집중142·대표3시작) · 다음0.818 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6) · cpppj 제품1326 / 11.01 · 전체 목표 미완료**
+**2026-11-22 · 사용자 요청으로 개발 재개 · 마지막 완료0.818(전체 HUD 부모/현재 루트 수명·160관측·집중152·대표3시작) · 다음0.819 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6) · cpppj 제품1326 / 11.01 · 전체 목표 미완료**
 
 현행 인계는 이 문서가 기준이다. 단위별 근거는 `docs/dotnet-canon-0NNN-*.md`이다. 0.733~0.797의 단위별 재개 연쇄·주제별 표 행과 1.1절 R4-6 단위별 완료 문장 원문은 [0.797 정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0797)에, 0.645~0.732의 단위별 완료 문장, 0.640 회귀 점검 상세, 0.546~0.676 완료 기록 원문은 [0.732 정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0732)에 있다. 0.600~0.635는 [0.635 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635), 0.613까지의 경과와 파일 계열별 체크 목록은 [0.613 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)에 있다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
@@ -19,17 +19,17 @@
 
 ### 0.1 재개 순서와 최근 완료 요약
 
-**재개 인계(2026-11-22).** 0.817에서 HUD 구분선 생성/슬레이브/전체 부착·도킹 명령과 같은 트리/화면/Deck·갱신 owner를 빌리는 지도 상태를 이식했다. 독립2150관측(중단6포함)과 실제 공통 생성/수명/트리 연결6검사를 포함한 Client142건이 통과했고 Release오류0/기존경고6이다. 같은 빌드 대표3시작의 전체 덤프/34지표가0.816과 같고 원본1392/실행6불변·제품/검사1845파일 고정도 확인했다. 기존 자료/대응의 전체값·순서·base를 보존해428/1544기록이다. 실제 Uber Root·네 자식 공장/수명과 Native MapView provider/전체 장치는 아직 미설치이며 고정본문18/26·M1 0/34도 그대로다. 다음0.818은 실제 UI·선택·장기 장치 전체 조립을 계속한다. 다음 정기 전체는0.820이다. [0.817](docs/dotnet-canon-0817-20261122.md)
+**재개 인계(2026-11-22).** 0.818에서 전체 Uber 부모 생성/Replace/Recreate와 해당 this의 현재 DockView를 이식했다. 기존 생성/교체 Native160관측과 실제 공통 트리/수명·재생성 등9검사를 포함한 Client152건이 통과했고 Release오류0/기존경고6이다. Recreate는 이160자료 범위 밖이므로 Source 전체 대조/실제 공통 수명 검사로 구별한다. 같은 빌드 대표3시작의 전체 덤프/34지표가0.816과 같고 원본1392/실행6불변·제품/검사1848파일 고정도 확인했다. 기존 자료/대응의 값·순서·base를 보존해429/1547기록이다. 실제 호스트 UI 호출자/가상 분배·구분선 입력·네 자식 공장/수명과 Native MapView/장기 장치 전체 조립은 남았다. 고정본문18/26·M1 0/34는 그대로며 다음0.819에 실제 UI·선택·장기 장치를 계속 잇는다. 다음 정기 전체는0.820이다. [0.818](docs/dotnet-canon-0818-20261122.md)
 
 
 
-1. **0.818 — 같은 장기 Surface에서 전체 Native Root 장치를 실제 조립.** 첫 장치 설치/같은 상태·깊이(0.814), 지갑 전체/현재 records·실제 Host 메모리 대여와 AI 통지 진입점(0.815)은 선행 완료다. 일반 Root는 Native 전송을 아직 설치하지 않았으며 CreateAiWallet도 실제 Native Reward 장치에 공급해야 한다. Source ClientMain447~536의 실제 PostPop 선택 재검사·Transmission·Process·Resource·Reward·Deletion·PlayerRecords·표시/음향/AI 장치와 현재 Menu 데모 getter를 실제 owner로 조립한다. 기존83VT 실제 분배/고유 파생·Runtimepin을 잇고 미설치를 일반 Pre/Post/no-op으로 통과시키지 않는다. 공유 Surface의 Player 인자를 생략해 별도 배열을 만들던 경로는0.815에서 실제 owner 빌림/혼용 거부로 수정했다. Player 고유Pre/약한records owner(0.813)와 Residence/Dude도 중복하지 않는다. Dais의 실제 current records 하위 등 잔여를 확인하며 prepared 상태나 동일 깊이 검사를 완화하지 않는다. 도킹/구분선 전체 본체와 동일 트리 지도 상태는0.817에서 완료했다. 실제 Uber Root 생성/교체/재생성·구분선 입력·네 자식 공장/수명과 현재 MapView getter, 살아 있는 선택 객체의 수명을 잇는다. 실제 지도 영역을 전체viewport로 대체하지 않는다. 0.816 중 읽은 Source 소견은extracted/dotnet-0816/next-0817-static.md다.
+1. **0.819 — 같은 장기 Surface에서 전체 Native Root 장치를 실제 조립.** 첫 장치 설치/같은 상태·깊이(0.814), 지갑 전체/현재 records·실제 Host 메모리 대여와 AI 통지 진입점(0.815)은 선행 완료다. 일반 Root는 Native 전송을 아직 설치하지 않았으며 CreateAiWallet도 실제 Native Reward 장치에 공급해야 한다. Source ClientMain447~536의 실제 PostPop 선택 재검사·Transmission·Process·Resource·Reward·Deletion·PlayerRecords·표시/음향/AI 장치와 현재 Menu 데모 getter를 실제 owner로 조립한다. 기존83VT 실제 분배/고유 파생·Runtimepin을 잇고 미설치를 일반 Pre/Post/no-op으로 통과시키지 않는다. 공유 Surface의 Player 인자를 생략해 별도 배열을 만들던 경로는0.815에서 실제 owner 빌림/혼용 거부로 수정했다. Player 고유Pre/약한records owner(0.813)와 Residence/Dude도 중복하지 않는다. Dais의 실제 current records 하위 등 잔여를 확인하며 prepared 상태나 동일 깊이 검사를 완화하지 않는다. 도킹/구분선 전체 본체와 동일 트리 지도 상태는0.817, 전체 Uber 부모 생성/교체/재생성·현재 this DockView는0.818에서 완료했다. 실제 호스트 UI의 공통 가상 분배/생성·수명 호출자·구분선 입력·네 자식 공장/수명과 현재 MapView getter, 살아 있는 선택 객체의 수명을 잇는다. 실제 지도 영역을 전체viewport로 대체하지 않는다. 0.816 중 읽은 Source 소견은extracted/dotnet-0816/next-0817-static.md다.
 
 2. **NativeGameplay 26F 고정 수신 나머지.** 현재 API `BindSquidPacketDevices`·`ReceiveFixedGameplayPacket`에 2c/7a/4a/4b/6a/7e/33/34/70/30/2d/2e/65/53/62/5b/31/35의18개 entry가 실제 본체로 연결됐다([0.790](docs/dotnet-canon-0790-20261121.md)·0.791·[0.801](docs/dotnet-canon-0801-20261122.md)·[0.806](docs/dotnet-canon-0806-20261122.md)). 나머지8고정 본문(38/39/3a/3b/3c/73/74/86)과 전체26F 설치/Bind 검증, Root의 실제 언어/이름/ScreenSize/FormPacket/수신 장치 공급, 같은 Host의 파생 수신/변경/전체 가상 삭제를 현재 Runtime·저장소 전송 관문과 함께 잇는다. Dude 전용PostPop·사제 보호막/낙하 음향 등 기존 큰 경계도 실제 설치해야 한다. 검토한26행·본문·누락 하위 모듈과 기존 독립Path writer 자료는extracted/dotnet-0788/next-0789.md에 있다. 순수observer나 구Mission세션·일반삭제Pre/Post로 결선을 대신하지 않는다.
 3. **R4-6 나머지와 R4 마감.** 위 항목 다음은 [1.1절 R4-6 남음](#r4-detail)의 전송·수신, Root 장치·UI, 표시·입력, 시작·수명 묶음을 잇고 R4-2~R4-5의 일치 대조, R4-7·R4-8(M1)로 넘어간다. 이어서 R5~R11과 후순위 요구사항(3절)을 진행한다. 다음 정기 전체 회귀는0.820이다.
 4. **사용자 검사 범위(2026-11-22).** 캠페인1-1~1-5·스커미시에 한해 아군 AI 활성화로 포획/희생·특정 적 공격·시나리오 승리를 재현할 수 있다. 그 밖의 스테이지 해당 검사는 사용자 수동 확인으로 남긴다. 단순 진입/대기/생산/건설 검사는 진행한다. DN 자동 플레이의 실제 연결은 아직 없다. 원본1,392파일은0.816 전체65시작 전후와0.812 전체 장부 대조에서 불변이다. 마지막 전체65시작은0.816이다.
 
-**최근 완료 요약(0.639~0.817).** 단위별 완료 문장과 집중 검사 수는 보관본과 각 단위 문서에 있다. 완료 범위와 남은 일의 기준은 1.1·1.2절 체크 항목이다.
+**최근 완료 요약(0.639~0.818).** 단위별 완료 문장과 집중 검사 수는 보관본과 각 단위 문서에 있다. 완료 범위와 남은 일의 기준은 1.1·1.2절 체크 항목이다.
 
 | 주제 | 단위 | 핵심 | 남은 일 |
 | --- | --- | --- | --- |
@@ -48,7 +48,7 @@
 | Root 수신·전송 관찰기 | 0.778~0.779·0.781~0.783·0.785~0.787 | UI 수신 원문·실제 Root UI 수신(뉴스·알림), 장기 패킷 기록/Root 소유자, 기본 18행·송신 관찰기, 장기 설정/버전 응답, 3f/30/7a/5f/7d 관찰기, 69h 장기 목록, 장기 CS/7bh | 전체 기본 설치 부모, Root Source/Record/Sent, 435220 요청 reset, NativeMapView 공급자 |
 | 객체 패킷 수신·Host entry | 0.789~0.791·0.802~0.803·0.806·0.811 | 수신/변경/검증/압축/WORD 하위 본체, 실제 이름 83표·부착, Host 2c/7a/4a/4b·6a/7e/33/34/70의 실제 본문9개와변경/삭제5개·채집5bh·전체 개발자31h·섬 정리35h | 나머지8본문·전체 26F, Root ScreenSize/FormPacket·수신 설치 |
 | 경로 Runtime·Data·본체·탐색 | 0.793~0.795·0.797~0.799·0.801 | 경로 Runtime·독립 관측, Data typed/Native 버퍼, Process 8종·전송 분배, BFS 탐색·Start/Cleanup 본체·Host 검색 공유, 건설 환불·Cleanup 하위·실제 SP 공유와 Halt/Arrival 본체·Host 부모 조립과전체Path/Start/Motion·30h | 제품Root전체장치설치와가상삭제 |
-| HUD 도킹·지도 상태 | 0.817 | 구분선 생성/고정10슬롯·전체 부착과 도킹 명령, 같은 트리/화면/Deck·미니맵 갱신 owner, 독립2150관측·실제 공통 연결6검사 | 실제 Uber Root/네 자식 공장·입력·수명/Native MapView, R4-6 |
+| HUD 도킹·전체 부모 | 0.817~0.818 | 구분선/도킹 전체·같은 지도 owner(2150관측), 전체 Uber 생성/교체/재생성·현재 this DockView(생성/교체160관측·실제 공통 수명) | 실제 호스트 UI 호출자/가상 분배·네 자식 공장/입력/수명/Native MapView, R4-6 |
 | 정기 전체 회귀·L2 | 0.644부터 4단위마다(0.816까지) | 매회 실패 0·65실행 종료 0·원본 불변·M1 0/34 유지. 수집으로 드러난 미연결·순서 회귀를 0.644(AI 색 프레임·펜스)·0.680(플레어 분배)·0.684(시작 음향 순서)·0.688(Carrier 통지)에서 교정. 전체 검사 4,686건(0.644) → 5,817건(0.816) | 다음0.820 |
 
 <a id="first-run"></a>
@@ -138,7 +138,7 @@ AGENTS.md 지정에 따라0.807에서 공통 [assets/Netstorm.ico](assets/Netsto
   - 완료(Root 수신·전송 관찰기, 0.778~0.787): UI 수신 원문·부분 버퍼(0.778), 실제 Root UI 수신(0.779), 장기 패킷 기록/Root 소유자(0.781), 기본 18행·송신 관찰기(0.782), 장기 설정/버전 응답(0.783), 3f/30/7a/5f/7d 관찰기(0.785, 45건), 69h 장기 목록·현재 Runtime 표시(0.786, 75건), 장기 CS/7bh(0.787, 39건·CPP Source 105값). [0.779](docs/dotnet-canon-0779-20261121.md) · [0.783](docs/dotnet-canon-0783-20261121.md) · [0.787](docs/dotnet-canon-0787-20261121.md)
   - 완료(객체 패킷·Host entry, 0.789~0.791): 같은 검증 상자의 수신/변경/검증/압축/WORD 하위 본체, 실제 설명/가상 이름 83표(CPP Source 대조이며 새 독립 PE 관찰은 아님)·자산 부착, Host 2c/7a/4a/4b(0.790)와 6a/7e/33/34/70(0.791)의 실제 본문 9개. [0.790](docs/dotnet-canon-0790-20261121.md) · [0.791](docs/dotnet-canon-0791-20261121.md)
   - 완료(경로, 0.793~0.797): 경로 Runtime 하위와 독립 216/32/27관측(0.793), Data typed 768·Native 384 버퍼와 장기 헤더(0.794), Process 8종·Host·Kernel·전송 분배와 Host 부착 순서 교정(0.795), RawPathSearch/Start/Cleanup 본체(BFS 탐색/역추적·장기 Work·현재 진단)와 Host 검색 공유(0.797). [0.795](docs/dotnet-canon-0795-20261121.md) · [0.797](docs/dotnet-canon-0797-20261121.md)
-  - 완료(HUD 도킹 선행, 0.817): 구분선 생성/슬레이브/전체 부착·HUD 명령/영역 계산과 같은 트리·화면·Deck/갱신 owner, 독립2150관측·실제 공통 생성/수명/트리 연결6검사. 실제 Uber Root/네 자식 공장·입력/수명과 Root MapView 공급은 계속 남음이다. [0.817](docs/dotnet-canon-0817-20261122.md)
+  - 완료(HUD 도킹 선행, 0.817): 구분선 생성/슬레이브/전체 부착·HUD 명령/영역 계산과 같은 트리·화면·Deck/갱신 owner, 독립2150관측·실제 공통 생성/수명/트리 연결6검사. 전체 Uber 부모 생성/Replace/Recreate·현재 this DockView도0.818에서 완료했다(독립 생성/교체160관측·실제 공통 수명). 실제 호스트 UI 호출자/가상 분배·네 자식 공장·입력/수명과 Root MapView 공급은 계속 남음이다. [0.817](docs/dotnet-canon-0817-20261122.md) · [0.818](docs/dotnet-canon-0818-20261122.md)
   - 남음(전송·수신, 근거 `cpppj/src/client/ClientCampaignTransport.cpp`): 전체 `NativeGameplay26F` 설치·Bind 검증과 나머지 8고정 본문, 공통 41h가 `Root.ReceiveNativePacketChat`을 부르는 전송 설치, 전체 InstallClientPacketDefaults/MakeClientCampaignTransport 부모와 Carrier/Construction/Meta 고정 F 설치, Root의 실제 Source/Record/Sent·송신/제출, 전체 435220 옵션 부모의 Requested만 0으로 재설정하는 호출(FILE/enabled를 닫는 동작으로 대신하지 않음), NativeLoginPacketReceivers의 실제 MonoGame Root 설치 호출, HostSession 실제 송신 부모(구 `Mission.RawCampaignSession`의 sendChatMutable 입구로 대신하지 않음), 나머지 순수 observer/장기 수신, 장기 CS/7bh의 나머지 Meta/UI/투영/배열 소비자와 Root 생성 부모.
   - 남음(Root 장치·UI): Root의 언어/이름/ScreenSize/FormPacket/수신 장치 공급, NativeRoot/HUD 창 생성·Enter와 알림 등록 ID의 실제 HUD 작성자, NSInfo HUD/메타 UI/Root reply 저장, 장면음악 장치·UI/음향/Pool·전체 State 설치, NativeMapView 공급자(없는 동안 뉴스의 해당 분기는 명시 실패), Native 색표 7 getter/zone 옵션 변경 부모, 세션 자산 InBattle 최초 상태, Chat 실제 명령 효과.
   - 완료(건설 환불·정리 하위,0.798): RawConstructionPlace의Refund/Money/AddMoney, 같은carrier/anchor/Host/place 어댑터·실제Host SP/현재Player 공유. 집중76건·독립288호출·대표3시작 불변. [0.798](docs/dotnet-canon-0798-20261122.md)
@@ -263,6 +263,7 @@ AGENTS.md 지정에 따라0.807에서 공통 [assets/Netstorm.ico](assets/Netsto
 | 0.800 | 2026-11-22 | 전체5,681회귀·기존 검사 이름 보존/+18, 같은 빌드65시작·DN31전체 바이트/34지표·원본/416자료 불변 감사 |
 | 0.816 | 2026-11-22 | 전체5,817회귀·기존 검사 이름 보존/+40, 검사·실행 DLL 동일성과 같은 빌드65시작·DN31전체 바이트/34지표·원본/427자료 불변 감사 |
 | 0.817 | 2026-11-22 | HUD 도킹 전체 본체/같은 지도 상태·2150원본관측·집중142통과·대표3시작 및 원본/실행/제품 고정 감사 |
+| 0.818 | 2026-11-22 | 전체 HUD 부모 생성/교체/재생성·현재 this뷰·160원본관측·실제 공통 수명·집중152통과·대표3시작/원본/실행/제품 고정 감사 |
 
 정기 전체 회귀·일괄 덤프는 0.644부터 4단위마다(0.644·0.652·0.656·0.660·0.664 … 0.728 … 0.800) 수행했다. 단위별 근거는 `docs/dotnet-*.md`와 Git 기록에 있다.
 

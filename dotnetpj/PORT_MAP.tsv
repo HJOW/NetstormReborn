@@ -1547,3 +1547,6 @@ cpppj/src/client/HudDock.h	Netstorm.Client/Gump/HudDividerGump.cs	53a1ebf945ea66
 cpppj/src/client/HudDock.cpp	Netstorm.Client/Gump/HudDividerGump.cs	53a1ebf945ea66c55541992e6dd14f1bab440d6d	port
 cpppj/src/client/HudDock.h	Netstorm.Client/Gump/HudDock.cs	53a1ebf945ea66c55541992e6dd14f1bab440d6d	port
 cpppj/src/client/HudDock.cpp	Netstorm.Client/Gump/HudDock.cs	53a1ebf945ea66c55541992e6dd14f1bab440d6d	port
+cpppj/src/client/UberRootGump.h	Netstorm.Client/Gump/UberRootState.cs	52cfee23d6440b89b7961bc8d6269b4aa1098038	port
+cpppj/src/client/UberRootGump.h	Netstorm.Client/Gump/UberRootGump.cs	52cfee23d6440b89b7961bc8d6269b4aa1098038	port
+cpppj/src/client/UberRootGump.cpp	Netstorm.Client/Gump/UberRootGump.cs	52cfee23d6440b89b7961bc8d6269b4aa1098038	port
