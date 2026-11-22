@@ -296,7 +296,7 @@ public sealed partial class RawPostPop : IRawPopPostPop
     /// <param name="sid">오브젝트 슬롯 번호.</param>
     public bool HandlesDerived(int sid) => HandlesBridge(sid) || HandlesIsland(sid) || HandlesSurface(sid)
         || HandlesPlayer(sid) || HandlesPriest(sid) || HandlesForcefield(sid)
-        || HandlesCarrier(sid) || HandlesDamageable(sid) || HandlesAsset(sid) || HandlesFactory(sid) || HandlesFence(sid);
+        || HandlesCarrier(sid) || HandlesDamageable(sid) || HandlesAsset(sid) || HandlesFactory(sid) || HandlesFence(sid) || HandlesFlyer(sid);
 
     /// <summary>
     /// 실제 Player 최초 기록·예약 몸체를 같은 풀에만 명시 등록한다. null이면 등록을 해제한다.

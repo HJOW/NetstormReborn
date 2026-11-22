@@ -596,4 +596,8 @@
   <ItemGroup>
     <None Include="../../../cpppj/tests/fixtures/flyer-postpop-x86.tsv" Link="X86/flyer-postpop-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 훨리기그 전용136BYTE/홈/그림자/소리의 독립391관측이다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/sun-flyer-postpop-x86.tsv" Link="X86/sun-flyer-postpop-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

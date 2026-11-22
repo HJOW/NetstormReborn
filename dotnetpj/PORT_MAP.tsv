@@ -1681,3 +1681,7 @@ cpppj/src/o/RawFlyerProcess.h	Netstorm.Core/Original/FlyerProcess.cs	a44b76be436
 cpppj/src/o/RawWindFlyer.cpp	Netstorm.Core/Original/RawFlyerProcess.Data.cs	a44b76be436c542d24865bbffe690b4e5c6bdb64	port
 cpppj/src/o/RawWindFlyer.h	Netstorm.Core/Original/RawFlyerProcess.Data.cs	a44b76be436c542d24865bbffe690b4e5c6bdb64	port
 cpppj/src/o/RawGameAuxState.h	Netstorm.Core/Original/RawGameAuxState.Flyer.cs	a44b76be436c542d24865bbffe690b4e5c6bdb64	port
+cpppj/src/o/RawFlyerProcess.cpp	Netstorm.Core/Original/RawFlyerPostPop.cs	98bb14e19a393874127ec2ef7486e91788b30234	port
+cpppj/src/o/RawFlyerProcess.h	Netstorm.Core/Original/RawFlyerPostPop.cs	98bb14e19a393874127ec2ef7486e91788b30234	port
+cpppj/src/o/SquidPostPop.cpp	Netstorm.Core/Original/RawPostPop.Flyer.cs	98bb14e19a393874127ec2ef7486e91788b30234	port
+cpppj/src/o/SquidPostPop.h	Netstorm.Core/Original/RawPostPop.Flyer.cs	98bb14e19a393874127ec2ef7486e91788b30234	port

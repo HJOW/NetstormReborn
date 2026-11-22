@@ -135,7 +135,7 @@ public sealed partial class RawPostPop
     public void ReleaseRuntimeBindings()
     {
         _runtimePin = null; _aiNotice = null; _selectionRecheck = null; _localOwner = null; _teleportPrefix = null;
-        _priestPostPop = null; _forcefieldPostPop = null; _carrierPostPop = null; _assetPostPop = null; _factoryPostPop = null; _fencePostPop = null; _playerPostPop = null;
+        _priestPostPop = null; _forcefieldPostPop = null; _carrierPostPop = null; _assetPostPop = null; _factoryPostPop = null; _fencePostPop = null; _playerPostPop = null; _flyerPostPop = null;
     }
     /// <summary>선택한 실제 가상 몸체 전체를 현재 Runtime pin 안에서 실행한다. 미구현 몸체는 도달 위치에서 실패한다.</summary>
     private void DispatchPostPop(int sid, uint flags)
@@ -152,6 +152,7 @@ public sealed partial class RawPostPop
                 selected(sid, flags); return;
             }
             // 전체 파생 몸체는 내부 공통 부모가 깊이를 한 번 줄이므로 여기서 다시 호출하지 않는다.
+            if (HandlesFlyer(sid)) { RawFlyerPostPop selected = _flyerPostPop!; selected.PostPop((ushort)sid, flags); return; }
             if (HandlesPlayer(sid)) { RawPlayerWorld selected = _playerPostPop!; selected.PostPop(sid, flags); return; }
             if (HandlesPriest(sid)) { RawPriestPostPopTail selected = _priestPostPop!; selected.PostPop(sid, flags); return; }
             if (HandlesCarrier(sid) || HandlesDamageable(sid))
