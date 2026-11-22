@@ -1504,3 +1504,13 @@ cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.GeyserM
 cpppj/src/o/RawGeyserMined.h	Netstorm.Core/Original/RawGeyserMined.cs	0d82e448de8ce679357cda8042bbc8226b8ed1b2	port
 cpppj/src/o/RawGeyserMined.h	Netstorm.Net/GeyserMinedRegistration.cs	0d82e448de8ce679357cda8042bbc8226b8ed1b2	port
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.GeyserMined.cs	baf141ebe8d2893459a1b18ea74a6caa88504468	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.DeveloperCommand.cs	29f2ebcd6988df6ccf4f07fe008f6d634ca5dd72	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.DeveloperHelp.cs	29f2ebcd6988df6ccf4f07fe008f6d634ca5dd72	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Core/Original/RawDeveloperCommandInput.cs	29f2ebcd6988df6ccf4f07fe008f6d634ca5dd72	port
+cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.DeveloperCommand.cs	29f2ebcd6988df6ccf4f07fe008f6d634ca5dd72	port
+cpppj/src/o/RawBoardTarget.cpp	Netstorm.Core/Original/RawBoardTarget.cs	29f2ebcd6988df6ccf4f07fe008f6d634ca5dd72	port
+cpppj/src/o/RawBoardTarget.h	Netstorm.Core/Original/RawBoardTarget.cs	29f2ebcd6988df6ccf4f07fe008f6d634ca5dd72	port
+cpppj/src/o/RawDeveloperCommandPacket.cpp	Netstorm.Core/Original/RawDeveloperCommandPacket.cs	29f2ebcd6988df6ccf4f07fe008f6d634ca5dd72	port
+cpppj/src/o/RawDeveloperCommandPacket.cpp	Netstorm.Net/DeveloperCommandRegistration.cs	29f2ebcd6988df6ccf4f07fe008f6d634ca5dd72	port
+cpppj/src/o/RawDeveloperCommandPacket.h	Netstorm.Core/Original/RawDeveloperCommandPacket.cs	29f2ebcd6988df6ccf4f07fe008f6d634ca5dd72	port
+cpppj/src/o/RawDeveloperCommandPacket.h	Netstorm.Net/DeveloperCommandRegistration.cs	29f2ebcd6988df6ccf4f07fe008f6d634ca5dd72	port

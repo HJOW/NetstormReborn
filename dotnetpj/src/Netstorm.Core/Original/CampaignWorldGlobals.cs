@@ -103,6 +103,12 @@ public sealed class CampaignWorldGlobals
         }
     }
 
+    /// <summary>Subscriber 변경의 ref 쓰기가 같은 실제 장기 DWORD를 콜백 전에 공개하도록 빌린다.</summary>
+    public ref uint MySubscriberStorage
+    {
+        get { if (_myBox is not null) return ref _myBox.Storage; return ref _localMy; }
+    }
+
     /// <summary>명시 외부 owner 또는 자체 fallback의 같은 DWORD다. 2026-11-07 F2d 캠페인 월드 적재 이식에서 추가됐다.</summary>
     public uint LoginSubscriber
     {

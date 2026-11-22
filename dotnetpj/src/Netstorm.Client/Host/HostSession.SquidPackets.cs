@@ -65,6 +65,7 @@ public sealed partial class HostSession
         ReleaseConstructionRefundDevices();
         ReleasePathParentDevices();
         ReleaseGeyserMinedDevices();
+        _developerEffects = null;
     }
     /// <summary>번호 선택 시점의 현재 TYPE를 읽는다.</summary>
     private OriginalTypeRecord SquidPacketType(uint type) => _terrainPopTypes is { } types && type < types.Count ? types[(int)type]
@@ -143,6 +144,7 @@ public sealed partial class HostSession
         if (_playerRecordsReleased || ProcessBindingsReturned() || _playerProcessRuntime is null) throw new ObjectDisposedException(nameof(HostSession), "고정 gameplay의 실제 World 반납 뒤 호출");
         switch (entry)
         {
+            case 0x44dba0: RawDeveloperCommandPacket.Receive(packet, ExecuteDeveloperCommand); return;
             case 0x4266c0: GeyserMined.HandlePacket(packet); return;
             case 0x4327b0:
             case 0x433170:

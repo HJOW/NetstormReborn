@@ -557,4 +557,8 @@
   <ItemGroup>
     <None Include="../../../cpppj/tests/fixtures/geysermined-x86.tsv" Link="X86/geysermined-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 원본 PE와 구별한 Windows CRT 독립434입력의 scanf 원시 결과다. -->
+  <ItemGroup>
+    <None Update="Fixtures/developer-scanf-windows.tsv" TargetPath="X86/developer-scanf-windows.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
