@@ -54,8 +54,8 @@ public sealed partial class HostSession
         RunMissionFrame();
     }
 
-    /// <summary>호출자가이미캡처한같은현재게임시각으로Kernel을한번실행한다. 시간대입/추가전진은하지않는다.</summary>
-    public void RunMissionFrame() => Kernel.RunFrame();
+    /// <summary>같은 현재 시각/Player 모드를 Gun에 준비하고 Kernel을 한 번 실행한다. 시계를 전진하지 않는다.</summary>
+    public void RunMissionFrame() { if (_gunProcess is not null) PrepareGunFrame(); Kernel.RunFrame(); }
 
     /// <summary>화신의 실제 부모 체인·커널 등록을 처리하는 호스트다.</summary>
     public SquidProcessHost PlayerProcesses { get; private set; } = null!;

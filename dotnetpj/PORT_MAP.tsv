@@ -1666,3 +1666,9 @@ cpppj/src/o/RawGunProcess.h	Netstorm.Core/Original/RawGunProcess.Data.cs	99504d5
 cpppj/src/o/RawGunProcess.cpp	Netstorm.Core/Original/GunProcess.cs	99504d5692008f7ef220dba7433b25444461d442	port
 cpppj/src/o/RawGunProcess.h	Netstorm.Core/Original/GunProcess.cs	99504d5692008f7ef220dba7433b25444461d442	port
 cpppj/src/o/RawGameAuxState.h	Netstorm.Core/Original/RawGameAuxState.Gun.cs	99504d5692008f7ef220dba7433b25444461d442	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.GunPackets.cs	879c61b201397a84d7c8dde01179da3e6f207951	port
+cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.GunPackets.cs	879c61b201397a84d7c8dde01179da3e6f207951	port
+cpppj/src/client/RawCampaignAssetBindings.cpp	Netstorm.Client/Host/HostSession.GunPackets.cs	879c61b201397a84d7c8dde01179da3e6f207951	port
+cpppj/src/client/RawCampaignAssetBindings.h	Netstorm.Client/Host/HostSession.GunPackets.cs	879c61b201397a84d7c8dde01179da3e6f207951	port
+cpppj/src/client/NativeGameplayPacketReceivers.cpp	Netstorm.Client/NativeGameplayPacketReceivers.Gun.cs	879c61b201397a84d7c8dde01179da3e6f207951	port
+cpppj/src/client/NativeGameplayPacketReceivers.h	Netstorm.Client/NativeGameplayPacketReceivers.Gun.cs	879c61b201397a84d7c8dde01179da3e6f207951	port
