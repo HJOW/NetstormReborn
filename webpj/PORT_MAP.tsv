@@ -141,7 +141,7 @@ cpppj/src/client/ExternalHelpClient.cpp	adapt	www/platform/external-opener.js;ww
 cpppj/src/client/FloatingSpGump.cpp	port	www/ui/floating-sp-gump.js;www/ui/client-floating-sp.js	1f00a25a	port	[client-default] WB04-E434 FloatingSpGump construct(한 줄 생성→가상 표/시각 0/가속도 float32/속도 0→Clear→서식 ~3~E~y<비용>~[IfortGump.3]→측정→idle→현재 시각/깊이)·show(new 0xb8·가속도 -2·객체 참조 시 (0,0)·루트 Attach mode 0)·idle(double 시각 차이·y float32·범위 이탈 x87 parity NaN 제외→idle 해제+Kill·속도 float32)·deleteScalar 이식. WB04-E486: 원본 10.78 독립 관측 426행(노드 float32/double 비트·호출 순서·Redraw 안 필드 변경)을 tests/hud-gump-native-fixtures.test.mjs 가 첫 실행 전체일치로 대조(이전의 "전용 PE fixture 없음"은 오기였다); 기준선 뒤 변경 없음; WB04-E1074 실제 Client 비용 표시·게임 시계·커서 연결; 나머지 RawMenuControls 허브 조립은 남음
 cpppj/src/client/FontCacheFile.cpp	adapt	www/assets/bitmap-font.js	1f00a25a	port	[adapt-file] WB04-E272: BitmapFont.parse 의 서명·버전 1·글자 수 256 판정을 font-cache-file-x86.tsv reader 시나리오로 대조, 서명 마지막 바이트 무시를 원문과 같게 수정. writer·부분 설치·FILE 효과열 웹 제외
 cpppj/src/client/FontFaceEncoding.cpp	exclude-host			-	[host-win32]
-cpppj/src/client/FortCoreDataLoad.cpp	port			todo	[rebaseline-port]
+cpppj/src/client/FortCoreDataLoad.cpp	exclude-mp			-	[mp-fort-core-data]
 cpppj/src/client/FortCurrentNameDevices.cpp	port	www/core/client-fort-current-name.js;www/netstorm.js	a328ac1f	partial	[campaign-fort-name] WB04-E885: 실제 Client 이름·Template·설정·문서 제목을 결선하고 단독 및 읽기 전용 manager 경로를 검사했다. 실제 Snapshot/Notify·Guide Init 연결은 잔여이며 Editor 삭제와 원격 경로는 웹 제외; docs/webpj-client-fort-name-20261119.md / WB04-E948: 앱의 현재 Session snapshot·Notify·State와 설치/반납 경계 연결; docs/webpj-app-fort-name-session-20261119.md
 cpppj/src/client/FortSelection.cpp	exclude-edit			-	[edit-map-list]
 cpppj/src/client/FortSubscriberClient.cpp	exclude-edit			-	[rebaseline-edit]

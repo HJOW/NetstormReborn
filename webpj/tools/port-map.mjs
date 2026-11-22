@@ -56,6 +56,8 @@ export const RULES = Object.freeze([
     // 실제 소켓(TCP/UDP) 연결의 지연 FIFO·`lag` 분포는 멀티플레이 전용이다. 내부(단독) 미션은 큐를 설치하지 않는다(cpppj ClientCampaignTransport.cpp:322, 웹 core/client-campaign-transport.js 가 이미 웹 제외로 기록). (2026-11-22 WB04-E1187)
     // 메타(챌린지) 앞단: CS 장기 포인터·메타 참가자/전투 수신기 등록·접속 상태 28~33은 메타 목록에서만 쓰인다. 단독 미션은 CS 를 만들지 않으며(웹 core/raw-campaign-session-login-front.js 가 메타 CS 를 거부) 그 수신기가 받을 메타 패킷도 로컬 서버가 보내지 않는다(docs/webpj-meta-front-scope-20261122.md). (2026-11-22 WB04-E1188)
     // 메타·일반 Sprite 표시 갱신(가상 표 0x50c9f0·0x50cc08 객체의 dirty 처리)은 단독 미션에 해당 객체가 없다: 자산 TYPE 116개 중 Sprite 로 만들어지는 TYPE 이 없고(웹·cpppj 모두 생성 경로 없음) 실제 미션 20개를 시작해 풀을 훑어도 0개다(docs/webpj-meta-sprite-scope-20261122.md). (2026-11-22 WB04-E1203)
+    // Fort CoreData 읽기(004beca0)는 첫 줄이 `if (missionPost || editor) return;` 인 자연 관문이다. 웹 단독 미션은 항상 missionPost 이고 편집기는 웹 범위 밖이라 본문이 실행되지 않는다(docs/webpj-fort-core-data-gate-20261122.md). (2026-11-22 WB04-E1204)
+    { id: 'mp-fort-core-data', class: 'exclude-mp', names: ['FortCoreDataLoad'], reason: 'Fort CoreData 읽기. 미션(missionPost)·편집기에서는 첫 줄에서 반환하므로 단독 웹에서 실행되지 않는다(E1204)' },
     { id: 'mp-meta-sprite', class: 'exclude-mp', names: ['ClientMetaSpriteRefresh', 'NativeMetaSpriteRefresh'], reason: '메타·일반 Sprite 객체의 표시 갱신. 단독 미션에는 이 가상 표의 객체가 없다(E1203)' },
     { id: 'mp-meta-front', class: 'exclude-mp', names: ['ClientChallengeGlobals', 'ClientMetaPacketReceivers', 'NativeMetaConnectedState'], reason: '메타(챌린지) CS 포인터·메타 참가자/전투 수신기 등록·접속 상태 28~33. 단독은 CS 가 항상 0 이다(E1188)' },
     { id: 'mp-packet-delay', class: 'exclude-mp', names: ['RawPacketDelay'], reason: '실소켓 연결 지연 FIFO·lag 분포. 내부 미션에는 큐를 설치하지 않는다(E1187)' },
