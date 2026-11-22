@@ -130,7 +130,11 @@ public sealed partial class RawProcessHostStorage
     /// <returns>같은 장기 호스트다.</returns>
     public SquidProcessHost Host()
     {
-        _host ??= new SquidProcessHost(_pool, _types, Kernel(), State(), () => CurrentRuntime());
+        if (_host is null)
+        {
+            var host = new SquidProcessHost(_pool, _types, Kernel(), State(), () => CurrentRuntime());
+            InstallDefaults(host); _host = host;
+        }
         return _host;
     }
 

@@ -92,16 +92,6 @@ public sealed partial class RawSurfaceStorage
         }
 
         _resourceDevices = devices.Copy();
-        // Native 전송 뒤 장기 Host 의 기본 공장을 같은 저장소 공장으로 묶는다.
-        // World 없는 AttachRegular 가 CreateOrTakeForm 에서 같은 Pool 공장을 찾게 한다.
-        try
-        {
-            Processes().Host().BindDefaultFormFactory(() => FactoryExecutor(), () => PostPopState.Depth);
-        }
-        catch (ArgumentException)
-        {
-            // 이미 같은 장기 공장으로 묶인 경우 현재 호출을 유지한다.
-        }
     }
 
     /// <summary>같은 확보 메모리의 실패를 그 시점에서만 반환한다. 0.568에서 추가됐다.</summary>
@@ -133,8 +123,8 @@ public sealed partial class RawSurfaceStorage
     {
         RegularProcess reserved = _resourceRegular ?? throw new InvalidOperationException("장기 자원 Regular 의 실제 확보 메모리 누락");
         _resourceRegular = null;
-        var fresh = new RegularProcess(@event, payload);
-        RegularProcess? attached = Processes().Host().AttachRegular(fresh, sid, false);
+        reserved.InitializeReserved(@event, payload);
+        RegularProcess? attached = Processes().Host().AttachRegular(reserved, sid, false);
         // 원문 00496e80/00496f00 처럼 부착 뒤 현재 시각으로 다음 실행 시각을 둔다.
         if (attached is not null)
         {

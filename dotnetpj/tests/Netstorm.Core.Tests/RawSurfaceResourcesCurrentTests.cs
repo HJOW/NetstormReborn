@@ -94,6 +94,37 @@ public sealed class RawSurfaceResourcesCurrentTests
         Assert.True(storage.AllocateResourceRegular());
     }
 
+    /// <summary>자원 설치 뒤 실제 외부 Kernel을 결합할 수 있고 자원 설치 없이도 Native 공장이 존재한다.</summary>
+    [Fact]
+    public void ResourceInstallationDoesNotCreateHostBeforeExternalDevices()
+    {
+        var storage = Storage(); BindTransmission(storage); storage.BindResourceDevices(Devices());
+        var kernel = new Kernel(16); var clock = new FrameTimeBox();
+        storage.Processes().BindDevices(kernel, clock);
+        int form = storage.Processes().Host().CreateOrTakeForm(0x10, 0);
+        Assert.Same(kernel, storage.Processes().Kernel()); Assert.Equal(2, storage.Pool.Slot(form)[10]);
+        var withoutResource = Storage(); BindTransmission(withoutResource);
+        Assert.False(withoutResource.UsesNativeResourceDevices());
+        int nativeForm = withoutResource.Processes().Host().CreateOrTakeForm(0x10, 0);
+        Assert.Equal(2, withoutResource.Pool.Slot(nativeForm)[10]);
+    }
+
+    /// <summary>예약한 같은 객체를 사건/비트 인자로 초기화하고 실제 현재 시각과 count0으로 붙인다.</summary>
+    [Fact]
+    public void ResourceConstructUsesIdenticalReservedObjectAndCurrentClock()
+    {
+        var storage = Storage(); BindTransmission(storage); storage.BindResourceDevices(Devices());
+        var clock = new FrameTimeBox(); storage.Processes().BindDevices(new Kernel(16), clock);
+        int sid = storage.FactoryExecutor().Create(74); Assert.True(storage.AllocateResourceRegular());
+        var reservedField = typeof(RawSurfaceStorage).GetField("_resourceRegular", System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic)!;
+        var reserved = Assert.IsType<RegularProcess>(reservedField.GetValue(storage));
+        clock.Value = new FrameTime { Game = 123.5 }; float payload = BitConverter.UInt32BitsToSingle(0x80000000);
+        storage.ConstructResourceRegular(sid, 17, payload);
+        var attached = Assert.IsType<RegularProcess>(storage.Processes().Host().FindEvent(sid, 17));
+        Assert.Same(reserved, attached); Assert.Equal(0u, attached.Count()); Assert.Equal(123.5, attached.Time());
+        Assert.Equal(0x80000000u, BitConverter.SingleToUInt32Bits(attached.Payload())); Assert.Null(reservedField.GetValue(storage));
+    }
+
     /// <summary>장기 운반체는 실제 Template 로딩 owner 결합 뒤에만 만들 수 있다.</summary>
     [Fact]
     public void ResourceCarrierRequiresSerializationGlobals()
