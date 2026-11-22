@@ -203,4 +203,11 @@
     <None Include="../../../cpppj/tests/fixtures/hud-nsinfo-create-x86.tsv" Link="X86/hud-nsinfo-create-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/hud-nsinfo-attach-x86.tsv" Link="X86/hud-nsinfo-attach-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 생산 격자/점멸/항목/안내의 기존 독립 관측538행을 단일 소비자에 연결한다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/inventory-grid-x86.tsv" Link="X86/inventory-grid-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/inventory-blink-x86.tsv" Link="X86/inventory-blink-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/inventory-item-x86.tsv" Link="X86/inventory-item-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/production-hint-x86.tsv" Link="X86/production-hint-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>
