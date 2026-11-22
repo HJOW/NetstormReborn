@@ -97,6 +97,7 @@ import { GameMenuActions } from './core/game-menu-actions.js';
 import { gameMenuCommandValue, gameMenuScriptCode, isGameMenuCommand, queuePlayerListKey } from './core/game-menu-commands.js';
 import { KnowledgeMenuKind, knowledgeScriptCode } from './core/raw-knowledge-menu.js';
 import { RawFortBadgesGlobals } from './core/raw-fort-badges-globals.js';
+import { stepAmbientSound } from './core/raw-ambient-sound.js';
 import { dispatchGameTimeKey, readGameTimeSeconds } from './core/game-time-display.js';
 import { idleMainMenuActivity } from './core/main-menu-activity.js';
 import { frameDue, frameRateChoices, normalizeFrameRate, parseFrameRateTarget } from './core/frame-rate-option.js';
@@ -3773,6 +3774,7 @@ export class Netstorm {
             // 스크롤·창 열림/닫힘·키 입력으로 포인터 아래 내용이 바뀌었을 수 있으므로 커서를 다시 고른다(원본은 매 포인터 갱신마다 선택). (2026-10-31 WB03-L)
             this._applyCursor();
         }
+        this._runAmbientFrame();
         // 원본 Kernel 단계에서 같은 현재 World를 준비하고 단일 Client Kernel을 실행한다.
         // 원본 메인 루프는 Gump Idle(464170) 앞에서 죽은 Gump 정리(004662b0 cleanupGumps)를 매 프레임 한 번 실행한다. 이 정리가 없으면 만료된 안내(Game Time 등)가 Kill 큐에만 쌓이고 등록표에서 빠지지 않아
         // 개수가 999 한도에 닿으면 "Gump 원본 개수 한도 초과" 로 게임이 멈춘다. (2026-11-21 WB04-E1134, 몽키 시험의 Vicious 3분 진행에서 발견)
@@ -3782,6 +3784,18 @@ export class Netstorm {
         // 원본 주 루프 13번(439c33): 화면을 그린 뒤 Player 결과 알림을 한다. known 이고 전투 모드일 때만 Session 이 필요하다. (2026-11-22 WB04-E1233)
         if (this._campaignDisplayActive() && this._clientGameplay.player.playerKnown && this._surfaceStorage.ownerMode.battle) this._campaignWorld.session().notifyPlayerResults();
         this._startFrameLoop();
+    }
+
+    // 원본 주 루프 603·604(00439aeb·00439af0): 주변음(먼 천둥·독수리·고래, 120초 주기)과 공유 바람을 매 프레임 갱신한다. 둘은 같은 Game 난수를 소비하므로 게임 정지·메뉴·음향 장치 유무와 무관하게 실행하고(장치가 없으면 소리만 건너뛴다),
+    // 번개 섬광은 E1163 판정대로 창 모드에서 화면 변화가 없어 소리 요청만 한다. 이 호출이 없어 주변음이 한 번도 나지 않았고 바람(입자 흔들림)이 정지해 있었으며 Game 난수열이 원본과 달랐다. (2026-11-22 WB04-E1234)
+    _runAmbientFrame() {
+        const random = this._clientRandom?.game, local = this._clientLocal, clock = this._gameClock; if (!random || !local || !clock) return;
+        const state = this._ambientSound ??= { kind: 0, forced: 0 };
+        stepAmbientSound({ get deadline() { return local.activityEnd().value; }, set deadline(value) { local.activityEnd().value = value; }, get kind() { return state.kind; }, set kind(value) { state.kind = value; }, get forced() { return state.forced; } }, random, {
+            wallSeconds: () => clock.wallSeconds(), currentDialog: () => (this._mainMenu?.dialog ? 1 : 0), flash: () => {},
+            sound: (name, loop, volume, pan, priority, limit) => { this._clientSoundPlayer?.playByName(name, loop, volume, pan, priority, limit); },
+        });
+        this._surfaceStorage?.updateAmbientWind(random);
     }
 
     // 미션 화면(HUD 도킹으로 지도 영역이 왼쪽 85px 줄어든 상태)이 준비된 뒤 이미 열려 있던 안내 창을 같은 지도 영역의 가운데로 다시 놓는다. 튜토리얼 첫 안내 창은 HUD 도킹보다 먼저 열리므로 화면 전체 가운데에 놓였다가 어긋났다.
