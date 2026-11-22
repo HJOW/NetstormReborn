@@ -1586,3 +1586,11 @@ cpppj/src/client/ProductionHintGump.h	Netstorm.Client/Gump/ProductionHintGump.cs
 cpppj/src/client/ProductionHintGump.cpp	Netstorm.Client/Gump/ProductionHintGump.cs	5dc75236b8cdf237f5a7b666b11e2713ac40c86c	port
 cpppj/src/client/RawProductionControls.h	Netstorm.Client/Gump/ProductionInventoryBindings.cs	b601503d0edaceed695568b843ef20b828463968	port
 cpppj/src/client/RawProductionControls.cpp	Netstorm.Client/Gump/ProductionInventoryBindings.cs	4ee69f4f8f38835ce5b48213e55d98e162636aba	port
+cpppj/src/client/InventoryAboutMenu.h	Netstorm.Client/Gump/InventoryAboutMenu.cs	4398ba2c388d556aa432163a52615aa2b2fdc0e1	port
+cpppj/src/client/InventoryAboutMenu.cpp	Netstorm.Client/Gump/InventoryAboutMenu.cs	4398ba2c388d556aa432163a52615aa2b2fdc0e1	port
+cpppj/src/client/ProductionShortcuts.h	Netstorm.Client/Input/ProductionShortcuts.cs	3477db518ef155f6201c7b536126434322d36c86	port
+cpppj/src/client/ProductionShortcuts.cpp	Netstorm.Client/Input/ProductionShortcuts.cs	3477db518ef155f6201c7b536126434322d36c86	port
+cpppj/src/client/RawProductionMaintenance.h	Netstorm.Client/RawProductionMaintenance.cs	b35e345b9dae7e64c91b916c7edf7d99aed66890	port
+cpppj/src/client/RawProductionMaintenance.cpp	Netstorm.Client/RawProductionMaintenance.cs	49729df641264ab191ac7f3ff3109583e88fbc8e	port
+cpppj/src/o/RawProductionSync.h	Netstorm.Core/Original/RawProductionSync.cs	5d817c1546e6eec70cb19bd00d6df33b7c088aba	port
+cpppj/src/o/RawProductionSync.cpp	Netstorm.Core/Original/RawProductionSync.cs	674e320205e54ac54a2ddc2098c545bd271721e7	port

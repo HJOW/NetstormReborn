@@ -14,6 +14,8 @@ internal static class InventoryRawSupport
     private static readonly System.Reflection.FieldInfo PoolBytes = typeof(RawSidPool).GetField("_bytes", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
     /// <summary>기대값을 쓰지 않고 명시 입력 바이트만 준비하는 검사 전용 물리 뷰다.</summary>
     public static Span<byte> Raw(RawSidPool pool, int sid) => ((byte[])PoolBytes.GetValue(pool)!).AsSpan(checked(sid * RawSidPool.Stride), RawSidPool.Stride);
+    /// <summary>독립 관측의 풀 전체 불변 검사용 읽기 뷰다. 제품에는 노출하지 않는다.</summary>
+    public static ReadOnlySpan<byte> All(RawSidPool pool) => pool.Bytes;
     /// <summary>원본 DWORD 십진 입력이다.</summary>
     public static uint U(string value) => unchecked((uint)long.Parse(value, CultureInfo.InvariantCulture));
     /// <summary>원본 float32 입력 비트다.</summary>

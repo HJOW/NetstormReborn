@@ -1,5 +1,11 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <!-- 생산 정보/현재 단축키/내용물 동기화/장기 유지의 독립 원문 관측이다. -->
+    <None Include="../../../cpppj/tests/fixtures/inventory-about-x86.tsv" Link="X86/inventory-about-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/inventory-about-class-x86.tsv" Link="X86/inventory-about-class-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/production-shortcuts-x86.tsv" Link="X86/production-shortcuts-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/production-sync-x86.tsv" Link="X86/production-sync-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/production-idle-x86.tsv" Link="X86/production-idle-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- 섬 정리20BYTE 작성의 두 정밀도 독립336관측이다. -->
     <None Include="../../../cpppj/tests/fixtures/drop-island-packet-x86.tsv" Link="X86/drop-island-packet-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- 실제 Game의 건물 캡처를 독립 원본2577입력의 전체 픽셀과 대조한다. -->
