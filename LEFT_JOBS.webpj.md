@@ -6,14 +6,14 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-23 정리, 마지막 단위 WB04-E1239)
+### 0.1 현재 값 (2026-11-23 정리, 마지막 단위 WB04-E1240)
 
 | 항목 | 현행 상태 |
 | --- | --- |
 | 실행·플레이 | 브라우저에서 ‘클릭하여 시작’, 시작 title 그림, 메인 메뉴·캠페인/데모 목록·도움말·옵션·Credits와 개발용 지형 미리보기가 동작한다. **미션:** 캠페인 목록 31개(Early Missions 6·세 캠페인 묶음 16·Priest Training 9)와 데모 3개가 시작되고, 장시간 진행과 임의 조작(몽키) 시험에서 오류·먹통이 없다. Campaign ▸ Skirmish는 무작위 섬·간헐천 월드에서 AI와 진행된다. Tutorial2는 시작부터 완료 창·Tutorial3 시작까지 자연 진행으로 확인했고, 승패 안내 뒤 흐름(Continue·Replay Mission·Leave/Next Mission·진행 저장)도 확인했다. 미션 프레임에서 다리 붕괴 검사·전투 자원(간헐천 보충·스펠 소비·SP 주기 지급)·제단 결과 알림·주변음/공유 바람이 원본 주 루프 순서로 돈다(E1230~E1234). **조작:** 사제 선택·이동, 가장자리·Alt·가운데 버튼 스크롤, 미니맵 클릭·끌기, 생산 격자 클릭·단축키(D 포함)·조각 회전(C·회전 방향 옵션)·다리 배치, 사제·워크샾·제단·신전·배터리·발전기·운반체 우클릭 메뉴와 회수·기도·Cast/Drop, 객체 명령(Detonate·Meltdown·신전 명령), 화면 위치 키(F4/H·F5·TAB·U·Shift+숫자 저장/숫자 복귀), 미니맵·스톰 파워 표시·생산 창의 우클릭 빠른 도움말(E1236)이 동작한다. **게임 메뉴:** ESC 또는 화면 우측 상단 버튼(웹 전용)으로 Game·View·Options·Players·About 메뉴막대를 열고, Leave/Restart Mission(ABORT 확인 창), F1·F2·F6·F7·F8·F9·Shift-F3·T, Pause(Shift-F9·Pause 키·메뉴), Shift-F7 화면 GIF 저장, Players 메뉴의 송금(Send X 숫자 입력 창 포함)·동맹이 실행된다. 브리핑·완료 창의 Review Knowledge·GetTechnology 단추도 동작한다(E1227). **HUD 틀:** 실제 Uber 루트가 세로·미니맵·채팅 구분선, 좌측 사이드바(SP·생산 덱)와 하단 미니맵 칸을 원본 위치로 도킹하고 지도 영역이 `{85,0,W,H}`다(4:3 하단 85×82픽셀이 원본 스크린샷과 일치, 16:9·16:10·1920×1080과 창 크기 변경 확인). **채팅 창:** F3로 채팅 영역이 보이고 로그 줄이 색과 함께 그려지며, Enter로 입력줄을 열어 제출하면 로컬 서버를 거쳐 `You> 본문` 줄이 로그에 나오고 점 명령·Tab 이름 완성(동맹 AI)·붙여넣기/복사/잘라내기·도우미 메뉴·Edit Back/Front Format 창이 동작한다(E1169~E1179). **미완성:** 읽기 전용 감사가 남긴 차이([다음 작업 1](#next); 승리/패배 곡은 E1238에서 단독 미션 도달 불가로 닫음), 나머지 객체 메뉴(Factory 파생·특수 대상·채팅 분기)와 운반체 줍기·내려놓기, 다른 미션의 목표 수행과 자연 완주. 지식 NSInfo 패널·Players 하위의 Ignore chat·Whisper To·정보 보기·의식 보상 선택 UI·인트로 영상은 웹 범위 밖이다(E1167·E1171·E1180·E1202). |
 | 원본과의 동일성 | 영어 4:3 메뉴 M1 8장면은 cpppj 오라클과 알려진 구름 배경 등 차이 영역 밖에서 픽셀 차이 0이다. 월드·UI 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다(최근 원본 공통 메뉴 788행·Factory 메뉴 39행·Uber 루트 160행·장면 음악 3,113행 등). 좌측 HUD 틀의 하단(미니맵 구분선·세로 구분선 아랫부분·미니맵 칸) 85×82픽셀은 원본 스크린샷과 완전히 일치한다. 메뉴 비활성 색·안내 창 위치·지식 카드 이름 줄 나눔·Wind Noise 무동작은 원본 기준으로 맞췄다. Tutorial1 시작 직후 Session 덤프는 시간 의존 값을 빼고 cpppj 기준선과 구조가 같다(E1129). 고정 시각 L2·L3·L4 화면 비교와 자연 완주는 미검증이다. |
 | 현재 작업 | **게임 플레이 중 UI 구현 단계.** 4-D 후반(GameWorld·Client 서비스)과 5-A·5-B·6·8단계 항목을 미션 앱 프레임 위에서 병행한다. Renderer·Gump 트리·입력 큐·생산 패널·객체 메뉴·도움말·음향·채팅 창이 실제 미션 화면에 연결돼 있다. 최근 단위(E1167~E1237)는 웹 범위 판정, Native 대응 행 대조로 partial 행 닫기, 읽기 전용 감사(E1223~E1231)가 찾은 원본과 다른 동작의 수정으로 빈칸을 메웠다. 순서는 아래 [다음 작업](#next)을 따른다. |
-| 전체 회귀 | **Node 26.13.0:** E1238 기준 전체 6,764건 모두 통과(로그 `extracted/webpj-e1238-node26.log`, 469초). **Node 22.23.3:** E1236 기준 전체 6,759건 모두 통과(로그 `extracted/webpj-e1236-node22.log`, 746초). **e2e:** E1147 전체 `npx playwright test` 100건 통과·8건 건너뜀(옵트인 장시간, 로그 `extracted/webpj-e1147-e2e-all.log`, 39분). 이후 단위는 새 e2e와 관련 e2e를 단위마다 돌렸다. **HJOW-Athlon 주기(0.5절 5):** v26 1/4(E1239)·v22 3/8(E1237~E1239) — 다음 v26 전체 회귀는 E1242 완료 뒤, v22는 E1244 완료 뒤이며 겹치면 순차로 돈다. E1127~E1236의 회귀 이력(실패와 교정 포함)은 [E1166 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261121-through-wb04-e1166)과 [E1237 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1237)에 있다. |
+| 전체 회귀 | **Node 26.13.0:** E1238 기준 전체 6,764건 모두 통과(로그 `extracted/webpj-e1238-node26.log`, 469초). **Node 22.23.3:** E1236 기준 전체 6,759건 모두 통과(로그 `extracted/webpj-e1236-node22.log`, 746초). **e2e:** E1147 전체 `npx playwright test` 100건 통과·8건 건너뜀(옵트인 장시간, 로그 `extracted/webpj-e1147-e2e-all.log`, 39분). 이후 단위는 새 e2e와 관련 e2e를 단위마다 돌렸다. **HJOW-Athlon 주기(0.5절 5):** v26 2/4(E1239~E1240)·v22 4/8(E1237~E1240) — 다음 v26 전체 회귀는 E1242 완료 뒤, v22는 E1244 완료 뒤이며 겹치면 순차로 돈다. E1127~E1236의 회귀 이력(실패와 교정 포함)은 [E1166 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261121-through-wb04-e1166)과 [E1237 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1237)에 있다. |
 | 브라우저 검사 | 미션 화면은 단위마다 Chromium e2e로 확인한다(최근 전체 실행 E1147, 16:9·16:10 건설·메뉴 E1143~E1144, 한국어 Players 메뉴 E1166). 메뉴는 2026-11-17 Chromium 2/2(갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체), 최초 실행·진행 잠금/체크·저장 재실행은 E616 Chromium 2/2. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
 
 <a id="next"></a>
@@ -22,7 +22,7 @@
 
 1. **읽기 전용 감사(E1228·E1230·E1231)가 남긴 차이(우선순위순).** 근거는 PORT_MAP 해당 행의 E1228·E1230·E1231 노트에 있다.
    - ① (E1238 닫음) 승리/패배 곡(fanfare/defeat)은 단독 미션 복귀가 결과 DWORD 를 0 으로 쓰고 State 3 이 곡을 요청하지 않아 원본도 틀지 않는다. 전투 종료 프레임은 `!missionPost` 관문이라 멀티플레이 전용이다. [판정](docs/webpj-result-music-scope-20261123.md)
-   - ② 월드 없는 메인 메뉴 Help의 TYPE 정보 — `ReadAssetQuickHelpType` 이식(QuickHelpHtml 행). 미션 중 링크 이동·Back의 TYPE 정보 패널·유닛 그림은 E1229, 첫 주제 Back의 직전 팝업(F6 지식 창 등) 재열기는 E1237에서 해결했다.
+   - ② (E1240 닫음) 월드 없는 메인 메뉴 Help의 TYPE 정보 — `ReadAssetQuickHelpType`를 `readAssetQuickHelpType`로 이식하고 `_helpTypeSource`가 월드 유무로 출처를 고른다. 미션 중 링크 이동·Back의 TYPE 정보 패널·유닛 그림은 E1229, 첫 주제 Back의 직전 팝업(F6 지식 창 등) 재열기는 E1237에서 해결했다. [근거](docs/webpj-main-menu-help-type-20261123.md)
    - ③ (E1239 닫음) "Sound On"을 끄면 원문은 장치를 닫아 음악도 무음이고 켜면 현재 곡을 처음부터 재생한다 — `AudioSystem.setSoundEnabled`가 같게 동작한다(원본 실기 청취 미확인). [근거](docs/webpj-sound-off-music-thunder-20261123.md)
    - ④ (E1239 닫음) 천둥 효과음은 이제 `SoundPlayer.playByName`을 거쳐 게임 메뉴 음소거·동시 재생 한도가 적용된다.
    - ⑤ 한국어 큰 슬롯(제목) 글꼴 크기·굵기 규칙이 원문(Galmuri11 정수 배율·Bold 고정)과 다르다 — 굵기는 의도적 선택이라 **결정이 필요**하다(BitmapFont 행).
@@ -58,7 +58,7 @@
 | 게임 메뉴 | E1084~E1085, E1087~E1090, E1093~E1097, E1100, E1167~E1168, E1235 | ESC 메뉴막대·우측 상단 버튼, Leave/Restart, F6·F7·F9·T, Pause, Frame Rate·Language·Difficulty, Shift-F7 GIF, Players 하위 항목 실측(채팅·정보 항목은 단독 미션 도달 불가), Send X 숫자 입력 창(모달·글자 입력창), F1과 Tell/브리핑 창 | Tell 모달 스택·ESC Tell 닫기 확인 | [게임 메뉴막대](docs/webpj-game-menu-bar-20261120.md) · [Send X 창](docs/webpj-send-money-dialog-20261122.md) |
 | 스커미시(12차) | E1101~E1107 | 설정 화면·저장, 시작 섬·섬 생성 부모, 세션 월드 생성·앱 시작, AI 진행·금지 유닛 | AI 생산·공격, 실제 전투 승패·너겟 | [시작과 월드 생성](docs/webpj-skirmish-start-20261120.md) · [게임 진행](docs/webpj-skirmish-play-20261120.md) |
 | Gump·메뉴 UI | E1017~E1018, E1023~E1025, E1037~E1045, E1064~E1072, E1075, E1086 | Form 통지, 글자·Slider 출력, 중첩 메뉴, 사제·Player·공통 객체·운반체 메뉴, 신전 건설·완공 | 파생 +ac 객체 메뉴, 채팅 분기 | [Client 메뉴](docs/webpj-client-menu-gump-20261120.md) · [사제 우클릭](docs/webpj-browser-priest-menu-20261120.md) |
-| 도움말 | E1046, E1048~E1055 | 생산 Help, TYPE 정보 창, 요구 에너지·도움말 그림 | 타입별 원본 화면 비교 | [앱 TYPE](docs/webpj-app-help-type-info-20261120.md) |
+| 도움말 | E1046, E1048~E1055, E1229, E1240 | 생산 Help, TYPE 정보 창, 요구 에너지·도움말 그림, 링크 이동·월드 없는 메인 메뉴 Help 의 TYPE 정보 | 타입별 원본 화면 비교 | [앱 TYPE](docs/webpj-app-help-type-info-20261120.md) |
 | 한국어 | E1056~E1057, E1062~E1063, E1073, E1080, E1108~E1118, E1140~E1142, E1166 | 모든 미션 대본, 게임 안 메뉴·객체 메뉴·지식 문구, 지식 카드 줄 나눔, Player 이름 디코딩 | 생산 창·미니맵 도움말·채팅 채널 이름(번역 호출 없음), 실제 화면 확인 | [캠페인 미션](docs/webpj-korean-campaign-missions-20261120.md) · [한국어 이름](docs/webpj-korean-player-names-20261121.md) |
 | 조작키 | E1145~E1146, E1148, E1151, E1154~E1155, E1159, E1162~E1163 | Alt·가운데 버튼 스크롤, H, C·`rotmode`, TAB·U·Shift+숫자/숫자, D·F 키 점검, F3 구분선, Pause 키 | — | [Alt 스크롤·조작키](docs/webpj-alt-scroll-keys-20261121.md) · [화면 위치 키](docs/webpj-camera-keys-20261121.md) |
 | 객체 메뉴·명령 | E1126~E1127, E1135~E1138, E1150, E1225 | Players 송금·동맹, 파생 객체·제단·운반체·Archer 메뉴, 메뉴 닫기·비활성 색, 객체 명령·정체 안전장치, 사제 기도·Cast/Drop·Factory 순환 명령 소비 | Factory 파생·특수 대상·채팅 분기, Archer·운반체 항목 확인 | [파생 객체 메뉴](docs/webpj-object-menu-variants-20261120.md) · [객체 명령](docs/webpj-object-commands-20261121.md) |
@@ -69,11 +69,11 @@
 | 웹 범위 판정 | E1167, E1171, E1176, E1180, E1182, E1187~E1188, E1192, E1202~E1204 | Players 하위 3항목·지식 NSInfo·의식 보상 선택 UI·HTML `$Input=`·패킷 원천/지연·메타 앞단·Sprite 갱신·FortCoreDataLoad를 웹 범위 밖으로, 인트로 영상은 사용자 결정으로 웹 제외 | — | [NSInfo](docs/webpj-nsinfo-scope-20261122.md) · [동영상 결정](docs/webpj-intro-movie-decision-20261122.md) |
 | 대본·기술·타이틀 | E1184, E1189~E1190, E1197, E1199~E1200, E1227 | 시작 title 그림, Fury War 기술 지급, 대본 82개 명령 점검(`ViewSpot`·`Salvage`), 도움말·Tell 남은 두 행, Detonate·GetTechnology 원본 관측, Review Knowledge·GetTechnology 단추 | — | [대본 명령](docs/webpj-script-commands-audit-20261122.md) · [Fury War](docs/webpj-fury-war-technology-20261122.md) |
 | Native 대응 대조 | E1193~E1195, E1205~E1221 | Native 고정 수신기 네 묶음·채팅 수신기, 건설 여섯 행·AssetDeletionVtables, RawSurface 훅 대조와 표시 후 계속 진단·17종 가상 삭제·unit-lost 억제 | RawSurfaceDeletion·Lifetime(DestroyPatch 진단 열두 지점) | [수신기](docs/webpj-native-receivers-audit-20261122.md) · [RawSurface](docs/webpj-native-surface-audit-20261122.md) |
-| 읽기 전용 감사·수정 | E1223~E1239 | Client 상태·입력(제단 희생 메뉴 훅)·UI 컨트롤(와이드 메인 메뉴 버튼) 감사, 객체 메뉴 명령 소비, 아이스 반사 0점 기본값, 도움말·음향·설정 partial 15행 닫기와 Tell Warning, 다리 붕괴·전투 자원·Player 결과 알림·주변음/바람 프레임, F1·HUD 우클릭 도움말·Back, 승리/패배 곡 범위 판정(E1238)·소리 끄기 음악 무음·천둥 효과음 경로(E1239) | [다음 작업 1](#next)의 남은 차이 | [RawSurface 감사](docs/webpj-native-surface-audit-20261122.md) |
+| 읽기 전용 감사·수정 | E1223~E1240 | Client 상태·입력(제단 희생 메뉴 훅)·UI 컨트롤(와이드 메인 메뉴 버튼) 감사, 객체 메뉴 명령 소비, 아이스 반사 0점 기본값, 도움말·음향·설정 partial 15행 닫기와 Tell Warning, 다리 붕괴·전투 자원·Player 결과 알림·주변음/바람 프레임, F1·HUD 우클릭 도움말·Back, 승리/패배 곡 범위 판정(E1238)·소리 끄기 음악 무음·천둥 효과음 경로(E1239)·월드 없는 Help TYPE 정보(E1240) | [다음 작업 1](#next)의 남은 차이 | [RawSurface 감사](docs/webpj-native-surface-audit-20261122.md) |
 
 ### 0.2 단계 진행판
 
-`n/m`은 상위 체크 수이며 보관한 완료 항목을 포함한다. 상위 항목 안의 완료 부분은 중복 가산하지 않는다. 남은 단위와 줄 수는 `PORT_MAP.tsv`의 partial·todo 기준이며 partial에는 파일 전체 줄 수를 센다. 2026-11-23 정리 때 `node webpj/tools/port-map.mjs`와 `python -X utf8 tools/port_inventory.py --tsv`로 다시 세어 **partial 34·todo 0, 34단위 / 20,876줄**이다. 단계 배정은 각 행이 남은 일로 걸린 3.1절 항목 기준이며 아래 둘째 표에 행 이름을 적었다. 같은 정리에서 4D-8b~4D-8f를 '남은 행 없음'(해당 대응표 행이 모두 port 또는 제외)으로 판정해 4-D가 61/85가 됐다. 이전 단계별 분배(51 / 24,263)와 E1082~E1230의 증감 경과는 [E1237 보관본 0.2절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1237)에 있다.
+`n/m`은 상위 체크 수이며 보관한 완료 항목을 포함한다. 상위 항목 안의 완료 부분은 중복 가산하지 않는다. 남은 단위와 줄 수는 `PORT_MAP.tsv`의 partial·todo 기준이며 partial에는 파일 전체 줄 수를 센다. 2026-11-23 정리 때 `node webpj/tools/port-map.mjs`와 `python -X utf8 tools/port_inventory.py --tsv`로 다시 세어 **partial 34·todo 0, 34단위 / 20,876줄**이었고 E1240 에서 QuickHelpHtml·QuickHelpRequest 두 행을 닫아 **partial 32·todo 0, 32단위 / 20,635줄**이다. 단계 배정은 각 행이 남은 일로 걸린 3.1절 항목 기준이며 아래 둘째 표에 행 이름을 적었다. 같은 정리에서 4D-8b~4D-8f를 '남은 행 없음'(해당 대응표 행이 모두 port 또는 제외)으로 판정해 4-D가 61/85가 됐다. 이전 단계별 분배(51 / 24,263)와 E1082~E1230의 증감 경과는 [E1237 보관본 0.2절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1237)에 있다.
 
 | 순서 | 단계 | 체크·상태 | 남은 단위 / 줄 |
 | --- | --- | --- | --- |
@@ -85,10 +85,10 @@
 | 5 | 5-C 화면 허브·미션 진입 | 1/6 → M2 | 5 / 5,328 |
 | 6 | 입력·게임 메뉴·경제·건설 | 2/8 → M3 | 3 / 428 |
 | 7 | 전투·의식·AI | 3/6 | 1 / 161 |
-| 8 | 미션 수명·대본·오디오·도움말 | 2/9 → M4 | 5 / 1,536 |
+| 8 | 미션 수명·대본·오디오·도움말 | 3/9 → M4 | 3 / 1,295 |
 | 9 | 표시 품질·브라우저/OS·배포 | E945 하위 경로·설정 복원 검증, M5 미완료 | 0 / 0 |
 | 10 | AGENTS 후순위 웹 요구 | 일부 선행, 3.7절 참조 | 0 / 0 |
-| **합계** | | | **34 / 20,876** |
+| **합계** | | | **32 / 20,635** |
 
 남은 partial 행의 단계 배정(줄 수 큰 순, 대응표 메모와 3.1절 항목 기준):
 
@@ -100,19 +100,19 @@
 | 5-C | UberGump 2,703 · RawMenuControls 1,605 · RawButtonControls 811 · RawUberRootControls 161 · RawMenuChat 48 |
 | 6 | CampaignObjectMenuClient 229 · RawBuildReplay 100 · ClientBuildReplay 99 |
 | 7 | RawCampaignRitual 161 |
-| 8 | BitmapFont 508 · ClientAudio 492 · SoundSceneMusic 295 · QuickHelpHtml 184 · QuickHelpRequest 57 |
+| 8 | BitmapFont 508 · ClientAudio 492 · SoundSceneMusic 295 |
 
 ### 0.3 이식량
 
-기준선 `225553df`의 이식 대상 1,007단위는 **port 973(96.6%)·partial 34·todo 0**이다(2026-11-23 재집계). 제외 153단위(멀티 73·Edit 42·호스트 37·구판 1)를 합하면 대응표 1,160행이다. 앱 수명 연결을 뜻하는 `session`과 오라클 대조를 뜻하는 `oracle`은 0이다. E1098~E1237의 재판정 내역은 대응표 메모와 [E1166 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261121-through-wb04-e1166)·[E1237 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1237)에 있다.
+기준선 `225553df`의 이식 대상 1,007단위는 **port 975(96.8%)·partial 32·todo 0**이다(2026-11-23 재집계, E1240 반영). 제외 153단위(멀티 73·Edit 42·호스트 37·구판 1)를 합하면 대응표 1,160행이다. 앱 수명 연결을 뜻하는 `session`과 오라클 대조를 뜻하는 `oracle`은 0이다. E1098~E1237의 재판정 내역은 대응표 메모와 [E1166 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261121-through-wb04-e1166)·[E1237 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1237)에 있다.
 
 | 범위 | port / 대상 | partial | todo |
 | --- | --- | --- | --- |
 | `o/` 월드·규칙 | 572 / 573 | 1 | 0 |
-| `client/` 세션·UI·표시 | 400 / 433 | 33 | 0 |
+| `client/` 세션·UI·표시 | 402 / 433 | 31 | 0 |
 | `zacket/` 내부 미션 전송 | 1 / 1 | 0 | 0 |
 
-남은 34단위 중 기존 기준선은 28단위/20,444줄, 재기준선 추가분은 6단위/432줄이다(메모 머리 태그 `[rebaseline-port]`·`[rebaseline-adapt]` 기준). 재기준선 분류·영역별 상세는 [E801 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261118-through-wb04-e801)과 `python -X utf8 tools/port_inventory.py --families wb`에서 확인한다.
+남은 32단위 중 기존 기준선은 26단위/20,203줄, 재기준선 추가분은 6단위/432줄이다(메모 머리 태그 `[rebaseline-port]`·`[rebaseline-adapt]` 기준). 재기준선 분류·영역별 상세는 [E801 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261118-through-wb04-e801)과 `python -X utf8 tools/port_inventory.py --families wb`에서 확인한다.
 
 ### 0.4 기준선과 자료
 
@@ -330,12 +330,11 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 
 완료한 체크: **파괴·주문 효과**(E1199, DetonateInput 원본 관측 768행·RawObjectConversion 128+36행), **의식**(E1180, 보상 선택 UI는 비미션 전용이라 웹 범위 밖), **AI 잔여·전투 이탈**(E1198, AiTypeRequiredEnergy 실제 Session 연결·RawBattleLeave 부품 이식). [의식 판정](docs/webpj-ritual-reward-scope-20261122.md)
 
-#### 8 미션 수명·안내·대본·소리·채팅·도움말 (2/9)
+#### 8 미션 수명·안내·대본·소리·채팅·도움말 (3/9)
 
 - [ ] **대본·대화창** — DialogScript·DialogBodyLayout, 현재 미션의 안내·채팅·대화 소비자. 대본 82개의 스크립트 명령을 모두 대조해 `ViewSpot`(Run For It 시작 카메라)·`Salvage`(회수 경고 창)·`CheatAllTechnology`(Fury War)를 연결했고 나머지 미연결 명령은 개발·멀티플레이·플랫폼 전용이다([E1190 점검](docs/webpj-script-commands-audit-20261122.md)). Tutorial1~6과 캠페인·데모·훈련 미션 한국어 대본(E1056·E1062·E1108~E1116)과 Tell 그림(E1063)은 연결했다.
 - [ ] **소리 본체** — Sound·SoundDevice·ClientAudio를 Web Audio로 적응한다. E957~E966에서 효과음 공개 자산·선별 적재·원본 위치 음향·SoundPlayer·감쇠 파일 선택·Web Audio 장치·사전 해독·앱 설정/Session 재생·재생 수를, E968에서 최초 Fort 요청의 음향 자동 준비를, E997에서 경로 발소리를 연결했다. E1239에서 Sound On 끄기의 음악 무음·켤 때 현재 곡 재시작과 천둥 효과음의 SoundPlayer 경로를 원본과 맞췄다. 실제 청취를 확인한다(Wind Noise 는 E1153 분석으로 원본 기본 설치에서 무동작임을 확정해 값 저장만 유지한다).
 - [ ] **음악** — 완료: 공개 자산(E957)·선별 적재(E959), 장면 음악 선택·기한·날씨(E1059, 독립 3,113행 대조), 승리·패배 음악 1회 재생(E1061), 미션 State7·프레임·떠나기의 장면 음악(원소 곡 무작위 순환·다음 곡 미리 받기·해독 버퍼 놓기, 미션 중 메뉴 곡이 계속 나던 결함 수정, E1119), 희생 의식의 `sacrifice.mus` 요청(`services.requestMusic`, E1120). E1238에서 승리·패배 곡의 요청 연결을 단독 미션 도달 불가(원본도 틀지 않음)로 닫았다([판정](docs/webpj-result-music-scope-20261123.md)). 남음: 대기실 곡, 원소 팔레트(번개 섬광은 E1163에서 원본 창 모드와 같은 무동작으로 판정), 게임 난수 공유, 실제 청취 판정(사용자 확인 범위). [장면 음악 구동기](docs/webpj-scene-music-driver-20261120.md) · [장면 음악](docs/webpj-scene-music-20261120.md) · [결과 음악](docs/webpj-result-music-playback-20261120.md)
-- [ ] **도움말·Tell** — 남은 행: QuickHelpHtml·QuickHelpRequest(메인 메뉴 Help의 TYPE 정보, [다음 작업 1](#next) ②). 닫은 행: QuickHelpWindow·TellFileMenus(E1197, [근거](docs/webpj-help-tell-leftovers-20261122.md)), ExternalHelpClient(E1181), HtmlLinkText(E1212), QuickHelpControl(E1237), HtmlConditionEffect·HelpLinkPolicy(대응표 port), RawNsInfoContext는 NSInfo 범위 밖 제외(E1182). E1046·E1048~E1055에서 생산 메뉴 Help·TYPE 정보 본문·요구 에너지 그림·도움말 그림을, E1229에서 링크 이동·Back의 TYPE 조회를, E1236에서 HUD 우클릭 빠른 도움말을 연결했다.
 - [ ] **글자·설정·그림** — 남은 행: BitmapFont(1322 글꼴 변경 영향과 한국어 큰 슬롯 규칙, [다음 작업 1](#next) ⑤). KoreanResources·ClientOptionsDisk·GifImage는 대응표 port이고 GifScreenshot(Shift-F7 화면 저장)은 E1100에서 브라우저 내려받기로 완료했다. [화면 저장](docs/webpj-screenshot-gif-20261120.md)
 - [ ] **적응 fixture** — 3.8절의 오디오·글꼴·렌더러·음악 관측을 판정한다.
 - [ ] **M4** — 일반 31 + 데모 3경로의 진입·진행·저장과 한국어 미션 문구를 확인한다. 자연 완주는 1절의 사용자 확인 범위다.
@@ -343,7 +342,7 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
   - 남음: 실제 자연 승패에 따른 진행 저장·자연 완주, 한국어 전체 확인.
   - 근거: [모든 미션 시작](docs/webpj-all-missions-start-20261120.md) · [장시간 진행](docs/webpj-mission-services-long-run-20261120.md) · [데모 재시작](docs/webpj-demo-restart-20261120.md) · [시계 정지 누수](docs/webpj-mission-leave-pause-20261121.md) · [Gump 정리](docs/webpj-gump-cleanup-frame-20261121.md) · [몽키·미니맵](docs/webpj-monkey-minimap-20261121.md) · [승패 흐름](docs/webpj-mission-outcome-flow-20261121.md) · [Priest Training](docs/webpj-priest-training-missions-20261121.md)
 
-완료한 체크: **동영상**(E1202 사용자 결정, CD 전용 인트로 영상을 웹 빌드에서 제외하고 다섯 단위를 이식 대상에서 뺌, [결정 기록](docs/webpj-intro-movie-decision-20261122.md)), **미션 수명**(튜토리얼 완료·정지·Retry/Next/Abort·메뉴 복귀·진행 저장·데모 반복, E1085~E1161; 자연 승패 뒤 저장→새로고침→해제는 L5 사용자 확인, [승패 흐름](docs/webpj-mission-outcome-flow-20261121.md)).
+완료한 체크: **도움말·Tell**(QuickHelpWindow·TellFileMenus E1197, ExternalHelpClient E1181, HtmlLinkText E1212, QuickHelpControl E1237, QuickHelpHtml·QuickHelpRequest E1240까지 해당 대응표 행이 모두 port, HtmlConditionEffect·HelpLinkPolicy 대응표 port, RawNsInfoContext 는 NSInfo 범위 밖 제외 E1182; 생산 메뉴 Help·TYPE 정보 본문·요구 에너지 그림·도움말 그림 E1046·E1048~E1055, 링크 이동·Back 의 TYPE 조회 E1229, HUD 우클릭 빠른 도움말 E1236, 월드 없는 메인 메뉴 Help 의 TYPE 정보 E1240; [근거](docs/webpj-main-menu-help-type-20261123.md) · [E1197](docs/webpj-help-tell-leftovers-20261122.md)), **동영상**(E1202 사용자 결정, CD 전용 인트로 영상을 웹 빌드에서 제외하고 다섯 단위를 이식 대상에서 뺌, [결정 기록](docs/webpj-intro-movie-decision-20261122.md)), **미션 수명**(튜토리얼 완료·정지·Retry/Next/Abort·메뉴 복귀·진행 저장·데모 반복, E1085~E1161; 자연 승패 뒤 저장→새로고침→해제는 L5 사용자 확인, [승패 흐름](docs/webpj-mission-outcome-flow-20261121.md)).
 
 ### 3.2 실행 순서와 남은 마일스톤
 

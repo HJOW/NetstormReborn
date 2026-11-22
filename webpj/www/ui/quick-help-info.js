@@ -1,6 +1,8 @@
 // 전용 도움말의 실제 요구 에너지 그림과 TYPE 정보 HTML을 만든다.
 import { formatPlayerMenuText } from '../core/raw-player-menu.js';
+import { bindAiTypeRequiredEnergy } from '../core/raw-type-required-energy.js';
 import { cameraFtolLow } from '../render/camera-view.js';
+import { typeNumber, typeString } from '../assets/type-table.js';
 
 // 원본 00540ad8 ASCII 문자 순서이며 점은 구분자로 소비한다.
 const MANA_LETTERS = 'wrtsWRTS.?>';
@@ -68,4 +70,24 @@ export function createQuickHelpPicture(game, type) {
     const metrics = game.shapes.squidMetrics(block, frameNumber);
     return { type, frameNumber, frame, image: frame.special ? null : game.shapes.decode(block, frameNumber),
         hotspotX: Math.fround(metrics.hotspotX - view.hotspotX), hotspotY: Math.fround(metrics.hotspotY - view.hotspotY) };
+}
+
+// 미션 월드가 없을 때(메인 메뉴 Help) 전용 도움말의 TYPE 정보를 게임 자산의 장기 TYPE 표에서 읽는다(원본 QuickHelpHtml.cpp ReadAssetQuickHelpType).
+// 월드가 있으면 Session.helpTypeInfo 가 같은 항목을 현재 표에서 읽는다. 자산 TYPE(70~185)만 range·damage(hpPerSec)·class 를 정의에서 읽고 float32 로 저장하며 그 밖은 0·빈 문자열이다.
+// 인자: game(게임 자산: typeTable.definitions 116개·types()), types(현재 TYPE 188칸 레코드 배열), type(번호). 반환: { theme, flags1, flags2, cost, range, damage, classification, mana }.
+// 범위 밖 번호나 23바이트를 넘는 class 는 원본처럼 조용히 넘기지 않고 RangeError 로 알린다. (2026-11-23 WB04-E1240: 월드 없는 Help 의 TYPE 정보)
+export function readAssetQuickHelpType(game, types, type) {
+    if (!game?.typeTable || !Array.isArray(types) || !Number.isInteger(type) || type < 0 || type >= types.length) throw new RangeError('월드 설치 전 Help TYPE 범위');
+    const record = types[type];
+    const result = { theme: record.theme, flags1: record.flags1, flags2: record.flags2, cost: record.cost, range: 0, damage: 0, classification: '',
+        mana: bindAiTypeRequiredEnergy(game.typeTable.definitions, types)(type) };
+    // 자산 TYPE 은 번호 70 부터 정의 순서대로다(원본 kFirstAssetTypeNumber).
+    if (type >= 70 && type - 70 < game.types().length) {
+        const definition = game.types()[type - 70].definition;
+        result.range = Math.fround(typeNumber(definition, 'range') ?? 0); result.damage = Math.fround(typeNumber(definition, 'hpPerSec') ?? 0);
+        const classification = typeString(definition, 'class');
+        if (classification !== null) result.classification = classification.split('\0', 1)[0];
+        if (result.classification.length > 23) throw new RangeError('월드 설치 전 Help class 23바이트 초과');
+    }
+    return result;
 }

@@ -137,7 +137,8 @@ import { refreshWindowTitle } from './core/window-title.js';
 import { decodeWindows1252, encodeWindows1252 } from './assets/text-encoding.js';
 import { displayTextCodec } from './assets/display-text.js';
 import { PLAYER_IDENTITY_RECORD_SIZE, RawPlayerIdentity } from './core/raw-player-identity.js';
-import { buildQuickHelpInfoHtml, createQuickHelpPicture } from './ui/quick-help-info.js';
+import { buildQuickHelpInfoHtml, createQuickHelpPicture, readAssetQuickHelpType } from './ui/quick-help-info.js';
+import { currentRiftTypeNumber, readRiftHitPoints } from './core/squid-factory.js';
 import { CampaignSessionAssets } from './core/raw-campaign-session-owners.js';
 import { PriestPlacementAssets } from './core/priest-placement-assets.js';
 import { RawSurfaceStorage } from './core/raw-surface-storage.js';
@@ -2818,22 +2819,41 @@ export class Netstorm {
         const text = this._helpStrings?.get(pointer); if (text === undefined) throw new Error('도움말 문자열 토큰 없음'); return text;
     }
 
-    // 현재 미션 월드의 TYPE 하나에 대한 도움말 정보 패널 생성기와 그림이다(F1 생산 정보와 링크 이동이 같이 쓴다). 월드가 없으면 호출하지 않는다. (2026-11-22 WB04-E1229)
+    // 도움말 TYPE 정보의 출처 묶음 { types, info(type), hitPoints(type) }이다(원본 UberGump help.type·help.hitPoints: world_ 가 있으면 Session 의 현재 표, 없으면 ReadAssetQuickHelpType 과 장기 TYPE 표·현재 약화/특별 번호).
+    // 월드가 없는 메인 메뉴 Help 는 장기 표면 저장소의 TYPE 표(월드 설치 전 값)를 읽으며, 필요한 장기 소유자가 없으면 null 이다. (2026-11-23 WB04-E1240)
+    _helpTypeSource() {
+        const world = this._campaignWorld;
+        if (world) return { types: world.session().core().types, info: (type) => world.session().helpTypeInfo(type), hitPoints: (type) => world.session().hitPoints().typeHitPoints(type) };
+        const storage = this._surfaceStorage, gameplay = this._clientGameplay, game = this._gameAssets;
+        if (!storage || !gameplay || !game) return null;
+        const types = storage.types, aux = gameplay.gameAux();
+        return { types, info: (type) => readAssetQuickHelpType(game, types, type),
+            // 원본 MakeCurrentTypeHitPoints: 현재 표에서 선택 레코드를 읽고 진단·1/4 HP 가 켜진 경우만 같은 표 기준 번호를 쓴다.
+            hitPoints: (type) => {
+                if (!Number.isInteger(type) || type < 0 || type >= types.length) throw new RangeError('현재 TYPE HP 번호 범위');
+                const record = types[type];
+                return readRiftHitPoints(record, { checking: () => gameplay.aiDebug().checking().value, quarter: () => aux.priestQuarterHp, priest: () => aux.priestType, dais: () => aux.daisType },
+                    { number: () => currentRiftTypeNumber(record, types, types), assertion: (expression, file, line) => storage.assertDisplay(expression, file, line) });
+            } };
+    }
+
+    // 현재 TYPE 하나에 대한 도움말 정보 패널 생성기와 그림이다(F1 생산 정보·링크 이동·메인 메뉴 Help 가 같이 쓴다). 출처는 _helpTypeSource 가 월드 유무로 고른다. 출처가 없으면 던진다. (2026-11-22 WB04-E1229, 2026-11-23 WB04-E1240: 월드 없는 출처)
     _helpTypeDisplay(type) {
-        const world = this._campaignWorld, types = world.session().core().types;
-        const information = () => buildQuickHelpInfoHtml({ type: () => world.session().helpTypeInfo(type),
-            description: () => this._resources.translate(types[type].description), hitPoints: () => world.session().hitPoints().typeHitPoints(type),
+        const source = this._helpTypeSource(); if (!source) throw new Error('도움말 TYPE 정보의 실제 출처 미연결');
+        const types = source.types;
+        const information = () => buildQuickHelpInfoHtml({ type: () => source.info(type),
+            description: () => this._resources.translate(types[type].description), hitPoints: () => source.hitPoints(type),
             translate: (text) => this._resources.translate(text), substitute: (text) => this._gameData.substitute(text), config: (key) => this._gameData.get(key) ?? '' });
         return { information, picture: createQuickHelpPicture(this._gameAssets, type) };
     }
 
     // 도움말 주제 이름으로 TYPE 정보를 찾는다(원본 QuickHelpRequest::Open(0, 주제)): 끝의 `type`·`help` 를 차례로 떼고 `%s`·`sun%s`·`wind%s` 이름을 TYPE 표에서 대소문자 없이 찾아, 찾으면(번호 1 이상) 정보 패널·그림을 만든다.
-    // 찾지 못하면(원본은 TYPE 0) 정보 없이 본문만 보인다. 미션 월드가 없으면(메인 메뉴 도움말) 월드 밖 TYPE 읽기(ReadAssetQuickHelpType)가 아직 없어 null 이다. 어떤 주제에서도 던지지 않는다. (2026-11-22 WB04-E1229)
+    // 찾지 못하면(원본은 TYPE 0) 정보 없이 본문만 보인다. 미션 월드가 없는 메인 메뉴 도움말도 장기 TYPE 표와 ReadAssetQuickHelpType 으로 같은 정보를 만든다. 어떤 주제에서도 던지지 않는다. (2026-11-22 WB04-E1229, 2026-11-23 WB04-E1240)
     _resolveHelpType(topic) {
-        const world = this._campaignWorld; if (!world || !this._resources || !this._gameData || !this._gameAssets) return null;
+        const source = this._helpTypeSource(); if (!source || !this._resources || !this._gameData || !this._gameAssets) return null;
         let stem = String(topic ?? '').split('\0', 1)[0]; if (!stem || stem.length >= 80) return null;
         for (const suffix of ['type', 'help']) if (stem.length >= suffix.length && stem.slice(-suffix.length).toLowerCase() === suffix) stem = stem.slice(0, -suffix.length);
-        const types = world.session().core().types, nameOf = (record) => String(record.name ?? '').split('\0', 1)[0].toLowerCase();
+        const types = source.types, nameOf = (record) => String(record.name ?? '').split('\0', 1)[0].toLowerCase();
         let found = -1;
         for (const pattern of [stem, `sun${stem}`, `wind${stem}`]) { found = types.findIndex((record) => nameOf(record) === pattern.toLowerCase()); if (found >= 0) break; }
         if (found < 1 || found >= 256 || found >= types.length) return null;
