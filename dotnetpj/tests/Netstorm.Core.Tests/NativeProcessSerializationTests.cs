@@ -130,6 +130,29 @@ public sealed class NativeProcessSerializationTests
         Assert.Equal((uint)parent, BinaryPrimitives.ReadUInt32LittleEndian(packet.AsSpan(9))); Assert.Equal(0xa5, packet[21]); Assert.Equal(1, sends);
     }
 
+    /// <summary>Gun flags0의 최초 writer와 부착 뒤 통지 순서/현재 헤더/전체 FormPacket을 같은 실제 Host에서 확인한다.</summary>
+    [Fact]
+    public void AttachedGunUsesCurrentNativeHeaderAndWriterBeforeAttachedNotice()
+    {
+        int sends = 0; var storage = Storage(_ => sends++); storage.Types[128].Group = 1;
+        int parent = storage.Pool.Allocate(SidAllocation.Server); storage.Pool.RawSlot(parent).Clear(); storage.Pool.RawSlot(parent)[10] = 128;
+        var kernel = new Kernel(16); storage.Processes().BindDevices(kernel, new FrameTimeBox()); SquidProcessHost host = storage.Processes().Host();
+        var state = new GunProcessState { Boss = false, Now = 10, SharedWindArcherType = storage.GameAux().WindArcherTypeBox, SharedThunderCannonType = storage.GameAux().ThunderCannonTypeBox, SharedRainCannonType = storage.GameAux().RainCannonTypeBox };
+        var logic = new RawGunProcess(storage.Pool, storage.Types, state, new());
+        GunProcess process = Assert.IsType<GunProcess>(RawGunProcess.CreateGunProcess(host, logic, (ushort)parent, storage.GameAux().GunProcessTypeBox.Value));
+        Assert.Equal(1, sends); Assert.Equal(0, process.Fields.Dirty()); Assert.Equal(0u, process.Fields.Stage()); Assert.Equal(process.Form(), process.Fields.Form()); Assert.Equal(parent, process.Fields.Parent());
+        byte[] buffer = storage.GameAux().SquidTransmission.Buffer; Assert.Equal(31, BinaryPrimitives.ReadUInt16LittleEndian(buffer.AsSpan(2))); Assert.Equal(0x3a, buffer[1]); Assert.Equal(0xff, buffer[8]);
+        kernel.RunFrame(); Assert.Equal(1u, process.Fields.Stage());
+        BinaryPrimitives.WriteUInt32LittleEndian(process.Fields.Bytes.AsSpan(28), 3); process.Fields.Bytes[8] = 8; host.RefreshForm(process);
+        Assert.Equal(2, sends); Assert.Equal(3u, process.Fields.Stage()); Assert.Equal(13, BinaryPrimitives.ReadUInt16LittleEndian(buffer.AsSpan(2))); Assert.Equal(3u, BinaryPrimitives.ReadUInt32LittleEndian(buffer.AsSpan(9)));
+        byte[] header = storage.GameAux().GunProcessHeader; header[0] = 0x73; header[1] = 0x81; storage.GameAux().WindArcherTypeBox.Value = 141; storage.GameAux().GunProcessTypeBox.Value = 44; storage.GameAux().ResetForGeneralWorld();
+        Assert.Same(header, storage.GameAux().GunProcessHeader); Assert.Equal(141u, state.ReadWindArcherType()); Assert.Equal(44u, storage.GameAux().GunProcessTypeBox.Value);
+        byte[] target = Enumerable.Repeat((byte)0xa5, 2048).ToArray(); Assert.Equal(31, host.WriteFormPacket(process.Form(), 1, target, storage.GameAux().SquidTransmission));
+        Assert.Equal(0x81, target[0]); Assert.Equal(0x73, target[1]); Assert.Equal((uint)process.Form(), BinaryPrimitives.ReadUInt32LittleEndian(target.AsSpan(4))); Assert.Equal((uint)parent, BinaryPrimitives.ReadUInt32LittleEndian(target.AsSpan(9)));
+        Assert.Equal(0xa5, target[31]); Assert.Equal(3u, process.Fields.Stage()); Assert.Equal(2, sends); Assert.Same(process, host.FromForm(process.Form())); Assert.Same(process, kernel.Get(kernel.Find(process)));
+        kernel.DrainOwnedForShutdown();
+    }
+
     /// <summary>실제 건설 부착/현재 헤더/일반 준비 보존과 같은 Host 전체 FormPacket을 새 codec에 연결한다.</summary>
     [Fact]
     public void AttachedConstructionUsesCurrentHeaderAndSameNativeFormPacket()

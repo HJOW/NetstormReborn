@@ -587,4 +587,9 @@
   <ItemGroup>
     <None Include="../../../cpppj/tests/fixtures/minimap-cell-x86.tsv" Link="X86/minimap-cell-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- Gun의 두 PE2996관측과 PATCH 진단904관측을 읽기 전용으로 소비한다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/gunprocess-x86.tsv" Link="X86/gunprocess-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/gun-notify-checking-x86.tsv" Link="X86/gun-notify-checking-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

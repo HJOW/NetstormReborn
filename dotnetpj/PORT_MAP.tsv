@@ -1655,3 +1655,14 @@ cpppj/src/o/RawConstructionData.cpp	Netstorm.Core/Original/RawConstructionData.c
 cpppj/src/o/RawConstructionData.h	Netstorm.Core/Original/RawConstructionData.cs	0b8defee49a6b171708e0995ff1a2ee0652006f7	port
 cpppj/src/o/RawPacketDispatch.cpp	Netstorm.Net/RawConstructionDataRegistration.cs	0b8defee49a6b171708e0995ff1a2ee0652006f7	port
 cpppj/src/o/RawPacketDispatch.h	Netstorm.Net/RawConstructionDataRegistration.cs	0b8defee49a6b171708e0995ff1a2ee0652006f7	port
+cpppj/src/o/RawGunProcess.cpp	Netstorm.Core/Original/RawGunProcess.cs	99504d5692008f7ef220dba7433b25444461d442	port
+cpppj/src/o/RawGunProcess.h	Netstorm.Core/Original/RawGunProcess.cs	99504d5692008f7ef220dba7433b25444461d442	port
+cpppj/src/o/RawGunProcess.cpp	Netstorm.Core/Original/RawGunProcess.Fields.cs	99504d5692008f7ef220dba7433b25444461d442	port
+cpppj/src/o/RawGunProcess.h	Netstorm.Core/Original/RawGunProcess.Fields.cs	99504d5692008f7ef220dba7433b25444461d442	port
+cpppj/src/o/RawGunProcess.cpp	Netstorm.Core/Original/RawGunProcess.State.cs	99504d5692008f7ef220dba7433b25444461d442	port
+cpppj/src/o/RawGunProcess.h	Netstorm.Core/Original/RawGunProcess.State.cs	99504d5692008f7ef220dba7433b25444461d442	port
+cpppj/src/o/RawGunProcess.cpp	Netstorm.Core/Original/RawGunProcess.Data.cs	99504d5692008f7ef220dba7433b25444461d442	port
+cpppj/src/o/RawGunProcess.h	Netstorm.Core/Original/RawGunProcess.Data.cs	99504d5692008f7ef220dba7433b25444461d442	port
+cpppj/src/o/RawGunProcess.cpp	Netstorm.Core/Original/GunProcess.cs	99504d5692008f7ef220dba7433b25444461d442	port
+cpppj/src/o/RawGunProcess.h	Netstorm.Core/Original/GunProcess.cs	99504d5692008f7ef220dba7433b25444461d442	port
+cpppj/src/o/RawGameAuxState.h	Netstorm.Core/Original/RawGameAuxState.Gun.cs	99504d5692008f7ef220dba7433b25444461d442	port
