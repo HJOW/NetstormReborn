@@ -2855,6 +2855,8 @@ export class Netstorm {
             screen: { width: this._mainMenu.width, height: this._mainMenu.height },
             now: () => this._frameSeconds,
             resolveType: (name) => this._resolveHelpType(name),
+            // 첫 주제에서 Back 으로 닫으면 직전 팝업 명령(F6 지식 창 등)을 같은 문자열 토큰 인자로 다시 큐에 올린다(원본 QuickHelpControl: popup.command/Argument). (2026-11-22 WB04-E1237)
+            onBackToPopup: () => { const popup = this._clientHelpPopup; if (!popup?.command || !this._clientInputQueue) return; const token = this._clientChatWindows.store(String.fromCharCode(...popup.argumentBytes())); this._clientInputQueue.pushCommand(popup.command, token, token); },
             onClose: () => {
                 if (this._mainMenu?.dialog === result.window) this._mainMenu.setDialog(null);
                 this._displayDirty = true;

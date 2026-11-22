@@ -689,3 +689,12 @@ test('도움말 창: 링크 이동·Back 은 주제 이름으로 TYPE 정보 패
     window.resolveType = null; window.open('F1Help'); assert.equal(window.informationFactory, null); assert.equal(window.picture, null);
 });
 
+// 도움말 첫 주제의 Back(원본 QuickHelpControl.cpp:89~92): 방문 기록의 마지막 주제를 지우면 창을 닫은 뒤 직전 팝업 복귀 장치를 한 번 부른다. 이전 주제로 돌아가는 Back 은 부르지 않는다. (2026-11-22 WB04-E1237)
+test('도움말 창: 첫 주제의 Back 은 닫은 뒤 직전 팝업 복귀 장치를 한 번만 부른다', () => {
+    const { window, events } = newHelp(); let returned = 0; window.onBackToPopup = () => { returned += 1; assert.equal(window.closed, true); };
+    window.open('campaignHelp'); window.back(); assert.equal(window.topic, 'F1Help'); assert.equal(returned, 0); assert.equal(events.closed, 0);
+    window.back(); assert.equal(returned, 1); assert.equal(events.closed, 1); assert.equal(window.closed, true);
+    // 이미 닫힌 창(기록 없음)의 Back 은 닫기만 하고 복귀 장치를 부르지 않는다.
+    window.back(); assert.equal(returned, 1);
+});
+

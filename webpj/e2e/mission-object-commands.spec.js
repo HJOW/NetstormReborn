@@ -225,3 +225,19 @@ test('The War Begins!: HUD 우클릭 도움말 팝업이 열리고 Help 항목�
   await expect.poll(() => page.evaluate(() => window.netstorm._clientGump.blockingPopups()), { timeout: 5000, message: '실제 우클릭 도움말 팝업' }).toBe(true);
   expect(errors).toEqual([]);
 });
+
+// 도움말 첫 주제의 Back 은 닫은 뒤 직전 팝업(F6 지식 창) 명령을 다시 큐에 올려 지식 창이 다시 열린다(원본 QuickHelpControl). (2026-11-22 WB04-E1237)
+test('The War Begins!: 도움말 첫 주제의 Back 은 직전 팝업인 지식 창을 다시 연다', async ({ page }) => {
+  test.setTimeout(300000);
+  const errors = []; await startWarBegins(page, errors);
+  await page.keyboard.press('F6');
+  await expect.poll(() => page.evaluate(() => window.netstorm._campaignProduction.ui.knowledge().isOpen()), { timeout: 5000, message: 'F6 지식 창' }).toBe(true);
+  expect(await page.evaluate(() => window.netstorm._clientHelpPopup.command >>> 0), '지식 창이 남긴 팝업 표식').toBe(0x020000a0);
+  await page.evaluate(() => { const app = window.netstorm; app._closeCampaignPopups(); app._openHelp('F1Help'); });
+  expect(await page.evaluate(() => window.netstorm._campaignProduction.ui.knowledge().isOpen()), '도움말이 열린 동안 지식 창은 닫혀 있다').toBe(false);
+  await page.evaluate(() => window.netstorm._mainMenu.dialog.back());
+  await expect.poll(() => page.evaluate(() => window.netstorm._campaignProduction.ui.knowledge().isOpen()), { timeout: 5000, message: 'Back 뒤 지식 창 복귀' }).toBe(true);
+  expect(await page.evaluate(() => window.netstorm._mainMenu.dialog), '도움말 창은 닫힌다').toBeNull();
+  expect(errors).toEqual([]);
+});
+
