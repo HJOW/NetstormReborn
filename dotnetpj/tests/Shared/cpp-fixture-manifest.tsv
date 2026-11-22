@@ -467,3 +467,7 @@ sun-aviary-x86.tsv	e64841e232f3ea3b79eba3fba4d21656277a9b4dd05766f1ff1e77414cb6d
 rain-aviary-x86.tsv	0fbbc25c029fa02cd8b7f9c919bb499d7d92b2cc55eb85c3725d2a1b2286ea26	1603	cpppj	Core
 rain-home-notice-x86.tsv	e313b1cbd5c5105e6e28594f319f7a31d050f0784240dac44b270f01a47f5d94	36	cpppj	Core
 wind-aviary-state-x86.tsv	9de1895040c7b643dfbd30e48ec8ff0b4b8be174c43398f24d223fcb3c79a273	1895	cpppj	Core
+wind-aviary-destroy-x86.tsv	ee99ac43e1b003ca10f211554ca8f4c8a32a99ed52c31dcbdc4453ff8c68f2a5	880	cpppj	Core
+wind-aviary-frame-x86.tsv	5210995c295e336c4efc45eb9d4d40ec3be546f31ee55603fff807a0ab543bbb	1640	cpppj	Core
+wind-circle-frame-x86.tsv	213cd92056e7700bb505a3a65bdcda1895f0742c70def5e5d80e8c1f2c9561f4	288	cpppj	Core
+wind-circle-point-x86.tsv	10148eb52d02372c31c404c811279d25c1bc08c3bd2b35f017c2ca9b2fbd119c	232	cpppj	Core

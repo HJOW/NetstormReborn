@@ -41,6 +41,11 @@ public sealed partial class RawSurfaceStorage
             byte[] header = GameAux().RainAviaryHeader;
             return rainAviary.WritePacket(buffer.Span, parentChanged, force != 0, header[1], header[0]);
         }
+        if (process is WindAviaryProcess windAviary)
+        {
+            byte[] header = GameAux().WindAviaryHeader;
+            return windAviary.WritePacket(buffer.Span, parentChanged, force != 0, header[1], header[0]);
+        }
         if (process is RawPathProcess path) return SerializePathProcess(path, buffer);
         throw new InvalidOperationException("선택된 ProcessForm의 실제 파생 writer 미연결");
     }

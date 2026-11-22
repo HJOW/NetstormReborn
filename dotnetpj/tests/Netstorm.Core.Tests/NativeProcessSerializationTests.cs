@@ -222,6 +222,21 @@ public sealed class NativeProcessSerializationTests
         finally { kernel.DrainOwnedForShutdown(); }
     }
 
+    /// <summary>Wind의실제flags8 Host/Kernel/현재헤더와기존138역할·같은Native전체상태를 연결한다.</summary>
+    [Fact]
+    public void AttachedWindAviaryUsesCurrentNativeHeaderAndExistingFlyerRole()
+    {
+        int sends = 0; var storage = Storage(_ => sends++); int parent = storage.Pool.Allocate(SidAllocation.Server); storage.Pool.RawSlot(parent).Clear(); storage.Pool.RawSlot(parent)[10] = 139; var kernel = new Kernel(16); storage.Processes().BindDevices(kernel, new FrameTimeBox()); SquidProcessHost host = storage.Processes().Host();
+        var body = new RawWindAviaryProcess(storage.Pool, new(() => false, () => true, () => true, () => 0, () => 42, storage.GameAux().WindAviaryProcessTypeBox, storage.GameAux().WindFlyerTypeBox, new() { Value = 139 }), new()); var fields = new WindAviaryProcessFields(0xa5); RawWindAviaryState.Initialize(fields, true, 42); var process = new WindAviaryProcess(body, fields);
+        try
+        {
+            Assert.Same(process, host.Attach(process, storage.GameAux().WindAviaryProcessTypeBox.Value, parent, 8)); Assert.Equal(1, sends); Assert.Equal(0, process.Fields.Bytes[8]); Assert.Equal(59, storage.Pool.Slot(process.Form())[10]); byte[] common = storage.GameAux().SquidTransmission.Buffer; Assert.Equal(45, BinaryPrimitives.ReadUInt16LittleEndian(common.AsSpan(2))); Assert.Equal(0x74, common[1]); kernel.RunFrame(); Assert.Equal(2u, BinaryPrimitives.ReadUInt32LittleEndian(process.Fields.Bytes.AsSpan(24))); Assert.Equal(43, BinaryPrimitives.ReadDoubleLittleEndian(process.Fields.Bytes.AsSpan(16)));
+            byte[] header = storage.GameAux().WindAviaryHeader; header[0] = 0x73; header[1] = 0x81; storage.GameAux().WindAviaryProcessTypeBox.Value = 44; UIntBox role = storage.GameAux().WindFlyerTypeBox; role.Value = 146; storage.GameAux().ResetForGeneralWorld(); Assert.Same(header, storage.GameAux().WindAviaryHeader); Assert.Same(role, storage.GameAux().WindFlyerTypeBox); Assert.Equal(146u, role.Value); Assert.Equal(44u, storage.GameAux().WindAviaryProcessTypeBox.Value);
+            byte[] packet = Enumerable.Repeat((byte)0xa7, 2048).ToArray(); Assert.Equal(45, host.WriteFormPacket(process.Form(), 1, packet, storage.GameAux().SquidTransmission)); Assert.Equal(0x81, packet[0]); Assert.Equal(0x73, packet[1]); Assert.Equal(0xa7, packet[45]); var copy = new WindAviaryProcessFields(); Assert.Equal((uint)parent, RawWindAviaryState.ReadProcess(copy, packet)); Assert.Equal(43, BinaryPrimitives.ReadDoubleLittleEndian(copy.Bytes.AsSpan(16))); Assert.Equal(2u, BinaryPrimitives.ReadUInt32LittleEndian(copy.Bytes.AsSpan(24))); Assert.Equal(0u, BinaryPrimitives.ReadUInt32LittleEndian(copy.Bytes.AsSpan(48))); Assert.Equal(1, sends); Assert.Same(process, host.FromForm(process.Form()));
+        }
+        finally { kernel.DrainOwnedForShutdown(); }
+    }
+
     /// <summary>실제 건설 부착/현재 헤더/일반 준비 보존과 같은 Host 전체 FormPacket을 새 codec에 연결한다.</summary>
     [Fact]
     public void AttachedConstructionUsesCurrentHeaderAndSameNativeFormPacket()

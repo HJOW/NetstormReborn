@@ -1715,3 +1715,12 @@ cpppj/src/client/NativeGameplayPacketReceivers.cpp	Netstorm.Client/NativeGamepla
 cpppj/src/client/NativeGameplayPacketReceivers.h	Netstorm.Client/NativeGameplayPacketReceivers.RainAviary.cs	1f9e94a4b10c21fa18d8798978756e3caefd1845	port
 cpppj/src/o/RawWindAviaryState.cpp	Netstorm.Core/Original/RawWindAviaryState.cs	a71bd7453aec8929a4c9b8420eb386262fdb32c3	port
 cpppj/src/o/RawWindAviaryState.h	Netstorm.Core/Original/RawWindAviaryState.cs	a71bd7453aec8929a4c9b8420eb386262fdb32c3	port
+cpppj/src/o/RawWindAviaryProcess.cpp	Netstorm.Core/Original/RawWindAviaryProcess.cs	4a1d8f40d0d0158e9eb85568c4645e6a990b0777	port
+cpppj/src/o/RawWindAviaryProcess.cpp	Netstorm.Core/Original/RawWindAviaryProcess.Frame.cs	4a1d8f40d0d0158e9eb85568c4645e6a990b0777	port
+cpppj/src/o/RawWindAviaryProcess.cpp	Netstorm.Core/Original/WindAviaryProcess.cs	4a1d8f40d0d0158e9eb85568c4645e6a990b0777	port
+cpppj/src/o/RawWindAviaryProcess.h	Netstorm.Core/Original/RawWindAviaryProcess.cs	4a1d8f40d0d0158e9eb85568c4645e6a990b0777	port
+cpppj/src/o/RawWindAviaryProcess.h	Netstorm.Core/Original/RawWindAviaryProcess.Frame.cs	4a1d8f40d0d0158e9eb85568c4645e6a990b0777	port
+cpppj/src/o/RawWindAviaryProcess.h	Netstorm.Core/Original/WindAviaryProcess.cs	4a1d8f40d0d0158e9eb85568c4645e6a990b0777	port
+cpppj/src/o/RawWindCircle.cpp	Netstorm.Core/Original/RawWindCircle.cs	4a1d8f40d0d0158e9eb85568c4645e6a990b0777	port
+cpppj/src/o/RawWindCircle.h	Netstorm.Core/Original/RawWindCircle.cs	4a1d8f40d0d0158e9eb85568c4645e6a990b0777	port
+cpppj/src/o/RawGameAuxState.h	Netstorm.Core/Original/RawGameAuxState.WindAviary.cs	4a1d8f40d0d0158e9eb85568c4645e6a990b0777	port
