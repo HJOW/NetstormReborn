@@ -1704,7 +1704,7 @@ export class Netstorm {
             translate: (text) => self._resources.translate(text), encodeDisplayText: (text) => displayTextCodec.encode(text), decodeDisplayText: (bytes) => displayTextCodec.decode(bytes),
             writeDiagnosticLog: (level, text) => console.info(`Netstorm: ${String(text).trim()}`), nsInfoGlobals: () => self._clientNsInfo,
             worldAudio: () => ({ sounds: () => ({ playByName: (name) => self._clientSoundPlayer.play(self._clientSoundNames.lookup(name), 0, 0, 0, 0, 0) }) }),
-            requestThunderFlash: (brightness) => { console.info(`Netstorm: 채팅 .flash(${brightness}) 번개 섬광은 아직 연결하지 않았습니다.`); },
+            requestThunderFlash: (brightness) => { console.info(`Netstorm: 채팅 .flash(${brightness}) 번개 섬광 팔레트 효과는 원본 창 모드와 같이 아무것도 하지 않습니다(E1163 판정).`); },
             menu: () => ({ receiveNativePacketChat: (packet) => self._receiveCampaignChat(packet) }),
         };
     }
@@ -3217,6 +3217,8 @@ export class Netstorm {
         this._listen(canvas, 'wheel', (event) => this._onWheel(event), { passive: false });
         this._listen(canvas, 'blur', (event) => { if (event.relatedTarget !== this._clientImeElement) this._clearInput(); });
         this._listen(doc, 'visibilitychange', () => this._onVisibilityChange());
+        // 붙여넣기: 채팅 입력줄·Send X 숫자 창이 활성이면 클립보드 본문을 확정 문자로 입력줄에 넣는다. (2026-11-22 WB04-E1175)
+        this._listen(doc, 'paste', (event) => this._onPaste(event));
 
         // 비동기 크기 관찰 오류는 현재 상태와 함께 보고한 뒤 브라우저에 전달한다. (2026-11-19 WB04-E944)
         if (typeof view?.ResizeObserver === 'function') {
@@ -3426,6 +3428,16 @@ export class Netstorm {
         if (this._state !== AppState.MAIN_MENU || !dialog || typeof dialog.wheel !== 'function') return;
         event.preventDefault();
         if (dialog.wheel(event.deltaY)) this._mainMenu.dirty = true;
+    }
+
+    // 붙여넣기 사건을 활성 입력창(채팅 입력줄·Send X 숫자 창)의 확정 문자로 바꿔 입력 큐에 올린다. 한 줄 입력이므로 줄바꿈은 공백으로 바꾸고 원본 입력줄 한도(128)로 자른다. 입력창이 없으면 기본 동작에 맡긴다.
+    // 입력줄의 길이·금지 문자 규칙은 문자 입력 경로가 그대로 적용한다. (2026-11-22 WB04-E1175)
+    _onPaste(event) {
+        if (this._clientNativeInputEnabled || !(this._campaignInputDialogOpen() || this._campaignChatInputActive())) return;
+        const text = String(event.clipboardData?.getData('text/plain') ?? '').replace(/[\r\n\t]+/gu, ' ').slice(0, 128);
+        event.preventDefault(); if (!text) return;
+        const pointer = this._input.pointer;
+        try { if (!queueCommittedText(this._clientInputQueue, text, pointer.x | 0, pointer.y | 0)) throw new Error('붙여넣기 입력 큐 공간 부족'); } catch (error) { reportGameError('paste', error, { state: this._state }); }
     }
 
     // 키를 뗐을 때 눌린 키 집합에서 뺀다.

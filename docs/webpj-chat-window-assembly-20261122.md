@@ -47,3 +47,10 @@
 
 - `e2e/chat-window.spec.js` 다섯 번째 시험: `EVERYONE: team` 을 제출하면 본문만 로그 한 줄이 되고 접두 `EVERYONE:` 가 입력줄에 남는다(cpppj 문서 `cpp-chat-live-message`의 `EVERYONE: team` → `You> team`·접두 유지와 같다). `.front ~g` 는 줄을 만들지 않는 점 명령이고 이어지는 본문이 둘째 줄이 된다. 입력줄 왼쪽 `>` 도우미를 누르면 원본 Chat Helper 메뉴(`Chat Helper:` 제목, Format·Chat Effects·Chat Controls·Insert·Copy·Paste)가 Gump 팝업으로 뜨고 메뉴 밖을 누르면 닫힌다. 영향 e2e 묶음 27건 통과(앞 단위).
 - Tab 이름 완성: 후보는 채팅 기록 100행(`_clientChatRecords`)의 채널 참가자 이름이다. 동맹이 아닌 AI 만 있는 스커미시에서는 기록이 비어 Tab 이 입력을 바꾸지 않고(`Com` 유지), **동맹 AI**(`skirmishAi2Ally=1`)가 있으면 참가 때 채팅 채널(0x20)에 등록돼 `Com`+Tab 이 `Computer…` 로 완성된다. 여섯 번째 e2e 시험이 이를 고정한다(채팅 e2e 6건을 두 번 반복해 모두 통과).
+- `.flash 50`(issue 점 명령, 번개 섬광+소리)은 줄을 만들지 않고 오류 없이 처리된다. 섬광 팔레트 효과 자체는 [E1163](webpj-pause-key-unwired-modules-20261121.md) 판정대로 원본 창 모드와 같이 무동작이다(`requestThunderFlash`는 콘솔 안내만). 다섯 번째 e2e 시험에 포함했다.
+
+## 붙여넣기(E1175)
+
+- `netstorm.js`의 `_onPaste`가 문서 `paste` 사건을 받아, 채팅 입력줄이 보이거나 Send X 숫자 창이 열려 있을 때만 클립보드 본문을 가로챈다(줄바꿈·탭은 공백으로 바꾸고 128자로 자름). 본문은 IME 확정과 같은 `queueCommittedText`로 입력 큐에 올라 입력줄의 길이·금지 문자 규칙(Send X 는 숫자만)이 그대로 적용된다. 입력창이 없으면 `defaultPrevented`가 false 라 기본 동작에 맡긴다. 편집기의 `Paste`(선택 교체·`FilterDisplayText`)가 아니라 문자 입력 경로이므로 선택 영역 교체 의미는 같은 규칙(선택된 글자는 첫 문자가 대체)을 따른다.
+- 일곱 번째 e2e 시험: 숨은 동안 붙여넣기는 가로채지 않고, `Hi ` 입력 뒤 `pasted
+text` 붙여넣기는 `Hi pasted text`가 된다. 복사(Ctrl+C)는 아직 연결하지 않았다(브라우저 클립보드 쓰기 필요). 영향 e2e 25건 통과(`extracted/webpj-e1175-e2e.log`).

@@ -152,6 +152,8 @@ test('채팅: 채널 접두가 남고 서식 점 명령은 줄을 만들지 않�
   // 서식 점 명령은 줄을 만들지 않고 다음 본문부터 서식이 적용된다.
   await page.keyboard.type('.front ~g'); await page.keyboard.press('Enter'); await page.waitForTimeout(700); expect((await chat()).lines).toBe(1);
   await page.keyboard.type('green text'); await page.keyboard.press('Enter'); await page.waitForTimeout(700); expect((await chat()).lines).toBe(2);
+  // issue 점 명령 `.flash`(번개 섬광+소리)는 줄을 만들지 않고 오류 없이 처리된다(섬광은 원본 창 모드와 같은 무동작, E1163 판정).
+  await page.keyboard.type('.flash 50'); await page.keyboard.press('Enter'); await page.waitForTimeout(700); expect((await chat()).lines).toBe(2);
   // 도우미 `>` 를 누르면 Chat Helper 메뉴(Gump 팝업)가 열린다.
   const helper = await page.evaluate(() => { const app = window.netstorm, b = app._campaignProduction.ui.chat().report().helper.bounds, rect = app.canvas.getBoundingClientRect(); return { x: rect.left + (b.left + b.right) / 2 * rect.width / app._layout.logicalWidth, y: rect.top + (b.top + b.bottom) / 2 * rect.height / app._layout.logicalHeight }; });
   expect((await chat()).popup).toBe(false);
@@ -176,5 +178,25 @@ test('채팅: 동맹 AI 이름이 Tab 으로 완성된다', async ({ page }) => 
   const input = () => page.evaluate(() => window.netstorm._campaignProduction.ui.chat().inputText());
   await page.keyboard.press('Enter'); await page.waitForTimeout(400); await page.keyboard.type('Com'); await page.waitForTimeout(400); expect(await input()).toBe('Com');
   await page.keyboard.press('Tab'); await page.waitForTimeout(500); expect(await input()).toMatch(/^Computer/u);
+  expect(errors).toEqual([]);
+});
+
+// 붙여넣기: 채팅 입력줄이 활성일 때 클립보드 본문이 확정 문자로 입력줄에 들어가고(줄바꿈은 공백), 입력줄이 없으면 기본 동작에 맡긴다. (2026-11-22 WB04-E1175)
+test('채팅: 입력줄에 붙여넣기가 들어간다', async ({ page }) => {
+  test.setTimeout(300000);
+  const errors = []; page.on('pageerror', (error) => errors.push(error.stack ?? error.message)); page.on('console', (message) => { if (['error', 'warning'].includes(message.type()) && !/willReadFrequently/u.test(message.text())) errors.push(message.text()); });
+  await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0, autoDemo: 0, skirmishAiCount: 3, skirmishAi2Ally: 0, skirmishAi3Ally: 0, skirmishAi4Ally: 0 } })));
+  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/?aspect=4:3&lang=en');
+  await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 60000 }); await page.locator('canvas').click();
+  await page.waitForFunction(() => window.netstorm?.state === 'mainMenu', null, { timeout: 60000 });
+  await clickLabel(page, 'Campaign'); await clickLabel(page, 'Skirmish'); await clickLabel(page, 'Start');
+  await page.waitForFunction(() => window.netstorm?._campaignDisplayActive() && window.netstorm._clientGuide.current()?.runtime.gate.started === 1, null, { timeout: 120000 });
+  await clickLabel(page, 'Go!'); await page.waitForTimeout(2000); await page.locator('canvas').focus();
+  const input = () => page.evaluate(() => window.netstorm._campaignProduction.ui.chat().inputText());
+  const paste = (text) => page.evaluate((value) => { const data = new DataTransfer(); data.setData('text/plain', value); const event = new ClipboardEvent('paste', { clipboardData: data, bubbles: true, cancelable: true }); document.dispatchEvent(event); return event.defaultPrevented; }, text);
+  // 입력줄이 숨어 있으면 붙여넣기를 가로채지 않는다(기본 동작에 맡김).
+  expect(await paste('ignored')).toBe(false);
+  await page.keyboard.press('Enter'); await page.waitForTimeout(400); await page.keyboard.type('Hi '); await page.waitForTimeout(300);
+  expect(await paste('pasted\r\ntext')).toBe(true); await page.waitForTimeout(500); expect(await input()).toBe('Hi pasted text');
   expect(errors).toEqual([]);
 });
