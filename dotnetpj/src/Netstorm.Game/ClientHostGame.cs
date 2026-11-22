@@ -360,6 +360,7 @@ public sealed partial class ClientHostGame : Game
         // 기존 일반 World의 fresh 입력만 준비한다. Native prepared 대여/반납은 장기 선택을 유지한다.
         _gameplay.Selection.ResetForGeneralWorld();
         _gameplay.ResetCursorForGeneralWorld();
+        _gameplay.ResetProductionFinderForGeneralWorld();
         // 같은Client의장기Surface를빌린다. 미션시작마다Pool/권한/바람/프로세스시각을다시만들지않는다.
         RawSurfaceStorage storage = _surfaceGlobals.Storage;
         // 기존 일반 미션의 새 Host 기본값은 이 명시 부모가 준비한다. prepared 대여와 Host 생성자는 현재 상태를 보존한다.

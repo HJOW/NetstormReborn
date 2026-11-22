@@ -1,5 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <!-- 현재 owner 색표의 설정/초기 등록 원문2066관측이다. -->
+    <None Include="../../../cpppj/tests/fixtures/banner-option-x86.tsv" Link="X86/banner-option-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <!-- 생산 정보/현재 단축키/내용물 동기화/장기 유지의 독립 원문 관측이다. -->
     <None Include="../../../cpppj/tests/fixtures/inventory-about-x86.tsv" Link="X86/inventory-about-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/inventory-about-class-x86.tsv" Link="X86/inventory-about-class-x86.tsv" CopyToOutputDirectory="PreserveNewest" />

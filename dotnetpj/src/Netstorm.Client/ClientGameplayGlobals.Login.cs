@@ -16,6 +16,7 @@ public sealed partial class ClientGameplayGlobals
         PlayerRecords.BindCoreData(CoreData);
         // Session 이전부터 같은 현재 checking DWORD를 커서가 직접 빌린다.
         CursorGlobals.Lifecycle.Checking = new(() => AiDebug.Checking.Value);
+        BindProductionFinder();
         CursorGlobals.Placement.SharedScreenOrigin = Camera.Snapshot.Pixels;
     }
 

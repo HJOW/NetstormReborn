@@ -70,13 +70,13 @@ public sealed partial class HostSession
         get
         {
             if (_worldProductionFinder is not null) return _worldProductionFinder;
-            var finder = _aiFinderState ?? new ContainedFinderState();
-            finder.SharedBoss = () => Gameplay.Authority.Boss; finder.SharedContainedType = () => Gameplay.ContentFormTypeBox.Value;
-            finder.CheckingDead = new(() => AiChecking.Read());
-            finder.Assertion = (text, file, line) => throw new InvalidOperationException($"내용물 조회 원본 진단: {text} {file}:{line}");
+            var finder = Gameplay.ProductionFinder;
+            finder.Assertion ??= static (text, file, line) => throw new InvalidOperationException($"내용물 조회 원본 진단: {text} {file}:{line}");
             _worldProductionFinder = finder; return finder;
         }
     }
+    /// <summary>초기 UI와 AI/생산이 같은 실제 장기 검색 전역을 빌린다.</summary>
+    public ContainedFinderState ProductionFinder => SessionContainedFinder;
     /// <summary>계산/생성/삭제를 복제하지 않고 기존 실제 Player·공장·SP·현재 장부/역할에 연결한다.</summary>
     public RawCampaignProductionBindings BuildProductionWorldDevices(CampaignProductionDevices devices)
     {
