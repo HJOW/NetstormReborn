@@ -1709,3 +1709,7 @@ cpppj/src/o/RawRainAviaryProcess.h	Netstorm.Core/Original/RawRainAviaryProcess.c
 cpppj/src/o/RawRainAviaryProcess.h	Netstorm.Core/Original/RawRainAviaryProcess.Data.cs	3bcb87b79f7f3ddc04486bb7ab417ba489974b1c	port
 cpppj/src/o/RawRainAviaryProcess.h	Netstorm.Core/Original/RainAviaryProcess.cs	3bcb87b79f7f3ddc04486bb7ab417ba489974b1c	port
 cpppj/src/o/RawGameAuxState.h	Netstorm.Core/Original/RawGameAuxState.RainAviary.cs	3bcb87b79f7f3ddc04486bb7ab417ba489974b1c	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.RainAviaryPackets.cs	1f9e94a4b10c21fa18d8798978756e3caefd1845	port
+cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.RainAviaryPackets.cs	1f9e94a4b10c21fa18d8798978756e3caefd1845	port
+cpppj/src/client/NativeGameplayPacketReceivers.cpp	Netstorm.Client/NativeGameplayPacketReceivers.RainAviary.cs	1f9e94a4b10c21fa18d8798978756e3caefd1845	port
+cpppj/src/client/NativeGameplayPacketReceivers.h	Netstorm.Client/NativeGameplayPacketReceivers.RainAviary.cs	1f9e94a4b10c21fa18d8798978756e3caefd1845	port

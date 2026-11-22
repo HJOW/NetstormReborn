@@ -110,8 +110,7 @@ public sealed partial class HostSession
             finally { pending?.Dispose(); }
         }
         if ((packet.Span[8] & 1) != 0) Diagnose("(*(char *)(( (char *)zacket+8) ) & 1) == 0", 0x44);
-        SunAviaryProcess? current = PlayerProcesses.FromForm(form) as SunAviaryProcess;
-        _ = RawAviaryProcessData.Read(current is null ? Span<byte>.Empty : current.Fields.Bytes, packet.Span);
+        _ = RawAviaryProcessData.Read(CurrentAviaryFields(form).Span, packet.Span);
     }
     /// <summary>Kernel/Host 반납 뒤 같은 본체/조회/전송 참조만 해제한다.</summary>
     private void ReleaseSunAviaryProcessDevices() { _sunAviaryProcess = null; _sunAviaryLookup = null; _sunAviaryPacketTransmission = null; }
