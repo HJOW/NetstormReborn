@@ -230,3 +230,15 @@ test('음량 단계 변환', () => {
     assert.ok(Math.abs(centibelsToGain(-1000) - 0.31622776601683794) < 1e-12);
     assert.equal(centibelsToGain(0), 1);
 });
+
+// 높이 800 초과(4차 와이드)에서는 원문식(H/3+55)이 버튼을 가운데 타이틀 로고 위로 올리므로 그림 기준 같은 위치(((H-480)/2+112)+55/78)를 쓴다. 800 이하는 원문 그대로이다. (2026-11-22 WB04-E1224)
+test('메인 메뉴 와이드 보정: 높이 800 초과는 타이틀 그림 기준 위치, 800 이하는 원문 H/3', () => {
+    // 1024x768 은 원문 그대로(311/334)이다. 1280x800 은 한계값이라 원문 H/3(266+55=321)이다.
+    assert.equal(layoutOf(1024, 768, true).rects.Campaign.top, 311);
+    assert.equal(layoutOf(1280, 800, true).rects.Campaign.top, 321);
+    // 1920x1080: 타이틀 위쪽 y=300 에서 167 아래(=467)이고 두 번째 줄은 +23(78-55)이다. 1600x900 은 (900-480)/2+112+55=377.
+    const wide = layoutOf(1920, 1080, true).rects; assert.equal(wide.Campaign.top, 467); assert.equal(wide.Edit.top, 490);
+    assert.equal(layoutOf(1600, 900, true).rects.Campaign.top, 377);
+    // 로고(가운데 640x480) 아래 167 관계가 1024x768 과 같다: 타이틀 위쪽은 H/2-240.
+    for (const [width, height] of [[1024, 768], [1600, 900], [1920, 1080]]) assert.equal(layoutOf(width, height, true).rects.Campaign.top - (Math.trunc(height / 2) - 240), 167);
+});

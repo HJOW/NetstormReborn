@@ -43,6 +43,8 @@ const CENTER_FACTOR = 0.5;
 const FIRST_ROW_SLOTS = 4;
 
 // 화면높이/3 에 더하는 윗줄·아랫줄 y 오프셋(0x37, 0x4e)이다. (2026-10-23 WB03-M1)
+// 와이드 보정을 적용하는 화면 높이 한계(이 값을 넘으면 와이드)이다. (2026-11-22 WB04-E1224)
+const WIDE_HEIGHT = 800;
 const FIRST_ROW_OFFSET = 0x37;
 const SECOND_ROW_OFFSET = 0x4e;
 
@@ -90,9 +92,11 @@ export function layoutMainMenuButtons(buttons, font, screenWidth, screenHeight, 
     }
     // 모든 버튼에 같은 폭을 쓴다(배율 적용 폭도 함께 갱신).
     for (const button of buttons) if (button) button.setBaseWidth(widest);
-    const third = Math.trunc(screenHeight / 3);
-    placeRow(buttons.slice(0, FIRST_ROW_SLOTS), screenWidth, third + FIRST_ROW_OFFSET);
-    placeRow(buttons.slice(FIRST_ROW_SLOTS), screenWidth, third + SECOND_ROW_OFFSET);
+    // 원문은 y = 화면높이/3 + 55(윗줄)·+78(아랫줄)이다. 높이 800 이하는 그대로이고, 4차 와이드(높이 800 초과)에서는 같은 식이 버튼을 가운데 타이틀(640×480) 로고 위로 올리므로
+    // 그림 기준 같은 위치(((높이-480)/2 + 112) + 55/78)를 쓴다(cpppj RawButtonControls::LayoutMainMenuControls 와 같은 Windows 10/11 와이드 호환 처리). (2026-11-22 WB04-E1224)
+    const baseline = screenHeight > WIDE_HEIGHT ? Math.trunc((screenHeight - 480) / 2) + 112 : Math.trunc(screenHeight / 3);
+    placeRow(buttons.slice(0, FIRST_ROW_SLOTS), screenWidth, baseline + FIRST_ROW_OFFSET);
+    placeRow(buttons.slice(FIRST_ROW_SLOTS), screenWidth, baseline + SECOND_ROW_OFFSET);
 }
 
 // 타이틀 GIF 의 화면 위치를 구한다. 원본은 float(화면폭/2) - 그림폭×0.5, float(화면높이/2) - 그림높이×0.5 를 쓰고 정수로 절삭한다.

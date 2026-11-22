@@ -19,6 +19,7 @@ cpppj 의 `client/RawSurface*.cpp`·`ClientConstruction*.cpp` 는 "Native 장기
 | E1215 | `raw-campaign-session-deletion.js` | 실제 앱 탐침에서 `'다른 실제 자산 가상 삭제 미연결'` 17종 → 거주 구역(0x50f540: 공통 Pre·목록 제거+공통 Post)·Player(0x50ee08: 이전 포인터/상태 정리 전처리)·주문 폭발 효과 열 개·0x50c9f0·0x50cc08·0x50db78(공통 Pre/Post)을 원문 분배표대로 연결. 남은 것은 멀티플레이 전용 Outpost 하나 |
 | E1215 | `raw-campaign-session-runtime.js` | 의존 통지(`dependencyNotice`)를 감시자 VT 별 원문 분류로 교체: Factory 업그레이드 그림(건물과 같은 TYPE) 같은 자산 감시자는 flags 0 으로 삭제, 비행장 홈은 홈 통지, 나머지 자산·Depend/Gump/Content Form 은 빈 반환, Process Form 만 PID 통지 |
 | E1215 | `raw-campaign-session-state.js` | 보호막 Regular 상태의 `checking` 연결(점검 모드의 Dais.cpp 0x479 진단) |
+| E1224 | `www/ui/main-menu.js` | 메인 메뉴 버튼 와이드 보정(높이 800 초과에서 baseline=(H-480)/2+112, 원문 cpppj `LayoutMainMenuControls` 와 같음) — 1600x900·1920x1080 에서 버튼이 로고 위로 올라오던 것을 고침 |
 | E1223 | `raw-campaign-session.js` | `showSacrificeMenu` 추가(원문 ShowSacrificeMenu: 미션에서는 즉시 반환, 비미션에서만 `SacrificeMenu(대상,레벨,업그레이드)` Tell) — 이전에는 단독 미션에서 사제를 제단에 보내면 '희생의 실제 메뉴 부모 미연결' 오류로 중단됐다 |
 | E1219 | `raw-region-ownership.js`·`raw-campaign-ownership.js`·`raw-campaign-asset-bindings.js` | 섬 번호 조회(PE 0046f530)가 좌표에 0041d7a0 편향 snap(0.99999 를 더해 0 쪽 절삭)을 먼저 적용함을 역어셈블로 확인하고 웹 두 getter 에 `snapRegionCoordinate` 적용(소수 좌표의 칸이 달랐다). Reward refreshSp 는 HUD 예산 글자가 매 프레임 SP 를 읽어 무해로 확인 |
 | E1218 | `raw-campaign-session-arrivals.js` | 마나 볼트 주기의 frameZero 훅을 Rift SHP 접근(frameCheck 진단 후 계속)에 연결 |
@@ -44,3 +45,12 @@ cpppj 의 `client/RawSurface*.cpp`·`ClientConstruction*.cpp` 는 "Native 장기
 - **State 정리 다섯 행**(WorldCleanup·WorldGlobals·StorageCleanup·RuntimeRetirement·UserSelectionCleanup): 코드 이식은 동등하나 앱이 `cleanupClientStateWorld` 를 부르지 않는다. 웹은 미션 이탈을 `_leaveCampaignMission`→`_releaseCampaignWorld` 의 일반 수명으로 처리하고 초기화는 다음 대여(`storage.acquire`→`#freshGeneralInputs`, gameplay `#fresh`)에서 한다. 이 부모를 앱에 연결하려면 `interpretStateOptions`·`audio.writeSongEndBits`·`killGumps`/`replaceUber`/`leaveMetamap`/`refreshSp`/`retireRuntime` 등 앱에 없는 장치가 먼저 필요하다. 이탈 시 원문만 하는 효과(ownerMode 재설정, MapRevision+1, ChatChannels.resetOccupied, 이탈 시점 선택 해제 통지, 정지 깊이 반복 해제)의 영향 확인이 남았다.
 - **UberReconnect**: 앱이 `pollClientConnectionHealth` 를 부르지 않아 하트비트가 실행되지 않는다(단독 미션 관측 가능성 미확인).
 - **BuildReplay 두 행**: 개발자 전용 재생(읽기·키·Process)이 웹에 없다.
+
+## UI 컨트롤 계열 감사 (E1224)
+
+읽기 전용 에이전트가 `RawButtonControls`·`RawProductionControls`·`RawMinimapControls`·`RawTextEntryControls`·`TextEntryGump`·`InventoryItemGump`·`RawUberRootControls`·`RawGameMenus`·`RawMenuChat.inc`·`UberHud.inc` 를 대조했다.
+
+- **닫은 행**: RawTextEntryControls·TextEntryGump·InventoryItemGump·RawGameMenus(앞 노트의 남음은 낡았음).
+- **고친 것**: 메인 메뉴 와이드 버튼 기준선.
+- **남은 차이(표시만)**: 우클릭 도움말(`SetHelpText`/`SetHelpWord`: 예산 "Storm Power Available"·생산 "Production Window"·미니맵 "Sky Overview"·채팅 "Chat Window")이 웹 전체에서 죽어 있다 — `alternateTextPointer` 를 설정하는 곳이 앱에 없고 `GumpHelp` 는 `{node}` 훅만 가진다(text/beginMenu/title/entry/attachMenu/sound 와 함께 연결해야 한다). 채팅 도우미 점멸, `ToggleMinimap`(0x02000037) 핸들러, 앱에서 도달하지 않는 모듈(storm-power-refresh·raw-menu-tree·hud-ns-info·background-gif-gump·text-clipboard), 배경 GIF(0xb0) 자식·지식 공장.
+- **견고성 메모**: UI 진단 훅은 cpppj 도 throw 라 같지만, 웹은 프레임 예외 한 번에 렌더 루프가 멈춘다(`netstorm.js` `_startFrameLoop` 가 보고 후 rethrow, 재예약은 `_onFrame` 끝에서만). 설계 결정이 필요하다.
