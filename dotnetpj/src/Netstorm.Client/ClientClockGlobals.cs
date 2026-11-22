@@ -8,6 +8,8 @@ public sealed class ClientClockGlobals
 {
     /// <summary>같은실제0055b4ac와그backing을소유하는장기전역이다.</summary>
     private readonly ClientLocalStateGlobals _local;
+    /// <summary>같은 시계 보정과 Host가 빌리는 실제 장기 로컬 상태 owner다.</summary>
+    public ClientLocalStateGlobals LocalState => _local;
     /// <summary>같은FrameTime.game필드를읽고쓰는프로세스시각주소다.</summary>
     private sealed class FrameGame(FrameTimeBox frame) : DoubleBox
     {

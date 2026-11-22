@@ -170,14 +170,18 @@ public sealed partial class ClientHostGame : Game
         _localState = new ClientLocalStateGlobals(_gameplay, _ambientSound);
         _connections = new ClientConnectionGlobals(_localState);
         _clientClock = new ClientClockGlobals(_localState);
-        _surfaceGlobals = new ClientSurfaceGlobals(_gameplay, _clientClock, _kernel, () => _clock.Milliseconds);
-        _surfaceGlobals.BindDisplayDiagnostics(ErrorLog.RecordAssertion);
-        _sidLists = _surfaceGlobals.Storage.SidLists;
-        BindStateResourceOwners();
         // cpppj ClientMain 349행의 실제 공통 SP 초기화와 같은 위치다: 클라이언트 시작 때 1회만 reseed+초기화하고 미션 시작 때는 다시 하지 않는다(0.464, 원본 004391ed).
         // 세션 시작 흐름의 미션별 reseed는 원본에 없어 0.463에서 근본 원인으로 확정했다.
         _spGlobals = new ClientSpGlobals(_gameRandom, _spCrtBox, _spModeBox, () => _clock.UnixSeconds);
         _spGlobals.Store.Initialize();
+        // 같은 SP/Template owner를 먼저 마련한 뒤 첫 Process 전에 장기 장치를 설치한다.
+        _surfaceGlobals = new ClientSurfaceGlobals(_gameplay, _clientClock, _kernel, () => _clock.Milliseconds, installDevices: owner =>
+        {
+            owner.Storage.BindSerializationGlobals(_stateResources.Templates.SerializationGlobals);
+            owner.BindDisplayDiagnostics(ErrorLog.RecordAssertion);
+        });
+        _sidLists = _surfaceGlobals.Storage.SidLists;
+        BindStateResourceOwners();
         // 원문SP초기화정상복귀뒤서버파일을읽어잘못된목록의실패prefix도같이보존한다.
         LoadRootServerList();
         _graphics = new GraphicsDeviceManager(this);
@@ -345,6 +349,7 @@ public sealed partial class ClientHostGame : Game
     {
         if (_startup is null) throw new InvalidOperationException("미션 진입에 시작 화면 없음");
         if (_missionRuntime is not null) throw new InvalidOperationException("기존 실제 Runtime 반납 전 미션 재시작");
+        if (_surfaceGlobals.Storage.Borrowed()) throw new InvalidOperationException("장기 Surface 반납 전 일반 미션 초기화 금지");
         using var script = new MissionScript(_startup.Configuration, mission);
         HostAssetTables assets = AssetTables;
         RiftTypeTable types = assets.TypeTable;
@@ -357,6 +362,12 @@ public sealed partial class ClientHostGame : Game
         _gameplay.ResetCursorForGeneralWorld();
         // 같은Client의장기Surface를빌린다. 미션시작마다Pool/권한/바람/프로세스시각을다시만들지않는다.
         RawSurfaceStorage storage = _surfaceGlobals.Storage;
+        // 기존 일반 미션의 새 Host 기본값은 이 명시 부모가 준비한다. prepared 대여와 Host 생성자는 현재 상태를 보존한다.
+        RawGraphStorage.ResetTable(storage.Graph);
+        Array.Clear(storage.TotalMade.LocalCounts); Array.Clear(storage.TotalMade.LocalSecondaryCounts); Array.Clear(storage.TotalMade.GlobalCounts);
+        storage.PostPopState.Depth = 0; storage.PostPopState.ProductionDirty = 0; storage.PostPopState.CurrentTotalCost = 0;
+        storage.OwnerMode.Fort = false; storage.OwnerMode.Battle = true; storage.OwnerMode.Challenge = false;
+        storage.Links.Battle = true; storage.Links.Mission = true;
         // 현재개발용일반미션부모가같은장기옵션을명시Reset한다. 전체Native로그인설치시원문부모위치로인계한다.
         RawMissionBattleOptions.Reset(OriginalEdition.Patch1078, _gameplay.BattleOptions);
         // 적재 도중의 실패와 완성된 Runtime 모두 같은 실제 Surface 대여를 유지한다.
@@ -366,7 +377,7 @@ public sealed partial class ClientHostGame : Game
         HostMissionBurning? pendingBurning = null;
         try
         {
-            session = new HostSession(_kernel, _gameRandom, _crtRandom, sharedSp: _spGlobals.Store, sharedCrtBox: _spCrtBox, sharedGameplay: _gameplay, sharedLists: _sidLists, pool: storage.Pool, sharedLocal: _localState, sharedConnections: _connections, sharedPlayerRecords: _gameplay.PlayerRecords, sharedProcessTime: _clientClock.GameTime, sharedPlayerProcesses: _surfaceGlobals.Processes, sharedTemplates: _stateResources.Templates, sharedWorldFrames: assets.Frames);
+            session = new HostSession(_kernel, _gameRandom, _crtRandom, sharedSp: _spGlobals.Store, sharedCrtBox: _spCrtBox, sharedGameplay: _gameplay, sharedLists: _sidLists, pool: storage.Pool, sharedLocal: _localState, sharedConnections: _connections, sharedPlayerRecords: _gameplay.PlayerRecords, sharedProcessTime: _clientClock.GameTime, sharedPlayerProcesses: _surfaceGlobals.Processes, sharedTemplates: _stateResources.Templates, sharedWorldFrames: assets.Frames, sharedSurface: _surfaceGlobals);
             // 개발용일반미션의실제manager1을최초읽기의같은이미지/경로로설치한다. Native로그인의지연파일선택은별도부모에서연결한다.
             MissionFortSourceImage image = fort.SourceImage ?? throw new InvalidOperationException("현재미션의최초요새이미지미연결");
             session.Templates.InstallFile(1, fort.Fort, image.Image, image.FileName, types.Types.Count);

@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-22 · 사용자 요청으로 개발 재개 · 마지막 완료0.813(Player 고유 Pre360관측·현재 records owner·집중211통과·대표3시작) · 다음0.814 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6) · cpppj 제품1326 / 11.01 · 전체 목표 미완료**
+**2026-11-22 · 사용자 요청으로 개발 재개 · 마지막 완료0.814(첫 장치 설치·같은 Surface 장부/Graph/깊이·집중382통과·대표3시작) · 다음0.815 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6) · cpppj 제품1326 / 11.01 · 전체 목표 미완료**
 
 현행 인계는 이 문서가 기준이다. 단위별 근거는 `docs/dotnet-canon-0NNN-*.md`이다. 0.733~0.797의 단위별 재개 연쇄·주제별 표 행과 1.1절 R4-6 단위별 완료 문장 원문은 [0.797 정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0797)에, 0.645~0.732의 단위별 완료 문장, 0.640 회귀 점검 상세, 0.546~0.676 완료 기록 원문은 [0.732 정리 전 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0732)에 있다. 0.600~0.635는 [0.635 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635), 0.613까지의 경과와 파일 계열별 체크 목록은 [0.613 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)에 있다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
@@ -19,15 +19,17 @@
 
 ### 0.1 재개 순서와 최근 완료 요약
 
-**재개 인계(2026-11-22).** 0.813에서 빠진 Player 고유 Pre 전체와 실제 약한 records owner를 기존 장기 Storage 경계에 연결했다. REA 원본 바이트/135바이트39명령의 독립360입력은 세 전체버퍼/50바이트슬롯이 C#과 같고, 현재owner/base 교체와 부분 효과·실제 Client 기록 재할당/만료를 검증했다. 신규14(Core11/Client3) 포함 최종Core66/Client145 합계211통과·Release오류0/기존경고3이며 같은 최종빌드대표3시작 종료0/전체덤프·지표0.812동일·원본1392/실행6불변이다. 자료426/대응1532행. 일반 Root의 전체 Native 삭제/장기 상태 공유는 미완료이며 고정본문18/26·M1 0/34다. 다음0.814는 첫 장기 장치 설치 순서와 같은 상태/깊이 공급을 계속한다. 마지막 전체0.812는5777통과/65시작, 다음 정기 전체0.816. [0.813](docs/dotnet-canon-0813-20261122.md)
 
-1. **0.814 — Native 장기 장치의 설치 순서와 같은 상태/삭제 깊이 공급.** Player 고유 Pre/약한 records owner 선행은0.813 완료했다. 전체 Native Root 설치를 계속한다. 현재 ClientSurfaceGlobals 생성자는 ProcessStorage를 먼저 만들지만 BindProcessDevices 등은 그 이전 설치를 요구한다. Root의 SP 생성도 현재 Surface 뒤에 있으므로 Source ClientMain349/447~488/525의 실제 의존/설치 순서와 대조해 첫 Host 전에 장치를 공급한다. 현재 Host는 장부/Graph 일부와 typed 삭제 본체를 별도 생성하므로 Source RawSurfaceWorld.cpp69/71·153·161·192·202의 장기 참조/Native·typed 구분대로 맞춘다. prepared 상태를 새값으로 덮거나 다른 삭제 깊이를 혼용하지 않는다. 기존83VT 실제 분배/고유 파생·UI선택·AI·음향·송수신·복귀 진단과 Runtimepin을 잇고 미설치 선택을 일반 Pre/Post/no-op으로 통과시키지 않는다. 새 Player 선행과 기존 Residence/Dude를 중복 구현하지 않으며 Dais의 현재 records owner 등 잔여를 확인한다. 상세 재개는extracted/dotnet-0813/next-0814.md와0.812/next-0813.md다.
+
+**재개 인계(2026-11-22).** 0.814에서 첫 Process 전에 장기 장치를 설치하는 명시 경계와 실제 Root의 SP/Template/진단 설치 순서를 이었다. Host는 같은 Surface 장부·TotalMade·Graph 물리/실행기·목록·모드·로딩 깊이·Frame.game/LocalState를 빌리고 준비 상태를 초기화하지 않는다. Native만 같은 BaseDestroy 깊이를 쓰며 typed는 기존 구분을 유지한다. 신규13 포함 Core170/Client212 합계382통과·Release오류0, 같은 최종빌드대표3시작 종료0/전체덤프·34지표0.812동일·원본1392/실행6불변이다. 자료426/대응1534행. 일반 Root의 전체 Native 전송/삭제 장치 조립은 아직 미완료다. 고정본문18/26·M1 0/34, 마지막 전체0.812는5777통과/65시작이며 다음 정기 전체0.816이다. 다음0.815는 실제 Native 장치와 누락된 현재 AI 지갑/통지·선택 재검사 하위를 계속 잇는다. [0.814](docs/dotnet-canon-0814-20261122.md)
+
+1. **0.815 — 같은 장기 Surface에서 전체 Native Root 장치를 실제 조립.** 첫 장치 설치 순서와 같은 장부/Graph/모드/로딩·삭제 깊이 선행은0.814 완료했다. ClientSurfaceGlobals.installDevices는 첫 Process 생성 전이며 실제 Root는 같은 SP를 먼저 초기화하고 같은 Template 깊이/진단을 설치한다. HostSession.sharedSurface는 같은 실제 상태/Graph 실행기를 빌리고 Native만 Storage.BaseDestroy를 쓴다. 일반 Root는 Native 전송을 아직 설치하지 않았으므로 전체 Native 활성화 완료로 판단하지 않는다. Source ClientMain447~488/525·536의 실제 PostPop/Transmission/Process/Resource/Reward/Deletion/PlayerRecords·표시·음향/AI 장치를 이 경계에 공급한다. Source RawAiWallet의 실제 현재 Player+b0/같은 AI 본체+2d8 지갑 어댑터와 Host의 AI 통지·선택 재검사 등 누락 하위를 먼저 확인한다. 기존83VT 실제 분배/고유 파생·Runtimepin을 잇고 미설치를 일반 Pre/Post/no-op으로 통과시키지 않는다. Player 고유 Pre/약한 records owner는0.813 완료했고 Residence/Dude도 중복하지 않는다. Dais의 실제 현재 records owner 등 잔여를 확인한다. prepared 상태를 새값으로 덮거나 BindWorldDeletion의 동일 깊이 검사를 완화하지 않는다. 상세 재개는extracted/dotnet-0814/next-0815.md다.
 
 2. **NativeGameplay 26F 고정 수신 나머지.** 현재 API `BindSquidPacketDevices`·`ReceiveFixedGameplayPacket`에 2c/7a/4a/4b/6a/7e/33/34/70/30/2d/2e/65/53/62/5b/31/35의18개 entry가 실제 본체로 연결됐다([0.790](docs/dotnet-canon-0790-20261121.md)·0.791·[0.801](docs/dotnet-canon-0801-20261122.md)·[0.806](docs/dotnet-canon-0806-20261122.md)). 나머지8고정 본문(38/39/3a/3b/3c/73/74/86)과 전체26F 설치/Bind 검증, Root의 실제 언어/이름/ScreenSize/FormPacket/수신 장치 공급, 같은 Host의 파생 수신/변경/전체 가상 삭제를 현재 Runtime·저장소 전송 관문과 함께 잇는다. Dude 전용PostPop·사제 보호막/낙하 음향 등 기존 큰 경계도 실제 설치해야 한다. 검토한26행·본문·누락 하위 모듈과 기존 독립Path writer 자료는extracted/dotnet-0788/next-0789.md에 있다. 순수observer나 구Mission세션·일반삭제Pre/Post로 결선을 대신하지 않는다.
 3. **R4-6 나머지와 R4 마감.** 위 둘 다음은 [1.1절 R4-6 남음](#r4-detail)의 전송·수신, Root 장치·UI, 표시·입력, 시작·수명 묶음을 잇고 R4-2~R4-5의 일치 대조, R4-7·R4-8(M1)로 넘어간다. 이어서 R5~R11과 후순위 요구사항(3절)을 진행한다. 다음 정기 전체 회귀는0.816이다.
-4. **사용자 검사 범위(2026-11-22).** 캠페인1-1~1-5·스커미시에 한해 아군 AI 활성화로 포획/희생·특정 적 공격·시나리오 승리를 재현할 수 있다. 그 밖의 스테이지 해당 검사는 사용자 수동 확인으로 남긴다. 단순 진입/대기/생산/건설 검사는 진행한다. DN 자동 플레이의 실제 연결은 아직 없다. 원본1,392파일은0.813 대표3시작 전후와0.812 전체 장부 대조에서 불변이다. 마지막 전체65시작은0.812다.
+4. **사용자 검사 범위(2026-11-22).** 캠페인1-1~1-5·스커미시에 한해 아군 AI 활성화로 포획/희생·특정 적 공격·시나리오 승리를 재현할 수 있다. 그 밖의 스테이지 해당 검사는 사용자 수동 확인으로 남긴다. 단순 진입/대기/생산/건설 검사는 진행한다. DN 자동 플레이의 실제 연결은 아직 없다. 원본1,392파일은0.814 대표3시작 전후와0.812 전체 장부 대조에서 불변이다. 마지막 전체65시작은0.812다.
 
-**최근 완료 요약(0.639~0.813).** 단위별 완료 문장과 집중 검사 수는 보관본과 각 단위 문서에 있다. 완료 범위와 남은 일의 기준은 1.1·1.2절 체크 항목이다.
+**최근 완료 요약(0.639~0.814).** 단위별 완료 문장과 집중 검사 수는 보관본과 각 단위 문서에 있다. 완료 범위와 남은 일의 기준은 1.1·1.2절 체크 항목이다.
 
 | 주제 | 단위 | 핵심 | 남은 일 |
 | --- | --- | --- | --- |
@@ -39,7 +41,7 @@
 | 로그인·전송·Client 전역 | 0.689~0.691·0.693~0.695·0.697~0.699·0.701~0.703·0.705·0.707·0.715 | 패킷·연결표·Poll·로그인/재접속·옵션·상태 전이·Clock과 장기 Client 전역 | R4-6 |
 | Runtime·Player 장기 수명 | 0.706·0.709~0.711·0.713·0.714·0.717~0.719 | 실제 Runtime 대여/반납, 장기 Player·Core·옵션 전역, 현재 Runtime pin | R4-6 |
 | Client 프레임·장기 Host | 0.721~0.723·0.725~0.727 | Clock/Frame 공유, 프레임 실행 순서, 장기 Surface·Host Runtime | R4-6 |
-| Native State 정리·저장소·반납 | 0.729~0.731·0.733~0.735·0.813 | State 정리 부모(원문294행), 실제 전역·저장소·장기SID, 실제 자식 증빙/Runtime 반납·제품 Surface 대여, MetaZone 본체/실제Client표·Runtime삭제경계와 Player 고유Pre/현재 records owner(독립360관측) | R4-6(전체 가상 삭제 분배) |
+| Native State 정리·저장소·반납 | 0.729~0.731·0.733~0.735·0.813~0.814 | State 정리 부모(원문294행), 실제 전역·저장소·장기SID, 실제 자식 증빙/Runtime 반납·제품 Surface 대여, MetaZone 본체/실제Client표·Runtime삭제경계와 Player 고유Pre/현재 records owner(독립360관측), 첫 장치 설치/동일Surface 장부·Graph·로딩·Native삭제깊이 공유 | R4-6(전체 가상 삭제 분배) |
 | Root 자원·장기 자산표·선택 | 0.737~0.739·0.741~0.743·0.745~0.747 | NSInfo/서버 목록·장면 음악·Template/State 공유·State 효과분배/Root경계·첫메뉴 자산표·선택/강조/실제Clear/Root커서 | 나머지 기본 장치와 월드 표시 설치, R4-6 |
 | 커서·카메라·Renderer·Host 표시 | 0.749~0.751·0.753~0.755 | 커서 고정 데이터·수명·위치와 현재 checking 공유, 카메라 16DWORD·실제 snapshot, Renderer 장면/캐시/dirty·Native submit·288원문 출력, Renderer 공개·Camera 초기화·구름 token·현재 Surface·Root 실제 Cancel | Native Frame/Root UI/지도 provider, 전체 커서 효과/입력, CameraCommit/Present |
 | Chat 계열 | 0.757~0.759·0.761~0.763·0.765~0.767·0.769~0.771·0.773~0.775·0.777 | 실제 Subscriber·Chat 4800BYTE, manager·명령표·Chat 시작, 점 명령 분배, 제출·수신자·형식/제출 부모, Identity·일반 메시지/패킷, ChatWindow 상태·기하·전체 부모·공장/가상 분배, 공통 UI 소유권, 스타일 그림 출력, 중계·고정 등록, 장기 Client41h 수신 바인딩 | NativeRoot/HUD 창 생성·Enter, 공통 41h 전송 설치, 제출/송신 부모, Chat 명령 효과 |

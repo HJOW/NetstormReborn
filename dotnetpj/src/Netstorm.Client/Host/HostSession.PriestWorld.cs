@@ -91,7 +91,6 @@ public sealed partial class HostSession
     public void SetWorldLoadingDepth(uint depth)
     {
         _worldLoadingDepth = depth;
-        _islandLoadingDepth.Value = depth;
         if (_vortexAssetState is not null)
         {
             _vortexAssetState.LoadingDepth = depth;

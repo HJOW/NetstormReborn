@@ -77,15 +77,15 @@ public sealed partial class HostSession
     /// 2026-11-12 0.464에서 호스트 시작 1회 초기화를 잇려고 공유 저장소 빌림을 추가했다(원본 004391ed, cpppj ClientMain 349행).</remarks>
     public RawSpStore Sp { get; }
 
-    /// <summary>세션이 소유한 Graph 표다. 세션 설치(생성자)의 ResetTable로 초기 상태를 둔다.</summary>
+    /// <summary>같은 장기 Graph 표를 빌린다. 독립 조합만 새 표를 만들고 ResetTable로 초기화한다.</summary>
     /// <remarks>2026-11-12 0.476에서 생성자 초기화를 잇었다(근거 cpppj RawSurfaceStorage.Acquire의 Graph ResetTable). 적재 경로의 Rebuild는 무효 번호 수집만 하며 번호 부여는 Pop 그래프 연결(R6)에서 잇는다.</remarks>
-    public RawGraphStorage Graph { get; } = new();
+    public RawGraphStorage Graph { get; }
 
-    /// <summary>세션이 소유한 TotalMade 세 표다.</summary>
-    public RawTotalMadeStorage TotalMade { get; } = new();
+    /// <summary>같은 장기 TotalMade 세 표를 빌린다. 독립 조합만 새 표를 만든다.</summary>
+    public RawTotalMadeStorage TotalMade { get; }
 
     /// <summary>공통 PostPop과 덤프가 공유하는 총 비용이다.</summary>
-    public int TotalCost { get => TerrainBookkeeping.TotalCost; set => TerrainBookkeeping.TotalCost = value; }
+    public int TotalCost { get => TerrainBookkeeping.CurrentTotalCost; set => TerrainBookkeeping.CurrentTotalCost = value; }
 
     /// <summary>공통 PostPop과 덤프가 공유하는 중첩 깊이다.</summary>
     public uint PostPopDepth { get => TerrainBookkeeping.Depth; set => TerrainBookkeeping.Depth = value; }
@@ -123,14 +123,18 @@ public sealed partial class HostSession
     /// <param name="adoptInitializedPlayers">앞선실제Native부모가완료한같은Player를재초기화없이인계받는다.</param>
     /// <param name="sharedPlayerProcesses">같은Client의Kernel/Frame에결합된장기Host저장소다. 독립조합만세션전용Host를만든다.</param>
     /// <param name="sharedTemplates">같은Client의실제manager9개와헤더를빌린다. 독립호출만Session수명의소유자를만든다.</param>
+    /// <param name="sharedSurface">장기 Client의 실제 저장소다. 준비 상태와 장부·Graph·모드·깊이를 초기화 없이 빌리며 같은 Template/Kernel/Pool/목록/Host만 허용한다.</param>
     /// <param name="sharedWorldFrames">첫 메뉴 전에 준비한 동일 물리 프레임 배열이다. 빌린 표는 세션에서 다시 채우지 않는다.</param>
-    public HostSession(Kernel kernel, GameRandom game, CrtRandom crt, int poolCapacity = 0, RawSpStore? sharedSp = null, UIntBox? sharedCrtBox = null, ClientGameplayGlobals? sharedGameplay = null, RawStateSidLists? sharedLists = null, RawSidPool? pool = null, ClientLocalStateGlobals? sharedLocal = null, ClientConnectionGlobals? sharedConnections = null, ClientPlayerRecords? sharedPlayerRecords = null, bool adoptInitializedPlayers = false, DoubleBox? sharedProcessTime = null, RawProcessHostStorage? sharedPlayerProcesses = null, CampaignTemplateStorage? sharedTemplates = null, RiftTypeFrames[]? sharedWorldFrames = null)
+    public HostSession(Kernel kernel, GameRandom game, CrtRandom crt, int poolCapacity = 0, RawSpStore? sharedSp = null, UIntBox? sharedCrtBox = null, ClientGameplayGlobals? sharedGameplay = null, RawStateSidLists? sharedLists = null, RawSidPool? pool = null, ClientLocalStateGlobals? sharedLocal = null, ClientConnectionGlobals? sharedConnections = null, ClientPlayerRecords? sharedPlayerRecords = null, bool adoptInitializedPlayers = false, DoubleBox? sharedProcessTime = null, RawProcessHostStorage? sharedPlayerProcesses = null, CampaignTemplateStorage? sharedTemplates = null, RiftTypeFrames[]? sharedWorldFrames = null, ClientSurfaceGlobals? sharedSurface = null)
     {
         ArgumentNullException.ThrowIfNull(kernel);
         ArgumentNullException.ThrowIfNull(game);
         ArgumentNullException.ThrowIfNull(crt);
         if (sharedWorldFrames is not null && (sharedWorldFrames.Length != WorldFrameCount || sharedWorldFrames.Any(frame => frame is null)))
             throw new ArgumentException("동일188슬롯의실제프레임표필요", nameof(sharedWorldFrames));
+        ValidateSharedSurface(sharedSurface, kernel, sharedGameplay, sharedLists, pool, sharedPlayerProcesses, sharedTemplates, sharedProcessTime, sharedLocal, sharedConnections);
+        _surfaceStorage = sharedSurface?.Storage;
+        sharedPlayerProcesses ??= sharedSurface?.Processes;
         _borrowedWorldFrames = sharedWorldFrames is not null;
         WorldFrames = sharedWorldFrames ?? WorldFrameTables.Create([]);
         Templates = sharedTemplates ?? new CampaignTemplateStorage();
@@ -140,20 +144,21 @@ public sealed partial class HostSession
         Kernel = kernel;
         Game = game;
         Crt = crt;
-        ProcessTime = sharedProcessTime ?? new DoubleBox();
-        Gameplay = sharedGameplay ?? sharedLocal?.Gameplay ?? sharedConnections?.LocalState.Gameplay ?? new ClientGameplayGlobals();
+        ProcessTime = sharedProcessTime ?? sharedSurface?.Clock.GameTime ?? new DoubleBox();
+        Gameplay = sharedGameplay ?? sharedLocal?.Gameplay ?? sharedConnections?.LocalState.Gameplay ?? sharedSurface?.Gameplay ?? new ClientGameplayGlobals();
+        if (sharedSurface is not null && !ReferenceEquals(sharedSurface.Gameplay, Gameplay)) throw new ArgumentException("실제 Surface와 세션 Gameplay 소유자 불일치", nameof(sharedSurface));
         HandleBuffer = Gameplay.Subscribers?.Handle ?? new byte[64];
         // 비소유 진단 뷰는 짧은 Session 전체 대신 같은 장기 진단 소유자만 보유한다.
         ClientAiDebugGlobals checkingOwner = Gameplay.AiDebug;
         AiChecking.Bind(() => checkingOwner.Checking.Value);
-        LocalState = sharedLocal ?? sharedConnections?.LocalState ?? new ClientLocalStateGlobals(Gameplay, new AmbientSoundState());
+        LocalState = sharedLocal ?? sharedConnections?.LocalState ?? sharedSurface?.Clock.LocalState ?? new ClientLocalStateGlobals(Gameplay, new AmbientSoundState());
         if (!ReferenceEquals(LocalState.Gameplay, Gameplay)) throw new ArgumentException("미션의 실제 Gameplay/LocalState 소유자 불일치", nameof(sharedLocal));
         Connections = sharedConnections ?? new ClientConnectionGlobals(LocalState);
         if (!ReferenceEquals(Connections.LocalState, LocalState)) throw new ArgumentException("미션의 실제 LocalState/Registry 소유자 불일치", nameof(sharedConnections));
         // 기존 독립 조합 호출만 새전역에미션기본옵션을준비한다. 빌린제품전역은명시미션부모가Reset한다.
-        if (sharedGameplay is null && sharedLocal is null && sharedConnections is null)
+        if (sharedGameplay is null && sharedLocal is null && sharedConnections is null && sharedSurface is null)
             RawMissionBattleOptions.Reset(OriginalEdition.Patch1078, BattleOptions);
-        Pool = pool ?? new RawSidPool(poolCapacity <= 0 ? MissionPoolCapacity : poolCapacity, true, () => Gameplay.Authority.Server);
+        Pool = pool ?? _surfaceStorage?.Pool ?? new RawSidPool(poolCapacity <= 0 ? MissionPoolCapacity : poolCapacity, true, () => Gameplay.Authority.Server);
         if (pool is not null)
         {
             // 빌린 풀은 미션 덤프와 같은 크기·판본이어야 한다. poolCapacity는 빌린 풀이 있을 때 쓰지 않는다.
@@ -167,6 +172,10 @@ public sealed partial class HostSession
                 throw new ArgumentException("개발 호스트가 빌리는 외부 풀의 크기 오류", nameof(pool));
             }
         }
+        Graph = _surfaceStorage?.Graph ?? new RawGraphStorage();
+        TotalMade = _surfaceStorage?.TotalMade ?? new RawTotalMadeStorage();
+        OwnerMode = _surfaceStorage?.OwnerMode ?? new SquidOwnerMode { Battle = true };
+        BridgeState = _surfaceStorage?.Links ?? new BridgeConnectState { BridgeType = 82, IslandType = 94, StalagType = 95, ConnectorType = 155, NoIslandType = 157, Battle = true, Mission = true };
         AcquirePlayerRecordViews(sharedPlayerRecords, adoptInitializedPlayers);
         try
         {
@@ -184,18 +193,21 @@ public sealed partial class HostSession
                 });
             Sp = sharedSp ?? new RawSpStore(Game, () => _spReseed is not null ? _spReseed() : throw new InvalidOperationException("SP 재시드 미연결"));
             TerrainCrt = sharedCrtBox ?? new();
-            TerrainBookkeeping = new RawPostPopState(TotalMade);
+            TerrainBookkeeping = _surfaceStorage?.PostPopState ?? new RawPostPopState(TotalMade);
             BindPlayerFactoryViews();
-            SidLists = sharedLists ?? new RawStateSidLists();
+            SidLists = sharedLists ?? _surfaceStorage?.SidLists ?? new RawStateSidLists();
             // 원문 Client의 고정 용량 목록을 공통 후처리와 생산 재계산이 복제 없이 공유한다.
-            TerrainBookkeeping.SharedFactories = SidLists.Factories;
-            TerrainBookkeeping.SharedProviders = SidLists.Providers;
+            if (_surfaceStorage is null)
+            {
+                TerrainBookkeeping.SharedFactories = SidLists.Factories;
+                TerrainBookkeeping.SharedProviders = SidLists.Providers;
+            }
             PriestState = new(GameAux.PriestTypeBox, GameAux);
             PriestState.Priests.SharedPriests = SidLists.Priests;
             PriestState.Regen.SharedPriestType = GameAux.PriestTypeBox;
             PriestState.Regen.Patch.SharedSample = Gameplay.PatchSample;
             PriestState.Regen.Patch.SharedChangedSample = Gameplay.PatchDiagnostic;
-            RawGraphStorage.ResetTable(Graph);
+            if (_surfaceStorage is null) RawGraphStorage.ResetTable(Graph);
         }
         catch
         {
@@ -765,22 +777,13 @@ public sealed partial class HostSession
     /// <summary>호스트가 한 번 만든 정적 SID 목록을 미션이 직접 빌린다.</summary>
     public RawStateSidLists SidLists { get; }
 
-    /// <summary>세션이 소유한 소유자 모드다. 미션 전투이므로 battle을 켠다.</summary>
+    /// <summary>장기 Surface의 현재 모드다. 독립 조합만 미션 전투 기본값을 만든다.</summary>
     /// <remarks>2026-11-12 0.453에서 지형 바인딩 입력 결선용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 336행 CampaignLinks(battle=true).</remarks>
-    public SquidOwnerMode OwnerMode { get; } = new() { Battle = true };
+    public SquidOwnerMode OwnerMode { get; }
 
-    /// <summary>세션이 소유한 다리·섬 연결 전역이다. 미션이므로 mission을 켜고 캠페인 연결 타입을 둔다.</summary>
+    /// <summary>장기 Surface의 현재 다리·섬 전역이다. 독립 조합만 캠페인 기본값을 만든다.</summary>
     /// <remarks>2026-11-12 0.453에서 지형 바인딩 입력 결선용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 336행 CampaignLinks.</remarks>
-    public BridgeConnectState BridgeState { get; } = new()
-    {
-        BridgeType = 82,
-        IslandType = 94,
-        StalagType = 95,
-        ConnectorType = 155,
-        NoIslandType = 157,
-        Battle = true,
-        Mission = true,
-    };
+    public BridgeConnectState BridgeState { get; }
 
     /// <summary>같은Client가장기소유하는현재87바이트전투옵션이다. 세션교체는값을초기화하지않는다.</summary>
     /// <remarks>2026-11-12 0.453에서 지형 바인딩 입력 결선용으로 추가했다. 근거: cpppj RawMissionBattleOptions(ResetMissionBattleOptions).</remarks>
@@ -895,6 +898,7 @@ public sealed partial class HostSession
     {
         ArgumentNullException.ThrowIfNull(types);
         ArgumentNullException.ThrowIfNull(shapes);
+        SelectSharedTerrainDevices(types, shapes, ref factory, ref hash, ref spots);
         if (types.Count != OriginalConstructors.TypeCount || shapes.Count != types.Count)
         {
             throw new ArgumentException("지형 Pop 타입·셰이프 목록 크기 오류", nameof(types));
@@ -1104,7 +1108,7 @@ public sealed partial class HostSession
     private IslandPostPopState? _islandPostPopState;
     /// <summary>세션 적재 깊이를 섬 후처리와 공유하는 상자다. SetWorldLoadingDepth가 값을 둔다.</summary>
     /// <remarks>0.604에서 R4-2 적재 깊이 흐름용으로 추가했다. 원본 Storage/Template 깊이 DWORD와 같은 구실이다.</remarks>
-    private readonly UIntBox _islandLoadingDepth = new();
+    private UIntBox _islandLoadingDepth => _surfaceStorage?.LoadingDepthBox ?? _localWorldLoadingDepth;
 
     /// <summary>세션 섬 후처리와 연결 순회가 공유하는 소유자 지정 몸체다. BuildIslandPostPopDevices로 연결하기 전에는 null이다.</summary>
     /// <remarks>0.603에서 R4-2 Prefix 실측 발화용으로 추가했다. 섬 후처리와 다리 연결이 같은 Owner를 공유한다.</remarks>
@@ -1363,6 +1367,7 @@ public sealed partial class HostSession
     {
         ArgumentNullException.ThrowIfNull(types);
         ArgumentNullException.ThrowIfNull(frames);
+        SelectSharedFortDevices(types, ref factory, ref building);
         if (types.Count != OriginalConstructors.TypeCount || frames.Count != types.Count)
         {
             throw new ArgumentException("요새 객체 타입·프레임 목록 크기 오류", nameof(types));
@@ -1630,6 +1635,12 @@ public sealed partial class HostSession
         {
             throw new InvalidOperationException("월드 그래프 장치는 지형 Pop 장치 뒤에 연결해야 한다");
         }
+        if (_surfaceStorage is not null)
+        {
+            if (!ReferenceEquals(types, _surfaceStorage.Types)) throw new ArgumentException("공유 Graph의 실제 TYPE 소유자 불일치", nameof(types));
+            _worldGraph = _surfaceStorage.GraphExecutor();
+            return;
+        }
         // 월드 프레임(RiftFrameCode 바이트 4개)을 그래프 엔진(FrameCode 문자·정수·플래그)으로 옮기는 반복문이다. 플래그 비트는 양쪽이 같다(fringe 0x01·hard 0x40).
         var frames = new List<IReadOnlyList<FrameCode>>(WorldFrames.Length);
         for (int index = 0; index < WorldFrames.Length; ++index)
@@ -1669,7 +1680,7 @@ public sealed partial class HostSession
         {
             _worldGraph.BindCurrentTypes(_terrainPopTypes);
         }
-        _worldGraph.BindDiagnostics(new GraphDiagnostics
+        if (_surfaceStorage is null) _worldGraph.BindDiagnostics(new GraphDiagnostics
         {
             Checking = new RawCheckingFlag(() => AiChecking.Read()),
             Assertion = (expression, file, line) => throw new InvalidOperationException($"세션 그래프 원본 진단: {expression} {file}:{line}"),
@@ -3529,6 +3540,7 @@ public sealed partial class HostSession
             throw new InvalidOperationException("월드 그래프 장치가 연결되지 않았다");
         }
         _worldGraph.Rebuild(mode);
+        if (_surfaceStorage is not null) return;
         // 엔진이 복사해 가진 표·스택을 세션 저장소로 옮기는 반복문이다. 덤프 관측(DumpGraph)이 읽는 표다.
         for (int index = 0; index < Graph.Records.Length; ++index)
         {
@@ -3553,7 +3565,7 @@ public sealed partial class HostSession
 
     /// <summary>월드 적재의 로딩 깊이 공유 값이다. Territory·Money·Meta가 함께 읽고 쓴다.</summary>
     /// <remarks>2026-11-12 0.437에서 월드 적재 드라이런용으로 추가했다. 실제 값 경로는 시작 흐름 단위에서 잇는다.</remarks>
-    private uint _worldLoadingDepth;
+    private uint _worldLoadingDepth { get => _islandLoadingDepth.Value; set => _islandLoadingDepth.Value = value; }
 
     /// <summary>세션 저장소를 공유하는 섬 런타임 부모를 만든다. 호출자가 효과 묶음을 준다.</summary>
     /// <param name="islandHooks">섬 런타임의 거주 구역·진단 효과다.</param>

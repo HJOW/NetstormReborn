@@ -91,7 +91,9 @@ public sealed partial class HostSession
         _livePostPop = inner; _livePop = pop; _liveUnpop = unpop;
         _liveFrame = new SquidFrame(Pool, types, SquidFrameBinding.MakeSquidFrameHooks(Pool, types, display, unpop, pop));
         _liveFrame.BindCurrentTypes(types);
-        var destroy = new RawSquidDestroy(Pool, unpop, types);
+        // Native만 같은 장기 pre/post 깊이를 빌리고 독립 typed 경로는 기존 지역 삭제 본체를 유지한다.
+        var destroy = _surfaceStorage is { } storage && storage.UsesNativeTransmissionDevices()
+            ? storage.BaseDestroy() : new RawSquidDestroy(Pool, unpop, types);
         Func<IDisposable>? pin = _runtimePin;
         var runtime = new ProcessHostRuntimeBindings
         {

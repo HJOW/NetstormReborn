@@ -1535,3 +1535,5 @@ cpppj/src/o/SquidFormDispatch.cpp	Netstorm.Client/Host/HostSession.StateDeletion
 cpppj/src/o/RawPlayerWorld.cpp	Netstorm.Core/Original/RawPlayerWorld.PreDestroy.cs	51e4f872962055d47727169a60383ff8639810aa	port
 cpppj/src/o/RawPlayerWorld.h	Netstorm.Core/Original/RawPlayerWorld.PreDestroy.cs	51e4f872962055d47727169a60383ff8639810aa	port
 cpppj/src/client/RawSurfaceRegistryDeletion.cpp	Netstorm.Client/ClientSurfaceGlobals.PlayerDeletion.cs	51e4f872962055d47727169a60383ff8639810aa	port
+cpppj/src/client/RawSurfaceWorld.cpp	Netstorm.Client/Host/HostSession.SurfaceStorage.cs	87db9c138453f3d81a6886d9d1ac211e25e44283	port
+cpppj/src/client/RawSurfaceWorld.h	Netstorm.Client/Host/HostSession.SurfaceStorage.cs	87db9c138453f3d81a6886d9d1ac211e25e44283	port
