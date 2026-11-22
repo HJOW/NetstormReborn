@@ -160,3 +160,33 @@ test('Netstorm 안내 창 단추: 송금·동맹 이름을 명령 번호로 입�
     assert.equal(app._queueDialogPlayerCommand({ name: 'Tell', argument: 'x' }), false); assert.equal(app._clientInputQueue.peek(), null);
     app._clientInputQueue = null; assert.equal(app._queueDialogPlayerCommand({ name: 'SendAllBucks', argument: '2' }), false);
 });
+
+// 브리핑·완료 창의 지식 단추(Review Knowledge=ShowTechnology, GetTechnology)는 미션 월드가 있을 때만 명령 번호로 큐에 올라가고 인자는 두 칸에 같게 실린다. CheatAllTechnology 는 본문 명령이라 단추 경로에서 제외한다. (2026-11-22 WB04-E1227)
+test('Netstorm 안내 창 단추: ShowTechnology·GetTechnology 는 미션 월드가 있을 때만 큐에 올린다', () => {
+    const app = new Netstorm(); app._clientInputQueue = new InputQueue(); const warnings = [], warn = console.warn;
+    try {
+        console.warn = (text) => warnings.push(text);
+        // 월드가 없으면 큐에 올리지 않고(묵은 명령이 다음 미션에서 실행되지 않게) 소비만 한다.
+        assert.equal(app._queueDialogPlayerCommand({ name: 'ShowTechnology', argument: '55' }), true); assert.equal(app._clientInputQueue.peek(), null); assert.equal(warnings.length, 1);
+        app._campaignWorld = {};
+        assert.equal(app._queueDialogPlayerCommand({ name: 'ShowTechnology', argument: '55' }), true); assert.deepEqual(app._clientInputQueue.pop(false), { code: 0x020000a0, x: 55, y: 55 });
+        assert.equal(app._queueDialogPlayerCommand({ name: 'showtechnology', argument: '55' }), true); assert.deepEqual(app._clientInputQueue.pop(false), { code: 0x020000a0, x: 55, y: 55 });
+        assert.equal(app._queueDialogPlayerCommand({ name: 'GetTechnology', argument: '76' }), true); assert.deepEqual(app._clientInputQueue.pop(false), { code: 0x0200009f, x: 76, y: 76 });
+        assert.equal(app._queueDialogPlayerCommand({ name: 'ShowTecSideMenu', argument: '0' }), true); assert.deepEqual(app._clientInputQueue.pop(false), { code: 0x02000132, x: 0, y: 0 });
+        // 철자가 틀린 이름(GetTechnolgy)과 본문 명령 CheatAllTechnology 는 단추로 올리지 않는다.
+        assert.equal(app._queueDialogPlayerCommand({ name: 'GetTechnolgy', argument: '76' }), false); assert.equal(app._queueDialogPlayerCommand({ name: 'CheatAllTechnology', argument: '1' }), false); assert.equal(app._clientInputQueue.peek(), null);
+    } finally { console.warn = warn; }
+});
+
+// 전체 Fort snapshot 의 두 읽기 장치: 현재 Guide 의 저장 토큰·이름(NUL 포함)·순번·플래그와 Client 단일 Badges 장부(28x220)이다. 없으면 기술 획득이 오류로 멈췄다. (2026-11-22 WB04-E1227)
+test('Netstorm 미션 장치: 전체 Fort snapshot 의 Mission 읽기 장치와 Badges 장부', () => {
+    const app = new Netstorm(), services = app._campaignGameplayServices();
+    assert.equal(services.fortBadges.records().length, 28 * 220); assert.equal(app._campaignGameplayServices().fortBadges, services.fortBadges);
+    // Guide 가 없으면 현재 Mission 이 없다(토큰 0).
+    assert.equal(services.fortMission.current(), 0); assert.throws(() => services.fortMission.name(), /Mission 없는/); assert.throws(() => services.fortMission.field(1, 0x58), /수명 만료/);
+    const runtime = { saveToken: 7, init: { name: 'Tutorial1' }, state: { sequence: 3, flags: 0x80000001 } }; app._clientGuide = { current: () => ({ runtime }) };
+    assert.equal(services.fortMission.current(), 7); assert.deepEqual([...services.fortMission.name()], [...Buffer.from('Tutorial1'), 0]);
+    assert.equal(services.fortMission.field(7, 0x58), 3); assert.equal(services.fortMission.field(7, 0x54), 0x80000001);
+    assert.throws(() => services.fortMission.field(8, 0x58), /수명 만료/); assert.throws(() => services.fortMission.field(7, 0x5c), RangeError); assert.throws(() => services.fortMission.assertion(), /원문 이름 진단/);
+});
+

@@ -87,3 +87,27 @@ test('The War Begins!: 사제 기도와 운반체 Drop 명령이 입력 큐에�
   expect(errors).toEqual([]);
 });
 
+// 브리핑·완료 창의 `Review Knowledge`(ShowTechnology)와 `GetTechnology` 단추가 실제로 동작한다. 원본 스크립트에 각각 313개·101개가 있는데, 웹은 이름을 "아직 구현되지 않았습니다"로 넘겨 눌러도 아무 일이 없었다. (2026-11-22 WB04-E1227)
+test('The War Begins!: 브리핑의 Review Knowledge 단추가 지식 창을 열고 GetTechnology 단추가 기술을 지급한다', async ({ page }) => {
+  test.setTimeout(300000);
+  const errors = []; const ids = await startWarBegins(page, errors);
+  // F8 브리핑 → Review Knowledge: 대화창이 닫히고 지식 창(Storm 카드)이 열린다.
+  await page.keyboard.press('F8');
+  await expect.poll(() => page.evaluate(() => window.netstorm._mainMenu.dialog?.buttons?.map((button) => button.label) ?? null), { timeout: 5000, message: 'F8 브리핑 단추' }).toEqual(['Review Knowledge', 'Play Mission']);
+  expect(await page.evaluate(() => window.netstorm._campaignProduction.ui.knowledge().isOpen()), '열기 전').toBe(false);
+  await clickLabel(page, 'Review Knowledge');
+  await expect.poll(() => page.evaluate(() => window.netstorm._campaignProduction.ui.knowledge().isOpen()), { timeout: 5000, message: 'Review Knowledge 뒤 지식 창' }).toBe(true);
+  expect(await page.evaluate(() => window.netstorm._mainMenu.dialog), '브리핑 창은 닫힌다').toBeNull();
+  // GetTechnology 단추: 아직 없는 기술 한 장을 Session 에 지급한다. 이 단추가 큐에 올리는 명령은 인자(기술 번호)를 y 에 싣는다.
+  const granted = await page.evaluate(() => {
+    const app = window.netstorm, session = app._campaignWorld.session(), types = session.core().types, parent = session.currentTechnologyParent(), finder = session.priests().carrier;
+    const type = types.findIndex((record, index) => record.group !== 10 && record.theme !== 5 && !finder.findContained(parent, 4, index, 0));
+    if (type < 0) return { type: -1 };
+    app._runDialogCommand({ name: 'GetTechnology', argument: String(type) });
+    return { type };
+  });
+  expect(granted.type, '지급할 기술 후보').toBeGreaterThanOrEqual(0);
+  await expect.poll(() => page.evaluate((type) => { const session = window.netstorm._campaignWorld.session(); return session.priests().carrier.findContained(session.currentTechnologyParent(), 4, type, 0) !== 0; }, granted.type), { timeout: 5000, message: 'GetTechnology 뒤 기술 카드' }).toBe(true);
+  expect(errors).toEqual([]);
+});
+

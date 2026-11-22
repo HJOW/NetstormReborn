@@ -86,7 +86,7 @@ import { ClientRendererFrameGlobals } from './core/client-renderer-frame-globals
 import { currentAllocationBytes } from './core/current-allocation-bytes.js';
 import { bindCampaignAiClientServices, bindCampaignClientInputServices, bindCampaignOwnershipTheme, bindCampaignProductionRefresh, captureCampaignMissionStarting, makeCampaignMissionStartEffects, runCampaignMissionStarting } from './core/campaign-client-services.js';
 import { bindCampaignUserInputServices } from './core/campaign-user-input-services.js';
-import { applyThemeTechnology } from './core/get-technology-input.js';
+import { applyThemeTechnology, dispatchGetTechnologyInput, CHEAT_ALL_TECHNOLOGY_COMMAND } from './core/get-technology-input.js';
 import { parseViewSpot } from './core/camera-home.js';
 import { CampaignUserInput } from './core/campaign-user-input.js';
 import { makeCampaignCursorClientEffects } from './core/campaign-cursor-client-effects.js';
@@ -95,7 +95,8 @@ import { PRODUCTION_BRIDGE_COMMAND, PRODUCTION_REPEAT_COMMAND } from './core/pro
 import { ProductionMaintenanceGlobals, ProductionMaintenancePanel } from './core/raw-production-maintenance.js';
 import { GameMenuActions } from './core/game-menu-actions.js';
 import { gameMenuCommandValue, gameMenuScriptCode, isGameMenuCommand, queuePlayerListKey } from './core/game-menu-commands.js';
-import { KnowledgeMenuKind } from './core/raw-knowledge-menu.js';
+import { KnowledgeMenuKind, knowledgeScriptCode } from './core/raw-knowledge-menu.js';
+import { RawFortBadgesGlobals } from './core/raw-fort-badges-globals.js';
 import { dispatchGameTimeKey, readGameTimeSeconds } from './core/game-time-display.js';
 import { idleMainMenuActivity } from './core/main-menu-activity.js';
 import { frameDue, frameRateChoices, normalizeFrameRate, parseFrameRateTarget } from './core/frame-rate-option.js';
@@ -197,9 +198,12 @@ const MISSION_F6 = 0x750000;
 const SALVAGE_COMMAND = 0x0200005d;
 // 지식 창 명령 세 개다: ShowTechnology(Storm 카드, F6), ShowTecSideMenu(Storm/World 선택), ShowTecMenu2(World 카드). (2026-11-20 WB04-E1088)
 const KNOWLEDGE_COMMANDS = new Set([0x020000a0, 0x02000132, 0x02000133]);
+// 안내·브리핑 창 단추 이름이 지식 명령(ShowTechnology·ShowTecSideMenu·ShowTecMenu2·GetTechnology)이면 그 명령 번호를, 아니면 0xffffffff 를 돌려준다. 원본 이름표(`KnowledgeScriptCode`)를 쓰되 CheatAllTechnology 는
+// 본문 명령(`<$CheatAllTechnology,원소>`, `_runScriptCommand`)이 처리하므로 단추 경로에서는 제외한다. 브리핑·미션 완료 창의 `Review Knowledge`(313개)와 `GetTechnology` 단추(101개)가 이 경로를 쓴다. (2026-11-22 WB04-E1227)
+function knowledgeButtonCode(name) { const code = knowledgeScriptCode(name); return code === CHEAT_ALL_TECHNOLOGY_COMMAND ? 0xffffffff : code; }
 // 동맹 요청 입력이 처리하는 네 명령(요청 fb·해제 fa·확인 7e·무승부 선언 db)이다. (2026-11-20 WB04-E1126)
 const ALLIANCE_INPUT_COMMANDS = new Set([0x020000fb, 0x020000fa, 0x0200007e, 0x020000db]);
-const WIRED_MENU_COMMANDS = new Set([0x020000f0, 0x02000091, 0x020000f1, 0x0200006d, 0x020000e6, 0x020000e7, 0x020000ae, 0x020000b8, 0x02000095, 0x02000017, 0x0200008c, 0x0200008d, 0x020000c5, 0x020000a0, 0x02000132, 0x02000133, 0x020000cf, 0x02000088]);
+const WIRED_MENU_COMMANDS = new Set([0x020000f0, 0x02000091, 0x020000f1, 0x0200006d, 0x020000e6, 0x020000e7, 0x020000ae, 0x020000b8, 0x02000095, 0x02000017, 0x0200008c, 0x0200008d, 0x020000c5, 0x020000a0, 0x02000132, 0x02000133, 0x020000cf, 0x02000088, 0x0200009f]);
 // Session이 Tutorial 판정용으로 입력 큐에 올리는 통지 명령이다(발사기 배치 0x030000b0·포함 0x030000b1, 기술 0x020000b5, 포획 0x020000d7, 상승 0x020000df; 전역 005429b4 등의 PE 초기값).
 // Tutorial 판정기(`tutorial.event`)가 각 명령을 받고 해당 단계가 쓰지 않으면 원본 주 루프처럼 그대로 버려진다. 큐 소비 보호 목록에 없으면 뒤의 클릭까지 막혀 모든 입력이 멈추므로 소비를 허용한다. (2026-11-20 WB04-E1083)
 const TUTORIAL_NOTICE_COMMANDS = new Set([0x030000b0, 0x030000b1, 0x020000b5, 0x020000d7, 0x020000df]);
@@ -1255,6 +1259,19 @@ export class Netstorm {
         };
         // 중복 워크샾 경고는 채널 4 의 원본 문구와 정수 좌표를 같은 진단 로그에 쓴다. 별도 경고창은 만들지 않는다.
         services.assets.factory = { ...services.assets.factory, warnDuplicate: (_sid, x, y) => { writeClientDiagnosticLog(this._clientTrace, 4, `WARNING!  Extra workshop destroyed at (${x | 0},${y | 0})\n`); } };
+        // 전체 Fort snapshot(기술 획득·의식이 부르는 snapshotBattle/Fort)의 두 읽기 장치다(원본 UberGump::FortMissionSaveEffects 와 Client 단일 Badges 장부). 이 장치가 없으면 전투 모드(미션 포함)에서 기술을 얻는 순간
+        // "현재 Mission 읽기 장치 미연결" 오류로 프레임이 멈췄다. Mission 은 현재 Guide 의 저장 토큰·이름(NUL 포함 원문 바이트)·+58 순번·+54 플래그를 읽고, 선택한 미션이 바뀌면 거부한다. (2026-11-22 WB04-E1227)
+        const guideRuntime = () => this._clientGuide?.current()?.runtime ?? null;
+        services.fortMission = {
+            current: () => guideRuntime()?.saveToken ?? 0,
+            name: () => { const runtime = guideRuntime(); if (!runtime) throw new Error('현재 Mission 없는 이름 물리 접근'); return Uint8Array.from([...Array.from(runtime.init.name, (letter) => letter.charCodeAt(0) & 0xff), 0]); },
+            field: (token, offset) => {
+                const runtime = guideRuntime(); if (!runtime || token !== runtime.saveToken) throw new Error('선택 Mission 의 저장 수명 만료');
+                if (offset === 0x58) return runtime.state.sequence >>> 0; if (offset === 0x54) return runtime.state.flags >>> 0; throw new RangeError('Mission 저장의 실제 필드 범위');
+            },
+            assertion: () => { throw new Error('Mission 저장 원문 이름 진단'); },
+        };
+        this._clientFortBadges ??= new RawFortBadgesGlobals(); services.fortBadges = this._clientFortBadges;
         // 기술 획득(제단 의식 등): 이름은 현재 TYPE 설명의 번역, 설정은 같은 Config, 그림 서식의 %d 는 정수이며 안내는 현재 Tell 이다.
         services.newTechnology = {
             name: (type) => {
@@ -1872,6 +1889,8 @@ export class Netstorm {
         const text = () => { const value = this._clientChatWindows.strings.get(event.y >>> 0); return value === undefined ? '' : String(value); };
         if (code === 0x020000cf) { this._dispatchCampaignPause(event); this._displayDirty = true; }
         else if (KNOWLEDGE_COMMANDS.has(code)) this._openCampaignKnowledge(code === 0x02000132 ? KnowledgeMenuKind.Side : code === 0x02000133 ? KnowledgeMenuKind.World : KnowledgeMenuKind.Storm);
+        // GetTechnology(0x0200009f): 브리핑·안내 창의 `$Button=이름,GetTechnology,기술번호` 가 올린 명령이다. y 의 전체 DWORD 를 기술 번호로 원본 492a30(Session.learnNewTechnology)에 넘긴다(뗌은 거부). (2026-11-22 WB04-E1227)
+        else if (code === 0x0200009f) { dispatchGetTechnologyInput(event, (type) => { const world = this._campaignWorld; if (!world) { console.warn('Netstorm: GetTechnology 는 미션 월드가 있을 때만 기술을 지급합니다.'); return; } world.session().learnNewTechnology(type); }); this._clientRenderer.invalidateAll(); this._displayDirty = true; }
         else if (code === 0x020000f1) { this._dispatchCampaignViewAction(event); this._clientRenderer.invalidateAll(); }
         else if (code === 0x020000f0) { this._campaignProduction?.ui?.gameMenu()?.openPlayerList(); this._displayDirty = true; }
         else if (code === 0x0200006d) {
@@ -2871,10 +2890,12 @@ export class Netstorm {
         else if (name !== 'donothing') console.info(`Netstorm: 대화상자 명령 '${command.name}' 은(는) 아직 구현되지 않았습니다.`, command);
     }
 
-    // 대화상자 단추 명령이 송금·동맹·회수(Salvage, 회수 경고 창의 `Salvage It` 단추, E1190) 이름이면 명령 번호로 바꿔 입력 큐에 올리고 true 를 돌려준다. 그 밖의 이름은 false 이다. (2026-11-20 WB04-E1126)
+    // 대화상자 단추 명령이 송금·동맹·회수(Salvage, 회수 경고 창의 `Salvage It` 단추, E1190)·지식(ShowTechnology·GetTechnology 등, E1227) 이름이면 명령 번호로 바꿔 입력 큐에 올리고 true 를 돌려준다. 그 밖의 이름은 false 이다. (2026-11-20 WB04-E1126)
     _queueDialogPlayerCommand(command) {
-        const name = String(command.name), code = sendMoneyScriptCode(name) !== 0xffffffff ? sendMoneyScriptCode(name) : (['requestalliance', 'breakalliance', 'confirmalliance', 'declaredraw'].includes(name.toLowerCase()) ? gameMenuScriptCode(name) : name.toLowerCase() === 'salvage' ? SALVAGE_COMMAND : 0xffffffff);
+        const name = String(command.name), code = sendMoneyScriptCode(name) !== 0xffffffff ? sendMoneyScriptCode(name) : (['requestalliance', 'breakalliance', 'confirmalliance', 'declaredraw'].includes(name.toLowerCase()) ? gameMenuScriptCode(name) : name.toLowerCase() === 'salvage' ? SALVAGE_COMMAND : knowledgeButtonCode(name));
         if (code === 0xffffffff || !this._clientInputQueue) return false;
+        // 지식 명령(ShowTechnology·GetTechnology 등)은 미션 월드가 있을 때만 큐에 올린다(원본은 월드 없이 받으면 오류). 월드가 없을 때 올리면 입력 루프가 돌지 않아 다음 미션 시작에 묵은 명령이 실행된다. (2026-11-22 WB04-E1227)
+        if (knowledgeButtonCode(name) !== 0xffffffff && !this._campaignWorld) { console.warn(`Netstorm: 대화상자 명령 '${name}' 은(는) 미션 월드가 있을 때만 실행합니다.`); return true; }
         const target = Number.parseInt(String(command.argument ?? '').trim(), 10) | 0;
         this._clientInputQueue.pushCommand(code, target, target); return true;
     }
