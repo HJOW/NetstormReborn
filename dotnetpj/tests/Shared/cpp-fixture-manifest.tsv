@@ -464,3 +464,5 @@ flyer-postpop-x86.tsv	111beec5675ad2fcd8edc4fd2fb7b5dbe2c129d8b3c796f58b68ec3a7c
 sun-flyer-postpop-x86.tsv	c7693afd860973b51efad4321894bbfddec6eb058dea041dac0e56307ca22bda	391	cpppj	Core
 sun-aviary-notice-x86.tsv	a29498cf3a5305910f1c41f516facaa0b6febb8c91739bfab6711fd1a43bd21d	128	cpppj	Core
 sun-aviary-x86.tsv	e64841e232f3ea3b79eba3fba4d21656277a9b4dd05766f1ff1e77414cb6d0db	1735	cpppj	Core
+rain-aviary-x86.tsv	0fbbc25c029fa02cd8b7f9c919bb499d7d92b2cc55eb85c3725d2a1b2286ea26	1603	cpppj	Core
+rain-home-notice-x86.tsv	e313b1cbd5c5105e6e28594f319f7a31d050f0784240dac44b270f01a47f5d94	36	cpppj	Core

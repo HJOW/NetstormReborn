@@ -1,5 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <!-- 맨 오 워 풀의 독립1602관측과 홈 통지36관측을 원문 사본 없이 공유한다. -->
+    <None Include="../../../cpppj/tests/fixtures/rain-aviary-x86.tsv" Link="X86/rain-aviary-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/rain-home-notice-x86.tsv" Link="X86/rain-home-notice-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
     <!-- 훨리베이스의 독립1734관측과 홈 통지128관측을 원문 사본 없이 공유한다. -->
     <None Include="../../../cpppj/tests/fixtures/sun-aviary-x86.tsv" Link="X86/sun-aviary-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/sun-aviary-notice-x86.tsv" Link="X86/sun-aviary-notice-x86.tsv" CopyToOutputDirectory="PreserveNewest" />

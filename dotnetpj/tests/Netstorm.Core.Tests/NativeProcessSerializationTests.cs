@@ -206,6 +206,22 @@ public sealed class NativeProcessSerializationTests
         finally { kernel.DrainOwnedForShutdown(); }
     }
 
+    /// <summary>맨 오 워 풀의 실제flags8 Host/Kernel/현재헤더와 같은Native 전체상태를 연결한다.</summary>
+    [Fact]
+    public void AttachedRainAviaryUsesCurrentNativeHeaderAndExistingFlyerRole()
+    {
+        int sends = 0; var storage = Storage(_ => sends++); int parent = storage.Pool.Allocate(SidAllocation.Server); storage.Pool.RawSlot(parent).Clear(); storage.Pool.RawSlot(parent)[10] = 143; var kernel = new Kernel(16); storage.Processes().BindDevices(kernel, new FrameTimeBox()); SquidProcessHost host = storage.Processes().Host();
+        var body = new RawRainAviaryProcess(storage.Pool, new(() => false, () => true, () => 0, () => 42, storage.GameAux().RainAviaryProcessTypeBox, storage.GameAux().RainFlyerTypeBox), new() { SetFrame = (sid, frame) => BinaryPrimitives.WriteInt32LittleEndian(storage.Pool.RawSlot(sid)[36..], frame), Sound = (_, _, name) => Assert.Equal("manOWarBuild.wav", name) });
+        var fields = new RainAviaryProcessFields(0xa5); body.Initialize(fields); var process = new RainAviaryProcess(body, fields);
+        try
+        {
+            Assert.Same(process, host.Attach(process, storage.GameAux().RainAviaryProcessTypeBox.Value, parent, 8)); Assert.Equal(1, sends); Assert.Equal(0, process.Fields.Dirty()); Assert.Equal(60, storage.Pool.Slot(process.Form())[10]); Assert.Equal(0xff, fields.Dirty()); byte[] common = storage.GameAux().SquidTransmission.Buffer; Assert.Equal(25, BinaryPrimitives.ReadUInt16LittleEndian(common.AsSpan(2))); Assert.Equal(0x73, common[1]);
+            kernel.RunFrame(); Assert.Equal(2u, process.Fields.Stage()); byte[] header = storage.GameAux().RainAviaryHeader; header[0] = 0x74; header[1] = 0x81; storage.GameAux().RainAviaryProcessTypeBox.Value = 44; UIntBox flyerRole = storage.GameAux().RainFlyerTypeBox; flyerRole.Value = 146; storage.GameAux().ResetForGeneralWorld(); Assert.Same(header, storage.GameAux().RainAviaryHeader); Assert.Same(flyerRole, storage.GameAux().RainFlyerTypeBox); Assert.Equal(146u, flyerRole.Value); Assert.Equal(44u, storage.GameAux().RainAviaryProcessTypeBox.Value);
+            byte[] packet = Enumerable.Repeat((byte)0xa7, 2048).ToArray(); Assert.Equal(25, host.WriteFormPacket(process.Form(), 1, packet, storage.GameAux().SquidTransmission)); Assert.Equal(0x81, packet[0]); Assert.Equal(0x74, packet[1]); Assert.Equal(0xa7, packet[25]); var copy = new RainAviaryProcessFields(); Assert.Equal((uint)parent, RawAviaryProcessData.Read(copy.Bytes, packet)); Assert.Equal(42, copy.Time()); Assert.Equal(2u, copy.Stage()); Assert.Equal(1, sends); Assert.Same(process, host.FromForm(process.Form()));
+        }
+        finally { kernel.DrainOwnedForShutdown(); }
+    }
+
     /// <summary>실제 건설 부착/현재 헤더/일반 준비 보존과 같은 Host 전체 FormPacket을 새 codec에 연결한다.</summary>
     [Fact]
     public void AttachedConstructionUsesCurrentHeaderAndSameNativeFormPacket()

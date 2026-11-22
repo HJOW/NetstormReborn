@@ -1702,3 +1702,10 @@ cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.SunAvia
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.SunAviaryPackets.cs	e3d3e7d92bebf8ae75d2488161cfcc934fbdaaf1	port
 cpppj/src/client/NativeGameplayPacketReceivers.cpp	Netstorm.Client/NativeGameplayPacketReceivers.SunAviary.cs	e3d3e7d92bebf8ae75d2488161cfcc934fbdaaf1	port
 cpppj/src/client/NativeGameplayPacketReceivers.h	Netstorm.Client/NativeGameplayPacketReceivers.SunAviary.cs	e3d3e7d92bebf8ae75d2488161cfcc934fbdaaf1	port
+cpppj/src/o/RawRainAviaryProcess.cpp	Netstorm.Core/Original/RawRainAviaryProcess.cs	3bcb87b79f7f3ddc04486bb7ab417ba489974b1c	port
+cpppj/src/o/RawRainAviaryProcess.cpp	Netstorm.Core/Original/RawRainAviaryProcess.Data.cs	3bcb87b79f7f3ddc04486bb7ab417ba489974b1c	port
+cpppj/src/o/RawRainAviaryProcess.cpp	Netstorm.Core/Original/RainAviaryProcess.cs	3bcb87b79f7f3ddc04486bb7ab417ba489974b1c	port
+cpppj/src/o/RawRainAviaryProcess.h	Netstorm.Core/Original/RawRainAviaryProcess.cs	3bcb87b79f7f3ddc04486bb7ab417ba489974b1c	port
+cpppj/src/o/RawRainAviaryProcess.h	Netstorm.Core/Original/RawRainAviaryProcess.Data.cs	3bcb87b79f7f3ddc04486bb7ab417ba489974b1c	port
+cpppj/src/o/RawRainAviaryProcess.h	Netstorm.Core/Original/RainAviaryProcess.cs	3bcb87b79f7f3ddc04486bb7ab417ba489974b1c	port
+cpppj/src/o/RawGameAuxState.h	Netstorm.Core/Original/RawGameAuxState.RainAviary.cs	3bcb87b79f7f3ddc04486bb7ab417ba489974b1c	port
