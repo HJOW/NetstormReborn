@@ -1522,3 +1522,6 @@ cpppj/src/o/RawShrapnelLifetime.h	Netstorm.Core/Original/RawShrapnelLifetime.cs	
 cpppj/src/o/RawShrapnelLifetime.cpp	Netstorm.Core/Original/RawShrapnelLifetime.cs	049910e263288454ffbba2fc487a141a8a5178c4	port
 cpppj/src/o/ShrapnelVisualSystem.h	Netstorm.Core/Original/ShrapnelVisualSystem.cs	049910e263288454ffbba2fc487a141a8a5178c4	port
 cpppj/src/o/ShrapnelVisualSystem.cpp	Netstorm.Core/Original/ShrapnelVisualSystem.cs	049910e263288454ffbba2fc487a141a8a5178c4	port
+cpppj/src/o/RawPlainWorkshopCapture.h	Netstorm.Core/Original/RawPlainBuildingCapture.cs	59ed435c26d274be5bc028572c4fc15b592cfd29	port
+cpppj/src/o/RawPlainWorkshopCapture.cpp	Netstorm.Core/Original/RawPlainBuildingCapture.cs	59ed435c26d274be5bc028572c4fc15b592cfd29	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Core/Original/RawPlainBuildingCapture.cs	59ed435c26d274be5bc028572c4fc15b592cfd29	port

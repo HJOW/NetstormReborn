@@ -1,4 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <!-- 섬 정리20BYTE 작성의 두 정밀도 독립336관측이다. -->
+    <None Include="../../../cpppj/tests/fixtures/drop-island-packet-x86.tsv" Link="X86/drop-island-packet-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <!-- 실제 Game의 건물 캡처를 독립 원본2577입력의 전체 픽셀과 대조한다. -->
+    <None Include="../../../cpppj/tests/fixtures/plain-workshop-capture-x86.tsv" Link="X86/plain-workshop-capture-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/support-capture-x86.tsv" Link="X86/support-capture-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/generator-capture-x86.tsv" Link="X86/generator-capture-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/blocker-capture-x86.tsv" Link="X86/blocker-capture-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
   <!-- Netstorm.Client(8비트 논리 화면·팔레트·입력 큐 등 cpppj src/client 이식분) 테스트 (xUnit v3). MonoGame 없이 헤드리스로 실행한다. 2026-10-28 R1에서 추가 -->
   <PropertyGroup>
     <!-- xUnit v3 테스트 프로젝트는 실행 파일로 빌드한다 -->

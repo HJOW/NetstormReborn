@@ -66,7 +66,7 @@ public sealed class HostMissionBurning : IDisposable
             {
                 ReadOnlySpan<byte> raw = session.Pool.Slot(sid);
                 if (factory.Handles(sid)) return factory.MainFrame(sid);
-                if (!RawPlainUnitCapture.Matches(raw)) throw new InvalidOperationException("연소 다른 파생의 실제 주그림 캡처 미연결(R5)");
+                if (!RawPlainUnitCapture.Matches(raw) && !RawPlainBuildingCapture.Matches(raw)) throw new InvalidOperationException("연소 다른 파생의 실제 주그림 캡처 미연결(R5)");
                 return definitions[raw[10] - 70].SpecialFrames.BaseFrame;
             },
             Additional = (sid, image, x, y) =>
@@ -78,8 +78,9 @@ public sealed class HostMissionBurning : IDisposable
                             px, py, new(0, 0, image.Width - 1, image.Height - 1)));
                     return;
                 }
-                if (!RawPlainUnitCapture.Matches(session.Pool.Slot(sid))) throw new InvalidOperationException("연소 다른 파생의 실제 추가그림 캡처 미연결(R5)");
-                // 이13개 VT의+a4=41c100은 원문 빈ret8이다.
+                ReadOnlySpan<byte> raw = session.Pool.Slot(sid);
+                if (!RawPlainUnitCapture.Matches(raw) && !RawPlainBuildingCapture.Matches(raw)) throw new InvalidOperationException("연소 다른 파생의 실제 추가그림 캡처 미연결(R5)");
+                // 원문이 명시한 유닛/건물의+a4=41c100은 인자를 읽지 않는 빈ret8이다.
             },
         };
         Capture = new(session.Pool, types, shapes, database, captureState);
