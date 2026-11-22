@@ -161,3 +161,20 @@ test('채팅: 채널 접두가 남고 서식 점 명령은 줄을 만들지 않�
   await page.mouse.click(600, 300); await page.waitForTimeout(600); expect((await chat()).popup).toBe(false);
   expect(errors).toEqual([]);
 });
+
+// Tab 이름 완성: 동맹 AI 는 미션 참가 때 채팅 채널 기록(100행)에 등록되므로 그 이름의 앞부분을 치고 Tab 을 누르면 이름이 완성된다. (2026-11-22 WB04-E1173)
+test('채팅: 동맹 AI 이름이 Tab 으로 완성된다', async ({ page }) => {
+  test.setTimeout(300000);
+  const errors = []; page.on('pageerror', (error) => errors.push(error.stack ?? error.message)); page.on('console', (message) => { if (['error', 'warning'].includes(message.type()) && !/willReadFrequently/u.test(message.text())) errors.push(message.text()); });
+  await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0, autoDemo: 0, skirmishAiCount: 3, skirmishAi2Ally: 1, skirmishAi3Ally: 0, skirmishAi4Ally: 0 } })));
+  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/?aspect=4:3&lang=en');
+  await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 60000 }); await page.locator('canvas').click();
+  await page.waitForFunction(() => window.netstorm?.state === 'mainMenu', null, { timeout: 60000 });
+  await clickLabel(page, 'Campaign'); await clickLabel(page, 'Skirmish'); await clickLabel(page, 'Start');
+  await page.waitForFunction(() => window.netstorm?._campaignDisplayActive() && window.netstorm._clientGuide.current()?.runtime.gate.started === 1, null, { timeout: 120000 });
+  await clickLabel(page, 'Go!'); await page.waitForTimeout(2000); await page.locator('canvas').focus();
+  const input = () => page.evaluate(() => window.netstorm._campaignProduction.ui.chat().inputText());
+  await page.keyboard.press('Enter'); await page.waitForTimeout(400); await page.keyboard.type('Com'); await page.waitForTimeout(400); expect(await input()).toBe('Com');
+  await page.keyboard.press('Tab'); await page.waitForTimeout(500); expect(await input()).toMatch(/^Computer/u);
+  expect(errors).toEqual([]);
+});

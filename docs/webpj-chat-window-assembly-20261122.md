@@ -46,4 +46,4 @@
 ## 점검(E1173)
 
 - `e2e/chat-window.spec.js` 다섯 번째 시험: `EVERYONE: team` 을 제출하면 본문만 로그 한 줄이 되고 접두 `EVERYONE:` 가 입력줄에 남는다(cpppj 문서 `cpp-chat-live-message`의 `EVERYONE: team` → `You> team`·접두 유지와 같다). `.front ~g` 는 줄을 만들지 않는 점 명령이고 이어지는 본문이 둘째 줄이 된다. 입력줄 왼쪽 `>` 도우미를 누르면 원본 Chat Helper 메뉴(`Chat Helper:` 제목, Format·Chat Effects·Chat Controls·Insert·Copy·Paste)가 Gump 팝업으로 뜨고 메뉴 밖을 누르면 닫힌다. 영향 e2e 묶음 27건 통과(앞 단위).
-- Tab 이름 완성은 실행했으나 입력이 바뀌지 않았다: 완성 후보는 채팅 기록 100행(`_clientChatRecords`)의 이름이고 단독 미션에서는 채널 참가자가 비어 있다(AI 참가 등록 `ai.participation.addChat`의 호출 시점은 확인하지 않음). 후보 원천은 남은 일이다.
+- Tab 이름 완성: 후보는 채팅 기록 100행(`_clientChatRecords`)의 채널 참가자 이름이다. 동맹이 아닌 AI 만 있는 스커미시에서는 기록이 비어 Tab 이 입력을 바꾸지 않고(`Com` 유지), **동맹 AI**(`skirmishAi2Ally=1`)가 있으면 참가 때 채팅 채널(0x20)에 등록돼 `Com`+Tab 이 `Computer…` 로 완성된다. 여섯 번째 e2e 시험이 이를 고정한다(채팅 e2e 6건을 두 번 반복해 모두 통과).
