@@ -415,6 +415,21 @@ export class RawCampaignSession {
         if (!o.loaded || !o.factoryResearch?.handlesNotice(parent) || !o.factoryInput) throw new Error('실제 Factory 입력의 미설치/가상 표 오류');
         return o.factoryInput.input(parent, code, parameter);
     }
+    // 운반체 메뉴의 Cast/Drop 명령(원문 RawCampaignSession::CommandCarrierDrop)이다. 설치 뒤에만 허용하고, 운반 투하 상태(권한·지도)를 먼저 준비한 다음
+    // 같은 부모·명령·내용물 검색 부모로 실제 Cast/Drop 본체에 전달한다. 0x0300011a(Cast)·0x03000076(Drop)이 입력 큐 머리에서 소비되지 않아 3초 뒤 버려지던 것을 연결한다. (2026-11-22 WB04-E1225)
+    commandCarrierDrop(parent, command, listParent) {
+        const o = this.#live(); if (!o.loaded) throw new Error('설치 전 Cast/Drop 메뉴');
+        o.prepareCarrierDrop(); return o.carrierDrop.command(parent, command, listParent);
+    }
+    // 사제 기도 명령(원문 RawCampaignSession::CommandPriest)이다. 설치된 기도 본체와 현재 사제(TYPE 158·사제 가상 표 0x50f210)만 허용하고 packed 인자를 그대로 전달한다.
+    // 0x030000de(Pray)가 입력 큐에서 소비되지 않던 것을 연결한다. (2026-11-22 WB04-E1225)
+    commandPriest(parent, command, parameter) {
+        const o = this.#live();
+        if (!o.loaded || !o.priestPrayer) throw new Error('기도명령의 현재 사제/설치 계약 오류');
+        const raw = o.core.pool.slot(parent), table = new DataView(raw.buffer, raw.byteOffset, raw.byteLength).getUint32(0, true);
+        if (raw[10] !== 158 || table !== 0x50f210) throw new Error('기도명령의 현재 사제/설치 계약 오류');
+        return o.priestPrayer.command(parent, command, parameter);
+    }
     // 지식 메뉴의 선택은 같은 Factory 입력 경로를 사용한다.
     selectFactoryKnowledge(parent, code, parameter) { return this.commandFactory(parent, code, parameter); }
     // 설치된 현재 기술 부모의 실제 SID를 반환한다.

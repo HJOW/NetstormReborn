@@ -2017,7 +2017,7 @@ export class Netstorm {
             const selectionKey = code === 0x50 || code === 0x70 || code === 0x52 || code === 0x72 || code === 0x4e || code === 0x6e || code === 0x48 || code === 0x68;
             const productionKey = 'qwaszyxed'.includes(String.fromCharCode(code).toLowerCase()) && code < 256;
             const cursorCancel = code === 0x1b, cursorRotate = code === 0x250000 || code === 0x270000, gameTimeKey = code === 0x54 || code === 0x74;
-            const unsupported = (code !== 13 && !CHAT_HELPER_COMMANDS.has(code) && code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== PRODUCTION_REPEAT_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_F6 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !MISSION_VIEW_KEYS.has(code) && code !== MISSION_F9 && !TUTORIAL_NOTICE_COMMANDS.has(code) && !isGameMenuCommand(code) && !isSendMoneyCommand(code) && !objectCommand && !rotationKey && !cameraKey && code !== PAUSE_KEY_CODE && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && !gameTimeKey && code !== InputCode.leftButton && code !== InputCode.rightButton);
+            const unsupported = (code !== 13 && !CHAT_HELPER_COMMANDS.has(code) && code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== 0x03000063 && code !== 0x03000076 && code !== 0x0300011a && code !== 0x030000de && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== PRODUCTION_REPEAT_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_F6 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !MISSION_VIEW_KEYS.has(code) && code !== MISSION_F9 && !TUTORIAL_NOTICE_COMMANDS.has(code) && !isGameMenuCommand(code) && !isSendMoneyCommand(code) && !objectCommand && !rotationKey && !cameraKey && code !== PAUSE_KEY_CODE && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && !gameTimeKey && code !== InputCode.leftButton && code !== InputCode.rightButton);
             if (unsupported) {
                 // 미구현 사건 앞을 추월하지 않는다. 다만 처리하지 못하는 사건이 3초(벽 시각) 넘게 큐 머리에 남으면 이후 모든 입력이 영구히 막히므로 오류로 기록하고 버린다. (2026-11-21 WB04-E1150)
                 const key = `${next.code}:${next.x}:${next.y}`, wall = this._gameClock.wallSeconds();
@@ -2064,9 +2064,17 @@ export class Netstorm {
                 // 원본 packed 인자의 상위 WORD는 TYPE, 하위 WORD는 사제 SID다.
                 const packed = event.y >>> 0; world.session().makePriestMenu({ tell: (name) => this._openTell(name) }).selectBuild(packed >>> 16, packed & 0xffff);
             }
-            else if ((code === 0x03000080 || code === 0x03000032) && !release && !this._mainMenu?.dialog) {
-                // Factory 연구·업그레이드는 같은 packed 인자와 실제 Session 명령으로 전달한다.
+            else if ((code === 0x03000080 || code === 0x03000032 || code === 0x03000063) && !release && !this._mainMenu?.dialog) {
+                // Factory 연구·업그레이드·순환(0x03000063)은 같은 packed 인자와 실제 Session 명령으로 전달한다. 순환 명령이 허용 목록에 없어 3초 뒤 버려지던 것을 고쳤다. (2026-11-22 WB04-E1225)
                 const packed = event.y >>> 0; world.session().commandFactory(packed & 0xffff, event.code, packed);
+            }
+            else if ((code === 0x0300011a || code === 0x03000076) && !release && !this._mainMenu?.dialog) {
+                // 운반체 메뉴의 Cast(0x0300011a)·Drop(0x03000076): 원본 42aa50 은 이벤트의 y 를 내용물 검색 부모로 읽고 현재 메뉴의 부모도 같은 SID 이다. (2026-11-22 WB04-E1225)
+                const parent = event.y & 0xffff; world.session().commandCarrierDrop(parent, event.code, parent);
+            }
+            else if (code === 0x030000de && !release && !this._mainMenu?.dialog) {
+                // 사제 기도(0x030000de): 원본 4940b0 과 같은 packed y 로 기도 요청을 보낸다(하위 WORD=사제 SID, 상위 WORD=희망 종류). (2026-11-22 WB04-E1225)
+                const packed = event.y >>> 0; world.session().commandPriest(packed & 0xffff, event.code, packed);
             }
             else if (code === PRODUCTION_BRIDGE_COMMAND && !release && !this._mainMenu?.dialog) this._dispatchCampaignBridgeProduction(event);
             else if (code === PAUSE_KEY_CODE) {

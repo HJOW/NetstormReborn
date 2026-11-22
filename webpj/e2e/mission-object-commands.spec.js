@@ -72,3 +72,18 @@ test('The War Begins!: 처리하지 못하는 사건은 3초 뒤 오류로 기�
   expect(await page.evaluate(() => window.netstorm._clientGameplay.selection.selected), '버린 뒤 P 선택').toBe(ids.priest);
   expect(errors).toEqual([]);
 });
+
+// 객체 메뉴의 사제 기도(0x030000de)·운반체 Drop(0x03000076) 명령이(Cast 0x0300011a 는 같은 분기이나 내용물이 있는 운반체가 필요해 단위 시험이 맡는다) 입력 큐 머리에서 소비된다. 허용 목록에 없어 3초 뒤 "미구현 입력 사건을 버립니다" 로 버려지던 것을 연결했다. (2026-11-22 WB04-E1225)
+test('The War Begins!: 사제 기도와 운반체 Drop 명령이 입력 큐에서 소비된다', async ({ page }) => {
+  test.setTimeout(300000);
+  const errors = []; const ids = await startWarBegins(page, errors);
+  // 기도: packed y 의 하위 WORD 는 사제 SID, 상위 WORD 는 희망 종류이다. 소비 뒤 사제가 계속 선택 가능해야 한다.
+  for (const [name, code, target] of [['Drop', 0x03000076, ids.priest], ['Pray', 0x030000de, ((0x20 << 16) | ids.priest) >>> 0]]) {
+    await page.evaluate(({ code, target }) => window.netstorm._clientInputQueue.pushCommand(code, 0, target >>> 0), { code, target });
+    await expect.poll(() => head(page), { timeout: 2500, message: `${name} 명령이 3초 안에(버려지기 전에) 소비되어야 한다` }).toBeNull();
+  }
+  await page.keyboard.press('p'); await page.waitForTimeout(500);
+  expect(await page.evaluate(() => window.netstorm._clientGameplay.selection.selected), '명령 뒤 P 선택').toBe(ids.priest);
+  expect(errors).toEqual([]);
+});
+

@@ -3319,3 +3319,20 @@ test('Session 희생 메뉴: 설치 전에는 거부하고 미션에서는 조�
         s.showSacrificeMenu(sid, (text) => tells.push(text)); assert.equal(tells.length, 1); assert.equal(tells[0], `SacrificeMenu(${sid},0,1)`); // 새 자산은 레벨 0 이라 업그레이드 가능(레벨<3)이다.
     } finally { s.dispose(); }
 });
+
+test('Session 객체 메뉴 명령: Cast/Drop·기도는 설치 전 거부하고 설치 뒤 실제 본체로 전달하며 사제가 아니면 거부한다(E1225)', () => {
+    const sent = []; const { s } = scene({ carrierRequest: (target, packet) => { sent.push([target, Array.from(packet)]); } });
+    try {
+        assert.throws(() => s.commandCarrierDrop(100, 0x0300011a, 100), /설치 전/); assert.throws(() => s.commandPriest(100, 0x030000de, 100), /현재 사제\/설치 계약/);
+        s.load(); const plain = s.world().create(83, 0);
+        // 사제가 아닌 자산(TYPE 83)에는 기도 명령을 거부한다(원문 TYPE 158 + 사제 가상 표 확인).
+        assert.throws(() => s.commandPriest(plain, 0x030000de, plain), /현재 사제\/설치 계약/);
+        // 현재 사제(TYPE 158·가상 표 0x50f210)의 기도 명령(0x030000de)은 packed 상위 WORD 를 희망 종류로 하는 기도 요청(메시지 0x6d)을 서버(9)로 보내고 1 을 돌려준다.
+        const priest = s.world().create(158, 0); const raw = s.core().pool.slot(priest);
+        assert.equal(raw[10], 158); assert.equal(new DataView(raw.buffer, raw.byteOffset, raw.byteLength).getUint32(0, true), 0x50f210);
+        assert.equal(s.commandPriest(priest, 0x030000de, (0x20 << 16) | priest), 1);
+        assert.deepEqual(sent, [[9, [1, 0x6d, 8, 0, priest & 0xff, priest >>> 8, 0x20, 0]]]);
+        // Cast/Drop: 소유자가 로컬이 아닌 부모는 공통 메뉴로 넘기고 숫자를 돌려준다(예외·전송 없음).
+        sent.length = 0; assert.equal(typeof s.commandCarrierDrop(plain, 0x0300011a, plain), 'number'); assert.deepEqual(sent, []);
+    } finally { s.dispose(); }
+});
