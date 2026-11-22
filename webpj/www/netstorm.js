@@ -87,6 +87,7 @@ import { currentAllocationBytes } from './core/current-allocation-bytes.js';
 import { bindCampaignAiClientServices, bindCampaignClientInputServices, bindCampaignOwnershipTheme, bindCampaignProductionRefresh, captureCampaignMissionStarting, makeCampaignMissionStartEffects, runCampaignMissionStarting } from './core/campaign-client-services.js';
 import { bindCampaignUserInputServices } from './core/campaign-user-input-services.js';
 import { applyThemeTechnology } from './core/get-technology-input.js';
+import { parseViewSpot } from './core/camera-home.js';
 import { CampaignUserInput } from './core/campaign-user-input.js';
 import { makeCampaignCursorClientEffects } from './core/campaign-cursor-client-effects.js';
 import { RawContainedFinder } from './core/raw-contained-finder.js';
@@ -192,6 +193,8 @@ const MISSION_VIEW_KEYS = new Set([0x710000, 0x720000, 0x760000, 0x770000]);
 const MISSION_F9 = 0x780000;
 // F6 은 선택 키 분배기가 지식 창 명령(0x020000a0)을 예약하는 가상 키다. (2026-11-20 WB04-E1088)
 const MISSION_F6 = 0x750000;
+// 객체 메뉴의 회수 명령 번호(0x0200005d)이다. 회수 경고 창(SalvageVortex·SalvageInf)의 `Salvage It` 단추가 같은 번호로 입력 큐에 올라가 `requestSalvage` 로 이어진다. (2026-11-22 WB04-E1190)
+const SALVAGE_COMMAND = 0x0200005d;
 // 지식 창 명령 세 개다: ShowTechnology(Storm 카드, F6), ShowTecSideMenu(Storm/World 선택), ShowTecMenu2(World 카드). (2026-11-20 WB04-E1088)
 const KNOWLEDGE_COMMANDS = new Set([0x020000a0, 0x02000132, 0x02000133]);
 // 동맹 요청 입력이 처리하는 네 명령(요청 fb·해제 fa·확인 7e·무승부 선언 db)이다. (2026-11-20 WB04-E1126)
@@ -673,6 +676,8 @@ export class Netstorm {
         this._resources = null;
         // 시작 title 그림의 표시 시작 시각(밀리초, 첫 그리기 때 정해짐)과 그림별 RGBA 캔버스 캐시이다. (2026-11-22 WB04-E1184)
         this._titleStartedAt = null; this._titleBitmaps = [];
+        // 대본 `<$ViewSpot>` 이 맡겨 둔 시작 카메라 위치(칸 단위 { x, y }, 없으면 null)이다. (2026-11-22 WB04-E1190)
+        this._pendingViewSpot = null;
         // 같은 공개 자산 매니페스트와 현재 오디오의 미션 지연 적재 수명이다.
         this._assetLoader = null; this._missionAudioAssets = null;
         // 게임 데이터 조회 객체(GameData: 파일 조회·설정 층·언어 용어표·Tell 섹션)다. 자산 적재 전에는 null 이며 재시작해도 다시 만들지 않는다.
@@ -1981,6 +1986,8 @@ export class Netstorm {
     _runCampaignInputFrame() {
         const world = this._campaignWorld, queue = this._clientInputQueue, tutorial = this._clientGuide?.current()?.runtime.tutorial, gump = this._clientGump, user = this._campaignUserInput;
         if (!world || !queue || !tutorial || !gump || !user) throw new Error('미션 입력 프레임의 현재 장치 수명 누락');
+        // 대본 `<$ViewSpot>` 이 맡겨 둔 시작 카메라 위치를 월드가 도는 첫 프레임에 적용한다. (2026-11-22 WB04-E1190)
+        this._applyPendingViewSpot();
         const mouse = this._prepareClientPointer(this.options.language === 'korean' ? 7 : 0);
         tutorial.event(mouse);
         this._campaignCameraDevice().pollEdgeScroll(mouse);
@@ -2052,7 +2059,7 @@ export class Netstorm {
             }
             // 문자 Enter: 채팅 입력줄이 보이지 않으면 입력줄을 보이고 채팅 구분선을 올린다(원본 `OpenChatInput`). 이미 보이면 입력줄이 먼저 처리한다. (2026-11-22 WB04-E1170)
             else if (code === 13 && !release && !this._mainMenu?.dialog) { const chatWindow = this._campaignProduction?.ui?.chat(); if (chatWindow) { dispatchChatInputKey(event, () => (chatWindow.inputVisible() ? 1 : 0), () => chatWindow.setInput(true), () => chatWindow.open()); this._displayDirty = true; } }
-            else if (code === 0x0200005d && !release && !this._mainMenu?.dialog) world.session().requestSalvage(event.y >>> 0);
+            else if (code === SALVAGE_COMMAND && !release && !this._mainMenu?.dialog) world.session().requestSalvage(event.y >>> 0);
             else if (code === 0x02000060 && !release && !this._mainMenu?.dialog) {
                 // 원본 packed 인자의 상위 WORD는 TYPE, 하위 WORD는 사제 SID다.
                 const packed = event.y >>> 0; world.session().makePriestMenu({ tell: (name) => this._openTell(name) }).selectBuild(packed >>> 16, packed & 0xffff);
@@ -2646,6 +2653,14 @@ export class Netstorm {
         return result.window !== null;
     }
 
+    // 맡겨 둔 ViewSpot 좌표가 있고 미션 월드가 돌고 있으면 카메라를 그 칸으로 옮기고 맡김을 비운다(없으면 아무것도 하지 않는다). 칸 단위 좌표는 TAB·U 키 이동과 같은 `world.centerCamera` 로 보낸다. (2026-11-22 WB04-E1190)
+    _applyPendingViewSpot() {
+        const spot = this._pendingViewSpot, world = this._campaignWorld;
+        // 미션 시작(State9 Start 의 카메라 초기화·홈 이동)이 끝난 뒤에만 옮긴다. 그 전에 옮기면 이어지는 홈 이동이 덮어쓴다.
+        if (!spot || !world || !this._campaignDisplayActive() || this._clientGuide?.current()?.runtime.gate.started !== 1) return;
+        this._pendingViewSpot = null; world.centerCamera(spot.x, spot.y); this._clientRenderer?.invalidateAll(); this._displayDirty = true;
+    }
+
     // 현재 미션 Session 에 선택한 원소(theme)의 기술을 모두 지급한다(원본 UberGump 의 CheatAllTechnology 입력 0x02000028 → ApplyThemeTechnology). 미션 월드가 없으면 안내만 남기고 지급하지 않는다(원본은 logic_error).
     // 지급한 기술은 다음 프레임의 생산 내용물 갱신(`updateProductionContents`)이 생산 패널에 반영한다(원본의 `rebuild_`). (2026-11-22 WB04-E1189)
     _applyThemeTechnology(theme) {
@@ -2668,6 +2683,8 @@ export class Netstorm {
             console.warn(`Netstorm: ${command.argument}`);
             return true;
         }
+        // `<$ViewSpot,(가로x세로)>`: 미션 시작 카메라를 그 칸으로 옮긴다(RunForIt 의 [Init]). Init 은 월드가 생기기 전에 열리므로 좌표를 맡겨 두었다가 월드가 도는 첫 입력 프레임에 적용한다(원본은 명령 큐에 넣어 이어지는 입력에서 처리). (2026-11-22 WB04-E1190)
+        if (name === 'viewspot') { this._pendingViewSpot = parseViewSpot(String(command.argument ?? '')); this._applyPendingViewSpot(); return true; }
         // `<$CheatAllTechnology,원소>`: 선택한 원소(0 바람·1 비·2 천둥·3 태양)의 기술을 모두 지급한다. Fury War(bc8fury76)의 원소 선택 단추와 AI 사제 희생 안내가 쓴다. (2026-11-22 WB04-E1189)
         if (name === 'cheatalltechnology') return this._applyThemeTechnology(Number.parseInt(String(command.argument ?? '').trim(), 10) | 0);
         console.info(`Netstorm: 스크립트 명령 '${command.name}' 은(는) 아직 구현되지 않았습니다.`, command);
@@ -2846,9 +2863,9 @@ export class Netstorm {
         else if (name !== 'donothing') console.info(`Netstorm: 대화상자 명령 '${command.name}' 은(는) 아직 구현되지 않았습니다.`, command);
     }
 
-    // 대화상자 단추 명령이 송금·동맹 이름이면 명령 번호로 바꿔 입력 큐에 올리고 true 를 돌려준다. 그 밖의 이름은 false 이다. (2026-11-20 WB04-E1126)
+    // 대화상자 단추 명령이 송금·동맹·회수(Salvage, 회수 경고 창의 `Salvage It` 단추, E1190) 이름이면 명령 번호로 바꿔 입력 큐에 올리고 true 를 돌려준다. 그 밖의 이름은 false 이다. (2026-11-20 WB04-E1126)
     _queueDialogPlayerCommand(command) {
-        const name = String(command.name), code = sendMoneyScriptCode(name) !== 0xffffffff ? sendMoneyScriptCode(name) : (['requestalliance', 'breakalliance', 'confirmalliance', 'declaredraw'].includes(name.toLowerCase()) ? gameMenuScriptCode(name) : 0xffffffff);
+        const name = String(command.name), code = sendMoneyScriptCode(name) !== 0xffffffff ? sendMoneyScriptCode(name) : (['requestalliance', 'breakalliance', 'confirmalliance', 'declaredraw'].includes(name.toLowerCase()) ? gameMenuScriptCode(name) : name.toLowerCase() === 'salvage' ? SALVAGE_COMMAND : 0xffffffff);
         if (code === 0xffffffff || !this._clientInputQueue) return false;
         const target = Number.parseInt(String(command.argument ?? '').trim(), 10) | 0;
         this._clientInputQueue.pushCommand(code, target, target); return true;
