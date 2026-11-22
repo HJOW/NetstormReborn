@@ -31,6 +31,7 @@ import { MissionAudioAssets } from './audio/mission-audio-assets.js';
 import { SceneMusicDriver } from './audio/scene-music-driver.js';
 import { makePriestShieldNoticeHooks } from './core/sound-process.js';
 import { confirmSendMoney, dispatchSendMoneyInput, isSendMoneyCommand, sendMoneyScriptCode } from './core/send-money-input.js';
+import { dispatchChatInputKey } from './ui/hud-chat-geometry.js';
 import { captureSessionStateDump, formatSessionStateDump } from './core/session-state-dump.js';
 import { handleAllianceRequestInput } from './core/raw-player-participation.js';
 import { createSoundState, SoundPlayer } from './audio/sound-player.js';
@@ -1687,6 +1688,17 @@ export class Netstorm {
         return this._campaignDisplayActive() ? (this._campaignProduction?.ui?.sendMoney?.()?.current() ?? 0) : 0;
     }
 
+    // 채팅 입력줄이 지금 보이는지이다(미션 화면에서 입력줄이 보이는 동안 문자 키는 이 입력줄로 간다). 모달 입력 창과 달리 마우스는 월드로 간다. (2026-11-22 WB04-E1170)
+    _campaignChatInputActive() {
+        return this._campaignDisplayActive() && !this._campaignInputDialogOpen() && Boolean(this._campaignProduction?.ui?.chat()?.inputVisible());
+    }
+
+    // 입력줄이 받는 문자 키인지이다: 한 글자(Shift 만 허용)와 Backspace·Delete·Enter·좌우·Home·End. 그 밖의 키(F 키·ESC 등)는 평소 단축키 경로를 쓴다. (2026-11-22 WB04-E1170)
+    _isChatTextKey(event) {
+        if (event.ctrlKey || event.altKey || event.metaKey || event.isComposing) return false;
+        return (typeof event.key === 'string' && event.key.length === 1) || ['Backspace', 'Delete', 'Enter', 'ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key);
+    }
+
     // 입력 창이 열린 동안의 키 하나를 원본 입력 큐에 올린다(printable 문자·Backspace·Enter·방향/Home/End/Delete 가상 키). 브라우저 기본 동작과 게임 단축키로는 보내지 않는다.
     // 한글 등 조합 중인 입력은 이 경로가 아니라 IME 경로가 맡는다. (2026-11-22 WB04-E1168)
     _queueCampaignDialogKey(event, released) {
@@ -1860,6 +1872,10 @@ export class Netstorm {
             // Send X 숫자 창 같은 Gump 모달이 열려 있으면 모든 사건이 그 창으로만 가고 월드·단축키로는 가지 않는다(원본의 모달 dialog 우선 전달). (2026-11-22 WB04-E1168)
             if (this._campaignInputDialogOpen()) { const modal = queue.pop(false); gump.input().route(modal.code, modal.x, modal.y); this._displayDirty = true; continue; }
             const code = (next.code & 0x03ffffff) >>> 0, release = Boolean(next.code & InputCode.release);
+            // 채팅 입력줄이 보이는 동안 키보드 사건(마우스·명령 사건과 ESC 제외)은 입력줄로만 간다. 입력줄이 처리하지 않은 키도 월드 단축키로는 가지 않는다. (2026-11-22 WB04-E1170)
+            if (!(next.code & InputCode.command) && code !== InputCode.leftButton && code !== InputCode.rightButton && code !== InputCode.middleButton && code !== 0x1b && this._campaignChatInputActive()) {
+                const typed = queue.pop(false); gump.input().route(typed.code, typed.x, typed.y); this._displayDirty = true; continue;
+            }
             // 선택 키: P/R(사제)·N(다음 운반체)·H(집으로 점프, 원본 도움말 "F4 or H Jump to your Home Temple"). H 가 빠져 있어 F4 만 집으로 점프했다. (2026-11-21 WB04-E1146)
             // 객체 가상 6c 로 가는 명령: 신전 세 명령·시나리오 객체 다섯 명령(MakeMine·InflictDamage·DestroyPiece·TurnToObelisk·Meltdown)·DetonateBomb. 큐에서 소비하지 못하면 이후 입력이 막힌다. (2026-11-21 WB04-E1150)
             const rotationKey = code === 0x43 || code === 0x63;
@@ -1869,7 +1885,7 @@ export class Netstorm {
             const selectionKey = code === 0x50 || code === 0x70 || code === 0x52 || code === 0x72 || code === 0x4e || code === 0x6e || code === 0x48 || code === 0x68;
             const productionKey = 'qwaszyxed'.includes(String.fromCharCode(code).toLowerCase()) && code < 256;
             const cursorCancel = code === 0x1b, cursorRotate = code === 0x250000 || code === 0x270000, gameTimeKey = code === 0x54 || code === 0x74;
-            const unsupported = (code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== PRODUCTION_REPEAT_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_F6 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !MISSION_VIEW_KEYS.has(code) && code !== MISSION_F9 && !TUTORIAL_NOTICE_COMMANDS.has(code) && !isGameMenuCommand(code) && !isSendMoneyCommand(code) && !objectCommand && !rotationKey && !cameraKey && code !== PAUSE_KEY_CODE && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && !gameTimeKey && code !== InputCode.leftButton && code !== InputCode.rightButton);
+            const unsupported = (code !== 13 && code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== PRODUCTION_REPEAT_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_F6 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !MISSION_VIEW_KEYS.has(code) && code !== MISSION_F9 && !TUTORIAL_NOTICE_COMMANDS.has(code) && !isGameMenuCommand(code) && !isSendMoneyCommand(code) && !objectCommand && !rotationKey && !cameraKey && code !== PAUSE_KEY_CODE && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && !gameTimeKey && code !== InputCode.leftButton && code !== InputCode.rightButton);
             if (unsupported) {
                 // 미구현 사건 앞을 추월하지 않는다. 다만 처리하지 못하는 사건이 3초(벽 시각) 넘게 큐 머리에 남으면 이후 모든 입력이 영구히 막히므로 오류로 기록하고 버린다. (2026-11-21 WB04-E1150)
                 const key = `${next.code}:${next.x}:${next.y}`, wall = this._gameClock.wallSeconds();
@@ -1903,6 +1919,8 @@ export class Netstorm {
                     translate: (text) => this._resources.translate(text), substitute: (text) => this._gameData.substitute(text), config: (key) => this._gameData.get(key) ?? '' });
                 this._closeCampaignPopups(); this._openHelp(types[type].name.split('\0', 1)[0] + this._resources.translate('Type'), information, createQuickHelpPicture(this._gameAssets, type));
             }
+            // 문자 Enter: 채팅 입력줄이 보이지 않으면 입력줄을 보이고 채팅 구분선을 올린다(원본 `OpenChatInput`). 이미 보이면 입력줄이 먼저 처리한다. (2026-11-22 WB04-E1170)
+            else if (code === 13 && !release && !this._mainMenu?.dialog) { const chatWindow = this._campaignProduction?.ui?.chat(); if (chatWindow) { dispatchChatInputKey(event, () => (chatWindow.inputVisible() ? 1 : 0), () => chatWindow.setInput(true), () => chatWindow.open()); this._displayDirty = true; } }
             else if (code === 0x0200005d && !release && !this._mainMenu?.dialog) world.session().requestSalvage(event.y >>> 0);
             else if (code === 0x02000060 && !release && !this._mainMenu?.dialog) {
                 // 원본 packed 인자의 상위 WORD는 TYPE, 하위 WORD는 사제 SID다.
@@ -3264,6 +3282,8 @@ export class Netstorm {
         this._input.keys.add(event.code);
         // Gump 입력 창(Send X 숫자 창)이 열려 있으면 모든 키를 그 창의 입력으로 보낸다(게임 단축키·TAB·숫자 화면 저장으로 새지 않는다). (2026-11-22 WB04-E1168)
         if (!this._clientNativeInputEnabled && this._campaignInputDialogOpen()) { this._queueCampaignDialogKey(event, false); this._retryAudioOnGesture(); return; }
+        // 채팅 입력줄이 보이는 동안 문자 키는 입력줄로 간다(게임 단축키로 새지 않는다). (2026-11-22 WB04-E1170)
+        if (!this._clientNativeInputEnabled && this._campaignChatInputActive() && this._isChatTextKey(event)) { this._queueCampaignDialogKey(event, false); this._retryAudioOnGesture(); return; }
         if (this._clientNativeInputEnabled && !this._clientComposing) {
             const editing = event.target === this._clientImeElement && this._clientImeElement !== null;
             if (editing && !event.isComposing) this._clientImePending = null;
@@ -3278,7 +3298,7 @@ export class Netstorm {
         }
         // 문자 키 허용 목록에 H(집으로 점프)를 더했다. 전에는 H 가 큐에 들어가지 않아 F4 만 집으로 점프했다. (2026-11-21 WB04-E1146)
         // ESC 는 조각을 들고 있으면 취소, 아니면 게임 메뉴막대 전환이므로 항상 큐에 넣고 입력 프레임이 판단한다. (2026-11-20 WB04-E1084)
-        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && !event.isComposing && !this._clientComposing && !event.ctrlKey && !event.altKey && !event.metaKey && (/^[chnprqwaszyxetud]$/iu.test(event.key ?? '') || event.key === 'Escape')) queueBrowserCharacterEvent(this._clientInputQueue, event, this._input.pointer);
+        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && !event.isComposing && !this._clientComposing && !event.ctrlKey && !event.altKey && !event.metaKey && (/^[chnprqwaszyxetud]$/iu.test(event.key ?? '') || event.key === 'Escape' || event.key === 'Enter')) queueBrowserCharacterEvent(this._clientInputQueue, event, this._input.pointer);
         // TAB 과 숫자 줄(0~9, Shift 는 영어 기호 표 `)!@#$%^&*(`)이다. 숫자는 키보드 배열과 무관하게 Digit 코드로 원본 문자 코드를 만들고, TAB 은 브라우저 포커스 이동을 막는다. (2026-11-21 WB04-E1154)
         if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && !event.isComposing && !this._clientComposing && !event.ctrlKey && !event.altKey && !event.metaKey && !event.repeat) {
             const digit = /^Digit([0-9])$/u.exec(event.code ?? '');
@@ -3323,6 +3343,7 @@ export class Netstorm {
         this._input.keys.delete(event.code);
         if (event.target === this._clientImeElement && this._clientImePending?.text === event.key) this._clientImePending = null;
         if (!this._clientNativeInputEnabled && this._campaignInputDialogOpen()) { this._queueCampaignDialogKey(event, true); return; }
+        if (!this._clientNativeInputEnabled && this._campaignChatInputActive() && this._isChatTextKey(event)) { this._queueCampaignDialogKey(event, true); return; }
         if (this._clientNativeInputEnabled && !this._clientComposing) queueBrowserVirtualKeyEvent(this._clientInputQueue, event, this._input.pointer, true);
         else if (this._campaignDisplayActive() && (event.code === 'F4' || event.code === 'F5')) queueBrowserVirtualKeyEvent(this._clientInputQueue, event, this._input.pointer, true);
     }

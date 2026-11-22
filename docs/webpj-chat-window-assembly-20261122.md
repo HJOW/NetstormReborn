@@ -1,4 +1,4 @@
-# 채팅 창 조립 1단계: 만들기·F3 표시·로그 출력 (WB04-E1169)
+# 채팅 창 조립: 만들기·F3 표시·로그 출력(E1169)과 입력줄 키 경로(E1170)
 
 미션 화면 아래의 채팅 영역(F3)은 구분선만 오르내리고 안은 검은 띠였다([E1159](webpj-chat-toggle-f3-20261121.md)). 이식돼 있던 `ChatWindow`(원문 0043f820/00431ee0)와 `HudChatGeometry`를 실제 Client Gump 트리에 조립해 **창이 만들어지고, F3로 보이며, 로그 줄이 색과 함께 그려지게** 했다. E1168의 글자 입력창·모달 기반 위에서 같은 방식으로 조립했다.
 
@@ -12,7 +12,8 @@
 | 스크롤 글자 노출 | `ClientScrollingText`에 `atBottom`·`requestBottom`·`requestRelativeScroll`·`setScrollable`·`replaceBuffer`를 더했다(채팅 창이 로그 끝 판정·바닥 요청·버퍼 교체에 쓴다). |
 | HUD | [client-uber-hud.js](../webpj/www/ui/client-uber-hud.js): `devices.chat`가 있으면 Uber 루트가 `createChat`·`type`(TYPE 범위만 검사)·`translate`·`help`·`helpWord`·`refreshTechnology`를 받아 채팅 자식을 만들고, `HudDock`의 `chatVisible`/`chatInput`이 실제 창의 도우미·입력줄 표시를 바꾼다(원본 `SetHelperVisible`/`SetInputVisible`). 생산 UI 조립(`ui.chat()`)이 창을 만들고 [netstorm.js](../webpj/www/netstorm.js)가 Client 장기 채팅 전역과 현재 값 조회 장치를 넘긴다. |
 | Players 메뉴 | 채팅 창이 생기면서 Players 메뉴의 `whispered` 조회(채팅 창이 있으면 미연결 오류를 던지던 자리표시)가 터져 ESC 메뉴막대가 열리지 않았다(영향 e2e 묶음이 8건 실패로 잡았다). 원본 `ContainsRecipient`(0042e9e0)로 현재 입력줄 수신자 접두에 그 Player 이름이 있는지를 돌려주게 연결했다(`ClientChatWindow.containsRecipient`). |
-| 입력 | 입력줄 키보드 경로(Enter로 열기·문자 입력·제출)와 수신/송신은 아직 연결하지 않았다. 도우미·입력줄은 구분선 전환의 표시 비트만 바뀐다. 제출(`sendChat`)은 로컬 되울림, 수신자(`recipient`)는 없음, `resolve`는 실패가 기본이다. |
+| 입력줄 키 경로(E1170) | **Enter**(채팅 입력줄이 보이지 않을 때)가 입력 큐를 거쳐 원본 `dispatchChatInputKey`(`OpenChatInput`)를 실행한다: 입력줄을 보이고(`SetInputVisible(1)`) 채팅 구분선 전환 사건(0x02000088, 둘째 인자 1)을 부모로 올려 영역이 올라온다. 입력줄이 보이는 동안 **문자 키**(한 글자·Backspace·Delete·Enter·좌우·Home·End)는 입력 큐에 올라 입력 프레임에서 Gump 입력(`route`)으로만 간다(게임 단축키·화면 위치 저장 숫자로 새지 않음). 마우스와 F 키·**ESC**는 평소 경로를 쓴다(입력줄이 보여도 ESC 는 게임 메뉴막대를 연다). 입력줄 Enter 는 `ChatWindow.handle` 의 제출 분기를 타고, 단독 미션은 현재 채팅 manager 가 없어(원본 `say` 는 manager 가 없으면 0) 제출한 줄이 비워지며, **본문이 비어 있으면 입력줄이 숨는다**(원본 `inputVisible(0)`). 도우미 `>`와 입력줄·캐럿이 실제 화면에 그려진다. |
+| 아직 | 점 명령(`.clear`·`.quit`·`.format` 등) 해석, 수신자(`recipient`)·이름 완성·`resolve`, 실제 송신은 연결하지 않았다. 제출은 위 로컬 처리가 기본이다(`ClientChatWindow.#submitLocal`). 도우미 `>` 메뉴 열기는 e2e 로 확인하지 않았다. |
 
 ## 시험
 
@@ -22,8 +23,12 @@
 
 ## 남은 일
 
-- **입력줄 키보드 경로:** 채팅 구분선이 보일 때 Enter로 입력줄을 열고(`dispatchChatInputKey`) 키를 입력창으로 보내며 Enter로 제출한다. E1168의 모달 키 경로와 같은 방식(큐에 올린 키를 Gump 입력으로만 전달)을 쓴다. 제출·수신자 이름 완성·도우미 메뉴 e2e는 이 단위에 포함하지 않았다.
+- **입력줄 후속:** 점 명령 분배(`.clear`·`.format`·치트 발행 명령)·수신자 접두 해석(`submitChatInput`)·이름 완성(Tab)·도우미 `>` 메뉴 확인·붙여넣기(`paste`)가 남았다.
 - **로그 발생원:** 단독 미션의 알림 문구(예 `Our Priest has been Immobilized`)를 `appendLog`로 흘리는 연결(`MessageGump` 안내와 같은 원천).
 - 원본 단독 미션 스크린샷에는 채팅 영역이 보이지 않아(기본 숨김) 픽셀 대조는 F3를 직접 눌러 캡처해야 한다.
 - 지식(NSInfo) HUD 패널 공장은 이 단위 범위 밖이다.
 - 기준선 뒤 cpppj 변경 없음(`RawMenuChat.inc`·`UberHud.inc`).
+
+## 시험(E1170)
+
+- `e2e/chat-window.spec.js` 세 번째 시험(Chromium): 시작은 입력줄 숨김(지도 영역 768) → Enter 로 입력줄이 보이고 지도 영역이 672 로 줄어듦 → `qwa1 hello` 를 치면 입력줄 글자가 되고 입력 큐는 비며 카메라(화면 위치 저장 숫자 `1`)와 생산 단축키가 반응하지 않음 → Backspace 두 번으로 `qwa1 hel` → Enter 제출로 줄이 비워지고 입력줄은 남음 → 빈 Enter 로 숨음 → 다시 열고 ESC 가 게임 메뉴막대를 엶. 오류·경고 0.

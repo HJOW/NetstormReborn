@@ -155,7 +155,7 @@ export class ClientChatWindow {
             atBottom: (token) => scrolling.atBottom(token), appendLog: (token, text) => scrolling.style(token, text),
             baseHandle: (token, event, first, second) => devices.baseHandle(token, event, first, second), bubble: (...args) => root.events().bubble(...args),
             recipient: (text) => this.#recipient(text),
-            sendChat: (manager, text) => { if (typeof devices.sendChat === 'function') devices.sendChat(manager, text); else this.appendLog(text); },
+            sendChat: (manager, text) => { if (typeof devices.sendChat === 'function') devices.sendChat(manager, text); else this.#submitLocal(text); },
             resolve: (record) => (typeof devices.resolve === 'function' ? Boolean(devices.resolve(record)) : false),
             log: (level, format, value) => { if (typeof devices.log === 'function') devices.log(level, format, value); else console.warn(`Netstorm: ${format.replace('%d', String(value))}`); },
             config: (key) => devices.config(key),
@@ -167,6 +167,12 @@ export class ClientChatWindow {
             assertion: (line) => { throw new Error(`ChatWindow 원본 진단: ${line}`); },
         };
     }
+    // 입력줄 제출의 단독 미션 처리이다(원본 `SendChat` → 본문 분배): 대상 접두(`이름:`)를 뗀 본문이 비어 있으면 입력줄을 숨기고, 그 밖의 본문은 현재 채팅 manager 가 없어 보내지 않는다(원본 say 는 manager 가 없으면 0).
+    // 점 명령(`.clear` 등)·수신자 해석·실제 송신은 아직 연결하지 않았다. (2026-11-22 WB04-E1170)
+    #submitLocal(text) {
+        const line = String(text).split(NEWLINE, 1)[0], colon = line.indexOf(':'), body = (colon >= 0 ? line.slice(colon + 1) : line).trim();
+        if (body === '') this.setInput(false);
+    }
     // 채팅 창 root 를 만든다(Uber 루트의 `createChat`). 이미 있는 root 는 새로 만들지 않고 거부한다. (2026-11-22 WB04-E1169)
     create() { const token = this.#window.create(); this.#devices.changed(); return token; }
     // 현재 root 토큰이다(없으면 0).
@@ -174,6 +180,13 @@ export class ClientChatWindow {
     // HUD 채팅 구분선 전환의 도우미 표시(원본 `SetHelperVisible`)와 입력줄 표시(`SetInputVisible`)이다. 아직 만들어지지 않았으면 아무것도 하지 않는다. (2026-11-22 WB04-E1169)
     setVisible(visible) { const token = this.current(); if (token) { this.#geometry.setHelperVisible(token, visible ? 1 : 0); this.#devices.changed(); } }
     setInput(visible) { const token = this.current(); if (token) { this.#geometry.setInputVisible(token, visible ? 1 : 0); this.#devices.changed(); } }
+    // 입력줄 열기의 부모 사건이다(원본 `OpenChatInput` 의 Bubble: 채팅 구분선 전환 사건 0x02000088, 둘째 인자 1 = 보이기). 구분선이 화면 아래에 숨어 있으면 올라온다. (2026-11-22 WB04-E1170)
+    open() { const token = this.current(); if (token) { this.#root.events().bubble(token, 0x02000088, 0, 1); this.#devices.changed(); } }
+    // 입력줄의 현재 문자열이다(바이트 문자열, 창이 없으면 null). 시험·진단용이다.
+    inputText() {
+        const token = this.current(); if (!token) return null;
+        const console = this.#root.node(this.#root.node(token).console); return this.#entries.storage().find(console.buffer)?.text() ?? null;
+    }
     // 현재 입력줄의 수신자 접두에 그 이름이 들어 있는지이다(원본 `ContainsRecipient`, Player 메뉴의 Whisper To 체크 상태). 창이 없으면 false 이다. (2026-11-22 WB04-E1169)
     containsRecipient(name) { const token = this.current(); return token ? this.#window.containsRecipient(token, name) : false; }
     // 입력줄이 지금 보이는지이다(없으면 false). 키보드 경로가 입력줄에 키를 보낼지 판단한다.
