@@ -1753,3 +1753,7 @@ cpppj/src/o/RawCannonFire.cpp	Netstorm.Core/Original/CannonFire.cs	ad02e6aee1722
 cpppj/src/o/RawCannonFire.h	Netstorm.Core/Original/CannonFire.cs	ad02e6aee1722822ebb85d73cb35da5e11e23f00	port
 cpppj/src/o/RawLightningLifetime.cpp	Netstorm.Core/Original/RawLightningCreate.cs	ad02e6aee1722822ebb85d73cb35da5e11e23f00	port
 cpppj/src/o/RawLightningLifetime.h	Netstorm.Core/Original/RawLightningCreate.cs	ad02e6aee1722822ebb85d73cb35da5e11e23f00	port
+cpppj/src/o/RawCrossbowAnimation.cpp	Netstorm.Core/Original/RawCrossbowAnimation.cs	03320991f3a43d13f5d3b0f2863351d38e6b0a4d	port
+cpppj/src/o/RawCrossbowAnimation.h	Netstorm.Core/Original/RawCrossbowAnimation.cs	03320991f3a43d13f5d3b0f2863351d38e6b0a4d	port
+cpppj/src/o/RawCrossbowAnimation.cpp	Netstorm.Core/Original/CrossbowAnimation.cs	03320991f3a43d13f5d3b0f2863351d38e6b0a4d	port
+cpppj/src/o/RawCrossbowAnimation.h	Netstorm.Core/Original/CrossbowAnimation.cs	03320991f3a43d13f5d3b0f2863351d38e6b0a4d	port

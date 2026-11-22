@@ -1,6 +1,8 @@
 using System.Buffers.Binary;
 using Netstorm.Core.Original;
 using Netstorm.Core.Simulation;
+// 실제원문프로세스어댑터의이름을명시한다.
+using CrossbowAnimation = Netstorm.Core.Original.CrossbowAnimation;
 
 // 같은 Native Host의 기본 writer와 실제 공통 버퍼/현재 헤더/송신 예약을 확인한다.
 namespace Netstorm.Core.Tests;
@@ -8,6 +10,12 @@ namespace Netstorm.Core.Tests;
 /// <summary>기존 Dais/Path 본체를 실제 장기 저장소 기본 전송으로 호출한다.</summary>
 public sealed class NativeProcessSerializationTests
 {
+    /// <summary>크로스보우의현재원문역할/VT/헤더와같은Native Form writer를검사한다.</summary>
+    [Fact]
+    public void CrossbowAnimationUsesCurrentNativeHeaderAndExistingRoleBox()
+    {
+        var storage=Storage();SquidProcessHost host=storage.Processes().Host();int parent=storage.Pool.Allocate(SidAllocation.Server);storage.Pool.RawSlot(parent).Clear();storage.Pool.RawSlot(parent)[10]=140;ArcherTypeData[] data=Enumerable.Range(0,188).Select(_=>new ArcherTypeData()).ToArray();var state=new CrossbowAnimationState{Now=10,CurrentType=storage.GameAux().WindArcherTypeBox};var logic=new RawCrossbowAnimation(storage.Pool,storage.Types,data,state,new());var fields=new GunAnimationFields(0xa5);logic.Initialize(fields,77,78);var process=new CrossbowAnimation(logic,fields);Assert.Same(process,host.Attach(process,host.AnimationProcessType(true),parent,0x10));storage.GameAux().FireAnimationHeader[0]=0x73;storage.GameAux().FireAnimationHeader[1]=0x81;storage.GameAux().WindArcherTypeBox.Value=141;storage.GameAux().ResetForGeneralWorld();Assert.Equal(141u,logic.Type());Assert.Equal(140u,state.Type);byte[] packet=Enumerable.Repeat((byte)0xa7,2048).ToArray();Assert.Equal(25,host.WriteFormPacket(process.Form(),1,packet,storage.GameAux().SquidTransmission));Assert.Equal(0x81,packet[0]);Assert.Equal(0x73,packet[1]);Assert.Equal((uint)process.Form(),BinaryPrimitives.ReadUInt32LittleEndian(packet.AsSpan(4)));Assert.Equal((uint)parent,BinaryPrimitives.ReadUInt32LittleEndian(packet.AsSpan(9)));Assert.Equal(0xa7,packet[25]);storage.Processes().Kernel().DrainOwnedForShutdown();
+    }
     /// <summary>실제CannonFire의현재VT/헤더/식별자와원문코너외각필드를Native공통전송에연결한다.</summary>
     [Fact]
     public void CannonFireUsesCurrentNativeHeaderAndSameActualForm()
