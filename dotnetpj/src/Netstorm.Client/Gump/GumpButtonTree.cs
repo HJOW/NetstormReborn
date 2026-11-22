@@ -45,6 +45,8 @@ public sealed partial class GumpButtonTree
     public GumpFrameHooks FrameHooks { get; }
     /// <summary>현재 위치와 수집기.</summary>
     public GumpCollection Collection { get; }
+    /// <summary>HUD 배치와 지도 정렬/현재 표시 공급자가 공유하는 같은 트리 전역.</summary>
+    public GumpTreeState TreeState { get; }
     /// <summary>부모·자식 부착기.</summary>
     public GumpTree Tree { get; }
     /// <summary>지연 삭제와 자식 우선 파괴.</summary>
@@ -157,7 +159,8 @@ public sealed partial class GumpButtonTree
             DeletingDestructor = (token, flags) => Lifetime!.DeleteScalar(token, flags),
             Release = token => { if (_helpStrings.Remove(token)) return; if (!_nodes.Remove(token)) throw new InvalidOperationException("Gump 저장소 반납 불일치"); _nodeOwners.Remove(token); } };
         StoneButtonGump.BindStoneButtonGump(treeHooks, lifeHooks, token => Node(token) is StoneButtonGumpNode ? Stones : null);
-        Tree = new(Create, new() { MapView = new(0, 0, width, height) }, treeHooks);
+        TreeState = new() { MapView = new(0, 0, width, height) };
+        Tree = new(Create, TreeState, treeHooks);
         Lifetime = new(Create, LifeState, lifeHooks);
         var eventsHooks = EventHooks = new GumpEventHooks { Node = Node, Handle = hooks.HandleBase };
         var inputHooks = InputHooks = new GumpInputHooks { Node = Node, Handle = hooks.HandleBase };

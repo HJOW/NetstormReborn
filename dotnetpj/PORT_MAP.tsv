@@ -1542,3 +1542,8 @@ cpppj/src/o/RawAiWallet.h	Netstorm.Core/Original/RawAiWallet.cs	68fa942631ca0c71
 cpppj/src/client/ClientMain.cpp	Netstorm.Client/ClientSurfaceGlobals.Ai.cs	68fa942631ca0c71da8b135339ac5bffc5aaa24f	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.AiDevices.cs	68fa942631ca0c71da8b135339ac5bffc5aaa24f	port
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.AiDevices.cs	68fa942631ca0c71da8b135339ac5bffc5aaa24f	port
+cpppj/src/client/HudDock.h	Netstorm.Client/Gump/HudDockState.cs	53a1ebf945ea66c55541992e6dd14f1bab440d6d	port
+cpppj/src/client/HudDock.h	Netstorm.Client/Gump/HudDividerGump.cs	53a1ebf945ea66c55541992e6dd14f1bab440d6d	port
+cpppj/src/client/HudDock.cpp	Netstorm.Client/Gump/HudDividerGump.cs	53a1ebf945ea66c55541992e6dd14f1bab440d6d	port
+cpppj/src/client/HudDock.h	Netstorm.Client/Gump/HudDock.cs	53a1ebf945ea66c55541992e6dd14f1bab440d6d	port
+cpppj/src/client/HudDock.cpp	Netstorm.Client/Gump/HudDock.cs	53a1ebf945ea66c55541992e6dd14f1bab440d6d	port
