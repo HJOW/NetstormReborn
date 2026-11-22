@@ -80,15 +80,18 @@ public sealed class HostStartupScene
     /// 0.381에서 512×512 구름 타일을 원점 0에 그대로 반복하던 임시 그리기를 실제 Kencloud(cpppj 팔레트 전환 + <c>DrawKencloud</c>)로 바꿨다.
     /// 첫 L4a 비교(0.380)에서 cloudSpeed(2)번 행 이동이 없어 구름 띠 24개가 1픽셀 어긋나던 차이를 닫는다.
     /// </remarks>
-    public void Draw(Screen screen)
+    /// <param name="prepareColors">최초 팔레트 직후 실제 Client의 초기화·색표 소유자를 연결한다. 독립 장면에는 생략한다.</param>
+    /// <param name="rebuildColors">fort 팔레트 전환 뒤 같은 고정 입력으로 실제9표를 갱신한다.</param>
+    public void Draw(Screen screen, Action<Screen>? prepareColors = null, Action<Screen>? rebuildColors = null)
     {
         ArgumentNullException.ThrowIfNull(screen);
         if (!ReferenceEquals(_preparedScreen, screen))
         {
             // 모드가 정해지지 않은 화면에서는 검정 채움(clear)을 쓸 수 없어 0으로 읽는다. 호스트는 모드를 정한 뒤 불러 원문대로 1이다.
             screen.LoadPalette(_palette, (screen.Flags & ScreenMode.ModeSet) != 0 ? 1u : 0u);
+            prepareColors?.Invoke(screen);
             _preparedScreen = screen;
-            ChangeFortPalette(screen);
+            ChangeFortPalette(screen, rebuildColors);
         }
         // 구름: 원문 렌더러 앞단이 모드 변경·force 때 하는 전체 표시 요청 → 현재 화면 전체(카메라 원점 0) 표시 → 정리 순서다.
         Cloud.MarkDirty();
@@ -122,11 +125,12 @@ public sealed class HostStartupScene
     /// 다르면 이름 복사·구름 반납/생성·cloudSpeed번 행 이동·GamePalSpec 팔레트 읽기(clear 1)·색 표 갱신·dirty를 원문 순서로 한다.
     /// </summary>
     /// <param name="screen">팔레트를 읽을 화면이다.</param>
+    /// <param name="rebuildColors">실제 Client의 고정 입력/현재9표를 갱신하는 장치다. 독립 장면에는 없다.</param>
     /// <remarks>
-    /// 0.381에서 추가했다. C#에서 달라진 모양: 색 표 갱신(<c>RebuildColorSortMaps</c>·<c>RefreshPaletteConsumers</c>)은 이 호스트의 <see cref="Screen"/>이 팔레트를 읽을 때 직접 계산하므로 비운다.
+    /// 실제 Game은 같은 최초 ColorSort 입력과9표를 갱신한다. 독립 장면은 Screen의 독립 계산을 사용한다.
     /// 진단 로그(<c>Palette 29 init palette</c>)는 아직 호스트 로그 장치가 없어 남기지 않는다.
     /// </remarks>
-    private void ChangeFortPalette(Screen screen)
+    private void ChangeFortPalette(Screen screen, Action<Screen>? rebuildColors)
     {
         byte[] name = Encoding.Latin1.GetBytes(Configuration.PathSpec("fortPal") + '\0');
         var devices = new FortPaletteTransitionHooks
@@ -139,7 +143,7 @@ public sealed class HostStartupScene
                 string file = Encoding.Latin1.GetString(path[..end]);
                 screen.LoadPalette(new GamePalette(Files.ReadAllBytes(file)), (screen.Flags & ScreenMode.ModeSet) != 0 ? clear : 0u);
             },
-            BuildMaps = () => { },
+            BuildMaps = () => rebuildColors?.Invoke(screen),
         };
         Cloud.Transition(name, Files, Configuration, Random, devices);
     }

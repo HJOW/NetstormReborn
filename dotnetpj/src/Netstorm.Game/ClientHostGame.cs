@@ -161,6 +161,7 @@ public sealed partial class ClientHostGame : Game
         _driver = driver;
         _options = options;
         _startup = startup;
+        _startupColors = startup is null ? null : new HostStartupColorMaps(startup, InitializeNativePrefix, PrepareStartupColorAssets);
         _gameplay = new(_subscriberGlobals);
         _chatGlobals = new(OriginalEdition.Patch1078, () => _subscriberGlobals.MySubscriber.Value);
         InterpretNsInfoOptions();
@@ -217,6 +218,7 @@ public sealed partial class ClientHostGame : Game
             ReleaseNativeRenderer();
             _cursor?.Dispose();
             _packetRecord?.Dispose();
+            _startupColors?.Dispose();
         }
         base.Dispose(disposing);
     }
@@ -245,13 +247,7 @@ public sealed partial class ClientHostGame : Game
         if (_startup is null) _driver.Screen.Update(new ScreenRect(0, 0, _driver.Screen.Width, _driver.Screen.Height));
         else
         {
-            _startup.Draw(_driver.Screen);
-            InitializeNativePrefix();
-            // 채팅과 미션이 같은 장기 WorldAudio를 첫 메뉴 전부터 사용한다.
-            _missionAudio ??= new HostMissionAudio(_startup, Window.Handle, _options.MuteAudio, () => _clientClock.Clock.WallSeconds(_clock.Milliseconds), _stateResources.Music);
-            _buttonSound = new HostButtonSound(_startup);
-            _cursor = new HostOriginalCursor(_startup);
-            PrepareNativeAssetTables();
+            DrawStartupScreen();
             PrepareNativeRenderer();
             InitializeNativeChat();
             _mainMenu = new HostMainMenu(_startup, _driver.Screen, new GumpButtonTreeHooks
@@ -617,7 +613,7 @@ public sealed partial class ClientHostGame : Game
         // 프레임캡처뒤고정한같은시각으로표시준비/주변난수소비를끝낸다음Kernel슬롯을순회한다.
         _missionSession?.RunMissionFrame();
         if (_menuDirty && _gumpDrawing is not null && _startup is not null)
-        { _startup.Draw(_driver.Screen); _gumpDrawing.Draw(); _menuDirty = false; }
+        { DrawStartupScreen(); _gumpDrawing.Draw(); _menuDirty = false; }
         // 원문439b96처럼 현재 그리기 뒤 같은 Chat 입력줄 전환 요청을 한 번 소비한다.
         ConsumeNativeChatInputToggle();
         base.Update(gameTime);

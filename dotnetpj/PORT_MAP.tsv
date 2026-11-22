@@ -1630,3 +1630,6 @@ cpppj/src/o/BaseFile.cpp	Netstorm.Core/Original/RawBaseFileEnvironment.cs	0444b4
 cpppj/src/o/BaseFile.h	Netstorm.Core/Original/RawBaseFileEnvironment.cs	1d5b1f43700cd3c74f048bf791c460bc2f23f154	port
 cpppj/src/client/ClientColorMapFile.cpp	Netstorm.Game/WindowsBaseFileDevice.cs	b601503d0edaceed695568b843ef20b828463968	port
 cpppj/src/client/ClientColorMapFile.cpp	Netstorm.Client/Display/ClientColorSortInput.File.cs	b601503d0edaceed695568b843ef20b828463968	port
+cpppj/src/client/ClientMain.cpp	Netstorm.Game/HostStartupColorMaps.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	port
+cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.ColorMaps.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	port
+cpppj/src/client/ClientMain.cpp	Netstorm.Client/Host/HostStartupScene.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	port
