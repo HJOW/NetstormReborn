@@ -158,6 +158,8 @@ export class CampaignGameWorld {
         const paused = Boolean(this.#services.paused?.()); session.scanBridgeDecay(this.#surfaceTime, paused); session.prepareFrame(this.#surfaceTime, paused);
     }
     // 단일 Kernel 뒤 현재 객체 보기만 다시 읽는다.
+    // 원문 UberGump::PollBattleResources 의 월드 분기이다: 접속(Fort 준비) 중이 아니면 Session 의 전투 자원 프레임을 실행한다. (2026-11-22 WB04-E1232)
+    runBattleResources() { const session = this.#live(); if (!this.#connecting) session.runBattleResources(); }
     finishKernelFrame() { this.#live(); if (!this.#connecting) this.refreshCampaignObjects(); }
     // 독립 실행에서는 시간차를 누적하고 실제 로그인 전송·Session Kernel을 진행한다.
     step(seconds) {

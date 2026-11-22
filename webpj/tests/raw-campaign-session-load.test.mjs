@@ -1952,6 +1952,7 @@ test('CampaignGameWorld TheWarBegins: 지연 생성과 실제 로그인 준비',
         deletion: { selected: () => 0 }, install: { translateYou: () => Uint8Array.of(89, 111, 117, 0), setConfig: () => {}, refreshWindowTitle: () => {} },
         ownership: { refreshProduction: () => {}, themeMode: () => 0 }, assets: { postPop: { playImpactSound: () => {} }, queueCommand: (...args) => queue.pushCommand(...args) },
         sound: { wallSeconds: () => 0, play: (...args) => { sounds.push(args); return 1; }, playOnceAt: () => {}, playLoopAt: forbidden('반복 소리'), stop: forbidden('정지'), isPlaying: () => false },
+        construction: { configInt: (_key, fallback) => fallback, wallSeconds: () => 100, refresh: () => {}, negativeQuantity: () => {}, boundsAssertion: () => {} }, // 전투 자원 프레임·간헐천 배치의 Config·벽시각·표시·진단 장치(E1232)
         missionOutcome: { demo: () => 0 }, player: { log: () => {} }, ai: { assertion: forbidden('AI 진단'), participation: { addChat: () => {}, clearChat: () => {} } },
         surfaceDisplay: { suppressed: () => false, invalidate: (...args) => dirty.push(args) }, soundViewChanged: (view) => views.push({ ...view }),
         cameraCommit: (context) => { commits.push(context); const pixels = context.camera.target().pixels; context.camera.applyPixelsToRendererAndSnapshot(pixels[0], pixels[1]); },
@@ -1993,6 +1994,14 @@ test('CampaignGameWorld TheWarBegins: 지연 생성과 실제 로그인 준비',
         for (let frame = 0; frame < 5; frame += 1) clock.captureFrame();
         worldPaused = true; world.runFrame(); assert.deepEqual(frameVisits, [0.125]);
         worldPaused = false; world.runFrame(); assert.deepEqual(frameVisits, [0.125, 0.25]); core.kernel.remove(probe);
+        // 전투 자원 프레임(원문 PollBattleResources): 일반 간헐천 모드(기본 1)에서는 아무 일도 없고, 보충 모드(0)에서는 30초 주기로 부족할 때 간헐천 하나를 더한다. (2026-11-22 WB04-E1232)
+        const aux = gameplay.gameAux(), geyserCount = () => session.world().objects().filter(({ object }) => object.type === aux.geyserType).length;
+        const geyserSids = session.world().objects().filter(({ object }) => object.type === aux.geyserType).map(({ sid }) => sid); assert.ok(geyserSids.length > 10);
+        for (const sid of geyserSids.slice(0, 10)) session.world().destroy(sid, 0);
+        const reduced = geyserCount(); aux.ordinaryGeysers = 1; aux.secondaryGeyserDeadline = 0; world.runBattleResources(); assert.equal(geyserCount(), reduced);
+        aux.ordinaryGeysers = 0; world.runBattleResources(); assert.equal(geyserCount(), reduced + 1); assert.ok(aux.secondaryGeyserDeadline >= core.processState.now + 30);
+        world.runBattleResources(); assert.equal(geyserCount(), reduced + 1);
+        world.finishKernelFrame(); // 보충된 간헐천이 객체 보기에도 반영된다.
         assert.throws(() => world.step(-1), /시간차 범위/); assert.throws(() => world.step(NaN), /시간차 범위/);
         assert.deepEqual(cursorPalettes, [expectedPalette]);
         const named = buildPaletteColorTable(cursorDisplayLogicalPalette(expectedPalette)); assert.deepEqual([...cursor.display.textColors()], [named.basic[7], named.basic[5]]);

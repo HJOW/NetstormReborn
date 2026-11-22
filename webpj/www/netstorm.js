@@ -2156,7 +2156,8 @@ export class Netstorm {
     _runCampaignKernelFrame() {
         const world = this._campaignWorld, kernel = this._clientKernel;
         if (!world || !kernel || world.connecting || world.session().connectionCallbackActive()) throw new Error('미션 Kernel 프레임의 현재 World·Kernel 수명 오류');
-        world.prepareKernelFrame(); kernel.runFrame(); world.finishKernelFrame();
+        // 원본 주 루프의 PollBattleResources(614)는 Kernel 뒤에 간헐천 보충·스펠 소비를 한다. 웹의 finishKernelFrame 은 객체 보기를 다시 읽는 일이라 새로 생긴 간헐천이 같은 프레임에 보이도록 그 앞에 둔다. (2026-11-22 WB04-E1232)
+        world.prepareKernelFrame(); kernel.runFrame(); world.runBattleResources(); world.finishKernelFrame();
         // 원본 `00439b43..64`: 전투 모드이고 T 키로 켠 게임 시간 표시 값이 있으면 매 프레임 Game Time 안내(종류 16, 0.1초 기한)를 같은 20칸 표에 요청한다. (2026-11-20 WB04-E1097)
         if (this._surfaceStorage.ownerMode.battle && this._clientGameplay.showGameTime().value) this._campaignProduction?.ui?.warnings()?.gameTimeStatus();
     }

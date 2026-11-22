@@ -3,7 +3,7 @@
 // 생성 자체는 미션을 시작하거나 loaded를 켜지 않는다. Login/State 반납 증빙은 후속이다.
 import { RawCampaignSessionOwners } from './raw-campaign-session-owners.js';
 import { RawBattleCompletion } from './raw-battle-completion.js';
-import { learnCampaignNewTechnology } from './raw-campaign-callbacks.js';
+import { learnCampaignNewTechnology, runCampaignBattleResources } from './raw-campaign-callbacks.js';
 import { refreshLocalRitualData } from './raw-ritual-refresh.js';
 import { createCampaignAi, crankCampaignAiMoney, setCampaignAiParameter, prepareCampaignAi, initializeCampaignAi, makeCampaignAi } from './raw-campaign-session-ai-public.js';
 import { RawCampaignSessionAiActions } from './raw-campaign-session-ai-actions.js';
@@ -1372,6 +1372,8 @@ export class RawCampaignSession {
     aiMemory() { return this.#aiActions().memory(); }
     // 외곽 callback이 같은 현재 기술 부모/안내 본문을 선택한다.
     learnNewTechnology(type) { learnCampaignNewTechnology(this.#live(), type); }
+    // 전투 자원 프레임(원문 RunBattleResources, 00486bc0)이다: 간헐천 보충·스펠 소비·SP 주기 지급을 현재 전역과 실제 장치로 실행한다. Client 프레임이 Kernel 뒤에서 부른다. (2026-11-22 WB04-E1232)
+    runBattleResources() { const o = this.#live(); runCampaignBattleResources(o, (packet) => this.sendLocalPacket(9, packet)); }
     // 전체 저장의 설치 관문도 기존 실제 owner가 유지한다.
     snapshotFort(slot) { this.#live().snapshotFort(slot); }
     // Battle은 Fort 전용 자식을 덧붙이지 않는 기존 본문에 연결한다.
