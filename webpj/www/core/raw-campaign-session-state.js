@@ -184,6 +184,8 @@ export class RawCampaignSessionState {
         this.archerState.angles = storage.angleDiagnostics(); this.gunTargetState.angles = this.archerState.angles; this.process.bindChecking(checking);
         // 각 RawCheckingFlag는 같은 현재 DWORD를 읽으며 값 대입 시 독립 입력으로 분리된다.
         for (const [state, key] of [[this.gunState, 'checking'], [this.gunTargetState, 'checking'], [o.rewardState, 'debugAsserts'], [this.missionAiSettings, 'checkingAsserts'], [this.soundState, 'debug'], [this.buildArrivalState, 'checking'], [this.geyserMinedState, 'checking'], [this.assetState, 'checkingForms'], [this.regularState, 'checkingForms'], [this.motionState.carrier, 'debug'], [this.motionState.cleanup, 'checking'], [this.generalDamageState, 'checking'], [this.burningState, 'checking'], [o.priestState.spawn, 'checkingPlacement'], [o.priestState.forcefieldRegular, 'debug'], [this.carrierDropState, 'checking']]) bindFlag(state, key, checking);
+        // 보호막 Regular 상태의 checking 은 속성이 아니라 현재 DWORD 를 돌려주는 함수라 위 bindFlag 의 'debug' 칸으로는 읽히지 않는다. 원문(forcefieldState_.debug=Checking())처럼 호출마다 같은 현재 DWORD 를 읽게 함수로 연결한다. (2026-11-22 WB04-E1215: 이전에는 연결이 없어 점검 모드에서 Dais.cpp 0x479 진단이 나오지 않았다)
+        o.priestState.forcefieldRegular.checking = () => checking() >>> 0;
         // CanonDecoder의 checking() 계약으로 같은 현재 DWORD를 빌린다. 숫자 getter를 함수 자리에 넘기지 않는다.
         const diagnostics = { checking: () => checking() >>> 0, assertion: assertion(o, 'CanonDecoder') }; o.metadata.geometry.decoderDiagnostics = diagnostics;
         // 네 실제 Canon 소비자는 같은 진단 객체를 빌린다.

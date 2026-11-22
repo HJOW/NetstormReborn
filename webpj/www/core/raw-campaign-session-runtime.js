@@ -3,6 +3,13 @@
 // 뒤에서 생성할 모듈은 호출 시점에 조회한다. 미설치 몸체를 빈 성공이나 다른 주문으로 대체하지 않는다.
 import { SQUID_DESTROY_EFFECT } from './squid-destroy.js';
 import { connectedCampaignBombTable } from './raw-campaign-session-particles.js';
+import { squidAssetVtable } from './squid-vtables.js';
+
+// 감시자 가상 표별 부모 삭제 통지(VT+34)의 분류이다(원문 AssetDeletionVtables.inc 4번째 열과 RawSurfaceDepend.cpp). (2026-11-22 WB04-E1215)
+const DEPENDENCY_DESTROY_TABLES = new Set([0x509148, 0x509210, 0x50eb98]); // 통지가 0x48f0a0(현재 자산을 flags 0 으로 가상 삭제)인 세 표
+const DEPENDENCY_HOME_TABLES = new Set([0x509930, 0x5099e8, 0x509aa0]); // 통지가 비행장 홈(0x45b4a0/0x45b5b0/0x45b680)인 세 표
+const EMPTY_NOTICE_FORM_TABLES = new Set([0x512110, 0x512188, 0x512208]); // Depend·Gump·Content Form 의 빈 통지(0x41c100)
+const PROCESS_FORM_TABLE = 0x512098; // Process Form: 서버일 때만 현재 PID 의 통지를 부른다.
 
 // 현재 raw의 DWORD/float를 실제 바이트에서 읽는다. 반환 슬롯은 복사하지 않는다.
 function dword(raw, offset) { return (raw[offset] | (raw[offset + 1] << 8) | (raw[offset + 2] << 16) | (raw[offset + 3] << 24)) >>> 0; }
@@ -68,10 +75,17 @@ export class RawCampaignSessionRuntime {
             capturedContent: (parent, previous) => { this.#live(); module(o, 'priestTakenNotice', '현재 사제 포획 안내 몸체 미설치').notify(parent, previous); },
             gumpNotice: o.services.gumpNotice,
             assets: { ...assets, emit: (event) => { this.#live(); if (event.effect === SQUID_DESTROY_EFFECT.transmit) { o.world.transmitDeletion(event.sid, event.flags); return; } if (typeof other !== 'function') throw new Error('실제 세션의 다른 파생 삭제/선택 효과 미연결'); other(event); } },
+            // 감시자(watcher)의 가상 표로 부모 삭제 통지(VT+34)를 고른다. 원문 Native(RawSurfaceStorage::NotifyDependency·NotifyAssetDependency)와 같다: (2026-11-22 WB04-E1215)
+            //  - 자산 83개 VT 중 0x509148·0x509210·0x50eb98 은 현재 자산을 flags 0 으로 가상 삭제한다(Factory 업그레이드 그림이 건물 파괴로 함께 지워지는 경로),
+            //  - 비행장 홈 세 VT(0x509930·0x5099e8·0x509aa0)는 홈 통지(훨리베이스·맨 오 워)이며, 나머지 자산 VT 는 빈 반환이다.
+            //  - Depend/Gump/Content Form VT(0x512110·0x512188·0x512208)는 빈 반환이고, Process Form(0x512098)만 서버일 때 PID 통지(processes.notifyDependency)로 간다. 그 밖은 오류다.
             dependencyNotice: (watcher, watched, form) => {
-                this.#live(); const raw = c.pool.slot(watcher);
-                if (raw[10] === 110 && dword(raw, 0) === 0x50eb98) { o.world.destroy(watcher, 0); return; }
-                c.processes.notifyDependency(watcher, watched, form);
+                this.#live(); const table = dword(c.pool.slot(watcher), 0);
+                if (DEPENDENCY_DESTROY_TABLES.has(table)) { o.world.destroy(watcher, 0); return; }
+                if (DEPENDENCY_HOME_TABLES.has(table)) { module(o, 'flyerModules', '현재 비행 홈 통지 몸체 미설치').frameHooks.homeNotice(watcher, 0, 0); return; }
+                if (squidAssetVtable(table) || EMPTY_NOTICE_FORM_TABLES.has(table)) return;
+                if (table === PROCESS_FORM_TABLE) { c.processes.notifyDependency(watcher, watched, form); return; }
+                throw new Error(`현재 Depend 수신자의 실제 가상34 미연결 VT0x${table.toString(16)}`);
             },
             // 주문은 같은 준비 상태/대상 예약을 빌리며 sender/connection을 읽지 않는 수신 부모를 사용한다.
             bombRegular: {

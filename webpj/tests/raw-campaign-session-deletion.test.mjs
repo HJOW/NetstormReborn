@@ -67,3 +67,40 @@ test('Session 삭제 분배: 선택된 부모와 기존 fallback의 예외를 �
 test('Session Bomb 삭제 자격: 전용163 그림·일반 genus/VT와 TYPE 물리 범위를 구별한다', () => {
     const o = scene(); try { const sid = o.core.pool.allocate(2); const k = o.deletionModules.kinds; o.core.types[163].flags2 = 0; image(o, sid, 163, 0x509b98); assert.equal(k.bomb(sid), true); o.core.pool.physical(sid)[10] = 162; assert.equal(k.bomb(sid), false); image(o, sid, 174, 0x502370); o.core.types[174].flags2 |= 0x100; assert.equal(k.bomb(sid), true); o.core.types[174].flags2 &= ~0x100; assert.equal(k.bomb(sid), false); image(o, sid, 255, 0x502370); assert.equal(k.bomb(sid), false); } finally { o.dispose(); }
 });
+
+test('Session 삭제 분배: 공통만 쓰는 열세 가상 표는 공통 Pre/Post 로 가고 가상 삭제기도 같은 분배기에 보낸다(E1215)', () => {
+    const o = scene(); const common = o.world.commonDeletion; const calls = []; const saved = [common.preDestroy, common.postDestroy, o.core.virtualDestroy.destroy];
+    common.preDestroy = (...args) => calls.push(['pre', ...args]); common.postDestroy = (...args) => calls.push(['post', ...args]); o.core.virtualDestroy.destroy = (...args) => { calls.push(['virtual', ...args]); return 9; };
+    try {
+        const sid = o.core.pool.allocate(2); const effects = {};
+        // 원문 AssetDeletionVtables.inc 의 4b0950/4b0840 묶음과 41f910 단일 점프 표: 주문 폭발 효과·0x50c9f0·0x50cc08·0x50db78.
+        for (const vt of [0x5026a0, 0x502778, 0x502840, 0x502908, 0x5029d0, 0x502aa8, 0x502b70, 0x50c9f0, 0x50cc08, 0x50db78, 0x502c38, 0x502cf0, 0x502db0]) {
+            image(o, sid, 83, vt); calls.length = 0;
+            o.worldHooks.assets.emit({ sid, flags: 0x40, effect: E.preDestroy }); o.worldHooks.assets.emit({ sid, flags: 0x40, effect: E.postDestroy }); assert.equal(o.worldHooks.destroy(sid, 3, effects), 9);
+            assert.deepEqual(calls, [['pre', sid, 0x40], ['post', sid, 0x40], ['virtual', sid, 3, effects]], '0x' + vt.toString(16));
+        }
+    } finally { [common.preDestroy, common.postDestroy, o.core.virtualDestroy.destroy] = saved; o.dispose(); }
+});
+
+test('Session 삭제 분배: 거주 구역 후처리는 extra 비트 9 가 없을 때만 거주 목록에서 지우고 공통 Post 를 부른다(E1215)', () => {
+    const o = scene(); const common = o.world.commonDeletion; const calls = []; const post = common.postDestroy; common.postDestroy = (...args) => calls.push(['post', ...args]);
+    try {
+        const sid = o.core.pool.allocate(2); const list = o.state.assetState.currentResidences(); image(o, sid, 89, 0x50f540);
+        list.append(sid); list.append(sid + 1); o.worldHooks.assets.emit({ sid, flags: 5, effect: E.postDestroy }); assert.deepEqual([...list.items()], [sid + 1]); assert.deepEqual(calls, [['post', sid, 5]]);
+        // extra(+40) 의 비트 1 또는 8 이 있으면 목록을 건드리지 않는다.
+        for (const bit of [1, 8]) { o.core.pool.physical(sid)[40] = bit; list.append(sid); calls.length = 0; o.worldHooks.assets.emit({ sid, flags: 6, effect: E.postDestroy }); assert.deepEqual([...list.items()], [sid + 1, sid], '비트 ' + bit); assert.deepEqual(calls, [['post', sid, 6]]); list.removeAll(sid); }
+    } finally { common.postDestroy = post; o.dispose(); }
+});
+
+test('Session 삭제 분배: Player 전처리는 이전 포인터 정리→공통 Pre→상태 비트 정리 순서이고 공통 Pre 가 바꾼 소유자 기록을 따른다(E1215)', () => {
+    const o = scene(); const common = o.world.commonDeletion; const calls = []; const pre = common.preDestroy; const post = common.postDestroy;
+    try {
+        const sid = o.core.pool.allocate(2); const raw = image(o, sid, 152, 0x50ee08); raw[34] = 2; const records = o.players; const view = (owner, offset) => new DataView(records.buffer, records.byteOffset + owner * 0xb4 + offset, 4);
+        view(2, 0x9c).setUint32(0, sid, true); view(2, 0x50).setUint32(0, 0x0000000f, true); view(3, 0x50).setUint32(0, 0x000000f0, true);
+        common.preDestroy = (target, flags) => { calls.push(['pre', target, flags, view(2, 0x9c).getUint32(0, true)]); o.core.pool.physical(sid)[34] = 3; }; // 공통 Pre 가 소유자를 3 으로 바꾼다.
+        common.postDestroy = (...args) => calls.push(['post', ...args]);
+        o.worldHooks.assets.emit({ sid, flags: 0x20, effect: E.preDestroy }); o.worldHooks.assets.emit({ sid, flags: 0x20, effect: E.postDestroy });
+        assert.deepEqual(calls, [['pre', sid, 0x20, 0], ['post', sid, 0x20]], '이전 포인터는 공통 Pre 전에 0 이 된다');
+        assert.equal(view(2, 0x50).getUint32(0, true), 0x0f, '이전 소유자 기록은 그대로'); assert.equal(view(3, 0x50).getUint32(0, true), 0x1f0, '새 소유자 기록: 비트 0 제거·0x100 설정');
+    } finally { common.preDestroy = pre; common.postDestroy = post; o.dispose(); }
+});

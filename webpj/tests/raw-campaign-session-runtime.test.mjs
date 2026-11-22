@@ -116,11 +116,18 @@ test('Session Runtime: 의식 준비는 현재 Player9/동맹81을 값 복사하
     } finally { o.dispose(); }
 });
 
-test('Session Runtime: 의존 통지는 현재 TYPE110/VT가 둘 다 맞을 때만 가상 삭제0으로 분배한다', () => {
-    const o = scene(); try { const sid = actor(o, 110); const raw = o.core.pool.physical(sid); const calls = []; const stop = new Error('현재 의존 부모 관측'); const destroy = o.world.destroy; const notify = o.core.processes.notifyDependency;
-        o.world.destroy = (...args) => { calls.push(['destroy', ...args]); throw stop; }; o.core.processes.notifyDependency = (...args) => { calls.push(['notify', ...args]); throw stop; };
-        put(raw, 0, 0x50eb98); assert.throws(() => o.worldHooks.dependencyNotice(sid, 8, 9), (error) => error === stop); raw[10] = 109; assert.throws(() => o.worldHooks.dependencyNotice(sid, 8, 9), (error) => error === stop);
-        raw[10] = 110; put(raw, 0, 0x501dd0); assert.throws(() => o.worldHooks.dependencyNotice(sid, 8, 9), (error) => error === stop); assert.deepEqual(calls, [['destroy', sid, 0], ['notify', sid, 8, 9], ['notify', sid, 8, 9]]); o.world.destroy = destroy; o.core.processes.notifyDependency = notify;
+test('Session Runtime: 의존 통지는 감시자의 가상 표로 원문 부모 삭제 통지(VT+34)를 고른다', () => {
+    const o = scene(); try { const sid = actor(o, 110); const raw = o.core.pool.physical(sid); const calls = []; const destroy = o.world.destroy; const notify = o.core.processes.notifyDependency; const flyers = o.flyerModules;
+        o.world.destroy = (...args) => { calls.push(['destroy', ...args]); }; o.core.processes.notifyDependency = (...args) => { calls.push(['notify', ...args]); }; o.flyerModules = { frameHooks: { homeNotice: (...args) => { calls.push(['home', ...args]); } } };
+        const send = (vt, type = 110) => { raw[10] = type; put(raw, 0, vt); calls.length = 0; o.worldHooks.dependencyNotice(sid, 8, 9); return calls.map((call) => call.join(':')); };
+        // 현재 자산을 flags 0 으로 가상 삭제하는 세 표(표시 더미 0x50eb98·Factory 0x509148·Outpost 0x509210): TYPE 은 보지 않는다(Factory 업그레이드 그림은 건물과 같은 TYPE).
+        for (const vt of [0x50eb98, 0x509148, 0x509210]) assert.deepEqual(send(vt, 85), [`destroy:${sid}:0`], '0x' + vt.toString(16));
+        // 비행장 홈 세 표는 홈 통지이고, 나머지 자산 표(base 0x501dd0 포함)와 Depend/Gump/Content Form 표는 빈 반환이다.
+        for (const vt of [0x509930, 0x5099e8, 0x509aa0]) assert.deepEqual(send(vt), [`home:${sid}:0:0`], '0x' + vt.toString(16));
+        for (const vt of [0x501dd0, 0x501ea0, 0x50f210, 0x512110, 0x512188, 0x512208]) assert.deepEqual(send(vt), [], '0x' + vt.toString(16));
+        // Process Form 만 서버일 때의 PID 통지로 가고, 알 수 없는 표는 오류이다.
+        assert.deepEqual(send(0x512098), [`notify:${sid}:8:9`]); assert.throws(() => send(0xcafebabe), /가상34 미연결/);
+        o.world.destroy = destroy; o.core.processes.notifyDependency = notify; o.flyerModules = flyers;
     } finally { o.dispose(); }
 });
 
