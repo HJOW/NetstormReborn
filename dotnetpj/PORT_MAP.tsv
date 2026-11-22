@@ -1757,3 +1757,7 @@ cpppj/src/o/RawCrossbowAnimation.cpp	Netstorm.Core/Original/RawCrossbowAnimation
 cpppj/src/o/RawCrossbowAnimation.h	Netstorm.Core/Original/RawCrossbowAnimation.cs	03320991f3a43d13f5d3b0f2863351d38e6b0a4d	port
 cpppj/src/o/RawCrossbowAnimation.cpp	Netstorm.Core/Original/CrossbowAnimation.cs	03320991f3a43d13f5d3b0f2863351d38e6b0a4d	port
 cpppj/src/o/RawCrossbowAnimation.h	Netstorm.Core/Original/CrossbowAnimation.cs	03320991f3a43d13f5d3b0f2863351d38e6b0a4d	port
+cpppj/src/o/RawIceCannonFire.cpp	Netstorm.Core/Original/RawIceCannonFire.cs	b242648ab490a50e52d03dc87ba4c898f2629a72	port
+cpppj/src/o/RawIceCannonFire.h	Netstorm.Core/Original/RawIceCannonFire.cs	b242648ab490a50e52d03dc87ba4c898f2629a72	port
+cpppj/src/o/RawIceCannonFire.cpp	Netstorm.Core/Original/IceCannonFire.cs	b242648ab490a50e52d03dc87ba4c898f2629a72	port
+cpppj/src/o/RawIceCannonFire.h	Netstorm.Core/Original/IceCannonFire.cs	b242648ab490a50e52d03dc87ba4c898f2629a72	port

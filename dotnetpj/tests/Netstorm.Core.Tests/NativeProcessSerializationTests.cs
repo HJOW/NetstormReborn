@@ -10,6 +10,12 @@ namespace Netstorm.Core.Tests;
 /// <summary>기존 Dais/Path 본체를 실제 장기 저장소 기본 전송으로 호출한다.</summary>
 public sealed class NativeProcessSerializationTests
 {
+    /// <summary>아이스Native공통접두는현재헤더를쓰고전용16BYTE/외부이미지를보존한다.</summary>
+    [Fact]
+    public void IceCannonFireUsesSameNativePrefixAndPreservesExtraState()
+    {
+        var storage=Storage();SquidProcessHost host=storage.Processes().Host();int parent=storage.Pool.Allocate(SidAllocation.Server);storage.Pool.RawSlot(parent).Clear();storage.Pool.RawSlot(parent)[10]=129;PriestPlainCanonType[] frames=Enumerable.Range(0,188).Select(_=>new PriestPlainCanonType()).ToArray();var state=new CannonFireState{Now=10,Type=129,DisplayType=130,Delay=.08f,CurrentType=storage.GameAux().RainCannonTypeBox};var logic=new RawIceCannonFire(storage.Pool,storage.Types,frames,state,new(),new());var fields=new IceCannonFireFields(0xa5);logic.Initialize(fields,77,78);var process=new IceCannonFire(logic,fields);Assert.NotSame(fields.Common,process.Fields.Common);Assert.NotSame(fields.Extra,process.Fields.Extra);Assert.Same(process,host.Attach(process,host.AnimationProcessType(true),parent,0x10));storage.GameAux().FireAnimationHeader[0]=0x73;storage.GameAux().FireAnimationHeader[1]=0x81;storage.GameAux().RainCannonTypeBox.Value=130;storage.GameAux().ResetForGeneralWorld();Assert.Equal(130u,logic.Type());Assert.Equal(129u,state.Type);byte[] extra=process.Fields.Extra.ToArray(),packet=Enumerable.Repeat((byte)0xa7,2048).ToArray();Assert.Equal(25,host.WriteFormPacket(process.Form(),1,packet,storage.GameAux().SquidTransmission));Assert.Equal(0x81,packet[0]);Assert.Equal(0x73,packet[1]);Assert.Equal((uint)process.Form(),BinaryPrimitives.ReadUInt32LittleEndian(packet.AsSpan(4)));Assert.Equal((uint)parent,BinaryPrimitives.ReadUInt32LittleEndian(packet.AsSpan(9)));Assert.Equal(0xa7,packet[25]);Assert.Equal(extra,process.Fields.Extra);Assert.Equal(fields.Extra,process.Fields.Extra);storage.Processes().Kernel().DrainOwnedForShutdown();
+    }
     /// <summary>크로스보우의현재원문역할/VT/헤더와같은Native Form writer를검사한다.</summary>
     [Fact]
     public void CrossbowAnimationUsesCurrentNativeHeaderAndExistingRoleBox()
