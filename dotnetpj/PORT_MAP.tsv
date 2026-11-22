@@ -1498,3 +1498,9 @@ cpppj/src/client/RawSurfaceStorage.cpp	Netstorm.Core/Original/RawSurfaceStorage.
 cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceStorage.Path.cs	14fd017c3b6ca87880374e044e3ac00bf0575c2e	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.SquidMutations.cs	baf141ebe8d2893459a1b18ea74a6caa88504468	port
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.SquidMutations.cs	baf141ebe8d2893459a1b18ea74a6caa88504468	port
+cpppj/src/o/RawGeyserMined.cpp	Netstorm.Core/Original/RawGeyserMined.cs	0d82e448de8ce679357cda8042bbc8226b8ed1b2	port
+cpppj/src/o/RawGeyserMined.cpp	Netstorm.Net/GeyserMinedRegistration.cs	0d82e448de8ce679357cda8042bbc8226b8ed1b2	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.GeyserMined.cs	baf141ebe8d2893459a1b18ea74a6caa88504468	port
+cpppj/src/o/RawGeyserMined.h	Netstorm.Core/Original/RawGeyserMined.cs	0d82e448de8ce679357cda8042bbc8226b8ed1b2	port
+cpppj/src/o/RawGeyserMined.h	Netstorm.Net/GeyserMinedRegistration.cs	0d82e448de8ce679357cda8042bbc8226b8ed1b2	port
+cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.GeyserMined.cs	baf141ebe8d2893459a1b18ea74a6caa88504468	port

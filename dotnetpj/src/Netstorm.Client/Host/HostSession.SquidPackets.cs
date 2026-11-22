@@ -21,6 +21,8 @@ public sealed record HostSquidPacketEffects
     public Action<uint, ConstructionMoneyNotice>? ConstructionMoney { get; init; }
     /// <summary>같은 실제 월드의 전체 가상10 삭제 분배다. 일반 삭제 Pre/Post로 대신할 수 없다.</summary>
     public Action<int, uint>? VirtualDestroy { get; init; }
+    /// <summary>현재 파일 이름을 실제 자산 번호/위치 음향 장치로 전달한다.</summary>
+    public Action<float, float, string, uint>? PlayAtFile { get; init; }
 }
 
 /// <summary>고정F가 같은 객체/압축/검증 본체를 직접 선택하는 실제 Host 부분이다.</summary>
@@ -51,6 +53,7 @@ public sealed partial class HostSession
         BindDaisPacketTransmission();
         BindPathSearchDevices(storage);
         BindConstructionRefundDevices();
+        BindGeyserMinedDevices();
     }
     /// <summary>실제 프로세스 수명이 끝날 때 수신 전용 이름/외부 효과/종속 UI의 참조를 함께 반납한다.</summary>
     private void ReleaseSquidPacketDevices()
@@ -61,6 +64,7 @@ public sealed partial class HostSession
         ReleasePathSearchDevices();
         ReleaseConstructionRefundDevices();
         ReleasePathParentDevices();
+        ReleaseGeyserMinedDevices();
     }
     /// <summary>번호 선택 시점의 현재 TYPE를 읽는다.</summary>
     private OriginalTypeRecord SquidPacketType(uint type) => _terrainPopTypes is { } types && type < types.Count ? types[(int)type]
@@ -139,6 +143,7 @@ public sealed partial class HostSession
         if (_playerRecordsReleased || ProcessBindingsReturned() || _playerProcessRuntime is null) throw new ObjectDisposedException(nameof(HostSession), "고정 gameplay의 실제 World 반납 뒤 호출");
         switch (entry)
         {
+            case 0x4266c0: GeyserMined.HandlePacket(packet); return;
             case 0x4327b0:
             case 0x433170:
             case 0x432850: ReceiveSquidMutationPacket(entry, packet); return;
