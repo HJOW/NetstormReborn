@@ -1984,7 +1984,10 @@ test('CampaignGameWorld TheWarBegins: 지연 생성과 실제 로그인 준비',
         cursor.setPalette = (...args) => { cursorPalettes.push(args[0].slice()); cursorSetPalette(...args); };
         assert.equal(world.completeLocalConnection(), true); assert.equal(world.connecting, false); assert.equal(world.completeLocalConnection(), false);
         const frameVisits = [], core = session.core(), probe = core.kernel.add({ runFrame: () => frameVisits.push(core.processState.now) });
+        // Client 단일 Kernel 프레임은 준비 앞에서 다리 붕괴 검사(원본 RunClientBridgeDecay)를 정확히 한 번 부른다. (2026-11-22 WB04-E1230)
+        const decayCalls = [], decayOriginal = session.scanBridgeDecay.bind(session); session.scanBridgeDecay = (time, paused) => { decayCalls.push([time.game, paused]); decayOriginal(time, paused); };
         world.prepareKernelFrame(); assert.equal(core.processState.now, 0.125); assert.deepEqual(frameVisits, []);
+        assert.deepEqual(decayCalls, [[0.125, false]]); delete session.scanBridgeDecay;
         core.kernel.runFrame(); world.finishKernelFrame(); assert.deepEqual(frameVisits, [0.125]);
         // 실제 공유 Client 시계를 다음 125ms까지 전진시킨다.
         for (let frame = 0; frame < 5; frame += 1) clock.captureFrame();

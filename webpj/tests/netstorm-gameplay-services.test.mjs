@@ -93,6 +93,9 @@ test('Netstorm World 반납: 초기 캡처 기한을 0 으로 쓰고 World 가 �
     assert.equal(app._clientLocal.captureEnd().value, 0); assert.deepEqual(disposed, ['dispose']); assert.equal(app._campaignWorld, null);
     // World 가 없으면 반납이 아무것도 하지 않으므로 값이 남는다(다음 World 의 정리가 담당한다).
     app._clientLocal.captureEnd().value = 7; app._releaseCampaignWorld(); assert.equal(app._clientLocal.captureEnd().value, 7);
+    // 건물 숨김(0059a8ac)은 원본 State 정리처럼 미션을 떠날 때 0 으로 돌아가 다음 미션에 남지 않는다. World 가 없으면 그대로 둔다. (2026-11-22 WB04-E1230)
+    app._clientGameplay.hideBuildings().value = 1; app._releaseCampaignWorld(); assert.equal(app._clientGameplay.hideBuildings().value, 1);
+    app._campaignWorld = { dispose: () => {} }; app._releaseCampaignWorld(); assert.equal(app._clientGameplay.hideBuildings().value, 0);
 });
 
 // 원본 CampaignClientServices 의 소리·안내 서비스(보호막 안내음·번역, 유닛 상실음, 사제 낙하음, 섬 피격 경고 사건, Cast/Drop 비용 표시, 중복 워크샾 진단, 기술 획득)가

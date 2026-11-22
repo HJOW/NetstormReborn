@@ -508,6 +508,9 @@ export class RawCampaignSession {
         if (!paused) { if (!o.aiRuntime) throw new Error('실제 Session 자동 AI 프레임 설치 전 호출'); o.aiRuntime.frame(); }
         o.world.prepareFrame(current);
     }
+    // Client 공통 프레임이 Kernel 앞에서 부르는 다리 붕괴 검사이다(원본 ClientMain 의 RunClientBridgeDecay, 00422bc0). 같은 스캔 커서·기한으로 한 프레임에 칸 하나를 골라 붕괴 몸체에 넘긴다.
+    // 앱은 Session.runFrame 대신 Client 단일 Kernel 을 쓰므로 이 호출이 없으면 다리에 금이 가거나 무너지지 않았다. (2026-11-22 WB04-E1230)
+    scanBridgeDecay(time, paused) { this.#live().world.scanBridgeDecay(time, paused); }
     // 다리 붕괴 검사와 준비를 수행한 뒤 정지하지 않은 Kernel만 한 번 실행한다.
     runFrame(time, paused) {
         const o = this.#live(); o.world.scanBridgeDecay(time, paused); this.prepareFrame(time, paused);

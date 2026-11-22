@@ -153,7 +153,9 @@ export class CampaignGameWorld {
     prepareKernelFrame() {
         const session = this.#live(); if (typeof this.#services.frameTime !== 'function') throw new Error('실제 Client Kernel 프레임의 Session/시각 공급자 누락');
         if (this.#connecting) return;
-        this.#surfaceTime = { ...this.#services.frameTime() }; this.#surfaceView(); session.prepareFrame(this.#surfaceTime, Boolean(this.#services.paused?.()));
+        this.#surfaceTime = { ...this.#services.frameTime() }; this.#surfaceView();
+        // 원본 주 루프는 Kernel 앞에서 RunClientBridgeDecay 를 부른다. 다리 붕괴 검사를 준비보다 먼저 한다(Session.runFrame 과 같은 순서). (2026-11-22 WB04-E1230)
+        const paused = Boolean(this.#services.paused?.()); session.scanBridgeDecay(this.#surfaceTime, paused); session.prepareFrame(this.#surfaceTime, paused);
     }
     // 단일 Kernel 뒤 현재 객체 보기만 다시 읽는다.
     finishKernelFrame() { this.#live(); if (!this.#connecting) this.refreshCampaignObjects(); }
