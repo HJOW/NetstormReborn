@@ -85,6 +85,17 @@ public static class RawPlayerRegular
     /// <exception cref="ArgumentException">Player 가상 표 불일치다.</exception>
     /// <exception cref="InvalidOperationException">선택된 실제 장치가 미연결이다.</exception>
     public static float Run(RawSidPool pool, uint battleOwner, uint templateOwner, bool battle, int sid, uint @event, uint count, float payload, PlayerRegularHooks hooks)
+        => RunCurrent(pool, () => battleOwner, () => templateOwner, () => battle, sid, @event, count, payload, hooks);
+
+    /// <summary>같은 현재 두 owner와 전투 모드를 원문 소비 위치마다 읽고 효과 사이의 변경을 보존한다.</summary>
+    public static float Run(RawSidPool pool, PlayerWorldState state, SquidOwnerMode mode, int sid, uint @event, uint count, float payload, PlayerRegularHooks hooks)
+    {
+        ArgumentNullException.ThrowIfNull(state); ArgumentNullException.ThrowIfNull(mode);
+        return RunCurrent(pool, () => state.BattleOwner, () => state.TemplateOwner, () => mode.Battle, sid, @event, count, payload, hooks);
+    }
+
+    /// <summary>값형 검사와 실제 현재 owner가 같은 본체를 공유하며 Template 통지 직전 owner를 다시 조회한다.</summary>
+    private static float RunCurrent(RawSidPool pool, Func<uint> battleOwner, Func<uint> templateOwner, Func<bool> battle, int sid, uint @event, uint count, float payload, PlayerRegularHooks hooks)
     {
         ArgumentNullException.ThrowIfNull(pool);
         ArgumentNullException.ThrowIfNull(hooks);
@@ -101,7 +112,7 @@ public static class RawPlayerRegular
 
         ReadOnlySpan<byte> raw = pool.Slot(sid);
         byte owner = raw[pool.Edition == OriginalEdition.Patch1078 ? 34 : 32];
-        if (owner != battleOwner || count == 0)
+        if (owner != battleOwner() || count == 0)
         {
             return payload;
         }
@@ -109,7 +120,7 @@ public static class RawPlayerRegular
         if (@event == FirstEvent)
         {
             hooks.Log(LogGroup, "SORE LOSER TEST: ");
-            if (battle)
+            if (battle())
             {
                 hooks.Log(LogGroup, "STARTING.\n");
                 if (hooks.ReserveRegular())
@@ -126,18 +137,18 @@ public static class RawPlayerRegular
 
         if (@event == SecondEvent)
         {
-            if (battle)
+            if (battle())
             {
                 // Native의 실제 owner 수명은 반환 span 쓰기와 현재 owner 통지까지 유지한다. 독립 typed는 외곽 수명을 쓴다.
                 using IDisposable? hold = hooks.TemplatePin?.Invoke();
-                Memory<byte> bytes = hooks.TemplateState(templateOwner);
+                Memory<byte> bytes = hooks.TemplateState(templateOwner());
                 if (bytes.IsEmpty)
                 {
                     throw new ArgumentOutOfRangeException(nameof(hooks), "Player 실제 Template State 바이트 누락");
                 }
 
                 bytes.Span[0] |= TemplateMark;
-                hooks.TemplateChanged(templateOwner);
+                hooks.TemplateChanged(templateOwner());
             }
 
             return 0.0f;

@@ -180,6 +180,7 @@ public sealed partial class ClientHostGame : Game
         {
             owner.Storage.BindSerializationGlobals(_stateResources.Templates.SerializationGlobals);
             owner.BindDisplayDiagnostics(ErrorLog.RecordAssertion);
+            owner.Storage.BindGraphTrace((level, text) => ErrorLog.Note($"원본 로그 {level}: {text}"));
             owner.BindNativeTransmission(_connections, ClearNativeUserSelection);
         });
         _sidLists = _surfaceGlobals.Storage.SidLists;

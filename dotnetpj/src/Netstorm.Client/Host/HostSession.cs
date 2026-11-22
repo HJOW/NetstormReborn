@@ -2900,6 +2900,8 @@ public sealed partial class HostSession
     /// <summary>Player 정기 분배 전에 사용하던 공통 정기 분배기다. Player 사슬이 장식 사슬을 감싸므로 해제 순서는 Player가 먼저다.</summary>
     /// <remarks>2026-11-19 0.643에서 R4-4 Player 정기용으로 추가했다. Player 가상표가 아니면 이전 처리기로 넘긴다.</remarks>
     private RegularHandler? _beforePlayerRegular;
+    /// <summary>같은 장기 Player 정기가 약하게 빌리는 실제 현재 Template/전체 Runtime 후단이다.</summary>
+    private RawSurfacePlayerBindings? _nativePlayerRegular;
 
     /// <summary>Player 정기에서 기록한 그룹 29 로그·진단 문장이다. 화면 로그 UI는 R6에서 잇는다.</summary>
     /// <remarks>2026-11-19 0.643에서 추가했다. L1에서 사건 1의 소어 루저 문장과 미지원 사건 진단을 대조할 때 쓴다.</remarks>
@@ -2957,6 +2959,11 @@ public sealed partial class HostSession
             throw new ArgumentException("Player 정기 TYPE은 지형 Pop 장치와 같은 인스턴스여야 한다", nameof(types));
         }
 
+        if (_surfaceStorage is { } storage && storage.UsesNativePlayerRegularState())
+        {
+            var bindings = new RawSurfacePlayerBindings { State = CurrentPlayerTemplateState, Changed = NotifyPlayerTemplateState, Pin = () => PinRuntime() };
+            storage.BindPlayerRegularRuntime(bindings); _nativePlayerRegular = bindings;
+        }
         _beforePlayerRegular = processes.Regular();
         processes.SetRegularHandler(RegularHandlerWithPlayer(_beforePlayerRegular));
     }
@@ -2971,6 +2978,7 @@ public sealed partial class HostSession
     /// <remarks>2026-11-19 0.643에서 R4-4 Player 정기용으로 추가했다. 근거: cpppj o/RawPlayerRegular.cpp 24~43행의 RunPlayerRegular다. 새 정기 예약 실패(new 40)는 관리 코드에서 일어나지 않으므로 예약은 항상 성공으로 두고 실제 부착 실패는 null 반환으로 잇는다. 실제manager의State getter/Notify와같은헤더를사용하고제품Runtime전체수명을pin한다. Native UI의나머지통지는R6에서잇는다.</remarks>
     private float RunPlayerRegularSession(int sid, uint @event, uint count, float payload, RegularHandler? fallback)
     {
+        if (_nativePlayerRegular is not null) return _surfaceStorage!.PlayerRegular(sid, @event, count, payload);
         SquidProcessHost processes = PlayerProcesses ?? throw new InvalidOperationException("Player 정기 프로세스 미연결");
         var hooks = new PlayerRegularHooks
         {
@@ -2982,7 +2990,7 @@ public sealed partial class HostSession
             TemplateChanged = NotifyPlayerTemplateState,
             TemplatePin = () => Gameplay.Borrowed() ? Gameplay.PinCurrentRuntime(this) : null,
         };
-        return RawPlayerRegular.Run(Pool, MissionPlayer.BattleOwner, MissionPlayer.TemplateOwner, OwnerMode.Battle, sid, @event, count, payload, hooks);
+        return RawPlayerRegular.Run(Pool, MissionPlayer, OwnerMode, sid, @event, count, payload, hooks);
     }
 
     /// <summary>같은 장기 풀의 AI 통지 본체다. BuildAiRuntimeDevices로 연결하기 전에는 null이다.</summary>

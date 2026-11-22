@@ -1639,3 +1639,7 @@ cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.Product
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.ProductionSync.cs	baf141ebe8d2893459a1b18ea74a6caa88504468	port
 cpppj/src/client/UberHud.inc	Netstorm.Game/ClientHostGame.ColorMaps.cs	16431ec18a3f7518d7aaa55929b280ab1cc6a8fb	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Client/ClientSurfaceGlobals.Transmission.cs	a04251d110150f31d67362f2ef244ddfc44deecc	port
+cpppj/src/client/RawSurfacePlayerRegular.cpp	Netstorm.Core/Original/RawSurfaceStorage.PlayerRegular.cs	f7262ff00279349518698b151f7bc1173d8ae25a	port
+cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceStorage.PlayerRegular.cs	f7262ff00279349518698b151f7bc1173d8ae25a	port
+cpppj/src/o/RawPlayerRegular.cpp	Netstorm.Core/Original/RawPlayerRegular.cs	f7262ff00279349518698b151f7bc1173d8ae25a	port
+cpppj/src/o/RawPlayerRegular.h	Netstorm.Core/Original/RawPlayerRegular.cs	f7262ff00279349518698b151f7bc1173d8ae25a	port

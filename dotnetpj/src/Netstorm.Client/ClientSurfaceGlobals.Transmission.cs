@@ -25,6 +25,7 @@ public sealed partial class ClientSurfaceGlobals
                 clearSelection();
             },
         });
+        Storage.BindPlayerRegularState(Gameplay.Player);
     }
 
     /// <summary>같은 가변 버퍼를 재사용하고 각 효과 직전에 현재 연결과 Player를 다시 조회한다.</summary>

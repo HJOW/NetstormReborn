@@ -195,6 +195,7 @@ public sealed partial class HostSession
         ReleasePriestWorld();
         ReleaseProductionWorld();
         ReleaseSquidPacketDevices();
+        if (_nativePlayerRegular is { } playerRegular) { _surfaceStorage!.ReleasePlayerRegularRuntime(playerRegular); _nativePlayerRegular = null; }
         _reservedPlayerRegular = null;
         _playerProcessUse?.Dispose(); _playerProcessUse = null;
         _playerProcessCurrent?.SetTarget(null!); _playerProcessCurrent = null;
