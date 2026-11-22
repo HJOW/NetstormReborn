@@ -18,6 +18,8 @@ public sealed class MarkupGameAssets
     public MarkupAssets Pictures { get; }
     /// <summary>원문 00541348의 실제 최초 타입 수다.</summary>
     public int TypeCount => _types.Types.Count;
+    /// <summary>현재 월드 사본과 구별하는 동일 최초 TYPE 표의 읽기 전용 주소다.</summary>
+    public IReadOnlyList<OriginalTypeRecord> LoadedTypes => _types.Types;
     /// <summary>원문 내장 슬롯과 자산 슬롯의 경계다.</summary>
     private const int FirstAssetType = 70;
     /// <summary>현재 로딩 순서의 원문 기준점/논리 수와 물리 블록만 한 번 연결한다.</summary>

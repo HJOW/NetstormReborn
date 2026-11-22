@@ -11,6 +11,12 @@ public sealed partial class HostHtmlText
 {
     /// <summary>같은 공통 등록·입력·수명.</summary>
     private readonly GumpButtonTree _tree;
+    /// <summary>본문/한 줄 문자와 추가 HUD 공장이 공유하는 실제 공통 트리다.</summary>
+    public GumpButtonTree Tree => _tree;
+    /// <summary>같은 실제 한 줄 문자의 현재 종류 전역이다.</summary>
+    public TextGumpState SingleState { get; } = new();
+    /// <summary>생성/측정/그림/소멸이 공유하는 실제 한 줄 Text 본체다.</summary>
+    public TextGump Single { get; }
     /// <summary>실제 글리프를 그리는 같은 논리 화면.</summary>
     private readonly Screen _screen;
     /// <summary>본문과 글리프 장치가 공유하는 현재 클립.</summary>
@@ -69,6 +75,9 @@ public sealed partial class HostHtmlText
         StyleTextMarkup.BindStyleTextMarkupPalette(markupHooks, screen.Colors());
         var commands = new StyleTextMarkup(Fragments, pictures, _markupState, markupHooks); commands.Hooks(styleHooks);
         var style = Style = new StyleText(Fragments, styleHooks); var bufferHooks = new StyleTextBufferHooks();
+        Single = new(_tree.Create, SingleState, _tree.Factory, _tree.Lifetime, _tree.Collection, _clip, style,
+            new() { Node = token => _tree.Node(token) as TextGumpNode ?? _tree.ExternalDrawing.Text(token), BaseNode = _tree.Node });
+        TextGump.BindTextGumpLifetime(_tree.LifetimeHooks, token => _tree.Node(token) is TextGumpNode ? Single : null);
         StyleTextBuffer.BindStyleTextBufferFonts(bufferHooks, font); StyleTextBuffer.BindStyleTextBufferMarkup(bufferHooks, pictures);
         Buffers = new StyleTextBufferStore(Fragments, style, bufferHooks, token =>
         {

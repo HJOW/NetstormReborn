@@ -37,9 +37,8 @@ public sealed class HostSaveFortDialog
         string language = startup.Configuration.Configuration.Get("currentLanguage") ?? "english";
         byte[]? bytes = startup.Files.TryReadAllBytes("d/xlat." + language);
         var translation = bytes == null ? null : XlatTable.FromFileBytes(bytes);
-        _title = new TextGump(_tree.Create, new(), _tree.Factory, _tree.Lifetime, _tree.Collection, text.Clip, text.Style,
-            new() { Node = t => _tree.Node(t) as TextGumpNode, BaseNode = _tree.Node });
-        TextGump.BindTextGumpLifetime(_tree.LifetimeHooks, t => _tree.Node(t) is TextGumpNode ? _title : null);
+        if (!ReferenceEquals(_tree, text.Tree)) throw new ArgumentException("저장 창과 같은 공통 문자 트리 필요", nameof(text));
+        _title = text.Single;
         var previousEvent = _tree.EventHooks.Handle; var previousInput = _tree.InputHooks.Handle;
         var hooks = new SaveFortNameDialogHooks
         {

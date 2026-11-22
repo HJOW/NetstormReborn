@@ -1,0 +1,171 @@
+using System.Text;
+using Netstorm.Client.Display;
+using Netstorm.Client.Gump;
+using Netstorm.Core.Original;
+
+namespace Netstorm.Client.Host; // 실제 NSInfo 전체 생성을 같은 공통 메뉴/문자/수명에 연결한다.
+
+/// <summary>RawNsInfoContext의 현재 주소/번역/공유 문자열과 선택된 실제 메타 후속이다.</summary>
+public sealed class HostNsInfoDevices
+{
+    /// <summary>같은 현재 배경/TYPE/색 등 바깥 Client 전역이다.</summary>
+    public required Func<uint, uint> Read { get; init; }
+    /// <summary>같은 원문 글꼴 바이트의 현재 번역이다.</summary>
+    public required Func<string, string> Translate { get; init; }
+    /// <summary>원문 공용 형식 문자열 고리에 실제 문자열을 넣는다.</summary>
+    public required Func<string, uint> StoreText { get; init; }
+    /// <summary>같은 공용 고리의 현재 토큰을 해석한다.</summary>
+    public required Func<uint, string> Text { get; init; }
+    /// <summary>캡처한 printf format/server/zone의 실제 외부 형식화다.</summary>
+    public required Func<string, string, int, string> FormatZone { get; init; }
+    /// <summary>현재 NSInfo의 실제 메타맵 배치 전체다.</summary>
+    public Action<uint>? MetaRootLayout { get; init; }
+    /// <summary>현재 Player/Battle의 실제 메타맵 배치 전체다.</summary>
+    public Action<HudNsInfoChild, uint>? MetaChildLayout { get; init; }
+    /// <summary>현재 NSInfo/Player/Battle의 실제 원문 입력 분배다.</summary>
+    public Func<uint, uint, uint, uint, uint>? Handle { get; init; }
+    /// <summary>현재 실제 특수 버튼의 원문 그림이다.</summary>
+    public Action<uint, GumpPixelTarget, GumpGlyphColorState, GumpBackgroundDraw>? DrawPlayerButton { get; init; }
+    /// <summary>복귀하면 계속하는 실제 원문 줄 번호 진단이다.</summary>
+    public Action<uint>? Assertion { get; init; }
+    /// <summary>실제 공통 구조 변경을 알린다.</summary>
+    public required Action Changed { get; init; }
+}
+
+/// <summary>Source RawMenuControls의 AllocateNs/BindNs/CreateNsInfo/CloseNsInfo를 기존 실제 하위에 조립한다.
+/// 일반 관문 뒤 선택하는 메타 배치·입력·특수 그림은 실제 장치를 요구하며 빈 성공으로 바꾸지 않는다.</summary>
+public sealed class HostNsInfoWindows : IDisposable
+{
+    /// <summary>같은 실제 노드/등록/입력/수명/그림 소유자다.</summary>
+    private readonly GumpButtonTree _tree;
+    /// <summary>동일 스크롤/스타일/한 줄 문자 본체다.</summary>
+    private readonly HostHtmlText _text;
+    /// <summary>같은 현재 NSInfo/zone/서버 목록 owner다.</summary>
+    private readonly ClientNsInfoGlobals _globals;
+    /// <summary>같은 실제 모드/TYPE 물리다.</summary>
+    private readonly RawSurfaceStorage _storage;
+    /// <summary>같은 현재 PlayerKnown owner다.</summary>
+    private readonly ClientGameplayGlobals _gameplay;
+    /// <summary>같은 현재 외부 장치다.</summary>
+    private readonly HostNsInfoDevices _devices;
+    /// <summary>새 생성 도중 원문 첫0xd8 할당만 구별하는 호스트 문맥이다.</summary>
+    private bool _allocatingRoot;
+    /// <summary>현재 실제 NSInfo 파생의 소유 토큰이다.</summary>
+    private readonly HashSet<uint> _roots = [];
+    /// <summary>현재 실제 PlayerInfo 파생의 소유 토큰이다.</summary>
+    private readonly HashSet<uint> _players = [];
+    /// <summary>현재 실제 BattleInfo 파생의 소유 토큰이다.</summary>
+    private readonly HashSet<uint> _battles = [];
+    /// <summary>현재 실제 특수 버튼의 소유 토큰이다.</summary>
+    private readonly HashSet<uint> _buttons = [];
+    /// <summary>원문 주소별 현재 번역 바이트다. 형식 고리의 소유권을 가져오지 않는다.</summary>
+    private readonly Dictionary<uint, string> _translated = [];
+    /// <summary>같은 전체 부모 생성기다.</summary>
+    private readonly HudNsInfoCreate _create;
+    /// <summary>같은 일반 부착/현재 모드 관문이다.</summary>
+    private readonly HudNsInfo _geometry;
+    /// <summary>기본 물리 반납의 이전 장치다.</summary>
+    private readonly Action<uint> _releaseBase;
+    /// <summary>자기 특수 그림의 출력 수명 번호다.</summary>
+    private readonly uint _drawing;
+    /// <summary>수명 대여 반납 상태다.</summary>
+    private bool _disposed;
+    /// <summary>현재 선택된 실제 후속만 도달 위치에서 요구한다.</summary>
+    private static T Need<T>(T? hook) where T : Delegate => hook ?? throw new InvalidOperationException("NSInfo 실제 현재 후속 장치 미연결");
+    /// <summary>같은 실제 트리/문자/Client owner를 검증하고 실제 가상 분배만 먼저 설치한다. 생성은 Create까지 미룬다.</summary>
+    public HostNsInfoWindows(GumpButtonTree tree, HostHtmlText text, ClientNsInfoGlobals globals, ClientGameplayGlobals gameplay, RawSurfaceStorage storage, HostNsInfoDevices devices)
+    {
+        ArgumentNullException.ThrowIfNull(tree); ArgumentNullException.ThrowIfNull(text); ArgumentNullException.ThrowIfNull(globals); ArgumentNullException.ThrowIfNull(gameplay); ArgumentNullException.ThrowIfNull(storage); ArgumentNullException.ThrowIfNull(devices);
+        if (!ReferenceEquals(tree, text.Tree) || tree.Create.Collection.Edition != OriginalEdition.Patch1078 || storage.Pool.Edition != OriginalEdition.Patch1078 || storage.Types.Count == 0 || storage.Source() is not { } assets || !text.SharesPictureTypes(assets) || !ReferenceEquals(storage.Authority(), gameplay.Authority) || !ReferenceEquals(storage.GameAux(), gameplay.GameAux)) throw new ArgumentException("NSInfo 실제 공통 트리/10.78 물리 연결 불일치");
+        if (devices.Read is null || devices.Translate is null || devices.StoreText is null || devices.Text is null || devices.FormatZone is null || devices.Changed is null) throw new ArgumentException("NSInfo 실제 현재 주소/번역/문자열 연결 누락", nameof(devices));
+        _tree = tree; _text = text; _globals = globals; _gameplay = gameplay; _storage = storage; _devices = devices; _releaseBase = Need(tree.LifetimeHooks.Release);
+        var hooks = new HudNsInfoCreateHooks
+        {
+            Node = Root, Player = token => _players.Contains(token) ? tree.Node(token) as HudPlayerInfoNode : null, Battle = token => _battles.Contains(token) ? tree.Node(token) as HudBattleInfoNode : null,
+            Button = token => _buttons.Contains(token) ? tree.Node(token) as HudPlayerButtonNode : null, Base = tree.Node,
+            AddTextFlags = (token, bits) => Scroll(token).TextFlags |= bits, AddButtonFlags = (token, bits) => Button(token).ButtonFlags |= bits,
+            Read = Read, Allocate = Allocate, BaseConstruct = (token, command, width, height, flags) => tree.Factory.Construct(token, command, width, height, flags), Background = tree.Backgrounds.Construct,
+            Scroll = text.Widgets.Construct, Text = text.Single.Construct, ButtonBase = (token, width, height, flags) => tree.Buttons.ConstructBase(token, width, height, flags),
+            Stone = (token, width, height, label, color, context) => { if (context != 0) throw new InvalidOperationException("NSInfo 돌 버튼 실제 null 문맥 필요"); return tree.Stones.Construct(token, width, height, [.. Bytes(Text(label)), 0], color); },
+            Scrollable = text.Widgets.SetScrollable, Slider = text.Widgets.SetSlider, Wrap = (token, value) => text.Widgets.SetWrap(token, unchecked((int)value)),
+            ParseScroll = (token, value) => text.Parser.Parse(token, Bytes(Text(value))), ParseText = (token, value) => { var node = Plain(token); text.Style.Parse(ref node.Head, Bytes(Text(value)), node.TextContext); },
+            FitText = (token, width, height) => text.Single.Fit(token, unchecked((int)width), unchecked((int)height)), FitStone = tree.Stones.FitToText,
+            Attach = (token, x, y, parent, mode) => Need(tree.TreeHooks.Attach)(token, x, y, parent, mode), BaseAttach = tree.Tree.Attach,
+            Translate = token => { _translated[token] = devices.Translate(Text(token, true)); return token; },
+            Type = type => type < assets.LoadedTypes.Count ? 0x100000 + type : throw new ArgumentOutOfRangeException(nameof(type), "NSInfo 실제 최초 TYPE 범위"),
+            ServerName = () => { globals.ResolveServerName(value => Bytes(devices.Translate(value))); return 0x594970; },
+            FormatZone = (format, server, zone) => devices.StoreText(devices.FormatZone(Text(format), Text(server), zone)),
+            Assertion = line => Need(devices.Assertion)(line), MetamapLayout = (kind, token) => Need(devices.MetaChildLayout)(kind, token),
+        };
+        _create = new(globals.Current, hooks);
+        _geometry = new(new() { Metamap = () => Read(0x594fc8), PlayerKnown = () => Read(0x595344) }, new()
+        {
+            Node = Root, Base = tree.Node, BaseAttach = tree.Tree.Attach, Push = tree.Tree.Push,
+            Attach = (token, x, y, parent, mode) => Need(tree.TreeHooks.Attach)(token, x, y, parent, mode), MetamapLayout = token => Need(devices.MetaRootLayout)(token),
+        });
+        var weak = new WeakReference<HostNsInfoWindows>(this); Func<uint, HostNsInfoWindows?> resolve = token => weak.TryGetTarget(out var owner) && !owner._disposed && owner.OwnsParent(token) ? owner : null;
+        Bind(resolve, weak); ButtonGump.BindButtonGump(tree.EventHooks, tree.InputHooks, tree.FrameHooks, token => weak.TryGetTarget(out var owner) && !owner._disposed && owner._buttons.Contains(token) ? tree.Buttons : null);
+        _drawing = tree.ExternalDrawing.RegisterExternalGumps(new() { Owns = token => weak.TryGetTarget(out var owner) && !owner._disposed && owner._buttons.Contains(token), Draw = (token, target, colors, background) => { if (!weak.TryGetTarget(out var owner)) throw new InvalidOperationException("NSInfo 실제 그림 owner 반납됨"); Need(owner._devices.DrawPlayerButton)(token, target, colors, background); } });
+    }
+    /// <summary>현재 같은 실제 파생 부모에만 가상 함수를 분배한다.</summary>
+    private bool OwnsParent(uint token) => _roots.Contains(token) || _players.Contains(token) || _battles.Contains(token);
+    /// <summary>현재 살아 있는 같은 NSInfo 주소다.</summary>
+    private HudNsInfoNode? Root(uint token) => _roots.Contains(token) ? _tree.Node(token) as HudNsInfoNode : null;
+    /// <summary>실제 같은 스크롤 주소만 요구한다.</summary>
+    private ScrollingTextGumpNode Scroll(uint token) => _tree.Node(token) as ScrollingTextGumpNode ?? throw new InvalidOperationException("NSInfo 실제 스크롤 없음");
+    /// <summary>실제 같은 특수 버튼 주소만 요구한다.</summary>
+    private HudPlayerButtonNode Button(uint token) => _buttons.Contains(token) && _tree.Node(token) is HudPlayerButtonNode node ? node : throw new InvalidOperationException("NSInfo 실제 특수 버튼 없음");
+    /// <summary>실제 같은 한 줄 문자 주소만 요구한다.</summary>
+    private TextGumpNode Plain(uint token) => _tree.Node(token) as TextGumpNode ?? throw new InvalidOperationException("NSInfo 실제 한 줄 문자 없음");
+    /// <summary>첫NUL 앞의 원문 글꼴 바이트만 실제 파서에 제공한다.</summary>
+    private static byte[] Bytes(string text) { int end = text.IndexOf('\0'); return Encoding.Latin1.GetBytes(end < 0 ? text : text[..end]); }
+    /// <summary>원문 정적 포인터/현재 번역/서버 버퍼/공유 형식 고리를 구별한다.</summary>
+    private string Text(uint token, bool original = false)
+    {
+        if (!original && _translated.TryGetValue(token, out string? value)) return value;
+        return token switch { 0x50c894 => "~w~E%s\nPlayers in Zone %d\n", 0x50cd3c => "~r~EBATTLEMASTER", 0x50cd2c => "Start Battle", 0x594970 => Encoding.Latin1.GetString(_globals.ServerName.AsSpan(0, Array.IndexOf(_globals.ServerName, (byte)0) is int end && end >= 0 ? end : _globals.ServerName.Length)), _ => _devices.Text(token) };
+    }
+    /// <summary>현재 owner의 같은 전역을 사용 위치에서 읽고 바깥 배경/TYPE/색만 실제 장치에 위임한다.</summary>
+    private uint Read(uint address) => address switch
+    {
+        0x540421 => _globals.NsKind, 0x540440 => _globals.PlayerKind, 0x540457 => _globals.BattleKind, 0x5467b8 => _globals.Zone.Value, 0x540bac => _globals.ZoneFormat, 0x593150 => _globals.Current.Value,
+        0x54db4c => unchecked((uint)_globals.ServerSelection.Value), 0x594fc8 => _storage.OwnerMode.Challenge ? 1U : 0U, 0x595344 => _gameplay.Player.PlayerKnown,
+        _ => _devices.Read(address),
+    };
+    /// <summary>원문 new 크기와 첫0xd8 문맥의 실제 파생을 같은 공통 저장소에 할당한다.</summary>
+    private uint Allocate(int bytes)
+    {
+        GumpCreateNode node;
+        if (bytes == 0xd8 && _allocatingRoot) { _allocatingRoot = false; node = new HudNsInfoNode(); }
+        else node = bytes switch { 0xd8 => new ScrollingTextGumpNode(), 0xb8 => new GumpBackgroundNode(), 0x170 => new StoneButtonGumpNode(), 0xbc => new HudPlayerInfoNode(), 0x16c => new HudBattleInfoNode(), 0xc8 => new HudPlayerButtonNode(), 0xa4 => new TextGumpNode(), _ => throw new ArgumentOutOfRangeException(nameof(bytes), "NSInfo 실제 파생 할당 크기") };
+        uint token = _tree.AllocateNode(node); if (node is HudNsInfoNode) _roots.Add(token); else if (node is HudPlayerInfoNode) _players.Add(token); else if (node is HudBattleInfoNode) _battles.Add(token); else if (node is HudPlayerButtonNode) _buttons.Add(token); return token;
+    }
+    /// <summary>원문 부착/입력과 물리 반납을 현재 자기 파생에만 분배한다.</summary>
+    private void Bind(Func<uint, HostNsInfoWindows?> resolve, WeakReference<HostNsInfoWindows> weak)
+    {
+        var attach = _tree.TreeHooks.Attach; var events = _tree.EventHooks.Handle; var input = _tree.InputHooks.Handle; var release = _releaseBase;
+        _tree.TreeHooks.Attach = (token, x, y, parent, mode) => { if (resolve(token) is { } owner) { if (owner._roots.Contains(token)) owner._geometry.Attach(token, x, y, parent, mode); else if (owner._players.Contains(token)) owner._create.AttachPlayer(token, x, y, parent, mode); else owner._create.AttachBattle(token, x, y, parent, mode); } else Need(attach)(token, x, y, parent, mode); };
+        _tree.EventHooks.Handle = (token, code, first, second) => resolve(token) is { } owner ? Need(owner._devices.Handle)(token, code, first, second) : Need(events)(token, code, first, second);
+        _tree.InputHooks.Handle = (token, code, first, second) => resolve(token) is { } owner ? Need(owner._devices.Handle)(token, code, first, second) : Need(input)(token, code, first, second);
+        _tree.LifetimeHooks.Release = token => { if (weak.TryGetTarget(out var owner)) { owner._roots.Remove(token); owner._players.Remove(token); owner._battles.Remove(token); owner._buttons.Remove(token); } release(token); };
+    }
+    /// <summary>같은 실제 공통 owner의 전체 자식을 만들고 wrapper가 숨긴 현재 루트를 반환한다.</summary>
+    public uint Create()
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this); return _tree.WithNodeOwner(this, () => { _allocatingRoot = true; try { return _create.CreateHidden(); } finally { _allocatingRoot = false; } });
+    }
+    /// <summary>같은 현재 전역이 가리키는 실제 살아 있는 자기 부모만 반환한다.</summary>
+    public uint Current() => Root(_globals.Current.Value) is { } node && (node.Flags & 0x10000) == 0 ? _globals.Current.Value : 0;
+    /// <summary>공통 자식 우선 소멸과 미등록 부분 할당을 자기 owner 범위에서만 반납한다. 원문 current DWORD는 보존한다.</summary>
+    public void Close()
+    {
+        // 현재 등록표 순서로 자기 노드만 Kill하고 이미 죽은 자식은 다시 요청하지 않는다.
+        foreach (uint token in _tree.Create.Entries.Skip(1).ToArray()) if (token != 0 && ReferenceEquals(_tree.NodeOwner(token), this) && _tree.Node(token) is { } node && (node.Flags & 0x10000) == 0) _tree.Lifetime.Kill(token);
+        _tree.Lifetime.Cleanup();
+        // new 성공 뒤 기본 생성 전 실패한 자기 물리만 Source처럼 마지막에 반납한다.
+        foreach (uint token in _tree.OwnedNodes(this)) { if (_tree.Create.Entries.Contains(token)) throw new InvalidOperationException("NSInfo 정리 뒤 실제 등록 객체 남음"); _roots.Remove(token); _players.Remove(token); _battles.Remove(token); _buttons.Remove(token); _releaseBase(token); }
+        _devices.Changed();
+    }
+    /// <summary>자기 전체 노드 뒤 자기 특수 그림 대여만 반납하고 다른 UI/공유 문자는 유지한다.</summary>
+    public void Dispose() { if (_disposed) return; Close(); _tree.ExternalDrawing.UnregisterExternalGumps(_drawing); _disposed = true; }
+}

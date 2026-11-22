@@ -198,4 +198,9 @@
   <ItemGroup>
     <None Include="../../../cpppj/tests/fixtures/gump-redraw-x86.tsv" Link="X86/gump-redraw-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 전체 NSInfo 생성170관측과 일반 부착310관측의 전체 상태/호출/부분 중단을 대조한다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/hud-nsinfo-create-x86.tsv" Link="X86/hud-nsinfo-create-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/hud-nsinfo-attach-x86.tsv" Link="X86/hud-nsinfo-attach-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

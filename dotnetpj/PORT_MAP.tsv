@@ -1570,3 +1570,11 @@ cpppj/src/client/RawMinimapControls.cpp	Netstorm.Client/Gump/RawMinimapControls.
 cpppj/src/client/RawMenuControls.h	Netstorm.Client/Gump/GumpButtonTree.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
 cpppj/src/client/RawMenuControls.h	Netstorm.Client/Host/HostGumpDrawing.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
 cpppj/src/client/RawMenuControls.cpp	Netstorm.Client/Host/HostGumpDrawing.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
+cpppj/src/client/HudNsInfo.h	Netstorm.Client/Gump/HudNsInfo.cs	97dcd28fba5349f3ede0baf78f70eb83da70d0e4	port
+cpppj/src/client/HudNsInfo.cpp	Netstorm.Client/Gump/HudNsInfo.cs	97dcd28fba5349f3ede0baf78f70eb83da70d0e4	port
+cpppj/src/client/HudNsInfoCreate.h	Netstorm.Client/Gump/HudNsInfoCreate.cs	e5a68d5923bfaaa93fb52a20a1bc24dd66fa8441	port
+cpppj/src/client/HudNsInfoCreate.cpp	Netstorm.Client/Gump/HudNsInfoCreate.cs	e5a68d5923bfaaa93fb52a20a1bc24dd66fa8441	port
+cpppj/src/client/RawMenuControls.h	Netstorm.Client/Host/HostNsInfoWindows.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
+cpppj/src/client/RawMenuControls.cpp	Netstorm.Client/Host/HostNsInfoWindows.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
+cpppj/src/client/RawNsInfoContext.h	Netstorm.Client/Host/HostNsInfoWindows.cs	080c977d6be0b1c19cde69ac844b03f3d4e23b7c	port
+cpppj/src/client/RawMenuControls.cpp	Netstorm.Client/Host/HostHtmlText.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port

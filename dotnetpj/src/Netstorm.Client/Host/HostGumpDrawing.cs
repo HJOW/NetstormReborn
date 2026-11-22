@@ -25,8 +25,8 @@ public sealed class HostGumpDrawing
     /// <summary>같은 실제 메뉴 트리와 화면 장치를 빌린다.</summary>
     public HostGumpDrawing(HostMainMenu menu, HostHtmlText text, HostHtmlMenus menus, Screen screen, HostTextEntry? entry = null)
     { _menu = menu ?? throw new ArgumentNullException(nameof(menu)); _text = text ?? throw new ArgumentNullException(nameof(text)); _menus = menus ?? throw new ArgumentNullException(nameof(menus)); _screen = screen ?? throw new ArgumentNullException(nameof(screen)); _entry = entry;
-        var tree = menu.Tree; _single = new TextGump(tree.Create, new(), tree.Factory, tree.Lifetime, tree.Collection, text.Clip, text.Style,
-            new() { Node = token => tree.Node(token) as TextGumpNode ?? tree.ExternalDrawing.Text(token), BaseNode = tree.Node }); }
+        if (!ReferenceEquals(menu.Tree, text.Tree)) throw new ArgumentException("그림과 문자 처리기의 같은 공통 트리 필요", nameof(text));
+        _single = text.Single; }
 
     /// <summary>현재 표시 트리를 수집하고 원본 정렬 뒤 각 노드를 같은 픽셀·클립 문맥에서 출력한다.</summary>
     public void Draw()

@@ -21,6 +21,8 @@ public sealed partial class HostHtmlText
     private Func<byte[]>? _pictureColors;
     /// <summary>현재 잠긴 표면에서만 유효한 실제 그림 출력기다.</summary>
     private MarkupHooks? _activePicture;
+    /// <summary>추가 HUD가 같은 최초 자산 표를 빌리는지 확인하고 값이 같은 별도 로딩은 거부한다.</summary>
+    internal bool SharesPictureTypes(IRawSurfaceAssetSource source) => _pictureAssets is not null && ReferenceEquals(_pictureAssets.LoadedTypes, source.LoadedTypes);
     /// <summary>같은 그림/스타일에 최초 자산을 한 번 연결하고 팔레트/옵션은 별도 현재 조회로 둔다.</summary>
     public void BindPictures(MarkupGameAssets assets, Func<byte[]> colors, ConfigInterface configuration)
     {
