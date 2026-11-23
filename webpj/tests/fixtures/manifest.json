@@ -22804,6 +22804,69 @@
       }
     },
     {
+      "id": "chat-input-recipients",
+      "path": "cpppj/tests/fixtures/chat-input-recipients-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E1265",
+      "producer": "cpppj ChatWindowClient_ActualRecipientInputNative720: 보호 원본 10.78 입력줄 대상 포함 검사(ChatContainsRecipient 0042e9e0)와 실제 Identity 조회 접합의 독립 x86 관측 720행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/chat-hub-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/chat-window.js",
+        "webpj/www/core/client-chat-runtime.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/ClientChatRuntime.cpp",
+        "cpppj/src/client/RawMenuControls.cpp"
+      ],
+      "doc": "docs/webpj-chat-hub-fixtures-20261123.md",
+      "scope": "일반/전투/편집 모드·manager 현재값·입력줄 내용·대상 이름 432행(contains)과 Subscriber 번호만 넣은 식별 기록 조회 뒤 포함 검사 288행(subscriber)의 반환. 입력줄 본문은 검사로 바뀌지 않음",
+      "text": true,
+      "sha256": "1dd2d7c74fbddaad62485e652aa325d0052cb160ad571d437960f4528a92b7d3",
+      "bytes": 68683,
+      "lines": 721,
+      "fixtureCommit": "09fd17306",
+      "webCommit": "aa78f2c7e",
+      "cpppjBasis": {
+        "cpppj/src/client/ClientChatRuntime.cpp": "c0f7843ae",
+        "cpppj/src/client/RawMenuControls.cpp": "68a9545e2"
+      }
+    },
+    {
+      "id": "chat-callbacks",
+      "path": "cpppj/tests/fixtures/chat-callbacks-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E1265",
+      "producer": "cpppj ChatWindowClient_IndependentNativeCallbackMutationsAndCurrentReads: 보호 원본 10.78 채팅 창 callback 세 개(.clear 0042f680·로그 append 0042f590·.quit 0042e520)의 독립 x86 관측 29행(기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/chat-hub-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/ui/client-chat-window.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/ClientChatRuntime.cpp",
+        "cpppj/src/client/RawMenuControls.cpp"
+      ],
+      "doc": "docs/webpj-chat-hub-fixtures-20261123.md",
+      "scope": "웹 적응 판정: 세 callback 의 반환(모두 0)과 웹 quit 안내 반환·미지원 callback 오류를 대조한다. clear 의 로그 교체 순서는 e2e(chat-window.spec.js .clear), 로그 파일 쓰기(file valid·write 호출)와 quit 큐 예약은 브라우저에 대응이 없어 웹 제외",
+      "text": true,
+      "sha256": "fe2e8eadd7f118cabbcdf6984cc74fa53021af9df565353d7c87614eb97ee34a",
+      "bytes": 1588,
+      "lines": 30,
+      "fixtureCommit": "86458a88a",
+      "webCommit": "c324a01b2",
+      "cpppjBasis": {
+        "cpppj/src/client/ClientChatRuntime.cpp": "c0f7843ae",
+        "cpppj/src/client/RawMenuControls.cpp": "68a9545e2"
+      }
+    },
+    {
       "id": "production-hint",
       "path": "cpppj/tests/fixtures/production-hint-x86.tsv",
       "kind": "original-x86",
