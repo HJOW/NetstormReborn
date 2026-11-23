@@ -80,3 +80,20 @@ test('Death Bridge: 실패 → Training Menu 로 목록 미션 bc1menu76 이 시
   expect(await page.evaluate(() => window.netstorm._gameClock.paused()), '시작 뒤 시계가 흐른다').toBe(false);
   expect(errors).toEqual([]);
 });
+
+// Priest Training 7(bc7sun_bars76) 완료 안내의 Training Menu 단추는 원본 대본이 접미 없는 `MissionBegin,BC1Menu` 라고 적혀 있다.
+// 웹 자산에는 BC1Menu 대본이 없어 이전에는 아무 일도 없었다. 별칭 해석(core/mission-name-alias.js)으로 bc1menu76 이 시작되는지 확인한다. (2026-11-23 WB04-E1245)
+test('Priest Training 7: 완료 안내의 Training Menu(원본 오타 BC1Menu)로 bc1menu76 이 시작된다', async ({ page }) => {
+  test.setTimeout(300000); const errors = collectErrors(page);
+  await startMission(page, 'Priest Training', 'bc7sun_bars76');
+  expect(await current(page), '요청한 미션이 돈다').toEqual({ script: 'bc7sun_bars76', demo: 0 });
+  // 대본 `[@300]` 구역은 "시작 후 300초 경과 + 열린 창 없음" 이면 열린다(raw-mission-frame-gate.js). 300초를 기다리는 대신 시작 시각을 301초 앞당긴다.
+  await page.evaluate(() => { window.netstorm._clientGuide.current().runtime.gate.startSeconds -= 301; });
+  // 완료 구역의 단추 네 개이다(첫 단추가 원본 오타 대본이다).
+  await waitButtons(page, ['Training Menu', 'Restart', 'FINISH THEM!', 'Leave Missions'], 'Priest Training 7 완료 안내');
+  await clickLabel(page, 'Training Menu'); await waitButtons(page, ['Technology available', 'Ok'], 'Training Menu 브리핑');
+  expect(await current(page), 'Training Menu 가 시작한 미션').toEqual({ script: 'bc1menu76', demo: 0 });
+  await clickLabel(page, 'Ok'); await closeDialogs(page);
+  expect(await page.evaluate(() => window.netstorm._gameClock.paused()), '시작 뒤 시계가 흐른다').toBe(false);
+  expect(errors).toEqual([]);
+});

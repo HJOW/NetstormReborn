@@ -114,6 +114,7 @@ import { CHAT_RECORD_BYTES, RawChatChannels } from './core/raw-chat-channels.js'
 import { RawCampaignMissionStartBindings } from './core/raw-campaign-mission-start-bindings.js';
 import { RawCampaignTutorialOneBindings } from './core/raw-campaign-tutorial-one-bindings.js';
 import { MISSION_RELOAD_COMMAND, dispatchMissionAbort } from './core/mission-guide-input.js';
+import { resolveMissionBeginName } from './core/mission-name-alias.js';
 import { WORLD_DESTINATION_SELECTED_COMMAND } from './core/raw-user-selection.js';
 import { ClientRandomGlobals } from './core/random.js';
 import { ClientSpGlobals } from './core/client-sp-globals.js';
@@ -2980,8 +2981,9 @@ export class Netstorm {
     }
 
     // Tutorial 1~6과 연결된 캠페인 미션을 현재 Guide에 시작한다. 다른 미션과 기존 World 교체는 실제 수명 연결 전까지 거부한다.
+    // 인자는 먼저 별칭을 풀어 쓴다: Priest Training 7 완료 안내의 Training Menu 단추가 가리키는 원본 오타 `BC1Menu` 는 bc1menu76 으로 연결한다. (2026-11-23 WB04-E1245)
     _beginCampaignFromDialog(argument) {
-        const name = String(argument ?? '');
+        const name = resolveMissionBeginName(argument);
         if (!/^tutorial[1-6]$/iu.test(name) && !['thewarbegins', 'masterofwhirligigs', 'savetheisland', 'fragilefortune', 'thunderingpower', 'dissolvedalliance', 'thenoose', 'rainvsrain', 'runforit', 'guardmyback', 'surrounded', 'breakingthrough', 'totherescue', 'vicious', 'enemyterritory', 'finalconfrontation', 'bc1menu76', 'bc2bridging76', 'bc3acid_bar76', 'bc4bow_rush76', 'bc5walkers76', 'bc6mows76', 'bc7sun_bars76', 'bc8fury76', 'bc9ssun_bars76'].includes(name.toLowerCase())) { console.info(`Netstorm: 미션 '${name}' 은(는) 아직 연결되지 않았습니다.`); return false; }
         if (!this._clientGuide || this._state !== AppState.MAIN_MENU) throw new Error('미션 시작의 현재 Guide·메뉴 수명 누락');
         // 현재 미션이 있으면 원본 MissionBegin 처럼 먼저 떠나고(Guide 닫기·월드 반납·메인 메뉴 복귀) 새 미션을 시작한다. (2026-11-20 WB04-E1085)
