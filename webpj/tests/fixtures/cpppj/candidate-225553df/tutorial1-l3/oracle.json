@@ -1,0 +1,35 @@
+{
+  "format": "netstorm-webpj-cpppj-oracle",
+  "version": 1,
+  "description": "cpppj 기준선 실행 파일(225553df)로 Tutorial1 입력 단계표(steps.json)를 수집한 L3 오라클. c200·c300 은 각 프레임의 Session 덤프(.tsv)와 논리 화면(.png). E1284 에서 임시 스크립트(runCppScenario 직접 호출)로 수집했다.",
+  "cpppjCommit": "225553df",
+  "exe": {
+    "file": "Netstorm.exe",
+    "sha256": "5b52d96d2e53f4674a40991b78ff64c3c7e2ad8275a0a99b22d18d532b77eb46",
+    "bytes": 15595008
+  },
+  "steps": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial1-l3/steps.json",
+  "collected": {
+    "host": "HJOW-Athlon",
+    "at": "2026-11-23T11:00:00.000Z",
+    "node": "v26.13.0"
+  },
+  "args": [
+    "--run",
+    "assets/game-data",
+    "--window",
+    "--mute-audio",
+    "--frames",
+    "301",
+    "--set",
+    "SCREENW=1024;SCREENH=768;WelcomeGiven=1;tellTips=0;autoDemo=0",
+    "--ui-script",
+    "<steps.tsv>",
+    "--ui-report",
+    "<report.tsv>",
+    "--fixed-frame-ms",
+    "25",
+    "--mission",
+    "Tutorial1"
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "format": "netstorm-webpj-cpppj-l3-steps",
+  "version": 1,
+  "description": "cpppj 225553df Tutorial1 입력 단계표(L3). 단계는 [프레임, 동작, 인자]이며 cpppj `--ui-script` 의 동작 이름을 그대로 쓴다. 웹은 e2e/l3-tutorial1.spec.js 가 같은 단계를 고정 시각 모드로 적용한다(입력 프레임 규칙은 docs/webpj-l3-tutorial1-20261123.md).",
+  "language": "english",
+  "screen": {
+    "width": 1024,
+    "height": 768
+  },
+  "fixedFrameMs": 25,
+  "mission": "Tutorial1",
+  "settings": {
+    "SCREENW": 1024,
+    "SCREENH": 768,
+    "WelcomeGiven": 1,
+    "tellTips": 0,
+    "autoDemo": 0
+  },
+  "steps": [
+    [
+      95,
+      "click-if",
+      "MORE"
+    ],
+    [
+      110,
+      "click-if",
+      "OK"
+    ],
+    [
+      200,
+      "session-dump",
+      "c200"
+    ],
+    [
+      200,
+      "snapshot",
+      "c200"
+    ],
+    [
+      260,
+      "key",
+      "f4"
+    ],
+    [
+      300,
+      "session-dump",
+      "c300"
+    ],
+    [
+      300,
+      "snapshot",
+      "c300"
+    ]
+  ]
+}
