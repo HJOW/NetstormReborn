@@ -97,3 +97,22 @@ test('Priest Training 7: 완료 안내의 Training Menu(원본 오타 BC1Menu)�
   expect(await page.evaluate(() => window.netstorm._gameClock.paused()), '시작 뒤 시계가 흐른다').toBe(false);
   expect(errors).toEqual([]);
 });
+
+// Tell 모달이 하나뿐인 웹 구조가 원본의 모달 스택과 같은 결과를 내는지 확인한다: ABORT 확인 창이 열린 채(시계는 계속 흐른다) 실패 판정이 나도, 결과 안내는 프레임 관문(dialogsClear)이 창이 모두 닫힐 때까지 미루므로 창이 서로를 덮어쓰지 않고
+// 확인 창을 닫는 순간 실패 안내가 이어서 열린다. (2026-11-23 WB04-E1252)
+test('Death Bridge: ABORT 확인 창이 열린 동안의 실패 판정은 창을 덮어쓰지 않고 닫은 뒤 이어서 열린다', async ({ page }) => {
+  test.setTimeout(300000); const errors = collectErrors(page);
+  await startMission(page, 'Priest Training', 'bc5walkers76');
+  await page.evaluate(() => window.netstorm._openTell('ABORT'));
+  await waitButtons(page, ['Main Menu', 'Replay Mission', 'Continue Mission'], 'ABORT 확인 창');
+  // 확인 창이 열려도 게임 시계는 멈추지 않는다.
+  const before = await page.evaluate(() => window.netstorm._gameClock.gameSeconds()); await page.waitForTimeout(1500);
+  expect(await page.evaluate(() => window.netstorm._gameClock.gameSeconds()) - before, '확인 창이 열린 동안 시계').toBeGreaterThan(1);
+  // 그 사이 사제가 죽어 실패가 판정돼도 열린 창은 그대로 ABORT 하나이다(다른 창이 덮어쓰지 않는다).
+  await knockOut(page, 1); await page.waitForTimeout(3000);
+  expect(await buttons(page), '실패 판정 뒤에도 ABORT 창').toEqual(['Main Menu', 'Replay Mission', 'Continue Mission']);
+  // 창을 닫으면(Continue Mission) 실패 안내가 이어서 열린다.
+  await clickLabel(page, 'Continue Mission');
+  await waitButtons(page, ['Training Menu', 'Restart', 'Leave Missions'], '확인 창을 닫은 뒤 이어서 열린 실패 안내');
+  expect(errors).toEqual([]);
+});

@@ -6,14 +6,14 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-23 정리, 마지막 단위 WB04-E1251)
+### 0.1 현재 값 (2026-11-23 정리, 마지막 단위 WB04-E1252)
 
 | 항목 | 현행 상태 |
 | --- | --- |
 | 실행·플레이 | 브라우저에서 ‘클릭하여 시작’, 시작 title 그림, 메인 메뉴·캠페인/데모 목록·도움말·옵션·Credits와 개발용 지형 미리보기가 동작한다. **미션:** 캠페인 목록 31개(Early Missions 6·세 캠페인 묶음 16·Priest Training 9)와 데모 3개가 시작되고, 장시간 진행과 임의 조작(몽키) 시험에서 오류·먹통이 없다. Campaign ▸ Skirmish는 무작위 섬·간헐천 월드에서 AI와 진행된다. Tutorial2는 시작부터 완료 창·Tutorial3 시작까지 자연 진행으로 확인했고, 승패 안내 뒤 흐름(Continue·Replay Mission·Leave/Next Mission·진행 저장)도 확인했다. 미션 프레임에서 다리 붕괴 검사·전투 자원(간헐천 보충·스펠 소비·SP 주기 지급)·제단 결과 알림·주변음/공유 바람이 원본 주 루프 순서로 돈다(E1230~E1234). **조작:** 사제 선택·이동, 가장자리·Alt·가운데 버튼 스크롤, 미니맵 클릭·끌기, 생산 격자 클릭·단축키(D 포함)·조각 회전(C·회전 방향 옵션)·다리 배치, 사제·워크샾·제단·신전·배터리·발전기·운반체 우클릭 메뉴와 회수·기도·Cast/Drop, 객체 명령(Detonate·Meltdown·신전 명령), 화면 위치 키(F4/H·F5·TAB·U·Shift+숫자 저장/숫자 복귀), 미니맵·스톰 파워 표시·생산 창의 우클릭 빠른 도움말(E1236)이 동작한다. **게임 메뉴:** ESC 또는 화면 우측 상단 버튼(웹 전용)으로 Game·View·Options·Players·About 메뉴막대를 열고, Leave/Restart Mission(ABORT 확인 창), F1·F2·F6·F7·F8·F9·Shift-F3·T, Pause(Shift-F9·Pause 키·메뉴), Shift-F7 화면 GIF 저장, Players 메뉴의 송금(Send X 숫자 입력 창 포함)·동맹이 실행된다. 브리핑·완료 창의 Review Knowledge·GetTechnology 단추도 동작한다(E1227). **HUD 틀:** 실제 Uber 루트가 세로·미니맵·채팅 구분선, 좌측 사이드바(SP·생산 덱)와 하단 미니맵 칸을 원본 위치로 도킹하고 지도 영역이 `{85,0,W,H}`다(4:3 하단 85×82픽셀이 원본 스크린샷과 일치, 16:9·16:10·1920×1080과 창 크기 변경 확인). **채팅 창:** F3로 채팅 영역이 보이고 로그 줄이 색과 함께 그려지며, Enter로 입력줄을 열어 제출하면 로컬 서버를 거쳐 `You> 본문` 줄이 로그에 나오고 점 명령·Tab 이름 완성(동맹 AI)·붙여넣기/복사/잘라내기·도우미 메뉴·Edit Back/Front Format 창이 동작한다(E1169~E1179). **미완성:** 읽기 전용 감사가 남긴 차이([다음 작업 1](#next); 승리/패배 곡은 E1238에서 단독 미션 도달 불가로 닫음), 나머지 객체 메뉴(Factory 파생·특수 대상·채팅 분기)와 운반체 줍기·내려놓기, 다른 미션의 목표 수행과 자연 완주. 지식 NSInfo 패널·Players 하위의 Ignore chat·Whisper To·정보 보기·의식 보상 선택 UI·인트로 영상은 웹 범위 밖이다(E1167·E1171·E1180·E1202). |
 | 원본과의 동일성 | 영어 4:3 메뉴 M1 8장면은 cpppj 오라클과 알려진 구름 배경 등 차이 영역 밖에서 픽셀 차이 0이다. 월드·UI 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다(최근 원본 공통 메뉴 788행·Factory 메뉴 39행·Uber 루트 160행·장면 음악 3,113행 등). 좌측 HUD 틀의 하단(미니맵 구분선·세로 구분선 아랫부분·미니맵 칸) 85×82픽셀은 원본 스크린샷과 완전히 일치한다. 메뉴 비활성 색·안내 창 위치·지식 카드 이름 줄 나눔·Wind Noise 무동작은 원본 기준으로 맞췄다. Tutorial1 시작 직후 Session 덤프는 시간 의존 값을 빼고 cpppj 기준선과 구조가 같다(E1129). 고정 시각 L2·L3·L4 화면 비교와 자연 완주는 미검증이다. |
 | 현재 작업 | **게임 플레이 중 UI 구현 단계.** 4-D 후반(GameWorld·Client 서비스)과 5-A·5-B·6·8단계 항목을 미션 앱 프레임 위에서 병행한다. Renderer·Gump 트리·입력 큐·생산 패널·객체 메뉴·도움말·음향·채팅 창이 실제 미션 화면에 연결돼 있다. 최근 단위(E1167~E1237)는 웹 범위 판정, Native 대응 행 대조로 partial 행 닫기, 읽기 전용 감사(E1223~E1231)가 찾은 원본과 다른 동작의 수정으로 빈칸을 메웠다. 순서는 아래 [다음 작업](#next)을 따른다. |
-| 전체 회귀 | **Node 26.13.0:** E1250 기준 전체 6,788건 모두 통과(로그 `extracted/webpj-e1250-node26.log`, 394초). **Node 22.23.3:** E1244 기준 전체 6,773건 모두 통과(로그 `extracted/webpj-e1244-node22.log`, 583초). **e2e:** E1147 전체 `npx playwright test` 100건 통과·8건 건너뜀(옵트인 장시간, 로그 `extracted/webpj-e1147-e2e-all.log`, 39분). 이후 단위는 새 e2e와 관련 e2e를 단위마다 돌렸다. **HJOW-Athlon 주기(0.5절 5):** v26 1/4(E1250에서 실행, 이후 E1251)·v22 7/8(E1244에서 실행, 이후 E1245~E1251) — 다음 v26 전체 회귀는 E1254 완료 뒤, v22는 E1252 완료 뒤이며 겹치면 순차로 돈다. E1127~E1236의 회귀 이력(실패와 교정 포함)은 [E1166 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261121-through-wb04-e1166)과 [E1237 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1237)에 있다. |
+| 전체 회귀 | **Node 26.13.0:** E1250 기준 전체 6,788건 모두 통과(로그 `extracted/webpj-e1250-node26.log`, 394초). **Node 22.23.3:** E1252 기준 전체 6,790건 모두 통과(로그 `extracted/webpj-e1252-node22.log`, 552초). **e2e:** E1147 전체 `npx playwright test` 100건 통과·8건 건너뜀(옵트인 장시간, 로그 `extracted/webpj-e1147-e2e-all.log`, 39분). 이후 단위는 새 e2e와 관련 e2e를 단위마다 돌렸다. **HJOW-Athlon 주기(0.5절 5):** v26 2/4(E1250에서 실행, 이후 E1251~E1252)·v22 0/8(E1252에서 실행) — 다음 v26 전체 회귀는 E1254 완료 뒤, v22는 E1260 완료 뒤이며 겹치면 순차로 돈다. E1127~E1236의 회귀 이력(실패와 교정 포함)은 [E1166 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261121-through-wb04-e1166)과 [E1237 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1237)에 있다. |
 | 브라우저 검사 | 미션 화면은 단위마다 Chromium e2e로 확인한다(최근 전체 실행 E1147, 16:9·16:10 건설·메뉴 E1143~E1144, 한국어 Players 메뉴 E1166). 메뉴는 2026-11-17 Chromium 2/2(갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체), 최초 실행·진행 잠금/체크·저장 재실행은 E616 Chromium 2/2. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
 
 <a id="next"></a>
@@ -26,7 +26,7 @@
    - ③ (E1239 닫음) "Sound On"을 끄면 원문은 장치를 닫아 음악도 무음이고 켜면 현재 곡을 처음부터 재생한다 — `AudioSystem.setSoundEnabled`가 같게 동작한다(원본 실기 청취 미확인). [근거](docs/webpj-sound-off-music-thunder-20261123.md)
    - ④ (E1239 닫음) 천둥 효과음은 이제 `SoundPlayer.playByName`을 거쳐 게임 메뉴 음소거·동시 재생 한도가 적용된다.
    - ⑤ 한국어 큰 슬롯(제목) 글꼴 크기·굵기 규칙이 원문(Galmuri11 정수 배율·Bold 고정)과 다르다 — 굵기는 의도적 선택이라 **결정이 필요**하다(BitmapFont 행). 같은 행의 굵은 글꼴이 갖지 않은 문자(호환 자모 42자·한자·가나 등 8,271자)를 일반 갈무리11로 대체하는 규칙은 E1244에서 반영했다(보조 FontFace, [근거](docs/webpj-galmuri-bold-fallback-20261123.md)).
-   - ⑥ Tell 모달 스택 없음, 미션 제목 사건 4개·메뉴 request/closed 사건 미설정(영향 미확인). `ownerMode.battle`이 이탈 뒤 true로 남는 것은 미션 밖 소비자가 없어 영향을 못 찾았다.
+   - ⑥ (E1252 닫음) Tell 모달 스택·제목 사건 4개·메뉴 request/closed 사건은 도달성 판정으로 닫았다: 결과 안내가 프레임 관문(dialogsClear)을 거쳐 열린 창이 있으면 미뤄지므로 두 창이 동시에 필요한 순간이 없고(e2e: ABORT 확인 창이 열린 채 실패 판정이 나도 덮어쓰지 않고 닫은 뒤 이어서 열림), 나머지 사건은 웹에서 도달하지 않거나 영향이 없다. [근거](docs/webpj-menu-controls-close-20261123.md). `ownerMode.battle`이 이탈 뒤 true로 남는 것은 미션 밖 소비자가 없어 영향을 못 찾았다.
    - ⑧ (E1251 닫음, 사용자 결정 "바꿔 주세요") Reset All 확인을 브라우저 `confirm()` 에서 cpppj 1325 와 같은 게임 안 Tell 확인 창(`Patch1101.ResetAll`, 확정 `Patch1101.ResetAllConfirmed` 는 창이 열린 직후 한 번만)으로 바꿨다. 일본어 본문(13차)과 게임 안 ESC 메뉴 행은 남김. [근거](docs/webpj-reset-all-tell-20261123.md)
    - ⑨ (E1246 발견, E1247 판정) 스톰 파워 표시(왼쪽 위 예산 칸, 노드 (7,2) 66×21)의 **실제 마우스 우클릭**이 노드에 닿지 않는다(`input().route(0x20000, 40, 12)` 가 0). cpppj 대조 결과 원본 판정 논리와 같아 **웹 결함이 아닐 가능성이 높다**: 우클릭은 `baseFilter` 가 HELP 플래그(0x200)가 있는 노드의 경계 안에서만 전달하는데, 예산 텍스트 노드는 `TextGump::Construct`(flags=VISIBLE|VOID+DrawClip)로 HELP 플래그가 없고 cpppj 의 `SetHelpText`/`SetNodeHelp` 도 플래그를 바꾸지 않는다(HELP 가 켜지는 곳은 생산 루트 `flags|=0xe00` 과 격자·배경). 루트 핸들러는 `0x02000008` 등만 처리해 우클릭에는 0 을 돌려준다. 남은 것: 원본 실행 파일로 실제 우클릭이 팝업을 여는지 확인(AGENTS.md 실행 규칙 적용) — 열면 웹이 막는 지점을 찾고, 안 열면 닫는다. [근거](docs/webpj-korean-production-chat-xlat-20261123.md#budget-rightclick)
    - ⑦ (E1245 닫음) Priest Training 7 완료 안내의 "Training Menu" 단추가 원본 오타대로 `MissionBegin,BC1Menu`(76 접미 없음)라 웹에서 아무 일도 없던 것을 사용자 결정으로 `bc1menu76` 에 연결했다(`core/mission-name-alias.js`, 원본은 10.72판 loose `BC1Menu.english` 를 읽고 그 사슬(`BC2Bridging` 등)은 웹에 없다). [근거](docs/webpj-priest-training-menu-alias-20261123.md). 남은 것: ESC로 Tell 창을 닫는지 미확인(원문 UberGump.cpp:1823은 Dialog 단계에서 Tell Blank). Early Mission 3 단계 A·6 단계 B의 너겟 납품(`0x020000b4`) 진행은 자연 완주로 확인하지 못했다.
@@ -70,11 +70,11 @@
 | 웹 범위 판정 | E1167, E1171, E1176, E1180, E1182, E1187~E1188, E1192, E1202~E1204 | Players 하위 3항목·지식 NSInfo·의식 보상 선택 UI·HTML `$Input=`·패킷 원천/지연·메타 앞단·Sprite 갱신·FortCoreDataLoad를 웹 범위 밖으로, 인트로 영상은 사용자 결정으로 웹 제외 | — | [NSInfo](docs/webpj-nsinfo-scope-20261122.md) · [동영상 결정](docs/webpj-intro-movie-decision-20261122.md) |
 | 대본·기술·타이틀 | E1184, E1189~E1190, E1197, E1199~E1200, E1227 | 시작 title 그림, Fury War 기술 지급, 대본 82개 명령 점검(`ViewSpot`·`Salvage`), 도움말·Tell 남은 두 행, Detonate·GetTechnology 원본 관측, Review Knowledge·GetTechnology 단추 | — | [대본 명령](docs/webpj-script-commands-audit-20261122.md) · [Fury War](docs/webpj-fury-war-technology-20261122.md) |
 | Native 대응 대조 | E1193~E1195, E1205~E1221 | Native 고정 수신기 네 묶음·채팅 수신기, 건설 여섯 행·AssetDeletionVtables, RawSurface 훅 대조와 표시 후 계속 진단·17종 가상 삭제·unit-lost 억제 | RawSurfaceDeletion·Lifetime(DestroyPatch 진단 열두 지점) | [수신기](docs/webpj-native-receivers-audit-20261122.md) · [RawSurface](docs/webpj-native-surface-audit-20261122.md) |
-| 읽기 전용 감사·수정 | E1223~E1251 | Client 상태·입력(제단 희생 메뉴 훅)·UI 컨트롤(와이드 메인 메뉴 버튼) 감사, 객체 메뉴 명령 소비, 아이스 반사 0점 기본값, 도움말·음향·설정 partial 15행 닫기와 Tell Warning, 다리 붕괴·전투 자원·Player 결과 알림·주변음/바람 프레임, F1·HUD 우클릭 도움말·Back, 승리/패배 곡 범위 판정(E1238)·소리 끄기 음악 무음·천둥 효과음 경로(E1239)·월드 없는 Help TYPE 정보(E1240)·건설 기록 재생 개발자 전용 판정(E1242)·Uber 루트 배경 자식 판정(E1243)·Priest Training 7 Training Menu 원본 오타 별칭(E1245)·생산 창·채팅 채널 번역 항목(E1246)·예산 칸 우클릭이 원본 판정 논리와 같음 판정(E1247) | [다음 작업 1](#next)의 남은 차이 | [RawSurface 감사](docs/webpj-native-surface-audit-20261122.md) |
+| 읽기 전용 감사·수정 | E1223~E1252 | Client 상태·입력(제단 희생 메뉴 훅)·UI 컨트롤(와이드 메인 메뉴 버튼) 감사, 객체 메뉴 명령 소비, 아이스 반사 0점 기본값, 도움말·음향·설정 partial 15행 닫기와 Tell Warning, 다리 붕괴·전투 자원·Player 결과 알림·주변음/바람 프레임, F1·HUD 우클릭 도움말·Back, 승리/패배 곡 범위 판정(E1238)·소리 끄기 음악 무음·천둥 효과음 경로(E1239)·월드 없는 Help TYPE 정보(E1240)·건설 기록 재생 개발자 전용 판정(E1242)·Uber 루트 배경 자식 판정(E1243)·Priest Training 7 Training Menu 원본 오타 별칭(E1245)·생산 창·채팅 채널 번역 항목(E1246)·예산 칸 우클릭이 원본 판정 논리와 같음 판정(E1247) | [다음 작업 1](#next)의 남은 차이 | [RawSurface 감사](docs/webpj-native-surface-audit-20261122.md) |
 
 ### 0.2 단계 진행판
 
-`n/m`은 상위 체크 수이며 보관한 완료 항목을 포함한다. 상위 항목 안의 완료 부분은 중복 가산하지 않는다. 남은 단위와 줄 수는 `PORT_MAP.tsv`의 partial·todo 기준이며 partial에는 파일 전체 줄 수를 센다. 2026-11-23 정리 때 `node webpj/tools/port-map.mjs`와 `python -X utf8 tools/port_inventory.py --tsv`로 다시 세어 **partial 34·todo 0, 34단위 / 20,876줄**이었고 E1240 에서 QuickHelpHtml·QuickHelpRequest 두 행을 닫아 **partial 32·todo 0, 32단위 / 20,635줄**이었고 E1242 에서 RawBuildReplay·ClientBuildReplay 두 행을 개발자 전용으로 닫아 **partial 30·todo 0, 30단위 / 20,436줄**이었고 E1243 에서 RawUberRootControls 행을 닫아 **partial 29·todo 0, 29단위 / 20,275줄**이었고 E1248 에서 RawMinimapControls 행을 닫아 **partial 28·todo 0, 28단위 / 20,094줄**이다. 단계 배정은 각 행이 남은 일로 걸린 3.1절 항목 기준이며 아래 둘째 표에 행 이름을 적었다. 같은 정리에서 4D-8b~4D-8f를 '남은 행 없음'(해당 대응표 행이 모두 port 또는 제외)으로 판정해 4-D가 61/85가 됐다. 이전 단계별 분배(51 / 24,263)와 E1082~E1230의 증감 경과는 [E1237 보관본 0.2절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1237)에 있다.
+`n/m`은 상위 체크 수이며 보관한 완료 항목을 포함한다. 상위 항목 안의 완료 부분은 중복 가산하지 않는다. 남은 단위와 줄 수는 `PORT_MAP.tsv`의 partial·todo 기준이며 partial에는 파일 전체 줄 수를 센다. 2026-11-23 정리 때 `node webpj/tools/port-map.mjs`와 `python -X utf8 tools/port_inventory.py --tsv`로 다시 세어 **partial 34·todo 0, 34단위 / 20,876줄**이었고 E1240 에서 QuickHelpHtml·QuickHelpRequest 두 행을 닫아 **partial 32·todo 0, 32단위 / 20,635줄**이었고 E1242 에서 RawBuildReplay·ClientBuildReplay 두 행을 개발자 전용으로 닫아 **partial 30·todo 0, 30단위 / 20,436줄**이었고 E1243 에서 RawUberRootControls 행을 닫아 **partial 29·todo 0, 29단위 / 20,275줄**이었고 E1248 에서 RawMinimapControls 행을 닫아 **partial 28·todo 0, 28단위 / 20,094줄**이었고 E1252 에서 RawMenuControls 행을 닫아 **partial 27·todo 0, 27단위 / 18,489줄**이다. 단계 배정은 각 행이 남은 일로 걸린 3.1절 항목 기준이며 아래 둘째 표에 행 이름을 적었다. 같은 정리에서 4D-8b~4D-8f를 '남은 행 없음'(해당 대응표 행이 모두 port 또는 제외)으로 판정해 4-D가 61/85가 됐다. 이전 단계별 분배(51 / 24,263)와 E1082~E1230의 증감 경과는 [E1237 보관본 0.2절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1237)에 있다.
 
 | 순서 | 단계 | 체크·상태 | 남은 단위 / 줄 |
 | --- | --- | --- | --- |
@@ -83,13 +83,13 @@
 | 4 | **4-D Session 조립·Tutorial1 Load/Start** | **61/85, L2 미완료** | 15 / 12,225 |
 | 5 | 5-A 렌더러·Draw | 44/46 | 1 / 394 |
 | 5 | 5-B 카메라·HUD·미니맵·커서 | 10/13 | 3 / 623 |
-| 5 | 5-C 화면 허브·미션 진입 | 2/6 → M2 | 4 / 5,167 |
+| 5 | 5-C 화면 허브·미션 진입 | 2/6 → M2 | 3 / 3,562 |
 | 6 | 입력·게임 메뉴·경제·건설 | 2/8 → M3 | 1 / 229 |
 | 7 | 전투·의식·AI | 3/6 | 1 / 161 |
 | 8 | 미션 수명·대본·오디오·도움말 | 3/9 → M4 | 3 / 1,295 |
 | 9 | 표시 품질·브라우저/OS·배포 | E945 하위 경로·설정 복원 검증, M5 미완료 | 0 / 0 |
 | 10 | AGENTS 후순위 웹 요구 | 일부 선행, 3.7절 참조 | 0 / 0 |
-| **합계** | | | **28 / 20,094** |
+| **합계** | | | **27 / 18,489** |
 
 남은 partial 행의 단계 배정(줄 수 큰 순, 대응표 메모와 3.1절 항목 기준):
 
@@ -98,14 +98,14 @@
 | 4-D | RawCampaignSession 7,130 · ClientMain 2,138 · GameWorld 1,157 · RawCampaignSessionLogin 389 · ClientCampaignTransport 378 · CampaignClientServices 373 · ClientStateWorldGlobals 112 · ClientStateWorldCleanup 102 · ClientStateRuntimeRetirement 99 · RawClockSynchronization 99 · ClientStateStorageCleanup 71 · RawSurfaceLifetime 55 · RawSurfaceDeletion 46 · ClientUserSelectionCleanup 43 · UberReconnect 33 |
 | 5-A | ClientRendererFrame 394 |
 | 5-B | RawProductionControls 393 · UberHud 156 · CampaignCursorClientEffects 74 |
-| 5-C | UberGump 2,703 · RawMenuControls 1,605 · RawButtonControls 811 · RawMenuChat 48 |
+| 5-C | UberGump 2,703 · RawButtonControls 811 · RawMenuChat 48 |
 | 6 | CampaignObjectMenuClient 229 |
 | 7 | RawCampaignRitual 161 |
 | 8 | BitmapFont 508 · ClientAudio 492 · SoundSceneMusic 295 |
 
 ### 0.3 이식량
 
-기준선 `225553df`의 이식 대상 1,007단위는 **port 979(97.2%)·partial 28·todo 0**이다(2026-11-23 재집계, E1248 반영). 제외 153단위(멀티 73·Edit 42·호스트 37·구판 1)를 합하면 대응표 1,160행이다. 앱 수명 연결을 뜻하는 `session`과 오라클 대조를 뜻하는 `oracle`은 0이다. E1098~E1237의 재판정 내역은 대응표 메모와 [E1166 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261121-through-wb04-e1166)·[E1237 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1237)에 있다.
+기준선 `225553df`의 이식 대상 1,007단위는 **port 980(97.3%)·partial 27·todo 0**이다(2026-11-23 재집계, E1252 반영). 제외 153단위(멀티 73·Edit 42·호스트 37·구판 1)를 합하면 대응표 1,160행이다. 앱 수명 연결을 뜻하는 `session`과 오라클 대조를 뜻하는 `oracle`은 0이다. E1098~E1237의 재판정 내역은 대응표 메모와 [E1166 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261121-through-wb04-e1166)·[E1237 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1237)에 있다.
 
 | 범위 | port / 대상 | partial | todo |
 | --- | --- | --- | --- |
@@ -113,7 +113,7 @@
 | `client/` 세션·UI·표시 | 405 / 433 | 28 | 0 |
 | `zacket/` 내부 미션 전송 | 1 / 1 | 0 | 0 |
 
-남은 28단위 중 기존 기준선은 24단위/19,861줄, 재기준선 추가분은 4단위/233줄이다(메모 머리 태그 `[rebaseline-port]`·`[rebaseline-adapt]` 기준). 재기준선 분류·영역별 상세는 [E801 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261118-through-wb04-e801)과 `python -X utf8 tools/port_inventory.py --families wb`에서 확인한다.
+남은 27단위 중 기존 기준선은 23단위/18,256줄, 재기준선 추가분은 4단위/233줄이다(메모 머리 태그 `[rebaseline-port]`·`[rebaseline-adapt]` 기준). 재기준선 분류·영역별 상세는 [E801 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261118-through-wb04-e801)과 `python -X utf8 tools/port_inventory.py --families wb`에서 확인한다.
 
 ### 0.4 기준선과 자료
 
@@ -285,7 +285,7 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 
 - [ ] **ClientRendererFrame** — 미션 화면 출력의 원본 순서를 앱에 연결하고 있다.
   - 완료: 지형 수집 범위·행 한도 90행(E978), 지면·객체·입자·커서 수집과 원본 정렬·출력(E979~E980), Screen DIB·구름·Renderer 합성(E981), 표시 준비·Present·미션 화면과 임시 Tell 출력(E982~E984), Gump kind 2 수집·출력과 월드 부착 투영(E988~E989), Gump 이동 dirty(E1081), 도킹된 지도 영역(E1082).
-  - 남음: RawMenuControls(5-C)·GameWorld(4D-6a) 선행, ClientRendererFrameGlobals 확인(GumpVisual 은 E1214 에서 네 함수가 웹과 줄 단위로 같음을 확인해 닫음), Kencloud 메뉴 연결과 구름 배경의 알려진 차이 해소. 채팅 창 출력은 E1169~E1179에서 연결했다(지식 HUD 공장은 웹 범위 밖).
+  - 남음: GameWorld(4D-6a) 선행(RawMenuControls 는 E1252 에서 닫음), ClientRendererFrameGlobals 확인(GumpVisual 은 E1214 에서 네 함수가 웹과 줄 단위로 같음을 확인해 닫음), Kencloud 메뉴 연결과 구름 배경의 알려진 차이 해소. 채팅 창 출력은 E1169~E1179에서 연결했다(지식 HUD 공장은 웹 범위 밖).
   - 근거: [E978](docs/webpj-renderer-collection-geometry-20261120.md) · [E981](docs/webpj-campaign-renderer-drawing-20261120.md) · [E984](docs/webpj-app-mission-display-frame-20261120.md) · [E989](docs/webpj-app-gump-world-projection-20261120.md) · [E1081](docs/webpj-gump-redraw-cost-trails-20261120.md) · [화면 문서](docs/webpj-screen-20261113.md)
 - [ ] **E197·E198·E201 재대조** — 웹 조립으로만 확인한 시각 시스템을 실제 Session의 cpppj 시험과 대조한다. 7단계와 중복되는 시험은 한 번만 한다.
 
@@ -299,7 +299,7 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 #### 5-C 게임 화면 허브·미션 진입 (2/6)
 
 - [x] **Uber 허브** — 실제 Client 등록표의 serial·현재 HUD 판정(E914), 공통 구분선 생성·입력·부착(E916)과 프레임 방송 분배(E917), UberRootGump 전체 생성·교체의 원본 160행 대조(E912), `ClientUberHud`로 구분선·미니맵·생산 패널을 소유하는 Uber 루트의 앱 설치(E1082)를 마쳤다. 채팅 창(E1169~E1179)까지 연결해 HUD·덱·미니맵·채팅을 소유한다(지식 NSInfo 공장은 웹 범위 밖, E1171). Meta Sprite 두 단위는 E1203에서 제외로 판정했다. E1224 감사가 남긴 0xb0 배경 GIF 메시지 자식과 NSInfo 자식은 E1243에서 웹 범위 밖(웹 메인 메뉴가 배경을 직접 그리고 미션 HUD title=0)으로 닫았다([판정](docs/webpj-uber-root-background-scope-20261123.md)). [E912](docs/webpj-uber-root-construct-20261119.md) · [E914](docs/webpj-uber-root-lookup-20261119.md) · [E916](docs/webpj-app-hud-divider-20261119.md) · [E917](docs/webpj-app-gump-broadcast-20261119.md)
-- [ ] **메뉴·버튼 컨트롤** — 남은 행: RawMenuControls(E1230에서 todo→partial; Gump 허브이며 메뉴 구성은 RawGameMenus·RawGameMenuBar 행)·RawButtonControls·RawMenuChat(E1224 감사의 표시 차이: 채팅 로그를 미션 끝에 초기화·알림 serial 0 고정·도우미 점멸 없음). RawMenuHtml은 E1230에서 닫았고 RawMenuLoading·RawTextEntryControls는 대응표 port다. RawMenuControls는 5-A의 선행이다.
+- [ ] **메뉴·버튼 컨트롤** — 남은 행: RawButtonControls·RawMenuChat(E1224 감사의 표시 차이: 채팅 로그를 미션 끝에 초기화·알림 serial 0 고정·도우미 점멸 없음). RawMenuHtml은 E1230에서, RawMenuControls는 E1252에서(Tell 모달 스택·제목 사건·request/closed 사건 도달성 판정, [근거](docs/webpj-menu-controls-close-20261123.md)) 닫았고 RawMenuLoading·RawTextEntryControls는 대응표 port다.
 - [ ] **미션 진입 명령** — MissionBegin·StartDemo·환영 창 명령을 실제 Fort 요청·State 전환·Session 생성에 연결한다. 캠페인 목록 31개 미션의 시작(E985·E1010~E1016·E1157)과 Demo 목록·Auto-Demo의 StartDemo(E1092)는 앱에서 연결했다. 환영 창 명령의 미션 연결과 원본 Gump serial·취소 명령을 확인해 체크한다. [Tutorial 시작](docs/webpj-browser-tutorial-menu-start-20261120.md) · [데모](docs/webpj-demo-start-20261120.md) · [Priest Training](docs/webpj-priest-training-missions-20261121.md)
 - [ ] **허브 fixture** — 3.8절의 채팅·HTML 항목을 연결한다.
 - [ ] **M2 / L4a** — 4-D·5-A·5-B 조립 뒤 Tutorial1 진입 직후와 N프레임 뒤의 논리 화면 차이 0을 확인한다. 영어 4:3부터 16:9/16:10과 한국어로 넓힌다.
