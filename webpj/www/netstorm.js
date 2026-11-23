@@ -3848,7 +3848,11 @@ export class Netstorm {
         this._lastFrameStamp = now;
         // 원본 Client 순서대로 화면 입력과 갱신 전에 같은 게임 프레임을 고정한다.
         // 고정 시각 모드의 시작 그림 구간은 시각만 전진하고 주 루프 프레임(번호·시간차)으로 세지 않는다(원본 cpppj 의 고정 프레임 실행과 같음). (2026-11-23 WB04-E1271)
-        if (this.options.fixedFrameMs > 0 && this._state === AppState.TITLE) this._gameClock?.advanceWithoutCapture(); else this._gameClock?.captureFrame();
+        if (this.options.fixedFrameMs > 0 && this._state === AppState.TITLE) {
+            // 시작 그림 구간에는 주 루프의 갱신(주변음·바람의 Game 난수 소비 등)이 돌지 않고 시각만 흐르며 그림만 그린다(원본 cpppj 의 시작 그림 루프와 같음). (2026-11-23 WB04-E1271)
+            this._gameClock?.advanceWithoutCapture(); this._clock.tick(now); this._frameSeconds = now / 1000; this._render(now); return;
+        }
+        this._gameClock?.captureFrame();
         this._clock.tick(now);
         this._frameSeconds = now / 1000;
         // 원본 루프 2번: 현재 미션의 로컬 State만 Poll한다. 수신 콜백 안의 재진입은 정리와 전환을 미룬다.
