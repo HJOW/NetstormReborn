@@ -1,5 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <!-- 실제 반사점/후보1182와 지역8BYTE213의 독립 PE 관측을 읽기 전용으로 공유한다. -->
+    <None Include="../../../cpppj/tests/fixtures/ice-ricochet-x86.tsv" Link="X86/ice-ricochet-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/ice-ricochet-scratch-x86.tsv" Link="X86/ice-ricochet-scratch-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
     <!-- 실제 기하4280/방향480과 파생 투사체4202관측의 원문 사본 없는 공유다. campaign-frame의 H/S는 이 단위 검사 범위 밖이다. -->
     <None Include="../../../cpppj/tests/fixtures/projectile-geom-x86.tsv" Link="X86/projectile-geom-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/cannon-rayend-x86.tsv" Link="X86/cannon-rayend-x86.tsv" CopyToOutputDirectory="PreserveNewest" />

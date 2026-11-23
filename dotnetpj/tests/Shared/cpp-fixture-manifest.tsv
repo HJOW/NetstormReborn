@@ -486,3 +486,5 @@ ice-missile-initial-x86.tsv	d5a4d8c851617f544bfb8139db91fec222b3b5df6a0b0bca645b
 projectile-geom-x86.tsv	4bd57e85b13ff957ec63459638b0655d44b1595bfb5db79d37ca4ec2fbeeaffc	240	cpppj	Core
 thunder-hit-event-x86.tsv	64edac17dc6f25824bfed45afc6537cf120fe9f051fb47c84bceb4bfdbf85f58	688	cpppj	Core
 thunder-missile-x86.tsv	803773b09acb9e67dc17c534347b5067132b7cbd4e79f97dbe534cbd31957c64	1118	cpppj	Core
+ice-ricochet-scratch-x86.tsv	2f14707db8e06b817eb4043dc2268b1d136e0f307c33953994d8f3d4de1fe45e	213	cpppj	Core
+ice-ricochet-x86.tsv	07b12af8ac2d098aded65459c547c4db0221196697ca2221f2cfa933e7c49615	1182	cpppj	Core
