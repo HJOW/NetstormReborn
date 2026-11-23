@@ -511,4 +511,149 @@ public sealed class HostNsInfoWindowsTests
         Assert.Throws<ArgumentNullException>(() => scene.Ns.LayoutMetaBattle(root.Battle, null!));
         Assert.Throws<ObjectDisposedException>(() => other.LayoutMetaBattle(otherRoot.Battle, challenge));
     }
+
+    /// <summary>활성 정렬행은 실제 참가자 메뉴를 열고 1을 반환한다. 0.925에서 추가됐다.</summary>
+    [Fact]
+    public void HandleRootInputActiveRosterOpensMenu()
+    {
+        using var scene = new Scene();
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        WriteParticipant(challenge, 9, battle: 0, flags: 1, name: "me", sid: 7);
+        scene.Globals.RosterOrder[5] = 9;
+        var menus = new List<(uint Index, ScreenPoint Point)>();
+        var based = new List<(uint Event, uint First, uint Second)>();
+        // 같은 실제 명령 주소를 시험 명령 코드로 덮어쓴다.
+        var wired = new HostNsInfoDevices
+        {
+            Read = address => address switch { 0x542790 => 0x100u, 0x54278c => 0x200u, 0x5429dc => 0x300u, _ => scene.Devices.Read(address) },
+            Translate = scene.Devices.Translate, StoreText = scene.Devices.StoreText, Text = scene.Devices.Text, FormatZone = scene.Devices.FormatZone, Changed = scene.Devices.Changed,
+            MousePoint = () => new ScreenPoint(11, 22),
+            ParticipantMenu = (index, point) => menus.Add((index, point)),
+            CenterOnSid = _ => { },
+            StatusSend = _ => { },
+            KickoffSound = () => { },
+            BaseInput = (@event, first, second) => { based.Add((@event, first, second)); return 7u; },
+        };
+        using var other = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, wired);
+        uint result = other.HandleRootInput(0x100, 1, 5, challenge);
+        Assert.Equal(1u, result);
+        Assert.Equal([(9u, new ScreenPoint(11, 22))], menus);
+        Assert.Empty(based);
+        other.Dispose();
+    }
+
+    /// <summary>활성 중심행은 실제 참가자 SID를 카메라에 전달하고 1을 반환한다. 0.925에서 추가됐다.</summary>
+    [Fact]
+    public void HandleRootInputActiveCenterSendsSid()
+    {
+        using var scene = new Scene();
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        WriteParticipant(challenge, 4, battle: 0, flags: 1, name: "me", sid: 0x1234);
+        scene.Globals.RosterOrder[6] = 4;
+        var centers = new List<uint>();
+        var based = new List<(uint Event, uint First, uint Second)>();
+        var wired = new HostNsInfoDevices
+        {
+            Read = address => address switch { 0x542790 => 0x100u, 0x54278c => 0x200u, 0x5429dc => 0x300u, _ => scene.Devices.Read(address) },
+            Translate = scene.Devices.Translate, StoreText = scene.Devices.StoreText, Text = scene.Devices.Text, FormatZone = scene.Devices.FormatZone, Changed = scene.Devices.Changed,
+            MousePoint = () => new ScreenPoint(11, 22),
+            ParticipantMenu = (_, _) => { },
+            CenterOnSid = sid => centers.Add(sid),
+            StatusSend = _ => { },
+            KickoffSound = () => { },
+            BaseInput = (@event, first, second) => { based.Add((@event, first, second)); return 7u; },
+        };
+        using var other = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, wired);
+        uint result = other.HandleRootInput(0x200, 0, 6, challenge);
+        Assert.Equal(1u, result);
+        Assert.Equal([0x1234u], centers);
+        Assert.Empty(based);
+        other.Dispose();
+    }
+
+    /// <summary>직접 추방은 실제 기록 4번과 8을 패킷에 쓰고 추방음을 재생한다. 0.925에서 추가됐다.</summary>
+    [Fact]
+    public void HandleRootInputDirectKickFillsPacketAndPlaysSound()
+    {
+        using var scene = new Scene();
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        WriteParticipant(challenge, 8, battle: 0, flags: 1, name: "out", sid: 9);
+        BitConverter.GetBytes(0xAABBCCDDu).CopyTo(challenge.Participant(8).Span.Slice(4, 4));
+        var packets = new List<byte[]>();
+        int sounds = 0;
+        var based = new List<(uint Event, uint First, uint Second)>();
+        var wired = new HostNsInfoDevices
+        {
+            Read = address => address switch { 0x542790 => 0x100u, 0x54278c => 0x200u, 0x5429dc => 0x300u, _ => scene.Devices.Read(address) },
+            Translate = scene.Devices.Translate, StoreText = scene.Devices.StoreText, Text = scene.Devices.Text, FormatZone = scene.Devices.FormatZone, Changed = scene.Devices.Changed,
+            MousePoint = () => new ScreenPoint(11, 22),
+            ParticipantMenu = (_, _) => { },
+            CenterOnSid = _ => { },
+            StatusSend = fill => { byte[] packet = new byte[12]; fill(packet); packets.Add(packet); },
+            KickoffSound = () => sounds++,
+            BaseInput = (@event, first, second) => { based.Add((@event, first, second)); return 7u; },
+        };
+        using var other = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, wired);
+        uint result = other.HandleRootInput(0x300, 0, 8, challenge);
+        Assert.Equal(1u, result);
+        Assert.Single(packets);
+        Assert.Equal(0xAABBCCDDu, BitConverter.ToUInt32(packets[0], 4));
+        Assert.Equal(8u, BitConverter.ToUInt32(packets[0], 8));
+        Assert.Equal(1, sounds);
+        Assert.Empty(based);
+        other.Dispose();
+    }
+
+    /// <summary>비활성과 둘째 0은 실제 기본 처리에 원래 인자를 전달한다. 0.925에서 추가됐다.</summary>
+    [Fact]
+    public void HandleRootInputInactiveFallsThroughToBase()
+    {
+        using var scene = new Scene();
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        WriteParticipant(challenge, 9, battle: 0, flags: 0, name: "off", sid: 7);
+        scene.Globals.RosterOrder[5] = 9;
+        var menus = new List<(uint Index, ScreenPoint Point)>();
+        var based = new List<(uint Event, uint First, uint Second)>();
+        var wired = new HostNsInfoDevices
+        {
+            Read = address => address switch { 0x542790 => 0x100u, 0x54278c => 0x200u, 0x5429dc => 0x300u, _ => scene.Devices.Read(address) },
+            Translate = scene.Devices.Translate, StoreText = scene.Devices.StoreText, Text = scene.Devices.Text, FormatZone = scene.Devices.FormatZone, Changed = scene.Devices.Changed,
+            MousePoint = () => new ScreenPoint(11, 22),
+            ParticipantMenu = (index, point) => menus.Add((index, point)),
+            CenterOnSid = _ => { },
+            StatusSend = _ => { },
+            KickoffSound = () => { },
+            BaseInput = (@event, first, second) => { based.Add((@event, first, second)); return 7u; },
+        };
+        using var other = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, wired);
+        uint first = other.HandleRootInput(0x100, 3, 5, challenge);
+        Assert.Equal(7u, first);
+        Assert.Empty(menus);
+        uint second = other.HandleRootInput(0x100, 9, 0, challenge);
+        Assert.Equal(7u, second);
+        Assert.Equal([(0x100u, 3u, 5u), (0x100u, 9u, 0u)], based);
+        other.Dispose();
+    }
+
+    /// <summary>미연결 루트 입력 장치는 일반 성공으로 꾸미지 않는다. 0.925에서 추가됐다.</summary>
+    [Fact]
+    public void HandleRootInputMissingDevicesFailExplicitly()
+    {
+        using var scene = new Scene();
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        WriteParticipant(challenge, 9, battle: 0, flags: 1, name: "me", sid: 7);
+        scene.Globals.RosterOrder[5] = 9;
+        var bare = new HostNsInfoDevices
+        {
+            Read = address => address switch { 0x542790 => 0x100u, 0x54278c => 0x200u, 0x5429dc => 0x300u, _ => scene.Devices.Read(address) },
+            Translate = scene.Devices.Translate, StoreText = scene.Devices.StoreText,
+            Text = scene.Devices.Text, FormatZone = scene.Devices.FormatZone, Changed = scene.Devices.Changed,
+        };
+        using var other = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, bare);
+        Assert.Throws<InvalidOperationException>(() => other.HandleRootInput(0x100, 1, 5, challenge));
+        Assert.Throws<ArgumentNullException>(() => other.HandleRootInput(0x100, 1, 5, null!));
+        Assert.Throws<ArgumentOutOfRangeException>(() => other.HandleRootInput(0x100, 1, 99, challenge));
+        other.Dispose();
+        Assert.Throws<ObjectDisposedException>(() => other.HandleRootInput(0x100, 1, 5, challenge));
+    }
 }

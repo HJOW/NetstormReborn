@@ -34,6 +34,18 @@ public sealed class HostNsInfoDevices
     public Func<int, string>? RankPicture { get; init; }
     /// <summary>0049a840→0049af80의 현재 TYPE 설명/번역/80BYTE 설정 치환이다. 0.923에서 추가됐다.</summary>
     public Func<uint, string>? Describe { get; init; }
+    /// <summary>같은 실제 원시 마우스 좌표를 소비 시점에 읽는다. 루트 입력 결선에서 사용하며 0.925에서 추가됐다.</summary>
+    public Func<ScreenPoint>? MousePoint { get; init; }
+    /// <summary>같은 실제 참가자 메뉴 공장이다. 루트 입력 결선에서 사용하며 0.925에서 추가됐다.</summary>
+    public Action<uint, ScreenPoint>? ParticipantMenu { get; init; }
+    /// <summary>같은 실제 참가자 SID 카메라 중심 이동이다. 루트 입력 결선에서 사용하며 0.925에서 추가됐다.</summary>
+    public Action<uint>? CenterOnSid { get; init; }
+    /// <summary>같은 실제 1fh/12BYTE 헤더 뒤 부분효과 송신이다. 루트 입력 결선에서 사용하며 0.925에서 추가됐다.</summary>
+    public Action<Action<Memory<byte>>>? StatusSend { get; init; }
+    /// <summary>같은 실제 추방 확인 음향이다. 루트 입력 결선에서 사용하며 0.925에서 추가됐다.</summary>
+    public Action? KickoffSound { get; init; }
+    /// <summary>처리하지 않은 원래 세 DWORD의 같은 기본 입력 처리다. 루트 입력 결선에서 사용하며 0.925에서 추가됐다.</summary>
+    public Func<uint, uint, uint, uint>? BaseInput { get; init; }
     /// <summary>복귀하면 계속하는 실제 원문 줄 번호 진단이다.</summary>
     public Action<uint>? Assertion { get; init; }
     /// <summary>실제 공통 구조 변경을 알린다.</summary>
@@ -217,6 +229,29 @@ public sealed class HostNsInfoWindows : IDisposable
         }
 
         return box;
+    }
+    /// <summary>같은 실제 CS와 정렬표로 루트 원문 입력을 메뉴·카메라·송신에 연결한다. 0.925에서 추가됐다.</summary>
+    /// <param name="event">원문 입력 event DWORD다.</param>
+    /// <param name="first">원문 입력 첫 DWORD다.</param>
+    /// <param name="second">원문 입력 둘째 DWORD다.</param>
+    /// <param name="challenge">같은 실제 CS 참가자40·전투10 기록이다.</param>
+    public uint HandleRootInput(uint @event, uint first, uint second, ClientChallengeGlobals challenge)
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        ArgumentNullException.ThrowIfNull(challenge);
+        var hooks = new NativeNsInfoInputHooks
+        {
+            Command = address => Read(address),
+            Roster = row => row < (uint)_globals.RosterOrder.Length ? _globals.RosterOrder[row] : throw new ArgumentOutOfRangeException(nameof(second), "NSInfo 루트 입력의 실제 정렬표 범위"),
+            Participant = index => challenge.Participant(index),
+            Mouse = () => Need(_devices.MousePoint)(),
+            Menu = (index, point) => Need(_devices.ParticipantMenu)(index, point),
+            Center = sid => Need(_devices.CenterOnSid)(sid),
+            Status = fill => Need(_devices.StatusSend)(fill),
+            KickoffSound = () => Need(_devices.KickoffSound)(),
+            Base = (@event, first, second) => Need(_devices.BaseInput)(@event, first, second),
+        };
+        return NativeNsInfoInput.Handle(@event, first, second, hooks);
     }
     /// <summary>같은 실제 CS와 현재 NSInfo 전역으로 전체 메타 플레이어 본문을 배치한다. 0.922에서 추가됐다.</summary>
     /// <param name="token">같은 0xbc PlayerInfo 노드 토큰이다.</param>
