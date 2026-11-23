@@ -1,0 +1,37 @@
+{
+  "unit": 1333,
+  "passed": true,
+  "keysAdded": 23,
+  "totalJapaneseKeys": 536,
+  "totalKoreanKeys": 536,
+  "keySetsEqual": true,
+  "focusedTests": {
+    "total": 47,
+    "passed": 47
+  },
+  "gui": {
+    "name": "menus-final-ja",
+    "args": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "--run",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+      "--window",
+      "--frames",
+      "55",
+      "--fixed-frame-ms",
+      "25",
+      "--no-audio",
+      "--set",
+      "welcomeGiven=1;tellTips=0;autoDemo=0;edgeScroll=0;currentLanguage=japanese;SCREENW=1024;SCREENH=768",
+      "--ui-script",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\menus-final-ja.tsv",
+      "--ui-report",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\menus-final-ja-report.tsv",
+      "--mission",
+      "thewarbegins"
+    ],
+    "exit_code": 0,
+    "seconds": 1.9745793342590332,
+    "exe_sha256": "99514ed7c3b13ada9a155518880ce02421e21ba2d875805b13591f287b69da45"
+  }
+}
