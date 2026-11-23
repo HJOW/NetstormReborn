@@ -23,6 +23,9 @@ test('한국어 제목 슬롯: 갈무리11 정수 배율이고 글자 윗부분�
       }
       out[slot] = { em: font.spec.emSize, height: font.height, ascent: font.ascent, minTop, maxBottom, inked };
     }
+    // 슬롯별 확장 글자(한글 음절 120개·호환 자모 U+3131~314E·한자 U+4E00·6F22·AC00 등)의 전진 폭 집합이다.
+    out.advances = {}; const extended = [...codes, 0x3131, 0x3141, 0x314e, 0x4e00, 0x6f22, 0x97d3];
+    for (const slot of [0, 3, 4]) { const font = fonts.unicodeFont({ font: slot, style: 0 }); out.advances[slot] = [...new Set(extended.map((code) => font.glyph(code).advance))]; }
     // 잔의 맨 윗줄 잉크 폭이다(ㅈ 의 위쪽 가로획이 남아 있으면 10칸 이상).
     const g = fonts.unicodeFont({ font: 3, style: 0 }).glyph(0xc794).image; let topRun = 0; if (g) { let first = 0; while (first < g.height && !g.indices.slice(first * g.width, (first + 1) * g.width).some(Boolean)) first += 1; for (let x = 0; x < g.width; x += 1) if (g.indices[first * g.width + x]) topRun += 1; out.jan = { top: g.top, first, topRun }; }
     return out; });
@@ -31,6 +34,8 @@ test('한국어 제목 슬롯: 갈무리11 정수 배율이고 글자 윗부분�
   // 어떤 글자도 줄 맨 위(0) 위로 나가지 않는다.
   expect(result[3].minTop, '슬롯 3 윗부분 잘림 없음').toBeGreaterThanOrEqual(0); expect(result[4].minTop, '슬롯 4 윗부분 잘림 없음').toBeGreaterThanOrEqual(0);
   expect(result[3].inked).toBeGreaterThan(100);
+  // 확장 글자(한글 음절·호환 자모·한자)의 전진 폭은 모두 칸 폭(= 글자 크기)이다: 원문은 확장 글자 하나의 폭(`가` 의 폭)을 대표로 모든 확장 문자의 폭으로 쓰므로(`BitmapFont::ExtendedAdvance`) 같은 결과이다.
+  expect(result.advances, '확장 글자 폭').toEqual({ 0: [11], 3: [22], 4: [44] });
   // 잔(ㅈ)의 맨 윗줄에 가로획이 있다.
   expect(result.jan.topRun, '잔 의 위쪽 가로획').toBeGreaterThanOrEqual(10);
   expect(errors).toEqual([]);
