@@ -466,6 +466,11 @@ public sealed class RiftTypeTable
     /// <param name="edition">원본 판본.</param>
     private static void ApplyDefinition(OriginalTypeRecord type, RiftTypeDefinition definition, OriginalEdition edition)
     {
+        // 원문은 플래그/발자국 접두보다 먼저 실제 기본 프레임과 두 애니메이션 DWORD를 쓴다.
+        type.DefaultFrame = definition.SpecialFrames.DefaultFrame;
+        ArcherTypeData animation = RawArcherTypeData.Read(definition);
+        type.Directions = animation.Directions;
+        type.FrameCount = animation.FrameCount;
         type.FootX = 1;
         type.FootY = 1;
         type.Flags1 = 0;

@@ -17,6 +17,7 @@ public sealed partial class RawSurfaceStorage
     public float HandleDefaultRegular(int sid, uint @event, uint count, float payload)
     {
         uint table = BinaryPrimitives.ReadUInt32LittleEndian(Pool.Slot(sid));
+        if (table == 0x50b570) return DiscRegular(sid, @event, count, payload);
         if (table == 0x50cc08) return RawSpriteRegular.Run(Pool, Frames, FrameExecutor(), sid, payload);
         if (table == 0x50ee08) return PlayerRegular(sid, @event, count, payload);
         if (table == 0x50da88) return RawGeyserRegular.Run(Pool, Types, sid, @event, count, payload, new()

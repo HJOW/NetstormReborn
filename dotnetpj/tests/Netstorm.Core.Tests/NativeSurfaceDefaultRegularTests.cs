@@ -8,6 +8,12 @@ namespace Netstorm.Core.Tests;
 /// <summary>PE 자료의 기본13/피해14 VT와 실제 예약/현재 사건/미설치 경계를 검사한다. Source 기본3종은 이 자료 밖이다.</summary>
 public sealed class NativeSurfaceDefaultRegularTests
 {
+    /// <summary>삭제 분배기가 빌리는 최초 로딩 TYPE를 현재 수정 가능 표와 구분한다.</summary>
+    private sealed class LoadedSource(IReadOnlyList<OriginalTypeRecord> types) : IRawSurfaceAssetSource
+    {
+        /// <summary>저장소 생성 전의 최초 로딩 표다.</summary>
+        public IReadOnlyList<OriginalTypeRecord> LoadedTypes { get; } = types;
+    }
     /// <summary>보호 PE의 실제83VT 행을 정수로 읽는다. C# 분배 표를 기대값으로 사용하지 않는다.</summary>
     private static IEnumerable<uint[]> VtableRows() => File.ReadLines(Path.Combine(AppContext.BaseDirectory, "X86", "damageable-regular-tables-x86.tsv"))
         .Where(line => line.Length > 0 && line[0] != '#').Select(line => line.Split('\t').Select(uint.Parse).ToArray());
@@ -17,12 +23,12 @@ public sealed class NativeSurfaceDefaultRegularTests
     public static IEnumerable<object[]> DamageableTables() => VtableRows().Where(row => row[1] == 0x44b900).Select(row => new object[] { row[0] });
 
     /// <summary>현재 Native 장치/표시를 갖지만 World를 대여하지 않는 실제 저장소를 만든다.</summary>
-    private static RawSurfaceStorage Storage()
+    private static RawSurfaceStorage Storage(bool withSource = false)
     {
         var types = Enumerable.Range(0, 188).Select(i => new OriginalTypeRecord { ConstructorAddress = OriginalConstructors.Address(i), FootX = 1, FootY = 1, Cost = 100 }).ToArray();
         var frames = Enumerable.Range(0, 188).Select(_ => new RiftTypeFrames([])).ToArray();
         var shapes = Enumerable.Range(0, 188).Select(_ => new SquidDisplayShape()).ToArray();
-        var storage = new RawSurfaceStorage(OriginalEdition.Patch1078, types, frames, shapes);
+        var storage = new RawSurfaceStorage(OriginalEdition.Patch1078, types, frames, shapes, assetSource: withSource ? new LoadedSource(types) : null);
         storage.BindTransmissionDevices(new() { Broadcast = _ => { }, Connected = _ => false, Send = (_, _) => { } });
         storage.BindProcessDevices(new() { Selected = () => 0, ClearSelection = () => { } });
         storage.BindDisplayDevices(new() { View = () => new() { Zoom = 65536 }, Suppressed = () => false, Invalidate = (_, _) => { } });
@@ -166,4 +172,34 @@ public sealed class NativeSurfaceDefaultRegularTests
         Assert.Equal(0.25f, storage.Processes().Host().Regular()!(sid, 123456, 9, 0.25f));
         Assert.Same(storage.FenceRegular(), storage.FenceRegular());
     }
+    /// <summary>Native 디스크는 현재 TYPE/실제 Frame을 사용하고 분모오류는 선행 상태를 보존한다.</summary>
+    [Fact]
+    public void NativeDiscReadsCurrentRecordAndUsesSameFrameExecutor()
+    {
+        var storage = Storage(); int sid = Parent(storage, 0x50b570); const int type = 74;
+        storage.Types[type].Directions = 1; storage.Types[type].FrameCount = 4; SquidDisplayShape shape = storage.Shapes[type]; shape.Loaded = true; shape.FrameCount = 6;
+        // 현재 Native Frame의 실제 여섯 물리 헤더를 준비한다.
+        for (int i = 0; i < 6; i++) shape.Frames.Add(new() { Width = 16, Height = 11, CellWidth = 1, CellHeight = 1 });
+        Span<byte> raw = storage.Pool.RawSlot(sid); raw[33] = 1; BinaryPrimitives.WriteSingleLittleEndian(raw[14..], 50); BinaryPrimitives.WriteSingleLittleEndian(raw[18..], 50); RegularHandler handler = storage.Processes().Host().Regular()!; Assert.Equal(.25f, handler(sid, 99, 7, .25f)); Assert.Equal(1, BinaryPrimitives.ReadInt32LittleEndian(raw[36..])); OriginalTypeRecord replacement = storage.Types[type].Clone(); replacement.FrameCount = 6; storage.Types[type] = replacement; BinaryPrimitives.WriteInt32LittleEndian(raw[36..], 3); Assert.Equal(.5f, handler(sid, 1, 2, .5f)); Assert.Equal(4, BinaryPrimitives.ReadInt32LittleEndian(raw[36..])); byte[] before = raw.ToArray(); uint free = storage.Pool.FreeCount; replacement.Directions = 0; Assert.Throws<ArithmeticException>(() => handler(sid, 99, 0, 1)); Assert.Equal(before, storage.Pool.Slot(sid).ToArray()); Assert.Equal(free, storage.Pool.FreeCount); Assert.False(storage.Borrowed()); Assert.Equal(0ul, storage.Generation());
+    }
+
+    /// <summary>Native 디스크의 같은 실제 Kernel 정기가 current TYPE를 소비하고 보통 사건도 전용 본문으로 간다.</summary>
+    [Fact]
+    public void ActualNativeDiscRegularSharesKernelAndCurrentType()
+    {
+        var storage = Storage(withSource: true); int sid = Parent(storage, 0x50b570); storage.Types[74].Directions = 1; storage.Types[74].FrameCount = 4; SquidDisplayShape shape = storage.Shapes[74]; shape.Loaded = true; shape.FrameCount = 4;
+        // Form 삭제 분배기의 실제 보상 owner를 연결하되 정기 Form 삭제에서 경제 효과를 선택하면 실패한다.
+        storage.BindRewardDevices(new()
+        {
+            Sp = new RawSpStore(new GameRandom(1), () => 1u), Editor = new UIntBox(),
+            RefreshSp = () => throw new InvalidOperationException("정기 Form 삭제의 예상 밖 SP 표시"),
+            CreditWallet = (_, _) => throw new InvalidOperationException("정기 Form 삭제의 예상 밖 지갑 가산"),
+        });
+        // 실제 Frame.Set이 읽는 네 물리 헤더의 명시 입력이다.
+        for (int i = 0; i < 4; i++) shape.Frames.Add(new() { Width = 16, Height = 11, CellWidth = 1, CellHeight = 1 });
+        storage.Pool.RawSlot(sid)[33] = 1; BinaryPrimitives.WriteSingleLittleEndian(storage.Pool.RawSlot(sid)[14..], 50); BinaryPrimitives.WriteSingleLittleEndian(storage.Pool.RawSlot(sid)[18..], 50); var kernel = new Kernel(); var clock = new FrameTimeBox { Value = new FrameTime { Game = 7.5 } }; storage.Processes().BindDevices(kernel, clock); SquidProcessHost host = storage.Processes().Host();
+        try { RegularProcess process = Assert.IsType<RegularProcess>(host.AddRegular(sid, 99, .25f)); kernel.RunFrame(); Assert.Equal(1u, process.Count()); Assert.Equal(7.75, process.Time()); Assert.Equal(1, BinaryPrimitives.ReadInt32LittleEndian(storage.Pool.Slot(sid)[36..])); Assert.False(storage.Borrowed()); host.Kill(process, 0x10); Assert.Equal(0, kernel.Size()); Assert.Equal(0u, storage.BaseDestroy().PreDepth); Assert.Equal(0u, storage.BaseDestroy().PostDepth); }
+        finally { kernel.DrainOwnedForShutdown(); }
+    }
+
 }

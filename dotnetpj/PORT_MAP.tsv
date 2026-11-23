@@ -1781,3 +1781,5 @@ cpppj/src/o/RawDiscRegular.cpp	Netstorm.Core/Original/RawDiscRegular.cs	8610c9c0
 cpppj/src/o/RawDiscRegular.h	Netstorm.Core/Original/RawDiscRegular.cs	8610c9c0f6fd62e32b0e518e0336e7dd434ab285	port
 cpppj/src/o/RawArcherTypeData.cpp	Netstorm.Core/Original/RawArcherTypeData.cs	8610c9c0f6fd62e32b0e518e0336e7dd434ab285	port
 cpppj/src/o/RawArcherTypeData.h	Netstorm.Core/Original/RawArcherTypeData.cs	8610c9c0f6fd62e32b0e518e0336e7dd434ab285	port
+cpppj/src/client/RawSurfaceFrameRegular.cpp	Netstorm.Core/Original/RawSurfaceStorage.FrameRegular.cs	b5c7f855aaac9b4d24bd2f2ee83d0709162a60e9	port
+cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceStorage.FrameRegular.cs	b5c7f855aaac9b4d24bd2f2ee83d0709162a60e9	port
