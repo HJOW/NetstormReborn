@@ -14,14 +14,14 @@ const ORACLE = path.join(__dirname, '..', 'tests', 'fixtures', 'cpppj', 'candida
 // 단계 동작마다 웹에서 입력을 넣을 프레임 보정(단계 프레임에 더한다)이다. 위 규칙을 값으로 옮겼다.
 const INJECT_SHIFT = { 'click-if': 1, click: 1, right: 1, key: -1 };
 
-test('L3 Tutorial1: MORE→OK→스크롤 연습→F4→Bridges OK→다리 조각 집기·놓기의 체크포인트 화면과 덤프가 cpppj 와 같다', async ({ browser }) => {
+test('L3 Tutorial1: MORE→OK→스크롤 연습→F4→Bridges OK→다리 조각 집기·놓기(다리 생성)의 체크포인트 화면과 덤프가 cpppj 와 같다', async ({ browser }) => {
   test.setTimeout(600000);
   const plan = JSON.parse(fs.readFileSync(path.join(ORACLE, 'steps.json'), 'utf8')), meta = JSON.parse(fs.readFileSync(path.join(ORACLE, 'oracle.json'), 'utf8'));
   expect(meta.cpppjCommit, '오라클 기준선 커밋').toBe('225553df'); expect(plan.screen).toEqual({ width: 1024, height: 768 });
-  // 단계표의 체크포인트 이름마다 오라클의 덤프·화면 파일이 있어야 한다(덤프 c200·c300·c400, 화면 c200·c300·p345·c400).
-  for (const file of ['c200.tsv', 'c200.png', 'c300.tsv', 'c300.png', 'c400.tsv', 'c400.png', 'p345.png']) expect(fs.existsSync(path.join(ORACLE, file)), file).toBe(true);
+  // 단계표의 체크포인트 이름마다 오라클의 덤프·화면 파일이 있어야 한다(덤프 c200·c300·c400, 화면 c200·c300·p345·d364·c400).
+  for (const file of ['c200.tsv', 'c200.png', 'c300.tsv', 'c300.png', 'c400.tsv', 'c400.png', 'p345.png', 'd364.png']) expect(fs.existsSync(path.join(ORACLE, file)), file).toBe(true);
   expect(plan.steps.filter(([, op]) => op === 'session-dump').map(([, , label]) => label)).toEqual(['c200', 'c300', 'c400']);
-  expect(plan.steps.filter(([, op]) => op === 'snapshot').map(([, , label]) => label)).toEqual(['c200', 'c300', 'p345', 'c400']);
+  expect(plan.steps.filter(([, op]) => op === 'snapshot').map(([, , label]) => label)).toEqual(['c200', 'c300', 'p345', 'd364', 'c400']);
   const context = await browser.newContext({ viewport: { width: plan.screen.width, height: plan.screen.height }, locale: 'en-US' }), page = await context.newPage();
   const errors = []; page.on('pageerror', (error) => errors.push(error.stack ?? error.message)); page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
   await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, autoDemo: 0 } })));
@@ -60,7 +60,7 @@ test('L3 Tutorial1: MORE→OK→스크롤 연습→F4→Bridges OK→다리 조�
   expect(errors).toEqual([]);
   const { readPng, indexedToRgb } = await import('../tools/image-files.mjs'), { compareImages } = await import('../tools/screen-compare.mjs'), { compareSessionDumps } = await import('../tools/session-dump-compare.mjs');
   const normalize = (text) => text.split(/\r?\n/).join('\n');
-  // 화면 체크포인트마다 논리 화면이 0픽셀 다르다(다리 조각을 집은 직후 p345 의 커서 조각 표시 포함).
+  // 화면 체크포인트마다 논리 화면이 0픽셀 다르다(다리 조각을 집은 직후 p345 의 커서 조각 표시와 놓은 직후 d364·400 의 새 다리 포함).
   for (const name of checkpoints.filter(([, op]) => op === 'snapshot').map(([, , label]) => label)) {
     const shot = results[`snapshot:${name}`], palette = new Uint8Array(768);
     // BGRX → RGB 로 바꾼다.

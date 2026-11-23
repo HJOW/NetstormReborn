@@ -1,7 +1,7 @@
 {
   "format": "netstorm-webpj-cpppj-l3-steps",
   "version": 1,
-  "description": "cpppj 225553df Tutorial1 입력 단계표(L3: MORE→OK→스크롤 연습→F4→Bridges OK→다리 조각 집기(345 화면)→놓기 시도→400). 단계는 [프레임, 동작, 인자]이며 cpppj `--ui-script` 의 동작 이름을 그대로 쓴다. 웹은 e2e/l3-tutorial1.spec.js 가 같은 단계를 고정 시각 모드로 적용한다(입력 프레임 규칙은 docs/webpj-l3-tutorial1-20261123.md).",
+  "description": "cpppj 225553df Tutorial1 입력 단계표(L3: MORE→OK→스크롤 연습→F4→Bridges OK→다리 조각 집기(345 화면)→섬 남쪽 가장자리에 놓기(364 화면, 400 덤프·화면)). 단계는 [프레임, 동작, 인자]이며 cpppj `--ui-script` 의 동작 이름을 그대로 쓴다. 웹은 e2e/l3-tutorial1.spec.js 가 같은 단계를 고정 시각 모드로 적용한다(입력 프레임 규칙은 docs/webpj-l3-tutorial1-20261123.md).",
   "language": "english",
   "screen": {
     "width": 1024,
@@ -70,7 +70,12 @@
     [
       360,
       "click",
-      "screen:310,585"
+      "screen:430,660"
+    ],
+    [
+      364,
+      "snapshot",
+      "d364"
     ],
     [
       400,

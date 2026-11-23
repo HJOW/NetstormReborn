@@ -25612,10 +25612,10 @@
       ],
       "scope": "Tutorial1 L3 입력 단계표(MORE→OK→F4)와 체크포인트",
       "text": true,
-      "sha256": "603d80b456b23628bfae72d2a5ac8cbc63e724ee7708c6dced480b6cb8c12ebe",
-      "bytes": 1489,
-      "lines": 86,
-      "fixtureCommit": "318c716df",
+      "sha256": "ba5bbf6954d107331bd56cec52b1edea7b28495886350bf3ead082c6aa5070ec",
+      "bytes": 1590,
+      "lines": 91,
+      "fixtureCommit": "841097c60",
       "webCommit": "3b5974349",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
@@ -25644,10 +25644,10 @@
       ],
       "scope": "L3 오라클의 실행 파일·인자·수집 정보",
       "text": true,
-      "sha256": "2df85aac3ab4c6688cad61a7ff5561801e1c0c9f826e7fdd60c5282a50a81793",
-      "bytes": 1132,
+      "sha256": "ef3b7801c9152832bf186f7dd037222222a4d4cbaae4693fecf56aba3ae341e9",
+      "bytes": 1156,
       "lines": 35,
-      "fixtureCommit": "318c716df",
+      "fixtureCommit": "841097c60",
       "webCommit": "3b5974349",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
@@ -25676,10 +25676,10 @@
       ],
       "scope": "200프레임 Session 덤프(MORE·OK 뒤 스크롤 연습 창)",
       "text": true,
-      "sha256": "922561e1d614172933dc2c07e773c4cfb848b5910ca826b03538ad86850e66a9",
-      "bytes": 142457,
+      "sha256": "049c576308422cd77561e12ce32e449b5fb0db5cd72483b0d887ed4f83d4e1ed",
+      "bytes": 142448,
       "lines": 1965,
-      "fixtureCommit": "318c716df",
+      "fixtureCommit": "841097c60",
       "webCommit": "3b5974349",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
@@ -25740,10 +25740,10 @@
       ],
       "scope": "300프레임 Session 덤프(F4 뒤 Bridges 창)",
       "text": true,
-      "sha256": "a397d50bc1ead2e7ef1a6744f34ac88a2a96a3ab40b939e7f573240d21d3d6ce",
-      "bytes": 142567,
+      "sha256": "53eede4106e43ee5cc2c4c363d077108159e9f826e1ac5888f45ad0a6cfa55ce",
+      "bytes": 142558,
       "lines": 1966,
-      "fixtureCommit": "318c716df",
+      "fixtureCommit": "841097c60",
       "webCommit": "3b5974349",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
@@ -25807,6 +25807,38 @@
       "sha256": "911ad5606fb3309bc8888638cb852214fe60c77ef36ae053119301dcc7ba0084",
       "bytes": 198965,
       "lines": null,
+      "fixtureCommit": "841097c60",
+      "webCommit": "3b5974349",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial1-l3-d364-screen",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial1-l3/d364.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial1 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial1.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1286",
+      "doc": "docs/webpj-l3-tutorial1-20261123.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "364프레임 논리 화면(다리 조각을 섬 남쪽 가장자리에 놓은 직후)",
+      "text": false,
+      "sha256": "3ee295f85c18091398f4414e9d66e625675f508ffbdb8648eb0a8990fc656b7a",
+      "bytes": 199143,
+      "lines": null,
       "fixtureCommit": null,
       "webCommit": "3b5974349",
       "cpppjBasis": {
@@ -25834,12 +25866,12 @@
         "cpppj/src/client/SessionStateDump.cpp",
         "cpppj/src/app/main.cpp"
       ],
-      "scope": "400프레임 Session 덤프(다리 조각을 든 채 놓기 시도 뒤)",
+      "scope": "400프레임 Session 덤프(다리 조각을 놓은 뒤: 풀 새 SID·SP 변화)",
       "text": true,
-      "sha256": "dbc169c780f3d9aaefd90ba1c5ba19f45c7081cf1565b546056ca7183d1f7e8c",
-      "bytes": 142876,
-      "lines": 1970,
-      "fixtureCommit": null,
+      "sha256": "f3b175c793ddd91b2fc9e4bc6e9e91c9be69c0a87f45f850a1decc42103d89dd",
+      "bytes": 142912,
+      "lines": 1972,
+      "fixtureCommit": "841097c60",
       "webCommit": "3b5974349",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
@@ -25868,10 +25900,10 @@
       ],
       "scope": "400프레임 논리 화면",
       "text": false,
-      "sha256": "fe76e6669d25a1687a5e019c00aadd78e3fa6c58f00c6335c8f64479c67bc3ab",
-      "bytes": 199072,
+      "sha256": "b7493f0db229d0aee6089d5a1b3ed38c3f71312f03038f26c000dcae8ff702b6",
+      "bytes": 199327,
       "lines": null,
-      "fixtureCommit": null,
+      "fixtureCommit": "841097c60",
       "webCommit": "3b5974349",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
