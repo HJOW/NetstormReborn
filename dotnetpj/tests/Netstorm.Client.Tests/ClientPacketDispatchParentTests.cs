@@ -4,7 +4,7 @@ using Netstorm.Net;
 
 namespace Netstorm.Client.Tests;
 
-// 공통 패킷 분배 부모의 41h·로그인 설치를 검사하는 클래스다. 2026-11-23 0.897에서 R4-6 전송·수신 묶음용으로 추가했다.
+// 공통 패킷 분배 부모의 41h·로그인·Native gameplay 설치를 검사하는 클래스다. 2026-11-23 0.897에서 R4-6 전송·수신 묶음용으로 추가하고 0.899에서 Native gameplay 묶음을 이었다.
 // 근거: R4-6 남음의 "공통 41h가 Root.ReceiveNativePacketChat을 부르는 전송 설치"와 "NativeLoginPacketReceivers의 실제 MonoGame Root 설치 호출"이다.
 public sealed class ClientPacketDispatchParentTests
 {
@@ -69,6 +69,22 @@ public sealed class ClientPacketDispatchParentTests
         Assert.Equal(0x0044dc20u, dispatch.SnapshotReceiver(0x32)!.NativeEntry);
         Assert.Equal(0x004b3af0u, dispatch.SnapshotReceiver(0x0b)!.NativeEntry);
         Assert.Equal(0x004b49e0u, dispatch.SnapshotReceiver(0x69)!.NativeEntry);
+        Assert.Empty(scene.Assertions);
+    }
+    /// <summary>부모는 Native gameplay 6종 묶음을 같은 분배기에 설치한다.</summary>
+    [Fact]
+    public void ParentInstallsNativeGameplayEntries()
+    {
+        var scene = new Scene();
+        var dispatch = Build(scene, _ => { });
+        Assert.Equal(0x0045e4f0u, dispatch.SnapshotReceiver(0x74)!.NativeEntry);
+        Assert.Equal(0x0045e410u, dispatch.SnapshotReceiver(0x38)!.NativeEntry);
+        Assert.Equal(0x0045e5d0u, dispatch.SnapshotReceiver(0x73)!.NativeEntry);
+        Assert.Equal(0x0046a0c0u, dispatch.SnapshotReceiver(0x3a)!.NativeEntry);
+        Assert.Equal(0x0045e2b0u, dispatch.SnapshotReceiver(0x39)!.NativeEntry);
+        Assert.Equal(0x00426490u, dispatch.SnapshotReceiver(0x86)!.NativeEntry);
+        Assert.Equal(0x00466d30u, dispatch.SnapshotReceiver(0x3b)!.NativeEntry);
+        Assert.Equal(0x00466b60u, dispatch.SnapshotReceiver(0x3c)!.NativeEntry);
         Assert.Empty(scene.Assertions);
     }
     /// <summary>부모가 묶은 41h는 실제 Chat UI 입구로 전달한다.</summary>
