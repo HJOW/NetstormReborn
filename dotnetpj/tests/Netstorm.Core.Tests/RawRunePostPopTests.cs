@@ -1,4 +1,5 @@
 using System.Buffers.Binary;
+using System.Globalization;
 using Netstorm.Core.Original;
 using Netstorm.Core.Simulation;
 
@@ -33,6 +34,8 @@ public sealed class RawRunePostPopTests
         /// <summary>같은 실제 풀을 반납한다.</summary>
         public void Dispose() { }
     }
+    /// <summary>부호없는 입력의 원문 DWORD다.</summary>
+    private static uint N(string value) => uint.Parse(value, CultureInfo.InvariantCulture);
     /// <summary>지정 슬롯의 원문 필드를 직접 쓰고 같은 해시 셀에 등록한다.</summary>
     private static void Place(Scene scene, int sid, uint type, float x, float y, int owner)
     {
@@ -166,5 +169,68 @@ public sealed class RawRunePostPopTests
         var other = new RawSidPool(24000, false);
         Assert.Throws<ArgumentException>(() => RawRunePostPop.MakeRunePostPopHooks(other, host, construction, new()));
         kernel.DrainOwnedForShutdown();
+    }
+    /// <summary>원문 fixture 행만 읽는다.</summary>
+    private static IEnumerable<string[]> FixtureRows(string name) => File.ReadLines(Path.Combine(AppContext.BaseDirectory, "X86", name)).Where(line => line.Length != 0 && !line.StartsWith('#')).Select(line => line.Split('\t'));
+    /// <summary>원문1920행을 두 판본에서 전수 대조한다. CD행은 앞 36바이트만 대조한다.</summary>
+    [Fact]
+    public void MatchesAllNativeRunePostPopRows()
+    {
+        int rows = 0;
+        foreach (string[] row in FixtureRows("runepostpop-x86.tsv"))
+        {
+            Assert.Equal(7, row.Length); uint[] input = row[1].Split(',').Select(N).ToArray(); Assert.Equal(8, input.Length);
+            bool patch = row[0] == "originals";
+            uint flags = input[0], profile = input[1], reserve = input[2], word = input[3], playerFlag = input[4], suppress = input[5], mutation = input[6], extra = input[7];
+            var pool = new RawSidPool(24000, false, edition: patch ? OriginalEdition.Patch1078 : OriginalEdition.Cd1072);
+            int count = patch ? 188 : 171;
+            OriginalTypeRecord[] types = Enumerable.Range(0, count).Select(_ => new OriginalTypeRecord()).ToArray();
+            for (uint number = 5; number <= 8; number++) Assert.Equal((int)number, pool.Allocate(SidAllocation.Client));
+            for (int clear = 5; clear <= 8; clear++) pool.RawSlot(clear).Clear();
+            var hash = new RawSquidHash(); var state = new RunePostPopState(); var effects = new List<string>();
+            void Place(int sid, uint type, float x, float y, uint currentExtra, uint rawState, int foot)
+            {
+                Span<byte> raw = pool.RawSlot(sid); raw.Clear(); BinaryPrimitives.WriteUInt32LittleEndian(raw, 0x11010000);
+                raw[10] = (byte)type; raw[11] = (byte)rawState; raw[patch ? 40 : 35] = (byte)currentExtra;
+                BinaryPrimitives.WriteSingleLittleEndian(raw[14..], x); BinaryPrimitives.WriteSingleLittleEndian(raw[18..], y);
+                types[type].FootX = types[type].FootY = foot;
+                ref ushort head = ref hash.Bucket(1, x, y); BinaryPrimitives.WriteUInt16LittleEndian(raw[4..], head); head = (ushort)sid;
+            }
+            Place(8, 166, 40.75F, 41.25F, extra == 0 ? 0u : extra == 1 ? 1u : 8u, 0, 1);
+            if (profile != 0) Place(6, 165, profile == 7 ? 80.75F : profile == 6 ? 42.75F : 40.75F, profile == 7 ? 81.25F : profile == 6 ? 43.25F : 41.25F, profile == 3 ? 8u : profile == 5 ? 1u : 0u, profile == 4 ? 2u : 0u, profile == 6 ? 3 : 1);
+            if (profile != 8) Place(7, 164, profile == 9 ? 80.75F : 40.75F, profile == 9 ? 81.25F : 41.25F, 0, 0, 1);
+            // 공통 후처리 몸체는 거의 모든 표 항목을 읽으므로 패치 188표로 묶는다. 실제 CD 171표 대조는 후속에서 잇는다.
+            var base188 = Enumerable.Range(0, 188).Select(_ => new OriginalTypeRecord()).ToArray();
+            var book = new RawPostPopState(); var native = new RawPostPop(pool, base188, book);
+            var body = new RawRunePostPop(pool, hash, types, state, native, new RunePostPopHooks
+            {
+                ReserveRegular = () => { effects.Add("N:40"); if (mutation == 1) state.SuppressDuration = !state.SuppressDuration; return reserve != 0; },
+                AddRegular = (sid, ev, payload) => { effects.Add("R:" + ev + "," + sid + "," + BitConverter.SingleToUInt32Bits(payload)); if (mutation == 2) pool.RawSlot(8)[patch ? 34 : 32] = 2; },
+                StartConstruction = (sid, seconds) => effects.Add("C:" + sid + "," + BitConverter.SingleToUInt32Bits(seconds)),
+            });
+            Span<byte> rune = pool.RawSlot(8);
+            BinaryPrimitives.WriteUInt32LittleEndian(rune, patch ? 0x005075d8u : 0x00504148u); rune[patch ? 34 : 32] = 1;
+            pool.RawSlot(6)[patch ? 34 : 32] = (byte)(profile == 2 ? 2 : 1);
+            BinaryPrimitives.WriteUInt16LittleEndian(pool.RawSlot(7)[12..], (ushort)word);
+            state.SuppressDuration = suppress != 0; state.PlayerFlags[(int)word] = playerFlag;
+            book.ActivationDepth = 1;
+            Assert.Equal(int.Parse(row[2], CultureInfo.InvariantCulture), body.ConstructionSeconds(8));
+            if (patch) Assert.Equal(N(row[3]), body.FindOwnedDais(8));
+            body.PostPop(8, flags);
+            Assert.Equal(0u, book.ActivationDepth);
+            effects.Add("B:8," + flags);
+            Assert.Equal(row[4], string.Join(';', effects));
+            Assert.Equal(row[6] != "0", state.SuppressDuration);
+            string[] images = row[5].Split(';'); Assert.Equal(3, images.Length);
+            foreach (ushort number in new ushort[] { 6, 7, 8 })
+            {
+                string image = Convert.ToHexString(pool.Slot(number)).ToLowerInvariant();
+                string expected = images[number - 6];
+                if (patch) { Assert.True(expected.Length == image.Length, $"row {rows} sid {number}"); Assert.Equal(expected.Substring(8), image.Substring(8)); }
+                else Assert.Equal(expected.Substring(8), image.Substring(8, expected.Length - 8));
+            }
+            rows++;
+        }
+        Assert.True(rows > 1000);
     }
 }
