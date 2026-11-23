@@ -8,6 +8,12 @@ import { RawContainedLookup } from './raw-contained-lookup.js';
 import { RawPriestLookup } from './raw-priest-lookup.js';
 import { RawBoardApproach } from './raw-board-approach.js';
 import { RawCanonPlacementPipeline } from './raw-canon-placement-pipeline.js';
+import { RawPriestPlacement } from './raw-priest-placement.js';
+import { RawPriestPlacementCollision, makePriestPlacementCollisionHooks } from './raw-priest-placement-collision.js';
+import { RawPriestPlacementGeometry, makePriestGeometryCollisionHooks, makePriestGeometryPreviewHooks } from './raw-priest-placement-geometry.js';
+import { RawPriestPlacementPreview, makePriestPlacementPreviewHooks } from './raw-priest-placement-preview.js';
+import { RawPriestPlacementShape, makePriestShapePlacementHooks } from './raw-priest-placement-shape.js';
+import { RawPriestPlacementTerrain, createPriestPlacementTerrainState, makePriestTerrainCollisionHooks, makePriestTerrainGeometryHooks } from './raw-priest-placement-terrain.js';
 import { decodeOriginalText } from '../assets/text-encoding.js';
 import { formatWarningMessage } from '../ui/message-gump.js';
 
@@ -84,6 +90,24 @@ export class RawCampaignSessionConstruction {
         state.geometry = { ...o.metadata.geometry }; state.permission.useAlliances = 1;
         state.anchor.bindFullDeck(() => o.state.anchorState.currentIgnoreRestrictions);
         o.gameplayPipeline = new RawCanonPlacementPipeline(c.pool, c.hash, { types: c.types, frames: o.metadata.frames, shapes: c.shapes, hotspots: o.metadata.hotspots, spots: c.spots, islands: c.hash.view(0), regions: o.gameplayRegions }, c.bookkeeping, o.additional, o.contentFinder, state);
+        this.#bindPriestPlacement();
+    }
+
+    // 사제 생성(건물이 파괴돼 붙잡힌 사제를 풀어 줄 때 등)의 배치 검사 MayPlace 를 같은 현재 월드에 설치한다. 원문은 사제와 일반 배치가 12×12 차단 배열·관계·충돌·기하·모양 전역을 공유하므로 일반 파이프라인과 같은 상태 묶음(`state`)을 빌리고,
+    // 사제 전용 지형 지역 배열(`createPriestPlacementTerrainState`)만 따로 갖는다. 체인은 모양 → 지형 → 기하 → 충돌 → 미리보기 → 최종 접두 순서로 묶이며 후보 칸의 spot 이 0 이 아닐 때 `RawPriestSpawn.spawn` 이 이 판정을 부른다.
+    // 일반 배치와 같은 전역(로컬 Player·클라이언트 모드·무시 genus)은 호출 때마다 현재 값으로 맞춘다. 이전에는 이 장치가 없어 그 지점에서 "사제 월드 배치 검사 몸체 미연결" 오류가 났다. (2026-11-23 WB04-E1269)
+    #bindPriestPlacement() {
+        const o = this.#owner, c = o.core, state = o.state.gameplayPlacement, surfaces = c.hash.view(0), frames = o.metadata.frames;
+        const terrain = new RawPriestPlacementTerrain(c.pool, c.types, frames, surfaces, createPriestPlacementTerrainState());
+        const geometry = new RawPriestPlacementGeometry(c.pool, c.types, frames, state.geometry, makePriestTerrainGeometryHooks(c.pool, terrain));
+        const collision = new RawPriestPlacementCollision(c.pool, c.hash, c.types, state.collision, state.preview, makePriestGeometryCollisionHooks(c.pool, geometry, makePriestTerrainCollisionHooks(c.pool, terrain, {})));
+        const preview = new RawPriestPlacementPreview(c.pool, c.types, c.spots, surfaces, state.preview, makePriestGeometryPreviewHooks(c.pool, geometry, makePriestPlacementCollisionHooks(c.pool, collision, {})));
+        const shape = new RawPriestPlacementShape(c.pool, c.types, frames, c.shapes, o.metadata.hotspots, state.geometry, state.shape);
+        const placement = new RawPriestPlacement(c.pool, c.types, state.placement, makePriestShapePlacementHooks(c.pool, shape, makePriestPlacementPreviewHooks(c.pool, preview, {})));
+        o.priests.bindPlacement({ pool: placement.pool, mayPlace: (query) => {
+            this.#live(); state.placement.localPlayer = o.playerState.battleOwner | 0; state.collision.clientMode = c.processState.server ? 1 : 0; state.collision.ignoredGenus = o.state.buildingState.read('pushGenus');
+            return placement.mayPlace(query);
+        } });
     }
 
     // 현재 실제 파이프라인에 Player/방향 동맹/Graph·섬 기록을 원문 소비 위치로 공급한다.

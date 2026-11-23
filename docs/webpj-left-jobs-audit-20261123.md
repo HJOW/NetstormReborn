@@ -50,7 +50,7 @@
 1. **미션 중 열린 Tell 을 ESC 가 닫지 않는다**(코드 대조로 확인, 다음 작업 1 ⑩). 원문 `UberGump.cpp:1810~1823` 은 Dialog 단계 ESC 에서 `Tell Blank` 를 보낸다. → **E1264 에서 해소**([근거](webpj-tell-escape-20261123.md)); 6단계 게임 메뉴 항목도 닫아 4/8 이 됐다.
 2. **Client 기본 수신기 표가 앱에 설치되지 않는다**(4D-3b). 앱 Session 은 내부 `LocalMissionTransport` 만 쓴다. 연결할지 웹 대체로 닫을지 결정이 필요하다.
 3. **이탈 효과 4가지 미확인**(4D-5b): `MapRevision+1`·`ChatChannels.resetOccupied`·선택 해제 통지·시간 동기화 초기화. State 정리 부모를 앱이 부르지 않기 때문이다. → **E1268 에서 해소**([근거](webpj-mission-leave-state-reset-20261123.md)): 채팅 채널·시간 동기화는 옮기고 나머지 둘은 영향 없음으로 판정, ClientState 계열 다섯 행 port.
-4. **`raw-priest-placement-*` 6개 미연결**(3.8절): 건물 파괴로 사제를 해방하는 경로의 `mayPlace` 가 도달 시 던질 수 있다(도달성 미판정).
+4. **`raw-priest-placement-*` 6개 미연결**(3.8절): 건물 파괴로 사제를 해방하는 경로의 `mayPlace` 가 도달 시 던질 수 있다(도달성 미판정). → **E1269 에서 해소**: 점유된 후보 칸에서 실제로 던지는 것을 확인하고 연결([근거](webpj-priest-placement-session-20261123.md)).
 5. **메인 메뉴 Kencloud 구름 배경**(5-A): 정적 GIF 타일을 쓰는 M1 차이 37,054픽셀.
 6. **Session 큐 명령 전수와 입력 루프 허용 목록 대조**(4D-3e, E1267 에서 해소), **프레임 순서 차이 두 건**(4D-4a, E1266 에서 해소), **DestroyPatch 진단 12지점·`rememberPlacement`**(4D-8a), **채팅 허브 fixture 두 TSV**(5-C), **E197·E198·E201 재대조**(5-A·7 중복), **AI·전투 N프레임 L3·고정 시각 모드**(4D-10b·M2/M3).
 7. **사용자 결정 필요**: 채팅 로그를 미션 끝에 초기화하는 적응을 인정할지(5-C 메뉴·버튼 컨트롤).

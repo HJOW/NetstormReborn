@@ -34,3 +34,31 @@ test('Session 게임 배치: 실제 파이프라인과 현재 상태를 매 호�
     } finally { o.dispose(); }
     assert.throws(() => o.constructionModules.mayPlace({}), /반납/); assert.throws(() => o.connectGameplayPlacement(), /반납/);
 });
+
+// 사제 생성(건물이 파괴돼 붙잡힌 사제를 풀어 줄 때 등)의 배치 검사 MayPlace 는 게임 배치 설치와 함께 연결된다. 후보 칸의 spot 이 0 이 아니면 RawPriestSpawn 이 그 판정을 부르는데,
+// 이전에는 설치가 없어 "사제 월드 배치 검사 몸체 미연결" 오류였다. snap(100.25)=101 이라 (101,101) 칸을 점유시켜 첫 후보가 판정을 거치게 한다. (2026-11-23 WB04-E1269)
+test('Session 게임 배치: 사제 생성의 배치 검사가 같은 설치에서 연결돼 점유된 후보 칸에서도 자리를 찾는다', () => {
+    const quiet = () => {}, sound = { play: quiet, playOnceAt: quiet, playLoopAt: quiet, stop: quiet, isPlaying: () => false };
+    const make = () => {
+        const o = campaignOwners({ carrierRequest: () => {}, deletion: { selected: () => 0 }, sound, priest: { shield: { noticeSound: quiet, translate: (text) => text, tell: quiet } } });
+        try {
+            o.connectWorldInstall({ sections: Array.from({ length: 35 }, () => new Uint8Array(0)) });
+            o.connectOutcome(); o.connectAiBrains(); o.connectAiWorld(); o.connectAiProduction(); o.connectBuilding(); o.connectMotion(); o.connectDevastation(); o.connectCarrierDrop(); o.connectPriestPrayer(); o.connectBuilder();
+            return o;
+        } catch (error) { o.dispose(); throw error; }
+    };
+    // 설치 전: 점유된 첫 후보 칸에서 판정 장치가 없어 오류이며 아무것도 만들지 않는다.
+    const before = make();
+    try {
+        before.core.spots[101 * 256 + 101] = 1; const free = before.core.pool.freeCount;
+        assert.throws(() => before.priests.spawn.spawn(100.25, 100.25, 158, 1), /사제 월드 배치 검사 몸체 미연결/); assert.equal(before.core.pool.freeCount, free);
+    } finally { before.dispose(); }
+    // 설치 뒤: 같은 입력이 오류 없이 사제를 만들고, 판정이 호출 때마다 현재 로컬 Player 를 일반 배치와 같은 전역에 써 넣는다.
+    const o = make();
+    try {
+        o.connectGameplayPlacement(); o.playerState.battleOwner = 3; o.state.gameplayPlacement.placement.localPlayer = 0;
+        o.core.spots[101 * 256 + 101] = 1; const free = o.core.pool.freeCount;
+        o.priests.spawn.spawn(100.25, 100.25, 158, 1);
+        assert.ok(free - o.core.pool.freeCount > 0, '사제와 딸린 객체가 만들어진다'); assert.equal(o.state.gameplayPlacement.placement.localPlayer, 3);
+    } finally { o.dispose(); }
+});
