@@ -1238,4 +1238,72 @@ public sealed class HostNsInfoWindowsTests
         Assert.Empty(drawn);
         other.Dispose();
     }
+
+    /// <summary>이벤트 후크는 소유한 루트 토큰을 실제 입력 장치에 전달한다. 0.931에서 추가됐다.</summary>
+    [Fact]
+    public void HandleEventRoutesOwnedRootToDevice()
+    {
+        using var scene = new Scene();
+        var handled = new List<(uint Token, uint Event, uint First, uint Second)>();
+        var wired = new HostNsInfoDevices
+        {
+            Read = scene.Devices.Read,
+            Translate = scene.Devices.Translate, StoreText = scene.Devices.StoreText,
+            Text = scene.Devices.Text, FormatZone = scene.Devices.FormatZone, Changed = scene.Devices.Changed,
+            Handle = (token, @event, first, second) => { handled.Add((token, @event, first, second)); return 7u; },
+        };
+        using var other = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, wired);
+        uint rootToken = other.Create();
+        uint result = scene.Menu.Tree.EventHooks.Handle!(rootToken, 0x38, 1, 2);
+        Assert.Equal(7u, result);
+        Assert.Equal([(rootToken, 0x38u, 1u, 2u)], handled);
+        other.Dispose();
+    }
+
+    /// <summary>입력 후크는 소유한 플레이어 토큰을 실제 입력 장치에 전달한다. 0.931에서 추가됐다.</summary>
+    [Fact]
+    public void HandleInputRoutesOwnedPlayerToDevice()
+    {
+        using var scene = new Scene();
+        var handled = new List<(uint Token, uint Event, uint First, uint Second)>();
+        var wired = new HostNsInfoDevices
+        {
+            Read = scene.Devices.Read,
+            Translate = scene.Devices.Translate, StoreText = scene.Devices.StoreText,
+            Text = scene.Devices.Text, FormatZone = scene.Devices.FormatZone, Changed = scene.Devices.Changed,
+            Handle = (token, @event, first, second) => { handled.Add((token, @event, first, second)); return 7u; },
+        };
+        using var other = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, wired);
+        uint rootToken = other.Create();
+        var root = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(rootToken));
+        uint panelToken = root.Players[0];
+        uint result = scene.Menu.Tree.InputHooks.Handle!(panelToken, 0x38, 3, 4);
+        Assert.Equal(7u, result);
+        Assert.Equal([(panelToken, 0x38u, 3u, 4u)], handled);
+        other.Dispose();
+    }
+
+    /// <summary>반납 뒤 입력 후크는 이전 소유 장치에 닿지 않고 기본 처리에 넘어간다. 0.931에서 추가됐다.</summary>
+    [Fact]
+    public void HandleAfterDisposeFallsThroughToBase()
+    {
+        using var scene = new Scene();
+        var handled = new List<(uint Token, uint Event, uint First, uint Second)>();
+        var wired = new HostNsInfoDevices
+        {
+            Read = scene.Devices.Read,
+            Translate = scene.Devices.Translate, StoreText = scene.Devices.StoreText,
+            Text = scene.Devices.Text, FormatZone = scene.Devices.FormatZone, Changed = scene.Devices.Changed,
+            Handle = (token, @event, first, second) => { handled.Add((token, @event, first, second)); return 7u; },
+        };
+        using var other = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, wired);
+        uint rootToken = other.Create();
+        uint alive = scene.Menu.Tree.EventHooks.Handle!(rootToken, 0x38, 1, 2);
+        Assert.Equal(7u, alive);
+        Assert.Single(handled);
+        other.Dispose();
+        uint result = scene.Menu.Tree.EventHooks.Handle!(rootToken, 0x38, 1, 2);
+        Assert.Equal(0u, result);
+        Assert.Single(handled);
+    }
 }
