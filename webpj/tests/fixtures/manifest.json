@@ -1963,7 +1963,7 @@
       "bytes": 6099,
       "lines": 71,
       "fixtureCommit": "98663aa77",
-      "webCommit": "worktree",
+      "webCommit": "372f6b4d7",
       "cpppjBasis": {}
     },
     {
@@ -2029,7 +2029,7 @@
       "bytes": 7429,
       "lines": 308,
       "fixtureCommit": "98663aa77",
-      "webCommit": "worktree",
+      "webCommit": "372f6b4d7",
       "cpppjBasis": {}
     },
     {
@@ -25612,11 +25612,11 @@
       ],
       "scope": "Tutorial1 L3 입력 단계표(MORE→OK→F4)와 체크포인트",
       "text": true,
-      "sha256": "ba5bbf6954d107331bd56cec52b1edea7b28495886350bf3ead082c6aa5070ec",
-      "bytes": 1590,
-      "lines": 91,
-      "fixtureCommit": "841097c60",
-      "webCommit": "3b5974349",
+      "sha256": "bd6424e081a4b3cd3c9ee872d804f5351205a57ce6caa8cf48d07f3b44379a0e",
+      "bytes": 2109,
+      "lines": 126,
+      "fixtureCommit": "a449b4771",
+      "webCommit": "372f6b4d7",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -25644,11 +25644,11 @@
       ],
       "scope": "L3 오라클의 실행 파일·인자·수집 정보",
       "text": true,
-      "sha256": "ef3b7801c9152832bf186f7dd037222222a4d4cbaae4693fecf56aba3ae341e9",
+      "sha256": "3c35e38ea15fca310c8a25079e25b0c05effb9b9f74376a0af84a3a8ca36cd26",
       "bytes": 1156,
       "lines": 35,
-      "fixtureCommit": "841097c60",
-      "webCommit": "3b5974349",
+      "fixtureCommit": "a449b4771",
+      "webCommit": "372f6b4d7",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -25905,6 +25905,102 @@
       "lines": null,
       "fixtureCommit": "841097c60",
       "webCommit": "3b5974349",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial1-l3-e470-screen",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial1-l3/e470.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial1 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial1.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1299",
+      "doc": "docs/webpj-l3-tutorial1-20261123.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "364프레임 논리 화면(다리 조각을 섬 남쪽 가장자리에 놓은 직후)",
+      "text": false,
+      "sha256": "40de04f46e53d1fd654470483d0051f6a148d551814f5e557d5a203b13bf3466",
+      "bytes": 199802,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "372f6b4d7",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial1-l3-c540",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial1-l3/c540.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial1 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial1.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1299",
+      "doc": "docs/webpj-l3-tutorial1-20261123.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "400프레임 Session 덤프(다리 조각을 놓은 뒤: 풀 새 SID·SP 변화)",
+      "text": true,
+      "sha256": "8f7d15c11e2f8602327889e47564a1e1409cfb10a2d766ce9001a5d3bc63f5df",
+      "bytes": 144369,
+      "lines": 1990,
+      "fixtureCommit": null,
+      "webCommit": "372f6b4d7",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial1-l3-c540-screen",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial1-l3/c540.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial1 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial1.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1299",
+      "doc": "docs/webpj-l3-tutorial1-20261123.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "400프레임 논리 화면",
+      "text": false,
+      "sha256": "66b476c8b9b79bc58375b01e33abe3e38cc9eb1c4f268a812e3cdfe93d1b32bc",
+      "bytes": 206974,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "372f6b4d7",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
