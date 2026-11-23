@@ -97,7 +97,7 @@ import { GameMenuActions } from './core/game-menu-actions.js';
 import { gameMenuCommandValue, gameMenuScriptCode, isGameMenuCommand, queuePlayerListKey } from './core/game-menu-commands.js';
 import { KnowledgeMenuKind, knowledgeScriptCode } from './core/raw-knowledge-menu.js';
 import { RawFortBadgesGlobals } from './core/raw-fort-badges-globals.js';
-import { stepAmbientSound } from './core/raw-ambient-sound.js';
+import { resetAmbientSoundDeadline, stepAmbientSound } from './core/raw-ambient-sound.js';
 import { dispatchGameTimeKey, readGameTimeSeconds } from './core/game-time-display.js';
 import { idleMainMenuActivity } from './core/main-menu-activity.js';
 import { frameDue, frameRateChoices, normalizeFrameRate, parseFrameRateTarget } from './core/frame-rate-option.js';
@@ -1079,6 +1079,30 @@ export class Netstorm {
         });
     }
 
+    // 원본 State 전체 정리(CleanupStateWorld)의 플레이어 반복(1~8번)을 SP 쪽만 옮긴다: 각 소유자의 SP 를 0 으로 쓴다(`resetOtherPlayer(player, 0)`, 로컬은 `setSp`).
+    // SP 저장소 Set 은 소유자마다 Game 난수를 160회 쓰므로 한 번에 1,280회를 소비한다. 이 소비 순서가 지형 도장·구름·SP 잡음 등 뒤따르는 모든 난수 사용의 출발 상태를 정한다.
+    // 앱은 아직 State 전체 정리(`cleanupClientStateWorld`)를 State 기계에 연결하지 않았고, 시작·메뉴·미션 시작 시점에는 나머지 정리 대상이 이미 비어 있어 난수 소비와 SP 비우기만 같은 자리에서 실행한다. 실제 SP 저장소가 없으면 아무 일도 하지 않는다. (2026-11-23 WB04-E1280)
+    _clearPlayerSpForState() {
+        const store = this._clientSp?.store();
+        if (!store) return;
+        // 소유자 1~8 의 SP 를 float 0 의 DWORD 로 쓴다.
+        for (let owner = 1; owner < 9; owner += 1) store.set(owner, 0);
+    }
+
+    // 원본 State 39(인트로) 설치의 정리(004b6e62 부모의 cleanup)이다. 시작 입력 직후, title 그림이나 메인 메뉴보다 앞서 한 번 실행한다. (2026-11-23 WB04-E1280)
+    _installIntroStateEffects() {
+        this._clearPlayerSpForState();
+    }
+
+    // 원본 State 3(메인 메뉴) 설치(004b6fa9 부모)의 Game 난수·시각 효과이다: 정리 → 메뉴 팔레트 전환(구름 구축, 같은 battlePal 이면 이후 State7 이 구름을 다시 만들지 않음) → 주변음 기한을 벽시각+10초로 다시 잡는다(ApplyExistingEditorAfterCheckpoint).
+    // 같은 battlePal 로 전환하므로 메인 메뉴 표면·팔레트는 변하지 않는다(E1280 확인). 구름 구축이 Game 난수 801회를 쓴다. 자산·색표가 준비되지 않았으면 팔레트 전환은 건너뛴다. (2026-11-23 WB04-E1280)
+    _installMainMenuStateEffects() {
+        this._clearPlayerSpForState();
+        if (this._gameData && this._clientKencloud && this._clientPaletteScreen && this._clientColorSort?.mapsReady) this._changeClientFortPalette(this._gameData.pathSpec('battlePal'));
+        const local = this._clientLocal, clock = this._gameClock;
+        if (local && clock) resetAmbientSoundDeadline({ set deadline(value) { local.activityEnd().value = value; } }, () => clock.wallSeconds());
+    }
+
     // 같은 Client 설정·Player·월드 저장소에 Guide 수명을 연결한다.
     _initializeClientGuide() {
         if (this._clientGuide || !this._gameData || !this._surfaceStorage || !this._clientGameplay || !this._clientPlayers) throw new Error('Client Guide의 중복 또는 공통 수명 누락');
@@ -1444,6 +1468,8 @@ export class Netstorm {
         if (!request || this._campaignWorld) throw new Error('캠페인 State7의 현재 요청 또는 World 수명 오류');
         runCampaignMissionStarting(client, () => {
             captureCampaignMissionStarting(client, request);
+            // 원본 LoadMissionWorldBody 는 시작 정보를 보관한 뒤 State 전체 정리(CleanupNativeStateWorld(1))를 실행하고 그 다음에 장면 음악을 시작한다(SP 정리 1,280회 난수). (2026-11-23 WB04-E1280)
+            this._clearPlayerSpForState();
             // 원본 State7 의 전투 장면 음악 시작(StartScene(true))이다. World 설치보다 앞이다. (2026-11-20 WB04-E1119)
             this._beginSceneMusic();
             const world = this._installCampaignWorld(services, viewport); world.prepareLocalConnectionForState();
@@ -2463,6 +2489,8 @@ export class Netstorm {
             this._finishTitleScreens();
         } else if (this._state === AppState.CLICK_TO_START) {
             this._unlockAudio();
+            // 원본은 시작 때 State 39(인트로)를 설치하며 정리를 한 번 실행한다(title 그림·메인 메뉴보다 앞). (2026-11-23 WB04-E1280)
+            this._installIntroStateEffects();
             // 시작 title 그림이 켜져 있으면 먼저 보이고(입력하면 건너뜀), 아니면 바로 메인 메뉴로 간다. (2026-11-22 WB04-E1184)
             if (this.options.titleScreens && this._resources?.titleScreens) this._enterTitleScreens(); else this._enterMainMenu();
             // 개발용 맵도 클릭/오디오 활성화 관문 뒤에만 연다. 없는 맵은 메뉴를 유지하며 원인을 알린다. (2026-11-02 WB03-AA)
@@ -2517,6 +2545,8 @@ export class Netstorm {
             });
         }
         this._ensureSurface();
+        // 원본 State 3 설치의 정리·메뉴 팔레트 전환(구름 구축)·주변음 기한 재설정을 메뉴 상태로 바꾸기 전에 실행한다. (2026-11-23 WB04-E1280)
+        this._installMainMenuStateEffects();
         this._setState(AppState.MAIN_MENU);
         this._root.ownerDocument.title = this._resources.translate(MAIN_MENU_WINDOW_TITLE);
         this._displayDirty = true;
