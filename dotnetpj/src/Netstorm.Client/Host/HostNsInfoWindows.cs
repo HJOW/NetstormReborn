@@ -30,6 +30,8 @@ public sealed class HostNsInfoDevices
     public Func<uint, uint>? ObjectOwner { get; init; }
     /// <summary>0042b210의 현재 TYPE 기술 합계다. 0.921에서 추가됐다.</summary>
     public Func<ReadOnlyMemory<byte>, uint>? TechWeight { get; init; }
+    /// <summary>0042f480의 같은 현재 icon B/C와 전체 256BYTE 랭크 그림이다. 아이콘 틀 개수는 자산표에서 공급하며 0.922에서 추가됐다.</summary>
+    public Func<int, string>? RankPicture { get; init; }
     /// <summary>복귀하면 계속하는 실제 원문 줄 번호 진단이다.</summary>
     public Action<uint>? Assertion { get; init; }
     /// <summary>실제 공통 구조 변경을 알린다.</summary>
@@ -156,7 +158,6 @@ public sealed class HostNsInfoWindows : IDisposable
             _tree.SetHelpText(token, text);
         }
     }
-    /// <summary>번역→zone 캡처→현재 server 조회→256BYTE 서식을 원문 순서로 수행한다. 0.921에서 추가됐다.</summary>
     private string MetaHeader(bool battle)
     {
         string format = Need(_devices.Translate)(battle ? "~w~E%s\nPlayers in Battle (Zone %d)\n" : Text(_globals.ZoneFormat, true));
@@ -200,6 +201,72 @@ public sealed class HostNsInfoWindows : IDisposable
                 HelpWord = (target, text) => SetNodeHelp(target, text, true),
             };
             HudNsInfoMetaLayout.Layout(token, globals, hooks);
+    }
+    /// <summary>같은 실제 스크롤 노드의 현재 플래그 상자를 빌린다. 배치는 마친 뒤 노드에 되돌린다. 0.922에서 추가됐다.</summary>
+    private readonly Dictionary<uint, UIntBox> _textFlagBoxes = [];
+    /// <summary>같은 실제 스크롤 노드의 현재 플래그 상자를 빌린다. 0.922에서 추가됐다.</summary>
+    private UIntBox TextFlags(uint token)
+    {
+        ScrollingTextGumpNode node = Scroll(token);
+        if (!_textFlagBoxes.TryGetValue(token, out UIntBox? box))
+        {
+            box = new UIntBox { Value = node.TextFlags };
+            _textFlagBoxes.Add(token, box);
+        }
+
+        return box;
+    }
+    /// <summary>같은 실제 CS와 현재 NSInfo 전역으로 전체 메타 플레이어 본문을 배치한다. 0.922에서 추가됐다.</summary>
+    /// <param name="token">같은 0xbc PlayerInfo 노드 토큰이다.</param>
+    /// <param name="challenge">같은 실제 CS 참가자40·전투10 기록이다.</param>
+    public void LayoutMetaPlayer(uint token, ClientChallengeGlobals challenge)
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        ArgumentNullException.ThrowIfNull(challenge);
+        foreach ((uint entry, UIntBox box) in _textFlagBoxes)
+        {
+            if (_tree.Node(entry) is ScrollingTextGumpNode node)
+            {
+                box.Value = node.TextFlags;
+            }
+        }
+
+        try
+        {
+            var globals = new HudNsInfoMetaGlobals { Challenge = challenge, Info = _globals, Metamap = () => Read(0x594fc8), Known = () => Read(0x595344), Owner = () => _gameplay.Player.BattleOwner };
+            var hooks = new HudNsInfoMetaHooks
+            {
+                Player = player => _players.Contains(player) ? _tree.Node(player) as HudPlayerInfoNode : null,
+                Node = _tree.Node,
+                Push = _tree.Tree.Push,
+                TextFlags = TextFlags,
+                Read = Read,
+                Replace = (target, text) => _text.Text.ReplaceText(target, AppendBytes(text), 0),
+                Parse = (target, text) => _text.Parser.Parse(target, Bytes(text)),
+                Append = (target, text, context, metadata) => _text.Text.AppendText(target, AppendBytes(text), context, -1, metadata),
+                AppendDefault = (target, text) => _text.Text.AppendText(target, AppendBytes(text), -1, 0),
+                Enabled = (target, enabled) => _tree.Buttons.SetEnabled(target, enabled),
+                Value = (target, value) => _tree.Buttons.SetValue(target, value),
+                ReadyButton = button => _buttons.Contains(button) ? _tree.Node(button) as HudPlayerButtonNode : null,
+                SlotRank = (options, slot) => BattleOptionSlots.BattleSlotRank(options.Span, slot),
+                RankPicture = rank => Need(_devices.RankPicture)(rank),
+                RequestTop = target => _text.Text.RequestScroll(target, 0),
+                FitContent = target => _text.Text.FitContent(target, 0, 0),
+                Translate = text => Need(_devices.Translate)(text),
+                Attach = (target, x, y, parent, mode) => Need(_tree.TreeHooks.Attach)(target, x, y, parent, mode),
+            };
+            HudNsInfoMetaPlayer.Layout(token, globals, hooks);
+        }
+        finally
+        {
+            foreach ((uint entry, UIntBox box) in _textFlagBoxes)
+            {
+                if (_tree.Node(entry) is ScrollingTextGumpNode node)
+                {
+                    node.TextFlags = box.Value;
+                }
+            }
+        }
     }
     /// <summary>원문 new 크기와 첫0xd8 문맥의 실제 파생을 같은 공통 저장소에 할당한다.</summary>
     private uint Allocate(int bytes)

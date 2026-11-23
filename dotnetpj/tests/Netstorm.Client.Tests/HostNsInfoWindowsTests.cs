@@ -51,6 +51,8 @@ public sealed class HostNsInfoWindowsTests
         public uint TechWeightValue = 5;
         /// <summary>실제 기술 합계 호출 횟수다.</summary>
         public int TechWeightCalls;
+        /// <summary>실제 랭크 그림 호출이다.</summary>
+        public readonly List<int> RankPictureCalls = [];
         /// <summary>실제 번역으로 전달한 원문이다.</summary>
         public readonly List<string> Translations = [];
         /// <summary>같은 실제 외부 장치를 다른 owner 검증에도 제공한다.</summary>
@@ -69,13 +71,14 @@ public sealed class HostNsInfoWindowsTests
             Globals.ServerSelection.Value = -1; Globals.Zone.Value = 17;
             Devices = new()
             {
-                Read = address => address switch { 0x5ca920 => Menu.BackgroundType, 0x5ca924 => 1, 0x5411c8 => ButtonType, 0x5bec3c => Screen.Colors().Basic[7], 0x5c78d0 => Screen.Colors().Basic[0], 0x59afd8 => Screen.Colors().Basic[1], 0x5c85c8 => 0u, _ => throw new InvalidOperationException("검사에서 공급하지 않은 현재 전역:" + address.ToString("x")) },
+                Read = address => address switch { 0x5ca920 => Menu.BackgroundType, 0x5ca924 => 1, 0x5411c8 => ButtonType, 0x5bec2c => Screen.Colors().Basic[4], 0x5bec3c => Screen.Colors().Basic[2], 0x5b5e58 => Screen.Colors().Basic[3], 0x5c78d0 => Screen.Colors().Basic[0], 0x59afd8 => Screen.Colors().Basic[1], 0x5c85c8 => 0u, 0x5c78b0 => Screen.Colors().Basic[5], _ when address >= 0x5accf0u && address < 0x5accf0u + 32u => Screen.Colors().Basic[6], _ => throw new InvalidOperationException("검사에서 공급하지 않은 현재 전역:" + address.ToString("x")) },
                 Translate = value => { Translations.Add(value); return value == "LAN Server" ? "Local" : value; },
                 StoreText = value => { uint token = 0x2000000 + (uint)Strings.Count; Strings.Add(token, value); return token; }, Text = token => Strings[token],
                 FormatZone = (format, server, zone) => FailFormat ? throw new IOException("실제 형식화 중단") : format.Replace("%s", server, StringComparison.Ordinal).Replace("%d", zone.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal),
                 Changed = () => Changes++,
                 ObjectOwner = sid => { OwnerCalls.Add(sid); return Owners.TryGetValue(sid, out uint owner) ? owner : 0u; },
                 TechWeight = _ => { TechWeightCalls++; return TechWeightValue; },
+                RankPicture = rank => { RankPictureCalls.Add(rank); return "R" + rank.ToString(CultureInfo.InvariantCulture); },
             };
             Ns = new(Menu.Tree, Text, Globals, Game, Storage, Devices);
         }
@@ -159,7 +162,7 @@ public sealed class HostNsInfoWindowsTests
     private static void WriteParticipant(ClientChallengeGlobals challenge, uint index, uint battle, uint flags, string name, uint level = 0, uint sid = 0)
     {
         Span<byte> bytes = challenge.Participant(index).Span;
-        bytes[0x64] = (byte)flags;
+        BitConverter.GetBytes(flags).CopyTo(bytes.Slice(0x64, 4));
         bytes[0x58] = (byte)level;
         BitConverter.GetBytes(battle).CopyTo(bytes.Slice(0xa4, 4));
         BitConverter.GetBytes(sid).CopyTo(bytes.Slice(0xb8, 4));
@@ -289,5 +292,124 @@ public sealed class HostNsInfoWindowsTests
         Assert.Throws<InvalidOperationException>(() => other.LayoutMetaRoot(second, missing));
         other.Dispose();
         Assert.Throws<ObjectDisposedException>(() => other.LayoutMetaRoot(second, missing));
+    }
+
+    /// <summary>빈 슬롯은 이름 없이 버튼을 끄고 기본 문맥 개행을 둔다. 0.922에서 추가됐다.</summary>
+    [Fact]
+    public void LayoutMetaPlayerEmptySlotDisablesButtons()
+    {
+        using var scene = new Scene();
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        uint token = scene.Ns.Create(); var root = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(token));
+        var panel = Assert.IsType<HudPlayerInfoNode>(scene.Menu.Tree.Node(root.Players[0]));
+        Assert.Equal(0u, panel.Player);
+        scene.Ns.LayoutMetaPlayer(root.Players[0], challenge);
+        var button = Assert.IsType<HudPlayerButtonNode>(scene.Menu.Tree.Node(panel.Button));
+        Assert.NotEqual(0u, button.ButtonFlags & 1u);
+        var start = Assert.IsAssignableFrom<ButtonGumpNode>(scene.Menu.Tree.Node(panel.Start));
+        Assert.NotEqual(0u, start.ButtonFlags & 1u);
+        // 부모 0 부착은 기존 부모(플레이어 패널)를 유지한다.
+        Assert.Equal(root.Players[0], scene.Menu.Tree.Node(panel.Text)!.Parent);
+    }
+
+    /// <summary>마스터는 모두 준비되면 시작 버튼을 켠다. 0.922에서 추가됐다.</summary>
+    [Fact]
+    public void LayoutMetaPlayerMasterEnablesStartWhenReady()
+    {
+        using var scene = new Scene();
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        uint owner = scene.Game.Player.BattleOwner;
+        WriteParticipant(challenge, owner, battle: 2, flags: 1 | 4 | 2 | 0x2000, name: "me", sid: 7);
+        WriteParticipant(challenge, 5, battle: 2, flags: 1 | 2 | 0x2000, name: "ok", sid: 8);
+        var battle = challenge.Battle(2).Span;
+        BitConverter.GetBytes(owner).CopyTo(battle.Slice(0x38, 4));
+        BitConverter.GetBytes(5u).CopyTo(battle.Slice(0x3c, 4));
+        scene.Owners[7] = owner;
+        scene.Owners[8] = owner;
+        uint token = scene.Ns.Create(); var root = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(token));
+        var panel = Assert.IsType<HudPlayerInfoNode>(scene.Menu.Tree.Node(root.Players[0]));
+        panel.Player = owner;
+        scene.Ns.LayoutMetaPlayer(root.Players[0], challenge);
+        var start = Assert.IsAssignableFrom<ButtonGumpNode>(scene.Menu.Tree.Node(panel.Start));
+        Assert.NotEqual(0u, start.Flags & 1u);
+        Assert.Equal(0u, start.ButtonFlags & 1u);
+        var text = Assert.IsType<ScrollingTextGumpNode>(scene.Menu.Tree.Node(panel.Text));
+        Assert.NotEqual(0u, text.TextFlags & 0x10u);
+    }
+
+    /// <summary>마스터는 미준비자가 있으면 시작 버튼을 끈다. 0.922에서 추가됐다.</summary>
+    [Fact]
+    public void LayoutMetaPlayerMasterDisablesStartWhenUnready()
+    {
+        using var scene = new Scene();
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        uint owner = scene.Game.Player.BattleOwner;
+        WriteParticipant(challenge, owner, battle: 2, flags: 1 | 4 | 2 | 0x2000, name: "me", sid: 7);
+        WriteParticipant(challenge, 5, battle: 2, flags: 1 | 2, name: "notready", sid: 8);
+        var battle = challenge.Battle(2).Span;
+        BitConverter.GetBytes(owner).CopyTo(battle.Slice(0x38, 4));
+        BitConverter.GetBytes(5u).CopyTo(battle.Slice(0x3c, 4));
+        scene.Owners[7] = owner;
+        scene.Owners[8] = owner;
+        uint token = scene.Ns.Create(); var root = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(token));
+        var panel = Assert.IsType<HudPlayerInfoNode>(scene.Menu.Tree.Node(root.Players[0]));
+        panel.Player = owner;
+        scene.Ns.LayoutMetaPlayer(root.Players[0], challenge);
+        var start = Assert.IsAssignableFrom<ButtonGumpNode>(scene.Menu.Tree.Node(panel.Start));
+        Assert.NotEqual(0u, start.ButtonFlags & 1u);
+        Assert.Equal(0u, start.Flags & 1u);
+    }
+
+    /// <summary>비마스터는 시작 버튼 없이 랭크 그림을 한 번 요청한다. 0.922에서 추가됐다.</summary>
+    [Fact]
+    public void LayoutMetaPlayerNonMasterShowsMarkAndRank()
+    {
+        using var scene = new Scene();
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        uint owner = scene.Game.Player.BattleOwner;
+        WriteParticipant(challenge, owner, battle: 2, flags: 1 | 4 | 2 | 0x2000, name: "boss", sid: 7);
+        WriteParticipant(challenge, 5, battle: 2, flags: 1 | 2, name: "me", sid: 8);
+        var battle = challenge.Battle(2).Span;
+        BitConverter.GetBytes(5u).CopyTo(battle.Slice(0x38, 4));
+        scene.Owners[7] = owner;
+        scene.Owners[8] = owner;
+        uint token = scene.Ns.Create(); var root = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(token));
+        var panel = Assert.IsType<HudPlayerInfoNode>(scene.Menu.Tree.Node(root.Players[0]));
+        panel.Player = 5;
+        scene.Ns.LayoutMetaPlayer(root.Players[0], challenge);
+        var start = Assert.IsAssignableFrom<ButtonGumpNode>(scene.Menu.Tree.Node(panel.Start));
+        Assert.Equal(0u, start.Flags & 1u);
+        Assert.NotEqual(0u, start.ButtonFlags & 1u);
+        var button = Assert.IsType<HudPlayerButtonNode>(scene.Menu.Tree.Node(panel.Button));
+        Assert.Equal(1u, button.Value);
+        Assert.Equal(0u, button.Entry);
+        Assert.Equal([0], scene.RankPictureCalls);
+    }
+
+    /// <summary>미연결 장치는 일반 성공으로 꾸미지 않는다. 0.922에서 추가됐다.</summary>
+    [Fact]
+    public void LayoutMetaPlayerMissingDevicesFailExplicitly()
+    {
+        using var scene = new Scene();
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        uint token = scene.Ns.Create(); var root = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(token));
+        var panel = Assert.IsType<HudPlayerInfoNode>(scene.Menu.Tree.Node(root.Players[0]));
+        panel.Player = 0;
+        var bare = new HostNsInfoDevices
+        {
+            Read = scene.Devices.Read, Translate = scene.Devices.Translate, StoreText = scene.Devices.StoreText,
+            Text = scene.Devices.Text, FormatZone = scene.Devices.FormatZone, Changed = scene.Devices.Changed,
+            ObjectOwner = scene.Devices.ObjectOwner, TechWeight = scene.Devices.TechWeight,
+        };
+        using var other = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, bare);
+        uint second = other.Create();
+        var otherPanel = Assert.IsType<HudPlayerInfoNode>(scene.Menu.Tree.Node(root.Players[0]));
+        Assert.Equal(0u, otherPanel.Player);
+        WriteParticipant(challenge, 5, battle: 2, flags: 1 | 2, name: "x", sid: 8);
+        otherPanel.Player = 5;
+        Assert.Throws<InvalidOperationException>(() => other.LayoutMetaPlayer(root.Players[0], challenge));
+        other.Dispose();
+        Assert.Throws<ArgumentNullException>(() => scene.Ns.LayoutMetaPlayer(root.Players[0], null!));
+        Assert.Throws<ObjectDisposedException>(() => other.LayoutMetaPlayer(root.Players[0], challenge));
     }
 }
