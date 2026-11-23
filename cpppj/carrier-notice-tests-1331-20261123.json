@@ -1,0 +1,18 @@
+{
+  "unit": 1331,
+  "passed": true,
+  "initial": {
+    "total": 256,
+    "passed": 254,
+    "exceptions": 2,
+    "reason": "검사 서비스 priestTakenName/factoryTell 미연결"
+  },
+  "corrected": {
+    "filter": "CampaignCarrierFall",
+    "total": 3,
+    "passed": 3
+  },
+  "observedNotice": "WarnYourPriestTaken(1,,You,~q,~l)",
+  "productChanged": false,
+  "lastDecompilationHost": "HJOW-Athlon"
+}

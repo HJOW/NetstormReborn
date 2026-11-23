@@ -59,6 +59,17 @@ struct MenuServices {
         result.player.log=[](std::uint32_t,std::string_view) {};result.missionOutcome.demo=[this] { ++demoReads;return demo; };return result;
     }
 };
+// 포획 내용물 통합 검사는 현재 실제 Player 이름을 읽고 Tell 요청을 수집한다. 생성/낙하 결과를 공급하지 않는다.
+void BindTakenNoticeServices(RawCampaignSessionServices& services,RawCampaignSession*& session,std::vector<std::string>& notices) {
+    services.priestTakenName=[&session](std::uint32_t owner,std::string_view) {
+        if (!session || owner>=9) throw std::logic_error("포획 안내 검사 현재 Session/Player 범위 오류");
+        const auto name=session->PlayerRecords().subspan(owner*180U+0xc,32); // 실제 세션의 이름 필드만 읽으며 UI용 가짜 레코드를 만들지 않는다.
+        const auto end=std::find(name.begin(),name.end(),std::uint8_t{}); // 원문 이름의 첫 NUL을 확인해 검사에서도 필드 밖을 읽지 않는다.
+        if (end==name.end()) throw std::logic_error("포획 안내 검사 현재 이름의 NUL 누락");
+        return std::string(name.begin(),end);
+    };
+    services.factoryTell=[&notices](std::string_view section) { notices.emplace_back(section); }; // 실제 하위가 만든 요청만 수집하고 상태 전이나 안내 성공을 합성하지 않는다.
+}
 // 실제 서식의 인자 순서만 처리하는 명시 영어 UI 경계다. 원본 게임 조건은 계산하지 않는다.
 std::string PrintMenu(std::string_view pattern,std::span<const PriestMenuArgument> values) {
     std::string result;std::size_t argument=0;
@@ -598,11 +609,14 @@ TEST_CASE(CampaignNuggetRegular_ActualAnimationAndFallLifecycle) {
 TEST_CASE(CampaignCarrierFalling_ActualCapturedPriestRelease) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);MenuServices external;
     auto services=external.Make();std::vector<std::array<std::uint32_t,3>> sounds;std::vector<std::array<std::uint32_t,6>> globalSounds; // 실제 위치/전역 음향 장치 경계의 요청만 기록한다.
+    RawCampaignSession* noticeSession{};std::vector<std::string> notices; // 세션 생성 뒤 고정하는 실제 이름 조회 대상과 안내 요청 기록이다.
+    BindTakenNoticeServices(services,noticeSession,notices);
     services.sound.playOnceAt=[&](float x,float y,SoundHandle sound,std::uint32_t flags,std::uint32_t extra) { CHECK(flags==0 && extra==0);sounds.push_back({std::bit_cast<std::uint32_t>(x),std::bit_cast<std::uint32_t>(y),sound});return sound; };
     services.sound.play=[&](SoundHandle sound,std::uint32_t loop,std::uint32_t volume,std::uint32_t pan,std::uint32_t priority,std::uint32_t maximum) { globalSounds.push_back({sound,loop,volume,pan,priority,maximum});return sound; };
-    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();sounds.clear();
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));noticeSession=&session;session.Load();auto core=session.Core();sounds.clear();
     const auto carrier=session.World().Create(135,2);session.World().Pop(carrier,10.5F,10.5F,0);CHECK(Get(core.pool.Slot(carrier),0)==0x503e50U);
     const auto content=session.CreateContained(carrier,158,0x1281,0x20,0x10,0);CHECK(content.value && Get(core.pool.Slot(content),12,2)==0x1281U);
+    CHECK((notices==std::vector<std::string>{"WarnYourPriestTaken(1,,You,~q,~l)"})); // Create의2는소유자가아닌공장flags다. 실제중립캐리어0/기존사제1의이름·색·소유자를대조한다.
     const auto records=session.PlayerRecords();const Sid existing{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(existing.value);
     const auto homeX=Get(core.pool.Slot(existing),14),homeY=Get(core.pool.Slot(existing),18);CHECK(std::bit_cast<float>(homeX)>0 && std::bit_cast<float>(homeY)>0);
     Put(records,0xb4+0xa8,homeX);Put(records,0xb4+0xac,homeY); // 낙하 시작4287d0이 남기는 복귀 좌표의 명시 초기 입력이다. 그 시작 부모는 이번 통합 검사에서 실행하지 않는다.
@@ -632,11 +646,14 @@ TEST_CASE(CampaignCarrierFallStart_ActualSelectedMovementReleaseAndFall) {
     std::uint32_t selected{},mouseType{},mode{};std::array<std::uint32_t,2> remembered{};std::array<std::uint32_t,0> multiple{};std::int32_t multipleCount{},mouseX{},mouseY{}; // 같은 실제 UI 저장소다.
     std::vector<std::vector<std::uint8_t>> pathPackets;std::uint32_t lost{},dumps{}; // 외부 패킷/유닛 손실/진단 요청만 기록한다.
     auto services=external.Make();services.deletion.selected=[&] { return Sid{static_cast<std::uint16_t>(selected)}; };services.unitLost=[&](Sid) { ++lost; };
+    RawCampaignSession* noticeSession{};std::vector<std::string> notices; // 실제 세션 이름의 비소유 포인터와 이 실행에서 생성한 안내 요청이다.
+    BindTakenNoticeServices(services,noticeSession,notices);
     services.pathPacket=[&](std::span<const std::uint8_t> bytes) { pathPackets.emplace_back(bytes.begin(),bytes.end()); };services.motion.path.stepSound=[](Sid,float,float,std::uint32_t) {};services.dependencyTransmit=[](Sid,std::uint32_t) {};
-    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));session.Load();auto core=session.Core();
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",std::move(services));noticeSession=&session;session.Load();auto core=session.Core();
     const Sid existing{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(existing.value);const auto old=core.pool.Slot(existing);const auto x=std::bit_cast<float>(Get(old,14)),y=std::bit_cast<float>(Get(old,18));
     const auto carrier=session.World().Create(133,2);session.World().Pop(carrier,x,y,0);CHECK(Get(core.pool.Slot(carrier),0)==0x50e568U);
     const auto content=session.CreateContained(carrier,158,0x1281,0x20,0x10,0);core.owner.Set(carrier,1); // 포획된 내용물이 있는 캐리어를 초기 상태로 두며 포획 획득 부모는 실행하지 않는다.
+    CHECK((notices==std::vector<std::string>{"WarnYourPriestTaken(1,,You,~q,~l)"})); // 내용물생성당시캐리어는중립0이며뒤의SetOwner(1)보다먼저안내본문을호출한다.
     auto* path=session.StartCarrierMovement({carrier,{x,y},1,0,0,0,0});CHECK(path);if (!path) return;CHECK(path->MovementType()==40);const auto pathPid=core.kernel.Find(*path);const auto pathForm=path->Form();CHECK(!pathPackets.empty());
     RawUserHighlight highlight({mode,selected,mouseType,mouseX,mouseY},{});UserSelectionHooks hooks;hooks.paused=[] { return 0U; };hooks.enabled=[] { return 1U; };hooks.blocked=[] { return 0U; };hooks.dump=[&](Sid sid) { CHECK(sid==carrier);++dumps; };hooks.highlight=[&](std::uint32_t value) { highlight.Highlight(value); };hooks.assertion=hooks.previewAssertion=[] { throw std::logic_error("자연 낙하 선택 검사 예상 밖 진단"); };
     auto selection=session.MakeUserSelection({selected,mouseType,remembered,multiple,multipleCount},std::move(hooks));CHECK(selection->Select(carrier.value,0,0)==carrier.value);CHECK(selected==carrier.value && (core.pool.Slot(carrier)[40]&4U) && dumps==1);
