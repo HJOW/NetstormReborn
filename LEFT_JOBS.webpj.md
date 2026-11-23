@@ -22,7 +22,7 @@
 
 2026-11-23 저녁 정리에서 번호를 다시 매겼다. 단위 문서가 가리키는 이전 번호(다음 작업 1 ①~⑩·2~6)의 원문은 [E1288 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1288)에 있다.
 
-0. **중단 인수인계(2026-11-24, 사용자 요청으로 모든 작업을 멈춤).** 실행 중이던 백그라운드 작업은 모두 중지했고 임시 탐침 스펙(`e2e/zz-*.spec.js`)은 지웠다. 이 PC(vm 아님)의 다른 세션이 스테이징해 둔 dotnetpj 파일(`LEFT_JOBS.dotnetpj.md`·`docs/dotnet-canon-*.md`)은 건드리지 않았다(내 커밋에서도 제외). 상태와 이어 갈 순서:
+0. **중단 인수인계(2026-11-24, 사용자 요청으로 모든 작업을 멈춤).** 실행 중이던 백그라운드 작업은 모두 중지했고 임시 탐침 스펙(`e2e/zz-*.spec.js`)은 지웠다. 같은 작업 트리의 다른 세션이 다루는 dotnetpj 파일(`LEFT_JOBS.dotnetpj.md`·`docs/dotnet-canon-*.md`)은 건드리지 않았다(내 커밋에서도 제외). 상태와 이어 갈 순서:
    - **미완료 단위 E1313(전 미션 시작 상태 L3 대조)** — [기록](docs/webpj-l3-mission-starts-20261124.md). 31개 미션의 시작 5·30·120프레임 cpp 해시 수집(`tools/l3-mission-starts-collect.mjs`, `mission-starts/hashes.json`, manifest 942개)과 옵트인 e2e(`e2e/l3-mission-starts.spec.js`)를 만들었다. 일회성 대조에서 28개 중 27개가 일치했고 e2e 는 네 미션(Tutorial2·Tutorial4·bc5walkers76·bc7sun_bars76)만 통과했으며 **전체 31개 실행(`NETSTORM_L3_ALL=1`, 약 25분)은 끝나지 않았다.** 다음에 그것부터 돌린다.
    - **알려진 차이 `bc7sun_bars76`**: 웹이 시작 4프레임째 일반 간헐천 보충으로 간헐천(SID 15028, (131,204))을 하나 더 만든다(cpp 는 만들지 않음). 원인 미확인 — 단서와 다음 확인 순서(cpp 임시 추적 → `geyserCount` 훅 값 → MayPlace 질의 비교)는 위 기록에 있다. 고치면 e2e 의 `KNOWN_DIFFERENCES` 에서 뺀다.
    - **Tutorial3 L3**: 시작 240프레임까지 끝(E1309). 단계 A(간헐천 다리·골렘)의 첫 조각 자리(`screen:20,44` 집기 → `250,390` 등)까지 알았고 이어 가는 방법은 아래 1번과 `docs/webpj-l3-tutorial3-20261124.md` 에 있다.
