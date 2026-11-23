@@ -1783,3 +1783,7 @@ cpppj/src/o/RawArcherTypeData.cpp	Netstorm.Core/Original/RawArcherTypeData.cs	86
 cpppj/src/o/RawArcherTypeData.h	Netstorm.Core/Original/RawArcherTypeData.cs	8610c9c0f6fd62e32b0e518e0336e7dd434ab285	port
 cpppj/src/client/RawSurfaceFrameRegular.cpp	Netstorm.Core/Original/RawSurfaceStorage.FrameRegular.cs	b5c7f855aaac9b4d24bd2f2ee83d0709162a60e9	port
 cpppj/src/client/RawSurfaceWorld.h	Netstorm.Core/Original/RawSurfaceStorage.FrameRegular.cs	b5c7f855aaac9b4d24bd2f2ee83d0709162a60e9	port
+cpppj/src/o/RawGunTarget.cpp	Netstorm.Core/Original/RawGunTarget.cs	8db0f07baf143b5e8e86eaa43c9443c3c0bb29f8	port
+cpppj/src/o/RawGunTarget.cpp	Netstorm.Core/Original/RawGunTarget.Geometry.cs	8db0f07baf143b5e8e86eaa43c9443c3c0bb29f8	port
+cpppj/src/o/RawGunTarget.h	Netstorm.Core/Original/RawGunTarget.Types.cs	8db0f07baf143b5e8e86eaa43c9443c3c0bb29f8	port
+cpppj/src/o/RawGunTarget.h	Netstorm.Core/Original/RawGunTarget.cs	8db0f07baf143b5e8e86eaa43c9443c3c0bb29f8	port
