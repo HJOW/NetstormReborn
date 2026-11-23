@@ -89,6 +89,14 @@ std::string ProductTellBody(std::string_view target,std::string_view original,st
         if (japanese) return "<h2>すべてリセット</h2>\n<p>設定とキャンペーンの<br>進行状況をすべて<br>リセットしますか？<br>リセット後に<br>ゲームを終了します。\n$Button=リセット,Tell,Patch1101.ResetAllConfirmed\n$Button=キャンセル,Tell,Blank\n";
     }
     std::string body(original);
+    if (o::AsciiLower(target)=="about" && body.find("Copyright 2026 HJOW")==body.npos) {
+        // 버전 창은 원작 저작권/기존 패치 치환을 유지하고 확인 버튼 앞에 새 패치의 개발자와 저작권을 더한다.
+        const std::string patch=korean ? "NetStorm 11.01 패치: HJOW.<br>\nCopyright 2026 HJOW<br>\n"
+            : japanese ? "NetStorm 11.01 パッチ: HJOW。<br>\nCopyright 2026 HJOW<br>\n"
+            : "NetStorm 11.01 Patch by HJOW.<br>\nCopyright 2026 HJOW<br>\n"; // Patch Credits와 같은 개발자/연도이며 기존 10.78 작성자를 대체하지 않는다.
+        const auto buttons=body.find("$Button="); // 기존 번역본의 확인 버튼 이름과 명령은 그대로 남긴다.
+        body.insert(buttons==body.npos ? body.size() : buttons,patch);
+    }
     if (o::AsciiLower(target)=="ucampaign") { // 12차 스커미시: Campaign 목록에 Skirmish 항목을 더한다(원문 목록과 Back 버튼 사이).
         const std::string entry=std::string("$Menu=")+(korean ? "스커미시" : japanese ? "スカーミッシュ" : "Skirmish")+",Tell,Patch1101.Skirmish\n";
         const auto back=body.find("$Button=");

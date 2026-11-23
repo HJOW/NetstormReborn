@@ -1,0 +1,117 @@
+{
+  "unit": 1330,
+  "passed": true,
+  "windows": [
+    {
+      "language": "english",
+      "run": {
+        "name": "about-english-final",
+        "args": [
+          "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+          "--run",
+          "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+          "--window",
+          "--frames",
+          "35",
+          "--fixed-frame-ms",
+          "25",
+          "--no-audio",
+          "--set",
+          "welcomeGiven=1;tellTips=0;autoDemo=0;edgeScroll=0;currentLanguage=english;SCREENW=1024;SCREENH=768",
+          "--ui-script",
+          "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\about-english-final.tsv",
+          "--ui-report",
+          "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\about-english-final-report.tsv"
+        ],
+        "exit_code": 0,
+        "seconds": 0.7129433155059814,
+        "exe_sha256": "99514ed7c3b13ada9a155518880ce02421e21ba2d875805b13591f287b69da45"
+      },
+      "body": "raw_html_body\t401\t404\t10\tNetStorm Version v11.01  (c) 1997 Titanic Entertainment, Inc. and Activision Inc.10.78 Patch by Ticonderoga Entertainment.NetStorm 11.01 Patch by HJOW.Copyright 2026 HJOW"
+    },
+    {
+      "language": "korean",
+      "run": {
+        "name": "about-korean-final",
+        "args": [
+          "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+          "--run",
+          "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+          "--window",
+          "--frames",
+          "35",
+          "--fixed-frame-ms",
+          "25",
+          "--no-audio",
+          "--set",
+          "welcomeGiven=1;tellTips=0;autoDemo=0;edgeScroll=0;currentLanguage=korean;SCREENW=1024;SCREENH=768",
+          "--ui-script",
+          "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\about-korean-final.tsv",
+          "--ui-report",
+          "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\about-korean-final-report.tsv"
+        ],
+        "exit_code": 0,
+        "seconds": 1.2219250202178955,
+        "exe_sha256": "99514ed7c3b13ada9a155518880ce02421e21ba2d875805b13591f287b69da45"
+      },
+      "body": "raw_html_body\t401\t404\t10\tNetStorm \u001f\u0007\u0017\u0004\u001f\u000f\u000f\u001c v11.01  (c) 1997 Titanic Entertainment, Inc. and Activision Inc.10.78 \u001f\u0014\u0001\u001e\u001f\u0012\u0002\u0015: Ticonderoga Entertainment.NetStorm 11.01 \u001f\u0014\u0001\u001e\u001f\u0012\u0002\u0015: HJOW.Copyright 2026 HJOW"
+    },
+    {
+      "language": "japanese",
+      "run": {
+        "name": "about-japanese-final",
+        "args": [
+          "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+          "--run",
+          "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+          "--window",
+          "--frames",
+          "35",
+          "--fixed-frame-ms",
+          "25",
+          "--no-audio",
+          "--set",
+          "welcomeGiven=1;tellTips=0;autoDemo=0;edgeScroll=0;currentLanguage=japanese;SCREENW=1024;SCREENH=768",
+          "--ui-script",
+          "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\about-japanese-final.tsv",
+          "--ui-report",
+          "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\about-japanese-final-report.tsv"
+        ],
+        "exit_code": 0,
+        "seconds": 1.3197200298309326,
+        "exe_sha256": "99514ed7c3b13ada9a155518880ce02421e21ba2d875805b13591f287b69da45"
+      },
+      "body": "raw_html_body\t401\t404\t10\tNetStorm Version v11.01  (c) 1997 Titanic Entertainment, Inc. and Activision Inc.10.78 Patch by Ticonderoga Entertainment.NetStorm 11.01 \u001f\u0016\u0010\u0017\u001f\u0016\u0010\u0006\u001f\u0016\u0010\u0004: HJOW\u001f\u0016\u0001\u0016Copyright 2026 HJOW"
+    }
+  ],
+  "inGameKorean": {
+    "name": "version-ingame-ko",
+    "args": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "--run",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+      "--window",
+      "--frames",
+      "45",
+      "--fixed-frame-ms",
+      "25",
+      "--no-audio",
+      "--set",
+      "welcomeGiven=1;tellTips=0;autoDemo=0;edgeScroll=0;currentLanguage=korean;SCREENW=1024;SCREENH=768",
+      "--ui-script",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\version-ingame-ko.tsv",
+      "--ui-report",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\version-ingame-ko-report.tsv",
+      "--mission",
+      "thewarbegins"
+    ],
+    "exit_code": 0,
+    "seconds": 1.3732843399047852,
+    "exe_sha256": "99514ed7c3b13ada9a155518880ce02421e21ba2d875805b13591f287b69da45"
+  },
+  "focusedTests": {
+    "productUi": 25,
+    "koreanJapanese": 47,
+    "failed": 0
+  }
+}
