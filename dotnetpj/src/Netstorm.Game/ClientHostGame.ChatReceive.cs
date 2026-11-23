@@ -33,8 +33,8 @@ public sealed partial class ClientHostGame
     public void ReceiveNativePacketChat(Memory<byte> packet) => (_nativeChatReceive ?? throw new InvalidOperationException("실제 Root Chat 수신 미설치")).Receive(packet);
     /// <summary>R11 송수신 펌프가 소비하는 실제 패킷 분배기다.</summary>
     public RawPacketDispatch PacketDispatch => _packetDispatch ?? throw new InvalidOperationException("패킷 분배기 미설치");
-    /// <summary>공통 패킷 분배기에 41h와 로그인 묶음을 설치한다. 전송 설치는 R4-6, 실제 송수신 펌프는 R11에서 잇는다.</summary>
-    /// <remarks>2026-11-23 0.897에서 R4-6 전송·수신 묶음용으로 추가했다. 근거: R4-6 남음의 "공통 41h가 Root.ReceiveNativePacketChat을 부르는 전송 설치"와 "NativeLoginPacketReceivers의 실제 MonoGame Root 설치 호출"이다. 종료·닫기·반납은 수송이 없어 명시 거부한다.</remarks>
+    /// <summary>공통 패킷 분배기에 41h·로그인·설정·버전·기술·변수 묶음을 설치한다. 전송 설치는 R4-6, 실제 송수신 펌프는 R11에서 잇는다.</summary>
+    /// <remarks>2026-11-23 0.897·0.898에서 R4-6 전송·수신 묶음용으로 추가했다. 근거: R4-6 남음의 "공통 41h가 Root.ReceiveNativePacketChat을 부르는 전송 설치"와 "NativeLoginPacketReceivers의 실제 MonoGame Root 설치 호출"이다. 종료·닫기·반납은 수송이 없어 명시 거부한다.</remarks>
     private void InstallClientPacketDispatch()
     {
         _packetDispatch = ClientPacketDispatch.Build(

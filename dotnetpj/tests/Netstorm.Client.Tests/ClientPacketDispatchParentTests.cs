@@ -60,6 +60,17 @@ public sealed class ClientPacketDispatchParentTests
         Assert.NotNull(dispatch.SnapshotReceiver(0x2b));
         Assert.Empty(scene.Assertions);
     }
+    /// <summary>부모는 설정·버전·기술 묶음을 같은 분배기에 설치한다. 가변 묶음은 기존 관찰기 검사가 대조한다.</summary>
+    [Fact]
+    public void ParentInstallsSettingsVersionAndTechEntries()
+    {
+        var scene = new Scene();
+        var dispatch = Build(scene, _ => { });
+        Assert.Equal(0x0044dc20u, dispatch.SnapshotReceiver(0x32)!.NativeEntry);
+        Assert.Equal(0x004b3af0u, dispatch.SnapshotReceiver(0x0b)!.NativeEntry);
+        Assert.Equal(0x004b49e0u, dispatch.SnapshotReceiver(0x69)!.NativeEntry);
+        Assert.Empty(scene.Assertions);
+    }
     /// <summary>부모가 묶은 41h는 실제 Chat UI 입구로 전달한다.</summary>
     [Fact]
     public void ParentRelaysChatToReceive()
