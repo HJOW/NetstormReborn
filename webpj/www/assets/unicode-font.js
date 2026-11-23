@@ -14,14 +14,23 @@ import { FONT_INK_INDEX } from '../render/glyph-text.js';
 // 알파(0~255)가 이 값 이상이면 글자 픽셀로 본다. 작은 크기에서 가는 획이 끊기지 않으면서 번지지 않는 값이다. (2026-10-31 WB03-N)
 export const COVERAGE_THRESHOLD = 110;
 
-// 큰 슬롯의 논리 높이에 곱해 글자 크기(em, 픽셀)를 정하는 비율이다. 원본 슬롯과 줄 높이를 유지한다.
-export const EM_PER_SLOT_HEIGHT = 13 / 14;
-
-// 작은 슬롯에서 사용할 갈무리11의 원래 픽셀 크기이다. 비정수 확대에서 획이 뭉치는 것을 방지한다.
+// 갈무리11 의 원래 픽셀 크기(ppem)이다. 이 글꼴은 11px 비트맵 글꼴이라 11 의 배수로 그려야 1px 가로획이 합쳐지거나 빠지지 않는다. 작은 슬롯은 이 크기(1배) 그대로 쓴다.
 export const KOREAN_SMALL_EM_SIZE = 11;
 
-// 글자 크기의 최솟값(픽셀)이다. 너무 작으면 글자가 뭉개져 읽을 수 없다. (2026-10-31 WB03-N)
-const MIN_EM_SIZE = 6;
+// 정수 배율 한국어 글자의 기준선 위쪽 줄 수(글자 윗부분이 줄 맨 위 밖으로 나가 잘리지 않으려면 기준선이 이 값 이상이어야 한다)이다. 갈무리11 한글은 11px 에서 기준선 위로 10줄을 차지한다
+// (실측: 22px 에서 `잔` 의 잉크가 기준선 위 20줄 = 10줄 × 2배, 44px 에서는 래스터라이저 반올림으로 41줄이 필요해 3배 이상은 1줄을 더한다). (2026-11-23 WB04-E1259)
+const KOREAN_ASCENT_ROWS = 10;
+export function koreanAscentRows(emSize) {
+    const scale = Math.round(emSize / KOREAN_SMALL_EM_SIZE);
+    return scale * KOREAN_ASCENT_ROWS + (scale >= 3 ? 1 : 0);
+}
+
+// 슬롯 높이에서 한국어 글자 크기(em, 픽셀)를 정한다: 원본 BitmapFont.cpp 의 정수 확대 규칙 `scale = max(1, (높이 + ppem/2) / ppem)` 을 따라 11 의 정수배(22·33·44px)로 고른다(정수 나눗셈).
+// 슬롯 높이 [14, 13, -, 20, 48, 14, 12] 에서는 작은 슬롯 11px(1배), 슬롯 3(제목, 높이 20) 22px(2배), 슬롯 4(높이 48) 44px(4배)이다.
+// 이전에는 큰 슬롯을 `round(높이 × 13/14)`(슬롯 3 은 19px, 슬롯 4 는 45px)로 정해 비정수 배율 때문에 가로획이 합쳐져 `라`→`다`, `잔`→`산` 처럼 읽혔다. (2026-11-23 WB04-E1259)
+export function koreanEmSize(slotHeight) {
+    return KOREAN_SMALL_EM_SIZE * Math.max(1, Math.floor((slotHeight + Math.floor(KOREAN_SMALL_EM_SIZE / 2)) / KOREAN_SMALL_EM_SIZE));
+}
 
 // 밑줄을 기준선 아래 몇 줄에 긋는지, 취소선을 기준선 위 em 의 얼마에 긋는지이다(작은 글자에서 중앙 부근). (2026-10-31 WB03-N)
 const UNDERLINE_BELOW_BASELINE = 1;
@@ -47,8 +56,8 @@ export class UnicodeGlyphFont {
         this.height = height;
         // 기준선 위쪽 높이이다.
         this.ascent = ascent;
-        // 기준선 아래쪽 높이이다.
-        this.descent = height - ascent;
+        // 기준선 아래쪽 높이이다. 정수 배율 큰 글자는 줄 높이보다 기준선이 커질 수 있어 0 아래로는 내려가지 않게 한다(줄 배치는 높이와 기준선만 쓴다). (2026-11-23 WB04-E1259)
+        this.descent = Math.max(0, height - ascent);
         // 글자 코드 → 글리프 보관소이다.
         this.cache = new Map();
     }
@@ -141,7 +150,7 @@ export class UnicodeFontProvider {
         if (cached) return cached;
         const slotHeight = FONT_SLOT_HEIGHTS[slot];
         if (!slotHeight) throw new RangeError(`유니코드 글꼴을 만들 수 없는 슬롯입니다: ${slot}`);
-        const emSize = slotHeight <= 14 ? KOREAN_SMALL_EM_SIZE : Math.max(MIN_EM_SIZE, Math.round(slotHeight * EM_PER_SLOT_HEIGHT));
+        const emSize = koreanEmSize(slotHeight);
         const spec = {
             emSize,
             // 굵은체는 굵게 스타일(2)일 때만 쓴다. 슬롯 0·3 의 굵기 700 은 영어 Arial 의 획을 위한 것이고, 한글을 12~14픽셀 단색으로 그릴 때는
@@ -155,7 +164,10 @@ export class UnicodeFontProvider {
             rasterizer: this.rasterizer,
             spec,
             height: reference?.height ?? slotHeight,
-            ascent: reference?.ascent ?? Math.round(emSize * 0.85),
+            // 정수 배율 큰 슬롯(emSize > 11)의 기준선은 원본 글꼴 기준선과 갈무리11 글자의 기준선 위 높이(배율 × 10줄) 중 큰 값이다. 22px(슬롯 3)는 20줄이 필요한데 원본 Arial 20 의 기준선(15줄)에 맞추면
+            // 한글 윗부분(ㅈ·ㅎ·ㄹ 의 맨 위 가로획)이 줄 맨 위 밖으로 나가 잘려 `잔`→`산`, `라`→`다` 처럼 읽힌다. 원본 BitmapFont.cpp 도 글자가 기준선 위보다 크면 위쪽을 0 줄에 맞춘다(`shift = max(0, ascent - bearingY*scale)`).
+            // 작은 슬롯(11px)은 원본 기준선을 그대로 써서 기존 글자 위치가 변하지 않는다. (2026-11-23 WB04-E1259)
+            ascent: ((original) => (emSize > KOREAN_SMALL_EM_SIZE ? Math.max(original, koreanAscentRows(emSize)) : original))(reference?.ascent ?? Math.round(emSize * 0.85)),
         });
         this.fonts.set(key, font);
         return font;

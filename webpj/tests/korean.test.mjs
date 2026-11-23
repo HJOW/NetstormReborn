@@ -9,7 +9,7 @@ import path from 'node:path';
 import { DATA_ROOT, REPO_ROOT, readData, readDataMap } from './helpers.mjs';
 import { XlatTable } from '../www/assets/xlat.js';
 import { decodeOriginalText, encodeUtf16Units, encodeWindows1252 } from '../www/assets/text-encoding.js';
-import { COVERAGE_THRESHOLD, EM_PER_SLOT_HEIGHT, KOREAN_SMALL_EM_SIZE, UnicodeFontProvider, UnicodeGlyphFont } from '../www/assets/unicode-font.js';
+import { COVERAGE_THRESHOLD, KOREAN_SMALL_EM_SIZE, UnicodeFontProvider, UnicodeGlyphFont, koreanAscentRows, koreanEmSize } from '../www/assets/unicode-font.js';
 import { FontSet } from '../www/assets/font-set.js';
 import { BitmapFont } from '../www/assets/bitmap-font.js';
 import { KOREAN_ASSET_PATHS, KOREAN_BUNDLE, KOREAN_LANGUAGE_PATHS, buildKoreanSupport } from '../www/assets/korean-assets.js';
@@ -209,13 +209,31 @@ test('UnicodeFontProvider: 슬롯·스타일별 글꼴 사양과 원본 글꼴 �
     assert.equal(provider.get(5, 4).spec.underline, true);
     // 기준 글꼴이 없으면 슬롯 높이와 em 으로 추정한다. 비어 있는 슬롯 2 는 만들지 않는다.
     assert.equal(provider.get(3, 0).height, 20);
-    assert.equal(provider.get(3, 0).ascent, Math.round(Math.round(20 * EM_PER_SLOT_HEIGHT) * 0.85));
+    // 슬롯 3(높이 20)의 글자 크기는 갈무리11 의 2배(22px)이고 기준 글꼴이 없을 때의 기준선은 그 0.85배이다. (E1259)
+    assert.equal(provider.get(3, 0).spec.emSize, 22);
+    assert.equal(provider.get(3, 0).ascent, 20); // 기준 글꼴이 없으면 추정 기준선 round(22×0.85)=19 와 22px 글자의 20줄 중 큰 값이다.
     assert.throws(() => provider.get(2, 0), RangeError);
     // 기준 글꼴이 있으면 줄 높이·기준선은 그 값이다(슬롯 3: 원본 Arial 20 은 높이 19·기준선 15 라 추정값과 다르다).
     const reference20 = BitmapFont.parse(menuFiles.get('d/!Arial.normal.20.700.chfnt'));
     const referenced = new UnicodeFontProvider(fakeRasterizer()).get(3, 0, reference20);
-    assert.deepEqual([referenced.height, referenced.ascent, referenced.descent], [19, 15, 4]);
+    // 기준선은 원본 기준선(15)과 갈무리11 22px 글자의 기준선 위 높이(2배 × 10줄 = 20) 중 큰 값이라 20 이고 줄 높이는 원본(19)을 따른다(기준선이 줄 높이보다 커서 descent 는 0 으로 막는다). (E1259)
+    assert.deepEqual([referenced.height, referenced.ascent, referenced.descent], [19, 20, 0]);
+    // 작은 슬롯은 원본 기준선이 갈무리11 의 9줄보다 커서 바뀌지 않는다: Arial 14(슬롯 0)의 기준선 그대로이다.
+    assert.ok(reference.ascent >= 9 && slot0.ascent === reference.ascent);
     assert.ok(provider.get(4, 0).spec.emSize > provider.get(3, 0).spec.emSize);
+    // 모든 슬롯의 글자 크기는 갈무리11 원래 크기(11px)의 정수배이다(원본 BitmapFont.cpp 의 정수 확대: scale = max(1, (높이 + 5) / 11)). 비정수 배율은 1px 가로획을 합치거나 지운다. (E1259)
+    for (const [slot, height] of [[0, 14], [1, 13], [3, 20], [4, 48], [5, 14], [6, 12]]) {
+        const emSize = provider.get(slot, 0).spec.emSize;
+        assert.equal(emSize % KOREAN_SMALL_EM_SIZE, 0, `슬롯 ${slot} 은 11의 배수`);
+        assert.equal(emSize, koreanEmSize(height), `슬롯 ${slot}`);
+    }
+    assert.deepEqual([14, 13, 12, 20, 48].map(koreanEmSize), [11, 11, 11, 22, 44]);
+    // 높이 16 이하는 1배, 17~27 은 2배, 28~38 은 3배, 39 이상은 4배이다.
+    assert.deepEqual([16, 17, 27, 28, 38, 39].map(koreanEmSize), [11, 22, 22, 33, 33, 44]);
+    // 기준선 위쪽 줄 수: 배율 × 10줄이고 3배 이상은 래스터라이저 반올림 몫으로 1줄을 더한다(실측: 44px 는 41줄). 큰 슬롯의 기준선은 원본 기준선과 이 값 중 큰 값이다. 작은 슬롯은 원본 기준선 그대로이다.
+    assert.deepEqual([11, 22, 33, 44].map(koreanAscentRows), [10, 20, 31, 41]);
+    assert.equal(provider.get(4, 0).ascent, Math.max(Math.round(44 * 0.85), 41));
+    assert.equal(new UnicodeFontProvider(fakeRasterizer()).get(6, 0).ascent, Math.round(11 * 0.85), '작은 슬롯은 보정하지 않는다(기준 글꼴이 없으면 추정 기준선 그대로)');
 });
 
 // 글꼴 묶음: 부호화 종류로 글꼴을 가른다. (2026-10-31 WB03-N)
@@ -237,7 +255,7 @@ test('FontSet: 유니코드 글꼴이 있으면 UI 문구를 UTF-16 으로 부�
     assert.ok(fonts.drawFont(context, original) instanceof BitmapFont);
     // 유니코드 글꼴의 줄 높이·기준선은 같은 슬롯의 원본 비트맵 글꼴을 따른다(슬롯 3 은 높이 19·기준선 15).
     const slot3 = fonts.unicodeFont(createTextContext({ font: 3 }));
-    assert.deepEqual([slot3.height, slot3.ascent], [19, 15]);
+    assert.deepEqual([slot3.height, slot3.ascent], [19, 20]); // 기준선은 원본 15 가 아니라 22px 갈무리11 글자의 20(위쪽이 잘리지 않게, E1259)
     // 줄 기준선 계산(metrics)은 같은 슬롯의 원본 비트맵 값이라 영어와 한국어가 같다.
     assert.deepEqual(fonts.metrics(context), english.metrics(context));
     // 그림자 오프셋은 유니코드 문구의 크기에도 더해진다.
