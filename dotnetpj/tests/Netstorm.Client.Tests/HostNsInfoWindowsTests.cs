@@ -1134,4 +1134,108 @@ public sealed class HostNsInfoWindowsTests
         other.Dispose();
         Assert.Throws<ObjectDisposedException>(() => other.HandleDispatch(99999u, 0x10, 1, 2, challenge));
     }
+
+    /// <summary>메타맵 관문이 열리면 실제 루트 배치 장치에 전체 본문을 맡긴다. 0.930에서 추가됐다.</summary>
+    [Fact]
+    public void MetaRootLayoutFiresWhenMetamapKnown()
+    {
+        using var scene = new Scene();
+        scene.Storage.OwnerMode.Challenge = true;
+        scene.Game.Player.PlayerKnown = 1;
+        var laidOut = new List<uint>();
+        var childLaidOut = new List<(HudNsInfoChild Kind, uint Token)>();
+        var wired = new HostNsInfoDevices
+        {
+            Read = scene.Devices.Read,
+            Translate = scene.Devices.Translate, StoreText = scene.Devices.StoreText,
+            Text = scene.Devices.Text, FormatZone = scene.Devices.FormatZone, Changed = scene.Devices.Changed,
+            MetaRootLayout = token => laidOut.Add(token),
+            MetaChildLayout = (kind, token) => childLaidOut.Add((kind, token)),
+        };
+        using var other = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, wired);
+        uint rootToken = other.Create();
+        var root = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(rootToken));
+        root.BaseWidth = 300;
+        root.BaseHeight = 200;
+        scene.Menu.Tree.TreeHooks.Attach!(rootToken, 10, 20, scene.Menu.Tree.Create.Entries[0], 0);
+        Assert.Equal([rootToken], laidOut);
+        Assert.Equal(9, childLaidOut.Count);
+        Assert.Equal((HudNsInfoChild.Battle, root.Battle), childLaidOut[0]);
+        other.Dispose();
+    }
+
+    /// <summary>미연결 루트 배치 장치는 일반 부착으로 꾸미지 않는다. 0.930에서 추가됐다.</summary>
+    [Fact]
+    public void MetaRootLayoutMissingFailsExplicitly()
+    {
+        using var scene = new Scene();
+        scene.Storage.OwnerMode.Challenge = true;
+        scene.Game.Player.PlayerKnown = 1;
+        var childLaidOut = new List<(HudNsInfoChild Kind, uint Token)>();
+        var wired = new HostNsInfoDevices
+        {
+            Read = scene.Devices.Read,
+            Translate = scene.Devices.Translate, StoreText = scene.Devices.StoreText,
+            Text = scene.Devices.Text, FormatZone = scene.Devices.FormatZone, Changed = scene.Devices.Changed,
+            MetaChildLayout = (kind, token) => childLaidOut.Add((kind, token)),
+        };
+        using var other = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, wired);
+        uint rootToken = other.Create();
+        var root = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(rootToken));
+        root.BaseWidth = 300;
+        root.BaseHeight = 200;
+        Assert.Equal(9, childLaidOut.Count);
+        Assert.Throws<InvalidOperationException>(() => scene.Menu.Tree.TreeHooks.Attach!(rootToken, 10, 20, scene.Menu.Tree.Create.Entries[0], 0));
+        other.Dispose();
+    }
+
+    /// <summary>특수 버튼 그림은 실제 소유 판정을 통과한 뒤 장치에 전달된다. 0.930에서 추가됐다.</summary>
+    [Fact]
+    public void DrawPlayerButtonDispatchesToDevice()
+    {
+        using var scene = new Scene();
+        var drawn = new List<uint>();
+        var wired = new HostNsInfoDevices
+        {
+            Read = scene.Devices.Read,
+            Translate = scene.Devices.Translate, StoreText = scene.Devices.StoreText,
+            Text = scene.Devices.Text, FormatZone = scene.Devices.FormatZone, Changed = scene.Devices.Changed,
+            DrawPlayerButton = (token, _, _, _) => drawn.Add(token),
+        };
+        using var other = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, wired);
+        uint rootToken = other.Create();
+        var root = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(rootToken));
+        var panel = Assert.IsType<HudPlayerInfoNode>(scene.Menu.Tree.Node(root.Players[0]));
+        var clip = new GumpDrawState();
+        var target = new GumpPixelTarget(new byte[16], 4, 4, clip);
+        var background = new GumpBackgroundDraw(scene.Menu.Tree.Collection, clip, new(), new() { Node = id => scene.Menu.Tree.Node(id) as GumpBackgroundNode });
+        bool handled = scene.Menu.Tree.ExternalDrawing.TryDraw(panel.Button, target, new(), background);
+        Assert.True(handled);
+        Assert.Equal([panel.Button], drawn);
+        other.Dispose();
+    }
+
+    /// <summary>소유하지 않은 토큰의 그림 요청은 장치에 닿지 않고 실패한다. 0.930에서 추가됐다.</summary>
+    [Fact]
+    public void DrawPlayerButtonIgnoresUnownedToken()
+    {
+        using var scene = new Scene();
+        var drawn = new List<uint>();
+        var wired = new HostNsInfoDevices
+        {
+            Read = scene.Devices.Read,
+            Translate = scene.Devices.Translate, StoreText = scene.Devices.StoreText,
+            Text = scene.Devices.Text, FormatZone = scene.Devices.FormatZone, Changed = scene.Devices.Changed,
+            DrawPlayerButton = (token, _, _, _) => drawn.Add(token),
+        };
+        using var other = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, wired);
+        uint rootToken = other.Create();
+        var clip = new GumpDrawState();
+        var target = new GumpPixelTarget(new byte[16], 4, 4, clip);
+        var background = new GumpBackgroundDraw(scene.Menu.Tree.Collection, clip, new(), new() { Node = id => scene.Menu.Tree.Node(id) as GumpBackgroundNode });
+        Assert.False(scene.Menu.Tree.ExternalDrawing.TryDraw(99999u, target, new(), background));
+        Assert.False(scene.Menu.Tree.ExternalDrawing.TryDraw(rootToken, target, new(), background));
+        Assert.Empty(drawn);
+        other.Dispose();
+    }
 }
