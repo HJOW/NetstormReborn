@@ -111,8 +111,23 @@ public sealed class HudNsInfoMetaHooks
     /// <summary>같은 24DWORD 랭크 변환의 실제 슬롯 필드 읽기다. 0.909에서 추가됐다.</summary>
     public Func<ReadOnlyMemory<byte>, int, int>? SlotRank { get; set; }
 
-    /// <summary>0042f480의 같은 현재 icon B/C와 전체 256BYTE 처리다. 0.909에서 추가됐다.</summary>
+    /// <summary>0042f480의 같은 현재 icon B/C와 전체 256BYTE 처리다. 0.909에서 추가됐고 0.910의 배틀 패널 본문에서 함께 쓴다.</summary>
     public Func<int, string>? RankPicture { get; set; }
+
+    /// <summary>004ba230의 같은 현재 스크롤 상태다. 0.910에서 추가됐다.</summary>
+    public Action<uint, uint>? Scrollable { get; set; }
+
+    /// <summary>004ba1b0의 같은 현재 슬라이더 상태다. 0.910에서 추가됐다.</summary>
+    public Action<uint, uint>? Slider { get; set; }
+
+    /// <summary>같은 24DWORD 랭크 변환의 실제 선택 문자열이다. 0.910에서 추가됐다.</summary>
+    public Func<ReadOnlyMemory<byte>, int, string>? OptionValueText { get; set; }
+
+    /// <summary>같은 실제 선택 이름이다. 0.910에서 추가됐다.</summary>
+    public Func<int, string>? OptionNameText { get; set; }
+
+    /// <summary>0049a840→0049af80의 현재 TYPE 설명/번역/80BYTE 설정 치환이다. 0.910에서 추가됐다.</summary>
+    public Func<uint, string>? Describe { get; set; }
 }
 
 // 0047e630 전체의 39명 초기 순서·원문 쌍교환 정렬·이름/문맥/행 metadata다. 0.906에서 추가됐다.
@@ -752,6 +767,293 @@ public static class HudNsInfoMetaPlayer
     private static void SetPanelHeight(uint token, double height, HudNsInfoMetaHooks hooks)
     {
         GumpCreateNode node = Need(hooks.Node)(token) ?? throw new InvalidOperationException("NSInfo 플레이어 배치의 실제 패널 없음");
+        node.BaseHeight = (float)height;
+        node.Height = (float)(height * node.Scale);
+    }
+}
+
+// 일반 부착/두 현재 관문 뒤에는 비활성 전투도 공통 스크롤/자식 배치를 수행한다.
+// cpppj/src/client/HudNsInfoMeta.cpp 의 LayoutMetaBattleInfo(0047b480) 를 이식한다.
+// 0.910에서 RU-3 NSInfo HUD 묶음용으로 추가됐다.
+public static class HudNsInfoMetaBattle
+{
+    /// <summary>선택된 실제 장치만 요구하며 가짜 성공으로 대신하지 않는다. 0.910에서 추가됐다.</summary>
+    private static T Need<T>(T? value) where T : Delegate => value ?? throw new InvalidOperationException("NSInfo 배틀 배치의 실제 선택 장치 미연결");
+
+    /// <summary>지정한 실제 폭만 읽고 원문 필드 밖 접근은 그 위치에서 거부한다. 0.910에서 추가됐다.</summary>
+    private static uint ReadField(ReadOnlySpan<byte> bytes, int offset, int width = 4)
+    {
+        // 낮은 BYTE부터 원문 폭만 조립한다.
+        if (offset < 0 || offset > bytes.Length || width > bytes.Length - offset)
+        {
+            throw new ArgumentOutOfRangeException(nameof(offset), "NSInfo 배틀 배치의 실제 CS 필드 부족");
+        }
+
+        uint value = 0;
+        for (int index = 0; index < width; index++)
+        {
+            value |= (uint)bytes[offset + index] << (8 * index);
+        }
+
+        return value;
+    }
+
+    /// <summary>원문 현재 자식의 기본폭을 쓰뒤 같은 배율의 float 결과만 저장한다. 0.910에서 추가됐다.</summary>
+    private static void SetWidth(uint token, double width, HudNsInfoMetaHooks hooks)
+    {
+        GumpCreateNode node = Need(hooks.Node)(token) ?? throw new InvalidOperationException("NSInfo 배틀 배치의 실제 자식 없음");
+        node.BaseWidth = (float)width;
+        node.Width = (float)(width * node.Scale);
+    }
+
+    /// <summary>원문 0047b430은 원문 범위에 맞는 고정 그림 문자열을 반환하며 현재 언어 번역을 추가하지 않는다. 0.910에서 추가됐다.</summary>
+    private static string Category(int option)
+    {
+        if (option > 0 && option < 5)
+        {
+            return "~[I93.110]";
+        }
+
+        if (option > 4 && option < 11)
+        {
+            return "~[I93.117]";
+        }
+
+        if (option > 10 && option < 14)
+        {
+            return "~[I93.116]";
+        }
+
+        if (option >= 14 && option <= 21)
+        {
+            return "~[I93.115]";
+        }
+
+        return "~[I93.112]";
+    }
+
+    /// <summary>파생 +b4..163의 실제 현재 DWORD를 주소 순서가 아닌 원문 쓰기 순서로 지정한다. 0.910에서 추가됐다.</summary>
+    private static void Setting(HudBattleInfoNode node, int offset, uint value)
+    {
+        ArgumentNullException.ThrowIfNull(node);
+        int relative = offset - 0xb4;
+        node.Settings[relative / 8, (relative % 8) / 4] = value;
+    }
+
+    /// <summary>일부 현재 설정 쌍을 보존하는 원문 분기를 전체 초기화로 대체하지 않는다. 0.910에서 추가됐다.</summary>
+    /// <param name="node">같은 0x16c BattleInfo 노드다.</param>
+    /// <param name="gameType">게임 종류 번호다.</param>
+    public static void PrepareSettings(HudBattleInfoNode node, uint gameType)
+    {
+        ArgumentNullException.ThrowIfNull(node);
+        switch (gameType)
+        {
+            case 1:
+                Setting(node, 0xd4, 2);
+                Setting(node, 0xe4, 1);
+                Setting(node, 0x138, 0);
+                Setting(node, 0x144, 1);
+                break;
+            case 2:
+                Setting(node, 0xd4, 3);
+                Setting(node, 0xe0, 1);
+                Setting(node, 0xe4, 2);
+                Setting(node, 0x100, 1);
+                Setting(node, 0x128, 1);
+                Setting(node, 0x138, 1);
+                Setting(node, 0x140, 1);
+                Setting(node, 0x144, 2);
+                Setting(node, 0x148, 1);
+                goto extra;
+            case 3:
+                Setting(node, 0xd4, 3);
+                Setting(node, 0xe0, 0);
+                Setting(node, 0xe4, 2);
+                Setting(node, 0x100, 0);
+                Setting(node, 0x128, 0);
+                Setting(node, 0x138, 0);
+                Setting(node, 0x140, 0);
+                Setting(node, 0x144, 0);
+                Setting(node, 0x148, 0);
+                Setting(node, 0x154, 2);
+                Setting(node, 0x158, 1);
+                Setting(node, 0x15c, 1);
+                Setting(node, 0x160, 2);
+                goto lower;
+            case 4:
+                Setting(node, 0xd4, 3);
+                Setting(node, 0xe0, 1);
+                Setting(node, 0xe4, 2);
+                Setting(node, 0x100, 1);
+                Setting(node, 0x128, 1);
+                Setting(node, 0x138, 1);
+                Setting(node, 0x140, 1);
+                Setting(node, 0x144, 2);
+                Setting(node, 0x148, 1);
+                Setting(node, 0x150, 1);
+                Setting(node, 0x154, 0);
+                Setting(node, 0x158, 1);
+                Setting(node, 0x15c, 0);
+                Setting(node, 0x160, 1);
+                goto common;
+            default:
+                Setting(node, 0xd4, 3);
+                Setting(node, 0xe4, 2);
+                Setting(node, 0x138, 1);
+                Setting(node, 0x144, 2);
+                break;
+        }
+
+        Setting(node, 0xe0, 0);
+        Setting(node, 0x100, 0);
+        Setting(node, 0x128, 0);
+        Setting(node, 0x140, 0);
+        Setting(node, 0x148, 0);
+    extra:
+        Setting(node, 0x154, 0);
+        Setting(node, 0x158, 0);
+        Setting(node, 0x15c, 0);
+        Setting(node, 0x160, 0);
+    lower:
+        Setting(node, 0x150, 0);
+    common:
+        Setting(node, 0xbc, 2);
+        Setting(node, 0xc4, 2);
+        Setting(node, 0x12c, 2);
+        Setting(node, 0x134, 2);
+        Setting(node, 0x14c, 2);
+        Setting(node, 0xc0, 1);
+        Setting(node, 0xc8, 1);
+        Setting(node, 0xcc, 0);
+        Setting(node, 0xd0, 0);
+        Setting(node, 0xd8, 1);
+        Setting(node, 0xdc, 0);
+        Setting(node, 0xe8, 1);
+        Setting(node, 0xec, 1);
+        Setting(node, 0xf0, 1);
+        Setting(node, 0xf4, 1);
+        Setting(node, 0xf8, 1);
+        Setting(node, 0xfc, 0);
+        Setting(node, 0x104, 0);
+        Setting(node, 0x108, 0);
+        Setting(node, 0x10c, 1);
+        Setting(node, 0x110, 1);
+        Setting(node, 0x114, 0);
+        Setting(node, 0x118, 1);
+        Setting(node, 0x11c, 1);
+        Setting(node, 0x120, 1);
+        Setting(node, 0x124, 1);
+        Setting(node, 0x130, 1);
+        Setting(node, 0x13c, 1);
+    }
+
+    /// <summary>일반 부착/두 현재 관문 뒤에는 비활성 전투도 공통 스크롤/자식 배치를 수행한다. 0.910에서 추가됐다.</summary>
+    /// <param name="token">같은 0x16c BattleInfo 노드 토큰이다.</param>
+    /// <param name="globals">두 원문 몸체가 현재 위치에서 읽는 실제 전역이다.</param>
+    /// <param name="hooks">실제 UI 처리기·현재 색/기술 값이다.</param>
+    public static void Layout(uint token, HudNsInfoMetaGlobals globals, HudNsInfoMetaHooks hooks)
+    {
+        ArgumentNullException.ThrowIfNull(globals);
+        ArgumentNullException.ThrowIfNull(hooks);
+        ArgumentNullException.ThrowIfNull(globals.Challenge);
+        HudBattleInfoNode panel = Need(hooks.Battle)(token) ?? throw new InvalidOperationException("NSInfo 배틀 배치의 실제 BattleInfo 없음");
+        Need(hooks.Push)(panel.Title);
+        Need(hooks.Push)(panel.Body);
+        Need(hooks.Push)(panel.Summary);
+        Need(hooks.Replace)(panel.Title, "");
+        UIntBox titleFlags = Need(hooks.TextFlags)(panel.Title) ?? throw new InvalidOperationException("NSInfo 배틀 배치의 실제 제목 플래그 없음");
+        titleFlags.Value &= ~8u;
+        Need(hooks.TextFlags)(panel.Title).Value &= ~0x10u;
+        Need(hooks.Scrollable)(panel.Title, 1);
+        Need(hooks.Slider)(panel.Title, 1);
+        Need(hooks.Replace)(panel.Body, "");
+        Need(hooks.TextFlags)(panel.Body).Value &= ~8u;
+        Need(hooks.TextFlags)(panel.Body).Value &= ~0x10u;
+        if (panel.Battle != 0)
+        {
+            ReadOnlyMemory<byte> battle = globals.Challenge.Battle(panel.Battle);
+            if ((ReadField(battle.Span, 0, 1) & 1u) != 0)
+            {
+                Need(hooks.TextFlags)(panel.Title).Value |= 8u;
+                ReadOnlyMemory<byte> options = battle.Slice(0, 0x59);
+                PrepareSettings(panel, ReadField(options.Span, 0, 1));
+                Need(hooks.Parse)(panel.Title, "~y~E~[T1]Game Type~[T0]\n");
+                string type = Need(hooks.OptionValueText)(options, 0);
+                Need(hooks.Parse)(panel.Title, "~a~[T1]~w~E" + type + "~[T0]\n");
+                Need(hooks.Parse)(panel.Title, "~y~E~[T23]Game Options~[T0]~w~[T24]  (~sSort By~w)~[T0]\n");
+                // mode2는 활성 전체 값/편집 태그를 쓰고 그 외는 현재 값이 기준과 다른 활성행만 쓴다.
+                for (uint option = 1; option < 22; option++)
+                {
+                    if (panel.Mode == 2)
+                    {
+                        if (panel.Settings[(int)option, 1] == 0)
+                        {
+                            continue;
+                        }
+
+                        string value = Need(hooks.OptionValueText)(options, unchecked((int)option));
+                        string name = Need(hooks.OptionNameText)(unchecked((int)option));
+                        Need(hooks.Parse)(panel.Title, Category(unchecked((int)option)) + "~[T" + (option + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) + "]~w~E" + name + ": ~[T0]~[T" + (option + 27).ToString(System.Globalization.CultureInfo.InvariantCulture) + "]~i" + value + "~[T0]\n");
+                    }
+                    else
+                    {
+                        if (ReadField(options.Span, (int)option, 1) == panel.Settings[(int)option, 0] || panel.Settings[(int)option, 1] == 0)
+                        {
+                            continue;
+                        }
+
+                        string value = Need(hooks.OptionValueText)(options, unchecked((int)option));
+                        string name = Need(hooks.OptionNameText)(unchecked((int)option));
+                        Need(hooks.Parse)(panel.Title, Category(unchecked((int)option)) + "~[T" + (option + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) + "]~w~E" + name + ": ~[T0]~i" + value + "~[T0]\n");
+                    }
+                }
+
+                if (panel.Mode == 1)
+                {
+                    Need(hooks.Parse)(panel.Title, "~w~E~[T23]Click To Add~[T0]\n");
+                }
+
+                Need(hooks.Parse)(panel.Title, "~y~E~[T1000]Excluded:~[T0]\n");
+                uint excluded = 0;
+                // 원문은 count를 매회 다시 읽는다. 첫 행 번호 1과 TYPE+122 태그를 사용하고 실제 배열 밖은 명시 거부한다.
+                while (excluded < ReadField(options.Span, 0x16, 1))
+                {
+                    uint typeNumber = ReadField(options.Span, 0x17 + (int)excluded, 1);
+                    string name = Need(hooks.Describe)(typeNumber);
+                    uint tag = ReadField(options.Span, 0x17 + (int)excluded, 1) + 122u;
+                    Need(hooks.Parse)(panel.Title, "~j~E" + (excluded + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) + ") ~[T" + tag.ToString(System.Globalization.CultureInfo.InvariantCulture) + "]~N~w" + name + "~[T0]\n");
+                    excluded++;
+                }
+
+                if (excluded + 122u < 162u)
+                {
+                    string add = Need(hooks.Translate)("Click To Add");
+                    Need(hooks.Parse)(panel.Title, "~j~E" + (excluded + 1).ToString(System.Globalization.CultureInfo.InvariantCulture) + ") ~[T1000]~N~w" + add + "~[T0]\n");
+                }
+            }
+        }
+
+        SetWidth(panel.Summary, panel.BaseWidth, hooks);
+        SetWidth(panel.Title, panel.BaseWidth, hooks);
+        SetPanelHeight(panel.Title, panel.BaseHeight, hooks);
+        if (panel.Bytes[0] == 0)
+        {
+            Need(hooks.RequestTop)(panel.Title);
+            Need(hooks.RequestTop)(panel.Body);
+            panel.Bytes[0] = 1;
+        }
+
+        Need(hooks.Attach)(panel.Title, 0, 0, token, 0);
+        GumpCreateNode summaryNode = Need(hooks.Node)(panel.Summary) ?? throw new InvalidOperationException("NSInfo 배틀 배치의 실제 요약 없음");
+        GumpCreateNode titleNode = Need(hooks.Node)(panel.Title) ?? throw new InvalidOperationException("NSInfo 배틀 배치의 실제 제목 없음");
+        Need(hooks.Attach)(panel.Summary, (float)(((double)panel.BaseWidth - summaryNode.BaseWidth) * 0.5), (float)((double)titleNode.BaseHeight + 2.0), token, 0);
+        Need(hooks.Attach)(panel.Body, 0, (float)((double)summaryNode.Y + summaryNode.BaseHeight + 2.0), token, 0);
+    }
+
+    /// <summary>원문 PanelHeight의 실제 자식 기본높이/배율 쓰기다. 0.910에서 추가됐다.</summary>
+    private static void SetPanelHeight(uint token, double height, HudNsInfoMetaHooks hooks)
+    {
+        GumpCreateNode node = Need(hooks.Node)(token) ?? throw new InvalidOperationException("NSInfo 배틀 배치의 실제 패널 없음");
         node.BaseHeight = (float)height;
         node.Height = (float)(height * node.Scale);
     }

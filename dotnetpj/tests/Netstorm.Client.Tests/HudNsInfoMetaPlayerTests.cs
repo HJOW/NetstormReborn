@@ -149,7 +149,7 @@ public sealed class HudNsInfoMetaPlayerTests
         }
     }
 
-    /// <summary>빈 슬롯은 이름 없이 비활성으로 둔다. 0.909에서 추가됐다.</summary>
+    /// <summary>빈 슬롯은 이름 없이 비활성으로 둔다. 개행 추가는 비어 있지 않을 때만 수행한다. 0.909에서 추가됐다.</summary>
     [Fact]
     public void EmptySlotShowsPlaceholderWithoutName()
     {
