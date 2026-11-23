@@ -1825,3 +1825,6 @@ cpppj/src/client/ClientMain.cpp	Netstorm.Client/ClientSurfaceGlobals.RootFirstDe
 cpppj/src/o/RawGeyserAiRegistration.cpp	Netstorm.Core/Original/RawGeyserAiRegistration.cs	98663aa77353cb08f2c72bf13bff58630a0c95ec	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.ResourceDevices.cs	98663aa77353cb08f2c72bf13bff58630a0c95ec	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Core/Original/CampaignWorldGlobals.cs	98663aa77353cb08f2c72bf13bff58630a0c95ec	port
+cpppj/src/client/LanguageOptions.cpp	Netstorm.Client/ClientSurfaceGlobals.RootSupplyDevices.cs	372f6b4d759cde2ce935df93b3d3609882ba84bf	port
+cpppj/src/client/CampaignClientServices.cpp	Netstorm.Client/ClientSurfaceGlobals.RootSupplyDevices.cs	372f6b4d759cde2ce935df93b3d3609882ba84bf	port
+cpppj/src/client/ClientMain.cpp	Netstorm.Client/ClientSurfaceGlobals.RootSupplyDevices.cs	372f6b4d759cde2ce935df93b3d3609882ba84bf	port
