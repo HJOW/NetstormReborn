@@ -30,6 +30,7 @@
    - [ ] 방향키 카메라 이동 — 게임 중 ↑↓←→로 카메라를 옮긴다. 원본 ←/→ 조각 회전(`RawCampaignCursor.cpp:179~180`)과 TextEntry 커서 이동을 먼저 처리한다. 완료 기준: R5 카메라·R6 입력 연결 때 cpppj 규칙대로 구현하고 네 방향 이동·회전·입력 보존을 확인한다.
    - [ ] ESC 게임 메뉴 한국어 — webpj에서 번역 누락 행과 "플레이어"(Players) 메뉴 글자 깨짐이 재현됐다. 완료 기준: DN 게임 메뉴 연결 때 Game·View·Options·Players·About 하위의 한국어 라벨과 Player 이름 표시를 화면으로 확인한다.
    - [ ] 정보(About) ▸ 버전 창 Copyright — 원본 Tell `[About]`에 11.01 패치와 `Copyright 2026 HJOW`(AGENTS.md)가 없다. 완료 기준: cpppj에서 정한 문구로 영어·한국어 창에 원본 저작권 줄·10.78 패치 줄·11.01 패치(HJOW)·`Copyright 2026 HJOW`를 표시한다.
+   - 14차 모딩(QuickJS + webpj 이름 체계 공통 모드 API, 2026-11-23 사용자 결정)은 [3.1](#dotnet-modding)의 MOD-1~5다. 착수는 사용자 지시를 따른다.
 
 **최근 완료 요약(0.639~0.900).** 단위별 완료 문장과 집중 검사 수는 보관본과 각 단위 문서에 있다. 완료 범위와 남은 일의 기준은 1.1·1.2절 체크 항목이다.
 
@@ -225,10 +226,32 @@ AGENTS.md 지정에 따라0.807에서 공통 [assets/Netstorm.ico](assets/Netsto
 | 11 난이도 | Options 행과 AI 배율 부품 선행. 기본은 보통(원본), 쉬움은 적 AI의 다리·생산 주기 ×4와 채취 유닛 절반(최소 1), 어려움은 적 AI의 주기 ×½. 동맹 판정 포함. [cpppj 난이도](docs/exe/cpp-difficulty-d-20261111.md) |
 | 12 스커미시 | Campaign에서 시작/취소, 적 수·AI별 난이도/동맹, 금지 유닛 최대 5개(Outpost 포함). 멀티플레이 규칙의 임의 섬·간헐천. [cpppj 스커미시](docs/exe/cpp-skirmish-sk-20261111.md) |
 | 13 일본어 | 외부 Noto Sans JP, 일본어 UI와 본문 영어 대체. 번역 범위는 cpppj D3. [cpppj 일본어](docs/exe/cpp-japanese-l1-l3-20261111.md) |
-| 14 QuickJS | quickjs-ng 엔진 탑재·자체 검사·라이선스 동봉. 추가 연동은 별도 사용자 결정 대상이다. [cpppj 엔진 계약](docs/exe/cpp-quickjs-engine-20261111.md) |
+| 14 QuickJS | quickjs-ng 엔진 탑재·자체 검사·라이선스 동봉. **2026-11-23 사용자 결정: 모딩 지원** — webpj 이름 체계의 공통 모드 API를 QuickJS로 제공하고 게임 로직은 C#을 유지한다. 결정·세부 단위는 [3.1](#dotnet-modding). [cpppj 엔진 계약](docs/exe/cpp-quickjs-engine-20261111.md) |
 | **15 Reset All** | **미착수.** Options 맨 아래에 Reset All을 제공한다. 취소 시 현재 설정·진행을 보존하고 확인 시 `options.cfg`를 포함한 설정·게임 진행을 초기화한 뒤 종료한다. 다시 실행해 최초 상태를 검증한다. cpppj1325에서 확인/취소·초기화·종료와 최초 상태 복원을 구현했다(2026-11-22). DN은 해당 Source를 옮길 때 대조한다. [AGENTS.md](AGENTS.md) |
 
 **공통 완료 사항.** 기존 배포의 `Netstorm.exe` 이름과 압축 스크립트, 11.01·Credits 3항목·HJOW/AI 크레딧 및 카피라이트(0.150·0.342), 폐기 클라이언트 유효성 검사 비활성·외부 접속 문서화(0.151). 0.807에서 직역 호스트가 `Netstorm.exe` 이름을 승계하고 원본 아이콘을 EXE/ZIP에 적용했다(창 표시 확인은 [0.4](#exe-icon)). 새 소비자가 생기면 외부 접속 목록을 갱신한다. [배포 스크립트](dotnetpj/package-dotnetpj.ps1) · [외부 접속](docs/dotnet-external-endpoints-20261103.md)
+
+<a id="dotnet-modding"></a>
+
+### 3.1 14차 모딩 — QuickJS + webpj 이름 체계의 공통 모드 API (2026-11-23 사용자 결정)
+
+**결정.**
+- dotnetpj에 QuickJS(quickjs-ng, cpppj와 같은 v0.18.0 소스·provenance `cpppj/third_party/quickjs-ng`)를 탑재해 다른 사용자가 기능을 더하는 모딩을 지원한다.
+- 모드 API는 webpj의 함수·클래스 이름 체계를 따른다. webpj 내부 모듈(`Raw*`·원문 주소식 이름 등)을 그대로 노출하지 않고, 이름·형태를 webpj에 맞춘 얇은 공개 계약을 정한다. webpj가 기준 구현이고(브라우저 JS라 엔진 불필요) dotnetpj는 같은 계약을 QuickJS 바인딩으로 제공한다. 계약 설계 뒤 webpj도 맞춰 바뀔 수 있다([WB 모딩 API](LEFT_JOBS.webpj.md#modding-api)).
+- 게임 로직은 C#을 유지한다(로직을 JS로 옮겨 webpj 코드를 재사용하는 안은 채택하지 않음). cpppj 모딩은 아직 진행하지 않는다(LEFT_JOBS.md D7 그대로).
+- 착수 시점은 사용자 지시를 따르며 현 재개 순서(R4)는 바꾸지 않는다. MOD-1~3은 월드 연결과 독립이라 먼저 할 수 있고, MOD-4는 해당 기능이 DN에 연결된 뒤 한다.
+
+**검토 근거(2026-11-23 측정, scratchpad 임시 실행기·헤드리스 Chromium).**
+- QuickJS-ng 0.18(cpppj Release 정적 라이브러리)이 webpj 실제 ES 모듈(상대 import 포함)을 고치지 않고 불러 실행했다.
+- 속도: 같은 벤치마크(webpj `IndexedSurface.drawImage` 합성·float32 수치·private 필드 클래스/Map·BigInt)에서 V8 JIT보다 5~115배(합계 약 41배), V8 인터프리터보다 2.0~2.8배 느리다. 모드 API는 이벤트·명령 단위로 하고 매 프레임·매 유닛 반복 처리를 모드에 맡기지 않는다.
+- 결정론: `Math.sin`·`cos`·`atan2`·`pow`의 double 결과가 V8과 각각 2.6%·2.7%·17.3%·0.15% 다르다(2만 입력, float32로 줄이면 0건). 엔진의 이 함수들을 V8과 같은 fdlibm 구현으로 바꾼다.
+
+**세부 단위(각각 완료 기준).**
+- [ ] **MOD-1 공통 모드 API 계약 v0.** `docs/`에 범위(이벤트 훅·읽기 전용 상태 조회·원본 입력 큐로 들어가는 명령), 이름(webpj 클래스·함수 이름과 camelCase), 버전 규칙, 오류 처리, 결정론 규칙(게임 시계·난수만 사용, Math 함수 동일 구현), 보안(파일·네트워크·OS 미노출, 메모리·시간·스택 한도), 모드 위치(`%USERPROFILE%\Saved Games\Netstorm\Mods\`, Linux `$HOME/.netstorm/Mods/`), 기본 꺼짐·원본 대조 시험은 모드 꺼짐 상태를 적는다. 완료 기준: webpj 기준 구현 범위와 함께 확정해 두 인계 문서에서 링크한다.
+- [ ] **MOD-2 QuickJS 엔진 탑재.** quickjs-ng를 win-x64 네이티브 라이브러리로 빌드해(ARM64·Linux는 후순위) `Netstorm.Game` 배포에 넣고 얇은 C 래퍼 + P/Invoke로 런타임·컨텍스트·평가를 감싼다. quickjs-libc는 넣지 않고 한도는 cpppj `ScriptEngineLimits`와 같게 둔다. 완료 기준: cpppj `--quickjs-selftest` 6항목과 같은 자체 검사 통과, 배포 ZIP에 라이브러리·라이선스 포함.
+- [ ] **MOD-3 모듈 로더·호스트 shim.** 모드 폴더 안 ES 모듈만 불러오는 로더, `console`/`print` → 7차 로그, 계약이 요구하는 최소 전역, `Math.sin/cos/atan2/pow`의 fdlibm 구현 주입. 완료 기준: 같은 수학 격자에서 V8과 비트 일치, 모드 폴더 밖 import 거부.
+- [ ] **MOD-4 API 바인딩.** 계약 v0의 이벤트·조회·명령을 DN Client/Core에 연결한다(명령은 원본 입력 큐 경유, 원본 호출 순서 보존). 완료 기준: 공통 적합성 시험 모드 스크립트가 DN과 webpj에서 같은 결과를 낸다.
+- [ ] **MOD-5 모드 관리·멀티플레이.** Options에서 모드 목록·켜기/끄기(기본 꺼짐), 모드 오류 시 그 모드만 끄고 로그, LAN(R11)에서는 참가자 모드 목록·해시 일치 검사. 완료 기준: 실제 GUI에서 켜기·끄기·오류 격리와 해시 불일치 시 접속 거부 확인.
 
 <a id="resync-scope"></a><a id="cpppj-requests"></a><a id="dotnet-inventory"></a>
 

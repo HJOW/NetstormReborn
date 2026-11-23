@@ -33,6 +33,7 @@
 9. **방향키 카메라 이동(사용자 요구 2026-11-23, 세 프로젝트 공통).** 게임 중 ↑↓←→로 카메라를 옮길 수 있어야 한다. 원본 ←/→는 조각을 든 상태의 회전과 입력창 커서 이동에 쓰이므로 그 둘을 먼저 처리한다. 규칙은 cpppj가 먼저 정한다([공통](LEFT_JOBS.md#user-requests-20261123)). 세부 단위는 3.1절 6단계.
 10. **ESC 게임 메뉴 한국어 점검(사용자 제보 2026-11-23, webpj 재현).** 번역되지 않은 행이 남아 있고 "플레이어"(Players) 메뉴를 고르면 글자가 깨진다. 세부 단위는 3.1절 6단계.
 11. **정보 ▸ 버전 창의 Copyright(사용자 요구 2026-11-23).** 11.01 패치·`Copyright 2026 HJOW`가 없다. [0.6절](#about-version).
+12. **14차 모딩 API 기준 구현(사용자 결정 2026-11-23).** dotnetpj 계약 설계(MOD-1) 뒤 webpj를 기준 구현으로 맞춘다. [3.7절](#modding-api).
 
 - **로컬 산출물.** `webpj/test-results-e1072-rerun`~`webpj/test-results-e1081`의 10개 폴더는 빈 폴더이거나 Git 제외 `*.zip` trace만 들어 있어 Git 상태에 나타나지 않는다(2026-11-23 정리 때도 남아 있음). 다시 볼 필요가 없으면 삭제해도 된다. E633~E640 단위 문서가 적은 루트 로그는 2026-11-21에 `extracted/webpj-e633-e640-root-logs/`로 옮겼으므로 그 폴더에서 읽는다.
 - **미션 식별.** 공통 fixture의 `thewarbegins.fort`는 캠페인 1-1이고, 실제 `tutorial1`이 선택하는 Fort는 `BridgeTheGap`이다(E753 재대조). [미션명 정정](docs/webpj-session-login-shipped-forts-20261118.md)
@@ -380,10 +381,19 @@ M1은 메뉴 관문을 통과했다. 4-D의 Tutorial1 L2 → 5-A/5-B·5-C의 Tut
 | 11 | 쉬움/보통/어려움(기본 보통). 쉬움은 적 AI 다리/생산 주기 4배와 충분한 SP에서 채취 유닛 절반(최소 1), 어려움은 주기 절반. E554·E555 계산과 AiCreate 연결, E1096 Options·ESC 메뉴 Difficulty 선택과 저장을 마쳤다. E1149에서 실제 스커미시로 난이도별 AI 다리·섬 건설 속도(쉬움 ≪ 보통 < 어려움)를 확인하고 옵트인 e2e로 고정했다([난이도 진행](docs/webpj-skirmish-difficulty-20261121.md)). 쉬움의 채취 유닛 절반(최소 1)은 실제 진행에서 편차가 커 구분되지 않아(E1156, AI가 프레임 구동이라 빨리 감기 부적합, [빨리 감기](docs/webpj-fast-forward-clock-20261121.md)) 설정 단위 Node 시험과 AI 생성 연결을 근거로 둔다. |
 | 12 | Campaign의 Skirmish와 AI 수·개별 난이도/동맹·금지 유닛 최대 5(Outpost 포함)·시작/취소 UI, 무작위 섬·간헐천. Outpost 목록 수명·분류, 규칙·설정 화면·저장·시작 섬 fort 묶음·섬 생성 부모·세션 월드 생성과 시작·어려움 AI 진행·금지 유닛 반영(E1101~E1107), AI 생산·공격과 사제 사망 패배 안내의 실제 시간 관찰(E1262), 미션 모드라 비미션 너겟 배치·보충이 도달하지 않고 간헐천은 무작위로 놓임(E1270)을 마쳤다. 승리 경로와 AI 다리 멈춤 시점의 원본 대조가 남았다([다음 작업 6](#next)). [규칙](docs/webpj-skirmish-setup-20261120.md) · [UI](docs/webpj-skirmish-ui-20261120.md) · [시작](docs/webpj-skirmish-start-20261120.md) · [관찰](docs/webpj-skirmish-watch-20261123.md) |
 | 13 | 일본어 등 추가 언어. WOFF2가 없는 글꼴은 Google Fonts CDN을 사용하고(AGENTS.md가 가리키는 `fonts/webfonts.css` 예시는 `96d81381`에서 추가됨) 외부 접속 문서와 소스 감사를 함께 갱신한다. 일본어 Patch Credits에도 카피라이트를 넣는다. |
-| 14 | 웹 자체 JS 사용으로 QuickJS 탑재 불필요. |
+| 14 | 웹 자체 JS 사용으로 QuickJS 탑재 불필요. **2026-11-23 사용자 결정:** dotnetpj가 QuickJS로 제공할 모드 API를 webpj 이름 체계의 공통 계약으로 만들고 webpj가 기준 구현이 된다([모딩 API](#modding-api)). |
 | 15 | Reset All은 E863에서 구현·검증했고 E1251에서 확인을 브라우저 `confirm()` 대신 게임 안 Tell 확인 창(옵션 최하단 → `Patch1101.ResetAll` → 확정 단추 `Patch1101.ResetAllConfirmed`)으로 바꿨다. 확정 뒤 현재 게임 소유 설정·진행 키만 지우고 앱 정리 후 다시 로딩한다. 취소·확정·가드·오류·최초 실행과 다른 앱 저장값 보존을 검사했고 Chromium 실제 메뉴(영어·한국어)에서도 확인했다. 영구 저장 키가 추가되면 초기화 목록도 갱신한다. 일본어 본문은 13차에서 더한다. [E863](docs/webpj-reset-all-20261119.md) · [E1251](docs/webpj-reset-all-tell-20261123.md) |
 
 - **12차 Outpost 잔여.** 배치/거리 후보 목록의 실제 소유 관계 확인, 지역 소유 통지·Factory/연구/운반·AI·전투·Client 연결, 건설·금지 목록·삭제를 확인한다. 일반 캠페인/데모에서의 제외도 확인한다. [Outpost 부품](docs/webpj-raw-outpost-lifecycle-20261115.md) · [이관 전 범위](LEFT_JOBS.webpj.old.md#archive-webpj-20261118-through-wb04-e801)
+
+<a id="modding-api"></a>
+
+- **14차 모딩 API 기준 구현(2026-11-23 사용자 결정, 계약 설계 뒤 착수).** dotnetpj가 QuickJS로 제공할 모드 API는 webpj의 함수·클래스 이름 체계를 따르는 공통 계약이며 webpj가 기준 구현이다([DN 3.1](LEFT_JOBS.dotnetpj.md#dotnet-modding)). 계약 설계(DN MOD-1) 뒤 webpj도 그에 맞게 수정할 수 있다. cpppj 모딩은 아직 진행하지 않고, 게임 로직을 JS로 옮겨 dotnetpj가 webpj 코드를 재사용하는 안은 채택하지 않았다.
+  - [ ] 공개 계약 층 — `Raw*`·원문 주소식 내부 모듈을 그대로 노출하지 않고 계약 v0의 이벤트·읽기 전용 조회·명령(원본 입력 큐 경유)을 감싸는 얇은 층을 둔다. 완료 기준: 계약 문서의 모든 항목이 webpj에서 동작하고 내부 모듈 직접 노출이 없다.
+  - [ ] 이름 정렬 — 계약에서 정한 이름과 다른 webpj 클래스·함수는 계약 이름에 맞춘다(내부 이름 변경이 크면 단위로 나눈다). 완료 기준: 계약 이름 목록 대조 시험 통과.
+  - [ ] 모드 로드 — 브라우저에서 모드 스크립트를 불러오는 방식(파일 선택·localStorage 보관, 5차 대응)과 기본 꺼짐. 외부 URL에서 불러오는 기능을 두면 외부 접속 문서화 규칙을 따른다. 완료 기준: 켜기·끄기·오류 격리 e2e 통과.
+  - [ ] 공통 적합성 시험 — 같은 모드 스크립트를 webpj와 dotnetpj에서 돌려 결과를 비교하는 시험 묶음. 완료 기준: webpj 쪽 시험 통과와 DN MOD-4 대조 결과 일치.
+  - 근거(2026-11-23 검토): QuickJS가 webpj ES 모듈을 고치지 않고 실행한다. QuickJS는 V8 JIT보다 약 41배 느려 모드 API는 이벤트·명령 단위로 한다. Math 함수 double 결과의 엔진 차이는 DN이 fdlibm 구현으로 맞춘다.
 
 ### 3.8 원본 관측 연결 이월
 
