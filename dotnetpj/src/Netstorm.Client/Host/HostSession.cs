@@ -2328,6 +2328,9 @@ public sealed partial class HostSession
         // Disc 정기 분배를 Dude 분배보다 나중에 둔다. 가상표가 겹치지 않으므로 순서는 결과에 닿지 않는다.
         // 2026-11-23 0.893에서 R4-4 Disc 정기용으로 추가했다.
         BuildDiscRegularDevices(types);
+        // Dais 정기 분배를 Disc 분배보다 나중에 둔다. 가상표가 겹치지 않으므로 순서는 결과에 닿지 않는다.
+        // 2026-11-23 0.895에서 R4-4 Dais 정기용으로 추가했다.
+        BuildDaisRegularDevices(types);
     }
 
     /// <summary>공장 정기 트리거 본체를 세션에 연결하고 지형 분배 Pop의 공장 갈고리로 등록한다.</summary>
@@ -3434,6 +3437,134 @@ public sealed partial class HostSession
 
     /// <summary>Disc 정기 본체다. 방향/클러스터 표와 실제 지정기를 세션 수명과 같이 유지한다.</summary>
     private RawDiscRegular? _discRegular;
+
+    /// <summary>Dais 정기 분배 전에 사용하던 공통 정기 분배기다. 해제 순서는 Dais가 먼저다.</summary>
+    /// <remarks>2026-11-23 0.895에서 R4-4 Dais 정기용으로 추가했다. Dais 가상표가 아니면 이전 처리기로 넘긴다.</remarks>
+    private RegularHandler? _beforeDaisRegular;
+
+    /// <summary>Dais 가상표(패치 0x507950/CD 0x504090) 부모를 Dais 정기 본체에 분배하고 나머지는 이전 처리기로 넘긴다.</summary>
+    /// <param name="fallback">Dais가 맡지 않는 부모의 기존 처리기다. 없으면 payload를 돌려준다.</param>
+    /// <returns>같은 풀의 현재 가상표로 분배하는 처리기다.</returns>
+    /// <remarks>2026-11-23 0.895에서 R4-4 Dais 정기용으로 추가했다. 근거: cpppj client/RawCampaignSession.cpp 1766행의 typed 경로 Dais 분기다. 의식 공통 후처리·예약은 실제 장치를 쓰고 나머지는 R6에서 잇는다.</remarks>
+    private RegularHandler RegularHandlerWithDais(RegularHandler? fallback) => (sid, ev, count, payload) =>
+    {
+        if (_daisRegular is not null && _daisRegular.Handles(sid)) return _daisRegular.Handle(sid, ev, count, payload);
+
+        return fallback?.Invoke(sid, ev, count, payload) ?? payload;
+    };
+
+    /// <summary>Dais 정기 분배 장치를 세션에 연결한다. 의식 공통 후처리는 실제 장치를 쓰고 나머지는 R6에서 잇는다.</summary>
+    /// <param name="types">같은 실제 TYPE 표다. 지형 Pop 장치와 같은 인스턴스여야 한다.</param>
+    /// <exception cref="InvalidOperationException">Dais 정기 분배의 프로세스·프레임·해시·장소·공통 후처리 장치가 미연결이다.</exception>
+    /// <exception cref="ArgumentException">Dais 정기 TYPE이 지형 Pop 장치와 다르다.</exception>
+    /// <remarks>2026-11-23 0.895에서 R4-4 Dais 정기용으로 추가했다. 근거: cpppj client/RawCampaignSession.cpp 2654행의 typed 경로 Dais 조립이다. 사제/룬 조회는 실제 본체를 쓰고 의식·건설 예약은 실제 Host에 부착한다.</remarks>
+    public void BuildDaisRegularDevices(IReadOnlyList<OriginalTypeRecord> types)
+    {
+        ArgumentNullException.ThrowIfNull(types);
+        if (_beforeDaisRegular is not null)
+        {
+            throw new InvalidOperationException("Dais 정기 분배 장치 중복 연결");
+        }
+
+        SquidProcessHost processes = PlayerProcesses ?? throw new InvalidOperationException("Dais 정기 분배 프로세스 미연결");
+        if (_terrainPopTypes is null || !ReferenceEquals(types, _terrainPopTypes))
+        {
+            throw new ArgumentException("Dais 정기 TYPE은 지형 Pop 장치와 같은 인스턴스여야 한다", nameof(types));
+        }
+
+        SquidFrame frames = _terrainFrames ?? throw new InvalidOperationException("Dais 정기 프레임 미연결");
+        RawSquidHash hash = _terrainHash ?? throw new InvalidOperationException("Dais 정기 해시 미연결");
+        byte[] spots = _terrainSpots ?? throw new InvalidOperationException("Dais 정기 장소 미연결");
+        RawPostPop @base = _livePostPop ?? throw new InvalidOperationException("Dais 정기 공통 후처리 미연결");
+        IReadOnlyList<SquidDisplayShape> shapes = _terrainPopShapes ?? throw new InvalidOperationException("Dais 정기 표시 미연결");
+        if (shapes.Count != types.Count)
+        {
+            throw new InvalidOperationException("Dais 정기 표시·TYPE 물리 불일치");
+        }
+
+        RegularHandler? fallback = processes.Regular();
+        var footprint = new RawSquidNeighbors(Pool, hash, spots, types, new RiftFrameCodeTables(WorldFrames));
+        var reward = new RawSquidReward(Pool, types, TerrainBookkeeping, new SquidRewardState(), Sp);
+        var templeState = new TempleRitualState();
+        RawTempleRitual? ritual = null;
+        var templeHooks = new TempleRitualHooks
+        {
+            Create = (_, _) => throw new InvalidOperationException("Dais 의식 Rune 생성 미연결(R6)"),
+            SetHitPoints = (_, _) => throw new InvalidOperationException("Dais 의식 Rune HP 미연결(R6)"),
+            SetOwner = (_, _) => throw new InvalidOperationException("Dais 의식 Rune 소유자 미연결(R6)"),
+            Pop = (_, _, _, _) => throw new InvalidOperationException("Dais 의식 Rune 배치 미연결(R6)"),
+            PlayAt = (_, _, _, _) => throw new InvalidOperationException("Dais 의식 위치 음향 미연결(R6)"),
+            ReserveShared = () => throw new InvalidOperationException("Dais 의식 307 예약 미연결(R6)"),
+            AddShared = (_, _, _) => throw new InvalidOperationException("Dais 의식 307 부착 미연결(R6)"),
+            Count = sid => ritual!.Count(sid),
+        };
+        var actions = new RawPriestRitualActions(Pool, WorldFrames, new()
+        {
+            SetFrame = (sid, frame, flags) => frames.Set(sid, frame, flags),
+            ReserveShared = () => throw new InvalidOperationException("Dais 사제 604 예약 미연결(R6)"),
+            AddShared = (_, _, _) => throw new InvalidOperationException("Dais 사제 604 부착 미연결(R6)"),
+        });
+        ritual = new RawTempleRitual(Pool, hash, types, WorldFrames, shapes, spots, footprint, reward, actions, templeState, templeHooks);
+        var runeState = new RunePostPopState();
+        var rune = new RawRunePostPop(Pool, hash, types, runeState, @base, new()
+        {
+            ReserveRegular = () => true,
+            AddRegular = (sid, @event, payload) => { processes.AddRegular(sid, @event, payload); },
+            StartConstruction = (_, _) => throw new InvalidOperationException("Dais Rune 건설 미연결(R6)"),
+        });
+        var carrier = new RawCarrierPreDestroy(Pool, new ContainedFinderState(), new()
+        {
+            ValidateDamageable = (_, _) => throw new InvalidOperationException("Dais 선택조회는 Carrier 삭제검사를 실행하지 않는다"),
+            DamageablePre = (_, _) => throw new InvalidOperationException("Dais 선택조회는 Carrier 삭제를 실행하지 않는다"),
+            DependentFound = () => throw new InvalidOperationException("Dais 선택조회는 Carrier 후처리를 실행하지 않는다"),
+        });
+        var lookup = new RawContainedLookup(Pool, (_, _) => throw new InvalidOperationException("Dais 경로 종속 삭제 미연결(R6)"));
+        var path = new RawPathStart(Pool, hash, types, processes, lookup, frames, new RawPathStartState(new SquidProcessState()), new()
+        {
+            ProcessType = _ => throw new InvalidOperationException("Dais Path 조회 미연결(R6)"),
+            Create = _ => throw new InvalidOperationException("Dais Path 생성 미연결(R6)"),
+            Metadata = _ => throw new InvalidOperationException("Dais Path 메타 미연결(R6)"),
+            ClearBlocked = (_, _, _) => throw new InvalidOperationException("Dais 경로 막힘 정리 미연결(R6)"),
+        });
+        var state = new DaisRegularState(templeState, runeState, new SquidProcessState(), new SquidRewardState(), unchecked((uint)MissionPlayer.BattleOwner));
+        _daisRegular = new RawDaisRegular(Pool, hash, types, WorldFrames, ritual, rune, carrier, processes, lookup, path, state, DaisRegularHooks(fallback));
+        _beforeDaisRegular = fallback;
+        processes.SetRegularHandler(RegularHandlerWithDais(_beforeDaisRegular));
+    }
+
+    /// <summary>Dais 정기 본체다. 의식 공통 후처리·예약 장치를 세션 수명과 같이 유지한다.</summary>
+    private RawDaisRegular? _daisRegular;
+
+    /// <summary>Dais 정기 본체가 쓰는 실제 하위 효과다. 의식 공통 후처리·예약·손상은 실제 장치를 쓰고 나머지는 R6에서 잇는다.</summary>
+    /// <param name="fallback">Dais가 맡지 않는 사건의 기존 처리기다. 없으면 payload를 돌려준다.</param>
+    /// <returns>프레임 지정·삭제·공통 예약·손상은 실제 장치, 나머지는 명시 거부다.</returns>
+    private DaisRegularHooks DaisRegularHooks(RegularHandler? fallback) => new()
+    {
+        SetFrame = (sid, frame, flags) => (_terrainFrames ?? throw new InvalidOperationException("Dais 정기 프레임 미연결")).Set(sid, frame, flags),
+        Destroy = (sid, flags) => BuildSessionDestroy("Dais", PlayerProcesses)(sid, flags),
+        ReserveShared = static () => true,
+        AddShared = (sid, ev, payload) => PlayerProcesses.AddSharedRegular(sid, ev, payload),
+        PlayAt = (_, _, _, _) => throw new InvalidOperationException("Dais 위치 음향 미연결(R6)"),
+        ReserveSound = () => throw new InvalidOperationException("Dais 지연 소리 확보 미연결(R6)"),
+        LoadSound = (_, _, _) => throw new InvalidOperationException("Dais 지연 소리 조회 미연결(R6)"),
+        AttachSound = (_, _, _, _) => throw new InvalidOperationException("Dais 지연 소리 부착 미연결(R6)"),
+        WallSeconds = () => throw new InvalidOperationException("Dais 벽시계 미연결(R6)"),
+        SetSoundStart = (_, _) => throw new InvalidOperationException("Dais 지연 시각 미연결(R6)"),
+        StopVoice = (_, _, _) => throw new InvalidOperationException("Dais 희생 종료 미연결(R6)"),
+        ProcessType = _ => throw new InvalidOperationException("Dais Path 조회 미연결(R6)"),
+        PathMetadata = _ => throw new InvalidOperationException("Dais Path 메타 미연결(R6)"),
+        Damageable = (sid, ev, count, payload) => fallback?.Invoke(sid, ev, count, payload) ?? payload,
+        AddLocalSp = _ => throw new InvalidOperationException("Dais SP 획득 미연결(R6)"),
+        NormalizeForeignSp = _ => throw new InvalidOperationException("Dais 다른 SP 변환 미연결(R6)"),
+        GrantForeignType = (_, _) => throw new InvalidOperationException("Dais 다른 타입 획득 미연결(R6)"),
+        LocalSpecial = _ => throw new InvalidOperationException("Dais 로컬 특수 획득 미연결(R6)"),
+        LocalType = _ => throw new InvalidOperationException("Dais 로컬 타입 획득 미연결(R6)"),
+        RefreshOwner = _ => throw new InvalidOperationException("Dais 소유자 갱신 미연결(R6)"),
+        RefreshLocal = () => throw new InvalidOperationException("Dais 메뉴 갱신 미연결(R6)"),
+        PriestExists = _ => throw new InvalidOperationException("Dais 사제 조회 미연결(R6)"),
+        MultiplayerStatus = () => throw new InvalidOperationException("Dais 멀티 상태 조회 미연결(R6)"),
+        Chat = _ => throw new InvalidOperationException("Dais 희생 채팅 미연결(R6)"),
+    };
 
     /// <summary>Dude 가상표(0x508cc8) 부모를 Dude 정기 본체에 분배하고 나머지는 이전 처리기로 넘긴다.</summary>
     /// <param name="fallback">Dude가 맡지 않는 부모의 기존 처리기다. 없으면 payload를 돌려준다.</param>
