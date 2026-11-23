@@ -55,6 +55,8 @@ public sealed class HostNsInfoWindowsTests
         public readonly List<int> RankPictureCalls = [];
         /// <summary>실제 번역으로 전달한 원문이다.</summary>
         public readonly List<string> Translations = [];
+    /// <summary>실제 TYPE 설명 호출이다. 0.923에서 추가됐다.</summary>
+    public readonly List<uint> DescribedTypes = [];
         /// <summary>같은 실제 외부 장치를 다른 owner 검증에도 제공한다.</summary>
         public readonly HostNsInfoDevices Devices;
         /// <summary>기존 실제 메뉴/문자/자산을 조립한다. 선택하지 않은 입력·메타·특수 그림은 공급하지 않는다.</summary>
@@ -79,6 +81,7 @@ public sealed class HostNsInfoWindowsTests
                 ObjectOwner = sid => { OwnerCalls.Add(sid); return Owners.TryGetValue(sid, out uint owner) ? owner : 0u; },
                 TechWeight = _ => { TechWeightCalls++; return TechWeightValue; },
                 RankPicture = rank => { RankPictureCalls.Add(rank); return "R" + rank.ToString(CultureInfo.InvariantCulture); },
+                Describe = type => { DescribedTypes.Add(type); return "D" + type.ToString(CultureInfo.InvariantCulture); },
             };
             Ns = new(Menu.Tree, Text, Globals, Game, Storage, Devices);
         }
@@ -411,5 +414,101 @@ public sealed class HostNsInfoWindowsTests
         other.Dispose();
         Assert.Throws<ArgumentNullException>(() => scene.Ns.LayoutMetaPlayer(root.Players[0], null!));
         Assert.Throws<ObjectDisposedException>(() => other.LayoutMetaPlayer(root.Players[0], challenge));
+    }
+
+    /// <summary>빈 전투는 내용을 생략하고 공통 스크롤/자식 배치를 수행한다. 0.923에서 추가됐다.</summary>
+    [Fact]
+    public void LayoutMetaBattleEmptySkipsContentButAttaches()
+    {
+        using var scene = new Scene();
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        uint token = scene.Ns.Create(); var root = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(token));
+        var panel = Assert.IsType<HudBattleInfoNode>(scene.Menu.Tree.Node(root.Battle));
+        panel.BaseWidth = 300;
+        panel.BaseHeight = 60;
+        panel.Battle = 0;
+        var title = Assert.IsType<ScrollingTextGumpNode>(scene.Menu.Tree.Node(panel.Title));
+        title.TextFlags |= 8u;
+        scene.Ns.LayoutMetaBattle(root.Battle, challenge);
+        Assert.Equal(root.Battle, scene.Menu.Tree.Node(panel.Title)!.Parent);
+        Assert.Equal(root.Battle, scene.Menu.Tree.Node(panel.Summary)!.Parent);
+        Assert.Equal(root.Battle, scene.Menu.Tree.Node(panel.Body)!.Parent);
+        Assert.Equal(1u, panel.Bytes[0]);
+        Assert.Equal(0u, title.TextFlags & 8u);
+        Assert.Equal(0, title.ScrollRequest);
+    }
+
+    /// <summary>활성 전투는 게임 종류·옵션 행과 제외 목록을 쓴다. 0.923에서 추가됐다.</summary>
+    [Fact]
+    public void LayoutMetaBattleActiveWritesRowsAndExcluded()
+    {
+        using var scene = new Scene();
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        var battle = challenge.Battle(2).Span;
+        battle[0] = 1;
+        battle[0x16] = 1;
+        battle[0x17] = 5;
+        uint token = scene.Ns.Create(); var root = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(token));
+        var panel = Assert.IsType<HudBattleInfoNode>(scene.Menu.Tree.Node(root.Battle));
+        panel.BaseWidth = 300;
+        panel.BaseHeight = 60;
+        panel.Battle = 2;
+        panel.Mode = 2;
+        panel.Settings[1, 1] = 1;
+        scene.Ns.LayoutMetaBattle(root.Battle, challenge);
+        Assert.Equal([5u], scene.DescribedTypes);
+        Assert.Equal(1u, panel.Bytes[0]);
+        var title = Assert.IsType<ScrollingTextGumpNode>(scene.Menu.Tree.Node(panel.Title));
+        Assert.NotEqual(0u, title.TextFlags & 8u);
+        Assert.Equal(root.Battle, scene.Menu.Tree.Node(panel.Title)!.Parent);
+    }
+
+    /// <summary>일반 모드는 바뀐 활성행만 쓰고 추가 행을 둔다. 0.923에서 추가됐다.</summary>
+    [Fact]
+    public void LayoutMetaBattleNormalModeWritesChangedRows()
+    {
+        using var scene = new Scene();
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        var battle = challenge.Battle(2).Span;
+        battle[0] = 1;
+        uint token = scene.Ns.Create(); var root = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(token));
+        var panel = Assert.IsType<HudBattleInfoNode>(scene.Menu.Tree.Node(root.Battle));
+        panel.BaseWidth = 300;
+        panel.BaseHeight = 60;
+        panel.Battle = 2;
+        panel.Mode = 0;
+        scene.Ns.LayoutMetaBattle(root.Battle, challenge);
+        Assert.Equal(1u, panel.Bytes[0]);
+        Assert.Contains("Click To Add", scene.Translations);
+        Assert.Equal(root.Battle, scene.Menu.Tree.Node(panel.Body)!.Parent);
+    }
+
+    /// <summary>미연결 장치는 일반 성공으로 꾸미지 않는다. 0.923에서 추가됐다.</summary>
+    [Fact]
+    public void LayoutMetaBattleMissingDevicesFailExplicitly()
+    {
+        using var scene = new Scene();
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        uint token = scene.Ns.Create(); var root = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(token));
+        var panel = Assert.IsType<HudBattleInfoNode>(scene.Menu.Tree.Node(root.Battle));
+        panel.Battle = 2;
+        var battle = challenge.Battle(2).Span;
+        battle[0] = 1;
+        battle[0x16] = 1;
+        battle[0x17] = 5;
+        var bare = new HostNsInfoDevices
+        {
+            Read = scene.Devices.Read, Translate = scene.Devices.Translate, StoreText = scene.Devices.StoreText,
+            Text = scene.Devices.Text, FormatZone = scene.Devices.FormatZone, Changed = scene.Devices.Changed,
+        };
+        using var other = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, bare);
+        uint second = other.Create();
+        var otherRoot = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(second));
+        var otherPanel = Assert.IsType<HudBattleInfoNode>(scene.Menu.Tree.Node(otherRoot.Battle));
+        otherPanel.Battle = 2;
+        Assert.Throws<InvalidOperationException>(() => other.LayoutMetaBattle(otherRoot.Battle, challenge));
+        other.Dispose();
+        Assert.Throws<ArgumentNullException>(() => scene.Ns.LayoutMetaBattle(root.Battle, null!));
+        Assert.Throws<ObjectDisposedException>(() => other.LayoutMetaBattle(otherRoot.Battle, challenge));
     }
 }

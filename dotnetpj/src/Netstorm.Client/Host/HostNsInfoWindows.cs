@@ -32,6 +32,8 @@ public sealed class HostNsInfoDevices
     public Func<ReadOnlyMemory<byte>, uint>? TechWeight { get; init; }
     /// <summary>0042f480의 같은 현재 icon B/C와 전체 256BYTE 랭크 그림이다. 아이콘 틀 개수는 자산표에서 공급하며 0.922에서 추가됐다.</summary>
     public Func<int, string>? RankPicture { get; init; }
+    /// <summary>0049a840→0049af80의 현재 TYPE 설명/번역/80BYTE 설정 치환이다. 0.923에서 추가됐다.</summary>
+    public Func<uint, string>? Describe { get; init; }
     /// <summary>복귀하면 계속하는 실제 원문 줄 번호 진단이다.</summary>
     public Action<uint>? Assertion { get; init; }
     /// <summary>실제 공통 구조 변경을 알린다.</summary>
@@ -256,6 +258,55 @@ public sealed class HostNsInfoWindows : IDisposable
                 Attach = (target, x, y, parent, mode) => Need(_tree.TreeHooks.Attach)(target, x, y, parent, mode),
             };
             HudNsInfoMetaPlayer.Layout(token, globals, hooks);
+        }
+        finally
+        {
+            foreach ((uint entry, UIntBox box) in _textFlagBoxes)
+            {
+                if (_tree.Node(entry) is ScrollingTextGumpNode node)
+                {
+                    node.TextFlags = box.Value;
+                }
+            }
+        }
+    }
+    /// <summary>같은 실제 CS와 현재 NSInfo 전역으로 전체 메타 배틀 본문을 배치한다. 0.923에서 추가됐다.</summary>
+    /// <param name="token">같은 0x16c BattleInfo 노드 토큰이다.</param>
+    /// <param name="challenge">같은 실제 CS 참가자40·전투10 기록이다.</param>
+    public void LayoutMetaBattle(uint token, ClientChallengeGlobals challenge)
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        ArgumentNullException.ThrowIfNull(challenge);
+        foreach ((uint entry, UIntBox box) in _textFlagBoxes)
+        {
+            if (_tree.Node(entry) is ScrollingTextGumpNode node)
+            {
+                box.Value = node.TextFlags;
+            }
+        }
+
+        try
+        {
+            var globals = new HudNsInfoMetaGlobals { Challenge = challenge, Info = _globals, Metamap = () => Read(0x594fc8), Known = () => Read(0x595344), Owner = () => _gameplay.Player.BattleOwner };
+            var hooks = new HudNsInfoMetaHooks
+            {
+                Battle = battle => _battles.Contains(battle) ? _tree.Node(battle) as HudBattleInfoNode : null,
+                Node = _tree.Node,
+                Push = _tree.Tree.Push,
+                TextFlags = TextFlags,
+                Scrollable = (target, value) => _text.Widgets.SetScrollable(target, value),
+                Slider = (target, value) => _text.Widgets.SetSlider(target, value),
+                Replace = (target, text) => _text.Text.ReplaceText(target, AppendBytes(text), 0),
+                Parse = (target, text) => _text.Parser.Parse(target, Bytes(text)),
+                Read = Read,
+                OptionValueText = (options, index) => BattleOptionTexts.BattleOptionValueText(options.Span, unchecked((uint)index), Need(_devices.Translate)),
+                OptionNameText = index => BattleOptionTexts.BattleOptionNameText(unchecked((uint)index), Need(_devices.Translate)),
+                Describe = type => Need(_devices.Describe)(type),
+                Translate = text => Need(_devices.Translate)(text),
+                Attach = (target, x, y, parent, mode) => Need(_tree.TreeHooks.Attach)(target, x, y, parent, mode),
+                RequestTop = target => _text.Text.RequestScroll(target, 0),
+            };
+            HudNsInfoMetaBattle.Layout(token, globals, hooks);
         }
         finally
         {
