@@ -1775,3 +1775,5 @@ cpppj/src/o/RawProjectileGeometry.h	Netstorm.Core/Original/RawProjectileGeometry
 cpppj/src/o/RawProjectileGeometry.h	Netstorm.Core/Original/RawProjectileGeometry.Types.cs	a40bd80e7c1c0d619ca38d648d37b00f8cd86edb	port
 cpppj/src/o/RawIceRicochet.cpp	Netstorm.Core/Original/RawIceRicochet.cs	eabb4c250857d9fba297d84705832aba86109ba0	port
 cpppj/src/o/RawIceRicochet.h	Netstorm.Core/Original/RawIceRicochet.cs	eabb4c250857d9fba297d84705832aba86109ba0	port
+cpppj/src/o/RawGunHit.cpp	Netstorm.Core/Original/RawGunHit.cs	079a0f9ea31441120529cc80edd1f7763db1c6ec	port
+cpppj/src/o/RawGunHit.h	Netstorm.Core/Original/RawGunHit.cs	079a0f9ea31441120529cc80edd1f7763db1c6ec	port

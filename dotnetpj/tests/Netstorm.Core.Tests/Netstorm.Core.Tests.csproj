@@ -1,5 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <!-- 두 보호 PE의 압축 총 시각/DPS/피해2058관측을 사본 없이 읽는다. -->
+    <None Include="../../../cpppj/tests/fixtures/gunhit-x86.tsv" Link="X86/gunhit-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
     <!-- 실제 반사점/후보1182와 지역8BYTE213의 독립 PE 관측을 읽기 전용으로 공유한다. -->
     <None Include="../../../cpppj/tests/fixtures/ice-ricochet-x86.tsv" Link="X86/ice-ricochet-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/ice-ricochet-scratch-x86.tsv" Link="X86/ice-ricochet-scratch-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
