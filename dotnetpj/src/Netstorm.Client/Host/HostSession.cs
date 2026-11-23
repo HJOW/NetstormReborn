@@ -2322,6 +2322,9 @@ public sealed partial class HostSession
         // 매몰 정기 분배를 스프라이트 정기 분배보다 나중에 둔다. 가상표가 겹치지 않으므로 순서는 결과에 닿지 않는다.
         // 2026-11-19 0.659에서 R4-4 매몰 정기용으로 추가했다. event0의 0 나머지는 같은 게임 난수를 소비한다.
         BuildBuriedRegularDevices(types);
+        // Dude 정기 분배를 매몰 분배보다 나중에 둔다. 가상표가 겹치지 않으므로 순서는 결과에 닿지 않는다.
+        // 2026-11-23 0.891에서 R4-4 Dude 정기용으로 추가했다.
+        BuildDudeRegularDevices(types);
     }
 
     /// <summary>공장 정기 트리거 본체를 세션에 연결하고 지형 분배 Pop의 공장 갈고리로 등록한다.</summary>
@@ -3380,6 +3383,74 @@ public sealed partial class HostSession
     /// <summary>매몰 정기 분배 전에 사용하던 공통 정기 분배기다. 해제 순서는 매몰이 먼저다.</summary>
     /// <remarks>2026-11-19 0.659에서 R4-4 매몰 정기용으로 추가했다. 오벨리스크 가상표가 아니면 이전 처리기로 넘긴다.</remarks>
     private RegularHandler? _beforeBuriedRegular;
+
+    /// <summary>Dude 정기 분배 전에 사용하던 공통 정기 분배기다. 해제 순서는 Dude가 먼저다.</summary>
+    /// <remarks>2026-11-23 0.891에서 R4-4 Dude 정기용으로 추가했다. Dude 가상표가 아니면 이전 처리기로 넘긴다.</remarks>
+    private RegularHandler? _beforeDudeRegular;
+
+    /// <summary>Dude 가상표(0x508cc8) 부모를 Dude 정기 본체에 분배하고 나머지는 이전 처리기로 넘긴다.</summary>
+    /// <param name="fallback">Dude가 맡지 않는 부모의 기존 처리기다. 없으면 payload를 돌려준다.</param>
+    /// <returns>같은 풀의 현재 가상표로 분배하는 처리기다.</returns>
+    /// <remarks>2026-11-23 0.891에서 R4-4 Dude 정기용으로 추가했다. 근거: cpppj client/RawCampaignSession.cpp 1809행의 typed 경로 Dude 분기다. 이동·작업·거주 장치(R6)는 명시 거부하며 프레임 지정·삭제는 실제 장치를 쓴다. DN Dude 본체가 패치 전용이므로 CD판은 분배하지 않는다.</remarks>
+    private RegularHandler RegularHandlerWithDude(RegularHandler? fallback) => (sid, ev, count, payload) =>
+    {
+        DudeRegularState? state = _dudeRegularState;
+        if (state is not null && Pool.Edition == OriginalEdition.Patch1078)
+        {
+            var body = new RawDudeRegular(Pool, WorldFrames, Game, state, DudeRegularHooks());
+            if (body.Handles((ushort)sid))
+            {
+                return body.Handle((ushort)sid, ev, count, payload);
+            }
+        }
+
+        return fallback?.Invoke(sid, ev, count, payload) ?? payload;
+    };
+
+    /// <summary>Dude 정기 분배 장치를 세션에 연결한다. 이동·작업·거주 내부는 R6에서 잇는다.</summary>
+    /// <param name="types">같은 실제 TYPE 표다. 지형 Pop 장치와 같은 인스턴스여야 한다.</param>
+    /// <exception cref="InvalidOperationException">Dude 정기 분배의 프로세스 장치가 미연결이다.</exception>
+    /// <exception cref="ArgumentException">Dude 정기 TYPE이 지형 Pop 장치와 다르다.</exception>
+    /// <remarks>2026-11-23 0.891에서 R4-4 Dude 정기용으로 추가했다. 근거: cpppj client/RawCampaignSession.cpp 2654행의 typed 경로 Dude 조립이다. provider 목록은 세션 SidLists를 공유하고 진단 검사는 끈 채로 둔다.</remarks>
+    public void BuildDudeRegularDevices(IReadOnlyList<OriginalTypeRecord> types)
+    {
+        ArgumentNullException.ThrowIfNull(types);
+        if (_beforeDudeRegular is not null)
+        {
+            throw new InvalidOperationException("Dude 정기 분배 장치 중복 연결");
+        }
+
+        SquidProcessHost processes = PlayerProcesses ?? throw new InvalidOperationException("Dude 정기 분배 프로세스 미연결");
+        if (_terrainPopTypes is null || !ReferenceEquals(types, _terrainPopTypes))
+        {
+            throw new ArgumentException("Dude 정기 TYPE은 지형 Pop 장치와 같은 인스턴스여야 한다", nameof(types));
+        }
+
+        _dudeRegularState = new DudeRegularState(new RawCheckingFlag(), SidLists.Providers, 0);
+        _beforeDudeRegular = processes.Regular();
+        processes.SetRegularHandler(RegularHandlerWithDude(_beforeDudeRegular));
+    }
+
+    /// <summary>Dude 정기 분배의 공유 상태다. provider 목록·순환 인덱스를 세션 수명과 같이 유지한다.</summary>
+    private DudeRegularState? _dudeRegularState;
+
+    /// <summary>Dude 정기 본체가 쓰는 실제 하위 효과다. 이동·작업·거주 내부는 R6에서 잇는다.</summary>
+    /// <returns>프레임 지정·삭제는 실제 장치, 나머지는 명시 거부다.</returns>
+    private DudeRegularHooks DudeRegularHooks() => new()
+    {
+        CheckSpace = _ => throw new InvalidOperationException("Dude 이동 공간 조회 미연결(R6)"),
+        FindPath = (_, _) => throw new InvalidOperationException("Dude 경로 조회 미연결(R6)"),
+        Task = (_, _, _) => throw new InvalidOperationException("Dude 작업 예약 미연결(R6)"),
+        NearestResidence = _ => throw new InvalidOperationException("Dude 거주 조회 미연결(R6)"),
+        Entrance = _ => throw new InvalidOperationException("Dude 진입점 조회 미연결(R6)"),
+        Move = (_, _, _) => throw new InvalidOperationException("Dude 이동 미연결(R6)"),
+        SetFrame = (sid, frame, flags) => (_terrainFrames ?? throw new InvalidOperationException("Dude 정기 프레임 미연결")).Set(sid, frame, flags),
+        Unpop = (_, _) => throw new InvalidOperationException("Dude 배치 해제 미연결(R6)"),
+        Destroy = (sid, flags) => BuildSessionDestroy("Dude", PlayerProcesses)(sid, flags),
+        Pop = (_, _, _) => throw new InvalidOperationException("Dude 배치 미연결(R6)"),
+        Assertion = _ => throw new InvalidOperationException("원본 Dude 정기 진단"),
+        SetWord = (_, _) => throw new InvalidOperationException("Dude 단어 쓰기 미연결(R6)"),
+    };
 
     /// <summary>같은 장기 풀·프레임·난수의 현재 조회로 공장 정기 사건을 실행한다.</summary>
     /// <param name="sid">처리할 공장 부모 번호다.</param>
