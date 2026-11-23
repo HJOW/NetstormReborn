@@ -656,4 +656,174 @@ public sealed class HostNsInfoWindowsTests
         other.Dispose();
         Assert.Throws<ObjectDisposedException>(() => other.HandleRootInput(0x100, 1, 5, challenge));
     }
+
+    /// <summary>같은 실제 플레이어 입력 결선 장치를 기록하는 검사 장치다. 0.926에서 추가됐다.</summary>
+    private sealed class PlayerInputWiring
+    {
+        /// <summary>실제 송신한 상태 패킷이다.</summary>
+        public readonly List<byte[]> Packets = [];
+        /// <summary>실제 송신한 옵션이다.</summary>
+        public readonly List<(uint Battle, byte[] Options, uint Kind)> DataCalls = [];
+        /// <summary>실제 쓴 보조 값이다.</summary>
+        public readonly List<uint> Auxiliaries = [];
+        /// <summary>실제 메뉴 제목이다.</summary>
+        public readonly List<string> Titles = [];
+        /// <summary>실제 메뉴 항목이다.</summary>
+        public readonly List<(string Text, uint Command, uint Parameter)> Items = [];
+        /// <summary>실제 메뉴 생성/부착 횟수다.</summary>
+        public int Menus;
+        /// <summary>같은 실제 외부 장치 묶음을 조립한다.</summary>
+        public HostNsInfoDevices Build(Scene scene) => new()
+        {
+            Read = address => address switch { 0x5427a8 => 0x10u, 0x542790 => 0x20u, 0x54278c => 0x30u, 0x5429dc => 0x40u, _ => scene.Devices.Read(address) },
+            Translate = scene.Devices.Translate, StoreText = scene.Devices.StoreText,
+            Text = scene.Devices.Text, FormatZone = scene.Devices.FormatZone, Changed = scene.Devices.Changed,
+            StatusSend = fill => { byte[] packet = new byte[12]; fill(packet); Packets.Add(packet); },
+            PlayerSubscriber = () => 0x77u,
+            PlayerAuxiliary = value => Auxiliaries.Add(value),
+            PlayerData = (battle, options, kind) => DataCalls.Add((battle, options.ToArray(), kind)),
+            PlayerMenuBegin = () => Menus++,
+            PlayerMenuAttach = () => Menus++,
+            PlayerMenuTitle = text => Titles.Add(text),
+            PlayerMenuItem = (text, command, parameter) => Items.Add((text, command, parameter)),
+        };
+    }
+
+    /// <summary>준비 버튼은 실제 버튼값으로 CS 플래그를 쓰고 상태 패킷을 송신한다. 0.926에서 추가됐다.</summary>
+    [Fact]
+    public void HandlePlayerInputReadyTogglesFlagAndSends()
+    {
+        using var scene = new Scene();
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        uint owner = scene.Game.Player.BattleOwner;
+        WriteParticipant(challenge, owner, battle: 2, flags: 0, name: "me", sid: 7);
+        var wiring = new PlayerInputWiring();
+        using var other = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, wiring.Build(scene));
+        uint rootToken = other.Create();
+        var root = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(rootToken));
+        uint panelToken = root.Players[0];
+        var panel = Assert.IsType<HudPlayerInfoNode>(scene.Menu.Tree.Node(panelToken));
+        panel.Player = owner;
+        var button = Assert.IsType<HudPlayerButtonNode>(scene.Menu.Tree.Node(panel.Button));
+        button.Value = 1;
+        uint serial = scene.Menu.Tree.Node(panel.Button)!.Serial;
+        uint result = other.HandlePlayerInput(panelToken, 0x10, serial, 0, challenge);
+        Assert.Equal(1u, result);
+        Assert.Equal(2u, BitConverter.ToUInt32(challenge.Participant(owner).Span.Slice(0x64, 4)));
+        Assert.Single(wiring.Packets);
+        Assert.Equal(0x77u, BitConverter.ToUInt32(wiring.Packets[0], 4));
+        Assert.Equal(2u, BitConverter.ToUInt32(wiring.Packets[0], 8));
+        other.Dispose();
+    }
+
+    /// <summary>시작 버튼은 최초 1회만 송신하고 예약을 남긴다. 0.926에서 추가됐다.</summary>
+    [Fact]
+    public void HandlePlayerInputStartReservesOnce()
+    {
+        using var scene = new Scene();
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        uint owner = scene.Game.Player.BattleOwner;
+        WriteParticipant(challenge, owner, battle: 2, flags: 1, name: "me", sid: 7);
+        var wiring = new PlayerInputWiring();
+        using var other = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, wiring.Build(scene));
+        uint rootToken = other.Create();
+        var root = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(rootToken));
+        uint panelToken = root.Players[0];
+        var panel = Assert.IsType<HudPlayerInfoNode>(scene.Menu.Tree.Node(panelToken));
+        panel.Player = owner;
+        uint serial = scene.Menu.Tree.Node(panel.Start)!.Serial;
+        uint first = other.HandlePlayerInput(panelToken, 0x10, serial, 0, challenge);
+        Assert.Equal(1u, first);
+        Assert.Equal(1u, panel.Reserved);
+        Assert.Single(wiring.Packets);
+        Assert.Equal(0x12u, BitConverter.ToUInt32(wiring.Packets[0], 8));
+        uint second = other.HandlePlayerInput(panelToken, 0x10, serial, 0, challenge);
+        Assert.Equal(1u, second);
+        Assert.Single(wiring.Packets);
+        other.Dispose();
+    }
+
+    /// <summary>좌행 슬롯 변경은 실제 전투 옵션과 87BYTE 송신을 함께 수행한다. 0.926에서 추가됐다.</summary>
+    [Fact]
+    public void HandlePlayerInputSlotChangeRankDownSendsData()
+    {
+        using var scene = new Scene();
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        uint owner = scene.Game.Player.BattleOwner;
+        WriteParticipant(challenge, owner, battle: 2, flags: 1, name: "me", sid: 7);
+        var wiring = new PlayerInputWiring();
+        using var other = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, wiring.Build(scene));
+        uint rootToken = other.Create();
+        var root = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(rootToken));
+        uint panelToken = root.Players[0];
+        var panel = Assert.IsType<HudPlayerInfoNode>(scene.Menu.Tree.Node(panelToken));
+        panel.Player = owner;
+        uint serial = scene.Menu.Tree.Node(panel.Text)!.Serial;
+        uint result = other.HandlePlayerInput(panelToken, 0x20, serial, owner + 300u, challenge);
+        Assert.Equal(1u, result);
+        Assert.Single(wiring.Packets);
+        Assert.Single(wiring.DataCalls);
+        Assert.Equal(2u, wiring.DataCalls[0].Battle);
+        Assert.Equal(0x57u, wiring.DataCalls[0].Kind);
+        Assert.Empty(wiring.Auxiliaries);
+        other.Dispose();
+    }
+
+    /// <summary>추방 확인은 실제 이름 메뉴와 예/아니요 항목을 만든다. 0.926에서 추가됐다.</summary>
+    [Fact]
+    public void HandlePlayerInputKickoffOpensMenu()
+    {
+        using var scene = new Scene();
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        uint owner = scene.Game.Player.BattleOwner;
+        WriteParticipant(challenge, owner, battle: 2, flags: 1, name: "bob", sid: 7);
+        var wiring = new PlayerInputWiring();
+        using var other = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, wiring.Build(scene));
+        uint rootToken = other.Create();
+        var root = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(rootToken));
+        uint panelToken = root.Players[0];
+        var panel = Assert.IsType<HudPlayerInfoNode>(scene.Menu.Tree.Node(panelToken));
+        panel.Player = owner;
+        uint serial = scene.Menu.Tree.Node(panel.Text)!.Serial;
+        uint result = other.HandlePlayerInput(panelToken, 0x20, serial, owner + 400u, challenge);
+        Assert.Equal(1u, result);
+        Assert.Equal(2, wiring.Menus);
+        Assert.Single(wiring.Titles);
+        Assert.Contains("bob", wiring.Titles[0], StringComparison.Ordinal);
+        Assert.Equal(2, wiring.Items.Count);
+        Assert.Equal(0x40u, wiring.Items[0].Command);
+        Assert.Equal(owner, wiring.Items[0].Parameter);
+        Assert.Equal(0u, wiring.Items[1].Parameter);
+        other.Dispose();
+    }
+
+    /// <summary>미연결 플레이어 입력 장치는 일반 성공으로 꾸미지 않는다. 0.926에서 추가됐다.</summary>
+    [Fact]
+    public void HandlePlayerInputMissingDevicesFailExplicitly()
+    {
+        using var scene = new Scene();
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        uint owner = scene.Game.Player.BattleOwner;
+        WriteParticipant(challenge, owner, battle: 2, flags: 1, name: "me", sid: 7);
+        var bare = new HostNsInfoDevices
+        {
+            Read = address => address switch { 0x5427a8 => 0x10u, 0x542790 => 0x20u, 0x54278c => 0x30u, 0x5429dc => 0x40u, _ => scene.Devices.Read(address) },
+            Translate = scene.Devices.Translate, StoreText = scene.Devices.StoreText,
+            Text = scene.Devices.Text, FormatZone = scene.Devices.FormatZone, Changed = scene.Devices.Changed,
+        };
+        using var other = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, bare);
+        uint rootToken = other.Create();
+        var root = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(rootToken));
+        uint panelToken = root.Players[0];
+        var panel = Assert.IsType<HudPlayerInfoNode>(scene.Menu.Tree.Node(panelToken));
+        panel.Player = owner;
+        var button = Assert.IsType<HudPlayerButtonNode>(scene.Menu.Tree.Node(panel.Button));
+        button.Value = 1;
+        uint serial = scene.Menu.Tree.Node(panel.Button)!.Serial;
+        Assert.Throws<InvalidOperationException>(() => other.HandlePlayerInput(panelToken, 0x10, serial, 0, challenge));
+        Assert.Throws<ArgumentNullException>(() => other.HandlePlayerInput(panelToken, 0x10, serial, 0, null!));
+        Assert.Throws<InvalidOperationException>(() => other.HandlePlayerInput(rootToken, 0x10, serial, 0, challenge));
+        other.Dispose();
+        Assert.Throws<ObjectDisposedException>(() => other.HandlePlayerInput(panelToken, 0x10, serial, 0, challenge));
+    }
 }

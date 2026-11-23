@@ -46,6 +46,20 @@ public sealed class HostNsInfoDevices
     public Action? KickoffSound { get; init; }
     /// <summary>처리하지 않은 원래 세 DWORD의 같은 기본 입력 처리다. 루트 입력 결선에서 사용하며 0.925에서 추가됐다.</summary>
     public Func<uint, uint, uint, uint>? BaseInput { get; init; }
+    /// <summary>같은 실제 540c74 구독자다. 플레이어 입력 결선에서 사용하며 0.926에서 추가됐다.</summary>
+    public Func<uint>? PlayerSubscriber { get; init; }
+    /// <summary>자기 특수 슬롯 변경 때만 쓰는 실제594fc4 DWORD다. 플레이어 입력 결선에서 사용하며 0.926에서 추가됐다.</summary>
+    public Action<uint>? PlayerAuxiliary { get; init; }
+    /// <summary>실제 현재 옵션87BYTE 송신이다. 플레이어 입력 결선에서 사용하며 0.926에서 추가됐다.</summary>
+    public Action<uint, ReadOnlyMemory<byte>, uint>? PlayerData { get; init; }
+    /// <summary>같은 Fancy controlled 메뉴 생성이다. 플레이어 입력 결선에서 사용하며 0.926에서 추가됐다.</summary>
+    public Action? PlayerMenuBegin { get; init; }
+    /// <summary>같은 Fancy 메뉴 부착이다. 플레이어 입력 결선에서 사용하며 0.926에서 추가됐다.</summary>
+    public Action? PlayerMenuAttach { get; init; }
+    /// <summary>같은 실제 메뉴 제목 추가다. 플레이어 입력 결선에서 사용하며 0.926에서 추가됐다.</summary>
+    public Action<string>? PlayerMenuTitle { get; init; }
+    /// <summary>같은 실제 메뉴 항목 작성이다. 플레이어 입력 결선에서 사용하며 0.926에서 추가됐다.</summary>
+    public Action<string, uint, uint>? PlayerMenuItem { get; init; }
     /// <summary>복귀하면 계속하는 실제 원문 줄 번호 진단이다.</summary>
     public Action<uint>? Assertion { get; init; }
     /// <summary>실제 공통 구조 변경을 알린다.</summary>
@@ -252,6 +266,37 @@ public sealed class HostNsInfoWindows : IDisposable
             Base = (@event, first, second) => Need(_devices.BaseInput)(@event, first, second),
         };
         return NativeNsInfoInput.Handle(@event, first, second, hooks);
+    }
+    /// <summary>같은 실제 CS와 파생 노드로 플레이어 원문 입력을 준비·슬롯·추방 확인에 연결한다. 0.926에서 추가됐다.</summary>
+    /// <param name="token">같은 0xbc PlayerInfo 노드 토큰이다.</param>
+    /// <param name="event">원문 입력 event DWORD다.</param>
+    /// <param name="first">원문 입력 첫 DWORD다.</param>
+    /// <param name="second">원문 입력 둘째 DWORD다.</param>
+    /// <param name="challenge">같은 실제 CS 참가자40·전투10 기록이다.</param>
+    public uint HandlePlayerInput(uint token, uint @event, uint first, uint second, ClientChallengeGlobals challenge)
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        ArgumentNullException.ThrowIfNull(challenge);
+        HudPlayerInfoNode node = _tree.Node(token) as HudPlayerInfoNode ?? throw new InvalidOperationException("NSInfo 실제 플레이어 노드 없음");
+        var hooks = new NativePlayerInfoInputHooks
+        {
+            Command = address => Read(address),
+            Serial = child => _tree.Node(child)?.Serial ?? throw new InvalidOperationException("PlayerInfo 입력의 실제 자식 없음"),
+            ButtonValue = button => (_tree.Node(button) as ButtonGumpNode)?.Value ?? throw new InvalidOperationException("PlayerInfo 입력의 실제 버튼 없음"),
+            Owner = () => _gameplay.Player.BattleOwner,
+            Subscriber = () => Need(_devices.PlayerSubscriber)(),
+            Participant = index => challenge.Participant(index),
+            Battle = index => challenge.Battle(index),
+            Auxiliary = value => Need(_devices.PlayerAuxiliary)(value),
+            Status = fill => Need(_devices.StatusSend)(fill),
+            Data = (battle, options, kind) => Need(_devices.PlayerData)(battle, options, kind),
+            Translate = text => Need(_devices.Translate)(text),
+            BeginMenu = () => Need(_devices.PlayerMenuBegin)(),
+            AttachMenu = () => Need(_devices.PlayerMenuAttach)(),
+            Title = text => Need(_devices.PlayerMenuTitle)(text),
+            Item = (text, command, parameter) => Need(_devices.PlayerMenuItem)(text, command, parameter),
+        };
+        return NativePlayerInfoInput.Handle(node, @event, first, second, hooks);
     }
     /// <summary>같은 실제 CS와 현재 NSInfo 전역으로 전체 메타 플레이어 본문을 배치한다. 0.922에서 추가됐다.</summary>
     /// <param name="token">같은 0xbc PlayerInfo 노드 토큰이다.</param>
