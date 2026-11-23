@@ -85,7 +85,8 @@ export function buildOptionsItems(settings, { includeAll = false, language = 'en
             ...(includeAll ? [check('Pause - ~iShift-F9~.', false, 'Pause', '0')] : []),
         ],
         includeAll ? [check('Pass Server Diagnostic ', false, 'Tell', 'ChangeFirewall')] : [],
-        includeAll ? [] : [text('Reset All', 'ResetAll', '0')],
+        // 마지막 행은 초기화를 직접 실행하지 않고 게임 안 확인 창(Tell `Patch1101.ResetAll`)을 연다(cpppj 15차). 확정은 그 창의 단추가 한다. (2026-11-23 WB04-E1251)
+        includeAll ? [] : [text('Reset All', 'Tell', 'Patch1101.ResetAll')],
     ]);
 }
 

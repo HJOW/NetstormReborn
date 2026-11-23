@@ -40,6 +40,18 @@ const CAMPAIGN_SECTION = 'ucampaign';
 // 스커미시 화면 Tell 섹션의 자리 틀이다. 실제 본문은 앱이 설정으로 만들지만 Tell 이름 조회(`Patch1101.SkirmishCount` 등)가 섹션을 찾도록 같은 이름의 섹션이 있어야 한다(cpppj kPatchCredits). (2026-11-20 WB04-E1102)
 const SKIRMISH_SECTIONS = ['[Skirmish]', '<h2>Skirmish</h2>', '[SkirmishCount]', '<h2>Skirmish</h2>', '[SkirmishAi]', '<h2>Skirmish</h2>', '[SkirmishBans]', '<h2>Skirmish</h2>', ''].join('\n');
 
+// 15차 Reset All: 옵션 메뉴 마지막 행이 여는 확인 창의 Tell 대상과, 그 창의 확정 단추가 보내는 대상이다. cpppj ProductPresentation 의 `[ResetAll]` 섹션·`Patch1101.ResetAllConfirmed` 와 같은 이름이다.
+// 확정 대상은 확인 창이 열린 직후 한 번만 효력이 있다(netstorm.js `_openTell`, 원본 UberGump 의 `resetAllSubmission_` 가드에 대응). (2026-11-23 WB04-E1251)
+export const PRODUCT_RESET_ALL_TARGET = `${PRODUCT_CREDITS_OBJECT}.ResetAll`;
+export const PRODUCT_RESET_ALL_CONFIRMED_TARGET = `${PRODUCT_CREDITS_OBJECT}.ResetAllConfirmed`;
+
+// 언어별 Reset All 확인 창 섹션 원문이다. 영어는 cpppj 의 `[ResetAll]` 본문과 같고(웹은 게임을 종료하는 대신 다시 불러오므로 마지막 줄만 reload 로 적는다),
+// 한국어는 cpppj ProductTellBody 의 한국어 본문과 같은 구성이다. 단추는 확정(`Patch1101.ResetAllConfirmed`)과 취소(`Blank`) 두 개이다. (2026-11-23 WB04-E1251)
+const RESET_ALL_SECTIONS = Object.freeze({
+    english: ['[ResetAll]', '<h2>Reset All</h2>', '<p>Reset all settings and campaign progress?<br>', 'The game will reload after resetting.', `$Button=Reset All,Tell,${PRODUCT_RESET_ALL_CONFIRMED_TARGET}`, '$Button=Cancel,Tell,Blank', ''].join('\n'),
+    korean: ['[ResetAll]', '<h2>설정 초기화</h2>', '<p>모든 설정과 캠페인 진행 상황을 초기화하시겠습니까?<br>', '초기화 후 게임을 다시 불러옵니다.', `$Button=초기화,Tell,${PRODUCT_RESET_ALL_CONFIRMED_TARGET}`, '$Button=취소,Tell,Blank', ''].join('\n'),
+});
+
 // 제품 Credits 를 제공하는 언어(파일 확장자 이름)별 목록 행 이름이다. 영어는 AGENTS.md 가 정한 표기 그대로이고,
 // 한국어는 기존 한국어 Tell 의 "NetStorm 10.72 패치 크레딧" 번역 규칙을 따른다. 없는 언어는 영어를 쓴다. (2026-11-05 WB03-AC)
 export const PRODUCT_CREDITS_LABELS = Object.freeze({
@@ -106,8 +118,9 @@ function productLanguage(language) {
 
 // 언어의 제품 Credits 섹션 원문(`[Credits]` 머리 포함)을 돌려준다. 등록 설정 객체 Patch1101 의 버퍼로 쓴다.
 // 사용: new Config(registry, PRODUCT_CREDITS_OBJECT).append(productCreditsText('korean')). (2026-11-05 WB03-AC)
+// 15차: 같은 등록 설정 객체에 Reset All 확인 창 섹션(`[ResetAll]`)도 둔다. Tell `Patch1101.ResetAll` 이 이 섹션을 찾는다. (2026-11-23 WB04-E1251)
 export function productCreditsText(language) {
-    return PRODUCT_CREDITS_SECTIONS[productLanguage(language)] + SKIRMISH_SECTIONS;
+    return PRODUCT_CREDITS_SECTIONS[productLanguage(language)] + SKIRMISH_SECTIONS + RESET_ALL_SECTIONS[productLanguage(language)];
 }
 
 // 언어의 세 번째 Credits 목록 행 이름을 돌려준다. (2026-11-05 WB03-AC)

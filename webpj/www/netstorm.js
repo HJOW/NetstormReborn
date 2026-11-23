@@ -147,6 +147,7 @@ import { Kernel } from './core/kernel.js';
 import { bindClientKernelDiagnostics, ClientTraceGlobals, traceClientObject, writeClientDiagnosticLog } from './core/client-diagnostics.js';
 import { ClientTimeSource } from './core/client-time-source.js';
 import { resetGameStorage } from './platform/reset-storage.js';
+import { PRODUCT_RESET_ALL_CONFIRMED_TARGET, PRODUCT_RESET_ALL_TARGET } from './assets/product.js';
 import { createCanvasGlyphRasterizer } from './platform/glyph-rasterizer.js';
 import { MainMenuScreen } from './ui/main-menu.js';
 import { ClientGumpRoot } from './ui/client-gump-root.js';
@@ -277,7 +278,6 @@ const TEXTS = Object.freeze({
         loadFailed: 'Failed to load game data.',
         retry: 'Click to retry',
         clickToStart: 'Click to start',
-        resetConfirm: 'Reset all settings and campaign progress? The game will reload.',
         resetFailed: 'Could not reset game data. Check storage access and try again.',
         gameMenuButton: 'Menu',
         gameMenuButtonTitle: 'Game menu (ESC)',
@@ -288,7 +288,6 @@ const TEXTS = Object.freeze({
         loadFailed: '게임 데이터를 불러오지 못했습니다.',
         retry: '클릭하여 다시 시도',
         clickToStart: '클릭하여 시작',
-        resetConfirm: '모든 설정과 캠페인 진행 상황을 초기화할까요? 게임을 다시 불러옵니다.',
         resetFailed: '게임 데이터를 초기화하지 못했습니다. 저장소 접근을 확인한 후 다시 시도하세요.',
         gameMenuButton: '메뉴',
         gameMenuButtonTitle: '게임 메뉴 (ESC)',
@@ -2573,18 +2572,17 @@ export class Netstorm {
             this._settings?.set(key, Number(value));
         } else if (name === 'tell') {
             this._openTell(command.argument);
-        } else if (name === 'resetall') {
-            this._resetAll();
         } else {
             console.info(`Netstorm: 펼침 메뉴 명령 '${command.name}' 은(는) 아직 구현되지 않았습니다.`, command);
         }
         this._displayDirty = true;
     }
 
-    // 확인을 받은 뒤 게임 소유 저장 항목을 지우고 현재 앱을 정리한 다음 페이지를 다시 불러온다. (2026-11-19 WB04-E863)
+    // 확인이 끝난 Reset All 을 실행한다: 게임 소유 저장 항목을 지우고 현재 앱을 정리한 다음 페이지를 다시 불러온다. 확인은 게임 안 Tell 창(`Patch1101.ResetAll`)이 받고
+    // 확정 단추(`Patch1101.ResetAllConfirmed`)가 `_openTell` 을 거쳐 이 함수를 부른다(브라우저 confirm() 은 쓰지 않는다). 저장소 접근이 막히면 안내하고 앱을 유지한다.
+    // (2026-11-19 WB04-E863, 2026-11-23 WB04-E1251: confirm() 을 게임 안 확인 창으로 교체)
     _resetAll() {
         const view = this._view();
-        if (!view.confirm(this.texts.resetConfirm)) return;
         try {
             resetGameStorage(getLocalStorage(view));
         } catch (error) {
@@ -2646,6 +2644,14 @@ export class Netstorm {
     // 본문의 링크(`<a href>`)를 누르면 _onDialogLink 가 받는다. 본문이 화면보다 길면 스크롤바가 생긴다(시계는 _frameSeconds).
     // (2026-10-28 WB03-D, 2026-10-30 WB03-J: Blank·지역 인자·본문 스크립트 명령 추가, 2026-10-31 WB03-K: 링크·스크롤바 연결)
     _openTell(name, { suppressWindow = false } = {}) {
+        // Reset All 확정(`Patch1101.ResetAllConfirmed`)은 확인 창이 열린 직후 한 번만 효력이 있다(원본 UberGump 의 resetAllSubmission_ 가드: 그 단추가 낸 토큰만 소비). 다른 Tell·링크에서 오는 같은 이름은 무시하고,
+        // 그 밖의 모든 Tell(취소의 Blank 포함)은 무장을 풀어 오래된 확인 창의 확정이 나중에 되살아나지 않게 한다. (2026-11-23 WB04-E1251)
+        const resetTarget = String(name).trim().toLowerCase();
+        const resetArmed = this._resetAllArmed === true; this._resetAllArmed = false;
+        if (resetTarget === PRODUCT_RESET_ALL_CONFIRMED_TARGET.toLowerCase()) {
+            if (!resetArmed) { console.warn('Netstorm: 확인 창을 거치지 않은 Reset All 확정은 무시합니다.'); return false; }
+            this._resetAll(); return true;
+        }
         if (!this._mainMenu || !this._gameData || !this._resources) return false;
         // 옵션 메뉴 Frame Rate 항목의 대상(`Patch1101.SetFrameRate(n)`)은 창을 열지 않고 maxFPS 설정에 써서 바로 반영한다(cpppj 후순위 F1). (2026-11-20 WB04-E1094)
         const frameRate = parseFrameRateTarget(name);
@@ -2689,6 +2695,8 @@ export class Netstorm {
         if (result.window) {
             this._mainMenu.setDialog(result.window);
             this._displayDirty = true;
+            // Reset All 확인 창이 실제로 열렸을 때만 확정 단추를 한 번 받을 수 있다. (2026-11-23 WB04-E1251)
+            if (resetTarget === PRODUCT_RESET_ALL_TARGET.toLowerCase()) this._resetAllArmed = true;
         }
         // 본문 안의 스크립트 명령은 원본이 명령 큐에 넣어 다음 입력에서 처리하는 것과 같게, 창을 올린 뒤 순서대로 실행한다.
         for (const command of result.inlineCommands) this._runScriptCommand(command);
