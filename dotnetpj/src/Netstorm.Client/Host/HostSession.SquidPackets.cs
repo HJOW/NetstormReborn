@@ -89,6 +89,7 @@ public sealed partial class HostSession
         ReleaseSunAviaryProcessDevices();
         ReleaseRainAviaryProcessDevices();
         ReleaseWindAviaryProcessDevices();
+        ReleaseArcherAnimationCombatDevices();
         _developerEffects = null;
     }
     /// <summary>번호 선택 시점의 현재 TYPE를 읽는다.</summary>
@@ -162,12 +163,14 @@ public sealed partial class HostSession
         };
         RawSquidReceive.Receive(Pool, packet, new(GameAux.VerifySidBox, GameAux.SupportTypeWasBox, LocalState.PlayerNoMakeWarnings), hooks);
     }
-    /// <summary>저장된 네 고정 entry의 실제 객체/압축/검증 본체다. sender/현재 packet종류/등록표로 다시 선택하지 않는다.</summary>
+    /// <summary>저장된 고정 entry들의 실제 객체/압축/검증 본체다. sender/현재 packet종류/등록표로 다시 선택하지 않는다.</summary>
     public void ReceiveFixedGameplayPacket(uint entry, ReadOnlyMemory<byte> packet)
     {
         if (_playerRecordsReleased || ProcessBindingsReturned() || _playerProcessRuntime is null) throw new ObjectDisposedException(nameof(HostSession), "고정 gameplay의 실제 World 반납 뒤 호출");
         switch (entry)
         {
+            case 0x466d30: ReceiveArcherAnimationPacket(0x3b, packet); return;
+            case 0x466b60: ReceiveArcherAnimationPacket(0x3c, packet); return;
             case 0x45e410: ReceiveSunAviaryPacket(packet); return;
             case 0x45e5d0: ReceiveRainAviaryPacket(packet); return;
             case 0x45e4f0: ReceiveWindAviaryPacket(packet); return;
