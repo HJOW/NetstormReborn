@@ -2,6 +2,7 @@
 #include "client/RawProductionControls.h"
 #include "client/SessionStateDump.h" // 검사 전용 Session 상태 덤프(2026-11-09 추가)다.
 #include "client/RawCameraPan.h"
+#include "client/HudChatGeometry.h" // 방향키는 현재 채팅 입력줄의 표시 여부를 먼저 확인한다.
 #include "client/MoveDialog.h" //HTML 명령의 같은 실제 모달 위치 처리를 사용한다.
 #include "client/RawEdgeScroll.h"
 #include "client/RawMinimapControls.h"
@@ -1482,6 +1483,15 @@ void UberGump::Event(InputEvent event) {
     if (missionRuntime_ && missionRuntime_->tutorial) {
         if (missionRuntime_->tutorial->Event(event)) return; //F4/H의 실제 ViewHome 큐가 다음 사건으로 한 번 도착한다. 원시 키를 별도 Home 명령으로 합성하지 않는다.
     }
+    // 11.01 방향키는 입력줄/대화창/메뉴가 없을 때만 세계로 먼저 보낸다.
+    // 원본 ChatWindow는 입력줄을 숨겨도 위/아래를 로그 스크롤로 소비하므로 이 경우만 우선순위를 바꾼다.
+    const bool cameraKey=transitionCode>=0x250000U && transitionCode<=0x280000U && (transitionCode&0xffffU)==0; // 네 가상 방향키만 후보이며 명령·문자 사건은 제외한다.
+    const auto* chatGeometry=rawButtons_->Menus()->ChatGeometryBackend(); // 복제한 입력 상태 대신 현재 Console 표시 비트를 읽는다.
+    if (cameraKey && world_ && userInput_ && state_.phase==ClientPhase::Mission && popup_.empty()
+        && !rawButtons_->CurrentDialog() && !rawButtons_->HasCapture() && !rawButtons_->Menus()->HelpOpen()
+        && !rawButtons_->Menus()->HasMenus() && (!chatGeometry || !chatGeometry->InputVisible())) {
+        static_cast<void>(userInput_->Event(event));return; // 활성 조각의 좌/우 회전·정지·뗌 관문은 같은 기존 세계 입력이 먼저 판정한다.
+    }
     bool worldUiRouted=false; // 실제 HTML 모달과 월드 사건은 같은 공통 Gump에서 먼저 한 번만 소비를 판정한다.
     if (popup_.empty() && ((world_ && state_.phase==ClientPhase::Mission) || (editor_ && editor_->metaInput) || rawButtons_->Menus()->HtmlWindowsOpen() || (state_.phase==ClientPhase::MainMenu && rawButtons_->Menus()->HasMenus()))) {
         const auto old=rawButtons_->Pressed();const auto routed=rawButtons_->RouteInput(event);worldUiRouted=true; // nativeGuide뒤466200의현재성공토큰이다.
@@ -1493,6 +1503,7 @@ void UberGump::Event(InputEvent event) {
         if (routed.consumed) { rebuild_=true;return; }
         if (!(event.code&InputCode::kRelease) && (transitionCode==InputCode::kLeftButton || transitionCode==InputCode::kRightButton)) rawButtons_->RequestClosePopups(); // UI밖누름은팝업Kill뒤같은사건으로월드에진행한다.
     }
+    if (cameraKey && world_ && state_.phase==ClientPhase::Mission) return; // 입력 UI가 소비하지 않은 방향키도 위 관문에서 거부됐다면 세계 꼬리로 다시 보내지 않는다.
     if (DispatchScreenshotKey(event,[this] { client_.SaveGifScreenshot(); },[this](auto name) { Tell(std::string(name)); })) rebuild_=true; // Guide/Gump 뒤,console·정지와 일반 F7 배너 처리보다 앞이다. Tell이 연 정지를 아래에서 다시 읽는다.
     static_cast<void>(DispatchDiagnosticKey(event,[this] { client_.DumpDiagnostics(); })); // 같은 원문 위치에서 객체→프로세스 순서로 출력하며 정지/console은 아래에서 다시 읽는다.
     bool recentCommandHandled=false; //최근12명령의실제효과뒤press는현재공통꼬리로진행하며늦은dispatcher만건너뛴다.

@@ -1,0 +1,823 @@
+{
+  "unit": 1328,
+  "passed": true,
+  "observations": {
+    "base": {
+      "raw_camera_frame": [
+        "976",
+        "793",
+        "976",
+        "793",
+        "6",
+        "3",
+        "7",
+        "0"
+      ],
+      "raw_piece": [
+        "0",
+        "0"
+      ],
+      "raw_cursor": [
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "raw_chat_input": [
+        "555",
+        ""
+      ],
+      "paused": [
+        "0"
+      ],
+      "current_dialog": [
+        "0"
+      ],
+      "game_menu_bar": [
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "up": {
+      "raw_camera_frame": [
+        "976",
+        "761",
+        "976",
+        "761",
+        "6",
+        "4",
+        "7",
+        "0"
+      ],
+      "raw_piece": [
+        "0",
+        "0"
+      ],
+      "raw_cursor": [
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "raw_chat_input": [
+        "555",
+        ""
+      ],
+      "paused": [
+        "0"
+      ],
+      "current_dialog": [
+        "0"
+      ],
+      "game_menu_bar": [
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "down": {
+      "raw_camera_frame": [
+        "976",
+        "793",
+        "976",
+        "793",
+        "6",
+        "5",
+        "7",
+        "0"
+      ],
+      "raw_piece": [
+        "0",
+        "0"
+      ],
+      "raw_cursor": [
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "raw_chat_input": [
+        "555",
+        ""
+      ],
+      "paused": [
+        "0"
+      ],
+      "current_dialog": [
+        "0"
+      ],
+      "game_menu_bar": [
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "left": {
+      "raw_camera_frame": [
+        "944",
+        "793",
+        "944",
+        "793",
+        "6",
+        "6",
+        "7",
+        "0"
+      ],
+      "raw_piece": [
+        "0",
+        "0"
+      ],
+      "raw_cursor": [
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "raw_chat_input": [
+        "555",
+        ""
+      ],
+      "paused": [
+        "0"
+      ],
+      "current_dialog": [
+        "0"
+      ],
+      "game_menu_bar": [
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "right": {
+      "raw_camera_frame": [
+        "976",
+        "793",
+        "976",
+        "793",
+        "6",
+        "7",
+        "7",
+        "0"
+      ],
+      "raw_piece": [
+        "0",
+        "0"
+      ],
+      "raw_cursor": [
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "raw_chat_input": [
+        "555",
+        ""
+      ],
+      "paused": [
+        "0"
+      ],
+      "current_dialog": [
+        "0"
+      ],
+      "game_menu_bar": [
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "repeat": {
+      "raw_camera_frame": [
+        "1040",
+        "825",
+        "1040",
+        "825",
+        "6",
+        "10",
+        "7",
+        "0"
+      ],
+      "raw_piece": [
+        "0",
+        "0"
+      ],
+      "raw_cursor": [
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "raw_chat_input": [
+        "555",
+        ""
+      ],
+      "paused": [
+        "0"
+      ],
+      "current_dialog": [
+        "0"
+      ],
+      "game_menu_bar": [
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "release": {
+      "raw_camera_frame": [
+        "1040",
+        "825",
+        "1040",
+        "825",
+        "6",
+        "10",
+        "7",
+        "0"
+      ],
+      "raw_piece": [
+        "0",
+        "0"
+      ],
+      "raw_cursor": [
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "raw_chat_input": [
+        "555",
+        ""
+      ],
+      "paused": [
+        "0"
+      ],
+      "current_dialog": [
+        "0"
+      ],
+      "game_menu_bar": [
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "chat-base": {
+      "raw_camera_frame": [
+        "1040",
+        "825",
+        "1040",
+        "825",
+        "6",
+        "10",
+        "7",
+        "0"
+      ],
+      "raw_piece": [
+        "0",
+        "0"
+      ],
+      "raw_cursor": [
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "raw_chat_input": [
+        "555",
+        "61626364"
+      ],
+      "paused": [
+        "0"
+      ],
+      "current_dialog": [
+        "0"
+      ],
+      "game_menu_bar": [
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "chat-arrows": {
+      "raw_camera_frame": [
+        "1040",
+        "825",
+        "1040",
+        "825",
+        "6",
+        "10",
+        "7",
+        "0"
+      ],
+      "raw_piece": [
+        "0",
+        "0"
+      ],
+      "raw_cursor": [
+        "1",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0",
+        "0"
+      ],
+      "raw_chat_input": [
+        "555",
+        "6162635864"
+      ],
+      "paused": [
+        "0"
+      ],
+      "current_dialog": [
+        "0"
+      ],
+      "game_menu_bar": [
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "piece-base": {
+      "raw_camera_frame": [
+        "1040",
+        "825",
+        "1040",
+        "825",
+        "6",
+        "10",
+        "7",
+        "0"
+      ],
+      "raw_piece": [
+        "21",
+        "0"
+      ],
+      "raw_cursor": [
+        "0",
+        "0",
+        "82",
+        "81",
+        "102",
+        "111",
+        "64",
+        "512",
+        "0",
+        "1",
+        "1"
+      ],
+      "raw_chat_input": [
+        "555",
+        "6162635864"
+      ],
+      "paused": [
+        "0"
+      ],
+      "current_dialog": [
+        "0"
+      ],
+      "game_menu_bar": [
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "piece-left": {
+      "raw_camera_frame": [
+        "1040",
+        "825",
+        "1040",
+        "825",
+        "6",
+        "10",
+        "7",
+        "0"
+      ],
+      "raw_piece": [
+        "21",
+        "6"
+      ],
+      "raw_cursor": [
+        "0",
+        "0",
+        "82",
+        "81",
+        "102",
+        "111",
+        "64",
+        "512",
+        "0",
+        "1",
+        "1"
+      ],
+      "raw_chat_input": [
+        "555",
+        "6162635864"
+      ],
+      "paused": [
+        "0"
+      ],
+      "current_dialog": [
+        "0"
+      ],
+      "game_menu_bar": [
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "piece-right": {
+      "raw_camera_frame": [
+        "1040",
+        "825",
+        "1040",
+        "825",
+        "6",
+        "10",
+        "7",
+        "0"
+      ],
+      "raw_piece": [
+        "21",
+        "0"
+      ],
+      "raw_cursor": [
+        "0",
+        "0",
+        "82",
+        "81",
+        "102",
+        "111",
+        "64",
+        "512",
+        "0",
+        "1",
+        "1"
+      ],
+      "raw_chat_input": [
+        "555",
+        "6162635864"
+      ],
+      "paused": [
+        "0"
+      ],
+      "current_dialog": [
+        "0"
+      ],
+      "game_menu_bar": [
+        "0",
+        "0",
+        "0"
+      ]
+    },
+    "menu-base": {
+      "raw_camera_frame": [
+        "1040",
+        "825",
+        "1040",
+        "825",
+        "6",
+        "10",
+        "7",
+        "0"
+      ],
+      "raw_piece": [
+        "21",
+        "0"
+      ],
+      "raw_cursor": [
+        "1",
+        "0",
+        "82",
+        "0",
+        "102",
+        "111",
+        "64",
+        "512",
+        "0",
+        "1",
+        "1"
+      ],
+      "raw_chat_input": [
+        "555",
+        "6162635864"
+      ],
+      "paused": [
+        "0"
+      ],
+      "current_dialog": [
+        "0"
+      ],
+      "game_menu_bar": [
+        "619",
+        "1",
+        "106"
+      ]
+    },
+    "menu-arrows": {
+      "raw_camera_frame": [
+        "1040",
+        "825",
+        "1040",
+        "825",
+        "6",
+        "10",
+        "7",
+        "0"
+      ],
+      "raw_piece": [
+        "21",
+        "0"
+      ],
+      "raw_cursor": [
+        "1",
+        "0",
+        "82",
+        "0",
+        "102",
+        "111",
+        "64",
+        "512",
+        "0",
+        "1",
+        "1"
+      ],
+      "raw_chat_input": [
+        "555",
+        "6162635864"
+      ],
+      "paused": [
+        "0"
+      ],
+      "current_dialog": [
+        "0"
+      ],
+      "game_menu_bar": [
+        "619",
+        "1",
+        "106"
+      ]
+    },
+    "paused-base": {
+      "raw_camera_frame": [
+        "1040",
+        "825",
+        "1040",
+        "825",
+        "6",
+        "10",
+        "7",
+        "0"
+      ],
+      "raw_piece": [
+        "21",
+        "0"
+      ],
+      "raw_cursor": [
+        "1",
+        "0",
+        "82",
+        "0",
+        "102",
+        "111",
+        "64",
+        "512",
+        "0",
+        "1",
+        "1"
+      ],
+      "raw_chat_input": [
+        "555",
+        "6162635864"
+      ],
+      "paused": [
+        "1"
+      ],
+      "current_dialog": [
+        "0"
+      ],
+      "game_menu_bar": [
+        "0",
+        "0",
+        "106"
+      ]
+    },
+    "paused-arrows": {
+      "raw_camera_frame": [
+        "1040",
+        "825",
+        "1040",
+        "825",
+        "6",
+        "10",
+        "7",
+        "0"
+      ],
+      "raw_piece": [
+        "21",
+        "0"
+      ],
+      "raw_cursor": [
+        "1",
+        "0",
+        "82",
+        "0",
+        "102",
+        "111",
+        "64",
+        "512",
+        "0",
+        "1",
+        "1"
+      ],
+      "raw_chat_input": [
+        "555",
+        "6162635864"
+      ],
+      "paused": [
+        "1"
+      ],
+      "current_dialog": [
+        "0"
+      ],
+      "game_menu_bar": [
+        "0",
+        "0",
+        "106"
+      ]
+    },
+    "dialog-base": {
+      "raw_camera_frame": [
+        "1040",
+        "825",
+        "1040",
+        "825",
+        "6",
+        "10",
+        "7",
+        "0"
+      ],
+      "raw_piece": [
+        "21",
+        "0"
+      ],
+      "raw_cursor": [
+        "1",
+        "0",
+        "82",
+        "0",
+        "102",
+        "111",
+        "64",
+        "512",
+        "0",
+        "1",
+        "1"
+      ],
+      "raw_chat_input": [
+        "555",
+        "6162635864"
+      ],
+      "paused": [
+        "0"
+      ],
+      "current_dialog": [
+        "721"
+      ],
+      "game_menu_bar": [
+        "0",
+        "0",
+        "106"
+      ]
+    },
+    "dialog-arrows": {
+      "raw_camera_frame": [
+        "1040",
+        "825",
+        "1040",
+        "825",
+        "6",
+        "10",
+        "7",
+        "0"
+      ],
+      "raw_piece": [
+        "21",
+        "0"
+      ],
+      "raw_cursor": [
+        "1",
+        "0",
+        "82",
+        "0",
+        "102",
+        "111",
+        "64",
+        "512",
+        "0",
+        "1",
+        "1"
+      ],
+      "raw_chat_input": [
+        "555",
+        "6162635864"
+      ],
+      "paused": [
+        "0"
+      ],
+      "current_dialog": [
+        "721"
+      ],
+      "game_menu_bar": [
+        "0",
+        "0",
+        "106"
+      ]
+    }
+  },
+  "run": {
+    "name": "camera-verified",
+    "args": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "--run",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+      "--window",
+      "--frames",
+      "100",
+      "--fixed-frame-ms",
+      "25",
+      "--no-audio",
+      "--set",
+      "welcomeGiven=1;tellTips=0;autoDemo=0;edgeScroll=0;language=english;SCREENW=1024;SCREENH=768",
+      "--ui-script",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\camera-verified.tsv",
+      "--ui-report",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\camera-verified-report.tsv",
+      "--mission",
+      "thewarbegins"
+    ],
+    "exit_code": 0,
+    "seconds": 2.8074264526367188,
+    "exe_sha256": "73941228d8f1222fac91e87c07f0467aa7cb0801f7eb892f9186543fdfbe897d"
+  }
+}

@@ -1,6 +1,8 @@
 #include "client/UserInput.h"
 #include "client/ProductionShortcuts.h"
 #include "client/ClientMain.h"
+#include "client/ClientLocalStateGlobals.h" // 방향키도 현재 카메라의 메타 갱신 번호를 공유한다.
+#include "client/RawEdgeScroll.h" // 방향키 이동 목표를 기존 카메라 요청/표시 경계에 전달한다.
 #include "client/ClientGameplayGlobals.h" //Ctrl+special 강제 후보 조회의 현재0055a480을 읽는다.
 #include "client/RawUserSelection.h" //원문 WorldDestSelected와 실제 Shift 다중 선택 부모를 사용한다.
 #include "client/RawCampaignCursor.h"
@@ -29,6 +31,23 @@ std::optional<o::SquidId> UserInput::Event(InputEvent event) {
     //005cae94/98은 앞선 폴링의 현재 좌표다. 큐 사건 좌표로 덮어쓰면 모드5/6의 원문 입력이 달라진다.
     ReadCursorOptions();auto& rotateMode=client_.GameplayGlobals()->CursorGlobals().RotationMode(); // 실제 옵션 해석/메뉴와 같은 원문 DWORD다.
     if (world_.Session().Cursor().HandleInput(event,rotateMode)) return {};
+    // 11.01 추가 조작: 앞선 Gump 입력·활성 조각 회전을 우선하고 남은 방향키만 화면 이동에 쓴다.
+    // 누름과 Windows 자동 반복마다 32논리픽셀을 누적한다. 별도 프레임 타이머나 키 보관은 만들지 않는다.
+    constexpr std::int32_t cameraKeyStep=32; // 해상도·FPS와 독립인 키 사건 한 번의 화면 이동량이다.
+    std::int32_t cameraDx=0,cameraDy=0; // 이번 사건에서 이동할 화면 축이며 위/왼쪽은 음수다.
+    switch (event.code&0x03ffffffU) {
+    case 0x250000U:cameraDx=-cameraKeyStep;break;
+    case 0x260000U:cameraDy=-cameraKeyStep;break;
+    case 0x270000U:cameraDx=cameraKeyStep;break;
+    case 0x280000U:cameraDy=cameraKeyStep;break;
+    default:break;
+    }
+    if (cameraDx || cameraDy) {
+        auto& camera=client_.GameplayGlobals()->Camera(); // 현재 장기 카메라의 같은 목표/경계 제한을 사용한다.
+        auto origin=camera.RendererView();origin.pixels=camera.Target().pixels; // 같은 프레임의 여러 반복도 덮어쓰지 않고 누적한다.
+        RequestCameraDelta(origin,camera.Target(),client_.GetScreen().Height(),cameraDx,cameraDy,client_.LocalStateGlobals()->MetaRebuild());
+        return {};
+    }
     if (QueueProductionShortcut(event,client_.Paused(),{[] { return kProductionBridgeCommand; },[this](auto command,auto slot,auto zero) { client_.Input().PushCommand(command,slot,zero); },[] { return kProductionRepeatCommand; }})) return {}; // 실제 Gump 경로가 같은 큐의 다음 사건을 소비한다.
     SelectionKeyInputHooks selectionKeys;selectionKeys.paused=[this] { return client_.Paused(); };selectionKeys.command=[](auto address) { return GameMenuCommandValue(address).value(); };selectionKeys.localOwner=[this] { return world_.Session().LocalOwner(); }; //같은 실제 Client/Session의 현재 입력 경계를 사용한다.
     selectionKeys.queue=[this](auto code,auto first,auto second) { client_.Input().PushCommand(code,std::bit_cast<std::int32_t>(first),std::bit_cast<std::int32_t>(second)); };selectionKeys.next=[this](auto add) { world_.SelectNextUnit(add); };selectionKeys.priest=[this,queue=selectionKeys.queue] { world_.SelectPriest(queue); };
