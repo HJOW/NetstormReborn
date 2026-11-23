@@ -6,14 +6,14 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-23 정리, 마지막 단위 WB04-E1267)
+### 0.1 현재 값 (2026-11-23 정리, 마지막 단위 WB04-E1268)
 
 | 항목 | 현행 상태 |
 | --- | --- |
 | 실행·플레이 | 브라우저에서 ‘클릭하여 시작’, 시작 title 그림, 메인 메뉴·캠페인/데모 목록·도움말·옵션·Credits와 개발용 지형 미리보기가 동작한다. **미션:** 캠페인 목록 31개(Early Missions 6·세 캠페인 묶음 16·Priest Training 9)와 데모 3개가 시작되고, 장시간 진행과 임의 조작(몽키) 시험에서 오류·먹통이 없다. Campaign ▸ Skirmish는 무작위 섬·간헐천 월드에서 AI와 진행된다. Tutorial2는 시작부터 완료 창·Tutorial3 시작까지 자연 진행으로 확인했고, 승패 안내 뒤 흐름(Continue·Replay Mission·Leave/Next Mission·진행 저장)도 확인했다. 미션 프레임에서 다리 붕괴 검사·전투 자원(간헐천 보충·스펠 소비·SP 주기 지급)·제단 결과 알림·주변음/공유 바람이 원본 주 루프 순서로 돈다(E1230~E1234). **조작:** 사제 선택·이동, 가장자리·Alt·가운데 버튼 스크롤, 미니맵 클릭·끌기, 생산 격자 클릭·단축키(D 포함)·조각 회전(C·회전 방향 옵션)·다리 배치, 사제·워크샾·제단·신전·배터리·발전기·운반체 우클릭 메뉴와 회수·기도·Cast/Drop, 객체 명령(Detonate·Meltdown·신전 명령), 화면 위치 키(F4/H·F5·TAB·U·Shift+숫자 저장/숫자 복귀), 미니맵·스톰 파워 표시·생산 창의 우클릭 빠른 도움말(E1236)이 동작한다. **게임 메뉴:** ESC 또는 화면 우측 상단 버튼(웹 전용)으로 Game·View·Options·Players·About 메뉴막대를 열고, Leave/Restart Mission(ABORT 확인 창), F1·F2·F6·F7·F8·F9·Shift-F3·T, Pause(Shift-F9·Pause 키·메뉴), Shift-F7 화면 GIF 저장, Players 메뉴의 송금(Send X 숫자 입력 창 포함)·동맹이 실행된다. 브리핑·완료 창의 Review Knowledge·GetTechnology 단추도 동작한다(E1227). **HUD 틀:** 실제 Uber 루트가 세로·미니맵·채팅 구분선, 좌측 사이드바(SP·생산 덱)와 하단 미니맵 칸을 원본 위치로 도킹하고 지도 영역이 `{85,0,W,H}`다(4:3 하단 85×82픽셀이 원본 스크린샷과 일치, 16:9·16:10·1920×1080과 창 크기 변경 확인). **채팅 창:** F3로 채팅 영역이 보이고 로그 줄이 색과 함께 그려지며, Enter로 입력줄을 열어 제출하면 로컬 서버를 거쳐 `You> 본문` 줄이 로그에 나오고 점 명령·Tab 이름 완성(동맹 AI)·붙여넣기/복사/잘라내기·도우미 메뉴·Edit Back/Front Format 창이 동작한다(E1169~E1179). **미완성:** 읽기 전용 감사가 남긴 차이([다음 작업 1](#next); 승리/패배 곡은 E1238에서 단독 미션 도달 불가로 닫음), 나머지 객체 메뉴(Factory 파생·특수 대상·채팅 분기)와 운반체 줍기·내려놓기, 다른 미션의 목표 수행과 자연 완주. 지식 NSInfo 패널·Players 하위의 Ignore chat·Whisper To·정보 보기·의식 보상 선택 UI·인트로 영상은 웹 범위 밖이다(E1167·E1171·E1180·E1202). |
 | 원본과의 동일성 | 영어 4:3 메뉴 M1 8장면은 cpppj 오라클과 알려진 구름 배경 등 차이 영역 밖에서 픽셀 차이 0이다. 월드·UI 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다(최근 원본 공통 메뉴 788행·Factory 메뉴 39행·Uber 루트 160행·장면 음악 3,113행 등). 좌측 HUD 틀의 하단(미니맵 구분선·세로 구분선 아랫부분·미니맵 칸) 85×82픽셀은 원본 스크린샷과 완전히 일치한다. 메뉴 비활성 색·안내 창 위치·지식 카드 이름 줄 나눔·Wind Noise 무동작은 원본 기준으로 맞췄다. Tutorial1 시작 직후 Session 덤프는 시간 의존 값을 빼고 cpppj 기준선과 구조가 같다(E1129). 고정 시각 L2·L3·L4 화면 비교와 자연 완주는 미검증이다. |
 | 현재 작업 | **게임 플레이 중 UI 구현 단계.** 4-D 후반(GameWorld·Client 서비스)과 5-A·5-B·6·8단계 항목을 미션 앱 프레임 위에서 병행한다. Renderer·Gump 트리·입력 큐·생산 패널·객체 메뉴·도움말·음향·채팅 창이 실제 미션 화면에 연결돼 있다. 최근 단위(E1167~E1237)는 웹 범위 판정, Native 대응 행 대조로 partial 행 닫기, 읽기 전용 감사(E1223~E1231)가 찾은 원본과 다른 동작의 수정으로 빈칸을 메웠다. 순서는 아래 [다음 작업](#next)을 따른다. |
-| 전체 회귀 | **Node 26.13.0:** E1266 기준 전체 6,794건 모두 통과(로그 `extracted/webpj-e1266-node26.log`, 555초). **Node 22.23.3:** E1260 기준 전체 6,792건 모두 통과(로그 `extracted/webpj-e1260-node22.log`, 650초). **e2e:** E1147 전체 `npx playwright test` 100건 통과·8건 건너뜀(옵트인 장시간, 로그 `extracted/webpj-e1147-e2e-all.log`, 39분). 이후 단위는 새 e2e와 관련 e2e를 단위마다 돌렸다. **HJOW-Athlon 주기(0.5절 5):** v26 1/4(E1266에서 실행, 이후 E1267)·v22 7/8(E1260에서 실행, 이후 E1261~E1267) — v22 전체 회귀는 E1268 완료 뒤, v26은 E1270 완료 뒤이며 겹치면 순차로 돈다. E1127~E1236의 회귀 이력(실패와 교정 포함)은 [E1166 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261121-through-wb04-e1166)과 [E1237 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1237)에 있다. |
+| 전체 회귀 | **Node 26.13.0:** E1266 기준 전체 6,794건 모두 통과(로그 `extracted/webpj-e1266-node26.log`, 555초). **Node 22.23.3:** E1260 기준 전체 6,792건 모두 통과(로그 `extracted/webpj-e1260-node22.log`, 650초). **e2e:** E1147 전체 `npx playwright test` 100건 통과·8건 건너뜀(옵트인 장시간, 로그 `extracted/webpj-e1147-e2e-all.log`, 39분). 이후 단위는 새 e2e와 관련 e2e를 단위마다 돌렸다. **HJOW-Athlon 주기(0.5절 5):** v26 2/4(E1266에서 실행, 이후 E1267~E1268)·v22 8/8(E1260에서 실행, 이후 E1261~E1268 — **E1268 완료 직후 실행 대상**) — v26은 E1270 완료 뒤이며 겹치면 순차로 돈다. E1127~E1236의 회귀 이력(실패와 교정 포함)은 [E1166 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261121-through-wb04-e1166)과 [E1237 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1237)에 있다. |
 | 브라우저 검사 | 미션 화면은 단위마다 Chromium e2e로 확인한다(최근 전체 실행 E1147, 16:9·16:10 건설·메뉴 E1143~E1144, 한국어 Players 메뉴 E1166). 메뉴는 2026-11-17 Chromium 2/2(갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체), 최초 실행·진행 잠금/체크·저장 재실행은 E616 Chromium 2/2. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
 
 <a id="next"></a>
@@ -36,7 +36,7 @@
 3. **나머지 번역.** 게임 안 메뉴·객체 우클릭·지식 창의 번역 누락은 없다(E1166 수집, 소스 기준 누락은 개발자 치트 `CHEAT Set Owner`뿐). 생산 창·스톰 파워 도움말과 채팅 채널 이름은 번역 호출이 이미 있었고 번역표 항목만 없어 영어로 남았던 것이라 항목을 더해 닫았다(E1246, 미니맵 도움말 `Sky Overview` 는 원본이 번역 호출 없이 리터럴을 넣어 영어 유지가 원본과 같음). 번역 호출이 배열·상수에 들어 있어 놓쳤던 미션 화면 문구 15개(커서 배치 경고 5·생산 힌트 2·객체 정보 2·Players 메뉴 Send 5·도움말 없음 안내 1)는 번역표에 더하고 도움말 없음 안내는 원본처럼 번역 장치를 거치게 고쳤다(E1249, 나머지 후보의 판정은 [근거](docs/webpj-korean-gameplay-xlat-20261123.md)). 채팅 도우미(Chat Helper) 메뉴의 고정 라벨 59개도 원본은 번역 호출로 받는데 두 한국어 표에 항목이 없어 영어였으므로 더했다(E1250, 범위 라벨 `Colors 0 to 21` 등은 이어 붙인 문자열이라 영어로 남는 원본 동작, [근거](docs/webpj-korean-chat-helper-xlat-20261123.md)). 한국어 미션의 실제 화면 확인(대본 본문 줄 나눔 등)이 남았다(8단계·3.7절 6차). [게임 안 문구](docs/webpj-korean-ingame-xlat-20261120.md) · [생산·채팅 항목](docs/webpj-korean-production-chat-xlat-20261123.md) · [미션 화면 15개](docs/webpj-korean-gameplay-xlat-20261123.md) · [채팅 도우미 59개](docs/webpj-korean-chat-helper-xlat-20261123.md) · [한국어 이름](docs/webpj-korean-player-names-20261121.md)
 4. **4-D 완료 기준 L2.** Tutorial1 Load/Start의 보고서·덤프·첫 프레임 논리 화면 대조(4D-10b)는 계속 4-D의 완료 기준이다. 시작 직후 덤프의 구조 일치는 [E1129](docs/webpj-l2-tutorial1-20261121.md)에서 확인했고 고정 시각 모드·L3·첫 프레임 화면 대조가 남았다.
 5. **12차 스커미시 나머지.** 설정·화면·시작·월드 생성·금지 유닛과 난이도별 건설 속도는 E1101~E1107·E1149에서 연결·확인했다(3.7절 12차). E1262 에서 실제 시간 관찰(옵트인 `e2e/skirmish-watch.spec.js`)로 AI 생산(다리·섬·사제 건물·공장·워커·배터리·비행체·아처)과 AI 공격으로 플레이어 사제가 죽는 것(어려움 4명 혼전, 약 18분), 패배 안내(`Defeat`·`Leave` → Abort 확인)를 확인했고 오류는 0건이었다([관찰](docs/webpj-skirmish-watch-20261123.md)). 남은 것: 승리 경로(적 전멸)와 개별 난이도/동맹의 N프레임 동작의 정량 비교, AI 가 다리를 멈추는 시점(관찰에서 소유자별 360~600초)의 원본 대조, 비미션 너겟 보충(4D-1c)(자연 완주는 1절 사용자 확인 범위). [게임 진행](docs/webpj-skirmish-play-20261120.md) · [난이도 진행](docs/webpj-skirmish-difficulty-20261121.md)
-6. **PORT_MAP partial 19행의 낡은 메모 정리와 작은 코드 잔여.** (E1263 점검, [점검 기록](docs/webpj-left-jobs-audit-20261123.md)) 메모가 E981·E1224·E1241 이후 해결분을 반영하지 않은 행: ClientRendererFrame("자동 프레임과 실제 HUD는 남음", 실제 남은 것은 메인 메뉴 Kencloud 연결), RawButtonControls(E1236~E1253 미반영), UberGump(E1245 BC1Menu·E1251 Reset All Tell 미반영), RawMenuChat, ClientCampaignTransport("InstallNative…" 문구는 E1193~E1194 로 낡음; 실제 남은 것은 앱에 Client 기본 수신기 표 미설치), ClientState 네 행·ClientUserSelectionCleanup("영향 확인 필요(미확인)"가 이탈 효과 네 가지로 좁혀짐, 4D-5b), CampaignObjectMenuClient("다른 객체 메뉴는 남음"은 낡음 — 남은 것은 Archer 우클릭·운반체 Carrying/Drop 실제 확인뿐이라 확인 뒤 port 로 올림), UberReconnect·ClientMain(하트비트 문구 불일치: 단독은 하트비트 외 관측 효과 없음으로 확정). 작은 코드 잔여: ① (E1264 해소) 미션 중 Tell 을 ESC 가 닫지 않음(위 ⑩), ② `raw-priest-placement-*` 미연결의 도달성(3.8절 입력·장치), ③ Client 기본 수신기 표의 앱 설치 판정(4D-3b), ④ (E1267 해소) Session 큐 명령 코드와 입력 루프 허용 목록의 전수 대조(4D-3e), ⑤ (E1265 해소) 채팅 허브 fixture 두 TSV(`chat-callbacks-x86.tsv`·`chat-input-recipients-x86.tsv`)의 manifest 소비 시험(5-C 허브 fixture), ⑥ E197·E198·E201 재대조(5-A), ⑦ (E1266 해소) 프레임 순서 차이 두 건(4D-4a), ⑧ 채팅 로그 미션 간 초기화를 적응으로 인정할지(사용자 결정).
+6. **PORT_MAP partial 14행의 낡은 메모 정리와 작은 코드 잔여.** (E1263 점검, [점검 기록](docs/webpj-left-jobs-audit-20261123.md)) 메모가 E981·E1224·E1241 이후 해결분을 반영하지 않은 행: ClientRendererFrame("자동 프레임과 실제 HUD는 남음", 실제 남은 것은 메인 메뉴 Kencloud 연결), RawButtonControls(E1236~E1253 미반영), UberGump(E1245 BC1Menu·E1251 Reset All Tell 미반영), RawMenuChat, ClientCampaignTransport("InstallNative…" 문구는 E1193~E1194 로 낡음; 실제 남은 것은 앱에 Client 기본 수신기 표 미설치), ClientState 네 행·ClientUserSelectionCleanup(E1268 에서 port 로 올림), CampaignObjectMenuClient("다른 객체 메뉴는 남음"은 낡음 — 남은 것은 Archer 우클릭·운반체 Carrying/Drop 실제 확인뿐이라 확인 뒤 port 로 올림), UberReconnect·ClientMain(하트비트 문구 불일치: 단독은 하트비트 외 관측 효과 없음으로 확정). 작은 코드 잔여: ① (E1264 해소) 미션 중 Tell 을 ESC 가 닫지 않음(위 ⑩), ② `raw-priest-placement-*` 미연결의 도달성(3.8절 입력·장치), ③ Client 기본 수신기 표의 앱 설치 판정(4D-3b), ④ (E1267 해소) Session 큐 명령 코드와 입력 루프 허용 목록의 전수 대조(4D-3e), ⑤ (E1265 해소) 채팅 허브 fixture 두 TSV(`chat-callbacks-x86.tsv`·`chat-input-recipients-x86.tsv`)의 manifest 소비 시험(5-C 허브 fixture), ⑥ E197·E198·E201 재대조(5-A), ⑦ (E1266 해소) 프레임 순서 차이 두 건(4D-4a), ⑧ 채팅 로그 미션 간 초기화를 적응으로 인정할지(사용자 결정).
 
 - **로컬 산출물.** `webpj/test-results-e1072-rerun`~`webpj/test-results-e1081`의 10개 폴더는 빈 폴더이거나 Git 제외 `*.zip` trace만 들어 있어 Git 상태에 나타나지 않는다(2026-11-23 정리 때도 남아 있음). 다시 볼 필요가 없으면 삭제해도 된다. E633~E640 단위 문서가 적은 루트 로그는 2026-11-21에 `extracted/webpj-e633-e640-root-logs/`로 옮겼으므로 그 폴더에서 읽는다.
 - **미션 식별.** 공통 fixture의 `thewarbegins.fort`는 캠페인 1-1이고, 실제 `tutorial1`이 선택하는 Fort는 `BridgeTheGap`이다(E753 재대조). [미션명 정정](docs/webpj-session-login-shipped-forts-20261118.md)
@@ -76,13 +76,13 @@
 
 ### 0.2 단계 진행판
 
-`n/m`은 상위 체크 수이며 보관한 완료 항목을 포함한다. 상위 항목 안의 완료 부분은 중복 가산하지 않는다. 남은 단위와 줄 수는 `PORT_MAP.tsv`의 partial·todo 기준이며 partial에는 파일 전체 줄 수를 센다. 2026-11-23 정리 때 `node webpj/tools/port-map.mjs`와 `python -X utf8 tools/port_inventory.py --tsv`로 다시 세어 **partial 34·todo 0, 34단위 / 20,876줄**이었고 E1240 에서 QuickHelpHtml·QuickHelpRequest 두 행을 닫아 **partial 32·todo 0, 32단위 / 20,635줄**이었고 E1242 에서 RawBuildReplay·ClientBuildReplay 두 행을 개발자 전용으로 닫아 **partial 30·todo 0, 30단위 / 20,436줄**이었고 E1243 에서 RawUberRootControls 행을 닫아 **partial 29·todo 0, 29단위 / 20,275줄**이었고 E1248 에서 RawMinimapControls 행을 닫아 **partial 28·todo 0, 28단위 / 20,094줄**이었고 E1252 에서 RawMenuControls 행을 닫아 **partial 27·todo 0, 27단위 / 18,489줄**이었고 E1255 에서 UberHud 행을 닫아 **partial 26·todo 0, 26단위 / 18,333줄**이었고 E1256 에서 CampaignCursorClientEffects 행을 닫아 **partial 25·todo 0, 25단위 / 18,259줄**이었고 E1257 에서 RawProductionControls 행을 닫아 **partial 24·todo 0, 24단위 / 17,866줄**이었고 E1258 에서 SoundSceneMusic 행을 닫아 **partial 23·todo 0, 23단위 / 17,571줄**이었고 E1261 에서 BitmapFont·ClientAudio 두 행을 닫아 **partial 21·todo 0, 21단위 / 16,571줄**이었고 E1263 에서 GameWorld 행을 닫아(남은 갭 문장이 E1230~E1234 로 모두 해소) **partial 20·todo 0, 20단위 / 15,414줄**이었고 E1266 에서 ClientMain 행을 닫아(순서 차이 두 건을 원문 순서로 맞춤) **partial 19·todo 0, 19단위 / 13,276줄**이다. 단계 배정은 각 행이 남은 일로 걸린 3.1절 항목 기준이며 아래 둘째 표에 행 이름을 적었다. 같은 정리에서 4D-8b~4D-8f를 '남은 행 없음'(해당 대응표 행이 모두 port 또는 제외)으로 판정해 4-D가 61/85가 됐고 E1263 점검에서 15개를 더 닫아 76/85가 됐다. 이전 단계별 분배(51 / 24,263)와 E1082~E1230의 증감 경과는 [E1237 보관본 0.2절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1237)에 있다.
+`n/m`은 상위 체크 수이며 보관한 완료 항목을 포함한다. 상위 항목 안의 완료 부분은 중복 가산하지 않는다. 남은 단위와 줄 수는 `PORT_MAP.tsv`의 partial·todo 기준이며 partial에는 파일 전체 줄 수를 센다. 2026-11-23 정리 때 `node webpj/tools/port-map.mjs`와 `python -X utf8 tools/port_inventory.py --tsv`로 다시 세어 **partial 34·todo 0, 34단위 / 20,876줄**이었고 E1240 에서 QuickHelpHtml·QuickHelpRequest 두 행을 닫아 **partial 32·todo 0, 32단위 / 20,635줄**이었고 E1242 에서 RawBuildReplay·ClientBuildReplay 두 행을 개발자 전용으로 닫아 **partial 30·todo 0, 30단위 / 20,436줄**이었고 E1243 에서 RawUberRootControls 행을 닫아 **partial 29·todo 0, 29단위 / 20,275줄**이었고 E1248 에서 RawMinimapControls 행을 닫아 **partial 28·todo 0, 28단위 / 20,094줄**이었고 E1252 에서 RawMenuControls 행을 닫아 **partial 27·todo 0, 27단위 / 18,489줄**이었고 E1255 에서 UberHud 행을 닫아 **partial 26·todo 0, 26단위 / 18,333줄**이었고 E1256 에서 CampaignCursorClientEffects 행을 닫아 **partial 25·todo 0, 25단위 / 18,259줄**이었고 E1257 에서 RawProductionControls 행을 닫아 **partial 24·todo 0, 24단위 / 17,866줄**이었고 E1258 에서 SoundSceneMusic 행을 닫아 **partial 23·todo 0, 23단위 / 17,571줄**이었고 E1261 에서 BitmapFont·ClientAudio 두 행을 닫아 **partial 21·todo 0, 21단위 / 16,571줄**이었고 E1263 에서 GameWorld 행을 닫아(남은 갭 문장이 E1230~E1234 로 모두 해소) **partial 20·todo 0, 20단위 / 15,414줄**이었고 E1266 에서 ClientMain 행을 닫아(순서 차이 두 건을 원문 순서로 맞춤) **partial 19·todo 0, 19단위 / 13,276줄**이었고 E1268 에서 ClientState 계열 다섯 행을 닫아 **partial 14·todo 0, 14단위 / 12,849줄**이다. 단계 배정은 각 행이 남은 일로 걸린 3.1절 항목 기준이며 아래 둘째 표에 행 이름을 적었다. 같은 정리에서 4D-8b~4D-8f를 '남은 행 없음'(해당 대응표 행이 모두 port 또는 제외)으로 판정해 4-D가 61/85가 됐고 E1263 점검에서 15개를 더 닫아 76/85가 됐다. 이전 단계별 분배(51 / 24,263)와 E1082~E1230의 증감 경과는 [E1237 보관본 0.2절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1237)에 있다.
 
 | 순서 | 단계 | 체크·상태 | 남은 단위 / 줄 |
 | --- | --- | --- | --- |
 | 1~3 | M1·월드 선행 부품 | 완료 | — |
 | 4 | 4-A 자료·4-B 적재·4-C 전송·4-R 재기준선 | 완료. 4-C 통합 잔여는 4D-3 | — |
-| 4 | **4-D Session 조립·Tutorial1 Load/Start** | **78/85, L2 미완료** | 13 / 8,930 |
+| 4 | **4-D Session 조립·Tutorial1 Load/Start** | **80/85, L2 미완료** | 8 / 8,503 |
 | 5 | 5-A 렌더러·Draw | 44/46 | 1 / 394 |
 | 5 | 5-B 카메라·HUD·미니맵·커서 | 12/13 | 0 / 0 |
 | 5 | 5-C 화면 허브·미션 진입 | 4/6 → M2 | 3 / 3,562 |
@@ -91,13 +91,13 @@
 | 8 | 미션 수명·대본·오디오·도움말 | 8/9 → M4 | 0 / 0 |
 | 9 | 표시 품질·브라우저/OS·배포 | E945 하위 경로·설정 복원 검증, M5 미완료 | 0 / 0 |
 | 10 | AGENTS 후순위 웹 요구 | 일부 선행, 3.7절 참조 | 0 / 0 |
-| **합계** | | | **19 / 13,276** |
+| **합계** | | | **14 / 12,849** |
 
 남은 partial 행의 단계 배정(줄 수 큰 순, 대응표 메모와 3.1절 항목 기준):
 
 | 단계 | 대응표 partial 행(줄 수) |
 | --- | --- |
-| 4-D | RawCampaignSession 7,130 · RawCampaignSessionLogin 389 · ClientCampaignTransport 378 · CampaignClientServices 373 · ClientStateWorldGlobals 112 · ClientStateWorldCleanup 102 · ClientStateRuntimeRetirement 99 · RawClockSynchronization 99 · ClientStateStorageCleanup 71 · RawSurfaceLifetime 55 · RawSurfaceDeletion 46 · ClientUserSelectionCleanup 43 · UberReconnect 33 |
+| 4-D | RawCampaignSession 7,130 · RawCampaignSessionLogin 389 · ClientCampaignTransport 378 · CampaignClientServices 373 · RawClockSynchronization 99 · RawSurfaceLifetime 55 · RawSurfaceDeletion 46 · UberReconnect 33 |
 | 5-A | ClientRendererFrame 394 |
 | 5-B | (남은 행 없음) |
 | 5-C | UberGump 2,703 · RawButtonControls 811 · RawMenuChat 48 |
@@ -107,15 +107,15 @@
 
 ### 0.3 이식량
 
-기준선 `225553df`의 이식 대상 1,007단위는 **port 988(98.1%)·partial 19·todo 0**이다(2026-11-23 재집계, E1266 반영). 제외 153단위(멀티 73·Edit 42·호스트 37·구판 1)를 합하면 대응표 1,160행이다. 앱 수명 연결을 뜻하는 `session`과 오라클 대조를 뜻하는 `oracle`은 0이다. E1098~E1237의 재판정 내역은 대응표 메모와 [E1166 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261121-through-wb04-e1166)·[E1237 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1237)에 있다.
+기준선 `225553df`의 이식 대상 1,007단위는 **port 993(98.6%)·partial 14·todo 0**이다(2026-11-23 재집계, E1268 반영). 제외 153단위(멀티 73·Edit 42·호스트 37·구판 1)를 합하면 대응표 1,160행이다. 앱 수명 연결을 뜻하는 `session`과 오라클 대조를 뜻하는 `oracle`은 0이다. E1098~E1237의 재판정 내역은 대응표 메모와 [E1166 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261121-through-wb04-e1166)·[E1237 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1237)에 있다.
 
 | 범위 | port / 대상 | partial | todo |
 | --- | --- | --- | --- |
 | `o/` 월드·규칙 | 572 / 573 | 1 | 0 |
-| `client/` 세션·UI·표시 | 407 / 433 | 26 | 0 |
+| `client/` 세션·UI·표시 | 412 / 433 | 21 | 0 |
 | `zacket/` 내부 미션 전송 | 1 / 1 | 0 | 0 |
 
-남은 19단위 중 기존 기준선은 15단위/13,043줄, 재기준선 추가분은 4단위/233줄이다(메모 머리 태그 `[rebaseline-port]`·`[rebaseline-adapt]` 기준). 재기준선 분류·영역별 상세는 [E801 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261118-through-wb04-e801)과 `python -X utf8 tools/port_inventory.py --families wb`에서 확인한다.
+남은 14단위 중 기존 기준선은 10단위/12,616줄, 재기준선 추가분은 4단위/233줄이다(메모 머리 태그 `[rebaseline-port]`·`[rebaseline-adapt]` 기준). 재기준선 분류·영역별 상세는 [E801 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261118-through-wb04-e801)과 `python -X utf8 tools/port_inventory.py --families wb`에서 확인한다.
 
 ### 0.4 기준선과 자료
 
@@ -179,11 +179,11 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 
 단계 안에서 선행 조건을 따라 위에서부터 진행한다. 막힌 사유를 기록하고 해당 단계의 다음 항목으로 간다. 4-D 전체가 선행 대기면 가능한 5-A·5-B를 병행한다. 완료 체크에 단위 링크를 붙이고 0.2절과 단계 머리글을 함께 갱신한다.
 
-#### 4-D Session 조립·Tutorial1 Load/Start (78/85)
+#### 4-D Session 조립·Tutorial1 Load/Start (80/85)
 
 **완료 기준은 L2다.** Tutorial1 Load/Start의 보고서·Session 덤프·첫 프레임 논리 화면을 cpppj 오라클과 대조한다. typed `Load()`와 실제 Fort Login/Ready, 일부 Start는 Node 검사에서 확인했다. Client·Native 장치와 브라우저 앱 수명은 이어서 연결한다. 기준선 구간 지도와 E633~E801의 완료 체크 및 단위 링크는 [E801 보관본 3.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261118-through-wb04-e801)에, E802~E1166의 항목별 완료 나열 원문은 [E1166 보관본 3.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261121-through-wb04-e1166)에 있다.
 
-아래 cpppj 줄 번호는 `225553df`의 [RawCampaignSession.cpp](cpppj/src/client/RawCampaignSession.cpp) 기준이다. E946에서 4D-1b를 완료해 56개였고, 2026-11-23 정리에서 4D-8b~4D-8f를 완료로 판정해 61개였고, E1263 점검에서 15개(4D-3a·3d·3f·5a·5c·6a·6b·6c·7a·7b·7c·7d·8g·9a·10a)를 더 닫아 76개였고 E1266 에서 4D-4a 를 닫아 77개였고 E1267 에서 4D-3e 를 닫아 78개다. 닫은 항목의 남은 일은 "점검" 줄에 근거를 적었고 다른 열린 항목이 맡는 잔여는 그 항목으로 옮겼다([점검 기록](docs/webpj-left-jobs-audit-20261123.md)). 항목마다 남은 일을 먼저 적고 완료분은 단위 번호와 대표 근거만 둔다.
+아래 cpppj 줄 번호는 `225553df`의 [RawCampaignSession.cpp](cpppj/src/client/RawCampaignSession.cpp) 기준이다. E946에서 4D-1b를 완료해 56개였고, 2026-11-23 정리에서 4D-8b~4D-8f를 완료로 판정해 61개였고, E1263 점검에서 15개(4D-3a·3d·3f·5a·5c·6a·6b·6c·7a·7b·7c·7d·8g·9a·10a)를 더 닫아 76개였고 E1266 에서 4D-4a 를 닫아 77개였고 E1267 에서 4D-3e 를 닫아 78개였고 E1268 에서 4D-3c·4D-5b 를 닫아 80개다. 닫은 항목의 남은 일은 "점검" 줄에 근거를 적었고 다른 열린 항목이 맡는 잔여는 그 항목으로 옮겼다([점검 기록](docs/webpj-left-jobs-audit-20261123.md)). 항목마다 남은 일을 먼저 적고 완료분은 단위 번호와 대표 근거만 둔다.
 
 **4D-1 Session 외곽·snapshot.** 저장 writer, 현재 Core, 부모 callback, 생성자/Publish와 외곽 반납 앞단, 4D-1b 전체 snapshot(Battle 재적재·기술 획득 Fort snapshot, `loaded` 이전 Editor 수명은 Edit 제외, E946)은 완료했다. [Battle snapshot](docs/webpj-session-battle-snapshot-20261118.md) · [Fort 경계](docs/webpj-session-fort-snapshot-boundary-20261119.md)
 
@@ -201,8 +201,8 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 - [ ] **4D-3b 로컬 공개 API·ClientCampaignTransport**
   - 남음(E1263 점검): **Client 기본 수신기 표(`makeClientCampaignTransport`·`installClientPacketDefaults`)가 앱에 설치되지 않는다** — `www` 어디서도 import 하지 않고 시험만 부른다. 앱 Session 은 `raw-campaign-session-login-front.js` 의 내부 `LocalMissionTransport` 를 써서 connection-ended 2번·0x69·0x41·0x30/0x7a 관찰기 등 기본 수신기 18행이 분배기에 없다([근거](docs/webpj-client-campaign-transport-20261112.md) 가 "아직 Client가 이 생성기를 부르지 않는다"고 적었고 뒤 단위가 다룬 적이 없다). 앱에 연결할지, 단독 미션에서 도달하지 않는 것을 판정해 웹 대체로 닫을지 정한다. Native 전송 수명은 웹의 `usesNativeTransmissionDevices` 가 항상 false 라 도달하지 않는다.
   - 완료: 시작/Poll/Pump·상태8·전송 기록·로컬/mutable 송신·Tell과 typed 기본 수신기(경로/압축 관찰·기술·Chat·연결 종료, E772), 내부 전송 등록 세대의 Session 대여·수신 중 State 정리 차단(E893). [E772](docs/webpj-session-state-connect-record-20261118.md) · [E893](docs/webpj-session-internal-callback-20261119.md)
-- [ ] **4D-3c 전송 앞단**
-  - 남음(E1263 점검): 미션 이탈 때 시간 동기화 세 DWORD(`gameTicks` 등) 초기화(`resetClientClockSynchronization`)를 앱이 부르지 않는다(State 정리 부모 미연결, 4D-5b 와 같은 원인; 단독 로컬 왕복 지연이 0 에 가까워 영향은 작을 것으로 추정하나 확인하지 않음, 확신 낮음). 소켓 지연 FIFO(MP 전용, E1187)·`ClientPacketSources`(웹 대체, E1187)·Native baseline(canonical 수신기는 Native 전용, E1223)은 닫혔거나 도달하지 않는다.
+- [x] **4D-3c 전송 앞단** — (E1268 닫음)
+  - 점검: 미션 이탈 때 시간 동기화 세 DWORD(`gameTicks` 등) 초기화(`resetClientClockSynchronization`)를 E1268 에서 `_releaseCampaignWorld` 에 옮겼다(미션 중 `replyMode` 가 1 로 남던 것을 처음 상태로, e2e `mission-leave-state-reset.spec.js`, [근거](docs/webpj-mission-leave-state-reset-20261123.md)). 소켓 지연 FIFO(MP 전용, E1187)·`ClientPacketSources`(웹 대체, E1187)·Native baseline(canonical 수신기는 Native 전용, E1223)은 닫혔거나 도달하지 않는다.
   - 완료: 공통 `RawPacketFrame`의 로컬 전송 연결(E820), 앱의 시간 표본·Session Pump·공유 GameClock·State 정리(E947). [E820](docs/webpj-packet-frame-20261119.md) · [E947](docs/webpj-app-clock-synchronization-20261119.md)
 - [x] **4D-3d Squid 수신** — (E1263 닫음)
   - 점검: ReceiveSquid(0x2c)·Dais(0x6a)·Gun(0x3a)·Flyer(0x39·0x86)·Aviary 수신이 모두 이식돼 Session 분배기에 등록돼 있다(`raw-campaign-session.js` 804~838행; 시험 `raw-campaign-session-load.test.mjs` Dais·`raw-gun-process`·`aviary-process-data`). Native 경계와 실제 원격 로그인은 웹 범위 밖이다.
@@ -228,8 +228,8 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 - [x] **4D-5a 종료 수명** — (E1263 닫음)
   - 점검: 실제 앱의 State 반납은 `Session.dispose`(`raw-campaign-session.js`)가 State 자식 증빙·Player 링크·AI·Process 를 반납하며 Leave/Restart(`game-menu-bar.spec.js`)·`mission-leave-pause.spec.js`·31개 미션 시작·장시간 시험이 그 경로를 밟는다. Native 건설·지속 실패는 Native 저장소가 없어 도달하지 않고 승패 수명은 E1152·E1161·E1262 가 확인했다. State 정리 부모 연결은 4D-5b 가 맡는다.
   - 완료: 승패 조회 경계, AI·Player/Deck·Process 자식 반납 증빙, 일반 종료 순서·오류 진단(E786·E789). [E786](docs/webpj-session-state-withdraw-20261118.md) · [E789](docs/webpj-session-process-shutdown-error-20261118.md)
-- [ ] **4D-5b Client State 정리**
-  - 남음(E1263 점검): **앱이 State 정리 부모(`cleanupClientStateWorld`)를 부르지 않는다**(`www` 안에서 정의 파일 밖의 호출이 없음; 팝업·음향 소유자 `QuickHelpPopupState`·`ClientAudio` 는 이미 앱에 있다). 웹은 미션 이탈을 `_leaveCampaignMission`→`_releaseCampaignWorld` 로 처리하며, 부모를 직접 연결하려면 앱에 없는 장치(`interpretStateOptions`·`writeSongEndBits`·`killGumps`/`replaceUber`/`leaveMetamap`/`refreshSp`/`retireRuntime`)가 먼저 필요하다(E1223). 이 대체가 원문과 같은지 이탈 때 원문만 하는 효과로 확인한다: 처리됨 — 건물 숨김 복구(E1230)·정지 깊이 반복 해제(E1132)·`ownerMode.battle` 잔존(영향 없음, 다음 작업 1 ⑥)·장면 음악 난수(E1258); 미확인 — `MapRevision+1`(다음 미션 렌더러 초기화가 올려 영향이 없을 것으로 추정, `client-camera-globals.js:69`), `ChatChannels.resetOccupied`(웹은 부르지 않고 `raw-chat-channels.js` 기록 100칸이 미션 간 남음), 이탈 시점의 선택 해제 통지(미션 UI 를 모두 닫아 영향 없을 것으로 추정), 시간 동기화 세 DWORD 초기화(4D-3c). RawMenuControls(E1252)·ClientAudio(`5cb9366ec`)·승패 후 수명(E1152·E1161·E1262)은 끝났다.
+- [x] **4D-5b Client State 정리** — (E1268 닫음)
+  - 점검: 앱은 State 정리 부모(`cleanupClientStateWorld`)를 직접 부르지 않고(앱에 없는 장치 `interpretStateOptions`·`writeSongEndBits`·`killGumps`/`replaceUber`/`leaveMetamap`/`refreshSp`/`retireRuntime` 이 먼저 필요, E1223) `_leaveCampaignMission`→`_releaseCampaignWorld` 가 이탈 때 원문만 하는 효과를 하나씩 옮긴다([근거](docs/webpj-mission-leave-state-reset-20261123.md)): 건물 숨김 복구(E1230)·정지 깊이 반복 해제(E1132)·`ownerMode.battle` 잔존(영향 없음, 다음 작업 1 ⑥)·장면 음악 난수(E1258), E1268 에서 채팅 채널 정리(`ChatChannels.resetOccupied`)와 시간 동기화 초기화를 옮겼고(e2e `mission-leave-state-reset.spec.js`, 변형 확인) `MapRevision+1`(다음 미션 렌더러 초기화가 올림)·이탈 시점의 선택 해제 통지(미션 UI·Session 반납)는 영향 없음으로 판정했다. RawMenuControls(E1252)·ClientAudio(`5cb9366ec`)·승패 후 수명(E1152·E1161·E1262)은 끝났고 대응표 ClientState 계열 다섯 행을 port 로 올렸다.
   - 완료: Fort 적재 Session(E818)과 내부 로그인·AI 미션 시작 뒤(E819)의 정리 검사. [E818](docs/webpj-client-state-loaded-cleanup-20261119.md) · [E819](docs/webpj-client-state-started-cleanup-20261119.md)
 - [x] **4D-5c 이탈·전투 판정** — (E1263 닫음)
   - 점검: 전투 종료 프레임은 원문 관문 `!battle || missionPost || !serverConnection || phase!=14`(`RawBattleCompletion.cpp:65~96`)에 막혀 단독 미션에서 도달하지 않고(E1238), 4209..4279 의 함수 중 FinalizeBattleLeave(cpppj 전체에 호출자 없음)·RejectDraw·RequestForcedAlliance·PollReconnectSave·TakeServerForState·SaveServerFailure·BroadcastConnectionPlayer 는 전투·재접속·LAN 전용이고 BattleGate·BattleFinished(`netstorm.js:1404`·`raw-campaign-session.js:984`)와 RunConnectionLoginTimer(`login-front.js` `pump()`)는 앱에 연결돼 있다. 재접속 저장(`!state.dat`)은 `RawSavedStateWrite` 가 `exclude-mp` 이고 missionPost 에서 자연 반환한다. 스커미시 패배 안내는 실제 시간 관찰(E1262)로, 캠페인 진행 저장은 E1152 로 확인했고 스커미시 적 전멸(승리) 관찰만 [다음 작업 5](#next) 에 남는다.
@@ -374,7 +374,7 @@ M1은 메뉴 관문을 통과했다. 4-D의 Tutorial1 L2 → 5-A/5-B·5-C의 Tut
 
 | 처리 단계 | 남은 판정·연결 |
 | --- | --- |
-| 4D-3·4D-6 | (E1263 점검) 미션 이탈 때 State 정리 부모가 앱에서 불리지 않아 생기는 차이(4D-5b: ChatChannels.resetOccupied·MapRevision·선택 해제 통지·시간 동기화 초기화), Client 기본 수신기 표의 앱 설치(4D-3b), 분리 Poll·`pollClientConnectionHealth` 미호출(단독은 하트비트 외 관측 효과 없음으로 확정, 4D-7b), RawClockSynchronization 의 CRT 동률 RTT 동등성(원본 필요). Client 진행 창·GameClock 바인딩·RawIslandRuntime 소비자는 끝났고 PacketDelays(실소켓)·RawPacketCopies(LAN)·RawMonitorTime(옵션 UI 가 없는 숨은 키 `monitor`·`alert`)은 도달하지 않는다. 아비어리·공용 Form writer 경계는 E594·E1210 으로 대부분 닫혔고 확인하지 못한 칸이 남았다(확신 낮음). |
+| 4D-3·4D-6 | (E1263 점검) 미션 이탈 때 State 정리 효과(ChatChannels.resetOccupied·시간 동기화 초기화는 E1268 에서 옮기고 MapRevision·선택 해제 통지는 영향 없음으로 판정, 4D-5b), Client 기본 수신기 표의 앱 설치(4D-3b), 분리 Poll·`pollClientConnectionHealth` 미호출(단독은 하트비트 외 관측 효과 없음으로 확정, 4D-7b), RawClockSynchronization 의 CRT 동률 RTT 동등성(원본 필요). Client 진행 창·GameClock 바인딩·RawIslandRuntime 소비자는 끝났고 PacketDelays(실소켓)·RawPacketCopies(LAN)·RawMonitorTime(옵션 UI 가 없는 숨은 키 `monitor`·`alert`)은 도달하지 않는다. 아비어리·공용 Form writer 경계는 E594·E1210 으로 대부분 닫혔고 확인하지 못한 칸이 남았다(확신 낮음). |
 | 4D-8 | (E1263 점검) RawSurfaceDeletion·Lifetime 의 DestroyPatch 진단 12지점·`rememberPlacement`(4D-8a)와 ClientCampaignTransport 의 기본 수신기 앱 설치(4D-3b). 나머지(canonical 등록·고정 수신기 대여 E1193~E1194, 장기 Storage·ProcessHostStorage·Native 송신/Form writer·자산 삭제/후처리·보상·Native 조회기 E1205~E1221)는 port 로 끝났다. SidPool 소진 회수·진단과 GameAuxState 의 새 전역 칸은 코드와 행이 있으나 소비 여부를 직접 확인하지 못했다. |
 | 5-A~5-C | (E1263 점검) 메인 메뉴 Kencloud 구름 배경, UberGump/메뉴 허브의 ESC Tell 닫기(E1264 에서 해소), ‘Creating Islands.’ 로그인 진행 안내(앱이 `creatingIslands` 훅을 소비하지 않음; 원문은 `RawMissionServerPackets.cpp:60-63` 의 `createArchipelago`(Zone 0x100 비트·이름 `$`) 경로에서만 부르므로 단독·스커미시가 이 경로를 타는지 판정이 남음, 확신 낮음). 메타 Sprite 소비 경계는 제외로 판정했다(E1203). |
 | 6~7 | (E1263 점검) 건설 ActualConfirm/ActualPlace(E1139 e2e)·동맹 협상 입력(`registerAllianceNegotiationCommands`, `player-menu-actions.spec.js`)·RawGunHit Rain override(`raw-gun-hit.js`)는 끝났고 F7/Ctrl+F6 건설 기록은 개발자 전용으로 제외했다(E1242). RawPathRuntime/RawPathData 는 두 행 port 이고 사제·운반·경로 바인딩 항목이 이어받는다. NB20 실제 취소는 E804에서 검증했다. |

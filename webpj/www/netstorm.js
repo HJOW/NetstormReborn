@@ -111,6 +111,7 @@ const SKIRMISH_BUNDLE = 'skirmish';
 import { dispatchViewKeyInput } from './core/view-key-input.js';
 import { GameMenuButton } from './ui/game-menu-button.js';
 import { CHAT_RECORD_BYTES, RawChatChannels } from './core/raw-chat-channels.js';
+import { resetClientClockSynchronization } from './core/client-state-storage-cleanup.js';
 import { RawCampaignMissionStartBindings } from './core/raw-campaign-mission-start-bindings.js';
 import { RawCampaignTutorialOneBindings } from './core/raw-campaign-tutorial-one-bindings.js';
 import { MISSION_RELOAD_COMMAND, dispatchMissionAbort } from './core/mission-guide-input.js';
@@ -1470,6 +1471,10 @@ export class Netstorm {
         // 원본 월드 정리 어댑터(UberGump 004b2df0)는 Session·UI·Kernel 을 반납하기 전에 초기 캡처 기한(005c8618)을 0 으로 쓴다. 이 값이 남으면 다음 미션의 Zone 설치가
         // `!earlyCaptureTimer.isRunning()` 진단을 낸다(미션을 떠나고 곧바로 다른 미션을 시작할 때). (2026-11-20 WB04-E1121)
         if (this._clientLocal) this._clientLocal.captureEnd().value = 0;
+        // 원본 State 월드 정리의 채팅 채널 정리(Clear445140 → ChatChannels::ResetOccupied: 점유된 기록의 이름·플래그·ID 를 모두 0 으로)와 시간 동기화 세 DWORD 초기화(Clear4c1f20 → ResetClientClockSynchronization)이다.
+        // 이 둘이 없어 미션을 떠난 뒤에도 이전 미션의 채팅 대상 기록과 시간 응답 방식(replyMode 1)이 다음 미션까지 남았다. (2026-11-23 WB04-E1268)
+        this._clientChatChannels?.resetOccupied();
+        if (this._clientLocal) resetClientClockSynchronization(this._clientLocal);
         // 원본 State 월드 정리는 0059a8ac(건물 숨김, F2·View 메뉴)을 0 으로 되돌린다. 되돌리지 않으면 미션에서 켠 건물 숨김이 다음 미션에도 남아 처음부터 건물이 숨겨졌다. (2026-11-22 WB04-E1230)
         if (this._clientGameplay) this._clientGameplay.hideBuildings().value = 0;
         this._gameMenuButton?.destroy(); this._gameMenuButton = null; this._releaseCampaignPause();
