@@ -1,7 +1,7 @@
 {
   "format": "netstorm-webpj-cpppj-oracle",
   "version": 1,
-  "description": "cpppj 기준선 실행 파일(225553df)로 Tutorial1 입력 단계표(steps.json)를 수집한 L3 오라클. c200·c300 은 각 프레임의 Session 덤프(.tsv)와 논리 화면(.png). E1284 에서 임시 스크립트(runCppScenario 직접 호출)로 수집했다.",
+  "description": "cpppj 기준선 실행 파일(225553df)로 Tutorial1 입력 단계표(steps.json)를 수집한 L3 오라클. c200·c300·c400 은 각 프레임의 Session 덤프(.tsv)와 논리 화면(.png), p345 는 다리 조각을 집은 직후의 논리 화면(.png). E1284 에서 임시 스크립트(runCppScenario 직접 호출)로 수집했다.",
   "cpppjCommit": "225553df",
   "exe": {
     "file": "Netstorm.exe",
@@ -20,7 +20,7 @@
     "--window",
     "--mute-audio",
     "--frames",
-    "301",
+    "401",
     "--set",
     "SCREENW=1024;SCREENH=768;WelcomeGiven=1;tellTips=0;autoDemo=0",
     "--ui-script",
