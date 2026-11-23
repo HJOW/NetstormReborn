@@ -2325,6 +2325,9 @@ public sealed partial class HostSession
         // Dude 정기 분배를 매몰 분배보다 나중에 둔다. 가상표가 겹치지 않으므로 순서는 결과에 닿지 않는다.
         // 2026-11-23 0.891에서 R4-4 Dude 정기용으로 추가했다.
         BuildDudeRegularDevices(types);
+        // Disc 정기 분배를 Dude 분배보다 나중에 둔다. 가상표가 겹치지 않으므로 순서는 결과에 닿지 않는다.
+        // 2026-11-23 0.893에서 R4-4 Disc 정기용으로 추가했다.
+        BuildDiscRegularDevices(types);
     }
 
     /// <summary>공장 정기 트리거 본체를 세션에 연결하고 지형 분배 Pop의 공장 갈고리로 등록한다.</summary>
@@ -3387,6 +3390,50 @@ public sealed partial class HostSession
     /// <summary>Dude 정기 분배 전에 사용하던 공통 정기 분배기다. 해제 순서는 Dude가 먼저다.</summary>
     /// <remarks>2026-11-23 0.891에서 R4-4 Dude 정기용으로 추가했다. Dude 가상표가 아니면 이전 처리기로 넘긴다.</remarks>
     private RegularHandler? _beforeDudeRegular;
+
+    /// <summary>Disc 정기 분배 전에 사용하던 공통 정기 분배기다. 해제 순서는 Disc가 먼저다.</summary>
+    /// <remarks>2026-11-23 0.893에서 R4-4 Disc 정기용으로 추가했다. Disc 가상표가 아니면 이전 처리기로 넘긴다.</remarks>
+    private RegularHandler? _beforeDiscRegular;
+
+    /// <summary>Disc 가상표(0x50b570/CD 0x501440) 부모를 Disc 정기 본체에 분배하고 나머지는 이전 처리기로 넘긴다.</summary>
+    /// <param name="fallback">Disc가 맡지 않는 부모의 기존 처리기다. 없으면 payload를 돌려준다.</param>
+    /// <returns>같은 풀의 현재 가상표로 분배하는 처리기다.</returns>
+    /// <remarks>2026-11-23 0.893에서 R4-4 Disc 정기용으로 추가했다. 근거: cpppj client/RawSurfaceFrameRegular.cpp의 DiscRegular 조립이다. 방향/클러스터 표는 RiftTypeTable이 타입 표에 채운 값을 그대로 쓴다.</remarks>
+    private RegularHandler RegularHandlerWithDisc(RegularHandler? fallback) => (sid, ev, count, payload) =>
+    {
+        if (_discRegular is not null && _discRegular.Handles(sid)) return _discRegular.Handle(sid, ev, count, payload);
+
+        return fallback?.Invoke(sid, ev, count, payload) ?? payload;
+    };
+
+    /// <summary>Disc 정기 분배 장치를 세션에 연결한다. 방향/클러스터 표는 타입 표의 값을 그대로 쓴다.</summary>
+    /// <param name="types">같은 실제 TYPE 표다. 지형 Pop 장치와 같은 인스턴스여야 한다.</param>
+    /// <exception cref="InvalidOperationException">Disc 정기 분배의 프로세스·프레임 장치가 미연결이다.</exception>
+    /// <exception cref="ArgumentException">Disc 정기 TYPE이 지형 Pop 장치와 다르다.</exception>
+    /// <remarks>2026-11-23 0.893에서 R4-4 Disc 정기용으로 추가했다. 근거: cpppj client/RawSurfaceFrameRegular.cpp 13~19행의 DiscRegular 조립이다. typed 산술을 쓰며 Native 분기는 장기 저장소가 갖는다.</remarks>
+    public void BuildDiscRegularDevices(IReadOnlyList<OriginalTypeRecord> types)
+    {
+        ArgumentNullException.ThrowIfNull(types);
+        if (_beforeDiscRegular is not null)
+        {
+            throw new InvalidOperationException("Disc 정기 분배 장치 중복 연결");
+        }
+
+        SquidProcessHost processes = PlayerProcesses ?? throw new InvalidOperationException("Disc 정기 분배 프로세스 미연결");
+        if (_terrainPopTypes is null || !ReferenceEquals(types, _terrainPopTypes))
+        {
+            throw new ArgumentException("Disc 정기 TYPE은 지형 Pop 장치와 같은 인스턴스여야 한다", nameof(types));
+        }
+
+        SquidFrame frames = _terrainFrames ?? throw new InvalidOperationException("Disc 정기 프레임 미연결");
+        ArcherTypeData[] archer = types.Select(type => new ArcherTypeData(type.Directions, type.FrameCount)).ToArray();
+        _discRegular = new RawDiscRegular(Pool, archer, frames);
+        _beforeDiscRegular = processes.Regular();
+        processes.SetRegularHandler(RegularHandlerWithDisc(_beforeDiscRegular));
+    }
+
+    /// <summary>Disc 정기 본체다. 방향/클러스터 표와 실제 지정기를 세션 수명과 같이 유지한다.</summary>
+    private RawDiscRegular? _discRegular;
 
     /// <summary>Dude 가상표(0x508cc8) 부모를 Dude 정기 본체에 분배하고 나머지는 이전 처리기로 넘긴다.</summary>
     /// <param name="fallback">Dude가 맡지 않는 부모의 기존 처리기다. 없으면 payload를 돌려준다.</param>
