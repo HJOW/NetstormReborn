@@ -1805,3 +1805,5 @@ cpppj/src/o/RawRunePostPop.cpp	Netstorm.Core/Original/RawRunePostPop.cs	5cb9366e
 cpppj/src/o/RawRunePostPop.h	Netstorm.Core/Original/RawRunePostPop.cs	5cb9366ec780854a70f5c88fc322eb5f3e39431d	port
 cpppj/src/o/RawRunePostPop.cpp	Netstorm.Core/Original/RawRunePostPop.Types.cs	5cb9366ec780854a70f5c88fc322eb5f3e39431d	port
 cpppj/src/o/RawRunePostPop.h	Netstorm.Core/Original/RawRunePostPop.Types.cs	5cb9366ec780854a70f5c88fc322eb5f3e39431d	port
+cpppj/src/o/RawPriestRitualActions.cpp	Netstorm.Core/Original/RawPriestRitualActions.cs	ac1df866c79b85c394d9a1546cbe7029e912b3f2	port
+cpppj/src/o/RawPriestRitualActions.h	Netstorm.Core/Original/RawPriestRitualActions.cs	ac1df866c79b85c394d9a1546cbe7029e912b3f2	port
