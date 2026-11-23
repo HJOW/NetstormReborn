@@ -41,7 +41,8 @@ def signatures(text, kind):
     text = visible_source(text.replace('\r', ''))
     sections = re.findall(r'^\s*(\[[^\n]+\])\s*$', text, re.M)
     commands = []
-    for key, value in re.findall(r'^\s*\$(\w+)=(.*)$', text, re.M):
+    for key, value in re.findall(r'(?:^|>)[ \t]*\$(\w+)=(.*)$', text, re.M):
+        # 원본 훈련 대본의 <p>$Button도 실행되는 명령이므로 줄 첫머리와 동일하게 대조한다.
         # 라벨 뒤의 실제 명령/인자/완료·해금 조건은 같은 바이트여야 한다.
         tail = value.split(',', 1)[1] if key in LABEL_COMMANDS and ',' in value else value
         commands.append((key, tail))
