@@ -30,6 +30,9 @@
 6. **12차 스커미시 나머지.** 승리 경로(적 전멸), 개별 난이도/동맹의 N프레임 동작 정량 비교, AI가 다리를 멈추는 시점(관찰에서 소유자별 360~600초)의 원본 대조. 비미션 너겟 보충은 스커미시가 미션 모드라 도달하지 않는다(E1270). [관찰](docs/webpj-skirmish-watch-20261123.md) · [게임 진행](docs/webpj-skirmish-play-20261120.md) · [난이도 진행](docs/webpj-skirmish-difficulty-20261121.md)
 7. **주문(스펠) 사용·골렘 사제 포획(사용자 제보 2026-11-23, 차후 작업).** 사용자 지시로 지금은 구현하지 않고 기록만 했다. Early Missions에서 주문을 쓰면 스크립트 오류가 나고 게임이 잠시 멈추며, 주문을 얻은 골렘으로 적 사제를 포획할 수 없다. 원인 미확인(사용자 추정: 멀티플레이 미지원 범위 판정과 관련). 세부 단위와 완료 기준은 3.1절 7단계의 같은 이름 항목.
 8. **결정·원본 확인 대기.** 사용자 결정과 원본 실행·사람 확인이 필요한 항목은 3.5절에 모았다.
+9. **방향키 카메라 이동(사용자 요구 2026-11-23, 세 프로젝트 공통).** 게임 중 ↑↓←→로 카메라를 옮길 수 있어야 한다. 원본 ←/→는 조각을 든 상태의 회전과 입력창 커서 이동에 쓰이므로 그 둘을 먼저 처리한다. 규칙은 cpppj가 먼저 정한다([공통](LEFT_JOBS.md#user-requests-20261123)). 세부 단위는 3.1절 6단계.
+10. **ESC 게임 메뉴 한국어 점검(사용자 제보 2026-11-23, webpj 재현).** 번역되지 않은 행이 남아 있고 "플레이어"(Players) 메뉴를 고르면 글자가 깨진다. 세부 단위는 3.1절 6단계.
+11. **정보 ▸ 버전 창의 Copyright(사용자 요구 2026-11-23).** 11.01 패치·`Copyright 2026 HJOW`가 없다. [0.6절](#about-version).
 
 - **로컬 산출물.** `webpj/test-results-e1072-rerun`~`webpj/test-results-e1081`의 10개 폴더는 빈 폴더이거나 Git 제외 `*.zip` trace만 들어 있어 Git 상태에 나타나지 않는다(2026-11-23 정리 때도 남아 있음). 다시 볼 필요가 없으면 삭제해도 된다. E633~E640 단위 문서가 적은 루트 로그는 2026-11-21에 `extracted/webpj-e633-e640-root-logs/`로 옮겼으므로 그 폴더에서 읽는다.
 - **미션 식별.** 공통 fixture의 `thewarbegins.fort`는 캠페인 1-1이고, 실제 `tutorial1`이 선택하는 Fort는 `BridgeTheGap`이다(E753 재대조). [미션명 정정](docs/webpj-session-login-shipped-forts-20261118.md)
@@ -84,7 +87,7 @@
 | 5 | 5-A 렌더러·Draw | 44/46 | 1 / 394 |
 | 5 | 5-B 카메라·HUD·미니맵·커서 | 12/13 | 0 / 0 |
 | 5 | 5-C 화면 허브·미션 진입 | 4/6 → M2 | 3 / 3,562 |
-| 6 | 입력·게임 메뉴·경제·건설 | 4/8 → M3 | 1 / 229 |
+| 6 | 입력·게임 메뉴·경제·건설 | 4/10 → M3 | 1 / 229 |
 | 7 | 전투·의식·AI | 3/7 | 1 / 161 |
 | 8 | 미션 수명·대본·오디오·도움말 | 8/9 → M4 | 0 / 0 |
 | 9 | 표시 품질·브라우저/OS·배포 | E945 하위 경로·설정 복원 검증, M5 미완료 | 0 / 0 |
@@ -141,6 +144,10 @@
 <a id="favicon"></a>
 
 - [ ] **favicon 탭 시각 확인.** E894에서 공통 ICO를 복사하고 상대 경로 링크를 추가했다. 원본 두 이미지의 바이트 대조와 Chromium의 HTTP 200·해독을 확인했다. 2026-11-20 Chrome의 localhost NetStorm 탭은 접근성 트리에서 확인했으나 Windows 창 캡처가 반복 시간 초과하여 탭 그림의 시각 확인이 남았다(E1263 점검: 탭 아이콘은 페이지 화면 캡처에 나오지 않는 브라우저 창 부분이라 자동 확인이 안 되고, 사용자 눈 확인 범위이다). [작업·검증](docs/webpj-favicon-20261119.md) · [공통 기준](LEFT_JOBS.md#exe-icon)
+
+<a id="about-version"></a>
+
+- [ ] **정보(About) ▸ 버전 창의 Copyright(사용자 요구 2026-11-23).** 게임 메뉴 About ▸ Version(`raw-game-menu-bar.js`·`option-menus.js`의 `Tell About`)은 원본 Tell `[About]`(`data/d/tell.korean`·원본 `tell.english`)을 그대로 쓴다: `(c) 1997 Titanic Entertainment, Inc. and Activision Inc.`와 `{gamemaster}.{gameminor} Patch by Ticonderoga Entertainment.`뿐이라 11.01 패치와 `Copyright 2026 HJOW`(AGENTS.md)가 없고, 버전 치환값이 11.01이면 11.01 패치를 Ticonderoga로 표기하게 된다(실제 화면 확인 필요). 완료 기준: 원본 저작권 줄은 유지하고 10.78 패치 줄과 11.01 패치(HJOW)·`Copyright 2026 HJOW` 줄을 영어·한국어 창에 표시한다. 문구는 cpppj 결정과 Patch Credits(`assets/product.js`)를 따른다. [공통](LEFT_JOBS.md#user-requests-20261123)
 
 <a id="korean-font-change"></a>
 
@@ -264,7 +271,7 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
   - [ ] 16:10 — cpppj 선택지는 1280×800이고 웹 16:10 논리 크기는 높이 768 기준(약 1229×768)이라 직접 대조할 수 없다. 완료 기준: 크기 정책 결정(3.5절) 뒤 같은 크기 오라클로 90프레임 화면 0픽셀.
   - [ ] 한국어 — cpppj 한국어 설정으로 같은 오라클을 수집해 대조한다. 완료 기준: 차이가 [0.7절](#korean-font-change)의 의도된 차이(제목 배율·굵기·한글 기준선) 영역에만 있음을 기록한다.
 
-#### 6 입력·게임 메뉴·사제/운반·경제·건설 (4/8)
+#### 6 입력·게임 메뉴·사제/운반·경제·건설 (4/10)
 
 완료한 체크(머리글 수에 포함, 보관한 1개 외): **입력 본체**(E1263, UserInput 상위 메뉴 E1084·브라우저 이벤트 E919~E934·특수 진단 로그 장치, GameWorldInput E795~E796, NB20 E804, 편집 우클릭 메뉴·모드 1/6 좌클릭은 웹 제외, [E802](docs/webpj-campaign-user-input-movement-click-20261118.md) · [E796](docs/webpj-campaign-game-world-menu-cursor-20261118.md)), **게임 메뉴**(E1264, 메뉴막대 E1084와 하위 명령 E1085~E1235, Ignore chat·Whisper To·정보 보기 단독 도달 불가 E1167, Tell 모달 스택 E1252, ESC Tell 닫기, [게임 메뉴막대](docs/webpj-game-menu-bar-20261120.md) · [ESC](docs/webpj-tell-escape-20261123.md)), **공장·지식 메뉴와 기술**(E1076~E1079 Factory 생산·지식·업그레이드, 연구 명령 0x03000080 소비, E1189 Fury War 기술 지급; 제단 업그레이드·`Get 5,000` 행의 HTML 기술 목록은 비미션 전용, [E1180](docs/webpj-ritual-reward-scope-20261122.md) · [E1189](docs/webpj-fury-war-technology-20261122.md)).
 
@@ -282,6 +289,12 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
   - [ ] 이어지는 다리 놓기·튜토리얼 안내 진행.
   - [ ] 사제 선택·이동.
   - [ ] 건설·생산(수확 포함).
+- [ ] **방향키 카메라 이동(사용자 요구 2026-11-23)** — 게임 중 ↑↓←→로 카메라를 옮긴다(원본에 없는 추가 요구, cpppj·dotnetpj와 같은 규칙). [공통](LEFT_JOBS.md#user-requests-20261123)
+  - [ ] 키 우선순위 — 원본 ←/→ 조각 회전(cpppj `RawCampaignCursor.cpp:179~180`; 웹은 `lockDepth` 조건으로 같은 키를 입력 큐에 넣음)과 채팅·TextEntry 커서 이동을 먼저 처리하고 그 밖의 게임 화면에서만 카메라를 옮긴다. 이동량·키 반복은 cpppj 결정과 같게 한다. 완료 기준: 규칙을 단위 문서에 적는다.
+  - [ ] 구현·확인 — `keydown` 반복으로 가장자리 스크롤과 같은 카메라 경로를 쓴다. 완료 기준: 네 방향 이동·조각 회전 보존·입력창 보존 e2e 통과.
+- [ ] **ESC 게임 메뉴 한국어 점검(사용자 제보 2026-11-23, webpj 재현)** — Game·View·Options·Players·About 하위 전체를 한국어로 다시 점검한다(E1166의 메뉴 문구 수집 이후 제보).
+  - [ ] 번역 누락 행 — 원본 번역 호출이 있는데 번역표 항목이 없는 행과, 호출이 없어 원본도 영어인 행을 구별해 목록을 만든다. 완료 기준: 누락 행이 번역표에 들어가고 e2e가 한국어 라벨을 확인한다.
+  - [ ] "플레이어" 메뉴 글자 깨짐 — Players 메뉴를 고르면 글자가 깨진다. Player 이름 표시 바이트(E1166, `displayTextCodec`)와 E1288 글자 혼합(Windows-1252 글자는 원본 글리프) 전후를 먼저 비교해 원인을 좁힌다. 완료 기준: 한국어·영어 Players 하위 행이 깨지지 않음을 화면 e2e로 확인한다.
 
 #### 7 전투·의식·AI (3/7)
 
