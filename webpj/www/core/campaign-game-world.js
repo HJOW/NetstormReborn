@@ -149,13 +149,19 @@ export class CampaignGameWorld {
             session.pumpLocalConnection(); session.runFrame(this.#surfaceTime, stopped); this.refreshCampaignObjects();
         } else if (this.#services.elapsed && !stopped) this.step(this.#services.elapsed());
     }
-    // Client 단일 Kernel 전에 시각·표시 영역만 준비하고 Kernel을 직접 돌리지 않는다.
+    // 원본 주 루프의 RunClientBridgeDecay(00422bc0)이다: 현재 프레임 시각으로 다리 수명 검사를 정확히 한 번 한다. 원문 순서는 주변음·바람 뒤, 장면 음악·미니맵 갱신·Gump 정리·Kernel 준비 앞이다.
+    // 접속(Fort 준비) 중이면 아무것도 하지 않고 시각 공급자가 없으면 오류이다. 사용: world.runBridgeDecay(); (2026-11-23 WB04-E1266: 이전에는 prepareKernelFrame 안에서 불러 미니맵 갱신보다 늦었다, 처음 연결 2026-11-22 WB04-E1230)
+    runBridgeDecay() {
+        const session = this.#live(); if (typeof this.#services.frameTime !== 'function') throw new Error('실제 Client Kernel 프레임의 Session/시각 공급자 누락');
+        if (this.#connecting) return;
+        session.scanBridgeDecay({ ...this.#services.frameTime() }, Boolean(this.#services.paused?.()));
+    }
+    // Client 단일 Kernel 전에 시각·표시 영역만 준비하고 Kernel을 직접 돌리지 않는다. 다리 붕괴 검사는 runBridgeDecay 가 앞서 했다. (2026-11-23 WB04-E1266)
     prepareKernelFrame() {
         const session = this.#live(); if (typeof this.#services.frameTime !== 'function') throw new Error('실제 Client Kernel 프레임의 Session/시각 공급자 누락');
         if (this.#connecting) return;
         this.#surfaceTime = { ...this.#services.frameTime() }; this.#surfaceView();
-        // 원본 주 루프는 Kernel 앞에서 RunClientBridgeDecay 를 부른다. 다리 붕괴 검사를 준비보다 먼저 한다(Session.runFrame 과 같은 순서). (2026-11-22 WB04-E1230)
-        const paused = Boolean(this.#services.paused?.()); session.scanBridgeDecay(this.#surfaceTime, paused); session.prepareFrame(this.#surfaceTime, paused);
+        session.prepareFrame(this.#surfaceTime, Boolean(this.#services.paused?.()));
     }
     // 단일 Kernel 뒤 현재 객체 보기만 다시 읽는다.
     // 원문 UberGump::PollBattleResources 의 월드 분기이다: 접속(Fort 준비) 중이 아니면 Session 의 전투 자원 프레임을 실행한다. (2026-11-22 WB04-E1232)

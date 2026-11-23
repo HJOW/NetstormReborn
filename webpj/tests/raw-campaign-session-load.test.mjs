@@ -1985,8 +1985,9 @@ test('CampaignGameWorld TheWarBegins: 지연 생성과 실제 로그인 준비',
         cursor.setPalette = (...args) => { cursorPalettes.push(args[0].slice()); cursorSetPalette(...args); };
         assert.equal(world.completeLocalConnection(), true); assert.equal(world.connecting, false); assert.equal(world.completeLocalConnection(), false);
         const frameVisits = [], core = session.core(), probe = core.kernel.add({ runFrame: () => frameVisits.push(core.processState.now) });
-        // Client 단일 Kernel 프레임은 준비 앞에서 다리 붕괴 검사(원본 RunClientBridgeDecay)를 정확히 한 번 부른다. (2026-11-22 WB04-E1230)
+        // 다리 붕괴 검사(원본 RunClientBridgeDecay)는 원문 위치(미니맵·Gump 정리 앞)에서 runBridgeDecay 가 정확히 한 번 부르고 Kernel 준비는 부르지 않는다. (2026-11-22 WB04-E1230, 2026-11-23 WB04-E1266: 호출을 분리)
         const decayCalls = [], decayOriginal = session.scanBridgeDecay.bind(session); session.scanBridgeDecay = (time, paused) => { decayCalls.push([time.game, paused]); decayOriginal(time, paused); };
+        world.runBridgeDecay(); assert.deepEqual(decayCalls, [[0.125, false]]);
         world.prepareKernelFrame(); assert.equal(core.processState.now, 0.125); assert.deepEqual(frameVisits, []);
         assert.deepEqual(decayCalls, [[0.125, false]]); delete session.scanBridgeDecay;
         core.kernel.runFrame(); world.finishKernelFrame(); assert.deepEqual(frameVisits, [0.125]);
@@ -2198,7 +2199,7 @@ test('CampaignGameWorld TheWarBegins: 세 운반 유닛의 선택·호버·클�
         try {
             const session = world.session(); world.startLocalConnection(); session.pumpLocalConnection(); session.pollLocalConnectionState(); session.pumpLocalConnection();
             assert.equal(world.completeLocalConnection(), true); const core = session.core();
-            assert.throws(() => world.prepareKernelFrame(), /시각 공급자 누락/);
+            assert.throws(() => world.prepareKernelFrame(), /시각 공급자 누락/); assert.throws(() => world.runBridgeDecay(), /시각 공급자 누락/);
             const parent = startPoint ? session.world().create(kind, 2) : session.world().objects().find(({ object }) => object.type === kind && object.owner === 1).sid;
             if (startPoint) { session.world().pop(parent, ...startPoint, 0); core.owner.set(parent, 1); }
             world.bindUserInput({ paused: () => 0, dump: () => {}, assertion: forbidden('선택 진단'), previewAssertion: forbidden('미리보기 진단') },

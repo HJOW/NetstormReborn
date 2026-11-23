@@ -3830,8 +3830,6 @@ export class Netstorm {
         } else if (stateWorld && !stateWorld.session().connectionCallbackActive()) stateWorld.session().pollLocalConnectionState();
         // 원본 루프 3번: 자연 종료한 버퍼를 포함해 패킷 처리 전에 현재 재생 수를 갱신한다.
         this._clientSoundPlayer?.recount();
-        // 원본 SceneFrame(469f60): 미션 장면 음악의 곡 기한을 확인해 다음 원소 곡으로 넘긴다. (2026-11-20 WB04-E1119)
-        this._sceneMusic?.frame();
         // 원본 루프 4번: Poll 뒤 현재 World를 다시 조회해 같은 내부 전송을 진행한다. 완료 후 화면 설치는 별도 경계다.
         const packetWorld = this._campaignWorld;
         if (packetWorld && !packetWorld.session().connectionCallbackActive()) packetWorld.session().pumpLocalConnection();
@@ -3856,10 +3854,15 @@ export class Netstorm {
             this._applyCursor();
         }
         this._runAmbientFrame();
+        // 원본 주 루프는 주변음·바람 뒤에 RunClientBridgeDecay(00422bc0)와 SceneFrame(469f60: 미션 장면 음악의 곡 기한을 확인해 다음 원소 곡으로 넘김)을 이 순서로 하고, 그 뒤에 미니맵 갱신·Gump 정리·Kernel 이 온다.
+        // 장면 음악이 곡을 고를 때 쓰는 Game 난수는 주변음·바람과 같은 줄이라 이 순서가 난수열을 정한다. 이전에는 장면 음악을 입력보다 앞에서 했고 다리 붕괴는 Kernel 준비 안에 있었다. (2026-11-23 WB04-E1266, 장면 음악 연결 2026-11-20 WB04-E1119)
+        if (this._campaignDisplayActive()) this._campaignWorld.runBridgeDecay();
+        this._sceneMusic?.frame();
         // 원본 Kernel 단계에서 같은 현재 World를 준비하고 단일 Client Kernel을 실행한다.
         // 원본 메인 루프는 Gump Idle(464170) 앞에서 죽은 Gump 정리(004662b0 cleanupGumps)를 매 프레임 한 번 실행한다. 이 정리가 없으면 만료된 안내(Game Time 등)가 Kill 큐에만 쌓이고 등록표에서 빠지지 않아
         // 개수가 999 한도에 닿으면 "Gump 원본 개수 한도 초과" 로 게임이 멈춘다. (2026-11-21 WB04-E1134, 몽키 시험의 Vicious 3분 진행에서 발견)
-        if (this._campaignDisplayActive()) { this._runCampaignProductionFrame(); this._clientGump.lifetime().cleanup(); this._clientGump.idle(); this._runCampaignKernelFrame(); this._campaignProduction?.hud?.refresh(); }
+        // 미니맵 갱신(원본 RefreshMinimap 481320)은 Gump 정리·Idle·Kernel 앞이다(이전에는 Kernel 뒤라 한 프레임 앞선 모습을 그렸다). (2026-11-23 WB04-E1266)
+        if (this._campaignDisplayActive()) { this._runCampaignProductionFrame(); this._campaignProduction?.hud?.refresh(); this._clientGump.lifetime().cleanup(); this._clientGump.idle(); this._runCampaignKernelFrame(); }
         this._syncDialogToMapView();
         this._render(now);
         // 원본 주 루프 13번(439c33): 화면을 그린 뒤 Player 결과 알림을 한다. known 이고 전투 모드일 때만 Session 이 필요하다. (2026-11-22 WB04-E1233)
