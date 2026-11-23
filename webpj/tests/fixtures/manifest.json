@@ -26831,8 +26831,8 @@
       "sha256": "56b7ca358c29d3d9db3a3be6bce6072b531c537d704f5a32986127a0111a5a38",
       "bytes": 6782,
       "lines": 411,
-      "fixtureCommit": "8ba641a36",
-      "webCommit": "worktree",
+      "fixtureCommit": "317672a7c",
+      "webCommit": "82e7da906",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -26863,8 +26863,8 @@
       "sha256": "19808e9c181b72ab6ba0da32c8feafbee5e48a5771f27219ad071ed111da6e3b",
       "bytes": 1018,
       "lines": 35,
-      "fixtureCommit": "8ba641a36",
-      "webCommit": "worktree",
+      "fixtureCommit": "317672a7c",
+      "webCommit": "82e7da906",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -27343,8 +27343,8 @@
       "sha256": "e55d81a75131417388a84c2521be47a48692bb12dd03a0a32ecb03ed7985c58d",
       "bytes": 217994,
       "lines": null,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "317672a7c",
+      "webCommit": "82e7da906",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -27375,8 +27375,8 @@
       "sha256": "ea8ea04622b40418819b97de7da6c6c9cd70515663b705b741e2bd513fb3aa33",
       "bytes": 218722,
       "lines": null,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "317672a7c",
+      "webCommit": "82e7da906",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -27407,8 +27407,8 @@
       "sha256": "ae6dcbd5294846a60d59167b3dc37e3a43c8c47dcce48ebb393bd70d997cc20d",
       "bytes": 147680,
       "lines": 2044,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "317672a7c",
+      "webCommit": "82e7da906",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -27439,8 +27439,8 @@
       "sha256": "e3a5f943282dc1d9183daf8b6d996c8226caf5bbbf963fc1273a8dcf4ac84a92",
       "bytes": 209257,
       "lines": null,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "317672a7c",
+      "webCommit": "82e7da906",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -27471,8 +27471,8 @@
       "sha256": "6863f9134a9bfde23a8c56bfc67af9987ee4bdd2e24458006bd57c31ca52661c",
       "bytes": 206457,
       "lines": null,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "317672a7c",
+      "webCommit": "82e7da906",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -27503,8 +27503,8 @@
       "sha256": "401b4e91bf7be45e1651ec4a6d6e65ea6fa27b390b4218f1d3e40f8e0801dc11",
       "bytes": 143795,
       "lines": 1985,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "317672a7c",
+      "webCommit": "82e7da906",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -27535,8 +27535,8 @@
       "sha256": "056e59c6157356589efdc174b7926d49fd3c2868c6ea454c90223cc56423da05",
       "bytes": 208095,
       "lines": null,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "317672a7c",
+      "webCommit": "82e7da906",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -27567,8 +27567,8 @@
       "sha256": "407bdca23a829a4fbf6407cad09cf8fca99437ea6c31fb29bc2d754db23643f3",
       "bytes": 207721,
       "lines": null,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "317672a7c",
+      "webCommit": "82e7da906",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -27599,8 +27599,8 @@
       "sha256": "520cbb17442a33a16859e7b33347fc646d577aed4afc87d86a3dfca94f5fbadd",
       "bytes": 207888,
       "lines": null,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "317672a7c",
+      "webCommit": "82e7da906",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -27631,8 +27631,8 @@
       "sha256": "6111110bf7c376b3d4c91ac9a2b1e75694bab5c847b4ee7d55158c1d45ba3d11",
       "bytes": 144091,
       "lines": 1989,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "317672a7c",
+      "webCommit": "82e7da906",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -27663,8 +27663,8 @@
       "sha256": "942137b94da46a9f10f6493de38eb9c82682d0f14b346989ed90f6a9247ed760",
       "bytes": 200460,
       "lines": null,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "317672a7c",
+      "webCommit": "82e7da906",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -27695,8 +27695,8 @@
       "sha256": "feba335e83190d5761550fa201033c47d41fcc45f6c649e9c4c9b029f378d359",
       "bytes": 209158,
       "lines": null,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "317672a7c",
+      "webCommit": "82e7da906",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -27727,8 +27727,8 @@
       "sha256": "60920ae27cebb126d90e85e529d593dc8b94ec7186bd0e34dd6f6b1c15d78bd3",
       "bytes": 144092,
       "lines": 1989,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "317672a7c",
+      "webCommit": "82e7da906",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -27759,8 +27759,8 @@
       "sha256": "d7956a9b73d2f9bff9a479b0a4be03152c12dc7427fa6229401269f42f7d2941",
       "bytes": 209759,
       "lines": null,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "317672a7c",
+      "webCommit": "82e7da906",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -27791,8 +27791,8 @@
       "sha256": "1e8481ec0890aa7b72e5fcc432c905befa2ddf961286421c3077541706f2133e",
       "bytes": 208302,
       "lines": null,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "317672a7c",
+      "webCommit": "82e7da906",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -27823,8 +27823,8 @@
       "sha256": "6860827105d28cf0dd7a5079bd8f876ea4bb90a42a3c5eaa3899acd2ee937fa8",
       "bytes": 208562,
       "lines": null,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "317672a7c",
+      "webCommit": "82e7da906",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -27855,8 +27855,8 @@
       "sha256": "5f2914d87968623afe893237cc64a39cd63a8067b0c16505e63c14f90359bec2",
       "bytes": 144683,
       "lines": 1997,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "317672a7c",
+      "webCommit": "82e7da906",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -27887,8 +27887,8 @@
       "sha256": "7383227ba764aa3aa5cc3a1cfdfb2ef93fdb89e7c4a538f455341d86ee25fc78",
       "bytes": 208666,
       "lines": null,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "317672a7c",
+      "webCommit": "82e7da906",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -27919,8 +27919,8 @@
       "sha256": "d9cf392219ed9f8662503e31edf08f2e069aa5c7cb875c4c9e50ca02911a8340",
       "bytes": 144683,
       "lines": 1997,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "317672a7c",
+      "webCommit": "82e7da906",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -27951,8 +27951,8 @@
       "sha256": "f915f11bf77522243a8eb82738bd9844ca88130a6ae12320ce76478d6cfd546d",
       "bytes": 207474,
       "lines": null,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "317672a7c",
+      "webCommit": "82e7da906",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -27983,8 +27983,8 @@
       "sha256": "d3a2686133dc2c1a658f74a7c221071a3384257cd851bfcc4bae9f5d76751930",
       "bytes": 214253,
       "lines": null,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "317672a7c",
+      "webCommit": "82e7da906",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -28015,8 +28015,8 @@
       "sha256": "41b342d96705412e5af5f8b6d7b14e35fc8d646f8322fcdc439b8abfb2deb28f",
       "bytes": 144699,
       "lines": 1998,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "317672a7c",
+      "webCommit": "82e7da906",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -28047,8 +28047,8 @@
       "sha256": "a8de33bee02092ff9f7165ad135c946bcc04511561c8143530da58f35cffca46",
       "bytes": 208117,
       "lines": null,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "317672a7c",
+      "webCommit": "82e7da906",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -28079,8 +28079,8 @@
       "sha256": "dfc842304bc7ae9bac52c3c3017e900202caf656eaae8e028dc9865511094fdd",
       "bytes": 144699,
       "lines": 1998,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "317672a7c",
+      "webCommit": "82e7da906",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -28111,8 +28111,232 @@
       "sha256": "67827d13e3b11741a24a3c859a143ce859bfbe2e252f13f6e26687c7434e576f",
       "bytes": 211402,
       "lines": null,
+      "fixtureCommit": "317672a7c",
+      "webCommit": "82e7da906",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-l3-steps",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-l3/steps.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial1 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial3.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1309",
+      "doc": "docs/webpj-l3-tutorial3-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "Tutorial3 L3 입력 단계표(시작 안내 창 구간)와 체크포인트",
+      "text": true,
+      "sha256": "9b8e428d9debc4798e14aa90b73c2c6bbe4b3e36e061ef3d5805a9d75823f88a",
+      "bytes": 1140,
+      "lines": 56,
       "fixtureCommit": null,
-      "webCommit": "worktree",
+      "webCommit": "82e7da906",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-l3-metadata",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-l3/oracle.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial1 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-common.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1309",
+      "doc": "docs/webpj-l3-tutorial3-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "Tutorial3 L3 오라클의 실행 파일·인자·수집 정보",
+      "text": true,
+      "sha256": "e3e75fa898e3991b3a7efc1b3fac36aba0dd4aefee8cb150aeaccc679ed43cd0",
+      "bytes": 1017,
+      "lines": 35,
+      "fixtureCommit": null,
+      "webCommit": "82e7da906",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-l3-a100",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-l3/a100.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial1 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial3.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1309",
+      "doc": "docs/webpj-l3-tutorial3-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "100프레임 Session 덤프(Capture The Priest! 안내 창으로 정지, 단계 A)",
+      "text": true,
+      "sha256": "82ecc8d41ce47cc8ca9c96fac409c594b7293bc93088eb31eeb509207e9630f9",
+      "bytes": 308461,
+      "lines": 4052,
+      "fixtureCommit": null,
+      "webCommit": "82e7da906",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-l3-a100-screen",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-l3/a100.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial1 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial3.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1309",
+      "doc": "docs/webpj-l3-tutorial3-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "100프레임 논리 화면(Capture The Priest! 안내 창)",
+      "text": false,
+      "sha256": "42904e0bf30854e8ab19aead0c690af1565d3689fc3f85af83c1e8ffc71d6a30",
+      "bytes": 223508,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "82e7da906",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-l3-a160-screen",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-l3/a160.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial1 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial3.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1309",
+      "doc": "docs/webpj-l3-tutorial3-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "160프레임 논리 화면(Build Golems 안내 창)",
+      "text": false,
+      "sha256": "b3a784318330e245a7d5b9fe235640a06b968c6723e85e721b53bd0a26e9f30d",
+      "bytes": 226705,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "82e7da906",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-l3-a240",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-l3/a240.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial1 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial3.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1309",
+      "doc": "docs/webpj-l3-tutorial3-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "240프레임 Session 덤프(안내 창을 닫은 시작 화면)",
+      "text": true,
+      "sha256": "e17e47fc16c5ad6a42e449821dbe6a8df3f7246ff1f775a02ff49b4a0e459a13",
+      "bytes": 308797,
+      "lines": 4055,
+      "fixtureCommit": null,
+      "webCommit": "82e7da906",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-l3-a240-screen",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-l3/a240.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial1 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial3.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1309",
+      "doc": "docs/webpj-l3-tutorial3-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "240프레임 논리 화면(내 섬·간헐천 셋·적 섬 일부)",
+      "text": false,
+      "sha256": "f4d435306c49cd561cd6c5236970b3834908a381fde3ca9dc82f9fd118d2f372",
+      "bytes": 221865,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "82e7da906",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
