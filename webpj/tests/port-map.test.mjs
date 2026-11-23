@@ -117,12 +117,14 @@ test('이식 대응표: 후보 신규 단위 경로별 분류', () => {
 test('이식 대응표: 기존 웹 모듈 대응과 3.6절 판정 기록', () => {
     const row = (key) => map.rows.find((item) => unitKey(item.cpp) === key);
     // base 는 기준선이거나 그 뒤 변경을 판정한 커밋이다(2026-11-07 WB02-H 에서 9cb0547f 판정). (2026-11-06 WB02-G, 2026-11-07 WB02-H 수정)
-    assert.deepEqual([row('o/SidPool').web, row('o/SidPool').status], ['www/core/sid-pool.js', 'port']);
+    // `port` 이상(port·session·oracle)이면 이식·검사를 통과한 행이다: `session`(앱 수명 연결)으로 오른 행도 같은 판정이다. (2026-11-23 WB04-E1282)
+    const portOrAbove = (name) => ['port', 'session', 'oracle'].includes(row(name).status);
+    assert.equal(row('o/SidPool').web, 'www/core/sid-pool.js'); assert.ok(portOrAbove('o/SidPool'));
     assert.match(row('o/SidPool').base, /^[0-9a-f]{8}$/);
-    assert.equal(row('o/SquidFactory').status, 'port');
+    assert.ok(portOrAbove('o/SquidFactory'));
     // 감시 쌍 생성은 WB04-D5a 에서 옮겼고 Process VT 부착은 기준선도 DependFormHost 에서 명시 오류라 WB04-D5c 에서 port 로 올렸다.
-    assert.equal(row('o/RawDependCreate').status, 'port');
-    assert.equal(row('o/SquidProcess').status, 'port');
+    assert.ok(portOrAbove('o/RawDependCreate'));
+    assert.ok(portOrAbove('o/SquidProcess'));
     // 3.6절 9곳은 판정(①/②/③)을 메모에 남겼다.
     const judged = ['o/Config', 'o/ConfigInterface', 'client/TellSection', 'o/RiftTypeTable', 'o/CanonDecoder', 'o/RawTerrainContext', 'o/RawIslandPostPop', 'o/SidPool', 'o/RawSquidContainedUnpop'];
     assert.deepEqual(judged.filter((key) => !/3\.6[①②③]/.test(splitNote(row(key).note).text)), []);
@@ -148,7 +150,9 @@ test('이식 대응표: 기존 모듈 재판정과 시간 동기화 부분 이�
     for (const [key, [web, status]] of Object.entries(expected)) {
         const row = map.rows.find((item) => unitKey(item.cpp) === key);
         assert.ok(row, key);
-        assert.deepEqual([row.web, row.status], [web, status], key);
+        // 기대 상태가 port 이면 session·oracle 로 오른 행도 받아들인다(승격은 `tools/port-map-session.mjs`). (2026-11-23 WB04-E1282)
+        assert.equal(row.web, web, key);
+        assert.ok(status === 'port' ? ['port', 'session', 'oracle'].includes(row.status) : row.status === status, `${key}: ${row.status}`);
         assert.match(row.base, /^[0-9a-f]{8}$/, key);
         assert.match(row.note, /WB04-E514/, key);
     }

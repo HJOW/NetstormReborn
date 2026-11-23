@@ -185,6 +185,9 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         // 로그인된 같은 Session의 사제 선택과 해제를 실제 입력 서비스에 전달한다.
         assert.ok(app._campaignUserInput); assert.throws(() => app._prepareCampaignUserInput(), /수명 오류/);
         const priest = session.findPriestParticipation(session.localOwner()); assert.ok(priest);
+        // Guide 미션은 월드에 들어서며 게임이 멈춘 채(PauseMissionWorldEntry) 첫 안내 창을 기다리고 정지 중에는 선택이 막힌다. 그 한 단계를 풀고(관문의 자기 정지 표식 포함) 선택을 확인한다. (2026-11-23 WB04-E1282)
+        assert.equal(app._gameClock.paused(), true); assert.equal(runtime.gate.scriptPaused, 1); assert.equal(app._campaignWorld.select(priest), undefined); assert.equal(app._campaignWorld.selected(), 0);
+        app._gameClock.popGamePause(); runtime.gate.scriptPaused = 0;
         app._campaignWorld.select(priest); assert.equal(app._campaignWorld.selected(), priest);
         app._campaignWorld.resetSelection(); assert.equal(app._campaignWorld.selected(), 0);
         const priestSlot = session.core().pool.slot(priest), priestRaw = new DataView(priestSlot.buffer, priestSlot.byteOffset, priestSlot.byteLength);

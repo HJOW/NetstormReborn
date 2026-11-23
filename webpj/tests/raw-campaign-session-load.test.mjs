@@ -857,13 +857,17 @@ test('Netstorm Client World: 실제 앱 State7 부모와 State8 로컬 로그인
         assert.equal(session.localConnectionReady(), true); assert.equal(world.connecting, true);
         // 같은 앱 전역의 표본을 실제 Session 전송 프레임에서 처리하고 다음 프레임의 시계에 반영한다.
         const sync = app._clientLocal.clockSynchronization(), samples = app._clientLocal.clockSamples();
+        // Guide 미션은 월드에 들어서며 게임이 멈춘 채(PauseMissionWorldEntry) 첫 안내 창을 기다린다. 시계 보정이 게임 시각에 반영되는 모습을 보도록 그 한 단계를 풀고(관문의 자기 정지 표식 포함), 보정 전의 시계 차이를 기준으로 삼는다. (2026-11-23 WB04-E1282)
+        const entryGate = guide.current().runtime.gate; assert.equal(app._gameClock.paused(), true); assert.equal(entryGate.scriptPaused, 1);
+        app._gameClock.popGamePause(); entryGate.scriptPaused = 0; app._onFrame(950);
+        const baseGap = app._gameClock.time().wall - app._gameClock.time().game;
         sync.replyMode = 0; sync.connection = 1; samples.next = 0;
         const sample = new DataView(samples.samples[0].buffer);
         sample.setFloat64(8, 0.125, true); sample.setFloat64(16, 0.125, true); sample.setFloat64(24, 0.375, true);
         app._onFrame(1000); assert.equal(sync.gameTicks, 125);
-        app._onFrame(1100); assert.ok(Math.abs(app._gameClock.time().wall - app._gameClock.time().game - 0.125) < 1e-12);
+        app._onFrame(1100); assert.ok(Math.abs(app._gameClock.time().wall - app._gameClock.time().game - baseGap - 0.125) < 1e-9);
         resetClientClockSynchronization(app._clientLocal); app._onFrame(1200);
-        assert.equal(app._gameClock.time().game, app._gameClock.time().wall);
+        assert.ok(Math.abs(app._gameClock.time().wall - app._gameClock.time().game - baseGap) < 1e-9);
         assert.equal(data.get('fort.mySubHandle'), '당신');
         const owner = app._clientGameplay.player.battleOwner, record = app._clientPlayers.records().subarray(owner * 180 + 12, owner * 180 + 52);
         assert.equal(displayTextCodec.decode(record.subarray(0, record.indexOf(0))), '당신');
