@@ -124,6 +124,7 @@ public sealed class HostSquidPacketRootSupplyTests
         });
         byte[] packet = [0x30, 0xcf, 1, 0, 0, 0, 0, 0, (byte)'h', (byte)'i', 0];
         session.ReceiveFixedGameplayPacket(0x4cf980, packet);
+        Assert.NotNull(told);
         Assert.Equal([(byte)'h', (byte)'i'], told);
         int sid = session.BuildPlayerWorldHooks().Create!(158, 0);
         var first = new byte[6];
