@@ -4,6 +4,8 @@ namespace Netstorm.Core.Original;
 /// <summary>RawGameAuxState.h의00540468/6e와00541258 현재 상태다.</summary>
 public sealed partial class RawGameAuxState
 {
+    /// <summary>00541174의 현재71 썬 아처 역할이며 실제 생성/수신 공장이 같은 주소를 빌린다.</summary>
+    public UIntBox SunArcherTypeBox { get; } = new() { Value = 71 };
     /// <summary>현재128 썬 캐논 역할이며 수신/현재프레임이 함께 빌린다.</summary>
     public UIntBox SunCannonTypeBox { get; } = new() { Value = 128 };
     /// <summary>회전 writer가 매번 읽는 현재메시지/프로토콜 두BYTE다.</summary>

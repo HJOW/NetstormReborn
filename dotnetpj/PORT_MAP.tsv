@@ -1787,3 +1787,7 @@ cpppj/src/o/RawGunTarget.cpp	Netstorm.Core/Original/RawGunTarget.cs	8db0f07baf14
 cpppj/src/o/RawGunTarget.cpp	Netstorm.Core/Original/RawGunTarget.Geometry.cs	8db0f07baf143b5e8e86eaa43c9443c3c0bb29f8	port
 cpppj/src/o/RawGunTarget.h	Netstorm.Core/Original/RawGunTarget.Types.cs	8db0f07baf143b5e8e86eaa43c9443c3c0bb29f8	port
 cpppj/src/o/RawGunTarget.h	Netstorm.Core/Original/RawGunTarget.cs	8db0f07baf143b5e8e86eaa43c9443c3c0bb29f8	port
+cpppj/src/client/RawCampaignArcherBindings.cpp	Netstorm.Client/Mission/RawCampaignArcherBindings.cs	920346fd84a4e9b5d151135d16cecdabe1d22d56	port
+cpppj/src/client/RawCampaignArcherBindings.h	Netstorm.Client/Mission/RawCampaignArcherBindings.cs	920346fd84a4e9b5d151135d16cecdabe1d22d56	port
+cpppj/src/client/RawCampaignArcherBindings.cpp	Netstorm.Client/Mission/RawCampaignArcherBindings.Factories.cs	920346fd84a4e9b5d151135d16cecdabe1d22d56	port
+cpppj/src/client/RawCampaignArcherBindings.h	Netstorm.Client/Mission/RawCampaignArcherBindings.Factories.cs	920346fd84a4e9b5d151135d16cecdabe1d22d56	port
