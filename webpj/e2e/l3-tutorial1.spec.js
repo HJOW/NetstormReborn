@@ -15,14 +15,14 @@ const ORACLE = path.join(__dirname, '..', 'tests', 'fixtures', 'cpppj', 'candida
 // 단계 동작마다 웹에서 입력을 넣을 프레임 보정(단계 프레임에 더한다)이다. 위 규칙을 값으로 옮겼다.
 const INJECT_SHIFT = { 'click-if': 1, click: -1, right: 1, key: -1 };
 
-test('L3 Tutorial1: MORE→OK→스크롤 연습→F4→Bridges OK→다리 조각 집기·놓기(다리 생성)→두·세 번째 조각 이어 놓기의 체크포인트 화면과 덤프가 cpppj 와 같다', async ({ browser }) => {
+test('L3 Tutorial1: MORE→OK→스크롤 연습→F4→Bridges OK→다리 조각 집기·놓기(다리 생성)→두·세 번째 조각 이어 놓기→안내 창→카메라 이동→네 번째 조각 놓기의 체크포인트 화면과 덤프가 cpppj 와 같다', async ({ browser }) => {
   test.setTimeout(600000);
   const plan = JSON.parse(fs.readFileSync(path.join(ORACLE, 'steps.json'), 'utf8')), meta = JSON.parse(fs.readFileSync(path.join(ORACLE, 'oracle.json'), 'utf8'));
   expect(meta.cpppjCommit, '오라클 기준선 커밋').toBe('225553df'); expect(plan.screen).toEqual({ width: 1024, height: 768 });
-  // 단계표의 체크포인트 이름마다 오라클의 덤프·화면 파일이 있어야 한다(덤프 c200·c300·c400·c540, 화면 c200·c300·p345·d364·c400·e470·c540).
-  for (const file of ['c200.tsv', 'c200.png', 'c300.tsv', 'c300.png', 'c400.tsv', 'c400.png', 'p345.png', 'd364.png', 'e470.png', 'c540.tsv', 'c540.png']) expect(fs.existsSync(path.join(ORACLE, file)), file).toBe(true);
-  expect(plan.steps.filter(([, op]) => op === 'session-dump').map(([, , label]) => label)).toEqual(['c200', 'c300', 'c400', 'c540']);
-  expect(plan.steps.filter(([, op]) => op === 'snapshot').map(([, , label]) => label)).toEqual(['c200', 'c300', 'p345', 'd364', 'c400', 'e470', 'c540']);
+  // 단계표의 체크포인트 이름마다 오라클의 덤프·화면 파일이 있어야 한다(덤프 c200·c300·c400·c540·c680, 화면 c200·c300·p345·d364·c400·e470·c540·c680).
+  for (const file of ['c200.tsv', 'c200.png', 'c300.tsv', 'c300.png', 'c400.tsv', 'c400.png', 'p345.png', 'd364.png', 'e470.png', 'c540.tsv', 'c540.png', 'c680.tsv', 'c680.png']) expect(fs.existsSync(path.join(ORACLE, file)), file).toBe(true);
+  expect(plan.steps.filter(([, op]) => op === 'session-dump').map(([, , label]) => label)).toEqual(['c200', 'c300', 'c400', 'c540', 'c680']);
+  expect(plan.steps.filter(([, op]) => op === 'snapshot').map(([, , label]) => label)).toEqual(['c200', 'c300', 'p345', 'd364', 'c400', 'e470', 'c540', 'c680']);
   const context = await browser.newContext({ viewport: { width: plan.screen.width, height: plan.screen.height }, locale: 'en-US' }), page = await context.newPage();
   const errors = []; page.on('pageerror', (error) => errors.push(error.stack ?? error.message)); page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
   await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, autoDemo: 0 } })));

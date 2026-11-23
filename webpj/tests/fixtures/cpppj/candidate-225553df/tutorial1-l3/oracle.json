@@ -11,7 +11,7 @@
   "steps": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial1-l3/steps.json",
   "collected": {
     "host": "HJOW-Athlon",
-    "at": "2026-11-23T16:37:27.771Z",
+    "at": "2026-11-23T18:09:51.861Z",
     "node": "v26.13.0"
   },
   "args": [
@@ -20,7 +20,7 @@
     "--window",
     "--mute-audio",
     "--frames",
-    "541",
+    "681",
     "--set",
     "SCREENW=1024;SCREENH=768;WelcomeGiven=1;tellTips=0;autoDemo=0",
     "--ui-script",

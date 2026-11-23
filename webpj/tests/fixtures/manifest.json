@@ -25604,19 +25604,19 @@
         "webpj/www/netstorm.js",
         "webpj/www/core/session-state-dump.js"
       ],
-      "unit": "WB04-E1284",
+      "unit": "WB04-E1301",
       "doc": "docs/webpj-l3-tutorial1-20261123.md",
       "cpppjSources": [
         "cpppj/src/client/SessionStateDump.cpp",
         "cpppj/src/app/main.cpp"
       ],
-      "scope": "Tutorial1 L3 입력 단계표(MORE→OK→F4)와 체크포인트",
+      "scope": "Tutorial1 L3 입력 단계표(MORE→OK→F4→다리 조각 네 개 놓기)와 체크포인트",
       "text": true,
-      "sha256": "bd6424e081a4b3cd3c9ee872d804f5351205a57ce6caa8cf48d07f3b44379a0e",
-      "bytes": 2109,
-      "lines": 126,
-      "fixtureCommit": "a449b4771",
-      "webCommit": "372f6b4d7",
+      "sha256": "7a2c375f7d68b67708430cc9a348cb0be0bf38c07627004ef0117522c984713d",
+      "bytes": 2640,
+      "lines": 161,
+      "fixtureCommit": "3a325a259",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -25636,7 +25636,7 @@
         "webpj/www/netstorm.js",
         "webpj/www/core/session-state-dump.js"
       ],
-      "unit": "WB04-E1284",
+      "unit": "WB04-E1301",
       "doc": "docs/webpj-l3-tutorial1-20261123.md",
       "cpppjSources": [
         "cpppj/src/client/SessionStateDump.cpp",
@@ -25644,11 +25644,11 @@
       ],
       "scope": "L3 오라클의 실행 파일·인자·수집 정보",
       "text": true,
-      "sha256": "3c35e38ea15fca310c8a25079e25b0c05effb9b9f74376a0af84a3a8ca36cd26",
+      "sha256": "c997df8888d1762bb8f1e810ba5d90b9462fbb4a985b2ee5dc1759efde3fa8c8",
       "bytes": 1156,
       "lines": 35,
-      "fixtureCommit": "a449b4771",
-      "webCommit": "372f6b4d7",
+      "fixtureCommit": "3a325a259",
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -26001,6 +26001,70 @@
       "lines": null,
       "fixtureCommit": null,
       "webCommit": "372f6b4d7",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial1-l3-c680",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial1-l3/c680.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial1 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial1.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1301",
+      "doc": "docs/webpj-l3-tutorial1-20261123.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "680프레임 Session 덤프(네 번째 다리 조각을 놓은 뒤: 매달린 다리 끝 칸의 수명 감소·풀 새 SID)",
+      "text": true,
+      "sha256": "d0494da9fe569a261af4f441bcb85ca4aaf850323a5d545d8338acb2df9592a7",
+      "bytes": 145169,
+      "lines": 2000,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial1-l3-c680-screen",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial1-l3/c680.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial1 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial1.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1301",
+      "doc": "docs/webpj-l3-tutorial1-20261123.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "680프레임 논리 화면(카메라를 아래로 옮긴 뒤 네 번째 조각을 놓은 모습)",
+      "text": false,
+      "sha256": "7297319448511fae6361f35e3fbc5d4ad980cd0528956b0ae3e2e8980b8e2cd2",
+      "bytes": 179243,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"

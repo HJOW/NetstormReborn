@@ -1,7 +1,7 @@
 {
   "format": "netstorm-webpj-cpppj-l3-steps",
   "version": 1,
-  "description": "cpppj 225553df Tutorial1 입력 단계표(L3: MORE→OK→스크롤 연습→F4→Bridges OK→다리 조각 집기(345 화면)→섬 남쪽 가장자리에 놓기(364 화면, 400 덤프·화면)→두 번째 조각을 집어 놓기(470 화면)→세 번째 조각을 집어 놓기(540 덤프·화면)). 단계는 [프레임, 동작, 인자]이며 cpppj `--ui-script` 의 동작 이름을 그대로 쓴다. 웹은 e2e/l3-tutorial1.spec.js 가 같은 단계를 고정 시각 모드로 적용한다(입력 프레임 규칙은 docs/webpj-l3-tutorial1-20261123.md).",
+  "description": "cpppj 225553df Tutorial1 입력 단계표(L3: MORE→OK→스크롤 연습→F4→Bridges OK→다리 조각 집기(345 화면)→섬 남쪽 가장자리에 놓기(364 화면, 400 덤프·화면)→두 번째 조각을 집어 놓기(470 화면)→세 번째 조각을 집어 놓기(540 덤프·화면)→안내 창 MORE/OK→미니맵 클릭으로 카메라를 아래로→네 번째 조각을 집어 놓기(680 덤프·화면)). 단계는 [프레임, 동작, 인자]이며 cpppj `--ui-script` 의 동작 이름을 그대로 쓴다. 웹은 e2e/l3-tutorial1.spec.js 가 같은 단계를 고정 시각 모드로 적용한다(입력 프레임 규칙은 docs/webpj-l3-tutorial1-20261123.md).",
   "language": "english",
   "screen": {
     "width": 1024,
@@ -121,6 +121,41 @@
       540,
       "session-dump",
       "c540"
+    ],
+    [
+      560,
+      "click-if",
+      "MORE"
+    ],
+    [
+      580,
+      "click-if",
+      "OK"
+    ],
+    [
+      600,
+      "click",
+      "screen:30,735"
+    ],
+    [
+      620,
+      "click",
+      "screen:20,44"
+    ],
+    [
+      640,
+      "click",
+      "screen:255,210"
+    ],
+    [
+      680,
+      "snapshot",
+      "c680"
+    ],
+    [
+      680,
+      "session-dump",
+      "c680"
     ]
   ]
 }

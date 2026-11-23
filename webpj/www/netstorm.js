@@ -114,6 +114,7 @@ import { dispatchViewKeyInput } from './core/view-key-input.js';
 import { GameMenuButton } from './ui/game-menu-button.js';
 import { CHAT_RECORD_BYTES, RawChatChannels } from './core/raw-chat-channels.js';
 import { resetClientClockSynchronization } from './core/client-state-storage-cleanup.js';
+import { resetStateBridgeDecayScan } from './core/raw-state-bridge-reset.js';
 import { RawCampaignMissionStartBindings } from './core/raw-campaign-mission-start-bindings.js';
 import { RawCampaignTutorialOneBindings } from './core/raw-campaign-tutorial-one-bindings.js';
 import { MISSION_RELOAD_COMMAND, dispatchMissionAbort } from './core/mission-guide-input.js';
@@ -1097,12 +1098,15 @@ export class Netstorm {
 
     // 원본 State 전체 정리(CleanupStateWorld)의 플레이어 반복(1~8번)을 SP 쪽만 옮긴다: 각 소유자의 SP 를 0 으로 쓴다(`resetOtherPlayer(player, 0)`, 로컬은 `setSp`).
     // SP 저장소 Set 은 소유자마다 Game 난수를 160회 쓰므로 한 번에 1,280회를 소비한다. 이 소비 순서가 지형 도장·구름·SP 잡음 등 뒤따르는 모든 난수 사용의 출발 상태를 정한다.
-    // 앱은 아직 State 전체 정리(`cleanupClientStateWorld`)를 State 기계에 연결하지 않았고, 시작·메뉴·미션 시작 시점에는 나머지 정리 대상이 이미 비어 있어 난수 소비와 SP 비우기만 같은 자리에서 실행한다. 실제 SP 저장소가 없으면 아무 일도 하지 않는다. (2026-11-23 WB04-E1280)
+    // 앱은 아직 State 전체 정리(`cleanupClientStateWorld`)를 State 기계에 연결하지 않았고, 시작·메뉴·미션 시작 시점에는 나머지 정리 대상이 이미 비어 있어 난수 소비와 SP 비우기만 같은 자리에서 실행한다. 실제 SP 저장소가 없으면 SP 는 건너뛴다. (2026-11-23 WB04-E1280)
+    // 비어 있지 않은 정리 효과 하나는 같이 실행한다: 다리 붕괴 스캔 초기화(Reset422490)이다(위 SP 와 달리 난수를 쓰지 않으며 L3 540→680프레임 비교에서 매달린 다리의 수명 감소 누락으로 드러났다). (2026-11-24 WB04-E1301)
     _clearPlayerSpForState() {
         const store = this._clientSp?.store();
-        if (!store) return;
-        // 소유자 1~8 의 SP 를 float 0 의 DWORD 로 쓴다.
-        for (let owner = 1; owner < 9; owner += 1) store.set(owner, 0);
+        // 소유자 1~8 의 SP 를 float 0 의 DWORD 로 쓴다(저장소가 없으면 생략).
+        if (store) for (let owner = 1; owner < 9; owner += 1) store.set(owner, 0);
+        // 같은 정리의 Reset422490: 다리 붕괴 스캔의 범위(15000..23001)·커서·다음 기한(주기 + 현재 게임 시각)을 다시 잡는다. 이것이 없으면 스캔 범위가 -1 로 남아 매달린 다리가 영영 금 가지 않는다. (2026-11-24 WB04-E1301)
+        const storage = this._surfaceStorage, clock = this._gameClock;
+        if (storage && clock) resetStateBridgeDecayScan(storage.bridgeDecayScan, storage.bridgeDecayPeriod, clock.time().game);
     }
 
     // 원본 State 39(인트로) 설치의 정리(004b6e62 부모의 cleanup)이다. 시작 입력 직후, title 그림이나 메인 메뉴보다 앞서 한 번 실행한다. (2026-11-23 WB04-E1280)
