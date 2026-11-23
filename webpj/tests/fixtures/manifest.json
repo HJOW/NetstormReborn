@@ -23065,6 +23065,72 @@
       }
     },
     {
+      "id": "golem-capture",
+      "path": "cpppj/tests/fixtures/golem-capture-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E1312",
+      "producer": "cpppj CampaignSession_GolemWalkNative 계열(GameWorld 골렘 보행 대조, CampaignSessionTests.cpp:1104)이 읽는 실제 10.78 골렘(TYPE 133, VT 0x50e568, 소유자 0, extra 128, TYPE 기준점 (8,2), 단위 배율) 프레임 0..65 ShapeToBuffer 캡처 66행",
+      "consumers": [
+        "webpj/tests/golem-support-capture-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/raw-shape-to-buffer.js",
+        "webpj/www/core/raw-campaign-session-particles.js",
+        "webpj/www/core/raw-campaign-session-building.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawShapeToBuffer.cpp",
+        "cpppj/src/client/RawShapeToBuffer.h"
+      ],
+      "doc": "docs/webpj-golem-support-capture-20261124.md",
+      "scope": "66프레임 입력에서 캡처 메타데이터 16바이트와 전체 픽셀(작은 fixture 121KB)",
+      "text": true,
+      "sha256": "012d96d1c1d6064ee1074dc7b6dec7757be3ca8b49a86b6ed76baa1784cd8550",
+      "bytes": 121176,
+      "lines": 67,
+      "fixtureCommit": "9a21dd0c8",
+      "webCommit": "499c54ddb",
+      "cpppjBasis": {
+        "cpppj/src/client/RawShapeToBuffer.cpp": "e6c41d170",
+        "cpppj/src/client/RawShapeToBuffer.h": "e6c41d170"
+      }
+    },
+    {
+      "id": "support-color-capture",
+      "path": "cpppj/tests/fixtures/support-color-capture-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E1312",
+      "producer": "cpppj CampaignSession_SupportNative198FramesAndColors(CampaignSessionTests.cpp:1161)가 읽는 실제 10.78 받침 윗면 94·하단 95 의 9프레임 × 소유자·현재 색 번호 ShapeToBuffer 캡처 198행(TYPE 기준점 (-2,3), 독립 HSL 색표 입력)",
+      "consumers": [
+        "webpj/tests/golem-support-capture-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/raw-shape-to-buffer.js",
+        "webpj/www/core/raw-campaign-session-particles.js",
+        "webpj/www/core/raw-campaign-session-building.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawShapeToBuffer.cpp",
+        "cpppj/src/client/RawShapeToBuffer.h"
+      ],
+      "doc": "docs/webpj-golem-support-capture-20261124.md",
+      "scope": "198입력(TYPE·프레임·소유자·색 번호)에서 캡처 메타데이터와 전체 픽셀(721KB)",
+      "text": true,
+      "sha256": "c1c9ff9d6a017a22cc3c97713969d809648fd99b29b892e2629123a8a0d8c81a",
+      "bytes": 720921,
+      "lines": 199,
+      "fixtureCommit": "8f8b4b035",
+      "webCommit": "499c54ddb",
+      "cpppjBasis": {
+        "cpppj/src/client/RawShapeToBuffer.cpp": "e6c41d170",
+        "cpppj/src/client/RawShapeToBuffer.h": "e6c41d170"
+      }
+    },
+    {
       "id": "production-hint",
       "path": "cpppj/tests/fixtures/production-hint-x86.tsv",
       "kind": "original-x86",
