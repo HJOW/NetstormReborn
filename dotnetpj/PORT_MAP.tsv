@@ -1768,3 +1768,8 @@ cpppj/src/o/RawMissile.h	Netstorm.Core/Original/RawMissile.Types.cs	1d30e3841300
 cpppj/src/o/RawMissile.h	Netstorm.Core/Original/RawMissile.Hooks.cs	1d30e38413000f93a892474ac5842058d13f7c4c	port
 cpppj/src/o/RawMissile.cpp	Netstorm.Core/Original/Missile.cs	1d30e38413000f93a892474ac5842058d13f7c4c	port
 cpppj/src/o/RawMissile.h	Netstorm.Core/Original/Missile.cs	1d30e38413000f93a892474ac5842058d13f7c4c	port
+cpppj/src/o/RawGunMode.cpp	Netstorm.Core/Original/RawGunMode.cs	a40bd80e7c1c0d619ca38d648d37b00f8cd86edb	port
+cpppj/src/o/RawGunMode.h	Netstorm.Core/Original/RawGunMode.cs	a40bd80e7c1c0d619ca38d648d37b00f8cd86edb	port
+cpppj/src/o/RawProjectileGeometry.cpp	Netstorm.Core/Original/RawProjectileGeometry.cs	a40bd80e7c1c0d619ca38d648d37b00f8cd86edb	port
+cpppj/src/o/RawProjectileGeometry.h	Netstorm.Core/Original/RawProjectileGeometry.cs	a40bd80e7c1c0d619ca38d648d37b00f8cd86edb	port
+cpppj/src/o/RawProjectileGeometry.h	Netstorm.Core/Original/RawProjectileGeometry.Types.cs	a40bd80e7c1c0d619ca38d648d37b00f8cd86edb	port
