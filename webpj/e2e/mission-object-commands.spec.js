@@ -267,3 +267,34 @@ test('The War Begins!: 채팅 도우미 단추 우클릭 도움말이 열리고 
   await expect.poll(() => page.evaluate(() => window.netstorm._mainMenu.dialog?.topic ?? null), { timeout: 5000, message: '도우미 도움말 주제' }).toBe('chathelperHelp');
   expect(errors).toEqual([]);
 });
+
+// 팝업을 닫으면 다음 프레임에 화면에서 실제로 지워진다(원본 RequestClosePopups 뒤 common.changed 의 화면 갱신과 같은 결과). 채팅 도우미 팝업을 열었다가 `_closeCampaignPopups` 로 닫고 그 영역 픽셀로 확인한다. (2026-11-23 WB04-E1256)
+test('The War Begins!: 팝업을 닫으면 그 영역이 다음 프레임에 다시 그려진다', async ({ page }) => {
+  test.setTimeout(300000);
+  const errors = []; await startWarBegins(page, errors);
+  await page.locator('canvas').focus(); await page.keyboard.press('F3'); await page.waitForTimeout(800); await page.keyboard.press('Enter'); await page.waitForTimeout(600);
+  // 팝업이 차지할 영역(도우미 단추 위쪽 지도 가장자리 띠)의 논리 사각형이다.
+  const helper = await page.evaluate(() => { const app = window.netstorm, b = app._campaignProduction.ui.chat().report().helper.bounds, rect = app.canvas.getBoundingClientRect();
+    return { x: rect.left + (b.left + b.right) / 2 * rect.width / app._layout.logicalWidth, y: rect.top + (b.top + b.bottom) / 2 * rect.height / app._layout.logicalHeight }; });
+  // 현재 캔버스에서 논리 사각형의 픽셀 값을 읽는다.
+  const grab = (box) => page.evaluate((r) => { const app = window.netstorm, canvas = app.canvas, context = canvas.getContext('2d'), scale = canvas.width / app._layout.logicalWidth;
+    return Array.from(context.getImageData(Math.round(r.left * scale), Math.round(r.top * scale), Math.round((r.right - r.left) * scale), Math.round((r.bottom - r.top) * scale)).data); }, box);
+  const diff = (a, b) => { let count = 0; for (let index = 0; index < a.length; index += 4) if (Math.abs(a[index] - b[index]) + Math.abs(a[index + 1] - b[index + 1]) + Math.abs(a[index + 2] - b[index + 2]) > 60) count += 1; return count / (a.length / 4); };
+  // 팝업을 한 번 열어 차지하는 논리 사각형을 재고 닫는다.
+  const open1 = async () => { await page.mouse.move(helper.x, helper.y); await page.mouse.down(); await page.waitForTimeout(100); await page.mouse.up(); await page.waitForTimeout(700); };
+  await open1();
+  const box = await page.evaluate(() => { const root = window.netstorm._clientGump; let menu = 0; for (let t = root.root().child; t; t = root.node(t).next) { if (root.node(t).command === 26) menu = t; }
+    const b = root.collection().bounds(menu); return { left: b.left + 4, top: b.top + 4, right: b.right - 4, bottom: Math.min(b.bottom, 760) - 4 }; });
+  await page.evaluate(() => window.netstorm._closeCampaignPopups()); await page.waitForTimeout(700);
+  const before = await grab(box);
+  await open1();
+  expect(await page.evaluate(() => window.netstorm._clientGump.blockingPopups()), '도우미 메뉴가 열림').toBe(true);
+  const open = await grab(box);
+  expect(diff(before, open), '팝업이 영역을 덮는다').toBeGreaterThan(0.4);
+  await page.evaluate(() => window.netstorm._closeCampaignPopups()); await page.waitForTimeout(700);
+  expect(await page.evaluate(() => window.netstorm._clientGump.blockingPopups()), '팝업이 닫힘').toBe(false);
+  const after = await grab(box);
+  expect(diff(open, after), '닫은 뒤 영역이 다시 그려진다').toBeGreaterThan(0.25);
+  expect(diff(before, after), '닫은 뒤 영역이 팝업 전과 같다(애니메이션 오차 허용)').toBeLessThan(0.1);
+  expect(errors).toEqual([]);
+});

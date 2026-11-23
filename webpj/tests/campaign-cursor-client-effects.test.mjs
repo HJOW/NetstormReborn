@@ -53,3 +53,20 @@ test('캠페인 커서 Client: 한국어 글꼴 측정', () => {
     const expected = new GumpText(fonts).measure(Uint16Array.of(0xac00, 0xb098, 0), decodeGumpTextContext(words));
     assert.deepEqual(measured, [expected.width, expected.height]);
 });
+
+// 측정(lifecycle.measure)이 쓰는 글자 배열과 그리기(raw-campaign-cursor-display 의 `fonts.encode(`${text}\0`)`)가 쓰는 글자 배열이 실제 한국어 경고 문구에서 같아, 경고·비용 문구의 측정 폭과 그려지는 폭이 어긋나지 않는다. (2026-11-23 WB04-E1256)
+// 웹은 한국어를 유니코드 글꼴 경로(UTF-16 코드 단위)로 측정·출력하며 두 경로가 같은 `FontSet.encode` 를 쓴다(원본의 Windows-1252 바이트 대 표시 코덱 문제는 웹에 없다).
+test('캠페인 커서 Client: 한국어 경고 문구의 측정 폭과 그리기 폭이 같다', async () => {
+    const { readFileSync } = await import('node:fs'), { XlatTable } = await import('../www/assets/xlat.js'), { REPO_ROOT } = await import('./helpers.mjs');
+    const korean = new XlatTable(readFileSync(`${REPO_ROOT}/webpj/translations/xlat.korean`, 'utf8'));
+    const unicode = new UnicodeFontProvider({ glyph: (code) => ({ advance: code > 0x7f ? 13 : 6, left: 0, top: 0, width: 0, height: 0, coverage: new Uint8Array() }) });
+    const fonts = new FontSet(new Map(ALL_FONT_PATHS.map((name) => [name, readData(name)])), { unicode });
+    const effects = makeCampaignCursorClientEffects({ fonts: () => fonts }, {}, {}), words = Uint32Array.of(2, 0, 17, 0, 0, 9, 1, 1), text = new GumpText(fonts);
+    const warnings = ["Priest can't get here.", 'Must be placed over constructing artifact', 'Cannot place here', 'Energy not satisfied', 'Only on Controlled Island'];
+    for (const key of warnings) {
+        const translated = korean.translate(key); assert.notEqual(translated, key, `${key} 한국어 번역`);
+        const drawn = text.measure(fonts.encode(`${translated}\0`), decodeGumpTextContext(words)), measured = effects.lifecycle.measure(translated, words);
+        assert.deepEqual(measured, [drawn.width, drawn.height], key);
+        assert.ok(measured[0] > 13 * 5, `${key} 폭`);
+    }
+});
