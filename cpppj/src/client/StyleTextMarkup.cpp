@@ -1,5 +1,6 @@
 // 원본 정규식의 부분 검색·greedy 캡처와 그림 선택/옵션 우선순위를 유지한다.
 #include "client/StyleTextMarkup.h"
+#include "client/TextPictureResources.h"
 #include "client/Sound.h"
 #include <algorithm>
 #include <bit>
@@ -288,8 +289,9 @@ void BindStyleTextMarkupAssets(StyleTextMarkupHooks& hooks,const GameAssets& ass
         const auto index=static_cast<std::size_t>(type-o::kFirstAssetTypeNumber);
         if (index>=assets.Types().size()) return std::nullopt;
         const auto& asset=assets.Types()[index];
-        if (static_cast<std::size_t>(frame)>=asset.definition.clusters.size()) return std::nullopt;
-        const auto header=assets.Shapes().SquidHeader(asset.block,static_cast<std::size_t>(frame));
+        const auto resource=ResolveTextPictureResource(assets,asset);
+        if (frame>=resource.frames) return std::nullopt;
+        const auto header=resource.shapes->SquidHeader(resource.block,static_cast<std::size_t>(frame));
         return std::bit_cast<std::int16_t>(static_cast<std::uint16_t>(header[0x1a] | (std::uint16_t(header[0x1b])<<8)));
     };
     hooks.findType=[&assets](std::string_view name) { return assets.TypeTable().Find(name); };
@@ -304,7 +306,7 @@ void BindStyleTextMarkupAssets(StyleTextMarkupHooks& hooks,const GameAssets& ass
         const auto& definition=assets.Types()[index].definition;
         if (definition.clusters.size()>static_cast<std::size_t>(std::numeric_limits<std::int32_t>::max()))
             throw std::length_error("StyleText 대괄호 실제 프레임 수 범위 초과");
-        view.frameCount=static_cast<std::int32_t>(definition.clusters.size());
+        view.frameCount=ResolveTextPictureResource(assets,assets.Types()[index]).frames;
         view.defaultFrame=definition.specialFrames.defaultFrame;view.gumpFrame=definition.specialFrames.gumpFrame;
         const auto frames=definition.FrameTable();
         view.letterKinds=frames.LetterKinds();

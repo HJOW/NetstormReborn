@@ -463,7 +463,7 @@ UberGump::UberGump(Client& client) : client_(client),missionOptions_(client.Game
     help.scripted=[this] { return state_.phase==ClientPhase::Dialog || state_.phase==ClientPhase::Briefing; };help.scriptName=[this] { return std::string(client_.HtmlWindowGlobals()->tell.current.data()); }; // 창 생략/실패도 기록하는 원문 현재 Tell 이름을 읽는다.
     help.battle=[this] { return world_ && world_->Session().Core().ownerMode.battle; };help.challenge=[this] { return world_ && world_->Session().Core().ownerMode.challenge; };
     help.html.command=[this](auto&,auto text) { QueueScriptCommand(text,client_.Input(),scriptStrings_,{KnowledgeScriptCode,[](auto name) { std::clog<<"도움말 HTML 명령 미연결: "<<name<<'\n'; }}); };
-    BindHtmlConditionConfig(help.html,client_.Configuration(),client_.Assets().Edition());BindHtmlPictureText(help.html);
+    BindHtmlConditionConfig(help.html,client_.Configuration(),client_.Assets().Edition());BindHtmlPictureText(help.html,client_.Assets().Edition()==o::OriginalEdition::Patch1078); // 현행 제품 Help의 오래된 마나 그림 번호를 표시 경계에서 교정한다.
     BindHtmlBackground(help.html,htmlGlobals_); // Help와 Tell의 실제565e70을 같은 Client 수명에 보관한다.
     if (client_.Assets().Edition()==o::OriginalEdition::Patch1078) rawButtons_->Menus()->EnableHelp(std::move(help)); // 10.72에10.78 전용 이미지/창을 임의로 설치하지 않는다.
     objectMenus_=std::make_unique<CampaignObjectMenuClient>(client_,*rawButtons_,[this](std::string_view key) { state_.Post({"Tell",std::string(key)}); });
@@ -667,7 +667,7 @@ RawHtmlWindowContext UberGump::LoadingHtmlContext(ScreenRect mapView) { // 미�
     context.metadata.tech=[this](auto target) { if (!world_) throw std::logic_error("HTML 전체 기술 목록의 현재 Session 없음");rawButtons_->Menus()->AppendTechnology(world_->Session(),target,[this](auto text) { return FontBytes(client_.Translate(text)); }); }; //같은 HTML controlled 열과 실제 대상 Form을 사용한다.
     context.metadata.themeTech=[this](auto target,auto theme) { if (!world_) throw std::logic_error("HTML 원소 기술 목록의 현재 Session 없음");rawButtons_->Menus()->AppendThemeTechnology(world_->Session(),target,theme,[this](auto text) { return FontBytes(client_.Translate(text)); }); }; //같은 실제 HTML의 현재 열·가상 레벨/기술 부모를 사용한다.
     context.factory.globals=&htmlGlobals_;context.factory.html.command=[this](auto&,auto text) { QueueHtmlScriptCommand(text); };
-    BindHtmlConditionConfig(context.factory.html,client_.Configuration(),client_.Assets().Edition());BindHtmlPictureText(context.factory.html);
+    BindHtmlConditionConfig(context.factory.html,client_.Configuration(),client_.Assets().Edition());BindHtmlPictureText(context.factory.html,client_.Assets().Edition()==o::OriginalEdition::Patch1078); // 모든 언어의 공식 안내 그림을 같은 UI 호환 규칙으로 읽는다.
     BindHtmlBackground(context.factory.html,htmlGlobals_); // 미션 안내의 전체 HTML도 같은 현재 배경을 쓴다.
     context.factory.substitute=[this](auto text,auto) { return FontBytes(client_.Configuration().SubstituteLocal(o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(text.data()),text.size()}))); };context.factory.fallback=[this] { return FontBytes(client_.Configuration().PathSpec("OkButton")); };
     context.read=[this](auto address)->std::uint32_t { const auto map=mission_ && rawButtons_->UberRoot() && rawButtons_->UberRoot()->Current() ? rawButtons_->MapViewRect() : htmlMapView_;switch (address) {

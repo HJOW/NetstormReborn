@@ -5,6 +5,9 @@
 #include "client/ProductPresentation.h"
 #include "client/ConfigFileRead.h" // 일본어 번들도 실제 Native Config FILE/BOM 경계로 읽는다.
 #include "client/StyleTextBuffer.h" // 일본어무공백본문을실제표시줄버퍼로레이아웃한다.
+#include "client/TextPictureResources.h" // 안내/메뉴의 누락 마나 원본 그림을 실제 SHP로 검증한다.
+#include "client/StyleTextMarkup.h"
+#include "client/HtmlTextParser.h"
 #include "o/BaseFile.h" // 사용자 정확 파일과 공식 번들의 우선권을 같은 VFS로 검사한다.
 #include "o/OriginalText.h"
 #include "o/Xlat.h"
@@ -18,6 +21,39 @@
 namespace { // 저장소 루트를 이 검사 파일 위치에서 찾는다.
 std::filesystem::path JapaneseRepo() { return std::filesystem::path(__FILE__).parent_path().parent_path().parent_path(); }
 std::span<const std::uint8_t> JapaneseView(const std::vector<std::uint8_t>& bytes) { return {bytes.data(), bytes.size()}; }
+}
+
+// 원문 helper 계약과 제품 HTML의 오래된 켜짐/생산 슬롯 번호 교정을 따로 확인한다.
+TEST_CASE(JapaneseText_TutorialManaHtmlAliasesPreserveOtherPictures) {
+    using namespace netstorm::client;
+    HtmlTextParserState state;HtmlTextParserHooks original,repaired;BindHtmlPictureText(original);BindHtmlPictureText(repaired,true);
+    const std::array<std::pair<std::string_view,std::string_view>,7> cases{{ // 실제 대본의 닫는 따옴표 누락도 같은 아이콘으로 읽어야 한다.
+        {"!\"mana.8>","~[Imana.4]"},{"!\"mana.9\">","~[Imana.5]"},{"!\"mana.10>","~[Imana.6]"},
+        {"!\"MANA.11\">","~[Imana.7]"},{"!\"mana.17\">","~[Imana.9]"},{"!\"mana.3\">","~[Imana.3]"},{"!\"geyser.*\">","~[Igeyser.*]"}}};
+    for (const auto& [input,expected]:cases) { // 실제 helper는 원시 바이트를, 제품 연결만 UI 교정 결과를 공급한다.
+        CHECK(original.picture(state,input)==HtmlPictureText(input));CHECK(repaired.picture(state,input)==expected);
+    }
+    CHECK(repaired.picture(state,"!\"mana.9#\">")=="~[Imana.9#]");CHECK(repaired.picture(state,"!\"othermana.17\">")=="~[Iothermana.17]");
+}
+
+// 보충 자산이 실제 비어 있지 않은 슬롯이며 기존8그림/월드 자료를 바꾸지 않는지 검사한다.
+TEST_CASE(JapaneseText_TutorialManaPicturesUseOriginalPixelsAndFullMetrics) {
+    using namespace netstorm::client;
+    const auto root=JapaneseRepo()/"originals";netstorm::o::BaseFileSystem files(root);CHECK(files.RegisterArchive(root/"netstorm.tarc"));GameAssets assets(files,netstorm::o::OriginalEdition::Patch1078); // 실제 타입은 느슨한 파일이 아니라 같은 TAFF를 등록한 뒤 읽는다.
+    const auto& mana=assets.Find("mana");const auto resource=ResolveTextPictureResource(assets,mana);MarkupAssets markup(assets);
+    const auto type=static_cast<std::uint32_t>(mana.block+netstorm::o::kFirstAssetTypeNumber);CHECK(mana.definition.clusters.size()==8 && assets.Shapes().Blocks()[mana.block].frames.size()==8);
+    CHECK(resource.frames==25 && markup.Type(type)->frameCount==25 && resource.shapes!=&assets.Shapes());
+    for (std::size_t frame=0;frame<8;++frame) { // 10.78 월드에 사용되는 기존 마나의 모든 픽셀과 측정 헤더를 대조한다.
+        const auto before=assets.Shapes().Decode(mana.block,frame),after=resource.shapes->Decode(resource.block,frame);
+        CHECK(before.indices==after.indices && before.opacity==after.opacity && before.width==after.width && before.height==after.height);
+        CHECK(assets.Shapes().SquidHeader(mana.block,frame)==resource.shapes->SquidHeader(resource.block,frame));
+    }
+    for (const auto frame:{4U,5U,6U,7U,9U}) { // 안내의 켜짐4종과 실제 생산 슬롯은 모두 양의 크기/불투명 픽셀을 가져야 한다.
+        const auto [source,block]=markup.Shape(type,frame);const auto image=source->Decode(block,frame);const auto metrics=markup.Frame(type,0,frame);
+        CHECK(image.width && image.height && std::count(image.opacity.begin(),image.opacity.end(),255)>0);CHECK(metrics.width>0 && metrics.height>0);
+    }
+    StyleTextMarkupHooks hooks;BindStyleTextMarkupAssets(hooks,assets);CHECK(hooks.type(type).frameCount==25 && hooks.frameHeight(type,9).value_or(0)>0);
+    const auto& geyser=assets.Find("geyser");const auto untouched=ResolveTextPictureResource(assets,geyser);CHECK(untouched.shapes==&assets.Shapes() && untouched.block==geyser.block && untouched.frames==static_cast<std::int32_t>(geyser.definition.clusters.size()));
 }
 
 // 새 공식 일본어 번들의9파일/BOM과 기존 영어·한국어/사용자 경로의 우선권을 검사한다.

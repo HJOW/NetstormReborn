@@ -138,7 +138,7 @@ public:
     std::pair<const ShapeDatabase*,std::size_t> Shape(std::uint32_t shape,std::uint32_t frame) const;
 private:
     // 안정된 타입 필드와 로딩 순서의 SHP 블록이다.
-    struct View { /* type: 객체 종류를 구별하는 타입 자료. */ MarkupType type;/* block: 셰이프 DB에서 그림을 찾는 블록 번호. */ std::size_t block{}; };
+    struct View { /* type: 객체 종류를 구별하는 타입 자료. */ MarkupType type;/* block: 셰이프 DB에서 그림을 찾는 블록 번호. */ std::size_t block{};/* shapes: 같은 그림의 측정/출력을 소유하는 원본 또는 보충 UI 자산이다. */ const ShapeDatabase* shapes{}; };
     // shapes_: 프레임의 크기·그림 데이터를 조회하는 셰이프 자료.
     const ShapeDatabase& shapes_;
     // typeCount_: 현재 타입 표에 등록된 항목의 개수.

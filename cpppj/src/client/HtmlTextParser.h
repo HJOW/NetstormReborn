@@ -37,7 +37,7 @@ struct HtmlTextParserHooks {
 // PATCH0046bf40/CD00495310: 첫 따옴표의 내부를 ~[I...]로 옮긴다. 자산 해석/그림 출력은 수행하지 않는다.
 std::string HtmlPictureText(std::string_view raw);
 // 실제 그림 문자열 helper를 picture 효과에 연결한다. 이후 StyleTextMarkup의 실제 자산 연결은 별도로 필요하다.
-void BindHtmlPictureText(HtmlTextParserHooks& hooks);
+void BindHtmlPictureText(HtmlTextParserHooks& hooks,bool repairManaPictures=false); // 제품 PATCH의 오래된 HTML 마나 번호만 교정한다. 기본값은 원문 helper 계약이다.
 // PATCH 배경 태그의 쓰기를 같은 Client의80BYTE에 연결한다. 원본 범위 밖 입력은 명시 거부한다.
 void BindHtmlBackground(HtmlTextParserHooks& hooks,HtmlTextParserGlobals& globals);
 // 현재 첫NUL 앞 이름을 빌린다. 전체 Uber의 GIF 생성도 같은 저장소를 읽을 수 있다.

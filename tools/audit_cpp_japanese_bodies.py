@@ -20,6 +20,22 @@ def visible_source(text):
     return '\n'.join(line for line in text.split('\n') if not line.lstrip().startswith('//'))
 
 
+def image_locations(text):
+    """이미지의 순서와 소속 섹션/도움말 앵커를 기록해 번역 중 이동·누락도 찾는다."""
+    result = []
+    section = ''
+    for line in text.split('\n'):
+        # 그림이 속한 안내/도움말 주제를 유지하며 표기 라벨은 비교하지 않는다.
+        if re.fullmatch(r'\s*\[[^\n]+\]\s*', line):
+            section = line.strip()
+        anchor = re.search(r'<a\s+name="([^"]*)"', line, re.I)
+        if anchor:
+            section = anchor[1]
+        for picture in re.findall(r'<(?:img|picture|!)[^>]*>', line, re.I):
+            result.append((section, picture))
+    return result
+
+
 def signatures(text, kind):
     """번역 가능한 라벨과 문장을 제외한 구조를 원문 순서 또는 중복 개수로 수집한다."""
     text = visible_source(text.replace('\r', ''))
@@ -40,7 +56,7 @@ def signatures(text, kind):
     return dict(sections=sections, commands=commands, macros=Counter(macros), assignments=assignments,
                 scriptTags=Counter(re.findall(r'<\$[^>]*>', text)),
                 links=Counter(re.findall(r'<a\s+(?:name|href)="[^"]*"', text, re.I)),
-                images=Counter(re.findall(r'<(?:img|picture)[^>]*>', text, re.I)))
+                images=image_locations(text))
 
 
 def inspect(require_all=False):
@@ -69,7 +85,8 @@ def inspect(require_all=False):
         if re.search(r'[가-힣]', prose):
             errors.append(f'{path.name}: 표시 본문에 한국어 잔여')
         kanji.update(character for character in prose if '\u4e00' <= character <= '\u9fff')
-        records.append(dict(file=path.name, bytes=len(raw), sections=len(right['sections']), links=sum(right['links'].values())))
+        records.append(dict(file=path.name, bytes=len(raw), sections=len(right['sections']), links=sum(right['links'].values()),
+                            images=len(right['images']), imageSections=dict(Counter(section for section, _ in right['images']))))
     missing = sorted(set(originals) - {path.stem for path in translated})
     if require_all and missing:
         errors.append(f'미번역 공식 파일 {len(missing)}개')

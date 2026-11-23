@@ -29,8 +29,18 @@ std::string HtmlPictureText(std::string_view raw) {
     result+=']';return result;
 }
 // 변환은 기본 HTML 상태를 바꾸지 않으며 리소스는 기존 다중 줄 파서에서 해석한다.
-void BindHtmlPictureText(HtmlTextParserHooks& hooks) {
-    hooks.picture=[](HtmlTextParserState&,std::string_view raw) { return HtmlPictureText(raw); }; // 원본 helper의 정확한 바이트 출력을 공급한다.
+void BindHtmlPictureText(HtmlTextParserHooks& hooks,bool repairManaPictures) {
+    hooks.picture=[repairManaPictures](HtmlTextParserState&,std::string_view raw) {
+        auto result=HtmlPictureText(raw);
+        if (repairManaPictures) {
+            constexpr std::array<std::pair<std::string_view,std::string_view>,5> aliases{{ // 공식 HTML의 켜짐4원소와 생산 슬롯은 현행 마나 그림 번호와 달랐다.
+                {"~[imana.8]","~[Imana.4]"},{"~[imana.9]","~[Imana.5]"},{"~[imana.10]","~[Imana.6]"},
+                {"~[imana.11]","~[Imana.7]"},{"~[imana.17]","~[Imana.9]"}}};
+            const auto key=o::AsciiLower(result);
+            for (const auto& [before,after]:aliases) if (key==before) return std::string(after); // 정확한 이름/숫자만 바꾸며 다른 타입·프레임 식은 그대로 둔다.
+        }
+        return result;
+    };
 }
 // 이미 태그 파서가 구한 원문 이름을 복사하며 뒤쪽 기존 바이트를 지우지 않는다.
 void BindHtmlBackground(HtmlTextParserHooks& hooks,HtmlTextParserGlobals& globals) {

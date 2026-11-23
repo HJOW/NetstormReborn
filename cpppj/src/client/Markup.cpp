@@ -1,5 +1,7 @@
 // 원본 WORD 감김·x87 저장 위치·CRT 절삭과 그림 소멸/체인 분배를 복원한다.
 #include "client/Markup.h"
+#include "client/TextPictureResources.h"
+#include "o/OriginalText.h"
 #include <bit>
 #include <cmath>
 #include <limits>
@@ -7,6 +9,10 @@
 
 namespace netstorm::client {
 namespace {
+// 10.78에서 누락된 UI 마나 그림을 원본 CD의 같은 팔레트/앞8개와 이어 붙인다.
+constexpr std::uint8_t kManaPictureData[]={
+#include "client/ManaPictureData.inc"
+};
 // 원본 배율 1의 float32 비트와 VFX 16.16 배율 상수다.
 constexpr std::uint32_t kUnitScale=0x3f800000U;
 constexpr double kFixedScale=65536.0;
@@ -29,6 +35,16 @@ std::int32_t Ftol(double value) {
     if (!std::isfinite(value) || value<-9223372036854775808.0 || value>=9223372036854775808.0) return 0;
     return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(static_cast<std::uint64_t>(static_cast<std::int64_t>(value))));
 }
+}
+
+// 보충은 UI의 측정/출력에만 적용하며 월드 TYPE·SHP·게임 프레임 수는 바꾸지 않는다.
+TextPictureResource ResolveTextPictureResource(const GameAssets& assets,const TypeAsset& type) {
+    if (assets.Edition()==o::OriginalEdition::Patch1078 && o::AsciiLower(type.assetName)=="mana" &&
+        type.definition.clusters.size()==8 && assets.Shapes().Blocks()[type.block].frames.size()==8) {
+        static const ShapeDatabase supplemental(std::vector<std::uint8_t>(std::begin(kManaPictureData),std::end(kManaPictureData))); // 공유 읽기 전용25프레임의 수명은 모든 UI보다 길다.
+        return {&supplemental,0,25};
+    }
+    return {&assets.Shapes(),type.block,static_cast<std::int32_t>(type.definition.clusters.size())};
 }
 
 // 실제 도달 시 필요한 조회/출력 경계를 검사한다. 생성/색 BYTE 설정에는 자산 경계가 없어도 된다.
@@ -219,8 +235,8 @@ MarkupAssets::MarkupAssets(const GameAssets& assets):shapes_(assets.Shapes()) {
         if (token>=types.size() || asset.block>=shapes_.Blocks().size() ||
             asset.definition.clusters.size()>static_cast<std::size_t>(std::numeric_limits<std::int32_t>::max()))
             throw std::out_of_range("Markup 실제 자산 바인딩 범위 오류");
-        const auto count=static_cast<std::int32_t>(asset.definition.clusters.size());
-        views_.emplace(token,View{{token,token,count,types[token].hotspotX,types[token].hotspotY},asset.block});
+        const auto resource=ResolveTextPictureResource(assets,asset);
+        views_.emplace(token,View{{token,token,resource.frames,types[token].hotspotX,types[token].hotspotY},resource.block,resource.shapes});
     }
 }
 
@@ -237,7 +253,7 @@ const MarkupType* MarkupAssets::Type(std::uint32_t token) const {
 MarkupFrame MarkupAssets::Frame(std::uint32_t type,std::uint32_t abstract,std::uint32_t frame) const {
     const auto* view=Type(type);
     if (abstract || !view || frame>=static_cast<std::uint32_t>(view->frameCount)) throw std::out_of_range("Markup 논리 프레임 범위 오류");
-    const auto header=shapes_.SquidHeader(views_.at(type).block,frame);
+    const auto& source=views_.at(type);const auto header=source.shapes->SquidHeader(source.block,frame); // 측정과 출력이 같은 원본/보충 자료를 사용한다.
     return {HeaderWord(header,0x18),HeaderWord(header,0x1a),HeaderWord(header,0x1c),HeaderWord(header,0x1e),
         HeaderWord(header,0x20),HeaderWord(header,0x22)};
 }
@@ -245,8 +261,8 @@ MarkupFrame MarkupAssets::Frame(std::uint32_t type,std::uint32_t abstract,std::u
 // VFX 출력은 SHP의 실제 물리 프레임 인덱스로 조회한다.
 std::pair<const ShapeDatabase*,std::size_t> MarkupAssets::Shape(std::uint32_t shape,std::uint32_t frame) const {
     const auto it=views_.find(shape);
-    if (it==views_.end() || frame>=shapes_.Blocks()[it->second.block].frames.size()) throw std::out_of_range("Markup VFX 물리 프레임 범위 오류");
-    return {&shapes_,it->second.block};
+    if (it==views_.end() || frame>=it->second.shapes->Blocks()[it->second.block].frames.size()) throw std::out_of_range("Markup VFX 물리 프레임 범위 오류");
+    return {it->second.shapes,it->second.block};
 }
 
 // 생성 후에도 각 Lookup에서 동일한 현재 타입/헤더 조회를 사용한다.
