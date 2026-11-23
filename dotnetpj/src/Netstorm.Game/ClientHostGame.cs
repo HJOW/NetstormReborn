@@ -597,6 +597,28 @@ public sealed partial class ClientHostGame : Game
                     ResetCamera = () => worldOrder.Add("camera"),
                 });
             worldLoad.Load();
+            // RU-2 나머지: 고정 26F가 Root 공급값으로 실제 수신을 마친다.
+            // 근거: cpppj RawCampaignSession.cpp 5325~5562행의 ReceiveFixedGameplayPacket과 CampaignClientServices 112·114·190행의 names/screenSize 공급.
+            // 언어/이름은 같은 실제 설정 owner, 화면은 같은 실제 Screen, Tell/Log/명령은 같은 실제 로그·입력 owner를 빌린다.
+            // FormPacket은 같은 세션 수명 동안 실제 바이트를 보관한다. Gun/Flyer/Aviary 등 큰 본체와 장면음악·색표7·zone·InBattle 완전 결선은 R5/R6에서 잇는다.
+            {
+                string rootLanguage = _startup.Configuration.Configuration.Get("currentLanguage") ?? "english";
+                var rootNames = new RawSquidName(session.Pool, storage.Types, new SquidNameHooks
+                {
+                    Language = () => ClientSurfaceGlobals.RootLanguageNumber(rootLanguage),
+                    Substitute = bytes => ExtendedText.EncodeDisplayText(_startup.Configuration.SubstituteLocal(ExtendedText.DecodeDisplayText(bytes.Span))),
+                });
+                var tellMessages = new List<byte[]>();
+                var formPackets = new List<byte[]>();
+                session.BindSquidPacketDevices(storage, rootNames, new HostSquidPacketEffects
+                {
+                    Tell = bytes => { tellMessages.Add(bytes.ToArray()); ErrorLog.Note("객체 수신 Tell: " + ExtendedText.DecodeDisplayText(bytes.Span)); },
+                    Log = (level, text) => ErrorLog.Note($"원본 로그 {level}: {text}"),
+                    Command = (code, first, second) => _driver.Input.PushCommand(code, unchecked((int)first), unchecked((int)second)),
+                    ScreenSize = () => ClientSurfaceGlobals.RootScreenSize(_driver.Screen),
+                    FormPacket = buffer => formPackets.Add(buffer.ToArray()),
+                });
+            }
             // 미션 시작의 AI 생성 시 난이도 옵션을 읽어 적 AI에만 적용한다. 0.641에서 옵션을 연결했다.
             int difficultyValue = 0;
             _startup.Configuration.ReadInt(AiDifficulty.DifficultyConfigKey, ref difficultyValue);

@@ -1828,3 +1828,5 @@ cpppj/src/client/ClientMain.cpp	Netstorm.Core/Original/CampaignWorldGlobals.cs	9
 cpppj/src/client/LanguageOptions.cpp	Netstorm.Client/ClientSurfaceGlobals.RootSupplyDevices.cs	372f6b4d759cde2ce935df93b3d3609882ba84bf	port
 cpppj/src/client/CampaignClientServices.cpp	Netstorm.Client/ClientSurfaceGlobals.RootSupplyDevices.cs	372f6b4d759cde2ce935df93b3d3609882ba84bf	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Client/ClientSurfaceGlobals.RootSupplyDevices.cs	372f6b4d759cde2ce935df93b3d3609882ba84bf	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Game/ClientHostGame.cs	543dd3759d26080786af3855b9796fe8a99582a5	port
+cpppj/src/client/CampaignClientServices.cpp	Netstorm.Game/ClientHostGame.cs	543dd3759d26080786af3855b9796fe8a99582a5	port
