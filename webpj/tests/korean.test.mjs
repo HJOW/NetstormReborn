@@ -476,8 +476,9 @@ function fakeDocument() {
         fillText: (character, x, y) => {
             calls.push({ character, x, y, font: context.font });
             if (character === ' ') return;
-            // 펜 위치 기준 (1, -4) 에서 3×4 상자를 불투명하게 칠한다.
-            for (let row = 0; row < 4; row += 1) for (let column = 0; column < 3; column += 1) pixels[((y - 4 + row) * canvas.width + (x + 1 + column)) * 4 + 3] = 255;
+            // 펜 위치 기준 (1, -4) 에서 3×4 상자를 불투명하게 칠한다. 래스터라이저가 설계 크기(시험은 13px)의 배율(GLYPH_SUPERSAMPLE)배로 그리므로 상자도 글자 크기 비율만큼 키운다. (2026-11-23 WB04-E1290: E1288 4배 그리기에 맞춰 고침)
+            const unit = emOf(context.font) / 13;
+            for (let row = 0; row < 4 * unit; row += 1) for (let column = 0; column < 3 * unit; column += 1) pixels[((y - 4 * unit + row) * canvas.width + (x + unit + column)) * 4 + 3] = 255;
         },
         getImageData: (x, y, width, height) => {
             const data = new Uint8ClampedArray(width * height * 4);
@@ -505,8 +506,9 @@ test('createCanvasGlyphRasterizer: 글꼴 등록·글자 그림 자르기·위�
     // 영문은 em 의 절반(6.5 → 7)으로 전진한다. 굵게·기울임은 글꼴 문자열에 반영된다.
     const latin = rasterizer.glyph(0x41, { ...spec, bold: true, italic: true });
     assert.equal(latin.advance, 7);
-    assert.equal(env.calls[env.calls.length - 1].font, 'italic 700 13px "Galmuri11", "Galmuri11Regular"');
-    assert.equal(env.calls[0].font, '400 13px "Galmuri11"');
+    // 글자는 GLYPH_SUPERSAMPLE(4) 배 크기(13×4=52px)로 그린다. (2026-11-23 WB04-E1290)
+    assert.equal(env.calls[env.calls.length - 1].font, 'italic 700 52px "Galmuri11", "Galmuri11Regular"');
+    assert.equal(env.calls[0].font, '400 52px "Galmuri11"');
     // 공백은 그림이 없고 전진 폭만 있다. 이전 글자의 그림이 남아 있으면 안 된다.
     const space = rasterizer.glyph(0x20, spec);
     assert.deepEqual({ advance: space.advance, width: space.width, height: space.height, length: space.coverage.length }, { advance: 7, width: 0, height: 0, length: 0 });

@@ -159,6 +159,14 @@ export class RawPlayerMenu {
     // 번역된 고정 서식과 원본 256바이트/NUL 한도이다. (2026-11-15 WB04-E544)
     format(key, args = []) { return this.print(need(this.hooks.translate)(key), args); }
 
+    // 대상 Player 기록 이름 칸(+0xc, 32바이트)을 화면에 그릴 문자열로 돌려준다. 이름 바이트는 한국어·일본어 확장 문자를 4바이트 시퀀스로 담은 표시 부호화이므로
+    // `decodeName` 장치가 있으면 그것으로 해독하고, 없으면 바이트 그대로의 이진 문자열이다. 제목(`Player %s`)과 동맹 줄에 쓴다.
+    // (2026-11-23 WB04-E1290: 한국어 모드에서 Players 메뉴 Player 정보 창의 제목 뒤 이름이 깨진 글자로 그려져 추가. RawGameMenus.players 의 행 라벨은 E1166 에서 이미 해독했다)
+    displayName(owner) {
+        const raw = text(this.player(owner), 0xc, 32), decode = this.hooks.decodeName;
+        return typeof decode === 'function' ? decode(raw) : raw;
+    }
+
     // 원본에 번역 호출이 없는 asksend 및 조회가 사이에 있는 서식도 같은 출력 한도를 사용한다. (2026-11-15 WB04-E544)
     print(pattern, args = []) {
         let result = need(this.hooks.print)(pattern, args);
@@ -216,7 +224,7 @@ export class RawPlayerMenu {
         const state = this.state;
         let owner = this.owner(subscriber);
         if (!owner) return 0;
-        const name = this.mission() ? text(this.player(owner), 0xc, 32) : this.identity.nameForSubscriber(subscriber);
+        const name = this.mission() ? this.displayName(owner) : this.identity.nameForSubscriber(subscriber);
         need(h.beginFancy)();
         const title = this.format('Player %s\n', [name]);
         need(h.title)(title);
@@ -233,7 +241,7 @@ export class RawPlayerMenu {
                 for (let candidate = 1; candidate < 9; candidate += 1) {
                     if (read(this.player(candidate), 0x2c) && candidate !== owner && this.alliances[owner * 9 + candidate]) {
                         const pattern = need(h.translate)('Allied with ~i%s~.');
-                        let line = this.print(pattern, [text(this.player(candidate), 0xc, 32)]);
+                        let line = this.print(pattern, [this.displayName(candidate)]);
                         if (!this.alliances[candidate * 9 + owner]) line += this.format('(One-Way)');
                         line += '\n';
                         if (line.length >= 256) throw new RangeError('Player 메뉴 동맹 서식 초과');

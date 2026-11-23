@@ -1614,6 +1614,8 @@ export class Netstorm {
                 ownerName: (owner) => displayTextCodec.decode(Uint8Array.from(identity.nameForOwner(owner), (letter) => letter.charCodeAt(0))),
                 objectMenu: { world: this._campaignWorld, identity, staticText: (value) => this._clientChatWindows.store(value), tell: (name) => this._openTell(name),
                     player: { translate: (value) => this._resources.translate(value), assertion: (value) => console.error(`Player 메뉴 진단: ${value}`),
+                        // Player 이름 칸의 표시 부호화 바이트(이진 문자열)를 화면 문자열로 해독한다(한국어 이름이 제목·동맹 줄에서 깨지지 않게). (2026-11-23 WB04-E1290)
+                        decodeName: (value) => displayTextCodec.decode(Uint8Array.from(value, (letter) => letter.charCodeAt(0))),
                         parseAddress: () => { throw new Error('Player 메뉴 주소 해석 미연결'); }, reliability: () => { throw new Error('Player 메뉴 메타맵 신뢰도 미연결'); },
                         ignored: (subscriber) => this._clientChatWindows.ignored.includes(subscriber),
                         // 현재 채팅 입력줄의 수신자 접두에 그 Player 이름이 들어 있으면 1 이다(원본 0042e9e0). 채팅 창이 없으면 0 이다. 단독 미션 Players 메뉴는 자기 자신 행에서만 이 값을 읽고 쓰지 않는다. (2026-11-22 WB04-E1169)

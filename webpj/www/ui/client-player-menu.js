@@ -13,6 +13,8 @@ export class ClientPlayerMenu {
             assertion: devices.assertion, parseAddress: devices.parseAddress, reliability: devices.reliability, ignored: devices.ignored, whispered: devices.whispered,
             allowSend: () => session.battleOption(13), allowOffer: () => session.battleOption(11), allowBreak: () => session.battleOption(12),
             translate: devices.translate, print: formatPlayerMenuText,
+            // 선택 장치: Player 이름 바이트(표시 부호화)를 화면 문자열로 해독한다. 한국어·일본어 이름이 제목과 동맹 줄에서 깨지지 않게 한다. (2026-11-23 WB04-E1290)
+            ...(typeof devices.decodeName === 'function' ? { decodeName: (value) => devices.decodeName(value) } : {}),
             beginFancy: () => writer.beginFancy(), beginVertical: () => writer.beginVertical(), separator: () => writer.separator(),
             title: (value) => writer.title(value), header: (value) => writer.header(value), takeMenu: () => writer.takeCurrent(),
             submenu: (text, child) => writer.submenu(text, child),

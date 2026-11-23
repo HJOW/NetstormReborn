@@ -8,6 +8,7 @@ import path from 'node:path';
 import { REPO_ROOT } from './helpers.mjs';
 import { bitsToFloat, readRows } from './raw-support.mjs';
 import { RawPlayerIdentity } from '../www/core/raw-player-identity.js';
+import { displayTextCodec } from '../www/assets/display-text.js';
 import { PlayerMenuAssertion, RawPlayerMenu, bindObjectPlayerMenu, bindPlayerMenuControls, createPlayerMenuState, formatPlayerMenuText } from '../www/core/raw-player-menu.js';
 
 // 원본 관측 fixture 이다. 없으면 해당 검사를 건너뛴다. (2026-11-15 WB04-E544)
@@ -217,6 +218,29 @@ test('Player 메뉴 계약: 후보 동맹의 자기 제외·귓속말 BYTE·마�
     };
     assert.equal(spy(battle), 1);
     assert.equal(spy(['1', '3', '35', '0', '0', '0', '7', '1148846080', '0', '0', '5', '0', '0', '', '', '']), 0);
+});
+
+// 이름 해독: 한국어·일본어 이름은 표시 부호화 4바이트 시퀀스로 Player 기록에 들어 있다. 제목(`Player %s`)과 동맹 줄(`Allied with ~i%s~.`)은 decodeName 장치가 있으면 해독한 문자열을 쓰고, 없으면 바이트 그대로이다. (2026-11-23 WB04-E1290)
+test('Player 메뉴 이름 해독: 미션의 제목과 동맹 줄이 decodeName 장치로 한국어 이름을 문자열로 바꾼다', () => {
+    // 전투+미션(모드 3)에서 대상 owner 2 가 후보 3 과 한쪽 동맹(입력 열 Allied 1)이다.
+    const row = ['1', '3', '35', '0', '1', '0', '7', '1148846080', '0', '0', '5', '0', '0', '', '', ''];
+    const names = { 2: '알파', 3: '간수' };
+    const collect = (decode) => {
+        const scene = new PlayerScene(row), titles = [], headers = [];
+        for (const [owner, name] of Object.entries(names)) { const bytes = displayTextCodec.encode(name); scene.players.set(bytes, Number(owner) * 180 + 12); scene.players[Number(owner) * 180 + 12 + bytes.length] = 0; }
+        scene.hooks.title = (value) => titles.push(value); scene.hooks.header = (value) => headers.push(value);
+        if (decode) scene.hooks.decodeName = (value) => displayTextCodec.decode(Uint8Array.from(value, (letter) => letter.charCodeAt(0)));
+        scene.menu().open(scene.subscriber);
+        return { titles, headers };
+    };
+    // 장치가 있으면 사람이 읽는 이름이 제목과 동맹 줄에 들어간다.
+    const decoded = collect(true);
+    assert.deepEqual(decoded.titles, ['Player 알파\n']);
+    assert.ok(decoded.headers.some((line) => line === 'Allied with ~i간수~.(One-Way)\n'), JSON.stringify(decoded.headers));
+    // 장치가 없으면 표시 부호화 바이트가 그대로 이진 문자열로 남아 사람이 읽는 이름과 다르다(깨진 글자의 원인, 변형 확인용).
+    const raw = collect(false);
+    assert.notDeepEqual(raw.titles, decoded.titles);
+    assert.ok(raw.titles[0].startsWith('Player ') && raw.titles[0].includes('\u001f'), JSON.stringify(raw.titles));
 });
 
 test('Player 메뉴 서식·연결 계약: 고정 %s/%d/%% 와 256바이트 한도, 컨트롤/객체 메뉴 위임', () => {

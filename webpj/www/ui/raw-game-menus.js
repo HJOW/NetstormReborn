@@ -99,7 +99,8 @@ export class RawGameMenus {
         // 프레임 상한(Frame Rate) 하위 메뉴다. 선택은 Tell 대상 `Patch1101.SetFrameRate(n)` 이며 앱이 maxFPS 설정에 쓴다(cpppj 후순위 F1). 장치가 없으면 만들지 않는다. (2026-11-20 WB04-E1094)
         if (typeof hooks.frameRates === 'function') {
             hooks.vertical();
-            for (const rate of hooks.frameRates()) this.#check(rate.checked, rate.label, C.tell, `Patch1101.SetFrameRate(${rate.number})`);
+            // 라벨(`75 FPS (Original)` 등)도 현재 언어로 번역해 쓴다. 번역표에 없는 라벨(`60 FPS`)은 원문 그대로이다(cpppj 1329 의 `Text(rate.label)` 와 같다). (2026-11-23 WB04-E1290)
+            for (const rate of hooks.frameRates()) this.#check(rate.checked, this.#text(rate.label), C.tell, `Patch1101.SetFrameRate(${rate.number})`);
             need(hooks.submenu, '게임 메뉴의 하위 작성 연결 누락')(this.#text('Frame Rate'), hooks.take(), 1, 0);
         }
         difficultyMenu();

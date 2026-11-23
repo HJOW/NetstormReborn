@@ -6,14 +6,14 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-23 저녁 정리, 마지막 단위 WB04-E1289)
+### 0.1 현재 값 (2026-11-23 저녁 정리, 마지막 단위 WB04-E1290)
 
 | 항목 | 현행 상태 |
 | --- | --- |
 | 실행·플레이 | 브라우저에서 ‘클릭하여 시작’, 시작 title 그림, 메인 메뉴·캠페인/데모 목록·도움말·옵션(Reset All 게임 안 확인 창 포함)·Credits와 개발용 지형 미리보기가 동작한다. **미션:** 캠페인 목록 31개(Early Missions 6·세 캠페인 묶음 16·Priest Training 9)와 데모 3개가 시작되고, 장시간 진행과 임의 조작(몽키) 시험에서 오류·먹통이 없다. Campaign ▸ Skirmish는 무작위 섬·간헐천 월드에서 AI와 진행되며 AI 생산·공격으로 사제가 죽으면 패배 안내까지 이어진다(E1262, 약 18분 관찰). Tutorial2는 시작부터 완료 창·Tutorial3 시작까지 자연 진행으로 확인했고, 승패 안내 뒤 흐름(Continue·Replay Mission·Leave/Next Mission·진행 저장)도 확인했다. 미션 프레임은 다리 붕괴 검사·전투 자원·제단 결과 알림·주변음/공유 바람·장면 음악·미니맵 갱신을 원본 주 루프 순서로 돈다(E1230~E1234·E1266). **조작:** 사제 선택·이동, 가장자리·Alt·가운데 버튼 스크롤, 미니맵 클릭·끌기, 생산 격자 클릭·단축키(D 포함)·조각 회전(C·회전 방향 옵션)·다리 배치, 사제·워크샾·제단·신전·배터리·발전기·운반체 우클릭 메뉴와 회수·기도·Cast/Drop, 객체 명령(Detonate·Meltdown·신전 명령), 화면 위치 키(F4/H·F5·TAB·U·Shift+숫자 저장/숫자 복귀), 미니맵·스톰 파워 표시·생산 창·채팅 도우미 단추의 우클릭 빠른 도움말(E1236·E1253)이 동작한다. **게임 메뉴:** ESC 또는 화면 우측 상단 버튼(웹 전용)으로 Game·View·Options·Players·About 메뉴막대를 열고, Leave/Restart Mission(ABORT 확인 창), F1·F2·F6·F7·F8·F9·Shift-F3·T, Pause(Shift-F9·Pause 키·메뉴), Shift-F7 화면 GIF 저장, Players 메뉴의 송금(Send X 숫자 입력 창 포함)·동맹이 실행된다. ESC는 열린 Tell 창(브리핑·로딩 제외)을 원본처럼 닫는다(E1264). 브리핑·완료 창의 Review Knowledge·GetTechnology 단추와 Priest Training 7의 Training Menu(원본 오타 별칭, E1245)도 동작한다. **HUD 틀·채팅 창:** 실제 Uber 루트가 좌측 사이드바(SP·생산 덱)·하단 미니맵 칸·구분선을 원본 위치로 도킹하고 지도 영역이 `{85,0,W,H}`다(4:3·16:9·16:10·1920×1080·창 크기 변경 확인). F3 채팅 창의 로그·입력줄·제출(로컬 서버 경유 `You> 본문`)·점 명령·Tab 이름 완성(동맹 AI)·붙여넣기/복사/잘라내기·도우미 메뉴·Edit Back/Front Format 창이 동작한다(E1169~E1179). **미완성:** 주문(스펠) 사용(Early Missions에서 스크립트 오류·일시 정지)과 주문을 얻은 골렘의 적 사제 포획(사용자 제보 2026-11-23, 원인 미확인), 다른 미션의 목표 수행과 자연 완주, Archer 계열 특수 행 우클릭과 짐을 실은 운반체의 Carrying/Drop 실제 확인, 메인 메뉴 구름 배경(정적 GIF, Kencloud 미연결). 지식 NSInfo 패널·Players 하위의 Ignore chat·Whisper To·정보 보기·의식 보상 선택 UI·인트로 영상은 웹 범위 밖이다(E1167·E1171·E1180·E1202). |
 | 원본과의 동일성 | 영어 4:3 메뉴 M1 8장면은 cpppj 오라클과 알려진 구름 배경 등 차이 영역 밖에서 픽셀 차이 0이다. **L2(E1283 닫음):** 검사 전용 고정 시각 모드(`?fixed=25`)에서 Tutorial1 Load/Start의 Game 난수열(90프레임 6,851회)·논리 화면·Session 덤프가 cpppj 기준선 오라클과 같다 — 4:3과 16:9(1366×768)의 90프레임 화면 0픽셀, 90·130프레임 덤프는 환경 의존인 `sp 1`·`player:*` 행만 다르다. **L3(진행 중):** cpp `--ui-script` 입력 단계표를 그대로 적용한 Tutorial1 첫 400프레임(안내 창 MORE/OK·F4·다리 조각 집기·놓기)이 200·300·345·364·400프레임 모두 화면 0픽셀·덤프 일치다(E1284~E1286). 월드·UI 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다(원본 공통 메뉴 788행·Factory 메뉴 39행·Uber 루트 160행·장면 음악 3,113행, 채팅 입력줄 대상 720행(E1265), 파편·건물 캡처 4,474행(E1275~E1276) 등). 대응표 1,007단위 중 732행은 Tutorial1 실행에서 웹 모듈의 함수가 모두 실행된 `session`이다(E1283). 좌측 HUD 하단 85×82픽셀은 원본 스크린샷과 일치한다. 한국어 글자는 갈무리11 12px 격자로 그리되 제목 배율·굵기(사용자 결정으로 보통체)·한글 기준선을 cpppj와 다르게 둔다([0.7절](#korean-font-change)). 미검증: 16:10·한국어 화면 대조, 400프레임 뒤의 L3 구간, L4b(소리)와 자연 완주. |
-| 현재 작업 | **L3 입력 진행 대조와 남은 표시·조작 확인 단계.** 4-D는 4D-4b(Tutorial1·3~6 단계 진행)만 남았다. L2를 닫은 뒤(E1283) Tutorial1 L3 단계표를 늘려 가며(6단계 M3) 어긋나는 첫 프레임을 고치고, 5-A 메인 메뉴 Kencloud·E198/E201 재대조, 6단계 객체 메뉴·운반체 실제 확인, 대응표 partial 12행의 메모 정리·승격을 병행한다. E1238~E1289는 감사 차이 닫기, partial 34→12행, L2·L3, 원본 캡처 대조, 한국어 글자 품질을 다뤘다([진행 요약](#e951-e1081)). 순서는 아래 [다음 작업](#next)을 따른다. |
-| 전체 회귀 | **Node 26.13.0:** E1286 기준 6,803건 모두 통과(로그 `webpj/extracted/webpj-e1286-node26.log`, 658초). **Node 22.23.3:** E1284 기준 6,803건 모두 통과(로그 `webpj/extracted/webpj-e1284-node22.log`, 767초). **e2e:** E1281 전체 `npx playwright test` 162건 통과·11건 건너뜀(옵트인)·1건 실패(월드 진입 정지로 바뀐 Fury War 창 순서; 시험을 고쳐 통과, 로그 `webpj/extracted/webpj-e1281-e2e-all.log`, 30.7분). 이후 단위는 새 e2e와 관련 e2e를 단위마다 돌렸다. **HJOW-Athlon 주기(0.5절 5):** v26 3/4(E1286에서 실행, 이후 E1287~E1289)·v22 5/8(E1284에서 실행, 이후 E1285~E1289) — v26은 E1290 완료 뒤, v22는 E1292 완료 뒤이며 겹치면 순차로 돈다. 실패와 교정을 포함한 이전 회귀 이력은 [E1237 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1237)과 [E1288 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1288)에 있다. |
+| 현재 작업 | **L3 입력 진행 대조와 남은 표시·조작 확인 단계.** 4-D는 4D-4b(Tutorial1·3~6 단계 진행)만 남았다. L2를 닫은 뒤(E1283) Tutorial1 L3 단계표를 늘려 가며(6단계 M3) 어긋나는 첫 프레임을 고치고, 5-A 메인 메뉴 Kencloud·E198/E201 재대조, 6단계 객체 메뉴·운반체 실제 확인, 대응표 partial 12행의 메모 정리·승격을 병행한다. E1238~E1290는 감사 차이 닫기, partial 34→12행, L2·L3, 원본 캡처 대조, 한국어 글자 품질을 다뤘다([진행 요약](#e951-e1081)). 순서는 아래 [다음 작업](#next)을 따른다. |
+| 전체 회귀 | **Node 26.13.0:** E1290 기준 6,805건 모두 통과(로그 `webpj/extracted/webpj-e1290-node26.log`, 989초; E1288이 놓친 `korean.test.mjs` 래스터라이저 시험 1건을 이 회귀 준비 중 찾아 고침). **Node 22.23.3:** E1284 기준 6,803건 모두 통과(로그 `webpj/extracted/webpj-e1284-node22.log`, 767초). **e2e:** E1281 전체 `npx playwright test` 162건 통과·11건 건너뜀(옵트인)·1건 실패(월드 진입 정지로 바뀐 Fury War 창 순서; 시험을 고쳐 통과, 로그 `webpj/extracted/webpj-e1281-e2e-all.log`, 30.7분). 이후 단위는 새 e2e와 관련 e2e를 단위마다 돌렸다. **HJOW-Athlon 주기(0.5절 5):** v26 0/4(E1290에서 실행) — 다음은 E1294 완료 뒤·v22 6/8(E1284에서 실행, 이후 E1285~E1290) — E1292 완료 뒤이며 겹치면 순차로 돈다. 실패와 교정을 포함한 이전 회귀 이력은 [E1237 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1237)과 [E1288 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1288)에 있다. |
 | 브라우저 검사 | 미션 화면은 단위마다 Chromium e2e로 확인한다(최근 전체 실행 E1281, 고정 시각 L2·L3 `e2e/fixed-time.spec.js`·`e2e/l3-tutorial1.spec.js`, 한국어 글자 배치 `e2e/korean-glyph-layout.spec.js` E1288). 메뉴는 2026-11-17 Chromium 2/2(갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체), 최초 실행·진행 잠금/체크·저장 재실행은 E616 Chromium 2/2. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
 
 <a id="next"></a>
@@ -31,15 +31,14 @@
 7. **주문(스펠) 사용·골렘 사제 포획(사용자 제보 2026-11-23, 차후 작업).** 사용자 지시로 지금은 구현하지 않고 기록만 했다. Early Missions에서 주문을 쓰면 스크립트 오류가 나고 게임이 잠시 멈추며, 주문을 얻은 골렘으로 적 사제를 포획할 수 없다. 원인 미확인(사용자 추정: 멀티플레이 미지원 범위 판정과 관련). 세부 단위와 완료 기준은 3.1절 7단계의 같은 이름 항목.
 8. **결정·원본 확인 대기.** 사용자 결정과 원본 실행·사람 확인이 필요한 항목은 3.5절에 모았다.
 9. **방향키 카메라 이동(사용자 요구 2026-11-23, 세 프로젝트 공통).** 게임 중 ↑↓←→로 카메라를 옮길 수 있어야 한다. 원본 ←/→는 조각을 든 상태의 회전과 입력창 커서 이동에 쓰이므로 그 둘을 먼저 처리한다. 규칙은 cpppj가 먼저 정한다([공통](LEFT_JOBS.md#user-requests-20261123)). 세부 단위는 3.1절 6단계.
-10. **ESC 게임 메뉴 한국어 점검(사용자 제보 2026-11-23, webpj 재현).** 번역되지 않은 행이 남아 있고 "플레이어"(Players) 메뉴를 고르면 글자가 깨진다. 세부 단위는 3.1절 6단계.
-11. **14차 모딩 API 기준 구현(사용자 결정 2026-11-23).** dotnetpj 계약 설계(MOD-1) 뒤 webpj를 기준 구현으로 맞춘다. [3.7절](#modding-api).
+10. **14차 모딩 API 기준 구현(사용자 결정 2026-11-23).** dotnetpj 계약 설계(MOD-1) 뒤 webpj를 기준 구현으로 맞춘다. [3.7절](#modding-api).
 
 - **로컬 산출물.** `webpj/test-results-e1072-rerun`~`webpj/test-results-e1081`의 10개 폴더는 빈 폴더이거나 Git 제외 `*.zip` trace만 들어 있어 Git 상태에 나타나지 않는다(2026-11-23 정리 때도 남아 있음). 다시 볼 필요가 없으면 삭제해도 된다. E633~E640 단위 문서가 적은 루트 로그는 2026-11-21에 `extracted/webpj-e633-e640-root-logs/`로 옮겼으므로 그 폴더에서 읽는다.
 - **미션 식별.** 공통 fixture의 `thewarbegins.fort`는 캠페인 1-1이고, 실제 `tutorial1`이 선택하는 Fort는 `BridgeTheGap`이다(E753 재대조). [미션명 정정](docs/webpj-session-login-shipped-forts-20261118.md)
 
 <a id="e951-e1081"></a>
 
-#### E951~E1289 진행 요약
+#### E951~E1290 진행 요약
 
 단위별 완료 문단·검증 수·회귀 이력은 [E1081 정리 전 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261120-through-wb04-e1081)의 0.1절(E951~E1081), [E1166 정리 전 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261121-through-wb04-e1166)의 0.1·3.1·3.7절(E1082~E1166), [E1237 정리 전 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1237)의 0.1·3.1절(E1167~E1237), [E1288 정리 전 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1288)의 0.1·3.1절(E1238~E1288)과 각 단위 문서에 있다.
 
@@ -54,7 +53,7 @@
 | 생산·건설 | E1002~E1008, E1019~E1022, E1026~E1036, E1047, E1074, E1076~E1079, E1083, E1086 | 생산 패널·단축키·다리 배치, 회수·비용 표시, Factory 생산·업그레이드, Tutorial2 발사기 배치·회수 | 다리 조각 연속 배치·자연 완주 | [생산 패널](docs/webpj-client-production-panel-20261120.md) · [워크샾 생산](docs/webpj-browser-tutorial2-factory-20261120.md) |
 | HUD 틀 | E1082, E1128, E1236, E1248, E1255, E1257 | Uber 루트 HUD 모드 3 도킹·화면 크기 변경 재배치, 미니맵 Gump와 클릭·끌기 e2e, HUD 우클릭 빠른 도움말, 미니맵·HUD·생산 컨트롤 행 닫기(표시 차이 도달성 판정) | — | [좌측 HUD 틀](docs/webpj-uber-hud-left-dock-20261120.md) · [HUD 닫기](docs/webpj-uber-hud-close-20261123.md) |
 | 채팅 창 | E1169~E1179, E1253, E1265 | F3 표시·로그·입력줄·제출·수신·점 명령, Tab 이름 완성·붙여넣기/복사/잘라내기·도우미 메뉴·Edit Back/Front Format 창, 도우미 단추 우클릭 도움말, 허브 fixture 두 개 | Format 입력창 아래 가로 슬라이더의 원본 화면 대조, 미션 간 로그 유지 결정(3.5절) | [채팅 조립](docs/webpj-chat-window-assembly-20261122.md) · [허브 fixture](docs/webpj-chat-hub-fixtures-20261123.md) |
-| 게임 메뉴 | E1084~E1085, E1087~E1090, E1093~E1097, E1100, E1167~E1168, E1235, E1251, E1264, E1289 | ESC 메뉴막대·우측 상단 버튼, Leave/Restart, F6·F7·F9·T, Pause, Frame Rate·Language·Difficulty, Shift-F7 GIF, Players 하위 항목 실측(채팅·정보 항목은 단독 미션 도달 불가), Send X 숫자 입력 창, F1과 Tell/브리핑 창, Reset All 게임 안 Tell 확인 창, ESC Tell 닫기, 정보 ▸ 버전 창의 11.01 패치·Copyright 줄 | — | [게임 메뉴막대](docs/webpj-game-menu-bar-20261120.md) · [ESC Tell](docs/webpj-tell-escape-20261123.md) · [버전 창](docs/webpj-about-version-copyright-20261123.md) |
+| 게임 메뉴 | E1084~E1085, E1087~E1090, E1093~E1097, E1100, E1167~E1168, E1235, E1251, E1264, E1289~E1290 | ESC 메뉴막대·우측 상단 버튼, Leave/Restart, F6·F7·F9·T, Pause, Frame Rate·Language·Difficulty, Shift-F7 GIF, Players 하위 항목 실측(채팅·정보 항목은 단독 미션 도달 불가), Send X 숫자 입력 창, F1과 Tell/브리핑 창, Reset All 게임 안 Tell 확인 창, ESC Tell 닫기, 정보 ▸ 버전 창의 11.01 패치·Copyright 줄, 한국어 ESC 메뉴 전수 점검(프레임 속도 라벨·Player 정보 창 이름 해독) | — | [게임 메뉴막대](docs/webpj-game-menu-bar-20261120.md) · [ESC Tell](docs/webpj-tell-escape-20261123.md) · [버전 창](docs/webpj-about-version-copyright-20261123.md) · [ESC 한국어](docs/webpj-esc-menu-korean-20261123.md) |
 | 스커미시(12차) | E1101~E1107, E1262, E1270 | 설정 화면·저장, 시작 섬·섬 생성 부모, 세션 월드 생성·앱 시작, AI 진행·금지 유닛, AI 생산·공격과 사제 사망 패배 안내 관찰, 미션 모드 판정 | 승리 경로·AI 다리 멈춤 시점 원본 대조 | [시작과 월드 생성](docs/webpj-skirmish-start-20261120.md) · [관찰](docs/webpj-skirmish-watch-20261123.md) |
 | Gump·메뉴 UI | E1017~E1018, E1023~E1025, E1037~E1045, E1064~E1072, E1075, E1086 | Form 통지, 글자·Slider 출력, 중첩 메뉴, 사제·Player·공통 객체·운반체 메뉴, 신전 건설·완공 | — (객체 메뉴 잔여는 '객체 메뉴·명령' 행) | [Client 메뉴](docs/webpj-client-menu-gump-20261120.md) · [사제 우클릭](docs/webpj-browser-priest-menu-20261120.md) |
 | 도움말 | E1046, E1048~E1055, E1229, E1240 | 생산 Help, TYPE 정보 창, 요구 에너지·도움말 그림, 링크 이동·월드 없는 메인 메뉴 Help의 TYPE 정보 | 타입별 원본 화면 비교 | [앱 TYPE](docs/webpj-app-help-type-info-20261120.md) · [메인 메뉴 Help](docs/webpj-main-menu-help-type-20261123.md) |
@@ -87,7 +86,7 @@
 | 5 | 5-A 렌더러·Draw | 44/46 | 1 / 394 |
 | 5 | 5-B 카메라·HUD·미니맵·커서 | 12/13 | 0 / 0 |
 | 5 | 5-C 화면 허브·미션 진입 | 4/6 → M2 | 3 / 3,562 |
-| 6 | 입력·게임 메뉴·경제·건설 | 4/10 → M3 | 1 / 229 |
+| 6 | 입력·게임 메뉴·경제·건설 | 5/10 → M3 | 1 / 229 |
 | 7 | 전투·의식·AI | 3/7 | 1 / 161 |
 | 8 | 미션 수명·대본·오디오·도움말 | 8/9 → M4 | 0 / 0 |
 | 9 | 표시 품질·브라우저/OS·배포 | E945 하위 경로·설정 복원 검증, M5 미완료 | 0 / 0 |
@@ -271,7 +270,7 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
   - [ ] 16:10 — cpppj 선택지는 1280×800이고 웹 16:10 논리 크기는 높이 768 기준(약 1229×768)이라 직접 대조할 수 없다. 완료 기준: 크기 정책 결정(3.5절) 뒤 같은 크기 오라클로 90프레임 화면 0픽셀.
   - [ ] 한국어 — cpppj 한국어 설정으로 같은 오라클을 수집해 대조한다. 완료 기준: 차이가 [0.7절](#korean-font-change)의 의도된 차이(제목 배율·굵기·한글 기준선) 영역에만 있음을 기록한다.
 
-#### 6 입력·게임 메뉴·사제/운반·경제·건설 (4/10)
+#### 6 입력·게임 메뉴·사제/운반·경제·건설 (5/10)
 
 완료한 체크(머리글 수에 포함, 보관한 1개 외): **입력 본체**(E1263, UserInput 상위 메뉴 E1084·브라우저 이벤트 E919~E934·특수 진단 로그 장치, GameWorldInput E795~E796, NB20 E804, 편집 우클릭 메뉴·모드 1/6 좌클릭은 웹 제외, [E802](docs/webpj-campaign-user-input-movement-click-20261118.md) · [E796](docs/webpj-campaign-game-world-menu-cursor-20261118.md)), **게임 메뉴**(E1264, 메뉴막대 E1084와 하위 명령 E1085~E1235, Ignore chat·Whisper To·정보 보기 단독 도달 불가 E1167, Tell 모달 스택 E1252, ESC Tell 닫기, [게임 메뉴막대](docs/webpj-game-menu-bar-20261120.md) · [ESC](docs/webpj-tell-escape-20261123.md)), **공장·지식 메뉴와 기술**(E1076~E1079 Factory 생산·지식·업그레이드, 연구 명령 0x03000080 소비, E1189 Fury War 기술 지급; 제단 업그레이드·`Get 5,000` 행의 HTML 기술 목록은 비미션 전용, [E1180](docs/webpj-ritual-reward-scope-20261122.md) · [E1189](docs/webpj-fury-war-technology-20261122.md)).
 
@@ -292,9 +291,7 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 - [ ] **방향키 카메라 이동(사용자 요구 2026-11-23)** — 게임 중 ↑↓←→로 카메라를 옮긴다(원본에 없는 추가 요구, cpppj·dotnetpj와 같은 규칙). [공통](LEFT_JOBS.md#user-requests-20261123)
   - [ ] 키 우선순위 — 원본 ←/→ 조각 회전(cpppj `RawCampaignCursor.cpp:179~180`; 웹은 `lockDepth` 조건으로 같은 키를 입력 큐에 넣음)과 채팅·TextEntry 커서 이동을 먼저 처리하고 그 밖의 게임 화면에서만 카메라를 옮긴다. 이동량·키 반복은 cpppj 결정과 같게 한다. 완료 기준: 규칙을 단위 문서에 적는다.
   - [ ] 구현·확인 — `keydown` 반복으로 가장자리 스크롤과 같은 카메라 경로를 쓴다. 완료 기준: 네 방향 이동·조각 회전 보존·입력창 보존 e2e 통과.
-- [ ] **ESC 게임 메뉴 한국어 점검(사용자 제보 2026-11-23, webpj 재현)** — Game·View·Options·Players·About 하위 전체를 한국어로 다시 점검한다(E1166의 메뉴 문구 수집 이후 제보).
-  - [ ] 번역 누락 행 — 원본 번역 호출이 있는데 번역표 항목이 없는 행과, 호출이 없어 원본도 영어인 행을 구별해 목록을 만든다. 완료 기준: 누락 행이 번역표에 들어가고 e2e가 한국어 라벨을 확인한다.
-  - [ ] "플레이어" 메뉴 글자 깨짐 — Players 메뉴를 고르면 글자가 깨진다. Player 이름 표시 바이트(E1166, `displayTextCodec`)와 E1288 글자 혼합(Windows-1252 글자는 원본 글리프) 전후를 먼저 비교해 원인을 좁힌다. 완료 기준: 한국어·영어 Players 하위 행이 깨지지 않음을 화면 e2e로 확인한다.
+- [x] **ESC 게임 메뉴 한국어 점검(사용자 제보 2026-11-23, webpj 재현) — E1290 완료.** 한국어 ESC 메뉴 전수 e2e(`e2e/korean-esc-menu.spec.js`)가 찾은 영어 행은 프레임 속도 `75 FPS (Original)` 하나였다(Frame Rate 라벨이 번역 함수를 거치지 않았음 — 번역 경로 연결과 `75 FPS (원본)` 번역 추가, cpppj 1329와 같음). "플레이어" 메뉴의 글자 깨짐은 Player 정보 창 제목(`Player %s`)과 동맹 줄의 이름이 표시 부호화 바이트 그대로 그려진 것이었고 `decodeName` 장치로 해독하게 고쳤다(`간수` 확인). 같은 단위에서 E1288이 놓친 `korean.test.mjs` 래스터라이저 시험의 낡은 가정도 고쳤다. [근거](docs/webpj-esc-menu-korean-20261123.md)
 
 #### 7 전투·의식·AI (3/7)
 
@@ -355,7 +352,7 @@ M1은 메뉴 관문을 통과했다. 4-D의 Tutorial1 L2 → 5-A/5-B·5-C의 Tut
 
 ### 3.6 cpppj 변경 재반영
 
-대응표 검사에서 행 base 이후 변경을 확인한다. ① 웹 영향 없음, ② 웹 재반영, ③ 해당 소비 단계에서 처리로 판정한다. ②는 별도 단위로 반영하고 ③은 대상 단계에 남긴다. 판정 근거를 대응표와 단위 문서에 기록한다. cpppj 1322(`635906357`, 갈무리11)·1325(`710b9647b`, Reset All)·1326(`baf141ebe`, 테스트 AI 진단)의 변경 아홉 행은 E1241에서 판정해 base를 `63590635`·`710b9647`·`baf141eb`로 올렸다. ② 재반영은 RawDamageableHit의 파생 피해 진단 문구 하나(`core/raw-damageable-hit.js`)이고, ③ 두 건은 E1251(Reset All 게임 안 Tell 확인 창)·E1261(BitmapFont)에서 처리했다. 2026-11-23 저녁 정리 때 `node webpj/tools/port-map.mjs`의 변경 보고는 0행이었으나 cpppj 1328~1332 변경 여섯 파일이 새로 보고됐다: `ProductPresentation.cpp`는 E1289에서 ② 반영(버전 창 11.01 패치·Copyright, base `5a6c2d4d`)했고, `RawGameMenus.cpp`는 ESC 게임 메뉴 한국어 점검, `UberGump.cpp`·`UserInput.cpp`는 방향키 카메라 이동(둘 다 6단계 항목)에서, `KoreanResources.cpp`·`StyleTextBuffer.cpp`는 일본어(13차)에서 판정한다. 대응표 밖 새 파일 EmbeddedBitmapFont·KoreanFontSettings·ResetAllSettings 다섯 개는 모두 ①이며 재기준선 때 등록한다. [판정표](docs/webpj-cpppj-1322-1325-1326-judgment-20261123.md) SoundMusicSelection 행의 base는 기준선보다 앞선 `50ca1acf`였으나 그 뒤 두 커밋(`225f2322c`·`07885f694`)이 `SoundMusicSelection.h`의 주석·멤버 설명만 바꾼 것을 확인해(웹 영향 없음) 2026-11-22에 base를 `225553df`로 바로잡았다.
+대응표 검사에서 행 base 이후 변경을 확인한다. ① 웹 영향 없음, ② 웹 재반영, ③ 해당 소비 단계에서 처리로 판정한다. ②는 별도 단위로 반영하고 ③은 대상 단계에 남긴다. 판정 근거를 대응표와 단위 문서에 기록한다. cpppj 1322(`635906357`, 갈무리11)·1325(`710b9647b`, Reset All)·1326(`baf141ebe`, 테스트 AI 진단)의 변경 아홉 행은 E1241에서 판정해 base를 `63590635`·`710b9647`·`baf141eb`로 올렸다. ② 재반영은 RawDamageableHit의 파생 피해 진단 문구 하나(`core/raw-damageable-hit.js`)이고, ③ 두 건은 E1251(Reset All 게임 안 Tell 확인 창)·E1261(BitmapFont)에서 처리했다. 2026-11-23 저녁 정리 때 `node webpj/tools/port-map.mjs`의 변경 보고는 0행이었으나 cpppj 1328~1332 변경 여섯 파일이 새로 보고됐다: `ProductPresentation.cpp`는 E1289에서(버전 창 11.01 패치·Copyright, base `5a6c2d4d`), `RawGameMenus.cpp`는 E1290에서(프레임 속도 라벨 번역, base `840d92a8`) ② 반영했고, `UberGump.cpp`·`UserInput.cpp`는 방향키 카메라 이동(둘 다 6단계 항목)에서, `KoreanResources.cpp`·`StyleTextBuffer.cpp`는 일본어(13차)에서 판정한다. 대응표 밖 새 파일 EmbeddedBitmapFont·KoreanFontSettings·ResetAllSettings 다섯 개는 모두 ①이며 재기준선 때 등록한다. [판정표](docs/webpj-cpppj-1322-1325-1326-judgment-20261123.md) SoundMusicSelection 행의 base는 기준선보다 앞선 `50ca1acf`였으나 그 뒤 두 커밋(`225f2322c`·`07885f694`)이 `SoundMusicSelection.h`의 주석·멤버 설명만 바꾼 것을 확인해(웹 영향 없음) 2026-11-22에 base를 `225553df`로 바로잡았다.
 
 | 처리 단계 | 남은 판정·연결 |
 | --- | --- |

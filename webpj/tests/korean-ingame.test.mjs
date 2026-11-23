@@ -9,6 +9,7 @@ import { REPO_ROOT } from './helpers.mjs';
 import { XlatTable } from '../www/assets/xlat.js';
 import { RawGameMenus } from '../www/ui/raw-game-menus.js';
 import { gameMenuCommandValue } from '../www/core/game-menu-commands.js';
+import { frameRateChoices } from '../www/core/frame-rate-option.js';
 import { GameMenuBarChild, RawGameMenuBar, bindGameMenuBarControls, createGameMenuBarState } from '../www/core/raw-game-menu-bar.js';
 import { MessageGump, MessageGumpNode } from '../www/ui/message-gump.js';
 import { GumpCreateState } from '../www/ui/gump-create.js';
@@ -36,7 +37,7 @@ function menuHooks(globals, config, extra = {}) {
         player: (owner) => { const bytes = new Uint8Array(180); bytes.set([...`P${owner}`].map((c) => c.charCodeAt(0)), 0xc); new DataView(bytes.buffer).setUint32(0x2c, 7, true); return bytes; },
         refreshPriest: () => {}, playerMenu: (subscriber) => 1000 + subscriber,
         languages: () => [{ label: 'English', number: 0, checked: 1 }, { label: '한국어', number: 7, checked: 0 }],
-        frameRates: () => [{ label: '60 FPS', number: 60, checked: 1 }],
+        frameRates: () => frameRateChoices(75), // 실제 선택지(60·75(Original)·120 FPS)로 라벨 번역 경로를 함께 확인한다. (2026-11-23 WB04-E1290)
         difficulties: () => [{ label: 'Easy', number: 0, checked: 0 }, { label: 'Normal', number: 1, checked: 1 }, { label: 'Hard', number: 2, checked: 0 }],
         ...extra,
     };
@@ -58,7 +59,10 @@ test('게임 메뉴 Game·View·Options·Players 의 모든 문구가 한국어�
     // 모은 원문이 충분히 많아야 이 시험이 실제 코드를 훑었다고 볼 수 있다.
     assert.ok(keys.size >= 35, `수집한 원문 수 ${keys.size}`);
     for (const required of ['Restart Mission', 'Leave Mission', 'Hide buildings - ~iF2~.', 'View Player List - ~iF9~.', 'Cursor Snap To Grid', 'Player List\n', 'Refresh Zones - ~iF9~.']) assert.ok(keys.has(required), `코드가 요청하지 않은 원문 ${JSON.stringify(required)}`);
-    assert.deepEqual(untranslated(keys), [], '번역표에 없는 게임 메뉴 문구');
+    // `60 FPS`·`120 FPS` 는 번역하지 않는 고유 기술 이름이라 번역표에 없어도 된다(cpppj 1329 와 같다). `75 FPS (Original)` 은 `(원본)` 으로 번역해야 한다. (2026-11-23 WB04-E1290)
+    assert.ok(keys.has('75 FPS (Original)') && keys.has('60 FPS'), '프레임 속도 라벨이 번역 경로를 지나야 한다');
+    assert.deepEqual(untranslated(keys).filter((key) => !/^\d+ FPS$/u.test(key)), [], '번역표에 없는 게임 메뉴 문구');
+    assert.equal(korean.translate('75 FPS (Original)'), '75 FPS (원본)');
 });
 
 test('ESC 메뉴 막대의 Game·View·Players·About·Cheat 라벨이 한국어로 번역된다', () => {
