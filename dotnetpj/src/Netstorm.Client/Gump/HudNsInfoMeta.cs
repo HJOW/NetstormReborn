@@ -2,8 +2,10 @@
 // cpppj/src/client/HudNsInfoMeta.h·cpp 의 HudNsInfoMetaGlobals/HudNsInfoMetaHooks/RefreshNsInfoRoster(0047e630) 를 이식한다.
 // 0.906에서 RU-3 NSInfo HUD 묶음용으로 추가됐다.
 // LayoutMetaNsInfo(0047e9d0 일반 앞단/관문 뒤 전체 본문)는 0.907에서 이었다.
+// LayoutMetaPlayerInfo(00479fb0 기존 일반 부착/관문 뒤 전체 메타 본문)는 0.909에서 이었다.
 using System.Text;
 using Netstorm.Client.Display;
+using Netstorm.Core.Original;
 
 namespace Netstorm.Client.Gump;
 
@@ -84,6 +86,33 @@ public sealed class HudNsInfoMetaHooks
 
     /// <summary>현재 표시 바이트 언어 번역이다. 0.907에서 추가됐다.</summary>
     public Func<string, string>? Translate { get; set; }
+
+    /// <summary>같은 ScrollingText+d0의 현재 플래그를 빌린다. 0.909에서 추가됐다.</summary>
+    public Func<uint, UIntBox>? TextFlags { get; set; }
+
+    /// <summary>+c0 현재색/+c4 체크그림값을 쓰는 같은 특수 버튼이다. 0.909에서 추가됐다.</summary>
+    public Func<uint, HudPlayerButtonNode?>? ReadyButton { get; set; }
+
+    /// <summary>실제 Button 가상+3c의 활성화/Redraw다. 0.909에서 추가됐다.</summary>
+    public Action<uint, bool>? Enabled { get; set; }
+
+    /// <summary>실제 Button 가상+40의 값/돌배경/Redraw다. 0.909에서 추가됐다.</summary>
+    public Action<uint, uint>? Value { get; set; }
+
+    /// <summary>004ba360(0)의 같은 실제 스크롤 요청이다. 0.909에서 추가됐다.</summary>
+    public Action<uint>? RequestTop { get; set; }
+
+    /// <summary>004b9fb0(0,0)의 같은 실제 내용 맞춤이다. 0.909에서 추가됐다.</summary>
+    public Action<uint>? FitContent { get; set; }
+
+    /// <summary>004ba090은 현재 기본 문맥으로 문자열/metadata0을 추가한다. 0.909에서 추가됐다.</summary>
+    public Action<uint, string>? AppendDefault { get; set; }
+
+    /// <summary>같은 24DWORD 랭크 변환의 실제 슬롯 필드 읽기다. 0.909에서 추가됐다.</summary>
+    public Func<ReadOnlyMemory<byte>, int, int>? SlotRank { get; set; }
+
+    /// <summary>0042f480의 같은 현재 icon B/C와 전체 256BYTE 처리다. 0.909에서 추가됐다.</summary>
+    public Func<int, string>? RankPicture { get; set; }
 }
 
 // 0047e630 전체의 39명 초기 순서·원문 쌍교환 정렬·이름/문맥/행 metadata다. 0.906에서 추가됐다.
@@ -442,5 +471,288 @@ public static class HudNsInfoMetaLayout
             SetVisible(panel, false, hooks);
             Need(hooks.Attach)(panel, 0, 0, root.Background, 0);
         }
+    }
+}
+
+// 일반Attach/현재meta/known관문은 HudNsInfoCreate가 먼저 수행한다. 여기서는 그 뒤 원문 큰 본문만 수행한다.
+// cpppj/src/client/HudNsInfoMeta.cpp 의 LayoutMetaPlayerInfo(00479fb0) 를 이식한다.
+// 0.909에서 RU-3 NSInfo HUD 묶음용으로 추가됐다.
+public static class HudNsInfoMetaPlayer
+{
+    /// <summary>선택된 실제 장치만 요구하며 가짜 성공으로 대신하지 않는다. 0.909에서 추가됐다.</summary>
+    private static T Need<T>(T? value) where T : Delegate => value ?? throw new InvalidOperationException("NSInfo 플레이어 배치의 실제 선택 장치 미연결");
+
+    /// <summary>지정한 실제 폭만 읽고 원문 필드 밖 접근은 그 위치에서 거부한다. 0.909에서 추가됐다.</summary>
+    private static uint ReadField(ReadOnlySpan<byte> bytes, int offset, int width = 4)
+    {
+        // 낮은 BYTE부터 원문 폭만 조립한다.
+        if (offset < 0 || offset > bytes.Length || width > bytes.Length - offset)
+        {
+            throw new ArgumentOutOfRangeException(nameof(offset), "NSInfo 플레이어 배치의 실제 CS 필드 부족");
+        }
+
+        uint value = 0;
+        for (int index = 0; index < width; index++)
+        {
+            value |= (uint)bytes[offset + index] << (8 * index);
+        }
+
+        return value;
+    }
+
+    /// <summary>현재 레코드의 실제 첫 NUL을 찾으며 임의 길이로 이름을 잘라 성공시키지 않는다. 0.909에서 추가됐다.</summary>
+    private static string ParticipantName(ReadOnlySpan<byte> record)
+    {
+        ReadOnlySpan<byte> text = record.Slice(0x26);
+        int end = text.IndexOf((byte)0);
+        if (end < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(record), "NSInfo 플레이어 이름의 실제 NUL 없음");
+        }
+
+        return Encoding.Latin1.GetString(text[..end]);
+    }
+
+    /// <summary>바뀐 대상 또는 0대상에서만 +b8을 지우며 고정 PlayerInfo의 현재 +b0을 그대로 둔다. 0.909에서 추가됐다.</summary>
+    private static void Select(uint token, uint participant, HudNsInfoMetaHooks hooks)
+    {
+        HudPlayerInfoNode node = Need(hooks.Player)(token) ?? throw new InvalidOperationException("NSInfo 플레이어 배치의 실제 PlayerInfo 없음");
+        if (node.Player != participant || participant == 0)
+        {
+            node.Reserved = 0;
+        }
+
+        node.Player = participant;
+    }
+
+    /// <summary>다른 Gump 플래그는 보존하고 표시 비트만 바꾼다. 0.909에서 추가됐다.</summary>
+    private static void SetVisible(uint token, bool visible, HudNsInfoMetaHooks hooks)
+    {
+        GumpCreateNode node = Need(hooks.Node)(token) ?? throw new InvalidOperationException("NSInfo 플레이어 배치의 실제 자식 없음");
+        if (visible)
+        {
+            node.Flags |= 1u;
+        }
+        else
+        {
+            node.Flags &= ~1u;
+        }
+    }
+
+    /// <summary>원문 현재 자식의 기본폭을 쓰뒤 같은 배율의 float 결과만 저장한다. 0.909에서 추가됐다.</summary>
+    private static void SetWidth(uint token, double width, HudNsInfoMetaHooks hooks)
+    {
+        GumpCreateNode node = Need(hooks.Node)(token) ?? throw new InvalidOperationException("NSInfo 플레이어 배치의 실제 자식 없음");
+        node.BaseWidth = (float)width;
+        node.Width = (float)(width * node.Scale);
+    }
+
+    /// <summary>원문 "+T숫자" 서식을 만든다. 0.909에서 추가됐다.</summary>
+    private static string T(int number) => "~[T" + number.ToString(System.Globalization.CultureInfo.InvariantCulture) + "]";
+
+    /// <summary>같은 실제 문맥 배열을 유지한 채 현재 8DWORD를 덮어쓴다. 0.909에서 추가됐다.</summary>
+    private static void CopyContext(GumpCreateNode node, uint[] context)
+    {
+        ArgumentNullException.ThrowIfNull(node);
+        ArgumentNullException.ThrowIfNull(context);
+        if (context.Length != node.TextContext.Length)
+        {
+            throw new ArgumentException("NSInfo 문맥의 실제 8DWORD 폭 불일치", nameof(context));
+        }
+
+        Array.Copy(context, node.TextContext, context.Length);
+    }
+
+    /// <summary>기존 일반 부착/관문 뒤 전체 메타 본문이다. 실제 이름/버튼/아이콘과 최종 높이를 쓴다. 0.909에서 추가됐다.</summary>
+    /// <param name="token">같은 0xbc PlayerInfo 노드 토큰이다.</param>
+    /// <param name="globals">두 원문 몸체가 현재 위치에서 읽는 실제 전역이다.</param>
+    /// <param name="hooks">실제 UI 처리기·현재 색/기술 값이다.</param>
+    public static void Layout(uint token, HudNsInfoMetaGlobals globals, HudNsInfoMetaHooks hooks)
+    {
+        ArgumentNullException.ThrowIfNull(globals);
+        ArgumentNullException.ThrowIfNull(hooks);
+        ArgumentNullException.ThrowIfNull(globals.Challenge);
+        HudPlayerInfoNode panel = Need(hooks.Player)(token) ?? throw new InvalidOperationException("NSInfo 플레이어 배치의 실제 PlayerInfo 없음");
+        Need(hooks.Push)(panel.Text);
+        Need(hooks.Push)(panel.Button);
+        Need(hooks.Push)(panel.Start);
+        Need(hooks.Push)(panel.Master);
+        UIntBox textFlags = Need(hooks.TextFlags)(panel.Text) ?? throw new InvalidOperationException("NSInfo 플레이어 배치의 실제 편집 플래그 없음");
+        if ((ReadField(globals.Challenge.Participant(Need(globals.Owner)()).Span, 0x64, 1) & 4u) != 0)
+        {
+            textFlags.Value |= 8u;
+        }
+        else
+        {
+            textFlags.Value &= ~8u;
+        }
+
+        uint white = Need(hooks.Read)(0x5bec2cu);
+        uint yellow = Need(hooks.Read)(0x59afd8u);
+        // 원문 초기 흰 문맥의 색은 후행 이름색으로 덮어쓰지만 선행 getter 조회는 유지한다.
+        _ = white;
+        uint[] emptyContext = [0, 0, yellow, 0, 0, 0, 1, 1];
+        float extraHeight = 0;
+        if (panel.Player == 0)
+        {
+            Need(hooks.Replace)(panel.Text, "");
+            Need(hooks.Append)(panel.Text, "Slot empty\n", emptyContext, 0);
+            Need(hooks.Enabled)(panel.Button, false);
+            Need(hooks.Value)(panel.Button, 0);
+            Need(hooks.Enabled)(panel.Start, false);
+            Need(hooks.Value)(panel.Start, 0);
+        }
+        else
+        {
+            ReadOnlyMemory<byte> participant = globals.Challenge.Participant(panel.Player);
+            ReadOnlyMemory<byte> options = globals.Challenge.Battle(ReadField(participant.Span, 0xa4)).Slice(0, 0x59);
+            bool ownMaster = (ReadField(globals.Challenge.Participant(Need(globals.Owner)()).Span, 0x64) & 4u) != 0;
+            Need(hooks.TextFlags)(panel.Text).Value &= ~0x10u;
+            Need(hooks.Enabled)(panel.Start, false);
+            SetVisible(panel.Start, false, hooks);
+            SetVisible(panel.Master, false, hooks);
+            uint metadata = 0;
+            Need(hooks.Enabled)(panel.Button, true);
+            SetVisible(panel.Button, true, hooks);
+            uint targetMaster = ReadField(participant.Span, 0x64) & 4u;
+            if (targetMaster != 0 && !ownMaster)
+            {
+                SetVisible(panel.Master, true, hooks);
+                GumpCreateNode targetMasterNode = Need(hooks.Node)(panel.Master) ?? throw new InvalidOperationException("NSInfo 플레이어 배치의 실제 마스터 문자 없음");
+                extraHeight = targetMasterNode.BaseHeight;
+            }
+            else if (ownMaster)
+            {
+                if (targetMaster != 0)
+                {
+                    SetVisible(panel.Start, true, hooks);
+                    Need(hooks.Enabled)(panel.Start, true);
+                    ReadOnlyMemory<byte> battle = globals.Challenge.Battle(ReadField(participant.Span, 0xa4));
+                    // 실제 8슬롯을 원문 순서로 읽고 첫 미준비 참가자에서만 시작 버튼을 끈다.
+                    for (uint slotIndex = 0; slotIndex < 8; slotIndex++)
+                    {
+                        uint other = ReadField(battle.Span, 0x38 + (int)slotIndex * 4);
+                        if (other == 0)
+                        {
+                            continue;
+                        }
+
+                        uint flags = ReadField(globals.Challenge.Participant(other).Span, 0x64);
+                        if ((flags & 2u) == 0 || (flags & 0x2000u) == 0)
+                        {
+                            Need(hooks.Enabled)(panel.Start, false);
+                            SetVisible(panel.Start, false, hooks);
+                            break;
+                        }
+                    }
+
+                    metadata = panel.Player;
+                    GumpCreateNode startNode = Need(hooks.Node)(panel.Start) ?? throw new InvalidOperationException("NSInfo 플레이어 배치의 실제 Start 버튼 없음");
+                    extraHeight = startNode.BaseHeight;
+                }
+                else
+                {
+                    metadata = panel.Player;
+                }
+
+                Need(hooks.TextFlags)(panel.Text).Value |= 0x10u;
+            }
+
+            HudPlayerButtonNode readyButton = Need(hooks.ReadyButton)(panel.Button) ?? throw new InvalidOperationException("NSInfo 플레이어 배치의 실제 특수 버튼 없음");
+            if ((ReadField(participant.Span, 0x64, 1) & 2u) == 0)
+            {
+                readyButton.Entry = 0;
+                Need(hooks.Value)(panel.Button, 0);
+            }
+            else
+            {
+                Need(hooks.Value)(panel.Button, 1);
+                readyButton.Entry = (ReadField(participant.Span, 0x64) & 0x2000u) != 0 ? 1u : 0u;
+            }
+
+            if (panel.Player != Need(globals.Owner)())
+            {
+                Need(hooks.Enabled)(panel.Button, false);
+            }
+
+            Need(hooks.Replace)(panel.Text, "");
+            uint slot = ReadField(participant.Span, 0xa8);
+            uint colorAddress = 0x5c78b0u + slot * 4u;
+            uint nameColor = Need(hooks.Read)(colorAddress);
+            uint[] iconContext = [2, 0, Need(hooks.Read)(0x5b5e58u), 1, 0, Need(hooks.Read)(0x5bec2cu), 1, 1];
+            HudPlayerButtonNode colorButton = Need(hooks.ReadyButton)(panel.Button) ?? throw new InvalidOperationException("NSInfo 플레이어 배치의 실제 특수 버튼 없음");
+            colorButton.UntouchedC0 = (ReadField(participant.Span, 0x64) & 0x2000u) != 0 ? Need(hooks.Read)(0x5accfcu + slot * 4u) : Need(hooks.Read)(0x5bec3cu);
+            bool special = ReadField(options.Span, 0x3f + (int)ReadField(participant.Span, 0xa8), 1) != 0;
+            GumpCreateNode textNode = Need(hooks.Node)(panel.Text) ?? throw new InvalidOperationException("NSInfo 플레이어 배치의 실제 본문 없음");
+            uint[] saved = (uint[])textNode.TextContext.Clone();
+            CopyContext(textNode, iconContext);
+            Need(hooks.Parse)(panel.Text, T(unchecked((int)(panel.Player + 100u))));
+            Need(hooks.Parse)(panel.Text, special ? "~[IfortGump.L10]" : "~[IfortGump.L9]");
+            Need(hooks.Parse)(panel.Text, "~[T0]");
+            if (!special)
+            {
+                Need(hooks.Parse)(panel.Text, T(unchecked((int)(panel.Player + 200u))));
+                Need(hooks.Parse)(panel.Text, "~[IfortGump.L" + ((int)ReadField(options.Span, 0x47 + (int)ReadField(participant.Span, 0xa8), 1) + 11).ToString(System.Globalization.CultureInfo.InvariantCulture) + "]");
+                Need(hooks.Parse)(panel.Text, "~[T0]");
+            }
+
+            CopyContext(textNode, saved);
+            // 두 상태 아이콘은 각각 현재 문맥을 새로 보관/대입하고 정상 파싱 뒤에만 복원한다.
+            foreach (uint flag in new uint[] { 0x800u, 0x200u })
+            {
+                if ((ReadField(participant.Span, 0x64) & flag) == 0)
+                {
+                    continue;
+                }
+
+                saved = (uint[])textNode.TextContext.Clone();
+                CopyContext(textNode, iconContext);
+                Need(hooks.Parse)(panel.Text, flag == 0x800u ? "~[IfortGump.L1]" : "~[IfortGump.L0]");
+                CopyContext(textNode, saved);
+            }
+
+            if (!special)
+            {
+                Need(hooks.Parse)(panel.Text, T(unchecked((int)(panel.Player + 300u))));
+                int rank = Need(hooks.SlotRank)(options, unchecked((int)ReadField(participant.Span, 0xa8)));
+                string pictures = Need(hooks.RankPicture)(rank);
+                Need(hooks.Parse)(panel.Text, pictures);
+                Need(hooks.Parse)(panel.Text, "~[T0]");
+            }
+
+            uint[] nameContext = [2, 0, (ReadField(participant.Span, 0x64) & 0x2000u) != 0 ? nameColor : Need(hooks.Read)(0x5bec3cu), 0, 0, 0, 1, 1];
+            if ((ReadField(participant.Span, 0x64, 1) & 4u) != 0)
+            {
+                Need(hooks.Append)(panel.Text, ParticipantName(participant.Span), nameContext, metadata);
+            }
+            else
+            {
+                string name = ParticipantName(participant.Span);
+                Need(hooks.Parse)(panel.Text, T(unchecked((int)(panel.Player + 400u))) + "~B~E~[C." + nameContext[2].ToString(System.Globalization.CultureInfo.InvariantCulture) + "]" + name + "~[T0]");
+            }
+        }
+
+        Need(hooks.AppendDefault)(panel.Text, "\n");
+
+        Need(hooks.Attach)(panel.Button, 0, 0, 0, 0);
+        Need(hooks.RequestTop)(panel.Text);
+        Need(hooks.FitContent)(panel.Text);
+        GumpCreateNode buttonNode = Need(hooks.Node)(panel.Button) ?? throw new InvalidOperationException("NSInfo 플레이어 배치의 실제 버튼 없음");
+        SetWidth(panel.Text, (double)panel.BaseWidth - buttonNode.BaseWidth - 2.0, hooks);
+        GumpCreateNode startNode2 = Need(hooks.Node)(panel.Start) ?? throw new InvalidOperationException("NSInfo 플레이어 배치의 실제 Start 버튼 없음");
+        GumpCreateNode textNode2 = Need(hooks.Node)(panel.Text) ?? throw new InvalidOperationException("NSInfo 플레이어 배치의 실제 본문 없음");
+        Need(hooks.Attach)(panel.Text, (float)((double)buttonNode.BaseWidth + 2.0), 0, 0, 0);
+        Need(hooks.Attach)(panel.Start, (float)(((double)panel.BaseWidth - startNode2.BaseWidth) * 0.5), (float)((double)textNode2.BaseHeight + 2.0), 0, 0);
+        GumpCreateNode attachMasterNode = Need(hooks.Node)(panel.Master) ?? throw new InvalidOperationException("NSInfo 플레이어 배치의 실제 마스터 문자 없음");
+        Need(hooks.Attach)(panel.Master, 0, (float)((double)textNode2.BaseHeight + 2.0), 0, 0);
+        SetPanelHeight(token, (double)extraHeight + textNode2.BaseHeight + 2.0, hooks);
+    }
+
+    /// <summary>원문 PanelHeight의 실제 자식 기본높이/배율 쓰기다. 0.909에서 추가됐다.</summary>
+    private static void SetPanelHeight(uint token, double height, HudNsInfoMetaHooks hooks)
+    {
+        GumpCreateNode node = Need(hooks.Node)(token) ?? throw new InvalidOperationException("NSInfo 플레이어 배치의 실제 패널 없음");
+        node.BaseHeight = (float)height;
+        node.Height = (float)(height * node.Scale);
     }
 }
