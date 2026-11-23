@@ -22867,6 +22867,39 @@
       }
     },
     {
+      "id": "temple-capture",
+      "path": "cpppj/tests/fixtures/temple-capture-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E1275",
+      "producer": "cpppj CampaignTempleShrapnel_Native181CapturePixels: 보호 원본 10.78 ShapeToBuffer·가상 Draw·보호 SHP·전체 RLE 신전 파편 캡처 181행(TYPE 기준점 (-2,3)·단위 배율·일반 색, 기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/temple-shrapnel-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/raw-shape-to-buffer.js",
+        "webpj/www/core/raw-campaign-session-particles.js",
+        "webpj/www/core/raw-campaign-session-building.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawShapeToBuffer.cpp",
+        "cpppj/src/client/RawShapeToBuffer.h"
+      ],
+      "doc": "docs/webpj-temple-shrapnel-capture-20261123.md",
+      "scope": "신전 파편(windVortex·rainVortex 등 5개 TYPE)의 프레임·단어·추가 비트·소유자 181입력에서 캡처 그림의 크기·기준점·전체 픽셀·픽셀 수(2,684,495). 파편 소리 횟수와 의존 더미 정리는 cpppj Session 시험 범위이며 웹은 그림만 대조",
+      "text": true,
+      "sha256": "a2f47d625eaca90dfe2794fd55b32dee1952f27105ff4c7a085b23cda1a689d8",
+      "bytes": 5377449,
+      "lines": 182,
+      "fixtureCommit": "7cd3d5608",
+      "webCommit": "499c54ddb",
+      "cpppjBasis": {
+        "cpppj/src/client/RawShapeToBuffer.cpp": "e6c41d170",
+        "cpppj/src/client/RawShapeToBuffer.h": "e6c41d170"
+      }
+    },
+    {
       "id": "production-hint",
       "path": "cpppj/tests/fixtures/production-hint-x86.tsv",
       "kind": "original-x86",
