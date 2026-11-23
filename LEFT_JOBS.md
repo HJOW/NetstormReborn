@@ -1,8 +1,8 @@
 # LEFT_JOBS — cpppj 현행 상태와 남은 작업
 
-**제품 1326 / 11.01 · 정리 2026-11-23(HJOW-Athlon) · 마지막 단위1327(M8 완료) · 다음 번호1328(추가 요청 시) · 마지막 디컴파일 HJOW-Athlon · 자동 진행 범위 마감, 사용자 확인·기존 CD/선택 보류 유지**
+**제품 1326 / 11.01 · 2차 정리 2026-11-23(HJOW-Athlon) · 마지막 단위1327(M8 완료) · 다음 번호1328(추가 요청 시) · 마지막 디컴파일 HJOW-Athlon · 자동 진행 범위 마감, 사용자 확인·기존 CD/선택 보류 유지**
 
-현재 상태·남은 작업·유효한 규칙만 유지한다. 1314~1327의 단위별 상태 설명과 끝난 세부는 [1327 시점 전체 보관본](LEFT_JOBS.old.md#archive-20261123-through-1327), 그 이전 경과와 만료된 지시는 [1310 시점 전체 보관본](LEFT_JOBS.old.md#archive-20261114-through-1310), 개별 구현·검증은 아래 근거 문서를 따른다. [dotnetpj](LEFT_JOBS.dotnetpj.md)·[webpj](LEFT_JOBS.webpj.md)는 각 인계 문서가 기준이다.
+현재 상태·남은 작업·유효한 규칙만 유지한다. 2차 정리 직전 원문(D8·WB E1288 점검 세부, 1절 단위별 검사 교정 행 포함)은 [2차 정리 전 보관본](LEFT_JOBS.old.md#archive-20261123-second-through-1327), 1314~1327의 단위별 상태 설명과 끝난 세부는 [1327 시점 전체 보관본](LEFT_JOBS.old.md#archive-20261123-through-1327), 그 이전 경과와 만료된 지시는 [1310 시점 전체 보관본](LEFT_JOBS.old.md#archive-20261114-through-1310), 개별 구현·검증은 아래 근거 문서를 따른다. [dotnetpj](LEFT_JOBS.dotnetpj.md)·[webpj](LEFT_JOBS.webpj.md)는 각 인계 문서가 기준이다.
 
 <a id="now"></a>
 
@@ -14,10 +14,10 @@
 
 | 구분 | 상태와 다음 행동 |
 | --- | --- |
-| 최신 기준 | 제품1326 Release·**M8 관문1327 통과**. 완료 묶음과 근거는 [1절](#done), 관문 수치는 [3절](#final-gate), 검사 기준선은 [4.2절](#baselines)이다. 1321의 선정325는 반복하지 않았고 1327의 선정752와 교집합0이다. |
+| 최신 기준 | 제품1326 Release·**M8 관문1327 통과**. 완료 묶음과 근거는 [1절](#done), 관문 수치는 [3절](#final-gate), 검사 기준선은 [4.2절](#baselines)이다. |
 | 사용자 확인·결정 | [0.3](#user-checks)의 플레이·MP·물리 환경 확인은 AI 실행 범위 밖이다. [0.2](#decisions) D1~D7은 결정 전까지 권고 범위를 유지한다. |
 | **CD10.72 복원 C3~C5** | **사용자 보류(2026-11-14). 재개 지시 전 진행하지 않는다.** 메뉴·CDDir 저장 후 재실행은1309에서 확인했다. 1310의 Start/AI 설정은 순수 몸체만 검증했고 실제 Session/Guide/SP/AI 생성자에는 미연결이다. 첫 튜토리얼 차단은 `RawMenuHtml.inc:3`의 PATCH 전용 HTML 검사다. [보류 인계·재개 지점](docs/exe/cpp-cd1072-deferred-20261114.md). |
-| AI 자동 플레이 정체 | 1326으로 자동 범위 완료. 초기화/프레임 미연결은 아니다.1-3 후반은 자원 우선 연결 실패 재시도 대기,1-4 돈 누적 정체는600초 범위 미재현,3-1 옛 오류는 제단 수정 전 로그라 새 파생 누락으로 확정하지 않는다. 임의 전략 변경 없이 사용자 자연 플레이/동일성 확인을 유지한다. [1326](docs/exe/cpp-autoplay-ai-diagnostics-1326-20261122.md). |
+| AI 자동 플레이 정체 | 1326으로 자동 범위 완료(초기화/프레임 미연결 아님). 1-3 후반 재시도 대기·1-4 돈 정체 미재현·3-1 옛 오류의 판정은 [1326](docs/exe/cpp-autoplay-ai-diagnostics-1326-20261122.md)을 따른다. 임의 전략 변경 없이 사용자 자연 플레이/동일성 확인을 유지한다. |
 | 테스트 자동 플레이 | **플레이 결과 재현이 필요한 AI는 먼저 [AI 에이전트용 사용 안내](docs/testing/cpp-autoplay-test-guide.md)를 읽고 [실행 도구](tools/cpp_campaign_autoplay.py)를 쓴다.** 명령줄 전용 `--test-autoplay`·`--test-ally-ai`·`--test-enemy-ai`·`--test-start-sp`·`--test-enemy-start-sp`·`--test-follow-battle`이며 허용 범위는 [5절](#rules-verify)이다. 1313 일괄 실행 결과는 [결과 7절](docs/exe/cpp-campaign-test-play-20261114.md#7-캠페인-전체-자동-플레이-실행-1313-2026-11-14-후속). |
 | DN/WB 후속 | 최초 실행은 DN만 남음([0.6](#first-run)), 한국어 글꼴 화면 적용은 DN만 남음([0.7](#korean-font-change)), 아이콘은 DN 창 표시·WB 탭 시각 확인만 남음([0.8](#exe-icon)). 각 인계 문서에서 진행하며 CP 단위에서는 DN/WB 코드·인계를 수정하지 않는다. |
 | 선택/추가 제보 | 비행체 표시 보간·번역·QuickJS 추가 연동은 D2·D3·D7 결정 뒤 진행한다. 새 재현 자료가 오면 해당 NB 행을 다시 연다. |
@@ -69,7 +69,7 @@
 | 3차 LAN·Outpost | 구현·정적 대조 마감 | MP 실행은 사용자 확인 |
 | 4차 MCP·와이드 | 구현 마감, 최대1920×1080 | 구체적 누락 제보 시 재개 |
 | 5차 사용자 홈·맵 목록 | 구현·읽기 전용 설치 확인 | 실제 Program Files/UAC |
-| 6차 한국어 | K1~K5·갈무리11 전환/상수 분리1322 완료 | 사람 검수·물리 입력·다른 DPI |
+| 6차 한국어 | K1~K5·갈무리11 전환/상수 분리1322 완료 | 사람 검수·물리 입력·다른 DPI, 전체화면 글자 선명도는 D8 |
 | 7차 오류·상세 로그 | 완료 | 던진 위치 스택 없음·ARM64 레지스터 미구현 |
 | 8차 AA·FSR1.0 | 구현 마감, 기본OFF | 실물4K·성능·물리 출력 |
 | 9차 시나리오 편집 | S1~S4 완료 | 없음 |
@@ -115,23 +115,11 @@
 | webpj | `fonts/Galmuri11.woff2`·`fonts/Galmuri11-Bold.woff2`를 `webpj/www/data/fonts/`로 복사해 FontFace에 등록한다. 메뉴·도움말과 Tutorial1 실제 미션 브리핑에서 확인했다. 굵기는 사용자 결정으로 보통체를 유지한다. **E1288:** WOFF2 설계 격자(12px)로 그리고 4배 그리기·칸 평균으로 Canvas 번짐을 없앴으며, cpppj처럼 숫자·영문·공백을 원본 `.chfnt` 글리프로 그린다(SP 숫자·Tutorial3 D1 그림 줄 해소). [WB 인계](LEFT_JOBS.webpj.md#korean-font-change) · [E1288](docs/webpj-korean-glyph-grid-20261123.md) |
 | 라이선스 | `fonts/Galmuri11-LICENSE.txt`를 각 배포판에 글꼴과 함께 포함한다. |
 
-**WB E1288 점검의 cpppj 해당 여부(2026-11-23, 정적 대조·기존 화면 캡처 확인, cpppj 실행 없음).** 사용자 지시로 기록만 하고 작업하지 않는다([D8](#decisions)).
+**WB E1288 점검의 cpppj 해당 여부(2026-11-23, 정적 대조·기존 화면 캡처, cpppj 실행 없음).** 사용자 지시로 기록만 하고 작업하지 않는다([D8](#decisions)). webpj에서 고친 세 결함(11px 축소로 획 빠짐·SP 숫자 확대·Tutorial3 D1 그림 줄바꿈)은 cpppj에 없다: strike 비트맵을 픽셀 그대로 정수배 복제하고(`EmbeddedBitmapFont`, 한글 칸 전진 폭12·기준선 위12줄), Windows-1252 글자는 `EncodeBytes`→`.chfnt`로 그린다(`docs/screens/cpp-korean-galmuri-1322-20261117/briefing.png` 한글 11줄 온전). [근거](docs/webpj-korean-glyph-grid-20261123.md)
 
-- 해당 없음: webpj에서 고친 세 결함은 cpppj에 없다.
-  - 11px 축소로 획이 빠지는 문제: cpppj는 `EmbeddedBitmapFont`가 strike 비트맵을 픽셀 그대로 정수배 복제한다. 한글 칸은 전진 폭 12·기준선 위 12줄이다.
-  - SP 숫자가 커지는 문제, Tutorial3 D1 그림 줄바꿈 문제: cpppj는 `EncodeBytes`가 Windows-1252 글자를 한 바이트로 두고 `.chfnt`로 그린다. 그래서 SP 숫자는 원본 Arial이고, 공백은 3px이라 그림 줄은 318px이다(정적 계산).
-  - `docs/screens/cpp-korean-galmuri-1322-20261117/briefing.png`에서 한글 11줄이 온전하다.
-- [ ] **전체화면 1px 획 불균일.** 1024×768 논리 화면을 1080p 등으로 픽셀 중심 최근접 비정수 확대(1.40625배)한다(`ScreenPresentation.cpp:50`). 그래서 갈무리11의 1px 획·간격이 1~2px로 들쑥날쑥하다. 창 모드 1:1에서는 생기지 않는다. 비교 그림: WB 점검 ④(1.406배 최근접 모의).
-- [ ] **고해상도 글자 층(제안).** 다음 순서로 동작한다.
-  1. `GumpTextDraw` 의 글리프 출력 훅에서 위치·코드·슬롯·색·잘림 영역과 그리기 전후 표면 픽셀을 기록한다.
-  2. 표시 단계(`StretchDIBits`/`ScaleScreenPresentation`)에서, 기록과 화면 픽셀이 같아 가려지지 않은 글자만 배경을 되돌린 뒤 확대한다.
-  3. 그 위에 GDI/DirectWrite 로 출력 해상도 글자를 그린다.
-  4. 논리 화면은 바뀌지 않으므로 화면 대조 시험에 영향이 없다. 8차 안티앨리어싱 옵션과 묶는 것이 자연스럽다.
-- [ ] **webpj와의 차이(결정 필요).**
-  - 큰 슬롯 배율: cpppj는 strike ppem 16을 넣어 슬롯 3이 1배, 슬롯 4가 3배이고, webpj는 2배·4배이다.
-  - 굵기: cpppj는 굵기 700 슬롯에 굵은 갈무리를 쓰고, webpj는 보통체이다.
-  - 한글 기준선: cpppj는 칸 기준 12줄이라 슬롯 0에서 한글이 원본 기준선보다 1줄 아래에 놓인다. webpj는 잉크 기준 11줄이다.
-  - 근거: [WB E1288](docs/webpj-korean-glyph-grid-20261123.md)
+- [ ] **전체화면 1px 획 불균일(D8 ①).** 1024×768을 1080p 등으로 픽셀 중심 최근접 비정수 확대(1.40625배, `ScreenPresentation.cpp:50` `ScaleScreenPresentation`)해 갈무리11의 1px 획·간격이 1~2px로 들쑥날쑥하다. 창 모드 1:1은 해당 없음. 완료 기준: D8에서 정한 방식으로 1080p 전체화면의 획 굵기가 고르고 기존 화면 대조 시험이 통과한다.
+- [ ] **고해상도 글자 층(D8 ②, 제안).** `GumpTextDraw` 글리프 출력 훅에서 위치·코드·슬롯·색·잘림 영역과 그리기 전후 표면 픽셀을 기록하고, 표시 단계(`StretchDIBits`/`ScaleScreenPresentation`)에서 가려지지 않은 글자만 배경을 되돌린 뒤 GDI/DirectWrite로 출력 해상도 글자를 덧그린다. 논리 화면은 바뀌지 않아 대조 시험에 영향이 없고 8차 AA 옵션과 묶는 것이 자연스럽다. 완료 기준: 옵션 ON에서 한국어가 출력 해상도로 그려지고 OFF는 현행 화면과 같다.
+- [ ] **webpj와의 차이(D8 ③).** 큰 슬롯 배율(cpppj strike ppem16 → 슬롯3 1배·슬롯4 3배, webpj 2배·4배)·굵기(cpppj 굵기700 슬롯은 굵은 갈무리, webpj 보통체)·한글 기준선(cpppj 칸 기준12줄이라 슬롯0에서 원본 기준선보다 1줄 아래, webpj 잉크 기준11줄). 완료 기준: 결정된 쪽으로 맞추거나 차이 유지 결정을 기록한다.
 
 <a id="exe-icon"></a>
 
@@ -155,18 +143,14 @@
 
 | 묶음 | 요약·근거 |
 | --- | --- |
-| 최신 M8 관문1327 | 제품1326 Release·ZIP1,437전수·34/34진입+Credits/스커미시4경로·QuickJS6/6·정적 감사·배포/보호 불변. [보고](docs/exe/cpp-m8-final-gate-1327-20261122.md). |
-| 잔여 검사 계약1324 | 선정752 최초741통과·11실패 → 실제 장치/현행 계약 교정 뒤 최신11/11 통과. 최신 전수751통과·NB08 검사1실패/교정 후1건 통과는1327 관문에서 구별한다. [근거](docs/exe/cpp-remaining-test-contracts-1324-20261122.md). |
+| 최신 M8 관문1327 | 제품1326 Release·ZIP1,437전수·34/34진입+Credits/스커미시4경로·QuickJS6/6·정적 감사·배포/보호 불변. [보고](docs/exe/cpp-m8-final-gate-1327-20261122.md). 이전 관문: [1311](docs/exe/cpp-m8-final-gate-1310-20261114.md)·[요약JSON](cpppj/m8-final-gate-20261114.json)·[1294~1297](docs/exe/cpp-m8-final-gate-1294-20261111.md)([3.1절](#final-gate)). |
+| 검사 계약 교정 1304~1305·1316·1318·1319·1321·1324 | 제품·fixture 불변, 옛 기대값·검사 장치만 현행 계약으로 교정했다. 최신 통과 수치는 [4.2절](#baselines). 근거: [1324](docs/exe/cpp-remaining-test-contracts-1324-20261122.md)·[1321](docs/exe/cpp-pop-test-baseline-1321-20261117.md)([선정 목록/결과](cpppj/pop-test-baseline-1321-20261117.json))·[1319](docs/exe/cpp-world-test-contracts-1319-20261117.md)·[1318](docs/exe/cpp-startup-name-test-1318-20261117.md)·[1316](docs/exe/cpp-mission-parent-tests-1316-20261117.md)·[1304~1305](docs/exe/cpp-test-local-transport-accept-20261112.md). |
 | AI 본문·피해 진단1326 | 일반 덤프 보존/테스트 선택 AI 관측, 미연결 피해 문맥, 관련10/10·1-3/1-4 각600초 종료0·진단0. 원문 기한 대기/미재현 한계는 [1326](docs/exe/cpp-autoplay-ai-diagnostics-1326-20261122.md). |
 | 설정 초기화1325 | 실제 HTML 확인 제출 토큰만 소비, 취소/ESC/직접 Tell 보존, 사용자 설정/진행 초기화·정상 종료와 최초 상태 재시작. 집중6/6·고유GUI8경로. [근거](docs/exe/cpp-reset-all-1325-20261122.md). |
 | 실행 파일 아이콘 1323 | 원본 32×32·16×16 리소스 탑재와 공통 ICO 저장. Release PE 리소스 바이트 대조 및 Windows API 로드 검증. [근거](docs/exe/cpp-exe-icon-1323-20261119.md). |
 | 한국어 갈무리11 1322 | 외부 일반/굵은 비트맵 원형·같은 일반체 대체·공통 JSON/상수·배포 전환. 관련47/47·실제GUI5회 종료0·ZIP1,437항목/보호2,807파일 불변. [근거/화면](docs/exe/cpp-korean-galmuri-1322-20261117.md). |
-| 공통 Pop 검사1321 | 선정325건 중 일반 Sprite 지원표 기대값1건만 실패 → 검사 교정 후 통과. 제품·기존 fixture 유지. 전체1175건 통과는 미판정. [근거](docs/exe/cpp-pop-test-baseline-1321-20261117.md)·[선정 목록/결과](cpppj/pop-test-baseline-1321-20261117.json). |
 | 미션 전환1320 | 이전 Source의 실제 flush·종료 수신 전달, 등록표 번호 재사용/호출 수명 교정. 새4/4·전체119/119, 실제 Replay2회·한국어/영어 양방향 전환·오류 로그0. 실제 승리/MP 실행은 제외. [근거](docs/exe/cpp-mission-transition-1320-20261117.md). |
-| 표시/공유 커널 검사1319 | 제네레이터 그림자 대상색 기대1/1·외부 프로세스 보존/명시 정리4/4 통과. 검사 callback 접근 위반 해소, 제품/fixture 유지. [근거](docs/exe/cpp-world-test-contracts-1319-20261117.md). |
-| 시작 경로 검사1318 | 옛 값형25칸 기대를 현행 실제 존재조회/열기의37칸으로 교정, file_directory18/18 통과. 제품/원문fixture 유지. [근거](docs/exe/cpp-startup-name-test-1318-20261117.md). |
 | analyzeManager 최초 준비1317 | 옵션 파일이 없는 정상 입력 지원, 사본에만 관찰용 네 키 생성·원본/setup 보존. 단위114통과·MCP 기본 검사 통과. [근거](docs/exe/analyze-manager-first-run-1317-20261117.md). |
-| 미션 진입 검사1316 | 장기 표면과 같은 Template owner 공유로 교체 검사 복구, 집중2/2·전체115/115 통과. 제품/기대값 유지. [근거](docs/exe/cpp-mission-parent-tests-1316-20261117.md). |
 | 한국어 유닛 정보1315 | `Type` 내부 접미사 오역 교정, 실제 우클릭 정보/F1·영어 대조, 정보 앵커76개·관련40검사 통과. [원인·검증](docs/exe/cpp-korean-unit-help-1315-20261117.md). |
 | 최초 실행1314 | 원본 PE 기본 음량5·5, Client/메뉴/보고서의 같은 설정 해석, 사용자 음량·안내/진행 저장 보존. 집중48건·제품GUI13회·데이터 불변 확인. 넓은 미션 진입 검사의 별도 실패는4.2절. [구현·검증·제품 화면](docs/exe/cpp-first-run-1314-20261116.md). |
 | 비MP 복원·호환 | [UI](docs/exe/cpp-ui-implementation-closure-20261105.md)·[Edit](docs/exe/cpp-editor-implementation-closure-20261106.md)·[미션](docs/exe/cpp-mission-state-scope-20261106.md)·[수명/FILE](docs/exe/cpp-internal-lifetime-closure-20261106.md). |
@@ -175,8 +159,6 @@
 | 언어·제품 표기 | 일본어 UI509키·외부 글꼴·영어 대체, 11.01 Patch Credits/HJOW·AI·Copyright2026 HJOW. [일본어](docs/exe/cpp-japanese-l1-l3-20261111.md)·[제품](docs/exe/cpp-product-1101-20261101.md). |
 | 난이도·스커미시·프레임 | [난이도](docs/exe/cpp-difficulty-d-20261111.md)·[MP 규칙 스커미시](docs/exe/cpp-skirmish-sk-20261111.md)·[60/120FPS](docs/exe/cpp-post-plan-fps-cd1072-20261111.md). |
 | QuickJS | 탑재·자원 한도·자체 검사·배포 라이선스. [1301](docs/exe/cpp-quickjs-engine-20261111.md). |
-| 시험 교정1304~1305 | Pop/로컬 전송 accept·NB18 충돌 시험 교정. 실행 파일 불변. [근거](docs/exe/cpp-test-local-transport-accept-20261112.md). |
-| M8 1311 | Release·ZIP 전수·배포본 실행·PE/소스 감사 완료. [최종 보고](docs/exe/cpp-m8-final-gate-1310-20261114.md)·[요약JSON](cpppj/m8-final-gate-20261114.json). 사용자 요청으로 목표 일시 중지. |
 | 테스트 자동 플레이1312 | 캠페인·스커미시 아군 AI 자동 플레이·아군/적 난이도·시작 SP·관전 카메라(명령줄 전용)와 실행 도구, 11차 동맹 AI 판정 보정(`o/AiAllianceSide.h`). 1-1 승리 재현·스커미시 확인. [AI 사용 안내](docs/testing/cpp-autoplay-test-guide.md)·[근거](docs/exe/cpp-campaign-test-play-20261114.md). |
 | CD1306~1310 | 기본 해상도·메시지·CDDir·Player/메뉴·순수 Start/AI 설정. **후속 보류.** [메뉴/Player](docs/exe/cpp-cd1072-player-initialization-20261114.md)·[Start/AI](docs/exe/cpp-cd1072-mission-start-ai-settings-20261114.md)·[보류 인계](docs/exe/cpp-cd1072-deferred-20261114.md). |
 
@@ -225,13 +207,13 @@ ZIP: `extracted/cpp-m8-1327/NetstormReborn-11.01-cpppj.zip`(205,883,413바이트
 
 | 대상 | 마지막 확인 기준 |
 | --- | --- |
-| mission_entry(1320) | **전체119/119 통과**.1316의 검사 Template owner 공유 교정 뒤115건과1320의 이전 연결 flush·종료 수신/호출 수명4건이다.제품의 Replay/미션 이동도 확인했다.[근거](docs/exe/cpp-mission-transition-1320-20261117.md). |
-| pop_context(1321) | **선정325건 확인: 초기324통과·1실패 → 해당1건 기대값 교정 후 통과.** 일반 Sprite `0050cc08` 지원을 검사 표에서 누락한 문제다.38파일의 허용된 공통/지상 생성·표시 범위만 실행, 기존 fixture988파일 불변. 전체1175건/옛 실패24건의 최신 전수 재집계는 아니다.[근거](docs/exe/cpp-pop-test-baseline-1321-20261117.md). |
-| world_generation | **1319에서 제네레이터1/1·SharedKernel4/4 통과**. 그림자의 대상색 변환 인자 누락과 Session이 외부 Client 프로세스까지 지운다는 옛 검사 가정을 교정했다. 검사 종료 접근 위반 해소. AiCarrierActions의 옛 실패는 포로 내용물 검사이므로 이번 실행에서 제외했다. 전체 실행 통과로 확대하지 않는다. [근거](docs/exe/cpp-world-test-contracts-1319-20261117.md). |
-| guide_fort_request(1324) | 선정89건 중 최초87통과·2실패 → 최신 해당2/2 통과. 현재 진단 표본 복사/State6 오류 문자열 계약을 검사에 반영했다. 같은 최신 빌드의 선정89/89 통과를1327에서 확인했다. |
-| file_directory(1318) | **해결: 전체18/18 통과**. 실제 파일 존재조회가 추가된37칸 소비를 검사에 반영, 제품/fixture 유지. [근거](docs/exe/cpp-startup-name-test-1318-20261117.md). |
-| menu_session·main_popup·file(1324) | 선정194·79·390건. 최초 menu4·file5 실패는 Template/지형 생성/가상 Form/출력 장치와 현행 계약을 교정해 최신 해당9/9 통과. popup 최초79/79 통과. 최신 menu194/194·popup79/79·file390선정 중389통과/NB08 검사1실패 뒤 해당1건 교정 통과를1327에서 확인했다. 과거 전체 실패수와 구별한다. |
-| 실제 미션 하네스 | 옛 AGENTS 해시와 달라 passed:false가 나오는 기록이 있다. 미션 실행/종료 결과와 보호 해시 기준을 따로 확인한다. |
+| mission_entry(1320) | **전체119/119 통과**(1316 Template owner 교정115건 + 1320 flush·종료 수신/호출 수명4건). [근거](docs/exe/cpp-mission-transition-1320-20261117.md). |
+| pop_context(1321) | **선정325: 324통과·1실패 → 일반 Sprite `0050cc08` 지원 기대값 교정 후 통과.** fixture988파일 불변. 전체1175건/옛 실패24건 재집계는 아니다. [근거](docs/exe/cpp-pop-test-baseline-1321-20261117.md). |
+| world_generation(1319) | **제네레이터1/1·SharedKernel4/4 통과**(그림자 대상색 인자·외부 Client 프로세스 정리 가정 교정). AiCarrierActions 옛 실패는 제외 범위. 전체 통과로 확대하지 않는다. [근거](docs/exe/cpp-world-test-contracts-1319-20261117.md). |
+| guide_fort_request(1324) | 선정89: 최초87통과·2실패 → 표본 복사/State6 오류 문자열 계약 반영 뒤 89/89(1327 재확인). |
+| file_directory(1318) | **전체18/18 통과**(실제 존재조회37칸 소비 반영). [근거](docs/exe/cpp-startup-name-test-1318-20261117.md). |
+| menu_session·main_popup·file(1324) | 최초 menu4·file5 실패 → 교정 후 최신 menu194/194·popup79/79·file390 중389(NB08 1실패 → 교정 후 통과, 1327). 과거 전체 실패수와 구별한다. |
+| 실제 미션 하네스 | 옛 AGENTS 해시 때문에 passed:false 기록이 있다. 실행/종료 결과와 보호 해시를 따로 확인한다. |
 
 변경 전과 같은 실패인지 실제 기준선으로 비교한다. 과거 세부 로그·수치는 보관본4.2에 있다.
 
@@ -260,6 +242,7 @@ ZIP: `extracted/cpp-m8-1327/NetstormReborn-11.01-cpppj.zip`(205,883,413바이트
 7. 외부 접속은 [정책](docs/exe/cpp-external-services-20261101.md)·[목록](cpppj/external-endpoints-20261101.json)에 기록하며 폐기 클라이언트 검증은 비활성화한다.
 8. 응답·새 주석은 한국어, 새 코드/문서는 UTF-8이다. 네임스페이스·상수·함수·구조체·클래스·멤버·반복문 주석, AGENTS 번역명·외부 fonts 규칙을 따른다. **LEFT_JOBS.md는 CRLF**로 저장한다. 원시/fixture/`-text` 소스의 기존 바이트·혼합 줄바꿈은 국소 수정으로 보존한다. 코드 줄 중간의 `//`가 뒤 코드를 삼키지 않게 한다.
 9. 현재 문서의 지시가 옛 보고서의 "다음"보다 우선한다. 자동 진행 범위는2026-11-22의1327에서 마감했다. CD 재개와 선택 추가 작업은 별도 사용자 지시를 기다린다.
+10. **LEFT_JOBS 정리 요청 시**(AGENTS.md `1fc63cb1a`): 정리 직전 원문 전체를 [LEFT_JOBS.old.md](LEFT_JOBS.old.md) 끝에 앵커·SHA-256과 함께 보관한 뒤 만료·상세 불필요 내용은 요약만 남기고, 완료됐는데 미표시인 항목을 점검하며, 너무 큰 작업 단위는 완료 기준이 있는 세부 단위로 나눈다.
 
 ```powershell
 cmake --build cpppj/build --config Release --target NetstormCpp NetstormRoot --parallel 4 -- /p:UseMultiToolTask=true /p:MultiProcMaxCount=4 /p:EnforceProcessCountAcrossBuilds=true
@@ -269,8 +252,10 @@ cmake --build cpppj/build --config Release --target NetstormCpp NetstormRoot --p
 
 ## 7. 근거·보관
 
-[1327 전체 보관본](LEFT_JOBS.old.md#archive-20261123-through-1327)에는 2026-11-23 정리 직전 문서 전체를 원문 바이트로 보존했다. 0.1의 1314~1327 단위별 상태 행, 0.6~0.8의 완료 세부(최초 실행 관찰·글꼴 로딩/검증 체크·아이콘 리소스 표), 3.1 이전 관문1311 표, 머리의 2026-11-17 원격 병합·2026-11-19 아이콘 요구 안내는 이쪽에서 찾는다. 단위1302~1310의 경과·끝난 작업 상세·AGENTS 변경 이력표·낡은 다음 지시는 [1310 전체 보관본](LEFT_JOBS.old.md#archive-20261114-through-1310)에 있다. 기존 보관본은 수정하지 않았다.
+[2차 정리 전 보관본](LEFT_JOBS.old.md#archive-20261123-second-through-1327)에는 2차 정리 직전 문서 전체(0.7의 WB E1288 점검 세부 문장, 1절의 검사 교정 단위별 6행·M8 1311 행)를 원문 바이트로 보존했다. [1327 전체 보관본](LEFT_JOBS.old.md#archive-20261123-through-1327)에는 2026-11-23 정리 직전 문서 전체를 원문 바이트로 보존했다. 0.1의 1314~1327 단위별 상태 행, 0.6~0.8의 완료 세부(최초 실행 관찰·글꼴 로딩/검증 체크·아이콘 리소스 표), 3.1 이전 관문1311 표, 머리의 2026-11-17 원격 병합·2026-11-19 아이콘 요구 안내는 이쪽에서 찾는다. 단위1302~1310의 경과·끝난 작업 상세·AGENTS 변경 이력표·낡은 다음 지시는 [1310 전체 보관본](LEFT_JOBS.old.md#archive-20261114-through-1310)에 있다. 기존 보관본은 수정하지 않았다.
 
-**2026-11-23 정리 기록.** 바로잡은 것: 0.6의 WB 최초 실행 적용(E616 완료, DN만 남음), 0.7의 WB 갈무리11(적용·확인 완료, DN 화면 적용만 남음), 0.8의 webpj favicon(E894에서 `favicon.ico`·링크 추가, 탭 시각 확인만 남음). 흩어져 있던 1320 승리 창 버튼·1312 관전 카메라·탐색기 아이콘 확인은 0.3으로 모았다. cpppj 소스·제품·디컴파일 기준은 그대로다(마지막 `cpppj/src` 변경 `baf141ebe`=1326, AGENTS.md 마지막 변경 `11b16b778`).
+**2026-11-23 정리 기록.** 바로잡은 것: 0.6의 WB 최초 실행 적용(E616 완료, DN만 남음), 0.7의 WB 갈무리11(적용·확인 완료, DN 화면 적용만 남음), 0.8의 webpj favicon(E894에서 `favicon.ico`·링크 추가, 탭 시각 확인만 남음). 흩어져 있던 1320 승리 창 버튼·1312 관전 카메라·탐색기 아이콘 확인은 0.3으로 모았다. cpppj 소스·제품·디컴파일 기준은 그대로다(마지막 `cpppj/src` 변경 `baf141ebe`=1326, AGENTS.md 마지막 변경은 당시 `11b16b778`).
+
+**2026-11-23 2차 정리 기록(AGENTS.md `1fc63cb1a` 정리 규칙 적용).** 1절 검사 교정 6행·M8 1311 행을 합치고 0.7 E1288 점검·4.2 기준선 문장을 요약했다(원문은 2차 보관본). D8 세 항목에 완료 기준을 달았다. 완료 미표시는 없었다(DN 최초 실행·한국어 화면·창 아이콘, WB 탭 아이콘은 각 인계 기준으로 남음; `cpppj/src`는 1326 이후 변경 없음). AGENTS.md 마지막 변경은 `1fc63cb1a`(정리 규칙)이고 한국어 글꼴 지정은 갈무리11 그대로다(`96d81381c`의 Noto Sans KR은 참고 자료).
 
 주요 기준: [SOURCE_MAP](cpppj/SOURCE_MAP.md)·[디컴파일 신뢰도](docs/exe/decompile-reliability.md)·[제품](docs/exe/cpp-product-1101-20261101.md)·[미션 대응](docs/gameplay/demo-campaign-map.md)·[MCP/session dump](docs/exe/cpp-session-state-dump-20261109.md). DN/WB 요청·상태는 각 인계 문서를 따른다. AGENTS.md는 수정하지 않으며 현행1~15차·DN/WB4~15차 범위는 각 프로젝트에서 유지한다.
