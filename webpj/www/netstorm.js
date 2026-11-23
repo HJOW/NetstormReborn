@@ -2566,6 +2566,8 @@ export class Netstorm {
                 onButtonSound: () => this._audio?.playSound(BUTTON_SOUND_NAME),
                 // 원본 비교 모드는 원본 8버튼 배치를 쓴다. (2026-11-07 WB02-H)
                 includeAllButtons: this.options.originalComparison,
+                // 메인 메뉴 배경은 팔레트 전환이 만든 Kencloud 구름 캐시이다(원본 DrawKencloud). 캐시가 없으면 메뉴가 구름 GIF 를 깐다. (2026-11-24 WB04-E1298)
+                cloudSource: () => this._clientKencloud?.cacheImage() ?? null,
             });
         }
         this._ensureSurface();

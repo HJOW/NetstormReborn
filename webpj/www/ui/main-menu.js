@@ -113,9 +113,11 @@ export function titlePosition(screenWidth, screenHeight, image) {
 // resources: { font, clouds, title, texture, textureMetrics, shadeMaps, buttonPalette, textContexts }. (2026-10-23 WB03-M1)
 export class MainMenuScreen {
     // 화면 자원과 콜백으로 메뉴를 만든다. includeAllButtons 는 원본 비교용으로 8개 버튼을 모두 만들지 여부다.
-    constructor({ resources, onCommand = null, onButtonSound = null, includeAllButtons = false }) {
+    constructor({ resources, onCommand = null, onButtonSound = null, includeAllButtons = false, cloudSource = null }) {
         // 그리기에 쓰는 원본 자원 묶음이다.
         this.resources = resources;
+        // 메인 메뉴 배경(Kencloud 구름 캐시)을 주는 콜백이다: `() => { width, height, pixels } | null`. 없거나 null 을 돌려주면 구름 GIF 를 그대로 깐다. (2026-11-24 WB04-E1298)
+        this.cloudSource = cloudSource;
         // 버튼을 실행했을 때 명령 객체와 라벨을 받는 콜백이다.
         this.onCommand = onCommand;
         // 버튼을 누르는 순간 button.wav 를 내기 위한 콜백이다.
@@ -200,7 +202,10 @@ export class MainMenuScreen {
     // 구름 그림이 없으면(원본 크기 검사 실패) 색 번호 0 으로 채운다.
     render(surface) {
         const { clouds, title } = this.resources;
-        if (clouds) surface.tile(clouds);
+        // 원본 메인 메뉴 배경은 Kencloud 구름 캐시이다. 앱이 `cloudSource` 로 캐시를 주면 그것을 깔고(팔레트 전환이 만든 현재 모양), 아직 없거나 장치가 없으면 구름 GIF 그대로 깐다. (2026-11-24 WB04-E1298)
+        const cache = this.cloudSource?.() ?? null;
+        if (cache) surface.tile(cache);
+        else if (clouds) surface.tile(clouds);
         else surface.fill(0);
         const position = titlePosition(surface.width, surface.height, title);
         surface.drawImage(title, position.x, position.y);

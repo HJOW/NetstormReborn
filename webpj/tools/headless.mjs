@@ -174,7 +174,9 @@ export async function createHeadless({ language = 'english', screen = { width: 1
         // 구름 배경만 그린 화면(메인 메뉴 render 의 첫 단계와 같은 타일)을 팔레트 RGB 로 돌려준다. 비교 도구가 구름 차이를 분류할 때 쓴다.
         background() {
             const surface = new IndexedSurface(app._surface.width, app._surface.height);
-            if (app.resources.clouds) surface.tile(app.resources.clouds);
+            const cache = app.mainMenu?.cloudSource?.() ?? null; // 메인 메뉴 render 와 같은 배경 선택: Kencloud 캐시가 있으면 그것을 깐다. (2026-11-24 WB04-E1298)
+            if (cache) surface.tile(cache);
+            else if (app.resources.clouds) surface.tile(app.resources.clouds);
             else surface.fill(0);
             return indexedToRgb(surface, app.resources.palette.rgb);
         },

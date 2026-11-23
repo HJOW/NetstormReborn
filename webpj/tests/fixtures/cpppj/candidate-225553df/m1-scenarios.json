@@ -36,8 +36,8 @@
       "expected": {
         "welcome": {
           "background": {
-            "pixels": 37054,
-            "reason": "구름 배경: 원본/cpppj 는 Kencloud 출력, 웹은 GIF 단순 타일이라 일부 행이 가로 1픽셀 어긋난다. 원본 스크린샷도 cpppj 쪽에 가깝다(차이 픽셀 평균 오차 cpppj 5.78·웹 12.47). WB03-M2 KenCloud 이식 때 해소"
+            "pixels": 0,
+            "reason": "구름 배경은 Kencloud 구름 캐시로 그려 cpppj 와 픽셀까지 같다(WB04-E1298; 이전에는 웹이 GIF 단순 타일을 깔아 37054픽셀이 달랐다)"
           }
         }
       }
@@ -65,8 +65,8 @@
       "expected": {
         "main-menu": {
           "background": {
-            "pixels": 37054,
-            "reason": "구름 배경(welcome 과 같은 원인). 제목 그림과 8버튼은 픽셀까지 같다"
+            "pixels": 0,
+            "reason": "구름 배경은 Kencloud 구름 캐시로 그려 cpppj 와 픽셀까지 같다(WB04-E1298; 이전에는 웹이 GIF 단순 타일을 깔아 37054픽셀이 달랐다)"
           }
         }
       }
@@ -99,8 +99,8 @@
       "expected": {
         "campaign": {
           "background": {
-            "pixels": 37054,
-            "reason": "구름 배경(welcome 과 같은 원인). Tell 창은 픽셀까지 같다"
+            "pixels": 0,
+            "reason": "구름 배경은 Kencloud 구름 캐시로 그려 cpppj 와 픽셀까지 같다(WB04-E1298; 이전에는 웹이 GIF 단순 타일을 깔아 37054픽셀이 달랐다)"
           },
           "regions": [
             {
@@ -145,8 +145,8 @@
       "expected": {
         "demo": {
           "background": {
-            "pixels": 37054,
-            "reason": "구름 배경(welcome 과 같은 원인). Tell 창은 픽셀까지 같다"
+            "pixels": 0,
+            "reason": "구름 배경은 Kencloud 구름 캐시로 그려 cpppj 와 픽셀까지 같다(WB04-E1298; 이전에는 웹이 GIF 단순 타일을 깔아 37054픽셀이 달랐다)"
           }
         }
       }
@@ -179,8 +179,8 @@
       "expected": {
         "credits": {
           "background": {
-            "pixels": 37054,
-            "reason": "구름 배경(welcome 과 같은 원인). Tell 창은 픽셀까지 같다"
+            "pixels": 0,
+            "reason": "구름 배경은 Kencloud 구름 캐시로 그려 cpppj 와 픽셀까지 같다(WB04-E1298; 이전에는 웹이 GIF 단순 타일을 깔아 37054픽셀이 달랐다)"
           }
         }
       }
@@ -213,8 +213,8 @@
       "expected": {
         "help-popup": {
           "background": {
-            "pixels": 37054,
-            "reason": "구름 배경(welcome 과 같은 원인). 펼침 메뉴는 정지 포인터 아래 행 강조·Technical Help 비활성까지 픽셀이 같다"
+            "pixels": 0,
+            "reason": "구름 배경은 Kencloud 구름 캐시로 그려 cpppj 와 픽셀까지 같다(WB04-E1298; 이전에는 웹이 GIF 단순 타일을 깔아 37054픽셀이 달랐다)"
           }
         }
       }
@@ -247,8 +247,8 @@
       "expected": {
         "options-popup": {
           "background": {
-            "pixels": 37054,
-            "reason": "구름 배경(welcome 과 같은 원인)"
+            "pixels": 0,
+            "reason": "구름 배경은 Kencloud 구름 캐시로 그려 cpppj 와 픽셀까지 같다(WB04-E1298; 이전에는 웹이 GIF 단순 타일을 깔아 37054픽셀이 달랐다)"
           },
           "regions": [
             {
@@ -298,8 +298,8 @@
       "expected": {
         "general-help": {
           "background": {
-            "pixels": 33164,
-            "reason": "구름 배경(welcome 과 같은 원인)"
+            "pixels": 0,
+            "reason": "구름 배경은 Kencloud 구름 캐시로 그려 cpppj 와 픽셀까지 같다(WB04-E1298; 이전에는 웹이 GIF 단순 타일을 깔아 33164픽셀이 달랐다)"
           }
         }
       }

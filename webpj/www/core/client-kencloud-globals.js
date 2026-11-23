@@ -82,6 +82,11 @@ function compareIgnoringCase(first, second) {
     }
 }
 
+// 상태 배열(2054 DWORD)에서 구름 캐시 주소가 놓인 위치이다(raw-kencloud-render.js 의 CACHE 와 같다). (2026-11-24 WB04-E1298)
+const CACHE_INDEX = 515;
+// 구름 캐시 그림의 불투명도 표이다(512×512 전부 1: 캐시는 투명 없이 복사된다). 모든 호출이 같은 표를 쓴다. (2026-11-24 WB04-E1298)
+const CLOUD_OPACITY = new Uint8Array(512 * 512).fill(1);
+
 // 같은 Client 의 구름 전역 소유자이다. 사용: const cloud = new ClientKencloudGlobals(); cloud.readOptions(data); cloud.build(data.files, data, random); cloud.draw(screen, [0, 0, 640, 480, 0, 0], data.files, data, random).
 // allocation 은 새 블록·지역 scratch 의 현재 할당 입력 훅이며(생략/null 이면 currentAllocationBytes), 게임 계산을 하지 않는다. (2026-11-13 WB04-E396)
 export class ClientKencloudGlobals {
@@ -408,6 +413,15 @@ export class ClientKencloudGlobals {
             },
         };
         transitionFortPalette(() => name, this.paletteGlobals(), hooks);
+    }
+
+    // 메인 메뉴 배경으로 쓸 구름 캐시 512×512 색 번호 그림 `{ width, height, indices, opacity }`(IndexedSurface 그림 형식)이다. 캐시가 아직 없으면 null 이다(구름은 팔레트 전환 때 만들어진다).
+    // 원본 메인 메뉴는 카메라 원점 0 으로 이 캐시를 화면 전체에 투명 없이 타일로 복사한다(DrawKencloud, 구름 파일을 읽은 뒤 `speed` 번 한 줄씩 밀린 현재 모양). `indices` 는 캐시 바이트의 살아 있는 보기라 복사본이 아니다.
+    // 사용: const image = clouds.cacheImage(); if (image) surface.tile(image). (2026-11-24 WB04-E1298: 메인 메뉴가 정적 GIF 대신 이 캐시를 그리도록 추가)
+    cacheImage() {
+        const address = this.#state[CACHE_INDEX] >>> 0;
+        if (!address) return null;
+        return { width: 512, height: 512, indices: this.memory(address).subarray(0, 512 * 512), opacity: CLOUD_OPACITY };
     }
 
     // 현재 Renderer 를 소유하지 않고 연결한다. 같은 객체면 그대로, null 이면 토큰 0, 새 객체면 0x3b000000 부터 0x1000 간격의 다음 토큰이다(0xffffe000 초과는 RangeError).

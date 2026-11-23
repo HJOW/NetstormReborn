@@ -157,6 +157,24 @@ test('ClientKencloudGlobals_ActualFileAndNative400SeedRandom: 실제 512 GIF 픽
     assert.deepEqual([globals.phase, random.state, globals.dirtyRows[8]], [1, before, 1]);
 });
 
+// 메인 메뉴 배경: 구름 캐시 그림은 만들기 전에는 null 이고, 만든 뒤에는 512×512 투명 없는 IndexedSurface 그림이며 캐시 바이트의 살아 있는 보기이다. 행 이동(step)이 보기에 그대로 보인다. (2026-11-24 WB04-E1298)
+test('ClientKencloudGlobals_CacheImage: 메인 메뉴 배경용 구름 그림은 캐시의 살아 있는 보기이고 이동이 반영된다', { skip: !present }, () => {
+    const data = cloudData(), random = new GameRandom(0);
+    random.setState(SEED_STATE);
+    const cloud = new ClientKencloudGlobals((bytes) => { bytes.fill(0x5a); });
+    assert.equal(cloud.cacheImage(), null, '캐시가 없으면 null');
+    cloud.build(data.files, data, random);
+    const image = cloud.cacheImage();
+    assert.deepEqual([image.width, image.height, image.indices.length, image.opacity.length], [512, 512, 512 * 512, 512 * 512]);
+    assert.ok(image.opacity.every((value) => value === 1), '투명 없음');
+    const pixels = decodeBackgroundGif(original('d/Gifcloud.gif'));
+    assert.ok(Buffer.from(image.indices).equals(Buffer.from(pixels.indices)), '이동 전에는 구름 GIF 와 같다');
+    // 한 번 이동하면 같은 보기에서 행이 한 바이트씩 밀려 GIF 와 달라진다(메인 메뉴 구름이 GIF 단순 타일과 픽셀이 다른 원인).
+    cloud.step();
+    assert.ok(!Buffer.from(cloud.cacheImage().indices).equals(Buffer.from(pixels.indices)), '이동 뒤에는 GIF 와 다르다');
+    assert.ok(Buffer.from(image.indices).equals(Buffer.from(cloud.cacheImage().indices)), '처음 얻은 보기도 같은 메모리를 가리킨다');
+});
+
 test('ClientKencloudGlobals_MissingAndWrongSizeUseActualFallback: 없는 파일과 512 가 아닌 실제 GIF 는 반납 뒤 같은 난수/채움 fallback 을 쓴다', { skip: !present }, () => {
     const defeat = gifFileDimensions(original('d/Defeat.gif'));
     const decoded = decodeBackgroundGif(original('d/Defeat.gif'));
