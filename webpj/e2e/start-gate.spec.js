@@ -88,3 +88,35 @@ test('?lang 없이 브라우저 선호 언어로 한국어·영어를 탐지한�
   expect(await other.evaluate(() => window.netstorm.options.language), '영어 브라우저').toBe('english');
   await english.close();
 });
+
+// 고정 최소 대기(6초): 자원이 일찍 다 와도 첫 적재 시작 뒤 6초가 지나기 전에는 '클릭하여 시작'이 열리지 않고 클릭도 받지 않는다. 자동화 브라우저의 기본은 0 이므로 주소 `?startwait=6000` 으로 켠다. (2026-11-24 WB04-E1306, 사용자 요구)
+test('고정 최소 대기 6초: 자원이 일찍 와도 6초 전에는 클릭을 받지 않고 지나면 열린다', async ({ page }) => {
+  test.setTimeout(120000);
+  const errors = []; page.on('pageerror', (error) => errors.push(error.message));
+  const startedAt = Date.now();
+  await openFirstVisit(page, '/?lang=ko&startwait=6000');
+  // 메뉴·언어 묶음이 끝나 자원이 만들어진 뒤에도(음악은 별도) 약 2초 시점에는 아직 로딩 화면이다.
+  await page.waitForFunction(() => Boolean(window.netstorm?._resources), null, { timeout: 60000 });
+  await page.waitForTimeout(1000);
+  expect(await page.evaluate(() => window.netstorm.state), '6초 전에는 로딩 화면').toBe('loading');
+  await page.locator('canvas').click(); await page.waitForTimeout(200);
+  expect(await page.evaluate(() => window.netstorm.state), '최소 대기 중 클릭은 받지 않는다').toBe('loading');
+  await page.waitForFunction(() => window.netstorm.state === 'clickToStart', null, { timeout: 60000 });
+  expect(Date.now() - startedAt, '열리기까지 최소 6초').toBeGreaterThanOrEqual(6000);
+  await page.locator('canvas').click();
+  await page.waitForFunction(() => window.netstorm.state === 'mainMenu' || window.netstorm.state === 'title', null, { timeout: 30000 });
+  expect(errors).toEqual([]);
+});
+
+test('고정 최소 대기를 0 으로 주면(자동화 기본과 같음) 자원이 오는 대로 바로 열린다', async ({ page }) => {
+  test.setTimeout(120000);
+  const startedAt = Date.now();
+  await openFirstVisit(page, '/?lang=ko&startwait=0');
+  await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 60000 });
+  expect(await page.evaluate(() => window.netstorm.options.startMinWaitMs)).toBe(0);
+  expect(Date.now() - startedAt, '최소 대기 없이 6초 안에 열린다').toBeLessThan(6000);
+  // 자동화 브라우저(Playwright)에서 주소 값 없이 열면 기본이 0 이다.
+  await openFirstVisit(page, '/?lang=ko');
+  await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 60000 });
+  expect(await page.evaluate(() => window.netstorm.options.startMinWaitMs), '자동화 브라우저 기본').toBe(0);
+});

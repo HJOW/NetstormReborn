@@ -95,7 +95,7 @@ export async function createHeadless({ language = 'english', screen = { width: 1
         openedLinks.push(link.url);
         return true;
     };
-    const app = new Netstorm({ language, audio: false, originalComparison, fetch: diskFetch(dataRoot), autoFocus: false, previewMap: null, debug: false, openExternal });
+    const app = new Netstorm({ language, audio: false, originalComparison, fetch: diskFetch(dataRoot), autoFocus: false, previewMap: null, debug: false, openExternal, startMinWaitMs: 0 }); // 무브라우저 비교는 '클릭하여 시작' 고정 최소 대기(6초)를 건너뛴다. (2026-11-24 WB04-E1308)
     const doc = fakeDocument();
     // 실제 init과 같은 Client 공통 수명을 먼저 구성한다.
     app._initializeClientRuntime(doc.hidden);

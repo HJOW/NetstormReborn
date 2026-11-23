@@ -578,7 +578,7 @@ function diskFetch(urls, failPattern = null) {
 test('Netstorm 적재: 언어별 묶음 선택과 한국어 실패 대체', async () => {
     const sizeOf = (bundle) => manifest.files.filter((entry) => entry.bundle === bundle).reduce((sum, entry) => sum + entry.size, 0);
     const build = (language, fetch) => {
-        const app = new Netstorm({ language, fetch, audio: false, assetBase: 'http://localhost/data/' });
+        const app = new Netstorm({ language, fetch, audio: false, assetBase: 'http://localhost/data/', startMinWaitMs: 0 }); // 고정 최소 대기(6초)는 이 적재 시험과 무관하다. (2026-11-24 WB04-E1308)
         app._initializeClientRuntime(false);
         app._layout = { logicalWidth: 1024, logicalHeight: 768 };
         app._root = { ownerDocument: { ...fakeDocument().document, baseURI: 'http://localhost/' } };

@@ -276,6 +276,16 @@ export const AppState = Object.freeze({
 // '클릭하여 시작'을 열기 전에 나머지 시작 자원(메뉴 음악·글꼴)을 기다리는 최대 시간(밀리초)이다. 이 시간이 지나면 자원이 아직 오는 중이어도 시작을 허용한다(음악은 계속 받는다). (2026-11-24 WB04-E1300)
 export const START_READY_TIMEOUT_MS = 20000;
 
+// '클릭하여 시작'을 열기 전의 고정 최소 대기 시간(밀리초)이다. 자원 완료 신호(글꼴·음악)로 잡히지 않는 처음 방문의 경합(스크립트 오류·언어 탐지 실패)을 덜기 위해, 첫 적재가 시작된 뒤 이 시간이 지나기 전에는 자원이 다 와도 클릭을 받지 않는다. 사용자 요구 6초. (2026-11-24 WB04-E1306)
+export const START_MIN_WAIT_MS = 6000;
+
+// 고정 최소 대기 값(옵션·주소 `?startwait=밀리초`)을 0~60000 정수로 정리한다. 비어 있거나 숫자가 아니면 fallback 이다. 사용: normalizeStartMinWaitMs('3000', 6000) → 3000. (2026-11-24 WB04-E1306)
+export function normalizeStartMinWaitMs(value, fallback = START_MIN_WAIT_MS) {
+    if (value === null || value === undefined || value === '') return fallback;
+    const number = Number(value);
+    return Number.isFinite(number) && number >= 0 ? Math.min(60000, Math.floor(number)) : fallback;
+}
+
 // 웹 전용 화면(로딩·오류·클릭하여 시작)의 언어별 문구이다. 원본 메인 메뉴의 버튼 라벨은 원본 글꼴로 그리므로 여기에 없다.
 // 모르는 언어는 영어로 대체한다. (2026-10-23 WB01, 2026-10-23 WB03-M1: 임시 메뉴 문구 제거)
 const TEXTS = Object.freeze({
@@ -581,6 +591,8 @@ export class Netstorm {
             assetBase: options.assetBase ?? DEFAULT_ASSET_BASE,
             // 자산 일시적 실패 재시도 간격(밀리초) 목록이다. 기본(null)은 AssetLoader 의 기본값이며 빈 배열이면 재시도하지 않는다. 검사가 실패를 바로 확인하려고 줄인다. (2026-11-24 WB04-E1300)
             assetRetryDelays: options.assetRetryDelays ?? null,
+            // '클릭하여 시작' 고정 최소 대기(밀리초)이다. 기본은 START_MIN_WAIT_MS(6초)이고 주소 `?startwait=0` 이나 옵션으로 바꾼다. 자동화 브라우저(`navigator.webdriver`, e2e·MCP)에서는 기본을 0 으로 두어 검사가 느려지지 않게 하며, 6초 동작을 시험할 때는 `?startwait=6000` 처럼 값을 직접 준다. (2026-11-24 WB04-E1306)
+            startMinWaitMs: normalizeStartMinWaitMs(options.startMinWaitMs ?? params.get('startwait'), globalThis.navigator?.webdriver === true ? 0 : START_MIN_WAIT_MS),
             fetch: options.fetch ?? null,
             scaling: normalizeScaling(options.scaling ?? params.get('scaling')),
             audio: options.audio ?? !params.has('mute'),
@@ -2406,6 +2418,8 @@ export class Netstorm {
     // 메인 메뉴 필수 묶음(menu)은 기다리고, 음악 묶음(menu-music)은 뒤에서 받는다. 이미 받은 자원은 재시도·재시작에서 다시 받지 않는다.
     // 오래된 세대의 결과는 버린다. 준비 단계에서는 오디오를 재생하지 않는다.
     async _load() {
+        // 고정 최소 대기의 기준이 되는 첫 적재 시작 시각이다(이후 재적재에서는 이미 지났으므로 다시 기다리지 않는다). (2026-11-24 WB04-E1306)
+        this._loadStartedAt ??= Date.now();
         this._loadGeneration += 1;
         const generation = this._loadGeneration;
         this._loadError = null;
@@ -2477,11 +2491,16 @@ export class Netstorm {
         const fontsReady = this._root?.ownerDocument?.fonts?.ready;
         if (fontsReady && typeof fontsReady.then === 'function') pending.push(Promise.resolve(fontsReady).catch(() => {}));
         if (this._musicSettled && this._musicStatus === 'loading') pending.push(this._musicSettled);
+        // 고정 최소 대기: 첫 적재 시작으로부터 startMinWaitMs 가 지날 때까지 남은 시간만큼 더 기다린다. 이미 지났거나 0 이면 기다리지 않는다. (2026-11-24 WB04-E1306)
+        const floor = Math.max(0, this.options.startMinWaitMs - (Date.now() - (this._loadStartedAt ?? Date.now())));
+        let floorTimer = null;
+        if (floor > 0) pending.push(new Promise((resolve) => { floorTimer = view.setTimeout(resolve, floor); }));
         if (pending.length === 0) return;
         let timer = null;
-        const timeout = new Promise((resolve) => { timer = view.setTimeout(resolve, START_READY_TIMEOUT_MS); });
+        // 상한은 최소 대기보다 짧을 수 없다(최소 대기를 상한이 끊지 않는다).
+        const timeout = new Promise((resolve) => { timer = view.setTimeout(resolve, Math.max(START_READY_TIMEOUT_MS, this.options.startMinWaitMs)); });
         await Promise.race([Promise.all(pending), timeout]);
-        view.clearTimeout(timer);
+        view.clearTimeout(timer); if (floorTimer !== null) view.clearTimeout(floorTimer);
     }
 
     // 매니페스트에서 묶음에 속한 파일의 전체 크기(바이트)를 구한다. 묶음이 없으면 0 이다. (2026-10-31 WB03-N)
