@@ -1,4 +1,6 @@
 // 같은 Root의 실제 채팅 창·관계표·설정·음향과 뉴스 생성기를 수신에 연결한다.
+using Netstorm.Net;
+
 namespace Netstorm.Client.Host;
 
 /// <summary>UberHud.inc의 실제 UI 수신 소비자와 Root 수명 결선이다.</summary>
@@ -29,4 +31,29 @@ public sealed partial class ClientHostGame
     }
     /// <summary>공통41h 수신기와 로컬 fallback이 같은 현재 UI/패킷 물리를 사용한다.</summary>
     public void ReceiveNativePacketChat(Memory<byte> packet) => (_nativeChatReceive ?? throw new InvalidOperationException("실제 Root Chat 수신 미설치")).Receive(packet);
+    /// <summary>R11 송수신 펌프가 소비하는 실제 패킷 분배기다.</summary>
+    public RawPacketDispatch PacketDispatch => _packetDispatch ?? throw new InvalidOperationException("패킷 분배기 미설치");
+    /// <summary>공통 패킷 분배기에 41h와 로그인 묶음을 설치한다. 전송 설치는 R4-6, 실제 송수신 펌프는 R11에서 잇는다.</summary>
+    /// <remarks>2026-11-23 0.897에서 R4-6 전송·수신 묶음용으로 추가했다. 근거: R4-6 남음의 "공통 41h가 Root.ReceiveNativePacketChat을 부르는 전송 설치"와 "NativeLoginPacketReceivers의 실제 MonoGame Root 설치 호출"이다. 종료·닫기·반납은 수송이 없어 명시 거부한다.</remarks>
+    private void InstallClientPacketDispatch()
+    {
+        _packetDispatch = ClientPacketDispatch.Build(
+            new PacketDispatchHooks
+            {
+                Now = () => unchecked((uint)_clientClock.Frame.Value.Number),
+                Record = (connection, packet, length) => PacketRecordOwner.Write(false, connection, packet, length),
+                Terminate = _ => throw new InvalidOperationException("패킷 종료 미연결(R11)"),
+                Close = _ => throw new InvalidOperationException("패킷 닫기 미연결(R11)"),
+                Release = _ => throw new InvalidOperationException("패킷 반납 미연결(R11)"),
+            },
+            _gameplay, _connections, _surfaceGlobals, _chatWindowGlobals, ReceiveNativePacketChat,
+            (expression, file, line) => _surfaceGlobals.Storage.AssertDisplay(expression, file, line),
+            new ConnectionActivityHooks
+            {
+                WallSeconds = () => _clock.NowSeconds,
+                FrameNumber = () => unchecked((uint)_clientClock.Frame.Value.Number),
+                Server = () => _gameplay.Authority.Server,
+                EraseStatus = (_, _) => throw new InvalidOperationException("연결 활성 정리 미연결(R11)"),
+            });
+    }
 }

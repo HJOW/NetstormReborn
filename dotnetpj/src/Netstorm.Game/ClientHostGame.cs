@@ -66,6 +66,8 @@ public sealed partial class ClientHostGame : Game
 
     /// <summary>--mission 진입으로 조립한 현재 미션 세션이다. 없으면 메뉴만 돈다.</summary>
     private HostSession? _missionSession;
+    /// <summary>공통 패킷 분배기의 실제 소유자다. R11 송수신 펌프가 소비한다.</summary>
+    private RawPacketDispatch? _packetDispatch;
     /// <summary>완성한 실제 세션/같은 물리/음향·표시·UI 전체를 보유하는 현재 Runtime이다.</summary>
     private HostMissionRuntime? _missionRuntime;
     /// <summary>미션/메뉴보다 오래 같은 표면과 프로세스 장치를 소유한다.</summary>
@@ -281,6 +283,7 @@ public sealed partial class ClientHostGame : Game
                 _scriptStrings, () => _clock.NowSeconds, _ => 0,
                 name => Debug.WriteLine("HTML 메타 명령 미연결: " + name));
             InitializeNativeChatReceive();
+        InstallClientPacketDispatch();
             _menuInput = new HostMenuInput(_mainMenu, _htmlWindows, _htmlFactory, _driver.Input, _scriptStrings,
                 () => _menuDirty = true, action => throw new InvalidOperationException("메뉴 상위 명령 미연결: " + action));
             _menuInput.BindPopup(new HostPopupMenu(_mainMenu, _htmlWindows, _htmlMenus, _driver.Screen, _startup, () => _menuDirty = true, _buttonSound.ApplyOptions, _scriptStrings, () => !_options.MuteAudio, _stateResources.Popup));
