@@ -52,7 +52,7 @@
 3. **이탈 효과 4가지 미확인**(4D-5b): `MapRevision+1`·`ChatChannels.resetOccupied`·선택 해제 통지·시간 동기화 초기화. State 정리 부모를 앱이 부르지 않기 때문이다.
 4. **`raw-priest-placement-*` 6개 미연결**(3.8절): 건물 파괴로 사제를 해방하는 경로의 `mayPlace` 가 도달 시 던질 수 있다(도달성 미판정).
 5. **메인 메뉴 Kencloud 구름 배경**(5-A): 정적 GIF 타일을 쓰는 M1 차이 37,054픽셀.
-6. **Session 큐 명령 전수와 입력 루프 허용 목록 대조**(4D-3e), **프레임 순서 차이 두 건**(4D-4a, E1266 에서 해소), **DestroyPatch 진단 12지점·`rememberPlacement`**(4D-8a), **채팅 허브 fixture 두 TSV**(5-C), **E197·E198·E201 재대조**(5-A·7 중복), **AI·전투 N프레임 L3·고정 시각 모드**(4D-10b·M2/M3).
+6. **Session 큐 명령 전수와 입력 루프 허용 목록 대조**(4D-3e, E1267 에서 해소), **프레임 순서 차이 두 건**(4D-4a, E1266 에서 해소), **DestroyPatch 진단 12지점·`rememberPlacement`**(4D-8a), **채팅 허브 fixture 두 TSV**(5-C), **E197·E198·E201 재대조**(5-A·7 중복), **AI·전투 N프레임 L3·고정 시각 모드**(4D-10b·M2/M3).
 7. **사용자 결정 필요**: 채팅 로그를 미션 끝에 초기화하는 적응을 인정할지(5-C 메뉴·버튼 컨트롤).
 
 대응표 partial 20행 중 메모가 낡은 행(ClientRendererFrame·RawButtonControls·UberGump·RawMenuChat·ClientCampaignTransport·ClientState 네 행·CampaignObjectMenuClient·UberReconnect/ClientMain 문구 불일치)은 다음 작업 6 에 정리 후보로 적었다.
