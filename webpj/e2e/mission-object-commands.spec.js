@@ -241,3 +241,29 @@ test('The War Begins!: 도움말 첫 주제의 Back 은 직전 팝업인 지식 
   expect(errors).toEqual([]);
 });
 
+
+// 채팅 창의 도우미 단추(`>`)를 우클릭하면 제목 "Chat Helper" 와 Help 항목 팝업이 열리고, Help 를 누르면 `chathelperHelp` 주제의 도움말 창이 열린다(원본 RawMenuChat.inc:33 의 title→SetHelpText·help→SetHelpWord).
+// 이전에는 두 훅이 빈 함수라 노드에 도움말 문구·주제가 없어 아무 반응이 없었다. (2026-11-23 WB04-E1253)
+test('The War Begins!: 채팅 도우미 단추 우클릭 도움말이 열리고 Help 항목이 chathelperHelp 를 연다', async ({ page }) => {
+  test.setTimeout(300000);
+  const errors = []; await startWarBegins(page, errors);
+  // F3 로 채팅 창을 보이고 Enter 로 입력줄을 연다(도우미 단추는 입력줄이 열려 있을 때만 보인다).
+  await page.locator('canvas').focus(); await page.keyboard.press('F3'); await page.waitForTimeout(800); await page.keyboard.press('Enter'); await page.waitForTimeout(600);
+  const helper = await page.evaluate(() => { const app = window.netstorm, ui = app._campaignProduction.ui.chat(), b = ui.report().helper.bounds, rect = app.canvas.getBoundingClientRect();
+    return { bounds: b, x: rect.left + (b.left + b.right) / 2 * rect.width / app._layout.logicalWidth, y: rect.top + (b.top + b.bottom) / 2 * rect.height / app._layout.logicalHeight }; });
+  expect(helper.bounds.bottom - helper.bounds.top, '도우미 단추가 화면에 보인다').toBeGreaterThan(4);
+  // 노드에 도움말 문구(번역한 제목)와 주제 이름이 설정돼 있다.
+  expect(await page.evaluate(() => { const app = window.netstorm, node = app._clientGump.node(app._campaignProduction.ui.chat().report().helper.token); return { title: app._helpString(node.textPointer), word: app._helpString(node.alternateTextPointer) }; }), '도우미 노드 도움말').toEqual({ title: 'Chat Helper', word: 'chathelper' });
+  // 실제 마우스 우클릭이 도우미 단추에 닿아 팝업이 열린다.
+  await page.evaluate(() => window.netstorm._clientGump.closePopups());
+  await page.mouse.move(helper.x, helper.y); await page.mouse.click(helper.x, helper.y, { button: 'right', delay: 60 });
+  await expect.poll(() => page.evaluate(() => window.netstorm._clientGump.blockingPopups()), { timeout: 5000, message: '도우미 우클릭 도움말 팝업' }).toBe(true);
+  // 팝업 메뉴의 Help 항목은 F1 도움말 명령(0x02000017)에 주제 문자열 토큰을 싣는다.
+  const popup = await page.evaluate(() => { const root = window.netstorm._clientGump; let menu = 0; for (let t = root.root().child; t; t = root.node(t).next) { if (root.node(t).command === 26) menu = t; }
+    const items = menu ? root.node(menu).items.filter((item) => item && item.command !== undefined).map((item) => ({ command: item.command, parameter: item.parameter })) : []; return { menu, items }; });
+  const help = popup.items.find((item) => (item.command & 0x03ffffff) === 0x02000017); expect(help, 'Help 항목').toBeTruthy();
+  await page.evaluate(() => window.netstorm._closeCampaignPopups());
+  await page.evaluate((item) => window.netstorm._clientInputQueue.pushCommand(item.command, 0, item.parameter), help);
+  await expect.poll(() => page.evaluate(() => window.netstorm._mainMenu.dialog?.topic ?? null), { timeout: 5000, message: '도우미 도움말 주제' }).toBe('chathelperHelp');
+  expect(errors).toEqual([]);
+});

@@ -142,7 +142,8 @@ export class ClientChatWindow {
             },
             constructBase: (token, width, height) => root.factory().construct(token, 0, width, height, 1),
             constructHelper: (token, label, color) => this.#stones.construct(token, 0, 0, this.#label(label), color, null), fitHelper: (token) => this.#stones.backend().fitToText(token),
-            title: () => {}, help: () => {}, translate: (text) => devices.translate(text),
+            // 원본 RawMenuChat.inc:33 은 title→SetHelpText, help→SetHelpWord 로 연결해 도우미 단추(`>`)의 우클릭 도움말 제목 "Chat Helper" 와 주제 `chathelper` 를 노드에 넣는다. 장치가 없으면 하지 않는다. (2026-11-23 WB04-E1253)
+            title: (token, text) => { devices.setNodeHelp?.(token, text, false); }, help: (token, word) => { devices.setNodeHelp?.(token, word, true); }, translate: (text) => devices.translate(text),
             measure: (token, text) => this.#measure(Uint8Array.from([...displayTextCodec.encode(text), 0]), decodeGumpTextContext(node(token).textContext), -1),
             constructBackground: (token, width, height, flags) => parts.background.construct(token, width, height, flags, 0, 0, 1),
             constructScrolling: (token, width, height, font, color) => scrolling.construct(token, width, height, font, color),

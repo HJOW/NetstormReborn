@@ -57,7 +57,7 @@ export function createClientProductionAssembly(root, session, game, fonts, scree
         stock: () => globals.stockEnabled, failure: (empty, serial) => hint.show(empty, serial), flash: () => budget.flash(), sound: devices.sound, changed: devices.changed });
     if (devices.menu) menu = createClientProductionMenu(root, session, game, devices.menu.data, fonts, screen, colors, background, globals.backgroundType, {
         ...devices.menu, baseHandle: devices.baseHandle, sound: devices.sound, translate: devices.translate, affordable: (sid) => item.affordable(sid),
-        now: devices.now, poll: devices.poll, cursor: devices.cursor, changed: devices.changed,
+        now: devices.now, poll: devices.poll, cursor: devices.cursor, changed: devices.changed, setNodeHelp: devices.setNodeHelp,
     });
     const divider = new ClientHudDivider(root, { background, backgroundColor: () => 35, dividerColor: () => 55, baseHandle: devices.baseHandle,
         closePopups: devices.closePopups, menuInstances: () => menu ? menu.instances() : devices.menuInstances(), poll: devices.poll, cursor: devices.cursor });
