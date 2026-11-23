@@ -101,3 +101,21 @@ test('한국어 미션 화면: 스톰 파워·생산 창 우클릭 도움말 제
   await page.screenshot({ path: test.info().outputPath('korean-hud-help-popup.png') });
   expect(errors).toEqual([]);
 });
+
+// 브라우저가 실제로 받는 한국어 번역표(www/data/d/xlat.korean + manifest)에 미션 화면 문구 15개가 들어 있는지 확인한다: 커서 배치 경고·생산 힌트·객체 정보 줄·Players 메뉴 Send 줄·도움말 없음 안내. (2026-11-23 WB04-E1249)
+test('한국어 번역표: 커서 경고·생산 힌트·객체 정보·Send 줄·도움말 없음 안내가 번역된다', async ({ page }) => {
+  test.setTimeout(120000);
+  const errors = []; page.on('pageerror', (error) => errors.push(error.message)); page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
+  await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } })));
+  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/?lang=ko&aspect=4:3');
+  await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 60000 }); await page.locator('canvas').click();
+  await page.waitForFunction(() => window.netstorm?.state === 'mainMenu', null, { timeout: 60000 });
+  const keys = ["Priest can't get here.", 'Must be placed over constructing artifact', 'Cannot place here', 'Energy not satisfied', 'Only on Controlled Island',
+    '~0~w~ENot enough Storm Power to build this', '~0~w~ENone in inventory', '~yCapturable!~.\n', '~yNot Connected!~.\n', 'No help information available',
+    'Send %s300~[IfortGump.3]', 'Send %s700~[IfortGump.3]', 'Send %s1000~[IfortGump.3]', 'Send %s X~[IfortGump.3]', 'Send %s All~[IfortGump.3]'];
+  const result = await page.evaluate((list) => list.map((key) => window.netstorm._resources.translate(key)), keys);
+  expect(result).toEqual(['사제가 이곳에 올 수 없습니다.', '건설 중인 아티팩트 위에 배치해야 합니다', '여기에는 배치할 수 없습니다', '에너지 조건을 만족하지 않습니다', '통제 중인 섬에서만 가능합니다',
+    '~0~w~E이것을 건설할 스톰 파워가 부족합니다', '~0~w~E보유한 것이 없습니다', '~y포획 가능!~.\n', '~y연결되지 않음!~.\n', '사용할 수 있는 도움말 정보가 없습니다',
+    '%s300~[IfortGump.3] 보내기', '%s700~[IfortGump.3] 보내기', '%s1000~[IfortGump.3] 보내기', '%s X~[IfortGump.3] 보내기', '%s 전부~[IfortGump.3] 보내기']);
+  expect(errors).toEqual([]);
+});

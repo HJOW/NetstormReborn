@@ -2517,3 +2517,97 @@ BATTLE
 ---
 전투
 ===
+
+***
+Priest can't get here.
+---
+사제가 이곳에 올 수 없습니다.
+===
+
+***
+Must be placed over constructing artifact
+---
+건설 중인 아티팩트 위에 배치해야 합니다
+===
+
+***
+Cannot place here
+---
+여기에는 배치할 수 없습니다
+===
+
+***
+Energy not satisfied
+---
+에너지 조건을 만족하지 않습니다
+===
+
+***
+Only on Controlled Island
+---
+통제 중인 섬에서만 가능합니다
+===
+
+***
+~0~w~ENot enough Storm Power to build this
+---
+~0~w~E이것을 건설할 스톰 파워가 부족합니다
+===
+
+***
+~0~w~ENone in inventory
+---
+~0~w~E보유한 것이 없습니다
+===
+
+***
+~yCapturable!~.
+
+---
+~y포획 가능!~.
+
+===
+
+***
+~yNot Connected!~.
+
+---
+~y연결되지 않음!~.
+
+===
+
+***
+No help information available
+---
+사용할 수 있는 도움말 정보가 없습니다
+===
+
+***
+Send %s1000~[IfortGump.3]
+---
+%s1000~[IfortGump.3] 보내기
+===
+
+***
+Send %s300~[IfortGump.3]
+---
+%s300~[IfortGump.3] 보내기
+===
+
+***
+Send %s700~[IfortGump.3]
+---
+%s700~[IfortGump.3] 보내기
+===
+
+***
+Send %s X~[IfortGump.3]
+---
+%s X~[IfortGump.3] 보내기
+===
+
+***
+Send %s All~[IfortGump.3]
+---
+%s 전부~[IfortGump.3] 보내기
+===

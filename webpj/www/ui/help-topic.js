@@ -42,9 +42,10 @@ function beforeClose(state, source) {
 
 // 도움말 주제 하나를 StyleText 문자열로 만든다. helpText 는 도움말 파일 전체 문자열, topic 은 주제 이름(앵커 접두), substitute 는 설정 치환 함수(`{키}` 해석 + 조건 값)이다.
 // 반환: { styleText(설정 치환을 마친 StyleText), links(LinkTable: `~[T번호]` 의 목적지), found(주제 앵커를 찾았는지) }.
-// 앵커를 못 찾으면 안내 문구(NO_HELP_TEXT)를 본문으로 쓴다. 사용: const result = renderHelpTopic({ helpText, topic: 'F1Help', substitute: (text) => data.substitute(text) }).
-// (2026-10-30 WB03-G)
-export function renderHelpTopic({ helpText, topic, substitute, globals = createParserGlobals(), info = null }) {
+// 앵커를 못 찾으면 안내 문구(NO_HELP_TEXT)를 본문으로 쓴다. 이 문구는 원본 QuickHelpWindow::Show 처럼 치환 뒤 본문이 비었을 때 번역 장치(translate)로 바꾼다. 번역 장치가 없으면 영어 그대로이다.
+// 사용: const result = renderHelpTopic({ helpText, topic: 'F1Help', substitute: (text) => data.substitute(text), translate: (text) => resources.translate(text) }).
+// (2026-10-30 WB03-G, 2026-11-23 WB04-E1249: 번역 장치 추가)
+export function renderHelpTopic({ helpText, topic, substitute, globals = createParserGlobals(), info = null, translate = null }) {
     const links = new LinkTable();
     const state = createParserState(); let information = null;
     // 주제 앵커를 찾기 전까지는 아무것도 표시하지 않는다(원본 파생 생성자가 기본 표시 1 을 0 으로 바꿈).
@@ -67,6 +68,6 @@ export function renderHelpTopic({ helpText, topic, substitute, globals = createP
     let styleText = substitute(parsed);
     const nul = styleText.indexOf('\0');
     if (nul >= 0) styleText = styleText.slice(0, nul);
-    if (styleText.length === 0) styleText = NO_HELP_TEXT;
+    if (styleText.length === 0) styleText = translate ? translate(NO_HELP_TEXT) : NO_HELP_TEXT;
     return { styleText, links, found, information };
 }

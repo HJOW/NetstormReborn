@@ -110,6 +110,8 @@ export class HelpWindow {
         // Back·OK 돌 버튼이다. OK 의 글자 폭에 맞춘 값의 1.2배로 두 버튼의 폭을 통일하므로 fit 에서 크기를 정한다.
         // 라벨은 영어 키이고 화면 문구는 번역표(xlat)로 바꾼다. 부호화는 한국어일 때 유니코드 글꼴용이다(원본도 도움말 창 문구를 Translate 로 바꿈). (2026-10-31 WB03-O)
         const translate = resources.translate ?? ((text) => text);
+        // 본문이 비었을 때의 안내 문구도 같은 번역 장치로 바꾼다(원본 QuickHelpWindow::Show). (2026-11-23 WB04-E1249)
+        this.translate = translate;
         const encode = (text) => resources.fonts.encode(text);
         this.backButton = new StoneButton({ label: 'Back', display: translate('Back'), command: 'back', encode });
         this.okButton = new StoneButton({ label: 'OK', display: translate('OK'), command: 'ok', encode });
@@ -168,9 +170,9 @@ export class HelpWindow {
 
     // 주제 본문을 만들어 보이는 본문으로 바꾼다(원본 QuickHelpWindow::Show). 스크롤은 맨 위로 돌아간다. (2026-10-30 WB03-G)
     _show(topic) {
-        let result = renderHelpTopic({ helpText: this.helpText, topic, substitute: this.substitute, info: this.informationFactory });
+        let result = renderHelpTopic({ helpText: this.helpText, topic, substitute: this.substitute, info: this.informationFactory, translate: this.translate });
         // 번역 파일에 주제가 없으면 영어 파일에서 찾는다(주제 단위 대체, 웹 적응). (2026-10-31 WB03-P)
-        if (!result.found && this.fallbackHelpText !== null) result = renderHelpTopic({ helpText: this.fallbackHelpText, topic, substitute: this.substitute, info: this.informationFactory });
+        if (!result.found && this.fallbackHelpText !== null) result = renderHelpTopic({ helpText: this.fallbackHelpText, topic, substitute: this.substitute, info: this.informationFactory, translate: this.translate });
         this.topic = topic;
         this.links = result.links;
         if (!result.found) this.onUnsupported?.(`도움말 주제 '${topic}'`, '도움말 파일에서 앵커를 찾지 못했습니다.');
