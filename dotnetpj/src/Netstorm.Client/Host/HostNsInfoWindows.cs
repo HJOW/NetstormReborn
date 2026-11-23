@@ -60,6 +60,20 @@ public sealed class HostNsInfoDevices
     public Action<string>? PlayerMenuTitle { get; init; }
     /// <summary>같은 실제 메뉴 항목 작성이다. 플레이어 입력 결선에서 사용하며 0.926에서 추가됐다.</summary>
     public Action<string, uint, uint>? PlayerMenuItem { get; init; }
+    /// <summary>같은 실제 guy.wav(0,0,0,0,0) 음향이다. 배틀 입력 결선에서 사용하며 0.927에서 추가됐다.</summary>
+    public Action? BattleGuySound { get; init; }
+    /// <summary>원문 Sort Game Options By 전체 Fancy 메뉴 자식이다. 배틀 입력 결선에서 사용하며 0.927에서 추가됐다.</summary>
+    public Action<HudBattleInfoNode>? BattleSortMenu { get; init; }
+    /// <summary>전체 활성 옵션 하위 메뉴와 현재 TYPE 분류/정렬의 제외 추가 메뉴다. 배틀 입력 결선에서 사용하며 0.927에서 추가됐다.</summary>
+    public Action<HudBattleInfoNode, ReadOnlyMemory<byte>>? BattleOptionsMenu { get; init; }
+    /// <summary>제외 추가 메뉴다. 배틀 입력 결선에서 사용하며 0.927에서 추가됐다.</summary>
+    public Action<HudBattleInfoNode, ReadOnlyMemory<byte>>? BattleExcludeMenu { get; init; }
+    /// <summary>선택 옵션 하나의 모든 포함 선택값 메뉴다. 배틀 입력 결선에서 사용하며 0.927에서 추가됐다.</summary>
+    public Action<HudBattleInfoNode, ReadOnlyMemory<byte>, int>? BattleOptionMenu { get; init; }
+    /// <summary>현재 TYPE 설명을 쓰는 제외 제거 확인 메뉴다. 배틀 입력 결선에서 사용하며 0.927에서 추가됐다.</summary>
+    public Action<uint>? BattleRemoveMenu { get; init; }
+    /// <summary>같은 현재 BattleOptions87BYTE 송신이다. 배틀 입력 결선에서 사용하며 0.927에서 추가됐다.</summary>
+    public Action<uint, ReadOnlyMemory<byte>, uint>? BattleData { get; init; }
     /// <summary>복귀하면 계속하는 실제 원문 줄 번호 진단이다.</summary>
     public Action<uint>? Assertion { get; init; }
     /// <summary>실제 공통 구조 변경을 알린다.</summary>
@@ -297,6 +311,35 @@ public sealed class HostNsInfoWindows : IDisposable
             Item = (text, command, parameter) => Need(_devices.PlayerMenuItem)(text, command, parameter),
         };
         return NativePlayerInfoInput.Handle(node, @event, first, second, hooks);
+    }
+    /// <summary>같은 실제 CS와 파생 노드로 배틀 원문 입력을 순환·모드·설정·메뉴에 연결한다. 0.927에서 추가됐다.</summary>
+    /// <param name="token">같은 0x16c BattleInfo 노드 토큰이다.</param>
+    /// <param name="event">원문 입력 event DWORD다.</param>
+    /// <param name="first">원문 입력 첫 DWORD다.</param>
+    /// <param name="second">원문 입력 둘째 DWORD다.</param>
+    /// <param name="challenge">같은 실제 CS 참가자40·전투10 기록이다.</param>
+    public uint HandleBattleInput(uint token, uint @event, uint first, uint second, ClientChallengeGlobals challenge)
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        ArgumentNullException.ThrowIfNull(challenge);
+        HudBattleInfoNode node = _tree.Node(token) as HudBattleInfoNode ?? throw new InvalidOperationException("NSInfo 실제 배틀 노드 없음");
+        var hooks = new NativeBattleInfoInputHooks
+        {
+            Metamap = () => Read(0x594fc8),
+            Battle = index => challenge.Battle(index),
+            Command = address => Read(address),
+            Serial = child => _tree.Node(child)?.Serial ?? throw new InvalidOperationException("BattleInfo 입력의 실제 자식 없음"),
+            GuySound = () => Need(_devices.BattleGuySound)(),
+            SortMenu = battle => Need(_devices.BattleSortMenu)(battle),
+            OptionsMenu = (battle, options) => Need(_devices.BattleOptionsMenu)(battle, options),
+            ExcludeMenu = (battle, options) => Need(_devices.BattleExcludeMenu)(battle, options),
+            OptionMenu = (battle, options, index) => Need(_devices.BattleOptionMenu)(battle, options, index),
+            RemoveMenu = type => Need(_devices.BattleRemoveMenu)(type),
+            Push = push => _tree.Tree.Push(push),
+            Attach = (target, x, y, parent, mode) => Need(_tree.TreeHooks.Attach)(target, x, y, parent, mode),
+            Data = (battle, options, kind) => Need(_devices.BattleData)(battle, options, kind),
+        };
+        return NativeBattleInfoInput.Handle(token, node, @event, first, second, hooks);
     }
     /// <summary>같은 실제 CS와 현재 NSInfo 전역으로 전체 메타 플레이어 본문을 배치한다. 0.922에서 추가됐다.</summary>
     /// <param name="token">같은 0xbc PlayerInfo 노드 토큰이다.</param>

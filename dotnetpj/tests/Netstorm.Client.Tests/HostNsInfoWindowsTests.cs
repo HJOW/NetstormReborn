@@ -826,4 +826,169 @@ public sealed class HostNsInfoWindowsTests
         other.Dispose();
         Assert.Throws<ObjectDisposedException>(() => other.HandlePlayerInput(panelToken, 0x10, serial, 0, challenge));
     }
+
+    /// <summary>같은 실제 배틀 입력 결선 장치를 기록하는 검사 장치다. 0.927에서 추가됐다.</summary>
+    private sealed class BattleInputWiring
+    {
+        /// <summary>실제 송신한 옵션이다.</summary>
+        public readonly List<(uint Battle, byte[] Options, uint Kind)> DataCalls = [];
+        /// <summary>실제 정렬 메뉴 호출이다.</summary>
+        public int SortCalls;
+        /// <summary>실제 전체 옵션 메뉴 호출이다.</summary>
+        public int OptionsCalls;
+        /// <summary>실제 제외 메뉴 호출이다.</summary>
+        public int ExcludeCalls;
+        /// <summary>실제 개별 옵션 메뉴 호출이다.</summary>
+        public readonly List<int> OptionCalls = [];
+        /// <summary>실제 제거 확인 호출이다.</summary>
+        public readonly List<uint> RemoveCalls = [];
+        /// <summary>실제 재생한 음향 횟수다.</summary>
+        public int GuySounds;
+        /// <summary>같은 실제 외부 장치 묶음을 조립한다.</summary>
+        public HostNsInfoDevices Build(Scene scene) => new()
+        {
+            Read = address => address switch { 0x54278c => 0x10u, 0x542b80 => 0x20u, 0x542b7c => 0x30u, 0x5429e0 => 0x40u, 0x5429e4 => 0x50u, _ => scene.Devices.Read(address) },
+            Translate = scene.Devices.Translate, StoreText = scene.Devices.StoreText,
+            Text = scene.Devices.Text, FormatZone = scene.Devices.FormatZone, Changed = scene.Devices.Changed,
+            BattleGuySound = () => GuySounds++,
+            BattleSortMenu = _ => SortCalls++,
+            BattleOptionsMenu = (_, _) => OptionsCalls++,
+            BattleExcludeMenu = (_, _) => ExcludeCalls++,
+            BattleOptionMenu = (_, _, index) => OptionCalls.Add(index),
+            BattleRemoveMenu = type => RemoveCalls.Add(type),
+            BattleData = (battle, options, kind) => DataCalls.Add((battle, options.ToArray(), kind)),
+        };
+    }
+
+    /// <summary>모드2 순환은 실제 옵션과 87BYTE 송신을 함께 수행한다. 0.927에서 추가됐다.</summary>
+    [Fact]
+    public void HandleBattleInputMode2CycleSendsData()
+    {
+        using var scene = new Scene();
+        scene.Storage.OwnerMode.Challenge = true;
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        challenge.Battle(2).Span[0] = 1;
+        var wiring = new BattleInputWiring();
+        using var other = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, wiring.Build(scene));
+        uint rootToken = other.Create();
+        var root = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(rootToken));
+        uint panelToken = root.Battle;
+        var panel = Assert.IsType<HudBattleInfoNode>(scene.Menu.Tree.Node(panelToken));
+        panel.Battle = 2;
+        panel.Changed = 1;
+        panel.Mode = 2;
+        uint serial = scene.Menu.Tree.Node(panel.Title)!.Serial;
+        uint result = other.HandleBattleInput(panelToken, 0x10, serial, 5, challenge);
+        Assert.Equal(1u, result);
+        Assert.Single(wiring.DataCalls);
+        Assert.Equal(2u, wiring.DataCalls[0].Battle);
+        Assert.Equal(0x57u, wiring.DataCalls[0].Kind);
+        uint parent = scene.Menu.Tree.Node(panelToken)!.Parent;
+        Assert.NotEqual(0u, parent);
+        Assert.Equal(panelToken, scene.Menu.Tree.Node(parent)!.Child);
+        other.Dispose();
+    }
+
+    /// <summary>정렬 메뉴 선택은 변경 없이 메뉴만 열고 1을 반환한다. 0.927에서 추가됐다.</summary>
+    [Fact]
+    public void HandleBattleInputSortMenuOpensWithoutChange()
+    {
+        using var scene = new Scene();
+        scene.Storage.OwnerMode.Challenge = true;
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        challenge.Battle(2).Span[0] = 1;
+        var wiring = new BattleInputWiring();
+        using var other = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, wiring.Build(scene));
+        uint rootToken = other.Create();
+        var root = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(rootToken));
+        uint panelToken = root.Battle;
+        var panel = Assert.IsType<HudBattleInfoNode>(scene.Menu.Tree.Node(panelToken));
+        panel.Battle = 2;
+        uint serial = scene.Menu.Tree.Node(panel.Title)!.Serial;
+        uint result = other.HandleBattleInput(panelToken, 0x10, serial, 24, challenge);
+        Assert.Equal(1u, result);
+        Assert.Equal(1, wiring.SortCalls);
+        Assert.Empty(wiring.DataCalls);
+        other.Dispose();
+    }
+
+    /// <summary>제외 추가는 실제 목록과 87BYTE 송신을 함께 수행한다. 0.927에서 추가됐다.</summary>
+    [Fact]
+    public void HandleBattleInputAddExcludedTypeSendsData()
+    {
+        using var scene = new Scene();
+        scene.Storage.OwnerMode.Challenge = true;
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        challenge.Battle(2).Span[0] = 1;
+        var wiring = new BattleInputWiring();
+        using var other = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, wiring.Build(scene));
+        uint rootToken = other.Create();
+        var root = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(rootToken));
+        uint panelToken = root.Battle;
+        var panel = Assert.IsType<HudBattleInfoNode>(scene.Menu.Tree.Node(panelToken));
+        panel.Battle = 2;
+        panel.Changed = 1;
+        uint result = other.HandleBattleInput(panelToken, 0x40, 0, 5, challenge);
+        Assert.Equal(1u, result);
+        Assert.Single(wiring.DataCalls);
+        Assert.Equal(2u, wiring.DataCalls[0].Battle);
+        other.Dispose();
+    }
+
+    /// <summary>비활성 전투는 실제 메뉴·송신 없이 0을 반환한다. 0.927에서 추가됐다.</summary>
+    [Fact]
+    public void HandleBattleInputInactiveReturnsZero()
+    {
+        using var scene = new Scene();
+        scene.Storage.OwnerMode.Challenge = true;
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        var wiring = new BattleInputWiring();
+        using var other = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, wiring.Build(scene));
+        uint rootToken = other.Create();
+        var root = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(rootToken));
+        uint panelToken = root.Battle;
+        var panel = Assert.IsType<HudBattleInfoNode>(scene.Menu.Tree.Node(panelToken));
+        panel.Battle = 2;
+        panel.Changed = 1;
+        uint serial = scene.Menu.Tree.Node(panel.Title)!.Serial;
+        uint result = other.HandleBattleInput(panelToken, 0x10, serial, 5, challenge);
+        Assert.Equal(0u, result);
+        Assert.Empty(wiring.DataCalls);
+        Assert.Equal(0, wiring.SortCalls);
+        uint fresh = other.HandleBattleInput(root.Battle, 0x10, serial, 5, challenge);
+        panel.Battle = 0;
+        Assert.Equal(0u, other.HandleBattleInput(panelToken, 0x10, serial, 5, challenge));
+        Assert.Equal(0u, fresh);
+        other.Dispose();
+    }
+
+    /// <summary>미연결 배틀 입력 장치는 일반 성공으로 꾸미지 않는다. 0.927에서 추가됐다.</summary>
+    [Fact]
+    public void HandleBattleInputMissingDevicesFailExplicitly()
+    {
+        using var scene = new Scene();
+        scene.Storage.OwnerMode.Challenge = true;
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        challenge.Battle(2).Span[0] = 1;
+        var bare = new HostNsInfoDevices
+        {
+            Read = address => address switch { 0x54278c => 0x10u, 0x542b80 => 0x20u, 0x542b7c => 0x30u, 0x5429e0 => 0x40u, 0x5429e4 => 0x50u, _ => scene.Devices.Read(address) },
+            Translate = scene.Devices.Translate, StoreText = scene.Devices.StoreText,
+            Text = scene.Devices.Text, FormatZone = scene.Devices.FormatZone, Changed = scene.Devices.Changed,
+        };
+        using var other = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, bare);
+        uint rootToken = other.Create();
+        var root = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(rootToken));
+        uint panelToken = root.Battle;
+        var panel = Assert.IsType<HudBattleInfoNode>(scene.Menu.Tree.Node(panelToken));
+        panel.Battle = 2;
+        panel.Changed = 1;
+        panel.Mode = 2;
+        uint serial = scene.Menu.Tree.Node(panel.Title)!.Serial;
+        Assert.Throws<InvalidOperationException>(() => other.HandleBattleInput(panelToken, 0x10, serial, 5, challenge));
+        Assert.Throws<ArgumentNullException>(() => other.HandleBattleInput(panelToken, 0x10, serial, 5, null!));
+        Assert.Throws<InvalidOperationException>(() => other.HandleBattleInput(rootToken, 0x10, serial, 5, challenge));
+        other.Dispose();
+        Assert.Throws<ObjectDisposedException>(() => other.HandleBattleInput(panelToken, 0x10, serial, 5, challenge));
+    }
 }
