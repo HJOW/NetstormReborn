@@ -105,6 +105,14 @@ export class UberGumpCamera {
         return processCameraPan(mouse, hooks);
     }
 
+    // 11.01 방향키 카메라 이동: 키 사건 한 번(누름·브라우저 자동 반복)이 낸 논리 화면 dx·dy 픽셀을 카메라 목표에 누적한다(cpppj `UserInput::Event` 의 방향키 분기).
+    // 기준점을 현재 적용 위치가 아니라 현재 목표(`target().pixels`)로 두어, 같은 프레임의 여러 사건이 서로를 덮어쓰지 않고 쌓이게 한다. 지도 경계 제한은 기존 Present(`presentCameraTarget`)가 적용한다.
+    // 이동량은 호출자가 정한다(웹은 32). 목표만 쓰고 실제 적용은 Present 뒤(applyCameraFrame)이다. 사용: camera.requestKeyDelta(-32, 0). (2026-11-23 WB04-E1291, 사용자 요구)
+    requestKeyDelta(dx, dy) {
+        const client = this.#host.client; const camera = client.gameplay().camera(); const target = camera.target();
+        requestCameraDelta({ pixels: { x: target.pixels[0], y: target.pixels[1] } }, target, client.screen().height, dx | 0, dy | 0, client.localState().metaRebuild());
+    }
+
     // 497960 의 실제 장치/dirty/두 setter 를 같은 현재 Client 에서 실행한다. 표시/음향 공개 시점은 호출자가 소유한다. (2026-11-15 WB04-E469)
     commitCameraNow() {
         const client = this.#host.client; const gameplay = client.gameplay(); const camera = gameplay.camera(); const renderer = client.renderer(); const screen = client.screen(); const world = this.#host.world();

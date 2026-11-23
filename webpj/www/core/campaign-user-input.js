@@ -5,6 +5,11 @@ import { queueProductionShortcut, PRODUCTION_BRIDGE_COMMAND, PRODUCTION_REPEAT_C
 import { dispatchSelectionKeyInput } from './client-input-commands.js';
 import { gameMenuCommandValue } from './game-menu-commands.js';
 
+// 방향키 한 번의 카메라 이동량(논리 화면 픽셀)이다. 해상도·FPS와 무관하게 키 사건당 같다(cpppj UserInput 의 cameraKeyStep). (2026-11-23 WB04-E1291)
+export const ARROW_CAMERA_STEP = 32;
+// 입력 코드(가상 키 << 16)별 방향키 이동 방향(dx, dy)이다. ←0x25 ↑0x26 →0x27 ↓0x28. 위·왼쪽은 음수이다. (2026-11-23 WB04-E1291)
+export const ARROW_CAMERA_STEPS = new Map([[0x250000, [-ARROW_CAMERA_STEP, 0]], [0x260000, [0, -ARROW_CAMERA_STEP]], [0x270000, [ARROW_CAMERA_STEP, 0]], [0x280000, [0, ARROW_CAMERA_STEP]]]);
+
 // UserInput.cpp의 커서 설정·폴링 앞단이며 World와 설정 소유자는 이 객체보다 오래 살아야 한다.
 export class CampaignUserInput {
     // 실제 World와 원본 ReadInt 형식의 현재 설정을 빌린다.
@@ -26,6 +31,12 @@ export class CampaignUserInput {
         if ((event.code & InputCode.release) || this.#paused()) return null;
         this.readCursorOptions();
         if (this.#world.session().cursor().handleInput(event, this.#world.cursorRotationMode())) return null;
+        // 11.01 방향키 카메라 이동: 활성 조각의 ←/→ 회전이 위에서 먼저 소비한 뒤 남은 방향키만 화면을 옮긴다. 누름·자동 반복마다 32논리픽셀을 목표에 누적한다(cpppj 1328). (2026-11-23 WB04-E1291)
+        const step = ARROW_CAMERA_STEPS.get(event.code & 0x03ffffff);
+        if (step) {
+            const cameraKey = this.#services.cameraKey; if (typeof cameraKey !== 'function') throw new Error('사용자 입력의 방향키 카메라 장치 미연결');
+            cameraKey(step[0], step[1]); return null;
+        }
         const queue = (command, first, second) => this.#queue(command, first, second);
         if (queueProductionShortcut(event, this.#paused(), { command: () => PRODUCTION_BRIDGE_COMMAND, repeatCommand: () => PRODUCTION_REPEAT_COMMAND, queue })) return null;
         const selection = {

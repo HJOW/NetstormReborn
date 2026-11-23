@@ -262,3 +262,14 @@ test('Alt/가운데 버튼 카메라 이동: 누른 동안 포인터 쪽으로 �
     const world = scene({ pixels: [1000, 800], width: 640, height: 480 }); world.state.world = fakeWorld(world.log, { left: 100, top: 0, right: 640, bottom: 480 });
     assert.equal(world.uber.pollCameraPan({ code: 0, x: 640, y: 240 }), true); assert.notDeepEqual([...world.camera.target().pixels], [0, 0]);
 });
+
+// 11.01 방향키 이동: 기준을 현재 목표로 두어 같은 프레임의 여러 요청이 덮어쓰지 않고 누적되며 재구성 번호가 요청마다 오른다. (2026-11-23 WB04-E1291)
+test('방향키 카메라: 요청 dx·dy 가 현재 목표에 누적되고 metaRebuild 가 요청마다 증가한다', () => {
+    const s = scene({ pixels: [1000, 800] }), target = s.camera.target();
+    target.pixels[0] = 1000; target.pixels[1] = 800;
+    s.uber.requestKeyDelta(32, 0); s.uber.requestKeyDelta(32, 0); s.uber.requestKeyDelta(0, -32);
+    assert.deepEqual([target.pixels[0], target.pixels[1]], [1064, 768]);
+    assert.equal(s.meta.value, 3);
+    // 이미 다른 값을 가리키는 목표(이전 프레임의 요청이 남은 상태)에서도 그 값에 이어서 더한다.
+    target.pixels[0] = 5; target.pixels[1] = 7; s.uber.requestKeyDelta(-32, 32); assert.deepEqual([target.pixels[0], target.pixels[1]], [-27, 39]);
+});

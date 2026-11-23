@@ -88,7 +88,7 @@ import { bindCampaignAiClientServices, bindCampaignClientInputServices, bindCamp
 import { bindCampaignUserInputServices } from './core/campaign-user-input-services.js';
 import { applyThemeTechnology, dispatchGetTechnologyInput, CHEAT_ALL_TECHNOLOGY_COMMAND } from './core/get-technology-input.js';
 import { parseViewSpot } from './core/camera-home.js';
-import { CampaignUserInput } from './core/campaign-user-input.js';
+import { ARROW_CAMERA_STEPS, CampaignUserInput } from './core/campaign-user-input.js';
 import { makeCampaignCursorClientEffects } from './core/campaign-cursor-client-effects.js';
 import { RawContainedFinder } from './core/raw-contained-finder.js';
 import { PRODUCTION_BRIDGE_COMMAND, PRODUCTION_REPEAT_COMMAND } from './core/production-shortcuts.js';
@@ -1548,7 +1548,7 @@ export class Netstorm {
         },
             drawNativePathMarker: () => missing('경로 진단 표시'), presentNativeCursorClear: () => missing('커서 즉시 출력') };
         bindCampaignUserInputServices(client, world, (number) => { this._campaignCursor = number >>> 0; this._applyCursor(); }, (section) => this._openTell(section));
-        this._campaignUserInput = new CampaignUserInput(world, this._gameData, { paused: () => clock.paused(), queue: this._clientInputQueue });
+        this._campaignUserInput = new CampaignUserInput(world, this._gameData, { paused: () => clock.paused(), queue: this._clientInputQueue, cameraKey: (dx, dy) => this._campaignCameraDevice().requestKeyDelta(dx, dy) });
         return this._campaignUserInput;
     }
 
@@ -1909,6 +1909,13 @@ export class Netstorm {
         initializeClientChatManager(client); return 1;
     }
 
+    // 방향키를 세계(조각 회전·카메라 이동)로 보내면 안 되는 입력 UI 가 열려 있는지이다: 대화창·도움말 창, 팝업(우클릭 객체 메뉴 등), 게임 메뉴막대, 지식 창.
+    // 채팅 입력줄과 Send X 입력 창은 입력 루프의 앞쪽 분기가 먼저 처리한다. 사용: if (this._campaignArrowKeyBlocked()) ... (2026-11-23 WB04-E1291, cpppj 1328 의 입력 UI 관문)
+    _campaignArrowKeyBlocked() {
+        const ui = this._campaignProduction?.ui;
+        return Boolean(this._mainMenu?.dialog) || this._clientGump.blockingPopups() || Boolean(ui?.gameMenu()?.isOpen()) || Boolean(ui?.knowledge()?.isOpen());
+    }
+
     // 채팅 입력줄이 지금 보이는지이다(미션 화면에서 입력줄이 보이는 동안 문자 키는 이 입력줄로 간다). 모달 입력 창과 달리 마우스는 월드로 간다. (2026-11-22 WB04-E1170)
     _campaignChatInputActive() {
         return this._campaignDisplayActive() && !this._campaignInputDialogOpen() && Boolean(this._campaignProduction?.ui?.chat()?.inputVisible());
@@ -2111,8 +2118,9 @@ export class Netstorm {
             const objectCommand = VORTEX_COMMANDS.includes(code) || isScenarioObjectCommand(code) || code === DETONATE_BOMB_COMMAND;
             const selectionKey = code === 0x50 || code === 0x70 || code === 0x52 || code === 0x72 || code === 0x4e || code === 0x6e || code === 0x48 || code === 0x68;
             const productionKey = 'qwaszyxed'.includes(String.fromCharCode(code).toLowerCase()) && code < 256;
-            const cursorCancel = code === 0x1b, cursorRotate = code === 0x250000 || code === 0x270000, gameTimeKey = code === 0x54 || code === 0x74;
-            const unsupported = (code !== 13 && !CHAT_HELPER_COMMANDS.has(code) && code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== 0x03000063 && code !== 0x03000076 && code !== 0x0300011a && code !== 0x030000de && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== PRODUCTION_REPEAT_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_F6 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !MISSION_VIEW_KEYS.has(code) && code !== MISSION_F9 && !TUTORIAL_NOTICE_COMMANDS.has(code) && !isGameMenuCommand(code) && !isSendMoneyCommand(code) && !objectCommand && !rotationKey && !cameraKey && code !== PAUSE_KEY_CODE && !selectionKey && !productionKey && !cursorCancel && !cursorRotate && !gameTimeKey && code !== InputCode.leftButton && code !== InputCode.rightButton);
+            // 방향키(←0x25 ↑0x26 →0x27 ↓0x28): 활성 조각의 ←/→ 는 회전, 그 밖에는 카메라 이동이다(11.01, 아래 분기). (2026-11-23 WB04-E1291: 이전에는 ←/→ 만 조각을 든 때 회전으로 소비하고 ↑/↓ 는 미구현 사건으로 버려졌다)
+            const cursorCancel = code === 0x1b, arrowKey = ARROW_CAMERA_STEPS.has(code), gameTimeKey = code === 0x54 || code === 0x74;
+            const unsupported = (code !== 13 && !CHAT_HELPER_COMMANDS.has(code) && code !== 0x02000017 && code !== 0x0200005d && code !== 0x02000060 && code !== 0x03000080 && code !== 0x03000032 && code !== 0x03000063 && code !== 0x03000076 && code !== 0x0300011a && code !== 0x030000de && code !== WORLD_DESTINATION_SELECTED_COMMAND && code !== PRODUCTION_BRIDGE_COMMAND && code !== PRODUCTION_REPEAT_COMMAND && code !== MISSION_F4 && code !== MISSION_F5 && code !== MISSION_F6 && code !== MISSION_VIEW_HOME && code !== MISSION_VIEW_PRIEST && !MISSION_VIEW_KEYS.has(code) && code !== MISSION_F9 && !TUTORIAL_NOTICE_COMMANDS.has(code) && !isGameMenuCommand(code) && !isSendMoneyCommand(code) && !objectCommand && !rotationKey && !cameraKey && code !== PAUSE_KEY_CODE && !selectionKey && !productionKey && !cursorCancel && !arrowKey && !gameTimeKey && code !== InputCode.leftButton && code !== InputCode.rightButton);
             if (unsupported) {
                 // 미구현 사건 앞을 추월하지 않는다. 다만 처리하지 못하는 사건이 3초(벽 시각) 넘게 큐 머리에 남으면 이후 모든 입력이 영구히 막히므로 오류로 기록하고 버린다. (2026-11-21 WB04-E1150)
                 const key = `${next.code}:${next.x}:${next.y}`, wall = this._gameClock.wallSeconds();
@@ -2122,6 +2130,13 @@ export class Netstorm {
             }
             this._stalledInput = null;
             const event = queue.pop(false);
+            // 11.01 방향키(cpppj UberGump::Event): 대화창·도움말·메뉴·팝업이 없을 때만 세계 입력으로 먼저 보낸다(활성 조각 ←/→ 회전, 그 밖은 카메라 32픽셀). 입력 UI 가 열려 있으면 Gump 로만 보내고 세계 꼬리로는 다시 보내지 않는다.
+            // 채팅 입력줄·Send X 입력 창이 열린 경우는 이 위쪽 분기에서 이미 입력줄로 갔다. (2026-11-23 WB04-E1291)
+            if (arrowKey) {
+                if (tutorial.event(event)) continue;
+                if (this._campaignArrowKeyBlocked()) { gump.input().route(event.code, event.x, event.y); this._displayDirty = true; continue; }
+                user.event(event); continue;
+            }
             if (tutorial.event(event) || gump.input().route(event.code, event.x, event.y)) continue;
             // 원본 UberGump(UI 밖 누름): Gump 가 소비하지 않은 좌·우 버튼 누름은 열린 팝업(우클릭 객체 메뉴 등)을 먼저 닫고 같은 사건을 월드로 진행한다.
             // 이 닫기가 없으면 메뉴를 연 채 바깥을 클릭해도 메뉴가 남았다. (2026-11-21 WB04-E1135, 실제 미션 우클릭 시험에서 확인)
@@ -2131,7 +2146,7 @@ export class Netstorm {
             else if (cursorCancel && !release && !this._mainMenu?.dialog && this._campaignProduction?.ui?.knowledge()?.isOpen()) { this._campaignProduction.ui.knowledge().close(); this._displayDirty = true; }
             // 원본 ESC: 선택을 먼저 정리하고 조각을 들고 있으면(커서 잠금 0) 취소, 아니면 가로 게임 메뉴막대를 열거나 닫는다. (2026-11-20 WB04-E1084)
             else if (cursorCancel && !release && !this._mainMenu?.dialog && world.session().cursorDropSettings().lockDepth !== 0) { world.resetSelection(); this._toggleCampaignGameMenu(); }
-            else if ((code === MISSION_F4 || code === MISSION_F5 || code === MISSION_F6 || selectionKey || productionKey || cursorCancel || cursorRotate || code === InputCode.rightButton) && !release && !this._mainMenu?.dialog) {
+            else if ((code === MISSION_F4 || code === MISSION_F5 || code === MISSION_F6 || selectionKey || productionKey || cursorCancel || code === InputCode.rightButton) && !release && !this._mainMenu?.dialog) {
                 const picked = user.event(event);
                 if (code === InputCode.rightButton && picked) {
                     const ui = this._campaignProduction?.ui; if (ui && !ui.openPriest(picked, event) && !ui.openFactory(picked, event)) ui.openObject(picked, event);
@@ -3697,7 +3712,7 @@ export class Netstorm {
         }
         // 조합 중 Enter 등은 기존 메뉴 명령으로도 중복 실행하지 않는다.
         if (this._clientNativeInputEnabled && (this._clientComposing || event.isComposing)) return;
-        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && (event.code === 'F4' || event.code === 'F5' || event.code === 'F6' || event.code === 'F2' || event.code === 'F3' || event.code === 'F7' || event.code === 'F8' || event.code === 'F9' || event.code === 'Pause' || ((event.code === 'ArrowLeft' || event.code === 'ArrowRight') && this._campaignWorld.session().cursorDropSettings().lockDepth === 0))) {
+        if (!this._clientNativeInputEnabled && this._campaignDisplayActive() && !this._mainMenu?.dialog && (event.code === 'F4' || event.code === 'F5' || event.code === 'F6' || event.code === 'F2' || event.code === 'F3' || event.code === 'F7' || event.code === 'F8' || event.code === 'F9' || event.code === 'Pause' || event.code === 'ArrowLeft' || event.code === 'ArrowRight' || event.code === 'ArrowUp' || event.code === 'ArrowDown')) {
             event.preventDefault(); queueBrowserVirtualKeyEvent(this._clientInputQueue, event, this._input.pointer, false);
         }
         // 문자 키 허용 목록에 H(집으로 점프)를 더했다. 전에는 H 가 큐에 들어가지 않아 F4 만 집으로 점프했다. (2026-11-21 WB04-E1146)
