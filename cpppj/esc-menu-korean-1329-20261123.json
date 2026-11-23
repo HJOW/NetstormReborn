@@ -1,0 +1,90 @@
+{
+  "unit": 1329,
+  "passed": true,
+  "translationKeysAdded": 23,
+  "focusedTests": {
+    "total": 47,
+    "passed": 47,
+    "firstFailure": "한국어와 일본어 번역 키 수가 같다는 옛 가정 1건, 언어별 최소 범위 검증으로 교정"
+  },
+  "gui": [
+    {
+      "name": "menus-final-ko",
+      "args": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+        "--window",
+        "--frames",
+        "110",
+        "--fixed-frame-ms",
+        "25",
+        "--no-audio",
+        "--set",
+        "welcomeGiven=1;tellTips=0;autoDemo=0;edgeScroll=0;currentLanguage=korean;SCREENW=1024;SCREENH=768",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\menus-final-ko.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\menus-final-ko-report.tsv",
+        "--mission",
+        "thewarbegins"
+      ],
+      "exit_code": 0,
+      "seconds": 2.2044050693511963,
+      "exe_sha256": "08be730264e96a94d39d0abce078dde678f2e9f70dfe327ca8ded16cfef86cb0"
+    },
+    {
+      "name": "options-final-ko",
+      "args": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+        "--window",
+        "--frames",
+        "95",
+        "--fixed-frame-ms",
+        "25",
+        "--no-audio",
+        "--set",
+        "welcomeGiven=1;tellTips=0;autoDemo=0;edgeScroll=0;currentLanguage=korean;SCREENW=1024;SCREENH=768",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\options-final-ko.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\options-final-ko-report.tsv",
+        "--mission",
+        "thewarbegins"
+      ],
+      "exit_code": 0,
+      "seconds": 2.3193953037261963,
+      "exe_sha256": "08be730264e96a94d39d0abce078dde678f2e9f70dfe327ca8ded16cfef86cb0"
+    },
+    {
+      "name": "volumes-ko",
+      "args": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+        "--window",
+        "--frames",
+        "50",
+        "--fixed-frame-ms",
+        "25",
+        "--mute-audio",
+        "--set",
+        "welcomeGiven=1;tellTips=0;autoDemo=0;edgeScroll=0;currentLanguage=korean;SCREENW=1024;SCREENH=768",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\volumes-ko.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\volumes-ko-report.tsv",
+        "--mission",
+        "thewarbegins"
+      ],
+      "exit_code": 0,
+      "seconds": 1.9859840869903564,
+      "exe_sha256": "08be730264e96a94d39d0abce078dde678f2e9f70dfe327ca8ded16cfef86cb0"
+    }
+  ],
+  "playersGarbled": false,
+  "review": "Game/View/Options/Players/About 및 해상도·언어·프레임·난이도·두 음량·자기/적/자원 보내기 하위",
+  "limits": "The Jailer 등 시나리오 고유 이름과 API 이름은 유지, 실제 청취/IME 검증 제외"
+}
