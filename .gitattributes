@@ -2490,3 +2490,5 @@ cpppj/palette-frame-checking-20261104.json text eol=lf
 cpppj/tests/fixtures/sid-cd-allocation-recovery-x86.tsv -text
 # 14차 QuickJS-ng 상류 소스/라이선스의 바이트를 provenance.json SHA-256과 같게 보존한다(core.autocrlf 체크아웃 포함).
 cpppj/third_party/quickjs-ng/** -text
+# webpj webpack 번들은 생성된 한 줄짜리 파일이라 Windows 체크아웃(core.autocrlf=true)에서도 줄바꿈 변환 없이 바이트 그대로 보존해 재빌드 결과와 비교할 수 있게 한다.
+webpj/www/dist/** -text

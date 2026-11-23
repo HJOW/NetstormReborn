@@ -6,13 +6,13 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-23 저녁 정리, 마지막 단위 WB04-E1296)
+### 0.1 현재 값 (2026-11-23 저녁 정리, 마지막 단위 WB04-E1297)
 
 | 항목 | 현행 상태 |
 | --- | --- |
 | 실행·플레이 | 브라우저에서 ‘클릭하여 시작’, 시작 title 그림, 메인 메뉴·캠페인/데모 목록·도움말·옵션(Reset All 게임 안 확인 창 포함)·Credits와 개발용 지형 미리보기가 동작한다. **미션:** 캠페인 목록 31개(Early Missions 6·세 캠페인 묶음 16·Priest Training 9)와 데모 3개가 시작되고, 장시간 진행과 임의 조작(몽키) 시험에서 오류·먹통이 없다. Campaign ▸ Skirmish는 무작위 섬·간헐천 월드에서 AI와 진행되며 AI 생산·공격으로 사제가 죽으면 패배 안내까지 이어진다(E1262, 약 18분 관찰). Tutorial2는 시작부터 완료 창·Tutorial3 시작까지 자연 진행으로 확인했고, 승패 안내 뒤 흐름(Continue·Replay Mission·Leave/Next Mission·진행 저장)도 확인했다. 미션 프레임은 다리 붕괴 검사·전투 자원·제단 결과 알림·주변음/공유 바람·장면 음악·미니맵 갱신을 원본 주 루프 순서로 돈다(E1230~E1234·E1266). **조작:** 사제 선택·이동, 가장자리·Alt·가운데 버튼 스크롤, 미니맵 클릭·끌기, 생산 격자 클릭·단축키(D 포함)·조각 회전(C·회전 방향 옵션)·다리 배치, 사제·워크샾·제단·신전·배터리·발전기·운반체 우클릭 메뉴와 회수·기도·Cast/Drop, 객체 명령(Detonate·Meltdown·신전 명령), 화면 위치 키(F4/H·F5·TAB·U·Shift+숫자 저장/숫자 복귀)와 방향키 카메라 이동(32픽셀, 조각을 든 ←/→는 회전, E1291), 미니맵·스톰 파워 표시·생산 창·채팅 도우미 단추의 우클릭 빠른 도움말(E1236·E1253)이 동작한다. **게임 메뉴:** ESC 또는 화면 우측 상단 버튼(웹 전용)으로 Game·View·Options·Players·About 메뉴막대를 열고, Leave/Restart Mission(ABORT 확인 창), F1·F2·F6·F7·F8·F9·Shift-F3·T, Pause(Shift-F9·Pause 키·메뉴), Shift-F7 화면 GIF 저장, Players 메뉴의 송금(Send X 숫자 입력 창 포함)·동맹이 실행된다. ESC는 열린 Tell 창(브리핑·로딩 제외)을 원본처럼 닫는다(E1264). 브리핑·완료 창의 Review Knowledge·GetTechnology 단추와 Priest Training 7의 Training Menu(원본 오타 별칭, E1245)도 동작한다. **HUD 틀·채팅 창:** 실제 Uber 루트가 좌측 사이드바(SP·생산 덱)·하단 미니맵 칸·구분선을 원본 위치로 도킹하고 지도 영역이 `{85,0,W,H}`다(4:3·16:9·16:10·1920×1080·창 크기 변경 확인). F3 채팅 창의 로그·입력줄·제출(로컬 서버 경유 `You> 본문`)·점 명령·Tab 이름 완성(동맹 AI)·붙여넣기/복사/잘라내기·도우미 메뉴·Edit Back/Front Format 창이 동작한다(E1169~E1179). **미완성:** 주문(스펠) 사용(Early Missions에서 스크립트 오류·일시 정지)과 주문을 얻은 골렘의 적 사제 포획(사용자 제보 2026-11-23, 원인 미확인), 다른 미션의 목표 수행과 자연 완주, Archer 계열 특수 행 우클릭과 짐을 실은 운반체의 Carrying/Drop 실제 확인, 메인 메뉴 구름 배경(정적 GIF, Kencloud 미연결). 지식 NSInfo 패널·Players 하위의 Ignore chat·Whisper To·정보 보기·의식 보상 선택 UI·인트로 영상은 웹 범위 밖이다(E1167·E1171·E1180·E1202). |
 | 원본과의 동일성 | 영어 4:3 메뉴 M1 8장면은 cpppj 오라클과 알려진 구름 배경 등 차이 영역 밖에서 픽셀 차이 0이다. **L2(E1283 닫음):** 검사 전용 고정 시각 모드(`?fixed=25`)에서 Tutorial1 Load/Start의 Game 난수열(90프레임 6,851회)·논리 화면·Session 덤프가 cpppj 기준선 오라클과 같다 — 4:3과 16:9(1366×768)의 90프레임 화면 0픽셀, 90·130프레임 덤프는 환경 의존인 `sp 1`·`player:*` 행만 다르다. **L3(진행 중):** cpp `--ui-script` 입력 단계표를 그대로 적용한 Tutorial1 첫 400프레임(안내 창 MORE/OK·F4·다리 조각 집기·놓기)이 200·300·345·364·400프레임 모두 화면 0픽셀·덤프 일치다(E1284~E1286). 월드·UI 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다(원본 공통 메뉴 788행·Factory 메뉴 39행·Uber 루트 160행·장면 음악 3,113행, 채팅 입력줄 대상 720행(E1265), 파편·건물 캡처 4,474행(E1275~E1276) 등). 대응표 1,007단위 중 732행은 Tutorial1 실행에서 웹 모듈의 함수가 모두 실행된 `session`이다(E1283). 좌측 HUD 하단 85×82픽셀은 원본 스크린샷과 일치한다. 한국어 글자는 갈무리11 12px 격자로 그리되 제목 배율·굵기(사용자 결정으로 보통체)·한글 기준선을 cpppj와 다르게 둔다([0.7절](#korean-font-change)). 미검증: 16:10·한국어 화면 대조, 400프레임 뒤의 L3 구간, L4b(소리)와 자연 완주. |
-| 현재 작업 | **L3 입력 진행 대조와 남은 표시·조작 확인 단계.** 4-D는 4D-4b(Tutorial1·3~6 단계 진행)만 남았다. L2를 닫은 뒤(E1283) Tutorial1 L3 단계표를 늘려 가며(6단계 M3) 어긋나는 첫 프레임을 고치고, 5-A 메인 메뉴 Kencloud·E198/E201 재대조, 6단계 객체 메뉴·운반체 실제 확인, 대응표 partial 12행의 메모 정리·승격을 병행한다. E1238~E1296은 감사 차이 닫기, partial 34→12행, L2·L3, 원본 캡처 대조, 한국어 글자 품질을 다뤘다([진행 요약](#e951-e1081)). 순서는 아래 [다음 작업](#next)을 따른다. |
+| 현재 작업 | **L3 입력 진행 대조와 남은 표시·조작 확인 단계.** 4-D는 4D-4b(Tutorial1·3~6 단계 진행)만 남았다. L2를 닫은 뒤(E1283) Tutorial1 L3 단계표를 늘려 가며(6단계 M3) 어긋나는 첫 프레임을 고치고, 5-A 메인 메뉴 Kencloud·E198/E201 재대조, 6단계 객체 메뉴·운반체 실제 확인, 대응표 partial 12행의 메모 정리·승격을 병행한다. E1238~E1297은 감사 차이 닫기, partial 34→12행, L2·L3, 원본 캡처 대조, 한국어 글자 품질을 다뤘다([진행 요약](#e951-e1081)). 순서는 아래 [다음 작업](#next)을 따른다. |
 | 전체 회귀 | **Node 26.13.0:** E1294 기준 6,807건 모두 통과(로그 `webpj/extracted/webpj-e1294-node26.log`, 396초; E1290 회귀는 6,805건 통과, E1288이 놓친 `korean.test.mjs` 래스터라이저 시험 1건을 그때 찾아 고침). **Node 22.23.3:** E1292 기준 6,807건 모두 통과(로그 `webpj/extracted/webpj-e1292-node22.log`, 528초). **e2e:** E1281 전체 `npx playwright test` 162건 통과·11건 건너뜀(옵트인)·1건 실패(월드 진입 정지로 바뀐 Fury War 창 순서; 시험을 고쳐 통과, 로그 `webpj/extracted/webpj-e1281-e2e-all.log`, 30.7분). **E1293 번들 기준 전체 e2e:** 166건 통과·12건 건너뜀·5건 실패(`import()`로 앱과 같은 모듈 인스턴스를 쓰는 시험 방식 문제 — 해당 11개 파일을 `debug.html`로 옮겨 39건 통과, 로그 `webpj/extracted/webpj-e1293-e2e-all.log`, 23.9분). 이후 단위는 새 e2e와 관련 e2e를 단위마다 돌렸다. **HJOW-Athlon 주기(0.5절 5):** v26 0/4(E1294에서 실행) — 다음은 E1298 완료 뒤·v22 2/8(E1292에서 실행, 이후 E1293~E1294) — 다음은 E1300 완료 뒤이며 겹치면 순차로 돈다. 실패와 교정을 포함한 이전 회귀 이력은 [E1237 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1237)과 [E1288 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1288)에 있다. |
 | 브라우저 검사 | 미션 화면은 단위마다 Chromium e2e로 확인한다(최근 전체 실행 E1281, 고정 시각 L2·L3 `e2e/fixed-time.spec.js`·`e2e/l3-tutorial1.spec.js`, 한국어 글자 배치 `e2e/korean-glyph-layout.spec.js` E1288). 메뉴는 2026-11-17 Chromium 2/2(갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체), 최초 실행·진행 잠금/체크·저장 재실행은 E616 Chromium 2/2. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
 
@@ -37,7 +37,7 @@
 
 <a id="e951-e1081"></a>
 
-#### E951~E1296 진행 요약
+#### E951~E1297 진행 요약
 
 단위별 완료 문단·검증 수·회귀 이력은 [E1081 정리 전 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261120-through-wb04-e1081)의 0.1절(E951~E1081), [E1166 정리 전 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261121-through-wb04-e1166)의 0.1·3.1·3.7절(E1082~E1166), [E1237 정리 전 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1237)의 0.1·3.1절(E1167~E1237), [E1288 정리 전 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1288)의 0.1·3.1절(E1238~E1288)과 각 단위 문서에 있다.
 
@@ -63,7 +63,7 @@
 | 장시간·실사용 점검 | E1121~E1125, E1128, E1132~E1134, E1139, E1143~E1144, E1147, E1158, E1160, E1165 | 전 미션 시작·장시간 진행, 몽키, 시계 정지 누수·죽은 Gump 정리 수정, 실사용·넓은 화면 e2e, 성능 측정 | 자연 완주 | [장시간 진행](docs/webpj-mission-services-long-run-20261120.md) · [실사용 점검](docs/webpj-real-use-checks-20261121.md) |
 | 승패·미션 흐름 | E1129~E1131, E1152, E1157, E1161 | 시작 덤프 구조 대조, 안내 창 배치, 승패 뒤 흐름·진행 저장, Priest Training 시작 연결 | — (L2·L3는 아래 행) | [L2 대조](docs/webpj-l2-tutorial1-20261121.md) · [승패 흐름](docs/webpj-mission-outcome-flow-20261121.md) |
 | 분석·판정 | E1149, E1153, E1156, E1163, E1241 | 난이도별 건설 속도, Wind Noise, 빨리 감기 한계, 미연결 모듈 68개 분류, cpppj 1322·1325·1326 변경 아홉 행 판정(②는 파생 피해 진단 문구 하나) | 쉬움 채취 절반 실관찰 | [난이도 진행](docs/webpj-skirmish-difficulty-20261121.md) · [미연결 모듈](docs/webpj-pause-key-unwired-modules-20261121.md) · [1322·1325·1326 판정](docs/webpj-cpppj-1322-1325-1326-judgment-20261123.md) |
-| 번들 빌드 | E1293 | webpack 으로 스크립트 전체를 번들 하나로 묶어 `index.html`이 그것만 불러오게 하고 번들 없이 ES 모듈로 구동하는 `debug.html`을 따로 두었다. 운영(최소화) 3,419,754바이트=3.26MiB로 9.9MB 기준 통과, 개발(최소화 없음)은 10.9MiB. 크기 한도 검사·번들 최신 보장 도구, Playwright 서버 시작 전 자동 빌드 | 번들 Git 추적 여부(사용자 결정) | [번들](docs/webpj-webpack-bundle-20261124.md) |
+| 번들 빌드 | E1293, E1297 | webpack 으로 스크립트 전체를 번들 하나로 묶어 `index.html`이 그것만 불러오게 하고 번들 없이 ES 모듈로 구동하는 `debug.html`을 따로 두었다. 운영(최소화) 3,419,745바이트=3.26MiB로 9.9MB 기준 통과, 개발(최소화 없음)은 10.9MiB. 크기 한도 검사·번들 최신 보장 도구, Playwright 서버 시작 전 자동 빌드. 번들은 사용자 결정(E1297)으로 Git 에 추적하고 `tests/bundle-fresh.test.mjs`가 낡은 번들을 잡는다 | — | [번들](docs/webpj-webpack-bundle-20261124.md) |
 | 회귀 교정 | E1060, E1078 | 관측 자료 누락·메뉴 전용 번역 검사 범위, 외부 접속 감사의 비공개 필드 오탐 | — | [회귀 교정](docs/webpj-regression-translation-fixtures-20261120.md) · [접속 감사](docs/webpj-external-audit-private-field-20261120.md) |
 | 웹 범위 판정 | E1167, E1171, E1176, E1180, E1182, E1187~E1188, E1192, E1202~E1204, E1238, E1242~E1243 | Players 하위 3항목·지식 NSInfo·의식 보상 선택 UI·HTML `$Input=`·패킷 원천/지연·메타 앞단·Sprite 갱신·FortCoreDataLoad·승리/패배 곡·건설 기록 재생·Uber 배경 자식을 웹 범위 밖으로, 인트로 영상은 사용자 결정으로 웹 제외 | — | [NSInfo](docs/webpj-nsinfo-scope-20261122.md) · [동영상 결정](docs/webpj-intro-movie-decision-20261122.md) · [건설 기록 재생](docs/webpj-build-replay-scope-20261123.md) |
 | 대본·기술·타이틀 | E1184, E1189~E1190, E1197, E1199~E1200, E1227, E1245 | 시작 title 그림, Fury War 기술 지급, 대본 82개 명령 점검(`ViewSpot`·`Salvage`), 도움말·Tell 남은 두 행, Detonate·GetTechnology 원본 관측, Review Knowledge·GetTechnology 단추, Priest Training 7 Training Menu 별칭 | — | [대본 명령](docs/webpj-script-commands-audit-20261122.md) · [Fury War](docs/webpj-fury-war-technology-20261122.md) |
@@ -129,7 +129,7 @@
 3. 원본/클론·오라클 수집·별도 창 실행에는 AGENTS.md의 확인·예외 규칙을 적용한다. 웹 이식에는 디컴파일 소스 분석이 필요 없다.
 4. 단위 문서에 근거 커밋·fixture/오라클·검사·실패와 교정·미연결 경계를 기록한다. 대응표의 web·base(8자리)·status·메모와 해당 manifest를 갱신한다. 현행 인계에는 현재 값·다음 작업·검증과 해당 체크만 갱신하고 완료 항목 상세는 정리 때 이관한다.
 5. 각 작업 단위마다 해당 변경의 집중 검사와 연관 검사를 수행한다. HJOW-Athlon에서는 완료된 작업 단위 4회마다 Node v26 전체 회귀를, 8회마다 Node v22 전체 회귀를 수행한다. 두 버전의 전체 회귀가 함께 필요한 경우 순차 실행하며 동시에 실행하지 않는다. 다른 PC에서는 사용 가능한 최신 Node 버전으로 완료된 작업 단위 4회마다 전체 회귀를 수행한다. 필요하면 변경의 위험이나 통합 범위에 맞춰 추가 검사를 수행한다. 신호 NaN 비트 대조 시험은 맨 위에 `import './nan-exact.mjs'`를 둔다. (2026-11-19 사용자 지시)
-6. 완료 후 당일 최대 번호를 확인하고 `YYYYMMDD-NN WB 요약`으로 로컬 커밋한다. 기존 커밋의 Codex 공동 작성자 표기와 AGENTS.md의 push 금지 규칙을 따른다.
+6. `www` 소스를 바꾼 단위는 `npm --prefix webpj run build`로 webpack 번들(`www/dist/netstorm.bundle.js`)을 다시 만들어 함께 stage 한다(번들 Git 추적, E1297; `tests/bundle-fresh.test.mjs`가 낡은 번들을 실패로 잡는다). 완료 후 당일 최대 번호를 확인하고 `YYYYMMDD-NN WB 요약`으로 로컬 커밋한다. 기존 커밋의 Codex 공동 작성자 표기와 AGENTS.md의 push 금지 규칙을 따른다.
 
 ### 0.6 제품 공통 요구
 
@@ -159,7 +159,7 @@ E896에서 실제 미션 설치의 You→당신 번역과 Player 표시 바이�
 
 - **범위.** 일반 31경로와 데모 3경로를 대상으로 한다. 단독 미션의 같은 프로세스 안 내부 전송·패킷·Login·Zone·서버/클라이언트는 포함한다. LAN TCP·멀티플레이 UI·재접속/메타, 공식 검증 서버, Edit·커스텀 맵·User Made Campaigns, 설치/CD·Quit, 옵션 해상도/전체화면은 웹 범위에서 제외한다. 스커미시의 MP 시작 규칙과 Outpost는 12차에 포함한다.
 - **이식.** cpppj의 파일과 API 경계, 부작용과 호출 순서, 정수 폭과 저장 시 정밀도, 난수 소비를 보존한다. 단독에서 도달하는지 확인해 웹 제외 분기에는 명시 오류를 유지한다. 현재 단계가 직접 요구하는 부품만 앞당긴다.
-- **웹 구조.** `netstorm.js`가 앱 수명을 맡는다. 모든 스크립트는 webpack 으로 번들 하나(`www/dist/netstorm.bundle.js`, 진입 `www/bootstrap.js`)로 묶어 `index.html`이 그것만 불러온다(E1293, 번들은 Git 에 넣지 않으며 `npm --prefix webpj run build`로 만든다). 번들 없이 이전 방식(ES 모듈 직접 적재)으로 구동하는 디버그 페이지는 `www/debug.html`이며, 앱과 같은 모듈 인스턴스가 필요한 e2e(`import()` 사용 11개 파일)도 이 페이지를 연다. `index.html`은 최소 변경하고 스타일은 JS에서 관리한다. 기존 CommonJS 서버와 `www/` ES 모듈 경계를 유지한다. 코어를 DOM·Canvas·Web Audio에서 분리하고 8비트 논리 화면과 최종 표시를 구분한다.
+- **웹 구조.** `netstorm.js`가 앱 수명을 맡는다. 모든 스크립트는 webpack 으로 번들 하나(`www/dist/netstorm.bundle.js`, 진입 `www/bootstrap.js`)로 묶어 `index.html`이 그것만 불러온다(E1293, 번들은 사용자 결정으로 Git 에 추적한다 — `www` 소스를 고친 단위는 `npm --prefix webpj run build`로 번들을 다시 만들어 함께 커밋하며 `tests/bundle-fresh.test.mjs`가 낡은 번들을 잡는다). 번들 없이 이전 방식(ES 모듈 직접 적재)으로 구동하는 디버그 페이지는 `www/debug.html`이며, 앱과 같은 모듈 인스턴스가 필요한 e2e(`import()` 사용 11개 파일)도 이 페이지를 연다. `index.html`은 최소 변경하고 스타일은 JS에서 관리한다. 기존 CommonJS 서버와 `www/` ES 모듈 경계를 유지한다. 코어를 DOM·Canvas·Web Audio에서 분리하고 8비트 논리 화면과 최종 표시를 구분한다.
 - **시간·입력·수명.** 시작 입력에서 오디오를 활성화한다. 탭이 숨으면 진행을 멈추고 복귀 시 시계를 다시 잡는다. `requestAnimationFrame`은 표시 기회다. 4:3부터 확인하고 16:9·16:10, 입력 역변환·DPI를 비교한다. 가장자리 스크롤은 활성 미션과 게임 영역 안의 포인터에서 동작한다.
 - **자산·설정·언어.** `assets/game-data`·`fonts`·`webpj/translations`에서 `webpj/www/data`를 준비하며 느슨한 파일→TAFF 조회 순서를 유지한다. 버전 있는 `netstorm.settings`·`netstorm.progress` JSON은 localStorage에 두며 오류 시에도 계속할 수 있게 한다. 한국어 누락 파일·섹션·주제는 영어로 대체하고 미션 문구는 cpppj 확정본을 기본으로 삼는다. 사용자 검수와 언어별 글꼴은 3.5·3.7절을 따른다.
 - **외부 링크.** Tell/도움말에서 치환된 `http:`·`https:`·`mailto:` 링크는 새 탭/창으로 열고 다른 주소의 제외 사유는 console에 기록한다. 개발 서버는 모든 인터페이스에서 수신한다. [외부 접속 7절](docs/webpj-external-access-20261105.md)
@@ -339,7 +339,6 @@ M1은 메뉴 관문을 통과했다. 4-D의 Tutorial1 L2 → 5-A/5-B·5-C의 Tut
   - 채팅 로그를 미션 끝에 초기화하는 적응(E1170)을 인정할지, 원본처럼 Client 수명 동안 유지할지(5-C 메뉴·버튼 컨트롤).
   - DestroyPatch 진단 열두 지점을 원문처럼 표시 후 계속으로 바꿀지(현재 보고 후 중단, 4D-8a·E1273).
   - 16:10 대조를 위해 웹 16:10 논리 크기를 cpppj 1280×800에 맞출지(5-C M2, 와이드 해상도 요구와 함께 판단).
-  - webpack 번들(`www/dist`)을 Git 에 추적할지(현재 산출물이라 미추적: 정적 배포 전 `npm run build` 필요) 사용자가 결정한다(E1293, [번들 문서](docs/webpj-webpack-bundle-20261124.md)).
   - 한국어 고해상도 글자 층(글자만 출력 해상도로 외곽선 글꼴 덧그리기, E1288 제안)을 채택할지. 굵기는 보통체 유지로 결정됐다(0.7절).
   - 프레임 예외 한 번에 렌더 루프가 멈추는 설계를 유지할지(3.7절 7차).
 - **원본 실행·사람 확인.** 예산 칸 실제 우클릭의 원본 동작(5-C, AGENTS 실행 규칙), favicon 탭 그림(0.6절), 주변음·효과음·음악 실제 청취, 한국어 사람 검수와 미션 본문 줄 나눔 실제 화면.

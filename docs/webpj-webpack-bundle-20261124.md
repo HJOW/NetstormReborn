@@ -6,7 +6,7 @@
 
 | 빌드 | 크기 | 9.9MB 기준 |
 | --- | --- | --- |
-| **운영(`npm run build`, 최소화)** | **3,419,754바이트 = 3.42MB(10진) = 3.26MiB** | **통과**(한도의 약 35%) |
+| **운영(`npm run build`, 최소화)** | **3,419,745바이트 = 3.42MB(10진) = 3.26MiB** | **통과**(한도의 약 35%) |
 | 개발(`npm run build:dev`, 최소화 없음) | 11,390,370바이트 = 11.39MB = 10.9MiB (+ 소스 맵 11.5MB) | 초과 — 개발 번들은 배포하지 않는다 |
 
 - 번들에는 진입 모듈에서 import로 닿는 988개 모듈이 들어간다(`www` 아래 .js 1,056개 중 68개는 앱이 import하지 않는 미연결 모듈이라 빠진다). 원본 소스 합계는 주석 포함 약 10.2MB였고 최소화로 주석·공백이 빠져 3.4MB가 됐다. **롤백 기준은 배포할 운영 번들에 적용했고 통과했다.** 개발 번들이 9.9MB를 넘는 것은 주석(한국어 설명)이 그대로 남기 때문이다.
@@ -22,7 +22,7 @@
 - `tools/check-bundle-size.js`(`npm run check-bundle`): 번들이 9,900,000바이트(9.9MB, 10진)를 넘으면 종료 코드 1로 끝난다. `npm run build`는 webpack 뒤 이 검사를 이어서 돌린다.
 - `tools/ensure-bundle.js`(`npm run ensure-bundle`): 번들이 없거나 `www` 소스(data·dist 제외)·`webpack.config.js`·`package-lock.json`보다 오래됐으면 운영 번들을 다시 만들고 크기를 검사한다. `npm start`(`prestart`)와 Playwright `webServer.command`(`node tools/ensure-bundle.js && node server.js`, 대기 240초)가 쓴다. 이미 떠 있는 서버를 재사용하는 e2e 실행에서는 번들을 다시 만들지 않으므로 소스를 고친 뒤에는 서버를 내리고 시작한다.
 - `package.json`: 개발 의존성 `webpack` 5.113.0·`webpack-cli` 7.3.1·`terser-webpack-plugin` 5.6.1(정확한 버전 고정), 스크립트 `build`·`build:dev`·`check-bundle`·`ensure-bundle`·`prestart`. `package-lock.json` 갱신.
-- `.gitignore`: `webpj/www/dist/`(산출물)를 추가했다. **번들은 Git에 넣지 않는다.** 정적 배포 전에는 `npm run build`가 필요하다(아래 '결정 대기').
+- **Git 추적(사용자 결정 2026-11-24 "번들도 git 에 넣자"):** 번들(`www/dist/netstorm.bundle.js`, 3.4MB)을 Git에 추적한다. 처음에는 산출물로 보고 `.gitignore`에 넣었으나 결정에 따라 제외를 지웠고, 줄바꿈 변환(`core.autocrlf=true`)이 바이트를 바꾸지 않도록 `.gitattributes`에 `webpj/www/dist/** -text`를 더했다. `www`를 Git에서 그대로 정적 배포해도 번들이 있어 동작한다. 대신 **`www` 소스를 고친 단위는 `npm --prefix webpj run build`로 번들을 다시 만들어 함께 커밋해야 한다**(`ensure-bundle`이 e2e·`npm start` 때 자동으로 만들기도 한다). 새 시험 `tests/bundle-fresh.test.mjs`가 같은 설정으로 임시 폴더에 다시 빌드해(약 22초) 커밋된 번들과 바이트가 같은지·크기 한도 안인지 확인하며, 소스만 고치고 번들을 빠뜨리면 실패한다(소스에 한 줄을 더해 실패함을 확인했다).
 - 감사·도구: 외부 접속 감사(`tests/external-access.test.mjs`)와 대응표 도구(`tools/port-map.mjs`의 `listWebModules`)는 `www/dist`를 소스로 보지 않는다(번들 산출물이고 원본 소스는 따로 감사된다). `e2e/static-deployment.spec.js`는 이제 `dist/netstorm.bundle.js` 요청을 확인한다.
 - Node 시험(`tests/*.test.mjs`)은 `www` ES 모듈을 직접 import하므로 번들과 무관하게 그대로 돈다. 번들은 Chromium e2e와 실제 실행에서만 쓰인다.
 
@@ -38,7 +38,7 @@
 
 ## 결정 대기·주의
 
-- **번들 Git 추적 여부.** 지금은 산출물이라 추적하지 않는다. `www`를 Git에서 그대로 정적 배포하는 흐름이면 번들이 없어 빈 화면이 되므로 배포 전에 `npm --prefix webpj run build`를 돌려야 한다. 번들(3.4MB)을 커밋하면 소스를 고칠 때마다 큰 변경이 쌓이는 대신 `www`만 복사해도 배포된다. 사용자 결정 사항이다.
+- **번들 Git 추적 여부(결정됨).** 추적한다(위). 소스를 고칠 때마다 3.4MB 번들 변경이 쌓이는 비용은 사용자가 받아들였다. 번들은 결정적으로 같은 바이트를 만든다(같은 소스·같은 webpack/terser 버전에서). 의존성 버전(`package-lock.json`)을 올리면 번들 바이트가 달라질 수 있어 그때도 다시 빌드해 커밋한다.
 - **롤백 방법.** 이 단위의 커밋을 되돌리면 `index.html`이 다시 모듈 스크립트를 쓰고(원본 소스는 건드리지 않았다) `www/bootstrap.js`·`www/debug.html`·설정·도구·의존성만 사라진다. 또는 번들 없이 쓰려면 `debug.html`을 열면 된다.
 - 운영 번들의 오류 스택은 최소화되어 읽기 어렵다. 디버깅은 `npm run build:dev`(소스 맵 포함)로 한다.
 - 번들 도입은 코드 변환(Babel 등)을 하지 않는다. 지원 브라우저는 이전과 같이 ES 모듈을 쓰는 최신 브라우저이다.
