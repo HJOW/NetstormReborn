@@ -26,6 +26,10 @@ public sealed class HostNsInfoDevices
     public Func<uint, uint, uint, uint, uint>? Handle { get; init; }
     /// <summary>현재 실제 특수 버튼의 원문 그림이다.</summary>
     public Action<uint, GumpPixelTarget, GumpGlyphColorState, GumpBackgroundDraw>? DrawPlayerButton { get; init; }
+    /// <summary>같은 Pool의 실제 SID+22 BYTE다. 추가 active 필터는 없다. 0.921에서 추가됐다.</summary>
+    public Func<uint, uint>? ObjectOwner { get; init; }
+    /// <summary>0042b210의 현재 TYPE 기술 합계다. 0.921에서 추가됐다.</summary>
+    public Func<ReadOnlyMemory<byte>, uint>? TechWeight { get; init; }
     /// <summary>복귀하면 계속하는 실제 원문 줄 번호 진단이다.</summary>
     public Action<uint>? Assertion { get; init; }
     /// <summary>실제 공통 구조 변경을 알린다.</summary>
@@ -132,6 +136,71 @@ public sealed class HostNsInfoWindows : IDisposable
         0x54db4c => unchecked((uint)_globals.ServerSelection.Value), 0x594fc8 => _storage.OwnerMode.Challenge ? 1U : 0U, 0x595344 => _gameplay.Player.PlayerKnown,
         _ => _devices.Read(address),
     };
+    /// <summary>NUL 끝을 붙인 원문 글꼴 바이트로 본문 추가 길이를 센다. 0.921에서 추가됐다.</summary>
+    private static byte[] AppendBytes(string text) => Encoding.Latin1.GetBytes(text + '\0');
+    /// <summary>소유 문자열의 기존 반납/새 토큰/현재 노드 저장 순서를 도움말과 메타 창이 공유한다. 공통 트리 소유 표를 사용한다. 0.921에서 추가됐다.</summary>
+    private void SetNodeHelp(uint token, string text, bool word)
+    {
+        // 원문 도움말 실제 노드 없음은 그 위치에서 거부한다.
+        if (_tree.Node(token) is null)
+        {
+            throw new InvalidOperationException("NSInfo 도움말 실제 노드 없음");
+        }
+
+        if (word)
+        {
+            _tree.SetHelpWord(token, text);
+        }
+        else
+        {
+            _tree.SetHelpText(token, text);
+        }
+    }
+    /// <summary>번역→zone 캡처→현재 server 조회→256BYTE 서식을 원문 순서로 수행한다. 0.921에서 추가됐다.</summary>
+    private string MetaHeader(bool battle)
+    {
+        string format = Need(_devices.Translate)(battle ? "~w~E%s\nPlayers in Battle (Zone %d)\n" : Text(_globals.ZoneFormat, true));
+        int zone = unchecked((int)_globals.Zone.Value);
+        string server = Encoding.Latin1.GetString(_globals.ResolveServerName(value => Bytes(Need(_devices.Translate)(value))).Span);
+        string text = Need(_devices.FormatZone)(format, server, zone);
+        if (text.Length >= 256)
+        {
+            throw new ArgumentOutOfRangeException(nameof(battle), "NSInfo 메타 제목의 실제256BYTE 범위");
+        }
+
+        return text;
+    }
+    /// <summary>같은 실제 CS와 현재 NSInfo/zone/서버/문자 저장소로 전체 메타 루트 본문을 배치한다. 0.921에서 추가됐다.</summary>
+    /// <param name="token">같은 0xd8 NSInfo 노드 토큰이다.</param>
+    /// <param name="challenge">같은 실제 CS 참가자40·전투10 기록이다.</param>
+    public void LayoutMetaRoot(uint token, ClientChallengeGlobals challenge)
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        ArgumentNullException.ThrowIfNull(challenge);
+        var globals = new HudNsInfoMetaGlobals { Challenge = challenge, Info = _globals, Metamap = () => Read(0x594fc8), Known = () => Read(0x595344), Owner = () => _gameplay.Player.BattleOwner };
+            var hooks = new HudNsInfoMetaHooks
+            {
+                Root = Root,
+                Player = player => _players.Contains(player) ? _tree.Node(player) as HudPlayerInfoNode : null,
+                Battle = battle => _battles.Contains(battle) ? _tree.Node(battle) as HudBattleInfoNode : null,
+                Node = _tree.Node,
+                Push = _tree.Tree.Push,
+                FitHeight = target => _text.Text.FitHeight(target),
+                Attach = (target, x, y, parent, mode) => Need(_tree.TreeHooks.Attach)(target, x, y, parent, mode),
+                Replace = (target, text) => _text.Text.ReplaceText(target, AppendBytes(text), 0),
+                Parse = (target, text) => _text.Parser.Parse(target, Bytes(text)),
+                Wrap = (target, value) => _text.Widgets.SetWrap(target, unchecked((int)value)),
+                Read = Read,
+                ObjectOwner = sid => Need(_devices.ObjectOwner)(sid),
+                Weight = core => Need(_devices.TechWeight)(core),
+                Append = (target, text, context, metadata) => _text.Text.AppendText(target, AppendBytes(text), context, -1, metadata),
+                Header = MetaHeader,
+                Translate = text => Need(_devices.Translate)(text),
+                HelpText = (target, text) => SetNodeHelp(target, text, false),
+                HelpWord = (target, text) => SetNodeHelp(target, text, true),
+            };
+            HudNsInfoMetaLayout.Layout(token, globals, hooks);
+    }
     /// <summary>원문 new 크기와 첫0xd8 문맥의 실제 파생을 같은 공통 저장소에 할당한다.</summary>
     private uint Allocate(int bytes)
     {

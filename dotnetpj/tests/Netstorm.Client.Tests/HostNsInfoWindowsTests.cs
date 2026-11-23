@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Text;
 using Netstorm.Assets;
 using Netstorm.Client.Display;
 using Netstorm.Client.Gump;
@@ -42,6 +43,14 @@ public sealed class HostNsInfoWindowsTests
         public uint ButtonType;
         /// <summary>실제 공통 변경 통지 횟수다.</summary>
         public int Changes;
+        /// <summary>같은 실제 소유자 조회다.</summary>
+        public readonly Dictionary<uint, uint> Owners = [];
+        /// <summary>실제 소유자 조회 호출이다.</summary>
+        public readonly List<uint> OwnerCalls = [];
+        /// <summary>실제 기술 합계 값이다.</summary>
+        public uint TechWeightValue = 5;
+        /// <summary>실제 기술 합계 호출 횟수다.</summary>
+        public int TechWeightCalls;
         /// <summary>실제 번역으로 전달한 원문이다.</summary>
         public readonly List<string> Translations = [];
         /// <summary>같은 실제 외부 장치를 다른 owner 검증에도 제공한다.</summary>
@@ -60,11 +69,13 @@ public sealed class HostNsInfoWindowsTests
             Globals.ServerSelection.Value = -1; Globals.Zone.Value = 17;
             Devices = new()
             {
-                Read = address => address switch { 0x5ca920 => Menu.BackgroundType, 0x5ca924 => 1, 0x5411c8 => ButtonType, 0x5bec3c => Screen.Colors().Basic[7], _ => throw new InvalidOperationException("검사에서 공급하지 않은 현재 전역:" + address.ToString("x")) },
+                Read = address => address switch { 0x5ca920 => Menu.BackgroundType, 0x5ca924 => 1, 0x5411c8 => ButtonType, 0x5bec3c => Screen.Colors().Basic[7], 0x5c78d0 => Screen.Colors().Basic[0], 0x59afd8 => Screen.Colors().Basic[1], 0x5c85c8 => 0u, _ => throw new InvalidOperationException("검사에서 공급하지 않은 현재 전역:" + address.ToString("x")) },
                 Translate = value => { Translations.Add(value); return value == "LAN Server" ? "Local" : value; },
                 StoreText = value => { uint token = 0x2000000 + (uint)Strings.Count; Strings.Add(token, value); return token; }, Text = token => Strings[token],
                 FormatZone = (format, server, zone) => FailFormat ? throw new IOException("실제 형식화 중단") : format.Replace("%s", server, StringComparison.Ordinal).Replace("%d", zone.ToString(CultureInfo.InvariantCulture), StringComparison.Ordinal),
                 Changed = () => Changes++,
+                ObjectOwner = sid => { OwnerCalls.Add(sid); return Owners.TryGetValue(sid, out uint owner) ? owner : 0u; },
+                TechWeight = _ => { TechWeightCalls++; return TechWeightValue; },
             };
             Ns = new(Menu.Tree, Text, Globals, Game, Storage, Devices);
         }
@@ -142,5 +153,141 @@ public sealed class HostNsInfoWindowsTests
     {
         using var scene = new Scene(); scene.ButtonType = (uint)scene.Storage.Types.Count; scene.Storage.Types.AddRange([scene.Storage.Types[0].Clone()]);
         Assert.True(scene.ButtonType < scene.Storage.Types.Count); Assert.Throws<ArgumentOutOfRangeException>(() => scene.Ns.Create()); Assert.Equal(0u, scene.Globals.Current.Value); Assert.NotEmpty(scene.Menu.Tree.OwnedNodes(scene.Ns)); scene.Ns.Close(); Assert.Empty(scene.Menu.Tree.OwnedNodes(scene.Ns));
+    }
+
+    /// <summary>같은 실제 CS 참가자 기록을 준비한다.</summary>
+    private static void WriteParticipant(ClientChallengeGlobals challenge, uint index, uint battle, uint flags, string name, uint level = 0, uint sid = 0)
+    {
+        Span<byte> bytes = challenge.Participant(index).Span;
+        bytes[0x64] = (byte)flags;
+        bytes[0x58] = (byte)level;
+        BitConverter.GetBytes(battle).CopyTo(bytes.Slice(0xa4, 4));
+        BitConverter.GetBytes(sid).CopyTo(bytes.Slice(0xb8, 4));
+        byte[] nameBytes = Encoding.Latin1.GetBytes(name + "\0");
+        nameBytes.CopyTo(bytes.Slice(0x26, nameBytes.Length));
+    }
+
+    /// <summary>메타 후속까지 연결된 별도 호스트를 같은 트리/문자에 얹는다.</summary>
+    private sealed class MetaHost : IDisposable
+    {
+        /// <summary>같은 실제 트리/문자 소유자다.</summary>
+        public readonly Scene Scene = new();
+        /// <summary>메타 후속이 연결된 검사할 실제 장기 공장이다.</summary>
+        public readonly HostNsInfoWindows Ns;
+        /// <summary>실제 메타 후속 호출이다.</summary>
+        public readonly List<(HudNsInfoChild Kind, uint Token)> MetaCalls = [];
+
+        /// <summary>같은 트리/문자에 메타 후속 장치를 더한 호스트를 조립한다.</summary>
+        public MetaHost()
+        {
+            var devices = new HostNsInfoDevices
+            {
+                Read = Scene.Devices.Read, Translate = Scene.Devices.Translate, StoreText = Scene.Devices.StoreText,
+                Text = Scene.Devices.Text, FormatZone = Scene.Devices.FormatZone, Changed = Scene.Devices.Changed,
+                ObjectOwner = Scene.Devices.ObjectOwner, TechWeight = Scene.Devices.TechWeight,
+                MetaChildLayout = (kind, token) => MetaCalls.Add((kind, token)),
+            };
+            Ns = new HostNsInfoWindows(Scene.Menu.Tree, Scene.Text, Scene.Globals, Scene.Game, Scene.Storage, devices);
+        }
+
+        /// <summary>별도 호스트와 기존 HTML 소유 자식을 반납한다.</summary>
+        public void Dispose() { Ns.Dispose(); Scene.Dispose(); }
+    }
+
+    /// <summary>실전투 없이 명부·제목·도움말을 실제 저장소에 배치한다. 0.921에서 추가됐다.</summary>
+    [Fact]
+    public void LayoutMetaRootNoBattleRendersRosterAndHelp()
+    {
+        using var host = new MetaHost(); var scene = host.Scene;
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        uint owner = scene.Game.Player.BattleOwner;
+        WriteParticipant(challenge, owner, battle: 0, flags: 1, name: "me", sid: 7);
+        WriteParticipant(challenge, 5, battle: 0, flags: 1, name: "foe", level: 3, sid: 8);
+        scene.Owners[7] = owner;
+        scene.Owners[8] = owner + 1;
+        uint token = host.Ns.Create(); var root = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(token));
+        scene.Storage.OwnerMode.Challenge = true; scene.Game.Player.PlayerKnown = 1;
+        root.BaseWidth = 300; root.BaseHeight = 200;
+        host.Ns.LayoutMetaRoot(token, challenge);
+        var title = Assert.IsType<ScrollingTextGumpNode>(scene.Menu.Tree.Node(root.Title));
+        Assert.Equal(300, title.BaseWidth);
+        Assert.Equal(root.Background, scene.Menu.Tree.Node(root.Roster)!.Parent);
+        Assert.Equal(root.Background, title.Parent);
+        Assert.NotEqual(0u, scene.Menu.Tree.Node(token)!.TextPointer);
+        Assert.NotEqual(0u, scene.Menu.Tree.Node(token)!.AlternateTextPointer);
+        Assert.Equal(0u, scene.Menu.Tree.Node(root.Battle)!.Flags & 1u);
+        // 두 활성행의 자기 쌍교환 동률 2건×2회와 행 랭크 2건이다.
+        Assert.Equal(6, scene.TechWeightCalls);
+        Assert.Contains(7u, scene.OwnerCalls);
+    }
+
+    /// <summary>전투 경로는 마스터 0번 패널을 선택해 보인다. 0.921에서 추가됐다.</summary>
+    [Fact]
+    public void LayoutMetaRootBattlePathSelectsMaster()
+    {
+        using var host = new MetaHost(); var scene = host.Scene;
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        uint owner = scene.Game.Player.BattleOwner;
+        WriteParticipant(challenge, owner, battle: 2, flags: 5, name: "me", sid: 7);
+        WriteParticipant(challenge, 3, battle: 2, flags: 5, name: "boss", sid: 9);
+        scene.Owners[7] = owner;
+        scene.Owners[9] = owner;
+        var battle = challenge.Battle(2).Span;
+        battle[0] = 1;
+        BitConverter.GetBytes(3u).CopyTo(battle.Slice(0x38, 4));
+        uint token = host.Ns.Create(); var root = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(token));
+        scene.Storage.OwnerMode.Challenge = true; scene.Game.Player.PlayerKnown = 1;
+        root.BaseWidth = 300; root.BaseHeight = 200;
+        host.Ns.LayoutMetaRoot(token, challenge);
+        var first = Assert.IsType<HudPlayerInfoNode>(scene.Menu.Tree.Node(root.Players[0]));
+        Assert.NotEqual(0u, first.Flags & 1u);
+        Assert.Equal(root.Background, first.Parent);
+        Assert.Equal(3u, first.Player);
+        var info = Assert.IsType<HudBattleInfoNode>(scene.Menu.Tree.Node(root.Battle));
+        Assert.NotEqual(0u, info.Flags & 1u);
+        Assert.Equal(2u, info.Battle);
+        Assert.Equal(4u, info.Changed);
+        Assert.NotEqual(0u, scene.Menu.Tree.Node(token)!.TextPointer);
+    }
+
+    /// <summary>빈 명부도 제목·도움말 부착까지 수행한다. 0.921에서 추가됐다.</summary>
+    [Fact]
+    public void LayoutMetaRootEmptyRosterStillAttaches()
+    {
+        using var host = new MetaHost(); var scene = host.Scene;
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        uint owner = scene.Game.Player.BattleOwner;
+        WriteParticipant(challenge, owner, battle: 0, flags: 0, name: "me", sid: 7);
+        uint token = host.Ns.Create(); var root = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(token));
+        scene.Storage.OwnerMode.Challenge = true; scene.Game.Player.PlayerKnown = 1;
+        root.BaseWidth = 300; root.BaseHeight = 200;
+        host.Ns.LayoutMetaRoot(token, challenge);
+        Assert.Equal(root.Background, scene.Menu.Tree.Node(root.Title)!.Parent);
+        Assert.NotEqual(0u, scene.Menu.Tree.Node(token)!.AlternateTextPointer);
+        Assert.Equal(0, scene.TechWeightCalls);
+    }
+
+    /// <summary>미연결 장치는 일반 성공으로 꾸미지 않는다. 0.921에서 추가됐다.</summary>
+    [Fact]
+    public void LayoutMetaRootMissingDevicesFailExplicitly()
+    {
+        using var scene = new Scene();
+        uint token = scene.Ns.Create();
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        Assert.Throws<ArgumentNullException>(() => scene.Ns.LayoutMetaRoot(token, null!));
+        var bare = new HostNsInfoDevices
+        {
+            Read = scene.Devices.Read, Translate = scene.Devices.Translate, StoreText = scene.Devices.StoreText,
+            Text = scene.Devices.Text, FormatZone = scene.Devices.FormatZone, Changed = scene.Devices.Changed,
+        };
+        using var other = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, bare);
+        uint second = other.Create();
+        var missing = new ClientChallengeGlobals(); missing.Prepare();
+        uint owner = scene.Game.Player.BattleOwner;
+        WriteParticipant(missing, owner, battle: 0, flags: 1, name: "me", sid: 7);
+        scene.Storage.OwnerMode.Challenge = true; scene.Game.Player.PlayerKnown = 1;
+        Assert.Throws<InvalidOperationException>(() => other.LayoutMetaRoot(second, missing));
+        other.Dispose();
+        Assert.Throws<ObjectDisposedException>(() => other.LayoutMetaRoot(second, missing));
     }
 }
