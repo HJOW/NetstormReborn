@@ -5,15 +5,8 @@
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="icon" href="favicon.ico">
         <title>NetStorm</title>
-        <script type="module">
-        // ES 모듈의 클래스는 일반 스크립트의 전역 이름이 아니므로 import 로 가져온다.
-        import { Netstorm } from './netstorm.js';
-        document.addEventListener('DOMContentLoaded', function() {
-            const netstorm = new Netstorm();
-            netstorm.init( document.getElementById('netstorm_root') );
-            window.netstorm = netstorm; // 개발자 콘솔에서 setAspect() 등을 시험하기 위한 임시 노출
-        });
-        </script>
+        <!-- 모든 스크립트는 webpack 이 묶은 번들 하나이다(진입 모듈 bootstrap.js, 빌드: npm run build). defer 라서 문서 파싱 뒤 DOMContentLoaded 앞에서 실행된다. -->
+        <script src="dist/netstorm.bundle.js" defer></script>
     </head>
     <body>
         <div id="netstorm_root"></div>

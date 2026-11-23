@@ -3,7 +3,7 @@ const { test, expect } = require('@playwright/test');
 
 test('실제 갈무리11 편집 입력과 Gump 픽셀 출력', async ({ page }) => {
   const errors = []; page.on('pageerror', (error) => errors.push(String(error)));
-  await page.goto('/');
+  await page.goto('/debug.html');
   await page.waitForFunction(() => window.netstorm?.state === 'clickToStart' && window.netstorm?._clientGump);
   const result = await page.evaluate(async () => {
     const [{ FontSet }, { UnicodeFontProvider }, { createCanvasGlyphRasterizer }, { displayTextCodec }, { queueCommittedText },

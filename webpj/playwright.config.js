@@ -24,11 +24,12 @@ module.exports = defineConfig({
     screenshot: 'only-on-failure'
   },
   // 테스트 시작 시 정적 서버를 자동으로 띄운다. 이미 실행 중이면 재사용한다.
+  // 서버를 띄우기 전에 webpack 번들이 소스보다 오래됐으면 다시 만든다(tools/ensure-bundle.js, 최대 수십 초). 이미 떠 있는 서버를 재사용할 때는 번들을 다시 만들지 않으므로 소스를 고친 뒤에는 서버를 내리고 시작한다. (2026-11-24 WB04-E1293)
   webServer: {
-    command: 'node server.js',
+    command: 'node tools/ensure-bundle.js && node server.js',
     url: `http://localhost:${PORT}/`,
     reuseExistingServer: true,
-    timeout: 30000
+    timeout: 240000
   },
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },

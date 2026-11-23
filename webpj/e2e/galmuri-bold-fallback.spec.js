@@ -4,7 +4,7 @@ const { test, expect } = require('@playwright/test');
 
 test('굵은 글꼴에 없는 글자는 합성 굵기 없이 일반 갈무리11 글리프로 대체된다', async ({ page }) => {
   const errors = []; page.on('pageerror', (error) => errors.push(String(error)));
-  await page.goto('/');
+  await page.goto('/debug.html');
   await page.waitForFunction(() => window.netstorm?.state === 'clickToStart');
   const result = await page.evaluate(async () => {
     const { createCanvasGlyphRasterizer } = await import('/platform/glyph-rasterizer.js');

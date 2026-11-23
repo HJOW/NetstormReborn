@@ -31,7 +31,7 @@ test('Tutorial1 시작 직후 Session 덤프가 cpppj 기준선과 알려진 시
   const { compareSessionDumps } = await import('../tools/session-dump-compare.mjs');
   const errors = []; page.on('pageerror', (error) => errors.push(error.stack ?? error.message)); page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
   await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } })));
-  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/?aspect=4:3');
+  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/debug.html?aspect=4:3');
   await page.waitForFunction(() => window.netstorm?.state === 'clickToStart'); await page.locator('canvas').click();
   await page.waitForFunction(() => window.netstorm?.state === 'mainMenu');
   await clickLabel(page, 'Campaign'); await clickLabel(page, 'Early Missions');

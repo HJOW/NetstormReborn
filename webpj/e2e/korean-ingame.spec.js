@@ -29,7 +29,7 @@ test('한국어 미션 화면: ESC 막대·Game/View/Options 항목과 정지 �
   test.setTimeout(180000);
   const errors = []; page.on('pageerror', (error) => errors.push(error.message)); page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
   await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } })));
-  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/?lang=ko&aspect=4:3');
+  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/debug.html?lang=ko&aspect=4:3');
   await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 60000 }); await page.locator('canvas').click();
   await page.waitForFunction(() => window.netstorm?.state === 'mainMenu', null, { timeout: 60000 });
   await clickLabel(page, '캠페인'); await clickLabel(page, '자유를 위한 투쟁');
@@ -67,7 +67,7 @@ test('한국어 미션 화면: 스톰 파워·생산 창 우클릭 도움말 제
   test.setTimeout(180000);
   const errors = []; page.on('pageerror', (error) => errors.push(error.message)); page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
   await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } })));
-  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/?lang=ko&aspect=4:3');
+  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/debug.html?lang=ko&aspect=4:3');
   await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 60000 }); await page.locator('canvas').click();
   await page.waitForFunction(() => window.netstorm?.state === 'mainMenu', null, { timeout: 60000 });
   await clickLabel(page, '캠페인'); await clickLabel(page, '자유를 위한 투쟁');
@@ -107,7 +107,7 @@ test('한국어 번역표: 커서 경고·생산 힌트·객체 정보·Send 줄
   test.setTimeout(120000);
   const errors = []; page.on('pageerror', (error) => errors.push(error.message)); page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
   await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } })));
-  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/?lang=ko&aspect=4:3');
+  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/debug.html?lang=ko&aspect=4:3');
   await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 60000 }); await page.locator('canvas').click();
   await page.waitForFunction(() => window.netstorm?.state === 'mainMenu', null, { timeout: 60000 });
   const keys = ["Priest can't get here.", 'Must be placed over constructing artifact', 'Cannot place here', 'Energy not satisfied', 'Only on Controlled Island',
@@ -126,7 +126,7 @@ test('한국어 채팅 도우미 메뉴: 고정 라벨이 한국어로 번역된
   test.setTimeout(240000);
   const errors = []; page.on('pageerror', (error) => errors.push(error.message)); page.on('console', (message) => { if (['error', 'warning'].includes(message.type()) && !/willReadFrequently/u.test(message.text())) errors.push(message.text()); });
   await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0, autoDemo: 0 } })));
-  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/?aspect=4:3&lang=ko');
+  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/debug.html?aspect=4:3&lang=ko');
   await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 60000 }); await page.locator('canvas').click();
   await page.waitForFunction(() => window.netstorm?.state === 'mainMenu', null, { timeout: 60000 });
   await clickLabel(page, '캠페인'); await clickLabel(page, '자유를 위한 투쟁');

@@ -29,7 +29,7 @@ test('Send X 숫자 창: 숫자만 받고 OK/Enter 로 송금하며 Cancel 은 �
   test.setTimeout(300000);
   const errors = []; page.on('pageerror', (error) => errors.push(error.stack ?? error.message)); page.on('console', (message) => { if (['error', 'warning'].includes(message.type())) errors.push(message.text()); });
   await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0, autoDemo: 0, skirmishAiCount: 3, skirmishAi2Ally: 0, skirmishAi3Ally: 0, skirmishAi4Ally: 0 } })));
-  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/?aspect=4:3&lang=en');
+  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/debug.html?aspect=4:3&lang=en');
   await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 60000 }); await page.locator('canvas').click();
   await page.waitForFunction(() => window.netstorm?.state === 'mainMenu', null, { timeout: 60000 });
   await clickLabel(page, 'Campaign'); await clickLabel(page, 'Skirmish'); await clickLabel(page, 'Start');
@@ -85,7 +85,7 @@ test('Send X 숫자 창: 한국어 모드의 두 단추 라벨이 확인·취소
   test.setTimeout(300000);
   const errors = []; page.on('pageerror', (error) => errors.push(error.stack ?? error.message)); page.on('console', (message) => { if (['error', 'warning'].includes(message.type())) errors.push(message.text()); });
   await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0, autoDemo: 0, language: 2, skirmishAiCount: 3, skirmishAi2Ally: 0, skirmishAi3Ally: 0, skirmishAi4Ally: 0 } })));
-  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/?aspect=4:3&lang=ko&mute');
+  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/debug.html?aspect=4:3&lang=ko&mute');
   await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 60000 }); await page.locator('canvas').click();
   await page.waitForFunction(() => window.netstorm?.state === 'mainMenu', null, { timeout: 60000 });
   await clickLabel(page, '캠페인');

@@ -37,7 +37,7 @@ test('하위 경로에서 시작하고 새로고침 뒤 사용자 설정을 읽�
   await page.reload();
   await page.waitForFunction(() => window.netstorm?.state === 'clickToStart');
   expect(await page.evaluate(() => window.netstorm._settings.get('soundVolume'))).toBe(3);
-  expect(files.has(`${mount}netstorm.js`)).toBe(true);
+  expect(files.has(`${mount}dist/netstorm.bundle.js`)).toBe(true); // 모든 스크립트는 webpack 번들 하나로 불린다. (2026-11-24 WB04-E1293)
   expect(files.has(`${mount}data/manifest.json`)).toBe(true);
   expect(escapedRequests).toEqual([]);
   expect(errors).toEqual([]);

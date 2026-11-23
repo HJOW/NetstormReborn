@@ -31,11 +31,11 @@ const DOCUMENT_URL = 'https://netstorm.example/game/';
 // www 아래(데이터 폴더 제외)의 .js 파일 상대 경로 목록을 모은다. (2026-11-05 WB02-E)
 function sourceFiles(directory = WWW_ROOT) {
     const files = [];
-    // 하위 폴더를 차례로 훑는다. data 폴더(원본 자산 복사본)는 소스가 아니다.
+    // 하위 폴더를 차례로 훑는다. data 폴더(원본 자산 복사본)와 dist 폴더(번들 산출물)는 소스가 아니다.
     for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
         const full = path.join(directory, entry.name);
         if (entry.isDirectory()) {
-            if (path.relative(WWW_ROOT, full) !== 'data') files.push(...sourceFiles(full));
+            if (!['data', 'dist'].includes(path.relative(WWW_ROOT, full))) files.push(...sourceFiles(full)); // dist 는 webpack 이 만든 번들(산출물)이라 원본 소스만 감사한다. (2026-11-24 WB04-E1293)
         } else if (entry.name.endsWith('.js')) {
             files.push(path.relative(WWW_ROOT, full).split(path.sep).join('/'));
         }

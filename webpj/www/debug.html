@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8"/>
+        <meta name="viewport" content="width=device-width, initial-scale=1"/>
+        <link rel="icon" href="favicon.ico">
+        <title>NetStorm</title>
+        <!-- 디버그용 진입 페이지이다: webpack 번들을 쓰지 않고 이전 방식대로 ES 모듈(netstorm.js)을 직접 불러와 게임을 구동한다. index.html 은 번들 하나를 불러오는 배포용이다. 소스를 고친 즉시 번들 없이 확인하거나 읽기 쉬운 스택으로 디버깅할 때, 그리고 시험이 import() 로 같은 모듈 인스턴스를 함께 쓰는 e2e 가 연다. 번들 도입(E1293) 전의 index.html 과 같다. -->
+        <script type="module">
+        // ES 모듈의 클래스는 일반 스크립트의 전역 이름이 아니므로 import 로 가져온다.
+        import { Netstorm } from './netstorm.js';
+        document.addEventListener('DOMContentLoaded', function() {
+            const netstorm = new Netstorm();
+            netstorm.init( document.getElementById('netstorm_root') );
+            window.netstorm = netstorm; // 개발자 콘솔에서 setAspect() 등을 시험하기 위한 임시 노출
+        });
+        </script>
+    </head>
+    <body>
+        <div id="netstorm_root"></div>
+    </body>
+</html>

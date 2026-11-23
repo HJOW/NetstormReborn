@@ -3,7 +3,7 @@ const { test, expect } = require('@playwright/test');
 
 test('게임 시계는 앱 프레임과 같은 수명으로 생성되고 재시작된다', async ({ page }) => {
   const errors = []; page.on('pageerror', (error) => errors.push(String(error)));
-  await page.goto('/');
+  await page.goto('/debug.html');
   await page.waitForFunction(() => window.netstorm?.state === 'clickToStart' && window.netstorm?._gameClock?.time().number >= 2);
   const initial = await page.evaluate(() => {
     const app = window.netstorm; window.previousGameClock = app._gameClock; window.previousLocal = app._clientLocal; window.previousRandom = app._clientRandom; window.previousSp = app._clientSp; window.previousPlayers = app._clientPlayers; window.previousTemplates = app._clientTemplates; window.previousCamera = app._clientGameplay.camera(); window.previousPaletteScreen = app._clientPaletteScreen; window.previousColorSort = app._clientColorSort; window.previousGump = app._clientGump;

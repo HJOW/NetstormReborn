@@ -142,5 +142,7 @@ desktop.ini
 
 # webpj Playwright / Node 산출물
 webpj/node_modules/
+# webpj webpack 번들 산출물(npm run build 가 만든다)
+webpj/www/dist/
 webpj/test-results/
 webpj/playwright-report/

@@ -2,7 +2,7 @@
 const { test, expect } = require('@playwright/test');
 
 test('웹 소리 장치는 실제 Web Audio 출력에 음량과 좌우 감쇠를 적용한다', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('/debug.html');
   const result = await page.evaluate(async () => {
     const { AudioSystem } = await import('/audio/audio-system.js');
     const { SoundList } = await import('/audio/sound-list.js');
@@ -26,7 +26,7 @@ test('웹 소리 장치는 실제 Web Audio 출력에 음량과 좌우 감쇠를
 // 출하된 효과음 전체가 Chromium에서 실제로 해독되며 음악은 내려받지 않는다.
 test('미션 효과음은 제한된 요청으로 모두 해독된다', async ({ page }) => {
   test.setTimeout(120000);
-  await page.goto('/');
+  await page.goto('/debug.html');
   const result = await page.evaluate(async () => {
     const { AssetLoader } = await import('/assets/asset-loader.js');
     const { AudioSystem } = await import('/audio/audio-system.js');

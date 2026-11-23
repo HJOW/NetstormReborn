@@ -14,7 +14,7 @@ async function clickLabel(page, label) {
 test('캠페인 목록에서 첫 Tutorial의 월드와 안내를 표시한다', async ({ page }) => {
   const errors = []; page.on('pageerror', (error) => errors.push(error.message));
   await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } })));
-  await page.setViewportSize({ width: 1280, height: 720 }); await page.goto('/');
+  await page.setViewportSize({ width: 1280, height: 720 }); await page.goto('/debug.html');
   await page.waitForFunction(() => window.netstorm?.state === 'clickToStart'); await page.locator('canvas').click();
   await page.waitForFunction(() => window.netstorm?.state === 'mainMenu');
   await clickLabel(page, 'Campaign'); await clickLabel(page, 'Early Missions');
@@ -176,7 +176,7 @@ test('캠페인 목록에서 두 번째 Tutorial의 월드와 안내를 표시�
     localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } }));
     localStorage.setItem('netstorm.progress', JSON.stringify({ version: 1, values: { DoneTutorial1: '1' } }));
   });
-  await page.setViewportSize({ width: 1280, height: 720 }); await page.goto('/');
+  await page.setViewportSize({ width: 1280, height: 720 }); await page.goto('/debug.html');
   await page.waitForFunction(() => window.netstorm?.state === 'clickToStart'); await page.locator('canvas').click();
   await page.waitForFunction(() => window.netstorm?.state === 'mainMenu');
   await clickLabel(page, 'Campaign'); await clickLabel(page, 'Early Missions');
@@ -206,7 +206,7 @@ for (let number = 3; number <= 6; number += 1) {
       localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } }));
       localStorage.setItem('netstorm.progress', JSON.stringify({ version: 1, values: { [`DoneTutorial${previous}`]: '1' } }));
     }, number - 1);
-    await page.setViewportSize({ width: 1280, height: 720 }); await page.goto('/');
+    await page.setViewportSize({ width: 1280, height: 720 }); await page.goto('/debug.html');
     await page.waitForFunction(() => window.netstorm?.state === 'clickToStart'); await page.locator('canvas').click();
     await page.waitForFunction(() => window.netstorm?.state === 'mainMenu');
     await clickLabel(page, 'Campaign'); await clickLabel(page, 'Early Missions');
@@ -232,7 +232,7 @@ for (let number = 3; number <= 6; number += 1) {
 test('캠페인 목록에서 TheWarBegins 월드와 안내를 표시한다', async ({ page }) => {
   const errors = []; page.on('pageerror', (error) => errors.push(error.message));
   await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } })));
-  await page.setViewportSize({ width: 1280, height: 720 }); await page.goto('/');
+  await page.setViewportSize({ width: 1280, height: 720 }); await page.goto('/debug.html');
   await page.waitForFunction(() => window.netstorm?.state === 'clickToStart'); await page.locator('canvas').click();
   await page.waitForFunction(() => window.netstorm?.state === 'mainMenu');
   await clickLabel(page, 'Campaign'); await clickLabel(page, 'Struggle For Freedom');
@@ -260,7 +260,7 @@ test('캠페인 목록에서 MasterOfWhirligigs 월드와 안내를 표시한다
     localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } }));
     localStorage.setItem('netstorm.progress', JSON.stringify({ version: 1, values: { DoneTheWarBegins: '1' } }));
   });
-  await page.setViewportSize({ width: 1280, height: 720 }); await page.goto('/');
+  await page.setViewportSize({ width: 1280, height: 720 }); await page.goto('/debug.html');
   await page.waitForFunction(() => window.netstorm?.state === 'clickToStart'); await page.locator('canvas').click();
   await page.waitForFunction(() => window.netstorm?.state === 'mainMenu');
   await clickLabel(page, 'Campaign'); await clickLabel(page, 'Struggle For Freedom');
@@ -289,7 +289,7 @@ for (const [mission, previous] of [['SaveTheIsland', 'MasterOfWhirligigs'], ['Fr
       localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } }));
       localStorage.setItem('netstorm.progress', JSON.stringify({ version: 1, values: { [`Done${finished}`]: '1' } }));
     }, previous);
-    await page.setViewportSize({ width: 1280, height: 720 }); await page.goto('/');
+    await page.setViewportSize({ width: 1280, height: 720 }); await page.goto('/debug.html');
     await page.waitForFunction(() => window.netstorm?.state === 'clickToStart'); await page.locator('canvas').click();
     await page.waitForFunction(() => window.netstorm?.state === 'mainMenu');
     // 실제 Tell 동작은 그대로 실행하면서 공격 경고 도달 여부만 관찰한다.
@@ -325,7 +325,7 @@ for (const [mission, previous] of [['TheNoose', 'DissolvedAlliance'], ['RainVsRa
       localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } }));
       localStorage.setItem('netstorm.progress', JSON.stringify({ version: 1, values: { [`Done${finished}`]: '1' } }));
     }, previous);
-    await page.setViewportSize({ width: 1280, height: 720 }); await page.goto('/');
+    await page.setViewportSize({ width: 1280, height: 720 }); await page.goto('/debug.html');
     await page.waitForFunction(() => window.netstorm?.state === 'clickToStart'); await page.locator('canvas').click();
     await page.waitForFunction(() => window.netstorm?.state === 'mainMenu');
     await clickLabel(page, 'Campaign'); await clickLabel(page, 'A Nation Rises');
@@ -355,7 +355,7 @@ for (const [mission, previous] of [['BreakingThrough', 'Surrounded'], ['ToTheRes
       localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0 } }));
       localStorage.setItem('netstorm.progress', JSON.stringify({ version: 1, values: { [`Done${finished}`]: '1' } }));
     }, previous);
-    await page.setViewportSize({ width: 1280, height: 720 }); await page.goto('/');
+    await page.setViewportSize({ width: 1280, height: 720 }); await page.goto('/debug.html');
     await page.waitForFunction(() => window.netstorm?.state === 'clickToStart'); await page.locator('canvas').click();
     await page.waitForFunction(() => window.netstorm?.state === 'mainMenu');
     await clickLabel(page, 'Campaign'); await clickLabel(page, 'Complete Victory');

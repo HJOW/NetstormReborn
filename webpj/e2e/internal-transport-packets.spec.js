@@ -16,7 +16,7 @@ test('단독 미션: Client 기본 등록 18종의 패킷은 내부 전송으로
   test.setTimeout(300000);
   const errors = []; page.on('pageerror', (error) => errors.push(error.stack ?? error.message)); page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
   await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0, autoDemo: 0 } })));
-  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/?aspect=4:3');
+  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/debug.html?aspect=4:3');
   await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 60000 }); await page.locator('canvas').click();
   await page.waitForFunction(() => window.netstorm?.state === 'mainMenu');
   // 분배기의 dispatch 를 감싸 도착한 패킷 종류(헤더 둘째 바이트)를 센다. 미션 시작 전에 감싸 로그인 때 도착한 패킷도 센다.
