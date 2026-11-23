@@ -146,6 +146,18 @@ export class TellWindow {
         }
     }
 
+    // 줄 나눔이 허용하는 본문의 최소 폭(가장 긴 낱말 폭 + 1)을 잰다: 폭을 1 로 줄여 줄을 나눠 가장 넓은 줄을 읽고 폭·줄 나눔을 되돌린다. 본문이 비면 0 이다.
+    // 원본 폭 맞춤은 낱말 하나가 후보 폭보다 넓은 경우를 가정하지 않아(영어 대화상자는 해당 없음) 한국어의 긴 어절(예: `플레이하시겠습니까?`)이 본문 폭 밖으로 잘렸다. (2026-11-23 WB04-E1260)
+    _minimumBodyWidth(body) {
+        const saved = body.baseWidth;
+        body.setWidth(1);
+        body._relayout();
+        const widest = body.maximumWidth();
+        body.setWidth(saved);
+        body._relayout();
+        return widest > 0 ? f32(widest + 1) : 0;
+    }
+
     // 본문·목록·버튼 크기를 정하고 패널 크기와 자식 위치(부모 기준)를 정한다(원본 Fit, 004c7d40).
     // 1) 버튼을 글자에 맞추고 가장 넓은 폭을 모두에게 쓴다. 2) 버튼 열 전체 폭(span)과 요청 폭 - 40 중 큰 값을 본문 폭 후보로 삼는다.
     // 3) 본문 자연 폭이 후보보다 넓으면 후보 폭에서 시작해 20씩 넓혀 가며 줄 나눔을 다시 해, 폭 ≥ 높이×2 이거나 높이가 더 줄지 않을 때까지 맞춘다.
@@ -172,6 +184,8 @@ export class TellWindow {
         const requested = (this.requested.width | 0) - PADDING_WIDTH;
         let target = span > requested ? span : f32(requested);
         body.fitContent(0, 0);
+        // 웹 적응: 낱말이 긴 언어(한국어)에서 아래 폭 맞춤이 본문 폭을 가장 긴 낱말보다 좁게 잡아 낱말이 잘리지 않도록 줄 나눔이 허용하는 최소 폭을 먼저 잰다(영어는 낱말이 후보 폭보다 좁아 영향이 없다). (2026-11-23 WB04-E1260)
+        const minimum = this._minimumBodyWidth(body);
         if (!(body.baseWidth <= target)) {
             let previousHeight = 0;
             let previousWidth = 0;
@@ -204,6 +218,12 @@ export class TellWindow {
                 }
                 target = f32(target + WIDEN_STEP);
                 if (!(body.baseWidth * 2 < body.baseHeight * 4)) break;
+            }
+            // 웹 적응: 맞춘 본문 폭이 가장 긴 낱말보다 좁으면 낱말이 잘리므로 그 폭으로 넓히고 줄 나눔을 다시 한다. 영어 대화상자는 위 반복이 이미 낱말보다 넓은 폭에서 끝나 영향이 없다. (2026-11-23 WB04-E1260)
+            if (body.baseWidth < minimum) {
+                body.setWidth(minimum);
+                body.fitHeight();
+                if (target < minimum) target = f32(minimum);
             }
             // 화면에 다 들어가지 않으면 화면에 맞추고 스크롤바를 쓴다.
             if (this.screen.width < target + PADDING_WIDTH || this.screen.height < body.baseHeight + PADDING_HEIGHT) {
