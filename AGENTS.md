@@ -183,6 +183,11 @@
   cpppj 및 공통 사항 - LEFT_JOBS.md 에 작성한다.
   dotnetpj - LEFT_JOBS.dotnetpj.md 에 작성한다.
   webpj - LEFT_JOBS.webpj.md 에 작성한다.
+* 사용자가 LEFT_JOBS.md , LEFT_JOBS.dotnetpj.md, LEFT_JOBS.webpj.md 문서 정리를 요청한 경우, 다음 사항은 반드시 진행해야 한다.
+  1. 이미 만료된 내용은 old 문서 ( 예: LEFT_JOBS.dotnetpj.md 의 old 문서는 LEFT_JOBS.dotnetpj.old.md ) 로 옮긴다.
+     자세히 쓸 필요가 없어진 내용도 old 문서로 상세 내용을 옮긴 뒤 원 문서에는 요약만 남긴다.
+  2. 이미 완료되었으나 문서 상에서 아직 완료로 표시 안된 사항이 있는지 점검해 필요 시 수정한다.
+  3. 해당 작업 단위가 너무 큰 경우 세부 단위로 분할한다.
 * cpppj 및 dotnetpj 모두 각각, 배포판 압축파일 생성용 스크립트 (bat 혹은 ps1으로 작성) 를 만들어야 한다.
   이 스크립트 실행 시 매개변수 입력이 안된 경우, 사용자에게 배포판 압축파일 저장 위치 (파일명 포함) 를 입력 받는다. (매개변수 입력된 경우, 매개변수 값을 배포판 압축파일 저장 위치로 사용한다.)
   빈 값 입력 시 취소로 간주하여 종료한다.
