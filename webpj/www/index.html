@@ -5,10 +5,34 @@
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
         <link rel="icon" href="favicon.ico">
         <title>NetStorm</title>
-        <!-- 모든 스크립트는 webpack 이 묶은 번들 하나이다(진입 모듈 bootstrap.js, 빌드: npm run build). defer 라서 문서 파싱 뒤 DOMContentLoaded 앞에서 실행된다. -->
-        <script src="dist/netstorm.bundle.js" defer></script>
     </head>
     <body>
         <div id="netstorm_root"></div>
+        <!-- 모든 스크립트는 webpack 이 묶은 번들 하나(dist/netstorm.bundle.js, 진입 모듈 bootstrap.js, 빌드: npm run build)이다.
+             처음 방문(캐시 없음)에서 3MB 넘는 번들이 한 번 끊겨도 빈 화면으로 멈추지 않도록 아래 작은 로더가 번들을 불러오고 실패하면 세 번까지 다시 시도하며, 받는 동안 안내 문구를 보인다.
+             안내 요소(#netstorm_boot)는 번들이 실행되면 bootstrap.js 가 지운다. (2026-11-24 WB04-E1300) -->
+        <script>
+        (function () {
+            var delays = [500, 1500, 3500], tries = 0;
+            var languages = navigator.languages && navigator.languages.length ? navigator.languages : [navigator.language];
+            var korean = /^ko/i.test(String(languages[0] || ''));
+            var note = document.createElement('div');
+            note.id = 'netstorm_boot';
+            note.textContent = korean ? '불러오는 중...' : 'Loading...';
+            note.style.cssText = 'position:fixed;left:0;top:0;right:0;bottom:0;display:flex;align-items:center;justify-content:center;background:#000;color:#9fb4c8;font:24px sans-serif';
+            document.body.appendChild(note);
+            function load() {
+                var script = document.createElement('script');
+                script.src = 'dist/netstorm.bundle.js';
+                script.onerror = function () {
+                    script.parentNode && script.parentNode.removeChild(script);
+                    if (tries < delays.length) { setTimeout(load, delays[tries]); tries += 1; }
+                    else note.textContent = korean ? '게임 스크립트를 불러오지 못했습니다. 페이지를 새로고침하세요.' : 'Failed to load the game script. Please reload the page.';
+                };
+                document.body.appendChild(script);
+            }
+            load();
+        })();
+        </script>
     </body>
 </html>

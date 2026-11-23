@@ -272,6 +272,9 @@ export const AppState = Object.freeze({
     DESTROYED: 'destroyed',
 });
 
+// '클릭하여 시작'을 열기 전에 나머지 시작 자원(메뉴 음악·글꼴)을 기다리는 최대 시간(밀리초)이다. 이 시간이 지나면 자원이 아직 오는 중이어도 시작을 허용한다(음악은 계속 받는다). (2026-11-24 WB04-E1300)
+export const START_READY_TIMEOUT_MS = 20000;
+
 // 웹 전용 화면(로딩·오류·클릭하여 시작)의 언어별 문구이다. 원본 메인 메뉴의 버튼 라벨은 원본 글꼴로 그리므로 여기에 없다.
 // 모르는 언어는 영어로 대체한다. (2026-10-23 WB01, 2026-10-23 WB03-M1: 임시 메뉴 문구 제거)
 const TEXTS = Object.freeze({
@@ -461,6 +464,13 @@ export function clientToLogical(clientX, clientY, rect, logicalWidth, logicalHei
 
 // 문자열 언어 이름을 지원하는 언어 키로 바꾼다. 한국어면 'korean', 그 밖에는 'english' 다.
 // 'ko', 'ko-KR', 'korean' 을 한국어로 본다. (2026-10-23 WB01)
+// 브라우저가 알려 주는 선호 언어를 읽는다: `navigator.languages` 의 첫 항목을 우선하고(없으면 `language`, 옛 `userLanguage`) 비어 있으면 undefined 이다.
+// 처음 방문처럼 저장된 선택이 없을 때 쓰는 자동 탐지 값이다. 한국어 선호(`ko`, `ko-KR`)면 한국어, 그 밖에는 영어이다. (2026-11-24 WB04-E1300)
+export function detectBrowserLanguage(navigatorLike = globalThis.navigator) {
+    const first = Array.isArray(navigatorLike?.languages) || (navigatorLike?.languages && typeof navigatorLike.languages.length === 'number') ? navigatorLike.languages[0] : undefined;
+    return first || navigatorLike?.language || navigatorLike?.userLanguage || undefined;
+}
+
 export function normalizeLanguage(value) {
     const text = String(value ?? '').toLowerCase();
     return text === 'korean' || text.startsWith('ko') ? 'korean' : 'english';
@@ -561,13 +571,15 @@ export class Netstorm {
         const requestedAspect = options.aspect ?? params.get('aspect') ?? AUTO_ASPECT;
         // 확정된 옵션 모음이다.
         this.options = {
-            language: normalizeLanguage(options.language ?? params.get('lang') ?? savedLanguage(globalThis.localStorage) ?? globalThis.navigator?.language),
+            language: normalizeLanguage(options.language ?? params.get('lang') ?? savedLanguage(globalThis.localStorage) ?? detectBrowserLanguage()),
             debug: options.debug ?? params.has('debug'),
             previewMap: options.previewMap ?? (params.has('map') ? params.get('map') || 'savetheisland' : null),
             fillWindow: options.fillWindow ?? true,
             autoFocus: options.autoFocus ?? true,
             maxCanvasPixels: Math.max(1, Math.floor(options.maxCanvasPixels ?? DEFAULT_MAX_CANVAS_PIXELS) || DEFAULT_MAX_CANVAS_PIXELS),
             assetBase: options.assetBase ?? DEFAULT_ASSET_BASE,
+            // 자산 일시적 실패 재시도 간격(밀리초) 목록이다. 기본(null)은 AssetLoader 의 기본값이며 빈 배열이면 재시도하지 않는다. 검사가 실패를 바로 확인하려고 줄인다. (2026-11-24 WB04-E1300)
+            assetRetryDelays: options.assetRetryDelays ?? null,
             fetch: options.fetch ?? null,
             scaling: normalizeScaling(options.scaling ?? params.get('scaling')),
             audio: options.audio ?? !params.has('mute'),
@@ -2447,7 +2459,25 @@ export class Netstorm {
             return;
         }
         if (generation !== this._loadGeneration) return;
+        // 처음 방문(캐시 없음)에서 아직 받는 중인 자원(메뉴 음악·글꼴 적용)이 끝나기 전에 클릭하면 안 되므로 끝나거나 제한 시간이 지날 때까지 로딩 화면(100%)에 머문다. (2026-11-24 WB04-E1300)
+        await this._awaitStartReadiness();
+        if (generation !== this._loadGeneration) return;
         this._setState(AppState.CLICK_TO_START);
+    }
+
+    // '클릭하여 시작'을 열기 전에 시작 때 필요한 나머지 자원이 준비되기를 기다린다: 문서 글꼴 적재(`document.fonts.ready`)와 뒤에서 받는 메뉴 음악 묶음(성공이든 실패든 끝날 때까지).
+    // 어느 쪽이 영영 끝나지 않아도 START_READY_TIMEOUT_MS 가 지나면 넘어간다(음악은 계속 받는다). 오류를 던지지 않는다. 기다릴 것이 없으면 바로 돌아온다.
+    // 이전에는 메뉴·언어 묶음만 받으면 곧바로 클릭을 받아, 처음 방문에서 아직 받는 음악·글꼴과 엇갈리는 경합이 있었다. (2026-11-24 WB04-E1300, 사용자 요구)
+    async _awaitStartReadiness() {
+        const view = this._view(), pending = [];
+        const fontsReady = this._root?.ownerDocument?.fonts?.ready;
+        if (fontsReady && typeof fontsReady.then === 'function') pending.push(Promise.resolve(fontsReady).catch(() => {}));
+        if (this._musicSettled && this._musicStatus === 'loading') pending.push(this._musicSettled);
+        if (pending.length === 0) return;
+        let timer = null;
+        const timeout = new Promise((resolve) => { timer = view.setTimeout(resolve, START_READY_TIMEOUT_MS); });
+        await Promise.race([Promise.all(pending), timeout]);
+        view.clearTimeout(timer);
     }
 
     // 매니페스트에서 묶음에 속한 파일의 전체 크기(바이트)를 구한다. 묶음이 없으면 0 이다. (2026-10-31 WB03-N)
@@ -2480,7 +2510,7 @@ export class Netstorm {
         const view = this._view();
         const fetchFunction = this.options.fetch ?? (typeof view.fetch === 'function' ? view.fetch.bind(view) : null);
         if (!fetchFunction) throw new Error('이 브라우저에서는 fetch 를 쓸 수 없습니다.');
-        return new AssetLoader({ baseUrl: new URL(this.options.assetBase, doc.baseURI), fetchFunction });
+        return new AssetLoader({ baseUrl: new URL(this.options.assetBase, doc.baseURI), fetchFunction, ...(this.options.assetRetryDelays ? { retryDelays: this.options.assetRetryDelays } : {}) });
     }
 
     // 메뉴 음악 묶음을 뒤에서 받는다. 다 받으면 오디오가 준비된 경우 해독해 메인 메뉴에서 재생한다.
@@ -2488,7 +2518,8 @@ export class Netstorm {
     _startMusicDownload(loader) {
         if (this._musicBytes || this._musicStatus === 'loading' || !this.options.audio) return;
         this._musicStatus = 'loading';
-        loader
+        // 클릭하여 시작 관문이 기다릴 수 있도록 내려받기 약속(성공·실패 모두 끝나면 이행)을 보관한다. (2026-11-24 WB04-E1300)
+        this._musicSettled = loader
             .loadBundle(MENU_MUSIC_BUNDLE)
             .then((files) => {
                 this._musicBytes = files.get(MENU_ASSET_PATHS.music) ?? null;

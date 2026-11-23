@@ -4,9 +4,13 @@
 // (2026-11-24 WB04-E1293: webpack 도입으로 index.html 의 인라인 모듈 스크립트를 이 모듈로 옮겼다)
 import { Netstorm } from './netstorm.js';
 
-// 문서가 준비되면 앱을 만들어 시작한다(번들 스크립트는 defer 로 불려 DOMContentLoaded 앞에서 실행된다).
-document.addEventListener('DOMContentLoaded', function () {
+// 앱을 만들어 시작한다. index.html 의 로더가 번들을 동적으로 불러오므로(재시도 때문에) 실행 시점에 DOMContentLoaded 가 이미 지났을 수 있다 — 그때는 바로 시작한다.
+// debug.html 은 모듈 스크립트라 문서 파싱 뒤 실행되며 같은 코드로 시작한다. 번들 로딩 안내(#netstorm_boot)가 있으면 지운다. (2026-11-24 WB04-E1300)
+function start() {
+    document.getElementById('netstorm_boot')?.remove();
     const netstorm = new Netstorm();
     netstorm.init(document.getElementById('netstorm_root'));
     window.netstorm = netstorm; // 개발자 콘솔에서 setAspect() 등을 시험하기 위한 임시 노출이며 e2e 시험도 이 전역을 쓴다.
-});
+}
+if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', start);
+else start();

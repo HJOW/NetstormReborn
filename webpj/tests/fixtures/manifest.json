@@ -1959,11 +1959,11 @@
       "producer": "사람이 작성한 단계표와 원인 기록(expected). 수집 입력(언어·화면·설정·단계표)의 해시는 oracle.json 의 collectionInputsSha256 과 같아야 한다",
       "scope": "시나리오 8개의 단계표, 구름 배경 분류 기준(main-menu), 원인을 기록한 차이(구름 Kencloud·Options 항목 구성·스크롤 화살표 색·Demo Tell 이름)",
       "text": true,
-      "sha256": "4f5fe359e092afe07f46b3c5c8e9bdb30814700bcf51b796096affb04c616b39",
-      "bytes": 5596,
+      "sha256": "2dfac173df53c7a3d89e9587624d4122948a7f6829fbd01e123ba6ca46bd11d4",
+      "bytes": 6099,
       "lines": 71,
-      "fixtureCommit": "5bf64ed5e",
-      "webCommit": "1fb27a5e4",
+      "fixtureCommit": "98663aa77",
+      "webCommit": "worktree",
       "cpppjBasis": {}
     },
     {
@@ -2025,11 +2025,11 @@
       "producer": "cpppj 225553df Release 오라클 후보의 8장면 수집과 기록된 화면 차이",
       "scope": "영어 4:3 메인 메뉴 8장면의 후보 오라클. 기준선 전환은 후속 4-R 작업이다.",
       "text": true,
-      "sha256": "4ecd16f5566c7d68e369dc3df7f5c718b6b385439fdb7a5ccc35e158b9c63ca8",
-      "bytes": 6926,
+      "sha256": "4cc49af22ec40e772ec0979548eae03530a75efa024de9e3b4bd344dd31108d2",
+      "bytes": 7429,
       "lines": 308,
-      "fixtureCommit": "9a3c8ce4e",
-      "webCommit": "1fb27a5e4",
+      "fixtureCommit": "98663aa77",
+      "webCommit": "worktree",
       "cpppjBasis": {}
     },
     {
