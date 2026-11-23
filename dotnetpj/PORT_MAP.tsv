@@ -1777,3 +1777,7 @@ cpppj/src/o/RawIceRicochet.cpp	Netstorm.Core/Original/RawIceRicochet.cs	eabb4c25
 cpppj/src/o/RawIceRicochet.h	Netstorm.Core/Original/RawIceRicochet.cs	eabb4c250857d9fba297d84705832aba86109ba0	port
 cpppj/src/o/RawGunHit.cpp	Netstorm.Core/Original/RawGunHit.cs	079a0f9ea31441120529cc80edd1f7763db1c6ec	port
 cpppj/src/o/RawGunHit.h	Netstorm.Core/Original/RawGunHit.cs	079a0f9ea31441120529cc80edd1f7763db1c6ec	port
+cpppj/src/o/RawDiscRegular.cpp	Netstorm.Core/Original/RawDiscRegular.cs	8610c9c0f6fd62e32b0e518e0336e7dd434ab285	port
+cpppj/src/o/RawDiscRegular.h	Netstorm.Core/Original/RawDiscRegular.cs	8610c9c0f6fd62e32b0e518e0336e7dd434ab285	port
+cpppj/src/o/RawArcherTypeData.cpp	Netstorm.Core/Original/RawArcherTypeData.cs	8610c9c0f6fd62e32b0e518e0336e7dd434ab285	port
+cpppj/src/o/RawArcherTypeData.h	Netstorm.Core/Original/RawArcherTypeData.cs	8610c9c0f6fd62e32b0e518e0336e7dd434ab285	port
