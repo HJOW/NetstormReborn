@@ -48,3 +48,30 @@ function checkCaptureFixture(name, columns, cases, totalPixels) {
 test('temple-capture 원본 181행: 신전 파편 캡처의 크기·기준점·전체 픽셀이 같다', () => { checkCaptureFixture('temple-capture-x86.tsv', 10, 181, 2684495); });
 test('generator-capture 원본 180행: 제네레이터 세 TYPE 파편 캡처의 크기·기준점·전체 픽셀이 같다', () => { checkCaptureFixture('generator-capture-x86.tsv', 9, 180, 1844370); });
 test('blocker-capture 원본 120행: 스톤/아이스 타워 파편 캡처의 크기·기준점·전체 픽셀이 같다', () => { checkCaptureFixture('blocker-capture-x86.tsv', 9, 120, 1317660); });
+
+// 열 배치가 다른 두 fixture 를 같은 방식으로 대조한다. layout: type(TYPE 번호를 정하는 함수), frame·extra·owner(입력 열 번호), meta·pixels·size(관측 열 번호), flag(효과 생성 열 번호).
+// 두 fixture 모두 단어(+12)는 0 이다. 입력 열만 객체에 쓰고 관측 열은 비교에만 쓴다.
+function checkLayoutFixture(name, layout, cases, totalPixels) {
+    const lines = fs.readFileSync(new URL(`../../cpppj/tests/fixtures/${name}`, import.meta.url), 'utf8').split(/\r?\n/).filter((line) => line.length > 0 && !line.startsWith('#'));
+    assert.equal(lines.length, cases);
+    const o = scene(); const failures = []; let pixels = 0;
+    try {
+        for (const [index, line] of lines.entries()) {
+            const row = line.split('\t'); assert.equal(row.length, layout.columns, `행 ${index}`); assert.equal(row[layout.flag], '1');
+            const type = layout.type(row, o.core.types); assert.ok(type >= 70, `TYPE 행 ${index}`);
+            const sid = o.world.create(type, 2); const raw = o.core.pool.allocated(sid);
+            put(raw, 12, 0, 2); put(raw, 36, Number(row[layout.frame])); raw[40] = Number(row[layout.extra]); raw[34] = Number(row[layout.owner]);
+            const record = o.core.types[type], savedX = record.hotspotX, savedY = record.hotspotY; record.hotspotX = -2; record.hotspotY = 3;
+            let image; try { image = o.particleModules.shrapnel.lifetime.capture(sid); } catch (error) { failures.push(`${index}/TYPE${type}: ${error.message}`); record.hotspotX = savedX; record.hotspotY = savedY; continue; }
+            record.hotspotX = savedX; record.hotspotY = savedY;
+            const metadata = `${image.width},${image.height},${image.hotspotX},${image.hotspotY}`;
+            const same = metadata === row[layout.meta] && Buffer.from(image.pixels).toString('hex') === row[layout.pixels] && image.pixels.length === Number(row[layout.size]);
+            if (!same) failures.push(`${index}/TYPE${type} frame${row[layout.frame]} extra${row[layout.extra]} owner${row[layout.owner]}: 웹 ${metadata} 원본 ${row[layout.meta]}`); else pixels += image.pixels.length;
+        }
+    } finally { o.dispose(); }
+    assert.deepEqual(failures.slice(0, 12), []);
+    if (totalPixels !== null) assert.equal(pixels, totalPixels);
+}
+
+test('wind-aviary-capture 원본 54행: 윈드 아비어리(TYPE 139) 파편 캡처가 같다', () => { checkLayoutFixture('wind-aviary-capture-x86.tsv', { columns: 7, type: () => 139, frame: 0, extra: 1, owner: 2, meta: 3, pixels: 4, size: 5, flag: 6 }, 54, 64152); });
+test('plain-workshop-capture 원본 2115행: 다섯 워크샾 TYPE×5상태×3소유자 파편 캡처가 같다', () => { checkLayoutFixture('plain-workshop-capture-x86.tsv', { columns: 8, type: (row) => Number(row[0]), frame: 1, extra: 2, owner: 3, meta: 4, pixels: 5, size: 6, flag: 7 }, 2115, null); });

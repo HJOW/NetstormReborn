@@ -22966,6 +22966,105 @@
       }
     },
     {
+      "id": "wind-aviary-capture",
+      "path": "cpppj/tests/fixtures/wind-aviary-capture-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E1276",
+      "producer": "cpppj CampaignWindAviaryDestroy_Native54CapturePixels: 보호 원본 10.78 윈드 아비어리(TYPE 139) 여섯 생산 프레임·owner·추가·추상 플래그 파편 캡처 54행(TYPE 기준점 (-2,3), 기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/temple-shrapnel-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/raw-shape-to-buffer.js",
+        "webpj/www/core/raw-campaign-session-particles.js",
+        "webpj/www/core/raw-campaign-session-building.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawShapeToBuffer.cpp",
+        "cpppj/src/client/RawShapeToBuffer.h"
+      ],
+      "doc": "docs/webpj-temple-shrapnel-capture-20261123.md",
+      "scope": "윈드 아비어리(TYPE 139)의 프레임·추가 비트·소유자 54입력에서 캡처 그림의 크기·기준점·전체 픽셀·픽셀 수(64,152)",
+      "text": true,
+      "sha256": "98d4e22ed594e5c0dfc6bf028056c4aafa923088e629941d08d26d2b8a8bb04c",
+      "bytes": 129836,
+      "lines": 55,
+      "fixtureCommit": "51e97f717",
+      "webCommit": "499c54ddb",
+      "cpppjBasis": {
+        "cpppj/src/client/RawShapeToBuffer.cpp": "e6c41d170",
+        "cpppj/src/client/RawShapeToBuffer.h": "e6c41d170"
+      }
+    },
+    {
+      "id": "plain-workshop-capture",
+      "path": "cpppj/tests/fixtures/plain-workshop-capture-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E1276",
+      "producer": "cpppj CampaignPlainWorkshopCapture_Native2115Pixels: 보호 원본 10.78 다섯 워크샾 TYPE(129·136·140·143·148)×141클러스터×5상태×3소유자 파편 캡처 2115행(TYPE 기준점 (-2,3), 기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/temple-shrapnel-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/raw-shape-to-buffer.js",
+        "webpj/www/core/raw-campaign-session-particles.js",
+        "webpj/www/core/raw-campaign-session-building.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawShapeToBuffer.cpp",
+        "cpppj/src/client/RawShapeToBuffer.h"
+      ],
+      "doc": "docs/webpj-temple-shrapnel-capture-20261123.md",
+      "scope": "다섯 워크샾 TYPE 의 프레임·추가 비트·소유자 2115입력에서 캡처 그림의 크기·기준점·전체 픽셀·픽셀 수",
+      "text": true,
+      "sha256": "3233bba0b94e3c3d0259b31b602566f26919edf70fa90d45c7929d746233b790",
+      "bytes": 12023032,
+      "lines": 2116,
+      "fixtureCommit": "f5a13900f",
+      "webCommit": "499c54ddb",
+      "cpppjBasis": {
+        "cpppj/src/client/RawShapeToBuffer.cpp": "e6c41d170",
+        "cpppj/src/client/RawShapeToBuffer.h": "e6c41d170"
+      }
+    },
+    {
+      "id": "altar-capture",
+      "path": "cpppj/tests/fixtures/altar-capture-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E1276",
+      "producer": "cpppj ShapeToBuffer_AltarNative1824Pixels: 보호 원본 10.78 제단(TYPE 164)의 90프레임·소유자 색·추가/추상 비트·배율 ShapeToBuffer 캡처 1824행(TYPE 기준점 (-2,3), 기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/altar-capture-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/raw-shape-to-buffer.js",
+        "webpj/www/core/raw-campaign-session-particles.js",
+        "webpj/www/core/raw-campaign-session-building.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawShapeToBuffer.cpp",
+        "cpppj/src/client/RawShapeToBuffer.h"
+      ],
+      "doc": "docs/webpj-temple-shrapnel-capture-20261123.md",
+      "scope": "제단의 프레임·소유자·색·배율·추가 비트 1824입력에서 캡처 메타데이터 16바이트·전체 픽셀과 색표/주 프레임/추가 그림 호출 횟수(약 95MB)",
+      "text": true,
+      "sha256": "c4af9b9180ee1e7eefa1b22a933d565e2bdffd00df9578f8e8a54104fdf693cf",
+      "bytes": 95421383,
+      "lines": 1825,
+      "fixtureCommit": "1d7410bc9",
+      "webCommit": "499c54ddb",
+      "cpppjBasis": {
+        "cpppj/src/client/RawShapeToBuffer.cpp": "e6c41d170",
+        "cpppj/src/client/RawShapeToBuffer.h": "e6c41d170"
+      }
+    },
+    {
       "id": "production-hint",
       "path": "cpppj/tests/fixtures/production-hint-x86.tsv",
       "kind": "original-x86",
