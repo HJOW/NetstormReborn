@@ -67,3 +67,21 @@ test('도움말 본문이 비면 번역 장치로 바꾼 안내를 쓰고 번역
     const found = renderHelpTopic({ helpText: '<a name="t1">\n본문\n', topic: 't1', substitute: (text) => text, translate: () => { throw new Error('호출되면 안 됨'); } });
     assert.equal(found.found, true);
 });
+
+test('채팅 도우미 메뉴가 번역 호출로 받는 고정 라벨이 모두 한국어 번역표에 있다', () => {
+    // `#helperMenu` 본문에서 tr/translatedItem/sub/toggle/grouped 로 번역을 거치는 리터럴을 읽는다(item() 으로 바로 넣는 Mimic·Sound 등은 원본도 번역하지 않는다).
+    const text = source('www/ui/chat-window.js'), body = text.slice(text.indexOf('#helperMenu() {'));
+    const keys = new Set();
+    // 이 라벨들에는 이스케이프된 따옴표가 없어 `[^']*` 로 충분하다.
+    for (const pattern of [/\btr\('([^']*)'\)/gu, /translatedItem\('([^']*)'/gu, /\bsub\('([^']*)'\)/gu, /toggle\('[^']*', '([^']*)'\)/gu, /grouped\([^,]+, \d+, '[^']*', '([^']*)'\)/gu, /\['(~[A-Za-z*.][^']*)', '~[^']*'\]/gu]) {
+        for (const match of body.matchAll(pattern)) keys.add(unescape(match[1]));
+    }
+    // 명령 이름(.front 등)은 번역 호출을 거치지만 영어 그대로 둔다(번역표에 넣지 않는다). 범위 라벨은 코드가 문자열을 이어 붙여 만들어 키가 될 수 없다.
+    for (const command of ['.front', '.back', '.format']) keys.delete(command);
+    assert.ok(keys.size >= 55, `고정 라벨 ${keys.size}개`);
+    for (const key of keys) assert.equal(korean.has(key), true, `번역표에 없음: ${JSON.stringify(key)}`);
+    // 서식 접두(~B·~r 등)와 끝 공백이 번역문에도 그대로 이어진다.
+    assert.equal(korean.translate('~BBold'), '~B굵게'); assert.equal(korean.translate('~rRed'), '~r빨강'); assert.equal(korean.translate('Chat Effects '), '채팅 효과 ');
+    // 용어는 기존 번역표와 맞춘다(Back/Front 는 영어 유지, Emboss 는 엠보스).
+    assert.match(korean.translate('Edit Back Format'), /^Back /u); assert.match(korean.translate('Edit Front Format'), /^Front /u); assert.match(korean.translate('~EEmboss'), /엠보스/u);
+});

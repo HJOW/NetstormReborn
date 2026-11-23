@@ -2611,3 +2611,357 @@ Send %s All~[IfortGump.3]
 ---
 %s 전부~[IfortGump.3] 보내기
 ===
+
+***
+Chat Helper:
+---
+채팅 도우미:
+===
+
+***
+Edit Back Format
+---
+Back 서식 편집
+===
+
+***
+Edit Front Format
+---
+Front 서식 편집
+===
+
+***
+Format
+---
+서식
+===
+
+***
+Allow Chat Sound
+---
+채팅 소리 허용
+===
+
+***
+Allow Background Colors
+---
+배경색 허용
+===
+
+***
+Allow Foreground Colors
+---
+글자색 허용
+===
+
+***
+Allow Embossed Offset
+---
+엠보스 오프셋 허용
+===
+
+***
+Chat Effects 
+---
+채팅 효과 
+===
+
+***
+Show General Channel
+---
+일반 채널 표시
+===
+
+***
+Show Allies Channel
+---
+동맹 채널 표시
+===
+
+***
+Show Observer Channel
+---
+관전 채널 표시
+===
+
+***
+Show Whisper Channel
+---
+귓속말 채널 표시
+===
+
+***
+Channel Controls
+---
+채널 설정
+===
+
+***
+Show Allies Chat
+---
+동맹 채팅 표시
+===
+
+***
+Show Enemies Chat
+---
+적 채팅 표시
+===
+
+***
+Show Observers Chat
+---
+관전자 채팅 표시
+===
+
+***
+Player Controls
+---
+플레이어 설정
+===
+
+***
+Open Window on Message
+---
+메시지가 오면 창 열기
+===
+
+***
+Play sound on Message
+---
+메시지가 오면 소리 재생
+===
+
+***
+Chat Controls
+---
+채팅 설정
+===
+
+***
+Text Colors
+---
+글자색
+===
+
+***
+Background Colors
+---
+배경색
+===
+
+***
+Icons
+---
+아이콘
+===
+
+***
+KeyWords
+---
+키워드
+===
+
+***
+~BBold
+---
+~B굵게
+===
+
+***
+~EEmboss
+---
+~E엠보스
+===
+
+***
+~IItalic
+---
+~I기울임
+===
+
+***
+~SStrikeout
+---
+~S취소선
+===
+
+***
+~UUnderline
+---
+~U밑줄
+===
+
+***
+~.Reset Style
+---
+~.스타일 초기화
+===
+
+***
+~NReset Color & Emboss
+---
+~N색·엠보스 초기화
+===
+
+***
+~*Reset to Default
+---
+~*기본값으로 초기화
+===
+
+***
+Styles
+---
+스타일
+===
+
+***
+~kBlack
+---
+~k검정
+===
+
+***
+~xBrown
+---
+~x갈색
+===
+
+***
+~qDark Tan
+---
+~q짙은 황갈색
+===
+
+***
+~jLight Tan
+---
+~j연한 황갈색
+===
+
+***
+~rRed
+---
+~r빨강
+===
+
+***
+~gGreen
+---
+~g초록
+===
+
+***
+~uLight Green
+---
+~u연두
+===
+
+***
+~dTeal
+---
+~d청록
+===
+
+***
+~bBlue
+---
+~b파랑
+===
+
+***
+~lLight Blue
+---
+~l하늘색
+===
+
+***
+~mMagenta
+---
+~m자홍
+===
+
+***
+~sDark Magenta
+---
+~s짙은 자홍
+===
+
+***
+~pPink
+---
+~p분홍
+===
+
+***
+~yYellow
+---
+~y노랑
+===
+
+***
+~iLight Yellow
+---
+~i연노랑
+===
+
+***
+~oOrange
+---
+~o주황
+===
+
+***
+~aLight Orange
+---
+~a연주황
+===
+
+***
+~wWhite
+---
+~w흰색
+===
+
+***
+~tSilver
+---
+~t은색
+===
+
+***
+~nReset Color
+---
+~n색 초기화
+===
+
+***
+Prefabricated Colors
+---
+미리 정한 색
+===
+
+***
+Commands
+---
+명령
+===
+
+***
+Insert
+---
+삽입
+===
+
+***
+Copy
+---
+복사
+===
+
+***
+Paste
+---
+붙여넣기
+===

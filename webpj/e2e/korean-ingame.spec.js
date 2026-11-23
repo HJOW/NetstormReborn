@@ -119,3 +119,35 @@ test('한국어 번역표: 커서 경고·생산 힌트·객체 정보·Send 줄
     '%s300~[IfortGump.3] 보내기', '%s700~[IfortGump.3] 보내기', '%s1000~[IfortGump.3] 보내기', '%s X~[IfortGump.3] 보내기', '%s 전부~[IfortGump.3] 보내기']);
   expect(errors).toEqual([]);
 });
+
+// 한국어 미션 화면에서 채팅 도우미 `>` 를 눌러 Chat Helper 메뉴를 열면, 원본 ChatWindow::HelperMenu 가 번역 호출로 받는 고정 라벨이 모두 한국어로 번역되는지 실제 번역 요청을 기록해 확인한다. (2026-11-23 WB04-E1250)
+// `Colors 0 to 21`·`BGColors …`·`Icons …` 는 원본이 문자열을 이어 붙여 번역에 넘기는 동적 범위 라벨이라 번역표 키가 될 수 없고 영어로 남는다(원본 동작).
+test('한국어 채팅 도우미 메뉴: 고정 라벨이 한국어로 번역된다', async ({ page }) => {
+  test.setTimeout(240000);
+  const errors = []; page.on('pageerror', (error) => errors.push(error.message)); page.on('console', (message) => { if (['error', 'warning'].includes(message.type()) && !/willReadFrequently/u.test(message.text())) errors.push(message.text()); });
+  await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0, autoDemo: 0 } })));
+  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/?aspect=4:3&lang=ko');
+  await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 60000 }); await page.locator('canvas').click();
+  await page.waitForFunction(() => window.netstorm?.state === 'mainMenu', null, { timeout: 60000 });
+  await clickLabel(page, '캠페인'); await clickLabel(page, '자유를 위한 투쟁');
+  const mission = await page.evaluate(() => window.netstorm._mainMenu.dialog.menu.items.find((item) => item.command?.name === 'MissionBegin' && item.command.argument === 'TheWarBegins')?.label);
+  await clickLabel(page, mission);
+  await page.waitForFunction(() => window.netstorm?._campaignDisplayActive() && window.netstorm._clientGuide.current()?.runtime.gate.started === 1, null, { timeout: 120000 });
+  await page.waitForFunction(() => Boolean(window.netstorm._mainMenu.dialog?.content), null, { timeout: 15000 });
+  await clickLabel(page, '미션 시작'); await page.waitForTimeout(2000); await page.locator('canvas').focus();
+  await page.keyboard.press('Enter'); await page.waitForTimeout(400);
+  // 번역표 클래스의 translate 에 기록 장치를 끼운다(앱의 자원 객체는 동결돼 있어 같은 모듈의 클래스를 감싼다).
+  await page.evaluate(async () => { const { XlatTable } = await import('/assets/xlat.js'); window.__tr = []; const original = XlatTable.prototype.translate; XlatTable.prototype.translate = function (key, ...rest) { const result = original.call(this, key, ...rest); window.__tr.push([key, result]); return result; }; });
+  const helper = await page.evaluate(() => { const app = window.netstorm, b = app._campaignProduction.ui.chat().report().helper.bounds, rect = app.canvas.getBoundingClientRect(); return { x: rect.left + (b.left + b.right) / 2 * rect.width / app._layout.logicalWidth, y: rect.top + (b.top + b.bottom) / 2 * rect.height / app._layout.logicalHeight }; });
+  await page.mouse.move(helper.x, helper.y); await page.mouse.down(); await page.waitForTimeout(100); await page.mouse.up(); await page.waitForTimeout(800);
+  expect(await page.evaluate(() => window.netstorm._clientGump.blockingPopups()), 'Chat Helper 메뉴').toBe(true);
+  const recorded = new Map(await page.evaluate(() => window.__tr));
+  const expected = [['Chat Helper:', '채팅 도우미:'], ['Edit Back Format', 'Back 서식 편집'], ['Edit Front Format', 'Front 서식 편집'], ['Format', '서식'], ['Allow Chat Sound', '채팅 소리 허용'], ['Chat Effects ', '채팅 효과 '],
+    ['Text Colors', '글자색'], ['Background Colors', '배경색'], ['Icons', '아이콘'], ['KeyWords', '키워드'], ['~BBold', '~B굵게'], ['~rRed', '~r빨강'], ['Styles', '스타일'], ['Prefabricated Colors', '미리 정한 색'], ['Commands', '명령'], ['Insert', '삽입'], ['Copy', '복사'], ['Paste', '붙여넣기']];
+  for (const [key, text] of expected) expect(recorded.get(key), key).toBe(text);
+  // 요청된 고정 라벨(범위 라벨 제외)에 영어로 남은 것이 없다.
+  const english = [...recorded].filter(([key, text]) => key === text && /[A-Za-z]{3,}/u.test(key) && !/^(?:Colors|BGColors|Icons) \d+ to \d+$/u.test(key) && !key.startsWith('.'));
+  expect(english, '번역되지 않은 고정 라벨').toEqual([]);
+  await page.screenshot({ path: test.info().outputPath('korean-chat-helper-menu.png') });
+  expect(errors).toEqual([]);
+});
