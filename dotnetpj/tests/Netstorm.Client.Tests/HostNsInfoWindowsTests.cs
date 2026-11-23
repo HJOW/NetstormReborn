@@ -991,4 +991,147 @@ public sealed class HostNsInfoWindowsTests
         other.Dispose();
         Assert.Throws<ObjectDisposedException>(() => other.HandleBattleInput(panelToken, 0x10, serial, 5, challenge));
     }
+
+    /// <summary>분배는 루트 토큰을 실제 참가자 메뉴로 보낸다. 0.929에서 추가됐다.</summary>
+    [Fact]
+    public void HandleDispatchRoutesRootToMenu()
+    {
+        using var scene = new Scene();
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        WriteParticipant(challenge, 9, battle: 0, flags: 1, name: "me", sid: 7);
+        scene.Globals.RosterOrder[5] = 9;
+        var menus = new List<(uint Index, ScreenPoint Point)>();
+        var based = new List<(uint Event, uint First, uint Second)>();
+        var wired = new HostNsInfoDevices
+        {
+            Read = address => address switch { 0x5427a8 => 0x10u, 0x542790 => 0x20u, 0x54278c => 0x30u, 0x5429dc => 0x40u, _ => scene.Devices.Read(address) },
+            Translate = scene.Devices.Translate, StoreText = scene.Devices.StoreText,
+            Text = scene.Devices.Text, FormatZone = scene.Devices.FormatZone, Changed = scene.Devices.Changed,
+            MousePoint = () => new ScreenPoint(11, 22),
+            ParticipantMenu = (index, point) => menus.Add((index, point)),
+            CenterOnSid = _ => { },
+            StatusSend = fill => { byte[] packet = new byte[12]; fill(packet); },
+            KickoffSound = () => { },
+            BaseInput = (@event, first, second) => { based.Add((@event, first, second)); return 7u; },
+        };
+        using var other = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, wired);
+        uint rootToken = other.Create();
+        uint result = other.HandleDispatch(rootToken, 0x20, 1, 5, challenge);
+        Assert.Equal(1u, result);
+        Assert.Equal([(9u, new ScreenPoint(11, 22))], menus);
+        Assert.Empty(based);
+        other.Dispose();
+    }
+
+    /// <summary>분배는 플레이어 토큰을 실제 준비 플래그 송신으로 보낸다. 0.929에서 추가됐다.</summary>
+    [Fact]
+    public void HandleDispatchRoutesPlayerToReady()
+    {
+        using var scene = new Scene();
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        uint owner = scene.Game.Player.BattleOwner;
+        WriteParticipant(challenge, owner, battle: 2, flags: 0, name: "me", sid: 7);
+        var packets = new List<byte[]>();
+        var based = new List<(uint Event, uint First, uint Second)>();
+        var wired = new HostNsInfoDevices
+        {
+            Read = address => address switch { 0x5427a8 => 0x10u, 0x542790 => 0x20u, 0x54278c => 0x30u, 0x5429dc => 0x40u, _ => scene.Devices.Read(address) },
+            Translate = scene.Devices.Translate, StoreText = scene.Devices.StoreText,
+            Text = scene.Devices.Text, FormatZone = scene.Devices.FormatZone, Changed = scene.Devices.Changed,
+            StatusSend = fill => { byte[] packet = new byte[12]; fill(packet); packets.Add(packet); },
+            PlayerSubscriber = () => 0x77u,
+            PlayerAuxiliary = _ => { },
+            PlayerData = (_, _, _) => { },
+            PlayerMenuBegin = () => { },
+            PlayerMenuAttach = () => { },
+            PlayerMenuTitle = _ => { },
+            PlayerMenuItem = (_, _, _) => { },
+            BaseInput = (@event, first, second) => { based.Add((@event, first, second)); return 7u; },
+        };
+        using var other = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, wired);
+        uint rootToken = other.Create();
+        var root = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(rootToken));
+        uint panelToken = root.Players[0];
+        var panel = Assert.IsType<HudPlayerInfoNode>(scene.Menu.Tree.Node(panelToken));
+        panel.Player = owner;
+        var button = Assert.IsType<HudPlayerButtonNode>(scene.Menu.Tree.Node(panel.Button));
+        button.Value = 1;
+        uint serial = scene.Menu.Tree.Node(panel.Button)!.Serial;
+        uint result = other.HandleDispatch(panelToken, 0x10, serial, 0, challenge);
+        Assert.Equal(1u, result);
+        Assert.Equal(2u, BitConverter.ToUInt32(challenge.Participant(owner).Span.Slice(0x64, 4)));
+        Assert.Single(packets);
+        Assert.Empty(based);
+        other.Dispose();
+    }
+
+    /// <summary>분배는 배틀 토큰을 실제 정렬 메뉴로 보낸다. 0.929에서 추가됐다.</summary>
+    [Fact]
+    public void HandleDispatchRoutesBattleToSortMenu()
+    {
+        using var scene = new Scene();
+        scene.Storage.OwnerMode.Challenge = true;
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        challenge.Battle(2).Span[0] = 1;
+        int sorts = 0;
+        var based = new List<(uint Event, uint First, uint Second)>();
+        var wired = new HostNsInfoDevices
+        {
+            Read = address => address switch { 0x54278c => 0x10u, 0x542b80 => 0x20u, 0x542b7c => 0x30u, 0x5429e0 => 0x40u, 0x5429e4 => 0x50u, _ => scene.Devices.Read(address) },
+            Translate = scene.Devices.Translate, StoreText = scene.Devices.StoreText,
+            Text = scene.Devices.Text, FormatZone = scene.Devices.FormatZone, Changed = scene.Devices.Changed,
+            BattleGuySound = () => { },
+            BattleSortMenu = _ => sorts++,
+            BattleOptionsMenu = (_, _) => { },
+            BattleExcludeMenu = (_, _) => { },
+            BattleOptionMenu = (_, _, _) => { },
+            BattleRemoveMenu = _ => { },
+            BattleData = (_, _, _) => { },
+            BaseInput = (@event, first, second) => { based.Add((@event, first, second)); return 7u; },
+        };
+        using var other = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, wired);
+        uint rootToken = other.Create();
+        var root = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(rootToken));
+        uint panelToken = root.Battle;
+        var panel = Assert.IsType<HudBattleInfoNode>(scene.Menu.Tree.Node(panelToken));
+        panel.Battle = 2;
+        uint serial = scene.Menu.Tree.Node(panel.Title)!.Serial;
+        uint result = other.HandleDispatch(panelToken, 0x10, serial, 24, challenge);
+        Assert.Equal(1u, result);
+        Assert.Equal(1, sorts);
+        Assert.Empty(based);
+        other.Dispose();
+    }
+
+    /// <summary>분배는 알 수 없는 토큰을 기본 처리에 넘기고 미연결을 명시 실패한다. 0.929에서 추가됐다.</summary>
+    [Fact]
+    public void HandleDispatchFallsThroughAndFailsExplicitly()
+    {
+        using var scene = new Scene();
+        var challenge = new ClientChallengeGlobals(); challenge.Prepare();
+        var based = new List<(uint Event, uint First, uint Second)>();
+        var wired = new HostNsInfoDevices
+        {
+            Read = scene.Devices.Read,
+            Translate = scene.Devices.Translate, StoreText = scene.Devices.StoreText,
+            Text = scene.Devices.Text, FormatZone = scene.Devices.FormatZone, Changed = scene.Devices.Changed,
+            BaseInput = (@event, first, second) => { based.Add((@event, first, second)); return 7u; },
+        };
+        using var other = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, wired);
+        uint result = other.HandleDispatch(99999u, 0x10, 1, 2, challenge);
+        Assert.Equal(7u, result);
+        Assert.Equal([(0x10u, 1u, 2u)], based);
+        Assert.Throws<ArgumentNullException>(() => other.HandleDispatch(99999u, 0x10, 1, 2, null!));
+        var bare = new HostNsInfoDevices
+        {
+            Read = scene.Devices.Read,
+            Translate = scene.Devices.Translate, StoreText = scene.Devices.StoreText,
+            Text = scene.Devices.Text, FormatZone = scene.Devices.FormatZone, Changed = scene.Devices.Changed,
+        };
+        using var missing = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, bare);
+        Assert.Throws<InvalidOperationException>(() => missing.HandleDispatch(99999u, 0x10, 1, 2, challenge));
+        missing.Dispose();
+        other.Dispose();
+        Assert.Throws<ObjectDisposedException>(() => other.HandleDispatch(99999u, 0x10, 1, 2, challenge));
+    }
 }

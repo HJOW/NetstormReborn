@@ -341,6 +341,28 @@ public sealed class HostNsInfoWindows : IDisposable
         };
         return NativeBattleInfoInput.Handle(token, node, @event, first, second, hooks);
     }
+    /// <summary>같은 실제 소유 판정으로 세 파생 입력을 루트·플레이어·배틀·기본 처리에 분배한다. 0.929에서 추가됐다.</summary>
+    /// <param name="token">입력 대상 토큰이다.</param>
+    /// <param name="event">원문 입력 event DWORD다.</param>
+    /// <param name="first">원문 입력 첫 DWORD다.</param>
+    /// <param name="second">원문 입력 둘째 DWORD다.</param>
+    /// <param name="challenge">같은 실제 CS 참가자40·전투10 기록이다.</param>
+    public uint HandleDispatch(uint token, uint @event, uint first, uint second, ClientChallengeGlobals challenge)
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        ArgumentNullException.ThrowIfNull(challenge);
+        var hooks = new NativeNsInfoDispatchHooks
+        {
+            IsRoot = _roots.Contains,
+            IsPlayer = _players.Contains,
+            IsBattle = _battles.Contains,
+            Root = (@event, first, second) => HandleRootInput(@event, first, second, challenge),
+            Player = (@event, first, second) => HandlePlayerInput(token, @event, first, second, challenge),
+            Battle = (@event, first, second) => HandleBattleInput(token, @event, first, second, challenge),
+            Base = (token, @event, first, second) => Need(_devices.BaseInput)(@event, first, second),
+        };
+        return NativeNsInfoDispatch.Dispatch(token, @event, first, second, hooks);
+    }
     /// <summary>같은 실제 CS와 현재 NSInfo 전역으로 전체 메타 플레이어 본문을 배치한다. 0.922에서 추가됐다.</summary>
     /// <param name="token">같은 0xbc PlayerInfo 노드 토큰이다.</param>
     /// <param name="challenge">같은 실제 CS 참가자40·전투10 기록이다.</param>
