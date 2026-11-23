@@ -1,7 +1,7 @@
 {
   "format": "netstorm-webpj-cpppj-l3-steps",
   "version": 1,
-  "description": "cpppj 225553df Tutorial1 입력 단계표(L3: MORE→OK→스크롤 연습→F4→Bridges OK→다리 조각 집기(345 화면)→섬 남쪽 가장자리에 놓기(364 화면, 400 덤프·화면)→두 번째 조각을 집어 놓기(470 화면)→세 번째 조각을 집어 놓기(540 덤프·화면)→안내 창 MORE/OK→미니맵 클릭으로 카메라를 아래로→네 번째 조각을 집어 놓기(680 덤프·화면)). 단계는 [프레임, 동작, 인자]이며 cpppj `--ui-script` 의 동작 이름을 그대로 쓴다. 웹은 e2e/l3-tutorial1.spec.js 가 같은 단계를 고정 시각 모드로 적용한다(입력 프레임 규칙은 docs/webpj-l3-tutorial1-20261123.md).",
+  "description": "cpppj 225553df Tutorial1 입력 단계표(L3: MORE→OK→스크롤 연습→F4→Bridges OK→다리 조각 집기(345 화면)→섬 남쪽 가장자리에 놓기(364 화면, 400 덤프·화면)→두 번째 조각을 집어 놓기(470 화면)→세 번째 조각을 집어 놓기(540 덤프·화면)→안내 창 MORE/OK→미니맵 클릭으로 카메라를 아래로→네 번째 조각을 집어 놓기(680 덤프·화면)→다섯 번째 조각을 집어 놓기(간헐천 섬이 나타나고 단계 D 안내 창 'Storm Power, Part 1'이 열림, 760 덤프·화면)→Part 2 안내 창 닫기→여섯 번째 조각을 간헐천 쪽으로 놓기(880 덤프·화면)). 단계는 [프레임, 동작, 인자]이며 cpppj `--ui-script` 의 동작 이름을 그대로 쓴다. 웹은 e2e/l3-tutorial1.spec.js 가 같은 단계를 고정 시각 모드로 적용한다(입력 프레임 규칙은 docs/webpj-l3-tutorial1-20261123.md).",
   "language": "english",
   "screen": {
     "width": 1024,
@@ -156,6 +156,56 @@
       680,
       "session-dump",
       "c680"
+    ],
+    [
+      700,
+      "click",
+      "screen:20,44"
+    ],
+    [
+      720,
+      "click",
+      "screen:265,175"
+    ],
+    [
+      760,
+      "snapshot",
+      "c760"
+    ],
+    [
+      760,
+      "session-dump",
+      "c760"
+    ],
+    [
+      780,
+      "click-if",
+      "MORE"
+    ],
+    [
+      800,
+      "click-if",
+      "OK"
+    ],
+    [
+      820,
+      "click",
+      "screen:20,44"
+    ],
+    [
+      840,
+      "click",
+      "screen:305,170"
+    ],
+    [
+      880,
+      "snapshot",
+      "c880"
+    ],
+    [
+      880,
+      "session-dump",
+      "c880"
     ]
   ]
 }
