@@ -6,7 +6,7 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-23 정리, 마지막 단위 WB04-E1246)
+### 0.1 현재 값 (2026-11-23 정리, 마지막 단위 WB04-E1247)
 
 | 항목 | 현행 상태 |
 | --- | --- |
@@ -28,7 +28,7 @@
    - ⑤ 한국어 큰 슬롯(제목) 글꼴 크기·굵기 규칙이 원문(Galmuri11 정수 배율·Bold 고정)과 다르다 — 굵기는 의도적 선택이라 **결정이 필요**하다(BitmapFont 행). 같은 행의 굵은 글꼴이 갖지 않은 문자(호환 자모 42자·한자·가나 등 8,271자)를 일반 갈무리11로 대체하는 규칙은 E1244에서 반영했다(보조 FontFace, [근거](docs/webpj-galmuri-bold-fallback-20261123.md)).
    - ⑥ Tell 모달 스택 없음, 미션 제목 사건 4개·메뉴 request/closed 사건 미설정(영향 미확인). `ownerMode.battle`이 이탈 뒤 true로 남는 것은 미션 밖 소비자가 없어 영향을 못 찾았다.
    - ⑧ (E1241, 결정 필요) cpppj 1325는 Reset All 확인을 게임 안 Tell 창(`[ResetAll]`·`Patch1101.ResetAllConfirmed`)으로 바꿨다. 웹은 E863의 브라우저 `confirm()`으로 같은 확인·취소·확정 동작과 저장 보존을 이미 구현했다. 게임 안 확인 창으로 바꿀지(외관 선택) 정한다. [판정](docs/webpj-cpppj-1322-1325-1326-judgment-20261123.md)
-   - ⑨ (E1246 발견) 스톰 파워 표시(왼쪽 위 예산 칸, 노드 (7,2) 66×21)의 **실제 마우스 우클릭**이 노드에 닿지 않는다: 한국어 e2e 탐침에서 Uber 루트 `input().route(0x20000, 40, 12)` 가 0 이고 같은 방식으로 생산 창 격자 한가운데는 격자 토큰을 돌려준다. E1236 은 이 노드의 우클릭 도움말을 `root.handle(token, …)` 직접 호출로만 확인했다(미니맵은 실제 클릭 확인). 원본이 이 칸을 실제 우클릭에서 도달 가능하게 하는지(텍스트 노드 판정 플래그·`Attach` 모드 2)와 웹이 막는 지점을 먼저 cpppj 로 대조해 판정한다. [근거](docs/webpj-korean-production-chat-xlat-20261123.md)
+   - ⑨ (E1246 발견, E1247 판정) 스톰 파워 표시(왼쪽 위 예산 칸, 노드 (7,2) 66×21)의 **실제 마우스 우클릭**이 노드에 닿지 않는다(`input().route(0x20000, 40, 12)` 가 0). cpppj 대조 결과 원본 판정 논리와 같아 **웹 결함이 아닐 가능성이 높다**: 우클릭은 `baseFilter` 가 HELP 플래그(0x200)가 있는 노드의 경계 안에서만 전달하는데, 예산 텍스트 노드는 `TextGump::Construct`(flags=VISIBLE|VOID+DrawClip)로 HELP 플래그가 없고 cpppj 의 `SetHelpText`/`SetNodeHelp` 도 플래그를 바꾸지 않는다(HELP 가 켜지는 곳은 생산 루트 `flags|=0xe00` 과 격자·배경). 루트 핸들러는 `0x02000008` 등만 처리해 우클릭에는 0 을 돌려준다. 남은 것: 원본 실행 파일로 실제 우클릭이 팝업을 여는지 확인(AGENTS.md 실행 규칙 적용) — 열면 웹이 막는 지점을 찾고, 안 열면 닫는다. [근거](docs/webpj-korean-production-chat-xlat-20261123.md#budget-rightclick)
    - ⑦ (E1245 닫음) Priest Training 7 완료 안내의 "Training Menu" 단추가 원본 오타대로 `MissionBegin,BC1Menu`(76 접미 없음)라 웹에서 아무 일도 없던 것을 사용자 결정으로 `bc1menu76` 에 연결했다(`core/mission-name-alias.js`, 원본은 10.72판 loose `BC1Menu.english` 를 읽고 그 사슬(`BC2Bridging` 등)은 웹에 없다). [근거](docs/webpj-priest-training-menu-alias-20261123.md). 남은 것: ESC로 Tell 창을 닫는지 미확인(원문 UberGump.cpp:1823은 Dialog 단계에서 Tell Blank). Early Mission 3 단계 A·6 단계 B의 너겟 납품(`0x020000b4`) 진행은 자연 완주로 확인하지 못했다.
    - 해결한 것(E1229~E1237: 도움말 TYPE·다리 붕괴·통지 명령 입력 막힘과 MissionAbort 확인 창·전투 자원·Player 결과 알림·주변음/바람·F1·HUD 우클릭 도움말·Back)은 0.1 요약표의 '읽기 전용 감사·수정' 행과 [RawSurface 감사 문서](docs/webpj-native-surface-audit-20261122.md)에 있다. 남은 확인: 주변음 실제 청취, 채팅 창 "Chat Window" 실제 우클릭.
 2. **다른 미션의 목표 수행.** Tutorial2([E1086](docs/webpj-tutorial2-complete-20261120.md))처럼 Tutorial1·3~6과 세 캠페인 묶음 미션의 단계별 목표를 수행해 승리·완료 창까지 이어 보고, 남는 객체 메뉴(Factory 파생·특수 대상·채팅 분기, Archer 실제 우클릭·운반체 Carrying/Drop)와 입력 공백을 메운다. 승패 안내 뒤 흐름은 [E1152](docs/webpj-mission-outcome-flow-20261121.md)·[E1161](docs/webpj-idle-outcome-20261121.md)에서 확인했다. 앱에 연결되지 않은 나머지 모듈은 [E1163 분류표](docs/webpj-pause-key-unwired-modules-20261121.md)에 이어 사용자 기능과 직결된 것부터 확인한다(3.8절 입력·장치). 자연 완주는 1절 사용자 확인 범위다.
@@ -70,7 +70,7 @@
 | 웹 범위 판정 | E1167, E1171, E1176, E1180, E1182, E1187~E1188, E1192, E1202~E1204 | Players 하위 3항목·지식 NSInfo·의식 보상 선택 UI·HTML `$Input=`·패킷 원천/지연·메타 앞단·Sprite 갱신·FortCoreDataLoad를 웹 범위 밖으로, 인트로 영상은 사용자 결정으로 웹 제외 | — | [NSInfo](docs/webpj-nsinfo-scope-20261122.md) · [동영상 결정](docs/webpj-intro-movie-decision-20261122.md) |
 | 대본·기술·타이틀 | E1184, E1189~E1190, E1197, E1199~E1200, E1227 | 시작 title 그림, Fury War 기술 지급, 대본 82개 명령 점검(`ViewSpot`·`Salvage`), 도움말·Tell 남은 두 행, Detonate·GetTechnology 원본 관측, Review Knowledge·GetTechnology 단추 | — | [대본 명령](docs/webpj-script-commands-audit-20261122.md) · [Fury War](docs/webpj-fury-war-technology-20261122.md) |
 | Native 대응 대조 | E1193~E1195, E1205~E1221 | Native 고정 수신기 네 묶음·채팅 수신기, 건설 여섯 행·AssetDeletionVtables, RawSurface 훅 대조와 표시 후 계속 진단·17종 가상 삭제·unit-lost 억제 | RawSurfaceDeletion·Lifetime(DestroyPatch 진단 열두 지점) | [수신기](docs/webpj-native-receivers-audit-20261122.md) · [RawSurface](docs/webpj-native-surface-audit-20261122.md) |
-| 읽기 전용 감사·수정 | E1223~E1246 | Client 상태·입력(제단 희생 메뉴 훅)·UI 컨트롤(와이드 메인 메뉴 버튼) 감사, 객체 메뉴 명령 소비, 아이스 반사 0점 기본값, 도움말·음향·설정 partial 15행 닫기와 Tell Warning, 다리 붕괴·전투 자원·Player 결과 알림·주변음/바람 프레임, F1·HUD 우클릭 도움말·Back, 승리/패배 곡 범위 판정(E1238)·소리 끄기 음악 무음·천둥 효과음 경로(E1239)·월드 없는 Help TYPE 정보(E1240)·건설 기록 재생 개발자 전용 판정(E1242)·Uber 루트 배경 자식 판정(E1243)·Priest Training 7 Training Menu 원본 오타 별칭(E1245)·생산 창·채팅 채널 번역 항목과 예산 칸 우클릭 경로 발견(E1246) | [다음 작업 1](#next)의 남은 차이 | [RawSurface 감사](docs/webpj-native-surface-audit-20261122.md) |
+| 읽기 전용 감사·수정 | E1223~E1247 | Client 상태·입력(제단 희생 메뉴 훅)·UI 컨트롤(와이드 메인 메뉴 버튼) 감사, 객체 메뉴 명령 소비, 아이스 반사 0점 기본값, 도움말·음향·설정 partial 15행 닫기와 Tell Warning, 다리 붕괴·전투 자원·Player 결과 알림·주변음/바람 프레임, F1·HUD 우클릭 도움말·Back, 승리/패배 곡 범위 판정(E1238)·소리 끄기 음악 무음·천둥 효과음 경로(E1239)·월드 없는 Help TYPE 정보(E1240)·건설 기록 재생 개발자 전용 판정(E1242)·Uber 루트 배경 자식 판정(E1243)·Priest Training 7 Training Menu 원본 오타 별칭(E1245)·생산 창·채팅 채널 번역 항목(E1246)·예산 칸 우클릭이 원본 판정 논리와 같음 판정(E1247) | [다음 작업 1](#next)의 남은 차이 | [RawSurface 감사](docs/webpj-native-surface-audit-20261122.md) |
 
 ### 0.2 단계 진행판
 
