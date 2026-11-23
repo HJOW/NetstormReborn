@@ -108,7 +108,7 @@ test('제단 의식: 실제 몸체와 공유 Regular 예약 및 설치 순서', 
         const altar = o.world.create(164);
         module.altarHooks.addShared(altar, 20, Math.fround(0.08));
         assert.equal(o.core.processes.findEvent(altar, 20), reserved);
-        assert.equal(reserved.shared, true);
+        assert.equal(reserved.shared, false); // cpppj AddRitualRegular 는 일반 Attach 라 shared 표시를 켜지 않는다. (2026-11-24 WB04-E1294)
         assert.equal(module.pendingRegular, null);
         assert.throws(() => o.connectRitualAltar(), /순서/);
         assert.equal(o.loaded, false);
@@ -588,7 +588,7 @@ test('의식 예약: 실제 동일 객체와 중첩·미예약 관문, 공유 Ho
         assert.throws(() => m.reserveRegular(), /중첩/);
         m.addRegular(priest, 604, Math.fround(0.01), 61);
         assert.equal(m.pendingRegular, null); assert.equal(o.core.processes.findEvent(priest, 604), reserved);
-        assert.equal(reserved.time, o.core.processState.now); assert.equal(reserved.shared, true);
+        assert.equal(reserved.time, o.core.processState.now); assert.equal(reserved.shared, false); // 시각은 SetNextTime, shared 는 꺼진 채이다(E1294).
     } finally { o.dispose(); }
 });
 

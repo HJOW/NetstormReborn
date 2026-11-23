@@ -22,6 +22,9 @@ import { rawPathSurfaceAt } from './raw-path-surface.js';
 import { RawDaisContentNotice } from './raw-dais-content-notice.js';
 import { RawSalvageCommand } from './raw-salvage-command.js';
 
+// 의식 Regular 를 부착할 때 쓰는 flags(0x50: 서버/로컬 61·46 Form 정책)이다. cpppj `AddRitualRegular` 가 `Attach(…, type, sid, 0x50)` 에 넘기는 값과 같다. (2026-11-24 WB04-E1294)
+const RITUAL_ATTACH_FLAGS = 0x50;
+
 // 다이스 내용물 통지가 중지할 원본 음성 명령 번호다.
 const DAIS_CAPTURE_VOICE_COMMAND = 0x020000d7;
 
@@ -53,12 +56,14 @@ export class RawCampaignSessionRitual {
         this.pendingRegular = new RegularProcess(0, 0); return true;
     }
     // 확보한 동일 객체를 재초기화해 타입46 또는61로 부착하고 현재 시각을 사용한다.
+    // cpppj `AddRitualRegular` 와 같이 일반 `attach(process, type, parent, 0x50)` 를 직접 쓴다: 타입 번호(46/61)만 정해 부착하므로 `shared` 표시는 켜지지 않고 `basePostPop == 0` 진단·SharedRegular 28바이트 Form 작성도 하지 않는다.
+    // (이전에는 `attachRegular(…, type === 61)` 로 shared 가 참이 되어 Form 패킷의 SharedRegular 28바이트와 진단이 원문과 달랐다. 2026-11-24 WB04-E1294)
     addRegular(sid, event, payload, type) {
         this.#live(); if (!this.pendingRegular) throw new Error('의식 Regular 실제 예약 누락');
         if (type !== 46 && type !== 61) throw new RangeError('의식 Regular 타입 오류');
         const reserved = this.pendingRegular; this.pendingRegular = null;
         reserved.initializeDetached(event, payload);
-        const attached = this.#owner.core.processes.attachRegular(reserved, sid, type === 61);
+        const attached = this.#owner.core.processes.attach(reserved, type, sid, RITUAL_ATTACH_FLAGS);
         if (attached) attached.setNextTime(this.#owner.core.processState.now);
     }
     // 공황 뒤 실제 사제604 처리기와 K~P 동작을 같은 프레임/음향/Host에 한 번 설치한다.
