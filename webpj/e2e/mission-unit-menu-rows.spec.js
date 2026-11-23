@@ -1,6 +1,7 @@
-// 운반체·폭탄(Archer 계열) 우클릭 메뉴의 특수 행을 실제 Chromium 에서 확인한다. (2026-11-24 WB04-E1310)
+// 운반체·폭탄(Archer 계열) 우클릭 메뉴의 특수 행과 운반체의 줍기·내려놓기를 실제 Chromium 에서 확인한다. (2026-11-24 WB04-E1310~E1311)
 //  - 짐을 실은 운반체(Bulf): 내용물이 있으면 메뉴에 'Carrying' 머리말 아래 Drop 행(명령 0x03000076, 인자 = Bulf SID)이 생기고, 그 행을 누르면 명령이 입력 큐에 올라
 //    Session 이 소비해(Cast/Drop 성공 0x030000b2·내 너겟 납품 0x020000b4 통지) 너겟이 내용물에서 빠진다.
+//  - 줍기: 내 Bulf 를 실제 마우스로 선택하고 월드의 너겟을 누르면 줍기 명령(0x030000b1, 인자 = 너겟 SID·Bulf SID)이 소비되어 너겟이 월드에서 사라지고 Bulf 메뉴에 Drop 행이 생긴다(E1311).
 //  - 폭탄(원본 +a8 00420b30 / +ac 0041e660 'Archer 계열' 파생): 비편집 모드에서 내 폭탄 메뉴에 Detonate! 행(명령 0x03000074, 인자 = 폭탄 SID)이 생기고, 누르면 명령이 소비된다.
 // 시작 상태는 Priest Training 5(bc5walkers76): 내 Bulf(15005)가 있다. 폭탄·너겟 내용물은 실제 미션에 없어 앱 Session 의 객체 생성 경로(`world().create/pop`·`createContained`)로 만든다.
 const { test, expect } = require('@playwright/test');
@@ -121,5 +122,53 @@ test('Priest Training 5: 내 폭탄(Archer 계열 파생 메뉴)의 우클릭 �
   expect(pushed[3], 'Detonate 명령 인자(폭탄 SID)').toBe(bomb.sid.toString(16));
   await expect.poll(() => page.evaluate(() => window.netstorm._clientInputQueue.size), { timeout: 5000, message: '입력 큐가 비워짐' }).toBe(0);
   expect(await page.evaluate(() => window.netstorm._clientGump.blockingPopups()), '메뉴가 닫힘').toBe(false);
+  expect(errors).toEqual([]);
+});
+
+test('Priest Training 5: 내 Bulf 를 선택하고 월드의 너겟을 누르면 줍고, 그 Bulf 의 메뉴에 Drop 행이 생겨 눌러 내려놓는다', async ({ page }) => {
+  test.setTimeout(300000);
+  const errors = []; page.on('pageerror', (error) => errors.push(error.stack ?? error.message)); page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
+  await startPriestTraining5(page);
+  // 내 섬 위(Bulf 옆)에 주인 없는 너겟을 놓고 Bulf 와 너겟의 화면 적중점을 찾는다. 너겟은 실제 미션에 없어 객체 생성 경로로 만든다(너겟 TYPE 154).
+  const setup = await page.evaluate(() => {
+    const app = window.netstorm, world = app._campaignWorld, session = world.session(), w = session.world(), types = app._gameAssets.types(); let bulf = null;
+    for (const { sid, object } of w.objects()) if (object.owner === 1 && types[object.type - 70]?.assetName === 'bulf') { bulf = sid; break; }
+    const nugget = w.create(154, 0); w.setAssetOwner(nugget, 0); w.pop(nugget, 136, 184, 0);
+    const rect = app.canvas.getBoundingClientRect(), scan = (target) => {
+      const hits = []; for (let y = 10; y < 760; y += 2) for (let x = 90; x < 1020; x += 2) if (world.pick(x, y, 0) === target) hits.push([x, y]);
+      const hit = hits[Math.floor(hits.length / 2)];
+      return hit ? { x: rect.left + hit[0] * rect.width / app._layout.logicalWidth, y: rect.top + hit[1] * rect.height / app._layout.logicalHeight } : null;
+    };
+    return { bulf, nugget, bulfHit: scan(bulf), nuggetHit: scan(nugget) };
+  });
+  expect(setup.bulfHit, 'Bulf 적중점').toBeTruthy(); expect(setup.nuggetHit, '너겟 적중점').toBeTruthy();
+  const nuggetState = () => page.evaluate(({ nugget }) => window.netstorm._campaignWorld.session().core().pool.slot(nugget)[11], setup);
+  expect(await nuggetState() & 3, '월드의 너겟은 살아 있다').toBe(0);
+  // Bulf 를 선택하고(왼쪽 클릭) 너겟을 누르면 줍기 명령이 올라가 소비된다.
+  await page.mouse.move(setup.bulfHit.x, setup.bulfHit.y); await page.mouse.click(setup.bulfHit.x, setup.bulfHit.y, { delay: 60 });
+  await expect.poll(() => page.evaluate(() => window.netstorm._campaignWorld.selected?.() ?? null), { timeout: 5000, message: 'Bulf 선택' }).toBe(setup.bulf);
+  await spyInputQueue(page);
+  await page.mouse.move(setup.nuggetHit.x, setup.nuggetHit.y); await page.mouse.click(setup.nuggetHit.x, setup.nuggetHit.y, { delay: 60 });
+  await expect.poll(() => page.evaluate(() => window.__pushed.filter((entry) => entry[0] === 'pushCommand').map((entry) => entry[1]).join(',')), { timeout: 10000 }).toContain('30000b1');
+  const pickup = await page.evaluate(() => window.__pushed.find((entry) => entry[0] === 'pushCommand' && entry[1] === '30000b1'));
+  expect([pickup[2], pickup[3]], '줍기 명령 인자(너겟 SID, Bulf SID)').toEqual([setup.nugget.toString(16), setup.bulf.toString(16)]);
+  await expect.poll(async () => (await nuggetState()) & 3, { timeout: 10000, message: '월드의 너겟이 줍혀 사라짐' }).toBe(3);
+  await expect.poll(() => page.evaluate(() => window.netstorm._clientInputQueue.size), { timeout: 5000, message: '입력 큐가 비워짐' }).toBe(0);
+  // 이제 그 Bulf 의 메뉴(실제 우클릭)에 Drop 행이 생기고, 눌러 내려놓으면 성공 통지가 뒤따른다.
+  // 줍는 동안 Bulf 가 걸어 움직였으므로 지금 위치의 화면 적중점을 다시 찾는다.
+  const moved = await page.evaluate((sid) => {
+    const app = window.netstorm, world = app._campaignWorld, hits = [];
+    for (let y = 10; y < 760; y += 3) for (let x = 90; x < 1020; x += 3) if (world.pick(x, y, 0) === sid) hits.push([x, y]);
+    const rect = app.canvas.getBoundingClientRect(), hit = hits[Math.floor(hits.length / 2)];
+    return hit ? { x: rect.left + hit[0] * rect.width / app._layout.logicalWidth, y: rect.top + hit[1] * rect.height / app._layout.logicalHeight } : null;
+  }, setup.bulf);
+  expect(moved, '줍은 뒤 Bulf 적중점').toBeTruthy();
+  await page.mouse.move(moved.x, moved.y); await page.mouse.click(moved.x, moved.y, { button: 'right', delay: 60 });
+  await page.waitForFunction((sid) => { const root = window.netstorm._clientGump; for (let token = root.root().child; token; token = root.node(token).next) if (root.node(token).command === 26 && root.node(token).object === sid) return true; return false; }, setup.bulf, { timeout: 10000 });
+  const row = await findRow(page, setup.bulf, 0x03000076);
+  expect(row, '줍은 뒤 Drop 행').toBeTruthy(); expect(row.parameter).toBe(setup.bulf);
+  await spyInputQueue(page);
+  await page.mouse.move(row.x, row.y); await page.mouse.click(row.x, row.y, { delay: 60 });
+  await expect.poll(() => page.evaluate(() => window.__pushed.map((entry) => entry[1]).join(',')), { timeout: 15000 }).toContain('30000b2');
   expect(errors).toEqual([]);
 });
