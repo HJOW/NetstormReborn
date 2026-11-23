@@ -7,7 +7,7 @@ using Netstorm.Core.Simulation;
 namespace Netstorm.Core.Tests;
 
 /// <summary>크로스보우/썬더/초기 아이스의3514관측 및 충돌명령688관측 검사다.</summary>
-public sealed class RawMissileGeometryTests
+public sealed partial class RawMissileGeometryTests
 {
     /// <summary>부호 입력도 포함한 하위DWORD를 읽는다.</summary>
     private static uint N(string value) => unchecked((uint)long.Parse(value, CultureInfo.InvariantCulture));
@@ -38,14 +38,14 @@ public sealed class RawMissileGeometryTests
         internal List<string> Events { get; } = [];
         /// <summary>현재 독립 입력이다.</summary>
         internal string[] Row = [];
-        /// <summary>0크로스보우/1썬더/2초기 아이스의 원문 파생이다.</summary>
+        /// <summary>0크로스보우/1썬더/2초기 아이스/3반사 아이스의 원문 파생이다.</summary>
         internal int Style { get; }
         /// <summary>원문 발사자 TYPE다.</summary>
-        internal int Source => Style == 0 ? 140 : Style == 1 ? 131 : 129;
+        internal int Source => Style == 0 ? 140 : Style == 1 ? 131 : Style == 3 ? 130 : 129;
         /// <summary>원문 표시자 TYPE다.</summary>
         internal int Display => Style == 0 ? 81 : Style == 1 ? 132 : 130;
         /// <summary>기대 결과가 시작되는 실제 열이다.</summary>
-        internal int Output => Style == 0 ? 21 : Style == 1 ? 23 : 24;
+        internal int Output => Style == 0 ? 21 : Style == 1 ? 23 : Style == 3 ? 34 : 24;
         /// <summary>세 관측 자산 번호를 동일 순서로 확보한다.</summary>
         internal Scene(int style)
         {
@@ -66,16 +66,22 @@ public sealed class RawMissileGeometryTests
             {
                 Span<byte> raw = Pool.RawSlot(sid); raw.Clear(); Put(raw, 0, 0x11319000); raw[10] = (byte)type; raw[11] = sid == 60 ? (byte)N(row[10]) : (byte)0; raw[34] = 1; raw[40] = (sid == 60 || (Style != 0 && sid == 50)) ? (byte)N(row[19]) : (byte)0; Put(raw, 14, sid == 50 ? N(row[1]) : B(50)); Put(raw, 18, sid == 50 ? N(row[2]) : B(50));
             }
-            Types[Source].Group = Style == 0 ? 0 : 1; Types[Source].HotspotX = int.Parse(row[5], CultureInfo.InvariantCulture); Types[Source].HotspotY = int.Parse(row[6], CultureInfo.InvariantCulture); Data[Source].Range = F(13); Data[Source].FiringSound = N(row[14]); Data[Display].FiringSound = N(row[15]); Data[Display].ImpactSound = N(row[16]); Data[Display].FrameCount = int.Parse(row[17], CultureInfo.InvariantCulture); Data[136].ImpactSound = N(row[16]); GeometryData[Source].DefaultFrame = 0; GeometryData[Source].FrameCount = Style == 0 ? 1 : 36; GeometryData[Source].ShotOffsets = Enumerable.Repeat((unchecked((short)int.Parse(row[3], CultureInfo.InvariantCulture)), unchecked((short)int.Parse(row[4], CultureInfo.InvariantCulture))), Style == 0 ? 1 : 36).ToArray(); GeometryData[Display].Directions = int.Parse(row[17], CultureInfo.InvariantCulture); GeometryData[Display].FrameCount = int.Parse(row[18], CultureInfo.InvariantCulture);
+            Types[Source].Group = Style == 0 ? 0 : Style == 3 ? 10 : 1; Types[Source].HotspotX = int.Parse(row[5], CultureInfo.InvariantCulture); Types[Source].HotspotY = int.Parse(row[6], CultureInfo.InvariantCulture); Data[Source].Range = F(13); Data[Source].FiringSound = N(row[14]); if (Style != 3) Data[Display].FiringSound = N(row[15]); Data[Display].ImpactSound = N(row[16]); Data[Display].FrameCount = int.Parse(row[17], CultureInfo.InvariantCulture); Data[136].ImpactSound = N(row[16]); GeometryData[Source].DefaultFrame = 0; GeometryData[Source].FrameCount = Style == 0 ? 1 : 36; GeometryData[Source].ShotOffsets = Enumerable.Repeat((unchecked((short)int.Parse(row[3], CultureInfo.InvariantCulture)), unchecked((short)int.Parse(row[4], CultureInfo.InvariantCulture))), Style == 0 ? 1 : 36).ToArray(); GeometryData[Display].Directions = int.Parse(row[17], CultureInfo.InvariantCulture); GeometryData[Display].FrameCount = int.Parse(row[18], CultureInfo.InvariantCulture);
             if (Style != 0) { Put(Pool.RawSlot(50), 36, N(row[21])); Types[Source].FootX = Types[Source].FootY = 0; Types[71].FootX = 2; Types[71].FootY = 3; GeometryData[Source].Range = F(13); var codes = new RiftFrameCode[36]; codes[N(row[21])] = new((byte)N(row[22]), 0, 0, 0); Frames[Source] = new(codes); }
+            if (Style == 3)
+            {
+                Pool.RawSlot(50)[11] = (byte)N(row[24]); Pool.RawSlot(90)[34] = (byte)N(row[33]); Pool.RawSlot(0).Clear(); Data[130].DamagePerSecond = F(26); Data[130].SpecialFlyerDamage = N(row[27]) != 0; Data[130].FlyerDamagePerSecond = F(28); Data[129] = new() { Range = Data[130].Range, FrameCount = Data[130].FrameCount, FiringSound = Data[130].FiringSound, ImpactSound = Data[130].ImpactSound, DamagePerSecond = Data[130].DamagePerSecond, SpecialFlyerDamage = Data[130].SpecialFlyerDamage, FlyerDamagePerSecond = Data[130].FlyerDamagePerSecond }; Types[71].Flags2 = N(row[29]);
+            }
             if (N(row[0]) != 1) return;
-            byte[] fields = Fields.Bytes; Put(fields, 0, 0x50d630); Put(fields, 4, 81); Put(fields, 8, 90); Put(fields, 12, 0); Put(fields, 16, N(row[20])); Put(fields, 20, 50); Put(fields, 24, 60); Put(fields, 28, N(row[12]));
+            byte[] fields = Fields.Bytes; Put(fields, 0, 0x50d630); Put(fields, 4, 81); Put(fields, 8, 90); Put(fields, 12, Style == 3 ? 1u : 0); Put(fields, 16, N(row[20])); Put(fields, 20, 50); Put(fields, 24, Style == 3 && N(row[25]) != 0 ? 0u : 60u); Put(fields, 28, N(row[12]));
             // 독립 Frame의 네 초기 DWORD와 사각형은 생성 결과에서 가져오지 않는다.
             for (int at = 32; at < 48; at += 4) Put(fields, at, 0);
+            if (Style == 3) { Put(fields, 40, N(row[30]) == 1 ? 1u : 0); Put(fields, 44, N(row[30]) == 2 ? 1u : 0); }
             Put(fields, 48, B(Style == 0 ? 35 : 20)); Put(fields, 52, 0); Put(fields, 56, N(row[1])); Put(fields, 60, N(row[2])); Put(fields, 64, N(row[7])); Put(fields, 68, N(row[8])); Put(fields, 72, N(row[7])); Put(fields, 76, N(row[8]));
             // 원문 무효 사각형을 같은 비트로 보존한다.
             for (int at = 88; at < 104; at += 4) Put(fields, at, 0xc61c4000);
-            BinaryPrimitives.WriteDoubleLittleEndian(fields.AsSpan(104), 12); BinaryPrimitives.WriteDoubleLittleEndian(fields.AsSpan(112), 10); Put(fields, 120, B(50)); Put(fields, 124, N(row[11]) != 0 ? B(89) : 0xc61c4000);
+            if (Style == 3 && N(row[31]) != 0) { Put(fields, 88, B(49)); Put(fields, 92, B(89)); Put(fields, 96, B(51)); Put(fields, 100, B(91)); }
+            BinaryPrimitives.WriteDoubleLittleEndian(fields.AsSpan(104), Style == 3 && N(row[32]) != 0 ? 10 : 12); BinaryPrimitives.WriteDoubleLittleEndian(fields.AsSpan(112), 10); Put(fields, 120, B(50)); Put(fields, 124, N(row[11]) != 0 ? B(89) : 0xc61c4000);
         }
         /// <summary>명시 cdecl 위치 음향의 다섯 인수를 기록한다.</summary>
         internal void Sound(float x, float y, uint token) => Events.Add($"S:{B(x)}:{B(y)}:{token}:0:0");
@@ -87,13 +93,13 @@ public sealed class RawMissileGeometryTests
             Create = (type, flags) => { Events.Add($"A:{type}:{flags}"); return 90; }, Owner = (sid, owner) => { Pool.RawSlot(sid)[34] = owner; Events.Add($"O:90:{owner}"); }, Pop = (sid, x, y, flags) => { Put(Pool.RawSlot(sid), 14, B(x)); Put(Pool.RawSlot(sid), 18, B(y)); Events.Add($"P:90:{B(x)}:{B(y)}:{flags}"); }, Unpop = (_, flags) => Events.Add($"U:90:{flags}"), FiringSound = Sound, ImpactSound = Sound,
             Center = sid => { if (Style == 0) { Events.Add("C:50"); return [50, 50]; } ReadOnlySpan<byte> raw = Pool.Slot(sid); return [BitConverter.UInt32BitsToSingle(BinaryPrimitives.ReadUInt32LittleEndian(raw[14..])), BitConverter.UInt32BitsToSingle(BinaryPrimitives.ReadUInt32LittleEndian(raw[18..]))]; },
             TargetBounds = (_, point) => { Events.Add($"T:{B(point[0])}:{B(point[1])}"); return [49, 89, 51, 91]; }, Hit = (firing, target) => Events.Add($"G:{firing}:{target}"), HitEffect = (x, y) => Events.Add($"H:{B(x)}:{B(y)}"), Refresh = _ => Events.Add("Q:50"), Impact = (x, y, mode, payload) => Events.Add($"I:{B(x)}:{B(y)}:{mode}:{B(payload)}"), Destroy = (_, flags) => Events.Add($"X:90:{flags}"),
-            RandomInteger = (low, high) => { Events.Add($"N:{low}:{high}"); return unchecked((int)N(Row[23])); }, ImpactName = (x, y, name) => Events.Add($"F:{B(x)}:{B(y)}:{name}"), Ricochet = fields => Events.Add($"R:{fields.Parent()}:{fields.Target()}"), QueueCommand = (command, first, second) => Events.Add($"E:{command}:{first}:{second}"),
+            RandomInteger = (low, high) => { Events.Add($"N:{low}:{high}"); return unchecked((int)N(Row[23])); }, ImpactName = (x, y, name) => Events.Add($"F:{B(x)}:{B(y)}:{name}"), Ricochet = fields => Events.Add($"R:{fields.Parent()}:{fields.Target()}"), QueueCommand = (command, first, second) => Events.Add($"E:{command}:{first}:{second}"), Damage = (victim, amount, owner, attacker) => Events.Add($"D:{victim}:{unchecked((uint)amount)}:{owner}:{attacker}"),
         };
         /// <summary>실제 기하 getter와 생성/Frame을 실행하고 전체 결과를 직렬화한다.</summary>
         internal string[] Run(bool connectQueue = true)
         {
             var mode = new RawGunMode(Pool, Frames, new() { Value = 140 }); var geometry = new RawProjectileGeometry(Pool, Types, GeometryData, gunMode: mode); MissileHooks hooks = Hooks(geometry); if (!connectQueue) hooks.QueueCommand = null; var logic = new RawMissile(Pool, Types, Data, State, hooks); float[] point = [0, 0]; uint kind = N(Row[0]);
-            if (kind == 0) { var request = new GunProjectileRequest { Firing = 50, Target = 60, Speed = Style == 0 ? 35 : 20, DisplayType = (uint)Display, EffectType = 0, TargetPosition = [F(7), F(8)], TargetCenter = N(Row[12]) != 0 ? [F(7), F(8)] : [-10000, -10000], FiringPosition = [-10000, -10000] }; ushort asset = logic.Construct(Fields, request); Events.Add("B:28:90:0:16"); Put(Fields.Bytes, 4, 81); Put(Fields.Bytes, 8, asset); } else if (kind == 1) logic.Frame(Fields); else point = kind == 2 ? geometry.Muzzle(50) : geometry.CannonRayEnd([F(1), F(2)], [F(7), F(8)], 50);
+            if (kind == 0) { var request = new GunProjectileRequest { Firing = 50, Target = Style == 3 && N(Row[25]) != 0 ? (ushort)0 : (ushort)60, Ricochet = Style == 3 ? 1u : 0, Speed = Style == 0 ? 35 : 20, DisplayType = (uint)Display, EffectType = 0, TargetPosition = [F(7), F(8)], TargetCenter = N(Row[12]) != 0 ? [F(7), F(8)] : [-10000, -10000], FiringPosition = Style == 3 ? [F(1), F(2)] : [-10000, -10000] }; ushort asset = logic.Construct(Fields, request); Events.Add("B:28:90:0:16"); Put(Fields.Bytes, 4, 81); Put(Fields.Bytes, 8, asset); } else if (kind == 1) logic.Frame(Fields); else point = kind == 2 ? geometry.Muzzle(50) : geometry.CannonRayEnd([F(1), F(2)], [F(7), F(8)], 50);
             byte[] output = new byte[8]; Put(output, 0, B(point[0])); Put(output, 4, B(point[1])); return [string.Join(';', Events), Hex(Fields.Bytes), string.Concat(new[] { 50, 60, 90 }.Select(sid => Hex(Pool.Slot(sid)))), Hex(output)];
         }
     }

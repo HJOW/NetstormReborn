@@ -1,5 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <!-- 실제 반사탄수명1302/플로터회피481의 독립 PE 관측이다. -->
+    <None Include="../../../cpppj/tests/fixtures/ice-reflected-x86.tsv" Link="X86/ice-reflected-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/missile-floater-x86.tsv" Link="X86/missile-floater-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
     <!-- 두 보호 PE의 압축 총 시각/DPS/피해2058관측을 사본 없이 읽는다. -->
     <None Include="../../../cpppj/tests/fixtures/gunhit-x86.tsv" Link="X86/gunhit-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
