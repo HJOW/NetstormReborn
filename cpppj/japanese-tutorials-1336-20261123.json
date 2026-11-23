@@ -1,0 +1,230 @@
+{
+  "unit": 1336,
+  "date": "2026-11-23",
+  "host": "HJOW-Athlon",
+  "decompileHost": "HJOW-Athlon",
+  "audit": {
+    "passed": true,
+    "translated": 13,
+    "total": 43,
+    "missing": [
+      "bc1menu76",
+      "bc2bridging76",
+      "bc3acid_bar76",
+      "bc4bow_rush76",
+      "bc5walkers76",
+      "bc6mows76",
+      "bc7sun_bars76",
+      "bc8fury76",
+      "bc9ssun_bars76",
+      "breakingthrough",
+      "demostormrages",
+      "dissolvedalliance",
+      "enemyterritory",
+      "finalconfrontation",
+      "fragilefortune",
+      "guardmyback",
+      "help",
+      "masterofwhirligigs",
+      "rainvsrain",
+      "runforit",
+      "savetheisland",
+      "surrounded",
+      "tell",
+      "thenoose",
+      "thewarbegins",
+      "thunderingpower",
+      "totherescue",
+      "tutorial5",
+      "tutorial6",
+      "vicious"
+    ],
+    "uniqueKanji": 464,
+    "files": [
+      {
+        "file": "config.japanese",
+        "bytes": 2668,
+        "sections": 0,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical1.japanese",
+        "bytes": 907,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical2.japanese",
+        "bytes": 1307,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical2sep.japanese",
+        "bytes": 16,
+        "sections": 0,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical3.japanese",
+        "bytes": 1314,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical4.japanese",
+        "bytes": 723,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical5.japanese",
+        "bytes": 664,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical5sep.japanese",
+        "bytes": 16,
+        "sections": 0,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical6.japanese",
+        "bytes": 273,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "tutorial1.japanese",
+        "bytes": 7194,
+        "sections": 14,
+        "links": 0,
+        "images": 4,
+        "imageSections": {
+          "[D.]": 2,
+          "[D1.]": 1,
+          "[E.]": 1
+        }
+      },
+      {
+        "file": "tutorial2.japanese",
+        "bytes": 10752,
+        "sections": 20,
+        "links": 0,
+        "images": 13,
+        "imageSections": {
+          "[A1.]": 2,
+          "[C.]": 2,
+          "[D1.]": 2,
+          "[F.]": 5,
+          "[G.]": 2
+        }
+      },
+      {
+        "file": "tutorial3.japanese",
+        "bytes": 8541,
+        "sections": 15,
+        "links": 0,
+        "images": 4,
+        "imageSections": {
+          "[A1.]": 1,
+          "[D1.]": 3
+        }
+      },
+      {
+        "file": "tutorial4.japanese",
+        "bytes": 9466,
+        "sections": 16,
+        "links": 0,
+        "images": 1,
+        "imageSections": {
+          "[A.]": 1
+        }
+      }
+    ],
+    "errors": []
+  },
+  "gui": [
+    {
+      "name": "tutorials-1336-tutorial3",
+      "args": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+        "--window",
+        "--frames",
+        "63",
+        "--fixed-frame-ms",
+        "25",
+        "--no-audio",
+        "--set",
+        "welcomeGiven=1;tellTips=0;autoDemo=0;edgeScroll=0;currentLanguage=japanese;SCREENW=1024;SCREENH=768",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\tutorials-1336-tutorial3.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\tutorials-1336-tutorial3-report.tsv",
+        "--mission",
+        "tutorial3"
+      ],
+      "exit_code": 0,
+      "seconds": 6.477304458618164,
+      "exe_sha256": "bfaaafd7d36cafec5d534f5b156fad178b70a54b495076a0d5196060d72997a2"
+    },
+    {
+      "name": "tutorials-1336-tutorial4",
+      "args": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+        "--window",
+        "--frames",
+        "77",
+        "--fixed-frame-ms",
+        "25",
+        "--no-audio",
+        "--set",
+        "welcomeGiven=1;tellTips=0;autoDemo=0;edgeScroll=0;currentLanguage=japanese;SCREENW=1024;SCREENH=768",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\tutorials-1336-tutorial4.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\tutorials-1336-tutorial4-report.tsv",
+        "--mission",
+        "tutorial4"
+      ],
+      "exit_code": 0,
+      "seconds": 4.864032983779907,
+      "exe_sha256": "bfaaafd7d36cafec5d534f5b156fad178b70a54b495076a0d5196060d72997a2"
+    }
+  ],
+  "pictures": {
+    "references": 5,
+    "sections": 3,
+    "allVisuallyChecked": true
+  },
+  "productRebuild": false,
+  "exeSha256": "bfaaafd7d36cafec5d534f5b156fad178b70a54b495076a0d5196060d72997a2",
+  "excluded": [
+    "적 공격/사제 포획/희생/승리 재현",
+    "성공 안내와 완료 키 실행",
+    "MP 실행"
+  ]
+}
