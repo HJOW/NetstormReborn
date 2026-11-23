@@ -1069,6 +1069,10 @@ cpppj/src/o/RawCrossbowAnimation.h	Netstorm.Core/Original/CrossbowAnimation.cs	0
 cpppj/src/o/RawCrossbowAnimation.h	Netstorm.Core/Original/RawCrossbowAnimation.cs	03320991f3a43d13f5d3b0f2863351d38e6b0a4d	port
 cpppj/src/o/RawDaisProcessData.cpp	Netstorm.Core/Original/RawDaisProcessData.cs	3f766a97f7c4d5b290c195754be66a7ee5b929be	port
 cpppj/src/o/RawDaisProcessData.h	Netstorm.Core/Original/RawDaisProcessData.cs	3f766a97f7c4d5b290c195754be66a7ee5b929be	port
+cpppj/src/o/RawDaisRegular.cpp	Netstorm.Core/Original/RawDaisRegular.Types.cs	aac622b873760691476162181c24a0badcf3a7ae	port
+cpppj/src/o/RawDaisRegular.cpp	Netstorm.Core/Original/RawDaisRegular.cs	aac622b873760691476162181c24a0badcf3a7ae	port
+cpppj/src/o/RawDaisRegular.h	Netstorm.Core/Original/RawDaisRegular.Types.cs	aac622b873760691476162181c24a0badcf3a7ae	port
+cpppj/src/o/RawDaisRegular.h	Netstorm.Core/Original/RawDaisRegular.cs	aac622b873760691476162181c24a0badcf3a7ae	port
 cpppj/src/o/RawDamageableBurning.cpp	Netstorm.Core/Original/RawDamageableBurning.cs	a9157275900dc6537b7aa423481272be7328b8ba	L1
 cpppj/src/o/RawDamageableBurning.h	Netstorm.Core/Original/RawDamageableBurning.cs	a9157275900dc6537b7aa423481272be7328b8ba	L1
 cpppj/src/o/RawDamageableHit.cpp	Netstorm.Core/Original/RawDamageableHit.cs	c3cfc98fa788f6229dbf5dd0b57752c90dc9f4d9	L1
@@ -1560,6 +1564,8 @@ cpppj/src/o/RawRiftHitPoints.h	Netstorm.Core/Original/RawRiftHitPoints.cs	5207aa
 cpppj/src/o/RawRiftHitPoints.h	Netstorm.Core/Original/RawSquidFactory.HitPoints.cs	7313ba1c6a0e4984b434bb562c7335d4383bb075	port
 cpppj/src/o/RawRiftShapeAccess.cpp	Netstorm.Core/Original/RawRiftShapeAccess.cs	5626fa85b1ef8883ebe2d84b15bf8f742f74965b	port
 cpppj/src/o/RawRiftShapeAccess.h	Netstorm.Core/Original/RawRiftShapeAccess.cs	5626fa85b1ef8883ebe2d84b15bf8f742f74965b	port
+cpppj/src/o/RawRitualRegular.cpp	Netstorm.Core/Original/RawRitualRegular.cs	aac622b873760691476162181c24a0badcf3a7ae	port
+cpppj/src/o/RawRitualRegular.h	Netstorm.Core/Original/RawRitualRegular.cs	aac622b873760691476162181c24a0badcf3a7ae	port
 cpppj/src/o/RawRunePostPop.cpp	Netstorm.Core/Original/RawRunePostPop.Types.cs	5cb9366ec780854a70f5c88fc322eb5f3e39431d	port
 cpppj/src/o/RawRunePostPop.cpp	Netstorm.Core/Original/RawRunePostPop.cs	5cb9366ec780854a70f5c88fc322eb5f3e39431d	port
 cpppj/src/o/RawRunePostPop.h	Netstorm.Core/Original/RawRunePostPop.Types.cs	5cb9366ec780854a70f5c88fc322eb5f3e39431d	port
