@@ -1,4 +1,4 @@
-# webpj 신전 파편 캡처의 원본 관측 181행 대조 (WB04-E1275, 2026-11-23)
+# webpj 파편 캡처의 원본 관측 481행(신전 181·제네레이터 180·타워 120) 대조 (WB04-E1275, 2026-11-23)
 
 [LEFT_JOBS 점검](webpj-left-jobs-audit-20261123.md)(E1263)이 5-A "E197·E198·E201 재대조"와 7단계 "전용 시험이 없었던 시스템"에 남긴 "Shrapnel 표시 시스템을 cpppj Session 시험과 대조한다" 중 첫 부분이다. cpppj `CampaignTempleShrapnel_Native181CapturePixels` 가 읽는 원본 10.78 관측 `temple-capture-x86.tsv`(181행)는 `manifest.json`에도 웹 시험에도 없었다.
 
@@ -9,6 +9,10 @@
 ## 웹 시험
 
 새 `tests/temple-shrapnel-native-fixtures.test.mjs`: 실제 Session 생성자 순서를 `connectBuilding`(건물/유닛 캡처 설치)까지 조립하고, 행마다 신전 객체를 만들어 입력 열(프레임·단어·추가 비트·소유자, 기준점 -2·3)을 쓴 뒤 `particleModules.shrapnel.lifetime.capture(sid)` 의 그림을 비교한다. **181행 모두 크기·기준점·전체 픽셀이 같고 픽셀 수 합계 2,684,495 가 같다.** 변형 확인: 그리기 기준점을 한 칸 어긋나게 하면 실패한다(원복 확인).
+
+## 제네레이터·타워
+
+같은 형식의 `generator-capture-x86.tsv`(제네레이터 세 TYPE 180행, 픽셀 합계 1,844,370, cpppj `CampaignGeneratorShrapnel_Native180CapturePixels`)와 `blocker-capture-x86.tsv`(스톤/아이스 타워 TYPE 78·147 120행, 합계 1,317,660, `CampaignForwardBattle_Native120CapturePixels`)도 같은 시험이 읽는다. **두 fixture 모두 모든 행이 일치한다.** 세 fixture 를 한 헬퍼(`checkCaptureFixture`)로 대조하며 행 열 수만 다르다(신전 10: 소리 횟수 열 포함, 나머지 9).
 
 ## 범위
 

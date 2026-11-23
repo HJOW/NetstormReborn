@@ -22900,6 +22900,72 @@
       }
     },
     {
+      "id": "generator-capture",
+      "path": "cpppj/tests/fixtures/generator-capture-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E1275",
+      "producer": "cpppj CampaignGeneratorShrapnel_Native180CapturePixels: 보호 원본 10.78 제네레이터 ShapeToBuffer/+78/빈+a4/보호 RLE 파편 캡처 180행(TYPE 기준점 (-2,3)·단위 배율·일반 색, 기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/temple-shrapnel-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/raw-shape-to-buffer.js",
+        "webpj/www/core/raw-campaign-session-particles.js",
+        "webpj/www/core/raw-campaign-session-building.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawShapeToBuffer.cpp",
+        "cpppj/src/client/RawShapeToBuffer.h"
+      ],
+      "doc": "docs/webpj-temple-shrapnel-capture-20261123.md",
+      "scope": "제네레이터 세 TYPE(75~77)의 프레임·단어·추가 비트·소유자 180입력에서 캡처 그림의 크기·기준점·전체 픽셀·픽셀 수(1,844,370)",
+      "text": true,
+      "sha256": "5db59d411828a19c8ef4f236058d14b3a7d1658fc2e8ab1a4571986ab3dcf1a1",
+      "bytes": 3696790,
+      "lines": 181,
+      "fixtureCommit": "0e63fc670",
+      "webCommit": "499c54ddb",
+      "cpppjBasis": {
+        "cpppj/src/client/RawShapeToBuffer.cpp": "e6c41d170",
+        "cpppj/src/client/RawShapeToBuffer.h": "e6c41d170"
+      }
+    },
+    {
+      "id": "blocker-capture",
+      "path": "cpppj/tests/fixtures/blocker-capture-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "unit": "WB04-E1275",
+      "producer": "cpppj CampaignForwardBattle_Native120CapturePixels: 보호 원본 10.78 스톤/아이스 타워 ShapeToBuffer/+78/빈+a4/보호 RLE 파편 캡처 120행(TYPE 기준점 (-2,3)·단위 배율·일반 색, 기존 fixture, 재실행 없음)",
+      "consumers": [
+        "webpj/tests/temple-shrapnel-native-fixtures.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/render/raw-shape-to-buffer.js",
+        "webpj/www/core/raw-campaign-session-particles.js",
+        "webpj/www/core/raw-campaign-session-building.js"
+      ],
+      "cpppjSources": [
+        "cpppj/src/client/RawShapeToBuffer.cpp",
+        "cpppj/src/client/RawShapeToBuffer.h"
+      ],
+      "doc": "docs/webpj-temple-shrapnel-capture-20261123.md",
+      "scope": "스톤/아이스 타워(TYPE 78·147)의 프레임·단어·추가 비트·소유자 120입력에서 캡처 그림의 크기·기준점·전체 픽셀·픽셀 수(1,317,660)",
+      "text": true,
+      "sha256": "97bb9290d2777e8218d4bc5a9094e0ae669e72eb121c349fd3a9a57375427587",
+      "bytes": 2640307,
+      "lines": 121,
+      "fixtureCommit": "49b1e965f",
+      "webCommit": "499c54ddb",
+      "cpppjBasis": {
+        "cpppj/src/client/RawShapeToBuffer.cpp": "e6c41d170",
+        "cpppj/src/client/RawShapeToBuffer.h": "e6c41d170"
+      }
+    },
+    {
       "id": "production-hint",
       "path": "cpppj/tests/fixtures/production-hint-x86.tsv",
       "kind": "original-x86",
