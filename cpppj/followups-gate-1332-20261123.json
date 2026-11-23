@@ -1,0 +1,74 @@
+{
+  "unit": 1332,
+  "zip": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1332\\NetstormReborn-11.01-cpppj.zip",
+  "zipSha256": "ac0ed4d34dad0c663f726a6623bd13657dc81c270f82ade1bef3c426bfc5f11c",
+  "bytes": 205884306,
+  "entries": 1437,
+  "crcPassed": true,
+  "changedPayloads": {
+    "NetstormReborn-cpppj/Netstorm.exe": "99514ed7c3b13ada9a155518880ce02421e21ba2d875805b13591f287b69da45",
+    "NetstormReborn-cpppj/R.exe": "094a8e5e9c0d76690f8c190f6ebb0458af03b47878f1d76d1f9275933a644876",
+    "NetstormReborn-cpppj/lang/korean/xlat.korean": "9bf958b2db5971c9a5fd98cf2bbb9d1ccc72c980d729bd2a73b29aba03e562f6"
+  },
+  "gui": [
+    {
+      "name": "package-about-ko",
+      "args": [
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1332\\unpacked\\NetstormReborn-cpppj\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1332\\unpacked\\NetstormReborn-cpppj\\game",
+        "--window",
+        "--frames",
+        "35",
+        "--fixed-frame-ms",
+        "25",
+        "--no-audio",
+        "--set",
+        "welcomeGiven=1;tellTips=0;autoDemo=0;edgeScroll=0;currentLanguage=korean;SCREENW=1024;SCREENH=768",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\package-about-ko.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\package-about-ko-report.tsv"
+      ],
+      "exit_code": 0,
+      "seconds": 1.45228910446167,
+      "exe_sha256": "99514ed7c3b13ada9a155518880ce02421e21ba2d875805b13591f287b69da45"
+    },
+    {
+      "name": "package-camera-confirmed",
+      "args": [
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1332\\unpacked\\NetstormReborn-cpppj\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1332\\unpacked\\NetstormReborn-cpppj\\game",
+        "--window",
+        "--frames",
+        "100",
+        "--fixed-frame-ms",
+        "25",
+        "--no-audio",
+        "--set",
+        "welcomeGiven=1;tellTips=0;autoDemo=0;edgeScroll=0;currentLanguage=english;SCREENW=1024;SCREENH=768;intro=1",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\package-camera-confirmed.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\package-camera-confirmed-report.tsv",
+        "--mission",
+        "thewarbegins"
+      ],
+      "exit_code": 0,
+      "seconds": 2.499979257583618,
+      "exe_sha256": "99514ed7c3b13ada9a155518880ce02421e21ba2d875805b13591f287b69da45"
+    }
+  ],
+  "protection": {
+    "passed": true,
+    "files": 3212,
+    "originals": 1392,
+    "originalCD": 425,
+    "installCopy": 1393,
+    "AGENTSREADME": "unchanged"
+  },
+  "allUnpackedFilesUnchanged": true,
+  "passed": true,
+  "comparison": "카메라 적용/목표4정수·조각/커서·채팅내용·정지 비교, 실행별 UI토큰은 비교대상 제외"
+}
