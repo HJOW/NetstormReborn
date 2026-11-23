@@ -160,4 +160,124 @@ public static class NativeBattleInfoMenus
         Choices(options, index, maximum, hooks);
         Need(hooks.Attach)();
     }
+
+    /// <summary>현재전역제외/12별칭·TYPE분류/492960·여섯정렬/다섯하위메뉴 전체다. 0.918에서 추가됐다.</summary>
+    /// <param name="hooks">실제 메뉴 작성 장치다.</param>
+    public static void BuildBattleExcludeMenu(NativeBattleInfoMenuHooks hooks)
+    {
+        ArgumentNullException.ThrowIfNull(hooks);
+        Need(hooks.BeginFancy)();
+        Need(hooks.Title)(Need(hooks.Translate)("Exclude which unit:\n"));
+        List<KnowledgeRecord>[] groups = [ [], [], [], [], [], [], ];
+        // 원문12개비교의주소/단축평가순서다.
+        uint[] excludedGlobals = [0x5412d0, 0x54126c, 0x5411e8, 0x5411ec, 0x5411f0, 0x5411a8, 0x541240, 0x54123c, 0x541280, 0x541298, 0x5412b0, 0x54117c];
+        for (int number = 70; number < Need(hooks.TypeCount)(); number++)
+        {
+            // 각조건에서현재TYPE개수를다시읽는다.
+            uint type = unchecked((uint)number);
+            if (Need(hooks.GloballyExcluded)(type))
+            {
+                continue;
+            }
+
+            bool excluded = false;
+            foreach (uint address in excludedGlobals)
+            {
+                if (type == Need(hooks.Read)(address))
+                {
+                    excluded = true;
+                    break;
+                }
+            }
+
+            if (excluded)
+            {
+                continue;
+            }
+
+            OriginalTypeRecord record = Need(hooks.Type)(type);
+            int group;
+            if ((record.Flags2 & 0x100u) != 0)
+            {
+                if (type == Need(hooks.Read)(0x5412f8))
+                {
+                    continue;
+                }
+
+                group = 5;
+            }
+            else switch (record.Theme)
+                {
+                    case 0: group = 0; break;
+                    case 1: group = 1; break;
+                    case 2: group = 2; break;
+                    case 3: group = 3; break;
+                    default: group = 4; break;
+                }
+
+            uint capacity = group == 4 ? 100u : 50u;
+            if ((uint)groups[group].Count >= capacity)
+            {
+                throw new ArgumentOutOfRangeException(nameof(hooks), "BattleInfo 제외 메뉴의 원문 지역 지식 배열 범위");
+            }
+
+            groups[group].Add(Need(hooks.Knowledge)(type));
+        }
+
+        // 원문Sun/Wind/Thunder/Rain/기타/Spells의CRT호출순서다.
+        int[] sortOrder = [3, 0, 2, 1, 4, 5];
+        IReadOnlyList<OriginalTypeRecord> types = Need(hooks.Types)();
+        foreach (int group in sortOrder)
+        {
+            // 빈 배열도같은기존정렬부모에전달한다.
+            KnowledgeSort.SortKnowledgeRecords(groups[group], types);
+        }
+
+        // 기타그룹은수집/정렬하지만원문은메뉴에출력하지않는다.
+        int[] menuOrder = [5, 3, 0, 1, 2];
+        string[] headings = ["Wind", "Rain", "Thunder", "Sun", "", "Spells"];
+        foreach (int group in menuOrder)
+        {
+            // 원문Spells/Sun/Wind/Rain/Thunder순서로존재하는하위만작성한다.
+            if (groups[group].Count == 0)
+            {
+                continue;
+            }
+
+            Need(hooks.BeginVertical)();
+            foreach (KnowledgeRecord record in groups[group])
+            {
+                string description = Need(hooks.Description)(record.Type);
+                string label = Format("~y~E%s", description);
+                uint command = Need(hooks.Read)(0x5429e0);
+                Need(hooks.Item)(label, command, record.Type, true);
+            }
+
+            string heading = Need(hooks.Translate)(headings[group]);
+            uint child = Need(hooks.Take)();
+            Need(hooks.Submenu)(heading, child);
+        }
+
+        Need(hooks.Attach)();
+    }
+
+    /// <summary>현재설명/256BYTE 제거확인·Yes/No의TYPE/0을작성한다. 0.918에서 추가됐다.</summary>
+    /// <param name="type">제거 확인할 TYPE 번호다.</param>
+    /// <param name="hooks">실제 메뉴 작성 장치다.</param>
+    public static void BuildBattleRemoveMenu(uint type, NativeBattleInfoMenuHooks hooks)
+    {
+        ArgumentNullException.ThrowIfNull(hooks);
+        _ = Need(hooks.Type)(type);
+        Need(hooks.BeginFancy)();
+        string pattern = Need(hooks.Translate)("Remove exclusion of %s?\n");
+        string description = Need(hooks.Description)(type);
+        Need(hooks.Title)(Format(pattern, description));
+        string yes = Need(hooks.Translate)("Yes");
+        uint command = Need(hooks.Read)(0x5429e4);
+        Need(hooks.Item)(yes, command, type, true);
+        string no = Need(hooks.Translate)("No");
+        uint second = Need(hooks.Read)(0x5429e4);
+        Need(hooks.Item)(no, second, 0, true);
+        Need(hooks.Attach)();
+    }
 }
