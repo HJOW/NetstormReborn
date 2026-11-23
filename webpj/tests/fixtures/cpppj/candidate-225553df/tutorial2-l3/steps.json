@@ -1,0 +1,101 @@
+{
+  "format": "netstorm-webpj-cpppj-l3-steps",
+  "version": 1,
+  "description": "cpppj 225553df Tutorial2 입력 단계표(L3: Buildings Part 1 MORE→MORE→Create a Temple OK→사제 우클릭 메뉴(190 화면)→Construct(210 화면)→Temple(230 화면)→Build Wind Temple 선택(270 화면: 신전 모양 커서)→섬 안에 놓기(400 덤프·화면: 건설 중)→1200 덤프·화면: 신전 완공 안내 창). 단계는 [프레임, 동작, 인자]이며 cpppj `--ui-script` 의 동작 이름을 그대로 쓴다. 웹은 e2e/l3-tutorial2.spec.js 가 e2e/l3-common.js 로 같은 단계를 고정 시각 모드로 적용한다(입력 프레임 규칙은 docs/webpj-l3-tutorial1-20261123.md).",
+  "language": "english",
+  "screen": {
+    "width": 1024,
+    "height": 768
+  },
+  "fixedFrameMs": 25,
+  "mission": "Tutorial2",
+  "settings": {
+    "SCREENW": 1024,
+    "SCREENH": 768,
+    "WelcomeGiven": 1,
+    "tellTips": 0,
+    "autoDemo": 0
+  },
+  "steps": [
+    [
+      95,
+      "click-if",
+      "MORE"
+    ],
+    [
+      120,
+      "click-if",
+      "MORE"
+    ],
+    [
+      150,
+      "click-if",
+      "OK"
+    ],
+    [
+      180,
+      "right",
+      "screen:520,381"
+    ],
+    [
+      190,
+      "snapshot",
+      "m190"
+    ],
+    [
+      200,
+      "click",
+      "screen:570,403"
+    ],
+    [
+      210,
+      "snapshot",
+      "m210"
+    ],
+    [
+      220,
+      "click",
+      "screen:745,403"
+    ],
+    [
+      230,
+      "snapshot",
+      "m230"
+    ],
+    [
+      240,
+      "click",
+      "screen:900,407"
+    ],
+    [
+      270,
+      "snapshot",
+      "g270"
+    ],
+    [
+      280,
+      "click",
+      "screen:430,420"
+    ],
+    [
+      400,
+      "snapshot",
+      "c400"
+    ],
+    [
+      400,
+      "session-dump",
+      "c400"
+    ],
+    [
+      1200,
+      "snapshot",
+      "c1200"
+    ],
+    [
+      1200,
+      "session-dump",
+      "c1200"
+    ]
+  ]
+}

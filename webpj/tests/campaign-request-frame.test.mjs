@@ -152,8 +152,11 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         assert.ok(app._missionLoadingWindow); assert.equal(app._mainMenu.dialog, app._missionLoadingWindow);
         app._mainMenu.render(new IndexedSurface(1024, 768));
         const session = app._campaignWorld.session();
-        const notices = [], gump = app._clientGump;
-        const parent = gump.createBase(0, 20, 20, 1, (...event) => { notices.push(event.slice(0, 3)); return 0; });
+        // 생산 패널(HUD)은 원본처럼 Guide 의 시작 단계보다 먼저 같은 프레임에서 만들어지고 그 안의 실제 채팅 창이 현재 채팅 창이 된다. 시작의 숨김 명령(0x02000088)이 그 실제 채팅 창으로 가는지 Gump 사건 전달을 가로채 기록한다. (2026-11-24 WB04-E1305: 이전에는 가짜 채팅 부모를 먼저 심어 두었다)
+        const bubbled = [], gump = app._clientGump, events = gump.events(), originalBubble = events.bubble.bind(events);
+        events.bubble = (token, code, first, second) => { bubbled.push([token, code, first, second]); return originalBubble(token, code, first, second); };
+        // 뒤쪽 그리기 검사가 쓰는 가짜 부모·자식이다. 현재 채팅 창으로 심어 두지만 HUD 가 만들어지면 실제 채팅 창으로 바뀐다.
+        const parent = gump.createBase(0, 20, 20, 1, () => 0);
         const child = gump.createBase(0, 10, 10, 1, () => 0); gump.attach(parent, 0, 0); gump.attach(child, 0, 0, parent); app._clientChatWindows.window.current = child;
         // 실제 패킷·State는 앱 프레임에서만 진행하고 준비 전에는 Guide를 기다린다.
         for (let frame = 0; frame < 10 && !session.localConnectionReady(); frame += 1) app._onFrame(frame * 16);
@@ -176,7 +179,8 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         const pointerState = app._input.pointer, previousPointer = { ...pointerState };
         Object.assign(pointerState, { inside: true, x: 123, y: 234, buttons: 0 }); app._runCampaignInputFrame();
         assert.deepEqual(app._clientGameplay.selection.mouse, { x: 123, y: 234 }); Object.assign(pointerState, previousPointer);
-        assert.ok(notices.some(([code, first, second]) => code === 0x02000088 && first === 0 && second === 0));
+        assert.ok(bubbled.some(([token, code, first, second]) => code === 0x02000088 && first === 0 && second === 0 && token === app._clientChatWindows.window.current && token !== 0), '시작의 하단 채팅 숨김 명령이 실제 채팅 창으로 전달됨');
+        events.bubble = originalBubble;
         assert.equal(session.sp(session.localOwner()), Number(guide.current().script.get('myStartMoney')));
         const camera = app._clientGameplay.camera(); assert.deepEqual(camera.rendererView().pixels, camera.snapshot().pixels);
         const soundView = app._campaignSoundView(); assert.equal(soundView.cameraX, camera.snapshot().pixels.x); assert.equal(soundView.cameraY, camera.snapshot().pixels.y);

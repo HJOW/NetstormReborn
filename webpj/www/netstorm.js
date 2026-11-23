@@ -3963,10 +3963,11 @@ export class Netstorm {
         if (this._state === AppState.MAIN_MENU && readyWorld?.connecting && !readyWorld.session().connectionCallbackActive() && readyWorld.session().localConnectionReady()) {
             this._prepareCampaignMissionStart(); this._prepareCampaignUserInput(); this._prepareCampaignCursor(); this._prepareCampaignTutorial(); readyWorld.completeLocalConnection();
         }
-        // 원본 루프 8번의 Guide를 상태·패킷 처리 뒤, 입력 처리보다 먼저 실행한다.
-        this._clientGuide?.run();
+        // 생산 패널(HUD)은 원본 FinishMissionWorldLoad 가 만들고, Guide 의 시작 단계(기술 추가 등)는 그 뒤 루프 8번에서 돈다. 같은 프레임이어도 패널 폼(SID 순서)이 먼저이다. (2026-11-24 WB04-E1305: Tutorial2 L3 에서 슬롯 11~13 순서 차이로 발견)
         if (this._campaignDisplayActive() && !this._campaignProduction) this._prepareCampaignProduction();
         if (this._campaignDisplayActive() && !this._campaignProduction.ui) this._prepareCampaignProductionUi();
+        // 원본 루프 8번의 Guide를 상태·패킷 처리 뒤, 입력 처리보다 먼저 실행한다.
+        this._clientGuide?.run();
         if (this._campaignDisplayActive()) this._runCampaignInputFrame();
         if (this._state === AppState.MAIN_MENU) {
             // 원본 UserInput 은 매 프레임 마우스 위치를 폴링해 Gump 에 알린다. 그래서 포인터가 멈춰 있어도 그 아래에 새로 열린 펼침 메뉴 행이 바로 강조된다
