@@ -127,7 +127,13 @@ public sealed class CampaignWorldGlobals
     }
 
     /// <summary>현재 Player의 residence·island DWORD에 0으로 쓰는 값이다. 2026-11-07 F2d 캠페인 월드 적재 이식에서 추가됐다.</summary>
-    public uint Editor { get; set; }
+    public uint Editor { get => _editorBox.Value; set => _editorBox.Value = value; }
+
+    /// <summary>같은 실제 editor DWORD를 보상·생산·삭제가 별칭으로 빌리는 상자다. 0.901에서 RU-1 실제 owner 조립용으로 추가됐다.</summary>
+    public UIntBox EditorBox => _editorBox;
+
+    /// <summary>같은 실제 editor DWORD를 소유하는 상자다. 0.901에서 추가됐다.</summary>
+    private readonly UIntBox _editorBox = new();
 
     /// <summary>후처리 두 큰 분기를 모두 생략하는 실제 미션 전역이다. 2026-11-07 F2d 캠페인 월드 적재 이식에서 추가됐다.</summary>
     public bool MissionPost { get; set; } = true;

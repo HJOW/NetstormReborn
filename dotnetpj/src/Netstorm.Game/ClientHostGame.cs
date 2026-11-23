@@ -66,6 +66,8 @@ public sealed partial class ClientHostGame : Game
 
     /// <summary>--mission 진입으로 조립한 현재 미션 세션이다. 없으면 메뉴만 돈다.</summary>
     private HostSession? _missionSession;
+    /// <summary>현재 미션 스크립트의 demo 값이다. 메뉴 데모 getter가 실제 owner로 읽는다. 0.901에서 RU-1용으로 추가됐다.</summary>
+    private uint _missionDemo;
     /// <summary>공통 패킷 분배기의 실제 소유자다. R11 송수신 펌프가 소비한다.</summary>
     private RawPacketDispatch? _packetDispatch;
     /// <summary>완성한 실제 세션/같은 물리/음향·표시·UI 전체를 보유하는 현재 Runtime이다.</summary>
@@ -184,6 +186,32 @@ public sealed partial class ClientHostGame : Game
             owner.BindDisplayDiagnostics(ErrorLog.RecordAssertion);
             owner.Storage.BindGraphTrace((level, text) => ErrorLog.Note($"원본 로그 {level}: {text}"));
             owner.BindNativeTransmission(_connections, ClearNativeUserSelection);
+            // RU-1 Root 첫 장치 나머지: PostPop·Resource·Reward/현재 데모·Deletion·PlayerRecords를 실제 owner로 조립한다.
+            // 근거: cpppj ClientMain.cpp 447~455·468~488·525행. Transmission·Process 선택은 0.838에서 완료했다.
+            owner.BindNativeRootFirstDevices(
+                _spGlobals,
+                _gameRandom,
+                () => _missionDemo != 0,
+                () =>
+                {
+                    _ = _mainMenu ?? throw new InvalidOperationException("SP 표시의 실제 현재 메뉴 장치 미연결");
+                    throw new InvalidOperationException("SP 표시의 실제 생산 UI 미연결(R5)");
+                },
+                (x, y, type) =>
+                {
+                    var selection = new Netstorm.Client.Input.RawUserSelection(
+                        owner.Storage.Pool,
+                        owner.Storage.Types,
+                        _gameplay.Selection.SelectionState(),
+                        new Netstorm.Client.Input.UserSelectionHooks());
+                    selection.Remember(x, y, type);
+                },
+                sid =>
+                {
+                    HostMissionAudio audio = _missionAudio ?? throw new InvalidOperationException("공통 삭제 소리의 실제 장기 음향 장치 미연결");
+                    audio.PlayGlobal("unitLost.wav");
+                    _ = sid;
+                });
         });
         _sidLists = _surfaceGlobals.Storage.SidLists;
         BindStateResourceOwners();
@@ -354,6 +382,12 @@ public sealed partial class ClientHostGame : Game
         if (_missionRuntime is not null) throw new InvalidOperationException("기존 실제 Runtime 반납 전 미션 재시작");
         if (_surfaceGlobals.Storage.Borrowed()) throw new InvalidOperationException("장기 Surface 반납 전 일반 미션 초기화 금지");
         using var script = new MissionScript(_startup.Configuration, mission);
+        // RU-1 현재 Menu 데모 getter용 실제 owner: 미션 스크립트의 demo 값을 같은 호스트에 보관한다.
+        // 근거: cpppj UberGump.cpp 226행의 missionRuntime_->gate.demo. DN 미션 Runtime은 gate를 아직 노출하지 않아 호스트가 보관한다.
+        {
+            string? demoText = script.Get("demo");
+            _missionDemo = string.IsNullOrEmpty(demoText) ? 0u : unchecked((uint)Netstorm.Assets.ConfigNumbers.ParseLong(demoText));
+        }
         HostAssetTables assets = AssetTables;
         RiftTypeTable types = assets.TypeTable;
         MissionFortLoadResult fort = MissionFortLoad.Load(_startup, mission, types);

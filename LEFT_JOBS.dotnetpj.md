@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-23 · 목표 진행 중·마지막 완료0.900(정기 전체 회귀·6,363통과·65진입) · 다음0.901(R4-6 Root 장치·UI 묶음 RU-1) · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6) · cpppj 제품1326 / 11.01 · 전체 목표 미완료 · 0.900 뒤 정리**
+**2026-11-24 · 목표 진행 중·마지막 완료0.901(RU-1 Root 첫 장치·9통과·대표3동일) · 다음0.902(R4-6 Root 장치·UI 묶음 RU-2) · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6) · cpppj 제품1326 / 11.01 · 전체 목표 미완료 · 0.900 뒤 정리**
 
 현행 인계는 이 문서가 기준이다. 단위별 근거는 `docs/dotnet-canon-0NNN-*.md`이다. 정리 직전 원문 전체는 보관 파일 끝에 있다: [0.900 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261123-through-0900)(0.838~0.900의 재개 인계 연쇄·6절 단위별 행·R4-4/R4-6 남음 원문) · [0.837 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261123-through-0837) · [0.797 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0797) · [0.732 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0732)(0.640 회귀 점검 상세 포함) · [0.635 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635) · [0.613 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)(경과와 파일 계열별 체크 목록). 각 보관본에 옮긴 내용은 [6절](#dotnet-archive-log) 이관 기록에 있다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
@@ -19,8 +19,8 @@
 
 ### 0.1 재개 순서와 최근 완료 요약
 
-1. **다음0.901 — R4-6 Root 장치·UI 묶음(RU-1부터).** 0.900 정기 전체 회귀 뒤 첫 단위다. 세부 단위 RU-1~RU-6과 완료 기준은 [1.1절 R4-6](#r4-detail)에 있다. RU-6(Load/Editor 세 설치 값 공개)은 Load 하위가 모두 정상 복귀한 뒤 마지막에 한다. 이 묶음 뒤 R4-7·R4-8(M1)로 간다. 다음 정기 전체는0.904다.
-   - 선행 완료(중복 금지): 첫 장치 설치/같은 상태·깊이(0.814), 현재 지갑·실제 Host 메모리 대여·AI 통지 진입점과 Player owner 빌림(0.815), Player 고유Pre/약한 records owner와 Residence/Dude(0.813), HUD 도킹·전체 Uber 부모/현재 this DockView·공통 HUD 수명(0.817~0.819), 미니맵 기하·공유 FullRefresh·RawMinimapControls(MapRevision 대여·GumpRedraw 등록) 수명(0.821~0.822), NSInfo 생성/부착(0.823), 생산 격자·정보·동기화·실제 생산 부모(0.825~0.826·0.829), OwnerColorTableState/ProductionControlContext·장기 Finder(0.827), 최초 고정 RGB/primary/9표·캐시 부모(0.830), RawBaseFileIO·같은 경로 검색·실제 CRT/TAFF·색표 캐시(0.831·0.833·0.834), Game 최초 팔레트·소유자 옵션(0.835), ClientProductionSync·색표7 소비자(0.837), 실제 Root 전송/Process 선택·같은 지도 getter/BSS0(0.838), Native Player 정기/Template(0.839). 0.841~0.899의 Native 기본 Host·Process writer·패킷 분배 부모도 다시 만들지 않는다. 범위는 아래 요약표를 본다.
+1. **다음0.902 — R4-6 Root 장치·UI 묶음(RU-2부터).** 0.901에서 RU-1을 완료했다. 세부 단위 RU-2~RU-6과 완료 기준은 [1.1절 R4-6](#r4-detail)에 있다. RU-6(Load/Editor 세 설치 값 공개)은 Load 하위가 모두 정상 복귀한 뒤 마지막에 한다. 이 묶음 뒤 R4-7·R4-8(M1)로 간다. 다음 정기 전체는0.904다.
+   - 선행 완료(중복 금지): 첫 장치 설치/같은 상태·깊이(0.814), 현재 지갑·실제 Host 메모리 대여·AI 통지 진입점과 Player owner 빌림(0.815), Player 고유Pre/약한 records owner와 Residence/Dude(0.813), HUD 도킹·전체 Uber 부모/현재 this DockView·공통 HUD 수명(0.817~0.819), 미니맵 기하·공유 FullRefresh·RawMinimapControls(MapRevision 대여·GumpRedraw 등록) 수명(0.821~0.822), NSInfo 생성/부착(0.823), 생산 격자·정보·동기화·실제 생산 부모(0.825~0.826·0.829), OwnerColorTableState/ProductionControlContext·장기 Finder(0.827), 최초 고정 RGB/primary/9표·캐시 부모(0.830), RawBaseFileIO·같은 경로 검색·실제 CRT/TAFF·색표 캐시(0.831·0.833·0.834), Game 최초 팔레트·소유자 옵션(0.835), ClientProductionSync·색표7 소비자(0.837), 실제 Root 전송/Process 선택·같은 지도 getter/BSS0(0.838), Native Player 정기/Template(0.839). 0.841~0.899의 Native 기본 Host·Process writer·패킷 분배 부모와 0.901의 Root 첫 장치(PostPop·Resource·Reward/현재 데모·Deletion·PlayerRecords·실제 지갑 공급)도 다시 만들지 않는다. 범위는 아래 요약표를 본다.
    - 주의: 기존83VT 실제 분배/고유 파생·Runtimepin을 잇고 미설치를 일반 Pre/Post/no-op으로 통과시키지 않는다. prepared 상태나 동일 깊이 검사를 완화하지 않는다. 실제 지도 영역을 전체viewport로 대체하지 않는다. Root의 세 번째 NSInfo와 F6 RawKnowledgeMenu를 혼동하지 않는다. 후속 UI/World 소비자도 같은 현재 색표/OwnerTables를 빌려야 하며 별도 표를 만들지 않는다. 실제 색표 연결을 NativeRoot/World 전체 설치 완료로 세지 않는다. 설치 후/Editor 성공 범위를 0.837의 거부 검사로 완료 처리하지 않는다. 초기 Source 미니맵 공장은 Open이 아닌 Construct와 기존 bitmap 준비/전체 도킹의 Push→Attach를 사용한다.
    - 소견: 최신 `extracted/dotnet-0837/next-0838-static.md`. 이전 Root·미니맵·생산 소견은 extracted/dotnet-0816·0820·0821·0822·0824·0826의 `next-08NN-static.md`다.
 
@@ -32,7 +32,7 @@
    - [ ] 정보(About) ▸ 버전 창 Copyright — 원본 Tell `[About]`에 11.01 패치와 `Copyright 2026 HJOW`(AGENTS.md)가 없다. 완료 기준: cpppj에서 정한 문구로 영어·한국어 창에 원본 저작권 줄·10.78 패치 줄·11.01 패치(HJOW)·`Copyright 2026 HJOW`를 표시한다.
    - 14차 모딩(QuickJS + webpj 이름 체계 공통 모드 API, 2026-11-23 사용자 결정)은 [3.1](#dotnet-modding)의 MOD-1~5다. 착수는 사용자 지시를 따른다.
 
-**최근 완료 요약(0.639~0.900).** 단위별 완료 문장과 집중 검사 수는 보관본과 각 단위 문서에 있다. 완료 범위와 남은 일의 기준은 1.1·1.2절 체크 항목이다.
+**최근 완료 요약(0.639~0.901).** 단위별 완료 문장과 집중 검사 수는 보관본과 각 단위 문서에 있다. 완료 범위와 남은 일의 기준은 1.1·1.2절 체크 항목이다.
 
 | 주제 | 단위 | 핵심 | 남은 일 |
 | --- | --- | --- | --- |
@@ -60,6 +60,7 @@
 | 총 애니메이션·투사체·표적 | 0.862~0.863·0.865~0.867·0.869~0.871·0.873~0.874·0.878~0.879·0.881~0.882 | RawGunAnimation 공통 codec과 썬 캐논·아처·캐논/반더·크로스보우·아이스 캐논 발사, 미사일·포구/사정선·아이스 반사점·피해/DPS·반사탄/플로터, RawGunTarget 표적 Finder, 같은 World 전투 애니메이션 공장·3b/3c(RawCampaignArcherBindings)·고정 수신26/26(0.882) | Root의 Gun 큰 장치, RawGunTarget 실제 보호 자산 `cannon-asset-ray48` 검사 |
 | Dais·Dude·Disc 정기·의식 | 0.875·0.877·0.883·0.885~0.887·0.889~0.891·0.893~0.895 | 디스크 정기·현재 TYPE 애니메이션 필드, RawDudeRegular, Rune 후처리/RawRunePostPop, 사제 의식(RawPriestRitualActions), TempleRitual, RawDaisRegular·RawRitualRegular, Dude·Disc·Dais 세션 typed 정기 분배, Kernel/Process 초기 등록 계약 | [R4-4 남음](#r4-detail) |
 | 패킷 분배 부모 | 0.897~0.899 | `ClientPacketDispatch.Build`에 41h(ClientChatPacketReceiver)·NativeLoginPacketReceivers, 설정·버전·기술·변수 묶음, NativeGameplayPacketReceivers 6종 설치 | InstallClientPacketDefaults 나머지·MakeClientCampaignTransport 부모, 종료·닫기·반납(R11) |
+| Root 첫 장치 | 0.901 | PostPop 선택 재검사·Resource·Reward(실제 지갑 공급)/현재 데모·Deletion·PlayerRecords의 실제 owner 조립, 간헐천 AI 등록 순회, Editor 별칭 상자 | RU-2~RU-6, [1.1](#r4-detail) |
 | 정기 전체 회귀·L2 | 0.644부터4단위마다(0.900까지) | 전체6363통과/실패0·음향1미실행·신규63/기존이름/중복보존·같은빌드65종료0·원본1392/실행6/소스2064불변·M1 0/34 | 다음0.904 · [0.900](docs/dotnet-canon-0900-20261123.md) |
 
 <a id="first-run"></a>
@@ -146,8 +147,8 @@ AGENTS.md 지정에 따라0.807에서 공통 [assets/Netstorm.ico](assets/Netsto
   - 남음: 제품 양끝 요청 전송, 수집자·시설과 나머지 하위 행동의 세션 호출자, 신전 삭제, `SetAiParameter`·`CrankAiMoney`의 실제 호출자, 매 프레임 실행과 258 완료·brain·SP·Player L2 대조.
 - [ ] **R4-6 내부 로그인·전송·Client 전역.** 메뉴 핸들 출처와 이름 꼬리 16~19바이트, 로컬 Login→Ready→Start 실제 패킷, 요새 이미지·`Bind*`·State 수명을 연결한다. 실제 handshake 검사와 메뉴/`--mission`의 진입 덤프를 대조한다.
   - 완료(0.689~0.899, 묶음별 범위·핵심은 [0.1 요약표](#now)): 로그인·전송·Client 전역(0.689~0.715), Runtime·Player 장기 수명(0.706~0.719), Client 프레임·장기 Host(0.721~0.727·0.838), Native State 정리·저장소·반납(0.729~0.735·0.813~0.814), Root 자원·장기 자산표·선택(0.737~0.747), 커서·카메라·Renderer·Host 표시(0.749~0.755), Chat 계열(0.757~0.777), Root 수신·전송 관찰기(0.778~0.787), 객체 패킷 수신·Host entry(0.789~0.811), 경로 Runtime·Data·본체·탐색과 건설 환불·정지/도착 부모(0.793~0.801), HUD 도킹·전체 부모/공통 조립(0.817~0.822), NSInfo·생산 패널·색표(0.823~0.837), 파일 IO·검색·CRT(0.831~0.834), Native 기본 Host·수명·writer(0.841~0.844), 건설·총·비행 Process와 총 애니메이션·투사체·표적·고정 수신26/26(0.845~0.882), 패킷 분배 부모(0.897~0.899). 단위별 완료 문장은 [0.797](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0797)·[0.837](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261123-through-0837)·[0.900](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261123-through-0900) 보관본과 단위 문서에 있다.
-  - 남음(Root 장치·UI) — 0.901부터 RU-1→RU-6 순서로 잇고 각 단위는 집중 검사와 대표3 덤프/지표 불변으로 닫는다.
-    - [ ] **RU-1 Root 첫 장치 나머지.** Source ClientMain447~536의 PostPop 선택 재검사·Resource·Reward·Deletion·PlayerRecords·표시/음향/AI 장치와 현재 Menu 데모 getter를 실제 owner로 조립하고 CreateAiWallet을 실제 Native Reward 장치에 공급한다(Transmission·Process 선택은 0.838 완료). 완료 기준: 각 장치가 같은 Surface/Runtime을 빌려 설치되고 미설치를 일반 Pre/Post/no-op으로 통과시키지 않는다.
+  - 남음(Root 장치·UI) — 0.901에서 RU-1을 완료했고 RU-2→RU-6 순서로 잇는다. 각 단위는 집중 검사와 대표3 덤프/지표 불변으로 닫는다.
+    - [x] **RU-1 Root 첫 장치 나머지(0.901).** Source ClientMain447~536의 PostPop 선택 재검사·Resource·Reward·Deletion·PlayerRecords와 현재 Menu 데모 getter를 실제 owner로 조립하고 CreateAiWallet을 실제 Native Reward 장치에 공급했다(Transmission·Process 선택은 0.838 완료). 표시/음향/AI 장치 중 Flare/Mana/AttackSound/DaisFinish 본체는 R5/R6 표시·음향 결선에서 잇는다. [0.901](docs/dotnet-canon-0901-20261124.md)
     - [ ] **RU-2 Root 공급값·State.** Root의 언어/이름/ScreenSize/FormPacket/수신 장치 공급, 장면음악 장치·UI/음향/Pool·전체 State 설치, Native 색표7 getter/zone 옵션 변경 부모, 세션 자산 InBattle 최초 상태. 완료 기준: 고정 수신26F가 Root 공급값으로 실제 수신을 마치고 같은 현재 색표/OwnerTables를 빌린다.
     - [ ] **RU-3 Root 공장·창.** 실제 게임 Root의 네 자식·Root/생산 공장·채팅/메시지 공장과 바깥 UI 장치, NativeRoot/HUD 창 생성·Enter, 알림 등록 ID의 실제 HUD 작성자, NSInfo HUD/메타 UI/Root reply 저장. 완료 기준: 미션 진입 Root가 이 공장·창을 소유하고 세 번째 NSInfo와 F6 RawKnowledgeMenu를 구별한다.
     - [ ] **RU-4 지도·선택·미니맵.** 0.838의 현재 지도 getter를 재사용하는 실제 HUD 도킹(같은 지도 owner의 HUD 작성자), 현재 지도/카메라/선택과 살아 있는 선택 객체의 수명, 같은 미니맵 전역 공급. 완료 기준: HUD 도킹이 지도 저장소를 작성하고 실제 지도 영역을 쓴다(전체 viewport 대체 없음).
@@ -304,6 +305,7 @@ AGENTS.md 지정에 따라0.807에서 공통 [assets/Netstorm.ico](assets/Netsto
 | 0.862~0.882 | 2026-11-23 | 총 애니메이션·썬 캐논(0.862)·아처(0.863)·캐논/반더(0.865)·크로스보우(0.866)·아이스 캐논(0.867), 미사일(0.869)·포구/사정선(0.870)·아이스 반사점(0.871)·피해/DPS(0.873)·반사탄/플로터(0.874), 디스크 정기·현재 TYPE(0.875·0.877), Gun 표적 Finder(0.878), 전투 애니메이션 공장과 일시 중지 인계(0.879)·3b/3c 수신·전체26F(0.881·0.882), 0.864·0.868·0.872·0.876·0.880 전체 회귀(6,192·6,215·6,255·6,272·6,300)·65진입 |
 | 0.883~0.896 | 2026-11-23 | Dude 정기(0.883), Rune 후처리/PostPop(0.885·0.887), 사제 의식(0.886), TempleRitual(0.889), DaisRegular·RawRitualRegular(0.890), Dude·Disc·Dais 세션 분배(0.891·0.893·0.895), Kernel/Process 초기 등록(0.894), 0.884·0.888·0.892·0.896 전체 회귀(6,334·6,345·6,352·6,358)·65진입 |
 | 0.897~0.900 | 2026-11-23 | 패킷 분배 부모 `ClientPacketDispatch.Build`의 41h·로그인(0.897), 설정·버전·기술·변수(0.898), Native gameplay 6종(0.899), 0.900 전체 회귀6,363·65진입 |
+| 0.901 | 2026-11-24 | RU-1 Root 첫 장치(PostPop·Resource·Reward/현재 데모·Deletion·PlayerRecords·실제 지갑 공급)와 간헐천 AI 등록·Editor 별칭, 신규 9건·대표3 덤프/지표 0.900 동일 |
 
 정기 전체 회귀·일괄 덤프는 0.644부터 4단위마다(0.644·0.652·0.656·0.660·0.664 … 0.728 … 0.800 … 0.844~0.900) 수행했고 다음은0.904다. 단위별 근거는 `docs/dotnet-*.md`와 Git 기록에 있다.
 

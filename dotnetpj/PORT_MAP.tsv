@@ -1821,3 +1821,7 @@ cpppj/src/zacket/LocalMissionTransport.cpp	Netstorm.Net/LocalMissionZone.cs	5756
 cpppj/src/zacket/LocalMissionTransport.h	Netstorm.Net/LocalMissionTransport.Runtime.cs	5756ffd5ff23335839974c3c6f2b2aacd7b35618	port
 cpppj/src/zacket/LocalMissionTransport.h	Netstorm.Net/LocalMissionTransport.cs	5756ffd5ff23335839974c3c6f2b2aacd7b35618	port
 cpppj/src/zacket/LocalMissionTransport.h	Netstorm.Net/LocalMissionZone.cs	5756ffd5ff23335839974c3c6f2b2aacd7b35618	port
+cpppj/src/client/ClientMain.cpp	Netstorm.Client/ClientSurfaceGlobals.RootFirstDevices.cs	98663aa77353cb08f2c72bf13bff58630a0c95ec	port
+cpppj/src/o/RawGeyserAiRegistration.cpp	Netstorm.Core/Original/RawGeyserAiRegistration.cs	98663aa77353cb08f2c72bf13bff58630a0c95ec	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.ResourceDevices.cs	98663aa77353cb08f2c72bf13bff58630a0c95ec	port
+cpppj/src/client/ClientMain.cpp	Netstorm.Core/Original/CampaignWorldGlobals.cs	98663aa77353cb08f2c72bf13bff58630a0c95ec	port
