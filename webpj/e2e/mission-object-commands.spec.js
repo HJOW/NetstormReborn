@@ -298,3 +298,20 @@ test('The War Begins!: 팝업을 닫으면 그 영역이 다음 프레임에 다
   expect(diff(before, after), '닫은 뒤 영역이 팝업 전과 같다(애니메이션 오차 허용)').toBeLessThan(0.1);
   expect(errors).toEqual([]);
 });
+
+// 생산 다리 격자는 시간이 지나 새 다리 조각이 생기면(Session 의 생산 내용물 갱신) 다음 프레임들에 화면에서 실제로 바뀐다(원본 UpdateContents 뒤 common.changed 의 무효화와 같은 결과). 새 조각이 생겨 격자 내용물이 늘 때까지 영역 픽셀을 지켜본다.
+// (기술 지급(CheatAllTechnology)은 생산 패널이 아니라 사제의 건설 메뉴에 나타나므로 이 시험의 대상이 아니다.) (2026-11-23 WB04-E1257)
+test('The War Begins!: 새 다리 조각이 생기면 생산 다리 격자가 화면에서 바뀐다', async ({ page }) => {
+  test.setTimeout(300000);
+  const errors = []; await startWarBegins(page, errors);
+  const grab = (box) => page.evaluate((r) => { const app = window.netstorm, canvas = app.canvas, context = canvas.getContext('2d'), scale = canvas.width / app._layout.logicalWidth;
+    return Array.from(context.getImageData(Math.round(r.left * scale), Math.round(r.top * scale), Math.round((r.right - r.left) * scale), Math.round((r.bottom - r.top) * scale)).data); }, box);
+  const diff = (a, b) => { let count = 0; for (let index = 0; index < a.length; index += 4) if (Math.abs(a[index] - b[index]) + Math.abs(a[index + 1] - b[index + 1]) + Math.abs(a[index + 2] - b[index + 2]) > 60) count += 1; return count / (a.length / 4); };
+  // 생산 패널의 다리 격자(위쪽 슬롯) 영역이다.
+  const box = await page.evaluate(() => { const app = window.netstorm, root = app._clientGump, b = root.collection().bounds(app._campaignProduction.ui.node().bridge); return { left: b.left + 2, top: b.top + 2, right: b.right - 2, bottom: b.bottom - 2 }; });
+  const first = await grab(box); let changed = 0;
+  // 새 조각이 도착하는 동안(최대 40초) 영역이 처음 모습과 5% 넘게 달라지는지 본다.
+  for (let wait = 0; wait < 40 && changed < 0.05; wait += 1) { await page.waitForTimeout(1000); changed = diff(first, await grab(box)); }
+  expect(changed, '새 다리 조각이 화면에 나타난다').toBeGreaterThan(0.05);
+  expect(errors).toEqual([]);
+});
