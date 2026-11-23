@@ -3243,7 +3243,8 @@ export class Netstorm {
     }
 
     // 미션 State7 에서 장면 음악 구동기를 만들고 원소 곡 순환을 시작한다(원본 StartScene(true)). 재생기가 없거나 오디오를 끈 실행이면 아무 일도 없다.
-    // 곡 선택 난수는 월드 난수열을 건드리지 않도록 따로 쓴다. 곡 받기 실패는 오류로 기록하되 게임은 계속한다. (2026-11-20 WB04-E1119)
+    // 첫 곡 선택 난수는 원본처럼 공유 게임 난수(Client 난수 전역의 `game`)에서 한 번 뽑는다. 이전(E1119)에는 월드 난수열을 건드리지 않으려고 Math.random 을 썼지만, 원본 StartScene(true)이 게임 난수를 한 번 소비하므로
+    // 그렇게 하면 미션 이후의 난수열(게임 난수 모드 0 은 고정 시드)이 원본과 한 칸 어긋난다. 곡 받기 실패는 오류로 기록하되 게임은 계속한다. (2026-11-20 WB04-E1119, 2026-11-23 WB04-E1258: 공유 게임 난수로 교체)
     _beginSceneMusic() {
         const audio = this._audio;
         if (!audio || audio.closed || !this.options.audio || !this._gameClock || !this._assetLoader) return;
@@ -3251,7 +3252,7 @@ export class Netstorm {
         const loader = this._missionAudioLoader();
         this._sceneMusic = new SceneMusicDriver({
             audio, prepare: (name) => loader.loadMusic(name), release: (name) => loader.releaseMusic(name),
-            wallSeconds: () => this._gameClock.wallSeconds(), random: { next: (limit) => Math.floor(Math.random() * limit) },
+            wallSeconds: () => this._gameClock.wallSeconds(), random: { next: (limit) => { const random = this._clientRandom; if (!random) throw new Error('장면 음악의 공유 게임 난수 수명 누락'); return random.game.next(limit); } },
             // 날씨(천둥) 효과음은 원본 MakeSceneMusicHooks 처럼 SoundPlayer::PlayByName(이름, 0,0,0,0,0)을 거친다. 그래야 게임 메뉴 음소거(PushMute)·소리 옵션·동시 재생 한도가 같이 적용된다. (2026-11-23 WB04-E1239)
             weatherSound: (name) => { try { this._clientSoundPlayer?.playByName(name, 0, 0, 0, 0, 0); } catch (error) { if (this._audio === audio) reportGameError('scene-music', error, { state: this._state, asset: name }); } },
             onError: (error, name) => { if (this._audio === audio) reportGameError('scene-music', error, { state: this._state, asset: name }); },

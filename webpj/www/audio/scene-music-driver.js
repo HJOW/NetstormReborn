@@ -43,7 +43,7 @@ export class SceneMusicDriver {
         this.#audio = audio; this.#prepare = prepare; this.#release = release; this.#weatherSound = weatherSound; this.#onError = onError;
         this.#state = new SceneMusicState();
         this.#scene = new SceneMusic(this.#state, random, {
-            wallSeconds, currentName: () => this.#selected, select: (name) => this.#select(name), duration: () => musicSeconds(this.#selected),
+            wallSeconds, currentName: () => this.#selected, select: (name) => this.#select(name), duration: () => this.#musicAudible() ? musicSeconds(this.#selected) : 0,
             // 희생 의식 곡·대기실 곡·팔레트·화면 갱신·번개 섬광은 대응 부품이 없어 비어 있다(위 머리 설명).
             sacrificing: () => false, waitingRoom: () => false, refresh: () => {}, ascendancyPalette: () => false, loadPalette: () => {}, thunderFlash: () => {},
             weatherSound: (name) => this.#weatherSound(name),
@@ -92,6 +92,10 @@ export class SceneMusicDriver {
             this.#trim();
         });
     }
+
+    // 음악이 실제로 열릴 수 있는 상태(소리·음악 옵션이 켜짐)인지이다. 원본 MusicChannelDuration 은 주 채널이 파일을 연 적이 없거나 닫았으면(소리·음악을 끈 상태) 0 을 돌려주고, 감독은 길이 0 을 180초 뒤 재확인으로 처리한다.
+    // 그래서 음악을 끈 동안의 곡 기한(날씨·천둥 주기 포함)은 곡 길이 표가 아니라 180초이다. 시험용 대역 재생기처럼 속성이 없으면 켜짐으로 본다. (2026-11-23 WB04-E1258)
+    #musicAudible() { return this.#audio.musicEnabled !== false && this.#audio.soundEnabled !== false; }
 
     // 선택이 여전히 이 곡이면 재생을 요청하고 다음 원소 곡을 미리 받는다. 재생기가 닫혔으면 아무 일도 없다. (2026-11-20 WB04-E1119)
     #start(name) {

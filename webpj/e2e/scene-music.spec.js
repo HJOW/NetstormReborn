@@ -59,13 +59,13 @@ test('미션 장면 음악: 원소 곡 재생·다음 곡 미리 받기·떠나�
   await page.evaluate(() => window.netstorm._settings.set('sound', 1));
   await page.waitForFunction((name) => window.netstorm._audio.currentMusic === name, playing.current, { timeout: 10000 });
   // 천둥 곡이 시작되면 날씨 효과음은 audio.playSound 가 아니라 미션 SoundPlayer 의 playByName(이름,0,0,0,0,0)을 거친다(게임 메뉴 음소거·동시 재생 한도 적용, E1239).
-  // 난수 0.3 → 시작 색인 1 → 다음 곡 색인 2(thu22.mus)이다.
+  // 공유 게임 난수가 limit 4000 에서 1200(0.3)을 돌려주면 시작 색인 1 → 다음 곡 색인 2(thu22.mus)이다. (E1258 부터 첫 곡 난수는 Math.random 이 아니라 공유 게임 난수이다.)
   const thunder = await page.evaluate(() => {
-    const app = window.netstorm, player = app._clientSoundPlayer, calls = [], direct = [], play = player.playByName.bind(player), raw = app._audio.playSound.bind(app._audio), random = Math.random;
+    const app = window.netstorm, player = app._clientSoundPlayer, calls = [], direct = [], play = player.playByName.bind(player), raw = app._audio.playSound.bind(app._audio), game = app._clientRandom.game;
     player.playByName = (...args) => { calls.push(args); return play(...args); };
     app._audio.playSound = (...args) => { direct.push(args[0]); return raw(...args); };
-    Math.random = () => 0.3;
-    try { app._beginSceneMusic(); } finally { Math.random = random; delete player.playByName; delete app._audio.playSound; }
+    game.next = (limit) => Math.floor(0.3 * limit);
+    try { app._beginSceneMusic(); } finally { delete game.next; delete player.playByName; delete app._audio.playSound; }
     return { calls, direct, selected: app._sceneMusic.selected };
   });
   expect(thunder.selected).toBe('thu22.mus'); expect(thunder.calls).toEqual([['thunderCrack.wav', 0, 0, 0, 0, 0]]); expect(thunder.direct).toEqual([]);
@@ -73,5 +73,28 @@ test('미션 장면 음악: 원소 곡 재생·다음 곡 미리 받기·떠나�
   await page.evaluate(() => window.netstorm._leaveCampaignMission());
   await page.waitForFunction(() => window.netstorm._audio.currentMusic === 'ser22.mus' && !window.netstorm._sceneMusic, null, { timeout: 30000 });
   expect(await page.evaluate(() => [...window.netstorm._audio.music.keys()])).toEqual(['ser22.mus']);
+  expect(errors).toEqual([]);
+});
+
+// 장면 음악 시작(State7 StartScene(true))의 첫 곡 선택은 원본처럼 공유 게임 난수를 정확히 한 번 소비한다. 이전에는 Math.random 을 써서 미션 난수열(게임 난수 모드 0 은 고정 시드)이 원본과 한 칸 어긋났다. (2026-11-23 WB04-E1258)
+test('미션 장면 음악 시작은 공유 게임 난수를 정확히 한 번 소비한다', async ({ page }) => {
+  test.setTimeout(180000);
+  const errors = []; page.on('pageerror', (error) => errors.push(error.message)); page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
+  await page.addInitScript(() => { localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 1, music: 1 } }));
+    localStorage.setItem('netstorm.progress', JSON.stringify({ version: 1, values: { DoneTutorial1: '1' } })); });
+  await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/?aspect=4:3');
+  await page.waitForFunction(() => window.netstorm?.state === 'clickToStart'); await page.locator('canvas').click();
+  await page.waitForFunction(() => window.netstorm?.state === 'mainMenu');
+  await page.waitForFunction(() => window.netstorm._audio?.currentMusic === 'ser22.mus', null, { timeout: 60000 });
+  await clickLabel(page, 'Campaign'); await clickLabel(page, 'Early Missions');
+  const first = await page.evaluate(() => window.netstorm._mainMenu.dialog.menu.items.find((item) => item.command?.name === 'MissionBegin' && item.command.argument === 'Tutorial1')?.label);
+  await clickLabel(page, first);
+  await page.waitForFunction(() => window.netstorm?._campaignDisplayActive() && window.netstorm._clientGuide.current()?.runtime.gate.started === 1, null, { timeout: 50000 });
+  await page.waitForFunction(() => window.netstorm._sceneMusic?.active, null, { timeout: 90000 });
+  // 한 번의 동기 평가 안에서(프레임이 끼어들지 않는다) 구동기를 끝냈다 다시 시작하며 게임 난수 상태가 선형 합동 한 단계만 전진하는지 본다(상태 = 상태 × 0x10003 + 3).
+  const step = await page.evaluate(() => { const app = window.netstorm, game = app._clientRandom.game; app._endSceneMusic();
+    const before = game.state; app._beginSceneMusic(); const after = game.state; const advance = (state) => (Math.imul(state === 0 ? 0x0bad0bad : state, 0x10003) + 3) >>> 0;
+    return { before, after, once: advance(before), twice: advance(advance(before)) }; });
+  expect(step.after, '게임 난수를 한 번 소비').toBe(step.once); expect(step.after).not.toBe(step.twice);
   expect(errors).toEqual([]);
 });

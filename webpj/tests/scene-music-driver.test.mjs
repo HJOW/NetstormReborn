@@ -146,3 +146,23 @@ test('request: 승리 곡은 결과 상태가 아니면 무시하고 미션 장�
     const f = fixture({ values: [0] }); f.driver.begin(); f.driver.request('fanfare.mus'); assert.equal(f.driver.selected, 'rain22.mus', '결과 상태 1 이 아니면 승리 곡 요청을 거른다');
     f.driver.end(); const count = f.prepared.length; f.driver.request('sacrifice.mus'); assert.equal(f.prepared.length, count); assert.equal(f.driver.selected, MENU_TRACK);
 });
+
+// 원본 MusicChannelDuration 은 주 채널이 파일을 연 적이 없거나 닫았으면 0 을 돌려주고 감독은 길이 0 을 180초 뒤 재확인으로 처리한다. 소리·음악 옵션을 끈 동안의 곡 기한은 곡 길이 표(원소 곡 200초 넘음)가 아니라 180초이다. (2026-11-23 WB04-E1258)
+test('곡 기한: 음악이나 소리를 끈 동안은 곡 길이 대신 180초 뒤에 다음 곡으로 넘어간다', async () => {
+    const setup = async ({ musicEnabled, soundEnabled }) => {
+        // 난수 0 → 색인 0 → next() 가 색인을 올려 1 → rain22.mus 이다.
+        const f = fixture({ values: [0] }); f.audio.musicEnabled = musicEnabled; f.audio.soundEnabled = soundEnabled;
+        f.driver.begin(); await f.finish('rain22.mus'); f.audio.played.length = 0; f.prepared.length = 0;
+        return f;
+    };
+    // 둘 다 켜짐(또는 속성 없음): 곡 길이(200초 넘음)가 지나야 다음 곡으로 간다. 시작 시각 100 + 길이.
+    const on = await setup({ musicEnabled: true, soundEnabled: true });
+    on.clock.now = 100 + 181; on.driver.frame(); assert.deepEqual(on.audio.played, [], '180초가 지나도 곡이 이어진다');
+    on.clock.now = 100 + musicSeconds('rain22.mus') + 1; on.driver.frame(); assert.deepEqual(on.prepared.concat(on.audio.played).length > 0, true, '곡 길이가 지나면 다음 곡');
+    // 음악을 끔 / 소리를 끔: 길이 0 → 시작 시각 100 + 180 뒤에 다음 곡을 고른다.
+    for (const [name, options] of [['음악 끔', { musicEnabled: false, soundEnabled: true }], ['소리 끔', { musicEnabled: true, soundEnabled: false }]]) {
+        const off = await setup(options);
+        off.clock.now = 100 + 179; off.driver.frame(); assert.deepEqual(off.prepared, [], `${name}: 179초에는 그대로`);
+        off.clock.now = 100 + 181; off.driver.frame(); assert.ok(off.prepared.length > 0 || off.audio.played.length > 0, `${name}: 180초 뒤 다음 곡`);
+    }
+});
