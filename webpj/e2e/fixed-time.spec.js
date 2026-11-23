@@ -26,8 +26,11 @@ async function run(browser, missionFrames) {
   const frame = await page.evaluate(() => window.netstorm._gameClock.time().number);
   // 논리 화면의 색 번호 표면과 현재 팔레트(BGRX 256칸)이다.
   const screen = await page.evaluate(() => { const app = window.netstorm, surface = app._surface; return { width: surface.width, height: surface.height, pixels: Array.from(surface.pixels), palette: Array.from(app._clientPaletteScreen.palette()) }; });
+  // cpppj 기준선 `later.tsv` 와 같은 130프레임 시점의 덤프도 모은다. (2026-11-23 WB04-E1281)
+  await page.evaluate((count) => window.netstorm.stepFixedFrames(count), 130 - missionFrames);
+  const later = await page.evaluate(() => window.netstorm.sessionDump());
   await context.close();
-  return { dump, titleFrames, titleGame, frame, errors, screen };
+  return { dump, later, titleFrames, titleGame, frame, errors, screen };
 }
 
 test('고정 시각 모드: 시작 그림은 360프레임·9초이고 같은 입력의 두 실행은 같은 덤프를 낸다', async ({ browser }) => {
@@ -35,7 +38,7 @@ test('고정 시각 모드: 시작 그림은 360프레임·9초이고 같은 입
   const first = await run(browser, 90), second = await run(browser, 90);
   for (const result of [first, second]) {
     expect(result.titleFrames, '시작 그림 프레임 수').toBe(360);
-    expect(result.titleGame, '시작 그림 뒤 게임 시각').toBeCloseTo(9, 6);
+    expect(result.titleGame, '시작 그림 뒤 게임 시각(시계 출발 0.1초 + 그림 구간 9초)').toBeCloseTo(9.1, 6);
     expect(result.frame, '주 루프 프레임 번호(시작 그림은 세지 않음)').toBe(90);
     expect(result.errors).toEqual([]);
   }
@@ -56,9 +59,12 @@ test('고정 시각 모드: 시작 그림은 360프레임·9초이고 같은 입
   const { compareSessionDumps } = await import('../tools/session-dump-compare.mjs');
   const normalize = (text) => text.split(/\r?\n/).join('\n');
   const { differences } = compareSessionDumps(normalize(fs.readFileSync(path.join(oracle, 'load.tsv'), 'utf8')), normalize(first.dump));
-  const allowed = new Set(['frame', 'pool', 'sp']);
-  const unexpected = differences.filter((item) => !(allowed.has(item.key) || ['regular:', 'slot:', 'object:', 'player:'].some((prefix) => item.key.startsWith(prefix))));
+  const allowed = new Set(['sp']);
+  const unexpected = differences.filter((item) => !(allowed.has(item.key) || item.key.startsWith('player:')));
   expect(unexpected.map((item) => `${item.kind}:${item.key}`), '허용 밖 덤프 차이(난수 상태 random 행 포함)').toEqual([]);
+  // 130프레임 시점(`later.tsv`)도 같은 허용 행 밖에 차이가 없다.
+  const laterDifferences = compareSessionDumps(normalize(fs.readFileSync(path.join(oracle, 'later.tsv'), 'utf8')), normalize(first.later)).differences;
+  expect(laterDifferences.filter((item) => !(allowed.has(item.key) || item.key.startsWith('player:'))).map((item) => `${item.kind}:${item.key}`), '130프레임 허용 밖 덤프 차이').toEqual([]);
 });
 
 test('고정 시각 모드가 아니면 프레임을 직접 진행할 수 없다', async ({ page }) => {

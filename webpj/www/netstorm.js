@@ -98,6 +98,8 @@ import { gameMenuCommandValue, gameMenuScriptCode, isGameMenuCommand, queuePlaye
 import { KnowledgeMenuKind, knowledgeScriptCode } from './core/raw-knowledge-menu.js';
 import { RawFortBadgesGlobals } from './core/raw-fort-badges-globals.js';
 import { resetAmbientSoundDeadline, stepAmbientSound } from './core/raw-ambient-sound.js';
+import { pauseMissionWorldEntry } from './core/mission-lifecycle.js';
+import { pauseMissionFrameForDialog } from './core/raw-mission-frame-gate.js';
 import { dispatchGameTimeKey, readGameTimeSeconds } from './core/game-time-display.js';
 import { idleMainMenuActivity } from './core/main-menu-activity.js';
 import { frameDue, frameRateChoices, normalizeFrameRate, parseFrameRateTarget } from './core/frame-rate-option.js';
@@ -899,6 +901,8 @@ export class Netstorm {
         if (this.options.fixedFrameMs > 0) source.enableFixed({ frameMilliseconds: this.options.fixedFrameMs });
         const sp = new ClientSpGlobals(random, () => source.unixSeconds()); sp.store().initialize();
         const local = new ClientLocalStateGlobals(), clock = new ClientFrameClock(source, local.gameTicks());
+        // 고정 시각 모드: cpppj 고정 실행은 첫 주 루프 프레임 전에 시계가 4틱(0.1초) 흘러 첫 프레임의 게임 시각이 0.125초다. 시계 원점은 위에서 이미 잡았으므로 그 뒤에 4틱 전진해 같은 출발 시각으로 맞춘다. (2026-11-23 WB04-E1281)
+        if (this.options.fixedFrameMs > 0) for (let tick = 0; tick < 4; tick += 1) source.advanceFixed();
         const cloud = new ClientKencloudGlobals(), html = new ClientHtmlWindowGlobals(), connections = new ClientConnectionGlobals(local), activity = new ClientConnectionActivityGlobals();
         const subscriber = new ClientSubscriberGlobals(), gameplay = new ClientGameplayGlobals(subscriber), fort = new ClientFortGlobals();
         // 원본 ClientMain 의 최초 초기화(00439928·0043994c): 저장 화면 위치 10칸과 최근 건설 위치 5칸을 무효 좌표(-10000)로 쓴다. 미션·Renderer 교체에서는 다시 쓰지 않는다. 초기화가 없으면 저장하지 않은 숫자 키가 (0, 0) 으로 이동했다. (2026-11-21 WB04-E1154)
@@ -1472,6 +1476,9 @@ export class Netstorm {
             this._clearPlayerSpForState();
             // 원본 State7 의 전투 장면 음악 시작(StartScene(true))이다. World 설치보다 앞이다. (2026-11-20 WB04-E1119)
             this._beginSceneMusic();
+            // 원본 LoadMissionWorldBody 는 장면 음악 뒤, 월드·커서 설치 앞에서 Guide 미션이면 게임 시계를 정지하고 관문의 자기 정지 표식을 세운다(PauseMissionWorldEntry → PauseMissionFrameForDialog).
+            // 정지는 관문의 첫 안내 창(`lockFrames` 10→0)이 열리고 닫힐 때까지 이어져 그동안 게임 시각이 멈춘다(이전에는 창이 뜰 때까지 4프레임 동안 게임이 흘렀다). (2026-11-23 WB04-E1281)
+            pauseMissionWorldEntry(() => Boolean(this._clientGuide?.current()), () => pauseMissionFrameForDialog(this._clientGuide.current().runtime.gate, () => this._gameClock.paused(), () => this._gameClock.pushGamePause()));
             const world = this._installCampaignWorld(services, viewport); world.prepareLocalConnectionForState();
         }, (address, port) => {
             if (!this._campaignWorld) throw new Error('캠페인 State8의 현재 World 없음');

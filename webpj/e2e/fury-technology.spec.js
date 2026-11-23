@@ -47,7 +47,10 @@ test('Fury War: 원소를 고르면 그 원소의 기술이 모두 지급된다'
   const label = await page.evaluate(() => window.netstorm._mainMenu.dialog.menu.items.find((item) => item.command?.name === 'MissionBegin' && item.command.argument === 'bc8fury76')?.label);
   await clickLabel(page, label);
   await page.waitForFunction(() => window.netstorm?._campaignDisplayActive() && window.netstorm._clientGuide.current()?.runtime.gate.started === 1, null, { timeout: 120000 });
-  // 미션이 시작되면 원소 선택 창(Wind/Rain/Thunder/Sun)이 먼저 나온다.
+  // 원본처럼 월드에 들어서면 게임이 멈춘 채로 시작 안내 창([A.], "Lets do this!")이 먼저 나온다. 월드 진입 정지(PauseMissionWorldEntry)가 없던 때에는 로딩 중 흐른 실제 시간 때문에
+  // 1초 뒤 창([@1])이 이 창보다 앞서 열렸다. 이 단추를 누르면 게임이 풀리고 게임 시각 1초 뒤에 원소 선택 창(Wind/Rain/Thunder/Sun)이 나온다. (2026-11-23 WB04-E1281)
+  await expect.poll(() => buttons(page), { timeout: 30000, message: '시작 안내 창' }).toEqual(['Lets do this!']);
+  await clickButton(page, 'Lets do this!');
   await expect.poll(() => buttons(page), { timeout: 30000, message: '원소 선택 창' }).toEqual(['Wind', 'Rain', 'Thunder', 'Sun']);
   const before = await technologyByTheme(page); expect(before.wanted[1]).toBeGreaterThan(0);
   // 비(Rain, 원소 1)를 고르면 비 원소의 기술이 모두 생기고 다른 원소는 늘지 않는다.
