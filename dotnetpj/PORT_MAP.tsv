@@ -1791,3 +1791,5 @@ cpppj/src/client/RawCampaignArcherBindings.cpp	Netstorm.Client/Mission/RawCampai
 cpppj/src/client/RawCampaignArcherBindings.h	Netstorm.Client/Mission/RawCampaignArcherBindings.cs	920346fd84a4e9b5d151135d16cecdabe1d22d56	port
 cpppj/src/client/RawCampaignArcherBindings.cpp	Netstorm.Client/Mission/RawCampaignArcherBindings.Factories.cs	920346fd84a4e9b5d151135d16cecdabe1d22d56	port
 cpppj/src/client/RawCampaignArcherBindings.h	Netstorm.Client/Mission/RawCampaignArcherBindings.Factories.cs	920346fd84a4e9b5d151135d16cecdabe1d22d56	port
+cpppj/src/client/RawCampaignArcherBindings.cpp	Netstorm.Client/Mission/RawCampaignArcherBindings.Receive.cs	782faf5df77cac8d935cf5a17f554b8e8389b561	port
+cpppj/src/client/RawCampaignArcherBindings.h	Netstorm.Client/Mission/RawCampaignArcherBindings.Receive.cs	782faf5df77cac8d935cf5a17f554b8e8389b561	port
