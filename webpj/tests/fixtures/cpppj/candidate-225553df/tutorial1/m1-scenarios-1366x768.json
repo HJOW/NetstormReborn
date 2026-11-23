@@ -1,0 +1,57 @@
+{
+  "format": "netstorm-webpj-oracle-scenarios",
+  "version": 1,
+  "description": "cpppj 225553df Tutorial1 의 고정 시각 월드 덤프와 논리 화면 수집(16:9, 1366×768). 4:3 기준선(m1-scenarios.json)과 같은 단계에서 해상도만 바꿨다.",
+  "language": "english",
+  "screen": {
+    "width": 1366,
+    "height": 768
+  },
+  "settings": {
+    "SCREENW": 1366,
+    "SCREENH": 768,
+    "WelcomeGiven": 1,
+    "tellTips": 0,
+    "autoDemo": 0
+  },
+  "fixedFrameMs": 25,
+  "scenarios": [
+    {
+      "id": "tutorial1",
+      "mission": "Tutorial1",
+      "frames": 140,
+      "steps": [
+        [
+          30,
+          "click-if",
+          "Play Mission"
+        ],
+        [
+          60,
+          "click-if",
+          "Play Mission"
+        ],
+        [
+          90,
+          "session-dump",
+          "load"
+        ],
+        [
+          90,
+          "snapshot",
+          "load"
+        ],
+        [
+          130,
+          "session-dump",
+          "later"
+        ],
+        [
+          130,
+          "report",
+          "later"
+        ]
+      ]
+    }
+  ]
+}

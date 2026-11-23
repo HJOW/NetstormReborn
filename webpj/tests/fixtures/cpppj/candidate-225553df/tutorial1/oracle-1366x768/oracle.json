@@ -1,0 +1,54 @@
+{
+  "format": "netstorm-webpj-cpppj-oracle",
+  "version": 1,
+  "description": "cpppj 기준선 실행 파일(225553df)로 1366×768(16:9) Tutorial1 을 수집한 오라클. load.png 는 논리 화면 캡처(BMP)를 무손실 팔레트 PNG 로 바꾼 것이다. 4:3 기준선(oracle/oracle.json)과 같은 실행 파일·단계이며 해상도 설정만 다르다. E1282 에서 임시 스크립트(runCppScenario 직접 호출)로 수집했다.",
+  "cpppjCommit": "225553df",
+  "exe": {
+    "file": "Netstorm.exe",
+    "sha256": "5b52d96d2e53f4674a40991b78ff64c3c7e2ad8275a0a99b22d18d532b77eb46",
+    "bytes": 15595008
+  },
+  "scenarios": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial1/m1-scenarios-1366x768.json",
+  "collected": {
+    "host": "HJOW-Athlon",
+    "at": "2026-11-23T10:18:00.000Z",
+    "node": "v26.13.0"
+  },
+  "results": {
+    "tutorial1": {
+      "args": [
+        "--run",
+        "assets/game-data",
+        "--window",
+        "--mute-audio",
+        "--frames",
+        "141",
+        "--set",
+        "SCREENW=1366;SCREENH=768;WelcomeGiven=1;tellTips=0;autoDemo=0",
+        "--ui-script",
+        "<steps.tsv>",
+        "--ui-report",
+        "<report.tsv>",
+        "--fixed-frame-ms",
+        "25",
+        "--mission",
+        "Tutorial1"
+      ],
+      "snapshots": {
+        "load": {
+          "png": "tutorial1/load.png",
+          "width": 1366,
+          "height": 768
+        }
+      },
+      "dumps": {
+        "load": {
+          "file": "tutorial1/load.tsv"
+        },
+        "later": {
+          "file": "tutorial1/later.tsv"
+        }
+      }
+    }
+  }
+}
