@@ -47,7 +47,7 @@
 
 ## 열어 둔 항목에서 새로 드러난 실제 남은 일
 
-1. **미션 중 열린 Tell 을 ESC 가 닫지 않는다**(코드 대조로 확인, 다음 작업 1 ⑩). 원문 `UberGump.cpp:1810~1823` 은 Dialog 단계 ESC 에서 `Tell Blank` 를 보낸다.
+1. **미션 중 열린 Tell 을 ESC 가 닫지 않는다**(코드 대조로 확인, 다음 작업 1 ⑩). 원문 `UberGump.cpp:1810~1823` 은 Dialog 단계 ESC 에서 `Tell Blank` 를 보낸다. → **E1264 에서 해소**([근거](webpj-tell-escape-20261123.md)); 6단계 게임 메뉴 항목도 닫아 4/8 이 됐다.
 2. **Client 기본 수신기 표가 앱에 설치되지 않는다**(4D-3b). 앱 Session 은 내부 `LocalMissionTransport` 만 쓴다. 연결할지 웹 대체로 닫을지 결정이 필요하다.
 3. **이탈 효과 4가지 미확인**(4D-5b): `MapRevision+1`·`ChatChannels.resetOccupied`·선택 해제 통지·시간 동기화 초기화. State 정리 부모를 앱이 부르지 않기 때문이다.
 4. **`raw-priest-placement-*` 6개 미연결**(3.8절): 건물 파괴로 사제를 해방하는 경로의 `mayPlace` 가 도달 시 던질 수 있다(도달성 미판정).

@@ -2150,7 +2150,8 @@ export class Netstorm {
         const world = this._campaignWorld, current = this._clientGuide?.current(), gump = this._clientGump, clock = this._gameClock;
         if (!world || !current?.runtime.guided || !current.runtime.start || current.runtime.tutorial || !gump || !clock || !world.session().localConnectionReady() || this._campaignWorldMissionToken !== current.runtime.saveToken) throw new Error('Tutorial의 현재 World·Guide·Start 수명 오류');
         const session = world.session(), runtime = current.runtime;
-        const tell = (section) => current.script.section(section) !== null && this._openTell(section);
+        // 미션 프레임 관문이 연 안내 창은 원본처럼 Briefing 단계로 열어 ESC 가 닫지 않는다(원본 frameEffects.tell → TryTell(section, true)). (2026-11-23 WB04-E1264)
+        const tell = (section) => current.script.section(section) !== null && this._openTell(section, { briefing: true });
         const effects = {
             frame: { gameSeconds: () => clock.time().game, paused: () => clock.paused(), dialogsClear: () => !this._mainMenu?.dialog,
                 knowledgeOpen: () => session.cursorDropSettings().lockDepth === 0,
@@ -2643,7 +2644,9 @@ export class Netstorm {
     // 본문의 스크립트 명령(`<$config,키=값>` 등)은 창이 올라간 뒤(창이 없어도) 순서대로 실행한다. 열린 대화상자의 명령은 _onDialogCommand 가 받는다. 열었으면 true 를 돌려준다.
     // 본문의 링크(`<a href>`)를 누르면 _onDialogLink 가 받는다. 본문이 화면보다 길면 스크롤바가 생긴다(시계는 _frameSeconds).
     // (2026-10-28 WB03-D, 2026-10-30 WB03-J: Blank·지역 인자·본문 스크립트 명령 추가, 2026-10-31 WB03-K: 링크·스크롤바 연결)
-    _openTell(name, { suppressWindow = false } = {}) {
+    // `briefing` 은 원본 UberGump::TryTell 의 briefing 인자(창을 열 때 단계를 Briefing 으로 두는지)이다. 미션 프레임 관문이 연 안내 창(시작 브리핑·시간 대본 구역)만 참이고 그 밖의 Tell 은 Dialog 단계라,
+    // ESC 는 Dialog 단계의 창만 닫는다(_escapeCloseTell). 창을 연 뒤 그 창 객체(`_tellDialog`)와 단계(`_tellBriefing`)를 기억한다. 사용: this._openTell('Credits'); this._openTell('Briefing', { briefing: true }). (2026-11-23 WB04-E1264)
+    _openTell(name, { suppressWindow = false, briefing = false } = {}) {
         // Reset All 확정(`Patch1101.ResetAllConfirmed`)은 확인 창이 열린 직후 한 번만 효력이 있다(원본 UberGump 의 resetAllSubmission_ 가드: 그 단추가 낸 토큰만 소비). 다른 Tell·링크에서 오는 같은 이름은 무시하고,
         // 그 밖의 모든 Tell(취소의 Blank 포함)은 무장을 풀어 오래된 확인 창의 확정이 나중에 되살아나지 않게 한다. (2026-11-23 WB04-E1251)
         const resetTarget = String(name).trim().toLowerCase();
@@ -2669,7 +2672,7 @@ export class Netstorm {
             // 시작하지 못했으면(월드 생성 미연결·후보 부족) 단추가 닫은 설정 첫 화면을 다시 열어 사용자가 화면 밖으로 떨어지지 않게 한다. (2026-11-20 WB04-E1102)
             if (skirmish.kind === 'start') { if (this._startSkirmish(settings)) return true; this._openTell('Patch1101.Skirmish'); return false; }
             const next = applySkirmishAction(settings, skirmish.args); this._storeSkirmishSettings(settings);
-            return this._openTell(next, { suppressWindow });
+            return this._openTell(next, { suppressWindow, briefing });
         }
         // 미션 중에는 안내 창이 왼쪽 HUD 를 뺀 지도 영역의 가운데에 놓인다(원본 스크린샷의 Briefing·Success 창). 메인 메뉴에서는 화면 전체이다. (2026-11-21 WB04-E1130)
         const view = this._campaignDisplayActive() ? this._campaignWorld.mapView() : null;
@@ -2694,6 +2697,7 @@ export class Netstorm {
         if (result.missing && !suppressWindow) console.warn(`Netstorm: TELL cannot find "${name}".`);
         if (result.window) {
             this._mainMenu.setDialog(result.window);
+            this._tellDialog = result.window; this._tellBriefing = briefing === true;
             this._displayDirty = true;
             // Reset All 확인 창이 실제로 열렸을 때만 확정 단추를 한 번 받을 수 있다. (2026-11-23 WB04-E1251)
             if (resetTarget === PRODUCT_RESET_ALL_TARGET.toLowerCase()) this._resetAllArmed = true;
@@ -2905,13 +2909,15 @@ export class Netstorm {
     // 대화상자에서 실행된 명령(버튼·목록 행·Timeout)을 처리한다. 원본처럼 먼저 대화상자를 닫고(OnExit 명령 실행) 명령을 실행한다.
     // `Tell,이름` 은 다음 대화상자를 열고, `DoNothing` 은 닫기만 한다. `Config,키=값` 은 설정을 쓰고 `TellTip,번호` 는 팁 창을 처리한다(2026-10-30 WB03-J).
     // 연결된 Tutorial의 MissionBegin은 현재 Guide로 연결한다. 그 밖의 미구현 명령은 안내만 남긴다.
+    // 닫는 창이 Tell 창이면 그 창의 브리핑 단계를 읽어 두었다가 이어서 열리는 Tell 에 넘긴다(원본 UberGump 의 `Tell` 명령은 현재 단계가 Briefing 이면 다음 창도 Briefing 으로 연다). (2026-11-23 WB04-E1264)
     _onDialogCommand(command) {
         const dialog = this._mainMenu?.dialog ?? null;
+        const briefing = dialog !== null && dialog === this._tellDialog && this._tellBriefing === true;
         const onExit = dialog ? dialog.close() : null;
         this._mainMenu?.setDialog(null);
         this._displayDirty = true;
-        this._runDialogCommand(command);
-        if (onExit) this._runDialogCommand(onExit);
+        this._runDialogCommand(command, briefing);
+        if (onExit) this._runDialogCommand(onExit, briefing);
     }
 
     // 대화상자 본문의 링크(Tell 의 `<a href>`)를 처리한다. 원본 HtmlWindowGump::Handle 의 tagEvent 처럼 대화상자를 먼저 닫고(모달 해제) 링크를 분배한 뒤,
@@ -2960,9 +2966,10 @@ export class Netstorm {
     }
 
     // 닫힌 뒤 실행할 대화상자 명령 하나를 처리한다. (2026-10-28 WB03-D)
-    _runDialogCommand(command) {
+    // `briefing` 은 이 명령을 낸 창이 Briefing 단계였는지이며 `Tell` 명령이 다음 창에 그대로 넘긴다. (2026-11-23 WB04-E1264)
+    _runDialogCommand(command, briefing = false) {
         const name = String(command.name).toLowerCase();
-        if (name === 'tell') this._openTell(command.argument);
+        if (name === 'tell') this._openTell(command.argument, { briefing });
         else if (name === 'config') this._runScriptCommand(command);
         else if (name === 'telltip') this._runTellTip(command);
         else if (name === 'missionbegin') this._beginCampaignFromDialog(command.argument);
@@ -3593,12 +3600,24 @@ export class Netstorm {
         if (event.button === 0) this._activate();
     }
 
+    // ESC 로 열린 Tell 창을 닫는다(원본 UberGump.cpp:821 은 브리핑이 아닌 모든 Tell 을 Dialog 단계로 두고 :1810~1823 은 Briefing·LoadingMission 이면 ESC 를 무시, Dialog 면 `Post{"Tell","Blank"}` 로 창을 닫는다).
+    // 닫을 대상은 `_openTell` 이 연 Tell 창이면서 브리핑 단계가 아닌 창뿐이다(미션 로딩 창·도움말 창은 다른 경로라 대상이 아니다). 펼침 메뉴가 열려 있으면 그쪽이 먼저 닫히므로 건드리지 않는다. 닫았으면 true. 사용: if (this._escapeCloseTell()) return;
+    // 닫는 길은 `Tell,Blank` 단추와 같은 `_onDialogCommand` 라서 창 종료 명령(OnExit)과 Reset All 확인 해제도 그대로 따른다. (2026-11-23 WB04-E1264)
+    _escapeCloseTell() {
+        const dialog = this._mainMenu?.dialog ?? null;
+        if (!dialog || dialog !== this._tellDialog || this._tellBriefing === true || this._mainMenu?.popup) return false;
+        this._onDialogCommand({ name: 'Tell', argument: 'Blank' });
+        return true;
+    }
+
     // 키를 눌렀을 때: 눌린 키 집합에 넣고, 게임이 쓰는 스크롤 키의 브라우저 기본 동작을 막고, Enter/Space 는 시작 입력으로 쓴다.
     _onKeyDown(event) {
         this._clientInputPoll.recordKeyDown(event.code, this._input.keys.has(event.code) || event.repeat);
         this._input.keys.add(event.code);
         // 시작 title 그림 중에는 아무 키나 누르면 남은 그림을 건너뛴다(자동 반복은 무시). (2026-11-22 WB04-E1184)
         if (this._state === AppState.TITLE) { if (!event.repeat) this._finishTitleScreens(); return; }
+        // 원본 UberGump 의 ESC: 브리핑·미션 로딩 단계가 아닌 Tell 창(Dialog 단계)이 열려 있으면 `Tell Blank` 로 닫는다. 이 키는 월드 입력 큐로 보내지 않는다. (2026-11-23 WB04-E1264)
+        if (event.code === 'Escape' && !event.repeat && this._escapeCloseTell()) { event.preventDefault(); this._retryAudioOnGesture(); return; }
         // Gump 입력 창(Send X 숫자 창)이 열려 있으면 모든 키를 그 창의 입력으로 보낸다(게임 단축키·TAB·숫자 화면 저장으로 새지 않는다). (2026-11-22 WB04-E1168)
         if (!this._clientNativeInputEnabled && this._campaignInputDialogOpen()) { this._queueCampaignDialogKey(event, false); this._retryAudioOnGesture(); return; }
         // 채팅 입력줄이 보이는 동안 문자 키는 입력줄로 간다(게임 단축키로 새지 않는다). (2026-11-22 WB04-E1170)
