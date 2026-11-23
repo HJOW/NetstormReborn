@@ -6,7 +6,7 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-23 저녁 정리, 마지막 단위 WB04-E1312)
+### 0.1 현재 값 (2026-11-23 저녁 정리, 마지막 단위 WB04-E1313, 사용자 요청으로 2026-11-24 중단)
 
 | 항목 | 현행 상태 |
 | --- | --- |
@@ -22,6 +22,12 @@
 
 2026-11-23 저녁 정리에서 번호를 다시 매겼다. 단위 문서가 가리키는 이전 번호(다음 작업 1 ①~⑩·2~6)의 원문은 [E1288 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1288)에 있다.
 
+0. **중단 인수인계(2026-11-24, 사용자 요청으로 모든 작업을 멈춤).** 실행 중이던 백그라운드 작업은 모두 중지했고 임시 탐침 스펙(`e2e/zz-*.spec.js`)은 지웠다. 이 PC(vm 아님)의 다른 세션이 스테이징해 둔 dotnetpj 파일(`LEFT_JOBS.dotnetpj.md`·`docs/dotnet-canon-*.md`)은 건드리지 않았다(내 커밋에서도 제외). 상태와 이어 갈 순서:
+   - **미완료 단위 E1313(전 미션 시작 상태 L3 대조)** — [기록](docs/webpj-l3-mission-starts-20261124.md). 31개 미션의 시작 5·30·120프레임 cpp 해시 수집(`tools/l3-mission-starts-collect.mjs`, `mission-starts/hashes.json`, manifest 942개)과 옵트인 e2e(`e2e/l3-mission-starts.spec.js`)를 만들었다. 일회성 대조에서 28개 중 27개가 일치했고 e2e 는 네 미션(Tutorial2·Tutorial4·bc5walkers76·bc7sun_bars76)만 통과했으며 **전체 31개 실행(`NETSTORM_L3_ALL=1`, 약 25분)은 끝나지 않았다.** 다음에 그것부터 돌린다.
+   - **알려진 차이 `bc7sun_bars76`**: 웹이 시작 4프레임째 일반 간헐천 보충으로 간헐천(SID 15028, (131,204))을 하나 더 만든다(cpp 는 만들지 않음). 원인 미확인 — 단서와 다음 확인 순서(cpp 임시 추적 → `geyserCount` 훅 값 → MayPlace 질의 비교)는 위 기록에 있다. 고치면 e2e 의 `KNOWN_DIFFERENCES` 에서 뺀다.
+   - **Tutorial3 L3**: 시작 240프레임까지 끝(E1309). 단계 A(간헐천 다리·골렘)의 첫 조각 자리(`screen:20,44` 집기 → `250,390` 등)까지 알았고 이어 가는 방법은 아래 1번과 `docs/webpj-l3-tutorial3-20261124.md` 에 있다.
+   - **회귀 상태**: Node 26 전체 E1308 기준 통과(6,827건, 교정 후), 전체 e2e E1312 기준 199건 중 186 통과·12 건너뜀·1 부하 중 일시 실패(재실행 통과). **Node 22 회귀는 이 PC 에 Node 22 가 없어 E1299 이후 밀렸다**(Node 22 가 있는 PC 에서 돌릴 것). 6초 고정 대기·스캔 초기화·프레임 순서 수정 등 이번 날의 웹 코드 변경은 모두 커밋되어 있다.
+   - **커밋 규칙 주의**: 다른 세션이 같은 작업 트리에 있을 때는 `git commit -m ... -- <내 파일 경로>` 로 경로를 지정한다(E1312 에서 남의 staged 파일이 섞였다가 되돌렸다).
 1. **다음 미션 L3 대조(6단계 M3/L3).** Tutorial1(E1304, 4200프레임)과 Tutorial2(E1305~E1307, 5400프레임)는 시작부터 완료 창까지 화면 0픽셀·덤프 일치로 끝났다([Tutorial1](docs/webpj-l3-tutorial1-complete-20261124.md) · [Tutorial2](docs/webpj-l3-tutorial2-20261124.md)). 같은 틀(`e2e/l3-common.js`·`tools/l3-collect.mjs`, 미션 이름·폴더만 바꿈)로 **Tutorial3~6**(전투·방어물·AI)과 세 캠페인 묶음 미션의 시작~완료를 같은 방식으로 대조한다(**Tutorial3 은 E1309 로 시작 240프레임까지** 끝났고 이어서 단계 A 간헐천 다리·골렘 생산 → B 적 섬 잇기 → C 발사기 → D 제너레이터 → 적 사제 포획 순으로 늘린다. 단계 A 에서 알게 된 점: 시작 생산 창에 한 칸짜리 조각이 있고 `screen:20,44` 로 집어 `screen:250,390`·`260,390`·`250,430`·`260,430` 에 놓으면 섬 왼쪽 가장자리에 한 칸이 놓인다(격자 81곳, 빨간 틀 0 + 생산 창 변화로 판정). 가장 가까운 간헐천 섬은 왼쪽(≈`140,375`)이라 약 82픽셀(칸 6~7개)을 이어야 하고 조각이 한 칸씩 놓이므로 조각마다 격자 탐색(약 5분)이 필요하다. 골렘은 생산 창 `40,180` 에서 집는다): 폴더 `tests/fixtures/cpppj/candidate-225553df/tutorialN-l3/` 와 스펙 `e2e/l3-tutorialN.spec.js`(Tutorial2 스펙 복제), 입력 위치는 cpp 오라클을 5초 안팎으로 여러 번 돌려 정하고(격자 탐색 50~230회가 5~21분이라 백그라운드로), 단계는 cpp `report` 의 `mission_gate` 두 번째 값으로 판정한다. 전투가 있는 미션은 AI 난수·유닛 이동이 길게 이어지므로 체크포인트를 짧은 간격으로 두고 어긋나는 첫 프레임을 `mission_gate`·`bridge_scan_global` 과 프레임별 덤프(`runL3({ compare: false })`·`L3_DUMP_DIR`)로 좁힌다([탐색 기록](docs/webpj-l3-extension-probe-20261124.md)). 이 확장이 4D-4b의 Tutorial 단계 진행을 겸한다. cpppj 오라클 수집은 HJOW-Athlon에서 실행 확인 없이 가능하고 다른 PC는 AGENTS 실행 확인 규칙을 따른다(3.3절).
 2. **5-A 표시 잔여.** (메인 메뉴 Kencloud 구름은 E1298에서 닫았다: M1 구름 차이 37,054픽셀 → 0.) E197 계열 남은 캡처와 E198(EvilRay)·E201(Burning)을 cpppj 시험과 대조한다. 세부 단위는 3.1절 5-A.
 3. **운반체 사제 줍기·Cast 행(6단계).** Archer 계열(폭탄 Detonate!)·짐을 실은 운반체의 Carrying/Drop(E1310)과 Bulf 가 너겟을 줍고 내려놓는 앱 조작(E1311)은 실제 Chromium 으로 끝냈다([기록](docs/webpj-object-menu-rows-20261124.md)). 남은 것은 포획한 적 사제를 줍는 경우와 주문을 가진 운반체의 Cast 행이다.
@@ -37,7 +43,7 @@
 
 <a id="e951-e1081"></a>
 
-#### E951~E1312 진행 요약
+#### E951~E1313 진행 요약
 
 단위별 완료 문단·검증 수·회귀 이력은 [E1081 정리 전 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261120-through-wb04-e1081)의 0.1절(E951~E1081), [E1166 정리 전 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261121-through-wb04-e1166)의 0.1·3.1·3.7절(E1082~E1166), [E1237 정리 전 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1237)의 0.1·3.1절(E1167~E1237), [E1288 정리 전 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1288)의 0.1·3.1절(E1238~E1288)과 각 단위 문서에 있다.
 

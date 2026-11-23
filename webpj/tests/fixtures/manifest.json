@@ -28409,6 +28409,38 @@
       }
     },
     {
+      "id": "cpppj-mission-starts-hashes",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/mission-starts/hashes.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms 전 미션 시작 상태 실행(tools/l3-mission-starts-collect.mjs, 5·30·120프레임 Session 덤프의 정규화 해시)",
+      "consumers": [
+        "webpj/e2e/l3-mission-starts.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1313",
+      "doc": "docs/webpj-l3-mission-starts-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "31개 미션 × 3프레임의 덤프 해시(LF 정규화·sp·player 행 제외 SHA-256)",
+      "text": true,
+      "sha256": "78cff0193e110dbd59c1681a748b0a4712dcfc565284e9c42ee14be5766e82e3",
+      "bytes": 8689,
+      "lines": 179,
+      "fixtureCommit": null,
+      "webCommit": "82e7da906",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
       "id": "cpppj-tutorial1-report",
       "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial1/oracle/tutorial1/report.txt",
       "kind": "cpppj-oracle",
