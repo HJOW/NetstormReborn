@@ -268,6 +268,30 @@ test('The War Begins!: 채팅 도우미 단추 우클릭 도움말이 열리고 
   expect(errors).toEqual([]);
 });
 
+// 채팅 창 본체(로그 영역)를 우클릭하면 제목 "Chat Window" 와 Help 항목 팝업이 열리고, Help 를 누르면 `chatViewHelp` 주제의 도움말 창이 열린다(원본 UberGump 의 채팅 노드 SetHelpText·SetHelpWord('chatView')).
+// 도우미 단추(`>`)·미니맵·예산·생산 창 우클릭은 위에서 이미 확인했고, 이 시험이 Uber 루트 채팅 노드의 실제 마우스 우클릭을 닫는다. (2026-11-24 WB04-E1295)
+test('The War Begins!: 채팅 창 본체 우클릭 도움말이 열리고 Help 항목이 chatViewHelp 를 연다', async ({ page }) => {
+  test.setTimeout(300000);
+  const errors = []; await startWarBegins(page, errors);
+  // F3 으로 채팅 창을 보이게 한다(로그 영역이 화면에 놓인다).
+  await page.locator('canvas').focus(); await page.keyboard.press('F3'); await page.waitForTimeout(800);
+  const chat = await page.evaluate(() => { const app = window.netstorm, root = app._clientGump, token = app._campaignProduction.hud.node().chat, node = root.node(token), position = root.collection().position(token), rect = app.canvas.getBoundingClientRect();
+    return { token, title: app._helpString(node.textPointer), word: app._helpString(node.alternateTextPointer), width: node.width, height: node.height, x: rect.left + (position.x + node.width / 2) * rect.width / app._layout.logicalWidth, y: rect.top + (position.y + node.height / 2) * rect.height / app._layout.logicalHeight }; });
+  expect(chat.token, '채팅 노드').toBeGreaterThan(0); expect(chat.width * chat.height, '채팅 노드가 화면에 있다').toBeGreaterThan(0);
+  expect({ title: chat.title, word: chat.word }, '채팅 노드 도움말').toEqual({ title: 'Chat Window', word: 'chatView' });
+  // 실제 마우스 우클릭이 채팅 로그 영역에 닿아 팝업이 열린다.
+  await page.evaluate(() => window.netstorm._clientGump.closePopups());
+  await page.mouse.move(chat.x, chat.y); await page.mouse.click(chat.x, chat.y, { button: 'right', delay: 60 });
+  await expect.poll(() => page.evaluate(() => window.netstorm._clientGump.blockingPopups()), { timeout: 5000, message: '채팅 창 우클릭 도움말 팝업' }).toBe(true);
+  const popup = await page.evaluate(() => { const root = window.netstorm._clientGump; let menu = 0; for (let t = root.root().child; t; t = root.node(t).next) { if (root.node(t).command === 26) menu = t; }
+    return menu ? root.node(menu).items.filter((item) => item && item.command !== undefined).map((item) => ({ command: item.command, parameter: item.parameter })) : []; });
+  const help = popup.find((item) => (item.command & 0x03ffffff) === 0x02000017); expect(help, 'Help 항목').toBeTruthy();
+  await page.evaluate(() => window.netstorm._closeCampaignPopups());
+  await page.evaluate((item) => window.netstorm._clientInputQueue.pushCommand(item.command, 0, item.parameter), help);
+  await expect.poll(() => page.evaluate(() => window.netstorm._mainMenu.dialog?.topic ?? null), { timeout: 5000, message: '채팅 창 도움말 주제' }).toBe('chatViewHelp');
+  expect(errors).toEqual([]);
+});
+
 // 팝업을 닫으면 다음 프레임에 화면에서 실제로 지워진다(원본 RequestClosePopups 뒤 common.changed 의 화면 갱신과 같은 결과). 채팅 도우미 팝업을 열었다가 `_closeCampaignPopups` 로 닫고 그 영역 픽셀로 확인한다. (2026-11-23 WB04-E1256)
 test('The War Begins!: 팝업을 닫으면 그 영역이 다음 프레임에 다시 그려진다', async ({ page }) => {
   test.setTimeout(300000);
