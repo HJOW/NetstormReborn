@@ -21,6 +21,7 @@
 | 테스트 자동 플레이 | **플레이 결과 재현이 필요한 AI는 먼저 [AI 에이전트용 사용 안내](docs/testing/cpp-autoplay-test-guide.md)를 읽고 [실행 도구](tools/cpp_campaign_autoplay.py)를 쓴다.** 명령줄 전용 `--test-autoplay`·`--test-ally-ai`·`--test-enemy-ai`·`--test-start-sp`·`--test-enemy-start-sp`·`--test-follow-battle`이며 허용 범위는 [5절](#rules-verify)이다. 1313 일괄 실행 결과는 [결과 7절](docs/exe/cpp-campaign-test-play-20261114.md#7-캠페인-전체-자동-플레이-실행-1313-2026-11-14-후속). |
 | DN/WB 후속 | 최초 실행은 DN만 남음([0.6](#first-run)), 한국어 글꼴 화면 적용은 DN만 남음([0.7](#korean-font-change)), 아이콘은 DN 창 표시·WB 탭 시각 확인만 남음([0.8](#exe-icon)). 각 인계 문서에서 진행하며 CP 단위에서는 DN/WB 코드·인계를 수정하지 않는다. |
 | 선택/추가 제보 | 비행체 표시 보간·번역·QuickJS 추가 연동은 D2·D3·D7 결정 뒤 진행한다. 새 재현 자료가 오면 해당 NB 행을 다시 연다. |
+| 한국어 글자 선명도 | **사용자 지시(2026-11-23): 문서에만 반영하고 지금 작업하지 않는다.** WB E1288 점검에서 찾은 cpppj 후속(전체화면 최근접 비정수 확대로 1px 획 굵기 불균일, 고해상도 글자 층 제안, 큰 슬롯 배율·기준선 차이)은 [0.7](#korean-font-change) 하단에 적었다. 재개는 [D8](#decisions) 결정 뒤 새 단위(1328~)로 한다. |
 
 <a id="decisions"></a>
 
@@ -37,6 +38,7 @@
 | D5 | NB04·NB29 공식 | 현행 Even 구역 순서 섞기·6명 이후 인당 간헐천6개 증가 공식을 유지한다. 변경 목표가 주어질 때만 조정한다. |
 | D6 | 스커미시 시작 섬 | 현행22개 모양 후보·사람 남쪽(소유자1)을 유지한다. 위치/모양 확장은 선택 사항이다. |
 | D7 | QuickJS 추가 연동 | 14차 **엔진 탑재만 완료**. 게임 상태·파일·네트워크를 노출하지 않는다. 진단 JS/API/모드/미션 대본으로 넓힐 때 별도 범위를 정한다. |
+| D8 | 한국어 글자 선명도(2026-11-23 기록, 작업 보류) | ① 전체화면 확대 방식: 현행 픽셀 중심 최근접 비정수 확대(`ScreenPresentation.cpp` `ScaleScreenPresentation`)를 유지할지, 정수 최근접 뒤 부드러운 축소(webpj `sharp`)나 8차 안티앨리어싱·FSR 경로와 묶을지. ② '고해상도 글자 층'(아래 0.7) 채택 여부와 글꼴(갈무리11 정수배 또는 Noto Sans KR 등 외곽선 글꼴; AGENTS.md 지정은 현재 갈무리11). ③ 한국어 큰 슬롯 배율·굵기를 webpj(제목 2배·보통체)와 맞출지. 결정 전에는 현행 유지. |
 
 <a id="user-checks"></a>
 
@@ -110,8 +112,26 @@
 | --- | --- |
 | cpppj | `fonts/Galmuri11Bitmap-Regular-2.40.4.ttf`·`fonts/Galmuri11Bitmap-Bold-2.40.4.ttf`(내부 family `Galmuri11Bitmap`)를 실행 파일 옆 `fonts/`에서 읽는다. GDI가 TTF를 등록하지 못해 `EmbeddedBitmapFont`로 외부 EBDT/EBLC를 직접 읽고, 굵은 파일에 없는 글자는 같은 일반 파일로 대체한다. 글꼴명·파일명은 `cpppj/assets/korean-font.json` → CMake 생성 상수(`kKoreanFontFamily` 등)로 파일 탐색·FontStore·배포 스크립트·ZIP 검사가 공유한다. **1322 완료**(관련47/47·실제GUI5회, 파일 바이트 내장0). [근거/화면](docs/exe/cpp-korean-galmuri-1322-20261117.md) |
 | dotnetpj | 같은 두 TTF. 0.807에서 배포·ZIP 배치와 D2Coding 배포 의존 제거를 마쳤다. `KoreanFontFamily` 상수·8비트 출력 적용·작은 글씨 확인이 남았다. [DN 인계](LEFT_JOBS.dotnetpj.md#korean-font-change) |
-| webpj | `fonts/Galmuri11.woff2`·`fonts/Galmuri11-Bold.woff2`를 `webpj/www/data/fonts/`로 복사해 FontFace에 등록한다. 메뉴·도움말과 Tutorial1 실제 미션 브리핑에서 확인했다. 한국어 큰 슬롯의 굵기 규칙 차이는 WB 결정 대기다. [WB 인계](LEFT_JOBS.webpj.md#korean-font-change) |
+| webpj | `fonts/Galmuri11.woff2`·`fonts/Galmuri11-Bold.woff2`를 `webpj/www/data/fonts/`로 복사해 FontFace에 등록한다. 메뉴·도움말과 Tutorial1 실제 미션 브리핑에서 확인했다. 굵기는 사용자 결정으로 보통체를 유지한다. **E1288:** WOFF2 설계 격자(12px)로 그리고 4배 그리기·칸 평균으로 Canvas 번짐을 없앴으며, cpppj처럼 숫자·영문·공백을 원본 `.chfnt` 글리프로 그린다(SP 숫자·Tutorial3 D1 그림 줄 해소). [WB 인계](LEFT_JOBS.webpj.md#korean-font-change) · [E1288](docs/webpj-korean-glyph-grid-20261123.md) |
 | 라이선스 | `fonts/Galmuri11-LICENSE.txt`를 각 배포판에 글꼴과 함께 포함한다. |
+
+**WB E1288 점검의 cpppj 해당 여부(2026-11-23, 정적 대조·기존 화면 캡처 확인, cpppj 실행 없음).** 사용자 지시로 기록만 하고 작업하지 않는다([D8](#decisions)).
+
+- 해당 없음: webpj에서 고친 세 결함은 cpppj에 없다.
+  - 11px 축소로 획이 빠지는 문제: cpppj는 `EmbeddedBitmapFont`가 strike 비트맵을 픽셀 그대로 정수배 복제한다. 한글 칸은 전진 폭 12·기준선 위 12줄이다.
+  - SP 숫자가 커지는 문제, Tutorial3 D1 그림 줄바꿈 문제: cpppj는 `EncodeBytes`가 Windows-1252 글자를 한 바이트로 두고 `.chfnt`로 그린다. 그래서 SP 숫자는 원본 Arial이고, 공백은 3px이라 그림 줄은 318px이다(정적 계산).
+  - `docs/screens/cpp-korean-galmuri-1322-20261117/briefing.png`에서 한글 11줄이 온전하다.
+- [ ] **전체화면 1px 획 불균일.** 1024×768 논리 화면을 1080p 등으로 픽셀 중심 최근접 비정수 확대(1.40625배)한다(`ScreenPresentation.cpp:50`). 그래서 갈무리11의 1px 획·간격이 1~2px로 들쑥날쑥하다. 창 모드 1:1에서는 생기지 않는다. 비교 그림: WB 점검 ④(1.406배 최근접 모의).
+- [ ] **고해상도 글자 층(제안).** 다음 순서로 동작한다.
+  1. `GumpTextDraw` 의 글리프 출력 훅에서 위치·코드·슬롯·색·잘림 영역과 그리기 전후 표면 픽셀을 기록한다.
+  2. 표시 단계(`StretchDIBits`/`ScaleScreenPresentation`)에서, 기록과 화면 픽셀이 같아 가려지지 않은 글자만 배경을 되돌린 뒤 확대한다.
+  3. 그 위에 GDI/DirectWrite 로 출력 해상도 글자를 그린다.
+  4. 논리 화면은 바뀌지 않으므로 화면 대조 시험에 영향이 없다. 8차 안티앨리어싱 옵션과 묶는 것이 자연스럽다.
+- [ ] **webpj와의 차이(결정 필요).**
+  - 큰 슬롯 배율: cpppj는 strike ppem 16을 넣어 슬롯 3이 1배, 슬롯 4가 3배이고, webpj는 2배·4배이다.
+  - 굵기: cpppj는 굵기 700 슬롯에 굵은 갈무리를 쓰고, webpj는 보통체이다.
+  - 한글 기준선: cpppj는 칸 기준 12줄이라 슬롯 0에서 한글이 원본 기준선보다 1줄 아래에 놓인다. webpj는 잉크 기준 11줄이다.
+  - 근거: [WB E1288](docs/webpj-korean-glyph-grid-20261123.md)
 
 <a id="exe-icon"></a>
 
