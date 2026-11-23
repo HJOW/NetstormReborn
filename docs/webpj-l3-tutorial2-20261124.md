@@ -29,6 +29,12 @@ Tutorial1 L3([완료 기록](webpj-l3-tutorial1-complete-20261124.md))와 같은
 
 호출 스택을 찍어 보니 웹은 같은 프레임에서 `_clientGuide.run()`(안의 시작 단계 `addTechnology` → Contained 생성)을 먼저 돌리고 그 뒤에야 `_prepareCampaignProduction`·`_prepareCampaignProductionUi`(폼 생성)를 돌렸다. cpp 는 가이드 미션에서 `FinishMissionWorldLoad` 가 HUD 를 만들고 Guide 의 시작 단계(`StartMissionWorld`)는 그 뒤 루프 8번에서 돈다. **수정:** `_onFrame` 에서 생산 준비·UI 설치를 `Guide.run()` 앞으로 옮겼다(`www/netstorm.js`). 이 순서를 가정한 단위 시험 하나(`campaign-request-frame.test.mjs`, 시작의 하단 채팅 숨김 명령이 가짜 채팅 부모에 간다고 본 단언)는 실제 채팅 창으로 가는지 확인하도록 고쳤다(HUD 가 먼저 만들어지므로 현재 채팅 창이 실제 창이다).
 
+## 확장: 워크샾 건설과 Production 안내 창 (WB04-E1306, 2026-11-24)
+
+1200프레임 뒤에 'Temple Complete'(MORE)와 'Create a Workshop'(OK)을 넘기고(1220·1300) 사제를 다시 우클릭해(`screen:488,438`, 1360 화면) Construct → Workshop(`725,475`) → Build Sun Workshop for 800(`900,478`, 1460 화면 = 워크샾 모양 커서)을 고른 뒤 섬 안 `screen:580,340` 에 놓는다(1480). 건설 중(1520 덤프·화면: SP 4221 로 줄어드는 중, 800 표시)이고 완공하면 단계가 `C`=67 이 되어 'Production' 안내 창(워크샾 우클릭 → Put Knowledge Into Production)이 열려 정지한다(2600 덤프·화면). 결과: 체크포인트 w1360·w1460·c1520·c2600 이 화면 0픽셀·덤프 일치로 **웹을 고칠 차이는 없었다.**
+
+cpp 로 먼저 관측한 이어지는 구간(아직 단계표에 넣지 않음): 2620 OK → 2700 워크샾 우클릭(`570,350`, 메뉴: View Current Production·Put Knowledge into Production·Upgrade costs 800·Salvage gains 200·About·Player) → 2720 `670,375`(Knowledge Available: Sun Disc Thrower) → 2740 `860,375` 선택하면 생산 창에 발사기가 생기고 단계 `D`=68 'First Weapon, Part 1'(MORE) → 'Part 2'(에너지 아이콘 설명, BACK·OK) 가 열린다. 발사기는 2960 생산 창 `screen:40,180` 클릭으로 집으며 놓을 수 있는 자리는 에너지 범위 안이다(탐색 중).
+
 ## 남은 일
 
-신전 완공 뒤: 'Temple Complete' 이어지는 안내, 워크샾 건설, 연구 생산, 발사기 배치·에너지 범위·회수, 미션 완료 창(Tutorial2 단계 C~I). 다음 단위에서 단계표를 늘린다.
+발사기 네 개 배치(D~G)·신전 선택으로 에너지 범위 표시·에너지는 건설할 때만 쓰임(H)·회수(H1)·미션 완료 창(I).

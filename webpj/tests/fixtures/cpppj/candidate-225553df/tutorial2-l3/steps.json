@@ -1,7 +1,7 @@
 {
   "format": "netstorm-webpj-cpppj-l3-steps",
   "version": 1,
-  "description": "cpppj 225553df Tutorial2 입력 단계표(L3: Buildings Part 1 MORE→MORE→Create a Temple OK→사제 우클릭 메뉴(190 화면)→Construct(210 화면)→Temple(230 화면)→Build Wind Temple 선택(270 화면: 신전 모양 커서)→섬 안에 놓기(400 덤프·화면: 건설 중)→1200 덤프·화면: 신전 완공 안내 창). 단계는 [프레임, 동작, 인자]이며 cpppj `--ui-script` 의 동작 이름을 그대로 쓴다. 웹은 e2e/l3-tutorial2.spec.js 가 e2e/l3-common.js 로 같은 단계를 고정 시각 모드로 적용한다(입력 프레임 규칙은 docs/webpj-l3-tutorial1-20261123.md).",
+  "description": "cpppj 225553df Tutorial2 입력 단계표(L3: Buildings Part 1 MORE→MORE→Create a Temple OK→사제 우클릭 메뉴(190 화면)→Construct(210 화면)→Temple(230 화면)→Build Wind Temple 선택(270 화면: 신전 모양 커서)→섬 안에 놓기(400 덤프·화면: 건설 중)→1200 덤프·화면: 신전 완공 안내 창)→Temple Complete MORE→Create a Workshop OK→사제 우클릭(1360 화면)→Construct→Workshop→Build Sun Workshop for 800(1460 화면: 워크샾 모양 커서)→섬 안에 놓기(1520 덤프·화면: 건설 중)→완공 후 'Production' 안내 창(2600 덤프·화면). 단계는 [프레임, 동작, 인자]이며 cpppj `--ui-script` 의 동작 이름을 그대로 쓴다. 웹은 e2e/l3-tutorial2.spec.js 가 e2e/l3-common.js 로 같은 단계를 고정 시각 모드로 적용한다(입력 프레임 규칙은 docs/webpj-l3-tutorial1-20261123.md).",
   "language": "english",
   "screen": {
     "width": 1024,
@@ -96,6 +96,71 @@
       1200,
       "session-dump",
       "c1200"
+    ],
+    [
+      1220,
+      "click-if",
+      "MORE"
+    ],
+    [
+      1300,
+      "click-if",
+      "OK"
+    ],
+    [
+      1340,
+      "right",
+      "screen:488,438"
+    ],
+    [
+      1360,
+      "snapshot",
+      "w1360"
+    ],
+    [
+      1380,
+      "click",
+      "screen:538,460"
+    ],
+    [
+      1400,
+      "click",
+      "screen:725,475"
+    ],
+    [
+      1420,
+      "click",
+      "screen:900,478"
+    ],
+    [
+      1460,
+      "snapshot",
+      "w1460"
+    ],
+    [
+      1480,
+      "click",
+      "screen:580,340"
+    ],
+    [
+      1520,
+      "snapshot",
+      "c1520"
+    ],
+    [
+      1520,
+      "session-dump",
+      "c1520"
+    ],
+    [
+      2600,
+      "snapshot",
+      "c2600"
+    ],
+    [
+      2600,
+      "session-dump",
+      "c2600"
     ]
   ]
 }

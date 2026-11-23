@@ -8,13 +8,13 @@ const { oracleFolder, loadOracle, runL3 } = require('./l3-common');
 // 오라클 폴더이다.
 const ORACLE = oracleFolder('tutorial2-l3');
 
-test('L3 Tutorial2: Buildings 안내 창→사제 우클릭 메뉴(Construct→Temple→Build Wind Temple)→신전 놓기→건설→신전 완공 안내 창의 체크포인트 화면과 덤프가 cpppj 와 같다', async ({ browser }) => {
+test('L3 Tutorial2: Buildings 안내 창→사제 우클릭 메뉴(Construct→Temple→Build Wind Temple)→신전 놓기→건설→신전 완공 안내 창→워크샾 건설(Construct→Workshop→Build Sun Workshop)→Production 안내 창의 체크포인트 화면과 덤프가 cpppj 와 같다', async ({ browser }) => {
   test.setTimeout(900000);
   const { plan } = loadOracle(ORACLE);
   expect(plan.mission).toBe('Tutorial2');
-  // 단계표의 체크포인트 이름마다 오라클의 덤프·화면 파일이 있어야 한다(덤프 c400·c1200, 화면 m190·m210·m230·g270·c400·c1200).
-  for (const file of ['m190.png', 'm210.png', 'm230.png', 'g270.png', 'c400.tsv', 'c400.png', 'c1200.tsv', 'c1200.png']) expect(fs.existsSync(path.join(ORACLE, file)), file).toBe(true);
-  expect(plan.steps.filter(([, op]) => op === 'session-dump').map(([, , label]) => label)).toEqual(['c400', 'c1200']);
-  expect(plan.steps.filter(([, op]) => op === 'snapshot').map(([, , label]) => label)).toEqual(['m190', 'm210', 'm230', 'g270', 'c400', 'c1200']);
+  // 단계표의 체크포인트 이름마다 오라클의 덤프·화면 파일이 있어야 한다(덤프 c400·c1200·c1520·c2600, 화면 m190·m210·m230·g270·c400·c1200·w1360·w1460·c1520·c2600).
+  for (const file of ['m190.png', 'm210.png', 'm230.png', 'g270.png', 'c400.tsv', 'c400.png', 'c1200.tsv', 'c1200.png', 'w1360.png', 'w1460.png', 'c1520.tsv', 'c1520.png', 'c2600.tsv', 'c2600.png']) expect(fs.existsSync(path.join(ORACLE, file)), file).toBe(true);
+  expect(plan.steps.filter(([, op]) => op === 'session-dump').map(([, , label]) => label)).toEqual(['c400', 'c1200', 'c1520', 'c2600']);
+  expect(plan.steps.filter(([, op]) => op === 'snapshot').map(([, , label]) => label)).toEqual(['m190', 'm210', 'm230', 'g270', 'c400', 'c1200', 'w1360', 'w1460', 'c1520', 'c2600']);
   await runL3({ browser, plan, oracleDir: ORACLE });
 });
