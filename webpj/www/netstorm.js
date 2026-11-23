@@ -522,6 +522,9 @@ class FrameClock {
 // Netstorm 앱
 // ---------------------------------------------------------------------------------------------
 
+// 검사 전용 고정 시각 모드의 프레임 밀리초를 정한다: 1~60000 정수만 받고 그 밖(없음·0·문자)은 0(꺼짐)이다. 사용: normalizeFixedFrameMs('25') → 25. (2026-11-23 WB04-E1271)
+function normalizeFixedFrameMs(value) { const number = Number(value); return Number.isInteger(number) && number >= 1 && number <= 60000 ? number : 0; }
+
 // 주소창의 쿼리 문자열을 읽는다. 개발용 설정(?debug, ?aspect=16:9, ?lang=korean)에 쓴다.
 // 브라우저가 아니거나 location 이 없으면 빈 값이다. (2026-10-23 WB01)
 function readQueryParams() {
@@ -566,6 +569,9 @@ export class Netstorm {
             fetch: options.fetch ?? null,
             scaling: normalizeScaling(options.scaling ?? params.get('scaling')),
             audio: options.audio ?? !params.has('mute'),
+            // 검사 전용 고정 시각 모드의 프레임 밀리초(0 이면 꺼짐)이다. 켜면 Client 시각 공급원이 프레임마다 이 값만큼만 전진하고(원본 cpppj `--fixed-frame-ms` 와 같음) 프레임은 requestAnimationFrame 이 아니라
+            // `stepFixedFrames` 로만 진행한다. 같은 입력 단계표의 두 실행을 같은 시계·난수로 비교하는 L2·L3 결정론 대조용이며 주소 `?fixed=25` 로도 켠다. (2026-11-23 WB04-E1271)
+            fixedFrameMs: normalizeFixedFrameMs(options.fixedFrameMs ?? params.get('fixed')),
             // 원본 비교 모드이다. 참이면 웹 판본이 빼는 원본 화면 요소(메인 메뉴 Multiplayer·Edit·Quit 버튼, 펼침 메뉴의 Direct Draw·Resolution·Technical Help 등,
             // Campaign 목록의 User Made Campaigns 행)를 원본처럼 보여 cpppj 오라클·원본 스크린샷과 같은 배치로 비교한다. 그 요소들의 동작(Edit·멀티플레이 등)은 여전히 구현하지 않는다.
             // 무브라우저 실행(tools/headless.mjs)의 오라클 비교 전용이며 기본값 false 이다. (2026-11-07 WB02-H)
@@ -889,6 +895,8 @@ export class Netstorm {
         this._clientTrace = new ClientTraceGlobals();
         this._clientProductionGlobals = new ProductionMaintenanceGlobals();
         const source = new ClientTimeSource(), random = new ClientRandomGlobals();
+        // 고정 시각 모드이면 시각 공급원이 프레임마다 정해진 밀리초만 전진한다(난수 초기화 전에 켜서 유닉스 초도 같은 값에서 시작한다). (2026-11-23 WB04-E1271)
+        if (this.options.fixedFrameMs > 0) source.enableFixed({ frameMilliseconds: this.options.fixedFrameMs });
         const sp = new ClientSpGlobals(random, () => source.unixSeconds()); sp.store().initialize();
         const local = new ClientLocalStateGlobals(), clock = new ClientFrameClock(source, local.gameTicks());
         const cloud = new ClientKencloudGlobals(), html = new ClientHtmlWindowGlobals(), connections = new ClientConnectionGlobals(local), activity = new ClientConnectionActivityGlobals();
@@ -1750,6 +1758,19 @@ export class Netstorm {
         return formatSessionStateDump(captureSessionStateDump(session ? session.core().pool.edition : 'patch1078', clock.time(), random, kernel, session));
     }
 
+    // 검사 전용: 고정 시각 모드(?fixed=밀리초)에서 프레임을 가상 시각으로 정확히 count 개 진행한다(requestAnimationFrame 을 쓰지 않는다). 프레임마다 가상 시각이 `fixedFrameMs` 씩만 전진하고 Client 시계·난수·Kernel 이 그 시각으로 돈다.
+    // 프레임 사이에 이벤트 루프를 한 번 넘겨(setTimeout 0) 이미 시작한 비동기 작업(예: 해독이 끝난 효과음)이 정리되게 하지만, 아직 준비되지 않은 자산을 기다려 주지는 않는다: 호출하는 쪽이 `_prepareCampaignAudio()` 같은 준비를 먼저 마쳐야 한다.
+    // 지금까지 진행한 프레임 수를 돌려준다(`_fixedFrameCount`). 고정 시각 모드가 아니면 오류이다. 사용: await app.stepFixedFrames(90). (2026-11-23 WB04-E1271)
+    async stepFixedFrames(count = 1) {
+        if (!(this.options.fixedFrameMs > 0)) throw new Error('고정 시각 모드(?fixed=밀리초)에서만 프레임을 직접 진행합니다.');
+        const view = this._view();
+        for (let index = 0; index < count; index += 1) {
+            this._fixedStamp = (this._fixedStamp ?? 0) + this.options.fixedFrameMs; this._frameHandle = 0; this._onFrame(this._fixedStamp); this._fixedFrameCount = (this._fixedFrameCount ?? 0) + 1;
+            await new Promise((resolve) => view.setTimeout(resolve, 0));
+        }
+        return this._fixedFrameCount ?? 0;
+    }
+
     // 채팅 제출·수신이 빌리는 Client 조회 묶음이다(원본 Client 의 chat/설정/번역/소리 접근자를 앱의 장기 객체에 묶는다). 값은 호출할 때마다 현재 객체에서 읽는다. (2026-11-22 WB04-E1172)
     _campaignChatClient() {
         const self = this;
@@ -2453,8 +2474,9 @@ export class Netstorm {
     }
 
     // 시작 title 그림 표시를 시작한다(원본 4ab3e0). 첫 그림부터 3초씩 보이고, 클릭·키 입력이 있거나 세 장이 끝나면 `_finishTitleScreens` 가 메인 메뉴로 보낸다. (2026-11-22 WB04-E1184)
+    // 고정 시각 모드에서는 시작 시각을 들어온 순간(마지막 프레임의 가상 시각)으로 잡아 세 장이 정확히 3초씩, 즉 프레임 밀리초로 나눈 프레임 수만큼 보이게 한다(원본 cpppj 의 고정 프레임 실행이 9초·25ms 프레임에 360프레임인 것과 같다). (2026-11-23 WB04-E1271)
     _enterTitleScreens() {
-        this._titleStartedAt = null; this._titleBitmaps = [];
+        this._titleStartedAt = this.options.fixedFrameMs > 0 ? (this._fixedStamp ?? 0) : null; this._titleBitmaps = [];
         this._setState(AppState.TITLE);
         this._displayDirty = true;
     }
@@ -3796,6 +3818,8 @@ export class Netstorm {
 
     // 프레임 루프를 시작한다. 이미 예약돼 있거나 탭이 숨겨져 있으면 아무것도 하지 않는다.
     _startFrameLoop() {
+        // 고정 시각 모드의 프레임은 stepFixedFrames 가 직접 진행하므로 표시 주기(rAF)에 맡기지 않는다. (2026-11-23 WB04-E1271)
+        if (this.options.fixedFrameMs > 0) return;
         if (this._frameHandle || !this._root || this._root.ownerDocument.hidden) return;
         this._frameHandle = this._view().requestAnimationFrame((now) => {
             try {
@@ -3823,7 +3847,8 @@ export class Netstorm {
         if (!frameDue(now, this._lastFrameStamp, normalizeFrameRate(this._settings?.get('maxFPS')))) { this._startFrameLoop(); return; }
         this._lastFrameStamp = now;
         // 원본 Client 순서대로 화면 입력과 갱신 전에 같은 게임 프레임을 고정한다.
-        this._gameClock?.captureFrame();
+        // 고정 시각 모드의 시작 그림 구간은 시각만 전진하고 주 루프 프레임(번호·시간차)으로 세지 않는다(원본 cpppj 의 고정 프레임 실행과 같음). (2026-11-23 WB04-E1271)
+        if (this.options.fixedFrameMs > 0 && this._state === AppState.TITLE) this._gameClock?.advanceWithoutCapture(); else this._gameClock?.captureFrame();
         this._clock.tick(now);
         this._frameSeconds = now / 1000;
         // 원본 루프 2번: 현재 미션의 로컬 State만 Poll한다. 수신 콜백 안의 재진입은 정리와 전환을 미룬다.

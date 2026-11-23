@@ -17,6 +17,8 @@ export class ClientFrameClock {
 
     // 고정 시각 검사는 먼저 한 프레임 전진하고 현재 밀리초를 한 번 읽어 같은 프레임 객체를 갱신한다.
     captureFrame() { this.#source.advanceFixed(); Object.assign(this.#frame, this.#clock.capture(this.#source.milliseconds())); return this.#frame; }
+    // 고정 시각 검사 전용: 프레임을 고정하지 않고(프레임 번호·게임/벽 시각·시간차를 갱신하지 않고) 가상 시계만 한 프레임 전진한다. 원본 시작 그림 구간은 시각만 흐르고 주 루프 프레임으로는 세지 않는 것을 맞추려는 것이다. (2026-11-23 WB04-E1271)
+    advanceWithoutCapture() { this.#source.advanceFixed(); }
     // 현재 프레임은 새 시계를 읽지 않고 같은 장기 객체를 빌린다.
     time() { return this.#frame; }
     // 프레임 고정과 별도로 선택된 현재 호스트 시각을 읽는다.
