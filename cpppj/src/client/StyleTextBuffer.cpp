@@ -1,6 +1,7 @@
 // 입력/표시 줄의 독립 소유권과 원본의 엄격한 폭 비교·공백 포함 복사를 복원한다.
 #include "client/StyleTextBuffer.h"
 #include "client/Markup.h"
+#include "o/OriginalText.h" // 일본어 표시4BYTE를문자경계에서만나눠공백없는본문의잘림을막는다.
 #include <algorithm>
 #include <bit>
 #include <limits>
@@ -25,6 +26,23 @@ std::size_t WordEnd(std::span<const char> bytes,std::size_t position) {
     while (position<bytes.size() && bytes[position]!='\0' && bytes[position]!=' ') ++position;
     if (position==bytes.size()) throw std::out_of_range("StyleTextBuffer 단어 범위에 NUL 필요");
     return position;
+}
+// 일본어 가나·한자·반각 가타카나가 있는 조각에만 새 줄바꿈을 적용한다. 한글/원문 BYTE는 기존 경로다.
+bool JapaneseCharacter(std::uint32_t code) {
+    return (code>=0x3040 && code<=0x30ff) || (code>=0x4e00 && code<=0x9fff) || (code>=0xff61 && code<=0xff9f);
+}
+// 표시 토큰 하나의 Unicode/바이트 길이다. 원문ASCII는1BYTE며확장숫자중간을경계로삼지않는다.
+std::pair<std::uint32_t,std::size_t> DisplayCharacter(std::span<const char> bytes,std::size_t offset) {
+    const auto raw=std::span<const std::uint8_t>(reinterpret_cast<const std::uint8_t*>(bytes.data()),bytes.size());
+    if (const auto code=o::DecodeExtendedSequence(raw,offset)) return {*code,o::kExtendedTextLength};
+    return {static_cast<std::uint8_t>(bytes[offset]),1};
+}
+// 일본어의닫는구두점을줄첫머리로,여는괄호를줄끝으로밀지않고영문단어중간보다일본어경계를우선한다.
+bool JapaneseBreak(std::uint32_t before,std::uint32_t after) {
+    constexpr std::u32string_view opening=U"（［｛〈《「『【〔([{“‘"; // 다음문자와같은줄에둘여는부호다.
+    constexpr std::u32string_view closing=U"、。，．！？：；）］｝〉》」』】〕)]},.!?:;ーぁぃぅぇぉっゃゅょァィゥェォッャュョ”’"; // 앞문자와같은줄에둘닫는부호와작은가나다.
+    return opening.find(before)==opening.npos && closing.find(after)==closing.npos
+        && (before==' ' || after==' ' || JapaneseCharacter(before) || JapaneseCharacter(after));
 }
 }
 
@@ -186,6 +204,30 @@ std::span<const char> StyleTextBuffer::TextBytes(std::uint32_t token) const {
 // 마지막 단어 뒤 NUL도 length에 포함할 수 있다. 부분 조각 측정은 그 조각의 NUL 탐색을 사용한다.
 void StyleTextBuffer::SplitText(std::uint32_t token,std::uint32_t& line,std::int32_t width) const {
     const auto length=TextBytes(token).size()-1;
+    bool japanese=false; // 일본어를포함하지않는기존조각의분할/엄격폭비교/공백복사는그대로유지한다.
+    for (std::size_t at=0;at<length;) { const auto [code,size]=DisplayCharacter(TextBytes(token),at);japanese=japanese || JapaneseCharacter(code);at+=size; } // 유효표시토큰전체를한번만순회한다.
+    if (japanese) {
+        std::size_t consumed=0; // 실제복사한원문바이트만전진하며확장토큰을부분복사하지않는다.
+        while (consumed<length) { // 현재줄에들어갈다음표시조각을완전한문자단위로결정한다.
+            const auto suffix=TextBytes(token).subspan(consumed);std::size_t at=0,fits=0,boundary=0,chosen=0; // 들어간끝·합법적인줄경계·이번복사길이다.
+            while (at<length-consumed) { // 현재글꼴로접두를측정해이미지/스타일조각이차지한폭도반영한다.
+                const auto [code,size]=DisplayCharacter(suffix,at);const auto end=at+size;const auto measured=hooks_.measureText(suffix,Fragment(token).context,static_cast<std::int32_t>(end));
+                if (Add(Line(line).width,measured[0])>=width) {
+                    if (!fits && Line(line).width) break; // 첫문자도안들어가면빈다음줄에서같은문자를다시시도한다.
+                    chosen=boundary ? boundary : fits ? fits : end;break; // 단일글자가폭보다큰경우에도최소한한글자는소비한다.
+                }
+                fits=end;const auto next=end<length-consumed ? DisplayCharacter(suffix,end).first : 0U;
+                if (JapaneseBreak(code,next)) boundary=end;
+                at=end;if (at==length-consumed) chosen=at;
+            }
+            if (chosen) {
+                const auto& source=Fragment(token);const auto copy=style_.NewText(suffix,source.context,static_cast<std::uint32_t>(chosen),source.metadata); // 같은문맥/링크메타데이터의실제복사조각이다.
+                const auto size=style_.MeasureFragment(copy);Line(line).height=std::max(Line(line).height,size[1]);Line(line).width=Add(Line(line).width,size[0]);style_.Append(Line(line).head,copy);consumed+=chosen;
+            }
+            if (consumed<length) line=NewSoftLine(line);
+        }
+        return;
+    }
     std::size_t consumed=0;
     // 이미 배치한 바이트를 제외한 문자열에서 다음 표시 조각을 찾는다.
     while (consumed<length) {

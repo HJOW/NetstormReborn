@@ -1,0 +1,128 @@
+{
+  "passed": true,
+  "translated": 9,
+  "total": 43,
+  "missing": [
+    "bc1menu76",
+    "bc2bridging76",
+    "bc3acid_bar76",
+    "bc4bow_rush76",
+    "bc5walkers76",
+    "bc6mows76",
+    "bc7sun_bars76",
+    "bc8fury76",
+    "bc9ssun_bars76",
+    "breakingthrough",
+    "demostormrages",
+    "dissolvedalliance",
+    "enemyterritory",
+    "finalconfrontation",
+    "fragilefortune",
+    "guardmyback",
+    "help",
+    "masterofwhirligigs",
+    "rainvsrain",
+    "runforit",
+    "savetheisland",
+    "surrounded",
+    "tell",
+    "thenoose",
+    "thewarbegins",
+    "thunderingpower",
+    "totherescue",
+    "tutorial1",
+    "tutorial2",
+    "tutorial3",
+    "tutorial4",
+    "tutorial5",
+    "tutorial6",
+    "vicious"
+  ],
+  "uniqueKanji": 174,
+  "files": [
+    {
+      "file": "config.japanese",
+      "bytes": 2668,
+      "sections": 0,
+      "links": 0
+    },
+    {
+      "file": "offical1.japanese",
+      "bytes": 907,
+      "sections": 1,
+      "links": 0
+    },
+    {
+      "file": "offical2.japanese",
+      "bytes": 1307,
+      "sections": 1,
+      "links": 0
+    },
+    {
+      "file": "offical2sep.japanese",
+      "bytes": 16,
+      "sections": 0,
+      "links": 0
+    },
+    {
+      "file": "offical3.japanese",
+      "bytes": 1314,
+      "sections": 1,
+      "links": 0
+    },
+    {
+      "file": "offical4.japanese",
+      "bytes": 723,
+      "sections": 1,
+      "links": 0
+    },
+    {
+      "file": "offical5.japanese",
+      "bytes": 664,
+      "sections": 1,
+      "links": 0
+    },
+    {
+      "file": "offical5sep.japanese",
+      "bytes": 16,
+      "sections": 0,
+      "links": 0
+    },
+    {
+      "file": "offical6.japanese",
+      "bytes": 273,
+      "sections": 1,
+      "links": 0
+    }
+  ],
+  "errors": [],
+  "unit": 1334,
+  "focusedTests": {
+    "total": 49,
+    "passed": 49
+  },
+  "gui": {
+    "name": "campaigns-ja-1334-wrapped",
+    "args": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "--run",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+      "--window",
+      "--frames",
+      "100",
+      "--fixed-frame-ms",
+      "25",
+      "--no-audio",
+      "--set",
+      "welcomeGiven=1;tellTips=0;autoDemo=0;edgeScroll=0;currentLanguage=japanese;SCREENW=1024;SCREENH=768",
+      "--ui-script",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\campaigns-ja-1334-wrapped.tsv",
+      "--ui-report",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\campaigns-ja-1334-wrapped-report.tsv"
+    ],
+    "exit_code": 0,
+    "seconds": 2.0593788623809814,
+    "exe_sha256": "03a1e43b18a677aef468eda78e94d3cd128795672b69f9f4ee6dd10c7c52cc8e"
+  },
+  "packageDryRunEntries": 1446
+}

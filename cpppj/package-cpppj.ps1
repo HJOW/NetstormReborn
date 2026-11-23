@@ -901,6 +901,16 @@ try {
     foreach ($koreanBody in $koreanBodies) { # 실행파일옆언어namespace로본문만동봉하며AI/SP설정이나BOM을다시쓰지않는다.
         Add-FileItem -Items $items -Entry ($PackageRootName + '/lang/korean/d/' + $koreanBody.Name) -Source $koreanBody.FullName
     }
+    # 일본어는번역된공식본문만같은namespace에넣고미번역본문은기존영어대체를유지한다.
+    $japaneseBodyDirectory = Join-Path $RepoRoot 'assets\lang\japanese\d'
+    if (Test-Path -LiteralPath $japaneseBodyDirectory -PathType Container) {
+        $japaneseBodies = @(Get-ChildItem -LiteralPath $japaneseBodyDirectory -Filter '*.japanese' -File -ErrorAction Stop | Sort-Object Name) # 번역완료파일만열거한다.
+        $officialBodyStems = @($koreanBodies | ForEach-Object { $_.BaseName }) # 한국어와같은43공식stem을사용해사용자맵을배포번들로혼합하지않는다.
+        foreach ($japaneseBody in $japaneseBodies) { # 원문수치/명령/BOM을바꾸지않고해당읽기전용언어번들에복사한다.
+            if ($japaneseBody.BaseName -notin $officialBodyStems) { throw "미등록 일본어 본문: $($japaneseBody.Name)" }
+            Add-FileItem -Items $items -Entry ($PackageRootName + '/lang/japanese/d/' + $japaneseBody.Name) -Source $japaneseBody.FullName
+        }
+    }
 
     # 세 서버 페이지는 사용자가 지정한 게임 원천에 있으면 보존하고, 없으면 클론의 호환 콘텐츠를 동봉한다.
     foreach ($serverPageName in @('Admin.server', 'Update.server', 'Guild.server')) {

@@ -3,10 +3,14 @@
 #include "client/KoreanResources.h"
 #include "client/LanguageOptions.h"
 #include "client/ProductPresentation.h"
+#include "client/ConfigFileRead.h" // 일본어 번들도 실제 Native Config FILE/BOM 경계로 읽는다.
+#include "client/StyleTextBuffer.h" // 일본어무공백본문을실제표시줄버퍼로레이아웃한다.
+#include "o/BaseFile.h" // 사용자 정확 파일과 공식 번들의 우선권을 같은 VFS로 검사한다.
 #include "o/OriginalText.h"
 #include "o/Xlat.h"
 #include <algorithm>
 #include <filesystem>
+#include <fstream> // 공식 자료와 분리된 검사 경로에만 명시 입력을 쓴다.
 #include <set>
 #include <string>
 #include <vector>
@@ -14,6 +18,56 @@
 namespace { // 저장소 루트를 이 검사 파일 위치에서 찾는다.
 std::filesystem::path JapaneseRepo() { return std::filesystem::path(__FILE__).parent_path().parent_path().parent_path(); }
 std::span<const std::uint8_t> JapaneseView(const std::vector<std::uint8_t>& bytes) { return {bytes.data(), bytes.size()}; }
+}
+
+// 새 공식 일본어 번들의9파일/BOM과 기존 영어·한국어/사용자 경로의 우선권을 검사한다.
+TEST_CASE(JapaneseText_BuiltinConfigCampaignsAndExactFilePriority) {
+    using namespace netstorm::client;
+    const auto repo=JapaneseRepo(),work=repo/"cpppj/build/test-data/japanese-builtin-1334"; // 이 검사만 쓰는 입력 경로다.
+    std::filesystem::create_directories(work/"d");std::filesystem::remove(work/"d/config.japanese");
+    netstorm::o::BaseFileSystem files(work);
+    for (const auto stem:{"config","offical1","offical2","offical2sep","offical3","offical4","offical5","offical5sep","offical6"}) { // 공식43stem 중 이번에 번역한9본문을 각자 읽는다.
+        const auto logical=std::string("d/")+stem+".japanese";const auto selected=FindBuiltinKoreanFile(files,{repo},logical);CHECK(selected);
+        const auto actual=ReadLocalizedGameFile(files,{repo},logical);CHECK(actual && *actual==netstorm::o::ReadFileBytes(repo/"assets/lang/japanese"/logical));
+        if (actual) CHECK(actual->size()>=3 && (*actual)[0]==0xef && (*actual)[1]==0xbb && (*actual)[2]==0xbf);
+    }
+    for (const auto invalid:{"d/custom.japanese","d/../config.japanese","d/sub/config.japanese","//server/d/config.japanese","C:/CustomMaps/d/config.japanese","d/config.german"}) CHECK(!FindBuiltinKoreanFile(files,{repo},invalid)); // 사용자/다른 언어/경로 우회를 번들로 바꾸지 않는다.
+    netstorm::o::ConfigInterface config([&](auto name) { return ReadLocalizedGameFile(files,{repo},name); },files.FileNameOwner(),MakeConfigFileSearchHooks([&] { return work; }),MakeConfigFileReadHooks(files,[&](auto name) { return FindBuiltinKoreanFile(files,{repo},name); }));
+    config.Configuration().Append("languageSpec=\"d/config.{local.1}\"\n");config.LoadLanguage("japanese");CHECK(config.Language().Get("factory")=="ワークショップ" && config.Language().Get("helpWord")=="バージョン情報");
+    const auto campaigns=MatchLocalizedGameFiles(files,{repo},"d/offical*.japanese");CHECK(campaigns.size()==8);
+    for (const auto& name:campaigns) CHECK(name.ends_with(".japanese") && FindBuiltinKoreanFile(files,{repo},name)); // Finder도 같은 공식8파일만 일본어 논리 이름으로 돌려준다.
+    const std::string exact="\xef\xbb\xbf" "factory=\"USER EXACT\"\n"; // 사용자가 설치한 같은 논리 이름의 명시 파일이다.
+    { std::ofstream file(work/"d/config.japanese",std::ios::binary|std::ios::trunc);file.write(exact.data(),exact.size());CHECK(file.good()); }
+    CHECK(!FindBuiltinKoreanFile(files,{repo},"d/config.japanese"));const auto actual=ReadLocalizedGameFile(files,{repo},"d/config.japanese");CHECK(actual && std::string(actual->begin(),actual->end())==exact);
+    std::filesystem::remove(work/"d/config.japanese"); // 다음 재실행도 같은 초기 우선권을 검사한다.
+}
+
+// 실제조각복사/표시줄에서일본어잘림·4BYTE절단·닫는구두점의줄첫머리이동을검사한다.
+TEST_CASE(JapaneseText_LongUnspacedParagraphWrapsAndKeepsLegacyWords) {
+    using namespace netstorm::client;
+    const auto layout=[](std::string_view input,std::int32_t width) {
+        StyleTextState fragments;StyleTextBufferState state; // 이실행이소유하는원문/표시조각과줄저장소다.
+        const auto measure=[](std::span<const char> text,std::int32_t length) { // 글리프당10픽셀인독립검사폰트로폭을측정한다.
+            const auto end=std::find(text.begin(),text.end(),'\0');const auto count=length<0 ? static_cast<std::size_t>(end-text.begin()) : static_cast<std::size_t>(length);
+            const auto decoded=netstorm::o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(text.data()),count});
+            return std::array<std::int32_t,2>{static_cast<std::int32_t>(std::count_if(decoded.begin(),decoded.end(),[](unsigned char byte) { return (byte&0xc0)!=0x80; }))*10,10};
+        };
+        StyleTextHooks hooks;hooks.textMetrics=[](const auto&) { return std::array<std::int32_t,3>{10,10,0}; };hooks.textMeasure=[&](auto bytes,const auto&,auto& w,auto& h) { const auto size=measure(bytes,-1);w=size[0];h=size[1]; };
+        StyleText style(fragments,std::move(hooks));StyleTextBufferHooks bufferHooks;bufferHooks.measureText=[&](auto bytes,const auto&,auto length) { return measure(bytes,length); };
+        StyleTextBuffer buffer(state,fragments,style,8,std::move(bufferHooks));auto encoded=netstorm::o::EncodeDisplayText(std::string(input)+'\n');encoded.push_back(0);buffer.AppendText({reinterpret_cast<const char*>(encoded.data()),encoded.size()},{});buffer.Layout(width);
+        std::vector<std::string> lines; // 다음포인터순서대로실제표시문자열을합쳐누락/중복을확인한다.
+        for (auto line=state.sentinel.next;line;line=state.softLines.at(line).next) {
+            std::string text;
+            for (auto token=state.softLines.at(line).head;token;token=fragments.fragments.at(token).next) { const auto& raw=fragments.fragments.at(token).text;const auto end=std::find(raw.begin(),raw.end(),'\0');text+=netstorm::o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(raw.data()),static_cast<std::size_t>(end-raw.begin())}); } // 실제출력처럼첫NUL까지만조각마다독립해독해원본의여분NUL복사와토큰절단을구별한다.
+            lines.push_back(std::move(text));
+        }
+        buffer.Destroy();return lines;
+    };
+    const std::string japanese="日本語の文章を「正しく」折り返します。文字を失いません。";const auto lines=layout(japanese,61);
+    std::string joined;for (const auto& line:lines) { CHECK(!line.empty() && !line.starts_with("。") && !line.starts_with("」") && !line.ends_with("「"));CHECK(std::none_of(line.begin(),line.end(),[](unsigned char byte) { return byte<0x20; }));joined+=line; } // 폭조건과별도로행과문자순서/구두점보존을검증한다.
+    CHECK(lines.size()>1 && joined==japanese);
+    CHECK((layout("one two",51)==std::vector<std::string>{"one ","two"})); // 기존영문공백포함분할계약이다.
+    CHECK(layout("한국어문장",31).front()=="한국어문장"); // 일본어없는한국어긴단어의기존경로를유지한다.
 }
 
 // 히라가나·가타카나·반각 가타카나·전각 문장 부호는 한국어 구간 뒤의 정적 구간이라 4바이트 확장으로 왕복하고 한글 인덱스는 그대로다.

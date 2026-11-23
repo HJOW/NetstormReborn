@@ -1,0 +1,15 @@
+﻿title = "完全なる勝利"
+
+[Overview]
+<background="nsstart">
+<h2>{offical5.title}</h2>
+<p>
+闇の勢力を打ち砕き、最後の勝利をつかめるでしょうか？
+
+$Checked=1 突破,MissionBegin,BreakingThrough,{DoneBreakingThrough},{DoneSurrounded}
+$Checked=2 救出作戦！,MissionBegin,ToTheRescue,{DoneToTheRescue},{DoneBreakingThrough}
+$Checked=3 残虐,MissionBegin,Vicious,{DoneVicious},{DoneToTheRescue}
+$Checked=4 敵の領土,MissionBegin,EnemyTerritory,{DoneEnemyTerritory},{DoneVicious}
+$Checked=5 最後の対決,MissionBegin,FinalConfrontation,{DoneFinalConfrontation},{DoneEnemyTerritory}
+
+$Button=戻る,Tell,UCampaign

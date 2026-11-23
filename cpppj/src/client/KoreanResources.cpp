@@ -124,14 +124,15 @@ constexpr std::array<std::string_view,43> kBuiltinKoreanNames{{
     "finalconfrontation.korean",
     "demostormrages.korean",
 }}; // 원문대본의공통11/공식32고유파일만허용한다. xlat은기존별도표로읽는다.
-// 드라이브/UNC/상위이동/다른디렉터리를거부하고DataDir의선행구분자하나만논리접두로해석한다.
+// 드라이브/UNC/상위이동/다른디렉터리를거부하고한국어·일본어의공식basename만검사한다.
 std::optional<std::string> KoreanLeaf(std::string_view input,bool wildcard) {
     auto text=std::string(input.substr(0,input.find('\0')));std::replace(text.begin(),text.end(),'\\','/');text=o::AsciiLower(text);
     if (text.empty() || text.starts_with("//") || text.find(':')!=text.npos) return {};
     if (text.front()=='/') text.erase(0,1);if (!text.starts_with("d/")) return {};text.erase(0,2);
-    if (text.empty() || text.find('/')!=text.npos || text=="." || text==".." || !text.ends_with(".korean")) return {};
+    if (text.empty() || text.find('/')!=text.npos || text=="." || text==".." || (!text.ends_with(".korean") && !text.ends_with(".japanese"))) return {};
     if (!wildcard && text.find_first_of("*?")!=text.npos) return {};
-    if (!wildcard && std::find(kBuiltinKoreanNames.begin(),kBuiltinKoreanNames.end(),text)==kBuiltinKoreanNames.end()) return {};
+    const auto canonical=text.ends_with(".japanese") ? text.substr(0,text.size()-9)+".korean" : text; // 같은43개허용목록을공유하되실제요청의확장자는보존한다.
+    if (!wildcard && std::find(kBuiltinKoreanNames.begin(),kBuiltinKoreanNames.end(),canonical)==kBuiltinKoreanNames.end()) return {};
     return text;
 }
 // 아카이브FileFinder와같은ASCII와일드카드만비교하며경로는이미고정된한디렉터리다.
@@ -146,8 +147,9 @@ std::string KoreanStem(std::string_view path) {
 }
 }
 std::optional<std::filesystem::path> FindBuiltinKoreanFile(const o::BaseFileSystem& files,const std::vector<std::filesystem::path>& roots,std::string_view name) {
-    const auto leaf=KoreanLeaf(name,false);if (!leaf || files.ProbeExact(name)) return {}; // 사용자/설치/등록TAFF의정확한한국어파일이항상우선한다.
-    for (const auto& root:roots) for (const auto& prefix:{std::filesystem::path("lang")/"korean"/"d",std::filesystem::path("assets")/"lang"/"korean"/"d"}) { // 가까운배포번들다음개발저장소를읽기만한다.
+    const auto leaf=KoreanLeaf(name,false);if (!leaf || files.ProbeExact(name)) return {}; // 사용자/설치/등록TAFF의정확한언어파일이항상우선한다.
+    const auto language=leaf->ends_with(".japanese") ? "japanese" : "korean"; // 실제본문확장자로읽기전용번들namespace를고른다.
+    for (const auto& root:roots) for (const auto& prefix:{std::filesystem::path("lang")/language/"d",std::filesystem::path("assets")/"lang"/language/"d"}) { // 가까운배포번들다음개발저장소를읽기만한다.
         const auto candidate=root/prefix/(*leaf);std::error_code error;if (std::filesystem::is_regular_file(candidate,error)) return std::filesystem::absolute(candidate).lexically_normal();
     }
     return {};
@@ -158,7 +160,8 @@ std::optional<std::vector<std::uint8_t>> ReadLocalizedGameFile(const o::BaseFile
 std::vector<std::string> MatchLocalizedGameFiles(const o::BaseFileSystem& files,const std::vector<std::filesystem::path>& roots,std::string_view pattern) {
     auto result=files.MatchFinder(pattern);const auto mask=KoreanLeaf(pattern,true);if (!mask) return result; // 영어/절대사용자패턴은기존벡터를그대로반환한다.
     const auto separator=pattern.find_last_of("\\/");const auto prefix=std::string(pattern.substr(0,separator==pattern.npos ? 0:separator+1));
-    for (const auto name:kBuiltinKoreanNames) { // 같은영어fallback행의위치만한국어논리이름으로바꾸고새번들만뒤에추가한다.
+    for (const auto koreanName:kBuiltinKoreanNames) { // 같은공식stem의영어fallback만요청언어로바꾸고새번들만뒤에추가한다.
+        const auto name=mask->ends_with(".japanese") ? std::string(koreanName.substr(0,koreanName.size()-7))+".japanese" : std::string(koreanName); // 문자열수명은현재루프의경로조회/추가가끝날때까지유지한다.
         if (!KoreanMatches(name,*mask)) continue;const auto logical=prefix+std::string(name);if (!FindBuiltinKoreanFile(files,roots,logical)) continue;
         const auto stem=KoreanStem(name);const auto found=std::find_if(result.begin(),result.end(),[&](const auto& old) { return KoreanStem(old)==stem; });
         if (found==result.end()) result.push_back(logical);else if (o::AsciiLower(*found).ends_with(".english")) *found=logical;

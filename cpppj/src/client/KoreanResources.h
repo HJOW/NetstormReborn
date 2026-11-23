@@ -23,12 +23,12 @@ std::optional<std::string> ReadLanguageTranslationFile(const std::vector<std::fi
 std::filesystem::path FindJapaneseFontFile(const std::vector<std::filesystem::path>& roots);
 }
 
-namespace netstorm::client { // 클론이 추가한 한국어 본문만 별도 배포 namespace로 연결한다.
-// 논리 d/<이름>.korean의43공식본문 중 현재VFS의정확파일이없을때만언어번들파일을찾는다. 절대/사용자/다른언어경로는대상밖이다.
+namespace netstorm::client { // 클론이 추가한 한국어·일본어 본문을 별도 배포 namespace로 연결한다.
+// 기존 함수 이름은 유지한다. 논리 d/<공식이름>.korean/.japanese의43본문만 찾고 사용자/설치 정확파일을 우선한다.
 std::optional<std::filesystem::path> FindBuiltinKoreanFile(const o::BaseFileSystem& files,const std::vector<std::filesystem::path>& roots,std::string_view name);
-// 원문영어/사용자경로는같은VFS를읽고명시한국어본문만BOM그대로반환한다. Config가이후기존해독을소유한다.
+// 원문영어/사용자경로는같은VFS를읽고명시한국어·일본어본문만BOM그대로반환한다. Config가이후기존해독을소유한다.
 std::optional<std::vector<std::uint8_t>> ReadLocalizedGameFile(const o::BaseFileSystem& files,const std::vector<std::filesystem::path>& roots,std::string_view name);
-// 기존FileFinder순서를유지하면서일치하는공식한국어번들의논리이름을추가하고같은stem의영어대체중복을제거한다.
+// 기존FileFinder순서를유지하면서요청언어의공식번들을추가하고같은stem의영어대체중복을제거한다.
 std::vector<std::string> MatchLocalizedGameFiles(const o::BaseFileSystem& files,const std::vector<std::filesystem::path>& roots,std::string_view pattern);
 // UTF8 BOM이있는클론본문만표시4BYTE로바꾸며BOM없는원문1252/제어BYTE는그대로반환한다.
 std::string DecodeQuickHelpDisplaySource(std::string_view bytes);

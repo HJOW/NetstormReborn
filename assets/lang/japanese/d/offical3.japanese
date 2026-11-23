@@ -1,0 +1,23 @@
+﻿title = "自由への闘争"
+
+[Overview]
+<background="nsstart">
+<h2>{offical3.title}</h2>
+<p>
+ニンバスの善良な民は、ウィンド、レイン、サンダーの闇の支配者たちに
+奴隷にされています。島々は次々と征服され、指導者は殺されました。
+人々は邪悪な戦争機械の意のままに従わされています。
+<p>
+ニンバスで正義を守る最後の存在として、あなたは闇の支配者たちを倒し、
+人々を奴隷の身から解放しなければなりません。
+<p>
+あなたの目標は、ますます強まる闇の勢力に対抗するため、仲間を集めることです。
+
+$Checked=1 戦争の始まり！,MissionBegin,TheWarBegins,{DoneTheWarBegins},1
+$Checked=2 ワーリギグの支配者,MissionBegin,MasterOfWhirligigs,{DoneMasterOfWhirligigs},{DoneTheWarBegins}
+$Checked=3 島を救え！,MissionBegin,SaveTheIsland,{DoneSaveTheIsland},{DoneMasterOfWhirligigs}
+$Checked=4 危うい幸運,MissionBegin,FragileFortune,{DoneFragileFortune},{DoneSaveTheIsland}
+$Checked=5 とどろく力！,MissionBegin,ThunderingPower,{DoneThunderingPower},{DoneFragileFortune}
+$Checked=6 崩れた同盟,MissionBegin,DissolvedAlliance,{DoneDissolvedAlliance},{DoneThunderingPower}
+
+$Button=戻る,Tell,UCampaign

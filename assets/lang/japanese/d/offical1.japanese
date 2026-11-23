@@ -1,0 +1,18 @@
+﻿title = "初期ミッション"
+
+[Overview]
+<background="nsstart">
+<h2>初期ミッション</h2>
+<i>「平和を望むなら、戦いに備えよ。」 --作者不詳</i>
+<p>
+あなたはニンバスの民を率い、圧政者に勝利するために選ばれました。
+持てる力と意志のすべてをかけて戦う覚悟はありますか？
+
+$Checked=1 隙間に橋を架ける,MissionBegin,Tutorial1,{DoneTutorial1},1
+$Checked=2 秘密のワークショップ,MissionBegin,Tutorial2,{DoneTutorial2},{DoneTutorial1}
+$Checked=3 司祭の捕獲,MissionBegin,Tutorial3,{DoneTutorial3},{DoneTutorial2}
+$Checked=4 戦術的な戦い,MissionBegin,Tutorial4,{DoneTutorial4},{DoneTutorial3}
+$Checked=5 巧みな防御,MissionBegin,Tutorial5,{DoneTutorial5},{DoneTutorial4}
+$Checked=6 純粋な力,MissionBegin,Tutorial6,{DoneTutorial6},{DoneTutorial5}
+
+$Button=戻る,Tell,UCampaign
