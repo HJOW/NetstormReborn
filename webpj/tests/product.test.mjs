@@ -78,8 +78,23 @@ test('제품 Credits 행: Credits 에만 한 번 덧붙인다', () => {
     assert.equal(productTellBody('CREDITS', body, 'english'), extended);
     assert.equal(productTellBody('Credits', extended, 'english'), extended, '중복 확장 방지');
     assert.equal(productTellBody('CreditsNew', body, 'english'), body);
-    assert.equal(productTellBody('About', body, 'english'), body);
     assert.ok(productTellBody('Credits', body, 'korean').endsWith('$Menu=NetStorm 11.01 패치 크레딧,Tell,Patch1101.Credits\n'));
+});
+
+// 버전 창(About) 확장: 원작 저작권·기존 패치 줄과 확인 단추는 그대로 두고 단추 앞에 11.01 개발자·Copyright 2026 HJOW 줄을 한 번만 넣는다. (2026-11-23 WB04-E1289)
+test('버전 창: 단추 앞에 11.01 개발자·저작권 줄을 한 번만 넣는다', () => {
+    const body = '<h2>{H2}NetStorm</h2>\n<p>{Text}\nVersion {version}\n<p>\n(c) 1997 Titanic Entertainment, Inc. and Activision Inc.<br>\n{gamemaster}.{gameminor} Patch by Ticonderoga Entertainment.<br>\n$Button=OK,DoNothing,0\n';
+    const english = productTellBody('About', body, 'english');
+    assert.equal(english, body.replace('$Button=', 'NetStorm 11.01 Patch by HJOW.<br>\nCopyright 2026 HJOW<br>\n$Button='));
+    assert.equal(productTellBody('ABOUT', body, 'english'), english, '대소문자 무시');
+    assert.equal(productTellBody('About', english, 'english'), english, '중복 삽입 방지');
+    assert.ok(english.includes('(c) 1997 Titanic Entertainment, Inc. and Activision Inc.<br>') && english.includes('Ticonderoga Entertainment.<br>'), '원작·10.78 패치 줄 보존');
+    assert.ok(english.endsWith('$Button=OK,DoNothing,0\n'), '확인 단추 보존');
+    const korean = productTellBody('About', body, 'korean');
+    assert.ok(korean.includes('NetStorm 11.01 패치: HJOW.<br>\nCopyright 2026 HJOW<br>\n$Button='));
+    assert.equal(productTellBody('About', '<p>본문<br>\n', 'english'), '<p>본문<br>\nNetStorm 11.01 Patch by HJOW.<br>\nCopyright 2026 HJOW<br>\n', '단추가 없으면 끝에 붙는다');
+    assert.equal(productTellBody('Aboutx', body, 'english'), body, '다른 섹션은 그대로');
+    assert.equal(productTellBody('About', body, 'german'), english, '없는 언어는 영어');
 });
 
 // 설정 층: 제품 버전 줄과 Patch1101 객체가 있고, 원문 Tell 조회(tellSection)는 바뀌지 않는다. 원본 대조용은 10.78·객체 없음이다.

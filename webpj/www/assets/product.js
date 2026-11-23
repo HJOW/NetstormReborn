@@ -32,6 +32,16 @@ export const PRODUCT_CREDITS_TARGET = `${PRODUCT_CREDITS_OBJECT}.Credits`;
 // 세 번째 행을 덧붙일 원본 Tell 섹션 이름이다(메인 메뉴 Credits 버튼의 대상, 대소문자 무시 비교). (2026-11-05 WB03-AC)
 const CREDITS_SECTION = 'credits';
 
+// 정보(About) ▸ 버전 창의 Tell 섹션 이름이다(Help 메뉴 Version·게임 메뉴 About ▸ Version 의 대상, 대소문자 무시 비교). (2026-11-23 WB04-E1289)
+const ABOUT_SECTION = 'about';
+// 11.01 카피라이트 줄 본문이다. AGENTS.md 의 `Copyright 2026 HJOW` 표기이며 Patch Credits 본문·버전 창이 같은 줄을 쓴다(중복 삽입 검사에도 쓴다). (2026-11-23 WB04-E1289)
+export const PRODUCT_COPYRIGHT_LINE = 'Copyright 2026 HJOW';
+// 언어별 버전 창의 11.01 개발자 줄이다. cpppj ProductTellBody 의 About 확장과 같은 문구이며 기존 10.78 작성자(Ticonderoga) 줄은 바꾸지 않는다. (2026-11-23 WB04-E1289)
+const ABOUT_PATCH_LINES = Object.freeze({
+    english: 'NetStorm 11.01 Patch by HJOW.<br>',
+    korean: 'NetStorm 11.01 패치: HJOW.<br>',
+});
+
 // 12차 스커미시: 설정 화면의 첫 Tell 대상(`Patch1101.Skirmish`)과 Campaign 목록(UCampaign)의 항목 이름이다. cpppj ProductTellBody 와 같다. (2026-11-20 WB04-E1102)
 export const PRODUCT_SKIRMISH_TARGET = `${PRODUCT_CREDITS_OBJECT}.Skirmish`;
 export const PRODUCT_SKIRMISH_LABELS = Object.freeze({ english: 'Skirmish', korean: '스커미시' });
@@ -132,8 +142,14 @@ export function productCreditsLabel(language) {
 // target 은 지역 인자를 뗀 Tell 섹션 이름이며 대소문자를 무시해 비교한다(원본 Tell 이름 비교 규칙). 원본 두 행·Cancel 버튼은 그대로 둔다.
 // 사용: productTellBody('Credits', 원본본문, 'english') → 원본본문 + "\n$Menu=Netstorm 11.01 Patch Credits,Tell,Patch1101.Credits\n". (2026-11-05 WB03-AC)
 // 12차 스커미시: skirmish 가 참이면 Campaign 목록(UCampaign)에도 Skirmish 항목을 원문 목록과 첫 버튼 사이에 한 번만 넣는다(cpppj ProductTellBody). 스커미시를 켜지 않은 판본은 원문 그대로이다. (2026-11-20 WB04-E1102)
+// 버전 창(About): 첫 `$Button=` 앞에 "NetStorm 11.01 Patch by HJOW." 와 "Copyright 2026 HJOW" 두 줄을 한 번만 넣는다(버튼이 없으면 끝). 한국어는 "NetStorm 11.01 패치: HJOW." 이다. (2026-11-23 WB04-E1289, 사용자 요구)
 export function productTellBody(target, body, language, { skirmish = false } = {}) {
     const lower = asciiLower(String(target));
+    if (lower === ABOUT_SECTION) { // 버전 창은 원작 저작권·10.78 패치 줄을 그대로 두고 확인 단추 앞에 11.01 개발자와 저작권 줄만 더한다(cpppj ProductTellBody 의 About 확장).
+        if (body.includes(PRODUCT_COPYRIGHT_LINE)) return body; // 같은 줄이 이미 있으면 중복해서 넣지 않는다.
+        const patch = `${ABOUT_PATCH_LINES[productLanguage(language)]}\n${PRODUCT_COPYRIGHT_LINE}<br>\n`, button = body.indexOf('$Button=');
+        return button === -1 ? `${body}${patch}` : `${body.slice(0, button)}${patch}${body.slice(button)}`;
+    }
     if (skirmish && lower === CAMPAIGN_SECTION) {
         if (body.includes(PRODUCT_SKIRMISH_TARGET)) return body;
         const entry = `$Menu=${PRODUCT_SKIRMISH_LABELS[productLanguage(language)]},Tell,${PRODUCT_SKIRMISH_TARGET}\n`, back = body.indexOf('$Button=');
