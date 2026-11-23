@@ -11,6 +11,8 @@ async function measure(page, lang, names) {
   await page.waitForFunction(() => window.netstorm?.state === 'mainMenu');
   return page.evaluate((list) => { const app = window.netstorm, out = {};
     for (const name of list) { app._mainMenu.setDialog(null); app._openTell(name); const d = app._mainMenu.dialog; out[name] = d ? { width: Math.round(d.width), body: Math.round(d.body.baseWidth), widest: Math.round(d.body.maximumWidth()) } : null; }
+    // 제목 슬롯(3)으로 잰 `NetStorm` 의 폭이다. 한국어도 E1288 부터 원본 Arial 20 글리프 폭이다. (2026-11-23 WB04-E1288)
+    const fonts = app._resources.fonts; out.netstormWidth = fonts.measure(fonts.encode('NetStorm'), { flags: 0, font: 3, style: 0, color: 0, extra: 0, shadowColor: 0, shadowX: 0, shadowY: 0 }).width;
     app._mainMenu.setDialog(null); return out; }, names);
 }
 
@@ -23,8 +25,8 @@ test('Tell 창: 한국어 본문 폭이 가장 긴 줄·낱말보다 좁지 않�
   for (const name of NAMES) expect(sizes[name], name).not.toBeNull();
   // 좁은 목록 창은 가장 넓은 줄이 본문 폭 안에 들어간다(다른 창의 긴 본문 줄은 줄 나눔 폭 계산이 달라 이 불변식을 쓰지 않는다).
   for (const name of ['Credits', 'UCampaign']) expect(sizes[name].widest, `${name} 가장 넓은 줄`).toBeLessThanOrEqual(sizes[name].body);
-  // 이전에는 본문이 74px 로 맞춰져 `NetStorm`(111px)·`플레이하시겠습니까?` 가 잘렸다.
-  expect(sizes.Credits.body).toBeGreaterThan(110); expect(sizes.UCampaign.body).toBeGreaterThan(100);
+  // 이전에는 본문이 74px 로 맞춰져 `NetStorm`(당시 갈무리11 22px 로 111px)·`플레이하시겠습니까?` 가 잘렸다. E1288 부터 `NetStorm` 은 원본 Arial 20 글리프라 그 폭 이상이면 된다.
+  expect(sizes.Credits.body).toBeGreaterThanOrEqual(sizes.netstormWidth); expect(sizes.netstormWidth).toBeGreaterThan(60); expect(sizes.UCampaign.body).toBeGreaterThan(100);
   expect(errors).toEqual([]);
 });
 

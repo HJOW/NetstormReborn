@@ -39,8 +39,9 @@ test('갈무리11 일반·굵은 글꼴과 한국어 메뉴', async ({ page }) =
       regular: pixels(regular), bold: pixels(bold), tell: app._gameData.currentTell };
   });
   expect(result.faces).toEqual(expect.arrayContaining([['Galmuri11', '400', 'loaded'], ['Galmuri11', '700', 'loaded']]));
-  expect(result.size).toBe(11);
-  expect(result.advance).toBe(11);
+  // 갈무리11 WOFF2 의 설계 격자는 12px 이다(11px 는 가로획이 빠졌다). (2026-11-23 WB04-E1288)
+  expect(result.size).toBe(12);
+  expect(result.advance).toBe(12);
   expect(result.regular).toBeGreaterThan(0);
   expect(result.bold).toBeGreaterThan(result.regular);
   expect(result.tell).toBe('Welcome');

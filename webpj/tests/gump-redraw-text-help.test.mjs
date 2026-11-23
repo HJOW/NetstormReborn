@@ -72,7 +72,8 @@ test('GumpText 범위/출력 순서·메트릭: NUL/명시 길이/음수·alias�
 
 test('GumpText 실제 FontSet·기본 문맥 바인딩/Unicode: 측정과 현재 Draw가 같은 저장소/인코딩을 사용한다', () => {
     const files = new Map(ALL_FONT_PATHS.map((name) => [name, readData(name)])); const fonts = new FontSet(files); const text = new GumpText(fonts); const hooks = {}; bindStoneButtonText(hooks, text); const words = Uint32Array.of(2, 5, 7, 0, 0, 9, 1, 1); const label = Uint8Array.of(65, 66, 0); const expected = fonts.measure(label.subarray(0, 2), { flags: 2, font: 5, style: 0, shadowX: 1, shadowY: 1 }); const output = { width: 0, height: 0 }; hooks.measure(2, label, words, output, 0xffffffff); assert.deepEqual(output, expected);
-    const codes = []; const provider = new UnicodeFontProvider({ glyph: (code) => { codes.push(code); return { advance: code === 0xac00 ? 13 : 7, left: 0, top: 0, width: 0, height: 0, coverage: new Uint8Array() }; } }); const unicode = new FontSet(files, { unicode: provider }); const measured = new GumpText(unicode).measure(Uint16Array.of(0xac00, 65, 0), { flags: 2, font: 5, style: 0, shadowX: 1, shadowY: 1 }); assert.deepEqual(measured, { width: 21, height: 15 }); assert.deepEqual(codes, [0xac00, 65]);
+    const codes = []; const provider = new UnicodeFontProvider({ glyph: (code) => { codes.push(code); return { advance: code === 0xac00 ? 13 : 7, left: 0, top: 0, width: 0, height: 0, coverage: new Uint8Array() }; } }); const unicode = new FontSet(files, { unicode: provider }); const measured = new GumpText(unicode).measure(Uint16Array.of(0xac00, 65, 0), { flags: 2, font: 5, style: 0, shadowX: 1, shadowY: 1 }); assert.deepEqual(measured, { width: 13 + fonts.get(5, 0).glyph(65).advance + 1, height: 15 }); assert.deepEqual(codes, [0xac00]);
+    // 한국어 모드의 Windows-1252 글자('A')는 래스터라이저가 아니라 같은 슬롯의 원본 글리프 폭으로 잰다(cpppj 와 같은 혼합 규칙). (2026-11-23 WB04-E1288)
 });
 
 test('GumpHelp 현재 콜백: NUL 주제·현재 제목/본문/사건·항목 뒤 루트와 소리 순서를 보존한다', () => {

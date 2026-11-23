@@ -5,6 +5,7 @@
 // (2026-10-28 WB03-D: Tell 대화상자의 제목(슬롯 3)·본문(슬롯 5)·굵게/기울임 스타일을 그리기 위해 추가)
 import { BitmapFont, FONT_SLOT_HEIGHTS } from './bitmap-font.js';
 import { encodeUtf16Units, encodeWindows1252 } from './text-encoding.js';
+import { hasExtendedUnits } from './unicode-font.js';
 
 // 원본 스타일 번호(0~4)에 대응하는 파일 이름 조각이다. 순서는 원본 kStyles 와 같다. (2026-10-28 WB03-D)
 export const FONT_STYLE_NAMES = Object.freeze(['normal', 'italic', 'bold', 'strikeout', 'underline']);
@@ -72,13 +73,14 @@ export class FontSet {
     }
 
     // 문맥의 슬롯·스타일에 해당하는 유니코드 글꼴을 돌려준다(규칙은 measureFont 와 같다). 줄 높이·기준선은 같은 슬롯의 원본 비트맵 글꼴을 따른다.
-    // 없는 조합은 null 이고, 유니코드 글꼴 공급자가 없으면 오류다. (2026-10-31 WB03-N)
-    unicodeFont(context) {
+    // units 는 잴·그릴 UTF-16 코드 단위 배열이다. 생략하면 한글이 있는 문구로 본다. 큰 슬롯은 문구에 한글이 없으면 원본 글리프만 쓰는 글꼴을 돌려준다(UnicodeFontProvider.get).
+    // 없는 조합은 null 이고, 유니코드 글꼴 공급자가 없으면 오류다. (2026-10-31 WB03-N, 2026-11-23 WB04-E1288: units 추가)
+    unicodeFont(context, units = null) {
         if (!this.unicode) throw new Error('유니코드 글꼴이 준비되지 않았습니다.');
         const legal = context.style <= MAX_STYLE;
         const slot = legal ? context.font : 0;
         const style = legal ? context.style : 0;
-        return isFontAvailable(slot, style) ? this.unicode.get(slot, style, this.get(slot, style)) : null;
+        return isFontAvailable(slot, style) ? this.unicode.get(slot, style, this.get(slot, style), units === null || hasExtendedUnits(units)) : null;
     }
 
     // 슬롯·스타일의 글꼴을 돌려준다(없는 조합은 호출 전에 isFontAvailable 로 걸러야 한다). 처음 한 번만 해독한다.
@@ -98,7 +100,7 @@ export class FontSet {
     // 글자 측정에 쓰는 글꼴을 고른다(원본 GumpText::Measure). 스타일이 불법이면 슬롯 0 보통으로 대체하고, 없는 조합은 null(폭 0)이다.
     // bytes 가 UTF-16 코드 단위 배열(Uint16Array)이면 같은 규칙으로 유니코드 글꼴을 고른다. bytes 를 생략하면 원본 비트맵 글꼴이다(줄 기준선 계산용). (2026-10-31 WB03-N: bytes 추가)
     measureFont(context, bytes = null) {
-        if (bytes instanceof Uint16Array) return this.unicodeFont(context);
+        if (bytes instanceof Uint16Array) return this.unicodeFont(context, bytes);
         const legal = context.style <= MAX_STYLE;
         const slot = legal ? context.font : 0;
         const style = legal ? context.style : 0;
@@ -112,10 +114,11 @@ export class FontSet {
 
     // 글자 코드 배열의 폭·높이를 잰다(원본 GumpText::Measure). 폭은 글꼴의 측정 폭(첫 표) 합, 높이는 슬롯의 논리 높이이며,
     // 문맥 플래그 2(그림자)가 있으면 그림자 오프셋을 각각 더한다. 정수는 32비트로 감긴다.
+    // 유니코드 글꼴에 최소 높이(큰 슬롯의 한글 문구)가 있으면 슬롯 논리 높이 대신 그 값과의 큰 값을 쓴다. (2026-11-23 WB04-E1288)
     measure(bytes, context) {
         const font = this.measureFont(context, bytes);
         let width = font ? font.measure(bytes) : 0;
-        let height = logicalHeightOfSlot(context.font);
+        let height = Math.max(logicalHeightOfSlot(context.font), font?.minimumLineHeight ?? 0);
         if (context.flags & 2) {
             width = (width + context.shadowX) | 0;
             height = (height + context.shadowY) | 0;

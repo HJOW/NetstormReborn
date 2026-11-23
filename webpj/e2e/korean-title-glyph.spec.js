@@ -1,4 +1,5 @@
-// 한국어 큰 슬롯(제목, 슬롯 3·4)의 글자 크기가 갈무리11 11px 의 정수배이고 글자 윗부분이 줄 맨 위 밖으로 나가 잘리지 않는지 실제 Chromium 의 실제 글꼴·래스터라이저로 확인한다. (2026-11-23 WB04-E1259)
+// 한국어 큰 슬롯(제목, 슬롯 3·4)의 글자 크기가 갈무리11 설계 격자(12px)의 정수배이고 글자 윗부분이 줄 맨 위 밖으로 나가 잘리지 않는지 실제 Chromium 의 실제 글꼴·래스터라이저로 확인한다.
+// (2026-11-23 WB04-E1259, WB04-E1288: 기준 크기 11 → 12 로 바꿔 24·48px 과 폭 12 배수를 기대)
 // 이전에는 제목이 19px(슬롯 3)·45px(슬롯 4)이고 기준선이 원본 Arial 값이라 한글 윗부분이 줄 위로 3줄 나가 잘려 `잔`→`산`, `라`→`다`, `혹`→`폭` 처럼 읽혔다.
 const { test, expect } = require('@playwright/test');
 
@@ -29,13 +30,13 @@ test('한국어 제목 슬롯: 갈무리11 정수 배율이고 글자 윗부분�
     // 잔의 맨 윗줄 잉크 폭이다(ㅈ 의 위쪽 가로획이 남아 있으면 10칸 이상).
     const g = fonts.unicodeFont({ font: 3, style: 0 }).glyph(0xc794).image; let topRun = 0; if (g) { let first = 0; while (first < g.height && !g.indices.slice(first * g.width, (first + 1) * g.width).some(Boolean)) first += 1; for (let x = 0; x < g.width; x += 1) if (g.indices[first * g.width + x]) topRun += 1; out.jan = { top: g.top, first, topRun }; }
     return out; });
-  // 글자 크기는 11 의 정수배(슬롯 3 → 22px, 슬롯 4 → 44px).
-  expect([result[3].em, result[4].em]).toEqual([22, 44]);
+  // 글자 크기는 12 의 정수배(슬롯 3 → 24px, 슬롯 4 → 48px). (E1288)
+  expect([result[3].em, result[4].em]).toEqual([24, 48]);
   // 어떤 글자도 줄 맨 위(0) 위로 나가지 않는다.
   expect(result[3].minTop, '슬롯 3 윗부분 잘림 없음').toBeGreaterThanOrEqual(0); expect(result[4].minTop, '슬롯 4 윗부분 잘림 없음').toBeGreaterThanOrEqual(0);
   expect(result[3].inked).toBeGreaterThan(100);
   // 확장 글자(한글 음절·호환 자모·한자)의 전진 폭은 모두 칸 폭(= 글자 크기)이다: 원문은 확장 글자 하나의 폭(`가` 의 폭)을 대표로 모든 확장 문자의 폭으로 쓰므로(`BitmapFont::ExtendedAdvance`) 같은 결과이다.
-  expect(result.advances, '확장 글자 폭').toEqual({ 0: [11], 3: [22], 4: [44] });
+  expect(result.advances, '확장 글자 폭').toEqual({ 0: [12], 3: [24], 4: [48] });
   // 잔(ㅈ)의 맨 윗줄에 가로획이 있다.
   expect(result.jan.topRun, '잔 의 위쪽 가로획').toBeGreaterThanOrEqual(10);
   expect(errors).toEqual([]);

@@ -76,6 +76,16 @@ export function encodeUtf16Units(text) {
     return Uint16Array.from(output);
 }
 
+// UTF-16 코드 단위 하나를 Windows-1252 바이트로 바꾼다. 나타낼 수 없으면(한글·한자·가나·정의되지 않은 0x81 등 다섯 칸 포함) null 이다.
+// 한국어 모드에서 이 바이트로 나타낼 수 있는 글자(숫자·영문·공백·문장 부호·라틴-1)는 원본 비트맵 글꼴로 그리고 나머지만 갈무리11 로 그리는 판정에 쓴다
+// (cpppj OriginalText.cpp EncodeBytes 가 Windows-1252 로 나타낼 수 있는 문자만 한 바이트로 두고 나머지를 4바이트 확장 시퀀스로 만드는 규칙과 같다).
+// 사용: windows1252ByteOf(0x41) → 0x41, windows1252ByteOf(0x2026) → 0x85, windows1252ByteOf(0xd55c) → null.
+// (2026-11-23 WB04-E1288: 한국어 모드의 숫자·공백이 갈무리11 로 그려져 SP 숫자가 커지고 대본의 공백 정렬이 어긋나던 문제를 고치기 위해 추가)
+export function windows1252ByteOf(code) {
+    if (code < 0x80 || (code >= 0xa0 && code <= 0xff)) return code;
+    return CP1252_EXTRA.get(code) ?? null;
+}
+
 // 문자열을 Windows-1252 바이트 배열(Uint8Array)로 바꾼다. 나타낼 수 없는 문자는 '?' 로 바꾼다.
 // 사용: 원본 글꼴로 그리거나 폭을 잴 라벨을 넘기기 전에 호출한다. 예) encodeWindows1252('Campaign')
 // (2026-10-23 WB03-M1)

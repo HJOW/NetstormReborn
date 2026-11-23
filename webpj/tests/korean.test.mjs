@@ -39,8 +39,9 @@ function fakeRasterizer() {
     };
 }
 
-// 글꼴 슬롯 0(높이 14)의 한글 글자 크기이다. 가짜 래스터라이저에서 한글 전진 폭이 이 값이고 영문·공백은 절반(반올림)이다. 슬롯 높이 14 → em 11. (2026-10-31 WB03-N)
-const EM = 11;
+// 글꼴 슬롯 0(높이 14)의 한글 글자 크기이다. 가짜 래스터라이저에서 한글 전진 폭이 이 값이고 영문·공백은 절반(반올림)이다. 슬롯 높이 14 → em 12.
+// 원본 비트맵 글꼴이 있는 FontSet 경로에서는 영문·공백·숫자가 원본 글리프 폭을 쓴다. (2026-10-31 WB03-N, 2026-11-23 WB04-E1288: 갈무리11 설계 격자 12 로 바꿈)
+const EM = 12;
 assert.equal(KOREAN_SMALL_EM_SIZE, EM);
 
 // 메뉴 묶음 파일(원본 글꼴 포함)이다. (2026-10-31 WB03-N)
@@ -209,31 +210,43 @@ test('UnicodeFontProvider: 슬롯·스타일별 글꼴 사양과 원본 글꼴 �
     assert.equal(provider.get(5, 4).spec.underline, true);
     // 기준 글꼴이 없으면 슬롯 높이와 em 으로 추정한다. 비어 있는 슬롯 2 는 만들지 않는다.
     assert.equal(provider.get(3, 0).height, 20);
-    // 슬롯 3(높이 20)의 글자 크기는 갈무리11 의 2배(22px)이고 기준 글꼴이 없을 때의 기준선은 그 0.85배이다. (E1259)
-    assert.equal(provider.get(3, 0).spec.emSize, 22);
-    assert.equal(provider.get(3, 0).ascent, 20); // 기준 글꼴이 없으면 추정 기준선 round(22×0.85)=19 와 22px 글자의 20줄 중 큰 값이다.
+    // 슬롯 3(높이 20)의 글자 크기는 갈무리11 설계 격자(12px)의 2배(24px)이고 기준 글꼴이 없을 때의 기준선은 추정값 round(24×0.85)=20 과 24px 한글의 22줄 중 큰 값이다. (E1259, E1288)
+    assert.equal(provider.get(3, 0).spec.emSize, 24);
+    assert.equal(provider.get(3, 0).ascent, 22);
     assert.throws(() => provider.get(2, 0), RangeError);
     // 기준 글꼴이 있으면 줄 높이·기준선은 그 값이다(슬롯 3: 원본 Arial 20 은 높이 19·기준선 15 라 추정값과 다르다).
     const reference20 = BitmapFont.parse(menuFiles.get('d/!Arial.normal.20.700.chfnt'));
     const referenced = new UnicodeFontProvider(fakeRasterizer()).get(3, 0, reference20);
-    // 기준선은 원본 기준선(15)과 갈무리11 22px 글자의 기준선 위 높이(2배 × 10줄 = 20) 중 큰 값이라 20 이고 줄 높이는 원본(19)을 따른다(기준선이 줄 높이보다 커서 descent 는 0 으로 막는다). (E1259)
-    assert.deepEqual([referenced.height, referenced.ascent, referenced.descent], [19, 20, 0]);
-    // 작은 슬롯은 원본 기준선이 갈무리11 의 9줄보다 커서 바뀌지 않는다: Arial 14(슬롯 0)의 기준선 그대로이다.
-    assert.ok(reference.ascent >= 9 && slot0.ascent === reference.ascent);
+    // 기준선은 원본 기준선(15)과 갈무리11 24px 한글의 기준선 위 높이(2배 × 11줄 = 22) 중 큰 값이라 22 이고 줄 높이는 원본(19)을 따른다(기준선이 줄 높이보다 커서 descent 는 0 으로 막는다). (E1259, E1288)
+    assert.deepEqual([referenced.height, referenced.ascent, referenced.descent], [19, 22, 0]);
+    // 큰 슬롯의 한글 문구 글꼴(extended)은 원본 글리프를 한글 기준선까지(22 - 15 = 7줄) 내리고 측정 최소 높이가 기준선(22) + 원본 기준선 아래 높이(19 - 15 = 4) = 26 이다. 폭은 원본 글리프 그대로이다.
+    // 한글이 없는 문구 글꼴은 원본 글리프를 원래 자리에 그대로 쓰고 최소 높이가 없다. (E1288)
+    assert.deepEqual([referenced.native, referenced.nativeOffset, referenced.minimumLineHeight], [reference20, 7, 26]);
+    const two = reference20.glyph(0x32), shifted = referenced.glyph(0x32);
+    assert.deepEqual([shifted.advance, shifted.drawAdvance, shifted.image.left, shifted.image.top, shifted.image.indices], [two.advance, two.drawAdvance, two.image.left, two.image.top + 7, two.image.indices]);
+    const plain20 = new UnicodeFontProvider(fakeRasterizer()).get(3, 0, reference20, false);
+    assert.deepEqual([plain20.native, plain20.nativeOffset, plain20.minimumLineHeight, plain20.glyph(0x32)], [reference20, 0, 0, two]);
+    // 작은 슬롯은 원본 기준선(Arial 14 의 11)이 갈무리11 한글의 11줄 이상이라 바뀌지 않고, 한글 여부와 관계없이 원본 글리프를 섞는다.
+    assert.ok(reference.ascent >= 11 && slot0.ascent === reference.ascent);
+    assert.equal(provider.get(0, 0, reference, false), slot0, '1배 슬롯은 한글 여부와 관계없이 같은 글꼴');
+    assert.deepEqual([slot0.native, slot0.minimumLineHeight], [reference, 0]);
     assert.ok(provider.get(4, 0).spec.emSize > provider.get(3, 0).spec.emSize);
-    // 모든 슬롯의 글자 크기는 갈무리11 원래 크기(11px)의 정수배이다(원본 BitmapFont.cpp 의 정수 확대: scale = max(1, (높이 + 5) / 11)). 비정수 배율은 1px 가로획을 합치거나 지운다. (E1259)
+    // 모든 슬롯의 글자 크기는 갈무리11 설계 격자(12px)의 정수배이다(원본 BitmapFont.cpp 의 정수 확대: scale = max(1, (높이 + 6) / 12)). 비정수 배율은 1px 획을 합치거나 지운다. (E1259, E1288)
     for (const [slot, height] of [[0, 14], [1, 13], [3, 20], [4, 48], [5, 14], [6, 12]]) {
         const emSize = provider.get(slot, 0).spec.emSize;
-        assert.equal(emSize % KOREAN_SMALL_EM_SIZE, 0, `슬롯 ${slot} 은 11의 배수`);
+        assert.equal(emSize % KOREAN_SMALL_EM_SIZE, 0, `슬롯 ${slot} 은 12의 배수`);
         assert.equal(emSize, koreanEmSize(height), `슬롯 ${slot}`);
     }
-    assert.deepEqual([14, 13, 12, 20, 48].map(koreanEmSize), [11, 11, 11, 22, 44]);
-    // 높이 16 이하는 1배, 17~27 은 2배, 28~38 은 3배, 39 이상은 4배이다.
-    assert.deepEqual([16, 17, 27, 28, 38, 39].map(koreanEmSize), [11, 22, 22, 33, 33, 44]);
-    // 기준선 위쪽 줄 수: 배율 × 10줄이고 3배 이상은 래스터라이저 반올림 몫으로 1줄을 더한다(실측: 44px 는 41줄). 큰 슬롯의 기준선은 원본 기준선과 이 값 중 큰 값이다. 작은 슬롯은 원본 기준선 그대로이다.
-    assert.deepEqual([11, 22, 33, 44].map(koreanAscentRows), [10, 20, 31, 41]);
-    assert.equal(provider.get(4, 0).ascent, Math.max(Math.round(44 * 0.85), 41));
-    assert.equal(new UnicodeFontProvider(fakeRasterizer()).get(6, 0).ascent, Math.round(11 * 0.85), '작은 슬롯은 보정하지 않는다(기준 글꼴이 없으면 추정 기준선 그대로)');
+    assert.deepEqual([14, 13, 12, 20, 48].map(koreanEmSize), [12, 12, 12, 24, 48]);
+    // 높이 17 이하는 1배, 18~29 는 2배, 30~41 은 3배, 42 이상은 4배이다.
+    assert.deepEqual([17, 18, 29, 30, 41, 42].map(koreanEmSize), [12, 24, 24, 36, 36, 48]);
+    // 기준선 위쪽 줄 수: 배율 × 11줄이다(12·24·48px 실측이 정확히 11·22·44줄). 한글을 놓는 기준선은 원본 기준선과 이 값 중 큰 값이다.
+    assert.deepEqual([12, 24, 36, 48].map(koreanAscentRows), [11, 22, 33, 44]);
+    assert.equal(provider.get(4, 0).ascent, Math.max(Math.round(48 * 0.85), 44));
+    // 작은 슬롯도 한글 윗줄이 잘리지 않게 11 이상이다: 원본 기준선 9 인 슬롯 6(Arial 12)은 한글만 11 에 놓는다. (E1288: 이전에는 원본 기준선 그대로라 윗줄이 잘렸다)
+    const reference12 = BitmapFont.parse(menuFiles.get('d/!Arial.normal.12.0.chfnt'));
+    assert.equal(reference12.ascent, 9);
+    assert.equal(new UnicodeFontProvider(fakeRasterizer()).get(6, 0, reference12).ascent, 11);
 });
 
 // 글꼴 묶음: 부호화 종류로 글꼴을 가른다. (2026-10-31 WB03-N)
@@ -255,7 +268,15 @@ test('FontSet: 유니코드 글꼴이 있으면 UI 문구를 UTF-16 으로 부�
     assert.ok(fonts.drawFont(context, original) instanceof BitmapFont);
     // 유니코드 글꼴의 줄 높이·기준선은 같은 슬롯의 원본 비트맵 글꼴을 따른다(슬롯 3 은 높이 19·기준선 15).
     const slot3 = fonts.unicodeFont(createTextContext({ font: 3 }));
-    assert.deepEqual([slot3.height, slot3.ascent], [19, 20]); // 기준선은 원본 15 가 아니라 22px 갈무리11 글자의 20(위쪽이 잘리지 않게, E1259)
+    assert.deepEqual([slot3.height, slot3.ascent], [19, 22]); // 기준선은 원본 15 가 아니라 24px 갈무리11 한글의 22(위쪽이 잘리지 않게, E1259·E1288)
+    // 한국어 모드에서도 한글이 없는 문구(숫자·영문·공백)는 원본 글리프로 재고 그린다: 슬롯 3 의 SP 숫자 `2000` 은 영어와 폭·글꼴이 같다. (E1288)
+    const digits = fonts.encode('2000'), slot3Context = createTextContext({ font: 3 });
+    assert.equal(fonts.measure(digits, slot3Context).width, english.measure(encodeWindows1252('2000'), slot3Context).width);
+    assert.deepEqual(fonts.drawFont(slot3Context, digits).glyph(0x32), english.get(3, 0).glyph(0x32));
+    assert.equal(fonts.measure(digits, slot3Context).height, 20, '한글이 없는 큰 슬롯 문구는 원본 슬롯 높이');
+    // 한글이 섞인 큰 슬롯 문구는 24px 한글 기준선(22)에 원본 Arial 20 의 기준선 아래 높이(4)를 더한 26 이다(내린 쉼표 꼬리가 다음 줄에 걸치지 않게). 작은 슬롯 문구의 공백·숫자는 원본 글리프 폭이다.
+    assert.equal(fonts.measure(fonts.encode('제네레이터, 두 번째'), slot3Context).height, 26);
+    assert.equal(fonts.measure(fonts.encode('가 1'), context).width, EM + english.measure(encodeWindows1252(' 1'), context).width);
     // 줄 기준선 계산(metrics)은 같은 슬롯의 원본 비트맵 값이라 영어와 한국어가 같다.
     assert.deepEqual(fonts.metrics(context), english.metrics(context));
     // 그림자 오프셋은 유니코드 문구의 크기에도 더해진다.
@@ -381,9 +402,10 @@ test('PopupMenu: 한국어 Options 메뉴 크기·그리기·명령 실행', () 
     const list = popup.levels[0].list;
     assert.equal(list.items.length, buildPopupItems('options', settings).length);
     assert.ok(list.items.filter((item) => item.kind !== 'separator').every((item) => item.fragments.some((fragment) => fragment.bytes instanceof Uint16Array)));
-    // 가장 긴 항목 '전체 화면 가장자리 스크롤'의 글자 폭(한글 11자 + 공백 3개)에 좌우 여백 30 을 더한 값 이상이다.
+    // 가장 긴 항목 '전체 화면 가장자리 스크롤'의 글자 폭(한글 11자 + 원본 Arial 14 굵은 공백 3개)에 좌우 여백 30 을 더한 값 이상이다. (E1288: 공백은 원본 글리프 폭)
+    const spaceWidth = koreanResources.fonts.get(0, 0).glyph(0x20).advance;
     const longest = koreanResources.fonts.measure(koreanResources.fonts.encode('전체 화면 가장자리 스크롤'), createTextContext({ flags: 2, font: 0, shadowX: 1, shadowY: 0 })).width;
-    assert.equal(longest, 11 * EM + 3 * Math.round(EM / 2) + 1);
+    assert.equal(longest, 11 * EM + 3 * spaceWidth + 1);
     assert.ok(list.baseWidth >= longest + 30, `폭 ${list.baseWidth}`);
     const surface = new IndexedSurface(1024, 768);
     popup.draw(surface);

@@ -10,9 +10,10 @@ export class GumpText {
     // 생성 자체에서는 글꼴을 만들거나 측정하지 않는다.
     constructor(fonts) { this.#fonts = fonts; }
     // 높이는 요청 슬롯을 먼저 검사하고 불법 스타일의 폭만 슬롯0 normal로 바꾼다.
+    // 한국어(UTF-16) 문구는 유니코드 글꼴의 최소 높이(큰 슬롯 한글 문구)와 슬롯 높이 중 큰 값을 쓴다(FontSet.measure 와 같은 규칙). (2026-11-23 WB04-E1288)
     measure(bytes, context, output = { width: 0, height: 0 }, length = -1) {
         const height = logicalHeightOfSlot(context.font | 0); const font = this.#fonts.measureFont({ ...context, font: context.font >>> 0, style: context.style >>> 0 }, bytes);
-        if (bytes instanceof Uint16Array) return measureGumpText(bytes, (code) => font ? font.glyph(code).advance : 0, height, context, output, length);
+        if (bytes instanceof Uint16Array) return measureGumpText(bytes, (code) => font ? font.glyph(code).advance : 0, Math.max(height, font?.minimumLineHeight ?? 0), context, output, length);
         const widths = new Int32Array(256);
         // 캐시 첫 폭 표만 사용하며 그리기 전진 폭/ABC A와 섞지 않는다.
         if (font) for (let i = 0; i < 256; i += 1) widths[i] = font.glyph(i).advance;

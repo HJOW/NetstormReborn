@@ -16,6 +16,12 @@ export const GLYPH_FALLBACK_FONT_FAMILY = `${KOREAN_FONT_FAMILY}Regular`;
 // 글자 그림 주변에 더하는 여백(픽셀)이다. 기울임·굵은 글씨로 칸 밖으로 삐져나오는 부분을 담는다. (2026-10-31 WB03-N)
 const CANVAS_MARGIN_EM = 1;
 
+// 글자를 몇 배 크기로 그린 뒤 배율×배율 칸의 알파 평균으로 줄여 목표 크기 픽셀 하나의 덮임 정도를 구하는지이다.
+// Chromium Canvas 는 글자를 가로로 약간 번지게 그려(12px 갈무리11 의 1px 세로획 양옆에 알파 78~103) 1px 간격으로 붙은 두 획(ㅔ·ㅐ·ㅒ 등) 사이 픽셀에
+// 양쪽 번짐이 합쳐져 문턱(110)을 넘고 간격이 메워졌다. 4배로 그리면 번짐은 목표 픽셀 칸 가장자리 한두 열에만 남아 평균이 문턱보다 훨씬 작아지고,
+// 갈무리11 의 획은 정수배 크기에서 칸을 꽉 채워 평균 255 가 되므로 설계 픽셀이 그대로 남는다. (2026-11-23 WB04-E1288)
+export const GLYPH_SUPERSAMPLE = 4;
+
 // 보통체·굵은체 sfnt 바이트로 FontFace 두 개(와 굵은체 대체용 보조 FontFace 하나)를 등록하고 불러온 뒤 래스터라이저를 돌려준다. document 는 글꼴을 등록할 문서이다.
 // 글꼴을 불러오지 못하면 FontFace.load() 가 던지는 오류를 그대로 전달한다(호출자가 영어로 대체한다).
 // 사용: const rasterizer = await createCanvasGlyphRasterizer({ document, regular, bold }); (2026-10-31 WB03-N)
@@ -39,36 +45,51 @@ export async function createCanvasGlyphRasterizer({ document, regular, bold }) {
     return {
         // 글자 하나를 그려 정수 전진 폭과 알파 그림(좌우·상하 빈 줄을 잘라낸 것)을 돌려준다.
         // 글자 칸의 왼쪽 위(펜 x = 0, 줄 맨 위 y = 0)에서 기준선은 spec.ascent 아래에 둔다.
+        // 글자는 GLYPH_SUPERSAMPLE 배 크기로 그리고 목표 픽셀마다 배율×배율 칸의 알파 평균을 덮임 정도로 쓴다(가로 번짐으로 1px 간격이 메워지는 것을 막음). (2026-11-23 WB04-E1288)
         glyph(codePoint, spec) {
             const character = String.fromCodePoint(codePoint);
+            const scale = GLYPH_SUPERSAMPLE;
             // 굵게는 굵은체를 먼저 쓰고 그 파일에 없는 글자만 일반 글리프(보조 이름)로 대체한다. 보통체는 한 이름만 쓴다. (2026-11-23 WB04-E1244)
             const families = spec.bold ? `"${GLYPH_FONT_FAMILY}", "${GLYPH_FALLBACK_FONT_FAMILY}"` : `"${GLYPH_FONT_FAMILY}"`;
-            const font = `${spec.italic ? 'italic ' : ''}${spec.bold ? 700 : 400} ${spec.emSize}px ${families}`;
+            const font = `${spec.italic ? 'italic ' : ''}${spec.bold ? 700 : 400} ${spec.emSize * scale}px ${families}`;
             context.font = font;
-            const advance = Math.max(0, Math.round(context.measureText(character).width));
+            const advance = Math.max(0, Math.round(context.measureText(character).width / scale));
             const margin = Math.ceil(spec.emSize * CANVAS_MARGIN_EM);
             const width = advance + margin * 2;
             const height = spec.height + margin * 2;
+            const bigWidth = width * scale;
+            const bigHeight = height * scale;
             // 크기를 바꾸면 캔버스 상태가 지워지므로 큰 쪽에 맞춰 한 번만 키우고, 그 뒤에는 필요한 영역만 지운다.
-            if (canvas.width < width || canvas.height < height) {
-                canvas.width = Math.max(canvas.width, width);
-                canvas.height = Math.max(canvas.height, height);
+            if (canvas.width < bigWidth || canvas.height < bigHeight) {
+                canvas.width = Math.max(canvas.width, bigWidth);
+                canvas.height = Math.max(canvas.height, bigHeight);
                 context.font = font;
             }
-            context.clearRect(0, 0, width, height);
+            context.clearRect(0, 0, bigWidth, bigHeight);
             context.fillStyle = '#fff';
             context.textBaseline = 'alphabetic';
             context.textAlign = 'left';
-            context.fillText(character, margin, margin + spec.ascent);
-            const pixels = context.getImageData(0, 0, width, height).data;
+            // 펜 위치와 기준선을 배율의 정수배에 두어 확대한 글자의 설계 픽셀이 목표 픽셀 칸에 정확히 맞게 한다.
+            context.fillText(character, margin * scale, (margin + spec.ascent) * scale);
+            const pixels = context.getImageData(0, 0, bigWidth, bigHeight).data;
+            const alpha = new Uint8Array(width * height);
+            const cell = scale * scale;
             let minX = width;
             let minY = height;
             let maxX = -1;
             let maxY = -1;
-            // 알파가 있는 픽셀의 경계 사각형을 구한다.
+            // 목표 픽셀마다 배율×배율 칸의 알파 평균을 구하고, 알파가 있는 픽셀의 경계 사각형을 함께 구한다.
             for (let y = 0; y < height; y += 1) {
                 for (let x = 0; x < width; x += 1) {
-                    if (pixels[(y * width + x) * 4 + 3] === 0) continue;
+                    let sum = 0;
+                    // 칸 안의 확대 픽셀 알파를 더한다.
+                    for (let dy = 0; dy < scale; dy += 1) {
+                        const row = (y * scale + dy) * bigWidth + x * scale;
+                        for (let dx = 0; dx < scale; dx += 1) sum += pixels[(row + dx) * 4 + 3];
+                    }
+                    const value = Math.round(sum / cell);
+                    if (value === 0) continue;
+                    alpha[y * width + x] = value;
                     if (x < minX) minX = x;
                     if (x > maxX) maxX = x;
                     if (y < minY) minY = y;
@@ -79,9 +100,9 @@ export async function createCanvasGlyphRasterizer({ document, regular, bold }) {
             const cropWidth = maxX - minX + 1;
             const cropHeight = maxY - minY + 1;
             const coverage = new Uint8Array(cropWidth * cropHeight);
-            // 경계 사각형 안의 알파 값만 잘라 담는다.
+            // 경계 사각형 안의 평균 알파 값만 잘라 담는다.
             for (let y = 0; y < cropHeight; y += 1) {
-                for (let x = 0; x < cropWidth; x += 1) coverage[y * cropWidth + x] = pixels[((minY + y) * width + (minX + x)) * 4 + 3];
+                for (let x = 0; x < cropWidth; x += 1) coverage[y * cropWidth + x] = alpha[(minY + y) * width + (minX + x)];
             }
             return { advance, left: minX - margin, top: minY - margin, width: cropWidth, height: cropHeight, coverage };
         },
