@@ -26,6 +26,8 @@ public sealed class HostMenuInput
     /// <summary>같은 공통 트리에 설치한 상위 팝업 메뉴다.</summary>
     private HostPopupMenu? _popup;
     private HostEditorSelection? _editor;
+    /// <summary>숨은 입력줄의 문자 Enter를 실제 Chat 공장으로 연결한다.</summary>
+    private Func<InputEvent, bool>? _chatEnter;
     /// <summary>새 이름 창을 여는 실제 현재 호스트 장치다.</summary>
     private Action<uint>? _newFort;
     private Func<uint>? _screenFlags;
@@ -36,6 +38,8 @@ public sealed class HostMenuInput
     public void BindPopup(HostPopupMenu popup) => _popup = popup ?? throw new ArgumentNullException(nameof(popup));
     /// <summary>실제 편집 맵 선택 전역과 입력 분배기를 연결한다.</summary>
     public void BindEditor(HostEditorSelection editor) => _editor = editor ?? throw new ArgumentNullException(nameof(editor));
+    /// <summary>숨은 입력줄의 문자 Enter를 실제 Chat 창의 표시·열기에 연결한다.</summary>
+    public void BindChatEnter(Func<InputEvent, bool> openChat) => _chatEnter = openChat ?? throw new ArgumentNullException(nameof(openChat));
     /// <summary>새 Fort 이름 입력 명령을 같은 호스트 모달에 연결한다.</summary>
     public void BindNewFort(Action<uint> show) => _newFort = show ?? throw new ArgumentNullException(nameof(show));
     /// <summary>실제 화면 장치의 현재 모드·변경·확인을 연결한다.</summary>
@@ -79,6 +83,8 @@ public sealed class HostMenuInput
     {
         if (_menu.Route(input) != 0) { _changed(); return false; }
         if (_editor?.Dispatch(input) == true) { _changed(); return false; }
+        // 숨은 입력줄의 문자 Enter는 실제 Chat 창의 표시·열기가 먼저 소비한다. 표시 중이면 아래로 넘긴다.
+        if (_chatEnter?.Invoke(input) == true) { _changed(); return false; }
         uint code = input.Code & 0x03ffffff; bool released = (input.Code & InputCode.Release) != 0;
         if (code == HostPopupMenu.QueuedSelectCommand && _popup != null) { if (!released) Post(_popup.Select(unchecked((uint)input.Y))); return false; }
         if (code == 0x02000079) { if (!released) { (_newFort ?? throw new InvalidOperationException("새 Fort 이름 창 미연결"))(unchecked((uint)input.Y)); _changed(); } return false; }

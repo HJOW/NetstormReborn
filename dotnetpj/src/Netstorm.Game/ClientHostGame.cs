@@ -324,6 +324,8 @@ public sealed partial class ClientHostGame : Game
             _menuInput = new HostMenuInput(_mainMenu, _htmlWindows, _htmlFactory, _driver.Input, _scriptStrings,
                 () => _menuDirty = true, action => throw new InvalidOperationException("메뉴 상위 명령 미연결: " + action));
             _menuInput.BindPopup(new HostPopupMenu(_mainMenu, _htmlWindows, _htmlMenus, _driver.Screen, _startup, () => _menuDirty = true, _buttonSound.ApplyOptions, _scriptStrings, () => !_options.MuteAudio, _stateResources.Popup));
+            // RU-3c 숨은 입력줄의 문자 Enter를 실제 Chat 창의 표시·열기로 연결한다. 표시 중이면 아래로 넘긴다.
+            _menuInput.BindChatEnter(input => NativeChatWindows.OpenInput(input));
             _menuInput.BindScreenMode(() => _driver.Screen.Flags, ChangeScreenMode, AcceptScreenMode);
             _editor = new HostEditorSelection(_startup, _scriptStrings, _menuInput.ShowTell, sharedTemplates: _stateResources.Templates);
             _htmlFactory.BindMapCatalog(_editor.Catalog, _htmlMenus, _scriptStrings, () => _editor.CurrentName, () => _editor.PendingName);
@@ -652,6 +654,10 @@ public sealed partial class ClientHostGame : Game
                 players, types, worldDefinitions,
                 () => System.Text.Encoding.Latin1.GetString(ExtendedText.EncodeDisplayText(_startup.Configuration.PathSpec("defaultAiName"))),
                 difficulty: (owner, settings) => session.ResolveMissionAiDifficulty(difficulty, owner, settings));
+            // RU-3c 실제 미션 Root에 표시 창을 만들고 같은 트리 루트에 부착한다. 부착 전 Enter는 부모 없음으로 거부된다.
+            // 근거: GumpTree.Push/Attach의 void·부모 규칙과 ChatWindow Native 입력 호출자. 메뉴 경로는 바꾸지 않는다.
+            _ = NativeChatWindows.Create();
+            productionUi.TreeHooks.Attach!(NativeChatWindows.CurrentRoot, 0, _driver.Screen.Height - 100, productionUi.Create.Entries[0], 0);
             // 단일 미션의 첫 지역(+0x78)은 소용돌이→섬 소유자→첫 지역 사슬이 적재 중 기록한다(R6: 신전 Pop·postPop 표시와 함께).
             // 전투섬 배정 region 갈고리는 MP 전투 경로의 makeBattleIsland에서만 쓰므로 시작 흐름에서 직접 기록하지 않는다(0.477 정정).
             _missionRuntime = HostMissionRuntime.CreatePrepared(session, storage, pendingSurface, pendingBurning!, _missionAudio!, _mainMenu!, productionUi, _nativeChatWindows ?? throw new InvalidOperationException("미션 채팅의 실제 공장 없음"), rootFactories);
