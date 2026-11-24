@@ -89,6 +89,7 @@
 | 부모 결선 검증 | 0.935 | 분배 부모 송신 관찰·버전 응답 결선 검증(미션 관찰기·버전 응답·가변 길이 관찰기) | R4-6 전송·수신, [1.1](#r4-detail) |
 | 메타 버전 확인 | 0.937 | 004b4160 메타 버전 차이 확인(진단 기록·숨김 설정·UI 알림) 본체 이식 | R4-6 전송·수신, [1.1](#r4-detail) |
 | 메타 전투 설명 | 0.938 | 0042cad0 메타 전투 설명 수신·256BYTE 확정 본체 이식 | R4-6 전송·수신, [1.1](#r4-detail) |
+| 메타 전투 설명 수신 | 0.941 | 0042cad0 전투 설명 수신·확정 본체 이식(무효 로그·초과 갱신·복사 정제·LF/NUL 절단) | R4-6 전송·수신, [1.1](#r4-detail) |
 | 제단 정기 분기 | 0.939 | 44a5e0 제단 정기 분기 본체·후크·저항 상태 이식 | R4-4 정기 처리, [1.1](#r4-detail) |
 | 정기 전체 회귀·L2 | 0.644부터4단위마다(0.940까지) | 전체6544통과/실패0·음향1미실행·신규264/기존이름/중복보존·같은빌드62종료0·원본1392불변·M1 0/34 | 다음0.944 · [0.940](docs/dotnet-canon-0940-20261124.md) |
 
@@ -185,7 +186,7 @@ AGENTS.md 지정에 따라0.807에서 공통 [assets/Netstorm.ico](assets/Netsto
     - [ ] **RU-6 Load/Editor 세 설치 값 공개.** 실제 Load/Editor prefix·후반 UI/최종 공개 부모가 세 설치 값을 쓴다. Source Load의 Building/Motion → 실제 runtime.Load → Devastation/CarrierDrop/PriestPrayer/Builder/Placement/Cursor가 모두 정상 복귀한 뒤에만 공개한다. 완료 기준: 세 값이 원문 순서로 true가 되고 공개 Runtime이나 부분 적재를 loaded로 대신하지 않는다.
     - 이 묶음 밖 후속: 실제 F7의 상위 일반 입력, NSInfo의 메타 배치/입력/특수 그림, Dais의 실제 current records 하위.
   - 남음(전송·수신, 근거 `cpppj/src/client/ClientCampaignTransport.cpp`). `NativeGameplay26F` 26항목의 `BindSquidPacketDevices`·`ReceiveFixedGameplayPacket` 분배·Host 공급·Install/Bind(0.882)와 41h `Root.ReceiveNativePacketChat` 전송·NativeLoginPacketReceivers 설치·설정/버전/기술/변수·Native gameplay 6종 묶음의 `ClientPacketDispatch.Build`(0.897~0.899)와 기본 18행 설치(0.934)는 완료했다. 종료·닫기·반납과 연결 활성 정리는 R11 수송에서 잇는다.
-    - [ ] 전체 InstallClientPacketDefaults(270행) 나머지(기본 18행은 0.934 완료)와 MakeClientCampaignTransport 부모, Carrier/Construction/Meta 고정 F 설치. 메타 버전 확인 본체(0.937)와 메타 전투 설명 수신 본체(0.938)는 상태 응답·메타 전역·메타 게임 로그인·0x71 수신기 설치에서 재사용한다.
+    - [ ] 전체 InstallClientPacketDefaults(270행) 나머지(기본 18행은 0.934 완료)와 MakeClientCampaignTransport 부모, Carrier/Construction/Meta 고정 F 설치. 메타 버전 확인 본체(0.937)·메타 전투 설명 수신 본체(0.938)·전투 설명 수신/확정 본체(0.941)는 상태 응답·메타 전역·메타 게임 로그인·0x71 수신기 설치에서 재사용한다.
     - [ ] Root의 실제 Source/Record/Sent·송신/제출과 HostSession 실제 송신 부모(구 `Mission.RawCampaignSession`의 sendChatMutable 입구로 대신하지 않음).
     - [x] 전체 435220 옵션 부모의 Requested만 0으로 재설정하는 호출(0.933, FILE/enabled를 닫지 않음). 재설정 호출을 받는 옵션 재해석 부모(전체 435220 재실행)는 R7 옵션 저장 시점에서 잇는다.
     - [ ] 나머지 순수 observer/장기 수신, 장기 CS/7bh의 나머지 Meta/UI/투영/배열 소비자와 Root 생성 부모. 26F 검토 행·누락 하위 모듈·독립 Path writer 자료는 extracted/dotnet-0788/next-0789.md다.
