@@ -4,8 +4,8 @@ using Netstorm.Net;
 
 namespace Netstorm.Client;
 
-// 장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay·Carrier/Construction·장기 CS·연결 종료·전투 시작·서버 발견·메타 geometry·챌린지 응답·Root 로그인·전투 설명·참가자 제거 묶음을 같은 분배기에 설치한다. 전송 설치는 R4-6, 실제 송수신 펌프는 R11에서 잇는다.
-/// <summary>공통 패킷 분배기의 실제 소유자 조립이다. 장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay·Carrier/Construction·장기 CS·연결 종료·전투 시작·서버 발견·메타 geometry·챌린지 응답·Root 로그인·전투 설명·참가자 제거 묶음을 같은 분배기에 설치한다.</summary>
+// 장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay·Carrier/Construction·장기 CS·연결 종료·전투 시작·서버 발견·메타 geometry·챌린지 응답·Root 로그인·전투 설명·참가자 제거·참가자 이름·전투 옵션 묶음을 같은 분배기에 설치한다. 전송 설치는 R4-6, 실제 송수신 펌프는 R11에서 잇는다.
+/// <summary>공통 패킷 분배기의 실제 소유자 조립이다. 장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay·Carrier/Construction·장기 CS·연결 종료·전투 시작·서버 발견·메타 geometry·챌린지 응답·Root 로그인·전투 설명·참가자 제거·참가자 이름·전투 옵션 묶음을 같은 분배기에 설치한다.</summary>
 public static class ClientPacketDispatch
 {
     /// <summary>같은 장기 Client 장치만 읽으며 실제 수신 UI/진단/활동 장치를 묶는다.</summary>
@@ -19,7 +19,7 @@ public static class ClientPacketDispatch
     /// <param name="activity">장기 연결 활성의 실제 벽시계/프레임/서버 조회다.</param>
     /// <param name="challenge">같은 Client 수명으로 유지하는 실제 CS 슬롯·할당 owner다. 0x7b·0x7c 후크 결합 수신기가 공유한다.</param>
     /// <returns>장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay 묶음이 설치된 실제 분배기다.</returns>
-    /// <remarks>2026-11-23 0.897에서 R4-6 전송·수신 묶음용으로 추가하고 0.898에서 설정·버전·기술·변수 묶음을, 0.899에서 Native gameplay 6종 묶음을, 0.934에서 장기 기본 18행을, 0.964에서 Carrier/Construction 묶음을, 0.966에서 장기 CS 묶음(0x7b·0x7c)을, 0.969에서 연결 종료 2번을, 0.970에서 전투 시작 1a/1b를, 0.971에서 로컬 서버 발견 0x66·메타 geometry 0x26을, 0.973에서 챌린지 로그인 응답 0x1d를, 0.974에서 Root 로그인 응답 0x0f를, 0.975에서 전투 설명 0x71·참가자 제거 0x21을 이었다. 근거: R4-6 남음의 "공통 41h가 Root.ReceiveNativePacketChat을 부르는 전송 설치"와 "NativeLoginPacketReceivers의 실제 MonoGame Root 설치 호출"과 InstallClientPacketDefaults의 기본 18행·Carrier/Construction 고정 F·장기 CS·2번·1a/1b·0x66·0x26·0x1d·0x0f·0x71·0x21 수신기다. 호스트는 10.78만 다루므로 판본을 고정한다. 종료/닫기/반납은 R11 수송에서 잇는다.</remarks>
+    /// <remarks>2026-11-23 0.897에서 R4-6 전송·수신 묶음용으로 추가하고 0.898에서 설정·버전·기술·변수 묶음을, 0.899에서 Native gameplay 6종 묶음을, 0.934에서 장기 기본 18행을, 0.964에서 Carrier/Construction 묶음을, 0.966에서 장기 CS 묶음(0x7b·0x7c)을, 0.969에서 연결 종료 2번을, 0.970에서 전투 시작 1a/1b를, 0.971에서 로컬 서버 발견 0x66·메타 geometry 0x26을, 0.973에서 챌린지 로그인 응답 0x1d를, 0.974에서 Root 로그인 응답 0x0f를, 0.975에서 전투 설명 0x71·참가자 제거 0x21을, 0.977에서 참가자 이름 0x88·전투 옵션 0x67을 이었다. 근거: R4-6 남음의 "공통 41h가 Root.ReceiveNativePacketChat을 부르는 전송 설치"와 "NativeLoginPacketReceivers의 실제 MonoGame Root 설치 호출"과 InstallClientPacketDefaults의 기본 18행·Carrier/Construction 고정 F·장기 CS·2번·1a/1b·0x66·0x26·0x1d·0x0f·0x71·0x21·0x88·0x67 수신기다. 호스트는 10.78만 다루므로 판본을 고정한다. 종료/닫기/반납은 R11 수송에서 잇는다.</remarks>
     public static RawPacketDispatch Build(
         PacketDispatchHooks dispatch,
         ClientGameplayGlobals game,
@@ -304,6 +304,42 @@ public static class ClientPacketDispatch
             Leave = (_, _) => throw new InvalidOperationException("메타 참가자 제거의 실제 섬 장비 하차 미연결(R6)"),
             // 같은 실제 NSInfo 갱신 장치다. 실제 NSInfo 장치가 없으므로 명시 실패한다.
             RefreshInfo = () => throw new InvalidOperationException("메타 참가자 제거의 실제 NSInfo 갱신 미연결(R6)"),
+        });
+        // 0x88 참가자 이름을 같은 기본 표에 잇는다. CS 조회·복사는 실제 장기 장치이며 번역·등급·표시·NSInfo는 후속에 묶는다. 0.977에서 추가됐다.
+        ClientMetaParticipantName.Install(packet, new ClientMetaParticipantNameHooks
+        {
+            // 같은 실제 CS 참가자40 기록 owner다.
+            Challenge = challenge,
+            // 원문 표시 부호화의 실제 번역 장치다. 실제 번역 장치가 없으므로 명시 실패한다.
+            Translate = _ => throw new InvalidOperationException("메타 참가자 이름의 실제 번역 미연결(R6)"),
+            // 같은 Core 10BYTE의 실제 등급 합계 장치다. 실제 등급 장치가 없으므로 명시 실패한다.
+            Weight = _ => throw new InvalidOperationException("메타 참가자 이름의 실제 등급 합계 미연결(R6)"),
+            // 같은 실제 참가자 표시 갱신 장치다. 실제 표시 장치가 없으므로 명시 실패한다.
+            Update = (_, _) => throw new InvalidOperationException("메타 참가자 이름의 실제 표시 갱신 미연결(R6)"),
+            // 같은 실제 NSInfo 갱신 장치다. 실제 NSInfo 장치가 없으므로 명시 실패한다.
+            RefreshInfo = () => throw new InvalidOperationException("메타 참가자 이름의 실제 NSInfo 갱신 미연결(R6)"),
+        });
+        // 0x67 전투 옵션을 같은 기본 표에 잇는다. 게임·CS·저장소·진단·로그는 실제 장기 장치이며 음향·NSInfo·재생성은 후속에 묶는다. 0.977에서 추가됐다.
+        ClientMetaBattleOptions.Install(packet, new ClientMetaBattleOptionsHooks
+        {
+            // 같은 실제 장기 게임 전역 owner다.
+            Game = game,
+            // 같은 실제 CS owner다.
+            Challenge = challenge,
+            // 같은 실제 표면 저장소 owner다.
+            Storage = surface.Storage,
+            // 같은 실제 로컬 상태 owner다.
+            Local = connections.LocalState,
+            // 원문 진단의 실제 선택 줄 소비자다.
+            Assertion = assertion,
+            // 원문 수준9의 진단 문자열 장치다.
+            Log = text => challengeLog(9, text),
+            // 실제 guy.wav 재생 장치다. 실제 음향 장치가 없으므로 명시 실패한다.
+            GuySound = () => throw new InvalidOperationException("메타 전투 옵션의 실제 음향 미연결(R6)"),
+            // 현재 NSInfo 갱신 장치다. 실제 NSInfo 장치가 없으므로 명시 실패한다.
+            RefreshInfo = () => throw new InvalidOperationException("메타 전투 옵션의 실제 NSInfo 갱신 미연결(R6)"),
+            // 최종 전투·비미션·저장 관문을 모두 통과할 때 실제 Uber 재생성 장치다. 실제 메뉴 장치가 없으므로 명시 실패한다.
+            Reconnect = () => throw new InvalidOperationException("메타 전투 옵션의 실제 Uber 재생성 미연결(R11)"),
         });
     }
 }

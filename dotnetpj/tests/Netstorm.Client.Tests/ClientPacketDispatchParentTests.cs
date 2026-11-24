@@ -822,4 +822,168 @@ public sealed class ClientPacketDispatchParentTests
         Assert.Contains("전투 표시", error.Message);
         Assert.Equal(0u, BinaryPrimitives.ReadUInt32LittleEndian(scene.Challenge.Battle(2).Span.Slice(0x38 + 3 * 4, 4)));
     }
+    /// <summary>원문 0x88 이름 패킷을 조립한다. 이름 끝에 NUL을 둔다.</summary>
+    private static byte[] NamePacket(uint subscriber, string name)
+    {
+        // 종류·구독자·이름을 같은 위치에 둔다.
+        byte[] nameBytes = System.Text.Encoding.Latin1.GetBytes(name + "\0");
+        byte[] packet = new byte[8 + nameBytes.Length];
+        packet[1] = 0x88;
+        BinaryPrimitives.WriteUInt32LittleEndian(packet.AsSpan(4, 4), subscriber);
+        nameBytes.CopyTo(packet, 8);
+        return packet;
+    }
+    /// <summary>원문 0x67 전투 옵션 패킷을 조립한다. 바깥 복사가 읽는 전체 길이를 둔다.</summary>
+    private static byte[] OptionsPacket(uint battle, ushort length)
+    {
+        // 종류·전투·길이를 같은 위치에 두고 복사 원본을 길이만큼 둔다.
+        byte[] packet = new byte[7 + length];
+        packet[1] = 0x67;
+        packet[4] = (byte)battle;
+        BinaryPrimitives.WriteUInt16LittleEndian(packet.AsSpan(5, 2), length);
+        return packet;
+    }
+    /// <summary>부모는 참가자 이름 0x88·전투 옵션 0x67 고정 F를 같은 분배기에 설치한다. 0.977에서 추가됐다.</summary>
+    [Fact]
+    public void ParentInstallsNameAndOptionsEntries()
+    {
+        var scene = new Scene();
+        var dispatch = Build(scene, _ => { });
+        var name = dispatch.Registration(0x88);
+        Assert.Equal(1, name.Version);
+        Assert.Equal(0, name.Mismatch);
+        Assert.Equal(98, name.Length);
+        Assert.NotNull(name.Observer);
+        Assert.Null(name.PacketObserver);
+        Assert.Equal(0x004b4680u, dispatch.SnapshotReceiver(0x88)!.NativeEntry);
+        var options = dispatch.Registration(0x67);
+        Assert.Equal(1, options.Version);
+        Assert.Equal(0, options.Mismatch);
+        Assert.Equal(ushort.MaxValue, options.Length);
+        Assert.NotNull(options.PacketObserver);
+        Assert.Null(options.Observer);
+        Assert.Equal(0x004b4900u, dispatch.SnapshotReceiver(0x67)!.NativeEntry);
+        // 같은 묶음의 기존 설치가 0x88·0x67 행에 밀리지 않는다.
+        Assert.Equal(0x004b46d0u, dispatch.SnapshotReceiver(0x21)!.NativeEntry);
+        Assert.Equal(0x0042dc90u, dispatch.SnapshotReceiver(0x41)!.NativeEntry);
+        Assert.Empty(scene.Assertions);
+    }
+    /// <summary>0x88 미발견 구독자는 호스트 오류로 표시하고 조용히 넘기지 않는다. 0.977에서 추가됐다.</summary>
+    [Fact]
+    public void ParentNameRejectsUnknownSubscriber()
+    {
+        var scene = new Scene();
+        scene.Challenge.Prepare();
+        var logs = new List<(uint Code, string Text)>();
+        var dispatch = Build(scene, _ => { }, diagnosticLog: (code, text) => logs.Add((code, text)));
+        var error = Assert.Throws<ArgumentOutOfRangeException>(() => dispatch.InvokeDirect(0x88, 9, null, NamePacket(0x9999, "Ab")));
+        Assert.Contains("참가자 없음", error.Message);
+        Assert.Empty(logs);
+    }
+    /// <summary>0x88 비활성 참가자는 입력 이름·장치를 읽지 않고 조용히 돌아간다. 0.977에서 추가됐다.</summary>
+    [Fact]
+    public void ParentNameSkipsInactiveParticipant()
+    {
+        var scene = new Scene();
+        scene.Challenge.Prepare();
+        System.Memory<byte> record = scene.Challenge.Participant(2);
+        BinaryPrimitives.WriteUInt32LittleEndian(record.Span.Slice(4, 4), 0x1234);
+        record.Span[0x64] = 0;
+        var logs = new List<(uint Code, string Text)>();
+        var dispatch = Build(scene, _ => { }, diagnosticLog: (code, text) => logs.Add((code, text)));
+        dispatch.InvokeDirect(0x88, 9, null, NamePacket(0x1234, "Ab"));
+        Assert.Empty(logs);
+        Assert.Equal(0, record.Span[8]);
+    }
+    /// <summary>0x88 유효 이름은 복사 뒤 번역 앞에서 멈춘다. 0.977에서 추가됐다.</summary>
+    [Fact]
+    public void ParentNameCopiesBeforeTranslate()
+    {
+        var scene = new Scene();
+        scene.Challenge.Prepare();
+        System.Memory<byte> record = scene.Challenge.Participant(2);
+        BinaryPrimitives.WriteUInt32LittleEndian(record.Span.Slice(4, 4), 0x1234);
+        record.Span[0x64] = 1;
+        var logs = new List<(uint Code, string Text)>();
+        var dispatch = Build(scene, _ => { }, diagnosticLog: (code, text) => logs.Add((code, text)));
+        var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x88, 9, null, NamePacket(0x1234, "Ab")));
+        Assert.Contains("번역", error.Message);
+        Assert.Equal((byte)'A', record.Span[8]);
+        Assert.Equal((byte)'b', record.Span[9]);
+        Assert.Equal(0, record.Span[10]);
+    }
+    /// <summary>0x67 무효 전투는 로그만 남기고 저장 관문 앞에서 멈춘다. 바깥 복사는 먼저 수행된다. 0.977에서 추가됐다.</summary>
+    [Fact]
+    public void ParentOptionsLogsInvalidBattleOnly()
+    {
+        var scene = new Scene();
+        scene.Challenge.Prepare();
+        scene.Challenge.Battle(3).Span[0] = 0;
+        var logs = new List<(uint Code, string Text)>();
+        var dispatch = Build(scene, _ => { }, config: _ => 0, diagnosticLog: (code, text) => logs.Add((code, text)), tell: _ => { });
+        byte[] packet = OptionsPacket(3, 8);
+        packet[7] = 0xAA;
+        var error = Assert.Throws<ArgumentOutOfRangeException>(() => dispatch.InvokeDirect(0x67, 9, null, packet));
+        Assert.Contains("비용 TYPE", error.Message);
+        Assert.Contains(logs, e => e.Code == 9 && e.Text.Contains("is not valid"));
+        Assert.Equal((byte)0xAA, scene.Game.BattleOptions[0]);
+    }
+    /// <summary>0x67 초과 길이는 바깥 복사 범위 앞에서 멈춘다. 안쪽 길이 안내는 도달하지 않는다. 0.977에서 추가됐다.</summary>
+    [Fact]
+    public void ParentOptionsRejectsOverlongBeforeCopy()
+    {
+        var scene = new Scene();
+        scene.Challenge.Prepare();
+        scene.Challenge.Battle(2).Span[0] = 1;
+        var logs = new List<(uint Code, string Text)>();
+        var dispatch = Build(scene, _ => { }, config: _ => 0, diagnosticLog: (code, text) => logs.Add((code, text)), tell: _ => { });
+        var error = Assert.Throws<ArgumentOutOfRangeException>(() => dispatch.InvokeDirect(0x67, 9, null, OptionsPacket(2, 161)));
+        Assert.Contains("물리 범위", error.Message);
+        Assert.Contains(0xd51u, scene.Assertions);
+        Assert.Empty(logs);
+    }
+    /// <summary>0x67은 CS0이어도 공급 반경을 세우고 저장 관문 앞에서 멈춘다. 0.977에서 추가됐다.</summary>
+    [Fact]
+    public void ParentOptionsRangesWithoutChallenge()
+    {
+        var scene = new Scene();
+        Assert.Equal(0u, scene.Challenge.Current);
+        var logs = new List<(uint Code, string Text)>();
+        var dispatch = Build(scene, _ => { }, config: _ => 0, diagnosticLog: (code, text) => logs.Add((code, text)), tell: _ => { });
+        var error = Assert.Throws<ArgumentOutOfRangeException>(() => dispatch.InvokeDirect(0x67, 9, null, OptionsPacket(2, 8)));
+        Assert.Contains("비용 TYPE", error.Message);
+        Assert.Equal(14f, scene.Game.ManaRadius);
+        Assert.Empty(logs);
+    }
+    /// <summary>0x67 자기 master는 조용히 넘기고 저장 관문 앞에서 멈춘다. 0.977에서 추가됐다.</summary>
+    [Fact]
+    public void ParentOptionsSkipsOwnMaster()
+    {
+        var scene = new Scene();
+        scene.Challenge.Prepare();
+        scene.Game.Player.BattleOwner = 5;
+        System.Memory<byte> own = scene.Challenge.Participant(5);
+        BinaryPrimitives.WriteUInt32LittleEndian(own.Span.Slice(0xa4, 4), 2);
+        own.Span[0x64] = 0x05;
+        scene.Challenge.Battle(2).Span[0] = 1;
+        var logs = new List<(uint Code, string Text)>();
+        var dispatch = Build(scene, _ => { }, config: _ => 0, diagnosticLog: (code, text) => logs.Add((code, text)), tell: _ => { });
+        var error = Assert.Throws<ArgumentOutOfRangeException>(() => dispatch.InvokeDirect(0x67, 9, null, OptionsPacket(2, 8)));
+        Assert.Contains("비용 TYPE", error.Message);
+        Assert.Empty(logs);
+    }
+    /// <summary>0x67 일반 경로는 음향 앞에서 멈춘다. 0.977에서 추가됐다.</summary>
+    [Fact]
+    public void ParentOptionsStopsAtGuySound()
+    {
+        var scene = new Scene();
+        scene.Challenge.Prepare();
+        scene.Challenge.Battle(2).Span[0] = 1;
+        scene.Game.Player.BattleOwner = 7;
+        var logs = new List<(uint Code, string Text)>();
+        var dispatch = Build(scene, _ => { }, config: _ => 0, diagnosticLog: (code, text) => logs.Add((code, text)), tell: _ => { });
+        var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x67, 9, null, OptionsPacket(2, 8)));
+        Assert.Contains("음향", error.Message);
+        Assert.Empty(logs);
+    }
 }

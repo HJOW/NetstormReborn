@@ -379,4 +379,17 @@ public sealed class ClientCampaignTransportTests
         Assert.Equal(ushort.MaxValue, transport.Dispatch.Registration(0x21).Length);
         Assert.NotNull(transport.Dispatch.Registration(0x21).PacketObserver);
     }
+
+    /// <summary>수송 팩토리도 같은 기본 표에 0x88 참가자 이름·0x67 전투 옵션을 공유한다. 0.977에서 추가됐다.</summary>
+    [Fact]
+    public void FactorySharesNameAndOptionsEntries()
+    {
+        var scene = new Scene();
+        scene.Game.PlayerRecords.Initialize((_, _) => { });
+        using var transport = scene.Make();
+        Assert.Equal(0x004b4680u, transport.Dispatch.SnapshotReceiver(0x88)!.NativeEntry);
+        Assert.Equal(98, transport.Dispatch.Registration(0x88).Length);
+        Assert.Equal(0x004b4900u, transport.Dispatch.SnapshotReceiver(0x67)!.NativeEntry);
+        Assert.Equal(ushort.MaxValue, transport.Dispatch.Registration(0x67).Length);
+    }
 }
