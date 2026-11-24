@@ -8,16 +8,17 @@ const { oracleFolder, loadOracle, runL3 } = require('./l3-common');
 // 오라클 폴더이다.
 const ORACLE = oracleFolder('tutorial3-l3');
 
-// 덤프와 화면 체크포인트 목록이다(a100·a160·a240 도입 + b340 다리 직결 + b900 골렘 완성 + b1200 크리스털 운반 + b1600·b1640·b1700 단계 B 진입). (2026-11-24 WB04-E1329)
+// 덤프와 화면 체크포인트 목록이다(a100·a160·a240 도입 + b340 다리 직결 + b900 골렘 완성 + b1200 크리스털 운반 + b1600·b1640·b1700 단계 B 진입 + b1950 남쪽 다리 연결 + c2160·c2200 적 섬 직결 및 단계 C 진입). (2026-11-24 WB04-E1330)
 const EXPECTED_FILES = [
   'a100.tsv', 'a100.png', 'a160.png', 'a240.tsv', 'a240.png',
   'b340.tsv', 'b340.png', 'b900.tsv', 'b900.png', 'b1200.tsv', 'b1200.png',
   'b1600.tsv', 'b1600.png', 'b1640.png', 'b1700.tsv', 'b1700.png',
+  'b1950.tsv', 'b1950.png', 'c2160.tsv', 'c2160.png', 'c2200.tsv', 'c2200.png',
 ];
-const EXPECTED_DUMPS = ['a100', 'a240', 'b340', 'b900', 'b1200', 'b1600', 'b1700'];
-const EXPECTED_SNAPSHOTS = ['a100', 'a160', 'a240', 'b340', 'b900', 'b1200', 'b1600', 'b1640', 'b1700'];
+const EXPECTED_DUMPS = ['a100', 'a240', 'b340', 'b900', 'b1200', 'b1600', 'b1700', 'b1950', 'c2160', 'c2200'];
+const EXPECTED_SNAPSHOTS = ['a100', 'a160', 'a240', 'b340', 'b900', 'b1200', 'b1600', 'b1640', 'b1700', 'b1950', 'c2160', 'c2200'];
 
-test('L3 Tutorial3: 단계 A(간헐천 다리 직결·골렘 생산·크리스털 수확)→단계 B(Capturing Enemy Priests 안내 창·자유 진행)의 체크포인트 화면과 덤프가 cpppj 와 같다', async ({ browser }) => {
+test('L3 Tutorial3: 단계 A(간헐천 다리 직결·골렘 생산·크리스털 수확)→단계 B(남쪽 적 섬 다리 직결)→단계 C(Build Sun Disc Throwers)의 체크포인트 화면과 덤프가 cpppj 와 같다', async ({ browser }) => {
   test.setTimeout(900000);
   const { plan } = loadOracle(ORACLE);
   expect(plan.mission).toBe('Tutorial3');
