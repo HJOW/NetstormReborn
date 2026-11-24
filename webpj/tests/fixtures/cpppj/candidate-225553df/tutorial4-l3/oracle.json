@@ -1,0 +1,35 @@
+{
+  "format": "netstorm-webpj-cpppj-oracle",
+  "version": 1,
+  "description": "cpppj 기준선 실행 파일(225553df)로 Tutorial4 입력 단계표(steps.json)를 수집한 L3 오라클. 체크포인트마다 Session 덤프(.tsv)와 논리 화면(.png)이다. tools/l3-collect.mjs 로 수집했다.",
+  "cpppjCommit": "225553df",
+  "exe": {
+    "file": "Netstorm.exe",
+    "sha256": "5b52d96d2e53f4674a40991b78ff64c3c7e2ad8275a0a99b22d18d532b77eb46",
+    "bytes": 15595008
+  },
+  "steps": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial4-l3/steps.json",
+  "args": [
+    "--run",
+    "assets/game-data",
+    "--window",
+    "--mute-audio",
+    "--frames",
+    "3211",
+    "--set",
+    "SCREENW=1024;SCREENH=768;WelcomeGiven=1;tellTips=0;autoDemo=0",
+    "--ui-script",
+    "<steps.tsv>",
+    "--ui-report",
+    "<report.tsv>",
+    "--fixed-frame-ms",
+    "25",
+    "--mission",
+    "Tutorial4"
+  ],
+  "collected": {
+    "host": "HJOW-Athlon",
+    "at": "2026-11-24T17:34:46.561Z",
+    "node": "v26.13.0"
+  }
+}
