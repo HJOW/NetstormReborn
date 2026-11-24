@@ -4,8 +4,8 @@ using Netstorm.Net;
 
 namespace Netstorm.Client;
 
-// 장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay·Carrier/Construction·장기 CS·연결 종료·전투 시작·서버 발견·메타 geometry·챌린지 응답·Root 로그인·전투 설명·참가자 제거·참가자 이름·전투 옵션·참가자 추가·참가자 이동 묶음을 같은 분배기에 설치한다. 전송 설치는 R4-6, 실제 송수신 펌프는 R11에서 잇는다.
-/// <summary>공통 패킷 분배기의 실제 소유자 조립이다. 장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay·Carrier/Construction·장기 CS·연결 종료·전투 시작·서버 발견·메타 geometry·챌린지 응답·Root 로그인·전투 설명·참가자 제거·참가자 이름·전투 옵션·참가자 추가·참가자 이동 묶음을 같은 분배기에 설치한다.</summary>
+// 장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay·Carrier/Construction·장기 CS·연결 종료·전투 시작·서버 발견·메타 geometry·챌린지 응답·Root 로그인·전투 설명·참가자 제거·참가자 이름·전투 옵션·참가자 추가·참가자 이동·전투 생성·전투 제거·항해 오류 묶음을 같은 분배기에 설치한다. 전송 설치는 R4-6, 실제 송수신 펌프는 R11에서 잇는다.
+/// <summary>공통 패킷 분배기의 실제 소유자 조립이다. 장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay·Carrier/Construction·장기 CS·연결 종료·전투 시작·서버 발견·메타 geometry·챌린지 응답·Root 로그인·전투 설명·참가자 제거·참가자 이름·전투 옵션·참가자 추가·참가자 이동·전투 생성·전투 제거·항해 오류 묶음을 같은 분배기에 설치한다.</summary>
 public static class ClientPacketDispatch
 {
     /// <summary>같은 장기 Client 장치만 읽으며 실제 수신 UI/진단/활동 장치를 묶는다.</summary>
@@ -19,7 +19,7 @@ public static class ClientPacketDispatch
     /// <param name="activity">장기 연결 활성의 실제 벽시계/프레임/서버 조회다.</param>
     /// <param name="challenge">같은 Client 수명으로 유지하는 실제 CS 슬롯·할당 owner다. 0x7b·0x7c 후크 결합 수신기가 공유한다.</param>
     /// <returns>장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay 묶음이 설치된 실제 분배기다.</returns>
-    /// <remarks>2026-11-23 0.897에서 R4-6 전송·수신 묶음용으로 추가하고 0.898에서 설정·버전·기술·변수 묶음을, 0.899에서 Native gameplay 6종 묶음을, 0.934에서 장기 기본 18행을, 0.964에서 Carrier/Construction 묶음을, 0.966에서 장기 CS 묶음(0x7b·0x7c)을, 0.969에서 연결 종료 2번을, 0.970에서 전투 시작 1a/1b를, 0.971에서 로컬 서버 발견 0x66·메타 geometry 0x26을, 0.973에서 챌린지 로그인 응답 0x1d를, 0.974에서 Root 로그인 응답 0x0f를, 0.975에서 전투 설명 0x71·참가자 제거 0x21을, 0.977에서 참가자 이름 0x88·전투 옵션 0x67을, 0.978에서 참가자 추가 0x20·참가자 이동 0x22를 이었다. 근거: R4-6 남음의 "공통 41h가 Root.ReceiveNativePacketChat을 부르는 전송 설치"와 "NativeLoginPacketReceivers의 실제 MonoGame Root 설치 호출"과 InstallClientPacketDefaults의 기본 18행·Carrier/Construction 고정 F·장기 CS·2번·1a/1b·0x66·0x26·0x1d·0x0f·0x71·0x21·0x88·0x67·0x20·0x22 수신기다. 호스트는 10.78만 다루므로 판본을 고정한다. 종료/닫기/반납은 R11 수송에서 잇는다.</remarks>
+    /// <remarks>2026-11-23 0.897에서 R4-6 전송·수신 묶음용으로 추가하고 0.898에서 설정·버전·기술·변수 묶음을, 0.899에서 Native gameplay 6종 묶음을, 0.934에서 장기 기본 18행을, 0.964에서 Carrier/Construction 묶음을, 0.966에서 장기 CS 묶음(0x7b·0x7c)을, 0.969에서 연결 종료 2번을, 0.970에서 전투 시작 1a/1b를, 0.971에서 로컬 서버 발견 0x66·메타 geometry 0x26을, 0.973에서 챌린지 로그인 응답 0x1d를, 0.974에서 Root 로그인 응답 0x0f를, 0.975에서 전투 설명 0x71·참가자 제거 0x21을, 0.977에서 참가자 이름 0x88·전투 옵션 0x67을, 0.978에서 참가자 추가 0x20·참가자 이동 0x22를, 0.979에서 전투 생성 0x23·전투 제거 0x24·항해 오류 0x25를 이었다. 근거: R4-6 남음의 "공통 41h가 Root.ReceiveNativePacketChat을 부르는 전송 설치"와 "NativeLoginPacketReceivers의 실제 MonoGame Root 설치 호출"과 InstallClientPacketDefaults의 기본 18행·Carrier/Construction 고정 F·장기 CS·2번·1a/1b·0x66·0x26·0x1d·0x0f·0x71·0x21·0x88·0x67·0x20·0x22·0x23·0x24·0x25 수신기다. 호스트는 10.78만 다루므로 판본을 고정한다. 종료/닫기/반납은 R11 수송에서 잇는다.</remarks>
     public static RawPacketDispatch Build(
         PacketDispatchHooks dispatch,
         ClientGameplayGlobals game,
@@ -422,6 +422,56 @@ public static class ClientPacketDispatch
             RefreshCore = () => throw new InvalidOperationException("메타 참가자 이동의 실제 장부 갱신 미연결(R6)"),
             // 마지막 현재 CS 이름표 서식 장치다. 실제 표시 장치가 없으므로 명시 실패한다.
             RebuildName = _ => throw new InvalidOperationException("메타 참가자 이동의 실제 이름표 미연결(R6)"),
+        });
+        // 0x23 메타 전투 생성을 같은 기본 표에 잇는다. CS·진단·로그는 실제 장기 장치이며 공장·표시는 후속에 묶는다. 0.979에서 추가됐다.
+        ClientMetaBattleCreate.Install(packet, new ClientMetaBattleCreateHooks
+        {
+            // 같은 실제 CS 전투10 기록 owner다.
+            Challenge = challenge,
+            // Ch.cpp 1d1의 실제 진단 장치다.
+            Assertion = assertion,
+            // 수준9의 이미 존재 전투 진단 장치다.
+            Log = text => challengeLog(9, text),
+            // 같은 현재 전투 TYPE을 객체 생성 직전에 읽는다. 실제 공장 장치가 없으므로 명시 실패한다.
+            BattleType = () => throw new InvalidOperationException("메타 전투 생성의 실제 전투 TYPE 미연결(R6)"),
+            // 현재 TYPE/flags2의 실제 공장 장치다. 실제 공장 장치가 없으므로 명시 실패한다.
+            Create = (_, _) => throw new InvalidOperationException("메타 전투 생성의 실제 공장 미연결(R6)"),
+            // 생성한 같은 50BYTE 객체의 현재 물리다. 실제 월드 장치가 없으므로 명시 실패한다.
+            Raw = _ => throw new InvalidOperationException("메타 전투 생성의 실제 객체 물리 미연결(R6)"),
+            // 현재 종류 WORD 장치다. 실제 표시 장치가 없으므로 명시 실패한다.
+            SetKind = (_, _) => throw new InvalidOperationException("메타 전투 생성의 실제 표시 미연결(R6)"),
+            // 생성 객체의 가상 부모 장치다. 실제 월드 장치가 없으므로 명시 실패한다.
+            Pop = (_, _, _, _) => throw new InvalidOperationException("메타 전투 생성의 실제 가상 부모 미연결(R6)"),
+            // 같은 객체/지연10 Rig 생성 장치다. 실제 Rig 장치가 없으므로 명시 실패한다.
+            Animate = (_, _) => throw new InvalidOperationException("메타 전투 생성의 실제 Rig 미연결(R6)"),
+        });
+        // 0x24 메타 전투 삭제를 같은 기본 표에 잇는다. CS·진단·로그는 실제 장기 장치이며 하차는 후속에 묶는다. 0.979에서 추가됐다.
+        ClientMetaBattleRemove.Install(packet, new ClientMetaBattleRemoveHooks
+        {
+            // 같은 실제 CS 전투10 기록 owner다.
+            Challenge = challenge,
+            // 수준9의 없는 전투 진단 장치다.
+            Log = text => challengeLog(9, text),
+            // 같은 실제 섬 장비 하차 장치다. 실제 월드 장치가 없으므로 명시 실패한다.
+            Leave = _ => throw new InvalidOperationException("메타 전투 제거의 실제 섬 장비 하차 미연결(R6)"),
+            // Ch.cpp 696의 참가자 잔존 진단 장치다.
+            Assertion = assertion,
+        });
+        // 0x25 메타 항해 오류를 같은 기본 표에 잇는다. CS·구독자·진단·로그·알림은 실제 장기·호출자 장치이며 번역·안내·표시는 후속에 묶는다. 0.979에서 추가됐다.
+        ClientMetaSailError.Install(packet, new ClientMetaSailErrorHooks
+        {
+            // 같은 실제 CS 참가자40 기록 owner다.
+            Challenge = challenge,
+            // 같은 실제 자기 구독자 번호 owner다.
+            Subscriber = game.Subscribers?.MySubscriber ?? throw new InvalidOperationException("메타 항해 오류의 실제 구독자 미연결"),
+            // 오류 1~4의 원문을 한 번 번역하는 표시 장치다. 실제 번역 장치가 없으므로 명시 실패한다.
+            Translate = _ => throw new InvalidOperationException("메타 항해 오류의 실제 번역 미연결(R6)"),
+            // 현재 기록+b8의 같은 객체에 안내를 붙인다. 실제 표시 장치가 없으므로 명시 실패한다.
+            Note = (_, _) => throw new InvalidOperationException("메타 항해 오류의 실제 안내 미연결(R6)"),
+            // 오류 5~7의 원문 Tell 섹션을 실행한다. 호출자 알림 장치를 공유한다.
+            Tell = tell ?? (_ => throw new InvalidOperationException("메타 항해 오류의 실제 Tell 미연결(R6)")),
+            // 마지막 현재 기록+0 식별자를 ff로 표시한다. 실제 표시 장치가 없으므로 명시 실패한다.
+            Update = (_, _) => throw new InvalidOperationException("메타 항해 오류의 실제 표시 갱신 미연결(R6)"),
         });
     }
 }

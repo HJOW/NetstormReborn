@@ -405,4 +405,19 @@ public sealed class ClientCampaignTransportTests
         Assert.Equal(0x004b4820u, transport.Dispatch.SnapshotReceiver(0x22)!.NativeEntry);
         Assert.Equal(17, transport.Dispatch.Registration(0x22).Length);
     }
+
+    /// <summary>수송 팩토리도 같은 기본 표에 0x23 전투 생성·0x24 전투 제거·0x25 항해 오류를 공유한다. 0.979에서 추가됐다.</summary>
+    [Fact]
+    public void FactorySharesCreateRemoveAndSailEntries()
+    {
+        var scene = new Scene();
+        scene.Game.PlayerRecords.Initialize((_, _) => { });
+        using var transport = scene.Make();
+        Assert.Equal(0x004b4640u, transport.Dispatch.SnapshotReceiver(0x23)!.NativeEntry);
+        Assert.Equal(20, transport.Dispatch.Registration(0x23).Length);
+        Assert.Equal(0x004b4600u, transport.Dispatch.SnapshotReceiver(0x24)!.NativeEntry);
+        Assert.Equal(5, transport.Dispatch.Registration(0x24).Length);
+        Assert.Equal(0x004b47e0u, transport.Dispatch.SnapshotReceiver(0x25)!.NativeEntry);
+        Assert.Equal(8, transport.Dispatch.Registration(0x25).Length);
+    }
 }

@@ -1114,4 +1114,166 @@ public sealed class ClientPacketDispatchParentTests
         var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x22, 9, null, MovePacket(5, 0, 0, 0)));
         Assert.Contains("표시", error.Message);
     }
+    /// <summary>원문 0x23 전투 생성 패킷을 조립한다. 고정 길이 20을 둔다.</summary>
+    private static byte[] CreatePacket(byte battle)
+    {
+        // 종류·전투를 같은 위치에 두고 나머지는 0으로 둔다.
+        byte[] packet = new byte[20];
+        packet[1] = 0x23;
+        packet[4] = battle;
+        return packet;
+    }
+    /// <summary>원문 0x24 전투 삭제 패킷을 조립한다. 고정 길이 5를 둔다.</summary>
+    private static byte[] RemoveBattlePacket(byte battle)
+    {
+        // 종류·전투를 같은 위치에 둔다.
+        byte[] packet = new byte[5];
+        packet[1] = 0x24;
+        packet[4] = battle;
+        return packet;
+    }
+    /// <summary>원문 0x25 항해 오류 패킷을 조립한다. 고정 길이 8을 둔다.</summary>
+    private static byte[] SailPacket(ushort code)
+    {
+        // 종류·오류 코드를 같은 위치에 둔다.
+        byte[] packet = new byte[8];
+        packet[1] = 0x25;
+        BinaryPrimitives.WriteUInt16LittleEndian(packet.AsSpan(6, 2), code);
+        return packet;
+    }
+    /// <summary>부모는 전투 생성 0x23·전투 삭제 0x24·항해 오류 0x25 고정 F를 같은 분배기에 설치한다. 0.979에서 추가됐다.</summary>
+    [Fact]
+    public void ParentInstallsCreateRemoveAndSailEntries()
+    {
+        var scene = new Scene();
+        var dispatch = Build(scene, _ => { });
+        var create = dispatch.Registration(0x23);
+        Assert.Equal(1, create.Version);
+        Assert.Equal(0, create.Mismatch);
+        Assert.Equal(20, create.Length);
+        Assert.NotNull(create.Observer);
+        Assert.Null(create.PacketObserver);
+        Assert.Equal(0x004b4640u, dispatch.SnapshotReceiver(0x23)!.NativeEntry);
+        var remove = dispatch.Registration(0x24);
+        Assert.Equal(1, remove.Version);
+        Assert.Equal(0, remove.Mismatch);
+        Assert.Equal(5, remove.Length);
+        Assert.NotNull(remove.Observer);
+        Assert.Null(remove.PacketObserver);
+        Assert.Equal(0x004b4600u, dispatch.SnapshotReceiver(0x24)!.NativeEntry);
+        var sail = dispatch.Registration(0x25);
+        Assert.Equal(1, sail.Version);
+        Assert.Equal(0, sail.Mismatch);
+        Assert.Equal(8, sail.Length);
+        Assert.NotNull(sail.Observer);
+        Assert.Null(sail.PacketObserver);
+        Assert.Equal(0x004b47e0u, dispatch.SnapshotReceiver(0x25)!.NativeEntry);
+        // 같은 묶음의 기존 설치가 0x23·0x24·0x25 행에 밀리지 않는다.
+        Assert.Equal(0x004b4710u, dispatch.SnapshotReceiver(0x20)!.NativeEntry);
+        Assert.Equal(0x0042dc90u, dispatch.SnapshotReceiver(0x41)!.NativeEntry);
+        Assert.Empty(scene.Assertions);
+    }
+    /// <summary>0x23 기존 전투는 로그만 남기고 조용히 돌아간다. 0.979에서 추가됐다.</summary>
+    [Fact]
+    public void ParentCreateLogsExistingBattleOnly()
+    {
+        var scene = new Scene();
+        scene.Challenge.Prepare();
+        scene.Challenge.Battle(2).Span[0] = 1;
+        var logs = new List<(uint Code, string Text)>();
+        var dispatch = Build(scene, _ => { }, diagnosticLog: (code, text) => logs.Add((code, text)));
+        dispatch.InvokeDirect(0x23, 9, null, CreatePacket(2));
+        Assert.Contains(logs, e => e.Code == 9 && e.Text.Contains("already exists"));
+    }
+    /// <summary>0x23 신규 전투는 기록을 쓰고 전투 TYPE 앞에서 멈춘다. 0.979에서 추가됐다.</summary>
+    [Fact]
+    public void ParentCreateWritesRecordBeforeBattleType()
+    {
+        var scene = new Scene();
+        scene.Challenge.Prepare();
+        scene.Challenge.Battle(3).Span[0] = 0;
+        var logs = new List<(uint Code, string Text)>();
+        var dispatch = Build(scene, _ => { }, diagnosticLog: (code, text) => logs.Add((code, text)));
+        var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x23, 9, null, CreatePacket(3)));
+        Assert.Contains("TYPE", error.Message);
+        Assert.Equal(3u, BinaryPrimitives.ReadUInt32LittleEndian(scene.Challenge.Battle(3).Span.Slice(4, 4)));
+        Assert.Empty(logs);
+    }
+    /// <summary>0x24 없는 전투는 로그만 남기고 조용히 돌아간다. 0.979에서 추가됐다.</summary>
+    [Fact]
+    public void ParentRemoveLogsMissingBattleOnly()
+    {
+        var scene = new Scene();
+        scene.Challenge.Prepare();
+        scene.Challenge.Battle(4).Span[0] = 0;
+        var logs = new List<(uint Code, string Text)>();
+        var dispatch = Build(scene, _ => { }, diagnosticLog: (code, text) => logs.Add((code, text)));
+        dispatch.InvokeDirect(0x24, 9, null, RemoveBattlePacket(4));
+        Assert.Contains(logs, e => e.Code == 9 && e.Text.Contains("doesn't exist"));
+    }
+    /// <summary>0x24 유효 전투는 하차 앞에서 멈춘다. 0.979에서 추가됐다.</summary>
+    [Fact]
+    public void ParentRemoveStopsAtLeaveWhenValid()
+    {
+        var scene = new Scene();
+        scene.Challenge.Prepare();
+        scene.Challenge.Battle(2).Span[0] = 1;
+        BinaryPrimitives.WriteUInt32LittleEndian(scene.Challenge.Battle(2).Span.Slice(0x20, 4), 0x300);
+        var logs = new List<(uint Code, string Text)>();
+        var dispatch = Build(scene, _ => { }, diagnosticLog: (code, text) => logs.Add((code, text)));
+        var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x24, 9, null, RemoveBattlePacket(2)));
+        Assert.Contains("하차", error.Message);
+        Assert.Empty(logs);
+    }
+    /// <summary>0x25 미발견 구독자는 빈 기록 읽기를 거부한다. 0.979에서 추가됐다.</summary>
+    [Fact]
+    public void ParentSailRejectsUnknownSubscriber()
+    {
+        var scene = new Scene();
+        scene.Challenge.Prepare();
+        var logs = new List<(uint Code, string Text)>();
+        var dispatch = Build(scene, _ => { }, diagnosticLog: (code, text) => logs.Add((code, text)));
+        Assert.Throws<ArgumentOutOfRangeException>(() => dispatch.InvokeDirect(0x25, 9, null, SailPacket(0)));
+        Assert.Empty(logs);
+    }
+    /// <summary>0x25 오류 1은 번역 앞에서 멈춘다. 0.979에서 추가됐다.</summary>
+    [Fact]
+    public void ParentSailStopsAtTranslate()
+    {
+        var scene = new Scene();
+        scene.Challenge.Prepare();
+        BinaryPrimitives.WriteUInt32LittleEndian(scene.Challenge.Participant(2).Span.Slice(4, 4), 0x1234);
+        var logs = new List<(uint Code, string Text)>();
+        var dispatch = Build(scene, _ => { }, diagnosticLog: (code, text) => logs.Add((code, text)));
+        scene.Subscribers.MySubscriber.Value = 0x1234;
+        var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x25, 9, null, SailPacket(1)));
+        Assert.Contains("번역", error.Message);
+        Assert.Empty(logs);
+    }
+    /// <summary>0x25 오류 5는 Tell 없이 성공으로 꾸미지 않는다. 0.979에서 추가됐다.</summary>
+    [Fact]
+    public void ParentSailRequiresTellOnSection()
+    {
+        var scene = new Scene();
+        scene.Challenge.Prepare();
+        BinaryPrimitives.WriteUInt32LittleEndian(scene.Challenge.Participant(2).Span.Slice(4, 4), 0x1234);
+        var dispatch = Build(scene, _ => { });
+        scene.Subscribers.MySubscriber.Value = 0x1234;
+        var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x25, 9, null, SailPacket(5)));
+        Assert.Contains("Tell", error.Message);
+    }
+    /// <summary>0x25 오류 5는 Tell 뒤 표시 앞에서 멈춘다. 0.979에서 추가됐다.</summary>
+    [Fact]
+    public void ParentSailTellsBeforeUpdate()
+    {
+        var scene = new Scene();
+        scene.Challenge.Prepare();
+        BinaryPrimitives.WriteUInt32LittleEndian(scene.Challenge.Participant(2).Span.Slice(4, 4), 0x1234);
+        var tells = new List<string>();
+        var dispatch = Build(scene, _ => { }, tell: tells.Add);
+        scene.Subscribers.MySubscriber.Value = 0x1234;
+        var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x25, 9, null, SailPacket(5)));
+        Assert.Contains("표시", error.Message);
+        Assert.Equal(["TooManyPirates"], tells);
+    }
 }
