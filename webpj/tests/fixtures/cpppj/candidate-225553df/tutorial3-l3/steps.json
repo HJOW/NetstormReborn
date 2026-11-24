@@ -1,7 +1,7 @@
 {
   "format": "netstorm-webpj-cpppj-l3-steps",
   "version": 1,
-  "description": "cpppj 225553df Tutorial3 입력 단계표(L3: Capture The Priest! 안내 창 MORE→Build Golems OK→자유 진행(a240)→북서쪽 간헐천 다리 직결(b340)→골렘 완성(b900)→크리스털 수확·배달(b1200)→단계 B 안내 창 MORE·OK(b1600·b1640·b1700)→남쪽 적 섬 방향 8조각 다리 연결 중간(b1950)→적 섬 동북단 (135,130) 직결·단계 C 'Build Sun Disc Throwers' 안내 창(c2160)→OK(단계 C 자유 진행, c2200)). 단계는 [프레임, 동작, 인자]이며 cpppj `--ui-script` 의 동작 이름을 그대로 쓴다. 웹은 e2e/l3-tutorial3.spec.js 가 e2e/l3-common.js 로 같은 단계를 고정 시각 모드로 적용한다(입력 프레임 규칙은 docs/webpj-l3-tutorial1-20261123.md).",
+  "description": "cpppj 225553df Tutorial3 입력 단계표(L3: Capture The Priest! 안내 창 MORE→Build Golems OK→자유 진행(a240)→북서쪽 간헐천 다리 직결(b340)→골렘 완성(b900)→크리스털 수확·배달(b1200)→단계 B 안내 창 MORE·OK(b1600·b1640·b1700)→남쪽 적 섬 다리 직결(b1950·c2160)→OK(c2200)→Sun Workshop 우클릭(c2214)→Put Knowledge into Production(c2224)→Sun Disc Thrower 선택·단계 D 'Generators, Part 1' 안내 창(d2280)→MORE('Part 2', d2320)→OK(단계 D 자유 진행, d2360)). 단계는 [프레임, 동작, 인자]이며 cpppj `--ui-script` 의 동작 이름을 그대로 쓴다. 웹은 e2e/l3-tutorial3.spec.js 가 e2e/l3-common.js 로 같은 단계를 고정 시각 모드로 적용한다(입력 프레임 규칙은 docs/webpj-l3-tutorial1-20261123.md).",
   "language": "english",
   "screen": {
     "width": 1024,
@@ -316,6 +316,66 @@
       2200,
       "session-dump",
       "c2200"
+    ],
+    [
+      2210,
+      "right",
+      "screen:480,355"
+    ],
+    [
+      2214,
+      "snapshot",
+      "c2214"
+    ],
+    [
+      2220,
+      "click",
+      "screen:560,380"
+    ],
+    [
+      2224,
+      "snapshot",
+      "c2224"
+    ],
+    [
+      2230,
+      "click",
+      "screen:760,380"
+    ],
+    [
+      2280,
+      "snapshot",
+      "d2280"
+    ],
+    [
+      2280,
+      "session-dump",
+      "d2280"
+    ],
+    [
+      2300,
+      "click-if",
+      "MORE"
+    ],
+    [
+      2320,
+      "snapshot",
+      "d2320"
+    ],
+    [
+      2340,
+      "click-if",
+      "OK"
+    ],
+    [
+      2360,
+      "snapshot",
+      "d2360"
+    ],
+    [
+      2360,
+      "session-dump",
+      "d2360"
     ]
   ]
 }

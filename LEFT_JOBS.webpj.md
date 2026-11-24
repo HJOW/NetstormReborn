@@ -6,7 +6,7 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-24 정리, 마지막 단위 WB04-E1330)
+### 0.1 현재 값 (2026-11-24 정리, 마지막 단위 WB04-E1331)
 
 - **실행·플레이**
   - **화면:** 브라우저 ‘클릭하여 시작’(첫 적재 뒤 최소 6초, E1308), 시작 title 그림, 메인 메뉴·캠페인/데모 목록·도움말·옵션(Reset All 게임 안 확인 창 포함)·Credits와 개발용 지형 미리보기가 동작한다.
@@ -18,15 +18,15 @@
 - **원본과의 동일성**
   - **M1 메뉴:** 영어 4:3 메뉴 8장면은 cpppj 오라클과 알려진 차이 영역(Campaign 창 크기·Options 팝업 위치) 밖에서 픽셀 차이 0이고 구름 배경도 같다(Kencloud 캐시, E1298).
   - **L2 시작 상태(E1283 닫음):** 검사 전용 고정 시각 모드(`?fixed=25`)에서 Tutorial1 Load/Start의 Game 난수열(90프레임 6,851회)·논리 화면·Session 덤프가 cpppj 기준선 오라클과 같다. 4:3·16:9(1366×768)·16:10(1280×800, E1322)의 90프레임 화면 0픽셀, 90·130프레임 덤프는 환경 의존인 `sp 1`·`player:*` 행만 다르다. 한국어(E1323)는 상태가 같고 첫 안내 창 밖 0픽셀이며 창 안 차이는 웹 독립 번역·글꼴 차이로 분리 확인했다([근거](docs/webpj-korean-m2-20261124.md)). 31개 미션의 시작 5·30·120프레임 덤프도 모두 같다(E1313).
-  - **L3 입력 진행:** cpp `--ui-script` 입력 단계표를 그대로 적용해 Tutorial1 시작~'Mission Accomplished!' 완료 창 4,200프레임(체크포인트 20곳, E1284~E1286·E1299·E1301~E1304)과 Tutorial2 시작~완료 창 5,400프레임(체크포인트 41곳, E1305~E1307)이 화면 0픽셀·덤프 일치다. Tutorial3(Capture The Priest)은 단계 A 전체(북서쪽 간헐천 5칸 직선 다리 직결·골렘 배치/완성·크리스털 수확·신전 배달 SP 1600→1800) → 단계 B(`Capturing Enemy Priests, Part 1/2` 안내 창·남쪽 적 섬 `(135,130)` 8조각 다리 직결) → 단계 C(`Build Sun Disc Throwers` 안내 창·OK 뒤 자유 진행) 2,200프레임(체크포인트 화면 12곳·덤프 10곳, E1309·E1329·E1330, [단계 A→B](docs/webpj-l3-tutorial3-stage-ab-20261124.md) · [단계 B→C](docs/webpj-l3-tutorial3-stage-bc-20261124.md))과 ESC 메뉴 여닫기 360프레임(E1327)까지 같다. 이 대조로 다리 붕괴 스캔 초기화 누락(`Reset422490`, E1301)·생산 패널 HUD 생성 순서(E1305)·로그인 중 간헐천 보충 기한(E1313)·메뉴 SP 추적(E1327)·주변음/장면음악 천둥의 `ThunderProcess`(TYPE 55) 미연결(E1329) 차이를 고쳤다.
+  - **L3 입력 진행:** cpp `--ui-script` 입력 단계표를 그대로 적용해 Tutorial1 시작~'Mission Accomplished!' 완료 창 4,200프레임(체크포인트 20곳, E1284~E1286·E1299·E1301~E1304)과 Tutorial2 시작~완료 창 5,400프레임(체크포인트 41곳, E1305~E1307)이 화면 0픽셀·덤프 일치다. Tutorial3(Capture The Priest)은 단계 A 전체(북서쪽 간헐천 5칸 직선 다리 직결·골렘 배치/완성·크리스털 수확·신전 배달 SP 1600→1800) → 단계 B(남쪽 적 섬 `(135,130)` 8조각 다리 직결) → 단계 C(`Sun Disc Thrower` 생산) → 단계 D(`Generators, Part 1/2` 안내 창·OK 뒤 자유 진행) 2,360프레임(체크포인트 화면 17곳·덤프 12곳, E1309·E1329~E1331, [단계 A→B](docs/webpj-l3-tutorial3-stage-ab-20261124.md) · [단계 B→C](docs/webpj-l3-tutorial3-stage-bc-20261124.md) · [단계 C→D](docs/webpj-l3-tutorial3-stage-cd-20261124.md))과 ESC 메뉴 여닫기 360프레임(E1327)까지 같다. 이 대조로 다리 붕괴 스캔 초기화 누락(`Reset422490`, E1301)·생산 패널 HUD 생성 순서(E1305)·로그인 중 간헐천 보충 기한(E1313)·메뉴 SP 추적(E1327)·주변음/장면음악 천둥의 `ThunderProcess`(TYPE 55) 미연결(E1329) 차이를 고쳤다.
   - **부품:** 월드·UI 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다(원본 공통 메뉴 788행·Factory 메뉴 39행·Uber 루트 160행·장면 음악 3,113행, 채팅 입력줄 대상 720행(E1265), 파편·건물 캡처 4,474행(E1275~E1276)·골렘/받침 264행(E1312), 실제 Session의 EvilRay·Burning·섬 투하(E1314~E1316) 등). 대응표 1,007단위 중 732행은 Tutorial1 실행에서 웹 모듈의 함수가 모두 실행된 `session`이다(E1283). 좌측 HUD 하단 85×82픽셀은 원본 스크린샷과 일치한다.
   - **한국어 글자:** 갈무리11 12px 격자로 그리되 제목 배율·굵기(사용자 결정으로 보통체)·한글 기준선을 cpppj와 다르게 둔다([0.7절](#korean-font-change)).
-  - **미검증:** Tutorial3 단계 C 이후의 L3 진행(Tutorial3 단계 C~H·Tutorial4~6·캠페인 묶음 미션), L4b(소리)와 자연 완주.
-- **현재 작업:** E1330에서 Tutorial3 단계 B(남쪽 적 섬 다리 직결)→단계 C('Build Sun Disc Throwers') L3(2,200프레임) 대조를 마쳤다. 다음은 Tutorial3 단계 C~H(3.1절 4D-4b의 Tutorial3 세부 단위)와 Tutorial4~6 L3 대조다. 순서는 [다음 작업](#next)을 따른다.
+  - **미검증:** Tutorial3 단계 D 이후의 L3 진행(Tutorial3 단계 D~H·Tutorial4~6·캠페인 묶음 미션), L4b(소리)와 자연 완주.
+- **현재 작업:** E1331에서 Tutorial3 단계 C(`Sun Disc Thrower` 생산)→단계 D(`Generators, Part 1/2`) L3(2,360프레임) 대조를 마쳤다. 다음은 Tutorial3 단계 D~H(3.1절 4D-4b의 Tutorial3 세부 단위)와 Tutorial4~6 L3 대조다. 순서는 [다음 작업](#next)을 따른다.
 - **전체 회귀**
   - **Node 22.23.5 E1324:** 6,845/6,845 통과, 실패·취소·미실행 0(760.8초, `extracted/webpj-e1324-node22.log`). 로컬 Node22 실행 경로는 `extracted/webpj-node22/node_modules/node-win-x64/bin/node.exe`다.
   - **Node 26.13.0 E1329:** 6,847/6,847 통과, 실패·취소·미실행 0(500.1초, 4/4 주기 갱신).
-  - **주기(E1330 기준):** v26은 E1329 전체 뒤 1/4(E1330 누적), v22는 E1324 전체 뒤 6/8(E1330 누적).
+  - **주기(E1331 기준):** v26은 E1329 전체 뒤 2/4(E1330~E1331 누적), v22는 E1324 전체 뒤 7/8(E1330~E1331 누적). 다음 단위(E1332) 완료 시 Node v22 8/8 전체 회귀를 실행한다.
   - **Chromium:** E1313 전 미션 시작 상태 옵트인 전체 32/32 통과(24.3분, `webpj/extracted/webpj-e1313-final-e2e.log`). 기존 전체 e2e는 E1312 199건 중 186 통과·12 옵트인 미실행·한국어 브리핑 1건 부하 중 시간 초과(단독·3회 반복 통과)다. 단위별 실패·교정은 [E1313](docs/webpj-l3-mission-starts-20261124.md)과 각 단위 문서, 이전 회귀 이력은 [E1327 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261124-through-wb04-e1327)을 따른다.
 - **브라우저 검사:** 미션 화면은 단위마다 Chromium e2e로 확인한다(최근 전체 실행 E1312, 고정 시각 L2·L3 `e2e/fixed-time.spec.js`·`e2e/l3-tutorial1.spec.js`·`e2e/l3-tutorial2.spec.js`·`e2e/l3-tutorial3.spec.js`, 앱 서비스 결선 `e2e/session-services-wiring.spec.js` E1328, 한국어 글자 배치 `e2e/korean-glyph-layout.spec.js` E1288). 메뉴는 2026-11-17 Chromium 2/2(갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체), 최초 실행·진행 잠금/체크·저장 재실행은 E616 Chromium 2/2. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md)
 
@@ -37,7 +37,7 @@
 번호는 2026-11-24 첫 정리(E1327 이관)에서 1~6으로 다시 매겼고, E1328(`f6e6d8cd9`)이 1번(RawCampaignSession partial 닫기, [근거](docs/webpj-session-boundary-close-20261124.md))을 끝내 2~6번이 지금의 1~5번이 됐다(그 사이 번호는 커밋 `bcabc8025`의 문서). 단위 문서가 가리키는 더 앞 번호(다음 작업 0·0-a·1~9)의 원문은 [E1327 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261124-through-wb04-e1327), 그보다 앞 번호(다음 작업 1 ①~⑩·2~6)는 [E1288 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1288)에 있다.
 
 1. **다음 미션 L3 대조(4D-4b Tutorial3~6).** Tutorial1(E1304, 4200프레임)과 Tutorial2(E1305~E1307, 5400프레임)는 시작부터 완료 창까지 화면 0픽셀·덤프 일치로 끝났다([Tutorial1](docs/webpj-l3-tutorial1-complete-20261124.md) · [Tutorial2](docs/webpj-l3-tutorial2-20261124.md)). 같은 틀(`e2e/l3-common.js`·`tools/l3-collect.mjs`, 미션 이름·폴더만 바꿈)로 **Tutorial3~6**(전투·방어물·AI)과 세 캠페인 묶음 미션의 시작~완료를 대조한다. 이 확장이 4D-4b의 Tutorial 단계 진행을 겸한다.
-   - 현재 위치: Tutorial3 단계 A→B 1,700프레임(E1309·E1329, [단계 A→B 기록](docs/webpj-l3-tutorial3-stage-ab-20261124.md)) → 단계 B→C 2,200프레임(E1330, [단계 B→C 기록](docs/webpj-l3-tutorial3-stage-bc-20261124.md))·ESC 메뉴 360프레임(E1327). 다음은 단계 C(Sun Disc Thrower 생산)이며, Tutorial3~6의 대본 단계별 세부 단위와 완료 기준은 3.1절 4D-4b 아래에 있다.
+   - 현재 위치: Tutorial3 단계 A→B 1,700프레임(E1309·E1329, [단계 A→B 기록](docs/webpj-l3-tutorial3-stage-ab-20261124.md)) → 단계 B→C 2,200프레임(E1330, [단계 B→C 기록](docs/webpj-l3-tutorial3-stage-bc-20261124.md)) → 단계 C→D 2,360프레임(E1331, [단계 C→D 기록](docs/webpj-l3-tutorial3-stage-cd-20261124.md))·ESC 메뉴 360프레임(E1327). 다음은 단계 D~E(Wind Generator 생산·적 섬까지 에너지 확장)이며, Tutorial3~6의 대본 단계별 세부 단위와 완료 기준은 3.1절 4D-4b 아래에 있다.
    - 좌표 기준(E1329): 1024×768 기본 카메라 `cameraX=1552, cameraY=749`, 1칸=16×11px, 생산 창 다리 조각 `60,44`(우클릭 회전)·골렘 `40,180`. 단계 A의 입력 순서 전체는 단위 문서 표와 `tutorial3-l3/steps.json`에 있다.
    - 방법: 폴더 `tests/fixtures/cpppj/candidate-225553df/tutorialN-l3/` 와 스펙 `e2e/l3-tutorialN.spec.js`(Tutorial2 스펙 복제). 입력 위치는 cpp 오라클을 5초 안팎으로 여러 번 돌려 정하고(격자 탐색 50~230회가 5~21분이라 백그라운드로), 단계는 cpp `report` 의 `mission_gate` 두 번째 값으로 판정한다. 전투가 있는 미션은 체크포인트를 짧은 간격으로 두고 어긋나는 첫 프레임을 `mission_gate`·`bridge_scan_global` 과 프레임별 덤프(`runL3({ compare: false })`·`L3_DUMP_DIR`)로 좁힌다([탐색 기록](docs/webpj-l3-extension-probe-20261124.md)).
    - cpppj 오라클 수집은 HJOW-Athlon에서 실행 확인 없이 가능하고 다른 PC는 AGENTS 실행 확인 규칙을 따른다(3.3절).
@@ -127,7 +127,7 @@
 ### 0.4 기준선과 자료
 
 - **이식 기준선**은 cpppj 제품 1313(11.01) `225553df`다. 이후 변경 판정은 3.6절을 따른다. 별도 오라클 빌드는 HJOW-Athlon의 `extracted/webpj-oracle/225553df/Netstorm.exe`에 있다(SHA-256 `5b52d96d…b77eb46`, Git 제외).
-- **자료 추적**은 [PORT_MAP.tsv](webpj/PORT_MAP.tsv)와 [fixture manifest](webpj/tests/fixtures/manifest.json) 992항목(E1330 Tutorial3 단계 B→C 오라클 6항목 추가)을 기준으로 한다. 이식 자료는 cpppj 소스·fixture·문서를 사용한다.
+- **자료 추적**은 [PORT_MAP.tsv](webpj/PORT_MAP.tsv)와 [fixture manifest](webpj/tests/fixtures/manifest.json) 999항목(E1331 Tutorial3 단계 C→D 오라클 7항목 추가)을 기준으로 한다. 이식 자료는 cpppj 소스·fixture·문서를 사용한다.
 
 ### 0.5 단위 착수와 종료
 
@@ -204,7 +204,7 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
   - [ ] Tutorial3 — Tutorial2 e2e(`e2e/english-tutorial2.spec.js`)·L3(`e2e/l3-tutorial3.spec.js`) 방식으로 대본 단계 A~H를 수행하며 완료 창까지 대조한다([다음 작업 1](#next)). 아래 세부의 'L3 일치'는 체크포인트 화면 0픽셀·덤프 허용 행 밖 차이 0을 뜻한다. 완료 기준: 완료 창과 다음 미션 해제까지 e2e 통과.
     - [x] 단계 A(간헐천 다리 직결·골렘·첫 크리스털 신전 납품 `0x020000b4`, SP 1600→1800) → 단계 B 안내 창 — E1329, 1,700프레임 화면 9곳·덤프 7곳 일치. [기록](docs/webpj-l3-tutorial3-stage-ab-20261124.md)
     - [x] 단계 B 남쪽 적 섬에 다리 직결 — E1330, 2,200프레임(8조각 다리로 적 섬 `(135,130)` 연결 → 단계 C `'Build Sun Disc Throwers'` 안내 창·`OK` 뒤 자유 진행까지 화면 12곳 0픽셀·덤프 10곳 일치). [기록](docs/webpj-l3-tutorial3-stage-bc-20261124.md)
-    - [ ] 단계 C Sun Disc Thrower 생산 — 완료 기준: 단계 D 'Generators, Part 1' 안내 창까지 L3 일치.
+    - [x] 단계 C Sun Disc Thrower 생산 — E1331, 2,360프레임(Sun Workshop 우클릭 메뉴→지식 생산 투입→Sun Disc Thrower 선택 → 단계 D `'Generators, Part 1/2'` 안내 창·`OK` 뒤 자유 진행까지 화면 17곳 0픽셀·덤프 12곳 일치). [기록](docs/webpj-l3-tutorial3-stage-cd-20261124.md)
     - [ ] 단계 D~E Wind Generator 생산·적 섬까지 에너지 확장 — 완료 기준: 단계 F 'Incapacitating the Enemy Priest' 안내 창까지 L3 일치.
     - [ ] 단계 F~H 발사기로 적 사제 무력화·골렘 포획 → 'Mission Accomplished!' 완료 창 — 완료 기준: 완료 창까지 L3 일치(교전 구간은 짧은 체크포인트)와 다음 미션 해제.
   - [ ] Tutorial4 — 완료 기준: 위와 같다. 대본 단계 A~I1(아래 묶음은 진행하며 조정한다):
