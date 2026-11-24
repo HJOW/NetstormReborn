@@ -39,6 +39,127 @@ public sealed partial class ClientChallengeGlobals
         return null;
     }
 
+    /// <summary>실제 호스트 포인터를 자르지 않는 다음 비영 가변 배열 토큰이다.</summary>
+    private uint _nextArrayToken = 1;
+
+    /// <summary>현재 CS가 소유하는 실제 가변 배열 할당이다.</summary>
+    private readonly Dictionary<uint, byte[]> _arrays = [];
+
+    /// <summary>실제 할당 성공 뒤만 토큰을 발행한다. 0.957에서 추가됐다.</summary>
+    /// <param name="bytes">확보할 바이트 수다.</param>
+    /// <returns>비영 배열 토큰이며 할당 실패이면 0이다.</returns>
+    public uint AllocateArray(int bytes)
+    {
+        // 토큰이 소진되면 원문처럼 넘침을 표시한다.
+        if (_nextArrayToken == 0)
+        {
+            throw new OverflowException("CS 가변 배열 토큰 소진");
+        }
+
+        if (bytes < 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(bytes), "CS 가변 배열의 실제 크기 부족");
+        }
+
+        byte[] value = new byte[bytes];
+        uint token = _nextArrayToken;
+        _arrays.Add(token, value);
+        _nextArrayToken = unchecked(_nextArrayToken + 1);
+        return token;
+    }
+
+    /// <summary>같은 원문 포인터를 조회하며 없는 할당을 빈 배열로 합성하지 않는다. 0.957에서 추가됐다.</summary>
+    /// <param name="token">조회할 배열 토큰이다.</param>
+    /// <returns>같은 실제 할당 바이트다.</returns>
+    public Memory<byte> ArrayBytes(uint token) =>
+        token != 0 && _arrays.TryGetValue(token, out byte[]? value)
+            ? value
+            : throw new InvalidOperationException("CS 가변 배열의 실제 할당 미등록");
+
+    /// <summary>두 포인터를 순서대로 free하고 네 DWORD를 0·4·12·8 순서로 쓴다. 0.957에서 추가됐다.</summary>
+    /// <param name="header">실제 16BYTE 헤더다.</param>
+    public void ClearArray(Memory<byte> header)
+    {
+        if (header.Length < 16)
+        {
+            throw new ArgumentOutOfRangeException(nameof(header), "CS 가변 배열의 실제 16BYTE 헤더 부족");
+        }
+
+        // 두 포인터는 순서대로 다시 읽으며 NULL일 때만 free를 생략한다.
+        foreach (int at in new[] { 0, 4 })
+        {
+            uint token = BinaryPrimitives.ReadUInt32LittleEndian(header.Span.Slice(at, 4));
+            if (token != 0 && !_arrays.Remove(token))
+            {
+                throw new InvalidOperationException("CS 가변 배열 free의 실제 할당 미등록");
+            }
+        }
+
+        // 원문은 두 free가 끝난 뒤에만 네 DWORD를 이 순서로 쓴다.
+        foreach (int at in new[] { 0, 4, 12, 8 })
+        {
+            BinaryPrimitives.WriteUInt32LittleEndian(header.Span.Slice(at, 4), 0);
+        }
+    }
+
+    /// <summary>같은 현재 여덟 슬롯을 세며 WORD 상한 후 하한 조회와 최종 두 쓰기 순서를 유지한다. 0.957에서 추가됐다.</summary>
+    /// <param name="cs">같은 실제 캡처 CS 물리다.</param>
+    /// <param name="battle">집계할 전투 번호다.</param>
+    /// <param name="assertion">실제 진단 장치다.</param>
+    public static void UpdateBattleVersionBounds(Memory<byte> cs, int battle, Action<string, string, uint>? assertion)
+    {
+        // 원문 진단은 currentCS 물리 조회보다 앞서며 복귀해도 잘못된 배열 주소를 사용하지 않는다.
+        if (battle < 0 || battle >= RawChallengeState.BattleCount)
+        {
+            (assertion ?? throw new InvalidOperationException("CS 버전 집계의 실제 진단 미연결"))("bId >= 0 && bId < CL_NUM_CHAL_BATTLES", ".\\Ns\\O\\Ch.cpp", 0x45a);
+            throw new ArgumentOutOfRangeException(nameof(battle), "CS 버전 집계의 실제 전투10칸 범위");
+        }
+
+        if (cs.Length != RawChallengeState.Bytes)
+        {
+            throw new ArgumentOutOfRangeException(nameof(cs), "CS 버전 집계의 실제 캡처 기록 범위");
+        }
+
+        Memory<byte> record = cs.Slice(RawChallengeState.BattleOffset + battle * RawChallengeState.BattleBytes, RawChallengeState.BattleBytes);
+        if ((record.Span[0] & 1u) == 0)
+        {
+            (assertion ?? throw new InvalidOperationException("CS 버전 집계의 실제 진단 미연결"))("b->isValid()", ".\\Ns\\O\\Ch.cpp", 0x45d);
+        }
+
+        uint maximum = 0xffffffffu;
+        uint minimum = 0x100u;
+        // 원문의 두 묶음 네 슬롯을 동일한 현재 순서로 순회한다.
+        for (uint slot = 0; slot < 8; slot++)
+        {
+            uint participant = BinaryPrimitives.ReadUInt32LittleEndian(record.Span.Slice(0x38 + unchecked((int)slot) * 4, 4));
+            if (participant == 0)
+            {
+                continue;
+            }
+
+            if (participant >= RawChallengeState.ParticipantCount)
+            {
+                throw new ArgumentOutOfRangeException(nameof(cs), "CS 버전 집계의 실제 참가자40칸 범위");
+            }
+
+            Memory<byte> peer = cs.Slice(RawChallengeState.ParticipantOffset + unchecked((int)participant) * RawChallengeState.ParticipantBytes, RawChallengeState.ParticipantBytes);
+            uint upper = BinaryPrimitives.ReadUInt16LittleEndian(peer.Span.Slice(0xb4, 2));
+            if (unchecked((int)maximum) <= unchecked((int)upper))
+            {
+                maximum = upper;
+            }
+
+            uint lower = BinaryPrimitives.ReadUInt16LittleEndian(peer.Span.Slice(0xb2, 2));
+            if (lower <= minimum)
+            {
+                minimum = lower;
+            }
+        }
+
+        BinaryPrimitives.WriteUInt32LittleEndian(record.Span.Slice(0x1c, 4), minimum);
+        BinaryPrimitives.WriteUInt32LittleEndian(record.Span.Slice(0x18, 4), maximum);
+    }
+
     /// <summary>새 생성은 Construct 완료 뒤 공개한다. 기존 객체는 선택 진단 뒤 현재 기록만 Reset한다.</summary>
     public bool Prepare(Action? uninitialized = null)
     {
