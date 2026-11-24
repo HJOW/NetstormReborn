@@ -4,7 +4,7 @@ using Netstorm.Net;
 
 namespace Netstorm.Client.Tests;
 
-// 공통 패킷 분배 부모의 41h·로그인·Native gameplay·Carrier/Construction 설치를 검사하는 클래스다. 2026-11-23 0.897에서 R4-6 전송·수신 묶음용으로 추가하고 0.899에서 Native gameplay 묶음을, 0.964에서 Carrier/Construction 묶음을 이었다.
+// 공통 패킷 분배 부모의 41h·로그인·Native gameplay·Carrier/Construction·장기 CS 설치를 검사하는 클래스다. 2026-11-23 0.897에서 R4-6 전송·수신 묶음용으로 추가하고 0.899에서 Native gameplay 묶음을, 0.964에서 Carrier/Construction 묶음을, 0.966에서 장기 CS 묶음(0x7b·0x7c)을 이었다.
 // 근거: R4-6 남음의 "공통 41h가 Root.ReceiveNativePacketChat을 부르는 전송 설치"와 "NativeLoginPacketReceivers의 실제 MonoGame Root 설치 호출"이다.
 public sealed class ClientPacketDispatchParentTests
 {
@@ -23,6 +23,8 @@ public sealed class ClientPacketDispatchParentTests
         public readonly ClientSurfaceGlobals Surface;
         /// <summary>창이 없어도 존재하는 실제 마스크/현재 UI 슬롯이다.</summary>
         public readonly ClientChatWindowGlobals Chat = new();
+        /// <summary>같은 Client 수명으로 유지하는 실제 CS 슬롯·할당 owner다.</summary>
+        public readonly ClientChallengeGlobals Challenge = new();
         /// <summary>외부 표시 진단의 실제 선택 줄 번호다.</summary>
         public readonly List<uint> Assertions = [];
         /// <summary>실제 공통 소유자만 만들고 창/소리/네트워크는 열지 않는다.</summary>
@@ -48,7 +50,7 @@ public sealed class ClientPacketDispatchParentTests
     /// <summary>같은 장기 Client 장치로 실제 분배기를 묶는다.</summary>
     private static RawPacketDispatch Build(Scene scene, Action<Memory<byte>> receive) => ClientPacketDispatch.Build(
         DispatchHooks(), scene.Game, scene.Connections, scene.Surface, scene.Chat, receive,
-        (expression, file, line) => scene.Assertions.Add(line), ActivityHooks());
+        (expression, file, line) => scene.Assertions.Add(line), ActivityHooks(), scene.Challenge);
     /// <summary>부모는 41h 실제 F와 로그인 묶음을 같은 분배기에 설치한다.</summary>
     [Fact]
     public void ParentInstallsChatAndLoginEntries()
@@ -208,6 +210,81 @@ public sealed class ClientPacketDispatchParentTests
             Assert.NotNull(dispatch.Registration(0x3e).Observer);
         }
     }
+    /// <summary>부모는 장기 CS 묶음(0x7b·0x7c)을 같은 분배기에 설치한다. 0.966에서 추가됐다.</summary>
+    [Fact]
+    public void ParentInstallsChallengeEntries()
+    {
+        var scene = new Scene();
+        var dispatch = Build(scene, _ => { });
+        var peer = dispatch.Registration(0x7b);
+        Assert.Equal(1, peer.Version);
+        Assert.Equal(0, peer.Mismatch);
+        Assert.Equal(ushort.MaxValue, peer.Length);
+        Assert.Null(peer.Observer);
+        Assert.NotNull(peer.PacketObserver);
+        Assert.Equal(0x004b4790u, dispatch.SnapshotReceiver(0x7b)!.NativeEntry);
+        var login = dispatch.Registration(0x7c);
+        Assert.Equal(1, login.Version);
+        Assert.Equal(0, login.Mismatch);
+        Assert.Equal(28, login.Length);
+        Assert.NotNull(login.Observer);
+        Assert.Null(login.PacketObserver);
+        Assert.Equal(0x004b2cc0u, dispatch.SnapshotReceiver(0x7c)!.NativeEntry);
+        // 같은 묶음의 기존 설치가 장기 CS 행에 밀리지 않는다.
+        Assert.Equal(0x0042dc90u, dispatch.SnapshotReceiver(0x41)!.NativeEntry);
+        Assert.Equal(0x0048f7f0u, dispatch.SnapshotReceiver(0x77)!.NativeEntry);
+        Assert.Empty(scene.Assertions);
+    }
+    /// <summary>CS0이면 0x7b는 버퍼도 읽지 않고 조용히 돌아간다. 0.966에서 추가됐다.</summary>
+    [Fact]
+    public void ParentChallengeDefaultsIgnoresCsZero()
+    {
+        var scene = new Scene();
+        var dispatch = Build(scene, _ => { });
+        byte[] packet = [1, 0x7b, 9, 0, 0xff, 0xff, 0xff, 0xff, 0xff, 0xff];
+        dispatch.InvokeDirect(0x7b, 3, null, packet);
+        Assert.Empty(scene.Assertions);
+    }
+    /// <summary>같은 구독자면 0x7b는 참가자 주소 꼬리에 NUL까지 BYTE별 저장한다. 0.966에서 추가됐다.</summary>
+    [Fact]
+    public void ParentChallengeDefaultsCopiesPeerAddress()
+    {
+        var scene = new Scene();
+        scene.Challenge.Prepare();
+        BinaryPrimitives.WriteUInt32LittleEndian(scene.Challenge.Participant(0).Span.Slice(4, 4), 0x111);
+        var dispatch = Build(scene, _ => { });
+        byte[] packet = [1, 0x7b, 12, 0, 0, 0, 0, 0, 0, 0, (byte)'A', 0];
+        BinaryPrimitives.WriteUInt32LittleEndian(packet.AsSpan(5, 4), 0x111);
+        dispatch.InvokeDirect(0x7b, 3, null, packet);
+        Assert.Equal((byte)'A', scene.Challenge.Participant(0).Span[0x1a0]);
+        Assert.Equal(0, scene.Challenge.Participant(0).Span[0x1a1]);
+        Assert.Empty(scene.Assertions);
+    }
+    /// <summary>상태 2이면 0x7c는 캐시한 DWORD만 쓰고 송신·연결을 건드리지 않는다. 0.966에서 추가됐다.</summary>
+    [Fact]
+    public void ParentMetaGameLoginClearsCachedPeerOnly()
+    {
+        var scene = new Scene();
+        var dispatch = Build(scene, _ => { });
+        byte[] packet = new byte[28];
+        BinaryPrimitives.WriteUInt32LittleEndian(packet.AsSpan(4, 4), 2);
+        dispatch.InvokeDirect(0x7c, 7, null, packet);
+        Assert.Equal(0xffffffffu, scene.Local.CachedPeerIndex.Value);
+        Assert.Empty(scene.Assertions);
+    }
+    /// <summary>상태 1에서 master가 없으면 0x7c는 그대로 돌아간다. 0.966에서 추가됐다.</summary>
+    [Fact]
+    public void ParentMetaGameLoginStatus1MasterMissingReturns()
+    {
+        var scene = new Scene();
+        scene.Challenge.Prepare();
+        var dispatch = Build(scene, _ => { });
+        byte[] packet = new byte[28];
+        BinaryPrimitives.WriteUInt32LittleEndian(packet.AsSpan(4, 4), 1);
+        BinaryPrimitives.WriteUInt32LittleEndian(packet.AsSpan(8, 4), 0x5555);
+        dispatch.InvokeDirect(0x7c, 7, null, packet);
+        Assert.Empty(scene.Assertions);
+    }
     /// <summary>부모가 묶은 41h는 실제 Chat UI 입구로 전달한다.</summary>
     [Fact]
     public void ParentRelaysChatToReceive()
@@ -226,8 +303,9 @@ public sealed class ClientPacketDispatchParentTests
     public void ParentRejectsNullDevicesAndMismatchedOwners()
     {
         var scene = new Scene();
-        Assert.Throws<ArgumentNullException>(() => ClientPacketDispatch.Build(null!, scene.Game, scene.Connections, scene.Surface, scene.Chat, _ => { }, (_, _, _) => { }, ActivityHooks()));
+        Assert.Throws<ArgumentNullException>(() => ClientPacketDispatch.Build(null!, scene.Game, scene.Connections, scene.Surface, scene.Chat, _ => { }, (_, _, _) => { }, ActivityHooks(), scene.Challenge));
+        Assert.Throws<ArgumentNullException>(() => ClientPacketDispatch.Build(DispatchHooks(), scene.Game, scene.Connections, scene.Surface, scene.Chat, _ => { }, (_, _, _) => { }, ActivityHooks(), null!));
         var other = new Scene();
-        Assert.Throws<ArgumentException>(() => ClientPacketDispatch.Build(DispatchHooks(), scene.Game, other.Connections, scene.Surface, scene.Chat, _ => { }, (_, _, _) => { }, ActivityHooks()));
+        Assert.Throws<ArgumentException>(() => ClientPacketDispatch.Build(DispatchHooks(), scene.Game, other.Connections, scene.Surface, scene.Chat, _ => { }, (_, _, _) => { }, ActivityHooks(), scene.Challenge));
     }
 }

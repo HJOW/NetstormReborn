@@ -108,6 +108,10 @@ public sealed partial class ClientHostGame : Game
     /// <summary>미션 교체에서 배열을 다시 만들지 않는 실제 정적 SID 목록이다.</summary>
     private readonly RawStateSidLists _sidLists;
 
+    /// <summary>같은 Client 수명으로 유지하는 실제 CS 슬롯·할당 owner다. 0x7b·0x7c ···후크 결합 수신기가 같은 인스턴스를 공유한다.</summary>
+    /// <remarks>2026-11-24 0.966에서 R4-6 전송·수신 묶음용으로 추가했다. 근거: cpppj ClientCampaignTransport.cpp의 client.ChallengeGlobals() 장기 소유.</remarks>
+    private readonly ClientChallengeGlobals _challenge = new();
+
     /// <summary>메뉴 효과음의 MonoGame 장치 경계.</summary>
     private HostButtonSound? _buttonSound;
 

@@ -54,6 +54,7 @@ public sealed partial class ClientHostGame
                 FrameNumber = () => unchecked((uint)_clientClock.Frame.Value.Number),
                 Server = () => _gameplay.Authority.Server,
                 EraseStatus = (_, _) => throw new InvalidOperationException("연결 활성 정리 미연결(R11)"),
-            });
+            },
+            _challenge);
     }
 }
