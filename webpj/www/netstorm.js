@@ -1716,6 +1716,8 @@ export class Netstorm {
     _campaignGameMenuDevices(production) {
         const session = production.session;
         return {
+            // 원본 메뉴 준비는 SP 비트를 회전하고 RawGameMenuBar의 검산+3은 같은 실제 추적 상자에 쓴다. (WB04-E1327)
+            prepare: () => session.spStorage().rotate(), tracking: session.spStorage().trackingOwner,
             global: (address) => this._campaignMenuGlobal(address, production),
             // 설정 층에 있는 키(소리·음량 등)는 Settings 가, 그 밖의 키(rotmode·theammode 등)는 게임 데이터가 현재 값을 가진다.
             config: (key) => {

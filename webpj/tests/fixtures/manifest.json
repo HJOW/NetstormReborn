@@ -29467,7 +29467,7 @@
       "sha256": "fff872fd53aafc79278e3505cadd9c092ce6bbb6355e8b7e161167d52fcfb564",
       "bytes": 392039,
       "lines": null,
-      "fixtureCommit": null,
+      "fixtureCommit": "560bbe6ef",
       "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/client/RawMenuControls.cpp": "68a9545e2"
@@ -29496,7 +29496,7 @@
       "sha256": "0de6fca790f55c124f8a7568ef45dfdcdd60f5447160b5d462febf2b9df26cc7",
       "bytes": 951,
       "lines": 45,
-      "fixtureCommit": null,
+      "fixtureCommit": "560bbe6ef",
       "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/client/RawMenuControls.cpp": "68a9545e2"
@@ -29525,10 +29525,343 @@
       "sha256": "a389c45f7b699f3b4f723883339736a7c15e1810f5d3be7a8e9b14bcd1506a9a",
       "bytes": 392558,
       "lines": null,
-      "fixtureCommit": null,
+      "fixtureCommit": "560bbe6ef",
       "webCommit": "worktree",
       "cpppjBasis": {
         "cpppj/src/client/RawMenuControls.cpp": "68a9545e2"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-menu-sp-before240-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-menu-sp/before240.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon cpppj225553df 고정25ms Tutorial3 실제ESC 열기/닫기/재열기 실행",
+      "consumers": [
+        "webpj/e2e/menu-sp.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/ui/client-game-menu-bar.js",
+        "webpj/www/core/sp-store.js"
+      ],
+      "unit": "WB04-E1327",
+      "doc": "docs/webpj-menu-sp-tracking-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/UberGump.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp",
+        "cpppj/src/client/RawGameMenuBar.cpp",
+        "cpppj/src/o/SpStore.cpp"
+      ],
+      "scope": "240/280/320/360프레임 메뉴 수명과 SP offset103→106→106→109, owner0만 제외한SP원문 및 화면/상태 대조",
+      "text": true,
+      "sha256": "c6602e1dad1f0a53a1cb9ea7e9d6bf10fe7454700074a69920b0b11fe4a13f0e",
+      "bytes": 308798,
+      "lines": 4055,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/UberGump.cpp": "87324232f",
+        "cpppj/src/client/RawCampaignSession.cpp": "baf141ebe",
+        "cpppj/src/client/RawGameMenuBar.cpp": "5adcf532b",
+        "cpppj/src/o/SpStore.cpp": "a1bfa97d2"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-menu-sp-closed320-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-menu-sp/closed320.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon cpppj225553df 고정25ms Tutorial3 실제ESC 열기/닫기/재열기 실행",
+      "consumers": [
+        "webpj/e2e/menu-sp.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/ui/client-game-menu-bar.js",
+        "webpj/www/core/sp-store.js"
+      ],
+      "unit": "WB04-E1327",
+      "doc": "docs/webpj-menu-sp-tracking-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/UberGump.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp",
+        "cpppj/src/client/RawGameMenuBar.cpp",
+        "cpppj/src/o/SpStore.cpp"
+      ],
+      "scope": "240/280/320/360프레임 메뉴 수명과 SP offset103→106→106→109, owner0만 제외한SP원문 및 화면/상태 대조",
+      "text": false,
+      "sha256": "c4d4920ed745d4e6726ce7b4022ec063884bc5f47f7099c5dc56bf7465222132",
+      "bytes": 221938,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/UberGump.cpp": "87324232f",
+        "cpppj/src/client/RawCampaignSession.cpp": "baf141ebe",
+        "cpppj/src/client/RawGameMenuBar.cpp": "5adcf532b",
+        "cpppj/src/o/SpStore.cpp": "a1bfa97d2"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-menu-sp-closed320-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-menu-sp/closed320.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon cpppj225553df 고정25ms Tutorial3 실제ESC 열기/닫기/재열기 실행",
+      "consumers": [
+        "webpj/e2e/menu-sp.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/ui/client-game-menu-bar.js",
+        "webpj/www/core/sp-store.js"
+      ],
+      "unit": "WB04-E1327",
+      "doc": "docs/webpj-menu-sp-tracking-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/UberGump.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp",
+        "cpppj/src/client/RawGameMenuBar.cpp",
+        "cpppj/src/o/SpStore.cpp"
+      ],
+      "scope": "240/280/320/360프레임 메뉴 수명과 SP offset103→106→106→109, owner0만 제외한SP원문 및 화면/상태 대조",
+      "text": true,
+      "sha256": "5c8767550d343d7d1cb80b7ef2cd80db40d8ecf7469c4e5bfb38b594942c948a",
+      "bytes": 308794,
+      "lines": 4055,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/UberGump.cpp": "87324232f",
+        "cpppj/src/client/RawCampaignSession.cpp": "baf141ebe",
+        "cpppj/src/client/RawGameMenuBar.cpp": "5adcf532b",
+        "cpppj/src/o/SpStore.cpp": "a1bfa97d2"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-menu-sp-open280-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-menu-sp/open280.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon cpppj225553df 고정25ms Tutorial3 실제ESC 열기/닫기/재열기 실행",
+      "consumers": [
+        "webpj/e2e/menu-sp.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/ui/client-game-menu-bar.js",
+        "webpj/www/core/sp-store.js"
+      ],
+      "unit": "WB04-E1327",
+      "doc": "docs/webpj-menu-sp-tracking-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/UberGump.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp",
+        "cpppj/src/client/RawGameMenuBar.cpp",
+        "cpppj/src/o/SpStore.cpp"
+      ],
+      "scope": "240/280/320/360프레임 메뉴 수명과 SP offset103→106→106→109, owner0만 제외한SP원문 및 화면/상태 대조",
+      "text": false,
+      "sha256": "03c39b8fc23b81959b07d78b2b451042184f820e08ff38cbe8a302e08f7161b3",
+      "bytes": 221197,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/UberGump.cpp": "87324232f",
+        "cpppj/src/client/RawCampaignSession.cpp": "baf141ebe",
+        "cpppj/src/client/RawGameMenuBar.cpp": "5adcf532b",
+        "cpppj/src/o/SpStore.cpp": "a1bfa97d2"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-menu-sp-open280-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-menu-sp/open280.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon cpppj225553df 고정25ms Tutorial3 실제ESC 열기/닫기/재열기 실행",
+      "consumers": [
+        "webpj/e2e/menu-sp.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/ui/client-game-menu-bar.js",
+        "webpj/www/core/sp-store.js"
+      ],
+      "unit": "WB04-E1327",
+      "doc": "docs/webpj-menu-sp-tracking-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/UberGump.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp",
+        "cpppj/src/client/RawGameMenuBar.cpp",
+        "cpppj/src/o/SpStore.cpp"
+      ],
+      "scope": "240/280/320/360프레임 메뉴 수명과 SP offset103→106→106→109, owner0만 제외한SP원문 및 화면/상태 대조",
+      "text": true,
+      "sha256": "ebe65af4ca755e9224800ae114c0c3194b99961250abb4f16b7c4c86b89de0d5",
+      "bytes": 308799,
+      "lines": 4055,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/UberGump.cpp": "87324232f",
+        "cpppj/src/client/RawCampaignSession.cpp": "baf141ebe",
+        "cpppj/src/client/RawGameMenuBar.cpp": "5adcf532b",
+        "cpppj/src/o/SpStore.cpp": "a1bfa97d2"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-menu-sp-open360-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-menu-sp/open360.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon cpppj225553df 고정25ms Tutorial3 실제ESC 열기/닫기/재열기 실행",
+      "consumers": [
+        "webpj/e2e/menu-sp.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/ui/client-game-menu-bar.js",
+        "webpj/www/core/sp-store.js"
+      ],
+      "unit": "WB04-E1327",
+      "doc": "docs/webpj-menu-sp-tracking-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/UberGump.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp",
+        "cpppj/src/client/RawGameMenuBar.cpp",
+        "cpppj/src/o/SpStore.cpp"
+      ],
+      "scope": "240/280/320/360프레임 메뉴 수명과 SP offset103→106→106→109, owner0만 제외한SP원문 및 화면/상태 대조",
+      "text": false,
+      "sha256": "427db6e8159acc84e56a5fd835aab6059a186e8faa4b7418a2dd96548afb0192",
+      "bytes": 221308,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/UberGump.cpp": "87324232f",
+        "cpppj/src/client/RawCampaignSession.cpp": "baf141ebe",
+        "cpppj/src/client/RawGameMenuBar.cpp": "5adcf532b",
+        "cpppj/src/o/SpStore.cpp": "a1bfa97d2"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-menu-sp-open360-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-menu-sp/open360.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon cpppj225553df 고정25ms Tutorial3 실제ESC 열기/닫기/재열기 실행",
+      "consumers": [
+        "webpj/e2e/menu-sp.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/ui/client-game-menu-bar.js",
+        "webpj/www/core/sp-store.js"
+      ],
+      "unit": "WB04-E1327",
+      "doc": "docs/webpj-menu-sp-tracking-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/UberGump.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp",
+        "cpppj/src/client/RawGameMenuBar.cpp",
+        "cpppj/src/o/SpStore.cpp"
+      ],
+      "scope": "240/280/320/360프레임 메뉴 수명과 SP offset103→106→106→109, owner0만 제외한SP원문 및 화면/상태 대조",
+      "text": true,
+      "sha256": "0da001b825b9cd46a61c11682b215a2694e14d0285e5a623b572b93d1f3e1628",
+      "bytes": 308795,
+      "lines": 4055,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/UberGump.cpp": "87324232f",
+        "cpppj/src/client/RawCampaignSession.cpp": "baf141ebe",
+        "cpppj/src/client/RawGameMenuBar.cpp": "5adcf532b",
+        "cpppj/src/o/SpStore.cpp": "a1bfa97d2"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-menu-sp-oracle-json",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-menu-sp/oracle.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon cpppj225553df 고정25ms Tutorial3 실제ESC 열기/닫기/재열기 실행",
+      "consumers": [
+        "webpj/e2e/menu-sp.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/ui/client-game-menu-bar.js",
+        "webpj/www/core/sp-store.js"
+      ],
+      "unit": "WB04-E1327",
+      "doc": "docs/webpj-menu-sp-tracking-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/UberGump.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp",
+        "cpppj/src/client/RawGameMenuBar.cpp",
+        "cpppj/src/o/SpStore.cpp"
+      ],
+      "scope": "240/280/320/360프레임 메뉴 수명과 SP offset103→106→106→109, owner0만 제외한SP원문 및 화면/상태 대조",
+      "text": true,
+      "sha256": "d04d3e04a3801b81994e2c895ea5aa78e4e206d25533b91f7814a31ed98134cc",
+      "bytes": 1022,
+      "lines": 35,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/UberGump.cpp": "87324232f",
+        "cpppj/src/client/RawCampaignSession.cpp": "baf141ebe",
+        "cpppj/src/client/RawGameMenuBar.cpp": "5adcf532b",
+        "cpppj/src/o/SpStore.cpp": "a1bfa97d2"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-menu-sp-steps-json",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-menu-sp/steps.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon cpppj225553df 고정25ms Tutorial3 실제ESC 열기/닫기/재열기 실행",
+      "consumers": [
+        "webpj/e2e/menu-sp.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/ui/client-game-menu-bar.js",
+        "webpj/www/core/sp-store.js"
+      ],
+      "unit": "WB04-E1327",
+      "doc": "docs/webpj-menu-sp-tracking-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/UberGump.cpp",
+        "cpppj/src/client/RawCampaignSession.cpp",
+        "cpppj/src/client/RawGameMenuBar.cpp",
+        "cpppj/src/o/SpStore.cpp"
+      ],
+      "scope": "240/280/320/360프레임 메뉴 수명과 SP offset103→106→106→109, owner0만 제외한SP원문 및 화면/상태 대조",
+      "text": true,
+      "sha256": "5faf998846d8cb13102f5ef2f694ceb9571d24106788a01b4c5d8a92a33d3387",
+      "bytes": 1211,
+      "lines": 81,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/UberGump.cpp": "87324232f",
+        "cpppj/src/client/RawCampaignSession.cpp": "baf141ebe",
+        "cpppj/src/client/RawGameMenuBar.cpp": "5adcf532b",
+        "cpppj/src/o/SpStore.cpp": "a1bfa97d2"
       }
     }
   ]

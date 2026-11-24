@@ -1,7 +1,7 @@
 // 미션 화면 위쪽의 원본 가로 게임 메뉴막대(Game·View·Options·Players·About)를 실제 Client Gump 루트에 열고 닫는다(cpppj `UberGump::OpenGameMenu`·`ToggleGameMenu`).
 // 사용: const bar = new ClientGameMenuBar(root, menu, devices); bar.toggle(); bar.isOpen(); bar.close().
 //   menu = 같은 Client의 ClientMenuGump, devices = { global(주소), translate(키), config(키) → 정수, demo(), player(owner), refreshPriest(owner), playerMenu(subscriber) → 토큰, enabled(명령), storeText(문자열) → 토큰,
-//   about() → 문자열, technicalHelp() → 0|1, width() → 논리 화면 폭, prepare()(선택) }.
+//   about() → 문자열, technicalHelp() → 0|1, width() → 논리 화면 폭, prepare()(선택), tracking(선택): 실제 SP 추적 Int32Box }.
 // 원본 `ToggleGameMenu`: 같은 생성순번(serial)의 살아 있는 막대가 있으면 지우고, 없으면 새로 만든다. 열어도 게임 시계를 멈추지 않는다. 이 모듈은 DOM 을 쓰지 않는다. (2026-11-20 WB04-E1084)
 import { GameMenuBarChild, GameMenuBarValue, RawGameMenuBar, createGameMenuBarState } from '../core/raw-game-menu-bar.js';
 import { RawGameMenus } from './raw-game-menus.js';
@@ -10,13 +10,15 @@ import { RawUberRootLookup } from './raw-uber-root-lookup.js';
 // 원본 검산 DWORD(0054d4e0)를 별도 사본 없이 소유하는 상자 수명은 Client와 같다.
 export class ClientGameMenuBar {
     // 현재 Gump 루트·메뉴 작성기·장치와 같은 막대 상태·serial 조회기다.
-    #root; #menu; #devices; #state = createGameMenuBarState({ value: 0 }); #lookup; #labels = new Map();
+    #root; #menu; #devices; #state; #lookup; #labels = new Map();
     constructor(root, menu, devices) {
         if (!root || !menu || !devices) throw new TypeError('게임 메뉴막대의 실제 루트·메뉴·장치 필요');
         for (const name of ['global', 'translate', 'config', 'demo', 'player', 'refreshPriest', 'playerMenu', 'enabled', 'storeText', 'about', 'technicalHelp', 'width']) {
             if (typeof devices[name] !== 'function') throw new TypeError(`게임 메뉴막대 장치 누락: ${name}`);
         }
         this.#root = root; this.#menu = menu; this.#devices = devices; this.#lookup = new RawUberRootLookup(root);
+        // 실제 앱은 SP 저장소와 같은 검산 상자를 빌린다. 저장소가 없는 독립 UI 호출자는 지역 상자로 기존 계약을 유지한다. (WB04-E1327)
+        this.#state = createGameMenuBarState(devices.tracking === undefined ? { value: 0 } : devices.tracking);
     }
     // 진단용: 메뉴 토큰별로 작성기에 쓴 항목 라벨(구분선은 빈 문자열이며 메뉴 처음과 연속 구분선은 작성기가 버리므로 기록하지 않는다)을 돌려준다. 가장 최근에 연 막대와 하위 메뉴만 보관한다.
     labels(token) { return [...(this.#labels.get(token) ?? [])]; }

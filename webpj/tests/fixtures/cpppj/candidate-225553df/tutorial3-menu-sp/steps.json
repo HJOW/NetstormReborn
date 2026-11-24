@@ -1,0 +1,81 @@
+{
+  "format": "netstorm-webpj-cpppj-l3-steps",
+  "version": 1,
+  "description": "Tutorial3 실제 ESC 메뉴 여닫기. 240프레임 시작 뒤260 ESC로 열고300 ESC로 닫고340 ESC로 다시 연다. 화면/Session 및 SP offset 열을 대조한다. (WB04-E1327)",
+  "language": "english",
+  "screen": {
+    "width": 1024,
+    "height": 768
+  },
+  "fixedFrameMs": 25,
+  "mission": "Tutorial3",
+  "settings": {
+    "SCREENW": 1024,
+    "SCREENH": 768,
+    "WelcomeGiven": 1,
+    "tellTips": 0,
+    "autoDemo": 0
+  },
+  "steps": [
+    [
+      120,
+      "click-if",
+      "MORE"
+    ],
+    [
+      180,
+      "click-if",
+      "OK"
+    ],
+    [
+      240,
+      "session-dump",
+      "before240"
+    ],
+    [
+      260,
+      "esc",
+      ""
+    ],
+    [
+      280,
+      "snapshot",
+      "open280"
+    ],
+    [
+      280,
+      "session-dump",
+      "open280"
+    ],
+    [
+      300,
+      "esc",
+      ""
+    ],
+    [
+      320,
+      "snapshot",
+      "closed320"
+    ],
+    [
+      320,
+      "session-dump",
+      "closed320"
+    ],
+    [
+      340,
+      "esc",
+      ""
+    ],
+    [
+      360,
+      "snapshot",
+      "open360"
+    ],
+    [
+      360,
+      "session-dump",
+      "open360"
+    ]
+  ]
+}

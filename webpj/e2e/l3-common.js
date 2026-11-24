@@ -10,7 +10,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 // 단계 동작마다 웹에서 입력을 넣을 프레임 보정(단계 프레임에 더한다)이다. 위 규칙을 값으로 옮겼다. (2026-11-24 WB04-E1305: l3-tutorial1.spec.js 에서 이동)
-const INJECT_SHIFT = { 'click-if': 1, click: -1, right: 1, key: -1 };
+const INJECT_SHIFT = { 'click-if': 1, click: -1, right: 1, key: -1, esc: -1 };
 
 // 이름이 `name`(예: 'tutorial1-l3')인 cpppj 기준선 오라클 폴더의 절대 경로를 돌려준다. (2026-11-24 WB04-E1305)
 function oracleFolder(name) {
@@ -26,7 +26,9 @@ function loadOracle(oracleDir) {
 
 // 단계표를 웹에 적용해 체크포인트를 모두 오라클과 비교한다(화면 0픽셀·덤프는 `sp`·`player:*` 외 차이 없음). (2026-11-24 WB04-E1305: l3-tutorial1.spec.js 에서 이동)
 // compare 를 false 로 주면 비교 없이 체크포인트 결과만 돌려준다(어긋남 조사용 임시 단계표를 `L3_DUMP_DIR` 로 덤프할 때). 반환 { results, errors }.
-async function runL3({ browser, plan, oracleDir, compare = true }) {
+// inspect가 있으면 체크포인트 직후의 실제 앱을 추가 조회할 수 있다(읽기 전용 검사 용도). (WB04-E1327)
+async function runL3({ browser, plan, oracleDir, compare = true, inspect = null }) {
+  if (inspect !== null && typeof inspect !== 'function') throw new TypeError('L3 추가 조회는 함수여야 합니다.');
   const context = await browser.newContext({ viewport: { width: plan.screen.width, height: plan.screen.height }, locale: 'en-US' }), page = await context.newPage();
   const errors = []; page.on('pageerror', (error) => errors.push(error.stack ?? error.message)); page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
   await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, autoDemo: 0 } })));
@@ -53,12 +55,15 @@ async function runL3({ browser, plan, oracleDir, compare = true }) {
         const [x, y] = input.arg.replace('screen:', '').split(',').map(Number), point = await toClient({ x, y });
         await page.mouse.click(point.x, point.y, { delay: 0, button: input.op === 'right' ? 'right' : 'left' });
       } else if (input.op === 'key') await page.keyboard.press(input.arg.length === 2 && input.arg[0] === 'f' ? input.arg.toUpperCase() : input.arg);
+      // C++ 입력 단계표의 esc도 같은 가상 키 누름으로 보낸다. (WB04-E1327)
+      else if (input.op === 'esc') await page.keyboard.press('Escape');
     }
     for (const [frame, op, name] of checkpoints.filter(([frame]) => frame === n)) {
       results[`${op}:${name}`] = op === 'session-dump'
         ? await page.evaluate(() => window.netstorm.sessionDump())
         : await page.evaluate(() => { const app = window.netstorm, surface = app._surface; return { width: surface.width, height: surface.height, pixels: Array.from(surface.pixels), palette: Array.from(app._clientPaletteScreen.palette()) }; });
     }
+    if (inspect && checkpoints.some(([frame]) => frame === n)) await inspect(page, n, results);
     if (n < last) await page.evaluate(() => window.netstorm.stepFixedFrames(1));
   }
   await context.close();
@@ -81,6 +86,8 @@ async function runL3({ browser, plan, oracleDir, compare = true }) {
     const differences = compareSessionDumps(normalize(fs.readFileSync(path.join(oracleDir, `${name}.tsv`), 'utf8')), normalize(results[`session-dump:${name}`])).differences;
     expect(differences.filter((item) => !(item.key === 'sp' || item.key.startsWith('player:'))).map((item) => `${item.kind}:${item.key}`), `${name} 허용 밖 덤프 차이`).toEqual([]);
   }
+  // 같은 대조 결과를 SP 원문 열 등 추가 불변식 검사에도 제공한다. (WB04-E1327)
+  return { results, errors };
 }
 
 module.exports = { INJECT_SHIFT, oracleFolder, loadOracle, runL3 };
