@@ -28797,8 +28797,8 @@
       "sha256": "650a1c90b0ee907ae4fbbf4c222a49fd59151f2882e294c70928e0b5c39363e0",
       "bytes": 1040,
       "lines": 57,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "fa21d1f03",
+      "webCommit": "fa21d1f03",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -28829,8 +28829,8 @@
       "sha256": "ed510ab6f42f72c760118fe770519beb8425898e2eb109c859f04377ccaf03ed",
       "bytes": 2217,
       "lines": 70,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "fa21d1f03",
+      "webCommit": "fa21d1f03",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -28861,8 +28861,8 @@
       "sha256": "94daefb491aaa31b320f694214f217b1dc728aff87b45b554e909c6a115d1ce3",
       "bytes": 142237,
       "lines": 1963,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "fa21d1f03",
+      "webCommit": "fa21d1f03",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -28893,8 +28893,8 @@
       "sha256": "2715df048bb9a18406642854387fdbbdfe4188fcadfc95952939254fabdcb4db",
       "bytes": 142346,
       "lines": 1964,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "fa21d1f03",
+      "webCommit": "fa21d1f03",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -28925,8 +28925,8 @@
       "sha256": "c4cd97bc0207d4a5b2cff31003137ecac91400f03aa28fd7ce155de275115d28",
       "bytes": 221093,
       "lines": null,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "fa21d1f03",
+      "webCommit": "fa21d1f03",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
@@ -28957,8 +28957,488 @@
       "sha256": "3759d45c026c0f605f7fa18736534f1fe27255711f04d0ded504bd9e1faab8b5",
       "bytes": 135887,
       "lines": 3764,
+      "fixtureCommit": "fa21d1f03",
+      "webCommit": "fa21d1f03",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial1-korean1339-comparison-json",
+      "path": "webpj/tests/fixtures/cpppj/candidate-13e74579/tutorial1-korean/comparison.json",
+      "kind": "independent",
+      "edition": "10.78",
+      "required": true,
+      "producer": "CPP 실행 PNG와 실제 웹 PNG를 독립 screen-compare 도구로 대조한 E1323 영역·차이 개수; 제품 출력을 기대 화면으로 복제하지 않음",
+      "consumers": [
+        "webpj/e2e/korean-m2.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1323",
+      "doc": "docs/webpj-korean-m2-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "90·130프레임 한국어 상태/화면과 영어 대조군, 실제 번역 차이 및 같은 본문 글자 영역 분리",
+      "text": true,
+      "sha256": "caee774a24d281e45ef1c7988c14a833ec8f47f60798bc937d5be235b56e0630",
+      "bytes": 1549,
+      "lines": 61,
       "fixtureCommit": null,
-      "webCommit": "worktree",
+      "webCommit": "fa21d1f03",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial1-korean1339-cpp-topic-A-html",
+      "path": "webpj/tests/fixtures/cpppj/candidate-13e74579/tutorial1-korean/cpp-topic-A.html",
+      "kind": "independent",
+      "edition": "10.78",
+      "required": true,
+      "producer": "assets/lang/korean/d/tutorial1.korean의 A. 본문을 UTF-8로 그대로 발췌, CPP와 같은 본문의 별도 표면 대조용",
+      "consumers": [
+        "webpj/e2e/korean-m2.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1323",
+      "doc": "docs/webpj-korean-m2-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "90·130프레임 한국어 상태/화면과 영어 대조군, 실제 번역 차이 및 같은 본문 글자 영역 분리",
+      "text": true,
+      "sha256": "c72f3eb94b34511a3b75c458c92418c363692ae342097693c56da88a914d6fc8",
+      "bytes": 813,
+      "lines": 18,
+      "fixtureCommit": null,
+      "webCommit": "fa21d1f03",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial1-korean1339-english-m1-scenarios-json",
+      "path": "webpj/tests/fixtures/cpppj/candidate-13e74579/tutorial1-korean/english/m1-scenarios.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 제품1339(13e74579) 고정25ms Tutorial1 실행, 한국어와 영어 대조군",
+      "consumers": [
+        "webpj/e2e/korean-m2.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1323",
+      "doc": "docs/webpj-korean-m2-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "90·130프레임 한국어 상태/화면과 영어 대조군, 실제 번역 차이 및 같은 본문 글자 영역 분리",
+      "text": true,
+      "sha256": "2f998df6cdacef049b20c17c1ee9fb0c6c2bb356f554b90065f15b8a6689e3ff",
+      "bytes": 1050,
+      "lines": 58,
+      "fixtureCommit": null,
+      "webCommit": "fa21d1f03",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial1-korean1339-english-oracle-oracle-json",
+      "path": "webpj/tests/fixtures/cpppj/candidate-13e74579/tutorial1-korean/english/oracle/oracle.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 제품1339(13e74579) 고정25ms Tutorial1 실행, 한국어와 영어 대조군",
+      "consumers": [
+        "webpj/e2e/korean-m2.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1323",
+      "doc": "docs/webpj-korean-m2-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "90·130프레임 한국어 상태/화면과 영어 대조군, 실제 번역 차이 및 같은 본문 글자 영역 분리",
+      "text": true,
+      "sha256": "7d4e41a9a7272dd53ea12eaa40491e097e78dd79064e043555cf9a9b0fde32a2",
+      "bytes": 2250,
+      "lines": 70,
+      "fixtureCommit": null,
+      "webCommit": "fa21d1f03",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial1-korean1339-english-oracle-tutorial1-later-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-13e74579/tutorial1-korean/english/oracle/tutorial1/later.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 제품1339(13e74579) 고정25ms Tutorial1 실행, 한국어와 영어 대조군",
+      "consumers": [
+        "webpj/e2e/korean-m2.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1323",
+      "doc": "docs/webpj-korean-m2-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "90·130프레임 한국어 상태/화면과 영어 대조군, 실제 번역 차이 및 같은 본문 글자 영역 분리",
+      "text": true,
+      "sha256": "ef5fb154cf82732b83fb40d0343a46c071d9b9c34b12df2862287caa90a38b50",
+      "bytes": 142346,
+      "lines": 1964,
+      "fixtureCommit": null,
+      "webCommit": "fa21d1f03",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial1-korean1339-english-oracle-tutorial1-load-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-13e74579/tutorial1-korean/english/oracle/tutorial1/load.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 제품1339(13e74579) 고정25ms Tutorial1 실행, 한국어와 영어 대조군",
+      "consumers": [
+        "webpj/e2e/korean-m2.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1323",
+      "doc": "docs/webpj-korean-m2-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "90·130프레임 한국어 상태/화면과 영어 대조군, 실제 번역 차이 및 같은 본문 글자 영역 분리",
+      "text": false,
+      "sha256": "bdf2b916418545f94e0f3fc6357eedaf6efec73e578fc73da10037b063285125",
+      "bytes": 200038,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "fa21d1f03",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial1-korean1339-english-oracle-tutorial1-load-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-13e74579/tutorial1-korean/english/oracle/tutorial1/load.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 제품1339(13e74579) 고정25ms Tutorial1 실행, 한국어와 영어 대조군",
+      "consumers": [
+        "webpj/e2e/korean-m2.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1323",
+      "doc": "docs/webpj-korean-m2-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "90·130프레임 한국어 상태/화면과 영어 대조군, 실제 번역 차이 및 같은 본문 글자 영역 분리",
+      "text": true,
+      "sha256": "dd9b68098f2dd7b17b5ff1964f0c15b1a91eb104519e918ac60fd713d2c135c1",
+      "bytes": 142237,
+      "lines": 1963,
+      "fixtureCommit": null,
+      "webCommit": "fa21d1f03",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial1-korean1339-english-oracle-tutorial1-report-txt",
+      "path": "webpj/tests/fixtures/cpppj/candidate-13e74579/tutorial1-korean/english/oracle/tutorial1/report.txt",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 제품1339(13e74579) 고정25ms Tutorial1 실행, 한국어와 영어 대조군",
+      "consumers": [
+        "webpj/e2e/korean-m2.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1323",
+      "doc": "docs/webpj-korean-m2-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "90·130프레임 한국어 상태/화면과 영어 대조군, 실제 번역 차이 및 같은 본문 글자 영역 분리",
+      "text": true,
+      "sha256": "59e3275f46c2099d0cf0a74891d7029198a595dd29a5a162dc8ff3eeb6e81fab",
+      "bytes": 135890,
+      "lines": 3764,
+      "fixtureCommit": null,
+      "webCommit": "fa21d1f03",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial1-korean1339-korean-m1-scenarios-json",
+      "path": "webpj/tests/fixtures/cpppj/candidate-13e74579/tutorial1-korean/korean/m1-scenarios.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 제품1339(13e74579) 고정25ms Tutorial1 실행, 한국어와 영어 대조군",
+      "consumers": [
+        "webpj/e2e/korean-m2.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1323",
+      "doc": "docs/webpj-korean-m2-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "90·130프레임 한국어 상태/화면과 영어 대조군, 실제 번역 차이 및 같은 본문 글자 영역 분리",
+      "text": true,
+      "sha256": "e8bf10a76dac45ce1691d073a4b457686a672bc5722e051f29e68173828f76d3",
+      "bytes": 1123,
+      "lines": 63,
+      "fixtureCommit": null,
+      "webCommit": "fa21d1f03",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial1-korean1339-korean-oracle-oracle-json",
+      "path": "webpj/tests/fixtures/cpppj/candidate-13e74579/tutorial1-korean/korean/oracle/oracle.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 제품1339(13e74579) 고정25ms Tutorial1 실행, 한국어와 영어 대조군",
+      "consumers": [
+        "webpj/e2e/korean-m2.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1323",
+      "doc": "docs/webpj-korean-m2-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "90·130프레임 한국어 상태/화면과 영어 대조군, 실제 번역 차이 및 같은 본문 글자 영역 분리",
+      "text": true,
+      "sha256": "ea0c888212a059a5d773db473ae2db932c04eecad4da46199f40a368e124abf3",
+      "bytes": 2549,
+      "lines": 77,
+      "fixtureCommit": null,
+      "webCommit": "fa21d1f03",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial1-korean1339-korean-oracle-tutorial1-later-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-13e74579/tutorial1-korean/korean/oracle/tutorial1/later.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 제품1339(13e74579) 고정25ms Tutorial1 실행, 한국어와 영어 대조군",
+      "consumers": [
+        "webpj/e2e/korean-m2.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1323",
+      "doc": "docs/webpj-korean-m2-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "90·130프레임 한국어 상태/화면과 영어 대조군, 실제 번역 차이 및 같은 본문 글자 영역 분리",
+      "text": false,
+      "sha256": "c028192bb23a35ed7531e18e0c0968ba2428e04c5828e6ee85ed94eeeafa7777",
+      "bytes": 206750,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "fa21d1f03",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial1-korean1339-korean-oracle-tutorial1-later-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-13e74579/tutorial1-korean/korean/oracle/tutorial1/later.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 제품1339(13e74579) 고정25ms Tutorial1 실행, 한국어와 영어 대조군",
+      "consumers": [
+        "webpj/e2e/korean-m2.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1323",
+      "doc": "docs/webpj-korean-m2-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "90·130프레임 한국어 상태/화면과 영어 대조군, 실제 번역 차이 및 같은 본문 글자 영역 분리",
+      "text": true,
+      "sha256": "c56224a16b092e9adea0e1e928f2c75f1f4504beed9cdae9fcd152c8398a9888",
+      "bytes": 142346,
+      "lines": 1964,
+      "fixtureCommit": null,
+      "webCommit": "fa21d1f03",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial1-korean1339-korean-oracle-tutorial1-load-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-13e74579/tutorial1-korean/korean/oracle/tutorial1/load.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 제품1339(13e74579) 고정25ms Tutorial1 실행, 한국어와 영어 대조군",
+      "consumers": [
+        "webpj/e2e/korean-m2.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1323",
+      "doc": "docs/webpj-korean-m2-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "90·130프레임 한국어 상태/화면과 영어 대조군, 실제 번역 차이 및 같은 본문 글자 영역 분리",
+      "text": false,
+      "sha256": "8c936cd3670906e9b9641a9546b5eb9177192b66e2ad39964c9e2ec4e76910b2",
+      "bytes": 206638,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "fa21d1f03",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial1-korean1339-korean-oracle-tutorial1-load-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-13e74579/tutorial1-korean/korean/oracle/tutorial1/load.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 제품1339(13e74579) 고정25ms Tutorial1 실행, 한국어와 영어 대조군",
+      "consumers": [
+        "webpj/e2e/korean-m2.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1323",
+      "doc": "docs/webpj-korean-m2-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "90·130프레임 한국어 상태/화면과 영어 대조군, 실제 번역 차이 및 같은 본문 글자 영역 분리",
+      "text": true,
+      "sha256": "93ce24458c8050edf17fd56063eca9841810c0adaeb9e5883ab06418cce4f276",
+      "bytes": 142237,
+      "lines": 1963,
+      "fixtureCommit": null,
+      "webCommit": "fa21d1f03",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial1-korean1339-korean-oracle-tutorial1-report-txt",
+      "path": "webpj/tests/fixtures/cpppj/candidate-13e74579/tutorial1-korean/korean/oracle/tutorial1/report.txt",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 제품1339(13e74579) 고정25ms Tutorial1 실행, 한국어와 영어 대조군",
+      "consumers": [
+        "webpj/e2e/korean-m2.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1323",
+      "doc": "docs/webpj-korean-m2-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "90·130프레임 한국어 상태/화면과 영어 대조군, 실제 번역 차이 및 같은 본문 글자 영역 분리",
+      "text": true,
+      "sha256": "ac263bca50d2ca564f50482ff790c75515bb689b37b7d4091634809a0a43d32c",
+      "bytes": 136243,
+      "lines": 3764,
+      "fixtureCommit": null,
+      "webCommit": "fa21d1f03",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"

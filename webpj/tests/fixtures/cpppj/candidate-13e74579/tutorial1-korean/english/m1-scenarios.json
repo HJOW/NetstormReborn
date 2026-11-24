@@ -1,0 +1,58 @@
+{
+  "format": "netstorm-webpj-oracle-scenarios",
+  "version": 1,
+  "description": "cpppj1339의 english Tutorial1 고정시각 화면 대조. 사용자 글꼴 정책 차이 관측용.",
+  "language": "english",
+  "screen": {
+    "width": 1024,
+    "height": 768
+  },
+  "settings": {
+    "SCREENW": 1024,
+    "SCREENH": 768,
+    "WelcomeGiven": 1,
+    "tellTips": 0,
+    "autoDemo": 0,
+    "currentLanguage": "english"
+  },
+  "fixedFrameMs": 25,
+  "scenarios": [
+    {
+      "id": "tutorial1",
+      "mission": "Tutorial1",
+      "frames": 140,
+      "steps": [
+        [
+          30,
+          "click-if",
+          "Play Mission"
+        ],
+        [
+          60,
+          "click-if",
+          "Play Mission"
+        ],
+        [
+          90,
+          "session-dump",
+          "load"
+        ],
+        [
+          90,
+          "snapshot",
+          "load"
+        ],
+        [
+          130,
+          "session-dump",
+          "later"
+        ],
+        [
+          130,
+          "report",
+          "later"
+        ]
+      ]
+    }
+  ]
+}

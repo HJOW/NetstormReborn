@@ -1,0 +1,61 @@
+{
+  "format": "netstorm-webpj-korean-m2",
+  "version": 1,
+  "cpppjCommit": "13e74579",
+  "cppExeSha256": "116d44b3e08ca27fbc69a3b43aedf83f03e2b9ebaf1b64dcb87672cb02917564",
+  "frames": [
+    90,
+    130
+  ],
+  "production": {
+    "total": 41467,
+    "regions": [
+      {
+        "rect": [
+          336,
+          228,
+          774,
+          540
+        ],
+        "pixels": 41467,
+        "reason": "기존 웹 독립 번역·웹 전용 화면 이동 안내 및 사용자 유지 결정의 글꼴 차이로 달라지는 첫 안내 창. 같은 CPP 본문 대조로 조각/장식/지도 영역의 차이가 아님을 별도 확인한다."
+      }
+    ]
+  },
+  "controlled": {
+    "bounds": [
+      336.5,
+      228.5,
+      436,
+      311
+    ],
+    "total": 10204,
+    "regions": [
+      {
+        "rect": [
+          386,
+          248,
+          723,
+          495
+        ],
+        "pixels": 10035,
+        "reason": "같은 CPP 본문에서 사용자 결정으로 유지하는 갈무리11 보통체·한글 기준선 차이"
+      },
+      {
+        "rect": [
+          536,
+          504,
+          573,
+          525
+        ],
+        "pixels": 169,
+        "reason": "같은 다음 단추의 갈무리11 굵기·기준선 차이"
+      }
+    ]
+  },
+  "source": {
+    "cppTopic": "assets/lang/korean/d/tutorial1.korean",
+    "webTopic": "webpj/translations/Tutorial1.korean",
+    "description": "CPP 본문 발췌는 별도 표면에만 그리는 글꼴 격리 입력이며 제품 미션/게임 진행 결과를 바꾸지 않는다."
+  }
+}
