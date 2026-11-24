@@ -4008,6 +4008,8 @@ export class Netstorm {
         // 개수가 999 한도에 닿으면 "Gump 원본 개수 한도 초과" 로 게임이 멈춘다. (2026-11-21 WB04-E1134, 몽키 시험의 Vicious 3분 진행에서 발견)
         // 미니맵 갱신(원본 RefreshMinimap 481320)은 Gump 정리·Idle·Kernel 앞이다(이전에는 Kernel 뒤라 한 프레임 앞선 모습을 그렸다). (2026-11-23 WB04-E1266)
         if (this._campaignDisplayActive()) { this._runCampaignProductionFrame(); this._campaignProduction?.hud?.refresh(); this._clientGump.lifetime().cleanup(); this._clientGump.idle(); this._runCampaignKernelFrame(); }
+        // 로그인 중에도 원본 자원 프레임의 기한 예약을 실행한다. 활성 월드는 위 Kernel 프레임에서 이미 호출했다. (WB04-E1313)
+        else if (this._state === AppState.MAIN_MENU && this._campaignWorld && !this._campaignWorld.session().connectionCallbackActive()) this._campaignWorld.runBattleResources();
         this._syncDialogToMapView();
         this._render(now);
         // 원본 주 루프 13번(439c33): 화면을 그린 뒤 Player 결과 알림을 한다. known 이고 전투 모드일 때만 Session 이 필요하다. (2026-11-22 WB04-E1233)

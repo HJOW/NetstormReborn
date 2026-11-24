@@ -163,9 +163,10 @@ export class CampaignGameWorld {
         this.#surfaceTime = { ...this.#services.frameTime() }; this.#surfaceView();
         session.prepareFrame(this.#surfaceTime, Boolean(this.#services.paused?.()));
     }
+    // 원문 PollBattleResources는 캠페인 로그인 중에도 기한을 예약한다. PreparingFort는 웹에서 제외한 Edit 설치 관문이며 connecting과 다르다.
+    // 사용: Client 주 루프에서 로그인 여부와 관계없이 한 번 호출한다. (WB04-E1313)
+    runBattleResources() { this.#live().runBattleResources(); }
     // 단일 Kernel 뒤 현재 객체 보기만 다시 읽는다.
-    // 원문 UberGump::PollBattleResources 의 월드 분기이다: 접속(Fort 준비) 중이 아니면 Session 의 전투 자원 프레임을 실행한다. (2026-11-22 WB04-E1232)
-    runBattleResources() { const session = this.#live(); if (!this.#connecting) session.runBattleResources(); }
     finishKernelFrame() { this.#live(); if (!this.#connecting) this.refreshCampaignObjects(); }
     // 독립 실행에서는 시간차를 누적하고 실제 로그인 전송·Session Kernel을 진행한다.
     step(seconds) {

@@ -98,7 +98,7 @@ test('앱 미션 효과음: 기존 World의 대기 요청 보존', () => {
     const app = new Netstorm(), pending = new ClientState(), events = [];
     pending.post({ command: 'LoadMissionFort', argument: 'BridgeTheGap' });
     app._clientGuide = { pending: () => pending, run: () => events.push('guide') };
-    app._campaignWorld = { connecting: true, session: () => ({ connectionCallbackActive: () => false, localConnectionReady: () => false, pollLocalConnectionState: () => events.push('state'), pumpLocalConnection: () => events.push('packet') }) };
+    app._campaignWorld = { connecting: true, runBattleResources: () => events.push('resources'), session: () => ({ connectionCallbackActive: () => false, localConnectionReady: () => false, pollLocalConnectionState: () => events.push('state'), pumpLocalConnection: () => events.push('packet') }) };
     app._setState(AppState.MAIN_MENU); app._canvas = {}; app._render = () => {}; app._applyCursor = () => {}; app._startFrameLoop = () => {};
-    app._onFrame(0); assert.deepEqual(events, ['state', 'packet', 'guide']); assert.equal(pending.pending(), true); assert.equal(app._clientSoundPrepare, null);
+    app._onFrame(0); assert.deepEqual(events, ['state', 'packet', 'guide', 'resources']); assert.equal(pending.pending(), true); assert.equal(app._clientSoundPrepare, null);
 });

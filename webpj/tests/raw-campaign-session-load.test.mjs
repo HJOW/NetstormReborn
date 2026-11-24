@@ -1983,6 +1983,10 @@ test('CampaignGameWorld TheWarBegins: 지연 생성과 실제 로그인 준비',
         assert.equal(world.takeChanged(), true); assert.equal(world.takeChanged(), false);
         world.startLocalConnection(); assert.equal(world.connecting, true); assert.equal(world.completeLocalConnection(), false);
         world.runFrame(); world.prepareKernelFrame(); world.finishKernelFrame(); world.step(-1); assert.equal(frameRequests, 0);
+        // 로그인 전에는 생성하지 않지만 보충 기한을 예약한다. connecting으로 호출을 막으면 bc7에서 로그인 직후 간헐천이 하나 늘어난다.
+        const pendingAux = gameplay.gameAux(); pendingAux.ordinaryGeysers = 0; pendingAux.secondaryGeyserDeadline = 0;
+        world.runBattleResources(); assert.ok(pendingAux.secondaryGeyserDeadline > 0);
+        const reservedDeadline = pendingAux.secondaryGeyserDeadline; world.runBattleResources(); assert.equal(pendingAux.secondaryGeyserDeadline, reservedDeadline);
         session.pumpLocalConnection(); session.pollLocalConnectionState(); session.pumpLocalConnection();
         assert.equal(session.localConnectionReady(), true); assert.equal(session.loaded, true); assert.ok(session.world().objects().length > 1000);
         const cursor = session.cursor(), cursorPalettes = [], cursorSetPalette = cursor.setPalette.bind(cursor);
