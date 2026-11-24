@@ -1129,6 +1129,24 @@ public sealed class ClientPacketDispatchParentTests
         Assert.Contains("생성", error.Message);
         Assert.Contains(0x5b4u, scene.Assertions);
     }
+    /// <summary>0x20 일치 구독자는 CoreData·예약을 실제로 묶은 뒤 생성 앞에서 멈춘다. 0.982에서 추가됐다.</summary>
+    [Fact]
+    public void ParentAddMatchesSubscriberBeforeConstruct()
+    {
+        var scene = new Scene();
+        scene.Surface.Storage.OwnerMode.Challenge = true;
+        scene.Challenge.Prepare();
+        scene.Subscribers.MySubscriber.Value = 0x77;
+        System.Memory<byte> record = scene.Challenge.Participant(5);
+        BinaryPrimitives.WriteUInt32LittleEndian(record.Span.Slice(4, 4), 0x1234);
+        record.Span[0x64] = 1;
+        var dispatch = Build(scene, _ => { });
+        var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x20, 9, null, AddPacket(5, 0x77)));
+        Assert.Contains("생성", error.Message);
+        Assert.Equal(1u, scene.Local.MetaPending.Value);
+        Assert.Equal(1u, scene.Local.MetaRefresh.Value);
+        Assert.Contains(0x5b4u, scene.Assertions);
+    }
     /// <summary>0x22는 메타맵 모드가 거짓이면 버퍼·CS를 요구하지 않고 조용히 돌아간다. 0.978에서 추가됐다.</summary>
     [Fact]
     public void ParentMoveSkipsWhenOwnerModeOff()
