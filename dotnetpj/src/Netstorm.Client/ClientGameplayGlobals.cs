@@ -53,4 +53,8 @@ public sealed partial class ClientGameplayGlobals
 
     /// <summary>미션 교체 뒤에도 같은 원문 최근실패비트/TYPE를 보존하는 SID 진단 owner다.</summary>
     public RawSidRobustDiagnostics SidRobustDiagnostics { get; } = new();
+
+    /// <summary>005318e8의 현재 게임 포트 DWORD다. 상태/일반 로그인/메타 listener가 같은 주소에서 읽는다.</summary>
+    /// <remarks>2026-11-24 0.951에서 R4-6 배틀 시작 수신 결선용으로 추가했다. 근거: cpppj client/ClientGameplayGlobals.h GameServerPort(최초 6799).</remarks>
+    public UIntBox GameServerPort { get; } = new() { Value = 6799 };
 }
