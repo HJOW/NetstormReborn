@@ -49,9 +49,10 @@ public sealed class ClientPacketDispatchParentTests
     /// <summary>실제 장기 연결 활성을 고정 값으로 둔다.</summary>
     private static ConnectionActivityHooks ActivityHooks() => new() { WallSeconds = () => 100.0, FrameNumber = () => 100, Server = () => true, EraseStatus = (_, _) => { } };
     /// <summary>같은 장기 Client 장치로 실제 분배기를 묶는다.</summary>
-    private static RawPacketDispatch Build(Scene scene, Action<Memory<byte>> receive, Func<uint>? recordRequested = null, Action<string>? openRecord = null) => ClientPacketDispatch.Build(
+    private static RawPacketDispatch Build(Scene scene, Action<Memory<byte>> receive, Func<uint>? recordRequested = null, Action<string>? openRecord = null,
+        Func<string, int>? config = null, Action<uint, string>? diagnosticLog = null, Action<string>? tell = null) => ClientPacketDispatch.Build(
         DispatchHooks(), scene.Game, scene.Connections, scene.Surface, scene.Chat, receive,
-        (expression, file, line) => scene.Assertions.Add(line), ActivityHooks(), scene.Challenge, recordRequested, openRecord);
+        (expression, file, line) => scene.Assertions.Add(line), ActivityHooks(), scene.Challenge, recordRequested, openRecord, config, diagnosticLog, tell);
     /// <summary>같은 장부로 실제 수송을 만들고 소유 중인 현재 연결을 돌려준다. Source 선택·복제·연결 효과가 같은 실제 장치를 쓰는지 대조한다.</summary>
     private static CompositeMissionTransport MakeOwnedConnection(Scene scene, out PacketConnection connection)
     {
@@ -528,5 +529,83 @@ public sealed class ClientPacketDispatchParentTests
         packet[1] = 0x26;
         var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x26, 9, null, packet));
         Assert.Contains("화면 한계", error.Message);
+    }
+    /// <summary>원문 0x1d 13BYTE 입력 패킷을 조립한다.</summary>
+    private static byte[] ReplyPacket(uint major, uint minor, uint subscriber, byte code)
+    {
+        // 종류·버전·구독자·응답코드를 같은 위치에 둔다.
+        byte[] packet = new byte[13];
+        packet[1] = 0x1d;
+        BinaryPrimitives.WriteUInt16LittleEndian(packet.AsSpan(4, 2), unchecked((ushort)major));
+        BinaryPrimitives.WriteUInt16LittleEndian(packet.AsSpan(6, 2), unchecked((ushort)minor));
+        BinaryPrimitives.WriteUInt32LittleEndian(packet.AsSpan(8, 4), subscriber);
+        packet[12] = code;
+        return packet;
+    }
+    /// <summary>부모는 챌린지 로그인 응답 0x1d 고정 F를 같은 분배기에 설치한다. 0.973에서 추가됐다.</summary>
+    [Fact]
+    public void ParentInstallsChallengeReplyEntry()
+    {
+        var scene = new Scene();
+        var dispatch = Build(scene, _ => { });
+        var reply = dispatch.Registration(0x1d);
+        Assert.Equal(1, reply.Version);
+        Assert.Equal(0, reply.Mismatch);
+        Assert.Equal(13, reply.Length);
+        Assert.NotNull(reply.Observer);
+        Assert.Null(reply.PacketObserver);
+        Assert.Equal(0x004b8ac0u, dispatch.SnapshotReceiver(0x1d)!.NativeEntry);
+        // 같은 묶음의 기존 설치가 0x1d 행에 밀리지 않는다.
+        Assert.Equal(0x004b8a10u, dispatch.SnapshotReceiver(0x66)!.NativeEntry);
+        Assert.Equal(0x004b45a0u, dispatch.SnapshotReceiver(0x26)!.NativeEntry);
+        Assert.Equal(0x0042dc90u, dispatch.SnapshotReceiver(0x41)!.NativeEntry);
+        Assert.Empty(scene.Assertions);
+    }
+    /// <summary>0x1d 일치 버전은 구독자·28을 쓰고 동기 Run 앞에서 실제 UI State 부모 요구로 멈춘다. 0.973에서 추가됐다.</summary>
+    [Fact]
+    public void ParentChallengeReplyWritesStateOnMatchingVersion()
+    {
+        var scene = new Scene();
+        var logs = new List<(uint Code, string Text)>();
+        var tells = new List<string>();
+        var dispatch = Build(scene, _ => { }, config: _ => 0, diagnosticLog: (code, text) => logs.Add((code, text)), tell: tells.Add);
+        var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x1d, 9, null, ReplyPacket(10, 78, 0x4444, 3)));
+        Assert.Contains("UI State", error.Message);
+        Assert.Equal(0x4444u, scene.Subscribers.MySubscriber.Value);
+        Assert.Equal(28u, BinaryPrimitives.ReadUInt32LittleEndian(scene.Local.State.Current.Span.Slice(0, 4)));
+        Assert.Equal(3u, BinaryPrimitives.ReadUInt32LittleEndian(scene.Local.State.Current.Span.Slice(0x38, 4)));
+        Assert.Contains(logs, e => e.Code == 0x1d && e.Text.Contains("ZChalLoginReply"));
+        Assert.Empty(tells);
+    }
+    /// <summary>0x1d 주 버전 불일치는 12·0을 쓰고 Tell 뒤 동기 Run 앞에서 멈춘다. 0.973에서 추가됐다.</summary>
+    [Fact]
+    public void ParentChallengeReplyTellsOnMajorMismatch()
+    {
+        var scene = new Scene();
+        var logs = new List<(uint Code, string Text)>();
+        var tells = new List<string>();
+        var dispatch = Build(scene, _ => { }, config: _ => 0, diagnosticLog: (code, text) => logs.Add((code, text)), tell: tells.Add);
+        var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x1d, 9, null, ReplyPacket(11, 0, 0x5555, 7)));
+        Assert.Contains("UI State", error.Message);
+        Assert.Equal(12u, BinaryPrimitives.ReadUInt32LittleEndian(scene.Local.State.Current.Span.Slice(0, 4)));
+        Assert.Equal(0u, BinaryPrimitives.ReadUInt32LittleEndian(scene.Local.State.Current.Span.Slice(0x38, 4)));
+        Assert.Contains(logs, e => e.Code == 0x1d && e.Text.Contains("VERSION DIFFERENCE"));
+        Assert.Equal(["MetaVerDiff(11.0)"], tells);
+    }
+    /// <summary>0x1d은 진단 로그·설정·Tell 없이 성공으로 꾸미지 않는다. 0.973에서 추가됐다.</summary>
+    [Fact]
+    public void ParentChallengeReplyRequiresOwners()
+    {
+        var scene = new Scene();
+        var dispatch = Build(scene, _ => { });
+        var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x1d, 9, null, ReplyPacket(10, 78, 0x4444, 3)));
+        Assert.Contains("진단 로그", error.Message);
+        var logged = new List<(uint Code, string Text)>();
+        var configured = Build(scene, _ => { }, diagnosticLog: (code, text) => logged.Add((code, text)));
+        var configError = Assert.Throws<InvalidOperationException>(() => configured.InvokeDirect(0x1d, 9, null, ReplyPacket(11, 0, 0x5555, 7)));
+        Assert.Contains("설정", configError.Message);
+        var untold = Build(scene, _ => { }, config: _ => 0, diagnosticLog: (code, text) => logged.Add((code, text)));
+        var tellError = Assert.Throws<InvalidOperationException>(() => untold.InvokeDirect(0x1d, 9, null, ReplyPacket(11, 0, 0x5555, 7)));
+        Assert.Contains("Tell", tellError.Message);
     }
 }

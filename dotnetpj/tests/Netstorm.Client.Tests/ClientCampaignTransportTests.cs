@@ -341,4 +341,16 @@ public sealed class ClientCampaignTransportTests
         Assert.Equal(0x004b45a0u, transport.Dispatch.SnapshotReceiver(0x26)!.NativeEntry);
         Assert.Equal(ushort.MaxValue, transport.Dispatch.Registration(0x26).Length);
     }
+
+    /// <summary>수송 팩토리도 같은 기본 표에 0x1d 챌린지 로그인 응답을 공유한다. 0.973에서 추가됐다.</summary>
+    [Fact]
+    public void FactorySharesChallengeReplyEntry()
+    {
+        var scene = new Scene();
+        scene.Game.PlayerRecords.Initialize((_, _) => { });
+        using var transport = scene.Make();
+        Assert.Equal(0x004b8ac0u, transport.Dispatch.SnapshotReceiver(0x1d)!.NativeEntry);
+        Assert.Equal(13, transport.Dispatch.Registration(0x1d).Length);
+        Assert.NotNull(transport.Dispatch.Registration(0x1d).Observer);
+    }
 }
