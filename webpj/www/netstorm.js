@@ -1200,16 +1200,16 @@ export class Netstorm {
         return new ClientMissionAssets(this._gameData, this._gameAssets, name);
     }
 
-    // 미션 조립은 현재 Client의 난수·SP·Player·Core·Template·Subscriber와 시계를 대여한다. 이 호출은 Session을 생성하지 않는다.
+    // 미션 조립은 현재 Client의 난수·SP·Player·Core·Template·Subscriber·구름·HTML 전역과 시계를 대여한다. 이 호출은 Session을 생성하지 않는다. (2026-11-24 WB04-E1328: 누락된 kencloudGlobals·htmlWindowGlobals 연결)
     _campaignSharedServices() {
         const clock = this._gameClock, random = this._clientRandom, sp = this._clientSp, local = this._clientLocal;
         const subscriber = this._clientSubscriber, gameplay = this._clientGameplay, coreData = this._clientCoreData, players = this._clientPlayers, templates = this._clientTemplates;
-        if (!clock || !random || !sp || !local || !subscriber || !gameplay || !coreData || !players || !templates || !this._clientSoundNames || !this._clientChatWindows) throw new Error('캠페인의 실제 Client 공통 수명 미설치');
+        if (!clock || !random || !sp || !local || !subscriber || !gameplay || !coreData || !players || !templates || !this._clientSoundNames || !this._clientChatWindows || !this._clientKencloud || !this._clientHtml) throw new Error('캠페인의 실제 Client 공통 수명 미설치');
         const surface = this._surfaceStorage, kernel = this._clientKernel, request = this._clientGuide?.fortRequest();
         const colors = this._clientColorSort, screen = this._clientPaletteScreen;
         if (Boolean(colors) !== Boolean(screen) || (colors && !colors.mapsReady)) throw new Error('캠페인의 실제 Client 색표 수명 미설치');
         return { soundNames: this._clientSoundNames, chatGlobals: this._clientChatWindows, randomGlobals: random, spGlobals: sp, localStateGlobals: local, subscriberGlobals: subscriber, gameplayGlobals: gameplay, coreDataGlobals: coreData,
-            playerRecords: players, templateStorage: templates, connectionActivityGlobals: this._clientConnectionActivity, connectionRegistry: this._clientConnections, connectionFrameNumber: () => clock.time().number, ...(surface && kernel ? { surfaceStorage: surface, processKernel: kernel } : {}),
+            playerRecords: players, templateStorage: templates, kencloudGlobals: this._clientKencloud, htmlWindowGlobals: this._clientHtml, connectionActivityGlobals: this._clientConnectionActivity, connectionRegistry: this._clientConnections, connectionFrameNumber: () => clock.time().number, ...(surface && kernel ? { surfaceStorage: surface, processKernel: kernel } : {}),
             ...(colors ? { colorSortInput: colors, ownerColorTables: colors.ownerTables, screenPalette: () => this._clientPaletteScreen.palette() } : {}),
             ...(this._clientGuide ? { missionRestrictions: this._clientGuide.restrictions(), missionOptions: gameplay.battleOptionsOwner() } : {}), ...(request ? { missionFortRequest: request } : {}),
             unixSeconds: () => clock.unixSeconds(), frameTime: () => clock.time(), paused: () => clock.paused(),
@@ -1281,8 +1281,11 @@ export class Netstorm {
         bindCampaignAiClientServices({ configuration: () => this._gameData, languageNumber: () => this.options.language === 'korean' ? 7 : 0,
             translate: (text) => this._resources.translate(text), encodeDisplayText: (text) => displayTextCodec.encode(text),
             decodeDisplayText: (bytes) => displayTextCodec.decode(bytes), chatChannels: () => this._clientChatChannels }, services.ai);
-        // 섬 피격·사제 방어와 생산 자금 안내는 같은 현재 Tell 창을 사용한다.
+        // 섬 피격·사제 방어와 생산 자금 안내는 같은 현재 Tell 창을, Factory 연구 도움말(0x03000080 kind=0)은 현재 도움말 창을 사용한다. (2026-11-24 WB04-E1328: 누락된 factoryHelp·removeConnectionStatus·templateStateBytes 연결)
         services.factoryTell = (section) => this._openTell(section);
+        services.factoryHelp = (section) => { this._closeCampaignPopups(); this._openHelp(section); };
+        services.removeConnectionStatus = (kind, player) => { this._campaignProduction?.ui?.warnings()?.remove(kind | 0, player | 0, 0); };
+        services.templateStateBytes = currentAllocationBytes;
         // 로컬 서버가 41h 채팅 패킷을 되돌릴 때 받는 현재 UI 수신이다(채팅 창이 없으면 무시). (2026-11-22 WB04-E1172)
         services.chatReceive = (packet) => this._receiveCampaignChat(packet);
         services.priest = { shield: { tell: (section) => this._openTell(section) } };
