@@ -78,6 +78,15 @@ public sealed class HostMenuInput
         _changed();
     }
 
+    /// <summary>버전 차이 Tell을 실제 HTML 공장에 알린다. 없으면 거짓만 돌려주고 예외로 꾸미지 않는다.</summary>
+    public bool TryShowTell(string target)
+    {
+        if (string.Equals(target, "Blank", StringComparison.OrdinalIgnoreCase)) { _windows.RequestCloseAll(); _changed(); return true; }
+        var (found, _) = _factory.ShowTell(target);
+        if (found) _changed();
+        return found;
+    }
+
     /// <summary>공통 Gump가 먼저 소비한 입력을 제외하고 복원된 일반 명령을 처리한다. true는 앱 종료다.</summary>
     public bool Dispatch(InputEvent input)
     {
