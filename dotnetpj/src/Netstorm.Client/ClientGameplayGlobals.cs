@@ -69,4 +69,8 @@ public sealed partial class ClientGameplayGlobals
     /// <summary>005318e8의 현재 게임 포트 DWORD다. 상태/일반 로그인/메타 listener가 같은 주소에서 읽는다.</summary>
     /// <remarks>2026-11-24 0.951에서 R4-6 배틀 시작 수신 결선용으로 추가했다. 근거: cpppj client/ClientGameplayGlobals.h GameServerPort(최초 6799).</remarks>
     public UIntBox GameServerPort { get; } = new() { Value = 6799 };
+
+    /// <summary>00594fc4의 별도 현재 DWORD다. battle과 fort bool과 합치지 않는다. 최초 BSS0이다.</summary>
+    /// <remarks>2026-11-25 0.987에서 RU-3b NSInfo 플레이어 입력 결선용으로 추가했다. 근거: cpppj client/ClientGameplayGlobals.h stateAuxFC4_. 자기 특수 슬롯 변경 때만 쓴다.</remarks>
+    public UIntBox StateAuxFC4 { get; } = new();
 }

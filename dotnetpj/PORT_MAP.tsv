@@ -127,6 +127,7 @@ cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.NativePrefix.cs	635
 cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.NsInfo.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.PacketRecord.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.Renderer.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
+cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.RootFactories.cs	287d1c47ca98fc5d8aa218e588540f8c9f360a26	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.StateResources.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Game/HostStartupColorMaps.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	port
@@ -540,6 +541,7 @@ cpppj/src/client/RawMenuControls.cpp	Netstorm.Client/Host/HostHtmlText.Productio
 cpppj/src/client/RawMenuControls.cpp	Netstorm.Client/Host/HostHtmlText.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
 cpppj/src/client/RawMenuControls.cpp	Netstorm.Client/Host/HostNsInfoRootDevices.cs	30fab7faaf831fd7282d5e09ee3812a846d1d329	port
 cpppj/src/client/RawMenuControls.cpp	Netstorm.Client/Host/HostNsInfoWindows.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
+cpppj/src/client/RawMenuControls.cpp	Netstorm.Client/Host/HostRootFactorySet.cs	287d1c47ca98fc5d8aa218e588540f8c9f360a26	port
 cpppj/src/client/RawMenuControls.cpp	Netstorm.Game/ClientHostGame.TextPictures.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
 cpppj/src/client/RawMenuControls.h	Netstorm.Client/Gump/GumpButtonTree.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
 cpppj/src/client/RawMenuControls.h	Netstorm.Client/Gump/GumpExternalDrawing.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
@@ -793,6 +795,7 @@ cpppj/src/client/TraceChat.cpp	Netstorm.Client/Chat/TraceChat.cs	c3625c33e1dca2d
 cpppj/src/client/TraceChat.h	Netstorm.Client/Chat/TraceChat.cs	c3625c33e1dca2dba7618e041e708464df53124b	port
 cpppj/src/client/TutorialInit.cpp	Netstorm.Client/Mission/TutorialInit.cs	825a1a983336877e959114bcd4568fc244e98932	port
 cpppj/src/client/UberGump.cpp	Netstorm.Client/Host/HostHtmlWindows.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
+cpppj/src/client/UberGump.cpp	Netstorm.Game/ClientHostGame.RootFactories.cs	287d1c47ca98fc5d8aa218e588540f8c9f360a26	port
 cpppj/src/client/UberHud.inc	Netstorm.Client/Gump/RawUberMessageProbe.cs	3a325a2597e7436ad40a868cd30ed80b170a945d	port
 cpppj/src/client/UberHud.inc	Netstorm.Client/Host/HostChatReceive.cs	16431ec18a3f7518d7aaa55929b280ab1cc6a8fb	port
 cpppj/src/client/UberHud.inc	Netstorm.Game/ClientHostGame.ChatReceive.cs	16431ec18a3f7518d7aaa55929b280ab1cc6a8fb	port

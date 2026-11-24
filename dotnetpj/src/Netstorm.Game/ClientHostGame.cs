@@ -528,6 +528,9 @@ public sealed partial class ClientHostGame : Game
                 Command = (code, first, second) => _driver.Input.PushCommand(code, unchecked((int)first), unchecked((int)second)),
                 Log = (kind, text) => ErrorLog.Note($"미션 생산 종류{kind}: {text}"),
             });
+            // RU-3b Root와 메시지 공장과 바깥 UI 장치를 실제 미션 Root가 만들고 소유한다. 생산 공장은 위 세션 장치, 채팅 공장은 메뉴 경로로 이미 소유한다.
+            // 근거: 0.987. 미션 진입 경로에서 NSInfo 창 생성과 메시지 공장 공유를 집중 검사로 확인한다.
+            HostRootFactorySet rootFactories = EnsureRootFactories(storage);
             // 지형 바인딩 조립. 세션 저장소를 묶고 생성 입력을 바인딩한다. 진단 저널 연결은 7차 로그 배선 단위에서 잇는다.
             session.TerrainDiagnostics.Context = _ => { };
             session.TerrainDiagnostics.Stamp = _ => { };
@@ -651,7 +654,7 @@ public sealed partial class ClientHostGame : Game
                 difficulty: (owner, settings) => session.ResolveMissionAiDifficulty(difficulty, owner, settings));
             // 단일 미션의 첫 지역(+0x78)은 소용돌이→섬 소유자→첫 지역 사슬이 적재 중 기록한다(R6: 신전 Pop·postPop 표시와 함께).
             // 전투섬 배정 region 갈고리는 MP 전투 경로의 makeBattleIsland에서만 쓰므로 시작 흐름에서 직접 기록하지 않는다(0.477 정정).
-            _missionRuntime = HostMissionRuntime.CreatePrepared(session, storage, pendingSurface, pendingBurning!, _missionAudio!, _mainMenu!);
+            _missionRuntime = HostMissionRuntime.CreatePrepared(session, storage, pendingSurface, pendingBurning!, _missionAudio!, _mainMenu!, productionUi, _nativeChatWindows ?? throw new InvalidOperationException("미션 채팅의 실제 공장 없음"), rootFactories);
             pendingSurface = null;
             _missionSession = session;
             _missionBurning = pendingBurning;
