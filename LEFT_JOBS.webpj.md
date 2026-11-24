@@ -6,7 +6,7 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-23 저녁 정리, 마지막 단위 WB04-E1313, 사용자 요청으로 2026-11-24 중단)
+### 0.1 현재 값 (2026-11-24 재개, 마지막 완료 WB04-E1314, E1313 전체 검증 진행 중)
 
 | 항목 | 현행 상태 |
 | --- | --- |
@@ -22,7 +22,7 @@
 
 2026-11-23 저녁 정리에서 번호를 다시 매겼다. 단위 문서가 가리키는 이전 번호(다음 작업 1 ①~⑩·2~6)의 원문은 [E1288 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1288)에 있다.
 
-0. **중단 인수인계(2026-11-24, 사용자 요청으로 모든 작업을 멈춤).** 실행 중이던 백그라운드 작업은 모두 중지했고 임시 탐침 스펙(`e2e/zz-*.spec.js`)은 지웠다. 같은 작업 트리의 다른 세션이 다루는 dotnetpj 파일(`LEFT_JOBS.dotnetpj.md`·`docs/dotnet-canon-*.md`)은 건드리지 않았다(내 커밋에서도 제외). 상태와 이어 갈 순서:
+0. **재개 상태(2026-11-24).** 새 goal로 작업을 재개했다. E1313의 bc7 간헐천 차이는 로그인 중 자원 프레임의 기한 예약 누락을 고쳤고 전체 31개 일치 검사와 Node 22 회귀를 진행 중이다. E1314는 5-A E198의 실제 Session 대조 3건·변형 검출을 완료했다([근거](docs/webpj-evil-ray-session-20261124.md)). 아래는 재개 전 중단 인계이며 현재 조사 결과는 [E1313 기록](docs/webpj-l3-mission-starts-20261124.md)의 재개 절을 우선한다. 다른 세션의 dotnetpj 파일은 커밋에서 제외한다.
    - **미완료 단위 E1313(전 미션 시작 상태 L3 대조)** — [기록](docs/webpj-l3-mission-starts-20261124.md). 31개 미션의 시작 5·30·120프레임 cpp 해시 수집(`tools/l3-mission-starts-collect.mjs`, `mission-starts/hashes.json`, manifest 942개)과 옵트인 e2e(`e2e/l3-mission-starts.spec.js`)를 만들었다. 일회성 대조에서 28개 중 27개가 일치했고 e2e 는 네 미션(Tutorial2·Tutorial4·bc5walkers76·bc7sun_bars76)만 통과했으며 **전체 31개 실행(`NETSTORM_L3_ALL=1`, 약 25분)은 끝나지 않았다.** 다음에 그것부터 돌린다.
    - **알려진 차이 `bc7sun_bars76`**: 웹이 시작 4프레임째 일반 간헐천 보충으로 간헐천(SID 15028, (131,204))을 하나 더 만든다(cpp 는 만들지 않음). 원인 미확인 — 단서와 다음 확인 순서(cpp 임시 추적 → `geyserCount` 훅 값 → MayPlace 질의 비교)는 위 기록에 있다. 고치면 e2e 의 `KNOWN_DIFFERENCES` 에서 뺀다.
    - **Tutorial3 L3**: 시작 240프레임까지 끝(E1309). 단계 A(간헐천 다리·골렘)의 첫 조각 자리(`screen:20,44` 집기 → `250,390` 등)까지 알았고 이어 가는 방법은 아래 1번과 `docs/webpj-l3-tutorial3-20261124.md` 에 있다.
@@ -241,7 +241,7 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
   - [x] E197 Shrapnel 파편 캡처 — 신전 181·제네레이터 180·타워 120행의 크기·기준점·전체 픽셀 일치(E1275, `temple-shrapnel-native-fixtures.test.mjs`, 변형 확인). [근거](docs/webpj-temple-shrapnel-capture-20261123.md)
   - [x] 같은 계열 건물 캡처 — 윈드 아비어리 54·워크샾 2,115·제단 1,824행 일치(E1276, `altar-capture-native-fixtures.test.mjs`).
   - [x] `golem-capture`(66행)·`support-color-capture`(198행) — E1312 완료: 두 fixture 를 manifest 에 올리고 웹 `RawShapeToBuffer` 캡처가 전 행 일치함을 확인했다(`golem-support-capture-native-fixtures.test.mjs`, 변형 확인; 받침 색표는 윗면 94 명도 전용·하단 95 일반 띠). [근거](docs/webpj-golem-support-capture-20261124.md)
-  - [ ] E198 EvilRay — `EvilRayVisualSystem`의 Host/Kernel 부착·실제 입자 월드 결선을 대조한다(`EvilRayFrameTests`·`EvilRayLifetimeTests`는 웹 시험이 이미 있다. cpppj 쪽 대조 후보는 실제 Session 의 `EvilRayVisualProcess` 를 찾는 `CampaignObjectMenuTests.cpp:1083` `CurrentEvilRay` 사용 시험이다). 완료 기준: 대응 cpppj 시험의 기대값을 실제 Session을 쓰는 웹 Node 시험이 재현하고 변형 확인. [E198](docs/webpj-evil-ray-visual-20261109.md)
+  - [x] E198 EvilRay — E1314 완료. 실제 Session의 Teleport 생성자·현재 TYPE/source 선택, 프레임·전체 픽셀·Stop 통지·Form/Kernel/SID 반납과 부모 0의 표시 등록을 C++ `EvilRayCurrent` 세 검사와 대조했다. Node 3/3·공유 source 변형 3/3 검출. [근거](docs/webpj-evil-ray-session-20261124.md)
   - [ ] E201 Burning — 피해 연소 생성 호출(`RawCampaignParticles`)의 cpppj 시험(`cpppj/tests/DamageableBurningSessionTests.cpp`의 `DamageableBurningChecking_ActualClientSessionRecoveryAndLifetime`, `CampaignDamageTests.cpp`의 Burning 훅 등)과 대조. 완료 기준: 위와 같다. [E201](docs/webpj-burning-visual-20261109.md)
   - [ ] 섬 투하 지지·입자 — `CampaignSession_ActualDropIslandSupportAndParticles`(`cpppj/tests/CampaignSessionTests.cpp`) 대조. 완료 기준: 위와 같다.
 
