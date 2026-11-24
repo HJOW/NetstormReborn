@@ -97,10 +97,10 @@ export class RawCarrierPickup {
         return this.#types[type].flags2 >>> 0;
     }
 
-    // NB18: 사제 대상과 기존 mask1 내용물이 모두 있을 때 요청/수신을 같은 조건으로 거부한다.
+    // NB18: 사제와 실제 운반물(mask0x20)이 있을 때 요청/수신을 거부한다. 원본4277f0처럼 주문(mask1)은 포획을 막지 않는다.
     #refusesHeldPriest(parent, target) {
         if (!this.#state.refuseHeldPriest || !(this.#genus(target) & 0x200000)) return false;
-        return need(this.#hooks.find)(parent, 1, 0, 0) !== 0;
+        return need(this.#hooks.find)(parent, 0x20, 0, 0) !== 0;
     }
 
     // 생성 효과가 free/void 등을 바꾸어도 원본처럼 현재 물리 BYTE 의 dead 비트만 바꾼다. (2026-11-08 WB04-E73)

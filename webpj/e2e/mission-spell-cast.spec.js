@@ -28,14 +28,14 @@ async function startTutorial(page) {
 }
 
 // 실제 열린 객체 메뉴의 Cast 행을 자식 노드까지 찾아 클릭 좌표·활성 비트를 돌려준다.
-function castRow(page, target) {
-  return page.evaluate((sid) => {
+function castRow(page, target, command = 0x0300011a) {
+  return page.evaluate(({ sid, command }) => {
     const app = window.netstorm, root = app._clientGump, rect = app.canvas.getBoundingClientRect();
     // 메뉴 노드의 원본 항목 기하를 사용한다.
     const find = (token) => {
       const node = root.node(token);
       // 항목 순서대로 Cast 명령을 찾는다.
-      for (let index = 0; index < (node.itemCount ?? 0); index += 1) if (node.items[index].command === 0x0300011a) {
+      for (let index = 0; index < (node.itemCount ?? 0); index += 1) if (node.items[index].command === command) {
         const bounds = root.collection().bounds(token);
         return { x: rect.left + (bounds.left + 12) * rect.width / app._layout.logicalWidth, y: rect.top + (bounds.top + node.offsets[index] + node.heights[index] / 2) * rect.height / app._layout.logicalHeight, flags: node.items[index].flags };
       }
@@ -48,7 +48,7 @@ function castRow(page, target) {
       const node = root.node(token); if (node.command === 26 && node.object === sid) return find(token);
     }
     return null;
-  }, target);
+  }, { sid: target, command });
 }
 
 test('Tutorial3: 골렘의 Heal Cast 행이 실제 주문 효과와 정리까지 오류 없이 진행한다', async ({ page }) => {
@@ -86,5 +86,46 @@ test('Tutorial3: 골렘의 Heal Cast 행이 실제 주문 효과와 정리까지
   const afterHp = await page.evaluate((sid) => { const raw = window.netstorm._campaignWorld.session().core().pool.slot(sid); return new DataView(raw.buffer, raw.byteOffset, raw.byteLength).getUint32(26, true); }, setup.patient);
   expect(afterHp).toBe(Math.trunc((setup.beforeHp + setup.maximum) / 2));
   expect(await page.evaluate(() => window.netstorm._clientInputQueue.size)).toBe(0);
+  expect(errors).toEqual([]);
+});
+
+// 원본 mask1 주문을 보존한 채 실제 mask0x20 포로를 붙였다가 같은 골렘의 Drop 행으로 해방한다. (WB04-E1319)
+test('Tutorial3: 주문을 가진 골렘이 적 사제를 포획하고 Drop으로 내려놓는다', async ({ page }) => {
+  test.setTimeout(240000);
+  const errors = []; page.on('pageerror', (error) => errors.push(error.stack ?? error.message));
+  page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
+  await startTutorial(page);
+  // 원래 미션의 적 사제와 같은 실제 칸에 골렘/주문을 만든다. HP1은 포획 가능한 피해 상태의 명시 검사 입력이다.
+  const setup = await page.evaluate(() => {
+    const app = window.netstorm, world = app._campaignWorld, s = world.session(), w = s.world(), c = s.core();
+    const enemy = w.objects().find(({ object }) => object.type === 158 && object.owner === 2);
+    if (!enemy) throw new Error('Tutorial3 적 사제 누락');
+    const caster = w.create(app._gameAssets.typeTable.find('sunWalker'), 0);
+    w.setAssetOwner(caster, 1); w.pop(caster, enemy.object.x, enemy.object.y, 0);
+    const spell = s.createContained(caster, 116, 0, 1, 0, 0), raw = c.pool.allocated(enemy.sid);
+    new DataView(raw.buffer, raw.byteOffset, raw.byteLength).setUint32(26, 1, true);
+    world.finishKernelFrame(); world.select(caster); world.moveFromMinimap(enemy.object.x, enemy.object.y);
+    return { caster, enemy: enemy.sid, spell, beforeSp: s.sp(1) };
+  });
+  await page.evaluate(() => window.netstorm.stepFixedFrames(12));
+  const captured = await page.evaluate(({ caster, enemy, spell }) => {
+    const s = window.netstorm._campaignWorld.session(), c = s.core(), carrier = s.priests().carrier;
+    const content = carrier.findContained(caster, 0x20, 158, 0);
+    return { content, enemyState: c.pool.slot(enemy)[11] & 3, spell: carrier.findContained(caster, 1, 116, 0), expectedSpell: spell, participant: s.findPriestParticipation(2) };
+  }, setup);
+  expect(captured.content).toBeGreaterThan(0); expect(captured.enemyState).toBe(3);
+  expect(captured.spell).toBe(setup.spell); expect(captured.participant).toBe(setup.caster);
+  expect(await page.evaluate((sid) => window.netstorm._campaignProduction.ui.openObject(sid, { code: 0, x: 400, y: 300 }), setup.caster)).toBe(1);
+  const row = await castRow(page, setup.caster, 0x03000076);
+  expect(row, '포로를 실은 골렘의 Drop 행').toBeTruthy();
+  await page.mouse.click(row.x, row.y); await page.evaluate(() => window.netstorm.stepFixedFrames(12));
+  const restored = await page.evaluate(({ caster, spell, content }) => {
+    const s = window.netstorm._campaignWorld.session(), c = s.core(), carrier = s.priests().carrier;
+    const priest = s.findPriestParticipation(2);
+    return { priest, type: priest ? c.pool.slot(priest)[10] : 0, cargo: carrier.findContained(caster, 0x20, 158, 0),
+      contentState: c.pool.slot(content)[11] & 3, spell: carrier.findContained(caster, 1, 116, 0), expectedSpell: spell, sp: s.sp(1) };
+  }, { ...setup, content: captured.content });
+  expect(restored.priest).toBeGreaterThan(0); expect(restored.priest).not.toBe(setup.caster); expect(restored.type).toBe(158);
+  expect(restored.cargo).toBe(0); expect(restored.contentState).toBe(3); expect(restored.spell).toBe(setup.spell); expect(restored.sp).toBe(setup.beforeSp);
   expect(errors).toEqual([]);
 });

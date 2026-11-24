@@ -187,6 +187,33 @@ test('CarrierPickup: 원본 10.78 2657행의 요청/서버 수신/기존 내용�
     assert.equal(count, ROWS);
 });
 
+// 원본 입력의 내용물 flags를 구별하여 NB18이 주문만 가진 골렘을 차단하지 않고 너겟/포로 보호는 유지하는지 확인한다.
+test('CarrierPickup NB18: 요청·수신은 실제 운반물만 막고 주문은 허용한다', () => {
+    const pool = new SidPool(24000, { server: true }), contained = new ContainedFinderState();
+    const types = Array.from({ length: 188 }, () => ({ flags2: 0 })), state = new CarrierPickupState();
+    // 물리 슬롯은 외부 입력이며 대상 사제의 종속 목록은 비워 둔다.
+    for (const sid of [50, 60, 81]) pool.physical(sid).fill(0);
+    pool.physical(50)[10] = 133; pool.physical(60)[10] = 158; types[158].flags2 = 0x200000;
+    let heldFlags = 0x20, sent = 0, queued = 0;
+    const pickup = new RawCarrierPickup(pool, types, contained, () => true, () => true, state, {
+        candidate: () => [60, true], send: () => { sent += 1; }, queue: () => { queued += 1; },
+        find: (_parent, mask) => (heldFlags & mask) ? 52 : 0,
+        create: () => 81, destroy: () => {}, detach: () => {}, attach: () => {},
+    });
+    const packet = Uint8Array.of(0x4f, 1, 9, 0, 50, 0, 60, 0, 158);
+    pickup.request(50); pickup.receive(0, 0, packet);
+    assert.deepEqual([sent, queued], [1, 1], '원본 모드의 기존 동작');
+    state.refuseHeldPriest = true; sent = queued = 0;
+    pickup.request(50); pickup.receive(0, 0, packet);
+    assert.deepEqual([sent, queued], [0, 0], '너겟/포로는 요청과 수신에서 차단');
+    heldFlags = 1; pickup.request(50); pickup.receive(0, 0, packet);
+    assert.deepEqual([sent, queued], [1, 1], '주문만 가진 골렘은 포획 가능');
+    heldFlags = 0; pickup.request(50); pickup.receive(0, 0, packet);
+    assert.deepEqual([sent, queued], [2, 2], '빈 운반체도 포획 가능');
+    heldFlags = 0x21; pickup.request(50); pickup.receive(0, 0, packet);
+    assert.deepEqual([sent, queued], [2, 2], '주문과 운반물을 함께 가지면 차단');
+});
+
 test('CarrierPickup: 선택하지 않은 효과는 요구하지 않으며 짧은 패킷과 실제 도달한 경계 누락만 거부한다', () => {
     const scene = new CarrierPickupScene();
     const pickup = scene.body({ candidate: () => [0, false] });
