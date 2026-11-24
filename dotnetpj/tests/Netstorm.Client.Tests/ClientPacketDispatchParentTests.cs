@@ -308,4 +308,41 @@ public sealed class ClientPacketDispatchParentTests
         var other = new Scene();
         Assert.Throws<ArgumentException>(() => ClientPacketDispatch.Build(DispatchHooks(), scene.Game, other.Connections, scene.Surface, scene.Chat, _ => { }, (_, _, _) => { }, ActivityHooks(), scene.Challenge));
     }
+    /// <summary>부모는 연결 종료 2번 고정 F를 같은 분배기에 설치한다. observer/version/length 표는 바꾸지 않는다. 0.969에서 추가됐다.</summary>
+    [Fact]
+    public void ParentInstallsConnectionEndedEntry()
+    {
+        var scene = new Scene();
+        var dispatch = Build(scene, _ => { });
+        Assert.Equal(0x004b6660u, dispatch.SnapshotReceiver(2)!.NativeEntry);
+        Assert.Null(dispatch.Registration(2).Observer);
+        Assert.Null(dispatch.Registration(2).PacketObserver);
+        // 같은 묶음의 기존 설치가 2번 행에 밀리지 않는다.
+        Assert.Equal(0x0042dc90u, dispatch.SnapshotReceiver(0x41)!.NativeEntry);
+        Assert.Equal(0x0048f7f0u, dispatch.SnapshotReceiver(0x77)!.NativeEntry);
+        Assert.Equal(0x004b4790u, dispatch.SnapshotReceiver(0x7b)!.NativeEntry);
+        Assert.Empty(scene.Assertions);
+    }
+    /// <summary>서버가 아니면 2번은 실제 세션 없이 성공으로 꾸미지 않는다. 0.969에서 추가됐다.</summary>
+    [Fact]
+    public void ParentConnectionEndedNonServerRequiresSession()
+    {
+        var scene = new Scene();
+        scene.Game.Authority.Server = false;
+        var dispatch = Build(scene, _ => { });
+        var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(2, 9, null, new byte[4]));
+        Assert.Contains("Runtime", error.Message);
+    }
+    /// <summary>서버이면 2번 소유자 방송도 실제 세션 없이 성공으로 꾸미지 않는다. 0.969에서 추가됐다.</summary>
+    [Fact]
+    public void ParentConnectionEndedServerRequiresSession()
+    {
+        var scene = new Scene();
+        scene.Game.Authority.Server = true;
+        scene.Game.PlayerRecords.Initialize((_, _) => { });
+        scene.Connections.Activity.Frames[5] = 7;
+        var dispatch = Build(scene, _ => { });
+        var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(2, 5, null, new byte[4]));
+        Assert.Contains("Runtime", error.Message);
+    }
 }

@@ -3,8 +3,8 @@ using Netstorm.Net;
 
 namespace Netstorm.Client;
 
-// 장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay·Carrier/Construction·장기 CS 묶음을 같은 분배기에 설치한다. 전송 설치는 R4-6, 실제 송수신 펌프는 R11에서 잇는다.
-/// <summary>공통 패킷 분배기의 실제 소유자 조립이다. 장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay·Carrier/Construction·장기 CS 묶음을 같은 분배기에 설치한다.</summary>
+// 장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay·Carrier/Construction·장기 CS·연결 종료 묶음을 같은 분배기에 설치한다. 전송 설치는 R4-6, 실제 송수신 펌프는 R11에서 잇는다.
+/// <summary>공통 패킷 분배기의 실제 소유자 조립이다. 장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay·Carrier/Construction·장기 CS·연결 종료 묶음을 같은 분배기에 설치한다.</summary>
 public static class ClientPacketDispatch
 {
     /// <summary>같은 장기 Client 장치만 읽으며 실제 수신 UI/진단/활동 장치를 묶는다.</summary>
@@ -18,7 +18,7 @@ public static class ClientPacketDispatch
     /// <param name="activity">장기 연결 활성의 실제 벽시계/프레임/서버 조회다.</param>
     /// <param name="challenge">같은 Client 수명으로 유지하는 실제 CS 슬롯·할당 owner다. 0x7b·0x7c 후크 결합 수신기가 공유한다.</param>
     /// <returns>장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay 묶음이 설치된 실제 분배기다.</returns>
-    /// <remarks>2026-11-23 0.897에서 R4-6 전송·수신 묶음용으로 추가하고 0.898에서 설정·버전·기술·변수 묶음을, 0.899에서 Native gameplay 6종 묶음을, 0.934에서 장기 기본 18행을, 0.964에서 Carrier/Construction 묶음을, 0.966에서 장기 CS 묶음(0x7b·0x7c)을 이었다. 근거: R4-6 남음의 "공통 41h가 Root.ReceiveNativePacketChat을 부르는 전송 설치"와 "NativeLoginPacketReceivers의 실제 MonoGame Root 설치 호출"과 InstallClientPacketDefaults의 기본 18행·Carrier/Construction 고정 F·장기 CS 수신기다. 호스트는 10.78만 다루므로 판본을 고정한다. 종료/닫기/반납은 R11 수송에서 잇는다.</remarks>
+    /// <remarks>2026-11-23 0.897에서 R4-6 전송·수신 묶음용으로 추가하고 0.898에서 설정·버전·기술·변수 묶음을, 0.899에서 Native gameplay 6종 묶음을, 0.934에서 장기 기본 18행을, 0.964에서 Carrier/Construction 묶음을, 0.966에서 장기 CS 묶음(0x7b·0x7c)을, 0.969에서 연결 종료 2번을 이었다. 근거: R4-6 남음의 "공통 41h가 Root.ReceiveNativePacketChat을 부르는 전송 설치"와 "NativeLoginPacketReceivers의 실제 MonoGame Root 설치 호출"과 InstallClientPacketDefaults의 기본 18행·Carrier/Construction 고정 F·장기 CS·2번 수신기다. 호스트는 10.78만 다루므로 판본을 고정한다. 종료/닫기/반납은 R11 수송에서 잇는다.</remarks>
     public static RawPacketDispatch Build(
         PacketDispatchHooks dispatch,
         ClientGameplayGlobals game,
@@ -93,8 +93,29 @@ public static class ClientPacketDispatch
         // 0x3f/0x5f/0x7d 송신 관찰기는 ClientVariablePacketObservers와 식이 같아 마지막 쓰기가 이긴다.
         NativeCarrierPacketReceivers.Install(packet, game, surface.Storage);
         NativeConstructionPacketReceivers.Install(packet, game, surface.Storage);
-        // 같은 장기 CS만으로 묶이는 후크 결합 수신기(0x7b·0x7c)를 잇는다. 세션·메뉴·월드가 필요한 나머지는 후속에서 잇는다.
+        // 같은 장기 CS만으로 묶이는 후크 결합 수신기(0x7b·0x7c)를 잇는다. 세션·메뉴·월드가 필요한 나머지 중 2번을 먼저 잇는다.
         ClientChallengePacketDefaults.Install(packet, challenge, surface.Storage);
         ClientMetaGameLogin.Install(packet, game, connections, challenge, surface.Storage);
+        // 원문 앱 전역 2번 연결 종료를 같은 기본 표에 잇는다. 세션 효과는 실제 세션에 묶고 R6 본체까지 명시 실패한다. 0.969에서 추가됐다.
+        ClientConnectionEndedReceiver.Install(
+            packet,
+            game,
+            connections,
+            connections.Activity,
+            () => game.PlayerRecords.Records.ToArray(),
+            () =>
+            {
+                // 실제 9번 장애 저장은 선택된 현재 세션에서만 실제 전체 owner를 보유한다. R6 본체까지 명시 실패한다.
+                var session = game.RequireSession();
+                using var pin = game.PinCurrentRuntime(session);
+                throw new InvalidOperationException("연결 종료 9번 장애 저장 미연결(R6)");
+            },
+            owner =>
+            {
+                // 선행 flags 저장 뒤 선택된 현재 세션에서만 실제 방송 하위를 보유한다. R6 본체까지 명시 실패한다.
+                var session = game.RequireSession();
+                using var pin = game.PinCurrentRuntime(session);
+                throw new InvalidOperationException("연결 종료 소유자 방송 미연결(R6)");
+            });
     }
 }

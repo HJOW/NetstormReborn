@@ -303,4 +303,16 @@ public sealed class ClientCampaignTransportTests
         var broken = new Netstorm.Net.PacketDispatchHooks { Now = null, Record = (_, _, _) => { }, Terminate = _ => { }, Close = _ => { }, Release = _ => { } };
         Assert.Throws<ArgumentException>(() => transport.RebindWorld(CompositeTransportRole.InternalMission, new byte[1620], () => false, broken, new object()));
     }
+
+    /// <summary>수송 팩토리도 같은 기본 표에 2번 연결 종료를 공유한다. 0.969에서 추가됐다.</summary>
+    [Fact]
+    public void FactorySharesConnectionEndedEntry()
+    {
+        var scene = new Scene();
+        scene.Game.PlayerRecords.Initialize((_, _) => { });
+        using var transport = scene.Make();
+        Assert.Equal(0x004b6660u, transport.Dispatch.SnapshotReceiver(2)!.NativeEntry);
+        Assert.Null(transport.Dispatch.Registration(2).Observer);
+        Assert.Null(transport.Dispatch.Registration(2).PacketObserver);
+    }
 }
