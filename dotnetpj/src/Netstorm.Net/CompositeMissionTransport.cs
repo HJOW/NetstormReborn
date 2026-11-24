@@ -20,9 +20,9 @@ public enum CompositeTransportRole
 public sealed class CompositeMissionTransport : IDisposable
 {
     /// <summary>같은 실제 Client 물리를 모든 등록/호출 대여 끝까지 유지한다.</summary>
-    private readonly object _globalsLifetime;
-    /// <summary>현재 실제 서버 권한을 읽으며 새 권한을 만들지 않는다.</summary>
-    private readonly Func<bool> _server;
+    private object _globalsLifetime;
+    /// <summary>현재 실제 서버 권한을 읽으며 새 권한을 만들지 않는다. 재결합에서 같은 Client 권한으로 바꾼다.</summary>
+    private Func<bool> _server;
     /// <summary>기존 실제 내부 양끝과 완성 프레임/출력 큐다.</summary>
     private readonly LocalMissionTransport _internal;
     /// <summary>같은 실제 Source에 대한 외부/노드/호출 수명 장부다.</summary>
@@ -35,8 +35,8 @@ public sealed class CompositeMissionTransport : IDisposable
     public RawConnectionRegistry Registry { get; }
     /// <summary>모든 등록/송수신이 공유하는 같은 canonical 표다.</summary>
     public RawPacketDispatch Dispatch => _internal.Dispatch;
-    /// <summary>실제 내부 분기를 선택한 역할이며 권한/플레이어 상태와 별개다.</summary>
-    public CompositeTransportRole Role => CompositeTransportRole.InternalMission;
+    /// <summary>실제 내부 분기를 선택한 역할이며 권한/플레이어 상태와 별개다. 재결합 때 같은 원문 순서로 바꾼다.</summary>
+    public CompositeTransportRole Role { get; private set; }
     /// <summary>현재 구현된 실제 backend를 특수 설치/진단에서 동일 객체로 빌린다.</summary>
     public LocalMissionTransport InternalTransport => _internal;
     /// <summary>등록 대여를 포함한 Source 수명이 실제로 끝났는지 조회한다.</summary>
@@ -47,13 +47,49 @@ public sealed class CompositeMissionTransport : IDisposable
         ArgumentNullException.ThrowIfNull(server); ArgumentNullException.ThrowIfNull(registry); ArgumentNullException.ThrowIfNull(globalsLifetime);
         if (role != CompositeTransportRole.InternalMission) throw new NotSupportedException("복합 전송의 Editor/LAN 실제 backend는 후속 이식 대상");
         if (players.Length != 1620) throw new ArgumentException("복합 전송의 실제 Player9 누락", nameof(players));
-        _server = server; _globalsLifetime = globalsLifetime; Registry = registry;
+        _server = server; _globalsLifetime = globalsLifetime; Role = role; Registry = registry;
         _internal = new(players, server, hooks, registry, registrations); _lifetime = new(this, static owner => ((CompositeMissionTransport)owner).ReleaseDevice());
     }
     /// <summary>실제 노드/배송 호출이 같은 Source 수명을 선택한 동안만 대여한다.</summary>
     internal ConnectionDevicePin Pin() => _lifetime.Pin();
     /// <summary>배송값은 살아 있는 같은 실제 Source에서만 복구한다.</summary>
     internal NativeBattleSource? Borrow() => _released ? null : new(this, Pin());
+    /// <summary>실제 같은 TCP/UDP/내부 coordinator를 배송 동안 인계한다. 0.967에서 추가됐다.</summary>
+    /// <returns>현재 장치의 같은 실제 owner 묶음이다. 비어 있으면 새로 만든다.</returns>
+    public MissionNetwork SharedNetwork() => new() { Composite = this, Lifetime = _globalsLifetime };
+    /// <summary>원문 전역 장치의 같은 물리인지 확인하며 이름/현재 phase로 동일성을 추정하지 않는다. 0.967에서 추가됐다.</summary>
+    /// <param name="network">비교할 실제 같은 TCP/UDP/전체 owner 묶음이다. 비어 있으면 거짓이다.</param>
+    /// <returns>같은 실제 내부 coordinator를 공유하면 참이다.</returns>
+    public bool SharesNetwork(MissionNetwork? network)
+    {
+        if (network is null) return false;
+        if (network.Composite is not null && !ReferenceEquals(network.Composite, this)) return false;
+        if (network.Composite is null && network.Tcp is null && network.Udp is null && network.Lifetime is null) return false;
+        // DN 수송은 내부 backend만 보유하므로 TCP/UDP가 있으면 공유하지 않는다.
+        if (network.Tcp is not null || network.Udp is not null) return false;
+        return ReferenceEquals(_globalsLifetime, network.Lifetime);
+    }
+    /// <summary>등록 반납 뒤 같은 coordinator/모든 기존 backend를 새 World 장치에 인계한다. 0.967에서 추가됐다.</summary>
+    /// <param name="role">다시 선택하는 실제 내부 분기다. InternalMission만 지원한다.</param>
+    /// <param name="players">같은 실제 Player9 기록이다. 같은 Records 배열 재결합만 지원한다.</param>
+    /// <param name="server">현재 실제 서버 권한 조회다.</param>
+    /// <param name="hooks">같은 실제 World의 현재 장치다.</param>
+    /// <param name="globalsLifetime">같은 실제 Client 물리를 유지하는 새 owner다.</param>
+    public void RebindWorld(CompositeTransportRole role, ReadOnlyMemory<byte> players, Func<bool> server, PacketDispatchHooks hooks, object globalsLifetime)
+    {
+        ArgumentNullException.ThrowIfNull(server);
+        ArgumentNullException.ThrowIfNull(hooks);
+        ArgumentNullException.ThrowIfNull(globalsLifetime);
+        if (role != CompositeTransportRole.InternalMission) throw new NotSupportedException("재결합의 Editor/LAN 실제 backend는 후속 이식 대상");
+        if (players.Length != 1620) throw new ArgumentException("재결합의 실제 Player9 누락", nameof(players));
+        if (hooks.Now is null || hooks.Record is null || hooks.Terminate is null || hooks.Close is null || hooks.Release is null) throw new ArgumentException("재결합의 실제 분배 장치 누락", nameof(hooks));
+        if (ConnectionCallbackActive()) throw new InvalidOperationException("다른 Session 콜백 복귀 전 전송 재인계 금지");
+        // 내부 전송은 생성 때 Player9 물리를 고정하므로 같은 Records 배열 재결합만 지원한다. 분배 후크는 현재 장치로 바꾼다.
+        _internal.RebindHooks(hooks);
+        _server = server;
+        Role = role;
+        _globalsLifetime = globalsLifetime;
+    }
     /// <summary>최종 수명 뒤에만 실제 내부 큐/별칭을 반납한다. Native 방 종료와 구별한다.</summary>
     private void ReleaseDevice()
     {

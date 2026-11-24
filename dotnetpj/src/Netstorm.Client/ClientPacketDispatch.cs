@@ -40,6 +40,40 @@ public static class ClientPacketDispatch
         ArgumentNullException.ThrowIfNull(activity);
         ArgumentNullException.ThrowIfNull(challenge);
         var packet = new RawPacketDispatch(OriginalEdition.Patch1078, dispatch);
+        InstallDefaults(packet, game, connections, surface, chat, receive, assertion, activity, challenge);
+        return packet;
+    }
+
+    /// <summary>같은 장기 기본 표를 채우는 원문 순서로 전체 설치를 한 부모에서 호출한다. 수송 팩토리와 공유한다. 0.967에서 추가됐다.</summary>
+    /// <param name="packet">같은 장기 분배기의 실제 공유 표다.</param>
+    /// <param name="game">같은 실제 Player/권한/현재 세션 소유자다.</param>
+    /// <param name="connections">같은 실제 연결 Registry/Source 장부다.</param>
+    /// <param name="surface">같은 실제 표면/시계/커널이다.</param>
+    /// <param name="chat">창이 없어도 존재하는 실제 마스크/현재 UI 슬롯이다.</param>
+    /// <param name="receive">실제 Chat UI 수신 입구다. 41h가 도착하면 호출된다.</param>
+    /// <param name="assertion">원문 진단의 실제 선택 줄 소비자다.</param>
+    /// <param name="activity">장기 연결 활성의 실제 벽시계/프레임/서버 조회다.</param>
+    /// <param name="challenge">같은 Client 수명으로 유지하는 실제 CS 슬롯·할당 owner다.</param>
+    internal static void InstallDefaults(
+        RawPacketDispatch packet,
+        ClientGameplayGlobals game,
+        ClientConnectionGlobals connections,
+        ClientSurfaceGlobals surface,
+        ClientChatWindowGlobals chat,
+        Action<Memory<byte>> receive,
+        Action<string, string, uint> assertion,
+        ConnectionActivityHooks activity,
+        ClientChallengeGlobals challenge)
+    {
+        ArgumentNullException.ThrowIfNull(packet);
+        ArgumentNullException.ThrowIfNull(game);
+        ArgumentNullException.ThrowIfNull(connections);
+        ArgumentNullException.ThrowIfNull(surface);
+        ArgumentNullException.ThrowIfNull(chat);
+        ArgumentNullException.ThrowIfNull(receive);
+        ArgumentNullException.ThrowIfNull(assertion);
+        ArgumentNullException.ThrowIfNull(activity);
+        ArgumentNullException.ThrowIfNull(challenge);
         ClientPacketDefaultObservers.Install18(packet, surface.Storage);
         ClientChatPacketReceiver.Install(game, surface, connections, chat, packet, receive);
         NativeLoginPacketReceivers.Install(game, connections, packet, assertion, activity);
@@ -62,6 +96,5 @@ public static class ClientPacketDispatch
         // 같은 장기 CS만으로 묶이는 후크 결합 수신기(0x7b·0x7c)를 잇는다. 세션·메뉴·월드가 필요한 나머지는 후속에서 잇는다.
         ClientChallengePacketDefaults.Install(packet, challenge, surface.Storage);
         ClientMetaGameLogin.Install(packet, game, connections, challenge, surface.Storage);
-        return packet;
     }
 }
