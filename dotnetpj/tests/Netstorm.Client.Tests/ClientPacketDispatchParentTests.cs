@@ -115,6 +115,39 @@ public sealed class ClientPacketDispatchParentTests
         Assert.Equal(0x0045e4f0u, dispatch.SnapshotReceiver(0x74)!.NativeEntry);
         Assert.Empty(scene.Assertions);
     }
+    /// <summary>부모는 네 미션 송신 관찰기를 같은 분배기에 설치한다. 순수 관찰기만 두고 수신 F는 바꾸지 않는다. 0.935에서 추가됐다.</summary>
+    [Fact]
+    public void ParentInstallsMissionSendObservers()
+    {
+        var scene = new Scene();
+        var dispatch = Build(scene, _ => { });
+        foreach (uint type in new uint[] { 0x2a, 0x2b, 0x67, 0x81 })
+        {
+            Assert.NotNull(dispatch.Registration(type).PacketObserver);
+            Assert.Null(dispatch.Registration(type).Observer);
+        }
+        Assert.Equal(0x0042dc90u, dispatch.SnapshotReceiver(0x41)!.NativeEntry);
+        Assert.Empty(scene.Assertions);
+    }
+    /// <summary>부모는 버전 응답과 가변 길이 관찰기를 같은 분배기에 설치한다. 0.935에서 추가됐다.</summary>
+    [Fact]
+    public void ParentInstallsVersionReplyAndVariableObservers()
+    {
+        var scene = new Scene();
+        var dispatch = Build(scene, _ => { });
+        Assert.NotNull(dispatch.Registration(0x0b).PacketObserver);
+        Assert.Equal(1, dispatch.Registration(0x0b).Version);
+        Assert.Equal(ushort.MaxValue, dispatch.Registration(0x0b).Length);
+        Assert.Equal(0x004b3af0u, dispatch.SnapshotReceiver(0x0b)!.NativeEntry);
+        foreach (uint type in new uint[] { 0x3f, 0x30, 0x7a, 0x5f, 0x7d })
+        {
+            Assert.NotNull(dispatch.Registration(type).PacketObserver);
+            Assert.Null(dispatch.Registration(type).Observer);
+            Assert.Equal(1, dispatch.Registration(type).Version);
+            Assert.Equal(ushort.MaxValue, dispatch.Registration(type).Length);
+        }
+        Assert.Empty(scene.Assertions);
+    }
     /// <summary>부모가 묶은 41h는 실제 Chat UI 입구로 전달한다.</summary>
     [Fact]
     public void ParentRelaysChatToReceive()
