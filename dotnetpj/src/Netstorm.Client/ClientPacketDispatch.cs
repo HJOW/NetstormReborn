@@ -3,8 +3,8 @@ using Netstorm.Net;
 
 namespace Netstorm.Client;
 
-// 장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay·Carrier/Construction·장기 CS·연결 종료·전투 시작 묶음을 같은 분배기에 설치한다. 전송 설치는 R4-6, 실제 송수신 펌프는 R11에서 잇는다.
-/// <summary>공통 패킷 분배기의 실제 소유자 조립이다. 장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay·Carrier/Construction·장기 CS·연결 종료·전투 시작 묶음을 같은 분배기에 설치한다.</summary>
+// 장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay·Carrier/Construction·장기 CS·연결 종료·전투 시작·서버 발견·메타 geometry 묶음을 같은 분배기에 설치한다. 전송 설치는 R4-6, 실제 송수신 펌프는 R11에서 잇는다.
+/// <summary>공통 패킷 분배기의 실제 소유자 조립이다. 장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay·Carrier/Construction·장기 CS·연결 종료·전투 시작·서버 발견·메타 geometry 묶음을 같은 분배기에 설치한다.</summary>
 public static class ClientPacketDispatch
 {
     /// <summary>같은 장기 Client 장치만 읽으며 실제 수신 UI/진단/활동 장치를 묶는다.</summary>
@@ -18,7 +18,7 @@ public static class ClientPacketDispatch
     /// <param name="activity">장기 연결 활성의 실제 벽시계/프레임/서버 조회다.</param>
     /// <param name="challenge">같은 Client 수명으로 유지하는 실제 CS 슬롯·할당 owner다. 0x7b·0x7c 후크 결합 수신기가 공유한다.</param>
     /// <returns>장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay 묶음이 설치된 실제 분배기다.</returns>
-    /// <remarks>2026-11-23 0.897에서 R4-6 전송·수신 묶음용으로 추가하고 0.898에서 설정·버전·기술·변수 묶음을, 0.899에서 Native gameplay 6종 묶음을, 0.934에서 장기 기본 18행을, 0.964에서 Carrier/Construction 묶음을, 0.966에서 장기 CS 묶음(0x7b·0x7c)을, 0.969에서 연결 종료 2번을, 0.970에서 전투 시작 1a/1b를 이었다. 근거: R4-6 남음의 "공통 41h가 Root.ReceiveNativePacketChat을 부르는 전송 설치"와 "NativeLoginPacketReceivers의 실제 MonoGame Root 설치 호출"과 InstallClientPacketDefaults의 기본 18행·Carrier/Construction 고정 F·장기 CS·2번·1a/1b 수신기다. 호스트는 10.78만 다루므로 판본을 고정한다. 종료/닫기/반납은 R11 수송에서 잇는다.</remarks>
+    /// <remarks>2026-11-23 0.897에서 R4-6 전송·수신 묶음용으로 추가하고 0.898에서 설정·버전·기술·변수 묶음을, 0.899에서 Native gameplay 6종 묶음을, 0.934에서 장기 기본 18행을, 0.964에서 Carrier/Construction 묶음을, 0.966에서 장기 CS 묶음(0x7b·0x7c)을, 0.969에서 연결 종료 2번을, 0.970에서 전투 시작 1a/1b를, 0.971에서 로컬 서버 발견 0x66·메타 geometry 0x26을 이었다. 근거: R4-6 남음의 "공통 41h가 Root.ReceiveNativePacketChat을 부르는 전송 설치"와 "NativeLoginPacketReceivers의 실제 MonoGame Root 설치 호출"과 InstallClientPacketDefaults의 기본 18행·Carrier/Construction 고정 F·장기 CS·2번·1a/1b·0x66·0x26 수신기다. 호스트는 10.78만 다루므로 판본을 고정한다. 종료/닫기/반납은 R11 수송에서 잇는다.</remarks>
     public static RawPacketDispatch Build(
         PacketDispatchHooks dispatch,
         ClientGameplayGlobals game,
@@ -164,5 +164,33 @@ public static class ClientPacketDispatch
             throw new InvalidOperationException("전투 시작의 실제 UI State 부모 미연결");
         }
         ClientStateBattleStart.Install(packet, battleHooks, SelectSource, DispatchBattle);
+        // 0x66 로컬 서버 발견을 같은 기본 표에 잇는다. 상태·토큰·기한·벽시각·주소 조회는 실제 장기 장치이며 현재 36 뒤 동기 Run만 메뉴에 묶는다. 0.971에서 추가됐다.
+        ClientLocalServerDiscovery.Install(packet, new ClientLocalServerDiscoveryHooks
+        {
+            // 같은 실제 로컬 상태 블록 owner다.
+            State = connections.LocalState.State,
+            // 같은 실제 검색 토큰 owner다.
+            Token = connections.LocalState.LocalServerToken,
+            // 같은 실제 검색 만료 기한 owner다.
+            SearchEnd = connections.LocalState.LocalServerSearchEnd,
+            // 경쟁 검색의 지연 선택에서만 호출하는 현재 벽시각이다.
+            Wall = activity.WallSeconds,
+            // 현재 sender의 실제 주소 바이트다.
+            PeerAddress = sender => connections.Registry.Address(unchecked((int)sender)),
+            // 현재 36 작성 뒤에 호출하는 실제 부모다. 실제 UI State 부모가 없으므로 명시 실패한다.
+            ProcessState = () => throw new InvalidOperationException("로컬 서버 발견의 실제 UI State 부모 미연결"),
+        });
+        // 0x26 메타 geometry를 같은 기본 표에 잇는다. 좌표·모드·진단은 실제 장기 장치이며 화면 한계만 후속에 묶는다. 0.971에서 추가됐다.
+        ClientMetaGeometry.Install(packet, new ClientMetaGeometryHooks
+        {
+            // 같은 실제 최초 배치 좌표 owner다.
+            Geometry = challenge.Geometry,
+            // 005467d4의 같은 현재 모드 owner다.
+            Mode = challenge.GeometryMode,
+            // 실제 화면 논리 크기와 메타 크기로 현재 한계를 둔다. 화면 장치가 없으므로 명시 실패한다.
+            Limits = (_, _) => throw new InvalidOperationException("메타 geometry의 실제 화면 한계 미연결(R5)"),
+            // 원문 진단의 실제 선택 줄 소비자다.
+            Assertion = assertion,
+        });
     }
 }

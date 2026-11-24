@@ -328,4 +328,17 @@ public sealed class ClientCampaignTransportTests
         Assert.NotNull(transport.Dispatch.Registration(0x1a).PacketObserver);
         Assert.NotNull(transport.Dispatch.Registration(0x1b).Observer);
     }
+
+    /// <summary>수송 팩토리도 같은 기본 표에 0x66 서버 발견·0x26 메타 geometry를 공유한다. 0.971에서 추가됐다.</summary>
+    [Fact]
+    public void FactorySharesDiscoveryAndGeometryEntries()
+    {
+        var scene = new Scene();
+        scene.Game.PlayerRecords.Initialize((_, _) => { });
+        using var transport = scene.Make();
+        Assert.Equal(0x004b8a10u, transport.Dispatch.SnapshotReceiver(0x66)!.NativeEntry);
+        Assert.Equal(12, transport.Dispatch.Registration(0x66).Length);
+        Assert.Equal(0x004b45a0u, transport.Dispatch.SnapshotReceiver(0x26)!.NativeEntry);
+        Assert.Equal(ushort.MaxValue, transport.Dispatch.Registration(0x26).Length);
+    }
 }

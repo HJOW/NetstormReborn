@@ -456,4 +456,77 @@ public sealed class ClientPacketDispatchParentTests
         var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x1b, 9, connection, PeerPacket(0x20, "x\0")));
         Assert.Contains("UI State", error.Message);
     }
+    /// <summary>원문 0x66 12BYTE 입력 패킷을 조립한다.</summary>
+    private static byte[] DiscoveryPacket(uint command, uint value)
+    {
+        // 명령과 값을 같은 위치에 둔다.
+        byte[] packet = new byte[12];
+        packet[1] = 0x66;
+        BinaryPrimitives.WriteUInt32LittleEndian(packet.AsSpan(4, 4), command);
+        BinaryPrimitives.WriteUInt32LittleEndian(packet.AsSpan(8, 4), value);
+        return packet;
+    }
+    /// <summary>부모는 로컬 서버 발견 0x66·메타 geometry 0x26 고정 F를 같은 분배기에 설치한다. 0.971에서 추가됐다.</summary>
+    [Fact]
+    public void ParentInstallsDiscoveryAndGeometryEntries()
+    {
+        var scene = new Scene();
+        var dispatch = Build(scene, _ => { });
+        var discovery = dispatch.Registration(0x66);
+        Assert.Equal(1, discovery.Version);
+        Assert.Equal(0, discovery.Mismatch);
+        Assert.Equal(12, discovery.Length);
+        Assert.NotNull(discovery.Observer);
+        Assert.Null(discovery.PacketObserver);
+        Assert.Equal(0x004b8a10u, dispatch.SnapshotReceiver(0x66)!.NativeEntry);
+        var geometry = dispatch.Registration(0x26);
+        Assert.Equal(1, geometry.Version);
+        Assert.Equal(0, geometry.Mismatch);
+        Assert.Equal(ushort.MaxValue, geometry.Length);
+        Assert.NotNull(geometry.PacketObserver);
+        Assert.Null(geometry.Observer);
+        Assert.Equal(0x004b45a0u, dispatch.SnapshotReceiver(0x26)!.NativeEntry);
+        // 같은 묶음의 기존 설치가 0x66·0x26 행에 밀리지 않는다.
+        Assert.Equal(0x004b4df0u, dispatch.SnapshotReceiver(0x1a)!.NativeEntry);
+        Assert.Equal(0x004b6660u, dispatch.SnapshotReceiver(2)!.NativeEntry);
+        Assert.Equal(0x0042dc90u, dispatch.SnapshotReceiver(0x41)!.NativeEntry);
+        Assert.Empty(scene.Assertions);
+    }
+    /// <summary>0x66 명령 0은 값이 토큰보다 signed로 작을 때만 실제 기한을 12초 연장한다. 메뉴를 요구하지 않는다. 0.971에서 추가됐다.</summary>
+    [Fact]
+    public void ParentDiscoveryExtendsSearchOnlyWhenTokenGreater()
+    {
+        var scene = new Scene();
+        scene.Local.LocalServerToken.Value = 200;
+        var dispatch = Build(scene, _ => { });
+        dispatch.InvokeDirect(0x66, 9, null, DiscoveryPacket(0, 100));
+        Assert.Equal(112.0, scene.Local.LocalServerSearchEnd.Value);
+        var later = new Scene();
+        later.Local.LocalServerToken.Value = 50;
+        var next = Build(later, _ => { });
+        next.InvokeDirect(0x66, 9, null, DiscoveryPacket(0, 100));
+        Assert.Equal(0.0, later.Local.LocalServerSearchEnd.Value);
+    }
+    /// <summary>0x66 명령 1은 현재 36·주소·포트를 쓴 뒤 실제 UI State 부모 없이 성공으로 꾸미지 않는다. 0.971에서 추가됐다.</summary>
+    [Fact]
+    public void ParentDiscoveryCommandRequiresMenu()
+    {
+        var scene = new Scene();
+        var dispatch = Build(scene, _ => { });
+        var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x66, 9, null, DiscoveryPacket(1, 0x4444)));
+        Assert.Contains("UI State", error.Message);
+        Assert.Equal(36u, BinaryPrimitives.ReadUInt32LittleEndian(scene.Local.State.Current.Span.Slice(0, 4)));
+        Assert.Equal(0x4444u, BinaryPrimitives.ReadUInt32LittleEndian(scene.Local.State.Current.Span.Slice(0x30, 4)));
+    }
+    /// <summary>0x26은 화면 한계 앞에서 실제 화면 장치 없이 성공으로 꾸미지 않는다. 0.971에서 추가됐다.</summary>
+    [Fact]
+    public void ParentGeometryRequiresScreen()
+    {
+        var scene = new Scene();
+        var dispatch = Build(scene, _ => { });
+        byte[] packet = new byte[16];
+        packet[1] = 0x26;
+        var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x26, 9, null, packet));
+        Assert.Contains("화면 한계", error.Message);
+    }
 }
