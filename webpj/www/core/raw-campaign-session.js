@@ -1169,6 +1169,14 @@ export class RawCampaignSession {
     energySupply() { return this.#live().energySupply; }
     // 현재 건설 설정을 준비한 뒤 실제 전체 게임 배치 판정을 실행한다.
     mayPlaceConstruction(query) { const o = this.#live(); o.assetModules.prepareConstruction(); return o.constructionModules.mayPlace(query); }
+    // 설치된 실제 Session의 현재 noIsland TYPE으로 Player0 받침을 확정한다. 원문 ConfirmSupport와 같은 요청이며 자동 생성은 하지 않는다.
+    confirmSupport(x, y) {
+        const o = this.#live(); if (!o.loaded) throw new Error('실제 Session 설치 전 받침 확정 요청');
+        o.assetModules.prepareConstruction();
+        return o.construction.confirmSupport({ type: o.core.bridgeState.noIslandType, x: Math.fround(x), y: Math.fround(y), player: 0, argument: 0, direction: 0, flags: 0, timeLow: 0, timeHigh: 0, quality: 0 });
+    }
+    // 같은 Session 건설 처리기의 확정 패킷과 배치 상태를 빌린다. 사용자는 Session보다 오래 보관하지 않는다.
+    construction() { return this.#live().construction; }
     // GUI 효과는 호출자에게 남기고 사제 메뉴의 월드·기술·자금·커서를 같은 Session에 연결한다.
     makePriestMenu(input = {}) {
         const o = this.#live(); if (!o.loaded) throw new Error('설치 전 실제 Session 사제 메뉴 요청');

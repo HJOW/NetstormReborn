@@ -22,7 +22,7 @@ const fort = parseFort(entry.bytes, createFortTypes(data.table));
 function unexpected() { throw new Error('선택하지 않은 외부 장치'); }
 
 // 실제 논리는 그대로 실행하고 음향·진단만 수집한다. assertion은 진단 정상 복귀의 외부 입력을 줄 때 사용한다.
-export function visualSessionScene({ assertion, sound = {} } = {}) {
+export function visualSessionScene({ assertion, sound = {}, unitLost, construction } = {}) {
     const gameplay = new ClientGameplayGlobals(), sounds = [], diagnoses = [];
     gameplay.camera().initializeNativeRenderer(640, 480, 256, { value: 0 }, { value: 0 });
     const session = new RawCampaignSession(game, { read: unexpected }, fort, 'thewarbegins', {
@@ -30,6 +30,7 @@ export function visualSessionScene({ assertion, sound = {} } = {}) {
         install: { translateYou: () => Uint8Array.of(89, 111, 117, 0), setConfig: () => {}, refreshWindowTitle: () => {}, resetCamera: () => {} },
         ownership: { refreshProduction: () => {}, themeMode: () => 0 }, deletion: { selected: () => 0 },
         assets: { postPop: { playImpactSound: () => {} }, queueCommand: () => {} }, player: { log: () => {} },
+        unitLost, construction,
         sound: { wallSeconds: () => 0, play: () => 1, playOnceAt: (...args) => { sounds.push(args); return args[2]; }, playLoopAt: unexpected, stop: unexpected, isPlaying: () => false, ...sound },
         ai: { assertion: (expression) => { diagnoses.push(expression); assertion?.(expression); } },
     });

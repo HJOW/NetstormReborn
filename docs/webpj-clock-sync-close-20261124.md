@@ -9,3 +9,5 @@
 실제 Session의 등록·초기화·Attach·Poll은 `raw-campaign-session-login-front.js`가 같은 ClientLocalStateGlobals의 전역·70표본을 빌린다. E706·E947의 앱 결선, E1268의 이탈 초기화와 E1274의 단독 기본 수신기 범위 판정을 함께 적용한다. C++ `dataOwner_`의 canonical 장기 수신기/반납 baseline은 C++ 장치 수명 표현이며, 웹은 같은 내부 연결의 일반 등록과 JS 클로저/GC로 처리한다. LAN·소켓 주소 및 별도 Native 기본 수신기 발생원은 웹 범위에 포함하지 않는다. [앱 결선](webpj-app-clock-synchronization-20261119.md) · [이탈 정리](webpj-mission-leave-state-reset-20261123.md) · [단독 수신기](webpj-client-default-receivers-scope-20261123.md)
 
 검증: Node 26.13.0에서 `ucrt-clock-sort.test.mjs`, `raw-clock-synchronization.test.mjs`, `client-local-state-globals.test.mjs` 46/46 통과(`webpj/extracted/webpj-e1317-clock.log`). 새 제품 코드나 fixture는 없다. E1310에서 이미 port로 승격한 CampaignObjectMenuClient의 낡은 인계 집계도 함께 바로잡는다. 대응표는 총 1,160행, 대상 1,007 중 port 272·session 732·partial 3·todo 0이다. 남은 partial은 RawCampaignSession·RawButtonControls·RawMenuChat 세 행이다.
+
+E1316 전체 회귀에서 `port-map.test.mjs`의 이 행 기대값이 partial로 남아 있던 것을 찾았다. port 판정과 사유를 기대값에도 반영했고 해당 집중 검사 1/1이 통과했다. 대응표 구조·규칙 검사는 `checkMap(readMap())` 오류 0이다. 실패·교정은 E1316 커밋에 함께 기록한다.

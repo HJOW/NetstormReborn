@@ -134,12 +134,13 @@ test('이식 대응표: 기존 웹 모듈 대응과 3.6절 판정 기록', () =>
 });
 
 // 새 기준선에 등록한 기존 이식분과 아직 데이터만 있는 시간 동기화를 구분한다. (2026-11-15 WB04-E514)
-test('이식 대응표: 기존 모듈 재판정과 시간 동기화 부분 이식', () => {
+test('이식 대응표: 기존 모듈 재판정과 시간 동기화 적응 판정', () => {
     const expected = {
         'client/ClientHelpWord': ['www/core/client-help-word.js', 'port'],
         'client/ClientTimeSource': ['www/core/client-time-source.js', 'port'],
         'client/SystemNewsTime': ['www/core/system-news-time.js', 'port'],
-        'o/RawClockSynchronization': ['www/core/raw-clock-synchronization.js;www/core/ucrt-clock-sort.js', 'partial'],
+        // C++ UCRT 순서 고정의 플랫폼 적응으로 닫았다. 원본 구형 CRT 미관측은 E1317 기록에 보존한다.
+        'o/RawClockSynchronization': ['www/core/raw-clock-synchronization.js;www/core/ucrt-clock-sort.js', 'port'],
         'o/RawDaisDeletion': ['www/core/raw-dais-deletion.js', 'port'],
         'o/RawFactoryRegular': ['www/core/raw-factory-regular.js', 'port'],
         'o/RawPacketCopy': ['www/core/raw-packet-copy.js', 'port'],
