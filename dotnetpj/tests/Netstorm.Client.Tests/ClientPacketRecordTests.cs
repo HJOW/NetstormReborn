@@ -63,4 +63,56 @@ public sealed class ClientPacketRecordTests
         }
         finally { Remove(user); }
     }
+    /// <summary>요청 재설정은 0054dbac만 0으로 되돌리고 파일을 건드리지 않는다. 0.933에서 추가됐다.</summary>
+    [Fact]
+    public void ResetRequestZeroesRequestOnly()
+    {
+        var user = TempRoot();
+        try
+        {
+            using var record = new ClientPacketRecord(new FrameTimeBox(), user);
+            record.Requested.Value = 9;
+            record.ResetRequest();
+            Assert.Equal(0u, record.Requested.Value);
+            Assert.False(Directory.Exists(user.Root));
+        }
+        finally { Remove(user); }
+    }
+    /// <summary>요청 재설정은 열린 기록 FILE과 enabled1을 유지한다. 0.933에서 추가됐다.</summary>
+    [Fact]
+    public void ResetRequestKeepsOpenFileAndEnabled()
+    {
+        var user = TempRoot();
+        try
+        {
+            using var record = new ClientPacketRecord(new FrameTimeBox(), user);
+            record.Requested.Value = 9;
+            record.Open("keep.rec");
+            string path = Path.Combine(user.Diagnostics(), "keep.rec");
+            record.Write(true, new PacketConnection(), new byte[] { 3, 0x41, 4, 0 }, 4);
+            long before = new FileInfo(path).Length;
+            Assert.True(before > 0);
+            record.ResetRequest();
+            Assert.Equal(0u, record.Requested.Value);
+            record.Write(true, new PacketConnection(), new byte[] { 3, 0x41, 4, 0 }, 4);
+            Assert.True(new FileInfo(path).Length > before);
+        }
+        finally { Remove(user); }
+    }
+    /// <summary>요청 재설정은 닫힌 기록을 열거나 enabled하지 않는다. 0.933에서 추가됐다.</summary>
+    [Fact]
+    public void ResetRequestOnIdleRecordKeepsClosedState()
+    {
+        var user = TempRoot();
+        try
+        {
+            using var record = new ClientPacketRecord(new FrameTimeBox(), user);
+            record.Requested.Value = 5;
+            record.ResetRequest();
+            Assert.Equal(0u, record.Requested.Value);
+            record.Write(false, new PacketConnection(), ReadOnlyMemory<byte>.Empty, 0);
+            Assert.False(Directory.Exists(user.Root));
+        }
+        finally { Remove(user); }
+    }
 }

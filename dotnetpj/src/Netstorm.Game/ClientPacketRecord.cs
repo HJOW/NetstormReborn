@@ -18,6 +18,8 @@ public sealed class ClientPacketRecord : IDisposable
     private uint _enabled;
     /// <summary>0054dbac의 최초0 요청이다. Open/Close가 바꾸지 않는다.</summary>
     public UIntBox Requested { get; } = new();
+    /// <summary>원문 435220의 옵션 재해석처럼 0054dbac 요청만 0으로 재설정한다. 이미 열린 기록 FILE/enabled는 닫거나 지우지 않는다. 0.933에서 추가됐다.</summary>
+    public void ResetRequest() => Requested.Value = 0;
 
     /// <summary>같은 프레임 소유권만 보관하며 파일/폴더는 생성하지 않는다.</summary>
     public ClientPacketRecord(FrameTimeBox frame, UserDataRoot? user = null) { _frame = frame ?? throw new ArgumentNullException(nameof(frame)); _user = user; }
