@@ -29,6 +29,7 @@ import { AudioSystem, createAudioContext, volumeStepToCentibels } from './audio/
 import { SoundList } from './audio/sound-list.js';
 import { MissionAudioAssets } from './audio/mission-audio-assets.js';
 import { SceneMusicDriver } from './audio/scene-music-driver.js';
+import { ThunderProcess, THUNDER_PROCESS_TYPE } from './core/thunder-process.js';
 import { makePriestShieldNoticeHooks } from './core/sound-process.js';
 import { confirmSendMoney, dispatchSendMoneyInput, isSendMoneyCommand, sendMoneyScriptCode } from './core/send-money-input.js';
 import { dispatchChatInputKey } from './ui/hud-chat-geometry.js';
@@ -672,6 +673,8 @@ export class Netstorm {
         this._clientSubscriber = null; this._clientGameplay = null; this._clientCoreData = null; this._clientPlayers = null; this._clientTemplates = null;
         // 자산 적재 뒤 구성해 Session보다 오래 유지하는 월드 물리와 Kernel이다.
         this._gameAssets = null; this._surfaceStorage = null; this._clientKernel = null; this._clientTrace = null; this._clientProductionGlobals = null; this._campaignProduction = null;
+        // 커널이 소유한 번개 팔레트 프로세스(TYPE 55)의 PID 목록이다. 소멸 콜백에서 제거하며 세션 종료 전 정리한다. (2026-11-24 WB04-E1329)
+        this._thunderProcesses = [];
         // 미니맵의 장기 dirty 상태와 색 전역은 Client 수명에 둔다. (2026-11-20 WB04-E1082)
         this._clientMinimapState = null; this._clientMinimapGlobals = null; this._gameMenuButton = null; this._lastCampaignMission = null;
         // 게임 메뉴(Pause)가 올린 게임 시계 정지·음소거 깊이다. 미션을 떠날 때 되돌린다. (2026-11-20 WB04-E1089)
@@ -1555,8 +1558,8 @@ export class Netstorm {
         // World 가 없어도(State7 도중 실패 등) 이미 시작한 장면 음악은 메뉴 곡으로 되돌린다. (2026-11-20 WB04-E1119)
         this._endSceneMusic();
         if (!this._campaignWorld) return;
-        // 원본 월드 정리 어댑터(UberGump 004b2df0)는 Session·UI·Kernel 을 반납하기 전에 초기 캡처 기한(005c8618)을 0 으로 쓴다. 이 값이 남으면 다음 미션의 Zone 설치가
-        // `!earlyCaptureTimer.isRunning()` 진단을 낸다(미션을 떠나고 곧바로 다른 미션을 시작할 때). (2026-11-20 WB04-E1121)
+        // 원본 월드 정리 어댑터(UberGump 004b2df0)는 Session·UI·Kernel 을 반납하기 전에 번개 프로세스(ClearThunderFlashes)와 초기 캡처 기한(005c8618)을 정리한다. (2026-11-20 WB04-E1121, 2026-11-24 WB04-E1329)
+        this._clearThunderFlashes();
         if (this._clientLocal) this._clientLocal.captureEnd().value = 0;
         // 원본 State 월드 정리의 채팅 채널 정리(Clear445140 → ChatChannels::ResetOccupied: 점유된 기록의 이름·플래그·ID 를 모두 0 으로)와 시간 동기화 세 DWORD 초기화(Clear4c1f20 → ResetClientClockSynchronization)이다.
         // 이 둘이 없어 미션을 떠난 뒤에도 이전 미션의 채팅 대상 기록과 시간 응답 방식(replyMode 1)이 다음 미션까지 남았다. (2026-11-23 WB04-E1268)
@@ -1864,7 +1867,7 @@ export class Netstorm {
             translate: (text) => self._resources.translate(text), encodeDisplayText: (text) => displayTextCodec.encode(text), decodeDisplayText: (bytes) => displayTextCodec.decode(bytes),
             writeDiagnosticLog: (level, text) => console.info(`Netstorm: ${String(text).trim()}`), nsInfoGlobals: () => self._clientNsInfo,
             worldAudio: () => ({ sounds: () => ({ playByName: (name) => self._clientSoundPlayer.play(self._clientSoundNames.lookup(name), 0, 0, 0, 0, 0) }) }),
-            requestThunderFlash: (brightness) => { console.info(`Netstorm: 채팅 .flash(${brightness}) 번개 섬광 팔레트 효과는 원본 창 모드와 같이 아무것도 하지 않습니다(E1163 판정).`); },
+            requestThunderFlash: (brightness) => { this._startThunderFlash(brightness); },
             menu: () => ({ receiveNativePacketChat: (packet) => self._receiveCampaignChat(packet) }),
         };
     }
@@ -3421,6 +3424,8 @@ export class Netstorm {
             wallSeconds: () => this._gameClock.wallSeconds(), random: { next: (limit) => { const random = this._clientRandom; if (!random) throw new Error('장면 음악의 공유 게임 난수 수명 누락'); return random.game.next(limit); } },
             // 날씨(천둥) 효과음은 원본 MakeSceneMusicHooks 처럼 SoundPlayer::PlayByName(이름, 0,0,0,0,0)을 거친다. 그래야 게임 메뉴 음소거(PushMute)·소리 옵션·동시 재생 한도가 같이 적용된다. (2026-11-23 WB04-E1239)
             weatherSound: (name) => { try { this._clientSoundPlayer?.playByName(name, 0, 0, 0, 0, 0); } catch (error) { if (this._audio === audio) reportGameError('scene-music', error, { state: this._state, asset: name }); } },
+            // 원본 MakeSceneMusicHooks(00469c80)처럼 천둥 효과음 앞에 번개 프로세스를 생성한다. (2026-11-24 WB04-E1329)
+            thunderFlash: () => { this._startThunderFlash(0); },
             onError: (error, name) => { if (this._audio === audio) reportGameError('scene-music', error, { state: this._state, asset: name }); },
         });
         this._sceneMusic.begin();
@@ -4039,13 +4044,68 @@ export class Netstorm {
         this._startFrameLoop();
     }
 
+    // 원본 Client::StartThunderFlash(00470d40): 현재 Player 의 기술 부모(+0x9c DWORD)가 살아 있을 때만 TYPE 55·flags 0x10 번개 프로세스(ThunderProcess)를 실제 ProcessHost 에 부착한다.
+    // 창 모드와 마찬가지로 웹에서도 팔레트는 바꾸지 않지만, 실제 ProcessForm 할당과 수명(1/60초 뒤 자체 종료)이 원본 SidPool·Kernel 과 같아야 L3 덤프가 일치한다. (2026-11-24 WB04-E1329)
+    _startThunderFlash(brightness = 0) {
+        if (!this._clientGameplay?.player?.playerKnown) return;
+        const storage = this._surfaceStorage, kernel = this._clientKernel, screen = this._clientPaletteScreen, clock = this._gameClock;
+        if (!storage || !kernel || !screen || !clock) throw new Error('번개 기술 부모의 실제 표면 저장소·커널·팔레트·시계 없음');
+        if (storage.ownerMode.challenge) throw new Error('번개 메타맵 00479650 의 실제 기록 조회 미복원');
+        const players = this._clientCoreData.players;
+        const at = (this._clientGameplay.player.battleOwner >>> 0) * 180 + 0x9c;
+        if (at < 0 || at + 4 > players.length) throw new RangeError('번개 현재 Player 기술 DWORD 범위');
+        const parent = (players[at] | (players[at + 1] << 8) | (players[at + 2] << 16) | (players[at + 3] << 24)) >>> 0;
+        if (!parent) return;
+        if (parent > 65535 || parent >= storage.pool.capacity) throw new RangeError('번개 기술 부모의 실제 SID 범위');
+        const process = new ThunderProcess(false, {
+            wallSeconds: () => clock.wallSeconds(),
+            fullScreen: () => false,
+            readPalette: (start, count, destination) => {
+                const pal = screen.palette();
+                // 요청한 부분 팔레트 [start, start+count) 의 BGRX 바이트를 ScreenColor 객체로 채운다.
+                for (let index = 0; index < count; index += 1) {
+                    const offset = (start + index) * 4;
+                    destination[index] = { blue: pal[offset], green: pal[offset + 1], red: pal[offset + 2], reserved: pal[offset + 3] };
+                }
+            },
+            applyPalette: (start, count, colors) => {
+                const bytes = new Uint8Array(Math.max(count, 1) * 4);
+                // ScreenColor 배열을 Screen.setPalette 가 읽는 BGRX 바이트 배열로 옮긴다.
+                for (let index = 0; index < count; index += 1) {
+                    const offset = index * 4, color = colors[index];
+                    bytes[offset] = color.blue & 0xff; bytes[offset + 1] = color.green & 0xff; bytes[offset + 2] = color.red & 0xff; bytes[offset + 3] = color.reserved & 0xff;
+                }
+                screen.setPalette(start, count, bytes, true);
+            },
+            restorePalette: () => { screen.setPalette(0, 256, null, true); },
+        }, (pid) => {
+            const index = this._thunderProcesses.indexOf(pid);
+            if (index >= 0) this._thunderProcesses.splice(index, 1);
+        }, brightness);
+        const attached = storage.processes.host.attach(process, THUNDER_PROCESS_TYPE, parent, 0x10);
+        if (attached) this._thunderProcesses.push(kernel.find(attached));
+    }
+
+    // 원본 Client::ClearThunderFlashes: 등록된 번개 프로세스를 뒤에서부터 즉시 종료해 Form·목록을 함께 반납한다. (2026-11-24 WB04-E1329)
+    _clearThunderFlashes() {
+        const storage = this._surfaceStorage, kernel = this._clientKernel;
+        if (!storage || !kernel) { this._thunderProcesses.length = 0; return; }
+        // 매 kill 의 소멸 콜백이 배열에서 해당 PID 를 지우므로 매번 마지막 항목을 다시 읽는다.
+        while (this._thunderProcesses.length > 0) {
+            const pid = this._thunderProcesses[this._thunderProcesses.length - 1];
+            const process = kernel.get(pid);
+            if (!(process instanceof ThunderProcess)) throw new Error('번개 등록 목록과 실제 Kernel 불일치');
+            storage.processes.host.kill(process, 0x10);
+        }
+    }
+
     // 원본 주 루프 603·604(00439aeb·00439af0): 주변음(먼 천둥·독수리·고래, 120초 주기)과 공유 바람을 매 프레임 갱신한다. 둘은 같은 Game 난수를 소비하므로 게임 정지·메뉴·음향 장치 유무와 무관하게 실행하고(장치가 없으면 소리만 건너뛴다),
-    // 번개 섬광은 E1163 판정대로 창 모드에서 화면 변화가 없어 소리 요청만 한다. 이 호출이 없어 주변음이 한 번도 나지 않았고 바람(입자 흔들림)이 정지해 있었으며 Game 난수열이 원본과 달랐다. (2026-11-22 WB04-E1234)
+    // 번개 섬광(hooks.flash)은 원본 Client::RequestThunderFlash 처럼 창 모드에서도 실제 ThunderProcess(TYPE 55)를 부착해 SidPool·Kernel 수명을 맞춘다. (2026-11-22 WB04-E1234, 2026-11-24 WB04-E1329: ThunderProcess 연결)
     _runAmbientFrame() {
         const random = this._clientRandom?.game, local = this._clientLocal, clock = this._gameClock; if (!random || !local || !clock) return;
         const state = this._ambientSound ??= { kind: 0, forced: 0 };
         stepAmbientSound({ get deadline() { return local.activityEnd().value; }, set deadline(value) { local.activityEnd().value = value; }, get kind() { return state.kind; }, set kind(value) { state.kind = value; }, get forced() { return state.forced; } }, random, {
-            wallSeconds: () => clock.wallSeconds(), currentDialog: () => (this._mainMenu?.dialog ? 1 : 0), flash: () => {},
+            wallSeconds: () => clock.wallSeconds(), currentDialog: () => (this._mainMenu?.dialog ? 1 : 0), flash: (brightness) => { this._startThunderFlash(brightness); },
             sound: (name, loop, volume, pan, priority, limit) => { this._clientSoundPlayer?.playByName(name, loop, volume, pan, priority, limit); },
         });
         this._surfaceStorage?.updateAmbientWind(random);

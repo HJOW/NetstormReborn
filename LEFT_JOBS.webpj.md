@@ -6,7 +6,7 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-24, 마지막 단위 WB04-E1328)
+### 0.1 현재 값 (2026-11-24, 마지막 단위 WB04-E1329)
 
 - **실행·플레이**
   - **화면:** 브라우저 ‘클릭하여 시작’(첫 적재 뒤 최소 6초, E1308), 시작 title 그림, 메인 메뉴·캠페인/데모 목록·도움말·옵션(Reset All 게임 안 확인 창 포함)·Credits와 개발용 지형 미리보기가 동작한다.
@@ -18,15 +18,15 @@
 - **원본과의 동일성**
   - **M1 메뉴:** 영어 4:3 메뉴 8장면은 cpppj 오라클과 알려진 차이 영역(Campaign 창 크기·Options 팝업 위치) 밖에서 픽셀 차이 0이고 구름 배경도 같다(Kencloud 캐시, E1298).
   - **L2 시작 상태(E1283 닫음):** 검사 전용 고정 시각 모드(`?fixed=25`)에서 Tutorial1 Load/Start의 Game 난수열(90프레임 6,851회)·논리 화면·Session 덤프가 cpppj 기준선 오라클과 같다. 4:3·16:9(1366×768)·16:10(1280×800, E1322)의 90프레임 화면 0픽셀, 90·130프레임 덤프는 환경 의존인 `sp 1`·`player:*` 행만 다르다. 한국어(E1323)는 상태가 같고 첫 안내 창 밖 0픽셀이며 창 안 차이는 웹 독립 번역·글꼴 차이로 분리 확인했다([근거](docs/webpj-korean-m2-20261124.md)). 31개 미션의 시작 5·30·120프레임 덤프도 모두 같다(E1313).
-  - **L3 입력 진행:** cpp `--ui-script` 입력 단계표를 그대로 적용해 Tutorial1 시작~'Mission Accomplished!' 완료 창 4,200프레임(체크포인트 20곳, E1284~E1286·E1299·E1301~E1304)과 Tutorial2 시작~완료 창 5,400프레임(체크포인트 41곳, E1305~E1307)이 화면 0픽셀·덤프 일치다. Tutorial3(Capture The Priest)은 시작 안내 창 두 쪽과 240프레임(E1309, [기록](docs/webpj-l3-tutorial3-20261124.md)), ESC 메뉴 여닫기 360프레임(E1327)까지 같다. 이 대조로 다리 붕괴 스캔 초기화 누락(`Reset422490`, E1301)·생산 패널 HUD 생성 순서(E1305)·로그인 중 간헐천 보충 기한(E1313)·메뉴 SP 추적(E1327) 차이를 고쳤다.
+  - **L3 입력 진행:** cpp `--ui-script` 입력 단계표를 그대로 적용해 Tutorial1 시작~'Mission Accomplished!' 완료 창 4,200프레임(체크포인트 20곳, E1284~E1286·E1299·E1301~E1304)과 Tutorial2 시작~완료 창 5,400프레임(체크포인트 41곳, E1305~E1307)이 화면 0픽셀·덤프 일치다. Tutorial3(Capture The Priest)은 단계 A 전체(북서쪽 간헐천 5칸 직선 다리 직결·골렘 배치/완성·크리스털 수확·신전 배달 SP 1600→1800) → 단계 B(`Capturing Enemy Priests, Part 1/2` 안내 창·자유 진행) 1,700프레임(체크포인트 화면 9곳·덤프 7곳, E1309·E1329, [기록](docs/webpj-l3-tutorial3-stage-ab-20261124.md))과 ESC 메뉴 여닫기 360프레임(E1327)까지 같다. 이 대조로 다리 붕괴 스캔 초기화 누락(`Reset422490`, E1301)·생산 패널 HUD 생성 순서(E1305)·로그인 중 간헐천 보충 기한(E1313)·메뉴 SP 추적(E1327)·주변음/장면음악 천둥의 `ThunderProcess`(TYPE 55) 미연결(E1329) 차이를 고쳤다.
   - **부품:** 월드·UI 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다(원본 공통 메뉴 788행·Factory 메뉴 39행·Uber 루트 160행·장면 음악 3,113행, 채팅 입력줄 대상 720행(E1265), 파편·건물 캡처 4,474행(E1275~E1276)·골렘/받침 264행(E1312), 실제 Session의 EvilRay·Burning·섬 투하(E1314~E1316) 등). 대응표 1,007단위 중 732행은 Tutorial1 실행에서 웹 모듈의 함수가 모두 실행된 `session`이다(E1283). 좌측 HUD 하단 85×82픽셀은 원본 스크린샷과 일치한다.
   - **한국어 글자:** 갈무리11 12px 격자로 그리되 제목 배율·굵기(사용자 결정으로 보통체)·한글 기준선을 cpppj와 다르게 둔다([0.7절](#korean-font-change)).
   - **미검증:** Tutorial3 이후의 L3 진행, L4b(소리)와 자연 완주.
-- **현재 작업:** **대응표 partial 0 달성(E1328, RawCampaignSession port 승격).** 다음은 Tutorial3~6 L3 대조와 미션 목표 수행이다. 순서는 [다음 작업](#next)을 따른다.
+- **현재 작업:** **Tutorial3 단계 A→B L3 확장(1,700프레임) 및 `ThunderProcess`(TYPE 55) 연결·Node v26 전체 회귀 완료(E1329).** 다음은 Tutorial3 단계 B→H(적 섬 다리·Sun Disc Thrower·Wind Generator·적 사제 포획) 및 Tutorial4~6 L3 대조다. 순서는 [다음 작업](#next)을 따른다.
 - **전체 회귀**
   - **Node 22.23.5 E1324:** 6,845/6,845 통과, 실패·취소·미실행 0(760.8초, `extracted/webpj-e1324-node22.log`). 로컬 Node22 실행 경로는 `extracted/webpj-node22/node_modules/node-win-x64/bin/node.exe`다.
-  - **Node 26.13.0 E1325:** 6,847/6,847 통과, 실패·취소·미실행 0(486.4초, `extracted/webpj-e1325-node26-verified.log`).
-  - **주기(E1328 기준):** v26은 E1325 전체 뒤 3/4, v22는 E1324 전체 뒤 4/8. E1326~E1328은 집중 검사로 마감했다(다음 단위 E1329가 Node v26 전체 회귀 차례다).
+  - **Node 26.13.0 E1329:** 6,847/6,847 통과, 실패·취소·미실행 0(500.1초, 4/4 주기 갱신).
+  - **주기(E1329 기준):** v26은 E1329 전체 뒤 0/4, v22는 E1324 전체 뒤 5/8.
   - **Chromium:** E1313 전 미션 시작 상태 옵트인 전체 32/32 통과(24.3분, `webpj/extracted/webpj-e1313-final-e2e.log`). 기존 전체 e2e는 E1312 199건 중 186 통과·12 옵트인 미실행·한국어 브리핑 1건 부하 중 시간 초과(단독·3회 반복 통과)다. 단위별 실패·교정은 [E1313](docs/webpj-l3-mission-starts-20261124.md)과 각 단위 문서, 이전 회귀 이력은 [E1327 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261124-through-wb04-e1327)을 따른다.
 - **브라우저 검사:** 미션 화면은 단위마다 Chromium e2e로 확인한다(최근 전체 실행 E1312, 고정 시각 L2·L3 `e2e/fixed-time.spec.js`·`e2e/l3-tutorial1.spec.js`·`e2e/l3-tutorial2.spec.js`·`e2e/l3-tutorial3.spec.js`, 한국어 글자 배치 `e2e/korean-glyph-layout.spec.js` E1288). 메뉴는 2026-11-17 Chromium 2/2(갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체), 최초 실행·진행 잠금/체크·저장 재실행은 E616 Chromium 2/2. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md)
 
@@ -37,8 +37,8 @@
 2026-11-24 정리에서 번호를 다시 매겼다. 단위 문서가 가리키는 이전 번호(다음 작업 0·0-a·1~9)의 원문은 [E1327 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261124-through-wb04-e1327), 그보다 앞 번호(다음 작업 1 ①~⑩·2~6)는 [E1288 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1288)에 있다.
 
 1. **다음 미션 L3 대조(4D-4b Tutorial3~6).** Tutorial1(E1304, 4200프레임)과 Tutorial2(E1305~E1307, 5400프레임)는 시작부터 완료 창까지 화면 0픽셀·덤프 일치로 끝났다([Tutorial1](docs/webpj-l3-tutorial1-complete-20261124.md) · [Tutorial2](docs/webpj-l3-tutorial2-20261124.md)). 같은 틀(`e2e/l3-common.js`·`tools/l3-collect.mjs`, 미션 이름·폴더만 바꿈)로 **Tutorial3~6**(전투·방어물·AI)과 세 캠페인 묶음 미션의 시작~완료를 대조한다. 이 확장이 4D-4b의 Tutorial 단계 진행을 겸한다.
-   - 현재 위치: Tutorial3 시작 240프레임(E1309)·ESC 메뉴 360프레임(E1327). 이어서 단계 A 간헐천 다리·골렘 생산 → B 적 섬 잇기 → C 발사기 → D 제너레이터 → 적 사제 포획 순으로 늘린다([Tutorial3](docs/webpj-l3-tutorial3-20261124.md)).
-   - 단계 A 탐색 결과(단위 문서에 없는 기록, `e3b5fc615`): 시작 생산 창에 한 칸짜리 조각이 있고 `screen:20,44` 로 집어 `screen:250,390`·`260,390`·`250,430`·`260,430` 에 놓으면 섬 왼쪽 가장자리에 한 칸이 놓인다(격자 81곳, 빨간 틀 0 + 생산 창 변화로 판정). 가장 가까운 간헐천 섬은 왼쪽(≈`140,375`)이라 약 82픽셀(칸 6~7개)을 이어야 하고 조각이 한 칸씩 놓이므로 조각마다 격자 탐색(약 5분)이 필요하다. 골렘은 생산 창 `40,180` 에서 집는다.
+   - 현재 위치: Tutorial3 단계 A→B 1,700프레임(E1309·E1329, [단계 A→B 기록](docs/webpj-l3-tutorial3-stage-ab-20261124.md))·ESC 메뉴 360프레임(E1327). 이어서 단계 B 남쪽 적 섬 다리 직결 → C 발사기(Sun Disc Thrower 생산 투입) → D 제너레이터(Wind Generator 생산 투입) → E~H 적 사제 포획 순으로 늘린다.
+   - 단계 A 확인 좌표(E1329, 1024×768 기본 카메라 `cameraX=1552, cameraY=749`, 1칸=16×11px): 2칸 직선 막대(`60,44` 우클릭 회전 → `272,202` = `(113..114,85)`) + 리필 대기(~45프레임) 뒤 3칸 직선 막대(`60,44` 우클릭 회전 → `232,202` = `(110..112,85)`) 2조각으로 북서쪽 간헐천(`(109,85)`)에 직결. 골렘(`40,180` → `368,296` = `(119,95)`) 완성 후 선택(`360,290`)→간헐천(`186,185`) 클릭으로 첫 크리스털 배달(SP 1600→1800) 및 단계 B 진입.
    - 방법: 폴더 `tests/fixtures/cpppj/candidate-225553df/tutorialN-l3/` 와 스펙 `e2e/l3-tutorialN.spec.js`(Tutorial2 스펙 복제). 입력 위치는 cpp 오라클을 5초 안팎으로 여러 번 돌려 정하고(격자 탐색 50~230회가 5~21분이라 백그라운드로), 단계는 cpp `report` 의 `mission_gate` 두 번째 값으로 판정한다. 전투가 있는 미션은 체크포인트를 짧은 간격으로 두고 어긋나는 첫 프레임을 `mission_gate`·`bridge_scan_global` 과 프레임별 덤프(`runL3({ compare: false })`·`L3_DUMP_DIR`)로 좁힌다([탐색 기록](docs/webpj-l3-extension-probe-20261124.md)).
    - cpppj 오라클 수집은 HJOW-Athlon에서 실행 확인 없이 가능하고 다른 PC는 AGENTS 실행 확인 규칙을 따른다(3.3절).
 2. **다른 미션의 목표 수행(4D-4b).** Tutorial2([E1086](docs/webpj-tutorial2-complete-20261120.md))처럼 Tutorial3~6과 세 캠페인 묶음 미션의 단계별 목표를 수행해 완료 창까지 이어 본다. Early Mission 3 단계 A·6 단계 B의 너겟 납품(`0x020000b4`) 진행도 이때 확인한다. 자연 완주는 1절 사용자 확인 범위다.
@@ -52,7 +52,7 @@
 
 <a id="e951-e1081"></a>
 
-#### E951~E1328 진행 요약
+#### E951~E1329 진행 요약
 
 단위별 완료 문단·검증 수·회귀 이력은 [E1081 정리 전 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261120-through-wb04-e1081)의 0.1절(E951~E1081), [E1166 정리 전 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261121-through-wb04-e1166)의 0.1·3.1·3.7절(E1082~E1166), [E1237 정리 전 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1237)의 0.1·3.1절(E1167~E1237), [E1288 정리 전 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1288)의 0.1·3.1절(E1238~E1288), [E1327 정리 전 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261124-through-wb04-e1327)의 0.1·3.1절(E1289~E1327)과 각 단위 문서에 있다.
 
@@ -79,7 +79,7 @@
 | 승패·미션 흐름 | E1129~E1131, E1152, E1157, E1161 | 시작 덤프 구조 대조, 안내 창 배치, 승패 뒤 흐름·진행 저장, Priest Training 시작 연결 | — (L2·L3는 아래 행) | [L2 대조](docs/webpj-l2-tutorial1-20261121.md) · [승패 흐름](docs/webpj-mission-outcome-flow-20261121.md) |
 | 분석·판정 | E1149, E1153, E1156, E1163, E1241 | 난이도별 건설 속도, Wind Noise, 빨리 감기 한계, 미연결 모듈 68개 분류, cpppj 1322·1325·1326 변경 아홉 행 판정(②는 파생 피해 진단 문구 하나) | 쉬움 채취 절반 실관찰 | [난이도 진행](docs/webpj-skirmish-difficulty-20261121.md) · [미연결 모듈](docs/webpj-pause-key-unwired-modules-20261121.md) · [1322·1325·1326 판정](docs/webpj-cpppj-1322-1325-1326-judgment-20261123.md) |
 | 시작 화면 안정화 | E1300, E1308 | 처음 방문(캐시 없음)의 일시적 요청 실패로 한국어가 영어로 대체되거나 오류 화면이 되던 것을 파일·매니페스트 3회 재시도·동시 12개 한도·번들 로더 재시도로 막고, `클릭하여 시작`은 글꼴·메뉴 음악 내려받기 완료(상한 20초)와 첫 적재 뒤 고정 최소 6초(E1308 사용자 요청, `?startwait=밀리초`, 자동화 브라우저 기본 0)가 지난 뒤에 연다. 언어 탐지는 `navigator.languages[0]`를 우선한다 | 배포본 재배포 후 실제 처음 방문 확인(사용자) | [안정화](docs/webpj-start-screen-robustness-20261124.md) |
-| 번들 빌드 | E1293, E1297 | webpack 번들 하나를 `index.html`이 불러오고 번들 없는 ES 모듈 구동은 `debug.html`이 맡는다. 운영(최소화) 3.27MiB(E1328 3,429,669바이트)로 9.9MB 기준 통과, 개발(최소화 없음) 10.9MiB. 크기 한도·번들 최신 검사, Playwright 서버 시작 전 자동 빌드. 번들은 사용자 결정(E1297)으로 Git 에 추적하고 `tests/bundle-fresh.test.mjs`가 낡은 번들을 잡는다 | — | [번들](docs/webpj-webpack-bundle-20261124.md) |
+| 번들 빌드 | E1293, E1297 | webpack 번들 하나를 `index.html`이 불러오고 번들 없는 ES 모듈 구동은 `debug.html`이 맡는다. 운영(최소화) 3.27MiB(E1329 3,433,729바이트)로 9.9MB 기준 통과, 개발(최소화 없음) 10.9MiB. 크기 한도·번들 최신 검사, Playwright 서버 시작 전 자동 빌드. 번들은 사용자 결정(E1297)으로 Git 에 추적하고 `tests/bundle-fresh.test.mjs`가 낡은 번들을 잡는다 | — | [번들](docs/webpj-webpack-bundle-20261124.md) |
 | 회귀 교정 | E1060, E1078 | 관측 자료 누락·메뉴 전용 번역 검사 범위, 외부 접속 감사의 비공개 필드 오탐 | — | [회귀 교정](docs/webpj-regression-translation-fixtures-20261120.md) · [접속 감사](docs/webpj-external-audit-private-field-20261120.md) |
 | 웹 범위 판정 | E1167, E1171, E1176, E1180, E1182, E1187~E1188, E1192, E1202~E1204, E1238, E1242~E1243 | Players 하위 3항목·지식 NSInfo·의식 보상 선택 UI·HTML `$Input=`·패킷 원천/지연·메타 앞단·Sprite 갱신·FortCoreDataLoad·승리/패배 곡·건설 기록 재생·Uber 배경 자식을 웹 범위 밖으로, 인트로 영상은 사용자 결정으로 웹 제외 | — | [NSInfo](docs/webpj-nsinfo-scope-20261122.md) · [동영상 결정](docs/webpj-intro-movie-decision-20261122.md) · [건설 기록 재생](docs/webpj-build-replay-scope-20261123.md) |
 | 대본·기술·타이틀 | E1184, E1189~E1190, E1197, E1199~E1200, E1227, E1245 | 시작 title 그림, Fury War 기술 지급, 대본 82개 명령 점검(`ViewSpot`·`Salvage`), 도움말·Tell 남은 두 행, Detonate·GetTechnology 원본 관측, Review Knowledge·GetTechnology 단추, Priest Training 7 Training Menu 별칭 | — | [대본 명령](docs/webpj-script-commands-audit-20261122.md) · [Fury War](docs/webpj-fury-war-technology-20261122.md) |
@@ -88,7 +88,7 @@
 | 감사 잔여·partial 닫기 | E1240, E1247~E1248, E1252, E1255~E1257, E1261, E1263~E1270 | 예산 칸 우클릭 판정, 미니맵·메뉴·HUD·커서·생산·BitmapFont·ClientAudio 행 닫기, 미완료 46항목 전수 점검(20개 닫음), 프레임 순서, 입력 큐 코드 전수, 이탈 State 정리, 사제 배치 검사 Session 설치 | — | [점검](docs/webpj-left-jobs-audit-20261123.md) · [프레임 순서](docs/webpj-frame-order-20261123.md) |
 | partial 마감(12→0행) | E1292, E1294, E1296, E1298, E1310, E1317, E1320, E1324~E1328 | port 승격: 4-D 세 행 SessionLogin·ClientCampaignTransport·UberReconnect(E1292), RawCampaignRitual(의식 Regular 부착을 cpppj 일반 attach 와 같게, E1294), CampaignClientServices(아이스 반사 비결정 입력의 웹 적응, E1296), ClientRendererFrame·UberGump(메인 메뉴 Kencloud, E1298), CampaignObjectMenuClient(E1310), RawClockSynchronization(C++ UCRT 동작을 고정하는 플랫폼 적응, E1317), RawMenuChat(E1320), RawButtonControls(E1324~E1325), RawCampaignSession(송금 MessageBoard E1326·메뉴 SP 추적 E1327·구름/HTML/Factory연구도움말/연결상태삭제/빈State 5건 연결과 전수 감사 E1328) | — | [partial 세 행](docs/webpj-port-map-partial-close-20261124.md) · [시간 동기화](docs/webpj-clock-sync-close-20261124.md) · [세션 경계 마감](docs/webpj-session-boundary-close-20261124.md) |
 | L2·고정 시각 | E1271~E1272, E1278, E1280~E1283, E1322~E1323 | 고정 시각 모드(`?fixed=25`)와 시작 그림 구간, cpp 난수 호출 추적으로 State 설치(SP 정리·구름 구축·주변음 기한) 맞춤, 월드 진입 Guide 정지, 4:3·16:9 오라클 0픽셀, 대응표 `session` 732행 승격, 16:10 1280×800(E1322, 사용자 결정)·한국어 M2(E1323, 번역·글꼴 차이 분리) | — | [고정 시각](docs/webpj-fixed-time-mode-20261123.md) · [난수·시각](docs/webpj-state-install-rng-20261123.md) · [session 승격](docs/webpj-port-map-session-20261123.md) · [16:10](docs/webpj-aspect-16x10-20261124.md) |
-| L3 | E1284~E1286, E1299, E1301~E1307, E1309, E1313 | cpp `--ui-script` 단계표의 웹 적용(안내 단추 클릭 N+1·키와 화면 좌표 클릭 N−1 프레임), Tutorial1 시작~완료 창 4,200프레임(다리 일곱 조각·미니맵 카메라 이동·간헐천 섬과 Storm Power 안내 창·사제 수확·SP 600)과 Tutorial2 5,400프레임(신전·워크샾·발사기 네 개·회수) 화면 0픽셀·덤프 일치, Tutorial3 시작 240프레임, 31개 미션 시작 5·30·120프레임 덤프 일치(E1313). 고친 차이: 다리 붕괴 스캔 초기화(E1301), 생산 패널 HUD 생성 순서(E1305), 로그인 중 간헐천 보충 기한(bc7, E1313) | Tutorial3~6·캠페인 미션 단계표([다음 작업 1](#next)) | [L3](docs/webpj-l3-tutorial1-20261123.md) · [Tutorial1 완료](docs/webpj-l3-tutorial1-complete-20261124.md) · [Tutorial2](docs/webpj-l3-tutorial2-20261124.md) · [Tutorial3](docs/webpj-l3-tutorial3-20261124.md) · [전 미션 시작](docs/webpj-l3-mission-starts-20261124.md) |
+| L3 | E1284~E1286, E1299, E1301~E1307, E1309, E1313, E1329 | cpp `--ui-script` 단계표의 웹 적용(안내 단추 클릭 N+1·키와 화면 좌표 클릭 N−1 프레임), Tutorial1 시작~완료 창 4,200프레임(다리 일곱 조각·미니맵 카메라 이동·간헐천 섬과 Storm Power 안내 창·사제 수확·SP 600)과 Tutorial2 5,400프레임(신전·워크샾·발사기 네 개·회수) 화면 0픽셀·덤프 일치, Tutorial3 단계 A→B 1,700프레임(간헐천 직결·골렘 수확·SP 1600→1800·Capturing Enemy Priests 안내 창, E1309·E1329), 31개 미션 시작 5·30·120프레임 덤프 일치(E1313). 고친 차이: 다리 붕괴 스캔 초기화(E1301), 생산 패널 HUD 생성 순서(E1305), 로그인 중 간헐천 보충 기한(bc7, E1313), 주변음·장면음악 천둥 `ThunderProcess`(TYPE 55) 연결(E1329) | Tutorial3 단계 B→H·Tutorial4~6·캠페인 미션 단계표([다음 작업 1](#next)) | [L3](docs/webpj-l3-tutorial1-20261123.md) · [Tutorial1 완료](docs/webpj-l3-tutorial1-complete-20261124.md) · [Tutorial2](docs/webpj-l3-tutorial2-20261124.md) · [Tutorial3 단계 A→B](docs/webpj-l3-tutorial3-stage-ab-20261124.md) · [전 미션 시작](docs/webpj-l3-mission-starts-20261124.md) |
 | 원본 캡처·Session 대조 | E1275~E1276, E1312, E1314~E1316 | 신전·제네레이터·타워 파편 481행, 윈드 아비어리·워크샾·제단 3,993행, 골렘 66·받침 198행 캡처의 크기·기준점·전체 픽셀 일치, 실제 Session의 EvilRay(E1314)·피해 연소(E1315)·섬 투하 받침/입자(E1316)를 C++ 통합 시험과 대조 | — | [파편 캡처](docs/webpj-temple-shrapnel-capture-20261123.md) · [골렘·받침](docs/webpj-golem-support-capture-20261124.md) · [섬 투하](docs/webpj-drop-island-session-20261124.md) |
 
 ### 0.2 단계 진행판
@@ -127,7 +127,7 @@
 ### 0.4 기준선과 자료
 
 - **이식 기준선**은 cpppj 제품 1313(11.01) `225553df`다. 이후 변경 판정은 3.6절을 따른다. 별도 오라클 빌드는 HJOW-Athlon의 `extracted/webpj-oracle/225553df/Netstorm.exe`에 있다(SHA-256 `5b52d96d…b77eb46`, Git 제외).
-- **자료 추적**은 [PORT_MAP.tsv](webpj/PORT_MAP.tsv)와 [fixture manifest](webpj/tests/fixtures/manifest.json) 975항목(E1327 ESC 메뉴/SP 오라클9항목 포함)을 기준으로 한다. 이식 자료는 cpppj 소스·fixture·문서를 사용한다.
+- **자료 추적**은 [PORT_MAP.tsv](webpj/PORT_MAP.tsv)와 [fixture manifest](webpj/tests/fixtures/manifest.json) 986항목(E1329 Tutorial3 단계 A→B 오라클 11항목 포함)을 기준으로 한다. 이식 자료는 cpppj 소스·fixture·문서를 사용한다.
 
 ### 0.5 단위 착수와 종료
 

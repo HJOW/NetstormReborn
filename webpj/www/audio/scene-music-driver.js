@@ -33,19 +33,19 @@ export function musicSeconds(name) {
 // 장면 음악 구동기이다. 감독(SceneMusic)의 곡 선택·기한 규칙을 그대로 쓰고 장치 경계만 앱에 연결한다. (2026-11-20 WB04-E1119)
 export class SceneMusicDriver {
     // 재생기·적재기·시계·난수와 감독 상태이다. selected 는 원본 선택기의 현재 곡 이름(받는 중이어도 선택한 곡)이다.
-    #audio; #prepare; #release; #weatherSound; #onError; #state; #scene; #selected = MENU_TRACK; #active = false;
+    #audio; #prepare; #release; #weatherSound; #thunderFlash; #onError; #state; #scene; #selected = MENU_TRACK; #active = false;
 
-    // 장치를 받아 감독을 만든다. 필수 장치가 없으면 원본처럼 조용히 건너뛰지 않고 오류를 던진다. (2026-11-20 WB04-E1119)
-    // 인자: audio(AudioSystem), prepare(이름)→Promise, release(이름), wallSeconds()→초, random.next(n)→정수, weatherSound(이름), onError(오류, 곡 이름).
-    constructor({ audio, prepare, release, wallSeconds, random, weatherSound = () => {}, onError = () => {} } = {}) {
+    // 장치를 받아 감독을 만든다. 필수 장치가 없으면 원본처럼 조용히 건너뛰지 않고 오류를 던진다. (2026-11-20 WB04-E1119, 2026-11-24 WB04-E1329: thunderFlash 연결)
+    // 인자: audio(AudioSystem), prepare(이름)→Promise, release(이름), wallSeconds()→초, random.next(n)→정수, weatherSound(이름), thunderFlash(), onError(오류, 곡 이름).
+    constructor({ audio, prepare, release, wallSeconds, random, weatherSound = () => {}, thunderFlash = () => {}, onError = () => {} } = {}) {
         if (!audio || !(audio.music instanceof Map) || typeof audio.playMusic !== 'function' || typeof prepare !== 'function' || typeof release !== 'function'
-            || typeof wallSeconds !== 'function' || typeof random?.next !== 'function' || typeof weatherSound !== 'function' || typeof onError !== 'function') throw new TypeError('장면 음악 구동기의 재생기·적재기·시계·난수 장치 누락');
-        this.#audio = audio; this.#prepare = prepare; this.#release = release; this.#weatherSound = weatherSound; this.#onError = onError;
+            || typeof wallSeconds !== 'function' || typeof random?.next !== 'function' || typeof weatherSound !== 'function' || typeof thunderFlash !== 'function' || typeof onError !== 'function') throw new TypeError('장면 음악 구동기의 재생기·적재기·시계·난수 장치 누락');
+        this.#audio = audio; this.#prepare = prepare; this.#release = release; this.#weatherSound = weatherSound; this.#thunderFlash = thunderFlash; this.#onError = onError;
         this.#state = new SceneMusicState();
         this.#scene = new SceneMusic(this.#state, random, {
             wallSeconds, currentName: () => this.#selected, select: (name) => this.#select(name), duration: () => this.#musicAudible() ? musicSeconds(this.#selected) : 0,
-            // 희생 의식 곡·대기실 곡·팔레트·화면 갱신·번개 섬광은 대응 부품이 없어 비어 있다(위 머리 설명).
-            sacrificing: () => false, waitingRoom: () => false, refresh: () => {}, ascendancyPalette: () => false, loadPalette: () => {}, thunderFlash: () => {},
+            // 희생 의식 곡·대기실 곡·팔레트·화면 갱신은 대응 부품이 없어 비어 있고, 번개 섬광은 호출자(Client::StartThunderFlash)에 연결한다. (2026-11-24 WB04-E1329)
+            sacrificing: () => false, waitingRoom: () => false, refresh: () => {}, ascendancyPalette: () => false, loadPalette: () => {}, thunderFlash: () => this.#thunderFlash(),
             weatherSound: (name) => this.#weatherSound(name),
         });
     }

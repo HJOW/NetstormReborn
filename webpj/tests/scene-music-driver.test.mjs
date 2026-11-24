@@ -12,15 +12,15 @@ import { TRACKS } from '../www/audio/scene-music.js';
 function fixture({ values = [0], menuLoaded = true } = {}) {
     const audio = { music: new Map(), closed: false, played: [], playMusic(name) { this.played.push(name); return true; } };
     if (menuLoaded) audio.music.set(MENU_TRACK, {});
-    const clock = { now: 100 }, prepared = [], released = [], weather = [], errors = [], waiting = new Map();
+    const clock = { now: 100 }, prepared = [], released = [], weather = [], flashes = [], errors = [], waiting = new Map();
     const driver = new SceneMusicDriver({
         audio, wallSeconds: () => clock.now, random: { next: (limit) => { assert.equal(limit, 4000); return values.shift() ?? 0; } },
         prepare: (name) => { prepared.push(name); return new Promise((resolve, reject) => waiting.set(name, { resolve: () => { audio.music.set(name.toLowerCase(), {}); resolve({}); }, reject })); },
-        release: (name) => { released.push(name); audio.music.delete(name); }, weatherSound: (name) => weather.push(name), onError: (error, name) => errors.push([error.message, name]),
+        release: (name) => { released.push(name); audio.music.delete(name); }, weatherSound: (name) => weather.push(name), thunderFlash: () => flashes.push(weather.length), onError: (error, name) => errors.push([error.message, name]),
     });
     // 받기 하나를 끝내고 이어지는 비동기 정리가 돌도록 마이크로태스크를 비운다.
     const finish = async (name) => { waiting.get(name).resolve(); waiting.delete(name); for (let index = 0; index < 5; index += 1) await Promise.resolve(); };
-    return { audio, clock, prepared, released, weather, errors, waiting, driver, finish };
+    return { audio, clock, prepared, released, weather, flashes, errors, waiting, driver, finish };
 }
 
 test('곡 길이 표: 모든 곡이 공개 자산 파일 머리의 data 크기·원본 식과 같다', () => {
@@ -56,11 +56,11 @@ test('begin: 난수로 시작 원소 곡을 고르고 받은 뒤에 재생하며
     f.driver.begin(); assert.deepEqual(f.prepared, ['sun22.mus', 'wind22.mus']); assert.equal(f.driver.selected, 'sun22.mus');
 });
 
-test('begin: 천둥 곡이 시작될 때만 천둥 효과음을 내고 곡마다 색인 순환을 지킨다', () => {
-    // 난수 1500 → 색인 1 → 2 → thu22.mus 이며 날씨 효과음이 난다. 난수 0 → 1 → rain22.mus 는 효과음이 없다.
+test('begin: 천둥 곡이 시작될 때만 번개 섬광·천둥 효과음을 내고 곡마다 색인 순환을 지킨다', () => {
+    // 난수 1500 → 색인 1 → 2 → thu22.mus 이며 번개 섬광(효과음 앞: weather.length 0)과 날씨 효과음이 난다. 난수 0 → 1 → rain22.mus 는 효과음·섬광이 없다. (2026-11-24 WB04-E1329: thunderFlash 확인)
     const thunder = fixture({ values: [1500] }); thunder.driver.begin();
-    assert.equal(thunder.driver.selected, 'thu22.mus'); assert.deepEqual(thunder.weather, ['thunderCrack.wav']);
-    const rain = fixture({ values: [0] }); rain.driver.begin(); assert.equal(rain.driver.selected, 'rain22.mus'); assert.deepEqual(rain.weather, []);
+    assert.equal(thunder.driver.selected, 'thu22.mus'); assert.deepEqual(thunder.flashes, [0]); assert.deepEqual(thunder.weather, ['thunderCrack.wav']);
+    const rain = fixture({ values: [0] }); rain.driver.begin(); assert.equal(rain.driver.selected, 'rain22.mus'); assert.deepEqual(rain.flashes, []); assert.deepEqual(rain.weather, []);
     // 난수 3999 → 3 → (3+1)%4=0 → wind22.mus 로 넘어 돈다.
     const wrap = fixture({ values: [3999] }); wrap.driver.begin(); assert.equal(wrap.driver.selected, 'wind22.mus');
 });
