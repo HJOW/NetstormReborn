@@ -3,8 +3,8 @@ using Netstorm.Net;
 
 namespace Netstorm.Client;
 
-// 장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay·Carrier/Construction·장기 CS·연결 종료 묶음을 같은 분배기에 설치한다. 전송 설치는 R4-6, 실제 송수신 펌프는 R11에서 잇는다.
-/// <summary>공통 패킷 분배기의 실제 소유자 조립이다. 장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay·Carrier/Construction·장기 CS·연결 종료 묶음을 같은 분배기에 설치한다.</summary>
+// 장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay·Carrier/Construction·장기 CS·연결 종료·전투 시작 묶음을 같은 분배기에 설치한다. 전송 설치는 R4-6, 실제 송수신 펌프는 R11에서 잇는다.
+/// <summary>공통 패킷 분배기의 실제 소유자 조립이다. 장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay·Carrier/Construction·장기 CS·연결 종료·전투 시작 묶음을 같은 분배기에 설치한다.</summary>
 public static class ClientPacketDispatch
 {
     /// <summary>같은 장기 Client 장치만 읽으며 실제 수신 UI/진단/활동 장치를 묶는다.</summary>
@@ -18,7 +18,7 @@ public static class ClientPacketDispatch
     /// <param name="activity">장기 연결 활성의 실제 벽시계/프레임/서버 조회다.</param>
     /// <param name="challenge">같은 Client 수명으로 유지하는 실제 CS 슬롯·할당 owner다. 0x7b·0x7c 후크 결합 수신기가 공유한다.</param>
     /// <returns>장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay 묶음이 설치된 실제 분배기다.</returns>
-    /// <remarks>2026-11-23 0.897에서 R4-6 전송·수신 묶음용으로 추가하고 0.898에서 설정·버전·기술·변수 묶음을, 0.899에서 Native gameplay 6종 묶음을, 0.934에서 장기 기본 18행을, 0.964에서 Carrier/Construction 묶음을, 0.966에서 장기 CS 묶음(0x7b·0x7c)을, 0.969에서 연결 종료 2번을 이었다. 근거: R4-6 남음의 "공통 41h가 Root.ReceiveNativePacketChat을 부르는 전송 설치"와 "NativeLoginPacketReceivers의 실제 MonoGame Root 설치 호출"과 InstallClientPacketDefaults의 기본 18행·Carrier/Construction 고정 F·장기 CS·2번 수신기다. 호스트는 10.78만 다루므로 판본을 고정한다. 종료/닫기/반납은 R11 수송에서 잇는다.</remarks>
+    /// <remarks>2026-11-23 0.897에서 R4-6 전송·수신 묶음용으로 추가하고 0.898에서 설정·버전·기술·변수 묶음을, 0.899에서 Native gameplay 6종 묶음을, 0.934에서 장기 기본 18행을, 0.964에서 Carrier/Construction 묶음을, 0.966에서 장기 CS 묶음(0x7b·0x7c)을, 0.969에서 연결 종료 2번을, 0.970에서 전투 시작 1a/1b를 이었다. 근거: R4-6 남음의 "공통 41h가 Root.ReceiveNativePacketChat을 부르는 전송 설치"와 "NativeLoginPacketReceivers의 실제 MonoGame Root 설치 호출"과 InstallClientPacketDefaults의 기본 18행·Carrier/Construction 고정 F·장기 CS·2번·1a/1b 수신기다. 호스트는 10.78만 다루므로 판본을 고정한다. 종료/닫기/반납은 R11 수송에서 잇는다.</remarks>
     public static RawPacketDispatch Build(
         PacketDispatchHooks dispatch,
         ClientGameplayGlobals game,
@@ -28,7 +28,9 @@ public static class ClientPacketDispatch
         Action<Memory<byte>> receive,
         Action<string, string, uint> assertion,
         ConnectionActivityHooks activity,
-        ClientChallengeGlobals challenge)
+        ClientChallengeGlobals challenge,
+        Func<uint>? recordRequested = null,
+        Action<string>? openRecord = null)
     {
         ArgumentNullException.ThrowIfNull(dispatch);
         ArgumentNullException.ThrowIfNull(game);
@@ -40,7 +42,7 @@ public static class ClientPacketDispatch
         ArgumentNullException.ThrowIfNull(activity);
         ArgumentNullException.ThrowIfNull(challenge);
         var packet = new RawPacketDispatch(OriginalEdition.Patch1078, dispatch);
-        InstallDefaults(packet, game, connections, surface, chat, receive, assertion, activity, challenge);
+        InstallDefaults(packet, game, connections, surface, chat, receive, assertion, activity, challenge, recordRequested, openRecord);
         return packet;
     }
 
@@ -54,6 +56,8 @@ public static class ClientPacketDispatch
     /// <param name="assertion">원문 진단의 실제 선택 줄 소비자다.</param>
     /// <param name="activity">장기 연결 활성의 실제 벽시계/프레임/서버 조회다.</param>
     /// <param name="challenge">같은 Client 수명으로 유지하는 실제 CS 슬롯·할당 owner다.</param>
+    /// <param name="recordRequested">현재 요청 DWORD를 읽는다. 없으면 기록을 열지 않는다.</param>
+    /// <param name="openRecord">현재 이름으로 같은 실제 기록을 닫고 새로 연다. 없으면 명시 실패한다.</param>
     internal static void InstallDefaults(
         RawPacketDispatch packet,
         ClientGameplayGlobals game,
@@ -63,7 +67,9 @@ public static class ClientPacketDispatch
         Action<Memory<byte>> receive,
         Action<string, string, uint> assertion,
         ConnectionActivityHooks activity,
-        ClientChallengeGlobals challenge)
+        ClientChallengeGlobals challenge,
+        Func<uint>? recordRequested = null,
+        Action<string>? openRecord = null)
     {
         ArgumentNullException.ThrowIfNull(packet);
         ArgumentNullException.ThrowIfNull(game);
@@ -117,5 +123,46 @@ public static class ClientPacketDispatch
                 using var pin = game.PinCurrentRuntime(session);
                 throw new InvalidOperationException("연결 종료 소유자 방송 미연결(R6)");
             });
+        // 1a/1b 전투 시작을 같은 기본 표에 잇는다. 상태·예약·포트·구독자·검사·진단·복제·연결은 실제 장기 장치이며 기록 조회·열기는 호출자가 묶는다. 0.970에서 추가됐다.
+        var battleHooks = new ClientStateBattleStartHooks
+        {
+            // 같은 실제 로컬 상태 블록 owner다.
+            State = connections.LocalState.State,
+            // 같은 실제 예약 수 owner다.
+            ZonePending = connections.LocalState.ZonePending,
+            // 현재 게임 포트를 읽는다.
+            GamePort = () => game.GameServerPort.Value,
+            // 같은 실제 자기 구독자 번호 owner다.
+            Subscriber = game.Subscribers?.MySubscriber ?? throw new InvalidOperationException("전투 시작의 실제 구독자 미연결"),
+            // 현재 요청 DWORD를 읽는다. 기록 owner가 없으면 열지 않는다.
+            RecordRequested = recordRequested ?? (() => 0u),
+            // 같은 실제 현재 검사 뷰다.
+            Checking = surface.Storage.Checking(),
+            // 현재 서버 여부를 읽는다.
+            Server = () => game.Authority.Server,
+            // 원문 진단의 실제 선택 줄 소비자다.
+            Assertion = assertion,
+            // 같은 실제 가변 복제 장부 토큰을 반환한다.
+            Duplicate = buffer => connections.LocalState.ZonePackets.Duplicate(buffer, packet),
+            // 현재 이름으로 같은 실제 기록을 닫고 새로 연다. 기록 owner가 없으면 명시 실패한다.
+            OpenRecord = openRecord ?? (_ => throw new InvalidOperationException("전투 시작 기록 열기 미연결(R7)")),
+            // 실제 현재 연결을 순서대로 닫는다.
+            Disconnect = connections.Registry.Disconnect,
+            // 1b의 현재 쓰기 뒤 같은 실제 상태 처리기를 동기 실행한다. 실제 UI State 부모가 없으므로 설치 후크에서 명시 실패한다.
+            Run = () => throw new InvalidOperationException("전투 시작의 실제 UI State 부모 미연결"),
+        };
+        // 실제 배송 connection의 Source 선택 장치다. 비어 있으면 명시 실패한다.
+        NativeBattleSource SelectSource(PacketConnection? connection) =>
+            connection is null
+                ? throw new InvalidOperationException("전투 시작의 실제 Source 미연결")
+                : connections.PacketSources.Resolve(connection) ?? throw new InvalidOperationException("전투 시작의 실제 Source 미연결");
+        // 실제 UI State 부모의 배송 분배 장치다. 메뉴가 없으므로 대여를 반납하고 명시 실패한다.
+        void DispatchBattle(NativeBattleSource source, bool peer)
+        {
+            _ = peer;
+            source.Dispose();
+            throw new InvalidOperationException("전투 시작의 실제 UI State 부모 미연결");
+        }
+        ClientStateBattleStart.Install(packet, battleHooks, SelectSource, DispatchBattle);
     }
 }

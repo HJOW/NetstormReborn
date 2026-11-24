@@ -1,11 +1,12 @@
 using System.Buffers.Binary;
+using Netstorm.Core.Display;
 using Netstorm.Core.Original;
 using Netstorm.Net;
 
 namespace Netstorm.Client.Tests;
 
 // 공통 패킷 분배 부모의 41h·로그인·Native gameplay·Carrier/Construction·장기 CS 설치를 검사하는 클래스다. 2026-11-23 0.897에서 R4-6 전송·수신 묶음용으로 추가하고 0.899에서 Native gameplay 묶음을, 0.964에서 Carrier/Construction 묶음을, 0.966에서 장기 CS 묶음(0x7b·0x7c)을 이었다.
-// 근거: R4-6 남음의 "공통 41h가 Root.ReceiveNativePacketChat을 부르는 전송 설치"와 "NativeLoginPacketReceivers의 실제 MonoGame Root 설치 호출"이다.
+// 근거: R4-6 남음의 "공통 41h가 Root.ReceiveNativePacketChat을 부르는 전송 설치"와 "NativeLoginPacketReceivers의 실제 MonoGame Root 설치 호출"이다. 0.969에서 연결 종료 2번을, 0.970에서 전투 시작 1a/1b를 이었다.
 public sealed class ClientPacketDispatchParentTests
 {
     /// <summary>같은 실제 두 구독자 DWORD다.</summary>
@@ -48,9 +49,48 @@ public sealed class ClientPacketDispatchParentTests
     /// <summary>실제 장기 연결 활성을 고정 값으로 둔다.</summary>
     private static ConnectionActivityHooks ActivityHooks() => new() { WallSeconds = () => 100.0, FrameNumber = () => 100, Server = () => true, EraseStatus = (_, _) => { } };
     /// <summary>같은 장기 Client 장치로 실제 분배기를 묶는다.</summary>
-    private static RawPacketDispatch Build(Scene scene, Action<Memory<byte>> receive) => ClientPacketDispatch.Build(
+    private static RawPacketDispatch Build(Scene scene, Action<Memory<byte>> receive, Func<uint>? recordRequested = null, Action<string>? openRecord = null) => ClientPacketDispatch.Build(
         DispatchHooks(), scene.Game, scene.Connections, scene.Surface, scene.Chat, receive,
-        (expression, file, line) => scene.Assertions.Add(line), ActivityHooks(), scene.Challenge);
+        (expression, file, line) => scene.Assertions.Add(line), ActivityHooks(), scene.Challenge, recordRequested, openRecord);
+    /// <summary>같은 장부로 실제 수송을 만들고 소유 중인 현재 연결을 돌려준다. Source 선택·복제·연결 효과가 같은 실제 장치를 쓰는지 대조한다.</summary>
+    private static CompositeMissionTransport MakeOwnedConnection(Scene scene, out PacketConnection connection)
+    {
+        // 수송 생성·listener·연결·재배치는 같은 실제 owner 묶음으로 수행한다.
+        scene.Game.Authority.Server = true;
+        scene.Game.PlayerRecords.Initialize((_, _) => { });
+        var transport = ClientCampaignTransport.Make(scene.Game, scene.Connections, scene.Surface, scene.Chat, _ => { }, (_, _, _) => { },
+            new() { WallSeconds = () => 100.0, FrameNumber = () => 100, Server = () => scene.Game.Authority.Server, EraseStatus = (_, _) => { } },
+            scene.Challenge, CompositeTransportRole.InternalMission, new OriginalGameClock(0), () => 100u,
+            (_, _, _, _) => { }, null);
+        transport.InternalTransport.RegisterLogin((_, _, _) => { });
+        transport.Serve(6799);
+        transport.Connect(new byte[20], 6799);
+        Assert.Equal(0, transport.Poll());
+        transport.Assign(-1, 1);
+        connection = transport.Connection(1) ?? throw new InvalidOperationException("소유 중인 현재 연결 누락");
+        return transport;
+    }
+    /// <summary>원문 1a 입력 패킷을 조립한다. 길이는 개수×71+15의 실제 선언 길이를 따른다.</summary>
+    private static byte[] ZonePacket(byte clients, uint address)
+    {
+        // 종류·개수·주소를 같은 위치에 두고 나머지는 0으로 둔다.
+        byte[] packet = new byte[clients * 71 + 15];
+        packet[1] = 0x1a;
+        packet[14] = clients;
+        BinaryPrimitives.WriteUInt32LittleEndian(packet.AsSpan(10, 4), address);
+        return packet;
+    }
+    /// <summary>원문 1b 38BYTE 입력 패킷을 조립한다.</summary>
+    private static byte[] PeerPacket(uint address, string text)
+    {
+        // 주소와 NUL 끝 문자열을 같은 위치에 둔다.
+        byte[] packet = new byte[38];
+        packet[1] = 0x1b;
+        BinaryPrimitives.WriteUInt32LittleEndian(packet.AsSpan(4, 4), address);
+        byte[] body = System.Text.Encoding.ASCII.GetBytes(text);
+        body.CopyTo(packet.AsSpan(8, System.Math.Min(body.Length, 30)));
+        return packet;
+    }
     /// <summary>부모는 41h 실제 F와 로그인 묶음을 같은 분배기에 설치한다.</summary>
     [Fact]
     public void ParentInstallsChatAndLoginEntries()
@@ -344,5 +384,76 @@ public sealed class ClientPacketDispatchParentTests
         var dispatch = Build(scene, _ => { });
         var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(2, 5, null, new byte[4]));
         Assert.Contains("Runtime", error.Message);
+    }
+    /// <summary>부모는 전투 시작 1a/1b 고정 F를 같은 분배기에 설치한다. observer·버전·길이 표를 공유한다. 0.970에서 추가됐다.</summary>
+    [Fact]
+    public void ParentInstallsBattleStartEntries()
+    {
+        var scene = new Scene();
+        var dispatch = Build(scene, _ => { });
+        var zone = dispatch.Registration(0x1a);
+        Assert.Equal(1, zone.Version);
+        Assert.Equal(0, zone.Mismatch);
+        Assert.Equal(ushort.MaxValue, zone.Length);
+        Assert.NotNull(zone.PacketObserver);
+        Assert.Null(zone.Observer);
+        Assert.Equal(0x004b4df0u, dispatch.SnapshotReceiver(0x1a)!.NativeEntry);
+        var peer = dispatch.Registration(0x1b);
+        Assert.Equal(1, peer.Version);
+        Assert.Equal(0, peer.Mismatch);
+        Assert.Equal(38, peer.Length);
+        Assert.NotNull(peer.Observer);
+        Assert.Null(peer.PacketObserver);
+        Assert.Equal(0x004b8b20u, dispatch.SnapshotReceiver(0x1b)!.NativeEntry);
+        // 같은 묶음의 기존 설치가 1a/1b 행에 밀리지 않는다.
+        Assert.Equal(0x004b6660u, dispatch.SnapshotReceiver(2)!.NativeEntry);
+        Assert.Equal(0x0042dc90u, dispatch.SnapshotReceiver(0x41)!.NativeEntry);
+        Assert.Empty(scene.Assertions);
+    }
+    /// <summary>1a는 next·7/포트·복제를 쓰고 10/11을 닫은 뒤 실제 UI State 부모 없이 성공으로 꾸미지 않는다. 요청이 없으면 기록을 열지 않는다. 0.970에서 추가됐다.</summary>
+    [Fact]
+    public void ParentBattleStartZoneWritesNextWithoutRecord()
+    {
+        var scene = new Scene();
+        BinaryPrimitives.WriteUInt32LittleEndian(scene.Local.State.Phase.Span.Slice(0, 4), 29);
+        using var transport = MakeOwnedConnection(scene, out PacketConnection connection);
+        scene.Game.Authority.Server = false;
+        var dispatch = Build(scene, _ => { });
+        // 원문 순서대로 next7 인계 앞에서 실제 UI State 부모 요구로 멈춘다.
+        var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x1a, 9, connection, ZonePacket(1, 0x10)));
+        Assert.Contains("UI State", error.Message);
+        Assert.Equal(1u, scene.Local.ZonePending.Value);
+        Assert.Equal(7u, BinaryPrimitives.ReadUInt32LittleEndian(scene.Local.State.Next.Span.Slice(0, 4)));
+        Assert.Equal(6799u, BinaryPrimitives.ReadUInt32LittleEndian(scene.Local.State.Next.Span.Slice(0x7c, 4)));
+        Assert.NotEqual(0u, BinaryPrimitives.ReadUInt32LittleEndian(scene.Local.State.Next.Span.Slice(0x80, 4)));
+        Assert.Empty(scene.Assertions);
+    }
+    /// <summary>1a는 요청이 있으면 packet+10과 구독자로 기록을 연다. Root 기록 갈래를 대조한다. 0.970에서 추가됐다.</summary>
+    [Fact]
+    public void ParentBattleStartZoneOpensRecordWhenRequested()
+    {
+        var scene = new Scene();
+        BinaryPrimitives.WriteUInt32LittleEndian(scene.Local.State.Phase.Span.Slice(0, 4), 33);
+        scene.Subscribers.MySubscriber.Value = 0x1234;
+        using var transport = MakeOwnedConnection(scene, out PacketConnection connection);
+        scene.Game.Authority.Server = false;
+        var names = new List<string>();
+        var dispatch = Build(scene, _ => { }, () => 1u, names.Add);
+        // 기록을 연 뒤 next7 인계 앞에서 실제 UI State 부모 요구로 멈춘다.
+        var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x1a, 9, connection, ZonePacket(1, 0x00ABCDEF)));
+        Assert.Contains("UI State", error.Message);
+        Assert.Equal(["00ABCDEF.1234.c.dat"], names);
+    }
+    /// <summary>1b는 실제 Source까지 닿은 뒤 실제 UI State 부모 없이 성공으로 꾸미지 않는다. 0.970에서 추가됐다.</summary>
+    [Fact]
+    public void ParentBattleStartPeerRequiresMenu()
+    {
+        var scene = new Scene();
+        BinaryPrimitives.WriteUInt32LittleEndian(scene.Local.State.Phase.Span.Slice(0, 4), 29);
+        using var transport = MakeOwnedConnection(scene, out PacketConnection connection);
+        scene.Game.Authority.Server = false;
+        var dispatch = Build(scene, _ => { });
+        var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x1b, 9, connection, PeerPacket(0x20, "x\0")));
+        Assert.Contains("UI State", error.Message);
     }
 }

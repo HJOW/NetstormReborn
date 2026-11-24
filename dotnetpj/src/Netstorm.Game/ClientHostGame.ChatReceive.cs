@@ -34,7 +34,7 @@ public sealed partial class ClientHostGame
     /// <summary>R11 송수신 펌프가 소비하는 실제 패킷 분배기다.</summary>
     public RawPacketDispatch PacketDispatch => _packetDispatch ?? throw new InvalidOperationException("패킷 분배기 미설치");
     /// <summary>공통 패킷 분배기에 41h·로그인·설정·버전·기술·변수 묶음을 설치한다. 전송 설치는 R4-6, 실제 송수신 펌프는 R11에서 잇는다.</summary>
-    /// <remarks>2026-11-23 0.897·0.898에서 R4-6 전송·수신 묶음용으로 추가했다. 근거: R4-6 남음의 "공통 41h가 Root.ReceiveNativePacketChat을 부르는 전송 설치"와 "NativeLoginPacketReceivers의 실제 MonoGame Root 설치 호출"이다. 종료·닫기·반납은 수송이 없어 명시 거부한다.</remarks>
+    /// <remarks>2026-11-23 0.897·0.898에서 R4-6 전송·수신 묶음용으로 추가했다. 근거: R4-6 남음의 "공통 41h가 Root.ReceiveNativePacketChat을 부르는 전송 설치"와 "NativeLoginPacketReceivers의 실제 MonoGame Root 설치 호출"이다. 0.970에서 실제 기록 조회·열기를 묶어 1a/1b의 기록 갈래를 Root에 연결했다. 종료·닫기·반납은 수송이 없어 명시 거부한다.</remarks>
     private void InstallClientPacketDispatch()
     {
         _packetDispatch = ClientPacketDispatch.Build(
@@ -55,6 +55,8 @@ public sealed partial class ClientHostGame
                 Server = () => _gameplay.Authority.Server,
                 EraseStatus = (_, _) => throw new InvalidOperationException("연결 활성 정리 미연결(R11)"),
             },
-            _challenge);
+            _challenge,
+            () => PacketRecordOwner.Requested.Value,
+            PacketRecordOwner.Open);
     }
 }

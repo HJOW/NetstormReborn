@@ -315,4 +315,17 @@ public sealed class ClientCampaignTransportTests
         Assert.Null(transport.Dispatch.Registration(2).Observer);
         Assert.Null(transport.Dispatch.Registration(2).PacketObserver);
     }
+
+    /// <summary>수송 팩토리도 같은 기본 표에 1a/1b 전투 시작을 공유한다. 0.970에서 추가됐다.</summary>
+    [Fact]
+    public void FactorySharesBattleStartEntries()
+    {
+        var scene = new Scene();
+        scene.Game.PlayerRecords.Initialize((_, _) => { });
+        using var transport = scene.Make();
+        Assert.Equal(0x004b4df0u, transport.Dispatch.SnapshotReceiver(0x1a)!.NativeEntry);
+        Assert.Equal(0x004b8b20u, transport.Dispatch.SnapshotReceiver(0x1b)!.NativeEntry);
+        Assert.NotNull(transport.Dispatch.Registration(0x1a).PacketObserver);
+        Assert.NotNull(transport.Dispatch.Registration(0x1b).Observer);
+    }
 }
