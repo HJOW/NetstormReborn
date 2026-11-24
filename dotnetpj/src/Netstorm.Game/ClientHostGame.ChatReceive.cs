@@ -34,7 +34,7 @@ public sealed partial class ClientHostGame
     /// <summary>R11 송수신 펌프가 소비하는 실제 패킷 분배기다.</summary>
     public RawPacketDispatch PacketDispatch => _packetDispatch ?? throw new InvalidOperationException("패킷 분배기 미설치");
     /// <summary>공통 패킷 분배기에 41h·로그인·설정·버전·기술·변수 묶음을 설치한다. 전송 설치는 R4-6, 실제 송수신 펌프는 R11에서 잇는다.</summary>
-    /// <remarks>2026-11-23 0.897·0.898에서 R4-6 전송·수신 묶음용으로 추가했다. 근거: R4-6 남음의 "공통 41h가 Root.ReceiveNativePacketChat을 부르는 전송 설치"와 "NativeLoginPacketReceivers의 실제 MonoGame Root 설치 호출"이다. 0.970에서 실제 기록 조회·열기를 묶어 1a/1b의 기록 갈래를 Root에 연결했고, 0.973에서 실제 설정 조회·진단 로그를 묶어 0x1d의 진단·버전 갈래를 Root에 연결했다(Tell·Run은 메뉴 후속). 종료·닫기·반납은 수송이 없어 명시 거부한다.</remarks>
+    /// <remarks>2026-11-23 0.897·0.898에서 R4-6 전송·수신 묶음용으로 추가했다. 근거: R4-6 남음의 "공통 41h가 Root.ReceiveNativePacketChat을 부르는 전송 설치"와 "NativeLoginPacketReceivers의 실제 MonoGame Root 설치 호출"이다. 0.970에서 실제 기록 조회·열기를 묶어 1a/1b의 기록 갈래를 Root에 연결했고, 0.973에서 실제 설정 조회·진단 로그를 묶어 0x1d의 진단·버전 갈래를 Root에 연결했으며, 0.974에서 실제 송신 기록·Player 조회·지연 분포를 묶어 수송 팩토리와 같은 후크 모양으로 맞췄다(backend가 붙기 전까지 호출되지 않는다). 종료·닫기·반납은 수송이 없어 명시 거부한다.</remarks>
     private void InstallClientPacketDispatch()
     {
         _packetDispatch = ClientPacketDispatch.Build(
@@ -45,6 +45,12 @@ public sealed partial class ClientHostGame
                 Terminate = _ => throw new InvalidOperationException("패킷 종료 미연결(R11)"),
                 Close = _ => throw new InvalidOperationException("패킷 닫기 미연결(R11)"),
                 Release = _ => throw new InvalidOperationException("패킷 반납 미연결(R11)"),
+                // 실제 송신 복사/쓰기 뒤 방향1 기록이다. 수송 backend가 붙기 전까지 호출되지 않는다.
+                Sent = (connection, packet, length) => PacketRecordOwner.Write(true, connection, packet, length),
+                // 재할당 뒤에도 같은 현재 Player9 기록을 조회한다.
+                Players = () => _gameplay.PlayerRecords.Records,
+                // 실제 Client 장기 분포/벽시각/CRT를 TCP/UDP Poll만 선택한다. 수송 backend가 붙기 전까지 호출되지 않는다.
+                Delay = _connections.PacketDelays(),
             },
             _gameplay, _connections, _surfaceGlobals, _chatWindowGlobals, ReceiveNativePacketChat,
             (expression, file, line) => _surfaceGlobals.Storage.AssertDisplay(expression, file, line),

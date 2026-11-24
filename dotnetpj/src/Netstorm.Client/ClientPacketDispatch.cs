@@ -3,8 +3,8 @@ using Netstorm.Net;
 
 namespace Netstorm.Client;
 
-// 장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay·Carrier/Construction·장기 CS·연결 종료·전투 시작·서버 발견·메타 geometry·챌린지 응답 묶음을 같은 분배기에 설치한다. 전송 설치는 R4-6, 실제 송수신 펌프는 R11에서 잇는다.
-/// <summary>공통 패킷 분배기의 실제 소유자 조립이다. 장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay·Carrier/Construction·장기 CS·연결 종료·전투 시작·서버 발견·메타 geometry·챌린지 응답 묶음을 같은 분배기에 설치한다.</summary>
+// 장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay·Carrier/Construction·장기 CS·연결 종료·전투 시작·서버 발견·메타 geometry·챌린지 응답·Root 로그인 묶음을 같은 분배기에 설치한다. 전송 설치는 R4-6, 실제 송수신 펌프는 R11에서 잇는다.
+/// <summary>공통 패킷 분배기의 실제 소유자 조립이다. 장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay·Carrier/Construction·장기 CS·연결 종료·전투 시작·서버 발견·메타 geometry·챌린지 응답·Root 로그인 묶음을 같은 분배기에 설치한다.</summary>
 public static class ClientPacketDispatch
 {
     /// <summary>같은 장기 Client 장치만 읽으며 실제 수신 UI/진단/활동 장치를 묶는다.</summary>
@@ -18,7 +18,7 @@ public static class ClientPacketDispatch
     /// <param name="activity">장기 연결 활성의 실제 벽시계/프레임/서버 조회다.</param>
     /// <param name="challenge">같은 Client 수명으로 유지하는 실제 CS 슬롯·할당 owner다. 0x7b·0x7c 후크 결합 수신기가 공유한다.</param>
     /// <returns>장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay 묶음이 설치된 실제 분배기다.</returns>
-    /// <remarks>2026-11-23 0.897에서 R4-6 전송·수신 묶음용으로 추가하고 0.898에서 설정·버전·기술·변수 묶음을, 0.899에서 Native gameplay 6종 묶음을, 0.934에서 장기 기본 18행을, 0.964에서 Carrier/Construction 묶음을, 0.966에서 장기 CS 묶음(0x7b·0x7c)을, 0.969에서 연결 종료 2번을, 0.970에서 전투 시작 1a/1b를, 0.971에서 로컬 서버 발견 0x66·메타 geometry 0x26을, 0.973에서 챌린지 로그인 응답 0x1d를 이었다. 근거: R4-6 남음의 "공통 41h가 Root.ReceiveNativePacketChat을 부르는 전송 설치"와 "NativeLoginPacketReceivers의 실제 MonoGame Root 설치 호출"과 InstallClientPacketDefaults의 기본 18행·Carrier/Construction 고정 F·장기 CS·2번·1a/1b·0x66·0x26·0x1d 수신기다. 호스트는 10.78만 다루므로 판본을 고정한다. 종료/닫기/반납은 R11 수송에서 잇는다.</remarks>
+    /// <remarks>2026-11-23 0.897에서 R4-6 전송·수신 묶음용으로 추가하고 0.898에서 설정·버전·기술·변수 묶음을, 0.899에서 Native gameplay 6종 묶음을, 0.934에서 장기 기본 18행을, 0.964에서 Carrier/Construction 묶음을, 0.966에서 장기 CS 묶음(0x7b·0x7c)을, 0.969에서 연결 종료 2번을, 0.970에서 전투 시작 1a/1b를, 0.971에서 로컬 서버 발견 0x66·메타 geometry 0x26을, 0.973에서 챌린지 로그인 응답 0x1d를, 0.974에서 Root 로그인 응답 0x0f를 이었다. 근거: R4-6 남음의 "공통 41h가 Root.ReceiveNativePacketChat을 부르는 전송 설치"와 "NativeLoginPacketReceivers의 실제 MonoGame Root 설치 호출"과 InstallClientPacketDefaults의 기본 18행·Carrier/Construction 고정 F·장기 CS·2번·1a/1b·0x66·0x26·0x1d·0x0f 수신기다. 호스트는 10.78만 다루므로 판본을 고정한다. 종료/닫기/반납은 R11 수송에서 잇는다.</remarks>
     public static RawPacketDispatch Build(
         PacketDispatchHooks dispatch,
         ClientGameplayGlobals game,
@@ -223,6 +223,50 @@ public static class ClientPacketDispatch
             State = connections.LocalState.State,
             // 같은 실제 구독자 번호 owner다.
             Subscriber = game.Subscribers?.MySubscriber ?? throw new InvalidOperationException("챌린지 로그인 응답의 실제 구독자 미연결"),
+        });
+        // 0x0f Root 로그인을 같은 기본 표에 잇는다. 상태·기록·갱신·정리·진단은 실제 장기 장치이며 버전 확인은 0x1d와 같은 호출자 장치를 공유하고 서버 값·목록·저장은 후속에 묶는다. 0.974에서 추가됐다.
+        ClientRootLoginReply.Install(packet, new ClientRootLoginReplyHooks
+        {
+            // 같은 실제 로컬 상태 블록 owner다.
+            State = connections.LocalState.State,
+            // 00546908의 같은 실제 51×144BYTE 기록이다.
+            Zones = connections.LocalState.MetaZoneRecords,
+            // 같은 실제 현재 갱신 예약 owner다.
+            Refresh = connections.LocalState.MetaRefresh,
+            // 004b4160의 실제 버전 확인이다. 0x1d와 같은 호출자 장치를 공유한다.
+            Version = (major, minor) => ClientMetaVersion.Check(major, minor, versionHooks),
+            // 현재 마커 삭제/표 정리 부모다. 비영 마커 삭제에서만 실제 세션을 pin한다.
+            ClearZones = () => RawMetaZoneCleanup.ClearRecords(
+                connections.LocalState.MetaFirstReset,
+                connections.LocalState.MetaZoneRecords,
+                index => RawMetaZoneCleanup.ClearMarker(
+                    connections.LocalState.MetaZoneRecords,
+                    index,
+                    (sid, flags) =>
+                    {
+                        // 비영 마커의 실제 가상 삭제에서만 현재 전체 Runtime을 선택한다.
+                        var session = game.RequireSession();
+                        using var pin = game.PinCurrentRuntime(session);
+                        if (!ReferenceEquals(session.Pool, surface.Storage.Pool) || !ReferenceEquals(session.LocalState, connections.LocalState))
+                        {
+                            throw new InvalidOperationException("메타구역 삭제의 현재 Session/Pool/Client 불일치");
+                        }
+
+                        if (sid >= surface.Storage.Pool.Capacity || sid > ushort.MaxValue)
+                        {
+                            throw new ArgumentOutOfRangeException(nameof(sid), "메타구역 DWORD SID의 현재 Pool 물리 범위");
+                        }
+
+                        _ = session.DestroyForState((int)sid, flags);
+                    })),
+            // phase+44 서버 행 값을 갱신한다. 실제 NsInfo 저장소가 없으므로 명시 실패한다.
+            Checksum = _ => throw new InvalidOperationException("Root 로그인 응답의 실제 서버 값 미연결(R6)"),
+            // 현재 서버 목록에 행을 추가한다. 실제 NsInfo 저장소가 없으므로 명시 실패한다.
+            Server = _ => throw new InvalidOperationException("Root 로그인 응답의 실제 서버 목록 미연결(R6)"),
+            // 현재 서버 목록을 사용자 홈에 저장한다. 실제 저장 부모가 없으므로 명시 실패한다.
+            SaveServers = () => throw new InvalidOperationException("Root 로그인 응답의 실제 서버 목록 저장 미연결(R7)"),
+            // 원문 진단의 실제 선택 줄 소비자다.
+            Assertion = assertion,
         });
     }
 }

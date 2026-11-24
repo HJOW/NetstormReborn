@@ -353,4 +353,16 @@ public sealed class ClientCampaignTransportTests
         Assert.Equal(13, transport.Dispatch.Registration(0x1d).Length);
         Assert.NotNull(transport.Dispatch.Registration(0x1d).Observer);
     }
+
+    /// <summary>수송 팩토리도 같은 기본 표에 0x0f Root 로그인을 공유한다. 0.974에서 추가됐다.</summary>
+    [Fact]
+    public void FactorySharesRootReplyEntry()
+    {
+        var scene = new Scene();
+        scene.Game.PlayerRecords.Initialize((_, _) => { });
+        using var transport = scene.Make();
+        Assert.Equal(0x004b4250u, transport.Dispatch.SnapshotReceiver(0x0f)!.NativeEntry);
+        Assert.Equal(ushort.MaxValue, transport.Dispatch.Registration(0x0f).Length);
+        Assert.NotNull(transport.Dispatch.Registration(0x0f).PacketObserver);
+    }
 }

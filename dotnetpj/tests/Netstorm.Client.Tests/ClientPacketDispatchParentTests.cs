@@ -608,4 +608,69 @@ public sealed class ClientPacketDispatchParentTests
         var tellError = Assert.Throws<InvalidOperationException>(() => untold.InvokeDirect(0x1d, 9, null, ReplyPacket(11, 0, 0x5555, 7)));
         Assert.Contains("Tell", tellError.Message);
     }
+    /// <summary>원문 0x0f 입력 패킷을 조립한다. 버전 필드까지만 둔다.</summary>
+    private static byte[] RootReplyPacket(uint major, uint minor)
+    {
+        // 종류·버전을 같은 위치에 두고 나머지는 0으로 둔다.
+        byte[] packet = new byte[24];
+        packet[1] = 0x0f;
+        BinaryPrimitives.WriteUInt16LittleEndian(packet.AsSpan(4, 2), unchecked((ushort)major));
+        BinaryPrimitives.WriteUInt16LittleEndian(packet.AsSpan(6, 2), unchecked((ushort)minor));
+        return packet;
+    }
+    /// <summary>부모는 Root 로그인 응답 0x0f 고정 F를 같은 분배기에 설치한다. 0.974에서 추가됐다.</summary>
+    [Fact]
+    public void ParentInstallsRootReplyEntry()
+    {
+        var scene = new Scene();
+        var dispatch = Build(scene, _ => { });
+        var reply = dispatch.Registration(0x0f);
+        Assert.Equal(1, reply.Version);
+        Assert.Equal(0, reply.Mismatch);
+        Assert.Equal(ushort.MaxValue, reply.Length);
+        Assert.NotNull(reply.PacketObserver);
+        Assert.Null(reply.Observer);
+        Assert.Equal(0x004b4250u, dispatch.SnapshotReceiver(0x0f)!.NativeEntry);
+        // 같은 묶음의 기존 설치가 0x0f 행에 밀리지 않는다.
+        Assert.Equal(0x004b8ac0u, dispatch.SnapshotReceiver(0x1d)!.NativeEntry);
+        Assert.Equal(0x0042dc90u, dispatch.SnapshotReceiver(0x41)!.NativeEntry);
+        Assert.Empty(scene.Assertions);
+    }
+    /// <summary>0x0f 주 버전 불일치는 Tell 뒤 next12·+50 0만 쓰고 목록·존을 건드리지 않는다. 0.974에서 추가됐다.</summary>
+    [Fact]
+    public void ParentRootReplyRejectsMajorMismatch()
+    {
+        var scene = new Scene();
+        var logs = new List<(uint Code, string Text)>();
+        var tells = new List<string>();
+        var dispatch = Build(scene, _ => { }, config: _ => 0, diagnosticLog: (code, text) => logs.Add((code, text)), tell: tells.Add);
+        dispatch.InvokeDirect(0x0f, 9, null, RootReplyPacket(9, 0));
+        Assert.Equal(12u, BinaryPrimitives.ReadUInt32LittleEndian(scene.Local.State.Next.Span.Slice(0, 4)));
+        Assert.Equal(0u, BinaryPrimitives.ReadUInt32LittleEndian(scene.Local.State.Next.Span.Slice(0x50, 4)));
+        Assert.Contains(logs, e => e.Code == 0x1d && e.Text.Contains("VERSION DIFFERENCE"));
+        Assert.Equal(["MetaVerDiff(9.0)"], tells);
+    }
+    /// <summary>0x0f 일치 버전은 구역을 정리한 뒤 실제 서버 값 없이 성공으로 꾸미지 않는다. 0.974에서 추가됐다.</summary>
+    [Fact]
+    public void ParentRootReplyClearsZonesBeforeServerValue()
+    {
+        var scene = new Scene();
+        scene.Local.MetaZoneRecords.Span.Slice(0, 8).Fill(0xFF);
+        var logs = new List<(uint Code, string Text)>();
+        var dispatch = Build(scene, _ => { }, config: _ => 0, diagnosticLog: (code, text) => logs.Add((code, text)), tell: _ => { });
+        var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x0f, 9, null, RootReplyPacket(10, 78)));
+        Assert.Contains("서버 값", error.Message);
+        Assert.Equal(0u, scene.Local.MetaFirstReset.Value);
+        Assert.Equal(new byte[8], scene.Local.MetaZoneRecords.Span.Slice(0, 8).ToArray());
+    }
+    /// <summary>0x0f 주 버전 불일치는 Tell 없이 성공으로 꾸미지 않는다. 0.974에서 추가됐다.</summary>
+    [Fact]
+    public void ParentRootReplyRequiresTellOnMajorMismatch()
+    {
+        var scene = new Scene();
+        var logs = new List<(uint Code, string Text)>();
+        var dispatch = Build(scene, _ => { }, config: _ => 0, diagnosticLog: (code, text) => logs.Add((code, text)));
+        var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x0f, 9, null, RootReplyPacket(11, 0)));
+        Assert.Contains("Tell", error.Message);
+    }
 }
