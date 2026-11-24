@@ -22,6 +22,23 @@ public sealed partial class ClientChallengeGlobals
     public Memory<byte> Bytes => Current != 0 && _allocations.TryGetValue(Current, out byte[]? bytes)
         ? bytes : throw new InvalidOperationException("현재 CS의 실제 할당 물리 미등록");
 
+    /// <summary>원문 40개의 현재 구독자 DWORD를 배열 순서로 비교하며 처음 일치를 반환한다. 유효성 비트나 구독자 0은 검색 조건이 아니다. 0.955에서 추가됐다.</summary>
+    /// <param name="subscriber">찾을 구독자 번호다.</param>
+    /// <returns>처음 일치한 참가자 번호이며 없으면 null이다.</returns>
+    public uint? FindParticipantBySubscriber(uint subscriber)
+    {
+        // 처음 일치한 실제 0번도 반환한다.
+        for (uint index = 0; index < RawChallengeState.ParticipantCount; index++)
+        {
+            if (BinaryPrimitives.ReadUInt32LittleEndian(Participant(index).Span.Slice(4, 4)) == subscriber)
+            {
+                return index;
+            }
+        }
+
+        return null;
+    }
+
     /// <summary>새 생성은 Construct 완료 뒤 공개한다. 기존 객체는 선택 진단 뒤 현재 기록만 Reset한다.</summary>
     public bool Prepare(Action? uninitialized = null)
     {
