@@ -1,3 +1,4 @@
+using System.Buffers.Binary;
 using Netstorm.Client.Gump;
 using Netstorm.Core.Original;
 using Netstorm.Net;
@@ -34,7 +35,9 @@ public static class ClientPacketDispatch
         Action<string>? openRecord = null,
         Func<string, int>? config = null,
         Action<uint, string>? diagnosticLog = null,
-        Action<string>? tell = null)
+        Action<string>? tell = null,
+        ClientNsInfoGlobals? nsInfo = null,
+        Action? saveServers = null)
     {
         ArgumentNullException.ThrowIfNull(dispatch);
         ArgumentNullException.ThrowIfNull(game);
@@ -46,7 +49,7 @@ public static class ClientPacketDispatch
         ArgumentNullException.ThrowIfNull(activity);
         ArgumentNullException.ThrowIfNull(challenge);
         var packet = new RawPacketDispatch(OriginalEdition.Patch1078, dispatch);
-        InstallDefaults(packet, game, connections, surface, chat, receive, assertion, activity, challenge, recordRequested, openRecord, config, diagnosticLog, tell);
+        InstallDefaults(packet, game, connections, surface, chat, receive, assertion, activity, challenge, recordRequested, openRecord, config, diagnosticLog, tell, nsInfo, saveServers);
         return packet;
     }
 
@@ -65,6 +68,8 @@ public static class ClientPacketDispatch
     /// <param name="config">현재 설정 정수를 읽는다. suppressVersionMessage 조회에 사용한다. 없으면 명시 실패한다.</param>
     /// <param name="diagnosticLog">원문 진단 로그에 쓴다. 없으면 명시 실패한다.</param>
     /// <param name="tell">버전 차이 Tell을 실제 UI에 알린다. 없으면 명시 실패한다.</param>
+    /// <param name="nsInfo">같은 실제 NSInfo 서버 목록 owner다. 없으면 받는 즉시 명시 실패한다.</param>
+    /// <param name="saveServers">현재 서버 목록을 사용자 홈에 저장한다. 없으면 명시 실패한다.</param>
     internal static void InstallDefaults(
         RawPacketDispatch packet,
         ClientGameplayGlobals game,
@@ -79,7 +84,9 @@ public static class ClientPacketDispatch
         Action<string>? openRecord = null,
         Func<string, int>? config = null,
         Action<uint, string>? diagnosticLog = null,
-        Action<string>? tell = null)
+        Action<string>? tell = null,
+        ClientNsInfoGlobals? nsInfo = null,
+        Action? saveServers = null)
     {
         ArgumentNullException.ThrowIfNull(packet);
         ArgumentNullException.ThrowIfNull(game);
@@ -260,12 +267,12 @@ public static class ClientPacketDispatch
 
                         _ = session.DestroyForState((int)sid, flags);
                     })),
-            // phase+44 서버 행 값을 갱신한다. 실제 NsInfo 저장소가 없으므로 명시 실패한다.
-            Checksum = _ => throw new InvalidOperationException("Root 로그인 응답의 실제 서버 값 미연결(R6)"),
-            // 현재 서버 목록에 행을 추가한다. 실제 NsInfo 저장소가 없으므로 명시 실패한다.
-            Server = _ => throw new InvalidOperationException("Root 로그인 응답의 실제 서버 목록 미연결(R6)"),
-            // 현재 서버 목록을 사용자 홈에 저장한다. 실제 저장 부모가 없으므로 명시 실패한다.
-            SaveServers = () => throw new InvalidOperationException("Root 로그인 응답의 실제 서버 목록 저장 미연결(R7)"),
+            // phase+44 서버 행 값을 갱신한다. 같은 실제 NSInfo 서버 목록에 쓴다.
+            Checksum = value => (nsInfo ?? throw new InvalidOperationException("Root 로그인 응답의 실제 NSInfo 저장소 미연결")).SetServerValue(unchecked((int)BinaryPrimitives.ReadUInt32LittleEndian(connections.LocalState.State.Phase.Span.Slice(0x44, 4))), value),
+            // 현재 서버 목록에 행을 추가한다. 같은 실제 NSInfo 서버 목록에 쓴다.
+            Server = row => (nsInfo ?? throw new InvalidOperationException("Root 로그인 응답의 실제 NSInfo 저장소 미연결")).UpsertServer(row.Span, true),
+            // 현재 서버 목록을 사용자 홈에 저장한다. 호출자가 묶은 실제 저장 장치가 없으면 명시 실패한다.
+            SaveServers = saveServers ?? (() => throw new InvalidOperationException("Root 로그인 응답의 실제 서버 목록 저장 미연결(R7)")),
             // 원문 진단의 실제 선택 줄 소비자다.
             Assertion = assertion,
         });

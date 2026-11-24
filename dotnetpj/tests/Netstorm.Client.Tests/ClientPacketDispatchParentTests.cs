@@ -50,9 +50,10 @@ public sealed class ClientPacketDispatchParentTests
     private static ConnectionActivityHooks ActivityHooks() => new() { WallSeconds = () => 100.0, FrameNumber = () => 100, Server = () => true, EraseStatus = (_, _) => { } };
     /// <summary>같은 장기 Client 장치로 실제 분배기를 묶는다.</summary>
     private static RawPacketDispatch Build(Scene scene, Action<Memory<byte>> receive, Func<uint>? recordRequested = null, Action<string>? openRecord = null,
-        Func<string, int>? config = null, Action<uint, string>? diagnosticLog = null, Action<string>? tell = null) => ClientPacketDispatch.Build(
+        Func<string, int>? config = null, Action<uint, string>? diagnosticLog = null, Action<string>? tell = null,
+        ClientNsInfoGlobals? nsInfo = null, Action? saveServers = null) => ClientPacketDispatch.Build(
         DispatchHooks(), scene.Game, scene.Connections, scene.Surface, scene.Chat, receive,
-        (expression, file, line) => scene.Assertions.Add(line), ActivityHooks(), scene.Challenge, recordRequested, openRecord, config, diagnosticLog, tell);
+        (expression, file, line) => scene.Assertions.Add(line), ActivityHooks(), scene.Challenge, recordRequested, openRecord, config, diagnosticLog, tell, nsInfo, saveServers);
     /// <summary>같은 장부로 실제 수송을 만들고 소유 중인 현재 연결을 돌려준다. Source 선택·복제·연결 효과가 같은 실제 장치를 쓰는지 대조한다.</summary>
     private static CompositeMissionTransport MakeOwnedConnection(Scene scene, out PacketConnection connection)
     {
@@ -659,7 +660,7 @@ public sealed class ClientPacketDispatchParentTests
         var logs = new List<(uint Code, string Text)>();
         var dispatch = Build(scene, _ => { }, config: _ => 0, diagnosticLog: (code, text) => logs.Add((code, text)), tell: _ => { });
         var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x0f, 9, null, RootReplyPacket(10, 78)));
-        Assert.Contains("서버 값", error.Message);
+        Assert.Contains("NSInfo", error.Message);
         Assert.Equal(0u, scene.Local.MetaFirstReset.Value);
         Assert.Equal(new byte[8], scene.Local.MetaZoneRecords.Span.Slice(0, 8).ToArray());
     }
@@ -672,6 +673,57 @@ public sealed class ClientPacketDispatchParentTests
         var dispatch = Build(scene, _ => { }, config: _ => 0, diagnosticLog: (code, text) => logs.Add((code, text)));
         var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x0f, 9, null, RootReplyPacket(11, 0)));
         Assert.Contains("Tell", error.Message);
+    }
+    /// <summary>0x0f 일치 버전은 서버 값을 갱신하고 목록을 저장한다. NSInfo 갈래는 실제 장기 장치를 쓴다. 0.981에서 추가됐다.</summary>
+    [Fact]
+    public void ParentRootReplyWritesServerValueAndSaves()
+    {
+        var scene = new Scene();
+        var servers = new ClientNsInfoGlobals();
+        servers.Servers.Add("e;d;1");
+        BinaryPrimitives.WriteUInt32LittleEndian(scene.Local.State.Phase.Span.Slice(0x44, 4), 0);
+        scene.Local.MetaZoneRecords.Span.Slice(0, 8).Fill(0xFF);
+        var saves = 0;
+        var dispatch = Build(scene, _ => { }, nsInfo: servers, saveServers: () => saves++);
+        dispatch.InvokeDirect(0x0f, 9, null, RootReplyPacket(10, 78));
+        Assert.Equal("e;d;0", servers.Servers[0]);
+        Assert.Equal(1, saves);
+        Assert.Equal(0u, scene.Local.MetaFirstReset.Value);
+        Assert.Equal(new byte[8], scene.Local.MetaZoneRecords.Span.Slice(0, 8).ToArray());
+        Assert.Equal(1u, scene.Local.MetaRefresh.Value);
+    }
+    /// <summary>0x0f 빈 목록에도 행을 추가하고 저장한다. 0.981에서 추가됐다.</summary>
+    [Fact]
+    public void ParentRootReplyUpsertsServerRowAndSaves()
+    {
+        var scene = new Scene();
+        var servers = new ClientNsInfoGlobals();
+        var saves = 0;
+        var dispatch = Build(scene, _ => { }, nsInfo: servers, saveServers: () => saves++);
+        byte[] packet = RootReplyPacket(10, 78);
+        byte[] wide = new byte[40];
+        packet.CopyTo(wide, 0);
+        wide[12] = 40;
+        wide[20] = 0;
+        wide[21] = 1;
+        wide[22] = 0;
+        wide[23] = 6;
+        wide[24] = (byte)'s';
+        wide[25] = (byte)'v';
+        wide[26] = (byte)'1';
+        dispatch.InvokeDirect(0x0f, 9, null, wide);
+        Assert.Single(servers.Servers);
+        Assert.Equal(1, saves);
+    }
+    /// <summary>0x0f 저장 장치 없이 성공으로 꾸미지 않는다. 0.981에서 추가됐다.</summary>
+    [Fact]
+    public void ParentRootReplyRequiresSaveServers()
+    {
+        var scene = new Scene();
+        var servers = new ClientNsInfoGlobals();
+        var dispatch = Build(scene, _ => { }, nsInfo: servers);
+        var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x0f, 9, null, RootReplyPacket(10, 78)));
+        Assert.Contains("저장", error.Message);
     }
     /// <summary>원문 0x71 설명 패킷을 조립한다. 길이에 종단 NUL을 포함한다.</summary>
     private static byte[] DescriptionPacket(uint battle, string text)
