@@ -3,14 +3,14 @@
 // 단계표의 한 단계는 [프레임, 동작, 인자]이고 동작 이름은 cpppj `--ui-script` 와 같다(`click-if` 라벨 클릭, `click`/`right` 화면 좌표 클릭, `key`, `session-dump`, `snapshot`).
 // 입력 프레임 규칙(실측): cpppj 는 단계 프레임 N 의 시작에 입력을 큐에 넣어 그 프레임에서 처리한다. 웹은 DOM 사건이라 주입 위치가 동작마다 다르다.
 //  - 안내 창 단추 클릭(click-if): 웹은 즉시 처리하지만 cpppj 는 창 닫힘·관문 재개가 한 프레임 뒤에 이어져 웹을 N+1 에 넣어야 같다.
-//  - 키(key)와 화면 좌표 클릭(click): 웹 입력 큐는 다음 프레임 처리라 N-1 에 넣어야 cpppj 의 프레임 N 처리와 같다(세부 근거는 docs/webpj-l3-tutorial1-20261123.md).
+//  - 키(key)와 화면 좌표 좌/우 클릭(click/right): 웹 입력 큐는 다음 프레임 처리라 N-1 에 넣어야 cpppj 의 프레임 N 처리와 같다(Tutorial3 g4185 이동 중 골렘 우클릭 위치 0픽셀 일치에서 right -1 도 동일 규약으로 확인, 세부 근거는 docs/webpj-l3-tutorial1-20261123.md).
 // 체크포인트(session-dump·snapshot)는 N 프레임을 마친 뒤에 찍는다. 시작 순서는 고정 시각 L2 와 같다(메뉴 1프레임 → 미션 시작).
 const { expect } = require('@playwright/test');
 const fs = require('node:fs');
 const path = require('node:path');
 
-// 단계 동작마다 웹에서 입력을 넣을 프레임 보정(단계 프레임에 더한다)이다. 위 규칙을 값으로 옮겼다. (2026-11-24 WB04-E1305: l3-tutorial1.spec.js 에서 이동)
-const INJECT_SHIFT = { 'click-if': 1, click: -1, right: 1, key: -1, esc: -1 };
+// 단계 동작마다 웹에서 입력을 넣을 프레임 보정(단계 프레임에 더한다)이다. 위 규칙을 값으로 옮겼다. (2026-11-24 WB04-E1305, E1333 right -1 정리)
+const INJECT_SHIFT = { 'click-if': 1, click: -1, right: -1, key: -1, esc: -1 };
 
 // 이름이 `name`(예: 'tutorial1-l3')인 cpppj 기준선 오라클 폴더의 절대 경로를 돌려준다. (2026-11-24 WB04-E1305)
 function oracleFolder(name) {

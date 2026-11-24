@@ -15,7 +15,7 @@
     "--window",
     "--mute-audio",
     "--frames",
-    "3461",
+    "6201",
     "--set",
     "SCREENW=1024;SCREENH=768;WelcomeGiven=1;tellTips=0;autoDemo=0",
     "--ui-script",
@@ -29,7 +29,7 @@
   ],
   "collected": {
     "host": "HJOW-Athlon",
-    "at": "2026-11-24T13:40:23.401Z",
+    "at": "2026-11-24T14:22:39.826Z",
     "node": "v26.13.0"
   }
 }

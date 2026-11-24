@@ -28198,18 +28198,18 @@
         "webpj/www/netstorm.js",
         "webpj/www/core/session-state-dump.js"
       ],
-      "unit": "WB04-E1332",
-      "doc": "docs/webpj-l3-tutorial3-stage-def-20261124.md",
+      "unit": "WB04-E1333",
+      "doc": "docs/webpj-l3-tutorial3-complete-20261125.md",
       "cpppjSources": [
         "cpppj/src/client/SessionStateDump.cpp",
         "cpppj/src/app/main.cpp"
       ],
-      "scope": "Tutorial3 L3 입력 단계표(단계 A~C(a100~d2360) → 단계 D~E Wind Generator 생산·적 섬 에너지 확장·Sun Disc Thrower 배치 → 단계 F Incapacitating the Enemy Priest 안내 창·자유 진행)와 체크포인트",
+      "scope": "Tutorial3 L3 입력 단계표(단계 A~F(a100~f3460) → 단계 F~H 두 번째 발사기·적 사제 무력화·골렘 Drop Storm Crystal·포획 → 'Mission Accomplished!' 6200프레임)와 체크포인트",
       "text": true,
-      "sha256": "076ff90a7ed568fa4492b04f096dd0aa940dc09a7491e7b8d20af0dce96a98c7",
-      "bytes": 6889,
-      "lines": 506,
-      "fixtureCommit": "a6da5cf92",
+      "sha256": "0cbdd8cbb1b121248d835ac55da690fcccd385762f5add679b3e19c408ad3817",
+      "bytes": 8157,
+      "lines": 611,
+      "fixtureCommit": "e83f9cbb5",
       "webCommit": "ff916dca4",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
@@ -28230,18 +28230,18 @@
         "webpj/www/netstorm.js",
         "webpj/www/core/session-state-dump.js"
       ],
-      "unit": "WB04-E1332",
-      "doc": "docs/webpj-l3-tutorial3-stage-def-20261124.md",
+      "unit": "WB04-E1333",
+      "doc": "docs/webpj-l3-tutorial3-complete-20261125.md",
       "cpppjSources": [
         "cpppj/src/client/SessionStateDump.cpp",
         "cpppj/src/app/main.cpp"
       ],
       "scope": "Tutorial3 L3 오라클의 실행 파일·인자·수집 정보",
       "text": true,
-      "sha256": "ec98eafd901e210be8bd02e26465798f3e6ca83d6c6e2c716bb911f6b709011b",
+      "sha256": "76e7fdff252a3351cff7582f6c3809a0f9a18c6d82c125f421ce27a0d1daab1d",
       "bytes": 1018,
       "lines": 35,
-      "fixtureCommit": "a6da5cf92",
+      "fixtureCommit": "e83f9cbb5",
       "webCommit": "ff916dca4",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
@@ -29648,6 +29648,306 @@
       "text": false,
       "sha256": "6bbc79a86fac39fde43ac3df5fc328b706a6ba4dbef899ddad7e67998bb58095",
       "bytes": 230974,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "ff916dca4",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/client/ClientMain.cpp": "710b9647b",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-l3-f3620-screen",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-l3/f3620.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial3 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial3.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1333",
+      "doc": "docs/webpj-l3-tutorial3-complete-20261125.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/client/ClientMain.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "3620프레임 논리 화면(두 번째 Sun Disc Thrower 건설·사격 준비, 적 섬 하단)",
+      "text": false,
+      "sha256": "91ad48ce6337e6b8745a4e6b8239e2018540d024551d786d4ab1b0ecd486b1ef",
+      "bytes": 218681,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "ff916dca4",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/client/ClientMain.cpp": "710b9647b",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-l3-g4160",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-l3/g4160.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial3 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial3.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1333",
+      "doc": "docs/webpj-l3-tutorial3-complete-20261125.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "4160프레임 Session 상태 덤프(적 사제 무력화 완료 및 단계 G Capturing the Enemy Priest 안내 창)",
+      "text": true,
+      "sha256": "37dcf44d9e1ebdd24d6584fabbb5f003c226bd7764f7bfaa23d380d932a67e29",
+      "bytes": 319251,
+      "lines": 4193,
+      "fixtureCommit": null,
+      "webCommit": "ff916dca4",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-l3-g4160-screen",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-l3/g4160.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial3 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial3.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1333",
+      "doc": "docs/webpj-l3-tutorial3-complete-20261125.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/client/ClientMain.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "4160프레임 논리 화면(단계 G Capturing the Enemy Priest 안내 창)",
+      "text": false,
+      "sha256": "8797287763dc9b8ffd690fbc04dc5565f5ca14ada295f631a41b81858ff19010",
+      "bytes": 229104,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "ff916dca4",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/client/ClientMain.cpp": "710b9647b",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-l3-g4185-screen",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-l3/g4185.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial3 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial3.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1333",
+      "doc": "docs/webpj-l3-tutorial3-complete-20261125.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/client/ClientMain.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "4185프레임 논리 화면(이동 중 골렘 우클릭 메뉴 Golem Level I / Carrying: Storm Crystal / Drop Storm Crystal)",
+      "text": false,
+      "sha256": "2c15af1c4cd9034cb5f7051ae8e767fc58b781f7aad0754e63821acf8c461463",
+      "bytes": 230370,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "ff916dca4",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/client/ClientMain.cpp": "710b9647b",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-l3-g5120",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-l3/g5120.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial3 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial3.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1333",
+      "doc": "docs/webpj-l3-tutorial3-complete-20261125.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "5120프레임 Session 상태 덤프(크리스털 내려놓고 다리 건너온 골렘과 기절한 적 사제)",
+      "text": true,
+      "sha256": "f98df5a241fa996bf7eb494fedd23d0a48015f1e357b40c5bd4b68077e06e2d9",
+      "bytes": 319907,
+      "lines": 4203,
+      "fixtureCommit": null,
+      "webCommit": "ff916dca4",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-l3-g5120-screen",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-l3/g5120.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial3 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial3.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1333",
+      "doc": "docs/webpj-l3-tutorial3-complete-20261125.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/client/ClientMain.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "5120프레임 논리 화면(다리 위 빈손 골렘과 적 섬 하단 기절 사제)",
+      "text": false,
+      "sha256": "d9f1186c42cf4bd5270981ab531f6cb286dcea209a1f1e680ce9837232097588",
+      "bytes": 233213,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "ff916dca4",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/client/ClientMain.cpp": "710b9647b",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-l3-g5140-screen",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-l3/g5140.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial3 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial3.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1333",
+      "doc": "docs/webpj-l3-tutorial3-complete-20261125.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/client/ClientMain.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "5140프레임 논리 화면(골렘 좌클릭 선택 표시 및 HP 바)",
+      "text": false,
+      "sha256": "840f832a52c92b5d705b3adcfdb207e6a0e7df224400b47523dad10e77ee6400",
+      "bytes": 233243,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "ff916dca4",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/client/ClientMain.cpp": "710b9647b",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-l3-h6200",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-l3/h6200.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial3 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial3.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1333",
+      "doc": "docs/webpj-l3-tutorial3-complete-20261125.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "6200프레임 Session 상태 덤프(적 사제 포획 후 단계 H Mission Accomplished! 완료)",
+      "text": true,
+      "sha256": "78ff96c7e889fd75ed5dec240413805dcc2b49cb6be2e715ca9c3a031d19e3ba",
+      "bytes": 318844,
+      "lines": 4187,
+      "fixtureCommit": null,
+      "webCommit": "ff916dca4",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-l3-h6200-screen",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-l3/h6200.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial3 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial3.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1333",
+      "doc": "docs/webpj-l3-tutorial3-complete-20261125.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/client/ClientMain.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "6200프레임 논리 화면(적 사제 포획 및 단계 H Mission Accomplished! 완료 창)",
+      "text": false,
+      "sha256": "512d355db5d861870470870668e363dd7246c93cc1eddec10e0cd2d6528637a4",
+      "bytes": 243884,
       "lines": null,
       "fixtureCommit": null,
       "webCommit": "ff916dca4",
