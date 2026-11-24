@@ -55,7 +55,7 @@ test('캠페인 Client 로그인 안내: 현재 메뉴와 프레임 시계', () 
 
 // UI·시계·World 대상은 각 효과가 호출되는 시점의 실제 공급자에서 다시 조회한다.
 test('캠페인 Client Start 효과: 현재 시계·화면·World 경계', () => {
-    const calls = [], clock = { game: 12.5 }, menu = { refresh: () => calls.push('menu') };
+    const calls = [], clock = { game: 12.5 }, menu = { refreshStormPower: () => calls.push('menu') };
     const client = { time: () => clock, renderer: () => ({ invalidateAll: () => calls.push('renderer') }), menu: () => menu };
     const world = { session: () => ({ generateWorldGeysers: () => calls.push('geysers') }), resetCampaignCamera: () => calls.push('camera') };
     assert.throws(() => makeCampaignMissionStartEffects(client, world, null), /명령 Gump 조회 미연결/);
@@ -63,8 +63,8 @@ test('캠페인 Client Start 효과: 현재 시계·화면·World 경계', () =>
     assert.deepEqual(calls, []); effects.settingsBytes(3, bytes); assert.ok(bytes.every((value) => value === 0xa7));
     assert.equal(effects.gameSeconds(), 12.5); clock.game = 14.5; assert.equal(effects.gameSeconds(), 14.5);
     effects.refreshSp(); effects.refreshCommandGump(); effects.randomGeysers(); effects.resetCamera();
-    assert.deepEqual(calls, ['renderer', 'menu', 'gump', 'geysers', 'camera']);
-    client.menu = () => null; effects.refreshSp(); assert.deepEqual(calls.slice(-1), ['renderer']);
+    assert.deepEqual(calls, ['menu', 'gump', 'geysers', 'camera']);
+    client.menu = () => null; const count = calls.length; effects.refreshSp(); assert.equal(calls.length, count);
 });
 
 // 실제 GameData와 채팅 장부에서 현재 설정·언어·이름·난이도를 다시 읽는다.

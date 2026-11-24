@@ -8,6 +8,23 @@ import { GumpBackgroundCreate, GumpBackgroundNode } from '../www/ui/gump-backgro
 import { UberRootNode } from '../www/ui/uber-root-gump.js';
 import { GumpDrawState, GumpPixelTarget, setGumpDrawClip } from '../www/render/gump-draw.js';
 
+// 현재 serial과 실제 트리가 재부착되며 새 노드/금액/Idle을 만들거나 다른 형제를 삭제하지 않아야 한다. (WB04-E1325)
+test('Client Gump 루트: 앱의 현재 예산 serial 재부착과 깊이·같은 노드 수명', () => {
+    const app = new Netstorm(), redraw = [], root = new ClientGumpRoot(1024, 768, () => 0, (...args) => redraw.push(args));
+    app._clientGump = root; app._clientProductionGlobals = { budgetSerial: 0 };
+    const budget = root.createBase(45, 66, 21, 1, () => 0); root.attach(budget, 7, 2);
+    const node = root.node(budget); node.depth = 0xfffffff1; node.amount = 1234; node.head = 71;
+    const cover = root.createBase(1, 66, 21, 1, () => 0); root.attach(cover, 7, 2); assert.equal(root.root().child, cover);
+    app._clientProductionGlobals.budgetSerial = node.serial; const count = root.createState().count; redraw.length = 0;
+    app._refreshCampaignStormPower();
+    assert.equal(root.node(budget), node); assert.equal(root.root().child, budget); assert.equal(node.next, cover); assert.equal(root.node(cover).previous, budget);
+    assert.deepEqual([node.x, node.y, node.depth, node.amount, node.head, root.createState().count], [7, 2, 0xfffffff1, 1234, 71, count]);
+    assert.deepEqual(redraw, [[budget, true], [budget, false]]);
+    app._clientProductionGlobals.budgetSerial = 0xfedcba98; redraw.length = 0; app._refreshCampaignStormPower(); assert.deepEqual(redraw, []);
+    root.remove(budget); app._clientProductionGlobals.budgetSerial = node.serial; redraw.length = 0; app._refreshCampaignStormPower(); assert.deepEqual(redraw, []);
+    root.dispose(); app._clientGump = null; assert.doesNotThrow(() => app._refreshCampaignStormPower());
+});
+
 // 등록 루트와 현재 입력 전역은 크기 변경에도 같은 객체이며 원본 삭제 큐로 반납한다.
 test('Client Gump 루트: 실제 등록표·크기·입력·삭제 수명', () => {
     const app = new Netstorm(); app._initializeClientRuntime(false); app._layout = { logicalWidth: 1024, logicalHeight: 768 };

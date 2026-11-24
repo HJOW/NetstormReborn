@@ -395,6 +395,19 @@ test('Session Login 클라이언트: 서버 전제와 중복 결선 거부', () 
     } finally { front.dispose(); o.dispose(); }
 });
 
+// 실제 소유자/클라이언트 수신으로 SP 전용 장치와 다른 타이머의 공통 갱신을 구분한다. (WB04-E1325)
+test('Session Login 클라이언트: SP 수신은 Session 전용 재부착을 사용한다', () => {
+    const o = loginServerOwner(), calls = [];
+    o.services.refreshSp = () => calls.push('예산');
+    const front = new RawCampaignSessionLoginFront(o, { ...devices([]), refresh: () => calls.push('공통') });
+    try {
+        front.bindServer(); const client = front.bindClient(); o.playerState.playerKnown = true; o.playerState.battleOwner = 1;
+        const packet = new Uint8Array(16), view = new DataView(packet.buffer); view.setInt32(4, 2, true); view.setInt32(8, -1, true); view.setInt32(12, 777, true);
+        client.receiveSp(packet); assert.deepEqual(calls, ['예산']);
+        const bits = new DataView(new ArrayBuffer(4)); bits.setUint32(0, o.sp.get(1), true); assert.equal(bits.getFloat32(0, true), 777);
+    } finally { front.dispose(); o.dispose(); }
+});
+
 // 수신 seed의 최상위 비트도 서버가 보는 같은 자원 DWORD에 보존한다.
 test('Session Login 클라이언트: 현재 Core와 상위 비트 seed 공유', () => {
     const o = loginServerOwner(), front = new RawCampaignSessionLoginFront(o, devices([])), sent = [];

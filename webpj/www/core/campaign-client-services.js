@@ -10,7 +10,7 @@ export function makeCampaignMissionStartEffects(client, world, refreshCommandGum
     return {
         settingsBytes: (_owner, bytes) => currentAllocationBytes(bytes),
         gameSeconds: () => client.time().game,
-        refreshSp: () => { client.renderer().invalidateAll(); const menu = client.menu(); if (menu) menu.refresh(); },
+        refreshSp: () => { const menu = client.menu(); if (menu) menu.refreshStormPower(); },
         refreshCommandGump,
         randomGeysers: () => world.session().generateWorldGeysers(),
         // 12차 스커미시: 계획이 있을 때만 MP 규칙으로 섬을 만든다(일반 미션은 계획이 없어 아무 일도 하지 않는다). (2026-11-20 WB04-E1105)

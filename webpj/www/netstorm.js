@@ -1242,9 +1242,17 @@ export class Netstorm {
         };
     }
 
+    // 같은 Client 등록표와 현재 예산 serial로 원본 SP 재부착을 실행한다. HUD가 아직 없거나 이미 반납됐으면 찾기만 하고 끝난다. (WB04-E1325)
+    _refreshCampaignStormPower() {
+        if (!this._clientGump || !this._clientProductionGlobals) return;
+        this._clientGump.refreshStormPower(this._clientProductionGlobals.budgetSerial);
+    }
+
     // 같은 앱의 현재 설정·Gump·입력 큐를 미션 소유권과 자산 후처리에 빌려준다.
     _campaignGameplayServices() {
         const services = {};
+        // 보상·다른 플레이어 SP 정리도 같은 실제 예산 노드를 다시 부착한다. (WB04-E1325)
+        services.refreshSp = () => this._refreshCampaignStormPower();
         bindCampaignOwnershipTheme({ configuration: () => {
             if (!this._gameData) throw new Error('미션 소유권의 실제 설정 수명 누락');
             return this._gameData;
@@ -1460,7 +1468,7 @@ export class Netstorm {
             gameSeconds: () => this._gameClock.gameSeconds(),
             // 브라우저에는 C 런타임 clock()이 없어 같은 Client의 단조 밀리초를 사용한다.
             clock: () => this._gameClock.milliseconds(),
-            // 현재 메뉴와 최종 화면이 다시 그려지도록 표시한다.
+            // 공통 로그인/타이머 갱신은 메뉴와 화면을 무효화한다. SP 전용 재부착은 같은 Session의 services.refreshSp를 사용한다. (WB04-E1325)
             refresh: () => { if (this._mainMenu) this._mainMenu.dirty = true; this._displayDirty = true; },
             // 비전투·미션·대본 중단을 먼저 제외한 뒤 현재 Session의 전투 종료를 확인한다.
             playerUiBusy: () => {
@@ -1556,7 +1564,7 @@ export class Netstorm {
         const world = this._campaignWorld, current = this._clientGuide?.current(), gump = this._clientGump, chat = this._clientChatWindows;
         if (!world || !current || !gump || !chat || !world.session().localConnectionReady() || this._campaignWorldMissionToken !== current.runtime.saveToken || current.runtime.start) throw new Error('미션 Start의 현재 World·Guide·로그인 수명 오류');
         const client = { time: () => this._gameClock.time(), renderer: () => this._clientRenderer,
-            menu: () => this._mainMenu ? { refresh: () => { this._mainMenu.dirty = true; this._displayDirty = true; }, receiveNativePacketChat: (packet) => this._receiveCampaignChat(packet) } : null };
+            menu: () => this._mainMenu ? { refreshStormPower: () => this._refreshCampaignStormPower(), receiveNativePacketChat: (packet) => this._receiveCampaignChat(packet) } : null };
         const effects = makeCampaignMissionStartEffects(client, world, () => {
             const token = chat.window.current; if (token) gump.events().bubble(token, 0x02000088, 0, 0);
         });

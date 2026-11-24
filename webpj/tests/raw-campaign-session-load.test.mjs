@@ -2078,11 +2078,11 @@ test('CampaignGameWorld TheWarBegins: 실제 Client Start 효과와 미션 시�
     const world = new CampaignGameWorld(game, { read: forbidden('파일') }, fort, 'thewarbegins', services, { x: 1024, y: 768 });
     try {
         const session = world.session(); world.startLocalConnection(); session.pumpLocalConnection(); session.pollLocalConnectionState(); session.pumpLocalConnection(); assert.equal(world.completeLocalConnection(), true);
-        const beforeCameras = events.length, time = { game: 123.5 }, client = { time: () => time, renderer: () => ({ invalidateAll: () => events.push('renderer') }), menu: () => ({ refresh: () => events.push('menu') }) };
+        const beforeCameras = events.length, time = { game: 123.5 }, client = { time: () => time, renderer: () => ({ invalidateAll: () => events.push('renderer') }), menu: () => ({ refreshStormPower: () => events.push('budget') }) };
         const effects = makeCampaignMissionStartEffects(client, world, () => events.push('gump')), gate = createMissionFrameGateState(), state = createMissionStartState();
         new RawCampaignMissionStartBindings(session, script, gate, state, session.missionStartSettings(), session.missionAiSettings(), effects).start();
         assert.equal(session.sp(1), 3000); assert.equal(gate.started, 1); assert.equal(gate.startSeconds, 123.5); assert.equal(state.sequence, 1);
-        assert.deepEqual(events.slice(beforeCameras, beforeCameras + 3), ['renderer', 'menu', 'gump']); assert.ok(events.length > beforeCameras + 3);
+        assert.deepEqual(events.slice(beforeCameras, beforeCameras + 2), ['budget', 'gump']); assert.ok(events.length > beforeCameras + 2);
     } finally { world.dispose(); script.dispose(); }
 });
 

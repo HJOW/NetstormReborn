@@ -311,7 +311,8 @@ export class RawCampaignSessionLoginFront {
         const o = this.#live(), effects = this.#effects;
         if (!this.server || this.client) throw new Error('클라이언트 Login의 실제 서버 전제 또는 중복 결선 오류');
         this.client = new RawMissionClientPackets(o.players, o.participation, o.sp, this.#clientGlobals(), {
-            clock: effects.clock, wallSeconds: effects.wallSeconds, runState: () => this.state.run(), resetCamera: o.services.install.resetCamera, refreshSp: effects.refresh,
+            // 실제 앱은 Session 서비스로 SP 전용 재부착을 제공한다. 기존 독립 Login 공급자의 공통 refresh 계약은 계속 지원한다. (WB04-E1325)
+            clock: effects.clock, wallSeconds: effects.wallSeconds, runState: () => this.state.run(), resetCamera: o.services.install.resetCamera, refreshSp: o.services.refreshSp ?? effects.refresh,
             observerAssertion: (expression, file, line) => o.world.storage.assertDisplay(expression, file, line),
             outpostOptions: effects.metaBattleOptions, reconnectUi: effects.reconnectUi,
             localFort: () => { throw new Error('일반 전투 Fort는 웹 후속 스커미시 단계'); },

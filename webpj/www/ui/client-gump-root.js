@@ -6,6 +6,7 @@ import { GumpEventState, GumpEvents } from './gump-events.js';
 import { GumpInput, GumpInputState } from './gump-input.js';
 import { GumpFrame } from './gump-frame.js';
 import { GumpTree, GumpTreeState } from './gump-tree.js';
+import { refreshStormPowerGump } from './storm-power-refresh.js';
 import { GumpCollection } from '../render/gump-collection.js';
 import { GumpDraw, GumpDrawState, GumpPixelTarget } from '../render/gump-draw.js';
 
@@ -86,6 +87,10 @@ export class ClientGumpRoot {
     }
     // 가상 구분선 입력과 위치 계산에 실제 트리를 빌린다.
     tree() { this.#live(); return this.#tree; }
+    // 원본43dad0: 현재 예산 serial의 실제 노드를 Push/가상 Attach하고 깊이를 복원한다. 금액·Idle·전체 화면은 갱신하지 않는다. (WB04-E1325)
+    refreshStormPower(serial) {
+        this.#live(); refreshStormPowerGump(this.#create.entries, serial, { node: (token) => this.node(token), push: (token) => this.#tree.push(token), attach: (...args) => this.attach(...args) });
+    }
     // 같은 현재 트리의 좌표 수집기를 빌린다.
     collection() { this.#live(); return this.#collection; }
     // 원본 `GumpTree` 지도 영역(005ca9cc~d8)의 같은 저장소를 빌린다. HUD 도킹이 이 객체에 정수 LTRB를 쓰고 월드·Renderer·중앙 정렬이 같은 객체를 읽는다. (2026-11-20 WB04-E1082)
