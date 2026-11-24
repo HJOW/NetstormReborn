@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-24 · 목표 진행 중·마지막 완료0.982(집중 1건·대표 3경로 기준선 유지) · 다음0.983(RU-3 나머지, R4-4 정기) · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6, 1/8) · 마지막 전체 회귀0.980(6,838통과·M1 0/34) · cpppj 제품1339 / 11.01 · 전체 목표 미완료 · 0.950 뒤 정리**
+**2026-11-24 · 목표 진행 중·마지막 완료0.983(집중 7건·대표 3경로 기준선 유지) · 다음0.984(정기 전체 회귀) · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6, 1/8) · 마지막 전체 회귀0.980(6,838통과·M1 0/34) · cpppj 제품1339 / 11.01 · 전체 목표 미완료 · 0.950 뒤 정리**
 
 현행 인계는 이 문서가 기준이다. 단위별 근거는 `docs/dotnet-canon-0NNN-*.md`이다. 정리 직전 원문 전체는 보관 파일 끝에 있다: 최신 [0.950 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261124-through-0950)(0.901~0.950의 요약표 단위별 행·RU-3 단위별 완료 나열·검사 기준선 단위별 신규 수·6절 단위별 행)과 [0.900 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261123-through-0900)(0.838~0.900의 재개 인계 연쇄·6절 단위별 행·R4-4/R4-6 남음 원문)이다. 그 이전 보관본(0.837·0.797·0.732·0.635·0.613·0.545)과 각 보관본에 옮긴 내용은 [6절](#dotnet-archive-log) 이관 기록에 있다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
@@ -12,14 +12,14 @@
 | --- | --- | --- |
 | 유일한 실행 경로 `Netstorm.Game` (`Netstorm.exe`) + 내부 `Netstorm.Client` | 0.807에서 구 근사 실행기를 제거하고 직역 호스트가 이름을 승계했다. 타이틀·메뉴·도움말·Options·Credits·캠페인 선택·Edit 목록과 이름 창이 동작한다. 개발용 `--mission <키> --handle <이름>`으로 일반31미션의 시작 상태 일부를 조립한다. 월드 표시·입력·규칙의 실제 경로가 남아 플레이 불가다. | 1024×768 메뉴 **12장면**의 논리 BMP가 cpppj와 바이트 일치했다(0.381~0.388). L2는 **0/34**, 데모3경로 DN 진입 미연결이며 L3·L4b·L5는 미착수다. |
 
-- **검사 기준선.** 마지막 전체0.980은 Assets376·Core3838·Client2624 합계6,838통과/실패0/건너뜀0이다. 0.880의 모든 이름/중복과 이후 신규497건(단위별 수는 각 단위 문서와 [0.950 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261124-through-0950))을 보존했다. 그 뒤 0.957·0.958·0.959·0.960·0.961·0.962·0.963·0.964·0.965·0.966·0.967·0.968·0.969·0.970·0.971·0.973·0.974·0.975·0.977·0.978·0.979·0.981·0.982가 집중 검사 16·15·10·13·12·12·12·2·15·5·16·0·4·5·5·5·5·9·10·8·10·3·1건을 더했다. NETSTORM_DATA 없이 Release 오류0·신규경고0이며 검사 사본은 실행본과 같고 원본1392파일은 전후 불변이다. 다음 정기 전체는0.984이다. [0.980](docs/dotnet-canon-0980-20261124.md)
+- **검사 기준선.** 마지막 전체0.980은 Assets376·Core3838·Client2624 합계6,838통과/실패0/건너뜀0이다. 0.880의 모든 이름/중복과 이후 신규497건(단위별 수는 각 단위 문서와 [0.950 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261124-through-0950))을 보존했다. 그 뒤 0.957·0.958·0.959·0.960·0.961·0.962·0.963·0.964·0.965·0.966·0.967·0.968·0.969·0.970·0.971·0.973·0.974·0.975·0.977·0.978·0.979·0.981·0.982·0.983이 집중 검사 16·15·10·13·12·12·12·2·15·5·16·0·4·5·5·5·5·9·10·8·10·3·1·7건을 더했다. NETSTORM_DATA 없이 Release 오류0·신규경고0이며 검사 사본은 실행본과 같고 원본1392파일은 전후 불변이다. 다음 정기 전체는0.984이다. [0.980](docs/dotnet-canon-0980-20261124.md)
 - **L2 기준선.** 마지막 수집은 extracted/dotnet-l2-0980/이다. 일반31양쪽의62실행 모두 종료0·오류/누락0이며 DN31전체덤프/34지표는0.920과 같다. M1 **0/34**(31미션 동등 0·cpp_only997·dn_only21), DN데모3진입 미연결, 고정 수신26/26이다. CPP 차이는 기존 미초기화SP행3열 범위뿐이다. 세 설치 값(`_nativeLoaded`·`_editorUiInstalling`·`_editorPrefixUiInstalling`)은 false다. [0.968](docs/dotnet-canon-0968-20261124.md) · [격차 분석](docs/dotnet-l2-0606-20261117.md)
 
 <a id="now"></a><a id="09-바로-다음-작업"></a><a id="r4-board"></a>
 
 ### 0.1 재개 순서와 최근 완료 요약
 
-1. **다음0.983 — RU-3 나머지(RU-3a~d), R4-4 남은 정기 두 단위.** [1.1절 R4-6 전송·수신](#r4-detail)의 세션·메뉴 결합 후크 수신기 연결과 Root Source/Record/Sent·송신/제출을 잇는다. 그다음 RU-3 나머지(RU-3a~d)~RU-6과 R4-4 남은 정기 두 단위로 간다. RU-6(Load/Editor 세 설치 값 공개)은 Load 하위가 모두 정상 복귀한 뒤 마지막에 한다. 이 묶음 뒤 R4-7·R4-8(M1)로 간다. 다음 정기 전체는0.984이다.
+1. **다음0.984 — 정기 전체 회귀.** [1.1절 R4-6 전송·수신](#r4-detail)의 세션·메뉴 결합 후크 수신기 연결과 Root Source/Record/Sent·송신/제출을 잇는다. 그다음 RU-3 나머지(RU-3a~d)~RU-6과 R4-4 남은 정기 두 단위로 간다. RU-6(Load/Editor 세 설치 값 공개)은 Load 하위가 모두 정상 복귀한 뒤 마지막에 한다. 이 묶음 뒤 R4-7·R4-8(M1)로 간다. 다음 정기 전체는0.984이다.
    - 선행 완료(중복 금지): 첫 장치 설치/같은 상태·깊이(0.814), 현재 지갑·실제 Host 메모리 대여·AI 통지 진입점과 Player owner 빌림(0.815), Player 고유Pre/약한 records owner와 Residence/Dude(0.813), HUD 도킹·전체 Uber 부모/현재 this DockView·공통 HUD 수명(0.817~0.819), 미니맵 기하·공유 FullRefresh·RawMinimapControls(MapRevision 대여·GumpRedraw 등록) 수명(0.821~0.822), NSInfo 생성/부착(0.823), 생산 격자·정보·동기화·실제 생산 부모(0.825~0.826·0.829), OwnerColorTableState/ProductionControlContext·장기 Finder(0.827), 최초 고정 RGB/primary/9표·캐시 부모(0.830), RawBaseFileIO·같은 경로 검색·실제 CRT/TAFF·색표 캐시(0.831·0.833·0.834), Game 최초 팔레트·소유자 옵션(0.835), ClientProductionSync·색표7 소비자(0.837), 실제 Root 전송/Process 선택·같은 지도 getter/BSS0(0.838), Native Player 정기/Template(0.839). 0.841~0.899의 Native 기본 Host·Process writer·패킷 분배 부모, 0.901~0.931의 RU-1·RU-2와 RU-3 NSInfo 메타 UI 조립·결선, 0.933~0.975의 분배 기본표·메타 수신기·2번·1a/1b·0x66·0x26·0x1d·0x0f·0x71·0x21 Build 연결 본체/설치(Build의 Carrier/Construction 연결·임대복구, PacketDelays 분포·장치, 0x7b·0x7c Build 연결, 수송 팩토리 생성·재결합·Publish 포함)와 0.939 제단 정기 분기도 다시 만들지 않는다. 범위는 아래 요약표와 단위 문서를 본다.
    - 주의: 기존83VT 실제 분배/고유 파생·Runtimepin을 잇고 미설치를 일반 Pre/Post/no-op으로 통과시키지 않는다. prepared 상태나 동일 깊이 검사를 완화하지 않는다. 실제 지도 영역을 전체viewport로 대체하지 않는다. Root의 세 번째 NSInfo와 F6 RawKnowledgeMenu를 혼동하지 않는다. 후속 UI/World 소비자도 같은 현재 색표/OwnerTables를 빌려야 하며 별도 표를 만들지 않는다. 실제 색표 연결을 NativeRoot/World 전체 설치 완료로 세지 않는다. 설치 후/Editor 성공 범위를 0.837의 거부 검사로 완료 처리하지 않는다. 초기 Source 미니맵 공장은 Open이 아닌 Construct와 기존 bitmap 준비/전체 도킹의 Push→Attach를 사용한다.
    - 소견: 최신 `extracted/dotnet-0837/next-0838-static.md`. 이전 Root·미니맵·생산 소견은 extracted/dotnet-0816·0820·0821·0822·0824·0826의 `next-08NN-static.md`다.
@@ -54,7 +54,7 @@
 | HUD 도킹·전체 부모/공통 조립 | 0.817~0.819·0.821~0.822 | 도킹/같은 지도 owner(2150), 전체 Uber 부모/현재 this(160), 입력/방송(13398)·공통 Frame2186행과 실제 전체 UI 소유/가상 분배/수명·재배치, 미니맵 기하/셀 그림·공유 갱신 지원(4722/1028/120), 실제 공통 미니맵/기본 영역·출력/통지 수명(1474) | 실제 게임 Root의 나머지 패널/메시지 공장·현재 지도/선택/미니맵 전역 공급/바깥 UI 장치/Native MapView, R4-6 |
 | 실행 경로 전환·Host 진단 | 0.805·0.807 | Host 부착 예외 소유권·독립 공장 진단, 구 근사 실행기 제거와 `Netstorm.Game`/`Netstorm.exe` 이름 승계·공통 ICO·갈무리11 배포 | R5 월드 화면, [0.3](#korean-font-change)·[0.4](#exe-icon) |
 | NSInfo·생산 패널·색표 | 0.823·0.825~0.827·0.829~0.830·0.835·0.837 | NSInfo 전체 생성/일반 부착·공통 UI 소유, 생산 격자/항목/안내·정보/단축키/동기화/유지·실제 생산 부모/예산/출력, 현재 owner 색표·생산 문맥·장기 Finder, 최초 고정 RGB/primary/9표·캐시 부모, Game 최초 팔레트·TYPE/사용자 캐시·소유자 옵션, ClientProductionSync 장기/대여 분기·생산 본체/초기 거부·색표7 소비자 | 실제 Load/Editor 설치 부모(RU-6)·Root/생산 공장(RU-3b), NSInfo 외부 장치 실제 공급(RU-3a) |
-| 파일 IO·검색·CRT | 0.831·0.833·0.834 | RawBaseFileIO 현재 FILE/키·부분 입출력 전체 본체(독립557관측), 같은 경로 Device/검색 수명·실제 Windows 검색·전체 열기 정책(독립1396관측), 등록 TAFF/현재 FILE·실제 CRT/캐시 reader·writer 입구 | RawFileName 나머지 조회·BaseFile 고리([1.1](#r4-detail) 시작·수명) |
+| 파일 IO·검색·CRT | 0.831·0.833·0.834·0.983 | RawBaseFileIO 현재 FILE/키·부분 입출력 전체 본체(독립557관측), 같은 경로 Device/검색 수명·실제 Windows 검색·전체 열기 정책(독립1396관측), 등록 TAFF/현재 FILE·실제 CRT/캐시 reader·writer 입구 | RawFileName 나머지 조회 완료(이름·디렉터리·전체, 0.983)·BaseFile 고리([1.1](#r4-detail) 시작·수명) |
 | Native 기본 Host·수명·writer | 0.841~0.844 | 기본 Host 지연 설치/Native 공장·동일 자원 예약, 기본 수명·현재 VT35종/피해·건설 사건, 기본 Dais/Path writer·실제 PID/FormPacket, 현재 Runtime의 알려진 ProcessForm 삭제(비 ProcessForm 자산은 명시 거부) | 전체 Native 가상 자산 삭제 분배(R4-6 월드·경로) |
 | 건설·총·비행 Process | 0.845~0.847·0.849~0.851·0.853~0.855·0.857~0.859·0.861 | RawConstructionData codec/0x37, GunProcess raw/codec·3ah, FlyerProcess codec·FlyerPostPop·39h/86h, 훨리베이스(Sun) 38h·맨 오 워 풀(Rain) 73h·데빌메이커(Wind·RawWindCircle) 80BYTE/74h의 상태 기계·실제 Host/Native writer | Root 비행 생산/음향/큰 Frame, CDHost 미복원 경계 |
 | 총 애니메이션·투사체·표적 | 0.862~0.863·0.865~0.867·0.869~0.871·0.873~0.874·0.878~0.879·0.881~0.882 | RawGunAnimation 공통 codec과 썬 캐논·아처·캐논/반더·크로스보우·아이스 캐논 발사, 미사일·포구/사정선·아이스 반사점·피해/DPS·반사탄/플로터, RawGunTarget 표적 Finder, 같은 World 전투 애니메이션 공장·3b/3c(RawCampaignArcherBindings)·고정 수신26/26(0.882) | Root의 Gun 큰 장치, RawGunTarget 실제 보호 자산 `cannon-asset-ray48` 검사 |
@@ -357,6 +357,7 @@ AGENTS.md 지정에 따라0.807에서 공통 [assets/Netstorm.ico](assets/Netsto
 | 0.980 | 2026-11-24 | 정기 전체 회귀 6,838통과(Assets376·Core3838·Client2624)·L2 전체 34경로 기준선 유지(M1 0/34·cpp_only997·dn_only21·원본1392불변) |
 | 0.981 | 2026-11-24 | R4-6 0x0f 서버 목록 갈래를 실제 NSInfo 주인에 연결·Root 저장 결선(집중 3건), 대표 3경로 기준선 유지 |
 | 0.982 | 2026-11-24 | 0x20 일치 구독자의 CoreData·예약 묶음 검증(집중 1건·제품 변경 없음), 대표 3경로 기준선 유지 |
+| 0.983 | 2026-11-24 | RawFileName 나머지 조회(Name·Directory·Full) 이식(집중 7건), 대표 3경로 기준선 유지 |
 
 정기 전체 회귀·일괄 덤프는 0.644부터 4단위마다(0.644·0.652·0.656·0.660·0.664 … 0.728 … 0.800 … 0.844~0.968) 수행했고 다음은0.972다. 0.908까지는 같은 빌드 65진입을, 0.912부터는 L2 일괄 수집을 함께 했다. 단위별 근거는 `docs/dotnet-*.md`와 Git 기록에 있다.
 
