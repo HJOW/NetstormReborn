@@ -54,6 +54,18 @@ public sealed partial class ClientGameplayGlobals
     /// <summary>미션 교체 뒤에도 같은 원문 최근실패비트/TYPE를 보존하는 SID 진단 owner다.</summary>
     public RawSidRobustDiagnostics SidRobustDiagnostics { get; } = new();
 
+    /// <summary>0052f488의 실제 공급 반경이다. 옵션·커서·AI가 같은 주소에서 읽고 쓴다.</summary>
+    /// <remarks>2026-11-24 0.959에서 R4-6 0x67 전투 옵션 공급 범위 결선용으로 추가했다. 근거: cpppj client/ClientGameplayGlobals.h ManaRadius(최초 22).</remarks>
+    public float ManaRadius { get; set; } = 22.0f;
+
+    /// <summary>005425f4의 현재 4float 선택표다. 옵션 해석이 같은 표를 읽는다.</summary>
+    /// <remarks>2026-11-24 0.959에서 추가했다. 근거: cpppj client/ClientGameplayGlobals.h ManaRanges(최초 14/22/30/38).</remarks>
+    public float[] ManaRanges { get; } = [14f, 22f, 30f, 38f];
+
+    /// <summary>같은 공급 제곱 반경이다(energy.radiusSquared). 옵션 해석이 같은 값을 쓴다.</summary>
+    /// <remarks>2026-11-24 0.959에서 추가했다. 근거: cpppj o/RawMissionBattleOptions.cpp UpdateMissionOptionSupplyRange의 squared 쓰기.</remarks>
+    public float ManaRadiusSquared { get; set; }
+
     /// <summary>005318e8의 현재 게임 포트 DWORD다. 상태/일반 로그인/메타 listener가 같은 주소에서 읽는다.</summary>
     /// <remarks>2026-11-24 0.951에서 R4-6 배틀 시작 수신 결선용으로 추가했다. 근거: cpppj client/ClientGameplayGlobals.h GameServerPort(최초 6799).</remarks>
     public UIntBox GameServerPort { get; } = new() { Value = 6799 };
