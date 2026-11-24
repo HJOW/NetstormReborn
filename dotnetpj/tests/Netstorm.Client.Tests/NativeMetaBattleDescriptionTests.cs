@@ -100,7 +100,7 @@ public sealed class NativeMetaBattleDescriptionTests
         Assert.Throws<ArgumentOutOfRangeException>(() => NativeMetaBattleDescription.Confirm(new char[255]));
     }
 
-    /// <summary>미연결 장치는 일반 성공으로 꾸미지 않는다. 0.941에서 추가됐다.</summary>
+    /// <summary>미연결 장치와 짧은 패킷은 일반 성공으로 꾸미지 않는다. 유효 경로의 진단 누락은 허용한다. 0.938에서 추가하고 0.942에서 복원했다.</summary>
     [Fact]
     public void MissingDevicesFailExplicitly()
     {
@@ -111,5 +111,42 @@ public sealed class NativeMetaBattleDescriptionTests
         battle[0] = 0;
         var bare = new NativeMetaBattleDescriptionHooks();
         Assert.Throws<InvalidOperationException>(() => NativeMetaBattleDescription.Receive(scene.Challenge, Scene.Packet(4, "ab"), bare));
+        Assert.Throws<ArgumentOutOfRangeException>(() => NativeMetaBattleDescription.Receive(scene.Challenge, new byte[3], scene.Hooks()));
+        // 유효 경로는 진단을 쓰지 않으므로 진단 누락이어도 성공한다. 0.942에서 바로잡았다.
+        var noLog = scene.Hooks();
+        noLog.Log = null;
+        var active = scene.Challenge.Battle(5).Span;
+        active[0] = 1;
+        active[0x20] = 3;
+        NativeMetaBattleDescription.Receive(scene.Challenge, Scene.Packet(5, "ab"), noLog);
+        Assert.Empty(scene.Logs);
+        Assert.Equal([3u], scene.Refreshed);
+        Assert.Equal([5u], scene.Updated);
+        // 유효 경로는 표시·갱신 장치가 없으면 명시 실패한다. 0.942에서 추가됐다.
+        var noRefresh = scene.Hooks();
+        noRefresh.RefreshObject = null;
+        Assert.Throws<InvalidOperationException>(() => NativeMetaBattleDescription.Receive(scene.Challenge, Scene.Packet(5, "ab"), noRefresh));
+        var noUpdate = scene.Hooks();
+        noUpdate.UpdateBattle = null;
+        Assert.Throws<InvalidOperationException>(() => NativeMetaBattleDescription.Receive(scene.Challenge, Scene.Packet(5, "ab"), noUpdate));
+    }
+
+    /// <summary>상한 길이 41은 잘라내지 않고 그대로 복사한다. 0.942에서 추가됐다.</summary>
+    [Fact]
+    public void BoundaryLength41CopiesFully()
+    {
+        var scene = new Scene();
+        var battle = scene.Challenge.Battle(2).Span;
+        battle[0] = 1;
+        battle[0x20] = 9;
+        string text = new('y', 40);
+        NativeMetaBattleDescription.Receive(scene.Challenge, Scene.Packet(2, text), scene.Hooks());
+        Assert.Empty(scene.Logs);
+        Span<byte> span = scene.Challenge.Battle(2).Span;
+        Assert.Equal((byte)'y', span[0xf9]);
+        Assert.Equal((byte)'y', span[0xf9 + 39]);
+        Assert.Equal(0, span[0xf8 + 41]);
+        Assert.Equal([9u], scene.Refreshed);
+        Assert.Equal([2u], scene.Updated);
     }
 }
