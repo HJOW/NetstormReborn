@@ -52,8 +52,8 @@ test('채팅 창: 숨긴 채 만들어지고 F3 로 보이며 로그가 색과 �
   expect(errors).toEqual([]);
 });
 
-test('채팅 창: 미션을 떠나면 창이 정리되고 다음 미션에서 다시 만들어진다', async ({ page }) => {
-  test.setTimeout(300000);
+test('채팅 창: 미션을 떠나도 같은 로그·색 조각이 유지되고 앱 재시작에서 초기화된다', async ({ page }) => {
+  test.setTimeout(450000);
   const errors = []; page.on('pageerror', (error) => errors.push(error.stack ?? error.message)); page.on('console', (message) => { if (['error', 'warning'].includes(message.type()) && !/willReadFrequently/u.test(message.text())) errors.push(message.text()); }); // 시험이 픽셀을 읽을 때 브라우저가 내는 Canvas2D 성능 안내는 게임 오류가 아니다.
   await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0, autoDemo: 0, skirmishAiCount: 3, skirmishAi2Ally: 0, skirmishAi3Ally: 0, skirmishAi4Ally: 0 } })));
   await page.setViewportSize({ width: 1024, height: 768 }); await page.goto('/?aspect=4:3&lang=en');
@@ -62,9 +62,25 @@ test('채팅 창: 미션을 떠나면 창이 정리되고 다음 미션에서 �
   const start = async () => { await clickLabel(page, 'Campaign'); await clickLabel(page, 'Skirmish'); await clickLabel(page, 'Start');
     await page.waitForFunction(() => window.netstorm?._campaignDisplayActive() && window.netstorm._clientGuide.current()?.runtime.gate.started === 1, null, { timeout: 120000 }); await clickLabel(page, 'Go!'); await page.waitForTimeout(1500); };
   await start(); const first = await state(page); expect(first.report).not.toBeNull();
+  // 새 창이 같은 Client 소유 로그·스타일 조각을 다시 빌려야 한다. 줄 수만 복사해서는 충분하지 않다.
+  await page.evaluate(() => { const app = window.netstorm, globals = app._clientChatWindows;
+    app._campaignProduction.ui.chat().appendLog('Persist ~rRed~n line');
+    window.__chatLifetime = { globals, log: globals.log, owner: globals.uiOwner, heads: [...globals.log.hardLines] }; });
+  await page.keyboard.press('F3'); await page.waitForTimeout(600);
+  expect((await ink(page, { left: 90, top: 680, right: 420, bottom: 693 })).red).toBeGreaterThan(5);
   await page.evaluate(() => window.netstorm._leaveCampaignMission()); await page.waitForFunction(() => !window.netstorm._campaignDisplayActive(), null, { timeout: 30000 });
   expect(await page.evaluate(() => window.netstorm._clientChatWindows.window.current)).toBe(0);
+  expect(await page.evaluate(() => ({ lines: window.netstorm._clientChatWindows.log.lineCount, devices: window.__chatLifetime.owner.devices }))).toEqual({ lines: 1, devices: null });
   await start(); const second = await state(page); expect(second.report, '다음 미션의 채팅 창').not.toBeNull(); expect(second.report.bounds.top).toBeGreaterThanOrEqual(768);
+  expect(second.lines).toBe(1);
+  expect(await page.evaluate(() => { const globals = window.netstorm._clientChatWindows, saved = window.__chatLifetime;
+    return globals === saved.globals && globals.log === saved.log && globals.uiOwner === saved.owner && saved.heads.every((head, index) => head === globals.log.hardLines[index]); })).toBe(true);
+  await page.keyboard.press('F3'); await page.waitForTimeout(600);
+  expect((await ink(page, { left: 90, top: 680, right: 420, bottom: 693 })).red, '두 번째 창의 같은 빨강 글자').toBeGreaterThan(5);
+  await page.evaluate(() => window.netstorm._campaignProduction.ui.chat().appendLog('second mission')); expect((await state(page)).lines).toBe(2);
+  // 페이지 재시작은 Client 수명의 끝이다. localStorage에 로그를 저장하지 않는다.
+  await page.reload(); await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 60000 }); await page.locator('canvas').click();
+  await page.waitForFunction(() => window.netstorm?.state === 'mainMenu', null, { timeout: 60000 }); await start(); expect((await state(page)).lines).toBe(0);
   expect(errors).toEqual([]);
 });
 

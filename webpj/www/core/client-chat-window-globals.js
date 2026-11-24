@@ -25,7 +25,7 @@ export class ClientChatWindowGlobals {
     #strings = new Map(); #stringTokens = new Map();
     // 54874c·548710·548748의 최초 BSS 0이며 수신/중계가 같은 필드를 사용한다.
     logFile = 0; receivedMask = 0; newsTime = 0;
-    // 54db18의 입력줄 전환 DWORD와 단일 UI 조각/글꼴 저장소 대여 표식이다.
+    // 54db18의 입력줄 전환 DWORD와 공유 로그가 빌리는 Client 수명의 UI 글자·그림·버퍼 저장소다.
     inputLineOff = 0; uiOwner = null;
     // 입력 고리/Help 영역과 겹치지 않는 최초 호스트 문자열 토큰이다.
     nextString = 0x71000000;
@@ -34,8 +34,6 @@ export class ClientChatWindowGlobals {
     get window() { return this.#window; }
     // 같은 공유 로그 객체를 값 사본 없이 빌린다.
     get log() { return this.#log; }
-    // 공유 로그를 새 상태로 바꾼다. 미션을 떠나 로그 버퍼를 반납한 뒤 다음 미션이 새 버퍼를 빌려 쓰게 한다(원본은 한 Client 동안 로그가 이어지지만 웹은 미션마다 스타일 저장소를 새로 만들므로 로그를 미션마다 새로 시작한다). (2026-11-22 WB04-E1169)
-    resetLog() { this.#log = new StyleTextBufferState(); }
     // 같은 장기 자동완성 BSS를 빌린다.
     get completion() { return this.#completion; }
     // 같은 128BYTE 뉴스 키를 빌린다. 기존 뉴스 시각 DWORD와 별개다.

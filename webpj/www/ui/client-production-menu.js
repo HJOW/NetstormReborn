@@ -28,12 +28,27 @@ import { ClientWarnings } from './client-warnings.js';
 import { ClientMoneyDialog } from './client-money-dialog.js';
 import { ClientChatWindow } from './client-chat-window.js';
 
+// 공유 채팅 로그의 글자·그림 조각과 버퍼를 Client 수명에 보관한다. 현재 장치는 미션마다 교체해 이전 Session을 붙잡지 않는다.
+function clientMenuText(root, game, fonts, screen, colors, devices) {
+    const globals = devices.chat?.globals;
+    let owner = globals?.uiOwner;
+    if (owner) {
+        if (owner.root !== root || owner.game !== game || owner.fonts !== fonts || owner.screen !== screen) throw new Error('Client 공유 로그의 실제 UI 소유자 불일치');
+        owner.devices = devices; owner.colors = colors; return owner;
+    }
+    owner = { root, game, fonts, screen, colors, devices, text: null, pictures: null, markup: null, buffers: null };
+    owner.text = new ClientTextGump(root, fonts, (...args) => owner.devices.baseHandle(...args),
+        makeClientTextMarkup(game, () => screen.colors(), () => owner.colors.maps[2], (...args) => owner.devices.sound(...args), undefined,
+            (pictures, markup) => { owner.pictures = pictures; owner.markup = markup; }));
+    owner.buffers = new ClientStyleTextBuffers(owner.text, fonts, owner.pictures);
+    if (globals) globals.uiOwner = owner;
+    return owner;
+}
+
 // Session·원본 자산과 실제 입력·출력 장치를 빌리고 생성한 메뉴를 반납할 수 있게 한다.
 export function createClientProductionMenu(root, session, game, data, fonts, screen, colors, background, backgroundType, devices) {
     if (!root || !session || !game || !data || !fonts || !screen || !colors || !background || !Number.isInteger(backgroundType) || !devices || ['baseHandle', 'sound', 'translate', 'ownerName', 'helpWord', 'affordable', 'now', 'poll', 'cursor', 'command', 'invalidate'].some((name) => typeof devices[name] !== 'function')) throw new TypeError('생산 메뉴의 실제 장치 누락');
-    let pictures, markup;
-    const text = new ClientTextGump(root, fonts, devices.baseHandle, makeClientTextMarkup(game, () => screen.colors(), () => colors.maps[2], devices.sound, undefined, (p, m) => { pictures = p; markup = m; }));
-    const buffers = new ClientStyleTextBuffers(text, fonts, pictures), assets = new GumpBackgroundAssets(game);
+    const textOwner = clientMenuText(root, game, fonts, screen, colors, devices), { text, markup, buffers } = textOwner, assets = new GumpBackgroundAssets(game);
     const buttonState = new ButtonGumpState(), stoneState = new StoneButtonGumpState(), scrollState = new ScrollGumpState(), widgetState = new ScrollGumpWidgetState();
     Object.assign(buttonState, { valueEvent: 0x02000070, clickEvent: 0x0200002c, rightEvent: 0x02000012, repeatEvent: 0x0200002f, baseColor: 56 });
     Object.assign(scrollState, { clickEvent: 0x0200002c, repeatEvent: 0x0200002f, stepEvent: 0x0200002e, changeEvent: 0x02000036 });
@@ -92,5 +107,7 @@ export function createClientProductionMenu(root, session, game, data, fonts, scr
         instances: () => menu.instances(), closePopups: () => menu.closePopups(),
         sendMoney: sendMoney ? { open: (target) => sendMoney.open(target), current: () => sendMoney.current(), text: () => sendMoney.text() } : null,
         chatFormat: chatFormat ? { open: (front, text) => chatFormat.openFormat(front, text), current: () => chatFormat.current(), text: () => chatFormat.text() } : null,
-        close: () => { chat?.close(); chatFormat?.close(); sendMoney?.close(); warnings?.close(); gameMenu?.close(); menu.close(); scroll.close(); } };
+        close: () => { chat?.close(); chatFormat?.close(); sendMoney?.close(); warnings?.close(); gameMenu?.close(); menu.close(); scroll.close();
+            // 공유 조각만 남기고 이전 미션의 장치/색표 연결은 놓는다. 늦은 중복 close가 새 미션 장치를 지우지 않게 한다.
+            if (textOwner.devices === devices) { textOwner.devices = null; textOwner.colors = null; } } };
 }

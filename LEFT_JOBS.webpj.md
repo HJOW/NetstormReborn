@@ -6,14 +6,14 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-24 재개, E1313~E1319 완료)
+### 0.1 현재 값 (2026-11-24 재개, E1313~E1320 완료)
 
 | 항목 | 현행 상태 |
 | --- | --- |
 | 실행·플레이 | 브라우저에서 ‘클릭하여 시작’, 시작 title 그림, 메인 메뉴·캠페인/데모 목록·도움말·옵션(Reset All 게임 안 확인 창 포함)·Credits와 개발용 지형 미리보기가 동작한다. **미션:** 캠페인 목록 31개(Early Missions 6·세 캠페인 묶음 16·Priest Training 9)와 데모 3개가 시작되고, 장시간 진행과 임의 조작(몽키) 시험에서 오류·먹통이 없다. Campaign ▸ Skirmish는 무작위 섬·간헐천 월드에서 AI와 진행되며 AI 생산·공격으로 사제가 죽으면 패배 안내까지 이어진다(E1262, 약 18분 관찰). Tutorial2는 시작부터 완료 창·Tutorial3 시작까지 자연 진행으로 확인했고, 승패 안내 뒤 흐름(Continue·Replay Mission·Leave/Next Mission·진행 저장)도 확인했다. 미션 프레임은 다리 붕괴 검사·전투 자원·제단 결과 알림·주변음/공유 바람·장면 음악·미니맵 갱신을 원본 주 루프 순서로 돈다(E1230~E1234·E1266). **조작:** 사제 선택·이동, 가장자리·Alt·가운데 버튼 스크롤, 미니맵 클릭·끌기, 생산 격자 클릭·단축키(D 포함)·조각 회전(C·회전 방향 옵션)·다리 배치, 사제·워크샾·제단·신전·배터리·발전기·운반체 우클릭 메뉴와 회수·기도·Cast/Drop, 객체 명령(Detonate·Meltdown·신전 명령), 화면 위치 키(F4/H·F5·TAB·U·Shift+숫자 저장/숫자 복귀)와 방향키 카메라 이동(32픽셀, 조각을 든 ←/→는 회전, E1291), 미니맵·스톰 파워 표시·생산 창·채팅 도우미 단추의 우클릭 빠른 도움말(E1236·E1253)이 동작한다. **게임 메뉴:** ESC 또는 화면 우측 상단 버튼(웹 전용)으로 Game·View·Options·Players·About 메뉴막대를 열고, Leave/Restart Mission(ABORT 확인 창), F1·F2·F6·F7·F8·F9·Shift-F3·T, Pause(Shift-F9·Pause 키·메뉴), Shift-F7 화면 GIF 저장, Players 메뉴의 송금(Send X 숫자 입력 창 포함)·동맹이 실행된다. ESC는 열린 Tell 창(브리핑·로딩 제외)을 원본처럼 닫는다(E1264). 브리핑·완료 창의 Review Knowledge·GetTechnology 단추와 Priest Training 7의 Training Menu(원본 오타 별칭, E1245)도 동작한다. **HUD 틀·채팅 창:** 실제 Uber 루트가 좌측 사이드바(SP·생산 덱)·하단 미니맵 칸·구분선을 원본 위치로 도킹하고 지도 영역이 `{85,0,W,H}`다(4:3·16:9·16:10·1920×1080·창 크기 변경 확인). F3 채팅 창의 로그·입력줄·제출(로컬 서버 경유 `You> 본문`)·점 명령·Tab 이름 완성(동맹 AI)·붙여넣기/복사/잘라내기·도우미 메뉴·Edit Back/Front Format 창이 동작한다(E1169~E1179). **미완성:** 다른 미션의 목표 수행과 자연 완주. 주문 오류는 E1318에서, 주문 보유 골렘의 적 사제 포획·Drop은 원본 mask 구분에 맞춰 E1319에서 교정·확인했다. 지식 NSInfo 패널·Players 하위의 Ignore chat·Whisper To·정보 보기·의식 보상 선택 UI·인트로 영상은 웹 범위 밖이다(E1167·E1171·E1180·E1202). |
 | 원본과의 동일성 | 영어 4:3 메뉴 M1 8장면은 cpppj 오라클과 알려진 차이 영역(Campaign 창 크기·Options 팝업 위치) 밖에서 픽셀 차이 0이고 구름 배경도 같다(Kencloud 캐시, E1298). **L2(E1283 닫음):** 검사 전용 고정 시각 모드(`?fixed=25`)에서 Tutorial1 Load/Start의 Game 난수열(90프레임 6,851회)·논리 화면·Session 덤프가 cpppj 기준선 오라클과 같다 — 4:3과 16:9(1366×768)의 90프레임 화면 0픽셀, 90·130프레임 덤프는 환경 의존인 `sp 1`·`player:*` 행만 다르다. **L3(진행 중):** cpp `--ui-script` 입력 단계표를 그대로 적용한 Tutorial1 시작부터 완료까지 4200프레임(안내 창 MORE/OK·F4·다리 조각 집기·놓기, 두·세 번째 조각 이어 놓기·단계 B→C 안내 창·미니맵 카메라 이동·네 번째 조각·다섯 번째 조각으로 간헐천 섬 등장과 'Storm Power' 안내 창 두 쪽·여섯·일곱 번째 조각으로 간헐천 연결·사제 선택·간헐천 왕복 수확과 크리스털 배달·단계 F 안내 창·수확 이어 가기와 SP 600 의 'Mission Accomplished!' 완료 창)이 200·300·345·364·400·470·540·680·760·880·1000·1070·1200·1400·1700·2000·2600·3200·3800·4200프레임 모두 화면 0픽셀·덤프 일치다(E1284~E1286·E1299·E1301~E1304). **Tutorial1 은 끝났다.** **Tutorial2**(건설·생산)도 시작부터 신전·워크샾 건설·발사기 네 개·회수와 'Mission Accomplished!' 완료 창까지 5400프레임(체크포인트 41곳)이 같다(E1305~E1307). **Tutorial1·2 가 끝났다.** Tutorial3(Capture The Priest)은 시작 안내 창 두 쪽과 시작 화면 240프레임까지 같다(E1309, [기록](docs/webpj-l3-tutorial3-20261124.md)). 이 비교에서 생산 패널 HUD 가 Guide 시작 단계보다 먼저 만들어지도록 웹의 프레임 순서를 고쳤다. E1301 은 이 비교로 웹이 State 정리의 다리 붕괴 스캔 초기화(`Reset422490`)를 빠뜨려 매달린 다리가 영영 금 가지 않던 차이를 찾아 고쳤다. 월드·UI 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다(원본 공통 메뉴 788행·Factory 메뉴 39행·Uber 루트 160행·장면 음악 3,113행, 채팅 입력줄 대상 720행(E1265), 파편·건물 캡처 4,474행(E1275~E1276) 등). 대응표 1,007단위 중 732행은 Tutorial1 실행에서 웹 모듈의 함수가 모두 실행된 `session`이다(E1283). 좌측 HUD 하단 85×82픽셀은 원본 스크린샷과 일치한다. 한국어 글자는 갈무리11 12px 격자로 그리되 제목 배율·굵기(사용자 결정으로 보통체)·한글 기준선을 cpppj와 다르게 둔다([0.7절](#korean-font-change)). E1313은 31개 미션의 시작 5·30·120프레임 덤프도 모두 대조했다. 미검증: 16:10·한국어 화면 대조, Tutorial3 이후의 L3 진행, L4b(소리)와 자연 완주. |
-| 현재 작업 | L3 입력 진행 대조와 남은 조작 확인. E1313은 31개 시작 상태를 닫았고 E1314~E1316은 5-A 표시 재대조(46/46)를 끝냈다. Tutorial3~6 단계 진행, 사용자 결정에 따른 채팅 수명·16:10 크기·DestroyPatch 정상 복귀 구현, E1318은 주문 생성 제한을 제거하고 실제 Heal Cast 효과를 확인했다. E1319의 사제 포획 NB18 교정도 브라우저 포획·Drop까지 통과했다. C++ 대응 교정은 제품1339로 검증 중이다. 대응표 partial은 3행이다. 순서는 [다음 작업](#next)을 따른다. |
-| 전체 회귀 | **Node 22.23.5: E1313 재개 기준 6,833/6,833 통과**, 실패·취소·미실행 0(978초, `webpj/extracted/webpj-e1313-node22-final.log`). 첫 실행 6,829건 중 4건 실패는 자산 적재 상태의 새 자원 프레임 호출과 접속 중 World 시험 모형을 교정해 관련 9건·전체 재실행으로 닫았다. 로컬 Node 22 실행 경로는 `extracted/webpj-node22/node_modules/node-win-x64/bin/node.exe`다. **Node 26.13.0 E1316:** 전체 6,834건 중 6,833 통과·1 실패(483초). 유일한 실패는 E1317의 시간 동기화 port 승격 뒤 남은 partial 기대값이며 교정 후 해당 집중 1/1 통과(전체 재실행 없음, `webpj/extracted/webpj-e1316-node26.log`·`webpj/extracted/webpj-e1317-status-regression.log`). 새 받침 공개 래퍼·번들 바이트 검사도 전체에서 통과했다. **Chromium:** E1313 전 미션 시작 상태 옵트인 전체 32/32 통과(24.3분, `webpj/extracted/webpj-e1313-final-e2e.log`). 기존 전체 e2e는 E1312 199건 중 186 통과·12 옵트인 미실행·한국어 브리핑 1건 부하 중 시간 초과(단독·3회 반복 통과)다. 단위별 실패·교정은 [E1313](docs/webpj-l3-mission-starts-20261124.md), 이전 회귀 이력은 [E1288 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1288)을 따른다. 주기: v26은 E1316 전체 뒤 2/4, v22는 E1313 재개 전체 뒤 3/8. |
+| 현재 작업 | L3 입력 진행 대조와 남은 조작 확인. E1313은 31개 시작 상태를 닫았고 E1314~E1316은 5-A 표시 재대조(46/46)를 끝냈다. Tutorial3~6 단계 진행, 사용자 결정에 따른 16:10 크기·DestroyPatch 정상 복귀 구현, E1318은 주문 생성 제한을 제거하고 실제 Heal Cast 효과를 확인했다. E1319의 사제 포획 NB18 교정도 브라우저 포획·Drop까지 통과했다. C++ 대응 교정은 제품1339로 검증 중이다. E1320은 채팅 로그를 앱 수명으로 고쳐 미션 간 유지·새로고침 초기화를 확인했다. 대응표 partial은 2행이다. 순서는 [다음 작업](#next)을 따른다. |
+| 전체 회귀 | **Node 22.23.5: E1313 재개 기준 6,833/6,833 통과**, 실패·취소·미실행 0(978초, `webpj/extracted/webpj-e1313-node22-final.log`). 첫 실행 6,829건 중 4건 실패는 자산 적재 상태의 새 자원 프레임 호출과 접속 중 World 시험 모형을 교정해 관련 9건·전체 재실행으로 닫았다. 로컬 Node 22 실행 경로는 `extracted/webpj-node22/node_modules/node-win-x64/bin/node.exe`다. **Node 26.13.0 E1316:** 전체 6,834건 중 6,833 통과·1 실패(483초). 유일한 실패는 E1317의 시간 동기화 port 승격 뒤 남은 partial 기대값이며 교정 후 해당 집중 1/1 통과(전체 재실행 없음, `webpj/extracted/webpj-e1316-node26.log`·`webpj/extracted/webpj-e1317-status-regression.log`). 새 받침 공개 래퍼·번들 바이트 검사도 전체에서 통과했다. **Chromium:** E1313 전 미션 시작 상태 옵트인 전체 32/32 통과(24.3분, `webpj/extracted/webpj-e1313-final-e2e.log`). 기존 전체 e2e는 E1312 199건 중 186 통과·12 옵트인 미실행·한국어 브리핑 1건 부하 중 시간 초과(단독·3회 반복 통과)다. 단위별 실패·교정은 [E1313](docs/webpj-l3-mission-starts-20261124.md), 이전 회귀 이력은 [E1288 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1288)을 따른다. 주기: v26은 E1316 전체 뒤 3/4, v22는 E1313 재개 전체 뒤 4/8. |
 | 브라우저 검사 | 미션 화면은 단위마다 Chromium e2e로 확인한다(최근 전체 실행 E1281, 고정 시각 L2·L3 `e2e/fixed-time.spec.js`·`e2e/l3-tutorial1.spec.js`, 한국어 글자 배치 `e2e/korean-glyph-layout.spec.js` E1288). 메뉴는 2026-11-17 Chromium 2/2(갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체), 최초 실행·진행 잠금/체크·저장 재실행은 E616 Chromium 2/2. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md) |
 
 <a id="next"></a>
@@ -52,7 +52,7 @@
 | 입력·카메라 | E990~E1001, E1009, E1084 | 선택·이동·포인터 폴링, 가장자리 스크롤·카메라 키(F4·P/R·F5·N), 조각 회전, ESC 메뉴 토글 | 여러 유닛 순환(Ctrl-F5·N은 사제 1명 상태로 확인) | [포인터](docs/webpj-app-mission-pointer-frame-20261120.md) · [사제 키](docs/webpj-browser-priest-shortcuts-20261120.md) |
 | 생산·건설 | E1002~E1008, E1019~E1022, E1026~E1036, E1047, E1074, E1076~E1079, E1083, E1086 | 생산 패널·단축키·다리 배치, 회수·비용 표시, Factory 생산·업그레이드, Tutorial2 발사기 배치·회수 | 다리 조각 연속 배치·자연 완주 | [생산 패널](docs/webpj-client-production-panel-20261120.md) · [워크샾 생산](docs/webpj-browser-tutorial2-factory-20261120.md) |
 | HUD 틀 | E1082, E1128, E1236, E1248, E1255, E1257 | Uber 루트 HUD 모드 3 도킹·화면 크기 변경 재배치, 미니맵 Gump와 클릭·끌기 e2e, HUD 우클릭 빠른 도움말, 미니맵·HUD·생산 컨트롤 행 닫기(표시 차이 도달성 판정) | — | [좌측 HUD 틀](docs/webpj-uber-hud-left-dock-20261120.md) · [HUD 닫기](docs/webpj-uber-hud-close-20261123.md) |
-| 채팅 창 | E1169~E1179, E1253, E1265 | F3 표시·로그·입력줄·제출·수신·점 명령, Tab 이름 완성·붙여넣기/복사/잘라내기·도우미 메뉴·Edit Back/Front Format 창, 도우미 단추 우클릭 도움말, 허브 fixture 두 개 | Format 입력창 아래 가로 슬라이더의 원본 화면 대조, 미션 간 로그 유지 결정(3.5절) | [채팅 조립](docs/webpj-chat-window-assembly-20261122.md) · [허브 fixture](docs/webpj-chat-hub-fixtures-20261123.md) |
+| 채팅 창 | E1169~E1179, E1253, E1265 | F3 표시·로그·입력줄·제출·수신·점 명령, Tab 이름 완성·붙여넣기/복사/잘라내기·도우미 메뉴·Edit Back/Front Format 창, 도우미 단추 우클릭 도움말, 허브 fixture 두 개 | Format 입력창 아래 가로 슬라이더의 원본 화면 대조, E1320에서 미션 간 로그 유지 완료(3.5절) | [채팅 조립](docs/webpj-chat-window-assembly-20261122.md) · [허브 fixture](docs/webpj-chat-hub-fixtures-20261123.md) |
 | 게임 메뉴 | E1084~E1085, E1087~E1090, E1093~E1097, E1100, E1167~E1168, E1235, E1251, E1264, E1289~E1290 | ESC 메뉴막대·우측 상단 버튼, Leave/Restart, F6·F7·F9·T, Pause, Frame Rate·Language·Difficulty, Shift-F7 GIF, Players 하위 항목 실측(채팅·정보 항목은 단독 미션 도달 불가), Send X 숫자 입력 창, F1과 Tell/브리핑 창, Reset All 게임 안 Tell 확인 창, ESC Tell 닫기, 정보 ▸ 버전 창의 11.01 패치·Copyright 줄, 한국어 ESC 메뉴 전수 점검(프레임 속도 라벨·Player 정보 창 이름 해독) | — | [게임 메뉴막대](docs/webpj-game-menu-bar-20261120.md) · [ESC Tell](docs/webpj-tell-escape-20261123.md) · [버전 창](docs/webpj-about-version-copyright-20261123.md) · [ESC 한국어](docs/webpj-esc-menu-korean-20261123.md) |
 | 스커미시(12차) | E1101~E1107, E1262, E1270 | 설정 화면·저장, 시작 섬·섬 생성 부모, 세션 월드 생성·앱 시작, AI 진행·금지 유닛, AI 생산·공격과 사제 사망 패배 안내 관찰, 미션 모드 판정 | 승리 경로·AI 다리 멈춤 시점 원본 대조 | [시작과 월드 생성](docs/webpj-skirmish-start-20261120.md) · [관찰](docs/webpj-skirmish-watch-20261123.md) |
 | Gump·메뉴 UI | E1017~E1018, E1023~E1025, E1037~E1045, E1064~E1072, E1075, E1086 | Form 통지, 글자·Slider 출력, 중첩 메뉴, 사제·Player·공통 객체·운반체 메뉴, 신전 건설·완공 | — (객체 메뉴 잔여는 '객체 메뉴·명령' 행) | [Client 메뉴](docs/webpj-client-menu-gump-20261120.md) · [사제 우클릭](docs/webpj-browser-priest-menu-20261120.md) |
@@ -78,7 +78,7 @@
 
 ### 0.2 단계 진행판
 
-`n/m`은 상위 체크 수이며 보관한 완료 항목을 포함한다. 상위 항목 안의 완료 부분(세부 단위 `- [x]`)은 중복 가산하지 않는다. 남은 단위와 줄 수는 `PORT_MAP.tsv`의 partial·todo 기준이며 partial에는 파일 전체 줄 수를 센다. 2026-11-24 E1317에서 대응표를 다시 확인해 **partial 3·todo 0, 3단위 / 7,989줄**이다. E1310의 객체 메뉴 port 승격이 인계 집계에서 빠졌던 것을 반영하고 RawClockSynchronization은 C++ UCRT 동작을 고정하는 플랫폼 적응으로 닫았다. 4-D 머리 수는 E1283의 L2 닫기 뒤 84/85이며 Tutorial 단계 진행이 남았다. [시간 동기화 판정](docs/webpj-clock-sync-close-20261124.md)
+`n/m`은 상위 체크 수이며 보관한 완료 항목을 포함한다. 상위 항목 안의 완료 부분(세부 단위 `- [x]`)은 중복 가산하지 않는다. 남은 단위와 줄 수는 `PORT_MAP.tsv`의 partial·todo 기준이며 partial에는 파일 전체 줄 수를 센다. 2026-11-24 E1320에서 채팅 로그 수명을 닫아 **partial 2·todo 0, 2단위 / 7,941줄**이다. E1310의 객체 메뉴 port 승격이 인계 집계에서 빠졌던 것을 반영하고 RawClockSynchronization은 C++ UCRT 동작을 고정하는 플랫폼 적응으로 닫았다. 4-D 머리 수는 E1283의 L2 닫기 뒤 84/85이며 Tutorial 단계 진행이 남았다. [시간 동기화 판정](docs/webpj-clock-sync-close-20261124.md)
 
 | 순서 | 단계 | 체크·상태 | 남은 단위 / 줄 |
 | --- | --- | --- | --- |
@@ -87,34 +87,33 @@
 | 4 | **4-D Session 조립·Tutorial1 Load/Start** | **84/85, L2 닫음(Tutorial1 4:3·16:9)** | 1 / 7,130 |
 | 5 | 5-A 렌더러·Draw | 46/46 | 0 / 0 |
 | 5 | 5-B 카메라·HUD·미니맵·커서 | 12/13 | 0 / 0 |
-| 5 | 5-C 화면 허브·미션 진입 | 4/6 → M2 | 2 / 859 |
+| 5 | 5-C 화면 허브·미션 진입 | 4/6 → M2 | 1 / 811 |
 | 6 | 입력·게임 메뉴·경제·건설 | 6/10 → M3 | 0 / 0 |
 | 7 | 전투·의식·AI | 5/7 | 0 / 0 |
 | 8 | 미션 수명·대본·오디오·도움말 | 8/9 → M4 | 0 / 0 |
 | 9 | 표시 품질·브라우저/OS·배포 | E945 하위 경로·설정 복원 검증, M5 미완료 | 0 / 0 |
 | 10 | AGENTS 후순위 웹 요구 | 일부 선행, 3.7절 참조 | 0 / 0 |
-| **합계** | | | **3 / 7,989** |
+| **합계** | | | **2 / 7,941** |
 
-남은 partial 3행의 단계 배정과 닫는 조건(줄 수 큰 순, 대응표 메모와 3.1절 항목 기준; [다음 작업 5](#next)):
+남은 partial 2행의 단계 배정과 닫는 조건(줄 수 큰 순, 대응표 메모와 3.1절 항목 기준; [다음 작업 5](#next)):
 
 | 단계 | 대응표 partial 행(줄 수) | 닫는 조건 |
 | --- | --- | --- |
 | 4-D | RawCampaignSession 7,130 | 메모 마지막 기록이 E1241이다. 메모의 '잔여' 문장을 4-D 닫기(E1263~E1283)와 대조해 남은 갭이 없으면 승격 |
 | 5-C | RawButtonControls 811 | 메모에 E1236~E1253·E1295 반영, 예산 칸 원본 우클릭 확인(5-C 메뉴·버튼 컨트롤; 'Chat Window' 우클릭은 E1295에서 닫음) |
-| 5-C | RawMenuChat 48 | 채팅 로그 미션 간 초기화 결정(3.5절) |
 
 
 ### 0.3 이식량
 
-기준선 `225553df`의 이식 대상 1,007단위는 **port 이상 1,004(99.7%; `port` 272·`session` 732)·partial 3·todo 0**이다(2026-11-24 E1317 재집계). 제외 153단위(멀티 73·Edit 42·호스트 37·구판 1)를 합하면 대응표 1,160행이다. 앱 수명 연결을 뜻하는 `session` 732행은 E1283 에서 `e2e/session-coverage.spec.js`(고정 시각 Tutorial1 4:3 130프레임 V8 함수 커버리지)와 `tools/port-map-session.mjs` 로 올렸다: **행의 웹 모듈이 모두 그 실행에서 함수를 하나 이상 실행했을 때만** 올리는 보수적 판정이며, 남은 `port` 272행의 `session` 승격은 시나리오를 늘려 같은 커버리지 도구로 재검사한다(전투·AI·의식·편집 아닌 UI 등). 오라클 대조를 뜻하는 `oracle`은 0이다(승격 규칙은 이후 시나리오가 늘 때 같은 도구로 다시 돌린다; [근거](docs/webpj-port-map-session-20261123.md)). E1098~E1237의 재판정 내역은 대응표 메모와 [E1166 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261121-through-wb04-e1166)·[E1237 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1237)에, E1238~E1288의 행 닫기는 대응표 메모와 [E1288 보관본 0.2절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1288)에 있다.
+기준선 `225553df`의 이식 대상 1,007단위는 **port 이상 1,005(99.8%; `port` 273·`session` 732)·partial 2·todo 0**이다(2026-11-24 E1320 재집계). 제외 153단위(멀티 73·Edit 42·호스트 37·구판 1)를 합하면 대응표 1,160행이다. 앱 수명 연결을 뜻하는 `session` 732행은 E1283 에서 `e2e/session-coverage.spec.js`(고정 시각 Tutorial1 4:3 130프레임 V8 함수 커버리지)와 `tools/port-map-session.mjs` 로 올렸다: **행의 웹 모듈이 모두 그 실행에서 함수를 하나 이상 실행했을 때만** 올리는 보수적 판정이며, 남은 `port` 272행의 `session` 승격은 시나리오를 늘려 같은 커버리지 도구로 재검사한다(전투·AI·의식·편집 아닌 UI 등). 오라클 대조를 뜻하는 `oracle`은 0이다(승격 규칙은 이후 시나리오가 늘 때 같은 도구로 다시 돌린다; [근거](docs/webpj-port-map-session-20261123.md)). E1098~E1237의 재판정 내역은 대응표 메모와 [E1166 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261121-through-wb04-e1166)·[E1237 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1237)에, E1238~E1288의 행 닫기는 대응표 메모와 [E1288 보관본 0.2절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1288)에 있다.
 
 | 범위 | port / 대상 | partial | todo |
 | --- | --- | --- | --- |
 | `o/` 월드·규칙 | 573 / 573 | 0 | 0 |
-| `client/` 세션·UI·표시 | 430 / 433 | 3 | 0 |
+| `client/` 세션·UI·표시 | 431 / 433 | 2 | 0 |
 | `zacket/` 내부 미션 전송 | 1 / 1 | 0 | 0 |
 
-남은 3단위는 기존 기준선의 7,989줄이다. 재기준선 추가분 RawClockSynchronization은 E1317에서 플랫폼 적응으로 닫았다. 메모 머리 태그와 이전 집계는 [E801 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261118-through-wb04-e801), 현행 계열은 `python -X utf8 tools/port_inventory.py --families wb`를 따른다.
+남은 2단위는 기존 기준선의 7,941줄이다. 재기준선 추가분 RawClockSynchronization은 E1317에서 플랫폼 적응으로 닫았다. 메모 머리 태그와 이전 집계는 [E801 보관본 0.3절](LEFT_JOBS.webpj.old.md#archive-webpj-20261118-through-wb04-e801), 현행 계열은 `python -X utf8 tools/port_inventory.py --families wb`를 따른다.
 
 ### 0.4 기준선과 자료
 
@@ -252,8 +251,8 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 
 완료한 체크(머리글 수에 포함): **Uber 허브**(E912~E917·E1082, 채팅 창 E1169~E1179, 0xb0 배경 GIF·NSInfo 자식은 웹 범위 밖 E1243, [판정](docs/webpj-uber-root-background-scope-20261123.md) · [E912](docs/webpj-uber-root-construct-20261119.md)), **미션 진입 명령**(E1263, 31개 미션·데모 시작, 환영 창 `MissionBegin` 경로와 로딩 창 취소, [Tutorial 시작](docs/webpj-browser-tutorial-menu-start-20261120.md)), **허브 fixture**(E1265, `chat-input-recipients` 720행 일치·`chat-callbacks` 29행 반환 0 대조와 적응 판정, [근거](docs/webpj-chat-hub-fixtures-20261123.md)), **메인 메뉴·타이틀 상태**(E1184, NativeIntroState·TitleBitmapLifetime·NativeMainMenuState와 title 그림 세 장, [문서](docs/webpj-title-screens-20261122.md)).
 
-- [ ] **메뉴·버튼 컨트롤** — 남은 대응표 행은 RawButtonControls·RawMenuChat이다. RawMenuHtml(E1230)·RawMenuControls(E1252, Tell 모달 스택·제목/request/closed 사건 도달성 판정)는 닫았고 RawMenuLoading·RawTextEntryControls는 port다. 우클릭 도움말은 HUD(E1236)와 채팅 도우미 단추(E1253)까지 연결했다. 알림 serial 0 고정·도우미 점멸 없음은 채팅 패킷 발생원이 사용자 say뿐이라 도달하지 않는다(`f66401a24`). [메뉴 컨트롤](docs/webpj-menu-controls-close-20261123.md) · [채팅 도우미](docs/webpj-chat-helper-help-20261123.md)
-  - [ ] 채팅 로그 미션 간 초기화 — 원본은 Client 수명 동안 유지하고 웹은 미션 끝에 초기화한다(E1170 적응, 채팅 전역이 미션마다 새로 만들어짐). 완료 기준: 사용자 결정(3.5절)대로 수명을 분리해 원본처럼 고치거나 적응으로 기록하고 RawMenuChat 메모를 갱신한다.
+- [ ] **메뉴·버튼 컨트롤** — 남은 대응표 행은 RawButtonControls다. RawMenuChat은 E1320에서 Client 수명 로그를 확인해 닫았다. RawMenuHtml(E1230)·RawMenuControls(E1252, Tell 모달 스택·제목/request/closed 사건 도달성 판정)는 닫았고 RawMenuLoading·RawTextEntryControls는 port다. 우클릭 도움말은 HUD(E1236)와 채팅 도우미 단추(E1253)까지 연결했다. 알림 serial 0 고정·도우미 점멸 없음은 채팅 패킷 발생원이 사용자 say뿐이라 도달하지 않는다(`f66401a24`). [메뉴 컨트롤](docs/webpj-menu-controls-close-20261123.md) · [채팅 도우미](docs/webpj-chat-helper-help-20261123.md)
+  - [x] 채팅 로그 수명 — E1320: 사용자 결정대로 원본처럼 Client/앱 수명 동안 유지한다. 공유 글자·그림·버퍼와 로그 객체를 재사용하고 이전 미션 장치는 해제한다. 실제 미션 간 같은 조각·색 글자 유지/추가 줄·페이지 재시작 0줄, 송수신·.clear Chromium3/3과 Node34/34 통과. RawMenuChat port 승격. [근거](docs/webpj-chat-client-lifetime-20261124.md)
   - [ ] `storm-power-refresh` 재부착 — 원문의 Push/Attach 재부착을 앱이 쓰지 않고 `refreshSp`를 `invalidateAll+menu.refresh`로 대체했다(예산 칸과 겹치는 Gump가 없어 보이는 차이가 없을 가능성, 확신 낮음). 완료 기준: 겹침 여부를 확인해 연결하거나 무해 판정을 문서화한다.
   - [ ] 예산 칸(스톰 파워 표시, 노드 (7,2) 66×21) 실제 우클릭 — 웹은 `input().route(0x20000, 40, 12)`가 0이다. 예산 텍스트 노드에 HELP 플래그(0x200)가 없어 원본 판정 논리와 같으므로 웹 결함이 아닐 가능성이 높다(E1247). 완료 기준: 원본 실행 파일에서 우클릭이 팝업을 여는지 확인(AGENTS 실행 규칙) — 열면 웹이 막는 지점을 고치고, 안 열면 닫는다. [근거](docs/webpj-korean-production-chat-xlat-20261123.md#budget-rightclick)
   - [x] 채팅 창 'Chat Window' 실제 우클릭 — E1295 완료. 실제 Chromium 우클릭으로 팝업과 Help 항목(`chatViewHelp`)이 열리는 e2e를 더했다. [근거](docs/webpj-chat-window-help-20261124.md)
@@ -335,7 +334,7 @@ M1은 메뉴 관문을 통과했다. 4-D의 Tutorial1 L2 → 5-A/5-B·5-C의 Tut
 - 웹 링크 브라우저 검증은 E942에서 마쳤다. Chromium에서 외부 출처 탭의 `opener`와 `referrer`가 비어 있고, 브라우저가 팝업을 차단해도 현재 문서가 유지된다. [E942](docs/webpj-external-access-20261105.md#71-브라우저-검증)
 - 와이드 전투 시야와 카메라 재배치를 연결할 때 16:9의 논리 크기 전환도 검증한다. WebMCP 대상 브라우저·조작/캡처/녹화 범위는 착수 시 확정한다.
 - **사용자 결정 완료(2026-11-24, 비동기 질문에 명시 답변).**
-  - 채팅 로그는 원본처럼 Client/앱 수명 동안 유지한다. 미션 종료 초기화 적응(E1170)을 해제하는 구현과 미션 간 유지 검증이 남았다(5-C).
+  - 채팅 로그는 원본처럼 Client/앱 수명 동안 유지한다. E1320에서 미션 종료 초기화 적응(E1170)을 해제하고 미션 간 유지·앱 재시작 초기화를 검증했다(5-C).
   - DestroyPatch 진단 열두 지점은 원본처럼 표시 후 계속 진행하도록 바꾼다. 현행 보고 후 중단 동작(E1273)을 바꾸고 정상 복귀 경로를 검증한다(4D-8a).
   - 16:10 논리 크기는 cpppj와 같은 1280×800으로 맞춘다. 크기 변경·입력 좌표·동일 크기 오라클 검증이 남았다(5-C M2).
   - 한국어 고해상도 글자 층은 도입하지 않고 현재 갈무리11 픽셀 표시를 유지한다. 굵기도 기존 결정대로 보통체다(0.7절).

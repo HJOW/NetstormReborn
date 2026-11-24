@@ -234,8 +234,6 @@ export class ClientChatWindow {
             this.#owned.delete(owned);
         }
         this.#entries.close(); this.#stones.close(); this.#parts.globals.window.current = 0;
-        // 미션마다 새로 만든 스타일 저장소가 빌렸던 공유 로그 버퍼를 반납하고 Client 로그 상태를 새로 바꿔 다음 미션이 다시 빌릴 수 있게 한다.
-        try { this.#parts.buffers.destroy(SHARED_LOG); } catch (error) { if (!/등록 토큰 없음/u.test(error.message)) throw error; }
-        this.#parts.globals.resetLog();
+        // 로그·글자/그림 조각·버퍼는 Client 소유다. 미션의 창만 닫고 다음 창이 같은 버퍼를 다시 빌린다.
     }
 }
