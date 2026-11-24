@@ -2958,9 +2958,11 @@ export class Netstorm {
     _setNodeHelp(token, text, word) {
         const node = this._clientGump?.node(token); if (!node) throw new Error('도움말 실제 노드 없음');
         const strings = this._helpStrings ??= new Map(), key = word ? 'alternateTextPointer' : 'textPointer';
-        strings.delete(node[key]); node[key] = 0; if (text === null) return;
+        strings.delete(node[key]); node[key] = 0;
+        // 원본00464ed0/00464f80: 비어 있지 않은 문구는 LOOK(1000)/HELP(200)를 켠다. 빈 도움말은 HELP를 유지하고 빈 LOOK만 비트를 지운다. (WB04-E1324)
+        if (text === null || String(text) === '') { if (!word) node.flags = (node.flags & ~0x1000) >>> 0; return; }
         this._nextHelpString = (this._nextHelpString ?? 0x61000100) + 1; if (this._nextHelpString > 0x61ffffff) throw new Error('도움말 문자열 주소 영역 소진');
-        strings.set(this._nextHelpString, String(text)); node[key] = this._nextHelpString;
+        strings.set(this._nextHelpString, String(text)); node[key] = this._nextHelpString; node.flags = (node.flags | (word ? 0x200 : 0x1000)) >>> 0;
     }
 
     // 도움말 포인터/토큰의 문자열이다(원본 HelpText): 0x61000002 는 현재 helpWord 캐시(없으면 번역한 "Help"), 0x61000001 은 themeHelp, 0x61000003 은 F1Help, 그 밖은 SetNodeHelp 가 저장한 문자열이다. (2026-11-22 WB04-E1236)

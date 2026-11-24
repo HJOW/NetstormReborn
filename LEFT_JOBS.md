@@ -33,6 +33,8 @@
 
 <a id="decisions"></a>
 
+- **웹 E1324에서 확인한 C++ 후속 후보:** 원본10.78 실제 스톰 파워 우클릭은 `Storm Power Available → About`을 연다. `RawMenuControls::SetNodeHelp`는 원본00464ed0의 LOOK1000/빈 값 해제와00464f80의 HELP200/빈 값 유지 쓰기가 빠져 있다. 웹은 교정했고 C++는 이 단위에서 변경하지 않았다. 다음 C++ 작업 때 공통 도움말 setter와 실제 예산 우클릭을 확인한다. 마지막 디컴파일 호스트 HJOW-Athlon 유지. [원본 실행/소스 근거](docs/webpj-budget-help-20261124.md).
+
 ### 0.2 사용자 결정/정보 대기
 
 별도 지시 전에는 아래 권고 범위를 유지한다.

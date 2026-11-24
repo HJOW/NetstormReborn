@@ -29443,6 +29443,93 @@
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
       }
+    },
+    {
+      "id": "original-budget-help-budget",
+      "path": "webpj/tests/fixtures/original-budget-help/budget.png",
+      "kind": "screenshot",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon analyzeManager 세션20261124T024452986Z-21e51050b597 원본10.78 작업 사본의 실제 우클릭 화면/관찰",
+      "consumers": [
+        "webpj/e2e/budget-help.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js"
+      ],
+      "unit": "WB04-E1324",
+      "doc": "docs/webpj-budget-help-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawMenuControls.cpp"
+      ],
+      "scope": "Tutorial1 스톰 파워/생산 창 실제 우클릭으로 나타나는 도움말 팝업의 좌표·주제·About 항목과 원본 화면 증거",
+      "text": false,
+      "sha256": "fff872fd53aafc79278e3505cadd9c092ce6bbb6355e8b7e161167d52fcfb564",
+      "bytes": 392039,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawMenuControls.cpp": "68a9545e2"
+      }
+    },
+    {
+      "id": "original-budget-help-observation",
+      "path": "webpj/tests/fixtures/original-budget-help/observation.json",
+      "kind": "independent",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon analyzeManager 세션20261124T024452986Z-21e51050b597 원본10.78 작업 사본의 실제 우클릭 화면/관찰",
+      "consumers": [
+        "webpj/e2e/budget-help.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js"
+      ],
+      "unit": "WB04-E1324",
+      "doc": "docs/webpj-budget-help-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawMenuControls.cpp"
+      ],
+      "scope": "Tutorial1 스톰 파워/생산 창 실제 우클릭으로 나타나는 도움말 팝업의 좌표·주제·About 항목과 원본 화면 증거",
+      "text": true,
+      "sha256": "0de6fca790f55c124f8a7568ef45dfdcdd60f5447160b5d462febf2b9df26cc7",
+      "bytes": 951,
+      "lines": 45,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawMenuControls.cpp": "68a9545e2"
+      }
+    },
+    {
+      "id": "original-budget-help-production",
+      "path": "webpj/tests/fixtures/original-budget-help/production.png",
+      "kind": "screenshot",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon analyzeManager 세션20261124T024452986Z-21e51050b597 원본10.78 작업 사본의 실제 우클릭 화면/관찰",
+      "consumers": [
+        "webpj/e2e/budget-help.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js"
+      ],
+      "unit": "WB04-E1324",
+      "doc": "docs/webpj-budget-help-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/RawMenuControls.cpp"
+      ],
+      "scope": "Tutorial1 스톰 파워/생산 창 실제 우클릭으로 나타나는 도움말 팝업의 좌표·주제·About 항목과 원본 화면 증거",
+      "text": false,
+      "sha256": "a389c45f7b699f3b4f723883339736a7c15e1810f5d3be7a8e9b14bcd1506a9a",
+      "bytes": 392558,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/RawMenuControls.cpp": "68a9545e2"
+      }
     }
   ]
 }

@@ -1,0 +1,45 @@
+{
+  "format": "netstorm-original-budget-help",
+  "version": 1,
+  "host": "HJOW-Athlon",
+  "session": "20261124T024452986Z-21e51050b597",
+  "exeSha256": "a305414cfe0b94494bb32fef2b359e920e9daba225e0821b76aea1f9f8e7d236",
+  "automaticRecordingRequested": false,
+  "budget": {
+    "file": "budget.png",
+    "point": [
+      40,
+      12
+    ],
+    "title": "Storm Power Available",
+    "item": "About",
+    "topic": "moneyGump",
+    "popupRect": [
+      40,
+      12,
+      234,
+      52
+    ]
+  },
+  "production": {
+    "file": "production.png",
+    "point": [
+      40,
+      180
+    ],
+    "title": "Production Window",
+    "item": "About",
+    "topic": "teleportView",
+    "popupRect": [
+      40,
+      180,
+      214,
+      220
+    ]
+  },
+  "sourceFunctions": [
+    "00464ed0",
+    "00464f80"
+  ],
+  "observed": "Tutorial1 안내 MORE/OK를 닫고 실제 우클릭. budget16/40/64 모두 도움말 표시. production은 입력 양성 대조군."
+}
