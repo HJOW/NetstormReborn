@@ -28198,18 +28198,18 @@
         "webpj/www/netstorm.js",
         "webpj/www/core/session-state-dump.js"
       ],
-      "unit": "WB04-E1331",
-      "doc": "docs/webpj-l3-tutorial3-stage-cd-20261124.md",
+      "unit": "WB04-E1332",
+      "doc": "docs/webpj-l3-tutorial3-stage-def-20261124.md",
       "cpppjSources": [
         "cpppj/src/client/SessionStateDump.cpp",
         "cpppj/src/app/main.cpp"
       ],
-      "scope": "Tutorial3 L3 입력 단계표(단계 A 간헐천 직결·골렘 수확 → 단계 B 남쪽 적 섬 다리 직결 → 단계 C Sun Disc Thrower 생산 → 단계 D Generators Part 1/2 안내 창·자유 진행)와 체크포인트",
+      "scope": "Tutorial3 L3 입력 단계표(단계 A~C(a100~d2360) → 단계 D~E Wind Generator 생산·적 섬 에너지 확장·Sun Disc Thrower 배치 → 단계 F Incapacitating the Enemy Priest 안내 창·자유 진행)와 체크포인트",
       "text": true,
-      "sha256": "c71a59e75d1e7a79408f0a3dd77e3b37cb1572e423a0a62221c4f72491036f49",
-      "bytes": 5473,
-      "lines": 381,
-      "fixtureCommit": "261190bab",
+      "sha256": "076ff90a7ed568fa4492b04f096dd0aa940dc09a7491e7b8d20af0dce96a98c7",
+      "bytes": 6889,
+      "lines": 506,
+      "fixtureCommit": "a6da5cf92",
       "webCommit": "ff916dca4",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
@@ -28230,18 +28230,18 @@
         "webpj/www/netstorm.js",
         "webpj/www/core/session-state-dump.js"
       ],
-      "unit": "WB04-E1331",
-      "doc": "docs/webpj-l3-tutorial3-stage-cd-20261124.md",
+      "unit": "WB04-E1332",
+      "doc": "docs/webpj-l3-tutorial3-stage-def-20261124.md",
       "cpppjSources": [
         "cpppj/src/client/SessionStateDump.cpp",
         "cpppj/src/app/main.cpp"
       ],
       "scope": "Tutorial3 L3 오라클의 실행 파일·인자·수집 정보",
       "text": true,
-      "sha256": "45542eeea7b8445b1f35d4423f569c8489e649d1ff87c671e58a59790a119643",
+      "sha256": "ec98eafd901e210be8bd02e26465798f3e6ca83d6c6e2c716bb911f6b709011b",
       "bytes": 1018,
       "lines": 35,
-      "fixtureCommit": "261190bab",
+      "fixtureCommit": "a6da5cf92",
       "webCommit": "ff916dca4",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
@@ -29216,6 +29216,438 @@
       "text": false,
       "sha256": "1a808d54a4943c5db0e2ac37abb8cdd7345a8f367cdaedddf826eedc1875580f",
       "bytes": 227548,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "ff916dca4",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/client/ClientMain.cpp": "710b9647b",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-l3-d2384-screen",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-l3/d2384.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial3 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial3.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1332",
+      "doc": "docs/webpj-l3-tutorial3-stage-def-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/client/ClientMain.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "2384프레임 논리 화면(Wind Generator 지식 생산 하위 메뉴)",
+      "text": false,
+      "sha256": "cec1653c622f265c46d6a62bad0bd69cbf63d02e02350fd52b025d8884cf03ba",
+      "bytes": 245022,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "ff916dca4",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/client/ClientMain.cpp": "710b9647b",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-l3-e2435",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-l3/e2435.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial3 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial3.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1332",
+      "doc": "docs/webpj-l3-tutorial3-stage-def-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "2435프레임 Session 상태 덤프(Wind Generator 생산 등록 후 단계 E Extending Energy Part 1 안내 창)",
+      "text": true,
+      "sha256": "6ddf29724b042d8114228f41bbb014bdf78172bd70905a4feda2cfef114c60ba",
+      "bytes": 322525,
+      "lines": 4243,
+      "fixtureCommit": null,
+      "webCommit": "ff916dca4",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-l3-e2435-screen",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-l3/e2435.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial3 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial3.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1332",
+      "doc": "docs/webpj-l3-tutorial3-stage-def-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/client/ClientMain.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "2435프레임 논리 화면(단계 E Extending Energy, Part 1 안내 창)",
+      "text": false,
+      "sha256": "7c5a5174d3d4457c3d2c45334b91a47273328e5939c6365bbebab788e067939b",
+      "bytes": 234365,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "ff916dca4",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/client/ClientMain.cpp": "710b9647b",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-l3-e2460-screen",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-l3/e2460.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial3 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial3.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1332",
+      "doc": "docs/webpj-l3-tutorial3-stage-def-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/client/ClientMain.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "2460프레임 논리 화면(Extending Energy, Part 2 안내 창)",
+      "text": false,
+      "sha256": "7e313afc737e43136e5b2248d77d3cb629416e75714c31c97bba29fde2112678",
+      "bytes": 235497,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "ff916dca4",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/client/ClientMain.cpp": "710b9647b",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-l3-e2510",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-l3/e2510.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial3 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial3.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1332",
+      "doc": "docs/webpj-l3-tutorial3-stage-def-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "2510프레임 Session 상태 덤프(아군 섬 남단 Wind Generator 건설 중)",
+      "text": true,
+      "sha256": "175cd26302ed4e4744ecf4c87e7ccb0393ca60bb2834c8b2f5cba75223a24bb5",
+      "bytes": 321092,
+      "lines": 4221,
+      "fixtureCommit": null,
+      "webCommit": "ff916dca4",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-l3-e2510-screen",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-l3/e2510.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial3 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial3.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1332",
+      "doc": "docs/webpj-l3-tutorial3-stage-def-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/client/ClientMain.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "2510프레임 논리 화면(첫 Wind Generator 건설 중 마나 볼트·400 비용)",
+      "text": false,
+      "sha256": "98eeba63e423d4d27f6eb27b948a8fc76cf34025a468d00588796508b99f61c4",
+      "bytes": 229159,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "ff916dca4",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/client/ClientMain.cpp": "710b9647b",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-l3-e3000",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-l3/e3000.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial3 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial3.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1332",
+      "doc": "docs/webpj-l3-tutorial3-stage-def-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "3000프레임 Session 상태 덤프(두 Wind Generator 완공 및 적 섬 에너지 확보)",
+      "text": true,
+      "sha256": "208cc1ddbd33b9f532e1bdb8bcd63f206fb862f5a282ff417bd420629808988e",
+      "bytes": 318187,
+      "lines": 4176,
+      "fixtureCommit": null,
+      "webCommit": "ff916dca4",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-l3-e3000-screen",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-l3/e3000.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial3 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial3.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1332",
+      "doc": "docs/webpj-l3-tutorial3-stage-def-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/client/ClientMain.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "3000프레임 논리 화면(두 Wind Generator 완공)",
+      "text": false,
+      "sha256": "0bcf71039133cae90845edc6bb675f895a44d6ae127bc2604e7072e2cae748a6",
+      "bytes": 230117,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "ff916dca4",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/client/ClientMain.cpp": "710b9647b",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-l3-e3240-screen",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-l3/e3240.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial3 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial3.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1332",
+      "doc": "docs/webpj-l3-tutorial3-stage-def-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/client/ClientMain.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "3240프레임 논리 화면(적 섬 Sun Disc Thrower 건설 중 마나 볼트·300 비용)",
+      "text": false,
+      "sha256": "8b97c49bbac2aeaee9504caf70a9e1e55c864a25abecede5c9d02b5730fb9a84",
+      "bytes": 230970,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "ff916dca4",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/client/ClientMain.cpp": "710b9647b",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-l3-f3420",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-l3/f3420.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial3 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial3.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1332",
+      "doc": "docs/webpj-l3-tutorial3-stage-def-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "3420프레임 Session 상태 덤프(적 섬 Sun Disc Thrower 완공 후 단계 F 안내 창)",
+      "text": true,
+      "sha256": "dd3ed29f6c20e89b552abc124a261585f0b89386222ee6707b657f07b732513d",
+      "bytes": 318044,
+      "lines": 4174,
+      "fixtureCommit": null,
+      "webCommit": "ff916dca4",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-l3-f3420-screen",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-l3/f3420.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial3 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial3.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1332",
+      "doc": "docs/webpj-l3-tutorial3-stage-def-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/client/ClientMain.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "3420프레임 논리 화면(단계 F Incapacitating the Enemy Priest 안내 창)",
+      "text": false,
+      "sha256": "94b7e7119f995715bb13e791b45b8ea4f14c1f580dc20e0b613f31336be42681",
+      "bytes": 230681,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "ff916dca4",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/client/ClientMain.cpp": "710b9647b",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-l3-f3460",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-l3/f3460.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial3 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial3.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1332",
+      "doc": "docs/webpj-l3-tutorial3-stage-def-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "3460프레임 Session 상태 덤프(OK 클릭 후 단계 F 자유 진행)",
+      "text": true,
+      "sha256": "d6d40958468c41b7c0960a859a17c150d892563d789fb577f403290ab407503f",
+      "bytes": 318043,
+      "lines": 4174,
+      "fixtureCommit": null,
+      "webCommit": "ff916dca4",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial3-l3-f3460-screen",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial3-l3/f3460.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial3 입력 단계표 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial3.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1332",
+      "doc": "docs/webpj-l3-tutorial3-stage-def-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/client/ClientMain.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "3460프레임 논리 화면(단계 F 자유 진행 재개)",
+      "text": false,
+      "sha256": "6bbc79a86fac39fde43ac3df5fc328b706a6ba4dbef899ddad7e67998bb58095",
+      "bytes": 230974,
       "lines": null,
       "fixtureCommit": null,
       "webCommit": "ff916dca4",

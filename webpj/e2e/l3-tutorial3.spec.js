@@ -8,18 +8,26 @@ const { oracleFolder, loadOracle, runL3 } = require('./l3-common');
 // 오라클 폴더이다.
 const ORACLE = oracleFolder('tutorial3-l3');
 
-// 덤프와 화면 체크포인트 목록이다(a100~c2200 + c2214 워크샾 메뉴 + c2224 지식 생산 메뉴 + d2280·d2320·d2360 Sun Disc Thrower 생산 및 단계 D 진입). (2026-11-24 WB04-E1331)
+// 덤프와 화면 체크포인트 목록이다(a100~d2360 + d2384·e2435·e2460 Wind Generator 생산·단계 E + e2510·e3000·e3240 에너지 확장·적 섬 발사기 배치 + f3420·f3460 단계 F 진입). (2026-11-24 WB04-E1332)
 const EXPECTED_FILES = [
   'a100.tsv', 'a100.png', 'a160.png', 'a240.tsv', 'a240.png',
   'b340.tsv', 'b340.png', 'b900.tsv', 'b900.png', 'b1200.tsv', 'b1200.png',
   'b1600.tsv', 'b1600.png', 'b1640.png', 'b1700.tsv', 'b1700.png',
   'b1950.tsv', 'b1950.png', 'c2160.tsv', 'c2160.png', 'c2200.tsv', 'c2200.png',
   'c2214.png', 'c2224.png', 'd2280.tsv', 'd2280.png', 'd2320.png', 'd2360.tsv', 'd2360.png',
+  'd2384.png', 'e2435.tsv', 'e2435.png', 'e2460.png', 'e2510.tsv', 'e2510.png',
+  'e3000.tsv', 'e3000.png', 'e3240.png', 'f3420.tsv', 'f3420.png', 'f3460.tsv', 'f3460.png',
 ];
-const EXPECTED_DUMPS = ['a100', 'a240', 'b340', 'b900', 'b1200', 'b1600', 'b1700', 'b1950', 'c2160', 'c2200', 'd2280', 'd2360'];
-const EXPECTED_SNAPSHOTS = ['a100', 'a160', 'a240', 'b340', 'b900', 'b1200', 'b1600', 'b1640', 'b1700', 'b1950', 'c2160', 'c2200', 'c2214', 'c2224', 'd2280', 'd2320', 'd2360'];
+const EXPECTED_DUMPS = [
+  'a100', 'a240', 'b340', 'b900', 'b1200', 'b1600', 'b1700', 'b1950', 'c2160', 'c2200',
+  'd2280', 'd2360', 'e2435', 'e2510', 'e3000', 'f3420', 'f3460',
+];
+const EXPECTED_SNAPSHOTS = [
+  'a100', 'a160', 'a240', 'b340', 'b900', 'b1200', 'b1600', 'b1640', 'b1700', 'b1950', 'c2160', 'c2200',
+  'c2214', 'c2224', 'd2280', 'd2320', 'd2360', 'd2384', 'e2435', 'e2460', 'e2510', 'e3000', 'e3240', 'f3420', 'f3460',
+];
 
-test('L3 Tutorial3: 단계 A→B(적 섬 직결)→C(Sun Disc Thrower 생산)→D(Generators 안내)의 체크포인트 화면과 덤프가 cpppj 와 같다', async ({ browser }) => {
+test('L3 Tutorial3: 단계 A→B→C→D~E(Wind Generator·적 섬 에너지 확장·발사기 배치)→F(Incapacitating the Enemy Priest)의 체크포인트 화면과 덤프가 cpppj 와 같다', async ({ browser }) => {
   test.setTimeout(900000);
   const { plan } = loadOracle(ORACLE);
   expect(plan.mission).toBe('Tutorial3');
