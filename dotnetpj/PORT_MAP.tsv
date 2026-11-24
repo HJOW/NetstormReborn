@@ -348,6 +348,7 @@ cpppj/src/client/NativeLoginPacketReceivers.cpp	Netstorm.Core/Original/RawMissio
 cpppj/src/client/NativeLoginPacketReceivers.h	Netstorm.Client/ClientPacketDispatch.cs	1d6bf66d1cfee9918233a536826002e052c3144c	port
 cpppj/src/client/NativeLoginPacketReceivers.h	Netstorm.Client/NativeLoginPacketReceivers.cs	eeae45c69171943ad99db6c2930574ee7747ba76	port
 cpppj/src/client/NativeLoginPacketReceivers.h	Netstorm.Core/Original/RawMissionPacketFields.cs	eeae45c69171943ad99db6c2930574ee7747ba76	port
+cpppj/src/client/NativeNsInfoInput.cpp	Netstorm.Client/Host/HostNsInfoRootDevices.cs	30fab7faaf831fd7282d5e09ee3812a846d1d329	port
 cpppj/src/client/NewFortManagerDevices.cpp	Netstorm.Client/Host/NewFortManagerDevices.cs	51e2d8f48ac7949ce094a88748cb9c0689ae3505	port
 cpppj/src/client/NewFortManagerDevices.h	Netstorm.Client/Host/NewFortManagerDevices.cs	51e2d8f48ac7949ce094a88748cb9c0689ae3505	port
 cpppj/src/client/OwnerColorMaps.cpp	Netstorm.Client/Display/OwnerColorMaps.cs	e4b739b97f5316453de827b92ba6527a63f17637	L1
@@ -537,6 +538,7 @@ cpppj/src/client/RawMenuControls.cpp	Netstorm.Client/Host/HostGumpDrawing.cs	68a
 cpppj/src/client/RawMenuControls.cpp	Netstorm.Client/Host/HostHtmlText.Pictures.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
 cpppj/src/client/RawMenuControls.cpp	Netstorm.Client/Host/HostHtmlText.Production.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
 cpppj/src/client/RawMenuControls.cpp	Netstorm.Client/Host/HostHtmlText.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
+cpppj/src/client/RawMenuControls.cpp	Netstorm.Client/Host/HostNsInfoRootDevices.cs	30fab7faaf831fd7282d5e09ee3812a846d1d329	port
 cpppj/src/client/RawMenuControls.cpp	Netstorm.Client/Host/HostNsInfoWindows.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
 cpppj/src/client/RawMenuControls.cpp	Netstorm.Game/ClientHostGame.TextPictures.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
 cpppj/src/client/RawMenuControls.h	Netstorm.Client/Gump/GumpButtonTree.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
