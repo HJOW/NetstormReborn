@@ -108,7 +108,7 @@ export class RawCampaignSessionCarrierDrop {
             destroy: (content, flags) => { this.#live(); o.world.destroy(content, flags); },
             create: (type, flags) => {
                 this.#live(); if (!Number.isInteger(type) || type < 0 || type >= c.types.length) throw new RangeError('Cast/Drop 생성 TYPE 범위');
-                if ((c.types[type].flags2 & 0x100) && ![168, 117, 118, 171, 172, 173].includes(type)) throw new Error('다른 주문 연결은 멀티플레이 단계로 이월');
+                // 주문 효과는 단독 미션도 사용한다. 이미 이식한 현재 World 생성자로 보내고 실제 생성·활성화 몸체의 진단을 보존한다.
                 return o.world.create(type, flags);
             },
             owner: (sid, owner) => { this.#live(); c.owner.set(sid, owner); },

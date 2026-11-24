@@ -78,3 +78,22 @@ test('Session 운반 투하 전체: 서버 효과와 현재 상태', () => {
     } finally { if (originalRequest) o.construction.request = originalRequest; o.dispose(); }
     assert.throws(() => hooks.money(1), /반납/);
 });
+
+// C++ Cast/Drop의 create 훅처럼 현재 World 생성자를 사용한다. 주문을 멀티 전용으로 묶어 막으면 단독 Early Missions도 실패한다.
+test('Session Cast: 원본 주문 19종의 생성이 같은 단독 World에 연결된다', () => {
+    const o = scene();
+    try {
+        o.connectDevastation(); o.connectCarrierDrop();
+        // 보호 TYPE 표의 SPELL genus 전체이며 프레임·전투·공중 유닛 행동은 실행하지 않는다.
+        const expected = [113, 114, 115, 116, 117, 118, 119, 120, 168, 171, 172, 173, 175, 178, 179, 180, 181, 182, 183];
+        const actual = [];
+        // 실제 TYPE와 생성자·현재 raw 슬롯을 대조하고 허용 목록으로 분기를 생략하지 않는다.
+        for (let type = 70; type < o.core.types.length; type += 1) {
+            if (!(o.core.types[type].flags2 & 0x100)) continue;
+            actual.push(type); const sid = o.carrierDropModules.dropHooks.create(type, 0);
+            assert.ok(sid); assert.equal(o.core.pool.slot(sid)[10], type, o.core.types[type].name);
+            assert.ok(o.core.pool.slot(sid)[11] & 4, 'Pop 전 실제 void 생성 상태');
+        }
+        assert.deepEqual(actual, expected);
+    } finally { o.dispose(); }
+});
