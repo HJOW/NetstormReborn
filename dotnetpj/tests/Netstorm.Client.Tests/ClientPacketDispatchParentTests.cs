@@ -4,7 +4,7 @@ using Netstorm.Net;
 
 namespace Netstorm.Client.Tests;
 
-// 공통 패킷 분배 부모의 41h·로그인·Native gameplay 설치를 검사하는 클래스다. 2026-11-23 0.897에서 R4-6 전송·수신 묶음용으로 추가하고 0.899에서 Native gameplay 묶음을 이었다.
+// 공통 패킷 분배 부모의 41h·로그인·Native gameplay·Carrier/Construction 설치를 검사하는 클래스다. 2026-11-23 0.897에서 R4-6 전송·수신 묶음용으로 추가하고 0.899에서 Native gameplay 묶음을, 0.964에서 Carrier/Construction 묶음을 이었다.
 // 근거: R4-6 남음의 "공통 41h가 Root.ReceiveNativePacketChat을 부르는 전송 설치"와 "NativeLoginPacketReceivers의 실제 MonoGame Root 설치 호출"이다.
 public sealed class ClientPacketDispatchParentTests
 {
@@ -147,6 +147,66 @@ public sealed class ClientPacketDispatchParentTests
             Assert.Equal(ushort.MaxValue, dispatch.Registration(type).Length);
         }
         Assert.Empty(scene.Assertions);
+    }
+    /// <summary>부모는 Carrier 15행·건설/연구 8행 고정 F를 같은 분배기에 설치한다. 0.964에서 추가됐다.</summary>
+    [Fact]
+    public void ParentInstallsCarrierAndConstructionEntries()
+    {
+        var scene = new Scene();
+        var dispatch = Build(scene, _ => { });
+        Assert.Equal(0x0048f7f0u, dispatch.SnapshotReceiver(0x77)!.NativeEntry);
+        Assert.Equal(6, dispatch.Registration(0x77).Length);
+        Assert.NotNull(dispatch.Registration(0x77).Observer);
+        Assert.Null(dispatch.Registration(0x77).PacketObserver);
+        Assert.Equal(0x00420bf0u, dispatch.SnapshotReceiver(0x5f)!.NativeEntry);
+        Assert.Equal(0xffff, dispatch.Registration(0x5f).Length);
+        Assert.NotNull(dispatch.Registration(0x5f).PacketObserver);
+        Assert.Equal(0x004205f0u, dispatch.SnapshotReceiver(0x75)!.NativeEntry);
+        Assert.Equal(0x00444af0u, dispatch.SnapshotReceiver(0x3e)!.NativeEntry);
+        Assert.Equal(25, dispatch.Registration(0x3e).Length);
+        Assert.NotNull(dispatch.Registration(0x3e).Observer);
+        Assert.Equal(0x004441b0u, dispatch.SnapshotReceiver(0x3f)!.NativeEntry);
+        Assert.NotNull(dispatch.Registration(0x3f).PacketObserver);
+        Assert.Null(dispatch.Registration(0x37).Observer);
+        Assert.Null(dispatch.Registration(0x37).PacketObserver);
+        Assert.Equal(0x004427b0u, dispatch.SnapshotReceiver(0x37)!.NativeEntry);
+        // 같은 묶음의 기존 설치가 Carrier/Construction 행에 밀리지 않는다.
+        Assert.Equal(0x0042dc90u, dispatch.SnapshotReceiver(0x41)!.NativeEntry);
+        Assert.Equal(0x0045e4f0u, dispatch.SnapshotReceiver(0x74)!.NativeEntry);
+        Assert.Empty(scene.Assertions);
+    }
+    /// <summary>부모 설치 뒤 BindSession·대여·반납하면 C3/관찰기/metadata가 부모 기준으로 복구된다. 0.964에서 추가됐다.</summary>
+    [Fact]
+    public void ParentInstallPrecedesBindSessionAndLeaseRestoresBaseline()
+    {
+        var scene = new Scene();
+        var dispatch = Build(scene, _ => { });
+        // 호출자의 BindSession보다 먼저 부모가 같은 기본 표를 채운다.
+        using (var lease = dispatch.Registrations.BindSession(scene.Game))
+        {
+            NativeCarrierPacketReceivers.Bind(dispatch, 0x77);
+            NativeConstructionPacketReceivers.BindReceiver(dispatch, 0x3e);
+        }
+
+        using (var lease = dispatch.Registrations.BindSession(scene.Game))
+        {
+            dispatch.RegisterCanonicalDirect(0x77, 0x9999, static (_, _, _) => { });
+            dispatch.Version(0x77, 9, 9);
+            dispatch.RegisterCanonicalDirect(0x3e, 0x9999, static (_, _, _) => { });
+            dispatch.Observe(0x3e, null);
+            lease.Detach();
+            // 임대 반납 뒤 고정 F·관찰기·metadata가 부모 설치 기준으로 복구된다.
+            Assert.Equal(0x0048f7f0u, dispatch.SnapshotReceiver(0x77)!.NativeEntry);
+            Assert.Equal(1, dispatch.Registration(0x77).Version);
+            Assert.Equal(0, dispatch.Registration(0x77).Mismatch);
+            Assert.Equal(6, dispatch.Registration(0x77).Length);
+            Assert.NotNull(dispatch.Registration(0x77).Observer);
+            Assert.Null(dispatch.Registration(0x77).PacketObserver);
+            Assert.Equal(0x00444af0u, dispatch.SnapshotReceiver(0x3e)!.NativeEntry);
+            Assert.Equal(1, dispatch.Registration(0x3e).Version);
+            Assert.Equal(25, dispatch.Registration(0x3e).Length);
+            Assert.NotNull(dispatch.Registration(0x3e).Observer);
+        }
     }
     /// <summary>부모가 묶은 41h는 실제 Chat UI 입구로 전달한다.</summary>
     [Fact]
