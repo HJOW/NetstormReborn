@@ -217,7 +217,12 @@ test('화면 배치 계산', () => {
     assert.deepEqual([highDpi.logicalWidth, highDpi.logicalHeight], [1920, 1080]);
     assert.deepEqual([highDpi.canvasWidth, highDpi.canvasHeight], [5120, 2880]);
     const forced = computeLayout(1920, 1080, 1, '16:10');
-    assert.deepEqual([forced.logicalWidth, forced.logicalHeight], [1228, 768]);
+    assert.deepEqual([forced.logicalWidth, forced.logicalHeight], [1280, 800]);
+    // 같은 16:10 논리 화면은 창 크기·DPI가 바뀌어도 유지하고 마우스 좌표만 역변환한다.
+    const ten = computeLayout(1280, 800, 1, 'auto'), tenDpi = computeLayout(640, 400, 2, '16:10');
+    assert.deepEqual([ten.logicalWidth, ten.logicalHeight, ten.drawScaleX, ten.drawScaleY], [1280, 800, 1, 1]);
+    assert.deepEqual([tenDpi.logicalWidth, tenDpi.logicalHeight, tenDpi.canvasWidth, tenDpi.canvasHeight], [1280, 800, 1280, 800]);
+    assert.deepEqual(clientToLogical(320, 200, { left: 0, top: 0, width: tenDpi.cssWidth, height: tenDpi.cssHeight }, 1280, 800), { x: 640, y: 400, inside: true });
     const point = clientToLogical(1280, 720, { left: 0, top: 0, width: highDpi.cssWidth, height: highDpi.cssHeight },
         highDpi.logicalWidth, highDpi.logicalHeight);
     assert.deepEqual(point, { x: 960, y: 540, inside: true });

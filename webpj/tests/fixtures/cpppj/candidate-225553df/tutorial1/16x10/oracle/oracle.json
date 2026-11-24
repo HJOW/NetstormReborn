@@ -1,0 +1,70 @@
+{
+  "format": "netstorm-webpj-cpppj-oracle",
+  "version": 1,
+  "description": "cpppj 기준선 실행 파일로 수집한 오라클. 그림은 cpppj 논리 화면 캡처(BMP)를 무손실 팔레트 PNG 로 바꾼 것이다. tools/cpp-oracle.mjs 가 쓴다.",
+  "cpppjCommit": "225553df",
+  "exe": {
+    "file": "Netstorm.exe",
+    "sha256": "5b52d96d2e53f4674a40991b78ff64c3c7e2ad8275a0a99b22d18d532b77eb46",
+    "bytes": 15595008
+  },
+  "scenarios": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial1/16x10/m1-scenarios.json",
+  "collectionInputsSha256": "6f68e4eac4232408ee19d7a9b07bb81dcefc68c762fc7eba28bedab56b1b8653",
+  "data": {
+    "gameFiles": 1351,
+    "gameTreeSha256": "5ce8f82b6e3c1bfb51d5baca26e41f8dee4389cfd45e534b533799c4ca419555",
+    "compared": 286,
+    "mismatched": [],
+    "missingInWeb": 1065
+  },
+  "collected": {
+    "host": "HJOW-Athlon",
+    "at": "2026-11-24T02:06:06.919Z",
+    "node": "v26.13.0"
+  },
+  "results": {
+    "tutorial1": {
+      "args": [
+        "--run",
+        "assets/game-data",
+        "--window",
+        "--mute-audio",
+        "--frames",
+        "141",
+        "--set",
+        "SCREENW=1280;SCREENH=800;WelcomeGiven=1;tellTips=0;autoDemo=0",
+        "--ui-script",
+        "<steps.tsv>",
+        "--ui-report",
+        "<report.tsv>",
+        "--fixed-frame-ms",
+        "25",
+        "--mission",
+        "Tutorial1"
+      ],
+      "snapshots": {
+        "load": {
+          "png": "tutorial1/load.png",
+          "pngSha256": "c4cd97bc0207d4a5b2cff31003137ecac91400f03aa28fd7ce155de275115d28",
+          "bmpSha256": "a1d08159660934de5ce0b20c0e52ec095689af47f7238a3112f6777795e2eab0",
+          "width": 1280,
+          "height": 800
+        }
+      },
+      "dumps": {
+        "load": {
+          "file": "tutorial1/load.tsv",
+          "sha256": "94daefb491aaa31b320f694214f217b1dc728aff87b45b554e909c6a115d1ce3"
+        },
+        "later": {
+          "file": "tutorial1/later.tsv",
+          "sha256": "2715df048bb9a18406642854387fdbbdfe4188fcadfc95952939254fabdcb4db"
+        }
+      },
+      "report": {
+        "file": "tutorial1/report.txt",
+        "sha256": "3759d45c026c0f605f7fa18736534f1fe27255711f04d0ded504bd9e1faab8b5"
+      }
+    }
+  }
+}

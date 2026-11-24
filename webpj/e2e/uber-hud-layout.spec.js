@@ -60,7 +60,7 @@ test('4:3 Tutorial1의 좌측 HUD 틀은 원본 위치로 도킹되고 하단 �
 test('미션 중 창 크기를 16:9·16:10·대형으로 바꿔도 HUD 틀이 같은 도킹을 유지한다', async ({ page }) => {
   const errors = []; page.on('pageerror', (error) => errors.push(error.message));
   await startTutorial(page, { width: 1024, height: 768 }, '/');
-  for (const [size, layout] of [[{ width: 1366, height: 768 }, [1366, 768]], [{ width: 1280, height: 800 }, [1228, 768]], [{ width: 1920, height: 1080 }, [1920, 1080]], [{ width: 1024, height: 768 }, [1024, 768]]]) {
+  for (const [size, layout] of [[{ width: 1366, height: 768 }, [1366, 768]], [{ width: 1280, height: 800 }, [1280, 800]], [{ width: 1920, height: 1080 }, [1920, 1080]], [{ width: 1024, height: 768 }, [1024, 768]]]) {
     await page.setViewportSize(size); await page.waitForFunction(([width, height]) => window.netstorm._layout.logicalWidth === width && window.netstorm._layout.logicalHeight === height, layout);
     await page.waitForTimeout(300);
     const [width, height] = layout, hud = await readHud(page);

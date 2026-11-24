@@ -71,7 +71,7 @@ test('게임 시계는 앱 프레임과 같은 수명으로 생성되고 재시�
     app.setAspect('16:9'); result.push(app._clientPaletteScreen.width, app._clientPaletteScreen.height, app._clientColorSort === colors);
     return result;
   });
-  expect(resized).toEqual([1024, 768, true, true, true, true, 1228, 768, true, 1228, 1366, 768, true]);
+  expect(resized).toEqual([1024, 768, true, true, true, true, 1280, 800, true, 1280, 1366, 768, true]);
   // 실제 설정 쓰기는 같은 구름 전역을 즉시 갱신하고 검사 뒤 원래 값을 복구한다.
   const cloudSpeed = await page.evaluate(() => {
     const app = window.netstorm, cloud = app._clientKencloud, previous = cloud.value(1).value;

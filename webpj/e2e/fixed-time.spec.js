@@ -1,6 +1,6 @@
 // 검사 전용 고정 시각 모드(?fixed=25)의 결정론을 실제 Chromium 에서 확인한다: 같은 입력 단계표의 두 실행이 같은 시계·난수·Session 덤프를 낸다(cpppj `--fixed-frame-ms 25` 와 같은 L2·L3 대조의 바탕).
 // 같은 90프레임의 웹 논리 화면은 cpppj 기준 화면(`load.png`)과 비교한다(E1278: 7,195픽셀 차이였고 E1280 에서 State 설치의 난수 소비 순서를 맞춰 0픽셀이 됐다). 난수 상태(`random` 행)도 기준선과 같고 Session 덤프의 남은 차이는 `sp`·`player` 행뿐이다(E1281 에서 게임 시각도 맞춤).
-// 영어 4:3(1024×768)과 16:9(1366×768) 두 화면 모드를 각각 cpppj 오라클과 대조한다(E1282, 16:10 은 cpppj 해상도 1280×800 이 웹의 논리 크기와 달라 직접 대조하지 않는다).
+// 영어 4:3(1024×768)·16:9(1366×768)·16:10(1280×800)을 각각 같은 크기의 cpppj 오라클과 대조한다.
 // 시작 그림 구간(3초씩 세 장)은 시각만 흐르고 프레임으로 세지 않아 정확히 360프레임·게임 시각 9초(+시계 출발 0.1초)이며(원본 cpppj 의 고정 프레임 실행과 같음), 이어 Tutorial1 을 시작해 90프레임을 진행한다. (2026-11-23 WB04-E1271)
 const { test, expect } = require('@playwright/test');
 const fs = require('node:fs');
@@ -11,6 +11,7 @@ const ORACLE_ROOT = path.join(__dirname, '..', 'tests', 'fixtures', 'cpppj', 'ca
 const MODES = {
   '4:3': { viewport: { width: 1024, height: 768 }, oracle: path.join(ORACLE_ROOT, 'oracle', 'tutorial1'), scenarios: path.join(ORACLE_ROOT, 'm1-scenarios.json') },
   '16:9': { viewport: { width: 1366, height: 768 }, oracle: path.join(ORACLE_ROOT, 'oracle-1366x768', 'tutorial1'), scenarios: path.join(ORACLE_ROOT, 'm1-scenarios-1366x768.json') },
+  '16:10': { viewport: { width: 1280, height: 800 }, oracle: path.join(ORACLE_ROOT, '16x10', 'oracle', 'tutorial1'), scenarios: path.join(ORACLE_ROOT, '16x10', 'm1-scenarios.json'), report: true },
 };
 
 // 새 페이지에서 고정 시각 모드로 시작 그림을 끝내고 Tutorial1 을 시작해 mission 프레임 수만큼 진행한 뒤 덤프와 시작 그림 정보를 돌려준다. aspect 는 MODES 의 키이다.
@@ -50,6 +51,13 @@ async function expectMatchesOracle(result, mode) {
   const scenarios = JSON.parse(fs.readFileSync(mode.scenarios, 'utf8')), meta = JSON.parse(fs.readFileSync(path.join(oracle, '..', 'oracle.json'), 'utf8'));
   expect([scenarios.settings.SCREENW, scenarios.settings.SCREENH], '수집 시나리오의 해상도').toEqual([result.screen.width, result.screen.height]);
   expect(meta.cpppjCommit, '오라클 기준선 커밋').toBe('225553df');
+  // 새16:10 보고서의 실제 지도 영역도 수집 설정/웹 논리 크기와 일치해야 한다.
+  if (mode.report) {
+    const report = fs.readFileSync(path.join(oracle, 'report.txt'), 'utf8');
+    const view = report.split(/\r?\n/).find((line) => line.startsWith('audio_view\t'));
+    expect(view, 'C++ 실제 지도 영역 보고').toBeTruthy();
+    expect(view.split('\t').slice(-4).map(Number)).toEqual([85, 0, result.screen.width, result.screen.height]);
+  }
   const { readPng, indexedToRgb } = await import('../tools/image-files.mjs'), { compareImages } = await import('../tools/screen-compare.mjs');
   const palette = new Uint8Array(768);
   // BGRX → RGB 로 바꾼다.
@@ -96,4 +104,12 @@ test('고정 시각 모드가 아니면 프레임을 직접 진행할 수 없다
   await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 60000 });
   const message = await page.evaluate(async () => { try { await window.netstorm.stepFixedFrames(1); return ''; } catch (error) { return error.message; } });
   expect(message).toMatch(/고정 시각 모드/);
+});
+
+// 사용자 결정의 16:10 논리 크기로 처음으로 같은 해상도의 C++ 화면/상태를 직접 대조한다. (WB04-E1322)
+test('고정 시각 모드 16:10(1280×800): 화면과90·130프레임 덤프가 cpppj 오라클과 같다', async ({ browser }) => {
+  test.setTimeout(300000);
+  const result = await run(browser, 90, '16:10');
+  expect([result.screen.width, result.screen.height]).toEqual([1280, 800]); expect(result.errors).toEqual([]);
+  await expectMatchesOracle(result, MODES['16:10']);
 });

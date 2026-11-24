@@ -223,7 +223,7 @@ const TUTORIAL_NOTICE_COMMANDS = new Set([0x030000b0, 0x030000b1, 0x020000b5, 0x
 // 작거나 세로가 짧은 창의 기본 논리 크기다. 큰 16:9 창의 상위 크기는 WIDE_LOGICAL_SIZES에서 고른다. (2026-11-19 WB04-E943)
 export const SCREEN_MODES = Object.freeze([
     Object.freeze({ name: '4:3', ratio: 4 / 3, width: 1024, height: LOGICAL_HEIGHT }),
-    Object.freeze({ name: '16:10', ratio: 16 / 10, width: 1228, height: LOGICAL_HEIGHT }),
+    Object.freeze({ name: '16:10', ratio: 16 / 10, width: 1280, height: 800 }),
     Object.freeze({ name: '16:9', ratio: 16 / 9, width: 1366, height: LOGICAL_HEIGHT }),
 ]);
 

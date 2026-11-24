@@ -28771,6 +28771,198 @@
       "cpppjBasis": {
         "cpppj/src/client/AssetDeletionVtables.inc": "9c11dd728"
       }
+    },
+    {
+      "id": "cpppj-tutorial1-16x10-scenarios",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial1/16x10/m1-scenarios.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정25ms Tutorial1 실행(1280×800, 16:10)",
+      "consumers": [
+        "webpj/e2e/fixed-time.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1322",
+      "doc": "docs/webpj-aspect-16x10-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "16:10 1280×800 Tutorial1 시작90·130프레임의 같은 해상도 상태/화면 대조",
+      "text": true,
+      "sha256": "650a1c90b0ee907ae4fbbf4c222a49fd59151f2882e294c70928e0b5c39363e0",
+      "bytes": 1040,
+      "lines": 57,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial1-16x10-metadata",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial1/16x10/oracle/oracle.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정25ms Tutorial1 실행(1280×800, 16:10)",
+      "consumers": [
+        "webpj/e2e/fixed-time.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1322",
+      "doc": "docs/webpj-aspect-16x10-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "16:10 1280×800 Tutorial1 시작90·130프레임의 같은 해상도 상태/화면 대조",
+      "text": true,
+      "sha256": "ed510ab6f42f72c760118fe770519beb8425898e2eb109c859f04377ccaf03ed",
+      "bytes": 2217,
+      "lines": 70,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial1-16x10-load",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial1/16x10/oracle/tutorial1/load.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정25ms Tutorial1 실행(1280×800, 16:10)",
+      "consumers": [
+        "webpj/e2e/fixed-time.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1322",
+      "doc": "docs/webpj-aspect-16x10-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "16:10 1280×800 Tutorial1 시작90·130프레임의 같은 해상도 상태/화면 대조",
+      "text": true,
+      "sha256": "94daefb491aaa31b320f694214f217b1dc728aff87b45b554e909c6a115d1ce3",
+      "bytes": 142237,
+      "lines": 1963,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial1-16x10-later",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial1/16x10/oracle/tutorial1/later.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정25ms Tutorial1 실행(1280×800, 16:10)",
+      "consumers": [
+        "webpj/e2e/fixed-time.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1322",
+      "doc": "docs/webpj-aspect-16x10-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "16:10 1280×800 Tutorial1 시작90·130프레임의 같은 해상도 상태/화면 대조",
+      "text": true,
+      "sha256": "2715df048bb9a18406642854387fdbbdfe4188fcadfc95952939254fabdcb4db",
+      "bytes": 142346,
+      "lines": 1964,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial1-16x10-screen",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial1/16x10/oracle/tutorial1/load.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정25ms Tutorial1 실행(1280×800, 16:10)",
+      "consumers": [
+        "webpj/e2e/fixed-time.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1322",
+      "doc": "docs/webpj-aspect-16x10-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "16:10 1280×800 Tutorial1 시작90·130프레임의 같은 해상도 상태/화면 대조",
+      "text": false,
+      "sha256": "c4cd97bc0207d4a5b2cff31003137ecac91400f03aa28fd7ce155de275115d28",
+      "bytes": 221093,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial1-16x10-report",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial1/16x10/oracle/tutorial1/report.txt",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정25ms Tutorial1 실행(1280×800, 16:10)",
+      "consumers": [
+        "webpj/e2e/fixed-time.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1322",
+      "doc": "docs/webpj-aspect-16x10-20261124.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "16:10 수집 실행의 UI/Session 보고서",
+      "text": true,
+      "sha256": "3759d45c026c0f605f7fa18736534f1fe27255711f04d0ded504bd9e1faab8b5",
+      "bytes": 135887,
+      "lines": 3764,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
     }
   ]
 }
