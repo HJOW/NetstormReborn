@@ -365,4 +365,18 @@ public sealed class ClientCampaignTransportTests
         Assert.Equal(ushort.MaxValue, transport.Dispatch.Registration(0x0f).Length);
         Assert.NotNull(transport.Dispatch.Registration(0x0f).PacketObserver);
     }
+
+    /// <summary>수송 팩토리도 같은 기본 표에 0x71 전투 설명·0x21 참가자 제거를 공유한다. 0.975에서 추가됐다.</summary>
+    [Fact]
+    public void FactorySharesDescriptionAndRemoveEntries()
+    {
+        var scene = new Scene();
+        scene.Game.PlayerRecords.Initialize((_, _) => { });
+        using var transport = scene.Make();
+        Assert.Equal(0x004b49c0u, transport.Dispatch.SnapshotReceiver(0x71)!.NativeEntry);
+        Assert.Equal(ushort.MaxValue, transport.Dispatch.Registration(0x71).Length);
+        Assert.Equal(0x004b46d0u, transport.Dispatch.SnapshotReceiver(0x21)!.NativeEntry);
+        Assert.Equal(ushort.MaxValue, transport.Dispatch.Registration(0x21).Length);
+        Assert.NotNull(transport.Dispatch.Registration(0x21).PacketObserver);
+    }
 }

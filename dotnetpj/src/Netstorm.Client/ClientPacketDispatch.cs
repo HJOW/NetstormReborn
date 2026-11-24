@@ -1,10 +1,11 @@
+using Netstorm.Client.Gump;
 using Netstorm.Core.Original;
 using Netstorm.Net;
 
 namespace Netstorm.Client;
 
-// 장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay·Carrier/Construction·장기 CS·연결 종료·전투 시작·서버 발견·메타 geometry·챌린지 응답·Root 로그인 묶음을 같은 분배기에 설치한다. 전송 설치는 R4-6, 실제 송수신 펌프는 R11에서 잇는다.
-/// <summary>공통 패킷 분배기의 실제 소유자 조립이다. 장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay·Carrier/Construction·장기 CS·연결 종료·전투 시작·서버 발견·메타 geometry·챌린지 응답·Root 로그인 묶음을 같은 분배기에 설치한다.</summary>
+// 장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay·Carrier/Construction·장기 CS·연결 종료·전투 시작·서버 발견·메타 geometry·챌린지 응답·Root 로그인·전투 설명·참가자 제거 묶음을 같은 분배기에 설치한다. 전송 설치는 R4-6, 실제 송수신 펌프는 R11에서 잇는다.
+/// <summary>공통 패킷 분배기의 실제 소유자 조립이다. 장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay·Carrier/Construction·장기 CS·연결 종료·전투 시작·서버 발견·메타 geometry·챌린지 응답·Root 로그인·전투 설명·참가자 제거 묶음을 같은 분배기에 설치한다.</summary>
 public static class ClientPacketDispatch
 {
     /// <summary>같은 장기 Client 장치만 읽으며 실제 수신 UI/진단/활동 장치를 묶는다.</summary>
@@ -18,7 +19,7 @@ public static class ClientPacketDispatch
     /// <param name="activity">장기 연결 활성의 실제 벽시계/프레임/서버 조회다.</param>
     /// <param name="challenge">같은 Client 수명으로 유지하는 실제 CS 슬롯·할당 owner다. 0x7b·0x7c 후크 결합 수신기가 공유한다.</param>
     /// <returns>장기 기본 표·41h·로그인·설정·버전·기술·변수·Native gameplay 묶음이 설치된 실제 분배기다.</returns>
-    /// <remarks>2026-11-23 0.897에서 R4-6 전송·수신 묶음용으로 추가하고 0.898에서 설정·버전·기술·변수 묶음을, 0.899에서 Native gameplay 6종 묶음을, 0.934에서 장기 기본 18행을, 0.964에서 Carrier/Construction 묶음을, 0.966에서 장기 CS 묶음(0x7b·0x7c)을, 0.969에서 연결 종료 2번을, 0.970에서 전투 시작 1a/1b를, 0.971에서 로컬 서버 발견 0x66·메타 geometry 0x26을, 0.973에서 챌린지 로그인 응답 0x1d를, 0.974에서 Root 로그인 응답 0x0f를 이었다. 근거: R4-6 남음의 "공통 41h가 Root.ReceiveNativePacketChat을 부르는 전송 설치"와 "NativeLoginPacketReceivers의 실제 MonoGame Root 설치 호출"과 InstallClientPacketDefaults의 기본 18행·Carrier/Construction 고정 F·장기 CS·2번·1a/1b·0x66·0x26·0x1d·0x0f 수신기다. 호스트는 10.78만 다루므로 판본을 고정한다. 종료/닫기/반납은 R11 수송에서 잇는다.</remarks>
+    /// <remarks>2026-11-23 0.897에서 R4-6 전송·수신 묶음용으로 추가하고 0.898에서 설정·버전·기술·변수 묶음을, 0.899에서 Native gameplay 6종 묶음을, 0.934에서 장기 기본 18행을, 0.964에서 Carrier/Construction 묶음을, 0.966에서 장기 CS 묶음(0x7b·0x7c)을, 0.969에서 연결 종료 2번을, 0.970에서 전투 시작 1a/1b를, 0.971에서 로컬 서버 발견 0x66·메타 geometry 0x26을, 0.973에서 챌린지 로그인 응답 0x1d를, 0.974에서 Root 로그인 응답 0x0f를, 0.975에서 전투 설명 0x71·참가자 제거 0x21을 이었다. 근거: R4-6 남음의 "공통 41h가 Root.ReceiveNativePacketChat을 부르는 전송 설치"와 "NativeLoginPacketReceivers의 실제 MonoGame Root 설치 호출"과 InstallClientPacketDefaults의 기본 18행·Carrier/Construction 고정 F·장기 CS·2번·1a/1b·0x66·0x26·0x1d·0x0f·0x71·0x21 수신기다. 호스트는 10.78만 다루므로 판본을 고정한다. 종료/닫기/반납은 R11 수송에서 잇는다.</remarks>
     public static RawPacketDispatch Build(
         PacketDispatchHooks dispatch,
         ClientGameplayGlobals game,
@@ -267,6 +268,42 @@ public static class ClientPacketDispatch
             SaveServers = () => throw new InvalidOperationException("Root 로그인 응답의 실제 서버 목록 저장 미연결(R7)"),
             // 원문 진단의 실제 선택 줄 소비자다.
             Assertion = assertion,
+        });
+        // 0x71 전투 설명을 같은 기본 표에 잇는다. 분배·CS·진단은 실제 장기 장치이며 설명 본문의 표시 장치는 후속에 묶는다. 0.975에서 추가됐다.
+        ClientMetaBattleDescriptionReceiver.Install(
+            packet,
+            challenge,
+            surface.Storage,
+            (sender, body) => NativeMetaBattleDescription.Receive(challenge, body, new NativeMetaBattleDescriptionHooks
+            {
+                // 수준9의 무효 전투·설명 길이 진단이다.
+                Log = text => challengeLog(9, text),
+                // 현재 전투 기록+20H SID의 실제 가상88이며 복사·정제 뒤에 호출한다. 실제 표시 장치가 없으므로 명시 실패한다.
+                RefreshObject = _ => throw new InvalidOperationException("전투 설명의 실제 표시 갱신 미연결(R6)"),
+                // 00479c40의 현재 packet 전투 번호 갱신이다. 실제 표시 장치가 없으므로 명시 실패한다.
+                UpdateBattle = _ => throw new InvalidOperationException("전투 설명의 실제 전투 번호 갱신 미연결(R6)"),
+            }));
+        // 0x21 메타 참가자 제거를 같은 기본 표에 잇는다. CS·모드·검사·진단·로그는 실제 장기 장치이며 전투·Chat·하차·NSInfo 표시는 후속에 묶는다. 0.975에서 추가됐다.
+        ClientMetaParticipantRemove.Install(packet, new ClientMetaParticipantRemoveHooks
+        {
+            // 같은 실제 CS 참가자40 기록 owner다.
+            Challenge = challenge,
+            // 같은 실제 메타맵 모드 owner다. 거짓이면 수신 전체를 건너뛴다.
+            OwnerModeChallenge = () => surface.Storage.OwnerMode.Challenge,
+            // 같은 실제 현재 검사 뷰다.
+            Checking = surface.Storage.Checking(),
+            // 원문 진단의 실제 선택 줄 소비자다.
+            Assertion = assertion,
+            // 수준9의 실제 진단 로그 장치다.
+            Log = text => challengeLog(9, text),
+            // 같은 실제 전투 표시 갱신 장치다. 실제 표시 장치가 없으므로 명시 실패한다.
+            Battle = _ => throw new InvalidOperationException("메타 참가자 제거의 실제 전투 표시 미연결(R6)"),
+            // 실제 Chat 채널 망각 장치다. 실제 Chat 장치가 없으므로 명시 실패한다.
+            Chat = _ => throw new InvalidOperationException("메타 참가자 제거의 실제 Chat 망각 미연결(R6)"),
+            // 같은 실제 섬 장비 하차 장치다. 실제 월드 장치가 없으므로 명시 실패한다.
+            Leave = (_, _) => throw new InvalidOperationException("메타 참가자 제거의 실제 섬 장비 하차 미연결(R6)"),
+            // 같은 실제 NSInfo 갱신 장치다. 실제 NSInfo 장치가 없으므로 명시 실패한다.
+            RefreshInfo = () => throw new InvalidOperationException("메타 참가자 제거의 실제 NSInfo 갱신 미연결(R6)"),
         });
     }
 }

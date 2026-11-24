@@ -673,4 +673,153 @@ public sealed class ClientPacketDispatchParentTests
         var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x0f, 9, null, RootReplyPacket(11, 0)));
         Assert.Contains("Tell", error.Message);
     }
+    /// <summary>원문 0x71 설명 패킷을 조립한다. 길이에 종단 NUL을 포함한다.</summary>
+    private static byte[] DescriptionPacket(uint battle, string text)
+    {
+        // 종류·전투·길이·이름을 같은 위치에 둔다.
+        byte[] nameBytes = System.Text.Encoding.Latin1.GetBytes(text + "\0");
+        byte[] packet = new byte[10 + nameBytes.Length];
+        packet[1] = 0x71;
+        packet[4] = (byte)battle;
+        packet[9] = (byte)nameBytes.Length;
+        nameBytes.CopyTo(packet, 10);
+        return packet;
+    }
+    /// <summary>원문 0x21 입력 패킷을 조립한다.</summary>
+    private static byte[] RemovePacket(params byte[] ids)
+    {
+        // 종류·개수·참가자 번호를 같은 위치에 둔다.
+        byte[] packet = new byte[5 + ids.Length];
+        packet[1] = 0x21;
+        packet[4] = (byte)ids.Length;
+        ids.CopyTo(packet, 5);
+        return packet;
+    }
+    /// <summary>부모는 전투 설명 0x71·참가자 제거 0x21 고정 F를 같은 분배기에 설치한다. 0.975에서 추가됐다.</summary>
+    [Fact]
+    public void ParentInstallsDescriptionAndRemoveEntries()
+    {
+        var scene = new Scene();
+        var dispatch = Build(scene, _ => { });
+        var description = dispatch.Registration(0x71);
+        Assert.Equal(1, description.Version);
+        Assert.Equal(0, description.Mismatch);
+        Assert.Equal(ushort.MaxValue, description.Length);
+        Assert.NotNull(description.PacketObserver);
+        Assert.Null(description.Observer);
+        Assert.Equal(0x004b49c0u, dispatch.SnapshotReceiver(0x71)!.NativeEntry);
+        var remove = dispatch.Registration(0x21);
+        Assert.Equal(1, remove.Version);
+        Assert.Equal(0, remove.Mismatch);
+        Assert.Equal(ushort.MaxValue, remove.Length);
+        Assert.NotNull(remove.PacketObserver);
+        Assert.Null(remove.Observer);
+        Assert.Equal(0x004b46d0u, dispatch.SnapshotReceiver(0x21)!.NativeEntry);
+        // 같은 묶음의 기존 설치가 0x71·0x21 행에 밀리지 않는다.
+        Assert.Equal(0x004b4250u, dispatch.SnapshotReceiver(0x0f)!.NativeEntry);
+        Assert.Equal(0x0042dc90u, dispatch.SnapshotReceiver(0x41)!.NativeEntry);
+        Assert.Empty(scene.Assertions);
+    }
+    /// <summary>0x71은 CS0이면 버퍼·연결을 요구하지 않고 자식을 부르지 않는다. 0.975에서 추가됐다.</summary>
+    [Fact]
+    public void ParentDescriptionSkipsWhenCurrentZero()
+    {
+        var scene = new Scene();
+        var logs = new List<(uint Code, string Text)>();
+        var dispatch = Build(scene, _ => { }, diagnosticLog: (code, text) => logs.Add((code, text)));
+        Assert.Equal(0u, scene.Challenge.Current);
+        dispatch.InvokeDirect(0x71, 7, null, DescriptionPacket(3, "ab"));
+        Assert.Empty(logs);
+    }
+    /// <summary>0x71 무효 전투는 로그만 쓰고 표시를 건드리지 않는다. 0.975에서 추가됐다.</summary>
+    [Fact]
+    public void ParentDescriptionLogsInvalidBattleOnly()
+    {
+        var scene = new Scene();
+        scene.Challenge.Prepare();
+        var logs = new List<(uint Code, string Text)>();
+        var dispatch = Build(scene, _ => { }, diagnosticLog: (code, text) => logs.Add((code, text)));
+        dispatch.InvokeDirect(0x71, 7, null, DescriptionPacket(3, "ab"));
+        Assert.Contains(logs, e => e.Code == 9 && e.Text.Contains("battle 3 is not valid"));
+    }
+    /// <summary>0x71 초과 길이는 로그 뒤 전투 번호 갱신 앞에서 멈춘다. 0.975에서 추가됐다.</summary>
+    [Fact]
+    public void ParentDescriptionOverlongStopsAtUpdateBattle()
+    {
+        var scene = new Scene();
+        scene.Challenge.Prepare();
+        scene.Challenge.Battle(2).Span[0] = 1;
+        var logs = new List<(uint Code, string Text)>();
+        var dispatch = Build(scene, _ => { }, diagnosticLog: (code, text) => logs.Add((code, text)));
+        var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x71, 7, null, DescriptionPacket(2, new('x', 42))));
+        Assert.Contains("전투 번호 갱신", error.Message);
+        Assert.Contains(logs, e => e.Code == 9 && e.Text.Contains("desc too long"));
+    }
+    /// <summary>0x71 유효 설명은 복사·정제 뒤 표시 갱신 앞에서 멈춘다. 0.975에서 추가됐다.</summary>
+    [Fact]
+    public void ParentDescriptionCopiesBeforeRefreshObject()
+    {
+        var scene = new Scene();
+        scene.Challenge.Prepare();
+        scene.Challenge.Battle(2).Span[0] = 1;
+        scene.Challenge.Battle(2).Span[0x20] = 7;
+        var logs = new List<(uint Code, string Text)>();
+        var dispatch = Build(scene, _ => { }, diagnosticLog: (code, text) => logs.Add((code, text)));
+        var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x71, 7, null, DescriptionPacket(2, "A\tB")));
+        Assert.Contains("표시 갱신", error.Message);
+        Assert.Empty(logs);
+        System.Span<byte> span = scene.Challenge.Battle(2).Span;
+        Assert.Equal((byte)'A', span[0xf9]);
+        Assert.Equal((byte)' ', span[0xfa]);
+        Assert.Equal((byte)'B', span[0xfb]);
+    }
+    /// <summary>0x21은 메타맵 모드가 거짓이면 버퍼·CS를 요구하지 않고 조용히 돌아간다. 0.975에서 추가됐다.</summary>
+    [Fact]
+    public void ParentRemoveSkipsWhenOwnerModeOff()
+    {
+        var scene = new Scene();
+        scene.Surface.Storage.OwnerMode.Challenge = false;
+        var logs = new List<(uint Code, string Text)>();
+        var dispatch = Build(scene, _ => { }, diagnosticLog: (code, text) => logs.Add((code, text)));
+        dispatch.InvokeDirect(0x21, 9, null, RemovePacket(5));
+        Assert.Empty(logs);
+        Assert.Empty(scene.Assertions);
+    }
+    /// <summary>0x21 범위 밖 번호는 진단·로그 뒤 NSInfo 갱신 앞에서 멈춘다. 0.975에서 추가됐다.</summary>
+    [Fact]
+    public void ParentRemoveRejectsIllegalIdBeforeRefreshInfo()
+    {
+        var scene = new Scene();
+        scene.Surface.Storage.OwnerMode.Challenge = true;
+        scene.Challenge.Prepare();
+        var logs = new List<(uint Code, string Text)>();
+        var dispatch = Build(scene, _ => { }, diagnosticLog: (code, text) => logs.Add((code, text)));
+        var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x21, 9, null, RemovePacket(99)));
+        Assert.Contains("NSInfo 갱신", error.Message);
+        Assert.Contains(logs, e => e.Code == 9 && e.Text.Contains("Cannot delete illegal player number 99"));
+        Assert.Contains(0x499u, scene.Assertions);
+    }
+    /// <summary>0x21 유효 제거는 좌석을 지우고 버전 경계를 세운 뒤 전투 표시 앞에서 멈춘다. 0.975에서 추가됐다.</summary>
+    [Fact]
+    public void ParentRemoveClearsSeatBeforeBattleDisplay()
+    {
+        var scene = new Scene();
+        scene.Surface.Storage.OwnerMode.Challenge = true;
+        scene.Challenge.Prepare();
+        System.Memory<byte> record = scene.Challenge.Participant(5);
+        BinaryPrimitives.WriteUInt32LittleEndian(record.Span.Slice(4, 4), 0x4444);
+        record.Span[0x64] = 1;
+        BinaryPrimitives.WriteUInt32LittleEndian(record.Span.Slice(0xa4, 4), 2);
+        BinaryPrimitives.WriteUInt32LittleEndian(record.Span.Slice(0xa8, 4), 3);
+        BinaryPrimitives.WriteUInt32LittleEndian(record.Span.Slice(0xb8, 4), 0x300);
+        System.Memory<byte> battle = scene.Challenge.Battle(2);
+        battle.Span[0] = 1;
+        BinaryPrimitives.WriteUInt32LittleEndian(battle.Span.Slice(0x38 + 3 * 4, 4), 5);
+        BinaryPrimitives.WriteUInt32LittleEndian(battle.Span.Slice(4, 4), 0x202);
+        var logs = new List<(uint Code, string Text)>();
+        var dispatch = Build(scene, _ => { }, diagnosticLog: (code, text) => logs.Add((code, text)));
+        var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x21, 9, null, RemovePacket(5)));
+        Assert.Contains("전투 표시", error.Message);
+        Assert.Equal(0u, BinaryPrimitives.ReadUInt32LittleEndian(scene.Challenge.Battle(2).Span.Slice(0x38 + 3 * 4, 4)));
+    }
 }
