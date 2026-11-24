@@ -392,4 +392,17 @@ public sealed class ClientCampaignTransportTests
         Assert.Equal(0x004b4900u, transport.Dispatch.SnapshotReceiver(0x67)!.NativeEntry);
         Assert.Equal(ushort.MaxValue, transport.Dispatch.Registration(0x67).Length);
     }
+
+    /// <summary>수송 팩토리도 같은 기본 표에 0x20 참가자 추가·0x22 참가자 이동을 공유한다. 0.978에서 추가됐다.</summary>
+    [Fact]
+    public void FactorySharesAddAndMoveEntries()
+    {
+        var scene = new Scene();
+        scene.Game.PlayerRecords.Initialize((_, _) => { });
+        using var transport = scene.Make();
+        Assert.Equal(0x004b4710u, transport.Dispatch.SnapshotReceiver(0x20)!.NativeEntry);
+        Assert.Equal(ushort.MaxValue, transport.Dispatch.Registration(0x20).Length);
+        Assert.Equal(0x004b4820u, transport.Dispatch.SnapshotReceiver(0x22)!.NativeEntry);
+        Assert.Equal(17, transport.Dispatch.Registration(0x22).Length);
+    }
 }

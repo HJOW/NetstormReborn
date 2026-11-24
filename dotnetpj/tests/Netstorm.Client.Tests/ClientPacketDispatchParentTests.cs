@@ -986,4 +986,132 @@ public sealed class ClientPacketDispatchParentTests
         Assert.Contains("음향", error.Message);
         Assert.Empty(logs);
     }
+    /// <summary>원문 0x20 참가자 추가 패킷을 조립한다. Chat 이름은 생성 뒤에 읽는다.</summary>
+    private static byte[] AddPacket(uint index, byte subscriber)
+    {
+        // 종류·번호·구독자를 같은 위치에 둔다.
+        byte[] packet = new byte[64];
+        packet[1] = 0x20;
+        packet[4] = (byte)index;
+        packet[5] = subscriber;
+        return packet;
+    }
+    /// <summary>원문 0x22 참가자 이동 패킷을 조립한다. 고정 길이 17을 둔다.</summary>
+    private static byte[] MovePacket(uint index, byte subscriber, byte battle, byte slot)
+    {
+        // 종류·번호·표식·전투·좌석을 같은 위치에 둔다.
+        byte[] packet = new byte[17];
+        packet[1] = 0x22;
+        packet[4] = (byte)index;
+        packet[5] = subscriber;
+        packet[0xf] = battle;
+        packet[0x10] = slot;
+        return packet;
+    }
+    /// <summary>부모는 참가자 추가 0x20·참가자 이동 0x22 고정 F를 같은 분배기에 설치한다. 0.978에서 추가됐다.</summary>
+    [Fact]
+    public void ParentInstallsAddAndMoveEntries()
+    {
+        var scene = new Scene();
+        var dispatch = Build(scene, _ => { });
+        var add = dispatch.Registration(0x20);
+        Assert.Equal(1, add.Version);
+        Assert.Equal(0, add.Mismatch);
+        Assert.Equal(ushort.MaxValue, add.Length);
+        Assert.NotNull(add.PacketObserver);
+        Assert.Null(add.Observer);
+        Assert.Equal(0x004b4710u, dispatch.SnapshotReceiver(0x20)!.NativeEntry);
+        var move = dispatch.Registration(0x22);
+        Assert.Equal(1, move.Version);
+        Assert.Equal(0, move.Mismatch);
+        Assert.Equal(17, move.Length);
+        Assert.NotNull(move.Observer);
+        Assert.Null(move.PacketObserver);
+        Assert.Equal(0x004b4820u, dispatch.SnapshotReceiver(0x22)!.NativeEntry);
+        // 같은 묶음의 기존 설치가 0x20·0x22 행에 밀리지 않는다.
+        Assert.Equal(0x004b4680u, dispatch.SnapshotReceiver(0x88)!.NativeEntry);
+        Assert.Equal(0x0042dc90u, dispatch.SnapshotReceiver(0x41)!.NativeEntry);
+        Assert.Empty(scene.Assertions);
+    }
+    /// <summary>0x20은 메타맵 모드가 거짓이면 버퍼·CS를 요구하지 않고 조용히 돌아간다. 0.978에서 추가됐다.</summary>
+    [Fact]
+    public void ParentAddSkipsWhenOwnerModeOff()
+    {
+        var scene = new Scene();
+        scene.Surface.Storage.OwnerMode.Challenge = false;
+        var logs = new List<(uint Code, string Text)>();
+        var dispatch = Build(scene, _ => { }, diagnosticLog: (code, text) => logs.Add((code, text)));
+        dispatch.InvokeDirect(0x20, 9, null, AddPacket(5, 0x77));
+        Assert.Empty(logs);
+        Assert.Empty(scene.Assertions);
+    }
+    /// <summary>0x20 무효 기록은 생성 앞에서 멈춘다. 0.978에서 추가됐다.</summary>
+    [Fact]
+    public void ParentAddInvalidStopsAtConstruct()
+    {
+        var scene = new Scene();
+        scene.Surface.Storage.OwnerMode.Challenge = true;
+        scene.Challenge.Prepare();
+        System.Memory<byte> record = scene.Challenge.Participant(5);
+        BinaryPrimitives.WriteUInt32LittleEndian(record.Span.Slice(4, 4), 0x1234);
+        record.Span[0x64] = 0;
+        var logs = new List<(uint Code, string Text)>();
+        var dispatch = Build(scene, _ => { }, diagnosticLog: (code, text) => logs.Add((code, text)));
+        var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x20, 9, null, AddPacket(5, 0x77)));
+        Assert.Contains("생성", error.Message);
+        Assert.Empty(logs);
+    }
+    /// <summary>0x20 유효 기록은 진단 뒤 생성 앞에서 멈춘다. 0.978에서 추가됐다.</summary>
+    [Fact]
+    public void ParentAddValidAssertsBeforeConstruct()
+    {
+        var scene = new Scene();
+        scene.Surface.Storage.OwnerMode.Challenge = true;
+        scene.Challenge.Prepare();
+        System.Memory<byte> record = scene.Challenge.Participant(5);
+        BinaryPrimitives.WriteUInt32LittleEndian(record.Span.Slice(4, 4), 0x1234);
+        record.Span[0x64] = 1;
+        var logs = new List<(uint Code, string Text)>();
+        var dispatch = Build(scene, _ => { }, diagnosticLog: (code, text) => logs.Add((code, text)));
+        var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x20, 9, null, AddPacket(5, 0x77)));
+        Assert.Contains("생성", error.Message);
+        Assert.Contains(0x5b4u, scene.Assertions);
+    }
+    /// <summary>0x22는 메타맵 모드가 거짓이면 버퍼·CS를 요구하지 않고 조용히 돌아간다. 0.978에서 추가됐다.</summary>
+    [Fact]
+    public void ParentMoveSkipsWhenOwnerModeOff()
+    {
+        var scene = new Scene();
+        scene.Surface.Storage.OwnerMode.Challenge = false;
+        var logs = new List<(uint Code, string Text)>();
+        var dispatch = Build(scene, _ => { }, diagnosticLog: (code, text) => logs.Add((code, text)));
+        dispatch.InvokeDirect(0x22, 9, null, MovePacket(5, 0, 0, 0));
+        Assert.Empty(logs);
+        Assert.Empty(scene.Assertions);
+    }
+    /// <summary>0x22 범위 밖 번호·소유자는 실제 범위를 거부한다. 0.978에서 추가됐다.</summary>
+    [Fact]
+    public void ParentMoveRejectsOutOfRangeIdAndOwner()
+    {
+        var scene = new Scene();
+        scene.Surface.Storage.OwnerMode.Challenge = true;
+        scene.Challenge.Prepare();
+        var dispatch = Build(scene, _ => { });
+        Assert.Throws<ArgumentOutOfRangeException>(() => dispatch.InvokeDirect(0x22, 9, null, MovePacket(99, 0, 0, 0)));
+        scene.Game.Player.BattleOwner = 99;
+        Assert.Throws<ArgumentOutOfRangeException>(() => dispatch.InvokeDirect(0x22, 9, null, MovePacket(5, 0, 0, 0)));
+    }
+    /// <summary>0x22 최소 이동은 참가자 표시 앞에서 멈춘다. 0.978에서 추가됐다.</summary>
+    [Fact]
+    public void ParentMoveStopsAtUpdateWithoutChange()
+    {
+        var scene = new Scene();
+        scene.Surface.Storage.OwnerMode.Challenge = true;
+        scene.Challenge.Prepare();
+        scene.Game.Player.BattleOwner = 0;
+        scene.Challenge.Participant(0).Span[0xa4] = 0;
+        var dispatch = Build(scene, _ => { });
+        var error = Assert.Throws<InvalidOperationException>(() => dispatch.InvokeDirect(0x22, 9, null, MovePacket(5, 0, 0, 0)));
+        Assert.Contains("표시", error.Message);
+    }
 }
