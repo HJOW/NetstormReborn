@@ -21,6 +21,8 @@ public sealed class PacketDispatchHooks
     public Action<PacketConnection, ReadOnlyMemory<byte>, ushort>? Sent { get; set; }
     /// <summary>재할당 뒤에도 같은 현재 Player9 기록을 조회한다.</summary>
     public Func<ReadOnlyMemory<byte>>? Players { get; set; }
+    /// <summary>실제 Client 장기 분포/벽시각/CRT를 TCP/UDP Poll만 선택하며 World마다 초기화하지 않는다. 수송 팩토리의 hooks.delay 자리다.</summary>
+    public PacketDelayGlobals? Delay { get; set; }
     /// <summary>원문 함수 객체의 값 복사로 외부 재연결과 현재 실행을 분리한다.</summary>
     internal PacketDispatchHooks Copy() => (PacketDispatchHooks)MemberwiseClone();
 }

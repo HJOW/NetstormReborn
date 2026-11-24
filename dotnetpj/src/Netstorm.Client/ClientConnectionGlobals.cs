@@ -4,7 +4,7 @@ using Netstorm.Net;
 namespace Netstorm.Client;
 
 /// <summary>Session 밖에서 같은 실제 Registry와 현재 LocalState 수명을 유지한다.</summary>
-/// <remarks>PacketDelays의 실제 분포/장치/큐는 후속이다.</remarks>
+/// <remarks>PacketDelays의 실제 분포/장치는 이 소유자가 들고 큐 설치(Prepare) 연결과 wall/random 묶음은 R11 Poll에서 잇는다.</remarks>
 public sealed class ClientConnectionGlobals
 {
     /// <summary>현재 동기화DWORD의 실제 장기 소유자다.</summary>
@@ -15,6 +15,11 @@ public sealed class ClientConnectionGlobals
     public ClientPacketSources PacketSources { get; } = new();
     /// <summary>같은 Client 수명의 활동/Zone stamp/Heartbeat 상태다.</summary>
     public ClientConnectionActivityGlobals Activity { get; } = new();
+    /// <summary>005e4784의 같은 실제 선택 분포 owner다. 최초 분포/장치 저장소만 만들고 큐/소켓/난수 소비는 실제 Poll까지 미룬다.</summary>
+    private PacketDelayGlobals? _packetDelays;
+    /// <summary>실제 장기 선택 분포/시계/CRT를 TCP/UDP Poll만 선택하며 World마다 초기화하지 않는다.</summary>
+    /// <returns>같은 Client의 실제 지연 분포 owner다.</returns>
+    public PacketDelayGlobals PacketDelays() => _packetDelays ??= new();
     /// <summary>실제 동기화/Source 장치를 빌리며 표본/시각/소켓/난수/성공 상태를 변경하지 않는다.</summary>
     public ClientConnectionGlobals(ClientLocalStateGlobals local)
     {
