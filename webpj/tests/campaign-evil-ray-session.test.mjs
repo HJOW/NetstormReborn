@@ -2,46 +2,11 @@
 // 전체 게임/AI Kernel은 실행하지 않고 선택한 시각 효과만 호출한다. (WB04-E1314)
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { GameAssets } from '../www/assets/game-assets.js';
-import { GamePalette } from '../www/assets/palette.js';
-import { parseFort } from '../www/assets/fort.js';
-import { TaffArchive } from '../www/assets/taff.js';
-import { ARCHIVE_PATH } from '../www/assets/game-data.js';
-import { createFortTypes } from '../www/assets/type-flags.js';
-import { RawCampaignSession } from '../www/core/raw-campaign-session.js';
-import { ClientGameplayGlobals } from '../www/core/client-gameplay-globals.js';
-import { SoundList } from '../www/audio/sound-list.js';
 import { EvilRayVisualProcess } from '../www/core/evil-ray-visual-system.js';
 import { buildEvilRayPalette } from '../www/core/raw-evil-ray-lifetime.js';
 import { drawVfxEllipse } from '../www/render/vfx-ellipse.js';
-import { realCaptureAssets } from './capture-assets-support.mjs';
-import { readData, loadOriginalForts } from './helpers.mjs';
 import { put, floatToBits } from './raw-support.mjs';
-
-// 보호 자산은 읽기만 하고 실제 Session이 소유하는 TYPE·셰이프 메타데이터를 검사한다.
-const data = realCaptureAssets();
-const game = new GameAssets(data.table, data.database, GamePalette.parse(readData('d/GIFCLOUD.COL')));
-const archive = new TaffArchive(readData(ARCHIVE_PATH));
-const entry = loadOriginalForts(archive).find((candidate) => /thewarbegins.fort$/i.test(candidate.source));
-const fort = parseFort(entry.bytes, createFortTypes(data.table));
-
-// 이 검사에서 선택하지 않는 장치 호출은 조용히 성공시키지 않는다.
-function unexpected() { throw new Error('선택하지 않은 외부 장치'); }
-
-// 실제 논리는 그대로 쓰고 음향·진단·표시 알림만 관찰하는 Session이다.
-function scene() {
-    const gameplay = new ClientGameplayGlobals(), sounds = [], diagnoses = [];
-    gameplay.camera().initializeNativeRenderer(640, 480, 256, { value: 0 }, { value: 0 });
-    const session = new RawCampaignSession(game, { read: () => { throw new Error('예상하지 않은 파일 조회'); } }, fort, 'thewarbegins', {
-        gameplayGlobals: gameplay, unixSeconds: () => 1700000000, soundNames: new SoundList(),
-        install: { translateYou: () => Uint8Array.of(89, 111, 117, 0), setConfig: () => {}, refreshWindowTitle: () => {}, resetCamera: () => {} },
-        ownership: { refreshProduction: () => {}, themeMode: () => 0 }, deletion: { selected: () => 0 },
-        assets: { postPop: { playImpactSound: () => {} }, queueCommand: () => {} }, player: { log: () => {} },
-        sound: { wallSeconds: () => 0, play: () => 1, playOnceAt: (...args) => { sounds.push(args); return args[2]; }, playLoopAt: unexpected, stop: unexpected, isPlaying: () => false },
-        ai: { assertion: (expression) => diagnoses.push(expression) },
-    });
-    return { session, gameplay, sounds, diagnoses };
-}
+import { game, visualSessionScene as scene } from './campaign-visual-session-support.mjs';
 
 // 같은 실제 Kernel에서 부모에 붙은 EvilRay 파생 객체만 찾는다.
 function currentRay(core, parent) {

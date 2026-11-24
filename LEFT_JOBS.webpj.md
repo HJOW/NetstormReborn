@@ -6,7 +6,7 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-24 재개, 마지막 완료 WB04-E1314, E1313 전체 검증 진행 중)
+### 0.1 현재 값 (2026-11-24 재개, 마지막 완료 WB04-E1315, E1313 전체 검증 진행 중)
 
 | 항목 | 현행 상태 |
 | --- | --- |
@@ -242,7 +242,7 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
   - [x] 같은 계열 건물 캡처 — 윈드 아비어리 54·워크샾 2,115·제단 1,824행 일치(E1276, `altar-capture-native-fixtures.test.mjs`).
   - [x] `golem-capture`(66행)·`support-color-capture`(198행) — E1312 완료: 두 fixture 를 manifest 에 올리고 웹 `RawShapeToBuffer` 캡처가 전 행 일치함을 확인했다(`golem-support-capture-native-fixtures.test.mjs`, 변형 확인; 받침 색표는 윗면 94 명도 전용·하단 95 일반 띠). [근거](docs/webpj-golem-support-capture-20261124.md)
   - [x] E198 EvilRay — E1314 완료. 실제 Session의 Teleport 생성자·현재 TYPE/source 선택, 프레임·전체 픽셀·Stop 통지·Form/Kernel/SID 반납과 부모 0의 표시 등록을 C++ `EvilRayCurrent` 세 검사와 대조했다. Node 3/3·공유 source 변형 3/3 검출. [근거](docs/webpj-evil-ray-session-20261124.md)
-  - [ ] E201 Burning — 피해 연소 생성 호출(`RawCampaignParticles`)의 cpppj 시험(`cpppj/tests/DamageableBurningSessionTests.cpp`의 `DamageableBurningChecking_ActualClientSessionRecoveryAndLifetime`, `CampaignDamageTests.cpp`의 Burning 훅 등)과 대조. 완료 기준: 위와 같다. [E201](docs/webpj-burning-visual-20261109.md)
+  - [x] E201 Burning — E1315 완료. 실제 Session의 피해 HP·중복 checking 진단 정상 복귀·회복 정리·기본 생성자(mode 1·stage 0)·Form/표시 토큰 반납을 C++ `DamageableBurningChecking_ActualClientSessionRecoveryAndLifetime`와 대조했다. 새 1건·EvilRay 3건 통과, checking 분기 변형 검출. [근거](docs/webpj-burning-session-20261124.md)
   - [ ] 섬 투하 지지·입자 — `CampaignSession_ActualDropIslandSupportAndParticles`(`cpppj/tests/CampaignSessionTests.cpp`) 대조. 완료 기준: 위와 같다.
 
 #### 5-B 카메라·HUD·미니맵 (12/13)
