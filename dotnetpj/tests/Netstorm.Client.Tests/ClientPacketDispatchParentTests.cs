@@ -87,6 +87,34 @@ public sealed class ClientPacketDispatchParentTests
         Assert.Equal(0x00466b60u, dispatch.SnapshotReceiver(0x3c)!.NativeEntry);
         Assert.Empty(scene.Assertions);
     }
+    /// <summary>부모는 장기 기본 18행을 같은 분배기에 설치한다. C3 수신·버전·길이·관찰기 행을 대조한다. 0.934에서 추가됐다.</summary>
+    [Fact]
+    public void ParentInstallsBasic18Entries()
+    {
+        var scene = new Scene();
+        var dispatch = Build(scene, _ => { });
+        uint[] c3 = [0x0c, 0x42, 0x4d, 0x55, 0x56, 0x57, 0x5a];
+        uint[] mutable = [0x0c, 0x55, 0x56, 0x57, 0x16, 0x1c, 0x85];
+        foreach (uint type in c3)
+        {
+            Assert.Equal(0x004437f0u, dispatch.SnapshotReceiver(type)!.NativeEntry);
+        }
+        Assert.Equal(1, dispatch.Registration(0x0c).Version);
+        Assert.Equal(0, dispatch.Registration(0x0c).Mismatch);
+        Assert.Equal(ushort.MaxValue, dispatch.Registration(0x0c).Length);
+        Assert.Equal(12, dispatch.Registration(0x42).Length);
+        Assert.Equal(5, dispatch.Registration(0x5a).Length);
+        Assert.Equal(274, dispatch.Registration(0x87).Length);
+        Assert.NotNull(dispatch.Registration(0x0c).PacketObserver);
+        Assert.NotNull(dispatch.Registration(0x42).Observer);
+        Assert.Null(dispatch.Registration(0x42).PacketObserver);
+        Assert.NotNull(dispatch.Registration(0x16).PacketObserver);
+        // 같은 묶음의 기존 설치가 기본 행에 밀리지 않는다.
+        Assert.Equal(0x0042dc90u, dispatch.SnapshotReceiver(0x41)!.NativeEntry);
+        Assert.Equal(0x0044dc20u, dispatch.SnapshotReceiver(0x32)!.NativeEntry);
+        Assert.Equal(0x0045e4f0u, dispatch.SnapshotReceiver(0x74)!.NativeEntry);
+        Assert.Empty(scene.Assertions);
+    }
     /// <summary>부모가 묶은 41h는 실제 Chat UI 입구로 전달한다.</summary>
     [Fact]
     public void ParentRelaysChatToReceive()
