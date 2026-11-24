@@ -8,7 +8,7 @@ namespace netstorm::o {
 struct CarrierPickupState {
     FormPacketHeader request{0x4f,1,9}; //40a9a0의현재BYTE/BYTE/WORD다.
     std::uint32_t command{0x030000b1},silentType{168}; //5429b8의입력명령과5412f8의기존내용물삭제후보충생략타입이다.
-    // refuseHeldPriest: 10차 NB18 제품 전용 방어다. 켜면 이미 내용물(너겟 등)을 든 운반체가 사제(genus 0x200000)를 줍는 요청/수신을 거부한다.
+    // refuseHeldPriest: 10차 NB18 제품 전용 방어다. 켜면 운반물(mask0x20: 너겟·포로)을 든 운반체의 사제 줍기 요청/수신을 거부한다. 주문(mask1)은 허용한다.
     // 기본 꺼짐이라 독립 원문 fixture의 호출 기록은 그대로이며, 실제 세션이 조립할 때만 켠다.
     bool refuseHeldPriest{};
 };
@@ -19,7 +19,7 @@ struct CarrierPickupHooks {
     std::function<void(std::uint32_t)> assertion; //Carrier.cpp의20c 권한진단이며복귀뒤현재boss를다시읽는다.
     std::function<Sid(Sid)> reveal; //4620c0의오벨리스크보상객체변환이다.
     std::function<void(std::uint32_t,std::int32_t,std::int32_t)> queue; //452fe0(현재명령,현재대상,packet부모WORD)다.
-    std::function<Sid(Sid,std::uint32_t,std::uint32_t,std::uint32_t)> find; //4ac9f0(parent,1,0,0)의현재기존내용물이다.
+    std::function<Sid(Sid,std::uint32_t,std::uint32_t,std::uint32_t)> find; //4ac9f0의현재내용물이다. NB18은mask0x20, 주문교체Discard는mask1을쓴다.
     std::function<void()> afterDiscard; //485e40의원본인자없는전역보충부모다.
     std::function<Sid(Sid,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t)> create; //4afa70의같은실제ContainedForm 생성·부착이다.
     std::function<void(Sid,std::uint32_t)> destroy,detach; //현재가상+10/+48을flags0으로실행한다.

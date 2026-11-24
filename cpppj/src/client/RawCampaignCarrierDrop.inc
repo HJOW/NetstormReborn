@@ -42,7 +42,8 @@ void ConnectCarrierDrop() {
     hooks.movement=[this](std::uint32_t type) { return priests->MovementProcessType(type); };
     hooks.removeMovement=[this](Sid parent,std::uint32_t type,std::uint32_t ordinal,std::uint32_t remove) { RawContainedLookup lookup(core.pool,[this](Sid form,std::uint32_t flags) { static_cast<void>(world.Destroy(form,flags)); });static_cast<void>(lookup.Find(parent,type,ordinal,remove!=0)); };
     hooks.detach=[this](Sid parent,std::uint32_t flags) { world.Unpop(parent,flags); };hooks.unpop=[this](Sid parent,std::uint32_t flags) { world.Repop(parent,flags); };hooks.destroy=[this](Sid content,std::uint32_t flags) { static_cast<void>(world.Destroy(content,flags)); };
-    hooks.create=[this](std::uint32_t type,std::uint32_t flags) { if (type>=core.types.size()) throw std::out_of_range("Cast/Drop 생성TYPE범위");if ((core.types[type].flags2&0x100U) && type!=168 && type!=117 && type!=118 && type!=171 && type!=172 && type!=173) throw std::logic_error("다른주문연결은멀티플레이단계로이월");return world.Create(type,flags); };
+    // 원본444bc0은 단독/멀티 구별 없이 현재 주문 TYPE를 일반 공장으로 보낸다. 실제 생성자 진단은 World가 수행한다.
+    hooks.create=[this](std::uint32_t type,std::uint32_t flags) { if (type>=core.types.size()) throw std::out_of_range("Cast/Drop 생성TYPE범위");return world.Create(type,flags); };
     hooks.owner=[this](Sid sid,std::uint32_t owner) { core.owner.Set(sid,owner); };
     hooks.argument=[this](Sid sid,std::uint32_t value) { auto raw=core.pool.AllocatedBytes(sid);raw[12]=static_cast<std::uint8_t>(value);raw[13]=static_cast<std::uint8_t>(value>>8); };
     hooks.pop=[this](Sid sid,std::array<float,2> point,std::uint32_t flags) { world.Pop(sid,point[0],point[1],flags); };hooks.activate=[this](std::uint32_t,std::uint32_t,std::span<const std::uint8_t> packet) { ReceiveDevastationActivation(packet); };hooks.broadcast=[this](std::span<const std::uint8_t> packet) { broadcast->Send(packet); };

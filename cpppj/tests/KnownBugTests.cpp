@@ -66,13 +66,13 @@ TEST_CASE(KnownBug_NB18_CarrierHoldingContentRefusesPriestPickup) {
     auto raw=[&](Sid sid) { auto bytes=pool.Slot(sid);return std::span<std::uint8_t>(const_cast<std::uint8_t*>(bytes.data()),bytes.size()); };
     for (const auto sid:{Sid{50},Sid{60},Sid{81}}) { auto bytes=raw(sid);std::fill(bytes.begin(),bytes.end(),std::uint8_t{0}); } // 부모(50)·사제 대상(60)·새 내용물(81) 슬롯이다.
     raw(Sid{50})[10]=6;raw(Sid{60})[10]=20;types[6].flags2=0x30000;types[20].flags2=0x200000; // 20번 TYPE을 사제(genus 0x200000)로 둔다.
-    int sent=0,queued=0;bool holding=true;
+    int sent=0,queued=0;std::uint32_t heldFlags=0x20; // 실제 너겟/포로의 운반물 비트이며 주문은1이다.
     CarrierPickupHooks hooks;
     hooks.candidate=[](Sid,float,float) { return std::pair<Sid,bool>{Sid{60},true}; };
     hooks.send=[&](std::int32_t,std::span<const std::uint8_t>) { ++sent; };
     hooks.assertion=[](std::uint32_t) {};hooks.reveal=[](Sid sid) { return sid; };
     hooks.queue=[&](std::uint32_t,std::int32_t,std::int32_t) { ++queued; };
-    hooks.find=[&](Sid,std::uint32_t,std::uint32_t,std::uint32_t) { return holding ? Sid{52} : Sid{0}; };
+    hooks.find=[&](Sid,std::uint32_t mask,std::uint32_t,std::uint32_t) { return (heldFlags&mask) ? Sid{52} : Sid{0}; };
     hooks.afterDiscard=[] {};hooks.create=[](Sid,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t,std::uint32_t) { return Sid{81}; };
     hooks.destroy=[](Sid,std::uint32_t) {};hooks.detach=[](Sid,std::uint32_t) {};hooks.attach=[](Sid,Sid,std::uint32_t) {};
     RawCarrierPickup pickup(pool,types,contained,boss,single,state,hooks);
@@ -81,7 +81,9 @@ TEST_CASE(KnownBug_NB18_CarrierHoldingContentRefusesPriestPickup) {
     pickup.Receive(0,0,packet);CHECK(queued==1);
     state.refuseHeldPriest=true;sent=queued=0;
     pickup.Request(Sid{50});pickup.Receive(0,0,packet);CHECK(sent==0 && queued==0); // 내용물을 든 채 사제를 줍는 요청/수신을 모두 거부한다.
-    holding=false;pickup.Request(Sid{50});pickup.Receive(0,0,packet);CHECK(sent==1 && queued==1); // 빈 손이면 정상 포획 요청은 그대로다.
+    heldFlags=1;pickup.Request(Sid{50});pickup.Receive(0,0,packet);CHECK(sent==1 && queued==1); // 주문만 가진 경우 원본처럼 사제를 포획한다.
+    heldFlags=0;pickup.Request(Sid{50});pickup.Receive(0,0,packet);CHECK(sent==2 && queued==2); // 빈 손이면 정상 포획 요청은 그대로다.
+    heldFlags=0x21;pickup.Request(Sid{50});pickup.Receive(0,0,packet);CHECK(sent==2 && queued==2); // 주문과 실제 운반물을 모두 가지면 NB18 방어를 유지한다.
 }
 
 // NB04: Even 간헐천 모드(옵션 18 = 2)의 아홉 구역은 원문에서 1..9 고정 순서라 마지막 구역(아래 모서리)이 늘 같았다.

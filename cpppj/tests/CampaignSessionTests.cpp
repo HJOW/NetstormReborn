@@ -3900,6 +3900,25 @@ TEST_CASE(CampaignCarrierDrop_ActualCastRequestAndTransport) {
     CHECK(std::find(queued.begin(),queued.end(),std::array<std::uint32_t,3>{0x030000b2,168,0})!=queued.end());CHECK(!core.bookkeeping.depth && !core.destroy.PreDepth() && !core.destroy.PostDepth());wire=nullptr;
 }
 
+// 원본444bc0처럼 단독 Session 수신에서 주문19종을 일반 공장·소유자·Pop·활성화에 전달한다. 효과 프레임/자연 획득 검사는 아니다.
+TEST_CASE(CampaignCarrierDrop_ActualAllSpellKindsUseWorldFactory) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());
+    RawCampaignSession session(assets.game,assets.files,std::move(fort),"thewarbegins",external.Services());session.Load();auto core=session.Core();
+    const auto caster=session.World().Create(133,2);core.owner.Set(caster,1);session.World().Pop(caster,98,122,0);session.SetSp(1,100000);
+    std::vector<std::uint32_t> actual; // 보호 TYPE의 SPELL genus를 누락 없이 확인한다.
+    // 각 주문은 같은 Session의 실제 내용물과9바이트 수신을 사용한다.
+    for (std::uint32_t type=70;type<core.types.size();++type) {
+        if (!(core.types[type].flags2&0x100U)) continue;
+        actual.push_back(type);const auto content=session.CreateContained(caster,type,0,1,0,0);
+        std::array<std::uint8_t,9> packet{1,0x50,9,0};Put(packet,4,caster.value,2);Put(packet,6,content.value,2);
+        session.ReceiveFixedCarrierPacket(0x00444bc0,1,packet);
+        const auto spells=ConstructionLive(core,static_cast<std::uint8_t>(type));CHECK(spells.size()==1);
+        if (spells.size()==1) { const auto raw=core.pool.Slot(spells.front());CHECK(raw[34]==1 && Get(raw,12,2)==caster.value && !(raw[11]&7U)); }
+    }
+    CHECK(actual==(std::vector<std::uint32_t>{113,114,115,116,117,118,119,120,168,171,172,173,175,178,179,180,181,182,183}));
+}
+
 // SP가 부족하면 실제 요청 단계에서 팝업/493/송신을 만들지 않으며 내용물을 유지한다.
 TEST_CASE(CampaignCarrierDrop_ActualInsufficientFunds) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();std::size_t sent{},popups{};
@@ -3928,8 +3947,8 @@ TEST_CASE(CampaignObjectCommand_ActualCarrierParentAndPriestOwner) {
     CHECK(Get(session.Core().pool.Slot(enemy),26)==hp && session.Sp(1)==before && external.packets.size()==packets);
 }
 
-// 원본 Early5의 적 사제를 실제 검색/피해로 행동 불가로 만든 뒤, 기도를 든 시전자의 포획은 10차 NB18로 거부되고 내용물 없는 운반체가 포획/내려놓기를 하는지 검사한다.
-// 시전자/내용물/잔액만 명시 검사 입력이다(단위1304에서 결정 D8에 따라 NB18 거부를 단언하도록 교정).
+// 원본 Early5의 적 사제를 실제 검색/피해로 행동 불가로 만든 뒤, 기도(mask1)를 든 같은 시전자가 포획/내려놓기를 하는지 검사한다.
+// 시전자/내용물/잔액만 명시 검사 입력이다. 1339는 원본4277f0의 운반물(mask0x20) 구분에 맞춰 NB18의 잘못된 주문 차단을 고친다.
 TEST_CASE(CampaignDevastation_ActualEnemyCaptureAndDropFromCast) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto services=external.Services();netstorm::zacket::LocalMissionTransport* wire{};
     services.carrierRequest=[&](std::int32_t target,std::span<const std::uint8_t> packet) { CHECK(wire && target==9);if (wire) wire->Send(target,packet); };
@@ -3956,8 +3975,8 @@ TEST_CASE(CampaignDevastation_ActualEnemyCaptureAndDropFromCast) {
     }
     CHECK(frames>1 && frames<4096 && (core.pool.Slot(bomb)[11]&3U)==3U && !core.processes.FromForm(form));CHECK(Get(core.pool.Slot(enemy),26,2)==1 && initialHealth==100);CHECK(core.pool.Slot(enemy)[34]==2 && !(core.pool.Slot(enemy)[11]&3U));
     CHECK(Get(core.pool.Slot(temple),26,2)==templeHealth);CHECK(Get(core.pool.Slot(caster),26,2)==50 && !core.processes.FindEvent(caster,0x493));CHECK(SquidForms(core.pool).Parent(prayer)==caster && !(core.pool.Slot(prayer)[11]&3U));CHECK(session.Sp(1)==money-core.types[168].cost);
-    // 기도 내용물을 든 시전자가 행동 불가가 된 적 사제에게 도착해도 10차 NB18(1290)이 내용물을 든 운반체의 사제 줍기를 거부하므로 포획 요청이 나가지 않는다.
-    const auto argument=Get(core.pool.Slot(enemy),12,2);const auto participant=session.FindPriestParticipation(2);
+    // 주문만 가진 시전자는 원본처럼 적 사제를 포획한다. 실제 운반물을 가진 경우의 NB18 방어는 KnownBugTests가 따로 검사한다.
+    const auto argument=Get(core.pool.Slot(enemy),12,2);
     // 운반체 하나를 적 사제 좌표까지 실제 경로 프레임으로 이동시키고 도착을 확인한다.
     const auto arrive=[&](Sid carrier) {
         auto* movement=session.StartCarrierMovement({carrier,{x,y},1,0,0,0,0});CHECK(movement);if (!movement) return false;const auto movementForm=movement->Form();const auto arrivalTime=movement->Runtime().Time(movement->Runtime().Count()-1)+0.01;
@@ -3968,10 +3987,7 @@ TEST_CASE(CampaignDevastation_ActualEnemyCaptureAndDropFromCast) {
         CHECK(std::bit_cast<float>(Get(core.pool.Slot(carrier),14))==x && std::bit_cast<float>(Get(core.pool.Slot(carrier),18))==y && !core.processes.FromForm(movementForm));return true;
     };
     if (!arrive(caster)) return;
-    link.transport.Flush();CHECK(link.transport.Poll()==0 && link.recorded.size()==1);
-    CHECK(!session.Priests().Carrier().FindContained(caster,0x20,158,0).value && !(core.pool.Slot(enemy)[11]&3U) && session.FindPriestParticipation(2)==participant);
-    // 포획/내려놓기 흐름은 내용물이 없는 다른 운반체로 같은 적 사제에게 도착해 검증한다(결정 D8: NB18 유지·시험 교정).
-    const auto porter=session.World().Create(133,2);core.owner.Set(porter,1);session.World().Pop(porter,x-1,y-1,0);CHECK(!session.Priests().Carrier().FindContained(porter,1,0,0).value);if (!arrive(porter)) return;
+    const auto porter=caster; // 시전·포획·내려놓기 모두 같은 실제 골렘을 사용한다.
     link.transport.Flush();CHECK(link.transport.Poll()==1);
     const auto captured=session.Priests().Carrier().FindContained(porter,0x20,158,0);CHECK(captured.value);if (!captured.value) return;
     CHECK((core.pool.Slot(enemy)[11]&1U)!=0 && SquidForms(core.pool).Parent(captured)==porter && Get(core.pool.Slot(captured),12,2)==argument);CHECK(session.FindPriestParticipation(2)==porter.value);

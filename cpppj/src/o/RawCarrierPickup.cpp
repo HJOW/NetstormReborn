@@ -26,10 +26,10 @@ RawCarrierPickup::RawCarrierPickup(SidPool& pool,std::span<const RiftTypeRecord>
 // 현재TYPE getter를호출전순수조회로대체하며반환genus를보관하지않는다.
 std::uint32_t RawCarrierPickup::Genus(Sid sid) const { const auto type=pool_.Slot(sid)[10];if (type>=types_.size()) throw std::out_of_range("포획현재TYPE 범위오류");return types_[type].flags2; }
 // 10차 NB18: 너겟을 든 벌프가 사제를 주우면 사제가 또 하나의 너겟으로 바뀌던 원문 결함을 막는다.
-// 스위치(state_.refuseHeldPriest)가 켜져 있고 대상이 사제(genus 0x200000)이며 부모가 이미 내용물(4ac9f0 mask1)을 들고 있으면 참이다.
+// 스위치가 켜져 있고 대상이 사제이며 부모가 실제 운반물(mask0x20)을 들고 있으면 참이다. 주문(mask1)은 원본4277f0처럼 포획을 막지 않는다.
 bool RawCarrierPickup::RefusesHeldPriest(Sid parent,Sid target) const {
     if (!state_.refuseHeldPriest || !(Genus(target)&0x200000U)) return false;
-    return Need(hooks_.find)(parent,1,0,0).value!=0;
+    return Need(hooks_.find)(parent,0x20,0,0).value!=0;
 }
 // 생성효과가free/void 등을바꾸어도원본처럼현재물리BYTE의dead만해제한다.
 void RawCarrierPickup::Dead(Sid sid,bool value) const { auto& state=pool_.bytes_[pool_.Offset(sid)+11];state=static_cast<std::uint8_t>(value ? state|2U : state&~2U); }
