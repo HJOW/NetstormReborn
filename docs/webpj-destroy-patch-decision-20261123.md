@@ -1,5 +1,7 @@
 # webpj DestroyPatch 진단 열두 지점과 rememberPlacement 판정 (WB04-E1273, 2026-11-23)
 
+> 2026-11-24 E1321: 사용자가 원본처럼 진단 후 계속하도록 결정해 아래 DestroyPatch의 중단 적응을 해제했다. 독립 typed fixture는 보존하고 실제 앱에 원본 순서의 PATCH 경로를 연결했다. [현행 구현·검증](webpj-destroy-patch-continue-20261124.md)
+
 [LEFT_JOBS 점검](webpj-left-jobs-audit-20261123.md)(E1263)이 4D-8a 에 남긴 세 가지를 원문과 다시 대조해 판정했다. 코드는 바꾸지 않았다.
 
 ## 1. Native DestroyPatch `AssertPatch` 열두 지점 + 0x771

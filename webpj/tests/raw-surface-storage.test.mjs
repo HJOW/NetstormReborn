@@ -42,6 +42,19 @@ function make(options = {}) {
     return new RawSurfaceStorage(types, frames, shapes, options);
 }
 
+// 실제 앱의 명시 선택만 PATCH 삭제를 켜며 대여한 함수는 장치 교체 뒤 현재 Client를 조회한다.
+test('RawSurfaceStorage: PATCH 삭제 진단은 명시 선택과 현재 장기 진단·로그 장치를 사용한다', () => {
+    const storage = make(), calls = [];
+    assert.equal(storage.destroyDiagnostics(), null); storage.enablePatchDestroyDiagnostics();
+    const diagnostics = storage.destroyDiagnostics();
+    storage.bindDisplayDiagnostics({ value: null }, (...args) => calls.push(['first', ...args]));
+    diagnostics.assertion('one', 'file', 1);
+    storage.bindDisplayDiagnostics({ value: null }, (...args) => calls.push(['current', ...args]));
+    storage.bindGraphTrace((...args) => calls.push(['trace', ...args]));
+    diagnostics.assertion('two', 'file', 2); diagnostics.trace(0x27, 'destroying unit 5\n');
+    assert.deepEqual(calls, [['first', 'one', 'file', 1], ['current', 'two', 'file', 2], ['trace', 0x27, 'destroying unit 5\n']]);
+});
+
 // 오류가 나는지 확인한다(성공을 무조건 인정하지 않음). (2026-11-11 WB04-E298)
 function rejects(action) {
     try {

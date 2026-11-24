@@ -37,12 +37,14 @@ async function run(browser, missionFrames, aspect = '4:3') {
   // cpppj 기준선 `later.tsv` 와 같은 130프레임 시점의 덤프도 모은다. (2026-11-23 WB04-E1281)
   await page.evaluate((count) => window.netstorm.stepFixedFrames(count), 130 - missionFrames);
   const later = await page.evaluate(() => window.netstorm.sessionDump());
+  const patchMode = await page.evaluate(() => window.netstorm._campaignWorld.session().core().destroy.hasPatchDiagnostics);
   await context.close();
-  return { dump, later, titleFrames, titleGame, frame, errors, screen };
+  return { dump, later, titleFrames, titleGame, frame, errors, screen, patchMode };
 }
 
 // 웹 결과를 cpppj 오라클 폴더(load.png·load.tsv·later.tsv)와 대조한다: 논리 화면은 다른 픽셀이 0개, Session 덤프는 `sp`(소유자 0 의 미초기화 난수)와 `player:*`(+1·+2 바이트 주소 잔재, Player 1 은 동적 Deck 필드)만 다르다. (2026-11-23 WB04-E1282)
 async function expectMatchesOracle(result, mode) {
+  expect(result.patchMode, '실제 앱의 진단 정상 복귀 삭제 경로').toBe(true);
   const oracle = mode.oracle;
   // 오라클 수집 조건: 수집 시나리오의 해상도 설정과 오라클 메타(oracle.json)의 기준선 커밋·화면 크기가 웹 화면 모드와 같다.
   const scenarios = JSON.parse(fs.readFileSync(mode.scenarios, 'utf8')), meta = JSON.parse(fs.readFileSync(path.join(oracle, '..', 'oracle.json'), 'utf8'));

@@ -6,6 +6,8 @@
 // 근거: cpppj `o/RawSquidDestroy.cpp/.h`(f2215dc5·886f2d23), 원본 관측 `cpppj/tests/fixtures/destroy-x86.tsv`(10.78 Destroy 600행·Bridge 64행).
 // CD 10.72·10.37 경로는 범위 밖이다. 이 모듈은 DOM 을 쓰지 않는다. (2026-11-05 WB04-D2: 공통 삭제기 이식으로 추가)
 import { SquidUnpop } from './squid-unpop.js';
+import { SquidForms } from './squid-forms.js';
+import { SquidFactory } from './squid-factory.js';
 
 // 삭제 훅이 받는 효과 이름이다. (2026-11-05 WB04-D2)
 export const SQUID_DESTROY_EFFECT = Object.freeze({
@@ -43,6 +45,8 @@ export class RawSquidDestroy {
     // 원본 curDestroy/curPostDestroy 깊이 카운터(DWORD 감김)이다.
     #preDepth = 0;
     #postDepth = 0;
+    // 실제 Client의 진단·현재 로그 장치다. null이면 독립 typed fixture의 기존 선검사 경로를 유지한다.
+    #patchDiagnostics = null;
 
     // 다른 풀의 공간 해제와 섞는 연결을 거부한다.
     constructor(pool, unpop, types) {
@@ -69,6 +73,71 @@ export class RawSquidDestroy {
     // 현재 postDestroy 깊이이다.
     get postDepth() { return this.#postDepth; }
 
+    // 현재 진단 장치 묶음을 대여한다. 미연결 함수는 실제 선택 위치에서 거부한다.
+    bindPatchDiagnostics(diagnostics) { if (!diagnostics || typeof diagnostics !== 'object') throw new TypeError('PATCH 삭제 진단 묶음 필요'); this.#patchDiagnostics = diagnostics; }
+    // 공통 삭제 장부가 원본 진단 정상 복귀 경로를 선택하는지이다.
+    get hasPatchDiagnostics() { return this.#patchDiagnostics !== null; }
+    // 식·파일·줄을 원본 지점에서 표시하고 복귀 뒤 caller가 현재 상태를 다시 읽게 한다.
+    assertPatch(expression, line, file = '\\Ns\\O\\Squid.cpp') {
+        const assertion = this.#patchDiagnostics?.assertion;
+        if (typeof assertion !== 'function') throw new Error('PATCH 공통 삭제의 현재 진단 장치 미연결');
+        assertion(expression, file, line);
+    }
+
+    // 실제 PATCH 004af780의 dead→진단→로그→가상 효과→현재 Unpop→반납 순서다. 물리 범위·순환·알 수 없는 VT는 호스트 경계로 유지한다.
+    #destroyPatch(sid, flags, hooks) {
+        const pool = this.#pool, initial = pool.slot(sid)[STATE];
+        if (initial & DEAD) return;
+        pool.physical(sid)[STATE] = initial | DEAD;
+        if (initial & FREE) this.assertPatch('!isFree()', 0x24d);
+        if (pool.slot(sid)[STATE] & FREE) return;
+        const client = () => sid >= 5 && sid < pool.layout.serverFirst;
+        let current = flags >>> 0;
+        if (pool.isServer) { if (client()) current = (current | CLIENT) >>> 0; }
+        else if (!(current & SERVER)) { if (!client()) this.assertPatch('isClientSid()', 0x269); if (!client()) return; }
+        const pre = this.#preDepth; this.#preDepth = (pre + 1) >>> 0;
+        const type = pool.slot(sid)[TYPE]; if (type >= this.#types.length) throw new RangeError('PATCH 공통 삭제의 현재 로그 TYPE 범위 오류');
+        const trace = this.#patchDiagnostics.trace; if (typeof trace !== 'function') throw new Error('PATCH 공통 삭제의 현재 로그 장치 미연결');
+        trace(0x27, `destroying ${String(this.#types[type].name ?? '').split('\0')[0]} ${sid}\n`);
+        // 진단·로그가 장치를 바꿀 수 있으므로 각 가상 효과를 실행할 때 현재 훅을 조회한다.
+        const emit = (event) => { if (typeof hooks?.emit !== 'function') throw new Error('PATCH 공통 삭제의 현재 가상 효과 미연결'); hooks.emit(event); };
+        emit({ effect: SQUID_DESTROY_EFFECT.preDestroy, sid, parent: 0, flags: current });
+        if (this.#preDepth !== pre) this.assertPatch('baseDestroy == curDestroy', 0x276);
+        let dependent = word(pool.slot(sid), HEAD); const visited = new Set();
+        // 현재 next는 free 조건을 읽은 뒤 저장하며 진단 복귀가 바꾼 현재 필드를 다음 지점에서 다시 읽는다.
+        while (dependent) {
+            if (visited.has(dependent)) throw new Error('PATCH 공통 삭제의 종속 순환은 호스트에서 지원하지 않습니다'); visited.add(dependent);
+            if (pool.slot(dependent)[STATE] & FREE) this.assertPatch('!s.isFree()', 0x27d);
+            if (!(pool.slot(dependent)[STATE] & CONTAINED) && pool.slot(dependent)[TYPE] >= FIRST_ASSET_TYPE) this.assertPatch('s.isContained() || s.isForm()', 0x27e);
+            const free = Boolean(pool.slot(dependent)[STATE] & FREE), next = word(pool.slot(dependent), NEXT);
+            if (free) this.assertPatch('!s.isFree()', 0x280);
+            emit({ effect: SQUID_DESTROY_EFFECT.releaseDependent, sid: dependent, parent: sid, flags: 0 });
+            if (!(pool.slot(dependent)[STATE] & FREE)) emit({ effect: SQUID_DESTROY_EFFECT.destroyDependent, sid: dependent, parent: sid, flags: (current | DEPENDENT) >>> 0 });
+            dependent = next;
+        }
+        if (pool.slot(sid)[STATE] & FREE) this.assertPatch('!isFree()', 0x28f);
+        if (pool.slot(sid)[STATE] & FREE) return;
+        if (!(current & (CLIENT | DEPENDENT)) && pool.isServer && !client()) emit({ effect: SQUID_DESTROY_EFFECT.transmit, sid, parent: 0, flags: (current | SERVER) >>> 0 });
+        if (typeof hooks?.selected !== 'function') throw new Error('PATCH 공통 삭제의 현재 선택 조회 미연결');
+        if (hooks.selected() === sid) emit({ effect: SQUID_DESTROY_EFFECT.clearSelection, sid, parent: 0, flags: 0 });
+        if (!sid || sid >= pool.capacity) this.assertPatch('isValid()', 0x2a2);
+        const raw = pool.slot(sid);
+        if (!(raw[STATE] & VOID)) {
+            const table = new DataView(raw.buffer, raw.byteOffset, raw.byteLength).getUint32(0, true), forms = new SquidForms(pool);
+            const form = [1, 2, 3, 6].some((kind) => table === forms.vtable(kind));
+            if (form) { if (typeof hooks.unpopForm !== 'function') throw new Error('PATCH 공통 삭제의 현재 Form Unpop 미연결'); hooks.unpopForm(sid); }
+            else {
+                if (!SquidFactory.supportsConstructedVtable(table)) throw new Error('PATCH 공통 삭제의 현재 가상+48 미지 VT');
+                if (raw[TYPE] >= this.#types.length) throw new RangeError('PATCH 공통 삭제의 현재 Unpop TYPE 범위 오류');
+                this.#unpop.unpop(sid, this.#types[raw[TYPE]], 0);
+            }
+        }
+        const post = this.#postDepth; this.#postDepth = (post + 1) >>> 0;
+        emit({ effect: SQUID_DESTROY_EFFECT.postDestroy, sid, parent: 0, flags: current });
+        if (this.#postDepth !== post) this.assertPatch('curPostDestroy == basePostDestroy', 0x2a9);
+        pool.releasePatch(sid, (expression, file, line) => this.assertPatch(expression, line, file));
+    }
+
     // 공통 preDestroy 의 마지막 깊이 감소이다. 그 밖의 효과는 하지 않는다.
     completePreDestroy() { this.#preDepth = (this.#preDepth - 1) >>> 0; }
 
@@ -78,6 +147,7 @@ export class RawSquidDestroy {
     // 004af780: 이미 dead 이면 바로 끝난다. 원본 assert 에 해당하는 미지원 루트·권한은 dead 표시 전에 거부한다.
     // hooks: { emit(event: { effect, sid, parent, flags }), selected(): SID, unpopForm?(sid) }. emit 은 같은 풀을 바꿀 수 있고 각 단계 뒤 현재 필드를 다시 읽는다.
     destroy(sid, flags, hooks) {
+        if (this.#patchDiagnostics) return this.#destroyPatch(sid, flags, hooks);
         const pool = this.#pool;
         const layout = pool.layout;
         if (!Number.isInteger(sid) || sid < 5 || sid === layout.predictableFirst || sid >= pool.capacity) throw new RangeError('Destroy SID');

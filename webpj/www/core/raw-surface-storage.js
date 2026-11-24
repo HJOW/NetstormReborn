@@ -67,6 +67,8 @@ export class RawSurfaceStorage {
     #checking = () => 0;
     #displayDetail = null;
     #displayAssertion = null;
+    // 실제 앱만 원본 PATCH 삭제의 진단 정상 복귀 경로를 켠다. 독립 typed 장면은 기본 꺼짐이다.
+    #patchDestroyDiagnostics = false;
     // Client 수명 동안 현재 게임 시각을 읽는 장치, 현재 로그 장치, CD 소진 전용 객체 덤프/Tell 장치(웹 풀에는 연결이 없어 보관만 한다)이다.
     #graphClock = null;
     #graphTrace = null;
@@ -418,6 +420,11 @@ export class RawSurfaceStorage {
         if (!this.#displayAssertion) throw new Error('표시 원문 진단 장치 미연결');
         this.#displayAssertion(expression, file, line);
     }
+
+    // 첫 World 설치 전에 원본 공통 삭제 경로를 선택한다. 현재 Client의 진단/로그 함수는 실행 순간에 다시 읽는다.
+    enablePatchDestroyDiagnostics() { this.#patchDestroyDiagnostics = true; }
+    // 같은 장기 Client owner를 빌리는 삭제 진단 묶음이다. 독립 저장소는 null로 기존 typed 경로를 유지한다.
+    destroyDiagnostics() { return this.#patchDestroyDiagnostics ? { assertion: (expression, file, line) => this.assertDisplay(expression, file, line), trace: (level, text) => this.traceGraph(level, text) } : null; }
 
     // 장기 물리는 현재 Client 장치만 보관하며 실제 소진 전에는 덤프/대화상자를 실행하지 않는다. (2026-11-11 WB04-E298)
     bindAllocationDiagnostics(dump, tell) {

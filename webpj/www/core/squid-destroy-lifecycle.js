@@ -3,7 +3,7 @@
 // postDestroy 순서: 주변 표면 Add(Graph) → ordinary 이면 전역 비용 차감 → 깊이 감소. 모든 효과 사이에서 raw 슬롯의 현재 TYPE/상태를 다시 읽고 캐시하지 않는다.
 // 외부 효과(UI 선택 해제·보상·유닛 손실 소리)와 종속 가상 효과는 호출자 장치(emit/forward)이며, 선택된 장치가 없으면 해당 위치에서 오류다(빈 성공으로 채우지 않는다).
 // 이 모듈이 옮긴 판은 기준선(`1f00a25a`)의 독립 typed 경로다. 기준선 뒤 cpppj 3커밋이 더한 실제 PATCH(Native) 전용 분기 — 현재 전역 getter(selectedRaw·localOwner·loading/fort/silent/surface 현재 DWORD)·
-// 실제 PATCH 진단(`!isForm()` 0x771)·DWORD 감김 압축 제거·현재 TYPE 표 빌림·최초 로딩 비용 표·선행 검사 생략 — 은 옮기지 않았다(LEFT_JOBS.webpj.md 3.6절 ③ 표). CD 10.72 는 웹 범위 밖이다.
+// 실제 PATCH 진단(`!isForm()` 0x771)·현재 TYPE 표 빌림·선행 검사 생략은 E1321에서 진단 정상 복귀 경로에 반영했다. 나머지 Native 전역/비용 경계 판정은 LEFT_JOBS.webpj.md 3.6절을 따른다. CD 10.72 는 웹 범위 밖이다.
 // 이 모듈은 DOM 을 쓰지 않는다. (2026-11-10 WB04-E213: 공통 삭제 장부 이식으로 추가)
 
 import { TypeFlag1 } from '../assets/type-flags.js';
@@ -143,14 +143,15 @@ export class SquidDestroyLifecycle {
     // 루트 자산에만 공통 장부 처리를 제공한다. 현재 슬롯을 매번 읽으며 free/contained/예약 SID/Form TYPE/TYPE 표 밖은 거부한다(form/contained 의 파생 메서드는 별도). (2026-11-10 WB04-E213)
     #object(sid) {
         const raw = this.#pool.slot(sid);
+        if (this.#destroy.hasPatchDiagnostics) return raw;
         if (sid < 5 || sid === this.#pool.layout.predictableFirst || (raw[STATE_OFFSET] & INVALID_STATE) || raw[TYPE_OFFSET] < FIRST_ASSET_TYPE || raw[TYPE_OFFSET] >= this.#types.length) {
             throw new Error('삭제 훅 raw 자산 상태 오류');
         }
         return raw;
     }
 
-    // 앞선 외부 콜백이 raw 타입을 바꿨을 때 후속 타입 조회를 캐시하지 않는다. (2026-11-10 WB04-E213)
-    #type(sid) { return this.#types[this.#object(sid)[TYPE_OFFSET]]; }
+    // 앞선 외부 콜백 뒤 TYPE를 재조회한다. 실제 PATCH는 현재 표를 빌리고 독립 typed는 기존 사본을 사용한다.
+    #type(sid) { const types = this.#destroy.hasPatchDiagnostics ? this.#destroy.types : this.#types, type = this.#object(sid)[TYPE_OFFSET]; if (type >= types.length) throw new RangeError('삭제 훅의 현재 TYPE 물리 범위'); return types[type]; }
 
     // 소유자 BYTE(+34)이다. (2026-11-10 WB04-E213)
     #owner(sid) { return this.#object(sid)[OWNER_OFFSET]; }
@@ -246,7 +247,8 @@ export class SquidDestroyLifecycle {
 
     // 004b0950: 끝에서 기존 공통 삭제기의 pre 깊이를 감소시킨다. (2026-11-10 WB04-E213)
     preDestroy(sid, flags) {
-        this.validatePre(sid, flags);
+        if (this.#destroy.hasPatchDiagnostics) { if (this.#object(sid)[TYPE_OFFSET] < FIRST_ASSET_TYPE) this.#destroy.assertPatch('!isForm()', 0x771); }
+        else this.validatePre(sid, flags);
         const book = this.#book;
         const state = this.#state;
         if (state.selected === sid) {
@@ -298,7 +300,7 @@ export class SquidDestroyLifecycle {
 
     // 004b0840: 주변 표면을 원본 순서로 다시 Add 하고 ordinary 비용을 마지막에 차감한 뒤 post 깊이를 감소시킨다. (2026-11-10 WB04-E213)
     postDestroy(sid, flags) {
-        this.validatePost(sid, flags);
+        if (!this.#destroy.hasPatchDiagnostics) this.validatePost(sid, flags);
         if (this.#needsPostGraph(sid, flags)) this.#graph.postDestroy(sid);
         if (this.#ordinary(sid)) this.#book.totalCost = this.#remainingCost(sid);
         this.#destroy.completePostDestroy();

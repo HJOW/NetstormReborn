@@ -340,6 +340,7 @@ export class RawSurfaceWorld {
             typeWas: () => aux.supportTypeWas,
         });
         this.#baseDestroy = new RawSquidDestroy(pool, this.#unpop, types);
+        const destroyDiagnostics = storage.destroyDiagnostics(); if (destroyDiagnostics) this.#baseDestroy.bindPatchDiagnostics(destroyDiagnostics);
         this.#virtualDestroy = new RawSquidDestroyDispatch(this.#baseDestroy, this.#neighbors, this.#mode, this.#graph);
         this.#virtualDestroy.bindCurrentModes(authority);
         // 이 기본값은 단독 표면 기하 검사용 관찰이다. 실제 세션은 bindDeletion 으로 보상/실제 UI 를 공급한다.

@@ -1002,6 +1002,7 @@ export class Netstorm {
         const kernel = new Kernel(); storage.processes.bindDevices(kernel, clock.time());
         storage.bindChecking(() => gameplay.aiDebug().checking().value);
         storage.bindDisplayDiagnostics(gameplay.aiDebug().assertionDetail(), (expression, file, line) => console.error(`원본 표시 진단: ${file}:${line} ${expression}`));
+        storage.enablePatchDestroyDiagnostics();
         storage.bindGraphClock(() => clock.gameSeconds()); bindClientKernelDiagnostics(kernel, storage, (line) => console.info(line));
         this._gameAssets = game; this._surfaceStorage = storage; this._clientKernel = kernel;
     }

@@ -164,6 +164,25 @@ export class SidPool {
         this.#bytes[offset + STATE] = FREE | DEAD;
     }
 
+    // 원본 PATCH 공통 삭제의 반납이다. 진단이 복귀하면 현재 상태/TYPE를 다시 읽고 예약·free 슬롯도 원문 순서로 처리한다. 독립 release의 선검사는 유지한다.
+    releasePatch(sid, assertion) {
+        const offset = this.#offset(sid);
+        if (typeof assertion !== 'function') throw new TypeError('PATCH SID 반납 진단 장치 필요');
+        if (!(this.#bytes[offset + STATE] & VOID)) assertion('p->isVoid()', '\\Ns\\O\\Squid.cpp', 0x15c);
+        if (this.#bytes[offset + STATE] & FREE) assertion('!p->isFree()', '\\Ns\\O\\Squid.cpp', 0x15d);
+        const history = this.#history[sid < LAYOUT.serverFirst ? 0 : 1];
+        history.copyWithin(2, 0, HISTORY_WORDS - 2); history[0] = sid; history[1] = this.#bytes[offset + TYPE];
+        const type = this.#bytes[offset + TYPE]; this.#bytes.fill(0, offset, offset + LAYOUT.stride); this.#bytes[offset + TYPE] = type;
+        if (!this.isServer && sid >= LAYOUT.serverFirst) { this.#bytes[offset + STATE] = FREE; return; }
+        if (sid >= FIRST && sid < LAYOUT.predictableFirst) {
+            const list = sid < LAYOUT.serverFirst ? 0 : 1, tail = this.#tails[list];
+            if (tail === sid) assertion('n != getSid()', 'c:\\ns\\o\\squid.h', 0x123);
+            this.#writeNext(tail * LAYOUT.stride, sid); this.#tails[list] = sid; this.#writeNext(offset, 0);
+            this.#freeCount = (this.#freeCount + 1) >>> 0;
+        }
+        this.#bytes[offset + STATE] |= FREE | DEAD;
+    }
+
     // 서버free 슬롯을 번호순으로 다시 잇는다. freeCount는 재계산하지 않고 원본처럼 더한다.
     rebuildServer() {
         const free = [];
