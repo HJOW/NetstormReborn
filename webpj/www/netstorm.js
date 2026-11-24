@@ -1479,6 +1479,12 @@ export class Netstorm {
             },
             // Player 원문 진단을 출력하고 같은 표시 화면을 무효화한다.
             playerNotice: (kind, owner, value) => { console.info(`Player UI ${kind} ${owner} ${value}`); if (this._mainMenu) this._mainMenu.dirty = true; this._displayDirty = true; },
+            // 원본 MessageBoard 상태 통지를 현재 미션의 실제 경고 소유자로 전달한다. 미션 억제 판정은 WarningMessages가 수행한다. (WB04-E1326)
+            status: (kind, owner, value) => {
+                const messages = this._campaignProduction?.ui?.warnings();
+                if (!messages) throw new Error('전투 상태 통지의 실제 MessageBoard 미연결');
+                messages.battleStatus(kind | 0, owner | 0, value | 0);
+            },
             // 원본 연결 진단을 브라우저 콘솔에 기록한다.
             log: (text) => console.info(text),
         };
