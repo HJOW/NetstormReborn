@@ -112,6 +112,10 @@ public sealed partial class ClientHostGame : Game
     /// <remarks>2026-11-24 0.966에서 R4-6 전송·수신 묶음용으로 추가했다. 근거: cpppj ClientCampaignTransport.cpp의 client.ChallengeGlobals() 장기 소유.</remarks>
     private readonly ClientChallengeGlobals _challenge = new();
 
+    /// <summary>같은 Client 수명의 실제 임시 고리와 VFS 경로 고리 공유자다. 메뉴와 세션보다 먼저 만들고 그 소비자 뒤에 반납한다.</summary>
+    /// <remarks>2026-11-25 0.985에서 R4-6 시작·수명 묶음용으로 추가했다. 근거: cpppj ClientMain.cpp 253행의 files_.FileNameOwner 공유.</remarks>
+    private readonly ClientStaticStrings _staticStrings;
+
     /// <summary>메뉴 효과음의 MonoGame 장치 경계.</summary>
     private HostButtonSound? _buttonSound;
 
@@ -169,6 +173,7 @@ public sealed partial class ClientHostGame : Game
         _driver = driver;
         _options = options;
         _startup = startup;
+        _staticStrings = new ClientStaticStrings(startup?.Files.FileNameOwner);
         _startupColors = startup is null ? null : new HostStartupColorMaps(startup, InitializeNativePrefix, PrepareStartupColorAssets);
         _gameplay = new(_subscriberGlobals);
         _chatGlobals = new(OriginalEdition.Patch1078, () => _subscriberGlobals.MySubscriber.Value);
@@ -351,6 +356,19 @@ public sealed partial class ClientHostGame : Game
     /// <param name="frames">미션 프레임 표다. 저장소는 복제본을 소유한다.</param>
     /// <param name="shapes">미션 셰이프 표다. 저장소는 복제본을 소유한다.</param>
     /// <remarks>0.596에서 NativeStorage 일원화용으로 추가했다. 세션 장치와 같은 입력을 같은 순서로 넣으며 공장 전환(다음 단위) 전까지 저장소 공장은 쓰지 않는다. 검사에서 같은 입력을 직접 넣을 수 있게 공개한다.</remarks>
+    /// <summary>같은 실제 고리의 소유자를 조회한다. 조회 자체는 예약과 할당을 하지 않는다. 0.985에서 추가됐다.</summary>
+    /// <remarks>cpppj ClientMain 1534행의 StaticStrings 조회를 이식했다. 메뉴와 세션보다 오래 산다.</remarks>
+    public ClientStaticStrings StaticStrings() => _staticStrings;
+
+    /// <summary>원문 004b5470의 저장 상태 이름을 같은 경로 고리로 계산한 실제 파일 위치다. 설치 폴더에는 쓰지 않는다. 0.985에서 추가됐다.</summary>
+    /// <remarks>cpppj SavedStateFiles의 게임 폴더와 사용자 Saves 분기를 이식했다. 세션 읽기와 쓰기 결선은 R6에서 잇는다.</remarks>
+    public string SavedStatePath()
+    {
+        string gameDirectory = _startup?.Files.BaseDirectory ?? AppContext.BaseDirectory;
+        string userFile = Path.Combine(UserDataRoot.Resolve().Saves(), "!state.dat");
+        return SavedStateFiles.SavedStateFilePath(gameDirectory, _staticStrings.FileNames(), userFile);
+    }
+
     public static void InstallMissionStorageTables(RawSurfaceStorage storage, IReadOnlyList<OriginalTypeRecord> types, IReadOnlyList<RiftTypeFrames> frames, IReadOnlyList<SquidDisplayShape> shapes)
     {
         ArgumentNullException.ThrowIfNull(storage);

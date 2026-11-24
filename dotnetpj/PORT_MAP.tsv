@@ -22,6 +22,8 @@ cpppj/src/client/BurningFrameCapture.cpp	Netstorm.Client/Display/BurningFrameCap
 cpppj/src/client/BurningFrameCapture.h	Netstorm.Client/Display/BurningFrameCapture.cs	ab9361f11f2bc7618251f17d047f6d601c5c08fc	port
 cpppj/src/client/ButtonGump.cpp	Netstorm.Client/Gump/ButtonGump.cs	0a1a709127ad291d47289a9957e142feb04981a5	port
 cpppj/src/client/ButtonGump.h	Netstorm.Client/Gump/ButtonGump.cs	0a1a709127ad291d47289a9957e142feb04981a5	port
+cpppj/src/client/CampaignClientServices.cpp	Netstorm.Client/ClientSurfaceGlobals.RootSupplyDevices.cs	372f6b4d759cde2ce935df93b3d3609882ba84bf	port
+cpppj/src/client/CampaignClientServices.cpp	Netstorm.Game/ClientHostGame.cs	543dd3759d26080786af3855b9796fe8a99582a5	port
 cpppj/src/client/CampaignCursorClientEffects.cpp	Netstorm.Client/ClientRendererDevices.cs	b234f02e14fbdd224e8d19491114f16a56ae28ab	port
 cpppj/src/client/CampaignTemplateStorage.cpp	Netstorm.Client/Host/CampaignTemplateStorage.Image.cs	ce5f58f971a4d22366515077c210fee011c61dcd	port
 cpppj/src/client/CampaignTemplateStorage.cpp	Netstorm.Client/Host/CampaignTemplateStorage.ImageFile.cs	ce5f58f971a4d22366515077c210fee011c61dcd	port
@@ -107,12 +109,16 @@ cpppj/src/client/ClientLocalStateGlobals.h	Netstorm.Client/Host/HostSession.cs	c
 cpppj/src/client/ClientMain.cpp	Netstorm.Client/ClientChatGlobals.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Client/ClientClockGlobals.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Client/ClientNsInfoGlobals.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
+cpppj/src/client/ClientMain.cpp	Netstorm.Client/ClientStaticStrings.cs	fca7f52127165cf67c20a8dafd7e56182839de30	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Client/ClientSurfaceGlobals.Ai.cs	68fa942631ca0c71da8b135339ac5bffc5aaa24f	port
+cpppj/src/client/ClientMain.cpp	Netstorm.Client/ClientSurfaceGlobals.RootFirstDevices.cs	98663aa77353cb08f2c72bf13bff58630a0c95ec	port
+cpppj/src/client/ClientMain.cpp	Netstorm.Client/ClientSurfaceGlobals.RootSupplyDevices.cs	372f6b4d759cde2ce935df93b3d3609882ba84bf	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Client/ClientSurfaceGlobals.Transmission.cs	a04251d110150f31d67362f2ef244ddfc44deecc	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Client/ClientSurfaceGlobals.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Client/Display/ScreenCapture.cs	f0a08f08d86df0b44ca007c35dcb4eeb9fbf21a9	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Client/Host/HostFrameDriver.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Client/Host/HostStartupScene.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	port
+cpppj/src/client/ClientMain.cpp	Netstorm.Core/Original/CampaignWorldGlobals.cs	98663aa77353cb08f2c72bf13bff58630a0c95ec	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.Assets.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.Chat.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.ChatGeometry.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
@@ -125,6 +131,7 @@ cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.StateResources.cs	6
 cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Game/HostStartupColorMaps.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	port
 cpppj/src/client/ClientMain.h	Netstorm.Client/ClientClockGlobals.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
+cpppj/src/client/ClientMain.h	Netstorm.Client/ClientStaticStrings.cs	fca7f52127165cf67c20a8dafd7e56182839de30	port
 cpppj/src/client/ClientMain.h	Netstorm.Client/ClientSurfaceGlobals.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
 cpppj/src/client/ClientMain.h	Netstorm.Client/Host/HostFrameDriver.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
 cpppj/src/client/ClientMain.h	Netstorm.Game/ClientHostGame.NativePrefix.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
@@ -159,6 +166,8 @@ cpppj/src/client/ClientStateWorldGlobals.cpp	Netstorm.Client/ClientStateWorldGlo
 cpppj/src/client/ClientStateWorldGlobals.cpp	Netstorm.Game/ClientHostGame.StateResources.cs	d5c033e159a9d35c278bb82c9866a5a7b0b7f353	port
 cpppj/src/client/ClientStateWorldGlobals.h	Netstorm.Client/ClientStateWorldGlobals.cs	539bba9a3fb684e1fc1e171cf302f643d268b27f	port
 cpppj/src/client/ClientStateWorldGlobals.h	Netstorm.Game/ClientHostGame.StateResources.cs	539bba9a3fb684e1fc1e171cf302f643d268b27f	port
+cpppj/src/client/ClientStaticStrings.cpp	Netstorm.Client/ClientStaticStrings.cs	fca7f52127165cf67c20a8dafd7e56182839de30	port
+cpppj/src/client/ClientStaticStrings.h	Netstorm.Client/ClientStaticStrings.cs	fca7f52127165cf67c20a8dafd7e56182839de30	port
 cpppj/src/client/ClientSubscriberGlobals.h	Netstorm.Client/ClientSubscriberGlobals.cs	bed549ff50d543c5040243e32f5e63d8a6f741d7	port
 cpppj/src/client/ClientTemplateSectionNames.cpp	Netstorm.Client/Host/ClientTemplateSectionNames.cs	40bc0ed926e621cd2c2e703e3c7ac5c168e8d96a	port
 cpppj/src/client/ClientTemplateSectionNames.h	Netstorm.Client/Host/ClientTemplateSectionNames.cs	40bc0ed926e621cd2c2e703e3c7ac5c168e8d96a	port
@@ -270,6 +279,8 @@ cpppj/src/client/HudNsInfo.cpp	Netstorm.Client/Gump/HudNsInfo.cs	97dcd28fba5349f
 cpppj/src/client/HudNsInfo.h	Netstorm.Client/Gump/HudNsInfo.cs	97dcd28fba5349f3ede0baf78f70eb83da70d0e4	port
 cpppj/src/client/HudNsInfoCreate.cpp	Netstorm.Client/Gump/HudNsInfoCreate.cs	e5a68d5923bfaaa93fb52a20a1bc24dd66fa8441	port
 cpppj/src/client/HudNsInfoCreate.h	Netstorm.Client/Gump/HudNsInfoCreate.cs	e5a68d5923bfaaa93fb52a20a1bc24dd66fa8441	port
+cpppj/src/client/HudNsInfoMeta.cpp	Netstorm.Client/Gump/HudNsInfoMeta.cs	ea351ed87798157b1afce679e886b25ef6298568	port
+cpppj/src/client/HudNsInfoMeta.h	Netstorm.Client/Gump/HudNsInfoMeta.cs	ea351ed87798157b1afce679e886b25ef6298568	port
 cpppj/src/client/ImageGump.cpp	Netstorm.Client/Gump/ImageGump.cs	9813ecd5dfbbb30c4ca9d0ee6e3e8027b81e3d2f	L1
 cpppj/src/client/ImageGump.h	Netstorm.Client/Gump/ImageGump.cs	9813ecd5dfbbb30c4ca9d0ee6e3e8027b81e3d2f	L1
 cpppj/src/client/InputEvent.cpp	Netstorm.Client/Host/HostInputMapper.cs	8f8ddf6c22931cb635cd2e6dec97a1d93ba5e478	port
@@ -281,6 +292,7 @@ cpppj/src/client/InventoryGump.cpp	Netstorm.Client/Gump/InventoryGump.cs	087ff25
 cpppj/src/client/InventoryGump.h	Netstorm.Client/Gump/InventoryGump.cs	087ff257743f8bccb1ef546140c31de888c6b158	port
 cpppj/src/client/InventoryItemGump.cpp	Netstorm.Client/Gump/InventoryItemGump.cs	167866d9c40cc4b5d6260ceb11934b4a2a218177	port
 cpppj/src/client/InventoryItemGump.h	Netstorm.Client/Gump/InventoryItemGump.cs	668d8aee854597cb7d7f64e77560c78cb95cee71	port
+cpppj/src/client/LanguageOptions.cpp	Netstorm.Client/ClientSurfaceGlobals.RootSupplyDevices.cs	372f6b4d759cde2ce935df93b3d3609882ba84bf	port
 cpppj/src/client/LocalTcpTransport.cpp	Netstorm.Net/LocalTcpTransport.cs	a76499e35e6792f6039adda9a29d6328ac46cba9	port
 cpppj/src/client/LocalTcpTransport.h	Netstorm.Net/LocalTcpTransport.cs	a76499e35e6792f6039adda9a29d6328ac46cba9	port
 cpppj/src/client/LocalUdpTransport.cpp	Netstorm.Net/LocalUdpTransport.cs	a76499e35e6792f6039adda9a29d6328ac46cba9	port
@@ -435,6 +447,7 @@ cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.PriestW
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.Production.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	session
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.ProductionSync.cs	baf141ebe8d2893459a1b18ea74a6caa88504468	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.RainAviaryPackets.cs	1f9e94a4b10c21fa18d8798978756e3caefd1845	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.ResourceDevices.cs	98663aa77353cb08f2c72bf13bff58630a0c95ec	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.Runtime.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.Shrapnel.cs	5bfd5c8df4aa5a8645ddfdf286fe168e16cd155f	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.SquidMutations.cs	baf141ebe8d2893459a1b18ea74a6caa88504468	port
@@ -447,6 +460,7 @@ cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Mission/RawCampaignSessi
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Core/Original/RawDaisTransmission.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Core/Original/RawDeveloperCommandInput.cs	29f2ebcd6988df6ccf4f07fe008f6d634ca5dd72	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Core/Original/RawPlainBuildingCapture.cs	59ed435c26d274be5bc028572c4fc15b592cfd29	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Game/ClientHostGame.cs	543dd3759d26080786af3855b9796fe8a99582a5	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Game/HostMissionAudio.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Game/HostMissionBurning.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Game/HostMissionShrapnel.cs	5bfd5c8df4aa5a8645ddfdf286fe168e16cd155f	port
@@ -689,6 +703,8 @@ cpppj/src/client/RootServerListDisk.h	Netstorm.Game/RootServerListDisk.cs	d97301
 cpppj/src/client/SaveFortNameDialog.cpp	Netstorm.Client/Gump/SaveFortName.cs	8f8ddf6c22931cb635cd2e6dec97a1d93ba5e478	port
 cpppj/src/client/SaveFortNameDialog.cpp	Netstorm.Client/Gump/SaveFortNameDialog.cs	9d35b9a3441e5cd1d2ad5e86c61d006daaeb2979	port
 cpppj/src/client/SavedCameraKey.h	Netstorm.Client/Input/SavedCameraPositions.cs	aae2f0ab21675a6f7ed51a2d9bdd2d6b522acfdb	port
+cpppj/src/client/SavedStateFiles.cpp	Netstorm.Client/SavedStateFiles.cs	fca7f52127165cf67c20a8dafd7e56182839de30	port
+cpppj/src/client/SavedStateFiles.h	Netstorm.Client/SavedStateFiles.cs	fca7f52127165cf67c20a8dafd7e56182839de30	port
 cpppj/src/client/Screen.cpp	Netstorm.Client/Display/GamePalette.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
 cpppj/src/client/Screen.cpp	Netstorm.Client/Display/Screen.cs	58622e15d401535bf09f216e9c75bbd8c3ea2037	port
 cpppj/src/client/Screen.cpp	Netstorm.Client/Display/ScreenGeometry.cs	ac9ea9162ba0c580cd53505c8c3782c0b2a27172	port
@@ -775,6 +791,7 @@ cpppj/src/client/TraceChat.cpp	Netstorm.Client/Chat/TraceChat.cs	c3625c33e1dca2d
 cpppj/src/client/TraceChat.h	Netstorm.Client/Chat/TraceChat.cs	c3625c33e1dca2dba7618e041e708464df53124b	port
 cpppj/src/client/TutorialInit.cpp	Netstorm.Client/Mission/TutorialInit.cs	825a1a983336877e959114bcd4568fc244e98932	port
 cpppj/src/client/UberGump.cpp	Netstorm.Client/Host/HostHtmlWindows.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
+cpppj/src/client/UberHud.inc	Netstorm.Client/Gump/RawUberMessageProbe.cs	3a325a2597e7436ad40a868cd30ed80b170a945d	port
 cpppj/src/client/UberHud.inc	Netstorm.Client/Host/HostChatReceive.cs	16431ec18a3f7518d7aaa55929b280ab1cc6a8fb	port
 cpppj/src/client/UberHud.inc	Netstorm.Game/ClientHostGame.ChatReceive.cs	16431ec18a3f7518d7aaa55929b280ab1cc6a8fb	port
 cpppj/src/client/UberHud.inc	Netstorm.Game/ClientHostGame.ChatWindows.cs	16431ec18a3f7518d7aaa55929b280ab1cc6a8fb	port
@@ -1258,6 +1275,7 @@ cpppj/src/o/RawGameAuxState.h	Netstorm.Core/Original/RawGameAuxState.WindAviary.
 cpppj/src/o/RawGameAuxState.h	Netstorm.Core/Original/RawGameAuxState.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/o/RawGameRandomSeed.cpp	Netstorm.Core/Original/RawGameRandom.cs	a24db9dc5cf1ad77a6488fff4d2efa9dfb94ca79	port
 cpppj/src/o/RawGameRandomSeed.h	Netstorm.Core/Original/RawGameRandom.cs	a24db9dc5cf1ad77a6488fff4d2efa9dfb94ca79	port
+cpppj/src/o/RawGeyserAiRegistration.cpp	Netstorm.Core/Original/RawGeyserAiRegistration.cs	98663aa77353cb08f2c72bf13bff58630a0c95ec	port
 cpppj/src/o/RawGeyserLifetime.cpp	Netstorm.Core/Original/RawGeyserLifetime.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/o/RawGeyserLifetime.h	Netstorm.Core/Original/RawGeyserLifetime.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/o/RawGeyserMined.cpp	Netstorm.Core/Original/RawGeyserMined.cs	0d82e448de8ce679357cda8042bbc8226b8ed1b2	port
@@ -1650,6 +1668,8 @@ cpppj/src/o/RawStateWorldCleanup.h	Netstorm.Core/Original/RawStateWorldCleanup.G
 cpppj/src/o/RawStateWorldCleanup.h	Netstorm.Core/Original/RawStateWorldCleanup.cs	1e8e43d9a4c54caa3f69a669e827b726cd331ef2	port
 cpppj/src/o/RawStateZoneReset.cpp	Netstorm.Core/Original/RawStateZoneReset.cs	35041198c0de7cbfb9d5f9941b3fca4483add8b3	port
 cpppj/src/o/RawStateZoneReset.h	Netstorm.Core/Original/RawStateZoneReset.cs	35041198c0de7cbfb9d5f9941b3fca4483add8b3	port
+cpppj/src/o/RawStaticStrings.cpp	Netstorm.Core/Original/RawStaticStrings.cs	fca7f52127165cf67c20a8dafd7e56182839de30	port
+cpppj/src/o/RawStaticStrings.h	Netstorm.Core/Original/RawStaticStrings.cs	fca7f52127165cf67c20a8dafd7e56182839de30	port
 cpppj/src/o/RawSunAviaryProcess.cpp	Netstorm.Core/Original/RawSunAviaryProcess.Data.cs	2c7ac45db4210bb8146952ae4517363962c26aea	port
 cpppj/src/o/RawSunAviaryProcess.cpp	Netstorm.Core/Original/RawSunAviaryProcess.cs	2c7ac45db4210bb8146952ae4517363962c26aea	port
 cpppj/src/o/RawSunAviaryProcess.cpp	Netstorm.Core/Original/SunAviaryProcess.cs	2c7ac45db4210bb8146952ae4517363962c26aea	port
@@ -1821,15 +1841,3 @@ cpppj/src/zacket/LocalMissionTransport.cpp	Netstorm.Net/LocalMissionZone.cs	5756
 cpppj/src/zacket/LocalMissionTransport.h	Netstorm.Net/LocalMissionTransport.Runtime.cs	5756ffd5ff23335839974c3c6f2b2aacd7b35618	port
 cpppj/src/zacket/LocalMissionTransport.h	Netstorm.Net/LocalMissionTransport.cs	5756ffd5ff23335839974c3c6f2b2aacd7b35618	port
 cpppj/src/zacket/LocalMissionTransport.h	Netstorm.Net/LocalMissionZone.cs	5756ffd5ff23335839974c3c6f2b2aacd7b35618	port
-cpppj/src/client/ClientMain.cpp	Netstorm.Client/ClientSurfaceGlobals.RootFirstDevices.cs	98663aa77353cb08f2c72bf13bff58630a0c95ec	port
-cpppj/src/o/RawGeyserAiRegistration.cpp	Netstorm.Core/Original/RawGeyserAiRegistration.cs	98663aa77353cb08f2c72bf13bff58630a0c95ec	port
-cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.ResourceDevices.cs	98663aa77353cb08f2c72bf13bff58630a0c95ec	port
-cpppj/src/client/ClientMain.cpp	Netstorm.Core/Original/CampaignWorldGlobals.cs	98663aa77353cb08f2c72bf13bff58630a0c95ec	port
-cpppj/src/client/LanguageOptions.cpp	Netstorm.Client/ClientSurfaceGlobals.RootSupplyDevices.cs	372f6b4d759cde2ce935df93b3d3609882ba84bf	port
-cpppj/src/client/CampaignClientServices.cpp	Netstorm.Client/ClientSurfaceGlobals.RootSupplyDevices.cs	372f6b4d759cde2ce935df93b3d3609882ba84bf	port
-cpppj/src/client/ClientMain.cpp	Netstorm.Client/ClientSurfaceGlobals.RootSupplyDevices.cs	372f6b4d759cde2ce935df93b3d3609882ba84bf	port
-cpppj/src/client/RawCampaignSession.cpp	Netstorm.Game/ClientHostGame.cs	543dd3759d26080786af3855b9796fe8a99582a5	port
-cpppj/src/client/CampaignClientServices.cpp	Netstorm.Game/ClientHostGame.cs	543dd3759d26080786af3855b9796fe8a99582a5	port
-cpppj/src/client/UberHud.inc	Netstorm.Client/Gump/RawUberMessageProbe.cs	3a325a2597e7436ad40a868cd30ed80b170a945d	port
-cpppj/src/client/HudNsInfoMeta.cpp	Netstorm.Client/Gump/HudNsInfoMeta.cs	ea351ed87798157b1afce679e886b25ef6298568	port
-cpppj/src/client/HudNsInfoMeta.h	Netstorm.Client/Gump/HudNsInfoMeta.cs	ea351ed87798157b1afce679e886b25ef6298568	port
