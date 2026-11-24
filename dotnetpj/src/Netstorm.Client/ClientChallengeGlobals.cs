@@ -15,6 +15,9 @@ public sealed partial class ClientChallengeGlobals
     private readonly Dictionary<uint, byte[]> _allocations = [];
     /// <summary>CS 재사용/교체에서도 유지하는 같은 최초 배치 좌표다.</summary>
     public ChallengeGeometry Geometry { get; } = new();
+    /// <summary>005467d4의 현재 DWORD이며 0은 고정 22링/비영은 공통 CS 배치 반경을 선택한다.</summary>
+    /// <remarks>2026-11-24 0.954에서 R4-6 0x26 메타 geometry 수신 결선용으로 추가했다. 근거: cpppj client/ClientChallengeGlobals.h GeometryMode.</remarks>
+    public UIntBox GeometryMode { get; } = new();
     /// <summary>현재 등록된 실제 CS 물리를 빌린다.0이나 없는 토큰을 자동 생성하지 않는다.</summary>
     public Memory<byte> Bytes => Current != 0 && _allocations.TryGetValue(Current, out byte[]? bytes)
         ? bytes : throw new InvalidOperationException("현재 CS의 실제 할당 물리 미등록");
