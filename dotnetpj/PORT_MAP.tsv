@@ -914,6 +914,8 @@ cpppj/src/o/RawAiDeployment.cpp	Netstorm.Core/Original/RawAiDeployment.cs	3a0459
 cpppj/src/o/RawAiDeployment.h	Netstorm.Core/Original/RawAiDeployment.cs	3a0459751adcd933f0d8009b224a4b45f1c6fc65	port
 cpppj/src/o/RawAiDropEvaluation.cpp	Netstorm.Core/Original/RawAiDropEvaluation.cs	13d23e51ce1f30e326fcb488e3733ce8635465c3	port
 cpppj/src/o/RawAiDropEvaluation.h	Netstorm.Core/Original/RawAiDropEvaluation.cs	13d23e51ce1f30e326fcb488e3733ce8635465c3	port
+cpppj/src/o/RawAiDropScan.cpp	Netstorm.Core/Original/RawAiDropScan.cs	9c48dbc00228ff98fc0d4ffe7e2bdce6a47093b8	port
+cpppj/src/o/RawAiDropScan.h	Netstorm.Core/Original/RawAiDropScan.cs	9c48dbc00228ff98fc0d4ffe7e2bdce6a47093b8	port
 cpppj/src/o/RawAiDropTargets.cpp	Netstorm.Core/Original/RawAiDropTargets.cs	f60ae81906fde3d28fe77f38b6903e34b283145c	port
 cpppj/src/o/RawAiDropTargets.h	Netstorm.Core/Original/RawAiDropTargets.cs	f60ae81906fde3d28fe77f38b6903e34b283145c	port
 cpppj/src/o/RawAiDrySpots.cpp	Netstorm.Core/Original/RawAiDrySpots.cs	ad023ac927d2eefa3ddc8084eea5c356326fc753	port
