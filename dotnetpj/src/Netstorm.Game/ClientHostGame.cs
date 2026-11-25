@@ -732,7 +732,8 @@ public sealed partial class ClientHostGame : Game
             RawAmbientSound.Step(_ambientSound, _gameRandom, new AmbientSoundHooks
             {
                 WallSeconds = () => _clientClock.Clock.WallSeconds(_clock.Milliseconds),
-                Sound = (_, _, _, _, _, _) => { },
+                // SL-3c: 미션 음향이 있을 때만 주변음을 실제 재생기에 전달한다. 메뉴에서는 종전처럼 조용하다.
+                Sound = (name, loop, volume, pan, priority, limit) => { _missionAudio?.PlayAmbient(name, loop, volume, pan, priority, limit); },
                 CurrentDialog = () => 0u,
                 Flash = _ => { },
             });

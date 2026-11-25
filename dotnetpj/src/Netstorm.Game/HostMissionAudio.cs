@@ -87,6 +87,17 @@ public sealed class HostMissionAudio : IDisposable
     /// <summary>Chat 등 위치 없는 전역 요청을 같은 장기 이름표/원문 재생기에 우선순위0으로 전달한다.</summary>
     public void PlayGlobal(string name) => _player.Play(_list.Lookup(name), 0, 0, 0, 0, 0);
 
+    /// <summary>주변음의 이름·반복·음량·좌우·우선순위·한도를 같은 장기 재생기에 전달한다. 음소거·장치 없음이면 0이다.</summary>
+    /// <param name="name">재생할 소리 이름이다.</param>
+    /// <param name="loop">반복 재생이면 0이 아니다.</param>
+    /// <param name="volume">음량이다.</param>
+    /// <param name="pan">좌우다.</param>
+    /// <param name="priority">우선순위다.</param>
+    /// <param name="limit">동시 한도다.</param>
+    /// <returns>재생 항목이며 재생하지 않으면 0이다.</returns>
+    /// <remarks>2026-11-26 1.056에서 SL-3c 주변음용으로 추가했다. 근거: cpppj 주변음 004180f0의 Sound 호출이다. 메뉴에서는 미션 음향이 없어 조용하며 R6에서 메뉴 수명으로 잇는다.</remarks>
+    public uint PlayAmbient(string name, uint loop, int volume, int pan, uint priority, int limit) => _player.Play(_list.Lookup(name), loop, volume, pan, priority, limit);
+
     /// <summary>같은 실제47번 프로세스·이름표·위치/전역 재생기를 건설 진행에 빌린다.</summary>
     public ConstructionProcessHooks ConstructionHooks(HostSession session, IReadOnlyList<RiftTypeDefinition> definitions)
     {
