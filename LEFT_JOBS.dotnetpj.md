@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-25 · 목표 진행 중·마지막 완료0.999(R4-7b 월드 표·840행 대조) · 다음R4-7c F3 보류 검사 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6, 1/8) · 마지막 전체 회귀0.996(6,924통과·M1 0/34) · cpppj 제품1339 / 11.01 · 전체 목표 미완료 · 0.983 뒤 정리**
+**2026-11-25 · 목표 진행 중·마지막 완료1.000(R4-7c1 패치 장면·전체 회귀 6,939) · 다음R4-7c2 CD 장면 · 현재 단계 R4(R4-2·R4-4·R4-5·R4-6, 1/8) · 마지막 전체 회귀1.000(6,939통과·M1 0/34) · cpppj 제품1339 / 11.01 · 전체 목표 미완료 · 0.983 뒤 정리**
 
 현행 인계는 이 문서가 기준이다. 단위별 근거는 `docs/dotnet-canon-0NNN-*.md`이다. 정리 직전 원문 전체는 보관 파일 끝에 있다: 최신 [0.983 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261124-through-0983)(0.951~0.981의 전송·수신 단위별 완료 항목·검사 기준선 단위별 집중 수·6절 0.969~0.983 행)과 [0.950 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261124-through-0950)(0.901~0.950의 요약표 단위별 행·RU-3 단위별 완료 나열)이다. 그 이전 보관본(0.900·0.837·0.797·0.732·0.635·0.613·0.545)과 각 보관본에 옮긴 내용은 [6절](#dotnet-archive-log) 이관 기록에 있다. cpppj와 공통 사항은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)를 따른다.
 
@@ -12,17 +12,19 @@
 | --- | --- | --- |
 | 유일한 실행 경로 `Netstorm.Game` (`Netstorm.exe`) + 내부 `Netstorm.Client` | 0.807에서 구 근사 실행기를 제거하고 직역 호스트가 이름을 승계했다. 타이틀·메뉴·도움말·Options·Credits·캠페인 선택·Edit 목록과 이름 창이 동작한다. 개발용 `--mission <키> --handle <이름>`으로 일반31미션의 시작 상태 일부를 조립한다. 월드 표시·입력·규칙의 실제 경로가 남아 플레이 불가다. | 1024×768 메뉴 **12장면**의 논리 BMP가 cpppj와 바이트 일치했다(0.381~0.388). L2는 **0/34**, 데모3경로 DN 진입 미연결이며 L3·L4b·L5는 미착수다. |
 
-- **검사 기준선.** 마지막 정기 전체0.996은 Assets383·Core3844·Client2697 합계6,924통과/실패0/건너뜀0이다(0.992 대비 +27 = 0.993 6건·0.994 8건·0.995 8건·0.996 5건). 0.880 이후 기존 이름·중복을 보존한다. NETSTORM_DATA 없이 Release 오류0·신규경고0이며 검사 사본은 실행본과 같고 원본1392파일은 전후 불변이다. 단위별 집중 수는 각 단위 문서와 [0.983 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261124-through-0983)에 있다. [0.996](docs/dotnet-canon-0996-20261125.md)
-- **L2 기준선.** 마지막 수집은 extracted/dotnet-l2-0996이다. 일반31양쪽의62실행 모두 종료0·오류/누락0이며 DN31전체덤프/34지표는0.992와 같다. M1 **0/34**(31미션 동등 0·cpp_only997·dn_only21), DN데모3진입 미연결, 고정 수신26/26이다. CPP 차이는 기존 미초기화SP행3열 범위뿐이다. 세 설치 값(`_nativeLoaded`·`_editorUiInstalling`·`_editorPrefixUiInstalling`)은 false다. 0.996의 전체 34경로 수집이 0.992와 같은 DN31전체덤프/34지표를 유지한다. [0.996](docs/dotnet-canon-0996-20261125.md) · [격차 분석](docs/dotnet-l2-0606-20261117.md)
+- **검사 기준선.** 마지막 정기 전체1.000은 Assets383·Core3848·Client2708 합계6,939통과/실패0/건너뜀0이다(0.996 대비 +15 = 0.997 7건·0.998 3건·0.999 1건·1.000 4건). 0.880 이후 기존 이름·중복을 보존한다. NETSTORM_DATA 없이 Release 오류0·신규경고0이며 검사 사본은 실행본과 같고 원본1392파일은 전후 불변이다. 단위별 집중 수는 각 단위 문서와 [0.983 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261124-through-0983)에 있다. [1.000](docs/dotnet-canon-1000-20261125.md)
+- **L2 기준선.** 마지막 수집은 extracted/dotnet-l2-0998이다. 전체34경로의68실행 모두 종료0·오류/누락0이며 데모3경로의 DN 덤프가 생겨 34경로 모두 대조에 들어간다. M1 **0/34**(31미션 동등 0·cpp_only997·dn_only21), 고정 수신26/26이다. CPP 차이는 기존 미초기화SP행3열 범위뿐이다. 세 설치 값(`_nativeLoaded`·`_editorUiInstalling`·`_editorPrefixUiInstalling`)은 false다. 0.999·1.000은 제품 변경이 없어 0998 덤프·지표를 유지한다. [0.998](docs/dotnet-canon-0998-20261125.md) · [격차 분석](docs/dotnet-l2-0606-20261117.md)
 
 <a id="now"></a><a id="09-바로-다음-작업"></a><a id="r4-board"></a>
 
 ### 0.1 재개 순서와 최근 완료 요약
 
-1. **다음0.999 — R4-7c F3 보류 검사.** 미룬 Fort/지형 바인딩·미션 Fort 경로·로그인 객체 전송·미션 재적재 검사를 잇는다. 그 뒤 순서는 아래와 같다.
-   - ① R4-7c F3 보류 검사 → ② R4-8 M1 판정. PORT_MAP 행 보충([4절](#dotnet-inventory))도 남았다. 다음 정기 전체 회귀는 1.000이다.
+1. **다음1.000 — R4-7c2 CD 장면.** 표면 월드 CD 조립을 연결하고 두 장면의 CD 행을 더한다. 미룬 세션·대화
+   검사(Fort 경로·로그인 객체 전송·미션 재적재·새 Fort·Tell 메타·진단 전체 Client)도 이 단계에서 잇는다.
+   그 뒤 순서는 아래와 같다.
+   - ① R4-7c2 CD 장면 → ② R4-8 M1 판정. PORT_MAP 행 보충([4절](#dotnet-inventory))도 남았다. 다음 정기 전체 회귀는 1.004이다.
    - R4-6 전송·수신은 R4 범위 수신기 설치가 0.979로 끝났다. 남은 것은 Root 생성 부모·Root Source 공개/제출·수송 세션 갈래이고, 그중 Root Source 공개/제출과 수송 갈래는 수송 backend(R11)·세션 수명(R6)이 필요해 그 단계에서 잇는다([1.1](#r4-detail) 전송·수신).
-   - 선행 완료(중복 금지): 아래 요약표의 단위 범위와 1.1 완료 항목을 먼저 확인한다. 첫 장치 설치(0.814)·현재 지갑/Host 메모리 대여(0.815)·Player 고유 Pre/Residence/Dude(0.813)·HUD 도킹/전체 Uber 부모·현재 this DockView/공통 HUD(0.817~0.819)·미니맵 기하·공유 FullRefresh·`RawMinimapControls`(MapRevision 대여·GumpRedraw 등록, 0.821~0.822)·NSInfo 생성/부착(0.823)·생산 패널/`OwnerColorTableState`·`ProductionControlContext`/색표 캐시/`ClientProductionSync`(0.825~0.837)·`RawBaseFileIO`·CRT/TAFF(0.831~0.834)·Root 전송/같은 지도 getter(0.838)·Native Player 정기/Template(0.839)·Native 기본 Host·Process writer·패킷 분배 부모(0.841~0.899)·RU-1~RU-3 조립(0.901~0.931)·분배 기본표·메타 수신기·Build 연결(0.933~0.982)·제단 정기 분기(0.939)·RawFileName 조회(0.983)·정기 전체 회귀(0.984)·파일 계열 고리(0.985)·NSInfo 외부 장치 공장(0.986)·Root 공장 집합(0.987)·정기 전체 회귀(0.988)·NativeRoot 창 생성·Enter(0.989)·HUD 작성자·Root reply Tell(0.990)·미니맵 설치(0.991)·정기 전체 회귀(0.992)·HUD 도킹 작성자(0.993)·선택 수명(0.994)·Chat 명령 효과(0.995)·Dais 실제 장치 일부(0.996)·RU-6 세 설치 값 공개(0.997)·R4-7a 데모 진입(0.998)·R4-7b 월드 표 대조(0.999)는 다시 만들지 않는다.
+   - 선행 완료(중복 금지): 아래 요약표의 단위 범위와 1.1 완료 항목을 먼저 확인한다. 첫 장치 설치(0.814)·현재 지갑/Host 메모리 대여(0.815)·Player 고유 Pre/Residence/Dude(0.813)·HUD 도킹/전체 Uber 부모·현재 this DockView/공통 HUD(0.817~0.819)·미니맵 기하·공유 FullRefresh·`RawMinimapControls`(MapRevision 대여·GumpRedraw 등록, 0.821~0.822)·NSInfo 생성/부착(0.823)·생산 패널/`OwnerColorTableState`·`ProductionControlContext`/색표 캐시/`ClientProductionSync`(0.825~0.837)·`RawBaseFileIO`·CRT/TAFF(0.831~0.834)·Root 전송/같은 지도 getter(0.838)·Native Player 정기/Template(0.839)·Native 기본 Host·Process writer·패킷 분배 부모(0.841~0.899)·RU-1~RU-3 조립(0.901~0.931)·분배 기본표·메타 수신기·Build 연결(0.933~0.982)·제단 정기 분기(0.939)·RawFileName 조회(0.983)·정기 전체 회귀(0.984)·파일 계열 고리(0.985)·NSInfo 외부 장치 공장(0.986)·Root 공장 집합(0.987)·정기 전체 회귀(0.988)·NativeRoot 창 생성·Enter(0.989)·HUD 작성자·Root reply Tell(0.990)·미니맵 설치(0.991)·정기 전체 회귀(0.992)·HUD 도킹 작성자(0.993)·선택 수명(0.994)·Chat 명령 효과(0.995)·Dais 실제 장치 일부(0.996)·RU-6 세 설치 값 공개(0.997)·R4-7a 데모 진입(0.998)·R4-7b 월드 표 대조(0.999)·R4-7c1 패치 장면(1.000)은 다시 만들지 않는다.
    - 주의: 기존83VT 실제 분배/고유 파생·Runtimepin을 잇고 미설치를 일반 Pre/Post/no-op으로 통과시키지 않는다. prepared 상태나 동일 깊이 검사를 완화하지 않는다. 실제 지도 영역을 전체viewport로 대체하지 않는다. Root의 세 번째 NSInfo와 F6 RawKnowledgeMenu를 혼동하지 않는다. 후속 UI/World 소비자도 같은 현재 색표/OwnerTables를 빌려야 하며 별도 표를 만들지 않는다. 실제 색표 연결을 NativeRoot/World 전체 설치 완료로 세지 않는다. 설치 후/Editor 성공 범위를 0.837의 거부 검사로 완료 처리하지 않는다. 초기 Source 미니맵 공장은 Open이 아닌 Construct와 기존 bitmap 준비/전체 도킹의 Push→Attach를 사용한다.
    - 소견: 최신 `extracted/dotnet-0837/next-0838-static.md`. 이전 Root·미니맵·생산 소견은 extracted/dotnet-0816·0820·0821·0822·0824·0826의 `next-08NN-static.md`다.
 
@@ -34,7 +36,7 @@
    - [ ] 정보(About) ▸ 버전 창 Copyright — 원본 Tell `[About]`에 11.01 패치와 `Copyright 2026 HJOW`(AGENTS.md)가 없다. 완료 기준: cpppj에서 정한 문구로 영어·한국어 창에 원본 저작권 줄·10.78 패치 줄·11.01 패치(HJOW)·`Copyright 2026 HJOW`를 표시한다. 문구: [cpppj1330](docs/exe/cpp-about-copyright-1330-20261123.md)(`ProductPresentation.cpp`의 About 확장, 원본 Tell 파일 불변). DN `ProductPresentation.cs`는 Credits 3항목·HJOW 카피라이트(0.342)만 반영했다.
    - 14차 모딩(QuickJS + webpj 이름 체계 공통 모드 API, 2026-11-23 사용자 결정)은 [3.1](#dotnet-modding)의 MOD-1~5다. 착수는 사용자 지시를 따른다.
 
-**최근 완료 요약(0.639~0.998).** 단위별 완료 문장과 집중 검사 수는 보관본과 각 단위 문서에 있다. 완료 범위와 남은 일의 기준은 1.1·1.2절 체크 항목이다.
+**최근 완료 요약(0.639~1.000).** 단위별 완료 문장과 집중 검사 수는 보관본과 각 단위 문서에 있다. 완료 범위와 남은 일의 기준은 1.1·1.2절 체크 항목이다.
 
 | 주제 | 단위 | 핵심 | 남은 일 |
 | --- | --- | --- | --- |
@@ -66,7 +68,8 @@
 | NSInfo 메타 UI(RU-3) | 0.905~0.907·0.909~0.911·0.913~0.915·0.917~0.919·0.921~0.923·0.925~0.927·0.929~0.931·0.986·0.987·0.989·0.990 | 메시지 공장 팔레트 프로브(`savedMessage`·`equalText`·`constructMessage`·`formatMessage`·`testMessage`·`visitMessage`·`messageEvent`), 등록 명부 39명 정렬, 메타 본문·플레이어/배틀 패널, BattleOptions 22레코드 표·변이, 루트/PlayerInfo/BattleInfo 원문 입력(87BYTE 송신·기본값 1..21), 지식 행 CRT 정렬·배틀 정렬/전체/개별/제외/제거 메뉴, 세 파생 입력 토큰 분배와 그 생산 결선, 메타맵 관문·특수 그림·입력 후크 분배 검증 | RU-3 나머지(RU-3b 잔여), [1.1](#r4-detail) |
 | 분배 기본표·메타 수신 본체 | 0.933~0.935·0.937·0.938·0.941~0.943·0.945~0.947·0.949~0.951·0.953~0.963 | 435220 패킷 기록 요청 재설정(FILE/enabled 유지), 기본 18행·송신 관찰/버전 응답 검증, 메타 수신 본체·설치(004b4160 버전 확인·0042cad0 전투 설명·004b2c60 master 조회·0x7c·0x1d·0x66·1a/1b·0x0f·2번·0x26·0x88·0x25·0x21·0x23·0x24·0x67·0x20·0x22), Carrier/Construction 고정 F 설치·대여와 4종 송신 옵저버. 항목별은 [1.1](#r4-detail) 전송·수신 | 위 행과 같음 |
 | 제단 정기 분기 | 0.939 | 44a5e0 제단(RunAltarRegular) 정기 분기 본체·후크·저항 상태 | R4-4 남음 2, [1.1](#r4-detail) |
-| 정기 전체 회귀·L2 | 0.644부터4단위마다(0.992까지) | 전체6897통과/실패0·건너뜀0·기존이름/중복보존·같은빌드62종료0·원본1392불변·M1 0/34 | 다음0.996 · [0.992](docs/dotnet-canon-0992-20261125.md) |
+| 정기 전체 회귀·L2 | 0.644부터4단위마다(1.000까지) | 전체6939통과/실패0·건너뜀0·기존이름/중복보존·같은빌드68종료0·원본1392불변·M1 0/34 | 다음1.004 · [1.000](docs/dotnet-canon-1000-20261125.md) |
+| 보류 검사 패치 장면 | 1.000(R4-7c1) | Fort 적재 바인딩 전체 월드 장면·일반 지형 바인딩 3장면의 패치판 재현 대조(신규 Core 4건) | R4-7c2 CD 장면·세션·대화, [1.1](#r4-detail) |
 
 <a id="first-run"></a>
 
@@ -204,7 +207,12 @@ AGENTS.md 지정에 따라0.807에서 공통 [assets/Netstorm.ico](assets/Netsto
 - [ ] **R4-7 데모와 보류 검사.** `StartDemo` 3경로 덤프, `player-world-x86.tsv` 1,680행, F3에서 미룬 Fort/지형 바인딩·미션 Fort 경로·로그인 객체 전송·미션 재적재 검사를 잇는다.
   - [x] **R4-7a 데모 3경로 진입(0.998).** `StartDemo` 3경로의 DN 진입을 연결했다. [0.998](docs/dotnet-canon-0998-20261125.md)
   - [x] **R4-7b Player 월드 표 대조(0.999).** `player-world-x86.tsv` 중 originals 840행(Patch1078)을 DN `RawPlayerWorld` 실제 장면으로 재현 실행해 전체 열과 대조했다. CD 840행은 DN 범위 밖이라 cpppj가 대조한다. 제품 코드 변경이 없어 L2 기준선(extracted/dotnet-l2-0998)을 유지한다. [0.999](docs/dotnet-canon-0999-20261125.md)
-  - [ ] **R4-7c F3 보류 검사.** 미룬 Fort/지형 바인딩·미션 Fort 경로·로그인 객체 전송·미션 재적재 검사. 완료 기준: 네 검사가 실제 세션 경로에서 통과한다.
+  - [x] **R4-7c1 패치 장면 대조(1.000).** F3 보류 검사 중 `FortWorldLoadBindingTests` 전체 월드 장면과
+    `NormalTerrainWorldBindingTests` 3장면을 패치판 DN 실제 장면으로 재현 실행해 대조했다. CD판은 표면 월드 CD
+    조립이 후속 단위에 묶여 있어 잇지 못했다. 정기 전체 회귀와 함께 닫았다(6,939통과). [1.000](docs/dotnet-canon-1000-20261125.md)
+  - [ ] **R4-7c2 CD 장면·세션·대화 검사.** 표면 월드 CD 조립 연결, 두 장면의 CD 행, 미룬 미션 Fort 경로·로그인
+    객체 전송·미션 재적재·새 Fort 검사, Tell 메타 1종(대화 본체), 진단 전체 Client 연결. 완료 기준: 각 검사가
+    실제 세션 경로에서 통과한다.
 - [ ] **R4-8 M1 판정.** 같은 시드·고정 프레임·빈 사용자 루트로 34/34 상태 일치. 로드 뒤 프레임 진행에서만 생기는 차이는 cpp 후속 프레임 덤프로 입증한 뒤 R6으로 넘긴다.
 
 <a id="r6-preports"></a>

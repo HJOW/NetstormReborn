@@ -377,6 +377,7 @@
     <None Include="../../../cpppj/tests/fixtures/island-placement-x86.tsv" Link="X86/island-placement-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/islandqueries-x86.tsv" Link="X86/islandqueries-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/fortworldload-x86.tsv" Link="X86/fortworldload-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/fortworldload-builder-consumer-x86.tsv" Link="X86/fortworldload-builder-consumer-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/terraincontext-x86.tsv" Link="X86/terraincontext-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/terraingrowth-x86.tsv" Link="X86/terraingrowth-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/terrain-arch-helpers-x86.tsv" Link="X86/terrain-arch-helpers-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
