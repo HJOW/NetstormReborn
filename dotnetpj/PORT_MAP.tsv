@@ -445,6 +445,7 @@ cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.FlyerPa
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.GeyserMined.cs	baf141ebe8d2893459a1b18ea74a6caa88504468	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.GunPackets.cs	879c61b201397a84d7c8dde01179da3e6f207951	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.PathCleanup.cs	baf141ebe8d2893459a1b18ea74a6caa88504468	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.Selection.cs	3419ae818c8c929235cbeea666f42b1afe7bf80e	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.PlayerRecords.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.PlayerWorld.cs	b43574aea7f7f56a6d761b0fd50846017c84cd5a	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.PriestWorld.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
@@ -482,6 +483,7 @@ cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.GunPacket
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.PlayerRecords.cs	bda77381e54bc382937c720047ee4441086b46d7	port
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.ProductionSync.cs	baf141ebe8d2893459a1b18ea74a6caa88504468	port
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.RainAviaryPackets.cs	1f9e94a4b10c21fa18d8798978756e3caefd1845	port
+cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.Selection.cs	3419ae818c8c929235cbeea666f42b1afe7bf80e	port
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.Runtime.cs	bda77381e54bc382937c720047ee4441086b46d7	port
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.SquidMutations.cs	baf141ebe8d2893459a1b18ea74a6caa88504468	port
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.SquidPackets.cs	bda77381e54bc382937c720047ee4441086b46d7	port

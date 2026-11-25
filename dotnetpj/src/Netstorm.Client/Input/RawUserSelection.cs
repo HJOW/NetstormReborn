@@ -98,6 +98,9 @@ public sealed class RawUserSelection
         if (pool.Edition != OriginalEdition.Patch1078 || types.Count != 188 || state.RememberedPoint.Length != 2) throw new ArgumentException("사용자선택10.78풀/TYPE/기억점폭오류");
         _pool = pool; _types = types; _state = state; _hooks = hooks;
     }
+    /// <summary>살아 있는 선택 객체를 Session의 약한 연결에 묶어 두는 수명 고리다. 선택이 살아 있으면 Session의 약한 연결도 만료되지 않는다.</summary>
+    /// <remarks>2026-11-25 0.994에서 RU-4c용으로 추가했다. 근거: cpppj RawUserSelection.h 71행의 sessionLifetime_.</remarks>
+    public object? SessionLifetime { get; set; }
     /// <summary>미선택 효과는 요구하지 않고 도달한 하위 누락만 실패한다.</summary>
     private static T Need<T>(T? hook) where T : Delegate => hook ?? throw new InvalidOperationException("실제사용자선택하위미연결");
     /// <summary>전체 DWORD를 물리/WORD 범위 확인 뒤에만 슬롯 번호로 변환한다.</summary>
