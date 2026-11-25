@@ -662,6 +662,10 @@ public sealed partial class ClientHostGame : Game
                 () => System.Text.Encoding.Latin1.GetString(ExtendedText.EncodeDisplayText(_startup.Configuration.PathSpec("defaultAiName"))),
                 destroyTemple: session.BuildAiTempleDestroy(),
                 difficulty: (owner, settings) => session.ResolveMissionAiDifficulty(difficulty, owner, settings));
+            // WP-2 제품 Root의 전체 Path/Start/Motion 설치. 본체·API·Host·30h는 0.801에서 완료했다.
+            // 입력·음향·포획 갈고리는 명시 거부하며 미션 진입·대기 덤프에는 닿지 않는다.
+            // 근거: cpppj RawCampaignSession.cpp 3806~3807행의 anchorState와 3929행의 motion 조립이다.
+            session.BuildMotionRootDevices(worldDefinitions);
             // RU-3c 실제 미션 Root에 표시 창을 만들고 같은 트리 루트에 부착한다. 부착 전 Enter는 부모 없음으로 거부된다.
             // 근거: GumpTree.Push/Attach의 void·부모 규칙과 ChatWindow Native 입력 호출자. 메뉴 경로는 바꾸지 않는다.
             _ = NativeChatWindows.Create();
