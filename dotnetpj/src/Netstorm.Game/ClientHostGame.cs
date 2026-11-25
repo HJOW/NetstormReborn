@@ -660,6 +660,7 @@ public sealed partial class ClientHostGame : Game
             session.CreateMissionAiBrains(
                 players, types, worldDefinitions,
                 () => System.Text.Encoding.Latin1.GetString(ExtendedText.EncodeDisplayText(_startup.Configuration.PathSpec("defaultAiName"))),
+                destroyTemple: session.BuildAiTempleDestroy(),
                 difficulty: (owner, settings) => session.ResolveMissionAiDifficulty(difficulty, owner, settings));
             // RU-3c 실제 미션 Root에 표시 창을 만들고 같은 트리 루트에 부착한다. 부착 전 Enter는 부모 없음으로 거부된다.
             // 근거: GumpTree.Push/Attach의 void·부모 규칙과 ChatWindow Native 입력 호출자. 메뉴 경로는 바꾸지 않는다.

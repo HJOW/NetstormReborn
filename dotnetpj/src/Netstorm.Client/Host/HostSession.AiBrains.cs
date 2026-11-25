@@ -295,6 +295,24 @@ public sealed partial class HostSession
         return new RawContainedCreate(Pool, new ContainedCreateState(), hooks);
     }
 
+    /// <summary>원본 NoTemple 분기의 실제 신전 제거 효과를 같은 세션 파괴에 연결한다.</summary>
+    /// <returns>범위 검사 뒤 실제 월드 파괴에 전달하는 효과다. 전략 setup.destroy와 같은 실제 파괴를 공유한다.</returns>
+    /// <remarks>2026-11-25 1.032에서 R4-5c 신전 삭제용으로 추가했다. 근거: cpppj src/client/RawCampaignSession.cpp 2816~2818행의 createHooks.destroyTemple이다. SID 범위 검사는 원문 순서와 같고 파괴·통지는 같은 세션 삭제 분배를 쓴다.</remarks>
+    public Action<uint, uint> BuildAiTempleDestroy()
+    {
+        SquidProcessHost processes = PlayerProcesses ?? throw new InvalidOperationException("AI 신전 제거 프로세스 미연결");
+        Action<int, uint> destroy = BuildSessionDestroy("AI 신전", processes);
+        return (temple, flags) =>
+        {
+            if (temple > 65535 || temple >= (uint)Pool.Capacity)
+            {
+                throw new ArgumentOutOfRangeException(nameof(temple), "AI 신전 제거의 실제 SID 범위 오류");
+            }
+
+            destroy(unchecked((int)temple), flags);
+        };
+    }
+
     /// <summary>세션 소유 live 효과로 인공지능 brain을 만들어 같은 Player 기록에 부착한다.</summary>
     /// <param name="players">미션 플레이어 목록이다. 활성 인공지능 소유자만 만든다.</param>
     /// <param name="types">같은 실제 TYPE 표다.</param>
@@ -332,7 +350,7 @@ public sealed partial class HostSession
     /// <param name="table">실제 기술 이름 조회용 표다.</param>
     /// <param name="definitions">같은 순서의 실제 자산 정의다.</param>
     /// <param name="defaultName">현재 언어의 기본 AI 이름이다.</param>
-    /// <param name="destroyTemple">실제 신전 제거 효과다. null이면 NoTemple 소유자에서 명시 거부한다. 출하 미션에는 NoTemple 인공지능이 없다.</param>
+    /// <param name="destroyTemple">실제 신전 제거 효과다. null이면 NoTemple 소유자에서 명시 거부한다. 시작한 미션 흐름은 1.032부터 실제 세션 파괴를 넘긴다.</param>
     /// <param name="difficulty">11차 난이도 조회다. null이면 보통으로 둔다.</param>
     /// <param name="changeNotify">실제 색 변경 뒤의 외부 통지다.</param>
     /// <remarks>2026-11-19 0.640에서 R4-5 미션 시작 흐름 결선용으로 추가했다. 근거: RawMissionStart 163~165행의 생성 루프다. 로컬 소유자는 데모가 아니면 제외하며, 사제가 없는 인공지능은 만들지 않는다. 요새 장치가 연결됐으면 live 화신·내용물 몸체를 쓰고, 아니면 최소 live 몸체로 잇는다.</remarks>

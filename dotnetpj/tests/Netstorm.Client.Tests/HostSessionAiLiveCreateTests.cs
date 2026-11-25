@@ -257,6 +257,138 @@ public sealed class HostSessionAiLiveCreateTests
         Assert.Equal(session.AiBrainMemory.Allocations.Select(entry => entry.Token).Order(), session.AiBrainMemory.Frees.Order());
     }
 
+    /// <summary>값을 리틀 엔디언으로 쓴다. NoTemple 설정·첫 지역 기록용으로 추가했다.</summary>
+    private static void Put(byte[] bytes, int offset, uint value)
+    {
+        // 낮은 바이트부터 네 바이트를 쓰는 반복문이다.
+        for (int index = 0; index < 4; index++)
+        {
+            bytes[offset + index] = (byte)(value >> (index * 8));
+        }
+    }
+
+    /// <summary>신전 삭제 결선을 검사할 실제 장면을 만든다. AI 런타임·화신·파괴 장치를 모두 연결한다.</summary>
+    /// <returns>세션과 같은 실제 TYPE 표·자산 정의다.</returns>
+    private static (HostSession Session, IReadOnlyList<OriginalTypeRecord> Types, IReadOnlyList<RiftTypeDefinition> Definitions) NewTempleScene()
+    {
+        string? data = GameDataLocator.FindDataDirectory();
+        Assert.NotNull(data);
+        var startup = new HostStartupScene(data);
+        var session = new HostSession(new Kernel(), new GameRandom(1u), new CrtRandom());
+        IReadOnlyList<RiftTypeDefinition> definitions = MissionFortLoad.LoadTypeDefinitions(startup.Files);
+        session.FillWorldFrames(definitions);
+        RiftTypeTable table = MissionFortLoad.LoadTypeTable(startup.Files);
+        byte[] shpRaw = startup.Files.ReadAllBytes("d/_shapes.shp");
+        var shapes = TerrainDisplayShapes.Build(definitions, new ShapeDatabase(shpRaw));
+        session.BuildTerrainPopDevices(table.Types, shapes);
+        session.BuildFortObjectDevices(table.Types, session.WorldFrames);
+        session.BuildIslandPostPopDevices(table.Types, session.WorldFrames);
+        session.BuildPlayerWorldHooks();
+        session.BuildTerrainBinding(table.Types, session.TerrainDiagnostics, new IslandRuntimeHooks
+        {
+            SetResidenceOwner = (_, _) => { },
+            Assertion = _ => { },
+        });
+        session.BuildRegionOwnershipDevices(table.Types, () => 1u);
+        return (session, table.Types, definitions);
+    }
+
+    /// <summary>NoTemple 설정의 활성 전산 소유자를 만들고 첫 지역을 기록한다.</summary>
+    /// <param name="session">설정·기록을 쓸 세션이다.</param>
+    /// <param name="region">소유자의 첫 지역 번호다.</param>
+    /// <returns>소유자 2번만 활성 전산으로 둔 미션 목록이다.</returns>
+    private static MissionPlayers NewNoTemplePlayers(HostSession session, uint region)
+    {
+        var players = new MissionPlayers();
+        players.Players[2].Active = true;
+        players.Players[2].Computer = true;
+        byte[] settings = new byte[RawMissionAiSettings.Size];
+        Put(settings, 0x244, 1u);
+        session.AiSettings[2] = settings;
+        Put(session.PlayerRecords, 2 * 180 + 0x78, region);
+        return players;
+    }
+
+    /// <summary>NoTemple 소유자는 섬 신전을 실제 파괴로 지우고 brain을 부착하지 않는다.</summary>
+    /// <remarks>2026-11-25 1.032에서 R4-5c 신전 삭제용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 2816~2818행의 destroyTemple과 RawAiCreate의 NoTemple 분기다. 파괴 플래그는 원본 0x400000이다.</remarks>
+    [Fact]
+    public void NoTempleDestroysSessionTempleAndAttachesNoBrain()
+    {
+        (HostSession session, IReadOnlyList<OriginalTypeRecord> types, IReadOnlyList<RiftTypeDefinition> definitions) = NewTempleScene();
+        MissionPlayers players = NewNoTemplePlayers(session, 3);
+        // 섬 기록 0~3을 두어 3번에 신전을 둔다.
+        for (int i = 0; i < 4; i++)
+        {
+            session.AiIslands.Add(1, unchecked((byte)i));
+        }
+
+        int temple = new RawSquidFactory(session.Pool, types).CreateContained(2u);
+        session.AiIslands.Temple(3, unchecked((uint)temple));
+        var calls = new List<(uint Sid, uint Flags)>();
+        Action<uint, uint> destroy = session.BuildAiTempleDestroy();
+        AiCreateHooks hooks = session.BuildLiveAiCreateHooks(types, definitions,
+            initialUpdate: (_, _) => { },
+            destroyTemple: (sid, flags) => { calls.Add((sid, flags)); destroy(sid, flags); });
+        session.CreateAiBrains(players, hooks);
+        Assert.Equal([(unchecked((uint)temple), 0x400000u)], calls);
+        // NoTemple 분기는 0을 기록하고 Player 기록·brain 메모리에는 부착하지 않는다.
+        Assert.Equal(0u, session.AiBrains[2]);
+        Assert.Equal(0u, Get(session.PlayerRecords, 2 * 180 + PlayerParticipation.BrainOffset));
+        Assert.Throws<InvalidOperationException>(() => session.Pool.AllocatedBytes(temple));
+    }
+
+    /// <summary>섬 신전이 없으면 NoTemple 소유자는 파괴 없이 brain 없이 넘어간다.</summary>
+    /// <remarks>2026-11-25 1.032에서 R4-5c 신전 삭제용으로 추가했다. 원문 NoTemple 분기의 temple == 0 경로와 같다.</remarks>
+    [Fact]
+    public void NoTempleWithoutIslandTempleSkipsDestroyAndAttachesNoBrain()
+    {
+        (HostSession session, IReadOnlyList<OriginalTypeRecord> types, IReadOnlyList<RiftTypeDefinition> definitions) = NewTempleScene();
+        MissionPlayers players = NewNoTemplePlayers(session, 3);
+        // 섬 기록 0~3을 두되 신전은 두지 않는다.
+        for (int i = 0; i < 4; i++)
+        {
+            session.AiIslands.Add(1, unchecked((byte)i));
+        }
+
+        int decoy = session.Pool.Allocate(SidAllocation.Client);
+        session.Pool.AllocatedBytes(decoy).Clear();
+        var calls = new List<(uint Sid, uint Flags)>();
+        AiCreateHooks hooks = session.BuildLiveAiCreateHooks(types, definitions,
+            initialUpdate: (_, _) => { },
+            destroyTemple: (sid, flags) => calls.Add((sid, flags)));
+        session.CreateAiBrains(players, hooks);
+        Assert.Empty(calls);
+        Assert.Equal(0u, session.AiBrains[2]);
+        Assert.Equal(0u, Get(session.PlayerRecords, 2 * 180 + PlayerParticipation.BrainOffset));
+        Assert.Null(Record.Exception(() => session.Pool.AllocatedBytes(decoy)));
+    }
+
+    /// <summary>신전 제거 효과는 풀 범위를 벗어난 SID를 원문 순서대로 거부한다.</summary>
+    /// <remarks>2026-11-25 1.032에서 R4-5c 신전 삭제용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 2817행의 범위 검사다.</remarks>
+    [Theory]
+    [InlineData(70000u)]
+    [InlineData(70001u)]
+    public void TempleDestroyRejectsOutOfRangeSid(uint temple)
+    {
+        (HostSession session, _, _) = NewTempleScene();
+        Action<uint, uint> destroy = session.BuildAiTempleDestroy();
+        if (temple < (uint)session.Pool.Capacity)
+        {
+            temple = (uint)session.Pool.Capacity;
+        }
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => destroy(temple, 0x400000u));
+    }
+
+    /// <summary>화신 장치가 없으면 신전 제거 효과를 만들 수 없다.</summary>
+    /// <remarks>2026-11-25 1.032에서 R4-5c 신전 삭제용으로 추가했다. 시작 흐름의 장치 순서를 고정한다.</remarks>
+    [Fact]
+    public void TempleDestroyWithoutProcessesThrows()
+    {
+        var session = new HostSession(new Kernel(), new GameRandom(1u), new CrtRandom());
+        Assert.Throws<InvalidOperationException>(() => session.BuildAiTempleDestroy());
+    }
+
     /// <summary>미션 설정 길이가 맞지 않으면 AI 메모리 할당 전에 거부하는지 검사한다. 0.641에서 추가했다.</summary>
     [Fact]
     public void LiveCreateRejectsTruncatedSettingsBeforeAllocation()
