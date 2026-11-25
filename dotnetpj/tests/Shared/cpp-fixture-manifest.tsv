@@ -8,6 +8,8 @@ acid-fence-x86.tsv	c7380a4fd7c2b0daea334a0106934d6b5c03adf4eb1bc18e6ffc4352677b7
 add-random-input-x86.tsv	bbe76e4e4e4e9f6d8ac99fa9da3b98762c05350888eafede69e409b7498b805a	289	cpppj	Client
 add-random-parent-x86.tsv	dffb9b89963349c900283e3503f574987f81c155815c0dff01ad3064371fca3d	721	cpppj	Core
 ai-brain-x86.tsv	53aecd3e635d5743ea07091d863d6db7fb328daa8181b7a5769b78a233087fab	161	cpppj	Core
+ai-bridge-initialize-x86.tsv	0450a3947aa6a4c6d07c5f5d368c0abd7656ea817c84756e8c5c83a219314901	144	cpppj	Core
+ai-bridge-step-x86.tsv	2cd0d570668e97f0c45ffb720692b417bed0c8d4ba117e0a1a0be30822c6f19e	600	cpppj	Core
 ai-command-state-x86.tsv	fe6a534535c6d2ac05a125787df3901a629516d51f048323004e9e8b0a183675	1940	cpppj	Core
 ai-damage-x86.tsv	eaa90a665618f23d59365df1e65b330499f7a4fd87fac6280d9955b5ca05ab3a	150	cpppj	Core
 ai-initial-update-theme5-x86.tsv	e6ec842056c6df0dc8ec294dc5454775e36ccb2069f996936bf48ccaf2ba77c3	16	cpppj	Core
