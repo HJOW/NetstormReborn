@@ -912,6 +912,8 @@ cpppj/src/o/RawAiDamage.cpp	Netstorm.Core/Original/RawAiDamage.cs	72b232bcf41393
 cpppj/src/o/RawAiDamage.h	Netstorm.Core/Original/RawAiDamage.cs	72b232bcf41393c5dcbbc5743e2b604182b10b26	port
 cpppj/src/o/RawAiDeployment.cpp	Netstorm.Core/Original/RawAiDeployment.cs	3a0459751adcd933f0d8009b224a4b45f1c6fc65	port
 cpppj/src/o/RawAiDeployment.h	Netstorm.Core/Original/RawAiDeployment.cs	3a0459751adcd933f0d8009b224a4b45f1c6fc65	port
+cpppj/src/o/RawAiDropActions.cpp	Netstorm.Core/Original/RawAiDropActions.cs	f1566c993a3a0025d64375f1c3ebf2e2fc0a89df	port
+cpppj/src/o/RawAiDropActions.h	Netstorm.Core/Original/RawAiDropActions.cs	f1566c993a3a0025d64375f1c3ebf2e2fc0a89df	port
 cpppj/src/o/RawAiDropEvaluation.cpp	Netstorm.Core/Original/RawAiDropEvaluation.cs	13d23e51ce1f30e326fcb488e3733ce8635465c3	port
 cpppj/src/o/RawAiDropEvaluation.h	Netstorm.Core/Original/RawAiDropEvaluation.cs	13d23e51ce1f30e326fcb488e3733ce8635465c3	port
 cpppj/src/o/RawAiDropScan.cpp	Netstorm.Core/Original/RawAiDropScan.cs	9c48dbc00228ff98fc0d4ffe7e2bdce6a47093b8	port
