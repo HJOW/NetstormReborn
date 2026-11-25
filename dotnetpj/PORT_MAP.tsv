@@ -920,6 +920,8 @@ cpppj/src/o/RawAiDropSelection.cpp	Netstorm.Core/Original/RawAiDropSelection.cs	
 cpppj/src/o/RawAiDropSelection.h	Netstorm.Core/Original/RawAiDropSelection.cs	b320e81825757346c1b8ff1786b636f301c3e988	port
 cpppj/src/o/RawAiDropTargets.cpp	Netstorm.Core/Original/RawAiDropTargets.cs	f60ae81906fde3d28fe77f38b6903e34b283145c	port
 cpppj/src/o/RawAiDropTargets.h	Netstorm.Core/Original/RawAiDropTargets.cs	f60ae81906fde3d28fe77f38b6903e34b283145c	port
+cpppj/src/o/RawAiDryGeometry.cpp	Netstorm.Core/Original/RawAiDryGeometry.cs	2d6be9eb82efc71e769d980592c440b01c42121f	port
+cpppj/src/o/RawAiDryGeometry.h	Netstorm.Core/Original/RawAiDryGeometry.cs	2d6be9eb82efc71e769d980592c440b01c42121f	port
 cpppj/src/o/RawAiDrySpots.cpp	Netstorm.Core/Original/RawAiDrySpots.cs	ad023ac927d2eefa3ddc8084eea5c356326fc753	port
 cpppj/src/o/RawAiDrySpots.h	Netstorm.Core/Original/RawAiDrySpots.cs	ad023ac927d2eefa3ddc8084eea5c356326fc753	port
 cpppj/src/o/RawAiEconomy.cpp	Netstorm.Core/Original/RawAiEconomy.cs	bb1dbd427f232659d229a3522ff425fd0e19cf4f	port
