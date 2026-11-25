@@ -3457,7 +3457,7 @@ public sealed partial class HostSession
     /// <param name="types">같은 실제 TYPE 표다. 지형 Pop 장치와 같은 인스턴스여야 한다.</param>
     /// <exception cref="InvalidOperationException">Dais 정기 분배의 프로세스·프레임·해시·장소·공통 후처리 장치가 미연결이다.</exception>
     /// <exception cref="ArgumentException">Dais 정기 TYPE이 지형 Pop 장치와 다르다.</exception>
-    /// <remarks>2026-11-23 0.895에서 R4-4 Dais 정기용으로 추가했다. 근거: cpppj client/RawCampaignSession.cpp 2654행의 typed 경로 Dais 조립이다. 사제/룬 조회는 실제 본체를 쓰고 의식·건설 예약은 실제 Host에 부착한다.</remarks>
+    /// <remarks>2026-11-23 0.895에서 R4-4 Dais 정기용으로 추가했다. 근거: cpppj client/RawCampaignSession.cpp 2654행의 typed 경로 Dais 조립이다. 사제/룬 조회는 실제 본체를 쓰고 의식·건설 예약은 실제 Host에 부착한다. 2026-11-25 0.996에서 로컬 SP 가산과 0x307 공유 부착을 실제 장치로 연결했다. 근거: cpppj o/RawDaisRegular.cpp 243~245행의 MakeDaisRegularHooks(Frame/Host/로컬 SP)와 신전 0x307 AddSharedRegular. Damageable 전체 몸체는 RawAssetRegular 이식(R6)에서 잇는다.</remarks>
     public void BuildDaisRegularDevices(IReadOnlyList<OriginalTypeRecord> types)
     {
         ArgumentNullException.ThrowIfNull(types);
@@ -3494,8 +3494,8 @@ public sealed partial class HostSession
             SetOwner = (_, _) => throw new InvalidOperationException("Dais 의식 Rune 소유자 미연결(R6)"),
             Pop = (_, _, _, _) => throw new InvalidOperationException("Dais 의식 Rune 배치 미연결(R6)"),
             PlayAt = (_, _, _, _) => throw new InvalidOperationException("Dais 의식 위치 음향 미연결(R6)"),
-            ReserveShared = () => throw new InvalidOperationException("Dais 의식 307 예약 미연결(R6)"),
-            AddShared = (_, _, _) => throw new InvalidOperationException("Dais 의식 307 부착 미연결(R6)"),
+            ReserveShared = static () => true,
+            AddShared = (sid, ev, payload) => processes.AddSharedRegular(sid, ev, payload),
             Count = sid => ritual!.Count(sid),
         };
         var actions = new RawPriestRitualActions(Pool, WorldFrames, new()
@@ -3527,7 +3527,7 @@ public sealed partial class HostSession
             ClearBlocked = (_, _, _) => throw new InvalidOperationException("Dais 경로 막힘 정리 미연결(R6)"),
         });
         var state = new DaisRegularState(templeState, runeState, new SquidProcessState(), new SquidRewardState(), unchecked((uint)MissionPlayer.BattleOwner));
-        _daisRegular = new RawDaisRegular(Pool, hash, types, WorldFrames, ritual, rune, carrier, processes, lookup, path, state, DaisRegularHooks(fallback));
+        _daisRegular = new RawDaisRegular(Pool, hash, types, WorldFrames, ritual, rune, carrier, processes, lookup, path, state, DaisRegularHooks(fallback, reward, unchecked((uint)MissionPlayer.BattleOwner)));
         _beforeDaisRegular = fallback;
         processes.SetRegularHandler(RegularHandlerWithDais(_beforeDaisRegular));
     }
@@ -3535,10 +3535,13 @@ public sealed partial class HostSession
     /// <summary>Dais 정기 본체다. 의식 공통 후처리·예약 장치를 세션 수명과 같이 유지한다.</summary>
     private RawDaisRegular? _daisRegular;
 
-    /// <summary>Dais 정기 본체가 쓰는 실제 하위 효과다. 의식 공통 후처리·예약·손상은 실제 장치를 쓰고 나머지는 R6에서 잇는다.</summary>
+    /// <summary>Dais 정기 본체가 쓰는 실제 하위 효과다. 프레임 지정·삭제·공통 예약·손상·로컬 SP는 실제 장치를 쓰고 나머지는 R6에서 잇는다.</summary>
     /// <param name="fallback">Dais가 맡지 않는 사건의 기존 처리기다. 없으면 payload를 돌려준다.</param>
-    /// <returns>프레임 지정·삭제·공통 예약·손상은 실제 장치, 나머지는 명시 거부다.</returns>
-    private DaisRegularHooks DaisRegularHooks(RegularHandler? fallback) => new()
+    /// <param name="reward">같은 세션 SP 저장소를 쓰는 실제 보상 본체다. 로컬 SP 획득이 같은 owner에 가산한다.</param>
+    /// <param name="localOwner">로컬 SP를 받는 현재 전투 소유자다.</param>
+    /// <returns>프레임 지정·삭제·공통 예약·손상·로컬 SP는 실제 장치, 나머지는 명시 거부다.</returns>
+    /// <remarks>2026-11-25 0.996에서 AddLocalSp를 실제 보상 가산으로 연결했다. 근거: cpppj o/RawDaisRegular.cpp 245행의 MakeDaisRegularHooks 패치 경로. Damageable 전체 몸체는 RawAssetRegular 이식(R6)에서 잇는다.</remarks>
+    private DaisRegularHooks DaisRegularHooks(RegularHandler? fallback, RawSquidReward reward, uint localOwner) => new()
     {
         SetFrame = (sid, frame, flags) => (_terrainFrames ?? throw new InvalidOperationException("Dais 정기 프레임 미연결")).Set(sid, frame, flags),
         Destroy = (sid, flags) => BuildSessionDestroy("Dais", PlayerProcesses)(sid, flags),
@@ -3554,7 +3557,7 @@ public sealed partial class HostSession
         ProcessType = _ => throw new InvalidOperationException("Dais Path 조회 미연결(R6)"),
         PathMetadata = _ => throw new InvalidOperationException("Dais Path 메타 미연결(R6)"),
         Damageable = (sid, ev, count, payload) => fallback?.Invoke(sid, ev, count, payload) ?? payload,
-        AddLocalSp = _ => throw new InvalidOperationException("Dais SP 획득 미연결(R6)"),
+        AddLocalSp = delta => reward.AddSp(localOwner, delta),
         NormalizeForeignSp = _ => throw new InvalidOperationException("Dais 다른 SP 변환 미연결(R6)"),
         GrantForeignType = (_, _) => throw new InvalidOperationException("Dais 다른 타입 획득 미연결(R6)"),
         LocalSpecial = _ => throw new InvalidOperationException("Dais 로컬 특수 획득 미연결(R6)"),
