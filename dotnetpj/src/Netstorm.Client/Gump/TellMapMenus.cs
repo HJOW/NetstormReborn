@@ -83,7 +83,7 @@ public static class TellMapMenus
     }
 
     /// <summary>같은 캐시·파일 키·현재 선택을 Tell 메타의 맵 행 장치에 연결한다. 스크롤 창 상태도 같은 목록 상태에 둔다.</summary>
-    /// <remarks>2026-11-11 0.363에서 5차 스크롤 장치 배선을 추가했다. 이동 행 선택 소비는 메뉴 소유자(R7)에서 잇는다.</remarks>
+    /// <remarks>2026-11-11 0.363에서 5차 스크롤 장치 배선을 추가했다. 이동 행 선택은 FortSelection.Dispatch의 ScrollMapList에서 소비한다(1.043).</remarks>
     public static TellMapMenuHooks Bind(RawSoloMapList list, SoloMapListState state, Action<bool> selectFileSpec,
         Func<string> current, Func<string> fallback, Action<uint> begin, Action<SoloMapRow, uint> add, Func<string, string>? translate = null)
     {

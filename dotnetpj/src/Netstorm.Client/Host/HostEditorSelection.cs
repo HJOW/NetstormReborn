@@ -71,7 +71,14 @@ public sealed class HostEditorSelection : IDisposable
         ResolveString = _strings.Resolve,
         LastEditPath = () => _startup.Configuration.PathSpec("lastEditFort"),
         Pending = name => PendingName = FortSelection.PendingName(name, () => Debug.WriteLine("Fort pending 이름의 점 진단")),
-        Refresh = mode => Catalog.List.Refresh(mode), Tell = _tell
+        Refresh = mode => Catalog.List.Refresh(mode), Tell = _tell,
+        // 5차: 이동 행은 목록 창을 옮기고 같은 캐시로 다시 표시한다. 범위는 표시 때 창에 맞춘다.
+        ScrollMapList = delta =>
+        {
+            Catalog.State.WindowFirst = Math.Max(0, Catalog.State.WindowFirst + delta);
+            Catalog.State.KeepCache = true;
+            _tell("LoadEditable");
+        }
     });
 
     /// <summary>State 소비 전에 미이식 월드 경계를 명시한다.</summary>

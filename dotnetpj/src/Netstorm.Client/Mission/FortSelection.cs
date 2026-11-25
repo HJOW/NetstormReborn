@@ -1,4 +1,5 @@
 using System.Buffers.Binary;
+using System.Globalization;
 using Netstorm.Client.Input;
 
 namespace Netstorm.Client.Mission;
@@ -34,6 +35,8 @@ public sealed class FortSelectionHooks
     public Func<double>? GameSeconds { get; init; }
     public Func<uint, int>? OwnedIslands { get; init; }
     public Action<uint>? Notify { get; init; }
+    /// <summary>맵 목록의 이전·다음 창 이동 행이다. 인자는 이동할 행 수의 10진 문자열이다.</summary>
+    public Action<int>? ScrollMapList { get; init; }
 }
 
 /// <summary>편집 선택의 현재 입력과 지연 State 예약이다. 근거: cpppj FortSelection.cpp.</summary>
@@ -96,7 +99,7 @@ public static class FortSelection
         if (Need(hooks.OwnedIslands)(state.Owner) < 1) { Core(hooks, state.TemplateOwner).Span[0] &= 0xfb; Need(hooks.Notify)(state.TemplateOwner); }
     }
 
-    /// <summary>AskEditFort·ReadFort를 현재 전역과 실제 선택 장치에 분배한다.</summary>
+    /// <summary>AskEditFort·ReadFort·ScrollMapList를 현재 전역과 실제 선택 장치에 분배한다.</summary>
     public static bool Dispatch(InputEvent input, FortSelectionGlobals state, FortSelectionHooks hooks)
     {
         if ((input.Code & InputCode.Release) != 0) return false;
@@ -107,6 +110,11 @@ public static class FortSelection
             case ReadFort:
                 Need(hooks.Pending)(Need(hooks.ResolveString)(unchecked((uint)input.Y)));
                 if (state.Mode == 0) RequestRead(state); else RequestEdit(state, hooks); return true;
+            case ScrollMapList:
+                // 5차: 이동 행의 10진 인자를 목록 창에 더하고 같은 캐시로 다시 표시한다. 원본에는 없는 명령이다.
+                // 근거: TellMapMenus.Append의 AppendScroll 행(이전·다음)과 SoloMapListState.WindowFirst·KeepCache다.
+                if (!int.TryParse(Need(hooks.ResolveString)(unchecked((uint)input.Y)), NumberStyles.Integer, CultureInfo.InvariantCulture, out int delta)) return false;
+                Need(hooks.ScrollMapList)(delta); return true;
             default: return false;
         }
     }
