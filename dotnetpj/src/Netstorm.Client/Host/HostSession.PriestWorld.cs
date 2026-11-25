@@ -50,8 +50,8 @@ public sealed partial class HostSession
         live.OwnerAssertion ??= (expression, file, line) => throw new InvalidOperationException($"사제 Owner 원본 진단: {expression} {file}:{line}");
         live.ForcefieldAssertion ??= (expression, file, line) => throw new InvalidOperationException($"보호막 원본 진단: {expression} {file}:{line}");
         live.FindTypeAt = FindWorldTypeAt;
-        live.Destroy ??= (_, _) => throw PriestMissing("가상 삭제");
-        live.ClaimGround ??= (_, _, _) => throw PriestMissing("다이스 소유자");
+        live.Destroy ??= (sid, flags) => DestroyWorldObject(sid, flags);
+        live.ClaimGround ??= (x, y, owner) => (_islandPostPop ?? throw new InvalidOperationException("사제 지면 소유자 연결 통지 미연결")).SetSupportOwner(x, y, owner);
         live.DependentFound ??= () => throw PriestMissing("너겟 보충");
         // cpppj 실제 조립의 reserveRegular []{return true;}와 같으며 AddRegular가 실제 객체를 할당한다.
         live.ReserveRegular ??= static () => true;
