@@ -83,7 +83,7 @@ public sealed class RawTileSpritesTests
         var scene = new TileScene();
         var pixels = new byte[1024 * 768];
         RenderCollectionEntry entry = Place(scene, 20, 20);
-        RawTileSprites.DrawTile(entry, scene.Pool, scene.Types, scene.Database, 0, 0, pixels, 1024, 768, new(0, 0, 1024, 768));
+        RawTileSprites.DrawTile(entry, scene.Pool, scene.Types, scene.Database, 0, 0, pixels, 1024, 768, new(0, 0, 1024, 768), PlainModes(scene));
         int block = (int)scene.Tile.Type - 70;
         var image = scene.Database.Decode(block, scene.Tile.Frame);
         int expected = image.Opacity.Count(pixel => pixel != 0);
@@ -103,6 +103,9 @@ public sealed class RawTileSpritesTests
         }
     }
 
+    private static RawTileDrawModes PlainModes(TileScene scene) =>
+        new() { OwnerMaps = new byte[scene.Types.Count] };
+
     /// <summary>클립 밖은 건드리지 않는다.</summary>
     [Fact]
     public void ClipRestrictsPaint()
@@ -110,7 +113,7 @@ public sealed class RawTileSpritesTests
         var scene = new TileScene();
         var pixels = new byte[1024 * 768];
         RenderCollectionEntry entry = Place(scene, 20, 20);
-        RawTileSprites.DrawTile(entry, scene.Pool, scene.Types, scene.Database, 0, 0, pixels, 1024, 768, new(0, 0, 8, 8));
+        RawTileSprites.DrawTile(entry, scene.Pool, scene.Types, scene.Database, 0, 0, pixels, 1024, 768, new(0, 0, 8, 8), PlainModes(scene));
         Assert.All(pixels, pixel => Assert.Equal(0, pixel));
     }
 
@@ -123,14 +126,90 @@ public sealed class RawTileSpritesTests
         var clip = new ScreenRect(0, 0, 1024, 768);
         RenderCollectionEntry shadow = Place(scene, 20, 20, tail: 4);
         var missing = Assert.Throws<InvalidOperationException>(() =>
-            RawTileSprites.DrawTile(shadow, scene.Pool, scene.Types, scene.Database, 0, 0, pixels, 1024, 768, clip));
-        Assert.Contains("R5-3c", missing.Message);
+            RawTileSprites.DrawTile(shadow, scene.Pool, scene.Types, scene.Database, 0, 0, pixels, 1024, 768, clip, new RawTileDrawModes()));
+        Assert.Contains("색표 미연결", missing.Message);
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            RawTileSprites.DrawTile(new(0, 0, 3, 0, 1, 0), scene.Pool, scene.Types, scene.Database, 0, 0, pixels, 1024, 768, clip));
+            RawTileSprites.DrawTile(new(0, 0, 3, 0, 1, 0), scene.Pool, scene.Types, scene.Database, 0, 0, pixels, 1024, 768, clip, new RawTileDrawModes()));
         var badFrame = Place(scene, 20, 20);
         Span<byte> raw = Raw(scene.Pool, 100);
         BinaryPrimitives.WriteUInt32LittleEndian(raw[36..], 0xFFFFFFU);
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            RawTileSprites.DrawTile(badFrame, scene.Pool, scene.Types, scene.Database, 0, 0, pixels, 1024, 768, clip));
+            RawTileSprites.DrawTile(badFrame, scene.Pool, scene.Types, scene.Database, 0, 0, pixels, 1024, 768, clip, new RawTileDrawModes()));
+        var virtualEntry = Place(scene, 20, 20);
+        Raw(scene.Pool, 100)[40] = 2;
+        var virtualMissing = Assert.Throws<InvalidOperationException>(() =>
+            RawTileSprites.DrawTile(virtualEntry, scene.Pool, scene.Types, scene.Database, 0, 0, pixels, 1024, 768, clip, new RawTileDrawModes()));
+        Assert.Contains("R5-3c2", virtualMissing.Message);
+    }
+
+    private static byte[] ConstantTable(byte value)
+    {
+        var table = new byte[256];
+        Array.Fill(table, value);
+        return table;
+    }
+
+    /// <summary>그림자는 대상 화면 색을 표에서 변환한다.</summary>
+    [Fact]
+    public void ShadowTransformsDestination()
+    {
+        var scene = new TileScene();
+        var pixels = new byte[1024 * 768];
+        Array.Fill(pixels, (byte)7);
+        RenderCollectionEntry entry = Place(scene, 20, 20, tail: 4);
+        var modes = new RawTileDrawModes { ShadowTable = ConstantTable(99) };
+        RawTileSprites.DrawTile(entry, scene.Pool, scene.Types, scene.Database, 0, 0, pixels, 1024, 768, new(0, 0, 1024, 768), modes);
+        Assert.Contains(pixels, pixel => pixel == 99);
+    }
+
+    /// <summary>죽음·추상은 각 색표로 칠하고 로컬이 아니면 추상을 건너뛴다.</summary>
+    [Fact]
+    public void DeadAndAbstractUseTables()
+    {
+        var scene = new TileScene();
+        var clip = new ScreenRect(0, 0, 1024, 768);
+        var deadPixels = new byte[1024 * 768];
+        RenderCollectionEntry dead = Place(scene, 20, 20);
+        Raw(scene.Pool, 100)[40] = 1;
+        var deadModes = new RawTileDrawModes { DeadTable = ConstantTable(77) };
+        RawTileSprites.DrawTile(dead, scene.Pool, scene.Types, scene.Database, 0, 0, deadPixels, 1024, 768, clip, deadModes);
+        Assert.Contains(deadPixels, pixel => pixel == 77);
+        var abstractPixels = new byte[1024 * 768];
+        RenderCollectionEntry proximity = Place(scene, 20, 20);
+        Raw(scene.Pool, 100)[40] = 0x10;
+        Raw(scene.Pool, 100)[34] = 5;
+        var abstractModes = new RawTileDrawModes { LocalPlayer = 5, AbstractTable = ConstantTable(66) };
+        RawTileSprites.DrawTile(proximity, scene.Pool, scene.Types, scene.Database, 0, 0, abstractPixels, 1024, 768, clip, abstractModes);
+        Assert.Contains(abstractPixels, pixel => pixel == 66);
+        var foreignPixels = new byte[1024 * 768];
+        Raw(scene.Pool, 100)[34] = 6;
+        RawTileSprites.DrawTile(proximity, scene.Pool, scene.Types, scene.Database, 0, 0, foreignPixels, 1024, 768, clip, abstractModes);
+        Assert.All(foreignPixels, pixel => Assert.Equal(0, pixel));
+    }
+
+    /// <summary>소유자 표가 있고 소유자가 있으면 소유자 색표로 칠한다.</summary>
+    [Fact]
+    public void OwnerUsesOwnerTable()
+    {
+        var scene = new TileScene();
+        var pixels = new byte[1024 * 768];
+        RenderCollectionEntry entry = Place(scene, 20, 20);
+        Raw(scene.Pool, 100)[34] = 3;
+        var ownerMaps = new byte[scene.Types.Count];
+        ownerMaps[(int)scene.Tile.Type] = 1;
+        var modes = new RawTileDrawModes { OwnerMaps = ownerMaps, OwnerColors = _ => ConstantTable(55) };
+        RawTileSprites.DrawTile(entry, scene.Pool, scene.Types, scene.Database, 0, 0, pixels, 1024, 768, new(0, 0, 1024, 768), modes);
+        Assert.Contains(pixels, pixel => pixel == 55);
+        // 특수 모드·거름이면 추상으로 간다
+        var specialPixels = new byte[1024 * 768];
+        var specialModes = new RawTileDrawModes
+        {
+            SpecialMode = 1,
+            WideOwnerType = scene.Tile.Type,
+            AbstractTable = ConstantTable(66),
+        };
+        Raw(scene.Pool, 100)[34] = 0;
+        RawTileSprites.DrawTile(entry, scene.Pool, scene.Types, scene.Database, 0, 0, specialPixels, 1024, 768, new(0, 0, 1024, 768), specialModes);
+        Assert.Contains(specialPixels, pixel => pixel == 66);
     }
 }
