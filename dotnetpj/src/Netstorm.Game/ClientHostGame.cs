@@ -330,7 +330,12 @@ public sealed partial class ClientHostGame : Game
             // RU-3c 숨은 입력줄의 문자 Enter를 실제 Chat 창의 표시·열기로 연결한다. 표시 중이면 아래로 넘긴다.
             _menuInput.BindChatEnter(input => NativeChatWindows.OpenInput(input));
             _menuInput.BindScreenMode(() => _driver.Screen.Flags, ChangeScreenMode, AcceptScreenMode);
-            _editor = new HostEditorSelection(_startup, _scriptStrings, _menuInput.ShowTell, sharedTemplates: _stateResources.Templates);
+            // WP-5b: Edit 작업본 루트를 사용자 CustomMaps로 둔다. 설치 경로는 읽기만 하고 새 맵은 CustomMaps에 저장된다.
+            // 사용자 루트를 정할 수 없으면 종전 형제 작업본 동작으로 둔다.
+            EditorCatalogWorkspace? editorWorkspace = null;
+            try { editorWorkspace = new EditorCatalogWorkspace(_startup.Files, UserDataRoot.Resolve().CustomMaps()); }
+            catch (InvalidOperationException) { }
+            _editor = new HostEditorSelection(_startup, _scriptStrings, _menuInput.ShowTell, workspace: editorWorkspace, sharedTemplates: _stateResources.Templates);
             _htmlFactory.BindMapCatalog(_editor.Catalog, _htmlMenus, _scriptStrings, () => _editor.CurrentName, () => _editor.PendingName);
             _menuInput.BindEditor(_editor);
             var fortConfirmation = new HostFortNameConfirmation(_startup, _mainMenu, _textEntry, _driver.Input, _scriptStrings, _editor.Workspace, _menuInput.ShowTell);
