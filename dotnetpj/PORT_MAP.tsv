@@ -900,8 +900,8 @@ cpppj/src/o/RawAiBrain.cpp	Netstorm.Core/Original/RawAiBrain.cs	04c87c034dd35923
 cpppj/src/o/RawAiBrain.h	Netstorm.Core/Original/RawAiBrain.cs	04c87c034dd35923a20a363fd9a24ff708329648	L1
 cpppj/src/o/RawAiBrainInitialUpdate.cpp	Netstorm.Core/Original/RawAiBrainInitialUpdate.cs	efa953c41c6e53b21cfbea5ebd8948124d94edf1	L1
 cpppj/src/o/RawAiBrainInitialUpdate.h	Netstorm.Core/Original/RawAiBrainInitialUpdate.cs	efa953c41c6e53b21cfbea5ebd8948124d94edf1	L1
-cpppj/src/o/RawAiBridgePath.cpp	Netstorm.Core/Original/RawAiBridgePath.cs	31b8f6e6bfcd713e56b2d4a9afd2443c943e97a88	port
-cpppj/src/o/RawAiBridgePath.h	Netstorm.Core/Original/RawAiBridgePath.cs	31b8f6e6bfcd713e56b2d4a9afd2443c943e97a88	port
+cpppj/src/o/RawAiBridgePath.cpp	Netstorm.Core/Original/RawAiBridgePath.cs	31b8f6e6b620831eac809a35c51f6e87c163b37f	port
+cpppj/src/o/RawAiBridgePath.h	Netstorm.Core/Original/RawAiBridgePath.cs	31b8f6e6b620831eac809a35c51f6e87c163b37f	port
 cpppj/src/o/RawAiBuildChoice.cpp	Netstorm.Core/Original/RawAiBuildChoice.cs	47a78175dee45ac90361c35567039bbb8fa0f989	port
 cpppj/src/o/RawAiBuildChoice.h	Netstorm.Core/Original/RawAiBuildChoice.cs	47a78175dee45ac90361c35567039bbb8fa0f989	port
 cpppj/src/o/RawAiBuildSearch.cpp	Netstorm.Core/Original/RawAiBuildSearch.cs	bd6653bf94c583cc3297d7d48dc53f36045b6ed3	port
@@ -938,8 +938,8 @@ cpppj/src/o/RawAiFakeDrySpots.cpp	Netstorm.Core/Original/RawAiFakeDrySpots.cs	0e
 cpppj/src/o/RawAiFakeDrySpots.h	Netstorm.Core/Original/RawAiFakeDrySpots.cs	0e703d47362ff533cbb722f22d8868f7f83020bb	port
 cpppj/src/o/RawAiPriestActions.cpp	Netstorm.Core/Original/RawAiPriestActions.cs	c57ed7a3d169ab8f3799d1563b613761819cf61d	port
 cpppj/src/o/RawAiPriestActions.h	Netstorm.Core/Original/RawAiPriestActions.cs	c57ed7a3d169ab8f3799d1563b613761819cf61d	port
-cpppj/src/o/RawAiResourceChoice.cpp	Netstorm.Core/Original/RawAiResourceChoice.cs	ff7e02305d846779aa69a4f3c37df62937770f5e1	port
-cpppj/src/o/RawAiResourceChoice.h	Netstorm.Core/Original/RawAiResourceChoice.cs	ff7e02305d846779aa69a4f3c37df62937770f5e1	port
+cpppj/src/o/RawAiResourceChoice.cpp	Netstorm.Core/Original/RawAiResourceChoice.cs	ff7e02305f594b0f676ad777746b80bdaaab5d77	port
+cpppj/src/o/RawAiResourceChoice.h	Netstorm.Core/Original/RawAiResourceChoice.cs	ff7e02305f594b0f676ad777746b80bdaaab5d77	port
 cpppj/src/o/RawAiWallet.cpp	Netstorm.Core/Original/RawAiWallet.cs	68fa942631ca0c71da8b135339ac5bffc5aaa24f	port
 cpppj/src/o/RawAiWallet.h	Netstorm.Core/Original/RawAiWallet.cs	68fa942631ca0c71da8b135339ac5bffc5aaa24f	port
 cpppj/src/o/RawAmbientWind.cpp	Netstorm.Core/Original/RawAmbientWind.cs	e5a198df450ae720da38f5110ebc611119ea2f38	L1
