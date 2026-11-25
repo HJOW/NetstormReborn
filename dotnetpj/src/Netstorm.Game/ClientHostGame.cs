@@ -691,6 +691,9 @@ public sealed partial class ClientHostGame : Game
             // 감시 쌍·프로세스 Form은 같은 세션 장치를 등록하고 Gump·내용물 Form은 UI·내용물 본체(R3)에서 잇는다.
             // 자산 뿌리는 원문 83개 가상표 전체를 실제 공통 본체로 보내며 미복원 표는 명시 거부한다.
             session.BuildWorldDeletionRootDevices();
+        // R5-1 미션 카메라 장치 조립. 실제 화면 이동·dirty·다시 그리기를 제품 장치에 잇는다. 배경 시차·투영은 R6·DI-4 범위에서 잇는다.
+        // 근거: cpppj UberGumpCamera.cpp의 CommitCameraNow·ApplyCameraFrame 결선이다. 시작 덤프에는 닿지 않는다.
+        BindMissionCameraDevices(session);
             // RU-3c 실제 미션 Root에 표시 창을 만들고 같은 트리 루트에 부착한다. 부착 전 Enter는 부모 없음으로 거부된다.
             // 근거: GumpTree.Push/Attach의 void·부모 규칙과 ChatWindow Native 입력 호출자. 메뉴 경로는 바꾸지 않는다.
             _ = NativeChatWindows.Create();
@@ -754,6 +757,8 @@ public sealed partial class ClientHostGame : Game
                 _missionBurning?.PrepareFrame(_clientClock.Frame.Value.Game, unchecked((uint)_clientClock.Frame.Value.Number));
                 mission.RunMissionFrame();
             });
+            // R5-1: 매 프레임 실제 지도 영역으로 카메라 목표·현재값을 적용한다.
+            ApplyMissionCameraFrame(mission);
         }
         bool menuDrew = false;
         if (_menuDirty && _gumpDrawing is not null && _startup is not null)
