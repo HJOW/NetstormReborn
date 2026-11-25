@@ -724,8 +724,11 @@ public sealed partial class ClientHostGame : Game
         PumpMouse();
         if (_menuInput?.NotifyPointer(Poll(0xffff)) == 0) _cursor?.Set(GameCursor.Arrow);
         if (_driver.ProcessInput()) { Exit(); return; }
-        if (_startup?.Configuration.Configuration.Changed == true) _startup.SaveOptions();
-        if (_clientClock.Initialized)
+        // SL-7: 영상 갱신 잠금 중에는 설정 저장·주변음·바람·미션 프레임을 건너뛰고 idle·그리기만 실행한다.
+        // 근거: cpppj ClientMain.cpp 598행(원문439abe은 Moviegump 소유 0054dc58의 양수만 검사)과 618행(잠금 중 Idle만 계속). 영상 재생(R6) 없이는 잠기지 않는다.
+        bool movieLocked = _localState.IsMovieUpdateLocked;
+        if (_startup?.Configuration.Configuration.Changed == true && !movieLocked) _startup.SaveOptions();
+        if (_clientClock.Initialized && !movieLocked)
         {
             // 원문439aeb/439af0의주변음→바람은입력/설정저장뒤이며Kernel보다먼저같은난수를소비한다.
             // 같은장기바람은메뉴에서도진행한다. 실제소리/모달/번쩍임은후속연결범위다.
@@ -743,7 +746,8 @@ public sealed partial class ClientHostGame : Game
         _menuInput?.FinishFrame();
         // 미션 프레임의 월드·건설 효과(연소 준비·Kernel 정기)는 현재 Runtime pin 안에서 실행한다.
         // 근거: 원문 프레임 처리의 월드 pin 보유다. WP-4d에서 실제 설치했다. 미션 없으면 종전대로 둔다.
-        if (_missionSession is { } mission)
+        // SL-7: 영상 갱신 잠금 중에는 미션 프레임도 건너뛴다.
+        if (_missionSession is { } mission && !movieLocked)
         {
             mission.RunPinnedWorldFrame(() =>
             {

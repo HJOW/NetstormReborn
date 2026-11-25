@@ -150,6 +150,14 @@ public sealed class ClientLocalStateGlobals
     public DoubleBox LocalServerSearchEnd { get; } = new();
     /// <summary>005c8608의 별도 재송신 기한이다.</summary>
     public DoubleBox LocalServerRetryEnd { get; } = new();
+    /// <summary>실제 Moviegump가 소유하는 0054dc58의 현재 영화 갱신 잠금 깊이이며 BSS0에서 시작한다. 게임 시계 정지와 구별하며 영상 중에도 idle은 실행한다.</summary>
+    public int MovieUpdatePauseDepth { get; private set; }
+    /// <summary>양수 깊이에서만 갱신 블록을 건너뛴다. 0 이하는 잠그지 않는다.</summary>
+    public bool IsMovieUpdateLocked => MovieUpdatePauseDepth > 0;
+    /// <summary>원본 00435dc0의 같은 갱신 깊이를 32비트로 가감하며 게임 시계와 합치지 않는다.</summary>
+    /// <param name="paused">잠그면 참, 풀면 거짓이다.</param>
+    /// <remarks>2026-11-26 1.060에서 SL-7 영화 갱신 잠금용으로 추가했다. 근거: cpppj ClientMain.cpp의 PauseMovieUpdates다. 영상 재생(R6) 없이는 잠기지 않는다.</remarks>
+    public void PauseMovieUpdates(bool paused) => MovieUpdatePauseDepth = unchecked(MovieUpdatePauseDepth + (paused ? 1 : -1));
     /// <summary>기존 실제 저장 모드/주변음을 빌리고 새로운 블록/최초 PE값만 한 번 구성한다.</summary>
     public ClientLocalStateGlobals(ClientGameplayGlobals gameplay, AmbientSoundState ambient)
     {
