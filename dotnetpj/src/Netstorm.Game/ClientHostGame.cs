@@ -697,6 +697,9 @@ public sealed partial class ClientHostGame : Game
         // R5-2d3 미션 월드 수집 장치 조립. 같은 저장소·화면 크기로 타일·객체 수집기를 묶는다. 수집은 참조만 빌려 적재 뒤에도 같은 장치를 쓰며 배경·제출·매 프레임 구동은 R5-3에서 잇는다.
         // 근거: cpppj ClientRendererFrame.cpp의 Collect가 같은 Pool/해시/타입/셰이프로 수집기를 다시 만드는 결선이다. 시작 덤프에는 닿지 않는다.
         session.BuildWorldDrawingDevices(storage.Hash, storage.Pool, storage.Types, storage.Shapes, NativeMapView, _driver.Screen.Width, _driver.Screen.Height);
+        // R5-3c3 미션 월드 프레임 구동 장치. 앞단·구름·SHP·타일 모드를 묶으며 수집기는 위 세션 조립을 쓴다.
+        // 근거: cpppj ClientRendererFrame의 수집기 재생성과 DrawEntry 표시기 소유다. 시작 덤프에는 닿지 않는다.
+        BindMissionWorldDrawing(shpRaw);
             // RU-3c 실제 미션 Root에 표시 창을 만들고 같은 트리 루트에 부착한다. 부착 전 Enter는 부모 없음으로 거부된다.
             // 근거: GumpTree.Push/Attach의 void·부모 규칙과 ChatWindow Native 입력 호출자. 메뉴 경로는 바꾸지 않는다.
             _ = NativeChatWindows.Create();
@@ -762,6 +765,8 @@ public sealed partial class ClientHostGame : Game
             });
             // R5-1: 매 프레임 실제 지도 영역으로 카메라 목표·현재값을 적용한다.
             ApplyMissionCameraFrame(mission);
+            // R5-3c3: 미션 월드의 앞단·수집·제출을 실제 화면 버퍼에 합성한다. 메뉴 그리기는 뒤에 덮는다.
+            RenderMissionWorldFrame();
         }
         bool menuDrew = false;
         if (_menuDirty && _gumpDrawing is not null && _startup is not null)

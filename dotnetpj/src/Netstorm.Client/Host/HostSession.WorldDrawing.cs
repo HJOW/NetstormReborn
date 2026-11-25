@@ -86,9 +86,10 @@ public sealed partial class HostSession
         {
             Sprite = entry =>
             {
+                // 타일 외 종류(일반 자산·UI·건설·미리보기)는 그리기 장치가 뒤 조각이다. 제품이 멈추지 않게 건너뛴다.
                 if (entry.Kind != 1)
                 {
-                    throw new InvalidOperationException("월드 종류별 그리기 미연결(R5-3c3)");
+                    return;
                 }
                 RawTileSprites.DrawTile(entry, pool, types, database, cameraX, cameraY, pixels, pitch, height, clip, modes);
             },
