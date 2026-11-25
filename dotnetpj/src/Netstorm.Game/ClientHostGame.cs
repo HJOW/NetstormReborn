@@ -346,7 +346,7 @@ public sealed partial class ClientHostGame : Game
             // --mission 진입이면 세션 데이터를 조립해 world 1 덤프에 연결한다. 월드 본체 조립은 다음 단위다.
             // (2026-11-12 0.398에서 미션 시작 흐름으로 추가했다)
             if (!string.IsNullOrEmpty(_options.Mission) && _startup is not null)
-                sessionDump.BindSession(StartMission(_options.Mission, _options.Handle ?? "Player"));
+                sessionDump.BindSession(StartMission(_options.Mission, _options.Handle ?? "Player", _options.Demo ? 1u : null));
             _driver.BindSessionDump(sessionDump.Write);
             _gumpDrawing.Draw();
             _menuDirty = false;
@@ -398,12 +398,14 @@ public sealed partial class ClientHostGame : Game
     /// <summary>--mission 진입의 세션 데이터 조립이다. 요새 적재·목록·SP·AI·참가자를 묶고 소유한다.</summary>
     /// <param name="mission">들어갈 미션 이름.</param>
     /// <param name="handle">미션 1번의 핸들.</param>
+    /// <param name="demo">데모 진입 강제값. null이면 미션 스크립트의 demo 값을 쓴다.</param>
     /// <remarks>2026-11-12 0.398에서 미션 시작 흐름으로 추가했다. 대본·타입 표는 목록용으로 한 번 더 연다.
     /// 요새 적재 장치가 가진 것과 같은 입력이며 세션이 표를 소유하면 합친다. 0.401에서 동맹 마스크 기록을 연결했다.
     /// 0.406에서 로컬 1번의 가입·준비·Ready packet 송신을 연결했다(구독자 1은 mySubscriber 기본값이며 전송 갈고리는 기록만 한다).
     /// 0.407에서 단독 바인딩 Zone 설치를 연결했다(조합 검사와 같은 입력·순서이며 실제 서브 바인딩은 로컬 네트워크 단위에서 잇는다).
-    /// 월드 본체 조립·브리핑 화면은 다음 단위다.</remarks>
-    private HostSession StartMission(string mission, string handle)
+    /// 월드 본체 조립·브리핑 화면은 다음 단위다.
+    /// 2026-11-25 0.998에서 R4-7a 데모 3경로 진입용으로 demo 강제값을 추가했다. 근거: cpppj UberGump.cpp 1716행의 StartDemo→BeginMission(이름, 1). 대본에 demo 키가 없는 guardmyback·dissolvedalliance 데모 진입에 쓴다.</remarks>
+    private HostSession StartMission(string mission, string handle, uint? demo = null)
     {
         if (_startup is null) throw new InvalidOperationException("미션 진입에 시작 화면 없음");
         if (_missionRuntime is not null) throw new InvalidOperationException("기존 실제 Runtime 반납 전 미션 재시작");
@@ -411,9 +413,11 @@ public sealed partial class ClientHostGame : Game
         using var script = new MissionScript(_startup.Configuration, mission);
         // RU-1 현재 Menu 데모 getter용 실제 owner: 미션 스크립트의 demo 값을 같은 호스트에 보관한다.
         // 근거: cpppj UberGump.cpp 226행의 missionRuntime_->gate.demo. DN 미션 Runtime은 gate를 아직 노출하지 않아 호스트가 보관한다.
+        // R4-7a 데모 진입은 cpppj UberGump.cpp 1716행의 StartDemo→BeginMission(이름, 1)과 같이 demo를 강제 지정한다.
         {
             string? demoText = script.Get("demo");
-            _missionDemo = string.IsNullOrEmpty(demoText) ? 0u : unchecked((uint)Netstorm.Assets.ConfigNumbers.ParseLong(demoText));
+            uint scripted = string.IsNullOrEmpty(demoText) ? 0u : unchecked((uint)Netstorm.Assets.ConfigNumbers.ParseLong(demoText));
+            _missionDemo = demo ?? scripted;
         }
         HostAssetTables assets = AssetTables;
         RiftTypeTable types = assets.TypeTable;

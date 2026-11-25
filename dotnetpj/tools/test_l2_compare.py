@@ -52,6 +52,17 @@ class L2CompareTests(unittest.TestCase):
         self.assertEqual(31, len(set(l2_compare.MISSIONS)))
         self.assertEqual(3, len(l2_compare.DEMOS))
 
+    def test_demo_entry_uses_matching_paths(self):
+        """cpp 데모는 StartDemo 명령으로, DN 데모는 --mission/--demo로 진입한다."""
+        self.assertEqual(["--mission", "guardmyback", "--handle", "Youpson", "--demo"], l2_compare.entry_args("dn", "guardmyback", True))
+        self.assertEqual(["--mission", "thewarbegins", "--handle", "Youpson"], l2_compare.entry_args("dn", "thewarbegins", False))
+        self.assertEqual([], l2_compare.entry_args("cpp", "demostormrages", True))
+        self.assertEqual(["--mission", "thewarbegins"], l2_compare.entry_args("cpp", "thewarbegins", False))
+        self.assertEqual("5\tscript-command\tStartDemo,demostormrages\n", l2_compare.entry_script("cpp", "demostormrages", True))
+        self.assertEqual("", l2_compare.entry_script("dn", "demostormrages", True))
+        self.assertIn("Play Mission", l2_compare.entry_script("cpp", "thewarbegins", False))
+        self.assertEqual("", l2_compare.entry_script("dn", "thewarbegins", False))
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -45,6 +45,10 @@ public sealed class HostOptions
     /// <remarks>2026-11-12 0.398에서 L2 미션 진입용으로 추가했다. 대본 이름이 아니라 실제 핸들이 1번 기록에 들어간다.</remarks>
     public string? Handle { get; private set; }
 
+    /// <summary>데모 진입 여부. --demo 로 정하면 미션 스크립트 값과 관계없이 데모 1로 진입한다.</summary>
+    /// <remarks>2026-11-25 0.998에서 R4-7a 데모 3경로 진입용으로 추가했다. 근거: cpppj UberGump.cpp 1716행의 StartDemo→BeginMission(이름, 1). guardmyback·dissolvedalliance 대본에는 demo 키가 없어 강제 지정이 필요하다.</remarks>
+    public bool Demo { get; private set; }
+
     /// <summary>음향 장치를 만들지 않는지. --mute-audio 이면 참이다.</summary>
     /// <remarks>2026-11-12 0.384에서 cpppj `--mute-audio`와의 L4a 비교를 맞추려고 추가했다.
     /// 음소거이면 음향 장치 준비 판정(옵션 메뉴의 소리 행 사용 여부)이 거짓이다. 실제 무음향화는 R6에서 잇는다.</remarks>
@@ -128,6 +132,9 @@ public sealed class HostOptions
                 case "--handle":
                     options.Handle = TakeValue(args, ref i, "--handle");
                     break;
+                case "--demo":
+                    options.Demo = true;
+                    break;
                 case "--mute-audio":
                     options.MuteAudio = true;
                     break;
@@ -146,7 +153,7 @@ public sealed class HostOptions
 
     /// <summary>사용법을 돌려준다. 오류 종료 때 그대로 출력한다.</summary>
     public static string Usage() =>
-        "사용법: Netstorm.exe [--window|--fullscreen] [--width N] [--height N] [--fps N] [--frames N] [--fixed-frame-ms N] [--fixed-unix-seconds S] [--ui-script steps.tsv] [--ui-report report.tsv] [--mute-audio] [--mission name] [--handle name] [--set \"k=v;k=v...\"]";
+        "사용법: Netstorm.exe [--window|--fullscreen] [--width N] [--height N] [--fps N] [--frames N] [--fixed-frame-ms N] [--fixed-unix-seconds S] [--ui-script steps.tsv] [--ui-report report.tsv] [--mute-audio] [--mission name] [--handle name] [--demo] [--set \"k=v;k=v...\"]";
 
     /// <summary>고정 시각 프레임 밀리초(1~60000)를 읽는다.</summary>
     private static uint TakeFixedFrameMs(string[] args, ref int index)

@@ -118,6 +118,27 @@ def compare(cpp_path, dn_path):
     }
 
 
+def entry_script(engine, mission, demo):
+    """엔진·데모 여부에 따른 ui-script 진입부를 만든다. cpp 데모만 StartDemo 명령을 쓰고 DN은 --mission으로 곧장 진입한다."""
+    if engine == "cpp" and demo:
+        return f"5\tscript-command\tStartDemo,{mission}\n"
+    if engine == "cpp":
+        return "5\tclick-if\tPlay Mission\n30\tclick-if\tPlay Mission\n60\tclick-if\tPlay Mission\n"
+    return ""
+
+
+def entry_args(engine, mission, demo):
+    """엔진·데모 여부에 따른 진입 인자를 만든다. DN 데모는 대본 키와 무관하게 --demo로 데모 1을 강제한다."""
+    args = []
+    if not demo or engine == "dn":
+        args += ["--mission", mission]
+    if engine == "dn":
+        args += ["--handle", "Youpson"]
+        if demo:
+            args += ["--demo"]
+    return args
+
+
 def capture(engine, mission, demo, directory, seed, host_exe=None):
     """한 엔진을 새 사용자 루트로 실행하고90프레임의 관측을 남긴다. 공격 명령은 보내지 않는다."""
     output = directory / engine
@@ -128,10 +149,7 @@ def capture(engine, mission, demo, directory, seed, host_exe=None):
     user = output / "user"
     user.mkdir()
     steps = output / "steps.tsv"
-    prefix = "5\tclick-if\tPlay Mission\n30\tclick-if\tPlay Mission\n60\tclick-if\tPlay Mission\n"
-    if demo:
-        prefix = f"5\tscript-command\tStartDemo,{mission}\n"
-    steps.write_text((prefix if engine == "cpp" else "") + f"90\tsession-dump\t{dump.as_posix()}\n", encoding="utf-8")
+    steps.write_text(entry_script(engine, mission, demo) + f"90\tsession-dump\t{dump.as_posix()}\n", encoding="utf-8")
     executable = ROOT / ("cpppj/build/bin/Release/Netstorm.exe" if engine == "cpp" else
                          "dotnetpj/src/Netstorm.Game/bin/Release/net10.0/Netstorm.exe")
     data = ROOT / "extracted/dotnet-oracle-data"
@@ -140,10 +158,7 @@ def capture(engine, mission, demo, directory, seed, host_exe=None):
     args = [str(executable)]
     if engine == "cpp":
         args += ["--run", str(data)]
-    if not demo:
-        args += ["--mission", mission]
-    if engine == "dn":
-        args += ["--handle", "Youpson"]
+    args += entry_args(engine, mission, demo)
     args += ["--window", "--mute-audio", "--frames", "120", "--fixed-frame-ms", "25",
              "--fixed-unix-seconds", str(seed), "--set", OPTIONS, "--ui-script", str(steps),
              "--ui-report", str(output / "report.tsv")]
@@ -186,15 +201,10 @@ def main():
         for route, mission, demo in routes:
             directory = args.out / route
             try:
-                # 데모는 새 호스트의 진입점이 아직 없으므로 cpp 기준선만 수집한다.
-                for engine in (("cpp",) if demo else ("cpp", "dn")):
+                for engine in ("cpp", "dn"):
                     if args.capture and not (directory / engine / "f090.tsv").exists():
                         capture(engine, mission, demo, directory, args.seed, args.host_exe)
-                if demo:
-                    read_dump(directory / "cpp/f090.tsv")
-                    result = {"l2_equal": False, "pending": "새 호스트 StartDemo 진입 미연결"}
-                else:
-                    result = compare(directory / "cpp/f090.tsv", directory / "dn/f090.tsv")
+                result = compare(directory / "cpp/f090.tsv", directory / "dn/f090.tsv")
                 results[route] = result
                 print(route, json.dumps(result, ensure_ascii=False), flush=True)
             except (OSError, ValueError, RuntimeError, subprocess.TimeoutExpired) as error:
