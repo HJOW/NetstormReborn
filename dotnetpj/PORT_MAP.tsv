@@ -274,6 +274,7 @@ cpppj/src/client/HudDividerInput.cpp	Netstorm.Client/Gump/HudDividerInput.cs	d2d
 cpppj/src/client/HudDividerInput.h	Netstorm.Client/Gump/HudDividerInput.cs	d2dd9fcb0a3322ae249a23ada4a9b1d29cc923d0	port
 cpppj/src/client/HudDock.cpp	Netstorm.Client/Gump/HudDividerGump.cs	53a1ebf945ea66c55541992e6dd14f1bab440d6d	port
 cpppj/src/client/HudDock.cpp	Netstorm.Client/Gump/HudDock.cs	53a1ebf945ea66c55541992e6dd14f1bab440d6d	port
+cpppj/src/client/HudDock.cpp	Netstorm.Game/ClientHostGame.HudDock.cs	2dda75fb2df92bfa341845bb058856623dca19ca	port
 cpppj/src/client/HudDock.h	Netstorm.Client/Gump/HudDividerGump.cs	53a1ebf945ea66c55541992e6dd14f1bab440d6d	port
 cpppj/src/client/HudDock.h	Netstorm.Client/Gump/HudDock.cs	53a1ebf945ea66c55541992e6dd14f1bab440d6d	port
 cpppj/src/client/HudDock.h	Netstorm.Client/Gump/HudDockState.cs	53a1ebf945ea66c55541992e6dd14f1bab440d6d	port
@@ -803,6 +804,7 @@ cpppj/src/client/UberHud.inc	Netstorm.Client/Host/HostChatReceive.cs	16431ec18a3
 cpppj/src/client/UberHud.inc	Netstorm.Game/ClientHostGame.ChatReceive.cs	16431ec18a3f7518d7aaa55929b280ab1cc6a8fb	port
 cpppj/src/client/UberHud.inc	Netstorm.Game/ClientHostGame.ChatWindows.cs	16431ec18a3f7518d7aaa55929b280ab1cc6a8fb	port
 cpppj/src/client/UberHud.inc	Netstorm.Game/ClientHostGame.ColorMaps.cs	16431ec18a3f7518d7aaa55929b280ab1cc6a8fb	port
+cpppj/src/client/UberHud.inc	Netstorm.Game/ClientHostGame.HudDock.cs	2dda75fb2df92bfa341845bb058856623dca19ca	port
 cpppj/src/client/UberHud.inc	Netstorm.Game/HostMissionAudio.cs	16431ec18a3f7518d7aaa55929b280ab1cc6a8fb	port
 cpppj/src/client/UberRootGump.cpp	Netstorm.Client/Gump/UberRootGump.cs	52cfee23d6440b89b7961bc8d6269b4aa1098038	port
 cpppj/src/client/UberRootGump.h	Netstorm.Client/Gump/UberRootGump.cs	52cfee23d6440b89b7961bc8d6269b4aa1098038	port

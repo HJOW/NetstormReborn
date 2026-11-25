@@ -317,6 +317,7 @@ public sealed partial class ClientHostGame : Game
             _htmlMenus.BindInput(_driver.Input, _buttonSound.PlayByName, (_, _) => _menuDirty = true);
             InitializeNativeChatWindows();
             InitializeNativeMinimap();
+            InitializeNativeHudDock();
             _htmlFactory = new HostHtmlFactory(_mainMenu, _htmlWindows, _htmlMenus, _startup, _driver.Screen, _driver.Input,
                 _scriptStrings, () => _clock.NowSeconds, _ => 0,
                 name => Debug.WriteLine("HTML 메타 명령 미연결: " + name));
