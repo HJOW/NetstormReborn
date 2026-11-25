@@ -3241,6 +3241,7 @@ public sealed partial class HostSession
             });
         BuildAiEconomyDevice();
         BuildAiFactoryDevice(types, player, strategy);
+        BuildAiCollectorsDevice(types, strategy);
         var runtime = new RawAiRuntime(AiBrainMemory, PlayerRecords,
             new AiRuntimeGlobals
             {
@@ -3253,7 +3254,7 @@ public sealed partial class HostSession
                 Initialize = brain => strategy.Initialize(brain),
                 Prepare = brain => preparation.Update(brain),
                 SelectGoal = brain => strategy.SelectGoal(brain),
-                Collectors = _ => throw new InvalidOperationException("AI 수집자 행동 미연결(R6)"),
+                Collectors = brain => AiCollectors.Ensure(brain),
                 Factories = brain => AiFactories.Manage(brain),
                 DryScan = _ => throw new InvalidOperationException("AI 부족좌표 스캔 미연결(R6)"),
                 DryNotice = (_, _, _) => throw new InvalidOperationException("AI 부족좌표 통지 미연결(R6)"),

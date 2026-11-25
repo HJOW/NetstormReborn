@@ -66,6 +66,7 @@ public sealed class HostSessionAiRuntimeTests
         Assert.NotNull(session.AiObjects);
         Assert.NotNull(session.AiWorld);
         Assert.NotNull(session.AiRuntime);
+        Assert.NotNull(session.AiCollectors);
         Assert.Same(session.Sp, session.AiEconomy.Store);
         Assert.Same(session.Pool, session.AiFactories.Pool);
     }
@@ -173,6 +174,59 @@ public sealed class HostSessionAiRuntimeTests
         Assert.Contains("업그레이드 요청 미연결", error.Message);
         Assert.Equal(1u, BinaryPrimitives.ReadUInt32LittleEndian(body.AsSpan(0x320, 4)));
         Assert.Equal(0ul, BinaryPrimitives.ReadUInt64LittleEndian(body.AsSpan(0x5a8, 8)));
+    }
+
+    /// <summary>brain 없는 수집자 관리는 실제 난수를 소비하지 않고 범위 밖 owner를 거부한다.</summary>
+    [Fact]
+    public void CollectorsWithoutBrainPreserveRandomAndRejectInvalidOwner()
+    {
+        (HostSession session, _) = BuildScene();
+        uint before = session.Game.State();
+        Assert.False(session.ManageAiCollectors(2));
+        Assert.Equal(before, session.Game.State());
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.ManageAiCollectors(0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.ManageAiCollectors(9));
+    }
+
+    /// <summary>신전이 없으면 수집자 본체는 어떤 하위도 호출하지 않고 몸체를 바꾸지 않는다.</summary>
+    [Fact]
+    public void CollectorsGateClosedSkipsAllHooks()
+    {
+        (HostSession session, _) = BuildScene();
+        uint brain = PrepareBrain(session, 2);
+        uint before = session.Game.State();
+        Assert.True(session.ManageAiCollectors(2));
+        Assert.Equal(before, session.Game.State());
+        Assert.Empty(session.AiRuntimeLogs);
+        Assert.Empty(session.AiRuntimeDiagnostics);
+        Assert.Equal(0u, BinaryPrimitives.ReadUInt32LittleEndian(session.AiBrainMemory.Bytes(brain).AsSpan(0x5a8, 8)));
+    }
+
+    /// <summary>미연결 참여 상태에 닿으면 원문 순서대로 명시 거부하고 그 앞 효과만 둔다.</summary>
+    [Fact]
+    public void CollectorsMissingLeafThrowsExplicitly()
+    {
+        (HostSession session, _) = BuildScene();
+        uint brain = PrepareBrain(session, 2);
+        int temple = session.Pool.Allocate(Netstorm.Core.Simulation.SidAllocation.Client);
+        session.Pool.AllocatedBytes(temple).Clear();
+        int enemy = session.Pool.Allocate(Netstorm.Core.Simulation.SidAllocation.Client);
+        session.Pool.AllocatedBytes(enemy).Clear();
+        Put(session.AiBrainMemory.Bytes(brain), 0x294, unchecked((uint)temple));
+        Put(session.AiBrainMemory.Bytes(brain), 0x298, 7u);
+        Put(session.AiBrainMemory.Bytes(brain), 0x248, 0x100u);
+        Put(session.AiBrainMemory.Bytes(brain), 0x38c, 0u);
+        Put(session.AiBrainMemory.Bytes(brain), 0x388, 1u);
+        Put(session.AiBrainMemory.Bytes(brain), 0x28c, 1u);
+        Put(session.AiBrainMemory.Bytes(brain), 0x2a0, unchecked((uint)enemy));
+        Put(session.AiBrainMemory.Bytes(brain), 0x5a8, 0u);
+        Put(session.AiBrainMemory.Bytes(brain), 0x5a4, 0u);
+        session.ProcessTime.Value = 10;
+        session.Game.SetState(1);
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.ManageAiCollectors(2));
+        Assert.Contains("미연결(R6)", error.Message);
+        // 생각 기한·난수·깃발·개수·적 SID까지 원문 순서대로 진행하고 난수는 한 번만 소비한다.
+        Assert.Equal(65542u, session.Game.State());
     }
 
     /// <summary>brain이 없으면 준비·초기는 거짓으로 돌아간다.</summary>
