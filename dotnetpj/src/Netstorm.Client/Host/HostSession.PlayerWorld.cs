@@ -54,7 +54,21 @@ public sealed partial class HostSession
         RunMissionFrame();
     }
 
+    /// <summary>일시정지가 아닐 때만 실제 AI 전체 프레임을 실행한다. 원본 PrepareFrame의 aiRuntime->Frame()과 같다.</summary>
+    /// <param name="paused">정지 중이면 참이다. 참이면 AI를 실행하지 않고 설치 여부도 검사하지 않는다.</param>
+    /// <remarks>2026-11-25 1.031에서 R4-5e1 세션 결선용으로 추가했다. 근거: cpppj src/client/RawCampaignSession.cpp 4569행의 if (!paused) aiRuntime->Frame()이다. Drops·Bridges 미연결은 R6에서 잇는다. 실제 틱 결선(매 프레임 호출)은 live 루프가 R6에서 잇는다.</remarks>
+    public void RunAiFrame(bool paused)
+    {
+        if (paused)
+        {
+            return;
+        }
+
+        (_aiRuntime ?? throw new InvalidOperationException("AI 전체 프레임 미연결")).Frame();
+    }
+
     /// <summary>같은 현재 시각/Player 모드를 Gun에 준비하고 Kernel을 한 번 실행한다. 시계를 전진하지 않는다.</summary>
+    /// <remarks>2026-11-19 0.629에서 추가했다. AI 전체 프레임의 실제 틱 결선은 Drops·Bridges와 함께 R6에서 잇는다.</remarks>
     public void RunMissionFrame() { if (_gunProcess is not null) PrepareGunFrame(); Kernel.RunFrame(); }
 
     /// <summary>화신의 실제 부모 체인·커널 등록을 처리하는 호스트다.</summary>

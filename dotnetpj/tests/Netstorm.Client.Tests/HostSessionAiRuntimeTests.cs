@@ -656,4 +656,86 @@ public sealed class HostSessionAiRuntimeTests
             BitConverter.SingleToUInt32Bits(50.0f),
             BinaryPrimitives.ReadUInt32LittleEndian(session.AiBrainMemory.Bytes(brain).AsSpan(0x268, 4)));
     }
+
+    /// <summary>AI 장치가 없으면 명시 프레임 호출은 거부하고 정지 중에는 검사하지 않는다.</summary>
+    /// <remarks>2026-11-25 1.031에서 R4-5e1 프레임 부착용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 4569행의 if (!paused) aiRuntime->Frame()과 설치 전 throw다.</remarks>
+    [Fact]
+    public void AiFrameWithoutDeviceThrowsOnlyWhenRunning()
+    {
+        var session = new HostSession(new Kernel(), new GameRandom(1u), new CrtRandom());
+        Assert.Throws<InvalidOperationException>(() => session.RunAiFrame(false));
+        session.RunAiFrame(true);
+    }
+
+    /// <summary>brain이 없으면 명시 프레임 호출은 실제 난수를 소비하지 않는다.</summary>
+    /// <remarks>2026-11-25 1.031에서 R4-5e1 프레임 부착용으로 추가했다. 빈 Player 기록은 Frame의 owner1..8 방문에서 모두 건너뛴다.</remarks>
+    [Fact]
+    public void AiFrameWithoutBrainPreservesRandom()
+    {
+        (HostSession session, _) = BuildScene();
+        uint before = session.Game.State();
+        session.RunAiFrame(false);
+        Assert.Equal(before, session.Game.State());
+        Assert.Empty(session.AiRuntimeLogs);
+        Assert.Empty(session.AiRuntimeDiagnostics);
+    }
+
+    /// <summary>정지 중에는 brain이 있어도 명시 프레임 호출을 건너뛴다.</summary>
+    /// <remarks>2026-11-25 1.031에서 R4-5e1 프레임 부착용으로 추가했다. 원문 PrepareFrame의 paused 분기와 같다.</remarks>
+    [Fact]
+    public void AiFramePausedSkipsEvenWithBrain()
+    {
+        (HostSession session, _) = BuildScene();
+        uint brain = PrepareBrain(session, 2);
+        Put(session.PlayerRecords, 2 * 180 + 0xb0, brain);
+        Put(session.AiBrainMemory.Bytes(brain), 0x258, 1u);
+        uint before = session.Game.State();
+        session.RunAiFrame(true);
+        Assert.Equal(before, session.Game.State());
+        Assert.Empty(session.AiRuntimeLogs);
+        Assert.Empty(session.AiRuntimeDiagnostics);
+    }
+
+    /// <summary>초기화 완료 brain은 프레임에서 준비·목표·수집자·시설·부족·사제를 지나 배치에서 명시 실패한다.</summary>
+    /// <remarks>2026-11-25 1.031에서 R4-5e1 프레임 부착용으로 추가했다. Drops·Bridges 미연결은 R6에서 잇는다.</remarks>
+    [Fact]
+    public void AiFrameWithReadyBrainReachesDropsExplicitly()
+    {
+        (HostSession session, _) = BuildScene();
+        uint brain = PrepareBrain(session, 2);
+        Put(session.PlayerRecords, 2 * 180 + 0xb0, brain);
+        Put(session.PlayerRecords, 0 * 180 + 0x78, 127u);
+        Put(session.PlayerRecords, 2 * 180 + 0x78, 127u);
+        Put(session.AiBrainMemory.Bytes(brain), 0x258, 1u);
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.RunAiFrame(false));
+        Assert.Contains("AI 배치 행동 미연결(R6)", error.Message);
+    }
+
+    /// <summary>미션 프레임 실행은 AI 미설치 세션에서도 커널을 실행한다.</summary>
+    /// <remarks>2026-11-25 1.031에서 R4-5e1 프레임 부착용으로 추가했다. 메뉴·검사 조합의 기존 호출을 보존한다.</remarks>
+    [Fact]
+    public void MissionFrameWithoutAiDeviceStillRunsKernel()
+    {
+        var session = new HostSession(new Kernel(), new GameRandom(1u), new CrtRandom());
+        uint before = session.Game.State();
+        session.RunMissionFrame();
+        Assert.Equal(before, session.Game.State());
+        Assert.Equal(0, session.Kernel.Size());
+    }
+
+    /// <summary>미션 프레임 실행은 준비 완료 brain이 있어도 AI 프레임을 돌리지 않는다.</summary>
+    /// <remarks>2026-11-25 1.031에서 R4-5e1 프레임 부착용으로 추가했다. 실제 틱 결선(매 프레임 호출)은 Drops·Bridges와 함께 R6에서 잇는다.</remarks>
+    [Fact]
+    public void MissionFrameDefersAiFrameUntilR6()
+    {
+        (HostSession session, _) = BuildScene();
+        uint brain = PrepareBrain(session, 2);
+        Put(session.PlayerRecords, 2 * 180 + 0xb0, brain);
+        Put(session.AiBrainMemory.Bytes(brain), 0x258, 1u);
+        uint before = session.Game.State();
+        session.RunMissionFrame();
+        Assert.Equal(before, session.Game.State());
+        Assert.Empty(session.AiRuntimeLogs);
+        Assert.Empty(session.AiRuntimeDiagnostics);
+    }
 }
