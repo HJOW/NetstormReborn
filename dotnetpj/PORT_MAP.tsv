@@ -447,7 +447,6 @@ cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.GeyserM
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.GunPackets.cs	879c61b201397a84d7c8dde01179da3e6f207951	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.Load.cs	c26dc5f3d4c3c6d02a5c25ed26271c30edd5da09	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.PathCleanup.cs	baf141ebe8d2893459a1b18ea74a6caa88504468	port
-cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.Selection.cs	3419ae818c8c929235cbeea666f42b1afe7bf80e	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.PlayerRecords.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.PlayerWorld.cs	b43574aea7f7f56a6d761b0fd50846017c84cd5a	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.PriestWorld.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
@@ -456,6 +455,7 @@ cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.Product
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.RainAviaryPackets.cs	1f9e94a4b10c21fa18d8798978756e3caefd1845	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.ResourceDevices.cs	98663aa77353cb08f2c72bf13bff58630a0c95ec	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.Runtime.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.Selection.cs	3419ae818c8c929235cbeea666f42b1afe7bf80e	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.Shrapnel.cs	5bfd5c8df4aa5a8645ddfdf286fe168e16cd155f	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.SquidMutations.cs	baf141ebe8d2893459a1b18ea74a6caa88504468	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.SquidPackets.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
@@ -486,8 +486,8 @@ cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.Load.cs	c
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.PlayerRecords.cs	bda77381e54bc382937c720047ee4441086b46d7	port
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.ProductionSync.cs	baf141ebe8d2893459a1b18ea74a6caa88504468	port
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.RainAviaryPackets.cs	1f9e94a4b10c21fa18d8798978756e3caefd1845	port
-cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.Selection.cs	3419ae818c8c929235cbeea666f42b1afe7bf80e	port
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.Runtime.cs	bda77381e54bc382937c720047ee4441086b46d7	port
+cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.Selection.cs	3419ae818c8c929235cbeea666f42b1afe7bf80e	port
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.SquidMutations.cs	baf141ebe8d2893459a1b18ea74a6caa88504468	port
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.SquidPackets.cs	bda77381e54bc382937c720047ee4441086b46d7	port
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.StateRuntime.cs	bda77381e54bc382937c720047ee4441086b46d7	port
@@ -807,10 +807,10 @@ cpppj/src/client/UberGump.cpp	Netstorm.Game/ClientHostGame.RootFactories.cs	287d
 cpppj/src/client/UberHud.inc	Netstorm.Client/Gump/RawUberMessageProbe.cs	3a325a2597e7436ad40a868cd30ed80b170a945d	port
 cpppj/src/client/UberHud.inc	Netstorm.Client/Host/HostChatReceive.cs	16431ec18a3f7518d7aaa55929b280ab1cc6a8fb	port
 cpppj/src/client/UberHud.inc	Netstorm.Game/ClientHostGame.ChatReceive.cs	16431ec18a3f7518d7aaa55929b280ab1cc6a8fb	port
+cpppj/src/client/UberHud.inc	Netstorm.Game/ClientHostGame.ChatSubmit.cs	6f5bc791294ea093161430a714722bf573c0c44a	port
 cpppj/src/client/UberHud.inc	Netstorm.Game/ClientHostGame.ChatWindows.cs	16431ec18a3f7518d7aaa55929b280ab1cc6a8fb	port
 cpppj/src/client/UberHud.inc	Netstorm.Game/ClientHostGame.ColorMaps.cs	16431ec18a3f7518d7aaa55929b280ab1cc6a8fb	port
 cpppj/src/client/UberHud.inc	Netstorm.Game/ClientHostGame.HudDock.cs	2dda75fb2df92bfa341845bb058856623dca19ca	port
-cpppj/src/client/UberHud.inc	Netstorm.Game/ClientHostGame.ChatSubmit.cs	6f5bc791294ea093161430a714722bf573c0c44a	port
 cpppj/src/client/UberHud.inc	Netstorm.Game/HostMissionAudio.cs	16431ec18a3f7518d7aaa55929b280ab1cc6a8fb	port
 cpppj/src/client/UberRootGump.cpp	Netstorm.Client/Gump/UberRootGump.cs	52cfee23d6440b89b7961bc8d6269b4aa1098038	port
 cpppj/src/client/UberRootGump.h	Netstorm.Client/Gump/UberRootGump.cs	52cfee23d6440b89b7961bc8d6269b4aa1098038	port
@@ -906,6 +906,8 @@ cpppj/src/o/RawAiCreate.cpp	Netstorm.Core/Original/RawAiCreate.cs	382ec33feca7a4
 cpppj/src/o/RawAiCreate.h	Netstorm.Core/Original/RawAiCreate.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	L1
 cpppj/src/o/RawAiDeployment.cpp	Netstorm.Core/Original/RawAiDeployment.cs	3a0459751adcd933f0d8009b224a4b45f1c6fc65	port
 cpppj/src/o/RawAiDeployment.h	Netstorm.Core/Original/RawAiDeployment.cs	3a0459751adcd933f0d8009b224a4b45f1c6fc65	port
+cpppj/src/o/RawAiDrySpots.cpp	Netstorm.Core/Original/RawAiDrySpots.cs	ad023ac927d2eefa3ddc8084eea5c356326fc753	port
+cpppj/src/o/RawAiDrySpots.h	Netstorm.Core/Original/RawAiDrySpots.cs	ad023ac927d2eefa3ddc8084eea5c356326fc753	port
 cpppj/src/o/RawAiEconomy.cpp	Netstorm.Core/Original/RawAiEconomy.cs	bb1dbd427f232659d229a3522ff425fd0e19cf4f	port
 cpppj/src/o/RawAiEconomy.h	Netstorm.Core/Original/RawAiEconomy.cs	bb1dbd427f232659d229a3522ff425fd0e19cf4f	port
 cpppj/src/o/RawAiFactoryProduction.cpp	Netstorm.Core/Original/RawAiFactoryProduction.cs	ffce9162d539368f6373f4c3757ae54371065cd4	port
