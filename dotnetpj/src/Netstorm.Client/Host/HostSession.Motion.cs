@@ -42,7 +42,8 @@ public sealed partial class HostSession
     private RawCanonPlacementTerrain? _motionTerrain;
     /// <summary>미설치/반납 뒤에는 실패하는 실제 도착용 지면 getter다.</summary>
     public RawCanonPlacementTerrain MotionTerrain => FixedPacketNeed(_motionTerrain);
-    /// <summary>같은 실제 풀/시계의 정리→정지→Carrier→사제→경로를 순서대로 설치한다.</summary>
+    /// <summary>같은 실제 풀/시계의 정리→정지→Carrier→사제→경로를 순서대로 설치한다. 정리 예약·의식은 비어 있으면 실제 세션 장치를 쓴다.</summary>
+    /// <remarks>2026-11-25 1.034에서 WP-1 Cleanup 상위 설치용으로 정리 예약·의식 기본값을 실제 세션 장치로 바꿨다. 근거: cpppj src/client/RawCampaignMotionBindings.cpp 39~44행의 cleanupHooks 조립이다. 가상 삭제는 호출자의 VirtualDestroy를 그대로 쓴다.</remarks>
     public RawPathStart BuildMotionWorldDevices(RawIslandRuntime islands, RawPlayerPlacementAnchor anchor, IReadOnlyList<PriestPlainCanonType> frames, HostMotionState state, HostMotionEffects effects, RawPathStartState? start = null, RawPathProcessState? process = null)
     {
         EnsureRuntimeCanRelease(); ValidatePathEffects(effects.Path);
@@ -57,9 +58,16 @@ public sealed partial class HostSession
             FinishRelations = (_, _) => throw new InvalidOperationException("도착 getter의 배치 Finish 미연결"),
         });
         state.Cleanup.SharedBoss = () => Gameplay.Authority.Boss; state.Cleanup.SharedNuggetType = GameAux.NuggetTypeBox; state.Cleanup.Checking.Bind(() => AiChecking.Read());
+        PathCleanupHooks rootCleanup = BuildPathCleanupRootHooks();
+        PathCleanupHooks cleanupEffects = effects.Cleanup with
+        {
+            ReserveShared = effects.Cleanup.ReserveShared ?? rootCleanup.ReserveShared,
+            Ritual = effects.Cleanup.Ritual ?? rootCleanup.Ritual,
+            Destroy = effects.VirtualDestroy,
+        };
         try
         {
-            RawPathCleanup cleanup = BuildPathCleanupWorldDevices(PriestWorld.Carrier, anchor, state.Cleanup, effects.Cleanup with { Destroy = effects.VirtualDestroy });
+            RawPathCleanup cleanup = BuildPathCleanupWorldDevices(PriestWorld.Carrier, anchor, state.Cleanup, cleanupEffects);
             _ = BuildPriestHaltWorldDevices(effects.Halt, state.Halt);
             _ = BuildCarrierArrivalWorldDevices(cleanup, anchor, state.Carrier, effects.Carrier with { Destroy = effects.VirtualDestroy });
             _ = BuildPriestArrivalWorldDevices(terrain, islands, state.Priest, effects.Priest with { Destroy = effects.VirtualDestroy });

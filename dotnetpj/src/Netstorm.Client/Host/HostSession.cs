@@ -3537,6 +3537,7 @@ public sealed partial class HostSession
             AddShared = (_, _, _) => throw new InvalidOperationException("Dais 사제 604 부착 미연결(R6)"),
         });
         ritual = new RawTempleRitual(Pool, hash, types, WorldFrames, shapes, spots, footprint, reward, actions, templeState, templeHooks);
+        _templeRitual = ritual;
         var runeState = new RunePostPopState();
         var rune = new RawRunePostPop(Pool, hash, types, runeState, @base, new()
         {
@@ -3566,6 +3567,14 @@ public sealed partial class HostSession
 
     /// <summary>Dais 정기 본체다. 의식 공통 후처리·예약 장치를 세션 수명과 같이 유지한다.</summary>
     private RawDaisRegular? _daisRegular;
+
+    /// <summary>같은 세션의 실제 신전 의식 본체다. Dais 정기 장치와 같은 수명을 공유한다.</summary>
+    private RawTempleRitual? _templeRitual;
+
+    /// <summary>실제 세션 신전 의식 본체를 빌려준다. Dais 정기 장치 연결 전에는 명시 오류다.</summary>
+    /// <returns>같은 풀·해시·TYPE·프레임의 실제 의식 본체다.</returns>
+    /// <remarks>2026-11-25 1.034에서 WP-1 Cleanup 상위 설치용으로 추가했다. 근거: cpppj src/client/RawCampaignSession.cpp 3819행의 effects.cleanup.ritual이 쓰는 같은 templeRitual이다. Rune 생성·HP·소유자·배치·위치 음향 하위는 R6에서 잇는다.</remarks>
+    public RawTempleRitual TempleRitual => _templeRitual ?? throw new InvalidOperationException("실제 세션 신전 의식 미연결");
 
     /// <summary>Dais 정기 본체가 쓰는 실제 하위 효과다. 프레임 지정·삭제·공통 예약·손상·로컬 SP는 실제 장치를 쓰고 나머지는 R6에서 잇는다.</summary>
     /// <param name="fallback">Dais가 맡지 않는 사건의 기존 처리기다. 없으면 payload를 돌려준다.</param>
