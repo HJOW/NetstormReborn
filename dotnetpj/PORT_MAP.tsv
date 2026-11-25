@@ -932,6 +932,8 @@ cpppj/src/o/RawAiFactoryProduction.cpp	Netstorm.Core/Original/RawAiFactoryProduc
 cpppj/src/o/RawAiFactoryProduction.h	Netstorm.Core/Original/RawAiFactoryProduction.cs	ffce9162d539368f6373f4c3757ae54371065cd4	port
 cpppj/src/o/RawAiFakeDrySpots.cpp	Netstorm.Core/Original/RawAiFakeDrySpots.cs	0e703d47362ff533cbb722f22d8868f7f83020bb	port
 cpppj/src/o/RawAiFakeDrySpots.h	Netstorm.Core/Original/RawAiFakeDrySpots.cs	0e703d47362ff533cbb722f22d8868f7f83020bb	port
+cpppj/src/o/RawAiPriestActions.cpp	Netstorm.Core/Original/RawAiPriestActions.cs	c57ed7a3d169ab8f3799d1563b613761819cf61d	port
+cpppj/src/o/RawAiPriestActions.h	Netstorm.Core/Original/RawAiPriestActions.cs	c57ed7a3d169ab8f3799d1563b613761819cf61d	port
 cpppj/src/o/RawAiWallet.cpp	Netstorm.Core/Original/RawAiWallet.cs	68fa942631ca0c71da8b135339ac5bffc5aaa24f	port
 cpppj/src/o/RawAiWallet.h	Netstorm.Core/Original/RawAiWallet.cs	68fa942631ca0c71da8b135339ac5bffc5aaa24f	port
 cpppj/src/o/RawAmbientWind.cpp	Netstorm.Core/Original/RawAmbientWind.cs	e5a198df450ae720da38f5110ebc611119ea2f38	L1
