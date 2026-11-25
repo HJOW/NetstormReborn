@@ -904,6 +904,8 @@ cpppj/src/o/RawAiCommandState.cpp	Netstorm.Core/Original/RawAiCommandState.cs	64
 cpppj/src/o/RawAiCommandState.h	Netstorm.Core/Original/RawAiCommandState.cs	64f8d1cfb41aff3a95fa10432da0552b1e257aff	L1
 cpppj/src/o/RawAiCreate.cpp	Netstorm.Core/Original/RawAiCreate.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	L1
 cpppj/src/o/RawAiCreate.h	Netstorm.Core/Original/RawAiCreate.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	L1
+cpppj/src/o/RawAiDamage.cpp	Netstorm.Core/Original/RawAiDamage.cs	72b232bcf41393c5dcbbc5743e2b604182b10b26	port
+cpppj/src/o/RawAiDamage.h	Netstorm.Core/Original/RawAiDamage.cs	72b232bcf41393c5dcbbc5743e2b604182b10b26	port
 cpppj/src/o/RawAiDeployment.cpp	Netstorm.Core/Original/RawAiDeployment.cs	3a0459751adcd933f0d8009b224a4b45f1c6fc65	port
 cpppj/src/o/RawAiDeployment.h	Netstorm.Core/Original/RawAiDeployment.cs	3a0459751adcd933f0d8009b224a4b45f1c6fc65	port
 cpppj/src/o/RawAiDrySpots.cpp	Netstorm.Core/Original/RawAiDrySpots.cs	ad023ac927d2eefa3ddc8084eea5c356326fc753	port

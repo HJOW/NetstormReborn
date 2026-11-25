@@ -9,6 +9,7 @@ add-random-input-x86.tsv	bbe76e4e4e4e9f6d8ac99fa9da3b98762c05350888eafede69e409b
 add-random-parent-x86.tsv	dffb9b89963349c900283e3503f574987f81c155815c0dff01ad3064371fca3d	721	cpppj	Core
 ai-brain-x86.tsv	53aecd3e635d5743ea07091d863d6db7fb328daa8181b7a5769b78a233087fab	161	cpppj	Core
 ai-command-state-x86.tsv	fe6a534535c6d2ac05a125787df3901a629516d51f048323004e9e8b0a183675	1940	cpppj	Core
+ai-damage-x86.tsv	eaa90a665618f23d59365df1e65b330499f7a4fd87fac6280d9955b5ca05ab3a	150	cpppj	Core
 ai-initial-update-theme5-x86.tsv	e6ec842056c6df0dc8ec294dc5454775e36ccb2069f996936bf48ccaf2ba77c3	16	cpppj	Core
 ai-initial-update-x86.tsv	8784606de578d467f5ab2fbedc05662044782accf770ce9eb9ba1b18665a059d	134	cpppj	Core
 ai-wallet-x86.tsv	c842f5c847a5e4076ea3a4dd7ce4ea0e22e88e6d0b4d982f6d25d9f9791a7e29	2520	cpppj	Core
