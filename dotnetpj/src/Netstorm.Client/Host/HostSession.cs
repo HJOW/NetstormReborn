@@ -1591,6 +1591,13 @@ public sealed partial class HostSession
             TerrainPopObject(sid, x, y, flags);
             return true;
         }
+        // Dude 전용 후처리 본체가 연결된 Dude는 지형 분배 Pop으로 등록한다. idle·등록·I 프레임은 전용 몸체가 처리한다.
+        // 1.038에서 WP-4b Dude 전용 PostPop용으로 추가했다. 근거: cpppj RawSurfaceStorage.cpp 233행의 DudePostPop 분기다.
+        if (_dudePostPop is not null && _dudePostPop.Handles(sid))
+        {
+            TerrainPopObject(sid, x, y, flags);
+            return true;
+        }
         // 전용 파생 후처리가 필요한 종류는 R6 본체를 기다린다.
         if (RawPostPop.RequiresDedicatedPostPop(Pool, sid))
         {
@@ -2343,6 +2350,9 @@ public sealed partial class HostSession
         // Dais 정기 분배를 Disc 분배보다 나중에 둔다. 가상표가 겹치지 않으므로 순서는 결과에 닿지 않는다.
         // 2026-11-23 0.895에서 R4-4 Dais 정기용으로 추가했다.
         BuildDaisRegularDevices(types);
+        // Dude 전용 후처리를 Dais 분배보다 나중에 둔다. 가상표가 겹치지 않으므로 순서는 결과에 닿지 않는다.
+        // 1.038에서 WP-4b Dude 전용 PostPop용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 2632행의 SetDudePostPop 결선이다.
+        BuildDudePostPopDevices(types);
     }
 
     /// <summary>공장 정기 트리거 본체를 세션에 연결하고 지형 분배 Pop의 공장 갈고리로 등록한다.</summary>
@@ -3655,6 +3665,42 @@ public sealed partial class HostSession
 
     /// <summary>Dude 정기 분배의 공유 상태다. provider 목록·순환 인덱스를 세션 수명과 같이 유지한다.</summary>
     private DudeRegularState? _dudeRegularState;
+
+    /// <summary>Dude 전용 후처리 본체다. 지형·실시간 분배에 같은 몸체를 등록한다.</summary>
+    private RawDudePostPop? _dudePostPop;
+
+    /// <summary>Dude 전용 후처리 장치를 세션에 연결한다. idle·등록·I 프레임 뒤 실제 공통 몸체를 쓴다.</summary>
+    /// <param name="types">같은 실제 TYPE 표다. 지형 Pop 장치와 같은 인스턴스여야 한다.</param>
+    /// <exception cref="InvalidOperationException">Dude 후처리의 지형 분배·프레임·공통 후처리 장치가 미연결이다.</exception>
+    /// <exception cref="ArgumentException">Dude 후처리 TYPE이 지형 Pop 장치와 다르다.</exception>
+    /// <remarks>1.038에서 WP-4b Dude 전용 PostPop용으로 추가했다. 근거: cpppj RawCampaignSession.cpp 2631~2632행의 MakeDudePostPopHooks·SetDudePostPop 결선이다. population 목록은 세션 SidLists.Dudes를 공유하고 Bridge DWORD는 현재 값을 읽는다.</remarks>
+    public void BuildDudePostPopDevices(IReadOnlyList<OriginalTypeRecord> types)
+    {
+        ArgumentNullException.ThrowIfNull(types);
+        if (_dudePostPop is not null)
+        {
+            throw new InvalidOperationException("Dude 전용 후처리 장치 중복 연결");
+        }
+
+        RawPostPop terrainPostPop = _terrainPostPop ?? throw new InvalidOperationException("Dude 전용 후처리 지형 분배 미연결");
+        SquidFrame frames = _terrainFrames ?? throw new InvalidOperationException("Dude 전용 후처리 프레임 미연결");
+        if (_terrainPopTypes is null || !ReferenceEquals(types, _terrainPopTypes))
+        {
+            throw new ArgumentException("Dude 전용 후처리 TYPE은 지형 Pop 장치와 같은 인스턴스여야 한다", nameof(types));
+        }
+        var state = new DudeSpawnState { Population = SidLists.Dudes };
+        var hooks = new DudePostPopHooks
+        {
+            SetFrame = (sid, frame, flags) => frames.Set(sid, frame, flags),
+            ValidateBase = (sid, flags) => terrainPostPop.ValidateBase(sid, flags),
+            Base = (sid, flags) => terrainPostPop.PostPopBase(sid, flags),
+            NotifySurface = sid => (_fortBuilding ?? throw new InvalidOperationException("Dude 전용 후처리 연결 통지 미연결")).NotifySurface(sid),
+        };
+        var body = new RawDudePostPop(Pool, WorldFrames, state, hooks, () => BridgeState.BridgeType);
+        terrainPostPop.SetDudePostPop(body);
+        _livePostPop?.SetDudePostPop(body);
+        _dudePostPop = body;
+    }
 
     /// <summary>Dude 정기 본체가 쓰는 실제 하위 효과다. 이동·작업·거주 내부는 R6에서 잇는다.</summary>
     /// <returns>프레임 지정·삭제는 실제 장치, 나머지는 명시 거부다.</returns>

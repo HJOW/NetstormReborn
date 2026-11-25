@@ -302,7 +302,7 @@ public sealed partial class RawPostPop : IRawPopPostPop
     /// <param name="sid">오브젝트 슬롯 번호.</param>
     public bool HandlesDerived(int sid) => HandlesBridge(sid) || HandlesIsland(sid) || HandlesSurface(sid)
         || HandlesPlayer(sid) || HandlesPriest(sid) || HandlesForcefield(sid)
-        || HandlesCarrier(sid) || HandlesDamageable(sid) || HandlesAsset(sid) || HandlesFactory(sid) || HandlesFence(sid) || HandlesFlyer(sid);
+        || HandlesCarrier(sid) || HandlesDamageable(sid) || HandlesAsset(sid) || HandlesFactory(sid) || HandlesFence(sid) || HandlesFlyer(sid) || HandlesDude(sid);
 
     /// <summary>
     /// 실제 Player 최초 기록·예약 몸체를 같은 풀에만 명시 등록한다. null이면 등록을 해제한다.
@@ -397,6 +397,9 @@ public sealed partial class RawPostPop : IRawPopPostPop
             throw new InvalidOperationException("파생 postPop 미복원");
         }
         if (HandlesPriest(sid)) _priestPostPop!.Validate(sid);
+        // Dude는 idle·등록·I 프레임 쓰기 뒤 실제 공통 몸체를 검증한다. 근거: cpppj o/SquidPostPop.cpp 262행이다.
+        // 1.038에서 WP-4b Dude 전용 PostPop용으로 추가했다.
+        if (HandlesDude(sid)) _dudePostPop!.Validate(sid, flags);
         if (HandlesForcefield(sid)) _forcefieldPostPop!.Validate(sid);
         if (HandlesAsset(sid)) _assetPostPop!.Validate(sid, flags);
         if (HandlesFactory(sid)) _factoryPostPop!.Validate(sid, flags);

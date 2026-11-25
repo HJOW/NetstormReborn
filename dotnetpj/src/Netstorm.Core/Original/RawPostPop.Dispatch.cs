@@ -20,6 +20,8 @@ public sealed partial class RawPostPop
     private RawAssetPostPop? _assetPostPop;
     /// <summary>같은 풀의 실제 공장 후처리다. 연결 전에는 공장 분배를 건너뛴다. 2026-11-19 0.624에서 R4-2 공장 정기 트리거용으로 추가했다.</summary>
     private RawFactoryPostPop? _factoryPostPop;
+    /// <summary>같은 풀의 실제 Dude 후처리다. 연결 전에는 Dude 분배를 건너뛴다. 1.038에서 WP-4b Dude 전용 PostPop용으로 추가했다. 근거: cpppj o/SquidPostPop.cpp 142행의 SetDudePostPop이다.</summary>
+    private RawDudePostPop? _dudePostPop;
     /// <summary>같은 풀의 실제 펜스 후처리다. 연결 전에는 펜스 분배를 건너뛴다. 2026-11-19 0.636에서 R4-4 펜스 Pop용으로 추가했다.</summary>
     private RawFencePostPop? _fencePostPop;
     /// <summary>PATCH 직접 Carrier00427720을 호출하는 세 가상표다.</summary>
@@ -125,6 +127,20 @@ public sealed partial class RawPostPop
     /// <returns>펜스 부류이면 참이다.</returns>
     /// <remarks>2026-11-19 0.636에서 R4-4 펜스 Pop용으로 추가했다.</remarks>
     public bool HandlesFence(int sid) => _fencePostPop is not null && _fencePostPop.Handles(sid);
+    /// <summary>같은 실제 풀의 Dude 후처리 몸체를 등록한다. null이면 등록을 해제한다.</summary>
+    /// <param name="body">등록할 Dude 후처리 몸체다. null이면 해제한다.</param>
+    /// <exception cref="ArgumentException">Dude Pop/후처리 풀 불일치다.</exception>
+    /// <remarks>1.038에서 WP-4b Dude 전용 PostPop용으로 추가했다. 근거: cpppj o/SquidPostPop.cpp 142행의 SetDudePostPop이다.</remarks>
+    public void SetDudePostPop(RawDudePostPop? body)
+    {
+        if (body is not null && !ReferenceEquals(body.Pool, _pool)) throw new ArgumentException("Dude Pop/후처리 풀 불일치", nameof(body));
+        _dudePostPop = body;
+    }
+    /// <summary>Dude 몸체가 지원하는 실제 가상표만 조회한다.</summary>
+    /// <param name="sid">오브젝트 슬롯 번호.</param>
+    /// <returns>Dude 부류이면 참이다.</returns>
+    /// <remarks>1.038에서 WP-4b Dude 전용 PostPop용으로 추가했다. 근거: cpppj o/SquidPostPop.cpp 147행의 HandlesDude다.</remarks>
+    public bool HandlesDude(int sid) => _dudePostPop is not null && _dudePostPop.Handles(sid);
 
     /// <summary>실제 PATCH 장기 자원 분배만 설치하며 게임 조회/후처리는 실행하지 않는다.</summary>
     public void BindDefaultResourcePostPop(Action<int, uint> body)
@@ -135,7 +151,7 @@ public sealed partial class RawPostPop
     public void ReleaseRuntimeBindings()
     {
         _runtimePin = null; _aiNotice = null; _selectionRecheck = null; _localOwner = null; _teleportPrefix = null;
-        _priestPostPop = null; _forcefieldPostPop = null; _carrierPostPop = null; _assetPostPop = null; _factoryPostPop = null; _fencePostPop = null; _playerPostPop = null; _flyerPostPop = null;
+        _priestPostPop = null; _forcefieldPostPop = null; _carrierPostPop = null; _assetPostPop = null; _factoryPostPop = null; _fencePostPop = null; _dudePostPop = null; _playerPostPop = null; _flyerPostPop = null;
     }
     /// <summary>선택한 실제 가상 몸체 전체를 현재 Runtime pin 안에서 실행한다. 미구현 몸체는 도달 위치에서 실패한다.</summary>
     private void DispatchPostPop(int sid, uint flags)
@@ -154,6 +170,9 @@ public sealed partial class RawPostPop
             // 전체 파생 몸체는 내부 공통 부모가 깊이를 한 번 줄이므로 여기서 다시 호출하지 않는다.
             if (HandlesFlyer(sid)) { RawFlyerPostPop selected = _flyerPostPop!; selected.PostPop((ushort)sid, flags); return; }
             if (HandlesPlayer(sid)) { RawPlayerWorld selected = _playerPostPop!; selected.PostPop(sid, flags); return; }
+            // Dude는 idle·population·I 프레임 뒤 자기 전체 몸체에서 공통 장부를 한 번 호출한다.
+            // 1.038에서 WP-4b Dude 전용 PostPop용으로 추가했다. 근거: cpppj o/SquidPostPop.cpp 333~338행이다.
+            if (HandlesDude(sid)) { RawDudePostPop selected = _dudePostPop!; selected.PostPop(sid, flags); return; }
             if (HandlesPriest(sid)) { RawPriestPostPopTail selected = _priestPostPop!; selected.PostPop(sid, flags); return; }
             if (HandlesCarrier(sid) || HandlesDamageable(sid))
             {

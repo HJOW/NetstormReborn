@@ -98,6 +98,7 @@ public sealed partial class HostSession
         if (_vortexAssetPostPop is not null) inner.SetAssetPostPop(_vortexAssetPostPop);
         if (_factoryPostPop is not null) inner.SetFactoryPostPop(_factoryPostPop);
         if (_fencePostPop is not null) inner.SetFencePostPop(_fencePostPop);
+        if (_dudePostPop is not null) inner.SetDudePostPop(_dudePostPop);
         var pop = new RawPop(Pool, hash, _terrainSpots, display, inner);
         var unpop = new RawUnpop(Pool, hash, _terrainSpots, display);
         // 요새/지형과 같은 실제 건물 옆면을 공유해 신규 건물의 공간 등록과 완료 재등록을 처리한다.
