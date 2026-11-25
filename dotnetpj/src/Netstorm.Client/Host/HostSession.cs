@@ -3128,7 +3128,7 @@ public sealed partial class HostSession
     private void BuildAiRuntimeDevices(IReadOnlyList<OriginalTypeRecord> types)
     {
         ArgumentNullException.ThrowIfNull(types);
-        if (_aiPreparation is not null || _aiStrategySetup is not null || _aiObjects is not null || _aiWorld is not null || _aiRuntime is not null || _aiGraph is not null)
+        if (_aiPreparation is not null || _aiStrategySetup is not null || _aiObjects is not null || _aiWorld is not null || _aiRuntime is not null || _aiGraph is not null || _aiCarriers is not null)
         {
             throw new InvalidOperationException("AI 런타임 장치 중복 연결");
         }
@@ -3243,6 +3243,7 @@ public sealed partial class HostSession
         BuildAiFactoryDevice(types, player, strategy);
         BuildAiCollectorsDevice(types, strategy);
         BuildAiDrySpotsDevice();
+        BuildAiCarriersDevice(types, destroy);
         var runtime = new RawAiRuntime(AiBrainMemory, PlayerRecords,
             new AiRuntimeGlobals
             {
@@ -3270,7 +3271,7 @@ public sealed partial class HostSession
                 Priest = (_, _) => throw new InvalidOperationException("AI 사제 행동 미연결(R6)"),
                 Drops = _ => throw new InvalidOperationException("AI 배치 행동 미연결(R6)"),
                 Bridges = _ => throw new InvalidOperationException("AI 다리 행동 미연결(R6)"),
-                Carriers = _ => throw new InvalidOperationException("AI 운반 행동 미연결(R6)"),
+                Carriers = brain => AiCarriers.Act(brain),
                 Economy = brain => AiEconomy.Reconcile(brain),
                 Money = owner => BitConverter.UInt32BitsToSingle(Sp.Get(owner)),
                 Wall = () => ProcessTime.Value,

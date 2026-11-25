@@ -68,6 +68,7 @@ public sealed class HostSessionAiRuntimeTests
         Assert.NotNull(session.AiRuntime);
         Assert.NotNull(session.AiCollectors);
         Assert.NotNull(session.AiDrySpots);
+        Assert.NotNull(session.AiCarriers);
         Assert.Same(session.Sp, session.AiEconomy.Store);
         Assert.Same(session.Pool, session.AiFactories.Pool);
     }
@@ -278,6 +279,64 @@ public sealed class HostSessionAiRuntimeTests
         Assert.Equal(["99:AI2: Killed Dry Spot"], session.AiRuntimeLogs);
         session.LogAiDrySpotNote(brain, 99u, true);
         Assert.Equal(["99:AI2: Killed Dry Spot", "99:AI2: Killed Fake Dry Spot"], session.AiRuntimeLogs);
+    }
+
+    /// <summary>brain 목록 기록을 실제 backing에 쓴다. 운반 호출자용으로 추가했다.</summary>
+    private static void WriteBrainList(HostSession session, uint brain, int at, uint[] values, uint capacity = 8)
+    {
+        uint pointer = session.AiBrainMemory.Allocate((int)capacity * 4);
+        // 명시 입력 순서만 기록하는 반복문이다.
+        for (int index = 0; index < values.Length; index++)
+        {
+            Put(session.AiBrainMemory.Bytes(pointer), index * 4, values[index]);
+        }
+
+        Put(session.AiBrainMemory.Bytes(brain), at, pointer);
+        Put(session.AiBrainMemory.Bytes(brain), at + 4, capacity);
+        Put(session.AiBrainMemory.Bytes(brain), at + 8, (uint)values.Length);
+    }
+
+    /// <summary>brain이 없으면 운반 행동은 거짓으로 돌아가고 범위 밖 owner를 거부한다.</summary>
+    [Fact]
+    public void CarriersWithoutBrainPreserveRandomAndRejectInvalidOwner()
+    {
+        (HostSession session, _) = BuildScene();
+        uint before = session.Game.State();
+        Assert.False(session.ManageAiCarriers(2));
+        Assert.Equal(before, session.Game.State());
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.ManageAiCarriers(0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.ManageAiCarriers(9));
+    }
+
+    /// <summary>빈 운반 목록은 어떤 하위도 호출하지 않고 몸체를 바꾸지 않는다.</summary>
+    [Fact]
+    public void CarriersEmptyListsDoNothing()
+    {
+        (HostSession session, _) = BuildScene();
+        uint brain = PrepareBrain(session, 2);
+        uint before = session.Game.State();
+        Assert.True(session.ManageAiCarriers(2));
+        Assert.Equal(before, session.Game.State());
+        Assert.Empty(session.AiRuntimeLogs);
+        Assert.Empty(session.AiRuntimeDiagnostics);
+        Assert.Equal(0u, BinaryPrimitives.ReadUInt32LittleEndian(session.AiBrainMemory.Bytes(brain).AsSpan(0x6d0, 4)));
+    }
+
+    /// <summary>정지 운반자에 닿으면 원문 순서대로 경로 조회를 명시 거부하고 그 앞 효과만 둔다.</summary>
+    [Fact]
+    public void CarriersMissingPathThrowsExplicitly()
+    {
+        (HostSession session, IReadOnlyList<OriginalTypeRecord> types) = BuildScene();
+        uint brain = PrepareBrain(session, 2);
+        int carrier = session.Pool.Allocate(Netstorm.Core.Simulation.SidAllocation.Client);
+        session.Pool.AllocatedBytes(carrier).Clear();
+        session.Pool.AllocatedBytes(carrier)[10] = 1;
+        types[1].Flags2 &= ~0x200000u;
+        WriteBrainList(session, brain, 0x2dc, [unchecked((uint)carrier)]);
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.ManageAiCarriers(2));
+        Assert.Contains("미연결(R6)", error.Message);
+        Assert.Empty(session.AiRuntimeLogs);
+        Assert.Empty(session.AiRuntimeDiagnostics);
     }
 
     /// <summary>brain이 없으면 준비·초기는 거짓으로 돌아간다.</summary>
