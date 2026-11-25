@@ -11,6 +11,8 @@ public sealed partial class HostSession
     private RawSquidHash? _worldHash;
     /// <summary>수집기가 빌린 SID 풀이다.</summary>
     private RawSidPool? _worldPool;
+    /// <summary>수집기가 빌린 타입 표다.</summary>
+    private IReadOnlyList<OriginalTypeRecord>? _worldTypes;
     /// <summary>수집한 화면 높이다. 바뀌면 수집기를 다시 만든다.</summary>
     private int _worldScreenHeight;
     /// <summary>수집 viewport의 실제 지도 영역 getter다. 미설치를 화면 전체로 대체하지 않는다.</summary>
@@ -45,10 +47,59 @@ public sealed partial class HostSession
             _worldObjects = new RawObjectCollection(hash, pool, types, shapes);
             _worldHash = hash;
             _worldPool = pool;
+            _worldTypes = types;
             _worldScreenHeight = screenHeight;
         }
         _worldMapView = mapView;
         _worldScreenWidth = screenWidth;
+    }
+
+    /// <summary>수집한 타일 묶음·일반 자산을 정렬 뒤 종류별로 제출한다. 타일 멤버는 SHP 픽셀로 직접 합성한다.</summary>
+    /// <param name="pixels">그리기 화면(행 간격 포함 8비트 버퍼). ref 구조체 캡처 제한 탓에 배열로 받는다.</param>
+    /// <param name="pitch">한 행의 바이트 간격이다.</param>
+    /// <param name="height">화면 세로 크기다.</param>
+    /// <param name="clip">실제 dirty 사각형이다.</param>
+    /// <param name="database">타입 로딩 순서의 SHP 저장소다.</param>
+    /// <param name="modes">타일 소유자 표·색표와 특수 모드 값이다.</param>
+    /// <remarks>2026-11-26 1.072에서 R5-3c2 Submit용으로 추가했다. 근거: cpppj ClientRendererFrame.cpp의 Submit이 같은 원문 5,000칸을 정렬하고 종류 0..4를 실제 현재 출력기에 분배한다. 배경·매 프레임 구동은 R5-3c3에서 잇는다.</remarks>
+    public void SubmitWorldDrawing(byte[] pixels, int pitch, int height, ScreenRect clip, ShapeDatabase database, RawTileDrawModes modes)
+    {
+        ArgumentNullException.ThrowIfNull(database);
+        ArgumentNullException.ThrowIfNull(modes);
+        RawSidPool pool = _worldPool ?? throw new InvalidOperationException("월드 수집 장치 미연결");
+        IReadOnlyList<OriginalTypeRecord> types = _worldTypes ?? throw new InvalidOperationException("월드 수집 장치 미연결");
+        RawDrawCollectionResult collected = CollectWorldDrawing(clip);
+        var sorted = collected.Entries.ToArray();
+        DrawSort.Sort(sorted, pool.Edition);
+        var groups = new Dictionary<uint, RawTileGroupView>();
+        RawTileGroupCollection tiles = _worldTiles ?? throw new InvalidOperationException("월드 수집 장치 미연결");
+        IReadOnlyList<RawTileGroupView> found = tiles.Collect(
+            RawRendererViewport.CollectionViewport(clip, (_worldMapView ?? throw new InvalidOperationException("월드 수집 지도 영역 미설정")).Invoke(), Gameplay.Camera.Snapshot),
+            RawRendererViewport.CollectionRowLimit(_worldScreenWidth, _worldScreenHeight), out _);
+        foreach (RawTileGroupView group in found)
+        {
+            groups[group.Token] = group;
+        }
+        int cameraX = Gameplay.Camera.Snapshot.Pixels[0];
+        int cameraY = Gameplay.Camera.Snapshot.Pixels[1];
+        var hooks = new RawDrawDispatchHooks
+        {
+            Sprite = entry =>
+            {
+                if (entry.Kind != 1)
+                {
+                    throw new InvalidOperationException("월드 종류별 그리기 미연결(R5-3c3)");
+                }
+                RawTileSprites.DrawTile(entry, pool, types, database, cameraX, cameraY, pixels, pitch, height, clip, modes);
+            },
+            Group = token => groups.TryGetValue(token, out RawTileGroupView? group)
+                ? group
+                : throw new InvalidOperationException("월드 묶음 조회 실패"),
+            Ui = _ => throw new InvalidOperationException("월드 UI 그리기 미연결(R5-4)"),
+            Construction = _ => throw new InvalidOperationException("월드 건설 그리기 미연결(R5-3)"),
+            Preview = _ => throw new InvalidOperationException("월드 미리보기 그리기 미연결(R6)"),
+        };
+        RawDrawSubmission.DispatchDrawEntries(sorted, false, false, hooks);
     }
 
     /// <summary>실제 지도 영역 전역으로 타일 묶음·일반 자산을 순서대로 수집한다.</summary>
