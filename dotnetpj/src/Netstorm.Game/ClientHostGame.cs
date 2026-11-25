@@ -342,6 +342,11 @@ public sealed partial class ClientHostGame : Game
             _saveFortDialog = new HostSaveFortDialog(_mainMenu, _htmlWindows, _htmlText, _textEntry, _startup, _driver.Screen,
                 fortConfirmation.Confirm, _menuInput.ShowTell);
             _menuInput.BindNewFort(mode => _saveFortDialog.Show(mode, 1, _editor.CurrentName));
+            // SL-2a: 시작 detect intro — 실제 파일 존재만으로 Intro 표시값을 정한다. 빈 경로면 조회 없이 0을 둔다.
+            // 근거: cpppj ClientMain.cpp 547행의 DetectIntroAvailability(00435de0).
+            RawIntroMenu.DetectIntroMovie(_localState.IntroAvailable,
+                () => { string path = ""; _startup.Configuration.ReadString("introMovie", ref path); return path; },
+                name => _startup.Files.TryReadAllBytes(name) is not null ? 1u : 0u);
             // DI-3: 실제 포인터 이동을 현재 커서 위치에 반영하고, Esc는 잡은 커서가 있을 때만 놓는다.
             _menuInput.CursorPosition = (x, y) => { _gameplay.Cursor.ScreenX = x; _gameplay.Cursor.ScreenY = y; };
             _menuInput.CursorCancel = () => _missionSession?.TryCancelCursor() == true;
