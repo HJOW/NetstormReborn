@@ -739,8 +739,15 @@ public sealed partial class ClientHostGame : Game
                 mission.RunMissionFrame();
             });
         }
+        bool menuDrew = false;
         if (_menuDirty && _gumpDrawing is not null && _startup is not null)
-        { DrawStartupScreen(); _gumpDrawing.Draw(); _menuDirty = false; }
+        { DrawStartupScreen(); _gumpDrawing.Draw(); _menuDirty = false; menuDrew = true; }
+        // DI-1: 미션 중 Root UI(생산·채팅·HUD)도 같은 메뉴 트리의 수집·그리기 경로로 그린다. 메뉴 경로는 바꾸지 않는다.
+        // 근거: 미션 Root가 같은 공통 트리에 부착되며(RU-3c) 메뉴 그리기는 트리 수집·정렬·분배를 그대로 쓴다. 전체 화면 대조는 R5 D2에서 한다.
+        if (!menuDrew && _missionSession is not null && _gumpDrawing is not null && _startup is not null)
+        {
+            _gumpDrawing.Draw();
+        }
         // 원문439b96처럼 현재 그리기 뒤 같은 Chat 입력줄 전환 요청을 한 번 소비한다.
         ConsumeNativeChatInputToggle();
         base.Update(gameTime);
