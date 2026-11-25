@@ -900,6 +900,8 @@ cpppj/src/o/RawAiBrain.cpp	Netstorm.Core/Original/RawAiBrain.cs	04c87c034dd35923
 cpppj/src/o/RawAiBrain.h	Netstorm.Core/Original/RawAiBrain.cs	04c87c034dd35923a20a363fd9a24ff708329648	L1
 cpppj/src/o/RawAiBrainInitialUpdate.cpp	Netstorm.Core/Original/RawAiBrainInitialUpdate.cs	efa953c41c6e53b21cfbea5ebd8948124d94edf1	L1
 cpppj/src/o/RawAiBrainInitialUpdate.h	Netstorm.Core/Original/RawAiBrainInitialUpdate.cs	efa953c41c6e53b21cfbea5ebd8948124d94edf1	L1
+cpppj/src/o/RawAiBridgeCandidates.cpp	Netstorm.Core/Original/RawAiBridgeCandidates.cs	92bc1202606475917aa5347c0b40b3721ab2fd70	port
+cpppj/src/o/RawAiBridgeCandidates.h	Netstorm.Core/Original/RawAiBridgeCandidates.cs	92bc1202606475917aa5347c0b40b3721ab2fd70	port
 cpppj/src/o/RawAiBridgePath.cpp	Netstorm.Core/Original/RawAiBridgePath.cs	31b8f6e6b620831eac809a35c51f6e87c163b37f	port
 cpppj/src/o/RawAiBridgePath.h	Netstorm.Core/Original/RawAiBridgePath.cs	31b8f6e6b620831eac809a35c51f6e87c163b37f	port
 cpppj/src/o/RawAiBuildChoice.cpp	Netstorm.Core/Original/RawAiBuildChoice.cs	47a78175dee45ac90361c35567039bbb8fa0f989	port
