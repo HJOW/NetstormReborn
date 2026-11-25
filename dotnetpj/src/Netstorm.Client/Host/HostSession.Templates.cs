@@ -25,6 +25,26 @@ public sealed partial class HostSession
     {
         _templateAllocationBytes = bytes ?? throw new ArgumentNullException(nameof(bytes));
     }
+    /// <summary>같은 현재 manager·이름·숨김 전역과 실제 파일 쓰기로 저장 부모를 연결한다. 편집 작업본 경로에 쓴다.</summary>
+    /// <param name="types">같은 실제 TYPE 표다. 이미지 타입 개수에 쓴다.</param>
+    /// <param name="file">실제 권한·쓰기 장치다.</param>
+    /// <param name="readOnlyForts">저장 억제 DWORD다. 비어 있으면 0이다.</param>
+    /// <remarks>2026-11-26 1.057에서 SL-4 non-mine Notify용으로 추가했다. 근거: cpppj o/RawPlayerTemplateState.cpp 4bd540(Notify)의 실제 DataManager 파일 저장(0044d8d0/CD44cc40)이다. isMine 자연 반환·억제·숨김 관문은 본체가 수행하며 편집기 저장은 R9에서 잇는다.</remarks>
+    public void BuildTemplateSaveDevices(IReadOnlyList<OriginalTypeRecord> types, TemplateFileWriteHooks file, Func<uint>? readOnlyForts = null)
+    {
+        ArgumentNullException.ThrowIfNull(types); ArgumentNullException.ThrowIfNull(file);
+        if (_templateSave is not null) throw new InvalidOperationException("실제 Template 파일 저장 부모 중복 연결");
+        BindTemplateSave(slot => Templates.SaveFile(slot,
+            new DataManagerFileSaveState
+            {
+                ReadOnlyForts = readOnlyForts ?? (() => 0u),
+                LocalOwner = () => MissionPlayer.BattleOwner,
+                HiddenPlayers = () => HiddenPlayers,
+            },
+            new FortImageHooks { TypeCount = () => unchecked((uint)types.Count), Assertion = text => throw new InvalidOperationException("실제 Template 파일 이미지 진단:" + text) },
+            file));
+    }
+
     /// <summary>현재세션이반납된뒤이전Template소비자가재사용하지못하게한다.</summary>
     private RawPlayerTemplateState PlayerTemplateState()
     {
