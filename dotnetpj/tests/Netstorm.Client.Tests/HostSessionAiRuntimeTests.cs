@@ -69,6 +69,7 @@ public sealed class HostSessionAiRuntimeTests
         Assert.NotNull(session.AiCollectors);
         Assert.NotNull(session.AiDrySpots);
         Assert.NotNull(session.AiCarriers);
+        Assert.NotNull(session.AiPriests);
         Assert.Same(session.Sp, session.AiEconomy.Store);
         Assert.Same(session.Pool, session.AiFactories.Pool);
     }
@@ -334,6 +335,61 @@ public sealed class HostSessionAiRuntimeTests
         types[1].Flags2 &= ~0x200000u;
         WriteBrainList(session, brain, 0x2dc, [unchecked((uint)carrier)]);
         InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.ManageAiCarriers(2));
+        Assert.Contains("미연결(R6)", error.Message);
+        Assert.Empty(session.AiRuntimeLogs);
+        Assert.Empty(session.AiRuntimeDiagnostics);
+    }
+
+    /// <summary>brain이 없으면 사제 행동은 거짓으로 돌아가고 범위 밖 owner를 거부한다.</summary>
+    [Fact]
+    public void PriestsWithoutBrainPreserveRandomAndRejectInvalidOwner()
+    {
+        (HostSession session, _) = BuildScene();
+        uint before = session.Game.State();
+        Assert.False(session.ManageAiPriest(2, 7));
+        Assert.Equal(before, session.Game.State());
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.ManageAiPriest(0, 7));
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.ManageAiPriest(9, 7));
+    }
+
+    /// <summary>빈손 사제는 어떤 하위도 호출하지 않고 몸체를 바꾸지 않는다.</summary>
+    [Fact]
+    public void PriestsEmptyHandsDoNothing()
+    {
+        (HostSession session, _) = BuildScene();
+        PrepareBrain(session, 2);
+        uint before = session.Game.State();
+        Assert.True(session.ManageAiPriest(2, 0));
+        Assert.Equal(before, session.Game.State());
+        Assert.Empty(session.AiRuntimeLogs);
+        Assert.Empty(session.AiRuntimeDiagnostics);
+    }
+
+    /// <summary>기한 앞섬에 닿으면 원문 순서대로 탐색을 명시 거부한다.</summary>
+    [Fact]
+    public void PriestsMissingScanThrowsExplicitly()
+    {
+        (HostSession session, _) = BuildScene();
+        uint brain = PrepareBrain(session, 2);
+        Put(session.AiBrainMemory.Bytes(brain), 0x5a4, 0u);
+        Put(session.AiBrainMemory.Bytes(brain), 0x5a0, 1u);
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.ManageAiPriest(2, 0));
+        Assert.Contains("미연결(R6)", error.Message);
+        Assert.Empty(session.AiRuntimeLogs);
+        Assert.Empty(session.AiRuntimeDiagnostics);
+    }
+
+    /// <summary>살아 있는 사제에 닿으면 실제 HP·예약 판정을 지나 경로 조회를 명시 거부한다.</summary>
+    [Fact]
+    public void PriestsMissingPathThrowsExplicitly()
+    {
+        (HostSession session, _) = BuildScene();
+        PrepareBrain(session, 2);
+        int priest = session.Pool.Allocate(Netstorm.Core.Simulation.SidAllocation.Client);
+        session.Pool.AllocatedBytes(priest).Clear();
+        session.Pool.AllocatedBytes(priest)[10] = 1;
+        Put(session.Pool.AllocatedBytes(priest), 26, 0x7FFFFFFFu);
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.ManageAiPriest(2, unchecked((ushort)priest)));
         Assert.Contains("미연결(R6)", error.Message);
         Assert.Empty(session.AiRuntimeLogs);
         Assert.Empty(session.AiRuntimeDiagnostics);

@@ -3128,7 +3128,7 @@ public sealed partial class HostSession
     private void BuildAiRuntimeDevices(IReadOnlyList<OriginalTypeRecord> types)
     {
         ArgumentNullException.ThrowIfNull(types);
-        if (_aiPreparation is not null || _aiStrategySetup is not null || _aiObjects is not null || _aiWorld is not null || _aiRuntime is not null || _aiGraph is not null || _aiCarriers is not null)
+        if (_aiPreparation is not null || _aiStrategySetup is not null || _aiObjects is not null || _aiWorld is not null || _aiRuntime is not null || _aiGraph is not null || _aiCarriers is not null || _aiPriests is not null)
         {
             throw new InvalidOperationException("AI 런타임 장치 중복 연결");
         }
@@ -3244,6 +3244,7 @@ public sealed partial class HostSession
         BuildAiCollectorsDevice(types, strategy);
         BuildAiDrySpotsDevice();
         BuildAiCarriersDevice(types, destroy);
+        BuildAiPriestDevice(processes);
         var runtime = new RawAiRuntime(AiBrainMemory, PlayerRecords,
             new AiRuntimeGlobals
             {
@@ -3268,7 +3269,15 @@ public sealed partial class HostSession
 
                     LogAiDrySpotNote(brain, kind, fake);
                 },
-                Priest = (_, _) => throw new InvalidOperationException("AI 사제 행동 미연결(R6)"),
+                Priest = (brain, number) =>
+                {
+                    if (number > 65535 || number >= (uint)Pool.Capacity)
+                    {
+                        throw new ArgumentOutOfRangeException(nameof(number), "AI 사제 SID 범위");
+                    }
+
+                    AiPriests.Act(brain, new Sid(unchecked((ushort)number)));
+                },
                 Drops = _ => throw new InvalidOperationException("AI 배치 행동 미연결(R6)"),
                 Bridges = _ => throw new InvalidOperationException("AI 다리 행동 미연결(R6)"),
                 Carriers = brain => AiCarriers.Act(brain),
