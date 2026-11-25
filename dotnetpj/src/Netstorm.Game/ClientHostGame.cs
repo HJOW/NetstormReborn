@@ -666,6 +666,11 @@ public sealed partial class ClientHostGame : Game
             // 입력·음향·포획 갈고리는 명시 거부하며 미션 진입·대기 덤프에는 닿지 않는다.
             // 근거: cpppj RawCampaignSession.cpp 3806~3807행의 anchorState와 3929행의 motion 조립이다.
             session.BuildMotionRootDevices(worldDefinitions);
+            // WP-3 MetaZone 전체 Native World 자산 가상 삭제 분배 설치. MetaZone 마커 삭제가 이 분배를 사용한다.
+            // 근거: cpppj src/client/RawSurfaceWorld.cpp 373행의 BindDeletion이다.
+            // 감시 쌍·프로세스 Form은 같은 세션 장치를 등록하고 Gump·내용물 Form은 UI·내용물 본체(R3)에서 잇는다.
+            // 자산 뿌리는 원문 83개 가상표 전체를 실제 공통 본체로 보내며 미복원 표는 명시 거부한다.
+            session.BuildWorldDeletionRootDevices();
             // RU-3c 실제 미션 Root에 표시 창을 만들고 같은 트리 루트에 부착한다. 부착 전 Enter는 부모 없음으로 거부된다.
             // 근거: GumpTree.Push/Attach의 void·부모 규칙과 ChatWindow Native 입력 호출자. 메뉴 경로는 바꾸지 않는다.
             _ = NativeChatWindows.Create();
