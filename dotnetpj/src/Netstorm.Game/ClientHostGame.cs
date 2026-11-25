@@ -342,6 +342,9 @@ public sealed partial class ClientHostGame : Game
             _saveFortDialog = new HostSaveFortDialog(_mainMenu, _htmlWindows, _htmlText, _textEntry, _startup, _driver.Screen,
                 fortConfirmation.Confirm, _menuInput.ShowTell);
             _menuInput.BindNewFort(mode => _saveFortDialog.Show(mode, 1, _editor.CurrentName));
+            // DI-3: 실제 포인터 이동을 현재 커서 위치에 반영하고, Esc는 잡은 커서가 있을 때만 놓는다.
+            _menuInput.CursorPosition = (x, y) => { _gameplay.Cursor.ScreenX = x; _gameplay.Cursor.ScreenY = y; };
+            _menuInput.CursorCancel = () => _missionSession?.TryCancelCursor() == true;
             _gumpDrawing = new HostGumpDrawing(_mainMenu, _htmlText, _htmlMenus, _driver.Screen, _textEntry);
             _driver.BindControlLocator(_mainMenu);
             _driver.BindInputHandler(_menuInput.Dispatch);
