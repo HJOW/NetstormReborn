@@ -245,6 +245,15 @@ public sealed class ConfigInterface
         return ReadInt(key, ref value) && value == expected;
     }
 
+    /// <summary>이미 읽은 설정 바이트를 현재 설정 객체에 덧읽는다. 사용자 루트 재정의가 설치 값을 덮을 때 쓴다.</summary>
+    /// <param name="bytes">설정 파일 바이트. 원본 XOR 부호화 그대로 둔다.</param>
+    /// <remarks>5차 요구: 사용자 options.cfg를 설치 설정 위에 올리는 진입점이다. 1.041에서 추가했다.</remarks>
+    public void LoadBytes(byte[] bytes)
+    {
+        ArgumentNullException.ThrowIfNull(bytes);
+        _configuration.LoadBytes(bytes);
+    }
+
     /// <summary>원본 004414d0: 값을 쓰고 변경 알림을 부른다. 이전에 있었으면 참.</summary>
     /// <param name="key">쓸 키.</param>
     /// <param name="value">쓸 값.</param>

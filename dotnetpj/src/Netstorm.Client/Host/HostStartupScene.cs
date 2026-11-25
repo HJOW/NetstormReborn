@@ -16,6 +16,8 @@ public sealed class HostStartupScene
     public ConfigInterface Configuration { get; }
     /// <summary>원본 options.cfg가 놓인 실제 설치 경로다.</summary>
     private readonly string _optionsPath;
+    /// <summary>사용자 루트의 옵션 파일 경로다. 지정하면 읽기·쓰기 모두 여기를 쓰고 설치 경로는 건드리지 않는다.</summary>
+    private readonly string? _userOptionsPath;
     /// <summary>같은 클라이언트 수명에서 현재 Tell 이름을 보존한다.</summary>
     public TellSectionState TellState { get; } = new();
     /// <summary>설정의 fortPal 파일 팔레트.</summary>
@@ -37,15 +39,18 @@ public sealed class HostStartupScene
     /// <param name="dataDirectory">게임 데이터와 netstorm.tarc가 있는 디렉터리.</param>
     /// <param name="settings">원본 시작 설정 인자. 파일 설정보다 먼저 읽는다.</param>
     /// <param name="random">구름 생성이 소비할 같은 게임 난수다. null이면 새로 만든다(0.381에서 추가).</param>
-    public HostStartupScene(string dataDirectory, string settings = "", GameRandom? random = null)
+    /// <param name="userOptionsPath">사용자 루트의 옵션 파일 경로. 지정하면 설치 options.cfg 위에 덧읽고 저장도 여기로 한다(5차). null이면 종전 설치 경로를 쓴다.</param>
+    public HostStartupScene(string dataDirectory, string settings = "", GameRandom? random = null, string? userOptionsPath = null)
     {
         Random = random ?? new GameRandom();
         ArgumentException.ThrowIfNullOrEmpty(dataDirectory);
         if (!GameDataLocator.IsDataDirectory(dataDirectory)) throw new DirectoryNotFoundException("게임 데이터 디렉터리 또는 netstorm.tarc가 없다: " + dataDirectory);
         Files = GameFileSystem.Open(dataDirectory);
         _optionsPath = Path.Combine(Path.GetFullPath(dataDirectory), "d", "options.cfg");
+        _userOptionsPath = string.IsNullOrEmpty(userOptionsPath) ? null : Path.GetFullPath(userOptionsPath);
         Configuration = new ConfigInterface(Files.TryReadAllBytes);
         Configuration.Startup(new ConfigInterface.StartupOptions { InstallDir = Path.GetFullPath(dataDirectory), CommandLine = settings });
+        OverlayUserOptions();
         // 새 제품 표기 11.01을 적용하고 추가 Credits 상세를 같은 수명에 등록한다
         // (2026-11-03 11.01 요구에서 추가했다. 원본 데이터 판본은 바꾸지 않는다)
         ProductPresentation.ApplyProductVersion(Configuration);
@@ -60,8 +65,43 @@ public sealed class HostStartupScene
         _title = Netstorm.Client.Display.GifImage.DecodeGif(Files.ReadAllBytes(titlePath));
     }
 
-    /// <summary>현재 설정을 원본의 options.cfg 위치에 기록한다.</summary>
-    public void SaveOptions() => HostOptionsFile.Save(Configuration, (_, bytes) => File.WriteAllBytes(_optionsPath, bytes));
+    /// <summary>사용자 루트의 옵션 파일을 설치 설정 위에 덧읽는다. 없거나 읽을 수 없으면 설치 값을 그대로 쓴다.</summary>
+    /// <remarks>5차 요구: 읽기 전용 설치에서도 게임이 정상 동작하도록 설치 경로는 읽기만 한다. 사용자 값이 있으면 항상 이긴다.</remarks>
+    private void OverlayUserOptions()
+    {
+        if (_userOptionsPath is null) return;
+        byte[] bytes;
+        try
+        {
+            bytes = File.ReadAllBytes(_userOptionsPath);
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or NotSupportedException)
+        {
+            return;
+        }
+        try
+        {
+            Configuration.LoadBytes(bytes);
+        }
+        catch (Exception exception) when (exception is ArgumentException or InvalidDataException or DecoderFallbackException)
+        {
+            return;
+        }
+    }
+
+    /// <summary>현재 설정을 옵션 파일에 기록한다. 사용자 경로가 있으면 그곳에만 쓰고 설치 경로는 건드리지 않는다.</summary>
+    public void SaveOptions()
+    {
+        if (_userOptionsPath is not null)
+        {
+            string? directory = Path.GetDirectoryName(_userOptionsPath);
+            if (!string.IsNullOrEmpty(directory)) Directory.CreateDirectory(directory);
+            HostOptionsFile.Save(Configuration, (_, bytes) => File.WriteAllBytes(_userOptionsPath, bytes));
+            return;
+        }
+
+        HostOptionsFile.Save(Configuration, (_, bytes) => File.WriteAllBytes(_optionsPath, bytes));
+    }
 
     /// <summary>같은 시작 Config와 파일에서 Tell을 조회하고 현재 HTML 창 생성기에 전달한다.</summary>
     /// <param name="target">원본 BYTE 표현의 섹션 이름과 선택적 매개변수.</param>

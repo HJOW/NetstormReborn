@@ -71,7 +71,12 @@ internal static class Program
         try
         {
             string? data = GameDataLocator.FindDataDirectory();
-            HostStartupScene? startup = data is null ? null : new HostStartupScene(data, options.SettingsText);
+            // 5차 요구: 옵션은 사용자 루트(Saves/options.cfg)에 읽고 쓴다. 설치 경로는 읽기만 한다.
+            // 사용자 루트를 정할 수 없으면 종전 설치 경로 동작으로 둔다.
+            string? userOptions = null;
+            try { userOptions = UserDataRoot.Resolve().OptionsFile(); }
+            catch (InvalidOperationException) { }
+            HostStartupScene? startup = data is null ? null : new HostStartupScene(data, options.SettingsText, null, userOptions);
             startup?.SaveOptions();
             if (startup != null) options.ApplyStartupConfiguration(startup.Configuration);
             var screen = new Screen(options.Width, options.Height);
