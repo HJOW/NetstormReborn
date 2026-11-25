@@ -20,6 +20,7 @@ ai-bridge-search-x86.tsv	5a48f482a424e99a06e671df95f11e347d786ae5db81dfdb018c641
 ai-bridge-shape-x86.tsv	80d8ff50cb11e86abdf3d66a5c802241db72d40cfea9f99e75ea9e14f7166ee6	208	cpppj	Core
 ai-bridge-start-x86.tsv	a615658b0d1059ac2948661d71d29ee2e02ab870f28af0eb42b4697b1c2b38cc	399	cpppj	Core
 ai-bridge-step-x86.tsv	2cd0d570668e97f0c45ffb720692b417bed0c8d4ba117e0a1a0be30822c6f19e	600	cpppj	Core
+ai-bridge-strategies-x86.tsv	e42982e1380f075b82558bb3567f019b27d4e308911523aa525631b558542e2f	198	cpppj	Core
 ai-command-state-x86.tsv	fe6a534535c6d2ac05a125787df3901a629516d51f048323004e9e8b0a183675	1940	cpppj	Core
 ai-damage-x86.tsv	eaa90a665618f23d59365df1e65b330499f7a4fd87fac6280d9955b5ca05ab3a	150	cpppj	Core
 ai-initial-update-theme5-x86.tsv	e6ec842056c6df0dc8ec294dc5454775e36ccb2069f996936bf48ccaf2ba77c3	16	cpppj	Core
