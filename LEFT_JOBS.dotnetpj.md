@@ -222,6 +222,11 @@ AGENTS.md 지정에 따라0.807에서 공통 [assets/Netstorm.ico](assets/Netsto
   - [ ] **R4-7c3c 미룬 세션 로그인 본체.** 미션 Fort 경로 서버 설치·로그인 객체 전송·미션 재적재·미션 객체
     stream·새 Fort 검사. 완료 기준: 각 검사가 실제 세션 경로에서 통과한다. Tell 메타 1종은 대화
     본체(R3k-11)로 이관했다.
+    - **판단 필요(2026-11-25).** 6파일 13검사 모두 레거시 세션 로그인 본체(`LoadLocalConnection`·`Load`·
+      `InstallExistingEditorCheckpoint` 계열)를 요구하며, DN은 같은 본체를 `HostSession` 쪽에 이식해 두었다
+      ([분석](docs/dotnet-session-login-gap-20261125.md)). A안(레거시 통째 이식·수 단위)·B안(HostSession·L2
+      기준 동등 검사로 대체·완료 기준 변경 필요)·C안(R6·R11로 연기) 중 사용자 결정이 필요하다. 결정 전까지
+      착수하지 않는다.
 - [ ] **R4-8 M1 판정.** 같은 시드·고정 프레임·빈 사용자 루트로 34/34 상태 일치. 로드 뒤 프레임 진행에서만 생기는 차이는 cpp 후속 프레임 덤프로 입증한 뒤 R6으로 넘긴다.
 
 <a id="r6-preports"></a>
