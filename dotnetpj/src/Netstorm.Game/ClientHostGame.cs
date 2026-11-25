@@ -651,6 +651,10 @@ public sealed partial class ClientHostGame : Game
                     Command = (code, first, second) => _driver.Input.PushCommand(code, unchecked((int)first), unchecked((int)second)),
                     ScreenSize = () => ClientSurfaceGlobals.RootScreenSize(_driver.Screen),
                     FormPacket = buffer => formPackets.Add(buffer.ToArray()),
+                    // WP-4a 파생 수신·변경·원격 삭제는 같은 Host의 전체 가상 삭제 분배로 보낸다. 일반 삭제 Pre/Post로 대신하지 않는다.
+                    // 근거: cpppj RawCampaignSession.cpp의 고정 수신 2d/2e/65·53h·62h와 개발자 destroy·간헐천 채집 삭제가 같은 세션 분배를 쓴다.
+                    // 호출 시점에 WP-3 분배가 설치되어 있으므로 지연 조회로 잇는다.
+                    VirtualDestroy = (sid, flags) => session.DestroyWorldObject(sid, flags),
                 });
             }
             // 미션 시작의 AI 생성 시 난이도 옵션을 읽어 적 AI에만 적용한다. 0.641에서 옵션을 연결했다.
