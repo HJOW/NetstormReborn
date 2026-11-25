@@ -700,6 +700,9 @@ public sealed partial class ClientHostGame : Game
         // R5-3c3 미션 월드 프레임 구동 장치. 앞단·구름·SHP·타일 모드를 묶으며 수집기는 위 세션 조립을 쓴다.
         // 근거: cpppj ClientRendererFrame의 수집기 재생성과 DrawEntry 표시기 소유다. 시작 덤프에는 닿지 않는다.
         BindMissionWorldDrawing(shpRaw);
+        // R5-4b 미션 HUD 구분선·도크 배치. 실제 지도 영역을 트리에 기록하며 메뉴·패널은 손대지 않는다.
+        // 근거: cpppj HudDock.cpp의 kMoved 배치와 UberRootGump.Construct의 구분선 기본 배치다.
+        EnsureMissionHudDividers();
             // RU-3c 실제 미션 Root에 표시 창을 만들고 같은 트리 루트에 부착한다. 부착 전 Enter는 부모 없음으로 거부된다.
             // 근거: GumpTree.Push/Attach의 void·부모 규칙과 ChatWindow Native 입력 호출자. 메뉴 경로는 바꾸지 않는다.
             _ = NativeChatWindows.Create();
