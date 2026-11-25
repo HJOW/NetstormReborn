@@ -445,6 +445,7 @@ cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.Flare.c
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.FlyerPackets.cs	5fd474c2d4a71e882285e79f97a8e868cf041324	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.GeyserMined.cs	baf141ebe8d2893459a1b18ea74a6caa88504468	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.GunPackets.cs	879c61b201397a84d7c8dde01179da3e6f207951	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.Load.cs	c26dc5f3d4c3c6d02a5c25ed26271c30edd5da09	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.PathCleanup.cs	baf141ebe8d2893459a1b18ea74a6caa88504468	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.Selection.cs	3419ae818c8c929235cbeea666f42b1afe7bf80e	port
 cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.PlayerRecords.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	port
@@ -481,6 +482,7 @@ cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.Flare.cs	
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.FlyerPackets.cs	5fd474c2d4a71e882285e79f97a8e868cf041324	port
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.GeyserMined.cs	baf141ebe8d2893459a1b18ea74a6caa88504468	port
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.GunPackets.cs	879c61b201397a84d7c8dde01179da3e6f207951	port
+cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.Load.cs	c26dc5f3d4c3c6d02a5c25ed26271c30edd5da09	port
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.PlayerRecords.cs	bda77381e54bc382937c720047ee4441086b46d7	port
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.ProductionSync.cs	baf141ebe8d2893459a1b18ea74a6caa88504468	port
 cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.RainAviaryPackets.cs	1f9e94a4b10c21fa18d8798978756e3caefd1845	port
