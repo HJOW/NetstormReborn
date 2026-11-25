@@ -598,9 +598,9 @@ public sealed class FortObjectLoadTests
             values[(int)Field.Mission] = 1;
             FortLoadScene scene = new(edition, values);
             RawSquidFactory factory = new(scene.Pool, scene.ModuleTypes);
-            // 현재 관리풀은 CD도 서버15000을 사용하므로 원문14000예측경계 진단을 명시 복귀시킨다.
-            // 실제 CD풀 복원 성공으로 세지 않고 기존 로더의 같은 SID 입력을 유지한다.
-            factory.BindDiagnostics(new() { Assertion = (expression, file, line) => { Assert.False(scene.Patch); Assert.Equal("sid < FIRST_PREDICTABLE_SID", expression); Assert.Equal(@"\ns\o\Squid.cpp", file); Assert.Equal(0x18bu, line); } });
+            // 실제 CD 경계(서버 6000·예측 14000)에서는 예측 진단이 나지 않는다. 하네스 시절(서버 15000)에는 명시 복귀시켰으나
+            // R4-7c2에서 실제 경계로 바꿨으므로 진단이 나오면 실패다. 실제 CD풀 복원 성공으로 세지 않고 기존 로더의 같은 SID 입력을 유지한다.
+            factory.BindDiagnostics(new() { Assertion = (expression, file, line) => throw new InvalidOperationException("실제 경계에서 원문 진단이 나면 안 된다: " + expression) });
             scene.ModuleTypes[6].ConstructorAddress = OriginalConstructors.Address(edition, 6);
 
             SquidOwnerMode mode = new() { Battle = true };
@@ -638,9 +638,9 @@ public sealed class FortObjectLoadTests
             };
             RawFortObjectLoad loader = new(scene.Pool, scene.Hash, scene.Types, scene.Frames, scene.Random, scene.State, hooks);
             int sid = loader.Object(Record(values), 16, 32, 2);
-            // C# 풀은 10.78 스트라이드(서버 첫 번호 15000)만 지원하므로 CD 장면도 같은 풀 번호를 확인한다.
-            // 원본 CD 서버 첫 번호(6000)와의 차이는 풀 모듈 범위이며 로더 동작(소유자·HP·Pop·내용물)은 판본별로 대조된다.
-            Assert.Equal(RawSidPool.ServerFirst, sid);
+            // CD 풀도 실제 서버 첫 번호(6000)를 쓴다. 0.609 하네스 시절에는 15000을 썼으나 R4-7c2에서 실제 경계로 바꿨다.
+            // 원본 CD 서버 첫 번호(6000)와의 차이는 없어졌으며 로더 동작(소유자·HP·Pop·내용물)은 판본별로 대조된다.
+            Assert.Equal(edition == OriginalEdition.Patch1078 ? RawSidPool.ServerFirst : RawSidPool.CdServerFirst, sid);
             Assert.Equal((byte)2, scene.Pool.Slot(sid)[scene.Patch ? 34 : 32]);
             Assert.Equal(803u, Read(scene.Pool.Slot(sid), 26, scene.Patch ? 4 : 2));
             Assert.Equal(2, notices.Count);

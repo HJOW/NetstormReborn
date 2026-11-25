@@ -104,11 +104,11 @@ public sealed partial class RawSidPool
     /// <summary>이 풀의 슬롯 바이트 수다. 원본 CD 36과 달리 기존 관리 CD 하네스는 10.78과 같은 50을 쓴다. 2026-11-18 0.609에서 슬롯 폭 mismatch를 확인하고 하네스 유지를 명시했다. CD 36바이트 관측과의 대조는 테스트에서 앞 36바이트로 자른다.</summary>
     public int SlotStride => Stride;
 
-    /// <summary>이 풀의 서버 영역 첫 번호다. CD 실제 6000과 달리 기존 관리 CD 하네스는 10.78 경계(15000)를 쓴다. 2026-11-18 0.609에서 슬롯 폭만 판본별로 갈리고 할당 경계는 하네스 유지를 명시했다.</summary>
-    public int ServerFirstValue => ServerFirst;
+    /// <summary>이 풀의 서버 영역 첫 번호다. CD판은 실제 6000을 쓴다. 2026-11-18 0.609에서 하네스로 15000을 썼으나 R4-7c2 CD 재현에서 실제 경계로 바꿨다.</summary>
+    public int ServerFirstValue => Edition == OriginalEdition.Cd1072 ? CdServerFirst : ServerFirst;
 
-    /// <summary>이 풀의 예측 머리 번호다. CD 실제 14000과 달리 기존 관리 CD 하네스는 10.78 경계(23001)를 쓴다. 2026-11-18 0.609에서 슬롯 폭만 판본별로 갈리고 할당 경계는 하네스 유지를 명시했다.</summary>
-    public int PredictableFirstValue => PredictableFirst;
+    /// <summary>이 풀의 예측 머리 번호다. CD판은 실제 14000을 쓴다. 2026-11-18 0.609에서 하네스로 23001을 썼으나 R4-7c2 CD 재현에서 실제 경계로 바꿨다.</summary>
+    public int PredictableFirstValue => Edition == OriginalEdition.Cd1072 ? CdPredictableFirst : PredictableFirst;
 
     /// <summary>확보한 슬롯 수.</summary>
     public int Capacity { get; private set; }

@@ -218,7 +218,13 @@ public sealed partial class RawSurfaceWorld : IDisposable
                 (_runtime?.ContentNotice ?? throw new InvalidOperationException("현재 World의 실제 내용물 부모 파생 통지 미연결"))(selected, content, code)).Notice(parent, form, reason),
             Assertion = (expression, file, line) => _storage.AssertDisplay(expression, file, line),
         });
-        bool coreTypesReady = prepared || (_edition == OriginalEdition.Patch1078 && _types.Count == OriginalConstructors.TypeCount);
+        // 같은 수의 저장소 TYPE를 빌린 CD 171개 월드도 실제 실행기를 조립한다. 저장소 없는 CD 껍데기와 패치 조립 조건은 그대로 둔다.
+        // 근거: F3 보류 장면의 CD 재현(R4-7c2). 2026-11-25 R4-7c2 CD 표면 조립 연결에서 추가됐다.
+        bool storageBacked = _storage.Types.Count == _types.Count
+            && (_types.Count == OriginalConstructors.TypeCount
+                || (_edition == OriginalEdition.Cd1072 && _types.Count == 171));
+        bool coreTypesReady = prepared || (_edition == OriginalEdition.Patch1078 && _types.Count == OriginalConstructors.TypeCount)
+            || storageBacked;
         // 원문처럼 Graph를 표시 대여보다 먼저 구성해 실패한 Graph가 표시 실행기를 남기지 않게 한다.
         if (coreTypesReady)
         {
@@ -442,8 +448,11 @@ public sealed partial class RawSurfaceWorld : IDisposable
             _assetOwner = RawAssetOwner.MakeAssetOwnerDispatch(_storage.Pool, _storage.Links, _bookkeeping.ProductionDirtyBox, owner.Set);
         }
 
-        // 프레임 지정은 표시·Unpop·Pop 가상 호출 순서대로 외부 효과에 연결한다. CD 판본과 표시 미연결 껍데기에서는 비워 둔다.
-        if (_edition == OriginalEdition.Patch1078 && _display is not null && _unpop is not null && _pop is not null)
+        // 프레임 지정은 표시·Unpop·Pop 가상 호출 순서대로 외부 효과에 연결한다. 표시 미연결 껍데기에서는 비워 둔다.
+        // CD판도 같은 수의 저장소 TYPE를 빌리면 조립한다. 근거: F3 보류 장면의 CD 재현(R4-7c2). 2026-11-25 R4-7c2 CD 표면 조립 연결에서 추가됐다.
+        bool frameReady = _display is not null && _unpop is not null && _pop is not null
+            && (_edition == OriginalEdition.Patch1078 || _storage.Types.Count == _types.Count);
+        if (frameReady)
         {
             SquidDisplay display = _display;
             RawUnpop unpop = _unpop;

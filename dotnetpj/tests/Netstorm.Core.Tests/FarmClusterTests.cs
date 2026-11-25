@@ -227,7 +227,9 @@ public sealed class FarmClusterTests
         public FarmScene(OriginalEdition edition)
         {
             Patch = edition == OriginalEdition.Patch1078;
-            Pool = new RawSidPool(32768, false, null, edition);
+            // CD 실제 경계(서버 6000·예측 14000)에서는 서버 목록도 확보해야 직접 쓰는 10000번대 슬롯이 할당 상태가 된다.
+            // 근거: R4-7c2 CD 표면 조립 연결. 패치 장면의 false는 그대로 둔다.
+            Pool = new RawSidPool(32768, !Patch, null, edition);
             int typeCount = Patch ? 188 : 171;
             Types = [];
             Frames = [];
@@ -246,10 +248,22 @@ public sealed class FarmClusterTests
                     Assertion = reason => throw new InvalidOperationException("군집 예상 밖 목록 진단"),
                 });
             // 지면·생성 슬롯을 미리 확보한다. 원본처럼 빈 목록 상태는 관측하지 않는다.
-            // 생성 번호는 10000번부터 증가하며 기록 최대 10143번을 덮는다. 고객 영역 끝(14999번은 예약 꼬리)까지 확보한다
-            for (int sid = 5; sid <= 14998; sid++)
+            // 생성 번호는 10000번부터 증가하며 기록 최대 10143번을 덮는다. 고객 영역 끝(예약 꼬리)까지 확보한다.
+            // 패치 5~14998(14999번은 예약 꼬리), CD 5~5998(5999번은 예약 꼬리).
+            int lastClient = Patch ? 14998 : 5998;
+            for (int sid = 5; sid <= lastClient; sid++)
             {
                 Assert.Equal(sid, Pool.Allocate((SidAllocation)2));
+            }
+
+            if (!Patch)
+            {
+                // 서버 목록 전체를 확보한다. 직접 쓰는 생성 슬롯(FarmBorn 10000번대)이 할당 상태가 되어야 한다.
+                // 끝 번호(13999번)는 예약 꼬리로 남긴다.
+                for (int sid = RawSidPool.CdServerFirst; sid < 13999; sid++)
+                {
+                    Assert.Equal(sid, Pool.Allocate(SidAllocation.Server));
+                }
             }
         }
 

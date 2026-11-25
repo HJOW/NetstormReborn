@@ -144,14 +144,18 @@ public sealed partial class RawSquidFactory
 
     /// <summary>팩토리를 만든다.</summary>
     /// <param name="pool">슬롯 풀.</param>
-    /// <param name="types">타입 번호 순서의 타입 레코드. 개수는 <see cref="OriginalConstructors.TypeCount"/> 와 같아야 한다.</param>
+    /// <param name="types">타입 번호 순서의 타입 레코드. 개수는 판본과 같아야 한다(패치 188·CD 171).</param>
     /// <param name="weakenedMana">mana 약화 옵션.</param>
     /// <param name="unpop">Take가 선택한 실제 공간 해제의 독립 장치. 없으면 null.</param>
     public RawSquidFactory(RawSidPool pool, IReadOnlyList<OriginalTypeRecord> types, bool weakenedMana = false, IRawUnpop? unpop = null)
     {
         ArgumentNullException.ThrowIfNull(pool);
         ArgumentNullException.ThrowIfNull(types);
-        if (types.Count != OriginalConstructors.TypeCount)
+        // CD판 월드는 171개 TYPE 표도 쓴다. 기존 검사가 쓰던 188개 표도 CD 풀에서 그대로 받는다.
+        // 근거: F3 보류 장면의 CD 재현(R4-7c2). 2026-11-25 R4-7c2 CD 표면 조립 연결에서 추가됐다.
+        bool countOk = types.Count == OriginalConstructors.TypeCount
+            || (pool.Edition == OriginalEdition.Cd1072 && types.Count == 171);
+        if (!countOk)
         {
             throw new ArgumentException($"타입 레코드가 {types.Count}개입니다 (10.78 은 {OriginalConstructors.TypeCount}개)", nameof(types));
         }

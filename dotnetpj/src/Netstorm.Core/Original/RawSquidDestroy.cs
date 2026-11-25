@@ -152,7 +152,7 @@ public sealed partial class RawSquidDestroy
     /// <summary>삭제 본체를 만든다. 풀·Unpop·타입 표를 묶으며, 서로 다른 풀의 Unpop 은 거부한다.</summary>
     /// <param name="pool">삭제 대상 슬롯 풀.</param>
     /// <param name="unpop">자산 뿌리의 공간 해제기. 같은 풀을 써야 한다.</param>
-    /// <param name="types">타입 번호 순서의 타입 레코드. 10.78 은 188개다.</param>
+    /// <param name="types">타입 번호 순서의 타입 레코드. 판본과 같아야 한다(패치 188·CD 171).</param>
     public RawSquidDestroy(RawSidPool pool, RawUnpop unpop, IReadOnlyList<OriginalTypeRecord> types)
     {
         ArgumentNullException.ThrowIfNull(pool);
@@ -162,7 +162,11 @@ public sealed partial class RawSquidDestroy
         {
             throw new ArgumentException("삭제 본체와 Unpop 의 슬롯 풀이 다릅니다", nameof(unpop));
         }
-        if (types.Count != OriginalConstructors.TypeCount)
+        // CD판 월드는 171개 TYPE 표를 쓴다. 기존 검사가 쓰던 188개 표도 CD 풀에서 그대로 받는다.
+        // 근거: F3 보류 장면의 CD 재현(R4-7c2). 2026-11-25 R4-7c2 CD 표면 조립 연결에서 추가됐다.
+        bool countOk = types.Count == OriginalConstructors.TypeCount
+            || (pool.Edition == OriginalEdition.Cd1072 && types.Count == 171);
+        if (!countOk)
         {
             throw new ArgumentException($"타입 레코드가 {types.Count}개입니다 (10.78 은 {OriginalConstructors.TypeCount}개)", nameof(types));
         }

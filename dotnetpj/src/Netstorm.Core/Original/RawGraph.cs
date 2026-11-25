@@ -121,7 +121,11 @@ public sealed partial class RawGraph : IRawPostPopGraph
         ArgumentNullException.ThrowIfNull(hash);
         ArgumentNullException.ThrowIfNull(spots);
         ArgumentNullException.ThrowIfNull(types);
-        if (types.Count != OriginalConstructors.TypeCount || spots.Length != RawSquidHash.WorldCells * RawSquidHash.WorldCells)
+        // CD판 월드는 171개 TYPE 표도 쓴다. 기존 검사가 쓰던 188개 표도 CD 풀에서 그대로 받는다.
+        // 근거: F3 보류 장면의 CD 재현(R4-7c2). 2026-11-25 R4-7c2 CD 표면 조립 연결에서 추가됐다.
+        bool countOk = types.Count == OriginalConstructors.TypeCount
+            || (pool.Edition == OriginalEdition.Cd1072 && types.Count == 171);
+        if (!countOk || spots.Length != RawSquidHash.WorldCells * RawSquidHash.WorldCells)
         {
             throw new ArgumentException("raw 그래프 타입/지도 크기 오류", nameof(types));
         }
@@ -133,7 +137,8 @@ public sealed partial class RawGraph : IRawPostPopGraph
         {
             throw new ArgumentException("raw 그래프 스택 크기 오류", nameof(stack));
         }
-        if (frames is not null && frames.Count != OriginalConstructors.TypeCount)
+        if (frames is not null && !(frames.Count == OriginalConstructors.TypeCount
+            || (pool.Edition == OriginalEdition.Cd1072 && frames.Count == 171)))
         {
             throw new ArgumentException("raw 그래프 프레임 표 크기 오류", nameof(frames));
         }
@@ -142,7 +147,7 @@ public sealed partial class RawGraph : IRawPostPopGraph
         _spots = spots;
         _types = types.Select(type => type.Clone()).ToArray();
         _recovery = recovery;
-        _frames = frames?.Select(codes => (IReadOnlyList<FrameCode>)codes.ToArray()).ToArray() ?? Enumerable.Range(0, OriginalConstructors.TypeCount)
+        _frames = frames?.Select(codes => (IReadOnlyList<FrameCode>)codes.ToArray()).ToArray() ?? Enumerable.Range(0, types.Count)
             .Select(_ => (IReadOnlyList<FrameCode>)Array.Empty<FrameCode>()).ToArray();
         if (records is null)
         {

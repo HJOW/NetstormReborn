@@ -8,9 +8,9 @@ namespace Netstorm.Core.Tests;
 
 // R4-7c F3 보류 검사 중 일반 지형 바인딩 전체 월드 장면이다. cpppj tests/NormalTerrainWorldBindingTests.cpp의
 // 세 장면(두 섬 실제 생성·도장·군집 후처리, 새 분기 실제 농지 생성·owner·HP·게임 난수, 누락 효과·미복원 분기 거부)과
-// 같은 합성 188타입·실제 월드로 실행하고 게임·CRT 난수 소비와 HP·지역·장부를 대조한다.
-// CD판은 표면 월드의 CD 조립이 후속 단위에 묶여 있어 같은 장면을 실행할 수 없다. DN에 없던 장면 재현만 더하며
-// 제품 코드는 바꾸지 않는다. 1.000에서 추가됐다.
+// 같은 합성 타입·실제 월드로 두 판본을 실행하고 게임·CRT 난수 소비와 HP·지역·장부를 대조한다.
+// DN에 없던 장면 재현과 표면 월드 CD 조립 연결만 더하고 제품 본체는 바꾸지 않는다.
+// 1.000에서 패치판을, 1.001에서 CD판을 이었다.
 public sealed class NormalTerrainWorldSceneTests
 {
     /// <summary>같은 원본 10.78 진단 경계다. 미복원 하위 효과는 명시 실패로 둔다.</summary>
@@ -37,6 +37,10 @@ public sealed class NormalTerrainWorldSceneTests
     // 같은 실제 장기 장치와 두 섬·수명 긴 전역을 빌린다.
     private sealed class Scene
     {
+        /// <summary>같은 원본 판본이다.</summary>
+        public readonly OriginalEdition Edition;
+        /// <summary>패치판인가.</summary>
+        public bool Patch => Edition == OriginalEdition.Patch1078;
         /// <summary>같은 실제 합성 타입 표다.</summary>
         public readonly List<OriginalTypeRecord> Types;
         /// <summary>같은 실제 합성 프레임 표다.</summary>
@@ -115,12 +119,15 @@ public sealed class NormalTerrainWorldSceneTests
         public readonly RawSpStore Sp;
 
         /// <summary>같은 합성 자산·실제 월드로 장면을 조립한다.</summary>
+        /// <param name="edition">원본 판본이다.</param>
         /// <param name="randomFarm">농지 생성자 flags1을 무작위 프레임용으로 바꾸는지 여부다.</param>
-        public Scene(bool randomFarm = false)
+        public Scene(OriginalEdition edition, bool randomFarm = false)
         {
-            Types = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new OriginalTypeRecord()).ToList();
-            Frames = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new RiftTypeFrames([])).ToList();
-            var shapes = Enumerable.Range(0, OriginalConstructors.TypeCount).Select(_ => new SquidDisplayShape()).ToList();
+            Edition = edition;
+            int count = edition == OriginalEdition.Patch1078 ? OriginalConstructors.TypeCount : 171;
+            Types = Enumerable.Range(0, count).Select(_ => new OriginalTypeRecord()).ToList();
+            Frames = Enumerable.Range(0, count).Select(_ => new RiftTypeFrames([])).ToList();
+            var shapes = Enumerable.Range(0, count).Select(_ => new SquidDisplayShape()).ToList();
             var terrainCodes = new List<RiftFrameCode>();
             // 각 16방향의 16후보는 실제 fallback 조건을 함께 만족한다.
             for (byte side = (byte)'A'; side <= (byte)'P'; side++)
@@ -146,7 +153,7 @@ public sealed class NormalTerrainWorldSceneTests
             foreach (uint type in new uint[] { 97u, 121u })
             {
                 OriginalTypeRecord record = Types[(int)type];
-                record.ConstructorAddress = OriginalConstructors.Address(OriginalEdition.Patch1078, (int)type);
+                record.ConstructorAddress = OriginalConstructors.Address(edition, (int)type);
                 record.Flags1 = type == 97u ? 0x28000803u : randomFarm ? 0x00100012u : 0x00200012u;
                 record.Flags2 = type == 97u ? 2u : 0x80000u;
                 record.FootX = 1;
@@ -162,8 +169,8 @@ public sealed class NormalTerrainWorldSceneTests
                 shapes[(int)type] = shape;
             }
 
-            var storage = new RawSurfaceStorage(OriginalEdition.Patch1078, Types, Frames, shapes);
-            World = new RawSurfaceWorld(OriginalEdition.Patch1078, Types, 97u, storage, Frames);
+            var storage = new RawSurfaceStorage(edition, Types, Frames, shapes);
+            World = new RawSurfaceWorld(edition, Types, 97u, storage, Frames);
             Core = World.Core();
             Islands = new RawIslandRuntime(
                 Core.Pool, Core.Hash, IslandBytes, Modes, Residences,
@@ -219,7 +226,7 @@ public sealed class NormalTerrainWorldSceneTests
             };
             Pipeline = new RawCanonPlacementPipeline(Core.Pool, Core.Hash, data, Core.Bookkeeping, new RawPostPopList(), new ContainedFinderState(), PipelineState);
             Sp = new RawSpStore(Random, () => 0x12345678u);
-            Hp = new RawSquidReward(Core.Pool, Types, Core.Bookkeeping, HpState, Sp);
+            Hp = new RawSquidReward(Core.Pool, Types, Core.Bookkeeping, HpState, edition == OriginalEdition.Patch1078 ? Sp : null);
             Carrier = new RawCarrierPostPop(Core.Pool, Types, CarrierState,
                 RawCarrierPostPop.MakeCarrierPostPopHooks(Core.Pool, Core.PostPop,
                     _ => Unrestored("carrier"),
@@ -263,7 +270,7 @@ public sealed class NormalTerrainWorldSceneTests
         /// <returns>실제 초기 도장의 프레임 요청 수다.</returns>
         public uint ExpectedFrames(NormalTerrainRequest request, GameRandom expected, UIntBox expectedCrt, TerrainStampState expectedState)
         {
-            var context = new RawTerrainContext(OriginalEdition.Patch1078, request.Owner, request.SelectedRegion, request.Bounds, Globals, _ => Diagnostics++);
+            var context = new RawTerrainContext(Edition, request.Owner, request.SelectedRegion, request.Bounds, Globals, _ => Diagnostics++);
             var growth = new RawTerrainGrowth(context, Chunks, Globals);
             growth.RunNormal();
             context.MarkEdges('x', (byte)'=');
@@ -305,7 +312,19 @@ public sealed class NormalTerrainWorldSceneTests
     [Fact]
     public void ActualNormalGenerationAndFarmRetype()
     {
-        var scene = new Scene();
+        // 두 판본의 프레임 폭·선택 정책과 같은 현재 지역 바이트를 각각 실행하는 반복문이다.
+        foreach (OriginalEdition edition in new[] { OriginalEdition.Patch1078, OriginalEdition.Cd1072 })
+        {
+            RunNormalGenerationAndFarmRetype(edition);
+        }
+    }
+
+    /// <summary>한 판본의 두 섬 실제 생성·도장·군집 후처리를 실행한다.</summary>
+    /// <param name="edition">원본 판본이다.</param>
+    private static void RunNormalGenerationAndFarmRetype(OriginalEdition edition)
+    {
+        bool patch = edition == OriginalEdition.Patch1078;
+        var scene = new Scene(edition);
         RawWorldCore core = scene.Core;
         scene.World.BeginLoad();
         Assert.Same(core.Pool, scene.Islands.Pool());
@@ -341,10 +360,10 @@ public sealed class NormalTerrainWorldSceneTests
             uint region = ReadSlot(raw, 8, 2);
             Assert.True(region < 2, $"장면 지역 범위: region={region}");
             Assert.True(snapshot.Object.Owner == 0 && snapshot.Object.X >= 48 && snapshot.Object.X < 80 && snapshot.Object.Y >= 48 && snapshot.Object.Y < 64);
-            uint expectedVtable = snapshot.Object.Type == 121u ? 0x50a8e8u : 0x501dd0u;
+            uint expectedVtable = snapshot.Object.Type == 121u ? (patch ? 0x50a8e8u : 0x500b10u) : (patch ? 0x501dd0u : 0x5058d8u);
             Assert.Equal(expectedVtable, ReadSlot(raw, 0, 4));
             Assert.Equal(snapshot.Sid, scene.World.Find(snapshot.Object.X, snapshot.Object.Y, snapshot.Object.Type));
-            uint level = ReadSlot(raw, 33, 1);
+            uint level = ReadSlot(raw, patch ? 33 : 31, 1);
             bool found = false;
             int inspected = 0;
             // 실제 같은 버킷의 SID 체인 포함 여부와 순회 한도다.
@@ -362,7 +381,7 @@ public sealed class NormalTerrainWorldSceneTests
             Assert.True(found);
             if (raw[10] == 121)
             {
-                Assert.Equal(73u, ReadSlot(raw, 26, 4));
+                Assert.Equal(73u, ReadSlot(raw, 26, patch ? 4 : 2));
                 farmCount++;
             }
             else
@@ -384,10 +403,22 @@ public sealed class NormalTerrainWorldSceneTests
     [Fact]
     public void ActualFarmCreateOwnerHpAndGameRandom()
     {
-        var scene = new Scene(randomFarm: true);
+        // terrain-frame 교체와 구별한 synthetic random-frame 입력으로 양판본의 실제 생성 소비자를 확인하는 반복문이다.
+        foreach (OriginalEdition edition in new[] { OriginalEdition.Patch1078, OriginalEdition.Cd1072 })
+        {
+            RunFarmCreateOwnerHpAndGameRandom(edition);
+        }
+    }
+
+    /// <summary>한 판본의 새 배치 분기를 실행한다.</summary>
+    /// <param name="edition">원본 판본이다.</param>
+    private static void RunFarmCreateOwnerHpAndGameRandom(OriginalEdition edition)
+    {
+        bool patch = edition == OriginalEdition.Patch1078;
+        var scene = new Scene(edition, randomFarm: true);
         RawWorldCore core = scene.Core;
         scene.World.BeginLoad();
-        var context = new RawTerrainContext(OriginalEdition.Patch1078, 1, 0, new ChunkRect(3, 3, 4, 4), scene.Globals, _ => scene.Diagnostics++);
+        var context = new RawTerrainContext(edition, 1, 0, new ChunkRect(3, 3, 4, 4), scene.Globals, _ => scene.Diagnostics++);
         context.Codes[50 * 256 + 53] = (byte)'x';
         context.Regions[50 * 256 + 53] = 0;
         var stamp = new RawTerrainStamp(core.Pool, scene.Types, scene.Frames, context.Map, scene.Random,
@@ -415,9 +446,9 @@ public sealed class NormalTerrainWorldSceneTests
         Assert.Equal(expected.State(), scene.Random.State());
         Assert.Equal(77u, local.State());
         Assert.Equal(previousCrt, scene.Crt.Value);
-        Assert.Equal(expectedFrame, ReadSlot(raw, 36, 4));
-        Assert.Equal(2, raw[34]);
-        Assert.Equal(73u, ReadSlot(raw, 26, 4));
+        Assert.Equal(expectedFrame, ReadSlot(raw, patch ? 36 : 34, patch ? 4 : 1));
+        Assert.Equal(2, raw[patch ? 34 : 32]);
+        Assert.Equal(73u, ReadSlot(raw, 26, patch ? 4 : 2));
         Assert.Equal(1u, core.Bookkeeping.GlobalCounts[121]);
         Assert.Equal(0, core.Bookkeeping.TotalCost);
         Assert.Equal(0u, core.Bookkeeping.Depth);
@@ -430,7 +461,7 @@ public sealed class NormalTerrainWorldSceneTests
     [Fact]
     public void RejectsMissingEffectsAndUnrestoredBranches()
     {
-        var scene = new Scene();
+        var scene = new Scene(OriginalEdition.Patch1078);
         RawWorldCore core = scene.Core;
         string before = scene.World.Report();
         uint random = scene.Random.State();
@@ -448,7 +479,7 @@ public sealed class NormalTerrainWorldSceneTests
             ChunkRegion = (x, y) => unchecked((sbyte)scene.Chunks.At(x, y).Island),
             Assertion = _ => scene.Diagnostics++,
         }));
-        var other = new Scene();
+        var other = new Scene(OriginalEdition.Patch1078);
         Assert.Throws<ArgumentException>(() => new RawFarmCluster(core.Pool, scene.Chunks, other.Islands, scene.Placement, scene.Farm, new FarmClusterHooks { Assertion = _ => scene.Diagnostics++ }));
         var foreignPool = new RawSidPool(32768, true, null, OriginalEdition.Patch1078);
         var foreignHash = new RawSquidHash();

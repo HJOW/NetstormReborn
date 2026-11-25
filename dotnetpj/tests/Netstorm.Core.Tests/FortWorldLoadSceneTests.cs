@@ -9,7 +9,8 @@ namespace Netstorm.Core.Tests;
 // R4-7c F3 보류 검사 중 Fort 적재 바인딩 전체 월드 장면이다. cpppj tests/FortWorldLoadBindingTests.cpp의
 // ActualSelectedWorldAndTwoRandomStores와 같은 합성 188/171 타입·프레임·셰이프·실제 월드로 같은 자식 적재·지형 생성·
 // Money·배지·기술·Graph 재구성을 순서대로 실행하고 fortworldload-builder-consumer-x86.tsv 2행과 대조한다.
-// DN에 없던 fixture 연결과 장면 재현만 더하며 제품 코드는 바꾸지 않는다. 1.000에서 추가됐다.
+// DN에 없던 fixture 연결과 장면 재현, 표면 월드 CD 조립 연결만 더하고 제품 본체는 바꾸지 않는다.
+// 1.000에서 패치판을, 1.001에서 CD판을 이었다.
 public sealed class FortWorldLoadSceneTests
 {
     /// <summary>같은 원본 10.78 진단 경계다. 미복원 하위 효과는 명시 실패로 둔다.</summary>
@@ -516,14 +517,22 @@ public sealed class FortWorldLoadSceneTests
         }
     }
 
-    /// <summary>원본 Fort 적재 바인딩 전체 월드 장면을 패치판에서 같은 순서로 실행한다.</summary>
-    /// <remarks>CD판은 표면 월드의 CD 조립이 후속 단위에 묶여 있어 같은 장면을 실행할 수 없다. CD 조립이 연결되면 CD 행을 더한다.</remarks>
+    /// <summary>원본 Fort 적재 바인딩 전체 월드 장면을 두 판본에서 같은 순서로 실행한다.</summary>
     [Fact]
     public void ActualSelectedWorldAndTwoRandomStores()
     {
         string[][] rows = X86Fixture.Read("fortworldload-builder-consumer");
-        string[] row = Assert.Single(rows, candidate => candidate.Length == 11 && candidate[0] == "originals");
-        var scene = new Scene(OriginalEdition.Patch1078);
-        scene.Run(row);
+        int checkedCount = 0;
+        // 두 판본의 골든 행을 각각 새 장면에서 실행하는 반복문이다.
+        foreach (OriginalEdition edition in new[] { OriginalEdition.Patch1078, OriginalEdition.Cd1072 })
+        {
+            string expectedName = edition == OriginalEdition.Patch1078 ? "originals" : "originalCD";
+            string[] row = Assert.Single(rows, candidate => candidate.Length == 11 && candidate[0] == expectedName);
+            var scene = new Scene(edition);
+            scene.Run(row);
+            checkedCount++;
+        }
+
+        Assert.Equal(2, checkedCount);
     }
 }

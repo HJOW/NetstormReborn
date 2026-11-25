@@ -177,11 +177,13 @@ public sealed partial class RawPostPop : IRawPopPostPop
     /// <summary>패치판 비용 표가 타입 번호마다 더해 저장하는 정수(원본 23).</summary>
     private const long CostBias = 23;
 
-    /// <summary>슬롯 안 소유자 바이트의 위치(10.78).</summary>
-    private const int OwnerOffset = 34;
+    /// <summary>슬롯 안 소유자 바이트의 판본별 위치(패치 34·CD 32)다. CD 10.72 원문 행을 따른다.</summary>
+    /// <remarks>2026-11-25 R4-7c2 CD 표면 조립 연결에서 판본별로 읽도록 바꿨다.</remarks>
+    private int OwnerOffset => _pool.Edition == OriginalEdition.Patch1078 ? 34 : 32;
 
-    /// <summary>슬롯 안 추가 비트 바이트의 위치(10.78).</summary>
-    private const int ExtraOffset = 40;
+    /// <summary>슬롯 안 추가 비트 바이트의 판본별 위치(패치 40·CD 35)다. CD 10.72 원문 행을 따른다.</summary>
+    /// <remarks>2026-11-25 R4-7c2 CD 표면 조립 연결에서 판본별로 읽도록 바꿨다.</remarks>
+    private int ExtraOffset => _pool.Edition == OriginalEdition.Patch1078 ? 40 : 35;
 
     /// <summary>슬롯 안 Graph 번호 바이트의 위치(10.78). NoGraph 표면 등록 때 무효 번호를 쓴다.</summary>
     private const int GraphOffset = 30;
@@ -218,7 +220,7 @@ public sealed partial class RawPostPop : IRawPopPostPop
 
     /// <summary>공통 후처리 모듈을 만든다.</summary>
     /// <param name="pool">슬롯 풀.</param>
-    /// <param name="types">타입 번호 순서의 타입 레코드. 10.78 은 188개여야 한다.</param>
+    /// <param name="types">타입 번호 순서의 타입 레코드. 판본과 같아야 한다(패치 188·CD 171).</param>
     /// <param name="state">공유 상태. 이 모듈보다 오래 살아야 한다.</param>
     /// <param name="graph">표면 Graph. 같은 풀을 쓰는 몸체만 받는다. null 이면 영역·표면 등록을 거부한다.</param>
     /// <param name="bridgeConnector">같은 현재 풀/공간의 실제 다리 연결 접두다. 실행이 선택할 때만 요구한다.</param>
@@ -227,8 +229,12 @@ public sealed partial class RawPostPop : IRawPopPostPop
         ArgumentNullException.ThrowIfNull(pool);
         ArgumentNullException.ThrowIfNull(types);
         ArgumentNullException.ThrowIfNull(state);
-        // CD 10.72(171개)는 소유자·추가 비트 위치와 비용 누적 방식이 다르므로 받지 않는다
-        if (types.Count != OriginalConstructors.TypeCount)
+        // CD 10.72(171개)도 장면 조립에 쓴다. 기존 검사가 쓰던 188개 표도 CD 풀에서 그대로 받는다.
+        // 소유자·추가 비트 위치와 비용 누적은 같은 구현을 공유하며 차이는 원본 대조로 검증한다.
+        // 근거: F3 보류 장면의 CD 재현(R4-7c2). 2026-11-25 R4-7c2 CD 표면 조립 연결에서 추가됐다.
+        bool countOk = types.Count == OriginalConstructors.TypeCount
+            || (pool.Edition == OriginalEdition.Cd1072 && types.Count == 171);
+        if (!countOk)
         {
             throw new ArgumentException($"타입 레코드가 {types.Count}개입니다 (10.78 은 {OriginalConstructors.TypeCount}개)", nameof(types));
         }
@@ -383,8 +389,10 @@ public sealed partial class RawPostPop : IRawPopPostPop
             if ((flags & 1) != 0 && ((HandlesIsland(sid) && _islandPrefix is null) || (HandlesSurface(sid) && _surfacePrefix is null)))
                 throw new InvalidOperationException("명시 섬/표면 postPop 사전 검사의 접두 미연결");
         }
-        // 공통 지원 표에 없고 파생 몸체도 없으면 미복원 효과다. Player 몸체는 등록된 실제 몸체를 재사용한다
-        if (!OriginalPopDisplay.Supports(vtable, flags) && !HandlesDerived(sid) && !HandlesPlayer(sid))
+        // 공통 지원 표에 없고 파생 몸체도 없으면 미복원 효과다. Player 몸체는 등록된 실제 몸체를 재사용한다.
+        // 판본별 지원 표를 쓴다. 원문 SquidPostPop::Validate의 SquidPop::Supports(판본) 호출과 같다.
+        // 근거: F3 보류 장면의 CD 재현(R4-7c2). 2026-11-25 R4-7c2 CD 표면 조립 연결에서 추가됐다.
+        if (!OriginalPopDisplay.Supports(_pool.Edition, vtable, flags) && !HandlesDerived(sid) && !HandlesPlayer(sid))
         {
             throw new InvalidOperationException("파생 postPop 미복원");
         }

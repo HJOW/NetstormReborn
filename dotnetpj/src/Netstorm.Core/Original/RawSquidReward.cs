@@ -233,7 +233,8 @@ public sealed class RawSquidReward
     private readonly SquidRewardState _state;
 
     /// <summary>패치판 SP 저장소. 10.78 만 옮겼으므로 반드시 있어야 한다.</summary>
-    private readonly RawSpStore _store;
+    /// <summary>패치판 SP 저장소. CD판 장면에서는 null이며 지갑 가산 경로에서만 읽는다.</summary>
+    private readonly RawSpStore? _store;
 
     /// <summary>외부 표시·개수 조회 훅.</summary>
     private readonly SquidRewardHooks _hooks;
@@ -248,7 +249,7 @@ public sealed class RawSquidReward
     /// 보상 처리기를 만든다. 풀·타입 표·장부·상태·SP 저장소는 이 객체보다 오래 살아야 한다.
     /// </summary>
     /// <param name="pool">객체 슬롯 풀.</param>
-    /// <param name="types">10.78 타입 표(188개).</param>
+    /// <param name="types">판본과 같은 개수의 타입 표(패치 188·CD 171).</param>
     /// <param name="bookkeeping">AI 부착·로컬 소유자 장부.</param>
     /// <param name="state">보상 전역과 AI 지갑.</param>
     /// <param name="store">패치판 SP 저장소. null 이면 거부한다.</param>
@@ -260,11 +261,17 @@ public sealed class RawSquidReward
         ArgumentNullException.ThrowIfNull(types);
         ArgumentNullException.ThrowIfNull(bookkeeping);
         ArgumentNullException.ThrowIfNull(state);
-        if (types.Count != OriginalConstructors.TypeCount)
+        // CD판 월드는 171개 TYPE 표도 쓴다. 기존 검사가 쓰던 188개 표도 CD 풀에서 그대로 받는다.
+        // 근거: F3 보류 장면의 CD 재현(R4-7c2). 2026-11-25 R4-7c2 CD 표면 조립 연결에서 추가됐다.
+        bool countOk = types.Count == OriginalConstructors.TypeCount
+            || (pool.Edition == OriginalEdition.Cd1072 && types.Count == 171);
+        if (!countOk)
         {
             throw new ArgumentException($"타입 레코드가 {types.Count}개입니다 (10.78 은 {OriginalConstructors.TypeCount}개)", nameof(types));
         }
-        if (store is null)
+        // CD판 장면은 SP 저장소 없이 HP 조회만 쓴다. 지갑 가산(AddSp)은 패치판 저장소를 요구한다.
+        // 근거: F3 보류 장면의 CD 재현(R4-7c2). 2026-11-25 R4-7c2 CD 표면 조립 연결에서 추가됐다.
+        if (store is null && pool.Edition == OriginalEdition.Patch1078)
         {
             throw new ArgumentException("패치판 보상은 SP 저장소가 필요합니다", nameof(store));
         }
@@ -631,7 +638,8 @@ public sealed class RawSquidReward
     /// <param name="delta">더할 SP(음수면 차감).</param>
     public void AddSp(uint owner, float delta)
     {
-        float sp = BitConverter.UInt32BitsToSingle(_store.Get(owner));
+        RawSpStore store = _store ?? throw new InvalidOperationException("지갑 가산은 패치판 SP 저장소가 필요합니다.");
+        float sp = BitConverter.UInt32BitsToSingle(store.Get(owner));
         bool fixedMode = _state.ReadFixedSpA() || _state.ReadFixedSpB();
         if (fixedMode)
         {
@@ -639,7 +647,7 @@ public sealed class RawSquidReward
         }
         float sum = (float)((double)sp + (double)delta);
         int mirror = SpMirrorFtol(delta);
-        _store.Set(owner, BitConverter.SingleToUInt32Bits(sum));
+        store.Set(owner, BitConverter.SingleToUInt32Bits(sum));
         AddWallet(owner, mirror);
         _hooks.RefreshSp?.Invoke();
     }
