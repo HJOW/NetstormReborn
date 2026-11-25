@@ -904,6 +904,8 @@ cpppj/src/o/RawAiBuildChoice.cpp	Netstorm.Core/Original/RawAiBuildChoice.cs	47a7
 cpppj/src/o/RawAiBuildChoice.h	Netstorm.Core/Original/RawAiBuildChoice.cs	47a78175dee45ac90361c35567039bbb8fa0f989	port
 cpppj/src/o/RawAiBuildSearch.cpp	Netstorm.Core/Original/RawAiBuildSearch.cs	bd6653bf94c583cc3297d7d48dc53f36045b6ed3	port
 cpppj/src/o/RawAiBuildSearch.h	Netstorm.Core/Original/RawAiBuildSearch.cs	bd6653bf94c583cc3297d7d48dc53f36045b6ed3	port
+cpppj/src/o/RawAiCarrierActions.cpp	Netstorm.Core/Original/RawAiCarrierActions.cs	b6bf0a77e4a403f98f8b243b2ebaf2db9f495d1b	port
+cpppj/src/o/RawAiCarrierActions.h	Netstorm.Core/Original/RawAiCarrierActions.cs	b6bf0a77e4a403f98f8b243b2ebaf2db9f495d1b	port
 cpppj/src/o/RawAiCommandState.cpp	Netstorm.Core/Original/RawAiCommandState.cs	64f8d1cfb41aff3a95fa10432da0552b1e257aff	L1
 cpppj/src/o/RawAiCommandState.h	Netstorm.Core/Original/RawAiCommandState.cs	64f8d1cfb41aff3a95fa10432da0552b1e257aff	L1
 cpppj/src/o/RawAiCreate.cpp	Netstorm.Core/Original/RawAiCreate.cs	382ec33feca7a418dccd62c599abdbebb88e07e8	L1
