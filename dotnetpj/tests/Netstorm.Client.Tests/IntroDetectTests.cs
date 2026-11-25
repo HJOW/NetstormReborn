@@ -1,5 +1,6 @@
 using Netstorm.Assets;
 using Netstorm.Client.Host;
+using Netstorm.Client.Input;
 using Netstorm.Core.Original;
 
 namespace Netstorm.Client.Tests;
@@ -56,5 +57,36 @@ public sealed class IntroDetectTests
         Assert.Throws<ArgumentNullException>(() => RawIntroMenu.DetectIntroMovie(null!, () => "", _ => 0u));
         Assert.Throws<ArgumentNullException>(() => RawIntroMenu.DetectIntroMovie(available, null!, _ => 0u));
         Assert.Throws<ArgumentNullException>(() => RawIntroMenu.DetectIntroMovie(available, () => "d/x.avi", null!));
+    }
+
+    /// <summary>PlayIntro가 아니면 소비하지 않는다.</summary>
+    [Fact]
+    public void ForeignCommandIsNotConsumed()
+    {
+        var state = new LocalMissionStateStorage { Next = new byte[0x90] };
+        Assert.False(RawIntroMenu.DispatchPlayIntroInput(new(0x020000d9u, 0, 0), state));
+        Assert.False(RawIntroMenu.DispatchPlayIntroInput(new(0x1b0000u, 0, 0), state));
+        Assert.All(state.Next.ToArray(), value => Assert.Equal(0, value));
+    }
+
+    /// <summary>뗌은 소비만 하고 다음 블록을 건드리지 않는다.</summary>
+    [Fact]
+    public void ReleaseConsumesWithoutWritingNext()
+    {
+        var state = new LocalMissionStateStorage { Next = new byte[0x90] };
+        Assert.True(RawIntroMenu.DispatchPlayIntroInput(new(RawIntroMenu.PlayIntroCommand | InputCode.Release, 0, 0), state));
+        Assert.All(state.Next.ToArray(), value => Assert.Equal(0, value));
+    }
+
+    /// <summary>누름은 다음 블록에 39·35번 DWORD를 쓴다.</summary>
+    [Fact]
+    public void PressWritesIntroNextState()
+    {
+        var state = new LocalMissionStateStorage { Next = new byte[0x90] };
+        Assert.True(RawIntroMenu.DispatchPlayIntroInput(new(RawIntroMenu.PlayIntroCommand, 0, 0), state));
+        Assert.Equal(39u, System.Buffers.Binary.BinaryPrimitives.ReadUInt32LittleEndian(state.Next.Span));
+        Assert.Equal(1u, System.Buffers.Binary.BinaryPrimitives.ReadUInt32LittleEndian(state.Next.Span.Slice(35 * 4)));
+        Assert.Throws<ArgumentOutOfRangeException>(() => RawIntroMenu.DispatchPlayIntroInput(new(RawIntroMenu.PlayIntroCommand, 0, 0),
+            new LocalMissionStateStorage { Next = new byte[8] }));
     }
 }
