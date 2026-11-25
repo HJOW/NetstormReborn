@@ -67,6 +67,7 @@ public sealed class HostSessionAiRuntimeTests
         Assert.NotNull(session.AiWorld);
         Assert.NotNull(session.AiRuntime);
         Assert.NotNull(session.AiCollectors);
+        Assert.NotNull(session.AiDrySpots);
         Assert.Same(session.Sp, session.AiEconomy.Store);
         Assert.Same(session.Pool, session.AiFactories.Pool);
     }
@@ -227,6 +228,56 @@ public sealed class HostSessionAiRuntimeTests
         Assert.Contains("미연결(R6)", error.Message);
         // 생각 기한·난수·깃발·개수·적 SID까지 원문 순서대로 진행하고 난수는 한 번만 소비한다.
         Assert.Equal(65542u, session.Game.State());
+    }
+
+    /// <summary>brain이 없으면 부족 좌표 스캔은 0이고 범위 밖 owner는 거부한다.</summary>
+    [Fact]
+    public void DrySpotsWithoutBrainReturnZeroAndRejectInvalidOwner()
+    {
+        (HostSession session, _) = BuildScene();
+        Assert.Equal(0u, session.RecheckAiDrySpots(2));
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.RecheckAiDrySpots(0));
+        Assert.Throws<ArgumentOutOfRangeException>(() => session.RecheckAiDrySpots(9));
+    }
+
+    /// <summary>빈 부족 좌표 목록은 스캔 하위를 호출하지 않고 0을 돌려준다.</summary>
+    [Fact]
+    public void DrySpotsEmptyListScansNothing()
+    {
+        (HostSession session, _) = BuildScene();
+        uint brain = PrepareBrain(session, 2);
+        Assert.Equal(0u, session.RecheckAiDrySpots(2));
+        Assert.Empty(session.AiRuntimeLogs);
+        Assert.Empty(session.AiRuntimeDiagnostics);
+    }
+
+    /// <summary>미연결 에너지 승인에 닿으면 원문 순서대로 명시 거부한다.</summary>
+    [Fact]
+    public void DrySpotsMissingEnergyThrowsExplicit()
+    {
+        (HostSession session, _) = BuildScene();
+        uint brain = PrepareBrain(session, 2);
+        uint backing = session.AiBrainMemory.Allocate(12);
+        Put(session.AiBrainMemory.Bytes(brain), 0xae4, backing);
+        Put(session.AiBrainMemory.Bytes(brain), 0xae0, 1u);
+        Put(session.AiBrainMemory.Bytes(brain), 0xae8, 0u);
+        Put(session.AiBrainMemory.Bytes(brain), 0xaec, 2u);
+        InvalidOperationException error = Assert.Throws<InvalidOperationException>(() => session.RecheckAiDrySpots(2));
+        Assert.Contains("미연결(R6)", error.Message);
+    }
+
+    /// <summary>b00이 꺼진 부족 좌표 통지는 로그를 남기지 않고 켜지면 종류·주인·가짜 여부를 남긴다.</summary>
+    [Fact]
+    public void DryNoticeGateAndFormat()
+    {
+        (HostSession session, _) = BuildScene();
+        uint brain = PrepareBrain(session, 2);
+        Put(session.AiBrainMemory.Bytes(brain), 0x260, 2u);
+        Put(session.AiBrainMemory.Bytes(brain), 0xb00, 0u);
+        session.LogAiDrySpotNote(brain, 99u, false);
+        Assert.Equal(["99:AI2: Killed Dry Spot"], session.AiRuntimeLogs);
+        session.LogAiDrySpotNote(brain, 99u, true);
+        Assert.Equal(["99:AI2: Killed Dry Spot", "99:AI2: Killed Fake Dry Spot"], session.AiRuntimeLogs);
     }
 
     /// <summary>brain이 없으면 준비·초기는 거짓으로 돌아간다.</summary>

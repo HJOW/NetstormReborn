@@ -3242,12 +3242,13 @@ public sealed partial class HostSession
         BuildAiEconomyDevice();
         BuildAiFactoryDevice(types, player, strategy);
         BuildAiCollectorsDevice(types, strategy);
+        BuildAiDrySpotsDevice();
         var runtime = new RawAiRuntime(AiBrainMemory, PlayerRecords,
             new AiRuntimeGlobals
             {
                 Battle = () => OwnerMode.Battle,
                 Timing = () => 0u,
-                DryLog = () => 0u,
+                DryLog = () => Gameplay.AiDebug.Word(0x52f3dc),
             },
             new AiRuntimeHooks
             {
@@ -3256,8 +3257,16 @@ public sealed partial class HostSession
                 SelectGoal = brain => strategy.SelectGoal(brain),
                 Collectors = brain => AiCollectors.Ensure(brain),
                 Factories = brain => AiFactories.Manage(brain),
-                DryScan = _ => throw new InvalidOperationException("AI 부족좌표 스캔 미연결(R6)"),
-                DryNotice = (_, _, _) => throw new InvalidOperationException("AI 부족좌표 통지 미연결(R6)"),
+                DryScan = brain => AiDrySpots.Scan(brain),
+                DryNotice = (brain, kind, fake) =>
+                {
+                    if (BinaryPrimitives.ReadUInt32LittleEndian(AiBrainMemory.Bytes(brain).AsSpan(0xb00, 4)) == 0)
+                    {
+                        return;
+                    }
+
+                    LogAiDrySpotNote(brain, kind, fake);
+                },
                 Priest = (_, _) => throw new InvalidOperationException("AI 사제 행동 미연결(R6)"),
                 Drops = _ => throw new InvalidOperationException("AI 배치 행동 미연결(R6)"),
                 Bridges = _ => throw new InvalidOperationException("AI 다리 행동 미연결(R6)"),
