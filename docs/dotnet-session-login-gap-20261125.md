@@ -41,7 +41,11 @@
 - C. R6(세션 수명·입력·AI·음향) 또는 R11(수송 backend)까지 미룬다. 로그인 본체는 세션 수명·수송과 함께 잇는 것이
   순서상 맞다. 이 경우 R4-7c3c 체크박스를 해당 단계로 옮긴다.
 
-## 다음 턴 착수점
+## 결정: C안 확정 (2026-11-25 사용자 결정)
+
+미룬 세션 로그인 본체를 R6 SL-9·R11 수송으로 연기한다. R4-7은 마감한다. R4-7c3c 체크박스는 R6 SL-9로 옮겼다.
+
+## 다음 턴 착수점 (C안 이후)
 
 - A라면: `RawCampaignSessionServices` 구조체 + 세션 생성자 바인딩 + 파일 선택·읽기 경계부터 잇고,
   `ReloadSourceTests.SelectedMissingEmptyAndThrowKeepGlobalManagerAbsent`(읽기 실패·무상태 유지)부터 통과시킨다.
