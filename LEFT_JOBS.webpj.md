@@ -6,7 +6,7 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-25 정리, 마지막 단위 WB04-E1335)
+### 0.1 현재 값 (2026-11-25 정리, 마지막 단위 WB04-E1336)
 
 - **실행·플레이**
   - **화면:** 브라우저 ‘클릭하여 시작’(첫 적재 뒤 최소 6초, E1308), 시작 title 그림, 메인 메뉴·캠페인/데모 목록·도움말·옵션(Reset All 게임 안 확인 창 포함)·Credits와 개발용 지형 미리보기가 동작한다.
@@ -22,11 +22,13 @@
   - **부품:** 월드·UI 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다(원본 공통 메뉴 788행·Factory 메뉴 39행·Uber 루트 160행·장면 음악 3,113행, 채팅 입력줄 대상 720행(E1265), 파편·건물 캡처 4,474행(E1275~E1276)·골렘/받침 264행(E1312), 실제 Session의 EvilRay·Burning·섬 투하(E1314~E1316) 등). 대응표 1,007단위 중 732행은 Tutorial1 실행에서 웹 모듈의 함수가 모두 실행된 `session`이다(E1283). 좌측 HUD 하단 85×82픽셀은 원본 스크린샷과 일치한다.
   - **한국어 글자:** 갈무리11 12px 격자로 그리되 제목 배율·굵기(사용자 결정으로 보통체)·한글 기준선을 cpppj와 다르게 둔다([0.7절](#korean-font-change)).
   - **미검증:** Tutorial4 단계 E1~I1·Tutorial5~6·캠페인 묶음 미션 L3 진행, L4b(소리)와 자연 완주.
+- **최근 완료(E1336):** cpppj 1335 판정 ②(마나 그림 별칭·CD 25프레임 보충)를 웹에 반영하고 3.6절 판정 남음 6행을 닫았다(②4행·③2행). [근거](docs/webpj-mana-picture-supplement-20261125.md)
+- **작업 지시(2026-11-25 사용자 /goal):** 이 문서의 남은 작업을 모두 수행하되, 사제 포획/희생·특정 적 공격·시나리오 승리 재현이 필요한 시험은 캠페인 1-1~1-5와 스커미시만 아군 AI 활성화 방식으로 시험하고 그 밖의 스테이지는 건너뛴다(나중에 사용자가 직접 확인). 미션 진입 후 대기·유닛 생산·건물 건설로 끝나는 시험은 진행한다. 단위마다 문서 갱신과 커밋을 한다.
 - **현재 작업:** E1335에서 Tutorial4 단계 C~E1(Thrower 2기 최적화로 단계 C `SP=1,000` 진입 → Thrower 2기·WindGen #1 해체·Sun Workshop Level II 업그레이드 → 단계 D → `(131,124)` Sun Cannon 1기로 적 발사기 6기 연쇄 폭발 격파 `SP=950` → 단계 E1 `'Sacrificing Priests, Part 1'` 안내 창) 7,240프레임 L3 대조(화면 18곳 0픽셀·덤프 14곳 허용 행 외 차이 0)를 마쳤다. 다음은 Tutorial4 단계 E1~I1(골렘으로 적 사제 포획·Sun Altar 제물 바치기 → 완료 창과 Tutorial5 해제) L3 대조다. 순서는 [다음 작업](#next)을 따른다.
 - **전체 회귀**
   - **Node 22.23.5 E1332:** 6,847/6,847 통과, 실패·취소·미실행 0(469.0초, 8/8 주기 갱신). 로컬 Node22 실행 경로는 `extracted/webpj-node22/node_modules/node-win-x64/bin/node.exe`다.
-  - **Node 26.13.0 E1333:** 6,847/6,847 통과, 실패·취소·미실행 0(402.4초, 4/4 주기 갱신).
-  - **주기(E1335 기준):** v26은 E1333 전체 뒤 2/4, v22는 E1332 전체 뒤 3/8.
+  - **Node 26.13.0 E1336:** 6,851/6,851 통과, 실패·취소·미실행 0(376.5초, 4/4 주기 갱신).
+  - **주기(E1336 기준):** v26은 E1336 전체 뒤 0/4, v22는 E1332 전체 뒤 4/8.
   - **Chromium:** E1313 전 미션 시작 상태 옵트인 전체 32/32 통과(24.3분, `webpj/extracted/webpj-e1313-final-e2e.log`). 기존 전체 e2e는 E1312 199건 중 186 통과·12 옵트인 미실행·한국어 브리핑 1건 부하 중 시간 초과(단독·3회 반복 통과)다. 단위별 실패·교정은 [E1313](docs/webpj-l3-mission-starts-20261124.md)과 각 단위 문서, 이전 회귀 이력은 [E1327 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261124-through-wb04-e1327)을 따른다.
 - **브라우저 검사:** 미션 화면은 단위마다 Chromium e2e로 확인한다(최근 전체 실행 E1312, 고정 시각 L2·L3 `e2e/fixed-time.spec.js`·`e2e/l3-tutorial1.spec.js`·`e2e/l3-tutorial2.spec.js`·`e2e/l3-tutorial3.spec.js`·`e2e/l3-tutorial4.spec.js`, 앱 서비스 결선 `e2e/session-services-wiring.spec.js` E1328, 한국어 글자 배치 `e2e/korean-glyph-layout.spec.js` E1288). 메뉴는 2026-11-17 Chromium 2/2(갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체), 최초 실행·진행 잠금/체크·저장 재실행은 E616 Chromium 2/2. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md)
 
@@ -127,7 +129,7 @@
 ### 0.4 기준선과 자료
 
 - **이식 기준선**은 cpppj 제품 1313(11.01) `225553df`다. 이후 변경 판정은 3.6절을 따른다. 별도 오라클 빌드는 HJOW-Athlon의 `extracted/webpj-oracle/225553df/Netstorm.exe`에 있다(SHA-256 `5b52d96d…b77eb46`, Git 제외).
-- **자료 추적**은 [PORT_MAP.tsv](webpj/PORT_MAP.tsv)와 [fixture manifest](webpj/tests/fixtures/manifest.json) 1,055항목(E1335 Tutorial4 단계 C~E1 오라클 갱신 `1055`항목)을 기준으로 한다. 이식 자료는 cpppj 소스·fixture·문서를 사용한다.
+- **자료 추적**은 [PORT_MAP.tsv](webpj/PORT_MAP.tsv)와 [fixture manifest](webpj/tests/fixtures/manifest.json) 1,056항목(E1336 마나 보충 cpppj 근거 `src-mana-picture-data` 등록)을 기준으로 한다. 이식 자료는 cpppj 소스·fixture·문서를 사용한다.
 
 ### 0.5 단위 착수와 종료
 
@@ -304,7 +306,8 @@ M1은 메뉴 관문을 통과했다. 4-D의 Tutorial1 L2 → 5-A/5-B·5-C의 Tut
 
 대응표 검사에서 행 base 이후 변경을 확인한다. ① 웹 영향 없음, ② 웹 재반영, ③ 해당 소비 단계에서 처리로 판정한다. ②는 별도 단위로 반영하고 ③은 대상 단계에 남긴다. 판정 근거를 대응표와 단위 문서에 기록한다.
 - **판정 끝:** cpppj 1322(갈무리11)·1325(Reset All)·1326(테스트 AI 진단)의 변경 아홉 행(E1241, base `63590635`·`710b9647`·`baf141eb`, [판정표](docs/webpj-cpppj-1322-1325-1326-judgment-20261123.md)), 사용자 추가 요구 1328~1330(E1289~E1291), 1339 주문/포획 교정(E1319, base `13e74579`), SoundMusicSelection base 정정(2026-11-22, `225553df`). 커밋·행별 경과는 [E1329 보관본 3.6절](LEFT_JOBS.webpj.old.md#archive-webpj-20261124-through-wb04-e1329)에 있다.
-- **판정 남음(2026-11-24 두 번째 정리 때도 `port-map.mjs` 재실행 결과 같은 6행):** 일본어(13차) 커밋 `5238ee833`(1334)·`87324232f`(1335)가 바꾼 `KoreanResources.cpp`·`StyleTextBuffer.cpp`·`HtmlTextParser.cpp`·`Markup.cpp`·`StyleTextMarkup.cpp`와 `UberGump.cpp`(base `d2bcefeb` 뒤 `87324232f`). 이 중 `87324232f`의 `BindHtmlPictureText(…, Patch1078)`(Help·안내 HTML의 `imana.8`~`11`·`17`을 `Imana.4`~`7`·`9`로 바꿔 그림)와 `TextPictureResources.h`·`ManaPictureData.inc`(원본 10.78 자료에 없는 마나 아이콘을 CD 원본 25프레임으로 보충)는 언어와 무관한 표시 변경이라 13차와 별도로 ②·③을 판정해야 한다. 웹에는 같은 별칭·보충이 없다(4절 '도움말·Tell').
+- **판정 끝(E1336, 2026-11-25):** 일본어(13차) 커밋 `5238ee833`(1334)·`87324232f`(1335) 변경 여섯 행. `87324232f`의 마나 그림 별칭(`imana.8`~`11`·`17`→`Imana.4`~`7`·`9`)과 CD 마나 25프레임 보충(`HtmlTextParser`·`Markup`·`StyleTextMarkup`·`UberGump` 행)은 언어와 무관한 표시 변경이라 ②로 판정해 웹에 반영했고, `KoreanResources.cpp`(`.japanese` 번들 읽기)·`StyleTextBuffer.cpp`(가나·한자 줄바꿈)는 일본어 전용이라 ③ 13차에서 처리한다. [근거](docs/webpj-mana-picture-supplement-20261125.md)
+- **판정 남음:** 없음(`port-map.mjs` 기준 cpppj 변경 행 0, 새 파일 목록은 그대로).
 - **대응표 밖 새 파일:** EmbeddedBitmapFont(.cpp/.h)·KoreanFontSettings.h·ResetAllSettings(.cpp/.h)는 ①이고 `TextPictureResources.h`·`ManaPictureData.inc`는 위 판정을 따른다. 재기준선 때 등록한다.
 
 | 처리 단계 | 남은 판정·연결 |
@@ -359,7 +362,7 @@ M1은 메뉴 관문을 통과했다. 4-D의 Tutorial1 L2 → 5-A/5-B·5-C의 Tut
 | 지도·지형 | 중립색·가운데 카메라·고정 구름은 개발 미리보기 정책이다. 실제 지도에서 owner·원소 투표/themeMode·도장/flood·카메라 제한/스크롤·공유 난수·색 번호·팔레트/ColorSort와 `useBanners`를 확인한다. 절벽 외 0x10/0x18 지형 선택 및 회전2/3의 실제 저장 사례도 남아 있다. |
 | edgeFarm·보상/SP | edgeFarm의 spots/finder·MayPlace·Retype를 실 월드와 맞추고, 보상/SP의 재시드·실제 지갑·알림/소리·보상/후처리 장부 공유는 4D-8·6단계에 연결한다. [지형 추가 관측](docs/webpj-terrain-extras-20261102.md) · [보상과 Content 수명](docs/webpj-content-lifetime-20261107.md) |
 | 메뉴·입력 | 메인 메뉴 구름은 Kencloud 캐시로 cpppj 와 같다(E1298, M1 구름 차이 0). Help/Options 위치·와이드 배치, Overlay 드래그/캡처·미션 커서는 미확인이다. Edge Scroll(가장자리 스크롤)과 Auto-Demo(메인 메뉴 45초 무활동)의 실제 동작은 E990~E1001·E1092에서 확인했다([가장자리](docs/webpj-app-edge-scroll-frame-20261120.md) · [데모](docs/webpj-demo-start-20261120.md)). |
-| 도움말·Tell | `<info>` 머리글/능력치, `#`/`&` 맞춤·색 치환, mana.8~11의 실제 원본 F1 모습(cpppj 1335는 이 번호를 현행 마나 그림으로 바꿔 그린다, 3.6절 판정 남음), `<background>`/nsisles 사용, `{@미션.키}`·스크립트 도움말 Back 및 필요 시 두 열 메뉴를 확인한다. 도움말 그림은 레이어0/그림자 없음 경계를 유지한다. |
+| 도움말·Tell | `<info>` 머리글/능력치, `#`/`&` 맞춤·색 치환, mana.8~11의 실제 원본 F1 모습(cpppj 1335처럼 현행 마나 그림으로 바꿔 그린다, E1336 반영·육안 확인은 사용자), `<background>`/nsisles 사용, `{@미션.키}`·스크립트 도움말 Back 및 필요 시 두 열 메뉴를 확인한다. 도움말 그림은 레이어0/그림자 없음 경계를 유지한다. |
 | 소리·환경 | 실제 청취·위치 음향, 다양한 브라우저·GUI Linux·고DPI/모니터 이동은 미확인이다. |
 | Credits | 영어 AI 문구 `OpenAI Codex, ChatGPT and Anthropic Claude Code`와 한국어 문구는 사용자 수정 지시까지 유지한다. 수정 시 `www/assets/product.js`와 `tests/product.test.mjs`를 함께 갱신한다. |
 

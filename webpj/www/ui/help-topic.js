@@ -5,7 +5,7 @@
 // 호출자가 실제 TYPE 정보 생성기를 제공하면 선택된 주제의 <info>를 별도 스타일 본문으로 변환한다.
 // 원본 주소: 파서 Inside/After 는 cpppj QuickHelpHtml.cpp, 본문 선택은 QuickHelpWindow.cpp(Show), 파일 읽기는 RawMenuControls.cpp(RenderHelp). 복원 기준: cpppj(10.78 경로).
 // (2026-10-30 WB03-G: 메인 메뉴 Help → General Help 창을 위해 추가)
-import { LinkTable, applyHtmlCondition, createParserGlobals, createParserState, htmlPictureText, parseHtml } from './html-text.js';
+import { LinkTable, applyHtmlCondition, createParserGlobals, createParserState, htmlPictureTextRepaired, parseHtml } from './html-text.js';
 
 // 도움말 본문 변환 결과 최대 길이(바이트)이다(원본 HtmlBodyGump 본문 배열 8192). 평문이 이 한도 - 256 을 넘으면 변환을 멈춘다. (2026-10-30 WB03-G)
 export const HELP_BODY_CAPACITY = 8192;
@@ -53,7 +53,7 @@ export function renderHelpTopic({ helpText, topic, substitute, globals = createP
     const hooks = {
         link: (_state, raw, closing) => links.text(raw, closing),
         condition: (parserState, raw, closing) => applyHtmlCondition(parserState, raw, closing, substitute),
-        picture: (_state, raw) => htmlPictureText(raw),
+        picture: (_state, raw) => htmlPictureTextRepaired(raw),
         insideTag: (parserState, source) => insideTag(parserState, source, topic, info && (() => {
             const html = info(); if (typeof html !== 'string') throw new TypeError('도움말 정보 HTML 필요');
             const saved = links.destinations.length;

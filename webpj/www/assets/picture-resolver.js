@@ -9,6 +9,8 @@
 // 지원하지 않는 부분: `#`·`&`(상자 맞춤·색 치환) 그림은 null 로 돌려 호출자가 알린다(현재 도움말에는 쓰이지 않는다).
 // (2026-11-01 WB03-T: 도움말 그림(에너지 기호·간헐천·건물·주문 아이콘) 지원을 위해 추가, 이전에는 fortGump 숫자 프레임만 해석했다)
 
+import { resolveTextPictureResource } from './text-picture-resources.js';
+
 // 캡처 하나에서 읽는 최대 글자 수이다(원본 Regexp::Get 의 80바이트 복사). 프레임 식이 이 길이 이상이면 원본이 지역 배열을 넘쳐 쓰므로 그림을 만들지 않는다. (2026-11-01 WB03-T)
 const CAPTURE_LIMIT = 80;
 
@@ -66,18 +68,21 @@ export function createPictureResolver({ shapes, getTable }) {
             }
             frame = (frame + parseCrtInteger(suffix)) | 0;
         }
-        const count = view.frameCount;
+        // 10.78 마나 그림만 CD 보충본(25프레임)으로 측정·출력한다. 그 밖은 shapes·view.block·클러스터 수 그대로다. (2026-11-25 WB04-E1336)
+        const resource = view.block < 0 ? { shapes, block: view.block, frames: view.frameCount } : resolveTextPictureResource(shapes, view.block, view.frameCount);
+        const count = resource.frames;
         if (frame < 0 || count < 0) frame = 0;
         else if (frame >= count) frame = count;
         // 무자산 타입이거나 프레임 수 이상이면 그림이 없는 크기 0 조각이다.
         if (view.block < 0 || frame >= count) return EMPTY_PICTURE;
         try {
-            const metrics = shapes.squidMetrics(view.block, frame);
+            const source = resource.shapes;
+            const metrics = source.squidMetrics(resource.block, frame);
             const hotspotX = subtractWord(metrics.hotspotX, view.hotspotX);
             const hotspotY = subtractWord(metrics.hotspotY, view.hotspotY);
             // 특수 레코드(이미지 없음)는 크기만 가지고 그리지 않는다.
-            const special = shapes.frame(view.block, frame).special;
-            const image = special ? EMPTY_IMAGE : shapes.decode(view.block, frame);
+            const special = source.frame(resource.block, frame).special;
+            const image = special ? EMPTY_IMAGE : source.decode(resource.block, frame);
             return Object.freeze({ image, width: metrics.width, height: metrics.height, hotspotX, hotspotY });
         } catch (error) {
             // 셰이프 범위 밖이나 추가 헤더 없음은 지원하지 않는 그림으로 본다.

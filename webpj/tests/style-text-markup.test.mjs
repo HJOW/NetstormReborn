@@ -300,7 +300,9 @@ test('실제 자산 전수: 116개 타입×프레임 식이 독립 구현(pictur
             const v = raw.table.view(asset.block + 70); let expected; let suffix = expression;
             if (expression[0] === '*') expected = v.gumpFrame === -1 ? v.defaultFrame : v.gumpFrame;
             else { expected = 0; const letter = expression.charCodeAt(0); if (letter >= 65 && letter < 128 && letter < 65 + v.letterKinds) { expected = v.first[letter - 65]; suffix = expression.slice(1); letterHits += 1; } expected = (expected + parseCrtInteger(suffix)) | 0; }
-            if (expected < 0) expected = 0; else if (expected >= v.frameCount) expected = v.frameCount;
+            // 마나만 UI 보충 자원 기준 25프레임을 쓰므로 원본 타입 표의 8프레임이 아니라 실제 결선 프레임 수로 범위를 바로잡는다.
+            const frameCount = hooks.type(asset.block + 70).frameCount;
+            if (expected < 0) expected = 0; else if (expected >= frameCount) expected = frameCount;
             assert.equal(pictureState.pictures.get(tokens[0]).frame, expected, `${asset.assetName}.${expression}`); compared += 1;
         }
     }

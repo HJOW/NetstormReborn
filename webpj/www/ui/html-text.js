@@ -6,7 +6,7 @@
 // 복원 기준: cpppj HtmlTextParser.cpp·HtmlWindowMetadata.cpp·HtmlWindowFactory.cpp(10.78 경로). 조건 태그 `<?`·그림 `<!`·링크 `<a>` 의 효과와 목록 메뉴 `@`·`#`·`%`·`*TECHLIST*` 등은 호출자가 훅으로 공급한다.
 // (2026-10-28 WB03-D: Tell 대화상자 본문을 처리하기 위해 추가)
 import { configParseLong } from '../assets/config.js';
-import { HtmlTextParser, htmlPictureText } from './html-text-parser.js';
+import { HtmlTextParser, htmlPictureText, htmlPictureTextRepaired } from './html-text-parser.js';
 
 // 변환 결과 최대 길이(바이트)이다. 원본 출력 버퍼 8192바이트에서 NUL 자리를 뺀 한도로 쓴다. (2026-10-28 WB03-D)
 const OUTPUT_CAPACITY = 8192;
@@ -106,7 +106,7 @@ export class LinkTable {
 }
 
 // 그림 태그 `<!"이름.프레임">` 의 원문에서 StyleText 그림 명령 `~[I이름.프레임]` 을 만든다(원본 HtmlPictureText). 구현은 `html-text-parser.js` 로 옮겼고 여기서는 같은 함수를 다시 내보낸다. (2026-10-30 WB03-G, 2026-11-14 WB04-E460)
-export { htmlPictureText };
+export { htmlPictureText, htmlPictureTextRepaired };
 
 // 원본 토큰 읽기(공통 helper)이다. offset 부터 space·tab 만 건너뛴 뒤 delimiters 의 글자를 만나기 전까지(따옴표 안은 제외) 읽는다. 따옴표 글자는 출력하지 않고, 입력 한도는 78글자이며, 끝의 공백·탭은 첫 글자만 남기고 지운다.
 // 반환: { text, next }(next 는 읽은 뒤 구분자까지 건너뛴 위치). 사용: 조건 태그의 왼쪽·오른쪽 식을 읽는다. (2026-10-30 WB03-G)

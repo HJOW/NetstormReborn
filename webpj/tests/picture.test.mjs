@@ -194,7 +194,9 @@ test('그림 해석기: 원본 StyleText 그림 규칙', () => {
     // 음수·범위 밖 번호: 0 미만은 프레임 0, 프레임 수 이상은 그림이 없는 크기 0 조각이다.
     assert.deepEqual(shape(resolve('fortgump', '-5')), metricsOf(22, 0));
     assert.deepEqual(shape(resolve('mana', '7')), metricsOf(33, 7));
-    assert.equal(resolve('mana', '8'), EMPTY_PICTURE);
+    // 10.78 마나는 8프레임이지만 UI 그림은 CD 보충본 25프레임이라 mana.8~24 도 실제 그림이고 25 이상이 크기 0 조각이다(2026-11-25 WB04-E1336, cpppj 1335 판정 ②).
+    assert.notEqual(resolve('mana', '8'), EMPTY_PICTURE);
+    assert.equal(resolve('mana', '25'), EMPTY_PICTURE);
     assert.equal(resolve('fortgump', '81'), EMPTY_PICTURE);
     assert.equal(resolve('fortgump', '99999'), EMPTY_PICTURE);
     // 내장 타입 번호는 무자산이라 빈 그림이고, 타입 표 밖 번호·모르는 이름은 지원하지 않는다.
@@ -248,7 +250,7 @@ test('도움말 그림: 영어·한국어 모든 주제의 그림 명령이 해�
     }
     assert.deepEqual(unsupported, []);
     assert.ok(pictures > 200, `그림 조각 수 ${pictures}`);
-    assert.ok(withArt > 100 && withArt < pictures, `실제 그림이 있는 조각 ${withArt} / ${pictures}(mana.8~11 처럼 프레임 수 밖은 크기 0)`);
+    assert.ok(withArt > 100 && withArt <= pictures, `실제 그림이 있는 조각 ${withArt} / ${pictures}(mana.8~11 은 별칭·CD 보충본으로 그림이 있다, E1336)`);
 });
 
 // 도움말 창: 그림이 많은 주제도 열리고 그림 조각이 줄 높이에 반영되며 그려진다(예외 없음). (2026-11-01 WB03-T)

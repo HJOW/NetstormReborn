@@ -1,6 +1,7 @@
 // StyleText와 같은 토큰/소유 표의 그림 조각·현재 메타/배율·실제 자산/픽셀을 이식한다(cpppj client/Markup.cpp/.h, 기준선1f00a25a). (2026-11-14 WB04-E420)
 import { StyleTextFragment, StyleTextFragmentKind as K, registerStyleTextFragment } from './style-text-fragments.js';
 import { buildTypeRecords } from '../assets/type-flags.js';
+import { resolveTextPictureResource } from '../assets/text-picture-resources.js';
 
 // 원문 VFX 배율은16.16이며 기본 float 배율은1이다.
 const FIXED_SCALE = 65536;
@@ -83,16 +84,16 @@ export class MarkupAssets {
     // 공통 레코드의 같은 기준점과 원문 자산 로딩 순서를 보존한다.
     constructor(assets) { this.#shapes = assets.shapes; const types = buildTypeRecords(assets.typeTable.definitions); this.#typeCount = types.length; if (types.length > 0x7fffffff) throw new RangeError('Markup 타입 수 범위 초과');
         // 자산 없는 내장 타입은 views에 등록하지 않는다.
-        for (const asset of assets.types()) { const token = asset.block + 70; const count = asset.definition.clusters.length; if (token >= types.length || asset.block >= this.#shapes.blocks.length || count > 0x7fffffff) throw new RangeError('Markup 실제 자산 바인딩 범위 오류'); this.#views.set(token, { type: Object.freeze({ token, shape: token, frameCount: count, hotspotX: types[token].hotspotX | 0, hotspotY: types[token].hotspotY | 0 }), block: asset.block }); }
+        for (const asset of assets.types()) { const token = asset.block + 70; const count = asset.definition.clusters.length; if (token >= types.length || asset.block >= this.#shapes.blocks.length || count > 0x7fffffff) throw new RangeError('Markup 실제 자산 바인딩 범위 오류'); const resource = resolveTextPictureResource(this.#shapes, asset.block, count); /* 10.78 마나 그림은 UI 측정·출력에 한해 CD 보충본(25프레임)을 쓴다(cpppj 1335 판정 ②, 2026-11-25 WB04-E1336). */ this.#views.set(token, { type: Object.freeze({ token, shape: token, frameCount: resource.frames, hotspotX: types[token].hotspotX | 0, hotspotY: types[token].hotspotY | 0 }), block: resource.block, shapes: resource.shapes }); }
     }
     // 자산 수116과 구별하는 실제 원문 타입 수다.
     typeCount() { return this.#typeCount; }
     // 내장/무자산은 null이며 실제 타입 주소는 안정된다.
     type(token) { return this.#views.get(token >>> 0)?.type ?? null; }
     // abstract0의 논리 프레임과 실제 여섯 signed WORD만 공급한다.
-    frame(type, abstract, frame) { type >>>= 0; frame >>>= 0; const view = this.type(type); if (abstract || !view || frame >= view.frameCount) throw new RangeError('Markup 논리 프레임 범위 오류'); const header = this.#shapes.squidHeader(this.#views.get(type).block, frame); const words = new DataView(header.buffer, header.byteOffset, header.byteLength); return { width: words.getInt16(0x18, true), height: words.getInt16(0x1a, true), hotspotX: words.getInt16(0x1c, true), hotspotY: words.getInt16(0x1e, true), extraX: words.getInt16(0x20, true), extraY: words.getInt16(0x22, true) }; }
+    frame(type, abstract, frame) { type >>>= 0; frame >>>= 0; const view = this.type(type); if (abstract || !view || frame >= view.frameCount) throw new RangeError('Markup 논리 프레임 범위 오류'); const header = this.#views.get(type).shapes.squidHeader(this.#views.get(type).block, frame); const words = new DataView(header.buffer, header.byteOffset, header.byteLength); return { width: words.getInt16(0x18, true), height: words.getInt16(0x1a, true), hotspotX: words.getInt16(0x1c, true), hotspotY: words.getInt16(0x1e, true), extraX: words.getInt16(0x20, true), extraY: words.getInt16(0x22, true) }; }
     // 색 설치 후 바뀐 frame도 실제 물리 SHP 범위로 다시 검사한다.
-    shape(shape, frame) { const view = this.#views.get(shape >>> 0); frame >>>= 0; if (!view || frame >= this.#shapes.blocks[view.block].frames.length) throw new RangeError('Markup VFX 물리 프레임 범위 오류'); return { database: this.#shapes, block: view.block }; }
+    shape(shape, frame) { const view = this.#views.get(shape >>> 0); frame >>>= 0; if (!view || frame >= view.shapes.blocks[view.block].frames.length) throw new RangeError('Markup VFX 물리 프레임 범위 오류'); return { database: view.shapes, block: view.block }; }
 }
 // 같은 현재 타입 수와 두 실제 자산 조회 장치를 설치한다.
 export function bindMarkupAssets(state, hooks, assets) { state.typeCount = assets.typeCount(); hooks.type = (type) => assets.type(type); hooks.frame = (type, abstract, frame) => assets.frame(type, abstract, frame); }

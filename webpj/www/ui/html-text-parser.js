@@ -3,6 +3,8 @@
 // CD 10.72 판본 인자(H 글꼴 차이)는 웹 범위 밖이라 옮기지 않는다(AGENTS 웹 범위·10.78 전용).
 // 사용: const parser = new HtmlTextParser(createHtmlTextParserState(), createHtmlTextParserGlobals(), hooks); parser.parse('<h2>제목</h2>'); (2026-11-14 WB04-E460)
 
+import { repairManaPictureText } from '../assets/text-picture-resources.js';
+
 // 원본 평문 순회가 태그와 마지막 LF 를 위해 남기는 논리 여유 BYTE 수다. 출력이 (용량 - 256) 을 넘으면 평문 처리를 멈춘다.
 const OUTPUT_RESERVE = 256;
 // 원본 출력 버퍼의 기본 물리 용량이다(NUL 자리 포함).
@@ -47,8 +49,10 @@ export function htmlPictureText(raw) {
 }
 // 실제 그림 문자열 helper 를 picture 효과에 연결한다(StyleTextMarkup 의 실제 자산 연결은 별도). hooks 를 제자리에서 바꾼다.
 export function bindHtmlPictureText(hooks) {
-    hooks.picture = (_state, raw) => htmlPictureText(raw); // 원본 helper 의 정확한 바이트 출력을 공급한다.
+    hooks.picture = (_state, raw) => htmlPictureTextRepaired(raw); // 원본 helper 의 정확한 바이트 출력을 공급하되 현행 제품의 오래된 마나 그림 번호는 교정한다.
 }
+// htmlPictureText 결과에서 공식 HTML 의 오래된 마나 그림 번호(imana.8~11·17)만 현행 번호로 바꾼다(cpppj BindHtmlPictureText repairManaPictures, 판정 ②). 사용: htmlPictureTextRepaired('!"imana.8">') → '~[Imana.4]'. (2026-11-25 WB04-E1336)
+export function htmlPictureTextRepaired(raw) { return repairManaPictureText(htmlPictureText(raw)); }
 // 배경 태그의 쓰기를 같은 Client 의 80BYTE 에 연결한다. 이미 태그 파서가 구한 원문 이름을 NUL 까지 복사하며 뒤쪽 기존 바이트를 지우지 않는다. 원본 범위 밖 입력은 명시 거부한다(std::length_error).
 export function bindHtmlBackground(hooks, globals) {
     hooks.background = (_state, name) => { // 실제 쓰기 직전까지 같은 Client 저장소의 수명을 빌린다.

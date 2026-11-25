@@ -617,7 +617,7 @@ test('본문 그림: fortGump 아이콘 해석 · 줄 안 배치 · 그리기 ·
     assert.deepEqual([icon.width, icon.height, icon.hotspotX, icon.hotspotY], [12, 15, 10, 13]);
     assert.deepEqual([icon.image.left, icon.image.top], [-10, -13]);
     assert.equal(resources.resolvePicture('nothing', '1'), null);
-    assert.deepEqual([resources.resolvePicture('mana', '8').width, resources.resolvePicture('mana', '8').height], [0, 0]);
+    assert.deepEqual([resources.resolvePicture('mana', '8').width, resources.resolvePicture('mana', '8').height], [17, 17]);
     assert.deepEqual([resources.resolvePicture('fortgump', 'L1').width, resources.resolvePicture('fortgump', 'L1').height], [11, 11]);
     assert.deepEqual([resources.resolvePicture('fortgump', '99999').width, resources.resolvePicture('fortgump', '99999').height], [0, 0]);
     // 스타일 문자열: 그림은 글자 조각 사이의 별도 조각이고 그 앞뒤 글자 문맥을 따른다. 지원하지 않는 그림은 알리고 조각을 만들지 않는다.

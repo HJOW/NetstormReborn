@@ -123,13 +123,16 @@ test('HTML 기본 변환: Early1 본문의 i/b 는 줄을 나누지 않고 색/�
 
 test('HTML 그림 helper: 실제 10.78 그림 138행의 바이트·커서·현재 상태가 일치한다', () => {
     const table = rows('htmlpicture-x86.tsv').filter((row) => row[0] === 'originals'); assert.equal(table.length, 138);
-    // 그림 helper 는 실제 출력만 공급하며 자산 이름 해석은 StyleTextMarkup 의 책임이다.
+    // 원본 10.78 helper 자체는 별칭 교정 전 바이트를 그대로 공급하며 자산 이름 해석은 StyleTextMarkup 의 책임이다.
     for (const [index, row] of table.entries()) {
         assert.equal(row.length, 14, `행 ${index}`);
-        const { state, globals } = seeded(row[3], row[4], row[5]); const hooks = {}; bindHtmlPictureText(hooks);
+        const { state, globals } = seeded(row[3], row[4], row[5]); const hooks = { picture: (_state, raw) => htmlPictureText(raw) };
         assert.equal(new HtmlTextParser(state, globals, hooks).parse(unhex(row[1]), Number(row[2])), unhex(row[6]), `행 ${index} 출력 입력 ${row[1]}`);
         assertCurrent(state, globals, row.slice(7), `행 ${index} 상태`);
     }
+    // 실제 앱이 쓰는 bind 경계만 cpppj 1335 마나 별칭 교정을 더한다.
+    const hooks = {}; bindHtmlPictureText(hooks);
+    assert.equal(hooks.picture(null, '!"mana.17">'), '~[Imana.9]');
 });
 
 // 원본 관측이 닿지 않는 기본값/경계/수명을 독립 입력으로 고정한다(변형 확인에서 생존한 지점). (2026-11-14 WB04-E460)

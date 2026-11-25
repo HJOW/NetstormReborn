@@ -6,6 +6,7 @@
 import { configParseLong } from '../assets/config.js';
 import { PATCH_TYPE_COUNT, FIRST_ASSET_TYPE_NUMBER } from '../assets/type-table.js';
 import { appendStyleTextFragment } from './style-text-fragments.js';
+import { resolveTextPictureResource } from '../assets/text-picture-resources.js';
 
 // Regexp::Get 이 각 캡처에서 복사하는 최대 바이트 수다. 프레임 식의 원본 지역 배열도 80바이트다.
 const CAPTURE_BYTES = 80;
@@ -259,8 +260,9 @@ export function bindStyleTextMarkupAssets(hooks, assets) {
         const index = type - FIRST_ASSET_TYPE_NUMBER; const types = assets.types();
         if (index >= types.length) return null;
         const asset = types[index];
-        if (frame >= (asset.definition?.clusters.length ?? 0)) return null;
-        const header = assets.shapes.squidHeader(asset.block, frame);
+        const resource = resolveTextPictureResource(assets.shapes, asset.block, asset.definition?.clusters.length ?? 0); // 10.78 마나는 CD 보충본(25프레임) 기준이다(2026-11-25 WB04-E1336).
+        if (frame >= resource.frames) return null;
+        const header = resource.shapes.squidHeader(resource.block, frame);
         return ((header[0x1a] | (header[0x1b] << 8)) << 16) >> 16;
     };
     // 이름 표는 로딩 순서 파일 이름이며 대소문자를 무시한다. 없으면 -1 이다.
@@ -270,7 +272,9 @@ export function bindStyleTextMarkupAssets(hooks, assets) {
         const view = table.view(type);
         if (!view) throw new RangeError('StyleText 대괄호 실제 타입 범위 초과');
         if (view.frameCount > 0x7fffffff) throw new RangeError('StyleText 대괄호 실제 프레임 수 범위 초과');
-        return { frameCount: view.frameCount, defaultFrame: view.defaultFrame, gumpFrame: view.gumpFrame, letterKinds: view.letterKinds, first: Array.from(view.first) };
+        const asset = type >= FIRST_ASSET_TYPE_NUMBER ? assets.types()[type - FIRST_ASSET_TYPE_NUMBER] : null;
+        const frameCount = asset ? resolveTextPictureResource(assets.shapes, asset.block, view.frameCount).frames : view.frameCount; // 마나 보충 프레임 수(2026-11-25 WB04-E1336)
+        return { frameCount, defaultFrame: view.defaultFrame, gumpFrame: view.gumpFrame, letterKinds: view.letterKinds, first: Array.from(view.first) };
     };
 }
 

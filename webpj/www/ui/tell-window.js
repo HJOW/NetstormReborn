@@ -15,7 +15,7 @@ import { ScrollingText } from './scroll-text.js';
 import { CURSOR_NORMAL } from './cursor.js';
 import { VerticalSlider } from './slider.js';
 import { parseStyleText } from './style-text.js';
-import { LinkTable, applyHtmlCondition, createParserGlobals, createParserState, htmlPictureText, parseHtml, prepareDialogContent } from './html-text.js';
+import { LinkTable, applyHtmlCondition, createParserGlobals, createParserState, htmlPictureTextRepaired, parseHtml, prepareDialogContent } from './html-text.js';
 import { expandFileList } from './tell-lists.js';
 import { parseTellParameters } from './tell-parameters.js';
 import { parseScriptCommand } from './script-command.js';
@@ -518,7 +518,7 @@ export function createTellWindow({ bodyFor = null, gameData, resources, name, sc
             condition: (parserState, raw, closing) => applyHtmlCondition(parserState, raw, closing, (text) => gameData.substitute(text)),
             command: (parserState, raw) => inlineCommands.push(parseScriptCommand(raw)),
             link: (parserState, raw, closing) => links.text(raw, closing),
-            picture: (_state, raw) => htmlPictureText(raw),
+            picture: (_state, raw) => htmlPictureTextRepaired(raw),
             onUnsupported,
             ...hooks,
         };
