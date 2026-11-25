@@ -911,6 +911,9 @@ cpppj/src/o/RawAiBridgeSearch.h	Netstorm.Core/Original/RawAiBridgeSearch.cs	eb87
 cpppj/src/o/RawAiBridgeStrategies.cpp	Netstorm.Core/Original/RawAiBridgeStrategies.cs	16c86ad154938fa138dfdbc3a747bc47ad860760	port
 cpppj/src/o/RawAiBridgeStrategies.h	Netstorm.Core/Original/RawAiBridgeStrategies.cs	16c86ad154938fa138dfdbc3a747bc47ad860760	port
 cpppj/src/o/RawAiBuildChoice.cpp	Netstorm.Core/Original/RawAiBuildChoice.cs	47a78175dee45ac90361c35567039bbb8fa0f989	port
+cpppj/src/o/RawAiMovement.cpp	Netstorm.Core/Original/RawAiMovement.cs	65988c6d335145bd05897410145491b5c8611a2c	port
+cpppj/src/o/RawAiMovement.h	Netstorm.Core/Original/RawAiMovement.cs	65988c6d335145bd05897410145491b5c8611a2c	port
+cpppj/src/o/RawCarrierMove.h	Netstorm.Core/Original/RawCarrierMoveState.cs	65988c6d335145bd05897410145491b5c8611a2c	port
 cpppj/src/o/RawAiBuildChoice.h	Netstorm.Core/Original/RawAiBuildChoice.cs	47a78175dee45ac90361c35567039bbb8fa0f989	port
 cpppj/src/o/RawAiBuildSearch.cpp	Netstorm.Core/Original/RawAiBuildSearch.cs	bd6653bf94c583cc3297d7d48dc53f36045b6ed3	port
 cpppj/src/o/RawAiBuildSearch.h	Netstorm.Core/Original/RawAiBuildSearch.cs	bd6653bf94c583cc3297d7d48dc53f36045b6ed3	port
