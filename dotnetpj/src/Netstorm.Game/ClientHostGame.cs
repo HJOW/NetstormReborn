@@ -694,6 +694,9 @@ public sealed partial class ClientHostGame : Game
         // R5-1 미션 카메라 장치 조립. 실제 화면 이동·dirty·다시 그리기를 제품 장치에 잇는다. 배경 시차·투영은 R6·DI-4 범위에서 잇는다.
         // 근거: cpppj UberGumpCamera.cpp의 CommitCameraNow·ApplyCameraFrame 결선이다. 시작 덤프에는 닿지 않는다.
         BindMissionCameraDevices(session);
+        // R5-2d3 미션 월드 수집 장치 조립. 같은 저장소·화면 크기로 타일·객체 수집기를 묶는다. 수집은 참조만 빌려 적재 뒤에도 같은 장치를 쓰며 배경·제출·매 프레임 구동은 R5-3에서 잇는다.
+        // 근거: cpppj ClientRendererFrame.cpp의 Collect가 같은 Pool/해시/타입/셰이프로 수집기를 다시 만드는 결선이다. 시작 덤프에는 닿지 않는다.
+        session.BuildWorldDrawingDevices(storage.Hash, storage.Pool, storage.Types, storage.Shapes, NativeMapView, _driver.Screen.Width, _driver.Screen.Height);
             // RU-3c 실제 미션 Root에 표시 창을 만들고 같은 트리 루트에 부착한다. 부착 전 Enter는 부모 없음으로 거부된다.
             // 근거: GumpTree.Push/Attach의 void·부모 규칙과 ChatWindow Native 입력 호출자. 메뉴 경로는 바꾸지 않는다.
             _ = NativeChatWindows.Create();

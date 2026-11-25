@@ -51,7 +51,7 @@ public sealed class RawTileGroupCollection
     /// <summary>풀/해시는 객체보다 오래 살아야 한다. 화면 높이와 토큰 범위를 먼저 검사한다.</summary>
     /// <param name="hash">공간 해시다.</param>
     /// <param name="pool">SID 풀이다.</param>
-    /// <param name="state">화면 높이와 토큰 기준이다.</param>
+    /// <param name="state">화면 높이와 토큰 기준이다. 생략한 default는 0 초기화라 토큰 영역 검사에 걸리므로 표준 상태는 명시한다.</param>
     public RawTileGroupCollection(RawSquidHash hash, RawSidPool pool, RawTileGroupState state = default)
     {
         ArgumentNullException.ThrowIfNull(hash);
