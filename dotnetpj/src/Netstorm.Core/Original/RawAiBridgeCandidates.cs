@@ -381,4 +381,13 @@ public sealed class RawAiBridgeCandidates
     /// <summary>공유 세계의 주소를 노출해 연결 계층이 같은 풀인지 확인한다. 2026-11-25 R4-5b 다리 후보 이식에서 추가됐다.</summary>
     /// <returns>이 몸체가 쓰는 슬롯 풀이다.</returns>
     public RawSidPool Pool => _pool;
+
+    /// <summary>같은 hash0의 65536 WORD를 인접 전략 하위와 공유한다. 2026-11-25 R4-5b 다리 계획 이식에서 추가됐다.</summary>
+    internal IReadOnlyList<ushort> Surfaces => _surfaces;
+
+    /// <summary>원본 전역의 현재 참조를 인접 전략 하위와 공유한다. 2026-11-25 R4-5b 다리 계획 이식에서 추가됐다.</summary>
+    internal AiBridgeCandidateTypes Globals => _globals;
+
+    /// <summary>현재 raw프레임의 방향 코드 표를 인접 전략 하위와 공유한다. 2026-11-25 R4-5b 다리 계획 이식에서 추가됐다.</summary>
+    internal IReadOnlyList<RiftTypeFrames> Frames => _frames;
 }
