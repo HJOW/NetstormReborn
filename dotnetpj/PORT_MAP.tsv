@@ -9,6 +9,8 @@ cpppj/src/app/main.cpp	Netstorm.Client/Host/HostOptions.cs	91d494c3b2814f00d2cae
 cpppj/src/app/main.cpp	Netstorm.Game/Program.cs	91d494c3b2814f00d2cae81a0f4b247e91e81922	port
 cpppj/src/client/AddRandomInput.cpp	Netstorm.Client/Menu/AddRandomInput.cs	108f76cc814769142a03e6923cb59966d76216b4	L1
 cpppj/src/client/AddRandomInput.h	Netstorm.Client/Menu/AddRandomInput.cs	108f76cc814769142a03e6923cb59966d76216b4	L1
+cpppj/src/client/AiUtilityCommandInput.cpp	Netstorm.Client/Input/AiUtilityCommandInput.cs	688587aec5678b16c205d1b6820836a8dcee6cc3	port
+cpppj/src/client/AiUtilityCommandInput.h	Netstorm.Client/Input/AiUtilityCommandInput.cs	688587aec5678b16c205d1b6820836a8dcee6cc3	port
 cpppj/src/client/AiTypeRequiredEnergy.cpp	Netstorm.Client/Mission/AiTypeRequiredEnergy.cs	4a7b305e63ef80897526addff45d0f785a0711db	port
 cpppj/src/client/AiTypeRequiredEnergy.h	Netstorm.Client/Mission/AiTypeRequiredEnergy.cs	4a7b305e63ef80897526addff45d0f785a0711db	port
 cpppj/src/client/BackgroundGifGump.cpp	Netstorm.Client/Gump/BackgroundGifGump.cs	a168082548e090f2f191e4b83106e7351fbc00ba	L1

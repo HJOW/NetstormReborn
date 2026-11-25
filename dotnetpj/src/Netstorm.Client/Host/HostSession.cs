@@ -2,6 +2,7 @@ using System.Buffers.Binary;
 using Netstorm.Client.Player;
 using Netstorm.Assets;
 using Netstorm.Client.Automation;
+using Netstorm.Client.Input;
 using Netstorm.Core.Display;
 using Netstorm.Core.Original;
 using Netstorm.Core.Simulation;
@@ -337,6 +338,17 @@ public sealed partial class HostSession
 
         RawAiCommandState.SetAiParameter(packed, new AiCommandStateHooks { Players = () => PlayerRecords, Body = AiBrainMemory.Bytes });
     }
+
+    /// <summary>원문 세 일반 명령을 실제 AI 직접 상태 writer와 세계 간헐천 생성에 전달한다. crankMoney·parameter는 세션 AI 메모리에 닿는다.</summary>
+    /// <param name="event">받은 입력 사건이다.</param>
+    /// <returns>소비했으면 참이다.</returns>
+    /// <remarks>2026-11-25 R4-5d AI 직접 명령 입력 연결용으로 추가했다. 근거: cpppj src/client/UberGump.cpp의 aiCommands 조립과 AiUtilityCommandInput.h의 Dispatch다. 초기 간헐천 생성(GenerateWorldGeysers)은 DN 세션에 아직 없어 명시 거부한다.</remarks>
+    public bool DispatchAiUtilityCommand(InputEvent @event) => AiUtilityCommandInput.DispatchAiUtilityCommandInput(@event, new AiUtilityCommandHooks
+    {
+        InitialGeysers = () => throw new InvalidOperationException("AI 초기 간헐천 생성 미연결(R6)"),
+        CrankMoney = () => CrankAiMoney(),
+        Parameter = packed => SetAiParameter(packed),
+    });
 
     /// <summary>Player 기록의 이름 오프셋이다. RawPlayerParticipation과 같은 0xc다.</summary>
     private const int PlayerNameOffset = 0xc;
