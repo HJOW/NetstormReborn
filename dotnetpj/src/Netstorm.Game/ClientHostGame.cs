@@ -345,6 +345,9 @@ public sealed partial class ClientHostGame : Game
             // DI-3: 실제 포인터 이동을 현재 커서 위치에 반영하고, Esc는 잡은 커서가 있을 때만 놓는다.
             _menuInput.CursorPosition = (x, y) => { _gameplay.Cursor.ScreenX = x; _gameplay.Cursor.ScreenY = y; };
             _menuInput.CursorCancel = () => _missionSession?.TryCancelCursor() == true;
+            // DI-4d: 이동 전용 경로는 미션 세션의 Pan에, 숫자·기호 입력은 저장 카메라 분배에 맡긴다. 미션 없으면 거짓으로 종전 흐름을 유지한다.
+            _menuInput.CameraPan = pointer => _missionSession?.ProcessCameraPan(pointer) == true;
+            _menuInput.SavedCameraKey = input => _missionSession?.DispatchSavedCameraKey(input) == true;
             _gumpDrawing = new HostGumpDrawing(_mainMenu, _htmlText, _htmlMenus, _driver.Screen, _textEntry);
             _driver.BindControlLocator(_mainMenu);
             _driver.BindInputHandler(_menuInput.Dispatch);

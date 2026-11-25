@@ -30,6 +30,10 @@ public sealed class HostMenuInput
     public Action<int, int>? CursorPosition { get; set; }
     /// <summary>잡은 커서가 있으면 놓고 참을 돌려준다. 미연결이면 무시하고 거짓으로 둔다. 1.046에서 DI-3 커서 호출자용으로 추가했다.</summary>
     public Func<bool>? CursorCancel { get; set; }
+    /// <summary>실제 포인터의 카메라 이동 전용 경로를 실행한다. 미연결이면 무시하고 거짓으로 둔다. 1.050에서 DI-4d Pan용으로 추가했다.</summary>
+    public Func<InputEvent, bool>? CameraPan { get; set; }
+    /// <summary>실제 숫자·기호 입력의 저장 카메라 분배를 실행한다. 미연결이면 무시하고 거짓으로 둔다. 1.050에서 DI-4d 저장 카메라용으로 추가했다.</summary>
+    public Func<InputEvent, bool>? SavedCameraKey { get; set; }
     /// <summary>숨은 입력줄의 문자 Enter를 실제 Chat 공장으로 연결한다.</summary>
     private Func<InputEvent, bool>? _chatEnter;
     /// <summary>새 이름 창을 여는 실제 현재 호스트 장치다.</summary>
@@ -101,6 +105,8 @@ public sealed class HostMenuInput
         uint code = input.Code & 0x03ffffff; bool released = (input.Code & InputCode.Release) != 0;
         // DI-3: Esc(누름)는 잡은 커서가 있을 때만 놓는다. 없으면 종전 흐름을 유지한다.
         if (!released && code == 0x1B0000 && (CursorCancel?.Invoke() == true)) { _changed(); return false; }
+        // DI-4d: 숫자·기호 입력은 저장 카메라 분배가 먼저 소비한다. 미연결·미소비면 종전 흐름을 유지한다.
+        if (SavedCameraKey?.Invoke(input) == true) { _changed(); return false; }
         if (code == HostPopupMenu.QueuedSelectCommand && _popup != null) { if (!released) Post(_popup.Select(unchecked((uint)input.Y))); return false; }
         if (code == 0x02000079) { if (!released) { (_newFort ?? throw new InvalidOperationException("새 Fort 이름 창 미연결"))(unchecked((uint)input.Y)); _changed(); } return false; }
         if (code == 0x02000030) { if (!released) { (_changeScreen ?? throw new InvalidOperationException("화면 모드 장치 미연결"))(unchecked((uint)input.Y), true); _changed(); } return false; }
@@ -138,6 +144,8 @@ public sealed class HostMenuInput
     {
         if ((pointer.Code & InputCode.Outside) != 0) return null;
         CursorPosition?.Invoke(pointer.X, pointer.Y);
+        // DI-4d: 이동 전용 경로가 소비하면 overlay·이동 통지를 건너뛴다. 미연결·미소비면 종전 흐름을 유지한다.
+        if (CameraPan?.Invoke(pointer) == true) return null;
         uint overlay = _menu.Tree.Input.Overlay(pointer.Code, new(pointer.X, pointer.Y));
         _menu.Tree.Frame.Broadcast(pointer.Code, unchecked((uint)pointer.X), unchecked((uint)pointer.Y));
         return overlay;
