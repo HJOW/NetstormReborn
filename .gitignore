@@ -145,3 +145,5 @@ webpj/node_modules/
 # webpj webpack 번들(webpj/www/dist/netstorm.bundle.js)은 사용자 결정(2026-11-24)으로 Git 에 추적한다. www 소스를 고친 뒤에는 npm run build 로 최신 번들을 만들어 함께 커밋한다.
 webpj/test-results/
 webpj/playwright-report/
+# 저장소 루트에서 baseURL 없이 실행한 Playwright 결과(2026-11-25 사용자 요청으로 추적 해제)
+/test-results/
