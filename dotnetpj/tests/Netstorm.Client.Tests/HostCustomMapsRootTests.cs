@@ -40,8 +40,8 @@ public sealed class HostCustomMapsRootTests
         // 설치 원본은 바이트까지 그대로고, 사용자 작성본은 덮어쓰지 않는다.
         Assert.Equal(installed, File.ReadAllBytes(Path.Combine(temp.Source, "d", "Alpha.fort")));
         Assert.Equal(authored, File.ReadAllBytes(Path.Combine(temp.Root, "CustomMaps", "d", "Beta.fort")));
-        Assert.Equal([.. installed], workspace.Read("d/Alpha.fort"));
-        Assert.Equal(authored, workspace.Read("d/Beta.fort"));
+        Assert.Equal([.. installed], workspace.Read("d/Alpha.fort") ?? throw new InvalidOperationException("이관 맵 읽기 누락"));
+        Assert.Equal(authored, workspace.Read("d/Beta.fort") ?? throw new InvalidOperationException("사용자 맵 읽기 누락"));
         Assert.False(File.Exists(Path.Combine(temp.Source, "d", "Beta.fort")));
     }
 
