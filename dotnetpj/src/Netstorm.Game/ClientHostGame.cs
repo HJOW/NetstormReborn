@@ -724,9 +724,16 @@ public sealed partial class ClientHostGame : Game
         }
         // 원문439b13/439b18의지연삭제와Idle은현재입력뒤·Kernel준비앞에서실행한다.
         _menuInput?.FinishFrame();
-        _missionBurning?.PrepareFrame(_clientClock.Frame.Value.Game, unchecked((uint)_clientClock.Frame.Value.Number));
-        // 프레임캡처뒤고정한같은시각으로표시준비/주변난수소비를끝낸다음Kernel슬롯을순회한다.
-        _missionSession?.RunMissionFrame();
+        // 미션 프레임의 월드·건설 효과(연소 준비·Kernel 정기)는 현재 Runtime pin 안에서 실행한다.
+        // 근거: 원문 프레임 처리의 월드 pin 보유다. WP-4d에서 실제 설치했다. 미션 없으면 종전대로 둔다.
+        if (_missionSession is { } mission)
+        {
+            mission.RunPinnedWorldFrame(() =>
+            {
+                _missionBurning?.PrepareFrame(_clientClock.Frame.Value.Game, unchecked((uint)_clientClock.Frame.Value.Number));
+                mission.RunMissionFrame();
+            });
+        }
         if (_menuDirty && _gumpDrawing is not null && _startup is not null)
         { DrawStartupScreen(); _gumpDrawing.Draw(); _menuDirty = false; }
         // 원문439b96처럼 현재 그리기 뒤 같은 Chat 입력줄 전환 요청을 한 번 소비한다.

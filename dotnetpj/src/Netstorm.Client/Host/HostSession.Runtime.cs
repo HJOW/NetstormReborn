@@ -46,6 +46,20 @@ public sealed partial class HostSession
     }
     /// <summary>현재 실제 전체 owner를 선택된 하위 호출 끝까지 보유한다.</summary>
     public IDisposable PinRuntime() => (_runtimePin ?? throw new InvalidOperationException("세션의 실제 Runtime 대여 미공개"))();
+    /// <summary>미션 프레임의 월드·건설 효과를 현재 Runtime pin 안에서 실행한다. 미션 Runtime 미공개면 그대로 실행한다.</summary>
+    /// <param name="frame">월드·건설 효과를 실행하는 호출이다. 예외가 나도 pin은 반납된다.</param>
+    /// <remarks>1.040에서 WP-4d World/건설 효과 pin 전달용으로 추가했다. 근거: 원문 프레임 처리의 월드 pin 보유다. 적재 중(Runtime 미공개)에는 pin 없이 실행해 L2 덤프에 닿지 않는다.</remarks>
+    public void RunPinnedWorldFrame(Action frame)
+    {
+        ArgumentNullException.ThrowIfNull(frame);
+        if (_runtimePin is null || !Gameplay.Borrowed())
+        {
+            frame();
+            return;
+        }
+
+        using (PinRuntime()) frame();
+    }
     /// <summary>전체 State 자식을 실행하기 전에 같은 실제 배송·프로세스·공장 호출 관문을 확인한다.</summary>
     internal void EnsureStateRuntimeIdle() => EnsureRuntimeCanRelease();
     /// <summary>배송 중 실제 Pool/Player/장치를 명시 반납하는 전체 정리를 거부한다.</summary>
