@@ -74,4 +74,31 @@ public sealed partial class HostPriestWorldLiveTests
         Assert.Empty(dirtied);
         Assert.Equal(0u, session.CameraRedraw.Value);
     }
+
+    /// <summary>제품 프레임 조립은 Commit·Present만 잇고 Pan·저장 키는 미조립으로 둔다.</summary>
+    [Fact]
+    public void FrameDevicesLeavePanUnassembled()
+    {
+        var (session, _) = Scene();
+        session.BuildPlayerWorldHooks();
+        var calls = new List<string>();
+        session.BuildCameraFrameDevices(
+            new RawCameraCommitHooks
+            {
+                Scroll = (x, y, width, height, dx, dy) => calls.Add($"S{x},{y},{width},{height},{dx},{dy}"),
+                AddDirty = (rect, _) => calls.Add("D"),
+                RedrawRoots = () => calls.Add("R"),
+            },
+            new RawCameraPresentHooks { Flip = () => calls.Add("F") });
+        session.CameraViewport = new RawCameraCommitGlobals(0, 15, 1024, 768, new(10, 20, 800, 600), new(0, 0, 1024, 768), new(5, 6));
+        session.Gameplay.Camera.InitializeNativeRenderer(1024, 768, 256, new(), session.Gameplay.MapRevision);
+        session.Gameplay.Camera.Target.Pixels[0] = 40; session.Gameplay.Camera.Target.Pixels[1] = 15;
+        session.PresentCameraNow(0);
+        Assert.Equal(["F", "R", "S10,20,800,600,40,15", "S0,0,10,768,0,0", "S10,600,1014,168,0,0", "D", "D", "R"], calls);
+        // 매 프레임 포인터 폴링이 미조립 Pan·저장 키에 닿아도 거짓으로 통과한다(R6까지 명시 실패 없음).
+        Assert.False(session.ProcessCameraPan(new InputEvent(0, 100, 100)));
+        Assert.False(session.DispatchSavedCameraKey(new InputEvent(0x30, 0, 0)));
+        // 프레임 장치 중복 조립을 거부한다.
+        Assert.Throws<InvalidOperationException>(() => session.BuildCameraFrameDevices());
+    }
 }

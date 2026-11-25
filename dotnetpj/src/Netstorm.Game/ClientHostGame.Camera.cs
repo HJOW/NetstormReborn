@@ -11,11 +11,11 @@ public sealed partial class ClientHostGame
 {
     /// <summary>제품 진입 경로의 세션 카메라 장치를 실제 화면·Renderer 장치와 연결한다.</summary>
     /// <param name="session">미션 세션이다.</param>
-    /// <remarks>2026-11-26 1.062에서 R5-1용으로 추가했다. 근거: cpppj UberGumpCamera.cpp의 CommitCameraNow·ApplyCameraFrame 결선이다. 뒤집기는 매 프레임 출력에 맡기고 배경 시차는 비DIB에서만 요구한다.</remarks>
+    /// <remarks>2026-11-26 1.062에서 R5-1용으로 추가했다. 근거: cpppj UberGumpCamera.cpp의 CommitCameraNow·ApplyCameraFrame 결선이다. 뒤집기는 매 프레임 출력에 맡기고 배경 시차는 비DIB에서만 요구한다. 1.064에서 Pan·저장 조립을 뺐다. 매 프레임 포인터 폴링이 미조립 Pan의 명시 실패에 닿아 활성 창 미션 실행이 깨졌으므로 Commit·Present만 조립한다. Pan 폴링·저장 키는 R6에서 실제 장치로 잇는다.</remarks>
     private void BindMissionCameraDevices(HostSession session)
     {
         ArgumentNullException.ThrowIfNull(session);
-        session.BuildCameraDevices(
+        session.BuildCameraFrameDevices(
             new RawCameraCommitHooks
             {
                 Scroll = (x, y, width, height, dx, dy) => _driver.Screen.Scroll(x, y, width, height, dx, dy),
