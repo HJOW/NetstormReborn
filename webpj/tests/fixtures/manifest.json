@@ -35346,6 +35346,358 @@
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
       }
+    },
+    {
+      "id": "cpppj-tutorial6-crossbow-production-l3-c4300-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial6-crossbow-production-l3/c4300.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms tutorial6-crossbow-production-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial6-crossbow-production.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1345",
+      "doc": "docs/webpj-l3-tutorial6-crossbow-production-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "tutorial6-crossbow-production-l3 실제 입력 c4300.png",
+      "text": false,
+      "sha256": "2c638c9b47e9ffdc9bb5c86fd09e85df344bcd81c9e325c40d2c97899d346af1",
+      "bytes": 222743,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "60e9b50c9",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial6-crossbow-production-l3-c4300-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial6-crossbow-production-l3/c4300.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms tutorial6-crossbow-production-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial6-crossbow-production.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1345",
+      "doc": "docs/webpj-l3-tutorial6-crossbow-production-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "tutorial6-crossbow-production-l3 실제 입력 c4300.tsv",
+      "text": true,
+      "sha256": "acc81051c520a9a581a6c9853a4af9374a9c677d0096a43479332c2e073bfb52",
+      "bytes": 387544,
+      "lines": 5065,
+      "fixtureCommit": null,
+      "webCommit": "60e9b50c9",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial6-crossbow-production-l3-d5600-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial6-crossbow-production-l3/d5600.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms tutorial6-crossbow-production-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial6-crossbow-production.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1345",
+      "doc": "docs/webpj-l3-tutorial6-crossbow-production-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "tutorial6-crossbow-production-l3 실제 입력 d5600.png",
+      "text": false,
+      "sha256": "116a433f7120dbb1f8bcc9129c3b033f3da6dcaf03e8f496bb18aa300b402493",
+      "bytes": 220237,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "60e9b50c9",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial6-crossbow-production-l3-d5600-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial6-crossbow-production-l3/d5600.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms tutorial6-crossbow-production-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial6-crossbow-production.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1345",
+      "doc": "docs/webpj-l3-tutorial6-crossbow-production-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "tutorial6-crossbow-production-l3 실제 입력 d5600.tsv",
+      "text": true,
+      "sha256": "1d99bbf3bdc7858ecc195da12ccc02969e65ebde34bd3e1ec94b0a0bfa4db58f",
+      "bytes": 393515,
+      "lines": 5154,
+      "fixtureCommit": null,
+      "webCommit": "60e9b50c9",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial6-crossbow-production-l3-knowledge5530-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial6-crossbow-production-l3/knowledge5530.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms tutorial6-crossbow-production-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial6-crossbow-production.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1345",
+      "doc": "docs/webpj-l3-tutorial6-crossbow-production-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "tutorial6-crossbow-production-l3 실제 입력 knowledge5530.png",
+      "text": false,
+      "sha256": "ba438f59956bee10e8b870759e61ecc49268518df2ff282948e750326ba191a3",
+      "bytes": 238019,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "60e9b50c9",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial6-crossbow-production-l3-oracle-json",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial6-crossbow-production-l3/oracle.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms tutorial6-crossbow-production-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial6-crossbow-production.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1345",
+      "doc": "docs/webpj-l3-tutorial6-crossbow-production-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "tutorial6-crossbow-production-l3 실제 입력 oracle.json",
+      "text": true,
+      "sha256": "f9d997aad116c3b62e989842396b768074d24129a32d34ac179b5dad751b059b",
+      "bytes": 1038,
+      "lines": 35,
+      "fixtureCommit": null,
+      "webCommit": "60e9b50c9",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial6-crossbow-production-l3-steps-json",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial6-crossbow-production-l3/steps.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms tutorial6-crossbow-production-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial6-crossbow-production.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1345",
+      "doc": "docs/webpj-l3-tutorial6-crossbow-production-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "tutorial6-crossbow-production-l3 실제 입력 steps.json",
+      "text": true,
+      "sha256": "b50f77cb0355db6266edd46806229458d6ede299dd4002f579a2454d670af7a1",
+      "bytes": 2895,
+      "lines": 216,
+      "fixtureCommit": null,
+      "webCommit": "60e9b50c9",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial6-crossbow-production-l3-upgrade4390-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial6-crossbow-production-l3/upgrade4390.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms tutorial6-crossbow-production-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial6-crossbow-production.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1345",
+      "doc": "docs/webpj-l3-tutorial6-crossbow-production-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "tutorial6-crossbow-production-l3 실제 입력 upgrade4390.png",
+      "text": false,
+      "sha256": "6eccdc831913bbe2e99ea35818fabc898b6d4cc2426a4eed7c1606188a1ab4ab",
+      "bytes": 229418,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "60e9b50c9",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial6-crossbow-production-l3-upgraded5000-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial6-crossbow-production-l3/upgraded5000.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms tutorial6-crossbow-production-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial6-crossbow-production.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1345",
+      "doc": "docs/webpj-l3-tutorial6-crossbow-production-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "tutorial6-crossbow-production-l3 실제 입력 upgraded5000.png",
+      "text": false,
+      "sha256": "bc67fe2a0fb30c74db3c6b0e3883c2b414e830be5383023de6c177ab1ba5c3e8",
+      "bytes": 228529,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "60e9b50c9",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial6-crossbow-production-l3-upgraded5000-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial6-crossbow-production-l3/upgraded5000.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms tutorial6-crossbow-production-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial6-crossbow-production.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1345",
+      "doc": "docs/webpj-l3-tutorial6-crossbow-production-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "tutorial6-crossbow-production-l3 실제 입력 upgraded5000.tsv",
+      "text": true,
+      "sha256": "c4b832aa664be414137ec2143b5c42f5cb3388ff2ecf42543966375c06590597",
+      "bytes": 390209,
+      "lines": 5106,
+      "fixtureCommit": null,
+      "webCommit": "60e9b50c9",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial6-crossbow-production-l3-workshop4370-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial6-crossbow-production-l3/workshop4370.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms tutorial6-crossbow-production-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial6-crossbow-production.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1345",
+      "doc": "docs/webpj-l3-tutorial6-crossbow-production-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "tutorial6-crossbow-production-l3 실제 입력 workshop4370.png",
+      "text": false,
+      "sha256": "975bdbd82755494cd0867ba750a728766f9a93f435bc6ab5896fb0349cbb7895",
+      "bytes": 236441,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "60e9b50c9",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
     }
   ]
 }
