@@ -1,8 +1,8 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-27 정리1381 · 개발 중지 인계 유지 · 마지막 완료1.079 · R5-4c3 중간 커밋1015ca4a6(검증 미완료) · 다음1.080 Game 재빌드/관련 검사·대표3경로 L2 복구 → R5-4c4 → R5-4d → R5-3 → R5-5 → R6 · R5 2/5, R4 2/8 · 마지막 완료 관문1.076(7,379통과·M1 0/34), 중단 회귀1.080(7,385통과·L2 세 종료1) · cpppj 제품1377/ZIP1378·검증1380 · 튜토리얼 안내 DN-TUT-1~4 필수 미완료**
+**2026-11-27 정리1381 · 개발 중지 인계 유지 · 마지막 완료1.079 · R5-4c3 중간 커밋1015ca4a6(검증 미완료) · 1.080a/b Game 재빌드·관련 검사·대표3경로 L2 복구 완료 · 다음 R5-4c3c 픽셀 검증 → R5-4c4 → R5-4d → R5-3 → R5-5 → R6 · R5 2/5, R4 2/8 · 마지막 완료 관문1.076(7,379통과·M1 0/34), 중단 회귀1.080(7,385통과·L2 세 종료1) · cpppj 제품1377/ZIP1378·검증1380 · 튜토리얼 안내 DN-TUT-1~4 필수 미완료**
 
-**2026-11-26 작업 중지 기록(R5-4c3 검증 미완료, 중간 커밋1015ca4a6).** 정기 전체 회귀는 통과했다(Assets 383·Core 4,113·Client 2,889, 합계 7,385·실패0). 그러나 대표 3경로(`thewarbegins`·`tutorial1`·`surrounded`) L2 재수집에서 DN 3건 모두 종료1이 나왔다(`extracted/dotnet-l2-1080`, `run.json`의 `exit_code` 1). 원인은 미션 진입 뒤 생산 루트 Idle이 R6 미연결 본체(`UpdateContents`·`Maintenance`)를 요구한 결함이다(종료 로그에 `생산 … 실제 … R6에서 잇는다` FATAL). 대응으로 `EnsureMissionProductionDeck`에서 루트 유지 Idle을 끄도록 수정했으나(예산 Idle은 유지해 SP 표시 갱신) Game 재빌드·대표 3경로 재수집 검증 전에 중지했다. 커밋1015ca4a6에 보존한 변경: `ClientHostGame.Minimap.cs`(미니맵 HUD 부착 `EnsureMissionMinimap`)·`ClientHostGame.ProductionDeck.cs`(루트 Idle 차단)·`ClientHostGame.cs`(두 Ensure 연결)·`HostMissionMinimapDeckTests.cs`(신규 2건 통과, 관련 11건 통과·Game 오류0·경고0·`cpp_sync.py` 종료0 확인). R5-4c3 재개 시 Game 재빌드·관련 검사 → 대표 3경로 재수집(M1 0/34·0998 일치 유지) → 단위 문서·6절·커밋 순서로 진행한다.
+**2026-11-26 작업 중지 기록(R5-4c3 검증 미완료, 중간 커밋1015ca4a6).** 정기 전체 회귀는 통과했다(Assets 383·Core 4,113·Client 2,889, 합계 7,385·실패0). 그러나 대표 3경로(`thewarbegins`·`tutorial1`·`surrounded`) L2 재수집에서 DN 3건 모두 종료1이 나왔다(`extracted/dotnet-l2-1080`, `run.json`의 `exit_code` 1). 원인은 미션 진입 뒤 생산 루트 Idle이 R6 미연결 본체(`UpdateContents`·`Maintenance`)를 요구한 결함이다(종료 로그에 `생산 … 실제 … R6에서 잇는다` FATAL). 대응으로 `EnsureMissionProductionDeck`에서 루트 유지 Idle을 끄도록 수정했으나(예산 Idle은 유지해 SP 표시 갱신) Game 재빌드·대표 3경로 재수집 검증 전에 중지했다. 커밋1015ca4a6에 보존한 변경: `ClientHostGame.Minimap.cs`(미니맵 HUD 부착 `EnsureMissionMinimap`)·`ClientHostGame.ProductionDeck.cs`(루트 Idle 차단)·`ClientHostGame.cs`(두 Ensure 연결)·`HostMissionMinimapDeckTests.cs`(신규 2건 통과, 관련 11건 통과·Game 오류0·경고0·`cpp_sync.py` 종료0 확인). 2026-11-27 재검증(1.080a/b): Game Release 오류0·기존 경고8, 집중12/12·동기화 종료0; 대표3경로 양쪽 종료0·DN 덤프 0998 바이트 일치·원본1,392파일 불변이다. 최초 실패 수집은 보존했다. 미니맵 픽셀·수명 검증은 R5-4c3c에 남는다. [근거](docs/dotnet-canon-1080ab-20261127.md)
 
 현행 인계는 이 문서가 기준이다. 정리 직전 전문·완료 상세·과거 집계는 [1.079/중단 기록 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261127-through-1079-checkpoint1080)에 보존했다. 단위 근거는 `docs/dotnet-canon-0NNN-*.md`·`docs/dotnet-canon-1NNN-*.md`, 이전 보관본은 [6절](#dotnet-archive-log)을 따른다. cpppj·공통은 [LEFT_JOBS.md](LEFT_JOBS.md), 웹은 [LEFT_JOBS.webpj.md](LEFT_JOBS.webpj.md)가 기준이다. 이번1381은 문서 정리이며 제품·빌드·실행을 진행한 단위가 아니다.
 
@@ -33,7 +33,7 @@
 
 - [ ] **DN-MP-08 기존 ID 재시작·저장 복구.** CP1375의 epoch/DWORD 시계·State13 로컬 SP·Residence 실제 SavedGame 교정을 R11의 같은 Client/Player/Surface에 대응시킨다. 완료 기준: 같은 기존 ID의 실제 재시작·복구와 양쪽 월드/SP/정상 종료를 확인한다. 새 ID 중도 참가를 추가하지 않으며 CP 재현을 DN 결함/완료로 세지 않는다. [계약/CP1380 결정](docs/dotnet-cpp-lan-followup-20261126.md).
 
-1. **다음 — R5-4c3 검증 복구 → R5-4c4 → R5-4d → R5-3 → R5-5 → R6.** R5-4c3 중간 코드가 커밋돼 있어도 실제 L2/미니맵 완료는 아니다. 먼저 머리 중단 기록의 Game 재빌드·관련 검사·대표3경로 재수집을 마친다. R5 남은 세부는 [1.4](#r5-detail)에 있다. 튜토리얼 안내는 [0.5 DN-TUT-1~4](#tutorial-objective-port)를 R5 표시/R6 진행 소비자에 맞춰 구현한다.
+1. **다음 — R5-4c3c 픽셀·수명 검증 → R5-4c4 → R5-4d → R5-3 → R5-5 → R6.** R5-4c3 중간 코드가 커밋돼 있어도 실제 L2/미니맵 완료는 아니다. 재빌드·관련 검사·대표3경로 재수집은 1.080a/b에서 복구했다. 실제 미니맵 영역과 수명을 검증한다. R5 남은 세부는 [1.4](#r5-detail)에 있다. 튜토리얼 안내는 [0.5 DN-TUT-1~4](#tutorial-objective-port)를 R5 표시/R6 진행 소비자에 맞춰 구현한다.
    - 선행 완료: AI 프레임·신전 삭제1.031~1.033, WP·DI·SL1.034~1.061, 사용자 데이터1.041~1.044, R5 수집/타일/프레임·HUD 일부1.062~1.079를 다시 만들지 않는다. 상세 완료 식별자와 옛 소견은 [정리 전 보관본0.1](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261127-through-1079-checkpoint1080)에 있다.
    - 남은 Root Source 공개/제출·수송은 R6 세션 수명/R11 backend, AI Drops·Bridges와 호출자 내부 live 틱은 사용자 결정대로 R6이다. 기존83VT·현재 Runtime pin·공유 지도/색표·실제 분배를 유지하며 미설치 후크를 no-op이나 임시 표로 통과시키지 않는다. PORT_MAP 행 누락 보충은 [4절](#dotnet-inventory)을 따른다.
 
@@ -53,7 +53,7 @@
 | 월드/입력/수명(1.034~1.061) | WP-1~4·DI-1/3/4·SL-1~8, 5차 사용자 데이터 | WP-5·SL-9와 단계별 소비자 |
 | 월드 표시(1.062~1.076) | 카메라·수집/타일·Submit·프레임, HUD 도크와 입장 카메라 | R5-3·R5-4·R5-5 |
 | 공통 도움말·메뉴·생산 틀(1.077~1.079) | DN-MP-01·메뉴 배경/입력 숨김·생산 덱 틀/우클릭 확인 | 격자 내용물·유지/입력은 R6/R11 |
-| R5-4c3 중간 작업 | 미니맵 부착·루트 Idle 차단 코드는1015ca4a6에 보존 | 재빌드/관련 검사·대표 L2·실제 픽셀 검증 미완료, 완료 수에 미포함 |
+| R5-4c3 진행 | 미니맵 부착·Idle 차단 및 재빌드/관련 검사·대표 L2 복구(1.080a/b) | 실제 픽셀·수명 검증 미완료, 완료 수에 미포함 |
 
 <a id="first-run"></a>
 
@@ -239,8 +239,8 @@ AGENTS.md 지정에 따라0.807에서 공통 [assets/Netstorm.ico](assets/Netsto
     - [x] **R5-4c2 생산 덱 틀.** 생산 패널 본체(0.825~0.837)의 틀을 미션 HUD에 부착해 그린다. 완료 기준: 진입 직후 틀 영역의 표시·우클릭 도움말이 일치한다. 격자 내용물·입력/유지는 R6/R11이다.
       - 완료(1.079 틀 부착): 생산 덱 틀 8노드·예산/`BridgeGrid`·배경 HELP와 `GumpHelp` 우클릭 1 반환·주제·제목·부착·소리를 확인하고(집중 2건·관련 6건 통과·Game 오류0·경고0·`cpp_sync.py` 종료0) 미션 진입에 왼쪽 틀을 부착해 그린다. 근거: [1.079](docs/dotnet-canon-1079-20261126.md). 격자 내용물·유지·입력·동기화 본체와 About 본문 표시는 R6/R11에서 잇는다.
     - [ ] **R5-4c3 미니맵.** RU-4 미니맵(0.991·0.993)의 부착 코드는1015ca4a6에 보존했지만 검증 미완료다. 아래 세 조각을 모두 통과해야 완료한다.
-      - [ ] R5-4c3a Game 재빌드·관련 검사 — 루트 Idle 차단 뒤 Release와 미니맵/생산 틀 관련 검사가 통과한다.
-      - [ ] R5-4c3b 대표 L2 재수집 — thewarbegins/tutorial1/surrounded 세 종료0·0998 기준선/M1 0/34 유지. 실패 원인과 첫 실행을 보존한다.
+      - [x] R5-4c3a Game 재빌드·관련 검사 — 루트 Idle 차단 뒤 Release와 미니맵/생산 틀 관련 검사가 통과한다.
+      - [x] R5-4c3b 대표 L2 재수집 — thewarbegins/tutorial1/surrounded 세 종료0·0998 기준선/M1 0/34 유지. 실패 원인과 첫 실행을 보존한다.
       - [ ] R5-4c3c 실제 픽셀 — 미니맵 영역이 cpp L4a와 일치하며 진입/정리의 장치 수명을 확인한다.
     - [ ] **R5-4c4 인벤토리·공통 HUD.** 인벤토리와 공통 HUD(0.817~0.819)의 제품 경로. 완료 기준: 해당 패널 영역이 L4a와 일치한다.
   - [ ] **R5-4d UberRoot·패널 결선.** 1.074 조립 진입점을 제품 진입 경로에 잇고 네 자식·메시지 공장으로 패널을 만든다(RU-3b 남음과 같은 대상). 월드 UI 그리기(kind 2)의 `월드 UI 그리기 미연결(R5-4)` 명시 실패도 여기서 닫는다. 완료 기준: 미션 진입 Root가 UberRoot 패널을 소유하고 UI kind가 명시 실패 없이 그려진다.
@@ -353,7 +353,7 @@ AGENTS.md 지정에 따라0.807에서 공통 [assets/Netstorm.ico](assets/Netsto
 | --- | --- |
 | 1.034~1.076 | WP·사용자 데이터·DI·SL과 R5 표시/도크 일부, 정기7,379통과·대표3경로 M1 0/34 유지 |
 | 1.077~1.079 | 공통 도움말·메뉴 배경 숨김·생산 덱 틀 부착 완료, 집중9건. [1.079](docs/dotnet-canon-1079-20261126.md) |
-| 1.080/R5-4c3 | 중간 소스1015ca4a6 보존. 검사7,385통과지만 L2 세 종료1·Idle 차단 뒤 재검증 전 중지, 미완료 |
+| 1.080a/b/R5-4c3 | 기존 중간 소스의 Release·집중12/12·동기화 통과, 대표3경로 종료0·DN 0998 바이트 일치. 픽셀·수명은 미완료. [근거](docs/dotnet-canon-1080ab-20261127.md) |
 
 정기 회귀는4단위마다 수행한다.1.080은 검사 통과와 L2 실패/중단을 구분하고 재개 시 해당 단위를 닫는다. 과거 회귀/65진입/L2 수집 이력은 [정리 전6절](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261127-through-1079-checkpoint1080)을 따른다.
 
