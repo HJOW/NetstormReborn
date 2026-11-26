@@ -7,6 +7,7 @@ import { ScrambledSpStore } from '../www/core/sp-store.js';
 import { Kernel } from '../www/core/kernel.js';
 import { RegularProcess } from '../www/core/squid-process.js';
 import { GameClock } from '../www/core/game-clock.js';
+import { AI_BRAIN_BYTES } from '../www/core/raw-ai-brain.js';
 
 // C++ 검사와 같은 판본별 자산 슬롯·Player·동맹·Graph·TotalMade 관측값을 만든다.
 function sample(edition) {
@@ -96,4 +97,22 @@ test('Session 덤프 공통 수집은 현재 시계·난수·Kernel을 보존한
     const text = formatSessionStateDump(input);
     assert.ok(text.includes('frame\t1\t4609434218613702656\nrandom\t4660\t99\nworld\t0\nkernel\t2\t3\n'));
     assert.ok(text.includes('regular\t2\t20740\t3\t3226468352\t4628293042053316608\n'));
+});
+
+// 선택 계측은 기본 덤프를 보존하며 부호 있는 지갑과 NaN 기한도 원문 비트로 기록한다.
+test('Session AI 선택 계측은 실제 Player 연결과 정수 비트를 보존한다', () => {
+    const input = sample('patch1078'), legacy = formatSessionStateDump(input);
+    input.ais = []; assert.equal(formatSessionStateDump(input), legacy);
+    const body = new Uint8Array(AI_BRAIN_BYTES + 3).subarray(3), view = new DataView(body.buffer, body.byteOffset, body.byteLength);
+    new DataView(input.players.buffer).setUint32(2 * 180 + 0xb0, 0x20005380, true);
+    const linkedLegacy = formatSessionStateDump(input);
+    view.setUint32(0x260, 2, true); view.setInt32(0x2d8, -1, true); view.setBigUint64(0x5a8, 0x7ff8000000000042n, true);
+    input.ais = [{ owner: 2, token: 0x20005380, body }];
+    const result = formatSessionStateDump(input), row = result.split('\n').find((line) => line.startsWith('ai\t')).split('\t');
+    assert.equal(row.length, 37); assert.deepEqual(row.slice(0, 3), ['ai', '2', '536892288']);
+    assert.equal(row[8], '4294967295'); assert.equal(row[27], '9221120237041090626');
+    assert.equal(result.replace(/^ai\t.*\n/mu, ''), linkedLegacy);
+    input.ais[0].token += 1; assert.throws(() => formatSessionStateDump(input), /본문\/Player 계약/);
+    input.ais[0].token -= 1; view.setUint32(0x260, 1, true); assert.throws(() => formatSessionStateDump(input), /본문\/Player 계약/);
+    view.setUint32(0x260, 2, true); input.ais[0].body = body.subarray(1); assert.throws(() => formatSessionStateDump(input), /본문\/Player 계약/);
 });

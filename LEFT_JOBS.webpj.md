@@ -6,7 +6,7 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-26, 마지막 단위 WB04-E1369)
+### 0.1 현재 값 (2026-11-26, 마지막 단위 WB04-E1370)
 
 - **실행·플레이**
   - **화면:** 브라우저 ‘클릭하여 시작’(첫 적재 뒤 최소 6초, E1308), 시작 title 그림, 메인 메뉴·캠페인/데모 목록·도움말·옵션(Reset All 게임 안 확인 창 포함)·Credits와 개발용 지형 미리보기가 동작한다.
@@ -23,7 +23,8 @@
   - **부품:** 월드·UI 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다(원본 공통 메뉴 788행·Factory 메뉴 39행·Uber 루트 160행·장면 음악 3,113행, 채팅 입력줄 대상 720행(E1265), 파편·건물 캡처 4,474행(E1275~E1276)·골렘/받침 264행(E1312), 실제 Session의 EvilRay·Burning·섬 투하(E1314~E1316) 등). 대응표 1,007단위 중 732행은 Tutorial1 실행에서 웹 모듈의 함수가 모두 실행된 `session`이다(E1283). 좌측 HUD 하단 85×82픽셀은 원본 스크린샷과 일치한다.
   - **한국어 글자:** 갈무리11 12px 격자로 그리되 제목 배율·굵기(사용자 결정으로 보통체)·한글 기준선을 cpppj와 다르게 둔다([0.7절](#korean-font-change)).
   - **미검증:** 세 캠페인 묶음의 L3 진행·자연 완주와 L4b 소리. Tutorial4 E1~I1·Tutorial5 D 이후·Tutorial6 E 이후의 특정 적 공격·포획·희생·승리는 사용자 지시로 건너뛰고 사용자가 직접 확인한다. Tutorial6 A~D 생산·건설·납품은 E1343~E1346 완료다.
-- **최근 완료 E1369:** 캠페인1-2 실제 포획·희생·승리413.025초와 새 완료값 저장·새로고침 유지·다음 미션의 두 실제 UI 진입 확인, 브라우저 오류0([근거](docs/webpj-campaign1-2-ally-progress-20261126.md)).
+- **최근 완료 E1370:** 실제 Player/AI 선택 계측37칸·일반 덤프 보존. 현행 C++ 실제 AI7시점에서 난수·프로세스·객체·AI·소유자1~8 SP 일치, 화면4곳0픽셀. Chromium2/2·Node 덤프11/11·자료/번들4/4 통과. 화면3곳31·1·99픽셀은 원인 미확정으로 열어 둔다([근거](docs/webpj-campaign-ai-telemetry-20261126.md)).
+- **이전 완료 E1369:** 캠페인1-2 실제 포획·희생·승리413.025초와 새 완료값 저장·새로고침 유지·다음 미션의 두 실제 UI 진입 확인, 브라우저 오류0([근거](docs/webpj-campaign1-2-ally-progress-20261126.md)).
 - **이전 완료 E1368:** 캠페인1-1 실제 아군 AI로 포획715.65초·희생/적 사망854.15초·Success!와 Next Mission을 확인, 브라우저 오류0. Node26 전체6856/6856 통과([근거](docs/webpj-campaign1-1-ally-win-20261126.md)).
 - **이전 완료 E1367:** 1-2 실제 사제 선택·이동·경로 진행/도착의 전체 덤프 대조, 6단계10/10 완료. 화면4곳0픽셀·덤프4곳 허용 밖0, Chromium1/1·자료Node3/3 통과([근거](docs/webpj-l3-campaign-priest-path-20261126.md)).
 - **이전 완료 E1366:** 전체화면 pointer 폴링·오른쪽 이동·정지의 같은 프레임 말미 DIB 대조, 5-B13/13 완료. 화면4곳0픽셀·덤프4곳 허용 밖0, Chromium1/1·자료Node3/3 통과([근거](docs/webpj-l3-campaign-edge-scroll-20261126.md)).
@@ -55,11 +56,11 @@
 - **이전 완료 E1340:** Tutorial5 실제 피격과 B 안내 진입 대조([근거](docs/webpj-l3-tutorial5-defense-20261126.md)).
 - **이전 완료(E1337~E1339):** E1339 Tutorial5 단계 A1(생산 등록·스톤 타워 `(138,92)` 배치·1,000프레임 대기) L3 일치([근거](docs/webpj-l3-tutorial5-build-20261126.md)), E1338 일반 프레임 예외의 원인·문맥을 console에 기록한 뒤 다음 프레임 진행([근거](docs/webpj-frame-error-continue-20261126.md)), E1337 Tutorial4 자동 검사를 E1 진입 범위·345프레임 재실행으로 제한하고 중단본 16파일을 보존 자료로 등록([근거](docs/webpj-l3-tutorial4-scope-20261126.md)). 공격·포획·희생·승리는 재현하지 않았다.
 - **작업 지시(2026-11-25 사용자 /goal):** 이 문서의 남은 작업을 모두 수행하되, 사제 포획/희생·특정 적 공격·시나리오 승리 재현이 필요한 시험은 캠페인 1-1~1-5와 스커미시만 아군 AI 활성화 방식으로 시험하고 그 밖의 스테이지는 건너뛴다(나중에 사용자가 직접 확인). 미션 진입 후 대기·유닛 생산·건물 건설로 끝나는 시험은 진행한다. 단위마다 문서 갱신과 커밋을 한다.
-- **현재 작업(2026-11-26 목표 재개):** 캠페인 기본16/16·가장자리·사제 경로 L3와 실제 아군 AI1-1 승리·1-2 진행 저장 복원를 마쳤다. 다음 E1370는 현행 C++ AI 선택 계측·전투 N프레임 대조다.1-3·1-4는60000프레임 오류0이나 미승리여서 완료로 세지 않으며1-5는 두 장 브리핑과 시간 안내를 실제 단추로 넘겨 관찰 중이다.
+- **현재 작업(2026-11-26 목표 재개):** AI 실제7시점 상태 대조까지 마쳤다. 다음 E1371은 실제1-5 승리·진행 저장 복원 근거의 정식 종료, 그 뒤 WebMCP 제품 연결이다.1-3는120000프레임 확장·스커미시는 실제 아군 AI 승리 검사 중이다.7단계 전투의 작은 표시 차이는 미해결로 유지한다.
 - **전체 회귀**
   - **Node22.23.5 E1364:** 6,856/6,856 통과, 실패·취소·미실행0(818.3초). v26 종료 뒤 순차 실행했다.
   - **Node26.13.0 E1364:** 6,856/6,856 통과, 실패·취소·미실행0(739.7초).
-  - **주기(E1369):** Node26 전체E1368에서6856/6856 통과. v26·v22 전체 회귀 이후 각각1/4·5/8. 다음 정기는 E1372(v26·v22)이다.
+  - **주기(E1370):** Node26 전체E1368 이후2/4, Node22 전체E1364 이후6/8. 다음 정기는 E1372(v26·v22)이다.
   - **Chromium:** E1313 전 미션 시작 상태 옵트인 전체 32/32 통과(24.3분, `webpj/extracted/webpj-e1313-final-e2e.log`). 기존 전체 e2e는 E1312 199건 중 186 통과·12 옵트인 미실행·한국어 브리핑 1건 부하 중 시간 초과(단독·3회 반복 통과)다. 단위별 실패·교정은 [E1313](docs/webpj-l3-mission-starts-20261124.md)과 각 단위 문서, 이전 회귀 이력은 [E1327 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261124-through-wb04-e1327)을 따른다.
 - **브라우저 검사:** 미션 화면은 단위마다 Chromium e2e로 확인한다(최근 전체 실행 E1312, 고정 시각 L2·L3 `e2e/fixed-time.spec.js`·`e2e/l3-tutorial1.spec.js`·`e2e/l3-tutorial2.spec.js`·`e2e/l3-tutorial3.spec.js`·`e2e/l3-tutorial4.spec.js`(E1337부터 345프레임까지만 재실행)·`e2e/l3-tutorial5.spec.js`(E1339), 프레임 예외 뒤 진행 `e2e/error-reporting.spec.js` E1338, 앱 서비스 결선 `e2e/session-services-wiring.spec.js` E1328, 한국어 글자 배치 `e2e/korean-glyph-layout.spec.js` E1288). 메뉴는 2026-11-17 Chromium 2/2(갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체), 최초 실행·진행 잠금/체크·저장 재실행은 E616 Chromium 2/2. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md)
 
@@ -164,11 +165,11 @@
 | 5 | 5-B 카메라·HUD·미니맵·커서 | 13/13 | 0 / 0 | — |
 | 5 | 5-C 화면 허브·미션 진입 | 6/6(E1325) | 0 / 0 | — |
 | 6 | 입력·게임 메뉴·경제·건설 | 10/10 | 0 / 0 | — |
-| 7 | 전투·의식·AI | 5/7 | 0 / 0 | 전투 바인딩 · AI 세션 결선 |
+| 7 | 전투·의식·AI | 6/7 | 0 / 0 | 전투 바인딩 · AI 세션 결선 |
 | 8 | 미션 수명·대본·오디오·도움말 | 8/9 → M4 | 0 / 0 | M4 |
 | 9 | 표시 품질·브라우저/OS·배포 | E945 하위 경로·설정 복원 검증, M5 미완료 | 0 / 0 | M5(3.2절: 60/120 표시·성능·메모리, 브라우저·GUI Linux, HTTP 캐시·저장 호환) |
 | 10 | AGENTS 후순위 웹 요구 | 일부 선행, 3.7절 참조 | 0 / 0 | 3.7절 표의 남은 일(4·5·6·10·12·13·14차; 7차는 E1338로 끝남) |
-| **합계** | | | **0 / 0** | **4** |
+| **합계** | | | **0 / 0** | **3** |
 
 ### 0.3 이식량
 
@@ -185,7 +186,7 @@
 ### 0.4 기준선과 자료
 
 - **이식 기준선**은 cpppj 제품 1313(11.01) `225553df`다. 이후 변경 판정은 3.6절을 따른다. 별도 오라클 빌드는 HJOW-Athlon의 `extracted/webpj-oracle/225553df/Netstorm.exe`에 있다(SHA-256 `5b52d96d…b77eb46`, Git 제외).
-- **자료 추적**은 [PORT_MAP.tsv](webpj/PORT_MAP.tsv)와 [fixture manifest](webpj/tests/fixtures/manifest.json) 1,313항목(E1367 신규11항목 포함)을 기준으로 한다. 이식 자료는 cpppj 소스·fixture·문서를 사용한다.
+- **자료 추적**은 [PORT_MAP.tsv](webpj/PORT_MAP.tsv)와 [fixture manifest](webpj/tests/fixtures/manifest.json) 1,330항목(E1370 현행 AI 신규17항목 포함)을 기준으로 한다. 이식 자료는 cpppj 소스·fixture·문서를 사용한다.
 
 ### 0.5 단위 착수와 종료
 
@@ -307,15 +308,15 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
   - [x] 저장 미션 경로 L3 — E1367,1-2 실제 UI 이동의4화면0픽셀·전체 덤프 일치.
   - 근거: [E794](docs/webpj-session-carrier-input-20261118.md) · [실사용 점검](docs/webpj-real-use-checks-20261121.md) · [줍기·Drop e2e](docs/webpj-object-menu-rows-20261124.md) · [포획](docs/webpj-spell-priest-pickup-20261124.md)
 
-#### 7 전투·의식·AI (5/7)
+#### 7 전투·의식·AI (6/7)
 
 완료한 체크(머리글 수에 포함): **파괴·주문 효과**(E1199), **의식**(E1180, 보상 선택 UI는 웹 범위 밖, [의식 판정](docs/webpj-ritual-reward-scope-20261122.md)), **AI 잔여·전투 이탈**(E1198), **전용 시험이 없었던 시스템**(E1316, [근거](docs/webpj-drop-island-session-20261124.md)), **주문(스펠) 사용·골렘 사제 포획(사용자 제보 2026-11-23)**(E1318~E1319, cpppj 1339도 같게 교정, [주문](docs/webpj-spell-cast-20261124.md) · [포획](docs/webpj-spell-priest-pickup-20261124.md)).
 
 - [ ] **전투 바인딩** — Hit·GunQueries·Archer·Motion·BombBlast·Damageable 여섯 표 행은 모두 port이고 Session에 결선돼 있으며(`raw-campaign-session-{hits,guns,gun-views,combat,flyers,damageable}.js`와 각 Node 시험) 실제 Chromium에서 AI 혼전이 약 18분 오류 없이 돈다(E1262). Archer의 초기 배치·비행 및 factory/clock loop는 1절의 검증 범위를 적용한다.
-  - [ ] 전투 장면 오라클 — AI가 공격해 오는 미션의 고정 시각 cpppj 오라클을 수집한다(3.3절). 플레이어가 공격하는 교전 오라클(`tutorial3-l3`·`tutorial4-l3`, E1333~E1335)은 manifest에 있고, AI가 공격해 오는 장면(작업 지시에 따라 캠페인 1-1~1-5·스커미시)이 남았다. 완료 기준: 시나리오·결과와 출처가 manifest에 등록된다.
+  - [ ] 전투 장면 오라클 — E1370에서 독립 AI 관측17자료를 등록했고4화면0픽셀·7덤프 일치.7000·8000·12000의 표시 차이31·1·99픽셀은 원인 규명·수정이 남았다.  AI가 공격해 오는 미션의 고정 시각 cpppj 오라클을 수집한다(3.3절). 플레이어가 공격하는 교전 오라클(`tutorial3-l3`·`tutorial4-l3`, E1333~E1335)은 manifest에 있고, AI가 공격해 오는 장면(작업 지시에 따라 캠페인 1-1~1-5·스커미시)이 남았다. 완료 기준: 시나리오·결과와 출처가 manifest에 등록된다.
   - [x] 교전 N프레임 대조 — E1334 Tutorial4 단계 B 교전 구간 체크포인트(`b1550`·`b2100`·`b2750`, 발사기와 적 `Sun Cannon`)와 E1335 썬 캐논 사격·적 발사기 연쇄 격파(`e7200`)의 화면이 cpppj와 0픽셀, 덤프가 허용 행 밖 차이 0이다. [단계 A~B](docs/webpj-l3-tutorial4-stage-ab-20261125.md) · [단계 C~E1](docs/webpj-l3-tutorial4-stage-ce-20261125.md)
-- [ ] **AI 세션 결선** — Start의 일반/데모 AI·동맹과 typed 프레임, 현재 Player·SP·명령·난수와 장기 RawSurface 소비자를 연결했다(`raw-campaign-session-ai*.js`·`netstorm-campaign-ai.test.mjs`, E1122·E1124·E1198·E1206~E1216). DestroyPatch 진단은 사용자 결정에 따라 E1321에서 표시 후 정상 복귀로 고쳐 실제 앱에 연결했다(3.5절, [근거](docs/webpj-destroy-patch-continue-20261124.md)).
-  - [ ] AI 행동 N프레임 대조 — 위 전투 장면 오라클로 AI의 다리·생산 결정 시점을 비교한다. 완료 기준: AI 행동 체크포인트의 덤프(`random`·`regular`·`object` 행) 일치.
+- [x] **AI 세션 결선** — E1370의 실제 두 AI7시점 상태·행동 기한 대조로 마쳤다. [근거](docs/webpj-campaign-ai-telemetry-20261126.md) — Start의 일반/데모 AI·동맹과 typed 프레임, 현재 Player·SP·명령·난수와 장기 RawSurface 소비자를 연결했다(`raw-campaign-session-ai*.js`·`netstorm-campaign-ai.test.mjs`, E1122·E1124·E1198·E1206~E1216). DestroyPatch 진단은 사용자 결정에 따라 E1321에서 표시 후 정상 복귀로 고쳐 실제 앱에 연결했다(3.5절, [근거](docs/webpj-destroy-patch-continue-20261124.md)).
+  - [x] AI 행동 N프레임 대조 — E1370, 실제1-1 AI1000~12000프레임7곳의 난수·Regular·객체·AI 본문/기한·SP 일치. 화면3곳 차이는 아래 전투 표시 작업으로 유지한다.
 
 #### 8 미션 수명·안내·대본·소리·채팅·도움말 (8/9)
 

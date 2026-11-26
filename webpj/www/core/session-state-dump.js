@@ -1,5 +1,11 @@
 // cpppj SessionStateDump 판번호 1의 순수 TSV 서식과 현재 Client·Session 상태 수집이다. (2026-11-19 WB04-E865~E867)
 import { RegularProcess, SquidProcess } from './squid-process.js';
+import { AI_BRAIN_BYTES } from './raw-ai-brain.js';
+
+// 현행 cpppj SessionStateDump.cpp의 선택 AI 관측 DWORD 순서다. 원문 비트로 읽는다.
+const AI_FIELDS = Object.freeze([0x258, 0x25c, 0x254, 0x264, 0x248, 0x2d8, 0x2d4, 0x290, 0x234, 0x2e4, 0x298, 0x2ac, 0x29c, 0x2a0, 0x294, 0x2a8, 0x2cc, 0x2d0, 0x394, 0x5a0, 0x5a4, 0x3cc, 0x3d8, 0x5f0]);
+// AI 행동·생산·사제·검색·운반·건설·다리 재고의 실제 double 기한을 같은 QWORD 비트로 읽는다.
+const AI_DEADLINES = Object.freeze([0x5a8, 0x5b0, 0x5b8, 0x5c0, 0x5c8, 0x5d0, 0x5d8, 0x5e0, 0x5e8, 0x630]);
 
 // 풀 전체 원문의 FNV-1a 64비트 해시를 계산한다.
 export function sessionDumpHash(bytes) {
@@ -65,7 +71,8 @@ export function captureSessionDumpBase(edition, frame, random, kernel) {
 }
 
 // 같은 Client가 소유한 현재 Session의 풀·Player·SP·Graph·장부를 공통 관측에 추가한다. 관측 사본을 만들어 이후 상태 변경과 구별한다. (2026-11-19 WB04-E867)
-export function captureSessionStateDump(edition, frame, random, kernel, session = null) {
+export function captureSessionStateDump(edition, frame, random, kernel, session = null, { includeAi = false } = {}) {
+    if (typeof includeAi !== 'boolean') throw new TypeError('Session AI 관측 선택은 불리언이어야 합니다.');
     const input = captureSessionDumpBase(edition, frame, random, kernel);
     if (!session) return input;
     const core = session.core();
@@ -82,6 +89,14 @@ export function captureSessionStateDump(edition, frame, random, kernel, session 
     input.graph = core.graph.records().map((item) => ({ surfaces: item.surfaces, inUse: item.inUse, reserved: item.reserved }));
     input.totalCost = book.totalCost; input.postPopDepth = book.depth; input.productionDirty = book.productionDirty;
     input.totalLocal = book.localCounts().slice(); input.totalBuilt = book.localSecondaryCounts().slice(); input.totalGlobal = book.globalCounts().slice();
+    if (includeAi) {
+        input.ais = [];
+        // 실제 Player가 소유한 살아 있는 AI 본문의 사본만 선택적으로 읽는다. 생성·명령·난수 소비는 없다.
+        for (let owner = 1; owner < 9; owner += 1) {
+            const token = session.participation().brain(owner);
+            if (token) input.ais.push({ owner, token, body: session.aiMemory().bytes(token).slice() });
+        }
+    }
     return input;
 }
 
@@ -131,6 +146,15 @@ export function formatSessionStateDump(input) {
     // 하나라도 비영인 TYPE만 출력한다.
     for (let type = 0; type < totalLocal.length; type += 1) {
         if (totalLocal[type] || totalBuilt[type] || totalGlobal[type]) rows.push(`totalmade\t${type}\t${totalLocal[type]}\t${totalBuilt[type]}\t${totalGlobal[type]}`);
+    }
+    // 선택 관측은 일반 판번호1 덤프의 기존 행·바이트를 보존하면서 끝 직전에 덧붙인다.
+    for (const ai of input.ais ?? []) {
+        if (!patch || !Number.isInteger(ai.owner) || ai.owner < 1 || ai.owner >= 9 || !Number.isInteger(ai.token) || ai.token <= 0 || ai.token > 0xffffffff ||
+            !(ai.body instanceof Uint8Array) || ai.body.length !== AI_BRAIN_BYTES || input.players.length !== 9 * 180 ||
+            read(input.players, ai.owner * 180 + 0xb0, 4) !== ai.token || read(ai.body, 0x260, 4) !== ai.owner) throw new TypeError('Session AI 관측의 실제 본문/Player 계약 오류');
+        const view = new DataView(ai.body.buffer, ai.body.byteOffset, ai.body.byteLength);
+        rows.push(['ai', ai.owner, ai.token, ...AI_FIELDS.map((offset) => view.getUint32(offset, true)),
+            ...AI_DEADLINES.map((offset) => view.getBigUint64(offset, true).toString())].join('\t'));
     }
     return `${rows.join('\n')}\nend\n`;
 }

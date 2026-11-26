@@ -6,8 +6,8 @@ import { fileURLToPath } from 'node:url';
 // 원본 판번호 1의 행별 열 수와 번호가 붙는 행이다.
 const WIDTHS = Object.freeze({ netstorm_session_dump: 2, edition: 2, frame: 3, random: 3, world: 2, kernel: 3,
     process: 4, regular: 6, pool: 8, slot: 3, object: 9, player: 3, hidden_players: 2, alliances: 82, sp: 12,
-    graph: 5, totals: 4, totalmade: 5, end: 1 });
-const INDEXED = new Set(['process', 'regular', 'slot', 'object', 'player', 'graph', 'totalmade']);
+    graph: 5, totals: 4, totalmade: 5, ai: 37, end: 1 });
+const INDEXED = new Set(['process', 'regular', 'slot', 'object', 'player', 'graph', 'totalmade', 'ai']);
 
 // 텍스트를 중복 없는 행 표와 순서로 해독한다. 알 수 없는 형식은 비교 전에 거부한다.
 export function parseSessionDump(text) {
@@ -34,7 +34,7 @@ export function parseSessionDump(text) {
         for (const key of ['pool', 'hidden_players', 'alliances', 'sp', 'totals']) if (!rows.has(key)) throw new Error(`Session 덤프 월드 행 누락: ${key}`);
     } else {
         // 월드가 없으면 공통 Kernel 이외의 월드 행은 기록될 수 없다.
-        for (const key of order) if (['pool', 'slot', 'object', 'player', 'hidden_players', 'alliances', 'sp', 'graph', 'totals', 'totalmade'].includes(key.split(':', 1)[0])) throw new Error(`Session 덤프의 월드 없는 행: ${key}`);
+        for (const key of order) if (['pool', 'slot', 'object', 'player', 'hidden_players', 'alliances', 'sp', 'graph', 'totals', 'totalmade', 'ai'].includes(key.split(':', 1)[0])) throw new Error(`Session 덤프의 월드 없는 행: ${key}`);
     }
     return { rows, order };
 }

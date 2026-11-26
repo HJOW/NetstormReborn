@@ -30,9 +30,12 @@ function loadOracle(oracleDir) {
 // inspect가 있으면 체크포인트 직후의 실제 앱을 추가 조회할 수 있다(읽기 전용 검사 용도). (WB04-E1327)
 // screenRegions는 기준선 뒤 의도된 UI 변경만 사유·사각형·정확한 차이 픽셀 수로 명시한다. 영역 밖은 계속 0픽셀이어야 한다. (WB04-E1337)
 // snapshotPhase='presented'는 기존 마지막 표시 화면, 'frameEnd'는 C++ Capture와 같은 카메라 적용 뒤 DIB를 읽는다. frameEnd는 별도 합성 Tell 창이 없는 장면에 쓴다.
-async function runL3({ browser, plan, oracleDir, compare = true, inspect = null, screenRegions = {}, snapshotPhase = 'presented' }) {
+// prepareMission은 검사 전용 실제 아군 AI 설치 등에 쓰며 sessionDumpOptions로 선택 AI 계측을 켠다. batchIdleFrames는 호출만 묶고 내부의 모든 프레임은 유지한다.
+async function runL3({ browser, plan, oracleDir, compare = true, inspect = null, screenRegions = {}, snapshotPhase = 'presented', prepareMission = null, sessionDumpOptions = {}, batchIdleFrames = false }) {
   if (inspect !== null && typeof inspect !== 'function') throw new TypeError('L3 추가 조회는 함수여야 합니다.');
   if (snapshotPhase !== 'presented' && snapshotPhase !== 'frameEnd') throw new TypeError('L3 화면 관측 시점은 presented 또는 frameEnd여야 합니다.');
+  if (prepareMission !== null && typeof prepareMission !== 'function') throw new TypeError('L3 미션 준비는 함수여야 합니다.');
+  if (typeof batchIdleFrames !== 'boolean') throw new TypeError('L3 호출 묶음 선택은 불리언이어야 합니다.');
   const context = await browser.newContext({ viewport: { width: plan.screen.width, height: plan.screen.height }, locale: 'en-US' }), page = await context.newPage();
   const errors = []; page.on('pageerror', (error) => errors.push(error.stack ?? error.message)); page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
   await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, autoDemo: 0 } })));
@@ -42,6 +45,7 @@ async function runL3({ browser, plan, oracleDir, compare = true, inspect = null,
   await page.evaluate(() => window.netstorm._prepareCampaignAudio());
   while ((await page.evaluate(() => window.netstorm.state)) !== 'mainMenu') await page.evaluate(() => window.netstorm.stepFixedFrames(1));
   await page.evaluate(() => window.netstorm.stepFixedFrames(1));
+  if (prepareMission) await prepareMission(page);
   await page.evaluate((mission) => window.netstorm._beginCampaignFromDialog(mission), plan.mission);
   // 논리 좌표를 브라우저 클라이언트 좌표로 바꾼다.
   const toClient = (logical) => page.evaluate((point) => { const app = window.netstorm, rect = app.canvas.getBoundingClientRect(); return { x: rect.left + point.x * rect.width / app._layout.logicalWidth, y: rect.top + point.y * rect.height / app._layout.logicalHeight }; }, logical);
@@ -69,7 +73,7 @@ async function runL3({ browser, plan, oracleDir, compare = true, inspect = null,
     }
     for (const [frame, op, name] of checkpoints.filter(([frame]) => frame === n)) {
       results[`${op}:${name}`] = op === 'session-dump'
-        ? await page.evaluate(() => window.netstorm.sessionDump())
+        ? await page.evaluate((options) => window.netstorm.sessionDump(options), sessionDumpOptions)
         : await page.evaluate((phase) => {
           const app = window.netstorm, surface = app._surface, screen = app._clientPaletteScreen;
           // 기존 체크포인트는 마지막 표시 화면을 계속 읽는다. 정지 카메라에서는 프레임 말미 DIB와도 같다.
@@ -84,7 +88,11 @@ async function runL3({ browser, plan, oracleDir, compare = true, inspect = null,
         }, snapshotPhase);
     }
     if (inspect && checkpoints.some(([frame]) => frame === n)) await inspect(page, n, results);
-    if (n < last) await page.evaluate(() => window.netstorm.stepFixedFrames(1));
+    if (n < last) {
+      // 기본 단일 호출은 그대로 두며, 선택 묶음은 다음 실제 입력/관측 프레임까지만 전진한다.
+      const next = batchIdleFrames ? Math.min(last, ...inputs.filter((item) => item.at > n).map((item) => item.at), ...checkpoints.filter(([frame]) => frame > n).map(([frame]) => frame)) : n + 1;
+      await page.evaluate((count) => window.netstorm.stepFixedFrames(count), next - n); n = next - 1;
+    }
   }
   await context.close();
   // 어긋남을 조사할 때 웹 쪽 덤프를 파일로 남긴다: 환경 변수 L3_DUMP_DIR 가 있으면 체크포인트마다 `<이름>.web.tsv` 를 쓴다(오라클 `<이름>.tsv` 와 비교해 첫 어긋난 행을 찾는다). (2026-11-24 WB04-E1299)

@@ -1,0 +1,33 @@
+{
+  "host": "HJOW-Athlon",
+  "completedAt": "2026-11-26T12:23:50.835Z",
+  "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+  "sha256": "c3daa5bfbebfbcb91ab1b95965f9cecb745e17ec1110e9b574080229227249b7",
+  "windowsHide": true,
+  "args": [
+    "--run",
+    "assets/game-data",
+    "--window",
+    "--mute-audio",
+    "--frames",
+    "12001",
+    "--set",
+    "SCREENW=1024;SCREENH=768;WelcomeGiven=1;tellTips=0;autoDemo=0",
+    "--ui-script",
+    "<steps.tsv>",
+    "--ui-report",
+    "<report.tsv>",
+    "--fixed-frame-ms",
+    "25",
+    "--mission",
+    "thewarbegins",
+    "--test-ally-ai",
+    "hard",
+    "--test-enemy-ai",
+    "easy"
+  ],
+  "format": "netstorm-webpj-current-cpppj-ai-oracle",
+  "version": 1,
+  "productUnit": 1370,
+  "exeBytes": 16117760
+}

@@ -25,4 +25,8 @@ test('Session 덤프 비교: 잘못된 형식은 거부한다', () => {
     assert.throws(() => parseSessionDump(base.replace('process\t1\t0\t0', 'process\t-1\t0\t0')), /번호/);
     assert.throws(() => parseSessionDump(base.replace('world\t0', 'world\t1')), /월드 행 누락/);
     assert.throws(() => parseSessionDump(base.replace('end\n', 'slot\t1\t00\nend\n')), /월드 없는 행/);
+    // AI도 월드 전용이며 고정37칸 이외의 확장은 조용히 버리지 않는다.
+    const ai = ['ai', 1, 536892288, ...Array(34).fill(0)].join('\t');
+    assert.throws(() => parseSessionDump(base.replace('end\n', ai + '\nend\n')), /월드 없는 행/);
+    assert.throws(() => parseSessionDump(base.replace('end\n', ai + '\t0\nend\n')), /형식/);
 });

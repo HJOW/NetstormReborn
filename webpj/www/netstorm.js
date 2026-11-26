@@ -1843,10 +1843,11 @@ export class Netstorm {
 
     // 현재 Client 의 시각·난수·Kernel 과 미션 월드(있으면)의 풀·Player·SP·Graph·장부를 판번호 1 TSV 로 돌려준다(원본 `UberGump::SessionStateDump`, 검사 전용).
     // 월드가 없으면 `world 0` 덤프이다. cpppj 오라클 덤프와 `tools/session-dump-compare.mjs` 로 L2·L3 대조에 쓴다. 상태를 바꾸지 않고 난수도 쓰지 않는다. (2026-11-21 WB04-E1129)
-    sessionDump() {
+    // { includeAi: true }를 명시한 검사만 현행 C++와 같은 실제 AI 본문·행동 기한 행을 추가한다. 생략하면 기존 덤프 바이트를 유지한다.
+    sessionDump(options = {}) {
         const clock = this._gameClock, random = this._clientRandom; if (!clock || !random) throw new Error('Session 덤프의 현재 시계·난수 수명 누락');
         const session = this._campaignWorld?.session() ?? null, kernel = session ? session.core().kernel : this._clientKernel;
-        return formatSessionStateDump(captureSessionStateDump(session ? session.core().pool.edition : 'patch1078', clock.time(), random, kernel, session));
+        return formatSessionStateDump(captureSessionStateDump(session ? session.core().pool.edition : 'patch1078', clock.time(), random, kernel, session, options));
     }
 
     // 검사 전용: 고정 시각 모드(?fixed=밀리초)에서 프레임을 가상 시각으로 정확히 count 개 진행한다(requestAnimationFrame 을 쓰지 않는다). 프레임마다 가상 시각이 `fixedFrameMs` 씩만 전진하고 Client 시계·난수·Kernel 이 그 시각으로 돈다.

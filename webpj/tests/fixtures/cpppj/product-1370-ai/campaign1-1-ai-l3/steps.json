@@ -1,0 +1,131 @@
+{
+  "format": "netstorm-webpj-cpppj-l3-steps",
+  "version": 1,
+  "description": "현행 C++ 아군 어려움·적 쉬움 실제 AI의 결정·전투 상태 비교. 외부 관전 카메라를 켜지 않는다.",
+  "language": "english",
+  "screen": {
+    "width": 1024,
+    "height": 768
+  },
+  "fixedFrameMs": 25,
+  "mission": "thewarbegins",
+  "settings": {
+    "SCREENW": 1024,
+    "SCREENH": 768,
+    "WelcomeGiven": 1,
+    "tellTips": 0,
+    "autoDemo": 0
+  },
+  "steps": [
+    [
+      110,
+      "click-if",
+      "Play Mission"
+    ],
+    [
+      1000,
+      "report",
+      "ai1000"
+    ],
+    [
+      1000,
+      "snapshot",
+      "ai1000"
+    ],
+    [
+      1000,
+      "session-dump",
+      "ai1000"
+    ],
+    [
+      6000,
+      "report",
+      "ai6000"
+    ],
+    [
+      6000,
+      "snapshot",
+      "ai6000"
+    ],
+    [
+      6000,
+      "session-dump",
+      "ai6000"
+    ],
+    [
+      7000,
+      "report",
+      "ai7000"
+    ],
+    [
+      7000,
+      "snapshot",
+      "ai7000"
+    ],
+    [
+      7000,
+      "session-dump",
+      "ai7000"
+    ],
+    [
+      8000,
+      "report",
+      "ai8000"
+    ],
+    [
+      8000,
+      "snapshot",
+      "ai8000"
+    ],
+    [
+      8000,
+      "session-dump",
+      "ai8000"
+    ],
+    [
+      9000,
+      "report",
+      "ai9000"
+    ],
+    [
+      9000,
+      "snapshot",
+      "ai9000"
+    ],
+    [
+      9000,
+      "session-dump",
+      "ai9000"
+    ],
+    [
+      10000,
+      "report",
+      "ai10000"
+    ],
+    [
+      10000,
+      "snapshot",
+      "ai10000"
+    ],
+    [
+      10000,
+      "session-dump",
+      "ai10000"
+    ],
+    [
+      12000,
+      "report",
+      "ai12000"
+    ],
+    [
+      12000,
+      "snapshot",
+      "ai12000"
+    ],
+    [
+      12000,
+      "session-dump",
+      "ai12000"
+    ]
+  ]
+}
