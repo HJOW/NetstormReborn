@@ -43,4 +43,26 @@ public sealed partial class ClientHostGame
         minimap.SetPalette(_driver.Screen.Colors());
         _nativeMinimap = minimap;
     }
+
+    /// <summary>미션 진입에 미니맵을 실제 HUD 왼쪽 아래에 부착하고 현재 지형으로 갱신해 그린다.</summary>
+    /// <remarks>2026-11-26 1.080에서 R5-4c3용으로 추가했다. 근거: cpppj RawMinimapControls.cpp의 Open 뒤 80×75 부착과 HudDock.cpp의 왼쪽 아래 도킹이다. 처음 부착은 Push 없이 Attach하며(Construct 직후 void), 이후 크기 변경은 Resize(Push→부착)를 쓴다. 중앙·선택 이동과 입력 모드·폴링은 R5/R6 입력·카메라 연결에서 잇는다. 시작 덤프에는 닿지 않는다.</remarks>
+    private void EnsureMissionMinimap()
+    {
+        var minimap = _nativeMinimap ?? throw new InvalidOperationException("미션 미니맵의 실제 공장 없음");
+        minimap.SetPalette(_driver.Screen.Colors());
+        var node = minimap.Node(minimap.RootToken) ?? throw new InvalidOperationException("미션 미니맵 실제 노드 없음");
+        if (node.Parent == 0)
+        {
+            node.BaseWidth = node.Width = 80;
+            node.BaseHeight = node.Height = 75;
+            minimap.Attach(minimap.RootToken, 0, _driver.Screen.Height - 75, _mainMenu?.Tree.Create.Entries[0] ?? throw new InvalidOperationException("미니맵 부착의 실제 루트 없음"), 0);
+        }
+        else
+        {
+            minimap.Resize(_driver.Screen.Height);
+        }
+
+        minimap.Refresh();
+        _menuDirty = true;
+    }
 }

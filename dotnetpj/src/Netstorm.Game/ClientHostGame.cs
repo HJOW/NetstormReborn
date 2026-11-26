@@ -726,6 +726,9 @@ public sealed partial class ClientHostGame : Game
         // R5-4c2 미션 생산 덱 틀 부착. 예산 HELP와 생산창 HELP로 DN-MP-01 우클릭 메뉴를 검증한다. 내용물·동기화 본체는 R6/R11이다.
         // 근거: cpppj RawProductionControls.cpp 184~186행과 UberRootGump.cpp 86행이다. 시작 덤프에는 닿지 않는다.
         EnsureMissionProductionDeck();
+        // R5-4c3 미션 미니맵 부착. 왼쪽 아래 80×75에 현재 지형을 갱신해 그린다. 중앙·선택 이동과 입력 모드·폴링은 R5/R6에서 잇는다.
+        // 근거: cpppj RawMinimapControls.cpp의 Open 뒤 80×75 부착과 HudDock.cpp의 왼쪽 아래 도킹이다. 시작 덤프에는 닿지 않는다.
+        EnsureMissionMinimap();
             // RU-3c 실제 미션 Root에 표시 창을 만들고 같은 트리 루트에 부착한다. 부착 전 Enter는 부모 없음으로 거부된다.
             // 근거: GumpTree.Push/Attach의 void·부모 규칙과 ChatWindow Native 입력 호출자. 메뉴 경로는 바꾸지 않는다.
             _ = NativeChatWindows.Create();

@@ -74,6 +74,9 @@ public sealed partial class ClientHostGame
         };
         var panel = new HostProductionWindows(tree, text, context, _productionGlobals, devices);
         uint token = panel.Construct();
+        // R6에서 실제 내용물 갱신·유지를 연결하기 전까지 루트 유지 Idle을 끈다. 예산 Idle은 그대로 둬 SP 표시를 갱신한다.
+        // 근거: 루트 Idle은 Technology가 0이 아닐 때 UpdateContents·Maintenance를 요구하는데, 두 본체는 R6/R11에서 잇는다.
+        tree.Lifetime.SetIdle(token, false);
         panel.SetPalette(_driver.Screen.LogicalPalette);
         var root = panel.Node(token) as ProductionRootNode ?? throw new InvalidOperationException("생산 덱 실제 부모 없음");
         root.BaseWidth = root.Width = 80;
