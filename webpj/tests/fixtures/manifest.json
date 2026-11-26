@@ -38258,6 +38258,262 @@
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
       }
+    },
+    {
+      "id": "cpppj-campaign2-4-wait-l3-brief100-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign2-4-wait-l3/brief100.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign2-4-wait-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign2-4-wait.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1359",
+      "doc": "docs/webpj-l3-campaign2-4-wait-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign2-4-wait-l3 실제 입력 brief100.png",
+      "text": false,
+      "sha256": "b981113c888bd64979683e6b175aac5ed3698093c726024eb91c64691f933252",
+      "bytes": 264021,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-campaign2-4-wait-l3-brief100-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign2-4-wait-l3/brief100.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign2-4-wait-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign2-4-wait.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1359",
+      "doc": "docs/webpj-l3-campaign2-4-wait-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign2-4-wait-l3 실제 입력 brief100.tsv",
+      "text": true,
+      "sha256": "380cc1ee742a6df39dfd3833f69350aff057125ababf134c358719a3e6baa0d3",
+      "bytes": 608797,
+      "lines": 7865,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-campaign2-4-wait-l3-oracle-json",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign2-4-wait-l3/oracle.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign2-4-wait-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign2-4-wait.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1359",
+      "doc": "docs/webpj-l3-campaign2-4-wait-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign2-4-wait-l3 실제 입력 oracle.json",
+      "text": true,
+      "sha256": "2c78a436ff8ca3e7c9634dd9fd6739dd4d96f2cccb974baa326a46542c15c553",
+      "bytes": 1009,
+      "lines": 35,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-campaign2-4-wait-l3-steps-json",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign2-4-wait-l3/steps.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign2-4-wait-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign2-4-wait.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1359",
+      "doc": "docs/webpj-l3-campaign2-4-wait-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign2-4-wait-l3 실제 입력 steps.json",
+      "text": true,
+      "sha256": "e94fddb72b0091c972d314c610c3c74b36f6017b3ab37a098ef7a73d9a714d35",
+      "bytes": 911,
+      "lines": 56,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-campaign2-4-wait-l3-wait1200-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign2-4-wait-l3/wait1200.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign2-4-wait-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign2-4-wait.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1359",
+      "doc": "docs/webpj-l3-campaign2-4-wait-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign2-4-wait-l3 실제 입력 wait1200.png",
+      "text": false,
+      "sha256": "651afb3fb82996fadbc247e8149e509a6d88f3183768433fbeb4fd755f094ae3",
+      "bytes": 267076,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-campaign2-4-wait-l3-wait1200-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign2-4-wait-l3/wait1200.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign2-4-wait-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign2-4-wait.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1359",
+      "doc": "docs/webpj-l3-campaign2-4-wait-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign2-4-wait-l3 실제 입력 wait1200.tsv",
+      "text": true,
+      "sha256": "1fc43dc396d91adcca1a57ef5a07c8c1b8d442c77172708181045331a1f91c14",
+      "bytes": 615619,
+      "lines": 7929,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-campaign2-4-wait-l3-wait400-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign2-4-wait-l3/wait400.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign2-4-wait-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign2-4-wait.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1359",
+      "doc": "docs/webpj-l3-campaign2-4-wait-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign2-4-wait-l3 실제 입력 wait400.png",
+      "text": false,
+      "sha256": "5bebddbab6b3ffbe413755eeb9bfe2796624464ae5e6ce977181b5b8a85d1a7f",
+      "bytes": 267297,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-campaign2-4-wait-l3-wait400-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign2-4-wait-l3/wait400.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign2-4-wait-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign2-4-wait.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1359",
+      "doc": "docs/webpj-l3-campaign2-4-wait-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign2-4-wait-l3 실제 입력 wait400.tsv",
+      "text": true,
+      "sha256": "c6f4619a037c525d0c9d4db39724c52ff3518d10abd9354562a40b96ecbde7c2",
+      "bytes": 611868,
+      "lines": 7892,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
     }
   ]
 }
