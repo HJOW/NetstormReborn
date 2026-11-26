@@ -14,7 +14,7 @@ std::uint32_t AllocateMultiplayer(std::size_t bytes) {
 }
 //004bc800의 현재 체인 교체 뒤 같은 노드 문맥으로 스타일 문자를 추가한다.
 void SetMultiplayerText(std::uint32_t token,std::string_view text) {
-    costText->Clear(token);costText->AppendText(token,{text.data(),text.size()},plainTexts.at(token)->textContext,static_cast<std::int32_t>(text.size()));
+    costText->Clear(token);auto& node=*plainTexts.at(token);style->Parse(node.head,text,node.textContext); // 원문4bc800→4bb430의 색/크기 제어 문자는 표시 글자와 분리한다.
 }
 // 번역을 먼저 수행한 뒤 현재 문자열 값을 넣어 원문 %s 한 곳만 치환한다.
 std::string MultiplayerLabel(const MultiplayerOptionsWindowContext& context,std::string_view pattern,const std::function<std::string()>& value) const {
@@ -23,20 +23,20 @@ std::string MultiplayerLabel(const MultiplayerOptionsWindowContext& context,std:
 //004cc970의250×145와 장식/제목·네 행·상대 화살표·하단 세 버튼을 현재 자식 크기로 배치한다.
 void AttachMultiplayer(std::uint32_t token,float x,float y,std::uint32_t parent,std::uint32_t mode) {
     auto& root=*multiplayerRoots.at(token);const auto& context=multiplayerContexts.at(token);root.width=root.scale*250.0F;root.height=root.scale*145.0F;root.baseWidth=250;root.baseHeight=145;
-    common.attach(root.decoration,0,0,token,0);common.attach(root.title,0,5,token,0);
+    common.tree.Move(root.decoration,0,0,token);common.tree.Move(root.title,0,5,token); // 원문 가상+10은 기존 링크를 분리하는 Move이며 직접 Attach가 아니다.
     if (!context.fortName || !context.playerName || !context.serverName || !context.rememberFort) throw std::logic_error("Multiplayer Options 현재 이름/설정 장치 미연결");
     SetMultiplayerText(root.labels[0],MultiplayerLabel(context,"~ySave Game: ~w%s",context.fortName));context.rememberFort(context.fortName());
     SetMultiplayerText(root.labels[1],MultiplayerLabel(context,"~yPlayer Name: ~w%s",context.playerName));
     SetMultiplayerText(root.labels[2],MultiplayerLabel(context,"~yServer: ~w%s",context.serverName));
     SetMultiplayerText(root.labels[3],MultiplayerLabel(context,"~yProtocol: ~w%s",[] { return std::string("TCP/IP"); }));
     common.node(root.arrows[3])->flags&=~1U; // 요구된 로컬 TCP/IP 제품은 구 SPX/IPX 선택을 비활성화하며 검증 성공값을 합성하지 않는다.
-    common.attach(root.labels[0],10,30,token,0);
+    common.tree.Move(root.labels[0],10,30,token);
     for (std::size_t index=1;index<root.labels.size();++index) common.tree.MoveRelative(root.labels[index],root.labels[index-1],0,3,4,token); // 원문 앞 행의 실제 높이 뒤3픽셀 간격이다.
     for (std::size_t index=0;index<root.arrows.size();++index) common.tree.MoveRelative(root.arrows[index],root.labels[index],10,-4,8,token); // 원문 현재 행의 오른쪽 끝+10/위쪽−4다.
     const auto bottom=[&](std::uint32_t child) { return static_cast<float>(static_cast<std::int32_t>(root.baseHeight)-static_cast<std::int32_t>(common.node(child)->baseHeight)-10); }; // 원문 _ftol의 각 높이 정수부로 하단 간격을 계산한다.
-    common.attach(root.connect,10,bottom(root.connect),token,0);common.attach(root.cancel,10+common.node(root.connect)->baseWidth+10,bottom(root.cancel),token,0);
+    common.tree.Move(root.connect,10,bottom(root.connect),token);common.tree.Move(root.cancel,10+common.node(root.connect)->baseWidth+10,bottom(root.cancel),token);
     if (context.special && context.special()) common.node(root.subscriber)->flags|=1U;else common.node(root.subscriber)->flags&=~1U;
-    common.attach(root.subscriber,10+common.node(root.connect)->baseWidth+common.node(root.cancel)->baseWidth+20,bottom(root.subscriber),token,0);
+    common.tree.Move(root.subscriber,10+common.node(root.connect)->baseWidth+common.node(root.cancel)->baseWidth+20,bottom(root.subscriber),token);
     common.tree.Attach(token,x,y,parent,mode);
     const auto unnamed=context.translate("Unnamed");if (_stricmp(context.playerName().c_str(),unnamed.c_str())==0) context.action(MultiplayerOptionsAction::ChooseName); // 원문은 각 Attach의 끝에서 현재 Unnamed를 다시 읽고 같은 일반 입력 큐에 이름 입력을 예약한다.
 }
@@ -68,6 +68,6 @@ std::uint32_t HandleMultiplayer(std::uint32_t token,std::uint32_t event,std::uin
         if (first==common.node(root.connect)->serial) { context.action(MultiplayerOptionsAction::Connect);common.lifetime.Kill(token);return 1; }
         if (first==common.node(root.cancel)->serial) { context.action(MultiplayerOptionsAction::Cancel);common.lifetime.Kill(token);return 1; }
         if (first==common.node(root.subscriber)->serial) return 1;
-    } else if (code==0x020000c8U || code==0x0200006dU) { common.RedrawBase(token,true);AttachMultiplayer(token,root.x,root.y,0,0); }
+    } else if (code==0x020000c8U || code==0x0200006dU) { common.tree.Push(token);AttachMultiplayer(token,root.x,root.y,0,0); } // 원문 가상+18은 Push이며 재그리기만 하면 같은 루트가 형제 체인에 중복된다.
     return BaseHelp(token,event,first,second);
 }

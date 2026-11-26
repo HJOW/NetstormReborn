@@ -880,7 +880,7 @@ RawTextEntryControls* RawMenuControls::TextEntryControls() const { return impl_-
 // 현재 문자 장치와 같은 실제 Gump 등록표/수명을 사용하여 일반 옵션 창을 생성한다.
 std::uint32_t RawMenuControls::ShowMultiplayerOptions(MultiplayerOptionsWindowContext context) { EnableTextEntry(context.editor);return impl_->CreateMultiplayer(std::move(context)); }
 // 원문 갱신 통지는 살아 있는 같은 창에만 전달되며 닫힌 serial을 새 창으로 대신하지 않는다.
-void RawMenuControls::RefreshMultiplayerOptions(std::uint32_t token) { auto& s=*impl_;const auto found=s.multiplayerRoots.find(token);if (found==s.multiplayerRoots.end() || (found->second->flags&0x10004U)) return;const auto& root=*found->second;s.common.RedrawBase(token,true);s.AttachMultiplayer(token,root.x,root.y,0,0); }
+void RawMenuControls::RefreshMultiplayerOptions(std::uint32_t token) { auto& s=*impl_;const auto found=s.multiplayerRoots.find(token);if (found==s.multiplayerRoots.end() || (found->second->flags&0x10004U)) return;const auto& root=*found->second;s.common.tree.Push(token);s.AttachMultiplayer(token,root.x,root.y,0,0); } // 이름 확정도 원문 갱신 통지와 같은 Push/Attach 수명을 사용한다.
 std::uint32_t RawMenuControls::ShowSaveFortNameDialog(SaveFortNameDialogContext context,std::uint32_t fortMode,std::uint32_t canCancel,std::optional<std::string_view> initial) {
     auto& s=*impl_;if (!context.work || !context.editor.now || !context.translate || !context.fortPath || !context.tell || (fortMode && (!context.header || !context.setName)) || (!fortMode && !context.readFort)) throw std::invalid_argument("Save as 실제 작업본/Client/이름 장치 누락");
     EnableTextEntry(context.editor);s.BindSaveFortDialog();if (s.saveFortBuilding) throw std::logic_error("Save as 생성 안의 재귀 생성 미지원");s.saveFortBuilding=&context;

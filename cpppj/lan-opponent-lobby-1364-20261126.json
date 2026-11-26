@@ -1,0 +1,45 @@
+{
+  "unit": 1364,
+  "date": "2026-11-26",
+  "host": "HJOW-Athlon",
+  "decompileHost": "HJOW-Athlon",
+  "completed": "상대 봇·옵션 수명·실제 TCP 대기실",
+  "tests": {
+    "menu": 170,
+    "failed": 0
+  },
+  "lobby": {
+    "passed": true,
+    "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+    "exeSha256": "36b86d20fcab6c66a54900febada94a77f8dd7102e0897224690ddd8d8bd78b3",
+    "peers": [
+      {
+        "role": "bot",
+        "exitCode": 0
+      },
+      {
+        "role": "host",
+        "exitCode": 0
+      }
+    ]
+  },
+  "battleProbe": {
+    "passed": false,
+    "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+    "exeSha256": "36b86d20fcab6c66a54900febada94a77f8dd7102e0897224690ddd8d8bd78b3",
+    "peers": [
+      {
+        "role": "bot",
+        "exitCode": 1
+      },
+      {
+        "role": "host",
+        "exitCode": 1
+      }
+    ],
+    "error": "RuntimeError('host: MCP EOF, process=None')"
+  },
+  "remaining": "1365 일반 연결/재접속 안내 미연결부터 전투 경로 검증",
+  "protectedFiles": 3212,
+  "protectedUnchanged": true
+}

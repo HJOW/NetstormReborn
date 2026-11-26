@@ -19,8 +19,10 @@
 #include "client/RawSurfaceWorld.h"
 #include "client/RawProductionControls.h"
 #include "client/ClientGameplayGlobals.h"
+#include "client/MultiplayerOptionsWindow.h" // 실제 일반 옵션의 자식/재부착 수명을 검사한다.
 #include <filesystem>
 #include <sstream>
+#include <unordered_set>
 
 using namespace netstorm::client;
 using namespace netstorm::test::rawscene;
@@ -145,6 +147,31 @@ TEST_CASE(RawMenuControls_HelpSettersPreserveOriginalFlagsAndEmptyOwnership) {
     client.menus->SetHelpText(token,"Restored");client.menus->SetHelpWord(token,"moneyGump");CHECK(node->flags==(baseFlags|0x1200U)); // 지운 뒤 다시 같은 공통 필터에 등록할 수 있다.
     client.menus->SetHelpText(token,std::string_view("\0ignored",8));client.menus->SetHelpWord(token,std::string_view("\0ignored",8)); // 첫 NUL인 입력도 빈 원문 문자열과 같은 반납 경계다.
     CHECK(node->textPointer==0 && node->alternateTextPointer==0 && node->flags==(baseFlags|0x200U));CHECK(client.menus->Report().find("raw_gump_help_strings\t0\n")!=std::string::npos);
+}
+// 이름/설정 갱신이 같은 옵션 루트와 자식을 중복 부착하지 않아 뒤 팝업 닫기도 정상이어야 한다.
+TEST_CASE(RawMenuControls_MultiplayerRefreshUnlinksBeforeReattach) {
+    MenuClient client;client.Resize(1024,768);std::string name="Local Host";std::size_t remembered{}; // 같은 현재 이름과 실제 설정 쓰기 횟수를 관찰한다.
+    MultiplayerOptionsWindowContext context;context.editor.now=[] { return 0.0; };context.translate=[](auto text) { return std::string(text); };
+    context.fortName=[] { return std::string("LocalFort"); };context.playerName=[&] { return name; };context.serverName=[] { return std::string("127.0.0.1"); };
+    context.rememberFort=[&](auto) { ++remembered; };context.action=[](auto) { throw std::logic_error("갱신 중 예상 밖 옵션 선택"); };
+    const auto token=client.menus->ShowMultiplayerOptions(std::move(context)); // 실제 생성/기본 부착도 같은 검사에 포함한다.
+    const auto checkTree=[&] { // 각 살아 있는 링크를 한 번만 방문하며 루트 중복/자식 순환/부모 불일치를 확인한다.
+        const auto* root=client.menus->Node(token);CHECK(root && root->next!=token && root->previous!=token); // 옵션 루트의 자기 형제 링크는 외부 루트를 빌리지 않고도 확인한다.
+        std::unordered_set<std::uint32_t> seen;std::vector<std::uint32_t> parents{token};
+        while (!parents.empty()) { // 옵션 하위 트리의 부모를 차례로 검사한다.
+            const auto parent=parents.back();parents.pop_back();
+            const auto* owner=client.menus->Node(parent);if (!owner) continue; // 돌 버튼 배경의 외부 기본 노드는 해당 소유자의 기존 검사에 맡긴다.
+            for (auto child=owner->child;child;) { // 실제 형제 포인터를 따라가며 중복에서 즉시 중단한다.
+                const auto inserted=seen.insert(child).second;CHECK(inserted);if (!inserted || seen.size()>1000) return;
+                const auto* node=client.menus->Node(child);if (!node) break;CHECK(node->parent==parent);
+                parents.push_back(child);const auto next=node->next;if (next && seen.contains(next)) { CHECK(false);return; }child=next;
+            }
+        }
+    };
+    checkTree();name="Opponent Bot";
+    for (int repeat=0;repeat<3;++repeat) { client.menus->RefreshMultiplayerOptions(token);checkTree(); } // 실제 이름 확정의 외곽 갱신을 반복한다.
+    for (const auto command:{0x020000c8U,0x0200006dU}) { client.menus->Handle(token,command,0,0);checkTree(); } // 두 원문 통지도 같은 Push 부모를 사용해야 한다.
+    CHECK(remembered==6);client.menus->RequestClosePopups();client.buttons.KillGump(token);client.buttons.CleanupGumps(); // 순환이 있으면 실제 닫기 경로가 예외를 던진다.
 }
 // Back/OK는 실제 돌 버튼 serial과 같은 파생 Handle을 통과하고 소멸 뒤 이력/표식을 정리한다.
 TEST_CASE(RawMenuControls_HelpActualHistoryButtonsAndReopen) {
