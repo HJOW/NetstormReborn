@@ -20,10 +20,20 @@ export class GumpEventState {
 export class GumpEvents {
     // 같은 생성·수명·선택·위치와 현재 가상 경계다.
     #create; #life; #state; #collection; #hooks;
+    // 신규 안내의 토큰/생성serial 쌍이다. 원본 플래그와 직접 사건 전달은 보존한다.
+    #displayOnly = new Set();
     // 노드 조회만 생성 시 필수다. 기본 필터는 선택적 filter를 대신한다.
     constructor(create, lifetime, state, collection, hooks = {}) { if (typeof hooks.node !== 'function') throw new TypeError('Gump 이벤트 저장소 필요'); this.#create = create; this.#life = lifetime; this.#state = state; this.#collection = collection; this.#hooks = hooks; }
     // 처리 동안 안정된 같은 노드를 읽는다. 삭제는 지연 수명이 맡는다.
     #node(token) { const node = token ? this.#hooks.node(token) : null; if (!node) throw new Error('Gump 이벤트 토큰 없음'); return node; }
+    // 같은 생성serial만 등록/해제하므로 토큰이 재사용돼도 다른 노드를 입력에서 제외하지 않는다.
+    setDisplayOnly(token, serial, enabled) {
+        const key = `${token}:${serial}`;
+        if (enabled) { if (this.#node(token).serial !== serial) throw new Error('표시 전용 Gump의 생성serial 불일치'); this.#displayOnly.add(key); }
+        else this.#displayOnly.delete(key);
+    }
+    // 선택 시점의 현재serial을 읽는다. 자식 재귀와 Dispatch에는 이 조건을 적용하지 않는다.
+    #isDisplayOnly(token, node) { return this.#displayOnly.has(`${token}:${node.serial}`); }
     // 현재 dialog는 모든 사건을 받는다. help 경계 실패를 다른 마우스/키보드 플래그로 통과시키지 않는다.
     baseFilter(token, event, first, second) {
         if (token === this.#life.currentDialog) return true; const flags = this.#node(token).flags; const kind = event & EVENT_MASK;
@@ -34,7 +44,7 @@ export class GumpEvents {
     pickTopLevel(point) {
         point = { x: point.x | 0, y: point.y | 0 }; let selected = 0; let depth = 1000; const siblings = [];
         // 현재 next/깊이를 매 방문에서 읽으며 void는 제외하지 않는다.
-        for (let child = this.#node(this.#create.entries[0]).child; child; child = this.#node(child).next) { enter(siblings, child); const bounds = this.#collection.bounds(child); const node = this.#node(child); if (contains(bounds, point) && (node.depth | 0) < depth && (node.flags & VISIBLE) && !(node.flags & DEAD)) { depth = node.depth | 0; selected = child; } }
+        for (let child = this.#node(this.#create.entries[0]).child; child; child = this.#node(child).next) { enter(siblings, child); const bounds = this.#collection.bounds(child); const node = this.#node(child); if (contains(bounds, point) && (node.depth | 0) < depth && (node.flags & VISIBLE) && !(node.flags & DEAD) && !this.#isDisplayOnly(child, node)) { depth = node.depth | 0; selected = child; } }
         return selected;
     }
     // 모든 선택 전역을 초기화하고 실제 위치 수집기를 사용해 전체 자식을 탐색한다.
@@ -44,7 +54,7 @@ export class GumpEvents {
         enter(active, token); const siblings = [];
         // 화면 밖 통과도 visible·void/dead 검사를 생략하지 않는다.
         for (let child = this.#node(token).child; child; child = this.#node(child).next) { enter(siblings, child); const bounds = this.#collection.bounds(child); const inside = contains(bounds, this.#state.point); const node = this.#node(child);
-            if (((node.flags & PASS_CHILDREN) || inside) && (node.flags & VISIBLE) && !(node.flags & (DEAD | VOID))) { if (inside && (node.depth | 0) < (this.#state.bestDepth | 0) && (!this.#state.mask || (node.flags & this.#state.mask))) { this.#state.bestDepth = node.depth; this.#state.selected = child; } this.#pickChildren(child, active); }
+            if (((node.flags & PASS_CHILDREN) || inside) && (node.flags & VISIBLE) && !(node.flags & (DEAD | VOID))) { if (inside && (node.depth | 0) < (this.#state.bestDepth | 0) && (!this.#state.mask || (node.flags & this.#state.mask)) && !this.#isDisplayOnly(child, node)) { this.#state.bestDepth = node.depth; this.#state.selected = child; } this.#pickChildren(child, active); }
         }
         active.pop();
     }

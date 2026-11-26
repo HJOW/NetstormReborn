@@ -107,6 +107,26 @@ function connected(flags = 1, frameOrder = false) {
 // 실제 위치/이벤트를 캡처·dialog/overlay 입력에 연결한다. 같은 +28 처리기를 양쪽에 공급한다.
 function inputPair(s, collection, eventHooks = s.eventHooks(true), directHooks = null) { const events = new GumpEvents(s.create, s.life, s.event, collection, eventHooks); const input = new GumpInput(s.create, s.life, s.input, collection, events, directHooks ?? { ...s.inputHooks(), handle: eventHooks.handle }); return { events, input }; }
 
+// CP1372의 표시 전용 목록은 후보만 제외한다. 플래그·자식 재귀·직접전달과 새serial은 기존대로 남는다.
+test('GumpEvents 표시 전용: 토큰/serial 후보 제외와 자식·전달·재사용 보존', () => {
+    const { s, collection } = connected(), hooks = s.eventHooks(true);
+    hooks.filter = () => true; hooks.handle = (token) => token === 3 ? 1 : 0;
+    const events = new GumpEvents(s.create, s.life, s.event, collection, hooks), point = { x: 12, y: 12 };
+    s.nodes.get(3).depth = 2; s.nodes.get(2).depth = 5; s.nodes.get(4).depth = 3;
+    const node = s.nodes.get(3), serial = node.serial;
+    assert.equal(events.pickTopLevel(point), 3); assert.equal(events.pick(point, 0), 3);
+    const before = nodeSnapshot(s.nodes);
+    events.setDisplayOnly(3, serial, true); assert.equal(nodeSnapshot(s.nodes), before);
+    assert.equal(events.pickTopLevel(point), 2); assert.equal(events.pick(point, 0), 4);
+    assert.equal(events.dispatch(1, 1, 0, 0), 3);
+    events.setDisplayOnly(2, s.nodes.get(2).serial, true); assert.equal(events.pick(point, 0), 4);
+    events.setDisplayOnly(4, s.nodes.get(4).serial, true); assert.equal(events.pick(point, 0), 0);
+    node.serial += 1; assert.equal(events.pick(point, 0), 3);
+    assert.throws(() => events.setDisplayOnly(3, serial, true), /serial/);
+    events.setDisplayOnly(3, node.serial, true); events.setDisplayOnly(3, serial, false); assert.equal(events.pick(point, 0), 0);
+    events.setDisplayOnly(3, node.serial, false); assert.equal(events.pick(point, 0), 3);
+});
+
 test('GumpEvents 실제 생성/트리/수명: 직계/전체 선택·캐시와 지연 삭제 뒤의 dialog/후속 선택이 같은 노드를 읽는다', () => {
     const { s, lifetime, collection } = connected(); const handled = []; const hooks = s.eventHooks(true); hooks.handle = (token) => { handled.push(token); return 7; }; const events = new GumpEvents(s.create, s.life, s.event, collection, hooks); Object.assign(s.nodes.get(3), { depth: 4 }); s.nodes.get(2).depth = 5; s.nodes.get(4).depth = 3;
     assert.equal(events.pickTopLevel({ x: 12, y: 12 }), 3); assert.equal(events.pick({ x: 12, y: 12 }, 0), 4); assert.deepEqual(s.nodes.get(4).cached, { x: 11, y: 11 }); s.nodes.get(3).flags |= 0x400; assert.equal(events.dispatch(1, 1, 2, 3), 3); assert.deepEqual(handled, [3]); s.life.dialogs[0] = 4; s.life.dialogCount = 1; s.life.currentDialog = 4; assert.equal(events.baseFilter(4, 0xffffffff, 999, 999), true); lifetime.kill(2); assert.equal(events.pick({ x: 12, y: 12 }, 0), 3); assert.deepEqual([s.life.currentDialog, s.life.killCount], [0, 2]);

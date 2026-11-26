@@ -121,6 +121,8 @@ export class ClientGumpRoot {
     }
     // 같은 현재 트리의 부모 사건 전달기를 빌린다.
     events() { this.#live(); return this.#events; }
+    // 신규 표시 안내만 같은 선택기의 토큰/serial 목록에 등록한다. 기존 플래그나 입력 처리기를 바꾸지 않는다.
+    setDisplayOnly(token, serial, enabled) { this.#live(); this.#events.setDisplayOnly(token, serial, enabled); }
     // 같은 노드 주소의 기본 생성기를 빌린다.
     factory() { this.#live(); return this.#factory; }
     // 같은 지연 삭제와 기본 소멸자를 빌린다.
