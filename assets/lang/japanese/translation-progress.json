@@ -28,13 +28,11 @@
     "nextSection": null
   },
   "help": {
-    "completedAnchorOccurrences": 96,
+    "completedAnchorOccurrences": 112,
     "totalAnchorOccurrences": 138,
-    "completedUniqueTopics": 95,
+    "completedUniqueTopics": 108,
     "totalUniqueTopics": 128,
-    "nextSection": "bulfType",
-    "pendingSharedBodyTopics": [
-      "thunderWalkerType"
-    ]
+    "nextSection": "thunderVortexType",
+    "pendingSharedBodyTopics": []
   }
 }
