@@ -1,0 +1,242 @@
+{
+  "mission": "thewarbegins",
+  "frame": 34000,
+  "time": 854.175,
+  "state": "mainMenu",
+  "sp": 26900,
+  "types": {
+    "0:0": 1,
+    "1:152": 1,
+    "0:46": 24,
+    "0:6": 18,
+    "1:94": 42,
+    "0:95": 12,
+    "2:94": 3,
+    "2:155": 7,
+    "2:95": 1,
+    "0:94": 2,
+    "0:3": 2,
+    "2:152": 1,
+    "1:155": 155,
+    "0:47": 44,
+    "0:73": 44,
+    "1:95": 34,
+    "0:14": 2,
+    "1:70": 5,
+    "0:24": 5,
+    "0:160": 2,
+    "0:110": 1,
+    "0:16": 1,
+    "0:1": 18,
+    "0:35": 1,
+    "1:158": 1,
+    "1:124": 1,
+    "1:89": 1,
+    "2:71": 1,
+    "0:34": 10,
+    "0:89": 1,
+    "1:157": 378,
+    "0:122": 9,
+    "2:157": 27,
+    "2:82": 100,
+    "0:157": 18,
+    "1:133": 4,
+    "1:82": 437,
+    "1:128": 9,
+    "1:76": 6,
+    "0:84": 4,
+    "1:72": 47,
+    "0:32": 47,
+    "1:73": 44,
+    "0:31": 44,
+    "0:40": 4,
+    "0:121": 152,
+    "1:97": 853,
+    "0:102": 168,
+    "0:97": 500
+  },
+  "priests": [
+    {
+      "sid": 15000,
+      "owner": 1,
+      "hp": 100,
+      "flags": 0,
+      "bytes": [
+        16,
+        242,
+        80,
+        0,
+        0,
+        0,
+        7,
+        0,
+        0,
+        0,
+        158,
+        0,
+        129,
+        0,
+        0,
+        64,
+        203,
+        66,
+        210,
+        69,
+        197,
+        66,
+        90,
+        6,
+        61,
+        4,
+        100,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        2,
+        1,
+        236,
+        32,
+        0,
+        0,
+        0,
+        128,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "observation": {
+    "events": [
+      {
+        "name": "priestDead",
+        "owner": 1,
+        "result": false,
+        "time": 9.2
+      },
+      {
+        "name": "priestCaptured",
+        "owner": 1,
+        "result": false,
+        "time": 9.2
+      },
+      {
+        "name": "priestDead",
+        "owner": 2,
+        "result": false,
+        "time": 9.2
+      },
+      {
+        "name": "priestCaptured",
+        "owner": 2,
+        "result": false,
+        "time": 9.2
+      },
+      {
+        "name": "priestCaptured",
+        "owner": 2,
+        "result": true,
+        "time": 715.65
+      },
+      {
+        "name": "finishSacrifice",
+        "args": [
+          18165
+        ],
+        "time": 854.15
+      },
+      {
+        "name": "priestDead",
+        "owner": 2,
+        "result": true,
+        "time": 854.15
+      },
+      {
+        "name": "priestDead",
+        "owner": 3,
+        "result": true,
+        "time": 854.15
+      },
+      {
+        "name": "priestDead",
+        "owner": 4,
+        "result": true,
+        "time": 854.15
+      },
+      {
+        "name": "priestDead",
+        "owner": 5,
+        "result": true,
+        "time": 854.15
+      },
+      {
+        "name": "priestDead",
+        "owner": 6,
+        "result": true,
+        "time": 854.15
+      },
+      {
+        "name": "priestDead",
+        "owner": 7,
+        "result": true,
+        "time": 854.15
+      },
+      {
+        "name": "priestDead",
+        "owner": 8,
+        "result": true,
+        "time": 854.15
+      },
+      {
+        "name": "priestCaptured",
+        "owner": 2,
+        "result": false,
+        "time": 854.175
+      }
+    ],
+    "captured": {
+      "1": false,
+      "2": false
+    },
+    "dead": {
+      "1": false,
+      "2": true,
+      "3": true,
+      "4": true,
+      "5": true,
+      "6": true,
+      "7": true,
+      "8": true
+    }
+  },
+  "buttons": [
+    "Leave Missions",
+    "Next Mission"
+  ],
+  "gate": {
+    "stage": 65,
+    "stageDirty": 0,
+    "tutorialNumber": 0,
+    "demo": 0,
+    "startSeconds": 9.2,
+    "nextStageSeconds": 0,
+    "delaySeconds": 0.5,
+    "lockFrames": 0,
+    "started": 1,
+    "demoEndSeconds": 0,
+    "timerSeconds": 0,
+    "tellAtSeconds": 0,
+    "scriptPaused": 1,
+    "clearFrames": 0
+  },
+  "errors": []
+}

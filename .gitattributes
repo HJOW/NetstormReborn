@@ -2495,3 +2495,5 @@ webpj/www/dist/** -text
 
 # 원시 계측 보고서의 마지막 빈 TSV 열은 데이터이므로 끝 탭을 공백 오류로 세지 않는다.
 webpj/tests/fixtures/cpppj/**/report.tsv whitespace=-blank-at-eol
+# 실행 근거 로그는 provenance에 기록한 원문 바이트와 줄바꿈을 보존한다.
+docs/webpj-*-evidence/browser.log -text whitespace=cr-at-eol

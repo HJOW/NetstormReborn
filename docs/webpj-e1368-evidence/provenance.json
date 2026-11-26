@@ -1,0 +1,30 @@
+{
+  "unit": "WB04-E1368",
+  "mission": "thewarbegins",
+  "recordedAt": "2026-11-26T12:02:15.622Z",
+  "host": "HJOW-Athlon",
+  "mode": "실제 Kernel·Renderer·AI 실행 관측",
+  "canvasPresentation": "모든 프레임 출력",
+  "files": [
+    {
+      "path": "webpj/extracted/ally-observe-thewarbegins-60000.log",
+      "bytes": 27934,
+      "sha256": "bd34456b236f32c59a819e66756d3d0f2831257237fb87349d184b8dbcdad752"
+    },
+    {
+      "path": "webpj/extracted/observe-ally-ai.cjs",
+      "bytes": 5199,
+      "sha256": "b7fbdc000c773260c78ade67e2d4e2515be89e92df089c9071f4006e864c91dc"
+    },
+    {
+      "path": "webpj/e2e/ally-ai-test-control.js",
+      "bytes": 4841,
+      "sha256": "755742fc21faee1857fec9a501ac0f29c6436e3fdedad5793a10eac06d24a46c"
+    },
+    {
+      "path": "webpj/www/dist/netstorm.bundle.js",
+      "bytes": 3446525,
+      "sha256": "0d96488c526d4d7ddbc53df67cc656ee51856c4c970ff0006693420e54cf76b9"
+    }
+  ]
+}
