@@ -1,0 +1,58 @@
+﻿[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+
+myStartMoney = 2000
+myTech = "sunWalker;sunArcher;rainBattery;rainAviary;rainCannon;rainBalloon;rainBlocker;rainWalker;rainFence"
+
+aiName = "Prince of Rain"
+aiTech = "sunWalker;sunArcher;rainBattery;rainAviary;rainCannon;rainBalloon;rainBlocker;rainWalker;rainFence;sunBalloon"
+aiStartMoney = 6000
+aiGeyserAttachments = 4
+aiCollectors = 4
+aiTimeBetweenMoves = 3
+
+title="レイン対レイン"
+
+[Options]
+
+[A.]
+<h2>レイン対レイン</h2>
+<i>「ゆえに雨よ、そなたの恐るべき怒りの花輪をよみがえらせよ。」<br>
+--大使ハルムク・ペリタン</i>
+<p>
+最後の対決の時です。
+最も強力なレインの神殿を率いて、
+レインの闇の王子の本拠地を攻撃しなければなりません。
+<p>
+邪悪な神殿には、ニンバス人一万の魂が閉じ込められています。
+神殿を破壊して司祭を生贄に捧げ、
+一万の死に報いてください！
+
+$Button=知識を確認,ShowTechnology,55
+$Button=ミッション開始,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>成功！</h2>
+<p>
+闇の王子の司祭を討ち取り、神殿を破壊して、
+ニンバス人一万の魂を彼岸へ解き放ちました。
+彼らは永遠にあなたの名をたたえ、感謝するでしょう。
+<$Config,Done{mission.fileName}=1>
+$Button=ミッションを終了,MissionAbort,1
+$Button=次のミッション,MissionBegin,RunForIt
+
+
+[Failed]
+<h2>失敗！</h2>
+<p>
+勇敢で忠実なニンバスの兵たちは、
+レインの闇の王子に踏みにじられました！
+兵たちとあなたの魂は邪悪な神殿に閉じ込められ、
+永遠の苦しみを受けることになりました。
+$Button=続ける,Tell,TryAgain
+
+
+[END]
