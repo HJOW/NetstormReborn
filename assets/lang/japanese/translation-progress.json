@@ -1,5 +1,7 @@
 {
-  "partialFiles": [],
+  "partialFiles": [
+    "help"
+  ],
   "tell": {
     "completedRanges": [
       {
@@ -24,5 +26,12 @@
       }
     ],
     "nextSection": null
+  },
+  "help": {
+    "completedAnchorOccurrences": 16,
+    "totalAnchorOccurrences": 138,
+    "completedUniqueTopics": 16,
+    "totalUniqueTopics": 128,
+    "nextSection": "teleportViewHelp"
   }
 }

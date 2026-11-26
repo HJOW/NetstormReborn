@@ -8,6 +8,9 @@
 #include "client/TextPictureResources.h" // 안내/메뉴의 누락 마나 원본 그림을 실제 SHP로 검증한다.
 #include "client/StyleTextMarkup.h"
 #include "client/HtmlTextParser.h"
+#include "client/QuickHelpHtml.h" // 일본어의 전체 주제도 실제 전용 파서로 검사한다.
+#include "client/HtmlConditionEffect.h" // 도움말의 조건 분기를 실제 설정 조회에 연결한다.
+#include "client/DisplayTextInput.h" // 파서 출력의 확장 표시 문자 여부를 검사한다.
 #include "o/BaseFile.h" // 사용자 정확 파일과 공식 번들의 우선권을 같은 VFS로 검사한다.
 #include "o/OriginalText.h"
 #include "o/Xlat.h"
@@ -15,12 +18,36 @@
 #include <filesystem>
 #include <fstream> // 공식 자료와 분리된 검사 경로에만 명시 입력을 쓴다.
 #include <set>
+#include <regex>
 #include <string>
 #include <vector>
 
 namespace { // 저장소 루트를 이 검사 파일 위치에서 찾는다.
 std::filesystem::path JapaneseRepo() { return std::filesystem::path(__FILE__).parent_path().parent_path().parent_path(); }
 std::span<const std::uint8_t> JapaneseView(const std::vector<std::uint8_t>& bytes) { return {bytes.data(), bytes.size()}; }
+}
+
+// 일본어 도움말의 중복 앵커128주제와8192BYTE 경계·확장 문자 완전성을 실제 파서로 검사한다.
+TEST_CASE(JapaneseText_HelpAll128TopicsKeepCompleteDisplaySequences) {
+    using namespace netstorm::client;
+    const auto bytes=netstorm::o::ReadFileBytes(JapaneseRepo()/"assets/lang/japanese/d/help.japanese"); // 배포할 현재 본문을 읽는다.
+    const std::string raw(bytes.begin(),bytes.end()),display=DecodeQuickHelpDisplaySource(raw); // UTF-8 본문을 제품과 같은 표시 BYTE로 바꾼다.
+    const std::regex anchor("<a name=\"([^\"]*)\">");std::set<std::string> topics; // 대소문자·중복 별칭을 실제 주제처럼 접는다.
+    for (std::sregex_iterator entry(raw.begin(),raw.end(),anchor),end;entry!=end;++entry) topics.insert(netstorm::o::AsciiLower((*entry)[1].str())); // 원문138앵커를 빠짐없이 수집한다.
+    CHECK(topics.size()==128);
+    for (const auto& topic:topics) { // 각 주제를 실제 링크/조건/그림 파서로 끝까지 읽는다.
+        HtmlTextParserState state;HtmlTextParserGlobals globals;globals.extendedText=true;std::uint32_t info{}; // 각 파싱의 현재 HTML 상태다.
+        HtmlLinkTextState links;links.base=0x13000000;links.enabled=true; // 독립 주소 영역으로 링크를 보존한다.
+        netstorm::o::ConfigInterface config([](std::string_view)->std::optional<std::vector<std::uint8_t>> { return std::nullopt; }); // 조건이 없는 기본 도움말 설정이다.
+        HtmlTextParserHooks hooks;BindHtmlConditionConfig(hooks,config);BindHtmlPictureText(hooks);BindHtmlLinkText(hooks,links); // 제품의 공통 경계다.
+        QuickHelpHtml parser(state,globals,info,0,topic,false,{},{},std::move(hooks),&links);const auto body=parser.Parse(display); // 원문 주제 선택부터8192BYTE 버퍼까지 실행한다.
+        CHECK(!body.empty() && body.size()<8192);
+        for (std::size_t at=0;at<body.size();++at) { // 다중 BYTE 문자가 버퍼 끝에서 잘리지 않는지 확인한다.
+            if (static_cast<std::uint8_t>(body[at])!=netstorm::o::kExtendedTextLead) continue;
+            CHECK(netstorm::o::DecodeExtendedSequence({reinterpret_cast<const std::uint8_t*>(body.data()),body.size()},at));at+=netstorm::o::kExtendedTextLength-1;
+        }
+        if (topic=="bridgetype" || topic=="sacrificeoutline" || topic=="f1help") CHECK(HasExtendedDisplayText(body)); // 이번에 번역한 핵심 주제도 실제 일본어여야 한다.
+    }
 }
 
 // 원문 helper 계약과 제품 HTML의 오래된 켜짐/생산 슬롯 번호 교정을 따로 확인한다.

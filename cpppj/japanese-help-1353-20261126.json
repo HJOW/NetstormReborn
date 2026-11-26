@@ -1,0 +1,481 @@
+{
+  "unit": 1353,
+  "date": "2026-11-26",
+  "host": "HJOW-Athlon",
+  "decompileHost": "HJOW-Athlon",
+  "range": {
+    "anchorOccurrences": [
+      1,
+      16
+    ],
+    "first": "sacrificeOutline",
+    "last": "bridgeType",
+    "next": "teleportViewHelp"
+  },
+  "translatedUniqueDisplayLines": 203,
+  "helpProgress": {
+    "completedAnchorOccurrences": 16,
+    "totalAnchorOccurrences": 138,
+    "completedUniqueTopics": 16,
+    "totalUniqueTopics": 128,
+    "nextSection": "teleportViewHelp"
+  },
+  "audit": {
+    "passed": true,
+    "translated": 42,
+    "present": 43,
+    "partial": [
+      "help"
+    ],
+    "total": 43,
+    "missing": [
+      "help"
+    ],
+    "uniqueKanji": 958,
+    "originalCompared": 43,
+    "files": [
+      {
+        "file": "bc1menu76.japanese",
+        "bytes": 1161,
+        "sections": 11,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "bc2bridging76.japanese",
+        "bytes": 2243,
+        "sections": 6,
+        "links": 0,
+        "images": 2,
+        "imageSections": {
+          "[A.]": 2
+        }
+      },
+      {
+        "file": "bc3acid_bar76.japanese",
+        "bytes": 2815,
+        "sections": 7,
+        "links": 0,
+        "images": 1,
+        "imageSections": {
+          "[A1.]": 1
+        }
+      },
+      {
+        "file": "bc4bow_rush76.japanese",
+        "bytes": 2381,
+        "sections": 6,
+        "links": 0,
+        "images": 1,
+        "imageSections": {
+          "[A.]": 1
+        }
+      },
+      {
+        "file": "bc5walkers76.japanese",
+        "bytes": 2291,
+        "sections": 6,
+        "links": 0,
+        "images": 8,
+        "imageSections": {
+          "[A.]": 8
+        }
+      },
+      {
+        "file": "bc6mows76.japanese",
+        "bytes": 3367,
+        "sections": 6,
+        "links": 0,
+        "images": 3,
+        "imageSections": {
+          "[A.]": 3
+        }
+      },
+      {
+        "file": "bc7sun_bars76.japanese",
+        "bytes": 2677,
+        "sections": 6,
+        "links": 0,
+        "images": 1,
+        "imageSections": {
+          "[A.]": 1
+        }
+      },
+      {
+        "file": "bc8fury76.japanese",
+        "bytes": 3831,
+        "sections": 15,
+        "links": 0,
+        "images": 8,
+        "imageSections": {
+          "[@1]": 4,
+          "[ai2priestdead]": 1,
+          "[ai3priestdead]": 1,
+          "[ai4priestdead]": 1,
+          "[ai5priestdead]": 1
+        }
+      },
+      {
+        "file": "bc9ssun_bars76.japanese",
+        "bytes": 2178,
+        "sections": 8,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "breakingthrough.japanese",
+        "bytes": 2209,
+        "sections": 7,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "config.japanese",
+        "bytes": 2653,
+        "sections": 0,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "demostormrages.japanese",
+        "bytes": 812,
+        "sections": 3,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "dissolvedalliance.japanese",
+        "bytes": 2231,
+        "sections": 6,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "enemyterritory.japanese",
+        "bytes": 3004,
+        "sections": 8,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "finalconfrontation.japanese",
+        "bytes": 2636,
+        "sections": 5,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "fragilefortune.japanese",
+        "bytes": 2045,
+        "sections": 6,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "guardmyback.japanese",
+        "bytes": 3987,
+        "sections": 9,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "help.japanese",
+        "bytes": 123282,
+        "sections": 2,
+        "links": 744,
+        "images": 125,
+        "imageSections": {
+          "map": 1,
+          "interfaceHelp": 4,
+          "moneyGumpHelp": 6,
+          "salvageHelp": 3,
+          "priestType": 1,
+          "themeHelp": 28,
+          "bombHelp": 18,
+          "bombLightingZapType": 1,
+          "bombLightingwaveType": 1,
+          "bombTwisterType": 1,
+          "bombIITwisterType": 1,
+          "bombIIITwisterType": 1,
+          "bombIManoType": 1,
+          "bombIIManoType": 1,
+          "bombIIIManoType": 1,
+          "bombGravitonType": 1,
+          "bombMeteorType": 1,
+          "bombExplodeSmallType": 1,
+          "bombSpecialOneType": 1,
+          "bombExplodeLargeType": 1,
+          "bombHardenerType": 1,
+          "bombHealType": 1,
+          "bombInvisibleType": 1,
+          "bombParalyzeType": 1,
+          "bombTreasonType": 1,
+          "influenceHelp": 14,
+          "windBatteryType": 1,
+          "thunderBatteryType": 1,
+          "rainBatteryType": 1,
+          "stormPowerHelp": 2,
+          "multiQuickHelp": 2,
+          "battleIslandType": 2,
+          "challengeIslandType": 2,
+          "playerListViewHelp": 7,
+          "battleStatusViewHelp": 4,
+          "playerOptionsHelp": 10
+        }
+      },
+      {
+        "file": "masterofwhirligigs.japanese",
+        "bytes": 2071,
+        "sections": 5,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical1.japanese",
+        "bytes": 907,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical2.japanese",
+        "bytes": 1307,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical2sep.japanese",
+        "bytes": 16,
+        "sections": 0,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical3.japanese",
+        "bytes": 1314,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical4.japanese",
+        "bytes": 723,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical5.japanese",
+        "bytes": 664,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical5sep.japanese",
+        "bytes": 16,
+        "sections": 0,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical6.japanese",
+        "bytes": 273,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "rainvsrain.japanese",
+        "bytes": 1821,
+        "sections": 6,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "runforit.japanese",
+        "bytes": 2263,
+        "sections": 7,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "savetheisland.japanese",
+        "bytes": 1950,
+        "sections": 6,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "surrounded.japanese",
+        "bytes": 2546,
+        "sections": 6,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "tell.japanese",
+        "bytes": 78014,
+        "sections": 303,
+        "links": 23,
+        "images": 2,
+        "imageSections": {
+          "[BuildNoBucks]": 1,
+          "[UpgradeNoBucks]": 1
+        }
+      },
+      {
+        "file": "thenoose.japanese",
+        "bytes": 2245,
+        "sections": 7,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "thewarbegins.japanese",
+        "bytes": 1997,
+        "sections": 5,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "thunderingpower.japanese",
+        "bytes": 5807,
+        "sections": 17,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "totherescue.japanese",
+        "bytes": 2992,
+        "sections": 7,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "tutorial1.japanese",
+        "bytes": 7194,
+        "sections": 14,
+        "links": 0,
+        "images": 4,
+        "imageSections": {
+          "[D.]": 2,
+          "[D1.]": 1,
+          "[E.]": 1
+        }
+      },
+      {
+        "file": "tutorial2.japanese",
+        "bytes": 10752,
+        "sections": 20,
+        "links": 0,
+        "images": 13,
+        "imageSections": {
+          "[A1.]": 2,
+          "[C.]": 2,
+          "[D1.]": 2,
+          "[F.]": 5,
+          "[G.]": 2
+        }
+      },
+      {
+        "file": "tutorial3.japanese",
+        "bytes": 8541,
+        "sections": 15,
+        "links": 0,
+        "images": 4,
+        "imageSections": {
+          "[A1.]": 1,
+          "[D1.]": 3
+        }
+      },
+      {
+        "file": "tutorial4.japanese",
+        "bytes": 9466,
+        "sections": 16,
+        "links": 0,
+        "images": 1,
+        "imageSections": {
+          "[A.]": 1
+        }
+      },
+      {
+        "file": "tutorial5.japanese",
+        "bytes": 9608,
+        "sections": 16,
+        "links": 0,
+        "images": 3,
+        "imageSections": {
+          "[A.]": 2,
+          "[E.]": 1
+        }
+      },
+      {
+        "file": "tutorial6.japanese",
+        "bytes": 8256,
+        "sections": 11,
+        "links": 0,
+        "images": 14,
+        "imageSections": {
+          "[A1.]": 1,
+          "[A2.]": 11,
+          "[C.]": 1,
+          "[E.]": 1
+        }
+      },
+      {
+        "file": "vicious.japanese",
+        "bytes": 2006,
+        "sections": 6,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      }
+    ],
+    "errors": []
+  },
+  "focusedTests": {
+    "passed": 10,
+    "failed": 0,
+    "all128TopicsParsed": true
+  },
+  "guiFinalRuns": [
+    "help-1353-topics-fixed",
+    "help-1353-scroll-final",
+    "help-1353-mana-final"
+  ],
+  "initialFailures": {
+    "help-1353-topics": "표시 불가 U+2015를 U+2014로 교정",
+    "help-1353-scroll-links": "HTML 링크를 버튼 라벨로 찾던 검사 입력을 화면 좌표 클릭으로 교정"
+  },
+  "protectedFilesUnchanged": 3212,
+  "exeSha256": "458f23e09021c5c8d7230459c1499034d8fddfb69a471da60af5c39e4741b918"
+}

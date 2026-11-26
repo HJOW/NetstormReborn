@@ -13,6 +13,24 @@ SOURCE = ROOT / 'assets/lang/korean/d'
 TARGET = ROOT / 'assets/lang/japanese/d'
 # 첫 인자만 화면 라벨인 명령이며 나머지 명령의 숫자/인자는 전부 보존한다.
 LABEL_COMMANDS = {'Button', 'ButtonInstant', 'Checked', 'Menu', 'Input'}
+# 제품의 정적 확장 문자와 동적 한자 구간이며 나머지는 Windows-1252로 표현되어야 한다.
+DISPLAY_RANGES = ((0xac00, 0xd7a3), (0x3131, 0x318e), (0x3000, 0x303f),
+                  (0xff01, 0xff5e), (0x3040, 0x30ff), (0xff61, 0xff9f), (0x4e00, 0x9fff))
+
+
+def unencodable_characters(text):
+    """제품 표시 바이트로 바꿀 수 없는 문자를 찾아 실행 시 전체 도움말 읽기 실패를 방지한다."""
+    invalid = set()
+    for character in text:
+        # 원본1252의 미정 제어 문자도 같은 코드 포인트로 되돌릴 수 있다.
+        value = ord(character)
+        if value in (0x81, 0x8d, 0x8f, 0x90, 0x9d) or any(first <= value <= last for first, last in DISPLAY_RANGES):
+            continue
+        try:
+            character.encode('cp1252')
+        except UnicodeEncodeError:
+            invalid.add(f'U+{value:04X}')
+    return sorted(invalid)
 
 
 def visible_source(text):
@@ -60,7 +78,8 @@ def signatures(text, kind):
                    for tag in re.findall(r'<\$[^>]*>', text)]
     return dict(sections=sections, commands=commands, macros=Counter(macros), assignments=assignments,
                 scriptTags=Counter(script_tags), styleCodes=Counter(re.findall(r'~(?:\[[^\]]*\]|.)', text)),
-                links=Counter(re.findall(r'<a\s+(?:name|href)="[^"]*"', text, re.I)),
+                # 원본의 닫는 따옴표 누락·herf 오타도 보존하되 다음 태그의 표시 문장을 주소에 섞지 않는다.
+                links=Counter(re.findall(r'<a\s+(?:name|href|herf)="[^"\n>]*(?:"|>)', text, re.I)),
                 images=image_locations(text))
 
 
@@ -116,6 +135,9 @@ def inspect(require_all=False, original_archive=None):
                     if expected != right[category]:
                         errors.append(f'{path.name}: 원본 영어 {category} 불일치')
         prose = visible_source(target)
+        invalid = unencodable_characters(target)
+        if invalid:
+            errors.append(f'{path.name}: 표시 인코딩 불가 {", ".join(invalid)}')
         if re.search(r'[가-힣]', prose):
             errors.append(f'{path.name}: 표시 본문에 한국어 잔여')
         kanji.update(character for character in prose if '\u4e00' <= character <= '\u9fff')
