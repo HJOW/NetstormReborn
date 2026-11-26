@@ -241,7 +241,7 @@ AGENTS.md 지정에 따라0.807에서 공통 [assets/Netstorm.ico](assets/Netsto
     - [ ] **R5-4c3 미니맵.** RU-4 미니맵(0.991·0.993)의 부착 코드는1015ca4a6에 보존했지만 검증 미완료다. 아래 세 조각을 모두 통과해야 완료한다.
       - [x] R5-4c3a Game 재빌드·관련 검사 — 루트 Idle 차단 뒤 Release와 미니맵/생산 틀 관련 검사가 통과한다.
       - [x] R5-4c3b 대표 L2 재수집 — thewarbegins/tutorial1/surrounded 세 종료0·0998 기준선/M1 0/34 유지. 실패 원인과 첫 실행을 보존한다.
-      - [ ] R5-4c3c 실제 픽셀 — 미니맵 영역이 cpp L4a와 일치하며 진입/정리의 장치 수명을 확인한다.
+      - [ ] R5-4c3c 실제 픽셀 — 미니맵 영역이 cpp L4a와 일치하며 진입/정리의 장치 수명을 확인한다. 2026-11-27 실제 비교는 6,000/6,000 픽셀 불일치: 임시 채팅창이 영역을 덮는다. 미니맵 월드 알림·프레임 갱신·호스트 종료 반납도 미연결이다. 원본 도킹과 수명을 연결한 뒤 다시 비교한다. [관측](docs/dotnet-canon-1080c-observation-20261127.md)
     - [ ] **R5-4c4 인벤토리·공통 HUD.** 인벤토리와 공통 HUD(0.817~0.819)의 제품 경로. 완료 기준: 해당 패널 영역이 L4a와 일치한다.
   - [ ] **R5-4d UberRoot·패널 결선.** 1.074 조립 진입점을 제품 진입 경로에 잇고 네 자식·메시지 공장으로 패널을 만든다(RU-3b 남음과 같은 대상). 월드 UI 그리기(kind 2)의 `월드 UI 그리기 미연결(R5-4)` 명시 실패도 여기서 닫는다. 완료 기준: 미션 진입 Root가 UberRoot 패널을 소유하고 UI kind가 명시 실패 없이 그려진다.
 - [ ] **R5-5 가장자리 스크롤·전체 대조(D2).** 전체화면 가장자리 스크롤과 34경로 진입·N프레임 뒤 L4a 차이 0. 완료 기준: D2 판정을 닫는다.
@@ -355,7 +355,7 @@ AGENTS.md 지정에 따라0.807에서 공통 [assets/Netstorm.ico](assets/Netsto
 | 1.077~1.079 | 공통 도움말·메뉴 배경 숨김·생산 덱 틀 부착 완료, 집중9건. [1.079](docs/dotnet-canon-1079-20261126.md) |
 | 1.080a/b/R5-4c3 | 기존 중간 소스의 Release·집중12/12·동기화 통과, 대표3경로 종료0·DN 0998 바이트 일치. 픽셀·수명은 미완료. [근거](docs/dotnet-canon-1080ab-20261127.md) |
 
-정기 회귀는4단위마다 수행한다.1.080은 검사 통과와 L2 실패/중단을 구분하고 재개 시 해당 단위를 닫는다. 과거 회귀/65진입/L2 수집 이력은 [정리 전6절](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261127-through-1079-checkpoint1080)을 따른다.
+정기 회귀는4단위마다 수행한다. 1.080은 차단 전 전체 검사·최초 L2 실패와 1.080a/b 재검증을 구분하며 실제 픽셀·수명 검증을 마쳐야 닫는다. 과거 회귀/65진입/L2 수집 이력은 [정리 전6절](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261127-through-1079-checkpoint1080)을 따른다.
 
 - **이전 이관.** 전체 보관본은 [1.030](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261125-through-1030)(0.1 요약표 1.004~1.030 단위별 행·R4-5 하위 행동 나열·RU와 전송·수신 완료 세부·R4-7 하위 체크·6절 0.969~0.998 나열) · [0.983](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261124-through-0983)(1.1 전송·수신 단위별 `[x]` 25개·0.1 선행 완료 나열·검사 기준선 집중 수·6절 0.969~0.983 행) · [0.950](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261124-through-0950)(0.1 요약표 0.901~0.950 단위별 행 38개·RU-3 단위별 완료 나열·6절 0.901~0.909 행) · [0.900](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261123-through-0900)(0.1 재개 인계 연쇄·6절 0.845~0.900 행·R4-2 완료 문장과 1.2 플레어·건설 문장) · [0.837](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261123-through-0837)(0.1 중지 인계·R4-6 완료 bullet 12개·6절 0.798~0.822 행) · [0.797](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0797)(재개 순서·주제별 표·R4-6 완료 bullet 29건) · [0.732](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0732)(0.1 단위별 완료 문장 88건) · [0.635](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635)(R4 체크 단위별 문장 22건) · [0.613](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261118-through-0613)(경과·중복 체크·이식량·AGENTS 이력·파일별 목록·명령 예시) · [0.545](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261115-through-0545)이다. 각 이관에서 옮긴 것·바로잡은 것의 목록은 바로 다음 보관본의 6절에 있고(0.983 이관 기록은 1.030 보관본, 1.030 이관 기록은 1.076 보관본의 6절), 그 이전은 보관 파일 머리의 날짜별 색인을 본다. 아래는 이전 문서에서 참조하는 앵커다. 같은 이름의 상세는 보관본에 있다.
 
