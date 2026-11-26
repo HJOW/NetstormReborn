@@ -132,12 +132,13 @@ export class ClientGumpRoot {
         this.#live(); if (this.#formHost || host?.pool?.edition !== 'patch1078') throw new Error('Client Gump Form 호스트의 현재 수명 오류');
         this.#formHost = host;
     }
-    // 등록 ID와 실제 객체 SID를 같은 풀의 GumpForm으로 연결한다.
+    // 등록 ID와 실제 객체 SID를 같은 풀의 GumpForm으로 연결한다. 객체 0은 State HUD 생성 중 호스트 없이도 그대로 반환한다.
     bindObject(token, object) {
-        this.#live(); const node = this.#nodes.get(token), host = this.#formHost;
-        if (!node || !host) throw new Error('Client Gump 객체 부착의 현재 수명 오류');
+        this.#live(); const node = this.#nodes.get(token);
+        if (!node) throw new Error('Client Gump 객체 부착의 현재 수명 오류');
         if (!object) return;
-        if (node.flags & 0x40) throw new Error('Client Gump 객체 부착의 현재 수명 오류');
+        const host = this.#formHost;
+        if (!host || (node.flags & 0x40)) throw new Error('Client Gump 객체 부착의 현재 수명 오류');
         if (!Number.isInteger(object) || object < 0 || object > 0xffff || object >= host.pool.capacity) throw new RangeError('Client Gump 객체 SID 범위');
         const form = host.create(2); host.setOwner(form, node.id); host.attach(form, object, 0);
         node.flags = (node.flags | 0x40) >>> 0; node.object = object; node.form = form;

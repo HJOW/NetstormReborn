@@ -8,6 +8,20 @@ import { GumpBackgroundCreate, GumpBackgroundNode } from '../www/ui/gump-backgro
 import { UberRootNode } from '../www/ui/uber-root-gump.js';
 import { GumpDrawState, GumpPixelTarget, setGumpDrawClip } from '../www/render/gump-draw.js';
 
+// State7의 빈 기술 연결은 아직 Session이 없어도 실제 노드를 유지하며 비0 객체는 현재 호스트를 요구한다.
+test('Client Gump 객체0: World 없는 HUD 생성은 Form을 만들지 않고 같은 노드를 보존한다', () => {
+    const root = new ClientGumpRoot(100, 80, () => 0, () => {});
+    const token = root.createBase(1, 20, 10, 1, () => 0), node = root.node(token);
+    const before = { flags: node.flags, object: node.object, form: node.form, count: root.createState().count };
+    assert.doesNotThrow(() => root.bindObject(token, 0));
+    assert.equal(root.node(token), node);
+    assert.deepEqual({ flags: node.flags, object: node.object, form: node.form, count: root.createState().count }, before);
+    assert.throws(() => root.bindObject(token, 1), /수명/u);
+    assert.throws(() => root.bindObject(0xffffffff, 0), /수명/u);
+    root.remove(token); assert.throws(() => root.bindObject(token, 0), /수명/u);
+    root.dispose(); assert.throws(() => root.bindObject(token, 0), /반납/u);
+});
+
 // 현재 serial과 실제 트리가 재부착되며 새 노드/금액/Idle을 만들거나 다른 형제를 삭제하지 않아야 한다. (WB04-E1325)
 test('Client Gump 루트: 앱의 현재 예산 serial 재부착과 깊이·같은 노드 수명', () => {
     const app = new Netstorm(), redraw = [], root = new ClientGumpRoot(1024, 768, () => 0, (...args) => redraw.push(args));

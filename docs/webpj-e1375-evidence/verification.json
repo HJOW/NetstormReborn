@@ -1,0 +1,29 @@
+{
+  "unit": "WB04-E1375",
+  "baseCommit": "1f0aca688",
+  "node": {
+    "version": "26.13.0",
+    "tests": 22,
+    "pass": 22,
+    "fail": 0,
+    "logSha256": "192592f57c3827d7576ce396bc60bb07f452fd758d96a2ef2ec20a6b085e8c9c"
+  },
+  "bundleFresh": [
+    "ℹ tests 1",
+    "ℹ pass 1",
+    "ℹ fail 0"
+  ],
+  "browser": {
+    "tests": 1,
+    "pass": 1,
+    "screens": 3,
+    "outsidePixels": 0,
+    "dumps": 3,
+    "outsideAllowedRows": 0
+  },
+  "bundle": {
+    "bytes": 3461020,
+    "sha256": "401759161b8a1030435f180ceefa2ad0a1a02370b83d11da7c1c6082b200d33b"
+  },
+  "state7ParentConnected": false
+}

@@ -1,0 +1,7 @@
+
+Running 1 test using 1 worker
+
+
+
+[1/1] [chromium] › e2e\l3-campaign1-1-wait.spec.js:11:1 › L3 캠페인1-1: 브리핑·시작·대기 화면과 상태가 cpppj와 같다
+  1 passed (1.3m)
