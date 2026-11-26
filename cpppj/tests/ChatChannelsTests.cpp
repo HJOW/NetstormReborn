@@ -3,6 +3,7 @@
 #include "client/RawChatChannels.h"
 #include "client/CampaignClientServices.h"
 #include "client/ClientMain.h"
+#include "o/OriginalText.h" // 확장 AI 이름의 실제 저장 BYTE와 Unicode 왕복을 대조한다.
 #include <optional>
 
 using namespace netstorm::test::rawscene;
@@ -127,4 +128,27 @@ TEST_CASE(ChatChannels_ClientDefaultAiNameUsesCurrentPathSpec) {
     CHECK(ai.defaultName()=="Evil Duke");
     client.Configuration().Set("defaultAiName","{liveAiName}");client.Configuration().Set("liveAiName","Changed Name");
     CHECK(ai.defaultName()=="Changed Name");
+}
+
+// 기본 AI 이름은 확장 문자 경계를 지키며 Player의32BYTE 이름 칸과 마지막 NUL 안에 들어가야 한다.
+TEST_CASE(ChatChannels_ClientDefaultAiNameBoundsExtendedPlayerName) {
+    ClientOptions options; // 원본은 읽기만 하고 Client.Run·장치·창·사용자 저장은 호출하지 않는다.
+    options.gameDirectory=std::filesystem::path(__FILE__).parent_path().parent_path().parent_path()/"originals";
+    Client client(std::move(options));CampaignAiServices ai;BindCampaignAiClientServices(client,ai);
+    client.Configuration().Configuration().Assign("[END]\r\n");
+    client.Configuration().Language().Assign("defaultAiName = \"{aiTitle}\"\naiTitle = \"イービル・デューク\"\n");
+    const auto decode=[](const std::string& bytes) { // 실제 네 BYTE 표시 토큰을 모두 복원해 중간 절단도 검출한다.
+        return netstorm::o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(bytes.data()),bytes.size()});
+    };
+    const auto longName=ai.defaultName(); // 기존 번역9문자는36BYTE여서 subscriber를 덮던 입력이다.
+    CHECK(longName.size()==28 && decode(longName)=="イービル・デュ");
+    client.Configuration().Set("aiTitle","ABCイービル・デュ");
+    const auto exactName=ai.defaultName(); // ASCII3BYTE와 확장7문자는31BYTE로 NUL 한 자리를 남긴다.
+    CHECK(exactName.size()==31 && decode(exactName)=="ABCイービル・デュ");
+    client.Configuration().Set("aiTitle","ABCDイービル・デュ");
+    const auto crossingName=ai.defaultName(); // 32BYTE가 되는 마지막 확장 문자 전체를 제외해야 한다.
+    CHECK(crossingName.size()==28 && decode(crossingName)=="ABCDイービル・デ");
+    client.Configuration().Set("aiTitle","悪の公爵");
+    const auto shippedName=ai.defaultName(); // 배포 기본값은 생략 없이 모두 표시되는16BYTE다.
+    CHECK(shippedName.size()==16 && decode(shippedName)=="悪の公爵");
 }

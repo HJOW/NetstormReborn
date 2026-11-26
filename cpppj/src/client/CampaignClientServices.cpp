@@ -30,6 +30,7 @@
 #include "client/SavedStateFiles.h" // 실제 사용자 저장 namespace의!state.dat 삭제 장치다.
 #include "client/SavedStateFileWrite.h" // 일반 로그인 완료의!state.dat도 같은 사용자 경로/VFS 쓰기를 사용한다.
 #include "client/RawChatChannels.h"
+#include "client/DisplayTextInput.h" // 확장 AI 기본 이름은 Player의 고정 BYTE 칸에서 문자 단위로 제한한다.
 #include "client/ScriptCommand.h"
 #include "o/OriginalText.h"
 #include <algorithm>
@@ -127,10 +128,11 @@ void BindCampaignAiClientServices(Client& client,CampaignAiServices& ai) {
         if (config.GetInt("skirmishRun")!=0 && owner>=2 && owner<=8) return static_cast<std::uint32_t>(config.GetInt("skirmishAi"+std::to_string(owner)+"Diff")); // 12차: 스커미시는 AI별 난이도를 옵션 난이도 대신 쓴다(동맹 AI 포함).
         return enemy ? static_cast<std::uint32_t>(config.GetInt(std::string(o::kDifficultyConfigKey))) : 0U; // 일반 게임의 옵션 난이도는 적 AI에만 쓴다.
     };
-    // Xlat 키로 바꾸지 않는다. 현재 언어 Config/치환 결과를 매 요청마다 원본 Windows-1252로 인코딩한다.
+    // 현재 언어 Config/치환 결과를 표시 BYTE로 바꾸고 확장 이름만 Player 이름32BYTE의 NUL 자리를 확보한다.
     ai.defaultName=[&client] {
         const auto bytes=o::EncodeDisplayText(client.Configuration().PathSpec("defaultAiName")); // 현재 언어 교체/설정 변경을 반영한 실제 좁은 바이트다.
-        return std::string(bytes.begin(),bytes.end());
+        const std::string name(bytes.begin(),bytes.end()); // Player+0xc에서 subscriber+0x2c 직전까지 이름과 NUL을 보관한다.
+        return HasExtendedDisplayText(name) ? FilterDisplayText(name,{},31) : name; // 기존 CP1252 복사는 보존하며 확장 토큰을 잘라 다음 필드를 덮지 않는다.
     };
 }
 // 같은 번역 원문은 다음 번역 조회까지 유지하며 서식 결과는 Client 공유 고리에 둔다.

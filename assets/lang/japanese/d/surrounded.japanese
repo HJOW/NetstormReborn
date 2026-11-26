@@ -1,0 +1,84 @@
+﻿[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+myStartMoney = 5000
+myTech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;rainBattery;windBattery;thunderBattery"
+
+ai2Name = "Lord of Sun"
+ai2Tech = "sunWalker;sunArcher;sunBlocker;sunBalloon;sunAviary;sunCannon"
+ai2StartMoney = 3000
+ai2GeyserAttachments = 2
+ai2Collectors = 3
+ai2TimeBetweenMoves = 4
+ai2AllyList = "3;4;5"
+ai2color = red
+
+ai3Name = "Lord of Thunder"
+ai3Tech = "sunWalker;thunderBattery;thunderBlocker;thunderCannon;bulf;thunderArcher"
+ai3StartMoney = 3000
+ai3GeyserAttachments = 2
+ai3Collectors = 4
+ai3TimeBetweenMoves = 3
+ai3AllyList = "2;4;5"
+ai3Color = yellow
+
+ai4Name = "Lord of Wind"
+ai4Tech = "sunWalker;windBattery;windWalker;windAviary;windArcher;windBalloon;windBlocker"
+ai4StartMoney = 2000
+ai4GeyserAttachments = 2
+ai4Collectors = 4
+ai4TimeBetweenMoves = 4
+ai4AllyList = "2;3;5"
+ai4Color = orange
+
+ai5Name = "Lord of Rain"
+ai5Tech = "sunWalker;rainBattery;rainCannon;rainAviary;rainBalloon;rainBlocker;rainWalker"
+ai5StartMoney = 0
+ai5GeyserAttachments = 2
+ai5Collectors = 3
+ai5TimeBetweenMoves = 4
+ai5AllyList = "2;3;4"
+ai5Color = white
+
+title="包囲された！"
+
+[Options]
+
+[A.]
+<h2>包囲された！</h2>
+<i>「だがニンバスに永遠の平和が訪れたら、我々はいったい何を楽しみに生きるのか？」<br>
+--戦争大臣イントゥム・ルカト</i>
+<p>
+相次ぐ勝利に怒ったサン、ウィンド、レイン、サンダーの闇の君主たちが、
+奇襲を仕掛けてきました。
+すべての知恵を集め、彼らを倒さなければなりません！
+
+$Button=知識を確認,ShowTechnology,55
+$Button=ミッション開始,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>成功！</h2>
+<p>
+あなたの軍事的天才が、不可能を可能にしました！
+大規模な奇襲を退け、輝かしい勝利を収めました！
+誰がニンバスの空を支配しているのか、知らしめてください！
+<$Config,Done{mission.fileName}=1>
+$Button=ミッションを終了,MissionAbort,1
+$Button=次のミッション,MissionBegin,BreakingThrough
+
+
+[Failed]
+<h2>失敗！</h2>
+<p>
+闇の君主たちは、ついにニンバスの空で
+とどまることを知らなかったあなたの成長を阻みました。
+あなたは今や闇の手先となり、
+病んだ残酷な君主たちの命令に従わなければなりません。
+$Button=続ける,Tell,TryAgain
+
+
+[END]

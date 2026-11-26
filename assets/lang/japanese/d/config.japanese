@@ -10,7 +10,7 @@ technologies = "知識"
 helpWord = "バージョン情報"
 priest = "司祭"
 influence = "エネルギー"
-defaultAiName = "イービル・デューク"
+defaultAiName = "悪の公爵"
 progName = "NetStorm"
 copyright = "(C) 1997 Titanic Entertainment, Inc. and Activision Inc. {version}"
 

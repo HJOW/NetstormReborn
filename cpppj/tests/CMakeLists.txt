@@ -3931,3 +3931,8 @@ target_sources(netstorm_tests PRIVATE ResetAllSettingsTests.cpp)
 add_executable(netstorm_reset_all_tests FocusedTestMain.cpp ResetAllSettingsTests.cpp)
 target_link_libraries(netstorm_reset_all_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_reset_all_tests)
+
+# 채팅 채널과 현재 언어의 AI 기본 이름을 전체 검사 재컴파일 없이 검증하는 집중 대상이다(1345).
+add_executable(netstorm_chat_channels_tests FocusedTestMain.cpp ChatChannelsTests.cpp)
+target_link_libraries(netstorm_chat_channels_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_chat_channels_tests)
