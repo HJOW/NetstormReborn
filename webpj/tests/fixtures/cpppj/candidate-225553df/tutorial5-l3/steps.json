@@ -1,0 +1,116 @@
+{
+  "format": "netstorm-webpj-cpppj-l3-steps",
+  "version": 1,
+  "description": "Tutorial5 단계 A의 스톤 타워 생산 등록·(138,92) 배치·1000프레임 대기만 대조한다. 특정 적 공격·사제 포획/희생·승리 재현은 제외한다. 단계 B 피격 관문은 이 단계표에서 열리지 않는다.",
+  "language": "english",
+  "screen": {
+    "width": 1024,
+    "height": 768
+  },
+  "fixedFrameMs": 25,
+  "mission": "Tutorial5",
+  "settings": {
+    "SCREENW": 1024,
+    "SCREENH": 768,
+    "WelcomeGiven": 1,
+    "tellTips": 0,
+    "autoDemo": 0
+  },
+  "steps": [
+    [
+      100,
+      "snapshot",
+      "a100"
+    ],
+    [
+      100,
+      "session-dump",
+      "a100"
+    ],
+    [
+      110,
+      "click-if",
+      "MORE"
+    ],
+    [
+      140,
+      "snapshot",
+      "a140"
+    ],
+    [
+      150,
+      "click-if",
+      "OK"
+    ],
+    [
+      200,
+      "snapshot",
+      "a200"
+    ],
+    [
+      200,
+      "session-dump",
+      "a200"
+    ],
+    [
+      220,
+      "right",
+      "screen:540,297"
+    ],
+    [
+      250,
+      "click",
+      "screen:620,322"
+    ],
+    [
+      280,
+      "click",
+      "screen:810,375"
+    ],
+    [
+      295,
+      "snapshot",
+      "production295"
+    ],
+    [
+      295,
+      "session-dump",
+      "production295"
+    ],
+    [
+      300,
+      "click",
+      "screen:40,272"
+    ],
+    [
+      305,
+      "snapshot",
+      "cursor305"
+    ],
+    [
+      310,
+      "click",
+      "screen:690,465"
+    ],
+    [
+      500,
+      "snapshot",
+      "tower500"
+    ],
+    [
+      500,
+      "session-dump",
+      "tower500"
+    ],
+    [
+      1000,
+      "snapshot",
+      "a1000"
+    ],
+    [
+      1000,
+      "session-dump",
+      "a1000"
+    ]
+  ]
+}
