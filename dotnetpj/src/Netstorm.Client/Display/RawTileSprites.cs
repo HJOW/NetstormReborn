@@ -166,9 +166,10 @@ public static class RawTileSprites
             throw new ArgumentOutOfRangeException(nameof(frame), "타일 셰이프 프레임 오류");
         }
         ShapeFrame shape = database.Blocks()[block].Frames[checked((int)frame)];
+        // 특수 셰이프 레코드는 그림이 없으며 원문처럼 조용히 건너뛴다.
         if (shape.IsSpecial())
         {
-            throw new InvalidDataException("타일 특수 셰이프에 그림이 없습니다");
+            return;
         }
         RendererDraw.DrawIndexedImage(pixels, width, height, database.Decode(block, checked((int)frame)),
             unchecked(point.X + shape.Rect.Left), unchecked(point.Y + shape.Rect.Top), clip, colors, shadow);

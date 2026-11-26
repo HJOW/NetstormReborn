@@ -76,6 +76,58 @@ public sealed class RawTileSpritesTests
         return new(wx, wy, unchecked((uint)sid * (uint)RawSidPool.Stride), 0, 1, tail);
     }
 
+    private static RenderCollectionEntry Place(TileScene scene, uint type, int frame, float wx, float wy)
+    {
+        const int sid = 100;
+        Span<byte> raw = Raw(scene.Pool, sid);
+        raw.Clear();
+        raw[10] = (byte)type;
+        BinaryPrimitives.WriteUInt32LittleEndian(raw[36..], unchecked((uint)frame));
+        BinaryPrimitives.WriteSingleLittleEndian(raw[14..], wx);
+        BinaryPrimitives.WriteSingleLittleEndian(raw[18..], wy);
+        BinaryPrimitives.WriteInt16LittleEndian(raw[22..], unchecked((short)(SpriteDraw.Truncate((double)wx * 16 + 0.5))));
+        BinaryPrimitives.WriteInt16LittleEndian(raw[24..], unchecked((short)(SpriteDraw.Truncate((double)wy * 11 + 0.5))));
+        raw[40] = 0;
+        BinaryPrimitives.WriteUInt16LittleEndian(raw[4..], 0);
+        return new(wx, wy, unchecked((uint)sid * (uint)RawSidPool.Stride), 0, 1, 0);
+    }
+
+    /// <summary>특수 셰이프 타일은 조용히 건너뛴다.</summary>
+    [Fact]
+    public void SpecialFrameSkipsQuietly()
+    {
+        var scene = new TileScene();
+        uint foundType = 0;
+        int foundFrame = -1;
+        for (uint type = 70; type < (uint)scene.Types.Count; type++)
+        {
+            int block = (int)type - 70;
+            if (block >= scene.Database.Blocks().Count)
+            {
+                break;
+            }
+            var frames = scene.Database.Blocks()[block].Frames;
+            for (int frame = 0; frame < frames.Count && frame < scene.Types[(int)type].FrameCount; frame++)
+            {
+                if (frames[frame].IsSpecial())
+                {
+                    foundType = type;
+                    foundFrame = frame;
+                    break;
+                }
+            }
+            if (foundFrame >= 0)
+            {
+                break;
+            }
+        }
+        Assert.True(foundFrame >= 0);
+        var pixels = new byte[1024 * 768];
+        RenderCollectionEntry entry = Place(scene, foundType, foundFrame, 20, 20);
+        RawTileSprites.DrawTile(entry, scene.Pool, scene.Types, scene.Database, 0, 0, pixels, 1024, 768, new(0, 0, 1024, 768), PlainModes(scene));
+        Assert.All(pixels, pixel => Assert.Equal(0, pixel));
+    }
+
     /// <summary>일반 타일을 카메라 상대 위치에 칠한다.</summary>
     [Fact]
     public void PlainTilePaintsPixels()

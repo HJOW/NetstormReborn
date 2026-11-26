@@ -644,7 +644,23 @@ public sealed partial class ClientHostGame : Game
                         // 실제 그래프 재구성 live 연결. territory 갈고리와 같은 세션 엔진을 공유한다(0.470).
                         session.RebuildWorldGraph(graph);
                     },
-                    ResetCamera = () => worldOrder.Add("camera"),
+                    ResetCamera = () =>
+                    {
+                        worldOrder.Add("camera");
+                        // R5-4c 미션 입장 카메라 고향. 같은 저장소·화면·소유자로 내 사제·월드 가운데를 목표로 둔다. 즉시 뒤집기는 매 프레임 제품 루프가 수행한다.
+                        // 근거: cpppj ClientRendererFrame.cpp의 ResetCamera 결선이다. 시작 덤프에는 닿지 않는다.
+                        session.ResetMissionCamera(new CameraHomeState
+                        {
+                            LocalPlayer = session.MissionPlayer.BattleOwner,
+                            Fort = storage.OwnerMode.Fort,
+                            Battle = storage.OwnerMode.Battle,
+                            Challenge = storage.OwnerMode.Challenge,
+                            Width = _driver.Screen.Width,
+                            Height = _driver.Screen.Height,
+                            WorldWidth = session.Gameplay.Camera.Target.Limits[0],
+                            WorldHeight = session.Gameplay.Camera.Target.Limits[1],
+                        }, storage.Types, _driver.Screen.Width, _driver.Screen.Height);
+                    },
                 });
             worldLoad.Load();
             // RU-2 나머지: 고정 26F가 Root 공급값으로 실제 수신을 마친다.
@@ -773,7 +789,12 @@ public sealed partial class ClientHostGame : Game
         }
         bool menuDrew = false;
         if (_menuDirty && _gumpDrawing is not null && _startup is not null)
-        { DrawStartupScreen(); _gumpDrawing.Draw(); _menuDirty = false; menuDrew = true; }
+        {
+            // R5-4c: 타이틀 화면은 메뉴에서만 그리고 미션에서는 월드·임무 UI만 그린다.
+            // 근거: 미션 진입 뒤에도 시작 화면을 다시 그리면 구름·타이틀이 월드를 덮는다. 팔레트 준비는 첫 호출에 끝났다.
+            if (_missionSession is null) DrawStartupScreen();
+            _gumpDrawing.Draw(); _menuDirty = false; menuDrew = true;
+        }
         // DI-1: 미션 중 Root UI(생산·채팅·HUD)도 같은 메뉴 트리의 수집·그리기 경로로 그린다. 메뉴 경로는 바꾸지 않는다.
         // 근거: 미션 Root가 같은 공통 트리에 부착되며(RU-3c) 메뉴 그리기는 트리 수집·정렬·분배를 그대로 쓴다. 전체 화면 대조는 R5 D2에서 한다.
         if (!menuDrew && _missionSession is not null && _gumpDrawing is not null && _startup is not null)
