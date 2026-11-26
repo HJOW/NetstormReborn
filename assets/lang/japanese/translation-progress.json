@@ -28,11 +28,11 @@
     "nextSection": null
   },
   "help": {
-    "completedAnchorOccurrences": 112,
+    "completedAnchorOccurrences": 128,
     "totalAnchorOccurrences": 138,
-    "completedUniqueTopics": 108,
+    "completedUniqueTopics": 118,
     "totalUniqueTopics": 128,
-    "nextSection": "thunderVortexType",
+    "nextSection": "battlemasterHelp",
     "pendingSharedBodyTopics": []
   }
 }

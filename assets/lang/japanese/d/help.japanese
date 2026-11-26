@@ -2015,299 +2015,260 @@ If you have trouble use the troubleshooting guide.
 <a name="thunderVortexType">
 <a name="vortexHelp">
 <info>
-<q>The blood of holy men is the elixir of destiny.</q>
+<q>聖なる者の血は運命の霊薬である。</q>
 <p>
-<a href="#rainVortexType">Rain Temple</a><br>
-<a href="#windVortexType">Wind Temple</a><br>
-<a href="#thunderVortexType">Thunder Temple</a><br>
+<a href="#rainVortexType">レイン神殿</a><br>
+<a href="#windVortexType">ウィンド神殿</a><br>
+<a href="#thunderVortexType">サンダー神殿</a><br>
 <p>
-The Temple is the ultimate center of <a href="#influenceHelp">Energy</a> on each island.  
-Temples take one of three forms, as listed above.
+神殿は、各島の究極の<a href="#influenceHelp">エネルギー</a>の中心です。上に挙げた三種類のいずれかの形を取ります。
 <p>
-As long as your Temple is standing, your <a href="#priestType">Priest</a> will heal 
-during battle.
+神殿がある間は、戦闘中も<a href="#priestType">司祭</a>が回復します。
 <p>
-Hit <c>F4</c> to jump to your Temple during game play.
+プレイ中に<c>F4</c>を押すと、自分の神殿へ移動します。
 <p>
-Find out about using the Temple for:<br> 
-<a href="#spVortexHelp">Acquiring Storm Power</a><br>
-<a href="#golemVortexHelp">Making Golems</a><br>
-<a href="#influenceVortexHelp">Generating Energy</a><br>
+神殿の次の使い方をご覧ください。<br>
+<a href="#spVortexHelp">ストームパワーを得る</a><br>
+<a href="#golemVortexHelp">ゴーレムを作る</a><br>
+<a href="#influenceVortexHelp">エネルギーを作る</a><br>
 </a>
 </a>
 </a>
 </a>
 
 <a name="spVortexHelp">
-<h2>The Temple:<br>Acquiring Storm Power</h2>
+<h2>神殿:<br>ストームパワーを得る</h2>
 <p>
-In battle, the Temple converts <a href="#moneyHelp">Storm Power</a> into a usable 
-resource.  Without a Temple you can't collect or process Storm Power.
+神殿は、戦闘中に<a href="#moneyHelp">ストームパワー</a>を利用可能な資源に変えます。神殿がなければ、集めたり処理したりできません。
 <p>
-Storm Power is collected from <a href="#geyserType">Storm Geysers</a> in the 
-form of <a href="#nuggetType">Storm Crystals</a>.
+<a href="#geyserType">ストームガイザー</a>から、<a href="#nuggetType">ストームクリスタル</a>の形で採取します。
 <p>
-Learn more about <a href="#golemVortexHelp">making Golems</a>...<br>
+<a href="#golemVortexHelp">ゴーレムの作り方</a>について詳しく見る...<br>
 <br>
 </a>
 
 <a name="golemVortexHelp">
-<h2>The Temple:<br>Making Golems</h2>
+<h2>神殿:<br>ゴーレムを作る</h2>
 <p>
-Temples allow you to create <a href="#sunWalkerType">Golems</a> that serve as 
-<a href="#transportHelp">Transports</a> on your new island.
+神殿では新しい島の<a href="#sunWalkerType">ゴーレム</a>を作れます。ゴーレムは<a href="#transportHelp">輸送</a>を担います。
 <p>
-A Golem will show up in your
-<a href="#teleportViewHelp">Production Window</a> when you first descend to the
-<a href="#pyrosphereHelp">Pyrosphere</a> for battle.  You can make as many of these
-servants as you wish, provided you have enough <a href="#moneyHelp">Storm Power</a>.
+最初の戦闘のために<a href="#pyrosphereHelp">パイロスフィア</a>へ降りると、<a href="#teleportViewHelp">生産ウィンドウ</a>に現れます。<a href="#moneyHelp">ストームパワー</a>が十分なら、いくらでも作れます。
 <p>
-Learn more about how the Vortex <a href="#influenceVortexHelp">generates Energy</a>...<br>
+神殿の<a href="#influenceVortexHelp">エネルギーの生成方法</a>について詳しく見る...<br>
 <br>
 </a>
 
 <a name="influenceVortexHelp">
-<h2>The Temple:<br>Generating Energy</h2>
+<h2>神殿:<br>エネルギーを作る</h2>
 <p>
-To build anything in Nimbus, you must have the adequate <a href="#influenceHelp">Energy</a>.  Your
-Temple is one of the two sources for this Energy; the other source is Generators.  As you prepare to build anything on your home island, 
-whether it's a Golem, a Workshop, or <a href="#unitHelp">units</a> for battle, your Temple will supply the Energy you need.
+ニンバスで建設するには、適切な<a href="#influenceHelp">エネルギー</a>が必要です。神殿は二つの供給源の一つで、もう一つはジェネレーターです。本島でゴーレム、ワークショップ、戦闘<a href="#unitHelp">ユニット</a>などを作る準備をすると、神殿が必要なエネルギーを供給します。
 <p>
-Left-click on your Temple to see the range of this Energy.
+神殿を左クリックすると、その範囲を確認できます。
 <p>
-<a href="#vortexHelp">Return to Temple Help.</a>
+<a href="#vortexHelp">神殿のヘルプに戻る。</a>
 </a>
 
 <a name="edgeFarmType">
 <info>
-<q>"In other cultures, the plowing is not so dangerous." -Pavel Milyukov, Nimbian farmer</q>
+<q>「他の文化では、畑を耕すのはこれほど危険ではない。」 — パーヴェル・ミリュコフ、ニンビアンの農夫</q>
 <p>
-No <a href="#bridgeType">bridge</a> may be attached where an Edge Farm
-grows, so enemy boarding attempts are foiled there --but this may also foil your attempts to build bridges out from
-your own island.
+エッジファームが育つ場所には<a href="#bridgeType">橋</a>をつなげられず、敵の上陸を阻みます。ただし、自分の島から外へ橋を架けることも妨げられます。
 <p>
-As a <a href="#vortexHelp">Temple</a> is built, the alignment of that Temple grows into the Edge Farm itself.
+<a href="#vortexHelp">神殿</a>を建てると、その系統がエッジファームにも宿ります。
 <p>
-The inhabitants of the islands grow their food around the island's perimeter, leaving interior space open for
-development.
+住民は内側を開発のために空け、島の端に沿って食料を育てます。
 <br>
 </a>
 
 <a name="moneyHelp">
+
 <a name="stormPowerHelp">
-<h2>Storm Power</h2>
+<h2>ストームパワー</h2>
 <p>
-Storm Power is like currency: you spend it for every <a href="#unitHelp">unit</a> you build--except <a href="#bridgeType">bridges</a>.
+ストームパワーは通貨のようなものです。<a href="#bridgeType">橋</a>以外のすべての<a href="#unitHelp">ユニット</a>の建設に使います。
 <p>
-Your current total is displayed in the <a href="#moneyGumpHelp">Storm Power Available Window</a> in the upper left
-of the screen.
+現在の残量は、画面左上の<a href="#moneyGumpHelp">ストームパワー残量ウィンドウ</a>に表示されます。
 <p>
-Storm Power is an unstable state of matter between Energy and Time. It is the essence of
-all that is created or destroyed in <a href="#sphereHelp">Nimbus</a>.
+ストームパワーは、エネルギーと時間の間にある不安定な物質の状態です。<a href="#sphereHelp">ニンバス</a>で生まれ、
+または破壊される、あらゆるものの本質です。
 <p>
-You can use it to build nearly anything in the world of Nimbus. Remember, though, that 
-everything also requires <a href="#influenceHelp">Energy</a> to build.
+ニンバスのほぼすべてのものを建設できます。ただし、何を建てるにも、
+<a href="#influenceHelp">エネルギー</a>も必要なことを覚えておいてください。
 <p>
-Storm Power appears in the world as <a href="#geyserType">Storm Geysers</a>: <!"geyser.*">  
+世界には<a href="#geyserType">ストームガイザー</a>の姿で現れます: <!"geyser.*">
 <br>
-Left-click on one of your <a href="#transportHelp">Transports</a> and send it over to a Geyser.  The
-Transport will now automatically circle between the Geyser and your <a href="#vortexHelp">Temple</a>, mining
-the Storm Power in the form of <a href="#nuggetType">Storm Crystals</a>, until the Geyser is depleted.  (Storm Crystal:
+<a href="#transportHelp">輸送ユニット</a>を左クリックし、ガイザーに送ってください。輸送ユニットは、
+枯れるまでガイザーと自分の<a href="#vortexHelp">神殿</a>の間を自動的に往復し、
+<a href="#nuggetType">ストームクリスタル</a>の形で採掘します。（ストームクリスタル:
 <!"nugget.*">)<br>
-It will then, find the next, closest un-depleted Geyser and do the same.  Watch your 
-<a href="#moneyGumpHelp">Storm Power Available Window</a> crank as your Transports
-gather the goods!
+枯れると、最も近い、まだ枯れていないガイザーを探して同じ作業を続けます。
+集めている間、<a href="#moneyGumpHelp">ストームパワー残量ウィンドウ</a>の数字が増える様子を見てください！
 <p>
-In your left-hand <a href="#teleportViewHelp">Production Window</a>, <a href="#unitHelp">units</a> will appear red if you do not have enough
-Storm Power to build them. 
+左の<a href="#teleportViewHelp">生産ウィンドウ</a>では、ストームパワーが足りず作れない<a href="#unitHelp">ユニット</a>は、
+赤く表示されます。
 <p>
-Destroying enemy units in battle will give you half of their Storm Power value! The other half falls into the 
-war between the <a href="#themehelp">Furies</a> below, and eventually it is lofted up again 
-as <a href="#geyserType">Storm Geysers</a>.
+戦闘で敵ユニットを破壊すると、そのストームパワー価値の半分を得ます！ 残り半分は下で続く
+<a href="#themehelp">フューリー</a>の戦争へ落ち、やがて再び<a href="#geyserType">ストームガイザー</a>となり、
+空へ噴き上がります。
 <br>
 </a>
 </a>
 
 <a name="outpostType">
+
 <a name="outpostHelp">
 <info>
-<q>You can almost feel the power as it takes over the island! - Sar Quinset</q>
+<q>島を支配する力が、感じられるほどだ！ — サール・クインセット</q>
 <p>
-Outposts give you control over an island in <a href="multiQuickHelp">Multiplayer</a> play.
+アウトポストは、<a href="multiQuickHelp">マルチプレイヤー</a>で島の支配権をもたらします。
 <p>
-Use your <a href="#priestType">Priest</a> to create Outposts on islands in multiplayer
-games and take them over. When an Outpost is created you gain four benefits:
+<a href="#priestType">司祭</a>で島にアウトポストを建て、占領しましょう。
+四つの利点があります。
 <p>
-1. You may build bridges off of the island containing the Outpost.
+1. アウトポストがある島から、外へ橋を架けられます。
 <br>
-2. The island is warded against enemy construction. No enemy may build on it.
+2. 島を敵の建設から守ります。敵はそこへ何も建てられません。
 <br>
-3. Transports may return Storm Crystals to the Outpost to turn them to Storm Power.
+3. 輸送ユニットがストームクリスタルを運び込むと、ストームパワーに変わります。
 <br>
-4. Units can be teleported directly from an Outpost, rather than having to travel the
-entire distance from your Workshops.
+4. ワークショップから長い距離を移動する代わりに、アウトポストから直接ユニットを転送できます。
 <p>
-The rule for island domination is: The player with the most Outposts on an island dominates. If two
-players build simultaneously, the island may still remain unowned until one player creates
-another Outpost there.
+島の支配ルールは次のとおりです。最も多くのアウトポストを持つプレイヤーが支配します。二人が
+同時に建てた場合は、どちらかが追加で一つ建てるまで、無所属のままになることがあります。
 <p>
-Outposts are only available in <a href="multiplayerHelp">multiplayer</a> games.
+アウトポストは、<a href="multiplayerHelp">マルチプレイヤー</a>でのみ使えます。
 <p>
-Note: The island you build an outpost on will reflect the theme of your <a href="#vortexHelp">Temple</a>.
+注意: アウトポストを建てた島は、自分の<a href="#vortexHelp">神殿</a>の系統を反映します。
 </a>
 </a>
 
 <a name="campaignHelp">
+
 <a name="multiplayerHelp">
-<h2>Campaign vs. Multiplayer Mode</h2>
+<h2>キャンペーンとマルチプレイヤーモード</h2>
 <p>
-NetStorm has a number of Campaign missions for you to play, as well as a Multiplayer
-mode which you can play indefinitely. If you play the "Early Missions" you will be
-instructed in the workings of the game.
+NetStormには、多彩なキャンペーンミッションと、無限に遊べるマルチプレイヤーモードがあります。
+「初期ミッション」で、ゲームの仕組みを学べます。
 <p>
-<b>Campaign</b>
+<b>キャンペーン</b>
 <p>
-In the Campaign you begin each mission with a specific group of Knowledge.  In order to win
-you must usually Sacrifice the enemy's <a href="#priestType">High Priest</a> to
-the <a href="themeHelp">Furies</a>.  This action vanquishes your enemy and allows you
-to advance to the next mission.
+各ミッションは決められた知識で始まります。通常、勝利するには敵の<a href="#priestType">司祭</a>を、
+<a href="themeHelp">フューリー</a>に捧げる必要があります。敵が退き、次のミッションへ進めます。
 <p>
-<b>Multiplayer</b>
+<b>マルチプレイヤー</b>
 <p>
-In <a href="multiQuickHelp">Multiplayer</a> mode things are slightly different. Your Nimbians start with a simple Knowledge
-Profile. Each time you <a href="#sacrificeOutline">Sacrifice</a> an enemy Priest you will
-be able to gain new <a href="#technologyHelp">Knowledge</a> to improve your fighting
-ability.
+<a href="multiQuickHelp">マルチプレイヤー</a>は少し異なり、ニンバス人は少ない知識から始めます。
+敵の司祭を<a href="#sacrificeOutline">生け贄にする</a>たび、戦闘能力を高める新たな
+<a href="#technologyHelp">知識</a>を得られます。
 <p>
-Multiplayer maps are configured differently from those in the Campaign. You'll see that
-there are many small islands to control as you attempt to defeat your enemy. The
-<a href="#outpostType">Outpost</a> (which does not appear in the Original Campaigns) is instrumental
-in winning Multiplayer games.
+マップの構成も異なり、敵を倒そうとする間に、数多くの小島を支配することになります。
+<a href="#outpostType">アウトポスト</a>（原作のキャンペーンには登場しません）は、
+勝利に不可欠です。
 <p>
-The <a href="#altarType">Altar</a> also functions differently
-and you should learn about <a href="#challengeIslandType">Zones</a> and being
-a <a href="#battlemasterHelp">Battle Master</a>.  If you want 
-to <a href="#chatViewHelp">chat</a> with other players you might be interested in the
-<a href="#formatCommandHelp">.format command</a>.
+<a href="#altarType">祭壇</a>の働きも異なります。<a href="#challengeIslandType">ゾーン</a>や、
+<a href="#battlemasterHelp">バトルマスター</a>になる方法も知っておきましょう。他のプレイヤーと
+<a href="#chatViewHelp">チャット</a>したい場合は、<a href="#formatCommandHelp">.formatコマンド</a>もお役に立つでしょう。
 </a>
 </a>
 
 <a name="multiQuickHelp">
-<h2>Multiplayer Quick Start</h2>
+<h2>マルチプレイヤーのクイックスタート</h2>
 <p>
-Want to make sure a super-experienced guy doesn't kick your butt? Check
-out the <a href="#multiSafeHelp">Multiplayer Survival Guide</a>.
+経験豊かな相手に、一方的に負けたくありませんか？
+<a href="#multiSafeHelp">マルチプレイヤー生存ガイド</a>をご覧ください。
 <p>
-Other things you need to learn about for Multiplayer play:
+その他、知っておくと役立つこと:
 <p>
-* <a href="#chatViewHelp">Chat</a> lets you talk with other players.
+* <a href="#chatViewHelp">チャット</a>で他のプレイヤーと会話できます。
 <br>
-* <a href="#reliabilityHelp">Reliability Ratings</a> tell you whether your opponent will finish a game.
+* <a href="#reliabilityHelp">信頼度</a>は、相手が最後までゲームを続けるかの目安です。
 <br>
-* <a href="#challengeIslandType">Zones</a> let you find players your own Level.
+* <a href="#challengeIslandType">ゾーン</a>では、同じレベルの相手を探せます。
 <br>
-* <a href="#battleIslandType">Challenge Rings</a> let you start battles.
+* <a href="#battleIslandType">チャレンジリング</a>で戦闘を開始できます。
 <br>
-* <a href="#battlemasterHelp">Battle Mastering</a> is a skill you'll want to have.
+* <a href="#battlemasterHelp">バトルマスター</a>になることも、覚えておきたい技能です。
 <br>
-* <a href="#battleOptionsHelp">Battle Options</a> let you change the rules of the game.
+* <a href="#battleOptionsHelp">戦闘オプション</a>でルールを変更できます。
 <br>
-* <a href="#playerOptionsHelp">Player Settings</a> let you set each player's settings.
+* <a href="#playerOptionsHelp">プレイヤー設定</a>で各プレイヤーの条件を指定できます。
 <br>
-* <a href="#outpostType">Outposts</a> are used to capture territory.
+* <a href="#outpostType">アウトポスト</a>は領土を占領するために使います。
 <br>
-* <a href="#altarType">Altars</a> let you <a href="#sacrificeOutline">Sacrifice</a> to gain <a href="#technologyHelp">Knowledge</a>.
+* <a href="#altarType">祭壇</a>で<a href="#sacrificeOutline">生け贄</a>を捧げ、<a href="#technologyHelp">知識</a>を得られます。
 <br>
-* <a href="#rankHelp">Rank</a> is achievement on a grand scale.
+* <a href="#rankHelp">階級</a>は大きな達成を示します。
 <p>
-* Click <a href="#playerlistView">here</a> for a key to the information contained in:<br> 
+* <a href="#playerlistView">こちら</a>で、次のウィンドウの情報の解説をご覧ください。<br>
 <a href="#PlayerListView"><!"fortgump.L1"><!"fortgump.L0"><~y><~E><~B>1.43 devo12<~.></a>
 </a>
 
 <a name="rankHelp">
-<h2>Rank</h2>
+<h2>階級</h2>
 <p>
-What divides the true veterans from the beginners?  Rank does.
+真のベテランと初心者を分けるものは何でしょう？ 階級です。
 <p>
-Having a higher Rank than another player does not give you any advantages in
-battle - it is merely a way of showing your skill and how many Priests you have sacrificed.
+相手より階級が高くても、戦闘で有利にはなりません。技量や生け贄にした司祭の数を示す
+手段にすぎません。
 <p>
-Higher Rank is achieved when you have Sacrificed many Priests and
-gained every single piece of Knowledge the Furies can bestow. At this
-moment, when you next Sacrifice you will get the option to
+多くの司祭を捧げ、フューリーが授けるすべての知識を得ると、上の階級へ進めます。
+次の生け贄では、次の選択肢が現れます。
 <p>
-<c>ADVANCE TO RANK X</c>
+<c>階級Xへ昇進（ADVANCE TO RANK X）</c>
 <p>
-The 'X' will be the number of your new Rank. If you choose this option, all of the technologies 
-that you have gained whilst advancing to level 43 will be lost, and you will start over again 
-with the Sun Disc Thrower, the Sun Cannon, and one Generator. Choosing this option will also increase your Rank by 1.
+「X」は新しい階級の数字です。選ぶと、レベル43までに得た技能をすべて失い、サンディスクスロワー、
+サンキャノン、ジェネレーター一つから、やり直します。階級は1上がります。
 <p>
-In previous versions of Netstorm, Ranks gave players an advantage in battle, by giving their units more health 
-and stronger attacking power, but this was considered unfair. This system of stronger units is now used in the 
-Handicap system, of which the advantages are decided by the <a href="playerOptionsHelp">Player Settings</a>
-the <a href="#battlemasterHelp">Battle Master</a> can set.
+以前のNetStormでは、高階級のユニットは体力と攻撃力が高く、戦闘で有利でした。しかし、不公平と
+考えられました。そのようなユニットの強化は、現在ではハンディキャップに使われ、その効果は<a href="#battlemasterHelp">バトルマスター</a>が
+選べる<a href="playerOptionsHelp">プレイヤー設定</a>で決まります。
 <p>
-<a href="multiQuickHelp">Back to Multiplayer Quick Start</a>
+<a href="multiQuickHelp">マルチプレイヤーのクイックスタートに戻る</a>
 </a>
 
-
 <a name="multiSafeHelp">
-<h2>Multiplayer Survival Guide</h2>
+<h2>マルチプレイヤー生存ガイド</h2>
 <p>
-You need to know that players with a higher Level than yours
-have been playing longer and have won more battles. Be cautious
-if they join a game you're playing.
+高レベルのプレイヤーは、より長く遊び、より多くの戦闘で勝ってきたことを覚えておきましょう。
+参加してきた場合は、注意してください。
 <p>
-Even players with low Levels might be veterans. Check out their
-Rank by looking next to their name. A player with higher rank
-inflicts more damage the higher his Rank, and suffers less
-damage from lower Ranked players.
+低レベルでもベテランの場合があります。名前の横の階級を確認してください。高階級のプレイヤーは、階級が高いほど、
+与える損害が増え、低階級の相手から受ける損害が減ります。
 <p>
-You can also examine how many games the player has played. To find out,
-<c>right-click</c> on the player's island and choose <c>View Player Info</c>
-to get details about them. This is probably the best way to tell how good a 
-player is, as the players who are the best are those who have been playing for the longest.
+プレイしたゲーム数も確認できます。島を<c>右クリック</c>し、
+<c>View Player Info</c>を選んで詳細を見てください。長く遊んできた人ほど上手なので、
+実力を判断する最良の目安になるでしょう。
 <p>
-If they have played many more games than you, they are probably much
-more experienced than you are.  If you're not on a <a href="battleIslandType">Challenge
-Ring</a> then you don't need to be concerned.
+自分よりはるかに多く遊んでいれば、経験豊富でしょう。<a href="battleIslandType">チャレンジ
+リング</a>にいなければ、心配はいりません。
 <p>
-If they are on the same Ring as you are, you have two options if you do not 
-want to play with them. First, you can simply leave the Challenge Ring by
-<c>left-clicking</c> outside the ring. Second, if you are the 
-<a href="#battlemasterHelp">Battle Master</a> you can right-click their 
-name in the left window and Kick them Off, however it is common courtesy
-to politely ask a player to leave before using this option.
+同じリングにいて対戦したくなければ、二つの選択肢があります。一つはリング外を<c>左クリック</c>して
+退出すること。もう一つは、自分が<a href="#battlemasterHelp">バトルマスター</a>なら、左のウィンドウで相手の名前を
+右クリックして追い出すことです。ただし、先に丁寧に退出を頼むのが普通の礼儀です。
 <p>
-It is also wise to check a player's <a href="reliabilityHelp">Reliability Rating</a> before
-playing.
+対戦前に相手の<a href="reliabilityHelp">信頼度</a>を確認するのも賢明です。
 <p>
-<a href="multiQuickHelp">Back to Multiplayer Quick Start</a>
+<a href="multiQuickHelp">マルチプレイヤーのクイックスタートに戻る</a>
 </a>
 
 <a name="reliabilityHelp">
-<h2>Reliability Ratings</h2>
+<h2>信頼度</h2>
 <p>
-Every player gets a Reliability Rating that indicates how often he finishes games.
+全プレイヤーには、どの程度最後までゲームを続けるかを示す信頼度があります。
 <p>
-At first this may seem unimportant - but consider how disappointing it can be when
-your enemy disconnects right at the end of a battle - just so you won't beat
-him.
+最初は重要でないように思えるかもしれません。しかし、決着間際に、負けたくないという理由で相手が切断したら、
+どれほど残念か考えてみてください。
 <p>
-That is where Reliability Ratings come in. Whenever somebody disconnects from an unfinished
-battle and never returns, their Reliability Rating goes down.  Of course, it's
-impossible to tell whether they disconnected intentionally, or whether their 
-Internet connection is poor.  A disconnect is a disconnect. So a low Reliability 
-Rating might just mean you have a flaky Internet connection - not that you're a sore loser.
+その時に信頼度が役立ちます。未終了の戦闘から切断して戻らないと、
+信頼度が下がります。故意か、接続が悪かったのかは分かりません。切断は切断です。そのため、
+低いからといって必ずしも負けを嫌う人とは限らず、接続が不安定なだけかもしれません。
 <p>
-You can view a player's Reliability Rating in the Challenge area by <c>right-clicking</c> on
-their island.  A Reliability Rating of 100% is as good as it gets. A Rating of 0% means
-they have never finished any games!
+チャレンジエリアで相手の島を<c>右クリック</c>すると、信頼度を確認できます。
+100%が最高で、0%は最後まで続けたゲームがないことを意味します！
 <p>
-If you find yourself with a low Reliability Rating you might consider switching Internet
-Service Providers.
+信頼度が低い場合は、インターネットサービス会社の変更も検討してみてください。
 <p>
-<a href="multiQuickHelp">Back to Multiplayer Quick Start</a>
+<a href="multiQuickHelp">マルチプレイヤーのクイックスタートに戻る</a>
 </a>
 
 <a name="battlemasterHelp">
