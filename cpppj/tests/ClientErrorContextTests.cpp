@@ -14,10 +14,12 @@
 #include <windows.h>
 
 namespace { // 검사 전용 로그 경로만 소유하고 실제 게임/사용자 저장소를 열지 않는다.
+// 사례마다 독립 로그/확인창 환경을 준비하고 자기 임시 파일만 정리한다.
 struct ContextLogs {
     std::filesystem::path base,logs; // 검사 프로세스의 새 임시 루트와 그 내부 logs다.
     std::wstring previousWindow; // 검사 중 원문 assertion 확인 창을 끄고 기존 환경 값을 복원한다.
     static std::uint32_t Next() { static std::uint32_t counter{};return ++counter; } // 같은 프로세스에서 임시 경로를 재사용하지 않는다.
+    // 기존 경로 재사용을 거부하고 확인창 환경을 보존한 뒤 공통 기록기를 새 임시 logs에 연결한다.
     ContextLogs() {
         base=std::filesystem::temp_directory_path()/("netstorm-error-context-1377-"+std::to_string(GetCurrentProcessId())+'-'+std::to_string(Next()));logs=base/"logs";
         if (std::filesystem::exists(base)) throw std::runtime_error("진단 검사 임시 경로가 이미 존재합니다");
