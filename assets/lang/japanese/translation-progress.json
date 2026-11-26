@@ -15,8 +15,12 @@
       {
         "first": "Credits",
         "last": "Credits13"
+      },
+      {
+        "first": "NewTech",
+        "last": "TipList"
       }
     ],
-    "nextSection": "NewTech"
+    "nextSection": "AllianceRequested"
   }
 }

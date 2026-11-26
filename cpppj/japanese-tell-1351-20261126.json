@@ -1,0 +1,551 @@
+{
+  "unit": 1351,
+  "date": "2026-11-26",
+  "host": "HJOW-Athlon",
+  "decompileHost": "HJOW-Athlon",
+  "range": {
+    "first": "NewTech",
+    "last": "TipList",
+    "next": "AllianceRequested"
+  },
+  "translatedUniqueDisplayLines": 86,
+  "tipCount": 40,
+  "tipNumbers": {
+    "0": 0,
+    "1": 1,
+    "2": 2,
+    "3": 3,
+    "4": 4,
+    "5": 5,
+    "6": 6,
+    "7": 7,
+    "8": 8,
+    "9": 9,
+    "10": 10,
+    "11": 11,
+    "12": 12,
+    "13": 13,
+    "14": 14,
+    "15": 15,
+    "16": 16,
+    "17": 17,
+    "18": 18,
+    "19": 19,
+    "20": 20,
+    "21": 21,
+    "22": 22,
+    "23": 23,
+    "24": 24,
+    "25": 25,
+    "26": 26,
+    "27": 27,
+    "28": 28,
+    "29": 29,
+    "30": 30,
+    "31": 31,
+    "32": 32,
+    "33": 33,
+    "34": 34,
+    "35": 35,
+    "36": 36,
+    "37": 37,
+    "38": 38,
+    "39": 0
+  },
+  "previousAndNextVerified": true,
+  "lastTipResetsNumber": true,
+  "audit": {
+    "passed": true,
+    "translated": 41,
+    "present": 42,
+    "partial": [
+      "tell"
+    ],
+    "total": 43,
+    "missing": [
+      "help",
+      "tell"
+    ],
+    "uniqueKanji": 904,
+    "originalCompared": 42,
+    "files": [
+      {
+        "file": "bc1menu76.japanese",
+        "bytes": 1161,
+        "sections": 11,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "bc2bridging76.japanese",
+        "bytes": 2243,
+        "sections": 6,
+        "links": 0,
+        "images": 2,
+        "imageSections": {
+          "[A.]": 2
+        }
+      },
+      {
+        "file": "bc3acid_bar76.japanese",
+        "bytes": 2815,
+        "sections": 7,
+        "links": 0,
+        "images": 1,
+        "imageSections": {
+          "[A1.]": 1
+        }
+      },
+      {
+        "file": "bc4bow_rush76.japanese",
+        "bytes": 2381,
+        "sections": 6,
+        "links": 0,
+        "images": 1,
+        "imageSections": {
+          "[A.]": 1
+        }
+      },
+      {
+        "file": "bc5walkers76.japanese",
+        "bytes": 2291,
+        "sections": 6,
+        "links": 0,
+        "images": 8,
+        "imageSections": {
+          "[A.]": 8
+        }
+      },
+      {
+        "file": "bc6mows76.japanese",
+        "bytes": 3367,
+        "sections": 6,
+        "links": 0,
+        "images": 3,
+        "imageSections": {
+          "[A.]": 3
+        }
+      },
+      {
+        "file": "bc7sun_bars76.japanese",
+        "bytes": 2677,
+        "sections": 6,
+        "links": 0,
+        "images": 1,
+        "imageSections": {
+          "[A.]": 1
+        }
+      },
+      {
+        "file": "bc8fury76.japanese",
+        "bytes": 3831,
+        "sections": 15,
+        "links": 0,
+        "images": 8,
+        "imageSections": {
+          "[@1]": 4,
+          "[ai2priestdead]": 1,
+          "[ai3priestdead]": 1,
+          "[ai4priestdead]": 1,
+          "[ai5priestdead]": 1
+        }
+      },
+      {
+        "file": "bc9ssun_bars76.japanese",
+        "bytes": 2178,
+        "sections": 8,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "breakingthrough.japanese",
+        "bytes": 2209,
+        "sections": 7,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "config.japanese",
+        "bytes": 2653,
+        "sections": 0,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "demostormrages.japanese",
+        "bytes": 812,
+        "sections": 3,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "dissolvedalliance.japanese",
+        "bytes": 2231,
+        "sections": 6,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "enemyterritory.japanese",
+        "bytes": 3004,
+        "sections": 8,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "finalconfrontation.japanese",
+        "bytes": 2636,
+        "sections": 5,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "fragilefortune.japanese",
+        "bytes": 2045,
+        "sections": 6,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "guardmyback.japanese",
+        "bytes": 3987,
+        "sections": 9,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "masterofwhirligigs.japanese",
+        "bytes": 2071,
+        "sections": 5,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical1.japanese",
+        "bytes": 907,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical2.japanese",
+        "bytes": 1307,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical2sep.japanese",
+        "bytes": 16,
+        "sections": 0,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical3.japanese",
+        "bytes": 1314,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical4.japanese",
+        "bytes": 723,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical5.japanese",
+        "bytes": 664,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical5sep.japanese",
+        "bytes": 16,
+        "sections": 0,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical6.japanese",
+        "bytes": 273,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "rainvsrain.japanese",
+        "bytes": 1821,
+        "sections": 6,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "runforit.japanese",
+        "bytes": 2263,
+        "sections": 7,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "savetheisland.japanese",
+        "bytes": 1950,
+        "sections": 6,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "surrounded.japanese",
+        "bytes": 2546,
+        "sections": 6,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "tell.japanese",
+        "bytes": 75192,
+        "sections": 303,
+        "links": 21,
+        "images": 2,
+        "imageSections": {
+          "[BuildNoBucks]": 1,
+          "[UpgradeNoBucks]": 1
+        }
+      },
+      {
+        "file": "thenoose.japanese",
+        "bytes": 2245,
+        "sections": 7,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "thewarbegins.japanese",
+        "bytes": 1997,
+        "sections": 5,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "thunderingpower.japanese",
+        "bytes": 5807,
+        "sections": 17,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "totherescue.japanese",
+        "bytes": 2992,
+        "sections": 7,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "tutorial1.japanese",
+        "bytes": 7194,
+        "sections": 14,
+        "links": 0,
+        "images": 4,
+        "imageSections": {
+          "[D.]": 2,
+          "[D1.]": 1,
+          "[E.]": 1
+        }
+      },
+      {
+        "file": "tutorial2.japanese",
+        "bytes": 10752,
+        "sections": 20,
+        "links": 0,
+        "images": 13,
+        "imageSections": {
+          "[A1.]": 2,
+          "[C.]": 2,
+          "[D1.]": 2,
+          "[F.]": 5,
+          "[G.]": 2
+        }
+      },
+      {
+        "file": "tutorial3.japanese",
+        "bytes": 8541,
+        "sections": 15,
+        "links": 0,
+        "images": 4,
+        "imageSections": {
+          "[A1.]": 1,
+          "[D1.]": 3
+        }
+      },
+      {
+        "file": "tutorial4.japanese",
+        "bytes": 9466,
+        "sections": 16,
+        "links": 0,
+        "images": 1,
+        "imageSections": {
+          "[A.]": 1
+        }
+      },
+      {
+        "file": "tutorial5.japanese",
+        "bytes": 9608,
+        "sections": 16,
+        "links": 0,
+        "images": 3,
+        "imageSections": {
+          "[A.]": 2,
+          "[E.]": 1
+        }
+      },
+      {
+        "file": "tutorial6.japanese",
+        "bytes": 8256,
+        "sections": 11,
+        "links": 0,
+        "images": 14,
+        "imageSections": {
+          "[A1.]": 1,
+          "[A2.]": 11,
+          "[C.]": 1,
+          "[E.]": 1
+        }
+      },
+      {
+        "file": "vicious.japanese",
+        "bytes": 2006,
+        "sections": 6,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      }
+    ],
+    "errors": []
+  },
+  "focusedTests": {
+    "passed": 9,
+    "failed": 0
+  },
+  "gui": [
+    {
+      "name": "tell-1351-tips",
+      "args": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+        "--window",
+        "--frames",
+        "630",
+        "--fixed-frame-ms",
+        "25",
+        "--no-audio",
+        "--set",
+        "welcomeGiven=1;tellTips=0;autoDemo=0;edgeScroll=0;currentLanguage=japanese;SCREENW=1024;SCREENH=768",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\tell-1351-tips.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\tell-1351-tips-report.tsv"
+      ],
+      "exit_code": 0,
+      "seconds": 3.787593364715576,
+      "exe_sha256": "458f23e09021c5c8d7230459c1499034d8fddfb69a471da60af5c39e4741b918"
+    },
+    {
+      "name": "tell-1351-dialogs-fixed",
+      "args": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+        "--window",
+        "--frames",
+        "140",
+        "--fixed-frame-ms",
+        "25",
+        "--no-audio",
+        "--set",
+        "welcomeGiven=1;tellTips=0;autoDemo=0;edgeScroll=0;currentLanguage=japanese;SCREENW=1024;SCREENH=768;global.newTechName=\"サンキャノン\";global.newTechPic=\"<!`\"sunCannon.*`\">\"",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\tell-1351-dialogs-fixed.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\tell-1351-dialogs-fixed-report.tsv",
+        "--mission",
+        "thewarbegins"
+      ],
+      "exit_code": 0,
+      "seconds": 3.1900558471679688,
+      "exe_sha256": "458f23e09021c5c8d7230459c1499034d8fddfb69a471da60af5c39e4741b918"
+    }
+  ],
+  "preliminaryDisplayInput": {
+    "name": "tell-1351-dialogs",
+    "args": [
+      "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "--run",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+      "--window",
+      "--frames",
+      "140",
+      "--fixed-frame-ms",
+      "25",
+      "--no-audio",
+      "--set",
+      "welcomeGiven=1;tellTips=0;autoDemo=0;edgeScroll=0;currentLanguage=japanese;SCREENW=1024;SCREENH=768",
+      "--ui-script",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\tell-1351-dialogs.tsv",
+      "--ui-report",
+      "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\tell-1351-dialogs-report.tsv",
+      "--mission",
+      "thewarbegins"
+    ],
+    "exit_code": 0,
+    "seconds": 3.4205856323242188,
+    "exe_sha256": "458f23e09021c5c8d7230459c1499034d8fddfb69a471da60af5c39e4741b918"
+  },
+  "preliminaryIssue": "표시 BYTE를 받는 Config UI 명령에 UTF-8 치환값을 넣은 검사 입력 오류. 실제 configure와 같은 UTF-8 시작 설정으로 교정해 이름/그림 확인.",
+  "dynamicPictures": {
+    "references": 1,
+    "type": "sunCannon",
+    "displayOnly": true,
+    "allVisuallyChecked": true
+  },
+  "protectedFiles": 3212,
+  "protectedAndGameUnchanged": true,
+  "productRebuild": false,
+  "exeSha256": "458f23e09021c5c8d7230459c1499034d8fddfb69a471da60af5c39e4741b918",
+  "excluded": [
+    "기술 획득/희생 실제 재현",
+    "비활성 온라인/장치 명령 실행",
+    "공격·포획·승리 재현",
+    "MP 실행"
+  ]
+}

@@ -1767,145 +1767,135 @@ $Button=確認,Tell,Blank
 
 [***********************************************************]
 [NewTech]
-<h2>{H2}Technology Gained!</h2>
+<h2>{H2}知識を獲得！</h2>
 <p>{Text}
-Your Altar is consumed! Your sacrifice is received!  The Furies 
-are merciful. Your people are imbued with knowledge of 
-the <i>{global.newTechName}</i>{Text}.
+あなたの祭壇は消費されました！ 生贄は受け入れられました！ フューリーたちは慈悲深いのです。あなたの民は、<i>{global.newTechName}</i>{Text}の知識を授かりました。
 <p>
 {global.newTechPic}
 <p>
-You will be able to use this unit from now on!
+今後、このユニットを使えるようになります！
 
 $Timeout=15,DoNothing,0
-$Button=OK,DoNothing,0
+$Button=確認,DoNothing,0
 
 [***********************************************************]
 [AltarUpgrade]
-<h2>{H2}Altar Upgraded!</h2>
+<h2>{H2}祭壇をアップグレード！</h2>
 <p>{Text}
-Your altar has been sanctified and strengthened by the Sacrifice
-of your enemy's Priest. In your next battle, you may use it to 
-gain more powerful Knowledge.
+敵司祭の生贄によって、あなたの祭壇は神聖で強力になりました。次の戦闘では、この祭壇でより強力な知識を得られます。
 
 $Timeout=15,DoNothing,0
-$Button=OK,DoNothing,0
+$Button=確認,DoNothing,0
 
 [***********************************************************]
 [MultiplayerPriestDead]
-<$Warning,"~B~E~yYour priest has been sacrificed by {param.1}{param.2}">
+
+<$Warning,"~B~E~yあなたの司祭が{param.1}{param.2}に生贄として捧げられました">
 
 [AddWarningRemoved]
-<h2>{H2}Priest is Dead!</h2>
+<h2>{H2}司祭死亡！</h2>
 <p>{Text}
-Your Priest's blood has been spilled on 
-the Altar of {CText}{param.1}.{Text}
+あなたの司祭の血が流されました。その場所は、{CText}{param.1}.{Text}の祭壇です。
 
 <?{param.2}>
 $Timeout=15,DoNothing,0
-$Button=OK,DoNothing,0
+$Button=確認,DoNothing,0
 </?>
 <?!{param.2}>
 $Timeout=15,DoNothing,0
-$Button=Leave Battle,LeaveBattle,1
-$Button=Keep Watching,DoNothing,0
+$Button=戦闘から離れる,LeaveBattle,1
+$Button=観戦を続ける,DoNothing,0
 </?>
 
 [***********************************************************]
 [MultiplayerOtherPriestDead]
-<$Warning,"~B~E~y{param.1}{param.2}'s~y Priest has been sacrificed by {param.3}{param.4}">
+
+<$Warning,"~B~E~y{param.1}{param.2}の~y司祭が{param.3}{param.4}に生贄として捧げられました">
 
 [AddWarningRemoved]
-<h2>{H2}Sacrifice!</h2>
+<h2>{H2}生贄！</h2>
 <p>{Text}
-The High Priest of {CText}{param.1}{Text} has been slain
-upon the Altar of {CText}{param.2}.{Text} The Furies are well pleased.
+司祭が命を落としました。所有者は{CText}{param.1}{Text}で、
+祭壇の所有者は{CText}{param.2}.{Text}です。フューリーたちは大いに喜んでいます。
 
 $Timeout=15,DoNothing,0
-$Button=OK,DoNothing,0
+$Button=確認,DoNothing,0
 
 [***********************************************************]
 [AlreadyUpgrading]
-<h2>{H2}Already Upgrading</h2>
+<h2>{H2}すでにアップグレード中です</h2>
 <p>{Text}
-You must wait until the current upgrade is complete before
-starting another.
+別のアップグレードを始めるには、現在のアップグレードが完了するまで待つ必要があります。
 
 [***********************************************************]
 [ClientDisconnect]
-<h2>{H2}Client Disconnected</h2>
+<h2>{H2}クライアント切断</h2>
 {Text}
-{param.1} has disconnected from the game.
-$Button=OK,DoNothing,0
+{param.1}のゲーム接続が切れました。
+$Button=確認,DoNothing,0
 
 
 [***********************************************************]
 [QueryDecendToChalLevel]
-<h2>{H2}Descend to zone {param.1}?</h2>
+<h2>{H2}ゾーン{param.1}に降りますか？</h2>
 {Text}
-$Button=Yes,DecendToChalLevel,{param.1}
-$Button=No,DoNothing,0
+$Button=はい,DecendToChalLevel,{param.1}
+$Button=いいえ,DoNothing,0
 
 [***********************************************************]
 [QueryLeaveChalBattle]
-<h2>{H2}Leave current battle?</h2>
+<h2>{H2}現在の戦闘から離れますか？</h2>
 {Text}
-$Button=Yes,ChalSailPos,{param.1}
-$Button=No,DoNothing,0
+$Button=はい,ChalSailPos,{param.1}
+$Button=いいえ,DoNothing,0
 
 [***********************************************************]
 [QueryLeaveJoinChalBattle]
-<h2>{H2}Leave current battle?</h2>
+<h2>{H2}現在の戦闘から離れますか？</h2>
 {Text}
-$Button=Yes,ChalSailJoinBattle,{param.1}
-$Button=No,DoNothing,0
+$Button=はい,ChalSailJoinBattle,{param.1}
+$Button=いいえ,DoNothing,0
 
 [***********************************************************]
 [NoDirectDraw]
-<h2>{H2}DirectDraw Not Installed</h2>
+<h2>{H2}DirectDrawがインストールされていません</h2>
 <p>{Text}
-You have requested a fullscreen mode, but DirectDraw does
-not appear to be installed. DirectDraw is required to play
-in fullscreen mode.
+全画面モードが要求されましたが、DirectDrawがインストールされていないようです。全画面でプレイするにはDirectDrawが必要です。
 <p>
-Exit NetStorm and install DirectX to play fullscreen.
+NetStormを終了し、DirectXをインストールしてください。
 
-$Button=OK,DoNothing,0
+$Button=確認,DoNothing,0
 
 
 [***********************************************************]
 [Tips]
-<h2>{H2}Did You Know?</h2>
+<h2>{H2}ご存じですか？</h2>
 <p>{Text}
-{@tell.tip{tipNumber}|You're out of Tips!}
+{@tell.tip{tipNumber}|これ以上ヒントはありません！}
 <p>
 <?{tipNumber}>
-$Button=Prior Tip,TellTip,1
+$Button=前のヒント,TellTip,1
 </?>
-$Button=Next Tip,TellTip,2
-$Button=No More Tips,Config,tellTips=0
-$Button=OK,TellTip,3
-
+$Button=次のヒント,TellTip,2
+$Button=今後表示しない,Config,tellTips=0
+$Button=確認,TellTip,3
 
 [***********************************************************]
 [NotInDemo][BreakingThroughMissing][MissingMission]
 [Remvoed]
 <h2>{H2}NetStorm!</h2>
 <p>{Text}
-This mission is not in the NetStorm demo.
+このミッションは、NetStormのデモには含まれていません。
 <p>
-We hope you have enjoyed playing this short demo. There are
-many more missions in the final version, and if you haven't
-tried the Multiplayer game give it a shot!
+短いデモを楽しんでいただけたなら幸いです。製品版には、さらに多くのミッションがあります。マルチプレイヤーをまだ試していないなら、ぜひ挑戦してください！
 <p>
-You can buy
-NetStorm direct from <a href="http://www.titanic.com/netstorm/buynetstormdirect.html">Activision</a>
-by calling 800-477-3650 or by visiting your nearest retailer.
+NetStormは、<a href="http://www.titanic.com/netstorm/buynetstormdirect.html">Activision</a>から直接購入できます。
+800-477-3650に電話するか、お近くの販売店へお越しください。
 <p>
-For the latest demo download check out <a href="http://www.titanic.com/netstorm/demo.html">http://www.titanic.com/netstorm/demo.html</a>
-.
+最新のデモは、<a href="http://www.titanic.com/netstorm/demo.html">http://www.titanic.com/netstorm/demo.html</a>
+から入手できます。
 
-$Button=OK,DoNothing,0
+$Button=確認,DoNothing,0
 
 <?{param.1}>
 $OnExit=X,Tell,Blank
@@ -1916,62 +1906,61 @@ $OnExit=X,Tell,Blank
 
 [***********************************************************]
 [DemoNote]
-<h2>{H2}Demonstration</h2>
+<h2>{H2}デモ</h2>
 <p>{Text}
-This is a demonstration of NetStorm, version {version}. 
+これは、NetStormバージョン{version}のデモです。
 <p>
-This demo has three missions, all the tutorials, and lets you play
-in Multiplayer using only Sun Knowledge. Save games created during this
-demo can be continued when you purchase the game!
+このデモには三つのミッションと、すべてのチュートリアルが含まれており、サンの知識だけを使ってマルチプレイヤーをプレイできます。デモで作った保存済みゲームは、製品を購入した後も続けられます！
 <p>
-Hit F1 in the game for help and technical support.
+ゲーム中にF1を押すと、ヘルプとテクニカルサポートを表示できます。
 <p>
-Have fun!
+楽しくプレイしてください！
 
-$Button=OK,Tell,{param.1}
+$Button=確認,Tell,{param.1}
 
 [***********************************************************]
 [TipList]
-tip0="Visit <a href=`"http://www.netstormhq.com`">NetstormHQ</a> to check for updates, get support, meet new friends, or discuss your favorite strategies. You can also participate in tournaments! Please visit our sponsors."
-tip1="You can use {CText}F2{Text} to make bridge connecting easier."
-tip2="You can {CText}right-click{Text} on anything to get help about it - even game windows!"
-tip3="If at first you don't succeed, try again! The only way to master Netstorm is to practice. Some people have been playing for years and still have room for improvement. You'll soon beat them if you train hard!"
-tip4="You can use {CText}F5{Text} to find your Priest at any time. Pressing the key {CText}P{Text} or {CText}R{Text} will select the priest, pressing the key twice will find him and select him too!"
-tip5="You can check the range of enemy units by clicking on them."
-tip6="When you place a unit off of a bridge, you can build more bridge from that unit's island!"
-tip7="If you build bridge directly to a Geyser it's harder to connect than if you approach from one side."
-tip8="You should always continue building bridges to Storm Geysers so that your Golems never stop harvesting."
-tip9="Using hotkeys in Netstorm can save valuable seconds in battle. The keys {CText}Q W A S Z X{Text} allow you to bring up bridges without having to move your mouse! Also pressing {CText}U{Text} takes you to the last unit you lost."
-tip10="When forming a bridge arm for attack you can alternate your branch arms in and out to maximize mobility, offensive, and defensive positioning!"
-tip11="Towers can be used to protect weak attack units!"
-tip12="You get Storm Power every time you destroy an enemy unit!"
-tip13="Once you've attached to a Geyser you own its island, and can build bridge off of it!"
-tip14="Building more Workshops is more efficient than Upgrading!"
-tip15="A mix of weapons is often better than focusing on just one type."
-tip16="All units will always pick the closest available target - even if its invulnerable to their attack!"
-tip17="When transports arrive at an empty Geyser, they always choose the Geyser closest to your Temple next - even if it is in enemy territory!"
-tip18="You shouldn't cluster your shooting units together - when one blows up they will all be damaged!"
-tip19="You can break through enemy bridge by building an inexpensive unit right next to it, and then Salvaging your unit. The destructive force will cause normal bridge to crack, and cracked bridge to crumble!"
-tip20="In Multiplayer, you can blow up enemy bridges by building a generator next to them, right-clicking on it and choosing 'Meltdown'!"
-tip21="If you have a fast video card you may be able to use {CText}Options / Adjust Direct Draw / Parallax Clouds{Text} in Direct Draw mode. Its cool!!"
-tip22="When shooting an enemy unit, aim for the area where it meets the ground. If you try to hit it up high your shots may pass right by it!"
-tip23="You can build on your allies' Island and bridges, if your bridges connect."
-tip24="You can Salvage what you're not using when you need extra Storm Power."
-tip25="Since units always choose the closest target, you can often use Towers to distract enemy fire while you attack from another angle!"
-tip26="Beware of broken bridges! Golems may walk off a bridge if it existed when they started moving!"
-tip27="The priest can pray for a powerful Spell in multiplayer games!"
-tip28="You can build Outposts in Multiplayer Mode to control more islands!"
-tip29="Air units can not attack other air units!"
-tip30="Which 'slot' you choose in a Multiplayer Challenge Ring determines the location of your island in the battle."
-tip31="The key to fighting Whirligigs, Dust Devils, and Man o' Wars is to kill their bases - never waste time on the flyers themselves."
-tip32="If you don't want to have to worry about running out of money, use Sun units - they're cheap!"
-tip33="Each Transport has important differences - if you know how to use them creatively!"
-tip34="You can group weapons in a complementary manner.  The weakness of one could be the strength of the other!"
-tip35="In Multiplayer, when you build your temple you should place it near the most geysers, so your golems don't have so far to walk!"
-tip36="You can build more bridge even when the one you're connecting to is still dark."
-tip37="In Multiplayer, if you start typing another player's name in the chat window and hit TAB, it will fill in the rest of the name."
-tip38="When your ally is low on cash, you can {CText}right-click{Text} on a unit owned by them, go to {CText}Player{Text}, click {CText}Send Money{Text} and choose how much you want to send."
-tip39="You're out of Tips! You can find more Tips at <a href=`"http://www.netstormhq.com`">NetstormHQ</a>.<$Config,tipNumber=0>"
+tip0="<a href=`"http://www.netstormhq.com`">NetstormHQ</a>を訪れ、更新の確認、サポート、新しい友達探し、お気に入りの戦略の議論を楽しみましょう。大会にも参加できます！ スポンサーのサイトもご覧ください。"
+tip1="{CText}F2{Text}キーを使うと、橋をより簡単につなげられます。"
+tip2="何でも{CText}右クリック{Text}すれば、そのヘルプを見ることができます。ゲームのウィンドウも同じです！"
+tip3="最初に失敗しても、もう一度挑戦しましょう！ NetStormを身につける唯一の方法は練習です。何年もプレイしながら、まだ上達の余地がある人もいます。熱心に訓練すれば、すぐに彼らに勝てるでしょう！"
+tip4="{CText}F5{Text}キーで、いつでも司祭を見つけられます。{CText}P{Text}または{CText}R{Text}を押すと司祭を選び、二回押すと司祭の位置に移動して選択します！"
+tip5="敵ユニットをクリックすると、その射程を確認できます。"
+tip6="橋の先にユニットを配置すると、そのユニットの島から、さらに橋を架けられます！"
+tip7="間欠泉に向かってまっすぐ橋を架けると、横から近づく場合よりも、つなぐのが難しくなります。"
+tip8="ゴーレムが採集をやめないように、ストームガイザーへの橋を架け続けましょう。"
+tip9="ホットキーは、戦闘中の貴重な時間を節約します。{CText}Q W A S Z X{Text}で、マウスを動かさずに橋を取り出せます。また、{CText}U{Text}を押すと、最後に失ったユニットの位置に移動します。"
+tip10="攻撃用の橋を延ばすときは、枝を内側と外側に交互に張り出すと、機動性、攻撃、防御の位置を最大限に生かせます！"
+tip11="タワーは、弱い攻撃ユニットを守るために使えます！"
+tip12="敵ユニットを破壊するたびに、ストームパワーを得られます！"
+tip13="間欠泉につなぐと、その島を所有でき、その島からさらに橋を架けられます！"
+tip14="アップグレードするより、ワークショップを増やすほうが効率的です！"
+tip15="一種類の武器に集中するよりも、さまざまな武器を組み合わせるほうが、たいてい効果的です。"
+tip16="すべてのユニットは、常に最も近い標的を選びます。その標的に、自分の攻撃が効かなくても同じです！"
+tip17="輸送ユニットが枯れた間欠泉に着くと、次は必ず神殿に最も近い間欠泉を選びます。敵の領土にあっても同じです！"
+tip18="射撃ユニットを一か所に集めないようにしましょう。一体が爆発すると、全員が損害を受けます！"
+tip19="敵の橋のすぐ隣に安いユニットを作り、それを回収（Salvage）すると、敵の橋を突破できます。破壊の衝撃で通常の橋はひび割れ、ひび割れた橋は崩れます！"
+tip20="マルチプレイヤーでは、敵の橋の隣にジェネレーターを作り、右クリックして「メルトダウン（Meltdown）」を選ぶと、敵の橋を爆破できます！"
+tip21="高速なグラフィックスカードなら、Direct Drawモードで{CText}オプション / Direct Drawを調整 / 視差のある雲{Text}を使えます。とても見事です！！"
+tip22="敵ユニットを撃つときは、地面と接する部分を狙ってください。高い所を狙うと、弾が通り抜けてしまうことがあります！"
+tip23="橋がつながっていれば、同盟の島や橋の上にも建設できます。"
+tip24="ストームパワーがさらに必要なときは、使っていないものを回収（Salvage）できます。"
+tip25="ユニットは常に最も近い標的を選ぶため、タワーに敵の射撃を引きつけながら、別の方向から攻撃できます！"
+tip26="切れた橋に気をつけてください！ ゴーレムは、動き始めたときに橋があった場所なら、切れた端から歩き出して落ちることがあります！"
+tip27="マルチプレイヤーでは、司祭が祈って強力なスペルを得られます！"
+tip28="マルチプレイヤーモードでは、アウトポストを建てて、さらに多くの島を支配できます！"
+tip29="飛行ユニットは、ほかの飛行ユニットを攻撃できません！"
+tip30="マルチプレイヤーのチャレンジリングで、どの「スロット」を選ぶかによって、戦闘時の自分の島の位置が決まります。"
+tip31="ワーリギグ、ダストデビル、マンオウォーと戦うこつは、その基地を壊すことです。飛行体そのものに時間を無駄にしないようにしましょう。"
+tip32="資金切れを心配したくないなら、サンユニットを使いましょう。安価です！"
+tip33="輸送ユニットには、それぞれ大切な違いがあります。工夫して使う方法を知っていれば、それを生かせます！"
+tip34="互いを補うように武器を組み合わせられます。一方の弱点を、もう一方の強みで補えます！"
+tip35="マルチプレイヤーで神殿を建てるときは、間欠泉が最も多い場所の近くに置きましょう。ゴーレムが遠くまで歩かずに済みます！"
+tip36="つなごうとする橋が、まだ暗い状態でも、さらに橋を架けられます。"
+tip37="マルチプレイヤーのチャット欄で、ほかのプレイヤーの名前を途中まで入力してTABキーを押すと、残りの名前を補完できます。"
+tip38="同盟の資金が不足したら、その所有ユニットを{CText}右クリック{Text}し、{CText}プレイヤー{Text}から{CText}ストームパワーを送る{Text}を選んで、金額を指定できます。"
+tip39="これ以上ヒントはありません！ さらに多くのヒントは、<a href=`"http://www.netstormhq.com`">NetstormHQ</a>で見つかります。<$Config,tipNumber=0>"
+
 [***********************************************************]
 [AllianceRequested]
 <h2>{H2}Alliance Requested</h2>
