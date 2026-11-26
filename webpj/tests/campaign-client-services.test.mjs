@@ -19,6 +19,7 @@ import { GamePalette } from '../www/assets/palette.js';
 import { realCaptureAssets } from './capture-assets-support.mjs';
 import { createMissionFortLoadRequest, writeMissionFortRequest, captureMissionFortZone } from '../www/core/mission-fort-request.js';
 import { restoreLocalMissionStarting } from '../www/core/raw-local-mission-state.js';
+import { displayTextCodec } from '../www/assets/display-text.js';
 
 // 실제 입력 고리의 명령 정규화, signed 인수 및 가득 찬 큐 동작을 그대로 쓴다.
 test('캠페인 Client 입력 서비스: 현재 큐와 원본 명령 고리', () => {
@@ -85,6 +86,30 @@ test('캠페인 Client AI: 실제 설정·로컬 치환·채팅·난이도', () 
     assert.equal(ai.skirmishPlayers(), 8); assert.equal(ai.difficulty(2, false), 1); assert.equal(ai.difficulty(1, true), 3);
     data.setInt('skirmishAiCount', -3); assert.equal(ai.skirmishPlayers(), 2);
     assert.throws(() => ai.names.translate('가'), /원문 바이트 범위/);
+});
+
+// 고정32BYTE 이름 칸을 보호하되 확장 토큰·CP1252·현재 설정 재조회 규칙을 C++1345와 맞춘다.
+test('캠페인 Client AI: 확장 기본 이름은31BYTE 안의 완전한 문자만 보존한다', () => {
+    // 실제 앱·입력 필터와 같은 프로세스 공유 한자 배정표를 사용한다.
+    const codec = displayTextCodec, ai = {}; let current = '';
+    bindCampaignAiClientServices({ configuration: () => ({ pathSpec: () => current }), encodeDisplayText: (text) => codec.encode(text) }, ai);
+    // 토큰 끝·혼합 문자 경계·첫 NUL과 기존 CP1252 이름을 함께 대조한다.
+    const cases = [
+        ['가'.repeat(8), '가'.repeat(7), 28],
+        ['ABC' + '가'.repeat(8), 'ABC' + '가'.repeat(7), 31],
+        ['ABCD' + '가'.repeat(7), 'ABCD' + '가'.repeat(6), 28],
+        ['日本語日本語日本語', '日本語日本語日', 28],
+        ['가나\0다라', '가나', 8],
+        ['Café', 'Café', 4],
+        ['A'.repeat(40), 'A'.repeat(40), 40],
+    ];
+    // 연결을 다시 만들지 않고 매번 바뀐 설정의 현재 이름을 읽어야 한다.
+    for (const [text, expected, bytes] of cases) {
+        current = text;
+        const name = ai.defaultName();
+        assert.equal(name.length, bytes, text);
+        assert.equal(codec.decode(Uint8Array.from(name, (character) => character.charCodeAt(0))), expected, text);
+    }
 });
 
 // 같은 실제 Client 전역과 요청에서 State7 복사·카메라·재접속 지역 값을 확인한다.

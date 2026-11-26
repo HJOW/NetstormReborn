@@ -3,6 +3,7 @@
 import { currentAllocationBytes } from './current-allocation-bytes.js';
 import { DIFFICULTY_CONFIG_KEY } from './ai-difficulty.js';
 import { captureLocalMissionStarting, RawLocalMissionState } from './raw-local-mission-state.js';
+import { hasExtendedDisplayText, filterDisplayText } from './display-text-input.js';
 
 // 같은 실제 Client 시계·화면 및 현재 World의 카메라·전체 간헐천 생성기를 빌린다.
 export function makeCampaignMissionStartEffects(client, world, refreshCommandGump) {
@@ -50,7 +51,12 @@ export function bindCampaignAiClientServices(client, ai) {
         if (config.getInt('skirmishRun') !== 0 && owner >= 2 && owner <= 8) return config.getInt(`skirmishAi${owner}Diff`) >>> 0;
         return enemy ? config.getInt(DIFFICULTY_CONFIG_KEY) >>> 0 : 0;
     };
-    ai.defaultName = () => encodeDisplay(client, client.configuration().pathSpec('defaultAiName'));
+    // 현재 설정의 확장 이름만 Player32BYTE의 NUL 자리를 남기며 완전한 표시 문자로 제한한다(C++1345).
+    ai.defaultName = () => {
+        // CP1252 원문 복사는 유지하고4BYTE 확장 토큰이 있는 이름만31BYTE 이내로 자른다.
+        const name = encodeDisplay(client, client.configuration().pathSpec('defaultAiName'));
+        return hasExtendedDisplayText(name) ? Array.from(filterDisplayText(name, '', 31), (byte) => String.fromCharCode(byte)).join('') : name;
+    };
 }
 
 // 개발자 명령과 신전 이탈이 같은 Client의 현재 입력 큐에 signed 좌표로 예약되게 한다.

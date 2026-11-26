@@ -2976,15 +2976,17 @@ export class Netstorm {
 
     // 일반 도움말 창을 열어 메인 메뉴 위에 올린다(원본 F1Help: 메인 메뉴 Help 목록의 General Help 행과 F1 키). 이미 열려 있으면 그 창에서 주제만 첫 주제로 되돌린다.
     // 도움말 파일(`Quick Help Spec`)이 없으면 원본처럼 오류 로그만 남기고 열지 않는다. 바깥 주소 링크는 `_openExternalAddress` 로 새 탭/창에 연다(2026-11-07 WB03-AD, 그 전에는 콘솔 안내만). 열었으면 true 를 돌려준다. (2026-10-30 WB03-G)
-    // 노드의 도움말 문구(text=false) 또는 주제 이름(word=true) 포인터를 새 문자열 토큰으로 바꾼다(원본 SetNodeHelp: 이전 문자열을 반납하고 0x61000000 대 토큰을 새로 받는다). null 이면 포인터를 지운다. (2026-11-22 WB04-E1236)
+    // 노드의 도움말 문구(text=false) 또는 주제 이름(word=true)을 첫 NUL까지 소유한다. 이전 토큰을 반납한 뒤 새 토큰을 받으며 null·빈 값은 포인터를 지운다(원본 SetNodeHelp, E1236·E1347).
     _setNodeHelp(token, text, word) {
         const node = this._clientGump?.node(token); if (!node) throw new Error('도움말 실제 노드 없음');
+        // C 문자열처럼 첫 NUL 뒤의 내용은 문구·주제·빈 값 판정에 포함하지 않는다.
+        const terminated = text === null ? '' : String(text).split('\0', 1)[0];
         const strings = this._helpStrings ??= new Map(), key = word ? 'alternateTextPointer' : 'textPointer';
         strings.delete(node[key]); node[key] = 0;
         // 원본00464ed0/00464f80: 비어 있지 않은 문구는 LOOK(1000)/HELP(200)를 켠다. 빈 도움말은 HELP를 유지하고 빈 LOOK만 비트를 지운다. (WB04-E1324)
-        if (text === null || String(text) === '') { if (!word) node.flags = (node.flags & ~0x1000) >>> 0; return; }
+        if (terminated === '') { if (!word) node.flags = (node.flags & ~0x1000) >>> 0; return; }
         this._nextHelpString = (this._nextHelpString ?? 0x61000100) + 1; if (this._nextHelpString > 0x61ffffff) throw new Error('도움말 문자열 주소 영역 소진');
-        strings.set(this._nextHelpString, String(text)); node[key] = this._nextHelpString; node.flags = (node.flags | (word ? 0x200 : 0x1000)) >>> 0;
+        strings.set(this._nextHelpString, terminated); node[key] = this._nextHelpString; node.flags = (node.flags | (word ? 0x200 : 0x1000)) >>> 0;
     }
 
     // 도움말 포인터/토큰의 문자열이다(원본 HelpText): 0x61000002 는 현재 helpWord 캐시(없으면 번역한 "Help"), 0x61000001 은 themeHelp, 0x61000003 은 F1Help, 그 밖은 SetNodeHelp 가 저장한 문자열이다. (2026-11-22 WB04-E1236)

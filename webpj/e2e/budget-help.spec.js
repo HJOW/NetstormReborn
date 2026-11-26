@@ -52,5 +52,16 @@ test('스톰 파워 실제 우클릭은 원본처럼 About 팝업을 열고 도�
     app._setNodeHelp(token, '', false); values.push([node.flags & 0x1200, node.textPointer]);
     app._setNodeHelp(token, 'Storm Power Available', false); app._setNodeHelp(token, 'moneyGump', true); values.push([node.flags & 0x1200, Boolean(node.textPointer && node.alternateTextPointer)]); return values;
   });
-  expect(flags).toEqual([[0x1200, 0], [0x200, 0], [0x1200, true]]); expect(errors).toEqual([]);
+  expect(flags).toEqual([[0x1200, 0], [0x200, 0], [0x1200, true]]);
+  // C 문자열의 첫 NUL은 문구와 주제 모두를 끝내며 기존 문자열 토큰도 반납한다(C++1363).
+  const terminated = await page.evaluate(() => {
+    const app = window.netstorm, token = app._campaignProduction.ui.node().budget, node = app._clientGump.node(token);
+    app._setNodeHelp(token, 'Budget\0hidden', false); app._setNodeHelp(token, 'moneyGump\0hidden', true);
+    // 실제 노드가 소유한 문자열과 뒤이은 빈 값 교체 전 토큰을 읽는다.
+    const text = app._helpString(node.textPointer), word = app._helpString(node.alternateTextPointer), oldText = node.textPointer, oldWord = node.alternateTextPointer;
+    app._setNodeHelp(token, '\0hidden', false); app._setNodeHelp(token, '\0hidden', true);
+    return { text, word, flags: node.flags & 0x1200, textPointer: node.textPointer, wordPointer: node.alternateTextPointer, released: !app._helpStrings.has(oldText) && !app._helpStrings.has(oldWord) };
+  });
+  expect(terminated).toEqual({ text: 'Budget', word: 'moneyGump', flags: 0x200, textPointer: 0, wordPointer: 0, released: true });
+  expect(errors).toEqual([]);
 });

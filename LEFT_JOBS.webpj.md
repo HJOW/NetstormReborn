@@ -6,7 +6,7 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-26, 마지막 단위 WB04-E1346)
+### 0.1 현재 값 (2026-11-26, 마지막 단위 WB04-E1347)
 
 - **실행·플레이**
   - **화면:** 브라우저 ‘클릭하여 시작’(첫 적재 뒤 최소 6초, E1308), 시작 title 그림, 메인 메뉴·캠페인/데모 목록·도움말·옵션(Reset All 게임 안 확인 창 포함)·Credits와 개발용 지형 미리보기가 동작한다.
@@ -22,7 +22,8 @@
   - **부품:** 월드·UI 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다(원본 공통 메뉴 788행·Factory 메뉴 39행·Uber 루트 160행·장면 음악 3,113행, 채팅 입력줄 대상 720행(E1265), 파편·건물 캡처 4,474행(E1275~E1276)·골렘/받침 264행(E1312), 실제 Session의 EvilRay·Burning·섬 투하(E1314~E1316) 등). 대응표 1,007단위 중 732행은 Tutorial1 실행에서 웹 모듈의 함수가 모두 실행된 `session`이다(E1283). 좌측 HUD 하단 85×82픽셀은 원본 스크린샷과 일치한다.
   - **한국어 글자:** 갈무리11 12px 격자로 그리되 제목 배율·굵기(사용자 결정으로 보통체)·한글 기준선을 cpppj와 다르게 둔다([0.7절](#korean-font-change)).
   - **미검증:** 세 캠페인 묶음의 L3 진행·자연 완주와 L4b 소리. Tutorial4 E1~I1·Tutorial5 D 이후·Tutorial6 E 이후의 특정 적 공격·포획·희생·승리는 사용자 지시로 건너뛰고 사용자가 직접 확인한다. Tutorial6 A~D 생산·건설·납품은 E1343~E1346 완료다.
-- **최근 완료 E1346:** Tutorial6 D 실제 크로스보우 회전·배치·완공→E 안내를 화면4곳0픽셀·덤프2곳 허용 밖0으로 대조했다. Chromium1/1 통과, Tutorial 자동 검사 허용 범위 완료([근거](docs/webpj-l3-tutorial6-crossbow-build-20261126.md)).
+- **최근 완료 E1347:** C++1345의 확장 AI 기본 이름31BYTE 제한·1363의 도움말 첫 NUL 절단을 반영했다. 관련Node28/28·대응표7/7·번들/자료4/4·Chromium1/1 통과([근거](docs/webpj-cpppj-common-help-ai-name-20261126.md)).
+- **이전 완료 E1346:** Tutorial6 D 실제 크로스보우 회전·배치·완공→E 안내를 화면4곳0픽셀·덤프2곳 허용 밖0으로 대조했다. Chromium1/1 통과, Tutorial 자동 검사 허용 범위 완료([근거](docs/webpj-l3-tutorial6-crossbow-build-20261126.md)).
 - **이전 완료 E1345:** Tutorial6 C 워크샾 업그레이드·크로스보우 생산→D 안내를 대조했다. 화면6곳은 알려진 입자4픽셀·마나 슬롯5,632픽셀 밖0, 덤프3곳 허용 밖0, Chromium1/1·관련Node6/6 통과([근거](docs/webpj-l3-tutorial6-crossbow-production-20261126.md)).
 - **이전 완료 E1344:** Tutorial6 B 에어 쉽의 실제 수확·귀환·200 SP 납품→C 안내를 화면3곳0픽셀·덤프2곳 허용 밖0으로 대조했다. Chromium1/1·정기Node26 전체6,853/6,853 통과([근거](docs/webpj-l3-tutorial6-transport-20261126.md)).
 - **이전 완료 E1343:** Tutorial6 A 워크샾·제네레이터2·에어 쉽을 실제 건설해 B 안내까지 대조했다. 화면8곳은 알려진 마나 그림 영역26,846픽셀 밖0·덤프3곳 허용 밖0, Chromium1/1·자료Node3/3 통과([근거](docs/webpj-l3-tutorial6-build-20261126.md)).
@@ -31,11 +32,11 @@
 - **이전 완료 E1340:** Tutorial5 실제 피격과 B 안내 진입 대조([근거](docs/webpj-l3-tutorial5-defense-20261126.md)).
 - **이전 완료(E1337~E1339):** E1339 Tutorial5 단계 A1(생산 등록·스톤 타워 `(138,92)` 배치·1,000프레임 대기) L3 일치([근거](docs/webpj-l3-tutorial5-build-20261126.md)), E1338 일반 프레임 예외의 원인·문맥을 console에 기록한 뒤 다음 프레임 진행([근거](docs/webpj-frame-error-continue-20261126.md)), E1337 Tutorial4 자동 검사를 E1 진입 범위·345프레임 재실행으로 제한하고 중단본 16파일을 보존 자료로 등록([근거](docs/webpj-l3-tutorial4-scope-20261126.md)). 공격·포획·희생·승리는 재현하지 않았다.
 - **작업 지시(2026-11-25 사용자 /goal):** 이 문서의 남은 작업을 모두 수행하되, 사제 포획/희생·특정 적 공격·시나리오 승리 재현이 필요한 시험은 캠페인 1-1~1-5와 스커미시만 아군 AI 활성화 방식으로 시험하고 그 밖의 스테이지는 건너뛴다(나중에 사용자가 직접 확인). 미션 진입 후 대기·유닛 생산·건물 건설로 끝나는 시험은 진행한다. 단위마다 문서 갱신과 커밋을 한다.
-- **현재 작업(2026-11-26 목표 재개):** Tutorial6의 허용 범위를 E1346에서 완료했다. 다음은 C++ 공통 도움말·AI 기본 이름 변경 반영(E1347 준비), LAN 변경16행 판정, 세 캠페인 묶음의 허용 구간 L3와 아군 AI 시험이다.
+- **현재 작업(2026-11-26 목표 재개):** Tutorial 허용 범위와 공통 도움말·AI 이름 변경(E1347)을 마쳤다. 다음은 E1348 LAN 변경16행 판정과 공통 Fort 오류 문맥, 그 뒤 세 캠페인 묶음의 허용 구간 L3·아군 AI 시험이다.
 - **전체 회귀**
   - **Node 22.23.5 E1340:** 6,853/6,853 통과, 실패·취소·미실행 0(1,111.5초, 정기 8/8 갱신). 로컬 Node22 실행 경로는 `extracted/webpj-node22/node_modules/node-win-x64/bin/node.exe`다.
   - **Node 26.13.0 E1344:** 6,853/6,853 통과, 실패·취소·미실행 0(1,164.1초, 정기 4/4 갱신).
-  - **주기(E1346):** v26·v22 전체 회귀 이후 각각2/4·6/8. 다음 정기는 E1348(v26·v22 순차)이다.
+  - **주기(E1347):** v26·v22 전체 회귀 이후 각각3/4·7/8. 다음 정기는 E1348(v26·v22 순차)이다.
   - **Chromium:** E1313 전 미션 시작 상태 옵트인 전체 32/32 통과(24.3분, `webpj/extracted/webpj-e1313-final-e2e.log`). 기존 전체 e2e는 E1312 199건 중 186 통과·12 옵트인 미실행·한국어 브리핑 1건 부하 중 시간 초과(단독·3회 반복 통과)다. 단위별 실패·교정은 [E1313](docs/webpj-l3-mission-starts-20261124.md)과 각 단위 문서, 이전 회귀 이력은 [E1327 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261124-through-wb04-e1327)을 따른다.
 - **브라우저 검사:** 미션 화면은 단위마다 Chromium e2e로 확인한다(최근 전체 실행 E1312, 고정 시각 L2·L3 `e2e/fixed-time.spec.js`·`e2e/l3-tutorial1.spec.js`·`e2e/l3-tutorial2.spec.js`·`e2e/l3-tutorial3.spec.js`·`e2e/l3-tutorial4.spec.js`(E1337부터 345프레임까지만 재실행)·`e2e/l3-tutorial5.spec.js`(E1339), 프레임 예외 뒤 진행 `e2e/error-reporting.spec.js` E1338, 앱 서비스 결선 `e2e/session-services-wiring.spec.js` E1328, 한국어 글자 배치 `e2e/korean-glyph-layout.spec.js` E1288). 메뉴는 2026-11-17 Chromium 2/2(갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체), 최초 실행·진행 잠금/체크·저장 재실행은 E616 Chromium 2/2. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md)
 
@@ -94,7 +95,7 @@
 | 승패·미션 흐름 | E1129~E1131, E1152, E1157, E1161 | 시작 덤프 구조 대조, 안내 창 배치, 승패 뒤 흐름·진행 저장, Priest Training 시작 연결 | — (L2·L3는 아래 행) | [L2 대조](docs/webpj-l2-tutorial1-20261121.md) · [승패 흐름](docs/webpj-mission-outcome-flow-20261121.md) |
 | 분석·판정 | E1149, E1153, E1156, E1163, E1241, E1336 | 난이도별 건설 속도, Wind Noise, 빨리 감기 한계, 미연결 모듈 68개 분류, cpppj 1322·1325·1326 변경 아홉 행 판정(②는 파생 피해 진단 문구 하나), cpppj 1334·1335 변경 여섯 행 판정과 마나 그림 별칭·CD 25프레임 UI 보충 반영(E1336) | 쉬움 채취 절반 실관찰, 마나 아이콘 육안 확인(사용자) | [난이도 진행](docs/webpj-skirmish-difficulty-20261121.md) · [미연결 모듈](docs/webpj-pause-key-unwired-modules-20261121.md) · [1322·1325·1326 판정](docs/webpj-cpppj-1322-1325-1326-judgment-20261123.md) · [마나 보충](docs/webpj-mana-picture-supplement-20261125.md) |
 | 시작 화면 안정화 | E1300, E1308 | 처음 방문의 요청 실패 재시도(파일·매니페스트 3회, 동시 12개, 번들 로더), 글꼴·메뉴 음악 받기(상한 20초)와 첫 적재 뒤 최소 6초(`?startwait=밀리초`, 자동화 브라우저 0)가 지난 뒤 `클릭하여 시작`, 언어 탐지 `navigator.languages[0]` 우선 | 배포본 재배포 후 실제 처음 방문 확인(사용자) | [안정화](docs/webpj-start-screen-robustness-20261124.md) |
-| 번들 빌드 | E1293, E1297 | `index.html`은 webpack 운영 번들(E1338 3,446,031바이트, 9.9MB 기준 통과), `debug.html`은 번들 없는 ES 모듈 구동, 크기 한도·최신 검사(`tests/bundle-fresh.test.mjs`), 번들 Git 추적(사용자 결정 E1297) | — | [번들](docs/webpj-webpack-bundle-20261124.md) |
+| 번들 빌드 | E1293, E1297 | `index.html`은 webpack 운영 번들(E1347 3,446,160바이트, 9.9MB 기준 통과), `debug.html`은 번들 없는 ES 모듈 구동, 크기 한도·최신 검사(`tests/bundle-fresh.test.mjs`), 번들 Git 추적(사용자 결정 E1297) | — | [번들](docs/webpj-webpack-bundle-20261124.md) |
 | 회귀 교정 | E1060, E1078 | 관측 자료 누락·메뉴 전용 번역 검사 범위, 외부 접속 감사의 비공개 필드 오탐 | — | [회귀 교정](docs/webpj-regression-translation-fixtures-20261120.md) · [접속 감사](docs/webpj-external-audit-private-field-20261120.md) |
 | 프레임 예외 계속 진행(7차) | E1338 | 일반 프레임 예외의 원인·문맥 console 기록 뒤 다음 프레임 진행(사용자 결정 2026-11-26), 숨김·해제·고정 시각 수명, 실제 Tutorial1 한 프레임 실패 뒤 진행 확인 | — | [계속 진행](docs/webpj-frame-error-continue-20261126.md) |
 | 웹 범위 판정 | E1167, E1171, E1176, E1180, E1182, E1187~E1188, E1192, E1202~E1204, E1238, E1242~E1243 | Players 하위 3항목·지식 NSInfo·의식 보상 선택 UI·HTML `$Input=`·패킷 원천/지연·메타 앞단·Sprite 갱신·FortCoreDataLoad·승리/패배 곡·건설 기록 재생·Uber 배경 자식을 웹 범위 밖으로, 인트로 영상은 사용자 결정으로 웹 제외 | — | [NSInfo](docs/webpj-nsinfo-scope-20261122.md) · [동영상 결정](docs/webpj-intro-movie-decision-20261122.md) · [건설 기록 재생](docs/webpj-build-replay-scope-20261123.md) |
@@ -319,7 +320,7 @@ M1은 메뉴 관문을 통과했다. 4-D의 Tutorial1 L2 → 5-A/5-B·5-C의 Tut
 대응표 검사에서 행 base 이후 변경을 확인한다. ① 웹 영향 없음, ② 웹 재반영, ③ 해당 소비 단계에서 처리로 판정한다. ②는 별도 단위로 반영하고 ③은 대상 단계에 남긴다. 판정 근거를 대응표와 단위 문서에 기록한다.
 - **판정 끝:** cpppj 1322(갈무리11)·1325(Reset All)·1326(테스트 AI 진단)의 변경 아홉 행(E1241, base `63590635`·`710b9647`·`baf141eb`, [판정표](docs/webpj-cpppj-1322-1325-1326-judgment-20261123.md)), 사용자 추가 요구 1328~1330(E1289~E1291), 1339 주문/포획 교정(E1319, base `13e74579`), SoundMusicSelection base 정정(2026-11-22, `225553df`), 일본어(13차) 커밋 `5238ee833`(1334)·`87324232f`(1335)의 여섯 행(E1336: 마나 그림 별칭 `imana.8`~`11`·`17`→`Imana.4`~`7`·`9`와 CD 마나 25프레임 보충의 `HtmlTextParser`·`Markup`·`StyleTextMarkup`·`UberGump` 행은 ② 반영, `KoreanResources.cpp`(`.japanese` 번들 읽기)·`StyleTextBuffer.cpp`(가나·한자 줄바꿈)는 ③ 13차, [근거](docs/webpj-mana-picture-supplement-20261125.md)). 커밋·행별 경과는 [E1329 보관본 3.6절](LEFT_JOBS.webpj.old.md#archive-webpj-20261124-through-wb04-e1329)과 [E1336 보관본 3.6절](LEFT_JOBS.webpj.old.md#archive-webpj-20261125-through-wb04-e1336)에 있다.
 - **판정 남음(2026-11-26 정리 재집계):** `node webpj/tools/port-map.mjs`가 cpppj 변경 16행을 보고한다. ②/③ 판정 필요 13행과 제외 분류라 ① 자동인 3행(`EditorLocalTransport.cpp`·`RawMenuMultiplayer.inc`·`UberLan.inc`)이다. 원인 커밋은 1345 `2c9210093`, 1363 `ac817a21c`, 1364~1370 `f7ed546a3`·`0ff95f9da`·`205fa2c07`·`af2523282`·`a7509bbc7`·`a3bea51fa`·`ffd35d367`이고 나머지 일본어 커밋(1340~1362)은 `cpppj/src`를 바꾸지 않았다. 다른 세션의 작업 사본은 보존한다.
-  - [ ] 언어 무관 공통 변경 — 1363 `RawMenuControls.cpp`의 `SetNodeHelp`(원문 `00464ed0`/`00464f80`의 LOOK 0x1000·HELP 0x200 플래그, 첫 NUL 절단)와 1345 `CampaignClientServices.cpp`의 AI 기본 이름 확장 표시 문자 31바이트 제한(한국어 AI 이름에도 닿는지). 완료 기준: 행별 ②/③ 판정과 ②의 웹 반영·검사, 대응표 base 갱신.
+  - [x] 언어 무관 공통 변경 — E1347에서 아래 두 변경을② 반영하고 검증했다([근거](docs/webpj-cpppj-common-help-ai-name-20261126.md)).  1363 `RawMenuControls.cpp`의 `SetNodeHelp`(원문 `00464ed0`/`00464f80`의 LOOK 0x1000·HELP 0x200 플래그, 첫 NUL 절단)와 1345 `CampaignClientServices.cpp`의 AI 기본 이름 확장 표시 문자 31바이트 제한(한국어 AI 이름에도 닿는지). 확장 이름 제한은 한국어에도 적용된다. Node28/28·대응표7/7·번들/자료4/4·Chromium1/1, 두 행base 갱신 완료.
   - [ ] LAN 변경 행 — `CampaignClientServices`·`CampaignLoginServices`·`GameWorld`·`RawCampaignArcherBindings`(음수 경과 허용)·`RawCampaignCursor`·`RawCursorDrop`(내려놓기 비용 차감 뒤 `004b54e0` 복구 저장)·`RawCampaignSession`·`RawCampaignSessionLogin.inc`·`RawChatChannels`·`RawMenuControls`(1364 `RefreshMultiplayerOptions`)·`RawSurfaceWorld`(게임 시각 역행 허용)·`RawFortObjectStream`·`RawLocalMissionState`. 단독 미션에서 도달하는지로 ①/②/③을 가린다(1370 문서는 미션이 missionPost 관문으로 그 저장 호출을 생략한다고 적는다). 완료 기준: 행별 판정과 대응표 base 갱신으로 `port-map.mjs`의 cpppj 변경 행 0.
 - **대응표 밖 새 파일:** EmbeddedBitmapFont(.cpp/.h)·KoreanFontSettings.h·ResetAllSettings(.cpp/.h)는 ①이고 `TextPictureResources.h`·`ManaPictureData.inc`는 위 판정을 따른다. 재기준선 때 등록한다.
 
