@@ -395,6 +395,21 @@ test('Session Login 클라이언트: 서버 전제와 중복 결선 거부', () 
     } finally { front.dispose(); o.dispose(); }
 });
 
+// missionPost가 켜진 실제 수신기에서도 비활성 Player의2bh가 채널 해제를 선택한다.
+test('Session Login 클라이언트: 미션2bh 채널 해제는 현재 subscriber와 마스크를 전달한다', () => {
+    // 외부 LAN 없이 같은 내부 Session의 실제 Player 수신 몸체를 사용한다.
+    const o = loginServerOwner(), calls = [], front = new RawCampaignSessionLoginFront(o, { ...devices([]), removeChat: (...args) => calls.push(args), playerUiBusy: () => true });
+    try {
+        front.bindServer(); const client = front.bindClient(); o.core.processState.server = 1; o.globals.missionPost = true;
+        // 로컬 Player 확정 전의 초기2bh도 비활성 채널 해제를 먼저 실행한다.
+        o.playerState.playerKnown = false;
+        const packet = new Uint8Array(64), view = new DataView(packet.buffer);
+        view.setUint32(0x26, 0x12345678, true); packet[0x32] = 2; packet.set([66, 111, 116, 0], 0x3b);
+        client.player(9, packet);
+        assert.deepEqual(calls, [[0x12345678, 0x20]]);
+    } finally { front.dispose(); o.dispose(); }
+});
+
 // 실제 소유자/클라이언트 수신으로 SP 전용 장치와 다른 타이머의 공통 갱신을 구분한다. (WB04-E1325)
 test('Session Login 클라이언트: SP 수신은 Session 전용 재부착을 사용한다', () => {
     const o = loginServerOwner(), calls = [];

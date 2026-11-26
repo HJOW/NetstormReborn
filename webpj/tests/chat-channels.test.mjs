@@ -12,6 +12,23 @@ import { CHAT_CHANNEL_CALL, CHAT_RECORD_BYTES, RawChatChannels } from '../www/co
 // 원본 관측 행이다. 파일이 없으면 검사를 건너뛴다. (2026-11-08 WB04-E6)
 const rows = readRows(path.join(REPO_ROOT, 'cpppj', 'tests', 'fixtures', 'chat-channels-x86.tsv'));
 
+// C++1366의 채널 해제는 반복 ID·자기ID·0을 모두 처리하며48BYTE 중 플래그 한 BYTE만 바꾼다.
+test('Chat 채널: 특정 subscriber의 모든 기록에서 지정한 채널만 해제한다', () => {
+    // 사용하지 않는 바이트도 채워 전체 보존 여부를 비교한다.
+    const bytes = new Uint8Array(CHAT_RECORD_BYTES).fill(0xa7), expected = bytes.slice(), calls = [];
+    // 첫·중간·마지막 기록의 반복 ID와0ID를 명시해 조기 중단·점유 필터를 구별한다.
+    for (const [index, subscriber, flags] of [[0, 7, 0xa5], [1, 0, 0x63], [50, 7, 0xff], [99, 7, 0x20]]) {
+        put(bytes, index * 48 + 44, subscriber); bytes[index * 48 + 40] = flags;
+    }
+    expected.set(bytes);
+    const channels = new RawChatChannels(bytes, () => 7, (...args) => calls.push(args));
+    channels.removeFromChannel(7, 0x120);
+    expected[40] = 0x85; expected[50 * 48 + 40] = 0xdf; expected[99 * 48 + 40] = 0;
+    assert.deepEqual(bytes, expected); assert.deepEqual(calls, []);
+    channels.removeFromChannel(0, 0x21); expected[48 + 40] = 0x42;
+    assert.deepEqual(bytes, expected);
+});
+
 // fixture 숫자 열을 32비트로 감아 읽는다. (2026-11-08 WB04-E6)
 const number = (text) => Number(BigInt(text) & 0xffffffffn);
 

@@ -145,7 +145,9 @@ test('Fort Objects stream: 잘린 둘째 객체는 앞선 객체와 증가한 cu
     objectStream(loader, 1, 16, 32, 1, devices);
     assert.deepEqual([born(scene), getDword(memory[0].fields, 4)], [1, 3]);
     // 둘째 객체는 stored 100 뒤 필드 BYTE 를 읽다 물리 끝에서 실패하지만 객체 생성과 cursor 는 되돌리지 않는다.
-    assert.throws(() => objectStream(loader, 1, 16, 32, 1, devices), RangeError);
+    // 실패 문맥을 추가해도 부분 생성 효과·끝까지 진행한 커서를 되돌리지 않아야 한다.
+    assert.throws(() => objectStream(loader, 1, 16, 32, 1, devices), (error) => error instanceof RangeError
+        && error.message === `Fort Objects 직접 BYTE 물리범위: stream=1 pos=${bytes.length} size=${bytes.length}`);
     assert.deepEqual([born(scene), getDword(memory[0].fields, 4)], [2, bytes.length]);
     assert.deepEqual([scene.pool.slot(100)[34], scene.pool.slot(101)[10], scene.state.loadingDepth], [1, 100, 3]);
 });

@@ -52,7 +52,8 @@ function streamByte(token, input) {
     need(input.access)(token, (fields, memory) => {
         const position = dword(fields, 4);
         const bytes = need(memory.buffer)(dword(fields, 0));
-        if (position >= bytes.length) throw new RangeError('Fort Objects 직접 BYTE 물리범위');
+        // 부분 객체·커서는 유지하고 실패한 실제 스트림과 읽기 위치를 진단에 남긴다(C++1367).
+        if (position >= bytes.length) throw new RangeError(`Fort Objects 직접 BYTE 물리범위: stream=${token >>> 0} pos=${position} size=${bytes.length}`);
         value = bytes[position];
         putDword(fields, 4, (position + 1) >>> 0);
     });

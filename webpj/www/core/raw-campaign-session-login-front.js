@@ -322,6 +322,7 @@ export class RawCampaignSessionLoginFront {
             updateRange: () => this.options.updateRange(), requiredEnergy: () => this.options.typeCost(),
             setEnergyType: (value) => this.options.setSelectedTypeCost(value), readOptionValue: () => this.options.currentValue(),
             addChat: o.services.ai.participation.addChat, playerUiBusy: effects.playerUiBusy, playerNotice: effects.playerNotice,
+            removeChat: effects.removeChat, // 미션에서도 선택되는2bh 비활성 Player의 채널 해제를 실제 Client 장치에 연결한다.
             send: (target, packet) => this.#send(target, packet, false), sendReady: (target) => this.server.sendReady(target),
             restoreCoreData: (owner) => this.#restoreCoreData(owner),
         });

@@ -195,15 +195,15 @@ test('내부 전송 바인더: send/sendMutable/peer/주소 표시는 실제 전
 
 // ---------------------------------------------------------------- CampaignLoginServices
 
-// 칸 이름 전체: 기준선 17칸 + 기준선 뒤 17칸 = 34칸이고, 함수 칸은 30개, 값 칸은 네 개이다.
-test('로그인 서비스: 칸 이름 전체(기준선 17 + 기준선 뒤 17)', () => {
+// 칸 이름 전체: 기준선17칸+기준선 뒤18칸(1366의 removeChat 포함)이며 함수31개·값4개다.
+test('로그인 서비스: 칸 이름 전체(기준선17+기준선 뒤18)', () => {
     const baseline = ['configInt', 'wallSeconds', 'clock', 'refresh', 'playerUiBusy', 'playerNotice', 'observePacket', 'log', 'requestPhase', 'initializeRenderer', 'uiMode', 'battlePalette', 'closeProgress', 'startingProgress', 'initializeChat', 'transport', 'attachCommander'];
-    const added = ['metaBattleDescription', 'metaBattleOptions', 'frameLoginTimer', 'gameSeconds', 'creatingIslands', 'progress', 'selectReconnectFort', 'queueAlliance', 'status', 'abortBattle', 'translate', 'frameWallSeconds', 'showTimerProgress', 'closeTimerProgress', 'reconnectFile', 'clearStatus', 'reconnectUi'];
+    const added = ['metaBattleDescription', 'metaBattleOptions', 'frameLoginTimer', 'gameSeconds', 'creatingIslands', 'progress', 'selectReconnectFort', 'queueAlliance', 'status', 'abortBattle', 'translate', 'frameWallSeconds', 'showTimerProgress', 'closeTimerProgress', 'reconnectFile', 'clearStatus', 'reconnectUi', 'removeChat'];
     assert.equal(baseline.length, 17);
-    assert.equal(added.length, 17);
+    assert.equal(added.length, 18);
     assert.deepEqual([...CAMPAIGN_LOGIN_SERVICE_FIELDS].sort(), [...baseline, ...added].sort());
-    assert.equal(CAMPAIGN_LOGIN_SERVICE_FUNCTIONS.length, 30);
-    assert.equal(new Set(CAMPAIGN_LOGIN_SERVICE_FIELDS).size, 34);
+    assert.equal(CAMPAIGN_LOGIN_SERVICE_FUNCTIONS.length, 31);
+    assert.equal(new Set(CAMPAIGN_LOGIN_SERVICE_FIELDS).size, 35);
     // 값 칸 네 개는 함수 칸에 들어 있지 않다.
     for (const name of ['requestPhase', 'transport', 'reconnectFile', 'frameLoginTimer']) assert.equal(CAMPAIGN_LOGIN_SERVICE_FUNCTIONS.includes(name), false);
 });

@@ -1450,6 +1450,11 @@ export class Netstorm {
     // 로컬 Login이 현재 Client의 설정·시계·진단과 표시 무효화를 직접 조회한다.
     _campaignLoginServices() {
         return {
+            // 2bh 수신 시 현재 Client 채팅 장부에서 해당 subscriber의 채널만 해제한다(C++1366).
+            removeChat: (subscriber, mask) => {
+                if (!this._clientChatChannels) throw new Error('로그인 채널 해제의 현재 Client 수명 누락');
+                this._clientChatChannels.removeFromChannel(subscriber, mask);
+            },
             // State7은 실제 화면 크기와 공유 카메라 전역을 다시 초기화한다.
             initializeRenderer: () => this._initializeClientRendererView(),
             // State7에서 현재 battlePal을 조회해 같은 Client 팔레트 전환을 실행한다.

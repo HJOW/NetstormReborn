@@ -19,6 +19,10 @@ test('앱 미션 AI: 채팅·언어·이름·현재 난이도', () => {
     app._clientSubscriber.mySubscriber().value = 5; ai.participation.addChat(5, 'Self', 0x20); assert.equal(chat[0x2c], 0);
     ai.participation.addChat(6, 'Bot', 0x20); assert.equal(chat[0x2c], 6); assert.equal(chat[0x28], 0x20);
     ai.participation.clearChat(0x20); assert.equal(chat[0x28], 0); assert.equal(chat[0x2c], 6);
+    // 로그인 수신기도 같은 현재 장부를 읽어 채널만 지우고 이름·다른 채널은 유지한다.
+    const login = app._campaignLoginServices();
+    ai.participation.addChat(6, 'Bot', 0x60); login.removeChat(6, 0x20);
+    assert.equal(chat[0x28], 0x40); assert.equal(chat[0x2c], 6); assert.equal(chat[0], 66);
 });
 
 // Session이 받는 창·무시 목록은 앱이 장기 소유하는 같은 객체다.

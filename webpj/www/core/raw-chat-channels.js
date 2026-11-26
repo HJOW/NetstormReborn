@@ -155,6 +155,16 @@ export class RawChatChannels {
         }
     }
 
+    // 00444ff0: 자기ID·0도 제외하지 않고 일치하는 모든 기록의 채널 BYTE만 지운다(C++1366).
+    removeFromChannel(subscriber, mask) {
+        // 다른 이름·채널·subscriber·미사용 BYTE는 그대로 보존한다.
+        const target = subscriber >>> 0, keep = ~(mask & 0xff) & 0xff;
+        // 첫 일치에서 멈추지 않고 실제100개 기록의 현재 subscriber를 각각 읽는다.
+        for (let index = 0; index < CHAT_RECORD_COUNT; index += 1) {
+            if (this.#subscriber(index) === target) this.#records[index * CHAT_RECORD_STRIDE + FLAGS] &= keep;
+        }
+    }
+
     // 00445140: subscriber 비제로인 기록의 이름/플래그/미사용/ID 48 BYTE 를 전부 0 으로 반납한다. 빈 기록의 stale 값은 유지한다.
     resetOccupied() {
         // 100 기록을 앞에서부터 순회하며 각 기록의 현재 DWORD 를 읽는다.

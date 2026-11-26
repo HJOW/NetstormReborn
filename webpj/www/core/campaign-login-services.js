@@ -2,7 +2,7 @@
 // C++ 의 `struct CampaignLoginServices` 는 칸마다 비어 있을 수 있는 `std::function` 이고, 로그인 부모는 **필요한 선택 위치에서** 칸이 비었으면 명시 거부한다(빈 성공으로 대신하지 않음).
 // 웹은 plain 객체로 같은 칸을 둔다: `createCampaignLoginServices(칸들)` 이 이름·형식을 검증해 만들고, `requireLoginService(services, 이름, 위치)` 가 선택 위치에서 비어 있으면 위치와 이름을 담아 거부한다.
 // 칸(함수): configInt(키, 기본)·wallSeconds·gameSeconds·clock·refresh·playerUiBusy·playerNotice·observePacket·log·initializeRenderer·uiMode·battlePalette·closeProgress·startingProgress·creatingIslands·progress·initializeChat·selectReconnectFort·
-//   attachCommander·queueAlliance·status·abortBattle·translate·frameWallSeconds·showTimerProgress·closeTimerProgress·clearStatus·reconnectUi·metaBattleDescription·metaBattleOptions.
+//   attachCommander·queueAlliance·status·abortBattle·translate·frameWallSeconds·showTimerProgress·closeTimerProgress·clearStatus·reconnectUi·metaBattleDescription·metaBattleOptions·removeChat.
 // 칸(값): requestPhase(`{ value }` 상자, 005c85ac 결과 DWORD 를 빌림 — 독립 fixture 는 지역 fallback)·transport(`CampaignTransportServices` 객체, 없으면 기존 내부 미션 양끝)·reconnectFile(실제 Client 만 제공하는 저장 파일 장치)·frameLoginTimer(boolean, 기본 false).
 // 사용: const services = createCampaignLoginServices({ configInt: (key, fallback) => …, wallSeconds: () => …, frameLoginTimer: true }); const attach = requireLoginService(services, 'attachCommander', 'State13 비서버');
 // 기준선 뒤 cpppj 변경 판정(LEFT_JOBS 3.6절): 새 칸 17개(metaBattleDescription·metaBattleOptions·frameLoginTimer·gameSeconds·creatingIslands·progress·selectReconnectFort·queueAlliance·status·abortBattle·translate·frameWallSeconds·showTimerProgress·
@@ -16,6 +16,7 @@ export const CAMPAIGN_LOGIN_SERVICE_FUNCTIONS = Object.freeze([
     'observePacket', 'log', 'initializeRenderer', 'uiMode', 'battlePalette', 'closeProgress', 'startingProgress', 'creatingIslands', 'progress',
     'initializeChat', 'selectReconnectFort', 'attachCommander', 'queueAlliance', 'status', 'abortBattle', 'translate', 'frameWallSeconds',
     'showTimerProgress', 'closeTimerProgress', 'clearStatus', 'reconnectUi',
+    'removeChat', // 2bh 수신의 현재 subscriber/마스크 채널 해제 장치다(C++1366).
 ]);
 
 // 함수가 아닌 값 칸 이름이다(requestPhase 상자·transport 서비스 객체·reconnectFile 장치 객체·frameLoginTimer 불리언). (2026-11-12 WB04-E326)
