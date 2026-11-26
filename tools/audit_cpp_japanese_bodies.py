@@ -52,10 +52,14 @@ def signatures(text, kind):
         macros.append(value.split('|', 1)[0] + ('|' if '|' in value else ''))
     assignments = []
     for key, value in re.findall(r'^\s*([\w ]+?)\s*=\s*(.*?)\s*$', text, re.M):
-        # config의 값은 용어이므로 키를 대조하고, 미션 실행 설정은 title 외의 값을 보존한다.
-        assignments.append((key, '' if kind == 'config' or key == 'title' else value))
+        # config와 Tell의 tip숫자 값은 표시 문장이다. 키·치환·명령·스타일은 다른 항목도 함께 대조한다.
+        display_value = kind == 'config' or key == 'title' or (kind == 'tell' and re.fullmatch(r'tip\d+', key))
+        assignments.append((key, '' if display_value else value))
+    # Warning의 본문은 표시 문장이므로 번역을 허용하고 명령·치환·스타일은 별도 항목으로 보존한다.
+    script_tags = [re.sub(r'^(<\$Warning,).*?(>)$', r'\1@DISPLAY@\2', tag, flags=re.I)
+                   for tag in re.findall(r'<\$[^>]*>', text)]
     return dict(sections=sections, commands=commands, macros=Counter(macros), assignments=assignments,
-                scriptTags=Counter(re.findall(r'<\$[^>]*>', text)),
+                scriptTags=Counter(script_tags), styleCodes=Counter(re.findall(r'~(?:\[[^\]]*\]|.)', text)),
                 links=Counter(re.findall(r'<a\s+(?:name|href)="[^"]*"', text, re.I)),
                 images=image_locations(text))
 
@@ -67,6 +71,14 @@ def inspect(require_all=False, original_archive=None):
     errors = []
     records = []
     kanji = set()
+    # Tell/도움말처럼 여러 단위로 번역하는 파일은 존재와 전체 번역 완료를 구별한다.
+    progress_path = TARGET.parent / 'translation-progress.json'
+    partial = set(json.loads(progress_path.read_text(encoding='utf-8'))['partialFiles']) if progress_path.exists() else set()
+    present = {path.stem for path in translated}
+    for name in sorted(partial):
+        # 잘못된 보류 이름이나 파일 삭제로 전체 완료 수를 조용히 바꾸지 않는다.
+        if name not in originals or name not in present:
+            errors.append(f'부분 번역 상태의 공식 파일 누락: {name}')
     # 원본 영어를 선택하면 기존 한국어 번역과 독립된 실행 명령 보존 근거를 남긴다.
     english = {}
     original_compared = 0
@@ -109,12 +121,12 @@ def inspect(require_all=False, original_archive=None):
         kanji.update(character for character in prose if '\u4e00' <= character <= '\u9fff')
         records.append(dict(file=path.name, bytes=len(raw), sections=len(right['sections']), links=sum(right['links'].values()),
                             images=len(right['images']), imageSections=dict(Counter(section for section, _ in right['images']))))
-    missing = sorted(set(originals) - {path.stem for path in translated})
+    missing = sorted(set(originals) - (present - partial))
     if require_all and missing:
         errors.append(f'미번역 공식 파일 {len(missing)}개')
     if len(kanji) > 3946:
         errors.append(f'일본어 동적 한자 슬롯3946개 초과: {len(kanji)}')
-    return dict(passed=not errors, translated=len(translated), total=len(originals), missing=missing,
+    return dict(passed=not errors, translated=len(present - partial), present=len(translated), partial=sorted(partial), total=len(originals), missing=missing,
                 uniqueKanji=len(kanji), originalCompared=original_compared, files=records, errors=errors)
 
 

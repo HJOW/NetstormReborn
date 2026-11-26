@@ -1,0 +1,14 @@
+{
+  "partialFiles": [
+    "tell"
+  ],
+  "tell": {
+    "completedRanges": [
+      {
+        "first": "COMMENTS",
+        "last": "WELCOME2"
+      }
+    ],
+    "nextSection": "About"
+  }
+}
