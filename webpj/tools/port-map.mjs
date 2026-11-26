@@ -133,6 +133,7 @@ export const RULES = Object.freeze([
 
 // cpppj 단위에 대응하지 않는 웹 전용 모듈(webpj 기준 경로)과 사유이다. www 의 모든 .js 모듈은 대응표의 web 칸이나 이 목록 중 한 곳에 있어야 한다. (2026-11-06 WB02-G)
 export const WEB_ONLY = Object.freeze({
+    'www/core/tutorial-objective.js': '기준선1313 뒤 사용자 추가 요구인 CP1371의40단계/39키 안내 계약(WB-TUT-1/E1386). 원본 이식1,007단위의 완료량에는 가산하지 않는다.',
     'www/platform/game-agent-host.js': 'WebMCP에서 현재 게임의 값 조회·실제 DOM 입력·PNG와 녹화 장치를 연결하는 웹 전용 경계(WB04-E1372)',
     'www/platform/game-recorder.js': '브라우저 Canvas와 게임 소리 출력 버스를 WebM으로 녹화하는 웹 전용 경계(WB04-E1372)',
     'www/platform/webmcp-tools.js': 'Document WebMCP의 도구 등록과 Abort 수명을 관리하는 웹 전용 경계(WB04-E1372)',
