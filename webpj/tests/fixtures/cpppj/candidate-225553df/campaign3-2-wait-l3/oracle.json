@@ -1,0 +1,35 @@
+{
+  "format": "netstorm-webpj-cpppj-oracle",
+  "version": 1,
+  "cpppjCommit": "225553df",
+  "exe": {
+    "file": "Netstorm.exe",
+    "sha256": "5b52d96d2e53f4674a40991b78ff64c3c7e2ad8275a0a99b22d18d532b77eb46",
+    "bytes": 15595008
+  },
+  "args": [
+    "--run",
+    "assets/game-data",
+    "--window",
+    "--mute-audio",
+    "--frames",
+    "1201",
+    "--set",
+    "SCREENW=1024;SCREENH=768;WelcomeGiven=1;tellTips=0;autoDemo=0",
+    "--ui-script",
+    "<steps.tsv>",
+    "--ui-report",
+    "<report.tsv>",
+    "--fixed-frame-ms",
+    "25",
+    "--mission",
+    "totherescue"
+  ],
+  "collected": {
+    "host": "HJOW-Athlon",
+    "at": "2026-11-26T09:10:40.820Z",
+    "node": "v26.13.0"
+  },
+  "steps": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign3-2-wait-l3/steps.json",
+  "description": "cpppj225553df의 독립 캠페인3-2 To The Rescue 실행에서 브리핑·Play Mission·대기1200프레임의 화면3곳과 상태3곳을 수집했다. 공격·포획·희생·승리 입력은 없다."
+}
