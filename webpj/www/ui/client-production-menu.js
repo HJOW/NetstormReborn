@@ -45,9 +45,9 @@ function clientMenuText(root, game, fonts, screen, colors, devices) {
     return owner;
 }
 
-// Session·원본 자산과 실제 입력·출력 장치를 빌리고 생성한 메뉴를 반납할 수 있게 한다.
-export function createClientProductionMenu(root, session, game, data, fonts, screen, colors, background, backgroundType, devices) {
-    if (!root || !session || !game || !data || !fonts || !screen || !colors || !background || !Number.isInteger(backgroundType) || !devices || ['baseHandle', 'sound', 'translate', 'ownerName', 'helpWord', 'affordable', 'now', 'poll', 'cursor', 'command', 'invalidate'].some((name) => typeof devices[name] !== 'function')) throw new TypeError('생산 메뉴의 실제 장치 누락');
+// 공유 작성기·버퍼·Chat은 World 없이 생성하며 실제 객체 어댑터는 bindWorld에서 연결한다.
+export function createClientSharedProductionMenu(root, game, data, fonts, screen, colors, background, backgroundType, devices) {
+    if (!root || !game || !data || !fonts || !screen || !colors || !background || !Number.isInteger(backgroundType) || !devices || ['formHost', 'baseHandle', 'sound', 'translate', 'ownerName', 'helpWord', 'affordable', 'now', 'poll', 'cursor', 'command', 'invalidate'].some((name) => typeof devices[name] !== 'function')) throw new TypeError('생산 메뉴의 실제 장치 누락');
     const textOwner = clientMenuText(root, game, fonts, screen, colors, devices), { text, markup, buffers } = textOwner, assets = new GumpBackgroundAssets(game);
     const buttonState = new ButtonGumpState(), stoneState = new StoneButtonGumpState(), scrollState = new ScrollGumpState(), widgetState = new ScrollGumpWidgetState();
     Object.assign(buttonState, { valueEvent: 0x02000070, clickEvent: 0x0200002c, rightEvent: 0x02000012, repeatEvent: 0x0200002f, baseColor: 56 });
@@ -62,29 +62,38 @@ export function createClientProductionMenu(root, session, game, data, fonts, scr
     const decoration = new ClientGumpDecoration(root, game, background, createClientDecorationState(backgroundType), devices.baseHandle, devices.invalidate);
     const dimColor = screen.colors().named.find((color) => color.red === 47 && color.green === 24 && color.blue === 17);
     if (!dimColor) throw new Error('메뉴 원본 비활성/그림자 색 전역 없음');
-    const menu = new ClientMenuGump(root, { assets: game, fonts, text, background, decoration, title, session, config: data, backgroundType,
+    const menu = new ClientMenuGump(root, { assets: game, fonts, text, background, decoration, title, formHost: devices.formHost, config: data, backgroundType,
         // 원본(005c78d0)·cpppj RawMenuControls 는 메뉴 비활성 글자(하위 메뉴 `›` 포함)와 그림자 색을 같은 어두운 갈색 이름 색 (47,24,17) 로 둔다. 회색(basic[8])을 쓰면 비활성 `›` 가 석판 배경에 묻혀 보이지 않았다. (2026-11-21 WB04-E1136)
         foreground: screen.colors().basic[7], disabled: dimColor.index, shadow: dimColor.index,
         sound: devices.sound, command: devices.command, invalidate: devices.invalidate });
-    const about = new ClientProductionAbout(session, game, data, menu, devices);
-    let priestOpen = null, factoryOpen = null, playerOpen = null, objectOpen = null;
-    if (devices.objectMenu) {
-        const current = devices.objectMenu, player = new ClientPlayerMenu(session, current.identity, menu, current.player);
-        const objects = new ClientObjectMenu(session, current.identity, player, menu, data, { translate: devices.translate, helpWord: devices.helpWord, staticText: current.staticText });
-        const carrier = new ClientCarrierMenu(session, menu, objects, devices.translate); playerOpen = (subscriber) => player.open(subscriber);
-        const priest = new ClientPriestMenu(session, menu, { translate: devices.translate, baseMenu: (sid) => carrier.open(sid), tell: current.tell });
-        const summary = new ClientObjectMenuInfo(session, game, current.identity, menu, data, { translate: devices.translate, ownerName: devices.ownerName });
-        priestOpen = new ClientPriestMenuOpen(current.world, menu, summary, priest, { ...current.open, sound: devices.sound });
-        const factory = new ClientFactoryMenu(session, menu, objects, { translate: devices.translate, helpWord: devices.helpWord, staticText: current.staticText });
-        factoryOpen = new ClientFactoryMenuOpen(current.world, menu, summary, factory, devices.sound);
-        // 사제·Factory 가 아닌 공통 객체(발사기 같은 건물)의 회수 포함 메뉴다. (2026-11-20 WB04-E1086)
-        objectOpen = new ClientObjectMenuOpen(current.world, menu, summary, objects, { ...current.open, sound: devices.sound });
+    let about = null, priestOpen = null, factoryOpen = null, playerOpen = null, objectOpen = null, knowledge = null, bound = false, closed = false;
+    // 같은 공유 작성기·Chat을 유지하며 현재 실제 World 전용 어댑터를 한 번 연결한다.
+    function bindWorld(session, worldDevices = devices.objectMenu, knowledgeDevices = devices.knowledge) {
+        if (closed || bound) throw new Error('공유 생산 메뉴의 World 연결 수명 오류');
+        if (!session?.core) throw new TypeError('공유 생산 메뉴의 실제 World Session 누락');
+        about = new ClientProductionAbout(session, game, data, menu, devices);
+        if (worldDevices) {
+            const current = worldDevices, player = new ClientPlayerMenu(session, current.identity, menu, current.player);
+            const objects = new ClientObjectMenu(session, current.identity, player, menu, data, { translate: devices.translate, helpWord: devices.helpWord, staticText: current.staticText });
+            const carrier = new ClientCarrierMenu(session, menu, objects, devices.translate); playerOpen = (subscriber) => player.open(subscriber);
+            const priest = new ClientPriestMenu(session, menu, { translate: devices.translate, baseMenu: (sid) => carrier.open(sid), tell: current.tell });
+            const summary = new ClientObjectMenuInfo(session, game, current.identity, menu, data, { translate: devices.translate, ownerName: devices.ownerName });
+            priestOpen = new ClientPriestMenuOpen(current.world, menu, summary, priest, { ...current.open, sound: devices.sound });
+            const factory = new ClientFactoryMenu(session, menu, objects, { translate: devices.translate, helpWord: devices.helpWord, staticText: current.staticText });
+            factoryOpen = new ClientFactoryMenuOpen(current.world, menu, summary, factory, devices.sound);
+            // 사제·Factory 가 아닌 공통 객체(발사기 같은 건물)의 회수 포함 메뉴다. (2026-11-20 WB04-E1086)
+            objectOpen = new ClientObjectMenuOpen(current.world, menu, summary, objects, { ...current.open, sound: devices.sound });
+        }
+        knowledge = knowledgeDevices ? new ClientKnowledgeMenu(session, menu, { ...knowledgeDevices, translate: devices.translate }) : null;
+        bound = true; return true;
     }
+    // 아직 World가 없는 생성 단계의 객체 효과를 가짜 성공으로 바꾸지 않는다.
+    function requireWorld() { if (closed || !bound) throw new Error('공유 생산 메뉴의 현재 World 미연결'); }
     // 원본 가로 게임 메뉴막대(ESC)는 같은 메뉴 작성기와 Player 하위 메뉴를 쓴다. 현재 게임 조회 장치가 없으면 만들지 않는다. (2026-11-20 WB04-E1084)
     const gameMenu = devices.gameMenu ? new ClientGameMenuBar(root, menu, { ...devices.gameMenu, translate: devices.translate,
         playerMenu: (subscriber) => { if (!playerOpen) throw new Error('게임 메뉴막대의 Player 하위 장치 미연결'); return playerOpen(subscriber); } }) : null;
     // F6 지식 창(Storm·World 카드와 선택 메뉴)도 같은 메뉴 작성기와 현재 Session 을 쓴다. 화면·언어·정적 문자열 장치가 없으면 만들지 않는다. (2026-11-20 WB04-E1088)
-    const knowledge = devices.knowledge ? new ClientKnowledgeMenu(session, menu, { ...devices.knowledge, translate: devices.translate }) : null;
+    // 실제 지식 어댑터도 bindWorld에서 연결한다.
     // 오른쪽 위 경고·상태 안내(Game Paused!·Game Time·Warning)도 같은 글자 장치로 만든다. 장치가 없으면 만들지 않는다. (2026-11-20 WB04-E1089)
     const warnings = devices.warnings ? new ClientWarnings(root, text, fonts, { changed: devices.changed, ...devices.warnings, translate: devices.translate, sound: () => devices.sound('newWarnMessage.wav') }) : null;
     // Players ▸ Send Money ▸ Send X 의 숫자 입력 창(Send X Storm Power)이다. 확정 장치(원본 004c9350)가 없으면 만들지 않는다. (2026-11-22 WB04-E1168)
@@ -101,13 +110,23 @@ export function createClientProductionMenu(root, session, game, data, fonts, scr
             clipboardRead: devices.chat.clipboardRead, clipboardWrite: devices.chat.clipboardWrite, setNodeHelp: devices.setNodeHelp }) : null;
     // 우클릭 빠른 도움말 팝업(원본 BaseHelp: 세로 메뉴 시작→제목→Help 항목→현재 루트에 부착)을 같은 메뉴 작성기로 만드는 장치이다. (2026-11-22 WB04-E1236)
     const helpMenu = { begin: (flags) => menu.beginVertical(flags), title: (value) => menu.title(value), entry: (value, command, topic) => menu.entry(value, command, topic, true, true, false), attach: (x, y, parent) => menu.attach({ x, y }, parent) };
-    return { helpMenu, gameMenu, knowledge, warnings, chat, open: (item, point) => about.open(item, point), openPriest: (sid, event) => priestOpen?.supports(sid) ? priestOpen.open(sid, event) : 0,
-        openFactory: (sid, event) => factoryOpen?.supports(sid) ? factoryOpen.open(sid, event) : 0,
-        openObject: (sid, event) => objectOpen?.supports(sid) ? objectOpen.open(sid, event) : 0,
+    return { helpMenu, gameMenu, get knowledge() { return knowledge; }, warnings, chat, bindWorld, worldBound: () => bound,
+        open: (item, point) => { requireWorld(); return about.open(item, point); },
+        openPriest: (sid, event) => { requireWorld(); return priestOpen?.supports(sid) ? priestOpen.open(sid, event) : 0; },
+        openFactory: (sid, event) => { requireWorld(); return factoryOpen?.supports(sid) ? factoryOpen.open(sid, event) : 0; },
+        openObject: (sid, event) => { requireWorld(); return objectOpen?.supports(sid) ? objectOpen.open(sid, event) : 0; },
         instances: () => menu.instances(), closePopups: () => menu.closePopups(),
         sendMoney: sendMoney ? { open: (target) => sendMoney.open(target), current: () => sendMoney.current(), text: () => sendMoney.text() } : null,
         chatFormat: chatFormat ? { open: (front, text) => chatFormat.openFormat(front, text), current: () => chatFormat.current(), text: () => chatFormat.text() } : null,
-        close: () => { chat?.close(); chatFormat?.close(); sendMoney?.close(); warnings?.close(); gameMenu?.close(); menu.close(); scroll.close();
+        close: () => { if (closed) return; closed = true; chat?.close(); chatFormat?.close(); sendMoney?.close(); warnings?.close(); gameMenu?.close(); menu.close(); scroll.close();
             // 공유 조각만 남기고 이전 미션의 장치/색표 연결은 놓는다. 늦은 중복 close가 새 미션 장치를 지우지 않게 한다.
-            if (textOwner.devices === devices) { textOwner.devices = null; textOwner.colors = null; } } };
+            if (textOwner.devices === devices) { textOwner.devices = null; textOwner.colors = null; }
+            about = priestOpen = factoryOpen = playerOpen = objectOpen = knowledge = null; bound = false; } };
+}
+
+// 기존 실제 Session 호출자는 같은 공유 생성과 World 연결을 연속 실행한다.
+export function createClientProductionMenu(root, session, game, data, fonts, screen, colors, background, backgroundType, devices) {
+    if (typeof session?.gumpFormHost !== 'function') throw new TypeError('생산 메뉴의 실제 World Session 누락');
+    const shared = createClientSharedProductionMenu(root, game, data, fonts, screen, colors, background, backgroundType, { ...devices, formHost: () => session.gumpFormHost() });
+    shared.bindWorld(session); return shared;
 }

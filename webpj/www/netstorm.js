@@ -1735,7 +1735,7 @@ export class Netstorm {
             chat: { create: () => ui.chat().create(), setVisible: (visible) => ui?.chat()?.setVisible(visible), setInput: (visible) => ui?.chat()?.setInput(visible), refreshTechnology: () => ui.chat().refreshTechnology() },
             fullDeck: () => this._clientGameplay.fullDeck(), mapRevision: () => this._clientGameplay.mapRevision(),
             createMinimap: () => minimap.create(),
-            createProduction: () => { ui = createClientProductionAssembly(root, production.session, this._gameAssets, this._resources.fonts, screen, this._clientColorSort, this._clientProductionGlobals, production.panel, devices); return ui.construct(); },
+            createProduction: () => { ui = createClientProductionAssembly(root, production.session.productionContext(), this._gameAssets, this._resources.fonts, screen, this._clientColorSort, this._clientProductionGlobals, production.panel, devices); ui.bindWorld(production.session); return ui.construct(); },
             closePopups: () => this._closeCampaignPopups(), baseHandle: devices.baseHandle, invalidate: (rect, flags) => this._clientRenderer.invalidate(rect, flags),
             finishResize: () => { this._clientKencloud.worldRedraw().value = 1; this._campaignWorld?.resize(this._layout.logicalWidth, this._layout.logicalHeight); this._clientRenderer.invalidateAll(); this._displayDirty = true; } });
         production.hud = hud; production.minimap = minimap; hud.install(); production.ui = ui;

@@ -32,7 +32,9 @@ import { ClientHudDivider } from '../www/ui/client-hud-divider.js';
 import { createClientProductionAssembly } from '../www/ui/client-production-assembly.js';
 import { GumpHelp, GumpHelpState } from '../www/ui/gump-help.js';
 import { ClientProductionAbout } from '../www/ui/client-production-about.js';
-import { createClientProductionMenu } from '../www/ui/client-production-menu.js';
+import { ClientGumpRoot } from '../www/ui/client-gump-root.js';
+import { ClientChatWindowGlobals } from '../www/core/client-chat-window-globals.js';
+import { createClientProductionMenu, createClientSharedProductionMenu } from '../www/ui/client-production-menu.js';
 import { createQuickHelpPicture } from '../www/ui/quick-help-info.js';
 import { ClientStyleTextBuffers } from '../www/ui/client-style-text-buffers.js';
 import { ClientScrollingText } from '../www/ui/client-scrolling-text.js';
@@ -506,7 +508,7 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         assembled.close(); assert.equal(gump.node(assembledToken), null); assert.throws(() => assembled.open(), /중복 생성/u);
         // 실제 Client 색표·정책·글꼴을 쓰는 조립 공장도 같은 Session에서 생성한다.
         const help = new GumpHelp(gump.createState(), new GumpHelpState(), { node: (token) => gump.node(token) });
-        const complete = createClientProductionAssembly(gump, session, game, app._resources.fonts, screen, app._clientColorSort, globals, production.panel, {
+        const complete = createClientProductionAssembly(gump, session.productionContext(), game, app._resources.fonts, screen, app._clientColorSort, globals, production.panel, {
             now: () => app._gameClock.wallSeconds(), translate: (value) => app._resources.translate(value),
             sound: (name) => app._clientSoundPlayer.play(app._clientSoundNames.lookup(name), 0, 0, 0, 0, 0), tell: (section) => app._openTell(section),
             about: () => { throw new Error('생산 정보 메뉴 미연결'); }, changed: () => app._clientRenderer.invalidateAll(), closePopups: () => app._closeCampaignPopups(),
@@ -673,6 +675,30 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         gump.broadcast(0, integratedX, integratedY); assert.equal(gump.input().route(0x10000, integratedX, integratedY), productionMenuToken);
         assert.equal(integratedCommands[0][0], 0x02000017); gump.lifetime().cleanup(); assert.equal(productionMenu.instances(), 0);
         assert.equal(productionMenu.open(aboutItem, { x: 750, y: 420 }), 1); productionMenu.close(); assert.equal(productionMenu.instances(), 0);
+        // 공유 메뉴·Chat은 독립 실제 Gump 루트에서 World 없이 먼저 만들고 같은 자식/점멸 기한을 Ready 뒤에도 보존한다.
+        let sharedNow = 9.2, sharedReady = false, sharedHostReads = 0;
+        const sharedRoot = new ClientGumpRoot(1366, 768, () => sharedNow, () => {}), sharedGlobals = new ClientChatWindowGlobals();
+        const sharedBackground = new ClientGumpBackground(sharedRoot, game, () => 35, () => screen.shadeMaps(), () => screen.colors(), () => 0);
+        const sharedMenu = createClientSharedProductionMenu(sharedRoot, game, data, app._resources.fonts, screen, app._clientColorSort, sharedBackground, 92, {
+            formHost: () => { sharedHostReads++; if (!sharedReady) throw new Error('아직 World 없음'); return session.gumpFormHost(); },
+            baseHandle: () => 0, sound: () => {}, translate: value => app._resources.translate(value), ownerName: () => 'Player', helpWord: () => 'bridgeType',
+            affordable: () => { throw new Error('생성 중 비용 효과 없음'); }, now: () => sharedNow, poll: () => 0, cursor: () => {}, command: () => {}, invalidate: () => {}, changed: () => {},
+            knowledge: app._campaignKnowledgeDevices(), chat: { globals: sharedGlobals, config: () => 1, read: address => {
+                if (address === 0x594fc8) return 0; throw new Error('공유 Chat 생성의 예상 밖 전역 ' + address.toString(16));
+            } },
+        });
+        try {
+            assert.equal(sharedMenu.worldBound(), false); assert.equal(sharedMenu.knowledge, null); assert.equal(sharedHostReads, 0);
+            assert.throws(() => sharedMenu.open(aboutItem, { x: 750, y: 420 }), /현재 World 미연결/);
+            const sharedChat = sharedMenu.chat, chatToken = sharedChat.create(), chatNode = sharedRoot.node(chatToken), consoleNode = sharedRoot.node(chatNode.console);
+            const blinkAt = consoleNode.blinkAt; assert.equal(blinkAt, 9.7); assert.equal(sharedHostReads, 0);
+            sharedNow = 9.225; sharedReady = true; assert.equal(sharedMenu.bindWorld(session), true);
+            assert.equal(sharedMenu.worldBound(), true); assert.ok(sharedMenu.knowledge); assert.equal(sharedMenu.chat, sharedChat);
+            assert.equal(sharedRoot.node(chatToken), chatNode); assert.equal(sharedRoot.node(chatNode.console), consoleNode); assert.equal(consoleNode.blinkAt, blinkAt);
+            assert.equal(sharedHostReads, 0); assert.throws(() => sharedMenu.bindWorld(session), /연결 수명 오류/);
+            sharedMenu.close(); assert.equal(sharedGlobals.window.current, 0); assert.equal(sharedMenu.knowledge, null);
+            assert.throws(() => sharedMenu.bindWorld(session), /연결 수명 오류/); sharedMenu.close();
+        } finally { sharedMenu.close(); sharedRoot.dispose(); }
         // 사제 건설 명령의 packed TYPE/SID는 현재 Session 커서의 실제 미리보기를 만든다.
         const beforeBuildMoney = session.sp(session.localOwner()); session.setSp(session.localOwner(), 10000);
         app._clientInputQueue.pushCommand(0x02000060, 0, (123 << 16) | priest); app._runCampaignInputFrame();

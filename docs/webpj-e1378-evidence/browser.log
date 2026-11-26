@@ -1,0 +1,22 @@
+npm notice run NetstormWeb@1.0.0 npx
+npm notice run ^"playwright^" test e2e/l3-campaign1-1-wait.spec.js e2e/object-menu-variants.spec.js e2e/chat-window.spec.js --workers=1 --reporter=line --output=../extracted/webpj-e1378-results
+
+Running 12 tests using 1 worker
+
+
+(node:22184) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/12] [chromium] › e2e\chat-window.spec.js:21:1 › 채팅 창: 숨긴 채 만들어지고 F3 로 보이며 로그가 색과 함께 그려진다
+[2/12] [chromium] › e2e\chat-window.spec.js:55:1 › 채팅 창: 미션을 떠나도 같은 로그·색 조각이 유지되고 앱 재시작에서 초기화된다
+[3/12] [chromium] › e2e\chat-window.spec.js:88:1 › 채팅 입력줄: Enter 로 열리고 문자만 입력줄로 가며 빈 Enter 로 닫힌다
+[4/12] [chromium] › e2e\chat-window.spec.js:126:1 › 채팅 송수신: 제출한 줄이 You> 로그가 되고 점 명령 .clear 가 비운다
+[5/12] [chromium] › e2e\chat-window.spec.js:154:1 › 채팅: 채널 접두가 남고 서식 점 명령은 줄을 만들지 않으며 도우미 메뉴가 열린다
+[6/12] [chromium] › e2e\chat-window.spec.js:184:1 › 채팅: 동맹 AI 이름이 Tab 으로 완성된다
+[7/12] [chromium] › e2e\chat-window.spec.js:201:1 › 채팅: 입력줄에 붙여넣기가 들어간다
+[8/12] [chromium] › e2e\chat-window.spec.js:221:1 › 채팅 도우미 명령: 삽입·설정 대입이 처리되고 입력 큐를 막지 않는다
+[9/12] [chromium] › e2e\chat-window.spec.js:246:1 › 채팅: 입력줄 복사·잘라내기와 도우미 Paste 가 클립보드 사본을 쓴다
+[10/12] [chromium] › e2e\chat-window.spec.js:272:1 › 채팅: Edit Back/Front Format 입력 창이 열리고 확정하면 서식 설정이 저장된다
+[11/12] [chromium] › e2e\l3-campaign1-1-wait.spec.js:11:1 › L3 캠페인1-1: 브리핑·시작·대기 화면과 상태가 cpppj와 같다
+[12/12] [chromium] › e2e\object-menu-variants.spec.js:15:1 › 캠페인 1-1: 내 신전과 적 배터리·신전의 우클릭 객체 메뉴가 열린다
+  12 passed (4.3m)

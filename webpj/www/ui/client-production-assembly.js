@@ -14,12 +14,12 @@ import { ClientProductionHint } from './client-production-hint.js';
 import { ClientFloatingSp } from './client-floating-sp.js';
 import { ClientProductionSelection } from './client-production-selection.js';
 import { ClientProductionPanel } from './client-production-panel.js';
-import { createClientProductionMenu } from './client-production-menu.js';
+import { createClientSharedProductionMenu } from './client-production-menu.js';
 
-// 현재 Session·Client 자원과 실제 입력/표시 장치에서 생산 UI 소유자를 만든다.
-export function createClientProductionAssembly(root, session, game, fonts, screen, colors, globals, panel, devices) {
-    if (!root || !session?.core || !game || !fonts || !screen || !colors || !globals || !panel || !devices || ['now', 'translate', 'sound', 'tell', 'about', 'changed', 'closePopups', 'poll', 'cursor', 'baseHandle', 'menuInstances'].some((name) => typeof devices[name] !== 'function')) throw new TypeError('미션 생산 UI의 실제 장치 누락');
-    const context = session.productionContext(), storage = context.storage, cursor = context.gameplay.cursor, ownerTables = colors.ownerTables;
+// 장기 Client 문맥·자원·입력/표시 장치로 생산 UI를 만들고 실제 World는 bindWorld로 별도 연결한다.
+export function createClientProductionAssembly(root, context, game, fonts, screen, colors, globals, panel, devices) {
+    if (!root || !context?.storage || !context.gameplay || !context.players || !context.options || !game || !fonts || !screen || !colors || !globals || !panel || !devices || ['now', 'translate', 'sound', 'tell', 'about', 'changed', 'closePopups', 'poll', 'cursor', 'baseHandle', 'menuInstances'].some((name) => typeof devices[name] !== 'function')) throw new TypeError('미션 생산 UI의 실제 장치 누락');
+    const storage = context.storage, cursor = context.gameplay.cursor, ownerTables = colors.ownerTables;
     globals.backgroundType = game.find('fortGump').block + 70; globals.bridgeType = storage.links.bridgeType;
     const color = (token) => {
         if (token === 0x556038) return colors.maps[2]; if (token === 0x556338) return colors.maps[5]; if (token === 0x556438) return colors.maps[6];
@@ -56,14 +56,15 @@ export function createClientProductionAssembly(root, session, game, fonts, scree
     };
     const selection = new ClientProductionSelection(context, item, { technology, templateOwner: () => context.gameplay.player.templateOwner,
         stock: () => globals.stockEnabled, failure: (empty, serial) => hint.show(empty, serial), flash: () => budget.flash(), sound: devices.sound, changed: devices.changed });
-    if (devices.menu) menu = createClientProductionMenu(root, session, game, devices.menu.data, fonts, screen, colors, background, globals.backgroundType, {
-        ...devices.menu, baseHandle: devices.baseHandle, sound: devices.sound, translate: devices.translate, affordable: (sid) => item.affordable(sid),
+    if (devices.menu) menu = createClientSharedProductionMenu(root, game, devices.menu.data, fonts, screen, colors, background, globals.backgroundType, {
+        ...devices.menu, formHost: () => context.gameplay.requireSession().gumpFormHost(), baseHandle: devices.baseHandle, sound: devices.sound, translate: devices.translate, affordable: (sid) => item.affordable(sid),
         now: devices.now, poll: devices.poll, cursor: devices.cursor, changed: devices.changed, setNodeHelp: devices.setNodeHelp,
     });
     const divider = new ClientHudDivider(root, { background, backgroundColor: () => 35, dividerColor: () => 55, baseHandle: devices.baseHandle,
         closePopups: devices.closePopups, menuInstances: () => menu ? menu.instances() : devices.menuInstances(), poll: devices.poll, cursor: devices.cursor });
     return new ClientProductionPanel(root, context, { grid, background, divider, budget, selection, now: devices.now,
-        technology: () => context.gameplay.player.playerKnown ? technology(context.gameplay.player.battleOwner) : 0, changed: devices.changed, openPriest: (sid, event) => menu?.openPriest(sid, event) ?? 0, openFactory: (sid, event) => menu?.openFactory(sid, event) ?? 0, openObject: (sid, event) => menu?.openObject(sid, event) ?? 0, helpMenu: menu?.helpMenu ?? null, help: devices.setNodeHelp ? (token, text, word) => { devices.setNodeHelp(token, devices.translate(text), false); devices.setNodeHelp(token, word, true); } : null, gameMenu: menu?.gameMenu ?? null, knowledge: menu?.knowledge ?? null, warnings: menu?.warnings ?? null, sendMoney: menu?.sendMoney ?? null, chatFormat: menu?.chatFormat ?? null, chat: menu?.chat ?? null,
+        bindWorld: (session, worldDevices = devices.menu) => menu ? menu.bindWorld(session, worldDevices?.objectMenu, worldDevices?.knowledge) : false,
+        technology: () => context.gameplay.player.playerKnown ? technology(context.gameplay.player.battleOwner) : 0, changed: devices.changed, openPriest: (sid, event) => menu?.openPriest(sid, event) ?? 0, openFactory: (sid, event) => menu?.openFactory(sid, event) ?? 0, openObject: (sid, event) => menu?.openObject(sid, event) ?? 0, helpMenu: menu?.helpMenu ?? null, help: devices.setNodeHelp ? (token, text, word) => { devices.setNodeHelp(token, devices.translate(text), false); devices.setNodeHelp(token, word, true); } : null, gameMenu: menu?.gameMenu ?? null, get knowledge() { return menu?.knowledge ?? null; }, warnings: menu?.warnings ?? null, sendMoney: menu?.sendMoney ?? null, chatFormat: menu?.chatFormat ?? null, chat: menu?.chat ?? null,
         showSp: (cost, x, y, reference) => { if (!floating) throw new Error('생산 UI의 실제 비용 표시 미연결'); return floating.showSp(cost, x, y, reference); },
         close: () => { floating?.close(); menu?.close(); } }, globals, panel);
 }

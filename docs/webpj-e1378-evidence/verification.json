@@ -1,0 +1,37 @@
+{
+  "unit": "WB04-E1378",
+  "baseCommit": "ead4826cd",
+  "focused": {
+    "node": "26.13.0",
+    "tests": 8,
+    "pass": 8,
+    "fail": 0,
+    "logSha256": "5daffcb40c81d39710e906e8071a6083a8ce8a74a534fafaf3b4efba75644378"
+  },
+  "bundleFresh": {
+    "tests": 1,
+    "pass": 1,
+    "fail": 0,
+    "logSha256": "c01a371214127393f09616d34f9676f7241eb1316a23da24220eee030cfcc427"
+  },
+  "browser": {
+    "tests": 12,
+    "pass": 12,
+    "fail": 0,
+    "chat": 10,
+    "objects": 1,
+    "l3": {
+      "tests": 1,
+      "screens": 3,
+      "outsidePixels": 0,
+      "dumps": 3,
+      "outsideAllowedRows": 0
+    },
+    "logSha256": "25448e849b94e6f6f15fa54a35bb4e37d28f515a6a6e82feeed6373b4600f6e1"
+  },
+  "bundle": {
+    "bytes": 3463907,
+    "sha256": "494503af7f1cdfa236bd0a4a3a278af0d1847359676118dbd38a192c71e1b1a3"
+  },
+  "state7ParentConnected": false
+}

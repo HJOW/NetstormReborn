@@ -86,6 +86,8 @@ export class ClientProductionPanel {
         const node = this.node(), value = Math.fround(height - 80); if (node.baseHeight === value) return;
         node.baseHeight = node.height = value; this.#root.tree().push(this.#token); this.#root.attach(this.#token, 0, 0, this.#root.createState().collection.root, 0);
     }
+    // 같은 공유 메뉴·Chat을 보존하며 현재 실제 World 전용 어댑터를 Ready 시점에 연결한다.
+    bindWorld(session, devices) { return this.#parts.bindWorld?.(session, devices) ?? false; }
     // 실제 사제 메뉴 열기 장치는 같은 패널 수명에 연결되어 있다.
     openPriest(sid, event) { return this.#parts.openPriest?.(sid, event) ?? 0; }
     // 공통 객체(발사기 같은 건물) 메뉴 열기도 같은 패널 수명에 전달한다. (2026-11-20 WB04-E1086)
