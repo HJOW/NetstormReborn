@@ -115,7 +115,7 @@ F6キーで新しい知識を確認してください。
 <c>*</c> <a href="#pyrosphereHelp">パイロスフィア</a>では、敵の<a href="#priestType">司祭</a>を捕らえるために戦います。
 <br>
 <c>*</c> <a href="#deusphereHelp">デウスフィア</a>ではフューリーたちが永遠に戦い、絶えず
-<a herf="#geyserType">ストームガイザー</a>をパイロスフィアに投げ込み、あなたの戦いに力を与えます。
+<a herf="#geyserType">ストーム間欠泉</a>をパイロスフィアに投げ込み、あなたの戦いに力を与えます。
 <p>
 <a href="#serenisphereHelp">セレニスフィア</a>について詳しく見る...
 <br>
@@ -172,7 +172,7 @@ F6キーで新しい知識を確認してください。
 目標は、相手の<a href="#priestType">司祭</a>を捕らえ、フューリーへの<a href="#sacrificeOutline">生け贄に捧げる</a>ことです。
 <p>
 パイロスフィアで戦っている間、下のデウスフィアから投げ上げられた小さな浮島に
-<a href="#buriedType">オベリスク</a>と<a herf="#geyserType">ストームガイザー</a>が現れ、略奪を待っています。
+<a href="#buriedType">オベリスク</a>と<a herf="#geyserType">ストーム間欠泉</a>が現れ、略奪を待っています。
 <p>
 戦いが激しくなるほど、多くの資源が現れます。
 <p>
@@ -185,7 +185,7 @@ F6キーで新しい知識を確認してください。
 <p>
 中立の島は<a href="multiQuickHelp">マルチプレイヤー</a>の戦闘にのみ現れます。上陸して追加の<a href="#stormpowerHelp">ストームパワー</a>を得たり、
 輸送ユニットが強力な<a href="#buriedType">呪文</a>を使えるようにしたりしましょう。呪文は中立の島に
-<a href="#buriedType">オベリスク</a>として現れます。中立の島は<a href="#outpostType">アウトポスト</a>で自分の領土にすることもできます。
+<a href="#buriedType">オベリスク</a>として現れます。中立の島は<a href="#outpostType">前哨基地</a>で自分の領土にすることもできます。
 </a>
 
 <a name="F1Help">
@@ -412,7 +412,7 @@ NetStormを開発したTitanicは、残念ながら今はもう存在しませ�
 オンラインの対戦相手の島が表示されます。
 <p>
 島と<a href="#bridgeType">橋</a>は、それぞれの色で表示されます。
-ガイザーは茶色の点で目立つようになっています。
+間欠泉は茶色の点で目立つようになっています。
 <p>
 全景を左クリックすると、その場所を見ることができます。左ボタンを押したままドラッグして
 画面を動かすこともできます。戦闘中、戦略的な状況を一目で把握するのに便利です！
@@ -597,7 +597,7 @@ NetStormを開発したTitanicは、残念ながら今はもう存在しませ�
 ユニットは1）本島、2）本島と橋でつながる無所属の島、3）自分の橋から伸びる場所なら、
 どこでも建設できます。
 <p>
-敵を破壊すると、そのストームパワー価値の25%を得ます。ワーリギグとマンオウォーは個々の建設に追加費用がかからないため、
+敵を破壊すると、そのストームパワー価値の25%を得ます。ワーリギグとマンオブウォーは個々の建設に追加費用がかからないため、
 破壊しても戻りはありません。基地だけがストームパワーをもたらします。
 <p>
 狙うべき場所は、敵が<i>地面</i>に接する部分です。
@@ -647,9 +647,9 @@ NetStormを開発したTitanicは、残念ながら今はもう存在しませ�
 <b><c>分類一覧:</c></b>
 <p>
 <c>生産:</c><br>
-   <a href="#windVortexType">ウィンド神殿</a><br>
-   <a href="#rainVortexType">レイン神殿</a><br>
-   <a href="#thunderVortexType">サンダー神殿</a><br>
+   <a href="#windVortexType">ウィンドテンプル</a><br>
+   <a href="#rainVortexType">レインテンプル</a><br>
+   <a href="#thunderVortexType">サンダーテンプル</a><br>
    <a href="#sunFactoryType">サンワークショップ</a><br>
    <a href="#windFactoryType">ウィンドワークショップ</a><br>
    <a href="#rainFactoryType">レインワークショップ</a><br>
@@ -678,11 +678,11 @@ NetStormを開発したTitanicは、残念ながら今はもう存在しませ�
 <c>航空攻撃:</c><br>
    <a href="#sunflyerType">ワーリギグ</a><br>
    <a href="#windflyerType">ダストデビル</a><br>
-   <a href="#rainflyerType">マンオウォー</a><br>
+   <a href="#rainflyerType">マンオブウォー</a><br>
 <c>航空攻撃基地:</c><br>
    <a href="#sunaviaryType">ワーリベース</a><br>
    <a href="#windaviaryType">デビルメーカー</a><br>
-   <a href="#rainaviaryType">マンオウォープール</a><br>
+   <a href="#rainaviaryType">マンオブウォープール</a><br>
 <c>防御:</c><br>
    <a href="#sunblockerType">ストーンタワー</a><br>
    <a href="#windblockerType">ウィンドタワー</a><br>
@@ -786,7 +786,7 @@ NetStormを開発したTitanicは、残念ながら今はもう存在しませ�
 <h2>司祭の建設能力</h2>
 <p>
 司祭は、最初の島を含む大きな島のどこにでも、<a href="#vortexHelp">神殿</a>、<a href="#factoryHelp">ワークショップ</a>、
-<a href="#altarType">祭壇</a>、そして<a href="#multiplayerHelp">マルチプレイヤー</a>では<a href="#outpostType">アウトポスト</a>を建設できます。
+<a href="#altarType">祭壇</a>、そして<a href="#multiplayerHelp">マルチプレイヤー</a>では<a href="#outpostType">前哨基地</a>を建設できます。
 司祭を右クリックし、目的の項目を選んでください。建物がカーソルに付き、配置できる状態になります。（司祭が建設場所まで
 歩ける必要があります。）配置すると、司祭がそこへ歩いて建設を始めます。
 <p>
@@ -900,8 +900,8 @@ NetStormを開発したTitanicは、残念ながら今はもう存在しませ�
 <a href="#rainBlockerType">* アイスタワー</a>  /  防御<br>
 <a href="#rainFenceType">* アシッドバリケード</a>  /  防御<br>
 レベル3<br>
-<a href="#rainFlyerType">* マンオウォー</a>  /  航空攻撃<br>
-<a href="#rainAviaryType">* マンオウォープール</a>  /  航空攻撃基地<br>
+<a href="#rainFlyerType">* マンオブウォー</a>  /  航空攻撃<br>
+<a href="#rainAviaryType">* マンオブウォープール</a>  /  航空攻撃基地<br>
 <a href="#rainBalloonType">* クラウドフローター</a>  /  航空輸送<br>
 
 <p>
@@ -931,9 +931,9 @@ NetStormを開発したTitanicは、残念ながら今はもう存在しませ�
 <info>
 <q>聖職者の血は運命の霊薬である。</q>
 <p>
-<a href="#rainVortexType">レイン神殿</a><br>
-<a href="#windVortexType">ウィンド神殿</a><br>
-<a href="#thunderVortexType">サンダー神殿</a><br>
+<a href="#rainVortexType">レインテンプル</a><br>
+<a href="#windVortexType">ウィンドテンプル</a><br>
+<a href="#thunderVortexType">サンダーテンプル</a><br>
 <p>
 神殿は、各島の<a href="#influenceHelp">エネルギー</a>の究極の中心です。
 上に挙げた三つの形のいずれかを取ります。
@@ -948,7 +948,7 @@ NetStormを開発したTitanicは、残念ながら今はもう存在しませ�
 <br>
 4. 建てた神殿の系統を反映するよう、島の姿が変わります。
 <p>
-これらの利点は、<a href="multiplayerHelp">マルチプレイヤー</a>の重要なユニットである<a href="outpostType">アウトポスト</a>と
+これらの利点は、<a href="multiplayerHelp">マルチプレイヤー</a>の重要なユニットである<a href="outpostType">前哨基地</a>と
 ほぼ同じです。
 <p>
 ゲーム中に<c>F4</c>を押すと神殿へ移動します。
@@ -968,7 +968,7 @@ NetStormを開発したTitanicは、残念ながら今はもう存在しませ�
 神殿は、戦闘中に<a href="#moneyHelp">ストームパワー</a>を利用可能な資源へと変えます。
 神殿がなければ、ストームパワーを集めたり処理したりできません。
 <p>
-<a href="#geyserType">ストームガイザー</a>から、<a href="#nuggetType">ストームクリスタル</a>の
+<a href="#geyserType">ストーム間欠泉</a>から、<a href="#nuggetType">ストームクリスタル</a>の
 形で集めます。
 <p>
 <a href="#golemVortexHelp">ゴーレムの作り方</a>について詳しく見る...<br>
@@ -1142,7 +1142,7 @@ If you have trouble use the troubleshooting guide.
 <p>
 <!"bombIMano.1">
 <Br>
-一体の<a href="#rainFlyerType">マンオウォー</a>を呼び、敵を攻撃させる<a href="#buriedType">呪文</a>です。<br>
+一体の<a href="#rainFlyerType">マンオブウォー</a>を呼び、敵を攻撃させる<a href="#buriedType">呪文</a>です。<br>
 </a>
 
 <a name="bombIIManoType">
@@ -1151,7 +1151,7 @@ If you have trouble use the troubleshooting guide.
 <p>
 <!"bombIIMano.1">
 <Br>
-二体の<a href="#rainFlyerType">マンオウォー</a>を呼び、敵を攻撃させる<a href="#buriedType">呪文</a>です。<br>
+二体の<a href="#rainFlyerType">マンオブウォー</a>を呼び、敵を攻撃させる<a href="#buriedType">呪文</a>です。<br>
 </a>
 
 <a name="bombIIIManoType">
@@ -1160,7 +1160,7 @@ If you have trouble use the troubleshooting guide.
 <p>
 <!"bombIIIMano.1">
 <Br>
-三体の<a href="#rainFlyerType">マンオウォー</a>を呼び、敵を攻撃させる<a href="#buriedType">呪文</a>です。<br>
+三体の<a href="#rainFlyerType">マンオブウォー</a>を呼び、敵を攻撃させる<a href="#buriedType">呪文</a>です。<br>
 </a>
 
 <a name="bombGravitonType">
@@ -1391,16 +1391,16 @@ If you have trouble use the troubleshooting guide.
 
 <a name="emptyGeyserType">
 <info>
-<q>ガイザーがクリスタルへと凝固する姿は、白い炎が氷に変わるようだ。</q>
+<q>間欠泉がクリスタルへと凝固する姿は、白い炎が氷に変わるようだ。</q>
 <p>
-ストームガイザーは、<a href="#stormpowerHelp">ストームパワー</a>を<a href="#nuggetType">ストームクリスタル</a>の形で供給します。
-<a href="#transportHelp">輸送ユニット</a>で集められます。ガイザーを右クリックすると、得られる<a href="#stormpowerHelp">ストームパワー</a>の量を確認できます。
+ストーム間欠泉は、<a href="#stormpowerHelp">ストームパワー</a>を<a href="#nuggetType">ストームクリスタル</a>の形で供給します。
+<a href="#transportHelp">輸送ユニット</a>で集められます。間欠泉を右クリックすると、得られる<a href="#stormpowerHelp">ストームパワー</a>の量を確認できます。
 <p>
-戦闘開始時にガイザーの島がいくつか現れ、下で戦う<a href="#themeHelp">フューリー</a>から
+戦闘開始時に間欠泉の島がいくつか現れ、下で戦う<a href="#themeHelp">フューリー</a>から
 ストームパワーが投げ上げられる間、さらに島が現れ続けます。
-何かが破壊されるたび、そのエネルギーの一部がフューリーの戦いに落ち、ガイザーの島となって再び現れます。
+何かが破壊されるたび、そのエネルギーの一部がフューリーの戦いに落ち、間欠泉の島となって再び現れます。
 <p>
-<a href="#TransportHelp">地上または航空輸送ユニット</a>をガイザーに送ると、枯れるまで
+<a href="#TransportHelp">地上または航空輸送ユニット</a>を間欠泉に送ると、枯れるまで
 ストームクリスタルを集める作業を繰り返します。枯れ始めると、噴き出す蒸気が短くなります。
 <br>
 </a>
@@ -1408,11 +1408,11 @@ If you have trouble use the troubleshooting guide.
 
 <a name="nuggetType">
 <info>
-<q>ガイザーがクリスタルへと凝固する姿は、白い炎が氷に変わるようだ。</q>
+<q>間欠泉がクリスタルへと凝固する姿は、白い炎が氷に変わるようだ。</q>
 <p>
-ストームクリスタルは、<a href="#geyserType">ストームガイザー</a>が投げ出す、凝縮された<a href="#stormpowerHelp">ストームパワー</a>です。
+ストームクリスタルは、<a href="#geyserType">ストーム間欠泉</a>が投げ出す、凝縮された<a href="#stormpowerHelp">ストームパワー</a>です。
 <p>
-<a href="#TransportHelp">地上または航空輸送ユニット</a>をガイザーに送ると、
+<a href="#TransportHelp">地上または航空輸送ユニット</a>を間欠泉に送ると、
 枯れるまでストームクリスタルを集める作業を繰り返します。
 <br>
 </a>
@@ -1590,7 +1590,7 @@ If you have trouble use the troubleshooting guide.
 <info>
 <q>「ニンバスに、これほど優雅で美しいものはない。」 — ギルデン・プラジ、ニンバスの詩人</q>
 <p>
-エアシップは<a href="#transportHelp">航空輸送ユニット</a>で、<a href="#stormpowerhelp">ストームパワー</a>の収集、
+飛行船は<a href="#transportHelp">航空輸送ユニット</a>で、<a href="#stormpowerhelp">ストームパワー</a>の収集、
 <a href="#priestType">司祭</a>の捕獲、<a href="#buriedType">呪文</a>の取得と使用に最適です。
 <p>
 <a href="#sunballoontype">バルーン</a>と比べて、
@@ -1616,7 +1616,7 @@ If you have trouble use the troubleshooting guide.
 
 <a name="thunderArcherType">
 <info>
-<q>生のバルフの卵をヴァンダータワーの前に投げると、地面に落ちる頃には固ゆでになっている。</q>
+<q>生のブルフの卵をヴァンダータワーの前に投げると、地面に落ちる頃には固ゆでになっている。</q>
 <p>
 ヴァンダータワーは、航空攻撃ユニットか航空<a href="#transportHelp">輸送ユニット</a>だけを狙う、
 中距離の<a href="#shooterHelp">射撃ユニット</a>です。
@@ -1683,10 +1683,10 @@ If you have trouble use the troubleshooting guide.
 
 <a name="bulfType">
 <info>
-<q>「野生のバルフは砲弾ほどの大きさだが、ニッケルと石灰岩だけの厳しい食事を与えると、
+<q>「野生のブルフは砲弾ほどの大きさだが、ニッケルと石灰岩だけの厳しい食事を与えると、
 百倍もの大きさに育つ。」 — 野外調査日誌、J・T・キルケン</q>
 <p>
-バルフは<a href="#transportHelp">地上輸送ユニット</a>で、<a href="#stormpowerhelp">ストームパワー</a>の収集、
+ブルフは<a href="#transportHelp">地上輸送ユニット</a>で、<a href="#stormpowerhelp">ストームパワー</a>の収集、
 <a href="#priestType">司祭</a>の捕獲、<a href="#buriedType">呪文</a>の取得と使用に最適です。
 <p>
 ニンバスで最も丈夫な輸送ユニットですが、かなり低速です。
@@ -1978,7 +1978,7 @@ If you have trouble use the troubleshooting guide.
 <a href="#windBlocker">* ウィンドタワー</a>  /  防御<br>
 レベル3<br>
 <a href="#windFlyerType">* ダストデビル</a>  /  航空攻撃<br>
-<a href="#windBalloonType">* エアシップ</a>  /  航空輸送<br>
+<a href="#windBalloonType">* 飛行船</a>  /  航空輸送<br>
 
 <p>
 <h2>レインのユニット</h2>
@@ -1988,7 +1988,7 @@ If you have trouble use the troubleshooting guide.
 レベル2<br>
 <a href="#rainWalkerType">* クリスタルクラブ</a>  /  地上輸送<br>
 <a href="#rainBlockerType">* アイスタワー</a>  /  防御<br>
-<a href="#rainFlyerType">* マンオウォー</a>  /  航空攻撃<br>
+<a href="#rainFlyerType">* マンオブウォー</a>  /  航空攻撃<br>
 レベル3<br>
 <a href="#rainCannonType">* アイスキャノン</a>  /  射撃<br>
 <a href="#rainBalloonType">* クラウドフローター</a>  /  航空輸送<br>
@@ -1997,7 +1997,7 @@ If you have trouble use the troubleshooting guide.
 <h2>サンダーのユニット</h2>
 レベル1<br>
 <a href="#thunderBatteryType">* サンダージェネレーター</a>  /  エネルギー供給<br>
-<a href="#bulfType">* バルフ</a>  /  地上輸送<br>
+<a href="#bulfType">* ブルフ</a>  /  地上輸送<br>
 レベル2<br>
 <a href="#thunderCannonType">* サンダーキャノン</a>  /  射撃<br>
 <a href="#thunderFence">* アークスパイア</a>  /  防御<br>
@@ -2017,9 +2017,9 @@ If you have trouble use the troubleshooting guide.
 <info>
 <q>聖なる者の血は運命の霊薬である。</q>
 <p>
-<a href="#rainVortexType">レイン神殿</a><br>
-<a href="#windVortexType">ウィンド神殿</a><br>
-<a href="#thunderVortexType">サンダー神殿</a><br>
+<a href="#rainVortexType">レインテンプル</a><br>
+<a href="#windVortexType">ウィンドテンプル</a><br>
+<a href="#thunderVortexType">サンダーテンプル</a><br>
 <p>
 神殿は、各島の究極の<a href="#influenceHelp">エネルギー</a>の中心です。上に挙げた三種類のいずれかの形を取ります。
 <p>
@@ -2041,7 +2041,7 @@ If you have trouble use the troubleshooting guide.
 <p>
 神殿は、戦闘中に<a href="#moneyHelp">ストームパワー</a>を利用可能な資源に変えます。神殿がなければ、集めたり処理したりできません。
 <p>
-<a href="#geyserType">ストームガイザー</a>から、<a href="#nuggetType">ストームクリスタル</a>の形で採取します。
+<a href="#geyserType">ストーム間欠泉</a>から、<a href="#nuggetType">ストームクリスタル</a>の形で採取します。
 <p>
 <a href="#golemVortexHelp">ゴーレムの作り方</a>について詳しく見る...<br>
 <br>
@@ -2095,20 +2095,20 @@ If you have trouble use the troubleshooting guide.
 ニンバスのほぼすべてのものを建設できます。ただし、何を建てるにも、
 <a href="#influenceHelp">エネルギー</a>も必要なことを覚えておいてください。
 <p>
-世界には<a href="#geyserType">ストームガイザー</a>の姿で現れます: <!"geyser.*">
+世界には<a href="#geyserType">ストーム間欠泉</a>の姿で現れます: <!"geyser.*">
 <br>
-<a href="#transportHelp">輸送ユニット</a>を左クリックし、ガイザーに送ってください。輸送ユニットは、
-枯れるまでガイザーと自分の<a href="#vortexHelp">神殿</a>の間を自動的に往復し、
+<a href="#transportHelp">輸送ユニット</a>を左クリックし、間欠泉に送ってください。輸送ユニットは、
+枯れるまで間欠泉と自分の<a href="#vortexHelp">神殿</a>の間を自動的に往復し、
 <a href="#nuggetType">ストームクリスタル</a>の形で採掘します。（ストームクリスタル:
 <!"nugget.*">)<br>
-枯れると、最も近い、まだ枯れていないガイザーを探して同じ作業を続けます。
+枯れると、最も近い、まだ枯れていない間欠泉を探して同じ作業を続けます。
 集めている間、<a href="#moneyGumpHelp">ストームパワー残量ウィンドウ</a>の数字が増える様子を見てください！
 <p>
 左の<a href="#teleportViewHelp">生産ウィンドウ</a>では、ストームパワーが足りず作れない<a href="#unitHelp">ユニット</a>は、
 赤く表示されます。
 <p>
 戦闘で敵ユニットを破壊すると、そのストームパワー価値の半分を得ます！ 残り半分は下で続く
-<a href="#themehelp">フューリー</a>の戦争へ落ち、やがて再び<a href="#geyserType">ストームガイザー</a>となり、
+<a href="#themehelp">フューリー</a>の戦争へ落ち、やがて再び<a href="#geyserType">ストーム間欠泉</a>となり、
 空へ噴き上がります。
 <br>
 </a>
@@ -2120,25 +2120,25 @@ If you have trouble use the troubleshooting guide.
 <info>
 <q>島を支配する力が、感じられるほどだ！ — サール・クインセット</q>
 <p>
-アウトポストは、<a href="multiQuickHelp">マルチプレイヤー</a>で島の支配権をもたらします。
+前哨基地は、<a href="multiQuickHelp">マルチプレイヤー</a>で島の支配権をもたらします。
 <p>
-<a href="#priestType">司祭</a>で島にアウトポストを建て、占領しましょう。
+<a href="#priestType">司祭</a>で島に前哨基地を建て、占領しましょう。
 四つの利点があります。
 <p>
-1. アウトポストがある島から、外へ橋を架けられます。
+1. 前哨基地がある島から、外へ橋を架けられます。
 <br>
 2. 島を敵の建設から守ります。敵はそこへ何も建てられません。
 <br>
 3. 輸送ユニットがストームクリスタルを運び込むと、ストームパワーに変わります。
 <br>
-4. ワークショップから長い距離を移動する代わりに、アウトポストから直接ユニットを転送できます。
+4. ワークショップから長い距離を移動する代わりに、前哨基地から直接ユニットを転送できます。
 <p>
-島の支配ルールは次のとおりです。最も多くのアウトポストを持つプレイヤーが支配します。二人が
+島の支配ルールは次のとおりです。最も多くの前哨基地を持つプレイヤーが支配します。二人が
 同時に建てた場合は、どちらかが追加で一つ建てるまで、無所属のままになることがあります。
 <p>
-アウトポストは、<a href="multiplayerHelp">マルチプレイヤー</a>でのみ使えます。
+前哨基地は、<a href="multiplayerHelp">マルチプレイヤー</a>でのみ使えます。
 <p>
-注意: アウトポストを建てた島は、自分の<a href="#vortexHelp">神殿</a>の系統を反映します。
+注意: 前哨基地を建てた島は、自分の<a href="#vortexHelp">神殿</a>の系統を反映します。
 </a>
 </a>
 
@@ -2162,7 +2162,7 @@ NetStormには、多彩なキャンペーンミッションと、無限に遊べ
 <a href="#technologyHelp">知識</a>を得られます。
 <p>
 マップの構成も異なり、敵を倒そうとする間に、数多くの小島を支配することになります。
-<a href="#outpostType">アウトポスト</a>（原作のキャンペーンには登場しません）は、
+<a href="#outpostType">前哨基地</a>（原作のキャンペーンには登場しません）は、
 勝利に不可欠です。
 <p>
 <a href="#altarType">祭壇</a>の働きも異なります。<a href="#challengeIslandType">ゾーン</a>や、
@@ -2193,7 +2193,7 @@ NetStormには、多彩なキャンペーンミッションと、無限に遊べ
 <br>
 * <a href="#playerOptionsHelp">プレイヤー設定</a>で各プレイヤーの条件を指定できます。
 <br>
-* <a href="#outpostType">アウトポスト</a>は領土を占領するために使います。
+* <a href="#outpostType">前哨基地</a>は領土を占領するために使います。
 <br>
 * <a href="#altarType">祭壇</a>で<a href="#sacrificeOutline">生け贄</a>を捧げ、<a href="#technologyHelp">知識</a>を得られます。
 <br>
@@ -2477,9 +2477,9 @@ Gameを開き、サーバー診断合格を選ぶと消せます。これで開�
 
 <c>Game Type</c> - 分岐やパッチで変わってきた過去の戦い方を簡単に選べます。メニューを整理し、一部の設定を自動化して準備を早めます。例:<br>
 <p>
-<c>Netstorm Standard</c>は最新の方式です。新しいガイザー分配と、現代のNetStormで一般的な戦闘設定を含みます。<br>
+<c>Netstorm Standard</c>は最新の方式です。新しい間欠泉分配と、現代のNetStormで一般的な戦闘設定を含みます。<br>
 <p>
-<c> Netstorm Classic</c>は10.64と10.37の混合で、旧版のランダムマップのガイザー分配を使います。<br>
+<c> Netstorm Classic</c>は10.64と10.37の混合で、旧版のランダムマップの間欠泉分配を使います。<br>
 <p>
 <c> Netstorm Flexible</c>は設定の95%を変更でき、10.70の構成に非常によく似ています。<br>
 <p>
@@ -2505,12 +2505,12 @@ Gameを開き、サーバー診断合格を選ぶと消せます。これで開�
 <c>Allow Send</c> - 他のプレイヤーへのストームパワー送金。通常は可能です。
 禁止するには<c>No</c>を選びます。
 <p>
-<c>Money per Geyser</c> - ガイザー一つのストームパワー産出量。
+<c>Money per Geyser</c> - 間欠泉一つのストームパワー産出量。
 <p>
 <c>Starting Cash</c> - 初期ストームパワー。通常は<c>6500</c>ですが、
 増減したい場合は変更できます。
 <p>
-<c>Geyser Amount</c> - ゲーム内のガイザー数を増減します。
+<c>Geyser Amount</c> - ゲーム内の間欠泉数を増減します。
 <p>
 <c>Spell</c> - 通常は呪文が現れます。禁止するには、
 <c>No</c>を選びます。司祭には影響しません。
@@ -2527,7 +2527,7 @@ Gameを開き、サーバー診断合格を選ぶと消せます。これで開�
 <p>
 <c>Geysers Placement</c> - 開始時はなく途中で補充する方式、どこにでも現れる旧方式、全体に均等に分配する新方式を切り替えます。
 <p>
-<c>Geysers Respawns</c> - ガイザーが再出現する頻度。<p>
+<c>Geysers Respawns</c> - 間欠泉が再出現する頻度。<p>
 <p>
 <c>Resource Injections</c> - フューリーが一定間隔でストームパワーを送ります。<p>
 <p>

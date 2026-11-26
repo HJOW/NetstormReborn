@@ -8,6 +8,8 @@ help의sacrificeOutline~bridgeType, 고유 표시 줄203개를 번역했다. 원
 
 새 집중 검사는 실제QuickHelp 파서로128주제 전체·8192BYTE·확장 문자 완전성을 확인한다. 일본어10/10통과. 최초 검사 컴파일의 누락include를 추가한 뒤 빌드 성공했다.
 
-실제 도움말7주제, 긴 본문 스크롤·F1 목차 링크 클릭을 확인했다. 최초 링크 검사는 HTML문구를 일반 버튼 라벨로 찾아 실패했으나 화면 좌표 클릭으로 교정했다. 최종GUI3회 종료0. 마나4종·채팅5아이콘·스톰파워5그림은 원문 라벨과 함께 표시되며 겹침/누락이 없다. [목차](../screens/cpp-japanese-help-1353-20261126/index.png) · [마나4종](../screens/cpp-japanese-help-1353-20261126/mana.png) · [채팅](../screens/cpp-japanese-help-1353-20261126/chat.png) · [스톰파워](../screens/cpp-japanese-help-1353-20261126/money.png) · [내부 링크](../screens/cpp-japanese-help-1353-20261126/link.png). 고립된map그림은 파서 검사에 포함하지만 별도 실제 요청은 하지 않았다. 자연 포획/희생/온라인 접속은 실행하지 않았다.
+실제 도움말7주제, 긴 본문 스크롤·F1 목차 링크 클릭을 확인했다. 최초 링크 검사는 HTML문구를 일반 버튼 라벨로 찾아 실패했으나 화면 좌표 클릭으로 교정했다. 최종GUI3회 종료0. 마나4종·채팅5아이콘·스톰파워6그림은 원문 라벨과 함께 표시되며 겹침/누락이 없다. [목차](../screens/cpp-japanese-help-1353-20261126/index.png) · [마나4종](../screens/cpp-japanese-help-1353-20261126/mana.png) · [채팅](../screens/cpp-japanese-help-1353-20261126/chat.png) · [스톰파워](../screens/cpp-japanese-help-1353-20261126/money.png) · [내부 링크](../screens/cpp-japanese-help-1353-20261126/link.png). 고립된map그림은 파서 검사에 포함하지만 별도 실제 요청은 하지 않았다. 자연 포획/희생/온라인 접속은 실행하지 않았다.
 
 EXE는1345 SHA `458f23e0…741b918` 그대로다. 보호 원본/CD·AGENTS/README와 설치 사본3,212파일 전후 동일. [검증 JSON](../../cpppj/japanese-help-1353-20261126.json), 원시 자료는`extracted/cpp-followups-1328/*1353*`에 있다. 다음1354는17~32앵커(teleportViewHelp~rainVortexType)다.
+
+1362 전체 감사에서 스톰 파워 그림의 기존 집계5를6으로 바로잡았다. 원문/실제 화면의2000·1900·1000·850·설명·캐논 예시에 각1개씩 있으며 기존 PNG는 그대로다.

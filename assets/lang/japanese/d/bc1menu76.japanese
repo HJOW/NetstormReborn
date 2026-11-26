@@ -47,7 +47,7 @@ $Button=アシッドバー,MissionBegin,bc3acid_bar76
 [ai5priestcaptured]
 $Button=ウォーカー,MissionBegin,bc5walkers76
 [ai7priestcaptured]
-$Button=マンオウォー,MissionBegin,BC6Mows76
+$Button=マンオブウォー,MissionBegin,BC6Mows76
 [ai6priestcaptured]
 $Button=サンバリケード,MissionBegin,bc7Sun_bars76
 

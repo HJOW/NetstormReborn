@@ -30,10 +30,14 @@ PACKAGE_ROOT = 'NetstormReborn-cpppj'
 BUILD_BIN = ROOT / 'cpppj' / 'build' / 'bin' / 'Release'
 # 런타임 상수 생성·배포 스크립트와 같은 한국어 글꼴 설정이다. 파일명과 family를 따로 하드코딩하지 않는다.
 KOREAN_FONT = json.loads((ROOT / 'cpppj' / 'assets' / 'korean-font.json').read_text(encoding='utf-8'))
+# 일본어 번역 완료 뒤에는 같은 공식43stem과 별도 글꼴/라이선스도 필수 배포 자료다.
+OFFICIAL_BODY_STEMS = sorted(path.stem for path in (ROOT / 'assets/lang/korean/d').glob('*.korean'))
 # 반드시 있어야 하는 항목(패키지 루트 기준 상대 경로)이다.
 REQUIRED = [
     'Netstorm.exe', 'R.exe', 'NetstormSmacker.dll', 'Netstorm.bat', 'Netstorm-SavedMode.bat', 'README.txt', 'BUILD_INFO.txt',
     *('fonts/' + KOREAN_FONT[key] for key in ('regular', 'bold', 'license')), 'lang/korean/xlat.korean',
+    'fonts/NotoSansJP-VariableFont_wght.ttf', 'fonts/NotoSansJP-License.txt', 'lang/japanese/xlat.japanese',
+    *('lang/' + language + '/d/' + stem + '.' + language for language in ('korean', 'japanese') for stem in OFFICIAL_BODY_STEMS),
     'game/netstorm.tarc', 'game/Netstorm.exe', 'game/d/setup.cfg',
     # 14차: Netstorm.exe에 정적으로 넣은 QuickJS-ng 엔진의 MIT 라이선스와 출처(2026-11-11 추가).
     'third-party/quickjs-ng/LICENSE', 'third-party/quickjs-ng/provenance.json',
