@@ -1,0 +1,44 @@
+{
+  "originalX86Observation": {
+    "value": 1,
+    "scope": "원본10.78 Demo3의 TYPE11 FieryTail 공유11색. 독립실행1회에서1257읽기. 건설17 또는 모든할당의 보편초기값이 아니다.",
+    "sources": [
+      "docs/exe/cpp-fierytail-live-heap-20261017.md:11",
+      "docs/exe/cpp-fierytail-live-heap-20261017.md:24",
+      "docs/exe/cpp-fierytail-live-heap-20261017.md:34",
+      "cpppj/fierytail-live-heap.json"
+    ]
+  },
+  "cppMemoryOwnership": {
+    "source": "cpppj/src/client/ParticlePaletteMemory.cpp:17~29",
+    "known": [
+      "constructionMemory_는 다른효과와 분리된 Session 장기멤버다(RawCampaignParticles.h:134~137).",
+      "첫건설색표 생성 시 별도HeapCreate→정확11*4=44BYTE HeapAlloc(flags0)→앞11DWORD memcpy이며 추가DWORD를 쓰지 않는다.",
+      "현재매프레임 Snapshot은 실제44BYTE와 바로뒤4BYTE까지 ReadProcessMemory로읽는다(RawCampaignParticles.cpp:214~216).",
+      "이 클래스의 전용heap에는 현재색배열 한 앱블록만 할당한다. 다른효과의팔레트/읽기vector는 별도소유자/heap이다.",
+      "V5/V6 실제8000프레임에서 count11 바로뒤DWORD0을 읽었고 life>2인 입자가 index11로 사용했다."
+    ],
+    "unknown": [
+      "그DWORD를OS내부패딩/헤더/다음내부블록 중 무엇으로 분류할지는 실제HeapWalk/힙메타데이터관측 없이 단정하지 않는다.",
+      "이x64관측0을원본x86건설상수나모든PC/모든할당의초기값으로 일반화할근거는 없다."
+    ]
+  },
+  "readOnlyCodeProposal": {
+    "keep": "ParticlePaletteMemory의 기본관찰값1 및 기존원본FieryTail/독립fixture를유지한다.",
+    "correctBoundary": "팔레트할당을만드는Client/Session 적응계층에서 종류별 명시allocation-input 또는memoryFactory를 공급한다. RawCampaignParticles 현재options.adjacent는6메모리에같은값을주므로 construction만의입력을분리한다.",
+    "minimalInterface": "options.constructionAdjacent ?? options.adjacent ?? OBSERVED_ADJACENT_DWORD로 constructionMemory만생성; Session은명시호환메모리프로필에서건설값0을받도록한다. 이0은게임초기값복원이아닌검증된CPP1370-x64할당환경입력이다.",
+    "strongerInterface": "paletteMemoryFactory(kind) 또는allocationInputs[kind]를Client서비스가공급하며 할당세대·요청색수·snapshot시점의인접DWORD를표현한다. Native는현재heap읽기, web은명시환경프로필/독립입력으로구현한다.",
+    "avoid": [
+      "전역OBSERVED_ADJACENT_DWORD를0으로치환",
+      "그림자S(1)/S(11)변경",
+      "화면좌표/픽셀색/특정SID/프레임조건으로0출력",
+      "count-1 clamp 또는out-of-range색을추가정상색으로간주",
+      "State7 Chat/전체갱신위상수정과같은원인으로묶기"
+    ],
+    "verification": [
+      "명시건설입력0/1에대해같은life>max 경로와S(0)=0/S(1)=11을검사",
+      "기존기본1 FieryTail/ParticlePaletteMemory 계약유지",
+      "실제AI7시점및기존장면재대조로다른효과에파급없음을확인"
+    ]
+  }
+}

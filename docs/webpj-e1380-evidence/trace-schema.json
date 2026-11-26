@@ -1,0 +1,82 @@
+{
+  "write": [
+    "kindName",
+    "frame",
+    "drawKind",
+    "token",
+    "operation",
+    "before",
+    "after",
+    "sourceIndexOrConstructionPixel"
+  ],
+  "watch": [
+    "kindName",
+    "frame",
+    "token",
+    "originX",
+    "originY",
+    "column",
+    "row",
+    "linearPixel",
+    "output"
+  ],
+  "construction": [
+    "kindName",
+    "frame",
+    "token",
+    "parent",
+    "width",
+    "height",
+    "hotspotX",
+    "hotspotY",
+    "outputSize",
+    "output832",
+    "maximumBits",
+    "paletteCount",
+    "readableDwords",
+    "adjacentDword",
+    "activeCount",
+    "totalCount",
+    "gameTimeBits"
+  ],
+  "particle": [
+    "kindName",
+    "frame",
+    "particleIndex",
+    "active",
+    "originalColor",
+    "lifeBits",
+    "maximumBits",
+    "colorIndex",
+    "destinationPixel",
+    "selectedDword"
+  ],
+  "background-before": [
+    "kindName",
+    "frame",
+    "pixel",
+    "clipLeft",
+    "clipTop",
+    "clipRight",
+    "clipBottom",
+    "flags",
+    "covered"
+  ],
+  "background-after": [
+    "kindName",
+    "frame",
+    "pixel"
+  ],
+  "sprite-before": [
+    "kindName",
+    "frame",
+    "token",
+    "pixel"
+  ],
+  "sprite-after": [
+    "kindName",
+    "frame",
+    "token",
+    "pixel"
+  ]
+}

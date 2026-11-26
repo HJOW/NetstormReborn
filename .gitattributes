@@ -2508,3 +2508,8 @@ docs/webpj-e1373-evidence/native-instrumentation.patch whitespace=-blank-at-eol
 docs/webpj-e1379-evidence/before-*.log -text whitespace=cr-at-eol
 # Playwright 실패 제목의 원문 끝 공백도 해시와 함께 보존한다.
 docs/webpj-e1379-evidence/before-browser.log whitespace=cr-at-eol,-blank-at-eol
+
+# 격리 Native 계측의 원문 CRLF와 patch 문맥 공백을 보존한다.
+docs/webpj-e1380-evidence/** whitespace=cr-at-eol
+docs/webpj-e1380-evidence/native-instrumentation.patch whitespace=cr-at-eol,-blank-at-eol
+docs/webpj-e1380-evidence/next-hud-app.patch whitespace=cr-at-eol,-blank-at-eol

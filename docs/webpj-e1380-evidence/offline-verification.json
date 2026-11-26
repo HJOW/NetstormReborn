@@ -1,0 +1,53 @@
+{
+  "frame": 8000,
+  "screen": [
+    947,
+    689
+  ],
+  "capturePixel": 1978,
+  "particleLife": 2.091830253601074,
+  "maximum": 2,
+  "paletteCount": 11,
+  "actualAdjacent": 0,
+  "writes": [
+    [
+      240,
+      185
+    ],
+    [
+      185,
+      232
+    ],
+    [
+      232,
+      0
+    ],
+    [
+      0,
+      0
+    ]
+  ],
+  "cases": [
+    {
+      "adjacent": 0,
+      "input": 0,
+      "index": 0,
+      "rgb": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "adjacent": 1,
+      "input": 1,
+      "index": 11,
+      "rgb": [
+        45,
+        25,
+        19
+      ]
+    }
+  ],
+  "productChanged": false
+}

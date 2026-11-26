@@ -1,0 +1,62 @@
+[
+  {
+    "name": "ai1000",
+    "pixels": {
+      "sizeMatch": true,
+      "total": 0,
+      "outside": 0,
+      "outsideBox": null,
+      "regions": [],
+      "background": 0
+    },
+    "state": [],
+    "playerAddressRows": [],
+    "pngSha256": "baac85f3c68ab3554836e4ca26d0f3c78837ca03205276a84f263585ec5f3538",
+    "bmpSha256": "6da9bb53591336e370e0ea1bf1f1582eee268f53cf356ddbb45e791b1603efd3"
+  },
+  {
+    "name": "ai6000",
+    "pixels": {
+      "sizeMatch": true,
+      "total": 0,
+      "outside": 0,
+      "outsideBox": null,
+      "regions": [],
+      "background": 0
+    },
+    "state": [],
+    "playerAddressRows": [],
+    "pngSha256": "3b36c093c764bdb205b7a41c7166fed450107bffadfb5325e270d29e44476b22",
+    "bmpSha256": "b39591bff950dd59910df0c348ecc97069a034efb3b3cca60cc2c77f7ea56f09"
+  },
+  {
+    "name": "ai7000",
+    "pixels": {
+      "sizeMatch": true,
+      "total": 0,
+      "outside": 0,
+      "outsideBox": null,
+      "regions": [],
+      "background": 0
+    },
+    "state": [],
+    "playerAddressRows": [],
+    "pngSha256": "16910438b3f8bd03f041c6bb9e7df000169f3eec6373d856cb217ff1034b0b01",
+    "bmpSha256": "50d5b943225ca321ac77fa0c7c7f3c9e3a6d92336b88a86f0f84c0d60325dd5e"
+  },
+  {
+    "name": "ai8000",
+    "pixels": {
+      "sizeMatch": true,
+      "total": 0,
+      "outside": 0,
+      "outsideBox": null,
+      "regions": [],
+      "background": 0
+    },
+    "state": [],
+    "playerAddressRows": [],
+    "pngSha256": "b5dcf2f46074b48b449d9a0942877689916d37fd72b0aa244ed34ca5bfc7dbe3",
+    "bmpSha256": "fda59b26f8b16b487289a6c58dc64b7208dd58cd398a1e698ace3e41fab6f706"
+  }
+]

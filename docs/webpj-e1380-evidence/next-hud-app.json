@@ -1,0 +1,8 @@
+{
+  "baseSourceSha256": "f63e511cb34ea8d8c80ca69d8c8439be3210b57227ba8ac5250f5649a0e11c52",
+  "draftSha256": "c2c1fdcf3954f18550bd0aea414e30a509d1ed7aafb51ef204b3fd823f0a4865",
+  "productApplied": false,
+  "scope": "후속 앱 HUD 생성/World 도킹 분리 초안. 전체회귀 종료 전 제품 소스에 적용하지 않는다.",
+  "patchSha256": "740ccede0336148416af07066112d6ef2d423f482b657d2fefcb2a370db85e28",
+  "validated": "구문 검사만 통과. 제품 미적용·실제 회귀 전."
+}

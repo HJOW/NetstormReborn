@@ -1,0 +1,243 @@
+--- cpppj\src\client\ClientRendererFrame.cpp
++++ H:\Workspace\git\NetstormReborn\extracted\webpj-render-order-probe\pixel-v6\ClientRendererFrame.cpp
+@@ -1,3 +1,4 @@
++#include "PixelTrace.h"
+ // 원문 앞단/배경 본체는 유지하고 실제 Client/Screen/Gump/Pool 장치만 제공한다.
+ #include "client/ClientRendererFrame.h"
+ #include "client/ClientMetaSpriteRefresh.h" //실제4787c0/8c의기존본문을현재Client/Gump로공유한다.
+@@ -34,8 +35,19 @@
+ #include <bit>
+ #include <iostream>
+ #include <sstream>
+-
+-namespace netstorm::client { // 같은 현재 저장소를 원문 호출 위치에서 다시 조회한다.
++#include <fstream>
++#include <cstdlib>
++#include "client/HudChatGeometry.h"
++#include "client/TextEntryGump.h"
++
++namespace netstorm::client {
++// 관측 사본 두 번역 단위가 공유하는 마지막 실제 수집 프레임이다.
++// 제품 저장소에 쓰지 않는 독립 관측 문맥이다.
++std::uint32_t gPixelProbeToken=0,gPixelProbeKind=99;
++bool PixelProbeEnabled() { return gObserverLastFrame>=7900 && gObserverLastFrame<=8000; }
++std::ostream& PixelProbeLog() { static std::ofstream log(std::getenv("NETSTORM_PIXEL_TRACE"),std::ios::out|std::ios::trunc);return log; }
++void PixelProbeWrite(const char* stage,std::uint32_t before,std::uint32_t after,std::int32_t source) { if(PixelProbeEnabled()) PixelProbeLog()<<"write\t"<<gObserverLastFrame<<'\t'<<gPixelProbeKind<<'\t'<<gPixelProbeToken<<'\t'<<stage<<'\t'<<before<<'\t'<<after<<'\t'<<source<<'\n'; }
++std::uint64_t gObserverLastFrame=0; // 같은 현재 저장소를 원문 호출 위치에서 다시 조회한다.
+ namespace { // Native signed 덧셈과 단정도 저장/clip만 공통 처리한다.
+ std::int32_t Add(std::int32_t value,std::uint32_t delta) { return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(value)+delta); } //화면+16/+11의 실제32비트 감김이다.
+ o::RenderWorldRect WorldRect(ScreenRect rect,const RawCameraViewState& view) {
+@@ -206,6 +218,30 @@
+     }
+     const auto result=CollectDrawEntries({clip,visible,WorldRect(clip,camera),flags,RendererCollectionRowLimit(client_.screenWidth_,client_.screenHeight_)},entries_,hooks);
+     entryCount_=result.count;
++    // 독립 조사 사본에서만 현재 수집 목록을 읽어 기록하며 게임 상태와 목록을 변경하지 않는다.
++    const auto traceFrame=client_.Time().number;gObserverLastFrame=traceFrame;
++    // 실제 Chat/Console의 기한을 변경 없이 읽어 생성 직후와 비교 구간에 기록한다.
++    static std::uint64_t observedFrame=0,firstChatFrame=0;
++    const auto chatRoot=client_.menu_->rawButtons_->Menus()->ChatWindowRoot();
++    if(chatRoot && traceFrame!=observedFrame){
++     if(!firstChatFrame)firstChatFrame=traceFrame;
++     if(traceFrame<=firstChatFrame+5 || traceFrame==1000 || traceFrame==6000 || (traceFrame>=6980 && traceFrame<=7000)){
++      const auto* chat=static_cast<const HudChatNode*>(client_.menu_->rawButtons_->Menus()->Node(chatRoot));
++      const auto* input=static_cast<const TextEntryGumpNode*>(client_.menu_->rawButtons_->Menus()->Node(chat->console));
++      static std::ofstream uiTrace(std::getenv("NETSTORM_UI_TRACE"),std::ios::out|std::ios::trunc);
++      uiTrace<<traceFrame<<'\t'<<std::bit_cast<std::uint64_t>(client_.WallSeconds())<<'\t'<<chatRoot<<'\t'<<chat->console<<'\t'<<std::bit_cast<std::uint64_t>(input->blinkAt)<<'\t'<<input->blinkPhase<<'\t'<<input->flags<<'\t'<<input->readOnly<<'\n';uiTrace.flush();
++     }
++     observedFrame=traceFrame;
++    }
++
++    if (traceFrame>=6980 && traceFrame<=7000) {
++        static std::ofstream trace(std::getenv("NETSTORM_DRAW_TRACE"),std::ios::out|std::ios::trunc);
++        trace<<"collect\t"<<traceFrame<<'\t'<<clip.left<<'\t'<<clip.top<<'\t'<<clip.right<<'\t'<<clip.bottom<<'\t'<<flags<<'\t'<<entryCount_<<'\n';
++        // 수집된 실제 항목을 정렬 전 순서대로 읽는다.
++        for (const auto& entry:std::span(entries_).first(static_cast<std::size_t>(entryCount_))) trace<<"entry\t"<<std::bit_cast<std::uint32_t>(entry.x)<<'\t'<<std::bit_cast<std::uint32_t>(entry.y)<<'\t'<<entry.token<<'\t'<<entry.depth<<'\t'<<static_cast<unsigned>(entry.kind)<<'\t'<<static_cast<unsigned>(entry.tail)<<'\n';
++        trace.flush();
++    }
++
+     for (const auto& entry:std::span(entries_).first(static_cast<std::size_t>(entryCount_))) if (entry.kind<collectedKinds_.size()) ++collectedKinds_[entry.kind]; //관측은 실제 상위 항목만 세며 지형 내부 순서를 건드리지 않는다.
+     return result.backgroundCovered ? 1U : 0U;
+ }
+@@ -226,11 +262,15 @@
+         hooks.sprite=[&](const auto& entry) {
+             auto* world=client_.menu_->world_.get();auto* display=world ? world->factoryDisplay_.get() : client_.menu_->MetaSpriteDisplay();if (!display) throw std::logic_error("Native SpriteDraw 실제 게임/메타 공통 출력기 부재");
+             auto& session=client_.gameplayGlobals_->RequireSession();
++            gPixelProbeKind=0;gPixelProbeToken=entry.token;
++            if(PixelProbeEnabled() && clip.left<=947 && clip.right>947 && clip.top<=689 && clip.bottom>689) PixelProbeLog()<<"sprite-before\t"<<gObserverLastFrame<<'\t'<<entry.token<<'\t'<<unsigned(pixels[689*pitch+947])<<'\n';
+             display->DrawEntry(entry,pixels,pitch,height,clip,client_.gameplayGlobals_->Camera().Snapshot().pixels,session.LocalOwner(),client_.menu_->hideBuildings_,
+                 [&session](auto sid,auto x,auto y) { session.DrawBridgeAdditional(sid,x,y); },[&](auto sid,auto x,auto y) { DrawClientMetaSprite(client_,menus,sid,{x,y},pixels,pitch,height,clip); });
++            if(PixelProbeEnabled() && clip.left<=947 && clip.right>947 && clip.top<=689 && clip.bottom>689) PixelProbeLog()<<"sprite-after\t"<<gObserverLastFrame<<'\t'<<entry.token<<'\t'<<unsigned(pixels[689*pitch+947])<<'\n';
++            gPixelProbeKind=99;gPixelProbeToken=0;
+         };
+         hooks.group=[this](auto token) { return groups_->Group(token); };hooks.ui=ui;
+-        hooks.construction=[&](auto token) { client_.gameplayGlobals_->RequireSession().Particles().DrawEntry(token,pixels,pitch,height,clip); };
++        hooks.construction=[&](auto token) { gPixelProbeKind=3;gPixelProbeToken=token;client_.gameplayGlobals_->RequireSession().Particles().DrawEntry(token,pixels,pitch,height,clip);gPixelProbeKind=99;gPixelProbeToken=0; };
+         hooks.preview=[&](const auto& entry) { client_.gameplayGlobals_->RequireSession().Cursor().Display().DrawEntry(entry,pixels,pitch,height,clip); }; //수집때실제존재를확인한같은Session커서만출력한다.
+         for (const auto& entry:entries) { //묶음 숨김은 상위 항목마다 현재 DWORD를 다시 읽는다. 내부 묶음은 별도 정렬하지 않는다.
+             if (entry.kind<submittedKinds_.size()) ++submittedKinds_[entry.kind];
+--- cpppj\src\client\Renderer.cpp
++++ H:\Workspace\git\NetstormReborn\extracted\webpj-render-order-probe\pixel-v6\Renderer.cpp
+@@ -1,3 +1,4 @@
++#include "PixelTrace.h"
+ // 원본 00497580·00497900·00499fe0. 외부 목록 수집/구름/카메라 복사는 원본 Squid·지형 복원 뒤 확장한다.
+ #include "client/Renderer.h"
+ #include "client/DrawSort.h"
+@@ -6,8 +7,25 @@
+ #include <cmath>
+ #include <climits>
+ #include <stdexcept>
++#define WIN32_LEAN_AND_MEAN
++#define NOMINMAX
++#include <windows.h>
++#include <fstream>
++#include <cstdlib>
+ 
+ namespace netstorm::client {
++// 별도 사본에서 마지막 실제 프레임과 현재 호출 스택의 RVA만 읽는다.
++extern std::uint64_t gObserverLastFrame;
++static void ObserveFullDirty() {
++ if(gObserverLastFrame>5 && (gObserverLastFrame<6979 || gObserverLastFrame>7000))return;
++ static std::ofstream log(std::getenv("NETSTORM_INVALIDATE_TRACE"),std::ios::out|std::ios::trunc);
++ void* addresses[12]{};const auto count=CaptureStackBackTrace(1,12,addresses,nullptr);const auto base=reinterpret_cast<std::uintptr_t>(GetModuleHandleW(nullptr));
++ log<<"invalidate\t"<<gObserverLastFrame;
++ // ASLR 주소를 같은 사본 MAP에서 찾을 상대 주소로 기록한다.
++ for(unsigned i=0;i<count;++i)log<<'\t'<<std::hex<<(reinterpret_cast<std::uintptr_t>(addresses[i])-base)<<std::dec;
++ log<<'\n';log.flush();
++}
++
+ namespace {
+ // 원본 변경 사각형 표의 최대 개수(this+0x68의 사각형, this+0x6a8의 플래그).
+ constexpr std::size_t kDirtyCapacity = 100;
+@@ -85,13 +103,15 @@
+             const auto input = static_cast<std::size_t>(static_cast<std::int64_t>(y) - top) * image.width + static_cast<std::size_t>(static_cast<std::int64_t>(x) - left);
+             if (image.opacity[input]) {
+                 auto& output = pixels[static_cast<std::size_t>(y) * static_cast<std::size_t>(pitch) + static_cast<std::size_t>(x)];
++                const auto before=output;
+                 output = colors ? (*colors)[shadow ? output : image.indices[input]] : image.indices[input];
++                if(x==947 && y==689) PixelProbeWrite(shadow ? "indexed-shadow" : "indexed-source",before,output,image.indices[input]);
+             }
+         }
+     }
+ }
+ // 첫 프레임을 원본처럼 전체 화면으로 그린다.
+-Renderer::Renderer(int width, int height,o::OriginalEdition edition) : width_(width), height_(height),edition_(edition), dirty_(width, height) { dirty_.InvalidateAll(); }
++Renderer::Renderer(int width, int height,o::OriginalEdition edition) : width_(width), height_(height),edition_(edition), dirty_(width, height) { (ObserveFullDirty(),dirty_.InvalidateAll()); }
+ // 같은 객체가 제출한 모든 그림의 합집합을 무효화한다. 특수 프레임은 그림 범위가 없다.
+ ScreenRect Renderer::Bounds(const RenderSprite& sprite) const {
+     if (sprite.procedure) {
+@@ -139,37 +159,37 @@
+     sourceSprites_=sprites; // dirty별 재정렬도 같은 원본 입력 순서에서 시작한다.
+     if (sort) SortRenderSprites(sprites,edition_);
+     // 글자 이동·삭제는 현재 전체를 무효화한다. 후속 Gump가 전용 변경 범위를 등록한다.
+-    if (!text_.empty() || !text.empty()) dirty_.InvalidateAll();
++    if (!text_.empty() || !text.empty()) (ObserveFullDirty(),dirty_.InvalidateAll());
+     sprites_ = std::move(sprites); text_ = std::move(text);
+ }
+ // ShapeDatabase 소유자가 반납·재생성할 때만 호출하며 일반 장면/dirty 갱신의 캐시는 유지한다.
+ void Renderer::ClearDecodedImages() { images_.clear(); }
+ // 화면 모드 변경·전체 다시 그리기.
+-void Renderer::InvalidateAll() { dirty_.InvalidateAll(); }
++void Renderer::InvalidateAll() { (ObserveFullDirty(),dirty_.InvalidateAll()); }
+ // 원문 force redraw가 기존100칸을 비운 뒤 전체 사각형을 추가할 때 같은 표를 비운다.
+ void Renderer::ClearDirty() { dirty_.Clear(); }
+ // 수집기 교체/해제는 이전 캐시도 비워 반납된 월드 callback을 남기지 않는다.
+-void Renderer::SetExtraCollection(std::function<std::vector<RenderSprite>(ScreenRect,std::uint32_t)> collect) { extraCollection_=std::move(collect);extraCache_.clear();dirty_.InvalidateAll(); }
++void Renderer::SetExtraCollection(std::function<std::vector<RenderSprite>(ScreenRect,std::uint32_t)> collect) { extraCollection_=std::move(collect);extraCache_.clear();(ObserveFullDirty(),dirty_.InvalidateAll()); }
+ bool Renderer::HasExtraCollection() const { return static_cast<bool>(extraCollection_); } // 새 장치에 실제 수집기가 있는지 조회한다.
+ // 배경 팔레트 번호를 변환하지 않고 변경 영역의 합성에서 재사용한다.
+ void Renderer::SetBackground(std::shared_ptr<const IndexedImage> image) {
+     if (image && (image->width != static_cast<std::size_t>(width_) || image->height != static_cast<std::size_t>(height_) ||
+         image->indices.size() != image->width * image->height || image->opacity.size() != image->indices.size()))
+         throw std::invalid_argument("Invalid renderer background");
+-    background_ = std::move(image); dirty_.InvalidateAll();
++    background_ = std::move(image); (ObserveFullDirty(),dirty_.InvalidateAll());
+ }
+ // 오브젝트 선택 표시는 UI 글자와 같이 월드 스프라이트 뒤에 합성한다.
+ void Renderer::SetOverlay(std::shared_ptr<const IndexedImage> image) {
+     if (image && (image->width != static_cast<std::size_t>(width_) || image->height != static_cast<std::size_t>(height_) ||
+         image->indices.size() != image->width*image->height || image->opacity.size() != image->indices.size()))
+         throw std::invalid_argument("Invalid renderer overlay");
+-    overlay_=std::move(image); dirty_.InvalidateAll();
++    overlay_=std::move(image); (ObserveFullDirty(),dirty_.InvalidateAll());
+ }
+ // 실제 메뉴는 자신의 현재 상태를 그리며 장치 변경/닫힘도 다음 실제 표면에 반영한다.
+ void Renderer::SetOverlayProcedure(std::optional<RenderProcedure> procedure) {
+     if (procedure && !procedure->draw) throw std::invalid_argument("현재 UI 표면 출력 경계 누락");
+     if (!procedure && !overlayProcedure_) return;
+-    overlayProcedure_=std::move(procedure);dirty_.InvalidateAll();
++    overlayProcedure_=std::move(procedure);(ObserveFullDirty(),dirty_.InvalidateAll());
+ }
+ // 정지한 월드 위에 대화상자를 합성할 배경·스프라이트·선택 표시를 별도 버퍼에 그린다.
+ IndexedImage Renderer::SceneImage() {
+@@ -265,7 +285,9 @@
+             combined.insert(combined.end(),std::make_move_iterator(extra.begin()),std::make_move_iterator(extra.end()));SortRenderSprites(combined,edition_);
+         }
+         if (world) {
++            if(PixelProbeEnabled() && clip.left<=947 && clip.right>947 && clip.top<=689 && clip.bottom>689) PixelProbeLog()<<"background-before\t"<<gObserverLastFrame<<'\t'<<unsigned(pixels[689*pitch+947])<<'\t'<<clip.left<<'\t'<<clip.top<<'\t'<<clip.right<<'\t'<<clip.bottom<<'\t'<<paintFlags_[i]<<'\t'<<covered<<'\n';
+             world->background(clip,paintFlags_[i],covered);
++            if(PixelProbeEnabled() && clip.left<=947 && clip.right>947 && clip.top<=689 && clip.bottom>689) PixelProbeLog()<<"background-after\t"<<gObserverLastFrame<<'\t'<<unsigned(pixels[689*pitch+947])<<'\n';
+             if (paintFlags_[i]&kOpaque) combined.clear(); //UI 전용4의 원문은 월드/미리보기 표시를 제출하지 않는다.
+         }
+         if (world && world->submit) {
+--- cpppj\src\o\RawConstructionFrame.cpp
++++ H:\Workspace\git\NetstormReborn\extracted\webpj-render-order-probe\pixel-v6\RawConstructionFrame.cpp
+@@ -1,3 +1,4 @@
++#include "PixelTrace.h"
+ // 건설 입자의 활성/만료/재배치와 판본마다 다른 HP 폭·실수 저장 순서를 보존한다.
+ #include "o/RawConstructionFrame.h"
+ #include <algorithm>
+@@ -150,6 +151,17 @@
+     if (!v.parent.value) throw std::out_of_range("건설 Draw 부모 오류");const auto raw=pool_.Slot(v.parent);
+     const auto x=static_cast<float>(static_cast<double>(visualState_.scaleX)*std::bit_cast<float>(Read(raw,kX))-state_.cameraX);
+     const auto y=static_cast<double>(visualState_.scaleY)*std::bit_cast<float>(Read(raw,kY))-state_.cameraY;
++    if(v.parent.value==15651 && netstorm::client::PixelProbeEnabled()) {
++        auto& log=netstorm::client::PixelProbeLog();
++        // 현재 실제 캡처 기준점과 원문Draw의 정수화로 화면947/689의 목적지 인덱스를 계산한다.
++        const auto originX=Ftol(static_cast<double>(x)-v.image.hotspotX),originY=Ftol(y-v.image.hotspotY);
++        const auto column=947-originX,row=689-originY;
++        const auto watched=(column>=0 && column<v.image.width && row>=0 && row<v.image.height) ? row*v.image.width+column : -1;
++        log<<"watch\t"<<netstorm::client::gObserverLastFrame<<'\t'<<netstorm::client::gPixelProbeToken<<'\t'<<originX<<'\t'<<originY<<'\t'<<column<<'\t'<<row<<'\t'<<watched<<'\t'<<(watched>=0 ? unsigned(v.output.at(watched)) : 256U)<<'\n';
++        log<<"construction\t"<<netstorm::client::gObserverLastFrame<<'\t'<<netstorm::client::gPixelProbeToken<<'\t'<<v.parent.value<<'\t'<<v.image.width<<'\t'<<v.image.height<<'\t'<<v.image.hotspotX<<'\t'<<v.image.hotspotY<<'\t'<<v.output.size()<<'\t'<<unsigned(v.output.at(832))<<'\t'<<std::bit_cast<std::uint32_t>(v.maximum)<<'\t'<<palette_.count<<'\t'<<palette_.entries.size()<<'\t'<<palette_.entries[palette_.count]<<'\t'<<v.active<<'\t'<<v.total<<'\t'<<std::bit_cast<std::uint64_t>(state_.now)<<'\n';
++        // 실제 사용 꼬리 안에서 동적으로 계산한 목적지 또는 기존832의 현재 입자를 읽는다.
++        for(std::uint32_t index=0;index<v.total;++index) if(v.particles[index].pixel==static_cast<std::uint32_t>(watched) || v.particles[index].pixel==832) { const auto& p=v.particles[index];const auto value=std::min(p.life,v.maximum);const auto reciprocal=static_cast<float>(1.0/static_cast<double>(v.maximum));const auto colorIndex=Ftol(static_cast<double>(static_cast<float>(palette_.count))*value*reciprocal);log<<"particle\t"<<netstorm::client::gObserverLastFrame<<'\t'<<index<<'\t'<<unsigned(p.active)<<'\t'<<unsigned(p.color)<<'\t'<<std::bit_cast<std::uint32_t>(p.life)<<'\t'<<std::bit_cast<std::uint32_t>(v.maximum)<<'\t'<<colorIndex<<'\t'<<p.pixel<<'\t'<<palette_.entries[colorIndex]<<'\n'; }
++    }
+     hooks_.draw({Ftol(static_cast<double>(x)-v.image.hotspotX),Ftol(y-v.image.hotspotY),v.image.width,
+         {0,0,v.image.width,v.image.height},v.output});
+ }
+--- cpppj\src\client\RawCampaignParticles.cpp
++++ H:\Workspace\git\NetstormReborn\extracted\webpj-render-order-probe\pixel-v6\RawCampaignParticles.cpp
+@@ -1,3 +1,4 @@
++#include "PixelTrace.h"
+ // 원본 몸체를 현재 Windows 할당과 실제 Renderer의8비트 표면에 연결한다.
+ #include "client/RawCampaignParticles.h"
+ #include "client/VFXLine.h"
+@@ -299,7 +300,7 @@
+             // 255 투명 픽셀은 기존 화면을 보존한다.
+             for (int column=draw.clip.left;column<draw.clip.right;++column) {
+                 const auto x=static_cast<std::int64_t>(draw.x)+column;if (x<target.clip.left || x>=target.clip.right || x<0 || x>=target.pitch) continue;
+-                const auto color=draw.pixels[static_cast<std::size_t>(row)*draw.pitch+column];if (color!=255) target.pixels[static_cast<std::size_t>(y)*target.pitch+static_cast<std::size_t>(x)]=color;
++                const auto color=draw.pixels[static_cast<std::size_t>(row)*draw.pitch+column];if (color!=255) { const auto before=target.pixels[static_cast<std::size_t>(y)*target.pitch+static_cast<std::size_t>(x)];target.pixels[static_cast<std::size_t>(y)*target.pitch+static_cast<std::size_t>(x)]=color;if(x==947 && y==689) PixelProbeWrite("construction-output",before,color,row*draw.pitch+column); }
+             }
+         }
+     };
+--- cpppj\src\client\VFXTransform.cpp
++++ H:\Workspace\git\NetstormReborn\extracted\webpj-render-order-probe\pixel-v6\VFXTransform.cpp
+@@ -1,3 +1,4 @@
++#include "PixelTrace.h"
+ // 디컴파일의 다각형 행 순회를 직교 사각형으로 줄이되 정수 변환·끝점·표본 순서를 유지한다.
+ #include "client/VFXTransform.h"
+ #include "client/Renderer.h"
+@@ -103,10 +104,11 @@
+         for (int x=visible.left;x<visible.right;++x) {
+             const auto input=sourceRow+std::size_t(u>>16);
+             if (translated && image.opacity[input] && image.indices[input]!=kScratchTransparent) {
+-                auto& output=pixels[targetRow+std::size_t(x)];output=(*colors)[output]; //0040351d은 결과255도 불투명 대상으로 저장한다.
++                auto& output=pixels[targetRow+std::size_t(x)];const auto before=output;output=(*colors)[output];
++                if(x==947 && y==689) PixelProbeWrite("translated",before,output,image.indices[input]); //0040351d은 결과255도 불투명 대상으로 저장한다.
+             } else if (!translated && image.opacity[input]) {
+                 const auto ink=colors ? (*colors)[image.indices[input]] : image.indices[input];
+-                if (ink!=kScratchTransparent) pixels[targetRow+std::size_t(x)]=ink;
++                if (ink!=kScratchTransparent) { const auto before=pixels[targetRow+std::size_t(x)];pixels[targetRow+std::size_t(x)]=ink;if(x==947 && y==689) PixelProbeWrite("scaled-source",before,ink,image.indices[input]); }
+             }
+             u=Advance(u,stepX,1);
+         }

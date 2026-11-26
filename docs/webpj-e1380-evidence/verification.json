@@ -1,0 +1,81 @@
+{
+  "unit": "WB04-E1380",
+  "baseCommit": "2ebcaeb3b",
+  "native": {
+    "host": "HJOW-Athlon",
+    "frame": 8000,
+    "point": [
+      947,
+      689
+    ],
+    "constructionOutputPixel": 1978,
+    "particleLife": 2.091830253601074,
+    "maximum": 2,
+    "paletteCount": 11,
+    "adjacentDword": 0,
+    "lastWriterSid": 1292,
+    "screenCheckpoints": [
+      1000,
+      6000,
+      7000,
+      8000
+    ],
+    "outsidePixels": 0,
+    "stateOutsideSpOwner0": 0,
+    "protectedFiles": 5499,
+    "protectedChanged": 0,
+    "protectedAdded": 0,
+    "productExeSha256": "c3daa5bfbebfbcb91ab1b95965f9cecb745e17ec1110e9b574080229227249b7"
+  },
+  "offline": {
+    "node26Exit": 0,
+    "node22Exit": 0,
+    "sameJson": true,
+    "sha256": "22c3e8dde476701cb76c0c95c5d5d638caa6c7f7dbd2afdaed2c1bc45edbfb01"
+  },
+  "fullRegression": {
+    "node26": {
+      "version": "26.13.0",
+      "tests": 6867,
+      "pass": 6867,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "durationMs": 601122.1766,
+      "logSha256": "2bef997ed45655db84676dcd6a199245ec9c99424c78cf5b9c5515335e526c9c",
+      "log": "webpj/extracted/webpj-e1380-node26.log"
+    },
+    "node22": {
+      "version": "22.23.5",
+      "tests": 6867,
+      "pass": 6867,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "durationMs": 821346.5335,
+      "logSha256": "df9eddc7ace831996f4d1dcdcdb325268e188c740abeff0b9d010611990538a8",
+      "log": "webpj/extracted/webpj-e1380-node22.log"
+    },
+    "sequential": true
+  },
+  "bundle": {
+    "bytes": 3463907,
+    "sha256": "494503af7f1cdfa236bd0a4a3a278af0d1847359676118dbd38a192c71e1b1a3"
+  },
+  "webProductRenderingChanged": false,
+  "cppProductEditedByThisUnit": false,
+  "workspaceAtPause": {
+    "currentProductExeSha256": "12abad5844f0ff6ef1ab11c3d99a3c9eb821257cf68bde882ce888cbd4dcadb0",
+    "exeModifiedAt": "2026-11-26T16:03:59.136Z",
+    "differsFromObservedBaseline": true,
+    "unrelatedSourceChangesPreserved": true
+  },
+  "state7ParentConnected": false,
+  "draft": {
+    "applied": false,
+    "sourceBaseSha256": "f63e511cb34ea8d8c80ca69d8c8439be3210b57227ba8ac5250f5649a0e11c52",
+    "patchSha256": "740ccede0336148416af07066112d6ef2d423f482b657d2fefcb2a370db85e28",
+    "verified": "구문과 git apply --check만 통과; 실제 실행 전"
+  },
+  "pauseRequestedByUser": true
+}

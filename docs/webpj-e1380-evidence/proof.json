@@ -1,0 +1,90 @@
+{
+  "host": "HJOW-Athlon",
+  "frame": 8000,
+  "screenPoint": [
+    947,
+    689
+  ],
+  "correctedCaptureIndex": {
+    "previousStaticCandidate": 832,
+    "reason": "이전 후보는39x41 RLE 외곽 이미지 인덱스를 전체49x55 ShapeToBuffer 캡처 인덱스로 잘못 취급했다. 실제 관측은 원문Draw 필드에서 원점929,649와 상대18,40을 계산한다.",
+    "captureWidth": 49,
+    "captureHeight": 55,
+    "captureHotspot": [
+      47,
+      65
+    ],
+    "origin": [
+      929,
+      649
+    ],
+    "relative": [
+      18,
+      40
+    ],
+    "index": 1978,
+    "output": 0,
+    "old832Output": 255
+  },
+  "construction": {
+    "token": 86,
+    "form": 1302,
+    "parent": 15651,
+    "paletteCount": 11,
+    "readableDwords": 12,
+    "adjacentDword": 0,
+    "activeCount": 227,
+    "totalCount": 296,
+    "particleIndex": 285,
+    "particleActive": 0,
+    "particleOriginalColor": 23,
+    "lifeBits": 1074126988,
+    "life": 2.091830253601074,
+    "maximumBits": 1073741824,
+    "maximum": 2.0,
+    "selectedIndex": 11,
+    "destinationPixel": 1978,
+    "selectedDword": 0
+  },
+  "actualWrites": [
+    {
+      "kind": 0,
+      "token": 1223800,
+      "operation": "indexed-source",
+      "before": 240,
+      "after": 185,
+      "sourceIndexOrConstructionPixel": 185
+    },
+    {
+      "kind": 0,
+      "token": 782550,
+      "operation": "translated",
+      "before": 185,
+      "after": 232,
+      "sourceIndexOrConstructionPixel": 23
+    },
+    {
+      "kind": 3,
+      "token": 86,
+      "operation": "construction-output",
+      "before": 232,
+      "after": 0,
+      "sourceIndexOrConstructionPixel": 1978
+    },
+    {
+      "kind": 0,
+      "token": 64600,
+      "operation": "translated",
+      "before": 0,
+      "after": 0,
+      "sourceIndexOrConstructionPixel": 93
+    }
+  ],
+  "shadowLookup": {
+    "0": 0,
+    "1": 11,
+    "11": 11
+  },
+  "conclusion": "현재 프레임 건설 입자의 life>maximum으로 색표count 인덱스를 읽어 실제 인접DWORD0을 직접 출력했다. 마지막 마나볼트 실제translated 저장은0→0이다. Native검정의 직접 원인은 초기갱신잔류가 아니다. 웹명시 인접값1은 같은그림자표에서11로 변환된다.",
+  "limitation": "실제 웹 입자1978의 수명은 이 Native 실행에서 관측하지 않았다. Native힙 뒤DWORD0의 OS 내부패딩/메타데이터 분류는 관측하지 않았으며 앱은 그 위치를 쓰지 않는다."
+}
