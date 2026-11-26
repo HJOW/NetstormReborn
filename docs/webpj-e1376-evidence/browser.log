@@ -1,0 +1,7 @@
+
+Running 1 test using 1 worker
+
+
+
+[1/1] [chromium] › e2e\object-menu-variants.spec.js:15:1 › 캠페인 1-1: 내 신전과 적 배터리·신전의 우클릭 객체 메뉴가 열린다
+  1 passed (15.7s)

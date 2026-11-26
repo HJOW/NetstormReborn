@@ -1,0 +1,31 @@
+{
+  "unit": "WB04-E1376",
+  "baseCommit": "7cc613690",
+  "node": {
+    "version": "26.13.0",
+    "tests": 6864,
+    "pass": 6864,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "durationMs": 742473.5336,
+    "logSha256": "6076e84b6fbd86c9523c7a32601a2adeaefe1be69c1ce5a3fe3264c4089baf5a"
+  },
+  "focused": {
+    "tests": 20,
+    "pass": 20,
+    "fail": 0,
+    "logSha256": "377821c6315ae888148cea3390360afa4ea82a9fd2c767b41819ffde531c0745"
+  },
+  "browser": {
+    "tests": 1,
+    "pass": 1,
+    "scene": "campaign1-1 ownTemple/enemyBattery/enemyTemple menus",
+    "logSha256": "fcd793cf8ad782ac002acec016927fe2ffcdbe7348c0629f01ffd408e766a2b6"
+  },
+  "bundle": {
+    "bytes": 3461117,
+    "sha256": "b4f9a14d5c1dcfc337f4bc97ab06010aab91e2cf9f2e3a4735e81bebd17b2aa4"
+  },
+  "state7ParentConnected": false
+}

@@ -16,9 +16,9 @@ import { bindGameMenusControls } from './raw-game-menus.js';
 export class ClientMenuGump {
     // 현재 공통 수명·자산·스타일과 원본 메뉴 처리기들이다.
     #root; #parts; #menu; #layout; #controls; #widgets; #input; #owned = new Set(); #state = new MenuGumpState(); #drawState = new MenuGumpDrawState(); #colors = new GumpGlyphColorState();
-    // 모든 사용자 효과는 실제 호출 장치에서 받는다.
+    // 모든 사용자 효과는 실제 호출 장치에서 받는다. formHost()는 현재 Form 호스트를 지연 조회하며 생략하면 기존 session.gumpFormHost()를 사용한다.
     constructor(root, parts) {
-        if (!root || !parts?.assets || !parts?.fonts || !parts?.text || !parts?.background || !parts?.decoration || !parts?.title || !parts?.session || !parts?.config || ['sound', 'command', 'invalidate'].some((name) => typeof parts[name] !== 'function') || ['backgroundType', 'foreground', 'disabled', 'shadow'].some((name) => !Number.isInteger(parts[name]))) throw new TypeError('Client 메뉴 Gump의 실제 장치 누락');
+        if (!root || !parts?.assets || !parts?.fonts || !parts?.text || !parts?.background || !parts?.decoration || !parts?.title || (typeof parts?.formHost !== 'function' && !parts?.session) || !parts?.config || ['sound', 'command', 'invalidate'].some((name) => typeof parts[name] !== 'function') || ['backgroundType', 'foreground', 'disabled', 'shadow'].some((name) => !Number.isInteger(parts[name]))) throw new TypeError('Client 메뉴 Gump의 실제 장치 누락');
         this.#root = root; this.#parts = parts; const node = (token) => root.node(token), style = parts.text.styleEngine();
         this.#menu = new MenuGump(root.createState(), this.#state, root.lifetime(), { node, baseNode: node, push: (token) => root.tree().push(token),
             pop: (token) => { const current = node(token); root.attach(token, current.x, current.y, 0, 0); }, attach: (...args) => root.attach(...args),
@@ -31,12 +31,13 @@ export class ClientMenuGump {
         bindMenuLayoutText(layoutHooks, new GumpText(parts.fonts)); this.#layout = new MenuGumpLayout(root.createState(), this.#menu, layoutHooks);
         const widgetState = new MenuGumpWidgetState(); widgetState.backgroundType = parts.backgroundType; widgetState.backgroundFrame = 1;
         widgetState.foreground = parts.foreground; widgetState.shadow = parts.shadow; widgetState.currentObjectFormType = () => 3;
-        const host = parts.session.gumpFormHost();
+        // State 단계의 공유 메뉴 생성은 World를 요구하지 않는다. 실제 객체 Form 효과만 현재 호스트를 빌린다.
+        const host = () => typeof parts.formHost === 'function' ? parts.formHost() : parts.session.gumpFormHost();
         this.#widgets = new MenuGumpWidgets(root.createState(), this.#state, widgetState, { construct: (token, width, height, flags, mode, type, frame) => parts.background.construct(token, width, height, flags, type, frame, mode) },
             parts.decoration, parts.title, this.#layout, style, root.lifetime(), root.collection(), { attach: (...args) => root.attachBase(...args) }, {
                 node, base: node, allocate: (size) => { if (size === 0xb90) return this.#allocate(); if (size === 0xc4) return parts.decoration.allocate(); if (size === 0xd8) return parts.title.allocate(); throw new RangeError('Client 메뉴 자식 할당 크기'); },
-                attach: (...args) => root.attach(...args), objectForm: (type, mode) => { if (type !== 3) throw new RangeError('메뉴 Form TYPE 오류'); const token = host.create(mode); return { token, index: token }; },
-                formOwner: (form, owner) => host.setOwner(form, owner), formObject: (form, object, flags) => host.attach(form, object, flags),
+                attach: (...args) => root.attach(...args), objectForm: (type, mode) => { if (type !== 3) throw new RangeError('메뉴 Form TYPE 오류'); const token = host().create(mode); return { token, index: token }; },
+                formOwner: (form, owner) => host().setOwner(form, owner), formObject: (form, object, flags) => host().attach(form, object, flags),
             });
         const controlHooks = { node, base: node }; bindMenuGumpControlConfig(controlHooks, parts.config);
         this.#controls = new MenuGumpControls(root.createState(), this.#state, this.#menu, this.#layout, { parse: (token, value) => parts.title.style(token, value) }, controlHooks);
