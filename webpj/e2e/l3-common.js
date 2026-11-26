@@ -72,7 +72,7 @@ async function runL3({ browser, plan, oracleDir, compare = true, inspect = null,
   if (process.env.L3_DUMP_DIR) for (const [key, value] of Object.entries(results)) if (key.startsWith('session-dump:')) fs.writeFileSync(path.join(process.env.L3_DUMP_DIR, `${key.slice(13)}.web.tsv`), value);
   if (!compare) return { results, errors };
   expect(errors).toEqual([]);
-  const { readPng, indexedToRgb } = await import('../tools/image-files.mjs'), { compareImages } = await import('../tools/screen-compare.mjs'), { compareSessionDumps } = await import('../tools/session-dump-compare.mjs');
+  const { readPng, indexedToRgb, encodeIndexedPng } = await import('../tools/image-files.mjs'), { compareImages } = await import('../tools/screen-compare.mjs'), { compareSessionDumps } = await import('../tools/session-dump-compare.mjs');
   const normalize = (text) => text.split(/\r?\n/).join('\n');
   // 화면 체크포인트마다 논리 화면이 0픽셀 다르다(다리 조각을 집은 직후 p345 의 커서 조각 표시와 놓은 직후 d364·400 의 새 다리 포함).
   for (const name of checkpoints.filter(([, op]) => op === 'snapshot').map(([, , label]) => label)) {
@@ -82,6 +82,8 @@ async function runL3({ browser, plan, oracleDir, compare = true, inspect = null,
     const web = indexedToRgb({ width: shot.width, height: shot.height, pixels: Uint8Array.from(shot.pixels) }, palette);
     const regions = screenRegions[name] ?? [];
     const difference = compareImages(readPng(fs.readFileSync(path.join(oracleDir, `${name}.png`))), web, regions);
+    // 조사 폴더를 지정한 실행만 웹 논리 화면도 보존해 기존 오라클을 바꾸지 않고 차이 위치를 확인한다. (WB04-E1341)
+    if (process.env.L3_DUMP_DIR) fs.writeFileSync(path.join(process.env.L3_DUMP_DIR, `${name}.web.png`), encodeIndexedPng(web));
     expect(difference.outside, `${name} 화면의 설명된 영역 밖 차이`).toBe(0);
     // 변경 영역도 사유와 정확한 픽셀 수를 고정해 다른 결함이 섞이지 않게 한다.
     for (let index = 0; index < regions.length; index += 1) {
