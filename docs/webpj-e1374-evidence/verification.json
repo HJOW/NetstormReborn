@@ -1,0 +1,27 @@
+{
+  "unit": "WB04-E1374",
+  "baseCommit": "24131dc47",
+  "node": {
+    "version": "26.13.0",
+    "tests": 13,
+    "pass": 13,
+    "fail": 0,
+    "durationMilliseconds": 51923.4054,
+    "logSha256": "fef485982d495138ef35bbddf3a28884af55278135b3c6da06a6d3f510eda339"
+  },
+  "browser": {
+    "tests": 1,
+    "pass": 1,
+    "screenCheckpoints": 3,
+    "outsidePixels": 0,
+    "dumpCheckpoints": 3,
+    "outsideAllowedRows": 0,
+    "scope": "1-1 브리핑·진입·1200프레임 대기"
+  },
+  "bundle": {
+    "bytes": 3461014,
+    "sha256": "64ceb5512f0978f68baacf9940e7ce8782e1d0b3406d1ebe06646e2f447f19c2"
+  },
+  "state7ParentConnected": false,
+  "sharedClientProductionContextConnected": false
+}

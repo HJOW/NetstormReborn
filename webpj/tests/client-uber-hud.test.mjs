@@ -74,3 +74,24 @@ test('Uber HUD 장치 누락: 필수 실제 장치 없이는 만들지 않는다
     const root = new ClientGumpRoot(1024, 768, () => 0, () => {});
     assert.throws(() => new ClientUberHud(root, {}), /Uber HUD/u); assert.throws(() => new ClientUberHud(null, {}), /Uber HUD/u); root.dispose();
 });
+
+// State7 생성과 Ready 뒤 도킹 사이에 실제 자식의 정체·수명을 보존하고 중복 연결을 구별한다.
+test('Uber HUD 두 단계 수명: 생성은 World 후처리를 미루고 최초 도킹은 같은 자식을 재사용한다', () => {
+    const { root, hud, calls } = scene();
+    assert.throws(() => hud.dockForWorld(), /생성/u);
+    const token = hud.createForState(), node = hud.node();
+    const children = [node.vertical, node.minimapDivider, node.chatDivider, node.minimap, node.production];
+    const objects = children.map((child) => root.node(child));
+    assert.equal(root.createState().entries[0], token); assert.ok(children.every(Boolean));
+    assert.equal(calls.includes('finish'), false);
+    assert.equal(hud.dockForWorld(), token);
+    // 도킹이 같은 값의 새 노드로 바꾸지 않고 실제 생성 객체를 유지해야 한다.
+    children.forEach((child, index) => assert.equal(root.node(child), objects[index]));
+    assert.deepEqual({ ...hud.mapView() }, { left: 85, top: 0, right: 1024, bottom: 768 });
+    assert.ok(calls.includes('finish')); calls.length = 0;
+    assert.equal(hud.dockForWorld(), token); assert.deepEqual(calls, []);
+    hud.close(); assert.throws(() => hud.dockForWorld(), /생성/u);
+    const next = hud.createForState(); assert.notEqual(next, token);
+    assert.equal(hud.dockForWorld(), next);
+    hud.close(); root.dispose();
+});

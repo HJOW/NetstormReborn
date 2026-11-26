@@ -1,6 +1,6 @@
 // 실제 미션 화면의 원본 Uber HUD 틀(세로·미니맵·채팅 구분선, 미니맵, 생산 패널)을 같은 Client Gump 루트에 설치하고 지도 영역을 도킹한다.
-// 원본 `UberRootGump` 생성·교체 순서와 `HudDock` 모드 3 도킹을 그대로 호출하며(cpppj `UberHud.inc` `InstallHud`·`RawUberRootControls`), 앱이 아직 연결하지 않은 지식(NSInfo) 패널과 채팅 창은 만들지 않고 해당 자식 필드를 0으로 둔다.
-// 사용: const hud = new ClientUberHud(root, devices); hud.install(); hud.refresh(); hud.reflow(width, height); hud.close().
+// 원본 `UberRootGump` 교체와 첫 World의 `HudDock` 모드 3을 분리한다(cpppj `UberHud.inc`). 채팅 공장이 있으면 같은 생성 단계에서 자식을 만든다.
+// 사용: const hud = new ClientUberHud(root, devices); hud.createForState(); Ready 뒤 hud.dockForWorld(). 기존 hud.install()은 두 단계를 이어 호출한다.
 //   devices = { assets, panelGlobals, divider, fullDeck(), mapRevision(), createMinimap(), createProduction(), minimap, closePopups(), baseHandle(token, event, first, second),
 //   invalidate(rect, flags), finishResize() } — 모두 현재 Client 수명이 소유하며 이 모듈은 DOM·Canvas를 쓰지 않는다. (2026-11-20 WB04-E1082: 좌측 사이드바 위치 보정으로 추가)
 import { HudDock, HudDividerNode } from './hud-dock.js';
@@ -19,6 +19,8 @@ const DIVIDER_BYTES = 0x11c, ROOT_BYTES = 0xc8;
 export class ClientUberHud {
     // 현재 루트·장치와 HudDock이 읽고 쓰는 실제 전역, 구분선 조회기와 현재 Uber 루트 토큰이다.
     #root; #devices; #globals; #lookup; #token = 0; #previous = { width: 0, height: 0 }; #closed = new Set();
+    // 같은 생성물의 최초 World 도킹 여부다. 반복 연결 통지는 사용자가 바꾼 구분선·채팅 표시를 유지한다.
+    #worldDocked = false;
     // 모든 장치를 확인하고 HudDock 전역을 현재 화면 크기로 초기화한다. 지도 사각형은 Gump 트리가 읽는 같은 객체를 쓴다.
     constructor(root, devices) {
         if (!root || !devices?.assets || !devices.panelGlobals || !devices.divider) throw new TypeError('Uber HUD의 실제 루트·자산·전역·구분선 필요');
@@ -90,7 +92,7 @@ export class ClientUberHud {
         if (bytes === DIVIDER_BYTES) return this.#devices.divider.allocate();
         throw new Error('Uber HUD의 미지원 할당 크기');
     }
-    // 원본 Uber 생성·교체에 필요한 실제 하위 장치 묶음이다. 지식·채팅 공장은 의도적으로 제공하지 않는다.
+    // 원본 Uber 생성·교체의 하위 장치다. 지식 패널은 웹 범위 밖이며 제공된 채팅 공장만 같은 단계에서 연결한다.
     #hooks() {
         const root = this.#root, devices = this.#devices;
         return {
@@ -107,18 +109,29 @@ export class ClientUberHud {
             cleanup: () => root.lifetime().cleanup(), kill: (token) => root.lifetime().kill(token), replaceRoot: (token) => root.replaceRoot(token),
         };
     }
-    // 새 Uber 루트를 만들어 기존 직계 자식을 옮기고 현재 루트로 공개한 뒤 모드 3 도킹과 채팅 숨김을 적용한다.
-    install() {
+    // State 정리 단계의 새 Uber 루트와 자식을 생성한다. World 도킹은 Ready 뒤 별도로 수행한다.
+    createForState() {
         if (this.#token) throw new Error('Uber HUD 중복 설치');
         const root = this.#root, create = root.createState();
         new UberRootGump(create, this.#hooks()).replace();
         this.#token = create.entries[0]; this.#previous = { width: create.screenWidth, height: create.screenHeight };
+        this.#worldDocked = false;
+        return this.#token;
+    }
+    // 같은 생성물에 최초 World 도킹만 적용한다. 반복 Ready 통지는 자식·채팅 상태를 다시 만들거나 전환하지 않는다.
+    dockForWorld() {
+        if (!this.#token) throw new Error('World 도킹 전 Uber HUD 생성 필요');
+        if (this.#worldDocked) return this.#token;
+        const root = this.#root;
         // 첫 World 대여의 모드 3: 세로 구분선을 x80, 미니맵 구분선을 아래 80에 두고 같은 도킹 순서로 자식 크기를 맞춘다.
         root.handle(this.#token, HUD_MODE, 3, 0);
         // 원본 미션 화면은 채팅 창을 숨긴 상태로 시작하므로 같은 전환 명령으로 채팅 구분선을 화면 아래로 내린다.
         root.handle(this.#token, CHAT_TOGGLE, 0, 0);
+        this.#worldDocked = true;
         return this.#token;
     }
+    // 기존 호출자는 생성과 최초 World 도킹을 이어 수행한다. State7 연결 전에도 종전 실행 순서를 보존한다.
+    install() { this.createForState(); return this.dockForWorld(); }
     // 현재 도킹으로 정해진 정수 지도 영역이다(Gump 트리·World·Renderer가 읽는 같은 객체).
     mapView() { return this.#root.mapView(); }
     // 화면 크기가 바뀌면 사용자가 끈 구분선 위치의 하단 간격을 유지하며 다시 배치한다(cpppj `RawUberRootControls::Reflow`, 고정 해상도 원본에 없는 Windows 호환 재배치).
@@ -155,6 +168,7 @@ export class ClientUberHud {
             }
         }
         this.#devices.minimap?.dispose(); this.#closed.add(this.#token); this.#token = 0;
+        this.#worldDocked = false;
         // HUD 가 사라지면 지도 영역은 다시 전체 논리 화면이다(메인 메뉴 복귀 뒤 중앙 정렬 등이 같은 객체를 읽는다).
         const create = root.createState(); Object.assign(root.mapView(), { left: 0, top: 0, right: create.screenWidth, bottom: create.screenHeight });
     }
