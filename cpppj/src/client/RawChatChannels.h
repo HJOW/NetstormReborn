@@ -30,6 +30,7 @@ public:
     std::int32_t AddToChannel(std::uint32_t subscriber,std::string_view name,std::uint32_t channel) const;
     // 원본 Clear는 subscriber가 비제로인 기록에만 flags &= ~BYTE(mask)를 쓰며 이름/효과는 건드리지 않는다.
     void Clear(std::uint32_t mask) const;
+    void RemoveFromChannel(std::uint32_t subscriber,std::uint32_t mask) const; //00444ff0:같은ID의모든100기록에서flags하위BYTE의선택비트만지운다.이름/ID/다른채널은보존한다.
     // 원본00445140: Subscriber 비0인 행만48BYTE 전체0으로 정리한다. 빈 행의 stale 값과 두 Subscriber 전역은 유지한다.
     void ResetOccupied() const;
     void Forget(std::uint32_t subscriber) const; //00445110:같은ID의100기록을 모두 검사해 일치 행48BYTE를0으로 쓴다.0도 일치 대상이며 추가Refresh는 없다.

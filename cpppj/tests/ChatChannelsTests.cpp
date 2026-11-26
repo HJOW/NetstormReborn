@@ -152,3 +152,11 @@ TEST_CASE(ChatChannels_ClientDefaultAiNameBoundsExtendedPlayerName) {
     const auto shippedName=ai.defaultName(); // 배포 기본값은 생략 없이 모두 표시되는16BYTE다.
     CHECK(shippedName.size()==16 && decode(shippedName)=="悪の公爵");
 }
+
+// 원문444ff0의 중복ID/0/하위BYTE 마스크와 이름·다른 필드·무관 기록 보존을 검사한다.
+TEST_CASE(ChatChannels_RemoveChannelOnlyChangesMatchingFlags) {
+    auto bytes=ChatInput(4),expected=bytes;RawChatChannels channels(netstorm::o::OriginalEdition::Patch1078,bytes,[]()->std::uint32_t { throw std::logic_error("채널 제거는 자기ID를 읽지 않음"); },[](auto,auto) { throw std::logic_error("채널 제거는 Refresh를 호출하지 않음"); }); // 실제100기록과 호출되면 안 되는 두 외부 효과다.
+    expected[7*48+40]&=0xdf;expected[98*48+40]&=0xdf;channels.RemoveFromChannel(77,0x120);CHECK(bytes==expected); // 떨어진 두 중복 행과 DWORD mask의 하위BYTE만 선택한다.
+    Put(bytes,2*48+44,0);Put(expected,2*48+44,0);expected[2*48+40]&=0x7f;channels.RemoveFromChannel(0,0x80);CHECK(bytes==expected); // subscriber0도 원문과 같이 일치 대상으로 처리한다.
+    channels.RemoveFromChannel(1234567,0xff);CHECK(bytes==expected); // 부재ID는 전체 저장소를 보존한다.
+}

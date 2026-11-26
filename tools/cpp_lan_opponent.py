@@ -125,7 +125,10 @@ class Peer:
         """정상 종료를 우선하고 제한 시간 뒤 자기 자식만 정리한다."""
         try:
             if self.process.poll() is None:
-                self.call("netstorm_quit")
+                try:
+                    self.call("netstorm_quit")
+                except (OSError, RuntimeError):
+                    self.process.wait(timeout=2)  # EOF와 프로세스 종료 통지 사이의 짧은 경합은 실제 종료 코드로 수집한다.
             self.exit_code = self.process.wait(timeout=15)
         finally:
             if self.process.poll() is None:
@@ -146,6 +149,13 @@ class Peer:
 def fields(report, key):
     """탭 보고의 지정 행을 원문 열 순서대로 읽는다."""
     return [line.split("\t")[1:] for line in report.splitlines() if line.startswith(key + "\t")]
+
+
+def battle_ready(report):
+    """실제 일반 로그인14와 로컬 PlayerKnown 비영을 함께 확인한다."""
+    inputs, sessions = fields(report, "raw_input"), fields(report, "raw_session")  # 화면 단계와 구별한 실제 Session 관측이다.
+    return (any(len(row) > 2 and row[2] == "14" for row in inputs)
+            and any(len(row) > 1 and int(row[0]) in range(1, 9) and int(row[1]) != 0 for row in sessions))
 
 
 def main():
@@ -175,7 +185,7 @@ def main():
         if not args.lobby_only:
             peers[0].action("click", "Start Battle", 10)
             for peer in peers:  # 실제 phase14/PlayerKnown과 게임 입력 설치를 확인한다.
-                peer.wait(lambda text: any(row[2] == "14" for row in fields(text, "raw_input")) and bool(fields(text, "raw_session")), "전투 로그인14", seconds=45)
+                peer.wait(battle_ready, "전투 로그인14/PlayerKnown", seconds=45)
                 peer.observe("battle")
             for peer in peers:  # 간단한 자연 대기 뒤 각자 연결/월드 상태를 다시 읽는다.
                 peer.call("netstorm_wait_frames", frames=120)

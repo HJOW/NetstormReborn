@@ -27,6 +27,7 @@ public:
     o::PacketConnection* Connection(std::int32_t id) const; // 현재 자기 두 끝만 반환한다.
     void Disconnect(std::int32_t destination); // 현재 끝에 종료를 기록하고 가상 처리 중이면 실제 최외곽 복귀까지 반납을 미룬다.
     void CloseListener(); // 새 accepted를 만들던 listener만 실제close/release로반납한다. 양끝을 대신 종료하지 않는다.
+    void CloseOwnedConnections(); // 직접 LAN 시작에서 인계하지 않은 이 Fort의 실제 두 끝/리스너만 반납하고 다른 Source의 공용 표는 보존한다.
     o::RawPacketDispatch& Dispatch(); // 건설/이동/파괴의 실제 기존 처리기를 같은 표에 등록한다.
     std::span<const std::uint8_t> Players() const; // 연결이 빌리는 같은 Player9 물리의 정체성을 Session 대여 전에 확인한다.
     o::PacketConnection& Listener(); // 원문listener의별도초기시각/소멸장치를현재수명과연결한다.

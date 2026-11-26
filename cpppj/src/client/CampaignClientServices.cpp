@@ -330,6 +330,7 @@ RawCampaignSessionServices MakeCampaignClientServices(Client& client,RawButtonCo
     login.gameSeconds=[&client] { return client.GameSeconds(); }; // 서버 시간 응답은 요청 처리 순간의 같은 실제 보정/정지 시계를 읽는다.
     login.refresh=[&client] { client.GetRenderer().InvalidateAll(); };
     login.initializeChat=[&client] { InitializeClientChatManager(client); }; // 현재 Core/manager·명령표·Config를 실제 원문 수명으로 재구성한다.
+    login.removeChat=[&client](auto subscriber,auto mask) { client.ChatChannels().RemoveFromChannel(subscriber,mask); }; // 일반2bh의실제이탈채널만제거하고이름/다른채널을남긴다.
     login.playerUiBusy=[&client,&controls] { if (client.Edition()!=o::OriginalEdition::Patch1078) return controls.Menus() && controls.Menus()->HasMenus();if (!client.SurfaceStorage()->ownerMode.battle || client.GameplayGlobals()->world.missionPost || client.LocalStateGlobals()->ScriptBreak()) return false;return client.GameplayGlobals()->RequireSession().BattleFinished(); }; // 패치는 원문449200 종료 관문을 사용하고 CD는 기존 어댑터를 유지한다. 역사적 필드명으로 동작을 추측하지 않는다.
     login.playerNotice=[&client](std::uint32_t kind,std::uint32_t owner,std::uint32_t value) { std::clog<<"Player UI "<<kind<<' '<<owner<<' '<<value<<'\n';client.GetRenderer().InvalidateAll(); };
     login.log=[](std::string_view text) { std::clog<<text; };services.reconnectFile=login.reconnectFile;services.localLogin=std::move(login); //이미 구성한 같은 파일 장치를 메타의 비로그인 Session에도 보존하며 새 FILE을 열지 않는다.

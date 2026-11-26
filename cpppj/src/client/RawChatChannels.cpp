@@ -68,6 +68,12 @@ void RawChatChannels::Forget(std::uint32_t subscriber) const {
         for (auto& byte:record) byte=0; //같은 실제48BYTE 전체를 지우며 별도 Chat Refresh/이벤트를 만들지 않는다.
     }
 }
+//00444ff0은 자기ID/0도 별도 제외하지 않고 일치하는 모든 기록의 채널 비트만 지운다.
+void RawChatChannels::RemoveFromChannel(std::uint32_t subscriber,std::uint32_t mask) const {
+    for (std::size_t index=0;index<kCount;++index) { //원문20회다섯행풀기의같은100행을방문하며첫일치에서멈추지않는다.
+        if (Subscriber(index)==subscriber) records_[index*kStride+kFlags]&=static_cast<std::uint8_t>(~static_cast<std::uint8_t>(mask));
+    }
+}
 // 현재 자기 식별자·첫 빈칸·기존 식별자와 특수-1 분기를 원본 검색 순서로 처리한다.
 std::int32_t RawChatChannels::Add(std::uint32_t subscriber,std::optional<std::string_view> name,std::uint32_t flags) const {
     if (subscriber==mySubscriber_()) return -1;

@@ -1,0 +1,43 @@
+{
+  "unit": 1366,
+  "date": "2026-11-26",
+  "host": "HJOW-Athlon",
+  "decompileHost": "HJOW-Athlon",
+  "buildPassed": true,
+  "tests": {
+    "transport": 30,
+    "chat": 7,
+    "failed": 0
+  },
+  "completed": [
+    "인계하지않은Fort두끝/리스너만반납",
+    "실제수신6콜백연결",
+    "00444ff0채널비트해제복원"
+  ],
+  "fullBattlePassed": false,
+  "probe": {
+    "passed": false,
+    "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+    "exeSha256": "b844b195763104548617ffe77b9c8c59ce309f3cf03a2db48f670c4a51b67957",
+    "peers": [
+      {
+        "role": "bot",
+        "exitCode": 1
+      },
+      {
+        "role": "host",
+        "exitCode": 1
+      }
+    ],
+    "error": "RuntimeError('bot: MCP EOF, process=None')",
+    "closeErrors": [
+      "OSError(22, 'Invalid argument')"
+    ]
+  },
+  "remaining": [
+    "호스트Fort Objects 직접 BYTE 물리범위",
+    "상대State17미복원상태진단미연결"
+  ],
+  "protectedFiles": 3212,
+  "protectedUnchanged": true
+}

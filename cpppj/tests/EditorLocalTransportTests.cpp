@@ -1,6 +1,7 @@
 // 실제 Editor 단일 zlocal 큐와 기존 분배기의 순서·재진입·부분반납을 창 없이 검사한다.
 #include "TestSupport.h"
 #include "client/EditorLocalTransport.h"
+#include "client/LocalTcpTransport.h" // 이전 Fort9가 TCP의 기존 연결 재사용을 선택하는 실제 경계를 검사한다.
 #include <array>
 #include <stdexcept>
 #include <string>
@@ -161,4 +162,14 @@ TEST_CASE(EditorLocalTransport_NativeNegativeDisconnectBoundsPreserveLiveEnds) {
 TEST_CASE(EditorLocalTransport_NativeDeferredCloseKeepsCapturedDepth) {
     EditorWireEffects effects;auto hooks=effects.Hooks();const auto close=hooks.close;hooks.close=[close](auto& connection) { close(connection);connection.depth=7; };EditorLocalTransport wire(effects.players,effects.server,std::move(hooks));wire.Open(6799);wire.Disconnect(9);
     CHECK(!wire.ClientAlive() && wire.ListenerAlive() && wire.Client().depth==7 && (wire.Client().flags&0x40) && effects.closes==1 && effects.releases==1 && effects.trace==std::vector<std::string>({"close","release"}));
+}
+// 인계하지 않은 Fort를 닫으면 새 TCP는 이전 내부9를 재사용하지 않고 다른 Source의 연결은 보존한다.
+TEST_CASE(EditorLocalTransport_CloseOwnedConnectionsPreservesForeignAndRetiresReuse) {
+    EditorWireEffects effects;auto registry=std::make_shared<RawConnectionRegistry>();EditorLocalTransport wire(effects.players,effects.server,effects.Hooks(),registry);wire.Open(6799);wire.Poll(); // 실제 내부 양끝/수락 등록을 만든다.
+    LocalTcpTransport replacement(effects.players,effects.server,effects.Hooks(),registry);CHECK(replacement.Connect("999.0.0.1",1) && !replacement.HasConnection(9)); // 원문 재사용 관문은 주소 파싱 전에 이전 실제 내부9를 선택한다.
+    PacketConnection foreign;foreign.sender=5;bool foreignClosed{};const auto foreignToken=registry->Track(foreign,[&] { foreignClosed=true; },[] {});registry->Register(5,foreignToken); // 같은 표에 속한 다른 Source의 식별자를 독립 보존한다.
+    wire.CloseOwnedConnections();CHECK(!wire.ClientAlive() && !wire.PendingAlive() && !wire.ListenerAlive());CHECK(!registry->Cleanup().transceivers[9] && !registry->Cleanup().pending[1]);
+    CHECK(registry->Cleanup().transceivers[5]==foreignToken && !foreignClosed && registry->Owns(foreignToken));CHECK(effects.closes==3 && effects.releases==3);
+    bool parsed{};try { static_cast<void>(replacement.Connect("999.0.0.1",1)); }catch (const std::invalid_argument&) { parsed=true; }CHECK(parsed); // 과거9가사라져실제새접속의숫자주소검사가선택돼야하며DNS/socket은열지않는다.
+    wire.CloseOwnedConnections();CHECK(effects.closes==3 && effects.releases==3);registry->Forget(foreignToken); // 반복 종료와 외부 소유자의 명시 반납을 구별한다.
 }

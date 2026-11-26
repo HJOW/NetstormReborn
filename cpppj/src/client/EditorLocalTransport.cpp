@@ -172,6 +172,12 @@ void EditorLocalTransport::Disconnect(std::int32_t destination) {
 void EditorLocalTransport::CloseListener() { //listener가상소멸도실제장치에전달하며양끝의명시정리는호출자가순서대로한다.
     if (!listenerAlive_) return;listener_.flags|=kClosed;Need(hooks_.close)(listener_);Need(hooks_.release)(listener_);listenerAlive_=false;
 }
+// State7이 보존한 서버9를 다른 TCP로 인계하지 않는 직접 LAN 경로의 자기 Source 종료다.
+void EditorLocalTransport::CloseOwnedConnections() {
+    for (std::int32_t id=0;id<static_cast<std::int32_t>(o::kTransceiverSlots);++id) if (Connection(id)) registry_->Disconnect(id); // 자기 현재 정상 별칭만 원문 번호 순서로 닫는다.
+    for (std::int32_t id=-1;id>-static_cast<std::int32_t>(o::kPendingConnectionSlots);--id) if (Connection(id)) registry_->Disconnect(id); // 소유한 수락 끝의 실제 현재 음수 칸만 반납한다.
+    CloseListener(); // 외부 가상 수신이 끝난 정상 State 경계에서 기존 listener 장치도 반납한다.
+}
 void EditorLocalTransport::RebindHooks(o::PacketDispatchHooks hooks) { if (!hooks.now || !hooks.record || !hooks.terminate || !hooks.close || !hooks.release) throw std::invalid_argument("기존 Editor Source 인계의 실제 장치 누락");hooks_=std::move(hooks); } //현재wrapper는매효과에서새hooks를읽는다.
 void EditorLocalTransport::AssignConnection(std::int32_t pending,std::int32_t owner) {
     if (!serverMode_ || pending>=0 || owner<1 || owner>8 || Connection(pending)!=&pending_) throw std::logic_error("기존 Editor Source의 실제 pending 재배치 계약 오류");
