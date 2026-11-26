@@ -28,11 +28,13 @@
     "nextSection": null
   },
   "help": {
-    "completedAnchorOccurrences": 80,
+    "completedAnchorOccurrences": 96,
     "totalAnchorOccurrences": 138,
-    "completedUniqueTopics": 80,
+    "completedUniqueTopics": 95,
     "totalUniqueTopics": 128,
-    "nextSection": "sunBalloonType",
-    "pendingSharedBodyTopics": []
+    "nextSection": "bulfType",
+    "pendingSharedBodyTopics": [
+      "thunderWalkerType"
+    ]
   }
 }
