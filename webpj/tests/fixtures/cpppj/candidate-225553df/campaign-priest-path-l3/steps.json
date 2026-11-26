@@ -1,0 +1,101 @@
+{
+  "format": "netstorm-webpj-cpppj-l3-steps",
+  "version": 1,
+  "description": "캠페인1-2 저장 사제 경로의 실제 UI 입력·대기 대조. 공격·포획·희생·승리 입력은 없다.",
+  "language": "english",
+  "screen": {
+    "width": 1024,
+    "height": 768
+  },
+  "fixedFrameMs": 25,
+  "mission": "masterofwhirligigs",
+  "settings": {
+    "SCREENW": 1024,
+    "SCREENH": 768,
+    "WelcomeGiven": 1,
+    "tellTips": 0,
+    "autoDemo": 0
+  },
+  "steps": [
+    [
+      110,
+      "click-if",
+      "Play Mission"
+    ],
+    [
+      250,
+      "key",
+      "p"
+    ],
+    [
+      260,
+      "key",
+      "f5"
+    ],
+    [
+      290,
+      "session-dump",
+      "before"
+    ],
+    [
+      290,
+      "snapshot",
+      "before"
+    ],
+    [
+      290,
+      "report",
+      "before"
+    ],
+    [
+      300,
+      "click",
+      "screen:400,300"
+    ],
+    [
+      301,
+      "session-dump",
+      "start"
+    ],
+    [
+      301,
+      "snapshot",
+      "start"
+    ],
+    [
+      301,
+      "report",
+      "start"
+    ],
+    [
+      350,
+      "session-dump",
+      "walking"
+    ],
+    [
+      350,
+      "snapshot",
+      "walking"
+    ],
+    [
+      350,
+      "report",
+      "walking"
+    ],
+    [
+      800,
+      "session-dump",
+      "arrived"
+    ],
+    [
+      800,
+      "snapshot",
+      "arrived"
+    ],
+    [
+      800,
+      "report",
+      "arrived"
+    ]
+  ]
+}

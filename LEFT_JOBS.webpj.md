@@ -6,7 +6,7 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-26, 마지막 단위 WB04-E1366)
+### 0.1 현재 값 (2026-11-26, 마지막 단위 WB04-E1367)
 
 - **실행·플레이**
   - **화면:** 브라우저 ‘클릭하여 시작’(첫 적재 뒤 최소 6초, E1308), 시작 title 그림, 메인 메뉴·캠페인/데모 목록·도움말·옵션(Reset All 게임 안 확인 창 포함)·Credits와 개발용 지형 미리보기가 동작한다.
@@ -23,7 +23,8 @@
   - **부품:** 월드·UI 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다(원본 공통 메뉴 788행·Factory 메뉴 39행·Uber 루트 160행·장면 음악 3,113행, 채팅 입력줄 대상 720행(E1265), 파편·건물 캡처 4,474행(E1275~E1276)·골렘/받침 264행(E1312), 실제 Session의 EvilRay·Burning·섬 투하(E1314~E1316) 등). 대응표 1,007단위 중 732행은 Tutorial1 실행에서 웹 모듈의 함수가 모두 실행된 `session`이다(E1283). 좌측 HUD 하단 85×82픽셀은 원본 스크린샷과 일치한다.
   - **한국어 글자:** 갈무리11 12px 격자로 그리되 제목 배율·굵기(사용자 결정으로 보통체)·한글 기준선을 cpppj와 다르게 둔다([0.7절](#korean-font-change)).
   - **미검증:** 세 캠페인 묶음의 L3 진행·자연 완주와 L4b 소리. Tutorial4 E1~I1·Tutorial5 D 이후·Tutorial6 E 이후의 특정 적 공격·포획·희생·승리는 사용자 지시로 건너뛰고 사용자가 직접 확인한다. Tutorial6 A~D 생산·건설·납품은 E1343~E1346 완료다.
-- **최근 완료 E1366:** 전체화면 pointer 폴링·오른쪽 이동·정지의 같은 프레임 말미 DIB 대조, 5-B13/13 완료. 화면4곳0픽셀·덤프4곳 허용 밖0, Chromium1/1·자료Node3/3 통과([근거](docs/webpj-l3-campaign-edge-scroll-20261126.md)).
+- **최근 완료 E1367:** 1-2 실제 사제 선택·이동·경로 진행/도착의 전체 덤프 대조, 6단계10/10 완료. 화면4곳0픽셀·덤프4곳 허용 밖0, Chromium1/1·자료Node3/3 통과([근거](docs/webpj-l3-campaign-priest-path-20261126.md)).
+- **이전 완료 E1366:** 전체화면 pointer 폴링·오른쪽 이동·정지의 같은 프레임 말미 DIB 대조, 5-B13/13 완료. 화면4곳0픽셀·덤프4곳 허용 밖0, Chromium1/1·자료Node3/3 통과([근거](docs/webpj-l3-campaign-edge-scroll-20261126.md)).
 - **이전 완료 E1365:** 캠페인3-5 Final Confrontation의 브리핑·시작·대기1200프레임 화면3곳0픽셀·덤프3곳 허용 밖0, 로컬brain0·SP1200→1200 일치. Chromium1/1·자료Node3/3 통과([근거](docs/webpj-l3-campaign3-5-wait-20261126.md)).
 - **이전 완료 E1364:** 캠페인3-4 Enemy Territory의 브리핑·시작·대기1200프레임 화면3곳0픽셀·덤프3곳 허용 밖0, 로컬brain0·SP10000→10000 일치. Chromium1/1·정기Node26 전체6856/6856 통과([근거](docs/webpj-l3-campaign3-4-wait-20261126.md)).
 - **이전 완료 E1363:** 캠페인3-3 Vicious의 브리핑·시작·대기1200프레임 화면3곳0픽셀·덤프3곳 허용 밖0, 로컬brain0·SP7000→7000 일치. Chromium1/1·자료Node3/3 통과([근거](docs/webpj-l3-campaign3-3-wait-20261126.md)).
@@ -52,11 +53,11 @@
 - **이전 완료 E1340:** Tutorial5 실제 피격과 B 안내 진입 대조([근거](docs/webpj-l3-tutorial5-defense-20261126.md)).
 - **이전 완료(E1337~E1339):** E1339 Tutorial5 단계 A1(생산 등록·스톤 타워 `(138,92)` 배치·1,000프레임 대기) L3 일치([근거](docs/webpj-l3-tutorial5-build-20261126.md)), E1338 일반 프레임 예외의 원인·문맥을 console에 기록한 뒤 다음 프레임 진행([근거](docs/webpj-frame-error-continue-20261126.md)), E1337 Tutorial4 자동 검사를 E1 진입 범위·345프레임 재실행으로 제한하고 중단본 16파일을 보존 자료로 등록([근거](docs/webpj-l3-tutorial4-scope-20261126.md)). 공격·포획·희생·승리는 재현하지 않았다.
 - **작업 지시(2026-11-25 사용자 /goal):** 이 문서의 남은 작업을 모두 수행하되, 사제 포획/희생·특정 적 공격·시나리오 승리 재현이 필요한 시험은 캠페인 1-1~1-5와 스커미시만 아군 AI 활성화 방식으로 시험하고 그 밖의 스테이지는 건너뛴다(나중에 사용자가 직접 확인). 미션 진입 후 대기·유닛 생산·건물 건설로 끝나는 시험은 진행한다. 단위마다 문서 갱신과 커밋을 한다.
-- **현재 작업(2026-11-26 목표 재개):** 캠페인16/16 진입·대기 L3와 가장자리 화면 대조를 마쳤다. 다음 E1367는 저장 사제 경로의 정식 종료다. 허용 밖 공격·포획·희생·승리는 재현하지 않는다.
+- **현재 작업(2026-11-26 목표 재개):** 캠페인16/16 진입·대기 L3와 가장자리·저장 사제 경로 대조를 마쳤다. 다음 E1368는 허용 아군 AI 자연 승리·진행 저장과 현행 C++ AI 계측 대조다. 허용 밖 공격·포획·희생·승리는 재현하지 않는다.
 - **전체 회귀**
   - **Node22.23.5 E1364:** 6,856/6,856 통과, 실패·취소·미실행0(818.3초). v26 종료 뒤 순차 실행했다.
   - **Node26.13.0 E1364:** 6,856/6,856 통과, 실패·취소·미실행0(739.7초).
-  - **주기(E1366):** v26·v22 전체 회귀 이후 각각2/4·2/8. 다음 정기는 E1368(v26)·E1372(v26·v22)이다.
+  - **주기(E1367):** v26·v22 전체 회귀 이후 각각3/4·3/8. 다음 정기는 E1368(v26)·E1372(v26·v22)이다.
   - **Chromium:** E1313 전 미션 시작 상태 옵트인 전체 32/32 통과(24.3분, `webpj/extracted/webpj-e1313-final-e2e.log`). 기존 전체 e2e는 E1312 199건 중 186 통과·12 옵트인 미실행·한국어 브리핑 1건 부하 중 시간 초과(단독·3회 반복 통과)다. 단위별 실패·교정은 [E1313](docs/webpj-l3-mission-starts-20261124.md)과 각 단위 문서, 이전 회귀 이력은 [E1327 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261124-through-wb04-e1327)을 따른다.
 - **브라우저 검사:** 미션 화면은 단위마다 Chromium e2e로 확인한다(최근 전체 실행 E1312, 고정 시각 L2·L3 `e2e/fixed-time.spec.js`·`e2e/l3-tutorial1.spec.js`·`e2e/l3-tutorial2.spec.js`·`e2e/l3-tutorial3.spec.js`·`e2e/l3-tutorial4.spec.js`(E1337부터 345프레임까지만 재실행)·`e2e/l3-tutorial5.spec.js`(E1339), 프레임 예외 뒤 진행 `e2e/error-reporting.spec.js` E1338, 앱 서비스 결선 `e2e/session-services-wiring.spec.js` E1328, 한국어 글자 배치 `e2e/korean-glyph-layout.spec.js` E1288). 메뉴는 2026-11-17 Chromium 2/2(갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체), 최초 실행·진행 잠금/체크·저장 재실행은 E616 Chromium 2/2. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md)
 
@@ -156,12 +157,12 @@
 | 5 | 5-A 렌더러·Draw | 46/46 | 0 / 0 | — |
 | 5 | 5-B 카메라·HUD·미니맵·커서 | 13/13 | 0 / 0 | — |
 | 5 | 5-C 화면 허브·미션 진입 | 6/6(E1325) | 0 / 0 | — |
-| 6 | 입력·게임 메뉴·경제·건설 | 9/10 → M3 | 0 / 0 | 사제·운반·경로 바인딩 |
+| 6 | 입력·게임 메뉴·경제·건설 | 10/10 | 0 / 0 | — |
 | 7 | 전투·의식·AI | 5/7 | 0 / 0 | 전투 바인딩 · AI 세션 결선 |
 | 8 | 미션 수명·대본·오디오·도움말 | 8/9 → M4 | 0 / 0 | M4 |
 | 9 | 표시 품질·브라우저/OS·배포 | E945 하위 경로·설정 복원 검증, M5 미완료 | 0 / 0 | M5(3.2절: 60/120 표시·성능·메모리, 브라우저·GUI Linux, HTTP 캐시·저장 호환) |
 | 10 | AGENTS 후순위 웹 요구 | 일부 선행, 3.7절 참조 | 0 / 0 | 3.7절 표의 남은 일(4·5·6·10·12·13·14차; 7차는 E1338로 끝남) |
-| **합계** | | | **0 / 0** | **5** |
+| **합계** | | | **0 / 0** | **4** |
 
 ### 0.3 이식량
 
@@ -178,7 +179,7 @@
 ### 0.4 기준선과 자료
 
 - **이식 기준선**은 cpppj 제품 1313(11.01) `225553df`다. 이후 변경 판정은 3.6절을 따른다. 별도 오라클 빌드는 HJOW-Athlon의 `extracted/webpj-oracle/225553df/Netstorm.exe`에 있다(SHA-256 `5b52d96d…b77eb46`, Git 제외).
-- **자료 추적**은 [PORT_MAP.tsv](webpj/PORT_MAP.tsv)와 [fixture manifest](webpj/tests/fixtures/manifest.json) 1,302항목(E1366 신규11항목 포함)을 기준으로 한다. 이식 자료는 cpppj 소스·fixture·문서를 사용한다.
+- **자료 추적**은 [PORT_MAP.tsv](webpj/PORT_MAP.tsv)와 [fixture manifest](webpj/tests/fixtures/manifest.json) 1,313항목(E1367 신규11항목 포함)을 기준으로 한다. 이식 자료는 cpppj 소스·fixture·문서를 사용한다.
 
 ### 0.5 단위 착수와 종료
 
@@ -291,13 +292,13 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 
 완료한 체크(머리글 수에 포함): **Uber 허브**(E912~E917·E1082·E1169~E1179, 배경 GIF·NSInfo 자식은 웹 범위 밖 E1243, [판정](docs/webpj-uber-root-background-scope-20261123.md)), **미션 진입 명령**(E1263, [Tutorial 시작](docs/webpj-browser-tutorial-menu-start-20261120.md)), **허브 fixture**(E1265, [근거](docs/webpj-chat-hub-fixtures-20261123.md)), **메인 메뉴·타이틀 상태**(E1184, [문서](docs/webpj-title-screens-20261122.md)), **메뉴·버튼 컨트롤**(E1325, RawButtonControls·RawMenuChat·RawMenuHtml·RawMenuControls·RawMenuLoading·RawTextEntryControls port, [메뉴 컨트롤](docs/webpj-menu-controls-close-20261123.md)), **M2 / L4a**(E1323, 영어 4:3·16:9·16:10과 한국어, [한국어](docs/webpj-korean-m2-20261124.md)).
 
-#### 6 입력·게임 메뉴·사제/운반·경제·건설 (9/10)
+#### 6 입력·게임 메뉴·사제/운반·경제·건설 (10/10)
 
 완료한 체크(머리글 수에 포함, 보관한 1개 외): **입력 본체**(E1263, [E802](docs/webpj-campaign-user-input-movement-click-20261118.md)), **게임 메뉴**(E1264, [게임 메뉴막대](docs/webpj-game-menu-bar-20261120.md)), **공장·지식 메뉴와 기술**(E1076~E1079·E1189, [E1189](docs/webpj-fury-war-technology-20261122.md)), **객체 우클릭 메뉴**(E1310, [e2e](docs/webpj-object-menu-rows-20261124.md)), **방향키 카메라 이동(사용자 요구 2026-11-23)**(E1291, [근거](docs/webpj-arrow-camera-20261124.md)), **ESC 게임 메뉴 한국어 점검(사용자 제보 2026-11-23)**(E1290, [근거](docs/webpj-esc-menu-korean-20261123.md)), **건설·생산·경제**(다리 조각 연속 배치 E1299~E1307로 마감, 건설 기록 재생은 웹 범위 밖 E1242, [다리 조각](docs/webpj-l3-tutorial1-20261123.md#확장-다리-조각-연속-배치wb04-e1299-2026-11-24)), **M3 / L3**(Tutorial1 입력 단계표 세부 넷 E1284~E1307, Tutorial3~6 확장은 4D-4b, [L3](docs/webpj-l3-tutorial1-20261123.md)).
 
-- [ ] **사제·운반·경로 바인딩**
+- [x] **사제·운반·경로 바인딩** — E1367의 저장 사제 L3로 마지막 경계를 마쳤다. [근거](docs/webpj-l3-campaign-priest-path-20261126.md)
   - 완료: 캠페인 Session 운반 입력과 일반 사제 이동(E794), 실제 마우스의 사제 선택→이동(E1139 e2e), 단독 미션 제단 희생 메뉴 훅(E1223), 기도·Cast/Drop·Factory 순환 명령 소비(E1225), Review Knowledge·GetTechnology 단추와 기술 획득 Fort snapshot 장치(E1227), Bulf 너겟 줍기(0x030000b1)·메뉴 Drop(0x030000b2) Chromium e2e(E1311), 주문 Cast와 주문 보유 골렘의 사제 포획·Drop(E1318~E1319). MetaMap은 도달하지 않고(E1188), 저장 미션의 전체 초기화와 경로 루프는 31개 시작 e2e·`raw-campaign-session-load.test.mjs`·`mission-priest-move.spec.js`·`raw-campaign-motion-bindings.test.mjs`로 확인했다.
-  - [ ] 저장 미션 경로 L3 — cpppj `CampaignMotionTests.cpp:120~126`의 저장 미션 경로 시험을 고정 시각 단계표로 대조한다. 완료 기준: 체크포인트 덤프의 경로·위치 관련 행 일치.
+  - [x] 저장 미션 경로 L3 — E1367,1-2 실제 UI 이동의4화면0픽셀·전체 덤프 일치.
   - 근거: [E794](docs/webpj-session-carrier-input-20261118.md) · [실사용 점검](docs/webpj-real-use-checks-20261121.md) · [줍기·Drop e2e](docs/webpj-object-menu-rows-20261124.md) · [포획](docs/webpj-spell-priest-pickup-20261124.md)
 
 #### 7 전투·의식·AI (5/7)

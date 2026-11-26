@@ -40402,6 +40402,358 @@
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
       }
+    },
+    {
+      "id": "cpppj-campaign-priest-path-l3-arrived-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign-priest-path-l3/arrived.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign-priest-path-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign-priest-path.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1367",
+      "doc": "docs/webpj-l3-campaign-priest-path-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign-priest-path-l3 실제 입력 arrived.png",
+      "text": false,
+      "sha256": "0df83135468404992ff04d90f0c61f675e44a08b57021d804f4538b49da9ac20",
+      "bytes": 216631,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-campaign-priest-path-l3-arrived-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign-priest-path-l3/arrived.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign-priest-path-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign-priest-path.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1367",
+      "doc": "docs/webpj-l3-campaign-priest-path-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign-priest-path-l3 실제 입력 arrived.tsv",
+      "text": true,
+      "sha256": "48bff96d46c58747b68efe7edc4105fd19d3368356f10d17d7a7aa43e0dea3f2",
+      "bytes": 296746,
+      "lines": 3911,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-campaign-priest-path-l3-before-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign-priest-path-l3/before.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign-priest-path-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign-priest-path.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1367",
+      "doc": "docs/webpj-l3-campaign-priest-path-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign-priest-path-l3 실제 입력 before.png",
+      "text": false,
+      "sha256": "d95412a5ec731204922e9bea57772b941fd13deed59c8ffdb36a1b29ae70f376",
+      "bytes": 216759,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-campaign-priest-path-l3-before-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign-priest-path-l3/before.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign-priest-path-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign-priest-path.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1367",
+      "doc": "docs/webpj-l3-campaign-priest-path-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign-priest-path-l3 실제 입력 before.tsv",
+      "text": true,
+      "sha256": "997f22eccf8353a08312abb49179a528f3c66d7becdc98ba53225a70b66491f4",
+      "bytes": 296282,
+      "lines": 3907,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-campaign-priest-path-l3-oracle-json",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign-priest-path-l3/oracle.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign-priest-path-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign-priest-path.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1367",
+      "doc": "docs/webpj-l3-campaign-priest-path-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign-priest-path-l3 실제 입력 oracle.json",
+      "text": true,
+      "sha256": "8982782f4ccb74c9fd06c8de843ce6b5415c3811e2652b67569c46062f7fe841",
+      "bytes": 1046,
+      "lines": 35,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-campaign-priest-path-l3-report-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign-priest-path-l3/report.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign-priest-path-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign-priest-path.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1367",
+      "doc": "docs/webpj-l3-campaign-priest-path-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign-priest-path-l3 실제 입력 report.tsv",
+      "text": true,
+      "sha256": "55d49965c19dff716f1f3729d5b1851c810ac33c02f9276533a3eb52c3fc5e35",
+      "bytes": 1065330,
+      "lines": 29223,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-campaign-priest-path-l3-start-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign-priest-path-l3/start.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign-priest-path-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign-priest-path.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1367",
+      "doc": "docs/webpj-l3-campaign-priest-path-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign-priest-path-l3 실제 입력 start.png",
+      "text": false,
+      "sha256": "fe73dd505ef3abdeee25c6c5e8c6133fe09c65aaa261b40cbe91f61d7a993806",
+      "bytes": 216614,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-campaign-priest-path-l3-start-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign-priest-path-l3/start.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign-priest-path-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign-priest-path.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1367",
+      "doc": "docs/webpj-l3-campaign-priest-path-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign-priest-path-l3 실제 입력 start.tsv",
+      "text": true,
+      "sha256": "068ba4c88556e4c9f0653ea0a4e515fadd022e3912d6c9fb0224130c960c03fc",
+      "bytes": 296422,
+      "lines": 3909,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-campaign-priest-path-l3-steps-json",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign-priest-path-l3/steps.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign-priest-path-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign-priest-path.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1367",
+      "doc": "docs/webpj-l3-campaign-priest-path-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign-priest-path-l3 실제 입력 steps.json",
+      "text": true,
+      "sha256": "ed6a39dd8b88541aa4aecb0c44ab5e98a433c0210b7de441adf13e0134d16e6c",
+      "bytes": 1395,
+      "lines": 101,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-campaign-priest-path-l3-walking-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign-priest-path-l3/walking.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign-priest-path-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign-priest-path.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1367",
+      "doc": "docs/webpj-l3-campaign-priest-path-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign-priest-path-l3 실제 입력 walking.png",
+      "text": false,
+      "sha256": "663089d066d783ca5b93ab002593ef6e5944fdd724790b7bfcf80c10696ab722",
+      "bytes": 216516,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-campaign-priest-path-l3-walking-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign-priest-path-l3/walking.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign-priest-path-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign-priest-path.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1367",
+      "doc": "docs/webpj-l3-campaign-priest-path-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign-priest-path-l3 실제 입력 walking.tsv",
+      "text": true,
+      "sha256": "b809df962ac32a36e50c99ce4bc2c60726741ef460297efb1a769d9c3877a325",
+      "bytes": 296437,
+      "lines": 3909,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
     }
   ]
 }
