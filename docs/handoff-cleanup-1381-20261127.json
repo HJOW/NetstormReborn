@@ -1,0 +1,91 @@
+{
+  "unit": 1381,
+  "date": "2026-11-27",
+  "host": "HJOW-Athlon",
+  "archives": [
+    {
+      "source": "LEFT_JOBS.md",
+      "archive": "LEFT_JOBS.old.md",
+      "anchor": "archive-20261127-through-1380",
+      "snapshotBytes": 60381,
+      "snapshotSha256": "e39f991c1d0eb8a94dc9e525beba139ed78326296f6e7b4b7a1024c01515a87c",
+      "oldPrefixUnchanged": true,
+      "currentBytes": 42723
+    },
+    {
+      "source": "LEFT_JOBS.dotnetpj.md",
+      "archive": "LEFT_JOBS.dotnetpj.old.md",
+      "anchor": "archive-dotnet-20261127-through-1079-checkpoint1080",
+      "snapshotBytes": 120923,
+      "snapshotSha256": "8d6ac2df4ce4694f2e8097f80ea215f8975e857dfc0c89a80d17f8e1b4be76a4",
+      "oldPrefixUnchanged": true,
+      "currentBytes": 94780
+    },
+    {
+      "source": "LEFT_JOBS.webpj.md",
+      "archive": "LEFT_JOBS.webpj.old.md",
+      "anchor": "archive-webpj-20261127-through-wb04-e1380",
+      "snapshotBytes": 113969,
+      "snapshotSha256": "f7560e63e363a8f58a98c7374416878d38fca129b943bb3559793eae8b265d41",
+      "oldPrefixUnchanged": true,
+      "currentBytes": 78788
+    }
+  ],
+  "readmeOverviewSha256": "9aab95f3a4370d8c6c06da74727b533c5a288d2ed705801d7aab1efeb95c1dfc",
+  "readmeOverviewUnchanged": true,
+  "agentsUnchanged": true,
+  "protectedWholeFiles": 2809,
+  "protectedChanged": [],
+  "productSourceChanges": [],
+  "localLinkedFiles": 250,
+  "missingLinks": [],
+  "tutorialTasks": {
+    "dotnetpj": 4,
+    "webpj": 4,
+    "implementedThisUnit": false
+  },
+  "inventory": {
+    "cppUnits": 1244,
+    "cppLines": 170238,
+    "dnMappedUnits": 690,
+    "dnMappedLines": 115930,
+    "dnUnmappedUnits": 554,
+    "dnUnmappedLines": 54308,
+    "wbRows": 1160,
+    "wbPort": 275,
+    "wbSession": 732,
+    "wbPartial": 0,
+    "wbTodo": 0,
+    "wbChangedRowsAwaitingReview": 9,
+    "wbNewFilesOutsideMap": 10
+  },
+  "goalPause": "사용자 요청으로 문서 커밋 후 일시 중지",
+  "passed": true,
+  "missingSectionAnchors": [],
+  "validatedDocuments": [
+    "LEFT_JOBS.md",
+    "LEFT_JOBS.dotnetpj.md",
+    "LEFT_JOBS.webpj.md",
+    "README.md",
+    "README.en.md",
+    "docs/tutorial-objectives-porting-20261127.md",
+    "docs/handoff-cleanup-1381-20261127.md"
+  ],
+  "pendingChecklistAudit": {
+    "cpppj": {
+      "before": 5,
+      "after": 5,
+      "removed": 0
+    },
+    "dotnetpj": {
+      "before": 60,
+      "after": 68,
+      "changes": "R5-4c3 세분화·DN-MP-08·DN-TUT-1~4 추가"
+    },
+    "webpj": {
+      "before": 12,
+      "after": 19,
+      "changes": "캠페인/스커미시 목표 분할·전투 원인 판정 문구 교정·WB-TUT-1~4 추가"
+    }
+  }
+}
