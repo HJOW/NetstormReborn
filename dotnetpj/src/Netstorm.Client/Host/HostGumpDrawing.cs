@@ -22,6 +22,10 @@ public sealed class HostGumpDrawing
     /// <summary>같은 스타일 저장소를 사용하는 한 줄 제목 출력기다.</summary>
     private readonly TextGump _single;
 
+    /// <summary>미션 중이면 참을 돌려주는 실제 호스트 판별이다. 메뉴 배경 숨김에 쓴다.</summary>
+    /// <remarks>2026-11-26 1.078에서 R5-4c1 메뉴 배경 숨김용으로 추가했다. 근거: cpppj UberGump.cpp 2111~2112행의 MainMenu 단계 조건이다. 미션에서는 메인 메뉴 돌 버튼·배경을 그리지 않는다.</remarks>
+    public Func<bool>? IsMissionActive { get; set; }
+
     /// <summary>같은 실제 메뉴 트리와 화면 장치를 빌린다.</summary>
     public HostGumpDrawing(HostMainMenu menu, HostHtmlText text, HostHtmlMenus menus, Screen screen, HostTextEntry? entry = null)
     { _menu = menu ?? throw new ArgumentNullException(nameof(menu)); _text = text ?? throw new ArgumentNullException(nameof(text)); _menus = menus ?? throw new ArgumentNullException(nameof(menus)); _screen = screen ?? throw new ArgumentNullException(nameof(screen)); _entry = entry;
@@ -68,12 +72,14 @@ public sealed class HostGumpDrawing
                         // 모달 대화창(Tell 등)이 열리면 메인 메뉴 돌 버튼은 그리지 않는다. 대화창 안의 돌 버튼(Cancel 등)은 그대로 그린다.
                         // 근거: cpppj/src/client/UberGump.cpp 2029행(MainMenu 단계에서만 버튼 그림)과 2065행(Dialog 단계는 Tell 창만).
                         // L4a menu-credits(0.382)에서 cpppj와 비교해 확인했다. 팝업 메뉴는 모달이 아니라 제외하지 않는다.
-                        if (tree.LifeState.CurrentDialog != 0 && _menu.HideWithModal(token)) break;
+                        // R5-4c1: 미션 중에도 메인 메뉴 돌 버튼·배경을 그리지 않는다. 근거: UberGump.cpp 2111~2112행의 MainMenu 단계 조건이다.
+                        if ((tree.LifeState.CurrentDialog != 0 && _menu.HideWithModal(token)) || (IsMissionActive?.Invoke() == true && _menu.HideWithModal(token))) break;
                         tree.Stones.Draw(token, tree.Collection, glyph, target); break;
                     case TextEntryGumpNode: (_entry ?? throw new InvalidOperationException("문자 입력창 출력 소유자 미연결")).Draw(token, glyph, background, target); break;
                     case GumpBackgroundNode:
                         // 메인 메뉴 돌 버튼의 배경 자식도 모달이 열리면 함께 건너뛴다(별도 수집 항목이다. 0.382).
-                        if (tree.LifeState.CurrentDialog != 0 && _menu.HideWithModal(token)) break;
+                        // R5-4c1: 미션 중에도 함께 건너뛴다. 근거: UberGump.cpp 2111~2112행의 MainMenu 단계 조건이다.
+                        if ((tree.LifeState.CurrentDialog != 0 && _menu.HideWithModal(token)) || (IsMissionActive?.Invoke() == true && _menu.HideWithModal(token))) break;
                         background.Draw(token); break;
                 }
             } });

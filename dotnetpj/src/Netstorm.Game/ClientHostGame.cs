@@ -354,6 +354,10 @@ public sealed partial class ClientHostGame : Game
             _menuInput.CameraPan = pointer => _missionSession?.ProcessCameraPan(pointer) == true;
             _menuInput.SavedCameraKey = input => _missionSession?.DispatchSavedCameraKey(input) == true;
             _gumpDrawing = new HostGumpDrawing(_mainMenu, _htmlText, _htmlMenus, _driver.Screen, _textEntry);
+            // R5-4c1: 미션 중 메인 메뉴 배경 숨김. 같은 트리의 임무 UI는 그대로 그리고 입력도 그대로 전달한다.
+            // 근거: cpppj UberGump.cpp 2111~2112행의 MainMenu 단계 조건이다. 미션 세션이 생기면 메뉴 돌 버튼·배경을 건너뛴다.
+            _mainMenu.IsMissionActive = () => _missionSession is not null;
+            _gumpDrawing.IsMissionActive = () => _missionSession is not null;
             _driver.BindControlLocator(_mainMenu);
             _driver.BindInputHandler(_menuInput.Dispatch);
             // 메뉴/미션모두같은Client Frame번호/게임시각을기록한다. world1의ProcessTime도같은Frame주소를빌린다.

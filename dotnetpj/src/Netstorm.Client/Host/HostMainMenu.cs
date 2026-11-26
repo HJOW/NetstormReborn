@@ -100,10 +100,20 @@ public sealed class HostMainMenu : IUiControlLocator
         return hooks.HandleBase(token, code, first, second);
     }
 
-    /// <summary>실제 큐에서 꺼낸 마우스 사건을 같은 트리의 캡처·재귀 전달로 처리한다.</summary>
+    /// <summary>실제 큐에서 꺼낸 마우스 사건을 같은 트리의 캡처·재귀 전달로 처리한다. 미션 중 메인 메뉴 부품은 소비하지 않는다.</summary>
     /// <param name="input">코드와 논리 화면 좌표를 담은 입력.</param>
     /// <returns>소비된 Gump 토큰. 0이면 소비하지 않았다.</returns>
-    public uint Route(InputEvent input) => _tree.Input.Route(input.Code, unchecked((uint)input.X), unchecked((uint)input.Y));
+    /// <remarks>2026-11-26 1.078에서 R5-4c1 메뉴 배경 숨김용으로 미션 중 메뉴 버튼 무시를 추가했다. 근거: cpppj UberGump.cpp의 MainMenu 단계 조건이다. 같은 트리의 임무 UI는 그대로 전달한다.</remarks>
+    public uint Route(InputEvent input)
+    {
+        uint token = _tree.Input.Route(input.Code, unchecked((uint)input.X), unchecked((uint)input.Y));
+        if (token != 0 && HidesMainMenuForMission(token))
+        {
+            return 0;
+        }
+
+        return token;
+    }
 
     /// <summary>현재 메뉴에서 일치하는 첫 버튼의 실제 Gump 경계 중심을 찾는다. 이름은 원본처럼 대소문자를 구분한다.</summary>
     /// <param name="label">찾을 버튼 라벨.</param>
@@ -137,14 +147,25 @@ public sealed class HostMainMenu : IUiControlLocator
     /// <summary>모달 대화창이 열리면 함께 그리지 않는 실제 메뉴 부품 토큰이다. 돌 버튼 여덟 개와 각 배경 자식이다.</summary>
     private readonly HashSet<uint> _modalHidden = [];
 
+    /// <summary>미션 중이면 참을 돌려주는 실제 호스트 판별이다. 같은 트리의 임무 UI와 메뉴 버튼 입력을 구별한다.</summary>
+    /// <remarks>2026-11-26 1.078에서 R5-4c1 메뉴 배경 숨김용으로 추가했다. 근거: cpppj UberGump.cpp 2111~2112행의 MainMenu 단계 조건이다. 미션에서는 메인 메뉴 돌 버튼을 그리지 않고 입력도 소비하지 않는다. 미션 임무 UI(채팅·HUD)는 같은 트리의 다른 토큰이라 그대로 둔다.</remarks>
+    public Func<bool>? IsMissionActive { get; set; }
+
     /// <summary>모달 대화창이 열리면 도와 달리 메인 메뉴 돌 버튼과 그 배경은 그리지 않는다.</summary>
     /// <param name="token">확인할 실제 Gump 토큰.</param>
     /// <returns>여덟 버튼이나 그 배경 자식 중 하나이면 참이다.</returns>
     /// <remarks>2026-11-12 0.382에서 L4a menu-credits 비교로 추가했다. cpppj는 Tell이 열리면 Dialog 단계로 바뀌어
     /// 메인 메뉴 버튼을 그리지 않고 Tell 창만 그린다(<c>UberGump.cpp</c> 2029행의 MainMenu 단계 조건과 2065행의 Dialog 단계 분기).
     /// 배경 자식은 별도 수집 항목이라 함께 건너뛰어야 한다. 팝업 메뉴(Help·Options)는 모달이 아니라 버튼을 계속 그린다.
+    /// 미션 중 숨김은 <see cref="IsMissionActive"/>와 함께 <see cref="HostGumpDrawing"/>·<see cref="Route"/>에서 판별한다.
     /// <see cref="HostGumpDrawing"/>이 이 판별로 건너뛴다.</remarks>
     public bool HideWithModal(uint token) => _modalHidden.Contains(token);
+
+    /// <summary>미션 중 메인 메뉴 부품이면 참이다. 그리기·입력에서 메뉴 배경 숨김에 쓴다.</summary>
+    /// <param name="token">확인할 실제 Gump 토큰.</param>
+    /// <returns>미션이 활성화되고 여덟 버튼·배경 중 하나이면 참이다.</returns>
+    /// <remarks>2026-11-26 1.078에서 R5-4c1 메뉴 배경 숨김용으로 추가했다. 근거: cpppj UberGump.cpp의 MainMenu 단계 조건이다.</remarks>
+    public bool HidesMainMenuForMission(uint token) => (IsMissionActive?.Invoke() == true) && _modalHidden.Contains(token);
 
     /// <summary>현재 화면에 배경과 글리프를 같은 실제 팔레트·8비트 표면으로 그린다.</summary>
     /// <param name="screen">시작 타이틀을 그린 논리 화면.</param>
