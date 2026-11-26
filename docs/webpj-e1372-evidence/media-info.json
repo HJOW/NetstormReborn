@@ -1,0 +1,17 @@
+{
+  "source": "ffprobe -v error -show_entries stream=codec_name,codec_type,width,height,sample_rate,channels -of json docs/webpj-e1372-evidence/native-effects.webm",
+  "streams": [
+    {
+      "codec_name": "opus",
+      "codec_type": "audio",
+      "sample_rate": "48000",
+      "channels": 2
+    },
+    {
+      "codec_name": "vp8",
+      "codec_type": "video",
+      "width": 1024,
+      "height": 768
+    }
+  ]
+}

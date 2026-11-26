@@ -48,6 +48,8 @@ import { createSoundState, SoundPlayer } from './audio/sound-player.js';
 import { WebSoundDevice } from './audio/web-sound-device.js';
 import { IndexedSurface } from './render/indexed-surface.js';
 import { IndexedPresenter, normalizeScaling } from './render/presenter.js';
+import { GameAgentHost } from './platform/game-agent-host.js';
+import { installWebMcp } from './platform/webmcp-tools.js';
 import { Screen, ScreenMode } from './render/screen.js';
 import { Renderer } from './render/renderer.js';
 import { SquidRenderer } from './render/squid-renderer.js';
@@ -643,6 +645,10 @@ export class Netstorm {
         this._layout = null;
         // 이벤트 리스너를 한꺼번에 해제하기 위한 컨트롤러다.
         this._abort = null;
+        // 현재 문서의 실제 게임 입력·캡처·녹화 어댑터다. WebMCP 지원 시에만 만든다.
+        this._agentHost = null;
+        // 이 앱 수명이 등록한 표준 WebMCP 도구의 반납 핸들이다.
+        this._agentBridge = null;
         // 루트 크기 변화 관찰자다.
         this._resizeObserver = null;
         // 예약된 requestAnimationFrame 번호다. 0 이면 예약 없음이다.
@@ -909,6 +915,7 @@ export class Netstorm {
             this._bindEvents();
             this._applyLayout();
             this._initializeClientRendererView();
+            this._initializeAgentTools();
             if (this.options.autoFocus) canvas.focus({ preventScroll: true });
             this._startFrameLoop();
             this._load();
@@ -918,6 +925,23 @@ export class Netstorm {
             throw error;
         }
         return this;
+    }
+
+    // 지원 문서에서만 실제 게임 도구를 등록한다. 초기화/반납 경합과 등록 오류가 일반 게임 시작을 중단하지 않게 한다.
+    _initializeAgentTools() {
+        const doc = this._root.ownerDocument, lifetime = this._abort;
+        try {
+            if (typeof doc.modelContext?.registerTool !== 'function') return;
+            const host = new GameAgentHost(this); this._agentHost = host;
+            installWebMcp(doc, host, { signal: lifetime.signal }).then((bridge) => {
+                // 이전 init의 늦은 등록은 새 게임 수명에 남기지 않는다.
+                if (this._abort !== lifetime) { bridge.dispose(); return host.dispose(); }
+                this._agentBridge = bridge;
+            }).catch((error) => {
+                host.dispose().catch(() => {});
+                if (this._abort === lifetime) reportGameError('webmcp-registration', error, { state: this._state });
+            });
+        } catch (error) { reportGameError('webmcp-initialize', error, { state: this._state }); }
     }
 
     // 원본 공통 시작의 SP 초기화와 게임 시계 생성을 같은 Client 소유자로 연결한다.
@@ -2366,6 +2390,9 @@ export class Netstorm {
         this._stopFrameLoop();
         this._abort?.abort();
         this._abort = null;
+        this._agentBridge?.dispose(); this._agentBridge = null;
+        // 녹화 트랙·Blob 주소는 오디오 문맥을 닫기 시작하기 전에 같은 앱 수명에서 반납한다.
+        this._agentHost?.dispose().catch((error) => reportGameError('webmcp-dispose', error, { state: this._state })); this._agentHost = null;
         this._resizeObserver?.disconnect();
         this._resizeObserver = null;
         this._mainMenu?.cancel();
@@ -3619,7 +3646,8 @@ export class Netstorm {
         this._listen(canvas, 'compositionend', (event) => this._onCompositionEnd(event));
         // 마우스 휠은 열린 도움말 창 본문을 스크롤한다(웹 적응). 도움말이 열려 있을 때만 페이지 스크롤을 막는다. (2026-10-30 WB03-G)
         this._listen(canvas, 'wheel', (event) => this._onWheel(event), { passive: false });
-        this._listen(canvas, 'blur', (event) => { if (event.relatedTarget !== this._clientImeElement) this._clearInput(); });
+        // IME 요소가 없는 때의 relatedTarget=null도 실제 포커스 해제이므로 누름을 정리한다.
+        this._listen(canvas, 'blur', (event) => { if (!this._clientImeElement || event.relatedTarget !== this._clientImeElement) this._clearInput(); });
         this._listen(doc, 'visibilitychange', () => this._onVisibilityChange());
         // 붙여넣기: 채팅 입력줄·Send X 숫자 창이 활성이면 클립보드 본문을 확정 문자로 입력줄에 넣는다. (2026-11-22 WB04-E1175)
         this._listen(doc, 'paste', (event) => this._onPaste(event));

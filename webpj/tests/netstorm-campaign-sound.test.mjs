@@ -27,11 +27,13 @@ test('앱 미션 효과음: 준비 공유와 실제 재생·옵션 변경', asyn
     try {
         const [player, same] = await Promise.all([app._prepareCampaignAudio(), app._prepareCampaignAudio()]);
         assert.equal(player, same); assert.equal(reads, 1); assert.equal(app._clientSoundState.maxPlaying, 8);
+        // 최종 출력 버스 등 공통 노드 수와 무관하게 이번 실제 음성의 감쇠 노드를 검사한다.
+        const voiceGain = scene.gains.length;
         const services = app._campaignGameplayServices(), sound = app._clientSoundNames.lookup('test.wav');
         assert.equal(services.sound.play(sound, 0, 0, 0, 0, 0), sound); assert.equal(services.sound.isPlaying(sound), 1);
-        assert.equal(scene.sources[0].started, true); assert.ok(Math.abs(scene.gains[2].gain.value - 10 ** (-500 / 2000)) < 1e-12);
+        assert.equal(scene.sources[0].started, true); assert.ok(Math.abs(scene.gains[voiceGain].gain.value - 10 ** (-500 / 2000)) < 1e-12);
         app._settings.set('soundVolume', 3); app._settings.set('swapLeftRightSpeakers', 1);
-        assert.equal(app._clientSoundState.swapSpeakers, true); assert.ok(Math.abs(scene.gains[2].gain.value - 10 ** (-1500 / 2000)) < 1e-12);
+        assert.equal(app._clientSoundState.swapSpeakers, true); assert.ok(Math.abs(scene.gains[voiceGain].gain.value - 10 ** (-1500 / 2000)) < 1e-12);
         services.assets.postPop.playImpactSound(sound); assert.equal(scene.sources.length, 2);
         services.sound.stop(sound); assert.equal(scene.sources[0].stopped, true);
         app._settings.set('sound', 0); assert.equal(services.sound.play(sound, 0, 0, 0, 0, 0), 0); assert.equal(scene.sources.length, 2);

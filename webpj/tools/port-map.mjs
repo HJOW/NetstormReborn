@@ -133,6 +133,9 @@ export const RULES = Object.freeze([
 
 // cpppj 단위에 대응하지 않는 웹 전용 모듈(webpj 기준 경로)과 사유이다. www 의 모든 .js 모듈은 대응표의 web 칸이나 이 목록 중 한 곳에 있어야 한다. (2026-11-06 WB02-G)
 export const WEB_ONLY = Object.freeze({
+    'www/platform/game-agent-host.js': 'WebMCP에서 현재 게임의 값 조회·실제 DOM 입력·PNG와 녹화 장치를 연결하는 웹 전용 경계(WB04-E1372)',
+    'www/platform/game-recorder.js': '브라우저 Canvas와 게임 소리 출력 버스를 WebM으로 녹화하는 웹 전용 경계(WB04-E1372)',
+    'www/platform/webmcp-tools.js': 'Document WebMCP의 도구 등록과 Abort 수명을 관리하는 웹 전용 경계(WB04-E1372)',
     'www/bootstrap.js': 'webpack 번들의 진입 모듈로 Netstorm 을 만들어 시작하고 window.netstorm 을 노출하는 웹 전용 경계(WB04-E1293)',
     'www/platform/error-reporting.js': '브라우저 콘솔에 게임 예외와 실행 문맥을 남기는 웹 전용 경계(WB04-E862)',
     'www/platform/reset-storage.js': '웹 게임 소유 저장 항목의 확인 후 초기화와 실패 복구 경계(WB04-E863)',

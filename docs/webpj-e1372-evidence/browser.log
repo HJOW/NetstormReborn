@@ -1,0 +1,15 @@
+npm notice run NetstormWeb@1.0.0 npx
+npm notice run ^"playwright^" test e2e/webmcp.spec.js --workers=1 --reporter=line --output=../extracted/webpj-e1372-boundary-results
+
+Running 2 tests using 1 worker
+
+
+(node:21080) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/2] [chromium] › e2e\webmcp.spec.js:19:1 › WebMCP가 없는 기본 브라우저에서도 일반 게임 시작이 유지된다
+[2/2] [chromium] › e2e\webmcp.spec.js:24:1 › WebMCP 실제 게임: 등록·메뉴·입력·PNG·효과음 WebM·다운로드와 앱 반납
+[chromium] › e2e\webmcp.spec.js:24:1 › WebMCP 실제 게임: 등록·메뉴·입력·PNG·효과음 WebM·다운로드와 앱 반납
+MCP 실제 녹화 PCM {"channels":2,"samples":72000,"rms":0.04691185429306312,"maximum":0.9938000440597534}
+
+  2 passed (1.2m)

@@ -1,0 +1,44 @@
+{
+  "unit": "WB04-E1372",
+  "baseCommit": "e5bdfad01",
+  "completedAt": "2026-11-26T14:32:39.297Z",
+  "runs": {
+    "22": {
+      "file": "webpj/extracted/webpj-e1372-node22.log",
+      "tests": 6860,
+      "pass": 6860,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "duration_ms": 1092815.4084,
+      "sha256": "b690f97a48bb4e238b5d639ba61f7d1eced12eeb60a497b38bb7a07a8926ef55"
+    },
+    "26": {
+      "file": "webpj/extracted/webpj-e1372-node26.log",
+      "tests": 6860,
+      "pass": 6860,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "duration_ms": 1102274.2484,
+      "sha256": "a6347a0a97d49acf37ad34aeac0b0d5a6db315f1b35c36bfca6e0d7cb2921472"
+    }
+  },
+  "bundle": {
+    "bytes": 3460761,
+    "sha256": "2982e796a8099f7df94331cb46ec218f5c493e02771dced99ad7bea74881a8f2"
+  },
+  "browser": {
+    "tests": 2,
+    "pass": 2,
+    "file": "docs/webpj-e1372-evidence/browser.log",
+    "pcm": {
+      "channels": 2,
+      "samples": 72000,
+      "rms": 0.04691185429306312,
+      "maximum": 0.9938000440597534
+    }
+  }
+}

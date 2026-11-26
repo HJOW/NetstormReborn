@@ -53,14 +53,18 @@ export class AudioSystem {
     constructor(context, { soundVolumeStep = DEFAULT_SOUND_VOLUME_STEP, musicVolumeStep = DEFAULT_MUSIC_VOLUME_STEP } = {}) {
         // 소리를 내는 Web Audio 문맥이다.
         this.context = context;
+        // 일반 효과음·음악·원본 SoundPlayer를 모두 모으는1배 출력이다. 녹화도 이 버스만 추가 분기한다.
+        this.output = context.createGain();
+        this.output.gain.value = 1;
+        this.output.connect(context.destination);
         // 효과음 전체 음량 노드다(원본 SetMasterVolume).
         this.soundGain = context.createGain();
         this.soundGain.gain.value = centibelsToGain(volumeStepToCentibels(soundVolumeStep));
-        this.soundGain.connect(context.destination);
+        this.soundGain.connect(this.output);
         // 음악 음량 노드다(원본 music SetVolume).
         this.musicGain = context.createGain();
         this.musicGain.gain.value = centibelsToGain(volumeStepToCentibels(musicVolumeStep));
-        this.musicGain.connect(context.destination);
+        this.musicGain.connect(this.output);
         // 이름(소문자) → 해독한 효과음 AudioBuffer 표다.
         this.sounds = new Map();
         // 이름(소문자) → 해독한 음악 AudioBuffer 표다.

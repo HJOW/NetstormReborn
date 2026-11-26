@@ -28,13 +28,19 @@ test('웹 소리 장치: 실제 SoundPlayer의 복제·감쇠·좌우·자연 �
     const device = new WebSoundDevice(audio, assets), hooks = device.hooks(), list = new SoundList(), state = createSoundState();
     list.initialize(); state.initialized = state.device = state.enabled = true;
     const player = new SoundPlayer(list, state, hooks), sound = list.lookup('test.wav');
+    // 공통 출력 노드 개수와 무관하게 이 재생에서 실제 추가한 세 음량 노드만 확인한다.
+    const firstVoice = scene.gains.length;
     try {
         assert.equal(player.play(sound, 0, -1000, 2000, 0, 0), sound); assert.equal(list.field(sound, SOUND_FIELD.attenuation), 500);
         assert.equal(scene.sources[0].started, true); assert.equal(player.isPlaying(sound), 1);
-        assert.ok(Math.abs(scene.gains[2].gain.value - 10 ** (-1500 / 2000)) < 1e-12);
-        assert.ok(Math.abs(scene.gains[3].gain.value - 0.1) < 1e-12); assert.equal(scene.gains[4].gain.value, 1);
+        assert.ok(Math.abs(scene.gains[firstVoice].gain.value - 10 ** (-1500 / 2000)) < 1e-12);
+        assert.ok(Math.abs(scene.gains[firstVoice + 1].gain.value - 0.1) < 1e-12); assert.equal(scene.gains[firstVoice + 2].gain.value, 1);
         const copy = player.play(sound, 1, 0, -10000, 0, 0); assert.notEqual(copy, sound); assert.equal(scene.sources[1].loop, true);
-        assert.equal(scene.gains[6].gain.value, 1); assert.equal(scene.gains[7].gain.value, 0);
+        assert.equal(scene.gains[firstVoice + 4].gain.value, 1); assert.equal(scene.gains[firstVoice + 5].gain.value, 0);
+        // 원본 장치도 음악/일반 효과음과 같은1배 버스로 합쳐지고 음량은 다시 곱하지 않는다.
+        assert.equal(audio.output.gain.value, 1); assert.deepEqual(audio.output.links, [[scene.context.destination]]);
+        assert.deepEqual(audio.soundGain.links, [[audio.output]]); assert.deepEqual(audio.musicGain.links, [[audio.output]]);
+        assert.equal(scene.nodes.filter(node => node.links.some(link => link[0] === audio.output)).length, 4);
         scene.sources[0].onended(); assert.equal(player.isPlaying(sound), 0); assert.equal(state.playing, 2);
         assert.equal(player.recount(), 1); player.stop(copy); assert.equal(scene.sources[1].stopped, true); assert.equal(state.playing, 0);
         assert.equal(hooks.load('missing.wav').buffer, SILENT_SOUND_BUFFER);

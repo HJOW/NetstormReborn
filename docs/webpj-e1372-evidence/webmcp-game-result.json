@@ -1,0 +1,81 @@
+{
+  "initial": {
+    "state": "mainMenu",
+    "mission": "TheWarBegins",
+    "gameSeconds": 9.3,
+    "logicalSize": {
+      "width": 1024,
+      "height": 768
+    },
+    "selected": 0,
+    "localOwner": 1,
+    "stormPower": 3000,
+    "pointer": {
+      "x": 621,
+      "y": 500,
+      "inside": true,
+      "buttons": 0
+    },
+    "keys": [],
+    "controls": [],
+    "recording": {
+      "recording": false,
+      "stopping": false,
+      "bytes": 0,
+      "lastResult": null
+    }
+  },
+  "started": {
+    "recording": true,
+    "mimeType": "video/webm;codecs=vp8,opus",
+    "framesPerSecond": 10,
+    "maximumSeconds": 10,
+    "includesGameAudio": true
+  },
+  "recorded": {
+    "mimeType": "video/webm;codecs=vp8,opus",
+    "bytes": 143908,
+    "fileName": "Netstorm-1795700176632.webm",
+    "url": "blob:http://localhost:9803/ce22a24e-55df-43ed-99e1-35fe216ab078",
+    "durationMilliseconds": 1539,
+    "downloadStarted": true
+  },
+  "pcm": {
+    "channels": 2,
+    "samples": 72000,
+    "rms": 0.04691185429306312,
+    "maximum": 0.9938000440597534
+  },
+  "final": {
+    "state": "mainMenu",
+    "mission": "TheWarBegins",
+    "gameSeconds": 10.275,
+    "logicalSize": {
+      "width": 1024,
+      "height": 768
+    },
+    "selected": 15000,
+    "localOwner": 1,
+    "stormPower": 3000,
+    "pointer": {
+      "x": 621,
+      "y": 500,
+      "inside": true,
+      "buttons": 0
+    },
+    "keys": [],
+    "controls": [],
+    "recording": {
+      "recording": false,
+      "stopping": false,
+      "bytes": 143908,
+      "lastResult": {
+        "mimeType": "video/webm;codecs=vp8,opus",
+        "bytes": 143908,
+        "fileName": "Netstorm-1795700176632.webm",
+        "url": "blob:http://localhost:9803/ce22a24e-55df-43ed-99e1-35fe216ab078",
+        "durationMilliseconds": 1539
+      }
+    }
+  }
+}

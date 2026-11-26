@@ -60,7 +60,8 @@ export class WebSoundDevice {
                 const context = this.#audio.context, source = context.createBufferSource(), gain = context.createGain();
                 const splitter = context.createChannelSplitter(2), left = context.createGain(), right = context.createGain(), merger = context.createChannelMerger(2);
                 gain.channelCount = 2; gain.channelCountMode = 'explicit'; source.buffer = buffer.decoded; source.loop = Boolean(flags & 1);
-                source.connect(gain); gain.connect(splitter); splitter.connect(left, 0); splitter.connect(right, 1); left.connect(merger, 0, 0); right.connect(merger, 0, 1); merger.connect(context.destination);
+                // 원본 장치의 음량을 다시 곱하지 않고 음악과 같은1배 출력/녹화 버스에 합친다.
+                source.connect(gain); gain.connect(splitter); splitter.connect(left, 0); splitter.connect(right, 1); left.connect(merger, 0, 0); right.connect(merger, 0, 1); merger.connect(this.#audio.output ?? context.destination);
                 buffer.source = source; buffer.nodes = { gain, splitter, left, right, merger }; buffer.loop = source.loop; this.#apply(buffer);
                 source.onended = () => this.#finish(buffer, source);
                 try { source.start(); } catch (error) { this.#finish(buffer, source); throw error; }
