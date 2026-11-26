@@ -23,6 +23,14 @@ function fixture({ values = [0], menuLoaded = true } = {}) {
     return { audio, clock, prepared, released, weather, flashes, errors, waiting, driver, finish };
 }
 
+// State의 double 기한 작성은 난수나 곡 선택 없이 현재 감독의 다음 프레임 판정만 바꾼다.
+test('State 음악 기한: 현재 곡 기한 비트를 직접 쓰고 다음 프레임에서만 원소 곡을 넘긴다', async () => {
+    const f = fixture(); f.driver.begin(); await f.finish('rain22.mus');
+    f.driver.writeSongEndBits(0x7ff0000000000000n); f.driver.frame(); assert.equal(f.driver.selected, 'rain22.mus');
+    f.driver.writeSongEndBits(0n); assert.equal(f.driver.selected, 'rain22.mus');
+    f.driver.frame(); assert.equal(f.driver.selected, 'thu22.mus');
+});
+
 test('곡 길이 표: 모든 곡이 공개 자산 파일 머리의 data 크기·원본 식과 같다', () => {
     const directory = path.join(DATA_ROOT, 'music'), files = fs.readdirSync(directory).filter((name) => name.endsWith('.mus')).sort();
     assert.deepEqual(Object.keys(MUSIC_DATA_BYTES).sort(), files);

@@ -33,12 +33,13 @@ function clientMenuText(root, game, fonts, screen, colors, devices) {
     const globals = devices.chat?.globals;
     let owner = globals?.uiOwner;
     if (owner) {
-        if (owner.root !== root || owner.game !== game || owner.fonts !== fonts || owner.screen !== screen) throw new Error('Client 공유 로그의 실제 UI 소유자 불일치');
-        owner.devices = devices; owner.colors = colors; return owner;
+        if (owner.root !== root || owner.game !== game || owner.fonts !== fonts) throw new Error('Client 공유 로그의 실제 UI 소유자 불일치');
+        // 창 크기 변경은 같은 Client의 Screen을 교체한다. 로그/글자 버퍼는 보존하고 현재 팔레트 장치만 다시 빌린다.
+        owner.devices = devices; owner.colors = colors; owner.screen = screen; return owner;
     }
     owner = { root, game, fonts, screen, colors, devices, text: null, pictures: null, markup: null, buffers: null };
     owner.text = new ClientTextGump(root, fonts, (...args) => owner.devices.baseHandle(...args),
-        makeClientTextMarkup(game, () => screen.colors(), () => owner.colors.maps[2], (...args) => owner.devices.sound(...args), undefined,
+        makeClientTextMarkup(game, () => owner.screen.colors(), () => owner.colors.maps[2], (...args) => owner.devices.sound(...args), undefined,
             (pictures, markup) => { owner.pictures = pictures; owner.markup = markup; }));
     owner.buffers = new ClientStyleTextBuffers(owner.text, fonts, owner.pictures);
     if (globals) globals.uiOwner = owner;

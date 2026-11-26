@@ -150,9 +150,9 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         let createdHud = null;
         const createHud = app._createCampaignProductionHud.bind(app), dockHud = app._dockCampaignProductionHud.bind(app);
         app._createCampaignProductionHud = (production) => {
-            assert.equal(app._campaignWorld, null); assert.equal(production.session, null);
+            assert.equal(production.session, null);
             const ui = createHud(production), chat = ui.chat().current(), consoleToken = app._clientGump.node(chat).console;
-            createdHud = { ui, chat, consoleToken, consoleNode: app._clientGump.node(consoleToken), blinkAt: app._clientGump.node(consoleToken).blinkAt };
+            createdHud = { ui, chat, consoleToken, consoleNode: app._clientGump.node(consoleToken), blinkAt: app._clientGump.node(consoleToken).blinkAt, world: app._campaignWorld };
             return ui;
         };
         app._dockCampaignProductionHud = (production) => {
@@ -170,6 +170,7 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         await app._clientSoundPrepare; app._onFrame(16);
         assert.equal(request.consumed, true); assert.equal(guide.pending().pending(), false);
         assert.ok(createdHud); assert.equal(app._campaignProduction.ui, createdHud.ui);
+        assert.equal(createdHud.world, null);
         assert.equal(app._campaignProduction.worldBound, false); assert.equal(app._campaignProduction.session, null);
         assert.throws(() => app._prepareCampaignMissionStart(), /수명 오류/);
         assert.ok(app._missionLoadingWindow); assert.equal(app._mainMenu.dialog, app._missionLoadingWindow);
@@ -194,7 +195,10 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         finally { player.playOnceAt = originalPlay; }
         assert.deepEqual(steps, [[10.5, 20.25, 7, 0, 0]]);
         // 실제 Player 정기 진단은 같은 Client 로그 버퍼를 사용한다.
-        app._campaignGameplayServices().player.log(1, 'Player test');
+        assert.equal(app._clientTrace.log.level, data.readInt('tracelevel', 30).value);
+        const previousTraceLevel = app._clientTrace.log.level; app._clientTrace.log.level = 1;
+        try { app._campaignGameplayServices().player.log(1, 'Player test'); }
+        finally { app._clientTrace.log.level = previousTraceLevel; }
         assert.ok(app._clientTrace.log.buffer.some((byte) => byte !== 0));
         // 미구현 사건을 추월하지 않고 맨 앞 이동 통지만 현재 Guide와 Gump에 전달한다.
         const inputQueue = app._clientInputQueue; inputQueue.pushCommand(0x02000050, 1, 2); inputQueue.pushCommand(0x02000044, 3, 4);
@@ -735,7 +739,11 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         app._clientInputQueue.pushCommand(0x0200005d, 0, salvageSid); app._runCampaignInputFrame();
         assert.deepEqual(session.localConnectionPackets().slice(beforeSalvage), []); assert.equal(session.core().pool.slot(salvageSid)[11], salvageFlags);
         session.pumpLocalConnection(); assert.deepEqual(session.localConnectionPackets().slice(beforeSalvage), [0x54]); assert.ok(session.core().pool.slot(salvageSid)[11] & 3); app._clientGameplay.denySalvage().value = denied;
-
-
+        // 실제 미션 이탈은 공통 자식 증빙을 거쳐 Runtime을 반납하고 그 전에 만든 같은 새 HUD만 남긴다.
+        const retiringWorld = app._campaignWorld; app._releaseCampaignWorld();
+        assert.equal(app._campaignWorld, null); assert.equal(app._clientGameplay.borrowed(), false); assert.equal(app._surfaceStorage.borrowed, false);
+        assert.equal(createdHud.world, retiringWorld); assert.equal(app._campaignProduction.ui, createdHud.ui);
+        assert.equal(app._campaignProduction.session, null); assert.equal(app._campaignProduction.worldBound, false);
+        assert.throws(() => session.core(), /반납/);
     } finally { guide.dispose(); app._releaseCampaignWorld(); app._surfaceStorage.dispose(); app._clientSoundDevice.dispose(); app._missionAudioAssets.dispose(); }
 });

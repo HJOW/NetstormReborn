@@ -96,6 +96,7 @@ import { makeCampaignCursorClientEffects } from './core/campaign-cursor-client-e
 import { RawContainedFinder } from './core/raw-contained-finder.js';
 import { PRODUCTION_BRIDGE_COMMAND, PRODUCTION_REPEAT_COMMAND } from './core/production-shortcuts.js';
 import { ProductionControlContext } from './core/production-control-context.js';
+import { cleanupNetstormStateWorld } from './core/netstorm-state-world.js';
 import { ProductionMaintenanceGlobals, ProductionMaintenancePanel } from './core/raw-production-maintenance.js';
 import { GameMenuActions } from './core/game-menu-actions.js';
 import { gameMenuCommandValue, gameMenuScriptCode, isGameMenuCommand, queuePlayerListKey } from './core/game-menu-commands.js';
@@ -1021,6 +1022,14 @@ export class Netstorm {
         globals.rotationMode().value = this._gameData.readInt('rotmode', 0).value >>> 0;
     }
 
+    // 전체 State 부모가 선택한 위치에서 현재 웹 설정의 기존 소비자들을 다시 해석한다.
+    _interpretClientStateOptions() {
+        this._syncClientCloudOptions(); this._syncClientHelpWord(); this._syncClientOwnerColorOptions(); this._syncClientCursorOptions();
+        this._surfaceStorage.transmission.state.compress = this._gameData.readInt('cs', this._surfaceStorage.transmission.state.compress).value | 0;
+        if (this._clientTrace) this._clientTrace.log.level = this._gameData.readInt('tracelevel', this._clientTrace.log.level).value | 0;
+        this._applySettings();
+    }
+
     // 실제 게임 자산에서 장기 물리를 만들고 같은 Client 권한·시각·Kernel과 진단을 연결한다.
     _initializeClientWorldStorage(game, files) {
         if (this._surfaceStorage || !this._clientGameplay || !this._gameClock) throw new Error('Client 월드 저장소의 중복 또는 공통 수명 누락');
@@ -1551,12 +1560,8 @@ export class Netstorm {
         if (!request || this._campaignWorld) throw new Error('캠페인 State7의 현재 요청 또는 World 수명 오류');
         runCampaignMissionStarting(client, () => {
             captureCampaignMissionStarting(client, request);
-            // 원본 LoadMissionWorldBody 는 시작 정보를 보관한 뒤 State 전체 정리(CleanupNativeStateWorld(1))를 실행하고 그 다음에 장면 음악을 시작한다(SP 정리 1,280회 난수). (2026-11-23 WB04-E1280)
-            this._clearPlayerSpForState();
-            // State 정리가 교체하는 HUD는 World보다 먼저 생성한다. Ready 뒤에도 같은 Chat·Console·생산 유지 상태를 사용한다.
-            if (this._campaignProduction) throw new Error('State7 HUD 생성 전 이전 생산 수명 반납 필요');
-            this._campaignProduction = { session: null, panel: new ProductionMaintenancePanel(), maintenance: null, ui: null, worldBound: false };
-            this._createCampaignProductionHud(this._campaignProduction);
+            // 시작 정보를 보관한 뒤 같은 전체 State 부모가 기존 저장소를 정리하고 World 없는 HUD를 만든다.
+            cleanupNetstormStateWorld(this, 1);
             // 원본 State7 의 전투 장면 음악 시작(StartScene(true))이다. World 설치보다 앞이다. (2026-11-20 WB04-E1119)
             this._beginSceneMusic();
             // 원본 LoadMissionWorldBody 는 장면 음악 뒤, 월드·커서 설치 앞에서 Guide 미션이면 게임 시계를 정지하고 관문의 자기 정지 표식을 세운다(PauseMissionWorldEntry → PauseMissionFrameForDialog).
@@ -1592,6 +1597,10 @@ export class Netstorm {
         // World 가 없어도(State7 도중 실패 등) 이미 시작한 장면 음악은 메뉴 곡으로 되돌린다. (2026-11-20 WB04-E1119)
         this._endSceneMusic();
         if (!this._campaignWorld && !this._campaignProduction) return;
+        if (this._campaignWorld) {
+            // 공통 부모가 자식 정리 증빙·Core0·Runtime 반납·새 HUD 생성을 원문 순서로 수행한다.
+            this._clearThunderFlashes(); cleanupNetstormStateWorld(this, 0); this._endSceneMusic(); return;
+        }
         // 원본 월드 정리 어댑터(UberGump 004b2df0)는 Session·UI·Kernel 을 반납하기 전에 번개 프로세스(ClearThunderFlashes)와 초기 캡처 기한(005c8618)을 정리한다. (2026-11-20 WB04-E1121, 2026-11-24 WB04-E1329)
         this._clearThunderFlashes();
         if (this._clientLocal) this._clientLocal.captureEnd().value = 0;

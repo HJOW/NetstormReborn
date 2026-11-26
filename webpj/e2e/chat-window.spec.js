@@ -69,8 +69,10 @@ test('채팅 창: 미션을 떠나도 같은 로그·색 조각이 유지되고 
   await page.keyboard.press('F3'); await page.waitForTimeout(600);
   expect((await ink(page, { left: 90, top: 680, right: 420, bottom: 693 })).red).toBeGreaterThan(5);
   await page.evaluate(() => window.netstorm._leaveCampaignMission()); await page.waitForFunction(() => !window.netstorm._campaignDisplayActive(), null, { timeout: 30000 });
-  expect(await page.evaluate(() => window.netstorm._clientChatWindows.window.current)).toBe(0);
-  expect(await page.evaluate(() => ({ lines: window.netstorm._clientChatWindows.log.lineCount, devices: window.__chatLifetime.owner.devices }))).toEqual({ lines: 1, devices: null });
+  // 전체 State 부모는 이전 Runtime을 반납하기 전에 World 없는 새 HUD를 만든다. 같은 로그를 빌리되 이전 Session은 보유하지 않는다.
+  expect(await page.evaluate(() => { const app = window.netstorm, production = app._campaignProduction;
+    return { lines: app._clientChatWindows.log.lineCount, world: app._campaignWorld, borrowed: app._clientGameplay.borrowed(), session: production.session,
+      bound: production.worldBound, chat: app._clientChatWindows.window.current === production.ui.chat().current(), owner: app._clientChatWindows.uiOwner === window.__chatLifetime.owner }; })).toEqual({ lines: 1, world: null, borrowed: false, session: null, bound: false, chat: true, owner: true });
   await start(); const second = await state(page); expect(second.report, '다음 미션의 채팅 창').not.toBeNull(); expect(second.report.bounds.top).toBeGreaterThanOrEqual(768);
   expect(second.lines).toBe(1);
   expect(await page.evaluate(() => { const globals = window.netstorm._clientChatWindows, saved = window.__chatLifetime;

@@ -71,6 +71,11 @@ export class SceneMusicDriver {
         if (this.#active) this.#scene.request(String(name));
     }
 
+    // 공통 State 정리가 같은 현재 곡 기한의 double 비트를 직접 작성한다. 곡 선택이나 난수 소비는 하지 않는다.
+    writeSongEndBits(bits) {
+        const data = new DataView(new ArrayBuffer(8)); data.setBigUint64(0, bits, true); this.#state.songEnd = data.getFloat64(0, true);
+    }
+
     // 미션을 떠날 때 불러 전투 밖 장면으로 돌려 메뉴 곡을 요청하고 받아 둔 미션 곡을 놓는다. 시작하지 않았으면 아무 일도 없다. (2026-11-20 WB04-E1119)
     end() {
         if (!this.#active) return;

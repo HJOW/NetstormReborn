@@ -28,6 +28,7 @@ import { resetClientClockSynchronization, resetClientStateZone, resetClientState
 import { StateWorldCleanupEffect } from '../www/core/raw-state-world-cleanup.js';
 import { ClientStateRuntimeRetirement } from '../www/core/client-state-runtime-retirement.js';
 import { cancelClientStateCursor, cleanupClientStateWorld, makeClientStateWorldHooks } from '../www/core/client-state-world-cleanup.js';
+import { SoundPlayer, createSoundState } from '../www/audio/sound-player.js';
 import { formatPlayerMenuText } from '../www/core/raw-player-menu.js';
 import { ClientFactoryMenu } from '../www/ui/client-factory-menu.js';
 import { bindClientStateWorldGlobals } from '../www/core/client-state-world-globals.js';
@@ -102,6 +103,18 @@ const entry = loadOriginalForts(archive).find((candidate) => /thewarbegins.fort$
 const fort = parseFort(entry.bytes, createFortTypes(TypeTable.fromArchive(archive, decodeOriginalText)));
 // 예상하지 않은 외부 장치는 호출된 자리에서 중단한다.
 const forbidden = (name) => () => { throw new Error(`외부 장치 미연결: ${name}`); };
+
+// 실제 앱 State 정리가 사용하는 SoundPlayer를 설치한다. 재생하지 않는 시험이 장치를 선택하면 명시적으로 실패한다.
+function prepareAppStateSound(app) {
+    const hooks = Object.fromEntries(['status', 'play', 'setPosition', 'setVolume', 'setPan', 'stop', 'duplicate', 'load'].map((name) => [name, forbidden(name)]));
+    app._clientSoundPlayer = new SoundPlayer(app._clientSoundNames, createSoundState(), hooks);
+}
+
+// 직접 World를 설치하는 시험도 State 취소가 사용하는 실제 Renderer·강조 저장소를 연결한다.
+function prepareAppStateCursor(app, session) {
+    const selectCursor = (number) => { app._campaignCursor = number; }, highlight = new RawUserHighlight(app._clientGameplay.selection.highlightState(), { selectCursor });
+    session.cursor().setEffects({ placement: { invalidate: (rect, flags) => app._clientRenderer.invalidate(rect, flags) }, lifecycle: { selectCursor, highlight: (mode) => highlight.highlight(mode) } });
+}
 
 // 게임 논리는 실제 몸체로 실행하고 UI·음향은 관찰하며 명령은 실제 원본 큐에 담는다.
 function scene(overrides = {}, savedFort = fort) {
@@ -778,6 +791,7 @@ test('Netstorm Client Guide: 앱 프레임에서 Tutorial 단계와 지연 요�
 // 앱이 현재 Guide Fort와 실제 공유 소유자로 GameWorld를 설치하고 Session 반납까지 관리한다.
 test('Netstorm Client World: 실제 Guide Fort 설치와 로컬 로그인 수명', () => {
     const app = new Netstorm(); app._initializeClientRuntime(false);
+    prepareAppStateSound(app);
     const manifest = JSON.parse(fs.readFileSync(path.join(DATA_ROOT, 'manifest.json'), 'utf8'));
     const files = readDataMap(manifest.files.filter((item) => item.bundle === 'menu').map((item) => item.path));
     const data = GameData.build({ files, language: 'english' });
@@ -803,6 +817,7 @@ test('Netstorm Client World: 실제 Guide Fort 설치와 로컬 로그인 수명
         assert.equal(world.session().world().storage, app._surfaceStorage); assert.throws(() => app._installCampaignWorld(services, { x: 1024, y: 768 }), /단독 수명/);
         world.startLocalConnection(); assert.ok(app._mainMenu.dialog);
         const session = world.session(); session.pumpLocalConnection(); session.pollLocalConnectionState(); session.pumpLocalConnection();
+        prepareAppStateCursor(app, session);
         assert.equal(world.completeLocalConnection(), true); assert.equal(session.localConnectionReady(), true); assert.equal(request.consumed, true);
         assert.equal(app._clientRenderer.cameraRedraw.value, 1); assert.equal(app._mainMenu.dialog, null);
         guide.dispose(); app._releaseCampaignWorld(); assert.equal(app._campaignWorld, null); assert.equal(app._campaignWorldMissionToken, 0); assert.equal(app._surfaceStorage.borrowed, false);
@@ -812,15 +827,20 @@ test('Netstorm Client World: 실제 Guide Fort 설치와 로컬 로그인 수명
 // 실제 앱 Client State7 부모와 State8 접속이 같은 Guide·World·연결표를 사용한다.
 test('Netstorm Client World: 실제 앱 State7 부모와 State8 로컬 로그인', () => {
     const app = new Netstorm(); app._initializeClientRuntime(false);
+    prepareAppStateSound(app);
     const source = new ClientTimeSource(); source.enableFixed({ frameMilliseconds: 100 });
     app._gameClock = new ClientFrameClock(source, app._clientLocal.gameTicks());
-    const data = GameData.build({ files: new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)], ['d/Gifcloud.gif', readData('d/Gifcloud.gif')], ['d/GIFCLOUD.COL', readData('d/GIFCLOUD.COL')]]), language: 'english' });
+    const manifest = JSON.parse(fs.readFileSync(path.join(DATA_ROOT, 'manifest.json'), 'utf8'));
+    const files = readDataMap(manifest.files.filter((item) => item.bundle === 'menu').map((item) => item.path));
+    const data = GameData.build({ files, language: 'english' });
     const xlat = new XlatTable(fs.readFileSync(path.join(REPO_ROOT, 'webpj/translations/xlat.korean'), 'utf8'));
-    app._gameData = data; app._root = { ownerDocument: { title: 'before' } }; app._resources = { translate: (text) => xlat.translate(text) }; app._initializeClientWorldStorage(game, data.files); app._initializeClientGuide();
+    app._gameData = data; app._root = { ownerDocument: { title: 'before' } }; app._resources = { ...buildMenuResources(files), translate: (text) => xlat.translate(text) }; app._initializeClientWorldStorage(game, data.files); app._initializeClientGuide();
     const guide = app._clientGuide; let world;
     const localLogin = { startingProgress: () => {}, progress: () => {}, closeProgress: () => {} };
     app._layout = { logicalWidth: 1024, logicalHeight: 768, visible: false }; app._surface = new IndexedSurface(1024, 768); app._presenter = new IndexedPresenter(null); app._syncClientCloudOptions(); app._initializeClientGump();
-    const hudModes = [], hud = app._clientGump.createBase(0, 10, 10, 0x800, (event, mode) => { hudModes.push([event, mode]); return 1; }); app._clientGump.attach(hud, 0, 0);
+    // 교체될 가짜 HUD 대신 같은 실제 입력 트리로 들어오는 모드 통지를 관찰한다.
+    const hudModes = [], input = app._clientGump.input(), route = input.route.bind(input);
+    input.route = (...args) => { hudModes.push(args.slice(0, 2)); return route(...args); };
     app._initializeClientPalette(game); app._initializeClientPaletteCache(game);
     const sharedColors = app._campaignSharedServices();
     assert.equal(sharedColors.colorSortInput, app._clientColorSort); assert.equal(sharedColors.ownerColorTables, app._clientColorSort.ownerTables);
@@ -842,7 +862,8 @@ test('Netstorm Client World: 실제 앱 State7 부모와 State8 로컬 로그인
         assert.ok(app._clientKencloud.globals().cache); assert.equal(new TextDecoder().decode(app._clientKencloud.paletteName().subarray(0, 8)), 'gifcloud');
         assert.equal(state.phase[0], 8); assert.equal(state.next[0], 9); assert.equal(request.consumed, true); assert.equal(world.connecting, true);
         assert.deepEqual([...app._clientGameplay.camera().target().limits], [3072, 2048]);
-        assert.equal(app._clientKencloud.worldRedraw().value, 1); assert.equal(app._clientGameplay.mapRevision().value, 1);
+        // 공통 State 부모와 실제 HUD 생성의 갱신 통지가 기존 로그인 갱신보다 먼저 적용된다.
+        assert.equal(app._clientKencloud.worldRedraw().value, 1); assert.equal(app._clientGameplay.mapRevision().value, 3);
         assert.equal(session.world().storage, app._surfaceStorage);
         app._canvas = {}; app._render = () => {}; app._startFrameLoop = () => {};
         const order = [], poll = session.pollLocalConnectionState.bind(session), pump = session.pumpLocalConnection.bind(session), runGuide = guide.run.bind(guide);
@@ -855,6 +876,7 @@ test('Netstorm Client World: 실제 앱 State7 부모와 State8 로컬 로그인
             assert.deepEqual(order.splice(0), ['state', 'packet', 'guide']);
         }
         assert.equal(session.localConnectionReady(), true); assert.equal(world.connecting, true);
+        prepareAppStateCursor(app, session);
         // 같은 앱 전역의 표본을 실제 Session 전송 프레임에서 처리하고 다음 프레임의 시계에 반영한다.
         const sync = app._clientLocal.clockSynchronization(), samples = app._clientLocal.clockSamples();
         // Guide 미션은 월드에 들어서며 게임이 멈춘 채(PauseMissionWorldEntry) 첫 안내 창을 기다린다. 시계 보정이 게임 시각에 반영되는 모습을 보도록 그 한 단계를 풀고(관문의 자기 정지 표식 포함), 보정 전의 시계 차이를 기준으로 삼는다. (2026-11-23 WB04-E1282)
