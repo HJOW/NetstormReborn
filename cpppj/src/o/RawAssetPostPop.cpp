@@ -228,7 +228,7 @@ void RawAssetPostPop::Residence(Sid sid,std::uint32_t flags) const {
         AssetSlot(pool_,sid)[12]&=0xf0;AssetNeed(hooks_.notifySurface)(sid);
         if (patch) {
             auto value=std::bit_cast<std::int32_t>(Read(pool_.Slot(sid),36));
-            if (state_.residenceAnimation) {
+            if (state_.SavedGame()) {
                 value=std::bit_cast<std::int32_t>(static_cast<std::uint32_t>((value/2)*2)+(pool_.Slot(sid)[12]&15));
                 const auto group=value<6 ? 0 : value<12 ? 1 : value<18 ? 2 : 3;
                 value=std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(value)-static_cast<std::uint32_t>(group*6));

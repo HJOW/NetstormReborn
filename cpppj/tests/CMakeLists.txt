@@ -3940,7 +3940,8 @@ netstorm_apply_compiler_options(netstorm_chat_channels_tests)
 
 # LAN 보정의 음수 경과와 원본 시계/Archer 회귀만 창 없이 실행하는 집중 대상이다(1368).
 target_sources(netstorm_tests PRIVATE CampaignClockTests.cpp)
-add_executable(netstorm_lan_clock_tests FocusedTestMain.cpp CampaignClockTests.cpp GameClockResetTests.cpp ArcherAnimationTests.cpp RawSurfaceWorldTests.cpp)
+target_sources(netstorm_tests PRIVATE GameClockEpochTests.cpp)
+add_executable(netstorm_lan_clock_tests FocusedTestMain.cpp CampaignClockTests.cpp GameClockEpochTests.cpp GameClockResetTests.cpp StartupStateCheckTests.cpp ArcherAnimationTests.cpp RawSurfaceWorldTests.cpp)
 target_link_libraries(netstorm_lan_clock_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_lan_clock_tests)
 target_compile_definitions(netstorm_lan_clock_tests PRIVATE ${_netstorm_menu_session_definitions})
@@ -3955,3 +3956,8 @@ target_sources(netstorm_tests PRIVATE TutorialObjectiveTests.cpp)
 add_executable(netstorm_tutorial_objective_tests FocusedTestMain.cpp TutorialObjectiveTests.cpp TutorialOneTests.cpp TutorialTwoTests.cpp TutorialLaterTests.cpp MissionFrameGateTests.cpp GumpEventsTests.cpp)
 target_link_libraries(netstorm_tutorial_objective_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_tutorial_objective_tests)
+
+# LAN 복구의 거주 구역 savedGame 결선과 기존 파생 후처리 원문을 창 없이 대조한다.
+add_executable(netstorm_lan_residence_tests FocusedTestMain.cpp AssetPostPopTests.cpp)
+target_link_libraries(netstorm_lan_residence_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_lan_residence_tests)

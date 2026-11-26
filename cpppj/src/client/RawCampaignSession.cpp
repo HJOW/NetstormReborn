@@ -1118,6 +1118,7 @@ struct RawCampaignSession::Impl {
         if (!world.Storage()->UsesNativeTransmissionDevices()) anchorState.graphAssertion=[this](auto expression,auto,auto line) { if (!services.ai.assertion) throw std::logic_error("Graph SID 조회 실제 진단 장치 미연결 "+std::to_string(line));services.ai.assertion(expression); }; //Native는같은장기Client진단을유지하고독립typed만기존Session장치를쓴다.
         placement.anchor.graphAssertion=anchorState.graphAssertion; // 지형 생성용 고정 파이프라인도 같은 현재 진단을 빌리며 gameplay 쪽은 매 요청 anchorState 전체를 복사한다.
         assetState.sharedAuthority=gameplayGlobals->Authority().get();gunState.sharedAuthority=gameplayGlobals->Authority().get();regularState.sharedAuthority=gameplayGlobals->Authority().get(); // 첫 파생 모듈 전에 같은 owner를 연결하며 준비된false를 true로 덮지 않는다.
+        assetState.sharedSavedGame=&localStateGlobals->SavedGame(); // Residence 복구 테마 정규화는005c85d4의 같은 현재값을 읽으며 애니메이션 옵션으로 바꾸지 않는다.
         assetState.inBattle=true;assetState.localOwner=services.installMode==CampaignInstallMode::GeneralBattle || services.installMode==CampaignInstallMode::MetaMap ? static_cast<std::uint8_t>(playerState.battleOwner) : 1;
         if (services.installMode==CampaignInstallMode::MetaMap) {
             // State19의 같은 모드/캐시를 검사하고 비편집 처리기 별칭만 맞춘다. 원문 known0은 HUD 뒤 부모가 쓴다.

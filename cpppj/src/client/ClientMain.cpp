@@ -380,7 +380,15 @@ int Client::Run() {
     else screen_->LoadPalette(GamePalette(files_.Read(palettePath)),options_.edition); // CD호스트의기존값형입구는별도판본으로유지한다.
     if (options_.edition==o::OriginalEdition::Patch1078) registeredMessages_.message=RegisterWindowMessageA("NETSTORMOOGABOOGA"); //00438dc0의 팔레트 뒤 원문 위치다. 서버 시작 통지도 같은 ID로 받는다.
     // [원본] 설치 검사(GameInstalledTest)·zacket·프로토콜 검사는 아직 연결하지 않았다.
-    *clock_ = o::GameClock(ClientMilliseconds()); // "init full time"(FUN_00461090)의 시작 시각.
+    constexpr std::uint32_t clockEpoch=0x32c85780U; // 00461090이 time32에서 감산하는 원본 기준 초다.
+    auto clockOrigin=ClientMilliseconds();std::uint32_t clockBase{}; // 고정 시각 대조는 기존0 기준·원점·최초 프레임 순서를 유지한다.
+    if (!FixedClientTimeEnabled()) {
+        const auto previousSecond=ClientUnixSeconds(); // 원본은 UTC 초가 바뀐 뒤 밀리초 원점과 time32 기준 초를 함께 잡는다.
+        while (ClientUnixSeconds()==previousSecond) ::Sleep(1); // 바쁜 대기 대신 OS에 양보하고 같은 초 경계 정렬을 보존한다.
+        clockOrigin=ClientMilliseconds();clockBase=static_cast<std::uint32_t>(ClientUnixSeconds())-clockEpoch;
+    }
+    *clock_ = o::GameClock(clockOrigin,clockBase); // 원본의 epoch 밀리초는 Wall/Game 두 계산의 DWORD 감김에 함께 들어간다.
+    if (!FixedClientTimeEnabled()) *time_=clock_->Capture(ClientMilliseconds()); // 실제 InitFullTime의 최초 캡처로 첫 프레임 delta에 epoch 전체가 들어가지 않게 한다. 검사 모드의 frame 번호는 유지한다.
     if (options_.edition==o::OriginalEdition::Patch1078) clock_->BindSynchronizationTicks(localStateGlobals_->GameTicks(),localStateGlobals_); // 같은 실제0055b4ac와 owner를 보유하여 외부 공유 시계가 Client보다 오래 남아도 주소 대여를 유지한다.
     InitializeClientPlayerRecords(*this); // PATCH0043952c/CD00406200의 실제 판본별 Player 초기화이며 첫 메뉴 전에 같은 장기 기록을 구성한다.
     //00439537의초기ColorSort입력위치다.이캡처만으로미연결43b430검색/색띠전체를성공시킨것은아니다.

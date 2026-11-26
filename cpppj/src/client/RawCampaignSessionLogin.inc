@@ -174,6 +174,9 @@ struct RawCampaignSession::Impl::Login {
         hooks.fortAvailable=[this](std::uint32_t owner) { return owner<9 && Get(s.headers,owner*20)!=0; };hooks.loadCurrentFort=[this] { Reload(s.playerState.templateOwner); };
         hooks.fortCore=[this](std::uint32_t owner) { return s.templateState->Get(owner); };hooks.touchFort=[this](std::uint32_t owner) { s.templateState->Changed(owner); };
         hooks.localAddress=[this] { return Address(); };hooks.uiMode=[this](std::uint32_t mode) { SetUiMode(mode); };
+        hooks.setReconnectSp=[this](float amount) { // 004477d0: 현재 Editor 정책과 로컬 known 관문 뒤 같은 분산 SP를 쓰고 HUD는 항상 갱신한다.
+            const auto value=s.globals.editor ? 194162.0F:amount;if (s.playerState.playerKnown) s.sp.Set(s.playerState.battleOwner,std::bit_cast<std::uint32_t>(value));Need(effects.refresh)();
+        };
         hooks.refreshFort=s.services.install.refreshWindowTitle;hooks.loginTimer=[this](bool start) { timer->Run(start); };hooks.inputMode=[this](bool mode) { inputMode=mode;Need(effects.refresh)(); };
         return hooks;
     }

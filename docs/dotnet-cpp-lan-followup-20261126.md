@@ -37,3 +37,9 @@ DN의 제품 기준1339·마지막 완료1.076·기존 검사 수/진행률을 �
 1373의 DN-MP-05 참고 검증: CP의 새 두 Fort/실시간 TCP에서 Wind 신전 완성 뒤 실제 생산 아이콘으로 골렘(sunWalker/TYPE133)을 배치했다. 양쪽 신규 SID15249/owner1/좌표116,206/HP50·SP1500→1100·호스트 복구 저장owner1/SP1100·두 종료0을 확인했다. 비용400은 실제 TYPE 후처리의 운반 기본 단가이며 metadata의 후처리 전 cost0과 구별한다. stockEnabled=0에서는 수량0만으로 취득을 막지 않는다. 이 실행은 DN의 생산/통신 재현으로 세지 않는다. [CP1373 근거](exe/cpp-lan-production-1373-20261127.md)·[봇 사용법](testing/cpp-lan-opponent-guide.md).
 
 1374의 DN-MP-05 참고 검증: CP의 같은 실제 TCP에서 썬 워크샾800 SP와 단일 다리0 SP를 추가 건설해 양쪽 객체/비용·호스트 복구 저장SP300·두 종료0을 확인했다. Factory는 건설 중에도 TYPE/VT가 같으므로 객체 존재로 완료를 판정하지 않는다. 실제 HP3000과 extra의 abstract bit0 해제를 기다린다. 다리는 자산명 bridge만 선택하고 별도 bridgeConnector를 섞지 않는다. 원본 pattern0은 신규 bridge1개이며 HP가 없는 타입이므로 보고HP0이 정상이다. DN 재현/완료로 세지 않는다. [CP1374 근거](exe/cpp-lan-extra-build-1374-20261127.md).
+
+| 추가 ID | CP에서 확정한 원문 계약 | DN 후속 |
+| --- | --- | --- |
+| DN-MP-08 | CP1375의 실제 새 프로세스 복구에서 ①00461090의 time32−0x32c85780 기준 초/초 변환 전 DWORD 밀리초 감김 누락 ②State13의004477d0 로컬 known/Editor/SP/HUD 장치 누락 ③Residence PostPop의005c85d4(SavedGame)를 애니메이션 bool로 오인한 미결선을 교정했다. 복구 frame13에서 테마12를 중복 가산해25가 되는 실제 오류도 확인했다. | R11의 기존 참가자 재시작·저장 복구에 같은 실제 시계/Player/SP/SavedGame을 연결한다. Native reader가 사용하지 않는 저장 SP 필드를 새 정책으로 읽거나 SP·ACK·프레임을 주입하지 않는다. SavedGame은 Notify 뒤 현재값을 읽으며 독립 fixture 입력과 구별한다. DN 대응 코드 결함·재현·완료로 세지 않는다. |
+
+CP1375는 공유 SID객체6,525개·로컬 생성 표면45개·SP300/6500과 기존 owner2/ID·세 종료0, 집중130/130·튜토리얼 실제 회귀를 확인했다. 로컬 player는 별도 참가자/owner로 확인하고, SID<15000의 island/islandStalag/bridgeConnector는 frame 포함 나머지 행의 다중집합으로 대조한다. 공유 객체는 SID를 유지하며 비동기 그림 프레임만 제외하고 다리 frame/수명은 보존한다. 원본은 알 수 없는 새 ID의 중도 참가를 거부하며, 기존 ID 복구와 새 ID 기능 추가는 별도 범위다. [CP1375](exe/cpp-lan-restart-1375-20261127.md).

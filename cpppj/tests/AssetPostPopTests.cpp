@@ -380,6 +380,22 @@ TEST_CASE(AssetParentsCurrent_NotifyChangesCurrentFrameNibbleAndAnimation) { // 
 TEST_CASE(AssetParentsCurrent_OwnerCallbackKeepsPhysicalFreeContainedSlot) { // 소유자 콜백이 free/contained와 TYPE를 바꿔도 같은 물리 슬롯의 원문 쓰기를 유지한다.
     AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,6);scene.reserveMask=0;auto hooks=scene.Hooks();hooks.setOwner=[&](Sid sid,auto owner) { auto raw=AssetCurrentSlot(scene,sid);raw[34]=static_cast<std::uint8_t>(owner);raw[11]=9;raw[10]=255; };AssetCurrentBody body(scene,std::move(hooks));body.Run();CHECK(scene.pool.Slot(kSource)[11]==9 && scene.pool.Slot(kSource)[10]==255 && scene.pool.Slot(kSource)[12]==0xc0 && Get(scene.pool.Slot(kSource),42)==25 && scene.baseState.depth==0);
 }
+
+// 저장 여부는 생성 때 복사하지 않고 마지막 Notify가 바꾼 실제 Client 값을 소비해야 한다.
+TEST_CASE(AssetParentsCurrent_ResidenceReadsSharedSavedGameAfterNotify) {
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,6);scene.reserveMask=0;bool saved{}; // 공유 Client 복구 값과 독립 옛 입력을 서로 다르게 둔다.
+    scene.state.sharedSavedGame=&saved;scene.state.residenceAnimation=false;auto hooks=scene.Hooks();hooks.surface=[](float,float) { return Sid{}; };
+    hooks.notifySurface=[&](Sid sid) { Put(AssetCurrentSlot(scene,sid),36,13);saved=true; }; // 실제 통지 뒤 frame13의 테마12를 제거해야 한다.
+    AssetCurrentBody body(scene,std::move(hooks));body.Run();CHECK(saved && Get(scene.pool.Slot(kSource),42)==0 && Get(scene.pool.Slot(kSource),36)==13);
+}
+
+// 실제 새 게임false는 독립 입력true보다 우선하며 원본의 비복구 분기를 유지해야 한다.
+TEST_CASE(AssetParentsCurrent_ResidenceSharedNewGameOverridesLegacyInput) {
+    AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,6);scene.reserveMask=0;bool saved=true; // 효과 이전true를 캡처하는 결선도 구별한다.
+    scene.state.sharedSavedGame=&saved;scene.state.residenceAnimation=true;auto hooks=scene.Hooks();hooks.surface=[](float,float) { return Sid{}; };
+    hooks.notifySurface=[&](Sid sid) { Put(AssetCurrentSlot(scene,sid),36,13);saved=false; }; // 현재false이면 테마 구간을 감산하지 않는다.
+    AssetCurrentBody body(scene,std::move(hooks));body.Run();CHECK(!saved && Get(scene.pool.Slot(kSource),42)==13 && Get(scene.pool.Slot(kSource),36)==13);
+}
 TEST_CASE(AssetParentsCurrent_SignedFullListSkipsUnneededStorage) { // signed count>=capacity면 과거 배열 포인터와 쓰기 장치를 해석하지 않는다.
     for (const auto pair:{std::array<std::uint32_t,2>{7,4},{0,0xffffffffU},{0xffffffffU,0xfffffffeU}}) { // 양수 초과와 두 음수 용량 비교를 실제 jge에 맞춰 공급한다.
         AssetScene scene(OriginalEdition::Patch1078);PrepareAssetCurrent(scene,6);scene.reserveMask=0;SquidPostPopList current;current.BindCurrent({[]()->std::span<std::uint32_t> { throw std::logic_error("가득 찬 목록의 미도달 저장소"); },[&] { return pair[1]; },[&] { return pair[0]; },[](auto) { throw std::logic_error("가득 찬 목록의 미도달 쓰기"); }});scene.state.sharedResidences=&current;

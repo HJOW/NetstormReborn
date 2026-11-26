@@ -1,5 +1,5 @@
 // 범위: 정상 시작 상태의 32비트 밀리초 시계·중첩 정지·프레임 시각 고정.
-// 원본 초기 시간 오프셋과 FPS 통계는 아직 옮기지 않았다. OS timeGetTime 호출은 외부 입력으로 대체한다.
+// 시작 epoch 초와 OS timeGetTime은 외부 입력으로 공급한다. FPS 통계는 별도이다.
 #include "o/GameClock.h"
 #include <limits>
 #include <stdexcept>
@@ -9,15 +9,15 @@ namespace netstorm::o {
 // 원본 DAT_0050a668: 밀리초 나머지를 초로 환산하는 배율.
 constexpr double kMillisecondSeconds = 0.001;
 // 원본 시작 밀리초 기준을 기록한다.
-GameClock::GameClock(std::uint32_t originMilliseconds) : origin_(originMilliseconds) {}
+GameClock::GameClock(std::uint32_t originMilliseconds, std::uint32_t baseSeconds) : origin_(originMilliseconds), baseSeconds_(baseSeconds) {}
 // 원본과 같은 unsigned 감산으로 32비트 래핑을 재현한다.
 double GameClock::WallSeconds(std::uint32_t milliseconds) const {
-    const std::uint32_t elapsed = milliseconds - origin_;
+    const std::uint32_t elapsed = (milliseconds - origin_) + baseSeconds_ * 1000U; // 원문은 초 변환 전에 epoch 밀리초까지 DWORD로 감싼다.
     return static_cast<double>(elapsed / 1000) + static_cast<double>(elapsed % 1000) * kMillisecondSeconds;
 }
 // 정지 시간은 프레임 시간차와 별도로 누적한다.
 double GameClock::GameSeconds(std::uint32_t milliseconds) const {
-    if (pauseDepth_!=0) return pausedGame_;const auto elapsed=(milliseconds-origin_)-(synchronizationTicks_ ? *synchronizationTicks_ : 0U); // 원문은 signed 보정 비트도 unsigned 밀리초 감김으로 감산한다.
+    if (pauseDepth_!=0) return pausedGame_;const auto elapsed=(milliseconds-origin_)-(synchronizationTicks_ ? *synchronizationTicks_ : 0U)+baseSeconds_*1000U; // 원문은 epoch와 signed 보정 비트도 unsigned 밀리초 감김으로 계산한다.
     return (static_cast<double>(elapsed/1000)+static_cast<double>(elapsed%1000)*kMillisecondSeconds)-pausedTotal_;
 }
 void GameClock::BindSynchronizationTicks(const std::uint32_t& ticks,std::shared_ptr<void> owner) { synchronizationOwner_=std::move(owner);synchronizationTicks_=&ticks; } // 같은 Native writer/cleanup 결과를 매 게임시각 조회에 직접 반영하고 실제 소유자를 유지한다.

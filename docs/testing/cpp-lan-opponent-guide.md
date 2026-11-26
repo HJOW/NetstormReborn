@@ -12,7 +12,7 @@ python -X utf8 tools/cpp_lan_opponent.py --exe cpppj/build/bin/Release/Netstorm.
 
 입력은 영어1024×768의 실제 라벨과 전용 이름/옵션창의 실제 좌표를 사용한다. `--fixed-frame-ms`나 전투 결과 주입을 쓰지 않는다. 요청30초·작업별 제한 시간과 자기 자식 종료 처리가 있어 응답 없는 게임을 무한 대기하지 않는다. 포획·희생·특정 공격·승리는 이 도구의 기본 검사에 포함하지 않는다.
 
-1367은 일반 Fort 객체/공유 모드를 교정해 두 참가자 시작을 통과했다.1368은 원문 시계 보정의 음수 경과/역행을 Archer와 월드에서 허용하고 실제60초 이상 대기2회/각 두 정상 종료를 확인했다. 새 프로필은 표준 registeredSubId에6356993/6356994를 설정한다. 1369에서17/18과 실제 서버 인수를 확인했다. 1370은 Wind 신전 한 건의 실제 객체/SP·복구 저장을 확인했다. 유닛 생산은1373·추가 건설은1374에서 확인했고, 이탈 뒤 새 참가자 재접속이 잔여다. 단순 월드 규모 일치를 개별 객체 전체 일치로 세지 않는다.
+1367은 일반 Fort 객체/공유 모드를 교정해 두 참가자 시작을 통과했다.1368은 원문 시계 보정의 음수 경과/역행을 Archer와 월드에서 허용하고 실제60초 이상 대기2회/각 두 정상 종료를 확인했다. 새 프로필은 표준 registeredSubId에6356993/6356994를 설정한다. 1369에서17/18과 실제 서버 인수를 확인했다. 1370은 Wind 신전 한 건의 실제 객체/SP·복구 저장을 확인했다. 유닛 생산은1373·추가 건설은1374에서 확인했고, 기존 참가자의 새 프로세스 복구는1375에서 확인했다. 새 ID 추가는 범위 확인 대상이다. 단순 월드 규모 일치를 개별 객체 전체 일치로 세지 않는다.
 
 `cpppj/build/bin/Release/netstorm_lan_clock_tests.exe`는 창 없이 시계 Reset·Archer 양판본·월드 회귀와 LAN 보정 경계를 실행한다. `--list`로 사례 목록, `--filter CampaignClock`으로 새 관련 사례만 선택한다. 기본 전체는21개이며 기존 보호 자산/fixture를 읽기만 한다.
 
@@ -36,4 +36,12 @@ python -X utf8 tools/cpp_lan_opponent.py --exe cpppj/build/bin/Release/Netstorm.
 python -X utf8 tools/cpp_lan_opponent.py --exe cpppj/build/bin/Release/Netstorm.exe --game extracted/cpp-reset-all-1325/game --output extracted/lan-extra-build-new --produce-golem --extra-build
 ```
 
-관련 창 없는 검사는 `cpppj/build/bin/Release/netstorm_construction_current_tests.exe`이며 --list/--filter도 지원한다. 현재 건설 상태·요청·예측 정리와 실제 확정 조각 교체19사례를 실행하며1374에서 전체 통과했다. [건설 완료 조건/실행 근거](../exe/cpp-lan-extra-build-1374-20261127.md). 추가 건설은 완료했고, 새 참가자 재접속은 다음 작업이다.
+관련 창 없는 검사는 `cpppj/build/bin/Release/netstorm_construction_current_tests.exe`이며 --list/--filter도 지원한다. 현재 건설 상태·요청·예측 정리와 실제 확정 조각 교체19사례를 실행하며1374에서 전체 통과했다. [건설 완료 조건/실행 근거](../exe/cpp-lan-extra-build-1374-20261127.md). 추가 건설은 완료했고, 기존 참가자 재시작 복구는1375에서 완료했고 새 ID 추가는 범위 확인 대상이다.
+
+1375의 `--restart-peer`는 상대를 정상 종료한 뒤 같은 격리 사용자 폴더의 cfg/Fort/실제 복구 파일로 새 프로세스를 시작한다. 메인 메뉴의 복구 질문에서 Yes를 클릭하며 새 로비/새 ID를 생성하지 않는다. 기존 owner2와 공유 월드·SP·모든 정상 종료를 대조한다. `--lobby-only`·`--takeover`와 함께 선택할 수 없다. 원본은 진행 중 전투의 새 ID 참가를 지원하지 않으므로 그 추가 여부는 별도 범위 확인 대상이다.
+
+```powershell
+python -X utf8 tools/cpp_lan_opponent.py --exe cpppj/build/bin/Release/Netstorm.exe --game extracted/cpp-reset-all-1325/game --output extracted/lan-restart-new --produce-golem --extra-build --restart-peer
+```
+
+1375에서 원본 epoch 시계·State13의 로컬 SP 복원·Residence의 실제 SavedGame 결선을 교정하고 위 전체 경로를 통과했다. 공유 객체 SID는 유지하고 로컬 player와 flags2로 생성한 island/islandStalag/bridgeConnector의 SID를 구별한다. 다리 frame/수명과 로컬 표면의 색/방향도 비교한다. 창 없는 관련 대상은 `netstorm_lan_clock_tests`25개·`netstorm_cd_presence_tests`14개·`netstorm_lan_residence_tests`91개이며 모두 통과했다. [근거/비교 범위](../exe/cpp-lan-restart-1375-20261127.md).

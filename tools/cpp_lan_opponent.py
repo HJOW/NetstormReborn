@@ -9,6 +9,7 @@
 """
 import argparse
 import base64
+from collections import Counter
 import hashlib
 import json
 import os
@@ -22,8 +23,8 @@ import time
 class Peer:
     """실제 Netstorm.exe 한 개와 제한 시간이 있는 MCP 입출력을 소유한다."""
 
-    def __init__(self, exe, game, output, role, lobby_port, game_port, trace=False):
-        """새 사용자 디렉터리로 시작하며 생성된 Fort/설정/로그를 결과 옆에 보존한다."""
+    def __init__(self, exe, game, output, role, lobby_port, game_port, trace=False, resume_user=None):
+        """새 사용자 또는 지정한 이전 격리 저장소로 시작하고 관측 파일을 역할별로 보존한다."""
         self.output = output / role  # 이 참가자의 관측·사용자 파일만 저장한다.
         self.output.mkdir()
         self.role = role  # 사람이 읽을 역할이며 게임 Player 번호를 대신하지 않는다.
@@ -31,17 +32,22 @@ class Peer:
         self.replies = queue.Queue()  # 읽기 스레드가 받은 실제 응답 또는 EOF다.
         self.transcript = []  # 큰 이미지 본문을 제외한 도구/응답 요약이다.
         self.exit_code = None  # 최종 실제 프로세스 종료 코드다.
+        self.user = resume_user or self.output / "user"  # 재시작은 이전 실제 Fort/복구 파일을 그대로 읽는다.
         settings = (f"welcomeGiven=1;tellTips=0;autoDemo=0;intro=1;edgeScroll=0;"
                     f"SCREENW=1024;SCREENH=768;currentLanguage=english;"
-                    f"registeredSubId={0x610001 if role == 'host' else 0x610002};"
-                    f"lastMultiplayerFort=LanBot{role};lanServerAddress=127.0.0.1;"
+                    f"lanServerAddress=127.0.0.1;"
                     f"lanLobbyPort={lobby_port};gameServerPort={game_port}")  # 표준 옵션으로 새 Fort·서로 다른 오프라인 등록ID·로컬 주소를 선택한다.
+        if resume_user is None:
+            settings += (f";registeredSubId={0x610001 if role == 'host' else 0x610002}"
+                         f";lastMultiplayerFort=LanBot{role}")  # 최초 두 프로필에만 새 ID/이름을 지정한다.
+        else:
+            settings += ";startupStateCheck=1"  # 제품의 기존 시작 복구 안내를 켜며 저장 내용은 바꾸지 않는다.
         if trace:
             settings += ";tracelevel=29"  # 원문1d 결과 로그를 표준 필터 옵션으로 선택한다.
         command = [str(exe), "--run", str(game), "--mcp", "--window", "--no-audio", "--set", settings]  # 고정 시각/자동 전투 옵션을 사용하지 않는다.
         self.stderr = (self.output / "stderr.log").open("wb")  # 게임 진단 stdout은 MCP가 stderr로 분리한다.
         self.process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-                                        stderr=self.stderr, env=dict(os.environ, NETSTORM_USER_DATA=str(self.output / "user")),
+                                        stderr=self.stderr, env=dict(os.environ, NETSTORM_USER_DATA=str(self.user)),
                                         creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0)
         self.reader = threading.Thread(target=self._read, daemon=True)  # stdout의 큰 PNG 응답도 계속 비운다.
         self.reader.start()
@@ -306,6 +312,69 @@ def build_extra(peers):
                 sourceBridge=bridge, bridges=bridges, saved=dict(bytes=len(image), owner=1, sp=expected_sp[0], sha256=hashlib.sha256(image).hexdigest()))
 
 
+def shared_world(report):
+    """공유 객체는 SID를 보존하고 로컬 Player/접속부 SID와 비동기 그림 프레임만 구별한다."""
+    objects = {}  # 서버가 공유하는 실제 SID별 나머지 객체 필드다.
+    connectors = Counter()  # 각 클라이언트가 따로 만드는 접속부/종유석은 나머지 전체 필드의 다중집합이다.
+    for row in fields(report, "object"):  # 원문 행을 복사하고 비교 대상에서 제외한 열만 분리한다.
+        if row[1].lower() == "player":
+            continue
+        stable = tuple(row[1:8] + row[9:])  # 현재 그림 프레임8을 제외하고 위치/목표/수량/HP/내용물 수는 유지한다.
+        if int(row[0]) < 15000 and row[1].lower() in ("bridgeconnector", "islandstalag", "island"):
+            connectors[tuple(row[1:])] += 1  # flags2로 만든 로컬 받침/종유석/접속부만 구별하고 색/방향 frame도 보존한다.
+        else:
+            objects[row[0]] = tuple(row[1:]) if row[1].lower() == "bridge" else stable  # 다리의 품질/손상 frame을 일반 애니메이션과 구별한다.
+    bridges = sorted(tuple(row) for row in fields(report, "raw_bridge_fields"))  # 수명WORD와 frame code flags도 같은 실제SID로 대조한다.
+    return objects, connectors, bridges
+
+
+def restart_peer(peers, args):
+    """기존 상대를 정상 종료한 뒤 같은 저장소의 새 프로세스에서 원본 복구 안내를 실제로 선택한다."""
+    host, previous = peers  # 새 ID 중도 참가와 구별하여 이전 참가자의 가입 기록을 유지한다.
+    previous.observe("restart-before-close")
+    previous.close()
+    if previous.exit_code != 0:
+        raise AssertionError("재시작 전 상대가 정상 종료하지 않았습니다")
+    host.wait(lambda text: any(row["owner"] == 2 and not (row["flags"] & 1) for row in player_identity(text)),
+              "이전 참가자의 실제 연결 비트 해제", seconds=45)
+    host.observe("restart-peer-disconnected")
+    saved = previous.user / "Saves/!state.dat"
+    image = saved.read_bytes()  # 실제 정상 종료가 남긴 복구 파일을 복사 관측만 한다.
+    (previous.output / "restart-state.dat").write_bytes(image)
+    if len(image) != 976:
+        raise AssertionError("이전 참가자의 실제 복구 저장 크기 불일치")
+    resumed = Peer(args.exe, args.game, args.output, "restarted", args.lobby_port, args.game_port,
+                   trace=True, resume_user=previous.user)  # 기존 cfg/Fort/저장 파일만 제품이 다시 읽는다.
+    peers.append(resumed)
+    resumed.request("initialize", dict(protocolVersion="2025-06-18", capabilities={}, clientInfo=dict(name="lan-opponent-restart", version="1")))
+    resumed.wait(lambda text: any("Attempt to reconnect?" in row[-1] for row in fields(text, "raw_html_body")),
+                 "저장 파일의 실제 시작 복구 안내", seconds=30)
+    resumed.observe("restart-prompt")
+    resumed.action("click", "Yes", 10)
+    resumed.wait(battle_ready, "재시작 참가자의 실제 일반 로그인14/PlayerKnown", seconds=60)
+    deadline = time.monotonic() + 30  # phase14 이후 도착하는 전체 월드도 실제로 다 받을 때까지 기다린다.
+    while time.monotonic() < deadline:  # 호스트는 움직이는 명령을 받지 않으므로 공유 상태가 안정되면 같아야 한다.
+        current = [peer.report() for peer in (host, resumed)]
+        if shared_world(current[0]) == shared_world(current[1]) and fields(current[0], "raw_sp")[0][1:] == fields(current[1], "raw_sp")[0][1:]:
+            break
+        resumed.call("netstorm_wait_frames", frames=30)
+    settled = [peer.observe("restart-settled") for peer in (host, resumed)]
+    worlds = [shared_world(text) for text in settled]
+    identities = [player_identity(text) for text in settled]
+    sp = [list(map(int, fields(text, "raw_sp")[0][1:])) for text in settled]
+    if worlds[0] != worlds[1] or sp[0] != sp[1]:
+        delta = [sid for sid in worlds[0][0].keys() | worlds[1][0].keys() if worlds[0][0].get(sid) != worlds[1][0].get(sid)]  # 실패한 실제 SID를 숨기지 않고 결과에 남긴다.
+        raise AssertionError(f"재시작 뒤 공유 월드/SP 불일치: SID={delta[:30]}, SP={sp}")
+    if identities[0] != identities[1] or any(row["flags"] != 0x43 for row in identities[0]):
+        raise AssertionError("재시작 뒤 두 실제 참가자 ID/이름/로그인/Ready 불일치")
+    if fields(settled[1], "raw_session")[0][0] != "2":
+        raise AssertionError("재시작 참가자가 이전 owner2 슬롯을 복구하지 못했습니다")
+    return dict(identity=identities[0], sp=sp[0], sharedObjects=len(worlds[0][0]),
+                localDerivedObjects=sum(worlds[0][1].values()),
+                saved=dict(bytes=len(image), sha256=hashlib.sha256(image).hexdigest()),
+                roles=[fields(text, "raw_network_role") for text in settled])
+
+
 def main():
     """새 검증 디렉터리에 호스트와 상대 봇을 생성해 로비/전투를 검사한다."""
     parser = argparse.ArgumentParser(description=__doc__)
@@ -319,6 +388,7 @@ def main():
     parser.add_argument("--takeover", action="store_true", help="시작 검사 후 이 도구의 호스트만 강제 종료해 상대의 서버 인수를 검사")
     parser.add_argument("--produce-golem", action="store_true", help="실제 Wind 신전과 골렘 생산/배치 뒤 양쪽 객체·SP·복구 저장을 대조")
     parser.add_argument("--extra-build", action="store_true", help="골렘 생산 뒤 실제 썬 워크샾·단일 다리 건설을 추가 검증")
+    parser.add_argument("--restart-peer", action="store_true", help="이전 참가자 정상 종료 후 같은 저장소의 새 프로세스에서 복구 안내·공유 월드/SP를 검증")
     args = parser.parse_args()  # 사용자 선택은 실제 포트·자산·출력 경로로만 제한한다.
     if not (0 < args.lobby_port < 65536 and 0 < args.game_port < 65536 and args.lobby_port != args.game_port):
         parser.error("서로 다른1~65535 포트가 필요합니다.")
@@ -327,9 +397,11 @@ def main():
     if args.takeover and args.lobby_only:
         parser.error("서버 인수는 실제 전투 시작 검사와 함께 사용해야 합니다.")
     if args.produce_golem and (args.lobby_only or args.takeover):
-        parser.error("골렘 생산은 일반 전투 시작 검증에서만 단독 선택합니다.")
+        parser.error("골렘 생산은 대기실 전용/서버 인수 검사와 함께 선택할 수 없습니다.")
     if args.extra_build and not args.produce_golem:
         parser.error("추가 건설은 --produce-golem과 함께 선택해야 합니다.")
+    if args.restart_peer and (args.lobby_only or args.takeover):
+        parser.error("참가자 재시작은 일반 전투와 함께 사용해야 합니다.")
     args.exe, args.game, args.output = args.exe.resolve(strict=True), args.game.resolve(strict=True), args.output.resolve()
     args.output.mkdir(parents=True, exist_ok=False)
     peers = []  # 이 호출이 실행한 두 자식만 종료 대상으로 보관한다.
@@ -366,6 +438,8 @@ def main():
                 result["production"] = produce_golem(peers)
             if args.extra_build:
                 result["extraBuild"] = build_extra(peers)
+            if args.restart_peer:
+                result["restart"] = restart_peer(peers, args)
             if args.takeover:
                 host, bot = peers  # 이 호출이 직접 만든 실제 두 자식만 대상으로 삼는다.
                 if fields(steady[1], "raw_network_role") != [["0", "0"]]:

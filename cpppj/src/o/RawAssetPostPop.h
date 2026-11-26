@@ -22,7 +22,7 @@ struct AssetPostPopState {
     // boss: boss 여부.
     // fortMode: Fort 모드 여부.
     // checkingForms: 검사 Form 여부.
-    // residenceAnimation: 거주건물 애니메이션 여부.
+    // residenceAnimation: 독립 옛 fixture의 savedGame 입력이다. 실제 제품은 아래 공유 복구 전역을 읽는다.
     bool inBattle{},boss{true},fortMode{}; RawCheckingFlag checkingForms{}; bool residenceAnimation{};
     // loadingDepth: 로딩 깊이.
     // templeCount: 신전 개수.
@@ -64,6 +64,8 @@ struct AssetPostPopState {
     std::uint32_t IslandType() const { return currentIslandType ? *currentIslandType:islandType; } //현재후보의TYPE비교위치에서실제섬번호를읽는다.
     std::uint32_t StalagType() const { return currentStalagType ? *currentStalagType:stalagType; } //isle이아닌후보에서현재종유석번호를읽는다.
     std::uint32_t BridgeType() const { return currentBridgeType ? *currentBridgeType : bridgeType; } // WORD 저장 뒤 현재 TYPE 비교에서만 전체 DWORD를 읽는다.
+    const bool* sharedSavedGame{}; // 005c85d4: 같은 Client의 복구 여부를 직접 빌리며 Session보다 오래 살아야 한다.
+    bool SavedGame() const { return sharedSavedGame ? *sharedSavedGame:residenceAnimation; } // Residence 통지 효과 뒤 현재 복구 값을 읽고 독립 Native 입력도 유지한다.
 };
 // 외부 몸체를 생략하지 않고 호출 순서대로 연결하는 명시 경계다. 필요한 경계가 없으면 사전 검사에서 거부한다.
 struct AssetPostPopHooks {

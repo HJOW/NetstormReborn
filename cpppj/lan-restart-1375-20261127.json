@@ -1,0 +1,414 @@
+{
+  "unit": 1375,
+  "date": "2026-11-27",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "scope": "기존 참가자의 새 프로세스 복구 완료; 새 ID 중도 참가 범위는 사용자 결정 대기",
+  "result": {
+    "passed": true,
+    "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+    "exeSha256": "08a24d6532616b5c9c1511ae012b05b937ad19c95b60c1d93c16dd5044702dec",
+    "peers": [
+      {
+        "role": "restarted",
+        "exitCode": 0
+      },
+      {
+        "role": "bot",
+        "exitCode": 0
+      },
+      {
+        "role": "host",
+        "exitCode": 0
+      }
+    ],
+    "steadySeconds": 4.047385300000315,
+    "identity": [
+      {
+        "owner": 1,
+        "subscriber": 6356993,
+        "name": "LocalHost",
+        "flags": 67
+      },
+      {
+        "owner": 2,
+        "subscriber": 6356994,
+        "name": "OpponentBot",
+        "flags": 67
+      }
+    ],
+    "world": [
+      [
+        "6566",
+        "0"
+      ]
+    ],
+    "production": {
+      "templeSite": [
+        600,
+        420
+      ],
+      "unitSite": [
+        450,
+        420
+      ],
+      "beforeSp": [
+        1500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500
+      ],
+      "afterSp": [
+        1100,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500
+      ],
+      "units": [
+        [
+          {
+            "sid": 15231,
+            "asset": "sunWalker",
+            "owner": 1,
+            "x": 116.0,
+            "y": 212.0,
+            "hp": 50
+          }
+        ],
+        [
+          {
+            "sid": 15231,
+            "asset": "sunWalker",
+            "owner": 1,
+            "x": 116.0,
+            "y": 212.0,
+            "hp": 50
+          }
+        ]
+      ],
+      "saved": {
+        "bytes": 976,
+        "owner": 1,
+        "sp": 1100,
+        "sha256": "5c13c34ac2abf54a0e4b8db29402466295fae8c10d5f434842cc6d8fa6552163"
+      }
+    },
+    "extraBuild": {
+      "workshopSite": [
+        720,
+        400
+      ],
+      "workshops": [
+        [
+          {
+            "sid": 15232,
+            "asset": "sunFactory",
+            "owner": 1,
+            "x": 136.0,
+            "y": 214.0,
+            "hp": 3000
+          }
+        ],
+        [
+          {
+            "sid": 15232,
+            "asset": "sunFactory",
+            "owner": 1,
+            "x": 136.0,
+            "y": 214.0,
+            "hp": 3000
+          }
+        ]
+      ],
+      "beforeSp": [
+        1100,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500
+      ],
+      "afterSp": [
+        300,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500
+      ],
+      "sourceBridge": [
+        "114",
+        "0",
+        "2",
+        "31267362",
+        "64"
+      ],
+      "bridges": [
+        [
+          [
+            "15234",
+            "bridge",
+            "1",
+            "-1",
+            "139",
+            "213",
+            "139",
+            "213",
+            "35",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ]
+        ],
+        [
+          [
+            "15234",
+            "bridge",
+            "1",
+            "-1",
+            "139",
+            "213",
+            "139",
+            "213",
+            "35",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ]
+        ]
+      ],
+      "saved": {
+        "bytes": 976,
+        "owner": 1,
+        "sp": 300,
+        "sha256": "bd38cf26d7e4965a6fb580f41506e8f2dadd4e0f67bdbd46b8afed370a355968"
+      }
+    },
+    "restart": {
+      "identity": [
+        {
+          "owner": 1,
+          "subscriber": 6356993,
+          "name": "LocalHost",
+          "flags": 67
+        },
+        {
+          "owner": 2,
+          "subscriber": 6356994,
+          "name": "OpponentBot",
+          "flags": 67
+        }
+      ],
+      "sp": [
+        300,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500
+      ],
+      "sharedObjects": 6525,
+      "localDerivedObjects": 45,
+      "saved": {
+        "bytes": 976,
+        "sha256": "2f7acb0b786457a86e12aeeee443c593c9e0e9e39cc8263817b17e7049249415"
+      },
+      "roles": [
+        [
+          [
+            "1",
+            "1"
+          ]
+        ],
+        [
+          [
+            "0",
+            "0"
+          ]
+        ]
+      ]
+    }
+  },
+  "tutorialRegression": {
+    "passed": true,
+    "exeSha256": "08a24d6532616b5c9c1511ae012b05b937ad19c95b60c1d93c16dd5044702dec",
+    "initial": {
+      "objective": [
+        "F4를 눌러 내 섬으로 돌아오거나 다리를 놓으십시오."
+      ],
+      "gate": [
+        "1",
+        "65",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "size": [
+        "1280",
+        "720"
+      ],
+      "screenMode": [
+        "138",
+        "1280",
+        "720",
+        "1280",
+        "1"
+      ]
+    },
+    "afterF4": {
+      "objective": [
+        "다리를 총 8개 놓으십시오."
+      ],
+      "gate": [
+        "1",
+        "66",
+        "0",
+        "0",
+        "0",
+        "1",
+        "3126812.219",
+        "0"
+      ]
+    },
+    "restart": true,
+    "lifecycle": true,
+    "exitCode": 0
+  },
+  "tests": {
+    "clock": 25,
+    "state": 14,
+    "assetPostPop": 91,
+    "failed": 0
+  },
+  "protection": {
+    "files": 2810,
+    "changed": []
+  },
+  "failedRuns": [
+    {
+      "path": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-lan-1375\\restart-1",
+      "error": "TimeoutError('restarted: 저장 파일의 실제 시작 복구 안내')"
+    },
+    {
+      "path": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-lan-1375\\restart-2",
+      "error": "RuntimeError('restarted: MCP EOF, process=None')"
+    },
+    {
+      "path": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-lan-1375\\restart-3",
+      "error": "RuntimeError('restarted: MCP EOF, process=None')"
+    }
+  ],
+  "landmarksAfterRestart": [
+    {
+      "windVortex": [
+        {
+          "sid": 15229,
+          "asset": "windVortex",
+          "owner": 1,
+          "x": 129.0,
+          "y": 217.0,
+          "hp": 5000
+        }
+      ],
+      "sunWalker": [
+        {
+          "sid": 15231,
+          "asset": "sunWalker",
+          "owner": 1,
+          "x": 116.0,
+          "y": 212.0,
+          "hp": 50
+        }
+      ],
+      "sunFactory": [
+        {
+          "sid": 15232,
+          "asset": "sunFactory",
+          "owner": 1,
+          "x": 136.0,
+          "y": 214.0,
+          "hp": 3000
+        }
+      ],
+      "bridge": [
+        {
+          "sid": 15234,
+          "asset": "bridge",
+          "owner": 1,
+          "x": 139.0,
+          "y": 213.0,
+          "hp": 0
+        }
+      ]
+    },
+    {
+      "windVortex": [
+        {
+          "sid": 15229,
+          "asset": "windVortex",
+          "owner": 1,
+          "x": 129.0,
+          "y": 217.0,
+          "hp": 5000
+        }
+      ],
+      "sunWalker": [
+        {
+          "sid": 15231,
+          "asset": "sunWalker",
+          "owner": 1,
+          "x": 116.0,
+          "y": 212.0,
+          "hp": 50
+        }
+      ],
+      "sunFactory": [
+        {
+          "sid": 15232,
+          "asset": "sunFactory",
+          "owner": 1,
+          "x": 136.0,
+          "y": 214.0,
+          "hp": 3000
+        }
+      ],
+      "bridge": [
+        {
+          "sid": 15234,
+          "asset": "bridge",
+          "owner": 1,
+          "x": 139.0,
+          "y": 213.0,
+          "hp": 0
+        }
+      ]
+    }
+  ],
+  "reportSha256": {
+    "extracted\\cpp-lan-1375\\restart-4\\host\\restart-settled.tsv": "ad5f15df42756084dbf09399a408a63db32f2eeb95aa7b9184add4f5f1ea2068",
+    "extracted\\cpp-lan-1375\\restart-4\\restarted\\restart-settled.tsv": "8e6f06dd05629a563fc2654035b1dc710db3b80a1f58f8a6a33d025b2581a535"
+  }
+}

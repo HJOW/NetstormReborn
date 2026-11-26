@@ -15,8 +15,8 @@ struct FrameTime {
 // 게임 시각과 프레임 간격을 계산하고 중첩 정지 시간을 제외하는 시계이다.
 class GameClock {
 public:
-    // OS 시계는 외부에서 공급한다. 시작 밀리초와의 차이는 원본 unsigned 32비트 연산이다.
-    explicit GameClock(std::uint32_t originMilliseconds = 0);
+    // OS 시작 밀리초와 원본 epoch 기준 초를 외부에서 공급한다. 기본 기준 초0은 독립 검사용이며 합산은 unsigned 32비트다.
+    explicit GameClock(std::uint32_t originMilliseconds = 0, std::uint32_t baseSeconds = 0);
     // 00460d70(A) ↔ CD 004011b0: 원본 나눗셈·나머지 순서대로 초를 계산한다.
     double WallSeconds(std::uint32_t milliseconds) const;
     // 00460cd0(A) ↔ CD 00401130: 정지 중이면 저장값, 아니면 누적 정지 시간을 뺀 값.
@@ -35,6 +35,7 @@ public:
 private:
     // origin_: 좌표 또는 시각 계산의 기준 원점.
     std::uint32_t origin_{};
+    std::uint32_t baseSeconds_{}; // 0055b4a4: time32에서 원본 epoch를 뺀 시작 초다. 기본0은 독립 원문 검사 입력이다.
     const std::uint32_t* synchronizationTicks_{}; // 실제 장기 소유자에서 빌린 보정 주소이며 독립 시계는 기존0 보정을 유지한다.
     std::shared_ptr<void> synchronizationOwner_; // 실제 Client 바인딩은 같은 LocalState owner를 보유하여 외부 공유 시계의 주소 대여를 끝까지 유지한다.
     // pauseDepth_: 중첩된 시계 정지 요청의 수.
