@@ -1,15 +1,15 @@
-// 실제 Client Gump 트리와 Session 내용물 풀에 원본 생산 격자를 조립한다.
-// 사용: new ClientInventoryGrid(root, session, state, devices).create(columns, rows, mask). 항목 그림·생산 패널은 호출자가 연결한다.
+// 실제 Client Gump 트리와 Client 내용물 풀에 원본 생산 격자를 조립한다.
+// 사용: new ClientInventoryGrid(root, context, state, devices).create(columns, rows, mask). 항목 그림·생산 패널은 호출자가 연결한다.
 import { InventoryGump, InventoryGridNode, InventoryItemNode } from './inventory-gump.js';
 
-// 같은 현재 UI·Session과 원본 격자의 가상 부착·입력·객체 통지를 공유한다.
+// 같은 현재 UI·Client 물리와 원본 격자의 가상 부착·입력·객체 통지를 공유한다.
 export class ClientInventoryGrid {
     // 현재 Gump와 격자 실행기 및 선택적 실제 항목 공장을 빌린다.
     #root; #inventory;
     // 현재 풀·검색 전역·커서 상태와 항목 공장/기본 UI 경계를 받는다.
-    constructor(root, session, state, devices) {
-        if (!root || !session?.core || !state || !devices || typeof devices.allocateItem !== 'function' || typeof devices.baseHandle !== 'function' || typeof devices.now !== 'function') throw new TypeError('Client 생산 격자의 실제 수명·항목 장치 누락');
-        this.#root = root; const pool = session.core().pool;
+    constructor(root, context, state, devices) {
+        if (!root || !context?.storage?.pool || !context.gameplay?.finder || !state || !devices || typeof devices.allocateItem !== 'function' || typeof devices.baseHandle !== 'function' || typeof devices.now !== 'function') throw new TypeError('Client 생산 격자의 실제 수명·항목 장치 누락');
+        this.#root = root; const pool = context.storage.pool;
         const node = (token) => { const result = root.node(token); if (!result) throw new Error('Client 생산 격자의 현재 노드 누락'); return result; };
         const hooks = {
             grid: (token) => { const value = node(token); if (!(value instanceof InventoryGridNode)) throw new TypeError('Client 생산 격자 노드 오류'); return value; },
@@ -22,10 +22,10 @@ export class ClientInventoryGrid {
             forward: (...args) => root.events().bubble(...args), baseHandle: (...args) => devices.baseHandle(...args),
             local: (token, _event, point) => root.collection().screenToLocal(token, point),
             inside: (token, point) => { const current = node(token); return point[0] >= 0 && point[1] >= 0 && point[0] < current.width && point[1] < current.height; },
-            cancelCursor: () => session.cursor().cancel(), assertion: (text) => { throw new Error(`생산 격자 원본 진단: ${text}`); },
+            cancelCursor: () => context.gameplay.requireSession().cursor().cancel(), assertion: (text) => { throw new Error(`생산 격자 원본 진단: ${text}`); },
             redraw: (token, erase) => root.redraw(token, erase), clearBlink: (sid) => { pool.allocated(sid)[21] &= ~2; },
         };
-        this.#inventory = new InventoryGump(root.createState(), root.factory(), pool, session.productionFinder(), state, hooks);
+        this.#inventory = new InventoryGump(root.createState(), root.factory(), pool, context.gameplay.finder, state, hooks);
     }
     // 실제 파생 노드와 원본 가상 입력·부착·객체 소멸 경계를 생성한다.
     create(columns, rows, mask) {

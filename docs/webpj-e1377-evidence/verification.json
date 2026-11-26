@@ -1,0 +1,36 @@
+{
+  "unit": "WB04-E1377",
+  "baseCommit": "f10d17a75",
+  "node": {
+    "version": "26.13.0",
+    "focused": {
+      "tests": 9,
+      "pass": 9,
+      "fail": 0,
+      "logSha256": "ac5a7f95b32cf5a43c53f9f5e6282bed8b699f0d786ca4346949ca9ab7db5eb5"
+    },
+    "audit": {
+      "tests": 8,
+      "pass": 8,
+      "fail": 0,
+      "logSha256": "0e98b3c507e7282f8aed7f6a4afe351b9e1a63b809c345d8d8299dd0a916a569"
+    }
+  },
+  "browser": {
+    "tests": 3,
+    "pass": 3,
+    "fail": 0,
+    "l3": {
+      "screens": 3,
+      "outsidePixels": 0,
+      "dumps": 3,
+      "outsideAllowedRows": 0
+    },
+    "logSha256": "0494f63486cd0186b01a59f86d8fea33e5feff251bc1e048975a0592c78438b7"
+  },
+  "bundle": {
+    "bytes": 3463176,
+    "sha256": "42eb7302e55af8eb90fb3da07f69554a0903f72058148481bd07d3de10d47ee0"
+  },
+  "state7ParentConnected": false
+}

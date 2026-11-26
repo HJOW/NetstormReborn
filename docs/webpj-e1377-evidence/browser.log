@@ -1,0 +1,13 @@
+npm notice run NetstormWeb@1.0.0 npx
+npm notice run ^"playwright^" test e2e/l3-campaign1-1-wait.spec.js e2e/mission-production-d-key.spec.js e2e/campaign-production-about.spec.js --workers=1 --reporter=line --output=../extracted/webpj-e1377-results
+
+Running 3 tests using 1 worker
+
+
+(node:11424) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/3] [chromium] › e2e\campaign-production-about.spec.js:14:1 › Tutorial 생산 항목에서 우클릭으로 정보와 도움말을 연다
+[2/3] [chromium] › e2e\l3-campaign1-1-wait.spec.js:11:1 › L3 캠페인1-1: 브리핑·시작·대기 화면과 상태가 cpppj와 같다
+[3/3] [chromium] › e2e\mission-production-d-key.spec.js:43:1 › The War Begins!: D 는 생산 창에서 마지막으로 고른 다리 조각을 다시 쥔다
+  3 passed (2.0m)

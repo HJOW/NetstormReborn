@@ -18,3 +18,10 @@ export class ProductionControlContext {
         this.storage = storage; this.gameplay = gameplay; this.players = players; this.options = options; this.sp = sp; this.ownerColorTables = ownerColorTables;
     }
 }
+
+// 생산 UI의 자본은 같은 Client 분산 DWORD를 float로 읽는다. 독립 기존 문맥만 현재 실제 Session의 SP를 조회한다.
+export function readProductionControlMoney(context, owner) {
+    if (!context?.gameplay) throw new TypeError('생산 자본의 실제 Client 문맥 미연결');
+    if (!context.sp) return context.gameplay.requireSession().sp(owner);
+    const value = new DataView(new ArrayBuffer(4)); value.setUint32(0, context.sp.store().get(owner), true); return value.getFloat32(0, true);
+}

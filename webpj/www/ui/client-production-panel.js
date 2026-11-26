@@ -1,4 +1,5 @@
 // 원본 생산 패널의 실제 자식 배치와 선택 분배를 하나의 Client Gump 트리에 조립한다.
+import { synchronizeProductionControlContents } from '../core/client-production-sync.js';
 import { GumpCreateNode } from './gump-create.js';
 
 // 생산 유지 상태와 자식 토큰은 같은 루트 노드에서 소유한다.
@@ -7,14 +8,14 @@ class ProductionPanelNode extends GumpCreateNode {
     budget = 0; top = 0; middle = 0; bottom = 0; bridge = 0; teleport = 0; separator = 0; panel = null;
 }
 
-// 기존 Session과 원본 구성 요소를 같은 루트의 수명으로 결합한다.
+// 장기 Client 물리와 원본 구성 요소를 같은 루트의 수명으로 결합한다.
 export class ClientProductionPanel {
     // 현재 소유자·실제 장치·전역과 생성한 루트다.
-    #root; #session; #parts; #globals; #panel; #token = 0; #used = false;
-    // 이미 생성된 생산 유지 상태와 같은 Session 구성 요소를 빌린다.
-    constructor(root, session, parts, globals, panel) {
-        if (!root || !session?.core || !parts?.grid || !parts?.background || !parts?.divider || !parts?.budget || !parts?.selection || !globals || !panel || typeof parts.technology !== 'function' || typeof parts.changed !== 'function') throw new TypeError('생산 패널의 실제 구성 요소 누락');
-        this.#root = root; this.#session = session; this.#parts = parts; this.#globals = globals; this.#panel = panel;
+    #root; #context; #parts; #globals; #panel; #token = 0; #used = false;
+    // 이미 생성된 생산 유지 상태와 같은 Client 구성 요소를 빌린다.
+    constructor(root, context, parts, globals, panel) {
+        if (!root || !context?.storage || !context.gameplay || !context.options || context.options.length < 2 || !parts?.grid || !parts?.background || !parts?.divider || !parts?.budget || !parts?.selection || !globals || !panel || typeof parts.now !== 'function' || typeof parts.technology !== 'function' || typeof parts.changed !== 'function') throw new TypeError('생산 패널의 실제 구성 요소 누락');
+        this.#root = root; this.#context = context; this.#parts = parts; this.#globals = globals; this.#panel = panel;
     }
     // 실제 루트와 현재 자식 필드를 호출자에게 빌린다.
     token() { return this.#token; }
@@ -53,7 +54,9 @@ export class ClientProductionPanel {
         n.budget = parts.budget.create(this.#token); globals.budgetSerial = root.node(n.budget).serial;
         n.top = parts.background.create(40, n.baseHeight, 0x02000000, globals.backgroundType, 4); let child = root.node(n.top);
         child.alignFlags |= 1; child.baseHeight = child.height = 23; root.attach(n.top, 0, 0, this.#token, 0);
-        const slots = this.#session.battleOption(1) * 2 + 2; this.#panel.slots = slots;
+        // 원본 생성 시각과 같은 옵션 BYTE를 읽어 이후 World 도킹까지 초기 슬롯·기한을 보존한다.
+        this.#panel.bridgeUntil = parts.now(); this.#panel.initialized = true;
+        const slots = this.#context.options[1] * 2 + 2; this.#panel.slots = slots;
         n.bridge = parts.grid.create(2, slots / 2, 0x40); child = root.node(n.bridge); child.fixed = 1; child.baseHeight = child.height = slots * 18; child.acceptedCursor = 0x40; child.alignFlags |= 1; child.itemScale = Math.fround(0.63); root.attach(n.bridge, 0, 26, this.#token, 0);
         n.middle = parts.background.create(40, n.baseHeight, 0x02000000, globals.backgroundType, globals.panelFrame); child = root.node(n.middle); child.alignFlags |= 1; child.baseHeight = child.height = slots * 18; root.attach(n.middle, 0, 26, this.#token, 0);
         n.teleport = parts.grid.create(1, 6, 8); child = root.node(n.teleport); child.baseHeight = child.height = 250; child.acceptedCursor = 8; child.alignFlags |= 1; root.attach(n.teleport, 0, 26 + slots * 18, this.#token, 0);
@@ -67,7 +70,7 @@ export class ClientProductionPanel {
     handleHudMode(first) {
         const root = this.#root, n = this.node(), technology = this.#parts.technology();
         root.bindObject(n.bridge, technology); root.bindObject(n.teleport, technology);
-        if (first === 1) this.#session.synchronizeProductionContents();
+        if (first === 1) synchronizeProductionControlContents(this.#context);
     }
     // Uber HUD가 도킹을 끝낸 뒤 설치된 현재 내용물을 실제 격자로 다시 부착한다(원본 `Open`의 마지막 단계). (2026-11-20 WB04-E1082)
     finishInstall() { this.handleHudMode(3); this.refresh(3); }

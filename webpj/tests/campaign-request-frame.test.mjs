@@ -417,13 +417,13 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         const images = new ClientImageGump(gump, game, { localOwner: 0, ownerMaps: new Uint32Array(188), shadowOffset: { x: 5, y: 5 } }, () => { throw new Error('선택하지 않은 색표'); }, () => 0);
         const itemState = { localOwner: session.localOwner(), editor: 0, stockEnabled: 0, inputDisabled: 0, lastType: 0, bridgeType: session.core().bridgeState.bridgeType, pixelsX: 16, pixelsY: 11, backgroundType: 92, backgroundFrame: 2 };
         const itemBackground = new ClientGumpBackground(gump, game, () => 0, () => screen.shadeMaps(), () => screen.colors(), () => 0);
-        let grid; const itemDevice = new ClientInventoryItem(gump, session, game, metadata, measure, images, itemState, { idleItem: (token) => grid.idleItem(token), denied: () => 0,
+        let grid; const itemDevice = new ClientInventoryItem(gump, session.productionContext(), game, metadata, measure, images, itemState, { idleItem: (token) => grid.idleItem(token), denied: () => 0,
             background: (target, clip, ...args) => itemBackground.texture(target, clip, ...args) });
-        grid = new ClientInventoryGrid(gump, session, gridState, {
+        grid = new ClientInventoryGrid(gump, session.productionContext(), gridState, {
             now: () => app._gameClock.wallSeconds(), baseHandle: () => 0, allocateItem: (size) => itemDevice.allocate(size),
         });
         const gridToken = grid.create(2, 2, 0x40), gridNode = gump.node(gridToken); gridNode.fixed = 1; gridNode.acceptedCursor = 0x40; gridNode.baseWidth = gridNode.width = 72; gridNode.baseHeight = gridNode.height = 72;
-        const selectedItems = [], selectionSounds = [], selection = new ClientProductionSelection(session, itemDevice, { technology: () => technology,
+        const selectedItems = [], selectionSounds = [], selection = new ClientProductionSelection(session.productionContext(), itemDevice, { technology: () => technology,
             templateOwner: () => session.localOwner(), stock: () => false, failure: () => { throw new Error('다리 선택 실패'); },
             flash: () => { throw new Error('다리 예산 부족'); }, sound: (name) => selectionSounds.push(name), changed: () => {} });
         const panel = gump.createBase(0, 80, 200, 1, (event, first, second) => { if (event === 0x02000008) { selectedItems.push([first, second]); return selection.choose(first, second); } return 0; });
@@ -489,7 +489,7 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
             known: () => true, fort: () => false, editor: () => false, backgroundType: () => 92, changed: () => app._clientRenderer.invalidateAll() });
         const divider = new ClientHudDivider(gump, { background: itemBackground, backgroundColor: () => 0, dividerColor: () => 55, closePopups: () => gump.closePopups() });
         const globals = app._clientProductionGlobals; globals.backgroundType = 92; globals.backgroundFrame = 0;
-        const assembled = new ClientProductionPanel(gump, session, { grid, background: itemBackground, divider, budget: panelBudget, selection,
+        const assembled = new ClientProductionPanel(gump, session.productionContext(), { grid, background: itemBackground, divider, budget: panelBudget, selection, now: () => app._gameClock.wallSeconds(),
             technology: () => technology, changed: () => app._clientRenderer.invalidateAll() }, globals, production.panel);
         const assembledToken = assembled.open(), assembledNode = assembled.node(); assert.equal(assembledNode.panel, production.panel); assert.equal(assembledNode.width, 80);
         assert.ok(gump.node(assembledNode.bridge).child); assert.equal(gump.node(assembledNode.bridge).object, technology); assert.equal(gump.node(assembledNode.teleport).object, technology);

@@ -1,5 +1,6 @@
-// 실제 생산 격자 항목을 같은 Client Gump·Session·이미지 자산에 연결한다.
-// 사용: new ClientInventoryItem(root, session, assets, geometry, measure, images, state, devices).allocate(0xc0).
+// 실제 생산 격자 항목을 같은 Client Gump·장기 물리·이미지 자산에 연결한다.
+// 사용: new ClientInventoryItem(root, context, assets, geometry, measure, images, state, devices).allocate(0xc0).
+import { readProductionControlMoney } from '../core/production-control-context.js';
 import { InventoryItemNode } from './inventory-gump.js';
 import { InventoryItemGump, bindInventoryItemAssets } from './inventory-item-gump.js';
 
@@ -8,9 +9,9 @@ export class ClientInventoryItem {
     // 현재 루트와 실제 항목 본체, 출력 중에만 유효한 픽셀 대상이다.
     #root; #item; #devices; #target = null; #clip = null;
     // 텍스트·도움말·배경 등 선택된 UI 경계는 호출자가 제공한다.
-    constructor(root, session, assets, geometry, measure, images, state, devices) {
-        if (!root || !session?.core || !images || !state || !devices) throw new TypeError('Client 생산 항목의 실제 수명 누락');
-        this.#root = root; this.#devices = devices; const pool = session.core().pool, finder = session.productionFinder();
+    constructor(root, context, assets, geometry, measure, images, state, devices) {
+        if (!root || !context?.storage?.pool || !context.gameplay?.finder || !images || !state || !devices) throw new TypeError('Client 생산 항목의 실제 수명 누락');
+        this.#root = root; this.#devices = devices; const pool = context.storage.pool, finder = context.gameplay.finder;
         const node = (token) => { const value = root.node(token); if (!value) throw new Error('Client 생산 항목의 현재 노드 누락'); return value; };
         const device = (name, ...args) => { if (typeof devices[name] !== 'function') throw new Error(`Client 생산 항목 실제 ${name} 미연결`); return devices[name](...args); };
         const hooks = {
@@ -22,11 +23,11 @@ export class ClientInventoryItem {
             allocate: (size) => size === 0xb4 ? images.allocate() : size === 0xa4 ? device('allocateText', size) : (() => { throw new RangeError('생산 항목 자식 할당 크기'); })(),
             image: (...args) => images.construct(...args), text: (...args) => device('text', ...args),
             styledText: (...args) => device('styledText', ...args), fitText: (...args) => device('fitText', ...args),
-            attach: (...args) => root.attach(...args), costUnits: (type) => session.hitPoints().typeCostUnits(type), money: (owner) => session.sp(owner),
+            attach: (...args) => root.attach(...args), costUnits: (type) => context.gameplay.requireSession().hitPoints().typeCostUnits(type), money: (owner) => readProductionControlMoney(context, owner),
             position: (token) => root.collection().position(token),
             background: (...args) => { if (!this.#target || !this.#clip) throw new Error('생산 항목의 현재 출력 표면 누락'); device('background', this.#target, this.#clip, ...args); },
             local: (token, _event, x, y) => root.collection().screenToLocal(token, { x: x | 0, y: y | 0 }),
-            knowledgeOpen: () => session.cursorDropSettings().lockDepth === 0 ? 1 : 0, imageHit: (...args) => images.hit(...args),
+            knowledgeOpen: () => context.gameplay.cursor.lockDepth === 0 ? 1 : 0, imageHit: (...args) => images.hit(...args),
             denied: (...args) => device('denied', ...args), tell: (...args) => device('tell', ...args),
             forward: (...args) => root.events().bubble(...args), about: (...args) => device('about', ...args),
         };
@@ -46,6 +47,6 @@ export class ClientInventoryItem {
         });
         return token;
     }
-    // 같은 Session의 비용·자본으로 항목 구매 가능성을 조회한다.
+    // 현재 실제 비용·Client 자본으로 항목 구매 가능성을 조회한다.
     affordable(content) { return this.#item.affordable(content); }
 }
