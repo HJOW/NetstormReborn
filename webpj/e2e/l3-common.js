@@ -27,7 +27,8 @@ function loadOracle(oracleDir) {
 // 단계표를 웹에 적용해 체크포인트를 모두 오라클과 비교한다(화면 0픽셀·덤프는 `sp`·`player:*` 외 차이 없음). (2026-11-24 WB04-E1305: l3-tutorial1.spec.js 에서 이동)
 // compare 를 false 로 주면 비교 없이 체크포인트 결과만 돌려준다(어긋남 조사용 임시 단계표를 `L3_DUMP_DIR` 로 덤프할 때). 반환 { results, errors }.
 // inspect가 있으면 체크포인트 직후의 실제 앱을 추가 조회할 수 있다(읽기 전용 검사 용도). (WB04-E1327)
-async function runL3({ browser, plan, oracleDir, compare = true, inspect = null }) {
+// screenRegions는 기준선 뒤 의도된 UI 변경만 사유·사각형·정확한 차이 픽셀 수로 명시한다. 영역 밖은 계속 0픽셀이어야 한다. (WB04-E1337)
+async function runL3({ browser, plan, oracleDir, compare = true, inspect = null, screenRegions = {} }) {
   if (inspect !== null && typeof inspect !== 'function') throw new TypeError('L3 추가 조회는 함수여야 합니다.');
   const context = await browser.newContext({ viewport: { width: plan.screen.width, height: plan.screen.height }, locale: 'en-US' }), page = await context.newPage();
   const errors = []; page.on('pageerror', (error) => errors.push(error.stack ?? error.message)); page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
@@ -79,7 +80,14 @@ async function runL3({ browser, plan, oracleDir, compare = true, inspect = null 
     // BGRX → RGB 로 바꾼다.
     for (let index = 0; index < 256; index += 1) { palette[index * 3] = shot.palette[index * 4 + 2]; palette[index * 3 + 1] = shot.palette[index * 4 + 1]; palette[index * 3 + 2] = shot.palette[index * 4]; }
     const web = indexedToRgb({ width: shot.width, height: shot.height, pixels: Uint8Array.from(shot.pixels) }, palette);
-    expect(compareImages(readPng(fs.readFileSync(path.join(oracleDir, `${name}.png`))), web, []).total, `${name} 화면의 다른 픽셀 수`).toBe(0);
+    const regions = screenRegions[name] ?? [];
+    const difference = compareImages(readPng(fs.readFileSync(path.join(oracleDir, `${name}.png`))), web, regions);
+    expect(difference.outside, `${name} 화면의 설명된 영역 밖 차이`).toBe(0);
+    // 변경 영역도 사유와 정확한 픽셀 수를 고정해 다른 결함이 섞이지 않게 한다.
+    for (let index = 0; index < regions.length; index += 1) {
+      expect(regions[index].reason, `${name} 변경 사유`).toBeTruthy();
+      expect(difference.regions[index], `${name} ${regions[index].reason}`).toBe(regions[index].pixels);
+    }
   }
   // 덤프 체크포인트마다 `sp`(소유자 0 미초기화 난수)·`player:*`(주소 잔재) 외에는 차이가 없다.
   for (const name of checkpoints.filter(([, op]) => op === 'session-dump').map(([, , label]) => label)) {

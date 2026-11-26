@@ -6,7 +6,7 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-25 정리, 마지막 단위 WB04-E1336)
+### 0.1 현재 값 (2026-11-26, 마지막 단위 WB04-E1337)
 
 - **실행·플레이**
   - **화면:** 브라우저 ‘클릭하여 시작’(첫 적재 뒤 최소 6초, E1308), 시작 title 그림, 메인 메뉴·캠페인/데모 목록·도움말·옵션(Reset All 게임 안 확인 창 포함)·Credits와 개발용 지형 미리보기가 동작한다.
@@ -24,11 +24,11 @@
   - **미검증:** Tutorial5 단계 A~D·Tutorial6·캠페인 묶음 미션 L3 진행, L4b(소리)와 자연 완주. 사제 포획/희생이 들어간 Tutorial4 단계 E1~I1·Tutorial5 단계 E~G는 사용자 결정(2026-11-25)으로 건너뛰고 사용자가 직접 확인한다.
 - **최근 완료(E1336):** cpppj 1335 판정 ②(마나 그림 별칭·CD 25프레임 보충)를 웹에 반영하고 3.6절 판정 남음 6행을 닫았다(②4행·③2행). [근거](docs/webpj-mana-picture-supplement-20261125.md)
 - **작업 지시(2026-11-25 사용자 /goal):** 이 문서의 남은 작업을 모두 수행하되, 사제 포획/희생·특정 적 공격·시나리오 승리 재현이 필요한 시험은 캠페인 1-1~1-5와 스커미시만 아군 AI 활성화 방식으로 시험하고 그 밖의 스테이지는 건너뛴다(나중에 사용자가 직접 확인). 미션 진입 후 대기·유닛 생산·건물 건설로 끝나는 시험은 진행한다. 단위마다 문서 갱신과 커밋을 한다.
-- **현재 작업:** E1336(마나 보충) 뒤 WB 단위는 없다. Tutorial4 단계 E1~I1(적 사제 포획·제단 건설·제물 의식)은 작업 지시의 건너뛸 시험이라 사용자 결정(2026-11-25)으로 건너뛴다. 이 구간의 cpp 오라클 18,100프레임(새 체크포인트 8곳 `e7276`~`i1_18100`)·단계표·`e2e/l3-tutorial4.spec.js` 확장은 E1335 뒤 형식 밖 커밋 `560920813`('webpj 시간 부족 중단본', 2026-11-25 06:53)에만 있고 웹 L3 통과 기록·단위 문서·manifest 등록은 없다. 다음 단위는 이 스펙을 단계 E1 진입(E1335, 7,240프레임) 범위로 좁히고(오라클 자료는 사용자 확인용으로 보존) Tutorial5로 넘어간다. 순서는 [다음 작업](#next)을 따른다.
+- **현재 작업:** E1337에서 Tutorial4 스펙의 자동 실행을 생산 등록·단계 B 안내(345프레임)까지로 제한했다. E1 진입까지의 기존 단계표는 E1335와 같으며 포획·희생 중단본 16파일은 manifest에 보존 자료로 등록했다. E1336 마나 보충으로 `a220` 하위 메뉴만 8,656픽셀 다르고 그 영역 밖과 나머지 화면·덤프는 같다. 다음은 일반 프레임 예외 후 계속 진행(사용자 결정 2026-11-26), Tutorial5의 허용 구간이다. [근거](docs/webpj-l3-tutorial4-scope-20261126.md)
 - **전체 회귀**
   - **Node 22.23.5 E1332:** 6,847/6,847 통과, 실패·취소·미실행 0(469.0초, 8/8 주기 갱신). 로컬 Node22 실행 경로는 `extracted/webpj-node22/node_modules/node-win-x64/bin/node.exe`다.
   - **Node 26.13.0 E1336:** 6,851/6,851 통과, 실패·취소·미실행 0(376.5초). 정기 4/4 회귀는 E1333(6,847/6,847, 402.4초)이며 E1336은 단위 검증으로 다시 돌렸다.
-  - **주기(E1336 기준):** v26은 E1336 전체 뒤 0/4, v22는 E1332 전체 뒤 4/8.
+  - **주기(E1336 기준):** v26은 E1336 전체 뒤 1/4, v22는 E1332 전체 뒤 5/8.
   - **Chromium:** E1313 전 미션 시작 상태 옵트인 전체 32/32 통과(24.3분, `webpj/extracted/webpj-e1313-final-e2e.log`). 기존 전체 e2e는 E1312 199건 중 186 통과·12 옵트인 미실행·한국어 브리핑 1건 부하 중 시간 초과(단독·3회 반복 통과)다. 단위별 실패·교정은 [E1313](docs/webpj-l3-mission-starts-20261124.md)과 각 단위 문서, 이전 회귀 이력은 [E1327 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261124-through-wb04-e1327)을 따른다.
 - **브라우저 검사:** 미션 화면은 단위마다 Chromium e2e로 확인한다(최근 전체 실행 E1312, 고정 시각 L2·L3 `e2e/fixed-time.spec.js`·`e2e/l3-tutorial1.spec.js`·`e2e/l3-tutorial2.spec.js`·`e2e/l3-tutorial3.spec.js`·`e2e/l3-tutorial4.spec.js`, 앱 서비스 결선 `e2e/session-services-wiring.spec.js` E1328, 한국어 글자 배치 `e2e/korean-glyph-layout.spec.js` E1288). 메뉴는 2026-11-17 Chromium 2/2(갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체), 최초 실행·진행 잠금/체크·저장 재실행은 E616 Chromium 2/2. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md)
 
@@ -39,7 +39,7 @@
 번호는 2026-11-24 첫 정리(E1327 이관)에서 1~6으로 다시 매겼고, E1328(`f6e6d8cd9`)이 1번(RawCampaignSession partial 닫기, [근거](docs/webpj-session-boundary-close-20261124.md))을 끝내 2~6번이 지금의 1~5번이 됐다(그 사이 번호는 커밋 `bcabc8025`의 문서). 단위 문서가 가리키는 더 앞 번호(다음 작업 0·0-a·1~9)의 원문은 [E1327 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261124-through-wb04-e1327), 그보다 앞 번호(다음 작업 1 ①~⑩·2~6)는 [E1288 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1288)에 있다.
 
 1. **다음 미션 L3 대조(4D-4b Tutorial4~6).** Tutorial1(E1304, 4,200프레임), Tutorial2(E1305~E1307, 5,400프레임), Tutorial3(E1309·E1329~E1333, 6,200프레임)는 시작부터 완료 창·다음 미션 전환까지 화면 0픽셀·덤프 일치로 끝났다([Tutorial1](docs/webpj-l3-tutorial1-complete-20261124.md) · [Tutorial2](docs/webpj-l3-tutorial2-20261124.md) · [Tutorial3](docs/webpj-l3-tutorial3-complete-20261125.md)). 같은 틀(`e2e/l3-common.js`·`tools/l3-collect.mjs`, 미션 이름·폴더만 바꿈)로 **Tutorial4~6**(전투·방어물·AI)과 세 캠페인 묶음 미션의 시작~완료를 대조한다. 이 확장이 4D-4b의 Tutorial 단계 진행을 겸한다.
-   - 현재 위치: Tutorial4(`TacticalCombat`) 단계 A~E1 완료(E1334~E1335). 단계 E1~I1(적 사제 포획·제단 건설·제물 의식 → 완료 창과 `Tutorial5` 해제)과 Tutorial5 단계 E~G(사제 희생)는 사용자 결정(2026-11-25, 3.5절)으로 건너뛰고 사용자가 직접 확인한다. 다음은 중단본 `560920813`의 스펙 범위 정리(3.1절 4D-4b Tutorial4, 스펙 주석의 `WB04-E1336` 표기도 정정) → Tutorial5 단계 A~D → Tutorial6 → 세 캠페인 묶음 미션이다. 단계마다 작업 지시(0.1절) 범위를 먼저 확인한다.
+   - 현재 위치: Tutorial4(`TacticalCombat`) 단계 A~E1 완료(E1334~E1335). 단계 E1~I1(적 사제 포획·제단 건설·제물 의식 → 완료 창과 `Tutorial5` 해제)과 Tutorial5 단계 E~G(사제 희생)는 사용자 결정(2026-11-25, 3.5절)으로 건너뛰고 사용자가 직접 확인한다. E1337에서 중단본 스펙 범위 정리와 자료 등록을 마쳤다. 다음은 Tutorial5의 건설·생산·대기 허용 구간 → Tutorial6 → 세 캠페인 묶음 미션이다. 특정 적 공격·승리 재현도 Tutorial 스테이지에서는 건너뛴다. 단계마다 작업 지시(0.1절) 범위를 먼저 확인한다.
    - 좌표 기준(E1329): 1024×768 기본 카메라 `cameraX=1552, cameraY=749`, 1칸=16×11px, 생산 창 다리 조각 `60,44`(우클릭 회전)·골렘 `40,180`. 단계 A의 입력 순서 전체는 단위 문서 표와 `tutorial3-l3/steps.json`에 있다.
    - 방법: 폴더 `tests/fixtures/cpppj/candidate-225553df/tutorialN-l3/` 와 스펙 `e2e/l3-tutorialN.spec.js`(Tutorial2 스펙 복제). 입력 위치는 cpp 오라클을 5초 안팎으로 여러 번 돌려 정하고(격자 탐색 50~230회가 5~21분이라 백그라운드로), 단계는 cpp `report` 의 `mission_gate` 두 번째 값으로 판정한다. 전투가 있는 미션은 체크포인트를 짧은 간격으로 두고 어긋나는 첫 프레임을 `mission_gate`·`bridge_scan_global` 과 프레임별 덤프(`runL3({ compare: false })`·`L3_DUMP_DIR`)로 좁힌다([탐색 기록](docs/webpj-l3-extension-probe-20261124.md)).
    - cpppj 오라클 수집은 HJOW-Athlon에서 실행 확인 없이 가능하고 다른 PC는 AGENTS 실행 확인 규칙을 따른다(3.3절).
@@ -129,7 +129,7 @@
 ### 0.4 기준선과 자료
 
 - **이식 기준선**은 cpppj 제품 1313(11.01) `225553df`다. 이후 변경 판정은 3.6절을 따른다. 별도 오라클 빌드는 HJOW-Athlon의 `extracted/webpj-oracle/225553df/Netstorm.exe`에 있다(SHA-256 `5b52d96d…b77eb46`, Git 제외).
-- **자료 추적**은 [PORT_MAP.tsv](webpj/PORT_MAP.tsv)와 [fixture manifest](webpj/tests/fixtures/manifest.json) 1,056항목(E1336 마나 보충 cpppj 근거 `src-mana-picture-data` 등록; Tutorial4 중단본 `560920813`의 새 체크포인트 16파일은 미등록)을 기준으로 한다. 이식 자료는 cpppj 소스·fixture·문서를 사용한다.
+- **자료 추적**은 [PORT_MAP.tsv](webpj/PORT_MAP.tsv)와 [fixture manifest](webpj/tests/fixtures/manifest.json) 1,072항목(E1337: Tutorial4 중단본 `560920813`의 새 체크포인트 16파일을 실행 검증 제외 보존 자료로 등록)을 기준으로 한다. 이식 자료는 cpppj 소스·fixture·문서를 사용한다.
 
 ### 0.5 단위 착수와 종료
 
@@ -202,14 +202,8 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 - [ ] **4D-4b Tutorial 게이트·표시 장치** — Tutorial 1~6 판정·공통 게이트와 신전의 현재 슬롯 재조회(E781~E782), 다리 수명 숫자·Renderer(E1230), 승패 판정 소비(E1152·E1161·E1262)는 끝났다. 남은 것은 실제 앱의 단계 진행이다(자연 진행 e2e는 Tutorial2뿐, E1086; Tutorial1~3은 L3로 시작~완료 창을 cpp와 대조해 끝남, E1304·E1307·E1333; Tutorial4는 단계 E1 진입까지, E1335). 스커미시 승리 실전은 1절 사용자 확인 범위다. [E781](docs/webpj-session-temple-draw-20261118.md) · [E782](docs/webpj-session-tutorial-gate-20261118.md)
   - [x] Tutorial1 — E1304에서 완료 창까지 4,200프레임 화면 0픽셀·덤프 일치로 완료했다. E1313에서 미표시 체크를 바로잡았다. [완료 근거](docs/webpj-l3-tutorial1-complete-20261124.md)
   - [x] Tutorial3 — E1333에서 시작~'Mission Accomplished!' 완료 창 및 `DoneTutorial3=1`·`Tutorial4` 전환까지 6,200프레임(체크포인트 화면 31곳 0픽셀·덤프 20곳 허용 행 외 차이 0)으로 완료했다. 대본 단계 다섯 묶음(A→B E1329·B E1330·C E1331·D~E E1332·F~H E1333)의 세부 줄은 보관본에 있다. [완료 근거](docs/webpj-l3-tutorial3-complete-20261125.md)
-  - [ ] Tutorial4 — 완료 기준: 단계 A~E1 진입까지 L3 일치(체크포인트 화면 0픽셀·덤프 허용 행 밖 차이 0)와 스펙 범위 정리. 단계 E1~I1과 완료 창·Tutorial5 해제는 사용자 결정(2026-11-25)으로 사용자 확인 범위다. 대본 단계 A~I1:
-    - [x] 단계 A~B 고급 전투·썬 디스크 발사기와 썬 캐논 — E1334(3,210프레임; E1335에서 발사기 2기·단계 C `c3500`으로 조정), 적 `Sun Cannon` 2기 파괴 → 단계 C `'Upgrading Workshops, Part 1'` 안내 창. [단계 A~B](docs/webpj-l3-tutorial4-stage-ab-20261125.md)
-    - [x] 단계 C~E 워크샾 업그레이드·썬 캐논으로 적 발사기 파괴 — E1335, 7,240프레임(Sun Workshop Level II → `(131,124)` Sun Cannon으로 적 발사기 6기 연쇄 격파 → 단계 E1 `'Sacrificing Priests, Part 1'` 안내 창, 화면 18곳 0픽셀·덤프 14곳 일치). [단계 C~E1](docs/webpj-l3-tutorial4-stage-ce-20261125.md)
-    - 건너뜀(2026-11-25 사용자 결정, 3.5절): 단계 E1~I1 사제 희생 1~4부·멀티/싱글플레이어 안내 → 완료 창. 적 사제 포획·제물 의식이 들어가 작업 지시의 건너뛸 시험이며 사용자가 직접 확인한다. cpp 오라클(18,100프레임, 새 체크포인트 8곳 `e7276`·`e7625`·`f10000`·`g13500`·`h14000`·`h16000`·`i18000`·`i1_18100`, 16파일 manifest 미등록)·단계표·스펙 확장은 중단본 `560920813`에 남아 있다.
-    - [ ] 스펙 범위 정리 — `e2e/l3-tutorial4.spec.js`를 단계 E1 진입 `e7240`(E1335, 7,240프레임) 범위로 좁히고(중단본의 `steps.json`·`oracle.json` 변경이 앞 구간에 영향 없는지 확인), 스펙 주석의 `WB04-E1336` 표기를 고친다. 중단본 오라클 16파일은 사용자 확인용으로 보존한다. 완료 기준: 좁힌 스펙이 Chromium에서 통과하고 단위 문서에 건너뛴 구간과 보존 자료를 적는다.
-      - [ ] 단계 E1~F 웹 대조 — `e7240` 뒤 `e7276`·`e7625`·`f10000`. 완료 기준: 세 체크포인트 화면 0픽셀·덤프 허용 행 밖 차이 0(어긋나면 첫 프레임을 프레임별 덤프로 좁힌다).
-      - [ ] 단계 G~I1 웹 대조와 다음 미션 전환 — `g13500`·`h14000`·`h16000`·`i18000`·`i1_18100`과 18,100프레임의 `DoneTutorial4=1`·`Next Tutorial`→Tutorial5 전환(스펙의 `inspect`). 완료 기준: `e2e/l3-tutorial4.spec.js` 전체 통과.
-      - [ ] 자료·기록 마무리 — 새 체크포인트 16파일 manifest 등록(`fixture-manifest.mjs --write --only`), 스펙 주석의 `WB04-E1336` 표기 정정, 단위 문서. 완료 기준: `fixture-manifest.test.mjs` 통과와 단위 문서 링크.
+  - [x] Tutorial4 범위 정리 — E1334~E1335에서 A~E1 진입은 대조 완료했다. E1337은 E1까지 단계표 불변·중단본 16파일 보존 등록과 자동 검사 제한을 완료했다. Chromium 2통과·제한 구간 1건너뜀, Node 관련 11/11. 생산 슬롯 그림 보충의 알려진 메뉴 차이는 사유·영역·정확한 픽셀 수로 검사한다. [정리·검증](docs/webpj-l3-tutorial4-scope-20261126.md)
+    - 사용자 확인: 특정 적 공격을 포함하는 단계 B 이후와 E1~I1의 포획·희생·완료·다음 미션 전환. 중단본 단계표·오라클은 보존하고 자동 실행하지 않는다.
   - [ ] Tutorial5 — 완료 기준: 단계 A~D(단계 E '주문' 안내 창)까지 L3 일치. 단계 E~G는 사용자 결정(2026-11-25)으로 사용자 확인 범위다. 대본 단계 A~G:
     - [ ] 단계 A~B 방어·워크샾 추가 건설 — 완료 기준: 단계 C 안내 창까지 L3 일치.
     - [ ] 단계 C~D 적의 섬·공중 공격 방어·캐논 방어·다리 품질 — 완료 기준: 단계 E '주문' 안내 창까지 L3 일치.
@@ -302,14 +296,14 @@ M1은 메뉴 관문을 통과했다. 4-D의 Tutorial1 L2 → 5-A/5-B·5-C의 Tut
   - 사제 포획/희생이 들어간 L3 대조(Tutorial4 단계 E1~I1·Tutorial5 단계 E~G)는 작업 지시의 건너뛸 시험으로 보고 건너뛴다. 사용자가 직접 확인한다(3.1절 4D-4b).
   - 7단계 '교전 N프레임 대조'는 플레이어가 공격하는 교전 체크포인트 일치(E1334~E1335)로 완료 표시를 유지한다. AI가 공격해 오는 장면은 '전투 장면 오라클'·'AI 행동 N프레임 대조'에 남는다.
   - 저장소 루트 `test-results/`(2026-11-24 baseURL 없이 돈 l3-tutorial3 실패 기록, `560920813`에 함께 커밋)는 지웠고, 다시 들어가지 않게 `.gitignore`에 `/test-results/`를 더했다.
-- **결정 대기.** 프레임 예외 한 번에 렌더 루프가 멈추는 설계를 유지할지(3.7절 7차). DestroyPatch의 진단 정상 복귀와 일반 예외 복구 정책을 구별한다.
+- **사용자 결정(2026-11-26).** 일반 프레임 예외는 상세 오류를 기록한 뒤 다음 프레임을 진행한다. 구현·실제 브라우저 검증을 다음 단위로 수행한다. DestroyPatch 정상 복귀와 구별한다.
 - **원본 실행·사람 확인.** favicon 탭 그림(0.6절), 도움말·안내 마나 아이콘(E1336) 육안 대조, 주변음·효과음·음악 실제 청취, 한국어 사람 검수와 미션 본문 줄 나눔 실제 화면, 시작 화면 안정화(E1300·E1308)의 배포본 처음 방문. 예산 칸 원본 우클릭은 E1324에서 확인했다.
 
 ### 3.6 cpppj 변경 재반영
 
 대응표 검사에서 행 base 이후 변경을 확인한다. ① 웹 영향 없음, ② 웹 재반영, ③ 해당 소비 단계에서 처리로 판정한다. ②는 별도 단위로 반영하고 ③은 대상 단계에 남긴다. 판정 근거를 대응표와 단위 문서에 기록한다.
 - **판정 끝:** cpppj 1322(갈무리11)·1325(Reset All)·1326(테스트 AI 진단)의 변경 아홉 행(E1241, base `63590635`·`710b9647`·`baf141eb`, [판정표](docs/webpj-cpppj-1322-1325-1326-judgment-20261123.md)), 사용자 추가 요구 1328~1330(E1289~E1291), 1339 주문/포획 교정(E1319, base `13e74579`), SoundMusicSelection base 정정(2026-11-22, `225553df`), 일본어(13차) 커밋 `5238ee833`(1334)·`87324232f`(1335)의 여섯 행(E1336: 마나 그림 별칭 `imana.8`~`11`·`17`→`Imana.4`~`7`·`9`와 CD 마나 25프레임 보충의 `HtmlTextParser`·`Markup`·`StyleTextMarkup`·`UberGump` 행은 ② 반영, `KoreanResources.cpp`(`.japanese` 번들 읽기)·`StyleTextBuffer.cpp`(가나·한자 줄바꿈)는 ③ 13차, [근거](docs/webpj-mana-picture-supplement-20261125.md)). 커밋·행별 경과는 [E1329 보관본 3.6절](LEFT_JOBS.webpj.old.md#archive-webpj-20261124-through-wb04-e1329)과 [E1336 보관본 3.6절](LEFT_JOBS.webpj.old.md#archive-webpj-20261125-through-wb04-e1336)에 있다.
-- **판정 남음:** 없음(`port-map.mjs` 기준 cpppj 변경 행 0, 새 파일 목록은 그대로).
+- **판정 남음:** 2026-11-26 CP 일본어·공통 메뉴·LAN·시계 변경이 새로 감지됐다. E1337 대응표 형식 검사는 통과했으며 변경 행 판정·웹 공통분 재반영은 후속 단위로 수행한다. 다른 세션의 작업 사본은 보존한다.
 - **대응표 밖 새 파일:** EmbeddedBitmapFont(.cpp/.h)·KoreanFontSettings.h·ResetAllSettings(.cpp/.h)는 ①이고 `TextPictureResources.h`·`ManaPictureData.inc`는 위 판정을 따른다. 재기준선 때 등록한다.
 
 | 처리 단계 | 남은 판정·연결 |
