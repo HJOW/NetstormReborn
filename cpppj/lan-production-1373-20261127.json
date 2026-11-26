@@ -1,0 +1,113 @@
+{
+  "unit": 1373,
+  "productUnit": 1372,
+  "host": "HJOW-Athlon",
+  "lastDecompilationHost": "HJOW-Athlon",
+  "newDecompilation": false,
+  "gameSourceChanges": false,
+  "focusedTests": {
+    "cursorDrop": 12,
+    "inventoryItem": 2,
+    "failedChecks": 0,
+    "relinkBuildExitCode": 0
+  },
+  "protectedFiles": {
+    "count": 2810,
+    "changed": []
+  },
+  "actualTcp": {
+    "passed": true,
+    "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+    "exeSha256": "b400a38a93a54c89d6b90e13fefa1f31d49656c203dbeb785e8bfd788a0618a2",
+    "peers": [
+      {
+        "role": "bot",
+        "exitCode": 0
+      },
+      {
+        "role": "host",
+        "exitCode": 0
+      }
+    ],
+    "steadySeconds": 4.169427300003008,
+    "identity": [
+      {
+        "owner": 1,
+        "subscriber": 6356993,
+        "name": "LocalHost",
+        "flags": 67
+      },
+      {
+        "owner": 2,
+        "subscriber": 6356994,
+        "name": "OpponentBot",
+        "flags": 67
+      }
+    ],
+    "world": [
+      [
+        "7157",
+        "0"
+      ]
+    ],
+    "production": {
+      "templeSite": [
+        600,
+        420
+      ],
+      "unitSite": [
+        450,
+        420
+      ],
+      "beforeSp": [
+        1500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500
+      ],
+      "afterSp": [
+        1100,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500
+      ],
+      "units": [
+        [
+          {
+            "sid": 15249,
+            "asset": "sunWalker",
+            "owner": 1,
+            "x": 116.0,
+            "y": 206.0,
+            "hp": 50
+          }
+        ],
+        [
+          {
+            "sid": 15249,
+            "asset": "sunWalker",
+            "owner": 1,
+            "x": 116.0,
+            "y": 206.0,
+            "hp": 50
+          }
+        ]
+      ],
+      "saved": {
+        "bytes": 976,
+        "owner": 1,
+        "sp": 1100,
+        "sha256": "653cac6f03fb790ba8cdc2c563a0d0e61e2a41d5d514700da034b8c2b3cd7edd"
+      }
+    }
+  },
+  "rawDirectory": "extracted/cpp-lan-1373/production-1"
+}

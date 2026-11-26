@@ -20,4 +20,12 @@ python -X utf8 tools/cpp_lan_opponent.py --exe cpppj/build/bin/Release/Netstorm.
 
 재접속 상태의 창 없는 검사는 `cpppj/build/bin/Release/netstorm_cd_presence_tests.exe --filter LocalMissionState`로 실행한다. 인자 없이 실행하면 기존 CD/경로 회귀를 포함한14개를 검사하며 보류된 CD 복원 작업을 확장하지 않는다.
 
-1370의 커서 비용 차감/복구 저장 경로 회귀는 `cpppj/build/bin/Release/netstorm_cursor_drop_tests.exe`로 실행한다. 창 없이 기존 커서/파일 경로12사례를 검사하며 `--list`·`--filter Cursor`도 지원한다. 실제 Wind 신전 한 건의 객체/SP/저장 파일과 두 정상 종료는1370 원시 TCP 관측으로 확인했다. 생산/건설을 자동화하는 추가 옵션은 현재 상대 봇 CLI에 없으며 재개 후 확장한다.
+1370의 커서 비용 차감/복구 저장 경로 회귀는 `cpppj/build/bin/Release/netstorm_cursor_drop_tests.exe`로 실행한다. 창 없이 기존 커서/파일 경로12사례를 검사하며 `--list`·`--filter Cursor`도 지원한다. 실제 Wind 신전 한 건의 객체/SP/저장 파일과 두 정상 종료는1370 원시 TCP 관측으로 확인했다.
+
+1373에서 `--produce-golem`을 추가했다. 실제 사제 메뉴로 Wind 신전을 완성한 뒤 `production:133`의 실제 아이콘을 클릭하여 골렘 한 개를 배치한다. 같은 객체의 SID/자산/owner/좌표/HP·양쪽 SP400 차감·호스트 복구 저장을 대조한다. 기본1024×768/영어와 표준 시작6500 SP를 사용하며 현재 보이는 메뉴와 실제 커서 허용 후보만 선택한다. `--lobby-only`·`--takeover`와 함께 사용할 수 없다.
+
+```powershell
+python -X utf8 tools/cpp_lan_opponent.py --exe cpppj/build/bin/Release/Netstorm.exe --game extracted/cpp-reset-all-1325/game --output extracted/lan-production-new --produce-golem
+```
+
+골렘 생산의 관련 창 없는 검사는 `cpppj/build/bin/Release/netstorm_selection_key_input_tests.exe --filter InventoryItemGump`다. 실제 자산/아이콘/트리 클릭과 독립 원본 입력2사례를 검사하며1373에서 기존 커서12사례와 함께 통과했다. 실제 TCP에서 골렘HP50/SP1500→1100·두 정상 종료를 확인했다. 추가 건설과 새 참가자 재접속은 아직 잔여다.

@@ -173,6 +173,74 @@ def player_identity(report):
     return result
 
 
+def owned_objects(report, asset, owner=1):
+    """실제 객체 보고에서 지정 자산/소유자의 현재 SID·좌표·HP만 선택한다."""
+    return [dict(sid=int(row[0]), asset=row[1], owner=int(row[2]),
+                 x=float(row[6]), y=float(row[7]), hp=int(row[13]))
+            for row in fields(report, "object") if row[1].lower() == asset.lower() and int(row[2]) == owner]
+
+
+def select_legal_site(peer, expected_type, name):
+    """현재 커서에 실제 마우스 이동을 보내고 원본 배치 허용을 통과한 화면 위치를 고른다."""
+    candidates = [(600, 420), (560, 420), (560, 450), (600, 450), (450, 420), (500, 450),
+                  (620, 380), (580, 360), (480, 380), (640, 460), (520, 440)]  # 고정1024×768 화면의 자기 섬 주변 후보이며 성공값을 만들지 않는다.
+    for x, y in candidates:  # 각 후보의 실제 Query/표시/소스 허용을 모두 읽은 뒤 선택한다.
+        peer.action("pointer", f"0,{x},{y}", 8)
+        rows = fields(peer.report(), "raw_cursor")
+        if rows and rows[0][1] == "1" and rows[0][2] == str(expected_type) and rows[0][8:11] == ["1", "1", "1"]:
+            peer.observe(name)
+            return x, y
+    peer.observe(name + "-rejected")
+    raise AssertionError(f"TYPE{expected_type} 실제 허용 배치 위치를 찾지 못했습니다")
+
+
+def produce_golem(peers):
+    """실제 신전 건설과 생산 아이콘 입력으로 골렘 한 개를 배치하고 두 TCP 수신 결과를 대조한다."""
+    host, bot = peers  # 호스트만 조작하며 상대는 실제 소켓으로 생산/배치 결과를 받는다.
+    initial = host.observe("production-initial")
+    if owned_objects(initial, "sunWalker"):
+        raise AssertionError("새 Fort에 이미 골렘이 있어 신규 생산을 구별할 수 없습니다")
+    host.action("right", "world:priest", 10)
+    host.action("click", "Construct", 10)
+    host.action("click", "Temple", 10)
+    menu = host.observe("production-temple-menu")
+    choices = [row for row in fields(menu, "raw_menu_item") if row[5] == "1" and "Wind" in row[6]]  # 현재 실제 보이는 신전 하위 메뉴에서만 항목을 고른다.
+    if len(choices) != 1:
+        raise AssertionError("실제 Wind 신전 메뉴 항목을 하나로 구별하지 못했습니다")
+    choice = choices[0]  # 명령/인자는 보고된 실제 항목의 클릭 위치 조회에만 사용한다.
+    host.action("click", f"menu-command:{int(choice[3]):x},{int(choice[4]):x}", 10)
+    temple_site = select_legal_site(host, 123, "production-temple-preview")
+    host.action("click", f"screen:{temple_site[0]},{temple_site[1]}", 120)
+    for peer in peers:  # 완성된 실제 신전과 전송 수신 뒤에만 생산 아이콘을 사용한다.
+        peer.wait(lambda text: bool(owned_objects(text, "windVortex")), "실제 Wind 신전 완성", seconds=60)
+    host.wait(lambda text: any(row[2] == "133" for row in fields(text, "raw_production_item")), "신전의 골렘 생산 아이콘", seconds=30)
+    before = [peer.observe("production-before-unit") for peer in peers]  # 비용과 신규 SID 대조의 실제 시작 상태다.
+    before_sp = [list(map(int, fields(text, "raw_sp")[0][1:])) for text in before]
+    if before_sp[0] != before_sp[1] or before_sp[0][0] != 1500:
+        raise AssertionError("신전 비용 차감 뒤 두 실제 SP가1500으로 일치하지 않습니다")
+    host.action("click", "production:133", 10)  # 실제 아이콘의 불투명 픽셀을 클릭하며 생산/재고 경로를 우회하지 않는다.
+    unit_site = select_legal_site(host, 133, "production-unit-preview")
+    host.action("click", f"screen:{unit_site[0]},{unit_site[1]}", 120)
+    for peer in peers:  # 새 객체가 양쪽 월드에 실제 등록될 때까지 자연 프레임을 기다린다.
+        peer.wait(lambda text: bool(owned_objects(text, "sunWalker")), "실제 신규 골렘", seconds=30)
+    after = [peer.observe("production-unit-settled") for peer in peers]
+    units = [owned_objects(text, "sunWalker") for text in after]
+    after_sp = [list(map(int, fields(text, "raw_sp")[0][1:])) for text in after]
+    if len(units[0]) != 1 or units[0] != units[1] or units[0][0]["hp"] != 50:
+        raise AssertionError("신규 골렘의 양쪽 SID/자산/owner/좌표/HP 불일치")
+    expected_sp = before_sp[0].copy()  # 실제 비용 기본값400은 원본 TYPE 후처리에서 적용된다.
+    expected_sp[0] -= 400
+    if after_sp != [expected_sp, expected_sp]:
+        raise AssertionError("골렘 비용400의 실제 SP 차감 또는 두 수신 결과 불일치")
+    saved = host.output / "user/Saves/!state.dat"
+    image = saved.read_bytes()  # 커서 배치가 실제 작성한 호스트 복구 파일이다.
+    if int.from_bytes(image[260:264], "little") != 1 or int.from_bytes(image[268:272], "little") != expected_sp[0]:
+        raise AssertionError("실제 복구 저장의 owner/SP 불일치")
+    (host.output / "production-after-unit-state.dat").write_bytes(image)
+    return dict(templeSite=temple_site, unitSite=unit_site, beforeSp=before_sp[0], afterSp=after_sp[0],
+                units=units, saved=dict(bytes=len(image), owner=1, sp=expected_sp[0], sha256=hashlib.sha256(image).hexdigest()))
+
+
 def main():
     """새 검증 디렉터리에 호스트와 상대 봇을 생성해 로비/전투를 검사한다."""
     parser = argparse.ArgumentParser(description=__doc__)
@@ -184,6 +252,7 @@ def main():
     parser.add_argument("--lobby-only", action="store_true")
     parser.add_argument("--steady-seconds", type=float, default=4, help="두 참가자의 시작 후 실제 OS 시계 대기 초")
     parser.add_argument("--takeover", action="store_true", help="시작 검사 후 이 도구의 호스트만 강제 종료해 상대의 서버 인수를 검사")
+    parser.add_argument("--produce-golem", action="store_true", help="실제 Wind 신전과 골렘 생산/배치 뒤 양쪽 객체·SP·복구 저장을 대조")
     args = parser.parse_args()  # 사용자 선택은 실제 포트·자산·출력 경로로만 제한한다.
     if not (0 < args.lobby_port < 65536 and 0 < args.game_port < 65536 and args.lobby_port != args.game_port):
         parser.error("서로 다른1~65535 포트가 필요합니다.")
@@ -191,6 +260,8 @@ def main():
         parser.error("실시간 대기는0~3600초 범위여야 합니다.")
     if args.takeover and args.lobby_only:
         parser.error("서버 인수는 실제 전투 시작 검사와 함께 사용해야 합니다.")
+    if args.produce_golem and (args.lobby_only or args.takeover):
+        parser.error("골렘 생산은 일반 전투 시작 검증에서만 단독 선택합니다.")
     args.exe, args.game, args.output = args.exe.resolve(strict=True), args.game.resolve(strict=True), args.output.resolve()
     args.output.mkdir(parents=True, exist_ok=False)
     peers = []  # 이 호출이 실행한 두 자식만 종료 대상으로 보관한다.
@@ -223,6 +294,8 @@ def main():
                 raise AssertionError("두 초기 월드의 객체/타일 수 불일치")
             result["identity"] = identities[0]
             result["world"] = fields(steady[0], "world")
+            if args.produce_golem:
+                result["production"] = produce_golem(peers)
             if args.takeover:
                 host, bot = peers  # 이 호출이 직접 만든 실제 두 자식만 대상으로 삼는다.
                 if fields(steady[1], "raw_network_role") != [["0", "0"]]:
