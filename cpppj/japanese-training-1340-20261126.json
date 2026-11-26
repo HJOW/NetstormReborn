@@ -1,0 +1,336 @@
+{
+  "unit": 1340,
+  "date": "2026-11-26",
+  "host": "HJOW-Athlon",
+  "decompileHost": "HJOW-Athlon",
+  "audit": {
+    "passed": true,
+    "translated": 21,
+    "total": 43,
+    "missing": [
+      "bc7sun_bars76",
+      "bc8fury76",
+      "bc9ssun_bars76",
+      "breakingthrough",
+      "demostormrages",
+      "dissolvedalliance",
+      "enemyterritory",
+      "finalconfrontation",
+      "fragilefortune",
+      "guardmyback",
+      "help",
+      "masterofwhirligigs",
+      "rainvsrain",
+      "runforit",
+      "savetheisland",
+      "surrounded",
+      "tell",
+      "thenoose",
+      "thewarbegins",
+      "thunderingpower",
+      "totherescue",
+      "vicious"
+    ],
+    "uniqueKanji": 590,
+    "files": [
+      {
+        "file": "bc1menu76.japanese",
+        "bytes": 1161,
+        "sections": 11,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "bc2bridging76.japanese",
+        "bytes": 2243,
+        "sections": 6,
+        "links": 0,
+        "images": 2,
+        "imageSections": {
+          "[A.]": 2
+        }
+      },
+      {
+        "file": "bc3acid_bar76.japanese",
+        "bytes": 2815,
+        "sections": 7,
+        "links": 0,
+        "images": 1,
+        "imageSections": {
+          "[A1.]": 1
+        }
+      },
+      {
+        "file": "bc4bow_rush76.japanese",
+        "bytes": 2381,
+        "sections": 6,
+        "links": 0,
+        "images": 1,
+        "imageSections": {
+          "[A.]": 1
+        }
+      },
+      {
+        "file": "bc5walkers76.japanese",
+        "bytes": 2291,
+        "sections": 6,
+        "links": 0,
+        "images": 8,
+        "imageSections": {
+          "[A.]": 8
+        }
+      },
+      {
+        "file": "bc6mows76.japanese",
+        "bytes": 3367,
+        "sections": 6,
+        "links": 0,
+        "images": 3,
+        "imageSections": {
+          "[A.]": 3
+        }
+      },
+      {
+        "file": "config.japanese",
+        "bytes": 2668,
+        "sections": 0,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical1.japanese",
+        "bytes": 907,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical2.japanese",
+        "bytes": 1307,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical2sep.japanese",
+        "bytes": 16,
+        "sections": 0,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical3.japanese",
+        "bytes": 1314,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical4.japanese",
+        "bytes": 723,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical5.japanese",
+        "bytes": 664,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical5sep.japanese",
+        "bytes": 16,
+        "sections": 0,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical6.japanese",
+        "bytes": 273,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "tutorial1.japanese",
+        "bytes": 7194,
+        "sections": 14,
+        "links": 0,
+        "images": 4,
+        "imageSections": {
+          "[D.]": 2,
+          "[D1.]": 1,
+          "[E.]": 1
+        }
+      },
+      {
+        "file": "tutorial2.japanese",
+        "bytes": 10752,
+        "sections": 20,
+        "links": 0,
+        "images": 13,
+        "imageSections": {
+          "[A1.]": 2,
+          "[C.]": 2,
+          "[D1.]": 2,
+          "[F.]": 5,
+          "[G.]": 2
+        }
+      },
+      {
+        "file": "tutorial3.japanese",
+        "bytes": 8541,
+        "sections": 15,
+        "links": 0,
+        "images": 4,
+        "imageSections": {
+          "[A1.]": 1,
+          "[D1.]": 3
+        }
+      },
+      {
+        "file": "tutorial4.japanese",
+        "bytes": 9466,
+        "sections": 16,
+        "links": 0,
+        "images": 1,
+        "imageSections": {
+          "[A.]": 1
+        }
+      },
+      {
+        "file": "tutorial5.japanese",
+        "bytes": 9608,
+        "sections": 16,
+        "links": 0,
+        "images": 3,
+        "imageSections": {
+          "[A.]": 2,
+          "[E.]": 1
+        }
+      },
+      {
+        "file": "tutorial6.japanese",
+        "bytes": 8256,
+        "sections": 11,
+        "links": 0,
+        "images": 14,
+        "imageSections": {
+          "[A1.]": 1,
+          "[A2.]": 11,
+          "[C.]": 1,
+          "[E.]": 1
+        }
+      }
+    ],
+    "errors": []
+  },
+  "gui": [
+    {
+      "name": "training-1340-bc4bow_rush76",
+      "args": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+        "--window",
+        "--frames",
+        "38",
+        "--fixed-frame-ms",
+        "25",
+        "--no-audio",
+        "--set",
+        "welcomeGiven=1;tellTips=0;autoDemo=0;edgeScroll=0;currentLanguage=japanese;SCREENW=1024;SCREENH=768",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\training-1340-bc4bow_rush76.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\training-1340-bc4bow_rush76-report.tsv",
+        "--mission",
+        "bc4bow_rush76"
+      ],
+      "exit_code": 0,
+      "seconds": 3.7194736003875732,
+      "exe_sha256": "116d44b3e08ca27fbc69a3b43aedf83f03e2b9ebaf1b64dcb87672cb02917564"
+    },
+    {
+      "name": "training-1340-bc5walkers76",
+      "args": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+        "--window",
+        "--frames",
+        "38",
+        "--fixed-frame-ms",
+        "25",
+        "--no-audio",
+        "--set",
+        "welcomeGiven=1;tellTips=0;autoDemo=0;edgeScroll=0;currentLanguage=japanese;SCREENW=1024;SCREENH=768",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\training-1340-bc5walkers76.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\training-1340-bc5walkers76-report.tsv",
+        "--mission",
+        "bc5walkers76"
+      ],
+      "exit_code": 0,
+      "seconds": 4.002298593521118,
+      "exe_sha256": "116d44b3e08ca27fbc69a3b43aedf83f03e2b9ebaf1b64dcb87672cb02917564"
+    },
+    {
+      "name": "training-1340-bc6mows76",
+      "args": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+        "--window",
+        "--frames",
+        "38",
+        "--fixed-frame-ms",
+        "25",
+        "--no-audio",
+        "--set",
+        "welcomeGiven=1;tellTips=0;autoDemo=0;edgeScroll=0;currentLanguage=japanese;SCREENW=1024;SCREENH=768",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\training-1340-bc6mows76.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\training-1340-bc6mows76-report.tsv",
+        "--mission",
+        "bc6mows76"
+      ],
+      "exit_code": 0,
+      "seconds": 5.170743227005005,
+      "exe_sha256": "116d44b3e08ca27fbc69a3b43aedf83f03e2b9ebaf1b64dcb87672cb02917564"
+    }
+  ],
+  "pictures": {
+    "references": 12,
+    "sections": 3,
+    "allVisuallyChecked": true
+  },
+  "focusedTests": {
+    "filter": "JapaneseText_",
+    "passed": 9,
+    "failed": 0
+  },
+  "protectedFiles": 3212,
+  "protectedAndGameUnchanged": true,
+  "productRebuild": false,
+  "exeSha256": "116d44b3e08ca27fbc69a3b43aedf83f03e2b9ebaf1b64dcb87672cb02917564",
+  "excluded": [
+    "공격·포획·희생·승리 재현",
+    "성공 안내 및 완료 키 실행",
+    "MP 실행"
+  ]
+}
