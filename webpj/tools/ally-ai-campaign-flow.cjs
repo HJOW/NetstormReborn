@@ -1,0 +1,77 @@
+// 실제 브라우저 결과를 파일에 보존하고 현재 UI 상태를 단언하는 검사 도구다.
+const fs=require('node:fs'), {chromium,expect}=require('@playwright/test');
+const {installAllyAi}=require('../e2e/ally-ai-test-control');
+// 허용된 다섯 캠페인과 실제 다음 미션의 이름이다. 후반 미션은 완료 뒤 브리핑 진입만 확인한다.
+const NEXT={thewarbegins:'masterofwhirligigs',masterofwhirligigs:'savetheisland',savetheisland:'fragilefortune',fragilefortune:'thunderingpower',thunderingpower:'dissolvedalliance'};
+// 실행할 미션과 실제 논리 프레임 상한이다.
+const mission=(process.argv[2]??'masterofwhirligigs').toLowerCase(),limit=Number(process.argv[3]??60000);
+if(!NEXT[mission]||!Number.isInteger(limit)||limit<100||limit>120000)throw new Error('아군 AI 캠페인 관찰 인자 오류');
+// 실제 시작 그림·메뉴의 모든 프레임을 통과한다.
+async function ready(page){
+ await page.waitForFunction(()=>window.netstorm?.state==='clickToStart',null,{timeout:120000});await page.locator('canvas').click();await page.evaluate(()=>window.netstorm._prepareCampaignAudio());
+ while(await page.evaluate(()=>window.netstorm.state!=='mainMenu'))await page.evaluate(()=>window.netstorm.stepFixedFrames(1));
+ await page.evaluate(()=>window.netstorm.stepFixedFrames(1));
+}
+// 실제 UI 단추만 누르고 입력이 소비될 두 프레임을 진행한다.
+async function clickLabel(page,label){
+ const point=await page.evaluate(text=>{const app=window.netstorm,p=app._mainMenu.controlPoint(text),rect=app.canvas.getBoundingClientRect();if(!p)throw new Error('현재 UI 단추 없음: '+text);return{x:rect.left+p.x*rect.width/app._layout.logicalWidth,y:rect.top+p.y*rect.height/app._layout.logicalHeight};},label);
+ await page.mouse.click(point.x,point.y);await page.evaluate(()=>window.netstorm.stepFixedFrames(2));
+}
+// 실제 사제 판정과 희생 종료 호출을 감싸 관측하며 반환·효과·인자는 바꾸지 않는다.
+async function observe(page){
+ await page.evaluate(async()=>{
+  const {RawMissionOutcome}=await import('./core/raw-mission-outcome.js'),{RawDaisRegular}=await import('./core/raw-dais-regular.js');
+  window.allyObservation={events:[],captured:{},dead:{}};
+  // 현재 값이 바뀔 때만 상태 전이를 기록한다.
+  for(const [method,key] of [['priestCaptured','captured'],['priestDead','dead']]){
+   const original=RawMissionOutcome.prototype[method];
+   RawMissionOutcome.prototype[method]=function(owner){const result=original.call(this,owner),state=window.allyObservation;if(state[key][owner]!==result){state[key][owner]=result;state.events.push({method,owner,result,time:window.netstorm._gameClock.gameSeconds()});}return result;};
+  }
+  const finish=RawDaisRegular.prototype.finishSacrifice;
+  RawDaisRegular.prototype.finishSacrifice=function(...args){window.allyObservation.events.push({method:'finishSacrifice',args,time:window.netstorm._gameClock.gameSeconds()});return finish.apply(this,args);};
+ });
+}
+// AI 자연 승리·새 완료값 저장·새로고침 뒤 다음 미션 해제를 같은 브라우저 저장소에서 확인한다.
+async function run(){
+ const browser=await chromium.launch({headless:true});
+ try{
+  const page=await browser.newPage({viewport:{width:1024,height:768},locale:'en-US'}),errors=[];
+  page.on('pageerror',error=>errors.push(error.stack??error.message));page.on('console',message=>{if(message.type()==='error')errors.push(message.text());});
+  await page.addInitScript(()=>localStorage.setItem('netstorm.settings',JSON.stringify({version:1,values:{welcomeGiven:1,tellTips:0,autoDemo:0,sound:0,music:0}})));
+  await page.goto('http://localhost:9803/debug.html?fixed=25&aspect=4:3&title=1');await ready(page);
+  const before=await page.evaluate(()=>localStorage.getItem('netstorm.progress'));
+  await installAllyAi(page,mission);await observe(page);await page.evaluate(name=>window.netstorm._beginCampaignFromDialog(name),mission);await page.evaluate(()=>window.netstorm.stepFixedFrames(120));await clickLabel(page,'Play Mission');
+  const activation=await page.evaluate(()=>window.netstormAllyTestState);
+  expect(activation.money).toBe(activation.before.money);expect(activation.allies).toBe(activation.before.allies);expect(activation.name).toEqual(activation.before.name);expect(activation.technology).toEqual(activation.before.technology);
+  // 최종 Canvas 출력만 미루며 Screen·Renderer·Kernel은 모두 매 프레임 실행한다.
+  await page.evaluate(()=>{const app=window.netstorm;window.originalFlowPresent=app._presenter.present;app._presenter.present=()=>{};});
+  let terminal=null;
+  //100프레임을 묶어도 내부 프레임은 생략하지 않는다. 승리/패배는 실제 UI와 사제 상태로만 판정한다.
+  for(let frame=0;frame<=limit;frame+=100){
+   if(frame)await page.evaluate(()=>window.netstorm.stepFixedFrames(100));
+   const current=await page.evaluate(()=>{const app=window.netstorm;return{time:app._gameClock.gameSeconds(),buttons:app._mainMenu.dialog?.buttons?.map(button=>button.label)??[],observation:window.allyObservation,sp:app._campaignWorld.session().sp(1)};});
+   if(frame%2000===0)console.log(JSON.stringify({mission,frame,...current,errors}));
+   if(errors.length)throw new Error('실제 게임 프레임 오류');
+   if(current.buttons.includes('Next Mission')){terminal={frame,...current,won:true};break;}
+   if(current.buttons.length&&current.observation.dead[1]){terminal={frame,...current,won:false};break;}
+  }
+  // 종료 화면은 현재 표면을 실제 Canvas에 한 번 출력해 보존한다.
+  await page.evaluate(()=>{const app=window.netstorm;app._presenter.present=window.originalFlowPresent;app._presenter.present(app._ctx,app._surface,app._layout,true);});
+  await page.screenshot({path:'extracted/ally-flow-'+mission+'-terminal.png'});
+  const result={mission,limit,before,activation,terminal,errors};
+  fs.writeFileSync('extracted/ally-flow-'+mission+'.json',JSON.stringify(result,null,2));
+  expect(terminal?.won,'실제 AI 자연 승리').toBe(true);
+  const saved=await page.evaluate(()=>localStorage.getItem('netstorm.progress'));
+  const key='done'+mission,lookup=text=>Object.entries(JSON.parse(text??'{}').values??{}).find(([name])=>name.toLowerCase()===key)?.[1];
+  expect(lookup(before)).not.toBe('1');expect(String(lookup(saved))).toBe('1');result.saved=saved;
+  // 실제 완료 단추가 다음 미션 브리핑으로 이어지는지 확인한다. 목표 수행 입력은 넣지 않는다.
+  await clickLabel(page,'Next Mission');await page.waitForFunction(name=>window.netstorm._clientGuide.current()?.script.name.toLowerCase()===name,NEXT[mission],{timeout:120000});result.directNext=await page.evaluate(()=>window.netstorm._clientGuide.current().script.name);
+  await page.reload();await ready(page);const reloaded=await page.evaluate(()=>localStorage.getItem('netstorm.progress'));expect(String(lookup(reloaded))).toBe('1');result.reloaded=reloaded;
+  await clickLabel(page,'Campaign');await clickLabel(page,'Struggle For Freedom');
+  const label=await page.evaluate(name=>window.netstorm._mainMenu.dialog.menu.items.find(item=>item.command?.name==='MissionBegin'&&item.command.argument.toLowerCase()===name)?.label,NEXT[mission]);
+  expect(label).toBeTruthy();await clickLabel(page,label);await page.waitForFunction(name=>window.netstorm._clientGuide.current()?.script.name.toLowerCase()===name,NEXT[mission],{timeout:120000});
+  result.menuNext=await page.evaluate(()=>window.netstorm._clientGuide.current().script.name);expect(errors).toEqual([]);
+  await page.screenshot({path:'extracted/ally-flow-'+mission+'-unlocked-next.png'});fs.writeFileSync('extracted/ally-flow-'+mission+'.json',JSON.stringify(result,null,2));console.log(JSON.stringify({mission,result:'자연 승리·새 완료값 저장·다음 미션·새로고침 뒤 해제 확인',terminal:terminal.frame}));
+ }finally{await browser.close();}
+}
+run().catch(error=>{console.error(error.stack??error);process.exitCode=1;});

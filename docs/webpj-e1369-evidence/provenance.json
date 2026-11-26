@@ -1,0 +1,30 @@
+{
+  "unit": "WB04-E1369",
+  "mission": "masterofwhirligigs",
+  "recordedAt": "2026-11-26T12:02:15.636Z",
+  "host": "HJOW-Athlon",
+  "mode": "실제 Kernel·Renderer·AI 실행 관측",
+  "canvasPresentation": "물리 Canvas 출력만 미루고 마지막 화면 출력",
+  "files": [
+    {
+      "path": "webpj/extracted/webpj-ally-flow-masterofwhirligigs.log",
+      "bytes": 4243,
+      "sha256": "70fb3e225dc3fcdecce8af1f34356b3bbcd46ef8fa5e63c5b7796d5cfc8fab69"
+    },
+    {
+      "path": "webpj/extracted/campaign-ally-flow.cjs",
+      "bytes": 7936,
+      "sha256": "32ddd6810a503aa2b22e9a21ff5c476e3a17cb286192ec60b6c7c264f490a312"
+    },
+    {
+      "path": "webpj/e2e/ally-ai-test-control.js",
+      "bytes": 4841,
+      "sha256": "755742fc21faee1857fec9a501ac0f29c6436e3fdedad5793a10eac06d24a46c"
+    },
+    {
+      "path": "webpj/www/dist/netstorm.bundle.js",
+      "bytes": 3446525,
+      "sha256": "0d96488c526d4d7ddbc53df67cc656ee51856c4c970ff0006693420e54cf76b9"
+    }
+  ]
+}
