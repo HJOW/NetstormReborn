@@ -2272,306 +2272,273 @@ NetStormには、多彩なキャンペーンミッションと、無限に遊べ
 </a>
 
 <a name="battlemasterHelp">
-<h2>Battle Master</h2>
+<h2>バトルマスター</h2>
 <p>
-The Battle Master can control the <a href="battleOptionsHelp">rules</a> and <a href="playerOptionsHelp">Players Settings</a> of a battle and kick
-unruly players off of the <a href="battleIslandType">Challenge Ring</a>
-before a battle begins.
+バトルマスターは、開始前に戦闘の<a href="battleOptionsHelp">ルール</a>や、
+<a href="playerOptionsHelp">プレイヤー設定</a>を選び、従わないプレイヤーを
+<a href="battleIslandType">チャレンジリング</a>から追い出せます。
 <p>
-The rules of a battle are shown at the bottom of the left hand
-window and the player settings are shown at the top left hand window.
-Click on a rule or setting to change it. When a rule or setting is changed
-you and all the other players in the battle will become "unchecked."
-This is a safety measure to prevent rules and settings changes from slipping past
-players undetected. 
+ルールは左ウィンドウの下半分、プレイヤー設定は上半分に表示され、押すと変更できます。
+変更すると、自分を含む全プレイヤーの準備完了チェックが外れます。これは、変更が
+見過ごされることを防ぐためです。
 <p>
-As Battle Master you have the responsibility of creating a good
-game for all the players involved. If one player is not appropriate
-to your game (perhaps his level is too high) you can Kick him Off the
-ring. Just <c>right-click</c> on his name in the window and 
-select <c>Yes</c>. However, we ask you to be nice to the fellow players and
-try asking them to leave before kicking.
+参加者全員に良いゲームを用意する責任があります。レベルが高すぎるなど、適さない相手は、
+名前を<c>右クリック</c>し、
+<c>Yes</c>を選ぶと追い出せます。ただし、相手を思いやり、まず退出を頼むことをお勧めします。
 <p>
-We urge you to consider the requests of other players on your ring
-regarding rules changes. Nobody likes to wait a long time for a battle
-to start, and heeding such requests can make everyone happier.
+ルールの変更を求められた場合も、検討してみてください。長い開始待ちを
+好む人はおらず、要望を聞くことで、皆がより楽しめるでしょう。
 <p>
-There is one other extremely important role for you as Battle Master.
-Your computer will be the one chosen to route information between the
-other players in the game. If you have a slow or poor connection, it
-is good etiquette to allow others to become a Battle Master instead.
+もう一つの重要な役割は、他のプレイヤー間の情報を、自分のコンピューターが
+中継することです。接続が遅いか不安定なら、他の人に譲るのが礼儀です。
 <p>
-Another consideration is your connection speed. If you're hosting a game
-of five or more players, you might ask around the ring to see who has the
-fastest connection. A fast Battle Master makes a more reliable game for
-everyone.
+接続速度も重要です。五人以上のゲームでは、誰が最も高速か尋ねるとよいでしょう。
+高速なバトルマスターは、全員に安定したゲームを提供できます。
 <p>
-<a href="playerOptionsHelp">Review Player Settings</a>
+<a href="playerOptionsHelp">プレイヤー設定を見る</a>
 <br>
-<a href="battleOptionsHelp">Review Battle Options</a>
+<a href="battleOptionsHelp">戦闘オプションを見る</a>
 <p>
-<a href="multiQuickHelp">Back to Multiplayer Quick Start</a>
+<a href="multiQuickHelp">マルチプレイヤーのクイックスタートに戻る</a>
 </a>
-
-
 
 <a name="battleIslandType">
-<h2>Challenge Rings</h2>
+<h2>チャレンジリング</h2>
 <p>
-<c>Left-click</c> on a Challenge Ring to join that ring.
+リングを<c>左クリック</c>すると参加します。
 <p>
-If you're the first player on the Challenge Ring, you will become the <a href="#battlemasterHelp">Battle Master</a>, 
-as long as the Pass Server Diagnostic option located under Options then Game is selected. Pass Server Diagnostic 
-allows you to serve, however, if you are behind a firewall or have a slow connection you may choose to deselect 
-this option and disallows you to become a <a href="#battlemasterHelp">Battle Master</a>.
-If you are not the first player on the ring you will simply become a member of that battle.
-<p>  
-If you are behind a firewall but would like to be able to serve NetStorm games you will need to open/forward  
-ports <c>6799</c> and <c>6800</c>. There is more help regarding this subject at <a href="http://www.netstormhq.com">Netstorm:HQ</a>.  
+最初の参加者の場合、オプションのGameメニューでサーバー診断合格が選ばれていれば、
+<a href="#battlemasterHelp">バトルマスター</a>になります。この設定はサーバーを務める資格を与えますが、
+ファイアウォールの内側にいるか接続が遅い場合は、解除して<a href="#battlemasterHelp">バトルマスター</a>に
+ならないようにできます。最初でなければ、単に参加者となります。
 <p>
-<i>Your location on the challenge ring is your location in the battle!</i>
+ファイアウォールの内側からサーバーを務めるには、ポート<c>6799</c>と<c>6800</c>を開くか転送する必要があります。
+詳しくは<a href="http://www.netstormhq.com">Netstorm:HQ</a>をご覧ください。
 <p>
-When you join the battle, your name will appear in the left window with a colored box next to it and other <a href="playerOptionsHelp">Player Settings</a>.
-Your name will first be a gray color until you connect to the <a href="#battlemasterHelp">Battle Master</a>. If your name stays gray color,
-then for some reason you can not connect to the Battle Master. Once the gray color goes away the color of the box and your
-name is the color you'll have in the battle. To indicate that you're ready to start, click the colored box next to your name.
+<i>リング内の位置が、戦闘中の自分の位置になります！</i>
 <p>
-Once you clicked the box at first a black circle will appear in the box:   <!"fortgump.L6">
+参加すると、左のウィンドウに、色付きボックスや<a href="playerOptionsHelp">プレイヤー設定</a>と共に名前が現れます。
+<a href="#battlemasterHelp">バトルマスター</a>に接続するまで、名前は灰色です。そのままなら、何らかの理由で
+接続できていません。灰色でなくなると、ボックスと名前の色が戦闘で使う色になります。開始の
+準備ができたら、名前の横の色付きボックスを押してください。
 <p>
-The circle should light up if your name is not gray. If it lights up this means your computer has
-confirmed that it can make a connection to the Battle Master:   <!"fortgump.L7">
+最初に押すと、中に黒い丸が現れます:   <!"fortgump.L6">
 <p>
-If the black circle never lights up and your name stays gray, you cannot make this connection for some reason.
-You will want to leave this battle and join another. In rare circumstances, leaving the
-Challenge Ring and rejoining will allow the connection to be established.
+名前が灰色でなければ、丸が明るくなります。自分のコンピューターがバトルマスターに接続できると確認された
+印です:   <!"fortgump.L7">
 <p>
-You don't have to join a battle if you don't want to. You can leave a battle ring at any time. The <a href="#battlemasterHelp">Battle Master</a>
-has the power to 'kick', however it is common courtesy to politely ask a player to leave
-before using this option.
+丸が暗く、名前も灰色のままなら、何らかの理由で接続できません。
+退出して別の戦闘に参加する方がよいでしょう。まれに、リングを出て再参加すると接続できることもあります。
 <p>
-If a ring has yellow text on it, that means the battle is using a version that is different enough from yours that you may not play together.
+参加は必須ではなく、いつでもリングを離れられます。<a href="#battlemasterHelp">バトルマスター</a>には
+追放する権限がありますが、先に丁寧に退出を頼むのが普通の礼儀です。
 <p>
-Note: The <a href="#battlemasterHelp">Battle Master</a> can add a description by right clicking the center of the ring and typing into the field.
+黄色い文字のリングは、互換性のないバージョンを使っており、一緒に遊べないことを示します。
 <p>
-<a href="multiQuickHelp">Back to Multiplayer Quick Start</a>
+注意: <a href="#battlemasterHelp">バトルマスター</a>はリングの中央を右クリックし、入力欄で説明を設定できます。
+<p>
+<a href="multiQuickHelp">マルチプレイヤーのクイックスタートに戻る</a>
 
 </a>
 </a>
-
 
 <a name="zoneHelp">
+
 <a name="challengeIslandType">
-<h2>Zones</h2>
+<h2>ゾーン</h2>
 <p>
-NetStorm has many Zones for you to play in.  When you first enter the Pyrosphere you'll
-move automatically to a Zone that matches your Level.  If the best Zone for
-you has no other players, you'll probably appear in a nearby Zone with somebody in it.
+NetStormには多くのゾーンがあります。最初にパイロスフィアへ入ると、自分のレベルに合う場所へ
+自動的に移動します。誰もいなければ、他の人がいる近いゾーンに現れるでしょう。
 <p>
-In each Zone you'll see <a href="#battleIslandType">Challenge Rings</a> and more Zones.
+各ゾーンからは、<a href="#battleIslandType">チャレンジリング</a>と、さらに別のゾーンが見えます。
 <br>
 <!"battleIsland.*">
-"Challenge Ring"
+「チャレンジリング」
 <br>
-<!"challengeIsland.*"> "Zone"
+<!"challengeIsland.*"> 「ゾーン」
 <p>
-If you wish to visit another Zone, examine the words under the Zone. If it says, "Empty"
-then there are no other players in that Zone. However, if someone joined the zone recently
-you may not be able to tell they joined the zone. Pushing <c>F9</c> will refresh the zones and allow
-you to see if anyone joined the zone recently. If there is someone in the zone it will say the number of
-players in the zone, and there average level. To travel to another Zone, just <c>left-click</c>
-the Zone.
+移動したければ、ゾーンの下の文字を見てください。「Empty」なら他のプレイヤーはいません。
+ただし、新しい参加者をまだ検出していないこともあります。<c>F9</c>で
+更新し、最近の参加者を確認できます。誰かがいれば、人数と
+平均レベルが表示されます。移動するには、ゾーンを<c>左クリック</c>するだけです。
 <p>
-While in a Zone, click on the player's name on the left window and your
-screen will zoom to that player. <c>Left-click</c> near that player and your island
-will fly to the new location you've chosen.
+ゾーン内で左ウィンドウの名前を押すと、相手の場所へ表示が移動します。その近くを
+<c>左クリック</c>すると、自分の島が選んだ場所へ飛びます。
 <p>
-<a href="multiQuickHelp">Back to Multiplayer Quick Start</a>
+<a href="multiQuickHelp">マルチプレイヤーのクイックスタートに戻る</a>
 </a>
 </a>
 
 <a name="playerListView">
+
 <a name="playerListViewHelp">
-<h2>Player List Window</h2>
+<h2>プレイヤー一覧ウィンドウ</h2>
 <p>
-If you are floating free in the Pyrosphere you will see the names
-of every player present in your <a href="challengeIslandType">Zone</a>.  You can
-click on a player's name to see where that player is.
+パイロスフィアを自由に漂っている時は、自分の<a href="challengeIslandType">ゾーン</a>の全プレイヤーが
+表示されます。名前を押すと、その人の場所が分かります。
 <p>
-With each player handle you may see some or all of the following information, and might look like this:
+各プレイヤーの名前には、次の情報の一部または全部が付きます。
 <!"fortgump.L1"><!"fortgump.L0"><~y><~E><~B>1.43 devo12<~.>
 <p>
-<!"fortgump.L1"> indicates that the player is marked as not being able to be the 
-<a href="battleMasterHelp">Battle Master</a> i.e. the server in a multi-player game. 
-In short, battles will be more robst the fewer players are fire-walled.
-If you are fire-walled yourself, look for battles where most of your opponents are not i.e. the server
-in a multi-player game.
+<!"fortgump.L1">は、<a href="battleMasterHelp">バトルマスター</a>、つまりゲームのサーバーを務められないことを
+示します。簡単に言えば、ファイアウォールの内側の人が少ないほど、戦闘は安定します。
+自分が内側にいる場合は、他の人の多くがサーバーを務められる、
+ファイアウォールの影響を受けていない戦闘を探しましょう。
 <p>
-If you see the <!"fortgump.L1"> icon next to your name, but don't think that you are
-actually fire-walled, you can get rid of the icon by pressing Esc, clicking Options, 
-clicking Game and select the Pass Server Diagnostic option. This means that you can 
-be a Battle Master at the start of a game, and that you can take over the role of
-<a href="battleMasterHelp">Battle Master</a> in the middle of a game if the current Battle Master disconnects.
+名前の横に<!"fortgump.L1">があっても、影響を受けていないと思う場合は、Escからオプション、
+Gameを開き、サーバー診断合格を選ぶと消せます。これで開始時にバトルマスターになれます。
+また、現在のマスターが切断した時に、その<a href="battleMasterHelp">役割</a>を引き継ぐことも
+できます。
 <p>
-If you do not see the <!"fortgump.L1"> icon next to your name, but you know that you are unable to
-serve well, then you can mark yourself as firewalled by unselecting the option mentioned in the previous
-paragraph. This will mean that you will never become Battle Master in a game.
+<!"fortgump.L1">がなくても、サーバーを務められないと分かっている場合は、前述の
+設定を解除し、ファイアウォールの内側と示してください。バトルマスターにならなくなります。
 <p>
-<!"fortgump.L0"> indicates that the player does not have the NetStorm CD currently in 
-his or her CD-Rom drive.  Note: On most servers you will not see this icon.
+<!"fortgump.L0">は、CD-RomドライブにNetStorm CDが入っていないことを示します。多くの
+サーバーでは、このアイコンは表示されません。
 <p>
-The numbers before the name, example <c>1.43</c> are the <a href="rankHelp">Rank</a> and level. So therefore
-<c>1.43</c> would be rank 1 level 43. The higher the level the more <a href="unitHelp">Units</a> the player 
-has. The higher the rank is the longer the player has been playing.
+名前の前の数字（例: <c>1.43</c>）は<a href="rankHelp">階級</a>とレベルです。<c>1.43</c>なら、階級1、レベル43です。
+レベルが高いほど、持っている<a href="unitHelp">ユニット</a>が多く、階級が高いほど、長く遊んでいることを
+示します。
 <p>
-<~y><~E><~B>devo12<~.> is an example of a player's handle name
+<~y><~E><~B>devo12<~.>は、名前（ハンドル）の例です。
 <p>
-While inside a <a href="battleIslandType">Challenge Ring</a> you may notice icons such as
-~[IfortGump.L9] ~[IfortGump.L11] <!"icon.B0">. You can review these icons in the
-<a href="playerOptionsHelp">Player Settings</a> section.
+<a href="battleIslandType">チャレンジリング</a>では、~[IfortGump.L9] ~[IfortGump.L11] <!"icon.B0">などのアイコンが現れる
+こともあります。<a href="playerOptionsHelp">プレイヤー設定</a>の項目で確認できます。
 <p>
-See the <a href="multiQuickHelp">Multiplayer Quick Start</a> for additional information.
+詳細は、<a href="multiQuickHelp">マルチプレイヤーのクイックスタート</a>をご覧ください。
 </a>
 </a>
 
 <a name="battleStatusView">
+
 <a name="battleStatusViewHelp">
-<h2>Battle Status Window</h2>
+<h2>戦闘状態ウィンドウ</h2>
 <p>
-The top half of this window displays all the players in your battle and the current <a href="#playeroptionshelp">Player Settings</a>.
+上半分には、戦闘の全プレイヤーと現在の<a href="#playeroptionshelp">プレイヤー設定</a>が表示されます。
 <p>
-The bottom half shows the current <a href="#battleoptionshelp">Battle Options</a>.
+下半分には、現在の<a href="#battleoptionshelp">戦闘オプション</a>が表示されます。
 <p>
-Each player must click the box next to his or her name before the <a href="battlemasterhelp">Battle Master</a>
-can start the battle.
+<a href="battlemasterhelp">バトルマスター</a>が開始するには、全員が名前の横のボックスを押す必要があります。
 <p>
-If somebody joins and their name stays gray it means they can not connect. When the gray named person clicks 
-in their pip will stay dark meaning they cannot establish a connection with the <a href="battlemasterhelp">Battle Master</a> 
-and cannot play in that game. Sometimes leaving the <a href="#battleIslandType">Challenge Ring</a> and rejoining will
-allow the connection to be established.
+参加しても名前が灰色のままなら、接続できていません。ボックスを押しても丸が暗いままなら、
+<a href="battlemasterhelp">バトルマスター</a>と接続できず、そのゲームでは遊べません。
+<a href="#battleIslandType">チャレンジリング</a>を出て再参加すると、接続できる場合もあります。
 <br>
-<!"fortgump.L6"> Dark Pip (can not connect)<br>
-<!"fortgump.L7"> Light Pip (connected)
+<!"fortgump.L6"> 暗い印（接続不能）<br>
+<!"fortgump.L7"> 明るい印（接続済み）
 <p>
-Click <a href="#playerlistView">here</a> for a key to the information contained in:<br>
+<a href="#playerlistView">こちら</a>で、次の情報の解説をご覧ください。<br>
 <a href="#playerlistView"><!"fortgump.L1"><!"fortgump.L0"><~y>devo12<~.></a>
 <p>
-<a href="multiQuickHelp">Back to Multiplayer Quick Start</a>
+<a href="multiQuickHelp">マルチプレイヤーのクイックスタートに戻る</a>
 </a>
 </a>
+
 <a name="playerOptionsHelp">
-<h2>Player Settings</h2>
+<h2>プレイヤー設定</h2>
 <p>
-Player settings are settings the <a href="battlemasterhelp">Battle Master</a> sets for each player.
+<a href="battlemasterhelp">バトルマスター</a>が、各プレイヤーの条件を指定します。
 <p>
-<c>Observer</c> - determines whether the indicated person is fighting or observing the battle. A ~[IfortGump.L9] 
-represents that the person is playing, while a ~[IfortGump.L10] represents that the person is observing.
-An observer will not have an island, a priest, or Storm Power in the game. The Battle Master can adjust
-this setting by clicking on the icon.
+<c>Observer</c> - 参加か観戦かを選びます。~[IfortGump.L9]は参加、
+~[IfortGump.L10]は観戦です。観戦者に島、司祭、ストームパワーはありません。バトルマスターが
+アイコンを押して切り替えます。
 <p>
-<c>Preset Teams</c> - To create a preset team, the Battle Master can click on the colored shields until the
-players on the same team have matching shields. Right clicking a colored shield will make this setting go back.
+<c>Preset Teams</c> - 事前にチームを決めるには、同じチームの人の盾が同じになるまで、色付きの盾を
+押します。右クリックで逆順に切り替わります。
 <br>
-The Shields are: ~[IfortGump.L11]~[IfortGump.L12]~[IfortGump.L13]~[IfortGump.L14]~[IfortGump.L15]~[IfortGump.L16]~[IfortGump.L17]~[IfortGump.L18]
+盾は次のとおりです: ~[IfortGump.L11]~[IfortGump.L12]~[IfortGump.L13]~[IfortGump.L14]~[IfortGump.L15]~[IfortGump.L16]~[IfortGump.L17]~[IfortGump.L18]
 <p>
-<c>Handicap</c> - The Handicap option allows the Battle Master to strengthen the units of a certain player.
-Left and Right clicking the icon forces it to change. 
+<c>Handicap</c> - バトルマスターが、指定したプレイヤーのユニットを強くできます。
+アイコンを左または右クリックして切り替えます。
 <br>
-The icons from one to ten are: <!"icon.B0"> <!"icon.B1"> <!"icon.B2"> <!"icon.B3"> <!"icon.B4"> <!"icon.B5"> <!"icon.B6"> <!"icon.B7"> <!"icon.B8"> <!"icon.B9">
+1から10のアイコンです: <!"icon.B0"> <!"icon.B1"> <!"icon.B2"> <!"icon.B3"> <!"icon.B4"> <!"icon.B5"> <!"icon.B6"> <!"icon.B7"> <!"icon.B8"> <!"icon.B9">
 <br>
-Once the rank gets high, it will have two icons and it works just like a number system. The higher the icon the
-more strength the player units are. You can check the handicap any time in battle by pressing <c>F9</c> to
-bring up the player list. For more information on this you can check <a href="http://www.netstormhq.com">Netstorm:HQ</a>.
+階級が上がると二つのアイコンになり、数字のように働きます。値が高いほどユニットが強くなります。
+戦闘中はいつでも<c>F9</c>で一覧を開き、ハンディキャップを確認できます。詳しくは、
+<a href="http://www.netstormhq.com">Netstorm:HQ</a>をご覧ください。
 <p>
-<a href="battleOptionsHelp">Review Battle Options</a>
+<a href="battleOptionsHelp">戦闘オプションを見る</a>
 <br>
-<a href="multiQuickHelp">Back to Multiplayer Quick Start</a>
+<a href="multiQuickHelp">マルチプレイヤーのクイックスタートに戻る</a>
 </a>
+
 <a name="battleOptionsHelp">
-<h2>Battle Options</h2>
+<h2>戦闘オプション</h2>
 <p>
-Battle options change the initial conditions of a battle.
-<p>
-
-<c>Game Options></c> Clicking this text will pop up a drop down menu that will list all the battle options that can be changed in drop down format.<p>
-
-<c>(Sort By)</c> you can click the sort by menu to easily toggle between the battle options viewing.<br> 
-<p><c>The Show All Options</c> has the same appearance of older version of NS however clicking the white text will bring up a drop down box allowing you to change the value of the option easily while clicking the tan text will toggle the options by one as seen in prior version of Netstorm.<br>
-<p><c>Show Only Changed Options</c>this option will show only the battle options that have been changed from there original default. This option allows you to add battle master option much the same as you would add excluded units. Clicking the white or tan text will reset the battle option to default and remove it from the current viewpoint. <p>
+戦闘の初期条件を変更します。
 <p>
 
-<c>Game Type</c> - Netstorm as a game over the years has evolved into many branches and with every introduction of a new patch the game dynamics tend to change. Keeping this in mind the concept of Game Types was born. In general Game Types allows you to easily select between different generations of battle styles that have been created over the years. This option also organizes the battle menu into something that is easier to read and easier to configure and auto configures some of the battle options thus making setting up a game quicker and easier. For example <br>
-<p>
-<c>Netstorm Standard</c> is classified as the most current style of game play. This selection features the newly implemented geyser distribution system and includes battle options that are traditionally associated with Modern Netstorm game play.<br> 
-<p>
-<c> Netstorm Classic</c> is a highbred between Netstorm 10.64 and Netstorm 10.37 and utilizes the random map geyser distribution system commonly found in older version of the game.<br>
-<p>
-<c> Netstorm Flexible</c> unlocks 95% of the battle options that can be configured and is very similar to the layout of  Netstorm 10.70<br>
-<p>
-<c> Netstorm Geyserless</c> is a radical new concept born from the idea of the furies granting the player small amounts of money during the game rather than the player having to worry about collecting. This game style is very new, and can be quite fun.<br>
-<p>
-<c> Player Customizable</c> allows the player to create there own game style and edit almost every aspect of the game. Who knows maybe you will create a game style that everyone will enjoy playing.
+<c>Game Options></c>を押すと、全オプションの変更用ドロップダウンメニューが開きます。<p>
+
+<c>(Sort By)</c>で、表示方法を切り替えられます。<br>
+<p><c>The Show All Options</c>は旧版と同じ表示です。白い文字は値を選ぶドロップダウンを開き、黄褐色の文字は旧版のように順に切り替わります。<br>
+<p><c>Show Only Changed Options</c>は既定値と異なる項目だけを表示します。除外ユニットの追加に似た方法で設定項目を追加できます。白や黄褐色の文字を押すと、既定値に戻って表示から消えます。<p>
 <p>
 
-<c>Bridge Slots</c> - determines how many bridges will appear in
-your Production Window during the game.
+<c>Game Type</c> - 分岐やパッチで変わってきた過去の戦い方を簡単に選べます。メニューを整理し、一部の設定を自動化して準備を早めます。例:<br>
 <p>
-<c>Unit Rate</c> - determines how quickly units refresh in your
-Production Window. For example, when you lay a unit down in the
-game its image in the Production Window will stay dimmed for a 
-while. Increase the Unit Rate and it will light up more quickly.
+<c>Netstorm Standard</c>は最新の方式です。新しいガイザー分配と、現代のNetStormで一般的な戦闘設定を含みます。<br>
 <p>
-<c>Generator Range</c> - describes how far a Generator will cast
-its energy. A longer range means it's easier to deploy high level
-units (but there is less strategy to the game).
+<c> Netstorm Classic</c>は10.64と10.37の混合で、旧版のランダムマップのガイザー分配を使います。<br>
 <p>
-<c>Kill Reward</c> - When you destroy an enemy unit you usually
-get one quarter of the Storm Power value of that unit. You can change
-the reward value with this option.
+<c> Netstorm Flexible</c>は設定の95%を変更でき、10.70の構成に非常によく似ています。<br>
 <p>
-<c>Breakable Alliances</c> - Are players allowed to break alliances once they
-have made them?  Normally you cannot break alliances. If you want greater freedom
-you can switch this to <c>Yes</c>.
+<c> Netstorm Geyserless</c>は資源収集の代わりに、フューリーが少額ずつ資金を授ける新方式です。新しく、面白い遊び方になるでしょう。<br>
 <p>
-<c>Allow Send</c> - Are players allowed to send Storm Power to other players? Normally you 
-can send Storm Power to other players. If you want to disallow this you can switch this to <c>No</c>.
+<c> Player Customizable</c>では、ほぼすべてを編集して独自の方式を作れます。皆に好まれる方式を生み出せるかもしれません。
 <p>
-<c>Money per Geyser</c> - How much Storm Power will each Geyser
-produce?
+
+<c>Bridge Slots</c> - 生産ウィンドウに現れる橋の数。
 <p>
-<c>Starting Cash</c> - determines how much Storm Power you start with. This is normally set at <c>6500</c>,
-however if you feel you need more or less at the start of game you can change this option.
+<c>Unit Rate</c> - 配置後、生産ウィンドウのユニットが再び使えるまでの速さです。
+暗い絵が、値を上げると早く明るくなります。
 <p>
-<c>Geyser Amount</c> - determines how many geysers are in the game. You can change this to have
-more or less geysers in the game.
+<c>Generator Range</c> - エネルギーの届く範囲です。広いほど上位ユニットを置きやすくなりますが、
+戦略性は減ります。
 <p>
-<c>Spell</c> - Do you want spells in the game? Normally spells are in the game. If you want to disallow spells
-you can switch this to <c>No</c>. This option does not affect the priest.
+<c>Kill Reward</c> - 通常、敵を破壊すると、そのストームパワー価値の4分の1を得ます。
+その報酬を変更します。
 <p>
-<c>Map Mode</c> - determines what type of map you want. This is normally set to the traditional multiplayer map
-<c>Archipelago</c>, but you can change this to a <c>Single Island</c>.
+<c>Breakable Alliances</c> - 同盟を破棄できるかどうか。通常は不可ですが、自由にするには、
+<c>Yes</c>を選びます。
 <p>
-<c>Map Size</c> - Changing this option will result in a larger or smaller map size.
+<c>Allow Send</c> - 他のプレイヤーへのストームパワー送金。通常は可能です。
+禁止するには<c>No</c>を選びます。
 <p>
-<c>Map Density</c> - determines the size and amount of islands in the game. Higher densities increase the
-odds of more and larger islands appearing, while lower densities decrease these odds.
+<c>Money per Geyser</c> - ガイザー一つのストームパワー産出量。
 <p>
-<c>Island Dynamics</c> - this option if active causes random items such as trees, ruins and monuments to be created allover the map. 
+<c>Starting Cash</c> - 初期ストームパワー。通常は<c>6500</c>ですが、
+増減したい場合は変更できます。
 <p>
-<c>Geysers Placement</c> - This option toggles between having no geyser on startup or respawning during the game, the old Netstorm geyser mode where geysers could spawn anywhere on the map and the new geyser mode that evenly distributes geysers across the map.
+<c>Geyser Amount</c> - ゲーム内のガイザー数を増減します。
 <p>
-<c>Geysers Respawns</c> - this option sets how often the respawn geyser could. <p>
+<c>Spell</c> - 通常は呪文が現れます。禁止するには、
+<c>No</c>を選びます。司祭には影響しません。
 <p>
-<c>Resource Injections</c> - This option allows the furies to send you storm power at discreet intervals of time. <p>
+<c>Map Mode</c> - マップの種類。通常のマルチプレイヤー用の
+<c>Archipelago</c>から、<c>Single Island</c>へ変更できます。
 <p>
-<c>Injection Value</c> - This option sets how much storm power the furies will send you per injection. <p>
+<c>Map Size</c> - マップを拡大または縮小します。
+<p>
+<c>Map Density</c> - 島の大きさと数。高密度ほど、大きな島や多数の島が現れやすく、
+低密度ほど現れにくくなります。
+<p>
+<c>Island Dynamics</c> - 木、遺跡、記念碑などをランダムに配置します。
+<p>
+<c>Geysers Placement</c> - 開始時はなく途中で補充する方式、どこにでも現れる旧方式、全体に均等に分配する新方式を切り替えます。
+<p>
+<c>Geysers Respawns</c> - ガイザーが再出現する頻度。<p>
+<p>
+<c>Resource Injections</c> - フューリーが一定間隔でストームパワーを送ります。<p>
+<p>
+<c>Injection Value</c> - 一度に届くストームパワーの量。<p>
 <p>
 
 
-<c>Excluded Units</c> - If you don't want to allow a certain unit or building to be
-built during your battle, you can exclude them here. Also excluding spells will not allow a particular spell to appear on the map.
+<c>Excluded Units</c> - 建設を禁止したいユニットや建物を選べます。
+呪文を除外すると、マップに現れなくなります。
 <p>
-<a href="playerOptionsHelp">Review Player Settings</a>
+<a href="playerOptionsHelp">プレイヤー設定を見る</a>
 <br>
-<a href="multiQuickHelp">Back to Multiplayer Quick Start</a>
-
+<a href="multiQuickHelp">マルチプレイヤーのクイックスタートに戻る</a>
 

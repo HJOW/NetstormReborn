@@ -1,7 +1,5 @@
 {
-  "partialFiles": [
-    "help"
-  ],
+  "partialFiles": [],
   "tell": {
     "completedRanges": [
       {
@@ -28,11 +26,11 @@
     "nextSection": null
   },
   "help": {
-    "completedAnchorOccurrences": 128,
+    "completedAnchorOccurrences": 138,
     "totalAnchorOccurrences": 138,
-    "completedUniqueTopics": 118,
+    "completedUniqueTopics": 128,
     "totalUniqueTopics": 128,
-    "nextSection": "battlemasterHelp",
+    "nextSection": null,
     "pendingSharedBodyTopics": []
   }
 }

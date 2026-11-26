@@ -47,6 +47,11 @@ TEST_CASE(JapaneseText_HelpAll128TopicsKeepCompleteDisplaySequences) {
             CHECK(netstorm::o::DecodeExtendedSequence({reinterpret_cast<const std::uint8_t*>(body.data()),body.size()},at));at+=netstorm::o::kExtendedTextLength-1;
         }
         if (topic=="bridgetype" || topic=="sacrificeoutline" || topic=="f1help") CHECK(HasExtendedDisplayText(body)); // 이번에 번역한 핵심 주제도 실제 일본어여야 한다.
+        if (topic=="battleoptionshelp") { // 가장 긴 주제가8192BYTE 파서에서 조용히 잘리는 회귀도 찾는다.
+            const auto decoded=netstorm::o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(body.data()),body.size()}); // 실제 표시 BYTE의 끝 문장을 UTF-8로 확인한다.
+            CHECK(decoded.find("呪文を除外すると、マップに現れなくなります。")!=std::string::npos);
+            CHECK(decoded.find("マルチプレイヤーのクイックスタートに戻る")!=std::string::npos);
+        }
     }
 }
 
