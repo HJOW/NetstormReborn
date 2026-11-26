@@ -739,10 +739,27 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         app._clientInputQueue.pushCommand(0x0200005d, 0, salvageSid); app._runCampaignInputFrame();
         assert.deepEqual(session.localConnectionPackets().slice(beforeSalvage), []); assert.equal(session.core().pool.slot(salvageSid)[11], salvageFlags);
         session.pumpLocalConnection(); assert.deepEqual(session.localConnectionPackets().slice(beforeSalvage), [0x54]); assert.ok(session.core().pool.slot(salvageSid)[11] & 3); app._clientGameplay.denySalvage().value = denied;
+        // 실제 Session/Guide/루트에서 추가 안내를 제출해도 게임 덤프는 변하지 않는다. Node 조건 검사용 단계 변경은 끝에 되돌린다.
+        const objectiveGate = guide.current().runtime.gate, objectiveBefore = { ...objectiveGate };
+        Object.assign(objectiveGate, { started: 1, tutorialNumber: 1, stage: 65, lockFrames: 0, timerSeconds: 0, demo: 0 });
+        app._mainMenu.setDialog(null); app._campaignProduction.ui.gameMenu().close();
+        const beforeObjectiveDump = app.sessionDump(); app._updateCampaignTutorialObjective();
+        assert.equal(app._campaignTutorialObjective.text(), 'Press F4 to return to your island, or place a bridge.');
+        assert.equal(app.sessionDump(), beforeObjectiveDump);
+        assert.deepEqual(objectiveGate, { ...objectiveBefore, started: 1, tutorialNumber: 1, stage: 65, lockFrames: 0, timerSeconds: 0, demo: 0 });
+        objectiveGate.stage = 66; app._updateCampaignTutorialObjective(); assert.equal(app._campaignTutorialObjective.text(), 'Place a total of 8 bridges.');
+        objectiveGate.lockFrames = 1; app._updateCampaignTutorialObjective(); assert.equal(app._campaignTutorialObjective.text(), 'Wait for the next tutorial message.');
+        assert.equal(app._openTell('A.'), true); app._updateCampaignTutorialObjective(); assert.equal(app._campaignTutorialObjective.text(), '');
+        app._mainMenu.setDialog(null); objectiveGate.lockFrames = 0; app._updateCampaignTutorialObjective(); assert.equal(app._campaignTutorialObjective.text(), 'Place a total of 8 bridges.');
+        app._campaignProduction.ui.gameMenu().open(); app._updateCampaignTutorialObjective(); assert.equal(app._campaignTutorialObjective.text(), '');
+        app._campaignProduction.ui.gameMenu().close(); app._updateCampaignTutorialObjective(); assert.equal(app._campaignTutorialObjective.text(), 'Place a total of 8 bridges.');
+        Object.assign(objectiveGate, objectiveBefore);
+        const retiredObjective = app._campaignTutorialObjective;
         // 실제 미션 이탈은 공통 자식 증빙을 거쳐 Runtime을 반납하고 그 전에 만든 같은 새 HUD만 남긴다.
         app._clientLocal.captureEnd().value = 123.5; app._clientGameplay.hideBuildings().value = 1;
         const retiringWorld = app._campaignWorld; app._releaseCampaignWorld();
         assert.equal(app._campaignWorld, null); assert.equal(app._clientGameplay.borrowed(), false); assert.equal(app._surfaceStorage.borrowed, false);
+        assert.equal(app._campaignTutorialObjective, null); assert.equal(retiredObjective.text(), '');
         assert.equal(app._clientLocal.captureEnd().value, 0); assert.equal(app._clientGameplay.hideBuildings().value, 0);
         assert.equal(createdHud.world, retiringWorld); assert.equal(app._campaignProduction.ui, createdHud.ui);
         assert.equal(app._campaignProduction.session, null); assert.equal(app._campaignProduction.worldBound, false);

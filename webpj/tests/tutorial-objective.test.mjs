@@ -7,10 +7,19 @@ import { REPO_ROOT } from './helpers.mjs';
 import { TUTORIAL_OBJECTIVES, TUTORIAL_WAITING, tutorialObjectiveKey } from '../www/core/tutorial-objective.js';
 import { createMissionFrameGateState } from '../www/core/raw-mission-frame-gate.js';
 import { XlatTable } from '../www/assets/xlat.js';
+import { Netstorm } from '../www/netstorm.js';
 
 // CP1371 카탈로그는 웹 표의 누락·오타를 검출하는 별도 기준 자료다.
 const catalog = fs.readFileSync(path.join(REPO_ROOT, 'cpppj/src/client/TutorialObjectiveCatalog.inc'), 'utf8');
 const expected = [...catalog.matchAll(/\{(\d),'(.)',"([^"]+)"\}/g)].map((match) => ({ tutorial: Number(match[1]), stage: match[2].charCodeAt(0), english: match[3] }));
+
+// 원본 표시 생략은 고정 시각을 명시한 검사에서만 가능하고 기본 고정 실행도 새 안내를 표시한다.
+test('튜토리얼 안내: 원본 표시 대조는 고정 시각의 명시 선택으로만 켜진다', () => {
+    assert.equal(new Netstorm().options.originalTutorialPresentation, false);
+    assert.equal(new Netstorm({ originalTutorialPresentation: true }).options.originalTutorialPresentation, false);
+    assert.equal(new Netstorm({ fixedFrameMs: 25 }).options.originalTutorialPresentation, false);
+    assert.equal(new Netstorm({ fixedFrameMs: 25, originalTutorialPresentation: true }).options.originalTutorialPresentation, true);
+});
 
 // 완결된40단계와 공유 문구2개를 포함한39키를 모두 비교한다.
 test('튜토리얼 안내: CP1371의40단계·39키와 불변 목록이 일치한다', () => {

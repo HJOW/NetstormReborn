@@ -123,6 +123,8 @@ import { resetClientClockSynchronization } from './core/client-state-storage-cle
 import { resetStateBridgeDecayScan } from './core/raw-state-bridge-reset.js';
 import { RawCampaignMissionStartBindings } from './core/raw-campaign-mission-start-bindings.js';
 import { RawCampaignTutorialOneBindings } from './core/raw-campaign-tutorial-one-bindings.js';
+import { tutorialObjectiveKey } from './core/tutorial-objective.js';
+import { TutorialObjectiveGump } from './ui/tutorial-objective-gump.js';
 import { MISSION_RELOAD_COMMAND, dispatchMissionAbort } from './core/mission-guide-input.js';
 import { resolveMissionBeginName } from './core/mission-name-alias.js';
 import { WORLD_DESTINATION_SELECTED_COMMAND } from './core/raw-user-selection.js';
@@ -605,6 +607,8 @@ export class Netstorm {
             // 검사 전용 고정 시각 모드의 프레임 밀리초(0 이면 꺼짐)이다. 켜면 Client 시각 공급원이 프레임마다 이 값만큼만 전진하고(원본 cpppj `--fixed-frame-ms` 와 같음) 프레임은 requestAnimationFrame 이 아니라
             // `stepFixedFrames` 로만 진행한다. 같은 입력 단계표의 두 실행을 같은 시계·난수로 비교하는 L2·L3 결정론 대조용이며 주소 `?fixed=25` 로도 켠다. (2026-11-23 WB04-E1271)
             fixedFrameMs: normalizeFixedFrameMs(options.fixedFrameMs ?? params.get('fixed')),
+            // 고정 시각 원본 화면 대조에서만 추가 튜토리얼 표시를 생략한다. 기본 게임과 고정 시각의 기본 표시는 안내를 포함한다.
+            originalTutorialPresentation: normalizeFixedFrameMs(options.fixedFrameMs ?? params.get('fixed')) > 0 && Boolean(options.originalTutorialPresentation ?? (params.get('originalTutorialPresentation') === '1')),
             // 원본 비교 모드이다. 참이면 웹 판본이 빼는 원본 화면 요소(메인 메뉴 Multiplayer·Edit·Quit 버튼, 펼침 메뉴의 Direct Draw·Resolution·Technical Help 등,
             // Campaign 목록의 User Made Campaigns 행)를 원본처럼 보여 cpppj 오라클·원본 스크린샷과 같은 배치로 비교한다. 그 요소들의 동작(Edit·멀티플레이 등)은 여전히 구현하지 않는다.
             // 무브라우저 실행(tools/headless.mjs)의 오라클 비교 전용이며 기본값 false 이다. (2026-11-07 WB02-H)
@@ -684,6 +688,8 @@ export class Netstorm {
         this._gameAssets = null; this._surfaceStorage = null; this._clientKernel = null; this._clientTrace = null; this._clientProductionGlobals = null; this._campaignProduction = null;
         // 커널이 소유한 번개 팔레트 프로세스(TYPE 55)의 PID 목록이다. 소멸 콜백에서 제거하며 세션 종료 전 정리한다. (2026-11-24 WB04-E1329)
         this._thunderProcesses = [];
+        // 현재 Client 루트에 소유한 추가 튜토리얼 안내다. State 정리와 루트 반납 전에 자기 노드만 지운다.
+        this._campaignTutorialObjective = null;
         // 미니맵의 장기 dirty 상태와 색 전역은 Client 수명에 둔다. (2026-11-20 WB04-E1082)
         this._clientMinimapState = null; this._clientMinimapGlobals = null; this._gameMenuButton = null; this._lastCampaignMission = null;
         // 게임 메뉴(Pause)가 올린 게임 시계 정지·음소거 깊이다. 미션을 떠날 때 되돌린다. (2026-11-20 WB04-E1089)
@@ -1597,6 +1603,7 @@ export class Netstorm {
 
     // 현재 World의 Session을 반납하고 같은 미션 연결 대기 관문을 해제한다.
     _releaseCampaignWorld() {
+        this._clearCampaignTutorialObjective();
         // World 가 없어도(State7 도중 실패 등) 이미 시작한 장면 음악은 메뉴 곡으로 되돌린다. (2026-11-20 WB04-E1119)
         this._endSceneMusic();
         if (!this._campaignWorld && !this._campaignProduction) return;
@@ -2390,11 +2397,35 @@ export class Netstorm {
             });
     }
 
+    // 미션/State/Client 반납 전에 실제 표시 줄과 장기 루트 참조를 함께 정리한다.
+    _clearCampaignTutorialObjective() {
+        if (!this._campaignTutorialObjective) return;
+        this._campaignTutorialObjective.clear(); this._campaignTutorialObjective = null;
+        this._clientRenderer?.invalidateAll();
+    }
+
+    // 현재 실제 gate를 읽어 창이 없는 지도에만 안내를 제출한다. 진행/예약/승패 판정은 호출하지 않는다.
+    _updateCampaignTutorialObjective() {
+        const root = this._clientGump, current = this._clientGuide?.current(), world = this._campaignWorld;
+        if (!root) { if (this._campaignTutorialObjective) throw new Error('튜토리얼 안내의 Client 루트 반납 순서 오류'); return; }
+        const ui = this._campaignProduction?.ui; let key = '';
+        if (!this.options.originalTutorialPresentation && this._campaignDisplayActive() && current?.runtime.guided
+            && current.runtime.saveToken === this._campaignWorldMissionToken && !this._mainMenu?.dialog && !root.lifetimeState().currentDialog
+            && !this._clientHtml?.window.instances && !ui?.knowledge()?.isOpen() && !ui?.gameMenu()?.isOpen()) {
+            key = tutorialObjectiveKey(current.script.name, current.runtime.gate, current.runtime.mode64);
+        }
+        if (!key && !this._campaignTutorialObjective) return;
+        if (!this._campaignTutorialObjective) this._campaignTutorialObjective = new TutorialObjectiveGump(root, this._resources.fonts);
+        const colors = this._clientPaletteScreen.colors();
+        if (this._campaignTutorialObjective.sync(key ? this._resources.translate(key) : '', world?.mapView() ?? root.mapView(), colors.basic[7], colors.basic[0])) this._clientRenderer.invalidateAll();
+    }
+
     // 현재 미션의 준비·DIB 합성·구름 정리·표시를 원본 순서로 한 번 실행한다.
     _drawCampaignRendererFrame() {
         const world = this._campaignWorld, screen = this._clientPaletteScreen, renderer = this._clientRenderer;
         const clouds = this._clientKencloud, game = this._clientGameplay, data = this._gameData, gump = this._clientGump;
         if (!world || world.connecting || !screen || !renderer || !clouds || !game || !data || !gump || !this._clientRendererFrame || !this._clientRandom) throw new Error('미션 Renderer 출력의 현재 장치 수명 오류');
+        this._updateCampaignTutorialObjective();
         const camera = game.camera();
         const drawing = new CampaignRendererDrawing({ world, screen, camera: camera.snapshot(), globals: this._clientRendererFrame,
             clouds, files: data.files, config: data, random: this._clientRandom.game, denominator: camera.denominator(), clearOutsideMap: true,
