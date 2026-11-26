@@ -1,0 +1,149 @@
+{
+  "unit": 1376,
+  "product": 1375,
+  "date": "2026-11-27",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "sourceCommit": "84182644a",
+  "zip": {
+    "path": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-final-1376\\NetstormReborn-11.01-cpppj.zip",
+    "bytes": 206351258,
+    "sha256": "ccc1d7b0594027a559567597c1866e1b6af3e5210c2590cc5a6bb7a33cf03348",
+    "duplicates": 0
+  },
+  "package": {
+    "zip": "extracted\\cpp-final-1376\\NetstormReborn-11.01-cpppj.zip",
+    "entries": 1480,
+    "verified": 1473,
+    "generated": 4,
+    "runtime": 3,
+    "directories": 0,
+    "mismatches": [],
+    "unmapped": [],
+    "missingRequired": [],
+    "forbidden": [],
+    "fontSignaturesInExe": [],
+    "buildInfo": {
+      "Netstorm.exe": {
+        "sha256": "08a24d6532616b5c9c1511ae012b05b937ad19c95b60c1d93c16dd5044702dec",
+        "recordedInBuildInfo": true
+      },
+      "R.exe": {
+        "sha256": "b80f5a11fb160fef519362b90db12bc98b151922a49b8d1c9540aaf0fbbde5ff",
+        "recordedInBuildInfo": true
+      }
+    },
+    "extract": {
+      "files": 1480,
+      "expectedFiles": 1480,
+      "bytes": 246000122,
+      "expectedBytes": 246000122
+    },
+    "passed": true
+  },
+  "gui": {
+    "gui-korean-fullscreen": {
+      "passed": true,
+      "exeSha256": "08a24d6532616b5c9c1511ae012b05b937ad19c95b60c1d93c16dd5044702dec",
+      "initial": {
+        "objective": [
+          "F4를 눌러 내 섬으로 돌아오거나 다리를 놓으십시오."
+        ],
+        "gate": [
+          "1",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "size": [
+          "1920",
+          "1080"
+        ],
+        "screenMode": [
+          "139",
+          "1920",
+          "1080",
+          "1920",
+          "1"
+        ]
+      },
+      "afterF4": {
+        "objective": [
+          "다리를 총 8개 놓으십시오."
+        ],
+        "gate": [
+          "1",
+          "66",
+          "0",
+          "0",
+          "0",
+          "1",
+          "3127172.464",
+          "0"
+        ]
+      },
+      "restart": true,
+      "lifecycle": true,
+      "exitCode": 0
+    },
+    "gui-japanese-window": {
+      "passed": true,
+      "exeSha256": "08a24d6532616b5c9c1511ae012b05b937ad19c95b60c1d93c16dd5044702dec",
+      "initial": {
+        "objective": [
+          "F4キーで自分の島に戻るか、橋を置いてください。"
+        ],
+        "gate": [
+          "1",
+          "65",
+          "0",
+          "0",
+          "0",
+          "1",
+          "0",
+          "0"
+        ],
+        "size": [
+          "1024",
+          "768"
+        ],
+        "screenMode": [
+          "138",
+          "1024",
+          "768",
+          "1024",
+          "1"
+        ]
+      },
+      "afterF4": {
+        "objective": [
+          "橋を合計8個置いてください。"
+        ],
+        "gate": [
+          "1",
+          "66",
+          "0",
+          "0",
+          "0",
+          "1",
+          "3127231.871",
+          "0"
+        ]
+      },
+      "exitCode": 0
+    }
+  },
+  "postGuiDistribution": {
+    "files": 1480,
+    "changed": []
+  },
+  "protected": {
+    "files": 2810,
+    "changed": []
+  },
+  "passed": true
+}
