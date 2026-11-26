@@ -12,4 +12,6 @@
 | DN-MP-04 | 다음 실행 경계: 상대 클라이언트는 State9에서 `다른 owner의 복합 연결 status 조회`, 호스트는 중앙섬/Fort 전송 뒤 `미션 클라이언트 패킷의 실제 소비자 미연결`로 종료됐다. **원인/최종 수정은 아직 미확정**이다. 이전 Fort 내부 연결이 Client 장기 등록표에 남는지, 새 TCP와 인계 Source가 같은 노드를 소유하는지 조사 중이다. | `Netstorm.Net/CompositeMissionTransport.cs:189`에도 `다른 Source의 status 조회` 명시 실패가 있다(정적 확인). `LocalTcpTransport.cs`의 접속/기존 연결 재사용, `RawMissionClientPackets.cs`의 실제 소비자, R11 Source 공개/노드 pin/반납·State7 정리 reason을 함께 대조한다. CP의 후속 확정 결과를 먼저 읽는다. 다른 owner를 항상0/1로 처리하거나 살아 있는 공용 등록표를 통째로 지워 우회하지 않는다. |
 | DN-MP-05 | 단일 미션·정적 소스/단위 검사만으로 위 일반 LAN 조립 누락이 발견되지 않았다. CP 봇은 새 사용자/실시간/새 Fort로 실제 두 참가자를 실행한다. | R11 실행 검증에 DN 상대 봇 또는 같은 MCP 조작 경로를 마련한다. 실제 TCP 연결→두 고유 subscriber/명단→Start/실제 ACK→로그인14/PlayerKnown→동일 월드·단순 생산/건설/수신→이탈/정상 종료를 단계별로 검증한다. CP 봇은 현재 CP 전용이므로 DN 지원으로 세지 않는다. 사용자 직접 확인·물리 LAN·MP 포획/희생/특정 공격/승리는 기존 제외 범위를 유지한다. |
 
+CP1365의 두 안내 콜백 연결·실제 State9/10/중앙섬/Fort 전송과 남은 두 오류는 [단위1365 근거](exe/cpp-lan-login-ui-1365-20261126.md)를 따른다. DN-MP-03은 CP 해당 범위 완료/DN 미완료이며 DN-MP-04의 원인/수정은1366부터 계속 조사한다.
+
 DN의 제품 기준1339·마지막 완료1.076·기존 검사 수/진행률을 이 기록만으로 올리지 않는다. 완료 표시는 실제 코드 교정과 해당 단위 검증 뒤에만 한다. 원본/fixture·AGENTS.md·README 개요는 변경하지 않았다.

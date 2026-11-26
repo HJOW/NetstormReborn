@@ -131,6 +131,14 @@ class Peer:
             if self.process.poll() is None:
                 self.process.kill()
                 self.exit_code = self.process.wait(timeout=15)
+            if self.exit_code is None:
+                self.exit_code = self.process.poll()
+            try:
+                self.process.stdin.close()  # 오류 종료한 게임의 깨진 파이프도 Python 종료 전에 명시 반납한다.
+            except OSError:
+                pass  # 이미 결과에 보존한 실제 자식 종료 코드를 바꾸지 않는다.
+            self.reader.join(timeout=1)
+            self.process.stdout.close()
             self.stderr.close()
             (self.output / "mcp.json").write_text(json.dumps(self.transcript, ensure_ascii=False, indent=2), encoding="utf8")
 
