@@ -1,0 +1,37 @@
+{
+  "unit": "WB04-E1371",
+  "mission": "thunderingpower",
+  "host": "HJOW-Athlon",
+  "recordedAt": "2026-11-26T12:47:22.142Z",
+  "entry": "debug.html?fixed=25&aspect=4:3&title=1&lang=english",
+  "webSourceCommit": "2392a50a6",
+  "webSourceTree": "fd80d067e0b2ab20cde782e8a16a27b7b3f78027",
+  "note": "실제 실행 시작 시점의 ESM 소스 기준이다. E1370 선택 덤프 API 변경은 이 문서의 실행이 소스를 적재한 뒤 일어났다. 물리 Canvas만 지연하고 모든 Kernel·Renderer 프레임을 실행했다.",
+  "files": [
+    {
+      "path": "webpj/extracted/campaign-ally-flow-v2.cjs",
+      "bytes": 9843,
+      "sha256": "e0d13076221ac5a080baee6f5a4eca6cb3480dbc35d0ae63348fc1eff8b53148"
+    },
+    {
+      "path": "webpj/e2e/ally-ai-test-control.js",
+      "bytes": 4841,
+      "sha256": "755742fc21faee1857fec9a501ac0f29c6436e3fdedad5793a10eac06d24a46c"
+    },
+    {
+      "path": "docs/webpj-e1371-evidence/browser.log",
+      "bytes": 8872,
+      "sha256": "f8b30b1adad3994ae56c74dc2abdea4eb19c713c9bd1110785172d9db9a3995d"
+    },
+    {
+      "path": "docs/webpj-e1371-evidence/result.json",
+      "bytes": 84022,
+      "sha256": "f6de5f5c95f66409d0a23bb0726272d52535ff731c2313f52d3b3d96b5649730"
+    },
+    {
+      "path": "docs/webpj-e1371-evidence/terminal.tsv",
+      "bytes": 558416,
+      "sha256": "b69e54402dcd63ed7d2826fb01f774b2fb9077c7b541d4a7e75a6caed47c0735"
+    }
+  ]
+}

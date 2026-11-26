@@ -2497,3 +2497,5 @@ webpj/www/dist/** -text
 webpj/tests/fixtures/cpppj/**/report.tsv whitespace=-blank-at-eol
 # 실행 근거 로그는 provenance에 기록한 원문 바이트와 줄바꿈을 보존한다.
 docs/webpj-*-evidence/browser.log -text whitespace=cr-at-eol
+# 실행 근거 JSON·TSV도 기록 시점의 SHA-256 바이트를 유지한다.
+docs/webpj-*-evidence/** -text
