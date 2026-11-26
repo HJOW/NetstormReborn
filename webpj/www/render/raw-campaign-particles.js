@@ -2,7 +2,7 @@
 // 같은 월드의 raw 풀/Host/Kernel 과 하나의 공통 표시 목록(`RenderProcessSystem`)에 묶고, 팔레트 색 띠·dirty 통지·VFX 선/타원/픽셀 출력·위치 음향을 현재 클라이언트 경계로 연결한다.
 // 게임 계산은 바꾸지 않으며(원본 몸체는 각 시스템이 소유) 이 모듈은 장치 경계(색 표 메모리, 8비트 표면, dirty 큐, 음향, 카메라, 현재 TYPE 전역)만 공급한다.
 //  - new RawCampaignParticles(core, random, palette, options): core 는 `RawSurfaceWorld.core()`(pool·types·shapes·processes·neighbors 사용), random 은 게임 난수(`GameRandom`), palette 는 `GamePalette`(`logical` 256 DWORD).
-//    options = { sound(x, y, 파일명)?, shrapnel?: { lifetime: { create, pop, depend, capture }, destroyUnpaired(dummy), crt }, adjacent? }. shrapnel 이 있으면 파편·분해가 생기고 crt 는 필수이다.
+//    options = { sound(x, y, 파일명)?, shrapnel?: { lifetime: { create, pop, depend, capture }, destroyUnpaired(dummy), crt }, adjacent?, adjacentByKind? }. shrapnel 이 있으면 파편·분해가 생기고 crt 는 필수이다.
 //    adjacent 는 색 표 바로 뒤 인접 DWORD 의 명시 입력(기본 관찰값 1, `particle-palette-memory.js`)이다. core/random/palette 는 이 객체보다 오래 살아야 한다.
 //  - add(11, 부모)·addStreak(부모)·addEvilRay(부모)·addBeam(부모, 표적, 파일명)·addScreenBolt(부모, 시작, 끝, 수명)·addShrapnel(원천, 종류)·addDissolve(원천, 첫째, 둘째, xOriented)·addConstruction(부모, instant)
 //    ·addBurning(피해자, 모드)·addCooling(부모, 포구)·addSmoke(요청): 각 원본 생성자/래퍼를 같은 Host 에 부착한다. 확보 실패는 웹에 없으므로(reserve 는 항상 성공) null 이 되지 않는다.
@@ -153,19 +153,23 @@ export class RawCampaignParticles {
 
     // 공통 목록과 기본 시스템(불꽃·빔·줄기·연기·악마 광선)을 만들고, 파편 장치가 있으면 파편·분해도 만든다. (2026-11-13 WB04-E390)
     constructor(core, random, palette, options = {}) {
-        const { sound = null, shrapnel = null, adjacent = OBSERVED_ADJACENT_DWORD } = options;
+        const { sound = null, shrapnel = null, adjacent = OBSERVED_ADJACENT_DWORD, adjacentByKind = {} } = options;
         if (sound !== null && typeof sound !== 'function') throw new TypeError('입자 위치 음향은 함수여야 합니다.');
+        // 부류별 입력은 명시한 표만 바꾼다. 누락한 표는 기존 관측 입력을 사용하고 오타 난 부류는 거부한다.
+        const kinds = ['fieryTail', 'lightning', 'smoke', 'evilRay', 'construction', 'burning'];
+        if (!adjacentByKind || typeof adjacentByKind !== 'object' || Array.isArray(adjacentByKind) || Object.keys(adjacentByKind).some((kind) => !kinds.includes(kind))) throw new TypeError('입자 종류별 인접 DWORD 입력 오류');
+        const adjacentFor = (kind) => Object.hasOwn(adjacentByKind, kind) ? adjacentByKind[kind] : adjacent;
         this.#core = core;
         this.#random = random;
         this.#palette = palette;
         this.#sound = sound;
-        // 색 표 메모리마다 같은 인접 DWORD 입력을 쓴다.
-        this.#memory = new ParticlePaletteMemory(adjacent);
-        this.#lightningMemory = new ParticlePaletteMemory(adjacent);
-        this.#smokeMemory = new ParticlePaletteMemory(adjacent);
-        this.#evilMemory = new ParticlePaletteMemory(adjacent);
-        this.#constructionMemory = new ParticlePaletteMemory(adjacent);
-        this.#burningMemory = new ParticlePaletteMemory(adjacent);
+        // 각 색 표는 자기 할당의 인접 DWORD 입력만 소유하며 수명·색수·난수 계산은 바꾸지 않는다.
+        this.#memory = new ParticlePaletteMemory(adjacentFor('fieryTail'));
+        this.#lightningMemory = new ParticlePaletteMemory(adjacentFor('lightning'));
+        this.#smokeMemory = new ParticlePaletteMemory(adjacentFor('smoke'));
+        this.#evilMemory = new ParticlePaletteMemory(adjacentFor('evilRay'));
+        this.#constructionMemory = new ParticlePaletteMemory(adjacentFor('construction'));
+        this.#burningMemory = new ParticlePaletteMemory(adjacentFor('burning'));
         this.#rendering = new RenderProcessSystem(core.pool, core.processes, this.#renderState, this.#registryHooks());
         this.#fiery = new FieryTailVisualSystem(this.#rendering, random, this.#lifetime, this.#frame, this.#colors, this.#fieryHooks());
         this.#lightning = new LightningVisualSystem(this.#rendering, random, this.#lightningLifetime, this.#frame, this.#lightningHooks());

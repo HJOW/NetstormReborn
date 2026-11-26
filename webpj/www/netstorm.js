@@ -97,6 +97,7 @@ import { RawContainedFinder } from './core/raw-contained-finder.js';
 import { PRODUCTION_BRIDGE_COMMAND, PRODUCTION_REPEAT_COMMAND } from './core/production-shortcuts.js';
 import { ProductionControlContext } from './core/production-control-context.js';
 import { cleanupNetstormStateWorld } from './core/netstorm-state-world.js';
+import { CLIENT_PARTICLE_PALETTE_INPUT } from './core/client-particle-palette-input.js';
 import { ProductionMaintenanceGlobals, ProductionMaintenancePanel } from './core/raw-production-maintenance.js';
 import { GameMenuActions } from './core/game-menu-actions.js';
 import { gameMenuCommandValue, gameMenuScriptCode, isGameMenuCommand, queuePlayerListKey } from './core/game-menu-commands.js';
@@ -1303,6 +1304,8 @@ export class Netstorm {
             return this._clientInputQueue;
         } }, services);
         services.assets.queueCommand = services.developerQueue;
+        // 건설17의 검증된 CPP x64 할당 입력을 Session에 명시한다. 원본 공통 입자 상수로 일반화하지 않는다.
+        services.particlePaletteInput = CLIENT_PARTICLE_PALETTE_INPUT;
         // 객체 소멸 통지는 같은 Client의 현재 Gump 등록 ID에 전달한다.
         services.gumpNotice = (owner, parent) => { if (!this._clientGump) throw new Error('미션 Gump 객체 통지 수명 누락'); this._clientGump.objectGone(owner, parent); };
         // Player 내용물 변경은 같은 현재 등록표에서 조회한 Gump에 원본 사건을 직접 전달한다.

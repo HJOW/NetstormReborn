@@ -94,17 +94,12 @@ test('Netstorm 미션 장치: 희생 의식 음악 요청은 현재 장면 음�
     assert.deepEqual(first, ['sacrifice.mus']); assert.deepEqual(second, ['other.mus']);
 });
 
-// 미션을 떠나 World 를 반납하면 초기 캡처 기한(005c8618)이 0 이 되어야 다음 미션의 Zone 설치가 `!earlyCaptureTimer.isRunning()` 진단을 내지 않는다. World 가 없으면 건드리지 않는다. (2026-11-20 WB04-E1121)
-test('Netstorm World 반납: 초기 캡처 기한을 0 으로 쓰고 World 가 없으면 그대로 둔다', () => {
+// World 가 없으면 반납이 실제 State 정리를 호출하지 않아 캡처 기한과 건물 숨김 값을 보존한다. 실제 World 의 초기화는 campaign-request-frame 통합 검사에서 확인한다.
+test('Netstorm World 반납: World 가 없으면 캡처 기한과 건물 숨김을 보존한다', () => {
     const app = new Netstorm(); app._initializeClientRuntime(false);
-    const disposed = []; app._campaignWorld = { dispose: () => disposed.push('dispose') };
-    app._clientLocal.captureEnd().value = 123.5; app._releaseCampaignWorld();
-    assert.equal(app._clientLocal.captureEnd().value, 0); assert.deepEqual(disposed, ['dispose']); assert.equal(app._campaignWorld, null);
-    // World 가 없으면 반납이 아무것도 하지 않으므로 값이 남는다(다음 World 의 정리가 담당한다).
     app._clientLocal.captureEnd().value = 7; app._releaseCampaignWorld(); assert.equal(app._clientLocal.captureEnd().value, 7);
-    // 건물 숨김(0059a8ac)은 원본 State 정리처럼 미션을 떠날 때 0 으로 돌아가 다음 미션에 남지 않는다. World 가 없으면 그대로 둔다. (2026-11-22 WB04-E1230)
     app._clientGameplay.hideBuildings().value = 1; app._releaseCampaignWorld(); assert.equal(app._clientGameplay.hideBuildings().value, 1);
-    app._campaignWorld = { dispose: () => {} }; app._releaseCampaignWorld(); assert.equal(app._clientGameplay.hideBuildings().value, 0);
+    assert.equal(app._campaignWorld, null);
 });
 
 // 원본 CampaignClientServices 의 소리·안내 서비스(보호막 안내음·번역, 유닛 상실음, 사제 낙하음, 섬 피격 경고 사건, Cast/Drop 비용 표시, 중복 워크샾 진단, 기술 획득)가

@@ -6,11 +6,13 @@
 // 실제 게임·브라우저 실행이 아니다. (2026-11-13 WB04-E390: 5-A RawCampaignParticles 이식으로 추가)
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import { put, get, floatToBits } from './raw-support.mjs';
 import { readData } from './helpers.mjs';
 import { World } from './construction-visual-support.mjs';
 import { GamePalette } from '../www/assets/palette.js';
 import { RawCampaignParticles, particlePaletteInput } from '../www/render/raw-campaign-particles.js';
+import { CLIENT_PARTICLE_PALETTE_INPUT } from '../www/core/client-particle-palette-input.js';
 import { CameraView, projectCameraCoordinates } from '../www/render/camera-view.js';
 import { RawSquidNeighbors } from '../www/core/raw-squid-neighbors.js';
 import { LightningCreateStatus } from '../www/core/raw-lightning-lifetime.js';
@@ -424,6 +426,33 @@ test('줄기(12): 빔보다 먼저 만들어도 공유 빔 팔레트를 만들�
     scene.frame(2.05);
     assert.equal(world.kernel.size, 2);
     assert.ok(scene.sounds.length === 1 && scene.sounds[0][2] === 'a.wav');
+});
+
+// 독립 Native 관측의 수명/색수 경계가 실제 건설17 출력에서 종류별 입력을 읽는지 확인한다.
+test('건설 인접 메모리: 실제17 출력은 명시 입력을 읽고 다른 종류와 공통 기본값은 보존한다', () => {
+    const proof = JSON.parse(fs.readFileSync(new URL('../../docs/webpj-e1380-evidence/proof.json', import.meta.url), 'utf8')).construction;
+    const run = (options = {}) => {
+        const scene = new Scene(options), image = { width: 5, height: 7, hotspotX: 2, hotspotY: 3, pixels: new Uint8Array(35).fill(23) };
+        scene.particles.connectConstruction(() => image, () => 100); scene.particles.setView(VIEW, scene.display);
+        const process = scene.particles.addConstruction(scene.world.parent, false); scene.frame(2);
+        // 최대 수명을 넘은 비활성 입자 한 개를 독립 관측처럼 공급한다. 화면 좌표·SID·프레임으로 분기하지 않는다.
+        const visual = process.fields.visual; visual.active = 0; visual.total = 1; visual.selected = visual.opaque; visual.maximum = proof.maximum;
+        visual.particles[0] = { active: 0, color: proof.particleOriginalColor, life: Math.fround(proof.life), pixel: 0 }; visual.output.fill(255);
+        scene.frame(2); return visual.output[0];
+    };
+    assert.equal(run(), 1); assert.equal(run({ adjacent: 3 }), 3);
+    assert.equal(run({ adjacentByKind: { evilRay: 0 } }), 1);
+    assert.equal(run({ adjacentByKind: { construction: 159 } }), 159);
+    assert.equal(CLIENT_PARTICLE_PALETTE_INPUT.adjacentByKind.construction, proof.adjacentDword);
+    assert.equal(run(CLIENT_PARTICLE_PALETTE_INPUT), proof.selectedDword);
+});
+
+// 잘못된 부류나 DWORD는 실제 Process/Kernel을 만들기 전에 거부해야 한다.
+test('종류별 입자 메모리 입력: 오타·음수·DWORD 초과를 거부하고 기존 Kernel을 보존한다', () => {
+    const scene = new Scene(), before = scene.world.kernel.size;
+    for (const adjacentByKind of [null, [], { typo: 0 }]) assert.throws(() => new RawCampaignParticles(scene.core, scene.random, PALETTE, { adjacentByKind }), TypeError);
+    for (const value of [-1, 0x100000000, 0.5]) assert.throws(() => new RawCampaignParticles(scene.core, scene.random, PALETTE, { adjacentByKind: { construction: value } }), RangeError);
+    assert.equal(scene.world.kernel.size, before);
 });
 
 test('건설 표시: 연결한 캡처/최대 HP 로 17 프로세스가 붙고 캡처 픽셀이 부모 화면 위치의 직사각형에만 복사된다', () => {

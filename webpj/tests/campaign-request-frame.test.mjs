@@ -740,8 +740,10 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         assert.deepEqual(session.localConnectionPackets().slice(beforeSalvage), []); assert.equal(session.core().pool.slot(salvageSid)[11], salvageFlags);
         session.pumpLocalConnection(); assert.deepEqual(session.localConnectionPackets().slice(beforeSalvage), [0x54]); assert.ok(session.core().pool.slot(salvageSid)[11] & 3); app._clientGameplay.denySalvage().value = denied;
         // 실제 미션 이탈은 공통 자식 증빙을 거쳐 Runtime을 반납하고 그 전에 만든 같은 새 HUD만 남긴다.
+        app._clientLocal.captureEnd().value = 123.5; app._clientGameplay.hideBuildings().value = 1;
         const retiringWorld = app._campaignWorld; app._releaseCampaignWorld();
         assert.equal(app._campaignWorld, null); assert.equal(app._clientGameplay.borrowed(), false); assert.equal(app._surfaceStorage.borrowed, false);
+        assert.equal(app._clientLocal.captureEnd().value, 0); assert.equal(app._clientGameplay.hideBuildings().value, 0);
         assert.equal(createdHud.world, retiringWorld); assert.equal(app._campaignProduction.ui, createdHud.ui);
         assert.equal(app._campaignProduction.session, null); assert.equal(app._campaignProduction.worldBound, false);
         assert.throws(() => session.core(), /반납/);

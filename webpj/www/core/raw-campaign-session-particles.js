@@ -87,7 +87,7 @@ export class RawCampaignSessionParticles {
         }, destroyUnpaired: (sid) => { o.world.destroy(sid, 0); } };
         // 실제 SoundList의 파일명을 같은 현재 위치 재생 장치로 보낸다.
         this.beamSound = (x, y, name) => { if (typeof o.services.sound?.playOnceAt !== 'function') throw new Error('캠페인 빔 실제 파일명 음향 미연결'); o.services.sound.playOnceAt(Math.fround(x), Math.fround(y), o.soundNames.lookup(name), 0, 0); };
-        o.particles = new RawCampaignParticles(c, o.random, o.assets.game.palette, { sound: this.beamSound, shrapnel: this.shrapnel });
+        o.particles = new RawCampaignParticles(c, o.random, o.assets.game.palette, { sound: this.beamSound, shrapnel: this.shrapnel, adjacentByKind: o.services.particlePaletteInput?.adjacentByKind });
         o.particles.bindCameraView(o.gameplayGlobals.camera().snapshot());
         const aux = o.gameplayGlobals.gameAux(); o.particles.bindTailProcessTypes(aux); o.state.buildArrivalState.sharedStreakProcessType = () => aux.streakProcessType;
         this.evilDevices = {
