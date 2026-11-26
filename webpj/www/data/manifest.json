@@ -2480,8 +2480,8 @@
       "path": "d/MasterOfWhirligigs.korean",
       "source": "webpj/translations/MasterOfWhirligigs.korean",
       "bundle": "korean",
-      "size": 1914,
-      "sha256": "fb24e5c9dea832020b80a0d2ab7a5669b2d96f54b72fce1993eb54791f062dd7",
+      "size": 1911,
+      "sha256": "0fe801e53f236bf394298efee8192387ad31b68d2abbee55c84233617ae22c43",
       "use": "한국어 캠페인 미션 대본(UTF-8): 원본 MasterOfWhirligigs.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
     },
     {

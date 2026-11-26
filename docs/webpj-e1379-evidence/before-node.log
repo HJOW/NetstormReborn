@@ -1,0 +1,27 @@
+✖ 한국어 미션 AI 이름 전수: 29BYTE 제한과 기술 문자열 경계를 지킨다 (13.7321ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 158.468
+
+✖ failing tests:
+
+test at tests\korean-mission.test.mjs:197:1
+✖ 한국어 미션 AI 이름 전수: 29BYTE 제한과 기술 문자열 경계를 지킨다 (13.7321ms)
+  AssertionError [ERR_ASSERTION]: MasterOfWhirligigs.korean AI 이름 훨리기그의 지배자: 33BYTE
+      at TestContext.<anonymous> (file:///H:/Workspace/git/NetstormReborn/webpj/tests/korean-mission.test.mjs:204:67)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }

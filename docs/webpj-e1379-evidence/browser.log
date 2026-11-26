@@ -1,0 +1,11 @@
+npm notice run NetstormWeb@1.0.0 npx
+npm notice run ^"playwright^" test e2e/korean-campaign1-2-start.spec.js --workers=1 --reporter=line --output=../extracted/webpj-e1379-results
+
+Running 1 test using 1 worker
+
+
+(node:3244) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/1] [chromium] › e2e\korean-campaign1-2-start.spec.js:20:1 › 한국어 캠페인1-2: AI 생성 뒤 시계가 흐르고 사제를 실제 마우스로 선택한다
+  1 passed (23.0s)

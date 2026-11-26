@@ -9,6 +9,8 @@ import { decodeOriginalText } from '../www/assets/text-encoding.js';
 import { GameData } from '../www/assets/game-data.js';
 import { MissionScript } from '../www/core/mission-script.js';
 import { XlatTable } from '../www/assets/xlat.js';
+import { displayTextCodec } from '../www/assets/display-text.js';
+import { RawMissionAiSettings } from '../www/core/raw-mission-ai-settings.js';
 import { KOREAN_CAMPAIGN_MISSIONS } from '../www/assets/korean-assets.js';
 
 // 원본과 동일한 실행 키·단계·명령을 유지하고 안내만 한국어로 출력한다.
@@ -189,4 +191,22 @@ test('한국어 캠페인 미션 대본: 실행 설정·섹션·명령은 원본
             try { assert.match(other.get('title'), /[가-힣]/u, `${name} 대문자 이름`); } finally { other.dispose(); }
         } finally { mission.dispose(); }
     }
+});
+
+// 배포할 모든 미션 AI 이름은 실제30BYTE 이름칸의 NUL을 남기고 확장4BYTE 문자 전체가 들어가야 한다.
+test('한국어 미션 AI 이름 전수: 29BYTE 제한과 기술 문자열 경계를 지킨다',()=>{
+ const directory=path.join(REPO_ROOT,'webpj/translations');let count=0;
+ // 실제 번역 원본의 aiName·aiNName을 모두 검사해 특정 미션만 고친 뒤 다른 긴 이름을 놓치지 않는다.
+ for(const file of fs.readdirSync(directory).filter(name=>name.endsWith('.korean'))){
+  const text=fs.readFileSync(path.join(directory,file),'utf8');
+  // 한글 수가 아니라 실제 표시 부호화 BYTE를 기준으로 검사한다.
+  for(const match of text.matchAll(/^ai\d*name\s*=\s*"([^"\r\n]*)/gim)){
+   const name=match[1],bytes=displayTextCodec.encode(name);assert.ok(bytes.length<=29,file+' AI 이름 '+name+': '+bytes.length+'BYTE');
+   assert.equal(displayTextCodec.decode(bytes),name);count++;
+   const raw=new Uint8Array(600),settings=new RawMissionAiSettings({stuffRefreshRate:3,startingSp:2500},{get:key=>key==='aiName'?Array.from(bytes,value=>String.fromCharCode(value)).join(''):''});
+   settings.initialize(raw);const technology=raw.slice(30,544);settings.apply(raw,-1);
+   assert.deepEqual(raw.subarray(0,bytes.length),bytes);assert.equal(raw[bytes.length],0);assert.deepEqual(raw.slice(30,544),technology);
+  }
+ }
+ assert.ok(count>=59,'배포된 전체 미션 AI 이름이 검사되어야 한다');
 });

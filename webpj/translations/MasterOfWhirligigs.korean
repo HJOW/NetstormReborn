@@ -7,7 +7,7 @@ missionNumber = 1
 myStartMoney = 2000
 myTech = "sunWalker;windBattery;sunArcher;sunCannon"
 
-aiName = "훨리기그의 지배자"
+aiName = "훨리기그 지배자"
 aiTech = "sunWalker;rainBattery;sunAviary"
 aiStartMoney = 2000
 aiGeyserAttachments = 1

@@ -1,0 +1,53 @@
+npm notice run NetstormWeb@1.0.0 npx
+npm notice run ^"playwright^" test e2e/korean-campaign1-2-start.spec.js --workers=1 --reporter=line --output=../extracted/webpj-e1379-before-results
+
+Running 1 test using 1 worker
+
+
+(node:10636) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/1] [chromium] › e2e\korean-campaign1-2-start.spec.js:20:1 › 한국어 캠페인1-2: AI 생성 뒤 시계가 흐르고 사제를 실제 마우스로 선택한다
+  1) [chromium] › e2e\korean-campaign1-2-start.spec.js:20:1 › 한국어 캠페인1-2: AI 생성 뒤 시계가 흐르고 사제를 실제 마우스로 선택한다 
+
+    Error: Netstorm: 실행 중 오류가 발생했습니다. {state: mainMenu, frameTime: 3130.3, mission: MasterOfWhirligigs, fixedFrame: null, phase: frame} RangeError: 확장 AI 이름은 한글 표시토큰을 포함해29BYTE 이하여야 합니다
+        at Object.get (http://localhost:9803/dist/netstorm.bundle.js:1:595584)
+        at get (http://localhost:9803/dist/netstorm.bundle.js:1:281109)
+        at RawMissionAiSettings.apply (http://localhost:9803/dist/netstorm.bundle.js:1:281124)
+        at RawMissionAiSettings.prepare (http://localhost:9803/dist/netstorm.bundle.js:1:282172)
+        at RawCampaignMissionStartBindings.createAi (http://localhost:9803/dist/netstorm.bundle.js:1:596895)
+        at createAi (http://localhost:9803/dist/netstorm.bundle.js:1:596529)
+        at RawMissionStart.start (http://localhost:9803/dist/netstorm.bundle.js:1:593692)
+        at RawCampaignMissionStartBindings.start (http://localhost:9803/dist/netstorm.bundle.js:1:596746)
+        at start (http://localhost:9803/dist/netstorm.bundle.js:1:2746908)
+        at runTutorialMissionStage (http://localhost:9803/dist/netstorm.bundle.js:1:529815)
+        at Object.get (http://localhost:9803/dist/netstorm.bundle.js:1:595584)
+        at get (http://localhost:9803/dist/netstorm.bundle.js:1:281109)
+        at RawMissionAiSettings.apply (http://localhost:9803/dist/netstorm.bundle.js:1:281124)
+        at RawMissionAiSettings.prepare (http://localhost:9803/dist/netstorm.bundle.js:1:282172)
+        at RawCampaignMissionStartBindings.createAi (http://localhost:9803/dist/netstorm.bundle.js:1:596895)
+        at createAi (http://localhost:9803/dist/netstorm.bundle.js:1:596529)
+        at RawMissionStart.start (http://localhost:9803/dist/netstorm.bundle.js:1:593692)
+        at RawCampaignMissionStartBindings.start (http://localhost:9803/dist/netstorm.bundle.js:1:596746)
+        at start (http://localhost:9803/dist/netstorm.bundle.js:1:2746908)
+        at runTutorialMissionStage (http://localhost:9803/dist/netstorm.bundle.js:1:529815)
+        at waitStarted (H:\Workspace\git\NetstormReborn\webpj\e2e\korean-campaign1-2-start.spec.js:13:26)
+        at H:\Workspace\git\NetstormReborn\webpj\e2e\korean-campaign1-2-start.spec.js:33:63
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    ..\extracted\webpj-e1379-before-results\korean-campaign1-2-start-한-19b78--뒤-시계가-흐르고-사제를-실제-마우스로-선택한다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: ..\extracted\webpj-e1379-before-results\korean-campaign1-2-start-한-19b78--뒤-시계가-흐르고-사제를-실제-마우스로-선택한다-chromium\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    ..\extracted\webpj-e1379-before-results\korean-campaign1-2-start-한-19b78--뒤-시계가-흐르고-사제를-실제-마우스로-선택한다-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace ..\extracted\webpj-e1379-before-results\korean-campaign1-2-start-한-19b78--뒤-시계가-흐르고-사제를-실제-마우스로-선택한다-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+  1 failed
+    [chromium] › e2e\korean-campaign1-2-start.spec.js:20:1 › 한국어 캠페인1-2: AI 생성 뒤 시계가 흐르고 사제를 실제 마우스로 선택한다 

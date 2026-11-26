@@ -1,0 +1,55 @@
+{
+  "unit": "WB04-E1379",
+  "baseCommit": "36ef31b7e",
+  "cause": {
+    "mission": "MasterOfWhirligigs",
+    "before": "훨리기그의 지배자",
+    "beforeDisplayBytes": 33,
+    "limit": 29,
+    "after": "훨리기그 지배자",
+    "afterDisplayBytes": 29,
+    "title": "훨리기그의 지배자"
+  },
+  "before": {
+    "browser": {
+      "tests": 1,
+      "pass": 0,
+      "fail": 1,
+      "expectedRangeError": true,
+      "logSha256": "50815784eaa4196a23b35cd80ea1e882ff2974837bfa0bcd1c7d17b51f630e6a"
+    },
+    "node": {
+      "tests": 1,
+      "pass": 0,
+      "fail": 1,
+      "expectedLengthFailure": true,
+      "logSha256": "a67e82520cdef6554522a8e9bca42d75fcccb3e716ba1a8aa08371d46a03ec09"
+    }
+  },
+  "after": {
+    "node": {
+      "version": "26.13.0",
+      "tests": 39,
+      "pass": 39,
+      "fail": 0,
+      "logSha256": "0a1d657be40d9ed4789c76134457ee588c61e3fcbdabb8cb4481764cc9796674"
+    },
+    "browser": {
+      "tests": 1,
+      "pass": 1,
+      "fail": 0,
+      "errors": 0,
+      "enemyAiCreated": true,
+      "clockAdvanced": true,
+      "priestMouseSelected": true,
+      "logSha256": "f56554fe26f3a715caba95a9ac80b4ad00dba901ceffe4f2e251ac66a9a9d25b"
+    },
+    "names": {
+      "count": 59,
+      "excess": 0
+    },
+    "sourceSha256": "0fe801e53f236bf394298efee8192387ad31b68d2abbee55c84233617ae22c43",
+    "publicSha256": "0fe801e53f236bf394298efee8192387ad31b68d2abbee55c84233617ae22c43"
+  },
+  "bundleChanged": false
+}

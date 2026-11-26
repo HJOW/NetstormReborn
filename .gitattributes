@@ -2503,3 +2503,8 @@ docs/webpj-*-evidence/** -text
 # Native 관측 TSV의 CRLF와 패치의 빈 문맥 표시를 원문 바이트대로 보존한다.
 docs/webpj-e1373-evidence/native-*.tsv whitespace=cr-at-eol
 docs/webpj-e1373-evidence/native-instrumentation.patch whitespace=-blank-at-eol
+
+# 수정 전 실제 오류 원문의 CRLF 바이트를 보존한다.
+docs/webpj-e1379-evidence/before-*.log -text whitespace=cr-at-eol
+# Playwright 실패 제목의 원문 끝 공백도 해시와 함께 보존한다.
+docs/webpj-e1379-evidence/before-browser.log whitespace=cr-at-eol,-blank-at-eol

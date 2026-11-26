@@ -1,0 +1,356 @@
+[
+  {
+    "file": "bc1menu76.korean",
+    "key": "ai2name",
+    "name": "크로스보우",
+    "bytes": 20
+  },
+  {
+    "file": "bc1menu76.korean",
+    "key": "ai3name",
+    "name": "다리",
+    "bytes": 8
+  },
+  {
+    "file": "bc1menu76.korean",
+    "key": "ai4name",
+    "name": "애시드 바",
+    "bytes": 17
+  },
+  {
+    "file": "bc1menu76.korean",
+    "key": "ai5name",
+    "name": "워커",
+    "bytes": 8
+  },
+  {
+    "file": "bc1menu76.korean",
+    "key": "ai6name",
+    "name": "썬 바리케이드",
+    "bytes": 25
+  },
+  {
+    "file": "bc1menu76.korean",
+    "key": "ai7name",
+    "name": "맨 오 워",
+    "bytes": 14
+  },
+  {
+    "file": "bc2bridging76.korean",
+    "key": "ai2name",
+    "name": "표류자",
+    "bytes": 12
+  },
+  {
+    "file": "bc3acid_bar76.korean",
+    "key": "ai2name",
+    "name": "간수",
+    "bytes": 8
+  },
+  {
+    "file": "bc4bow_rush76.korean",
+    "key": "ai2name",
+    "name": "아이스 경",
+    "bytes": 17
+  },
+  {
+    "file": "bc4bow_rush76.korean",
+    "key": "ai3name",
+    "name": "썬더 백작",
+    "bytes": 17
+  },
+  {
+    "file": "bc4bow_rush76.korean",
+    "key": "ai4name",
+    "name": "썬 씨",
+    "bytes": 9
+  },
+  {
+    "file": "bc5walkers76.korean",
+    "key": "ai2name",
+    "name": "승산 없는 군주",
+    "bytes": 26
+  },
+  {
+    "file": "bc6mows76.korean",
+    "key": "ai2name",
+    "name": "아이스 경",
+    "bytes": 17
+  },
+  {
+    "file": "bc6mows76.korean",
+    "key": "ai3name",
+    "name": "썬더 백작",
+    "bytes": 17
+  },
+  {
+    "file": "bc6mows76.korean",
+    "key": "ai4name",
+    "name": "보텍스 경",
+    "bytes": 17
+  },
+  {
+    "file": "bc6mows76.korean",
+    "key": "ai5name",
+    "name": "데스 남작",
+    "bytes": 17
+  },
+  {
+    "file": "bc6mows76.korean",
+    "key": "ai6name",
+    "name": "썬 씨",
+    "bytes": 9
+  },
+  {
+    "file": "bc7sun_bars76.korean",
+    "key": "ai2name",
+    "name": "아이스 경",
+    "bytes": 17
+  },
+  {
+    "file": "bc7sun_bars76.korean",
+    "key": "ai3name",
+    "name": "보텍스 경",
+    "bytes": 17
+  },
+  {
+    "file": "bc7sun_bars76.korean",
+    "key": "ai4name",
+    "name": "썬더 백작",
+    "bytes": 17
+  },
+  {
+    "file": "bc7sun_bars76.korean",
+    "key": "ai5name",
+    "name": "썬 씨",
+    "bytes": 9
+  },
+  {
+    "file": "bc8fury76.korean",
+    "key": "ai2name",
+    "name": "보텍스 경",
+    "bytes": 17
+  },
+  {
+    "file": "bc8fury76.korean",
+    "key": "ai3name",
+    "name": "아이스 경",
+    "bytes": 17
+  },
+  {
+    "file": "bc8fury76.korean",
+    "key": "ai4name",
+    "name": "썬더 백작",
+    "bytes": 17
+  },
+  {
+    "file": "bc8fury76.korean",
+    "key": "ai5name",
+    "name": "썬 씨",
+    "bytes": 9
+  },
+  {
+    "file": "bc9ssun_bars76.korean",
+    "key": "ai2name",
+    "name": "공격 공작",
+    "bytes": 17
+  },
+  {
+    "file": "BreakingThrough.korean",
+    "key": "aiName",
+    "name": "윈드 왕자",
+    "bytes": 17
+  },
+  {
+    "file": "DissolvedAlliance.korean",
+    "key": "ai1Name",
+    "name": "플레이어",
+    "bytes": 16
+  },
+  {
+    "file": "DissolvedAlliance.korean",
+    "key": "ai2Name",
+    "name": "썬더 왕자",
+    "bytes": 17
+  },
+  {
+    "file": "DissolvedAlliance.korean",
+    "key": "ai3Name",
+    "name": "레인 공작",
+    "bytes": 17
+  },
+  {
+    "file": "EnemyTerritory.korean",
+    "key": "ai2Name",
+    "name": "배신자",
+    "bytes": 12
+  },
+  {
+    "file": "EnemyTerritory.korean",
+    "key": "ai3Name",
+    "name": "윈드 공작",
+    "bytes": 17
+  },
+  {
+    "file": "EnemyTerritory.korean",
+    "key": "ai4Name",
+    "name": "레인 공작",
+    "bytes": 17
+  },
+  {
+    "file": "FinalConfrontation.korean",
+    "key": "aiName",
+    "name": "플레이어",
+    "bytes": 16
+  },
+  {
+    "file": "FinalConfrontation.korean",
+    "key": "ai2Name",
+    "name": "썬더의 군주",
+    "bytes": 21
+  },
+  {
+    "file": "FinalConfrontation.korean",
+    "key": "ai3Name",
+    "name": "레인의 군주",
+    "bytes": 21
+  },
+  {
+    "file": "FinalConfrontation.korean",
+    "key": "ai4Name",
+    "name": "윈드의 군주",
+    "bytes": 21
+  },
+  {
+    "file": "FinalConfrontation.korean",
+    "key": "ai5Name",
+    "name": "스톰 군주",
+    "bytes": 17
+  },
+  {
+    "file": "FragileFortune.korean",
+    "key": "aiName",
+    "name": "윈드 왕자",
+    "bytes": 17
+  },
+  {
+    "file": "GuardMyBack.korean",
+    "key": "ai1Name",
+    "name": "플레이어",
+    "bytes": 16
+  },
+  {
+    "file": "GuardMyBack.korean",
+    "key": "ai2Name",
+    "name": "썬의 대신",
+    "bytes": 17
+  },
+  {
+    "file": "GuardMyBack.korean",
+    "key": "ai3Name",
+    "name": "썬더 후작",
+    "bytes": 17
+  },
+  {
+    "file": "GuardMyBack.korean",
+    "key": "ai4Name",
+    "name": "레인의 기사",
+    "bytes": 21
+  },
+  {
+    "file": "MasterOfWhirligigs.korean",
+    "key": "aiName",
+    "name": "훨리기그 지배자",
+    "bytes": 29
+  },
+  {
+    "file": "RainVsRain.korean",
+    "key": "aiName",
+    "name": "레인 왕자",
+    "bytes": 17
+  },
+  {
+    "file": "RunForIt.korean",
+    "key": "aiName",
+    "name": "레인의 군주",
+    "bytes": 21
+  },
+  {
+    "file": "SaveTheIsland.korean",
+    "key": "aiName",
+    "name": "썬더 백작",
+    "bytes": 17
+  },
+  {
+    "file": "Surrounded.korean",
+    "key": "ai2Name",
+    "name": "썬의 군주",
+    "bytes": 17
+  },
+  {
+    "file": "Surrounded.korean",
+    "key": "ai3Name",
+    "name": "썬더의 군주",
+    "bytes": 21
+  },
+  {
+    "file": "Surrounded.korean",
+    "key": "ai4Name",
+    "name": "윈드의 군주",
+    "bytes": 21
+  },
+  {
+    "file": "Surrounded.korean",
+    "key": "ai5Name",
+    "name": "레인의 군주",
+    "bytes": 21
+  },
+  {
+    "file": "TheNoose.korean",
+    "key": "aiName",
+    "name": "레인의 시종장",
+    "bytes": 25
+  },
+  {
+    "file": "TheWarBegins.korean",
+    "key": "aiName",
+    "name": "간수",
+    "bytes": 8
+  },
+  {
+    "file": "ThunderingPower.korean",
+    "key": "ai1Name",
+    "name": "썬더의 기사",
+    "bytes": 21
+  },
+  {
+    "file": "ThunderingPower.korean",
+    "key": "ai2Name",
+    "name": "맨 오 워 후작",
+    "bytes": 23
+  },
+  {
+    "file": "ToTheRescue.korean",
+    "key": "ai2Name",
+    "name": "체로크 총독",
+    "bytes": 21
+  },
+  {
+    "file": "ToTheRescue.korean",
+    "key": "ai3Name",
+    "name": "썬더 왕자",
+    "bytes": 17
+  },
+  {
+    "file": "ToTheRescue.korean",
+    "key": "ai4Name",
+    "name": "썬더 공작",
+    "bytes": 17
+  },
+  {
+    "file": "Vicious.korean",
+    "key": "aiName",
+    "name": "퓨리의 공작",
+    "bytes": 21
+  }
+]
