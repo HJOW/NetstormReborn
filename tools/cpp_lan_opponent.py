@@ -180,9 +180,12 @@ def main():
     parser.add_argument("--lobby-port", type=int, default=16800)
     parser.add_argument("--game-port", type=int, default=16799)
     parser.add_argument("--lobby-only", action="store_true")
+    parser.add_argument("--steady-seconds", type=float, default=4, help="두 참가자의 시작 후 실제 OS 시계 대기 초")
     args = parser.parse_args()  # 사용자 선택은 실제 포트·자산·출력 경로로만 제한한다.
     if not (0 < args.lobby_port < 65536 and 0 < args.game_port < 65536 and args.lobby_port != args.game_port):
         parser.error("서로 다른1~65535 포트가 필요합니다.")
+    if not 0 <= args.steady_seconds <= 3600:
+        parser.error("실시간 대기는0~3600초 범위여야 합니다.")
     args.exe, args.game, args.output = args.exe.resolve(strict=True), args.game.resolve(strict=True), args.output.resolve()
     args.output.mkdir(parents=True, exist_ok=False)
     peers = []  # 이 호출이 실행한 두 자식만 종료 대상으로 보관한다.
@@ -200,10 +203,12 @@ def main():
             for peer in peers:  # 실제 phase14/PlayerKnown과 게임 입력 설치를 확인한다.
                 peer.wait(battle_ready, "전투 로그인14/PlayerKnown", seconds=45)
                 peer.observe("battle")
-            steady = []  # 자연 대기 뒤 양쪽 명단·월드와 로그인창 소멸을 독립 비교한다.
-            for peer in peers:  # 간단한 자연 대기 뒤 각자 연결/월드 상태를 다시 읽는다.
-                peer.call("netstorm_wait_frames", frames=120)
-                steady.append(peer.observe("steady"))
+            started = time.monotonic()  # 고정 게임 시각 대신 실제 OS 경과를 측정한다.
+            while time.monotonic() - started < args.steady_seconds:  # 양쪽 프레임을 작은 구간으로 기다려 종료/오류도 즉시 수집한다.
+                for peer in peers:  # 상대도 계속 실제 패킷을 수신하며 현재 제품 프레임으로 실행된다.
+                    peer.call("netstorm_wait_frames", frames=120)
+            result["steadySeconds"] = time.monotonic() - started
+            steady = [peer.observe("steady") for peer in peers]  # 자연 대기 뒤 명단·월드와 로그인창 소멸을 독립 비교한다.
             identities = [player_identity(text) for text in steady]  # 원격 수신 뒤의 실제 Player9 기록이다.
             expected = [dict(owner=1, subscriber=0x610001, name="LocalHost", flags=0x43),
                         dict(owner=2, subscriber=0x610002, name="OpponentBot", flags=0x43)]  # 새 격리 프로필의 명시 등록/이름 입력과 원문 Ready 비트다.

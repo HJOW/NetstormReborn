@@ -1,0 +1,109 @@
+{
+  "unit": 1368,
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "exeSha256": "8677c5e75ed3c3b37ba4391db246dfcf855b6f150b3ee69a8fbda1890c99df3e",
+  "tests": {
+    "before": {
+      "total": 10,
+      "failed": 2
+    },
+    "after": {
+      "total": 21,
+      "failed": 0
+    }
+  },
+  "integration": {
+    "intermediateFailure": "bot-battle-10: raw 월드의 역행/비유한 게임 시각",
+    "runs": [
+      {
+        "passed": true,
+        "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "exeSha256": "8677c5e75ed3c3b37ba4391db246dfcf855b6f150b3ee69a8fbda1890c99df3e",
+        "peers": [
+          {
+            "role": "bot",
+            "exitCode": 0
+          },
+          {
+            "role": "host",
+            "exitCode": 0
+          }
+        ],
+        "steadySeconds": 62.14388780000445,
+        "identity": [
+          {
+            "owner": 1,
+            "subscriber": 6356993,
+            "name": "LocalHost",
+            "flags": 67
+          },
+          {
+            "owner": 2,
+            "subscriber": 6356994,
+            "name": "OpponentBot",
+            "flags": 67
+          }
+        ],
+        "world": [
+          [
+            "6377",
+            "0"
+          ]
+        ]
+      },
+      {
+        "passed": true,
+        "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "exeSha256": "8677c5e75ed3c3b37ba4391db246dfcf855b6f150b3ee69a8fbda1890c99df3e",
+        "peers": [
+          {
+            "role": "bot",
+            "exitCode": 0
+          },
+          {
+            "role": "host",
+            "exitCode": 0
+          }
+        ],
+        "steadySeconds": 61.80134949999774,
+        "identity": [
+          {
+            "owner": 1,
+            "subscriber": 6356993,
+            "name": "LocalHost",
+            "flags": 67
+          },
+          {
+            "owner": 2,
+            "subscriber": 6356994,
+            "name": "OpponentBot",
+            "flags": 67
+          }
+        ],
+        "world": [
+          [
+            "6098",
+            "0"
+          ]
+        ]
+      }
+    ]
+  },
+  "protected": {
+    "count": 3212,
+    "changed": [],
+    "extra": []
+  },
+  "originalContract": [
+    "00460e90: currentGame - previousGame, signed double delta",
+    "00467c80: delta <= 0 skips angular integration"
+  ],
+  "remaining": [
+    "State17/18",
+    "생산/건설과 개별 객체·SP 동기화",
+    "서버 인수/재접속",
+    "최종 ZIP"
+  ],
+  "dotnetChanged": false
+}

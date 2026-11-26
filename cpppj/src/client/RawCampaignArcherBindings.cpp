@@ -108,9 +108,9 @@ RawCampaignArcherBindings::RawCampaignArcherBindings(RawSurfaceWorld& world,cons
     :impl_(std::make_unique<Impl>(world,target,random,animationTypes,frameTypes,missileTypes,animation,missile,std::move(effects))) {}
 // 상위가 Kernel 및 callback 사용을 끝낸 뒤 실제 모듈을 해제한다.
 RawCampaignArcherBindings::~RawCampaignArcherBindings()=default;
-// 원본 경과는 Archer에서 float로 읽으므로 여기서는 double 입력을 임의 고정하지 않는다.
+// 원본00460e90은 보정 뒤 음수 차분도 보존하고00467c80이 비양수 적분을 건너뛰므로 같은 유한 경과를 전달한다.
 void RawCampaignArcherBindings::PrepareFrame(o::FrameTime time) {
-    if (!std::isfinite(time.game) || !std::isfinite(time.delta) || time.delta<0) throw std::invalid_argument("Archer 현재 clock/경과 오류");
+    if (!std::isfinite(time.game) || !std::isfinite(time.delta)) throw std::invalid_argument("Archer 현재 clock/경과 오류");
     impl_->animationState.now=time.game;impl_->animationState.delta=time.delta;impl_->missileState.now=time.game;impl_->cannonState.now=time.game;
     impl_->crossbowRotateState.now=time.game;impl_->crossbowRotateState.delta=time.delta;impl_->crossbowState.now=time.game;
     impl_->thunderRotateState.now=time.game;impl_->sunFireState.now=time.game;impl_->thunderFireState.now=time.game;

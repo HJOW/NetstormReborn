@@ -109,7 +109,8 @@ TEST_CASE(RawSurfaceWorld_PausedRegularResumesWithClientGameClock) {
         CHECK(world->Find(30,29,kConnector).value==0 && world->Find(32,29,kBridge).value!=0);
         const auto summary=Summary(*world);CHECK(summary[3]=="0" && summary[4]=="11" && summary[6]=="10");
         CHECK(summary[7]=="0" && summary[8]=="0" && summary[9]=="0" && world->TakeChanged());
-        CHECK(Throws([&] { world->RunFrame({0.5,0,0,4},false); }));
+        world->RunFrame({0.5,1,-0.5,4},false);CHECK(Summary(*world)[1]=="0.5"); // 원본 보정 시각은 역행을 허용하며 예약 판단은 현재 시각을 읽는다.
+        const auto beforeInvalid=world->Report();CHECK(Throws([&] { world->RunFrame({std::numeric_limits<double>::quiet_NaN(),2,0,5},false); }) && world->Report()==beforeInvalid);
     }
 }
 TEST_CASE(RawSurfaceWorld_HardBridgeAndPendingMissionTeardown) {

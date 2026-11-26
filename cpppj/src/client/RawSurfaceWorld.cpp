@@ -482,10 +482,10 @@ void RawSurfaceWorld::Load(std::span<const SurfaceSeed> seeds) {
     }
     FinishLoad();
 }
-// GUI의 준비 단계는 시각만 쓰며 Kernel을 중첩 실행하지 않는다.
+// GUI 준비는 원본 보정 시각의 역행도 보존하며 Kernel을 중첩 실행하지 않는다.
 void RawSurfaceWorld::PrepareFrame(o::FrameTime time) {
     if (impl_->processState.sharedNow) time.game=impl_->processState.Now(); // 실제 현재 시각으로 독립 스냅샷의 게임 값만 교정한다.
-    if (!std::isfinite(time.game) || time.game<impl_->time.game) throw std::invalid_argument("raw 월드의 역행/비유한 게임 시각");
+    if (!std::isfinite(time.game)) throw std::invalid_argument("raw 월드의 비유한 게임 시각");
     if (!impl_->processState.sharedNow) impl_->processState.now=time.game; // bound Client 시각은 스냅샷으로 역쓰기하지 않는다.
     impl_->time=time;
 }

@@ -3937,3 +3937,10 @@ netstorm_apply_compiler_options(netstorm_reset_all_tests)
 add_executable(netstorm_chat_channels_tests FocusedTestMain.cpp ChatChannelsTests.cpp)
 target_link_libraries(netstorm_chat_channels_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_chat_channels_tests)
+
+# LAN 보정의 음수 경과와 원본 시계/Archer 회귀만 창 없이 실행하는 집중 대상이다(1368).
+target_sources(netstorm_tests PRIVATE CampaignClockTests.cpp)
+add_executable(netstorm_lan_clock_tests FocusedTestMain.cpp CampaignClockTests.cpp GameClockResetTests.cpp ArcherAnimationTests.cpp RawSurfaceWorldTests.cpp)
+target_link_libraries(netstorm_lan_clock_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_lan_clock_tests)
+target_compile_definitions(netstorm_lan_clock_tests PRIVATE ${_netstorm_menu_session_definitions})
