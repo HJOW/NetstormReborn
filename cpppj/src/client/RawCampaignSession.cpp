@@ -3597,6 +3597,7 @@ struct RawCampaignSession::Impl {
         if (cursor) throw std::logic_error("실제 캠페인 커서 중복 연결");CampaignCursorGame game;
         if (services.production.effects.configInt) game.productTimers=[this] { return static_cast<std::uint32_t>(services.production.effects.configInt("useProductTimers")); }; // 실제 Client 설정을 반환 몸체의 두 소비 위치에 연결한다.
         game.unitRate=[this] { return battleOptions.at(2); }; // 현재 로그인/튜토리얼 옵션을 읽어 Fast의1초 대신 초기 Slow의10초를 쓰던 누락을 복원한다.
+        game.saveReconnect=[this] { WriteReconnect(services.reconnectFile.value_or(SavedStateWriteHooks{})); }; // 미션의 자연 반환과 일반 LAN의 비용 차감 뒤 실제 저장을 같은004b54e0 작성자에 맡긴다.
         game.prepare=[this] { PrepareConstruction();gameplayPlacement.geometry.patternTypes=constructionState.confirm.patternTypes;cursorDrop.localPlayer=playerState.battleOwner;cursorDrop.battle=core.ownerMode.battle ? 1U : 0U;cursorDrop.blocked=globals.missionPost; };
         game.lifecycle.source=[this](Sid form) { return SquidForms(core.pool).Parent(form); };
         game.lifecycle.sourceNotice=[this](Sid parent,Sid form,std::uint32_t reason) { contentNotice->Notice(parent,form,reason); };

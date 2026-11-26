@@ -107,7 +107,7 @@ struct RawCampaignCursor::Impl {
         dropHooks.placeLocal=[this](const o::ConstructionLocalRequest& request) { returnState.type=data.drop.type;local->Place(request); };
         dropHooks.addLocalSp=game.lifecycle.addLocalSp;
         dropHooks.showSp=Current(effects.drop.showSp,"비용 표시");
-        dropHooks.battleRefresh=Current(effects.drop.battleRefresh,"전투 표시 갱신");
+        dropHooks.battleRefresh=Current(game.saveReconnect,"복구 상태 저장"); // 역사적 훅 이름의 원문 실체는004b54e0이며 UI 갱신으로 대체하지 않는다.
         dropHooks.invalidGui=[this] { lifecycle->Cancel(); };
         dropHooks.guiFlags=Current(effects.drop.guiFlags,"Gump 허용 DWORD");
         dropHooks.guiParent=Current(effects.drop.guiParent,"Gump 부착 부모");

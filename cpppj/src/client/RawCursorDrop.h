@@ -44,7 +44,7 @@ struct CursorDropHooks {
     // addLocalSp: 로컬 플레이어의 SP 변경을 적용하는 콜백.
     std::function<void(float)> addLocalSp;
     std::function<void(std::int32_t,std::int32_t,std::int32_t,std::uint32_t)> showSp; // 절삭 비용·화면 x/y·0.
-    // battleRefresh: 전투 상태의 후속 갱신을 요청하는 콜백.
+    // battleRefresh: 역사적 이름이며 실체는 비용 차감 뒤004b54e0의 재접속 상태 저장이다. UI 갱신으로 대체하지 않는다.
     // invalidGui: 배치 불가 상태의 UI 피드백을 실행하는 콜백.
     std::function<void()> battleRefresh,invalidGui;
     std::function<std::uint32_t(std::uint32_t)> guiFlags; // Gump +0x28: 전체 DWORD 반환으로 겹침을 검사한다.

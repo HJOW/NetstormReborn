@@ -3944,3 +3944,8 @@ add_executable(netstorm_lan_clock_tests FocusedTestMain.cpp CampaignClockTests.c
 target_link_libraries(netstorm_lan_clock_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_lan_clock_tests)
 target_compile_definitions(netstorm_lan_clock_tests PRIVATE ${_netstorm_menu_session_definitions})
+
+# 내려놓기의 비용/복구 저장 호출 순서와 실제 저장 경로 회귀를 창 없이 확인한다(1370).
+add_executable(netstorm_cursor_drop_tests FocusedTestMain.cpp CursorDropTests.cpp SavedStateFilesTests.cpp)
+target_link_libraries(netstorm_cursor_drop_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_cursor_drop_tests)

@@ -2150,7 +2150,6 @@ struct SessionCursorUi {
         effects.placement.gumpAt=[](std::int32_t,std::int32_t) { return 0U; }; // 이 입력에는 화면 위 Gump가 없다.
         effects.placement.invalidate=[this](ScreenRect,std::uint32_t) { ++dirty; };
         effects.drop.showSp=[this](std::int32_t amount,std::int32_t,std::int32_t,std::uint32_t flags) { CHECK(amount>0 && flags==0);++shown; };
-        effects.drop.battleRefresh=[this] { ++refreshes; };
         effects.drop.refresh=[this](std::uint32_t a,std::uint32_t b,std::uint32_t c) { CHECK(a==0 && b==0 && c==1);++refreshes; };
         effects.drop.closeGump=[this](std::uint32_t,std::uint32_t a,std::uint32_t b,std::uint32_t c) { CHECK(a==3 && b==0 && c==0);++refreshes; };
         effects.send=[this](std::uint32_t destination,std::span<const std::uint8_t> packet) { CHECK(destination==9 && packet.size()==25);if (onSend) onSend();sent.emplace_back(packet.begin(),packet.end()); };
