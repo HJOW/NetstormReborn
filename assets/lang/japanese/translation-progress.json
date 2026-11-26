@@ -28,11 +28,11 @@
     "nextSection": null
   },
   "help": {
-    "completedAnchorOccurrences": 48,
+    "completedAnchorOccurrences": 64,
     "totalAnchorOccurrences": 138,
-    "completedUniqueTopics": 48,
+    "completedUniqueTopics": 64,
     "totalUniqueTopics": 128,
-    "nextSection": "bombIManoType",
+    "nextSection": "factoryHelp",
     "pendingSharedBodyTopics": []
   }
 }

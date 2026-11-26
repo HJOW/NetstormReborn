@@ -1137,175 +1137,171 @@ If you have trouble use the troubleshooting guide.
 
 <a name="bombIManoType">
 <info>
-<q>"Often it is neccessary to purge the poison from the mind by embodying it in the form of 
-ones' own fear." -Lord Dwia, High Priest of the XIIIBY</q>
+<q>「心の毒を洗い流すには、自分自身の恐れという形にして表す必要があることも多い。」
+— ドウィア卿、XIIIBYの大司祭</q>
 <p>
 <!"bombIMano.1">
 <Br>
-A <a href="#buriedType">Spell</a> that summons a <a href="#rainFlyerType">Man o' War</a> to attack enemy units.<br>
+一体の<a href="#rainFlyerType">マンオウォー</a>を呼び、敵を攻撃させる<a href="#buriedType">呪文</a>です。<br>
 </a>
 
 <a name="bombIIManoType">
 <info>
-<q>"Just when you think you can relax, along come the bringers of destruction." -Kenzo, Veteran Archer</q>
+<q>「ようやく気を抜けると思った時に、破壊を呼ぶ者たちが現れる。」 — ケンゾー、熟練の射手</q>
 <p>
 <!"bombIIMano.1">
 <Br>
-A <a href="#buriedType">Spell</a> that summons two <a href="#rainFlyerType">Man o' War</a> to attack enemy units<br>
+二体の<a href="#rainFlyerType">マンオウォー</a>を呼び、敵を攻撃させる<a href="#buriedType">呪文</a>です。<br>
 </a>
 
 <a name="bombIIIManoType">
 <info>
-<q>"Where one is good, three are better." -Dwindlin, Nimbian Mathematician</q>
+<q>「一つが良ければ、三つならもっと良い。」 — ドウィンドリン、ニンバスの数学者</q>
 <p>
 <!"bombIIIMano.1">
 <Br>
-A <a href="#buriedType">Spell</a> that summons three <a href="#rainFlyerType">Man o' War</a> to attack enemy units.<br>
+三体の<a href="#rainFlyerType">マンオウォー</a>を呼び、敵を攻撃させる<a href="#buriedType">呪文</a>です。<br>
 </a>
 
 <a name="bombGravitonType">
 <info>
-<q>"Apparatuses with flying capabilities were designed to work under a specific
-gravitational constant; even a slight change in this constant will result in a
-catastrophic failure." -Ventusmori, Nimbian Engineer</q>
+<q>「飛行装置は、特定の重力定数の下で働くよう設計されている。
+それが少し変わるだけで、致命的な故障につながる。」 — ベントゥスモリ、ニンバスの技術者</q>
 <p>
 <!"bombGraviton.1">
 <Br>
-A <a href="#buriedType">Spell</a> that destroys all air units in its range.<br>
+範囲内のすべての航空ユニットを破壊する<a href="#buriedType">呪文</a>です。<br>
 </a>
 
 <a name="bombMeteorType">
 <info>
-<q>"Rain from the sky has no allies." -UnSpokenOne, Wise Nimbian</q>
+<q>「空から降る雨に味方はいない。」 — アンスピークンワン、ニンバスの賢人</q>
 <p>
 <!"bombMeteor.1">
 <Br>
-A <a href="#buriedType">Spell</a> that deals a random amount of damage to everything in its range.<br>
+範囲内のすべてに、無作為な量の損害を与える<a href="#buriedType">呪文</a>です。<br>
 </a>
 
 <a name="bombExplodeSmallType">
 <info>
-<q>"I don't think 'cute' is the word you're looking for." -Ervin Grots, Apprentice</q>
+<q>「『かわいい』は、君が探している言葉ではないと思うが。」 — アーヴィン・グロッツ、見習い</q>
 <p>
 <!"bombExplodeSmall.1">
 <br>
-A <a href="#buriedType">Spell</a> that destroys everything destructible in its range.<br>
+範囲内の破壊可能なものをすべて破壊する<a href="#buriedType">呪文</a>です。<br>
 </a>
 
 <a name="bombExplodeMediumType">
+
 <a name="bombSpecialOneType">
 <info>
-<q>"Ideal for day-to-day pandemonium." -Telsen Rott, </q>
+<q>「日々の大混乱にうってつけ。」 — テルセン・ロット、</q>
 <p>
 <!"bombExplodeMedium.1">
 <br>
-A <a href="#buriedType">Spell</a> that destroys anything destructible in its range.<br>
+範囲内の破壊可能なものをすべて破壊する<a href="#buriedType">呪文</a>です。<br>
 </a>
 </a>
 
 <a name="bombExplodeLargeType">
 <info>
-<q>"Run.  Faster." -Captain Knut Hamsun, Nimbian casualty.</q>
+<q>「走れ。もっと速く。」 — クヌート・ハムスン船長、ニンバスの犠牲者。</q>
 <p>
 <!"bombExplodeLarge.1">
 <br>
-A <a href="#buriedType">Spell</a> that destroys anything destructible in its range.<br>
+範囲内の破壊可能なものをすべて破壊する<a href="#buriedType">呪文</a>です。<br>
 </a>
 
 <a name="bombHardenerType">
 <info>
-<q>"The mortar itself takes on a hellish willfulness." -Hule Gundersun, Master Mason</q>
+<q>「モルタルそのものが、地獄のような頑固さを帯びる。」 — ヒューレ・グンダーソン、石工の親方</q>
 <p>
 <!"bombHardener.1">
 <br>
-A <a href="#buriedType">Spell</a> that makes <a href="#bridgeType">bridges</a> indestructible in its range.<br>
+範囲内の<a href="#bridgeType">橋</a>を破壊不能にする<a href="#buriedType">呪文</a>です。<br>
 </a>
 
 <a name="bombHealType">
 <info>
-<q>"And your illness was illusion.<br>  
-And your fever was a dream." -Book of Nimbus</q>
+<q>「そして、お前の病は幻であり、<br>
+お前の熱は夢だった。」 — ニンバスの書</q>
 <p>
 <!"bombHeal.1">
 <br>
-A <a href="#buriedType">Spell</a> that that restores all units in its range with some of their missing hit points. 
-It also heals <a href="#bombParalyzeType">Paralysis</a>, and, because of the iridescence of its healing magic, it
-negates <a href="#bombInvisibleType">Invisibility</a>.<br>
+範囲内の全ユニットの失った体力を、一部回復する<a href="#buriedType">呪文</a>です。
+<a href="#bombParalyzeType">パラリシス</a>も治します。また、治癒の魔法の虹色の輝きにより、
+<a href="#bombInvisibleType">インビジビリティ</a>を解除します。<br>
 </a>
 
 <a name="bombInvisibleType">
 <info>
-<q>"It's not that you do not see, but merely that your eyes do not perceive." -Luffor Haginit, Nimbian Logician</q>
+<q>「見ていないのではなく、目が知覚できないだけだ。」 — ルポール・ハギニット、ニンバスの論理学者</q>
 <p>
 <!"bombInvisible.1">
 <br>
-A <a href="#buriedType">Spell</a> that temporarily turns all units invisible in its range.
-Note that nothing can be targeted or picked up while it is invisible.  Invisible blockers
-will still block, but anything else previously targeted becomes un-targeted when it becomes
-invisible.<br>
+範囲内の全ユニットを、一時的に透明にする<a href="#buriedType">呪文</a>です。
+透明な間は、何からも目標にされたり拾われたりしません。透明な防御ユニットは
+道を塞ぎ続けますが、それを狙っていたものは透明になった時に目標を失います。<br>
 </a>
 
 <a name="bombParalyzeType">
 <info>
-<q>"A stalemate with the ether itself." -Dag Haverlink, Nimbian Gamesman</q>
+<q>「エーテルそのものとの膠着状態。」 — ダグ・ハバーリンク、ニンバスの勝負師</q>
 <p>
 <!"bombParalyze.1">
 <br>
-A <a href="#buriedType">Spell</a> that stops all movement and shooting in its range.  Any affected 
-<a href="#TransportHelp">Transports</a> will not be able to cast their Spells.
-Paralyzed units can be distinguished by the Spell icon next to them.<br>
+範囲内のすべての移動と射撃を止める<a href="#buriedType">呪文</a>です。影響を受けた
+<a href="#TransportHelp">輸送ユニット</a>は呪文を使えません。
+麻痺したユニットは、横に表示される呪文アイコンで見分けられます。<br>
 </a>
 
 <a name="bombTreasonType">
 <info>
-<q>"The most delightful victory over any foe is to persuade his right hand to hack off his left." -General Greig Hamlinken</q>
+<q>「どんな敵にも最も痛快な勝利は、その右手に左手を切り落とさせることだ。」 — グレイグ・ハムリンケン将軍</q>
 <p>
 <!"bombTreason.1">
 <br>
-A <a href="#buriedType">Spell</a> that gives you the ownership of all units in its range, including
-<a href="#bridgeType">bridges</a> and all non-<a href="#PriestType">Priest</a> <a href="#transportHelp">Transports</a>.<br>
+範囲内の全ユニットの所有権を得る<a href="#buriedType">呪文</a>です。これには
+<a href="#bridgeType">橋</a>と、<a href="#PriestType">司祭</a>以外のすべての<a href="#transportHelp">輸送ユニット</a>が含まれます。<br>
 </a>
 
 <a name="residenceType">
 <info>
-<q>"I wouldn't mind living above ground, but battle crossfire tends to burn your house down." -Damon
-Runyon, regular guy</q>
+<q>「地上に暮らすのも構わないが、戦闘の十字砲火で家を焼かれることが多くてね。」 — デイモン・
+ラニアン、普通の男</q>
 <p>
-As a <a href="#vortexHelp">Temple</a> is built, the alignment of that Temple grows into the Residence.
+<a href="#vortexHelp">神殿</a>を建てると、その系統が居住区にも広がります。
 <p>
-Nimbians live in submerged houses below the chaos of battle. You cannot move or destroy
-a residence.  And you can't build on top of it.
+ニンバス人は戦闘の混乱の下、水に沈む家で暮らします。居住区は移動も破壊もできず、
+その上に建物を建てることもできません。
 <br>
 </a>
 
 <a name="influenceHelp">
-<h2>Energy</h2>
+<h2>エネルギー</h2>
 <p>
-Energy is what helps you build <a href="#unitHelp">units</a> in battle. There are three
-types of Energy provided by <a href="#vortexHelp">Temples</a> 
-and "Generators":<br>
-<!"mana.8"> - Wind Energy from <!"windvortex.*"> and <!"windbattery.*"><br>
-<!"mana.9"> - Rain Energy from <!"rainvortex.*"> and <!"rainbattery.*"><br>
-<!"mana.10"> - Thunder Energy from <!"thundervortex.*"> and <!"thunderbattery.*"><br>
+エネルギーは、戦闘で<a href="#unitHelp">ユニット</a>を建設するための力です。<a href="#vortexHelp">神殿</a>と
+「ジェネレーター」が供給するエネルギーには、三種類あります。<br>
+<!"mana.8"> - <!"windvortex.*"> と <!"windbattery.*"> のウィンドエネルギー<br>
+<!"mana.9"> - <!"rainvortex.*"> と <!"rainbattery.*"> のレインエネルギー<br>
+<!"mana.10"> - <!"thundervortex.*"> と <!"thunderbattery.*"> のサンダーエネルギー<br>
 <p>
-<b>Building units using Energy</b>
+<b>エネルギーでユニットを建設する</b>
 <p>
-Icons next to each thing you build tell you what Energy is needed to complete the structure. For example,
+各建設対象の横のアイコンは、完成に必要なエネルギーを示します。例えば、
 <br>
 <!"mana.2"><!"thunderCannon.0">
 <p>
-tells you that this Thunder Cannon will need one Thunder Energy - that is, a Thunder Temple or
-a <a href="#thunderbatteryType">Thunder Generator</a> must be 
-nearby to satisfy the Cannon's Energy requirement.
+は、このサンダーキャノンにサンダーエネルギーが一つ必要という意味です。神殿か
+<a href="#thunderbatteryType">サンダージェネレーター</a>が近くにあれば、その要求を満たせます。
 <p>
-When you see that a unit requires Sun Energy - <!"mana.3"> - it means that <i>any</i> sort of
-Energy will satisfy its requirements. For example,
+ユニットがサンエネルギー - <!"mana.3"> - を要求する場合、<i>どの</i>種類のエネルギーでも満たせます。例えば、
 <br>
 <!"mana.3"><!"sunCannon.0">
 <p>
-tells you that this Sun Cannon will accept one of <i>any</i> Energy, be it Rain, Wind, or Thunder.
+は、このサンキャノンがレイン、ウィンド、サンダーの<i>いずれか</i>一つのエネルギーを受け入れるという意味です。
 <p>
-Left-click on Temples and Generators to see the Energy they provide.
+神殿やジェネレーターを左クリックすると、供給するエネルギーを見ることができます。
 <br>
 </a>
 
