@@ -2492,3 +2492,6 @@ cpppj/tests/fixtures/sid-cd-allocation-recovery-x86.tsv -text
 cpppj/third_party/quickjs-ng/** -text
 # webpj webpack 번들은 생성된 한 줄짜리 파일이라 Windows 체크아웃(core.autocrlf=true)에서도 줄바꿈 변환 없이 바이트 그대로 보존해 재빌드 결과와 비교할 수 있게 한다.
 webpj/www/dist/** -text
+
+# 원시 계측 보고서의 마지막 빈 TSV 열은 데이터이므로 끝 탭을 공백 오류로 세지 않는다.
+webpj/tests/fixtures/cpppj/**/report.tsv whitespace=-blank-at-eol

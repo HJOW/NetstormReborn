@@ -1,16 +1,17 @@
 // L3 공통 보조: cpppj 오라클과 같은 입력 단계표(steps.json)를 고정 시각 웹에 적용해 체크포인트 프레임의 논리 화면과 Session 덤프를 오라클 폴더의 파일과 비교한다.
 // Tutorial1(`l3-tutorial1.spec.js`)과 Tutorial2(`l3-tutorial2.spec.js`)가 같은 틀을 쓰도록 `l3-tutorial1.spec.js` 에서 옮겨 왔다. (2026-11-24 WB04-E1305)
-// 단계표의 한 단계는 [프레임, 동작, 인자]이고 동작 이름은 cpppj `--ui-script` 와 같다(`click-if` 라벨 클릭, `click`/`right` 화면 좌표 클릭, `key`, `session-dump`, `snapshot`).
+// 단계표의 한 단계는 [프레임, 동작, 인자]이고 동작 이름은 cpppj `--ui-script` 와 같다(`click-if` 라벨 클릭, `click`/`right` 화면 좌표 클릭, `key`, `pointer` 좌표 폴링, `session-dump`, `snapshot`).
 // 입력 프레임 규칙(실측): cpppj 는 단계 프레임 N 의 시작에 입력을 큐에 넣어 그 프레임에서 처리한다. 웹은 DOM 사건이라 주입 위치가 동작마다 다르다.
 //  - 안내 창 단추 클릭(click-if): 웹은 즉시 처리하지만 cpppj 는 창 닫힘·관문 재개가 한 프레임 뒤에 이어져 웹을 N+1 에 넣어야 같다.
 //  - 키(key)와 화면 좌표 좌/우 클릭(click/right): 웹 입력 큐는 다음 프레임 처리라 N-1 에 넣어야 cpppj 의 프레임 N 처리와 같다(Tutorial3 g4185 이동 중 골렘 우클릭 위치 0픽셀 일치에서 right -1 도 동일 규약으로 확인, 세부 근거는 docs/webpj-l3-tutorial1-20261123.md).
+//  - 좌표 폴링(pointer)도 N-1에 옮기면 프레임 N의 실제 입력 폴링이 C++와 같다(E1366의 가장자리 시작 시각16.6·좌표·화면으로 확인).
 // 체크포인트(session-dump·snapshot)는 N 프레임을 마친 뒤에 찍는다. 시작 순서는 고정 시각 L2 와 같다(메뉴 1프레임 → 미션 시작).
 const { expect } = require('@playwright/test');
 const fs = require('node:fs');
 const path = require('node:path');
 
 // 단계 동작마다 웹에서 입력을 넣을 프레임 보정(단계 프레임에 더한다)이다. 위 규칙을 값으로 옮겼다. (2026-11-24 WB04-E1305, E1333 right -1 정리)
-const INJECT_SHIFT = { 'click-if': 1, click: -1, right: -1, key: -1, esc: -1 };
+const INJECT_SHIFT = { 'click-if': 1, click: -1, right: -1, key: -1, esc: -1, pointer: -1 };
 
 // 이름이 `name`(예: 'tutorial1-l3')인 cpppj 기준선 오라클 폴더의 절대 경로를 돌려준다. (2026-11-24 WB04-E1305)
 function oracleFolder(name) {
@@ -28,8 +29,10 @@ function loadOracle(oracleDir) {
 // compare 를 false 로 주면 비교 없이 체크포인트 결과만 돌려준다(어긋남 조사용 임시 단계표를 `L3_DUMP_DIR` 로 덤프할 때). 반환 { results, errors }.
 // inspect가 있으면 체크포인트 직후의 실제 앱을 추가 조회할 수 있다(읽기 전용 검사 용도). (WB04-E1327)
 // screenRegions는 기준선 뒤 의도된 UI 변경만 사유·사각형·정확한 차이 픽셀 수로 명시한다. 영역 밖은 계속 0픽셀이어야 한다. (WB04-E1337)
-async function runL3({ browser, plan, oracleDir, compare = true, inspect = null, screenRegions = {} }) {
+// snapshotPhase='presented'는 기존 마지막 표시 화면, 'frameEnd'는 C++ Capture와 같은 카메라 적용 뒤 DIB를 읽는다. frameEnd는 별도 합성 Tell 창이 없는 장면에 쓴다.
+async function runL3({ browser, plan, oracleDir, compare = true, inspect = null, screenRegions = {}, snapshotPhase = 'presented' }) {
   if (inspect !== null && typeof inspect !== 'function') throw new TypeError('L3 추가 조회는 함수여야 합니다.');
+  if (snapshotPhase !== 'presented' && snapshotPhase !== 'frameEnd') throw new TypeError('L3 화면 관측 시점은 presented 또는 frameEnd여야 합니다.');
   const context = await browser.newContext({ viewport: { width: plan.screen.width, height: plan.screen.height }, locale: 'en-US' }), page = await context.newPage();
   const errors = []; page.on('pageerror', (error) => errors.push(error.stack ?? error.message)); page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
   await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, autoDemo: 0 } })));
@@ -55,6 +58,11 @@ async function runL3({ browser, plan, oracleDir, compare = true, inspect = null,
       } else if (input.op === 'click' || input.op === 'right') {
         const [x, y] = input.arg.replace('screen:', '').split(',').map(Number), point = await toClient({ x, y });
         await page.mouse.click(point.x, point.y, { delay: 0, button: input.op === 'right' ? 'right' : 'left' });
+      } else if (input.op === 'pointer') {
+        // C++ inspectPoll의 좌버튼 뗌 좌표만 바꾼다. 마우스 버튼 사건을 만들지 않으며 다른 raw 폴링 코드는 명시 거부한다.
+        const fields = input.arg.split(',').map(Number), [code, x, y] = fields;
+        if (fields.length !== 3 || !fields.every(Number.isInteger) || code !== 0x80010000) throw new Error('L3 pointer는 좌버튼 뗌 code2147549184,x,y만 지원합니다.');
+        const point = await toClient({ x, y }); await page.mouse.move(point.x, point.y);
       } else if (input.op === 'key') await page.keyboard.press(input.arg.length === 2 && input.arg[0] === 'f' ? input.arg.toUpperCase() : input.arg);
       // C++ 입력 단계표의 esc도 같은 가상 키 누름으로 보낸다. (WB04-E1327)
       else if (input.op === 'esc') await page.keyboard.press('Escape');
@@ -62,7 +70,18 @@ async function runL3({ browser, plan, oracleDir, compare = true, inspect = null,
     for (const [frame, op, name] of checkpoints.filter(([frame]) => frame === n)) {
       results[`${op}:${name}`] = op === 'session-dump'
         ? await page.evaluate(() => window.netstorm.sessionDump())
-        : await page.evaluate(() => { const app = window.netstorm, surface = app._surface; return { width: surface.width, height: surface.height, pixels: Array.from(surface.pixels), palette: Array.from(app._clientPaletteScreen.palette()) }; });
+        : await page.evaluate((phase) => {
+          const app = window.netstorm, surface = app._surface, screen = app._clientPaletteScreen;
+          // 기존 체크포인트는 마지막 표시 화면을 계속 읽는다. 정지 카메라에서는 프레임 말미 DIB와도 같다.
+          if (phase === 'presented') return { width: surface.width, height: surface.height, pixels: Array.from(surface.pixels), palette: Array.from(screen.palette()) };
+          if (app._mainMenu?.dialog) throw new Error('L3 frameEnd는 별도 Tell 합성 창이 닫힌 장면에 사용하십시오.');
+          const raw = screen.lock(), pixels = new Uint8Array(surface.width * surface.height);
+          try {
+            // DIB 행 패딩을 제외한 논리 픽셀만 읽고 잠금 깊이는 원래 값으로 돌려놓는다.
+            for (let row = 0; row < surface.height; row += 1) pixels.set(raw.subarray(row * screen.pitch, row * screen.pitch + surface.width), row * surface.width);
+          } finally { screen.unlock(); }
+          return { width: surface.width, height: surface.height, pixels: Array.from(pixels), palette: Array.from(screen.palette()) };
+        }, snapshotPhase);
     }
     if (inspect && checkpoints.some(([frame]) => frame === n)) await inspect(page, n, results);
     if (n < last) await page.evaluate(() => window.netstorm.stepFixedFrames(1));

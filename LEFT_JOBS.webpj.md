@@ -6,7 +6,7 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-26, 마지막 단위 WB04-E1365)
+### 0.1 현재 값 (2026-11-26, 마지막 단위 WB04-E1366)
 
 - **실행·플레이**
   - **화면:** 브라우저 ‘클릭하여 시작’(첫 적재 뒤 최소 6초, E1308), 시작 title 그림, 메인 메뉴·캠페인/데모 목록·도움말·옵션(Reset All 게임 안 확인 창 포함)·Credits와 개발용 지형 미리보기가 동작한다.
@@ -19,11 +19,12 @@
   - **M1 메뉴:** 영어 4:3 메뉴 8장면은 cpppj 오라클과 알려진 차이 영역(Campaign 창 크기·Options 팝업 위치) 밖에서 픽셀 차이 0이고 구름 배경도 같다(Kencloud 캐시, E1298).
   - **L2 시작 상태(E1283 닫음):** 검사 전용 고정 시각 모드(`?fixed=25`)에서 Tutorial1 Load/Start의 Game 난수열(90프레임 6,851회)·논리 화면·Session 덤프가 cpppj 기준선 오라클과 같다. 4:3·16:9(1366×768)·16:10(1280×800, E1322)의 90프레임 화면 0픽셀, 90·130프레임 덤프는 환경 의존인 `sp 1`·`player:*` 행만 다르다. 한국어(E1323)는 상태가 같고 첫 안내 창 밖 0픽셀이며 창 안 차이는 웹 독립 번역·글꼴 차이로 분리 확인했다([근거](docs/webpj-korean-m2-20261124.md)). 31개 미션의 시작 5·30·120프레임 덤프도 모두 같다(E1313).
   - **L3 입력 진행:** cpp `--ui-script` 입력 단계표를 그대로 적용해 Tutorial1(4,200프레임, E1284~E1286·E1299·E1301~E1304)·Tutorial2(5,400프레임, E1305~E1307)·Tutorial3(Capture The Priest, 6,200프레임, E1309·E1329~E1333)의 시작~'Mission Accomplished!' 완료 창·다음 미션 해제와 Tutorial4 단계 A→C→E1 `'Sacrificing Priests, Part 1'` 안내 창 진입 7,240프레임(E1334~E1335)·Tutorial5 단계 A2 실제 피격·B 안내까지 1,000프레임(E1339~E1340), ESC 메뉴 여닫기 360프레임(E1327)까지 체크포인트 화면 0픽셀·덤프 일치다(단계별 근거는 [진행 요약](#e951-e1081) L3 행과 3.1절 4D-4b). 이 대조로 다리 붕괴 스캔 초기화 누락(`Reset422490`, E1301)·생산 패널 HUD 생성 순서(E1305)·로그인 중 간헐천 보충 기한(E1313)·메뉴 SP 추적(E1327)·주변음/장면음악 천둥의 `ThunderProcess`(TYPE 55) 미연결(E1329)과 `e2e/l3-common.js`의 `INJECT_SHIFT.right`(-1, E1333)를 고쳤다. E1336 마나 그림 보충 뒤 Tutorial4 `a220`의 생산 하위 메뉴 영역은 기준선 오라클과 8,656픽셀 달라 E1337부터 사유·영역·픽셀 수를 명시한 알려진 차이로 검사하며(영역 밖 0픽셀), E1336 이전의 0픽셀 결과를 그 뒤로 넓혀 읽지 않는다.
-  - **L3 캠페인(16/16):** E1350~E1365의1-1·1-2·1-3·1-4·1-5·1-6·2-1·2-2·2-3·2-4·2-5·3-1·3-2·3-3·3-4·3-5 브리핑·시작·대기1200프레임은 미션마다 화면3곳0픽셀·덤프3곳 허용 밖0이다. 목표 수행·승리는 별도이며 0개 미션 진입·대기 L3가 남았다.
+  - **L3 캠페인(16/16):** E1350~E1365에서 모든 미션의 브리핑·시작·대기1200프레임을 미션마다 화면3곳0픽셀·덤프3곳 허용 밖0으로 대조했다. 허용 미션의 실제 목표 수행·승리는 별도 단위다.
   - **부품:** 월드·UI 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다(원본 공통 메뉴 788행·Factory 메뉴 39행·Uber 루트 160행·장면 음악 3,113행, 채팅 입력줄 대상 720행(E1265), 파편·건물 캡처 4,474행(E1275~E1276)·골렘/받침 264행(E1312), 실제 Session의 EvilRay·Burning·섬 투하(E1314~E1316) 등). 대응표 1,007단위 중 732행은 Tutorial1 실행에서 웹 모듈의 함수가 모두 실행된 `session`이다(E1283). 좌측 HUD 하단 85×82픽셀은 원본 스크린샷과 일치한다.
   - **한국어 글자:** 갈무리11 12px 격자로 그리되 제목 배율·굵기(사용자 결정으로 보통체)·한글 기준선을 cpppj와 다르게 둔다([0.7절](#korean-font-change)).
   - **미검증:** 세 캠페인 묶음의 L3 진행·자연 완주와 L4b 소리. Tutorial4 E1~I1·Tutorial5 D 이후·Tutorial6 E 이후의 특정 적 공격·포획·희생·승리는 사용자 지시로 건너뛰고 사용자가 직접 확인한다. Tutorial6 A~D 생산·건설·납품은 E1343~E1346 완료다.
-- **최근 완료 E1365:** 캠페인3-5 Final Confrontation의 브리핑·시작·대기1200프레임 화면3곳0픽셀·덤프3곳 허용 밖0, 로컬brain0·SP1200→1200 일치. Chromium1/1·자료Node3/3 통과([근거](docs/webpj-l3-campaign3-5-wait-20261126.md)).
+- **최근 완료 E1366:** 전체화면 pointer 폴링·오른쪽 이동·정지의 같은 프레임 말미 DIB 대조, 5-B13/13 완료. 화면4곳0픽셀·덤프4곳 허용 밖0, Chromium1/1·자료Node3/3 통과([근거](docs/webpj-l3-campaign-edge-scroll-20261126.md)).
+- **이전 완료 E1365:** 캠페인3-5 Final Confrontation의 브리핑·시작·대기1200프레임 화면3곳0픽셀·덤프3곳 허용 밖0, 로컬brain0·SP1200→1200 일치. Chromium1/1·자료Node3/3 통과([근거](docs/webpj-l3-campaign3-5-wait-20261126.md)).
 - **이전 완료 E1364:** 캠페인3-4 Enemy Territory의 브리핑·시작·대기1200프레임 화면3곳0픽셀·덤프3곳 허용 밖0, 로컬brain0·SP10000→10000 일치. Chromium1/1·정기Node26 전체6856/6856 통과([근거](docs/webpj-l3-campaign3-4-wait-20261126.md)).
 - **이전 완료 E1363:** 캠페인3-3 Vicious의 브리핑·시작·대기1200프레임 화면3곳0픽셀·덤프3곳 허용 밖0, 로컬brain0·SP7000→7000 일치. Chromium1/1·자료Node3/3 통과([근거](docs/webpj-l3-campaign3-3-wait-20261126.md)).
 - **이전 완료 E1362:** 캠페인3-2 To The Rescue의 브리핑·시작·대기1200프레임 화면3곳0픽셀·덤프3곳 허용 밖0, 로컬brain0·SP4600→4600 일치. Chromium1/1·자료Node3/3 통과([근거](docs/webpj-l3-campaign3-2-wait-20261126.md)).
@@ -51,11 +52,11 @@
 - **이전 완료 E1340:** Tutorial5 실제 피격과 B 안내 진입 대조([근거](docs/webpj-l3-tutorial5-defense-20261126.md)).
 - **이전 완료(E1337~E1339):** E1339 Tutorial5 단계 A1(생산 등록·스톤 타워 `(138,92)` 배치·1,000프레임 대기) L3 일치([근거](docs/webpj-l3-tutorial5-build-20261126.md)), E1338 일반 프레임 예외의 원인·문맥을 console에 기록한 뒤 다음 프레임 진행([근거](docs/webpj-frame-error-continue-20261126.md)), E1337 Tutorial4 자동 검사를 E1 진입 범위·345프레임 재실행으로 제한하고 중단본 16파일을 보존 자료로 등록([근거](docs/webpj-l3-tutorial4-scope-20261126.md)). 공격·포획·희생·승리는 재현하지 않았다.
 - **작업 지시(2026-11-25 사용자 /goal):** 이 문서의 남은 작업을 모두 수행하되, 사제 포획/희생·특정 적 공격·시나리오 승리 재현이 필요한 시험은 캠페인 1-1~1-5와 스커미시만 아군 AI 활성화 방식으로 시험하고 그 밖의 스테이지는 건너뛴다(나중에 사용자가 직접 확인). 미션 진입 후 대기·유닛 생산·건물 건설로 끝나는 시험은 진행한다. 단위마다 문서 갱신과 커밋을 한다.
-- **현재 작업(2026-11-26 목표 재개):** E1365까지 캠페인16/16 진입·대기 L3를 마쳤다. 다음은 허용 미션의 실제 아군 AI 목표·승리와 잔여 결선 검증이다. 아군 AI 목표/승리는 별도 진행한다.
+- **현재 작업(2026-11-26 목표 재개):** 캠페인16/16 진입·대기 L3와 가장자리 화면 대조를 마쳤다. 다음 E1367는 저장 사제 경로의 정식 종료다. 허용 밖 공격·포획·희생·승리는 재현하지 않는다.
 - **전체 회귀**
   - **Node22.23.5 E1364:** 6,856/6,856 통과, 실패·취소·미실행0(818.3초). v26 종료 뒤 순차 실행했다.
   - **Node26.13.0 E1364:** 6,856/6,856 통과, 실패·취소·미실행0(739.7초).
-  - **주기(E1365):** v26·v22 전체 회귀 이후 각각1/4·1/8. 다음 정기는 E1368(v26)·E1372(v26·v22)이다.
+  - **주기(E1366):** v26·v22 전체 회귀 이후 각각2/4·2/8. 다음 정기는 E1368(v26)·E1372(v26·v22)이다.
   - **Chromium:** E1313 전 미션 시작 상태 옵트인 전체 32/32 통과(24.3분, `webpj/extracted/webpj-e1313-final-e2e.log`). 기존 전체 e2e는 E1312 199건 중 186 통과·12 옵트인 미실행·한국어 브리핑 1건 부하 중 시간 초과(단독·3회 반복 통과)다. 단위별 실패·교정은 [E1313](docs/webpj-l3-mission-starts-20261124.md)과 각 단위 문서, 이전 회귀 이력은 [E1327 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261124-through-wb04-e1327)을 따른다.
 - **브라우저 검사:** 미션 화면은 단위마다 Chromium e2e로 확인한다(최근 전체 실행 E1312, 고정 시각 L2·L3 `e2e/fixed-time.spec.js`·`e2e/l3-tutorial1.spec.js`·`e2e/l3-tutorial2.spec.js`·`e2e/l3-tutorial3.spec.js`·`e2e/l3-tutorial4.spec.js`(E1337부터 345프레임까지만 재실행)·`e2e/l3-tutorial5.spec.js`(E1339), 프레임 예외 뒤 진행 `e2e/error-reporting.spec.js` E1338, 앱 서비스 결선 `e2e/session-services-wiring.spec.js` E1328, 한국어 글자 배치 `e2e/korean-glyph-layout.spec.js` E1288). 메뉴는 2026-11-17 Chromium 2/2(갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체), 최초 실행·진행 잠금/체크·저장 재실행은 E616 Chromium 2/2. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md)
 
@@ -66,7 +67,7 @@
 번호는 2026-11-24 첫 정리(E1327 이관)에서 1~6으로 다시 매겼고, E1328(`f6e6d8cd9`)이 1번(RawCampaignSession partial 닫기, [근거](docs/webpj-session-boundary-close-20261124.md))을 끝내 2~6번이 지금의 1~5번이 됐다(그 사이 번호는 커밋 `bcabc8025`의 문서). 단위 문서가 가리키는 더 앞 번호(다음 작업 0·0-a·1~9)의 원문은 [E1327 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261124-through-wb04-e1327), 그보다 앞 번호(다음 작업 1 ①~⑩·2~6)는 [E1288 보관본 0.1절](LEFT_JOBS.webpj.old.md#archive-webpj-20261123-through-wb04-e1288)에 있다.
 
 1. **세 캠페인 묶음 미션 L3 대조.** Tutorial1~6의 자동 검사 허용 범위는4D-4b에서 마쳤다(E1346). 같은 단계표·오라클·브라우저 틀로 Struggle For Freedom6·A Nation Rises5·Complete Victory5 미션을 대조한다. 기존 Tutorial 완주 근거는 E1304·E1307·E1333, 이후 공격·포획·희생·승리는 사용자 직접 확인 범위다.
-   - 현재 위치: Tutorial4 E1 안내·Tutorial5 D 안내·Tutorial6 E 안내까지 허용 범위를 마쳤다(E1337·E1342·E1346). 다음은 세 캠페인 묶음 미션이다. 그 뒤 공격·포획·희생·승리 재현은 사용자 지시에 따라 건너뛰며 각 단계 착수 때0.1절 범위를 확인한다.
+   - 현재 위치: Tutorial 허용 범위(E1346)와 캠페인16개 진입·대기(E1365)를 마쳤다. 그 뒤 공격·포획·희생·승리 재현은 사용자 지시에 따라 건너뛰며 각 단계 착수 때0.1절 범위를 확인한다.
    - 좌표 기준(E1329): 1024×768 기본 카메라 `cameraX=1552, cameraY=749`, 1칸=16×11px, 생산 창 다리 조각 `60,44`(우클릭 회전)·골렘 `40,180`. 단계 A의 입력 순서 전체는 단위 문서 표와 `tutorial3-l3/steps.json`에 있다.
    - 방법: 폴더 `tests/fixtures/cpppj/candidate-225553df/tutorialN-l3/` 와 스펙 `e2e/l3-tutorialN.spec.js`(Tutorial2 스펙 복제). 입력 위치는 cpp 오라클을 5초 안팎으로 여러 번 돌려 정하고(격자 탐색 50~230회가 5~21분이라 백그라운드로), 단계는 cpp `report` 의 `mission_gate` 두 번째 값으로 판정한다. 전투가 있는 미션은 체크포인트를 짧은 간격으로 두고 어긋나는 첫 프레임을 `mission_gate`·`bridge_scan_global` 과 프레임별 덤프(`runL3({ compare: false })`·`L3_DUMP_DIR`)로 좁힌다([탐색 기록](docs/webpj-l3-extension-probe-20261124.md)).
    - cpppj 오라클 수집은 HJOW-Athlon에서 실행 확인 없이 가능하고 다른 PC는 AGENTS 실행 확인 규칙을 따른다(3.3절).
@@ -140,7 +141,7 @@
 | 감사 잔여·partial 닫기 | E1240, E1247~E1248, E1252, E1255~E1257, E1261, E1263~E1270 | 예산 칸 우클릭 판정, 미니맵·메뉴·HUD·커서·생산·BitmapFont·ClientAudio 행 닫기, 미완료 46항목 전수 점검(20개 닫음), 프레임 순서, 입력 큐 코드 전수, 이탈 State 정리, 사제 배치 검사 Session 설치 | — | [점검](docs/webpj-left-jobs-audit-20261123.md) · [프레임 순서](docs/webpj-frame-order-20261123.md) |
 | partial 마감(12→0행) | E1292, E1294, E1296, E1298, E1310, E1317, E1320, E1324~E1328 | port 승격: SessionLogin·ClientCampaignTransport·UberReconnect(E1292), RawCampaignRitual(E1294), CampaignClientServices(웹 적응, E1296), ClientRendererFrame·UberGump(Kencloud, E1298), CampaignObjectMenuClient(E1310), RawClockSynchronization(플랫폼 적응, E1317), RawMenuChat(E1320), RawButtonControls(E1324~E1325), RawCampaignSession(송금 MessageBoard E1326·메뉴 SP E1327·앱 서비스 5건 `kencloudGlobals`·`htmlWindowGlobals`·`factoryHelp`·`removeConnectionStatus`·`templateStateBytes` 연결과 공개 경계 전수 감사 E1328) | — | [partial 세 행](docs/webpj-port-map-partial-close-20261124.md) · [시간 동기화](docs/webpj-clock-sync-close-20261124.md) · [세션 경계 마감](docs/webpj-session-boundary-close-20261124.md) |
 | L2·고정 시각 | E1271~E1272, E1278, E1280~E1283, E1322~E1323 | 고정 시각 모드(`?fixed=25`)·시작 그림 구간, cpp 난수 호출 추적으로 State 설치 맞춤, 월드 진입 Guide 정지, 4:3·16:9·16:10(1280×800, E1322) 오라클 0픽셀과 한국어 M2(E1323), 대응표 `session` 732행 승격 | — | [고정 시각](docs/webpj-fixed-time-mode-20261123.md) · [난수·시각](docs/webpj-state-install-rng-20261123.md) · [session 승격](docs/webpj-port-map-session-20261123.md) · [16:10](docs/webpj-aspect-16x10-20261124.md) |
-| L3 | E1284~E1286, E1299, E1301~E1307, E1309, E1313, E1329~E1335, E1337, E1339 | cpp `--ui-script` 단계표의 웹 적용(안내 단추 클릭 N+1·키·화면 좌표 클릭·우클릭 N−1 프레임, 우클릭은 E1333에서 교정), Tutorial1 4,200·Tutorial2 5,400·Tutorial3 6,200프레임(시작~완료 창·다음 미션 해제)과 Tutorial4 단계 A~E1 7,240프레임의 화면 0픽셀·덤프 일치, 31개 미션 시작 덤프(E1313), Tutorial4 자동 재실행 345프레임 제한과 E1336 뒤 `a220` 메뉴 영역 차이 명시(E1337), Tutorial5 단계 A1 1,000프레임(E1339). 고친 차이: 다리 붕괴 스캔 초기화(E1301), 생산 패널 HUD 생성 순서(E1305), 로그인 중 간헐천 보충 기한(E1313), 천둥 `ThunderProcess`(TYPE 55) 연결(E1329) | Tutorial5 A2~C·Tutorial6·캠페인 미션 단계표([다음 작업 1](#next)); Tutorial4 E1~I1(중단본 `560920813` 보존)·Tutorial5 E~G는 사용자 확인 | [L3](docs/webpj-l3-tutorial1-20261123.md) · [Tutorial1 완료](docs/webpj-l3-tutorial1-complete-20261124.md) · [Tutorial3 완료](docs/webpj-l3-tutorial3-complete-20261125.md) · [Tutorial4 단계 C~E1](docs/webpj-l3-tutorial4-stage-ce-20261125.md) · [전 미션 시작](docs/webpj-l3-mission-starts-20261124.md) |
+| L3 | E1284~E1286, E1299, E1301~E1307, E1309, E1313, E1329~E1335, E1337, E1339 | cpp `--ui-script` 단계표의 웹 적용(안내 단추 클릭 N+1·키·화면 좌표 클릭·우클릭 N−1 프레임, 우클릭은 E1333에서 교정), Tutorial1 4,200·Tutorial2 5,400·Tutorial3 6,200프레임(시작~완료 창·다음 미션 해제)과 Tutorial4 단계 A~E1 7,240프레임의 화면 0픽셀·덤프 일치, 31개 미션 시작 덤프(E1313), Tutorial4 자동 재실행 345프레임 제한과 E1336 뒤 `a220` 메뉴 영역 차이 명시(E1337), Tutorial5 단계 A1 1,000프레임(E1339). 고친 차이: 다리 붕괴 스캔 초기화(E1301), 생산 패널 HUD 생성 순서(E1305), 로그인 중 간헐천 보충 기한(E1313), 천둥 `ThunderProcess`(TYPE 55) 연결(E1329) | Tutorial 허용 구간과16개 캠페인 진입·대기 완료(E1346·E1365); 허용 미션 목표/승리는 [다음 작업 2](#next); Tutorial4 E1~I1(중단본 `560920813` 보존)·Tutorial5 E~G는 사용자 확인 | [L3](docs/webpj-l3-tutorial1-20261123.md) · [Tutorial1 완료](docs/webpj-l3-tutorial1-complete-20261124.md) · [Tutorial3 완료](docs/webpj-l3-tutorial3-complete-20261125.md) · [Tutorial4 단계 C~E1](docs/webpj-l3-tutorial4-stage-ce-20261125.md) · [전 미션 시작](docs/webpj-l3-mission-starts-20261124.md) |
 | 원본 캡처·Session 대조 | E1275~E1276, E1312, E1314~E1316 | 신전·제네레이터·타워 파편 481행, 윈드 아비어리·워크샾·제단 3,993행, 골렘 66·받침 198행 캡처의 크기·기준점·전체 픽셀 일치, 실제 Session의 EvilRay(E1314)·피해 연소(E1315)·섬 투하 받침/입자(E1316)를 C++ 통합 시험과 대조 | — | [파편 캡처](docs/webpj-temple-shrapnel-capture-20261123.md) · [골렘·받침](docs/webpj-golem-support-capture-20261124.md) · [섬 투하](docs/webpj-drop-island-session-20261124.md) |
 
 ### 0.2 단계 진행판
@@ -153,14 +154,14 @@
 | 4 | 4-A 자료·4-B 적재·4-C 전송·4-R 재기준선 | 완료(4-C 통합 잔여는 4D-3에서 닫음) | — | — |
 | 4 | **4-D Session 조립·Tutorial1 Load/Start** | **85/85, L2·Tutorial 자동 검사 허용 범위 닫음** | 0 / 0 | 건너뛴 공격·포획·희생·승리는1절 사용자 확인 |
 | 5 | 5-A 렌더러·Draw | 46/46 | 0 / 0 | — |
-| 5 | 5-B 카메라·HUD·미니맵·커서 | 12/13 | 0 / 0 | Cursor·RawCursor 표시 |
+| 5 | 5-B 카메라·HUD·미니맵·커서 | 13/13 | 0 / 0 | — |
 | 5 | 5-C 화면 허브·미션 진입 | 6/6(E1325) | 0 / 0 | — |
 | 6 | 입력·게임 메뉴·경제·건설 | 9/10 → M3 | 0 / 0 | 사제·운반·경로 바인딩 |
 | 7 | 전투·의식·AI | 5/7 | 0 / 0 | 전투 바인딩 · AI 세션 결선 |
 | 8 | 미션 수명·대본·오디오·도움말 | 8/9 → M4 | 0 / 0 | M4 |
 | 9 | 표시 품질·브라우저/OS·배포 | E945 하위 경로·설정 복원 검증, M5 미완료 | 0 / 0 | M5(3.2절: 60/120 표시·성능·메모리, 브라우저·GUI Linux, HTTP 캐시·저장 호환) |
 | 10 | AGENTS 후순위 웹 요구 | 일부 선행, 3.7절 참조 | 0 / 0 | 3.7절 표의 남은 일(4·5·6·10·12·13·14차; 7차는 E1338로 끝남) |
-| **합계** | | | **0 / 0** | **6** |
+| **합계** | | | **0 / 0** | **5** |
 
 ### 0.3 이식량
 
@@ -177,7 +178,7 @@
 ### 0.4 기준선과 자료
 
 - **이식 기준선**은 cpppj 제품 1313(11.01) `225553df`다. 이후 변경 판정은 3.6절을 따른다. 별도 오라클 빌드는 HJOW-Athlon의 `extracted/webpj-oracle/225553df/Netstorm.exe`에 있다(SHA-256 `5b52d96d…b77eb46`, Git 제외).
-- **자료 추적**은 [PORT_MAP.tsv](webpj/PORT_MAP.tsv)와 [fixture manifest](webpj/tests/fixtures/manifest.json) 1,291항목(E1365 캠페인3-5 진입·대기 신규8항목 포함)을 기준으로 한다. 이식 자료는 cpppj 소스·fixture·문서를 사용한다.
+- **자료 추적**은 [PORT_MAP.tsv](webpj/PORT_MAP.tsv)와 [fixture manifest](webpj/tests/fixtures/manifest.json) 1,302항목(E1366 신규11항목 포함)을 기준으로 한다. 이식 자료는 cpppj 소스·fixture·문서를 사용한다.
 
 ### 0.5 단위 착수와 종료
 
@@ -275,15 +276,15 @@ Tutorial1 하나를 Load→Start→표시→입력→진행까지 먼저 확인�
 - **ClientRendererFrame** — E1298. 미션 화면 출력의 원본 순서(E978~E1082)와 메인 메뉴 Kencloud 구름 캐시(M1 구름 차이 37,054픽셀 → 0). [Kencloud](docs/webpj-menu-kencloud-20261124.md)
 - **E197·E198·E201 재대조** — E1316. 파편·건물(E1275~E1276)·골렘/받침(E1312) 캡처와 실제 Session의 EvilRay(E1314)·피해 연소(E1315)·섬 투하(E1316)를 C++ 시험과 대조했다. [마지막 근거](docs/webpj-drop-island-session-20261124.md)
 
-#### 5-B 카메라·HUD·미니맵 (12/13)
+#### 5-B 카메라·HUD·미니맵 (13/13)
 
 완료한 체크(머리글 수에 포함, 보관한 9개 외): **UberHud**(E1255, [근거](docs/webpj-uber-hud-close-20261123.md)), **RawMinimapControls**(E1248, [근거](docs/webpj-minimap-controls-close-20261123.md)), **FloatingSpGump·RawProductionControls**(E1257, [근거](docs/webpj-production-controls-close-20261123.md)).
 
-- [ ] **Cursor·RawCursor 표시** — 커서 부품의 실 화면 연결(Cursor 계열 행 전부 port, CampaignCursorClientEffects E1256)과 가장자리 스크롤(E990~E1001)·마나 볼트 Session 연결(`raw-campaign-session-arrivals.js`)은 끝났다. 남은 것은 실제 화면 대조다. [근거](docs/webpj-cursor-client-effects-close-20261123.md)
+- [x] **Cursor·RawCursor 표시** — E1366. 기존 카메라·커서·마나 볼트에 더해 실제 가장자리 이동/정지 화면까지 대조했다. [근거](docs/webpj-l3-campaign-edge-scroll-20261126.md)
   - [x] 카메라 투영·커서 표시 — L2/L3 고정 시각 대조에서 F4 카메라 이동 뒤(300프레임)와 다리 조각을 든 커서(345프레임) 화면이 cpppj와 0픽셀이다(E1280~E1286).
-  - [ ] 가장자리 스크롤 뒤 화면 — 완료 기준: 아래 두 세부 완료.
-    - [ ] 입력 방법 확인 — cpp `--ui-script`에는 `click`·`right`·`key`·`keyup` 외에 폴링 좌표만 바꾸는 `pointer code,x,y`(`cpppj/src/app/main.cpp`의 `inspectPoll`)가 있고 웹 `e2e/l3-common.js`의 `INJECT_SHIFT`에는 `pointer`가 없다. 완료 기준: `pointer`로 cpp 가장자리 스크롤이 일어나는지와 웹에 같은 동작을 더하는 방법을 단위 문서에 기록한다.
-    - [ ] 화면 대조 — 완료 기준: 같은 스크롤 입력 뒤 체크포인트 화면이 cpppj와 0픽셀.
+  - [x] 가장자리 스크롤 뒤 화면 — E1366에서 입력 방법과 같은 시점의 화면을 확인했다.
+    - [x] 입력 방법 확인 — C++ `inspectPoll`의 좌버튼 뗌 `pointer 2147549184,x,y`와 웹 N−1프레임 DOM 이동을 대응했다. 전체화면 테두리0과 실제 카메라 이동/정지로 검증했다.
+    - [x] 화면 대조 — E1366, 실제 오른쪽 스크롤·정지4화면0픽셀.
   - [x] 마나 볼트 정기 표시 — 마나 볼트가 날아가는 장면의 고정 시각 화면이 cpppj와 0픽셀이다(E1332 L3 `e2510`·`e3240`, E1333 `f3620`). [근거](docs/webpj-l3-tutorial3-stage-def-20261124.md)
 
 #### 5-C 게임 화면 허브·미션 진입 (6/6)

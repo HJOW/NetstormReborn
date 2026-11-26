@@ -1,0 +1,103 @@
+{
+  "format": "netstorm-webpj-cpppj-l3-steps",
+  "version": 1,
+  "description": "캠페인1-1 가장자리 스크롤의 실제 UI 입력·대기 대조. 공격·포획·희생·승리 입력은 없다.",
+  "language": "english",
+  "screen": {
+    "width": 1024,
+    "height": 768
+  },
+  "fixedFrameMs": 25,
+  "mission": "thewarbegins",
+  "settings": {
+    "SCREENW": 1024,
+    "SCREENH": 768,
+    "WelcomeGiven": 1,
+    "tellTips": 0,
+    "autoDemo": 0,
+    "startInFullScreen": 1,
+    "edgeScroll": 1
+  },
+  "steps": [
+    [
+      110,
+      "click-if",
+      "Play Mission"
+    ],
+    [
+      200,
+      "pointer",
+      "2147549184,512,384"
+    ],
+    [
+      290,
+      "report",
+      "before"
+    ],
+    [
+      290,
+      "snapshot",
+      "before"
+    ],
+    [
+      290,
+      "session-dump",
+      "before"
+    ],
+    [
+      300,
+      "pointer",
+      "2147549184,1023,384"
+    ],
+    [
+      350,
+      "report",
+      "during"
+    ],
+    [
+      350,
+      "snapshot",
+      "during"
+    ],
+    [
+      350,
+      "session-dump",
+      "during"
+    ],
+    [
+      400,
+      "report",
+      "after"
+    ],
+    [
+      400,
+      "snapshot",
+      "after"
+    ],
+    [
+      400,
+      "session-dump",
+      "after"
+    ],
+    [
+      410,
+      "pointer",
+      "2147549184,512,384"
+    ],
+    [
+      450,
+      "report",
+      "stop"
+    ],
+    [
+      450,
+      "snapshot",
+      "stop"
+    ],
+    [
+      450,
+      "session-dump",
+      "stop"
+    ]
+  ]
+}

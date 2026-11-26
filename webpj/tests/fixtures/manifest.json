@@ -40050,6 +40050,358 @@
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
       }
+    },
+    {
+      "id": "cpppj-campaign-edge-scroll-l3-after-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign-edge-scroll-l3/after.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign-edge-scroll-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign-edge-scroll.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1366",
+      "doc": "docs/webpj-l3-campaign-edge-scroll-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign-edge-scroll-l3 실제 입력 after.png",
+      "text": false,
+      "sha256": "66b5b92d0d937b114194a760a4d1afcfc0e3bc66b62e8df7bb557ad79ed4b708",
+      "bytes": 160106,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-campaign-edge-scroll-l3-after-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign-edge-scroll-l3/after.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign-edge-scroll-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign-edge-scroll.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1366",
+      "doc": "docs/webpj-l3-campaign-edge-scroll-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign-edge-scroll-l3 실제 입력 after.tsv",
+      "text": true,
+      "sha256": "f139019315649d1e30336c7d4a62679ad6e0102d6a6399a4b33c28064a7ede77",
+      "bytes": 318020,
+      "lines": 4185,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-campaign-edge-scroll-l3-before-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign-edge-scroll-l3/before.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign-edge-scroll-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign-edge-scroll.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1366",
+      "doc": "docs/webpj-l3-campaign-edge-scroll-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign-edge-scroll-l3 실제 입력 before.png",
+      "text": false,
+      "sha256": "09c7b3f1a289663e563ac0e07af55e4b137456fd6cec390a08c72151e21ac969",
+      "bytes": 214873,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-campaign-edge-scroll-l3-before-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign-edge-scroll-l3/before.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign-edge-scroll-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign-edge-scroll.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1366",
+      "doc": "docs/webpj-l3-campaign-edge-scroll-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign-edge-scroll-l3 실제 입력 before.tsv",
+      "text": true,
+      "sha256": "ddeeb861fb3c010e2f81d052ae34d0235e814a70fb93d039ac45a3801149a0ab",
+      "bytes": 317208,
+      "lines": 4175,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-campaign-edge-scroll-l3-during-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign-edge-scroll-l3/during.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign-edge-scroll-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign-edge-scroll.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1366",
+      "doc": "docs/webpj-l3-campaign-edge-scroll-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign-edge-scroll-l3 실제 입력 during.png",
+      "text": false,
+      "sha256": "92383dc676991ef81906f5a36238470dd1ddcdd636a2593d0a2267df2e9467b4",
+      "bytes": 222099,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-campaign-edge-scroll-l3-during-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign-edge-scroll-l3/during.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign-edge-scroll-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign-edge-scroll.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1366",
+      "doc": "docs/webpj-l3-campaign-edge-scroll-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign-edge-scroll-l3 실제 입력 during.tsv",
+      "text": true,
+      "sha256": "702cb0dd588befe1fbcf20fcc8a4ee240fcb3b7b391319b1ae369b2a12aed677",
+      "bytes": 317226,
+      "lines": 4175,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-campaign-edge-scroll-l3-oracle-json",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign-edge-scroll-l3/oracle.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign-edge-scroll-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign-edge-scroll.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1366",
+      "doc": "docs/webpj-l3-campaign-edge-scroll-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign-edge-scroll-l3 실제 입력 oracle.json",
+      "text": true,
+      "sha256": "ff65fce2aa1b1ecfb2b8d80038c6e893762771220a4cc8695f0e3feecd21f428",
+      "bytes": 1051,
+      "lines": 34,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-campaign-edge-scroll-l3-report-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign-edge-scroll-l3/report.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign-edge-scroll-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign-edge-scroll.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1366",
+      "doc": "docs/webpj-l3-campaign-edge-scroll-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign-edge-scroll-l3 실제 입력 report.tsv",
+      "text": true,
+      "sha256": "e9bf486f0a87733198213d03af87a71140fef2255e9b63aabdbbfd4af1686b26",
+      "bytes": 1160283,
+      "lines": 31086,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-campaign-edge-scroll-l3-steps-json",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign-edge-scroll-l3/steps.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign-edge-scroll-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign-edge-scroll.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1366",
+      "doc": "docs/webpj-l3-campaign-edge-scroll-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign-edge-scroll-l3 실제 입력 steps.json",
+      "text": true,
+      "sha256": "afdb02c58481e1f01edc1ae0eac8691f5ca561eafa0fc87c042cbd3abf112707",
+      "bytes": 1476,
+      "lines": 103,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-campaign-edge-scroll-l3-stop-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign-edge-scroll-l3/stop.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign-edge-scroll-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign-edge-scroll.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1366",
+      "doc": "docs/webpj-l3-campaign-edge-scroll-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign-edge-scroll-l3 실제 입력 stop.png",
+      "text": false,
+      "sha256": "d655abb782e503360de3cc4e57cfcfd54910d4ede5738adb71755c14367e9a96",
+      "bytes": 160024,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-campaign-edge-scroll-l3-stop-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/campaign-edge-scroll-l3/stop.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms campaign-edge-scroll-l3 실제 입력 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-campaign-edge-scroll.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1366",
+      "doc": "docs/webpj-l3-campaign-edge-scroll-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "campaign-edge-scroll-l3 실제 입력 stop.tsv",
+      "text": true,
+      "sha256": "33edabd3709c7ab627fcd5830dbb80121906817c56a3b207b9015395c8391e42",
+      "bytes": 318034,
+      "lines": 4185,
+      "fixtureCommit": null,
+      "webCommit": "2392a50a6",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
     }
   ]
 }
