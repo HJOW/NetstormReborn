@@ -924,81 +924,80 @@ NetStormを開発したTitanicは、残念ながら今はもう存在しませ�
 <a name="rainVortexType">
 
 <a name="windVortexType">
+
 <a name="thunderVortexType">
+
 <a name="vortexHelp">
 <info>
-<q>The blood of holy men is the elixir of destiny.</q>
+<q>聖職者の血は運命の霊薬である。</q>
 <p>
-<a href="#rainVortexType">Rain Temple</a><br>
-<a href="#windVortexType">Wind Temple</a><br>
-<a href="#thunderVortexType">Thunder Temple</a><br>
+<a href="#rainVortexType">レイン神殿</a><br>
+<a href="#windVortexType">ウィンド神殿</a><br>
+<a href="#thunderVortexType">サンダー神殿</a><br>
 <p>
-The Temple is the ultimate center of <a href="#influenceHelp">Energy</a> on each island.
-Temples take one of three forms, as listed above.
+神殿は、各島の<a href="#influenceHelp">エネルギー</a>の究極の中心です。
+上に挙げた三つの形のいずれかを取ります。
 <p>
-As long as your Temple is standing, your <a href="#priestType">Priest</a> will heal 
-during battle. They also confer the following benefits:
+神殿がある限り、自分の<a href="#priestType">司祭</a>は戦闘中も体力を回復します。また、次の利点があります。
 <p>
-1. You may build <a href="#bridgeType">bridges</a> off of the island containing the Temple.
+1. 神殿がある島から外へ<a href="#bridgeType">橋</a>を架けられます。
 <br>
-2. The island is warded against enemy construction. No enemy may build on it.
+2. 島を敵の建設から守ります。敵はそこへ何も建てられません。
 <br>
-3. Transports may return <a href="#nuggetType">Storm Crystals</a> to the Temple to turn them to <a href="#stormpowerHelp">Storm Power</a>.
+3. 輸送ユニットが<a href="#nuggetType">ストームクリスタル</a>を運び込むと、<a href="#stormpowerHelp">ストームパワー</a>に変わります。
 <br>
-4. The island will change to reflect the theme of which ever temple you build.
+4. 建てた神殿の系統を反映するよう、島の姿が変わります。
 <p>
-These benefits are nearly identical to the <a href="outpostType">Outpost</a>, a key
-unit in <a href="multiplayerHelp">multiplayer</a> play.
+これらの利点は、<a href="multiplayerHelp">マルチプレイヤー</a>の重要なユニットである<a href="outpostType">アウトポスト</a>と
+ほぼ同じです。
 <p>
-Hit <c>F4</c> to jump to your Temple during game play.
+ゲーム中に<c>F4</c>を押すと神殿へ移動します。
 <p>
-Find out about using the Temple for:<br>
-<a href="#spVortexHelp">Acquiring Storm Power</a><br>
-<a href="#golemVortexHelp">Making Golems</a><br>
-<a href="#influenceVortexHelp">Generating Energy</a><br>
+神殿の使い方を見る:<br>
+<a href="#spVortexHelp">ストームパワーを得る</a><br>
+<a href="#golemVortexHelp">ゴーレムを作る</a><br>
+<a href="#influenceVortexHelp">エネルギーの生成</a><br>
 </a>
 </a>
 </a>
 </a>
 
 <a name="spVortexHelp">
-<h2>The Temple:<br>Acquiring Storm Power</h2>
+<h2>神殿:<br>ストームパワーを得る</h2>
 <p>
-In battle, the Temple converts <a href="#moneyHelp">Storm Power</a> into a usable 
-resource.  Without a Temple you can't collect or process Storm Power.
+神殿は、戦闘中に<a href="#moneyHelp">ストームパワー</a>を利用可能な資源へと変えます。
+神殿がなければ、ストームパワーを集めたり処理したりできません。
 <p>
-Storm Power is collected from <a href="#geyserType">Storm Geysers</a> in the 
-form of <a href="#nuggetType">Storm Crystals</a>.
+<a href="#geyserType">ストームガイザー</a>から、<a href="#nuggetType">ストームクリスタル</a>の
+形で集めます。
 <p>
-Learn more about <a href="#golemVortexHelp">making Golems</a>...<br>
+<a href="#golemVortexHelp">ゴーレムの作り方</a>について詳しく見る...<br>
 <br>
 </a>
 
 <a name="golemVortexHelp">
-<h2>The Temple:<br>Making Golems</h2>
+<h2>神殿:<br>ゴーレムを作る</h2>
 <p>
-Temples allow you to create <a href="#sunWalkerType">Golems</a> that serve as 
-<a href="#transportHelp">Transports</a> on your new island.
+神殿では、新しい島で<a href="#transportHelp">輸送ユニット</a>として働く<a href="#sunWalkerType">ゴーレム</a>を
+作れます。
 <p>
-A Golem will show up in your
-<a href="#teleportViewHelp">Production Window</a> when you first descend to the 
-<a href="#pyrosphereHelp">Pyrosphere</a> for battle.  You can make as many of these
-servants as you wish, provided you have enough <a href="#moneyHelp">Storm Power</a>.
+<a href="#pyrosphereHelp">パイロスフィア</a>に降りて戦闘を始めると、<a href="#teleportViewHelp">生産ウィンドウ</a>に
+ゴーレムが現れます。<a href="#moneyHelp">ストームパワー</a>が十分なら、いくらでも作れます。
 <p>
-Learn more about how the Vortex <a href="#influenceVortexHelp">generates Energy</a>...<br>
+神殿が<a href="#influenceVortexHelp">エネルギーを生成する</a>方法について詳しく見る...<br>
 <br>
 </a>
 
 <a name="influenceVortexHelp">
-<h2>The Temple:<br>Generating Energy</h2>
+<h2>神殿:<br>エネルギーの生成</h2>
 <p>
-To build anything in Nimbus, you must have the adequate <a href="#influenceHelp">Energy</a>.  Your
-Temple is one of the two sources for this Energy.  As you prepare to build anything on your home island, 
-whether it's a Golem, a Workshop, or <a href="#unitHelp">units</a> for battle, your Temple will supply the Energy you need.
+ニンバスで何かを建てるには、十分な<a href="#influenceHelp">エネルギー</a>が必要です。
+神殿は、そのエネルギーを供給する二種類の施設の一つです。本島でゴーレム、ワークショップ、
+戦闘<a href="#unitHelp">ユニット</a>などを建設するためのエネルギーを供給します。
 <p>
-Left-click on your Temple to see the range of this Energy.
+神殿を左クリックすると、エネルギーの届く範囲を見ることができます。
 <p>
-<a href="#vortexHelp">Return to Temple Help.</a>
+<a href="#vortexHelp">神殿のヘルプに戻る。</a>
 </a>
 
 <a name="serverHelp">
@@ -1021,123 +1020,119 @@ If you have trouble use the troubleshooting guide.
 
 <a name="edgeFarmType">
 <info>
-<q>"In other cultures, the plowing is not so dangerous." -Pavel Milyukov, Nimbian farmer</q>
+<q>「他の文化では、耕すことはこれほど危険ではない。」 — パーヴェル・ミリュコフ、ニンバスの農夫</q>
 <p>
-No <a href="#bridgeType">bridge</a> may be attached where an Edge Farm
-grows, so enemy boarding attempts are foiled there --but this may also foil your attempts to build bridges out from
-your own island.
+エッジファームが育つ場所には<a href="#bridgeType">橋</a>をつなげられないため、
+敵が上陸する試みを阻みます。ただし、自分の島から
+外へ橋を伸ばすことも妨げられる場合があります。
 <p>
-As a <a href="#vortexHelp">Temple</a> is built, the alignment of that Temple grows into the Edge Farm itself.
+<a href="#vortexHelp">神殿</a>を建てると、その系統がエッジファームにも広がります。
 <p>
-The inhabitants of the islands grow their food around the island's perimeter, leaving interior space open for 
-development.
+住民は島の端に沿って食料を育て、内側の土地を開発のために空けています。
 <br>
 </a>
 
 <a name="obeliskType">
+
 <a name="buriedType">
+
 <a name="bombHelp">
-<h2>Spells</h2>
+<h2>呪文</h2>
 <p>
-<q>"They add a little spice to the carnage."  -Oltor Hammershold, Nimbian battle-cook.</q>
+<q>「殺戮に少しばかりの風味を添えてくれる。」 — オルトル・ハマーショルド、ニンバスの戦場料理人。</q>
 <p>
-Transports can acquire and cast Spells that have special effects in the world.
+輸送ユニットは、世界に特別な効果を起こす呪文を得て使えます。
 <p>
-Spells manifest in the world as Obelisks.  Left-click your Transport and then position the cursor over an Obelisk.  
-Left-click again when the hand-cursor appears, and now your Transport will travel to the Obelisk and acquire a Spell. 
-Each transport can possess one Spell.  An icon for that Spell will then appear overlaid
-on the Transport.
+呪文はオベリスクの形で現れます。輸送ユニットを左クリックし、オベリスクにカーソルを合わせてください。
+手の形のカーソルになったら再び左クリックすると、そこへ移動して呪文を得ます。
+一つの輸送ユニットは一つの呪文を持てます。呪文のアイコンがユニットに重ねて表示されます。
 <p>
-Once a Transport has acquired a Spell, it can cast the Spell an unlimited number of times, provided the player has
-sufficient Storm Power.  The Transport keeps that Spell until destroyed, or until he acquires another Spell--displacing
-the previous one.  
-Left-click on the Transport to see the 
-range of the Spell.  Right-click on the Transport to cast the Spell.
+一度得た呪文は、ストームパワーが十分なら回数制限なく使えます。
+ユニットが破壊されるか、別の呪文を得て置き換わるまで保持します。
+輸送ユニットを左クリックすると呪文の範囲を表示し、右クリックすると呪文を使います。
 <p>
-Once you cast the Spell, your Transport will halt in place until the Spell is cast.  This will 
-take a couple of seconds.  
+呪文を使うと、発動するまで輸送ユニットはその場に止まります。数秒かかります。
 <p>
-Spells are more common in <a href="#multiplayerHelp">multiplayer</a> mode than in the Campaign.
+呪文は、キャンペーンよりも<a href="#multiplayerHelp">マルチプレイヤー</a>で多く見られます。
 <p>
-Spells do not affect the caster.
+呪文は使用者自身には影響しません。
 <p>
-The various kinds of Spells:<br>
-<!"bombExplodeSmall.1"><a href="#bombExplodeSmallType">Point Blast</a><br>
-<!"bombExplodeMedium.1"><a href="#bombExplodeMediumType">Devastation</a><br>
-<!"bombExplodeLarge.1"><a href="#bombExplodeLargeType">Decimation</a><br>
-<!"bombHardener.1"><a href="#bombHardenerType">Bridge Harden</a><br>
-<!"bombHeal.1"><a href="#bombHealType">Heal</a><br>
-<!"bombInvisible.1"><a href="#bombInvisibleType">Invisibility</a><br>
-<!"bombParalyze.1"><a href="#bombParalyzeType">Paralysis</a><br>
-<!"bombTreason.1"><a href="#bombTreasonType">Treason</a><br>
-<!"bombMeteor.1"><a href="#bombMeteorType">Bombardment</a><br>
-<!"bombGraviton.1"><a href="#bombGravitonType">Graviton</a><br>
-<!"bombLightingwave.1"><a href="#bombLightingwaveType">ThunderStorm</a><br>
-<!"bombLightingZap.1"><a href="#bombLightingZapType">Thunder Strike</a><br>
-<!"bombTwister.1"><a href="#bombTwisterType">Whirlwind</a><br>
-<!"bombIITwister.1"><a href="#bombIITwisterType">Twister</a><br>
-<!"bombIIITwister.1"><a href="#bombIIITwisterType">Vortex</a><br>
-<!"bombIMano.1"><a href="#bombIManoType">Hydra</a><br>
-<!"bombIIMano.1"><a href="#bombIIManoType">Hydra Wave</a><br>
-<!"bombIIIMano.1"><a href="#bombIIIManoType">Hydra Flood</a><br>
+呪文の種類:<br>
+<!"bombExplodeSmall.1"><a href="#bombExplodeSmallType">ポイントブラスト</a><br>
+<!"bombExplodeMedium.1"><a href="#bombExplodeMediumType">デバステーション</a><br>
+<!"bombExplodeLarge.1"><a href="#bombExplodeLargeType">デシメーション</a><br>
+<!"bombHardener.1"><a href="#bombHardenerType">ブリッジハーデン</a><br>
+<!"bombHeal.1"><a href="#bombHealType">ヒール</a><br>
+<!"bombInvisible.1"><a href="#bombInvisibleType">インビジビリティ</a><br>
+<!"bombParalyze.1"><a href="#bombParalyzeType">パラリシス</a><br>
+<!"bombTreason.1"><a href="#bombTreasonType">トリーズン</a><br>
+<!"bombMeteor.1"><a href="#bombMeteorType">ボンバードメント</a><br>
+<!"bombGraviton.1"><a href="#bombGravitonType">グラビトン</a><br>
+<!"bombLightingwave.1"><a href="#bombLightingwaveType">サンダーストーム</a><br>
+<!"bombLightingZap.1"><a href="#bombLightingZapType">サンダーストライク</a><br>
+<!"bombTwister.1"><a href="#bombTwisterType">ワールウィンド</a><br>
+<!"bombIITwister.1"><a href="#bombIITwisterType">ツイスター</a><br>
+<!"bombIIITwister.1"><a href="#bombIIITwisterType">ボルテックス</a><br>
+<!"bombIMano.1"><a href="#bombIManoType">ハイドラ</a><br>
+<!"bombIIMano.1"><a href="#bombIIManoType">ハイドラウェーブ</a><br>
+<!"bombIIIMano.1"><a href="#bombIIIManoType">ハイドラフラッド</a><br>
 
 <br>
 </a>
 </a>
 </a>
+
 <a name="bombLightingZapType">
 <info>
-<q>"The skies of nimbus take on a bleak blackness as every hair
-upon your body begins to rise. For a brief moment a bittersweet
-tranquility emerges… then the sky bellows out a bone shattering  
-roar unmatched by a thousand thunder cannons while bolts from above 
-rain down reeking havoc upon all that stands in there path…" -Fleet Admiral of Nimbus</q>
+<q>「ニンバスの空が陰鬱な闇に染まり、全身の毛が逆立ち始める。一瞬、ほろ苦くも甘い
+静けさが訪れる…そして、サンダーキャノン千門にも勝る骨を砕くような
+轟音が響き、空から降り注ぐ稲妻が行く手のすべてに破滅をもたらす…」 — ニンバスの艦隊提督</q>
 <p>
 <!"bombLightingZap.1">
 <Br>
-A <a href="#buriedType">Spell</a> that deals a random amount of damage to everything in its range.<br>
+範囲内のすべてに、無作為な量の損害を与える<a href="#buriedType">呪文</a>です。<br>
 </a>
 
 <a name="bombLightingwaveType">
 <info>
-<q>"Forged by the thunder furies for those pure of heart.<br>
-Comes the power to summon lightning and make it reach its mark.<br>
-Many will run and more will hide as the clouds within grow gray.<br>
-Yet amps of current shall flood there bodies and soon dead they will lay." -Cantata, 4 of the 3rd Thunder Core</q>
+<q>「心清らかな者のため、サンダーのフューリーが鍛え上げた。<br>
+稲妻を呼び、標的に届ける力が来る。<br>
+雲の中が灰色に染まると、多くは逃げ、さらに多くは隠れるだろう。<br>
+だが電流がその体を満たし、やがて死んで倒れる。」 — カンタータ、第三サンダーコアの第4番</q>
 <p>
 <!"bombLightingwave.1>
 <Br>
-A <a href="#buriedType">Spell</a> that destroys everything destructible in its range.<br>
+範囲内の破壊可能なものをすべて破壊する<a href="#buriedType">呪文</a>です。<br>
 </a>
 
 <a name="bombTwisterType">
 <info>
-<q>"Fallen Devil from above, wreaking havoc until he’s done." -DeaCon, Godly Council</q>
+<q>「空から落ちた悪魔は、気が済むまで破壊を続ける。」 — ディーコン、神聖委員会</q>
 <p>
 <!"bombTwister.1">
 <Br>
-A <a href="#buriedType">Spell</a> that summons two <a href="#windFlyerType">Dust Devils</a> to attack enemy units.<br>
+二体の<a href="#windFlyerType">ダストデビル</a>を呼び、敵を攻撃させる<a href="#buriedType">呪文</a>です。<br>
 </a>
 
 <a name="bombIITwisterType">
 <info>
-<q>"In the lands of lightning and thunderous roars,<br>
-The winds of death began to soar,<br>
-And when it died back to a calm,<br>
-Not a single thing had found no harm." -DWMI, Nimbian Poet</q>
+<q>「稲妻と雷鳴が轟く大地から<br>
+死の風が吹き上がり、<br>
+それが静まり、静寂が戻った時、<br>
+無傷で残ったものはなかった。」 — DWMI、ニンバスの詩人</q>
 <p>
 <!"bombIITwister.1">
 <Br>
-A <a href="#buriedType">Spell</a> that summons four <a href="#windFlyerType">Dust Devils</a> to attack enemy units.<br>
+四体の<a href="#windFlyerType">ダストデビル</a>を呼び、敵を攻撃させる<a href="#buriedType">呪文</a>です。<br>
 </a>
 
 <a name="bombIIITwisterType">
 <info>
-<q>"It's not the wind that hurts... Have you ever been hit by a flying bridge? -Papers, Nimbian Safety Inspector"</q>
+<q>「痛いのは風ではありませんよ…飛んでくる橋に当たったことはありますか？ — ペイパース、ニンバスの安全検査官」</q>
 <p>
 <!"bombIIITwister.1">
 <Br>
-A <a href="#buriedType">Spell</a> that summons six <a href="#windFlyerType">Dust Devils</a> to attack enemy units.<br>
+六体の<a href="#windFlyerType">ダストデビル</a>を呼び、敵を攻撃させる<a href="#buriedType">呪文</a>です。<br>
 </a>
 
 <a name="bombIManoType">

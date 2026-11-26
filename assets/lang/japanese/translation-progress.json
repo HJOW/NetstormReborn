@@ -28,13 +28,11 @@
     "nextSection": null
   },
   "help": {
-    "completedAnchorOccurrences": 32,
+    "completedAnchorOccurrences": 48,
     "totalAnchorOccurrences": 138,
-    "completedUniqueTopics": 31,
+    "completedUniqueTopics": 48,
     "totalUniqueTopics": 128,
-    "nextSection": "windVortexType",
-    "pendingSharedBodyTopics": [
-      "rainVortexType"
-    ]
+    "nextSection": "bombIManoType",
+    "pendingSharedBodyTopics": []
   }
 }
