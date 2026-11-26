@@ -356,9 +356,13 @@ struct RawMenuControls::Impl {
         default:return std::string(nsContext->text(token));
         }
     }
-    // 소유문자열의기존반납/새토큰/현재노드저장순서를도움말과메타창이공유한다.
+    // LOOK/HELP 문자열을 같은 노드에 소유하고 원문464ed0/464f80의1000/200 플래그를 함께 갱신한다.
+    // 빈 LOOK는1000을 끄고 빈 HELP는200을 유지하며, 문자열 교체는 기존 호스트 소유권 정책을 따른다.
     void SetNodeHelp(std::uint32_t token,std::string_view text,bool word) {
+        text=text.substr(0,text.find('\0')); // 원문 C 문자열의 첫 NUL 뒤는 제목/주제로 소유하지 않는다.
         auto* node=common.node(token);if (!node) throw std::out_of_range("도움말 실제 노드 없음");auto& pointer=word ? node->alternateTextPointer:node->textPointer;helpStrings.erase(pointer);pointer=0;
+        if (text.empty()) { if (!word) node->flags&=~0x1000U;return; } // 빈 HELP는 기존200 비트를 지우지 않고 포인터만 반납한다.
+        node->flags|=word ? 0x200U : 0x1000U; // 공통 입력 필터가 설치된 도움말 노드의 우클릭 좌표를 검사하게 한다.
         if (nextHelpString==0x61ffffffU) throw std::overflow_error("도움말 문자열 주소 영역 소진");const auto value=++nextHelpString;helpStrings.emplace(value,text);pointer=value;
     }
     // 같은현재Session의실제표/식별자와공통controlled스택으로전체Player메뉴를작성한다.

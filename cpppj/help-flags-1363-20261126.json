@@ -1,0 +1,118 @@
+{
+  "unit": 1363,
+  "date": "2026-11-26",
+  "host": "HJOW-Athlon",
+  "decompileHost": "HJOW-Athlon",
+  "passed": true,
+  "tests": {
+    "menu": 169,
+    "language": 52,
+    "failed": 0
+  },
+  "gui": [
+    {
+      "name": "help-flags-1363-after-final",
+      "args": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+        "--window",
+        "--frames",
+        "95",
+        "--fixed-frame-ms",
+        "25",
+        "--no-audio",
+        "--set",
+        "welcomeGiven=1;tellTips=0;autoDemo=0;edgeScroll=0;currentLanguage=english;SCREENW=1024;SCREENH=768",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\help-flags-1363-after-final.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\help-flags-1363-after-final-report.tsv",
+        "--mission",
+        "thewarbegins"
+      ],
+      "exit_code": 0,
+      "seconds": 2.0833024978637695,
+      "exe_sha256": "154ea7f86e3e16ff2a166fb0391ceed018bffc5ca1c84e21523fdc10b9f7e405"
+    },
+    {
+      "name": "help-flags-1363-korean",
+      "args": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+        "--window",
+        "--frames",
+        "65",
+        "--fixed-frame-ms",
+        "25",
+        "--no-audio",
+        "--set",
+        "welcomeGiven=1;tellTips=0;autoDemo=0;edgeScroll=0;currentLanguage=korean;SCREENW=1024;SCREENH=768",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\help-flags-1363-korean.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\help-flags-1363-korean-report.tsv",
+        "--mission",
+        "thewarbegins"
+      ],
+      "exit_code": 0,
+      "seconds": 2.003171920776367,
+      "exe_sha256": "154ea7f86e3e16ff2a166fb0391ceed018bffc5ca1c84e21523fdc10b9f7e405"
+    },
+    {
+      "name": "help-flags-1363-japanese",
+      "args": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+        "--window",
+        "--frames",
+        "65",
+        "--fixed-frame-ms",
+        "25",
+        "--no-audio",
+        "--set",
+        "welcomeGiven=1;tellTips=0;autoDemo=0;edgeScroll=0;currentLanguage=japanese;SCREENW=1024;SCREENH=768",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\help-flags-1363-japanese.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\help-flags-1363-japanese-report.tsv",
+        "--mission",
+        "thewarbegins"
+      ],
+      "exit_code": 0,
+      "seconds": 2.9477827548980713,
+      "exe_sha256": "154ea7f86e3e16ff2a166fb0391ceed018bffc5ca1c84e21523fdc10b9f7e405"
+    },
+    {
+      "name": "help-flags-1363-production-window",
+      "args": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+        "--window",
+        "--frames",
+        "43",
+        "--fixed-frame-ms",
+        "25",
+        "--no-audio",
+        "--set",
+        "welcomeGiven=1;tellTips=0;autoDemo=0;edgeScroll=0;currentLanguage=english;SCREENW=1024;SCREENH=768",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\help-flags-1363-production-window.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\help-flags-1363-production-window-report.tsv",
+        "--mission",
+        "thewarbegins"
+      ],
+      "exit_code": 0,
+      "seconds": 1.927156925201416,
+      "exe_sha256": "154ea7f86e3e16ff2a166fb0391ceed018bffc5ca1c84e21523fdc10b9f7e405"
+    }
+  ],
+  "protectedFiles": 3212,
+  "protectedUnchanged": true,
+  "exeSha256": "154ea7f86e3e16ff2a166fb0391ceed018bffc5ca1c84e21523fdc10b9f7e405",
+  "package": "1362 ZIP은 도움말 수정 전, 최종 배포에서 재생성"
+}

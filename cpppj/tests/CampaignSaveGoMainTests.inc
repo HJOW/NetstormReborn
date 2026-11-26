@@ -27,8 +27,8 @@ TEST_CASE(CampaignSaveGoMain_NoThenYesUsesActualFullFortWriter) {
     },true,&saveGoWire,{},[&](Client&,RawCampaignSessionServices& services) { saveGoStorage=services.templateStorage; });
 }
 
-// 실제 헤더 첫 DWORD0은 선택된 Battle/파일 장치까지 가지 않으며 Battle 중단 뒤 next3을 만들지 않는다.
-TEST_CASE(CampaignSaveGoMain_ActualManagerGateAndSelectedBattleStop) {
+// 실제 헤더 첫 DWORD0은 저장을 생략하고 정상 manager의 Battle 모드는 전체 저장 뒤 next3으로 진행한다.
+TEST_CASE(CampaignSaveGoMain_ActualManagerGateAndSelectedBattleSave) {
     EditorInstallWireScene saveGoWire;std::shared_ptr<CampaignTemplateStorage> saveGoStorage; //원문 header와 실제 파일 장치를 같은 Session에서 빌린다.
     WithEditorInstallSession([&](RawCampaignSession& session,Client& client,const auto& checkpoint,EditorFiles& work) {
         RunEditorWireInstallState(session,client,checkpoint,work);auto& owner=*client.LocalStateGlobals();session.CommitExistingEditorInstall(owner);
@@ -36,8 +36,16 @@ TEST_CASE(CampaignSaveGoMain_ActualManagerGateAndSelectedBattleStop) {
         std::fill(header.begin(),header.end(),std::uint8_t{});core.ownerMode.battle=true;std::uint32_t next=87;
         CHECK(DispatchEditorSaveGoMain({kSaveGoMainCommand,0,1},next,[&] { session.SaveCurrentMap(); }));CHECK(next==3 && ReadFileBytes(path)==original);
         for (std::size_t byte=0;byte<4;++byte) header[byte]=static_cast<std::uint8_t>(manager>>(byte*8)); //정상 실제 header를 원래 값으로 돌려 다음 선택 경계를 따로 검사한다.
-        next=88;bool selected=false;try { static_cast<void>(DispatchEditorSaveGoMain({kSaveGoMainCommand,0,1},next,[&] { session.SaveCurrentMap(); })); }catch (const std::logic_error& error) { selected=std::string_view(error.what()).find("004bf880")!=std::string_view::npos; }
-        CHECK(selected && next==88 && ReadFileBytes(path)==original);core.ownerMode.battle=false;
+        const auto names=saveGoStorage->Template(session.TemplateOwner()).Section("TypeNames"),badges=saveGoStorage->Template(session.TemplateOwner()).Section("Badges"); // Battle 부모가 추가하지 않는 두 섹션의 독립 기준이다.
+        const std::vector<std::uint8_t> namesBefore(names.begin(),names.end()),badgesBefore(badges.begin(),badges.end()); // 저장 중 재할당과 무관하게 원본 섹션을 보관한다.
+        core.ownerMode.fort=false;session.SetAllBridgeQuality(0);next=88; // 두 독립 if 중 Battle만 선택하고 실제 저장 파일의 차이가 생기게 한다.
+        CHECK(DispatchEditorSaveGoMain({kSaveGoMainCommand,0,1},next,[&] { session.SaveCurrentMap(); }));
+        const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);const auto savedBytes=ReadFileBytes(path); // 이 조립 Client는 자산을 초기화하지 않으므로 같은 Session이 빌린 실제 검사 자산을 사용한다.
+        const auto saved=FortTemplate::Parse(savedBytes,assets.game.TypeTable()); // 예전004bf880 미연결 예외 대신 현재 전체 writer가 쓴 파일을 검증한다.
+        CHECK(next==3 && savedBytes!=original && saved.Section("CoreData").size()==12);
+        CHECK(std::vector<std::uint8_t>(saved.Section("TypeNames").begin(),saved.Section("TypeNames").end())==namesBefore);
+        CHECK(std::vector<std::uint8_t>(saved.Section("Badges").begin(),saved.Section("Badges").end())==badgesBefore);
+        core.ownerMode.battle=false;core.ownerMode.fort=true;
     },true,&saveGoWire,{},[&](Client&,RawCampaignSessionServices& services) { saveGoStorage=services.templateStorage; });
 }
 

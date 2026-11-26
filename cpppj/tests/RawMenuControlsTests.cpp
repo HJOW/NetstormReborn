@@ -131,6 +131,21 @@ TEST_CASE(RawMenuControls_OwnedHelpStringsDriveRealMenuAndRelease) {
     if (client.commands.size()==1) CHECK(client.commands[0][0]==0x02000017U && client.helpStrings.Resolve(client.commands[0][2]&0x0fffffffU)=="teleportViewHelp"); // 실제 클릭의 주제 토큰을 외부 문자열 고리에서 관측한다.
     client.buttons.KillGump(token);client.buttons.CleanupGumps();CHECK(client.menus->Report().find("raw_gump_help_strings\t6\n")!=std::string::npos);client.buttons.DisableProduction();CHECK(client.menus->Report().find("raw_gump_help_strings\t0\n")!=std::string::npos);
 }
+// 공통 setter의 빈 값/재설정/문자열 반납과 원문 LOOK/HELP 플래그의 비대칭을 검사한다.
+TEST_CASE(RawMenuControls_HelpSettersPreserveOriginalFlagsAndEmptyOwnership) {
+    MenuClient client;client.EnableHelp();const auto token=client.menus->OpenHelp(0x61000001U);auto* node=client.menus->Node(token);CHECK(node);if (!node) return; // 실제 등록된 도움말 창의 같은 공통 필드를 사용한다.
+    const auto baseFlags=node->flags&~0x1200U;node->flags=baseFlags; // 도움말 이외의 원래 비트는 모든 교체 뒤에도 보존되어야 한다.
+    client.menus->SetHelpWord(token,"");CHECK(node->flags==baseFlags && node->alternateTextPointer==0);
+    client.menus->SetHelpText(token,"Storm Power Available");CHECK(node->flags==(baseFlags|0x1000U) && node->textPointer!=0);
+    client.menus->SetHelpWord(token,"moneyGump");CHECK(node->flags==(baseFlags|0x1200U) && node->alternateTextPointer!=0);
+    const auto oldTitle=node->textPointer;client.menus->SetHelpText(token,"Replacement title"); // 소유 토큰을 교체해도 문자열 개수는 늘어나지 않는다.
+    CHECK(node->textPointer!=oldTitle && node->flags==(baseFlags|0x1200U));CHECK(client.menus->Report().find("raw_gump_help_strings\t2\n")!=std::string::npos);
+    client.menus->SetHelpWord(token,"");CHECK(node->alternateTextPointer==0 && node->flags==(baseFlags|0x1200U));
+    client.menus->SetHelpText(token,"");CHECK(node->textPointer==0 && node->flags==(baseFlags|0x200U));CHECK(client.menus->Report().find("raw_gump_help_strings\t0\n")!=std::string::npos);
+    client.menus->SetHelpText(token,"Restored");client.menus->SetHelpWord(token,"moneyGump");CHECK(node->flags==(baseFlags|0x1200U)); // 지운 뒤 다시 같은 공통 필터에 등록할 수 있다.
+    client.menus->SetHelpText(token,std::string_view("\0ignored",8));client.menus->SetHelpWord(token,std::string_view("\0ignored",8)); // 첫 NUL인 입력도 빈 원문 문자열과 같은 반납 경계다.
+    CHECK(node->textPointer==0 && node->alternateTextPointer==0 && node->flags==(baseFlags|0x200U));CHECK(client.menus->Report().find("raw_gump_help_strings\t0\n")!=std::string::npos);
+}
 // Back/OK는 실제 돌 버튼 serial과 같은 파생 Handle을 통과하고 소멸 뒤 이력/표식을 정리한다.
 TEST_CASE(RawMenuControls_HelpActualHistoryButtonsAndReopen) {
     MenuClient client;client.EnableHelp();const auto token=client.menus->OpenHelp(0x61000001U);auto* window=static_cast<QuickHelpContentNode*>(client.menus->Node(token));CHECK(window);if (!window) return;
