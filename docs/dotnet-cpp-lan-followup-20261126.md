@@ -35,3 +35,5 @@ DN의 제품 기준1339·마지막 완료1.076·기존 검사 수/진행률을 �
 1370 마감/일시 중지 인계: DN-MP-07의 저장 작성자는 기존 `Host/HostSession.SavedState.cs`·`Original/RawSavedState.cs`와 실제 장치를 공유한다. CP의 실제 신전 자산명은windVortex이며 단순temple 문자열 필터로 건설 성공을 판정하지 않는다. DN은 계속 다음 작업으로 남기고 제품1.076·진행률·검사 수를 올리지 않는다.
 
 1373의 DN-MP-05 참고 검증: CP의 새 두 Fort/실시간 TCP에서 Wind 신전 완성 뒤 실제 생산 아이콘으로 골렘(sunWalker/TYPE133)을 배치했다. 양쪽 신규 SID15249/owner1/좌표116,206/HP50·SP1500→1100·호스트 복구 저장owner1/SP1100·두 종료0을 확인했다. 비용400은 실제 TYPE 후처리의 운반 기본 단가이며 metadata의 후처리 전 cost0과 구별한다. stockEnabled=0에서는 수량0만으로 취득을 막지 않는다. 이 실행은 DN의 생산/통신 재현으로 세지 않는다. [CP1373 근거](exe/cpp-lan-production-1373-20261127.md)·[봇 사용법](testing/cpp-lan-opponent-guide.md).
+
+1374의 DN-MP-05 참고 검증: CP의 같은 실제 TCP에서 썬 워크샾800 SP와 단일 다리0 SP를 추가 건설해 양쪽 객체/비용·호스트 복구 저장SP300·두 종료0을 확인했다. Factory는 건설 중에도 TYPE/VT가 같으므로 객체 존재로 완료를 판정하지 않는다. 실제 HP3000과 extra의 abstract bit0 해제를 기다린다. 다리는 자산명 bridge만 선택하고 별도 bridgeConnector를 섞지 않는다. 원본 pattern0은 신규 bridge1개이며 HP가 없는 타입이므로 보고HP0이 정상이다. DN 재현/완료로 세지 않는다. [CP1374 근거](exe/cpp-lan-extra-build-1374-20261127.md).

@@ -1,0 +1,315 @@
+{
+  "unit": 1374,
+  "productUnit": 1372,
+  "host": "HJOW-Athlon",
+  "lastDecompilationHost": "HJOW-Athlon",
+  "newDecompilation": false,
+  "gameSourceChanges": false,
+  "focusedTests": {
+    "constructionCurrentRequestClear": 19,
+    "failedChecks": 0,
+    "relinkBuildExitCode": 0
+  },
+  "protectedFiles": {
+    "count": 2810,
+    "changed": [],
+    "baseline": "extracted/lan-protection-before-1373.json"
+  },
+  "actualTcp": {
+    "passed": true,
+    "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+    "exeSha256": "b400a38a93a54c89d6b90e13fefa1f31d49656c203dbeb785e8bfd788a0618a2",
+    "peers": [
+      {
+        "role": "bot",
+        "exitCode": 0
+      },
+      {
+        "role": "host",
+        "exitCode": 0
+      }
+    ],
+    "steadySeconds": 4.0976720999897225,
+    "identity": [
+      {
+        "owner": 1,
+        "subscriber": 6356993,
+        "name": "LocalHost",
+        "flags": 67
+      },
+      {
+        "owner": 2,
+        "subscriber": 6356994,
+        "name": "OpponentBot",
+        "flags": 67
+      }
+    ],
+    "world": [
+      [
+        "7937",
+        "0"
+      ]
+    ],
+    "production": {
+      "templeSite": [
+        450,
+        420
+      ],
+      "unitSite": [
+        600,
+        420
+      ],
+      "beforeSp": [
+        1500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500
+      ],
+      "afterSp": [
+        1100,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500
+      ],
+      "units": [
+        [
+          {
+            "sid": 15204,
+            "asset": "sunWalker",
+            "owner": 1,
+            "x": 134.0,
+            "y": 206.0,
+            "hp": 50
+          }
+        ],
+        [
+          {
+            "sid": 15204,
+            "asset": "sunWalker",
+            "owner": 1,
+            "x": 134.0,
+            "y": 206.0,
+            "hp": 50
+          }
+        ]
+      ],
+      "saved": {
+        "bytes": 976,
+        "owner": 1,
+        "sp": 1100,
+        "sha256": "4ea087a1e67921b169e47773bbf0cde2c09158e92d08dfd5322ed2dadceb3e3d"
+      }
+    },
+    "extraBuild": {
+      "workshopSite": [
+        620,
+        380
+      ],
+      "workshops": [
+        [
+          {
+            "sid": 15205,
+            "asset": "sunFactory",
+            "owner": 1,
+            "x": 139.0,
+            "y": 206.0,
+            "hp": 3000
+          }
+        ],
+        [
+          {
+            "sid": 15205,
+            "asset": "sunFactory",
+            "owner": 1,
+            "x": 139.0,
+            "y": 206.0,
+            "hp": 3000
+          }
+        ]
+      ],
+      "beforeSp": [
+        1100,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500
+      ],
+      "afterSp": [
+        300,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500
+      ],
+      "sourceBridge": [
+        "108",
+        "0",
+        "2",
+        "498",
+        "64"
+      ],
+      "bridges": [
+        [
+          [
+            "15207",
+            "bridge",
+            "1",
+            "-1",
+            "143",
+            "198",
+            "143",
+            "198",
+            "35",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ]
+        ],
+        [
+          [
+            "15207",
+            "bridge",
+            "1",
+            "-1",
+            "143",
+            "198",
+            "143",
+            "198",
+            "35",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0",
+            "0"
+          ]
+        ]
+      ],
+      "saved": {
+        "bytes": 976,
+        "owner": 1,
+        "sp": 300,
+        "sha256": "0e11d65fdb51f42e6b6a1dc726071e6184431f15af61d2a9cde4080c42f9e414"
+      }
+    }
+  },
+  "retainedPrematureCompletionFailure": {
+    "passed": false,
+    "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+    "exeSha256": "b400a38a93a54c89d6b90e13fefa1f31d49656c203dbeb785e8bfd788a0618a2",
+    "peers": [
+      {
+        "role": "bot",
+        "exitCode": 0
+      },
+      {
+        "role": "host",
+        "exitCode": 0
+      }
+    ],
+    "steadySeconds": 4.3637176000047475,
+    "identity": [
+      {
+        "owner": 1,
+        "subscriber": 6356993,
+        "name": "LocalHost",
+        "flags": 67
+      },
+      {
+        "owner": 2,
+        "subscriber": 6356994,
+        "name": "OpponentBot",
+        "flags": 67
+      }
+    ],
+    "world": [
+      [
+        "6314",
+        "0"
+      ]
+    ],
+    "production": {
+      "templeSite": [
+        720,
+        400
+      ],
+      "unitSite": [
+        560,
+        420
+      ],
+      "beforeSp": [
+        1500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500
+      ],
+      "afterSp": [
+        1100,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500,
+        6500
+      ],
+      "units": [
+        [
+          {
+            "sid": 15249,
+            "asset": "sunWalker",
+            "owner": 1,
+            "x": 123.0,
+            "y": 208.0,
+            "hp": 50
+          }
+        ],
+        [
+          {
+            "sid": 15249,
+            "asset": "sunWalker",
+            "owner": 1,
+            "x": 123.0,
+            "y": 208.0,
+            "hp": 50
+          }
+        ]
+      ],
+      "saved": {
+        "bytes": 976,
+        "owner": 1,
+        "sp": 1100,
+        "sha256": "70dc4d23fa8abdea91cd485a5d995cc3a3737014c156bb2c21fad845c35442d9"
+      }
+    },
+    "error": "AssertionError('썬 워크샾 실제 객체/HP3000/비용800의 두 수신 결과 불일치')"
+  },
+  "completionReports": [
+    "extracted\\cpp-lan-1374\\build-2\\host\\extra-workshop-settled.tsv",
+    "extracted\\cpp-lan-1374\\build-2\\host\\extra-bridge-settled.tsv",
+    "extracted\\cpp-lan-1374\\build-2\\bot\\extra-workshop-settled.tsv",
+    "extracted\\cpp-lan-1374\\build-2\\bot\\extra-bridge-settled.tsv"
+  ],
+  "rawDirectory": "extracted/cpp-lan-1374"
+}

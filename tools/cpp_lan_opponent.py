@@ -177,13 +177,14 @@ def owned_objects(report, asset, owner=1):
     """실제 객체 보고에서 지정 자산/소유자의 현재 SID·좌표·HP만 선택한다."""
     return [dict(sid=int(row[0]), asset=row[1], owner=int(row[2]),
                  x=float(row[6]), y=float(row[7]), hp=int(row[13]))
-            for row in fields(report, "object") if row[1].lower() == asset.lower() and int(row[2]) == owner]
+            for row in fields(report, "object") if row[1].lower() == asset.lower() and (owner is None or int(row[2]) == owner)]
 
 
 def select_legal_site(peer, expected_type, name):
     """현재 커서에 실제 마우스 이동을 보내고 원본 배치 허용을 통과한 화면 위치를 고른다."""
     candidates = [(600, 420), (560, 420), (560, 450), (600, 450), (450, 420), (500, 450),
-                  (620, 380), (580, 360), (480, 380), (640, 460), (520, 440)]  # 고정1024×768 화면의 자기 섬 주변 후보이며 성공값을 만들지 않는다.
+                  (620, 380), (580, 360), (480, 380), (640, 460), (520, 440),
+                  (720, 400), (700, 500), (500, 540), (640, 540), (440, 500), (580, 560)]  # 고정1024×768 화면의 자기 섬 주변 후보이며 성공값을 만들지 않는다.
     for x, y in candidates:  # 각 후보의 실제 Query/표시/소스 허용을 모두 읽은 뒤 선택한다.
         peer.action("pointer", f"0,{x},{y}", 8)
         rows = fields(peer.report(), "raw_cursor")
@@ -212,7 +213,7 @@ def produce_golem(peers):
     temple_site = select_legal_site(host, 123, "production-temple-preview")
     host.action("click", f"screen:{temple_site[0]},{temple_site[1]}", 120)
     for peer in peers:  # 완성된 실제 신전과 전송 수신 뒤에만 생산 아이콘을 사용한다.
-        peer.wait(lambda text: bool(owned_objects(text, "windVortex")), "실제 Wind 신전 완성", seconds=60)
+        peer.wait(lambda text: any(row["hp"] == 5000 for row in owned_objects(text, "windVortex")), "실제 Wind 신전 완성", seconds=60)
     host.wait(lambda text: any(row[2] == "133" for row in fields(text, "raw_production_item")), "신전의 골렘 생산 아이콘", seconds=30)
     before = [peer.observe("production-before-unit") for peer in peers]  # 비용과 신규 SID 대조의 실제 시작 상태다.
     before_sp = [list(map(int, fields(text, "raw_sp")[0][1:])) for text in before]
@@ -241,6 +242,70 @@ def produce_golem(peers):
                 units=units, saved=dict(bytes=len(image), owner=1, sp=expected_sp[0], sha256=hashlib.sha256(image).hexdigest()))
 
 
+def first_bridge(report):
+    """실제 첫 다리 아이콘의 내용물 SID와 원본 패턴/품질을 대응시킨다."""
+    items = [row for row in fields(report, "raw_production_item") if row[2] == "82"]
+    if not items:
+        return None
+    return next((row for row in fields(report, "raw_production_bridge") if row[0] == items[0][1]), None)
+
+
+def workshop_finished(report):
+    """같은 Factory TYPE의 건설 중/완성을 최대HP와 원본 abstract bit 해제로 구별한다."""
+    extras = {int(row[0]): int(row[2]) for row in fields(report, "raw_asset_fields")}  # 현재 실제 자산 확장 플래그이며 보고서 값을 수정하지 않는다.
+    return any(row["hp"] == 3000 and row["sid"] in extras and not (extras[row["sid"]] & 1)
+               for row in owned_objects(report, "sunFactory"))
+
+
+def build_extra(peers):
+    """실제 사제 메뉴로 썬 워크샾을 완성하고 자연 공급된 단일 다리를 정상 클릭으로 배치한다."""
+    host, bot = peers  # 상태는 호스트의 실제 명령이 전송한 결과로만 비교한다.
+    initial = [peer.observe("extra-before-workshop") for peer in peers]
+    before_sp = [list(map(int, fields(text, "raw_sp")[0][1:])) for text in initial]
+    if before_sp[0] != before_sp[1] or before_sp[0][0] != 1100:
+        raise AssertionError("추가 건설 전 실제 두 SP1100 불일치")
+    host.action("right", "world:priest", 10)
+    host.action("click", "Construct", 10)
+    host.action("click", "Workshop", 10)
+    menu = host.observe("extra-workshop-menu")
+    choices = [row for row in fields(menu, "raw_menu_item") if row[5] == "1" and "Sun Workshop" in row[6]]
+    if len(choices) != 1:
+        raise AssertionError("현재 보이는 썬 워크샾 건설 항목 불일치")
+    choice = choices[0]  # 읽은 항목의 실제 클릭점을 조회한다. 직접 건설 명령을 호출하지 않는다.
+    host.action("click", f"menu-command:{int(choice[3]):x},{int(choice[4]):x}", 10)
+    site = select_legal_site(host, 85, "extra-workshop-preview")
+    host.action("click", f"screen:{site[0]},{site[1]}", 120)
+    for peer in peers:  # 일반 건설/수신 본체가 같은 워크샾을 등록해야 한다.
+        peer.wait(workshop_finished, "실제 썬 워크샾 완성/최대HP/abstract 해제", seconds=60)
+    built = [peer.observe("extra-workshop-settled") for peer in peers]
+    workshops = [owned_objects(text, "sunFactory") for text in built]
+    after_sp = [list(map(int, fields(text, "raw_sp")[0][1:])) for text in built]
+    expected_sp = before_sp[0].copy()  # 명시 비용800을 원래 SP 차감 결과와 대조한다.
+    expected_sp[0] -= 800
+    if len(workshops[0]) != 1 or workshops[0] != workshops[1] or workshops[0][0]["hp"] != 3000 or after_sp != [expected_sp, expected_sp]:
+        raise AssertionError("썬 워크샾 실제 객체/HP3000/비용800의 두 수신 결과 불일치")
+    host.wait(lambda text: (row := first_bridge(text)) is not None and row[1:3] == ["0", "2"], "자연 공급된 단일 다리의 품질2", seconds=30)
+    before = host.observe("extra-before-bridge")
+    bridge = first_bridge(before)  # 실제 내용물의 패턴0·품질2를 강제로 수정하지 않고 읽는다.
+    existing = {int(row[0]) for row in fields(before, "object") if row[1].lower() == "bridge"}
+    priest = owned_objects(before, "priest")[0]  # 원래 사제 좌표 주변의 지도 칸을 탐색 목표로 정한다.
+    host.action("click", "production:82", 10)
+    host.action("click", f"placement-reach:{int(priest['x']) + 12},{int(priest['y'])}", 120)  # 현재 커서의 실제 허용 위치만 탐색하고 생성은 정상 클릭이 수행한다.
+    for peer in peers:  # 새 다리의 네트워크 수신도 실제 객체 목록으로 확인한다.
+        peer.wait(lambda text: any(int(row[0]) not in existing for row in fields(text, "object") if row[1].lower() == "bridge"), "실제 신규 다리", seconds=30)
+    settled = [peer.observe("extra-bridge-settled") for peer in peers]
+    bridges = [[row for row in fields(text, "object") if row[1].lower() == "bridge" and int(row[0]) not in existing] for text in settled]
+    bridge_sp = [list(map(int, fields(text, "raw_sp")[0][1:])) for text in settled]
+    if len(bridges[0]) != 1 or bridges[0] != bridges[1] or bridge_sp != [expected_sp, expected_sp]:
+        raise AssertionError("새 단일 다리의 양쪽 전체 객체 행 또는0 SP 비용 불일치")
+    image = (host.output / "user/Saves/!state.dat").read_bytes()  # 워크샾 비용 이후의 실제 복구 저장을 확인한다.
+    if int.from_bytes(image[260:264], "little") != 1 or int.from_bytes(image[268:272], "little") != expected_sp[0]:
+        raise AssertionError("추가 건설 뒤 복구 저장의 실제 owner/SP 불일치")
+    (host.output / "extra-after-build-state.dat").write_bytes(image)
+    return dict(workshopSite=site, workshops=workshops, beforeSp=before_sp[0], afterSp=expected_sp,
+                sourceBridge=bridge, bridges=bridges, saved=dict(bytes=len(image), owner=1, sp=expected_sp[0], sha256=hashlib.sha256(image).hexdigest()))
+
+
 def main():
     """새 검증 디렉터리에 호스트와 상대 봇을 생성해 로비/전투를 검사한다."""
     parser = argparse.ArgumentParser(description=__doc__)
@@ -253,6 +318,7 @@ def main():
     parser.add_argument("--steady-seconds", type=float, default=4, help="두 참가자의 시작 후 실제 OS 시계 대기 초")
     parser.add_argument("--takeover", action="store_true", help="시작 검사 후 이 도구의 호스트만 강제 종료해 상대의 서버 인수를 검사")
     parser.add_argument("--produce-golem", action="store_true", help="실제 Wind 신전과 골렘 생산/배치 뒤 양쪽 객체·SP·복구 저장을 대조")
+    parser.add_argument("--extra-build", action="store_true", help="골렘 생산 뒤 실제 썬 워크샾·단일 다리 건설을 추가 검증")
     args = parser.parse_args()  # 사용자 선택은 실제 포트·자산·출력 경로로만 제한한다.
     if not (0 < args.lobby_port < 65536 and 0 < args.game_port < 65536 and args.lobby_port != args.game_port):
         parser.error("서로 다른1~65535 포트가 필요합니다.")
@@ -262,6 +328,8 @@ def main():
         parser.error("서버 인수는 실제 전투 시작 검사와 함께 사용해야 합니다.")
     if args.produce_golem and (args.lobby_only or args.takeover):
         parser.error("골렘 생산은 일반 전투 시작 검증에서만 단독 선택합니다.")
+    if args.extra_build and not args.produce_golem:
+        parser.error("추가 건설은 --produce-golem과 함께 선택해야 합니다.")
     args.exe, args.game, args.output = args.exe.resolve(strict=True), args.game.resolve(strict=True), args.output.resolve()
     args.output.mkdir(parents=True, exist_ok=False)
     peers = []  # 이 호출이 실행한 두 자식만 종료 대상으로 보관한다.
@@ -296,6 +364,8 @@ def main():
             result["world"] = fields(steady[0], "world")
             if args.produce_golem:
                 result["production"] = produce_golem(peers)
+            if args.extra_build:
+                result["extraBuild"] = build_extra(peers)
             if args.takeover:
                 host, bot = peers  # 이 호출이 직접 만든 실제 두 자식만 대상으로 삼는다.
                 if fields(steady[1], "raw_network_role") != [["0", "0"]]:

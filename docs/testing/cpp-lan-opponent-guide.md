@@ -12,7 +12,7 @@ python -X utf8 tools/cpp_lan_opponent.py --exe cpppj/build/bin/Release/Netstorm.
 
 입력은 영어1024×768의 실제 라벨과 전용 이름/옵션창의 실제 좌표를 사용한다. `--fixed-frame-ms`나 전투 결과 주입을 쓰지 않는다. 요청30초·작업별 제한 시간과 자기 자식 종료 처리가 있어 응답 없는 게임을 무한 대기하지 않는다. 포획·희생·특정 공격·승리는 이 도구의 기본 검사에 포함하지 않는다.
 
-1367은 일반 Fort 객체/공유 모드를 교정해 두 참가자 시작을 통과했다.1368은 원문 시계 보정의 음수 경과/역행을 Archer와 월드에서 허용하고 실제60초 이상 대기2회/각 두 정상 종료를 확인했다. 새 프로필은 표준 registeredSubId에6356993/6356994를 설정한다. 1369에서17/18과 실제 서버 인수를 확인했다. 1370은 Wind 신전 한 건의 실제 객체/SP·복구 저장을 확인했다. 유닛 생산·추가 건설·이탈 뒤 새 참가자 재접속은 잔여다. 단순 월드 규모 일치를 개별 객체 전체 일치로 세지 않는다.
+1367은 일반 Fort 객체/공유 모드를 교정해 두 참가자 시작을 통과했다.1368은 원문 시계 보정의 음수 경과/역행을 Archer와 월드에서 허용하고 실제60초 이상 대기2회/각 두 정상 종료를 확인했다. 새 프로필은 표준 registeredSubId에6356993/6356994를 설정한다. 1369에서17/18과 실제 서버 인수를 확인했다. 1370은 Wind 신전 한 건의 실제 객체/SP·복구 저장을 확인했다. 유닛 생산은1373·추가 건설은1374에서 확인했고, 이탈 뒤 새 참가자 재접속이 잔여다. 단순 월드 규모 일치를 개별 객체 전체 일치로 세지 않는다.
 
 `cpppj/build/bin/Release/netstorm_lan_clock_tests.exe`는 창 없이 시계 Reset·Archer 양판본·월드 회귀와 LAN 보정 경계를 실행한다. `--list`로 사례 목록, `--filter CampaignClock`으로 새 관련 사례만 선택한다. 기본 전체는21개이며 기존 보호 자산/fixture를 읽기만 한다.
 
@@ -28,4 +28,12 @@ python -X utf8 tools/cpp_lan_opponent.py --exe cpppj/build/bin/Release/Netstorm.
 python -X utf8 tools/cpp_lan_opponent.py --exe cpppj/build/bin/Release/Netstorm.exe --game extracted/cpp-reset-all-1325/game --output extracted/lan-production-new --produce-golem
 ```
 
-골렘 생산의 관련 창 없는 검사는 `cpppj/build/bin/Release/netstorm_selection_key_input_tests.exe --filter InventoryItemGump`다. 실제 자산/아이콘/트리 클릭과 독립 원본 입력2사례를 검사하며1373에서 기존 커서12사례와 함께 통과했다. 실제 TCP에서 골렘HP50/SP1500→1100·두 정상 종료를 확인했다. 추가 건설과 새 참가자 재접속은 아직 잔여다.
+골렘 생산의 관련 창 없는 검사는 `cpppj/build/bin/Release/netstorm_selection_key_input_tests.exe --filter InventoryItemGump`다. 실제 자산/아이콘/트리 클릭과 독립 원본 입력2사례를 검사하며1373에서 기존 커서12사례와 함께 통과했다. 실제 TCP에서 골렘HP50/SP1500→1100·두 정상 종료를 확인했다. 추가 건설은 아래1374에서 완료했고 새 참가자 재접속이 잔여다.
+
+1374의 `--produce-golem --extra-build`는 같은 실제 게임에서 썬 워크샾800 SP와 단일 다리0 SP를 추가 검증한다. 워크샾은 양쪽 HP3000/abstract 해제를 기다리며 객체가 보인다는 이유만으로 완성 처리하지 않는다. 다리는 실제 아이콘의 pattern0/quality2가 자연 공급됐는지 확인하고 배치 허용 탐색 뒤 정상 클릭한다. 양쪽 워크샾·신규 bridge 전체 행·최종SP300·복구 저장·두 정상 종료를 확인했다.
+
+```powershell
+python -X utf8 tools/cpp_lan_opponent.py --exe cpppj/build/bin/Release/Netstorm.exe --game extracted/cpp-reset-all-1325/game --output extracted/lan-extra-build-new --produce-golem --extra-build
+```
+
+관련 창 없는 검사는 `cpppj/build/bin/Release/netstorm_construction_current_tests.exe`이며 --list/--filter도 지원한다. 현재 건설 상태·요청·예측 정리와 실제 확정 조각 교체19사례를 실행하며1374에서 전체 통과했다. [건설 완료 조건/실행 근거](../exe/cpp-lan-extra-build-1374-20261127.md). 추가 건설은 완료했고, 새 참가자 재접속은 다음 작업이다.
