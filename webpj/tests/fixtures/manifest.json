@@ -34732,7 +34732,7 @@
       "sha256": "a1ae97c87c245d44bed24a30bb3d4bcfdac622092ce35ea5a5d3b0431ad8693d",
       "bytes": 215700,
       "lines": null,
-      "fixtureCommit": null,
+      "fixtureCommit": "e6e0c59f5",
       "webCommit": "60e9b50c9",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
@@ -34764,7 +34764,7 @@
       "sha256": "d4b44124c9d351f30bb443c46b08c743b6faa3020100930b27c02f390052656b",
       "bytes": 228068,
       "lines": null,
-      "fixtureCommit": null,
+      "fixtureCommit": "e6e0c59f5",
       "webCommit": "60e9b50c9",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
@@ -34796,7 +34796,7 @@
       "sha256": "bbc10a3cc44375010efed91bf8a534c5b51d6a33044e19f63b6db002f5792269",
       "bytes": 220504,
       "lines": null,
-      "fixtureCommit": null,
+      "fixtureCommit": "e6e0c59f5",
       "webCommit": "60e9b50c9",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
@@ -34828,7 +34828,7 @@
       "sha256": "68f7f1b6d7732dc95f3b97d8ba6e8062214b5ede6f6ec7b19603f55a3647dca7",
       "bytes": 387469,
       "lines": 5065,
-      "fixtureCommit": null,
+      "fixtureCommit": "e6e0c59f5",
       "webCommit": "60e9b50c9",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
@@ -34860,7 +34860,7 @@
       "sha256": "909b234c20960e58eb1adb70e63dc1bb24222473c19f59829ba6280a137ad968",
       "bytes": 212293,
       "lines": null,
-      "fixtureCommit": null,
+      "fixtureCommit": "e6e0c59f5",
       "webCommit": "60e9b50c9",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
@@ -34892,7 +34892,7 @@
       "sha256": "c85669961c3fcc0071225f58b8b061d6727bb810eee6658ce1cf2e2d0132d3cd",
       "bytes": 227157,
       "lines": null,
-      "fixtureCommit": null,
+      "fixtureCommit": "e6e0c59f5",
       "webCommit": "60e9b50c9",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
@@ -34924,7 +34924,7 @@
       "sha256": "53e285ba87ab5cc5d3ea5caa5323c1a15ae0cd475ae9882a9ef1c4416f51db03",
       "bytes": 387135,
       "lines": 5060,
-      "fixtureCommit": null,
+      "fixtureCommit": "e6e0c59f5",
       "webCommit": "60e9b50c9",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
@@ -34956,7 +34956,7 @@
       "sha256": "3fbce048a33f72caacfd62754e60033887e2ec7dab7bf9b6d181ab83b015b316",
       "bytes": 1024,
       "lines": 35,
-      "fixtureCommit": null,
+      "fixtureCommit": "e6e0c59f5",
       "webCommit": "60e9b50c9",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
@@ -34988,7 +34988,7 @@
       "sha256": "534522b9b1bc249c1ee6d9cb1384964f5ad7698892d798cb1c4ddcea7fe58d94",
       "bytes": 225547,
       "lines": null,
-      "fixtureCommit": null,
+      "fixtureCommit": "e6e0c59f5",
       "webCommit": "60e9b50c9",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
@@ -35020,7 +35020,7 @@
       "sha256": "a8585b5a043e5356bf89e751c9214d8f4e81ec8fc248478ae7aa02e568fe7f9a",
       "bytes": 2555,
       "lines": 181,
-      "fixtureCommit": null,
+      "fixtureCommit": "e6e0c59f5",
       "webCommit": "60e9b50c9",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
@@ -35052,7 +35052,7 @@
       "sha256": "e9229227bfddb1c6379c62ab5847a6604a08a07eddf84d90bad7243b52a1f63f",
       "bytes": 223464,
       "lines": null,
-      "fixtureCommit": null,
+      "fixtureCommit": "e6e0c59f5",
       "webCommit": "60e9b50c9",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
@@ -35084,7 +35084,7 @@
       "sha256": "94b46dc35257be0f1062218078f2b0956ddd2c474f6ca3b370cd58c89cd88f9e",
       "bytes": 386302,
       "lines": 5049,
-      "fixtureCommit": null,
+      "fixtureCommit": "e6e0c59f5",
       "webCommit": "60e9b50c9",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
@@ -35116,6 +35116,230 @@
       "sha256": "e60e1b1c2fd7efea41317aafcb2928923171bff15283b53ade91424a0465d045",
       "bytes": 219284,
       "lines": null,
+      "fixtureCommit": "e6e0c59f5",
+      "webCommit": "60e9b50c9",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial6-transport-l3-airship3240-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial6-transport-l3/airship3240.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial6 실제 자원 납품 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial6-transport.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1344",
+      "doc": "docs/webpj-l3-tutorial6-transport-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "Tutorial6 B 실제 자원 납품과 C 안내 airship3240.png",
+      "text": false,
+      "sha256": "15dbe1297dd78cfdc8ad9765a6cf68713383b7c42903b6dbf89105f704bdcc49",
+      "bytes": 231308,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "60e9b50c9",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial6-transport-l3-airship3240-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial6-transport-l3/airship3240.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial6 실제 자원 납품 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial6-transport.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1344",
+      "doc": "docs/webpj-l3-tutorial6-transport-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "Tutorial6 B 실제 자원 납품과 C 안내 airship3240.tsv",
+      "text": true,
+      "sha256": "61262062ccc74ddc1d9e7ba4e20e1cc0042055c597339539667991e27a4e4ab0",
+      "bytes": 387470,
+      "lines": 5065,
+      "fixtureCommit": null,
+      "webCommit": "60e9b50c9",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial6-transport-l3-delivery4300-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial6-transport-l3/delivery4300.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial6 실제 자원 납품 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial6-transport.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1344",
+      "doc": "docs/webpj-l3-tutorial6-transport-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "Tutorial6 B 실제 자원 납품과 C 안내 delivery4300.png",
+      "text": false,
+      "sha256": "2c638c9b47e9ffdc9bb5c86fd09e85df344bcd81c9e325c40d2c97899d346af1",
+      "bytes": 222743,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "60e9b50c9",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial6-transport-l3-delivery4300-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial6-transport-l3/delivery4300.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial6 실제 자원 납품 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial6-transport.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1344",
+      "doc": "docs/webpj-l3-tutorial6-transport-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "Tutorial6 B 실제 자원 납품과 C 안내 delivery4300.tsv",
+      "text": true,
+      "sha256": "554c71fe8073569a6f03fd1304ef29531935f2d2a5ff7f1474421fb16dc8d9e2",
+      "bytes": 387542,
+      "lines": 5065,
+      "fixtureCommit": null,
+      "webCommit": "60e9b50c9",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial6-transport-l3-flight3400-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial6-transport-l3/flight3400.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial6 실제 자원 납품 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial6-transport.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1344",
+      "doc": "docs/webpj-l3-tutorial6-transport-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "Tutorial6 B 실제 자원 납품과 C 안내 flight3400.png",
+      "text": false,
+      "sha256": "aa6262cdaf0b389284e206c41ac319eecd27ef799d2faaf50725ee2432062caa",
+      "bytes": 229997,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "60e9b50c9",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial6-transport-l3-oracle-json",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial6-transport-l3/oracle.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial6 실제 자원 납품 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial6-transport.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1344",
+      "doc": "docs/webpj-l3-tutorial6-transport-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "Tutorial6 B 실제 자원 납품과 C 안내 oracle.json",
+      "text": true,
+      "sha256": "b20e19492f47c384114b90cc5ecae37046f4d8bf5726b6ec10eaffbe86ca7466",
+      "bytes": 1028,
+      "lines": 35,
+      "fixtureCommit": null,
+      "webCommit": "60e9b50c9",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial6-transport-l3-steps-json",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial6-transport-l3/steps.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial6 실제 자원 납품 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial6-transport.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1344",
+      "doc": "docs/webpj-l3-tutorial6-transport-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "Tutorial6 B 실제 자원 납품과 C 안내 steps.json",
+      "text": true,
+      "sha256": "fb9a1b996412b02fd13b91d5017e0261295657f113eadfd29899f6d3ad4fcb8f",
+      "bytes": 2315,
+      "lines": 166,
       "fixtureCommit": null,
       "webCommit": "60e9b50c9",
       "cpppjBasis": {

@@ -1,0 +1,166 @@
+{
+  "format": "netstorm-webpj-cpppj-l3-steps",
+  "version": 1,
+  "description": "Tutorial6 B: 에어 쉽을 선택하고 간헐천을 클릭해 실제 자원 수확·귀환·200 SP 납품과 C 안내를 대조한다. 공격·포획·희생·승리는 없다.",
+  "language": "english",
+  "screen": {
+    "width": 1024,
+    "height": 768
+  },
+  "fixedFrameMs": 25,
+  "mission": "Tutorial6",
+  "settings": {
+    "SCREENW": 1024,
+    "SCREENH": 768,
+    "WelcomeGiven": 1,
+    "tellTips": 0,
+    "autoDemo": 0
+  },
+  "steps": [
+    [
+      110,
+      "click-if",
+      "MORE"
+    ],
+    [
+      150,
+      "click-if",
+      "MORE"
+    ],
+    [
+      190,
+      "click-if",
+      "MORE"
+    ],
+    [
+      230,
+      "click-if",
+      "OK"
+    ],
+    [
+      260,
+      "right",
+      "screen:520,381"
+    ],
+    [
+      280,
+      "click",
+      "screen:570,403"
+    ],
+    [
+      300,
+      "click",
+      "screen:745,420"
+    ],
+    [
+      320,
+      "click",
+      "screen:900,423"
+    ],
+    [
+      340,
+      "click",
+      "screen:350,400"
+    ],
+    [
+      1620,
+      "right",
+      "screen:350,400"
+    ],
+    [
+      1640,
+      "click",
+      "screen:425,425"
+    ],
+    [
+      1660,
+      "click",
+      "screen:630,425"
+    ],
+    [
+      1680,
+      "right",
+      "screen:350,400"
+    ],
+    [
+      1700,
+      "click",
+      "screen:425,425"
+    ],
+    [
+      1720,
+      "click",
+      "screen:630,425"
+    ],
+    [
+      1740,
+      "click",
+      "screen:40,180"
+    ],
+    [
+      1760,
+      "click",
+      "screen:450,430"
+    ],
+    [
+      2020,
+      "click",
+      "screen:40,180"
+    ],
+    [
+      2040,
+      "click",
+      "screen:450,500"
+    ],
+    [
+      2600,
+      "click",
+      "screen:40,270"
+    ],
+    [
+      2620,
+      "click",
+      "screen:390,500"
+    ],
+    [
+      3220,
+      "click-if",
+      "OK"
+    ],
+    [
+      3240,
+      "snapshot",
+      "airship3240"
+    ],
+    [
+      3240,
+      "session-dump",
+      "airship3240"
+    ],
+    [
+      3260,
+      "click",
+      "screen:390,470"
+    ],
+    [
+      3280,
+      "click",
+      "screen:687,225"
+    ],
+    [
+      3400,
+      "snapshot",
+      "flight3400"
+    ],
+    [
+      4300,
+      "snapshot",
+      "delivery4300"
+    ],
+    [
+      4300,
+      "session-dump",
+      "delivery4300"
+    ]
+  ]
+}
