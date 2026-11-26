@@ -1,7 +1,5 @@
 {
-  "partialFiles": [
-    "tell"
-  ],
+  "partialFiles": [],
   "tell": {
     "completedRanges": [
       {
@@ -19,8 +17,12 @@
       {
         "first": "NewTech",
         "last": "TipList"
+      },
+      {
+        "first": "AllianceRequested",
+        "last": "END"
       }
     ],
-    "nextSection": "AllianceRequested"
+    "nextSection": null
   }
 }

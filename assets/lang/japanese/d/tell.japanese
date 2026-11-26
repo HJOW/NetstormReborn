@@ -1963,61 +1963,57 @@ tip39="これ以上ヒントはありません！ さらに多くのヒントは
 
 [***********************************************************]
 [AllianceRequested]
-<h2>{H2}Alliance Requested</h2>
+<h2>{H2}同盟の申し出</h2>
 {Text}
-{param.1}{param.2} {Text} would like to form an Alliance. If you agree, you 
-will be able to build off each other's bridges and your Battle Units will 
-not target each other.
+{param.1}{param.2} {Text}が同盟を申し出ています。同意すると互いの橋に建設でき、戦闘ユニットは互いを攻撃しなくなります。
 
 <p>
-Do you agree to the Alliance?
-$Button=Yes,ConfirmAlliance,{param.3}
-$Button=No,DoNothing,0
+同盟に同意しますか？
+$Button=はい,ConfirmAlliance,{param.3}
+$Button=いいえ,DoNothing,0
 
 
 [AllianceSpam]
-<h2>{H2}Alliance Requested Denied</h2> 
-{Text} 
-You have exceeded the limit of {param.1} alliances request with {param.2}{param.3}{Text}. Please try again later.
-$Button=OK,DoNothing,0
+<h2>{H2}同盟の申し出を拒否</h2>
+{Text}
+同盟の申し出が上限の{param.1}回を超えました。相手は{param.2}{param.3}{Text}です。しばらくしてから再度お試しください。
+$Button=確認,DoNothing,0
 
 [***********************************************************]
 [AllianceComplete]
-<h2>{H2}Alliance Complete</h2>
+<h2>{H2}同盟成立</h2>
 {Text}
-You and {CText}{param.1}{Text} are now mutual Allies. You can both build off each 
-other's bridges, and your Battle Units will not target each other.
+あなたと{CText}{param.1}{Text}は同盟を結びました。互いの橋に建設でき、戦闘ユニットは互いを攻撃しなくなります。
 <p>
-Note that you still have be connected to your Ally's bridge network to be 
-able to build off of it!
-$Button=OK,DoNothing,0
+同盟の橋に建設するには、あなたの橋網と同盟の橋網がつながっている必要があります！
+$Button=確認,DoNothing,0
 
 [***********************************************************]
 [AllianceBroken]
-<$Warning,"~B~E~wAlliance Broken With {param.2}{param.1}">
+
+<$Warning,"~B~E~w同盟破棄: {param.2}{param.1}">
 
 [***********************************************************]
 [SacrificeMenu]
-<h2>{H2}Sacrifice!</h2>
+<h2>{H2}生け贄！</h2>
 <p>{Text}
-Glory be to the Furies! You may choose a Level {param.2}
-unit as your 
+フューリーに栄光あれ！ レベル{param.2}のユニットを
 <?{param.3}>
-reward, or Upgrade to get higher level units.
+報酬として選ぶか、より高いレベルのユニットを得るためにアップグレードできます。
 </?>
 <?!{param.3}>
-reward.
+報酬として選べます。
 </?>
 $Timeout=15,RequestStormpower,0
 $Menu=*TECHLIST*,DoNothing,{param.1}
 [***********************************************************]
 [SacrificeForStormpower]
-<h2>{H2}Storm Power Gained!</h2>
+<h2>{H2}ストームパワー獲得！</h2>
 {Text}
-You have gained Storm Power for the Sacrifice of your enemy's Priest!
+敵の司祭を生け贄に捧げ、ストームパワーを得ました！
 
 $Timeout=15,DoNothing,0
-$Button=OK,DoNothing,0
+$Button=確認,DoNothing,0
 
 
 
@@ -2030,28 +2026,18 @@ $Button=OK,DoNothing,0
 <?!{workingFullScreenFlags}>
 <h2>{H2}Direct Draw</h2>
 <p>{Text}
-This game uses Microsoft's "Direct Draw" technology to 
-give you fast full-screen game performance. 
-Most modern games use DirectDraw.  However,
-for optimal performance NetStorm uses a few DirectDraw features
-that many other games don't use, and which may or may not
-work on all video cards.
+このゲームはMicrosoftの「Direct Draw」技術で高速な全画面表示を実現します。当時の多くのゲームもDirectDrawを使用しています。ただしNetStormは最適な性能を得るため、他のゲームではあまり使わない機能も使用しており、すべてのビデオカードで動作するとは限りません。
 <p>
-Consequently, we have provided several options which let you tune
-NetStorm to your particular video card.  As you toggle options,
-it is possible that your machine will crash. If this
-occurs, simply reboot and run NetStorm again. NetStorm will
-return to the last known good mode.  But, to be safe,
-you should close all other applications before selecting {CText}Start Direct Draw{Text} below.
+そのため、ビデオカードに合わせてNetStormを調整するオプションがあります。切り替え時にコンピューターが停止することもあります。その場合は再起動してNetStormを実行すると、最後に正常に動作したモードに戻ります。安全のため、下の{CText}Direct Drawを開始{Text}を選ぶ前に他のプログラムをすべて閉じてください。
 <p>
-{CText}For Windows Legacy users Hit ALT-ENTER any time to return to a window!{Text}<br>
-{CText}For Windows XP users, to go into windows mode simply press and hold CTRL-ALT-ENTER. For other operating systems use ALT-ENTER.{Text}
+{CText}旧Windowsでは、いつでもALT-ENTERでウィンドウ表示に戻れます！{Text}<br>
+{CText}Windows XPではCTRL-ALT-ENTERを押し続けるとウィンドウ表示に戻ります。他のOSではALT-ENTERを使ってください。{Text}
 
 <$Config,shownScreenExplain=1>
 
-$Button=Start Direct Draw,Tell,DirectDrawManager2
-$Button=Support,Tell,DirectDrawSupport
-$Button=Cancel,DoNothing,0
+$Button=Direct Drawを開始,Tell,DirectDrawManager2
+$Button=サポート,Tell,DirectDrawSupport
+$Button=キャンセル,DoNothing,0
 $Timeout=45,DoNothing,0
 
 </?>
@@ -2067,588 +2053,511 @@ $Timeout=45,DoNothing,0
 [AdjustDirectDraw]
 <h2>{H2}Direct Draw</h2>
 <p>{Text}
-You can often drastically improve the performance of NetStorm
-by changing some of the options below.
-Each option will be explained when you select it (before it is activated.)
+以下のオプションを変更すると、NetStormの性能が大幅に向上する場合があります。各項目を選ぶと、有効にする前に説明が表示されます。
 <p>
-Remember that if your video card does not support a particular
-feature, some of these options may lock up your machine.  
-It is recommended that you shut down all other
-applications before changing these options.
+ビデオカードが機能に対応していない場合、一部のオプションでコンピューターが停止することがあります。変更前に他のプログラムをすべて閉じることをお勧めします。
 <p>
-As you change each feature, NetStorm will prompt you to
-accept the change, and will automatically revert in 15 seconds
-if you do not.
+機能を変更するたびに、変更を適用するか確認します。同意しなければ15秒後に以前の状態に戻ります。
 <p>
-In case your machine crashes, restart and NetStorm will return
-to the last known good mode.
+コンピューターが停止した場合は再起動してください。NetStormは最後に正常に動作したモードに戻ります。
 <p>
-{CText}If you can't see your mouse, try pressing F12!{Text}<br>
-{CText}Hit ALT-ENTER any time to return to a window!{Text}
+{CText}マウスが見えないときはF12を押してみてください！{Text}<br>
+{CText}いつでもALT-ENTERでウィンドウ表示に戻れます！{Text}
 
-$Checked=Safe & Slow Mode,Tell,ToggleBackBufferDib,{global.ddBackBufferDib},1
-$Checked=Safe & Jumpy Mouse,Tell,ToggleMouse,{global.ddSoftwareMouse},1
-$Checked=Parallax Clouds,Tell,ToggleParallax,{global.ddParallax},{global.ddFourPage}
-$Checked=Reduce Tearing,Tell,ToggleFlipping,{global.ddFlipping},1
+$Checked=安全だが低速なモード,Tell,ToggleBackBufferDib,{global.ddBackBufferDib},1
+$Checked=安全だがぎこちないマウス,Tell,ToggleMouse,{global.ddSoftwareMouse},1
+$Checked=雲の視差効果,Tell,ToggleParallax,{global.ddParallax},{global.ddFourPage}
+$Checked=画面のちらつきを軽減,Tell,ToggleFlipping,{global.ddFlipping},1
 
-$Button=Help,Tell,DirectDrawSupport
-$Button=OK,DoNothing,0
+$Button=ヘルプ,Tell,DirectDrawSupport
+$Button=確認,DoNothing,0
 
 
 [***********************************************************]
 [ToggleBackBufferDib]
-<h2>{H2}Compatible But Slower Mode</h2>
+<h2>{H2}互換性重視の低速モード</h2>
 <p>{Text}
-Compatible Mode should work on almost all video cards,
-however, it is often considerably slower.
+互換モードはほぼすべてのビデオカードで動作しますが、通常は大幅に遅くなります。
 <p>
-It is highly recommended that you turn {CText}off{Text} Compatibilty Mode if
-possible.  Fortunatly, this should work on the vast majority of cards.
+可能なら互換モードを{CText}オフ{Text}にすることを強くお勧めします。幸い、ほとんどのカードでオフにできます。
 <p>
-Compatible But Slower Mode is currently {CText}<?{global.ddBackBufferDib}>ON</?><?!{global.ddBackBufferDib}>OFF</?>{Text}.
+互換性重視の低速モードは現在{CText}<?{global.ddBackBufferDib}>オン</?><?!{global.ddBackBufferDib}>オフ</?>{Text}です。
 
 <?{global.ddBackBufferDib}>
-$Button=Turn Off,ScreenModeChange,2
+$Button=オフ,ScreenModeChange,2
 </?>
 <?!{global.ddBackBufferDib}>
-$Button=Turn On,ScreenModeChange,2
+$Button=オン,ScreenModeChange,2
 </?>
-$Button=Cancel,Tell,AdjustDirectDraw
+$Button=キャンセル,Tell,AdjustDirectDraw
 
 [***********************************************************]
 [ToggleMouse]
-<h2>{H2}Compatible But Jumpy Mouse</h2>
+<h2>{H2}互換性重視のぎこちないマウス</h2>
 <p>{Text}
-If your mouse leaves 'trash' on the screen when you move
-it around, or doesn't show up at all, then you should turn
-on this option.
+マウスを動かすと跡が残ったり、マウスがまったく見えなかったりする場合は、このオプションをオンにしてください。
 <p>
-Turning this option on will not slow the game down much,
-but will cause the mouse to 'stick' and 'jump' when the frame rate is low.
+オンにしてもゲームはあまり遅くなりませんが、フレームレートが低いとマウスが引っ掛かったり、急に移動したりすることがあります。
 <p>
-Compatible But Jumpy Mouse is currently {CText}<?{global.ddSoftwareMouse}>ON</?><?!{global.ddSoftwareMouse}>OFF</?>{Text}.
+互換性重視のぎこちないマウスは現在{CText}<?{global.ddSoftwareMouse}>オン</?><?!{global.ddSoftwareMouse}>オフ</?>{Text}です。
 
 <?{global.ddSoftwareMouse}>
-$Button=Turn Off,ScreenModeChange,64
+$Button=オフ,ScreenModeChange,64
 </?>
 <?!{global.ddSoftwareMouse}>
-$Button=Turn On,ScreenModeChange,64
+$Button=オン,ScreenModeChange,64
 </?>
-$Button=Cancel,Tell,AdjustDirectDraw
+$Button=キャンセル,Tell,AdjustDirectDraw
 
 
 [***********************************************************]
 [ToggleFlipping]
-<h2>{H2}Reduce Tearing</h2>
+<h2>{H2}画面のちらつきを軽減</h2>
 <p>{Text}
-If the screen seems to 'tear' when you scroll around in NetStorm, 
-turn on this option.  However, this may slow the game 
-down considerably on many video cards.
+NetStormで画面を移動したときに映像が裂けて見える場合は、このオプションをオンにしてください。ただし、多くのビデオカードではゲームがかなり遅くなることがあります。
 <p>
-Tearing Reduction is currently {CText}<?{global.ddFlipping}>ON</?><?!{global.ddFlipping}>OFF</?>{Text}.
+画面のちらつき軽減は現在{CText}<?{global.ddFlipping}>オン</?><?!{global.ddFlipping}>オフ</?>{Text}です。
 
 <?{global.ddFlipping}>
-$Button=Turn Off,ScreenModeChange,4
+$Button=オフ,ScreenModeChange,4
 </?>
 <?!{global.ddFlipping}>
-$Button=Turn On,ScreenModeChange,4
+$Button=オン,ScreenModeChange,4
 </?>
-$Button=Cancel,Tell,AdjustDirectDraw
+$Button=キャンセル,Tell,AdjustDirectDraw
 
 [***********************************************************]
 [ToggleParallax]
-<h2>{H2}Parallax Clouds</h2>
+<h2>{H2}雲の視差効果</h2>
 <p>{Text}
-You can make the clouds move as if they were far away, increasing
-the illusion of altitude in NetStorm.  If your video card has enough
-memory and is fast, this won't slow the game down too much and
-will look very good.
+雲が遠くにあるように動くことで、NetStormの高度感を高めます。ビデオカードに十分なメモリーと速度があれば、ゲームをあまり遅くせず、美しい効果を楽しめます。
 <p>
-Parallax Clouds are currently {CText}<?{global.ddParallax}>ON</?><?!{global.ddParallax}>OFF</?>{Text}.
+雲の視差効果は現在{CText}<?{global.ddParallax}>オン</?><?!{global.ddParallax}>オフ</?>{Text}です。
 
 <?{global.ddParallax}>
-$Button=Turn Off,ScreenModeChange,16
+$Button=オフ,ScreenModeChange,16
 </?>
 <?!{global.ddParallax}>
-$Button=Turn On,ScreenModeChange,16
+$Button=オン,ScreenModeChange,16
 </?>
-$Button=Cancel,Tell,AdjustDirectDraw
+$Button=キャンセル,Tell,AdjustDirectDraw
 
 
 
 [***********************************************************]
 [DirectDrawSupport]
-<h2>{H2}Direct Draw Support</h2>
+<h2>{H2}Direct Drawサポート</h2>
 <p>{Text}
-Direct Draw is Microsoft's technology, but each video card 
-manufacturer is responsible for making their card work with it.
+Direct DrawはMicrosoftの技術ですが、各ビデオカードで動作させる責任はカードの製造元にあります。
 <p>
-If Direct Draw doesn't work on your computer contact your graphics
-card manufacturer, or contact Microsoft on the web at<p>
+コンピューターでDirect Drawが動作しない場合は、グラフィックカードの製造元に問い合わせるか、次のMicrosoftのウェブサイトをご覧ください。<p>
 
 <a href="http://www.microsoft.com">http://www.microsoft.com</a>
 
-$Button=OK,DoNothing,0
+$Button=確認,DoNothing,0
 
 
 [***********************************************************]
 [BattleOver1]
-<h2>{H2}VICTORY!</h2>
+<h2>{H2}勝利！</h2>
 {Text}
 <$MoveDialog,br>
-$Button=Continue,GoMultiplayer,1
+$Button=続ける,GoMultiplayer,1
 
 [BattleOver2]
-<h2>{H2}DEFEAT!</h2>
+<h2>{H2}敗北！</h2>
 {Text}
 <$MoveDialog,br>
-$Button=Continue,GoMultiplayer,1
+$Button=続ける,GoMultiplayer,1
 
 [BattleOver3]
-<h2>{H2}Battle Over</h2>
+<h2>{H2}戦闘終了</h2>
 {Text}
 <$MoveDialog,br>
-$Button=Continue,GoMultiplayer,1
+$Button=続ける,GoMultiplayer,1
 
 [BattleOver4]
-<h2>{H2}Connection Failure</h2>
+<h2>{H2}接続失敗</h2>
 {Text}
 <p>
-Your multiplayer NetStorm game could not start because
-some players never connected to the server.
+一部のプレイヤーがサーバーに接続していないため、NetStormのマルチプレイヤーゲームを開始できません。
 <p>
-$Button=Return to Challenge Area,GoMultiplayer,1
+$Button=チャレンジエリアに戻る,GoMultiplayer,1
 
 [BattleOver5]
-<h2>{H2}Draw</h2>
+<h2>{H2}引き分け</h2>
 {Text}
 <$MoveDialog,br>
-$Button=Continue,GoMultiplayer,1
+$Button=続ける,GoMultiplayer,1
 
 
 [***********************************************************]
 [BattleVersionMismatch]
-<h2>{H2}Version Mismatch</h2>
+<h2>{H2}バージョン不一致</h2>
 <p>{Text}
-All players in a given battle must be using compatible
-versions.
+同じ戦闘の全プレイヤーは、互換性のあるバージョンを使用する必要があります。
 <p>
-We're sorry, but your version is not compatible with the
-rest of the players in that battle.  This could be because
-they are playing a later version, or because you are using
-a more recent version than they.
+あなたのバージョンは、この戦闘の他のプレイヤーと互換性がありません。相手またはあなたが、より新しいバージョンを使っている可能性があります。
 <p>
-You can download the latest patches from <a href="http://{UPDATEURL}">{Link}{UPDATEURL}</a> {Text}
+最新パッチは<a href="http://{UPDATEURL}">{Link}{UPDATEURL}</a> {Text}で入手できます。
 <p>
-$Button=Darn,DoNothing,0
+$Button=了解,DoNothing,0
 
 [***********************************************************]
 [BattleFailedDiags]
-<h2>{H2}Sorry</h2>
+<h2>{H2}お知らせ</h2>
 <p>{Text}
-You cannot become the battlemaster if you have not passed
-the diagnostics.
+診断に合格しないとバトルマスターにはなれません。
 <p>
-The previous battlemaster of this battle has left, which
-would make you the battlemaster.  But you have not passed
-the diagnostics, making you ineligble.
+以前のバトルマスターが退出したため、あなたがバトルマスターになる必要があります。しかし、診断に合格していないため資格がありません。
 <p>
-You can try running the diagnostics again, or join
-another battle.
+診断を再実行するか、別の戦闘に参加してください。
 <p>
-$Button=Ok,DoNothing,0
+$Button=確認,DoNothing,0
 
 [***********************************************************]
 [QueryForceJoinChalBattle]
-<h2>{H2}You May Be Firewalled</h2>
+<h2>{H2}ファイアウォールの影響の可能性</h2>
 <p>{Text}
-You have not passed the receive diagnostics, indicating that
-other players will not be able to connect to your computer.
-This condition prevents you from being the master of a
-battle, although you can still join other battles.
+受信診断に合格しませんでした。他のプレイヤーがあなたのコンピューターに接続できないという意味です。他の戦闘には参加できますが、マスターにはなれません。
 <p>
-If you think your network situation has changed since the
-last time you ran diagnostics, exit NetStorm and run them
-again.  You can also force yourself to attach as the
-battlemaster by clicking "BattleMaster"
+最後の診断からネットワーク環境が変わった場合は、NetStormを終了して診断を再実行してください。「バトルマスター」を押して、強制的にバトルマスターとして接続することもできます。
 <p>
-$Button=BattleMaster,ChalForceJoinBattle,{param.1}
-$Button=Cancel,DoNothing,0
+$Button=バトルマスター,ChalForceJoinBattle,{param.1}
+$Button=キャンセル,DoNothing,0
 
 [***********************************************************]
 [Player]
-<h2>{H2}Player "{p.handle}"</h2>
+<h2>{H2}プレイヤー「{p.handle}」</h2>
 <p>{Text}
-{p.handle} has played {CText}{p.totalGames}{Text} games.
+{p.handle}は{CText}{p.totalGames}{Text}回プレイしています。
 <p>
-Reliability Rating: {CText}{p.reliability}%{Text}
-(meaning that {p.handle} disconnects or quits out of games early
-{CText}{p.unreliability}%{Text} of the time).
+信頼度: {CText}{p.reliability}%{Text}
+（{p.handle}がゲーム中に切断または早期退出した割合は
+{CText}{p.unreliability}%{Text}です）。
 
-$Button=OK,DoNothing,0
+$Button=確認,DoNothing,0
 
 
 [***********************************************************]
 [MetaPlayer]
-<h2>{H2}Player "{p.handle}"</h2>
+<h2>{H2}プレイヤー「{p.handle}」</h2>
 <p>{Text}
-Client version: {CText}{p.version}{Text}<br>
-Client language: {CText}{p.language}{Text}
+クライアントのバージョン: {CText}{p.version}{Text}<br>
+クライアントの言語: {CText}{p.language}{Text}
 <p>
-{p.handle} has played {CText}{p.totalGames}{Text} games.
+{p.handle}は{CText}{p.totalGames}{Text}回プレイしています。
 <p>
-Reliability Rating: {CText}{p.reliability}%{Text}
-(meaning that {p.handle} disconnects or quits out of games early
-{CText}{p.unreliability}%{Text} of the time).
+信頼度: {CText}{p.reliability}%{Text}
+（{p.handle}がゲーム中に切断または早期退出した割合は
+{CText}{p.unreliability}%{Text}です）。
 
-$Button=OK,DoNothing,0
+$Button=確認,DoNothing,0
 
 
 [***********************************************************]
 [ChalIntro]
-<h2>{H2}Serenisphere</h2>
+<h2>{H2}セレニスフィア</h2>
 {Text}
-You have entered the Serenisphere where the tribes of
-Nimbus gather to fight for Knowledge and power!
+知識と力を求めてニンバスの部族が戦う、セレニスフィアへようこそ！
 <p>
-Click <a href="multiQuickHelp">{Link}here</a>{Text} to see the <a href="multiQuickHelp">{Link}Multiplayer Quick Start</a>{Text}.
+<a href="multiQuickHelp">{Link}こちら</a>{Text}を押すと<a href="multiQuickHelp">{Link}マルチプレイヤーのクイックスタート</a>{Text}が表示されます。
 <p>
-{CText}Left-Click{Text} to move your island.
+{CText}左クリック{Text}で島を移動します。
 <br>
-{CText}Right-Click{Text} to get information about <a href="battleIslandType">{Link}Challenge Rings</a>{Text} and <a href="challengeIslandType">{Link}Zones</a>{Text}.
+{CText}右クリック{Text}で<a href="battleIslandType">{Link}チャレンジリング</a>{Text}と<a href="challengeIslandType">{Link}エリア</a>{Text}の情報を確認します。
 <p>
 <?!{DoneTutorial4}>
-<i>{Text}We strongly encourage you to play the "Early Missions" so that 
-you'll know how to fight in a Multiplayer battle!</i>{Text}
+<i>{Text}マルチプレイヤーの戦い方を学ぶため、まず「初期ミッション」をプレイすることを強くお勧めします！</i>{Text}
 <p>
 </?>
-Hit {CText}F8{Text} any time to see this box again.
+いつでも{CText}F8{Text}を押すと、この案内を再表示できます。
 <p>
-$Button=OK,DoNothing,0
+$Button=確認,DoNothing,0
 <?{param.1}>
-$Button=Don't Show This Again,Config,noShowChalIntro=1
+$Button=今後表示しない,Config,noShowChalIntro=1
 </?>
 
 [***********************************************************]
 [CSLShutdown]
-<h2>{H2}Server Shutdown</h2>
+<h2>{H2}サーバー終了中</h2>
 {Text}
-This server is being shutdown or reset. While it is in this state,
-it is not allowing new players to connect.
+このサーバーは終了またはリセット中です。この状態では新しいプレイヤーを受け付けません。
 <p>
-Try connecting again in a few minutes, or try another server.
+数分後に再接続するか、別のサーバーをご利用ください。
 <p>
-$Button=OK,DoNothing,0
+$Button=確認,DoNothing,0
 
 [***********************************************************]
 [asksend]
-<h2>{h2}Send All</h2>
+<h2>{h2}すべて送る</h2>
 <p>{Text}
-Are you sure you want to send all your Storm Power?
-$Button=Yes,SendAllBucks,{param.1}
-$Button=No,DoNothing,0
+ストームパワーをすべて送りますか？
+$Button=はい,SendAllBucks,{param.1}
+$Button=いいえ,DoNothing,0
 
 [NewRank]
-<h2>{H2}New Rank Achieved</h2>
+<h2>{H2}新しい階級に到達</h2>
 <p>{Text}
-Congratulations!
+おめでとうございます！
 <p>
-You have achieved Rank {param.1}! 
+階級{param.1}に到達しました！
 <p>
-The Furies destroy your Knowledge and grant you the Sun Disc
-Thrower and Sun Cannon again. 
+フューリーはあなたの知識を消し、サンディスクスロワーとサンキャノンを再び授けます。
 [***********************************************************]
 [ProdPending]
-<h2>{H2}Production Busy</h2>
+<h2>{H2}生産準備中</h2>
 <p>{Text}
-Production is busy.
+生産の準備を進めています。
 <p>
-You must wait until the prior Knowledge is in production
-before starting another. Production should be ready in
-just a moment.
+別の知識を投入するには、前の知識が生産に入るまで待つ必要があります。まもなく準備が整います。
 
 [***********************************************************]
 [LeaveEarly]
-<h2>{H2}Leave Battle In Shame</h2>
+<h2>{H2}不名誉な退出</h2>
 <p>{Text}
-You may leave this battle now, but your Reliability
-Rating will be decreased and other players may not
-wish to play with you.
+今すぐ戦闘を離れることはできますが、信頼度が下がり、他のプレイヤーがあなたとの対戦を避けるようになるかもしれません。
 <p>
-You may leave honorably when:<br>
-* A victor is decided or draw declared.<br>
-* Your Priest is captured or dead.<br>
-* Your temple is destroyed and you cannot build another.<br>
-* Your temple is destroyed and your Priest is immobile.<br>
+次の場合は名誉を保って退出できます。<br>
+* 勝者が決まったか、引き分けが宣言されたとき。<br>
+* あなたの司祭が捕らえられたか、死亡したとき。<br>
+* 神殿が破壊され、別の神殿を建てられないとき。<br>
+* 神殿が破壊され、司祭が移動できないとき。<br>
 <p>
-Are you certain you wish to depart from this battle?
+この戦闘を離れますか？
 
-$Button=Leave Anyway,LeaveBattle,1
-$Button=Stay,DoNothing,0
+$Button=それでも退出,LeaveBattle,1
+$Button=残る,DoNothing,0
 
 
 [***********************************************************]
 [LeaveNormal]
-<h2>{H2}Leave Battle Honorably</h2>
+<h2>{H2}名誉ある退出</h2>
 <p>{Text}
-Your Priest has been Captured or Sacrificed, or you are alone
-in a battle.  There is no need to remain in
-this battle now.
+あなたの司祭が捕らえられたか、生け贄にされたか、戦闘にあなたしか残っていません。もう戦闘に残る必要はありません。
 <p>
-If you choose to leave now your Reliability Rating will
-not be harmed.
+今退出しても信頼度は下がりません。
 <p>
-$Button=Leave Honorably,LeaveBattle,9
-$Button=Stay,DoNothing,0
+$Button=名誉を保って退出,LeaveBattle,9
+$Button=残る,DoNothing,0
 
 [***********************************************************]
 [NoCaptureNotOnline]
-<h2>{H2}Not Capturable!</h2>
+<h2>{H2}捕獲できません！</h2>
 <p>{Text}
-You may not capture the Priest owned by "{param.1}" because
-that player is disconnected from the game.
+プレイヤー「{param.1}」はゲームから切断しているため、その司祭を捕らえることはできません。
 <p>
-If the player reconnects his Priest will be capturable again.
+そのプレイヤーが再接続すれば、司祭を捕らえられます。
 
 [***********************************************************]
 [OnlyOneLeft]
-<h2>{H2}Only One Left!</h2>
+<h2>{H2}残り一人！</h2>
 <p>{Text}
-You are the only player still connected to this game.
+このゲームに接続しているのは、あなた一人です。
 <p>
-You can keep playing to see whether other players reconnect.
+他のプレイヤーの再接続を待ちながら、プレイを続けることができます。
 
 [***********************************************************]
 [EarlySacrifice]
-<h2>{H2}Too Early!</h2>
+<h2>{H2}まだ早すぎます！</h2>
 <p>{Text}
-Priests may not be Sacrificed within the first few minutes of
-game play.
+ゲーム開始から最初の数分間は、司祭を生け贄にできません。
 <p>
-The Furies are unwilling to grant Knowledge for brief and
-easy battles. Wait a short while and perhaps they will be
-more generous!
+フューリーは短く容易な戦いに知識を与えようとはしません。しばらく待てば、寛大になるかもしれません！
 
 [***********************************************************]
 [DrawNotAccepted]
-<$Warning,~B~E~yDraw Rejected>
+
+<$Warning,~B~E~y引き分けが拒否されました>
 
 [***********************************************************]
 [MayNotBattleUpdate]
-<h2>{H2}Sorry</h2>
+<h2>{H2}お知らせ</h2>
 <p>{Text}
-Only the BattleMaster may change the description of a battle.
+戦闘の説明を変更できるのはバトルマスターだけです。
 <p>
-You are either not in a battle, or you are not the battle master.
+あなたは戦闘に参加していないか、バトルマスターではありません。
 
 [***********************************************************]
 [WarnCantUpgradeAltarOffHomeIsland]
-<h2>{h2}Warning</h2>
+<h2>{h2}警告</h2>
 <p>{Text}
-You've built your Altar on an island other than your home. You won't be
-able to upgrade this Altar, because it won't return with you after battle.
-You may still Sacrifice priests for Knowledge or Storm Power at this Altar.
+本島以外の島に祭壇を建てました。この祭壇は戦闘後に持ち帰れないため、アップグレードできません。ここでも司祭を生け贄にして、知識やストームパワーを得ることはできます。
 <p>
-$Button=OK,DoNothing,0
-$Button=Don't Show This Again,Config,noShowWarnCantUpgrade=1
+$Button=確認,DoNothing,0
+$Button=今後表示しない,Config,noShowWarnCantUpgrade=1
 
 [***********************************************************]
 [NoProtocol]
-<h2>{H2}No Network Detected</h2>
+<h2>{H2}ネットワークが見つかりません</h2>
 <p>{Text}
-NetStorm could not find evidence of TCP/IP nor IPX/SPX socket
-support on your computer. At least one of these protocols is 
-required in order to play multiplayer NetStorm.
+このコンピューターではTCP/IPとIPX/SPXのソケット対応を検出できません。NetStormのマルチプレイヤーには、どちらか一方以上のプロトコルが必要です。
 <p>
-Install TCP/IP (for Internet play) or IPX/SPX (for LAN play), or
-both, then run NetStorm diagnostics.  If the diagnostics detect
-the protocols you installed, you should not see this message.
+TCP/IP（インターネット用）、IPX/SPX（LAN用）、または両方をインストールしてNetStormの診断を実行してください。診断で検出されれば、このメッセージは表示されなくなります。
 <p>
-If diagnostics detects the protocols, but you still get this
-message, contact customer support.
+診断でプロトコルが見つかっても表示される場合は、サポートにお問い合わせください。
 <p>
-$Button=I will,Tell,Blank
+$Button=了解しました,Tell,Blank
 
 [***********************************************************]
 [BridgesKilled]
-<h2>{H2}Low on Space</h2>
+<h2>{H2}容量不足</h2>
 <p>
 {Text}
-The amount of bridges currently on the map has exceeded the allowed Allocated memory set aside in the game. In order to all game play to continue all bridges have been destroyed.
+現在のマップの橋の数が、ゲームが専用に確保したメモリーの上限を超えました。ゲームを続行できるよう、すべての橋を除去しました。
 <p>
 
 [***********************************************************]
 [FinishedDemo]
 [Void]
-<h2>Demo Complete</h2>
+<h2>デモ完了</h2>
 <p>
-Congratulations, you've gotten all the Sun Knowledge! You've advanced
-as far as you can in this Demo of NetStorm. 
+おめでとうございます。サンの知識をすべて獲得しました！ このNetStormデモで到達できる最終地点です。
 <p>
-You can order the game at our 
-<a href="http://www.titanic.com/netstorm/buynetstormdirect.html">website</a>
+ゲームは当社の
+<a href="http://www.titanic.com/netstorm/buynetstormdirect.html">ウェブサイト</a>
 
-or by visiting your local software retailer.
+またはお近くのソフトウェア販売店で購入できます。
 <p>
-You will receive 5,000 ~[IfortGump.3] for this Sacrifice.
+今回の生け贄で5,000 ~[IfortGump.3]を受け取ります。
 <p>
-$Button=OK,DoNothing,0
+$Button=確認,DoNothing,0
 
 [***********************************************************]
 [MetaKeepAliveTimeout]
-<h2>{H2}Closing Server Connection</h2>
+<h2>{H2}サーバーとの接続終了</h2>
 <p>{Text}
-The server has not been heard from in too long.<br>
-Try reconnecting. If you cannot connect, the server may be
-down or the network between you and the server may be
-experiencing problems.
+長時間サーバーから応答がありません。<br>
+再接続をお試しください。接続できない場合は、サーバーが停止しているか、そこまでのネットワークに問題がある可能性があります。
 <p>
-$Button=OK,LeaveBattle,2
+$Button=確認,LeaveBattle,2
 
 [***********************************************************]
 [TooManyPirates]
-<h2>{H2}Too Many Players Without CDs</h2>
+<h2>{H2}CDを持たないプレイヤーが多すぎます</h2>
 <p>{Text}
-Half or more of the players in a battle must have their game
-CD in order to play.
+プレイするには、参加者の半数以上がゲームCDを持っている必要があります。
 <p>
-$Button=OK,DoNothing,0
+$Button=確認,DoNothing,0
 
 
 [***********************************************************]
 [DirectDrawVerify]
-<h2>{H2}Confirm Mode Change</h2>
+<h2>{H2}モード変更の確認</h2>
 {Text}
-Your Direct Draw mode has been changed. 
+Direct Drawのモードを変更しました。
 <p>
-If everything looks fine to you, select {CText}OK{Text} now to keep
-this mode. Otherwise you will return to your old mode in 15 seconds.
+画面に問題がなければ、今{CText}確認{Text}を選んで、このモードを維持してください。選ばない場合は15秒後に以前のモードに戻ります。
 
 $Timeout=15,ScreenModeAbsChange,{param.1}
-$Button=OK,AcceptScreenModeChange,1
-$Button=Cancel,ScreenModeAbsChange,{param.1}
+$Button=確認,AcceptScreenModeChange,1
+$Button=キャンセル,ScreenModeAbsChange,{param.1}
 
 [***********************************************************]
 [NotRestart]
-<h2>{H2}Cannot Connect</h2>
+<h2>{H2}接続できません</h2>
 <p>{Text}
-Battle can not be restarted because all remaining players
-(including yourself) are firewalled.
+残っている全プレイヤーがファイアウォールの影響を受けているため、戦闘を再開できません。あなたも含まれます。
 <p>
-If you believe that you are not firewalled, you can re-run the
-diagnostics at any time by choosing "Netstorm Diagnostics"
-from the NetStorm Folder on Windows Start Menu.
+影響を受けていないと思う場合は、WindowsのスタートメニューのNetStormフォルダーから「Netstorm Diagnostics」を選び、いつでも診断を再実行できます。
 <p>
-$Button=OK,LeaveBattle,1
+$Button=確認,LeaveBattle,1
 
 [***********************************************************]
 [AskLaunchRootServer]
-<h2>{H2}Launch Challenge Server?</h2>
+<h2>{H2}チャレンジサーバーを開始しますか？</h2>
 {Text}
-No challenge server was found on your LAN.
-Would you like to become a challenge server
-now?
+LANでチャレンジサーバーが見つかりません。今サーバーになりますか？
 <p>
-If you do nothing, you will become server in 10 seconds.
+何も選ばなければ、10秒後にサーバーになります。
 <p>
 $Timeout=10,LaunchRootServer,1
-$Button=Become Server,LaunchRootServer,1
-$Button=Keep Searching,LaunchRootServer,0
-$Button=Cancel,LaunchRootServer,2
+$Button=サーバーになる,LaunchRootServer,1
+$Button=検索を続ける,LaunchRootServer,0
+$Button=キャンセル,LaunchRootServer,2
 
 [***********************************************************]
 [InsertCD]
 [no cd requred]
-<h2>{H2}Insert NetStorm CD</h2>
+<h2>{H2}NetStorm CDを挿入</h2>
 {Text}
-NetStorm requires the CD now.
-Please insert it into any CDROM drive
-on your machine.
+NetStorm CDが必要です。コンピューターのCDROMドライブに挿入してください。
 <p>
-$Button=OK,RecheckCD,0
-$Button=Quit Game,QuitApp,99
+$Button=確認,RecheckCD,0
+$Button=ゲーム終了,QuitApp,99
 
 [***********************************************************]
 [WarnFailedDiags]
-<h2>{H2}You Have Not Passed the Diagnostics</h2>
+<h2>{H2}診断に不合格</h2>
 {Text}
-Players who have not passed the diagnostics cannot become Battle Masters.
+診断に合格していないプレイヤーはバトルマスターになれません。
 <p>
-If you are not behind a firewall, or have <a href="http://www.netstormhq.com/content.php?content.27">Forwarded ports</a> <c>6799</c> and <c>6800</c>, you can disable the diagnostics check by pressing the <c>Escape key</c>, clicking on the <c>Options</c> menu, then selecting the <c>Game</c> tab, and choosing the <c>Pass Server Diagnostics</c> option. This will allow you to become the Battle Master.
+ファイアウォールの影響を受けていないか、<a href="http://www.netstormhq.com/content.php?content.27">ポート転送</a>を設定している場合、対象ポートは<c>6799</c>と<c>6800</c>です。<c>Escapeキー</c>を押し、<c>オプション</c>メニューの<c>ゲーム</c>タブにある<c>サーバー診断合格</c>オプションを選ぶと、診断チェックを無効にできます。これでバトルマスターになれます。
 <p>
-If, however, you are behind a firewall, or have not forwarded the proper ports, please leave this option checked as it will ensure that only those that can host games will become the Battle Master.
+逆にファイアウォールの影響を受けているか、必要なポートを転送していない場合は、このオプションをチェックしたままにしてください。ゲームをホストできる人だけがバトルマスターになります。
 <p>
-$Button=OK,ChalForceJoinBattle,{param.1}
-$Button=Don't Show This Again,ChalJoinBattleNoWarning,{param.1}
+$Button=確認,ChalForceJoinBattle,{param.1}
+$Button=今後表示しない,ChalJoinBattleNoWarning,{param.1}
 
 [old junk]
-
-Players whom have not passed diagnostics cannot become
-BattleMasters.
+診断に合格していないプレイヤーはバトルマスターになれません。
 <p>
-You can run diagnostics by selecting "NetStorm Diagnostics"
-from the submenu of the Window Start Menu in which you installed
-the NetStorm shortcuts.<br>
-You may also run diagnostics from the DOS
-command line by typing "NSUTIL diagnose" in the directory
-in which you installed NetStorm.
+NetStormのショートカットを置いたWindowsスタートメニューのサブメニューで「NetStorm Diagnostics」を選ぶと診断を実行できます。<br>
+インストール先のDOSコマンドラインで「NSUTIL diagnose」と入力しても診断を実行できます。
 
 
 [***********************************************************]
 [IPXSucks]
-<h2>{H2}IPX/SPX Warning</h2>
+<h2>{H2}IPX/SPXの警告</h2>
 {Text}
-The IPX/SPX Protocol under Windows has various instabilities 
-depending on the networking card and driver used.  You may 
-experience difficulties including crashes and/or the inability 
-to connect to games.  If you experience any of these problems, 
-you should use the TCP/IP protocol for LAN games if at all possible.
+WindowsのIPX/SPXプロトコルは、ネットワークカードやドライバーによって不安定になることがあります。ゲームの停止や接続不能などの問題が起きたら、可能であればLANゲームにもTCP/IPを使用してください。
 <p>
-Also please note that NetStorm cannot run under an IPX emulator such as 
-Kali(tm).  NetStorm provides its own TCP/IP Networking which makes 
-Kali(tm) (and similar IPX emulators) unnecessary to play NetStorm.
+NetStormはKali(tm)のようなIPXエミュレーターでは動作しません。独自のTCP/IPネットワーク機能があるため、Kali(tm)などのIPXエミュレーターは不要です。
+
 
 <p>
-$Button=OK,Config,useIPAsLanProtocol=0
-$Button=Cancel,DoNothing,0
+$Button=確認,Config,useIPAsLanProtocol=0
+$Button=キャンセル,DoNothing,0
 
 [***********************************************************]
 [ClientCheated]
 [zonked]
-<$Warning,~B~E~rWarning: Player {param.1} attempted to cheat and was denied.>
+
+<$Warning,~B~E~r警告: プレイヤー{param.1}の不正行為を拒否しました。>
 
 
 [***********************************************************]
 [ServerCheated]
 [zonked]
-<$Warning,~B~E~rWarning:{param.1} has cheated. Because he or his ally is server, he can get away with it this time.> 
+
+<$Warning,~B~E~r警告:{param.1}が不正行為をしました。本人か同盟がサーバーのため、今回は処罰できません。> 
 
 
 [***********************************************************]
 [ServerThinksYouCheated]
 [zonked]
-<$Warning,~B~E~rServer Says You Cheated!!!>
+
+<$Warning,~B~E~rサーバーがあなたの不正行為を通知しました!!!>
 
 
 [***********************************************************]
 [PlayerNoMake]
 [zonked]
-<$Warning,~B~E~rWarning: Player {param.1} is creating unit type "{param.2}" illegally.>
+
+<$Warning,~B~E~r警告: プレイヤー{param.1}のユニット種別「{param.2}」の不正生成を検出しました。>
 
 
 [***********************************************************]
 [LeaveCheaters]
 [zonked]
-<h2>{H2}Leave Battle Honorably</h2>
+<h2>{H2}名誉ある退出</h2>
 <p>{Text}
-Somebody has cheated. Your priest will be removed from battle
-when you leave.
+誰かが不正行為をしました。退出すると、あなたの司祭は戦闘から除去されます。
 <p>
-If you choose to leave now your Reliability Rating will
-not be harmed.
+今退出しても信頼度は下がりません。
 <p>
-$Button=Leave Honorably,LeaveCheater,0
-$Button=Stay,DoNothing,0
+$Button=名誉を保って退出,LeaveCheater,0
+$Button=残る,DoNothing,0
 
 [END]
 
