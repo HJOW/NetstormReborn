@@ -1,0 +1,56 @@
+{
+  "format": "netstorm-webpj-cpppj-l3-steps",
+  "version": 1,
+  "description": "vicious 진입·Play Mission 안내 닫기·대기 허용 구간. 공격·포획·희생·승리는 재현하지 않는다.",
+  "language": "english",
+  "screen": {
+    "width": 1024,
+    "height": 768
+  },
+  "fixedFrameMs": 25,
+  "mission": "vicious",
+  "settings": {
+    "SCREENW": 1024,
+    "SCREENH": 768,
+    "WelcomeGiven": 1,
+    "tellTips": 0,
+    "autoDemo": 0
+  },
+  "steps": [
+    [
+      100,
+      "snapshot",
+      "brief100"
+    ],
+    [
+      100,
+      "session-dump",
+      "brief100"
+    ],
+    [
+      110,
+      "click-if",
+      "Play Mission"
+    ],
+    [
+      400,
+      "snapshot",
+      "wait400"
+    ],
+    [
+      400,
+      "session-dump",
+      "wait400"
+    ],
+    [
+      1200,
+      "snapshot",
+      "wait1200"
+    ],
+    [
+      1200,
+      "session-dump",
+      "wait1200"
+    ]
+  ]
+}
