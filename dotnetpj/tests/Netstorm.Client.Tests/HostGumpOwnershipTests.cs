@@ -58,11 +58,26 @@ public sealed class HostGumpOwnershipTests
         });
         var node = Assert.IsType<ConsoleGumpNode>(scene.Tree.Node(token)); uint bufferToken = node.Buffer; var buffer = scene.Entry.FindBuffer(bufferToken); Assert.NotNull(buffer); Assert.True(scene.Tree.OwnedNodes(owner).Length > 2); scene.Windows.CloseAll(); Assert.Same(node, scene.Tree.Node(token)); Assert.Same(buffer, scene.Entry.FindBuffer(bufferToken)); Assert.Equal(1u, scene.Tree.InputHooks.Handle!(token, 'A', 0, 0)); Assert.Equal("A", Encoding.Latin1.GetString(buffer!.Text())); scene.Tree.Lifetime.Kill(token); scene.Tree.Lifetime.Cleanup(); Assert.Null(scene.Tree.Node(token)); Assert.Null(scene.Entry.FindBuffer(bufferToken)); Assert.Empty(scene.Tree.OwnedNodes(owner));
     }
-    /// <summary>공통 도움말 교체는 이전 주소를 반납하고 기본 자식 우선 소멸이 두 문자열도 반납한다.</summary>
+    /// <summary>공통 도움말 교체는 cpppj 1363 순서대로 이전 주소를 반납하고 LOOK 0x1000/HELP 0x200을 함께 갱신한다. 빈 LOOK는 0x1000을 끄고, 빈 HELP는 0x200을 유지한 채 포인터만 반납하며, 첫 NUL 뒤는 소유하지 않는다. 이 검사는 2026-11-26 DN-MP-01에서 교정했다.</summary>
     [Fact]
     public void CommonOwnedHelpTextUsesNativeRangeAndScalarRelease()
     {
-        using var scene = new Scene(); uint token = scene.Tree.AddStone(50, 20, "Text\0"u8.ToArray(), 10, 10); var node = scene.Tree.Node(token)!; uint serial = node.Serial; scene.Tree.SetHelpText(token, "Chat Helper"); uint first = node.TextPointer; scene.Tree.SetHelpWord(token, "chathelper"); Assert.Equal(0x61100001u, first); Assert.Equal(2, scene.Tree.OwnedTextCount); Assert.Equal("chathelper", scene.Tree.ReadOwnedText(node.AlternateTextPointer)); scene.Tree.SetHelpText(token, "Changed"); Assert.NotEqual(first, node.TextPointer); Assert.Throws<ArgumentOutOfRangeException>(() => scene.Tree.ReadOwnedText(first)); Assert.Equal("Changed", scene.Tree.ReadOwnedText(node.TextPointer)); scene.Tree.SetHelpWord(token, ""); Assert.Equal("", scene.Tree.ReadOwnedText(node.AlternateTextPointer)); Assert.Equal(2, scene.Tree.OwnedTextCount); Assert.Equal(serial, node.Serial); scene.Tree.Lifetime.Kill(token); scene.Tree.Lifetime.Cleanup(); Assert.Equal(0, scene.Tree.OwnedTextCount); Assert.Null(scene.Tree.Node(token));
+        using var scene = new Scene(); uint token = scene.Tree.AddStone(50, 20, "Text\0"u8.ToArray(), 10, 10); var node = scene.Tree.Node(token)!; uint serial = node.Serial; uint baseFlags = node.Flags;
+        Assert.Equal(0u, node.TextPointer); Assert.Equal(0u, node.AlternateTextPointer); Assert.Equal(0, scene.Tree.OwnedTextCount);
+        scene.Tree.SetHelpText(token, "Chat Helper"); uint first = node.TextPointer; Assert.Equal(0x61100001u, first); Assert.Equal(1, scene.Tree.OwnedTextCount);
+        Assert.Equal("Chat Helper", scene.Tree.ReadOwnedText(node.TextPointer)); Assert.NotEqual(0u, node.Flags & 0x1000U); Assert.Equal(baseFlags & ~0x1200U, node.Flags & ~0x1200U);
+        scene.Tree.SetHelpWord(token, "chathelper"); Assert.Equal(0x61100002u, node.AlternateTextPointer); Assert.Equal(2, scene.Tree.OwnedTextCount);
+        Assert.Equal("chathelper", scene.Tree.ReadOwnedText(node.AlternateTextPointer)); Assert.NotEqual(0u, node.Flags & 0x200U); Assert.NotEqual(0u, node.Flags & 0x1000U);
+        Assert.Equal(first, node.TextPointer); Assert.Equal(baseFlags & ~0x1200U, node.Flags & ~0x1200U);
+        scene.Tree.SetHelpText(token, "Changed"); Assert.NotEqual(first, node.TextPointer); Assert.Throws<ArgumentOutOfRangeException>(() => scene.Tree.ReadOwnedText(first)); Assert.Equal("Changed", scene.Tree.ReadOwnedText(node.TextPointer)); Assert.Equal(2, scene.Tree.OwnedTextCount); Assert.NotEqual(0u, node.Flags & 0x1000U);
+        uint wordPointer = node.AlternateTextPointer; scene.Tree.SetHelpWord(token, ""); Assert.Equal(0u, node.AlternateTextPointer); Assert.Throws<ArgumentOutOfRangeException>(() => scene.Tree.ReadOwnedText(wordPointer)); Assert.Equal(1, scene.Tree.OwnedTextCount);
+        Assert.NotEqual(0u, node.Flags & 0x200U); Assert.NotEqual(0u, node.Flags & 0x1000U);
+        uint textPointer = node.TextPointer; scene.Tree.SetHelpText(token, ""); Assert.Equal(0u, node.TextPointer); Assert.Throws<ArgumentOutOfRangeException>(() => scene.Tree.ReadOwnedText(textPointer)); Assert.Equal(0, scene.Tree.OwnedTextCount);
+        Assert.Equal(0u, node.Flags & 0x1000U); Assert.NotEqual(0u, node.Flags & 0x200U); Assert.Equal(baseFlags & ~0x1200U, node.Flags & ~0x1200U);
+        scene.Tree.SetHelpText(token, "ab\0cd"); Assert.Equal("ab", scene.Tree.ReadOwnedText(node.TextPointer)); Assert.NotEqual(0u, node.Flags & 0x1000U);
+        uint nulText = node.TextPointer; scene.Tree.SetHelpText(token, "\0xyz"); Assert.Equal(0u, node.TextPointer); Assert.Throws<ArgumentOutOfRangeException>(() => scene.Tree.ReadOwnedText(nulText)); Assert.Equal(0u, node.Flags & 0x1000U);
+        scene.Tree.SetHelpWord(token, "ef\0gh"); Assert.Equal("ef", scene.Tree.ReadOwnedText(node.AlternateTextPointer)); Assert.NotEqual(0u, node.Flags & 0x200U);
+        Assert.Equal(serial, node.Serial); scene.Tree.Lifetime.Kill(token); scene.Tree.Lifetime.Cleanup(); Assert.Equal(0, scene.Tree.OwnedTextCount); Assert.Null(scene.Tree.Node(token));
     }
     /// <summary>실제 공유128줄 객체를 같은 Store와 반납 추적이 함께 보관하며 HTML 닫기가 지우지 않는다.</summary>
     [Fact]

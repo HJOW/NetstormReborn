@@ -29,14 +29,51 @@ public sealed partial class GumpButtonTree
     public int OwnedTextCount => _helpStrings.Count;
     /// <summary>같은 현재 소유 문자열을 읽고 해제/미등록 토큰을 명시 거부한다.</summary>
     public string ReadOwnedText(uint token) => _helpStrings.TryGetValue(token, out string? text) ? text : throw new ArgumentOutOfRangeException(nameof(token), "Gump 현재 소유 문자열 없음");
-    /// <summary>기존 반납/현재 포인터0/새 별칭 게시의 원문 순서로 제목 또는 도움말 키를 교체한다.</summary>
+    /// <summary>원문 00464ed0/00464f80 순서로 제목 또는 도움말 키를 교체한다. 첫 NUL 뒤는 원문 C 문자열과 같이 버리고, 비어 있지 않을 때만 LOOK 0x1000/HELP 0x200을 켠다. 빈 LOOK는 0x1000을 끄고, 빈 HELP는 0x200을 유지한 채 포인터만 반납한다. 이 교정은 cpppj 1363에서 예산 우클릭 About이 열리지 않던 결함을 고친 것과 같다. 2026-11-26 DN-MP-01에서 이식했다.</summary>
     private void SetNodeHelp(uint token, string text, bool word)
     {
-        ArgumentNullException.ThrowIfNull(text); var node = Node(token) ?? throw new ArgumentOutOfRangeException(nameof(token), "도움말 실제 노드 없음"); uint pointer = word ? node.AlternateTextPointer : node.TextPointer; _helpStrings.Remove(pointer); if (word) node.AlternateTextPointer = 0; else node.TextPointer = 0;
+        ArgumentNullException.ThrowIfNull(text);
+        int end = text.IndexOf('\0');
+        if (end >= 0)
+        {
+            text = text[..end];
+        }
+
+        var node = Node(token) ?? throw new ArgumentOutOfRangeException(nameof(token), "도움말 실제 노드 없음");
+        uint pointer = word ? node.AlternateTextPointer : node.TextPointer;
+        _helpStrings.Remove(pointer);
+        if (word)
+        {
+            node.AlternateTextPointer = 0;
+        }
+        else
+        {
+            node.TextPointer = 0;
+        }
+
+        if (text.Length == 0)
+        {
+            if (!word)
+            {
+                node.Flags &= ~0x1000U;
+            }
+
+            return;
+        }
+
+        if (word)
+        {
+            node.Flags |= 0x200U;
+        }
+        else
+        {
+            node.Flags |= 0x1000U;
+        }
+
         if (_nextHelpString == 0x61ffffff) throw new OverflowException("도움말 문자열 주소 영역 소진"); uint value = ++_nextHelpString; _helpStrings.Add(value, text); if (word) node.AlternateTextPointer = value; else node.TextPointer = value;
     }
-    /// <summary>같은 기본+78의 실제 소유 제목만 교체한다.빈 값도 원문처럼 새 문자열을 소유한다.</summary>
+    /// <summary>같은 기본+78의 실제 소유 제목만 교체한다. 빈 LOOK는 0x1000을 끄고 새 문자열을 소유하지 않는다. 이 교정은 cpppj 1363과 같다. 2026-11-26 DN-MP-01에서 이식했다.</summary>
     public void SetHelpText(uint token, string text) => SetNodeHelp(token, text, false);
-    /// <summary>같은 기본+7c의 실제 소유 도움말 키만 교체한다.</summary>
+    /// <summary>같은 기본+7c의 실제 소유 도움말 키만 교체한다. 빈 HELP는 0x200을 유지한 채 포인터만 반납한다. 이 교정은 cpppj 1363과 같다. 2026-11-26 DN-MP-01에서 이식했다.</summary>
     public void SetHelpWord(uint token, string text) => SetNodeHelp(token, text, true);
 }
