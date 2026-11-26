@@ -1,6 +1,6 @@
 # 표시·Regular 오류 문맥의 파일 기록 — 단위1377
 
-2026-11-27, HJOW-Athlon. AGENTS.md·LEFT_JOBS.md·LEFT_JOBS.dotnetpj.md를 읽고 현재 목표의 완료 감사를 진행했다. 마지막 디컴파일 PC도 HJOW-Athlon이며 원문/디컴파일 변경은 없다. D9의 새 ID 참가 범위 확인은 계속 대기하며 이 단위는 기존7차 상세 로그 요구를 보완한다.
+2026-11-27, HJOW-Athlon. AGENTS.md·LEFT_JOBS.md·LEFT_JOBS.dotnetpj.md를 읽고 현재 목표의 완료 감사를 진행했다. 마지막 디컴파일 PC도 HJOW-Athlon이며 원문/디컴파일 변경은 없다. 이 단위는 기존7차 상세 로그 요구를 보완한다. 당시 대기하던 D9는 이후1380 사용자 지시로 원본 범위 유지(새 ID 중도 참가 추가 안 함)로 확정됐다.
 
 ## 실제 누락 근거
 

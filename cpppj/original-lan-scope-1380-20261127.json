@@ -1,0 +1,339 @@
+{
+  "unit": 1380,
+  "date": "2026-11-27",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "newDecompilation": false,
+  "userDecision": {
+    "quote": "원본대로 진행 (전투 중 참가 기능 추가하지 않음)",
+    "newIdMidBattleJoin": "추가하지 않음",
+    "existingIdRestartRecovery": "원본 경로 유지",
+    "D9": "해소"
+  },
+  "product": {
+    "unit": 1377,
+    "sourceCommit": "aed29e3d1",
+    "exeSha256": "6851dfabaa7f6b8eb98eb4c8b312b9374d3287ae4ee845552d6fd9d78dc0846b",
+    "sourceChangesSinceProduct": []
+  },
+  "zip": {
+    "unit": 1378,
+    "path": "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-final-1378\\NetstormReborn-11.01-cpppj.zip",
+    "bytes": 206351884,
+    "sha256": "d92b32495a068a0a0a428c0fbecafc091fec36cda688557a8c871b54c129645d",
+    "entries": 1480,
+    "exeMatchesCurrent": true,
+    "newPackageRequired": false
+  },
+  "actualTcp": {
+    "raw": "extracted/cpp-scope-1380/original-restart/result.json",
+    "rawSha256": "b15b7bbd0bdbe5946b0d3777aa137f5b3557c79da3ae402e32c038802e853298",
+    "result": {
+      "passed": true,
+      "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+      "exeSha256": "6851dfabaa7f6b8eb98eb4c8b312b9374d3287ae4ee845552d6fd9d78dc0846b",
+      "peers": [
+        {
+          "role": "restarted",
+          "exitCode": 0
+        },
+        {
+          "role": "bot",
+          "exitCode": 0
+        },
+        {
+          "role": "host",
+          "exitCode": 0
+        }
+      ],
+      "steadySeconds": 7.591283699992346,
+      "identity": [
+        {
+          "owner": 1,
+          "subscriber": 6356993,
+          "name": "LocalHost",
+          "flags": 67
+        },
+        {
+          "owner": 2,
+          "subscriber": 6356994,
+          "name": "OpponentBot",
+          "flags": 67
+        }
+      ],
+      "world": [
+        [
+          "7351",
+          "0"
+        ]
+      ],
+      "production": {
+        "templeSite": [
+          600,
+          420
+        ],
+        "unitSite": [
+          450,
+          420
+        ],
+        "beforeSp": [
+          1500,
+          6500,
+          6500,
+          6500,
+          6500,
+          6500,
+          6500,
+          6500
+        ],
+        "afterSp": [
+          1100,
+          6500,
+          6500,
+          6500,
+          6500,
+          6500,
+          6500,
+          6500
+        ],
+        "units": [
+          [
+            {
+              "sid": 15258,
+              "asset": "sunWalker",
+              "owner": 1,
+              "x": 121.0,
+              "y": 211.0,
+              "hp": 50
+            }
+          ],
+          [
+            {
+              "sid": 15258,
+              "asset": "sunWalker",
+              "owner": 1,
+              "x": 121.0,
+              "y": 211.0,
+              "hp": 50
+            }
+          ]
+        ],
+        "saved": {
+          "bytes": 976,
+          "owner": 1,
+          "sp": 1100,
+          "sha256": "1e36f79baa46b9e7aef3572ba58d670229c0f55676d9aa2f9eb4723a74a091de"
+        }
+      },
+      "extraBuild": {
+        "workshopSite": [
+          450,
+          420
+        ],
+        "workshops": [
+          [
+            {
+              "sid": 15259,
+              "asset": "sunFactory",
+              "owner": 1,
+              "x": 124.0,
+              "y": 215.0,
+              "hp": 3000
+            }
+          ],
+          [
+            {
+              "sid": 15259,
+              "asset": "sunFactory",
+              "owner": 1,
+              "x": 124.0,
+              "y": 215.0,
+              "hp": 3000
+            }
+          ]
+        ],
+        "beforeSp": [
+          1100,
+          6500,
+          6500,
+          6500,
+          6500,
+          6500,
+          6500,
+          6500
+        ],
+        "afterSp": [
+          300,
+          6500,
+          6500,
+          6500,
+          6500,
+          6500,
+          6500,
+          6500
+        ],
+        "sourceBridge": [
+          "120",
+          "0",
+          "2",
+          "31409779",
+          "64"
+        ],
+        "bridges": [
+          [
+            [
+              "15261",
+              "bridge",
+              "1",
+              "-1",
+              "140",
+              "209",
+              "140",
+              "209",
+              "35",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ],
+          [
+            [
+              "15261",
+              "bridge",
+              "1",
+              "-1",
+              "140",
+              "209",
+              "140",
+              "209",
+              "35",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0",
+              "0"
+            ]
+          ]
+        ],
+        "saved": {
+          "bytes": 976,
+          "owner": 1,
+          "sp": 300,
+          "sha256": "e96377bbc18fb0fec9dcc92600ffaf5c803d0dff98bc87f3553de4a508d4af0a"
+        }
+      },
+      "restart": {
+        "identity": [
+          {
+            "owner": 1,
+            "subscriber": 6356993,
+            "name": "LocalHost",
+            "flags": 67
+          },
+          {
+            "owner": 2,
+            "subscriber": 6356994,
+            "name": "OpponentBot",
+            "flags": 67
+          }
+        ],
+        "sp": [
+          300,
+          6500,
+          6500,
+          6500,
+          6500,
+          6500,
+          6500,
+          6500
+        ],
+        "sharedObjects": 7305,
+        "localDerivedObjects": 51,
+        "saved": {
+          "bytes": 976,
+          "sha256": "670e1ed8cc9e9a2627da0d0c48d72b7049b7ef18b79d847ce8cb5f7003985bf8"
+        },
+        "roles": [
+          [
+            [
+              "1",
+              "1"
+            ]
+          ],
+          [
+            [
+              "0",
+              "0"
+            ]
+          ]
+        ]
+      }
+    }
+  },
+  "priorEvidence": {
+    "tutorial": {
+      "unit": 1372,
+      "stages": 40,
+      "uniqueKeys": 39,
+      "focusedPassed": 22,
+      "guiPathsPassed": 19,
+      "languages": [
+        "english",
+        "korean",
+        "japanese"
+      ],
+      "rerunThisUnit": false
+    },
+    "errorContext": {
+      "unit": 1377,
+      "testsPassed": 18,
+      "testsFailed": 0,
+      "rerunThisUnit": false
+    },
+    "package": {
+      "unit": 1378,
+      "entries": 1480,
+      "guiPathsPassed": 2,
+      "guiExitCodes": [
+        0,
+        0
+      ],
+      "postGuiFilesUnchanged": 1480,
+      "rerunThisUnit": false
+    }
+  },
+  "protection": {
+    "baseline": "extracted/lan-protection-before-1373.json",
+    "files": 2810,
+    "changed": []
+  },
+  "scopeAudit": {
+    "currentCpWork": "완료",
+    "deferred": [
+      "CD10.72 재개",
+      "QuickJS 추가 연동",
+      "비행체 표시 보간",
+      "D8 글자 선명도 작업"
+    ],
+    "manual": [
+      "명시 사용자 확인 검사",
+      "허용 캠페인 밖의 포획/희생·특정 적 공격·승리 자연 진행",
+      "실물 LAN·물리 IME·다른 모니터/DPI·Windows11/ARM",
+      "탐색기 아이콘 시각 확인"
+    ],
+    "outsideCp": [
+      "dotnetpj 후속",
+      "webpj 후속"
+    ],
+    "originalFidelityComplete": false
+  },
+  "passed": true,
+  "handoffLinks": {
+    "localFiles": 84,
+    "missing": []
+  }
+}
