@@ -95,6 +95,7 @@ import { ARROW_CAMERA_STEPS, CampaignUserInput } from './core/campaign-user-inpu
 import { makeCampaignCursorClientEffects } from './core/campaign-cursor-client-effects.js';
 import { RawContainedFinder } from './core/raw-contained-finder.js';
 import { PRODUCTION_BRIDGE_COMMAND, PRODUCTION_REPEAT_COMMAND } from './core/production-shortcuts.js';
+import { ProductionControlContext } from './core/production-control-context.js';
 import { ProductionMaintenanceGlobals, ProductionMaintenancePanel } from './core/raw-production-maintenance.js';
 import { GameMenuActions } from './core/game-menu-actions.js';
 import { gameMenuCommandValue, gameMenuScriptCode, isGameMenuCommand, queuePlayerListKey } from './core/game-menu-commands.js';
@@ -1664,9 +1665,16 @@ export class Netstorm {
         this._campaignProduction = production; return production;
     }
 
-    // 실제 미션 생산 UI를 같은 Client 수명과 기존 생산 유지 상태에 설치한다.
+    // 기존 Ready 호출자는 같은 Client 생성과 실제 World 도킹을 연속 수행한다.
     _prepareCampaignProductionUi() {
-        const production = this._campaignProduction, root = this._clientGump, screen = this._clientPaletteScreen;
+        const production = this._campaignProduction;
+        if (!production?.session) throw new Error('생산 UI 도킹의 실제 Session 미연결');
+        this._createCampaignProductionHud(production); this._dockCampaignProductionHud(production); return production.ui;
+    }
+
+    // World 없이 같은 Client 문맥으로 Uber HUD·생산·Chat 자식을 생성한다.
+    _createCampaignProductionHud(production) {
+        const root = this._clientGump, screen = this._clientPaletteScreen;
         if (!production || production.ui || !root || !screen || !this._clientColorSort || !this._gameAssets || !this._resources?.fonts || !this._clientSoundPlayer || !this._clientSoundNames) throw new Error('미션 생산 UI의 현재 수명 누락');
         // 우클릭 빠른 도움말(원본 RawMenuControls::BaseHelp): 노드의 대체 글자 포인터(주제 이름)가 있으면 제목+Help 항목 팝업을 연다. 항목은 F1 도움말 명령(0x02000017)에 주제 문자열 토큰을 실어 보낸다. (2026-11-22 WB04-E1236)
         const helpState = new GumpHelpState(); helpState.body = 0x61000002; helpState.event = 0x02000017;
@@ -1684,13 +1692,16 @@ export class Netstorm {
             battle: () => this._surfaceStorage.ownerMode.battle, editor: () => this._clientGameplay.world.editor !== 0,
             metamap: () => this._surfaceStorage.ownerMode.challenge, unknownName: () => 'SOMEONE',
         });
+        // 입력/객체 효과가 실행되는 때에만 현재 실제 World를 요구한다.
+        const currentWorld = () => { const world = this._campaignWorld; if (!world) throw new Error('HUD 효과의 현재 실제 World 미연결'); return world; };
+        const context = new ProductionControlContext(this._surfaceStorage, this._clientGameplay, this._clientPlayers, this._clientGameplay.battleOptionsOwner(), this._clientSp, this._clientColorSort.ownerTables);
         const devices = {
             now: () => this._gameClock.wallSeconds(), gameSeconds: () => this._gameClock.gameSeconds(), translate: (value) => this._resources.translate(value),
             sound: (name) => this._clientSoundPlayer.play(this._clientSoundNames.lookup(name), 0, 0, 0, 0, 0), tell: (section) => this._openTell(section),
             about: () => { throw new Error('생산 정보 메뉴 미연결'); },
             menu: { data: this._gameData, helpWord: () => this._clientLocal.helpWord().get(),
                 ownerName: (owner) => displayTextCodec.decode(Uint8Array.from(identity.nameForOwner(owner), (letter) => letter.charCodeAt(0))),
-                objectMenu: { world: this._campaignWorld, identity, staticText: (value) => this._clientChatWindows.store(value), tell: (name) => this._openTell(name),
+                objectMenu: { get world() { return currentWorld(); }, identity, staticText: (value) => this._clientChatWindows.store(value), tell: (name) => this._openTell(name),
                     player: { translate: (value) => this._resources.translate(value), assertion: (value) => console.error(`Player 메뉴 진단: ${value}`),
                         // Player 이름 칸의 표시 부호화 바이트(이진 문자열)를 화면 문자열로 해독한다(한국어 이름이 제목·동맹 줄에서 깨지지 않게). (2026-11-23 WB04-E1290)
                         decodeName: (value) => displayTextCodec.decode(Uint8Array.from(value, (letter) => letter.charCodeAt(0))),
@@ -1720,7 +1731,6 @@ export class Netstorm {
         const background = new ClientGumpBackground(root, this._gameAssets, () => 35, () => screen.shadeMaps(), () => screen.colors(), devices.baseHandle);
         const divider = new ClientHudDivider(root, { background, backgroundColor: () => 35, dividerColor: () => 55, baseHandle: devices.baseHandle, closePopups: devices.closePopups,
             menuInstances: devices.menuInstances, poll: devices.poll, cursor: devices.cursor });
-        const world = this._campaignWorld;
         this._clientMinimapState ??= createMetadisplayDirtyState({ fullRefreshOwner: this._clientGameplay.mapRevision() });
         this._clientMinimapGlobals ??= createRawMinimapGlobals();
         const minimap = new ClientMinimap(root, { storage: this._surfaceStorage, dirty: this._clientMinimapState, globals: this._clientMinimapGlobals,
@@ -1728,18 +1738,25 @@ export class Netstorm {
                 const data = this._clientGameplay.camera().snapshot().data, map = root.mapView();
                 return { camera: [data.getUint32(0, true), data.getUint32(4, true)], viewport: { left: map.left, top: map.top, right: map.right, bottom: map.bottom }, pixelsX: data.getInt32(8, true), pixelsY: data.getInt32(12, true) };
             },
-            center: (x, y) => world.centerCamera(x, y), move: (x, y) => world.moveFromMinimap(x, y), inputMode: () => world.inputMode(), poll: () => this._clientInputPoll.poll(0xffff),
+            center: (x, y) => currentWorld().centerCamera(x, y), move: (x, y) => currentWorld().moveFromMinimap(x, y), inputMode: () => currentWorld().inputMode(), poll: () => this._clientInputPoll.poll(0xffff),
             baseHandle: devices.baseHandle, changed: devices.changed, setNodeHelp: devices.setNodeHelp });
         const hud = new ClientUberHud(root, { setNodeHelp: devices.setNodeHelp, translate: devices.translate, assets: this._gameAssets, panelGlobals: this._clientProductionGlobals, divider, minimap,
             // 채팅 창은 생산 UI 조립이 만든 `ui.chat()` 이다(Uber 루트가 생산 패널 뒤에 `createChat` 을 부른다). (2026-11-22 WB04-E1169)
             chat: { create: () => ui.chat().create(), setVisible: (visible) => ui?.chat()?.setVisible(visible), setInput: (visible) => ui?.chat()?.setInput(visible), refreshTechnology: () => ui.chat().refreshTechnology() },
             fullDeck: () => this._clientGameplay.fullDeck(), mapRevision: () => this._clientGameplay.mapRevision(),
             createMinimap: () => minimap.create(),
-            createProduction: () => { ui = createClientProductionAssembly(root, production.session.productionContext(), this._gameAssets, this._resources.fonts, screen, this._clientColorSort, this._clientProductionGlobals, production.panel, devices); ui.bindWorld(production.session); return ui.construct(); },
+            createProduction: () => { ui = createClientProductionAssembly(root, context, this._gameAssets, this._resources.fonts, screen, this._clientColorSort, this._clientProductionGlobals, production.panel, devices); return ui.construct(); },
             closePopups: () => this._closeCampaignPopups(), baseHandle: devices.baseHandle, invalidate: (rect, flags) => this._clientRenderer.invalidate(rect, flags),
             finishResize: () => { this._clientKencloud.worldRedraw().value = 1; this._campaignWorld?.resize(this._layout.logicalWidth, this._layout.logicalHeight); this._clientRenderer.invalidateAll(); this._displayDirty = true; } });
-        production.hud = hud; production.minimap = minimap; hud.install(); production.ui = ui;
-        ui.finishInstall(); minimap.setPalette(screen.colors()); minimap.bindWorld(production.session.core());
+        production.hud = hud; production.minimap = minimap; hud.createForState(); production.ui = ui; return ui;
+    }
+
+    // Ready가 된 같은 World를 기존 HUD에 연결하고 최초 도킹·실제 Form·미니맵·웹 메뉴 단추를 설치한다.
+    _dockCampaignProductionHud(production) {
+        const world = this._campaignWorld, session = world?.session(), screen = this._clientPaletteScreen;
+        if (!production?.ui || !production.hud || !session || production.session !== session || production.worldBound) throw new Error('생산 HUD의 실제 World 도킹 수명 오류');
+        const ui = production.ui; ui.bindWorld(session); production.hud.dockForWorld();
+        ui.finishInstall(); production.minimap.setPalette(screen.colors()); production.minimap.bindWorld(session.core()); production.worldBound = true;
         // 웹 전용: 화면 우측 상단 버튼으로도 ESC 와 같은 게임 메뉴막대를 열고 닫는다. 버튼은 Canvas 위 DOM 요소라 열린 메뉴막대보다 항상 앞에 있다. (2026-11-20 WB04-E1084)
         this._gameMenuButton?.destroy();
         this._gameMenuButton = new GameMenuButton(this._root, { label: this.texts.gameMenuButton, title: this.texts.gameMenuButtonTitle, onClick: () => { this._toggleCampaignGameMenu(); this._canvas?.focus(); } });
@@ -1749,10 +1766,10 @@ export class Netstorm {
 
     // ESC 게임 메뉴막대가 읽는 현재 게임 조회 장치다(원본 `CurrentGameMenuHooks`·`RawCampaignSession::BindGameMenus` 대응). 값은 모두 호출 시점에 다시 읽는다. (2026-11-20 WB04-E1084)
     _campaignGameMenuDevices(production) {
-        const session = production.session;
+        const session = () => this._clientGameplay.requireSession();
         return {
             // 원본 메뉴 준비는 SP 비트를 회전하고 RawGameMenuBar의 검산+3은 같은 실제 추적 상자에 쓴다. (WB04-E1327)
-            prepare: () => session.spStorage().rotate(), tracking: session.spStorage().trackingOwner,
+            prepare: () => this._clientSp.store().rotate(), tracking: this._clientSp.store().trackingOwner,
             global: (address) => this._campaignMenuGlobal(address, production),
             // 설정 층에 있는 키(소리·음량 등)는 Settings 가, 그 밖의 키(rotmode·theammode 등)는 게임 데이터가 현재 값을 가진다.
             config: (key) => {
@@ -1763,10 +1780,10 @@ export class Netstorm {
             demo: () => Boolean(this._clientGuide?.current()?.runtime.gate.demo),
             // 옵션 메뉴 Frame Rate 하위 항목(60·75·120 FPS)이다. (2026-11-20 WB04-E1094)
             frameRates: () => frameRateChoices(this._settings?.get('maxFPS')), languages: () => languageChoices(this.options.language), difficulties: () => difficultyChoices(this._settings?.get('difficulty')),
-            player: (owner) => session.playerRecords().subarray(owner * 180, owner * 180 + 180),
+            player: (owner) => this._clientPlayers.records().subarray(owner * 180, owner * 180 + 180),
             // Player 이름은 표시 부호화 바이트이므로 한국어 이름이 깨지지 않게 디코딩한다. (2026-11-21 WB04-E1166)
             decodeName: (bytes) => displayTextCodec.decode(Uint8Array.from(bytes)),
-            refreshPriest: (owner) => session.refreshPriestParticipation(owner),
+            refreshPriest: (owner) => session().refreshPriestParticipation(owner),
             enabled: (code) => WIRED_MENU_COMMANDS.has(code >>> 0), configEnabled: () => true, storeText: (value) => this._clientChatWindows.store(value),
             about: () => this._resources.translate('About'), technicalHelp: () => 0, width: () => this._layout.logicalWidth,
         };
@@ -1775,14 +1792,14 @@ export class Netstorm {
     // 원본 전역 주소 식별자를 현재 앱의 값으로 바꾼다. 명령 전역 주소는 명령 ID를 돌려준다.
     _campaignMenuGlobal(address, production) {
         const commandId = gameMenuCommandValue(address); if (commandId !== null && commandId !== undefined) return commandId >>> 0;
-        const game = this._clientGameplay, modes = this._surfaceStorage.ownerMode, session = production.session;
+        const game = this._clientGameplay, modes = this._surfaceStorage.ownerMode, session = () => this._clientGameplay.requireSession();
         switch (address) {
         case 0x5c85a4: return game.world.editor ? 1 : 0;
         case 0x594fa4: return game.world.missionPost ? 1 : 0;
         case 0x594fbc: return modes.battle ? 1 : 0;
         case 0x594fb8: return modes.fort ? 1 : 0;
         case 0x594fc8: return modes.challenge ? 1 : 0;
-        case 0x594fa0: return session.core().bridgeState.mission ? 1 : 0;
+        case 0x594fa0: return this._surfaceStorage.links.mission ? 1 : 0;
         case 0x59a8ac: return game.hideBuildings().value >>> 0;
         case 0x540c70: return game.player.battleOwner >>> 0;
         case 0x55b4b0: return this._gameClock.paused() ? 1 : 0;
@@ -1794,20 +1811,20 @@ export class Netstorm {
         case 0x531864: return this._layout.logicalHeight;
         case 0x563e38: return this._clientGump.createState().collection.root;
         default:
-            if (address > 0x52f81e && address < 0x52f827) return session.hiddenPlayers()[address - 0x52f81e] >>> 0;
+            if (address > 0x52f81e && address < 0x52f827) return session().hiddenPlayers()[address - 0x52f81e] >>> 0;
             throw new Error(`게임 메뉴의 미연결 전역: 0x${address.toString(16)}`);
         }
     }
 
     // 오른쪽 위 경고·상태 안내가 읽는 벽 시각·억제·화면 크기와 메시지 이름·모드 조회 장치다(cpppj `UberGump` 의 `pauseContext`·`EnableWarnings`). 값은 호출 시점에 다시 읽는다. 메타맵 참가자 이름은 웹 제외 범위라 연결하지 않는다. (2026-11-20 WB04-E1089)
     _campaignWarningDevices(production) {
-        const session = production.session, empty = new Uint8Array(1), game = () => this._clientGameplay;
+        const empty = new Uint8Array(1), game = () => this._clientGameplay;
         const meta = () => { throw new Error('웹 제외 메타맵 참가자 이름 미연결'); };
         return { now: () => this._gameClock.wallSeconds(), suppressed: () => Boolean(game().world.missionPost),
             view: () => ({ width: this._layout.logicalWidth, height: this._layout.logicalHeight, palette: this._clientPaletteScreen.colors(), inset: this._gameMenuButton?.logicalInset(this._layout.logicalWidth) ?? 0 }),
             context: { challenge: () => this._surfaceStorage.ownerMode.challenge ? 1 : 0, battle: () => this._surfaceStorage.ownerMode.battle ? 1 : 0,
-                playerName: (owner) => { if (owner > 0 && owner < 9) session.playerRecords().subarray(owner * 180 + 12, owner * 180 + 44); },
-                playerText: (owner) => owner <= 0 || owner >= 9 ? empty : session.playerRecords().subarray(owner * 180 + 12, owner * 180 + 44),
+                playerName: (owner) => { if (owner > 0 && owner < 9) this._clientPlayers.records().subarray(owner * 180 + 12, owner * 180 + 44); },
+                playerText: (owner) => owner <= 0 || owner >= 9 ? empty : this._clientPlayers.records().subarray(owner * 180 + 12, owner * 180 + 44),
                 challengePlayerName: meta, challengePlayerText: meta,
                 gameTimeSeconds: () => readGameTimeSeconds(game().battleClockStamp(), () => game().battleClockOrigin().value, () => Math.trunc(performance.now())) } };
     }

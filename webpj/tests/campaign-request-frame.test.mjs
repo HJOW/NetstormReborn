@@ -146,6 +146,21 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         assert.ok(app._mainMenu.dialog); app._mainMenu.setDialog(null);
         guide.run(); guide.run();
         const request = guide.fortRequest(); assert.equal(request.fort, 'BridgeTheGap'); assert.equal(guide.pending().pending(), true);
+        // 실제 앱 생성·도킹 사이의 Chat/Console 정체와 점멸 기한을 관찰한다. 도킹은 초기 생성물을 교체하면 안 된다.
+        let createdHud = null;
+        const createHud = app._createCampaignProductionHud.bind(app), dockHud = app._dockCampaignProductionHud.bind(app);
+        app._createCampaignProductionHud = (production) => {
+            const ui = createHud(production), chat = ui.chat().current(), consoleToken = app._clientGump.node(chat).console;
+            createdHud = { ui, chat, consoleToken, consoleNode: app._clientGump.node(consoleToken), blinkAt: app._clientGump.node(consoleToken).blinkAt };
+            return ui;
+        };
+        app._dockCampaignProductionHud = (production) => {
+            assert.ok(createdHud); assert.equal(production.ui, createdHud.ui);
+            assert.equal(production.ui.chat().current(), createdHud.chat);
+            assert.equal(app._clientGump.node(createdHud.consoleToken), createdHud.consoleNode);
+            assert.equal(createdHud.consoleNode.blinkAt, createdHud.blinkAt);
+            return dockHud(production);
+        };
         app._onFrame(0);
         assert.equal(request.consumed, false); assert.equal(guide.pending().pending(), true); assert.ok(app._clientSoundPrepare);
         await app._clientSoundPrepare; app._onFrame(16);
@@ -164,6 +179,8 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         for (let frame = 0; frame < 10 && !session.localConnectionReady(); frame += 1) app._onFrame(frame * 16);
         assert.equal(session.localConnectionReady(), true); assert.equal(session.world().storage, app._surfaceStorage);
         const runtime = guide.current().runtime; assert.equal(app._campaignWorld.connecting, false);
+        assert.equal(app._campaignProduction.worldBound, true);
+        assert.throws(() => app._dockCampaignProductionHud(app._campaignProduction), /도킹 수명 오류/);
         assert.ok(runtime.start && runtime.tutorial); assert.equal(runtime.state.sequence, 4); assert.equal(runtime.gate.started, 1);
         // 실제 경로 발소리는 같은 Client 재생기에 원본 위치와 반복·우선순위를 전달한다.
         const player = app._clientSoundPlayer, originalPlay = player.playOnceAt, steps = [];
