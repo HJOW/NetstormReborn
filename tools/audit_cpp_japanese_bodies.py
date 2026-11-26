@@ -60,13 +60,24 @@ def signatures(text, kind):
                 images=image_locations(text))
 
 
-def inspect(require_all=False):
-    """현재 번역된 공식 파일을 모두 비교하고 미번역 목록은 완료로 바꾸지 않는다."""
+def inspect(require_all=False, original_archive=None):
+    """번역 구조를 한국어 번들과 비교하며 선택한 원본 아카이브도 읽기 전용으로 대조한다."""
     originals = {path.stem: path for path in SOURCE.glob('*.korean')}
     translated = sorted(TARGET.glob('*.japanese'))
     errors = []
     records = []
     kanji = set()
+    # 원본 영어를 선택하면 기존 한국어 번역과 독립된 실행 명령 보존 근거를 남긴다.
+    english = {}
+    original_compared = 0
+    if original_archive is not None:
+        from taff import TaffArchive
+        archive = TaffArchive(original_archive)
+        for entry in archive.entries:
+            # 공식 파일만 비교하고 원본 자료와 추출 디렉터리에는 쓰지 않는다.
+            logical = Path(entry.name.replace('\\', '/').lstrip('/'))
+            if logical.suffix.lower() == '.english' and logical.stem.lower() in originals:
+                english[logical.stem.lower()] = archive.read(entry).decode('cp1252')
     for path in translated:
         # 사용자 맵/새 basename이 공식 번들에 섞이면 즉시 보고한다.
         if path.stem not in originals:
@@ -82,6 +93,16 @@ def inspect(require_all=False):
             # 첫 차이의 구조 종류를 남기며 다른 파일/종류 검사도 계속한다.
             if left[category] != right[category]:
                 errors.append(f'{path.name}: {category} 불일치')
+        if original_archive is not None:
+            original = english.get(path.stem)
+            if original is None:
+                errors.append(f'{path.name}: 원본 영어 파일 누락')
+            else:
+                original_compared += 1
+                for category, expected in signatures(original, path.stem).items():
+                    # 영어 표시 문장만 제외하고 원본 명령·조건·수치·그림까지 독립 대조한다.
+                    if expected != right[category]:
+                        errors.append(f'{path.name}: 원본 영어 {category} 불일치')
         prose = visible_source(target)
         if re.search(r'[가-힣]', prose):
             errors.append(f'{path.name}: 표시 본문에 한국어 잔여')
@@ -94,7 +115,7 @@ def inspect(require_all=False):
     if len(kanji) > 3946:
         errors.append(f'일본어 동적 한자 슬롯3946개 초과: {len(kanji)}')
     return dict(passed=not errors, translated=len(translated), total=len(originals), missing=missing,
-                uniqueKanji=len(kanji), files=records, errors=errors)
+                uniqueKanji=len(kanji), originalCompared=original_compared, files=records, errors=errors)
 
 
 def main():
@@ -102,8 +123,9 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--require-all', action='store_true')
     parser.add_argument('--json', type=Path)
+    parser.add_argument('--original-archive', type=Path, help='선택한 원본 TAFF의 영어 실행 구조도 읽기 전용으로 비교')
     args = parser.parse_args()
-    result = inspect(args.require_all)
+    result = inspect(args.require_all, args.original_archive)
     if args.json:
         args.json.parent.mkdir(parents=True, exist_ok=True)
         args.json.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding='utf-8')

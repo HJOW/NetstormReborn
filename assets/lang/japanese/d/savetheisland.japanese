@@ -1,0 +1,62 @@
+﻿[Header]
+missionType = "Tutorial"
+aid=1
+
+loadFort = "SaveTheIsland"
+
+missionNumber = 1
+
+myStartMoney = 2000
+myTech = "sunWalker;rainBattery;sunArcher;sunCannon;sunBlocker;sunAviary"
+
+aiName = "Earl of Thunder"
+aiTech = "sunWalker;thunderBattery;thunderCannon;sunArcher;thunderArcher;sunBalloon"
+aiStartMoney = 2000
+aiGeyserAttachments = 1
+aiCollectors = 1
+aiTimeBetweenMoves = 4
+
+title="島を救え！"
+
+[Options]
+
+[A.]
+<h2>島を救え！</h2>
+<i>「我らは生まれつき残酷な民ではない。絶え間ない必要が、我らをそうさせたのだ。」
+--アブステク・ヴォルティキン将軍</i>
+<p>
+大使ハイドラスの島が、突然攻撃を受けました。
+ゴーレムたちは何とか間に合い、サンバリアーを築いて、
+島が完全に破壊されるのを防ぎました。
+<p>
+資源も乏しく、窮地に立った大使は、
+絶望的な状況を救うため、あなたの優れた知略を求めています。
+<p>
+この島を救えば、大使はかけがえのない同盟者となるでしょう！
+
+$Button=知識を確認,ShowTechnology,55
+$Button=ミッション開始,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>成功！</h2>
+<p>
+あなたの知略は、今や伝説となりました！
+大使は永遠の感謝を込めて、あなたを息子、そして後継者に迎えます。
+<p>
+彼の民は永遠の忠誠を誓い、あなたの帝国が誕生します！
+<$Config,Done{mission.fileName}=1>
+$Button=ミッションを終了,MissionAbort,1
+$Button=次のミッション,MissionBegin,FragileFortune
+
+
+[Failed]
+<h2>失敗！</h2>
+<p>
+大使があなたを信頼したのは、明らかな誤りでした！
+残酷な敵が島を踏みにじるのを、あなたは許してしまいました。
+大使は最後の行動として、自らあなたの命を奪います。
+$Button=続ける,Tell,TryAgain
+
+
+[END]

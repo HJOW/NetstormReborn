@@ -1,0 +1,66 @@
+﻿[Header]
+missionType = "Tutorial"
+aid=1
+
+missionNumber = 1
+
+myStartMoney = 3000
+myTech = "sunWalker;rainBattery;sunAviary;sunCannon"
+
+aiName = "The Jailer"
+aiTech = "sunWalker;windBattery;sunArcher"
+aiStartMoney = 0
+aiGeyserAttachments = 1
+aiCollectors = 1
+aiTimeBetweenMoves = 6
+aiAbility="!ENCIRCLE_ENEMY_ISLAND;!USE_PRIEST_TO_COLLECT"
+
+title="戦争の始まり！"
+
+[A.]
+<h2>戦争の始まり！</h2>
+<p>
+<i>「闇と圧政は、我らの鎖を閉ざす錠前。
+勇気を持って、その鍵となる者は誰か？」
+--光の嘆き</i>
+<p>
+ニンバスの人々を征服して奴隷にした闇の君主たちは、
+今や空の絶対的な支配者として君臨しています。
+<p>
+彼らはあなたの島に監視兵を置き、司祭を鎖につなぎました。
+しかし大胆な奇襲によって、司祭は解放されました！
+今こそ束縛を逃れ、ニンバス全体のために一撃を加える好機です！
+
+$Button=知識を確認,ShowTechnology,55
+$Button=ミッション開始,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>成功！</h2>
+<p>
+あなたの島は自由を取り戻しました！
+<p>
+次は、自由を求める島々を
+あなたの旗の下にさらに集めなければなりません。
+<p>
+多くの指導者の支持を得てこそ、
+闇の勢力を倒し、追い払うことができるのです！
+<$Config,Done{mission.fileName}=1>
+$Button=ミッションを終了,MissionAbort,1
+$Button=次のミッション,MissionBegin,MasterOfWhirligigs
+
+
+[Failed]
+<h2>失敗！</h2>
+<p>
+奇襲は失敗しました！
+<p>
+闇の勢力が再びこのような隙を見せることはないでしょう。
+彼らは女性の三人に一人を島から投げ落とし、
+三十五歳未満の男性全員を奴隷にするよう命じます。
+<p>
+自由を得る唯一の機会は、つかめない風のように過ぎ去りました。
+$Button=続ける,Tell,TryAgain
+
+
+[END]
