@@ -73,6 +73,7 @@ struct LocalMissionStateHooks {
     std::function<void(float)> setReconnectSp; std::function<void(bool)> loginTimer,inputMode; // 004477d0/004b67c0(1)/0042f270(0)이다.
     std::function<void()> metaFirst,metaSecond,metaThird; // Poll의00479760/0047dd60/0047cab0이다.
     std::function<void()> takeServer; //State15의 같은 월드/Player/전송/시계 부모다. 몸체가 즉시16을 요청하고 공통부가 확정한다.
+    std::function<void(bool)> reconnectResult; //004b7cd5/004b7cf3의 레벨1d 수락/거절 로그다. 상태 쓰기 전에 호출한다.
 };
 // 실제상태확정과비동기수신경계를같은수명으로소유한다.
 class RawLocalMissionState {

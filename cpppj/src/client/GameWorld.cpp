@@ -873,6 +873,7 @@ std::string GameWorld::Report(bool mask) const {
         out<<"\nraw_alliances";
         for (const auto value:campaign_->Alliances()) out<<'\t'<<value; // 같은 승패/메뉴가 읽는 방향별81DWORD를 순서대로 관측한다.
         out<<"\nraw_world_modes\t"<<campaign_->Editor()<<'\t'<<gameplayGlobals_->world.missionPost; //실제 Editor/missionPost를 별도 관측하며 상태나 프레임은 바꾸지 않는다.
+        out<<"\nraw_network_role\t"<<gameplayGlobals_->Authority()->server<<'\t'<<gameplayGlobals_->Authority()->boss; // 실제 서버 인수 전후 같은 장기 권한의 두 값을 읽기만 한다.
         const auto& drop=campaign_->CursorDropSettings();const auto& placement=campaign_->Cursor().Placement(); // 실제 배치/원본 입력과 같은 저장소다.
         out<<"\nraw_piece\t"<<drop.argument<<'\t'<<drop.direction; // 실제 무작위 조각 번호/현재 회전을 관찰하며 취득 상태를 변경하지 않는다.
         out<<"\nraw_cursor\t"<<drop.lockDepth<<'\t'<<drop.legal<<'\t'<<drop.type<<'\t'<<drop.preview<<'\t'<<drop.x<<'\t'<<drop.y<<'\t'<<drop.inputFlags<<'\t'<<drop.costFlags<<'\t'<<placement.placementAllowed<<'\t'<<placement.spaceAllowed<<'\t'<<placement.sourceAllowed<<"\nraw_sp";

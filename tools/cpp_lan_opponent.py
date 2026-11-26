@@ -22,7 +22,7 @@ import time
 class Peer:
     """실제 Netstorm.exe 한 개와 제한 시간이 있는 MCP 입출력을 소유한다."""
 
-    def __init__(self, exe, game, output, role, lobby_port, game_port):
+    def __init__(self, exe, game, output, role, lobby_port, game_port, trace=False):
         """새 사용자 디렉터리로 시작하며 생성된 Fort/설정/로그를 결과 옆에 보존한다."""
         self.output = output / role  # 이 참가자의 관측·사용자 파일만 저장한다.
         self.output.mkdir()
@@ -36,6 +36,8 @@ class Peer:
                     f"registeredSubId={0x610001 if role == 'host' else 0x610002};"
                     f"lastMultiplayerFort=LanBot{role};lanServerAddress=127.0.0.1;"
                     f"lanLobbyPort={lobby_port};gameServerPort={game_port}")  # 표준 옵션으로 새 Fort·서로 다른 오프라인 등록ID·로컬 주소를 선택한다.
+        if trace:
+            settings += ";tracelevel=29"  # 원문1d 결과 로그를 표준 필터 옵션으로 선택한다.
         command = [str(exe), "--run", str(game), "--mcp", "--window", "--no-audio", "--set", settings]  # 고정 시각/자동 전투 옵션을 사용하지 않는다.
         self.stderr = (self.output / "stderr.log").open("wb")  # 게임 진단 stdout은 MCP가 stderr로 분리한다.
         self.process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
@@ -181,18 +183,21 @@ def main():
     parser.add_argument("--game-port", type=int, default=16799)
     parser.add_argument("--lobby-only", action="store_true")
     parser.add_argument("--steady-seconds", type=float, default=4, help="두 참가자의 시작 후 실제 OS 시계 대기 초")
+    parser.add_argument("--takeover", action="store_true", help="시작 검사 후 이 도구의 호스트만 강제 종료해 상대의 서버 인수를 검사")
     args = parser.parse_args()  # 사용자 선택은 실제 포트·자산·출력 경로로만 제한한다.
     if not (0 < args.lobby_port < 65536 and 0 < args.game_port < 65536 and args.lobby_port != args.game_port):
         parser.error("서로 다른1~65535 포트가 필요합니다.")
     if not 0 <= args.steady_seconds <= 3600:
         parser.error("실시간 대기는0~3600초 범위여야 합니다.")
+    if args.takeover and args.lobby_only:
+        parser.error("서버 인수는 실제 전투 시작 검사와 함께 사용해야 합니다.")
     args.exe, args.game, args.output = args.exe.resolve(strict=True), args.game.resolve(strict=True), args.output.resolve()
     args.output.mkdir(parents=True, exist_ok=False)
     peers = []  # 이 호출이 실행한 두 자식만 종료 대상으로 보관한다.
     result = dict(passed=False, exe=str(args.exe), exeSha256=hashlib.sha256(args.exe.read_bytes()).hexdigest(), peers=[])
     try:
         for role in ("host", "bot"):  # 봇도 실제 두 번째 클라이언트/등록표/프로토콜을 사용한다.
-            peer = Peer(args.exe, args.game, args.output, role, args.lobby_port, args.game_port)
+            peer = Peer(args.exe, args.game, args.output, role, args.lobby_port, args.game_port, trace=args.takeover)
             peers.append(peer)
             peer.prepare()
         for peer in peers:  # 두 이름이 실제 수신된 명단에 함께 나타나야 한다.
@@ -218,6 +223,19 @@ def main():
                 raise AssertionError("두 초기 월드의 객체/타일 수 불일치")
             result["identity"] = identities[0]
             result["world"] = fields(steady[0], "world")
+            if args.takeover:
+                host, bot = peers  # 이 호출이 직접 만든 실제 두 자식만 대상으로 삼는다.
+                if fields(steady[1], "raw_network_role") != [["0", "0"]]:
+                    raise AssertionError("서버 인수 전 상대의 실제 client 권한 불일치")
+                host.process.kill()  # 호스트 장애를 실제 소켓 단절로 재현하고 게임 상태를 변경하지 않는다.
+                result["hostTermination"] = dict(requested=True, exitCode=host.process.wait(timeout=15))
+                bot.wait(lambda text: battle_ready(text) and fields(text, "raw_network_role") == [["1", "1"]],
+                         "실제 서버 인수와 재접속14", seconds=45)
+                bot.call("netstorm_wait_frames", frames=120)
+                taken = bot.observe("takeover")  # 실제 재접속 수신과 권한 전환 뒤의 상태/화면이다.
+                if not battle_ready(taken) or fields(taken, "raw_network_role") != [["1", "1"]]:
+                    raise AssertionError("인수 후 실제 권한/로그인 불일치")
+                result["takeover"] = dict(role=fields(taken, "raw_network_role"), session=fields(taken, "raw_session"), world=fields(taken, "world"))
         result["passed"] = True
     except Exception as error:
         result["error"] = repr(error)
@@ -235,8 +253,14 @@ def main():
             except Exception as error:
                 result.setdefault("closeErrors", []).append(repr(error))
             result["peers"].append(dict(role=peer.role, exitCode=peer.exit_code))
-        if any(peer.exit_code != 0 for peer in peers) or result.get("closeErrors"):
+        if any(peer.exit_code != 0 and not (peer.role == "host" and result.get("hostTermination", {}).get("requested")) for peer in peers) or result.get("closeErrors"):
             result["passed"] = False
+        if result.get("takeover"):
+            log = (peers[1].output / "stderr.log").read_text(encoding="utf8", errors="replace")  # 실제 정상 종료의 CRT flush 뒤 결과 로그를 검증한다.
+            result["takeover"]["acceptedLog"] = "Reconnection accepted" in log
+            if not result["takeover"]["acceptedLog"]:
+                result["passed"] = False
+                result["error"] = "정상 종료 후 실제 재접속 수락 로그 없음"
         (args.output / "result.json").write_text(json.dumps(result, ensure_ascii=False, indent=2) + "\n", encoding="utf8")
         print(json.dumps(result, ensure_ascii=False), flush=True)
     return 0 if result["passed"] else 1

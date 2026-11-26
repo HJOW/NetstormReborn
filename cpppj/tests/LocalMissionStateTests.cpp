@@ -130,4 +130,37 @@ TEST_CASE(LocalMissionState_AliasesAndRequiredConsumers) {
     CHECK(Throws([&] { RawLocalMissionState invalid(OriginalEdition::Patch1078,same,scene.Globals(),scene.Hooks()); }));
 }
 
+// 원문 수락 로그는 이전 phase를 관측하고 같은144BYTE를17→14의 공통 확정으로 전달한다.
+TEST_CASE(LocalMissionState_ReconnectionAcceptedCommitsSeventeenThenFourteen) {
+    StateScene scene("Run",17,0,0);const auto input=scene.blocks[3];auto hooks=scene.Hooks(); // 서로 구별한 모든 stale DWORD를 보존한다.
+    hooks.reconnectResult=[&](bool accepted) { CHECK(accepted && scene.blocks[1][0]==1000 && scene.blocks[3]==input && scene.source==17);scene.Event("Reconnection accepted"); };
+    scene.body=std::make_unique<RawLocalMissionState>(OriginalEdition::Patch1078,scene.Storage(),scene.Globals(),std::move(hooks));scene.body->Run();
+    auto phase=input;phase[0]=14;auto cleared=input;cleared[0]=0; // 원문 즉시14와 마지막 공통 확정의 전체 블록 기대값이다.
+    CHECK(scene.blocks[0]==input && scene.blocks[1]==phase && scene.blocks[2]==cleared && scene.blocks[3]==cleared && scene.blocks[4]==cleared);
+    CHECK(scene.source==17 && scene.trace=="State,17;Reconnection accepted;State,14");
+}
+
+// 원문 거절은18을 확정하되 메뉴3은 다음 Poll에 남기고 부수 필드를 바꾸지 않는다.
+TEST_CASE(LocalMissionState_ReconnectionDeniedDefersMenuThree) {
+    StateScene scene("Run",18,0,0);const auto input=scene.blocks[3],previous=scene.blocks[1];auto hooks=scene.Hooks(); // 출처 쓰기보다 앞선 로그 시점을 관측한다.
+    hooks.reconnectResult=[&](bool accepted) { CHECK(!accepted && scene.source==17 && scene.blocks[1]==previous);scene.Event("Reconnection denied"); };
+    scene.body=std::make_unique<RawLocalMissionState>(OriginalEdition::Patch1078,scene.Storage(),scene.Globals(),std::move(hooks));scene.body->Run();
+    auto cleared=input;cleared[0]=0;auto pending=input;pending[0]=3; // 전체144BYTE 복사 중 첫 상태 DWORD만 원문대로 다르다.
+    CHECK(scene.source==0 && scene.blocks[0]==previous && scene.blocks[1]==input && scene.blocks[2]==cleared && scene.blocks[3]==cleared && scene.blocks[4]==pending);
+    CHECK(scene.trace=="State,18;Reconnection denied");
+}
+
+// 결과 로그의 누락/예외가 원문보다 뒤의 출처 쓰기나 상태 확정을 실행하지 못하게 한다.
+TEST_CASE(LocalMissionState_ReconnectionLogFailurePreservesPartialWrites) {
+    for (const auto selected:{17U,18U}) { // 수락과 거절을 같은 현재 저장소 계약으로 각각 확인한다.
+        for (const bool installed:{false,true}) { // 미연결과 실제 소비자 예외를 독립적으로 선택한다.
+            StateScene scene("Run",selected,0,0);const auto before=scene.blocks;auto hooks=scene.Hooks();
+            if (installed) hooks.reconnectResult=[](bool) { throw std::logic_error("결과 로그 장치 예외"); };
+            scene.body=std::make_unique<RawLocalMissionState>(OriginalEdition::Patch1078,scene.Storage(),scene.Globals(),std::move(hooks));
+            CHECK(Throws([&] { scene.body->Run(); }));auto cleared=before[3];cleared[0]=0; // 공통 진입의 복사만 남고 확정 전 저장소는 그대로다.
+            CHECK(scene.source==17 && scene.blocks[0]==before[0] && scene.blocks[1]==before[1] && scene.blocks[3]==before[3] && scene.blocks[2]==cleared && scene.blocks[4]==cleared);
+        }
+    }
+}
+
 #include "LocalMissionCdPresenceTests.inc" // 기존 State 입력 장치를 같은 실제 Client CD 소유자에 연결한다.

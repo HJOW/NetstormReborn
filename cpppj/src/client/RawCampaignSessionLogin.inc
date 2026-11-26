@@ -159,6 +159,7 @@ struct RawCampaignSession::Impl::Login {
         hooks.clearChat=s.services.ai.participation.clearChat;hooks.progress=effects.progress;
         hooks.loadReconnectFort=effects.selectReconnectFort; // 기존 일반 State7 몸체도 같은00460980 이름/manager 부모를 사용한다.
         hooks.takeServer=[this] { TakeServer(); }; //State15도 현재 같은 Login/World를 보유하고 원문 공통부에 즉시16을 요청한다.
+        hooks.reconnectResult=[this](bool accepted) { Need(s.services.player.log)(0x1d,accepted ? "Reconnection accepted\n" : "Reconnection denied\n"); }; // 원문004c2630의 실제 수준/문자열을 같은 장기 로그 장치에 보낸다.
         hooks.closeConnection=[this](auto id) { Need(transport.close)(id); };hooks.renameConnection=[this](auto pending,auto owner) { Need(transport.assign)(pending,owner); };
         hooks.logConnection=[this](auto line,auto value) { Need(effects.log)("연결 진단 "+std::to_string(line)+":"+std::to_string(value)+"\n"); };
         hooks.serverConnection=[this] { return transport.registry->Cleanup().transceivers[9]; };hooks.attachCommander=effects.attachCommander ? effects.attachCommander : std::function<void(std::uint32_t)>{[this](auto connection) { clockSynchronization->Attach(*transport.dispatch,connection); }}; // 실제 Client는 같은 Commander 표본/기한/연결을 설치하며 기존 명시 외부 장치 대여만 존중한다.
