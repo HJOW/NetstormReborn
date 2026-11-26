@@ -150,31 +150,37 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         let createdHud = null;
         const createHud = app._createCampaignProductionHud.bind(app), dockHud = app._dockCampaignProductionHud.bind(app);
         app._createCampaignProductionHud = (production) => {
+            assert.equal(app._campaignWorld, null); assert.equal(production.session, null);
             const ui = createHud(production), chat = ui.chat().current(), consoleToken = app._clientGump.node(chat).console;
             createdHud = { ui, chat, consoleToken, consoleNode: app._clientGump.node(consoleToken), blinkAt: app._clientGump.node(consoleToken).blinkAt };
             return ui;
         };
         app._dockCampaignProductionHud = (production) => {
-            assert.ok(createdHud); assert.equal(production.ui, createdHud.ui);
-            assert.equal(production.ui.chat().current(), createdHud.chat);
-            assert.equal(app._clientGump.node(createdHud.consoleToken), createdHud.consoleNode);
-            assert.equal(createdHud.consoleNode.blinkAt, createdHud.blinkAt);
+            // 최초 도킹 전까지만 생성 기한을 대조한다. 도킹 후에는 실제 Console Idle이 정상적으로 기한을 갱신한다.
+            if (!production.worldBound) {
+                assert.ok(createdHud); assert.equal(production.ui, createdHud.ui);
+                assert.equal(production.ui.chat().current(), createdHud.chat);
+                assert.equal(app._clientGump.node(createdHud.consoleToken), createdHud.consoleNode);
+                assert.equal(createdHud.consoleNode.blinkAt, createdHud.blinkAt);
+            }
             return dockHud(production);
         };
         app._onFrame(0);
         assert.equal(request.consumed, false); assert.equal(guide.pending().pending(), true); assert.ok(app._clientSoundPrepare);
         await app._clientSoundPrepare; app._onFrame(16);
         assert.equal(request.consumed, true); assert.equal(guide.pending().pending(), false);
+        assert.ok(createdHud); assert.equal(app._campaignProduction.ui, createdHud.ui);
+        assert.equal(app._campaignProduction.worldBound, false); assert.equal(app._campaignProduction.session, null);
         assert.throws(() => app._prepareCampaignMissionStart(), /수명 오류/);
         assert.ok(app._missionLoadingWindow); assert.equal(app._mainMenu.dialog, app._missionLoadingWindow);
         app._mainMenu.render(new IndexedSurface(1024, 768));
         const session = app._campaignWorld.session();
-        // 생산 패널(HUD)은 원본처럼 Guide 의 시작 단계보다 먼저 같은 프레임에서 만들어지고 그 안의 실제 채팅 창이 현재 채팅 창이 된다. 시작의 숨김 명령(0x02000088)이 그 실제 채팅 창으로 가는지 Gump 사건 전달을 가로채 기록한다. (2026-11-24 WB04-E1305: 이전에는 가짜 채팅 부모를 먼저 심어 두었다)
+        // State7에서 만든 HUD를 Guide의 시작 단계보다 먼저 도킹한다. 시작의 숨김 명령(0x02000088)이 같은 실제 채팅 창으로 가는지 관찰한다. (E1305·E1383)
         const bubbled = [], gump = app._clientGump, events = gump.events(), originalBubble = events.bubble.bind(events);
         events.bubble = (token, code, first, second) => { bubbled.push([token, code, first, second]); return originalBubble(token, code, first, second); };
-        // 뒤쪽 그리기 검사가 쓰는 가짜 부모·자식이다. 현재 채팅 창으로 심어 두지만 HUD 가 만들어지면 실제 채팅 창으로 바뀐다.
+        // 뒤쪽 그리기 검사가 쓰는 독립 부모·자식이다. State7에서 생성된 실제 채팅 창은 덮어쓰지 않는다.
         const parent = gump.createBase(0, 20, 20, 1, () => 0);
-        const child = gump.createBase(0, 10, 10, 1, () => 0); gump.attach(parent, 0, 0); gump.attach(child, 0, 0, parent); app._clientChatWindows.window.current = child;
+        const child = gump.createBase(0, 10, 10, 1, () => 0); gump.attach(parent, 0, 0); gump.attach(child, 0, 0, parent);
         // 실제 패킷·State는 앱 프레임에서만 진행하고 준비 전에는 Guide를 기다린다.
         for (let frame = 0; frame < 10 && !session.localConnectionReady(); frame += 1) app._onFrame(frame * 16);
         assert.equal(session.localConnectionReady(), true); assert.equal(session.world().storage, app._surfaceStorage);

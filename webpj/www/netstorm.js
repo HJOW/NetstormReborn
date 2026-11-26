@@ -1553,6 +1553,10 @@ export class Netstorm {
             captureCampaignMissionStarting(client, request);
             // 원본 LoadMissionWorldBody 는 시작 정보를 보관한 뒤 State 전체 정리(CleanupNativeStateWorld(1))를 실행하고 그 다음에 장면 음악을 시작한다(SP 정리 1,280회 난수). (2026-11-23 WB04-E1280)
             this._clearPlayerSpForState();
+            // State 정리가 교체하는 HUD는 World보다 먼저 생성한다. Ready 뒤에도 같은 Chat·Console·생산 유지 상태를 사용한다.
+            if (this._campaignProduction) throw new Error('State7 HUD 생성 전 이전 생산 수명 반납 필요');
+            this._campaignProduction = { session: null, panel: new ProductionMaintenancePanel(), maintenance: null, ui: null, worldBound: false };
+            this._createCampaignProductionHud(this._campaignProduction);
             // 원본 State7 의 전투 장면 음악 시작(StartScene(true))이다. World 설치보다 앞이다. (2026-11-20 WB04-E1119)
             this._beginSceneMusic();
             // 원본 LoadMissionWorldBody 는 장면 음악 뒤, 월드·커서 설치 앞에서 Guide 미션이면 게임 시계를 정지하고 관문의 자기 정지 표식을 세운다(PauseMissionWorldEntry → PauseMissionFrameForDialog).
@@ -1587,7 +1591,7 @@ export class Netstorm {
     _releaseCampaignWorld() {
         // World 가 없어도(State7 도중 실패 등) 이미 시작한 장면 음악은 메뉴 곡으로 되돌린다. (2026-11-20 WB04-E1119)
         this._endSceneMusic();
-        if (!this._campaignWorld) return;
+        if (!this._campaignWorld && !this._campaignProduction) return;
         // 원본 월드 정리 어댑터(UberGump 004b2df0)는 Session·UI·Kernel 을 반납하기 전에 번개 프로세스(ClearThunderFlashes)와 초기 캡처 기한(005c8618)을 정리한다. (2026-11-20 WB04-E1121, 2026-11-24 WB04-E1329)
         this._clearThunderFlashes();
         if (this._clientLocal) this._clientLocal.captureEnd().value = 0;
@@ -1598,7 +1602,7 @@ export class Netstorm {
         // 원본 State 월드 정리는 0059a8ac(건물 숨김, F2·View 메뉴)을 0 으로 되돌린다. 되돌리지 않으면 미션에서 켠 건물 숨김이 다음 미션에도 남아 처음부터 건물이 숨겨졌다. (2026-11-22 WB04-E1230)
         if (this._clientGameplay) this._clientGameplay.hideBuildings().value = 0;
         this._gameMenuButton?.destroy(); this._gameMenuButton = null; this._releaseCampaignPause();
-        this._campaignProduction?.ui?.close(); this._campaignProduction?.hud?.close(); this._clientGump?.releaseFormHost(); this._campaignWorld.dispose(); this._campaignWorld = null; this._campaignWorldMissionToken = 0; this._campaignUserInput = null; this._campaignProduction = null; this._campaignCursor = CURSOR_NORMAL;
+        this._campaignProduction?.ui?.close(); this._campaignProduction?.hud?.close(); this._clientGump?.releaseFormHost(); this._campaignWorld?.dispose(); this._campaignWorld = null; this._campaignWorldMissionToken = 0; this._campaignUserInput = null; this._campaignProduction = null; this._campaignCursor = CURSOR_NORMAL;
     }
 
     // 로그인된 현재 World와 Guide의 실제 미션 Start를 같은 Client 수명에 준비한다.
@@ -1652,15 +1656,16 @@ export class Netstorm {
         return cursor;
     }
 
-    // 현재 Session과 Client 생산 전역을 같은 생산 패널 유지 상태에 연결한다.
+    // Ready가 된 Session을 State7에서 만든 같은 생산 패널 유지 상태에 연결한다. 독립 호출자는 같은 상태를 여기서 만든다.
     _prepareCampaignProduction() {
         const world = this._campaignWorld, current = this._clientGuide?.current(), globals = this._clientProductionGlobals, clock = this._gameClock;
-        if (!world || world.connecting || !current?.runtime.start || !globals || !clock || !this._clientRenderer || this._campaignProduction || this._campaignWorldMissionToken !== current.runtime.saveToken) throw new Error('미션 생산 유지의 현재 수명 오류');
-        const session = world.session(), panel = new ProductionMaintenancePanel();
-        panel.initialized = true; panel.bridgeUntil = clock.wallSeconds(); panel.slots = session.battleOption(1) * 2 + 2;
+        if (!world || world.connecting || !current?.runtime.start || !globals || !clock || !this._clientRenderer || this._campaignProduction?.maintenance || this._campaignWorldMissionToken !== current.runtime.saveToken) throw new Error('미션 생산 유지의 현재 수명 오류');
+        // 생성 단계가 이미 정한 최초 슬롯·다리 기한은 다시 쓰지 않는다.
+        const session = world.session(), production = this._campaignProduction ?? { session: null, panel: new ProductionMaintenancePanel(), maintenance: null, ui: null, worldBound: false }, panel = production.panel;
+        if (!production.ui) { panel.initialized = true; panel.bridgeUntil = clock.wallSeconds(); panel.slots = session.battleOption(1) * 2 + 2; }
         globals.bridgeType = this._surfaceStorage.links.bridgeType;
         session.synchronizeProductionContents();
-        const production = { session, panel, maintenance: null, ui: null };
+        production.session = session;
         production.maintenance = session.makeProductionMaintenance(globals, panel, () => clock.wallSeconds(), (mask) => { production.ui?.refresh(mask); this._clientRenderer.invalidateAll(); });
         this._campaignProduction = production; return production;
     }
@@ -1669,7 +1674,8 @@ export class Netstorm {
     _prepareCampaignProductionUi() {
         const production = this._campaignProduction;
         if (!production?.session) throw new Error('생산 UI 도킹의 실제 Session 미연결');
-        this._createCampaignProductionHud(production); this._dockCampaignProductionHud(production); return production.ui;
+        if (!production.ui) this._createCampaignProductionHud(production);
+        this._dockCampaignProductionHud(production); return production.ui;
     }
 
     // World 없이 같은 Client 문맥으로 Uber HUD·생산·Chat 자식을 생성한다.
@@ -1686,7 +1692,8 @@ export class Netstorm {
             entry: (body, command, topic) => helpMenu().entry(this._helpString(body), command, this._clientChatWindows.store(topic)),
             attachMenu: (x, y, parent) => helpMenu().attach(x, y, parent), sound: (name) => this._clientSoundPlayer.play(this._clientSoundNames.lookup(name), 0, 0, 0, 0, 0),
         });
-        const identity = new RawPlayerIdentity(this._clientPlayers.records(), new Uint8Array(0), this._clientChatRecords, {
+        // 로그인은 Player 기록을 재할당하므로 HUD 생성 시의 뷰를 보관하지 않고 실제 조회 시점에 빌린다.
+        const identity = () => new RawPlayerIdentity(this._clientPlayers.records(), new Uint8Array(0), this._clientChatRecords, {
             localOwner: () => this._clientGameplay.player.battleOwner, subscriber: () => this._clientSubscriber.mySubscriber().value,
             address: () => this._clientGameplay.localAddress().value, name: () => { const bytes = this._clientSubscriber.handle(), end = bytes.indexOf(0); return String.fromCharCode(...bytes.subarray(0, end)); },
             battle: () => this._surfaceStorage.ownerMode.battle, editor: () => this._clientGameplay.world.editor !== 0,
@@ -1700,15 +1707,15 @@ export class Netstorm {
             sound: (name) => this._clientSoundPlayer.play(this._clientSoundNames.lookup(name), 0, 0, 0, 0, 0), tell: (section) => this._openTell(section),
             about: () => { throw new Error('생산 정보 메뉴 미연결'); },
             menu: { data: this._gameData, helpWord: () => this._clientLocal.helpWord().get(),
-                ownerName: (owner) => displayTextCodec.decode(Uint8Array.from(identity.nameForOwner(owner), (letter) => letter.charCodeAt(0))),
-                objectMenu: { get world() { return currentWorld(); }, identity, staticText: (value) => this._clientChatWindows.store(value), tell: (name) => this._openTell(name),
+                ownerName: (owner) => displayTextCodec.decode(Uint8Array.from(identity().nameForOwner(owner), (letter) => letter.charCodeAt(0))),
+                objectMenu: { get world() { return currentWorld(); }, get identity() { return identity(); }, staticText: (value) => this._clientChatWindows.store(value), tell: (name) => this._openTell(name),
                     player: { translate: (value) => this._resources.translate(value), assertion: (value) => console.error(`Player 메뉴 진단: ${value}`),
                         // Player 이름 칸의 표시 부호화 바이트(이진 문자열)를 화면 문자열로 해독한다(한국어 이름이 제목·동맹 줄에서 깨지지 않게). (2026-11-23 WB04-E1290)
                         decodeName: (value) => displayTextCodec.decode(Uint8Array.from(value, (letter) => letter.charCodeAt(0))),
                         parseAddress: () => { throw new Error('Player 메뉴 주소 해석 미연결'); }, reliability: () => { throw new Error('Player 메뉴 메타맵 신뢰도 미연결'); },
                         ignored: (subscriber) => this._clientChatWindows.ignored.includes(subscriber),
                         // 현재 채팅 입력줄의 수신자 접두에 그 Player 이름이 들어 있으면 1 이다(원본 0042e9e0). 채팅 창이 없으면 0 이다. 단독 미션 Players 메뉴는 자기 자신 행에서만 이 값을 읽고 쓰지 않는다. (2026-11-22 WB04-E1169)
-                        whispered: (subscriber) => { const chat = this._campaignProduction?.ui?.chat(); return chat?.current() ? (chat.containsRecipient(identity.nameForSubscriber(subscriber)) ? 1 : 0) : 0; } },
+                        whispered: (subscriber) => { const chat = this._campaignProduction?.ui?.chat(); return chat?.current() ? (chat.containsRecipient(identity().nameForSubscriber(subscriber)) ? 1 : 0) : 0; } },
                     // 제단 받침(dais)은 같은 좌표의 제단(altar)을 찾아 그 메뉴로 위임한다(원본 447930). 제단 TYPE 은 게임 보조 상태의 값이다. 위임 자체는 객체 메뉴 열기가 같은 몸체로 처리한다. (2026-11-21 WB04-E1137)
                     open: { altar: (sid) => { const session = production.session, raw = session.core().pool.slot(sid), view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength), world = session.world(); return world.find(view.getFloat32(14, true), view.getFloat32(18, true), world.storage.gameAux.altarType); },
                         delegate: () => { throw new Error('사제 메뉴 제단 위임 미연결'); },
@@ -4071,9 +4078,9 @@ export class Netstorm {
         if (this._state === AppState.MAIN_MENU && readyWorld?.connecting && !readyWorld.session().connectionCallbackActive() && readyWorld.session().localConnectionReady()) {
             this._prepareCampaignMissionStart(); this._prepareCampaignUserInput(); this._prepareCampaignCursor(); this._prepareCampaignTutorial(); readyWorld.completeLocalConnection();
         }
-        // 생산 패널(HUD)은 원본 FinishMissionWorldLoad 가 만들고, Guide 의 시작 단계(기술 추가 등)는 그 뒤 루프 8번에서 돈다. 같은 프레임이어도 패널 폼(SID 순서)이 먼저이다. (2026-11-24 WB04-E1305: Tutorial2 L3 에서 슬롯 11~13 순서 차이로 발견)
-        if (this._campaignDisplayActive() && !this._campaignProduction) this._prepareCampaignProduction();
-        if (this._campaignDisplayActive() && !this._campaignProduction.ui) this._prepareCampaignProductionUi();
+        // State7에서 생성한 HUD의 실제 Session/Form 도킹은 FinishMissionWorldLoad 위치에서 수행한다. Guide의 기술 추가보다 패널 Form(SID 순서)이 먼저다. (E1305·E1383)
+        if (this._campaignDisplayActive() && !this._campaignProduction?.maintenance) this._prepareCampaignProduction();
+        if (this._campaignDisplayActive() && !this._campaignProduction.worldBound) this._prepareCampaignProductionUi();
         // 원본 루프 8번의 Guide를 상태·패킷 처리 뒤, 입력 처리보다 먼저 실행한다.
         this._clientGuide?.run();
         if (this._campaignDisplayActive()) this._runCampaignInputFrame();
