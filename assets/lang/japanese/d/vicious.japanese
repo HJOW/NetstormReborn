@@ -1,0 +1,64 @@
+﻿[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+
+myStartMoney = 7000
+myTech = "sunWalker;thunderBattery;rainBattery;rainFence;sunFence;sunCannon;thunderFence;thunderBlocker;thunderArcher"
+
+aiName = "Duke of the Furies"
+aiTech = "rainWalker;rainBattery;windBattery;thunderBattery;sunArcher;sunCannon;windArcher;rainCannon;thunderCannon"
+aiStartMoney = 10000
+aiGeyserAttachments = 4
+aiCollectors = 4
+aiTimeBetweenMoves = 2
+
+title="残虐"
+
+[A.]
+<h2>残虐</h2>
+<i>「島々は、暗く耳の聞こえぬ空に向かって、自らの傷を叫び訴えた。」<br>
+--ニンバスの書</i>
+<p>
+敵は「嵐の島」という、恐るべき怪物を作り上げました。
+ウィンド、レイン、サンダーがそこに集まり、
+止められない力となっています。
+<p>
+各系統の残酷で有害な力を、ことごとく備えた要塞が、
+あなたに向かって近づいてきます。
+
+$Button=次へ,Tell,A1.
+
+[A1.]
+<h2>残虐</h2>
+<p>
+攻撃目標は、我々の新兵器開発施設が置かれる場所です。
+そこに建つ施設の武装は弱いため、試作兵器で襲撃者を撃退し、
+敵司祭を討ち取らなければなりません！
+
+$Button=知識を確認,ShowTechnology,55
+$Button=ミッション開始,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>成功！</h2>
+<p>
+奇跡的に嵐の島を倒しました！
+今や、ニンバスの最高支配者となる準備は整いました。
+闇の君主たちを、今度こそ完全に征服できるでしょうか？
+<$Config,Done{mission.fileName}=1>
+$Button=ミッションを終了,MissionAbort,1
+$Button=次のミッション,MissionBegin,EnemyTerritory
+
+
+[Failed]
+<h2>失敗！</h2>
+<p>
+嵐の島は、あなたの軍を踏みにじり、粉々に打ち砕きました。
+<p>
+敵は新兵器の設計図を奪いました。
+それを我々に向け、帝国を破壊するでしょう！
+$Button=続ける,Tell,TryAgain
+
+
+[END]
