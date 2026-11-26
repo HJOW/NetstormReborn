@@ -10,6 +10,7 @@
 #include "o/RawTerrainBitmap.h"
 #include "o/RawProcessSummary.h"
 #include "o/SquidProcess.h"
+#include "platform/ErrorLog.h" // 필터된 개발자 trace와 별개인 사용자 오류 파일에 현재 문맥을 남긴다.
 #include <windows.h> // Windows10/11의 유니코드 시스템 경로와 버전 리소스 조회 경계다.
 #include <winver.h>
 #include <bit>
@@ -18,8 +19,32 @@
 #include <cstdio>
 #include <cstring> // 버전 리소스의 고정 크기를 정렬과 무관하게 복사한다.
 #include <stdexcept>
+#include <iostream> // 기존 진단의 표준 출력과 공통 스트림 복제를 유지한다.
 
 namespace netstorm::client { // 출력 모드/재귀 깊이는 같은 Client 객체에서만 변경한다.
+// 선택 창에서 사용자가 종료해도 이미 계산한 TYPE/프레임 상세가 파일에 남도록 먼저 기록한다.
+void LogClientDisplayAssertion(const std::optional<std::string>& detail,std::string_view expression,std::string_view file,std::uint32_t line) {
+    if (detail && !detail->empty()) platform::ErrorLog::Record(platform::LogLevel::kWarning,"assertion-detail",*detail);
+    platform::ErrorLog::RecordAssertion(expression,file,line);std::clog<<"원본 표시 진단: "<<file<<':'<<line<<' '<<expression<<'\n';
+}
+// 같은 실제 풀을 읽기만 하며 오류 기록기의 예외는 원래 Regular 예외보다 앞세우지 않는다.
+void LogRegularFailure(const o::SidPool& pool,o::Sid sid,std::uint32_t event,std::uint32_t count,float payload) noexcept {
+    try {
+        std::array<char,256> text{};int length{}; // 할당 없이 오류 순간의 고정 폭 문맥을 구성한다.
+        if (sid.value<pool.Capacity()) {
+            const auto raw=pool.Slot(sid);std::uint32_t frameBits{},raw42{}; // raw42는 파생별 추가 필드이며 거주 구역에서는 기본 프레임이다.
+            if (pool.Edition()==o::OriginalEdition::Patch1078) {
+                std::memcpy(&frameBits,raw.data()+36,4);std::memcpy(&raw42,raw.data()+42,4);
+                length=std::snprintf(text.data(),text.size(),"Regular failure SID%u TYPE%u event%u count%u payload%08x frame%d raw42=%08x",sid.value,raw[10],event,count,std::bit_cast<std::uint32_t>(payload),std::bit_cast<std::int32_t>(frameBits),raw42);
+            } else {
+                frameBits=raw[34];length=std::snprintf(text.data(),text.size(),"Regular failure SID%u TYPE%u event%u count%u payload%08x frame%u",sid.value,raw[10],event,count,std::bit_cast<std::uint32_t>(payload),frameBits); // CD36BYTE 슬롯 밖의 PATCH 추가 필드는 읽지 않는다.
+            }
+        } else {
+            length=std::snprintf(text.data(),text.size(),"Regular failure SID%u TYPEunknown event%u count%u payload%08x (pool capacity %u)",sid.value,event,count,std::bit_cast<std::uint32_t>(payload),pool.Capacity());
+        }
+        if (length>0 && static_cast<std::size_t>(length)<text.size()) platform::ErrorLog::Record(platform::LogLevel::kError,"regular",{text.data(),static_cast<std::size_t>(length)});
+    } catch (...) { /* 진단 부가 기록 실패는 호출자의 원래 예외와 stderr 출력을 그대로 보존한다. */ }
+}
 // 4429e0은 실제 xor eax,eax/ret이므로 원문 실패 두 줄 뒤에만 DLL의 버전 리소스를 읽는다.
 void QueryDeveloperDirectDraw(const std::function<void(std::string_view)>& log) {
     if (!log) throw std::invalid_argument("개발자 DirectDraw 조회 로그 미연결");log("You don't have DirectDraw installed, or some error occured during\n");log("the query.\n");

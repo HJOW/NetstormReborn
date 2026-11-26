@@ -1,0 +1,69 @@
+{
+  "unit": 1377,
+  "date": "2026-11-27",
+  "host": "HJOW-Athlon",
+  "lastDecompileHost": "HJOW-Athlon",
+  "tests": {
+    "newContext": 4,
+    "existingErrorLog": 14,
+    "passed": 18,
+    "failed": 0
+  },
+  "gui": {
+    "passed": true,
+    "exeSha256": "6851dfabaa7f6b8eb98eb4c8b312b9374d3287ae4ee845552d6fd9d78dc0846b",
+    "initial": {
+      "objective": [
+        "F4를 눌러 내 섬으로 돌아오거나 다리를 놓으십시오."
+      ],
+      "gate": [
+        "1",
+        "65",
+        "0",
+        "0",
+        "0",
+        "1",
+        "0",
+        "0"
+      ],
+      "size": [
+        "1280",
+        "720"
+      ],
+      "screenMode": [
+        "138",
+        "1280",
+        "720",
+        "1280",
+        "1"
+      ]
+    },
+    "afterF4": {
+      "objective": [
+        "다리를 총 8개 놓으십시오."
+      ],
+      "gate": [
+        "1",
+        "66",
+        "0",
+        "0",
+        "0",
+        "1",
+        "3128006.242",
+        "0"
+      ]
+    },
+    "exitCode": 0
+  },
+  "protection": {
+    "files": 2810,
+    "changed": []
+  },
+  "oldFailureEvidence": {
+    "stderrHasSidTypeEvent": true,
+    "fileHasSidType": false,
+    "fileHasFrameDetail": false,
+    "logSha256": "b1785d6ceb15c753185d539c59670d06a2e5f398fd64563df8b0162e9b26f432"
+  },
+  "passed": true
+}

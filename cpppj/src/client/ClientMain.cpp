@@ -450,7 +450,7 @@ int Client::Run() {
     screen_->BindColorMaps([owner=colorSortInput_] { const auto& maps=owner->Maps();return GumpShadeMaps{maps[4],maps[6]}; }); // 실제cache의두행을화면명암에도사용한다.
     surfaceStorage_=MakeRawSurfaceStorage(*assets_,gameplayGlobals_->Authority(),gameplayGlobals_->GameAux()); // init squid/hash/spot의 실제 장기 물리를 메뉴보다 먼저 확보한다.
     surfaceStorage_->BindChecking(o::RawCheckingFlag{gameplayGlobals_->AiDebug().Checking()}); // 같은ClientDWORD를Editor/Session대여전부터빌리며새World에서0으로복제하지않는다.
-    surfaceStorage_->BindDisplayDiagnostics(gameplayGlobals_->AiDebug().AssertionDetail(),[](std::string_view expression,std::string_view file,std::uint32_t line) { platform::ErrorLog::RecordAssertion(expression,file,line);std::clog<<"원본 표시 진단: "<<file<<':'<<line<<' '<<expression<<'\n'; }); // M7.5: 모든 AssertDisplay가 이 중앙 장치를 거쳐 사용자 홈 logs 파일에 남는다. // 첫 Editor/Session 이전부터 현재 상세 저장소와 복귀하는 기존 로그 진단을 연결한다.
+    surfaceStorage_->BindDisplayDiagnostics(gameplayGlobals_->AiDebug().AssertionDetail(),[detail=&gameplayGlobals_->AiDebug().AssertionDetail()](std::string_view expression,std::string_view file,std::uint32_t line) { LogClientDisplayAssertion(*detail,expression,file,line); }); // 기존 Client 수명 상세 대여를 유지하고 TYPE/프레임 상세도 같은 오류 파일에 기록한다.
     surfaceStorage_->BindGraphTrace([this](auto level,auto text) { WriteDiagnosticLog(level,text); }); // Graph의 원문 로그도 현재 Client 필터/들여쓰기/FILE 수명을 직접 사용한다.
     if (options_.edition==o::OriginalEdition::Patch1078) surfaceStorage_->EnablePatchDestroyDiagnostics(); // 실제 첫 Editor/Session 전부터 원문 공통 삭제의 정상 복귀 진단을 같은 Client에 연결한다.
     if (options_.edition==o::OriginalEdition::Patch1078) surfaceStorage_->BindPostPopDevices({[this](auto owner,auto object,auto added) {

@@ -5,13 +5,20 @@
 #include <cstdio> // 기록기의 실제 FILE 수명을 Client 종료까지 보유한다.
 #include <filesystem>
 #include <memory>
+#include <optional> // 원문이 보관한 상세 문자열의 유무를 그대로 전달한다.
+#include <string> // 상세를 재해석하지 않고 공통 오류 기록기에 전달한다.
 
 namespace netstorm::o { class Kernel; } // 실제 Client Kernel을 빌리며 새 실행기를 만들지 않는다.
+namespace netstorm::o { class SidPool; struct Sid; } // 오류 순간의 실제 슬롯만 읽고 공장/월드를 새로 구성하지 않는다.
 
 namespace netstorm::client { // 장기 로그 상태와 실제 입력 관문만 선언하며 월드를 별도 소유하지 않는다.
 class Client; // 실제 현재 기록/시간/경로 장치만 빌리고 새 게임 세션을 만들지 않는다.
 class RawSurfaceStorage; // 현재 Pool/TYPE/진단 장치의 실제 소유자다.
 class ClientGameplayGlobals; // 상세 문자열의 장기 소유권을 Kernel 장치 수명까지 유지한다.
+// 원문 상세 저장소를 변경하지 않고 표현식/파일/행과 함께 사용자 오류 파일에 기록한다.
+void LogClientDisplayAssertion(const std::optional<std::string>& detail,std::string_view expression,std::string_view file,std::uint32_t line);
+// 실패한 Regular의 현재 SID/TYPE/프레임/사건을 즉시 기록한다. 기록 실패가 원래 예외를 교체하지 않는다.
+void LogRegularFailure(const o::SidPool& pool,o::Sid sid,std::uint32_t event,std::uint32_t count,float payload) noexcept;
 // 시작/창 없는 집중 검사 모두 같은 요약 본문·사용자 경로·현재 단언을 연결한다. Kernel/Surface는 약한 참조로 순환 소유를 피한다.
 void BindClientKernelDiagnostics(const std::shared_ptr<o::Kernel>& kernel,const std::shared_ptr<RawSurfaceStorage>& surface,const std::shared_ptr<ClientGameplayGlobals>& gameplay,const std::filesystem::path& directory,bool userPolicy);
 // queryDirectDraw의 원문 로그 순서와 시스템 ddraw.dll 버전 리소스만 조회한다. DLL/DirectDraw 장치를 초기화하지 않는다.

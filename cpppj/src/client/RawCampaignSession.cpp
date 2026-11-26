@@ -6,6 +6,7 @@
 #include "o/RawSquidRegion.h" // 같은 TYPE 진단과 raw 지역 WORD의 getter/setter를 공유한다.
 // 기존 원본 몸체의 단일 저장소 조립을 실제 클라이언트 세션이 소유한다.
 #include "client/RawCampaignSession.h"
+#include "client/ClientDiagnostics.h" // Regular 예외의 현재 객체/사건 문맥을 사용자 오류 파일에도 남긴다.
 #include "client/SkirmishSetup.h" // 12차: 스커미시 월드 계획(시작 섬 fort/중앙섬 기록)이다.
 #include "client/NativeLoginPacketReceivers.h" //실제 Login/Editor의 같은 고정 F를 빌린다.
 #include "client/NativeGameplayPacketReceivers.h" //이동/Squid/문자열의 같은 실제 고정 F를 사용한다.
@@ -1811,7 +1812,7 @@ struct RawCampaignSession::Impl {
                 if (devastationRegular && ConnectedBombTable(Read(core.pool.Slot(sid),0))) { PrepareDevastation();return devastationRegular->Handle(sid,event,count,payload); }
                 return handler(sid,event,count,payload);
             }
-            catch (...) { std::fprintf(stderr,"실제 Regular 실패 SID%u TYPE%u event%u count%u payload%08x\n",sid.value,sid.value<core.pool.Capacity() ? core.pool.Slot(sid)[10] : 0xffffU,event,count,std::bit_cast<std::uint32_t>(payload));throw; }
+            catch (...) { LogRegularFailure(core.pool,sid,event,count,payload);std::fprintf(stderr,"실제 Regular 실패 SID%u TYPE%u event%u count%u payload%08x\n",sid.value,sid.value<core.pool.Capacity() ? core.pool.Slot(sid)[10] : 0xffffU,event,count,std::bit_cast<std::uint32_t>(payload));throw; } // 오류 문맥은 사용자 파일에도 남기며 기존 stderr/원래 예외 전파를 유지한다.
         };
         worldHooks.transmit=DaisTransmission(AviaryTransmission(ConstructionTransmission(combat->Transmission(services.formPacket,assetBindings->Transmission()))));worldHooks.walkerFall=[this](Sid sid) { return priests->FallWalker(sid); };
         worldHooks.bridgeEffect=[this](const BridgeLifecycleEvent& event) {

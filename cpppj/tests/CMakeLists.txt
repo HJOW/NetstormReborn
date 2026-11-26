@@ -3961,3 +3961,9 @@ netstorm_apply_compiler_options(netstorm_tutorial_objective_tests)
 add_executable(netstorm_lan_residence_tests FocusedTestMain.cpp AssetPostPopTests.cpp)
 target_link_libraries(netstorm_lan_residence_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_lan_residence_tests)
+
+# 실제 원문 상세와 Regular 실패가 사용자 오류 파일에 보존되는지 창 없이 확인한다.
+target_sources(netstorm_tests PRIVATE ClientErrorContextTests.cpp)
+add_executable(netstorm_error_context_tests FocusedTestMain.cpp ClientErrorContextTests.cpp ErrorLogTests.cpp)
+target_link_libraries(netstorm_error_context_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_error_context_tests)
