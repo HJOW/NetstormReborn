@@ -49,11 +49,20 @@ test('Netstorm 미션 장치: 화면 크기와 교체된 실제 변경 표', () 
     assert.deepEqual(services.cameraScreenSize(), { x: 1024, y: 768 }); assert.equal(services.surfaceDisplay.suppressed(), true);
     first.clearDirty(); app._displayDirty = false;
     services.surfaceDisplay.invalidate({ left: 1, top: 2, right: 5, bottom: 7 }, 4);
-    assert.equal(app._displayDirty, true); assert.deepEqual(first.cameraDirtyEntries(), [{ rect: { left: 1, top: 2, right: 5, bottom: 7 }, flags: 4 }]);
+    assert.equal(app._displayDirty, false); assert.deepEqual(first.cameraDirtyEntries(), [{ rect: { left: 1, top: 2, right: 5, bottom: 7 }, flags: 4 }]);
+    // 실제 앱의 그리기 진입점에서도 부분 영역이 전체 영역으로 승격되지 않아야 한다.
+    app._ctx = {}; app._layout = { visible: true, logicalWidth: 1024, logicalHeight: 768 };
+    app._surface = {}; app._mainMenu = { dialog: null, dirty: false }; app._campaignDisplayActive = () => true;
+    app._campaignCameraDevice = () => ({ applyCameraFrame() {} });
+    app._drawCampaignRendererFrame = () => assert.deepEqual(first.cameraDirtyEntries(), [{ rect: { left: 1, top: 2, right: 5, bottom: 7 }, flags: 4 }]);
+    app._render(0);
     app._clientPaletteScreen = { width: 1366, height: 768 }; app._initializeClientRenderer(1366, 768);
     const second = app._clientRenderer; assert.notEqual(second, first);
     assert.deepEqual(services.cameraScreenSize(), { x: 1366, y: 768 }); assert.equal(services.surfaceDisplay.suppressed(), true);
+    // 다른 UI가 이미 요청한 전체 Canvas 표시는 부분 갱신 전달이 지우지 않는다.
+    app._displayDirty = true;
     second.clearDirty(); services.surfaceDisplay.invalidate({ left: 1025, top: 3, right: 1030, bottom: 9 }, 0);
+    assert.equal(app._displayDirty, true);
     assert.equal(second.cameraDirtyEntries().length, 1); assert.equal(first.cameraDirtyEntries().length, 1);
 });
 

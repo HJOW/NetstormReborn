@@ -1,0 +1,186 @@
+{
+  "format": "netstorm-webpj-cpppj-l3-steps",
+  "version": 1,
+  "description": "Tutorial5 C의 안내 두 쪽을 닫고 미니맵으로 적 섬을 본 뒤 훨리베이스를 선택하고 대기하여 D 안내까지 대조한다. 특정 적 공격·파괴·희생·승리 입력은 없다.",
+  "language": "english",
+  "screen": {
+    "width": 1024,
+    "height": 768
+  },
+  "fixedFrameMs": 25,
+  "mission": "Tutorial5",
+  "settings": {
+    "SCREENW": 1024,
+    "SCREENH": 768,
+    "WelcomeGiven": 1,
+    "tellTips": 0,
+    "autoDemo": 0
+  },
+  "steps": [
+    [
+      110,
+      "click-if",
+      "MORE"
+    ],
+    [
+      150,
+      "click-if",
+      "OK"
+    ],
+    [
+      220,
+      "right",
+      "screen:540,297"
+    ],
+    [
+      250,
+      "click",
+      "screen:620,322"
+    ],
+    [
+      280,
+      "click",
+      "screen:810,375"
+    ],
+    [
+      300,
+      "click",
+      "screen:40,272"
+    ],
+    [
+      310,
+      "click",
+      "screen:674,465"
+    ],
+    [
+      1020,
+      "click-if",
+      "OK"
+    ],
+    [
+      1060,
+      "right",
+      "screen:520,381"
+    ],
+    [
+      1080,
+      "click",
+      "screen:570,403"
+    ],
+    [
+      1100,
+      "click",
+      "screen:745,420"
+    ],
+    [
+      1120,
+      "click",
+      "screen:900,423"
+    ],
+    [
+      1140,
+      "click",
+      "screen:450,420"
+    ],
+    [
+      2200,
+      "right",
+      "screen:445,420"
+    ],
+    [
+      2220,
+      "click",
+      "screen:520,445"
+    ],
+    [
+      2240,
+      "click",
+      "screen:720,445"
+    ],
+    [
+      2260,
+      "right",
+      "screen:445,420"
+    ],
+    [
+      2280,
+      "click",
+      "screen:520,445"
+    ],
+    [
+      2300,
+      "click",
+      "screen:720,445"
+    ],
+    [
+      2320,
+      "right",
+      "screen:540,297"
+    ],
+    [
+      2340,
+      "click",
+      "screen:620,322"
+    ],
+    [
+      2360,
+      "click",
+      "screen:810,322"
+    ],
+    [
+      2400,
+      "snapshot",
+      "c2400"
+    ],
+    [
+      2420,
+      "click-if",
+      "MORE"
+    ],
+    [
+      2440,
+      "snapshot",
+      "airdefense2440"
+    ],
+    [
+      2460,
+      "click-if",
+      "OK"
+    ],
+    [
+      2500,
+      "click",
+      "screen:50,750"
+    ],
+    [
+      2520,
+      "snapshot",
+      "enemyview"
+    ],
+    [
+      2540,
+      "click",
+      "screen:345,455"
+    ],
+    [
+      2560,
+      "snapshot",
+      "aviaryselected"
+    ],
+    [
+      2560,
+      "session-dump",
+      "aviaryselected"
+    ],
+    [
+      2800,
+      "snapshot",
+      "d2800"
+    ],
+    [
+      2800,
+      "session-dump",
+      "d2800"
+    ]
+  ]
+}

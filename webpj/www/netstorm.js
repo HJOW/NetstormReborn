@@ -1392,7 +1392,7 @@ export class Netstorm {
             if (!screen) throw new Error('미션 카메라의 실제 Screen 수명 누락');
             return { x: screen.width, y: screen.height };
         };
-        // 표면 변경은 크기 변경으로 교체된 현재 Renderer에도 같은 어댑터로 전달한다.
+        // 표면 변경은 현재 Renderer의 부분 영역으로 전달한다. Canvas 전체 갱신 표시는 원본 dirty 영역을 넓히므로 여기서 켜지 않는다. (WB04-E1342)
         services.surfaceDisplay = {
             suppressed: () => {
                 if (!this._clientSurfaceDisplay) throw new Error('미션 표면의 실제 Renderer 수명 누락');
@@ -1400,7 +1400,7 @@ export class Netstorm {
             },
             invalidate: (rect, flags) => {
                 if (!this._clientSurfaceDisplay) throw new Error('미션 표면의 실제 Renderer 수명 누락');
-                this._clientSurfaceDisplay.invalidate(rect, flags); this._displayDirty = true;
+                this._clientSurfaceDisplay.invalidate(rect, flags);
             },
         };
         return services;

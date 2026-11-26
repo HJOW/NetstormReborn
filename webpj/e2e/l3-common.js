@@ -84,7 +84,7 @@ async function runL3({ browser, plan, oracleDir, compare = true, inspect = null,
     const difference = compareImages(readPng(fs.readFileSync(path.join(oracleDir, `${name}.png`))), web, regions);
     // 조사 폴더를 지정한 실행만 웹 논리 화면도 보존해 기존 오라클을 바꾸지 않고 차이 위치를 확인한다. (WB04-E1341)
     if (process.env.L3_DUMP_DIR) fs.writeFileSync(path.join(process.env.L3_DUMP_DIR, `${name}.web.png`), encodeIndexedPng(web));
-    expect(difference.outside, `${name} 화면의 설명된 영역 밖 차이`).toBe(0);
+    expect(difference.outside, `${name} 화면의 설명된 영역 밖 차이 ${JSON.stringify(difference.outsideBox)}`).toBe(0);
     // 변경 영역도 사유와 정확한 픽셀 수를 고정해 다른 결함이 섞이지 않게 한다.
     for (let index = 0; index < regions.length; index += 1) {
       expect(regions[index].reason, `${name} 변경 사유`).toBeTruthy();
