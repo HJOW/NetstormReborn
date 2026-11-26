@@ -11,8 +11,12 @@
       {
         "first": "About",
         "last": "UCampaign"
+      },
+      {
+        "first": "Credits",
+        "last": "Credits13"
       }
     ],
-    "nextSection": "Credits"
+    "nextSection": "NewTech"
   }
 }

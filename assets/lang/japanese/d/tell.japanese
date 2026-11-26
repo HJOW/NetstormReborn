@@ -743,63 +743,60 @@ $Button=戻る,Tell,Blank
 [***********************************************************]
 [Credits]
 <background="nsstart">
-<h2>{H2}NetStorm Credits</h2>
-$Menu=Netstorm 10.72 Patch Credits,Tell,CreditsNew
-$Menu=Netstorm Original Credits,Tell,Creditsold
-$Button=Cancel,Tell,Blank
-
-
-
+<h2>{H2}クレジット</h2>
+$Menu=NetStorm 10.72 パッチ クレジット,Tell,CreditsNew
+$Menu=NetStorm オリジナル クレジット,Tell,Creditsold
+$Button=キャンセル,Tell,Blank
 
 [CreditsNew]
 <background="nsstart">
-<h2>{H2}NetStorm 10.72 Patch Credits</h2>
+<h2>{H2}NetStorm 10.72 パッチ クレジット</h2>
 <p>{Text}
-Patch Developed by Ticonderoga Entertainment
+パッチ開発：Ticonderoga Entertainment
 <p>
-{CText}Programming{Text}<br>
-Fleet_Admiral, Project Leader and Lead Developer.<br>
-Wishmaster, Assistant developer.<br>
-Rangerone, Auto Updating Software.<br>
+{CText}プログラミング{Text}<br>
+Fleet_Admiral, プロジェクトリーダー兼リード開発者。<br>
+Wishmaster, アシスタント開発者。<br>
+Rangerone, 自動更新ソフトウェア。<br>
 <br>
-{CText}Graphics{Text}<br>
-DWMI, 3d Graphics and Graphics Manager.<br>
-Robban, 3d Graphics.<br>
-Cirrostratus, Concept Art.<br> 
-Fleet_Admiral, 2d art and general concepts.<br>
+{CText}グラフィックス{Text}<br>
+DWMI, 3Dグラフィックスおよびグラフィックスマネージャー。<br>
+Robban, 3Dグラフィックス。<br>
+Cirrostratus, コンセプトアート。<br> 
+Fleet_Admiral, 2Dアートおよび全体のコンセプト。<br>
 <br>
-{CText}Sound{Text}<br>
-Dwia, Sound Technician.<br> 
-Dwindlin, Sound Technician.<br>
+{CText}サウンド{Text}<br>
+Dwia, サウンドエンジニア。<br> 
+Dwindlin, サウンドエンジニア。<br>
 <br>
 $Timeout=20,Tell,CreditsNew1
-$Button=More,Tell,CreditsNew1
-$Button=Back,Tell,Credits
-$Button=Cancel,Tell,Blank
+$Button=続きを見る,Tell,CreditsNew1
+$Button=戻る,Tell,Credits
+$Button=キャンセル,Tell,Blank
 
 [CreditsNew1]
 <background="nsstart">
-<h2>{H2}NetStorm 10.72 Patch Credits</h2>
+<h2>{H2}NetStorm 10.72 パッチ クレジット</h2>
 <p>{Text}
-{CText}Scripting{Text}<br>
-Fleet_Admiral, Lead English Scripter.<br>
-Samthemon, English Scripter.<br>
-AmericanEagle, Help File Writer.<br>
-Dwindlin, Help File Writer.<br>
-MrBig, Help File Writer.<br>
-Ventusmori, Help File Writer.<br>
-Whirlibulf, Help File Writer.<br>
-Kenzo, Help File Writer.<br>
+{CText}スクリプト{Text}<br>
+Fleet_Admiral, 英語スクリプト統括。<br>
+Samthemon, 英語スクリプト作成。<br>
+AmericanEagle, ヘルプファイル作成。<br>
+Dwindlin, ヘルプファイル作成。<br>
+MrBig, ヘルプファイル作成。<br>
+Ventusmori, ヘルプファイル作成。<br>
+Whirlibulf, ヘルプファイル作成。<br>
+Kenzo, ヘルプファイル作成。<br>
 <br>
-{CText}Unit Balance{Text}<br>
-MrBig, Lead Tester and Unit Balance.<br> 
-Clif, Unit Balance.<br>
-Kain, Unit Balance.<br>
+{CText}ユニットバランス{Text}<br>
+MrBig, リードテスターおよびユニットバランス。<br> 
+Clif, ユニットバランス。<br>
+Kain, ユニットバランス。<br>
 <br>
-{CText}Others{Text}<br>
-YellowEye, Darkskies and Activision coordinator.<br>
+{CText}その他{Text}<br>
+YellowEye, DarkskiesおよびActivision担当コーディネーター。<br>
 <br>
-{CText}Special Thanks to{Text}<br>
+{CText}特別な感謝{Text}<br>
 Kain<br>
 YellowEye<br>
 NsWorld<br>
@@ -808,21 +805,20 @@ ZBS<br>
 Ken<br>
 
 $Timeout=20,Tell,CreditsNew2
-$Button=More,Tell,CreditsNew2
-$Button=Back,Tell,CreditsNew
-$Button=Cancel,Tell,Blank
-
+$Button=続きを見る,Tell,CreditsNew2
+$Button=戻る,Tell,CreditsNew
+$Button=キャンセル,Tell,Blank
 
 [CreditsNew2]
 <background="nsstart">
-<h2>{H2}NetStorm 10.72 Patch Credits</h2>
+<h2>{H2}NetStorm 10.72 パッチ クレジット</h2>
 <p>{Text}
-{CText}The NSHQ Pip Icon Contest Winners{Text}<br>
-First place, IV0.<br>
-Second Place, mig5.<br>
-Third Place, Tas.<br>
+{CText}NSHQピップアイコンコンテスト受賞者{Text}<br>
+1位, IV0。<br>
+2位, mig5。<br>
+3位, Tas。<br>
 <br>
-{CText}The NSHQ Pip Icon Contest Participants{Text}<br>
+{CText}NSHQピップアイコンコンテスト参加者{Text}<br>
 Tas<br>
 demon98765<br>
 DWMI<br>
@@ -830,157 +826,149 @@ mig5<br>
 Drunken_Master<br>
 IV0<br>
 <br>
-{CText}Alpha Testers{Text}<br>
+{CText}アルファテスター{Text}<br>
 Manifesto, CrispyCrab, Deacon, Caesar<br> 
 Ventusmori, Darkwizzard, Dwindlin, Promise<br>
 RickMcCrank, CoWsGoMoO, Dwiggy, AustralianDingo<br>
 Papers, Sudden_Death, BlueCheese, AmericanEagle<br>
 KellJes, NsWorld, Chgirl, Whirlibulf<br>
 $Timeout=20,Tell,CreditsNew3
-$Button=More,Tell,CreditsNew3
-$Button=Back,Tell,CreditsNew1
-$Button=Cancel,Tell,Blank
+$Button=続きを見る,Tell,CreditsNew3
+$Button=戻る,Tell,CreditsNew1
+$Button=キャンセル,Tell,Blank
 
 [CreditsNew3]
 <background="nsstart">
-<h2>{H2}NetStorm 10.72 Patch Credits</h2>
+<h2>{H2}NetStorm 10.72 パッチ クレジット</h2>
 <p>{Text}
-{CText}Beta Testers{Text}<br>
+{CText}ベータテスター{Text}<br>
 Besroah, Dahonk, Ingwe, Jaron<br>
 Moonstone, Shoty, Sneakynewbie, stormer<br>
 Tas, Zazu<br> 
 
-{CText}Dedication{Text}<br>
-The Netstorm 10.70 patch is dedicated in memory of Ladybulf.<br> 
-May your devotion to nimbus never be forgotten!<br>
+{CText}献辞{Text}<br>
+NetStorm 10.70パッチを、Ladybulfの思い出に捧げます。<br> 
+ニンバスへのあなたの献身が、決して忘れられませんように！<br>
 
 $Timeout=20,Tell,Blank
-$Button=Back,Tell,CreditsNew2
-$Button=Cancel,Tell,Blank
-
-
+$Button=戻る,Tell,CreditsNew2
+$Button=キャンセル,Tell,Blank
 
 [Creditsold]
 <background="nsstart">
-<h2>{H2}NetStorm Credits</h2>
+<h2>{H2}NetStorm クレジット</h2>
 <p>{Text}
-Developed by Titanic Entertainment
+開発：Titanic Entertainment
 <p>
-{CText}Titanic is, in alphabetical order:{Text}<br>
-Tony Bratton, Chief Nerd<br>
-Ken Demarest, President and Nerd<br>
-Beverly Garland, Art Director<br>
-Jim Greer, Director of Mind Control Products<br>
-Steve Moore, Father and Author<br>
-Chip Patterson, Artist<br>
-Kelcey Privett, Artist<br>
-Zack Simpson, Chief Executive Nerd<br>
+{CText}Titanicのチーム（アルファベット順）：{Text}<br>
+Tony Bratton, 主任オタク<br>
+Ken Demarest, 社長兼オタク<br>
+Beverly Garland, アートディレクター<br>
+Jim Greer, マインドコントロール製品担当ディレクター<br>
+Steve Moore, 父親、作家<br>
+Chip Patterson, アーティスト<br>
+Kelcey Privett, アーティスト<br>
+Zack Simpson, 最高経営オタク<br>
 
 $Timeout=20,Tell,Credits1
-$Button=More,Tell,Credits1
-$Button=Back,Tell,Credits
-$Button=Cancel,Tell,Blank
+$Button=続きを見る,Tell,Credits1
+$Button=戻る,Tell,Credits
+$Button=キャンセル,Tell,Blank
 
 [***********************************************************]
 [Credits1]
-<h2>{H2}NetStorm Credits</h2>
+<h2>{H2}NetStorm クレジット</h2>
 <p>{Text}
-{CText}Additional Support From:{Text}<br>
-Thomas Blom, Video Support<br>
-Randy Buck, Voice and Sound Effects<br>
-Tom Byrne, Voice Talent<br>
-John King, Voice Talent<br>
-Richard (Dicko) Mather, Conceptual Art<br>
-John Miles, Graphic Code<br>
-Mark Morgan, Music<br>
-Morgan Ogburn, Conceptual Art<br>
-Mike Privett, Additional Programming<br>
-Purple Frog Software, Conversion to Html
-Boutros Boutros-Doggie, Security<br>
+{CText}追加協力：{Text}<br>
+Thomas Blom, 映像協力<br>
+Randy Buck, 音声および効果音<br>
+Tom Byrne, 声の出演<br>
+John King, 声の出演<br>
+Richard (Dicko) Mather, コンセプトアート<br>
+John Miles, グラフィックスコード<br>
+Mark Morgan, 音楽<br>
+Morgan Ogburn, コンセプトアート<br>
+Mike Privett, 追加プログラミング<br>
+Purple Frog Software, HTML変換
+Boutros Boutros-Doggie, セキュリティー<br>
 
 $Timeout=20,Tell,Credits2
-$Button=Back,Tell,Creditsold
-$Button=More,Tell,Credits2
-$Button=Cancel,Tell,Blank
+$Button=戻る,Tell,Creditsold
+$Button=続きを見る,Tell,Credits2
+$Button=キャンセル,Tell,Blank
 
 [Credits2]
-<h2>{H2}NetStorm Credits</h2>
+<h2>{H2}NetStorm クレジット</h2>
 <p>{Text}
-{CText}Activision Production{Text}<br>
-Mitch Lasky, Executive Producer<br>
-Jonathan Knight, Producer<br>
-Jason Kay, Producer<br>
-John Cibulski, Production Coordinator<br>
-Sandi Isaacs, Localizations<br>
+{CText}Activision制作{Text}<br>
+Mitch Lasky, エグゼクティブプロデューサー<br>
+Jonathan Knight, プロデューサー<br>
+Jason Kay, プロデューサー<br>
+John Cibulski, 制作コーディネーター<br>
+Sandi Isaacs, ローカライズ<br>
 <p>
-{CText}German Localization{Text}<br>
+{CText}ドイツ語ローカライズ{Text}<br>
 Natascha Conrad, Activision Germany<br>
 Maren Bitzer, MB Office Service<br>
-M & S Music, German Speech Recordings<br>
-Effective Media, German QA Testing<br>
+M & S Music, ドイツ語音声収録<br>
+Effective Media, ドイツ語QAテスト<br>
 
 $Timeout=20,Tell,Credits3
-$Button=Back,Tell,Credits1
-$Button=More,Tell,Credits3
-$Button=Cancel,Tell,Blank
-
-
+$Button=戻る,Tell,Credits1
+$Button=続きを見る,Tell,Credits3
+$Button=キャンセル,Tell,Blank
 
 [Credits3]
-<h2>{H2}NetStorm Credits</h2>
+<h2>{H2}NetStorm クレジット</h2>
 <p>{Text}
-{CText}Activision Marketing and Public Relations{Text}<br>
-Peter Karpas, Product Manager<br>
-Steve Perkins, Assistant Product Manager (Intern)<br>
-Kerstine Johnson, Manager Corporate Communications<br>
-Elizabeth Capps, Junior Publicist<br>
+{CText}Activisionマーケティングおよび広報{Text}<br>
+Peter Karpas, プロダクトマネージャー<br>
+Steve Perkins, アシスタントプロダクトマネージャー（インターン）<br>
+Kerstine Johnson, コーポレートコミュニケーションマネージャー<br>
+Elizabeth Capps, ジュニア広報担当<br>
 <p>
-{CText}Activision Documentation{Text}<br>
-Mark Walker, Author<br>
-Mike Rivera, Documentation Manager<br>
-Ronnie Lane, Technical Help Documentation<br>
-Belinda Van Sickle, Documentation Writer / Production Artist<br>
+{CText}Activisionドキュメント制作{Text}<br>
+Mark Walker, 著者<br>
+Mike Rivera, ドキュメントマネージャー<br>
+Ronnie Lane, 技術ヘルプ文書<br>
+Belinda Van Sickle, 文書制作／制作アーティスト<br>
 <p>
-{CText}Activision Creative Services{Text}<br>
-Ron Gould, Creative Director<br>
-Veronica Milito, Lead Copywriter<br>
-Jim Bridges, Senior Designer<br>
+{CText}Activisionクリエイティブサービス{Text}<br>
+Ron Gould, クリエイティブディレクター<br>
+Veronica Milito, シニアコピーライター<br>
+Jim Bridges, シニアデザイナー<br>
 
 $Timeout=20,Tell,Credits4
-$Button=Back,Tell,Credits2
-$Button=More,Tell,Credits4
-$Button=Cancel,Tell,Blank
-
-
+$Button=戻る,Tell,Credits2
+$Button=続きを見る,Tell,Credits4
+$Button=キャンセル,Tell,Blank
 
 [Credits4]
-<h2>{H2}NetStorm Credits</h2>
+<h2>{H2}NetStorm クレジット</h2>
 <p>{Text}
-{CText}Activision Quality Assurance{Text}<br>
-Dave Arnspiger, QA Manager<br>
-Tim Vanlaw, Senior QA Project Lead<br>
-Mitchell Goldman, Project Lead<br>
-Aaron Casillas, Tester<br>
-Christian Campbell, Tester<br>
-Michael Brady, Tester<br>
-Chris Toft, Tester<br>
-Aaron Gray, Tester<br>
-Laurent Slutzky, Tester<br>
-Matt Powers, Tester<br>
+{CText}Activision品質保証{Text}<br>
+Dave Arnspiger, QAマネージャー<br>
+Tim Vanlaw, シニアQAプロジェクトリーダー<br>
+Mitchell Goldman, プロジェクトリーダー<br>
+Aaron Casillas, テスター<br>
+Christian Campbell, テスター<br>
+Michael Brady, テスター<br>
+Chris Toft, テスター<br>
+Aaron Gray, テスター<br>
+Laurent Slutzky, テスター<br>
+Matt Powers, テスター<br>
 <p>
-And lots of other important people!<br>
+ほかにも、ご協力いただいた多くの皆様に感謝します！<br>
 
 $Timeout=20,Tell,Credits5
-$Button=Back,Tell,Credits3
-$Button=More,Tell,Credits5
-$Button=Cancel,Tell,Blank
-
-
+$Button=戻る,Tell,Credits3
+$Button=続きを見る,Tell,Credits5
+$Button=キャンセル,Tell,Blank
 
 [Credits5]
-<h2>{H2}NetStorm Credits</h2>
+<h2>{H2}NetStorm クレジット</h2>
 <p>{Text}
-{CText}Special Thanks To:{Text}<br>
+{CText}特別な感謝：{Text}<br>
 Bill Anker<br>
 Jamie Bafus<br>
 Tony Bowren<br>
@@ -997,14 +985,14 @@ Brian Kelly<br>
 Gary Knight<br>
 Bobby Kotick<br>
 $Timeout=20,Tell,Credits6
-$Button=Back,Tell,Credits4
-$Button=More,Tell,Credits6
-$Button=Cancel,Tell,Blank
+$Button=戻る,Tell,Credits4
+$Button=続きを見る,Tell,Credits6
+$Button=キャンセル,Tell,Blank
 
 [Credits6]
-<h2>{H2}NetStorm Credits</h2>
+<h2>{H2}NetStorm クレジット</h2>
 <p>{Text}
-{CText}Special Thanks To:{Text}<br>
+{CText}特別な感謝：{Text}<br>
 Maryanne Lataif<br>
 Julia Moore<br>
 David Petchey<br>
@@ -1016,14 +1004,14 @@ Michael Tracy<br>
 Denise Walsh<br>
 David Vonderhaar<br>
 $Timeout=20,Tell,Credits7
-$Button=Back,Tell,Credits5
-$Button=More,Tell,Credits7
-$Button=Cancel,Tell,Blank
+$Button=戻る,Tell,Credits5
+$Button=続きを見る,Tell,Credits7
+$Button=キャンセル,Tell,Blank
 
 [Credits7]
-<h2>{H2}NetStorm Credits</h2>
+<h2>{H2}NetStorm クレジット</h2>
 <p>{Text}
-{CText}Our Official Beta Testers:{Text}<br>{Text}
+{CText}公式ベータテスター：{Text}<br>{Text}
 ^ShahaB^	
 __Mike__	
 |}urn()ut	
@@ -1103,9 +1091,9 @@ BullsEye
 Bumpbash	
 butter	<br>
 $Timeout=20,Tell,Credits8
-$Button=Back,Tell,Credits6
-$Button=More,Tell,Credits8
-$Button=Cancel,Tell,Blank
+$Button=戻る,Tell,Credits6
+$Button=続きを見る,Tell,Credits8
+$Button=キャンセル,Tell,Blank
 
 [Credits8]
 {Text}
@@ -1231,9 +1219,9 @@ Farman
 Fate	
 Faustus	<br>
 $Timeout=20,Tell,Credits9
-$Button=Back,Tell,Credits7
-$Button=More,Tell,Credits9
-$Button=Cancel,Tell,Blank
+$Button=戻る,Tell,Credits7
+$Button=続きを見る,Tell,Credits9
+$Button=キャンセル,Tell,Blank
 
 [Credits9]
 {Text}
@@ -1336,9 +1324,9 @@ jjbean
 jkf3	
 JoDax	
 $Timeout=20,Tell,Credits10
-$Button=Back,Tell,Credits8
-$Button=More,Tell,Credits10
-$Button=Cancel,Tell,Blank
+$Button=戻る,Tell,Credits8
+$Button=続きを見る,Tell,Credits10
+$Button=キャンセル,Tell,Blank
 
 [Credits10]
 {Text}
@@ -1463,9 +1451,9 @@ Nagash	<br>
 Nat	
 N-Dawg	
 $Timeout=20,Tell,Credits11
-$Button=Back,Tell,Credits9
-$Button=More,Tell,Credits11
-$Button=Cancel,Tell,Blank
+$Button=戻る,Tell,Credits9
+$Button=続きを見る,Tell,Credits11
+$Button=キャンセル,Tell,Blank
 
 [Credits11]
 {Text}
@@ -1586,9 +1574,9 @@ Sephiroth
 SHADE	
 Shade	
 $Timeout=20,Tell,Credits12
-$Button=Back,Tell,Credits10
-$Button=More,Tell,Credits12
-$Button=Cancel,Tell,Blank
+$Button=戻る,Tell,Credits10
+$Button=続きを見る,Tell,Credits12
+$Button=キャンセル,Tell,Blank
 
 [Credits12]
 {Text}
@@ -1708,9 +1696,9 @@ UnIoNFliP
 Vader187	
 Vagabond	
 $Timeout=20,Tell,Credits13
-$Button=Back,Tell,Credits11
-$Button=More,Tell,Credits13
-$Button=Cancel,Tell,Blank
+$Button=戻る,Tell,Credits11
+$Button=続きを見る,Tell,Credits13
+$Button=キャンセル,Tell,Blank
 
 [Credits13]
 {Text}
@@ -1774,10 +1762,8 @@ zodiak
 Zorik	
 Zuhkov	
 $Timeout=20,Tell,Blank
-$Button=Back,Tell,Credits12
-$Button=OK,Tell,Blank
-
-
+$Button=戻る,Tell,Credits12
+$Button=確認,Tell,Blank
 
 [***********************************************************]
 [NewTech]
