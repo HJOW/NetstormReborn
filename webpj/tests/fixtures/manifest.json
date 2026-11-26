@@ -33490,6 +33490,582 @@
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/app/main.cpp": "382ec33fe"
       }
+    },
+    {
+      "id": "cpppj-tutorial5-defense-l3-a100-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial5-defense-l3/a100.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial5 실제 건설·피격 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial5-defense.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1340",
+      "doc": "docs/webpj-l3-tutorial5-defense-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "Tutorial5 단계 A2 실제 피격과 B 안내 a100.png",
+      "text": false,
+      "sha256": "fb07094b16ca123aa1ff3ff1f8acc8ed348952d0c5d355deddf050ea11a2f2ec",
+      "bytes": 207455,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "0e18404e0",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial5-defense-l3-a100-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial5-defense-l3/a100.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial5 실제 건설·피격 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial5-defense.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1340",
+      "doc": "docs/webpj-l3-tutorial5-defense-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "Tutorial5 단계 A2 실제 피격과 B 안내 a100.tsv",
+      "text": true,
+      "sha256": "c7b640d574702839082004dd703fc5acb4c74030f39237665d51b352cdaae194",
+      "bytes": 446004,
+      "lines": 5776,
+      "fixtureCommit": null,
+      "webCommit": "0e18404e0",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial5-defense-l3-a140-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial5-defense-l3/a140.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial5 실제 건설·피격 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial5-defense.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1340",
+      "doc": "docs/webpj-l3-tutorial5-defense-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "Tutorial5 단계 A2 실제 피격과 B 안내 a140.png",
+      "text": false,
+      "sha256": "cfa2603672f1173413b1cfa83d01acdd768bf35e39c9aaf3d82845cb673c1488",
+      "bytes": 206967,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "0e18404e0",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial5-defense-l3-a200-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial5-defense-l3/a200.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial5 실제 건설·피격 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial5-defense.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1340",
+      "doc": "docs/webpj-l3-tutorial5-defense-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "Tutorial5 단계 A2 실제 피격과 B 안내 a200.png",
+      "text": false,
+      "sha256": "494bd060d6550d429b15ac7b648134d8bf714b78cda53ba6cf5168c2c3259352",
+      "bytes": 215727,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "0e18404e0",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial5-defense-l3-a200-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial5-defense-l3/a200.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial5 실제 건설·피격 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial5-defense.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1340",
+      "doc": "docs/webpj-l3-tutorial5-defense-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "Tutorial5 단계 A2 실제 피격과 B 안내 a200.tsv",
+      "text": true,
+      "sha256": "97c851db8028964583b7b615406323c6fe5d3afe80b430823aedd1060c9f1dc2",
+      "bytes": 446233,
+      "lines": 5778,
+      "fixtureCommit": null,
+      "webCommit": "0e18404e0",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial5-defense-l3-cursor305-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial5-defense-l3/cursor305.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial5 실제 건설·피격 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial5-defense.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1340",
+      "doc": "docs/webpj-l3-tutorial5-defense-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "Tutorial5 단계 A2 실제 피격과 B 안내 cursor305.png",
+      "text": false,
+      "sha256": "d3635138ad67eecb0a93d01e77a6525284cb8fdde89d2434bfdb24a3832a1ad1",
+      "bytes": 217314,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "0e18404e0",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial5-defense-l3-defense1000-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial5-defense-l3/defense1000.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial5 실제 건설·피격 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial5-defense.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1340",
+      "doc": "docs/webpj-l3-tutorial5-defense-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "Tutorial5 단계 A2 실제 피격과 B 안내 defense1000.png",
+      "text": false,
+      "sha256": "e8a767beedb1ac1f73a6a3e28635868916673a3272122efe7dee49cebcb2d6fc",
+      "bytes": 208029,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "0e18404e0",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial5-defense-l3-defense1000-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial5-defense-l3/defense1000.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial5 실제 건설·피격 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial5-defense.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1340",
+      "doc": "docs/webpj-l3-tutorial5-defense-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "Tutorial5 단계 A2 실제 피격과 B 안내 defense1000.tsv",
+      "text": true,
+      "sha256": "4c4e0a8f8f3cdca480be1cfc8a331de03ecd9547c2e7e664269a19d48457dce2",
+      "bytes": 446786,
+      "lines": 5785,
+      "fixtureCommit": null,
+      "webCommit": "0e18404e0",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial5-defense-l3-defense500-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial5-defense-l3/defense500.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial5 실제 건설·피격 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial5-defense.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1340",
+      "doc": "docs/webpj-l3-tutorial5-defense-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "Tutorial5 단계 A2 실제 피격과 B 안내 defense500.png",
+      "text": false,
+      "sha256": "cddb10c4265c8346d00c47dd3d3d024a96cfb1b1ce9122a7d389b6020358c1fa",
+      "bytes": 219024,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "0e18404e0",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial5-defense-l3-defense500-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial5-defense-l3/defense500.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial5 실제 건설·피격 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial5-defense.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1340",
+      "doc": "docs/webpj-l3-tutorial5-defense-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "Tutorial5 단계 A2 실제 피격과 B 안내 defense500.tsv",
+      "text": true,
+      "sha256": "30a3c6cb9b27c30676aadcfd4f095d9a63886fc1811978f179ec975c97ba0e95",
+      "bytes": 447131,
+      "lines": 5791,
+      "fixtureCommit": null,
+      "webCommit": "0e18404e0",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial5-defense-l3-defense700-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial5-defense-l3/defense700.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial5 실제 건설·피격 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial5-defense.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1340",
+      "doc": "docs/webpj-l3-tutorial5-defense-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "Tutorial5 단계 A2 실제 피격과 B 안내 defense700.png",
+      "text": false,
+      "sha256": "e8a767beedb1ac1f73a6a3e28635868916673a3272122efe7dee49cebcb2d6fc",
+      "bytes": 208029,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "0e18404e0",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial5-defense-l3-defense700-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial5-defense-l3/defense700.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial5 실제 건설·피격 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial5-defense.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1340",
+      "doc": "docs/webpj-l3-tutorial5-defense-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "Tutorial5 단계 A2 실제 피격과 B 안내 defense700.tsv",
+      "text": true,
+      "sha256": "8a85e5e2aef0c42f5b4ff6018ab67963ed2371e60f87644da96c8434014a9256",
+      "bytes": 446785,
+      "lines": 5785,
+      "fixtureCommit": null,
+      "webCommit": "0e18404e0",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial5-defense-l3-defense800-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial5-defense-l3/defense800.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial5 실제 건설·피격 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial5-defense.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1340",
+      "doc": "docs/webpj-l3-tutorial5-defense-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "Tutorial5 단계 A2 실제 피격과 B 안내 defense800.png",
+      "text": false,
+      "sha256": "e8a767beedb1ac1f73a6a3e28635868916673a3272122efe7dee49cebcb2d6fc",
+      "bytes": 208029,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "0e18404e0",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial5-defense-l3-defense800-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial5-defense-l3/defense800.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial5 실제 건설·피격 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial5-defense.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1340",
+      "doc": "docs/webpj-l3-tutorial5-defense-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "Tutorial5 단계 A2 실제 피격과 B 안내 defense800.tsv",
+      "text": true,
+      "sha256": "01eedd9d41cc59e020bf8bf72ed5cb7dec91845d479b842129e26002606c149c",
+      "bytes": 446785,
+      "lines": 5785,
+      "fixtureCommit": null,
+      "webCommit": "0e18404e0",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial5-defense-l3-oracle-json",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial5-defense-l3/oracle.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial5 실제 건설·피격 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial5-defense.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1340",
+      "doc": "docs/webpj-l3-tutorial5-defense-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "Tutorial5 단계 A2 실제 피격과 B 안내 oracle.json",
+      "text": true,
+      "sha256": "9d55c3257fb2366a575e99315ae71b65f47b267de6aac9a02e4da08a1df73a6d",
+      "bytes": 1026,
+      "lines": 35,
+      "fixtureCommit": null,
+      "webCommit": "0e18404e0",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial5-defense-l3-production295-png",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial5-defense-l3/production295.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial5 실제 건설·피격 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial5-defense.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1340",
+      "doc": "docs/webpj-l3-tutorial5-defense-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "Tutorial5 단계 A2 실제 피격과 B 안내 production295.png",
+      "text": false,
+      "sha256": "853438a8342632d9008cdb93e2d5cf4ef338e890a09977650d07e1febcb62cf8",
+      "bytes": 217024,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "0e18404e0",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial5-defense-l3-production295-tsv",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial5-defense-l3/production295.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial5 실제 건설·피격 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial5-defense.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1340",
+      "doc": "docs/webpj-l3-tutorial5-defense-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "Tutorial5 단계 A2 실제 피격과 B 안내 production295.tsv",
+      "text": true,
+      "sha256": "196bf899b0f245c193b9316f32b1e74833d8dfba9d54dbf18f8a8b87d3ae1922",
+      "bytes": 450936,
+      "lines": 5849,
+      "fixtureCommit": null,
+      "webCommit": "0e18404e0",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "cpppj-tutorial5-defense-l3-steps-json",
+      "path": "webpj/tests/fixtures/cpppj/candidate-225553df/tutorial5-defense-l3/steps.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "HJOW-Athlon의 cpppj 225553df 고정 25ms Tutorial5 실제 건설·피격 실행(L3)",
+      "consumers": [
+        "webpj/e2e/l3-tutorial5-defense.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js",
+        "webpj/www/core/session-state-dump.js"
+      ],
+      "unit": "WB04-E1340",
+      "doc": "docs/webpj-l3-tutorial5-defense-20261126.md",
+      "cpppjSources": [
+        "cpppj/src/client/SessionStateDump.cpp",
+        "cpppj/src/app/main.cpp"
+      ],
+      "scope": "Tutorial5 단계 A2 실제 피격과 B 안내 steps.json",
+      "text": true,
+      "sha256": "80a3f258364879c7c3e9124de6e1ad480222ba25fa13a175c9de6e0232faa1a6",
+      "bytes": 1934,
+      "lines": 136,
+      "fixtureCommit": null,
+      "webCommit": "0e18404e0",
+      "cpppjBasis": {
+        "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
+        "cpppj/src/app/main.cpp": "382ec33fe"
+      }
     }
   ]
 }
