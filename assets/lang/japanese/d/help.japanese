@@ -390,576 +390,539 @@ NetStormを開発したTitanicは、残念ながら今はもう存在しませ�
 </a>
 
 <a name="teleportViewHelp">
-<h2>Production Window</h2>
+<h2>生産ウィンドウ</h2>
 <p>
-Pick up <a href="unitHelp">units</a> from the Production Window by left-clicking, and
-left-click again to lay them down on an island or bridge spur.
+生産ウィンドウで<a href="unitHelp">ユニット</a>を左クリックして持ち上げ、もう一度左クリックすると島や橋の端へ配置します。
 <p>
-Units will show red in this window if you need more <a href="#stormPowerHelp">Storm Power</a> to
-build them.
+建設に必要な<a href="#stormPowerHelp">ストームパワー</a>が足りないユニットは、このウィンドウで赤く表示されます。
 <p>
-Any <a href="#technologyHelp">Knowledge</a> that you have put into production in a 
-<a href="#factoryHelp">Workshop</a> or acquired by <a href="#sacrificeOutline">Sacrifice</a> will 
-appear in this window. 
+<a href="#factoryHelp">ワークショップ</a>で生産に登録したか、<a href="#sacrificeOutline">生け贄の儀式</a>で得た
+<a href="#technologyHelp">知識</a>は、すべてここに現れます。
 <p>
-Right-click on any unit in this window to get more information about it.
+どのユニットでも右クリックすれば、その詳細を見ることができます。
 <p>
-You may also read a general <a href="#interfaceHelp">interface discussion</a>.
+<a href="#interfaceHelp">インターフェースの説明</a>もお読みください。
 <br>
 </a>
 
 <a name="minimapGumpHelp">
-<h2>Sky Overview</h2>
+<h2>空の全景</h2>
 <p>
-In the <a href="#pyrosphereHelp">Pyrosphere</a>, the Sky Overview shows you the 
-<a href="#bountyislandHelp">Neutral Islands</a> and 
-the islands of your on-line opponents.
+<a href="#pyrosphereHelp">パイロスフィア</a>では、全景ウィンドウに<a href="#bountyislandHelp">中立の島</a>と
+オンラインの対戦相手の島が表示されます。
 <p>
-The Sky Overview Window displays islands and <a href="#bridgeType">bridges</a> in their corresponding colors
-Geysers also stand out as brown dots.
+島と<a href="#bridgeType">橋</a>は、それぞれの色で表示されます。
+ガイザーは茶色の点で目立つようになっています。
 <p>
-Left-click in the Sky Overview to see a particular part of the sky. You may also hold down the left
-mouse button to drag the view around. This can be handy during battles when you want to
-get a good aerial view of the strategic situation!
+全景を左クリックすると、その場所を見ることができます。左ボタンを押したままドラッグして
+画面を動かすこともできます。戦闘中、戦略的な状況を一目で把握するのに便利です！
 <br>
 </a>
 
 <a name="formatCommandHelp">
-<h2>.Format Command</h2>
+<h2>.Formatコマンド</h2>
 <p>
-When you type .format in the Chat Window and follow it with text, that text will 
-appear before any chat message you send from then on. For example, in the Chat Window type
+チャット欄に.formatと入力して文章を続けると、その内容が以後のすべてのチャットメッセージの前に
+付きます。例えば、チャット欄に
 <br>
 .format ~~y~~E
 <br>
-and hit <b>ENTER</b>. All of your chat messages will now be ~y~Eyellow and embossed~N~.! You can use other
-lowercase letters for colors as well, such as
+と入力し、<b>ENTER</b>を押してください。以後のメッセージはすべて~y~E黄色のエンボス文字~N~.になります！ 小文字では
+他の色も使えます。
 <br>
-~b~~b  Blue~.
+~b~~b  青~.
 <br>
-~l~~l  Light Blue~.
+~l~~l  水色~.
 <br>
-~d~~d  Teal~.
+~d~~d  青緑~.
 <br>
-~r~~r  Red~.
+~r~~r  赤~.
 <br>
-~g~~g  Green~.
+~g~~g  緑~.
 <br>
-~u~~u  Light Green~.
+~u~~u  明るい緑~.
 <br>
-~k~~k  Black~.
+~k~~k  黒~.
 <br>
-~m~~m  Magenta~.
+~m~~m  マゼンタ~.
 <br>
-~s~~s  Dark Magenta~.
+~s~~s  暗いマゼンタ~.
 <br>
-~o~~o  Orange~.
+~o~~o  オレンジ~.
 <br>
-~a~~a  Light Orange~.
+~a~~a  明るいオレンジ~.
 <br>
-~x~~x  Brown~.
+~x~~x  茶色~.
 <br>
-~q~~q  Dark Tan~.
+~q~~q  暗い黄褐色~.
 <br>
-~j~~j  Light Tan~.
+~j~~j  明るい黄褐色~.
 <br>
-~p~~p  Pink~.
+~p~~p  ピンク~.
 <br>
-~y~~y  Yellow~.
+~y~~y  黄色~.
 <br>
-~i~~i  Light Yellow~.
+~i~~i  明るい黄色~.
 <br>
-~t~~t  Silver~.
+~t~~t  銀色~.
 <br>
-~~.  Resets the color. (That is Tilde + Period)
+~~.  色を元に戻します。（波形記号とピリオドです）
 <p>
-Some uppercase letters have meaning as well, for example, if you type
+大文字にも意味があります。例えば、
 <br>
 .format ~~E~~y
 <br>
-your chat messages will all be ~y~Eyellow and embossed~N~.. Other styles include
+と入力すると、すべてのメッセージが~y~E黄色のエンボス文字~N~.になります。その他のスタイルは次のとおりです。
 <br>
-~I~~I  Italicizes text.~N
+~I~~I  斜体にします。~N
 <br>
-~B~~B  Bolds text.~N
+~B~~B  太字にします。~N
 <br>
-~E~~E  Embosses all of your chat text.~N
+~E~~E  文字全体をエンボス表示にします。~N
 <br>
-~S~~S  Strikeouts all of your chat text.~N
+~S~~S  文字全体に取り消し線を引きます。~N
 <br>
-~U~~U  Underlines all of your chat text.~N
+~U~~U  文字全体に下線を引きます。~N
 <br>
-~~N  Sets all your chat text to normal again.
+~~N  文字全体を通常の表示に戻します。
 <p>
-For more colors and other command codes you can check the <a href="#chathelperHelp">Chat Helper</a> and for more
-help on formats you can check <a href="http://www.netstormhq.com">Netstorm:HQ</a>.
+その他の色やコマンドコードは<a href="#chathelperHelp">チャットヘルパー</a>で確認できます。書式についての
+詳しいヘルプは<a href="http://www.netstormhq.com">Netstorm:HQ</a>をご覧ください。
 <p>
-Note: You can use <c>.back</c> instead of <c>.format</c> as it will do the same thing. If you want to change something
-in the front of your name you can use <c>.front</c> just like <c>.format</c>.
+注意: <c>.format</c>の代わりに<c>.back</c>を使っても同じ動作になります。名前の前に付く内容を変えるには、
+<c>.format</c>と同じように<c>.front</c>を使ってください。
 <br>
 </a>
+
 <a name="chathelperHelp">
-<h2>Chat Helper</h2>
+<h2>チャットヘルパー</h2>
 <p>
-<h3>What is the Chat Helper?</h3>
-The Chat Helper is the small button to the left of the <a href="#chatViewHelp">Chat Window</a>. Clicking on it brings up
-a menu of functions and options to let you decide what you are able to see in the Chat Window and 
-to help you create effects for your own text.
+<h3>チャットヘルパーとは？</h3>
+<a href="#chatViewHelp">チャットウィンドウ</a>の左にある小さなボタンです。押すと、表示する内容を選んだり、
+自分の文章に効果を付けたりする機能やオプションのメニューが開きます。
 <p>
-<h3>Format</h3>
-The Format menu gives you two options: <c>Edit Back Format</c>, and <c>Edit Front Format</c>. <c>Edit Back Format</c>
-brings up a text box in which you can put the text and codes you want to appear before your name in the 
-Chat Window. <c>Edit Front Format</c> also brings up a text box, but instead allows you to input the text and
-codes you want to appear in front of your name in the <a href="#chatViewHelp">Chat Window</a>.<br>
+<h3>書式（Format）</h3>
+書式メニューには<c>Edit Back Format</c>と<c>Edit Front Format</c>があります。<c>Edit Back Format</c>は、
+チャット欄で名前の前に表示する文章やコードの入力欄を開きます。<c>Edit Front Format</c>も入力欄を
+開きますが、こちらでは<a href="#chatViewHelp">チャットウィンドウ</a>の名前のさらに前に表示する内容を指定します。<br>
 <br>
-This is an alternative way to using the .back, .format and .front commands.
+.back、.format、.frontコマンドを使う別の方法です。
 <p>
-<h3>Chat Effects</h3>
-The Chat Effects menu allows you to decide which effects will be displayed or not
-and whether sounds will be played or not when you receive text from other users featuring 
-these codes. There are four options:
+<h3>チャット効果（Chat Effects）</h3>
+他のユーザーからコードを含む文章を受け取った時に、表示する効果や音を再生するかどうかを
+設定します。四つのオプションがあります。
 <p>
-<c>Allow Chat Sound:</c> Turning this off will prevent sounds sent by other users from being played.
+<c>Allow Chat Sound:</c> オフにすると、他のユーザーが送った音を再生しません。
 <p>
-<c>Allow Background Colors:</c> Turning this off will stop background colors received from being
-displayed, ~E~[B.3]such as this.
+<c>Allow Background Colors:</c> オフにすると、受信した背景色を表示しません。~E~[B.3]このような文字です。
 <p>
-<c>Allow Foreground Colors:</c> Turning this off will stop foreground colors received from being
-displayed which use the ~~[C.xxx] code, ~[C.52]such ~[C.156]as ~[C.223]these~., but it leaves
-the regular colors, such as ~y~~y~. and ~r~~r~..
+<c>Allow Foreground Colors:</c> オフにすると、~~[C.xxx]コードによる前景色を表示しません。~[C.52]このような~[C.156]文字が
+~[C.223]一例です~.。ただし、~y~~y~.や~r~~r~.のような通常の色は残ります。
 <p>
-<c>Allow Embossed Offset:</c> Turning this off will prevent any adjusted Emboss effects from being
-displayed (those which use the ~~[E.X#xY#] command)
+<c>Allow Embossed Offset:</c> オフにすると、位置を調整したエンボス効果（~~[E.X#xY#]コマンド）を表示しません。
 <p>
-<h3>Chat Controls</h3>
-These options are only available inside a game, and they allow you to decide which channels you can 
-receive text from, and which actions should be performed when a new message is received.
+<h3>チャット制御（Chat Controls）</h3>
+ゲーム中のみ使えます。受信するチャンネルや、新しいメッセージを受け取った時の動作を設定します。
 <p>
-<h3>Channel Controls</h3>
-<c>Show General Channel:</c> Disabling this means you do not receive text which is sent to everybody.
+<h3>チャンネル制御（Channel Controls）</h3>
+<c>Show General Channel:</c> オフにすると、全員宛ての文章を受信しません。
 <p>
-<c>Show Allies Channel:</c> Disabling this means that you do not receive text which is sent through the <c>ALLIES:</c> Channel.
+<c>Show Allies Channel:</c> オフにすると、<c>ALLIES:</c>チャンネルの文章を受信しません。
 <p>
-<c>Show Observer Channel:</c> Disabling this means that you do not receive text which is sent through the <c>OBSERVER:</c> Channel.
+<c>Show Observer Channel:</c> オフにすると、<c>OBSERVER:</c>チャンネルの文章を受信しません。
 <p>
-<c>Show Whisper Channel:</c> Disabling this means that you do not receive text from anyone whispering to you.
+<c>Show Whisper Channel:</c> オフにすると、自分宛てのささやきを受信しません。
 <p>
-<h3>Player Controls</h3>
-<c>Show Allies Chat:</c> Disabling this means that you do not receive text from your Allies inside a game.
+<h3>プレイヤー制御（Player Controls）</h3>
+<c>Show Allies Chat:</c> オフにすると、ゲーム中の同盟の文章を受信しません。
 <p>
-<c>Show Enemies Chat:</c> Disabling this means that you do not receive text from your Enemies inside a game.
+<c>Show Enemies Chat:</c> オフにすると、ゲーム中の敵の文章を受信しません。
 <p>
-<c>Show Observers Chat:</c> Disabling this means that you do not receive text from the Observers inside a game.
+<c>Show Observers Chat:</c> オフにすると、ゲーム中の観戦者の文章を受信しません。
 <p>
-<h3>Other Controls</h3>
-<c>Open Window on Message:</c> Disabling this means that the Chat Window does not open when a message is received.
+<h3>その他の制御（Other Controls）</h3>
+<c>Open Window on Message:</c> オフにすると、受信時にチャットウィンドウを開きません。
 <p>
-<c>Play sound on Message:</c> Disabling this means that sounds aren't played when a message is Received.
+<c>Play sound on Message:</c> オフにすると、受信時に音を再生しません。
 <p>
-<h3>Insert</h3>
-This menu allows you to insert certain codes into the Chat Window which  change the colors of,
-or which give certain effects to, your text. You can  learn how to use these in the <a href="#formatCommandHelp">.format section</a>.
-These are the menus:
+<h3>挿入（Insert）</h3>
+文章の色や効果を変えるコードを、チャット欄へ挿入できます。使い方は
+<a href="#formatCommandHelp">.formatの項目</a>をご覧ください。メニューは次のとおりです。
 <p>
-<c>Text Colors:</c> This menu allows you to insert colors from the 255 available ones.
+<c>Text Colors:</c> 使用可能な255色から選んで挿入します。
 <p>
-<c>Background Colors:</c> This menu allows you to insert background colors which will
-be displayed behind the text when used in conjunction with the ~~E command (embossed text).
+<c>Background Colors:</c> エンボス文字（~~Eコマンド）と共に使う背景色を挿入します。
 <p>
-<c>Icons:</c> This menu allows you to insert icons from the many hundreds.
+<c>Icons:</c> 数百種類のアイコンから選んで挿入します。
 <p>
-<c>Keywords:</c> These give you some command templates to use: Mimicing, Sounds,
-Icons and Emboss Offset (the positioning of the background color when used with the ~~E command (embossed text).
+<c>Keywords:</c> 使用可能なコマンド書式を示します: 「Mimicing」「Sounds」「Icons」「Emboss Offset」
+（~~Eコマンドのエンボス文字と共に使う場合の背景色の位置）。
 <p>
-<c>Styles:</c> This menu gives you the codes of the formats which alter the style, not the color, of your text.
+<c>Styles:</c> 色ではなく文字の形を変える書式コードを示します。
 <p>
-<c>Prefabricated Colors:</c> This menu gives you a list of the basic colors used in
-Netstorm which are not blocked by disabling the "Allow Foreground Colors" option.
-They also have simple codes, e.g. ~y~~y~., or ~b~~b~..
+<c>Prefabricated Colors:</c> NetStormの基本色の一覧です。「Allow Foreground Colors」を
+オフにしても有効です。これらの色には、~y~~y~.や~b~~b~.のような簡単なコードがあります。
 <p>
-<c>Commands:</c> This menu gives you the commands which can be used to alter what is
-displayed before and after your name in the chat window.
+<c>Commands:</c> チャット欄の名前の前後に表示する内容を変えるコマンドを示します。
 <p>
-<h3>Copy</h3>
-Clicking this copies text which you have put at the bottom of the <a href="#chatViewHelp">Chat Window</a> 
-to the clipboard. If no text is highlighted, all of the text is copied; if some of the text is highlighted, only that
-text is copied to the clipboard.
+<h3>コピー（Copy）</h3>
+<a href="#chatViewHelp">チャットウィンドウ</a>の一番下に入力した文章をクリップボードにコピーします。選択範囲が
+なければ全文を、範囲を選択していればその部分だけをコピーします。
 <p>
-<h3>Paste</h3>
-Clicking this pastes any copied text into the text line of <a href="#chatViewHelp">Chat Window</a>, where the cursor is.
+<h3>貼り付け（Paste）</h3>
+コピーした文章を<a href="#chatViewHelp">チャットウィンドウ</a>の入力行のカーソル位置へ貼り付けます。
 <p>
-Note: For more help on formats you can check <a href="http://www.netstormhq.com">Netstorm:HQ</a>.
+注意: 書式の詳しいヘルプは<a href="http://www.netstormhq.com">Netstorm:HQ</a>をご覧ください。
 </a>
+
 <a name="tacticHelp">
+
 <a name="tacticsHelp">
-<h2>Tactics in NetStorm</h2>
-It is crucial to understand how your <a href="unitHelp">units</a> will fight in battle.
-Your strategy will depend upon these facts.
+<h2>NetStormの戦術</h2>
+ユニットが戦闘でどう戦うかを理解することは重要です。戦略は、これらの事実に基づきます。
 <p>
-All units will always choose the closest available target. Once locked, they will keep at it
-until destroyed.  Certain defensive units, like Towers, can be interposed to force the attacker to
-choose a new target. The closest target will be chosen <i>even if it is invulnerable to the attacker</i>!
+<a href="unitHelp">ユニット</a>は常に最も近い攻撃可能な目標を選び、破壊するまで
+攻撃を続けます。タワーなどの防御ユニットを間に置けば、新しい目標を選ばせることができます。
+最も近い目標は、<i>攻撃者の攻撃が効かなくても</i>選ばれます！
 <p>
-When a unit explodes cracked bridge nearby will also crumble. Normal bridge that was adjacent
-to the unit will crack, or become a jagged end.
+ユニットが爆発すると、近くのひび割れた橋も崩れます。すぐ隣の通常の橋にはひびが入り、
+または端が欠けた状態になります。
 <p>
-When shooting units explode they also damage every other unit nearby! They may explode from that damage in
-a chain reaction. Temples also explode in this way.
+射撃ユニットの爆発は、近くの他の全ユニットにも損害を与えます！ 連鎖爆発が起きることもあります。
+神殿も同じように爆発します。
 <p>
-<a href="salvageHelp">Salvaging</a> a unit does not cause such an explosion,
-but bridge is affected in the same way, as if the unit had exploded.
+<a href="salvageHelp">回収（Salvage）</a>すれば爆発は起きませんが、橋はユニットが爆発した時と
+同じ影響を受けます。
 <p>
-You can build units 1) on your home island, 2) on any un-owned island which is connected by bridges to your 
-home island, or 3) off of any bridge that you own.
+ユニットは1）本島、2）本島と橋でつながる無所属の島、3）自分の橋から伸びる場所なら、
+どこでも建設できます。
 <p>
-When you destroy an enemy unit you get 25% of its Storm Power value. Remember that 
-Whirligigs and Man o' War cost no additional Storm Power to build, and thus return none to you
-when destroyed. Only their bases will do so.
+敵を破壊すると、そのストームパワー価値の25%を得ます。ワーリギグとマンオウォーは個々の建設に追加費用がかからないため、
+破壊しても戻りはありません。基地だけがストームパワーをもたらします。
 <p>
-When you are targeting an enemy, remember that you must shoot the area where it meets the <i>ground</i>.
-If your shots are hitting its upper areas, then you're not really shooting it at all.
+狙うべき場所は、敵が<i>地面</i>に接する部分です。
+上の部分に当てていても、実際には攻撃できていません。
 </a>
 </a>
 
 <a name="salvageHelp">
-<h2>Salvaging</h2>
+<h2>回収（Salvage）</h2>
 <p>
-You may Salvage any unit and recoup 25% of the Storm Power you spent to build it.
+ユニットを回収すると、建設に使ったストームパワーの25%を取り戻せます。
 <p>
-If the <a href="unitHelp">unit</a> has been damaged, you will recoup less Storm Power. For example, if
-you build a unit for 400<!"fortgump.3"> you can Salvage it for 100<!"fortgump.3">. However, if one third of
-its hit points are gone, you'll only get 66<!"fortgump.3">.
+<a href="unitHelp">ユニット</a>が損害を受けている場合、戻る量は減ります。例えば、
+400<!"fortgump.3">で建てたユニットは100<!"fortgump.3">で回収できます。しかし体力の3分の1を
+失っていると、得られるのは66<!"fortgump.3">だけです。
 <p>
-One last thing to know: If the damage goes beyond half of the unit's hit points
-you will recoup no Storm Power at all.
+最後に、体力の半分を超える損害を受けていると、ストームパワーはまったく戻りません。
 <p>
-Note: Salvaging a unit next to a bridge will make solid bridges crack, and cracked bridges fall.
+注意: 橋の隣のユニットを回収すると、丈夫な橋にはひびが入り、ひび割れた橋は崩れます。
 </a>
 
 <a name="statsHelp">
-<h2>Unit Information</h2>
+<h2>ユニット情報</h2>
 <p>
-<b><c>Alignment:</c></b> Each <a href="unitHelp">unit</a> in the game is aligned with one of the <a href="#themeHelp">Furies</a>
-or with Sun. The unit's alignment determines what Fury grants <a href="#technologyHelp">Knowledge</a> for it, 
-what <a href="#factoryHelp">Workshop</a>
-can produce it, and what sort of <a href="#influenceHelp">Energy</a> is required to build it.
+<b><c>系統:</c></b> すべての<a href="unitHelp">ユニット</a>は、いずれかの<a href="#themeHelp">フューリー</a>かサンに属します。
+系統によって、どのフューリーから<a href="#technologyHelp">知識</a>を授かるか、
+どの<a href="#factoryHelp">ワークショップ</a>で生産できるか、
+建設にどの種類の<a href="#influenceHelp">エネルギー</a>が必要かが決まります。
 <p>
-<b><c>Class:</c></b> Describes what the unit does and how it can be used. A list of classes appears at the
-bottom of this page.
+<b><c>分類:</c></b> ユニットの役割や使い方を示します。分類の一覧は、このページの下にあります。
 <p>
-<b><c>Hits:</c></b> Tells how much damage the unit can absorb before being destroyed.
+<b><c>体力:</c></b> 破壊されるまでに耐えられる損害の量です。
 <p>
-<b><c>Range:</c></b> If the unit shoots or spreads an effect, this number tells how many 'tiles'
-the effect will reach.  For reference, the size of a Sun Disc Thrower is 3x3 'tiles' and the 
-screen is forty tiles high.
+<b><c>射程:</c></b> 射撃や効果が何「マス」先まで届くかを示す数値です。
+参考として、サンディスクスロワーは3x3マスで、画面の高さは40マスです。
 <p>
-<b><c>Damage:</c></b> Describes how much damage the unit will inflict, on average, every second. Remember,
-the rating isn't a per-shot rating, but an absolute scale telling you the unit's effectiveness over time.
+<b><c>ダメージ:</c></b> 平均で毎秒与える損害を示します。一発ごとの値ではなく、
+時間あたりの効率を示す絶対的な尺度であることを覚えておいてください。
 <p>
-<b><c>Cost in Storm Power:</c></b> Tells how much Storm Power you must expend in order to build the unit.
+<b><c>ストームパワー費用:</c></b> 建設に消費するストームパワーの量です。
 <p>
-<b><c>Energy to Build:</c></b> Shows you how much <a href="#influenceHelp">Energy</a> is required 
-to create the unit and exactly which types of Energy are needed. 
+<b><c>必要エネルギー:</c></b> 建設に必要な<a href="#influenceHelp">エネルギー</a>の量と、
+正確にどの種類のエネルギーが必要かを示します。
 <p>
-Units may be <a href="salvageHelp">Salvaged</a> to recoup some of their Storm Power.
+<a href="salvageHelp">回収（Salvage）</a>すれば、ストームパワーの一部を取り戻せます。
 <p>
-<b><c>CLASSES:</c></b>
+<b><c>分類一覧:</c></b>
 <p>
-<c>Production:</c><br>
-   <a href="#windVortexType">Wind Temple</a><br>
-   <a href="#rainVortexType">Rain Temple</a><br>
-   <a href="#thunderVortexType">Thunder Temple</a><br>
-   <a href="#sunFactoryType">Sun Workshop</a><br>
-   <a href="#windFactoryType">Wind Workshop</a><br>
-   <a href="#rainFactoryType">Rain Workshop</a><br>
-   <a href="#thunderFactoryType">Thunder Workshop</a><br>
-   <a href="#outpostType">Outpost</a><br>
-<c>Holy Place:</c><br>
-   <a href="#altarType">Altar</a><br>
-<c>High Priest:</c><br>
-   <a href="#priestType">High Priest</a><br>
-<c>Source of Energy:</c><br>
-   <a href="#windbatteryType">Wind Generator</a><br>
-   <a href="#rainbatteryType">Rain Generator</a><br>
-   <a href="#thunderbatteryType">Thunder Generator</a><br>
-<c>Source of Storm Power:</c><br>
-   <a href="#geyserType">Storm Geyser</a><br>
-   <a href="#nuggetType">Storm Crystal</a><br>
-<c>Bridge:</c><br>
-   <a href="#bridgeType">Bridge</a><br>
-<c>Shooter:</c><br>
-   <a href="#suncannonType">Sun Cannon</a><br>
-   <a href="#raincannonType">Ice Cannon</a><br>
-   <a href="#thundercannonType">Thunder Cannon</a><br>
-   <a href="#sunarcherType">Sun Disc Thrower</a><br>
-   <a href="#windarcherType">Crossbow</a><br>
-   <a href="#thunderarcherType">Vander Tower</a><br>
-<c>Aerial Attack:</c><br>
-   <a href="#sunflyerType">Whirligig</a><br>
-   <a href="#windflyerType">Dust Devil</a><br>
-   <a href="#rainflyerType">Man o' War</a><br>
-<c>Air Attack Base:</c><br>
-   <a href="#sunaviaryType">Whirlibase</a><br>
-   <a href="#windaviaryType">Devil Maker</a><br>
-   <a href="#rainaviaryType">Man o' War Pool</a><br>
-<c>Defense:</c><br>
-   <a href="#sunblockerType">Stone Tower</a><br>
-   <a href="#windblockerType">Wind Tower</a><br>
-   <a href="#rainblockerType">Ice Tower</a><br>
-   <a href="#thunderblockerType">Bulwark</a><br>
-   <a href="#sunfenceType">Barricade</a><br>
-   <a href="#rainfenceType">Acid Barricade</a><br>
-   <a href="#thunderfenceType">Arc Spire</a><br>
-   <a href="#edgefarmType">Edge Farm</a><br>
-<c>Ground Transport:</c><br>
-   <a href="#sunwalkerType">Golem</a><br>
-   <a href="#windwalkerType">Sail Skater</a><br>
-   <a href="#rainwalkerType">Crystal Crab</a><br>
-   <a href="#bulfType">Bulf</a><br>
-<c>Aerial Transport:</c><br>
-   <a href="#sunballoonType">Balloon</a><br>
-   <a href="#windballoonType">Air Ship</a><br>
-   <a href="#rainballoonType">Cloud Floater</a><br>
-<c>Offensive Spell:</c><br>
-   <a href="#bombExplodeSmallType">Point Blast</a><br>
-   <a href="#bombExplodeMediumType">Devastation</a><br>
-   <a href="#bombExplodeLargeType">Decimation</a><br>
-   <a href="#bombTreasonType">Treason</a><br>
-   <a href="#bombMeteorType">Bombardment</a><br>
-   <a href="#bombGravitonType">Graviton</a><br>
-   <a href="#bombLightingwaveType">ThunderStorm</a><br>
-   <a href="#bombLightingZapType">Thunder Strike</a><br>
-<c>Defensive Spell:</c><br>
-   <a href="#bombHardenerType">Bridge Harden</a><br>
-   <a href="#bombHealType">Heal</a><br>
-   <a href="#bombInvisibleType">Invisibility</a><br>
-   <a href="#bombParalyzeType">Paralysis</a><br>
-<c>Summons Spell:</c><br>
-   <a href="#bombTwisterType">Whirlwind</a><br>
-   <a href="#bombIITwisterType">Twister</a><br>
-   <a href="#bombIIITwisterType">Vortex</a><br>
-   <a href="#bombIManoType">Hydra</a><br>
-   <a href="#bombIIManoType">Hydra Wave</a><br>
-   <a href="#bombIIIManoType">Hydra Flood</a><br>
-<c>Residence:</c><br>
-   <a href="#residenceType">Residence</a><br>
+<c>生産:</c><br>
+   <a href="#windVortexType">ウィンド神殿</a><br>
+   <a href="#rainVortexType">レイン神殿</a><br>
+   <a href="#thunderVortexType">サンダー神殿</a><br>
+   <a href="#sunFactoryType">サンワークショップ</a><br>
+   <a href="#windFactoryType">ウィンドワークショップ</a><br>
+   <a href="#rainFactoryType">レインワークショップ</a><br>
+   <a href="#thunderFactoryType">サンダーワークショップ</a><br>
+   <a href="#outpostType">前哨基地</a><br>
+<c>聖地:</c><br>
+   <a href="#altarType">祭壇</a><br>
+<c>司祭:</c><br>
+   <a href="#priestType">司祭</a><br>
+<c>エネルギー供給源:</c><br>
+   <a href="#windbatteryType">ウィンドジェネレーター</a><br>
+   <a href="#rainbatteryType">レインジェネレーター</a><br>
+   <a href="#thunderbatteryType">サンダージェネレーター</a><br>
+<c>ストームパワー供給源:</c><br>
+   <a href="#geyserType">ストーム間欠泉</a><br>
+   <a href="#nuggetType">ストームクリスタル</a><br>
+<c>橋:</c><br>
+   <a href="#bridgeType">橋</a><br>
+<c>射撃:</c><br>
+   <a href="#suncannonType">サンキャノン</a><br>
+   <a href="#raincannonType">アイスキャノン</a><br>
+   <a href="#thundercannonType">サンダーキャノン</a><br>
+   <a href="#sunarcherType">サンディスクスロワー</a><br>
+   <a href="#windarcherType">クロスボウ</a><br>
+   <a href="#thunderarcherType">ヴァンダータワー</a><br>
+<c>航空攻撃:</c><br>
+   <a href="#sunflyerType">ワーリギグ</a><br>
+   <a href="#windflyerType">ダストデビル</a><br>
+   <a href="#rainflyerType">マンオウォー</a><br>
+<c>航空攻撃基地:</c><br>
+   <a href="#sunaviaryType">ワーリベース</a><br>
+   <a href="#windaviaryType">デビルメーカー</a><br>
+   <a href="#rainaviaryType">マンオウォープール</a><br>
+<c>防御:</c><br>
+   <a href="#sunblockerType">ストーンタワー</a><br>
+   <a href="#windblockerType">ウィンドタワー</a><br>
+   <a href="#rainblockerType">アイスタワー</a><br>
+   <a href="#thunderblockerType">ブルワーク</a><br>
+   <a href="#sunfenceType">サンバリケード</a><br>
+   <a href="#rainfenceType">アシッドバリケード</a><br>
+   <a href="#thunderfenceType">アークスパイア</a><br>
+   <a href="#edgefarmType">エッジファーム</a><br>
+<c>地上輸送:</c><br>
+   <a href="#sunwalkerType">ゴーレム</a><br>
+   <a href="#windwalkerType">セイルスケーター</a><br>
+   <a href="#rainwalkerType">クリスタルクラブ</a><br>
+   <a href="#bulfType">ブルフ</a><br>
+<c>航空輸送:</c><br>
+   <a href="#sunballoonType">バルーン</a><br>
+   <a href="#windballoonType">飛行船</a><br>
+   <a href="#rainballoonType">クラウドフローター</a><br>
+<c>攻撃呪文:</c><br>
+   <a href="#bombExplodeSmallType">ポイントブラスト</a><br>
+   <a href="#bombExplodeMediumType">デバステーション</a><br>
+   <a href="#bombExplodeLargeType">デシメーション</a><br>
+   <a href="#bombTreasonType">トリーズン</a><br>
+   <a href="#bombMeteorType">ボンバードメント</a><br>
+   <a href="#bombGravitonType">グラビトン</a><br>
+   <a href="#bombLightingwaveType">サンダーストーム</a><br>
+   <a href="#bombLightingZapType">サンダーストライク</a><br>
+<c>防御呪文:</c><br>
+   <a href="#bombHardenerType">ブリッジハーデン</a><br>
+   <a href="#bombHealType">ヒール</a><br>
+   <a href="#bombInvisibleType">インビジビリティ</a><br>
+   <a href="#bombParalyzeType">パラリシス</a><br>
+<c>召喚呪文:</c><br>
+   <a href="#bombTwisterType">ワールウィンド</a><br>
+   <a href="#bombIITwisterType">ツイスター</a><br>
+   <a href="#bombIIITwisterType">ボルテックス</a><br>
+   <a href="#bombIManoType">ハイドラ</a><br>
+   <a href="#bombIIManoType">ハイドラウェーブ</a><br>
+   <a href="#bombIIIManoType">ハイドラフラッド</a><br>
+<c>居住区:</c><br>
+   <a href="#residenceType">居住区</a><br>
 <br>
-
-
-
-
-
-
-
-
-
 </a>
 
 <a name="daisType">
+
 <a name="runeType">
+
 <a name="altarType">
 <info>
-<q>"It is a window onto the greatest of all glory,<br>
-and into the deepest of all oblivion." -Askeld Urvonnus, High Priest of Nimbus</q>
+<q>「それはあらゆる栄光の中で最も偉大な栄光へ、<br>
+そしてあらゆる忘却の中で最も深い忘却へと開く窓である。」 — アスケルド・ウルボヌス、ニンバスの大司祭</q>
 <p>
-Use your Altar to <a href="#sacrificeOutline">Sacrifice</a> captured <a href="#priestType>Priests</a> to the <a href="#themeHelp">Furies</a>.
+祭壇を使い、捕らえた<a href="#priestType>司祭</a>を<a href="#themeHelp">フューリー</a>への<a href="#sacrificeOutline">生け贄に捧げてください</a>。
 <p>
-Your Priest can build an Altar. Each Altar has five runes - Sun, Wind, Rain, Thunder and Storm - which
-must be filled in order to complete a Sacrifice. As each rune is filled, one of the supporting bridges
-leaves the center and when all five are gone, the enemy Priest plunges into the abyss.
+司祭は祭壇を建てられます。祭壇にはサン、ウィンド、レイン、サンダー、ストームの五つのルーンがあり、儀式を終えるには、
+すべてを満たす必要があります。一つ満ちるたびに支えの橋が中央から引き、
+五つすべてがなくなると、敵の司祭は深淵に落ちます。
 <p>
-In the <a href="#campaignHelp">Campaign</a> when you Sacrifice all the enemy Priests, the 
-mission will usually end successfully.
+<a href="#campaignHelp">キャンペーン</a>では、敵の司祭を全員生け贄にすると、
+通常はミッションが成功します。
 <p>
-In <a href="multiplayerHelp">Multiplayer</a> mode Sacrificing has a different meaning. You Sacrifice to
-get Knowledge from the Furies.  In order to get higher level units, you must Upgrade your Altar (by
-Sacrificing). The
-Upgraded Altar (there is a level two and a level three Altar) will stay with your island from
-game to game. (Note that you will not be able to Upgrade an Altar that is not on your home island.)  
-Your Altar's level must match the level of the unit you're trying to get from the Furies.
-Here is a <a href="unitHelp">table</a> of every unit and its level.
+<a href="multiplayerHelp">マルチプレイヤー</a>では、生け贄の意味が少し異なります。フューリーから知識を得るために
+捧げます。上位のユニットを得るには、生け贄によって祭壇をアップグレードする必要があります。
+アップグレードされた祭壇（レベル2とレベル3）は、ゲーム終了後も自分の島に残ります。
+（本島以外の祭壇はアップグレードできないことに注意してください。）
+祭壇のレベルは、フューリーから得たいユニットのレベルと同じである必要があります。
+すべてのユニットとレベルを示す<a href="unitHelp">一覧</a>があります。
 <p>
-Note that when an Altar is destroyed, a captive Priest will go free.
+注意: 祭壇が破壊されると、捕らえられていた司祭は解放されます。
 <p>
-Click here for to learn <a href="#sacrificeOutline">How To Capture and Sacrifice a Priest</a>.
+<a href="#sacrificeOutline">司祭を捕らえて生け贄にする手順</a>を見るには、ここを押してください。
 </a>
 </a>
 </a>
 
 <a name="priestType">
 <info>
-<q>"Who among you will face the Fury?<br>
-Who will know of holiness and fear?<br> 
-And who will be destroyed?"  -Book of Nimbus</q>
+<q>「お前たちの誰がフューリーと対するのか？<br>
+誰が神聖と恐怖を知るのか？<br>
+そして誰が滅びるのか？」 — ニンバスの書</q>
 <p>
-Your High Priest is the ultimate vessel of Knowledge and power from the <a href="#themeHelp">Furies</a>.
-Your Priest can build special buildings and Altars, and also performs Sacrifices of other Priests
-to the Furies.
+自分の司祭は、<a href="#themeHelp">フューリー</a>からの知識と力を収める究極の器です。
+特別な建物や祭壇を建て、他の司祭をフューリーに捧げる儀式を行えます。
 <p>
-A Priest can only be destroyed on an Altar.  He cannot be killed by battle units, only incapacitated. 
-Furthermore, if the Priest has a <a href="#vortexHelp">Temple</a> his wounds will gradually heal during battle.
+司祭を破壊できるのは祭壇の上だけです。戦闘ユニットでは殺せず、動けなくするだけです。
+また、<a href="#vortexHelp">神殿</a>があれば、戦闘中も傷は徐々に回復します。
 <p>
-Priests are also able to "Pray" in order to acquire the 
-<a href="#bombExplodeMediumType">Devastation Spell</a> which they are then able to cast for 100<!"fortgump.3">.  
-Right-click your Priest and choose "Pray" to
-see how this works. (Multiplayer Only)
+司祭は「Pray」で<a href="#bombExplodeMediumType">デバステーションの呪文</a>を得ることもでき、
+100<!"fortgump.3">で使用できます。
+司祭を右クリックし、「Pray」を選んでみてください。（マルチプレイヤー専用）
 <p>
-To view your High Priest simply press <c>F5</c>. If you wish to select your High Priest,
-press <c>P</c> or <c>R</c> once, to view and select it press it twice.
+司祭を見るには<c>F5</c>を押します。選択するには、
+<c>P</c>または<c>R</c>を一度、見ると同時に選択するには二度押してください。
 <p>
-<a href="#vesselPriestHelp">The Priest's Powers of Construction</a><br>
-<a href="#sacrificeOutline">Sacrificing a Priest for new Knowledge</a><br>
+<a href="#vesselPriestHelp">司祭の建設能力</a><br>
+<a href="#sacrificeOutline">司祭を生け贄にし、新しい知識を得る</a><br>
 </a>
 
 <a name="vesselPriestHelp">
-<h2>The Priest's Powers of Construction</h2>
+<h2>司祭の建設能力</h2>
 <p>
-Use your High Priest to build <a href="#vortexHelp">Temples</a>, <a href="#factoryHelp">Workshops</a>, 
-and <a href="#altarType">Altars</a>, and (in <a href="#multiplayerHelp">multiplayer</a> mode) <a href="#outpostType">Outposts</a> on any 
-large island--including your own first island.  Right-click on him and 
-select the appropriate option. The building will go to your cursor, ready to be placed.  (Note that your Priest must
-be able to walk to the build location.)  Once you've placed the building, the Priest will walk to it and begin
-construction.
+司祭は、最初の島を含む大きな島のどこにでも、<a href="#vortexHelp">神殿</a>、<a href="#factoryHelp">ワークショップ</a>、
+<a href="#altarType">祭壇</a>、そして<a href="#multiplayerHelp">マルチプレイヤー</a>では<a href="#outpostType">アウトポスト</a>を建設できます。
+司祭を右クリックし、目的の項目を選んでください。建物がカーソルに付き、配置できる状態になります。（司祭が建設場所まで
+歩ける必要があります。）配置すると、司祭がそこへ歩いて建設を始めます。
 <p>
-Note that a Priest cannot construct buildings while <a href="#immobileHelp">immobilized</a>.
+<a href="#immobileHelp">動けない</a>間は、建設できません。
 <p>
-Like the <a href="#sunWalkerType">Golem</a>, your Priest also serves as a <a href="#transportHelp">Transport</a>.  
-You can use him to acquire and cast
-<a href="#buriedType">Spells</a> or to transport <a href="#nuggetType">Storm Crystals</a>.
-Additionally, the Priest will try to move to a safer location if the <a href="#bridgeType">bridge</a> underneath him becomes dangerous.
+<a href="#sunWalkerType">ゴーレム</a>と同様に、司祭も<a href="#transportHelp">輸送ユニット</a>として働きます。
+<a href="#buriedType">呪文</a>を得て使ったり、<a href="#nuggetType">ストームクリスタル</a>を運んだりできます。
+足元の<a href="#bridgeType">橋</a>が危険になると、安全な場所へ移動しようとします。
 <p>
-Learn more about <a href="#sacrificeOutline">Sacrificing a Priest for new Knowledge</a><br>
+<a href="#sacrificeOutline">司祭を生け贄にして新しい知識を得る手順</a>について詳しく見る<br>
 </a>
 
 <a name="themeHelp">
-<h2>The Three Furies of Nimbus</h2>
+<h2>ニンバスの三柱のフューリー</h2>
 <p>
-At the heart of Nimbus a constant storm rages. There the three Furies, Wind, Rain and Thunder,
-strive in never-ending conflict for control of the <a href="#sphereHelp">world</a>.
+ニンバスの中心では、絶えず嵐が吹き荒れています。そこでウィンド、レイン、サンダーの三柱のフューリーが、
+<a href="#sphereHelp">世界</a>の支配を巡って果てしなく争います。
 <p>
-This conflict
-tears huge chunks of the Hidden Planet up into the sky. Upon these newborn islands live the Nimbians, your people.
+その争いが、隠れた惑星の巨大な大地を空へ引き裂きます。こうして生まれた島に、あなたの民であるニンバス人は暮らしています。
 <p>
-Death and destruction please the Furies. Thus, when you destroy an enemy unit, you are granted one quarter
-of the Storm Power value of that enemy <a href="#unitHelp">unit</a>--except for individual Aerial Attackers which
-do not actually cost any Storm Power to build.  
+死と破壊はフューリーを喜ばせます。そのため、敵の<a href="#unitHelp">ユニット</a>を破壊すると、ストームパワー価値の
+4分の1を得ます。ただし、個々の航空攻撃ユニットは作るのにストームパワーを使わないため例外です。
 <p>
-Even more pleasing to the Furies is the
-<a href="#sacrificeOutline">Sacrifice of a Priest</a>. Such Sacrifices cause them to grant the gift of 
-battle <a href="#technologyHelp">Knowledge</a>.
+フューリーがさらに喜ぶのは、<a href="#sacrificeOutline">司祭を生け贄に捧げること</a>です。その贈り物を受けると、
+戦闘の<a href="#technologyHelp">知識</a>を授けてくれます。
 <p>
-Each Fury has a symbol for its <a href="#influenceHelp">Energy</a>:<br>
-<!"mana.8"> - Wind<br>
-<!"mana.9"> - Rain<br>
-<!"mana.10"> - Thunder<br>
+各フューリーには、自分の<a href="#influenceHelp">エネルギー</a>を表す記号があります。<br>
+<!"mana.8"> - ウィンド<br>
+<!"mana.9"> - レイン<br>
+<!"mana.10"> - サンダー<br>
 <p>
-There is also common Knowledge called "Sun," symbolized by <!"mana.11">. <a href="#unitHelp">Sun units</a> can
-use any type of <a href="#influenceHelp">Energy</a> but are relatively weak.
+「サン」という共通知識もあり、<!"mana.11">で表されます。<a href="#unitHelp">サンのユニット</a>はどの種類の
+<a href="#influenceHelp">エネルギー</a>でも使えますが、比較的弱いものです。
 <p>
-Beyond Sun Knowledge each Fury can supply specialized Knowledge. This Knowledge
-tends to require the Energy of the particular Fury who bestowed it.
+サンを超える知識として、各フューリーは専門知識を授けます。通常は、そのフューリーのエネルギーを必要とします。
 <p>
-Associated with the Wind Fury are:<br>
+ウィンドのフューリーに属するものは、次のとおりです。<br>
 <p>
 1<!"windVortex.*">  2<!"windfactory.*">  3<!"windbattery.*"><br>
 <p>
-1) The <a href="#windVortexType">Temple</a> where Wind is worshipped.<br>
-2) The <a href="#windFactoryType">Workshop</a> producing Wind-aligned units.<br>
-3) The <a href="#windBatteryType">Wind Generator</a> that generates Wind Energy.<br>
-4) All <a href="#unitHelp">Wind-aligned units</a>.<br>
+1）ウィンドを崇める<a href="#windVortexType">神殿</a>。<br>
+2）ウィンドのユニットを生産する<a href="#windFactoryType">ワークショップ</a>。<br>
+3）ウィンドのエネルギーを生む<a href="#windBatteryType">ウィンドジェネレーター</a>。<br>
+4）<a href="#unitHelp">ウィンドのユニット</a>全般。<br>
 <p>
-Associated with the Rain Fury are:<br>
+レインのフューリーに属するものは、次のとおりです。<br>
 <p>
 1<!"RainVortex.*">  2<!"Rainfactory.*">  3<!"Rainbattery.*"><br>
 <p>
-1) The <a href="#RainVortexType">Temple</a> where Rain is worshipped.<br>
-2) The <a href="#RainFactoryType">Workshop</a> producing Rain-aligned units.<br>
-3) The <a href="#RainBatteryType">Rain Generator</a> that generates Rain Energy.<br>
-4) All <a href="#unitHelp">Rain-aligned units</a>.<br>
+1）レインを崇める<a href="#RainVortexType">神殿</a>。<br>
+2）レインのユニットを生産する<a href="#RainFactoryType">ワークショップ</a>。<br>
+3）レインのエネルギーを生む<a href="#RainBatteryType">レインジェネレーター</a>。<br>
+4）<a href="#unitHelp">レインのユニット</a>全般。<br>
 <p>
-Associated with the Thunder Fury are:<br>
+サンダーのフューリーに属するものは、次のとおりです。<br>
 <p>
 1<!"ThunderVortex.*">  2<!"Thunderfactory.*">  3<!"Thunderbattery.*"><br>
 <p>
-1) The <a href="#ThunderVortexType">Temple</a> where Thunder is worshipped.<br>
-2) The <a href="#ThunderFactoryType">Workshop</a> producing Thunder-aligned units.<br>
-3) The <a href="#ThunderBatteryType">Thunder Generator</a> that generates Thunder Energy.<br>
-4) All <a href="#unitHelp">Thunder-aligned units</a>.<br>
+1）サンダーを崇める<a href="#ThunderVortexType">神殿</a>。<br>
+2）サンダーのユニットを生産する<a href="#ThunderFactoryType">ワークショップ</a>。<br>
+3）サンダーのエネルギーを生む<a href="#ThunderBatteryType">サンダージェネレーター</a>。<br>
+4）<a href="#unitHelp">サンダーのユニット</a>全般。<br>
 <p>
-Sun, which has no Fury associated with it, is nevertheless supplied by all Furies. Thus it
-has:<br>
+サンは特定のフューリーには属さず、すべてのフューリーから与えられます。そのため、次のものがあります。<br>
 1<!"sunFactory.*"><br>
 <p>
-1) A <a href="#SunFactoryType">Workshop</a> producing unaligned (Sun) units.<br>
-2) All <a href="#unitHelp">Sun units</a>.<br>
+1）系統を持たないサンのユニットを生産する<a href="#SunFactoryType">ワークショップ</a>。<br>
+2）<a href="#unitHelp">サンのユニット</a>全般。<br>
 <p>
-Learn more about <a href="#sacrificeOutline">Sacrificing a Priest for new Knowledge</a>...
+<a href="#sacrificeOutline">司祭を生け贄にして新しい知識を得る手順</a>について詳しく見る...
 <br>
 </a>
 
 <a name="unitHelp">
-<h2>Battle Units</h2>
-Battle units are divided into four varieties: Sun, Wind, Rain and Thunder. Units may
-be <a href="salvageHelp">Salvaged</a> if necessary. There are basic <a href="tacticsHelp">Tactics</a>
-that all units use for attack.
+<h2>戦闘ユニット</h2>
+戦闘ユニットにはサン、ウィンド、レイン、サンダーの四種類があります。必要なら<a href="salvageHelp">回収（Salvage）</a>できます。
+攻撃に使う基本的な<a href="tacticsHelp">戦術</a>があります。
 
 <p>
-<h2>Sun Units</h2>
-Level One<br>
-<a href="#sunWalkerType">* Golem</a>  /  Ground Transport<br>
-<a href="#sunArcherType">* Sun Disc Thrower</a>  /  Shooter<br>
-<a href="#sunCannonType">* Sun Cannon</a>  /  Shooter<br>
-<a href="#sunBlockerType">* Stone Tower</a>  /  Defense<br>
-<a href="#sunFenceType">* Sun Barricade</a>  /  Defense<br>
-Level Two<br>
-<a href="#sunFlyerType">* Whirligig</a>  /  Aerial Attack<br>
-<a href="#sunAviaryType">* Whirlibase</a>  /  Aerial Attack Base<br>
-<a href="#sunBalloonType">* Balloon</a>  /  Aerial Transport<br>
+<h2>サンのユニット</h2>
+レベル1<br>
+<a href="#sunWalkerType">* ゴーレム</a>  /  地上輸送<br>
+<a href="#sunArcherType">* サンディスクスロワー</a>  /  射撃<br>
+<a href="#sunCannonType">* サンキャノン</a>  /  射撃<br>
+<a href="#sunBlockerType">* ストーンタワー</a>  /  防御<br>
+<a href="#sunFenceType">* サンバリケード</a>  /  防御<br>
+レベル2<br>
+<a href="#sunFlyerType">* ワーリギグ</a>  /  航空攻撃<br>
+<a href="#sunAviaryType">* ワーリベース</a>  /  航空攻撃基地<br>
+<a href="#sunBalloonType">* バルーン</a>  /  航空輸送<br>
 <p>
-<h2>Wind Units</h2>
-Level One<br>
-<a href="#windBatteryType">* Wind Generator</a>  /  Source of Energy<br>
-Level Two<br>
-<a href="#windWalkerType">* Sail Skater</a>  /  Ground Transport<br>
-<a href="#windArcherType">* Crossbow</a>  /  Shooter<br>
-<a href="#windBlocker">* Wind Tower</a>  /  Defense<br>
-Level Three<br>
-<a href="#windFlyerType">* Dust Devil</a>  /  Aerial Attack<br>
-<a href="#windAviaryType">* Devil Maker</a>  /  Aerial Attack Base<br>
-<a href="#windBalloonType">* Air Ship</a>  /  Aerial Transport<br>
+<h2>ウィンドのユニット</h2>
+レベル1<br>
+<a href="#windBatteryType">* ウィンドジェネレーター</a>  /  エネルギー供給源<br>
+レベル2<br>
+<a href="#windWalkerType">* セイルスケーター</a>  /  地上輸送<br>
+<a href="#windArcherType">* クロスボウ</a>  /  射撃<br>
+<a href="#windBlocker">* ウィンドタワー</a>  /  防御<br>
+レベル3<br>
+<a href="#windFlyerType">* ダストデビル</a>  /  航空攻撃<br>
+<a href="#windAviaryType">* デビルメーカー</a>  /  航空攻撃基地<br>
+<a href="#windBalloonType">* 飛行船</a>  /  航空輸送<br>
 
 <p>
-<h2>Rain Units</h2>
-Level One<br>
-<a href="#rainBatteryType">* Rain Generator</a>  /  Source of Energy<br>
-<a href="#rainWalkerType">* Crystal Crab</a>  /  Ground Transport<br>
-Level Two<br>
-<a href="#rainCannonType">* Ice Cannon</a>  /  Shooter<br>
-<a href="#rainBlockerType">* Ice Tower</a>  /  Defense<br>
-<a href="#rainFenceType">* Acid barricade</a>  /  Defense<br>
-Level Three<br>
-<a href="#rainFlyerType">* Man o' War</a>  /  Aerial Attack<br>
-<a href="#rainAviaryType">* Man o' War Pool</a>  /  Aerial Attack Base<br>
-<a href="#rainBalloonType">* Cloud Floater</a>  /  Aerial Transport<br>
+<h2>レインのユニット</h2>
+レベル1<br>
+<a href="#rainBatteryType">* レインジェネレーター</a>  /  エネルギー供給源<br>
+<a href="#rainWalkerType">* クリスタルクラブ</a>  /  地上輸送<br>
+レベル2<br>
+<a href="#rainCannonType">* アイスキャノン</a>  /  射撃<br>
+<a href="#rainBlockerType">* アイスタワー</a>  /  防御<br>
+<a href="#rainFenceType">* アシッドバリケード</a>  /  防御<br>
+レベル3<br>
+<a href="#rainFlyerType">* マンオウォー</a>  /  航空攻撃<br>
+<a href="#rainAviaryType">* マンオウォープール</a>  /  航空攻撃基地<br>
+<a href="#rainBalloonType">* クラウドフローター</a>  /  航空輸送<br>
 
 <p>
-<h2>Thunder Units</h2>
-Level One<br>
-<a href="#thunderBatteryType">* Thunder Generator</a>  /  Source of Energy<br>
-<a href="#bulfType">* Bulf</a>  /  Ground Transport<br>
-<a href="#thunderFence">* Arc Spire</a>  /  Defense<br>
-Level Two<br>
-<a href="#thunderCannonType">* Thunder Cannon</a>  /  Shooter<br>
-<a href="#thunderBlockerType">* Bulwark</a>  /  Defense<br>
-Level Three<br>
-<a href="#thunderArcher">* Vander Tower</a>  /  Shooter<br>
+<h2>サンダーのユニット</h2>
+レベル1<br>
+<a href="#thunderBatteryType">* サンダージェネレーター</a>  /  エネルギー供給源<br>
+<a href="#bulfType">* ブルフ</a>  /  地上輸送<br>
+<a href="#thunderFence">* アークスパイア</a>  /  防御<br>
+レベル2<br>
+<a href="#thunderCannonType">* サンダーキャノン</a>  /  射撃<br>
+<a href="#thunderBlockerType">* ブルワーク</a>  /  防御<br>
+レベル3<br>
+<a href="#thunderArcher">* ヴァンダータワー</a>  /  射撃<br>
 <p>
-<a href="#statsHelp">How to read unit information.</a><br>
-<a href="#themeHelp">Other units and their Alignments.</a>
+<a href="#statsHelp">ユニット情報の読み方。</a><br>
+<a href="#themeHelp">その他のユニットと系統。</a>
 <br>
 </a>
 
 <a name="rainVortexType">
+
 <a name="windVortexType">
 <a name="thunderVortexType">
 <a name="vortexHelp">

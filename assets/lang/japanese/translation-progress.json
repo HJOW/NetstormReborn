@@ -28,10 +28,13 @@
     "nextSection": null
   },
   "help": {
-    "completedAnchorOccurrences": 16,
+    "completedAnchorOccurrences": 32,
     "totalAnchorOccurrences": 138,
-    "completedUniqueTopics": 16,
+    "completedUniqueTopics": 31,
     "totalUniqueTopics": 128,
-    "nextSection": "teleportViewHelp"
+    "nextSection": "windVortexType",
+    "pendingSharedBodyTopics": [
+      "rainVortexType"
+    ]
   }
 }
