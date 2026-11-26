@@ -1,0 +1,154 @@
+{
+  "unit": 1367,
+  "date": "2026-11-26",
+  "host": "HJOW-Athlon",
+  "decompileHost": "HJOW-Athlon",
+  "buildPassed": true,
+  "completed": "일반전투객체Chaff/공유후처리3모드교정",
+  "twoPeerStartPassed": true,
+  "probe": {
+    "passed": true,
+    "exe": "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+    "exeSha256": "4716a5f0b3da37ba789ae7a517c5ef0cd960588a2df3e4a001e2ff2fc8eabdb1",
+    "peers": [
+      {
+        "role": "bot",
+        "exitCode": 0
+      },
+      {
+        "role": "host",
+        "exitCode": 0
+      }
+    ]
+  },
+  "identity": {
+    "host": {
+      "phase": [
+        [
+          "4"
+        ]
+      ],
+      "page": [
+        [
+          "battle"
+        ]
+      ],
+      "world": [
+        [
+          "7660",
+          "0"
+        ]
+      ],
+      "raw_input": [
+        [
+          "0",
+          "0",
+          "14",
+          "22"
+        ]
+      ],
+      "raw_session": [
+        [
+          "1",
+          "1"
+        ]
+      ],
+      "raw_sp": [
+        [
+          "194162",
+          "6500",
+          "6500",
+          "6500",
+          "6500",
+          "6500",
+          "6500",
+          "6500",
+          "6500"
+        ]
+      ],
+      "raw_mission_loading": [],
+      "players": [
+        {
+          "owner": 1,
+          "id": 6356993,
+          "flags": 75,
+          "name": "LocalHost"
+        },
+        {
+          "owner": 2,
+          "id": 6356994,
+          "flags": 67,
+          "name": "OpponentBot"
+        }
+      ]
+    },
+    "bot": {
+      "phase": [
+        [
+          "4"
+        ]
+      ],
+      "page": [
+        [
+          "battle"
+        ]
+      ],
+      "world": [
+        [
+          "7660",
+          "0"
+        ]
+      ],
+      "raw_input": [
+        [
+          "0",
+          "0",
+          "14",
+          "79"
+        ]
+      ],
+      "raw_session": [
+        [
+          "2",
+          "1"
+        ]
+      ],
+      "raw_sp": [
+        [
+          "194162",
+          "6500",
+          "6500",
+          "6500",
+          "6500",
+          "6500",
+          "6500",
+          "6500",
+          "6500"
+        ]
+      ],
+      "raw_mission_loading": [],
+      "players": [
+        {
+          "owner": 1,
+          "id": 6356993,
+          "flags": 75,
+          "name": "LocalHost"
+        },
+        {
+          "owner": 2,
+          "id": 6356994,
+          "flags": 67,
+          "name": "OpponentBot"
+        }
+      ]
+    }
+  },
+  "protectedFiles": 3212,
+  "protectedUnchanged": true,
+  "remaining": [
+    "간헐Archer clock/delta오류",
+    "원문State17/18",
+    "생산건설/개별객체및SP변경동기화/긴대기/재접속",
+    "최종ZIP재생성"
+  ]
+}

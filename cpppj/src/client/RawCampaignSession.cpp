@@ -1129,7 +1129,7 @@ struct RawCampaignSession::Impl {
             // Native State7 정리/전투 모드 쓰기를 대여하며 ctor에서 미션/서버/현재 Player를 다시 만들지 않는다.
             if (localStateGlobals->State().current[0]!=7 || !core.ownerMode.battle || core.ownerMode.fort || core.ownerMode.challenge || core.bridgeState.mission || globals.missionPost || globals.editor || !services.missionFortFileSelect) throw std::logic_error("일반 LAN의 실제 State7/비미션 전투/파일 선택 계약");
             world.ConfigureInstallModes(core.ownerMode.fort,core.ownerMode.battle,core.ownerMode.challenge,false); // 준비된 기존 Fort 전용이던 C++ BridgeDecay의 private editor 별칭을 실제 비편집 모드에 맞춘다. 공유 모드 값은 같은 값으로 유지한다.
-            objectState.mission=false;objectState.fort=false;objectState.special=false;
+            objectState.mission=false;objectState.fort=false;objectState.special=false;objectState.chaffMode=false;finishState.chaffMode=false;finishState.special=false;finishState.fort=false; // 실제 일반 전투 모드로 맞춘다. 이전 Fort의 공유 special이 남으면 다른 참가자의 같은Terr 섬까지 읽어 스트림을 초과한다.
             const auto& request=*services.generalBattleStart;const auto& name=request.handle;if (request.reconnect!=(localStateGlobals->State().current[33]!=0) || (!request.reconnect && name.empty()) || name.size()>=handle.size() || name.find('\0')!=name.npos) throw std::logic_error("일반 전투의 실제 복구 표식/사용자 이름 범위");std::copy(name.begin(),name.end(),handle.begin());handle[name.size()]=0; // 저장 복구의 빈 이름도 실제 현재 버퍼에 인계하며 새 LAN의 비어 있지 않은 이름 계약은 유지한다.
         }
         if (services.adoptMainMenuFort && (!services.adoptPreparedWorld || services.installMode!=CampaignInstallMode::ExistingEditor || !IsExistingFortEntry(services.localStateGlobals->State().current[0],true))) throw std::logic_error("State3/일반 복귀의 같은 준비된 Fort/State1·2·6 계약");

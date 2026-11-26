@@ -33,8 +33,9 @@ class Peer:
         self.exit_code = None  # 최종 실제 프로세스 종료 코드다.
         settings = (f"welcomeGiven=1;tellTips=0;autoDemo=0;intro=1;edgeScroll=0;"
                     f"SCREENW=1024;SCREENH=768;currentLanguage=english;"
+                    f"registeredSubId={0x610001 if role == 'host' else 0x610002};"
                     f"lastMultiplayerFort=LanBot{role};lanServerAddress=127.0.0.1;"
-                    f"lanLobbyPort={lobby_port};gameServerPort={game_port}")  # 표준 옵션으로 새 Fort/로컬 주소만 선택한다.
+                    f"lanLobbyPort={lobby_port};gameServerPort={game_port}")  # 표준 옵션으로 새 Fort·서로 다른 오프라인 등록ID·로컬 주소를 선택한다.
         command = [str(exe), "--run", str(game), "--mcp", "--window", "--no-audio", "--set", settings]  # 고정 시각/자동 전투 옵션을 사용하지 않는다.
         self.stderr = (self.output / "stderr.log").open("wb")  # 게임 진단 stdout은 MCP가 stderr로 분리한다.
         self.process = subprocess.Popen(command, stdin=subprocess.PIPE, stdout=subprocess.PIPE,
@@ -158,6 +159,18 @@ def battle_ready(report):
             and any(len(row) > 1 and int(row[0]) in range(1, 9) and int(row[1]) != 0 for row in sessions))
 
 
+def player_identity(report):
+    """실제180BYTE Player 기록에서 두 참가자의 ID·이름·참여/로그인/Ready 비트를 읽는다."""
+    result = []  # 카메라·로컬 표시 비트와 구별한 두 공통 참가자 기록이다.
+    for row in fields(report, "raw_player_record"):  # 일반 LAN의 실제 두 슬롯만 관측한다.
+        if int(row[0]) not in (1, 2):
+            continue
+        record = bytes.fromhex(row[1])  # 보고서의 원문 바이트를 그대로 읽는다.
+        result.append(dict(owner=int(row[0]), subscriber=int.from_bytes(record[44:48], "little"),
+                           name=record[12:44].split(b"\0")[0].decode("ascii"), flags=int.from_bytes(record[80:84], "little") & 0x43))
+    return result
+
+
 def main():
     """새 검증 디렉터리에 호스트와 상대 봇을 생성해 로비/전투를 검사한다."""
     parser = argparse.ArgumentParser(description=__doc__)
@@ -187,13 +200,29 @@ def main():
             for peer in peers:  # 실제 phase14/PlayerKnown과 게임 입력 설치를 확인한다.
                 peer.wait(battle_ready, "전투 로그인14/PlayerKnown", seconds=45)
                 peer.observe("battle")
+            steady = []  # 자연 대기 뒤 양쪽 명단·월드와 로그인창 소멸을 독립 비교한다.
             for peer in peers:  # 간단한 자연 대기 뒤 각자 연결/월드 상태를 다시 읽는다.
                 peer.call("netstorm_wait_frames", frames=120)
-                peer.observe("steady")
+                steady.append(peer.observe("steady"))
+            identities = [player_identity(text) for text in steady]  # 원격 수신 뒤의 실제 Player9 기록이다.
+            expected = [dict(owner=1, subscriber=0x610001, name="LocalHost", flags=0x43),
+                        dict(owner=2, subscriber=0x610002, name="OpponentBot", flags=0x43)]  # 새 격리 프로필의 명시 등록/이름 입력과 원문 Ready 비트다.
+            if identities != [expected, expected] or any(fields(text, "raw_mission_loading") for text in steady):
+                raise AssertionError("두 참가자/Ready 또는 일반 시작 안내 소멸 불일치")
+            if fields(steady[0], "world") != fields(steady[1], "world"):
+                raise AssertionError("두 초기 월드의 객체/타일 수 불일치")
+            result["identity"] = identities[0]
+            result["world"] = fields(steady[0], "world")
         result["passed"] = True
     except Exception as error:
         result["error"] = repr(error)
         print(result["error"], flush=True)
+        for peer in peers:  # 대기실 거부 등 양쪽 상태가 다른 실패도 각 실제 화면/보고를 보존한다.
+            if peer.process.poll() is None:
+                try:
+                    peer.observe("failure")
+                except Exception as observation_error:
+                    result.setdefault("observationErrors", []).append(repr(observation_error))
     finally:
         for peer in reversed(peers):  # 상대 봇부터 종료하며 자기 프로세스 밖의 서버/게임을 건드리지 않는다.
             try:

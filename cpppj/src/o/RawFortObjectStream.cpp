@@ -18,7 +18,7 @@ void StreamPut(std::span<std::uint8_t> bytes,std::size_t at,std::uint32_t value)
 }
 std::uint32_t StreamByte(std::uint32_t token,const FortObjectStreamHooks& hooks) { // BYTE 직접 읽기는 논리 end 검사를 추가하지 않는다.
     std::uint32_t value{};NeedStream(hooks.access)(token,[&](auto fields,const auto& memory) {
-        const auto pos=StreamDword(fields,4);const auto bytes=NeedStream(memory.buffer)(StreamDword(fields,0));if (pos>=bytes.size()) throw std::out_of_range("Fort Objects 직접 BYTE 물리범위");
+        const auto pos=StreamDword(fields,4);const auto bytes=NeedStream(memory.buffer)(StreamDword(fields,0));if (pos>=bytes.size()) throw std::out_of_range("Fort Objects 직접 BYTE 물리범위: stream="+std::to_string(token)+" pos="+std::to_string(pos)+" size="+std::to_string(bytes.size())); // 부분 객체/커서를 유지하며 실패한 실제 읽기 위치를 로그에 남긴다.
         value=bytes[pos];StreamPut(fields,4,pos+1U);
     });return value;
 }
