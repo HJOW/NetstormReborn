@@ -1,0 +1,63 @@
+﻿[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+
+myStartMoney = 2000
+myTech = "sunWalker;rainBattery;sunBlocker;sunCannon;sunBalloon"
+
+aiName = "Prince of Wind"
+aiTech = "sunArcher;sunWalker;windBattery"
+aiStartMoney = 1000
+aiGeyserAttachments = 1
+aiCollectors = 3
+aiTimeBetweenMoves = 2
+aiAbility="!STOP_COLLECTING_FROM_DANGEROUS_GEYSERS"
+
+
+title="危うい幸運"
+
+[Options]
+
+[A.]
+<h2>危うい幸運</h2>
+<i>「泥から立ち上がれ！<br>
+塔へと登れ！<br>
+今日こそ、その日だ！<br>
+今こそ、その時だ！」<br>
+--絶望的な劣勢を覆したウィンドのアルトゥスの雄叫び。</i>
+<p>
+偵察島「パスファインダー」が、莫大なストームパワーの貯蔵地を発見しました。
+しかしウィンドの闇の王子が先に到着し、採集を始めています。
+敵が戦力を強化するのを阻止しなければなりません！
+<p>
+偵察によると、敵は無防備な経路でストームパワーを集めています。
+キャノンを使い、間欠泉に向かう敵のゴーレムを破壊してください！
+
+$Button=知識を確認,ShowTechnology,55
+$Button=ミッション開始,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>成功！</h2>
+<p>
+ウィンドの闇の王子の戦線を突破し、
+敵軍を全滅させるだけのストームパワーを奪いました！
+パスファインダーと乗組員は、盛大な祝賀の中で帰還します。
+老若男女が何日も街で踊り続けます。
+<$Config,Done{mission.fileName}=1>
+$Button=ミッションを終了,MissionAbort,1
+$Button=次のミッション,MissionBegin,ThunderingPower
+
+
+[Failed]
+<h2>失敗！</h2>
+<p>
+ウィンドの闇の王子はあなたの企てを打ち破り、
+パスファインダーは邪悪な敵の手に落ちました。
+復讐のため、王子はパスファインダーに乗って本拠地に侵入し、
+帝国の心臓部を踏みにじります。
+$Button=続ける,Tell,TryAgain
+
+
+[END]

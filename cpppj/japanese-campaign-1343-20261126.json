@@ -1,0 +1,449 @@
+{
+  "unit": 1343,
+  "date": "2026-11-26",
+  "host": "HJOW-Athlon",
+  "decompileHost": "HJOW-Athlon",
+  "audit": {
+    "passed": true,
+    "translated": 30,
+    "total": 43,
+    "missing": [
+      "breakingthrough",
+      "demostormrages",
+      "enemyterritory",
+      "finalconfrontation",
+      "guardmyback",
+      "help",
+      "rainvsrain",
+      "runforit",
+      "surrounded",
+      "tell",
+      "thenoose",
+      "totherescue",
+      "vicious"
+    ],
+    "uniqueKanji": 750,
+    "originalCompared": 30,
+    "files": [
+      {
+        "file": "bc1menu76.japanese",
+        "bytes": 1161,
+        "sections": 11,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "bc2bridging76.japanese",
+        "bytes": 2243,
+        "sections": 6,
+        "links": 0,
+        "images": 2,
+        "imageSections": {
+          "[A.]": 2
+        }
+      },
+      {
+        "file": "bc3acid_bar76.japanese",
+        "bytes": 2815,
+        "sections": 7,
+        "links": 0,
+        "images": 1,
+        "imageSections": {
+          "[A1.]": 1
+        }
+      },
+      {
+        "file": "bc4bow_rush76.japanese",
+        "bytes": 2381,
+        "sections": 6,
+        "links": 0,
+        "images": 1,
+        "imageSections": {
+          "[A.]": 1
+        }
+      },
+      {
+        "file": "bc5walkers76.japanese",
+        "bytes": 2291,
+        "sections": 6,
+        "links": 0,
+        "images": 8,
+        "imageSections": {
+          "[A.]": 8
+        }
+      },
+      {
+        "file": "bc6mows76.japanese",
+        "bytes": 3367,
+        "sections": 6,
+        "links": 0,
+        "images": 3,
+        "imageSections": {
+          "[A.]": 3
+        }
+      },
+      {
+        "file": "bc7sun_bars76.japanese",
+        "bytes": 2677,
+        "sections": 6,
+        "links": 0,
+        "images": 1,
+        "imageSections": {
+          "[A.]": 1
+        }
+      },
+      {
+        "file": "bc8fury76.japanese",
+        "bytes": 3831,
+        "sections": 15,
+        "links": 0,
+        "images": 8,
+        "imageSections": {
+          "[@1]": 4,
+          "[ai2priestdead]": 1,
+          "[ai3priestdead]": 1,
+          "[ai4priestdead]": 1,
+          "[ai5priestdead]": 1
+        }
+      },
+      {
+        "file": "bc9ssun_bars76.japanese",
+        "bytes": 2178,
+        "sections": 8,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "config.japanese",
+        "bytes": 2668,
+        "sections": 0,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "dissolvedalliance.japanese",
+        "bytes": 2231,
+        "sections": 6,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "fragilefortune.japanese",
+        "bytes": 2045,
+        "sections": 6,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "masterofwhirligigs.japanese",
+        "bytes": 2071,
+        "sections": 5,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical1.japanese",
+        "bytes": 907,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical2.japanese",
+        "bytes": 1307,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical2sep.japanese",
+        "bytes": 16,
+        "sections": 0,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical3.japanese",
+        "bytes": 1314,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical4.japanese",
+        "bytes": 723,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical5.japanese",
+        "bytes": 664,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical5sep.japanese",
+        "bytes": 16,
+        "sections": 0,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "offical6.japanese",
+        "bytes": 273,
+        "sections": 1,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "savetheisland.japanese",
+        "bytes": 1950,
+        "sections": 6,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "thewarbegins.japanese",
+        "bytes": 1997,
+        "sections": 5,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "thunderingpower.japanese",
+        "bytes": 5807,
+        "sections": 17,
+        "links": 0,
+        "images": 0,
+        "imageSections": {}
+      },
+      {
+        "file": "tutorial1.japanese",
+        "bytes": 7194,
+        "sections": 14,
+        "links": 0,
+        "images": 4,
+        "imageSections": {
+          "[D.]": 2,
+          "[D1.]": 1,
+          "[E.]": 1
+        }
+      },
+      {
+        "file": "tutorial2.japanese",
+        "bytes": 10752,
+        "sections": 20,
+        "links": 0,
+        "images": 13,
+        "imageSections": {
+          "[A1.]": 2,
+          "[C.]": 2,
+          "[D1.]": 2,
+          "[F.]": 5,
+          "[G.]": 2
+        }
+      },
+      {
+        "file": "tutorial3.japanese",
+        "bytes": 8541,
+        "sections": 15,
+        "links": 0,
+        "images": 4,
+        "imageSections": {
+          "[A1.]": 1,
+          "[D1.]": 3
+        }
+      },
+      {
+        "file": "tutorial4.japanese",
+        "bytes": 9466,
+        "sections": 16,
+        "links": 0,
+        "images": 1,
+        "imageSections": {
+          "[A.]": 1
+        }
+      },
+      {
+        "file": "tutorial5.japanese",
+        "bytes": 9608,
+        "sections": 16,
+        "links": 0,
+        "images": 3,
+        "imageSections": {
+          "[A.]": 2,
+          "[E.]": 1
+        }
+      },
+      {
+        "file": "tutorial6.japanese",
+        "bytes": 8256,
+        "sections": 11,
+        "links": 0,
+        "images": 14,
+        "imageSections": {
+          "[A1.]": 1,
+          "[A2.]": 11,
+          "[C.]": 1,
+          "[E.]": 1
+        }
+      }
+    ],
+    "errors": []
+  },
+  "gui": [
+    {
+      "name": "campaign-1343-fragilefortune",
+      "args": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+        "--window",
+        "--frames",
+        "48",
+        "--fixed-frame-ms",
+        "25",
+        "--no-audio",
+        "--set",
+        "welcomeGiven=1;tellTips=0;autoDemo=0;edgeScroll=0;currentLanguage=japanese;SCREENW=1024;SCREENH=768",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\campaign-1343-fragilefortune.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\campaign-1343-fragilefortune-report.tsv",
+        "--mission",
+        "fragilefortune"
+      ],
+      "exit_code": 0,
+      "seconds": 2.4967169761657715,
+      "exe_sha256": "116d44b3e08ca27fbc69a3b43aedf83f03e2b9ebaf1b64dcb87672cb02917564"
+    },
+    {
+      "name": "campaign-1343-thunderingpower",
+      "args": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+        "--window",
+        "--frames",
+        "1040",
+        "--fixed-frame-ms",
+        "25",
+        "--no-audio",
+        "--set",
+        "welcomeGiven=1;tellTips=0;autoDemo=0;edgeScroll=0;currentLanguage=japanese;SCREENW=1024;SCREENH=768",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\campaign-1343-thunderingpower.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\campaign-1343-thunderingpower-report.tsv",
+        "--mission",
+        "thunderingpower"
+      ],
+      "exit_code": 0,
+      "seconds": 7.377887487411499,
+      "exe_sha256": "116d44b3e08ca27fbc69a3b43aedf83f03e2b9ebaf1b64dcb87672cb02917564"
+    },
+    {
+      "name": "campaign-1343-dissolvedalliance",
+      "args": [
+        "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+        "--run",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-reset-all-1325\\game",
+        "--window",
+        "--frames",
+        "48",
+        "--fixed-frame-ms",
+        "25",
+        "--no-audio",
+        "--set",
+        "welcomeGiven=1;tellTips=0;autoDemo=0;edgeScroll=0;currentLanguage=japanese;SCREENW=1024;SCREENH=768",
+        "--ui-script",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\campaign-1343-dissolvedalliance.tsv",
+        "--ui-report",
+        "H:\\Workspace\\git\\NetstormReborn\\extracted\\cpp-followups-1328\\campaign-1343-dissolvedalliance-report.tsv",
+        "--mission",
+        "dissolvedalliance"
+      ],
+      "exit_code": 0,
+      "seconds": 2.4100396633148193,
+      "exe_sha256": "116d44b3e08ca27fbc69a3b43aedf83f03e2b9ebaf1b64dcb87672cb02917564"
+    }
+  ],
+  "naturalTimedNotice": {
+    "mission": "thunderingpower",
+    "section": "@20",
+    "natural": true,
+    "before": 9.225,
+    "after": 29.225,
+    "elapsed": 20.0
+  },
+  "displayOnlySections": [
+    "@120",
+    "@360",
+    "@500",
+    "Wife",
+    "@700",
+    "@900",
+    "Surrender",
+    "KillSoldier",
+    "FightAgain",
+    "Failed"
+  ],
+  "allStartedByJapaneseButton": true,
+  "allRunningUnpaused": true,
+  "missionProgress": {
+    "fragilefortune": [
+      0,
+      0,
+      0
+    ],
+    "thunderingpower": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "dissolvedalliance": [
+      0,
+      0,
+      0
+    ]
+  },
+  "pictures": 0,
+  "protectedFiles": 3212,
+  "protectedAndGameUnchanged": true,
+  "productRebuild": false,
+  "exeSha256": "116d44b3e08ca27fbc69a3b43aedf83f03e2b9ebaf1b64dcb87672cb02917564",
+  "excluded": [
+    "공격·포획·희생·승리 재현",
+    "승리 편지 및 완료 키 실행",
+    "MP 실행"
+  ]
+}
