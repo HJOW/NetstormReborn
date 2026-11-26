@@ -1,0 +1,94 @@
+{
+  "unit": "WB04-E1373",
+  "host": "HJOW-Athlon",
+  "productSha256": "c3daa5bfbebfbcb91ab1b95965f9cecb745e17ec1110e9b574080229227249b7",
+  "nativeProbe": {
+    "host": "HJOW-Athlon",
+    "completedAt": "2026-11-26T14:28:25.589Z",
+    "exe": "H:\\Workspace\\git\\NetstormReborn\\extracted\\webpj-render-order-probe\\Netstorm.exe",
+    "sha256": "523b092600415ed3c0c2104102390c4866dd1babd413c092c90c5076b6c05966",
+    "windowsHide": true,
+    "args": [
+      "--run",
+      "assets/game-data",
+      "--window",
+      "--mute-audio",
+      "--frames",
+      "7001",
+      "--set",
+      "SCREENW=1024;SCREENH=768;WelcomeGiven=1;tellTips=0;autoDemo=0",
+      "--ui-script",
+      "<steps.tsv>",
+      "--ui-report",
+      "<report.tsv>",
+      "--fixed-frame-ms",
+      "25",
+      "--mission",
+      "thewarbegins",
+      "--test-ally-ai",
+      "hard",
+      "--test-enemy-ai",
+      "easy"
+    ]
+  },
+  "webObservation": {
+    "basis": "E1370 실제 12000프레임 관측",
+    "unchangedAcrossMcpSource": true,
+    "secondRun": "E1372 소스의 Guide 뒤 Ready 재검사 실험; 효과 없음·상태7곳일치",
+    "sourcePaths": [
+      "webpj/extracted/webpj-ai-telemetry-frame-end-12000/",
+      "extracted/webpj-render-order-ready-finish/"
+    ]
+  },
+  "scope": "1-1 실제 아군 어려움·적 쉬움 AI. 포획·희생·승패 직접 수정 없음",
+  "files": {
+    "ai12000.web.png": {
+      "bytes": 253519,
+      "sha256": "6fd708aef0fef655d6793d1c9b38146eb1290eb34479c6f0f75d96672ad502f0"
+    },
+    "ai7000.web.png": {
+      "bytes": 243302,
+      "sha256": "73437f59db33f5dcff62029a7a55bd9c5fdce13c84649bbb7f900f689d41b20c"
+    },
+    "ai8000.web.png": {
+      "bytes": 246572,
+      "sha256": "46adc633a3e824687ecdf1e6e5e5b20a54db8b69a1990dd864eb482c03c18e7c"
+    },
+    "native-call-stacks.tsv": {
+      "bytes": 17629,
+      "sha256": "c125fc3df9929fff1c5ba86236cf2c32d36223e09c4cea8fcbcbd4ec8c5d3415"
+    },
+    "native-constructor-stacks.json": {
+      "bytes": 12344,
+      "sha256": "f1451e84bfedd68a2e38e590f9b7e1defb283fdeb538a9f73c5660016df028fc"
+    },
+    "native-instrumentation.patch": {
+      "bytes": 9706,
+      "sha256": "8bf76e74d7f9f8bfd2c75e3e261e9056aae3b80bbd43f4c48d205018b2f6740b"
+    },
+    "native-source.json": {
+      "bytes": 689,
+      "sha256": "5cd405c4035c756fc0141cf5d1c1fddf29c9da8d0ddc9387153cd5d7e6871816"
+    },
+    "native-ui.tsv": {
+      "bytes": 1815,
+      "sha256": "ac03fb9212401ec11be453e1f54ee8c1aea3fdb67936bf558d2a3cbcb31742dd"
+    },
+    "noninterference.log": {
+      "bytes": 375,
+      "sha256": "806e6659f40dda5ac5c9c97e01fa73e46ac551a06de5d7a8d1fa99dad19544bd"
+    },
+    "pixel-proof.json": {
+      "bytes": 1324,
+      "sha256": "5a2638c0a8261641f4caedbefb1d45fd54658533d0d0e25376558c4899723685"
+    },
+    "ready-recheck-result.json": {
+      "bytes": 2084,
+      "sha256": "90be0596a2bcab688b0023487ab807e82c8dcb5ae8214ba09d1ba9633bb796ff"
+    },
+    "web-ui.json": {
+      "bytes": 2030,
+      "sha256": "f8144b95513f4a9012de06e210c8694be1bfc0d96756902db4bacf1769d1a70d"
+    }
+  }
+}

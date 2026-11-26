@@ -1,0 +1,392 @@
+[
+  {
+    "afterFrame": 0,
+    "frames": [
+      {
+        "rva": "772e",
+        "name": "?InvalidateAll@Renderer@client@netstorm@@QEAAXXZ",
+        "offset": 14
+      },
+      {
+        "rva": "64fe4f",
+        "name": "?Construct@TextEntryGump@client@netstorm@@QEBAIIHHV?$optional@V?$basic_string_view@DU?$char_traits@D@std@@@std@@@std@@III@Z",
+        "offset": 799
+      },
+      {
+        "rva": "6503bf",
+        "name": "?ConstructConsole@TextEntryGump@client@netstorm@@QEBAIIHHV?$optional@V?$basic_string_view@DU?$char_traits@D@std@@@std@@@std@@III@Z",
+        "offset": 111
+      },
+      {
+        "rva": "3cd1cf",
+        "name": "?Construct@ChatWindow@client@netstorm@@QEBAIIHH@Z",
+        "offset": 1167
+      },
+      {
+        "rva": "3ce0d9",
+        "name": "?Create@ChatWindow@client@netstorm@@QEBAIXZ",
+        "offset": 233
+      },
+      {
+        "rva": "2282e9",
+        "name": "?CreateChatWindow@RawMenuControls@client@netstorm@@QEAAIURawChatWindowContext@23@@Z",
+        "offset": 89
+      },
+      {
+        "rva": "2cc4ec",
+        "name": "?_Do_call@?$_Func_impl_no_alloc@V<lambda_9>@?8??EnsureHudFactories@UberGump@client@netstorm@@AEAAXXZ@I$$V@std@@EEAAIXZ",
+        "offset": 60
+      },
+      {
+        "rva": "78737e",
+        "name": "?Construct@UberRootGump@client@netstorm@@QEBAII@Z",
+        "offset": 2254
+      },
+      {
+        "rva": "788a05",
+        "name": "?Replace@UberRootGump@client@netstorm@@QEBAXXZ",
+        "offset": 101
+      },
+      {
+        "rva": "6816d5",
+        "name": "?Replace@RawUberRootControls@client@netstorm@@QEAAXXZ",
+        "offset": 21
+      },
+      {
+        "rva": "2c77e6",
+        "name": "?_Do_call@?$_Func_impl_no_alloc@V<lambda_4>@?1??CleanupNativeStateWorld@UberGump@client@netstorm@@QEAAXIV?$shared_ptr@VMetaConnectionRuntime@client@netstorm@@@std@@@Z@X$$V@std@@EEAAXXZ",
+        "offset": 38
+      },
+      {
+        "rva": "7a3922",
+        "name": "?CleanupStateWorld@o@netstorm@@YAXIAEBUStateWorldCleanupGlobals@12@AEBUStateWorldCleanupHooks@12@@Z",
+        "offset": 2866
+      }
+    ]
+  },
+  {
+    "afterFrame": 0,
+    "frames": [
+      {
+        "rva": "772e",
+        "name": "?InvalidateAll@Renderer@client@netstorm@@QEAAXXZ",
+        "offset": 14
+      },
+      {
+        "rva": "6534c9",
+        "name": "?SetScroll@TextEntryGump@client@netstorm@@QEBAXIHH@Z",
+        "offset": 1273
+      },
+      {
+        "rva": "650128",
+        "name": "?Construct@TextEntryGump@client@netstorm@@QEBAIIHHV?$optional@V?$basic_string_view@DU?$char_traits@D@std@@@std@@@std@@III@Z",
+        "offset": 1528
+      },
+      {
+        "rva": "6503bf",
+        "name": "?ConstructConsole@TextEntryGump@client@netstorm@@QEBAIIHHV?$optional@V?$basic_string_view@DU?$char_traits@D@std@@@std@@@std@@III@Z",
+        "offset": 111
+      },
+      {
+        "rva": "3cd1cf",
+        "name": "?Construct@ChatWindow@client@netstorm@@QEBAIIHH@Z",
+        "offset": 1167
+      },
+      {
+        "rva": "3ce0d9",
+        "name": "?Create@ChatWindow@client@netstorm@@QEBAIXZ",
+        "offset": 233
+      },
+      {
+        "rva": "2282e9",
+        "name": "?CreateChatWindow@RawMenuControls@client@netstorm@@QEAAIURawChatWindowContext@23@@Z",
+        "offset": 89
+      },
+      {
+        "rva": "2cc4ec",
+        "name": "?_Do_call@?$_Func_impl_no_alloc@V<lambda_9>@?8??EnsureHudFactories@UberGump@client@netstorm@@AEAAXXZ@I$$V@std@@EEAAIXZ",
+        "offset": 60
+      },
+      {
+        "rva": "78737e",
+        "name": "?Construct@UberRootGump@client@netstorm@@QEBAII@Z",
+        "offset": 2254
+      },
+      {
+        "rva": "788a05",
+        "name": "?Replace@UberRootGump@client@netstorm@@QEBAXXZ",
+        "offset": 101
+      },
+      {
+        "rva": "6816d5",
+        "name": "?Replace@RawUberRootControls@client@netstorm@@QEAAXXZ",
+        "offset": 21
+      },
+      {
+        "rva": "2c77e6",
+        "name": "?_Do_call@?$_Func_impl_no_alloc@V<lambda_4>@?1??CleanupNativeStateWorld@UberGump@client@netstorm@@QEAAXIV?$shared_ptr@VMetaConnectionRuntime@client@netstorm@@@std@@@Z@X$$V@std@@EEAAXXZ",
+        "offset": 38
+      }
+    ]
+  },
+  {
+    "afterFrame": 0,
+    "frames": [
+      {
+        "rva": "772e",
+        "name": "?InvalidateAll@Renderer@client@netstorm@@QEAAXXZ",
+        "offset": 14
+      },
+      {
+        "rva": "64fe4f",
+        "name": "?Construct@TextEntryGump@client@netstorm@@QEBAIIHHV?$optional@V?$basic_string_view@DU?$char_traits@D@std@@@std@@@std@@III@Z",
+        "offset": 799
+      },
+      {
+        "rva": "6503bf",
+        "name": "?ConstructConsole@TextEntryGump@client@netstorm@@QEBAIIHHV?$optional@V?$basic_string_view@DU?$char_traits@D@std@@@std@@@std@@III@Z",
+        "offset": 111
+      },
+      {
+        "rva": "3cd1cf",
+        "name": "?Construct@ChatWindow@client@netstorm@@QEBAIIHH@Z",
+        "offset": 1167
+      },
+      {
+        "rva": "3ce0d9",
+        "name": "?Create@ChatWindow@client@netstorm@@QEBAIXZ",
+        "offset": 233
+      },
+      {
+        "rva": "2282e9",
+        "name": "?CreateChatWindow@RawMenuControls@client@netstorm@@QEAAIURawChatWindowContext@23@@Z",
+        "offset": 89
+      },
+      {
+        "rva": "2cc4ec",
+        "name": "?_Do_call@?$_Func_impl_no_alloc@V<lambda_9>@?8??EnsureHudFactories@UberGump@client@netstorm@@AEAAXXZ@I$$V@std@@EEAAIXZ",
+        "offset": 60
+      },
+      {
+        "rva": "78737e",
+        "name": "?Construct@UberRootGump@client@netstorm@@QEBAII@Z",
+        "offset": 2254
+      },
+      {
+        "rva": "788a05",
+        "name": "?Replace@UberRootGump@client@netstorm@@QEBAXXZ",
+        "offset": 101
+      },
+      {
+        "rva": "6816d5",
+        "name": "?Replace@RawUberRootControls@client@netstorm@@QEAAXXZ",
+        "offset": 21
+      },
+      {
+        "rva": "2c77e6",
+        "name": "?_Do_call@?$_Func_impl_no_alloc@V<lambda_4>@?1??CleanupNativeStateWorld@UberGump@client@netstorm@@QEAAXIV?$shared_ptr@VMetaConnectionRuntime@client@netstorm@@@std@@@Z@X$$V@std@@EEAAXXZ",
+        "offset": 38
+      },
+      {
+        "rva": "7a3922",
+        "name": "?CleanupStateWorld@o@netstorm@@YAXIAEBUStateWorldCleanupGlobals@12@AEBUStateWorldCleanupHooks@12@@Z",
+        "offset": 2866
+      }
+    ]
+  },
+  {
+    "afterFrame": 0,
+    "frames": [
+      {
+        "rva": "772e",
+        "name": "?InvalidateAll@Renderer@client@netstorm@@QEAAXXZ",
+        "offset": 14
+      },
+      {
+        "rva": "6534c9",
+        "name": "?SetScroll@TextEntryGump@client@netstorm@@QEBAXIHH@Z",
+        "offset": 1273
+      },
+      {
+        "rva": "650128",
+        "name": "?Construct@TextEntryGump@client@netstorm@@QEBAIIHHV?$optional@V?$basic_string_view@DU?$char_traits@D@std@@@std@@@std@@III@Z",
+        "offset": 1528
+      },
+      {
+        "rva": "6503bf",
+        "name": "?ConstructConsole@TextEntryGump@client@netstorm@@QEBAIIHHV?$optional@V?$basic_string_view@DU?$char_traits@D@std@@@std@@@std@@III@Z",
+        "offset": 111
+      },
+      {
+        "rva": "3cd1cf",
+        "name": "?Construct@ChatWindow@client@netstorm@@QEBAIIHH@Z",
+        "offset": 1167
+      },
+      {
+        "rva": "3ce0d9",
+        "name": "?Create@ChatWindow@client@netstorm@@QEBAIXZ",
+        "offset": 233
+      },
+      {
+        "rva": "2282e9",
+        "name": "?CreateChatWindow@RawMenuControls@client@netstorm@@QEAAIURawChatWindowContext@23@@Z",
+        "offset": 89
+      },
+      {
+        "rva": "2cc4ec",
+        "name": "?_Do_call@?$_Func_impl_no_alloc@V<lambda_9>@?8??EnsureHudFactories@UberGump@client@netstorm@@AEAAXXZ@I$$V@std@@EEAAIXZ",
+        "offset": 60
+      },
+      {
+        "rva": "78737e",
+        "name": "?Construct@UberRootGump@client@netstorm@@QEBAII@Z",
+        "offset": 2254
+      },
+      {
+        "rva": "788a05",
+        "name": "?Replace@UberRootGump@client@netstorm@@QEBAXXZ",
+        "offset": 101
+      },
+      {
+        "rva": "6816d5",
+        "name": "?Replace@RawUberRootControls@client@netstorm@@QEAAXXZ",
+        "offset": 21
+      },
+      {
+        "rva": "2c77e6",
+        "name": "?_Do_call@?$_Func_impl_no_alloc@V<lambda_4>@?1??CleanupNativeStateWorld@UberGump@client@netstorm@@QEAAXIV?$shared_ptr@VMetaConnectionRuntime@client@netstorm@@@std@@@Z@X$$V@std@@EEAAXXZ",
+        "offset": 38
+      }
+    ]
+  },
+  {
+    "afterFrame": 1,
+    "frames": [
+      {
+        "rva": "772e",
+        "name": "?InvalidateAll@Renderer@client@netstorm@@QEAAXXZ",
+        "offset": 14
+      },
+      {
+        "rva": "64fe4f",
+        "name": "?Construct@TextEntryGump@client@netstorm@@QEBAIIHHV?$optional@V?$basic_string_view@DU?$char_traits@D@std@@@std@@@std@@III@Z",
+        "offset": 799
+      },
+      {
+        "rva": "6503bf",
+        "name": "?ConstructConsole@TextEntryGump@client@netstorm@@QEBAIIHHV?$optional@V?$basic_string_view@DU?$char_traits@D@std@@@std@@@std@@III@Z",
+        "offset": 111
+      },
+      {
+        "rva": "3cd1cf",
+        "name": "?Construct@ChatWindow@client@netstorm@@QEBAIIHH@Z",
+        "offset": 1167
+      },
+      {
+        "rva": "3ce0d9",
+        "name": "?Create@ChatWindow@client@netstorm@@QEBAIXZ",
+        "offset": 233
+      },
+      {
+        "rva": "2282e9",
+        "name": "?CreateChatWindow@RawMenuControls@client@netstorm@@QEAAIURawChatWindowContext@23@@Z",
+        "offset": 89
+      },
+      {
+        "rva": "2cc4ec",
+        "name": "?_Do_call@?$_Func_impl_no_alloc@V<lambda_9>@?8??EnsureHudFactories@UberGump@client@netstorm@@AEAAXXZ@I$$V@std@@EEAAIXZ",
+        "offset": 60
+      },
+      {
+        "rva": "78737e",
+        "name": "?Construct@UberRootGump@client@netstorm@@QEBAII@Z",
+        "offset": 2254
+      },
+      {
+        "rva": "788a05",
+        "name": "?Replace@UberRootGump@client@netstorm@@QEBAXXZ",
+        "offset": 101
+      },
+      {
+        "rva": "6816d5",
+        "name": "?Replace@RawUberRootControls@client@netstorm@@QEAAXXZ",
+        "offset": 21
+      },
+      {
+        "rva": "2c77e6",
+        "name": "?_Do_call@?$_Func_impl_no_alloc@V<lambda_4>@?1??CleanupNativeStateWorld@UberGump@client@netstorm@@QEAAXIV?$shared_ptr@VMetaConnectionRuntime@client@netstorm@@@std@@@Z@X$$V@std@@EEAAXXZ",
+        "offset": 38
+      },
+      {
+        "rva": "7a3922",
+        "name": "?CleanupStateWorld@o@netstorm@@YAXIAEBUStateWorldCleanupGlobals@12@AEBUStateWorldCleanupHooks@12@@Z",
+        "offset": 2866
+      }
+    ]
+  },
+  {
+    "afterFrame": 1,
+    "frames": [
+      {
+        "rva": "772e",
+        "name": "?InvalidateAll@Renderer@client@netstorm@@QEAAXXZ",
+        "offset": 14
+      },
+      {
+        "rva": "6534c9",
+        "name": "?SetScroll@TextEntryGump@client@netstorm@@QEBAXIHH@Z",
+        "offset": 1273
+      },
+      {
+        "rva": "650128",
+        "name": "?Construct@TextEntryGump@client@netstorm@@QEBAIIHHV?$optional@V?$basic_string_view@DU?$char_traits@D@std@@@std@@@std@@III@Z",
+        "offset": 1528
+      },
+      {
+        "rva": "6503bf",
+        "name": "?ConstructConsole@TextEntryGump@client@netstorm@@QEBAIIHHV?$optional@V?$basic_string_view@DU?$char_traits@D@std@@@std@@@std@@III@Z",
+        "offset": 111
+      },
+      {
+        "rva": "3cd1cf",
+        "name": "?Construct@ChatWindow@client@netstorm@@QEBAIIHH@Z",
+        "offset": 1167
+      },
+      {
+        "rva": "3ce0d9",
+        "name": "?Create@ChatWindow@client@netstorm@@QEBAIXZ",
+        "offset": 233
+      },
+      {
+        "rva": "2282e9",
+        "name": "?CreateChatWindow@RawMenuControls@client@netstorm@@QEAAIURawChatWindowContext@23@@Z",
+        "offset": 89
+      },
+      {
+        "rva": "2cc4ec",
+        "name": "?_Do_call@?$_Func_impl_no_alloc@V<lambda_9>@?8??EnsureHudFactories@UberGump@client@netstorm@@AEAAXXZ@I$$V@std@@EEAAIXZ",
+        "offset": 60
+      },
+      {
+        "rva": "78737e",
+        "name": "?Construct@UberRootGump@client@netstorm@@QEBAII@Z",
+        "offset": 2254
+      },
+      {
+        "rva": "788a05",
+        "name": "?Replace@UberRootGump@client@netstorm@@QEBAXXZ",
+        "offset": 101
+      },
+      {
+        "rva": "6816d5",
+        "name": "?Replace@RawUberRootControls@client@netstorm@@QEAAXXZ",
+        "offset": 21
+      },
+      {
+        "rva": "2c77e6",
+        "name": "?_Do_call@?$_Func_impl_no_alloc@V<lambda_4>@?1??CleanupNativeStateWorld@UberGump@client@netstorm@@QEAAXIV?$shared_ptr@VMetaConnectionRuntime@client@netstorm@@@std@@@Z@X$$V@std@@EEAAXXZ",
+        "offset": 38
+      }
+    ]
+  }
+]

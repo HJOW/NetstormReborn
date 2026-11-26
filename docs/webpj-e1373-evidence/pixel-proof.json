@@ -1,0 +1,79 @@
+[
+  {
+    "frame": 7000,
+    "actual": 31,
+    "modeled": 31,
+    "sameCoordinateSet": true,
+    "pairs": [
+      {
+        "x": 1008,
+        "y": 494,
+        "nativeFrame": 0,
+        "webFrame": 3,
+        "pixels": 31,
+        "nativeMatches": 31,
+        "webMatches": 31
+      }
+    ],
+    "unexplained": []
+  },
+  {
+    "frame": 8000,
+    "actual": 1,
+    "modeled": 0,
+    "sameCoordinateSet": false,
+    "pairs": [],
+    "unexplained": [
+      {
+        "x": 947,
+        "y": 689,
+        "native": [
+          0,
+          0,
+          0
+        ],
+        "web": [
+          45,
+          25,
+          19
+        ]
+      }
+    ]
+  },
+  {
+    "frame": 12000,
+    "actual": 99,
+    "modeled": 99,
+    "sameCoordinateSet": true,
+    "pairs": [
+      {
+        "x": 384,
+        "y": 307,
+        "nativeFrame": 1,
+        "webFrame": 2,
+        "pixels": 42,
+        "nativeMatches": 42,
+        "webMatches": 42
+      },
+      {
+        "x": 1008,
+        "y": 494,
+        "nativeFrame": 0,
+        "webFrame": 3,
+        "pixels": 31,
+        "nativeMatches": 31,
+        "webMatches": 31
+      },
+      {
+        "x": 816,
+        "y": 769,
+        "nativeFrame": 1,
+        "webFrame": 0,
+        "pixels": 26,
+        "nativeMatches": 26,
+        "webMatches": 26
+      }
+    ],
+    "unexplained": []
+  }
+]

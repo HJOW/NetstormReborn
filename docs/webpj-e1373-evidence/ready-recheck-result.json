@@ -1,0 +1,125 @@
+{
+  "errors": [],
+  "differences": [
+    {
+      "name": "ai1000",
+      "screen": {
+        "sizeMatch": true,
+        "total": 0,
+        "outside": 0,
+        "outsideBox": null,
+        "regions": [],
+        "background": 0
+      }
+    },
+    {
+      "name": "ai1000",
+      "state": []
+    },
+    {
+      "name": "ai6000",
+      "screen": {
+        "sizeMatch": true,
+        "total": 0,
+        "outside": 0,
+        "outsideBox": null,
+        "regions": [],
+        "background": 0
+      }
+    },
+    {
+      "name": "ai6000",
+      "state": []
+    },
+    {
+      "name": "ai7000",
+      "screen": {
+        "sizeMatch": true,
+        "total": 31,
+        "outside": 31,
+        "outsideBox": [
+          1000,
+          489,
+          1009,
+          495
+        ],
+        "regions": [],
+        "background": 0
+      }
+    },
+    {
+      "name": "ai7000",
+      "state": []
+    },
+    {
+      "name": "ai8000",
+      "screen": {
+        "sizeMatch": true,
+        "total": 1,
+        "outside": 1,
+        "outsideBox": [
+          947,
+          689,
+          948,
+          690
+        ],
+        "regions": [],
+        "background": 0
+      }
+    },
+    {
+      "name": "ai8000",
+      "state": []
+    },
+    {
+      "name": "ai9000",
+      "screen": {
+        "sizeMatch": true,
+        "total": 0,
+        "outside": 0,
+        "outsideBox": null,
+        "regions": [],
+        "background": 0
+      }
+    },
+    {
+      "name": "ai9000",
+      "state": []
+    },
+    {
+      "name": "ai10000",
+      "screen": {
+        "sizeMatch": true,
+        "total": 0,
+        "outside": 0,
+        "outsideBox": null,
+        "regions": [],
+        "background": 0
+      }
+    },
+    {
+      "name": "ai10000",
+      "state": []
+    },
+    {
+      "name": "ai12000",
+      "screen": {
+        "sizeMatch": true,
+        "total": 99,
+        "outside": 99,
+        "outsideBox": [
+          369,
+          297,
+          1009,
+          768
+        ],
+        "regions": [],
+        "background": 0
+      }
+    },
+    {
+      "name": "ai12000",
+      "state": []
+    }
+  ]
+}

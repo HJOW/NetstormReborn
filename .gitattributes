@@ -2499,3 +2499,7 @@ webpj/tests/fixtures/cpppj/**/report.tsv whitespace=-blank-at-eol
 docs/webpj-*-evidence/browser.log -text whitespace=cr-at-eol
 # 실행 근거 JSON·TSV도 기록 시점의 SHA-256 바이트를 유지한다.
 docs/webpj-*-evidence/** -text
+
+# Native 관측 TSV의 CRLF와 패치의 빈 문맥 표시를 원문 바이트대로 보존한다.
+docs/webpj-e1373-evidence/native-*.tsv whitespace=cr-at-eol
+docs/webpj-e1373-evidence/native-instrumentation.patch whitespace=-blank-at-eol

@@ -1,0 +1,29 @@
+{
+  "host": "HJOW-Athlon",
+  "completedAt": "2026-11-26T14:28:25.589Z",
+  "exe": "H:\\Workspace\\git\\NetstormReborn\\extracted\\webpj-render-order-probe\\Netstorm.exe",
+  "sha256": "523b092600415ed3c0c2104102390c4866dd1babd413c092c90c5076b6c05966",
+  "windowsHide": true,
+  "args": [
+    "--run",
+    "assets/game-data",
+    "--window",
+    "--mute-audio",
+    "--frames",
+    "7001",
+    "--set",
+    "SCREENW=1024;SCREENH=768;WelcomeGiven=1;tellTips=0;autoDemo=0",
+    "--ui-script",
+    "<steps.tsv>",
+    "--ui-report",
+    "<report.tsv>",
+    "--fixed-frame-ms",
+    "25",
+    "--mission",
+    "thewarbegins",
+    "--test-ally-ai",
+    "hard",
+    "--test-enemy-ai",
+    "easy"
+  ]
+}

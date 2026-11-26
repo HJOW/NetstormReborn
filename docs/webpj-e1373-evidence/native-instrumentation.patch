@@ -1,0 +1,135 @@
+diff --git a/cpppj/src/client/ClientRendererFrame.cpp b/extracted/webpj-render-order-probe/ClientRendererFrame.cpp
+index 24eba97b5..d43138043 100644
+--- a/cpppj/src/client/ClientRendererFrame.cpp
++++ b/extracted/webpj-render-order-probe/ClientRendererFrame.cpp
+@@ -34,8 +34,14 @@
+ #include <bit>
+ #include <iostream>
+ #include <sstream>
++#include <fstream>
++#include <cstdlib>
++#include "client/HudChatGeometry.h"
++#include "client/TextEntryGump.h"
+ 
+-namespace netstorm::client { // 같은 현재 저장소를 원문 호출 위치에서 다시 조회한다.
++namespace netstorm::client {
++// 관측 사본 두 번역 단위가 공유하는 마지막 실제 수집 프레임이다.
++std::uint64_t gObserverLastFrame=0; // 같은 현재 저장소를 원문 호출 위치에서 다시 조회한다.
+ namespace { // Native signed 덧셈과 단정도 저장/clip만 공통 처리한다.
+ std::int32_t Add(std::int32_t value,std::uint32_t delta) { return std::bit_cast<std::int32_t>(static_cast<std::uint32_t>(value)+delta); } //화면+16/+11의 실제32비트 감김이다.
+ o::RenderWorldRect WorldRect(ScreenRect rect,const RawCameraViewState& view) {
+@@ -206,6 +212,30 @@ std::uint32_t ClientRendererFrame::Collect(ScreenRect clip,std::uint32_t flags)
+     }
+     const auto result=CollectDrawEntries({clip,visible,WorldRect(clip,camera),flags,RendererCollectionRowLimit(client_.screenWidth_,client_.screenHeight_)},entries_,hooks);
+     entryCount_=result.count;
++    // 독립 조사 사본에서만 현재 수집 목록을 읽어 기록하며 게임 상태와 목록을 변경하지 않는다.
++    const auto traceFrame=client_.Time().number;gObserverLastFrame=traceFrame;
++    // 실제 Chat/Console의 기한을 변경 없이 읽어 생성 직후와 비교 구간에 기록한다.
++    static std::uint64_t observedFrame=0,firstChatFrame=0;
++    const auto chatRoot=client_.menu_->rawButtons_->Menus()->ChatWindowRoot();
++    if(chatRoot && traceFrame!=observedFrame){
++     if(!firstChatFrame)firstChatFrame=traceFrame;
++     if(traceFrame<=firstChatFrame+5 || traceFrame==1000 || traceFrame==6000 || (traceFrame>=6980 && traceFrame<=7000)){
++      const auto* chat=static_cast<const HudChatNode*>(client_.menu_->rawButtons_->Menus()->Node(chatRoot));
++      const auto* input=static_cast<const TextEntryGumpNode*>(client_.menu_->rawButtons_->Menus()->Node(chat->console));
++      static std::ofstream uiTrace(std::getenv("NETSTORM_UI_TRACE"),std::ios::out|std::ios::trunc);
++      uiTrace<<traceFrame<<'\t'<<std::bit_cast<std::uint64_t>(client_.WallSeconds())<<'\t'<<chatRoot<<'\t'<<chat->console<<'\t'<<std::bit_cast<std::uint64_t>(input->blinkAt)<<'\t'<<input->blinkPhase<<'\t'<<input->flags<<'\t'<<input->readOnly<<'\n';uiTrace.flush();
++     }
++     observedFrame=traceFrame;
++    }
++
++    if (traceFrame>=6980 && traceFrame<=7000) {
++        static std::ofstream trace(std::getenv("NETSTORM_DRAW_TRACE"),std::ios::out|std::ios::trunc);
++        trace<<"collect\t"<<traceFrame<<'\t'<<clip.left<<'\t'<<clip.top<<'\t'<<clip.right<<'\t'<<clip.bottom<<'\t'<<flags<<'\t'<<entryCount_<<'\n';
++        // 수집된 실제 항목을 정렬 전 순서대로 읽는다.
++        for (const auto& entry:std::span(entries_).first(static_cast<std::size_t>(entryCount_))) trace<<"entry\t"<<std::bit_cast<std::uint32_t>(entry.x)<<'\t'<<std::bit_cast<std::uint32_t>(entry.y)<<'\t'<<entry.token<<'\t'<<entry.depth<<'\t'<<static_cast<unsigned>(entry.kind)<<'\t'<<static_cast<unsigned>(entry.tail)<<'\n';
++        trace.flush();
++    }
++
+     for (const auto& entry:std::span(entries_).first(static_cast<std::size_t>(entryCount_))) if (entry.kind<collectedKinds_.size()) ++collectedKinds_[entry.kind]; //관측은 실제 상위 항목만 세며 지형 내부 순서를 건드리지 않는다.
+     return result.backgroundCovered ? 1U : 0U;
+ }
+
+diff --git a/cpppj/src/client/Renderer.cpp b/extracted/webpj-render-order-probe/Renderer.cpp
+index 1f4c8e2f4..4a3397c11 100644
+--- a/cpppj/src/client/Renderer.cpp
++++ b/extracted/webpj-render-order-probe/Renderer.cpp
+@@ -6,8 +6,25 @@
+ #include <cmath>
+ #include <climits>
+ #include <stdexcept>
++#define WIN32_LEAN_AND_MEAN
++#define NOMINMAX
++#include <windows.h>
++#include <fstream>
++#include <cstdlib>
+ 
+ namespace netstorm::client {
++// 별도 사본에서 마지막 실제 프레임과 현재 호출 스택의 RVA만 읽는다.
++extern std::uint64_t gObserverLastFrame;
++static void ObserveFullDirty() {
++ if(gObserverLastFrame>5 && (gObserverLastFrame<6979 || gObserverLastFrame>7000))return;
++ static std::ofstream log(std::getenv("NETSTORM_INVALIDATE_TRACE"),std::ios::out|std::ios::trunc);
++ void* addresses[12]{};const auto count=CaptureStackBackTrace(1,12,addresses,nullptr);const auto base=reinterpret_cast<std::uintptr_t>(GetModuleHandleW(nullptr));
++ log<<"invalidate\t"<<gObserverLastFrame;
++ // ASLR 주소를 같은 사본 MAP에서 찾을 상대 주소로 기록한다.
++ for(unsigned i=0;i<count;++i)log<<'\t'<<std::hex<<(reinterpret_cast<std::uintptr_t>(addresses[i])-base)<<std::dec;
++ log<<'\n';log.flush();
++}
++
+ namespace {
+ // 원본 변경 사각형 표의 최대 개수(this+0x68의 사각형, this+0x6a8의 플래그).
+ constexpr std::size_t kDirtyCapacity = 100;
+@@ -91,7 +108,7 @@ void DrawIndexedImage(std::span<std::uint8_t> pixels, int pitch, int height, con
+     }
+ }
+ // 첫 프레임을 원본처럼 전체 화면으로 그린다.
+-Renderer::Renderer(int width, int height,o::OriginalEdition edition) : width_(width), height_(height),edition_(edition), dirty_(width, height) { dirty_.InvalidateAll(); }
++Renderer::Renderer(int width, int height,o::OriginalEdition edition) : width_(width), height_(height),edition_(edition), dirty_(width, height) { (ObserveFullDirty(),dirty_.InvalidateAll()); }
+ // 같은 객체가 제출한 모든 그림의 합집합을 무효화한다. 특수 프레임은 그림 범위가 없다.
+ ScreenRect Renderer::Bounds(const RenderSprite& sprite) const {
+     if (sprite.procedure) {
+@@ -139,37 +156,37 @@ void Renderer::SetScene(std::vector<RenderSprite> sprites, std::vector<RenderTex
+     sourceSprites_=sprites; // dirty별 재정렬도 같은 원본 입력 순서에서 시작한다.
+     if (sort) SortRenderSprites(sprites,edition_);
+     // 글자 이동·삭제는 현재 전체를 무효화한다. 후속 Gump가 전용 변경 범위를 등록한다.
+-    if (!text_.empty() || !text.empty()) dirty_.InvalidateAll();
++    if (!text_.empty() || !text.empty()) (ObserveFullDirty(),dirty_.InvalidateAll());
+     sprites_ = std::move(sprites); text_ = std::move(text);
+ }
+ // ShapeDatabase 소유자가 반납·재생성할 때만 호출하며 일반 장면/dirty 갱신의 캐시는 유지한다.
+ void Renderer::ClearDecodedImages() { images_.clear(); }
+ // 화면 모드 변경·전체 다시 그리기.
+-void Renderer::InvalidateAll() { dirty_.InvalidateAll(); }
++void Renderer::InvalidateAll() { (ObserveFullDirty(),dirty_.InvalidateAll()); }
+ // 원문 force redraw가 기존100칸을 비운 뒤 전체 사각형을 추가할 때 같은 표를 비운다.
+ void Renderer::ClearDirty() { dirty_.Clear(); }
+ // 수집기 교체/해제는 이전 캐시도 비워 반납된 월드 callback을 남기지 않는다.
+-void Renderer::SetExtraCollection(std::function<std::vector<RenderSprite>(ScreenRect,std::uint32_t)> collect) { extraCollection_=std::move(collect);extraCache_.clear();dirty_.InvalidateAll(); }
++void Renderer::SetExtraCollection(std::function<std::vector<RenderSprite>(ScreenRect,std::uint32_t)> collect) { extraCollection_=std::move(collect);extraCache_.clear();(ObserveFullDirty(),dirty_.InvalidateAll()); }
+ bool Renderer::HasExtraCollection() const { return static_cast<bool>(extraCollection_); } // 새 장치에 실제 수집기가 있는지 조회한다.
+ // 배경 팔레트 번호를 변환하지 않고 변경 영역의 합성에서 재사용한다.
+ void Renderer::SetBackground(std::shared_ptr<const IndexedImage> image) {
+     if (image && (image->width != static_cast<std::size_t>(width_) || image->height != static_cast<std::size_t>(height_) ||
+         image->indices.size() != image->width * image->height || image->opacity.size() != image->indices.size()))
+         throw std::invalid_argument("Invalid renderer background");
+-    background_ = std::move(image); dirty_.InvalidateAll();
++    background_ = std::move(image); (ObserveFullDirty(),dirty_.InvalidateAll());
+ }
+ // 오브젝트 선택 표시는 UI 글자와 같이 월드 스프라이트 뒤에 합성한다.
+ void Renderer::SetOverlay(std::shared_ptr<const IndexedImage> image) {
+     if (image && (image->width != static_cast<std::size_t>(width_) || image->height != static_cast<std::size_t>(height_) ||
+         image->indices.size() != image->width*image->height || image->opacity.size() != image->indices.size()))
+         throw std::invalid_argument("Invalid renderer overlay");
+-    overlay_=std::move(image); dirty_.InvalidateAll();
++    overlay_=std::move(image); (ObserveFullDirty(),dirty_.InvalidateAll());
+ }
+ // 실제 메뉴는 자신의 현재 상태를 그리며 장치 변경/닫힘도 다음 실제 표면에 반영한다.
+ void Renderer::SetOverlayProcedure(std::optional<RenderProcedure> procedure) {
+     if (procedure && !procedure->draw) throw std::invalid_argument("현재 UI 표면 출력 경계 누락");
+     if (!procedure && !overlayProcedure_) return;
+-    overlayProcedure_=std::move(procedure);dirty_.InvalidateAll();
++    overlayProcedure_=std::move(procedure);(ObserveFullDirty(),dirty_.InvalidateAll());
+ }
+ // 정지한 월드 위에 대화상자를 합성할 배경·스프라이트·선택 표시를 별도 버퍼에 그린다.
+ IndexedImage Renderer::SceneImage() {
