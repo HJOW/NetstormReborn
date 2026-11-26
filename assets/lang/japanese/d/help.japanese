@@ -1306,176 +1306,171 @@ If you have trouble use the troubleshooting guide.
 </a>
 
 <a name="factoryHelp">
+
 <a name="sunFactoryType">
+
 <a name="windFactoryType">
+
 <a name="rainFactoryType">
+
 <a name="thunderFactoryType">
 <info>
-<q>"The Nimbian aptitude for complex mechanics is simply unsurpassed." - Nimbian Mechanic</q>
+<q>「複雑な機械にかけて、ニンバス人の才能に並ぶ者はいない。」 — ニンバスの機械工</q>
 <p>
-Workshops build your <a href="#unitHelp">units</a> for battle.
+ワークショップは、戦闘に使う<a href="#unitHelp">ユニット</a>を作ります。
 <p>
-You'll build Workshops in battle to construct combat units based on the <a href="#technologyHelp">Knowledge</a> that 
-you've gained from Sacrificing <a href="#priestType">High Priests</a>.  This Knowledge carries over from
-battle to battle so that your diversity and power of units can increase over time.
+戦闘中にワークショップを建て、<a href="#priestType">司祭</a>を生け贄にして得た<a href="#technologyHelp">知識</a>に
+基づいて戦闘ユニットを作ります。知識は戦闘が終わっても残るため、時とともに
+ユニットの種類や力を増やすことができます。
 <p>
-Each Workshop can build only
-a few units so choose carefully!
+一つのワークショップで作れる種類はわずかなので、慎重に選んでください！
 <p>
-On a new, Level I Workshop you'll have two "Production Slots."  When you choose a new
-Knowledge to build, you are filling up one of the slots.  Once you've chosen what a Workshop will build, you can't change
-it.
+新しいレベル1のワークショップには、生産スロットが二つあります。生産する知識を選ぶと、一つ埋まります。
+一度生産対象を決めると、変更できません。
 <p>
-<I>But</I>, you get one additional slot each time  you <a href="#upgradeHelp">Upgrade</a> a Workshop. In order to Upgrade you must
-pay a certain amount of <a href="#moneyHelp">Storm Power</a>.
+<I>ただし</I>、<a href="#upgradeHelp">アップグレード</a>するたびにスロットが一つ増えます。
+アップグレードには、一定量の<a href="#moneyHelp">ストームパワー</a>が必要です。
 <p>
-When a Workshop creates a unit, a Storm Power Stream streaks from the Workshop to the build site. When it combines
-with the proper <a href="#influenceHelp">Energy</a> the unit will be created on the spot. However, if the Workshop is
-destroyed you will lose the ability to build anything that Workshop was making until you build another Workshop to replace it.
+生産する時は、ワークショップから建設場所へストームパワーの流れが伸びます。適切な
+<a href="#influenceHelp">エネルギー</a>と合わさると、その場でユニットが形になります。ただし、ワークショップが破壊されると、
+代わりを建てるまで、そこで作っていたものは何も作れなくなります。
 <br>
 </a></a></a></a></a>
 
 <a name="upgradeHelp">
-<h2>Upgrading Workshops</h2>
+<h2>ワークショップのアップグレード</h2>
 <p>
-<q>"More power, more speed. Absolute power, speed of light!" - Spen Lodel, Sun Disciple</q>
+<q>「さらなる力、さらなる速さ。絶対の力、光の速さ！」 — スフェン・ロデル、サンの弟子</q>
 <p>
-Upgrade a Workshop to build new types of <a href="#unitHelp">units</a> for battle.
+新たな種類の<a href="#unitHelp">ユニット</a>を戦闘に投入するため、ワークショップをアップグレードしましょう。
 <p>
-To get more Production Slots in a Workshop you may Upgrade it by 
-paying <a href="#moneyHelp">Storm Power</a>.
-Right-click on the <a href="#factoryHelp">Workshop</a> to learn how much Storm Power it requires for the Upgrade.  
+生産スロットは、<a href="#moneyHelp">ストームパワー</a>を払ってアップグレードすると増えます。
+必要なストームパワーは、<a href="#factoryHelp">ワークショップ</a>を右クリックして確認できます。
 <p>
-You may only Upgrade each Workshop three times. 
+各ワークショップは、三回までアップグレードできます。
 <br>
 </a>
 
 <a name="researchHelp">
+
 <a name="technologyHelp">
-<h2>Knowledge</h2>
+<h2>知識</h2>
 <p>
-<q>"You can read their bleeding guts like a draftsman's blueprint."<br>
-- Haldor Hurlmen, Nimbian High Priest and Mechanical Engineer</q>
+<q>「血まみれの内臓を、製図工の設計図のように読み解けるのだ。」<br>
+— ハルドル・フルメン、ニンバスの司祭にして機械技師</q>
 <p>
-Knowledge gives you the ability to build <a href="#unitHelp">units</a> in Battle.  In <a href="multiQuickHelp">Multiplayer</a> mode, your accumulated
-Knowledge persists from each on-line battle to the next.
+知識によって、戦闘中に<a href="#unitHelp">ユニット</a>を作れるようになります。<a href="multiQuickHelp">マルチプレイヤー</a>では、
+蓄積した知識はオンライン対戦の終了後も、次の戦闘に引き継がれます。
 <p>
-Once you've acquired Knowledge by <a href="#sacrificeOutline">Sacrificing High Priests</a>, you can put that
-Knowledge into production in any <a href="#factoryHelp">Workshop</a> of the appropriate 
-<a href="#themeHelp">Fury alignment</a>.
+<a href="#sacrificeOutline">司祭を生け贄にして</a>得た知識は、対応する<a href="#themeHelp">フューリーの系統</a>の
+<a href="#factoryHelp">ワークショップ</a>であれば、どこでも生産に登録できます。
 <p>
-From the outset, you are granted the Knowledge for the <a href="#sunarcherType">
-Disc Throwers</a> and <a href="#suncannontype">Sun Cannons</a> which you may then put into production
-with your first Workshop.  Everything else will cost you the <a href="#sacrificeOutline">Sacrifice</a> 
-of some number of Priests.  
+最初から<a href="#sunarcherType">サンディスクスロワー</a>と<a href="#suncannontype">サンキャノン</a>の知識を持っており、
+最初のワークショップですぐに生産できます。他のすべての知識は、司祭を何人か<a href="#sacrificeOutline">生け贄に捧げる</a>
+代償を払って得る必要があります。
 <p>
-Once you've killed some Priests in exchange for the Knowledge you want, that Knowledge will 
-be available to you when you build the appropriate Workshop.  
+必要な知識と引き換えに司祭を倒したら、対応するワークショップを建てて、その知識を使えます。
 <p>
-For instance, I kill three Priests
-in exchange for the ability to build Thunder Cannons.  Now when I build a Thunder Workshop, I can choose
-to fill one of my slots with Thunder Cannons.
+例えば、司祭三人の代償でサンダーキャノンの知識を得たとします。サンダーワークショップを建てれば、
+スロットの一つをサンダーキャノンで埋められます。
 <p>
-But if I build a Wind Workshop, I won't be able to build my Thunder Cannons there.  Each Workshop can only build
-the units corresponding to its alignment: Sun units in Sun Workshops, Thunder units in Thunder Workshops, and so on.
+しかし、ウィンドワークショップではサンダーキャノンを作れません。各ワークショップは、自分の系統の
+ユニットだけを作れます。サンならサンのユニット、サンダーならサンダーのユニットという具合です。
 <p>
-If you have exhausted all of the available slots for a Workshop, it's time to <a href="#upgradeHelp">Upgrade</a>,
-which will increase the number of slots available for additional Knowledge or time to build an additional Workshop.
+スロットを使い切ったら、<a href="#upgradeHelp">アップグレード</a>するか、もう一つワークショップを建てましょう。
+アップグレードすると、追加の知識を登録できるスロットが増えます。
 <p>
-Learn more about <a href="#factoryHelp">Workshops</a>...
+<a href="#factoryHelp">ワークショップ</a>について詳しく見る...
 <p>
-Learn more about <a href="#sacrificeOutline">Sacrificing Priests for new Knowledge</a>...
+<a href="#sacrificeOutline">司祭を生け贄にして新しい知識を得る手順</a>について詳しく見る...
 <br>
 </a>
 </a>
 
 <a name="geyserType">
+
 <a name="emptyGeyserType">
 <info>
-<q>The coagulation of the Geyser into Crystal form is like watching white fire turn to ice.</q>
+<q>ガイザーがクリスタルへと凝固する姿は、白い炎が氷に変わるようだ。</q>
 <p>
-Storm Geysers provide you with <a href="#stormpowerHelp">Storm Power</a> in the form of <a href="#nuggetType">Storm Crystals</a> 
-which your <a href="#transportHelp">Transports</a> can collect for you. Right-clicking on a Storm Geyser will show the available <a href="#stormpowerHelp">Storm Power</a>.
+ストームガイザーは、<a href="#stormpowerHelp">ストームパワー</a>を<a href="#nuggetType">ストームクリスタル</a>の形で供給します。
+<a href="#transportHelp">輸送ユニット</a>で集められます。ガイザーを右クリックすると、得られる<a href="#stormpowerHelp">ストームパワー</a>の量を確認できます。
 <p>
-Several Geyser islands appear at the opening of each battle,
-and more will be generated throughout the battle as Storm Power continues to be hurled up from
-the <a href="#themeHelp">Fury</a> battle below.
-Every time something is destroyed, part of its
-energy falls into this battle of the Furies, and reappears as Geyser islands.
+戦闘開始時にガイザーの島がいくつか現れ、下で戦う<a href="#themeHelp">フューリー</a>から
+ストームパワーが投げ上げられる間、さらに島が現れ続けます。
+何かが破壊されるたび、そのエネルギーの一部がフューリーの戦いに落ち、ガイザーの島となって再び現れます。
 <p>
-If you send a <a href="#TransportHelp">Ground or Aerial Transport</a> out to a Geyser, the Transport will set itself into a
-loop collecting Storm Crystals until the Geyser is depleted. As a Storm Geyser begins to deplete, the steam spewing will shorten.
+<a href="#TransportHelp">地上または航空輸送ユニット</a>をガイザーに送ると、枯れるまで
+ストームクリスタルを集める作業を繰り返します。枯れ始めると、噴き出す蒸気が短くなります。
 <br>
 </a>
 </a>
 
 <a name="nuggetType">
 <info>
-<q>The coagulation of the Geyser into Crystal form is like watching white fire turn to ice.</q>
+<q>ガイザーがクリスタルへと凝固する姿は、白い炎が氷に変わるようだ。</q>
 <p>
-Storm Crystals are condensed <a href="#stormpowerHelp">Storm Power</a> hurled up by <a href="#geyserType">Storm Geysers</a>.
+ストームクリスタルは、<a href="#geyserType">ストームガイザー</a>が投げ出す、凝縮された<a href="#stormpowerHelp">ストームパワー</a>です。
 <p>
-If you send a <a href="#TransportHelp">Ground or Aerial Transport</a> out to a Geyser, it will set itself into a
-loop collecting Storm Crystals until the Geyser is depleted.
+<a href="#TransportHelp">地上または航空輸送ユニット</a>をガイザーに送ると、
+枯れるまでストームクリスタルを集める作業を繰り返します。
 <br>
 </a>
 
 <a name="sunArcherType">
 <info>
-<q>"Sun Disc Throwers decapitate the clumsy." -Major Tomas Rultoff.</q>
+<q>「サンディスクスロワーは、のろまの首を刈る。」 — トーマス・ルルトフ少佐。</q>
 <p>
-The Sun Disc Thrower fires in any direction at short range.  It is crucial for defense against air attack.
+サンディスクスロワーは、近距離で全方向に発射します。航空攻撃への防衛に欠かせません。
 <p>
-A massive rotor arm flings the exploding saucers with perfect precision.
+巨大な回転アームが、爆発するディスクを正確無比に投げます。
 </a>
 
 <a name="sunAviaryType">
 <info>
-<q>Only a roof of gold could contain the blinding light of the Whirligig's creation.</q>
+<q>ワーリギグ誕生のまばゆい光を収められるのは、黄金の屋根だけだ。</q>
 <p>
-The Whirlibase builds and refuels <a href="#sunFlyerType">Whirligigs</a>--airborne attackers.  
+ワーリベースは、航空攻撃ユニットの<a href="#sunFlyerType">ワーリギグ</a>を作り、燃料を補給します。
 <p>
-If you destroy it, its Whirligig will have no place to refuel.  Each time a Whirligig is 
-destroyed, its home base will make a new one.
+基地が破壊されると、ワーリギグは燃料を補給する場所を失います。ワーリギグが
+破壊されるたびに、その基地が新しい一体を作ります。
 <p>
-Note: Nothing can ever be targeted by more than three Aerial Attackers at once.
+注意: どんな対象でも、同時に狙う航空攻撃ユニットは三体までです。
 </a>
 
 <a name="sunFlyerType">
 <info>
-<q>"This device is lofted on its own impossibility, and so it destroys by the powers of negation." -Jakob Hammersholt,
- inventor of the Whirligig.</q>
+<q>「この装置は、自らの不可能性によって浮かび、否定の力によって破壊する。」 — ヤーコプ・ハマーショルト、
+ ワーリギグの発明者。</q>
 <p>
-The Whirligigs fly into enemy territory, wreaking havoc on enemy units from above.  
+ワーリギグは敵陣へ飛び、上空からユニットを破壊します。
 <p>
-Generated by <a href="#sunAviaryType">Whirlibases</a>, they go from target to target until something knocks them out 
-of the sky, but they need to refuel once every minute.  A Whirligig cannot be used for cargo.
+<a href="#sunAviaryType">ワーリベース</a>で作られ、何かに撃ち落とされるまで
+目標を渡り歩きますが、一分に一度は燃料補給が必要です。貨物は運べません。
 <p>
-Rule to remember: A Whirligig will never target a <a href="#transporthelp">Transport</a>.
+基本ルール: ワーリギグは<a href="#transporthelp">輸送ユニット</a>を決して目標にしません。
 <p>
-Note: Nothing can ever be targeted by more than three Aerial Attackers at once, and Ground 
-Transports are only targeted by one Aerial Attacker at a time.
+注意: どんな対象でも、同時に狙う航空攻撃ユニットは三体までです。また、地上の
+輸送ユニットを同時に狙う航空攻撃ユニットは一体だけです。
 </a>
 
 <a name="sunBlockerType">
 <info>
-<q>Stone Towers are built from the outside in.  Their builders give their strength and courage to the Tower, so 
-much so that in every third layer of bricks is the body of a brave man.</q>
+<q>ストーンタワーは外側から内側へ積み上げる。建設者は自らの力と勇気を注ぎ込み、
+三層ごとの一層には、勇敢な男の体さえ使われるほどだ。</q>
 <p>
-The Stone Tower is a damage-absorber.  Set it between a valuable unit and hostile fire to block incoming shots.
+ストーンタワーは損害を吸収します。大切なユニットと敵の射撃の間に置き、飛来する弾を防ぎましょう。
 </a>
 
 <a name="sunCannonType">
 <info>
-<q>"Two things in life cannot be ignored: one is a cannon, the other is a cannon-ball." -Commander Petrik 
-'Bombard' Lombard</q>
+<q>「人生で無視できないものが二つある。大砲と、その砲弾だ。」 — ペトリック・
+「ボンバード」ロンバード司令官</q>
 <p>
-The Sun Cannon <a href="#shooterHelp">shoots</a> straight north, south, east, or west.  
+サンキャノンは、東西南北の四方向にまっすぐ<a href="#shooterHelp">射撃</a>します。
 <p>
-It inflicts more damage per shot than 
-the <a href="#sunArcherType">Sun Disc Thrower</a>, and it can suffer more damage
-than a Sun Disc Thrower, too, but fires less often.  The Cannon will rotate 
-itself to target an enemy.
+一発あたりの損害は<a href="#sunArcherType">サンディスクスロワー</a>より大きく、耐久力もありますが、
+発射間隔は長くなります。敵の方向へ自動的に旋回します。
 </a>
 
 <a name="sunBalloonType">
