@@ -1851,7 +1851,7 @@ export class Netstorm {
         if (!(this.options.fixedFrameMs > 0)) throw new Error('고정 시각 모드(?fixed=밀리초)에서만 프레임을 직접 진행합니다.');
         const view = this._view();
         for (let index = 0; index < count; index += 1) {
-            this._fixedStamp = (this._fixedStamp ?? 0) + this.options.fixedFrameMs; this._frameHandle = 0; this._onFrame(this._fixedStamp); this._fixedFrameCount = (this._fixedFrameCount ?? 0) + 1;
+            this._fixedStamp = (this._fixedStamp ?? 0) + this.options.fixedFrameMs; this._frameHandle = 0; this._runFrameSafely(this._fixedStamp); this._fixedFrameCount = (this._fixedFrameCount ?? 0) + 1;
             await new Promise((resolve) => view.setTimeout(resolve, 0));
         }
         return this._fixedFrameCount ?? 0;
@@ -3959,13 +3959,22 @@ export class Netstorm {
         if (this.options.fixedFrameMs > 0) return;
         if (this._frameHandle || !this._root || this._root.ownerDocument.hidden) return;
         this._frameHandle = this._view().requestAnimationFrame((now) => {
-            try {
-                this._onFrame(now);
-            } catch (error) {
-                reportGameError('frame', error, { state: this._state, frameTime: now });
-                throw error;
-            }
+            // 실행된 예약을 먼저 반납해 프레임 본문 앞부분의 실패도 다음 예약을 막지 않게 한다.
+            this._frameHandle = 0;
+            this._runFrameSafely(now);
         });
+    }
+
+    // 한 프레임의 오류를 원래 객체·상태·미션·시각과 함께 기록하고 다음 표시 기회를 예약한다.
+    // 실패한 프레임을 다시 실행하지 않으며 정상 종료·숨김·고정 시각의 예약 규칙은 그대로 따른다. (2026-11-26 사용자 결정, WB04-E1338)
+    _runFrameSafely(now) {
+        try {
+            this._onFrame(now);
+        } catch (error) {
+            reportGameError('frame', error, { state: this._state, frameTime: now, mission: this._lastCampaignMission?.name ?? null, fixedFrame: this._fixedFrameCount ?? null });
+            this._displayDirty = true;
+            this._startFrameLoop();
+        }
     }
 
     // 프레임 루프를 멈춘다. 예약된 프레임이 없으면 아무것도 하지 않는다.

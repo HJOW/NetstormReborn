@@ -78,20 +78,61 @@ test('이전 적재 세대의 실패는 무시한다', async () => {
     });
 });
 
-// 프레임 콜백의 오류에 시간과 상태를 붙이고 원본 오류를 다시 던진다.
-test('프레임 오류를 보고하고 브라우저에 전달한다', async () => {
+// 프레임 콜백 오류를 기록한 뒤 다음 프레임을 예약한다. 실패한 프레임을 재시도하지 않는다.
+test('프레임 오류를 보고하고 다음 프레임을 진행한다', async () => {
     const error = new Error('프레임 실패');
     await captureErrors(async (entries) => {
         const app = new Netstorm();
-        let callback;
-        app._root = { ownerDocument: { hidden: false, defaultView: { requestAnimationFrame: (fn) => { callback = fn; return 1; } } } };
-        app._onFrame = () => { throw error; };
+        // 예약 큐로 중복 예약·실패한 프레임 재실행 여부를 함께 확인한다.
+        const callbacks = [], stamps = [];
+        app._root = { ownerDocument: { hidden: false, defaultView: { requestAnimationFrame: (fn) => { callbacks.push(fn); return callbacks.length; } } } };
+        app._lastCampaignMission = { name: 'Tutorial1' };
+        app._onFrame = (now) => { stamps.push(now); if (stamps.length <= 2) throw error; app._startFrameLoop(); };
         app._startFrameLoop();
-        assert.throws(() => callback(123), (actual) => actual === error);
-        assert.equal(entries.length, 1);
+        assert.doesNotThrow(() => callbacks[0](123));
+        assert.doesNotThrow(() => callbacks[1](148));
+        assert.doesNotThrow(() => callbacks[2](173));
+        assert.deepEqual(stamps, [123, 148, 173]);
+        assert.equal(callbacks.length, 4);
+        assert.equal(entries.length, 2);
         assert.equal(entries[0][1].phase, 'frame');
         assert.equal(entries[0][1].frameTime, 123);
+        assert.equal(entries[0][1].mission, 'Tutorial1');
         assert.equal(entries[0][2], error);
+        assert.equal(app._displayDirty, true);
+    });
+});
+
+// 숨김·앱 해제 상태에서는 실패 뒤에도 새 프레임을 만들지 않는다.
+test('프레임 실패 뒤 숨김 또는 해제된 앱은 재예약하지 않는다', async () => {
+    await captureErrors(async (entries) => {
+        // 두 수명 종료 조건을 각각 실제 예약 콜백에서 적용한다.
+        for (const mode of ['hidden', 'released']) {
+            const app = new Netstorm(), callbacks = [];
+            const doc = { hidden: false, defaultView: { requestAnimationFrame: (fn) => { callbacks.push(fn); return 1; } } };
+            app._root = { ownerDocument: doc };
+            app._onFrame = () => { if (mode === 'hidden') doc.hidden = true; else app._root = null; throw new Error(mode); };
+            app._startFrameLoop();
+            callbacks[0](25);
+            assert.equal(callbacks.length, 1);
+            assert.equal(app._frameHandle, 0);
+        }
+        assert.equal(entries.length, 2);
+    });
+});
+
+// 고정 시각에서도 같은 오류 정책을 적용하고 시각과 프레임 수를 앞으로 진행한다.
+test('고정 시각 프레임 실패를 기록하고 다음 시각을 처리한다', async () => {
+    // Node 26의 첫 localStorage 접근 경고는 게임 진단이 아니므로 타이머 실행 전에 출력되게 한다.
+    await new Promise((resolve) => setImmediate(resolve));
+    await captureErrors(async (entries) => {
+        const app = new Netstorm({ fixedFrameMs: 25 }), stamps = [];
+        app._root = { ownerDocument: { defaultView: { setTimeout } } };
+        app._onFrame = (now) => { stamps.push(now); if (stamps.length === 1) throw new Error('고정 시각 실패'); };
+        assert.equal(await app.stepFixedFrames(3), 3);
+        assert.deepEqual(stamps, [25, 50, 75]);
+        assert.equal(entries.length, 1);
+        assert.equal(entries[0][1].fixedFrame, null);
     });
 });
 
