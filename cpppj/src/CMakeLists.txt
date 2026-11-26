@@ -10,6 +10,7 @@
 # 게임 본체. 실행 파일과 테스트가 함께 쓰도록 정적 라이브러리로 묶는다.
 # 소스 목록은 각 폴더의 CMakeLists.txt 가 target_sources 로 더한다.
 add_library(netstorm STATIC)
+target_sources(netstorm PRIVATE client/TutorialObjective.h client/TutorialObjective.cpp client/TutorialObjectiveCatalog.inc) # 초기 미션의 읽기 전용 다음 조건과 공통 UI 글자 표시다.
 
 # 한국어 글꼴 선택을 JSON 한 곳에서 관리하고 런타임이 쓰는 상수를 생성한다(배포/ZIP 검사도 같은 JSON을 읽는다).
 set(NETSTORM_KOREAN_FONT_CONFIG "${CMAKE_CURRENT_SOURCE_DIR}/../assets/korean-font.json")

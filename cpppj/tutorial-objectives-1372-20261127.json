@@ -1,0 +1,719 @@
+{
+  "unit": 1372,
+  "host": "HJOW-Athlon",
+  "lastDecompilationHost": "HJOW-Athlon",
+  "newDecompilation": false,
+  "exeSha256": "b400a38a93a54c89d6b90e13fefa1f31d49656c203dbeb785e8bfd788a0618a2",
+  "buildExitCode": 0,
+  "focusedTests": {
+    "cases": 22,
+    "failedChecks": 0,
+    "log": "extracted/tests-tutorial-objective-1372-final.log"
+  },
+  "catalog": {
+    "stages": 40,
+    "uniqueKeys": 39,
+    "languages": {
+      "korean": {
+        "keys": 575,
+        "duplicates": 0,
+        "objectiveKeysPresent": 39
+      },
+      "japanese": {
+        "keys": 575,
+        "duplicates": 0,
+        "objectiveKeysPresent": 39
+      }
+    }
+  },
+  "protectedFiles": {
+    "files": 2810,
+    "changed": [],
+    "unchanged": true
+  },
+  "gui": {
+    "passed": 19,
+    "cases": [
+      {
+        "name": "en-16x10",
+        "passed": true,
+        "exeSha256": "b400a38a93a54c89d6b90e13fefa1f31d49656c203dbeb785e8bfd788a0618a2",
+        "initial": {
+          "objective": [
+            "Press F4 to return to your island, or place a bridge."
+          ],
+          "gate": [
+            "1",
+            "65",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          "size": [
+            "1280",
+            "800"
+          ],
+          "screenMode": [
+            "138",
+            "1280",
+            "800",
+            "1280",
+            "0"
+          ]
+        },
+        "exitCode": 0
+      },
+      {
+        "name": "en-16x9",
+        "passed": true,
+        "exeSha256": "b400a38a93a54c89d6b90e13fefa1f31d49656c203dbeb785e8bfd788a0618a2",
+        "initial": {
+          "objective": [
+            "Press F4 to return to your island, or place a bridge."
+          ],
+          "gate": [
+            "1",
+            "65",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          "size": [
+            "1920",
+            "1080"
+          ],
+          "screenMode": [
+            "138",
+            "1920",
+            "1080",
+            "1920",
+            "1"
+          ]
+        },
+        "exitCode": 0
+      },
+      {
+        "name": "en-4x3-lifecycle-2",
+        "passed": true,
+        "exeSha256": "b400a38a93a54c89d6b90e13fefa1f31d49656c203dbeb785e8bfd788a0618a2",
+        "initial": {
+          "objective": [
+            "Press F4 to return to your island, or place a bridge."
+          ],
+          "gate": [
+            "1",
+            "65",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          "size": [
+            "1024",
+            "768"
+          ],
+          "screenMode": [
+            "138",
+            "1024",
+            "768",
+            "1024",
+            "1"
+          ]
+        },
+        "afterF4": {
+          "objective": [
+            "Place a total of 8 bridges."
+          ],
+          "gate": [
+            "1",
+            "66",
+            "0",
+            "0",
+            "0",
+            "1",
+            "14.269",
+            "0"
+          ]
+        },
+        "lifecycle": true,
+        "exitCode": 0
+      },
+      {
+        "name": "fs-en-16x10-2",
+        "passed": true,
+        "exeSha256": "b400a38a93a54c89d6b90e13fefa1f31d49656c203dbeb785e8bfd788a0618a2",
+        "initial": {
+          "objective": [
+            "Press F4 to return to your island, or place a bridge."
+          ],
+          "gate": [
+            "1",
+            "65",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          "size": [
+            "1280",
+            "800"
+          ],
+          "screenMode": [
+            "139",
+            "1280",
+            "800",
+            "1280",
+            "1"
+          ]
+        },
+        "exitCode": 0
+      },
+      {
+        "name": "fs-ja-4x3",
+        "passed": true,
+        "exeSha256": "b400a38a93a54c89d6b90e13fefa1f31d49656c203dbeb785e8bfd788a0618a2",
+        "initial": {
+          "objective": [
+            "F4キーで自分の島に戻るか、橋を置いてください。"
+          ],
+          "gate": [
+            "1",
+            "65",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          "size": [
+            "1024",
+            "768"
+          ],
+          "screenMode": [
+            "139",
+            "1024",
+            "768",
+            "1024",
+            "1"
+          ]
+        },
+        "exitCode": 0
+      },
+      {
+        "name": "fs-ko-16x9",
+        "passed": true,
+        "exeSha256": "b400a38a93a54c89d6b90e13fefa1f31d49656c203dbeb785e8bfd788a0618a2",
+        "initial": {
+          "objective": [
+            "F4를 눌러 내 섬으로 돌아오거나 다리를 놓으십시오."
+          ],
+          "gate": [
+            "1",
+            "65",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          "size": [
+            "1920",
+            "1080"
+          ],
+          "screenMode": [
+            "139",
+            "1920",
+            "1080",
+            "1920",
+            "1"
+          ]
+        },
+        "exitCode": 0
+      },
+      {
+        "name": "ja-16x10",
+        "passed": true,
+        "exeSha256": "b400a38a93a54c89d6b90e13fefa1f31d49656c203dbeb785e8bfd788a0618a2",
+        "initial": {
+          "objective": [
+            "F4キーで自分の島に戻るか、橋を置いてください。"
+          ],
+          "gate": [
+            "1",
+            "65",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          "size": [
+            "1280",
+            "800"
+          ],
+          "screenMode": [
+            "138",
+            "1280",
+            "800",
+            "1280",
+            "1"
+          ]
+        },
+        "exitCode": 0
+      },
+      {
+        "name": "ja-16x9",
+        "passed": true,
+        "exeSha256": "b400a38a93a54c89d6b90e13fefa1f31d49656c203dbeb785e8bfd788a0618a2",
+        "initial": {
+          "objective": [
+            "F4キーで自分の島に戻るか、橋を置いてください。"
+          ],
+          "gate": [
+            "1",
+            "65",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          "size": [
+            "1920",
+            "1080"
+          ],
+          "screenMode": [
+            "138",
+            "1920",
+            "1080",
+            "1920",
+            "0"
+          ]
+        },
+        "exitCode": 0
+      },
+      {
+        "name": "ja-4x3",
+        "passed": true,
+        "exeSha256": "b400a38a93a54c89d6b90e13fefa1f31d49656c203dbeb785e8bfd788a0618a2",
+        "initial": {
+          "objective": [
+            "F4キーで自分の島に戻るか、橋を置いてください。"
+          ],
+          "gate": [
+            "1",
+            "65",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          "size": [
+            "1024",
+            "768"
+          ],
+          "screenMode": [
+            "138",
+            "1024",
+            "768",
+            "1024",
+            "1"
+          ]
+        },
+        "exitCode": 0
+      },
+      {
+        "name": "ko-16x10",
+        "passed": true,
+        "exeSha256": "b400a38a93a54c89d6b90e13fefa1f31d49656c203dbeb785e8bfd788a0618a2",
+        "initial": {
+          "objective": [
+            "F4를 눌러 내 섬으로 돌아오거나 다리를 놓으십시오."
+          ],
+          "gate": [
+            "1",
+            "65",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          "size": [
+            "1280",
+            "800"
+          ],
+          "screenMode": [
+            "138",
+            "1280",
+            "800",
+            "1280",
+            "0"
+          ]
+        },
+        "exitCode": 0
+      },
+      {
+        "name": "ko-16x9",
+        "passed": true,
+        "exeSha256": "b400a38a93a54c89d6b90e13fefa1f31d49656c203dbeb785e8bfd788a0618a2",
+        "initial": {
+          "objective": [
+            "F4를 눌러 내 섬으로 돌아오거나 다리를 놓으십시오."
+          ],
+          "gate": [
+            "1",
+            "65",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          "size": [
+            "1920",
+            "1080"
+          ],
+          "screenMode": [
+            "138",
+            "1920",
+            "1080",
+            "1920",
+            "0"
+          ]
+        },
+        "exitCode": 0
+      },
+      {
+        "name": "ko-4x3",
+        "passed": true,
+        "exeSha256": "b400a38a93a54c89d6b90e13fefa1f31d49656c203dbeb785e8bfd788a0618a2",
+        "initial": {
+          "objective": [
+            "F4를 눌러 내 섬으로 돌아오거나 다리를 놓으십시오."
+          ],
+          "gate": [
+            "1",
+            "65",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          "size": [
+            "1024",
+            "768"
+          ],
+          "screenMode": [
+            "138",
+            "1024",
+            "768",
+            "1024",
+            "1"
+          ]
+        },
+        "exitCode": 0
+      },
+      {
+        "name": "ko-lifecycle-restart",
+        "passed": true,
+        "exeSha256": "b400a38a93a54c89d6b90e13fefa1f31d49656c203dbeb785e8bfd788a0618a2",
+        "initial": {
+          "objective": [
+            "F4를 눌러 내 섬으로 돌아오거나 다리를 놓으십시오."
+          ],
+          "gate": [
+            "1",
+            "65",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          "size": [
+            "1024",
+            "768"
+          ],
+          "screenMode": [
+            "138",
+            "1024",
+            "768",
+            "1024",
+            "1"
+          ]
+        },
+        "afterF4": {
+          "objective": [
+            "다리를 총 8개 놓으십시오."
+          ],
+          "gate": [
+            "1",
+            "66",
+            "0",
+            "0",
+            "0",
+            "1",
+            "13.626",
+            "0"
+          ]
+        },
+        "restart": true,
+        "lifecycle": true,
+        "exitCode": 0
+      },
+      {
+        "name": "outside-campaign",
+        "passed": true,
+        "exeSha256": "b400a38a93a54c89d6b90e13fefa1f31d49656c203dbeb785e8bfd788a0618a2",
+        "initial": {
+          "objective": [
+            ""
+          ],
+          "gate": [
+            "0",
+            "65",
+            "0",
+            "1",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          "size": [
+            "1024",
+            "768"
+          ],
+          "screenMode": [
+            "138",
+            "1024",
+            "768",
+            "1024",
+            "1"
+          ]
+        },
+        "exitCode": 0
+      },
+      {
+        "name": "tutorial2",
+        "passed": true,
+        "exeSha256": "b400a38a93a54c89d6b90e13fefa1f31d49656c203dbeb785e8bfd788a0618a2",
+        "initial": {
+          "objective": [
+            "신전 건설을 완료하십시오."
+          ],
+          "gate": [
+            "2",
+            "65",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          "size": [
+            "1024",
+            "768"
+          ],
+          "screenMode": [
+            "138",
+            "1024",
+            "768",
+            "1024",
+            "0"
+          ]
+        },
+        "exitCode": 0
+      },
+      {
+        "name": "tutorial3",
+        "passed": true,
+        "exeSha256": "b400a38a93a54c89d6b90e13fefa1f31d49656c203dbeb785e8bfd788a0618a2",
+        "initial": {
+          "objective": [
+            "골렘으로 스톰 크리스탈을 신전에 가져오십시오."
+          ],
+          "gate": [
+            "3",
+            "65",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          "size": [
+            "1024",
+            "768"
+          ],
+          "screenMode": [
+            "138",
+            "1024",
+            "768",
+            "1024",
+            "0"
+          ]
+        },
+        "exitCode": 0
+      },
+      {
+        "name": "tutorial4",
+        "passed": true,
+        "exeSha256": "b400a38a93a54c89d6b90e13fefa1f31d49656c203dbeb785e8bfd788a0618a2",
+        "initial": {
+          "objective": [
+            "썬 디스크 발사기와 윈드 제네레이터를 생산에 투입하십시오."
+          ],
+          "gate": [
+            "4",
+            "65",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          "size": [
+            "1024",
+            "768"
+          ],
+          "screenMode": [
+            "138",
+            "1024",
+            "768",
+            "1024",
+            "0"
+          ]
+        },
+        "exitCode": 0
+      },
+      {
+        "name": "tutorial5",
+        "passed": true,
+        "exeSha256": "b400a38a93a54c89d6b90e13fefa1f31d49656c203dbeb785e8bfd788a0618a2",
+        "initial": {
+          "objective": [
+            "썬더 캐논의 사격선에 스톤 타워를 건설하여 공격을 막으십시오."
+          ],
+          "gate": [
+            "5",
+            "65",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          "size": [
+            "1024",
+            "768"
+          ],
+          "screenMode": [
+            "138",
+            "1024",
+            "768",
+            "1024",
+            "1"
+          ]
+        },
+        "exitCode": 0
+      },
+      {
+        "name": "tutorial6",
+        "passed": true,
+        "exeSha256": "b400a38a93a54c89d6b90e13fefa1f31d49656c203dbeb785e8bfd788a0618a2",
+        "initial": {
+          "objective": [
+            "에어 쉽과 윈드 제네레이터를 건설하십시오."
+          ],
+          "gate": [
+            "6",
+            "65",
+            "0",
+            "0",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          "size": [
+            "1024",
+            "768"
+          ],
+          "screenMode": [
+            "138",
+            "1024",
+            "768",
+            "1024",
+            "1"
+          ]
+        },
+        "exitCode": 0
+      }
+    ],
+    "retainedHarnessFailures": [
+      {
+        "name": "en-4x3-lifecycle",
+        "passed": false,
+        "exeSha256": "b400a38a93a54c89d6b90e13fefa1f31d49656c203dbeb785e8bfd788a0618a2",
+        "initial": {
+          "objective": [
+            ""
+          ],
+          "gate": [
+            "1",
+            "65",
+            "0",
+            "1",
+            "0",
+            "1",
+            "0",
+            "0"
+          ],
+          "size": [
+            "1024",
+            "768"
+          ]
+        },
+        "error": "AssertionError('초기 미션 안내가 비어 있습니다')",
+        "exitCode": 0
+      },
+      {
+        "name": "fs-en-16x10",
+        "passed": false,
+        "exeSha256": "b400a38a93a54c89d6b90e13fefa1f31d49656c203dbeb785e8bfd788a0618a2",
+        "error": "RuntimeError(None)",
+        "closeError": "OSError(22, 'Invalid argument')",
+        "exitCode": 1
+      }
+    ],
+    "pngDimensionsAndModeVerified": true
+  },
+  "skipped": "튜토리얼의 포획·희생·특정 적 공격·승리 자연 전환, 사용자 직접 확인·물리 환경 검사",
+  "rawDirectory": "extracted/tutorial-objective-1372"
+}

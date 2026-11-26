@@ -43,7 +43,7 @@ std::uint32_t GumpEvents::PickTopLevel(ScreenPoint point) const {
     // 루트 자신/손자는 검사하지 않으며 동일 깊이에서는 기존 선택을 보존한다.
     for (auto child=Node(create_.entries[0]).child;child;child=Node(child).next) {
         Enter(siblings,child);const auto bounds=collection_.Bounds(child);const auto& node=Node(child);
-        if (Contains(bounds,point) && std::bit_cast<std::int32_t>(node.depth)<depth && (node.flags&kVisible) && !(node.flags&kDead)) {
+        if (Contains(bounds,point) && std::bit_cast<std::int32_t>(node.depth)<depth && (node.flags&kVisible) && !(node.flags&kDead) && !displayOnly_.contains({child,node.serial})) {
             depth=std::bit_cast<std::int32_t>(node.depth);selected=child;
         }
     }
@@ -61,13 +61,18 @@ void GumpEvents::PickChildren(std::uint32_t token,std::vector<std::uint32_t>& ac
     for (auto child=Node(token).child;child;child=Node(child).next) {
         Enter(siblings,child);const auto bounds=collection_.Bounds(child);const bool inside=Contains(bounds,state_.point);const auto& node=Node(child);
         if (((node.flags&kPassChildren) || inside) && (node.flags&kVisible) && !(node.flags&(kDead|kVoid))) {
-            if (inside && std::bit_cast<std::int32_t>(node.depth)<std::bit_cast<std::int32_t>(state_.bestDepth) && (!state_.mask || (node.flags&state_.mask))) {
+            if (inside && !displayOnly_.contains({child,node.serial}) && std::bit_cast<std::int32_t>(node.depth)<std::bit_cast<std::int32_t>(state_.bestDepth) && (!state_.mask || (node.flags&state_.mask))) {
                 state_.bestDepth=node.depth;state_.selected=child;
             }
             PickChildren(child,active);
         }
     }
     active.pop_back();
+}
+// 기존 플래그의 모든 비트를 보존하고 신규 표시 전용 객체만 별도 호스트 목록으로 식별한다.
+void GumpEvents::SetDisplayOnly(std::uint32_t token,std::uint32_t serial,bool enabled) const {
+    if (enabled) { if (Node(token).serial!=serial) throw std::logic_error("표시 전용 Gump의 생성serial 불일치");displayOnly_.emplace(token,serial); }
+    else displayOnly_.erase({token,serial});
 }
 // 가상 처리기는 전달 시에만 필요하다. 선택/기본 필터만 쓰는 호스트는 처리기를 제공하지 않아도 된다.
 std::uint32_t GumpEvents::Dispatch(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second,bool includeHidden) const {

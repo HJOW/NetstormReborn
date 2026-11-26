@@ -33,6 +33,7 @@ class RawCampaignSession; // State1의 현재 Guide Subscriber 요청을 같은 
 class RawCampaignFactoryDisplay; //메타도같은Pool/현재가상표를사용하는공통SpriteDraw출력기를소유한다.
 class UserInput;
 class WarningMessages;
+class TutorialObjectiveGump; // 초기 미션의 비상호작용 안내 글자와 실제 공통 노드 식별자를 소유한다.
 struct GameMenuBarState; // 현재Session의기존검산참조와메뉴serial만빌린다.
 struct FortSelectionHooks; //편집 선택과 Test Battle 복귀가 같은 실제 파일/State/섬/Notify 장치를 사용한다.
 class CampaignObjectMenuClient; // 같은 실제 원본 객체 메뉴와 현재 명령 큐를 연결한다.
@@ -150,6 +151,7 @@ private:
     RawMovieContext MovieDevices(); // 영상 객체가 같은 실제 Client의 장기 Screen/시계/음향을 조회하도록 연결한다.
     // 표시 상태를 합성한다. 페이지 교체 예약이 있을 때만 입력 영역과 실제 돌 버튼을 함께 교체한다.
     void Compose();
+    void UpdateTutorialObjective(); // 현재 미션 단계·모달·지도 영역을 읽어 투명한 다음 조건 안내만 갱신한다.
     // 새 페이지/팝업/해상도의 입력 영역 교체를 다음 합성에 예약한다. 단순 픽셀 갱신에는 쓰지 않는다.
     void RebuildControls();
     // 대기 중인 명령을 실행한다. 지원하지 않는 명령은 실제 동작으로 가장하지 않는다.
@@ -286,6 +288,7 @@ private:
     std::shared_ptr<RawSurfaceGumpBindings> gumpUiRuntime_; // 실제 UI 등록표의 대여는 그 저장소 정리가 끝날 때까지 유지한다.
     std::shared_ptr<RawButtonControls> rawButtons_; // 실제 트리/등록표/지연 삭제의 저장소이며 선택된 Gump 통지 동안만 추가 pin한다.
     WarningMessages* warnings_{}; // rawButtons가 소유하는 같은 실제 Gump/StyleText의10초 안내를 빌린다.
+    std::unique_ptr<TutorialObjectiveGump> tutorialObjective_; // 공식 초기 미션에서만 생성하는 상시 안내의 표시 수명이다.
     ScriptStringRing scriptStrings_; // 입력 큐에 예약한 문자열의 원본80칸 수명이며 페이지가 바뀌어도 보존한다.
     SoloMapFileSpec& mapFileSpec_; // 같은 Client의9BYTE FileSpec 키를 페이지/Session 교체 뒤에도 직접 빌린다.
     std::unique_ptr<SoloMapCatalog> mapCatalog_; // 현재 파일 캐시/dirty/이름을 Client 수명에 소유한다.

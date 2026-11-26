@@ -1,6 +1,7 @@
 // 같은 Gump 생성/트리/수명 저장소에서 원본 커서 대상 선택과 가상 이벤트 전달을 복원한다.
 #pragma once
 #include "client/GumpLifetime.h"
+#include <set>
 
 namespace netstorm::client {
 // 원본 전체 트리 커서 선택의 현재 좌표/필터/최소 signed 깊이/선택 토큰 전역이다.
@@ -34,6 +35,7 @@ public:
     std::uint32_t PickTopLevel(ScreenPoint point) const;
     // 선택 전역을 초기화하고 전체 자식을 탐색한다. 화면 밖 자식 통과/void/dead/플래그 마스크를 적용한다.
     std::uint32_t Pick(ScreenPoint point,std::uint32_t mask) const;
+    void SetDisplayOnly(std::uint32_t token,std::uint32_t serial,bool enabled) const; // 신규 안내의 호스트 식별자를 선택에서 제외한다. 원본 flags와 등록표는 변경하지 않는다.
     // 직접 자식부터 재귀 전달하고 실패하면 자신의 가상 필터/처리기를 호출한다. 성공 토큰을 반환한다.
     std::uint32_t Dispatch(std::uint32_t token,std::uint32_t event,std::uint32_t first,std::uint32_t second,bool includeHidden=false) const;
     // 자신을 제외한 현재 부모 체인으로 전달하고 첫 비영 처리기 반환값의 전체 DWORD를 보존한다.
@@ -56,5 +58,6 @@ private:
     const GumpCollection& collection_;
     // hooks_: 외부 저장소 조회와 가상 동작을 연결하는 콜백 묶음 (GumpEventHooks).
     GumpEventHooks hooks_;
+    mutable std::set<std::pair<std::uint32_t,std::uint32_t>> displayOnly_; // 표시 전용 토큰/생성serial이다. 번호 재사용은 다른 객체로 구별한다.
 };
 }

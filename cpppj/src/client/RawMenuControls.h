@@ -111,6 +111,7 @@ public:
     void BindMetaParticipantGumps(NativeMetaParticipantCreateHooks& hooks); //실제d8 이름표 생성/선택1/스크롤0만 연결하며 조회로 새 Gump를 만들지 않는다.
     void KillRegisteredGump(std::uint32_t id); //선행 FindGump가 찾은 실제 등록ID의 현재 Gump를 공통00466480으로 Kill한다.
     void RedrawRegisteredGump(std::uint32_t id); //현재 FindGump 결과가 있을 때만 같은 실제 가상Redraw(false)를 호출한다.
+    void SetDisplayOnly(std::uint32_t token,std::uint32_t serial,bool enabled) const; // 신규 안내의 원본 플래그를 유지하며 공통 입력의 표시 전용 식별자만 등록/해제한다.
     void BindMetaSceneGumps(NativeMetaSceneHooks& hooks); //같은TextGump생성/Clear/Append/Fit/serial/객체부착과현재NSInfo의TYPE/SHP장치를연결한다.실제World/카메라장치는호출자가공급한다.
     std::uint32_t CreateMetaText(std::int32_t width,std::int32_t height,std::uint32_t font,std::uint32_t color); //같은등록표에new(a4)/TextGump를생성한다.미부착실패노드도공통Cleanup이소유한다.
     std::uint32_t CreateMetaName(std::int32_t width,std::int32_t height,std::uint32_t font,std::uint32_t color); //같은new(d8)/다중줄/버퍼·Slider를생성하여메타참가자이름표로사용한다.

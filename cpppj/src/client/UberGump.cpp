@@ -68,6 +68,7 @@
 #include "client/FontFaceEncoding.h" //변경 후 현재31BYTE ACP 이름만 실제 UTF-8 Config 경계에서 변환한다.
 #include "client/ConfigurationCommandInput.h" //원문 모드별 palette와 공유 priority/State 일반 명령을 기존 부모에 연결한다.
 #include "client/RendererDiagnostics.h" //명시특수전역뒤원문7/10/13키의현재DWORD만토글한다.
+#include "client/TutorialObjective.h" // 초기 미션의 다음 단계 조건을 기존 공통 글자 노드에 표시한다.
 #include "client/LanguageRequest.h" //언어 요청/알림도 원문 설정/큐와 이미 수행한 Gump 전달을 공유한다.
 #include "o/AiDifficulty.h" //11차: 옵션 메뉴 Difficulty 하위 메뉴의 단계 값이다.
 #include "client/SkirmishSetup.h" //12차: Campaign 스커미시 설정 화면과 시작 대본이다.
@@ -532,6 +533,7 @@ void UberGump::ReleaseCurrentGuideMission() {
 }
 // 입력 참조를 먼저 없애고 월드의 실제 소유권을 해제한다. 위치 효과음은 카메라 0의 전체 메뉴 영역으로 되돌린다.
 void UberGump::ClearWorld() {
+    if (tutorialObjective_ && rawButtons_ && rawButtons_->Menus()) tutorialObjective_->Clear(*rawButtons_->Menus()); // 미션/루트 반납 전에 자기 글자만 지운다.
     CloseScenarioUi(true); // Session을 빌리는 Scenario 모달/보류 문서를 기존 실제 World보다 먼저 반납한다.
     CloseLanLobby();lan_.reset();state_.Cancel("LoadLanBattleWorld"); // Player 주소를 다시 만들기 전에 제어 연결과 이전 일반 시작 요청을 반납한다.
     if ((world_ && world_->Session().ConnectionCallbackActive()) || (editor_ && editor_->metaWorld && editor_->metaWorld->ConnectionCallbackActive())) throw std::logic_error("패킷 콜백 실행 중 전체 World 정리 재진입"); // UI/공유 저장소를 일부 반납하기 전에 전체 정리를 거부한다.
@@ -2002,6 +2004,18 @@ void UberGump::IdleGumps() {
 void UberGump::Frame() {
     if (world_ && world_->TakeChanged()) rebuild_=true;
     if (rebuild_) Compose();
+    UpdateTutorialObjective(); // 원본 Guide가 바꾼 단계/예약도 월드 그림 변경 여부와 별개로 같은 프레임에 반영한다.
+}
+// 진행 판정이나 타이머는 쓰지 않는다. 현재 표시 가능한 공식 초기 미션의 번역 문구만 제출한다.
+void UberGump::UpdateTutorialObjective() {
+    if (!rawButtons_ || !rawButtons_->Menus()) return;
+    auto& menus=*rawButtons_->Menus();std::string_view key; // 현재 모달이 닫혔을 때만 지도 위 안내를 선택한다.
+    if (client_.Edition()==o::OriginalEdition::Patch1078 && mission_ && missionRuntime_ && missionRuntime_->guided && world_ && !world_->Connecting() && state_.phase==ClientPhase::Mission && popup_.empty() && !rawButtons_->CurrentDialog() && !menus.HtmlWindowsOpen() && !menus.KnowledgeOpen() && !menus.HelpOpen() && !GameMenuOpen())
+        key=TutorialObjectiveKey(mission_->Name(),missionRuntime_->gate,missionRuntime_->mode64);
+    if (key.empty()) { if (tutorialObjective_) tutorialObjective_->Clear(menus);return; }
+    if (!tutorialObjective_) tutorialObjective_=std::make_unique<TutorialObjectiveGump>();
+    const auto& colors=client_.GetScreen().Colors(); // 번개 팔레트가 아니라 기존 UI와 같은 파일 색표를 사용한다.
+    tutorialObjective_->Sync(menus,rawButtons_->RootToken(),client_.Fonts().Get(0),FontBytes(client_.Translate(key)),CurrentMapView(),static_cast<std::uint8_t>(colors.basic[7]),static_cast<std::uint8_t>(colors.basic[0]));
 }
 // UI 합성을 예약하고 이미 제출된 정적 픽셀도 다시 그리게 한다.
 void UberGump::Refresh() { rebuild_=true;client_.GetRenderer().InvalidateAll(); }
@@ -2223,6 +2237,7 @@ void UberGump::Compose() {
     if (!nativeFrame && !commonDrawSubmitted && (state_.phase==ClientPhase::MainMenu || nativeHud || rawButtons_->Menus()->KnowledgeOpen() || rawButtons_->Menus()->HelpOpen() || warnings_->HasMessages())) client_.GetRenderer().SetOverlayProcedure(RenderProcedure{{0,0,width,height},[this](std::span<std::uint8_t> pixels,int pitch,int height,ScreenRect clip) {
         rawButtons_->Menus()->Draw(pixels,pitch,height,client_.GetScreen().Colors(),client_.GetScreen().ShadeMaps(),clip);
     }}); //CD의 기존 후합성만 유지한다.10.78 UI는 실제 공통 수집/정렬에서 월드와 함께 그린다.
+    UpdateTutorialObjective(); // 페이지/해상도 교체 직후에도 이전 단계 글자를 한 프레임 남기지 않는다.
     if (world_) world_->TakeChanged();
     rebuild_ = false;
 }
@@ -2250,6 +2265,7 @@ std::string UberGump::Report(bool cameraOnly) const {
     out<<ReportClientBridgeDecay(client_); //현재 메뉴/World가 공유하는 실제 스캔의 읽기 전용 CLI 관측이다.
     const auto& camera=client_.GameplayGlobals()->Camera();out<<"raw_camera_frame\t"<<camera.RendererView().pixels[0]<<'\t'<<camera.RendererView().pixels[1]<<'\t'<<camera.Target().pixels[0]<<'\t'<<camera.Target().pixels[1]<<'\t'<<client_.GameplayGlobals()->PatchDiagnostic()<<'\t'<<client_.LocalStateGlobals()->MetaRebuild()<<'\t'<<pointerBoundary_.initializationFlags<<'\t'<<edgeScrollSince_<<'\n'; //실제 적용/요청·공유 전역만 관측한다.
     out << "phase\t" << static_cast<int>(state_.phase) << "\npage\t" << Field(pageName_) << "\npopup\t" << Field(popup_) << "\n";
+    out<<"tutorial_objective\t"<<Field(tutorialObjective_ ? o::DecodeDisplayText({reinterpret_cast<const std::uint8_t*>(tutorialObjective_->Text().data()),tutorialObjective_->Text().size()}) : std::string{})<<'\n'; // 실제 제출한 안내만 읽고 단계나 게임 상태를 바꾸지 않는다.
     out << "size\t" << client_.GetScreen().Width() << '\t' << client_.GetScreen().Height() << "\n";
     std::int32_t themeMode{};client_.Configuration().ReadInt("theammode",themeMode);out<<"raw_view_keys\t"<<hideBuildings_<<'\t'<<worldRedraw_<<'\t'<<themeMode<<'\n'; // 실제 표시 DWORD 둘과 현재 설정만 읽고 입력 효과를 만들지 않는다.
     const auto& ownerTables=client_.ColorSortInput()->OwnerTables();out<<"raw_owner_tables\t"<<ownerTables->Enabled()<<'\t'<<(ownerTables->Ready() ? 1 : 0);

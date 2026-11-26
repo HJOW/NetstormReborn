@@ -3949,3 +3949,9 @@ target_compile_definitions(netstorm_lan_clock_tests PRIVATE ${_netstorm_menu_ses
 add_executable(netstorm_cursor_drop_tests FocusedTestMain.cpp CursorDropTests.cpp SavedStateFilesTests.cpp)
 target_link_libraries(netstorm_cursor_drop_tests PRIVATE netstorm)
 netstorm_apply_compiler_options(netstorm_cursor_drop_tests)
+
+# 초기 미션 신규 안내와 기존 단계/입력 판정의 독립 원본 회귀를 창 없이 확인한다.
+target_sources(netstorm_tests PRIVATE TutorialObjectiveTests.cpp)
+add_executable(netstorm_tutorial_objective_tests FocusedTestMain.cpp TutorialObjectiveTests.cpp TutorialOneTests.cpp TutorialTwoTests.cpp TutorialLaterTests.cpp MissionFrameGateTests.cpp GumpEventsTests.cpp)
+target_link_libraries(netstorm_tutorial_objective_tests PRIVATE netstorm)
+netstorm_apply_compiler_options(netstorm_tutorial_objective_tests)
