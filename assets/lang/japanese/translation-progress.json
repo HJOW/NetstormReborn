@@ -7,8 +7,12 @@
       {
         "first": "COMMENTS",
         "last": "WELCOME2"
+      },
+      {
+        "first": "About",
+        "last": "UCampaign"
       }
     ],
-    "nextSection": "About"
+    "nextSection": "Credits"
   }
 }

@@ -343,115 +343,102 @@ $Button=メインメニュー,Tell,Blank
 [About]
 <h2>{H2}NetStorm</h2>
 <p>{Text}
-Version {version}
+バージョン {version}
 <p>
 (c) 1997 Titanic Entertainment, Inc. and Activision Inc.<br>
-{gamemaster}.{gameminor} Patch by Ticonderoga Entertainment.<br>
-$Button=OK,DoNothing,0
+{gamemaster}.{gameminor} パッチ：Ticonderoga Entertainment.<br>
+$Button=確認,DoNothing,0
 
 [***********************************************************]
 [NotImplemented]
-<h2>{H2}Not Implemented Yet</h2>
+<h2>{H2}未実装</h2>
 <p>{Text}
-Sorry, this function has not yet been implemented, or
-has been temporarily disabled for the demo due to
-instability.
+この機能は未実装か、動作が不安定なため、デモでは一時的に無効になっています。
 <br>
-If you receive this message in error, your version number is {version}.
-$Button=OK,Tell,{global.priorTell}
+このメッセージが誤って表示された場合、お使いのバージョンは{version}です。
+$Button=確認,Tell,{global.priorTell}
 
 
 [***********************************************************]
 [PlayerSubIdNotFound]
-<h2>{H2}No Information for Player #{p.handle}</h2>
+<h2>{H2}プレイヤー#{p.handle}の情報がありません</h2>
 <p>{Text}
-No information was found for the given account.
+このアカウントの情報が見つかりません。
 <p>
 
-$Button=OK,DoNothing,0
+$Button=確認,DoNothing,0
 
 
 [***********************************************************]
 [TechSupport]
-<h2>{H2}Technical Support</h2>
+<h2>{H2}テクニカルサポート</h2>
 <p>{Text}
-Before contacting us for help, we suggest consulting the Technical Help file supplied with
-this game. From your Windows {CText}Start{Text} menu select {CText}Programs{Text} / {CText}NetStorm{Text} / {CText}Technical Help{Text}
-to see more information. It may take twenty seconds or more for this program to run, so please be patient.
+サポートに問い合わせる前に、ゲームに付属する技術ヘルプの
+ファイルを確認してください。Windowsの
+{CText}スタート{Text}メニューで{CText}プログラム{Text} / {CText}NetStorm{Text} / {CText}Technical Help{Text}を
+選ぶと、詳しい情報が表示されます。このプログラムの
+起動には20秒以上かかることがありますので、お待ちください。
 <p>
-You can Email {SUPPORTNAME} technical support at <a href="mailto:{EMAIL1}">{Link}{EMAIL1}</a>{Text}
-for assistance.
+サポートが必要な場合は、{SUPPORTNAME}のサポートチームに、
+<a href="mailto:{EMAIL1}">{Link}{EMAIL1}</a>{Text}宛てにメールを送ってください。
 <p>
-
 
 [***********************************************************]
 [SETUP]
-<h2>{H2}Setup</h2>
+<h2>{H2}セットアップ</h2>
 <p>{Text}
-NetStorm's Setup program is being started.  Please wait for the
-program to appear, then enter the required information.
+NetStormのセットアッププログラムを起動します。表示されるまで待ち、必要な情報を入力してください。
 <p>
-If you register while setup is running this fortress will take
-the handle that you register with.
+セットアップ中に登録すると、この要塞には登録時の名前が使われます。
 <p>
-When you are ready, quit setup and click the button below.
-$Button=Setup is Done,AccountSetup,1
+準備ができたらセットアッププログラムを終了し、下のボタンを押してください。
+$Button=セットアップ完了,AccountSetup,1
 
 
 [***********************************************************]
 [QUITABANDON]
-<h2>{H2}Quit Program</h2>
+<h2>{H2}プログラム終了</h2>
 <p>{Text}
-There is a battle in progress. Are you certain you wish to
-quit NetStorm and return to the desktop now?
+戦闘中です。今NetStormを終了し、デスクトップに戻りますか？
 <p>
-$Button=Quit,QuitApp,99
-$Button=Keep Playing,DoNothing,0
+$Button=終了,QuitApp,99
+$Button=プレイを続ける,DoNothing,0
 
 
 [***********************************************************]
 [BuildNoBucks]
-<h2>{H2}Storm Power Needed</h2>
+<h2>{H2}ストームパワーが必要です</h2>
 <p>{Text}
-You do not have enough <a href="stormPowerHelp">{Link}Storm Power</a>{Text} to create
-this building.
+この建物を作るための<a href="stormPowerHelp">{Link}ストームパワー</a>{Text}が足りません。
 <p>
-You can tell how much Storm Power is needed by looking at the
-number on the High Priest build menu in the upper-left-hand 
-corner of your screen. If the number shows in red, like this 
-~r210{Text}<!"fortgump.3">, you know you need more Storm Power.
+画面左上の司祭の建設メニューにある数字を見ると、必要なストームパワーが分かります。数字がこのように赤く表示される場合は、
+~r210{Text}<!"fortgump.3">ストームパワーがさらに必要です。
 
 
 [***********************************************************]
 [NoTechTheme]
-<h2>{H2}May Not Build</h2>
+<h2>{H2}建設できません</h2>
 <p>{Text}
-You may not build <a href="factoryHelp">{Link}a Workshop</a>{Text} of that alignment until you
-control <a href="technologyHelp">{Link}Knowledge</a>{Text} of the same alignment. In other words,
-a Rain Workshop can only be used to create <a href="unitHelp">{Link}Units</a>{Text} which
-are Rain oriented.
+その系統の<a href="factoryHelp">{Link}ワークショップ</a>{Text}を建設するには、同じ系統の<a href="technologyHelp">{Link}知識</a>{Text}が必要です。つまり、レインワークショップで作れるのは、レイン系統の<a href="unitHelp">{Link}ユニット</a>{Text}だけです。
 
 
 [***********************************************************]
 [UpgradeNoBucks]
-<h2>{H2}Storm Power Needed</h2>
+<h2>{H2}ストームパワーが必要です</h2>
 <p>{Text}
-You do not have enough <a href="stormPowerHelp">{Link}Storm Power</a>{Text} to upgrade this Workshop.
+このワークショップをアップグレードするための<a href="stormPowerHelp">{Link}ストームパワー</a>{Text}が足りません。
 <p>
-You can tell how much Storm Power is needed by looking at the
-number on the High Priest build menu in the upper-left-hand 
-corner of your screen. If the number shows in red, like this 
-~r210{Text}<!"fortgump.3">, you know you need more Storm Power.
+画面左上の司祭の建設メニューにある数字を見ると、必要なストームパワーが分かります。数字がこのように赤く表示される場合は、
+~r210{Text}<!"fortgump.3">ストームパワーがさらに必要です。
 
 
 [***********************************************************]
 [NameRequired]
-<h2>{H2}Unique Name Required</h2>
+<h2>{H2}別の名前が必要です</h2>
 {Text}
-A Fortress with that name already exists on this computer.
-Please choose a unique name for your fortress.
+このコンピューターには、同じ名前の要塞がすでにあります。要塞に別の名前を付けてください。
 <p>
-$Button=OK,DoNothing,0
+$Button=確認,DoNothing,0
 
 
 
@@ -460,16 +447,16 @@ $Button=OK,DoNothing,0
 <background="nsisles">
 <h2>{H2}NetStorm</h2>
 <p>{Text}
-Please choose which demo you wish to view:
+見たいデモを選んでください：
 <p>
 
 $Timeout=120,Tell,Blank
 
-$Menu=The Storm Rages,StartDemo,DemoStormRages
-$Menu=Demo of "Guard My Back",StartDemo,GuardMyBack
-$Menu=Demo of "Dissolved Alliance",StartDemo,DissolvedAlliance
+$Menu=嵐が吹き荒れる,StartDemo,DemoStormRages
+$Menu=デモ「背後を守れ」,StartDemo,GuardMyBack
+$Menu=デモ「崩れた同盟」,StartDemo,DissolvedAlliance
 
-$Button=Cancel,Tell,Blank
+$Button=キャンセル,Tell,Blank
 
 [***********************************************************]
 [DemoAi1TempleDead]
@@ -483,205 +470,187 @@ $Button=Cancel,Tell,Blank
 
 [***********************************************************]
 [Demo]
-<h2>{H2}Demo of NetStorm</h2>
+<h2>{H2}NetStorm デモ</h2>
 <p>{Text}
-This demonstration will show your island in
-a battle, but controlled by the computer.
+このデモでは、コンピューターが操作する戦闘中の
+あなたの島をお見せします。
 <p>
-If you wish, you may lay down units just as in the game,
-to help your island to victory.
+実際のゲームと同じようにユニットを配置して、
+島の勝利を手助けすることもできます。
 
 $Timeout=15,DoNothing,0
 
-
 [***********************************************************]
 [MetaVerDiff]
-<h2>{H2}Version Difference</h2>
+<h2>{H2}バージョンが異なります</h2>
 <p>{Text}
-You are attempting to attach to a challenge server
-which has version {param.1}.
-Your game is version {MAJOR_VERSION}.{MINOR_VERSION} which is
-incompatible with the server version.  You either need to update
-your version or you need to find a more modern challenge server.
+接続しようとしているチャレンジサーバーのバージョンは{param.1}です。
+ゲームのバージョンは{MAJOR_VERSION}.{MINOR_VERSION}で、サーバーのバージョンと互換性がありません。ゲームを更新するか、より新しいチャレンジサーバーを探す必要があります。
 <p>
-If you need to update your version, updates are located at:<br>
+バージョンを更新する必要がある場合は、次の場所から更新を入手できます。<br>
 <a href="http://{UPDATEURL}">{Link}{UPDATEURL}</a>{Text}
 <p>
-$Button=OK,SaveGoMain,0
+$Button=確認,SaveGoMain,0
 
 
 [***********************************************************]
 [GameVerDiff]
-<h2>{H2}Version Difference</h2>
+<h2>{H2}バージョンが異なります</h2>
 <p>{Text}
-You are attempting to attach to a game server
-which has version {param.1}.
-Your game is version {MAJOR_VERSION}.{MINOR_VERSION} which is
-incompatible with that game server version.  You either need
-to update your version or play with someone who is the same version as you.
+接続しようとしているゲームサーバーのバージョンは{param.1}です。
+ゲームのバージョンは{MAJOR_VERSION}.{MINOR_VERSION}で、このゲームサーバーのバージョンと互換性がありません。ゲームを更新するか、同じバージョンの相手とプレイしてください。
 <p>
-If you need to update your version, updates are located at:<br>
+バージョンを更新する必要がある場合は、次の場所から更新を入手できます。<br>
 <a href="http://{UPDATEURL}">{Text}{UPDATEURL}</a>{Text}
 <p>
-$Button=OK,SaveGoMain,0
+$Button=確認,SaveGoMain,0
 
 
 [***********************************************************]
 [PieceDump]
 {Text}
-The entire piece list has been written to the html 
-file<br>
+すべてのピースの一覧を、ゲームの基本ディレクトリにあるHTMLファイル<br>
 <b> "<a href="file:NetStormPieceList.html">{Link}NetStormPieceList</a>"</b>{text}
 <br>
-in your game's main directory.
+に保存しました。
 
 
 [***********************************************************]
 [SalvageVortex]
-<h2>{H2}Warning</h2>
+<h2>{H2}警告</h2>
 <p>{Text}
-If you choose to salvage this Temple you will
-be unable to accumulate additional Storm Power
-and you will be unable to build bridges.
+この神殿を回収すると、ストームパワーの採集も、橋の建設もできなくなります。
 <p>
-Are you sure you wish to salvage it?
+回収しますか？
 <br>
-$Button=Salvage It,Salvage,{global.salvageSid}
-$Button=Cancel,DoNothing,0
+$Button=回収,Salvage,{global.salvageSid}
+$Button=キャンセル,DoNothing,0
 
 
 [***********************************************************]
 [SalvageInf]
-<h2>{H2}Warning</h2>
+<h2>{H2}警告</h2>
 <p>{Text}
-If you Salvage this you may lose the ability to produce
-one or more battle units.
+これを回収すると、一つ以上の戦闘ユニットを生産できなくなる可能性があります。
 <p>
-Are you sure you wish to salvage it?
-$Button=Salvage It!,Salvage,{global.salvageSid}
-$Button=Cancel,DoNothing,0
+回収しますか？
+$Button=回収！,Salvage,{global.salvageSid}
+$Button=キャンセル,DoNothing,0
 
 
 [***********************************************************]
 [BeginCapture]
-<h2>{H2}Begin Capture</h2>
+<h2>{H2}キャプチャ開始</h2>
 <p>{Text}
-Would you like to begin capturing a movie now?
-$Button=Begin Capture,Capture,1
-$Button=Cancel,DoNothing,0
+今、動画のキャプチャを開始しますか？
+$Button=キャプチャ開始,Capture,1
+$Button=キャンセル,DoNothing,0
 
 
 [***********************************************************]
 [EndCapture]
-<h2>{H2}End Capture</h2>
+<h2>{H2}キャプチャ終了</h2>
 <p>{Text}
-The capture has been written into the files
-called {gifSequenceName}000.bmp and so on.
+キャプチャした内容は、{gifSequenceName}000.bmpなどの名前のファイルに保存されました。
 
 [PlacingIslands]
 {Text}
-To the left is an overview of this map. To add a new island,
-left-click on one of the islands below the overview window. Then
-click again to drop the new island into place on the map.
+左側には、このマップの全体が表示されています。新しい島を追加するには、全体表示ウィンドウの下にある島を左クリックし、次にマップをクリックして配置してください。
 <p>
-To cancel without placing, click again on the island's image in
-the bottom part of the window.
+配置を取り消すには、ウィンドウ下部の島の絵をもう一度クリックしてください。
 
 
 [***********************************************************]
 [CSLGenericFail]
-<h2>{H2}Challenge Login Failed!</h2>
+<h2>{H2}チャレンジサーバーへのログイン失敗！</h2>
 {Text}
-Your attempt to connect to the Challenge server has failed
-for some unknown reason.
+不明な理由でチャレンジサーバーに接続できませんでした。
 <p>
-Check <a href="http://{UPDATEURL}">{Link}{UPDATEURL}</a> {Text} For Information
+詳しくは<a href="http://{UPDATEURL}">{Link}{UPDATEURL}</a> {Text}をご覧ください。
 
 
 [***********************************************************]
 [CSLServerFull]
-<h2>{H2}Challenge Login Failed!</h2>
+<h2>{H2}チャレンジサーバーへのログイン失敗！</h2>
 {Text}
-You could not connect to the Challenge server because it has
-no more room for new players.
+チャレンジサーバーには新たなプレイヤーを受け入れる空きがないため、接続できません。
 <p>
-Try another server, or try again later.
+別のサーバーを使うか、後でもう一度お試しください。
 
 
 [***********************************************************]
 [CSLBadNameLen]
-<h2>{H2}Challenge Login Failed!</h2>
+<h2>{H2}チャレンジサーバーへのログイン失敗！</h2>
 {Text}
-The name length received by the server was invalid.
+サーバーが受け取った名前の長さが正しくありません。
 <p>
-Check <a href="http://{UPDATEURL}">{Link}{UPDATEURL}</a> {Text} For Information
+詳しくは<a href="http://{UPDATEURL}">{Link}{UPDATEURL}</a> {Text}をご覧ください。
 
 [***********************************************************]
 [CSLAlreadyHere]
-<h2>{H2}Challenge Login Failed!</h2>
+<h2>{H2}チャレンジサーバーへのログイン失敗！</h2>
 {Text}
-You could not connect to the Challenge server because another
-user is connected with the same Fort ID number as yours.
+同じ要塞ID番号を使う別のユーザーがすでに接続しているため、チャレンジサーバーに接続できません。
 <p>
-Create a new Multiplayer Fort and try logging in again.<br>
+新しいマルチプレイヤー用の要塞を作り、もう一度ログインしてください。<br>
 
 
 [***********************************************************]
 [TellGifWritten]
-<h2>{H2}Screen Shot Written</h2>
+<h2>{H2}スクリーンショット保存完了</h2>
 {Br}
-This screen shot has been written to the file
+このスクリーンショットを、次のファイルに保存しました。
 <p>
 {CText}<b>{InstallDir}{GifOutSpec}</b>{Text}
 <p>
-$Button=View,URL,file:///{InstallDir}{GifOutSpec}
-$Button=OK,DoNothing,0
+$Button=表示,URL,file:///{InstallDir}{GifOutSpec}
+$Button=確認,DoNothing,0
 
 
 [***********************************************************]
 [WarnPriestTaken]
-<$Warning,~B~E~a{param.5}{param.3} ~aPriest Has Been Captured By {param.4}{param.2}~a!>
+
+<$Warning,~B~E~a{param.5}{param.3} ~aの司祭が{param.4}{param.2}~aに捕らえられました！>
 
 [WarnYourPriestTaken]
-<$Warning,~B~E~a Your Priest Has Been Captured By {param.4}{param.2}~a!>
+
+<$Warning,~B~E~a 我々の司祭が{param.4}{param.2}~aに捕らえられました！>
 
 
 [***********************************************************]
 [WarnNeutralPriestTaken]
-<$Warning,~B~E~a A Neutral Priest has been captured by {param.5}{param.2}~a!>
+
+<$Warning,~B~E~a 中立の司祭が{param.5}{param.2}~aに捕らえられました！>
 
 [***********************************************************]
 [BecomingServer]
-<h2>{H2}Becoming Server</h2>
+<h2>{H2}サーバーの役割の引き継ぎ</h2>
 <p>{Text}
-The connection to the game server has been lost. Your
-machine has been elected the new server.  You may experience
-some delays while the other players reconnect to your machine.
+ゲームサーバーとの接続が切れました。あなたのコンピューターが新たなサーバーに選ばれました。ほかのプレイヤーが再接続する間、遅延が発生する場合があります。
 <p>
-If your machine is unreachable by the others, the game
-will end prematurely.
+ほかのプレイヤーがあなたのコンピューターに接続できない場合、ゲームは途中で終了します。
 
 
 [***********************************************************]
 [ConfirmRetreat]
-<h2>{H2}Depart Battle</h2>
+<h2>{H2}戦闘から離れる</h2>
 <p>{Text}
-Are you certain you wish to depart from this battle?
+この戦闘から離れますか？
 <p>
-You will not be able to return if you choose to do so.
+離れると、戻ることはできません。
 
-$Button=Depart,LeaveBattle,1
-$Button=Stay,DoNothing,0
+$Button=離れる,LeaveBattle,1
+$Button=残る,DoNothing,0
 
 
 [***********************************************************]
 [LoadEditable]
-<h2>{H2}Load Battle Map</h2>
+<h2>{H2}戦闘マップを読み込む</h2>
 <p>{Text}
-Select the battle you wish to load from the list below.
+以下の一覧から、読み込む戦闘を選んでください。
 $Menu=*SOLOLIST*,DoNothing,0
-$Button=Create New Map,tell,LOADLOADFORT
-$Button=Cancel,Tell,Blank
+$Button=新しいマップを作成,tell,LOADLOADFORT
+$Button=キャンセル,Tell,Blank
 
 [LOADLOADFORT]
 <$tell,LoadEditable>
@@ -691,86 +660,85 @@ $Button=Cancel,Tell,Blank
 
 [***********************************************************]
 [LoadMultiplayer]
-<h2>{H2}Load Multi-player Game</h2>
+<h2>{H2}マルチプレイヤーのゲームを読み込む</h2>
 <p>{Text}
-Select the saved game you wish to load from the list below.
+以下の一覧から、読み込む保存済みゲームを選んでください。
 
 $Menu=*FORTLIST*,DoNothing,0
-$Button=Create New Game,tell,LOADLOADFORT1
-$Button=Cancel,DoNothing,0
+$Button=新しいゲームを作成,tell,LOADLOADFORT1
+$Button=キャンセル,DoNothing,0
 
 [LOADLOADFORT1]
 <$tell,LoadMultiplayer>
 <$NewFort,0>
 [***********************************************************]
 [LeaveEditMode]
-<h2>{H2}Leave Edit Mode</h2>
+<h2>{H2}編集モードを終了</h2>
 <p>{Text}
-Would you like to save this map now?
+今、このマップを保存しますか？
 
-$Button=Yes,SaveGoMain,1
-$Button=No,SaveGoMain,0
-$Button=Cancel,DoNothing,0
+$Button=はい,SaveGoMain,1
+$Button=いいえ,SaveGoMain,0
+$Button=キャンセル,DoNothing,0
 
 
 [***********************************************************]
 [QuitEditMode]
-<h2>{H2}Quit NetStorm</h2>
+<h2>{H2}NetStormを終了</h2>
 <p>{Text}
-Quit now without saving?
+保存せずに今終了しますか？
 
-$Button=Yes,QuitApp,99
-$Button=No,DoNothing,0
+$Button=はい,QuitApp,99
+$Button=いいえ,DoNothing,0
 
 [***********************************************************]
 [ABORT]
-<h2>{H2}Leave Mission?</h2>
+<h2>{H2}ミッションを終了しますか？</h2>
 <p>{Text}
-Do you wish to quit this mission and return to the
-Main Menu now?
+今、このミッションを離れてメインメニューに戻りますか？
 <p>
-$Button=Main Menu,LeaveBattle,1
-$Button=Replay Mission,MissionRestart,0
-$Button=Continue Mission,DoNothing,0
+$Button=メインメニュー,LeaveBattle,1
+$Button=ミッションをやり直す,MissionRestart,0
+$Button=ミッションを続ける,DoNothing,0
 
 [***********************************************************]
 [TryAgain]
-{Text} 
-Would you like to attempt the mission {CText}{mission.title}{Text} again?
+{Text}
+ミッション{CText}{mission.title}{Text}に、もう一度挑戦しますか？
 <p>
-$Button=Replay Mission,MissionRestart,0
-$Button=Leave Missions,MissionAbort,1
+$Button=ミッションをやり直す,MissionRestart,0
+$Button=ミッションを終了,MissionAbort,1
 
 [***********************************************************]
 [SetOwner]
-<h2>{H2}Set Player</h2>
+<h2>{H2}プレイヤーを指定</h2>
 <p>{Text}
-Make this unit owned by which player?
+このユニットを、どのプレイヤーの所有にしますか？
 
-$Menu=~[C.84]Human Player,SetOwner,1
-$Menu=~[C.249]Computer #1,SetOwner,2
-$Menu=~[C.184]Computer #2,SetOwner,3
-$Menu=~[C.140]Computer #3,SetOwner,4
-$Menu=~[C.150]Computer #4,SetOwner,5
-$Menu=~[C.112]Computer #5,SetOwner,6
-$Menu=~[C.156]Computer #6,SetOwner,7
-$Menu=~[C.222]Computer #7,SetOwner,8
-$Button=No Owner,SetOwner,0
-$Button=Cancel,DoNothing,0
+$Menu=~[C.84]人間のプレイヤー,SetOwner,1
+$Menu=~[C.249]コンピューター #1,SetOwner,2
+$Menu=~[C.184]コンピューター #2,SetOwner,3
+$Menu=~[C.140]コンピューター #3,SetOwner,4
+$Menu=~[C.150]コンピューター #4,SetOwner,5
+$Menu=~[C.112]コンピューター #5,SetOwner,6
+$Menu=~[C.156]コンピューター #6,SetOwner,7
+$Menu=~[C.222]コンピューター #7,SetOwner,8
+$Button=所有者なし,SetOwner,0
+$Button=キャンセル,DoNothing,0
 
 [***********************************************************]
 [Campaign]
 <$tell,offical6.Overview>
 [UCampaign]
 <background="nsstart">
-<h2>{H2}Campaign</h2>
+<h2>{H2}キャンペーン</h2>
 <p>{Text}
-Which section would you like to play?<br>
+どの部分をプレイしますか？<br>
 $Timeout=120,Tell,Blank
 
 $Menu=@{guideSpec},Tell,{cur.file}.overview
 
-$Button=Back,Tell,Blank
+$Button=戻る,Tell,Blank
 
 [***********************************************************]
 [Credits]
