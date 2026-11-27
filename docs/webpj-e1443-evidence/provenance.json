@@ -1,0 +1,83 @@
+{
+  "unit": "WB04-E1443",
+  "host": "HJOW-Athlon",
+  "sourceHead": "38709bc2c7d84160c82324ddb011a893df26e471",
+  "sourceFreezeEvidence": "docs/webpj-e1441-evidence/source-freeze.json",
+  "sourceFreezeSha256": "18daab7dc61139f80800cd345137336691e4bbf839056c771683da9a3862bc68",
+  "runtime": "E1436 네모듈/E1434삭제 본소스; 후보 route0. GameAux E1440/Outpost시작기술E1447후보는미포함.",
+  "exactCurrentMainHashes": {
+    "raw-ai-preparation.js": "c09cd5478a1f4e7ee184a026bca2a3f921b24cbdcab14bc412a56e1b8ffd47ee",
+    "raw-campaign-session-ai-world.js": "c0d28ad0fced79bb02cea3d33194d78c27c74e9ed942de1765c19254e8fd215f",
+    "raw-ai-collectors.js": "1be1c3fd0c146a17adc02d9869326e0f4d07f5e9e881c9efb831a6e69b4cb64e",
+    "raw-campaign-session-ai-production.js": "b86ca73c522532ed46dff2865b08f57500d86a4e0fa3068fd883970c2c581be3",
+    "raw-campaign-session-deletion.js": "6f1e9ca272885a0fed0b95da211cc8c3b5a397502972330ff8d4febbb352fa5f"
+  },
+  "terminal": {
+    "frame": 44300,
+    "time": 1114.875,
+    "won": true,
+    "errors": 0
+  },
+  "periodAfter": {
+    "v26": "2/4",
+    "v22": "E1442완료뒤이월2/8"
+  },
+  "evidence": {
+    "e1443-final-wide-source.json": {
+      "bytes": 305,
+      "sha256": "4d11960549f3bfb7440bb449c7ea24200ac27435c875d5d7c245773006fe96b2"
+    },
+    "e1443-final-wide-win-frame-10000-1920.png": {
+      "bytes": 1374759,
+      "sha256": "9a38c9541dcca6d93f47ad0118f445549da8dc927bff26b6faca8f7fc10642bd"
+    },
+    "e1443-final-wide-win-frame-20000-1024.png": {
+      "bytes": 728827,
+      "sha256": "3b6e552fef04673fc2c898bc03d8d46ce761b9fa02527e89302fcfb04fcc24a9"
+    },
+    "e1443-final-wide-win-frame-20000-1280.png": {
+      "bytes": 947460,
+      "sha256": "563d27c3e85e7744ebc9489d20037e97e820186b91dd3abbd0e046ac04f39ab9"
+    },
+    "e1443-final-wide-win-frame-20000-1920.png": {
+      "bytes": 1402701,
+      "sha256": "0d7c6bcab583f732c6512dca2057a89a06d501ad91046ce9f9749c4652e871bf"
+    },
+    "e1443-final-wide-win-frame-30000-1920.png": {
+      "bytes": 1434259,
+      "sha256": "d0097893a0767093589535e9acfe8bc74ca0ad673df432f9266c9786b9979bfc"
+    },
+    "e1443-final-wide-win-initial.json": {
+      "bytes": 7848,
+      "sha256": "7be5d7a92b5628aaed35f57bc4fda2c09cea39c3bc8de52814d16c58b4b7dd41"
+    },
+    "e1443-final-wide-win-layouts.json": {
+      "bytes": 2469,
+      "sha256": "441111a987f5679cf24634f4b78d2ddd40f1db4592917ccb90d7cf6c93329640"
+    },
+    "e1443-final-wide-win-menu.png": {
+      "bytes": 880837,
+      "sha256": "b2ce0612600c08e8945629e0765c30c86c03affb6ee5717c34edb2219bc89d1f"
+    },
+    "e1443-final-wide-win-terminal.png": {
+      "bytes": 1455109,
+      "sha256": "f3d4c378c5696e4aa163be6b08a3cfccebc3b6c71823782a52b52e9356b1e85d"
+    },
+    "e1443-final-wide-win-terminal.tsv": {
+      "bytes": 2053032,
+      "sha256": "be88e5c009b7eddb4905dca881eddca821ea31804cd36300fa201dc8f235ab32"
+    },
+    "e1443-final-wide-win.cjs": {
+      "bytes": 10769,
+      "sha256": "68a97897878a020bfb5e689bc03ab9054518b1f83c299735a7cdf7a0d20782f4"
+    },
+    "e1443-final-wide-win.json": {
+      "bytes": 11994,
+      "sha256": "cdcaba63e6ae20787776a4fffba98741a4e7f0044af978cba763acb235e9cd70"
+    },
+    "webpj-e1443-final-wide-win.log": {
+      "bytes": 28997,
+      "sha256": "334e26834892839cf9a72e11b00c49c9d35104caa1a094f9d9936ff48a53b635"
+    }
+  }
+}

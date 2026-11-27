@@ -1,0 +1,127 @@
+[
+  {
+    "frame": 10000,
+    "size": {
+      "width": 1920,
+      "height": 1080
+    },
+    "layout": {
+      "visible": true,
+      "mode": "16:9",
+      "logicalWidth": 1920,
+      "logicalHeight": 1080,
+      "scale": 1,
+      "cssWidth": 1920,
+      "cssHeight": 1080,
+      "left": 0,
+      "top": 0,
+      "canvasWidth": 1920,
+      "canvasHeight": 1080,
+      "drawScaleX": 1,
+      "drawScaleY": 1,
+      "devicePixelRatio": 1,
+      "world": true,
+      "mission": "Skirmish"
+    }
+  },
+  {
+    "frame": 20000,
+    "size": {
+      "width": 1280,
+      "height": 800
+    },
+    "layout": {
+      "visible": true,
+      "mode": "16:10",
+      "logicalWidth": 1280,
+      "logicalHeight": 800,
+      "scale": 1,
+      "cssWidth": 1280,
+      "cssHeight": 800,
+      "left": 0,
+      "top": 0,
+      "canvasWidth": 1280,
+      "canvasHeight": 800,
+      "drawScaleX": 1,
+      "drawScaleY": 1,
+      "devicePixelRatio": 1,
+      "world": true,
+      "mission": "Skirmish"
+    }
+  },
+  {
+    "frame": 20000,
+    "size": {
+      "width": 1024,
+      "height": 768
+    },
+    "layout": {
+      "visible": true,
+      "mode": "4:3",
+      "logicalWidth": 1024,
+      "logicalHeight": 768,
+      "scale": 1,
+      "cssWidth": 1024,
+      "cssHeight": 768,
+      "left": 0,
+      "top": 0,
+      "canvasWidth": 1024,
+      "canvasHeight": 768,
+      "drawScaleX": 1,
+      "drawScaleY": 1,
+      "devicePixelRatio": 1,
+      "world": true,
+      "mission": "Skirmish"
+    }
+  },
+  {
+    "frame": 20000,
+    "size": {
+      "width": 1920,
+      "height": 1080
+    },
+    "layout": {
+      "visible": true,
+      "mode": "16:9",
+      "logicalWidth": 1920,
+      "logicalHeight": 1080,
+      "scale": 1,
+      "cssWidth": 1920,
+      "cssHeight": 1080,
+      "left": 0,
+      "top": 0,
+      "canvasWidth": 1920,
+      "canvasHeight": 1080,
+      "drawScaleX": 1,
+      "drawScaleY": 1,
+      "devicePixelRatio": 1,
+      "world": true,
+      "mission": "Skirmish"
+    }
+  },
+  {
+    "frame": 30000,
+    "size": {
+      "width": 1920,
+      "height": 1080
+    },
+    "layout": {
+      "visible": true,
+      "mode": "16:9",
+      "logicalWidth": 1920,
+      "logicalHeight": 1080,
+      "scale": 1,
+      "cssWidth": 1920,
+      "cssHeight": 1080,
+      "left": 0,
+      "top": 0,
+      "canvasWidth": 1920,
+      "canvasHeight": 1080,
+      "drawScaleX": 1,
+      "drawScaleY": 1,
+      "devicePixelRatio": 1,
+      "world": true,
+      "mission": "Skirmish"
+    }
+  }
+]
