@@ -8,6 +8,17 @@ namespace Netstorm.Client.Host;
 /// <summary>같은 세션의 실제 객체 표시 조회를 조립한다.</summary>
 public sealed partial class HostSession
 {
+    /// <summary>현재 다리 수명 숫자 옵션에 따라 원본 추가 그림을 처리한다.</summary>
+    /// <param name="sid">다리 SID다. 기본 0 관문에서는 읽지 않는다.</param>
+    /// <param name="x">현재 화면 가로 기준점이다.</param>
+    /// <param name="y">현재 화면 세로 기준점이다.</param>
+    /// <remarks>cpppj RawBridgeDraw::Additional과 같은 실제 005453ac 전역을 사용한다. 개발용 숫자 표시는 아직 미복원이다.</remarks>
+    public void DrawBridgeAdditional(int sid, int x, int y)
+    {
+        if (Gameplay.BridgeLifeNumbers.Value != 0)
+            throw new InvalidOperationException("개발용 다리 수명 숫자 표시 미복원");
+    }
+
     /// <summary>현재 공간·공장·정기 프로세스와 객체 표시의 조회 경계를 연결한다.</summary>
     /// <param name="hash">현재 월드의 실제 공간 해시다.</param>
     /// <param name="types">같은 공장에서 선택할 현재 TYPE 표다.</param>

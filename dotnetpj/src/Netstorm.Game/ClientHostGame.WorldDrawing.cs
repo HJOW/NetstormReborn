@@ -46,6 +46,7 @@ public sealed partial class ClientHostGame
         });
         _worldSprites = new SpriteWorldRenderer(storage.Pool, storage.Types, storage.Shapes, definitions, mission.WorldFrames,
             _worldShapesDb, _worldSpriteState, colors, mission.BuildSpriteWorldRules(storage.Hash, storage.Types),
+            bridge: (sid, point, pixels, pitch, height, clip) => mission.DrawBridgeAdditional(sid, point.X, point.Y),
             templeAscend: () => (_missionAudio ?? throw new InvalidOperationException("신전 상승음 실제 장치 미연결")).PlayGlobal("templeAscend.wav"));
         _worldInitialHeight = _driver.Screen.Height;
         _worldLogicalPalette = null;

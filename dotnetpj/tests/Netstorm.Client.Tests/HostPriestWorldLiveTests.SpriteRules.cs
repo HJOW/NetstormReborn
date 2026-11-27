@@ -10,6 +10,18 @@ namespace Netstorm.Client.Tests;
 /// <summary>같은 실제 사제·공장·프로세스 호스트를 객체 표시에서 사용한다.</summary>
 public sealed partial class HostPriestWorldLiveTests
 {
+    /// <summary>실제 다리 표시 전역이 0일 때만 SID와 좌표를 읽지 않고 반환한다.</summary>
+    [Fact]
+    public void BridgeAdditionalReadsActualSessionLifeNumberGate()
+    {
+        var (session, _) = Scene();
+        session.Gameplay.BridgeLifeNumbers.Value = 0;
+        session.DrawBridgeAdditional(-1, int.MinValue, int.MaxValue);
+        session.Gameplay.BridgeLifeNumbers.Value = 1;
+        Assert.Throws<InvalidOperationException>(() => session.DrawBridgeAdditional(-1, int.MinValue, int.MaxValue));
+        session.ReleasePlayerProcesses();
+    }
+
     /// <summary>현재 HP·건설/자원 정기 프로세스와 실제 공간 해시를 조회한다.</summary>
     [Fact]
     public void SpriteRulesUseActualSessionFactoryAndProcesses()
