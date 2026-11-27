@@ -1,0 +1,110 @@
+{
+  "unit": "WB04-E1481",
+  "failedFull": {
+    "unit": "WB04-E1481",
+    "nodeExit": 1,
+    "files": 12385,
+    "changed": [],
+    "newlinesOnly": [],
+    "results": {
+      "tests": 7021,
+      "pass": 7019,
+      "fail": 2,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "durationMs": 580754.3165
+    },
+    "runnerSeconds": 586.0311627000046
+  },
+  "failedSourceHead": "11fe7406ab6b34b4f3e49624cf7df81d6e552d15",
+  "fix": "실제관리자있을때만초기load를await하고기존세대번호취소를유지;기존오류/prepare호출시점복구",
+  "node26FocusPass": 27,
+  "node22FocusPass": 27,
+  "actualChromium": {
+    "startTime": "2026-11-27T19:44:35.150Z",
+    "duration": 26027.317,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "build": {
+    "exit": 0,
+    "eslintBeforeBuild": true,
+    "webpackSeconds": 69.694,
+    "bundleBytes": 5845774
+  },
+  "counters": {
+    "node26": 5,
+    "node22": 5,
+    "nextFullExpected": 7023
+  },
+  "files": {
+    "webpj/extracted/webpj-e1481-node26.log": {
+      "bytes": 923696,
+      "sha256": "d21c29937afa8fc67dabe0bda0607f2c2df15e79cdc755af127db5ae3e9ce750",
+      "lfSha256": "d21c29937afa8fc67dabe0bda0607f2c2df15e79cdc755af127db5ae3e9ce750"
+    },
+    "webpj/extracted/webpj-e1481-freeze.json": {
+      "bytes": 2937644,
+      "sha256": "2a960f9a233ed074ca7cdbfe72f6041379a38c9d6fbd451162be57985003ee5e",
+      "lfSha256": "a399d925e8bf1833eb1f1bd7314b91df576a915dc74dca3f8f6228f886e544fe"
+    },
+    "webpj/extracted/webpj-e1481-freeze-check.json": {
+      "bytes": 311,
+      "sha256": "afaeecfb0e8f721e542329aedf8439eb665e26e4775d16215afc5a69ac87c56d",
+      "lfSha256": "b3c4099ab9e43ffe7079187660f2cb75b785d685445d1c8c3c12012dd3db2138"
+    },
+    "webpj/extracted/e1481-run-state.json": {
+      "bytes": 689,
+      "sha256": "3e11215b0e94bbc190cc76c01c069d02ae0690007fc96038c5ebc9ccdfd99295",
+      "lfSha256": "3df0edafcb283eb03bcd94d2ce8afbfde9e0a4e49f75b1faeebc55957b44270d"
+    },
+    "webpj/extracted/webpj-e1481-focus-node26.log": {
+      "bytes": 3147,
+      "sha256": "5e3873d666829bdcfe5d77cf612c2e0c0484b5ac861544c238cb8810a315fa65",
+      "lfSha256": "b58489cf68181a26a4093883864f32f25b68acc8601f131842793b05c7d89e22"
+    },
+    "webpj/extracted/webpj-e1481-focus-node22.log": {
+      "bytes": 6574,
+      "sha256": "77b08a8f3f198358dca66c617e60beee07aa61570ace3b8c4cd0f08af61490cf",
+      "lfSha256": "c3f2b54ab8c5976b5ca35e5fe244b4160435414e3e193c117fb7906a2b288811"
+    },
+    "webpj/extracted/webpj-e1481-build.log": {
+      "bytes": 457,
+      "sha256": "c09a0a5bda322f021b68f1583e6dbaff67b8d7c62043b4e2204a38d92834d243",
+      "lfSha256": "89289e526060447846a232c7f0c607046c110723b023a4fd26bbec3fefa59f7e"
+    },
+    "webpj/extracted/webpj-e1481-smoke.json": {
+      "bytes": 10632,
+      "sha256": "0a4fb08fd020933c4fe4cf0bf7e76c9fd396318762fae2fdb8850015114f57cd",
+      "lfSha256": "8ef0de2bf5a1c2ccd963a9a577ecdefbbed96b65ce744e74c3cf7578b2c2f519"
+    },
+    "webpj/extracted/webpj-e1481-smoke.stderr.log": {
+      "bytes": 176,
+      "sha256": "5f77f40c9fe02cb259313937c82d52896c79868ba6ab2a8a714dab36a0fff40d",
+      "lfSha256": "1f473ca56e8a4d7721c805dfd8627ca8cec4f78b60dd4ebabd8240d9fe50805c"
+    },
+    "webpj/extracted/e1482-full-node26.py": {
+      "bytes": 5033,
+      "sha256": "41954f0c13c899110f99f2d623148688be40c7760d5fcb9ca93981ac1a6f11f6",
+      "lfSha256": "febad701eb9286a2ce97c1e39aabb033bea0528bd915fb481775e4fbd39e0854"
+    },
+    "webpj/www/netstorm.js": {
+      "bytes": 377767,
+      "sha256": "12a53dc50ef063ec0a9699f9ec5507852f29ee6b05f7074c5c0ca7c234fecba3",
+      "lfSha256": "110fee1e65d1b0c126b86acbcf975a6ea434e89106b1c214fb46e1b4b84c521d"
+    },
+    "webpj/tests/error-reporting.test.mjs": {
+      "bytes": 12257,
+      "sha256": "61941012fab2357ba907f4de7b2d1a43ec34c414219cb1a1c12edd83fe3def54",
+      "lfSha256": "61941012fab2357ba907f4de7b2d1a43ec34c414219cb1a1c12edd83fe3def54"
+    },
+    "webpj/www/dist/netstorm.bundle.js": {
+      "bytes": 5845774,
+      "sha256": "a681de96b336f202a08206fffeddf87313d6422f73ecb448af17d0f33e3801f7",
+      "lfSha256": "a681de96b336f202a08206fffeddf87313d6422f73ecb448af17d0f33e3801f7"
+    }
+  }
+}

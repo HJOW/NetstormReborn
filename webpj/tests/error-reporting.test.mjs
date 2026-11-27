@@ -78,6 +78,29 @@ test('이전 적재 세대의 실패는 무시한다', async () => {
     });
 });
 
+// 저장 검증이 실제 있을 때만 준비 훅을 늦추며 그 뒤 실패 객체/세대를 그대로 보고한다.
+test('모드 초기 적재를 기다린 뒤 현재 준비 실패의 객체와 문맥을 보고한다', async () => {
+    const error = new Error('모드 준비 뒤 자산 준비 실패'); let release; const order = [];
+    const waiting = new Promise((resolve) => { release = resolve; });
+    await captureErrors(async (entries) => {
+        const app = new Netstorm({ prepare: async () => { order.push('prepare'); throw error; } });
+        app._resources = {}; app._surfaceStorage = {}; app._clientGuide = {}; app._clientPaletteScreen = {}; app._clientColorSort = { mapsReady: true }; app._clientGump = {};
+        app._mods = { load: () => { order.push('mods'); return waiting; } };
+        const loading = app._load(); assert.deepEqual(order, ['mods']); assert.equal(app._state, 'loading'); release(); await loading;
+        assert.deepEqual(order, ['mods', 'prepare']); assert.equal(app._state, 'error'); assert.equal(app._loadError, error); assert.equal(entries.length, 1); assert.equal(entries[0][1].phase, 'asset-loading'); assert.equal(entries[0][1].generation, 1); assert.equal(entries[0][2], error);
+    });
+});
+
+// 명시 해제하는 검증 Promise를 둬 새 적재 세대가 이전 완료보다 우선하는지 확인한다.
+test('모드 초기 적재 중 바뀐 세대는 늦은 완료 후 준비 훅/상태를 덮어쓰지 않는다', async () => {
+    let release, prepared = 0; const waiting = new Promise((resolve) => { release = resolve; });
+    await captureErrors(async (entries) => {
+        const app = new Netstorm({ prepare: () => { prepared++; } }); app._mods = { load: () => waiting };
+        const loading = app._load(); app._loadGeneration += 1; app._state = 'new-generation'; release(); await loading;
+        assert.equal(prepared, 0); assert.equal(app._state, 'new-generation'); assert.equal(app._loadError, null); assert.deepEqual(entries, []);
+    });
+});
+
 // 프레임 콜백 오류를 기록한 뒤 다음 프레임을 예약한다. 실패한 프레임을 재시도하지 않는다.
 test('프레임 오류를 보고하고 다음 프레임을 진행한다', async () => {
     const error = new Error('프레임 실패');

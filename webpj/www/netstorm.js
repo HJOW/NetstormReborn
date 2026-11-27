@@ -2583,8 +2583,8 @@ export class Netstorm {
         this._loadError = null;
         this._setState(AppState.LOADING);
         try {
-            // 코드는 검증만 하며 첫 실제 시계 원점/메뉴를 준비하기 전에 저장 목록을 읽는다.
-            await this._mods?.load(); if (generation !== this._loadGeneration || !this._root) return;
+            // 실제 관리자가 있을 때만 저장 검증을 기다린다. 없는 경로의 준비 훅 호출 순서는 유지한다.
+            if (this._mods) { await this._mods.load(); if (generation !== this._loadGeneration) return; }
             // 같은Client의 SP/RNG 초기화 뒤 원본초경계와 최초Capture를 준비한다. 취소된이전앱의결과는 새수명에 적용하지 않는다.
             if (this._clientClockPreparing) {
                 const clock = this._gameClock;
