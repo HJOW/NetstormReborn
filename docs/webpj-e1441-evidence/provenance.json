@@ -1,0 +1,51 @@
+{
+  "unit": "WB04-E1441",
+  "host": "HJOW-Athlon",
+  "sourceHead": "38709bc2c7d84160c82324ddb011a893df26e471",
+  "node": "v26.13.0",
+  "nodeExecutableSha256": "14319838b3f355e0398c13569a90270bce4fc68f25189f58c59b03dadae0e6d5",
+  "result": {
+    "unit": "WB04-E1441",
+    "recordedAt": "2026-11-27T11:02:53.351472+00:00",
+    "nodeExit": 0,
+    "files": 3543,
+    "changed": [],
+    "newlinesOnly": [],
+    "results": {
+      "tests": 6919,
+      "pass": 6919,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "durationMs": 855328.0132
+    },
+    "runnerElapsedSeconds": 860.8815519000054
+  },
+  "periodAfter": {
+    "v26": "0/4",
+    "v22": "8/8 (E1442running)"
+  },
+  "evidence": {
+    "full.py": {
+      "bytes": 6263,
+      "sha256": "3df2ff2fcf72faee4118ebe20680f3774d7169388714a9a8028879dee3138133"
+    },
+    "node26.log": {
+      "bytes": 911643,
+      "sha256": "74940b0b8d559f471fd80d3af53932cb4fd9d4349202f0180edbf26028ec8df8"
+    },
+    "sequential-state-at-node26-end.json": {
+      "bytes": 794,
+      "sha256": "5d083d2ef82f570358b81e520f072078e87b4a90fabeec3682c340eda610802c"
+    },
+    "source-freeze-check.json": {
+      "bytes": 370,
+      "sha256": "0064718b3050ddf7cc5d2bdaad396565ec1c29477e1c0770a1f546e919a2122f"
+    },
+    "source-freeze.json": {
+      "bytes": 795040,
+      "sha256": "18daab7dc61139f80800cd345137336691e4bbf839056c771683da9a3862bc68"
+    }
+  }
+}
