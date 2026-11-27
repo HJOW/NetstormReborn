@@ -1,0 +1,53 @@
+// V8 heap 원문에서 World/Session의 강한 최단 루트 경로를 읽기 전용으로 찾는다.
+'use strict';
+// 파일 API와 분석할 원문이다.
+const fs = require('node:fs');
+const snapshot = JSON.parse(fs.readFileSync('extracted/webpj-e1404-mission-memory.heapsnapshot', 'utf8'));
+// V8 원문이 정의한 노드/간선 필드 폭과 이름 인덱스다.
+const meta = snapshot.snapshot.meta, nodes = snapshot.nodes, edges = snapshot.edges, strings = snapshot.strings;
+const width = meta.node_fields.length, stride = meta.edge_fields.length, count = nodes.length / width;
+const typeAt = meta.node_fields.indexOf('type'), nameAt = meta.node_fields.indexOf('name'), sizeAt = meta.node_fields.indexOf('self_size'), edgeCountAt = meta.node_fields.indexOf('edge_count');
+const edgeTypeAt = meta.edge_fields.indexOf('type'), edgeNameAt = meta.edge_fields.indexOf('name_or_index'), targetAt = meta.edge_fields.indexOf('to_node');
+const weakType = meta.edge_types[edgeTypeAt].indexOf('weak');
+// 각 노드의 간선 시작 위치와 BFS 부모/실제 간선 위치다.
+const starts = new Uint32Array(count), parents = new Int32Array(count), parentEdges = new Int32Array(count), queue = new Uint32Array(count);
+parents.fill(-1); parentEdges.fill(-1);
+// 대상 객체의 원문 인덱스와 순회 중 간선 누적 위치다.
+const targets = [];
+let offset = 0;
+// 원문 간선 수로 노드별 위치를 계산하고 실제 클래스 객체만 고른다.
+for (let index = 0; index < count; index += 1) {
+    starts[index] = offset; offset += nodes[index * width + edgeCountAt] * stride;
+    if (meta.node_types[typeAt][nodes[index * width + typeAt]] === 'object' && ['CampaignGameWorld', 'RawCampaignSession'].includes(strings[nodes[index * width + nameAt]])) targets.push(index);
+}
+// 원문 루트0에서 약한 간선을 제외한 모든 강한 경로를 한 번씩 순회한다.
+let head = 0, tail = 1; queue[0] = 0; parents[0] = 0;
+while (head < tail) {
+    // 현재 부모의 간선 구간이다.
+    const parent = queue[head++], end = starts[parent] + nodes[parent * width + edgeCountAt] * stride;
+    // WeakRef/WeakMap의 무조건 약한 간선은 강한 보유의 증거로 올리지 않는다.
+    for (let edge = starts[parent]; edge < end; edge += stride) {
+        if (edges[edge + edgeTypeAt] === weakType) continue;
+        const child = edges[edge + targetAt] / width;
+        if (parents[child] !== -1) continue;
+        parents[child] = parent; parentEdges[child] = edge; queue[tail++] = child;
+    }
+}
+// 노드와 실제 원문 간선의 이름을 표시한다.
+function describe(index) {
+    const edge = parentEdges[index], kind = edge < 0 ? 'root' : meta.edge_types[edgeTypeAt][edges[edge + edgeTypeAt]], rawName = edge < 0 ? 0 : edges[edge + edgeNameAt];
+    return { node: index, type: meta.node_types[typeAt][nodes[index * width + typeAt]], name: strings[nodes[index * width + nameAt]], selfSize: nodes[index * width + sizeAt], edgeKind: kind, edge: edge < 0 ? '(root)' : ['element', 'hidden'].includes(kind) ? String(rawName) : strings[rawName] };
+}
+// 대상별 최단 경로와 클래스 prototype 오인의 확인용 직속 간선 이름을 보존한다.
+const result = [];
+for (const target of targets) {
+    const path = [], ownEdges = [];
+    for (let edge = starts[target]; edge < starts[target] + nodes[target * width + edgeCountAt] * stride; edge += stride) {
+        const kind = meta.edge_types[edgeTypeAt][edges[edge + edgeTypeAt]];
+        if (!['element', 'hidden'].includes(kind)) ownEdges.push({ kind, name: strings[edges[edge + edgeNameAt]] });
+    }
+    if (parents[target] >= 0) { let index = target; for (let depth = 0; depth < 100; depth += 1) { path.push(describe(index)); if (index === 0) break; index = parents[index]; } path.reverse(); }
+    result.push({ target: describe(target), ownEdges, strongPath: path });
+}
+fs.writeFileSync('extracted/webpj-e1404-heap-retainers.json', JSON.stringify({ count, reached: tail, result }, null, 2));
+console.log(JSON.stringify({ count, reached: tail, targets: result.map((entry) => ({ name: entry.target.name, size: entry.target.selfSize, path: entry.strongPath.map((node) => `${node.edge}:${node.name}`) })) }, null, 2));

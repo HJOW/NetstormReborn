@@ -1,0 +1,414 @@
+{
+  "count": 820965,
+  "reached": 820886,
+  "result": [
+    {
+      "target": {
+        "node": 648280,
+        "type": "object",
+        "name": "RawCampaignSession",
+        "selfSize": 80,
+        "edgeKind": "context",
+        "edge": "this"
+      },
+      "ownEdges": [
+        {
+          "kind": "property",
+          "name": "RawCampaignSession"
+        },
+        {
+          "kind": "property",
+          "name": "#owner"
+        },
+        {
+          "kind": "property",
+          "name": "#login"
+        },
+        {
+          "kind": "property",
+          "name": "#disposed"
+        },
+        {
+          "kind": "property",
+          "name": "#priestMenuState"
+        },
+        {
+          "kind": "property",
+          "name": "#playerMenuState"
+        },
+        {
+          "kind": "property",
+          "name": "#factoryMenuState"
+        },
+        {
+          "kind": "property",
+          "name": "#carrierInput"
+        },
+        {
+          "kind": "property",
+          "name": "__proto__"
+        },
+        {
+          "kind": "internal",
+          "name": "map"
+        }
+      ],
+      "strongPath": [
+        {
+          "node": 0,
+          "type": "synthetic",
+          "name": "",
+          "selfSize": 0,
+          "edgeKind": "root",
+          "edge": "(root)"
+        },
+        {
+          "node": 1,
+          "type": "synthetic",
+          "name": "(GC roots)",
+          "selfSize": 0,
+          "edgeKind": "element",
+          "edge": "1"
+        },
+        {
+          "node": 11,
+          "type": "synthetic",
+          "name": "(Global handles)",
+          "selfSize": 0,
+          "edgeKind": "element",
+          "edge": "10"
+        },
+        {
+          "node": 3716,
+          "type": "native",
+          "name": "system / NativeContext / http://localhost:9803",
+          "selfSize": 1244,
+          "edgeKind": "internal",
+          "edge": "29 / V8PerContextData::context_"
+        },
+        {
+          "node": 296481,
+          "type": "object",
+          "name": "Window [JSGlobalObject] / http://localhost:9803",
+          "selfSize": 24,
+          "edgeKind": "internal",
+          "edge": "global_object"
+        },
+        {
+          "node": 326364,
+          "type": "object",
+          "name": "Netstorm",
+          "selfSize": 508,
+          "edgeKind": "property",
+          "edge": "netstorm"
+        },
+        {
+          "node": 161739,
+          "type": "object",
+          "name": "RawSurfaceStorage",
+          "selfSize": 272,
+          "edgeKind": "property",
+          "edge": "_surfaceStorage"
+        },
+        {
+          "node": 159323,
+          "type": "object",
+          "name": "RawBuildingSpace",
+          "selfSize": 84,
+          "edgeKind": "property",
+          "edge": "#building"
+        },
+        {
+          "node": 159335,
+          "type": "closure",
+          "name": "",
+          "selfSize": 28,
+          "edgeKind": "property",
+          "edge": "#notifyAssertion"
+        },
+        {
+          "node": 213420,
+          "type": "object",
+          "name": "system / Context / scope @324633",
+          "selfSize": 20,
+          "edgeKind": "internal",
+          "edge": "context"
+        },
+        {
+          "node": 213767,
+          "type": "object",
+          "name": "system / Context / scope @331167",
+          "selfSize": 28,
+          "edgeKind": "internal",
+          "edge": "previous"
+        },
+        {
+          "node": 158572,
+          "type": "object",
+          "name": "RawCampaignSessionOwners",
+          "selfSize": 1020,
+          "edgeKind": "context",
+          "edge": "owner"
+        },
+        {
+          "node": 723492,
+          "type": "closure",
+          "name": "",
+          "selfSize": 28,
+          "edgeKind": "property",
+          "edge": "placeBattleNuggets"
+        },
+        {
+          "node": 723563,
+          "type": "object",
+          "name": "system / Context / scope @1021241",
+          "selfSize": 20,
+          "edgeKind": "internal",
+          "edge": "context"
+        },
+        {
+          "node": 648280,
+          "type": "object",
+          "name": "RawCampaignSession",
+          "selfSize": 80,
+          "edgeKind": "context",
+          "edge": "this"
+        }
+      ]
+    },
+    {
+      "target": {
+        "node": 722757,
+        "type": "object",
+        "name": "CampaignGameWorld",
+        "selfSize": 176,
+        "edgeKind": "context",
+        "edge": "this"
+      },
+      "ownEdges": [
+        {
+          "kind": "property",
+          "name": "CampaignGameWorld"
+        },
+        {
+          "kind": "property",
+          "name": "#gameplay"
+        },
+        {
+          "kind": "property",
+          "name": "#session"
+        },
+        {
+          "kind": "property",
+          "name": "#factoryDisplay"
+        },
+        {
+          "kind": "property",
+          "name": "#width"
+        },
+        {
+          "kind": "property",
+          "name": "#height"
+        },
+        {
+          "kind": "property",
+          "name": "#services"
+        },
+        {
+          "kind": "property",
+          "name": "#cameraHome"
+        },
+        {
+          "kind": "property",
+          "name": "#connecting"
+        },
+        {
+          "kind": "property",
+          "name": "#changed"
+        },
+        {
+          "kind": "property",
+          "name": "#disposed"
+        },
+        {
+          "kind": "property",
+          "name": "#surfaceTime"
+        },
+        {
+          "kind": "property",
+          "name": "#assets"
+        },
+        {
+          "kind": "property",
+          "name": "#objects"
+        },
+        {
+          "kind": "property",
+          "name": "#palette"
+        },
+        {
+          "kind": "property",
+          "name": "#pendingPalette"
+        },
+        {
+          "kind": "property",
+          "name": "#colorSortLogical"
+        },
+        {
+          "kind": "property",
+          "name": "#colorSortMaps"
+        },
+        {
+          "kind": "property",
+          "name": "#selection"
+        },
+        {
+          "kind": "property",
+          "name": "#input"
+        },
+        {
+          "kind": "property",
+          "name": "#hideBuildings"
+        },
+        {
+          "kind": "property",
+          "name": "__proto__"
+        },
+        {
+          "kind": "internal",
+          "name": "map"
+        }
+      ],
+      "strongPath": [
+        {
+          "node": 0,
+          "type": "synthetic",
+          "name": "",
+          "selfSize": 0,
+          "edgeKind": "root",
+          "edge": "(root)"
+        },
+        {
+          "node": 1,
+          "type": "synthetic",
+          "name": "(GC roots)",
+          "selfSize": 0,
+          "edgeKind": "element",
+          "edge": "1"
+        },
+        {
+          "node": 11,
+          "type": "synthetic",
+          "name": "(Global handles)",
+          "selfSize": 0,
+          "edgeKind": "element",
+          "edge": "10"
+        },
+        {
+          "node": 3716,
+          "type": "native",
+          "name": "system / NativeContext / http://localhost:9803",
+          "selfSize": 1244,
+          "edgeKind": "internal",
+          "edge": "29 / V8PerContextData::context_"
+        },
+        {
+          "node": 296481,
+          "type": "object",
+          "name": "Window [JSGlobalObject] / http://localhost:9803",
+          "selfSize": 24,
+          "edgeKind": "internal",
+          "edge": "global_object"
+        },
+        {
+          "node": 326364,
+          "type": "object",
+          "name": "Netstorm",
+          "selfSize": 508,
+          "edgeKind": "property",
+          "edge": "netstorm"
+        },
+        {
+          "node": 161739,
+          "type": "object",
+          "name": "RawSurfaceStorage",
+          "selfSize": 272,
+          "edgeKind": "property",
+          "edge": "_surfaceStorage"
+        },
+        {
+          "node": 159323,
+          "type": "object",
+          "name": "RawBuildingSpace",
+          "selfSize": 84,
+          "edgeKind": "property",
+          "edge": "#building"
+        },
+        {
+          "node": 159335,
+          "type": "closure",
+          "name": "",
+          "selfSize": 28,
+          "edgeKind": "property",
+          "edge": "#notifyAssertion"
+        },
+        {
+          "node": 213420,
+          "type": "object",
+          "name": "system / Context / scope @324633",
+          "selfSize": 20,
+          "edgeKind": "internal",
+          "edge": "context"
+        },
+        {
+          "node": 213767,
+          "type": "object",
+          "name": "system / Context / scope @331167",
+          "selfSize": 28,
+          "edgeKind": "internal",
+          "edge": "previous"
+        },
+        {
+          "node": 158572,
+          "type": "object",
+          "name": "RawCampaignSessionOwners",
+          "selfSize": 1020,
+          "edgeKind": "context",
+          "edge": "owner"
+        },
+        {
+          "node": 161729,
+          "type": "object",
+          "name": "RawSurfaceWorld",
+          "selfSize": 344,
+          "edgeKind": "property",
+          "edge": "world"
+        },
+        {
+          "node": 196278,
+          "type": "closure",
+          "name": "selected",
+          "selfSize": 28,
+          "edgeKind": "property",
+          "edge": "#deletionSelected"
+        },
+        {
+          "node": 482918,
+          "type": "object",
+          "name": "system / Context / scope @966487",
+          "selfSize": 24,
+          "edgeKind": "internal",
+          "edge": "context"
+        },
+        {
+          "node": 722757,
+          "type": "object",
+          "name": "CampaignGameWorld",
+          "selfSize": 176,
+          "edgeKind": "context",
+          "edge": "this"
+        }
+      ]
+    }
+  ]
+}

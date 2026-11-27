@@ -1,0 +1,122 @@
+{
+  "unit": "WB04-E1404",
+  "host": "HJOW-Athlon",
+  "baselineCommit": "4ae2a11cd",
+  "appliedAfterRegression": "9b9a65a02",
+  "recordedAt": "2026-11-27T04:59:34.131954+00:00",
+  "node": "v26.13.0",
+  "commands": {
+    "focused": "node --test --test-concurrency=2 tests/raw-campaign-session-state.test.mjs tests/raw-campaign-session-owners.test.mjs tests/raw-campaign-session.test.mjs",
+    "mainMemory": "NETSTORM_MEMORY_HEAP=0 node tools/mission-memory-profile.cjs 6",
+    "build": "npm run build",
+    "bundle": "node --test tests/bundle-fresh.test.mjs",
+    "browser": "npx playwright test e2e/fixed-time.spec.js e2e/progress-portability.spec.js --project=chromium --workers=1 --grep \"고정 시각 모드: 시작|실제1-1 저장 사본\" --trace=off"
+  },
+  "results": {
+    "focusedPass": 35,
+    "mainMemoryCycles": 6,
+    "mainMemoryAllReleasedWorldSessionCollected": true,
+    "mainMemoryErrors": 0,
+    "buildExit": 0,
+    "bundlePass": 1,
+    "browserPass": 2,
+    "browserExit": 0
+  },
+  "heapSnapshot": {
+    "path": "webpj/extracted/webpj-e1404-mission-memory.heapsnapshot",
+    "bytes": 78376521,
+    "committed": false
+  },
+  "authoredFiles": {
+    "webpj/www/core/raw-campaign-session-state.js": {
+      "bytes": 22469,
+      "sha256": "bbeba4b61c83254924109106311f704835a2c3d19474dabf3366cb066895a9df"
+    },
+    "webpj/tools/mission-memory-profile.cjs": {
+      "bytes": 14963,
+      "sha256": "f165375ebbef8ce0c0229fb1013388c84000c8fb7ae5dfdee00c4d52796e5859"
+    },
+    "webpj/eslint.config.cjs": {
+      "bytes": 2028,
+      "sha256": "ec694c5fa1ce00995defa3aa109f47c99e92c1ef1ce291e48ff8801e1790faf1"
+    },
+    "webpj/www/dist/netstorm.bundle.js": {
+      "bytes": 3500925,
+      "sha256": "1bd47729ff2d87e097ef4549d88fe656327ec4fb5712a8142e17556011f4e096"
+    }
+  },
+  "evidence": {
+    "after-six-cycles.json": {
+      "bytes": 57464,
+      "sha256": "8530b36404cf633a53b5850a11f631436e443bda91147602811a98c6da724488"
+    },
+    "after-six-cycles.log": {
+      "bytes": 2504,
+      "sha256": "fbe38613a609b3c696c2c8ee09e568eb7c234bbb1ccc6bc51be5eab5ac43d6d7"
+    },
+    "before-six-cycles.json": {
+      "bytes": 56695,
+      "sha256": "66e40fe2731366127facd1855ddebb12ec210657edffbd68cfbed8fa8ff1450c"
+    },
+    "before-six-cycles.log": {
+      "bytes": 2046,
+      "sha256": "9b43466a8930debe8fd0456951063d37ec23d705c9a1e405f8000f04c38db407"
+    },
+    "browser.log": {
+      "bytes": 798,
+      "sha256": "e7f0803b05390e4de12800f7004725bcae9db71f6e4336636782a9263b19e61e"
+    },
+    "build.log": {
+      "bytes": 462,
+      "sha256": "986fd63a8fb514f9bef099803a7242599e7b4d01a0d83cb1059db26fdd7ec334"
+    },
+    "bundle-fresh.log": {
+      "bytes": 248,
+      "sha256": "d87e7440f23e350f75a0b7ff7090e2b160033a3113ccb48e7c2a0ff29a7a37a1"
+    },
+    "candidate-collector.cjs.txt": {
+      "bytes": 15938,
+      "sha256": "5ae2b1220ef0984455c18dd5357c163ec73a383f03bbb8188b9e18d54eeb39d1"
+    },
+    "candidate-lint.log": {
+      "bytes": 51,
+      "sha256": "dc9b86439f0df567ff435944f4c2d276e1ee8533e71569c5e52a9583e09e887f"
+    },
+    "candidate-module.js.txt": {
+      "bytes": 22469,
+      "sha256": "bbeba4b61c83254924109106311f704835a2c3d19474dabf3366cb066895a9df"
+    },
+    "candidate-six-cycles.json": {
+      "bytes": 57720,
+      "sha256": "9592320bcb74b83ad106b60e01206b0e8fd56734af9aab0bf3f2a3056961042e"
+    },
+    "candidate-six-cycles.log": {
+      "bytes": 2504,
+      "sha256": "c4368c410ecf8bec70bf5888c14905b798772a7bd771b36babf69cbd107fccc0"
+    },
+    "first-collector-webpj-e1404-mission-memory.log": {
+      "bytes": 324,
+      "sha256": "b1e0022dbb8e515a6175e097578a8ec1b3b10ed2d5cc31a46ef665fa0004d7f5"
+    },
+    "focused.log": {
+      "bytes": 4362,
+      "sha256": "96458a8d9dfd2544279f3ccffe2d90219ef03f2eb25101a1dc8cdb7522373704"
+    },
+    "retainer-paths.json": {
+      "bytes": 9731,
+      "sha256": "d290869d9c2c9cbd63bc8631cd6364774a8821e1f4f37f1ff7c10a82a944c0f2"
+    },
+    "retainer-probe.json": {
+      "bytes": 10660,
+      "sha256": "586eb2741f63934af7ca54c9dbbf24ae6f575e39b7d58891d9ef65191dd6ab86"
+    },
+    "retainer-probe.log": {
+      "bytes": 692,
+      "sha256": "77b1a620640918e7945b9f7068f3a0495a0a43e420c34e5f60311b95339db54c"
+    },
+    "retainer-reader.cjs.txt": {
+      "bytes": 4226,
+      "sha256": "cd0e7a2f180ae99807a50932638f3fe7de54ff6186917a65775ee17c41f5ba7b"
+    }
+  }
+}

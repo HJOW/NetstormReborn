@@ -34,6 +34,8 @@ import { TempleRitualState } from './raw-temple-ritual.js';
 
 // RawCheckingFlag 복사 때 같은 현재 포인터 또는 지역 DWORD를 고르는 비공개 복사 장치다.
 const FLAG_COPIERS = new WeakMap();
+// 복사한 진단 함수는 살아 있는 Session의 약한 키에만 보관해 빌린 코어가 소유자를 붙잡지 않게 한다.
+const ASSERTION_CAPTURES = new WeakMap();
 // 값형 struct에 플래그를 복사한다. 이후 원래 struct의 값 대입은 복사본의 포인터를 바꾸지 않는다.
 export function captureCampaignFlag(target, key) {
     const copy = FLAG_COPIERS.get(target)?.get(key);
@@ -63,9 +65,17 @@ function borrowRead(target, key, read) {
 }
 // 복구 가능한 원문 진단은 도달한 위치에서만 실제 장치를 요구한다.
 function assertion(owner, label, capture = false) {
+    // 최초 함수 조회의 시점은 유지하고 값 복사는 소유자가 살아 있는 동안만 보관한다.
     const initial = owner.services.ai?.assertion;
+    const reports = capture ? (ASSERTION_CAPTURES.get(owner) ?? []) : null;
+    const captureIndex = reports ? reports.length : -1;
+    if (reports) { reports.push(initial); ASSERTION_CAPTURES.set(owner, reports); }
+    // 현재 조회/복사 함수 모두 강한 owner/함수를 코어 콜백의 환경에 남기지 않는다.
+    const ownerReference = new WeakRef(owner);
     return (expression, file, line) => {
-        const report = capture ? initial : owner.services.ai?.assertion;
+        // 같은 살아 있는 소유자의 현재 장치 또는 원래 복사값을 소비 지점에서 읽는다.
+        const current = ownerReference.deref();
+        const report = capture ? (current ? ASSERTION_CAPTURES.get(current)?.[captureIndex] : undefined) : current?.services.ai?.assertion;
         if (typeof report !== 'function') throw new Error(`${label} 실제 진단 장치 미연결${line === undefined ? '' : ` ${line}`}`);
         report(expression);
     };

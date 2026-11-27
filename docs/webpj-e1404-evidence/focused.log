@@ -1,0 +1,43 @@
+✔ Session 자산: 보호188TYPE·116프레임과 현재 표/최초 비용표의 독립 소유 (20.3247ms)
+✔ Session 기반: 실제 단일 World와 같은 Template 깊이를 빌리며 Player/SP·Runtime을 앞당기지 않는다 (129.8754ms)
+✔ Session 공유 자료: 같은 장기 owner/옵션·금지 표와 멤버 역할은 복사 없이 현재 값을 사용한다 (99.8164ms)
+✔ Session 사전 거부: 제외 모드와 다른 Subscriber·권한·보조 전역은 fresh 전에 실패한다 (65.3224ms)
+✔ Session 자산 불일치: 게임 대여 뒤의 원문 위치에서 거부하고 앞선 대여를 반납한다 (32.6322ms)
+✔ Session 중복 대여: 살아 있는 실제 owner의 World/Player/게임 상태를 새 Session으로 덮지 않는다 (10.5014ms)
+✔ Session 생성 중 실패: 옵션·시각·소리·금지 표 단계까지 확보한 실제 대여를 역순 반납한다 (87.9057ms)
+✔ Session Player/SP: 실제 초기화9기록·방향 동맹81·같은 Core뷰·독립 난수/사제 추적을 연결한다 (46.6376ms)
+✔ Session 공통 Player/SP: 초기화한 같은 Client 저장소는 재할당·재시드하지 않고 장기 값으로 빌린다 (18.8ms)
+✔ Session 공통 계약: SP 초기화·난수 owner·Player/Core 정체성 실패는 Player 쓰기 전에 멈춘다 (133.9553ms)
+✔ Session 현재 Core: 이전 Player를 가리키는 Core는 실제0선택 뒤에만 새 Player로 바뀐다 (108.7961ms)
+✔ Session 부분 실패: Player 뒤 시각 예외는 실제 앞선 기록·추적 연결을 유지하고 반복을 거부한다 (47.0633ms)
+✔ Session AI 할당: 생성 때 호출하지 않고 실제 할당의 같은 바이트에만 공급한다 (95.8078ms)
+✔ Session 채택 거부: 초기화하지 않은 Player를 완료 기록으로 만들지 않는다 (62.349ms)
+✔ Session 레벨 진단: 현재 실제 모듈은 같은 원문 식을 실제 장치에 전달한다 (21.9033ms)
+✔ Session 거주 구역 상태: World/Contents와 같은 현재 savedGame 상자를 빌린다 (102.7698ms)
+✔ Session 플래그 복사: 같은 전역 포인터와 원래 struct의 후속 지역 대입을 구별한다 (82.6503ms)
+✔ Session 플래그 복사: 미등록 지역 값도 unsigned DWORD의 복사 순간을 유지한다 (0.245ms)
+✔ Session 공유 상태: Player/SP 전후 단계와 실제 경로/피해 참조를 유지한다 (46.4541ms)
+✔ Session HP/비용: 실제 현재 TYPE를 빌리며 최초 비용표는 현재 비용 변경과 구별한다 (16.9666ms)
+✔ Session 너겟/권한: 실제 채집 소리 콜백 뒤 같은 현재 TYPE·boss를 다시 읽는다 (23.444ms)
+✔ Session 같은55a490: 실제 Gun 표적 판정과 Gun 전역이 현재 전체 DWORD를 함께 읽는다 (31.4645ms)
+✔ Session 미션 시작: 실제 Start가 장기 네 출력과 같은 SP를 쓰며 시작 관문을 갱신한다 (51.9178ms)
+✔ Session 공유 타입/깊이: Rune·Carrier·기도·경로가 현재 owner를 사용한다 (27.7241ms)
+✔ Session 건설 공유: 현재 권한·표면 종류·Player·이력·패턴을 소비 시점에 조회한다 (193.8012ms)
+✔ Session FullDeck/장르: 같은 현재 DWORD를 세 소비자가 공유하고 typed 지역 값은 유지한다 (11.7445ms)
+✔ Session checking: 한 현재 signed DWORD·같은 Canon 진단과 값 대입의 분리 의미 (8.2948ms)
+✔ Session 실제 진단: 호출 때 조회하는 장치와 생성 때 캡처한 장치를 구별한다 (126.9313ms)
+✔ Session 연결 활동: 같은 두 표·현재 시각/서버와 미션 경고 억제를 적용한다 (10.2372ms)
+✔ Session 연결 활동 부분 실패: 도달한 필수 장치만 요구하며 앞선 store는 유지한다 (78.5762ms)
+✔ CampaignSession 공개 AI: 같은 옵션과 Load 전 관문 (300.7807ms)
+✔ CampaignSharedGameplay_TwoActualSessionsPublishAndRetireSameGlobals: 실제 외곽 생성 범위 (108.479ms)
+✔ CampaignSharedGameplay_ForeignAndPartialConstructionRetireLease: 실제 외곽 생성 범위 (98.0304ms)
+✔ CampaignSession 외곽: 실제 Runtime pin·World 전달·배송 중 반납 거부 (92.643ms)
+✔ CampaignSession 외곽: 같은 전송 서비스의 늦은 detach·함수 표 사본·멱등 반납 (50.6122ms)
+ℹ tests 35
+ℹ suites 0
+ℹ pass 35
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 6859.4086
