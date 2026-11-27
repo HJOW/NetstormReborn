@@ -161,6 +161,36 @@ test('월드: 구성과 Load', () => {
     world.dispose();
 });
 
+// 장기 미션에서 그래프 번호가 모두 예약된 뒤 실제 월드 Pop이 기존 전체 풀 재구성으로 회복해야 한다.
+test('월드: 그래프 소진 뒤 Pop은 전체 풀을 재구성하고 기존 물리를 보존한다', () => {
+    // 실제 월드 조립과 공유 표/풀을 사용하며 가짜 Graph나 할당 성공값을 주입하지 않는다.
+    const world = new Inputs().make();
+    try {
+        world.load(seeds());
+        const core = world.core(), records = core.graph.records(), pool = core.pool;
+        const bridge = world.find(31, 29, BRIDGE), before = summary(world);
+        // 기존 할당기로 나머지 번호를 예약한다. 객체 없는 예약은 전체 재구성 때만 회수된다.
+        while (records.slice(0, GRAPH_COUNT).some((record) => !record.inUse)) core.graph.allocate();
+        assert.equal(records.slice(0, GRAPH_COUNT).filter((record) => record.inUse).length, GRAPH_COUNT);
+        // 기존 섬과 떨어진 표면을 정상 Create/Frame/Pop 경로로 추가해 새 번호가 필요하게 한다.
+        const added = world.create(SURFACE);
+        core.frame.set(added, 0, 0);
+        assert.doesNotThrow(() => world.pop(added, 60, 60, 0));
+        const after = summary(world), number = pool.slot(added)[SURFACE_GRAPH];
+        assert.equal(world.core().pool, pool);
+        assert.equal(world.core().graph.records(), records);
+        assert.equal(world.find(31, 29, BRIDGE), bridge);
+        assert.equal(world.find(60, 60, SURFACE), added);
+        // 원문 Add는 재구성 직후 다음 번호도 예약한다. 빈 예약 수 대신 실제 표면 성분/총합을 검사한다.
+        assert.equal(records.slice(1, GRAPH_COUNT).filter((record) => record.inUse && record.surfaces > 0).length, before.graphs + 1);
+        assert.equal(after.surfaces, before.surfaces + 1);
+        assert.ok(after.graphs < GRAPH_COUNT - 1);
+        assert.ok(number > 0 && number < GRAPH_COUNT);
+        assert.equal(records[number].surfaces, 1);
+        assert.equal(records[number].inUse, 1);
+    } finally { world.dispose(); }
+});
+
 // 정지 중 낙하 예약이 유지되다가 재개 뒤 끝 칸 교체가 일어난다(cpppj PausedRegularResumesWithClientGameClock). (2026-11-11 WB04-E299)
 test('월드: 정지 중 Regular 유지와 재개 뒤 끝 칸 교체', () => {
     const world = new Inputs().make();

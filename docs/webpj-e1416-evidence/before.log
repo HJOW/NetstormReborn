@@ -1,0 +1,38 @@
+✖ 월드: 그래프 소진 뒤 Pop은 전체 풀을 재구성하고 기존 물리를 보존한다 (685.046ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1375.882
+
+✖ failing tests:
+
+test at tests\raw-surface-world.test.mjs:165:1
+✖ 월드: 그래프 소진 뒤 Pop은 전체 풀을 재구성하고 기존 물리를 보존한다 (685.046ms)
+  AssertionError [ERR_ASSERTION]: Got unwanted exception.
+  Actual message: "그래프가 소진되어 전체 풀 재구성이 필요합니다"
+      at TestContext.<anonymous> (file:///H:/Workspace/git/NetstormReborn/webpj/tests/raw-surface-world.test.mjs:178:16)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: Error: 그래프가 소진되어 전체 풀 재구성이 필요합니다
+        at #executeAllocate (file:///H:/Workspace/git/NetstormReborn/webpj/www/core/raw-graph.js:716:33)
+        at #executeAdd (file:///H:/Workspace/git/NetstormReborn/webpj/www/core/raw-graph.js:858:49)
+        at RawGraph.add (file:///H:/Workspace/git/NetstormReborn/webpj/www/core/raw-graph.js:343:32)
+        at add (file:///H:/Workspace/git/NetstormReborn/webpj/www/core/squid-postpop.js:382:89)
+        at runSquidPostPopParent (file:///H:/Workspace/git/NetstormReborn/webpj/www/core/squid-postpop-parent.js:38:94)
+        at #postPopBody (file:///H:/Workspace/git/NetstormReborn/webpj/www/core/squid-postpop.js:413:9)
+        at file:///H:/Workspace/git/NetstormReborn/webpj/www/core/squid-postpop.js:368:57
+        at #withRuntime (file:///H:/Workspace/git/NetstormReborn/webpj/www/core/squid-postpop.js:322:22)
+        at SquidPostPop.postPop (file:///H:/Workspace/git/NetstormReborn/webpj/www/core/squid-postpop.js:368:33)
+        at #dispatchPostPop (file:///H:/Workspace/git/NetstormReborn/webpj/www/core/squid-postpop.js:363:14),
+    expected: undefined,
+    operator: 'doesNotThrow',
+    diff: 'simple'
+  }

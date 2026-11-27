@@ -1,0 +1,20 @@
+✖ 월드: 그래프 소진 뒤 Pop은 전체 풀을 재구성하고 기존 물리를 보존한다 (255.9702ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 799.0408
+
+✖ failing tests:
+
+test at tests\raw-surface-world.test.mjs:165:1
+✖ 월드: 그래프 소진 뒤 Pop은 전체 풀을 재구성하고 기존 물리를 보존한다 (255.9702ms)
+  TypeError [Error]: world.setFrame is not a function
+      at TestContext.<anonymous> (file:///H:/Workspace/git/NetstormReborn/webpj/tests/raw-surface-world.test.mjs:177:15)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)

@@ -13,6 +13,8 @@ import { RawBridgeConnect } from './raw-bridge-connect.js';
 import { RawBridgeDecay, RawBridgeDecayScan } from './raw-bridge-decay.js';
 import { RawBridgeEvents, makeBridgeNeighborHooks, makeBridgeRegularHandler } from './raw-bridge-events.js';
 import { RawGraph } from './raw-graph.js';
+// 실제 월드의 번호 소진은 기존 전체 풀 재구성 정책을 사용한다. 문자열 대신 공용 정책 상수를 전달한다.
+import { GRAPH_RECOVERY } from './graph.js';
 import { RawIslandPostPop } from './raw-island-post-pop.js';
 import { RawPeerWorldSync } from './raw-peer-world-sync.js';
 import { RawSquidDestroyDispatch } from './raw-squid-destroy-dispatch.js';
@@ -247,7 +249,7 @@ export class RawSurfaceWorld {
         const assertion = (expression, file, line) => storage.assertDisplay(expression, file, line);
         const checking = () => storage.checking();
         // 실제 전체 풀은 원문 소진 재구성을 허용한다. 생성 자체는 현재 물리를 쓰지 않는다.
-        this.#graph = new RawGraph(pool, hash, spots, types, storage.codes, { storage: storage.graph, recovery: 'fullPool' });
+        this.#graph = new RawGraph(pool, hash, spots, types, storage.codes, { storage: storage.graph, recovery: GRAPH_RECOVERY.fullPool });
         this.#graph.bindCurrentTypes(types);
         this.#graph.bindDiagnostics({ checking, assertion });
         this.#graph.bindTrace((level, text) => storage.traceGraph(level, text));

@@ -1,0 +1,137 @@
+{
+  "unit": "WB04-E1416 구현 완료/실게임 후속 진행 중",
+  "host": "HJOW-Athlon",
+  "recordedAt": "2026-11-27T06:56:42.134624+00:00",
+  "fix": "RawSurfaceWorld recovery literal fullPool -> GRAPH_RECOVERY.fullPool (FullPool). Recovery body/defaultReject/count unchanged.",
+  "checks": {
+    "focused": 86,
+    "bundleFreshAndWebpackGate": 3,
+    "strictEnglishL2": 1,
+    "buildExit": 0,
+    "pruneLintExit": 0
+  },
+  "suppressionCounts": {
+    "no-unused-vars": 89,
+    "no-useless-assignment": 51,
+    "no-unused-private-class-members": 36
+  },
+  "bundle": {
+    "bytes": 3508534,
+    "sha256": "72ea8d094b55216452615ed982bceb46e82ab3166957eb47a5225108e2bd7b25"
+  },
+  "actualFollowupPartial": {
+    "frame": 42000,
+    "time": 1059.175,
+    "sp": 8500,
+    "graphRecoveries": [],
+    "errors": []
+  },
+  "limits": "구현/조립 회귀 완료. 기존 75,000관측프레임을 지난 실제후속/승리/저장은 아직 미완료. 각 원문은 별개 실행이다. 원문 e1413수집기는 후보2모듈, fixed는 본소스경로가로채기없음. fixed-flow의 helper require는 원래 Git제외 상대경로이며 증빙은 실행원문 그대로 보존.",
+  "evidence": [
+    {
+      "file": "before.log",
+      "bytes": 2228,
+      "sha256": "14225d7c5372c665a02864d98b1daa080ed5c6ecb7f6114e330de2dc377725a4"
+    },
+    {
+      "file": "build.log",
+      "bytes": 462,
+      "sha256": "b89685a5fb107bd7768673f6e41e8dcbec97d8377d8ccb6a7d93ad3773fa26bb"
+    },
+    {
+      "file": "bundle-gate.log",
+      "bytes": 501,
+      "sha256": "707d76ef97ac0741a30bdbde2d34976b31c0ff9145d6c52e14a74e91ac86b448"
+    },
+    {
+      "file": "first-count-expectation.log",
+      "bytes": 10363,
+      "sha256": "81ef0d4bc28d063d7dee884e3ef550c558759d60edcc8905aecc184062b15064"
+    },
+    {
+      "file": "first-harness-error.log",
+      "bytes": 857,
+      "sha256": "0b90110045889a3b8bcae4a5b806663fbc68d20eed1515e4a6a34a7d0089e589"
+    },
+    {
+      "file": "fixed-flow.cjs",
+      "bytes": 15633,
+      "sha256": "edd93b16ddeb457faeb997f9fc28fb621592cd9e567d1065bc6e7355cb229969"
+    },
+    {
+      "file": "fixed-initial.json",
+      "bytes": 5686,
+      "sha256": "a247cfc3eb9784ce9b9f1ea07d8ca0145fcd12e3029ffabb1bfc4351af99f459"
+    },
+    {
+      "file": "fixed-through-current.log",
+      "bytes": 13492,
+      "sha256": "e15a11eb0277719850a1a9845af21c17a5bf1a6c1416650f7486018f192f874e"
+    },
+    {
+      "file": "focused.log",
+      "bytes": 9329,
+      "sha256": "907b831a0448b35e5c540018d5d8b566940e8c12230b196be167a74b7d7ee288"
+    },
+    {
+      "file": "force3-control.cjs",
+      "bytes": 5865,
+      "sha256": "7b4aaa2b2ed1b83323142b9612486ca5be70d371a0cf99f4914334fd6d429dc6"
+    },
+    {
+      "file": "l2.log",
+      "bytes": 620,
+      "sha256": "9bf11d13c2355ce9f6e48afb6cbb03a1c613c46d762ce5121fd9c47ef1297c49"
+    },
+    {
+      "file": "original-ally-force3-altarfix-dissolvedalliance-failure.json",
+      "bytes": 963203,
+      "sha256": "b03571136810627a98efb4f6b239e840c579bc0fd291b9939fc7ca3f1a957c4e"
+    },
+    {
+      "file": "original-ally-force3-altarfix-dissolvedalliance-failure.png",
+      "bytes": 1011879,
+      "sha256": "6660e7c634f07068bb9a84d2ac9bb4b15afc1cf847671945625b22d8f264e4be"
+    },
+    {
+      "file": "original-ally-force3-altarfix-dissolvedalliance-initial.json",
+      "bytes": 5686,
+      "sha256": "a247cfc3eb9784ce9b9f1ea07d8ca0145fcd12e3029ffabb1bfc4351af99f459"
+    },
+    {
+      "file": "original-e1413-altar-fix-flow.cjs",
+      "bytes": 14865,
+      "sha256": "be1c9e1743fc024f318dff03570089a94201aa0f4965a22985097922c96f9359"
+    },
+    {
+      "file": "original-manifest.json",
+      "bytes": 1229,
+      "sha256": "aa6c38ba2c08e3f6e5a32a26f63cfed4082f222f0da387b7704175aaeb8ed83e"
+    },
+    {
+      "file": "original-webpj-e1413-altar-fix-flow.log",
+      "bytes": 34880,
+      "sha256": "2d3ddc5666497e505babf390b239f09058e5ff26d22248eecee602c9484d1ed7"
+    },
+    {
+      "file": "play-source-freeze-check.json",
+      "bytes": 207,
+      "sha256": "8d1802fed3dce2cd3de9de93e9cf745b42b747a0a237a73e4f9075f7b97e46d2"
+    },
+    {
+      "file": "play-source-freeze.json",
+      "bytes": 125556,
+      "sha256": "e1bf60708f885615dec3252e31470a09e165ba768c8b89b79402af3ddeca4dba"
+    },
+    {
+      "file": "prune-lint.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "file": "stale-suppression-block.log",
+      "bytes": 1810,
+      "sha256": "a82d67d873e11686ae3db425187dae90c6489d849e5bb192b185141afc1a69b2"
+    }
+  ]
+}

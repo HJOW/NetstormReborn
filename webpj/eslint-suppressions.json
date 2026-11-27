@@ -276,7 +276,7 @@
   },
   "tests/raw-surface-world.test.mjs": {
     "no-unused-vars": {
-      "count": 2
+      "count": 1
     }
   },
   "tests/raw-wind-flyer.test.mjs": {

@@ -1,0 +1,19 @@
+{
+  "unit": "WB04-E1416 착수대기",
+  "recordedAt": "2026-11-27T06:22:12.380366+00:00",
+  "source": "E1413후보2모듈만제공한기존영어브라우저. 일본어UI수정전적재되어JPN후보와무관.",
+  "firstErrorTime": 1882,
+  "firstFixedFrame": 75395,
+  "collectedFrame": 75000,
+  "collectedTime": 1884.175,
+  "errors": 2,
+  "reason": "그래프가소진되어전체풀재구성이필요합니다. RawGraph.executeAllocate→executeAdd→SquidPostPop.",
+  "scope": "제단55,500오류는60,000이후도재발없음. 새그래프오류로120,000상한전에종료1,승리/저장미완료.",
+  "files": {
+    "ally-force3-altarfix-dissolvedalliance-failure.json": "b03571136810627a98efb4f6b239e840c579bc0fd291b9939fc7ca3f1a957c4e",
+    "ally-force3-altarfix-dissolvedalliance-failure.png": "6660e7c634f07068bb9a84d2ac9bb4b15afc1cf847671945625b22d8f264e4be",
+    "ally-force3-altarfix-dissolvedalliance-initial.json": "a247cfc3eb9784ce9b9f1ea07d8ca0145fcd12e3029ffabb1bfc4351af99f459",
+    "e1413-altar-fix-flow.cjs": "be1c9e1743fc024f318dff03570089a94201aa0f4965a22985097922c96f9359",
+    "webpj-e1413-altar-fix-flow.log": "2d3ddc5666497e505babf390b239f09058e5ff26d22248eecee602c9484d1ed7"
+  }
+}
