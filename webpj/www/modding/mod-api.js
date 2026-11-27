@@ -8,7 +8,7 @@ export const MOD_EVENT_NAMES = Object.freeze(['sessionStart', 'tick', 'sessionEn
 export const MOD_KEY_NAMES = Object.freeze(['p', 'r', 'n', 'h', 'q', 'w', 'a', 's', 'z', 'x', 'e', 'd', 'c', 'ArrowLeft', 'ArrowRight', 'ArrowUp', 'ArrowDown']);
 export const MOD_ERROR_CODES = Object.freeze(['invalidArgument', 'unsupportedVersion', 'invalidPackage', 'moduleNotFound', 'permissionDenied', 'quotaExceeded', 'noSession', 'staleSession', 'inputBlocked', 'queueFull', 'scriptError', 'timeLimit', 'disposed']);
 // 패키지/메시지 한도는 호스트도 재검사한다. 웹 VM의 힙·스택 바이트 상한을 뜻하지 않는다.
-export const MOD_LIMITS = Object.freeze({ maxInstalledMods: 8, maxPackageBytes: 1048576, maxModuleBytes: 262144, maxModules: 32, maxHandlers: 32, maxCommandsPerEvent: 8, maxLogsPerEvent: 8, maxLogCharacters: 1024, maxMessageBytes: 65536, timeLimitMilliseconds: 1000, quickJsMemoryBytes: 16777216, quickJsStackBytes: 262144, tickGameSeconds: 1 });
+export const MOD_LIMITS = Object.freeze({ maxInstalledMods: 8, maxPackageBytes: 1048576, maxModuleBytes: 262144, maxModules: 32, maxHandlers: 32, maxCommandsPerEvent: 8, maxCommandResultsPerEvent: 16, maxLogsPerEvent: 8, maxLogCharacters: 1024, maxMessageBytes: 65536, timeLimitMilliseconds: 1000, quickJsMemoryBytes: 16777216, quickJsStackBytes: 262144, tickGameSeconds: 1 });
 
 // 호스트와 모드가 함께 판별할 오류다. 내부 예외 객체를 그대로 메시지 경계에 보내지 않는다.
 export class ModError extends Error {
@@ -231,10 +231,14 @@ export class ModRuntime {
         requireValue(state.state.gameSeconds >= this.#snapshot.state.gameSeconds, '모드 게임 시계가 이전 경계보다 작습니다.');
         const keys = ['name', 'sequence', 'sessionId'];
         if (event.name === 'commandResult') {
-            keys.push('results'); requireValue(Array.isArray(event.results) && event.results.length <= MOD_LIMITS.maxCommandsPerEvent, '명령 결과 목록 오류');
+            keys.push('results'); requireValue(Array.isArray(event.results) && event.results.length <= MOD_LIMITS.maxCommandResultsPerEvent, '명령 결과 목록 오류');
+            // 같은 요청의 중복 통지를 거절하고 원래 요청 사건/번호 순서를 보존한다.
+            let previousSequence = 0, previousCommand = 0;
             // 각 입력 수용 결과도 미지정 코드를 통과시키지 않는다.
             for (const result of event.results) {
                 record(result, ['eventSequence', 'commandId', 'status', 'code'], '명령 결과'); integer(result.eventSequence, 1, this.#sequence, '요청 사건 번호'); integer(result.commandId, 1, MOD_LIMITS.maxCommandsPerEvent, '명령 번호');
+                requireValue(result.eventSequence > previousSequence || (result.eventSequence === previousSequence && result.commandId > previousCommand), '명령 결과 중복/순서 오류');
+                previousSequence = result.eventSequence; previousCommand = result.commandId;
                 requireValue((result.status === 'queued' && result.code === null) || (result.status === 'rejected' && MOD_ERROR_CODES.includes(result.code)), '명령 결과 상태/코드 오류');
             }
         } else {

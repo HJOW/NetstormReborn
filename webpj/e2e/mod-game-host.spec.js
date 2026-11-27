@@ -39,7 +39,7 @@ test('공개 조회는 RNG/풀을 바꾸지 않고 실제 입력 큐가 사제 �
         const result = host.commit(output, { eventSequence: 1, sessionId: clean.state.sessionId });
         return { unchanged, snapshot: clean, result, beforeQueue: queueSize, afterQueue: app._clientInputQueue.size, activation: window.netstormAllyTestState };
     });
-    expect(actual.unchanged).toBe(true); expect(actual.activation.brain).toBeTruthy(); expect(actual.result[0].status).toBe('queued'); expect(actual.afterQueue - actual.beforeQueue).toBe(2); expect(actual.snapshot.state.mission.toLowerCase()).toBe('thewarbegins'); expect(actual.snapshot.players.length).toBeGreaterThan(0);
+    expect(actual.unchanged).toBe(true); expect(actual.activation.brain).toBeTruthy(); expect(actual.result[0].status).toBe('queued'); expect(actual.afterQueue - actual.beforeQueue).toBe(2); expect(actual.snapshot.state.mission.toLowerCase()).toBe('thewarbegins'); expect(actual.snapshot.players.map((player) => player.owner)).toEqual([1, 2]);
     await step(page, 2);
     const selected = await page.evaluate(() => { const world = window.netstorm._campaignWorld, session = world.session(), priest = session.findPriestParticipation(session.localOwner()); return { raw: world.selected(), priest, expectedType: session.core().pool.slot(priest)[10], public: window.netstormModHostTest.snapshot().selection }; });
     expect(selected.raw).toBeGreaterThan(0); expect(selected.raw).toBe(selected.priest); expect(selected.public.typeId).toBe(selected.expectedType); expect(Object.keys(selected.public).sort()).toEqual(['health', 'owner', 'typeId']);

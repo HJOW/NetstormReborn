@@ -35,9 +35,9 @@ export class ModGameHost {
         if (!world) return validateModSnapshot(output);
         const session = world.session(), records = session.playerRecords(), players = new DataView(records.buffer, records.byteOffset, records.byteLength), allies = session.alliances();
         Object.assign(output.state, { sessionId: this.#sessionId, mission: app._clientGuide.current().script.name, gameSeconds: app._gameClock.time().game, localOwner: session.localOwner() || null, paused: app._gameClock.paused(), mapRect: { ...world.mapView() } });
-        // 로그인 참여 bit가 있는 원래 Player만 번호 순서로 읽는다. 양방향 동맹으로 합치지 않는다.
+        // 로그인 또는 실제 AI brain이 있는 Player를 읽는다. AI-only의 flags0x20은 로그인bit와 다르며, 반납 뒤 남은0x20만으로 참가자를 만들지 않는다.
         for (let owner = 1; owner <= 8; owner += 1) {
-            if (!(players.getUint32(owner * PLAYER_STRIDE + PLAYER_FLAGS, true) & 1)) continue;
+            if (!(players.getUint32(owner * PLAYER_STRIDE + PLAYER_FLAGS, true) & 1) && !session.participation().brain(owner)) continue;
             const allied = [];
             // 방향별 현재 동맹 행을 그대로 읽되 자기 번호는 제외한다.
             for (let other = 1; other <= 8; other += 1) if (other !== owner && allies[owner * 9 + other]) allied.push(other);

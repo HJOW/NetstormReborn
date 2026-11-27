@@ -1,0 +1,44 @@
+{
+  "unit": "WB04-E1477",
+  "before": {
+    "candidate": "webpj/extracted/e1476-sandbox-deps/roster-before.test.mjs",
+    "pass": 0,
+    "fail": 1,
+    "reason": "NativecheckLogin1/attachBrain2 뒤 공개owners가[1]이고[1,2]기대실패"
+  },
+  "after": {
+    "candidatePass": 1,
+    "node26FocusedPass": 56,
+    "node22FocusedPass": 26,
+    "actualChromium": {
+      "pass": 1,
+      "reportedSeconds": 12.3,
+      "scope": "실제아군AI1-1에서publicowners[1,2]·조회전후풀/RNG/시각불변·원래큐/사제선택·오류0"
+    }
+  },
+  "build": {
+    "exit": 0,
+    "webpackSeconds": 64.089,
+    "eslintBeforeWebpack": true,
+    "bundleBytes": 3517946,
+    "bundleChanged": false
+  },
+  "nativeDumpEvidence": {
+    "webpj/extracted/e1456-cache-canvas-before.tsv": {
+      "sha256": "9d27ee5cda1eaa1caea6e18b85f4b5035f777d69f9b1ebe21ff00fec1c2b6050",
+      "summary": "owner1 로그인+AI,owner2 로그인bit없는AI. 원문Git제외유지"
+    },
+    "webpj/extracted/ally-flow-thewarbegins-terminal.tsv": {
+      "sha256": "042cea91ae4b02847fa17d557a4095f9cb647491e504eb6f6f35a6d1476e39df",
+      "summary": "owner1 로그인+AI,owner2 로그인bit없는AI. 원문Git제외유지"
+    }
+  },
+  "sources": {
+    "webpj/www/modding/mod-api.js": "69359fd3b1ee7e365dcf3ec6f54ffc90707020efcc381dcb2cb8c181c258e2ac",
+    "webpj/www/modding/mod-game-host.js": "c18a4ce3a1b3cfd425493c28cd9b070c244c53e8e1b40b50c98bac31074d791b",
+    "webpj/tests/mod-api.test.mjs": "380bf817a1c35b3eff58945bee631cdad028ba8c71e5b15962e4128ebf8c740f",
+    "webpj/tests/mod-game-host.test.mjs": "806dfcca61afaa17ae7cbbe70d9fd62882a436e6196544d6409855b1c5f97531",
+    "webpj/e2e/mod-game-host.spec.js": "71b1352de0d7c783f73223e1fd0dd7eff7a4f26c4ac98293218350b8b6ab59ff",
+    "shared/modding/v0/contract.json": "85bb8aadb55bb104979dbc80627e88e01b3d455ba2c70b0392f9d14a80fff120"
+  }
+}

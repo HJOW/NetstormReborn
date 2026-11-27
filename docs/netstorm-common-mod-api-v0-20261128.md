@@ -32,7 +32,7 @@ DN의 디렉터리형 표현은 Windows `%USERPROFILE%\Saved Games\Netstorm\Mods
 | `on(name, handler)` | 알려진 사건과 동기 함수 등록, 양의 정수 구독 번호 반환. 총 32개 이하. 등록 순서로 호출 |
 | `off(subscription)` | 자기 구독을 제거했으면 true, 이미 없으면 false. 유효한 양의 정수 필요 |
 | `getState()` | `{sessionId,mission,gameSeconds,localOwner,paused,logicalSize:{width,height},mapRect:{left,top,right,bottom}}`. 세션이 없으면 sessionId/mission/localOwner=null, gameSeconds=0. sessionId는 실행 중 증가하는 문자열 `session-1` 등이며 원본 SID와 무관 |
-| `getPlayers()` | owner 오름차순 `{owner,stormPower,allies}` 배열. owner=1..8, allies는 해당 owner와 동맹인 owner의 정렬 배열(자신 제외). 비참가자는 제외. 세션 없으면 `[]`. 자원은 정수이며 조회로 검산/재시드하지 않음 |
+| `getPlayers()` | owner 오름차순 `{owner,stormPower,allies}` 배열. owner=1..8, allies는 해당 owner와 동맹인 owner의 정렬 배열(자신 제외). 로그인 참가자 또는 현재 AI brain이 있는 참가자를 포함한다. 반납 뒤 남는 AI 표시 bit만으로 포함하지 않는다. 비참가자는 제외. 세션 없으면 `[]`. 자원은 정수이며 조회로 검산/재시드하지 않음 |
 | `getSelection()` | `{typeId,owner,health}` 또는 null. 현재 대표 선택이 살아 있는 자산일 때만 반환. typeId=원본 TYPE 번호, owner=0..8, health=현재 정수 HP. SID/주소/원문 비트는 미공개 |
 | `randomInt(limit)` | limit=1..2^32-1, `[0,limit)` 정수. §5의 모드 전용 난수만 전진 |
 | `log(level,text)` | level=info/warn/error, text 문자열 ≤1024자. 사건당 8회. 플랫폼 로그에 modId/사건 번호를 붙임. 게임 채팅으로 보내지 않음 |
@@ -54,16 +54,16 @@ DN의 디렉터리형 표현은 Windows `%USERPROFILE%\Saved Games\Netstorm\Mods
 
 ## 4. 사건·순서·수명
 
-모드 실행 순서는 id의 ASCII 코드 순서다. 명령/로그 순서는 사건 번호 → 모드 id → 콜백 등록 → 호출 순서다. 일시 정지나 호스트 대기 시간을 게임 경과로 세지 않는다. 모든 모드는 같은 경계의 상태 사본을 읽는다. 해당 사건에서 요청한 입력은 **다음 원래 입력 단계 직전**에 추가하며 기존 사람/게임 입력을 추월하거나 버리지 않는다.
+같은 호스트 경계의 효과는 사건 종류(시작 → 직전 명령 결과 → tick → 종료) → 모드 id의 ASCII 코드 → 콜백 등록 → 호출 순서로 확정한다. sequence는 모드마다 독립이므로 서로 다른 모드의 번호를 섞어 정렬하지 않는다. 일시 정지나 호스트 대기 시간을 게임 경과로 세지 않는다. 모든 모드는 같은 경계의 상태 사본을 읽는다. 해당 사건에서 요청한 입력은 **다음 원래 입력 단계 직전**에 추가하며 기존 사람/게임 입력을 추월하거나 버리지 않는다.
 
 | 사건 | 추가 필드와 시점 |
 | --- | --- |
 | `sessionStart` | `{sessionId,mission,gameSeconds}`. 실제 Session Ready/미션 시작 준비 완료 뒤 첫 경계. 모드 인스턴스/구독/RNG를 미션마다 새로 만든 후 통지 |
 | `tick` | `{sessionId,gameSeconds}`. 시작 시각으로부터 처음1게임초 뒤, 이후 1초 간격. 프레임이 여러 간격을 넘으면 현재 상태로 **한 번만** 통지하고 다음 기한을 현재 시각+1로 정함. 매 유닛/매 표시 프레임 호출 금지 |
-| `commandResult` | `{sessionId,results:[{eventSequence,commandId,status,code}]}`. eventSequence는 요청을 만든 사건 번호다. 다음 입력 단계에서 확정한 모드별 결과를 다음 모드 경계에 한 번 통지. status=queued/rejected, queued의 code=null. 자체적으로 매초 tick을 발생시키지 않음 |
+| `commandResult` | `{sessionId,results:[{eventSequence,commandId,status,code}]}`. eventSequence는 요청을 만든 사건 번호다. 다음 입력 단계에서 확정한 모드별 결과를 다음 모드 경계에 한 번 통지(최대16개). 요청 사건/명령 번호의 오름차순이며 중복은 거절한다. status=queued/rejected, queued의 code=null. 자체적으로 매초 tick을 발생시키지 않음 |
 | `sessionEnd` | `{sessionId,mission,gameSeconds,reason}`. reason=leave/restart/replace/destroy. 마지막 사본으로 한 번 통지하고 명령은 거절. 남은 입력 요청을 staleSession으로 폐기한 뒤 컨텍스트·포트·구독·난수·타이머·강한 Session 참조를 반납 |
 
-모든 사건은 `{name,sequence,...}`이며 sequence는 미션 안에서 1부터 정확히 1씩 증가한다. gameSeconds는 이전 경계보다 작을 수 없다. 결과 사건 때문에 다시 생성되는 결과는 다음 경계로 미루어 한 경계에서 무한 재진입하지 않는다. 종료 뒤 늦게 도착한 메시지는 세션/인스턴스 번호로 폐기한다. 한 결과 사건에는 명령 결과를 최대8개 담고 원래 요청 사건 번호도 보존한다.
+모든 사건은 `{name,sequence,...}`이며 sequence는 **각 모드 인스턴스의 미션 안에서** 1부터 정확히 1씩 증가한다. 결과를 받지 않은 다른 모드의 번호를 건너뛰지 않는다. gameSeconds는 이전 경계보다 작을 수 없다. 결과 사건 때문에 다시 생성되는 결과는 다음 경계로 미루어 한 경계에서 무한 재진입하지 않는다. 종료 뒤 늦게 도착한 메시지는 세션/인스턴스 번호로 폐기한다. 한 결과 사건에는 명령 결과를 최대16개 담고 원래 요청 사건 번호도 보존한다. 호스트는 한 경계에서 모드별 commandResult를 최대 한 번, tick을 최대 한 번 호출한다. 각각 새 명령8개 이하를 만들므로 다음 경계의 결과도 최대16개에 머물며 결과 사건의 자기 증폭을 막는다.
 
 웹 Worker는 비동기이므로 미완료 사건을 둔 채 다음 게임 입력/시계/Kernel을 진행하지 않는다. 호스트가 대기 동안 게임 일시 정지를 유지하고 완료 뒤 원래 다음 프레임에서 재개한다. 이 장벽이 있어야 CPU/메시지 도착 순서가 명령을 넣는 프레임을 바꾸지 않는다. 화면/관리 UI는 계속 응답해야 한다. DN은 같은 사건 경계를 동기로 처리할 수 있으나 명령을 즉시 원본 객체에 실행해서는 안 된다.
 
@@ -81,7 +81,7 @@ DN의 디렉터리형 표현은 Windows `%USERPROFILE%\Saved Games\Netstorm\Mods
 
 선언·구문·로드·등록 실패, 처리되지 않은 예외/Promise, 무한 실행/시간 초과는 **해당 모드만 이번 실행에서 비활성화**하고 id·오류·사건·가능한 스택을 기록한다. 그 사건에서 해당 모드가 만든 아직 미반영 명령/로그는 폐기한다. 다른 모드는 계속한다. 재시작 때 자동으로 오류 모드를 반복 실행하지 않도록 저장된 활성 상태도 끈다. 저장 실패는 별도로 기록하고 메모리에서 먼저 끈다.
 
-패키지 최대1MiB, 모듈 하나256KiB/총32개, 설치8개, 구독32개, 사건당 명령8개·로그8개, 경계 메시지64KiB, 등록/사건 한 번1000ms다. 시간 제한은 복잡도/지연에 따른 안전 중단 장치이며 같은 입력의 시간 초과 여부까지 엔진 간 결정론으로 주장하지 않는다. 전송 크기·행 수·명령 개수를 호스트도 다시 검사한다.
+패키지 최대1MiB, 모듈 하나256KiB/총32개, 설치8개, 구독32개, 사건당 명령8개·로그8개, 명령 결과 사건은 최대16개 항목, 경계 메시지64KiB, 등록/사건 한 번1000ms다. 시간 제한은 복잡도/지연에 따른 안전 중단 장치이며 같은 입력의 시간 초과 여부까지 엔진 간 결정론으로 주장하지 않는다. 전송 크기·행 수·명령 개수를 호스트도 다시 검사한다.
 
 DN은 모드당 QuickJS runtime을 분리하고 quickjs-libc/std/os/파일/네트워크/프로세스를 등록하지 않는다. 메모리16MiB·스택256KiB·평가1000ms는 CPP `ScriptEngineLimits`와 같다. 웹은 불투명 origin iframe(`sandbox=allow-scripts`) 안에서 전용 Worker를 만들고 CSP로 외부 연결/외부 스크립트를 막는다. 추가 Worker 생성 capability도 모드에 주지 않는다. 모드 코드를 메인 페이지/iframe DOM에서 실행하지 않고, 검증된 메시지 전용 포트만 준다. 초과/비정상 종료는 Worker와 iframe을 폐기한다. 네트워크 함수 이름을 지우는 것만으로 격리를 대신하지 않는다.
 
@@ -98,7 +98,7 @@ DN은 모드당 QuickJS runtime을 분리하고 quickjs-libc/std/os/파일/네�
 | 사건 | Ready 뒤 sessionStart, 원래 루프 경계의 게임 시간 tick, 종료 전 sessionEnd, 다음 입력 전 결과 확정 | R6 실제 Session 결선이 된 동일 경계에 바인딩 |
 | 실행/로드 | native JS 격리 실행·파일 선택·localStorage·기본 꺼짐 | MOD-2 엔진 → MOD-3 로더/수학 → MOD-4 바인딩 → MOD-5 GUI/LAN |
 
-진행 단위: **E1470 명세 확정**, 다음 **공개 순수 API/검증·명령 프로토콜**, 다음 **실제 Session 어댑터·사건 장벽**, 다음 **격리 로더·Options·보관**, 다음 **공통 적합성·브라우저 e2e**. 각 단위는 인계 갱신 후 커밋한다. 새 JS 소스는 한국어 설명 주석·ESLint 선행 빌드를 따른다.
+진행: E1470 명세·E1471 순수API/공통 입력·E1472 실제 사본조회/큐·E1473 패키지/보관·E1474 분류등록·E1475/1476 두 전체를 완료했다. E1477은 AI 참가자 조회와 모드별 sequence/유계 결과16개를 보강한다. 남은 구현은 **격리 실행·실제 사건/시계 장벽·Options 관리·브라우저 적합성**이다. 각 단위는 인계 갱신 후 커밋한다. 새 JS 소스는 한국어 설명 주석·ESLint 선행 빌드를 따른다.
 
 공통 적합성에는 이름 정확 일치·조회 사본·구독 순서·독립 RNG golden·입력 FIFO/포화/수명/모달·오류 모드 단독 해제·기본 꺼짐·허용 모듈/경로 탈출·네트워크/DOM/컴파일 차단·무한 루프 종료·호스트 대기 중 게임 시계 보존을 포함한다. **같은 패키지**와 **같은 정규화 상태/사건/입력열**을 WB와 DN에 공급하고 결과 JSON을 비교한다. WB 통과와 DN 미실행을 분리 기록하며 DN 중지 중에는 양쪽 일치를 완료로 표시하지 않는다.
 

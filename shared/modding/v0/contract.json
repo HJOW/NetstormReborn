@@ -15,6 +15,7 @@
     "maxModules": 32,
     "maxHandlers": 32,
     "maxCommandsPerEvent": 8,
+    "maxCommandResultsPerEvent": 16,
     "maxLogsPerEvent": 8,
     "maxLogCharacters": 1024,
     "maxMessageBytes": 65536,

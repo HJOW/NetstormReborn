@@ -193,3 +193,32 @@ test('DN에 전달할 V8 수학 격자가 double 비트·부호0·비유한 분�
         assert.equal(bits, vector.expected, `${vector.name}(${vector.args})`);
     }
 });
+
+test('두 요청 사건의 16개 결과를 한 번에 받고 다음 출력은 여전히8개로 제한한다', () => {
+    const runtime = new ModRuntime({ modId: 'test.result-bound' }); let count = 0;
+    runtime.register((api) => {
+        api.on('sessionStart', () => { for (let index = 0; index < 8; index += 1) api.commands.selectPriest(); });
+        api.on('tick', () => { for (let index = 0; index < 8; index += 1) api.commands.nextUnit(); });
+        api.on('commandResult', (event) => { count = event.results.length; for (let index = 0; index < 8; index += 1) api.commands.selectPriest(); assert.throws(() => api.commands.selectPriest(), code('quotaExceeded')); });
+    });
+    runtime.dispatch(event(), snapshot()); runtime.dispatch(event('tick', 2, 1), snapshot(1));
+    const results = [1, 2].flatMap((eventSequence) => Array.from({ length: 8 }, (_, index) => ({ eventSequence, commandId: index + 1, status: 'queued', code: null })));
+    const output = runtime.dispatch({ name: 'commandResult', sequence: 3, sessionId: 'session-1', results }, snapshot(1)); assert.equal(count, 16); assert.equal(output.commands.length, 8);
+});
+
+test('결과17개·중복·역순은 콜백 전에 거절한다', () => {
+    const runtime = new ModRuntime({ modId: 'test.result-invalid' }); let calls = 0;
+    runtime.register((api) => api.on('commandResult', () => { calls += 1; })); runtime.dispatch(event(), snapshot()); runtime.dispatch(event('tick', 2, 1), snapshot(1));
+    const result = (commandId) => ({ eventSequence: 1, commandId, status: 'queued', code: null });
+    // 각 잘못된 전송은 같은 다음 sequence를 소비하지 않는다.
+    for (const results of [Array(17).fill(result(1)), [result(1), result(1)], [result(2), result(1)]]) assert.throws(() => runtime.dispatch({ name: 'commandResult', sequence: 3, sessionId: 'session-1', results }, snapshot(1)), code('invalidArgument'));
+    assert.equal(calls, 0); runtime.dispatch({ name: 'commandResult', sequence: 3, sessionId: 'session-1', results: [result(1)] }, snapshot(1)); assert.equal(calls, 1);
+});
+
+test('결과 사건을 받은 모드와 받지 않은 모드의 sequence는 각각 증가한다', () => {
+    const a = new ModRuntime({ modId: 'test.sequence-a' }), b = new ModRuntime({ modId: 'test.sequence-b' });
+    a.register((api) => { api.on('sessionStart', () => api.commands.selectPriest()); api.on('tick', (event) => api.log('info', String(event.sequence))); });
+    b.register((api) => api.on('tick', (event) => api.log('info', String(event.sequence))));
+    a.dispatch(event(), snapshot()); b.dispatch(event(), snapshot()); a.dispatch({ name: 'commandResult', sequence: 2, sessionId: 'session-1', results: [{ eventSequence: 1, commandId: 1, status: 'queued', code: null }] }, snapshot());
+    assert.equal(a.dispatch(event('tick', 3, 1), snapshot(1)).logs[0].text, '3'); assert.equal(b.dispatch(event('tick', 2, 1), snapshot(1)).logs[0].text, '2');
+});
