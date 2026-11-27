@@ -36,4 +36,25 @@ public static class SpriteAssetViews
         }
         return result;
     }
+
+    /// <summary>그림자 별칭을 매 호출에 다시 읽어 실제 SHP 블록을 선택하는 조회기를 만든다.</summary>
+    /// <param name="database">파일 자산과 같은 실제 SHP 저장소다.</param>
+    /// <param name="assetCount">TYPE 70부터 순서대로 놓인 자산 블록 수다.</param>
+    /// <param name="state">현재 그림자 별칭을 보유하는 표시 상태다.</param>
+    /// <returns>타입을 실제 저장소와 블록으로 변환하는 조회기다.</returns>
+    /// <remarks>cpppj SpriteDraw.cpp의 MakeSpriteAssetShapes를 따른다. 2026-11-27 일반 객체 출력 준비에 추가했다.</remarks>
+    public static Func<uint, PreviewShapeBinding> BindShapes(ShapeDatabase database, int assetCount, SpriteDrawState state)
+    {
+        ArgumentNullException.ThrowIfNull(database);
+        ArgumentNullException.ThrowIfNull(state);
+        if (assetCount < 0) throw new ArgumentOutOfRangeException(nameof(assetCount));
+        if (assetCount > database.Blocks().Count) throw new ArgumentException("Sprite 자산 블록 수 부족", nameof(assetCount));
+        return type =>
+        {
+            if (type == state.ShadowAliasType && state.ShadowShapeType is uint alias) type = alias;
+            if (type < FirstAssetType || type - FirstAssetType >= (uint)assetCount)
+                throw new ArgumentOutOfRangeException(nameof(type), "Sprite 자산 TYPE 범위 오류");
+            return new PreviewShapeBinding(database, checked((int)(type - FirstAssetType)));
+        };
+    }
 }

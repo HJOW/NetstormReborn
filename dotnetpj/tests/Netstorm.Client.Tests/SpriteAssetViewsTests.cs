@@ -45,6 +45,28 @@ public sealed class SpriteAssetViewsTests
         Assert.Throws<ArgumentException>(() => SpriteAssetViews.Build(shapes, [new RiftTypeDefinition()]));
     }
 
+    /// <summary>그림자 별칭의 현재 대상이 바뀌면 같은 조회기가 즉시 새 SHP 블록을 반환한다.</summary>
+    [Fact]
+    public void ShapeBindingUsesCurrentShadowAliasAndChecksTypeRange()
+    {
+        // 네 빈 SHP 블록으로 타입과 물리 블록의 같은 범위를 준비한다.
+        byte[] blocks = Enumerable.Range(0, 4).SelectMany(_ => new byte[] { 0x31, 0x2e, 0x31, 0x30, 0, 0, 0, 0 }).ToArray();
+        var database = new Netstorm.Client.Display.ShapeDatabase(blocks);
+        var state = new SpriteDrawState { ShadowAliasType = 72 };
+        Func<uint, PreviewShapeBinding> binding = SpriteAssetViews.BindShapes(database, 4, state);
+        Assert.Same(database, binding(70).Database);
+        Assert.Equal(2, binding(72).Block);
+        state.ShadowShapeType = 71;
+        Assert.Equal(1, binding(72).Block);
+        state.ShadowShapeType = 73;
+        Assert.Equal(3, binding(72).Block);
+        Assert.Throws<ArgumentOutOfRangeException>(() => binding(69));
+        Assert.Throws<ArgumentOutOfRangeException>(() => binding(74));
+        state.ShadowShapeType = 74;
+        Assert.Throws<ArgumentOutOfRangeException>(() => binding(72));
+        Assert.Throws<ArgumentException>(() => SpriteAssetViews.BindShapes(database, 5, state));
+    }
+
     /// <summary>실제 배포 자산의 전체 TYPE·SHP가 같은 번호 공간으로 조립되는지 확인한다.</summary>
     [Fact]
     public void ActualAssetTablesFitTheDisplayTypeSpace()
@@ -59,5 +81,9 @@ public sealed class SpriteAssetViewsTests
         Assert.True(assets.Definitions.Count > 0);
         Assert.Contains(views.Skip(70), view => view.Shape.Loaded);
         Assert.Equal(unchecked((uint)assets.Definitions[0].SpecialFrames.DefaultFrame), views[70].GumpFrame);
+        var database = new Netstorm.Client.Display.ShapeDatabase(assets.ShapeImage);
+        var binding = SpriteAssetViews.BindShapes(database, assets.Definitions.Count, new SpriteDrawState());
+        Assert.Same(database, binding(70).Database);
+        Assert.Equal(assets.Definitions.Count - 1, binding(unchecked((uint)(69 + assets.Definitions.Count))).Block);
     }
 }
