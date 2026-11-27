@@ -74,4 +74,17 @@ public sealed class ClientChatIdentityRuntimeTests
         var scene = new Scene(); var identity = scene.Identity(); byte[] output = new byte[64]; output.AsSpan().Fill(0xa5); Assert.Equal(1u, identity.CopyName(100, output)); Assert.Equal("LocalUser", Encoding.Latin1.GetString(output, 0, 9)); Assert.Equal(0, output[9]); Assert.Equal(0xa5, output[10]);
         Assert.Equal(1u, identity.CopyName(200, output)); Assert.Equal("SOMEONE", Encoding.Latin1.GetString(output, 0, 7)); Assert.Equal(0, output[7]); Assert.Throws<ArgumentOutOfRangeException>(() => identity.CopyName(200, new byte[7]));
     }
+
+    /// <summary>소유자 이름은 현재 로컬과 Player 기록을 다시 읽고 부분 조회는 원문 대체 이름을 쓴다.</summary>
+    [Fact]
+    public void OwnerNameReadsCurrentPlayerRecordsAndFallback()
+    {
+        var scene = new Scene(); var identity = scene.Identity();
+        Assert.Equal("LocalUser", identity.NameForOwner(1));
+        scene.Name = "Renamed"; Assert.Equal("Renamed", identity.NameForOwner(1));
+        scene.Surface.Storage.OwnerMode.Battle = true; Player(scene.Game, 2, 200, "Alice");
+        Assert.Equal("Alice", identity.NameForOwner(2));
+        Player(scene.Game, 2, 201, "Bob"); Assert.Equal("Bob", identity.NameForOwner(2));
+        Player(scene.Game, 2, 0, "Unresolved"); Assert.Equal("SOMEONE", identity.NameForOwner(2));
+    }
 }

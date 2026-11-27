@@ -44,6 +44,7 @@ public sealed class ClientChatIdentityRuntime
         LocalOwner = () => _game.Player.BattleOwner, Subscriber = () => _subscribers.MySubscriber.Value,
         Address = () => _game.LocalAddress.Value, Name = () => name,
         Battle = () => _surface.Storage.OwnerMode.Battle, Editor = () => _game.World.Editor != 0, Metamap = () => _surface.Storage.OwnerMode.Challenge,
+        UnknownName = () => "SOMEONE",
         MetaRecords = () => (_metaRecords ?? throw new InvalidOperationException("Chat Identity의 실제 현재 CS40행 미연결"))(),
     });
     /// <summary>현재 이름과 Player 배열을 매진입 다시 빌리고 기존 원문60BYTE 본체를 그대로 사용한다.</summary>
@@ -56,6 +57,13 @@ public sealed class ClientChatIdentityRuntime
     {
         byte[] record = GC.AllocateUninitializedArray<byte>(60); RawPlayerIdentity.Initialize(record, 2); BinaryPrimitives.WriteUInt32LittleEndian(record.AsSpan(4, 4), subscriber);
         Resolve(record); return BinaryPrimitives.ReadUInt32LittleEndian(record.AsSpan(0, 4));
+    }
+    /// <summary>현재 Player·Chat과 로컬 이름을 이용해 소유자 번호의 실제 이름을 조회한다.</summary>
+    /// <param name="owner">조회할 현재 소유자 번호다.</param>
+    /// <returns>현재 원본 이름 또는 조회 실패의 원본 대체 이름이다.</returns>
+    public string NameForOwner(uint owner)
+    {
+        string name = _currentName(); return Create(name).NameForOwner(owner);
     }
     /// <summary>일반 본문 이름 getter의 실제 SOMEONE fallback과 NUL 포함 대상 복사를 수행한다.</summary>
     public uint CopyName(uint subscriber, Span<byte> output)
