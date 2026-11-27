@@ -98,7 +98,7 @@ public static class RawTileSprites
                 index = unchecked(index - (uint)record.FrameCount);
             }
             Blit(database, type, index, point, pixels, width, height, clip,
-                modes.ShadowTable ?? throw new InvalidOperationException("타일 그림자 색표 미연결"), shadow: true);
+                modes.ShadowTable ?? throw new InvalidOperationException("타일 그림자 색표 미연결"), translated: true);
             return;
         }
         if ((extra & 2) != 0)
@@ -111,14 +111,14 @@ public static class RawTileSprites
             if ((extra & 1) != 0)
             {
                 Blit(database, type, frame, point, pixels, width, height, clip,
-                    modes.DeadTable ?? throw new InvalidOperationException("타일 죽음 색표 미연결"));
+                    modes.DeadTable ?? throw new InvalidOperationException("타일 죽음 색표 미연결"), translated: true);
                 return;
             }
             if (abstractShape || (modes.SpecialMode != 0 && filteredBridge))
             {
                 if (!abstractShape || owner == modes.LocalPlayer)
                     Blit(database, type, frame, point, pixels, width, height, clip,
-                        modes.AbstractTable ?? throw new InvalidOperationException("타일 추상 색표 미연결"));
+                        modes.AbstractTable ?? throw new InvalidOperationException("타일 추상 색표 미연결"), translated: true);
             }
             else
             {
@@ -136,7 +136,7 @@ public static class RawTileSprites
         if ((extra & 1) != 0)
         {
             Blit(database, type, frame, point, pixels, width, height, clip,
-                modes.DeadTable ?? throw new InvalidOperationException("타일 죽음 색표 미연결"));
+                modes.DeadTable ?? throw new InvalidOperationException("타일 죽음 색표 미연결"), translated: true);
             return;
         }
         if ((extra & 0x10) != 0)
@@ -144,7 +144,7 @@ public static class RawTileSprites
             if (owner == modes.LocalPlayer)
             {
                 Blit(database, type, frame, point, pixels, width, height, clip,
-                    modes.AbstractTable ?? throw new InvalidOperationException("타일 추상 색표 미연결"));
+                    modes.AbstractTable ?? throw new InvalidOperationException("타일 추상 색표 미연결"), translated: true);
             }
             return;
         }
@@ -152,7 +152,7 @@ public static class RawTileSprites
         if (modes.SpecialMode != 0 && filtered)
         {
             Blit(database, type, frame, point, pixels, width, height, clip,
-                modes.AbstractTable ?? throw new InvalidOperationException("타일 추상 색표 미연결"));
+                modes.AbstractTable ?? throw new InvalidOperationException("타일 추상 색표 미연결"), translated: true);
             return;
         }
         Blit(database, type, frame, point, pixels, width, height, clip, OwnerTable(modes, type, owner));
@@ -182,9 +182,9 @@ public static class RawTileSprites
     /// <param name="height">화면 세로 크기다.</param>
     /// <param name="clip">출력을 제한하는 클리핑 영역이다.</param>
     /// <param name="colors">색 변환표 256바이트다. 없으면 원본 번호를 그대로 쓴다.</param>
-    /// <param name="shadow">참이면 소스 색 대신 대상 화면 색을 표에서 변환한다.</param>
+    /// <param name="translated">참이면 원본 마스크 아래 현재 화면 색을 변환한다.</param>
     private static void Blit(ShapeDatabase database, uint type, uint frame, ScreenPoint point,
-        Span<byte> pixels, int width, int height, ScreenRect clip, byte[]? colors, bool shadow = false)
+        Span<byte> pixels, int width, int height, ScreenRect clip, byte[]? colors, bool translated = false)
     {
         int block = checked((int)type - 70);
         if (block < 0 || block >= database.Blocks().Count)
@@ -201,7 +201,12 @@ public static class RawTileSprites
         {
             return;
         }
-        RendererDraw.DrawIndexedImage(pixels, width, height, database.Decode(block, checked((int)frame)),
-            unchecked(point.X + shape.Rect.Left), unchecked(point.Y + shape.Rect.Top), clip, colors, shadow);
+        IndexedImage image = database.Decode(block, checked((int)frame));
+        if (translated)
+            VfxTransform.DrawTranslatedVfxImage(pixels, width, height, image, shape, point, 0x10000, 0x10000, clip,
+                colors ?? throw new InvalidOperationException("타일 화면색 변환표 미연결"));
+        else
+            RendererDraw.DrawIndexedImage(pixels, width, height, image,
+                unchecked(point.X + shape.Rect.Left), unchecked(point.Y + shape.Rect.Top), clip, colors);
     }
 }

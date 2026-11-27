@@ -214,6 +214,26 @@ public sealed class RawTileSpritesTests
         Assert.Contains(pixels, pixel => pixel == 99);
     }
 
+    /// <summary>실제 타일의 죽음·추상 색표는 원본 색이 아닌 현재 화면색을 변환한다.</summary>
+    [Theory]
+    [InlineData((byte)1)]
+    [InlineData((byte)0x10)]
+    public void DeadAndAbstractTransformExistingPixels(byte flags)
+    {
+        var scene = new TileScene();
+        var pixels = new byte[1024 * 768];
+        Array.Fill(pixels, (byte)7);
+        RenderCollectionEntry entry = Place(scene, 20, 20);
+        Raw(scene.Pool, 100)[40] = flags;
+        Raw(scene.Pool, 100)[34] = 5;
+        byte[] table = ConstantTable(99);
+        table[7] = 42;
+        var modes = new RawTileDrawModes { LocalPlayer = 5, DeadTable = table, AbstractTable = table };
+        RawTileSprites.DrawTile(entry, scene.Pool, scene.Types, scene.Database, 0, 0, pixels, 1024, 768, new(0, 0, 1024, 768), modes);
+        Assert.Contains(pixels, pixel => pixel == 42);
+        Assert.DoesNotContain(pixels, pixel => pixel == 99);
+    }
+
     /// <summary>죽음·추상은 각 색표로 칠하고 로컬이 아니면 추상을 건너뛴다.</summary>
     [Fact]
     public void DeadAndAbstractUseTables()
