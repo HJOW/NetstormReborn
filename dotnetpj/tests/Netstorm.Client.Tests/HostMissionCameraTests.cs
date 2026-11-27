@@ -20,12 +20,14 @@ public sealed partial class HostPriestWorldLiveTests
         int footY = types[raw[10]].FootY;
         var state = new CameraHomeState { LocalPlayer = session.MissionPlayer.BattleOwner, Battle = true, Width = 1024, Height = 768 };
         uint revision = session.Gameplay.MapRevision.Value;
+        uint metaRebuild = session.LocalState.MetaRebuild.Value;
         uint redraw = session.CameraWorldRedraw.Value;
         session.ResetMissionCamera(state, types, 1024, 768);
         int expectedX = unchecked(-RawCameraView.FtolLow(-16.0 * ((double)wx - footX)) - 1024 / 2);
         int expectedY = unchecked(-RawCameraView.FtolLow(-11.0 * ((double)wy - footY)) - 768 / 2);
         Assert.Equal(new[] { expectedX, expectedY }, session.Gameplay.Camera.Target.Pixels);
-        Assert.Equal(unchecked(revision + 1), session.Gameplay.MapRevision.Value);
+        Assert.Equal(revision, session.Gameplay.MapRevision.Value);
+        Assert.Equal(unchecked(metaRebuild + 1), session.LocalState.MetaRebuild.Value);
         Assert.Equal(unchecked(redraw + 1), session.CameraWorldRedraw.Value);
     }
 

@@ -119,7 +119,7 @@ public sealed class RawMinimapControlsTests
         rig.Rectangles.Clear(); rig.Tree.Input.Route(0x80010000, 50, 145); Assert.Equal(0U, rig.Tree.LifeState.Focus); Assert.Equal(0U, rig.Node.Flags & 0x80); Assert.Empty(rig.Rectangles); Assert.DoesNotContain(token, rig.Tree.LifeState.Idle);
     }
 
-    /// <summary>미니맵 클릭과 드래그가 같은 세션의 카메라 목표와 지도 갱신 번호를 바꾼다.</summary>
+    /// <summary>미니맵 클릭과 드래그는 카메라 목표와 메타 갱신을 바꾸되 미니맵 전체 갱신은 예약하지 않는다.</summary>
     [Fact]
     public void MinimapInputRequestsCurrentSessionCameraOnClickAndDrag()
     {
@@ -127,14 +127,17 @@ public sealed class RawMinimapControlsTests
         using var rig = new Rig(center: (x, y) => session!.RequestMinimapCenter(x, y, 320, 240));
         session = new HostSession(new Kernel(), new GameRandom(17), new CrtRandom(23), sharedGameplay: rig.Gameplay, pool: rig.Storage.Pool);
         uint revision = rig.Gameplay.MapRevision.Value;
+        uint metaRebuild = session.LocalState.MetaRebuild.Value;
         rig.Tree.Input.Route(0x10000, 50, 187);
         int firstX = rig.Gameplay.Camera.Target.Pixels[0];
         int firstY = rig.Gameplay.Camera.Target.Pixels[1];
-        Assert.Equal(revision + 1, rig.Gameplay.MapRevision.Value);
+        Assert.Equal(revision, rig.Gameplay.MapRevision.Value);
+        Assert.Equal(unchecked(metaRebuild + 1), session.LocalState.MetaRebuild.Value);
         Assert.NotEqual((0, 0), (firstX, firstY));
         rig.Pointer = new(0x10000, 105, 187);
         rig.Tree.Frame.Idle();
-        Assert.Equal(revision + 2, rig.Gameplay.MapRevision.Value);
+        Assert.Equal(revision, rig.Gameplay.MapRevision.Value);
+        Assert.Equal(unchecked(metaRebuild + 2), session.LocalState.MetaRebuild.Value);
         Assert.NotEqual(firstX, rig.Gameplay.Camera.Target.Pixels[0]);
         rig.Tree.Input.Route(0x80010000, 105, 187);
         Assert.Equal(0u, rig.Tree.LifeState.Focus);
