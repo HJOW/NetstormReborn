@@ -1,0 +1,153 @@
+{
+  "unit": "WB04-E1465",
+  "recordedAt": "2026-11-27T15:06:26.703778+00:00",
+  "sourceHead": "14c9f31f810eae52218086e55a1d4785a7ff1e4f",
+  "kind": "read-only source/data audit; no new game or regression execution",
+  "sources": [
+    {
+      "path": "webpj/www/core/raw-campaign-session-terrain.js",
+      "sha256": "a0c34b8cd0697029f6a401b78a28a9a4eec667be58af37e0ddeed94d0acf57ca",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/www/core/raw-normal-terrain-world-binding.js",
+      "sha256": "ffd7f71756bc9251df978c31f3de8ccb84bdddc15f5f2fbc1d2c3b986b6580f6",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/www/core/raw-terrain-world-binding.js",
+      "sha256": "eb85b37fc8f496bbac3eb52b3eeeca337e4350fef77b90729f71dfe9753d9d9c",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/www/core/raw-terrain-context.js",
+      "sha256": "7c2487e5870627d769b4335ec9259f0ce4de5bfdfbd84066861994f8825e44c9",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/www/core/raw-terrain-stamp.js",
+      "sha256": "9a3e6ea2edea5960e0063b4cdae797d785f37964586ef07b25d1d69824657470",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/www/core/raw-island-builder.js",
+      "sha256": "3f2d3bb1105a440dc4814df79c62c2b468881c4c4fed52a572f485a34a44835a",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/www/core/raw-fort-random-placement.js",
+      "sha256": "eeb419b8964e5446fb1f5805ec5dd97e8e0ed6f9b9e3a628b16deb364dbcc57f",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/www/core/raw-farm-cluster.js",
+      "sha256": "e6714e238d19adec7d96fee13ad32c91dfd9cfec59b88e1e2bbcd59780a1fccc",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/www/assets/type-table.js",
+      "sha256": "88a20f46e0c72a3e10104d63ce91bbf9529c29ab3f8bf7a496639caef5574bdf",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/www/assets/type-flags.js",
+      "sha256": "a481e99e309fd3ab6f4da4e1d66cda4828bacfb6d658b8ef4e0d4785ef13a1d8",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/www/assets/territory.js",
+      "sha256": "5a9504b5c3f853fd371793d6098de8406c824578bcf15cf54a3346a483e2fbe1",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/tests/normal-terrain-world-binding.test.mjs",
+      "sha256": "7e4759882f48d00345d427611101f7810ddd9bbb0088044a03b37fdf03d301ce",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/tests/terrain-world-binding.test.mjs",
+      "sha256": "9107a96d3cb78420d983a9edf2996d6c8f646346947995772658b708a35b539a",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/tests/raw-campaign-session-terrain.test.mjs",
+      "sha256": "cc962102e376fc26bb7f5b1067a2b71a305ed42e82cf0c82d2723fc7c9f4e3af",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/tests/terrain-stamp.test.mjs",
+      "sha256": "6f42976ff89d69b3c5e04f24b6b5a4b764e19bcfab2051558486b0fd78bc1741",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/tests/territory.test.mjs",
+      "sha256": "7be3047bf26aab478ae4f23aa71170bb69b21e0d461b83be1cf46c72e9616ab0",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/tests/farm-cluster.test.mjs",
+      "sha256": "72b05a5e4224ae1e16a17c301c111818b240f741aac52e294e69feb6f242a6b8",
+      "sameAsE1458": true
+    }
+  ],
+  "artifacts": [
+    {
+      "path": "webpj/extracted/e1465-terrain-inventory.json",
+      "bytes": 989,
+      "sha256": "b644f92788e3f600574e4159c6681c576cf69e09e382cfc7e70c0e21b0fee65e"
+    },
+    {
+      "path": "webpj/extracted/e1465-type-cluster-flags.json",
+      "bytes": 732,
+      "sha256": "7ee8b9867070507069a441233886f9da61d5432c233ec422be72f477e5408a5c"
+    },
+    {
+      "path": "webpj/extracted/e1465-source-audit.json",
+      "bytes": 3540,
+      "sha256": "8f03e3e8495da39f5ef2a5cff0f901c242b57f4ddeabe3a34b2da748330ce10e"
+    },
+    {
+      "path": "webpj/extracted/e1456-cache-canvas-before.tsv",
+      "bytes": 319909,
+      "sha256": "9d27ee5cda1eaa1caea6e18b85f4b5035f777d69f9b1ebe21ff00fec1c2b6050"
+    }
+  ],
+  "inheritedRegression": "WB04-E1458 Node26 6932/6932; selected 17 files raw-identical",
+  "fortCount": 465,
+  "activeTerritoryCount": 2060,
+  "savedDirectionCounts": [
+    2060,
+    0,
+    0,
+    0
+  ],
+  "currentTerrainClustersWithLitUnlit": {
+    "island94": [
+      0,
+      0
+    ],
+    "isle97": [
+      0,
+      0
+    ],
+    "isleBig98": [
+      0,
+      0
+    ],
+    "edgeFarm121": [
+      0,
+      0
+    ],
+    "fringe102": [
+      29,
+      29
+    ]
+  },
+  "actualPriorSessionObjectCounts": {
+    "94": 13,
+    "97": 1353,
+    "98": 0,
+    "102": 168,
+    "121": 152
+  }
+}
