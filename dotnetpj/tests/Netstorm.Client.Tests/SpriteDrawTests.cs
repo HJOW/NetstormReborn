@@ -225,6 +225,22 @@ public sealed class SpriteDrawTests
         Assert.Equal(new byte[] { 40, 11, 42, 255 }, pixels);
     }
 
+    /// <summary>픽셀 장치가 전달된 배율을 실제 SHP 변환기에 전달한다.</summary>
+    [Fact]
+    public void PixelTargetUsesRequestedScale()
+    {
+        byte[] raw = new byte[48];
+        Put(raw, 0, 0x30312e31); Put(raw, 4, 1); Put(raw, 8, 16);
+        Put(raw, 32, 1); Put(raw, 36, 1);
+        new byte[] { 5, 3, 4, 0, 5, 7, 8, 0 }.CopyTo(raw, 40);
+        var database = new ShapeDatabase(raw);
+        byte[] pixels = new byte[9];
+        var target = new SpritePixelTarget(pixels, 3, 3, new(0, 0, 3, 3), _ => new(database, 0), null);
+        target.Hooks().Shape!(new SpriteShapeRequest(70, 0, new(0, 0), SpriteShapeMode.Plain)
+            { Scaled = true, ScaleX = 0x20000, ScaleY = 0x20000 });
+        Assert.Equal(new byte[] { 3, 4, 4, 7, 8, 8, 7, 8, 8 }, pixels);
+    }
+
     /// <summary>선 끝점·역순·클립 및 half-open fill의 빈/역전 영역을 검사한다.</summary>
     [Fact]
     public void PixelLinesAndBars()

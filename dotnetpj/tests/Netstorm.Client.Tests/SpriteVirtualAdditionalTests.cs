@@ -169,6 +169,29 @@ public sealed class SpriteVirtualAdditionalTests
         Assert.Throws<ArgumentException>(() => draw.Draw(sid, new(3, 4)));
     }
 
+    /// <summary>메타 표시의 숨김 비트와 현재 정수·분수 배율을 실제 그림 요청에 전달한다.</summary>
+    [Fact]
+    public void MetaUsesCurrentFixedScaleAndVisibility()
+    {
+        var pool = new RawSidPool(24000, server: false);
+        int sid = pool.Allocate(SidAllocation.Client);
+        var frames = Enumerable.Range(0, 188).Select(_ => new RiftTypeFrames([])).ToArray();
+        var requests = new List<SpriteShapeRequest>();
+        var draw = new SpriteVirtualAdditional(pool, frames, requests.Add);
+        Set(pool, sid, 0x0050cc08, 94, 7);
+        draw.Draw(sid, new(1, 2));
+        Assert.Equal(new SpriteShapeRequest(94, 7, new(1, 2), SpriteShapeMode.Plain)
+            { Scaled = true, ScaleX = 0x10000, ScaleY = 0x10000 }, Assert.Single(requests));
+        BinaryPrimitives.WriteUInt32LittleEndian(pool.AllocatedBytes(sid)[26..], 2);
+        BinaryPrimitives.WriteUInt16LittleEndian(pool.AllocatedBytes(sid)[8..], 0x8000);
+        draw.Draw(sid, new(1, 2));
+        Assert.Equal(0x28000, requests[1].ScaleX);
+        Assert.Equal(requests[1].ScaleX, requests[1].ScaleY);
+        BinaryPrimitives.WriteUInt32LittleEndian(pool.AllocatedBytes(sid)[26..], 0x4000);
+        draw.Draw(sid, new(1, 2));
+        Assert.Equal(2, requests.Count);
+    }
+
     /// <summary>주문의 도움말 프레임과 추상 소유자 조건을 실제 현재 슬롯으로 분기한다.</summary>
     [Fact]
     public void SpellAdditionalSuppressesHelpAndUsesCurrentOwner()

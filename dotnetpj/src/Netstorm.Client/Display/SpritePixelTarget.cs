@@ -73,11 +73,14 @@ public sealed class SpritePixelTarget
         byte[]? colors = null;
         if (request.Mode == SpriteShapeMode.Owner) colors = _current ?? throw new InvalidOperationException("Sprite Draw 소유자 색 미설정");
         else if (request.Mode != SpriteShapeMode.Plain) colors = (_colors ?? throw new ArgumentException("Sprite Draw 색 경계 누락"))(request.Mode, request.Type, 0);
-        if (request.Mode is SpriteShapeMode.Plain or SpriteShapeMode.Owner)
+        if ((request.Mode is SpriteShapeMode.Plain or SpriteShapeMode.Owner) && request.Scaled)
+            VfxTransform.DrawScaledVfxImage(_pixels, _pitch, _height, image, frame, request.Position, request.ScaleX, request.ScaleY, _clip, colors);
+        else if (request.Mode is SpriteShapeMode.Plain or SpriteShapeMode.Owner)
             RendererDraw.DrawIndexedImage(_pixels, _pitch, _height, image,
                 unchecked(request.Position.X + frame.Rect.Left), unchecked(request.Position.Y + frame.Rect.Top), _clip, colors);
         else
-            VfxTransform.DrawTranslatedVfxImage(_pixels, _pitch, _height, image, frame, request.Position, 0x10000, 0x10000, _clip, colors!);
+            VfxTransform.DrawTranslatedVfxImage(_pixels, _pitch, _height, image, frame, request.Position,
+                request.Scaled ? request.ScaleX : 0x10000, request.Scaled ? request.ScaleY : 0x10000, _clip, colors!);
     }
 
     /// <summary>양 끝 포함 직교선을 원래 끝점에서 정규화하고 자른다. 대각선은 이 출력의 계약 밖이다.</summary>

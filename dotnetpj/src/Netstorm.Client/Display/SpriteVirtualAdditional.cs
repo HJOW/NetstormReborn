@@ -93,6 +93,9 @@ public sealed class SpriteVirtualAdditional
             case 0x004484b0:
                 DrawDais(sid, point);
                 return;
+            case 0x00479340:
+                DrawScaledMeta(sid, point);
+                return;
             case 0x00485f90:
                 ReadOnlySpan<byte> raw = _pool.Slot(sid);
                 _shape(new(raw[10], BinaryPrimitives.ReadUInt32LittleEndian(raw[36..]), point, SpriteShapeMode.Abstract));
@@ -191,5 +194,21 @@ public sealed class SpriteVirtualAdditional
         if ((raw[40] & 0x10) == 0) _shape(new(169, (uint)frame, point, SpriteShapeMode.Plain));
         else if (raw[34] == (_localOwner ?? throw new InvalidOperationException("제단 현재 로컬 소유자 미연결"))())
             _shape(new(169, (uint)frame, point, SpriteShapeMode.Abstract));
+    }
+
+    /// <summary>메타 표시의 현재 고정소수점 배율과 프레임을 실제 그림 요청으로 전달한다.</summary>
+    /// <param name="sid">현재 메타 표시 객체 SID다.</param>
+    /// <param name="point">현재 화면 기준점이다.</param>
+    /// <remarks>cpppj RawAuxiliaryDraw의 숨김 비트와 정수·분수 WORD, 0의 단위 배율 대체를 따른다.</remarks>
+    private void DrawScaledMeta(int sid, ScreenPoint point)
+    {
+        ReadOnlySpan<byte> raw = _pool.Slot(sid);
+        uint flags = BinaryPrimitives.ReadUInt32LittleEndian(raw[26..]);
+        if ((flags & 0x4000) != 0) return;
+        uint scale = ((flags & 0x3fff) << 16) + BinaryPrimitives.ReadUInt16LittleEndian(raw[8..]);
+        if (scale == 0) scale = 0x10000;
+        uint frame = BinaryPrimitives.ReadUInt32LittleEndian(raw[36..]);
+        _shape(new(raw[10], frame, point, SpriteShapeMode.Plain)
+            { Scaled = true, ScaleX = unchecked((int)scale), ScaleY = unchecked((int)scale) });
     }
 }

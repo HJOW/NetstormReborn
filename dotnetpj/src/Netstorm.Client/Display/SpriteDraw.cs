@@ -128,7 +128,15 @@ public sealed class SpriteDrawState
 /// <param name="Frame">물리 프레임 번호.</param>
 /// <param name="Position">화면 기준점.</param>
 /// <param name="Mode">사용할 색 변환.</param>
-public readonly record struct SpriteShapeRequest(uint Type, uint Frame, ScreenPoint Position, SpriteShapeMode Mode);
+public readonly record struct SpriteShapeRequest(uint Type, uint Frame, ScreenPoint Position, SpriteShapeMode Mode)
+{
+    /// <summary>참이면 실제 16.16 배율로 그림을 변환한다.</summary>
+    public bool Scaled { get; init; }
+    /// <summary>가로 16.16 배율이다. 배율 지정이 없으면 사용하지 않는다.</summary>
+    public int ScaleX { get; init; }
+    /// <summary>세로 16.16 배율이다. 배율 지정이 없으면 사용하지 않는다.</summary>
+    public int ScaleY { get; init; }
+}
 
 /// <summary>실행한 분기의 출력·가상 처리·게임 조회 경계. 필수 경계가 빠지면 예외로 알린다.</summary>
 public sealed class SpriteDrawHooks
