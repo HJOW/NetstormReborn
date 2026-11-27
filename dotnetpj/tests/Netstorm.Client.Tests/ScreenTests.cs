@@ -95,6 +95,22 @@ public sealed class ScreenTests
         Assert.True(ScreenGeometry.ScreenModeIsLegal(ScreenPresentation.ModernScreenMode(111), true));
     }
 
+    /// <summary>원본 설정의 창·전체화면 구름 비트와 명시된 구름 끄기를 보존한다.</summary>
+    [Fact]
+    public void ConfiguredModesPreserveCloudAndAnimationFlags()
+    {
+        var screen = new Screen(640, 480);
+        Assert.True(screen.SetMode(ScreenPresentation.ConfiguredScreenMode(false, 10)));
+        Assert.Equal(138U, screen.Flags);
+        Assert.True(screen.SetMode(ScreenPresentation.ConfiguredScreenMode(true, 11)));
+        Assert.Equal(139U, screen.Flags);
+        Assert.True(screen.SetMode(ScreenPresentation.ConfiguredScreenMode(false, 0)));
+        Assert.Equal(130U, screen.Flags);
+        Assert.Equal(10U, ScreenPresentation.ConfiguredScreenMode(false, null));
+        Assert.Equal(11U, ScreenPresentation.ConfiguredScreenMode(true, null));
+        Assert.Equal(42U, ScreenPresentation.ConfiguredScreenMode(false, 43));
+    }
+
     /// <summary>확대/축소의 중앙 표본·실제 행 간격·padding 보존을 작은 독립 입력으로 확인한다. 버퍼가 모자라면 쓰기 전에 거부한다.</summary>
     [Fact]
     public void IntegerNearestPixelsAndBounds()

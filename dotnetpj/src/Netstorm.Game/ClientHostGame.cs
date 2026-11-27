@@ -1013,6 +1013,18 @@ public sealed partial class ClientHostGame : Game
             _startup.Configuration.SetInt("workingFullScreenFlags", unchecked((int)_driver.Screen.Flags));
     }
 
+    /// <summary>선택한 창/전체화면 설정 비트를 현재 화면에 적용하고 불법 조합은 원본 기본값으로 복구한다.</summary>
+    /// <param name="fullscreen">적용할 실제 전체화면 여부다.</param>
+    private void ApplyConfiguredScreenMode(bool fullscreen)
+    {
+        string key = fullscreen ? "workingFullScreenFlags" : "windowScreenFlags";
+        ConfigInterface? config = _startup?.Configuration;
+        int? stored = config?.Configuration.Get(key) is null ? null : config.GetInt(key);
+        uint requested = ScreenPresentation.ConfiguredScreenMode(fullscreen, stored);
+        if (!_driver.Screen.SetMode(requested) && !_driver.Screen.SetMode(ScreenPresentation.ConfiguredScreenMode(fullscreen, null)))
+            throw new InvalidOperationException("화면 기본 모드 적용 실패");
+    }
+
     /// <summary>창 모드로 돌린다. 모드 전환은 저장 팔레트를 다시 적용한다(원본과 같은 순서).</summary>
     private void ApplyWindowed()
     {
@@ -1021,7 +1033,7 @@ public sealed partial class ClientHostGame : Game
         _graphics.PreferredBackBufferWidth = _windowedSize.X;
         _graphics.PreferredBackBufferHeight = _windowedSize.Y;
         _graphics.ApplyChanges();
-        _driver.Screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet);
+        ApplyConfiguredScreenMode(false);
     }
 
     /// <summary>전체화면 borderless 로 바꾼다. 모니터 장치 모드는 바꾸지 않는다.</summary>
@@ -1039,6 +1051,6 @@ public sealed partial class ClientHostGame : Game
         _graphics.PreferredBackBufferHeight = GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height;
         Window.Position = Point.Zero;
         _graphics.ApplyChanges();
-        _driver.Screen.SetMode(ScreenMode.FullScreen | ScreenMode.BackBufferDib | ScreenMode.ModeSet);
+        ApplyConfiguredScreenMode(true);
     }
 }

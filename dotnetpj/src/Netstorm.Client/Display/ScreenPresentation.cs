@@ -53,6 +53,17 @@ public static class ScreenPresentation
         return requested;
     }
 
+    /// <summary>설정된 원본 창/전체화면 비트를 선택하고 지정 모드의 전체화면 비트를 맞춘다.</summary>
+    /// <param name="fullscreen">실제로 선택한 전체화면 여부다.</param>
+    /// <param name="configured">설정 파일의 해당 모드 비트다. 없으면 원본 창 기본값을 쓴다.</param>
+    /// <returns>장치가 호환 모드로 정규화할 요청 비트다.</returns>
+    /// <remarks>cpppj ClientMain의 windowScreenFlags·workingFullScreenFlags 선택에 대응한다.</remarks>
+    public static uint ConfiguredScreenMode(bool fullscreen, int? configured)
+    {
+        uint mode = configured is int value ? unchecked((uint)value) : ScreenMode.FallbackWindowed;
+        return fullscreen ? mode | ScreenMode.FullScreen : mode & ~ScreenMode.FullScreen;
+    }
+
     /// <summary>
     /// 논리 크기를 바꾸지 않고 현재 클라이언트 영역에 비율대로 가운데 표시할 출력 사각형을 구한다. 4:3·16:9·16:10 등의 비율을 유지하며 늘어나지 않는다.
     /// 양수가 아닌 크기는 <see cref="ArgumentException"/>이다.
