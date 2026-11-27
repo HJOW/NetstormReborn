@@ -69,6 +69,10 @@ public sealed class RawMinimapControls : IDisposable
     private WeakReference<RawPop>? _pop;
     /// <summary>현재 World의 Unpop을 같은 짧은 대여로 빌린다.</summary>
     private WeakReference<RawUnpop>? _unpop;
+    /// <summary>같은 물리를 사용하는 세션의 추가 Pop 실행기들이다. UI가 세션을 보유하지 않는다.</summary>
+    private readonly List<WeakReference<RawPop>> _additionalPops = [];
+    /// <summary>같은 물리를 사용하는 세션의 추가 Unpop 실행기들이다.</summary>
+    private readonly List<WeakReference<RawUnpop>> _additionalUnpops = [];
     /// <summary>자기 외부 출력만 반납하는 실제 등록 번호다.</summary>
     private readonly uint _drawRegistration;
     /// <summary>공통 기본 물리 반납의 이전 장치다.</summary>
@@ -140,10 +144,33 @@ public sealed class RawMinimapControls : IDisposable
     {
         _pop = new(pop); _unpop = new(unpop); pop.SetMetadisplay(_dirty); unpop.SetMinimapQueue(_dirty); _state.FullRefresh = 1;
     }
+    /// <summary>기본 대여와 같은 풀·공간의 세션 실행기 쌍에도 동일한 변경 큐를 연결한다.</summary>
+    /// <remarks>중복이나 다른 물리를 먼저 거부하며 World 객체의 수명을 늘리지 않는다.</remarks>
+    public void BindAdditionalWorldPair(RawPop pop, RawUnpop unpop)
+    {
+        CheckAlive(); ArgumentNullException.ThrowIfNull(pop); ArgumentNullException.ThrowIfNull(unpop);
+        if (_pop is null || _unpop is null) throw new InvalidOperationException("미니맵의 기본 월드 대여 없음");
+        if (!ReferenceEquals(pop.Pool, _storage.Pool) || !ReferenceEquals(pop.Hash, _storage.Hash) || !ReferenceEquals(pop.Spots, _storage.Spots)
+            || !ReferenceEquals(unpop.Pool, _storage.Pool) || !ReferenceEquals(unpop.Hash, _storage.Hash) || !ReferenceEquals(unpop.Spots, _storage.Spots))
+            throw new ArgumentException("미니맵 추가 실행기의 실제 월드 물리 불일치");
+        if ((_pop.TryGetTarget(out var basePop) && ReferenceEquals(basePop, pop)) || (_unpop.TryGetTarget(out var baseUnpop) && ReferenceEquals(baseUnpop, unpop))
+            || _additionalPops.Any(reference => reference.TryGetTarget(out var current) && ReferenceEquals(current, pop))
+            || _additionalUnpops.Any(reference => reference.TryGetTarget(out var current) && ReferenceEquals(current, unpop)))
+            throw new ArgumentException("미니맵 추가 실행기 중복 대여");
+        pop.SetMetadisplay(_dirty); unpop.SetMinimapQueue(_dirty);
+        _additionalPops.Add(new(pop)); _additionalUnpops.Add(new(unpop));
+        _state.FullRefresh = 1;
+    }
     /// <summary>현재 자기 통지만 expected owner 확인으로 반납하고 장기 물리/bitmap은 유지한다.</summary>
     public void UnbindWorld()
     {
-        CheckAlive(); if (_pop is not null && _pop.TryGetTarget(out var pop)) pop.ReleaseMetadisplay(_dirty); if (_unpop is not null && _unpop.TryGetTarget(out var unpop)) unpop.ReleaseMinimapQueue(_dirty); _pop = null; _unpop = null;
+        CheckAlive();
+        // 나중에 연결한 세션 실행기부터 동일 큐일 때만 반납한다.
+        foreach (var reference in _additionalPops) if (reference.TryGetTarget(out var extraPop)) extraPop.ReleaseMetadisplay(_dirty);
+        // Unpop도 다른 소유자가 교체한 큐를 보존한다.
+        foreach (var reference in _additionalUnpops) if (reference.TryGetTarget(out var extraUnpop)) extraUnpop.ReleaseMinimapQueue(_dirty);
+        _additionalPops.Clear(); _additionalUnpops.Clear();
+        if (_pop is not null && _pop.TryGetTarget(out var pop)) pop.ReleaseMetadisplay(_dirty); if (_unpop is not null && _unpop.TryGetTarget(out var unpop)) unpop.ReleaseMinimapQueue(_dirty); _pop = null; _unpop = null;
     }
     /// <summary>004815b0→004801b0의 현재 bitmap 폭/부모0 생성 뒤 Help와 현재 serial/표시를 게시한다.</summary>
     public uint Construct()

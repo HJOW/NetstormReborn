@@ -182,6 +182,44 @@ public sealed class RawMinimapControlsTests
         Assert.Equal(RawPopResult.Registered, pop.Pop(sid, rig.Storage.Types[74], 1, 1, 120, 80));
         Assert.Equal(0, rig.State.Count);
     }
+    /// <summary>같은 물리의 추가 실행기 알림과 중복·타 월드 거부 및 교체된 큐 보존을 검증한다.</summary>
+    [Fact]
+    public void AdditionalWorldPairNotifiesAndReleasesOnlyItsOwnQueue()
+    {
+        using var rig = new Rig();
+        rig.Storage.BindDisplayDevices(new() { View = () => new() { Zoom = 65536 }, Suppressed = () => false, Invalidate = (_, _) => { } });
+        var display = rig.Storage.DisplayExecutor();
+        var pop = new RawPop(rig.Storage.Pool, rig.Storage.Hash, rig.Storage.Spots, display, rig.Storage.PostPopExecutor());
+        var unpop = new RawUnpop(rig.Storage.Pool, rig.Storage.Hash, rig.Storage.Spots, display);
+        pop.BindDiagnostics(new() { Types = rig.Storage.Types });
+        unpop.BindDiagnostics(new() { Types = rig.Storage.Types });
+        pop.SetBuildingSide(rig.Storage.BuildingExecutor());
+        unpop.SetBuildingSide(rig.Storage.BuildingExecutor());
+        Assert.Throws<InvalidOperationException>(() => rig.Mini.BindAdditionalWorldPair(pop, unpop));
+        rig.Mini.BindStorageExecutors();
+        rig.Mini.BindAdditionalWorldPair(pop, unpop);
+        Assert.Throws<ArgumentException>(() => rig.Mini.BindAdditionalWorldPair(pop, unpop));
+        using var foreign = new Rig(false);
+        var foreignUnpop = new RawUnpop(foreign.Storage.Pool, foreign.Storage.Hash, foreign.Storage.Spots);
+        Assert.Throws<ArgumentException>(() => rig.Mini.BindAdditionalWorldPair(pop, foreignUnpop));
+        rig.Mini.Refresh();
+        rig.Storage.Types[74].Flags2 = 0x4002;
+        rig.Storage.Types[74].FootX = rig.Storage.Types[74].FootY = 1;
+        rig.Storage.Shapes[74].Loaded = true;
+        rig.Storage.Shapes[74].FrameCount = 1;
+        rig.Storage.Shapes[74].Frames.Add(new() { Width = 16, Height = 11, CellWidth = 1, CellHeight = 1 });
+        int sid = rig.Storage.FactoryExecutor().Create(74, SidAllocation.Client);
+        Assert.Equal(RawPopResult.Registered, pop.Pop(sid, rig.Storage.Types[74], 1, 1, 120, 80));
+        Assert.True(rig.State.Count > 0);
+        rig.Mini.Refresh();
+        unpop.Unpop(sid, rig.Storage.Types[74]);
+        Assert.True(rig.State.Count > 0);
+        var other = new RawMetadisplayDirty(rig.Storage.Pool, new());
+        pop.SetMetadisplay(other); unpop.SetMinimapQueue(other);
+        rig.Mini.UnbindWorld();
+        Assert.True(pop.ReleaseMetadisplay(other));
+        Assert.True(unpop.ReleaseMinimapQueue(other));
+    }
     /// <summary>Capture/Idle 중 닫아도 같은 공통 수명이 둘을 반납하고 독립 bitmap은 남긴다.</summary>
     [Fact]
     public void CloseAndReopenKeepBitmapAndSharedWordButReleaseCaptureIdleAndOwnedStrings()
