@@ -1,0 +1,36 @@
+{
+  "unit": "WB04-E1408",
+  "host": "HJOW-Athlon",
+  "recordedAt": "2026-11-27T04:54:45.363048+00:00",
+  "sourceFreeze": "../webpj-e1405-evidence/source-freeze.json",
+  "command": "node extracted/e1408-ally-delay28-flow.cjs savetheisland 60000",
+  "loadedSource": "E1400 game modules; main E1404 mutation happened after this browser ended.",
+  "condition": "원래 메뉴28프레임 실제 대기 뒤 실제 아군AI. 초기SP2000/이름/동맹/기술보존.",
+  "terminalFrame": 13900,
+  "gameErrors": 0,
+  "naturalVictoryAssertion": "failed",
+  "shellExit": "원래 exec 응답이 잘려 종료코드 직접 회수 안 됨. 원문에는 자연 승리 단언 실패가 남고 프로세스는 종료됨.",
+  "files": {
+    "collector.cjs.txt": {
+      "bytes": 12786,
+      "sha256": "285587e41b81b26bb82bf87ae78592c643e490d08423339eca250d3b7048b83c"
+    },
+    "flow.log": {
+      "bytes": 3870,
+      "sha256": "5ca4341648b6b815263be96837a0fdc79fbf6f1496ba1307855ca5b888daf88b"
+    },
+    "result.json": {
+      "bytes": 82504,
+      "sha256": "b1a8198dddee0d4147110226f9da4ee5770155ee69da2ffede9c8bf755ded64f"
+    },
+    "terminal.png": {
+      "bytes": 695847,
+      "sha256": "c38b36f4f8fc66bdcb4f110a54496255d282492e90aa41aa82527421f39e7d31"
+    },
+    "terminal.tsv": {
+      "bytes": 536720,
+      "sha256": "b3ef6c0cc97de75dd00c1d10e02529fa4f8578df380030202fc8bec73bf2d73a"
+    }
+  },
+  "webBaselineCommit": "c0904e1e7"
+}
