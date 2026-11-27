@@ -1,0 +1,35 @@
+
+Running 6 tests using 1 worker
+
+  ✓  1 [chromium] › e2e/fixed-time.spec.js:91:1 › 고정 시각 모드: 시작 그림은 360프레임·9초이고 같은 입력의 두 실행은 같은 덤프를 낸다 (7.1m)
+  ✓  2 [chromium] › e2e/fixed-time.spec.js:105:1 › 고정 시각 모드 16:9(1366×768): 90·130프레임 화면과 덤프가 cpppj 오라클과 같다 (1.6m)
+  ✘  3 [chromium] › e2e/fixed-time.spec.js:113:1 › 고정 시각 모드가 아니면 프레임을 직접 진행할 수 없다 (1.0m)
+  ✓  4 [chromium] › e2e/fixed-time.spec.js:123:1 › 고정 시각 모드 16:10(1280×800): 화면과90·130프레임 덤프가 cpppj 오라클과 같다 (4.2m)
+  ✓  5 [chromium] › e2e/progress-portability.spec.js:54:1 › 실제1-1 저장 사본: 제품 번들의 새로고침과 해제된1-2 실제 브리핑 (37.7s)
+  ✓  6 [chromium] › e2e/static-deployment.spec.js:24:1 › 하위 경로에서 시작하고 새로고침 뒤 사용자 설정을 읽는다 (10.4s)
+
+
+  1) [chromium] › e2e/fixed-time.spec.js:113:1 › 고정 시각 모드가 아니면 프레임을 직접 진행할 수 없다 ────────────────────
+
+    Test timeout of 60000ms exceeded.
+
+    Error: page.waitForFunction: Test timeout of 60000ms exceeded.
+
+      115 |   await installSilentAudioSink(page);
+      116 |   await page.goto('/debug.html?aspect=4:3');
+    > 117 |   await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 60000 });
+          |              ^
+      118 |   const message = await page.evaluate(async () => { try { await window.netstorm.stepFixedFrames(1); return ''; } catch (error) { return error.message; } });
+      119 |   expect(message).toMatch(/고정 시각 모드/);
+      120 | });
+        at /mnt/h/Workspace/git/NetstormReborn/webpj/e2e/fixed-time.spec.js:117:14
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    extracted/e1397-linux-silent-no-trace/fixed-time-고정-시각-모드가-아니면-프레임을-직접-진행할-수-없다-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: extracted/e1397-linux-silent-no-trace/fixed-time-고정-시각-모드가-아니면-프레임을-직접-진행할-수-없다-chromium/error-context.md
+
+  1 failed
+    [chromium] › e2e/fixed-time.spec.js:113:1 › 고정 시각 모드가 아니면 프레임을 직접 진행할 수 없다 ─────────────────────
+  5 passed (15.4m)

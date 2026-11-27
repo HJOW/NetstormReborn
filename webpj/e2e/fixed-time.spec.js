@@ -5,6 +5,8 @@
 const { test, expect } = require('@playwright/test');
 const fs = require('node:fs');
 const path = require('node:path');
+// 실제 음향 엔진을 유지하면서 GUI 검사 장치만 분리하는 선택적 환경 설정이다.
+const { installSilentAudioSink } = require('./silent-audio-sink');
 
 // 화면 모드별 브라우저 크기·가로세로비 이름·cpppj 오라클 폴더이다. 4:3 은 1024×768, 16:9 는 논리 1366×768 이다. (2026-11-23 WB04-E1282)
 const ORACLE_ROOT = path.join(__dirname, '..', 'tests', 'fixtures', 'cpppj', 'candidate-225553df', 'tutorial1');
@@ -19,6 +21,7 @@ async function run(browser, missionFrames, aspect = '4:3') {
   const context = await browser.newContext({ viewport: MODES[aspect].viewport, locale: 'en-US' }), page = await context.newPage();
   const errors = []; page.on('pageerror', (error) => errors.push(error.stack ?? error.message)); page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
   await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, autoDemo: 0 } })));
+  await installSilentAudioSink(page);
   await page.goto(`/debug.html?fixed=25&originalTutorialPresentation=1&aspect=${aspect}&title=1`);
   await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 60000 });
   await page.locator('canvas').click();
@@ -39,6 +42,15 @@ async function run(browser, missionFrames, aspect = '4:3') {
   await page.evaluate((count) => window.netstorm.stepFixedFrames(count), 130 - missionFrames);
   const later = await page.evaluate(() => window.netstorm.sessionDump());
   const patchMode = await page.evaluate(() => window.netstorm._campaignWorld.session().core().destroy.hasPatchDiagnostics);
+  // 플랫폼/음향 모드 차이를 조사할 때는 실제 관측 사본을 파일에 남긴다. 비교 허용 범위나 게임 상태는 바꾸지 않는다.
+  if (process.env.NETSTORM_E2E_CAPTURE === '1') {
+    const directory = test.info().outputPath(`fixed-${aspect.replaceAll(':', 'x')}-${Date.now()}`);
+    fs.mkdirSync(directory, { recursive: true });
+    fs.writeFileSync(path.join(directory, 'load.tsv'), dump); fs.writeFileSync(path.join(directory, 'later.tsv'), later);
+    fs.writeFileSync(path.join(directory, 'pixels.bin'), Buffer.from(screen.pixels)); fs.writeFileSync(path.join(directory, 'palette.bin'), Buffer.from(screen.palette));
+    const audio = await page.evaluate(() => (window.netstormAudioTestContexts ?? []).map((context) => ({ sink: context.sinkId, state: context.state, currentTime: context.currentTime, sampleRate: context.sampleRate })));
+    fs.writeFileSync(path.join(directory, 'metrics.json'), JSON.stringify({ width: screen.width, height: screen.height, titleFrames, titleGame, frame, errors, patchMode, sinkMode: process.env.NETSTORM_E2E_SILENT_SINK === '1' ? 'none' : 'default', audio, platform: process.platform, node: process.version }, null, 2));
+  }
   await context.close();
   return { dump, later, titleFrames, titleGame, frame, errors, screen, patchMode };
 }
@@ -100,6 +112,7 @@ test('고정 시각 모드 16:9(1366×768): 90·130프레임 화면과 덤프가
 
 test('고정 시각 모드가 아니면 프레임을 직접 진행할 수 없다', async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, autoDemo: 0 } })));
+  await installSilentAudioSink(page);
   await page.goto('/debug.html?aspect=4:3');
   await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 60000 });
   const message = await page.evaluate(async () => { try { await window.netstorm.stepFixedFrames(1); return ''; } catch (error) { return error.message; } });

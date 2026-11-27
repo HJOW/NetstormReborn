@@ -1,0 +1,64 @@
+{
+  "unit": "WB04-E1397",
+  "host": "HJOW-Athlon",
+  "product": "E1393",
+  "node26": {
+    "version": "26.13.0",
+    "tests": 6895,
+    "pass": 6895,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "durationMs": 1342705.738
+  },
+  "node22": {
+    "version": "22.23.3",
+    "tests": 6895,
+    "pass": 6895,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "durationMs": 1053522.2719,
+    "exitCode": 0
+  },
+  "freezeRawChanges": [
+    {
+      "path": "webpj/www/netstorm.js",
+      "currentSha256": "a900b3a31e2d3f335c3858cf64474e976de206438e2f005ea2272b2a9136eb8c",
+      "lfSha256": "4d40cc551e4fb9ad5e07392a32c32d714eb6aa448174152b9bd0cda9bab5a301",
+      "reason": "CRLF/LF 줄바꿈만 다르고 LF 내용은 시작 해시와 동일"
+    },
+    {
+      "path": "webpj/server.js",
+      "currentSha256": "c5254a6a265e7eea455730b31d0680c7880bf57da2e1a8eeedf1a67239161f74",
+      "lfSha256": "ae7790e410712f6e2861eabb5f6c7ed40aa34cbbff290ecb68bfc0d89208c2b0",
+      "reason": "CRLF/LF 줄바꿈만 다르고 LF 내용은 시작 해시와 동일"
+    }
+  ],
+  "linux": {
+    "os": "Ubuntu26.04 WSL2 Linux6.18.58.1 x86_64",
+    "node": "24.21.0",
+    "browser": "Chrome for Testing156.0.8078.4 Chromium1248",
+    "headed": true,
+    "display": "Xvfb",
+    "audio": "실제 native AudioContext, sinkId type none, 게임 audio=true",
+    "command": "NETSTORM_E2E_SILENT_SINK=1 NETSTORM_E2E_CAPTURE=1 xvfb-run -a node node_modules/playwright/cli.js test e2e/static-deployment.spec.js e2e/progress-portability.spec.js e2e/fixed-time.spec.js --workers=1 --project=chromium --headed --trace=off",
+    "pass": 5,
+    "fail": 1,
+    "exitCode": 1,
+    "remaining": "비고정 초기 clickToStart 대기60초 시간 초과·물리 음향 확인",
+    "uaNote": "Desktop Chrome 장치 프리셋이 UA를 Windows로 지정하지만 실행 Node/Chromium 바이너리는 Linux다"
+  },
+  "sha256": {
+    "capture-comparison.json": "2d5c517fcd7639832b9b14ec37373b36238eb86a09984dd82b8111db3c5eb2e7",
+    "freeze-start.json": "432f9db34046085e07e3c4f5fcd7b6eb0e7c571f6b6f9e08159da35fd4ae6bc0",
+    "linux-audio-device.log": "fb22bf1ea83b3f296601459ba91648f731e9c2f72dc75b1ff5671a63266211e8",
+    "linux-final.log": "b7c947e902f36dd149b3f01448a18f169617c616e4c1de9badb9a729793f8e10",
+    "linux-muted-attempt.log": "c9feb5d6e899589ec14e4ad210156ff34e38374a058d14ec3b5797c61407197c",
+    "linux-progress-reader.json": "3be37624a81b8fdb3cbc08e43bb2c18dfe10c7647ef9d754fc3753270e0dcd0c",
+    "node22.log": "8d0b1a3c058cddaf44bd635b00a026ba5d8fecb1992f0adcfa7590de63c228fe",
+    "node26.log": "ef3c50c5b557975e3791a87758746393d72b0e1e47c00451ecc9e5e3c6ad30dd",
+    "windows-muted-attempt.log": "94e55f76557470b3ae91c50ddcdc5c67a587d61746ea0de8180440e87858ac95",
+    "windows-silent.log": "78e1030102713efd15287863c6ad3dd8f2829192420049d04fe11794045a808c"
+  }
+}

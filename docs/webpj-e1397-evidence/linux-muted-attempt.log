@@ -1,0 +1,119 @@
+
+Running 6 tests using 1 worker
+
+  ✘  1 [chromium] › e2e/fixed-time.spec.js:81:1 › 고정 시각 모드: 시작 그림은 360프레임·9초이고 같은 입력의 두 실행은 같은 덤프를 낸다 (3.9m)
+  ✘  2 [chromium] › e2e/fixed-time.spec.js:95:1 › 고정 시각 모드 16:9(1366×768): 90·130프레임 화면과 덤프가 cpppj 오라클과 같다 (2.5m)
+  ✓  3 [chromium] › e2e/fixed-time.spec.js:103:1 › 고정 시각 모드가 아니면 프레임을 직접 진행할 수 없다 (21.6s)
+  ✘  4 [chromium] › e2e/fixed-time.spec.js:112:1 › 고정 시각 모드 16:10(1280×800): 화면과90·130프레임 덤프가 cpppj 오라클과 같다 (3.1m)
+  ✓  5 [chromium] › e2e/progress-portability.spec.js:52:1 › 실제1-1 저장 사본: 제품 번들의 새로고침과 해제된1-2 실제 브리핑 (34.2s)
+  ✓  6 [chromium] › e2e/static-deployment.spec.js:22:1 › 하위 경로에서 시작하고 새로고침 뒤 사용자 설정을 읽는다 (11.8s)
+
+
+  1) [chromium] › e2e/fixed-time.spec.js:81:1 › 고정 시각 모드: 시작 그림은 360프레임·9초이고 같은 입력의 두 실행은 같은 덤프를 낸다 
+
+    Error: 웹 90프레임 화면과 load.png 의 다른 픽셀 수
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 7068
+
+      69 |   const compared = compareImages(cpp, web, []);
+      70 |   expect(compared.sizeMatch, '화면 크기').toBe(true);
+    > 71 |   expect(compared.total, '웹 90프레임 화면과 load.png 의 다른 픽셀 수').toBe(0);
+         |                                                            ^
+      72 |   const { compareSessionDumps } = await import('../tools/session-dump-compare.mjs');
+      73 |   const normalize = (text) => text.split(/\r?\n/).join('\n');
+      74 |   const allowed = new Set(['sp']);
+        at expectMatchesOracle (/mnt/h/Workspace/git/NetstormReborn/webpj/e2e/fixed-time.spec.js:71:60)
+        at /mnt/h/Workspace/git/NetstormReborn/webpj/e2e/fixed-time.spec.js:92:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    extracted/e1397-linux-muted/fixed-time-고정-시각-모드-시작-그림은-12a6d-9초이고-같은-입력의-두-실행은-같은-덤프를-낸다-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    extracted/e1397-linux-muted/fixed-time-고정-시각-모드-시작-그림은-12a6d-9초이고-같은-입력의-두-실행은-같은-덤프를-낸다-chromium/test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: extracted/e1397-linux-muted/fixed-time-고정-시각-모드-시작-그림은-12a6d-9초이고-같은-입력의-두-실행은-같은-덤프를-낸다-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    extracted/e1397-linux-muted/fixed-time-고정-시각-모드-시작-그림은-12a6d-9초이고-같은-입력의-두-실행은-같은-덤프를-낸다-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace extracted/e1397-linux-muted/fixed-time-고정-시각-모드-시작-그림은-12a6d-9초이고-같은-입력의-두-실행은-같은-덤프를-낸다-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  2) [chromium] › e2e/fixed-time.spec.js:95:1 › 고정 시각 모드 16:9(1366×768): 90·130프레임 화면과 덤프가 cpppj 오라클과 같다 
+
+    Error: 웹 90프레임 화면과 load.png 의 다른 픽셀 수
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 7068
+
+      69 |   const compared = compareImages(cpp, web, []);
+      70 |   expect(compared.sizeMatch, '화면 크기').toBe(true);
+    > 71 |   expect(compared.total, '웹 90프레임 화면과 load.png 의 다른 픽셀 수').toBe(0);
+         |                                                            ^
+      72 |   const { compareSessionDumps } = await import('../tools/session-dump-compare.mjs');
+      73 |   const normalize = (text) => text.split(/\r?\n/).join('\n');
+      74 |   const allowed = new Set(['sp']);
+        at expectMatchesOracle (/mnt/h/Workspace/git/NetstormReborn/webpj/e2e/fixed-time.spec.js:71:60)
+        at /mnt/h/Workspace/git/NetstormReborn/webpj/e2e/fixed-time.spec.js:100:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    extracted/e1397-linux-muted/fixed-time-고정-시각-모드-16-9-1-be158-30프레임-화면과-덤프가-cpppj-오라클과-같다-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: extracted/e1397-linux-muted/fixed-time-고정-시각-모드-16-9-1-be158-30프레임-화면과-덤프가-cpppj-오라클과-같다-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    extracted/e1397-linux-muted/fixed-time-고정-시각-모드-16-9-1-be158-30프레임-화면과-덤프가-cpppj-오라클과-같다-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace extracted/e1397-linux-muted/fixed-time-고정-시각-모드-16-9-1-be158-30프레임-화면과-덤프가-cpppj-오라클과-같다-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3) [chromium] › e2e/fixed-time.spec.js:112:1 › 고정 시각 모드 16:10(1280×800): 화면과90·130프레임 덤프가 cpppj 오라클과 같다 
+
+    Error: 웹 90프레임 화면과 load.png 의 다른 픽셀 수
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 7068
+
+      69 |     expect(view.split('\t').slice(-4).map(Number)).toEqual([85, 0, result.screen.width, result.screen.height]);
+      70 |   }
+    > 71 |   const { readPng, indexedToRgb } = await import('../tools/image-files.mjs'), { compareImages } = await import('../tools/screen-compare.mjs');
+         |                                                            ^
+      72 |   const palette = new Uint8Array(768);
+      73 |   // BGRX → RGB 로 바꾼다.
+      74 |   for (let index = 0; index < 256; index += 1) { palette[index * 3] = result.screen.palette[index * 4 + 2]; palette[index * 3 + 1] = result.screen.palette[index * 4 + 1]; palette[index * 3 + 2] = result.screen.palette[index * 4]; }
+        at expectMatchesOracle (/mnt/h/Workspace/git/NetstormReborn/webpj/e2e/fixed-time.spec.js:71:60)
+        at /mnt/h/Workspace/git/NetstormReborn/webpj/e2e/fixed-time.spec.js:116:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    extracted/e1397-linux-muted/fixed-time-고정-시각-모드-16-10--3e478-90·130프레임-덤프가-cpppj-오라클과-같다-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: extracted/e1397-linux-muted/fixed-time-고정-시각-모드-16-10--3e478-90·130프레임-덤프가-cpppj-오라클과-같다-chromium/error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    extracted/e1397-linux-muted/fixed-time-고정-시각-모드-16-10--3e478-90·130프레임-덤프가-cpppj-오라클과-같다-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace extracted/e1397-linux-muted/fixed-time-고정-시각-모드-16-10--3e478-90·130프레임-덤프가-cpppj-오라클과-같다-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  3 failed
+    [chromium] › e2e/fixed-time.spec.js:81:1 › 고정 시각 모드: 시작 그림은 360프레임·9초이고 같은 입력의 두 실행은 같은 덤프를 낸다 ─
+    [chromium] › e2e/fixed-time.spec.js:95:1 › 고정 시각 모드 16:9(1366×768): 90·130프레임 화면과 덤프가 cpppj 오라클과 같다 
+    [chromium] › e2e/fixed-time.spec.js:112:1 › 고정 시각 모드 16:10(1280×800): 화면과90·130프레임 덤프가 cpppj 오라클과 같다 
+  3 passed (11.6m)

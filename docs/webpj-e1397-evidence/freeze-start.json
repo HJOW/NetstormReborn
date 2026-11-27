@@ -1,0 +1,19 @@
+{
+  "recordedAt": "2026-11-27T02:22:22.735601+00:00",
+  "unit": "WB04-E1397",
+  "node26Command": "node --test --test-concurrency=2 tests/*.test.mjs",
+  "reason": "GUI/실제AI와 호스트를 공유하므로 파일별동시성2로전체검사한다. Node22는26종료후순차실행한다.",
+  "sha256": {
+    "webpj/www/netstorm.js": "4d40cc551e4fb9ad5e07392a32c32d714eb6aa448174152b9bd0cda9bab5a301",
+    "webpj/www/core/client-frame-clock.js": "cce7957b5d4d85c20cff398510765b2b98370c130148ccbd0aaa30ac51ed853e",
+    "webpj/www/core/raw-campaign-session-login-front.js": "17d5ca1d9bee69b8f20c045bfb5277e639231110c51a17961e2409bb69ee829c",
+    "webpj/www/dist/netstorm.bundle.js": "2bfd413ced0db5a54178695b435c85456be71795f48599d3feb9b54493515188",
+    "webpj/server.js": "ae7790e410712f6e2861eabb5f6c7ed40aa34cbbff290ecb68bfc0d89208c2b0",
+    "webpj/tests/static-server-cache.test.mjs": "a51872681b4a67a35aba0dc667b7e14e9880230f2de16ad8209f438088037cad",
+    "webpj/e2e/fixed-time.spec.js": "9e4adeeabd96568013826789eacd53ecc213622cb9c705f4156b423b83b37906",
+    "webpj/e2e/silent-audio-sink.js": "b6a534a52dbabfc26e406e39a8b951253e8caf7039727888149131cd8707a68d",
+    "webpj/e2e/ally-ai-test-control.js": "71e812e1b0f789b4493b14dcd7cd7a7e5d9db8003a04f69c864a11b2ba34822d",
+    "webpj/e2e/ally-ai-test-control.spec.js": "7860bfaf9db5573491329b9fef5a3a8dec57a1f47896c7e8cd5509d9ad57efcb",
+    "webpj/tools/ally-ai-campaign-flow.cjs": "db3ba0aed392591054ed9bc51d699a87266b308c6377966ba187b7a08917d977"
+  }
+}

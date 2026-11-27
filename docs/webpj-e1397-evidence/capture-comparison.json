@@ -1,0 +1,110 @@
+[
+  {
+    "capture": "extracted\\e1397-linux-silent-no-trace\\fixed-time-고정-시각-모드-16-10--3e478-90·130프레임-덤프가-cpppj-오라클과-같다-chromium\\fixed-16x10-1795748743973\\metrics.json",
+    "metrics": {
+      "width": 1280,
+      "height": 800,
+      "titleFrames": 360,
+      "titleGame": 9.1,
+      "frame": 90,
+      "errors": [],
+      "patchMode": true,
+      "sinkMode": "none",
+      "audio": [
+        {
+          "sink": {},
+          "state": "running",
+          "currentTime": 38.26648526077098,
+          "sampleRate": 22050
+        }
+      ],
+      "platform": "linux",
+      "node": "v24.21.0"
+    },
+    "screenDifference": 0,
+    "unexpectedLoad": [],
+    "unexpectedLater": []
+  },
+  {
+    "capture": "extracted\\e1397-linux-silent-no-trace\\fixed-time-고정-시각-모드-16-9-1-be158-30프레임-화면과-덤프가-cpppj-오라클과-같다-chromium\\fixed-16x9-1795748587189\\metrics.json",
+    "metrics": {
+      "width": 1366,
+      "height": 768,
+      "titleFrames": 360,
+      "titleGame": 9.1,
+      "frame": 90,
+      "errors": [],
+      "patchMode": true,
+      "sinkMode": "none",
+      "audio": [
+        {
+          "sink": {},
+          "state": "running",
+          "currentTime": 48.65160997732426,
+          "sampleRate": 22050
+        }
+      ],
+      "platform": "linux",
+      "node": "v24.21.0"
+    },
+    "screenDifference": 0,
+    "unexpectedLoad": [],
+    "unexpectedLater": []
+  },
+  {
+    "capture": "extracted\\e1397-linux-silent-no-trace\\fixed-time-고정-시각-모드-시작-그림은-12a6d-9초이고-같은-입력의-두-실행은-같은-덤프를-낸다-chromium\\fixed-4x3-1795748160699\\metrics.json",
+    "metrics": {
+      "width": 1024,
+      "height": 768,
+      "titleFrames": 360,
+      "titleGame": 9.1,
+      "frame": 90,
+      "errors": [],
+      "patchMode": true,
+      "sinkMode": "none",
+      "audio": [
+        {
+          "sink": {},
+          "state": "running",
+          "currentTime": 39.72353741496599,
+          "sampleRate": 22050
+        }
+      ],
+      "platform": "linux",
+      "node": "v24.21.0"
+    },
+    "screenDifference": 0,
+    "unexpectedLoad": [],
+    "unexpectedLater": [],
+    "windowsPixelsEqual": true,
+    "windowsPaletteEqual": true
+  },
+  {
+    "capture": "extracted\\e1397-linux-silent-no-trace\\fixed-time-고정-시각-모드-시작-그림은-12a6d-9초이고-같은-입력의-두-실행은-같은-덤프를-낸다-chromium\\fixed-4x3-1795748247633\\metrics.json",
+    "metrics": {
+      "width": 1024,
+      "height": 768,
+      "titleFrames": 360,
+      "titleGame": 9.1,
+      "frame": 90,
+      "errors": [],
+      "patchMode": true,
+      "sinkMode": "none",
+      "audio": [
+        {
+          "sink": {},
+          "state": "running",
+          "currentTime": 37.239002267573696,
+          "sampleRate": 22050
+        }
+      ],
+      "platform": "linux",
+      "node": "v24.21.0"
+    },
+    "screenDifference": 0,
+    "unexpectedLoad": [],
+    "unexpectedLater": [],
+    "windowsPixelsEqual": true,
+    "windowsPaletteEqual": true
+  }
+]

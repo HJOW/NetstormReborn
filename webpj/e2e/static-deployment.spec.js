@@ -2,6 +2,8 @@
 const { test, expect } = require('@playwright/test');
 const { once } = require('node:events');
 const { createStaticServer } = require('../server.js');
+// 물리 음향 장치에 의존하지 않는 GUI 검사 설정이며 기본 검사는 원래 장치를 사용한다.
+const { installSilentAudioSink } = require('./silent-audio-sink');
 
 // 개발 서버와 동일한 정적 장치를 하위 경로와 임시 포트에서 제공한다.
 const mount = '/preview/netstorm/';
@@ -23,6 +25,7 @@ test('하위 경로에서 시작하고 새로고침 뒤 사용자 설정을 읽�
   const files = new Set();
   const escapedRequests = [];
   const errors = [];
+  await installSilentAudioSink(page);
   // 브라우저가 합성한 캐시 응답 대신 서버가 실제 보낸 상태와 조건부 요청을 보존한다.
   const wire = [];
   const observe = (req, res) => res.on('finish', () => wire.push({ path: req.url.split('?')[0], status: res.statusCode, tag: req.headers['if-none-match'] }));
@@ -35,7 +38,10 @@ test('하위 경로에서 시작하고 새로고침 뒤 사용자 설정을 읽�
   });
 
   try {
-    await page.goto(baseUrl.href);
+    // GUI/저장 검사에서만 기존mute 옵션을 고를 수 있다. 기본 음향 경로의 검증 정책은 유지한다.
+    const entry = new URL(baseUrl.href);
+    if (process.env.NETSTORM_E2E_MUTE === '1') entry.searchParams.set('mute', '1');
+    await page.goto(entry.href);
     await page.waitForFunction(() => window.netstorm?.state === 'clickToStart');
     // 설정 변경은 앱의 구성 쓰기 경로를 통해 저장한다.
     await page.evaluate(() => window.netstorm._gameData.set('soundVolume', 3));

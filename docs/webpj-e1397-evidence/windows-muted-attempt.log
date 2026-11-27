@@ -1,0 +1,49 @@
+npm notice run NetstormWeb@1.0.0 npx
+npm notice run ^"playwright^" test -c webpj/playwright.config.js webpj/e2e/fixed-time.spec.js -g 시작 그림은 --workers=1 --output=webpj/extracted/e1397-windows-muted --reporter=list
+
+Running 1 test using 1 worker
+
+(node:14540) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › webpj\e2e\fixed-time.spec.js:81:1 › 고정 시각 모드: 시작 그림은 360프레임·9초이고 같은 입력의 두 실행은 같은 덤프를 낸다 (1.4m)
+
+
+  1) [chromium] › webpj\e2e\fixed-time.spec.js:81:1 › 고정 시각 모드: 시작 그림은 360프레임·9초이고 같은 입력의 두 실행은 같은 덤프를 낸다 
+
+    Error: 웹 90프레임 화면과 load.png 의 다른 픽셀 수
+
+    expect(received).toBe(expected) // Object.is equality
+
+    Expected: 0
+    Received: 7068
+
+      69 |   const compared = compareImages(cpp, web, []);
+      70 |   expect(compared.sizeMatch, '화면 크기').toBe(true);
+    > 71 |   expect(compared.total, '웹 90프레임 화면과 load.png 의 다른 픽셀 수').toBe(0);
+         |                                                            ^
+      72 |   const { compareSessionDumps } = await import('../tools/session-dump-compare.mjs');
+      73 |   const normalize = (text) => text.split(/\r?\n/).join('\n');
+      74 |   const allowed = new Set(['sp']);
+        at expectMatchesOracle (H:\Workspace\git\NetstormReborn\webpj\e2e\fixed-time.spec.js:71:60)
+        at H:\Workspace\git\NetstormReborn\webpj\e2e\fixed-time.spec.js:92:3
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    webpj\extracted\e1397-windows-muted\fixed-time-고정-시각-모드-시작-그림은-12a6d-9초이고-같은-입력의-두-실행은-같은-덤프를-낸다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    webpj\extracted\e1397-windows-muted\fixed-time-고정-시각-모드-시작-그림은-12a6d-9초이고-같은-입력의-두-실행은-같은-덤프를-낸다-chromium\test-failed-2.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: webpj\extracted\e1397-windows-muted\fixed-time-고정-시각-모드-시작-그림은-12a6d-9초이고-같은-입력의-두-실행은-같은-덤프를-낸다-chromium\error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    webpj\extracted\e1397-windows-muted\fixed-time-고정-시각-모드-시작-그림은-12a6d-9초이고-같은-입력의-두-실행은-같은-덤프를-낸다-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace webpj\extracted\e1397-windows-muted\fixed-time-고정-시각-모드-시작-그림은-12a6d-9초이고-같은-입력의-두-실행은-같은-덤프를-낸다-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › webpj\e2e\fixed-time.spec.js:81:1 › 고정 시각 모드: 시작 그림은 360프레임·9초이고 같은 입력의 두 실행은 같은 덤프를 낸다 

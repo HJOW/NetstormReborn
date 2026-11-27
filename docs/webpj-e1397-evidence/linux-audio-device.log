@@ -1,0 +1,48 @@
+
+Running 2 tests using 1 worker
+
+  ✘  1 [chromium] › e2e/progress-portability.spec.js:52:1 › 실제1-1 저장 사본: 제품 번들의 새로고침과 해제된1-2 실제 브리핑 (5.6m)
+  ✓  2 [chromium] › e2e/static-deployment.spec.js:22:1 › 하위 경로에서 시작하고 새로고침 뒤 사용자 설정을 읽는다 (1.1m)
+
+
+  1) [chromium] › e2e/progress-portability.spec.js:52:1 › 실제1-1 저장 사본: 제품 번들의 새로고침과 해제된1-2 실제 브리핑 ──
+
+    Error: expect(received).toEqual(expected) // deep equality
+
+    - Expected  - 1
+    + Received  + 3
+
+    - Array []
+    + Array [
+    +   "The AudioContext encountered an error from the audio device or the WebAudio renderer.",
+    + ]
+
+      69 |   await page.screenshot({ path: info.outputPath('restored-next-briefing.png') });
+      70 |   await info.attach('progress-reader.json', { body: Buffer.from(JSON.stringify({ source: progress, project: info.project.name, node: process.version, platform: process.platform, observed }, null, 2)), contentType: 'application/json' });
+    > 71 |   expect(errors).toEqual([]);
+         |                  ^
+      72 | });
+      73 |
+        at /mnt/h/Workspace/git/NetstormReborn/webpj/e2e/progress-portability.spec.js:71:18
+
+    Tearing down "context" exceeded the test timeout of 240000ms.
+
+    attachment #2: screenshot (image/png) ──────────────────────────────────────────────────────────
+    extracted/e1397-linux-xvfb/progress-portability-실제1-1-저장-사본-제품-번들의-새로고침과-해제된1-2-실제-브리핑-chromium/test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: extracted/e1397-linux-xvfb/progress-portability-실제1-1-저장-사본-제품-번들의-새로고침과-해제된1-2-실제-브리핑-chromium/error-context.md
+
+    attachment #4: trace (application/zip) ─────────────────────────────────────────────────────────
+    extracted/e1397-linux-xvfb/progress-portability-실제1-1-저장-사본-제품-번들의-새로고침과-해제된1-2-실제-브리핑-chromium/trace.zip
+    Usage:
+
+        npx playwright show-trace extracted/e1397-linux-xvfb/progress-portability-실제1-1-저장-사본-제품-번들의-새로고침과-해제된1-2-실제-브리핑-chromium/trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  Slow test file: [chromium] › e2e/progress-portability.spec.js (5.6m)
+  Consider running tests from slow files in parallel. See: https://playwright.dev/docs/test-parallel
+  1 failed
+    [chromium] › e2e/progress-portability.spec.js:52:1 › 실제1-1 저장 사본: 제품 번들의 새로고침과 해제된1-2 실제 브리핑 ───
+  1 passed (9.1m)
