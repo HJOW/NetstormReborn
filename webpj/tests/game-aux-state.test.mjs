@@ -204,8 +204,8 @@ test('GameAuxState: 초기값이 원본10.78 PE 의 .data/BSS 와 같다', (t) =
         if (value !== aux.manoSpellTypes[index]) mismatches.push(`주문@${address.toString(16)}: ${value} ≠ ${aux.manoSpellTypes[index]}`);
     }
     assert.deepEqual(mismatches, []);
-    // 필드93개와 장식4칸이다.
-    assert.deepEqual([GAME_AUX_FIELDS.length, WORLD_DECORATION_FIELDS.length], [93, 4]);
+    // 공급자 순환 칸을 포함한 필드94개와 장식4칸이다.
+    assert.deepEqual([GAME_AUX_FIELDS.length, WORLD_DECORATION_FIELDS.length], [94, 4]);
 });
 
 // 전투 종료 대기 BYTE는 일반 월드 초기화로 지우지 않으며 원본 폭만 허용한다.

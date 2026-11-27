@@ -1,0 +1,1141 @@
+[
+  {
+    "field": "allowAnyCapture",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/client-state-world-globals.js",
+      "webpj/www/core/raw-campaign-session-state.js",
+      "webpj/www/core/raw-mission-start.js"
+    ]
+  },
+  {
+    "field": "altarType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/netstorm.js",
+      "webpj/www/core/raw-ai-drop-targets.js",
+      "webpj/www/core/raw-ai-priest-actions.js",
+      "webpj/www/core/raw-campaign-session-motion-runtime.js",
+      "webpj/www/core/raw-campaign-session-priests.js",
+      "webpj/www/core/raw-campaign-session-ritual.js",
+      "webpj/www/core/raw-campaign-session-state.js",
+      "webpj/www/core/raw-campaign-session.js",
+      "webpj/www/core/raw-dais-deletion.js",
+      "webpj/www/core/raw-priest-participation.js",
+      "webpj/www/core/raw-rune-post-pop.js",
+      "webpj/www/core/raw-salvage-command.js",
+      "webpj/www/core/squid-reward.js",
+      "webpj/www/ui/client-production-about.js",
+      "webpj/www/ui/inventory-about-menu.js"
+    ]
+  },
+  {
+    "field": "archipelago",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/client-state-world-globals.js",
+      "webpj/www/core/raw-campaign-session-login-front.js",
+      "webpj/www/core/raw-campaign-session-skirmish.js",
+      "webpj/www/core/raw-campaign-session-state.js",
+      "webpj/www/core/raw-campaign-session-terrain.js",
+      "webpj/www/core/raw-campaign-session.js",
+      "webpj/www/core/raw-central-island.js",
+      "webpj/www/core/raw-farm-cluster.js",
+      "webpj/www/core/raw-mission-server-packets.js",
+      "webpj/www/core/raw-normal-terrain-world-binding.js",
+      "webpj/www/core/raw-terrain-context.js"
+    ]
+  },
+  {
+    "field": "archipelagoMaximum",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-session-skirmish.js",
+      "webpj/www/core/raw-campaign-session-terrain.js"
+    ]
+  },
+  {
+    "field": "archipelagoMinimum",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-session-skirmish.js",
+      "webpj/www/core/raw-campaign-session-terrain.js"
+    ]
+  },
+  {
+    "field": "archipelagoPercent",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-session-login-front.js",
+      "webpj/www/core/raw-campaign-session-skirmish.js",
+      "webpj/www/core/raw-campaign-session-terrain.js",
+      "webpj/www/core/raw-campaign-session.js"
+    ]
+  },
+  {
+    "field": "battleFinishFrames",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/client-battle-completion.js"
+    ]
+  },
+  {
+    "field": "battleStartPeerHeader",
+    "gameAuxHasName": false,
+    "otherSourceHits": []
+  },
+  {
+    "field": "bombFlareType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-session-devastation.js",
+      "webpj/www/core/raw-campaign-session-owners.js"
+    ]
+  },
+  {
+    "field": "bombTimerHeader",
+    "gameAuxHasName": false,
+    "otherSourceHits": []
+  },
+  {
+    "field": "bombTimerInitialLength",
+    "gameAuxHasName": false,
+    "otherSourceHits": []
+  },
+  {
+    "field": "buildReplayProcessType",
+    "gameAuxHasName": false,
+    "otherSourceHits": []
+  },
+  {
+    "field": "bulfType",
+    "gameAuxHasName": false,
+    "otherSourceHits": [
+      "webpj/www/core/raw-damageable-burning.js",
+      "webpj/www/core/raw-movement-process-types.js"
+    ]
+  },
+  {
+    "field": "centralPosition",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/client-state-world-globals.js",
+      "webpj/www/core/raw-campaign-session-skirmish.js"
+    ]
+  },
+  {
+    "field": "cleanupDeadline",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/client-state-world-globals.js"
+    ]
+  },
+  {
+    "field": "constructionBlocked",
+    "gameAuxHasName": true,
+    "otherSourceHits": []
+  },
+  {
+    "field": "constructionDisplaceGenus",
+    "gameAuxHasName": true,
+    "otherSourceHits": []
+  },
+  {
+    "field": "constructionHeader",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-session-transmission.js"
+    ]
+  },
+  {
+    "field": "constructionProcessType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/assets/type-flags.js",
+      "webpj/www/core/raw-asset-regular.js",
+      "webpj/www/core/raw-campaign-session-state.js"
+    ]
+  },
+  {
+    "field": "constructionRegularEvent",
+    "gameAuxHasName": false,
+    "otherSourceHits": []
+  },
+  {
+    "field": "constructionRequestHeader",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-cursor.js"
+    ]
+  },
+  {
+    "field": "constructionRequestLength",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-cursor.js"
+    ]
+  },
+  {
+    "field": "contentIncomeHeader",
+    "gameAuxHasName": false,
+    "otherSourceHits": []
+  },
+  {
+    "field": "daisProcessHeader",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-session-transmission.js"
+    ]
+  },
+  {
+    "field": "daisProcessType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/assets/type-flags.js",
+      "webpj/www/core/raw-campaign-session.js"
+    ]
+  },
+  {
+    "field": "daisType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/netstorm.js",
+      "webpj/www/core/raw-ai-build-choice.js",
+      "webpj/www/core/raw-ai-priest-actions.js",
+      "webpj/www/core/raw-burning-sources.js",
+      "webpj/www/core/raw-campaign-object-save.js",
+      "webpj/www/core/raw-campaign-session-ai-production.js",
+      "webpj/www/core/raw-campaign-session-motion-runtime.js",
+      "webpj/www/core/raw-campaign-session-priests.js",
+      "webpj/www/core/raw-campaign-session-ritual.js",
+      "webpj/www/core/raw-campaign-session-state.js",
+      "webpj/www/core/raw-carrier-arrival.js",
+      "webpj/www/core/raw-construction-notice.js",
+      "webpj/www/core/raw-construction-process.js",
+      "webpj/www/core/raw-fort-object-save.js",
+      "webpj/www/core/raw-path-cleanup.js",
+      "webpj/www/core/raw-priest-participation.js",
+      "webpj/www/core/raw-rune-post-pop.js",
+      "webpj/www/core/raw-salvage-command.js",
+      "webpj/www/core/ritual-choice-input.js",
+      "webpj/www/core/squid-factory.js",
+      "webpj/www/core/squid-reward.js",
+      "webpj/www/render/raw-campaign-particles.js",
+      "webpj/www/ui/client-production-about.js",
+      "webpj/www/ui/inventory-about-menu.js"
+    ]
+  },
+  {
+    "field": "damageRegularEvent",
+    "gameAuxHasName": false,
+    "otherSourceHits": []
+  },
+  {
+    "field": "defaultSp",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/client-state-world-globals.js",
+      "webpj/www/core/raw-state-world-cleanup.js"
+    ]
+  },
+  {
+    "field": "dependFormType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/depend-form-host.js",
+      "webpj/www/core/raw-campaign-session.js",
+      "webpj/www/core/raw-surface-world.js"
+    ]
+  },
+  {
+    "field": "developerCombatResizeCommand",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-developer-settings.js"
+    ]
+  },
+  {
+    "field": "developerScatterRow",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-developer-objects.js"
+    ]
+  },
+  {
+    "field": "dudePathType",
+    "gameAuxHasName": false,
+    "otherSourceHits": [
+      "webpj/www/core/raw-movement-process-types.js"
+    ]
+  },
+  {
+    "field": "dudeProviderIndex",
+    "gameAuxHasName": false,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-session-damageable.js",
+      "webpj/www/core/raw-campaign-session-owners.js"
+    ]
+  },
+  {
+    "field": "edgeFarmType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-ownership.js",
+      "webpj/www/core/raw-campaign-session-players.js",
+      "webpj/www/core/raw-fort-random-placement.js",
+      "webpj/www/core/raw-region-paint.js"
+    ]
+  },
+  {
+    "field": "emptyCarrierType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-movement-process-types.js"
+    ]
+  },
+  {
+    "field": "emptyGeyserType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-session-devastation.js",
+      "webpj/www/core/raw-campaign-session-state.js",
+      "webpj/www/core/raw-geyser-mined.js",
+      "webpj/www/core/raw-local-geyser.js"
+    ]
+  },
+  {
+    "field": "evilRayProcessType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/render/raw-campaign-particles.js"
+    ]
+  },
+  {
+    "field": "fakeSurfaceType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/squid-factory.js"
+    ]
+  },
+  {
+    "field": "fenceMarkerType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-session-owners.js"
+    ]
+  },
+  {
+    "field": "fenceShieldType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-session-fence.js",
+      "webpj/www/core/raw-campaign-session-owners.js"
+    ]
+  },
+  {
+    "field": "fieryTailProcessType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/render/raw-campaign-particles.js"
+    ]
+  },
+  {
+    "field": "fireAnimationHeader",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-archer-bindings.js"
+    ]
+  },
+  {
+    "field": "fireAnimationProcessType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-archer-bindings.js",
+      "webpj/www/core/squid-process.js"
+    ]
+  },
+  {
+    "field": "firstLocalGeyserQuantity",
+    "gameAuxHasName": true,
+    "otherSourceHits": []
+  },
+  {
+    "field": "firstTimerFactoryType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/client-gameplay-globals.js",
+      "webpj/www/core/raw-campaign-session-assets.js"
+    ]
+  },
+  {
+    "field": "flyerProcessHeader",
+    "gameAuxHasName": false,
+    "otherSourceHits": []
+  },
+  {
+    "field": "flyerProcessType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-session-flyers.js",
+      "webpj/www/core/raw-campaign-session.js"
+    ]
+  },
+  {
+    "field": "freeTechnologyType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-production-bindings.js",
+      "webpj/www/core/raw-campaign-session-owners.js",
+      "webpj/www/core/raw-campaign-session-production.js"
+    ]
+  },
+  {
+    "field": "geyserDeadline",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/client-state-world-globals.js",
+      "webpj/www/core/raw-battle-resource-frame.js"
+    ]
+  },
+  {
+    "field": "geyserFrameFlag",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/client-state-world-globals.js",
+      "webpj/www/core/raw-battle-resource-frame.js"
+    ]
+  },
+  {
+    "field": "geyserType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/client-gameplay-globals.js",
+      "webpj/www/core/client-state-world-globals.js",
+      "webpj/www/core/raw-campaign-callbacks.js",
+      "webpj/www/core/raw-campaign-session-login-front.js",
+      "webpj/www/core/raw-campaign-session-owners.js",
+      "webpj/www/core/raw-campaign-session-state.js",
+      "webpj/www/core/raw-carrier-arrival.js",
+      "webpj/www/core/raw-carrier-post-pop.js",
+      "webpj/www/core/raw-local-geyser.js",
+      "webpj/www/core/raw-path-start.js",
+      "webpj/www/core/raw-process-host-storage.js",
+      "webpj/www/core/raw-surface-storage.js",
+      "webpj/www/core/squid-process.js",
+      "webpj/www/ui/client-production-about.js"
+    ]
+  },
+  {
+    "field": "gravityEffectType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-session-devastation.js"
+    ]
+  },
+  {
+    "field": "growingRainBlockerType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-bomb-blast.js",
+      "webpj/www/core/raw-campaign-session-state.js",
+      "webpj/www/core/squid-reward.js"
+    ]
+  },
+  {
+    "field": "gunProcessHeader",
+    "gameAuxHasName": false,
+    "otherSourceHits": []
+  },
+  {
+    "field": "gunProcessType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/assets/type-flags.js",
+      "webpj/www/core/raw-campaign-asset-bindings.js",
+      "webpj/www/core/raw-campaign-session.js"
+    ]
+  },
+  {
+    "field": "incomePrimed",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/client-state-world-globals.js",
+      "webpj/www/core/raw-battle-resource-frame.js"
+    ]
+  },
+  {
+    "field": "islandDropBlocked",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-session-state.js"
+    ]
+  },
+  {
+    "field": "islandStumpType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-session-state.js"
+    ]
+  },
+  {
+    "field": "lastLocalGeyserQuantity",
+    "gameAuxHasName": true,
+    "otherSourceHits": []
+  },
+  {
+    "field": "lostX",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/construction-history-key.js",
+      "webpj/www/core/raw-surface-world.js",
+      "webpj/www/core/squid-destroy-lifecycle.js"
+    ]
+  },
+  {
+    "field": "lostY",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/construction-history-key.js",
+      "webpj/www/core/raw-surface-world.js",
+      "webpj/www/core/squid-destroy-lifecycle.js"
+    ]
+  },
+  {
+    "field": "manoSpellTypes",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-session-devastation.js"
+    ]
+  },
+  {
+    "field": "meteorEffectType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-session-devastation.js"
+    ]
+  },
+  {
+    "field": "missionSettings",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/client-campaign-transport.js",
+      "webpj/www/core/raw-campaign-developer-settings.js",
+      "webpj/www/core/raw-campaign-session-aviaries.js",
+      "webpj/www/core/raw-campaign-session-login-front.js",
+      "webpj/www/core/raw-campaign-session-spells.js",
+      "webpj/www/core/raw-campaign-session-state.js",
+      "webpj/www/core/raw-campaign-session.js"
+    ]
+  },
+  {
+    "field": "nuggetType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/content-form-lifetime.js",
+      "webpj/www/core/raw-campaign-session-ritual.js",
+      "webpj/www/core/raw-campaign-session-state.js",
+      "webpj/www/core/raw-campaign-session.js",
+      "webpj/www/core/raw-carrier-arrival.js",
+      "webpj/www/core/raw-carrier-transfer.js",
+      "webpj/www/core/raw-construction-place.js",
+      "webpj/www/core/raw-dais-regular.js",
+      "webpj/www/core/raw-geyser-mined.js",
+      "webpj/www/core/raw-path-cleanup.js",
+      "webpj/www/core/raw-path-retarget.js",
+      "webpj/www/core/raw-priest-sacrifice-request.js",
+      "webpj/www/core/raw-salvage-command.js",
+      "webpj/www/core/ritual-choice-input.js",
+      "webpj/www/core/squid-reward.js",
+      "webpj/www/ui/client-production-about.js",
+      "webpj/www/ui/inventory-about-menu.js",
+      "webpj/www/ui/technology-list-menu.js"
+    ]
+  },
+  {
+    "field": "ordinaryGeysers",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/client-state-world-globals.js",
+      "webpj/www/core/raw-battle-resource-frame.js",
+      "webpj/www/core/raw-campaign-session-state.js",
+      "webpj/www/core/raw-mission-start.js"
+    ]
+  },
+  {
+    "field": "outpostType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/client-gameplay-globals.js",
+      "webpj/www/core/raw-ai-object-notice.js",
+      "webpj/www/core/raw-campaign-session-ai-world.js",
+      "webpj/www/core/raw-campaign-session-assets.js",
+      "webpj/www/core/raw-campaign-session-factories.js",
+      "webpj/www/core/raw-carrier-arrival.js",
+      "webpj/www/core/raw-factory-research.js",
+      "webpj/www/core/raw-path-cleanup.js"
+    ]
+  },
+  {
+    "field": "packet0cHeader",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/client-campaign-transport.js",
+      "webpj/www/core/raw-campaign-session-login-front.js"
+    ]
+  },
+  {
+    "field": "packet0cInitialLength",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/client-campaign-transport.js",
+      "webpj/www/core/raw-campaign-session-login-front.js"
+    ]
+  },
+  {
+    "field": "particleSource",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/render/raw-campaign-particles.js"
+    ]
+  },
+  {
+    "field": "pathPacketHeader",
+    "gameAuxHasName": false,
+    "otherSourceHits": []
+  },
+  {
+    "field": "pathTraceLevel",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-path-bindings.js"
+    ]
+  },
+  {
+    "field": "previousVerifySid",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-session.js"
+    ]
+  },
+  {
+    "field": "priestForcefieldType",
+    "gameAuxHasName": false,
+    "otherSourceHits": []
+  },
+  {
+    "field": "priestQuarterHp",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/netstorm.js",
+      "webpj/www/core/client-state-world-globals.js",
+      "webpj/www/core/raw-campaign-session-teleport.js",
+      "webpj/www/core/squid-factory.js",
+      "webpj/www/core/squid-reward.js"
+    ]
+  },
+  {
+    "field": "priestType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/netstorm.js",
+      "webpj/www/core/raw-altar-sacrifice.js",
+      "webpj/www/core/raw-bomb-blast.js",
+      "webpj/www/core/raw-bridge-carriers.js",
+      "webpj/www/core/raw-campaign-path-bindings.js",
+      "webpj/www/core/raw-campaign-session-carrier-input.js",
+      "webpj/www/core/raw-campaign-session-carrier-steal.js",
+      "webpj/www/core/raw-campaign-session-contents.js",
+      "webpj/www/core/raw-campaign-session-priests.js",
+      "webpj/www/core/raw-campaign-session-ritual.js",
+      "webpj/www/core/raw-campaign-session-state.js",
+      "webpj/www/core/raw-carrier-arrival.js",
+      "webpj/www/core/raw-carrier-content-notice.js",
+      "webpj/www/core/raw-carrier-fall-start.js",
+      "webpj/www/core/raw-carrier-falling.js",
+      "webpj/www/core/raw-carrier-input.js",
+      "webpj/www/core/raw-carrier-menu.js",
+      "webpj/www/core/raw-carrier-steal.js",
+      "webpj/www/core/raw-construction-notice.js",
+      "webpj/www/core/raw-dais-content-notice.js",
+      "webpj/www/core/raw-dais-regular.js",
+      "webpj/www/core/raw-damageable-pre-destroy.js",
+      "webpj/www/core/raw-forcefield-lifecycle.js",
+      "webpj/www/core/raw-movement-process-types.js",
+      "webpj/www/core/raw-path-cleanup.js",
+      "webpj/www/core/raw-path-process.js",
+      "webpj/www/core/raw-path-start.js",
+      "webpj/www/core/raw-priest-participation.js",
+      "webpj/www/core/raw-priest-post-pop.js",
+      "webpj/www/core/raw-priest-regen-hit-points.js",
+      "webpj/www/core/raw-priest-regen.js",
+      "webpj/www/core/raw-priest-world-bindings.js",
+      "webpj/www/core/raw-temple-ritual.js",
+      "webpj/www/core/squid-factory.js",
+      "webpj/www/core/squid-reward.js",
+      "webpj/www/render/raw-campaign-particles.js",
+      "webpj/www/ui/technology-list-menu.js"
+    ]
+  },
+  {
+    "field": "processFormType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-process-attach.js",
+      "webpj/www/core/squid-process.js"
+    ]
+  },
+  {
+    "field": "processTypeEnd",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-session-flyers.js",
+      "webpj/www/core/raw-dais-deletion.js",
+      "webpj/www/core/raw-process-removal.js",
+      "webpj/www/core/squid-process.js"
+    ]
+  },
+  {
+    "field": "puzzlePieceType",
+    "gameAuxHasName": false,
+    "otherSourceHits": [
+      "webpj/www/core/raw-battle-island.js",
+      "webpj/www/core/raw-campaign-construction-bindings.js",
+      "webpj/www/core/raw-campaign-session-construction.js",
+      "webpj/www/core/raw-central-island.js",
+      "webpj/www/core/raw-island-builder.js",
+      "webpj/www/core/raw-player-geyser-bounds.js"
+    ]
+  },
+  {
+    "field": "quickBuild",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-developer-reports.js",
+      "webpj/www/core/raw-campaign-developer-settings.js",
+      "webpj/www/core/raw-campaign-session-state.js",
+      "webpj/www/core/raw-construction-process.js"
+    ]
+  },
+  {
+    "field": "quickVortex",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-developer-reports.js",
+      "webpj/www/core/raw-campaign-developer-settings.js",
+      "webpj/www/core/raw-campaign-session-state.js",
+      "webpj/www/core/raw-construction-process.js"
+    ]
+  },
+  {
+    "field": "rainAviaryHeader",
+    "gameAuxHasName": false,
+    "otherSourceHits": []
+  },
+  {
+    "field": "rainAviaryProcessType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/assets/type-flags.js",
+      "webpj/www/core/raw-campaign-session-aviaries.js",
+      "webpj/www/core/raw-campaign-session-owners.js"
+    ]
+  },
+  {
+    "field": "rainBalloonType",
+    "gameAuxHasName": false,
+    "otherSourceHits": []
+  },
+  {
+    "field": "rainBlockerType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-session-state.js",
+      "webpj/www/core/squid-reward.js"
+    ]
+  },
+  {
+    "field": "rainCannonType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-gun-process.js",
+      "webpj/www/core/raw-missile.js"
+    ]
+  },
+  {
+    "field": "rainFlyerType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-session-aviaries.js",
+      "webpj/www/core/raw-campaign-session-devastation.js",
+      "webpj/www/core/raw-campaign-session-flyers.js",
+      "webpj/www/core/raw-campaign-session-owners.js"
+    ]
+  },
+  {
+    "field": "rainWalkerType",
+    "gameAuxHasName": false,
+    "otherSourceHits": [
+      "webpj/www/core/raw-bridge-carriers.js",
+      "webpj/www/core/raw-campaign-path-bindings.js",
+      "webpj/www/core/raw-movement-process-types.js",
+      "webpj/www/core/raw-path-process.js"
+    ]
+  },
+  {
+    "field": "refundPercent",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/client-state-world-globals.js",
+      "webpj/www/core/raw-campaign-session-login-front.js",
+      "webpj/www/core/squid-reward.js"
+    ]
+  },
+  {
+    "field": "regularProcessType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/assets/type-flags.js",
+      "webpj/www/core/raw-campaign-session-state.js",
+      "webpj/www/core/squid-process.js"
+    ]
+  },
+  {
+    "field": "residenceMaximumScan",
+    "gameAuxHasName": false,
+    "otherSourceHits": []
+  },
+  {
+    "field": "resourcePool",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/client-state-world-globals.js",
+      "webpj/www/core/raw-battle-resource-frame.js",
+      "webpj/www/core/raw-local-geyser.js",
+      "webpj/www/core/squid-reward.js"
+    ]
+  },
+  {
+    "field": "rotateAnimationHeader",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-archer-bindings.js"
+    ]
+  },
+  {
+    "field": "rotateAnimationProcessType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-archer-bindings.js",
+      "webpj/www/core/squid-process.js"
+    ]
+  },
+  {
+    "field": "runeType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-session-state.js",
+      "webpj/www/core/raw-dais-deletion.js",
+      "webpj/www/core/raw-rune-post-pop.js",
+      "webpj/www/core/raw-temple-ritual.js"
+    ]
+  },
+  {
+    "field": "savedGeyserCount",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/client-state-world-globals.js"
+    ]
+  },
+  {
+    "field": "scheduledDrawDeadline",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/client-battle-completion.js",
+      "webpj/www/core/client-state-world-globals.js",
+      "webpj/www/core/raw-campaign-session.js"
+    ]
+  },
+  {
+    "field": "secondTimerFactoryType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/client-gameplay-globals.js",
+      "webpj/www/core/raw-campaign-session-assets.js",
+      "webpj/www/core/raw-campaign-session-install.js"
+    ]
+  },
+  {
+    "field": "secondaryGeyserDeadline",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/client-state-world-globals.js",
+      "webpj/www/core/raw-battle-resource-frame.js"
+    ]
+  },
+  {
+    "field": "sharedRegularProcessType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/assets/type-flags.js",
+      "webpj/www/core/raw-campaign-session-state.js",
+      "webpj/www/core/raw-surface-world.js",
+      "webpj/www/core/squid-process.js"
+    ]
+  },
+  {
+    "field": "soundProcessType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/assets/type-flags.js",
+      "webpj/www/core/raw-construction-process.js"
+    ]
+  },
+  {
+    "field": "spellDeadline",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-battle-resource-frame.js"
+    ]
+  },
+  {
+    "field": "squidTransmission",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-archer-bindings.js",
+      "webpj/www/core/raw-campaign-session-tables.js",
+      "webpj/www/core/raw-campaign-session-transmission.js",
+      "webpj/www/core/raw-campaign-session.js",
+      "webpj/www/core/raw-surface-storage.js",
+      "webpj/www/core/raw-surface-world.js"
+    ]
+  },
+  {
+    "field": "stateNotifyType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-vortex.js"
+    ]
+  },
+  {
+    "field": "streakProcessType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-session-particles.js",
+      "webpj/www/core/raw-campaign-session-teleport.js",
+      "webpj/www/core/raw-construction-arrival.js",
+      "webpj/www/render/raw-campaign-particles.js"
+    ]
+  },
+  {
+    "field": "subscriberMarker",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/client-state-world-globals.js"
+    ]
+  },
+  {
+    "field": "sunArcherType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-archer-bindings.js",
+      "webpj/www/core/raw-missile.js"
+    ]
+  },
+  {
+    "field": "sunAviaryHeader",
+    "gameAuxHasName": false,
+    "otherSourceHits": []
+  },
+  {
+    "field": "sunAviaryProcessType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/assets/type-flags.js",
+      "webpj/www/core/raw-campaign-session-aviaries.js",
+      "webpj/www/core/raw-campaign-session-owners.js"
+    ]
+  },
+  {
+    "field": "sunBalloonType",
+    "gameAuxHasName": false,
+    "otherSourceHits": []
+  },
+  {
+    "field": "sunCannonType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-archer-bindings.js",
+      "webpj/www/core/raw-campaign-session-state.js",
+      "webpj/www/core/raw-gun-animation.js",
+      "webpj/www/core/raw-gun-target.js",
+      "webpj/www/core/raw-missile.js"
+    ]
+  },
+  {
+    "field": "sunFenceType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-fence-dispatch.js",
+      "webpj/www/core/raw-campaign-session-devastation.js",
+      "webpj/www/core/raw-campaign-session-state.js",
+      "webpj/www/core/raw-fence-type-parent.js",
+      "webpj/www/core/raw-gun-target.js"
+    ]
+  },
+  {
+    "field": "sunFlyerType",
+    "gameAuxHasName": false,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-session-aviaries.js",
+      "webpj/www/core/raw-campaign-session-flyers.js",
+      "webpj/www/core/raw-campaign-session-owners.js"
+    ]
+  },
+  {
+    "field": "supportTypeWas",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-session-squid.js",
+      "webpj/www/core/raw-surface-world.js"
+    ]
+  },
+  {
+    "field": "templeProductType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-session-owners.js",
+      "webpj/www/core/raw-movement-process-types.js"
+    ]
+  },
+  {
+    "field": "terrainEnabled",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-session-login-front.js",
+      "webpj/www/core/raw-campaign-session-skirmish.js",
+      "webpj/www/core/raw-campaign-session-terrain.js",
+      "webpj/www/core/raw-central-island.js"
+    ]
+  },
+  {
+    "field": "terrainType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-ownership.js",
+      "webpj/www/core/raw-campaign-session-ai.js",
+      "webpj/www/core/raw-campaign-session-owners.js",
+      "webpj/www/core/raw-campaign-session-panic.js",
+      "webpj/www/core/raw-campaign-session-players.js",
+      "webpj/www/core/raw-campaign-session-skirmish.js",
+      "webpj/www/core/raw-island-partition.js",
+      "webpj/www/core/raw-region-owner.js",
+      "webpj/www/core/raw-region-paint.js",
+      "webpj/www/core/raw-surface-world.js"
+    ]
+  },
+  {
+    "field": "thunderCannonType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-gun-process.js",
+      "webpj/www/core/raw-missile.js"
+    ]
+  },
+  {
+    "field": "totalCost",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/client-state-world-globals.js",
+      "webpj/www/core/raw-surface-storage.js",
+      "webpj/www/core/session-state-dump.js",
+      "webpj/www/core/squid-destroy-lifecycle.js",
+      "webpj/www/core/squid-postpop-state.js",
+      "webpj/www/core/squid-postpop.js"
+    ]
+  },
+  {
+    "field": "typeUse",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/client-campaign-transport.js",
+      "webpj/www/core/raw-campaign-session-login-front.js",
+      "webpj/www/core/raw-mission-battle-options.js",
+      "webpj/www/core/raw-technology-types-packet.js"
+    ]
+  },
+  {
+    "field": "verifySid",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-session-squid.js",
+      "webpj/www/core/raw-campaign-session.js",
+      "webpj/www/core/raw-squid-receive.js"
+    ]
+  },
+  {
+    "field": "windArcherType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-archer-bindings.js",
+      "webpj/www/core/raw-campaign-session-cursor.js",
+      "webpj/www/core/raw-campaign-session-motion.js",
+      "webpj/www/core/raw-campaign-session-state.js",
+      "webpj/www/core/raw-cursor-range.js",
+      "webpj/www/core/raw-graph.js",
+      "webpj/www/core/raw-gun-mode.js",
+      "webpj/www/core/raw-gun-process.js",
+      "webpj/www/core/raw-gun-target.js",
+      "webpj/www/core/raw-path-search.js",
+      "webpj/www/core/raw-player-placement-anchor.js"
+    ]
+  },
+  {
+    "field": "windAviaryHeader",
+    "gameAuxHasName": false,
+    "otherSourceHits": []
+  },
+  {
+    "field": "windAviaryProcessType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/assets/type-flags.js",
+      "webpj/www/core/raw-campaign-session-aviaries.js",
+      "webpj/www/core/raw-campaign-session-owners.js"
+    ]
+  },
+  {
+    "field": "windBalloonType",
+    "gameAuxHasName": false,
+    "otherSourceHits": []
+  },
+  {
+    "field": "windBlockerType",
+    "gameAuxHasName": false,
+    "otherSourceHits": []
+  },
+  {
+    "field": "windFlyerType",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-session-aviaries.js",
+      "webpj/www/core/raw-campaign-session-devastation.js",
+      "webpj/www/core/raw-campaign-session-flyers.js",
+      "webpj/www/core/raw-campaign-session-owners.js"
+    ]
+  },
+  {
+    "field": "worldDecorationTypes",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-callbacks.js"
+    ]
+  },
+  {
+    "field": "worldGeyserMargin",
+    "gameAuxHasName": true,
+    "otherSourceHits": [
+      "webpj/www/core/raw-campaign-callbacks.js",
+      "webpj/www/core/raw-campaign-session-state.js"
+    ]
+  }
+]

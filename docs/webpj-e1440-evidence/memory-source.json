@@ -1,0 +1,10 @@
+{
+  "actualProduct": "E1440 본 소스+E1436/E1434/E1433. 원래 도구 JSON의 E1404/E1400은 오래된 표기로 원문을 유지한다.",
+  "command": "node tools/mission-memory-profile.cjs 12",
+  "hashes": {
+    "www/core/game-aux-state.js": "9b93fab6e0bbb8cbf65037d55d7ef08b979b2623fcf6cae44624f946cfefdeba",
+    "www/core/raw-campaign-session-state.js": "f2d8944593080adb9a8583b519b3109da337df991e20bf00d062aebc90fae779",
+    "www/core/sid-pool.js": "f812fce38614656839764ab22dd16c863931f38dc6a2e9adf7312f9ab04f5b2f",
+    "tools/mission-memory-profile.cjs": "f165375ebbef8ce0c0229fb1013388c84000c8fb7ae5dfdee00c4d52796e5859"
+  }
+}

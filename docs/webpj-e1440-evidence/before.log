@@ -1,0 +1,93 @@
+✖ Client GameAux 건설: 현재 차단값으로 실제 수신 본문 조회를 생략하고 독립 입력은 보존한다 (81.4457ms)
+✖ Client GameAux 경계: 같은 마스크/지역 요청 수의 재조회와 지역 fallback 대입 분리 (34.1049ms)
+✖ Client GameAux 공급자: 원래 signed 순환 저장소를 다음 Session에 보존한다 (81.0693ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 0
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3887.9595
+
+✖ failing tests:
+
+test at webpj\extracted\e1440-gameaux\client-aux-bindings.test.mjs:27:1
+✖ Client GameAux 건설: 현재 차단값으로 실제 수신 본문 조회를 생략하고 독립 입력은 보존한다 (81.4457ms)
+  AssertionError [ERR_ASSERTION]: Got unwanted exception.
+  Actual message: "건설 요청 수신 본문 부족"
+      at TestContext.<anonymous> (file:///H:/Workspace/git/NetstormReborn/webpj/extracted/e1440-gameaux/client-aux-bindings.test.mjs:33:16)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: RangeError: 건설 요청 수신 본문 부족
+        at RawConstructionCommand.receive (file:///H:/Workspace/git/NetstormReborn/webpj/www/core/raw-construction-command.js:81:82)
+        at file:///H:/Workspace/git/NetstormReborn/webpj/extracted/e1440-gameaux/client-aux-bindings.test.mjs:33:40
+        at getActual (node:assert:580:5)
+        at strict.doesNotThrow (node:assert:748:32)
+        at TestContext.<anonymous> (file:///H:/Workspace/git/NetstormReborn/webpj/extracted/e1440-gameaux/client-aux-bindings.test.mjs:33:16)
+        at Test.runInAsyncScope (node:async_hooks:226:14)
+        at Test.run (node:internal/test_runner/test:1402:25)
+        at Test.start (node:internal/test_runner/test:1262:17)
+        at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17),
+    expected: undefined,
+    operator: 'doesNotThrow',
+    diff: 'simple'
+  }
+
+test at webpj\extracted\e1440-gameaux\client-aux-bindings.test.mjs:41:1
+✖ Client GameAux 경계: 같은 마스크/지역 요청 수의 재조회와 지역 fallback 대입 분리 (34.1049ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   0,
+  +   272908800,
+  +   272908800,
+  +   0,
+  +   0
+  -   2147483649,
+  -   2147483649,
+  -   2147483649,
+  -   2147483649,
+  -   2147483649
+    ]
+  
+      at TestContext.<anonymous> (file:///H:/Workspace/git/NetstormReborn/webpj/extracted/e1440-gameaux/client-aux-bindings.test.mjs:46:16)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 0, 272908800, 272908800, 0, 0 ],
+    expected: [ 2147483649, 2147483649, 2147483649, 2147483649, 2147483649 ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }
+
+test at webpj\extracted\e1440-gameaux\client-aux-bindings.test.mjs:56:1
+✖ Client GameAux 공급자: 원래 signed 순환 저장소를 다음 Session에 보존한다 (81.0693ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  0 !== 17
+  
+      at TestContext.<anonymous> (file:///H:/Workspace/git/NetstormReborn/webpj/extracted/e1440-gameaux/client-aux-bindings.test.mjs:59:18)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 17,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

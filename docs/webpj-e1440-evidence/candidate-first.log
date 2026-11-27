@@ -1,0 +1,82 @@
+✔ Client GameAux 건설: 현재 차단값으로 실제 수신 본문 조회를 생략하고 독립 입력은 보존한다 (155.2043ms)
+✔ Client GameAux 경계: 같은 마스크/지역 요청 수의 재조회와 지역 fallback 대입 분리 (60.9993ms)
+✔ Client GameAux 공급자: 원래 signed 순환 저장소를 다음 Session에 보존한다 (61.3602ms)
+✔ Session tutorial 역할: 보호 PE의15주소·기본 사제 기술과 인스턴스 독립 (11.1066ms)
+✔ GameAuxState: 건설 요청의 현재 헤더/WORD는 보호 PE와 같고 장기 물리를 유지한다 (8.2539ms)
+✔ GameAuxState: Dais/건설 현재 헤더·보호 PE·reset/별도 owner 수명 (3.9763ms)
+✔ GameAuxState: 애니메이션 현재 헤더·공유 전송은 보호 PE 초기값이며 일반 reset과 별개로 유지된다 (6.3113ms)
+✔ GameAuxState: Session 미션 설정7DWORD의 주소/초기값이 보호 PE와 같다 (6.2264ms)
+✔ GameAuxState: 같은 미션 설정의 패킷 왕복이 무적·동맹 사격·강제 배치에 즉시 보인다 (1.2917ms)
+✔ GameAuxState: 짧은 미션 패킷의 앞선 저장을 같은 owner에 남기고 다음 송신이 읽는다 (50.376ms)
+✔ GameAuxState: Session 선행 건설·운반·미션 입력을 일반/준비 대여·reset에서 보존한다 (3.5636ms)
+✖ GameAuxState: 초기값이 원본10.78 PE 의 .data/BSS 와 같다 (6.9134ms)
+✔ GameAuxState: 전투 종료 대기 BYTE의 범위와 수명 (0.7763ms)
+✔ GameAuxState: TYPE 번호가 웹 타입 표의 이름과 맞는다 (0.6852ms)
+✔ GameAuxState: 원본 폭 검사와 자원 비트 해석 (0.972ms)
+✔ GameAuxState: 일반 월드 준비와 손실 좌표 정리 (0.7855ms)
+✔ Session 자산: 보호188TYPE·116프레임과 현재 표/최초 비용표의 독립 소유 (33.15ms)
+✔ Session 기반: 실제 단일 World와 같은 Template 깊이를 빌리며 Player/SP·Runtime을 앞당기지 않는다 (41.7705ms)
+✔ Session 공유 자료: 같은 장기 owner/옵션·금지 표와 멤버 역할은 복사 없이 현재 값을 사용한다 (29.2159ms)
+✔ Session 사전 거부: 제외 모드와 다른 Subscriber·권한·보조 전역은 fresh 전에 실패한다 (63.0323ms)
+✔ Session 자산 불일치: 게임 대여 뒤의 원문 위치에서 거부하고 앞선 대여를 반납한다 (26.9416ms)
+✔ Session 중복 대여: 살아 있는 실제 owner의 World/Player/게임 상태를 새 Session으로 덮지 않는다 (46.33ms)
+✔ Session 생성 중 실패: 옵션·시각·소리·금지 표 단계까지 확보한 실제 대여를 역순 반납한다 (58.961ms)
+✔ Session Player/SP: 실제 초기화9기록·방향 동맹81·같은 Core뷰·독립 난수/사제 추적을 연결한다 (21.0862ms)
+✔ Session 공통 Player/SP: 초기화한 같은 Client 저장소는 재할당·재시드하지 않고 장기 값으로 빌린다 (46.8955ms)
+✔ Session 공통 계약: SP 초기화·난수 owner·Player/Core 정체성 실패는 Player 쓰기 전에 멈춘다 (133.7953ms)
+✔ Session 현재 Core: 이전 Player를 가리키는 Core는 실제0선택 뒤에만 새 Player로 바뀐다 (13.0357ms)
+✔ Session 부분 실패: Player 뒤 시각 예외는 실제 앞선 기록·추적 연결을 유지하고 반복을 거부한다 (8.0431ms)
+✔ Session AI 할당: 생성 때 호출하지 않고 실제 할당의 같은 바이트에만 공급한다 (49.1074ms)
+✔ Session 채택 거부: 초기화하지 않은 Player를 완료 기록으로 만들지 않는다 (9.6446ms)
+✔ Session 레벨 진단: 현재 실제 모듈은 같은 원문 식을 실제 장치에 전달한다 (35.2807ms)
+✔ Session 거주 구역 상태: World/Contents와 같은 현재 savedGame 상자를 빌린다 (88.5808ms)
+✔ Session 플래그 복사: 같은 전역 포인터와 원래 struct의 후속 지역 대입을 구별한다 (29.1021ms)
+✔ Session 플래그 복사: 미등록 지역 값도 unsigned DWORD의 복사 순간을 유지한다 (0.4213ms)
+✔ Session 공유 상태: Player/SP 전후 단계와 실제 경로/피해 참조를 유지한다 (40.2966ms)
+✔ Session HP/비용: 실제 현재 TYPE를 빌리며 최초 비용표는 현재 비용 변경과 구별한다 (14.1326ms)
+✔ Session 너겟/권한: 실제 채집 소리 콜백 뒤 같은 현재 TYPE·boss를 다시 읽는다 (18.2881ms)
+✔ Session 같은55a490: 실제 Gun 표적 판정과 Gun 전역이 현재 전체 DWORD를 함께 읽는다 (15.0913ms)
+✔ Session 미션 시작: 실제 Start가 장기 네 출력과 같은 SP를 쓰며 시작 관문을 갱신한다 (15.0899ms)
+✔ Session 공유 타입/깊이: Rune·Carrier·기도·경로가 현재 owner를 사용한다 (35.577ms)
+✔ Session 건설 공유: 현재 권한·표면 종류·Player·이력·패턴을 소비 시점에 조회한다 (10.166ms)
+✔ Session FullDeck/장르: 같은 현재 DWORD를 세 소비자가 공유하고 typed 지역 값은 유지한다 (9.8542ms)
+✔ Session checking: 한 현재 signed DWORD·같은 Canon 진단과 값 대입의 분리 의미 (26.9425ms)
+✔ Session 실제 진단: 호출 때 조회하는 장치와 생성 때 캡처한 장치를 구별한다 (29.1886ms)
+✔ Session 연결 활동: 같은 두 표·현재 시각/서버와 미션 경고 억제를 적용한다 (25.8303ms)
+✔ Session 연결 활동 부분 실패: 도달한 필수 장치만 요구하며 앞선 store는 유지한다 (16.9419ms)
+ℹ tests 46
+ℹ suites 0
+ℹ pass 45
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 8376.5946
+
+✖ failing tests:
+
+test at webpj\tests\game-aux-state.test.mjs:175:1
+✖ GameAuxState: 초기값이 원본10.78 PE 의 .data/BSS 와 같다 (6.9134ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+    [
+  +   94,
+  -   93,
+      4
+    ]
+  
+      at TestContext.<anonymous> (file:///H:/Workspace/git/NetstormReborn/webpj/tests/game-aux-state.test.mjs:208:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ 94, 4 ],
+    expected: [ 93, 4 ],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

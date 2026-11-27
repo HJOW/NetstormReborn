@@ -1,0 +1,164 @@
+{
+  "unit": "WB04-E1440",
+  "host": "HJOW-Athlon",
+  "candidateSourceEquality": {
+    "game-aux-state.js": {
+      "rawSame": true,
+      "sha256": "9b93fab6e0bbb8cbf65037d55d7ef08b979b2623fcf6cae44624f946cfefdeba"
+    },
+    "raw-campaign-session-state.js": {
+      "rawSame": true,
+      "sha256": "f2d8944593080adb9a8583b519b3109da337df991e20bf00d062aebc90fae779"
+    }
+  },
+  "scope": "실제 Client 제공 surfaceStorage의 공유 GameAux 4입력+공급자 순환1칸. 독립 typed 경로유지. 전체129칸의단순이름감사를전부해결한것은아님.",
+  "checks": {
+    "before": "3/3fail",
+    "candidateFirst": "한개새전역추가로기존표개수93대신94가되어메타개수단언1실패; PE실제값불일치0",
+    "candidateSecond": "46/46",
+    "mainFocus": "72/72",
+    "exactConstructionFileAdditional": "8/8",
+    "preWebpackLintBuild": 0,
+    "bundleFresh": "1/1",
+    "strictChromiumL2": "1/1"
+  },
+  "periodAfter": {
+    "v26": "3/4",
+    "v22": "3/8"
+  },
+  "memoryRawKeys": [
+    "unit",
+    "product",
+    "node",
+    "platform",
+    "browser",
+    "scope",
+    "requestedCycles",
+    "cycles",
+    "errors",
+    "initialMenu",
+    "settled",
+    "progress",
+    "complete"
+  ],
+  "memory": {
+    "cycles": 12,
+    "errors": [],
+    "settled": {
+      "heap": {
+        "usedSize": 32190896,
+        "totalSize": 33333248,
+        "embedderHeapUsedSize": 5429288,
+        "backingStorageSize": 46127655
+      },
+      "state": {
+        "mission": null,
+        "world": false,
+        "production": true,
+        "productionSession": false,
+        "productionWorldBound": false,
+        "productionMaintenance": false,
+        "display": false,
+        "time": 205.625,
+        "paused": false,
+        "brain": 0,
+        "ai": null,
+        "worldRefsAlive": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "sessionRefsAlive": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ]
+      }
+    },
+    "qualification": "원도구JSON E1404/E1400표기는오래된문자열. 실행전본소스SHA로현재E1440런타임과구별하며원문수정안함. 600고정프레임씩12회이며정상rAF30분/물리FPS/전메모리무증가로세지않음."
+  },
+  "bundle": {
+    "bytes": 3515266,
+    "sha256": "e34ffeeb2885c59314f95feaac5e1f1a0e979d4b7355e895f2dc1544c45c6210"
+  },
+  "evidence": {
+    "before.log": {
+      "bytes": 4432,
+      "sha256": "dddea14204b733f8d2fd76397916c6bc1ee9533ca7e36bc4fbe1541b5fa66114"
+    },
+    "candidate-first.log": {
+      "bytes": 6535,
+      "sha256": "f57c42121960074aef27f369e83ee7d4ed8c242cd93bca99f8a3257a2c89646b"
+    },
+    "candidate-second.log": {
+      "bytes": 5535,
+      "sha256": "1807de676f9f95bf59179630c80ce3f67389b922e5e4c6fdddd9dc8360b0d957"
+    },
+    "client-aux-bindings.test.mjs": {
+      "bytes": 5532,
+      "sha256": "a1901808bf7bb433364a9bdcb30ee57ca7bfdec661622d3661fe3ec135fbae6e"
+    },
+    "e1440-gameaux-name-audit.json": {
+      "bytes": 33600,
+      "sha256": "a3c8e9db9705121ca8a87a7f24a82979d4c2c18b377e8a0fc8ea673526ad13be"
+    },
+    "game-aux-state.js": {
+      "bytes": 25696,
+      "sha256": "9b93fab6e0bbb8cbf65037d55d7ef08b979b2623fcf6cae44624f946cfefdeba"
+    },
+    "memory-source.json": {
+      "bytes": 647,
+      "sha256": "25c99509fc2d79fbdf59e4d740ee66eb415cf8212cf5b6d09fbc8324aef53535"
+    },
+    "memory12-raw.json": {
+      "bytes": 117191,
+      "sha256": "ee3bbb2554fac8c2c8b441836b1936cac88ad239aef9cab660c53d9daff809c5"
+    },
+    "raw-campaign-session-state.js": {
+      "bytes": 24067,
+      "sha256": "f2d8944593080adb9a8583b519b3109da337df991e20bf00d062aebc90fae779"
+    },
+    "webpj-e1440-build.log": {
+      "bytes": 462,
+      "sha256": "ab21a888e8a5f0c479275ed56e0af40ca42b9f723f5d0c4d0cd90d7171f24b10"
+    },
+    "webpj-e1440-bundle.log": {
+      "bytes": 248,
+      "sha256": "6d84bcb5abc63922ab39c478123f0f23156603820cbdd268a9dfb1b58339ab98"
+    },
+    "webpj-e1440-command-focus.log": {
+      "bytes": 755,
+      "sha256": "4b4e66ec2ab8abb2e2162c940718a7343292bd254fe123307bc945632e5a8a21"
+    },
+    "webpj-e1440-l2.log": {
+      "bytes": 555,
+      "sha256": "9082173ae9665207d6b44957cdb0915c5577d409b130bdcf09cbed1e25b03c49"
+    },
+    "webpj-e1440-main-focus.log": {
+      "bytes": 9183,
+      "sha256": "bc377a7f8336dffc0aa89f192febc62836921c1a57956e3e14e78ab786bf9b10"
+    },
+    "webpj-e1440-memory12.log": {
+      "bytes": 5069,
+      "sha256": "333301994616c8566f806e80ee32e3341b6e9962ed96f028f0836f689b05b6ab"
+    }
+  }
+}

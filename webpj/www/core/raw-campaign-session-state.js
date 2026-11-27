@@ -63,6 +63,14 @@ function borrowRead(target, key, read) {
     Object.defineProperty(target, key, { enumerable: true, configurable: true, get() { return read(); }, set(value) { local = value; } });
     return () => local;
 }
+// 장기 보조 owner의 현재 필드만 읽는다. 큰 Session 조립 문맥을 접근자에 보관하지 않는다.
+function auxiliaryReader(aux, key) { return () => aux[key]; }
+// 실제 Client의 쓰기 가능한 장기 값을 빌린다. 접근자는 짧은 Session을 캡처하지 않는다.
+function shareAuxiliaryField(target, key, aux, name) {
+    Object.defineProperty(target, key, { enumerable: true, configurable: true,
+        get() { return aux[name]; }, set(value) { aux[name] = value; },
+    });
+}
 // 복구 가능한 원문 진단은 도달한 위치에서만 실제 장치를 요구한다.
 function assertion(owner, label, capture = false) {
     // 최초 함수 조회의 시점은 유지하고 값 복사는 소유자가 살아 있는 동안만 보관한다.
@@ -174,6 +182,17 @@ export class RawCampaignSessionState {
         this.constructionState.place.sharedBridgeLife = () => 5;
         this.constructionState.notice.sharedDaisType = () => aux.daisType; this.constructionState.notice.sharedPriestType = () => aux.priestType;
         this.constructionState.place.patternTypesRead = this.constructionState.confirm.patternTypesRead = () => [o.piece, core.bridgeState.bridgeType, core.bridgeState.islandType, core.bridgeState.noIslandType, this.gunState.readThunderCannonType(), this.gunState.readRainCannonType(), aux.windArcherType, this.constructionState.confirm.patternTypes[7]];
+        // 실제 Client가 장기 Storage를 제공한 세션만 같은 현재 보조 전역을 빌린다. 독립 typed 입력의 기존 대입 계약은 유지한다.
+        if (o.services.surfaceStorage) {
+            const displace = auxiliaryReader(aux, 'constructionDisplaceGenus');
+            shareAuxiliaryField(o, 'dudeProviderIndex', aux, 'dudeProviderIndex');
+            borrowRead(this.constructionState.command, 'blocked', auxiliaryReader(aux, 'constructionBlocked'));
+            borrowRead(this.constructionState.request, 'displaceGenus', displace);
+            borrowRead(this.buildingState, 'pushGenus', displace); this.process.sharedBlockingGenus = displace;
+            borrowRead(this.placement.collision, 'ignoredGenus', displace); borrowRead(this.gameplayPlacement.collision, 'ignoredGenus', displace);
+            this.constructionState.geyser.sharedFirstQuantity = auxiliaryReader(aux, 'firstLocalGeyserQuantity');
+            this.constructionState.geyser.sharedLastQuantity = auxiliaryReader(aux, 'lastLocalGeyserQuantity');
+        }
         this.terrainArchipelago = reference(aux, 'archipelago'); this.terrainSpan = reference(aux, 'worldGeyserMargin');
         this.farm.sharedArchipelago = Object.assign(() => this.terrainArchipelago.value, { box: this.terrainArchipelago });
         this.farm.sharedArchipelagoSpan = Object.assign(() => this.terrainSpan.value, { box: this.terrainSpan }); this.devastationEffectState.sharedSpentCounter = aux;

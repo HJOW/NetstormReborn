@@ -43,6 +43,8 @@ const KIND_CHECKS = Object.freeze({
 // 보조 전역 필드 표이다: [이름, 원본 10.78 주소, 폭, 초기값, 대응 타입 이름(TYPE 번호 칸만), 설명].
 // 초기값은 PE .data 의 값이고 BSS 는 0 이다. 대응 타입 이름은 웹 타입 표(TYPE_LOAD_ORDER·PROCESS_TYPE_NAMES·내장 Form)와 맞춰 본 이름이다. (2026-11-05 WB04-C2)
 export const GAME_AUX_FIELDS = Object.freeze([
+    // 공급자 보행의 현재 순환 인덱스이며 같은 Client의 다음 미션에도 유지한다.
+    ['dudeProviderIndex', 0x0055a4fc, 'i32', 0, null, '공급자 보행 순환 인덱스'],
     ['ordinaryGeysers', 0x005950ac, 'u32', 0, null, 'Start 가 moreGeysers 의 부정을 쓴다'],
     ['geyserFrameFlag', 0x005950b0, 'u32', 0, null, '486bc0 의 미복원 프레임 입력'],
     ['savedGeyserCount', 0x00595090, 'u32', 0, null, '저장 상태 읽기 tail[0] 의 출력 저장소'],
