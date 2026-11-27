@@ -7,7 +7,40 @@ test('아군 AI 검사: 허용 목록 밖 미션은 브라우저 상태를 읽�
   // 이 장치는 호출되면 실패하므로 금지 미션에서 실제 페이지 접근이 없음을 확인한다.
   const page = { evaluate: () => { throw new Error('금지 미션에서 페이지 접근'); } };
   // Tutorial·후반 캠페인·알 수 없는 이름은 모두 같은 제한을 적용한다.
-  for (const mission of ['Tutorial1', 'Tutorial6', 'dissolvedalliance', 'finalconfrontation', 'unknown']) await expect(installAllyAi(page, mission)).rejects.toThrow('허용 미션');
+  for (const mission of ['Tutorial1', 'Tutorial6', 'thenoose', 'finalconfrontation', 'unknown']) await expect(installAllyAi(page, mission)).rejects.toThrow('허용 미션');
+});
+
+// 새로 허용된1-6에서는 시나리오의 기존 로컬AI를 보존하거나 없는 경우만 생성하며 실제15초를 진행한다.
+test('아군 AI 검사: 캠페인1-6의 실제 brain과 현재 Player 값을 보존한다', async ({ page }) => {
+  test.setTimeout(240000);
+  const errors = [];
+  page.on('pageerror', (error) => errors.push(error.stack ?? error.message));
+  page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
+  await page.setViewportSize({ width: 1024, height: 768 });
+  await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, autoDemo: 0, sound: 0, music: 0 } })));
+  await page.goto('/debug.html?fixed=25&aspect=4:3&title=1', { waitUntil: 'domcontentloaded', timeout: 120000 });
+  await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 120000 });
+  await page.locator('canvas').click(); await page.evaluate(() => window.netstorm._prepareCampaignAudio());
+  // 실제 시작 그림을 처리하고 원래 미션의 브리핑 단추만 누른다.
+  while (await page.evaluate(() => window.netstorm.state !== 'mainMenu')) await page.evaluate(() => window.netstorm.stepFixedFrames(1));
+  await page.evaluate(() => window.netstorm.stepFixedFrames(1));
+  await installAllyAi(page, 'DissolvedAlliance');
+  await page.evaluate(() => window.netstorm._beginCampaignFromDialog('DissolvedAlliance'));
+  await page.evaluate(() => window.netstorm.stepFixedFrames(120));
+  const point = await page.evaluate(() => { const app = window.netstorm, p = app._mainMenu.controlPoint('Play Mission'), r = app.canvas.getBoundingClientRect(); if (!p) throw new Error('1-6 실제 브리핑 단추 없음'); return { x: r.left + p.x * r.width / 1024, y: r.top + p.y * r.height / 768 }; });
+  await page.mouse.click(point.x, point.y); await page.evaluate(() => window.netstorm.stepFixedFrames(1));
+  const activated = await page.evaluate(() => window.netstormAllyTestState);
+  expect(activated.owner).toBe(1); expect(activated.token).toBeGreaterThan(0); expect(activated.brain).toBe(activated.token);
+  expect(activated.money).toBe(activated.before.money); expect(activated.allies).toBe(activated.before.allies);
+  expect(activated.name).toEqual(activated.before.name); expect(activated.technology).toEqual(activated.before.technology);
+  // 모든 실제 Kernel/Renderer 프레임을 실행하며 수동 건설/공격이나 목표 값 변경은 하지 않는다.
+  for (let frame = 0; frame < 600; frame += 100) await page.evaluate(() => window.netstorm.stepFixedFrames(100));
+  const after = await page.evaluate(() => { const app = window.netstorm, session = app._campaignWorld.session(), token = session.participation().brain(1), raw = session.aiMemory().bytes(token), view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength); return { mission: app._clientGuide.current().script.name, token, initialized: view.getUint32(0x258, true), stopped: view.getUint32(0x254, true), time: app._gameClock.gameSeconds() }; });
+  expect(after.mission.toLowerCase()).toBe('dissolvedalliance'); expect(after.token).toBe(activated.token);
+  expect(after.initialized).toBe(1); expect(after.stopped).toBe(0); expect(after.time).toBeGreaterThan(10); expect(errors).toEqual([]);
+  await page.screenshot({ path: test.info().outputPath('campaign1-6-ally-ai.png') });
+  // 기존 AI 재사용 여부도 관측해 기록하지만 승리 완료의 근거로 사용하지 않는다.
+  console.log(JSON.stringify({ activated, after }));
 });
 
 // 아군 AI 활성화만 허용된 단계에서 실제6000프레임의 Kernel·생산·건설을 유지한다.

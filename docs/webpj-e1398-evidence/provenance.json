@@ -1,0 +1,10 @@
+{
+  "unit": "WB04-E1398",
+  "host": "HJOW-Athlon",
+  "product": "E1393",
+  "command": "npx playwright test e2e/ally-ai-test-control.spec.js --workers=1 --project=chromium",
+  "result": "3/3 passed",
+  "logSha256": "fd570880dc7ab688b11e0950bb161051e6de298499051902b1e9bea0aa950abf",
+  "limits": "실제 AI 플레이는 캠페인1-1~1-6/스커미시, 모든 캠페인은 진입/안내만 가능",
+  "reusedBranch": "구현 검토, 이번 실제1-6은 reused=false"
+}

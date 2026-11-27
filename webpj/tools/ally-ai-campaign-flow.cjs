@@ -1,10 +1,12 @@
 const fs=require('node:fs'), {chromium,expect}=require('@playwright/test');
 const {installAllyAi}=require('../e2e/ally-ai-test-control');
-// 허용된 다섯 캠페인과 실제 다음 미션의 이름이다. 후반 미션은 완료 뒤 브리핑 진입만 확인한다.
-const NEXT={thewarbegins:'masterofwhirligigs',masterofwhirligigs:'savetheisland',savetheisland:'fragilefortune',fragilefortune:'thunderingpower',thunderingpower:'dissolvedalliance'};
+// 허용된 여섯 캠페인과 실제 다음 미션이다.1-6 완료 뒤에는 사용자 플레이 영역으로 넘어가지 않고 메뉴/저장만 확인한다.
+const NEXT={thewarbegins:'masterofwhirligigs',masterofwhirligigs:'savetheisland',savetheisland:'fragilefortune',fragilefortune:'thunderingpower',thunderingpower:'dissolvedalliance',dissolvedalliance:null};
+// 실제 목표 수행을 허용한 캠페인만 고른다. 일반적인 모든 캠페인 진입/안내 검사와 별도의 관문이다.
+const PLAYABLE=new Set(Object.keys(NEXT));
 // 실행할 미션과 실제 논리 프레임 상한이다.
 const mission=(process.argv[2]??'masterofwhirligigs').toLowerCase(),limit=Number(process.argv[3]??60000);
-if(!NEXT[mission]||!Number.isInteger(limit)||limit<100||limit>120000)throw new Error('아군 AI 캠페인 관찰 인자 오류');
+if(!PLAYABLE.has(mission)||!Number.isInteger(limit)||limit<100||limit>120000)throw new Error('아군 AI 캠페인 관찰 인자 오류');
 // 실제 시작 그림·메뉴의 모든 프레임을 통과한다.
 async function ready(page){
  await page.waitForFunction(()=>window.netstorm?.state==='clickToStart',null,{timeout:120000});await page.locator('canvas').click();await page.evaluate(()=>window.netstorm._prepareCampaignAudio());
@@ -18,6 +20,7 @@ async function clickLabel(page,label){
 }
 // 다음 미션 요청 수락과 실제 World/브리핑 표시를 구분한다. 고정 시각에서도 비동기 적재와 원래 State 프레임을 모두 진행한다.
 async function settledBriefing(page,name){
+ if(!PLAYABLE.has(name.toLowerCase()))throw new Error('실제 AI 플레이 흐름의 다음 미션 허용 범위 밖: '+name);
  // 읽기 전용 준비 상태를 매 프레임 확인하며 목표·SP·완료값을 쓰지 않는다.
  for(let frame=0;frame<1000;frame++){
   const state=await page.evaluate(expected=>{const app=window.netstorm;return{ready:app._clientGuide.current()?.script.name.toLowerCase()===expected&&Boolean(app._campaignWorld?.session().localConnectionReady())&&app._campaignDisplayActive()&&Boolean(app._mainMenu.dialog),mission:app._clientGuide.current()?.script.name??null,buttons:app._mainMenu.dialog?.buttons?.map(button=>button.label)??[]};},name);
@@ -84,6 +87,15 @@ async function run(){
   expect(lookup(before)).not.toBe('1');expect(String(lookup(saved))).toBe('1');result.saved=saved;
   // 긴 실제 플레이 뒤의 후속 검사 실패에도 이미 확인한 저장/이동 증빙을 잃지 않게 각 경계에서 보존한다.
   const preserve=()=>fs.writeFileSync('extracted/ally-flow-'+mission+'.json',JSON.stringify(result,null,2));preserve();
+  //1-6 다음은 사용자가 플레이하므로 Next Mission을 누르지 않는다. 원래 나가기와 새로고침만으로 실제 저장 보존을 확인한다.
+  if(NEXT[mission]===null){
+   result.nextMissionSkipped='사용자 지시:1-6 이후 실제 플레이 생략';
+   await clickLabel(page,'Leave Missions');await page.reload({waitUntil:'domcontentloaded',timeout:120000});await ready(page);
+   result.reloaded=await page.evaluate(()=>localStorage.getItem('netstorm.progress'));expect(String(lookup(result.reloaded))).toBe('1');
+   result.afterBoundary=await page.evaluate(()=>{const app=window.netstorm;return{state:app.state,mission:app._clientGuide.current()?.script.name??null,world:Boolean(app._campaignWorld)};});
+   expect(result.afterBoundary).toEqual({state:'mainMenu',mission:null,world:false});expect(errors).toEqual([]);preserve();
+   await page.screenshot({path:'extracted/ally-flow-'+mission+'-boundary-menu.png'});console.log(JSON.stringify({mission,result:'자연 승리·새 완료값 저장·새로고침 확인, 이후 미션은 사용자 플레이',terminal:terminal.frame}));return;
+  }
   // 실제 완료 단추가 다음 미션 브리핑으로 이어지는지 확인한다. 목표 수행 입력은 넣지 않는다.
   await clickLabel(page,'Next Mission');result.directNextBriefing=await settledBriefing(page,NEXT[mission]);result.directNext=result.directNextBriefing.mission;preserve();
   await page.screenshot({path:'extracted/ally-flow-'+mission+'-direct-next.png'});
