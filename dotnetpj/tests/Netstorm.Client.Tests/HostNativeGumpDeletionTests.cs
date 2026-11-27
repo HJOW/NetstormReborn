@@ -49,9 +49,10 @@ public sealed partial class HostPriestWorldLiveTests
 
     /// <summary>기본 자산과 Player 삭제도 같은 UI 등록표와 부착 Form을 중첩 정리한다.</summary>
     [Theory]
-    [InlineData(80u)]
-    [InlineData(152u)]
-    public void NativeAssetDeletionReleasesAttachedGumpThroughActualUi(uint type)
+    [InlineData(80u, false)]
+    [InlineData(152u, false)]
+    [InlineData(80u, true)]
+    public void NativeAssetDeletionReleasesAttachedGumpThroughActualUi(uint type, bool spatial)
     {
         var (session, _, surface) = WorldDeletionRootScene(sharedNative: true);
         session.BuildWorldDeletionRootDevices();
@@ -64,7 +65,15 @@ public sealed partial class HostPriestWorldLiveTests
         using (var runtime = HostMissionRuntime.Create(session, surface.Storage))
         {
             int parent = session.BuildPlayerWorldHooks().Create!(type, 2);
+            int spatialLevel = -1;
             if (type == 80) Assert.Equal(OriginalConstructors.BaseVtable, System.Buffers.Binary.BinaryPrimitives.ReadUInt32LittleEndian(session.Pool.Slot(parent)));
+            if (spatial)
+            {
+                // 실제 Pop으로 공간에 등록한 자산을 같은 삭제 경로에 전달한다.
+                session.PopWorldObject(parent, 50, 60, 0);
+                Assert.Equal(0, session.Pool.Slot(parent)[11] & RawSidPool.VoidBit);
+                spatialLevel = Enumerable.Range(0, RawSquidHash.Levels).Single(level => surface.Storage.Hash.Bucket(level, 50, 60) == parent);
+            }
             if (type == 152)
             {
                 // Player 전처리는 같은 현재 owner0의 기술 포인터와 접속 플래그를 갱신한다.
@@ -83,6 +92,7 @@ public sealed partial class HostPriestWorldLiveTests
             }
             Assert.Equal(1, changed);
             Assert.NotEqual(0, session.Pool.Slot(parent)[11] & 1);
+            if (spatial) Assert.Equal(0, surface.Storage.Hash.Bucket(spatialLevel, 50, 60));
             Assert.NotEqual(0, session.Pool.Slot(form)[11] & 1);
             Assert.NotEqual(0u, node.Flags & 0x10000);
             Assert.Equal(0u, surface.Storage.BaseDestroy().PreDepth);
