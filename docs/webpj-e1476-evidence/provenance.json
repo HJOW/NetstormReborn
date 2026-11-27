@@ -1,0 +1,31 @@
+{
+  "unit": "WB04-E1476",
+  "sourceHead": "b280c6082010be4f4a3ef1a20cba1b9ccda82408",
+  "node": "v22.23.5",
+  "nodeExecutable": "H:\\Workspace\\git\\NetstormReborn\\extracted\\webpj-node22\\node_modules\\node-win-x64\\bin\\node.exe",
+  "nodeExecutableSha256": "247e9693d316da9857e44990e5e11709f596f18112251b8026ec6eed80bdf38a",
+  "command": "node --test --test-concurrency=2 tests/*.test.mjs",
+  "results": {
+    "tests": 6982,
+    "pass": 6982,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "durationMs": 685116.9741
+  },
+  "nodeExit": 0,
+  "files": 3568,
+  "rawChanged": [],
+  "newlinesOnly": [],
+  "runnerElapsedSeconds": 687.8097228000115,
+  "artifacts": {
+    "webpj-e1476-node22.log": "441ae94d7c86e76dd1d331048ec53e1666e84b2054c340d677e9738a674e6749",
+    "webpj-e1476-freeze.json": "61d66ca076612fb4c2b14a78ff90d4729f1065c6e00f67aa8592f23983e11006",
+    "webpj-e1476-freeze-check.json": "58bb2225e58abab7148436fa3d43b9bc06441a88e486a388a9943f1e8667dd92",
+    "e1475-1476-run-state.json": "96ae648a34c4a2f8212688ada0e793bec38b829d08fb48698cbe35318e829ead"
+  },
+  "pair": "E1475 Node26.13.0 then E1476 Node22.23.5, same 3568 inputs, 6982/6982 each",
+  "sourceFreezeReleased": true,
+  "knownFollowup": "실제덤프/Native참여기와 독립후보검사에서 확인된 AI-only 플레이어 조회누락은 다음 제품 단위에서 수정한다. 현재 전체 검사는 그 조건을 아직 포함하지 않는다."
+}
