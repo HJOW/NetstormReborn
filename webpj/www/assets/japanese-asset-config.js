@@ -47,3 +47,17 @@ export const JAPANESE_LANGUAGE_PATHS = Object.freeze([
 // 언어 선택 때만 적재할 일본어 묶음과 번역표 경로다. 글꼴은 별도 브라우저 제공자가 준비한다.
 export const JAPANESE_BUNDLE = 'japanese';
 export const JAPANESE_TRANSLATIONS_PATH = 'd/xlat.japanese';
+
+// 일본어는 실제CDN Noto Sans JP를 사용한다. TTF를 배포하거나 변환하지 않는다.
+export const JAPANESE_FONT_FAMILY = 'Noto Sans JP';
+export const JAPANESE_FONT_STYLESHEET = 'https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap';
+// 일본어 벡터 글꼴은 슬롯 높이로 그리며 같은 줄의 영문도 확장 글자의 기준선에 맞춘다.
+export const JAPANESE_FONT_METRICS = Object.freeze({
+    // 원본 슬롯14/13/20/48/12px 크기를 그대로 사용한다.
+    emSize: (height) => height,
+    // 한자의 위쪽 획이 잘리지 않도록 기준선 위 공간을 확보한다.
+    ascentRows: (size) => Math.ceil(size * 0.88),
+    alignNative: true,
+    // 일본어 문장은 공백 없는 문자 경계에서도 줄을 바꾼다.
+    lineBreaks: 'japanese',
+});

@@ -9,6 +9,22 @@ import { clipRect } from '../render/indexed-surface.js';
 import { createFragment, drawChain, drawFragment, measureFragment } from './style-text.js';
 import { CURSOR_LINK, CURSOR_NORMAL, CURSOR_SCROLL } from './cursor.js';
 
+// 일본어 줄 끝/머리에 홀로 두지 않는 여는/닫는 문장부호와 작은 가나다. 원본 바이트 줄바꿈에는 적용하지 않는다.
+const JAPANESE_OPEN = new Set('「『（〔［｛〈《【〖〘〚“‘(');
+const JAPANESE_CLOSE = new Set('、。，．・：；？！ー〜…‥）〕］｝〉》】〗〙〛」』”’!?.,:;)ァィゥェォッャュョヮヵヶぁぃぅぇぉっゃゅょゎゕゖﾞﾟ');
+// 일본어 문장의 문자 단위 줄바꿈을 허용하는 가나/한자/전각 범위다. 영문 낱말은 공백 경계를 유지한다.
+function japaneseUnit(code) { return code >= 0x3000 && code <= 0x30ff || code >= 0x31f0 && code <= 0x31ff || code >= 0x3400 && code <= 0x9fff || code >= 0xf900 && code <= 0xfaff || code >= 0xff00 && code <= 0xffef; }
+// UTF-16 입력을 보존하는 줄바꿈 후보 끝 위치다. 결합 부호/서로게이트 쌍을 자르지 않으며 열린 괄호와 닫힌 부호는 이웃 글자와 묶는다.
+function japaneseBreakEnds(units) {
+    const ends = [];
+    // 각 문자 경계에서 일본어/공백 분할과 금칙을 확인한다. 마지막 조각은 항상 포함한다.
+    for (let index = 1; index <= units.length; index += 1) {
+        const before = units[index - 1], after = units[index];
+        if (index === units.length || (before === 0x20 || japaneseUnit(before) || japaneseUnit(after)) && !JAPANESE_OPEN.has(String.fromCharCode(before)) && !JAPANESE_CLOSE.has(String.fromCharCode(after)) && !/\p{Mark}/u.test(String.fromCharCode(after))) ends.push(index);
+    }
+    return ends;
+}
+
 // 원본 입력 줄 한 칸 수(생성 인자 128)이다. 이를 넘는 줄은 맨 앞부터 버린다. (2026-10-28 WB03-D)
 export const SCROLL_TEXT_MAX_LINES = 128;
 
@@ -224,6 +240,8 @@ export class ScrollingText {
     // 줄의 현재 폭 + 단어 폭이 width 이상이면 줄을 바꾼다. 줄이 비어 있으면 너무 긴 단어도 그대로 한 줄에 둔다.
     // 반환값은 마지막 단어가 놓인 표시 줄이다.
     _splitText(fragment, startLine, width) {
+        // 일본어 글꼴의 명시적 정책일 때만 문자 경계 배치를 사용한다.
+        if (this.fonts.unicode?.metrics?.lineBreaks === 'japanese') return this._splitJapaneseText(fragment, startLine, width);
         const bytes = fragment.bytes;
         let line = startLine;
         let consumed = 0;
@@ -258,6 +276,22 @@ export class ScrollingText {
                 consumed += accepted;
             }
             if (newLine) line = this._newSoftLine();
+        }
+        return line;
+    }
+
+    // 일본어 문장을 허용 경계로 나눠 현재 줄에 배치한다. 텍스트/스타일/링크 태그와 모든 공백을 보존한다.
+    _splitJapaneseText(fragment, startLine, width) {
+        let line = startLine, begin = 0;
+        // 원문 조각의 각 분할 범위를 한 번씩 배치하며 폭을 넘으면 새 표시 줄을 만든다.
+        for (const end of japaneseBreakEnds(fragment.bytes)) {
+            const piece = createFragment(fragment.bytes.subarray(begin, end), fragment.context, fragment.tag);
+            const size = measureFragment(this.fonts, piece);
+            if (line.width !== 0 && add(line.width, size.width) > width) line = this._newSoftLine();
+            line.height = Math.max(line.height, size.height);
+            line.width = add(line.width, size.width);
+            line.fragments.push(piece);
+            begin = end;
         }
         return line;
     }

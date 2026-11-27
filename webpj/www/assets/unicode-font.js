@@ -173,10 +173,12 @@ export class UnicodeGlyphFont {
 // 글꼴 슬롯·스타일마다 UnicodeGlyphFont 를 만들어 보관하는 공급자이다. FontSet 이 한국어 글꼴이 필요할 때 부른다.
 // 사용: const provider = new UnicodeFontProvider(rasterizer); provider.get(0, 0, bitmapFont) → 슬롯 0 보통 글꼴. (2026-10-31 WB03-N)
 export class UnicodeFontProvider {
-    // 래스터라이저를 받는다.
-    constructor(rasterizer) {
+    // 래스터라이저와선택적metrics(emSize/ascentRows/alignNative/lineBreaks)를받는다. 생략하면갈무리11규칙그대로다.
+    constructor(rasterizer, metrics = null) {
         // 글자 그림을 만드는 래스터라이저이다.
         this.rasterizer = rasterizer;
+        // 선택적 비트맵 외 글꼴의 크기/기준선 규칙이다. 없으면 기존 갈무리11 규칙을 그대로 쓴다.
+        this.metrics = metrics;
         // `슬롯:스타일:종류` → UnicodeGlyphFont 보관소이다. 종류는 원본 글리프를 원래 기준선에 두는 글꼴(n)과 한글 기준선까지 내리는 큰 슬롯 한글 문구 글꼴(g)이다. (2026-11-23 WB04-E1288: 종류 추가)
         this.fonts = new Map();
     }
@@ -188,8 +190,8 @@ export class UnicodeFontProvider {
     get(slot, style, reference = null, extended = true) {
         const slotHeight = FONT_SLOT_HEIGHTS[slot];
         if (!slotHeight) throw new RangeError(`유니코드 글꼴을 만들 수 없는 슬롯입니다: ${slot}`);
-        const emSize = koreanEmSize(slotHeight);
-        const whole = extended && koreanScale(emSize) >= 2;
+        const emSize = this.metrics ? this.metrics.emSize(slotHeight) : koreanEmSize(slotHeight);
+        const whole = extended && (this.metrics ? this.metrics.alignNative : koreanScale(emSize) >= 2);
         const key = `${slot}:${style}:${whole ? 'g' : 'n'}`;
         const cached = this.fonts.get(key);
         if (cached) return cached;
@@ -206,7 +208,7 @@ export class UnicodeFontProvider {
         // 줄 맨 위 밖으로 나가 잘려 `잔`→`산`, `제`→`세` 처럼 읽힌다. 원본 BitmapFont.cpp 도 확장 글자가 기준선 위보다 크면 위쪽을 0 줄에 맞춘다(`shift = max(0, ascent - bearingY*scale)`).
         // 슬롯 0·5(원본 기준선 11)는 그대로이고 슬롯 1·6(원본 기준선 9~10)은 한글만 11 에 놓여 윗줄 잘림이 없어진다. 원본 글리프는 원본 기준선 위치 그대로 그린다.
         // (2026-11-23 WB04-E1259 큰 슬롯 보정, WB04-E1288: 작은 슬롯에도 적용해 슬롯 1·6 의 한글 윗줄 잘림을 고침)
-        const ascent = Math.max(reference?.ascent ?? Math.round(emSize * 0.85), koreanAscentRows(emSize));
+        const ascent = Math.max(reference?.ascent ?? Math.round(emSize * 0.85), (this.metrics ? this.metrics.ascentRows(emSize) : koreanAscentRows(emSize)));
         const font = new UnicodeGlyphFont({
             rasterizer: this.rasterizer,
             spec,

@@ -1,0 +1,12 @@
+npm notice run NetstormWeb@1.0.0 npx
+npm notice run ^"playwright^" test e2e/korean-m2.spec.js --project=chromium --workers=1 --trace=off --reporter=line --output=extracted/e1412-korean-m2-results
+
+Running 2 tests using 1 worker
+
+(node:19732) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+[1/2] [chromium] › e2e\korean-m2.spec.js:47:1 › 한국어 참조의 CPP1339 영어 대조군은 기존225553df와 화면·상태가 같다
+[2/2] [chromium] › e2e\korean-m2.spec.js:55:1 › 한국어 Tutorial1 M2:90·130프레임 상태 일치·안내 창 밖0픽셀·같은 본문은 글자 영역만 다르다
+  2 passed (40.0s)

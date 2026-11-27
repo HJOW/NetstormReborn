@@ -40,11 +40,12 @@ export const PRODUCT_COPYRIGHT_LINE = 'Copyright 2026 HJOW';
 const ABOUT_PATCH_LINES = Object.freeze({
     english: 'NetStorm 11.01 Patch by HJOW.<br>',
     korean: 'NetStorm 11.01 패치: HJOW.<br>',
+    japanese: 'NetStorm 11.01 パッチ: HJOW。<br>',
 });
 
 // 12차 스커미시: 설정 화면의 첫 Tell 대상(`Patch1101.Skirmish`)과 Campaign 목록(UCampaign)의 항목 이름이다. cpppj ProductTellBody 와 같다. (2026-11-20 WB04-E1102)
 export const PRODUCT_SKIRMISH_TARGET = `${PRODUCT_CREDITS_OBJECT}.Skirmish`;
-export const PRODUCT_SKIRMISH_LABELS = Object.freeze({ english: 'Skirmish', korean: '스커미시' });
+export const PRODUCT_SKIRMISH_LABELS = Object.freeze({ english: 'Skirmish', korean: '스커미시', japanese: 'スカーミッシュ' });
 // Skirmish 항목을 덧붙일 원본 Tell 섹션 이름이다(메인 메뉴 Campaign 버튼의 대상, 대소문자 무시 비교). (2026-11-20 WB04-E1102)
 const CAMPAIGN_SECTION = 'ucampaign';
 // 스커미시 화면 Tell 섹션의 자리 틀이다. 실제 본문은 앱이 설정으로 만들지만 Tell 이름 조회(`Patch1101.SkirmishCount` 등)가 섹션을 찾도록 같은 이름의 섹션이 있어야 한다(cpppj kPatchCredits). (2026-11-20 WB04-E1102)
@@ -60,6 +61,8 @@ export const PRODUCT_RESET_ALL_CONFIRMED_TARGET = `${PRODUCT_CREDITS_OBJECT}.Res
 const RESET_ALL_SECTIONS = Object.freeze({
     english: ['[ResetAll]', '<h2>Reset All</h2>', '<p>Reset all settings and campaign progress?<br>', 'The game will reload after resetting.', `$Button=Reset All,Tell,${PRODUCT_RESET_ALL_CONFIRMED_TARGET}`, '$Button=Cancel,Tell,Blank', ''].join('\n'),
     korean: ['[ResetAll]', '<h2>설정 초기화</h2>', '<p>모든 설정과 캠페인 진행 상황을 초기화하시겠습니까?<br>', '초기화 후 게임을 다시 불러옵니다.', `$Button=초기화,Tell,${PRODUCT_RESET_ALL_CONFIRMED_TARGET}`, '$Button=취소,Tell,Blank', ''].join('\n'),
+    // 웹은 종료 대신 다시 불러온다는 기존 초기화 동작을 일본어로 안내한다.
+    japanese: ["[ResetAll]", "<h2>すべてリセット</h2>", "<p>設定とキャンペーンの進行状況をすべてリセットしますか？<br>", "リセット後にゲームを再読み込みします。", "$Button=リセット,Tell,Patch1101.ResetAllConfirmed", "$Button=キャンセル,Tell,Blank", ""].join('\n'),
 });
 
 // 제품 Credits 를 제공하는 언어(파일 확장자 이름)별 목록 행 이름이다. 영어는 AGENTS.md 가 정한 표기 그대로이고,
@@ -67,12 +70,14 @@ const RESET_ALL_SECTIONS = Object.freeze({
 export const PRODUCT_CREDITS_LABELS = Object.freeze({
     english: 'Netstorm 11.01 Patch Credits',
     korean: 'NetStorm 11.01 패치 크레딧',
+    japanese: 'NetStorm 11.01 パッチ クレジット',
 });
 
 // 언어별 제품 Credits 창 제목이다. 영어는 AGENTS.md 가 정한 대소문자 그대로이다. (2026-11-05 WB03-AC)
 export const PRODUCT_CREDITS_TITLES = Object.freeze({
     english: 'NetStorm 11.01 Patch Credits',
     korean: 'NetStorm 11.01 패치 크레딧',
+    japanese: 'NetStorm 11.01 パッチ クレジット',
 });
 
 // 언어별 제품 Credits 섹션 원문이다. 원본 Credits 창들과 같은 배경·제목·{CText} 소제목 형식이며, Back 은 Credits 목록으로, Cancel 은 메인 메뉴로 돌아간다.
@@ -119,6 +124,27 @@ const PRODUCT_CREDITS_SECTIONS = Object.freeze({
         '$Button=취소,Tell,Blank',
         '',
     ].join('\n'),
+    // 영어/한국어와 같은 개발자·AI 참여·저작권 내용을 일본어로 제공한다.
+    japanese: [
+        "[Credits]",
+        "<background=\"nsstart\">",
+        "<h2>{H2}NetStorm 11.01 パッチ クレジット</h2>",
+        "<p>{Text}",
+        "バージョン {version}",
+        "<p>",
+        "{CText}開発{Text}<br>",
+        "HJOW, NetStorm 11.01パッチの開発。<br>",
+        "Copyright 2026 HJOW<br>",
+        "<br>",
+        "{CText}AI支援{Text}<br>",
+        "OpenAI Codex、ChatGPT、Anthropic Claude CodeなどのAI支援で開発しました。<br>",
+        "AIは分析、プログラミング、文書作成、検証の補助に使用しました。<br>",
+        "<br>",
+        "原作の制作者は元のクレジット項目で確認できます。",
+        "$Button=戻る,Tell,Credits",
+        "$Button=キャンセル,Tell,Blank",
+        ""
+].join('\n'),
 });
 
 // 제품 표기를 제공하는 언어 이름으로 바꾼다. 목록에 없는 언어는 영어이다. (2026-11-05 WB03-AC)

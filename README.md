@@ -270,7 +270,9 @@ npm --prefix webpj start
 
 ESLint 검사는 `npm --prefix webpj run lint`, 운영 번들은 `npm --prefix webpj run build`, 개발 번들은 `npm --prefix webpj run build:dev`로 만듭니다. webpack은 생성 전에 전체 ESLint 검사를 기다리며 오류나 경고가 있으면 기존 번들을 보존하고 실패합니다. 자동 갱신과 직접 webpack 호출에도 같은 검사가 적용됩니다. [설정·기존 코드 예외 관리](docs/webpj-eslint-20261127.md)를 참조합니다.
 
-자동 검사는 `npm --prefix webpj test`로 실행합니다. `assets/game-data/`의 원본 자료가 바뀌면 `npm --prefix webpj run prepare-assets`로 `webpj/www/data/`를 다시 만들고, `npm --prefix webpj run check-assets`로 복사본을 점검합니다. 개발용 주소 인자로 `?lang=ko`(한국어), `?mute`(소리 끄기), `?aspect=16:9`(화면비)를 조합할 수 있고, `?map=savetheisland`는 게임 규칙 없이 지형만 보여 주는 개발용 화면입니다.
+웹 언어는 Options ▸ Language에서 English/Korean/Japanese를 고르고 저장할 수 있습니다. 일본어 글꼴은 Google Fonts CDN을 사용하며 적재에 실패하면 영어로 계속합니다. [일본어 지원/검증](docs/webpj-japanese-browser-support-20261127.md)·[외부 접속 경계](docs/webpj-external-access-20261105.md#9-일본어-google-fonts-경계-2026-11-27-wb04-e1412).
+
+자동 검사는 `npm --prefix webpj test`로 실행합니다. `assets/game-data/`의 원본 자료가 바뀌면 `npm --prefix webpj run prepare-assets`로 `webpj/www/data/`를 다시 만들고, `npm --prefix webpj run check-assets`로 복사본을 점검합니다. 개발용 주소 인자로 `?lang=ko`(한국어)·`?lang=ja`(일본어), `?mute`(소리 끄기), `?aspect=16:9`(화면비)를 조합할 수 있고, `?map=savetheisland`는 게임 규칙 없이 지형만 보여 주는 개발용 화면입니다.
 
 # 주요 문서
 

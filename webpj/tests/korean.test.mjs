@@ -106,7 +106,7 @@ test('xlat.korean: UTF-8·중복 없음·메뉴 라벨 전부 번역', () => {
     collect(buildHelpItems({ includeAll: true }));
     // 숫자만 있는 해상도 라벨(640 by 480 …)은 번역하지 않는다.
     // 프레임 상한 항목('60 FPS' 등)은 cpppj 처럼 각 선택지 자신의 표기를 쓰고 번역하지 않는다(제목 'Frame Rate' 는 번역한다). 언어 이름('English'·'한국어')도 각 언어 자신의 표기라 번역하지 않는다(제목 'Language' 는 번역한다). (2026-11-20 WB04-E1094·E1095)
-    const untranslatable = new Set(['640 by 480', '800 by 600', '1024 by 768', '60 FPS', '75 FPS (Original)', '120 FPS', 'English', 'Korean', '한국어']);
+    const untranslatable = new Set(['640 by 480', '800 by 600', '1024 by 768', '60 FPS', '75 FPS (Original)', '120 FPS', 'English', 'Korean', '한국어', 'Japanese', '日本語']);
     const missing = [...labels].filter((label) => !untranslatable.has(label) && !korean.translations.has(label));
     assert.deepEqual(missing, [], '번역이 없는 라벨');
     // 미션의 TYPE·분류 등은 원본 자산에서 동적으로 들어오므로 메뉴 집합으로 전체 번역표를 제한하지 않는다.

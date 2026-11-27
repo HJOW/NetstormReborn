@@ -39,6 +39,15 @@ export async function createCanvasGlyphRasterizer({ document, regular, bold }) {
     await Promise.all(faces.map((face) => face.load()));
     // 불러온 글꼴을 문서에 등록한다(캔버스가 이름으로 찾는다).
     for (const face of faces) document.fonts.add(face);
+    // 등록한 세 글꼴의 수명만 반납하는 공용 래스터라이저를 만든다.
+    return createRegisteredGlyphRasterizer({ document, family: GLYPH_FONT_FAMILY, fallback: GLYPH_FALLBACK_FONT_FAMILY, releaseFonts: () => {
+        // 한국어 제공자가 등록한 FontFace만 반납한다.
+        for (const face of faces) document.fonts.delete(face);
+    } });
+}
+
+// 이미 준비된 웹 글꼴로 같은4배 Canvas/평균 알파 글리프를 만든다. family/fallback은 등록된 이름이며 releaseFonts는 자기 소유 글꼴만 반납한다.
+export function createRegisteredGlyphRasterizer({ document, family, fallback = family, releaseFonts = () => {} }) {
     const canvas = document.createElement('canvas');
     const context = canvas.getContext('2d', { willReadFrequently: true });
     if (!context) throw new Error('2D 캔버스를 만들 수 없어 한국어 글자를 그릴 수 없습니다.');
@@ -50,7 +59,7 @@ export async function createCanvasGlyphRasterizer({ document, regular, bold }) {
             const character = String.fromCodePoint(codePoint);
             const scale = GLYPH_SUPERSAMPLE;
             // 굵게는 굵은체를 먼저 쓰고 그 파일에 없는 글자만 일반 글리프(보조 이름)로 대체한다. 보통체는 한 이름만 쓴다. (2026-11-23 WB04-E1244)
-            const families = spec.bold ? `"${GLYPH_FONT_FAMILY}", "${GLYPH_FALLBACK_FONT_FAMILY}"` : `"${GLYPH_FONT_FAMILY}"`;
+            const families = spec.bold ? `"${family}", "${fallback}"` : `"${family}"`;
             const font = `${spec.italic ? 'italic ' : ''}${spec.bold ? 700 : 400} ${spec.emSize * scale}px ${families}`;
             context.font = font;
             const advance = Math.max(0, Math.round(context.measureText(character).width / scale));
@@ -108,7 +117,7 @@ export async function createCanvasGlyphRasterizer({ document, regular, bold }) {
         },
         // 등록한 글꼴을 문서에서 뺀다(앱 정리 시). 한 번 더 불러도 안전하다.
         dispose() {
-            for (const face of faces) document.fonts.delete(face);
+            releaseFonts();
         },
     };
 }

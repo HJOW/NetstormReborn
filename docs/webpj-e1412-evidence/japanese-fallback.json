@@ -1,0 +1,10 @@
+{
+  "errors": [],
+  "requests": [
+    "https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap",
+    "https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap"
+  ],
+  "selected": 3,
+  "effective": "english",
+  "prompt": "Click to start"
+}

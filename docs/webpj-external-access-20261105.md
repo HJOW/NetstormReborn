@@ -4,7 +4,7 @@
 
 ## 1. 결론
 
-- 웹 런타임의 네트워크 요청은 **문서 기준 `./data/` 아래 같은 출처 정적 자산**뿐이다(`AssetLoader`). 외부 서버·DNS·업데이트·검증·진단·오류 보고 요청은 없다.
+- 영어/한국어 런타임은 **문서 기준 `./data/` 아래 같은 출처 정적 자산**만 받는다(`AssetLoader`). **일본어가 선택된 경우**에는 AGENTS.md의 WOFF2 없는 글꼴 규칙에 따라 Google Fonts CSS(`fonts.googleapis.com`)와 Noto Sans JP 부분 글꼴(`fonts.gstatic.com`)을 추가로 받는다(E1412, 아래9절). 업데이트·클라이언트 검증·진단·오류 전송 서버에는 접속하지 않는다.
 - 원본 자료의 바깥 주소는 링크를 누르면 **치환이 끝난 `http:`/`https:`/`mailto:` 주소만 브라우저 새 탭/창(메일은 메일 처리기)으로 연다.** `file:`·치환되지 않은 자리표시(`{…}`)·호스트 없는 주소·그 밖의 접두는 열지 않고 이유와 함께 콘솔로만 알린다. 주소 이동(`location`)·외부 프로그램 실행 경로는 없다. 2026-11-05 사용자 결정을 **2026-11-07 WB03-AD에서 구현했다(7절).** (그 전에는 모든 바깥 주소가 콘솔 안내뿐이었다.)
 - 구 클라이언트 검증(`UserNotUpdated`, "Not Validated")은 **열지 않는다**(2026-09-30 프로젝트 결정, WB03-J 구현 유지). 검증 성공값을 합성하지도 않는다.
 - 위 경계는 신규 검사 `webpj/tests/external-access.test.mjs`(5개)가 소스·자산 목록·앱 적재·링크·미연결 기능 단위로 고정한다.
@@ -14,13 +14,14 @@
 | 소비자 | 요청 | 처리 |
 | --- | --- | --- |
 | `www/assets/asset-loader.js` `AssetLoader` | `manifest.json` → 묶음 파일 | `new URL(상대경로, baseUrl)`. 기본 `assetBase`는 `./data/`(문서 기준). manifest 경로는 모두 상대 경로이며 `..`·절대 주소가 없다 |
-| `www/netstorm.js` `_load`·`_loadKorean`·`_startMusicDownload` | 묶음 `menu` 29파일(약7.43MB), 한국어 `korean` 15파일(약3.23MB, 한국어일 때만), `menu-music` 1파일(약17.99MB, 소리 사용 시 뒤에서) | 같은 `AssetLoader`. 호스트가 `fetch` 옵션을 주지 않으면 브라우저 `fetch`를 쓴다 |
-| `www/platform/glyph-rasterizer.js` | 없음 | D2Coding WOFF2는 이미 받은 바이트로 `FontFace`를 만든다(URL 요청 없음) |
+| `www/netstorm.js` `_load`·`_loadKorean`·`_loadJapanese`·음향 적재 | 현행manifest377파일 중 선택 묶음. menu49·korean47·japanese44·menu-music1·mission-sound216·mission-music8·skirmish12 | 같은 출처 `AssetLoader`. 일본어/한국어 추가 묶음은 해당 언어일 때만 받는다 |
+| `www/platform/glyph-rasterizer.js` | 없음 | 한국어 갈무리11 WOFF2는 이미 받은 바이트로 `FontFace`를 만든다. 공용 그리기 함수는 등록된 글꼴만 소비한다 |
+| `www/platform/japanese-font.js` | Google Fonts CSS와 CSS가 지정한 Noto Sans JP 부분 글꼴 | 일본어일 때만 적재. 전체 광고 부분 글꼴을 기다리고 실패/취소 링크는 반납한다(9절) |
 | `www/audio/audio-system.js` | 없음 | 받은 바이트를 Web Audio로 해독한다 |
 | `www/platform/settings.js`·`progress.js` | 없음 | 설정/진행은 브라우저 `localStorage`만 쓴다(쿠키·서버 저장 없음) |
-| `www/index.html` | 없음 | 바깥 스크립트·스타일·글꼴을 부르지 않는다. 모듈은 같은 폴더의 `netstorm.js`다 |
+| `www/index.html` | 바깥 src/href 없음 | 같은 출처 운영번들을 부른다. 일본어 폰트 링크는 해당 언어 적재 시에만 동적으로 만든다 |
 
-검사: 소스 정적 감사(주석 제외 코드에서 `XMLHttpRequest`·`WebSocket`·`EventSource`·`sendBeacon`·`RTCPeerConnection`·Worker·`location` 이동·전역 `open(`·`document.write`·절대 주소 문자열 금지, `fetch` 사용 파일은 `netstorm.js`·`asset-loader.js`뿐), manifest의 전 묶음 경로가 `https://netstorm.example/game/data/` 아래로 풀림, 영어/한국어 `_load()`의 실제 요청 목록이 manifest와 해당 묶음 파일과 정확히 같음. `help-window.js`의 `window.open(topic)`은 `HelpWindow` 지역 변수의 첫 주제 열기이며 브라우저 창 열기가 아니다.
+검사: 소스 정적 감사(주석 제외 코드에서 `XMLHttpRequest`·`WebSocket`·`EventSource`·`sendBeacon`·`RTCPeerConnection`·Worker·`location` 이동·전역 `open(`·`document.write`·절대 주소 문자열 금지(일본어 설정의 정확한 CSS 선언 한 줄만 예외), `fetch` 사용 파일은 `netstorm.js`·`asset-loader.js`뿐), manifest의 전 묶음 경로가 `https://netstorm.example/game/data/` 아래로 풀림, 영어/한국어 `_load()`의 실제 요청 목록이 manifest와 해당 묶음 파일과 정확히 같음. `help-window.js`의 `window.open(topic)`은 `HelpWindow` 지역 변수의 첫 주제 열기이며 브라우저 창 열기가 아니다.
 
 ## 3. 주소·링크 소비자
 
@@ -106,3 +107,13 @@ Chromium [브라우저 검사](../webpj/e2e/external-opener.spec.js) 2건과 Nod
 지원 브라우저의 document.modelContext에 게임 조회·DOM 입력·PNG 캡처·게임 소리 포함 WebM 녹화를 등록한다. 별도 MCP 서버 접속이나 외부 네트워크 요청을 추가하지 않는다. 등록 수명은 앱 AbortSignal로 반납한다. 사용자 마이크·화면 공유 장치를 열지 않고 Canvas.captureStream과 게임 출력 버스만 사용한다.
 
 녹화 결과는 현재 문서의 Blob URL이며 다음 녹화/앱 반납 때 폐기한다. download=true는 기존 platform/external-opener.js의 downloadBytes를 사용한다. 새 앵커 생성 허용 위치를 늘리지 않았고 외부 접속·링크 Node11/11, 실제 Chromium 도구/다운로드2/2가 통과했다. 제품 경계·입력 옵션·실측 PCM 근거는 [WebMCP 사용법](webpj-webmcp-20261126.md)을 따른다. 구 검증 서버 비활성 정책은 그대로다.
+
+## 9. 일본어 Google Fonts 경계 (2026-11-27 WB04-E1412)
+
+`fonts/NotoSansJP-VariableFont_wght.ttf`에는 배포용 WOFF2가 없어 AGENTS.md 지시에 따라 Google Fonts를 사용한다. 일본어는 Options ▸ Language ▸ Japanese, `?lang=ja`/`?lang=japanese`, 저장 선택3, 또는 명시 선택이 없는 일본어 브라우저 선호에서 활성화된다. 영어/한국어에서는 이 CSS/글꼴을 요청하지 않는다.
+
+고정 CSS 주소는 `https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap`이며 CSS가 가리키는 실제 글꼴은 `fonts.gstatic.com`에서 받는다. [Google Fonts 공식 CSS2 문서](https://developers.google.com/fonts/docs/css2)의 두 굵기 요청을 따른다. 문자 내용은 URL에 넣지 않는다. 초기 번역 문자만 준비하면 나중에 처음 입력하는 한자가 대체 글꼴로 캐시되는 것을 실제로 확인했으므로, CSS가 광고한 Noto Sans JP 부분 글꼴 전체를 먼저 준비한 뒤 그리기 자원을 공개한다. 계측 당시248개 FontFace가 모두 loaded였고 CSS 포함249응답이었다. 개수/주소 세부 버전은 CDN에 따라 바뀔 수 있으며 고정 테스트 기대 개수로 사용하지 않는다.
+
+CSS와 폰트 대기는 각각30초 상한이며 실패하면 경고 문맥을 console에 남기고 영어 자원/시작 안내/메뉴로 계속한다. 저장된 일본어 선택은 보존해 다시 선택하거나 새로고침해 재시도할 수 있다. 취소한 적재 세대와 실패는 자신이 만든 스타일시트 링크를 반납한다. 글꼴 TTF를 변환하거나 웹 배포 안에 복사하지 않는다.
+
+소스 감사는 `assets/japanese-asset-config.js`의 **정확한 고정 CSS 상수 선언 한 줄**만 URL 리터럴 검사에서 예외로 둔다. 다른 파일·다른 주소/글꼴·같은 줄에 붙인 추가 네트워크 코드는 계속 거부하는 음성 검사가 있다. 검증/업데이트 서버 요청의 금지는 유지한다. 실제 메뉴/언어 저장·CDN 차단과 진입 검증은 [일본어 구현 단위](webpj-japanese-browser-support-20261127.md)를 따른다.

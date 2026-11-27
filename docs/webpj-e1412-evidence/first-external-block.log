@@ -1,0 +1,38 @@
+✖ 외부 접속 소스 감사: 네트워크 API 는 같은 출처 자산 요청뿐이다 (780.2382ms)
+✔ 자산 목록: 모든 묶음 경로가 데이터 폴더 아래 같은 출처로 풀린다 (2.5767ms)
+✔ 앱 적재 요청: 언어별 묶음을 데이터 폴더 아래에서만 받는다 (12064.8345ms)
+✔ 링크의 바깥 주소: 열 수 있는 주소만 열기 장치로 가고 나머지는 이유와 함께 알린다 (2.3384ms)
+✔ 외부 서비스 기능: 구 검증·진단·외부 실행·서버 전송은 열리지 않는다 (4.5203ms)
+ℹ tests 5
+ℹ suites 0
+ℹ pass 4
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 16053.7472
+
+✖ failing tests:
+
+test at tests\external-access.test.mjs:61:1
+✖ 외부 접속 소스 감사: 네트워크 API 는 같은 출처 자산 요청뿐이다 (780.2382ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
+  + actual - expected
+  
+  + [
+  +   "assets/japanese-asset-config.js:53: export const JAPANESE_FONT_STYLESHEET = 'https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap';"
+  + ]
+  - []
+  
+      at TestContext.<anonymous> (file:///H:/Workspace/git/NetstormReborn/webpj/tests/external-access.test.mjs:81:12)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: [ "assets/japanese-asset-config.js:53: export const JAPANESE_FONT_STYLESHEET = 'https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap';" ],
+    expected: [],
+    operator: 'deepStrictEqual',
+    diff: 'simple'
+  }

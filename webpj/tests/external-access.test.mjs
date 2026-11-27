@@ -58,7 +58,26 @@ const FORBIDDEN = Object.freeze([
 ]);
 
 // 소스 정적 감사: 금지 API 가 없고, fetch 는 앱 조립(netstorm.js)과 자산 적재기만 쓰며, `window.open(` 은 도움말 창 지역 변수의 주제 열기뿐이다.
-test('외부 접속 소스 감사: 네트워크 API 는 같은 출처 자산 요청뿐이다', () => {
+// AGENTS의일본어CDN요구에허용한고정CSS주소다. 구현상수를그대로기대값으로쓰지않는다.
+const JAPANESE_CSS_URL = 'https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&display=swap';
+// 정확한설정파일/선언한줄의URL리터럴만감사에서제외한다. 같은줄의추가코드/다른URL/다른파일은계속검사한다.
+function allowJapaneseFontConstant(file, line) {
+    const expected = `export const JAPANESE_FONT_STYLESHEET = '${JAPANESE_CSS_URL}';`;
+    return file === 'assets/japanese-asset-config.js' && line.trim() === expected ? line.replace(JAPANESE_CSS_URL, '') : line;
+}
+
+// 소스감사예외가일반외부요청으로넓어지지않고정확한한선언만허용하는지독립예시로확인한다.
+test('일본어CDN소스예외: 고정주소한선언만허용하고추가코드/다른경로는거부한다', () => {
+    const declaration = `export const JAPANESE_FONT_STYLESHEET = '${JAPANESE_CSS_URL}';`;
+    const caught = (file, line) => FORBIDDEN.some((pattern) => pattern.test(allowJapaneseFontConstant(file, line)));
+    assert.equal(caught('assets/japanese-asset-config.js', declaration), false);
+    assert.equal(caught('assets/other.js', declaration), true);
+    assert.equal(caught('assets/japanese-asset-config.js', declaration + ' navigator.sendBeacon(address, body);'), true);
+    assert.equal(caught('assets/japanese-asset-config.js', declaration.replace('fonts.googleapis.com', 'other.example')), true);
+    assert.equal(caught('assets/japanese-asset-config.js', declaration.replace('Noto+Sans+JP', 'Other')), true);
+});
+
+test('외부 접속 소스 감사: 같은출처자산과명시일본어CDN만허용한다', () => {
     // 음성 대조: 패턴이 실제 위반 예시를 잡고 같은 출처 적재 코드는 잡지 않는다.
     const caught = (line) => FORBIDDEN.some((pattern) => pattern.test(line));
     for (const bad of ["fetch('https://a.b/c')", 'const s = new WebSocket(url);', "globalThis.open('x')", 'view.open(address)', 'window.opener.open(address)', 'location.href = next;', "const u = '//cdn.example/x.js';", 'navigator.sendBeacon(u, d);']) assert.ok(caught(bad), bad);
@@ -72,7 +91,7 @@ test('외부 접속 소스 감사: 네트워크 API 는 같은 출처 자산 요
     // 파일마다 코드 줄을 검사한다.
     for (const file of files) {
         codeLines(file).forEach((line, index) => {
-            for (const pattern of FORBIDDEN) if (pattern.test(line)) violations.push(`${file}:${index + 1}: ${line.trim()}`);
+            for (const pattern of FORBIDDEN) if (pattern.test(allowJapaneseFontConstant(file, line))) violations.push(`${file}:${index + 1}: ${line.trim()}`);
             if (/\bfetch\b/i.test(line)) fetchUsers.add(file);
             if (/\bwindow\s*\.\s*open\s*\(/.test(line)) windowOpen.push(file);
             if (/createElement\(\s*['"`]a['"`]\s*\)/.test(line)) anchorUsers.push(file);

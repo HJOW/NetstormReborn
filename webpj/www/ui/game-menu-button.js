@@ -11,13 +11,14 @@ export class GameMenuButton {
     // 부모 요소와 만든 버튼, 마지막 배치를 보관한다.
     #root; #button; #layout = null; #listener;
     // 호스트 문서에서 버튼을 만들어 루트 끝에 붙인다. 처음에는 숨겨 둔다.
-    constructor(root, { label, title, onClick }) {
+    // fontFamily는이미적재한언어글꼴이다. 일본어는Noto Sans JP를전달하고생략하면기존UI글꼴을쓴다.
+    constructor(root, { label, title, onClick, fontFamily = '"Segoe UI", "Malgun Gothic", sans-serif' }) {
         if (!root?.ownerDocument || typeof onClick !== 'function') throw new TypeError('게임 메뉴 버튼의 루트·클릭 처리기 필요');
         const button = root.ownerDocument.createElement('button');
         button.type = 'button'; button.textContent = `☰ ${label}`; button.title = title ?? label; button.setAttribute('aria-label', title ?? label); button.setAttribute('aria-pressed', 'false');
         button.setAttribute('data-netstorm', 'game-menu-button'); button.tabIndex = -1;
         Object.assign(button.style, { position: 'absolute', zIndex: '10', display: 'none', margin: '0', padding: '3px 10px', border: '1px solid #c9b88a', borderRadius: '3px',
-            background: 'rgba(40, 36, 30, 0.88)', color: '#f0e6c8', font: '14px/18px "Segoe UI", "Malgun Gothic", sans-serif', cursor: 'pointer', userSelect: 'none', touchAction: 'manipulation' });
+            background: 'rgba(40, 36, 30, 0.88)', color: '#f0e6c8', font: `14px/18px ${fontFamily}`, cursor: 'pointer', userSelect: 'none', touchAction: 'manipulation' });
         this.#listener = (event) => { event.preventDefault(); onClick(event); };
         button.addEventListener('click', this.#listener);
         // 포인터를 눌러도 Canvas 입력으로 새지 않게 한다.

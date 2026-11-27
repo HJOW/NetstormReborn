@@ -1,0 +1,185 @@
+{
+  "unit": "WB04-E1412",
+  "recordedAt": "2026-11-27T06:35:08.789894+00:00",
+  "host": "HJOW-Athlon",
+  "scope": "일본어 지원 본소스·운영번들. 31미션 진입/첫안내만;목표/플레이/승리 아님. rare-font-*는 후보검사로 구분. 각 검사는 개별 실행이며 합산 통과 아님.",
+  "productionBundle": {
+    "bytes": 3508533,
+    "sha256": "5e1c8349e7e51ccfdf9d9f2a4a3cb23bd57bae0038f6583caa079da18afea35b"
+  },
+  "checks": {
+    "focused": 69,
+    "network": 12,
+    "fontContractFinal": 6,
+    "chromiumFirst": 5,
+    "chromiumFinalWithIndependentFiles": 3,
+    "chromeEdgeFirefox": 6,
+    "strictEnglishL2": 1,
+    "koreanM2": 2,
+    "bundleFresh": 1,
+    "globalLint": "exit0",
+    "build": "exit0",
+    "assetCopies": 377
+  },
+  "initialOnly": {
+    "missions": 31,
+    "errors": 0,
+    "maxPanelWidth": 540,
+    "maxLineExcess": 0,
+    "notoButtons": 31
+  },
+  "networkPolicy": "정확한 Google Fonts CSS 선언 한 줄만 소스 감사 허용; bad file/host/family/additional code는 거부. CDN 부분글꼴 개수 고정 아님.",
+  "fullRegression": "E1415는 일본어 적용 전. 이 단위 완료 후 v26=1/4,v22=2/8.",
+  "evidence": [
+    {
+      "file": "assets.log",
+      "bytes": 72,
+      "sha256": "9880944cb90a7e1c030bcb4a4f97ad667b95b5e203465667566f1dbc4352aa9c"
+    },
+    {
+      "file": "bc6mows76.png",
+      "bytes": 668152,
+      "sha256": "fcfe5caf331f2ca360d2c03e1074d3423c452c844d0f48df0b05b1a38df97d42"
+    },
+    {
+      "file": "browser-matrix.log",
+      "bytes": 1577,
+      "sha256": "8a72e15ab3ef095bc243ddace3ea6b629b2b416ffbc6b18b5d3d1e95a419d478"
+    },
+    {
+      "file": "build.log",
+      "bytes": 461,
+      "sha256": "8674609973d350d60e8d6818ff9bd1e0f13b7a6c2d4fccf0eba46b088bb4acbf"
+    },
+    {
+      "file": "bundle-fresh.log",
+      "bytes": 246,
+      "sha256": "97231805874c295b97826c860f4680cd7917955fb2119f34e1cf6fc7644a0bb0"
+    },
+    {
+      "file": "chromium-final.log",
+      "bytes": 8722,
+      "sha256": "f02c6f09b6f9bef6a0b1a0fa85df388c964856deb9991b6bbada4e747f557883"
+    },
+    {
+      "file": "chromium-first.log",
+      "bytes": 8874,
+      "sha256": "cde6d768bc862a573eba1d456eb70c7cd59fa0f8e54b54ea0ef20fdbd56711cc"
+    },
+    {
+      "file": "FinalConfrontation.png",
+      "bytes": 611034,
+      "sha256": "33b3c57874a797263aeacd7db538fbe965aae8093ac93789eaa82c4c183f7e37"
+    },
+    {
+      "file": "first-external-block.log",
+      "bytes": 1846,
+      "sha256": "d71052bd262a33b17d4c7ec9c14115027e88fea3dfdf9c6d8a849cf9dae69b7d"
+    },
+    {
+      "file": "first-lint-block.log",
+      "bytes": 1623,
+      "sha256": "629f1f71875c6501e6f81f785017250c45655ef681b77d7f8696678c40ccca04"
+    },
+    {
+      "file": "focused.log",
+      "bytes": 7519,
+      "sha256": "def50a827e9391f013e33a7a31f2fc7fcb9bfdbd654c430d8743fd17fd794c43"
+    },
+    {
+      "file": "font-contract.log",
+      "bytes": 699,
+      "sha256": "8656cd210f684e1f325f5297274750490a631ce450eb9e387f626dcbd89c8433"
+    },
+    {
+      "file": "initial-missions.json",
+      "bytes": 11430,
+      "sha256": "a35c3a738468abf7fd5eb13db3da618911a5368326591dc0f5954fa25f4f920f"
+    },
+    {
+      "file": "japanese-credits.png",
+      "bytes": 981719,
+      "sha256": "a7468ed6ab71f77fb35565df2f87aa3e45fdd35e14d96fae8c4966bbf415ddf9"
+    },
+    {
+      "file": "japanese-fallback.json",
+      "bytes": 285,
+      "sha256": "69c15611dd5367a4004a513324e1e545805f9c115de2b3942f31e9067067dbcf"
+    },
+    {
+      "file": "japanese-fallback.png",
+      "bytes": 13152,
+      "sha256": "54b368cb17b0fa50ecc6b25b8159f62b78bef15ef5bee0c16b93b199dd28419d"
+    },
+    {
+      "file": "japanese-state.json",
+      "bytes": 32567,
+      "sha256": "d37e6217a1b9dd02c238a3d1b524e6769b0410bced8e8bf42ea8070a84cb4ada"
+    },
+    {
+      "file": "korean-m2.log",
+      "bytes": 743,
+      "sha256": "9383828a357bb3ac5d11fde17e9c440008cab00e14ad144ab0bb673079919c4b"
+    },
+    {
+      "file": "l2.log",
+      "bytes": 614,
+      "sha256": "622354bd58455ab4422889e3367fd29d1e3f7e7df8b888aa1f6ab6e2eab632f4"
+    },
+    {
+      "file": "lint.log",
+      "bytes": 81,
+      "sha256": "6c1a6c81a3e52bcd73c1f85f06e14798341ce6b8a5bd2fcfffd05c500ae04b4e"
+    },
+    {
+      "file": "network.log",
+      "bytes": 1376,
+      "sha256": "c571330144e8a15e57772aceee62e0d8a8992a0e1939d24f6d5e43ca48d738c3"
+    },
+    {
+      "file": "rare-font-after.json",
+      "bytes": 100628,
+      "sha256": "02007c69256d1298b2b10c4322bc61a84313a6effdad4f22dbdcc8bdaf531794"
+    },
+    {
+      "file": "rare-font-after.log",
+      "bytes": 157,
+      "sha256": "d984574f357f350b387555c76b4e574e09e4962c0735cc2fa6a2792db2fb8ef8"
+    },
+    {
+      "file": "rare-font-after.png",
+      "bytes": 14712,
+      "sha256": "5cac11d2a9031092c4c911f156079df875b3db4d917203b17c014d6d77295255"
+    },
+    {
+      "file": "rare-font-before.json",
+      "bytes": 83539,
+      "sha256": "99150081e0c278249eb1c50a85de3eaba9c745ec58ad9d6104b1ce2cd82c4e48"
+    },
+    {
+      "file": "rare-font-before.log",
+      "bytes": 156,
+      "sha256": "a5edcab7ececbed017435a5a3c8192764ccbf504b4468e89e44198feff2dae2d"
+    },
+    {
+      "file": "rare-font-before.png",
+      "bytes": 14712,
+      "sha256": "5cac11d2a9031092c4c911f156079df875b3db4d917203b17c014d6d77295255"
+    },
+    {
+      "file": "TheNoose.png",
+      "bytes": 678343,
+      "sha256": "6bc50c4feb13db2be07e116218ead7b65a1bbe84c87b95b326793a83812d2be5"
+    },
+    {
+      "file": "TheWarBegins.png",
+      "bytes": 586444,
+      "sha256": "bcb42d2b2df64298359e22aa94cc19b2ea3a1a0ff2efee666d59b345fe21c137"
+    },
+    {
+      "file": "Tutorial1.png",
+      "bytes": 530349,
+      "sha256": "299f5cc32c4cb5ff0219471005f3e3370133cca836c63992edf1cb5044b01599"
+    }
+  ]
+}

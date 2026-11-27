@@ -1,0 +1,76 @@
+npm notice run NetstormWeb@1.0.0 npx
+npm notice run ^"playwright^" test e2e/japanese-language.spec.js e2e/japanese-initial-missions.spec.js --project=chromium --workers=1 --trace=off --reporter=line --output=extracted/e1412-final-browser-results
+
+Running 3 tests using 1 worker
+
+(node:17924) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+
+
+[1/3] [chromium] › e2e\japanese-initial-missions.spec.js:12:1 › 일본어31캠페인: 실제번들진입과첫안내의창/줄폭
+[chromium] › e2e\japanese-initial-missions.spec.js:12:1 › 일본어31캠페인: 실제번들진입과첫안내의창/줄폭
+{"mission":"Tutorial1","title":"隙間に橋を架けよう！","language":"japanese","x":284.5,"width":540,"logicalWidth":1024,"maxLine":437,"bodyWidth":440,"buttons":["次へ"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172511.184}
+
+{"mission":"Tutorial2","title":"秘密のワークショップ","language":"japanese","x":354.5,"width":400,"logicalWidth":1024,"maxLine":339,"bodyWidth":340,"buttons":["次へ"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172512.488}
+
+{"mission":"Tutorial3","title":"司祭の捕獲","language":"japanese","x":294.5,"width":520,"logicalWidth":1024,"maxLine":459,"bodyWidth":460,"buttons":["次へ"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172513.327}
+
+{"mission":"Tutorial4","title":"戦術戦闘","language":"japanese","x":304.5,"width":500,"logicalWidth":1024,"maxLine":395,"bodyWidth":400,"buttons":["次へ"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172514.861}
+
+{"mission":"Tutorial5","title":"巧みな防御","language":"japanese","x":334.5,"width":440,"logicalWidth":1024,"maxLine":339,"bodyWidth":340,"buttons":["次へ"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172516.273}
+
+{"mission":"Tutorial6","title":"純粋な力！","language":"japanese","x":314.5,"width":480,"logicalWidth":1024,"maxLine":420,"bodyWidth":420,"buttons":["次へ"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172517.451}
+
+{"mission":"TheWarBegins","title":"戦争の始まり！","language":"japanese","x":327,"width":455,"logicalWidth":1024,"maxLine":395,"bodyWidth":395,"buttons":["知識を確認","ミッション開始"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172518.45}
+
+{"mission":"MasterOfWhirligigs","title":"ワーリギグの支配者","language":"japanese","x":347,"width":415,"logicalWidth":1024,"maxLine":314,"bodyWidth":315,"buttons":["知識を確認","ミッション開始"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172519.881}
+
+{"mission":"SaveTheIsland","title":"島を救え！","language":"japanese","x":307,"width":495,"logicalWidth":1024,"maxLine":434,"bodyWidth":435,"buttons":["知識を確認","ミッション開始"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172520.749}
+
+{"mission":"FragileFortune","title":"危うい幸運","language":"japanese","x":297,"width":515,"logicalWidth":1024,"maxLine":451,"bodyWidth":455,"buttons":["知識を確認","ミッション開始"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172522.927}
+
+{"mission":"ThunderingPower","title":"とどろく力！","language":"japanese","x":344.5,"width":420,"logicalWidth":1024,"maxLine":353,"bodyWidth":360,"buttons":["次へ"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172525.262}
+
+{"mission":"DissolvedAlliance","title":"崩れた同盟","language":"japanese","x":377,"width":355,"logicalWidth":1024,"maxLine":255,"bodyWidth":255,"buttons":["知識を確認","ミッション開始"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172526.52}
+
+{"mission":"TheNoose","title":"包囲の輪","language":"japanese","x":324.5,"width":460,"logicalWidth":1024,"maxLine":395,"bodyWidth":400,"buttons":["次へ"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172528.587}
+
+{"mission":"RainVsRain","title":"レイン対レイン","language":"japanese","x":357,"width":395,"logicalWidth":1024,"maxLine":294,"bodyWidth":295,"buttons":["知識を確認","ミッション開始"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172532.39}
+
+{"mission":"RunForIt","title":"逃げろ！","language":"japanese","x":334.5,"width":440,"logicalWidth":1024,"maxLine":339,"bodyWidth":340,"buttons":["次へ"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172533.397}
+
+{"mission":"GuardMyBack","title":"背後を守れ","language":"japanese","x":327,"width":455,"logicalWidth":1024,"maxLine":353,"bodyWidth":355,"buttons":["知識を確認","ミッション開始"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172534.929}
+
+{"mission":"Surrounded","title":"包囲された！","language":"japanese","x":357,"width":395,"logicalWidth":1024,"maxLine":328,"bodyWidth":335,"buttons":["知識を確認","ミッション開始"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172536.923}
+
+{"mission":"BreakingThrough","title":"突破","language":"japanese","x":344.5,"width":420,"logicalWidth":1024,"maxLine":353,"bodyWidth":360,"buttons":["次へ"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172539.38}
+
+{"mission":"ToTheRescue","title":"救出作戦！","language":"japanese","x":384.5,"width":340,"logicalWidth":1024,"maxLine":238,"bodyWidth":240,"buttons":["次へ"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172541.48}
+
+{"mission":"Vicious","title":"残虐","language":"japanese","x":354.5,"width":400,"logicalWidth":1024,"maxLine":297,"bodyWidth":300,"buttons":["次へ"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172544.666}
+
+{"mission":"EnemyTerritory","title":"敵の領土","language":"japanese","x":327,"width":455,"logicalWidth":1024,"maxLine":395,"bodyWidth":395,"buttons":["知識を確認","ミッション開始"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172546.065}
+
+{"mission":"FinalConfrontation","title":"最後の対決","language":"japanese","x":347,"width":415,"logicalWidth":1024,"maxLine":314,"bodyWidth":315,"buttons":["知識を確認","ミッション開始"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172549.365}
+
+{"mission":"bc1menu76","title":"メニュー","language":"japanese","x":435,"width":239,"logicalWidth":1024,"maxLine":171,"bodyWidth":179,"buttons":["使える知識","OK"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172553.427}
+
+{"mission":"bc2bridging76","title":"橋を架ける","language":"japanese","x":325,"width":459,"logicalWidth":1024,"maxLine":359,"bodyWidth":359,"buttons":["使える知識","始めます！"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172554.458}
+
+{"mission":"bc3acid_bar76","title":"アシッドバー","language":"japanese","x":344.5,"width":420,"logicalWidth":1024,"maxLine":319,"bodyWidth":320,"buttons":["次へ"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172555.402}
+
+{"mission":"bc4bow_rush76","title":"クロスボウ急襲","language":"japanese","x":345,"width":419,"logicalWidth":1024,"maxLine":312,"bodyWidth":319,"buttons":["使える知識","始めます！"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172558.447}
+
+{"mission":"bc5walkers76","title":"死の橋","language":"japanese","x":285,"width":539,"logicalWidth":1024,"maxLine":438,"bodyWidth":439,"buttons":["使える知識","始めます！"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172559.894}
+
+{"mission":"bc6mows76","title":"マンオブウォーとバリケード","language":"japanese","x":315,"width":479,"logicalWidth":1024,"maxLine":378,"bodyWidth":379,"buttons":["使える知識","始めます！"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172561.452}
+
+{"mission":"bc7sun_bars76","title":"サンバリケード","language":"japanese","x":355,"width":399,"logicalWidth":1024,"maxLine":298,"bodyWidth":299,"buttons":["使える知識","始めます！"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172565.75}
+
+{"mission":"bc8fury76","title":"フューリーの戦争","language":"japanese","x":363.5,"width":382,"logicalWidth":1024,"maxLine":280,"bodyWidth":282,"buttons":["始めます！"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172566.996}
+
+{"mission":"bc9ssun_bars76","title":"サンバリケード","language":"japanese","x":335,"width":439,"logicalWidth":1024,"maxLine":378,"bodyWidth":379,"buttons":["使える知識","始めます！"],"menuFont":"\"Noto Sans JP\", sans-serif","time":3172569.76}
+
+[2/3] [chromium] › e2e\japanese-language.spec.js:24:1 › 일본어실제CDN: 메뉴선택/저장/재적재와패치크레딧
+[3/3] [chromium] › e2e\japanese-language.spec.js:53:1 › 일본어CDN차단: 영어시작안내와언어재선택재시도
+  3 passed (1.3m)

@@ -270,7 +270,9 @@ npm --prefix webpj start
 
 Run ESLint with `npm --prefix webpj run lint`, production builds with `npm --prefix webpj run build`, and development builds with `npm --prefix webpj run build:dev`. Before generating output, webpack waits for the full ESLint check; errors or warnings stop the build and preserve the existing bundle. Automatic regeneration and direct webpack calls use the same check. See the [configuration and existing-code exception policy](docs/webpj-eslint-20261127.md).
 
-Run the automated tests with `npm --prefix webpj test`. If the original data in `assets/game-data/` changes, rebuild `webpj/www/data/` with `npm --prefix webpj run prepare-assets` and check the copies with `npm --prefix webpj run check-assets`. For development you can combine the URL parameters `?lang=ko` (Korean), `?mute` (no sound) and `?aspect=16:9` (aspect ratio); `?map=savetheisland` opens a development view that shows only the terrain, without game rules.
+Choose and save English, Korean or Japanese in Options ▸ Language. Japanese fonts use Google Fonts CDN; failed loading falls back to English. See [Japanese support and validation](docs/webpj-japanese-browser-support-20261127.md) and [external access](docs/webpj-external-access-20261105.md).
+
+Run the automated tests with `npm --prefix webpj test`. If the original data in `assets/game-data/` changes, rebuild `webpj/www/data/` with `npm --prefix webpj run prepare-assets` and check the copies with `npm --prefix webpj run check-assets`. For development you can combine the URL parameters `?lang=ko` (Korean) or `?lang=ja` (Japanese), `?mute` (no sound) and `?aspect=16:9` (aspect ratio); `?map=savetheisland` opens a development view that shows only the terrain, without game rules.
 
 # Key documents
 

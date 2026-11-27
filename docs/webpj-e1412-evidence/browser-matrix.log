@@ -1,0 +1,19 @@
+npm notice run NetstormWeb@1.0.0 npx
+npm notice run ^"playwright^" test e2e/japanese-language.spec.js --project=chrome --project=edge --project=firefox --workers=1 --trace=off --output=extracted/e1412-matrix-results
+
+Running 6 tests using 1 worker
+
+(node:1824) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chrome] › e2e\japanese-language.spec.js:22:1 › 일본어실제CDN: 메뉴선택/저장/재적재와패치크레딧 (10.0s)
+  ok 2 [chrome] › e2e\japanese-language.spec.js:50:1 › 일본어CDN차단: 영어시작안내와언어재선택재시도 (6.4s)
+(node:23428) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [edge] › e2e\japanese-language.spec.js:22:1 › 일본어실제CDN: 메뉴선택/저장/재적재와패치크레딧 (12.2s)
+  ok 4 [edge] › e2e\japanese-language.spec.js:50:1 › 일본어CDN차단: 영어시작안내와언어재선택재시도 (4.0s)
+(node:17328) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 5 [firefox] › e2e\japanese-language.spec.js:22:1 › 일본어실제CDN: 메뉴선택/저장/재적재와패치크레딧 (15.5s)
+  ok 6 [firefox] › e2e\japanese-language.spec.js:50:1 › 일본어CDN차단: 영어시작안내와언어재선택재시도 (6.8s)
+
+  6 passed (1.1m)

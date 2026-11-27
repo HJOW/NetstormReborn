@@ -1,0 +1,33 @@
+npm notice run NetstormWeb@1.0.0 build
+npm notice run webpack --mode production && node tools/check-bundle-size.js
+[webpack-cli] ✖ Error: 
+H:\Workspace\git\NetstormReborn\webpj\tests\japanese-ui.test.mjs
+  91:45  error  Unexpected combined character in character class  no-misleading-character-class
+
+✖ 1 problem (1 error, 0 warnings)
+
+
+[ESLint] 검사 실패로 번들 생성을 중단합니다.
+    at lintProject (H:\Workspace\git\NetstormReborn\webpj\tools\eslint-before-build.js:17:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  [cause]: Error: Command failed: C:\Program Files\nodejs\node.exe H:\Workspace\git\NetstormReborn\webpj\node_modules\eslint\bin\eslint.js . --max-warnings 0
+  
+      at genericNodeError (node:internal/errors:999:15)
+      at wrappedFn (node:internal/errors:544:14)
+      at ChildProcess.exithandler (node:child_process:420:12)
+      at ChildProcess.emit (node:events:514:20)
+      at maybeClose (node:internal/child_process:1156:16)
+      at ChildProcess._handle.onexit (node:internal/child_process:334:5) {
+    code: 1,
+    killed: false,
+    signal: null,
+    cmd: 'C:\\Program Files\\nodejs\\node.exe H:\\Workspace\\git\\NetstormReborn\\webpj\\node_modules\\eslint\\bin\\eslint.js . --max-warnings 0',
+    stdout: '\n' +
+      'H:\\Workspace\\git\\NetstormReborn\\webpj\\tests\\japanese-ui.test.mjs\n' +
+      '  91:45  error  Unexpected combined character in character class  no-misleading-character-class\n' +
+      '\n' +
+      '✖ 1 problem (1 error, 0 warnings)\n' +
+      '\n',
+    stderr: ''
+  }
+}

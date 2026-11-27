@@ -3,7 +3,7 @@
 import { decodeOriginalText } from './text-encoding.js';
 import { UnicodeFontProvider } from './unicode-font.js';
 import { XlatTable } from './xlat.js';
-import { JAPANESE_TRANSLATIONS_PATH } from './japanese-asset-config.js';
+import { JAPANESE_TRANSLATIONS_PATH, JAPANESE_FONT_METRICS } from './japanese-asset-config.js';
 
 // 일본어 느슨한 파일만 게임 데이터에 합친다. 영어 대체는 기존 GameData 규칙을 그대로 쓴다.
 const LANGUAGE_FILE_PATTERN = /^d\/[^/]+\.japanese$/iu;
@@ -20,7 +20,7 @@ export async function buildJapaneseSupport(files, { createRasterizer }) {
     const rasterizer = await createRasterizer();
     return Object.freeze({
         translate: (text) => translations.translate(text),
-        unicode: new UnicodeFontProvider(rasterizer),
+        unicode: new UnicodeFontProvider(rasterizer, JAPANESE_FONT_METRICS),
         translations,
         languageFiles: new Map([...files].filter(([assetPath]) => LANGUAGE_FILE_PATTERN.test(assetPath))),
     });

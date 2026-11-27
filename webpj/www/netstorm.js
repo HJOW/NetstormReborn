@@ -24,6 +24,9 @@ import {
     buildMenuResources,
 } from './assets/menu-assets.js';
 import { KOREAN_BUNDLE, buildKoreanSupport } from './assets/korean-assets.js';
+import { buildJapaneseSupport } from './assets/japanese-assets.js';
+import { JAPANESE_BUNDLE, JAPANESE_FONT_FAMILY } from './assets/japanese-asset-config.js';
+import { createJapaneseGlyphRasterizer } from './platform/japanese-font.js';
 import { KOREAN_FONT_FAMILY } from './assets/korean-font-config.js';
 import { AudioSystem, createAudioContext, volumeStepToCentibels } from './audio/audio-system.js';
 import { SoundList } from './audio/sound-list.js';
@@ -110,7 +113,7 @@ import { dispatchGameTimeKey, readGameTimeSeconds } from './core/game-time-displ
 import { idleMainMenuActivity } from './core/main-menu-activity.js';
 import { frameDue, frameRateChoices, normalizeFrameRate, parseFrameRateTarget } from './core/frame-rate-option.js';
 import { dispatchScreenshotKey, encodeScreenshotGif, screenshotFileName, screenshotPrimaryPalette } from './core/screenshot-gif.js';
-import { languageChoices, languageOfChoice, parseLanguageTarget, savedLanguage } from './platform/language-choice.js';
+import { languageChoices, languageOfChoice, parseLanguageTarget, savedLanguage, originalLanguageNumber } from './platform/language-choice.js';
 import { difficultyChoices, parseDifficultyTarget } from './core/difficulty-option.js';
 import { SKIRMISH_MISSION_NAME, applySkirmishAction, buildSkirmishLaunch, buildSkirmishScreen, createSkirmishFileSource, isSkirmishMissionName, loadSkirmishSettings, makeSkirmishEmptyWorldFort, makeSkirmishWorldPlan, parseSkirmishTarget, saveSkirmishSettings } from './core/skirmish-setup.js';
 
@@ -317,6 +320,8 @@ const TEXTS = Object.freeze({
         gameMenuButton: '메뉴',
         gameMenuButtonTitle: '게임 메뉴 (ESC)',
     }),
+    // 웹 전용 시작/오류/메뉴 단추의 일본어 문구다.
+    japanese: Object.freeze({ title: 'NetStorm', loading: '読み込み中...', loadFailed: 'ゲームデータを読み込めませんでした。', retry: 'クリックして再試行', clickToStart: 'クリックして開始', resetFailed: '初期化できませんでした。保存領域へのアクセスを確認して再試行してください。', gameMenuButton: 'メニュー', gameMenuButtonTitle: 'ゲームメニュー (ESC)' }),
 });
 
 // 시작·로딩 안내 Canvas 글꼴 목록이다. 한국어 글꼴이 등록되기 전에는 뒤의 시스템 글꼴로 대체한다.
@@ -481,10 +486,10 @@ export function clientToLogical(clientX, clientY, rect, logicalWidth, logicalHei
     };
 }
 
-// 문자열 언어 이름을 지원하는 언어 키로 바꾼다. 한국어면 'korean', 그 밖에는 'english' 다.
-// 'ko', 'ko-KR', 'korean' 을 한국어로 본다. (2026-10-23 WB01)
+// 문자열 언어 이름을 영어/한국어/일본어 키로 바꾼다. 나머지는영어로 대체한다.
+// ko/ko-KR/korean과 ja/ja-JP/japanese를 각각한국어/일본어로 본다. (2026-10-23 WB01)
 // 브라우저가 알려 주는 선호 언어를 읽는다: `navigator.languages` 의 첫 항목을 우선하고(없으면 `language`, 옛 `userLanguage`) 비어 있으면 undefined 이다.
-// 처음 방문처럼 저장된 선택이 없을 때 쓰는 자동 탐지 값이다. 한국어 선호(`ko`, `ko-KR`)면 한국어, 그 밖에는 영어이다. (2026-11-24 WB04-E1300)
+// 처음 방문처럼 저장된 선택이 없을 때 선호 언어를 정규화해 영어/한국어/일본어를 선택한다. (2026-11-24 WB04-E1300)
 export function detectBrowserLanguage(navigatorLike = globalThis.navigator) {
     const first = Array.isArray(navigatorLike?.languages) || (navigatorLike?.languages && typeof navigatorLike.languages.length === 'number') ? navigatorLike.languages[0] : undefined;
     return first || navigatorLike?.language || navigatorLike?.userLanguage || undefined;
@@ -492,6 +497,7 @@ export function detectBrowserLanguage(navigatorLike = globalThis.navigator) {
 
 export function normalizeLanguage(value) {
     const text = String(value ?? '').toLowerCase();
+    if (text === 'japanese' || /^ja(?:-|$)/u.test(text)) return 'japanese';
     return text === 'korean' || text.startsWith('ko') ? 'korean' : 'english';
 }
 
@@ -564,7 +570,7 @@ function readQueryParams() {
 
 // 게임 앱 클래스이다. 호스트 페이지는 `new Netstorm(옵션).init(루트요소)` 로 시작하고 `destroy()` 로 정리한다.
 // 옵션:
-//  - language: 'english' | 'korean'. 기본은 ?lang, 없으면 브라우저 언어.
+//  - language: 'english' | 'korean' | 'japanese'. 기본은 ?lang, 없으면 브라우저 언어.
 //  - aspect: 'auto' | '4:3' | '16:10' | '16:9'. 기본은 ?aspect, 없으면 auto.
 //  - debug: true 면 화면 구성·입력 정보를 겹쳐 그린다. 기본은 ?debug 유무.
 //  - fillWindow: true(기본)면 루트 요소를 브라우저 창 전체로 채운다. false 면 호스트가 정한 루트 크기를 따른다.
@@ -825,7 +831,7 @@ export class Netstorm {
 
     // 현재 언어의 화면 문구 모음이다.
     get texts() {
-        return TEXTS[this.options.language] ?? TEXTS.english;
+        return TEXTS[this._gameData?.language ?? this.options.language] ?? TEXTS.english;
     }
 
     // 메인 메뉴 화면 객체이다. 메인 메뉴에 들어가기 전에는 null 이다. (2026-10-23 WB03-M1)
@@ -1002,7 +1008,7 @@ export class Netstorm {
     // 옵션 메뉴 Language 선택을 적용한다. 선택을 설정(`language`)에 저장하고 주소의 `lang` 매개변수를 같은 출처 기록 교체(history.replaceState)로 지워(저장한 선택을 가리지 않게) 페이지를 다시 불러 새 언어 묶음으로 시작한다. 주소 이동(location.href·assign)은 외부 접속 감사가 금지하므로 쓰지 않는다. 현재 언어와 같으면 false 다. 다시 불러오는 방식은 options.reload() 로 바꿀 수 있다(검사용). (2026-11-20 WB04-E1095)
     _chooseLanguage(number) {
         const language = languageOfChoice(number);
-        if (language === null || language === this.options.language) return false;
+        if (language === null || language === (this._gameData?.language ?? this.options.language)) return false;
         this._settings?.set('language', number);
         const view = this._view(), params = new URLSearchParams(view.location.search);
         if (params.has('lang')) { params.delete('lang'); const query = params.toString(); view.history.replaceState(null, '', `${view.location.pathname}${query ? `?${query}` : ''}${view.location.hash}`); }
@@ -1330,7 +1336,7 @@ export class Netstorm {
             blockingGumpOpen: () => this._clientGump.blockingPopups(),
             // 12차 스커미시: 세션이 미션 Start 때 읽는 월드 계획이다(일반 미션은 null). (2026-11-20 WB04-E1105)
             skirmishWorld: () => this._skirmishPlan };
-        bindCampaignAiClientServices({ configuration: () => this._gameData, languageNumber: () => this.options.language === 'korean' ? 7 : 0,
+        bindCampaignAiClientServices({ configuration: () => this._gameData, languageNumber: () => originalLanguageNumber(this._gameData?.language ?? this.options.language),
             translate: (text) => this._resources.translate(text), encodeDisplayText: (text) => displayTextCodec.encode(text),
             decodeDisplayText: (bytes) => displayTextCodec.decode(bytes), chatChannels: () => this._clientChatChannels }, services.ai);
         // 섬 피격·사제 방어와 생산 자금 안내는 같은 현재 Tell 창을, Factory 연구 도움말(0x03000080 kind=0)은 현재 도움말 창을 사용한다. (2026-11-24 WB04-E1328: 누락된 factoryHelp·removeConnectionStatus·templateStateBytes 연결)
@@ -1791,7 +1797,7 @@ export class Netstorm {
         ui.finishInstall(); production.minimap.setPalette(screen.colors()); production.minimap.bindWorld(session.core()); production.worldBound = true;
         // 웹 전용: 화면 우측 상단 버튼으로도 ESC 와 같은 게임 메뉴막대를 열고 닫는다. 버튼은 Canvas 위 DOM 요소라 열린 메뉴막대보다 항상 앞에 있다. (2026-11-20 WB04-E1084)
         this._gameMenuButton?.destroy();
-        this._gameMenuButton = new GameMenuButton(this._root, { label: this.texts.gameMenuButton, title: this.texts.gameMenuButtonTitle, onClick: () => { this._toggleCampaignGameMenu(); this._canvas?.focus(); } });
+        this._gameMenuButton = new GameMenuButton(this._root, { label: this.texts.gameMenuButton, title: this.texts.gameMenuButtonTitle, fontFamily: this._gameData?.language === 'japanese' ? `"${JAPANESE_FONT_FAMILY}", sans-serif` : undefined, onClick: () => { this._toggleCampaignGameMenu(); this._canvas?.focus(); } });
         this._gameMenuButton.layout(this._layout); this._gameMenuButton.show();
         return ui;
     }
@@ -1898,7 +1904,7 @@ export class Netstorm {
 
     // F6 지식 창이 읽는 현재 화면 크기·언어·번역·정적 문자열·팝업 표식 장치다(원본 `RawMenuControls::OpenKnowledge` 의 호출자 몫). 값은 호출 시점에 다시 읽는다. (2026-11-20 WB04-E1088)
     _campaignKnowledgeDevices() {
-        return { width: () => this._layout.logicalWidth, height: () => this._layout.logicalHeight, language: () => this.options.language === 'korean' ? 7 : 0,
+        return { width: () => this._layout.logicalWidth, height: () => this._layout.logicalHeight, language: () => originalLanguageNumber(this._gameData?.language ?? this.options.language),
             storeText: (value) => this._clientChatWindows.store(value), mark: (command) => this._clientHelpPopup.mark(command) };
     }
 
@@ -2204,7 +2210,7 @@ export class Netstorm {
         if (dispatchConstructionHistoryKey(event, camera.constructionHistory(), cells, { paused, center })) return true;
         if (dispatchLostPositionKey(event, () => lost[0], () => lost[1], cells, { paused, center })) return true;
         return dispatchSavedCameraKey(event, camera.savedPositions(), {
-            paused, center, language: () => (this.options.language === 'korean' ? 7 : 0),
+            paused, center, language: () => (originalLanguageNumber(this._gameData?.language ?? this.options.language)),
             sound: () => { this._clientSoundPlayer.play(this._clientSoundNames.lookup('select.wav'), 0, 0, 0, 0, 0); },
             // 선택음 뒤의 현재 지도 영역과 렌더러 시점으로 지도 중심(칸 좌표)을 구한다. 칸 크기는 카메라 상태의 정수 칸 픽셀(+8·+12)을 float 으로 본 값이다.
             capture: () => {
@@ -2220,7 +2226,7 @@ export class Netstorm {
         if (!world || !queue || !tutorial || !gump || !user) throw new Error('미션 입력 프레임의 현재 장치 수명 누락');
         // 대본 `<$ViewSpot>` 이 맡겨 둔 시작 카메라 위치를 월드가 도는 첫 프레임에 적용한다. (2026-11-22 WB04-E1190)
         this._applyPendingViewSpot();
-        const mouse = this._prepareClientPointer(this.options.language === 'korean' ? 7 : 0);
+        const mouse = this._prepareClientPointer(originalLanguageNumber(this._gameData?.language ?? this.options.language));
         tutorial.event(mouse);
         this._campaignCameraDevice().pollEdgeScroll(mouse);
         const dialog = Boolean(this._mainMenu?.dialog), cursorActive = world.session().cursorDropSettings().lockDepth === 0;
@@ -2565,23 +2571,24 @@ export class Netstorm {
                 const loader = this._createAssetLoader();
                 await loader.loadManifest();
                 if (generation !== this._loadGeneration) return;
-                // 한국어면 메뉴 묶음 뒤에 한국어 묶음(글꼴·번역표)을 받으므로 진행률의 전체 크기에 미리 더해 둔다. (2026-10-31 WB03-N)
-                const koreanTotal = this.options.language === 'korean' ? this._bundleBytes(loader, KOREAN_BUNDLE) : 0;
+                // 선택 언어의 추가 묶음을 메뉴 뒤에 받으므로 진행률의 전체 크기에 미리 더해 둔다. (2026-10-31 WB03-N)
+                const languageBundle = this.options.language === 'japanese' ? JAPANESE_BUNDLE : this.options.language === 'korean' ? KOREAN_BUNDLE : null;
+                const languageTotal = languageBundle ? this._bundleBytes(loader, languageBundle) : 0;
                 let menuTotal = 0;
                 const files = await loader.loadBundle(MENU_BUNDLE, (loaded, total) => {
                     menuTotal = total;
-                    if (generation === this._loadGeneration) this._loadProgress = { loaded, total: total + koreanTotal };
+                    if (generation === this._loadGeneration) this._loadProgress = { loaded, total: total + languageTotal };
                 });
                 if (generation !== this._loadGeneration) return;
-                const korean = this.options.language === 'korean' ? await this._loadKorean(loader, menuTotal, koreanTotal, generation) : null;
+                const languageSupport = this.options.language === 'japanese' ? await this._loadJapanese(loader, menuTotal, languageTotal, generation) : this.options.language === 'korean' ? await this._loadKorean(loader, menuTotal, languageTotal, generation) : null;
                 if (generation !== this._loadGeneration) return;
-                this._resources = buildMenuResources(files, korean);
+                this._resources = buildMenuResources(files, languageSupport);
                 // 설정 층에는 웹 사용자 설정(언어·음량)과 저장된 캠페인 진행 값을 원본 options.cfg 자리에 넣는다. 해상도·전체화면 값은 넣지 않는다.
                 // 이후 게임 데이터에 쓰이는 값은 _onConfigWrite 가 설정·진행 저장소로 옮긴다. (2026-10-30 WB03-H: 진행 값과 쓰기 통지 연결)
-                // 한국어 언어 자료(tell·offical*·config 용어표)는 같은 데이터 폴더의 느슨한 파일로 합쳐 넘긴다. 한국어 묶음을 받지 못했으면(korean 이 null) 영어 파일로 대체된다. (2026-10-31 WB03-O)
+                // 선택 언어 자료를 느슨한 파일로 합친다. 일본어 준비 실패는 제품 추가 문구도 영어로 대체한다. (2026-10-31 WB03-O)
                 this._gameData = GameData.build({
-                    files: korean?.languageFiles?.size ? new Map([...files, ...korean.languageFiles]) : files,
-                    language: this.options.language,
+                    files: languageSupport?.languageFiles?.size ? new Map([...files, ...languageSupport.languageFiles]) : files,
+                    language: this.options.language === 'japanese' && !languageSupport ? 'english' : this.options.language,
                     options: { ...this._settings.snapshot(), ...this._progress.snapshot() },
                     onChange: (key, value) => this._onConfigWrite(key, value),
                     skirmish: this.options.skirmish,
@@ -2642,6 +2649,25 @@ export class Netstorm {
     // 매니페스트에서 묶음에 속한 파일의 전체 크기(바이트)를 구한다. 묶음이 없으면 0 이다. (2026-10-31 WB03-N)
     _bundleBytes(loader, bundle) {
         return loader.entries(bundle).reduce((sum, entry) => sum + entry.size, 0);
+    }
+
+    // 일본어 자료/실제CDN 글꼴을 현재 세대에 연결한다. 실패하면 원래 영어 자원으로 계속한다.
+    async _loadJapanese(loader, menuTotal, languageTotal, generation = this._loadGeneration) {
+        try {
+            const files = await loader.loadBundle(JAPANESE_BUNDLE, (loaded) => {
+                if (generation === this._loadGeneration) this._loadProgress = { loaded: menuTotal + loaded, total: menuTotal + languageTotal };
+            });
+            if (generation !== this._loadGeneration) return null;
+            // 공용 번역의 실제 문자를 글꼴 선적재에 사용한다. 텍스트를 외부URL에 넣지 않는다.
+            const text = [...files.values()].map((bytes) => new TextDecoder('utf-8').decode(bytes)).join('');
+            const support = await buildJapaneseSupport(files, { createRasterizer: () => createJapaneseGlyphRasterizer({ document: this._root.ownerDocument, text }) });
+            // 기다리는 동안 취소한 세대의 스타일시트는 현재 앱에 남기지 않는다.
+            if (generation !== this._loadGeneration) { support.unicode.rasterizer.dispose(); return null; }
+            return support;
+        } catch (error) {
+            if (generation === this._loadGeneration) reportGameError('japanese-assets', error, { state: this._state, generation }, 'Netstorm: 일본어 글꼴·번역표를 준비하지 못해 영어 메뉴로 계속합니다.');
+            return null;
+        }
     }
 
     // 현재 적재 세대에서 한국어 글꼴·번역을 준비하고, 실패하면 진단을 남기고 영어 자료로 대체한다.
@@ -2813,7 +2839,7 @@ export class Netstorm {
     _openPopup(target, point) {
         if (!this._mainMenu || !this._resources || !this._settings) return false;
         // 원본 비교 모드는 웹이 빼는 원본 항목도 만든다. Technical Help 는 원본 가용성 판정대로 비활성이다(웹에는 기술 도움말 프로그램이 없음). (2026-11-07 WB02-H)
-        const items = buildPopupItems(target, this._settings, { translate: this._resources.translate, includeAll: this.options.originalComparison, technicalHelpAvailable: false, language: this.options.language });
+        const items = buildPopupItems(target, this._settings, { translate: this._resources.translate, includeAll: this.options.originalComparison, technicalHelpAvailable: false, language: this._gameData?.language ?? this.options.language });
         if (!items) {
             console.warn(`Netstorm: 알 수 없는 펼침 메뉴 '${target}' 입니다.`);
             return false;
@@ -3036,7 +3062,7 @@ export class Netstorm {
     _skirmishScreenBody(target) {
         const parsed = parseSkirmishTarget(target);
         if (!['main', 'count', 'ai', 'bans'].includes(parsed.kind) || !this._gameData || !this._resources) return null;
-        return buildSkirmishScreen(parsed, this._loadSkirmishSettings(), this._gameData.productLanguage === 'korean' ? 7 : 0, (text) => this._resources.translate(text));
+        return buildSkirmishScreen(parsed, this._loadSkirmishSettings(), originalLanguageNumber(this._gameData.productLanguage), (text) => this._resources.translate(text));
     }
 
     // 12차 스커미시: 설정으로 게임을 시작한다. 시작 함수(options.startSkirmish)가 있으면 그것을 부르고(검사용), 없으면 무작위 시작 자료를 만들어 시작 섬 fort 묶음을 받은 뒤 생성 미션을 시작한다(비동기).
@@ -3772,7 +3798,7 @@ export class Netstorm {
         let element = this._clientImeElement;
         if (!element) {
             element = this._root.ownerDocument.createElement('textarea'); this._clientImeElement = element;
-            element.setAttribute('aria-label', this.options.language === 'korean' ? '문자 입력' : 'Text input'); element.setAttribute('autocomplete', 'off'); element.setAttribute('autocapitalize', 'off');
+            element.setAttribute('aria-label', this.options.language === 'japanese' ? '文字入力' : this.options.language === 'korean' ? '문자 입력' : 'Text input'); element.setAttribute('autocomplete', 'off'); element.setAttribute('autocapitalize', 'off');
             element.spellcheck = false; element.tabIndex = -1;
             Object.assign(element.style, { position: 'fixed', width: '1px', height: '1px', opacity: '0', padding: '0', border: '0', resize: 'none', overflow: 'hidden', pointerEvents: 'none' });
             this._listen(element, 'keydown', (event) => this._onKeyDown(event)); this._listen(element, 'keyup', (event) => this._onKeyUp(event));
@@ -4317,7 +4343,7 @@ export class Netstorm {
     _drawText(ctx, text, x, y, size, color, align = 'center', alpha = 1) {
         ctx.globalAlpha = alpha;
         ctx.fillStyle = color;
-        ctx.font = `${size}px ${FONT_FAMILY}`;
+        ctx.font = `${size}px ${(this._gameData?.language ?? this.options.language) === 'japanese' ? `"${JAPANESE_FONT_FAMILY}", sans-serif` : FONT_FAMILY}`;
         ctx.textAlign = align;
         ctx.textBaseline = 'middle';
         ctx.fillText(text, x, y);

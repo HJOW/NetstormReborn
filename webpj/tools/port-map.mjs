@@ -143,6 +143,7 @@ export const WEB_ONLY = Object.freeze({
     'www/platform/reset-storage.js': '웹 게임 소유 저장 항목의 확인 후 초기화와 실패 복구 경계(WB04-E863)',
     'www/core/mission-name-alias.js': 'MissionBegin 단추의 원본 오타 미션 이름(BC1Menu)을 웹 자산의 bc1menu76 으로 연결하는 별칭 표(WB04-E1245, 2026-11-23 사용자 결정)',
     // 일본어 배포 목록은 게임 규칙이 없는 웹 전용 자산 준비 설정이다(E1410).
+    'www/platform/japanese-font.js': 'WOFF2가 없는일본어글꼴을Google Fonts CSS/FontFaceSet으로준비하고실패/취소를처리하는웹전용경계(E1412)',
     'www/assets/japanese-asset-config.js': '공용 일본어 번역의 웹 배포 목록/묶음/경로 설정(E1410)',
     'www/assets/korean-font-config.js': '한국어 웹 글꼴 등록 이름과 배포 경로를 공유하는 웹 전용 설정',
     'www/assets/menu-assets.js': '메인 메뉴 자산 경로 묶음(웹 자산 준비). 원본 setup.cfg 값과 실행 파일 전역을 근거로 적은 웹 구성',
