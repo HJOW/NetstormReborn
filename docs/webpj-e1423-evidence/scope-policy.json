@@ -1,0 +1,25 @@
+{
+  "scope": "실제 수집기의 상수 선언만 평가; 브라우저/가짜미션 실행없음",
+  "playable": [
+    "thewarbegins",
+    "masterofwhirligigs",
+    "savetheisland",
+    "fragilefortune",
+    "thunderingpower"
+  ],
+  "briefing": [
+    "thewarbegins",
+    "masterofwhirligigs",
+    "savetheisland",
+    "fragilefortune",
+    "thunderingpower",
+    "dissolvedalliance"
+  ],
+  "next": {
+    "thewarbegins": "masterofwhirligigs",
+    "masterofwhirligigs": "savetheisland",
+    "savetheisland": "fragilefortune",
+    "fragilefortune": "thunderingpower",
+    "thunderingpower": "dissolvedalliance"
+  }
+}

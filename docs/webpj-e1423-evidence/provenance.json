@@ -1,0 +1,39 @@
+{
+  "unit": "WB04-E1423",
+  "recordedAt": "2026-11-27T07:57:58.428092+00:00",
+  "checks": {
+    "direct1_6Exit": 1,
+    "directLaterExit": 1,
+    "specificErrorMessages": true,
+    "syntaxErrorAbsent": true,
+    "policyConstEvaluation": "5 playable;1-6briefing allowed;thunderingpower->dissolvedalliance",
+    "globalLintExit": 0
+  },
+  "scope": "1-6승리검사제외만. 실제미션/브라우저를실행하지않음. 제품/게임자산변경없음. E1420입력고정종료뒤작업.",
+  "bundle": {
+    "bytes": 3508534,
+    "sha256": "72ea8d094b55216452615ed982bceb46e82ab3166957eb47a5225108e2bd7b25"
+  },
+  "periodAfter": {
+    "v26": 2,
+    "v22": 7
+  },
+  "evidence": {
+    "denied-1-6.log": {
+      "bytes": 1024,
+      "sha256": "530f02bf59228d6c5ff6761a49c0e3a732e9180d722c576a90950ebeaca09a7a"
+    },
+    "denied-later.log": {
+      "bytes": 928,
+      "sha256": "1201fce005fbaf44cac05402b5519b543a23c5ac2a9b37b0fe61cac5a6cf67aa"
+    },
+    "lint.log": {
+      "bytes": 81,
+      "sha256": "6c1a6c81a3e52bcd73c1f85f06e14798341ce6b8a5bd2fcfffd05c500ae04b4e"
+    },
+    "scope-policy.json": {
+      "bytes": 615,
+      "sha256": "ce530976d17355323fc5a09e44966e8e20ab62c53eb33d124d54f18c3f17e3bb"
+    }
+  }
+}
