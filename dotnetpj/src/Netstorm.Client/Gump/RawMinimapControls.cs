@@ -146,20 +146,33 @@ public sealed class RawMinimapControls : IDisposable
     }
     /// <summary>기본 대여와 같은 풀·공간의 세션 실행기 쌍에도 동일한 변경 큐를 연결한다.</summary>
     /// <remarks>중복이나 다른 물리를 먼저 거부하며 World 객체의 수명을 늘리지 않는다.</remarks>
-    public void BindAdditionalWorldPair(RawPop pop, RawUnpop unpop)
+    public void BindAdditionalWorldPair(RawPop pop, RawUnpop unpop) => BindAdditionalWorldPairs((pop, unpop));
+    /// <summary>추가 실행기 쌍을 모두 검사한 뒤에만 같은 큐를 일괄 연결한다.</summary>
+    public void BindAdditionalWorldPairs(params (RawPop Pop, RawUnpop Unpop)[] pairs)
     {
-        CheckAlive(); ArgumentNullException.ThrowIfNull(pop); ArgumentNullException.ThrowIfNull(unpop);
+        CheckAlive(); ArgumentNullException.ThrowIfNull(pairs);
         if (_pop is null || _unpop is null) throw new InvalidOperationException("미니맵의 기본 월드 대여 없음");
-        if (!ReferenceEquals(pop.Pool, _storage.Pool) || !ReferenceEquals(pop.Hash, _storage.Hash) || !ReferenceEquals(pop.Spots, _storage.Spots)
-            || !ReferenceEquals(unpop.Pool, _storage.Pool) || !ReferenceEquals(unpop.Hash, _storage.Hash) || !ReferenceEquals(unpop.Spots, _storage.Spots))
-            throw new ArgumentException("미니맵 추가 실행기의 실제 월드 물리 불일치");
-        if ((_pop.TryGetTarget(out var basePop) && ReferenceEquals(basePop, pop)) || (_unpop.TryGetTarget(out var baseUnpop) && ReferenceEquals(baseUnpop, unpop))
-            || _additionalPops.Any(reference => reference.TryGetTarget(out var current) && ReferenceEquals(current, pop))
-            || _additionalUnpops.Any(reference => reference.TryGetTarget(out var current) && ReferenceEquals(current, unpop)))
-            throw new ArgumentException("미니맵 추가 실행기 중복 대여");
-        pop.SetMetadisplay(_dirty); unpop.SetMinimapQueue(_dirty);
-        _additionalPops.Add(new(pop)); _additionalUnpops.Add(new(unpop));
-        _state.FullRefresh = 1;
+        var seenPops = new HashSet<RawPop>(); var seenUnpops = new HashSet<RawUnpop>();
+        // 모든 입력의 물리와 중복을 확인해 뒤쪽 오류가 앞쪽 큐를 바꾸지 않게 한다.
+        foreach (var (pop, unpop) in pairs)
+        {
+            ArgumentNullException.ThrowIfNull(pop); ArgumentNullException.ThrowIfNull(unpop);
+            if (!ReferenceEquals(pop.Pool, _storage.Pool) || !ReferenceEquals(pop.Hash, _storage.Hash) || !ReferenceEquals(pop.Spots, _storage.Spots)
+                || !ReferenceEquals(unpop.Pool, _storage.Pool) || !ReferenceEquals(unpop.Hash, _storage.Hash) || !ReferenceEquals(unpop.Spots, _storage.Spots))
+                throw new ArgumentException("미니맵 추가 실행기의 실제 월드 물리 불일치");
+            if (!seenPops.Add(pop) || !seenUnpops.Add(unpop)
+                || (_pop.TryGetTarget(out var basePop) && ReferenceEquals(basePop, pop)) || (_unpop.TryGetTarget(out var baseUnpop) && ReferenceEquals(baseUnpop, unpop))
+                || _additionalPops.Any(reference => reference.TryGetTarget(out var current) && ReferenceEquals(current, pop))
+                || _additionalUnpops.Any(reference => reference.TryGetTarget(out var current) && ReferenceEquals(current, unpop)))
+                throw new ArgumentException("미니맵 추가 실행기 중복 대여");
+        }
+        // 검증한 실제 실행기에만 동일 큐를 설치하고 약한 대여를 기록한다.
+        foreach (var (pop, unpop) in pairs)
+        {
+            pop.SetMetadisplay(_dirty); unpop.SetMinimapQueue(_dirty);
+            _additionalPops.Add(new(pop)); _additionalUnpops.Add(new(unpop));
+        }
+        if (pairs.Length != 0) _state.FullRefresh = 1;
     }
     /// <summary>현재 자기 통지만 expected owner 확인으로 반납하고 장기 물리/bitmap은 유지한다.</summary>
     public void UnbindWorld()

@@ -1,6 +1,8 @@
 using System.Buffers.Binary;
+using System.Reflection;
 using Netstorm.Client.Display;
 using Netstorm.Client.Gump;
+using Netstorm.Client.Host;
 using Netstorm.Client.Input;
 using Netstorm.Core.Original;
 using Netstorm.Core.Simulation;
@@ -197,10 +199,13 @@ public sealed class RawMinimapControlsTests
         unpop.SetBuildingSide(rig.Storage.BuildingExecutor());
         Assert.Throws<InvalidOperationException>(() => rig.Mini.BindAdditionalWorldPair(pop, unpop));
         rig.Mini.BindStorageExecutors();
+        using var foreign = new Rig(false);
+        var foreignPop = new RawPop(foreign.Storage.Pool, foreign.Storage.Hash, foreign.Storage.Spots);
+        var foreignUnpop = new RawUnpop(foreign.Storage.Pool, foreign.Storage.Hash, foreign.Storage.Spots);
+        Assert.Throws<ArgumentException>(() => rig.Mini.BindAdditionalWorldPairs((pop, unpop), (foreignPop, foreignUnpop)));
+        // 뒤쪽 쌍이 실패해도 앞쪽 쌍은 설치되지 않아 정상 대여가 가능하다.
         rig.Mini.BindAdditionalWorldPair(pop, unpop);
         Assert.Throws<ArgumentException>(() => rig.Mini.BindAdditionalWorldPair(pop, unpop));
-        using var foreign = new Rig(false);
-        var foreignUnpop = new RawUnpop(foreign.Storage.Pool, foreign.Storage.Hash, foreign.Storage.Spots);
         Assert.Throws<ArgumentException>(() => rig.Mini.BindAdditionalWorldPair(pop, foreignUnpop));
         rig.Mini.Refresh();
         rig.Storage.Types[74].Flags2 = 0x4002;
@@ -219,6 +224,47 @@ public sealed class RawMinimapControlsTests
         rig.Mini.UnbindWorld();
         Assert.True(pop.ReleaseMetadisplay(other));
         Assert.True(unpop.ReleaseMinimapQueue(other));
+    }
+    /// <summary>실제 HostSession의 지형과 Player 실행기에서 미니맵 큐까지 변경이 전달된다.</summary>
+    [Fact]
+    public void HostSessionTerrainAndPlayerExecutorsNotifyMinimap()
+    {
+        using var rig = new Rig();
+        rig.Storage.BindDisplayDevices(new() { View = () => new() { Zoom = 65536 }, Suppressed = () => false, Invalidate = (_, _) => { } });
+        var session = new HostSession(new Kernel(), new GameRandom(17), new CrtRandom(23), pool: rig.Storage.Pool);
+        try
+        {
+            _ = HostPostPopRuntimeTests.Build(session, rig.Storage);
+            _ = session.BuildPlayerWorldHooks();
+            rig.Mini.BindStorageExecutors();
+            session.BindMinimapNotifications(rig.Mini);
+            Assert.Throws<ArgumentException>(() => session.BindMinimapNotifications(rig.Mini));
+            rig.Mini.Refresh();
+            rig.Storage.Types[74].Flags2 = 0x4002;
+            rig.Storage.Types[74].FootX = rig.Storage.Types[74].FootY = 1;
+            rig.Storage.Shapes[74].Loaded = true;
+            rig.Storage.Shapes[74].FrameCount = 1;
+            rig.Storage.Shapes[74].Frames.Add(new() { Width = 16, Height = 11, CellWidth = 1, CellHeight = 1 });
+            int sid = rig.Storage.FactoryExecutor().Create(74, SidAllocation.Client);
+            session.PopWorldObject(sid, 120, 80, 0);
+            Assert.True(rig.State.Count > 0);
+            rig.Mini.Refresh();
+            session.UnpopWorldObject(sid, 0);
+            Assert.True(rig.State.Count > 0);
+            rig.Mini.Refresh();
+            var terrainPop = Assert.IsType<RawPop>(typeof(HostSession).GetField("_terrainPop", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(session));
+            Assert.Equal(RawPopResult.Registered, terrainPop.Pop(sid, rig.Storage.Types[74], 1, 1, 120, 80));
+            Assert.True(rig.State.Count > 0);
+            rig.Mini.Refresh();
+            var terrainUnpop = Assert.IsType<RawUnpop>(typeof(HostSession).GetField("_terrainUnpop", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(session));
+            terrainUnpop.Unpop(sid, rig.Storage.Types[74]);
+            Assert.True(rig.State.Count > 0);
+            rig.Mini.UnbindWorld();
+            rig.Mini.Refresh();
+            session.PopWorldObject(sid, 120, 80, 0);
+            Assert.Equal(0, rig.State.Count);
+        }
+        finally { session.ReleasePlayerRecordViews(); }
     }
     /// <summary>Capture/Idle 중 닫아도 같은 공통 수명이 둘을 반납하고 독립 bitmap은 남긴다.</summary>
     [Fact]

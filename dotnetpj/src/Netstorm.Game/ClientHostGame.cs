@@ -734,6 +734,8 @@ public sealed partial class ClientHostGame : Game
         // 근거: cpppj RawMinimapControls.cpp의 Open 뒤 80×75 부착과 HudDock.cpp의 왼쪽 아래 도킹이다. 시작 덤프에는 닿지 않는다.
         NativeMinimap.BindStorageExecutors();
         minimapBound = true;
+        // 같은 세션이 별도로 보유한 지형·Player의 공간 변경도 같은 미니맵 큐로 보낸다.
+        session.BindMinimapNotifications(NativeMinimap);
         EnsureMissionMinimap();
             // 실제 구분선의 오른쪽 아래에 채팅창을 부착한다. 채팅 입력도 같은 부모를 사용한다.
             // 근거: UberRootGump의 세로·채팅 구분선 slave와 HudDock의 크기 및 위치 계산이다.
