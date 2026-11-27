@@ -304,6 +304,30 @@ public sealed class SpriteDrawTests
         Assert.Equal(new[] { SpriteShapeMode.Owner }, modes);
     }
 
+    /// <summary>객체 출력기는 실제 가상표·자산·픽셀 장치를 연결하고 현재 카메라를 사용한다.</summary>
+    [Fact]
+    public void WorldRendererComposesVirtualDrawAndCurrentCamera()
+    {
+        var scene = new Scene();
+        Span<byte> raw = scene.Pool.AllocatedBytes(5);
+        Put(raw, 0, 0x00501dd0);
+        raw[40] = 2;
+        var definitions = new[] { new RiftTypeDefinition() };
+        definitions[0].SpecialFrames.BaseFrame = 0;
+        var frames = Enumerable.Range(0, 188).Select(_ => new RiftTypeFrames([])).ToArray();
+        var types = Enumerable.Range(0, 188).Select(index => index < scene.Types.Length ? scene.Types[index] : new OriginalTypeRecord()).ToArray();
+        var shapes = Enumerable.Range(0, 188).Select(index => index < scene.Views.Length ? scene.Views[index].Shape : new SquidDisplayShape()).ToArray();
+        var colors = new SpriteColorBinding(new ClientColorSortInput(), _ => 0);
+        var renderer = new SpriteWorldRenderer(scene.Pool, types, shapes, definitions, frames, PixelShape(), scene.State, colors, new());
+        byte[] pixels = Enumerable.Repeat((byte)9, 64).ToArray();
+        renderer.Draw(new(.25F, .25F, 5 * RawSidPool.Stride, 0, 0, 0), pixels, 8, 8, new(0, 0, 8, 8));
+        Assert.Equal(0, pixels[29]); Assert.Equal(255, pixels[30]);
+        scene.State.CameraX = 1;
+        pixels = Enumerable.Repeat((byte)9, 64).ToArray();
+        renderer.Draw(new(.25F, .25F, 5 * RawSidPool.Stride, 0, 0, 0), pixels, 8, 8, new(0, 0, 8, 8));
+        Assert.Equal(0, pixels[28]); Assert.Equal(255, pixels[29]);
+    }
+
     /// <summary>선 끝점·역순·클립 및 half-open fill의 빈/역전 영역을 검사한다.</summary>
     [Fact]
     public void PixelLinesAndBars()
