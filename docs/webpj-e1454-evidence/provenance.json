@@ -43,9 +43,19 @@
     "unhashed": 12,
     "missing": [],
     "mismatches": [],
-    "scope": "원래measure의정규화해시/존재만; Git기준선drift별도기존CLI실행중"
+    "scope": "원래measure의정규화해시/존재검사완료; 이어서공식CLI의Git기준선포함전체감사완료"
   },
-  "fullManifestGitAudit": "기존CLI는느린Git CPP기준선재검토로계속실행중, 세션73925. 이 결과를완료로세지않음. 파일해시/존재빠른검사는같은공식measure로완료.",
+  "fullManifestGitAudit": {
+    "command": "node webpj/tools/fixture-manifest.mjs",
+    "exitCode": 0,
+    "entries": 1331,
+    "hashMismatches": 0,
+    "missing": 0,
+    "cppSourceDriftLines": 0,
+    "log": "webpj-e1454-manifest.log",
+    "scope": "확인시각; 변경/재작성옵션없이읽기전용실행",
+    "verifiedAt": "2026-11-27T22:30:54.818998+09:00"
+  },
   "periodAfterUnit": {
     "v26": 2,
     "v22": 2
