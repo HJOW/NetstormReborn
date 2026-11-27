@@ -10,6 +10,35 @@ namespace Netstorm.Client.Tests; // 실제 자산/공통 트리로 생산 부모
 /// <summary>Source ProductionInitialContext의 실제8노드/현재 예산/부분 실패를 재현한다.</summary>
 public sealed class HostProductionWindowsTests
 {
+    /// <summary>직접 부착한 객체 메뉴를 중복 부착하지 않고 이전 sticky 팝업을 정리한다.</summary>
+    [Fact]
+    public void AttachedMenuUsesActualRootAndClosesPreviousPopup()
+    {
+        using var scene = new Scene(); var menus = scene.Menus; var tree = scene.Menu.Tree; int changes = 0;
+        uint first = 0; float attachedX = 0, attachedY = 0;
+        menus.OpenAttached(() =>
+        {
+            first = menus.Widgets.BeginFancy();
+            menus.Menu.AttachCurrent(14, 19, tree.Create.Collection.Root);
+            attachedX = tree.Node(first)!.X; attachedY = tree.Node(first)!.Y;
+            return first;
+        }, () => changes++);
+        Assert.Equal(first, menus.Popup); Assert.Equal(0u, menus.State.Index);
+        Assert.Equal(tree.Create.Collection.Root, tree.Node(first)!.Parent);
+        Assert.Equal(attachedX, tree.Node(first)!.X); Assert.Equal(attachedY, tree.Node(first)!.Y);
+        tree.Node(first)!.Flags |= 0x4000;
+        uint second = 0;
+        menus.OpenAttached(() =>
+        {
+            second = menus.Widgets.BeginFancy();
+            menus.Menu.AttachCurrent(30, 40, tree.Create.Collection.Root);
+            return second;
+        }, () => changes++);
+        Assert.Null(tree.Node(first)); Assert.Equal(second, menus.Popup); Assert.Equal(0u, menus.State.Index); Assert.Equal(4, changes);
+        Assert.Throws<InvalidOperationException>(() => menus.OpenAttached(() => menus.Widgets.BeginFancy(), () => changes++, false));
+        Assert.NotEqual(0u, menus.State.Index);
+    }
+
     /// <summary>World/Session 없이 실제 Client owner와 공통 글꼴/자산을 준비한다.</summary>
     private sealed class Scene : IDisposable
     {

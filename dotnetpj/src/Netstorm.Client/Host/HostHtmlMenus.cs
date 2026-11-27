@@ -20,6 +20,8 @@ public sealed class HostHtmlMenus
     public MenuGumpWidgets Widgets { get; }
     /// <summary>현재 열의 일반·체크 항목 작성기.</summary>
     public MenuGumpControls Controls { get; }
+    /// <summary>가장 최근에 실제 루트에 부착한 메뉴 토큰이다.</summary>
+    public uint Popup { get; private set; }
     /// <summary>공통 출력기가 같은 항목 측정 장치를 사용한다.</summary>
     internal MenuGumpLayout Layout { get; }
     /// <summary>한 번 연결한 실제 메뉴 입력 처리기.</summary>
@@ -97,5 +99,27 @@ public sealed class HostHtmlMenus
     public void RequestClosePopups(Action changed)
     {
         ArgumentNullException.ThrowIfNull(changed); (_input ?? throw new InvalidOperationException("현재 공통 메뉴 입력 미연결")).ClosePopups(); changed();
+    }
+
+    /// <summary>작성기가 직접 루트에 부착한 메뉴를 현재 팝업으로 기록한다.</summary>
+    /// <param name="builder">현재 메뉴 장치를 사용해 부착하고 루트 토큰을 반환한다.</param>
+    /// <param name="changed">실제 메뉴 구조 변경을 알린다.</param>
+    /// <param name="closeExisting">참이면 기존 sticky 팝업을 먼저 닫고 정리한다.</param>
+    /// <remarks>cpppj RawMenuControls::OpenAttached처럼 부착을 두 번 수행하지 않는다.</remarks>
+    public void OpenAttached(Func<uint> builder, Action changed, bool closeExisting = true)
+    {
+        ArgumentNullException.ThrowIfNull(changed);
+        if (closeExisting)
+        {
+            (_input ?? throw new InvalidOperationException("현재 공통 메뉴 입력 미연결")).ClosePopups();
+            _tree.Lifetime.Cleanup(); changed();
+        }
+        ArgumentNullException.ThrowIfNull(builder);
+        if (State.Index != 0) throw new InvalidOperationException("객체 메뉴 controlled 스택이 비어 있지 않다");
+        uint root = builder();
+        if (State.Index != 0) throw new InvalidOperationException("객체 메뉴 부착 뒤 controlled 스택이 남았다");
+        if (root != 0 && (_tree.Node(root) is not MenuGumpNode node || node.Parent != _tree.Create.Collection.Root))
+            throw new InvalidOperationException("객체 메뉴가 실제 루트에 부착되지 않았다");
+        Popup = root; changed();
     }
 }
