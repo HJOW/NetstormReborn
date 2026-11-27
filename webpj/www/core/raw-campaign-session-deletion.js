@@ -3,6 +3,8 @@
 import { SQUID_DESTROY_EFFECT } from './squid-destroy.js';
 import { BRIDGE_VTABLE } from './raw-bridge-events.js';
 import { PRIEST_VTABLE } from './raw-priest-owner.js';
+// Outpost 삭제의 두 현재 목록/지역 통지를 기존 원문 몸체에 연결한다.
+import { RawOutpostLifecycle } from './raw-outpost-lifecycle.js';
 
 // Source364의 공통 Damageable14VT다. 표시 TYPE나 이름을 추가 자격으로 사용하지 않는다.
 const PLAIN_DAMAGEABLE = new Set([0x501ea0, 0x509148, 0x509930, 0x5099e8, 0x509aa0, 0x50a820, 0x50a8e8, 0x50b6e8, 0x50b7c0, 0x50b888, 0x50b9b8, 0x50bad0, 0x50e668, 0x50e738]);
@@ -16,6 +18,8 @@ const COMMON_ONLY_TABLES = new Set([0x5026a0, 0x502778, 0x502840, 0x502908, 0x50
 // 거주 구역(0x50f540)과 Player(0x50ee08)의 가상 표다. 후처리(거주 목록 제거)/전처리(Player 기록 정리)가 각각 따로 있다. (2026-11-22 WB04-E1215)
 const RESIDENCE_TABLE = 0x50f540;
 const PLAYER_TABLE = 0x50ee08;
+// Outpost의 실제 가상 표이며 표시 TYPE 변경과 독립적으로 수명을 고른다.
+const OUTPOST_TABLE = 0x509210;
 // Player 기록 한 개의 크기(0xb4)와 PreDestroy 가 만지는 두 필드의 위치(+0x9c 이전 포인터, +0x50 상태 비트)이다. (2026-11-22 WB04-E1215)
 const PLAYER_RECORD_BYTES = 0xb4, PLAYER_POINTER_AT = 0x9c, PLAYER_STATE_AT = 0x50;
 // 같은 현재 raw 슬롯의 비정렬 DWORD를 읽는다.
@@ -37,6 +41,7 @@ export class RawCampaignSessionDeletion {
         // C++ span과 같이 같은 물리 슬롯을 읽어 역할 getter 뒤의 현재 바이트를 보존한다.
         const raw = (sid) => c.pool.physical(sid);
         return {
+            outpost: (sid) => table(raw(sid)) === OUTPOST_TABLE,
             plainDamageable: (sid) => PLAIN_DAMAGEABLE.has(table(raw(sid))), // VT만 비교하는14개 공통 피해 수명이다.
             blocker: (sid) => [0x50e940, 0x50ea08, 0x50ead0].includes(table(raw(sid))), // 세 Blocker의 전용 Post다.
             growingIce: (sid) => table(raw(sid)) === 0x50e888, // 성장형의 고유 Post/Regular다.
@@ -79,6 +84,15 @@ export class RawCampaignSessionDeletion {
             }
             if (k.growingIce(sid)) { if (pre) { o.world.commonDeletion.preDestroy(sid, flags); return; } if (post) { o.iceTower.growingPostDestroy(sid, flags); return; } }
             if (k.blocker(sid)) { if (pre) { o.damageablePre.preDestroy(sid, flags); return; } if (post) { o.iceTower.postDestroy(sid, flags); return; } }
+            if (k.outpost(sid)) {
+                if (pre) {
+                    RawOutpostLifecycle.preDestroyNative(c.pool, o.state.assetState.currentOutposts(), o.state.assetState.currentResidences(), sid, flags, {
+                        regionChanged: (x, y) => o.ownership.updateRegion(x, y),
+                        damageablePre: (target, mode) => o.damageablePre.preDestroy(target, mode),
+                    }); return;
+                }
+                if (post) { this.#post(sid, flags); return; }
+            }
             if (k.plainDamageable(sid) || k.sunFence(sid) || k.nugget(sid)) { if (pre) { if (k.sunFence(sid)) o.fenceLifetime.preDestroy(sid, flags); else o.damageablePre.preDestroy(sid, flags); return; } if (post) { this.#post(sid, flags); return; } }
             if (k.plainCarrier(sid) || o.balloonBody.handles(sid)) { if (pre) { if (o.balloonBody.handles(sid)) o.balloonBody.preDestroy(sid, flags); else o.priests.carrier.preDestroy(sid, flags); return; } if (post) { this.#post(sid, flags); return; } }
             if (k.priest(sid) && post) { this.#post(sid, flags); return; }
@@ -97,7 +111,7 @@ export class RawCampaignSessionDeletion {
         const previousDestroy = hooks.destroy;
         const destroy = (sid, flags, effects) => {
             this.#live();
-            if (k.bridge(sid) || k.connector(sid) || o.geyserLifetime.handles(sid) || k.vortex(sid) || k.fenceCommon(sid) || k.flyer(sid) || o.balloonBody.handles(sid) || k.visualDummy(sid) || k.plainDamageable(sid) || k.blocker(sid) || k.growingIce(sid) || k.sunFence(sid) || k.nugget(sid) || (o.daisLifecycle && o.daisLifecycle.handles(sid)) || (o.dudeBehavior && o.dudeBehavior.handles(sid)) || k.priestForcefield(sid) || k.plainCarrier(sid) || k.priest(sid) || k.buried(sid) || k.bomb(sid) || k.rune(sid) || k.commonOnly(sid) || k.residence(sid) || k.player(sid)) return c.virtualDestroy.destroy(sid, flags, effects);
+            if (k.outpost(sid) || k.bridge(sid) || k.connector(sid) || o.geyserLifetime.handles(sid) || k.vortex(sid) || k.fenceCommon(sid) || k.flyer(sid) || o.balloonBody.handles(sid) || k.visualDummy(sid) || k.plainDamageable(sid) || k.blocker(sid) || k.growingIce(sid) || k.sunFence(sid) || k.nugget(sid) || (o.daisLifecycle && o.daisLifecycle.handles(sid)) || (o.dudeBehavior && o.dudeBehavior.handles(sid)) || k.priestForcefield(sid) || k.plainCarrier(sid) || k.priest(sid) || k.buried(sid) || k.bomb(sid) || k.rune(sid) || k.commonOnly(sid) || k.residence(sid) || k.player(sid)) return c.virtualDestroy.destroy(sid, flags, effects);
             if (typeof previousDestroy !== 'function') throw new Error('Session의 다른 기존 가상 삭제 미연결'); return previousDestroy(sid, flags, effects);
         };
         this.destroy = hooks.destroy = destroy; this.#ready = true;

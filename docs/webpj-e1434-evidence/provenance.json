@@ -1,0 +1,55 @@
+{
+  "unit": "WB04-E1434",
+  "host": "HJOW-Athlon",
+  "sourceCandidateEqualsAppliedRaw": true,
+  "sourceSha256": "6f1e9ca272885a0fed0b95da211cc8c3b5a397502972330ff8d4febbb352fa5f",
+  "before": "세 통합 검사 전부 누락 가상 분배로 실패",
+  "candidate": "9/9",
+  "main": "23/23",
+  "preWebpackLintBuild": 0,
+  "bundleFresh": "1/1",
+  "strictChromiumL2": "1/1",
+  "periodAfter": {
+    "v26": "4/4",
+    "v22": "8/8"
+  },
+  "scope": "Outpost 삭제 연결만. 나머지 Outpost 실제 부모/건설/금지/제외 확인은 별도.",
+  "bundle": {
+    "bytes": 3514344,
+    "sha256": "47e159a4f6035e307478b3276c640d22044c94518a9d5978caac5672487eb9a5"
+  },
+  "evidence": {
+    "before.log": {
+      "bytes": 4980,
+      "sha256": "1127dac63aa47c0267fc798ae3a3aa740b255dab634185a65d2b4b210752e461"
+    },
+    "candidate-first.log": {
+      "bytes": 1389,
+      "sha256": "ada3cc3d94652fa3e3fc597733fc17b2129fd82399cdebdb995b33d6b231d60c"
+    },
+    "raw-campaign-session-deletion.js": {
+      "bytes": 15555,
+      "sha256": "6f1e9ca272885a0fed0b95da211cc8c3b5a397502972330ff8d4febbb352fa5f"
+    },
+    "webpj-e1434-build.log": {
+      "bytes": 461,
+      "sha256": "ed27d80082c84bb49671d52c0068072882477e0f590b6d3e9c16b17418cda449"
+    },
+    "webpj-e1434-bundle.log": {
+      "bytes": 246,
+      "sha256": "47a38f373d7608adb5a435da2c0c808a535eb78bc8ee3370764ed456fa5d77f9"
+    },
+    "webpj-e1434-l2.log": {
+      "bytes": 555,
+      "sha256": "d23c9c985ee93f8eec9d2a692b1f2cd766fa3f36d064c95923caba3ce4d3c989"
+    },
+    "webpj-e1434-main-focus.log": {
+      "bytes": 1389,
+      "sha256": "d6a69fe3d25ca398c46c2787fbc3c552c69893761b8bdf5cfba64942e22bc3bf"
+    },
+    "webpj-e1434-main-full-focus.log": {
+      "bytes": 3270,
+      "sha256": "d29589daddf995804001be25cfd35820a7d344e5201dea5c962c23f11b55e7cc"
+    }
+  }
+}

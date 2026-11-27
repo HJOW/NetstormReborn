@@ -23,7 +23,8 @@
     "mainFocus": "26/26",
     "preWebpackLintBuild": 0,
     "bundleFresh": "1/1",
-    "strictChromiumL2": "1/1"
+    "strictChromiumL2": "1/1",
+    "additionalSessionFocus": "11/11 after exact filenames corrected; E1434 deletion also applied at this later run"
   },
   "periodAfter": {
     "v26": "2/4",
@@ -213,6 +214,10 @@
     "webpj-e1436-main-focus.log": {
       "bytes": 3257,
       "sha256": "435847c87912075aeea706cb5bcb7923699e9eb769321412389a8edc774b76cd"
+    },
+    "webpj-e1436-main-session-focus.log": {
+      "bytes": 1518,
+      "sha256": "7894dbc77990e600d96344d80980fe44a4402da4f332e2fa490d5ebd9f2eb5d0"
     }
   }
 }

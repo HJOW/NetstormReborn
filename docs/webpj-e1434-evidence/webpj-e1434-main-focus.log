@@ -1,0 +1,17 @@
+✔ RawOutpostLifecycle: 원본 10.78 목록 접두 768행의 두 목록·개수·지역/base 순서·raw 쓰기가 같다 (26.5404ms)
+✔ RawOutpostLifecycle: 같은 실제 Player 기준점/Damageable 에 연결한 등록·제거가 기준점을 즉시 바꾼다 (3.9089ms)
+✔ RawOutpostLifecycle: 손상 연결·누락 효과를 목록 변경 전에 거부하고 원본이 읽지 않는 손상 목록은 막지 않는다 (2.5085ms)
+✔ RawOutpostLifecycle.preDestroyNative: 실제 455840 순서(extra → 두 현재 목록 압축 → 현재 지역 → Damageable 부모)와 음수 count·비활성 꼬리 보존 (1.7847ms)
+✔ RawOutpostLifecycle: 자산 TYPE 범위(70..187)·두 목록 선검사 순서·선검사 위치·실제 Damageable 선검사 연결 (1.3232ms)
+✔ RawOutpostLifecycle.preDestroyNative: extra 의 buried 단독 비트·첫 목록 우선 압축·현재 count 가 용량을 넘으면 물리 부족 (2.0243ms)
+✔ Session Outpost: 실제 두 목록 제거/지역 통지/피해 부모와 후처리 순서 (206.6926ms)
+✔ Session Outpost: abstract 목록 생략과 현재 VT 자격/표시 TYPE 변경 (49.5403ms)
+✔ Session Outpost: 지역 예외 전에 두 목록 제거를 보존하고 부모는 호출하지 않는다 (42.0387ms)
+ℹ tests 9
+ℹ suites 0
+ℹ pass 9
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 1401.0209

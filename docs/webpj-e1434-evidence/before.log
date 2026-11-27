@@ -1,0 +1,72 @@
+✖ Session Outpost: 실제 두 목록 제거/지역 통지/피해 부모와 후처리 순서 (343.1197ms)
+✖ Session Outpost: abstract 목록 생략과 현재 VT 자격/표시 TYPE 변경 (98.4917ms)
+✖ Session Outpost: 지역 예외 전에 두 목록 제거를 보존하고 부모는 호출하지 않는다 (105.0528ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 0
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 5178.1836
+
+✖ failing tests:
+
+test at webpj\extracted\e1434-outpost.test.mjs:28:1
+✖ Session Outpost: 실제 두 목록 제거/지역 통지/피해 부모와 후처리 순서 (343.1197ms)
+  Error: 실제 세션의 다른 파생 삭제/선택 효과 미연결
+      at emit (file:///H:/Workspace/git/NetstormReborn/webpj/www/core/raw-campaign-session-runtime.js:77:220)
+      at Object.emit (file:///H:/Workspace/git/NetstormReborn/webpj/www/core/raw-campaign-hit-bindings.js:154:13)
+      at hooks.emit (file:///H:/Workspace/git/NetstormReborn/webpj/www/core/raw-campaign-lifetime-bindings.js:112:22)
+      at emit (file:///H:/Workspace/git/NetstormReborn/webpj/www/core/raw-campaign-construction-bindings.js:402:22)
+      at RawCampaignSessionDeletion.emit (file:///H:/Workspace/git/NetstormReborn/webpj/www/core/raw-campaign-session-deletion.js:93:97)
+      at TestContext.<anonymous> (file:///H:/Workspace/git/NetstormReborn/webpj/extracted/e1434-outpost.test.mjs:32:21)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+
+test at webpj\extracted\e1434-outpost.test.mjs:37:1
+✖ Session Outpost: abstract 목록 생략과 현재 VT 자격/표시 TYPE 변경 (98.4917ms)
+  Error: 실제 세션의 다른 파생 삭제/선택 효과 미연결
+      at emit (file:///H:/Workspace/git/NetstormReborn/webpj/www/core/raw-campaign-session-runtime.js:77:220)
+      at Object.emit (file:///H:/Workspace/git/NetstormReborn/webpj/www/core/raw-campaign-hit-bindings.js:154:13)
+      at hooks.emit (file:///H:/Workspace/git/NetstormReborn/webpj/www/core/raw-campaign-lifetime-bindings.js:112:22)
+      at emit (file:///H:/Workspace/git/NetstormReborn/webpj/www/core/raw-campaign-construction-bindings.js:402:22)
+      at RawCampaignSessionDeletion.emit (file:///H:/Workspace/git/NetstormReborn/webpj/www/core/raw-campaign-session-deletion.js:93:97)
+      at TestContext.<anonymous> (file:///H:/Workspace/git/NetstormReborn/webpj/extracted/e1434-outpost.test.mjs:39:21)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+
+test at webpj\extracted\e1434-outpost.test.mjs:42:1
+✖ Session Outpost: 지역 예외 전에 두 목록 제거를 보존하고 부모는 호출하지 않는다 (105.0528ms)
+  AssertionError [ERR_ASSERTION]: The input did not match the regular expression /지역 실패/. Input:
+  
+  'Error: 실제 세션의 다른 파생 삭제/선택 효과 미연결'
+  
+      at TestContext.<anonymous> (file:///H:/Workspace/git/NetstormReborn/webpj/extracted/e1434-outpost.test.mjs:44:10)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Error: 실제 세션의 다른 파생 삭제/선택 효과 미연결
+        at emit (file:///H:/Workspace/git/NetstormReborn/webpj/www/core/raw-campaign-session-runtime.js:77:220)
+        at Object.emit (file:///H:/Workspace/git/NetstormReborn/webpj/www/core/raw-campaign-hit-bindings.js:154:13)
+        at hooks.emit (file:///H:/Workspace/git/NetstormReborn/webpj/www/core/raw-campaign-lifetime-bindings.js:112:22)
+        at emit (file:///H:/Workspace/git/NetstormReborn/webpj/www/core/raw-campaign-construction-bindings.js:402:22)
+        at RawCampaignSessionDeletion.emit (file:///H:/Workspace/git/NetstormReborn/webpj/www/core/raw-campaign-session-deletion.js:93:97)
+        at file:///H:/Workspace/git/NetstormReborn/webpj/extracted/e1434-outpost.test.mjs:44:39
+        at getActual (node:assert:580:5)
+        at strict.throws (node:assert:728:24)
+        at TestContext.<anonymous> (file:///H:/Workspace/git/NetstormReborn/webpj/extracted/e1434-outpost.test.mjs:44:10)
+        at Test.runInAsyncScope (node:async_hooks:226:14),
+    expected: /지역 실패/,
+    operator: 'throws',
+    diff: 'simple'
+  }

@@ -1,0 +1,31 @@
+✔ AssetDeletionVtables: 83행의 가상 표가 웹 SQUID_ASSET_VTABLES 와 같고 부모 삭제 통지(VT+34) 열의 구성이 원문과 같다 (2.0098ms)
+✔ AssetDeletionVtables: 전처리/후처리 묶음이 웹 삭제 자격 함수와 일대일이다 (321.0158ms)
+✔ AssetDeletionVtables: 통지 열(VT+34)의 83행이 웹 의존 통지 분류(삭제·홈 통지·빈 반환)와 일대일이다(E1221) (33.9658ms)
+✔ Session 자산 삭제: 선행/반복/반납과 훅 값 구성의 Pool·난수 무효과 (361.9105ms)
+✔ Session 자산 삭제: 실제 피해→내용물→건설과 사제 래퍼를 원문 순서로 합친다 (97.5237ms)
+✔ Session 삭제 자격: VT 전용과 TYPE/VT 쌍·현재 전체 DWORD 역할을 구별한다 (75.9897ms)
+✔ Session 삭제 분배: 현재 VT의 피해·펜스·아이스·공통·신전 Pre/Post 부모를 고른다 (90.3442ms)
+✔ Session 삭제 분배: 다른 효과·기존 함수 값과 실제 삭제 송신을 유지한다 (100.1593ms)
+✔ Session 가상 삭제: 알려진 자격은 같은 실제 분배기에, 나머지는 기존 반환 함수에 보낸다 (50.1595ms)
+✔ Session 삭제 분배: 선택된 부모와 기존 fallback의 예외를 우회하지 않는다 (37.9713ms)
+✔ Session Bomb 삭제 자격: 전용163 그림·일반 genus/VT와 TYPE 물리 범위를 구별한다 (74.593ms)
+✔ Session 삭제 분배: 공통만 쓰는 열세 가상 표는 공통 Pre/Post 로 가고 가상 삭제기도 같은 분배기에 보낸다(E1215) (44.1494ms)
+✔ Session 삭제 분배: 거주 구역 후처리는 extra 비트 9 가 없을 때만 거주 목록에서 지우고 공통 Post 를 부른다(E1215) (47.8298ms)
+✔ Session 삭제 분배: Player 전처리는 이전 포인터 정리→공통 Pre→상태 비트 정리 순서이고 공통 Pre 가 바꾼 소유자 기록을 따른다(E1215) (32.2788ms)
+✔ RawOutpostLifecycle: 원본 10.78 목록 접두 768행의 두 목록·개수·지역/base 순서·raw 쓰기가 같다 (29.6075ms)
+✔ RawOutpostLifecycle: 같은 실제 Player 기준점/Damageable 에 연결한 등록·제거가 기준점을 즉시 바꾼다 (3.2903ms)
+✔ RawOutpostLifecycle: 손상 연결·누락 효과를 목록 변경 전에 거부하고 원본이 읽지 않는 손상 목록은 막지 않는다 (2.2624ms)
+✔ RawOutpostLifecycle.preDestroyNative: 실제 455840 순서(extra → 두 현재 목록 압축 → 현재 지역 → Damageable 부모)와 음수 count·비활성 꼬리 보존 (1.3937ms)
+✔ RawOutpostLifecycle: 자산 TYPE 범위(70..187)·두 목록 선검사 순서·선검사 위치·실제 Damageable 선검사 연결 (1.3123ms)
+✔ RawOutpostLifecycle.preDestroyNative: extra 의 buried 단독 비트·첫 목록 우선 압축·현재 count 가 용량을 넘으면 물리 부족 (1.0431ms)
+✔ Session Outpost: 실제 두 목록 제거/지역 통지/피해 부모와 후처리 순서 (142.4139ms)
+✔ Session Outpost: abstract 목록 생략과 현재 VT 자격/표시 TYPE 변경 (36.4442ms)
+✔ Session Outpost: 지역 예외 전에 두 목록 제거를 보존하고 부모는 호출하지 않는다 (38.9756ms)
+ℹ tests 23
+ℹ suites 0
+ℹ pass 23
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 4586.4533

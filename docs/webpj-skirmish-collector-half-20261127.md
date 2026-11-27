@@ -18,3 +18,5 @@ WB04-E1436, 2026-11-27, HJOW-Athlon. 같은 스커미시 씨앗4·양측 시작1
 초기 새 검사 두 건은 RawAiBrainMemory 생성 인자를 빠뜨린 검사 준비 오류로 실패했다. 명시적인 주소/초기화기를 공급한 뒤16/16을 통과했고 첫 원문도 보존한다. 별도 보통 관찰을 로그 구분 착오로 중단한 이력은 [중단 정정](webpj-e1436-evidence/e1436-redundant-probes-stop.json)에 남겼다. 미승리·시드 불일치·첫 목표 충족만으로 완료를 주장하지 않았다. E1439 승리 실행은 집계 후보 두 모듈만 사용했으며 이 최종 네 모듈 조합의 승리 결과로 세지 않는다.
 
 [실제 관측](webpj-e1436-evidence/e1436-final-quota-telemetry.json) · [수집기](webpj-e1436-evidence/e1436-final-quota.cjs) · [실행 원문](webpj-e1436-evidence/webpj-e1436-final-quota.log) · [집중 검사](webpj-e1436-evidence/webpj-e1436-main-focus.log) · [빌드](webpj-e1436-evidence/webpj-e1436-build.log) · [번들](webpj-e1436-evidence/webpj-e1436-bundle.log) · [L2](webpj-e1436-evidence/webpj-e1436-l2.log) · [출처/독립 집계/해시](webpj-e1436-evidence/provenance.json).
+
+후속 파일 선택 점검에서 최초 명령의 Session AI 두 이름이 실제 파일명과 달라 선택되지 않았음을 확인했다. 최초 실제26개는그대로유효하며 올바른 raw-campaign-session-ai-production.test.mjs/ai-world.test.mjs의11개를 추가 통과했다. 이 후속 시점에는 E1434 삭제 연결도 적용됐고 E1436의 네 모듈은 동일하다. [추가 원문](webpj-e1436-evidence/webpj-e1436-main-session-focus.log).
