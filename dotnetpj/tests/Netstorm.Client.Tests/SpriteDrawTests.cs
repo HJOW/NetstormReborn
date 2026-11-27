@@ -283,6 +283,27 @@ public sealed class SpriteDrawTests
         Assert.Equal(3, calls);
     }
 
+    /// <summary>가상 프레임 조회 뒤의 실제 공유 소유자 토큰을 사용한다.</summary>
+    [Fact]
+    public void DrawReadsCurrentSharedOwnerMapAfterVirtualFrame()
+    {
+        var scene = new Scene();
+        scene.Pool.AllocatedBytes(5)[34] = 1;
+        scene.Pool.AllocatedBytes(5)[40] = 2;
+        uint[] tokens = new uint[71];
+        scene.State.SharedOwnerMapsCurrent = () => tokens;
+        var modes = new List<SpriteShapeMode>();
+        var hooks = new SpriteDrawHooks
+        {
+            VirtualFrame = _ => { tokens[70] = 123; return 0; },
+            VirtualDraw = (_, _) => { },
+            SetOwnerColors = (type, owner) => { Assert.Equal(70U, type); Assert.Equal(1U, owner); },
+            Shape = request => modes.Add(request.Mode),
+        };
+        scene.Draw(hooks).Draw(new(.25F, .25F, SpriteRaw, 0, 0, 0));
+        Assert.Equal(new[] { SpriteShapeMode.Owner }, modes);
+    }
+
     /// <summary>선 끝점·역순·클립 및 half-open fill의 빈/역전 영역을 검사한다.</summary>
     [Fact]
     public void PixelLinesAndBars()

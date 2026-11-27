@@ -103,6 +103,8 @@ public sealed class SpriteDrawState
     public byte[] OwnerMaps { get; set; } = [];
     /// <summary>현재 공유557940 표. 비어 있으면 독립 OwnerMaps를 쓴다.</summary>
     public uint[] SharedOwnerMaps { get; set; } = [];
+    /// <summary>현재 공유557940 표의 실제 소유자를 매번 조회한다.</summary>
+    public Func<ReadOnlyMemory<uint>>? SharedOwnerMapsCurrent { get; set; }
     /// <summary>현재5319c0 표식 옵션. 출력 순간 호출한다.</summary>
     public Func<uint>? SharedUseBanners { get; set; }
     /// <summary>현재005318ec 진단. 정확히 0일 때 alias를 갱신한다.</summary>
@@ -265,9 +267,10 @@ public sealed class SpriteDraw
         // 양수 소유자와 존재하는 표에서만 색 문맥을 먼저 바꾼다.
         void Normal(uint index)
         {
-            bool shared = s.SharedOwnerMaps.Length != 0;
-            if (type >= (shared ? s.SharedOwnerMaps.Length : s.OwnerMaps.Length)) throw new ArgumentOutOfRangeException(nameof(type), "Sprite Draw 소유자 표 오류");
-            uint map = shared ? s.SharedOwnerMaps[type] : s.OwnerMaps[type];
+            ReadOnlyMemory<uint> current = s.SharedOwnerMapsCurrent?.Invoke() ?? s.SharedOwnerMaps;
+            bool shared = s.SharedOwnerMapsCurrent is not null || !current.IsEmpty;
+            if (type >= (shared ? current.Length : s.OwnerMaps.Length)) throw new ArgumentOutOfRangeException(nameof(type), "Sprite Draw 소유자 표 오류");
+            uint map = shared ? current.Span[(int)type] : s.OwnerMaps[type];
             if (map != 0 && owner != 0)
             {
                 Required(_hooks.SetOwnerColors)(type, owner);
