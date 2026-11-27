@@ -103,6 +103,18 @@ public sealed partial class ClientHostGame
         _menuDirty = true;
     }
 
+    /// <summary>같은 현재 등록표에서 예산 창을 찾아 실제 가상 부착으로 갱신한다.</summary>
+    private void RefreshNativeStormPower()
+    {
+        var tree = (_mainMenu ?? throw new InvalidOperationException("SP 표시의 실제 현재 메뉴 장치 미연결")).Tree;
+        StormPowerRefresh.Refresh(tree.Create.Entries, _productionGlobals.BudgetSerial, new()
+        {
+            Node = tree.Node,
+            Push = tree.Tree.Push,
+            Attach = (token, x, y, parent, mode) => (tree.TreeHooks.Attach ?? throw new InvalidOperationException("SP 표시의 실제 가상 부착 미연결"))(token, x, y, parent, mode),
+        });
+    }
+
     /// <summary>현재 생산 내용물의 정보를 같은 미션·메뉴·번역·음향 장치로 연다.</summary>
     private uint OpenNativeProductionAbout(InventoryItemNode item, ScreenPoint point, Func<uint, bool> affordable)
     {

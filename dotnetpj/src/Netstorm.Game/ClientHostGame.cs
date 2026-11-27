@@ -206,11 +206,7 @@ public sealed partial class ClientHostGame : Game
                 _spGlobals,
                 _gameRandom,
                 () => _missionDemo != 0,
-                () =>
-                {
-                    _ = _mainMenu ?? throw new InvalidOperationException("SP 표시의 실제 현재 메뉴 장치 미연결");
-                    throw new InvalidOperationException("SP 표시의 실제 생산 UI 미연결(R5)");
-                },
+                RefreshNativeStormPower,
                 (x, y, type) =>
                 {
                     var selection = new Netstorm.Client.Input.RawUserSelection(

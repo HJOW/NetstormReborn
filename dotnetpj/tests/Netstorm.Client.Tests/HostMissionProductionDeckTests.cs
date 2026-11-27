@@ -83,6 +83,32 @@ public sealed class HostMissionProductionDeckTests
         public void Dispose() { Panel?.Dispose(); Html.CloseAll(); }
     }
 
+    /// <summary>실제 생산 예산 창을 공통 등록표에서 찾아 같은 부모와 깊이로 재부착한다.</summary>
+    [Fact]
+    public void StormPowerRefreshReattachesActualBudget()
+    {
+        using var scene = new Scene();
+        var panel = scene.NewPanel();
+        uint token = panel.Construct();
+        panel.Attach(token, 0, 0, scene.Menu.Tree.Create.Entries[0], 0);
+        var root = Assert.IsType<ProductionRootNode>(panel.Node(token));
+        var budget = Assert.IsType<ProductionBudgetNode>(panel.Node(root.Budget));
+        var tree = scene.Menu.Tree;
+        uint parent = budget.Parent, depth = budget.Depth;
+        var position = tree.Collection.Position(root.Budget);
+        Assert.Equal(budget.Serial, scene.Globals.BudgetSerial);
+        StormPowerRefresh.Refresh(tree.Create.Entries, scene.Globals.BudgetSerial, new()
+        {
+            Node = tree.Node,
+            Push = tree.Tree.Push,
+            Attach = (item, x, y, parentToken, mode) => tree.TreeHooks.Attach!(item, x, y, parentToken, mode),
+        });
+        Assert.Equal(parent, budget.Parent);
+        Assert.Equal(depth, budget.Depth);
+        Assert.Equal(position, tree.Collection.Position(root.Budget));
+        Assert.Same(budget, panel.Node(root.Budget));
+    }
+
     /// <summary>생산 구분선의 실제 입력 분배가 현재 커서 번호와 마우스 놓기 폴링을 장치에 전달한다.</summary>
     [Fact]
     public void ProductionDividerForwardsCursorAndReleasePolling()
