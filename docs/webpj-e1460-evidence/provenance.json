@@ -1,0 +1,367 @@
+{
+  "unit": "WB04-E1460",
+  "verifiedAt": "2026-11-27T23:19:32.102923+09:00",
+  "head": "3d9730c9d0c524b86b19c43c64483eeaf22619fb",
+  "scope": "본소스대체0의실제아군AI1-1과메뉴/빈문서환경대조. 제품변경없음.",
+  "sourceSha256": {
+    "www/netstorm.js": "d328528e812750c8213235e4703b5ee6d61002488e0ea81e5a201bd67ded44cf",
+    "www/render/presenter.js": "1512ecaa8abdb53436661938ffb0e90518f72eab146950eeb3a4b7c4f8511176",
+    "www/render/screen.js": "eeff43364764b0a19b03acf59a7a85e3a7810a5f5f4be4f9f9b33335fabb9c50",
+    "www/core/raw-surface-world.js": "31986ce5c01d0dd6f7c5da469279e26f35af6ce64da2f960aafb9130cc9a7b79"
+  },
+  "headedChrome": {
+    "browser": "158.0.8127.89",
+    "gpu": [
+      {
+        "vendorId": 4098,
+        "deviceId": 5597,
+        "subSysId": 366809090,
+        "revision": 200,
+        "vendorString": "",
+        "deviceString": "AMD Radeon(TM) Vega 8 Graphics",
+        "driverVendor": "AMD",
+        "driverVersion": "31.0.12027.9001"
+      },
+      {
+        "vendorId": 4098,
+        "deviceId": 5597,
+        "subSysId": 366809090,
+        "revision": 200,
+        "vendorString": "",
+        "deviceString": "AMD Radeon(TM) Vega 8 Graphics",
+        "driverVendor": "",
+        "driverVersion": "31.0.12027.9001"
+      },
+      {
+        "vendorId": 5140,
+        "deviceId": 140,
+        "subSysId": 0,
+        "revision": 0,
+        "vendorString": "",
+        "deviceString": "Microsoft Basic Render Driver",
+        "driverVendor": "",
+        "driverVersion": "10.0.19041.7811"
+      }
+    ],
+    "features": {
+      "2d_canvas": "enabled",
+      "direct_rendering_display_compositor": "disabled_off_ok",
+      "gpu_compositing": "enabled",
+      "multiple_raster_threads": "enabled_on",
+      "opengl": "enabled_on",
+      "rasterization": "enabled",
+      "skia_graphite": "enabled_on",
+      "trees_in_viz": "disabled_off",
+      "video_decode": "enabled",
+      "video_encode": "enabled",
+      "webgl": "enabled",
+      "webgpu": "enabled",
+      "webnn": "disabled_off"
+    },
+    "display": {
+      "innerWidth": 1920,
+      "innerHeight": 1080,
+      "outerWidth": 1920,
+      "outerHeight": 1080,
+      "screenWidth": 1920,
+      "screenHeight": 1080,
+      "dpr": 1
+    },
+    "window": {
+      "bounds": {
+        "left": 0,
+        "top": 0,
+        "width": 1920,
+        "height": 1080,
+        "windowState": "fullscreen"
+      }
+    },
+    "missionSamples": [
+      {
+        "rate": 60,
+        "fps": 31.96176586257409,
+        "rafHz": 31.96176586257409,
+        "seconds": 30.00459999999404,
+        "gameDelta": 30.00400000018999,
+        "heapAfterGc": {
+          "usedSize": 32375508,
+          "totalSize": 36478976,
+          "embedderHeapUsedSize": 5741176,
+          "backingStorageSize": 58228062
+        }
+      },
+      {
+        "rate": 60,
+        "fps": 32.03045059276089,
+        "rafHz": 32.03045059276089,
+        "seconds": 30.00270000001788,
+        "gameDelta": 30.003000000026077,
+        "heapAfterGc": {
+          "usedSize": 33130432,
+          "totalSize": 37789696,
+          "embedderHeapUsedSize": 5700752,
+          "backingStorageSize": 58574912
+        }
+      },
+      {
+        "rate": 120,
+        "fps": 31.96538805112557,
+        "rafHz": 31.96538805112557,
+        "seconds": 30.00120000001788,
+        "gameDelta": 30.001999999862164,
+        "heapAfterGc": {
+          "usedSize": 35354608,
+          "totalSize": 39886848,
+          "embedderHeapUsedSize": 5671936,
+          "backingStorageSize": 58303827
+        }
+      },
+      {
+        "rate": 120,
+        "fps": 31.99968000318725,
+        "rafHz": 31.99968000318725,
+        "seconds": 30.000300000011922,
+        "gameDelta": 30,
+        "heapAfterGc": {
+          "usedSize": 35689220,
+          "totalSize": 40148992,
+          "embedderHeapUsedSize": 5630160,
+          "backingStorageSize": 58806089
+        }
+      }
+    ],
+    "menuSamples": [
+      {
+        "rate": 60,
+        "fps": 31.99560060494066,
+        "rafHz": 31.99560060494066,
+        "seconds": 8.00109999999404,
+        "gameDelta": 8.001000000163913,
+        "heapAfterGc": {
+          "usedSize": 9841052,
+          "totalSize": 10264576,
+          "embedderHeapUsedSize": 522064,
+          "backingStorageSize": 49397709
+        }
+      },
+      {
+        "rate": 120,
+        "fps": 31.87380473239378,
+        "rafHz": 31.87380473239378,
+        "seconds": 8.000299999982118,
+        "gameDelta": 8,
+        "heapAfterGc": {
+          "usedSize": 9944284,
+          "totalSize": 10788864,
+          "embedderHeapUsedSize": 683848,
+          "backingStorageSize": 49397709
+        }
+      },
+      {
+        "rate": 60,
+        "fps": 31.97042735467311,
+        "rafHz": 31.97042735467311,
+        "seconds": 8.00740000000596,
+        "gameDelta": 8.007999999914318,
+        "heapAfterGc": {
+          "usedSize": 9974944,
+          "totalSize": 11051008,
+          "embedderHeapUsedSize": 689640,
+          "backingStorageSize": 49397709
+        }
+      },
+      {
+        "rate": 120,
+        "fps": 31.998800044950634,
+        "rafHz": 31.998800044950634,
+        "seconds": 8.00030000001192,
+        "gameDelta": 8.001000000163913,
+        "heapAfterGc": {
+          "usedSize": 9980496,
+          "totalSize": 11051008,
+          "embedderHeapUsedSize": 650936,
+          "backingStorageSize": 49397709
+        }
+      }
+    ],
+    "missionErrors": [],
+    "menuErrors": []
+  },
+  "headlessChromium": {
+    "browser": "156.0.8078.4",
+    "gpu": [
+      {
+        "vendorId": 65535,
+        "deviceId": 65535,
+        "subSysId": 0,
+        "revision": 0,
+        "vendorString": "Google Inc. (Google)",
+        "deviceString": "ANGLE (Google, Vulkan 1.3.0 (SwiftShader Device (Subzero) (0x0000C0DE)), SwiftShader driver-5.0.0)",
+        "driverVendor": "SwANGLE",
+        "driverVersion": "5.0.0"
+      }
+    ],
+    "features": {
+      "2d_canvas": "unavailable_software",
+      "direct_rendering_display_compositor": "disabled_off_ok",
+      "gpu_compositing": "disabled_software",
+      "multiple_raster_threads": "enabled_on",
+      "opengl": "disabled_off",
+      "rasterization": "disabled_software",
+      "raw_draw": "disabled_off_ok",
+      "skia_graphite": "disabled_off",
+      "trees_in_viz": "disabled_off",
+      "video_decode": "disabled_software",
+      "video_encode": "disabled_software",
+      "webgl": "unavailable_software",
+      "webgpu": "unavailable_software",
+      "webnn": "unavailable_software"
+    },
+    "missionSamples": [
+      {
+        "rate": 60,
+        "fps": 53.465953787325326,
+        "rafHz": 53.465953787325326,
+        "seconds": 15.000199999988078,
+        "gameDelta": 15,
+        "heapAfterGc": {
+          "usedSize": 34299936,
+          "totalSize": 38313984,
+          "embedderHeapUsedSize": 5570120,
+          "backingStorageSize": 58221086
+        }
+      }
+    ]
+  },
+  "blankNativeRaf": [
+    {
+      "mode": "chrome",
+      "browser": "158.0.8127.89",
+      "count": 252,
+      "seconds": 8.002099999994039,
+      "hz": 31.491733420000717,
+      "hidden": false,
+      "url": "about:blank",
+      "innerWidth": 1920,
+      "innerHeight": 1080,
+      "outerWidth": 1920,
+      "outerHeight": 1080,
+      "dpr": 1
+    },
+    {
+      "mode": "headless",
+      "browser": "156.0.8078.4",
+      "count": 482,
+      "seconds": 8.00490000000596,
+      "hz": 60.21311946428326,
+      "hidden": false,
+      "url": "about:blank",
+      "innerWidth": 1920,
+      "innerHeight": 1080,
+      "outerWidth": 1920,
+      "outerHeight": 1080,
+      "dpr": 1
+    }
+  ],
+  "displayAdapters": [
+    {
+      "Name": "Microsoft Remote Display Adapter",
+      "CurrentHorizontalResolution": 1920,
+      "CurrentVerticalResolution": 1080,
+      "CurrentRefreshRate": 32,
+      "DriverVersion": "10.0.19041.7811"
+    },
+    {
+      "Name": "AMD Radeon(TM) Vega 8 Graphics",
+      "CurrentHorizontalResolution": 1920,
+      "CurrentVerticalResolution": 1080,
+      "CurrentRefreshRate": 60,
+      "DriverVersion": "31.0.12027.9001"
+    }
+  ],
+  "interpretation": "빈문서/가벼운메뉴/미션모두일반Chrome은약32rAF. RemoteDisplay보고32Hz와일치해원격표시/합성경로제약을시사한다. 인과/단일원인을확정하지않고다른브라우저버전/GPU경로의FPS를직접성능비율로비교하지않음.",
+  "limitations": [
+    "물리60/120Hz미입증",
+    "M5전체관문완료아님",
+    "headless는SwiftShader소프트웨어경로",
+    "짧은표본이며장기메모리무증가주장아님",
+    "읽기전용복사후보4모듈은미검증/미적용이며성과와필수후속으로세지않음",
+    "before-profile scope에는E1454본소스라는이전바탕표기가남음;product는E1454/E1456현재본소스이며원문보존"
+  ],
+  "periodAfterUnit": {
+    "v26": 2,
+    "v22": 6
+  },
+  "rawArtifacts": [
+    {
+      "path": "webpj/extracted/e1460-before-profile.cjs",
+      "bytes": 13438,
+      "sha256": "baa49d5945133a88235f279ad67911075a25f7f42a11b4069e8f3b2f5d92f404"
+    },
+    {
+      "path": "webpj/extracted/e1460-before-profile.log",
+      "bytes": 276,
+      "sha256": "c4352105fa760ba2f9f25019c2cf2326bc0eb317595f9f7629fd23d801bf691a"
+    },
+    {
+      "path": "webpj/extracted/webpj-e1460-before-profile.json",
+      "bytes": 23890,
+      "sha256": "9ef3b32a6d678063f054a3ff644d5a7bc5665f9d805c38e21fb9672b96e54232"
+    },
+    {
+      "path": "webpj/extracted/e1460-before-1920.cpuprofile",
+      "bytes": 349775,
+      "sha256": "0705c0916d2278b2d4b20deb216a2c6cdb92484aca89776a111af5acbfb4459d"
+    },
+    {
+      "path": "webpj/extracted/e1460-chrome-profile.cjs",
+      "bytes": 13093,
+      "sha256": "2afcde8d429fa3f0873fc398006b4525326ee4e0ce2d2ec90f8b047b620b8c94"
+    },
+    {
+      "path": "webpj/extracted/e1460-chrome-profile.log",
+      "bytes": 982,
+      "sha256": "96871005a42ffff9224929f2355b4c6ee3715b9cbe0a33a13fea87ca6a00fedf"
+    },
+    {
+      "path": "webpj/extracted/webpj-e1460-chrome-profile.json",
+      "bytes": 60052,
+      "sha256": "dc70c93bf50c570d0890bad3969bccf190557248115253129cfc108a4f5cc9be"
+    },
+    {
+      "path": "webpj/extracted/e1460-chrome-menu-profile.cjs",
+      "bytes": 8266,
+      "sha256": "e7962c4b46eee124a335673add6bfe2565f3e660c0ebf9e8a0109a5d3cb197e6"
+    },
+    {
+      "path": "webpj/extracted/e1460-chrome-menu-profile.log",
+      "bytes": 969,
+      "sha256": "058a4763c25b7daa5b329ab9efa13a851e8c7e43888e7f60237dead47c761c3d"
+    },
+    {
+      "path": "webpj/extracted/webpj-e1460-chrome-menu-profile.json",
+      "bytes": 26572,
+      "sha256": "cfd2fd612757fdc51b1ab9e314d137ecd3065b47cb9b36cb69d587c4c7f2107d"
+    },
+    {
+      "path": "webpj/extracted/e1460-blank-raf.cjs",
+      "bytes": 1868,
+      "sha256": "fe0d1ed2f56bfbe7cd4f3213eb14f6c32b24c6147cade7faadcbf99d5eec1263"
+    },
+    {
+      "path": "webpj/extracted/e1460-blank-raf.log",
+      "bytes": 451,
+      "sha256": "637bceb52bc8160bb41ebd8a4c4952d33464593e97f72c6fe760e4dc1ae55191"
+    },
+    {
+      "path": "webpj/extracted/e1460-blank-raf.json",
+      "bytes": 608,
+      "sha256": "6d40f7a3f3275ecb5f56838be068a8d2b3ba034d4cf8cd2229c42ac78ed3c44e"
+    },
+    {
+      "path": "webpj/extracted/e1460-display-adapters.json",
+      "bytes": 429,
+      "sha256": "dc50b1203780ea6749ba46d3e653385ea25999dcda7c581df5cd70f49bb6aa41"
+    }
+  ]
+}
