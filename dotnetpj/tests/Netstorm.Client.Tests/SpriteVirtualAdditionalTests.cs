@@ -231,6 +231,65 @@ public sealed class SpriteVirtualAdditionalTests
         Assert.Throws<ArgumentException>(() => draw.Draw(sid, new(10, 20)));
     }
 
+    /// <summary>세 신전이 현재 프레임과 상승 구간을 사용하고 레인 신전만 조건부 상승음을 요청한다.</summary>
+    [Fact]
+    public void TempleFramesUseCurrentSlotAndRainAscendSound()
+    {
+        var pool = new RawSidPool(24000, server: false);
+        int sid = pool.Allocate(SidAllocation.Client);
+        var frames = Enumerable.Range(0, 188).Select(_ => new RiftTypeFrames([])).ToArray();
+        frames[90] = new([new((byte)'A', 0, 0, 0), new((byte)'A', 0, 1, 0), new((byte)'C', 0, 0, 0), new((byte)'C', 0, 1, 0)]);
+        var definitions = Enumerable.Range(0, 118).Select(_ => new RiftTypeDefinition()).ToArray();
+        definitions[20].SpecialFrames.BaseFrame = 1;
+        var requests = new List<SpriteShapeRequest>();
+        int sounds = 0;
+        var draw = new SpriteVirtualAdditional(pool, frames, requests.Add, definitions: definitions, templeAscend: () => sounds++);
+        Set(pool, sid, 0x005196f0, 90, 0);
+        BinaryPrimitives.WriteUInt16LittleEndian(pool.AllocatedBytes(sid)[12..], 1);
+        draw.Draw(sid, new(3, 4));
+        Assert.Equal(new uint[] { 0, 0, 2 }, requests.Select(request => request.Frame));
+        Assert.Equal(1, sounds);
+        requests.Clear();
+        Set(pool, sid, 0x00519860, 90, 1);
+        BinaryPrimitives.WriteUInt16LittleEndian(pool.AllocatedBytes(sid)[12..], 1);
+        draw.Draw(sid, new(3, 4));
+        Assert.Equal(new uint[] { 3 }, requests.Select(request => request.Frame));
+        requests.Clear();
+        Set(pool, sid, 0x00519918, 90, 1);
+        BinaryPrimitives.WriteUInt16LittleEndian(pool.AllocatedBytes(sid)[12..], 1);
+        draw.Draw(sid, new(3, 4));
+        Assert.Equal(new uint[] { 1, 3 }, requests.Select(request => request.Frame));
+        Assert.Equal(1, sounds);
+        var missingSound = new SpriteVirtualAdditional(pool, frames, _ => { });
+        Set(pool, sid, 0x005196f0, 90, 0);
+        BinaryPrimitives.WriteUInt16LittleEndian(pool.AllocatedBytes(sid)[12..], 1);
+        Assert.Throws<InvalidOperationException>(() => missingSound.Draw(sid, new(3, 4)));
+    }
+
+    /// <summary>신전 첫 그림 뒤 변경된 프레임과 소유자를 후속 그림에서 다시 읽는다.</summary>
+    [Fact]
+    public void TempleRereadsSlotAfterEachFrame()
+    {
+        var pool = new RawSidPool(24000, server: false);
+        int sid = pool.Allocate(SidAllocation.Client);
+        var frames = Enumerable.Range(0, 188).Select(_ => new RiftTypeFrames([])).ToArray();
+        frames[90] = new([new((byte)'A', 0, 0, 0), new((byte)'A', 0, 1, 0), new((byte)'C', 0, 0, 0), new((byte)'C', 0, 1, 0)]);
+        var requests = new List<SpriteShapeRequest>();
+        var draw = new SpriteVirtualAdditional(pool, frames, request =>
+        {
+            requests.Add(request);
+            if (requests.Count != 1) return;
+            BinaryPrimitives.WriteInt32LittleEndian(pool.AllocatedBytes(sid)[36..], 1);
+            pool.AllocatedBytes(sid)[40] = 0x10;
+            pool.AllocatedBytes(sid)[34] = 2;
+        }, localOwner: () => 2);
+        Set(pool, sid, 0x005196f0, 90, 0);
+        BinaryPrimitives.WriteUInt16LittleEndian(pool.AllocatedBytes(sid)[12..], 1);
+        draw.Draw(sid, new(3, 4));
+        Assert.Equal(new uint[] { 0, 1, 3 }, requests.Select(request => request.Frame));
+        Assert.Equal(new[] { SpriteShapeMode.Plain, SpriteShapeMode.Abstract, SpriteShapeMode.Abstract }, requests.Select(request => request.Mode));
+    }
+
     /// <summary>주문의 도움말 프레임과 추상 소유자 조건을 실제 현재 슬롯으로 분기한다.</summary>
     [Fact]
     public void SpellAdditionalSuppressesHelpAndUsesCurrentOwner()

@@ -11,6 +11,8 @@ public sealed class SpriteVirtualAdditional
     private readonly RawSidPool _pool;
     /// <summary>같은 풀의 공장 추가 그림 본체다.</summary>
     private readonly RawFactoryDraw _factory;
+    /// <summary>신전의 현재 애니메이션 구간을 읽는 실제 TYPE 프레임 표다.</summary>
+    private readonly IReadOnlyList<RiftTypeFrames> _frames;
     /// <summary>실제 SHP 그림을 현재 픽셀 표면에 전달한다.</summary>
     private readonly Action<SpriteShapeRequest> _shape;
     /// <summary>실제 다리 수명 표시 장치다. 도달 전에는 없어도 된다.</summary>
@@ -25,6 +27,8 @@ public sealed class SpriteVirtualAdditional
     private readonly Func<uint>? _localOwner;
     /// <summary>제단 추가 자산의 현재 프레임 수를 포함하는 실제 셰이프 표다.</summary>
     private readonly IReadOnlyList<SquidDisplayShape>? _shapes;
+    /// <summary>레인 신전의 조건부 상승음을 실제 음향 장치에 요청한다.</summary>
+    private readonly Action? _templeAscend;
 
     /// <summary>같은 실제 풀·프레임과 호출 위치에서 사용할 출력 장치를 빌린다.</summary>
     /// <param name="pool">10.78 객체 풀이다.</param>
@@ -36,15 +40,17 @@ public sealed class SpriteVirtualAdditional
     /// <param name="definitions">파일 TYPE 정의다.</param>
     /// <param name="localOwner">현재 로컬 소유자 조회다.</param>
     /// <param name="shapes">현재 TYPE 순서의 실제 셰이프 표다.</param>
+    /// <param name="templeAscend">레인 신전의 실제 상승음 재생이다.</param>
     public SpriteVirtualAdditional(RawSidPool pool, IReadOnlyList<RiftTypeFrames> frames, Action<SpriteShapeRequest> shape,
         Action<int, ScreenPoint>? bridge = null, Action<int, ScreenPoint>? meta = null,
         IReadOnlyList<OriginalTypeRecord>? types = null, IReadOnlyList<RiftTypeDefinition>? definitions = null, Func<uint>? localOwner = null,
-        IReadOnlyList<SquidDisplayShape>? shapes = null)
+        IReadOnlyList<SquidDisplayShape>? shapes = null, Action? templeAscend = null)
     {
         ArgumentNullException.ThrowIfNull(pool);
         ArgumentNullException.ThrowIfNull(frames);
         ArgumentNullException.ThrowIfNull(shape);
         _factory = new RawFactoryDraw(pool, frames);
+        _frames = frames;
         _pool = pool;
         _shape = shape;
         _bridge = bridge;
@@ -53,6 +59,7 @@ public sealed class SpriteVirtualAdditional
         _definitions = definitions;
         _localOwner = localOwner;
         _shapes = shapes;
+        _templeAscend = templeAscend;
     }
 
     /// <summary>현재 객체의 +a4를 조회해 해당 실제 추가 그림만 호출한다.</summary>
@@ -98,6 +105,11 @@ public sealed class SpriteVirtualAdditional
                 return;
             case 0x0046a6e0:
                 DrawBurningArcher(sid, point);
+                return;
+            case 0x004dcd00:
+            case 0x004dcf10:
+            case 0x004dd0f0:
+                DrawTemple(sid, point);
                 return;
             case 0x00485f90:
                 ReadOnlySpan<byte> raw = _pool.Slot(sid);
@@ -249,5 +261,46 @@ public sealed class SpriteVirtualAdditional
         if ((raw[40] & 0x10) == 0) _shape(new(type, frame, point, SpriteShapeMode.Plain));
         else if (raw[34] == (_localOwner ?? throw new InvalidOperationException("추가 그림 현재 로컬 소유자 미연결"))())
             _shape(new(type, frame, point, SpriteShapeMode.Abstract));
+    }
+
+    /// <summary>윈드·레인·썬더 신전의 현재 추가 프레임과 조건부 상승음을 표시한다.</summary>
+    /// <param name="sid">현재 신전 객체 SID다.</param>
+    /// <param name="point">현재 화면 기준점이다.</param>
+    /// <remarks>cpppj RawTempleDraw와 RawRainVortexDraw의 현재 슬롯 재조회 순서를 따른다.</remarks>
+    private void DrawTemple(int sid, ScreenPoint point)
+    {
+        ReadOnlySpan<byte> raw = _pool.Slot(sid);
+        uint table = BinaryPrimitives.ReadUInt32LittleEndian(raw);
+        uint type = raw[10];
+        if (type >= _frames.Count) throw new ArgumentOutOfRangeException(nameof(sid), "신전 프레임 TYPE 범위 오류");
+        RiftTypeFrames frames = _frames[(int)type];
+        void Emit(int frame)
+        {
+            if (frame < 0) throw new ArgumentOutOfRangeException(nameof(sid), "신전 추가 그림 음수 프레임");
+            DrawGated(sid, type, (uint)frame, point);
+        }
+        int Current() => BinaryPrimitives.ReadInt32LittleEndian(_pool.Slot(sid)[36..]);
+        if (table == 0x005196f0)
+        {
+            Emit(0);
+            Emit(Current());
+            if (BinaryPrimitives.ReadUInt16LittleEndian(_pool.Slot(sid)[12..]) == 0) return;
+            int current = Current();
+            RiftTypeFrames.LetterRun rise = frames.Run((byte)'C');
+            if (current >= rise.Count) return;
+            if (current < 0 || current >= frames.Codes.Count) throw new ArgumentOutOfRangeException(nameof(sid), "레인 신전 방향 프레임 범위 오류");
+            if (current == frames.Run(frames.Codes[current].Side).First)
+                (_templeAscend ?? throw new InvalidOperationException("레인 신전 상승음 미연결"))();
+            Emit(unchecked(rise.First + Current()));
+            return;
+        }
+        if (table is not (0x00519860 or 0x00519918)) throw new ArgumentException("신전 가상표 불일치", nameof(sid));
+        var definitions = _definitions ?? throw new InvalidOperationException("신전 TYPE 정의 미연결");
+        if (type < 70 || type - 70 >= definitions.Count) throw new ArgumentOutOfRangeException(nameof(sid), "신전 TYPE 정의 범위 오류");
+        int baseFrame = definitions[(int)type - 70].SpecialFrames.BaseFrame;
+        if (table == 0x00519918 || Current() < baseFrame) Emit(Current());
+        if (BinaryPrimitives.ReadUInt16LittleEndian(_pool.Slot(sid)[12..]) == 0) return;
+        RiftTypeFrames.LetterRun windRise = frames.Run((byte)'C');
+        if (Current() < windRise.Count) Emit(unchecked(windRise.First + Current()));
     }
 }
