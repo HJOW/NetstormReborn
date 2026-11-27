@@ -1,0 +1,690 @@
+{
+  "unit": "WB04-E1462",
+  "verifiedAt": "2026-11-27T23:53:42.875056+09:00",
+  "headBeforeCommit": "23e6bbb2d5d90d6a43e62d295521c35a5269fc11",
+  "gameAndBundleUnchangedSinceE1461": true,
+  "englishTestPrefixUnchangedSinceE1461": true,
+  "testSha256": "ff94b0fa3172b9ed7df53b6e8eefbecf217857a4c38e60dda91cb75d6f7f68a3",
+  "scope": "한국어메뉴/옵션/1-1첫안내만. 아군AIhelper설치, 시작단추/중간목표/승리없음.",
+  "matrix": {
+    "cases": 8,
+    "wholeCanvasCheckpoints": 40,
+    "pixelDifferences": 0,
+    "pointerChecks": 24,
+    "errors": 0,
+    "casesSummary": [
+      {
+        "browser": "158.0.8127.89",
+        "dpr": 1.25,
+        "font": {
+          "unicode": true,
+          "em": 12,
+          "advance": 12,
+          "inkRows": 11,
+          "faces": [
+            {
+              "family": "Galmuri11",
+              "status": "loaded"
+            },
+            {
+              "family": "Galmuri11",
+              "status": "loaded"
+            },
+            {
+              "family": "Galmuri11Regular",
+              "status": "loaded"
+            }
+          ]
+        },
+        "dialog": {
+          "width": 381,
+          "maxContentWidth": 368,
+          "lines": 12,
+          "tell": "A.",
+          "mission": "TheWarBegins",
+          "paused": true
+        },
+        "rows": [
+          {
+            "name": "korean-menu",
+            "canvas": [
+              1280,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "korean-option-input",
+            "canvas": [
+              1280,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "korean-first-dialog",
+            "canvas": [
+              1280,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "korean-resize-1366",
+            "canvas": [
+              1707,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "korean-resize-1280",
+            "canvas": [
+              1600,
+              1000
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          }
+        ],
+        "left": true
+      },
+      {
+        "browser": "156.0.8078.4",
+        "dpr": 1.25,
+        "font": {
+          "unicode": true,
+          "em": 12,
+          "advance": 12,
+          "inkRows": 11,
+          "faces": [
+            {
+              "family": "Galmuri11",
+              "status": "loaded"
+            },
+            {
+              "family": "Galmuri11",
+              "status": "loaded"
+            },
+            {
+              "family": "Galmuri11Regular",
+              "status": "loaded"
+            }
+          ]
+        },
+        "dialog": {
+          "width": 381,
+          "maxContentWidth": 368,
+          "lines": 12,
+          "tell": "A.",
+          "mission": "TheWarBegins",
+          "paused": true
+        },
+        "rows": [
+          {
+            "name": "korean-menu",
+            "canvas": [
+              1280,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "korean-option-input",
+            "canvas": [
+              1280,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "korean-first-dialog",
+            "canvas": [
+              1280,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "korean-resize-1366",
+            "canvas": [
+              1707,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "korean-resize-1280",
+            "canvas": [
+              1600,
+              1000
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          }
+        ],
+        "left": true
+      },
+      {
+        "browser": "158.0.4370.33",
+        "dpr": 1.25,
+        "font": {
+          "unicode": true,
+          "em": 12,
+          "advance": 12,
+          "inkRows": 11,
+          "faces": [
+            {
+              "family": "Galmuri11",
+              "status": "loaded"
+            },
+            {
+              "family": "Galmuri11",
+              "status": "loaded"
+            },
+            {
+              "family": "Galmuri11Regular",
+              "status": "loaded"
+            }
+          ]
+        },
+        "dialog": {
+          "width": 381,
+          "maxContentWidth": 368,
+          "lines": 12,
+          "tell": "A.",
+          "mission": "TheWarBegins",
+          "paused": true
+        },
+        "rows": [
+          {
+            "name": "korean-menu",
+            "canvas": [
+              1280,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "korean-option-input",
+            "canvas": [
+              1280,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "korean-first-dialog",
+            "canvas": [
+              1280,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "korean-resize-1366",
+            "canvas": [
+              1707,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "korean-resize-1280",
+            "canvas": [
+              1600,
+              1000
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          }
+        ],
+        "left": true
+      },
+      {
+        "browser": "157.0",
+        "dpr": 1.25,
+        "font": {
+          "unicode": true,
+          "em": 12,
+          "advance": 12,
+          "inkRows": 11,
+          "faces": [
+            {
+              "family": "Galmuri11",
+              "status": "loaded"
+            },
+            {
+              "family": "Galmuri11",
+              "status": "loaded"
+            },
+            {
+              "family": "Galmuri11Regular",
+              "status": "loaded"
+            }
+          ]
+        },
+        "dialog": {
+          "width": 381,
+          "maxContentWidth": 368,
+          "lines": 12,
+          "tell": "A.",
+          "mission": "TheWarBegins",
+          "paused": true
+        },
+        "rows": [
+          {
+            "name": "korean-menu",
+            "canvas": [
+              1280,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "korean-option-input",
+            "canvas": [
+              1280,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "korean-first-dialog",
+            "canvas": [
+              1280,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "korean-resize-1366",
+            "canvas": [
+              1707,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "korean-resize-1280",
+            "canvas": [
+              1600,
+              1000
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          }
+        ],
+        "left": true
+      },
+      {
+        "browser": "158.0.8127.89",
+        "dpr": 2,
+        "font": {
+          "unicode": true,
+          "em": 12,
+          "advance": 12,
+          "inkRows": 11,
+          "faces": [
+            {
+              "family": "Galmuri11",
+              "status": "loaded"
+            },
+            {
+              "family": "Galmuri11",
+              "status": "loaded"
+            },
+            {
+              "family": "Galmuri11Regular",
+              "status": "loaded"
+            }
+          ]
+        },
+        "dialog": {
+          "width": 381,
+          "maxContentWidth": 368,
+          "lines": 12,
+          "tell": "A.",
+          "mission": "TheWarBegins",
+          "paused": true
+        },
+        "rows": [
+          {
+            "name": "korean-menu",
+            "canvas": [
+              2048,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "korean-option-input",
+            "canvas": [
+              2048,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "korean-first-dialog",
+            "canvas": [
+              2048,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "korean-resize-1366",
+            "canvas": [
+              2732,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "korean-resize-1280",
+            "canvas": [
+              2560,
+              1600
+            ],
+            "dpr": 2,
+            "differences": 0
+          }
+        ],
+        "left": true
+      },
+      {
+        "browser": "156.0.8078.4",
+        "dpr": 2,
+        "font": {
+          "unicode": true,
+          "em": 12,
+          "advance": 12,
+          "inkRows": 11,
+          "faces": [
+            {
+              "family": "Galmuri11",
+              "status": "loaded"
+            },
+            {
+              "family": "Galmuri11",
+              "status": "loaded"
+            },
+            {
+              "family": "Galmuri11Regular",
+              "status": "loaded"
+            }
+          ]
+        },
+        "dialog": {
+          "width": 381,
+          "maxContentWidth": 368,
+          "lines": 12,
+          "tell": "A.",
+          "mission": "TheWarBegins",
+          "paused": true
+        },
+        "rows": [
+          {
+            "name": "korean-menu",
+            "canvas": [
+              2048,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "korean-option-input",
+            "canvas": [
+              2048,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "korean-first-dialog",
+            "canvas": [
+              2048,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "korean-resize-1366",
+            "canvas": [
+              2732,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "korean-resize-1280",
+            "canvas": [
+              2560,
+              1600
+            ],
+            "dpr": 2,
+            "differences": 0
+          }
+        ],
+        "left": true
+      },
+      {
+        "browser": "158.0.4370.33",
+        "dpr": 2,
+        "font": {
+          "unicode": true,
+          "em": 12,
+          "advance": 12,
+          "inkRows": 11,
+          "faces": [
+            {
+              "family": "Galmuri11",
+              "status": "loaded"
+            },
+            {
+              "family": "Galmuri11",
+              "status": "loaded"
+            },
+            {
+              "family": "Galmuri11Regular",
+              "status": "loaded"
+            }
+          ]
+        },
+        "dialog": {
+          "width": 381,
+          "maxContentWidth": 368,
+          "lines": 12,
+          "tell": "A.",
+          "mission": "TheWarBegins",
+          "paused": true
+        },
+        "rows": [
+          {
+            "name": "korean-menu",
+            "canvas": [
+              2048,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "korean-option-input",
+            "canvas": [
+              2048,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "korean-first-dialog",
+            "canvas": [
+              2048,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "korean-resize-1366",
+            "canvas": [
+              2732,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "korean-resize-1280",
+            "canvas": [
+              2560,
+              1600
+            ],
+            "dpr": 2,
+            "differences": 0
+          }
+        ],
+        "left": true
+      },
+      {
+        "browser": "157.0",
+        "dpr": 2,
+        "font": {
+          "unicode": true,
+          "em": 12,
+          "advance": 12,
+          "inkRows": 11,
+          "faces": [
+            {
+              "family": "Galmuri11",
+              "status": "loaded"
+            },
+            {
+              "family": "Galmuri11",
+              "status": "loaded"
+            },
+            {
+              "family": "Galmuri11Regular",
+              "status": "loaded"
+            }
+          ]
+        },
+        "dialog": {
+          "width": 381,
+          "maxContentWidth": 368,
+          "lines": 12,
+          "tell": "A.",
+          "mission": "TheWarBegins",
+          "paused": true
+        },
+        "rows": [
+          {
+            "name": "korean-menu",
+            "canvas": [
+              2048,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "korean-option-input",
+            "canvas": [
+              2048,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "korean-first-dialog",
+            "canvas": [
+              2048,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "korean-resize-1366",
+            "canvas": [
+              2732,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "korean-resize-1280",
+            "canvas": [
+              2560,
+              1600
+            ],
+            "dpr": 2,
+            "differences": 0
+          }
+        ],
+        "left": true
+      }
+    ]
+  },
+  "lintAllExit": 0,
+  "separateEnglishAndKoreanTotal": {
+    "cases": 16,
+    "wholeCanvasCheckpoints": 103,
+    "pointerChecks": 60
+  },
+  "limitations": [
+    "한국어중간/후반안내·사람문장검수미포함",
+    "한국어동적DPR만변경하는경로는이묶음에서미수행(E1461영어에서확인)",
+    "물리모니터이동/주사율/실제청취미포함"
+  ],
+  "periodAfterUnit": {
+    "v26": 4,
+    "v22": 8
+  },
+  "rawArtifacts": [
+    {
+      "path": "webpj/extracted/e1462-matrix.log",
+      "bytes": 1965,
+      "sha256": "9fdd772da20187fdae250cf7556e0830df41b98278a53afbc0506aef75cae034"
+    },
+    {
+      "path": "webpj/extracted/e1462-eslint.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "webpj/extracted/e1462-lint-all.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}

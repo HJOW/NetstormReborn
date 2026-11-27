@@ -152,3 +152,70 @@ for (const dpr of [1.25, 2]) test.describe(`고DPI ${dpr}`, () => {
     }
   });
 });
+
+// 한국어는 사용자 고정 글꼴의 논리 격자와 첫 안내만 확인한다. 목표 수행/승리는 시작하지 않는다.
+for (const dpr of [1.25, 2]) test.describe(`한국어 고DPI ${dpr}`, () => {
+  test.use({ viewport: { width: 1024, height: 768 }, deviceScaleFactor: dpr });
+  test('갈무리11 메뉴·첫안내·창 크기·CSS 입력과 전체 Canvas', async ({ page, browser }) => {
+    test.setTimeout(300000); page.setDefaultTimeout(30000);
+    const evidence = { dpr, browser: browser.version(), language: 'korean', rows: [], pointers: [], errors: [] };
+    page.on('pageerror', (error) => evidence.errors.push(error.stack ?? error.message)); page.on('console', (message) => { if (message.type() === 'error') evidence.errors.push(message.text()); });
+    try {
+      await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, autoDemo: 0, sound: 0, music: 0 } })));
+      await page.goto('http://localhost:9803/debug.html?fixed=25&title=1&aspect=auto&lang=korean');
+      await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 120000 }); await page.locator('canvas').click(); await page.evaluate(() => window.netstorm._prepareCampaignAudio());
+      // 원래 시작 그림과 메뉴 도달을 고정 프레임으로 진행한다.
+      for (let frames = 0; frames < 1200 && await page.evaluate(() => window.netstorm.state !== 'mainMenu'); frames += 20) await step(page, 20);
+      expect(await page.evaluate(() => window.netstorm.options.language)).toBe('korean'); await step(page);
+      evidence.font = await page.evaluate(() => {
+        // 실제 Unicode 글꼴과 FontFace 상태를 읽는다. 글리프나 표시 크기를 덮어쓰지 않는다.
+        const fonts = window.netstorm._resources.fonts, font = fonts.unicodeFont({ font: 0, style: 0 }), glyph = font.glyph(0xac00), image = glyph.image;
+        let inkRows = 0;
+        // 갈무리11의 실제 잉크가 있는 행 수다.
+        for (let y = 0; y < image.height; y += 1) if (image.indices.subarray(y * image.width, (y + 1) * image.width).some((value) => value !== 0)) inkRows += 1;
+        return { unicode: Boolean(fonts.unicode), em: font.spec.emSize, advance: glyph.advance, inkRows,
+          faces: [...document.fonts].map((face) => ({ family: face.family, status: face.status })) };
+      });
+      expect(evidence.font.unicode).toBe(true); expect([evidence.font.em, evidence.font.advance, evidence.font.inkRows]).toEqual([12, 12, 11]);
+      expect(evidence.font.faces.some((face) => face.status === 'loaded' && face.family.replace(/["'\s]/g, '').toLowerCase().includes('galmuri11'))).toBe(true);
+      await inspect(page, 'korean-menu', evidence.rows); evidence.pointers.push(await pointer(page));
+      // 번역된 실제 메뉴 라벨을 원래 제어점으로 찾아 누른다.
+      for (const key of ['Options', 'Frame Rate', '60 FPS']) {
+        const label = await page.evaluate((text) => window.netstorm._resources.translate(text), key); await clickLabel(page, label);
+      }
+      expect(await page.evaluate(() => window.netstorm._settings.get('maxFPS'))).toBe(60); await inspect(page, 'korean-option-input', evidence.rows);
+      await installAllyAi(page, 'thewarbegins'); await page.evaluate(() => window.netstorm._beginCampaignFromDialog('TheWarBegins'));
+      // 첫 안내가 준비되면 멈춘다. Play Mission/다음 안내 단추는 누르지 않는다.
+      for (let frames = 0; frames < 1500; frames += 5) {
+        if (await page.evaluate(() => Boolean(window.netstorm._mainMenu.dialog?.content) && Boolean(window.netstorm._campaignWorld?.session().localConnectionReady()))) break;
+        await step(page, 5);
+      }
+      evidence.dialog = await page.evaluate(() => {
+        const app = window.netstorm, dialog = app._mainMenu.dialog;
+        // 원본 줄 끝 공백의 전진 폭을 제외한 실제 내용 폭을 검사한다.
+        const widths = dialog.body.softLines.map((line) => {
+          const last = line.fragments.at(-1), bytes = last?.bytes; if (!bytes) return line.width;
+          let end = bytes.length; while (end > 0 && bytes[end - 1] === 32) end -= 1;
+          return line.width - (end < bytes.length ? app._resources.fonts.measure(bytes.subarray(end), last.context).width : 0);
+        });
+        window.netstormDpiReference = { world: new WeakRef(app._campaignWorld), session: new WeakRef(app._campaignWorld.session()) };
+        return { style: dialog.content.styleText, width: dialog.body.width, maxContentWidth: Math.max(...widths), lines: widths.length,
+          tell: app._gameData.currentTell, mission: app._clientGuide.current()?.script.name, paused: app._gameClock.paused() };
+      });
+      expect(evidence.dialog.mission.toLowerCase()).toBe('thewarbegins'); expect(evidence.dialog.style).toMatch(/[가-힣]/);
+      expect(evidence.dialog.lines).toBeGreaterThan(0); expect(evidence.dialog.maxContentWidth).toBeLessThanOrEqual(evidence.dialog.width); expect(evidence.dialog.paused).toBe(true);
+      await inspect(page, 'korean-first-dialog', evidence.rows);
+      // 같은 첫 안내를 유지하고 두 와이드 배치로 전환한다.
+      for (const viewport of [{ width: 1366, height: 768 }, { width: 1280, height: 800 }]) {
+        await page.setViewportSize(viewport); await page.waitForFunction((size) => window.netstorm._layout.logicalWidth === size.width && window.netstorm._layout.logicalHeight === size.height, viewport); await step(page);
+        evidence.pointers.push(await pointer(page)); await inspect(page, `korean-resize-${viewport.width}`, evidence.rows);
+        expect(await page.evaluate(() => window.netstorm._gameData.currentTell)).toBe(evidence.dialog.tell);
+      }
+      await page.screenshot({ path: test.info().outputPath('korean-high-dpi-first-dialog.png') });
+      await page.evaluate(() => window.netstorm._leaveCampaignMission()); await step(page, 3);
+      evidence.left = await page.evaluate(() => !window.netstorm._campaignWorld && !window.netstorm._clientGuide.current()); expect(evidence.left).toBe(true); expect(evidence.errors).toEqual([]);
+    } finally {
+      const output = test.info().outputPath('high-dpi-korean.json'); fs.mkdirSync(path.dirname(output), { recursive: true }); fs.writeFileSync(output, JSON.stringify(evidence, null, 2) + '\n');
+    }
+  });
+});
