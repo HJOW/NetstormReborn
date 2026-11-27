@@ -24,7 +24,7 @@ public sealed partial class RawSurfaceStorage
     public void BindGumpType(UIntBox type)
     {
         ArgumentNullException.ThrowIfNull(type);
-        if (!UsesNativeTransmissionDevices() || _gumpForms is not null || _gumpType is not null)
+        if (!UsesNativeTransmissionDevices() || _gumpForms is not null || _containedUnpopExecutor is not null || _gumpType is not null)
             throw new ArgumentException("장기 Gump의 최초 Native TYPE 주소 필요", nameof(type));
         _gumpType = type;
     }

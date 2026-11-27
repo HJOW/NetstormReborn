@@ -72,4 +72,14 @@ public sealed class RawSurfaceGumpCurrentTests
         // 실제 월드 삭제 장치가 없으면 가상 삭제 경로는 성공을 꾸미지 않는다.
         Assert.Throws<InvalidOperationException>(() => forms.Destroy(second));
     }
+
+    /// <summary>기존 종속 해제기가 이전 TYPE 주소를 빌린 뒤에는 다른 주소 설치를 거부한다.</summary>
+    [Fact]
+    public void GumpTypeCannotBeInstalledAfterContainedTerminal()
+    {
+        var storage = Storage(); var terminal = storage.ContainedUnpopExecutor(); var type = new UIntBox { Value = 4 };
+        Assert.Throws<ArgumentException>(() => storage.BindGumpType(type));
+        Assert.Same(terminal, storage.ContainedUnpopExecutor());
+        Assert.Equal(3u, storage.ContainedGumpType.Value);
+    }
 }
