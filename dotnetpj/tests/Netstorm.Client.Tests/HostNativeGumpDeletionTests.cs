@@ -47,9 +47,11 @@ public sealed partial class HostPriestWorldLiveTests
         }
     }
 
-    /// <summary>일반 월드 자산 삭제도 같은 UI 등록표와 부착 Form을 중첩 정리한다.</summary>
-    [Fact]
-    public void NativeAssetDeletionReleasesAttachedGumpThroughActualUi()
+    /// <summary>기본 자산과 Player 삭제도 같은 UI 등록표와 부착 Form을 중첩 정리한다.</summary>
+    [Theory]
+    [InlineData(80u)]
+    [InlineData(152u)]
+    public void NativeAssetDeletionReleasesAttachedGumpThroughActualUi(uint type)
     {
         var (session, _, surface) = WorldDeletionRootScene(sharedNative: true);
         session.BuildWorldDeletionRootDevices();
@@ -61,13 +63,24 @@ public sealed partial class HostPriestWorldLiveTests
         using var ui = new HostGumpFormRuntime(surface.Storage, tree, (_, _) => false, () => changed++);
         using (var runtime = HostMissionRuntime.Create(session, surface.Storage))
         {
-            int parent = session.BuildPlayerWorldHooks().Create!(80, 2);
-            Assert.Equal(OriginalConstructors.BaseVtable, System.Buffers.Binary.BinaryPrimitives.ReadUInt32LittleEndian(session.Pool.Slot(parent)));
+            int parent = session.BuildPlayerWorldHooks().Create!(type, 2);
+            if (type == 80) Assert.Equal(OriginalConstructors.BaseVtable, System.Buffers.Binary.BinaryPrimitives.ReadUInt32LittleEndian(session.Pool.Slot(parent)));
+            if (type == 152)
+            {
+                // Player 전처리는 같은 현재 owner0의 기술 포인터와 접속 플래그를 갱신한다.
+                System.Buffers.Binary.BinaryPrimitives.WriteUInt32LittleEndian(session.PlayerRecords.AsSpan(0x9c), (uint)parent);
+                System.Buffers.Binary.BinaryPrimitives.WriteUInt32LittleEndian(session.PlayerRecords.AsSpan(0x50), 1);
+            }
             uint token = tree.AllocateNode(new GumpCreateNode()); tree.Factory.Construct(token, 0, 0, 0, 1);
             GumpCreateNode node = tree.Node(token)!;
             int form = checked((int)HostProductionFormBinding.Bind(surface.Storage, tree, token, (uint)parent));
             node.Object = (uint)parent; node.Form = (uint)form; node.Flags |= 0x40;
             Assert.True(session.DestroyResourceObject(parent, 0));
+            if (type == 152)
+            {
+                Assert.Equal(0u, System.Buffers.Binary.BinaryPrimitives.ReadUInt32LittleEndian(session.PlayerRecords.AsSpan(0x9c)));
+                Assert.Equal(0x100u, System.Buffers.Binary.BinaryPrimitives.ReadUInt32LittleEndian(session.PlayerRecords.AsSpan(0x50)));
+            }
             Assert.Equal(1, changed);
             Assert.NotEqual(0, session.Pool.Slot(parent)[11] & 1);
             Assert.NotEqual(0, session.Pool.Slot(form)[11] & 1);

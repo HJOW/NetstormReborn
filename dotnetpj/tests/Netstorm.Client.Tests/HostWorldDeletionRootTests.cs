@@ -38,6 +38,7 @@ public sealed partial class HostPriestWorldLiveTests
                 // 제품의 공통 삭제 경계를 준비하고 검사에서 예상하지 않은 UI·소리 효과는 거부한다.
                 owner.Storage.BindDeletionDevices(new() { RememberPlacement = (_, _, _) => throw new InvalidOperationException("예상 밖 배치 기억"), UnitLost = _ => throw new InvalidOperationException("예상 밖 손실 소리") });
                 owner.Storage.BindPostPopDevices(new() { AiNotice = (who, sid, added) => owner.NotifyAiObject(who, sid, added), LocalOwner = () => game.Player.BattleOwner, RecheckSelection = () => throw new InvalidOperationException("예상 밖 선택 갱신") });
+                owner.BindPlayerRecords(game.PlayerRecords);
                 owner.Storage.BindContentDevices(new() { Cursor = game.Cursor.PreviewBox, LocalOwner = game.Player.BattleOwnerBox, ContentType = game.ContentFormTypeBox,
                     Effects = new() { CancelCursor = () => game.Cursor.Preview = 0, LocalNotice = _ => { }, RemoteNotice = _ => { }, Sound = (_, _) => { } } });
             }
