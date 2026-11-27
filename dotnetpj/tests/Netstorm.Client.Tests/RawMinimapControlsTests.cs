@@ -304,6 +304,57 @@ public sealed class RawMinimapControlsTests
         }
         finally { session.ReleasePlayerRecordViews(); }
     }
+    /// <summary>두 세션의 교체 뒤 이전 세션의 지연 그래프 재결선이 현재 미니맵 알림을 빼앗지 않는다.</summary>
+    [Fact]
+    public void PreviousSessionGraphRebindCannotStealCurrentMinimapNotifications()
+    {
+        using var rig = new Rig();
+        rig.Storage.BindDisplayDevices(new() { View = () => new() { Zoom = 65536 }, Suppressed = () => false, Invalidate = (_, _) => { } });
+        var first = new HostSession(new Kernel(), new GameRandom(17), new CrtRandom(23), pool: rig.Storage.Pool);
+        var second = new HostSession(new Kernel(), new GameRandom(19), new CrtRandom(29), pool: rig.Storage.Pool);
+        try
+        {
+            _ = HostPostPopRuntimeTests.Build(first, rig.Storage);
+            _ = first.BuildPlayerWorldHooks();
+            rig.Mini.BindStorageExecutors();
+            first.BindMinimapNotifications(rig.Mini);
+            rig.Mini.UnbindWorld();
+            _ = HostPostPopRuntimeTests.Build(second, rig.Storage);
+            _ = second.BuildPlayerWorldHooks();
+            rig.Mini.BindStorageExecutors();
+            second.BindMinimapNotifications(rig.Mini);
+            rig.Mini.Refresh();
+            // 이전 세션이 뒤늦게 지형 실행기를 교체해도 현재 세션의 대여와 전체 갱신을 건드리지 않는다.
+            first.BuildWorldGraphDevices(rig.Storage.Types);
+            first.WireTerrainPostPopGraph();
+            Assert.Equal(0U, rig.Gameplay.MapRevision.Value);
+            rig.Storage.Types[74].Flags2 = 0x4002;
+            rig.Storage.Types[74].FootX = rig.Storage.Types[74].FootY = 1;
+            rig.Storage.Shapes[74].Loaded = true;
+            rig.Storage.Shapes[74].FrameCount = 1;
+            rig.Storage.Shapes[74].Frames.Add(new() { Width = 16, Height = 11, CellWidth = 1, CellHeight = 1 });
+            int sid = rig.Storage.FactoryExecutor().Create(74, SidAllocation.Client);
+            var firstPop = Assert.IsType<RawPop>(typeof(HostSession).GetField("_terrainPop", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(first));
+            var firstUnpop = Assert.IsType<RawUnpop>(typeof(HostSession).GetField("_terrainUnpop", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(first));
+            var secondPop = Assert.IsType<RawPop>(typeof(HostSession).GetField("_terrainPop", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(second));
+            var secondUnpop = Assert.IsType<RawUnpop>(typeof(HostSession).GetField("_terrainUnpop", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(second));
+            Assert.Equal(RawPopResult.Registered, firstPop.Pop(sid, rig.Storage.Types[74], 1, 1, 120, 80));
+            firstUnpop.Unpop(sid, rig.Storage.Types[74]);
+            Assert.Equal(0, rig.State.Count);
+            Assert.Equal(RawPopResult.Registered, secondPop.Pop(sid, rig.Storage.Types[74], 1, 1, 120, 80));
+            Assert.True(rig.State.Count > 0);
+            rig.Mini.Refresh();
+            secondUnpop.Unpop(sid, rig.Storage.Types[74]);
+            Assert.True(rig.State.Count > 0);
+            rig.Mini.UnbindWorld();
+        }
+        finally
+        {
+            first.ReleasePlayerRecordViews();
+            second.ReleasePlayerRecordViews();
+        }
+    }
+
     /// <summary>Capture/Idle 중 닫아도 같은 공통 수명이 둘을 반납하고 독립 bitmap은 남긴다.</summary>
     [Fact]
     public void CloseAndReopenKeepBitmapAndSharedWordButReleaseCaptureIdleAndOwnedStrings()
