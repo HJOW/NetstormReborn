@@ -2126,7 +2126,8 @@ public sealed partial class HostSession
         });
         var paintHooks = new RegionPaintHooks
         {
-            SetOwner = SetWorldObjectOwner,
+            // 지역 경계의 에지 팜도 같은 실제 가상 소유자 분배를 거쳐 중립을 유지한다.
+            SetOwner = RawAssetOwner.MakeAssetOwnerDispatch(Pool, BridgeState, TerrainBookkeeping.ProductionDirtyBox, SetWorldObjectOwner),
             BoundaryAt = (x, y, type) => FindTerrainObjectAt(types, x, y, type),
             RegionAt = (x, y) => terrain.RegionAt((int)x, (int)y),
         };

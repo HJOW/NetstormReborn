@@ -1,6 +1,8 @@
 using Netstorm.Assets;
 using Netstorm.Client.Host;
 using Netstorm.Core.Original;
+using Netstorm.Core.Simulation;
+using System.Buffers.Binary;
 
 namespace Netstorm.Client.Tests;
 
@@ -8,6 +10,29 @@ namespace Netstorm.Client.Tests;
 // 근거: cpppj RawCampaignSession.cpp 1266~1267행의 ownership 조립이다.
 public sealed class HostSessionRegionOwnershipTests
 {
+    /// <summary>지역 도장이 실제 에지 팜 가상 소유자를 사용해 중립을 보존한다.</summary>
+    [Fact]
+    public void RegionPaintKeepsEdgeFarmNeutral()
+    {
+        (HostSession session, IReadOnlyList<OriginalTypeRecord> types) = BuildRegionScene();
+        session.BuildRegionOwnershipDevices(types, () => 1u);
+        var hash = Assert.IsType<RawSquidHash>(session.TerrainPopHash);
+        int ground = session.Pool.Allocate(SidAllocation.Client), edge = session.Pool.Allocate(SidAllocation.Client);
+        int frame = Enumerable.Range(0, session.WorldFrames[97].Codes.Count)
+            .First(index => session.WorldFrames[97].Codes[index].Side == (byte)'A' && session.WorldFrames[97].Codes[index].Variant == (byte)'A');
+        Span<byte> terrain = session.Pool.AllocatedBytes(ground); terrain.Clear(); terrain[10] = 97;
+        BinaryPrimitives.WriteSingleLittleEndian(terrain[14..], 10f); BinaryPrimitives.WriteSingleLittleEndian(terrain[18..], 10f);
+        BinaryPrimitives.WriteInt32LittleEndian(terrain[36..], frame);
+        Span<byte> farm = session.Pool.AllocatedBytes(edge); farm.Clear(); farm[10] = 121;
+        BinaryPrimitives.WriteUInt32LittleEndian(farm, 0x50a8e8u);
+        BinaryPrimitives.WriteSingleLittleEndian(farm[14..], 9f); BinaryPrimitives.WriteSingleLittleEndian(farm[18..], 10f);
+        BinaryPrimitives.WriteInt32LittleEndian(farm[36..], frame);
+        hash.Bucket(0, 10f, 10f) = (ushort)ground; hash.Bucket(1, 9f, 10f) = (ushort)edge;
+        session.RegionPaint.Paint(new RegionOwnershipPaint(10, 10, 1, 0));
+        Assert.Equal(1, session.Pool.Slot(ground)[34]);
+        Assert.Equal(0, session.Pool.Slot(edge)[34]);
+    }
+
     /// <summary>실제 자료로 지역 투표 장면을 만든다. 지형·요새 장치를 같은 인스턴스로 연결한다.</summary>
     /// <returns>세션과 같은 실제 TYPE 표다.</returns>
     private static (HostSession Session, IReadOnlyList<OriginalTypeRecord> Types) BuildRegionScene()
