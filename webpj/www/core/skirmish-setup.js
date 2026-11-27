@@ -278,7 +278,8 @@ export function buildSkirmishLaunch(settings, randomValue) {
     const pattern = bigPatterns.length ? bigPatterns[random.next() % bigPatterns.length] : 0;
     const rotation = random.next() & 3, seed = random.next() & 0xff;
     launch.central.set([(pattern | (rotation << 6)) & 0xff, 0x09, 0x00, seed, 0x00, 0x00]);
-    let script = '[Header]\nmissionType="Tutorial"\n\nmissionNumber=1\nmoreGeysers=1\nrandGeysers=1\n\nmyStartMoney=5000\nmyTech="all"\n';
+    // 일반 all 목록은 group10을 제외하므로 스커미시의 Outpost 기술만 명시해 준다. 캠페인/데모 해석은 바꾸지 않는다.
+    let script = '[Header]\nmissionType="Tutorial"\n\nmissionNumber=1\nmoreGeysers=1\nrandGeysers=1\n\nmyStartMoney=5000\nmyTech="all;outpost"\n';
     if (settings.bans.length) script += `techAllowed="deny${settings.bans.map((type) => `;${type}`).join('')}"\n`;
     const allies = [];
     // 플레이어와 같은 편인 AI 소유자를 모은다.
@@ -291,7 +292,7 @@ export function buildSkirmishLaunch(settings, randomValue) {
         for (let other = 1; other < 2 + settings.aiCount; other += 1) {
             if (other === owner || (other === 1 ? ally : (other >= 2 && settings.ai[slotOf(other)].ally === ally))) same.push(other);
         }
-        script += `\nai${owner}Name="Computer #${owner - 1}"\nai${owner}Tech="all"\nai${owner}StartMoney=5000\n`;
+        script += `\nai${owner}Name="Computer #${owner - 1}"\nai${owner}Tech="all;outpost"\nai${owner}StartMoney=5000\n`;
         script += `ai${owner}GeyserAttachments=3\nai${owner}Collectors=6\nai${owner}StuffRefreshRate=1\nai${owner}TimeBetweenMoves=2\n`;
         script += `ai${owner}BridgeDrawRate=1\nai${owner}AllyList="${same.join(';')}"\n`;
     }

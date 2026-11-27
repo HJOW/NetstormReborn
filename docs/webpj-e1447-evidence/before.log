@@ -1,0 +1,30 @@
+✖ 스커미시 Outpost: 실제 group10은 일반 all에서 제외되고 각 참가자의 시작 목록에만 명시된다 (7.0145ms)
+ℹ tests 1
+ℹ suites 0
+ℹ pass 0
+ℹ fail 1
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3060.2155
+
+✖ failing tests:
+
+test at webpj\extracted\e1447-outpost\outpost-technology.test.mjs:16:1
+✖ 스커미시 Outpost: 실제 group10은 일반 all에서 제외되고 각 참가자의 시작 목록에만 명시된다 (7.0145ms)
+  AssertionError [ERR_ASSERTION]: myTech
+  
+  0 !== 1
+  
+      at TestContext.<anonymous> (file:///H:/Workspace/git/NetstormReborn/webpj/extracted/e1447-outpost/outpost-technology.test.mjs:19:190)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: 0,
+    expected: 1,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

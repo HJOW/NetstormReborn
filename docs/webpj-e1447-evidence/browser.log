@@ -1,0 +1,3 @@
+{"name":"before","technology":[false,false],"entries":[],"errors":[]}
+{"name":"allowed","technology":[true,true],"entries":[{"text":"Build Outpost for 600~[IfortGump.3]","command":33554528,"parameter":8272536,"include":true,"enabled":true}],"errors":[]}
+{"name":"banned","technology":[true,true],"entries":[],"errors":[]}

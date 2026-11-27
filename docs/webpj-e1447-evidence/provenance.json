@@ -1,0 +1,56 @@
+{
+  "unit": "WB04-E1447",
+  "recordedAt": "2026-11-27T12:06:10.690607+00:00",
+  "sourceHead": "4f4e752f006c84071ee3881068c4ad7a4a6f465a",
+  "sourceSha256": {
+    "webpj/www/core/skirmish-setup.js": "d0e2541d70a1ba9a087e0776c6486b16a85f3bde7839de911545e42f6fef2202",
+    "webpj/tests/skirmish-outpost-technology.test.mjs": "16ac43de61dd62e849e1f789375916a630cbf3d4755290b9a1c8aa1986724fac",
+    "webpj/www/dist/netstorm.bundle.js": "ea3c2fae956ba3b0348f1278aa3963ec3c54d6373c538a12144b0a4eba7e4f78"
+  },
+  "candidateEqualsMain": true,
+  "mainCases": [
+    {
+      "scenario": {
+        "name": "allowed-main",
+        "candidate": false,
+        "ban": false
+      },
+      "actual": {
+        "time": 9.325,
+        "technology": [
+          true,
+          true
+        ],
+        "entries": [
+          {
+            "text": "Build Outpost for 600~[IfortGump.3]",
+            "command": 33554528,
+            "parameter": 8272536,
+            "include": true,
+            "enabled": true
+          }
+        ],
+        "activeAI": true
+      },
+      "errors": []
+    },
+    {
+      "scenario": {
+        "name": "banned-main",
+        "candidate": false,
+        "ban": true
+      },
+      "actual": {
+        "time": 9.325,
+        "technology": [
+          true,
+          true
+        ],
+        "entries": [],
+        "activeAI": true
+      },
+      "errors": []
+    }
+  ],
+  "scope": "시작 기술·실제 메뉴 생성·금지. 실제 건설 완료/Outpost 전체 연결은 별도 미완료."
+}
