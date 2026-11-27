@@ -1,0 +1,96 @@
+{
+  "unit": "WB04-E1484",
+  "phase": "complete",
+  "head": "7e491743b79c7b6e2ddd09ee1500f35df6f6a389",
+  "recordedAt": "2026-11-27T20:45:21.559968+00:00",
+  "kernel": "6.18.58.1-microsoft-standard-WSL2",
+  "node": "v24.21.0",
+  "nodeExecutable": "/home/buzz/.nvm/versions/node/v24.21.0/bin/node",
+  "nodeSha256": "7fde7b8afa198da66257f42ee2001d874c7355631e6d1579a5fb5ef1f246df4c",
+  "browserExecutable": "/home/buzz/.cache/ms-playwright/chromium-1248/chrome-linux64/chrome",
+  "browserSha256": "377a9fc07b495c3b8d0ab8ec1fdfd153641759f9756fea34d8dfce4de82f5025",
+  "nativeRoot": "/tmp/webpj-e1484-mods-fq59so2y",
+  "copiedFiles": 2337,
+  "command": [
+    "xvfb-run",
+    "-a",
+    "/home/buzz/.nvm/versions/node/v24.21.0/bin/node",
+    "node_modules/playwright/cli.js",
+    "test",
+    "--config=playwright.linux-mods.cjs",
+    "--project=chromium",
+    "--workers=1",
+    "--headed",
+    "--reporter=json",
+    "--output=/mnt/h/Workspace/git/NetstormReborn/webpj/extracted/e1484-linux-mods"
+  ],
+  "audio": "native AudioContext standard sink none in top-level document only; game audio retained",
+  "runnerPid": 8915,
+  "childPid": 8926,
+  "exitCode": 0,
+  "changed": [],
+  "elapsedSeconds": 139.62851314501313,
+  "results": {
+    "startTime": "2026-11-27T20:45:23.805Z",
+    "duration": 126865.074,
+    "expected": 8,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "periodAfter": {
+    "node26": 2,
+    "node22": 7
+  },
+  "ownedRemainingAtEnd": [],
+  "artifacts": {
+    "webpj/extracted/e1484-linux-mods.py": {
+      "bytes": 5586,
+      "sha256": "c098a24bee8128b45c954d844e6a1910e1a35d94615d783123dd4834229cb819"
+    },
+    "webpj/extracted/e1484-linux-mods-state.json": {
+      "bytes": 292280,
+      "sha256": "6d7f454ad8c6d6e776463c28789c0a6c4ff86e302051ccc5fe728cd526ba0adc"
+    },
+    "webpj/extracted/e1484-linux-mods.json": {
+      "bytes": 30292,
+      "sha256": "4237c53180c36db3313297c96ea951e035bb763a2b76c224d08859684af93112"
+    },
+    "webpj/extracted/e1484-linux-mods.log": {
+      "bytes": 1186,
+      "sha256": "ff9765485d7006d8bfb346c25d9d3f14d6f6fbca807022f9a2cc577743b871de"
+    },
+    "webpj/extracted/e1484-linux-runner.log": {
+      "bytes": 336,
+      "sha256": "3499765a4211b91fe36b882db9267bbdb0a524fcd76562047e8185ee0f688064"
+    },
+    "webpj/extracted/e1484-linux-mods/linux-mods-한국어-좁은-화면에서-글꼴-줄바꿈-키보드-모달과-앱-반납을-유지한다-chromium/korean-mod-panel.png": {
+      "bytes": 75236,
+      "sha256": "28748548bd118efa76eb81c6511f6ca206abc7530c8af93679a429a15377433c"
+    },
+    "docs/webpj-e1484-evidence/results.json": {
+      "bytes": 28963,
+      "sha256": "a299d85f35d6acab9f2f295e0528a1a1311a3988fe0a504d364853d87b0eb04d"
+    },
+    "docs/webpj-e1484-evidence/korean-mod-panel.png": {
+      "bytes": 75236,
+      "sha256": "28748548bd118efa76eb81c6511f6ca206abc7530c8af93679a429a15377433c"
+    },
+    "webpj/www/dist/netstorm.bundle.js": {
+      "bytes": 5857520,
+      "sha256": "dfb91187341ed2e0395d8db2aa90e9843868e2c9780b172a43c50758536dece6"
+    }
+  },
+  "inputNote": "전체 복사 입력2337개의 원시 SHA-256은 final state의 sourceFiles에 있다. 복사 시 원문/사본 일치와 종료 시 원문 변경0을 확인했다. 게임/기존 검사/공통 기대값/번들은 수정하지 않았다.",
+  "osRelease": "PRETTY_NAME=\"Ubuntu 26.04.1 LTS\"\nNAME=\"Ubuntu\"\nVERSION_ID=\"26.04\"\nVERSION=\"26.04.1 LTS (Resolute Raccoon)\"\nVERSION_CODENAME=resolute\nID=ubuntu\nID_LIKE=debian\nHOME_URL=\"https://www.ubuntu.com/\"\nSUPPORT_URL=\"https://help.ubuntu.com/\"\nBUG_REPORT_URL=\"https://bugs.launchpad.net/ubuntu/\"\nPRIVACY_POLICY_URL=\"https://www.ubuntu.com/legal/terms-and-policies/privacy-policy\"\nUBUNTU_CODENAME=resolute\nLOGO=ubuntu-logo\n",
+  "nativeGeneratedFiles": {
+    "/tmp/webpj-e1484-mods-fq59so2y/webpj/e2e/linux-mods.spec.cjs": {
+      "bytes": 517,
+      "sha256": "dfeb13e33194c648b69e282a3e0dd20a888c6e7f9d4ada18bcb691e06fe08723"
+    },
+    "/tmp/webpj-e1484-mods-fq59so2y/webpj/playwright.linux-mods.cjs": {
+      "bytes": 300,
+      "sha256": "745d810668b60421a3cc3629bd65863c6374f35ad3abc5bc810ac17ab4f81070"
+    }
+  }
+}

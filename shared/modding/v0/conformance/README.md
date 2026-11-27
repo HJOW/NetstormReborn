@@ -11,3 +11,5 @@ E1480에서 실제 Chromium/Firefox는`cos(0.1)=3fefd712f9a817c1`, 초기 Node26
 E1480 WB는 실제 아군AI1-1의 자동 사건/입력/시계 장벽과 Chromium/Firefox의 공통5경계·285수학 입력을 확인했다. DN 구현/양쪽 일치는 여전히 미검증이다. 별도 동시 확대 실행의 Worker timeLimit1/2 실패는 보존하고 한도를 늘리지 않았다. 요청 phase/시간 계측을 추가한 뒤 두브라우저순차2/2이며 이전 부하/시간초과 원인의 해결로 세지 않는다.
 
 E1483의 설치/관리 경계는 WB의 `mod-package-store.test.mjs`·`mod-manager.test.mjs`와 실제 `mod-panel.spec.js`에서 검사한다. 새 설치/명시 교체는 꺼짐, 설치 중 entry 비실행, 다른 탭/저장 오류의 원문 보존, 다음 미션 적용을 유지한다. 옛 실행의 늦은 오류는 직렬 쓰기 안에서 같은 정규화 패키지인지 확인하며 교체본/삭제를 덮지 않는다. DN MOD-5도 [같은 규칙](../../../../docs/webpj-mod-options-20261128.md)을 적용해야 하지만 DN 구현/실행은 중지 상태다.
+
+E1484는 같은 최종 번들/공통 입력의 Linux GUI Chromium에서5경계/285수학 벡터·권한/CSP/시간 한도·관리/실제아군AI1-1/Reset All을8/8로 확인했다([환경/원문](../../../../docs/webpj-mod-linux-gui-20261128.md)). WB의 추가 플랫폼 근거이며 DN 실행이나 양쪽 적합성 완료는 아니다.
