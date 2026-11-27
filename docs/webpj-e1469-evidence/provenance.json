@@ -1,0 +1,44 @@
+{
+  "unit": "WB04-E1469",
+  "recordedAt": "2026-11-27T16:16:33.859055+00:00",
+  "sourceHead": "141ebd137757cec7f13c93a6df7a195270c4b537",
+  "node": "v26.13.0",
+  "nodeExecutable": "C:\\Program Files\\nodejs\\node.exe",
+  "nodeExecutableSha256": "14319838b3f355e0398c13569a90270bce4fc68f25189f58c59b03dadae0e6d5",
+  "command": "node --test --test-concurrency=2 tests/*.test.mjs",
+  "files": 3548,
+  "changed": [],
+  "newlinesOnly": [],
+  "results": {
+    "tests": 6934,
+    "pass": 6934,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "durationMs": 944426.6604
+  },
+  "nodeExit": 0,
+  "artifacts": [
+    {
+      "path": "webpj/extracted/webpj-e1469-freeze.json",
+      "bytes": 796175,
+      "sha256": "8f582a1a942d0b3a203ae193b5313d4207b8c0224f90578fede02887663eda66"
+    },
+    {
+      "path": "webpj/extracted/webpj-e1469-freeze-check.json",
+      "bytes": 369,
+      "sha256": "283f02e1636209c4c7a4015616b6ebfad969feb61152dfe31bc6ffba2728c4c8"
+    },
+    {
+      "path": "webpj/extracted/webpj-e1469-node26.log",
+      "bytes": 913681,
+      "sha256": "cf6435396fef280996b32e8a7a51304f5e7b979cb4bdd9fd533b0e1e193daa80"
+    }
+  ],
+  "periodAfterRun": {
+    "v26": 0,
+    "v22": 4
+  },
+  "sourceFreezeReleased": true
+}
