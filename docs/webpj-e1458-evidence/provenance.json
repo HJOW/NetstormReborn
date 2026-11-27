@@ -1,0 +1,53 @@
+{
+  "unit": "WB04-E1458",
+  "sourceHead": "e780de05cb0a358322ef662dccf52145438c4e03",
+  "node": "v26.13.0",
+  "nodeExecutableSha256": "14319838b3f355e0398c13569a90270bce4fc68f25189f58c59b03dadae0e6d5",
+  "command": "node --test --test-concurrency=2 tests/*.test.mjs",
+  "results": {
+    "tests": 6932,
+    "pass": 6932,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "durationMs": 945670.3914
+  },
+  "files": 3546,
+  "changed": [],
+  "newlineOnly": [],
+  "runnerElapsedSeconds": 954.2179500999919,
+  "sourceFreezeReleased": true,
+  "newBehaviorIncluded": "E1454의7개검사+E1456의2개검사. E1457은문서만병행.",
+  "periodAfterCarriedE1457": {
+    "v26": 1,
+    "v22": 5
+  },
+  "rawArtifacts": [
+    {
+      "path": "webpj/extracted/webpj-e1458-freeze.json",
+      "bytes": 795714,
+      "sha256": "ffa57d35fe44e695d8f2eedab50bacdae392bfa672d99be1f9ac9f15a016d510"
+    },
+    {
+      "path": "webpj/extracted/webpj-e1458-freeze-check.json",
+      "bytes": 370,
+      "sha256": "2af969481907659c56614b8e84b20fcecb6fce35881a192321b6e4436a8a0d96"
+    },
+    {
+      "path": "webpj/extracted/webpj-e1458-node26.log",
+      "bytes": 913404,
+      "sha256": "f3c839567c089ec66ed352d9eb2b72f4bbed8404719e1cefbe0f6cb07f0ba95d"
+    },
+    {
+      "path": "webpj/extracted/e1458-run-state.json",
+      "bytes": 796,
+      "sha256": "3918c7b02fda1684bf67bc5b290d068fb39c9127d53085507034b2dd4cb3c5b3"
+    },
+    {
+      "path": "webpj/extracted/e1458-full.py",
+      "bytes": 6135,
+      "sha256": "02ac5bac392887f625e6471fe656b4ab5e93ce100311fe14e3cc9deb4bc719cb"
+    }
+  ]
+}
