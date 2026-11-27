@@ -1,9 +1,11 @@
 // 미션 HUD 생산 덱 틀 부착과 DN-MP-01 우클릭 도움말을 검증한다.
 // 2026-11-26 1.079에서 R5-4c2용으로 추가했다.
+using System.Buffers.Binary;
 using Netstorm.Assets;
 using Netstorm.Client.Display;
 using Netstorm.Client.Gump;
 using Netstorm.Client.Host;
+using Netstorm.Client.Player;
 using Netstorm.Core.Original;
 
 namespace Netstorm.Client.Tests;
@@ -56,7 +58,7 @@ public sealed class HostMissionProductionDeckTests
             var assets = new HostAssetTables(startup, Storage); Text.BindPictures(new(assets.TypeTable, assets.Definitions, new(assets.ShapeImage)), () => SpriteColorMapBuilder.BuildSpriteColorMaps(Screen.LogicalPalette).Shadow, startup.Configuration); Menus = new(Menu, Html, Text, startup, Screen, (_, _) => { }); Menus.BindInput(new(), _ => { }, (_, _) => { }); Globals.BackgroundType = Menu.BackgroundType;
         }
         /// <summary>실제 원문 입력/효과와 우클릭 도움말을 연결한다.</summary>
-        public HostProductionWindows NewPanel()
+        public HostProductionWindows NewPanel(Func<uint, uint, uint>? bindForm = null, Action? synchronize = null)
         {
             var tree = Menu.Tree;
             Help = new(tree.Create, new GumpHelpState(), new GumpHelpHooks
@@ -73,10 +75,52 @@ public sealed class HostMissionProductionDeckTests
             return Panel = new(tree, Text, new() { Storage = Storage, Gameplay = Game, Players = Game.PlayerRecords, Options = Options, Sp = Sp }, Globals, new()
             {
                 Now = () => Wall, Sound = _ => { }, Tell = _ => { }, ConfigInt = (_, fallback) => fallback, Translate = value => value, Changed = () => { }, BaseHandle = (token, code, first, second) => help.Handle(token, code, first, second), Redraw = (_, _) => { }, ClosePopups = () => Menus.RequestClosePopups(() => { }), MenuInstances = () => Menus.State.Instances,
+                BindForm = bindForm, Synchronize = synchronize,
             });
         }
         /// <summary>자기 생산 세대와 실제 기존 UI를 각각 반납한다.</summary>
         public void Dispose() { Panel?.Dispose(); Html.CloseAll(); }
+    }
+
+    /// <summary>생산 사건은 현재 기술 부모로 두 격자를 연결한 뒤 동기화를 실행한다.</summary>
+    [Fact]
+    public void ProductionModeEventBindsBothGridsBeforeSynchronization()
+    {
+        using var s = new Scene();
+        ClientPlayerRuntime.Initialize(s.Game);
+        s.Game.Player.PlayerKnown = 1; s.Game.Player.BattleOwner = 1;
+        BinaryPrimitives.WriteUInt32LittleEndian(s.Game.PlayerRecords.Records.Span[(180 + 0x9c)..], 117);
+        var calls = new List<(uint Token, uint Parent)>();
+        HostProductionWindows? panel = null; ProductionRootNode? root = null; int synchronized = 0;
+        s.Menu.Tree.LifetimeHooks.DeleteForm = (_, _) => { };
+        panel = s.NewPanel((token, parent) => { calls.Add((token, parent)); return unchecked((uint)(500 + calls.Count)); }, () =>
+        {
+            Assert.Equal(2, calls.Count);
+            Assert.Equal(501u, panel!.Node(root!.BridgeGrid)!.Form);
+            Assert.Equal(502u, panel.Node(root.TeleportGrid)!.Form);
+            synchronized++;
+        });
+        uint token = panel.Construct(); root = Assert.IsType<ProductionRootNode>(panel.Node(token));
+        Assert.Equal(0u, panel.Handle(token, 0x0200003d, 1, 0));
+        Assert.Equal(new[] { (root.BridgeGrid, 117u), (root.TeleportGrid, 117u) }, calls);
+        Assert.Equal(1, synchronized);
+        Assert.Equal(117u, panel.Node(root.BridgeGrid)!.Object);
+        Assert.Equal(117u, panel.Node(root.TeleportGrid)!.Object);
+    }
+
+    /// <summary>월드가 없는 생산 사건도 실제 Client 동기화로 현재 Deck을 마련한다.</summary>
+    [Fact]
+    public void ProductionModeEventRunsActualWorldlessSynchronization()
+    {
+        using var s = new Scene();
+        ClientPlayerRuntime.Initialize(s.Game);
+        s.Game.Player.TemplateOwner = 2;
+        var context = new ProductionControlContext { Storage = s.Storage, Gameplay = s.Game, Players = s.Game.PlayerRecords, Options = s.Options, Sp = s.Sp };
+        var panel = s.NewPanel(synchronize: () => ClientProductionSync.SynchronizeProductionControlContents(context));
+        uint token = panel.Construct();
+        Assert.Equal(0u, BinaryPrimitives.ReadUInt32LittleEndian(s.Game.PlayerRecords.Records.Span[(2 * 180 + 0x68)..]));
+        Assert.Equal(0u, panel.Handle(token, 0x0200003d, 1, 0));
+        Assert.NotEqual(0u, BinaryPrimitives.ReadUInt32LittleEndian(s.Game.PlayerRecords.Records.Span[(2 * 180 + 0x68)..]));
     }
 
     /// <summary>덱 틀 8노드·예산 HELP·생산창 HELP와 우클릭 메뉴를 확인한다.</summary>

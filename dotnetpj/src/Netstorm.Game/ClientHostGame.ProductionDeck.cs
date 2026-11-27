@@ -77,7 +77,7 @@ public sealed partial class ClientHostGame
             ClosePopups = () => _htmlMenus?.RequestClosePopups(() => _menuDirty = true),
             MenuInstances = () => _htmlMenus?.State.Instances ?? throw new InvalidOperationException("생산 구분선 실제 메뉴 수 미연결"),
             BindForm = (token, parent) => HostProductionFormBinding.Bind(_surfaceGlobals.Storage, tree, token, parent),
-            Synchronize = () => throw new InvalidOperationException("생산 동기화 실제 본체는 R6에서 잇는다"),
+            Synchronize = () => ClientProductionSync.SynchronizeProductionControlContents(context),
             UpdateContents = () => throw new InvalidOperationException("생산 내용물 실제 갱신은 R6에서 잇는다"),
             Maintenance = (_, _) => throw new InvalidOperationException("생산 유지 실제 본체는 R6에서 잇는다"),
             CancelCursor = () => throw new InvalidOperationException("생산 커서 실제 취소는 R6 입력에서 잇는다"),
