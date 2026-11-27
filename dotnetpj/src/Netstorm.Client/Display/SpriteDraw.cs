@@ -14,7 +14,7 @@ public enum SpriteShapeMode
     Abstract,
     /// <summary>건설·죽음 표시 색 표를 쓴다.</summary>
     Dead,
-    /// <summary>소스 그림자 색 표를 쓴다.</summary>
+    /// <summary>그림 마스크 아래 화면색에 그림자 표를 쓴다.</summary>
     Shadow,
 }
 

@@ -31,6 +31,21 @@ public sealed class VfxTransformTests
         Assert.Equal(plain, scaled);
     }
 
+    /// <summary>명시 변환은 소스 255와 투명을 건너뛰고 대상 색을 치환하며 결과 255도 저장한다.</summary>
+    [Fact]
+    public void TranslatedUsesDestinationAndPreservesMask()
+    {
+        var image = new IndexedImage { Width = 2, Height = 2, Indices = [3, 255, 7, 8], Opacity = [255, 255, 0, 255] };
+        var frame = new ShapeFrame { Rect = new ShapeRect(0, 0, 1, 1) };
+        byte[] pixels = [10, 11, 12, 13];
+        byte[] colors = Enumerable.Range(0, 256).Select(i => (byte)i).ToArray();
+        colors[10] = 40;
+        colors[13] = 255;
+        colors[3] = 60;
+        VfxTransform.DrawTranslatedVfxImage(pixels, 2, 2, image, frame, new(0, 0), 0x10000, 0x10000, new(0, 0, 2, 2), colors);
+        Assert.Equal(new byte[] { 40, 11, 12, 255 }, pixels);
+    }
+
     /// <summary>2배 확대는 원본 기울기 누적대로 샘플링한다(픽셀 중심 0x8000 시작·0x8000 간격).</summary>
     [Fact]
     public void DoubleScaleRepeatsPixels()

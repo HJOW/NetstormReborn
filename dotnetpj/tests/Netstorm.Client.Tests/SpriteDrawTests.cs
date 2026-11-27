@@ -180,7 +180,7 @@ public sealed class SpriteDrawTests
         Assert.Equal(9, pixels[28]); Assert.Equal(0, pixels[29]); Assert.Equal(255, pixels[30]);
     }
 
-    /// <summary>소유자 색·명시 그림자는 소스 색을 치환하며 투명·클립·소유자 문맥 오류를 유지한다.</summary>
+    /// <summary>소유자 색은 소스에 적용하며 한 행인 명시 변환은 원본 기하 관문에서 생략한다.</summary>
     [Fact]
     public void PixelModesTransparencyClip()
     {
@@ -203,9 +203,26 @@ public sealed class SpriteDrawTests
         hooks.Shape(new(70, 0, new(1, 1), SpriteShapeMode.Owner));
         Assert.Equal(10, pixels[10]); Assert.Equal(9, pixels[11]);
         hooks.Shape(new(70, 0, new(1, 1), SpriteShapeMode.Shadow));
-        Assert.Equal(40, pixels[10]); Assert.Equal(39, pixels[11]); Assert.Equal(9, pixels[9]);
+        Assert.Equal(10, pixels[10]); Assert.Equal(9, pixels[11]); Assert.Equal(9, pixels[9]);
         hooks.Shape(new(70, 0, new(4, 2), SpriteShapeMode.Dead)); Assert.Equal(9, pixels[21]);
         Assert.Throws<ArgumentOutOfRangeException>(() => hooks.Shape(new(70, 1, new(1, 1), SpriteShapeMode.Plain)));
+    }
+
+    /// <summary>실제 SHP 디코딩부터 그림자 합성까지 대상 화면색과 255 마스크를 확인한다.</summary>
+    [Fact]
+    public void PixelTargetTransformsDestinationUnderShapeMask()
+    {
+        byte[] raw = new byte[48];
+        Put(raw, 0, 0x30312e31); Put(raw, 4, 1); Put(raw, 8, 16);
+        Put(raw, 32, 1); Put(raw, 36, 1);
+        new byte[] { 5, 3, 255, 0, 5, 7, 8, 0 }.CopyTo(raw, 40);
+        var database = new ShapeDatabase(raw);
+        byte[] pixels = [10, 11, 12, 13];
+        byte[] colors = Enumerable.Range(0, 256).Select(i => (byte)i).ToArray();
+        colors[10] = 40; colors[12] = 42; colors[13] = 255; colors[3] = 60;
+        var target = new SpritePixelTarget(pixels, 2, 2, new(0, 0, 2, 2), _ => new(database, 0), (_, _, _) => colors);
+        target.Hooks().Shape!(new(70, 0, new(0, 0), SpriteShapeMode.Shadow));
+        Assert.Equal(new byte[] { 40, 11, 42, 255 }, pixels);
     }
 
     /// <summary>선 끝점·역순·클립 및 half-open fill의 빈/역전 영역을 검사한다.</summary>

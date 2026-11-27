@@ -6,7 +6,7 @@ namespace Netstorm.Client.Display; // 원본 인덱스 화면의 픽셀 출력 �
 public readonly record struct PreviewShapeBinding(ShapeDatabase Database, int Block);
 
 /// <summary>실제 SHP 합성·직교 선택선·막대를 잘린 8비트 화면에 출력한다.
-/// 근거: cpppj/src/client/SpriteDraw.cpp 의 SpritePixelTarget. 그림자도 대상이 아닌 소스 색을 치환한다.</summary>
+/// 근거: cpppj/src/client/SpriteDraw.cpp 의 SpritePixelTarget. 명시 변환 표는 그림 마스크 아래 대상 화면 색에 적용한다.</summary>
 public sealed class SpritePixelTarget
 {
     /// <summary>원본 팔레트 인덱스 출력 버퍼.</summary>
@@ -54,7 +54,7 @@ public sealed class SpritePixelTarget
         StatusProcesses = rules?.StatusProcesses,
     };
 
-    /// <summary>투명 RLE 마스크를 보존하며 원색 또는 명시/현재 소스 색 표로 합성한다.</summary>
+    /// <summary>원색·소유자색은 그림을 합성하고 명시 표는 마스크 아래 현재 화면색에 적용한다.</summary>
     private void Shape(SpriteShapeRequest request)
     {
         PreviewShapeBinding binding = (_shape ?? throw new ArgumentException("Sprite Draw SHP 경계 누락"))(request.Type);
@@ -73,8 +73,11 @@ public sealed class SpritePixelTarget
         byte[]? colors = null;
         if (request.Mode == SpriteShapeMode.Owner) colors = _current ?? throw new InvalidOperationException("Sprite Draw 소유자 색 미설정");
         else if (request.Mode != SpriteShapeMode.Plain) colors = (_colors ?? throw new ArgumentException("Sprite Draw 색 경계 누락"))(request.Mode, request.Type, 0);
-        RendererDraw.DrawIndexedImage(_pixels, _pitch, _height, image,
-            unchecked(request.Position.X + frame.Rect.Left), unchecked(request.Position.Y + frame.Rect.Top), _clip, colors);
+        if (request.Mode is SpriteShapeMode.Plain or SpriteShapeMode.Owner)
+            RendererDraw.DrawIndexedImage(_pixels, _pitch, _height, image,
+                unchecked(request.Position.X + frame.Rect.Left), unchecked(request.Position.Y + frame.Rect.Top), _clip, colors);
+        else
+            VfxTransform.DrawTranslatedVfxImage(_pixels, _pitch, _height, image, frame, request.Position, 0x10000, 0x10000, _clip, colors!);
     }
 
     /// <summary>양 끝 포함 직교선을 원래 끝점에서 정규화하고 자른다. 대각선은 이 출력의 계약 밖이다.</summary>

@@ -88,6 +88,31 @@ public static class VfxTransform
     public static void DrawScaledVfxImage(Span<byte> pixels, int pitch, int height,
         IndexedImage image, ShapeFrame frame, ScreenPoint position,
         int scaleX, int scaleY, ScreenRect clip, byte[]? colors = null)
+        => DrawVfxImage(pixels, pitch, height, image, frame, position, scaleX, scaleY, clip, colors, false);
+
+    /// <summary>불투명 마스크 아래 현재 화면색을 변환하며 원본 004dab90의 기하 순회를 사용한다.</summary>
+    /// <param name="pixels">그리기 화면이다.</param>
+    /// <param name="pitch">화면의 행 간격이다.</param>
+    /// <param name="height">화면의 행 수다.</param>
+    /// <param name="image">불투명 마스크와 원본 색을 보유한 그림이다.</param>
+    /// <param name="frame">원본 기준점 상대 프레임 영역이다.</param>
+    /// <param name="position">프레임 기준점의 화면 위치다.</param>
+    /// <param name="scaleX">가로 16.16 배율이다.</param>
+    /// <param name="scaleY">세로 16.16 배율이다.</param>
+    /// <param name="clip">출력을 제한하는 화면 영역이다.</param>
+    /// <param name="colors">현재 화면색에 적용할 256바이트 표다.</param>
+    public static void DrawTranslatedVfxImage(Span<byte> pixels, int pitch, int height,
+        IndexedImage image, ShapeFrame frame, ScreenPoint position,
+        int scaleX, int scaleY, ScreenRect clip, byte[] colors)
+    {
+        ArgumentNullException.ThrowIfNull(colors);
+        DrawVfxImage(pixels, pitch, height, image, frame, position, scaleX, scaleY, clip, colors, true);
+    }
+
+    /// <summary>원색과 화면색 변환에 동일한 원본 정점·텍스처 순회를 적용한다.</summary>
+    private static void DrawVfxImage(Span<byte> pixels, int pitch, int height,
+        IndexedImage image, ShapeFrame frame, ScreenPoint position,
+        int scaleX, int scaleY, ScreenRect clip, byte[]? colors, bool translated)
     {
         ArgumentNullException.ThrowIfNull(image);
         ArgumentNullException.ThrowIfNull(frame);
@@ -112,7 +137,7 @@ public static class VfxTransform
             throw new ArgumentException("VFX 변환 실제 프레임 영역 오류", nameof(frame));
         }
         // 원본의 조기 일반 출력 분기에서는 255도 불투명 색으로 유지한다
-        if (scaleX == FixedUnit && scaleY == FixedUnit)
+        if (!translated && scaleX == FixedUnit && scaleY == FixedUnit)
         {
             RendererDraw.DrawIndexedImage(pixels, pitch, height, image,
                 Add(position.X, rect.Left), Add(position.Y, rect.Top), clip, colors);
@@ -170,7 +195,12 @@ public static class VfxTransform
             for (int x = visible.Left; x < visible.Right; x++)
             {
                 long input = sourceRow + (u >> 16);
-                if (image.Opacity[input] != 0)
+                if (translated && image.Opacity[input] != 0 && image.Indices[input] != ScratchTransparent)
+                {
+                    int output = (int)targetRow + x;
+                    pixels[output] = colors![pixels[output]];
+                }
+                else if (!translated && image.Opacity[input] != 0)
                 {
                     byte ink = colors is null ? image.Indices[input] : colors[image.Indices[input]];
                     if (ink != ScratchTransparent)
