@@ -1,0 +1,56 @@
+{
+  "unit": "WB04-E1482",
+  "sourceHead": "541f59ea0d894ec1460245705679e699e2a155df",
+  "node": "v26.13.0",
+  "nodeExecutable": "C:\\Program Files\\nodejs\\node.exe",
+  "nodeExecutableSha256": "14319838b3f355e0398c13569a90270bce4fc68f25189f58c59b03dadae0e6d5",
+  "command": "node --test --test-concurrency=2 tests/*.test.mjs",
+  "periodAtStart": {
+    "node26": 5,
+    "node22": 5
+  },
+  "result": {
+    "unit": "WB04-E1482",
+    "nodeExit": 0,
+    "files": 12385,
+    "changed": [],
+    "newlinesOnly": [],
+    "results": {
+      "tests": 7023,
+      "pass": 7023,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "durationMs": 559068.395
+    },
+    "runnerSeconds": 563.5503619999799
+  },
+  "periodAfter": {
+    "node26": 0,
+    "node22": 5
+  },
+  "sourceNote": "E1481 첫 전체7019/7021·원시변경0 뒤 optional모드 초기적재 순서/취소 수정과 새2검사를 포함한 Node26 전체 재검사. 첫 실패 원문은 별도 보존한다. 추적 WB/공통 자료·원본 복사/fixture·설치 node_modules 전체 원시 입력 고정. 작성 인계/docs만 수정 가능. Node22 전체는 아직 주기5/8로 미실행.",
+  "files": {
+    "webpj/extracted/e1482-full-node26.py": {
+      "bytes": 5033,
+      "sha256": "41954f0c13c899110f99f2d623148688be40c7760d5fcb9ca93981ac1a6f11f6"
+    },
+    "webpj/extracted/e1482-run-state.json": {
+      "bytes": 688,
+      "sha256": "0494321e3f07fae15f239d300c9b9f51992961da815ecbf1fc0ab118b8c4bb4c"
+    },
+    "webpj/extracted/webpj-e1482-node26.log": {
+      "bytes": 922105,
+      "sha256": "10037f61c4e58ae07c748356c8fd419afd9f1bad4270b5223043e4cf2d986f03"
+    },
+    "webpj/extracted/webpj-e1482-freeze.json": {
+      "bytes": 2937708,
+      "sha256": "6d342abd2f787ac2498eb06481617dfff0b5520ee4c17075901df4210f1a75b9"
+    },
+    "webpj/extracted/webpj-e1482-freeze-check.json": {
+      "bytes": 310,
+      "sha256": "41ea0ddb70d02816ae1e3abac1c696a1588d1c307e5d76d2c0f52757fcdb82dc"
+    }
+  }
+}
