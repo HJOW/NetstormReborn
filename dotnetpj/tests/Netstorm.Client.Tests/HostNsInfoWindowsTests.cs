@@ -111,6 +111,51 @@ public sealed class HostNsInfoWindowsTests
         uint second = scene.Ns.Create(); Assert.NotEqual(token, second); Assert.Equal(second, scene.Ns.Current());
     }
 
+    /// <summary>제품과 같은 전역 읽기로 생성한 여덟 참가자 창이 실제 fortGump TYPE을 쓴다.</summary>
+    [Fact]
+    public void ExternalReadCreatesPlayersWithActualRuntimeType()
+    {
+        using var scene = new Scene();
+        var devices = new HostNsInfoDevices
+        {
+            Read = address => HostNsInfoExternalRead.TryRead(address, scene.Menu.BackgroundType, scene.Screen.Colors(), out uint value)
+                ? value : scene.Devices.Read(address),
+            Translate = scene.Devices.Translate, StoreText = scene.Devices.StoreText, Text = scene.Devices.Text,
+            FormatZone = scene.Devices.FormatZone, Changed = scene.Devices.Changed,
+        };
+        using var windows = new HostNsInfoWindows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage, devices);
+        uint token = windows.Create();
+        var root = Assert.IsType<HudNsInfoNode>(scene.Menu.Tree.Node(token));
+        Assert.Equal((uint)new TypeCatalog(scene.Startup.Files).Find("fortGump")!.RuntimeIndex, scene.Menu.BackgroundType);
+        // 실제 생성된 모든 참가자 버튼이 같은 런타임 TYPE 포인터를 보유한다.
+        foreach (uint player in root.Players)
+            Assert.Equal(0x100000u + scene.Menu.BackgroundType, Assert.IsType<HudPlayerInfoNode>(scene.Menu.Tree.Node(player)).ButtonType);
+    }
+
+    /// <summary>두 참가자 색상 배열과 기본색 주소의 정확한 항목 및 경계를 확인한다.</summary>
+    [Fact]
+    public void ExternalReadUsesEachNativePaletteAddress()
+    {
+        var colors = new PaletteColorTable();
+        // 값이 중복되지 않는 표로 잘못된 항목 선택도 식별한다.
+        for (int i = 0; i < colors.Basic.Length; i++) colors.Basic[i] = (uint)(100 + i);
+        // 원본 팔레트의 전체 호출 순서를 그대로 구성한다.
+        for (int i = 0; i < 58; i++) colors.Named.Add(new NamedPaletteColor(0, 0, 0, (uint)(200 + i)));
+        Assert.True(HostNsInfoExternalRead.TryRead(0x5411c8, 92, colors, out uint type)); Assert.Equal(92u, type);
+        foreach (var pair in new (uint Address, uint Value)[] { (0x5bec3c, 108), (0x5bec2c, 107), (0x5b5e58, 101), (0x59afd8, 105), (0x5c78d0, 236) })
+        {
+            Assert.True(HostNsInfoExternalRead.TryRead(pair.Address, 92, colors, out uint value)); Assert.Equal(pair.Value, value);
+        }
+        // 여덟 슬롯이 각각 원본의 두 색상 배열에 대응한다.
+        for (uint i = 0; i < 8; i++)
+        {
+            Assert.True(HostNsInfoExternalRead.TryRead(0x5accfc + i * 4, 92, colors, out uint background)); Assert.Equal(242u + i, background);
+            Assert.True(HostNsInfoExternalRead.TryRead(0x5c78b0 + i * 4, 92, colors, out uint name)); Assert.Equal(250u + i, name);
+        }
+        foreach (uint address in new uint[] { 0x5accf8, 0x5accfd, 0x5acd1c, 0x5c78af, 0x5c78b1, 0x5c78d4 })
+            Assert.False(HostNsInfoExternalRead.TryRead(address, 92, colors, out _));
+    }
+
     /// <summary>생성 도중 실제 예외는 current를 게시하지 않고 부분 자식/스크롤/조각을 같은 수명으로 정리한다.</summary>
     [Fact]
     public void InterruptedCreationKeepsCurrentAndReleasesPartialPhysicalState()

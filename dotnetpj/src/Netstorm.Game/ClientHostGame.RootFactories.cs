@@ -50,18 +50,14 @@ public sealed partial class ClientHostGame
         }
 
         // 원문 바깥 전역 읽기다. UberGump.cpp 2200행의 같은 주소 분기를 따른다.
-        uint ReadOuter(uint address) => address switch
+        uint ReadOuter(uint address)
         {
+            if (HostNsInfoExternalRead.TryRead(address, menu.BackgroundType, _driver.Screen.Colors(), out uint value)) return value;
+            return address switch
+            {
             // 0x5ca920은 생산 배경 TYPE, 0x5ca924는 그 프레임이다(RawMenuControls 441행). 생산 공장이 아직 없으므로 메뉴의 같은 값을 빌린다.
             0x5ca920u => menu.BackgroundType,
             0x5ca924u => 1u,
-            // 0x5411c8은 fortGump 블록이다. RuntimeIndex에서 70을 빼면 적재 순서와 같다.
-            0x5411c8u => menu.BackgroundType - (uint)Netstorm.Assets.TypeCatalog.RuntimeIndexBase,
-            0x5bec2cu => _driver.Screen.Colors().Basic[4],
-            0x5bec3cu => _driver.Screen.Colors().Basic[2],
-            0x5b5e58u => _driver.Screen.Colors().Basic[3],
-            0x5c78d0u => _driver.Screen.Colors().Basic[0],
-            0x59afd8u => _driver.Screen.Colors().Basic[1],
             // 0x5c85c8은 원본 MetadataMode다. 시험의 Basic[5] 대신 실제 전역을 읽는다.
             0x5c85c8u => _localState.MetadataMode.Value,
             0x542714u => _nsInfoGlobals.LeaveMenuCommand,
@@ -74,9 +70,9 @@ public sealed partial class ClientHostGame
             0x5429e0u => _nsInfoGlobals.ExcludeTypeCommand,
             0x5429e4u => _nsInfoGlobals.RestoreTypeCommand,
             0x5427a8u => 0x0200002cu,
-            _ when address >= 0x5accf0u && address < 0x5accf0u + 32u => _driver.Screen.Colors().Basic[6],
             _ => throw new InvalidOperationException("Root 바깥 UI 읽기 확장:" + address.ToString("x")),
-        };
+            };
+        }
         var baseDevices = new HostNsInfoDevices
         {
             Read = ReadOuter,
