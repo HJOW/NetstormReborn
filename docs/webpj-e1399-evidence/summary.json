@@ -1,0 +1,134 @@
+{
+  "unit": "WB04-E1399",
+  "host": "HJOW-Athlon",
+  "product": "E1393",
+  "command": "node tools/ally-ai-campaign-flow.cjs dissolvedalliance 60000",
+  "exitCode": 1,
+  "exitReason": "자연 승리 미확인 단언",
+  "errors": [],
+  "terminal": {
+    "frame": 60000,
+    "time": 1509.175,
+    "buttons": [],
+    "commands": [],
+    "observation": {
+      "events": [
+        {
+          "method": "priestDead",
+          "owner": 1,
+          "result": false,
+          "time": 9.2
+        },
+        {
+          "method": "priestCaptured",
+          "owner": 1,
+          "result": false,
+          "time": 9.2
+        },
+        {
+          "method": "priestDead",
+          "owner": 2,
+          "result": false,
+          "time": 9.2
+        },
+        {
+          "method": "priestCaptured",
+          "owner": 2,
+          "result": false,
+          "time": 9.2
+        },
+        {
+          "method": "priestDead",
+          "owner": 3,
+          "result": false,
+          "time": 9.2
+        },
+        {
+          "method": "priestCaptured",
+          "owner": 3,
+          "result": false,
+          "time": 9.2
+        },
+        {
+          "method": "priestCaptured",
+          "owner": 2,
+          "result": true,
+          "time": 1296.6
+        },
+        {
+          "method": "finishSacrifice",
+          "args": [
+            19528
+          ],
+          "time": 1443.45
+        },
+        {
+          "method": "priestDead",
+          "owner": 2,
+          "result": true,
+          "time": 1443.45
+        },
+        {
+          "method": "priestDead",
+          "owner": 4,
+          "result": true,
+          "time": 1443.45
+        },
+        {
+          "method": "priestDead",
+          "owner": 5,
+          "result": true,
+          "time": 1443.45
+        },
+        {
+          "method": "priestDead",
+          "owner": 6,
+          "result": true,
+          "time": 1443.45
+        },
+        {
+          "method": "priestDead",
+          "owner": 7,
+          "result": true,
+          "time": 1443.45
+        },
+        {
+          "method": "priestDead",
+          "owner": 8,
+          "result": true,
+          "time": 1443.45
+        },
+        {
+          "method": "priestCaptured",
+          "owner": 2,
+          "result": false,
+          "time": 1443.475
+        }
+      ],
+      "captured": {
+        "1": false,
+        "2": false,
+        "3": false
+      },
+      "dead": {
+        "1": false,
+        "2": true,
+        "3": false,
+        "4": true,
+        "5": true,
+        "6": true,
+        "7": true,
+        "8": true
+      }
+    },
+    "sp": 33650,
+    "won": false,
+    "reason": "프레임 상한"
+  },
+  "initialSp": 4000,
+  "initialAllies": 2,
+  "files": {
+    "web-observation.log": "afa5f215d10c8bc420782c10823cc6d6e8307b9281a2c7671e6cbcc4d728e48d",
+    "web-result.json": "e1a937f9dc5a281fadc7135800e6db06eba62c0c8ff1421072e22d9d1625cd11"
+  }
+}
