@@ -1,6 +1,7 @@
 // 같은 실제 Surface/Runtime을 빌리는 Root 첫 장치 묶음을 검사한다.
 // cpppj/src/client/ClientMain.cpp 447~455·468~488·525행의 PostPop·Resource·Reward·Deletion·PlayerRecords 조립을 이식한다.
 // 0.901에서 RU-1 실제 owner 조립용으로 추가됐다.
+using Netstorm.Assets;
 using Netstorm.Client.Host;
 using Netstorm.Core.Original;
 
@@ -113,6 +114,22 @@ public sealed class ClientSurfaceRootFirstDevicesTests
         Assert.True(scene.Surface.Storage.UsesNativeRewardDevices());
         Assert.Same(scene.Game.World.EditorBox, scene.Surface.Storage.RewardState().SharedFixedSpB);
         Assert.Throws<ArgumentException>(() => scene.InstallFirst());
+    }
+
+    /// <summary>실제 현재 커서·Player 주소와 공통 삭제기가 같은 내용물 수명을 사용한다.</summary>
+    [Fact]
+    public void ContentDevicesShareOwnersAndCancelActualSelectedForm()
+    {
+        using var scene = new Scene(); scene.InstallFirst(); var input = new Input.InputQueue(); int cancelled = 0;
+        scene.Surface.BindNativeContentDevices(scene.Connections, input, () => { cancelled++; scene.Game.Cursor.Preview = 0; }, (_, _) => throw new IOException("미선택 위치 음향"));
+        var state = scene.Surface.Storage.ContentState(); Assert.Same(scene.Game.Player.BattleOwnerBox, state.SharedLocalOwner);
+        scene.Game.Player.BattleOwner = 4; Assert.Equal(4u, state.ReadLocalOwner());
+        string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data); _ = new HostAssetTables(new HostStartupScene(data), scene.Surface.Storage);
+        scene.Surface.Storage.BindDisplayDevices(new() { View = () => new() { Zoom = 65536 }, Suppressed = () => false, Invalidate = (_, _) => { } });
+        int form = scene.Surface.Storage.FactoryExecutor().CreateContained(2); scene.Game.Cursor.Preview = (uint)form;
+        Assert.Equal((uint)form, state.CurrentCursor!()); Assert.True(scene.Surface.Storage.ProcessFormDispatch().Destroy(form, 0));
+        Assert.Equal(1, cancelled); Assert.Equal(0u, scene.Game.Cursor.PreviewBox.Value); Assert.NotEqual(0, scene.Surface.Storage.Pool.Slot(form)[11] & 1);
+        Assert.True(input.Empty);
     }
 
     /// <summary>자원 Random은 설치한 같은 실제 난수 owner를 빌린다. 0.901에서 추가됐다.</summary>

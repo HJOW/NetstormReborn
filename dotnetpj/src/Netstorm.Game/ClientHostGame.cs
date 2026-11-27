@@ -224,6 +224,7 @@ public sealed partial class ClientHostGame : Game
                     audio.PlayGlobal("unitLost.wav");
                     _ = sid;
                 });
+            owner.BindNativeContentDevices(_connections, _driver.Input, CancelNativeContentCursor, PlayNativeContentSound);
         });
         _sidLists = _surfaceGlobals.Storage.SidLists;
         BindStateResourceOwners();
