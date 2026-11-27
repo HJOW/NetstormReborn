@@ -38,11 +38,57 @@ public sealed class SpriteVirtualAdditionalTests
         Set(pool, sid, 0x0050c9f0, 94);
         draw.Draw(sid, point);
         Assert.Equal(new[] { ("bridge", sid, point), ("meta", sid, point) }, calls);
-        Set(pool, sid, 0x0050db78, 122);
-        Assert.Contains("00485F90", Assert.Throws<InvalidOperationException>(() => draw.Draw(sid, point)).Message);
+        Set(pool, sid, 0x0050b888, 130);
+        Assert.Contains("0046A6E0", Assert.Throws<InvalidOperationException>(() => draw.Draw(sid, point)).Message);
         var missing = new SpriteVirtualAdditional(pool, frames, _ => { });
         Set(pool, sid, 0x005034c8, 82);
         Assert.Throws<InvalidOperationException>(() => missing.Draw(sid, point));
+    }
+
+    /// <summary>마나는 그림자 소비자 뒤 현재 프레임을 다시 읽되 처음 선택한 TYPE을 유지한다.</summary>
+    [Fact]
+    public void ManaAdditionalRereadsFrameAfterShadowAndKeepsSelectedType()
+    {
+        var pool = new RawSidPool(24000, server: false);
+        int sid = pool.Allocate(SidAllocation.Client);
+        var frames = Enumerable.Range(0, 188).Select(_ => new RiftTypeFrames([])).ToArray();
+        var shapes = new List<SpriteShapeRequest>();
+        var draw = new SpriteVirtualAdditional(pool, frames, request =>
+        {
+            shapes.Add(request);
+            if (request.Mode != SpriteShapeMode.Shadow) return;
+            BinaryPrimitives.WriteUInt32LittleEndian(pool.AllocatedBytes(sid)[36..], 8);
+            pool.AllocatedBytes(sid)[10] = 70;
+        });
+        Set(pool, sid, 0x0050c3b0, 103, 4);
+        BinaryPrimitives.WriteUInt16LittleEndian(pool.AllocatedBytes(sid)[12..], 1);
+        draw.Draw(sid, new(int.MaxValue, 4));
+        Assert.Equal(new SpriteShapeRequest(103, 4, new(unchecked(int.MaxValue + 10), 14), SpriteShapeMode.Shadow), shapes[0]);
+        Assert.Equal(new SpriteShapeRequest(103, 8, new(int.MaxValue, 4), SpriteShapeMode.Plain), shapes[1]);
+    }
+
+    /// <summary>마나 볼트는 첫 프레임을 두 번 사용하고 고정 추상 출력은 별도 소유자 관문이 없다.</summary>
+    [Fact]
+    public void ManaBoltAndAbstractAdditionalUseTheirOriginalModes()
+    {
+        var pool = new RawSidPool(24000, server: false);
+        int sid = pool.Allocate(SidAllocation.Client);
+        var frames = Enumerable.Range(0, 188).Select(_ => new RiftTypeFrames([])).ToArray();
+        var shapes = new List<SpriteShapeRequest>();
+        var draw = new SpriteVirtualAdditional(pool, frames, request =>
+        {
+            shapes.Add(request);
+            BinaryPrimitives.WriteUInt32LittleEndian(pool.AllocatedBytes(sid)[36..], 9);
+        });
+        Set(pool, sid, 0x00509810, 105, 3);
+        draw.Draw(sid, new(1, 2));
+        Assert.Equal(new SpriteShapeRequest(105, 3, new(11, 12), SpriteShapeMode.Shadow), shapes[0]);
+        Assert.Equal(new SpriteShapeRequest(105, 3, new(1, 2), SpriteShapeMode.Plain), shapes[1]);
+        Set(pool, sid, 0x0050db78, 122, 4);
+        draw.Draw(sid, new(5, 6));
+        Assert.Equal(new SpriteShapeRequest(122, 4, new(5, 6), SpriteShapeMode.Abstract), shapes[2]);
+        Set(pool, sid, 0x00509810, 104, 3);
+        Assert.Throws<ArgumentException>(() => draw.Draw(sid, new(1, 2)));
     }
 
     /// <summary>주문의 도움말 프레임과 추상 소유자 조건을 실제 현재 슬롯으로 분기한다.</summary>

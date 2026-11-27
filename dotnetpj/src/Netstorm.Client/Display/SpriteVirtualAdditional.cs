@@ -70,6 +70,16 @@ public sealed class SpriteVirtualAdditional
             case 0x0041e3d0:
                 DrawSpell(sid, point);
                 return;
+            case 0x00473710:
+                DrawMana(sid, point);
+                return;
+            case 0x0045ac40:
+                DrawManaBolt(sid, point);
+                return;
+            case 0x00485f90:
+                ReadOnlySpan<byte> raw = _pool.Slot(sid);
+                _shape(new(raw[10], BinaryPrimitives.ReadUInt32LittleEndian(raw[36..]), point, SpriteShapeMode.Abstract));
+                return;
             case 0x00454cf0:
                 _factory.Additional(sid, point.X, point.Y, (x, y, type, frame) =>
                 {
@@ -99,5 +109,35 @@ public sealed class SpriteVirtualAdditional
         if ((raw[40] & 0x10) == 0) _shape(new((uint)type, frame, point, SpriteShapeMode.Plain));
         else if (raw[34] == (_localOwner ?? throw new InvalidOperationException("주문 현재 로컬 소유자 미연결"))())
             _shape(new((uint)type, frame, point, SpriteShapeMode.Abstract));
+    }
+
+    /// <summary>마나의 조건부 그림자 뒤에 현재 프레임을 다시 읽어 본체를 그린다.</summary>
+    /// <param name="sid">현재 마나 객체 SID다.</param>
+    /// <param name="point">현재 화면 기준점이다.</param>
+    /// <remarks>cpppj RawManaDraw의 현재 TYPE 선택·프레임 재조회와 signed 좌표 감김을 따른다.</remarks>
+    private void DrawMana(int sid, ScreenPoint point)
+    {
+        ReadOnlySpan<byte> raw = _pool.Slot(sid);
+        uint type = raw[10];
+        if (BinaryPrimitives.ReadUInt16LittleEndian(raw[12..]) != 0)
+        {
+            uint shadowFrame = BinaryPrimitives.ReadUInt32LittleEndian(raw[36..]);
+            _shape(new(type, shadowFrame, new(unchecked(point.X + 10), unchecked(point.Y + 10)), SpriteShapeMode.Shadow));
+        }
+        uint frame = BinaryPrimitives.ReadUInt32LittleEndian(_pool.Slot(sid)[36..]);
+        _shape(new(type, frame, point, SpriteShapeMode.Plain));
+    }
+
+    /// <summary>마나 볼트의 현재 프레임을 그림자와 본체에 같은 순서로 그린다.</summary>
+    /// <param name="sid">현재 마나 볼트 객체 SID다.</param>
+    /// <param name="point">현재 화면 기준점이다.</param>
+    /// <remarks>cpppj RawCampaignFactoryDisplay의 105번 실제 가상표 경계를 따른다.</remarks>
+    private void DrawManaBolt(int sid, ScreenPoint point)
+    {
+        ReadOnlySpan<byte> raw = _pool.Slot(sid);
+        if (raw[10] != 105) throw new ArgumentException("마나 볼트 TYPE 불일치", nameof(sid));
+        uint frame = BinaryPrimitives.ReadUInt32LittleEndian(raw[36..]);
+        _shape(new(105, frame, new(unchecked(point.X + 10), unchecked(point.Y + 10)), SpriteShapeMode.Shadow));
+        _shape(new(105, frame, point, SpriteShapeMode.Plain));
     }
 }
