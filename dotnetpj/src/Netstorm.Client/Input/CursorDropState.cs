@@ -1,4 +1,6 @@
 // 원문 내려놓기·취득·취소가 공유하는 전체 DWORD와 float 전역이다.
+using Netstorm.Core.Original;
+
 namespace Netstorm.Client.Input;
 
 /// <summary>RawCursorDrop.h의 데이터만 소유한다. 실제 Drop 본체/외부 효과와 구분한다.</summary>
@@ -18,8 +20,10 @@ public sealed class CursorDropState
     public uint InputFlags { get; set; }
     /// <summary>취득 호출의 별도 전체 비용/역할 플래그다.</summary>
     public uint CostFlags { get; set; }
-    /// <summary>55a2a8의 전체 미리보기 DWORD이며 실제 Pool 소비 전까지 자르지 않는다.</summary>
-    public uint Preview { get; set; }
+    /// <summary>55a2a8의 전체 미리보기 DWORD를 같은 현재 주소에서 빌린다.</summary>
+    public UIntBox PreviewBox { get; } = new();
+    /// <summary>실제 Pool 소비 전까지 자르지 않는 현재 미리보기 값이다.</summary>
+    public uint Preview { get => PreviewBox.Value; set => PreviewBox.Value = value; }
     /// <summary>현재 단정도 월드 X다.</summary>
     public float X { get; set; }
     /// <summary>현재 단정도 월드 Y다.</summary>

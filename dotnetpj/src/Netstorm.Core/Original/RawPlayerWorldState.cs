@@ -9,8 +9,11 @@ public sealed class PlayerWorldState
     /// <summary>현재 localPlayer 번호가 알려졌는가다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
     public uint PlayerKnown { get; set; }
 
+    /// <summary>현재 owner DWORD를 같은 주소에서 빌리는 상자다.</summary>
+    public UIntBox BattleOwnerBox { get; } = new() { Value = 1u };
+
     /// <summary>현재 owner다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
-    public uint BattleOwner { get; set; } = 1u;
+    public uint BattleOwner { get => BattleOwnerBox.Value; set => BattleOwnerBox.Value = value; }
 
     /// <summary>저장 Template 선택용 별도 owner다. 2026-11-07 F2d Player 이식에서 추가됐다.</summary>
     public uint TemplateOwner { get; set; } = 1u;

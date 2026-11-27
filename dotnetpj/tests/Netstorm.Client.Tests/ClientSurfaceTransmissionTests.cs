@@ -105,6 +105,19 @@ public sealed class ClientSurfaceTransmissionTests
         child[10] = 3; terminal.NotifyUi(parent); Assert.Equal(new Input.InputEvent(0x02000039, parent, 0), input.Pop(false));
     }
 
+    /// <summary>내용물 수명과 기존 커서·Player 소비자가 같은 현재 DWORD를 양방향으로 읽는다.</summary>
+    [Fact]
+    public void ContentOwnersShareActualCursorAndBattlePlayerValues()
+    {
+        using var scene = new Scene(); var cursor = scene.Game.Cursor; var player = scene.Game.Player;
+        Assert.Equal(0u, cursor.PreviewBox.Value); Assert.Equal(1u, player.BattleOwnerBox.Value);
+        cursor.Preview = 0x12345678; player.BattleOwner = 7;
+        Assert.Equal(0x12345678u, cursor.PreviewBox.Value); Assert.Equal(7u, player.BattleOwnerBox.Value);
+        cursor.PreviewBox.Value = 0xfedcba98; player.BattleOwnerBox.Value = 3;
+        Assert.Equal(0xfedcba98u, cursor.Preview); Assert.Equal(3u, player.BattleOwner);
+        cursor.Reset(); Assert.Equal(0u, cursor.PreviewBox.Value); Assert.Equal(3u, player.BattleOwnerBox.Value);
+    }
+
     /// <summary>활성 Player의 NULL 연결도 Source나 Runtime을 요구하지 않고 자연 반환한다.</summary>
     [Fact]
     public void NullConnectionsAndInactiveTargetsNeedNoSourceOrRuntime()
