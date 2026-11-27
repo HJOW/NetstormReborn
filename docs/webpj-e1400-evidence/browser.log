@@ -1,0 +1,11 @@
+npm notice run NetstormWeb@1.0.0 npx
+npm notice run ^"playwright^" test e2e/fixed-time.spec.js e2e/progress-portability.spec.js --workers=1 --project=chromium --grep 시작 그림은|실제1-1 저장 사본 --output=extracted/e1400-browser --reporter=list
+
+Running 2 tests using 1 worker
+
+(node:11084) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › e2e\fixed-time.spec.js:91:1 › 고정 시각 모드: 시작 그림은 360프레임·9초이고 같은 입력의 두 실행은 같은 덤프를 낸다 (2.9m)
+  ok 2 [chromium] › e2e\progress-portability.spec.js:54:1 › 실제1-1 저장 사본: 제품 번들의 새로고침과 해제된1-2 실제 브리핑 (1.1m)
+
+  2 passed (4.2m)

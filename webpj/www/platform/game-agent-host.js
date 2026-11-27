@@ -66,6 +66,7 @@ export class GameAgentHost {
    // 원래 keydown·keyup 리스너가 문자와 가상 키를 구분한다.
    for(const type of action==='press'?['keydown','keyup']:[action==='down'?'keydown':'keyup'])canvas.dispatchEvent(new view.KeyboardEvent(type,{...mods,bubbles:true,cancelable:true,key,code,repeat:false}));
   }else if(input.type==='text'){
+   // eslint-disable-next-line no-control-regex -- NUL/제어문자 검출 자체가 이 검사의 목적이다.
    const text=input.text;if(typeof text!=='string'||!text||text.length>16||/[\u0000-\u001f\u007f]/u.test(text))throw new TypeError('확정 문자는 제어문자 없이 한 번에16자 이하로 입력하십시오.');
    this.#space([...text].length*(this.#app._clientNativeInputEnabled?1:2));
    if(this.#app._clientNativeInputEnabled){canvas.dispatchEvent(new view.CompositionEvent('compositionstart',{bubbles:true}));canvas.dispatchEvent(new view.CompositionEvent('compositionend',{bubbles:true,data:text}));}

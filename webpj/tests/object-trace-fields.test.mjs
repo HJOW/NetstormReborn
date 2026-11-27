@@ -98,8 +98,8 @@ test('객체 trace 필드 계약: Content 이름 서식은 단일 %s/%% 와 폭�
         return String.fromCharCode(...scene.events[1].slice(3).match(/../g).map((pair) => parseInt(pair, 16)));
     };
     assert.match(contentLine('[%s]'), /ContentType=82\/~y\[XXX\]~n q=0 flags=0\n$/);
-    assert.match(contentLine('[%5s]'), /\/~y\[  XXX\]~n/);
-    assert.match(contentLine('[%-5s]'), /\/~y\[XXX  \]~n/);
+    assert.match(contentLine('[%5s]'), /\/~y\[ {2}XXX\]~n/);
+    assert.match(contentLine('[%-5s]'), /\/~y\[XXX {2}\]~n/);
     assert.match(contentLine('[%.2s]'), /\/~y\[XX\]~n/);
     assert.match(contentLine('[%.s]'), /\/~y\[\]~n/);
     assert.match(contentLine('100%%'), /\/~y100%~n/);

@@ -1,0 +1,26 @@
+{
+  "source": {
+    "sourceUnit": "WB04-E1394",
+    "sourceResultSha256": "2eff383323e40a1d5931d1f783cc20f6a1220f34fdcaf4b616d3b8b03c6a8dd3",
+    "sourceResult": "docs/webpj-e1394-evidence/first-pass-result.json",
+    "mission": "thewarbegins",
+    "captureSeconds": 715.65,
+    "sacrificeSeconds": 854.15,
+    "storage": "{\"version\":1,\"values\":{\"DoneThewarbegins\":\"1\"}}",
+    "purpose": "실제 신규 승리에서 생성한 저장값의 브라우저/OS 읽기 호환 검사. 이 사본을 새로운 자연 승리 근거로 사용하지 않는다."
+  },
+  "project": "chromium",
+  "node": "v26.13.0",
+  "platform": "win32",
+  "observed": {
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/156.0.8078.4 Safari/537.36",
+    "audioEnabled": true,
+    "audio": [],
+    "mission": "MasterOfWhirligigs",
+    "tell": "A.",
+    "buttons": [
+      "Review Knowledge",
+      "Play Mission"
+    ]
+  }
+}

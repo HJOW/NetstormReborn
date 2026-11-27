@@ -31,7 +31,7 @@ function bytes(hooks, address, length, cause) {
     try {
         view = hooks.memory(address >>> 0);
     } catch (error) {
-        if (error instanceof RangeError) throw new RangeError(`Kencloud ${cause}`);
+        if (error instanceof RangeError) throw new RangeError(`Kencloud ${cause}`, { cause: error });
         throw error;
     }
     if (view.length < length) throw new RangeError(`Kencloud ${cause}`);

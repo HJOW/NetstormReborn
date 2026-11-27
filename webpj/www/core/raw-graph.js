@@ -494,7 +494,7 @@ export class RawGraph {
                             connected = SurfaceFinder.connects(object, source);
                         } catch (error) {
                             if (!(error instanceof RangeError) || sourceFrameValid) throw error;
-                            throw new RangeError(`raw 그래프 삭제 치환 방향 코드가 필요합니다 source=${source.id},${source.x},${source.y},${source.width},${source.height},${source.flags2} candidate=${candidate},${object.x},${object.y},${object.width},${object.height},${object.flags2},${object.frame.side},${object.frame.variant}`);
+                            throw new RangeError(`raw 그래프 삭제 치환 방향 코드가 필요합니다 source=${source.id},${source.x},${source.y},${source.width},${source.height},${source.flags2} candidate=${candidate},${object.x},${object.y},${object.width},${object.height},${object.flags2},${object.frame.side},${object.frame.variant}`, { cause: error });
                         }
                         if (!connected) continue;
                         if (result.includes(candidate)) throw new Error('그래프 삭제 중복 해시 후보');

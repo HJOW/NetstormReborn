@@ -52,6 +52,7 @@ test('한국어 The War Begins!: Players 메뉴 행이 한국어 이름으로 �
   const token = await ensureBar(page); const child = await clickRow(page, token, 3); expect(child, 'Players 하위 메뉴').toBeTruthy();
   const rows = await labelsOf(page, child);
   expect(rows.length, 'Player 행').toBeGreaterThanOrEqual(2);
+  // eslint-disable-next-line no-control-regex -- NUL/제어문자 검출 자체가 이 검사의 목적이다.
   for (const row of rows) expect(row, '행 글자').not.toMatch(/[\u0000-\u001f]/u);
   expect(rows.some((row) => row.includes('간수')), 'AI 이름 행: ' + JSON.stringify(rows)).toBe(true);
   expect(errors).toEqual([]);

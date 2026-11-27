@@ -1,0 +1,156 @@
+{
+  "unit": "WB04-E1400",
+  "date": "2026-11-27T03:28:58.721397+00:00",
+  "host": "HJOW-Athlon",
+  "versions": {
+    "node26": "26.13.0",
+    "node22": "22.23.3",
+    "eslint": "10.15.0",
+    "@eslint/js": "10.0.1",
+    "globals": "17.14.0",
+    "webpack": "5.113.0"
+  },
+  "tests": {
+    "lint": {
+      "exitCode": 0,
+      "errors": 0,
+      "warnings": 0
+    },
+    "focusedNode26": {
+      "pass": 181,
+      "fail": 0,
+      "exitCode": 0,
+      "durationMs": 30430.4156
+    },
+    "node22": {
+      "pass": 3,
+      "fail": 0,
+      "exitCode": 0,
+      "durationMs": 88503.4367,
+      "scope": "실제 webpack 관문/기존 예외 증가·낡은 예외 거부/운영 번들 바이트 동일성"
+    },
+    "browser": {
+      "pass": 2,
+      "fail": 0,
+      "exitCode": 0,
+      "scope": "영어4:3 초기 L2·자연생성 저장 사본의 실제1-2 World/브리핑·재실행 복원"
+    }
+  },
+  "baseline": {
+    "files": 126,
+    "count": 177,
+    "rules": {
+      "no-unused-vars": 90,
+      "no-useless-assignment": 51,
+      "no-unused-private-class-members": 36
+    }
+  },
+  "build": {
+    "productionExitCode": 0,
+    "developmentExitCode": 0,
+    "ensureFreshExitCode": 0,
+    "bytes": 3500786,
+    "limit": 9900000,
+    "sha256": "e24f9de39773455070791171f856c830e0f871069329df634ab26b3dd9d1300b",
+    "developmentOutput": "webpj/extracted/e1400-development"
+  },
+  "gate": {
+    "before": {
+      "sha256": "e24f9de39773455070791171f856c830e0f871069329df634ab26b3dd9d1300b",
+      "mtimeMs": 1795749452109.0813
+    },
+    "results": [
+      {
+        "name": "production",
+        "severity": "error",
+        "exitCode": 2,
+        "bundle": {
+          "sha256": "e24f9de39773455070791171f856c830e0f871069329df634ab26b3dd9d1300b",
+          "mtimeMs": 1795749452109.0813
+        }
+      },
+      {
+        "name": "development",
+        "severity": "warning",
+        "exitCode": 2,
+        "bundle": {
+          "sha256": "e24f9de39773455070791171f856c830e0f871069329df634ab26b3dd9d1300b",
+          "mtimeMs": 1795749452109.0813
+        }
+      },
+      {
+        "name": "ensure-bundle",
+        "severity": "error",
+        "exitCode": 2,
+        "bundle": {
+          "sha256": "e24f9de39773455070791171f856c830e0f871069329df634ab26b3dd9d1300b",
+          "mtimeMs": 1795749452109.0813
+        }
+      }
+    ]
+  },
+  "priorFullRegression": "E1397 양쪽 Node6895/6895는 이 변경 전 소스의 결과다. 현재 전체를 재실행했다고 주장하지 않는다.",
+  "sha256": {
+    "browser.log": {
+      "raw": "10072ada130ec9f0d93863a0a4d870b75288632d0ee87948f5de1c51d155a0d6",
+      "lf": "0771c4d9f5fd5d15983d53c9a30433d43ac11b9687618ba19be48a28fbbe03eb"
+    },
+    "build-gate-results.json": {
+      "raw": "a6152034dc50617608146a1e66640feb52847bb7ba289f2db33d822fbe6c2d49",
+      "lf": "a6152034dc50617608146a1e66640feb52847bb7ba289f2db33d822fbe6c2d49"
+    },
+    "build-path-probe.cjs.txt": {
+      "raw": "e0c50ec4a520c0e10ac8af0212a0f81842a2da292ae5f8c660eba0de5db24267",
+      "lf": "e0c50ec4a520c0e10ac8af0212a0f81842a2da292ae5f8c660eba0de5db24267"
+    },
+    "development.log": {
+      "raw": "da6599db67fd47f499f1403704729bd048e3620d74e88fa184478a4a59486a91",
+      "lf": "0a248923edb8193e2aa01d2c16fcdce0040211c1a26d9d9f5304191b48ef66a5"
+    },
+    "ensure-fresh.log": {
+      "raw": "cf17616dcdf3d315c10491d2dbd6b3eb4aaacf35802235c366f4b1cb483b9a10",
+      "lf": "09a11fa54b50d77afbf00bdc397d31ec0581f8cc3059503f3b7a5b3cba1ce6a5"
+    },
+    "focused.log": {
+      "raw": "0bfa30cea2260ec2cac19524cc511ad89e6f8ed8ccfdd467cb18ee333b3b5019",
+      "lf": "d6a8b618a6f62b54f5f924b5ec2e2f35853e78b946c45704ea76fe3ca330011a"
+    },
+    "gate-development.log": {
+      "raw": "e6bdcb5915163dd3b0f83829fc762e338a90ffc498c7ded1c95ae48931ea99f3",
+      "lf": "e6bdcb5915163dd3b0f83829fc762e338a90ffc498c7ded1c95ae48931ea99f3"
+    },
+    "gate-ensure-bundle.log": {
+      "raw": "e80333fd2aa524fa483525e758dfb85dc4f68a23ff4c767476fc5393d8b68be1",
+      "lf": "e80333fd2aa524fa483525e758dfb85dc4f68a23ff4c767476fc5393d8b68be1"
+    },
+    "gate-production.log": {
+      "raw": "0fb39ab1fcb109212d5a32e89121aedc1b5fdc254927ce0ce790d6ea378f1b44",
+      "lf": "0fb39ab1fcb109212d5a32e89121aedc1b5fdc254927ce0ce790d6ea378f1b44"
+    },
+    "install.log": {
+      "raw": "f7da9df6165dfe6d6e95713859f4ed7d093f14805457149045f366617a0d0267",
+      "lf": "4cc8f9c1d6d9e17ceeeed722c4209dd45844aaeade62d9a4ab82c18d73ecd750"
+    },
+    "lint.log": {
+      "raw": "6c1a6c81a3e52bcd73c1f85f06e14798341ce6b8a5bd2fcfffd05c500ae04b4e",
+      "lf": "062169c153d33d10a2d803e6fa1d47522a35ea9b3876399731f3996e98fa8a57"
+    },
+    "lock.log": {
+      "raw": "90cb28581adb246a9f585ce0e75a582a79ef66713f16410e7ef35a22a7738373",
+      "lf": "8ed2a8821f3fe701d344a5d8a37ec6a88732e8e1744e0768241d7cd0bac9b9a3"
+    },
+    "node22.log": {
+      "raw": "9eca10c22d263b1cec69be2b8ae2771372362cbbca8246f3975983c9af021dd2",
+      "lf": "c4c4ba54104b6b8c5688a807ebf5d683b986cee49251886246240d0c235407f6"
+    },
+    "production.log": {
+      "raw": "0af646cea703887c57c229d4c2e4e3dc065972c2e22cd75664df52e13dc080ed",
+      "lf": "702031e25349ecc05def50fb0c4298a68426f818e85aa04c38181dfa1b78415d"
+    },
+    "progress-reader.json": {
+      "raw": "d78aec2a1dcf01f7d5168cf951207a79b99c3208be5f4d86e93f5b9f651b1018",
+      "lf": "d78aec2a1dcf01f7d5168cf951207a79b99c3208be5f4d86e93f5b9f651b1018"
+    }
+  },
+  "hashNote": "raw는 작업 호스트 원문 바이트, lf는 Git 줄바꿈 정규화 뒤 재검증용이다."
+}

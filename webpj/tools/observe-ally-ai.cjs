@@ -1,5 +1,4 @@
 // 실행 결과 화면을 저장할 파일 API와 실제 Chromium 검사 도구다.
-const fs = require('node:fs');
 const { chromium } = require('@playwright/test');
 const { installAllyAi } = require('../e2e/ally-ai-test-control');
 // 사용자가 허용한 미션의 실제 아군 AI를 관찰할 프레임 상한이다.

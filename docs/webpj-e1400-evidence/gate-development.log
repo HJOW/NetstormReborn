@@ -1,0 +1,33 @@
+[webpack-cli] ✖ Error: 
+H:\Workspace\git\NetstormReborn\webpj\www\core\eslint-gate-probe-e1400.js
+  3:1  warning  'missingE1400LintProbe' is not defined  no-undef
+
+✖ 1 problem (0 errors, 1 warning)
+
+ESLint found too many warnings (maximum: 0).
+
+[ESLint] 검사 실패로 번들 생성을 중단합니다.
+    at lintProject (H:\Workspace\git\NetstormReborn\webpj\tools\eslint-before-build.js:17:15)
+    at process.processTicksAndRejections (node:internal/process/task_queues:104:5) {
+  [cause]: Error: Command failed: C:\Program Files\nodejs\node.exe H:\Workspace\git\NetstormReborn\webpj\node_modules\eslint\bin\eslint.js . --max-warnings 0
+  ESLint found too many warnings (maximum: 0).
+  
+      at genericNodeError (node:internal/errors:999:15)
+      at wrappedFn (node:internal/errors:544:14)
+      at ChildProcess.exithandler (node:child_process:420:12)
+      at ChildProcess.emit (node:events:514:20)
+      at maybeClose (node:internal/child_process:1156:16)
+      at ChildProcess._handle.onexit (node:internal/child_process:334:5) {
+    code: 1,
+    killed: false,
+    signal: null,
+    cmd: 'C:\\Program Files\\nodejs\\node.exe H:\\Workspace\\git\\NetstormReborn\\webpj\\node_modules\\eslint\\bin\\eslint.js . --max-warnings 0',
+    stdout: '\n' +
+      'H:\\Workspace\\git\\NetstormReborn\\webpj\\www\\core\\eslint-gate-probe-e1400.js\n' +
+      "  3:1  warning  'missingE1400LintProbe' is not defined  no-undef\n" +
+      '\n' +
+      '✖ 1 problem (0 errors, 1 warning)\n' +
+      '\n',
+    stderr: 'ESLint found too many warnings (maximum: 0).\n'
+  }
+}

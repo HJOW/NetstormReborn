@@ -334,7 +334,8 @@ function relationScene(relation, master, child, attach) {
 test('HudDividerGump 재배치 정밀도: 폭/높이는 확장 값에 현재 scale 을 한 번 곱한 뒤 float32 로 저장하고 attach 인자도 float32 이다', () => {
     const f = Math.fround;
     // 관계 1: 자식 폭 = 마스터 x − 자식 x. 단일 곱과 먼저 줄인 곱이 다른 입력이다.
-    let [mx, cx, scale] = [-916.906494140625, 520.8770141601562, 0.7855936884880066];
+    // 관측값과 경계값의 double 반올림을 문자열→Number 변환으로 명시한다.
+    let [mx, cx, scale] = [-916.906494140625, Number('520.8770141601562'), 0.7855936884880066];
     assert.notEqual(f((mx - cx) * scale), f(f(mx - cx) * scale));
     let got = relationScene(1, { x: 0, y: 0, baseWidth: 0, baseHeight: 0 }, { x: cx, y: 3, scale, baseWidth: 0, width: 0, baseHeight: 0, height: 0 }, { x: mx, y: 0 });
     assert.equal(got.other.baseWidth, f(mx - cx)); assert.equal(got.other.width, f((mx - cx) * scale)); assert.deepEqual(got.captured, [[2, cx, 3, 0, 1]]);
@@ -344,7 +345,8 @@ test('HudDividerGump 재배치 정밀도: 폭/높이는 확장 값에 현재 sca
     got = relationScene(4, { baseWidth: bw, baseHeight: 0, y: 0 }, { x: 5, y: 6, scale, baseWidth: 0, width: 0, baseHeight: 0, height: 0 }, { x: mx, y: 0 });
     assert.equal(got.other.baseWidth, f(1024 - right)); assert.equal(got.other.width, f((1024 - right) * scale)); assert.deepEqual(got.captured, [[2, f(right), 6, 0, 1]]); assert.ok(Object.is(got.captured[0][1], f(got.captured[0][1])));
     // 관계 2: 자식 높이 = 마스터 y − 자식 y(0x10/0x20 없음).
-    let my; let cy; [my, cy, scale] = [-916.906494140625, 520.8770141601562, 0.7855936884880066]; assert.notEqual(f((my - cy) * scale), f(f(my - cy) * scale));
+    // 관측값과 경계값의 double 반올림을 문자열→Number 변환으로 명시한다.
+    let my; let cy; [my, cy, scale] = [-916.906494140625, Number('520.8770141601562'), 0.7855936884880066]; assert.notEqual(f((my - cy) * scale), f(f(my - cy) * scale));
     got = relationScene(2, { x: 0, y: 0 }, { x: 4, y: cy, scale, baseHeight: 0, height: 0 }, { x: 0, y: my });
     assert.equal(got.other.baseHeight, f(my - cy)); assert.equal(got.other.height, f((my - cy) * scale)); assert.deepEqual(got.captured, [[2, 4, cy, 0, 1]]);
     // 관계 8: 아래 = 마스터 baseHeight + y(배정도 합), 높이 = 화면 높이 − 아래. attach 의 y 는 그 합의 float32 이다.

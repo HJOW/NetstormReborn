@@ -1,0 +1,45 @@
+// 실제 프로젝트의 세 번들 진입점이 lint 오류 전에 산출물을 건드리지 않는지 검사한다.
+'use strict';
+// 파일/해시/프로세스 API이며 셸을 거치지 않고 현재 Node로 실행한다.
+const fs = require('node:fs');
+const path = require('node:path');
+const crypto = require('node:crypto');
+const assert = require('node:assert/strict');
+const { spawnSync } = require('node:child_process');
+// 이 도구의 절대 프로젝트 위치와 확인할 기존 산출물이다.
+const root = path.resolve(__dirname, '..');
+const bundle = path.join(root, 'www/dist/netstorm.bundle.js');
+const probe = path.join(root, 'www/core/eslint-gate-probe-e1400.js');
+const results = [];
+// 산출물의 바이트와 수정 시각을 읽기만 한다.
+function fingerprint() { return { sha256: crypto.createHash('sha256').update(fs.readFileSync(bundle)).digest('hex'), mtimeMs: fs.statSync(bundle).mtimeMs }; }
+// 같은 프로젝트의 실제 실행 파일과 인자를 사용한다.
+const commands = [
+    ['production', ['node_modules/webpack/bin/webpack.js', '--mode', 'production']],
+    ['development', ['node_modules/webpack/bin/webpack.js', '--mode', 'development']],
+    ['ensure-bundle', ['tools/ensure-bundle.js']],
+];
+// 외부 기존 파일을 덮지 않으며 정상 번들 생성이 끝난 뒤에만 실행한다.
+assert.equal(fs.existsSync(probe), false);
+const before = fingerprint();
+fs.writeFileSync(probe, '// 번들 관문의 실패 경로만 확인하는 임시 미사용 소스다.\nmissingE1400LintProbe();\n', { flag: 'wx' });
+try {
+    // 각 경로가 그래프 밖의 같은 오류를 거부하고 기존 번들을 그대로 보존해야 한다.
+    for (const [name, args] of commands) {
+        // 개발 모드에서는 같은 지적을 경고로 내려 max-warnings 0도 실제로 확인한다.
+        fs.writeFileSync(probe, `${name === 'development' ? '/* eslint no-undef: warn */\n' : ''}// 번들 관문을 확인하는 임시 소스다.\nmissingE1400LintProbe();\n`);
+        const result = spawnSync(process.execPath, args, { cwd: root, encoding: 'utf8', timeout: 180000, maxBuffer: 16 * 1024 * 1024 });
+        assert.ifError(result.error);
+        assert.notEqual(result.status, 0, `${name}: 오류가 있는데 성공함`);
+        assert.match(`${result.stdout}${result.stderr}`, /missingE1400LintProbe/);
+        if (name === 'development') assert.match(`${result.stdout}${result.stderr}`, /too many warnings/);
+        assert.deepEqual(fingerprint(), before, `${name}: 기존 번들을 변경함`);
+        fs.writeFileSync(path.join(root, 'extracted', `webpj-e1400-gate-${name}.log`), `${result.stdout}${result.stderr}`);
+        results.push({ name, severity: name === 'development' ? 'warning' : 'error', exitCode: result.status, bundle: fingerprint() });
+    }
+} finally {
+    // 이 도구가 wx로 생성한 정확한 단일 파일만 제거한다.
+    fs.unlinkSync(probe);
+}
+fs.writeFileSync(path.join(root, 'extracted/webpj-e1400-build-gate-results.json'), JSON.stringify({ before, results }, null, 2));
+console.log(JSON.stringify({ paths: results.length, result: '모두 실패 차단/기존 번들 보존' }));

@@ -16,6 +16,7 @@ export const EXTERNAL_LINK_KIND = Object.freeze({ WEB: 'web', MAIL: 'mail' });
 export const EXTERNAL_LINK_MAX_LENGTH = 2048;
 
 // 주소에 들어가면 안 되는 글자(공백·제어 문자·치환 자리표시 괄호)이다. (2026-11-07 WB03-AD)
+// eslint-disable-next-line no-control-regex -- NUL/제어문자 검출 자체가 이 검사의 목적이다.
 const FORBIDDEN_CHARACTERS = /[\u0000- \u007f-\u009f{}]/;
 
 // 닫힌 판정을 만든다. reason 은 콘솔 안내에 붙는 한국어 사유이다. (2026-11-07 WB03-AD)

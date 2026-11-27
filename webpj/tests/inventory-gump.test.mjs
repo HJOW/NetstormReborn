@@ -262,8 +262,10 @@ test('InventoryGump 격자 배치 보정: 풀 크기와 같은 SID 는 거부하
 test('InventoryGump 격자 배치 정밀도: 열 수는 sqrt 를 float32 로 줄인 값과 배정도 비율의 곱을 올림하고 음수 열의 항목 위치는 0 쪽으로 절삭한다', () => {
     const s = new InventoryScene(); const inventory = new InventoryGump(s.create, s.factory, s.pool, s.finder, s.state(), s.hooks); inventory.constructGrid(NODE, 2, 1, 8);
     // 개수 2(slot 1 + 1): sqrt(2) 를 float 로 줄이면 열 13, 배정도로 두면 14 가 되는 폭/높이 비율이다.
-    s.grid.object = 50; s.grid.baseWidth = 919.2388305664062; s.grid.baseHeight = 100; s.grid.width = 1000; s.grid.height = 100; s.contents('8:1');
-    assert.notEqual(Math.ceil((919.2388305664062 / 100) * Math.fround(Math.sqrt(2))), Math.ceil((919.2388305664062 / 100) * Math.sqrt(2)));
+    // 관측값과 경계값의 double 반올림을 문자열→Number 변환으로 명시한다.
+    s.grid.object = 50; s.grid.baseWidth = Number('919.2388305664062'); s.grid.baseHeight = 100; s.grid.width = 1000; s.grid.height = 100; s.contents('8:1');
+    // 관측값과 경계값의 double 반올림을 문자열→Number 변환으로 명시한다.
+    assert.notEqual(Math.ceil((Number('919.2388305664062') / 100) * Math.fround(Math.sqrt(2))), Math.ceil((Number('919.2388305664062') / 100) * Math.sqrt(2)));
     inventory.attachGrid(NODE, 0, 0, 0, 0); assert.equal(s.grid.cellWidth, Math.fround(1000 / 13)); assert.equal(s.grid.cellHeight, 100);
     // 고정 배치의 음수 열: 나머지/몫은 0 쪽으로 절삭한다(slot 3, 열 -2 → 나머지 1·몫 -1).
     const fixed = new InventoryScene(); const tool = new InventoryGump(fixed.create, fixed.factory, fixed.pool, fixed.finder, fixed.state(), fixed.hooks); tool.constructGrid(NODE, -2, 2, 8);

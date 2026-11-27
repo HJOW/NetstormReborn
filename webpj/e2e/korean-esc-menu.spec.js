@@ -74,6 +74,7 @@ test('한국어 ESC 게임 메뉴의 모든 행이 번역되고 Players 행이 �
   await test.info().attach('labels.json', { body: JSON.stringify(all, null, 1), contentType: 'application/json' });
   // 모든 행의 영어 낱말을 모아 번역 누락을 찾는다. 제어 문자는 Players 행 깨짐의 신호이다.
   const left = []; let rows = 0;
+  // eslint-disable-next-line no-control-regex -- NUL/제어문자 검출 자체가 이 검사의 목적이다.
   for (const { path, labels } of all) for (const label of labels) { if (!label) continue; rows += 1; const words = englishLeft(label); if (words.length) left.push(`${path}: ${JSON.stringify(label)}`); expect(label, `${path} 행 글자`).not.toMatch(/[\u0000-\u001f]/u); }
   expect(rows, '수집한 메뉴 행').toBeGreaterThan(40);
   expect(left, '영어가 남은 행').toEqual([]);

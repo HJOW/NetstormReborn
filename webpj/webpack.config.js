@@ -7,6 +7,8 @@
 
 const path = require('path');
 const TerserPlugin = require('terser-webpack-plugin');
+// 운영/개발 모드와 webpack API 호출에서 출력 정리 전에 전체 lint를 기다리는 관문이다.
+const { ESLintBeforeBuildPlugin } = require('./tools/eslint-before-build.js');
 
 // webpack 이 부르는 설정 함수이다. argv.mode 가 development 면 개발 번들, 그 밖에는 운영 번들이다.
 module.exports = (env, argv) => {
@@ -22,6 +24,7 @@ module.exports = (env, argv) => {
         },
         devtool: production ? false : 'source-map',
         target: 'web',
+        plugins: [new ESLintBeforeBuildPlugin(__dirname)],
         optimization: {
             minimize: production,
             minimizer: [new TerserPlugin({

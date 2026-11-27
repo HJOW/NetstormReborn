@@ -93,7 +93,8 @@ export class RawCampaignSessionRegular {
                 // CP1377의 현재 객체/프레임 문맥을 추가 기록하고 기존 stderr 대응 행과 원래 예외도 보존한다.
                 logRegularFailure(c.pool, sid, event, count, payload);
                 // C++ fprintf처럼 로그 장치 자체의 실패가 원래 게임 예외를 덮지 못한다.
-                try { const type = sid >= 0 && sid < c.pool.capacity ? c.pool.slot(sid)[10] : 0xffff; console.error('실제 Regular 실패 SID' + (sid >>> 0) + ' TYPE' + type + ' event' + (event >>> 0) + ' count' + (count >>> 0) + ' payload' + floatBits(payload).toString(16).padStart(8, '0')); } finally { throw error; }
+                try { const type = sid >= 0 && sid < c.pool.capacity ? c.pool.slot(sid)[10] : 0xffff; console.error('실제 Regular 실패 SID' + (sid >>> 0) + ' TYPE' + type + ' event' + (event >>> 0) + ' count' + (count >>> 0) + ' payload' + floatBits(payload).toString(16).padStart(8, '0')); } catch { /* 로그 장치 오류는 원래 게임 예외보다 우선하지 않는다. */ }
+                throw error;
             }
         };
         this.regular = hooks.regular = regular; this.#ready = true;

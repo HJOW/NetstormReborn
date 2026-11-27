@@ -1,0 +1,647 @@
+{
+  "e2e/game-time-key.spec.js": {
+    "no-unused-vars": {
+      "count": 3
+    }
+  },
+  "e2e/korean-players-menu.spec.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "e2e/l3-common.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "e2e/mission-context-menu-close.spec.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "e2e/mission-object-commands.spec.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "e2e/mission-rotation-key.spec.js": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "e2e/screenshot-key.spec.js": {
+    "no-unused-vars": {
+      "count": 3
+    }
+  },
+  "tests/ai-bridge-candidates.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/ai-preparation.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/asset-regular.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/bomb-effect-timer.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/bridge-carriers.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/bridge-draw.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/canon-placement-preview.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/carrier-choice.test.mjs": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "tests/chat-manager-prefix.test.mjs": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "tests/chat-window.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/client-campaign-transport.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/client-connection-globals.test.mjs": {
+    "no-useless-assignment": {
+      "count": 2
+    }
+  },
+  "tests/construction-data.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/construction-process.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/construction-visual-support.mjs": {
+    "no-unused-vars": {
+      "count": 6
+    }
+  },
+  "tests/construction-visual-system.test.mjs": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "tests/dais-regular.test.mjs": {
+    "no-unused-vars": {
+      "count": 5
+    }
+  },
+  "tests/dialog.test.mjs": {
+    "no-unused-vars": {
+      "count": 3
+    }
+  },
+  "tests/embedded-tell.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/factory-runtime.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/fence-target.test.mjs": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "tests/fiery-tail-lifetime.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/forcefield-lifecycle.test.mjs": {
+    "no-useless-assignment": {
+      "count": 3
+    }
+  },
+  "tests/fort-object-load.test.mjs": {
+    "no-unused-vars": {
+      "count": 5
+    }
+  },
+  "tests/graph.test.mjs": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "tests/gump-redraw-text-help.test.mjs": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "tests/help.test.mjs": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "tests/ice-tower.test.mjs": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "tests/image-gump.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/inventory-item-gump.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/island-generation-parents.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/judge-common-layer.test.mjs": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "tests/local-geyser.test.mjs": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "tests/menu-small-inputs.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/meta-image-list.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/mission-guide-input.test.mjs": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "tests/mission-start.test.mjs": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "tests/player-participation.test.mjs": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "tests/priest-post-pop.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/raw-campaign-ownership.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/raw-campaign-particles.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/raw-campaign-session-carrier-regular.test.mjs": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "tests/raw-campaign-session-factories.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/raw-campaign-session-runtime.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/raw-missile-host.test.mjs": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "tests/raw-mission-server-packets.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/raw-path-start.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/raw-sun-flyer-frame.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/raw-surface-world.test.mjs": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "tests/raw-wind-flyer.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/render-collection.test.mjs": {
+    "no-unused-vars": {
+      "count": 2
+    }
+  },
+  "tests/screen.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/scrolling-text-gump-markup.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/squid-display.test.mjs": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "tests/squid-pop.test.mjs": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "tests/style-text-buffer.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    },
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "tests/surface-factory-lifetime.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/surface-lifecycle.test.mjs": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "tests/temple-shrapnel-native-fixtures.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "tests/terrain-growth.test.mjs": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "tests/text-entry-gump-input.test.mjs": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "www/core/campaign-game-world.js": {
+    "no-unused-private-class-members": {
+      "count": 1
+    }
+  },
+  "www/core/campaign-template-storage.js": {
+    "no-unused-private-class-members": {
+      "count": 1
+    }
+  },
+  "www/core/client-campaign-guide.js": {
+    "no-unused-private-class-members": {
+      "count": 1
+    }
+  },
+  "www/core/composite-mission-transport.js": {
+    "no-unused-private-class-members": {
+      "count": 1
+    }
+  },
+  "www/core/depend-form-host.js": {
+    "no-unused-private-class-members": {
+      "count": 1
+    }
+  },
+  "www/core/raw-acid-fence.js": {
+    "no-useless-assignment": {
+      "count": 4
+    }
+  },
+  "www/core/raw-ai-deployment.js": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "www/core/raw-arc-spire.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "www/core/raw-battle-island.js": {
+    "no-unused-private-class-members": {
+      "count": 1
+    }
+  },
+  "www/core/raw-bomb-blast.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "www/core/raw-bridge-decay.js": {
+    "no-unused-private-class-members": {
+      "count": 1
+    }
+  },
+  "www/core/raw-campaign-archer-bindings.js": {
+    "no-unused-private-class-members": {
+      "count": 1
+    }
+  },
+  "www/core/raw-campaign-construction-bindings.js": {
+    "no-unused-private-class-members": {
+      "count": 1
+    }
+  },
+  "www/core/raw-campaign-hit-bindings.js": {
+    "no-unused-private-class-members": {
+      "count": 2
+    }
+  },
+  "www/core/raw-campaign-session-cursor.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "www/core/raw-carrier-arrival.js": {
+    "no-unused-private-class-members": {
+      "count": 1
+    }
+  },
+  "www/core/raw-carrier-input.js": {
+    "no-useless-assignment": {
+      "count": 3
+    }
+  },
+  "www/core/raw-central-island.js": {
+    "no-unused-private-class-members": {
+      "count": 1
+    }
+  },
+  "www/core/raw-color-map-cache.js": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "www/core/raw-construction-builder.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "www/core/raw-flare.js": {
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "www/core/raw-fort-object-stream.js": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "www/core/raw-knowledge-menu.js": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "www/core/raw-path-process.js": {
+    "no-unused-vars": {
+      "count": 3
+    }
+  },
+  "www/core/raw-player-notification.js": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "www/core/raw-process-host-storage.js": {
+    "no-unused-private-class-members": {
+      "count": 2
+    }
+  },
+  "www/core/raw-projectile-geometry.js": {
+    "no-unused-vars": {
+      "count": 1
+    },
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "www/core/raw-shrapnel-frame.js": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "www/core/raw-sun-aviary-process.js": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "www/core/raw-wind-aviary-process.js": {
+    "no-unused-vars": {
+      "count": 2
+    },
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "www/core/raw-world-geyser.js": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "www/core/squid-destroy-lifecycle.js": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "www/platform/progress.js": {
+    "no-useless-assignment": {
+      "count": 2
+    }
+  },
+  "www/platform/settings.js": {
+    "no-useless-assignment": {
+      "count": 2
+    }
+  },
+  "www/ui/client-chat-window.js": {
+    "no-unused-private-class-members": {
+      "count": 2
+    },
+    "no-unused-vars": {
+      "count": 1
+    }
+  },
+  "www/ui/client-gump-decoration.js": {
+    "no-unused-private-class-members": {
+      "count": 1
+    }
+  },
+  "www/ui/client-minimap.js": {
+    "no-unused-private-class-members": {
+      "count": 1
+    }
+  },
+  "www/ui/client-production-hint.js": {
+    "no-unused-private-class-members": {
+      "count": 1
+    }
+  },
+  "www/ui/client-scrolling-text.js": {
+    "no-unused-private-class-members": {
+      "count": 2
+    }
+  },
+  "www/ui/client-warnings.js": {
+    "no-unused-private-class-members": {
+      "count": 1
+    }
+  },
+  "www/ui/embedded-tell.js": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "www/ui/gump-background-create.js": {
+    "no-unused-private-class-members": {
+      "count": 1
+    }
+  },
+  "www/ui/gump-decoration.js": {
+    "no-unused-private-class-members": {
+      "count": 1
+    }
+  },
+  "www/ui/hud-dock.js": {
+    "no-unused-private-class-members": {
+      "count": 1
+    }
+  },
+  "www/ui/menu-gump-controls.js": {
+    "no-unused-private-class-members": {
+      "count": 1
+    }
+  },
+  "www/ui/menu-gump-draw.js": {
+    "no-unused-private-class-members": {
+      "count": 1
+    }
+  },
+  "www/ui/menu-gump-input.js": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "www/ui/menu-gump-layout.js": {
+    "no-unused-private-class-members": {
+      "count": 1
+    }
+  },
+  "www/ui/menu-gump-widgets.js": {
+    "no-useless-assignment": {
+      "count": 2
+    }
+  },
+  "www/ui/meta-image-list.js": {
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "www/ui/raw-background-gif-controls.js": {
+    "no-unused-private-class-members": {
+      "count": 1
+    }
+  },
+  "www/ui/scroll-gump-widgets.js": {
+    "no-unused-private-class-members": {
+      "count": 1
+    }
+  },
+  "www/ui/scroll-gump.js": {
+    "no-unused-private-class-members": {
+      "count": 1
+    }
+  },
+  "www/ui/scroll-text.js": {
+    "no-unused-vars": {
+      "count": 1
+    },
+    "no-useless-assignment": {
+      "count": 1
+    }
+  },
+  "www/ui/scrolling-text-gump-widgets.js": {
+    "no-unused-private-class-members": {
+      "count": 1
+    }
+  },
+  "www/ui/stone-button-gump.js": {
+    "no-unused-private-class-members": {
+      "count": 1
+    }
+  },
+  "www/ui/style-text-markup.js": {
+    "no-useless-assignment": {
+      "count": 2
+    }
+  },
+  "www/ui/text-gump.js": {
+    "no-unused-private-class-members": {
+      "count": 2
+    }
+  }
+}

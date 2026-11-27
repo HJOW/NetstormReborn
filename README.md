@@ -262,11 +262,13 @@ NETSTORM_DATA="/절대/경로/game-data" ./dist/linux-x64/Netstorm --window --se
 
 # 웹 클론 실행 (HTML + JavaScript)
 
-Node.js v22 이상이 필요하며(v22·v26에서 전체 검사 통과) 외부 npm 패키지는 쓰지 않습니다. 필요한 에셋은 `webpj/www/data/`에 커밋돼 있습니다. 프로젝트 루트에서 다음 명령으로 정적 웹 서버를 시작한 뒤 브라우저에서 `http://localhost:9803/`을 엽니다.
+Node.js 22.13 이상(22.x 계열) 또는 24 이상이 필요합니다. 빌드·검사 도구는 `npm --prefix webpj ci`로 설치합니다. 필요한 에셋은 `webpj/www/data/`에 커밋돼 있습니다. 프로젝트 루트에서 다음 명령으로 정적 웹 서버를 시작한 뒤 브라우저에서 `http://localhost:9803/`을 엽니다.
 
 ```sh
 npm --prefix webpj start
 ```
+
+ESLint 검사는 `npm --prefix webpj run lint`, 운영 번들은 `npm --prefix webpj run build`, 개발 번들은 `npm --prefix webpj run build:dev`로 만듭니다. webpack은 생성 전에 전체 ESLint 검사를 기다리며 오류나 경고가 있으면 기존 번들을 보존하고 실패합니다. 자동 갱신과 직접 webpack 호출에도 같은 검사가 적용됩니다. [설정·기존 코드 예외 관리](docs/webpj-eslint-20261127.md)를 참조합니다.
 
 자동 검사는 `npm --prefix webpj test`로 실행합니다. `assets/game-data/`의 원본 자료가 바뀌면 `npm --prefix webpj run prepare-assets`로 `webpj/www/data/`를 다시 만들고, `npm --prefix webpj run check-assets`로 복사본을 점검합니다. 개발용 주소 인자로 `?lang=ko`(한국어), `?mute`(소리 끄기), `?aspect=16:9`(화면비)를 조합할 수 있고, `?map=savetheisland`는 게임 규칙 없이 지형만 보여 주는 개발용 화면입니다.
 

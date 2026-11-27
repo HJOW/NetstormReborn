@@ -96,7 +96,7 @@ export class GameRecorder {
     #cleanup() {
         if (this.#timer !== null) this.#view.clearTimeout(this.#timer); this.#timer = null;
         // 문맥 종료로 이미 끊긴 분기는 무시하되 트랙·타이머 정리를 끝까지 수행한다.
-        try { if (this.#bus && this.#destination) this.#bus.disconnect(this.#destination); } catch {}
+        try { if (this.#bus && this.#destination) this.#bus.disconnect(this.#destination); } catch { /* 이미 끊긴 녹화 분기는 반납을 계속한다. */ }
         // Canvas 영상과 녹화용 오디오 트랙만 종료한다.
         for (const track of this.#stream?.getTracks() ?? []) track.stop();
         for (const track of this.#destination?.stream.getTracks() ?? []) track.stop();
@@ -105,7 +105,7 @@ export class GameRecorder {
     // 한 번의 반납으로 자동 종료·실패·완료 주소까지 정리한다.
     async dispose() {
         if (this.#disposed) return; this.#disposed = true;
-        if (this.#recorder) { try { await this.stop(); } catch {} }
+        if (this.#recorder) { try { await this.stop(); } catch { /* 중지 실패 뒤에도 아래 자원을 반납한다. */ } }
         // 결과 주소를 모두 반납해 녹화를 반복해도 큰 Blob을 계속 붙잡지 않는다.
         for (const url of this.#urls) this.#view.URL.revokeObjectURL(url);
         this.#urls.clear(); this.#result = null; this.#blob = null;

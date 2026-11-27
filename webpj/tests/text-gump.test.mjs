@@ -47,7 +47,7 @@ test('TextGump.clear/fit: 소유 체인 scalar 삭제와 측정 뒤 현재 scale
     // 여백은 DWORD 합이며 기본 크기를 float32 로 저장한다. 배율 크기는 측정 콜백이 바꾼 현재 scale 에 저장 전 정수 합을 곱한다.
     s.scaleOnMeasure.value = 0.5; s.single.fit(2, 3, -2); assert.deepEqual([s.text.baseWidth, s.text.width, s.text.baseHeight, s.text.height], [9, 4.5, 10, 5]);
     s.scaleOnMeasure.value = null; s.single.fit(2, 0x7fffffff, 0x7fffffff); assert.deepEqual([s.text.baseWidth, s.text.baseHeight], [Math.fround(6 + 0x7fffffff | 0), Math.fround(12 + 0x7fffffff | 0)]);
-    s.single.fit(2, 16777211, 0); assert.equal(s.text.baseWidth, 16777216 + 1 - 1 === 16777216 ? Math.fround(16777217) : 0); assert.equal(s.text.width, Math.fround(16777217 * s.text.scale));
+    s.single.fit(2, 16777211, 0); assert.equal(s.text.baseWidth, Math.fround(16777217)); assert.equal(s.text.width, Math.fround(16777217 * s.text.scale));
     // 빈 체인은 0×0 이다.
     const e = scene(); made(e); e.single.fit(2, 4, 5); assert.deepEqual([e.text.baseWidth, e.text.baseHeight], [4, 5]);
     s.events.length = 0; s.single.clear(2); assert.deepEqual(s.events, [['release', tokens[0]], ['release', tokens[1]]]); assert.equal(s.text.head, 0); assert.equal(s.fragments.fragments.has(tokens[0]), false);

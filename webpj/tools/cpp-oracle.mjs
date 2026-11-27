@@ -66,6 +66,7 @@ export function settingsArgument(settings) {
 
 // 파일명으로 쓰는 캡처 이름은 작업 폴더를 벗어나거나 Windows에서 해석이 달라지지 않아야 한다. (2026-11-19 WB04-E868)
 function captureName(value) {
+    // eslint-disable-next-line no-control-regex -- NUL/제어문자 검출 자체가 이 검사의 목적이다.
     if (typeof value !== 'string' || !value || value === '.' || value === '..' || /[\\/:*?"<>|\x00-\x1f]|[. ]$/.test(value)) throw new Error('오라클 캡처 이름 오류');
     return value;
 }
@@ -77,6 +78,7 @@ export function runCppScenario({ exe, gameDir, shared, scenario, execute = spawn
     const mission = scenario.mission ?? shared.mission;
     if (fixedFrameMs !== undefined && (!Number.isInteger(fixedFrameMs) || fixedFrameMs < 1 || fixedFrameMs > 60000)) throw new RangeError('고정 프레임 밀리초 범위 오류');
     if (fixedUnixSeconds !== undefined && (fixedFrameMs === undefined || !Number.isInteger(fixedUnixSeconds) || fixedUnixSeconds < -2147483648 || fixedUnixSeconds > 2147483647)) throw new RangeError('고정 Unix 초 범위 또는 프레임 설정 오류');
+    // eslint-disable-next-line no-control-regex -- NUL/제어문자 검출 자체가 이 검사의 목적이다.
     if (mission !== undefined && (typeof mission !== 'string' || !mission || /[\x00-\x1f]/.test(mission))) throw new TypeError('오라클 미션 이름 오류');
     const work = fs.mkdtempSync(path.join(os.tmpdir(), `netstorm-oracle-${captureName(scenario.id)}-`));
     try {

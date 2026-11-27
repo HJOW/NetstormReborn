@@ -17,6 +17,7 @@ const absent = (value) => value === null || value === undefined;
 // 원문 좁은 키를 실제 UTF-8 Config 경계에서만 해독한다(원문 DecodeDisplayText). 모든 글자가 0..255 이면 바이트로 보고 해독하며, 이미 해독된 문자열(255 초과 글자 포함)은 그대로 둔다.
 // TellSection(E461)도 같은 경계 변환을 쓰므로 내보낸다.
 export function decodeKey(key) {
+    // eslint-disable-next-line no-control-regex -- NUL/제어문자 검출 자체가 이 검사의 목적이다.
     if (/[^\u0000-ÿ]/.test(key)) return key;
     return decodeOriginalText(Uint8Array.from(key, (character) => character.charCodeAt(0)));
 }

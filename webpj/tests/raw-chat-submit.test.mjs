@@ -38,7 +38,7 @@ test('addChatRecipient 확장: capacity 가 count 이하면 capacity×4+128 바�
     assert.deepEqual(r.log, [['allocate', 136], ['release', 3]]); assert.deepEqual([getDword(r.manager, 0), getDword(r.manager, 4), getDword(r.manager, 8)], [3, 34, 100]); assert.deepEqual(list(r.manager, r.memory), [7, 8, 9]);
     // capacity 가 count 보다 크면 확장하지 않는다. 같으면 확장한다. 음수 capacity 는 signed 비교로 확장한다(복사 칸 0).
     const roomy = rig({ count: 1, capacity: 2 }); addChatRecipient(1, 9, roomy.hooks); assert.deepEqual(roomy.log, []); const edge = rig({ count: 4, capacity: 4 }); addChatRecipient(1, 9, edge.hooks); assert.equal(edge.log[0][0], 'allocate');
-    const neg = rig({ count: 0, capacity: 0xfffffff0 }); addChatRecipient(1, 9, neg.hooks); assert.equal(neg.log[0][0], 'allocate'); assert.equal(neg.log[0][1], ((0xfffffff0 * 4) + 128) >>> 0 || 0);
+    const neg = rig({ count: 0, capacity: 0xfffffff0 }); addChatRecipient(1, 9, neg.hooks); assert.equal(neg.log[0][0], 'allocate'); assert.equal(neg.log[0][1], ((0xfffffff0 * 4) + 128) >>> 0);
 });
 
 test('addChatRecipient 실패: 할당 실패(0)는 진단 0x112 를 알리고 원문 접근을 계속(토큰 0 물리 없음 RangeError)하며, 필수 장치는 도달한 위치에서만 요구한다', () => {

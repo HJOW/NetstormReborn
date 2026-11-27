@@ -1,0 +1,35 @@
+{
+  "before": {
+    "sha256": "e24f9de39773455070791171f856c830e0f871069329df634ab26b3dd9d1300b",
+    "mtimeMs": 1795749452109.0813
+  },
+  "results": [
+    {
+      "name": "production",
+      "severity": "error",
+      "exitCode": 2,
+      "bundle": {
+        "sha256": "e24f9de39773455070791171f856c830e0f871069329df634ab26b3dd9d1300b",
+        "mtimeMs": 1795749452109.0813
+      }
+    },
+    {
+      "name": "development",
+      "severity": "warning",
+      "exitCode": 2,
+      "bundle": {
+        "sha256": "e24f9de39773455070791171f856c830e0f871069329df634ab26b3dd9d1300b",
+        "mtimeMs": 1795749452109.0813
+      }
+    },
+    {
+      "name": "ensure-bundle",
+      "severity": "error",
+      "exitCode": 2,
+      "bundle": {
+        "sha256": "e24f9de39773455070791171f856c830e0f871069329df634ab26b3dd9d1300b",
+        "mtimeMs": 1795749452109.0813
+      }
+    }
+  ]
+}

@@ -23,7 +23,7 @@ async function runSkirmish(page, values) {
   try {
     await page.waitForFunction(() => window.netstorm?._clientGuide?.current()?.script.name === 'Skirmish', null, { timeout: 30000 });
     await page.waitForFunction(() => window.netstorm?._campaignDisplayActive() && window.netstorm._clientGuide.current()?.runtime.gate.started === 1, null, { timeout: 90000 });
-  } catch (error) { throw new Error(`${error.message}\n오류: ${errors.join('\n')}`); }
+  } catch (error) { throw new Error(`${error.message}\n오류: ${errors.join('\n')}`, { cause: error }); }
   const before = await page.evaluate(() => { const app = window.netstorm; return { run: app._gameData.getInt('skirmishRun'), players: app._skirmishPlan.islands.length, central: Array.from(app._skirmishPlan.central), mapSize: app._skirmishPlan.mapSize, clock: app._gameClock.gameSeconds() }; });
   await clickLabel(page, 'Go!'); await page.waitForTimeout(6000);
   const after = await page.evaluate(() => { const app = window.netstorm; return { clock: app._gameClock.gameSeconds(), paused: app._gameClock.paused(), dialog: Boolean(app._mainMenu.dialog), missionType: app._clientGuide.current().script.missionType() }; });
