@@ -1,0 +1,7 @@
+{
+  "recordedAt": "2026-11-27T08:27:50.022667+00:00",
+  "phase": "before tests/version validation",
+  "result": "WinError2: previous attempt used webpj/extracted instead of root/extracted. No test process launched. Correct path obtained from E1411 source-freeze evidence.",
+  "failedPath": "webpj/extracted/webpj-node22/node_modules/node-win-x64/bin/node.exe",
+  "correctPath": "extracted/webpj-node22/node_modules/node-win-x64/bin/node.exe"
+}

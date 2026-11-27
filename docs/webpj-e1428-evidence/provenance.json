@@ -1,0 +1,53 @@
+{
+  "unit": "WB04-E1428",
+  "host": "HJOW-Athlon",
+  "sourceHead": "f6a55f3a7f955ffc1baac7763bc57ef886c56ccd",
+  "node": "v22.23.5",
+  "nodeExecutable": "H:\\Workspace\\git\\NetstormReborn\\extracted\\webpj-node22\\node_modules\\node-win-x64\\bin\\node.exe",
+  "nodeExecutableSha256": "247e9693d316da9857e44990e5e11709f596f18112251b8026ec6eed80bdf38a",
+  "result": {
+    "unit": "WB04-E1428",
+    "recordedAt": "2026-11-27T08:42:06.281873+00:00",
+    "nodeExit": 0,
+    "files": 3539,
+    "changed": [],
+    "newlinesOnly": [],
+    "results": {
+      "tests": 6910,
+      "pass": 6910,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "durationMs": 846744.9484
+    },
+    "runnerElapsedSeconds": 850.9423363000096
+  },
+  "sequence": "Node22 종료/입력 불변 확인 뒤 Node26 E1429 시작. 두 전체 검사는 동시에 실행하지 않았다.",
+  "periodAfter": {
+    "v22": "0/8",
+    "v26": "4/4 (E1429実行中)"
+  },
+  "evidence": {
+    "first-launch-path-error.json": {
+      "bytes": 451,
+      "sha256": "3116e0ba48ca95aa8b29d58aee1eed378e4ff843ecdd05c5221928aa98753ca0"
+    },
+    "node22.log": {
+      "bytes": 2075652,
+      "sha256": "9863927c1aa6c693230648075a1299d72ebe26a68d87a8260857f75efbafb16b"
+    },
+    "sequential-runner.py": {
+      "bytes": 6237,
+      "sha256": "818dc6029347f9b85d8a8fbd5f49e858742f71264f895b037a87b574beeaf048"
+    },
+    "source-freeze-check.json": {
+      "bytes": 370,
+      "sha256": "78ec22e4548fee2ba06a0022a0facbfec24932a7919774f22bf4cbc0d6f32fb0"
+    },
+    "source-freeze.json": {
+      "bytes": 794171,
+      "sha256": "2b4c598efc0e422a894ca67c2e63992090b81dc377e4ac44c5d3d23a11e82f6b"
+    }
+  }
+}
