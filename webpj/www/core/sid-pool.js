@@ -33,6 +33,8 @@ export class SidPool {
     // 독립 풀의 서버 값과 세션이 제공하는 같은 {value:boolean} 소유자이다.
     #server;
     #serverOwner;
+    // 현재 Storage의 권한/종류/진단/가상 삭제를 선택하는 장기 대여다. 독립 풀은 기존 엄격 할당을 유지한다.
+    #allocation = null;
 
     // 23003~65535개 슬롯을 확보하고 초기화한다. serverOwner가 있으면 현재 값을 매번 빌린다.
     constructor(capacity = 32768, { server = true, serverOwner = null } = {}) {
@@ -101,9 +103,77 @@ export class SidPool {
         for (const index of [1, 0]) this.#history[index].fill(0);
     }
 
+    // 현재 장기 전역과 원문 진단/회수 장치를 빌린다. 설치만으로 풀이나 목록을 바꾸지 않는다.
+    bindAllocation(bindings) { this.#allocation = { ...bindings }; }
+
+    // 선택한 진단은 정상 복귀/예외와 재연결 효과를 그대로 전달한다.
+    #assertAllocation(expression, line, file = '\\Ns\\O\\Squid.cpp') {
+        const assertion = this.#allocation.assertion;
+        if (typeof assertion !== 'function') throw new Error('SID 할당의 선택된 원문 단언 미연결');
+        assertion(expression, file, line);
+    }
+
+    // 현재 필드/장치는 도달한 위치에서만 요구한다. 콜백 뒤에는 같은 저장소를 다시 읽는다.
+    #allocationEffect(name) {
+        const effect = this.#allocation[name];
+        if (typeof effect !== 'function') throw new Error(`SID 할당의 현재 ${name} 미연결`);
+        return effect;
+    }
+
+    // PATCH004af1d0의 진단 복귀와 최대50개 다리 회수를 실제 Pool에 적용한다. CD분기는 포함하지 않는다.
+    #allocatePatch(flags) {
+        if (this.#allocation.disallow?.()) this.#assertAllocation('disallowSquidAllocation == 0', 0xe8);
+        let sid;
+        if (flags & 1) {
+            const head = LAYOUT.predictableFirst * LAYOUT.stride;
+            if (!(this.#bytes[head + STATE] & FREE)) this.#assertAllocation('predictableHead->isFree()', 0xf0);
+            sid = LAYOUT.predictableFirst + this.#predictableCursor;
+            if ((sid | 0) >= this.#capacity) this.#assertAllocation('sid < numSquids', 0xf2);
+            if (!(this.physical(sid)[STATE] & FREE)) this.#assertAllocation('me->isFree()', 0xf4);
+            if (this.isServer) {
+                if (this.#readNext(sid * LAYOUT.stride) !== sid + 1) this.#assertAllocation('me->getNext() == sid+1', 0xf7);
+                const next = this.#readNext(sid * LAYOUT.stride);
+                if (!(this.physical(next)[STATE] & FREE)) this.#assertAllocation('checkMe->isFree()', 0xfa);
+                const selected = this.#readNext(sid * LAYOUT.stride);
+                if (selected === LAYOUT.predictableFirst) this.#assertAllocation('n != getSid()', 0x123, 'c:\\ns\\o\\squid.h');
+                this.#writeNext(head, selected);
+            }
+        } else {
+            const client = Boolean(flags & 2), list = client ? 0 : 1;
+            if (!client && !this.isServer) this.#assertAllocation('server', 0x10a);
+            if (this.#readNext(HEADS[list]) === this.#tails[list]) {
+                if (this.#allocationEffect('boss')()) {
+                    const end = this.#capacity; let candidate = 2, remaining = 50;
+                    // 원문 iterator는1에서 먼저 전진하며 free만 제외한다. 끝번호는 최초 값이다.
+                    while (candidate < end && (this.physical(candidate)[STATE] & FREE)) candidate += 1;
+                    // 회수 뒤 현재 TYPE/권한/용량을 다시 읽고 실제 가상 삭제만 호출한다.
+                    while (candidate >= 1 && candidate < this.#capacity && remaining) {
+                        if (this.physical(candidate)[TYPE] === this.#allocationEffect('bridgeType')()) {
+                            this.#allocationEffect('reclaim')(candidate); remaining -= 1;
+                        }
+                        candidate += 1;
+                        while (candidate < end && (this.physical(candidate)[STATE] & FREE)) candidate += 1;
+                    }
+                }
+                if (!client && !this.isServer) this.#assertAllocation('server', 0x139);
+            }
+            sid = this.#readNext(HEADS[list]);
+            if (!(this.physical(sid)[STATE] & FREE)) this.#assertAllocation('p->isFree()', 0x149);
+            if (sid === this.#tails[list]) this.#assertAllocation('p != *freeTail', 0x14a);
+            const next = this.#readNext(sid * LAYOUT.stride);
+            if (!next) this.#assertAllocation('n != getSid()', 0x123, 'c:\\ns\\o\\squid.h');
+            this.#writeNext(HEADS[list], next);
+        }
+        const selected = this.physical(sid); selected.fill(0); selected[STATE] = VOID;
+        if (flags & 1) this.#predictableCursor = (this.#predictableCursor + 1) >>> 0;
+        this.#freeCount = (this.#freeCount - 1) >>> 0;
+        return sid;
+    }
+
     // flags bit0은 예측, bit1은client이며 예측 분기가 우선한다. 반환값은 원본WORD 번호이다.
     allocate(flags = 0) {
         integer(flags, 0, 0xffffffff, 'SID 할당 플래그');
+        if (this.#allocation) return this.#allocatePatch(flags);
         let sid;
         if (flags & 1) {
             const head = LAYOUT.predictableFirst * LAYOUT.stride;

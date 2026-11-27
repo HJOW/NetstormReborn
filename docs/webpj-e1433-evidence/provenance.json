@@ -1,0 +1,53 @@
+{
+  "unit": "WB04-E1433",
+  "host": "HJOW-Athlon",
+  "sourceBefore": "296ce81ac (+공유DN커밋;WB입력불변)",
+  "scope": "독립엄격풀유지; 실제장기Storage만PATCH진단/50다리회수선택. 현재World의기존가상삭제/대여계약사용. 실제게임승리시험아님.",
+  "fixture": {
+    "path": "cpppj/tests/fixtures/sid-allocation-recovery-x86.tsv",
+    "rows": 47,
+    "sha256": "1527716c4194bc879f0bab5cb6352a378951f7beb049b730cf503485426fd5d8"
+  },
+  "validation": {
+    "nativeFixtureCandidate": "47/47rows +wholePool/history/events",
+    "candidateFocus": "75/75",
+    "mainFocus": "84/84",
+    "buildExit": 0,
+    "bundleFresh": "1/1",
+    "unchangedChromiumL2": "1/1"
+  },
+  "bundle": {
+    "bytes": 3510896,
+    "sha256": "0da5a46c2978732ac114f0b83c0a6ba10b392603d2408f6afc4f2f564ef63741"
+  },
+  "periodAfter": {
+    "v26": "3/4",
+    "v22": "3/8"
+  },
+  "evidence": {
+    "build.log": {
+      "bytes": 462,
+      "sha256": "41606ed32698eb2a4721672b1383a810eb6b0c4f76f91ca2d351f392687136b7"
+    },
+    "bundle-fresh.log": {
+      "bytes": 248,
+      "sha256": "55813752bc7b35ceca9ba910857a5add062868c4beca83031aefffcd002e5986"
+    },
+    "candidate-native47.log": {
+      "bytes": 225,
+      "sha256": "d4953546a765c35fea0a3d9bed0113b944e01535e84185710aea28153f55948e"
+    },
+    "candidate-world-focus.log": {
+      "bytes": 6494,
+      "sha256": "d86e74c598b8d4266f2fee194cb64d092a29ccfe32eab7719cd036de702511bc"
+    },
+    "chromium-l2.log": {
+      "bytes": 604,
+      "sha256": "82431da1a4b2eae4d6285a41ae5b8d98d19f224de248f555d0a7adcf41d45a11"
+    },
+    "node-focus.log": {
+      "bytes": 7288,
+      "sha256": "2fb9253abbf1ff0760937b89cd0c05046ac38413d95b6f0666fd95f0e8d3b4b3"
+    }
+  }
+}

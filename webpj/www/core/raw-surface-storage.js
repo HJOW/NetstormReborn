@@ -6,7 +6,7 @@
 //   - 장기 장치(Client 수명): 표시 진단·상세 owner, 할당 소진 진단, Graph 시계/추적, checking 뷰는 첫 World 전에 한 번 연결하며 World 마다 교체하지 않는다. 주변 바람은 Client 난수를 직접 소비한다.
 // C++ 의 `shared_ptr`/주소 동일성은 웹에서 객체 동일성이며, 대여가 "새 값 대입"인 곳은 같은 객체를 제자리에서 초기화해 참조를 유지한다. 웹에는 소멸자가 없으므로 `Use.release()` 와 `dispose()` 가 명시 반납이다.
 // E593의 Factory/표시/Unpop·건물·기본 종속 분리와 공통 후처리 상태도 Storage가 보유한다. Graph/Pop/후처리 등 나머지 실행기의 소유권 전환은 남았다.
-// E568의 실제 Path 검색기가 장기 거리표/큐도 빌린다. 남음: SID 소진 복구 할당 연결(SidPool.BindAllocation — 웹 풀은 소진을 거부만 한다, 3.6절 ③ 4-D), 실제 자산의 MakeRawSurfaceStorage(Client 자산 단위).
+// E568의 실제 Path 검색기가 장기 거리표/큐도 빌린다. SID 소진의 진단/현재 World 다리 회수는 같은 장기 Pool에 연결한다. 실제 자산의 MakeRawSurfaceStorage는 Client 자산 단위다.
 // CD(10.72)의 시작 값/분기는 옮기지 않았다. 이 모듈은 DOM 을 쓰지 않는다. (2026-11-11 WB04-E298: 4-B RawSurfaceStorage 이식)
 import { releaseRuntimePin } from './runtime-pin.js';
 import { ChunkMap } from '../assets/territory.js';
@@ -165,6 +165,13 @@ export class RawSurfaceStorage {
         this.links.stalagType = 95;
         this.links.connectorType = 155;
         this.links.noIslandType = 157;
+        // 같은 Client 전역을 빌리고 소진 때만 현재 World의 실제 가상 삭제를 선택한다.
+        this.pool.bindAllocation({
+            disallow: () => this.disallowSquidAllocation.value, boss: () => this.#authority.boss,
+            bridgeType: () => this.links.bridgeType,
+            assertion: (expression, file, line) => this.assertDisplay(expression, file, line),
+            reclaim: (sid) => this.processes.reclaimForAllocation(sid),
+        });
     }
 
     // 대여 소유권을 읽고 쓰는 내부 접근이다(SurfaceUse 만 호출). (2026-11-11 WB04-E298)
@@ -433,7 +440,7 @@ export class RawSurfaceStorage {
         this.#allocationTell = tell;
     }
 
-    // 보관된 소진 진단 장치를 읽는다(웹 풀 연결 전까지 소비자는 4-D). (2026-11-11 WB04-E298)
+    // 보관된 할당 덤프/Tell 장치를 읽는다. PATCH 회복은 같은 Pool의 원문 진단/현재 World 가상 삭제를 사용한다. (2026-11-11 WB04-E298)
     get allocationDiagnostics() {
         return { dump: this.#allocationDump, tell: this.#allocationTell };
     }
