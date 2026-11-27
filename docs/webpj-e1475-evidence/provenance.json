@@ -1,0 +1,29 @@
+{
+  "unit": "WB04-E1475",
+  "sourceHead": "b280c6082010be4f4a3ef1a20cba1b9ccda82408",
+  "node": "v26.13.0",
+  "nodeExecutable": "C:\\Program Files\\nodejs\\node.exe",
+  "nodeExecutableSha256": "14319838b3f355e0398c13569a90270bce4fc68f25189f58c59b03dadae0e6d5",
+  "command": "node --test --test-concurrency=2 tests/*.test.mjs",
+  "results": {
+    "tests": 6982,
+    "pass": 6982,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "durationMs": 561041.9599
+  },
+  "nodeExit": 0,
+  "files": 3568,
+  "rawChanged": [],
+  "newlinesOnly": [],
+  "runnerElapsedSeconds": 563.4460550000076,
+  "artifacts": {
+    "webpj-e1475-node26.log": "5ecc4b041b07f225ce4bfef30fc616d1fbd7d258ce10326e0ea4c0a03beaaa6e",
+    "webpj-e1475-freeze.json": "b43d40547ed2f88d79813824be42577ba88e37ebfd5839b8dcf4f609323d0eec",
+    "webpj-e1475-freeze-check.json": "77e4e3d00f1afa04c5a9f8dfb072e662fd09be44ac168e4a4ffa62c7b3a2ebea"
+  },
+  "previousFailure": "E1474 첫전체6980/6982는WEB_ONLY5누락2실패로보존. 이번재검사는수정된분류를포함하며단언/오라클을바꾸지않음.",
+  "next": "E1476 Node22 same input running; source freeze still active"
+}
