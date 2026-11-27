@@ -2,6 +2,7 @@
 using System.Text;
 using Netstorm.Client.Display;
 using Netstorm.Client.Gump;
+using Netstorm.Core.Original;
 
 namespace Netstorm.Client.Host;
 
@@ -82,7 +83,7 @@ public sealed partial class ClientHostGame
             Maintenance = (panel, refresh) => context.Gameplay.RequireSession().MakeProductionMaintenance(_productionGlobals, panel, () => _clock.NowSeconds, refresh),
             CancelCursor = CancelNativeProductionCursor,
             Take = TakeNativeProductionContent,
-            About = (_, _, _) => throw new InvalidOperationException("생산 항목 실제 정보 메뉴는 R6에서 잇는다"),
+            About = OpenNativeProductionAbout,
             // 생산 구분선도 미니맵과 같은 현재 입력과 Client의 실제 커서를 사용한다.
             Poll = Poll,
             Cursor = SelectNativeCursor,
@@ -100,6 +101,27 @@ public sealed partial class ClientHostGame
         panel.Idle(root.Budget);
         _missionProduction = panel;
         _menuDirty = true;
+    }
+
+    /// <summary>현재 생산 내용물의 정보를 같은 미션·메뉴·번역·음향 장치로 연다.</summary>
+    private uint OpenNativeProductionAbout(InventoryItemNode item, ScreenPoint point, Func<uint, bool> affordable)
+    {
+        HostSession session = _gameplay.RequireSession();
+        using var pin = _gameplay.PinCurrentRuntime(session);
+        var menus = _htmlMenus ?? throw new InvalidOperationException("생산 정보의 실제 메뉴 없음");
+        var startup = _startup ?? throw new InvalidOperationException("생산 정보의 실제 설정 없음");
+        var types = _surfaceGlobals.Storage.Types;
+        string TranslateBytes(string value) => TranslateNativeChatText(ExtendedText.DecodeDisplayText(Encoding.Latin1.GetBytes(value)));
+        return HostProductionAbout.Open(session, AssetTables.Definitions, menus, item, point, affordable, new()
+        {
+            Description = type => type < types.Count ? TranslateNativeChatText(types[(int)type].Description) : throw new ArgumentOutOfRangeException(nameof(type)),
+            OwnerName = owner => (_nativeChatIdentity ?? throw new InvalidOperationException("생산 정보의 실제 소유자 이름 없음")).NameForOwner(owner),
+            Translate = TranslateBytes,
+            Substitute = value => Encoding.Latin1.GetString(ExtendedText.EncodeDisplayText(startup.Configuration.SubstituteLocal(ExtendedText.DecodeDisplayText(Encoding.Latin1.GetBytes(value))))),
+            HelpWord = () => _localState.HelpWord.Value,
+            Sound = name => (_missionAudio ?? throw new InvalidOperationException("생산 정보의 실제 음향 없음")).PlayGlobal(name),
+            Changed = () => _menuDirty = true,
+        });
     }
 
     /// <summary>공통 xlat 표의 같은 현재 언어 번역이다. 없으면 원문을 보존한다.</summary>

@@ -13,6 +13,52 @@ namespace Netstorm.Client.Tests;
 /// <summary>제품과 같은 등록표·공장·세션에서 생산 격자의 부모 소실을 검증한다.</summary>
 public sealed partial class HostPriestWorldLiveTests
 {
+    /// <summary>검사 전용 적재 관문 뒤 실제 내용물·메뉴·Form과 현재 비용 및 도움말을 연결한다.</summary>
+    [Fact]
+    public void ProductionAboutUsesActualSessionMenuAndForm()
+    {
+        var (session, types, surface) = WorldDeletionRootScene(sharedNative: true);
+        string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        var startup = new HostStartupScene(data);
+        var screen = new Screen(1024, 768); Assert.True(screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); startup.Draw(screen);
+        var menu = new HostMainMenu(startup, screen, new() { Now = () => 0, Poll = _ => default, Sound = () => { }, Redraw = (_, _) => { }, HandleBase = (_, _, _, _) => 0 });
+        var tree = menu.Tree; var html = new HostHtmlWindows(menu, new InputQueue(), () => 0, _ => { }); html.BindParser(startup, _ => { });
+        var text = new HostHtmlText(menu, html, screen, _ => default, (_, _) => { }, _ => { }, _ => { }); text.Bind(html);
+        var assets = Assert.IsType<HostAssetTables>(surface.Storage.Source());
+        text.BindPictures(new(assets.TypeTable, assets.Definitions, new(assets.ShapeImage)), () => SpriteColorMapBuilder.BuildSpriteColorMaps(screen.LogicalPalette).Shadow, startup.Configuration);
+        var menus = new HostHtmlMenus(menu, html, text, startup, screen, (_, _) => { }); menus.BindInput(new(), _ => { }, (_, _) => { });
+        using var ui = new HostGumpFormRuntime(surface.Storage, tree, (_, _) => false, () => { });
+        menus.BindObjectForms(surface.Storage.GumpForms());
+        int content = session.BuildPlayerWorldHooks().Create!(2, 2);
+        BinaryPrimitives.WriteUInt16LittleEndian(session.Pool.AllocatedBytes(content)[18..], 71);
+        var item = new InventoryItemNode { Content = (uint)content };
+        var sounds = new List<string>(); int changes = 0, moneyChecks = 0;
+        var devices = new HostProductionAboutDevices
+        {
+            Description = type => types[(int)type].Description, OwnerName = owner => "Player" + owner,
+            Translate = value => value, Substitute = value => value, HelpWord = () => "Help",
+            Sound = sounds.Add, Changed = () => changes++,
+        };
+        uint Open() => HostProductionAbout.Open(session, assets.Definitions, menus, item, new(30, 40), _ => { moneyChecks++; return true; }, devices);
+        Assert.Throws<InvalidOperationException>(() => Open()); Assert.Equal(0, moneyChecks);
+        // 실제 완전 적재를 대신하지 않으며 이 독립 검사에서만 관문을 연다.
+        var loaded = typeof(HostSession).GetField("_nativeLoaded", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance)!;
+        loaded.SetValue(session, true);
+        try
+        {
+            Assert.Equal(1u, Open()); uint token = menus.Popup;
+            var node = Assert.IsType<MenuGumpNode>(tree.Node(token));
+            Assert.Equal(tree.Create.Entries[0], node.Parent); Assert.Equal((uint)content, node.Object);
+            Assert.NotEqual(0u, node.Form); Assert.Equal(node.Id, surface.Storage.GumpForms().Owner((int)node.Form));
+            Assert.Equal(content, surface.Storage.GumpForms().Parent((int)node.Form));
+            Assert.True(node.ItemCount > 0); Assert.Equal(1, moneyChecks); Assert.Equal(new[] { "opengump.wav" }, sounds);
+            uint form = node.Form; tree.Lifetime.Kill(token); tree.Lifetime.Cleanup();
+            Assert.Null(tree.Node(token)); Assert.NotEqual(0, session.Pool.Slot((int)form)[11] & 1);
+            Assert.Equal(3, changes);
+        }
+        finally { loaded.SetValue(session, false); html.CloseAll(); session.ReleasePlayerProcesses(); }
+    }
+
     /// <summary>생산 사건으로 두 격자를 연결한 뒤 공간 자산 삭제가 파생 통지에 도달한다.</summary>
     [Theory]
     [InlineData(80u)]

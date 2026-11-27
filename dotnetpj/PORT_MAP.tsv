@@ -554,6 +554,7 @@ cpppj/src/client/RawMenuControls.cpp	Netstorm.Client/Host/HostNsInfoWindows.cs	6
 cpppj/src/client/RawMenuControls.cpp	Netstorm.Client/Host/HostRootFactorySet.cs	287d1c47ca98fc5d8aa218e588540f8c9f360a26	port
 cpppj/src/client/RawMenuControls.cpp	Netstorm.Game/ClientHostGame.Minimap.cs	40fe3feeb92e4641d154a8d60e1f864954886398	port
 cpppj/src/client/RawMenuControls.cpp	Netstorm.Game/ClientHostGame.TextPictures.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
+cpppj/src/client/RawMenuControls.cpp	Netstorm.Client/Host/HostHtmlMenus.cs	dfbd393c50080d78619bd19724b393e457a4a7cf	port
 cpppj/src/client/RawMenuControls.h	Netstorm.Client/Gump/GumpButtonTree.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
 cpppj/src/client/RawMenuControls.h	Netstorm.Client/Gump/GumpExternalDrawing.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
 cpppj/src/client/RawMenuControls.h	Netstorm.Client/Host/HostGumpDrawing.cs	68a9545e25b148e5d4910fe532c9ec4009be8702	port
@@ -1902,3 +1903,4 @@ cpppj/src/zacket/LocalMissionTransport.cpp	Netstorm.Net/LocalMissionZone.cs	5756
 cpppj/src/zacket/LocalMissionTransport.h	Netstorm.Net/LocalMissionTransport.Runtime.cs	5756ffd5ff23335839974c3c6f2b2aacd7b35618	port
 cpppj/src/zacket/LocalMissionTransport.h	Netstorm.Net/LocalMissionTransport.cs	5756ffd5ff23335839974c3c6f2b2aacd7b35618	port
 cpppj/src/zacket/LocalMissionTransport.h	Netstorm.Net/LocalMissionZone.cs	5756ffd5ff23335839974c3c6f2b2aacd7b35618	port
+cpppj/src/client/CampaignObjectMenuClient.cpp	Netstorm.Client/Host/HostProductionAbout.cs	dfbd393c50080d78619bd19724b393e457a4a7cf	port

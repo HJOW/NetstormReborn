@@ -27,6 +27,8 @@ public sealed class HostHtmlMenus
     public MenuGumpControls Controls { get; }
     /// <summary>가장 최근에 실제 루트에 부착한 메뉴 토큰이다.</summary>
     public uint Popup { get; private set; }
+    /// <summary>현재 공통 등록표의 실제 루트 토큰이다.</summary>
+    public uint MenuRoot => _tree.Create.Entries[0];
     /// <summary>공통 출력기가 같은 항목 측정 장치를 사용한다.</summary>
     internal MenuGumpLayout Layout { get; }
     /// <summary>한 번 연결한 실제 메뉴 입력 처리기.</summary>
