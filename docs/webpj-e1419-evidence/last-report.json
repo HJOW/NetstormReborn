@@ -1,0 +1,117 @@
+{
+  "mission": "dissolvedalliance",
+  "frame": 116000,
+  "time": 2909.175,
+  "buttons": [],
+  "commands": [],
+  "observation": {
+    "events": [
+      {
+        "method": "priestDead",
+        "owner": 1,
+        "result": false,
+        "time": 9.2
+      },
+      {
+        "method": "priestCaptured",
+        "owner": 1,
+        "result": false,
+        "time": 9.2
+      },
+      {
+        "method": "priestDead",
+        "owner": 2,
+        "result": false,
+        "time": 9.2
+      },
+      {
+        "method": "priestCaptured",
+        "owner": 2,
+        "result": false,
+        "time": 9.2
+      },
+      {
+        "method": "priestDead",
+        "owner": 3,
+        "result": false,
+        "time": 9.2
+      },
+      {
+        "method": "priestCaptured",
+        "owner": 3,
+        "result": false,
+        "time": 9.2
+      },
+      {
+        "method": "priestCaptured",
+        "owner": 1,
+        "result": true,
+        "time": 1184.825
+      },
+      {
+        "method": "priestCaptured",
+        "owner": 1,
+        "result": false,
+        "time": 1200.425
+      },
+      {
+        "method": "priestCaptured",
+        "owner": 1,
+        "result": true,
+        "time": 1270.65
+      },
+      {
+        "method": "priestCaptured",
+        "owner": 3,
+        "result": true,
+        "time": 1326.9
+      },
+      {
+        "method": "priestCaptured",
+        "owner": 3,
+        "result": false,
+        "time": 1331.6
+      },
+      {
+        "method": "priestCaptured",
+        "owner": 3,
+        "result": true,
+        "time": 1405.55
+      },
+      {
+        "method": "priestCaptured",
+        "owner": 3,
+        "result": false,
+        "time": 1408.075
+      },
+      {
+        "method": "priestCaptured",
+        "owner": 3,
+        "result": true,
+        "time": 1507.1
+      }
+    ],
+    "captured": {
+      "1": true,
+      "2": false,
+      "3": true
+    },
+    "dead": {
+      "1": false,
+      "2": false,
+      "3": false
+    }
+  },
+  "sp": 9000,
+  "graphRecoveries": [
+    {
+      "sid": 17499,
+      "time": 1882,
+      "beforeUsed": 251,
+      "afterUsed": 18,
+      "sameRecords": true,
+      "ok": true
+    }
+  ],
+  "errors": []
+}

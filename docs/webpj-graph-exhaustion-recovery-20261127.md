@@ -21,3 +21,7 @@ WB04-E1416, 2026-11-27, HJOW-Athlon. 캠페인1-6의 실제 아군 AI 장기 실
 본소스의 실제 AI 후속은 구현 기록 시점에42,000관측프레임·1059.175초·게임 오류0이다. 기존75,000관측프레임을 아직 지나지 않았고 자연 승리/저장은 미완료다. E1419 후속 관찰로 계속하며, 구현 단위 완료를 승리 검증으로 세지 않는다. 시작부터 이 표본까지 ES모듈1070파일 SHA가 모두 같다.
 
 [수정 전 회귀](webpj-e1416-evidence/before.log)·[수정 후86건](webpj-e1416-evidence/focused.log)·[빌드](webpj-e1416-evidence/build.log)·[번들/관문3건](webpj-e1416-evidence/bundle-gate.log)·[영어 L2](webpj-e1416-evidence/l2.log), [최초 실게임 오류/덤프](webpj-e1416-evidence/original-ally-force3-altarfix-dissolvedalliance-failure.json)·[그 화면](webpj-e1416-evidence/original-ally-force3-altarfix-dissolvedalliance-failure.png)·[고정된 후속 표본](webpj-e1416-evidence/fixed-through-current.log)과 [환경/해시](webpj-e1416-evidence/provenance.json)를 보존했다.
+
+## E1419 실제 후속과 사용자 범위 변경
+
+실제1882초에251→18·같은배열복구를확인하고116,000관측프레임/2909.175초까지오류0이었다. 사용자추가지시로1-6승리검사를생략하고해당실행을중단했다. 최종상태/승리/저장은추정하지않는다. [원문·중단·경계](webpj-graph-live-recovery-stop-20261127.md).

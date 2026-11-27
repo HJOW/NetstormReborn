@@ -1,0 +1,68 @@
+{
+  "unit": "WB04-E1419",
+  "recordedAt": "2026-11-27T07:36:29.410277+00:00",
+  "host": "HJOW-Athlon",
+  "result": "실제Graph복구확인완료;사용자지시로1-6승리생략/실행중단.",
+  "lastCompletedFrame": 116000,
+  "lastCompletedTime": 2909.175,
+  "gameErrors": 0,
+  "actualRecovery": [
+    {
+      "sid": 17499,
+      "time": 1882,
+      "beforeUsed": 251,
+      "afterUsed": 18,
+      "sameRecords": true,
+      "ok": true
+    }
+  ],
+  "toolSessionExitAfterUserStop": 1,
+  "terminalStateKnown": false,
+  "fullRegressionStillRunning": "E1420 Node26/session92089; source/config/assets/table mutations prohibited",
+  "periodCarryAfterFull": {
+    "v26": 1,
+    "v22": 6
+  },
+  "evidence": [
+    {
+      "file": "collector.cjs",
+      "bytes": 15633,
+      "sha256": "edd93b16ddeb457faeb997f9fc28fb621592cd9e567d1065bc6e7355cb229969"
+    },
+    {
+      "file": "force3-control.cjs",
+      "bytes": 5865,
+      "sha256": "7b4aaa2b2ed1b83323142b9612486ca5be70d371a0cf99f4914334fd6d429dc6"
+    },
+    {
+      "file": "initial.json",
+      "bytes": 5686,
+      "sha256": "a247cfc3eb9784ce9b9f1ea07d8ca0145fcd12e3029ffabb1bfc4351af99f459"
+    },
+    {
+      "file": "last-report.json",
+      "bytes": 2292,
+      "sha256": "323429a856369440e5e42eb220982f0b19516edd3f4c1979eac2e91d1cdcf1eb"
+    },
+    {
+      "file": "source-freeze-check.json",
+      "bytes": 197,
+      "sha256": "47a49ecdb7d85c59083a21b0f6becabc9f089c383f6d5aa5dd73299d880c8bbd"
+    },
+    {
+      "file": "source-freeze.json",
+      "bytes": 125556,
+      "sha256": "e1bf60708f885615dec3252e31470a09e165ba768c8b89b79402af3ddeca4dba"
+    },
+    {
+      "file": "through-last-reported.log",
+      "bytes": 55365,
+      "sha256": "ea4166ae8234f1f6481d40ad170e5f2647da79dcb7443f01b635e1be1fe01ec6"
+    },
+    {
+      "file": "user-stop.json",
+      "bytes": 1034,
+      "sha256": "29c9437b767de5b1a63f68e78df102d4d3caeb7a6f90798da36c72c5c81c92ae"
+    }
+  ]
+}

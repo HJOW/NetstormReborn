@@ -1,0 +1,29 @@
+{
+  "unit": "WB04-E1419",
+  "recordedAt": "2026-11-27T07:34:32.429844+00:00",
+  "reason": "사용자 지시: 캠페인1-6승리검증은사용자가진행하므로건너뜀. 실제진행중노드PID20088의명령줄을확인하고그자식브라우저만종료. E1422재선정후속은준비만했고실행하지않음.",
+  "toolSession": 88303,
+  "exitAfterUserStop": 1,
+  "processIdentity": "node extracted/e1416-graph-fix-flow.cjs dissolvedalliance 120000",
+  "lastCompletedReport": {
+    "frame": 116000,
+    "time": 2909.175,
+    "sp": 9000,
+    "graphRecoveries": [
+      {
+        "sid": 17499,
+        "time": 1882,
+        "beforeUsed": 251,
+        "afterUsed": 18,
+        "sameRecords": true,
+        "ok": true
+      }
+    ],
+    "errors": []
+  },
+  "terminalState": "최종상태/프레임/화면/덤프는중단후추정하지않음. 승리단언/저장/Next미실행.",
+  "node26Session": 92089,
+  "node26StillRunning": true,
+  "collectorSession": 66177,
+  "collectorStillRunning": true
+}
