@@ -14,13 +14,13 @@ v0 조회 범위는 현재 미션·플레이어·단일 대표 선택이다. 전
 
 웹은 사용자가 파일 선택기로 고른 UTF-8 `.nsmod.json` 한 파일을 읽는다. 형식은 `{format:"netstorm-mod-package",formatVersion:1,manifest,modules}`이며 다른 최상위 키는 거절한다. `modules`는 정규화된 상대 경로에서 UTF-8 ES 모듈 원문으로 가는 사전이다. [실행 가능한 관찰 예제](../shared/modding/v0/examples/session-observer.nsmod.json)를 기준으로 한다. 선언은 스키마의 모든 조건을 만족해야 한다.
 
-경로는 ASCII 영숫자/`_`/`-`인 디렉터리와 `.js` 파일만 허용한다. 절대 경로·역슬래시·빈 구간·`.`/`..`·URL·인코딩 경로·쿼리·해시는 거절한다. 모듈은 패키지 내 `./` 또는 `../` 상대 **정적** import/export만 허용하며, 정규화 결과가 패키지 밖이면 거절한다. bare import·동적 import·외부 URL·import assertions는 거절한다. 순환 정적 ES 모듈은 허용한다. 코드 텍스트의 단순 문자열 치환으로 import를 판별하지 않고 구문 분석한다.
+경로는 ASCII 영숫자/`_`/`-`인 디렉터리와 `.js` 파일만 허용한다. 절대 경로·역슬래시·빈 구간·`.`/`..`·URL·인코딩 경로·쿼리·해시는 거절한다. 모듈은 패키지 내 `./` 또는 `../` 상대 **정적** import/export만 허용하며, 정규화 결과가 패키지 밖이면 거절한다. Windows 예약 이름·대소문자만 다른 파일 경로·중복 JSON 키도 양쪽에서 거절한다. bare import·동적 import·외부 URL·import assertions는 거절한다. 순환 정적 ES 모듈은 허용한다. 코드 텍스트의 단순 문자열 치환으로 import를 판별하지 않고 구문 분석한다.
 
-엔트리는 `export default function registerMod(netstorm) { ... }`다. 등록·핸들러는 동기로 종료해야 한다. Promise/thenable 반환과 비동기 작업은 지원하지 않는다. 호스트가 검증한 자체 모듈만 로드하고 `eval`·Function·Wasm 추가 컴파일을 허용하지 않는다.
+엔트리는 `export default function registerMod(netstorm) { ... }`다. 등록·핸들러는 동기로 종료해야 한다. Promise/thenable 반환과 비동기 작업은 지원하지 않는다. v0 구문 검증은 async 함수/화살표·await·import.meta도 거절한다. 호스트가 검증한 자체 모듈만 로드하고 `eval`·Function·Wasm 추가 컴파일을 허용하지 않는다.
 
 DN의 디렉터리형 표현은 Windows `%USERPROFILE%\Saved Games\Netstorm\Mods\<id>\`, Linux `$HOME/.netstorm/Mods/<id>/` 안에 `manifest.json`과 같은 상대 모듈들을 둔다. 디렉터리 열거·심볼릭 링크/재분석 지점·실제 경로 탈출 검증은 DN 호스트가 담당하며 모드에는 파일 기능을 주지 않는다. 웹 패키지와 DN 디렉터리를 정규화한 manifest+modules 내용은 같아야 한다.
 
-설치는 실행과 분리한다. 새 설치/교체는 항상 꺼짐이며 같은 id를 조용히 덮어쓰지 않는다. 켜짐 선택은 명시적으로 저장한다. 웹 저장소는 `netstorm.mods.v0`이고 용량/접근 오류 시 기존 정상 자료를 보존하고 UI에 실패를 표시한다. Options의 관리 화면에서 목록·가져오기·켜기/끄기·삭제·마지막 오류를 제공한다. 미션 중 변경은 다음 미션부터 적용한다. Reset All은 이 키도 지운 뒤 기존 재로딩 절차를 따른다. 원본 대조/고정 입력 fixture 실행은 강제로 모두 꺼짐이다.
+설치는 실행과 분리한다. 새 설치/교체는 항상 꺼짐이며 같은 id를 조용히 덮어쓰지 않는다. 켜짐 선택은 명시적으로 저장한다. 웹 저장소는 `netstorm.mods.v0`이고 용량/접근 오류 시 기존 정상 자료를 보존하고 UI에 실패를 표시한다. 한 키의 `{version:1,mods:[{package,enabled,lastError}]}`로 보관하며 package는 정규화한 패키지 JSON 문자열이다. 다른 탭이 마지막 읽기 뒤 값을 바꾸면 재읽기 전 쓰기를 거절한다. 손상 저장소는 자동으로 비우거나 덮어쓰지 않고 오류를 표시한다. Options의 관리 화면에서 목록·가져오기·켜기/끄기·삭제·마지막 오류를 제공한다. 미션 중 변경은 다음 미션부터 적용한다. Reset All은 이 키도 지운 뒤 기존 재로딩 절차를 따른다. 원본 대조/고정 입력 fixture 실행은 강제로 모두 꺼짐이다.
 
 ## 3. 공개 이름과 값
 

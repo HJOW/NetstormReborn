@@ -79,7 +79,7 @@ export function emptyModSnapshot() {
 // 원본 시계/RNG를 소비하지 않고 모드별 초기 난수 상태를 정한다.
 export function modRandomSeed(sessionSeed, modId) {
     integer(sessionSeed, 0, 0xffffffff, '미션 seed');
-    requireValue(typeof modId === 'string' && /^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$/u.test(modId) && modId.length <= 64, '모드 id 형식 오류');
+    requireValue(typeof modId === 'string' && modId.length <= 64 && /^[a-z][a-z0-9]*(?:[.-][a-z0-9]+)*$/u.exec(modId)?.[0] === modId, '모드 id 형식 오류');
     let hash = 2166136261;
     // FNV-1a의 각 곱에서 하위 32비트만 보존한다.
     for (const byte of new TextEncoder().encode(`${sessionSeed}\n${modId}`)) hash = Math.imul(hash ^ byte, 16777619) >>> 0;
@@ -91,7 +91,7 @@ export function validateModSnapshot(input) {
     const snapshot = copyModJson(input);
     record(snapshot, ['state', 'players', 'selection'], '모드 상태 묶음');
     const state = record(snapshot.state, ['sessionId', 'mission', 'gameSeconds', 'localOwner', 'paused', 'logicalSize', 'mapRect'], '게임 상태');
-    requireValue(state.sessionId === null || (typeof state.sessionId === 'string' && /^session-[1-9][0-9]*$/u.test(state.sessionId) && state.sessionId.length <= 32), '모드 미션 식별자 오류');
+    requireValue(state.sessionId === null || (typeof state.sessionId === 'string' && state.sessionId.length <= 32 && /^session-[1-9][0-9]*$/u.exec(state.sessionId)?.[0] === state.sessionId), '모드 미션 식별자 오류');
     requireValue(state.mission === null || (typeof state.mission === 'string' && state.mission.length <= 128), '모드 미션 이름 오류');
     requireValue(Number.isFinite(state.gameSeconds) && state.gameSeconds >= 0 && typeof state.paused === 'boolean', '모드 게임 시계/정지 오류');
     if (state.localOwner !== null) integer(state.localOwner, 1, 8, '현재 플레이어');

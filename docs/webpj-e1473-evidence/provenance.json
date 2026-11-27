@@ -1,0 +1,38 @@
+{
+  "unit": "WB04-E1473",
+  "focused": {
+    "v26": {
+      "pass": 50,
+      "fail": 0,
+      "durationMs": 633.0264
+    },
+    "v22": {
+      "pass": 50,
+      "fail": 0,
+      "durationMs": 3744.2173
+    },
+    "note": "API20+입력호스트9+신규패키지/보관19+기존큐2. 전체 회귀가 아니다."
+  },
+  "parser": {
+    "name": "acorn",
+    "version": "8.19.0",
+    "license": "MIT",
+    "note": "이미 설치된 잠금 버전을 직접 의존성으로 고정. 코드 실행 없는 AST 분석."
+  },
+  "sources": {
+    "webpj/www/modding/mod-api.js": "852e04416504a680204576e7881d9b659e6af13a20b2a097e620c2acc778ca5b",
+    "webpj/www/modding/mod-package.js": "90fe99d89ac5fbe5556d30c8fc0d3a5cdf01f42164233023ef5cb8cd97125a2f",
+    "webpj/www/modding/mod-store.js": "4fe47c61f745a2b7047ce36e8435de7a8a6be1c541de975c1b28c9ccbb97ff44",
+    "webpj/tests/mod-package-store.test.mjs": "736e35a7f727b4e674ac8e25719417338cf1aaf5ac6ab4dd2ae3ed6c64792d5d",
+    "webpj/package.json": "49a5a08f3ebe633db363240ad16fe422b6c321c7540e2690f25485823552bdcb",
+    "webpj/package-lock.json": "87f803e6f50f58f97ecc261c17cf37e32e9ff254df2aac1aa1c343e912eb963a",
+    "shared/modding/v0/manifest.schema.json": "c2708f7a58b73fe8c2fb1d34ef4a80fe9d8d81921d781ddc0548ef2a0402ada1"
+  },
+  "build": {
+    "exit": 0,
+    "webpackSeconds": 110.949,
+    "bundleBytes": 3517946,
+    "trackedBundleChanged": false,
+    "wholeEslintBeforeWebpack": true
+  }
+}
