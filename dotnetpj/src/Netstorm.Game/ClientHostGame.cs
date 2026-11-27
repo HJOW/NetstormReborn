@@ -779,6 +779,9 @@ public sealed partial class ClientHostGame : Game
             });
             _surfaceGlobals.Storage.UpdateAmbientWind(_gameRandom);
         }
+        // 영상 갱신이 잠기지 않은 미션에서는 현재 카메라와 지도 변경을 매 프레임 미니맵에 반영한다.
+        // 근거: 원문 481320은 지연 삭제·Idle·Kernel보다 먼저 실행하며 게임 시계 정지와 독립적이다.
+        if (_missionSession is not null && !movieLocked && _nativeMinimap?.Refresh() == true) _menuDirty = true;
         // 원문439b13/439b18의지연삭제와Idle은현재입력뒤·Kernel준비앞에서실행한다.
         _menuInput?.FinishFrame();
         // 미션 프레임의 월드·건설 효과(연소 준비·Kernel 정기)는 현재 Runtime pin 안에서 실행한다.

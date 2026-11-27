@@ -27,10 +27,13 @@ public sealed partial class ClientHostGame
         var baseHandle = menu.Tree.EventHooks.Handle;
         var minimap = new RawMinimapControls(menu.Tree, _surfaceGlobals.Storage, _minimapState, _minimapGlobals, _gameplay.MapRevision, new()
         {
+            // 원본 미니맵 기하는 화면 픽셀이 아닌 카메라의 월드 좌표와 현재 칸 배율을 사용한다.
             View = () => new MinimapGeometryView(
-                BitConverter.SingleToUInt32Bits(_gameplay.Camera.Snapshot.Pixels[0]),
-                BitConverter.SingleToUInt32Bits(_gameplay.Camera.Snapshot.Pixels[1]),
-                menu.CurrentMapView),
+                _gameplay.Camera.Snapshot.WorldBits[0],
+                _gameplay.Camera.Snapshot.WorldBits[1],
+                menu.CurrentMapView,
+                _gameplay.Camera.Snapshot.CellPixels[0],
+                _gameplay.Camera.Snapshot.CellPixels[1]),
             Center = (_, _) => throw new InvalidOperationException("미니맵 중앙 카메라는 R5 카메라 연결에서 잇는다"),
             Move = (_, _) => throw new InvalidOperationException("미니맵 선택 이동은 R5 입력 연결에서 잇는다"),
             InputMode = () => throw new InvalidOperationException("미니맵 입력 모드는 R5 입력 연결에서 잇는다"),
