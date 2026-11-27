@@ -250,12 +250,15 @@ public sealed partial class ClientHostGame : Game
             _missionHudRouting?.Dispose(); _missionHudRouting = null;
             // 미니맵의 노드와 월드 알림 대여를 세션 및 공통 트리보다 먼저 반납한다.
             _nativeMinimap?.Dispose(); _nativeMinimap = null;
+            // 생산 Form과 UI 노드는 해당 물리와 세션을 반납하기 전에 정리한다.
+            _missionProduction?.Dispose(); _missionProduction = null;
+            _nativeChatWindows?.Dispose();
+            _htmlWindows?.CloseAll();
+            _gumpFormRuntime?.Dispose(); _gumpFormRuntime = null;
             _missionSession?.ReleasePlayerRecordViews();
             _missionRuntime?.Dispose(); _missionRuntime = null;
             _missionBurning?.Dispose();
             _missionAudio?.Dispose();
-            _nativeChatWindows?.Dispose();
-            _htmlWindows?.CloseAll();
             _editor?.Dispose();
             _textEntry?.Dispose();
             _htmlFactory?.Dispose();
@@ -303,6 +306,7 @@ public sealed partial class ClientHostGame : Game
                 Redraw = (_, _) => _menuDirty = true,
                 HandleBase = (_, _, _, _) => 0
             }, action => (_menuInput ?? throw new InvalidOperationException("메인 메뉴 입력 소유자 미연결")).Post(action));
+            InitializeNativeGumpForms();
             _htmlWindows = new HostHtmlWindows(_mainMenu, _driver.Input, () => _clock.NowSeconds,
                 _ => throw new InvalidOperationException("HTML 링크 명령 소비자 미연결"));
             _htmlWindows.BindParser(_startup, raw => ScriptCommand.QueueScriptCommand(raw, _driver.Input, _scriptStrings,
