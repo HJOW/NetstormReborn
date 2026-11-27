@@ -1,7 +1,7 @@
 namespace Netstorm.Client.Display;
 
 /// <summary>
-/// 원본 일반 자산 출력의 추상/건설/그림자 소스 색 변환표. 세 표는 동일한 파일 팔레트에서 만들며 일시적인 날씨 RGB 변경에는 다시 계산하지 않는다.
+/// 원본 일반 자산 출력의 추상/건설/그림자 화면색 변환표. 세 표는 동일한 파일 팔레트에서 만들며 일시적인 날씨 RGB 변경에는 다시 계산하지 않는다.
 /// 근거: cpppj/src/client/SpriteColorMaps.h. (R2c, 2026-10-28)
 /// </summary>
 public sealed class SpriteColorMaps
@@ -12,7 +12,7 @@ public sealed class SpriteColorMaps
     /// <summary>건설(어두움) 표. 명암 표의 어두운 쪽을 그대로 쓴다.</summary>
     public byte[] Dead { get; set; } = new byte[256];
 
-    /// <summary>그림자 표. 소스 팔레트 번호를 제곱 거리로 변환한다.</summary>
+    /// <summary>그림자 표. 대상 화면 팔레트 번호를 제곱 거리로 변환한다.</summary>
     public byte[] Shadow { get; set; } = new byte[256];
 }
 
