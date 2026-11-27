@@ -1,0 +1,3 @@
+{"level":1,"frame":0,"time":9.2,"sp":0,"wallet":5000,"rates":[4,4,8],"desired":3,"count":0,"initialized":0,"scan":0,"stop":0,"enemy":0,"priest":0,"targetPriest":0,"temple":0,"flags":65535,"active":true,"buttons":[],"errors":[]}
+AssertionError [ERR_ASSERTION]: 실제 생산 예약 관측 필요
+    at run (H:\Workspace\git\NetstormReborn\webpj\extracted\e1418-short.cjs:62:11)

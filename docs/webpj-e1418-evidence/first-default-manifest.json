@@ -1,0 +1,14 @@
+{
+  "recordedAt": "2026-11-27T07:03:39.155899+00:00",
+  "seed": 14182026,
+  "exit": 1,
+  "result": "실제409.175초/16000프레임/오류0이나생산/다리/채취관측0으로정량단언실패. 통과로세지않음. 다음지도seed1과분리.",
+  "files": {
+    "e1418-ally-preserve-difficulty.cjs": "2902e6d3b2bd70654c3a0c3e3ed15cda8747aa5a2ded0fcb3be4c29a0c923f68",
+    "e1418-skirmish-current.json": "1ceb367ece259c28b4abc689576436a7894aa5c814c9e1ab23954a07365d4736",
+    "e1418-skirmish-level-1-initial.json": "fc6567b5e8566f74c43c8b933b36ec74dee82ef405d0bf92910e9cfbc232af95",
+    "e1418-skirmish-telemetry.cjs": "5144b61f991d4c54214e53e06648d09b0b1a74b1e6521480dab36201d32532b4",
+    "e1418-skirmish-telemetry.json": "7f2f86fd39935940ece6e936df240bd9a67dd0771b826ae324facbdffc6b8dcd",
+    "webpj-e1418-skirmish-telemetry.log": "e8f45b2c3301eee5c6c5e39508e4186759292637215c45dc019ab065d52d19a5"
+  }
+}

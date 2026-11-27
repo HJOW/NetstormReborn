@@ -1,0 +1,15 @@
+{"level":1,"frame":0,"time":9.2,"sp":0,"wallet":12000,"rates":[4,4,8],"desired":3,"count":0,"initialized":0,"scan":0,"stop":0,"enemy":0,"priest":0,"temple":0,"buttons":[],"errors":[]}
+{"level":1,"frame":2000,"time":59.175,"sp":6200,"wallet":6200,"rates":[4,4,8],"desired":3,"count":0,"initialized":1,"scan":1,"stop":0,"enemy":1,"priest":15002,"temple":15276,"buttons":[],"errors":[]}
+{"level":1,"frame":4000,"time":109.175,"sp":5200,"wallet":5200,"rates":[4,4,8],"desired":3,"count":0,"initialized":1,"scan":1,"stop":0,"enemy":1,"priest":15002,"temple":15276,"buttons":[],"errors":[]}
+{"level":1,"frame":6000,"time":159.175,"sp":2000,"wallet":2000,"rates":[4,4,8],"desired":3,"count":1,"initialized":1,"scan":1,"stop":0,"enemy":1,"priest":15002,"temple":15276,"buttons":[],"errors":[]}
+{"level":1,"frame":8000,"time":209.175,"sp":1000,"wallet":1000,"rates":[4,4,8],"desired":3,"count":1,"initialized":1,"scan":1,"stop":0,"enemy":1,"priest":15002,"temple":15276,"buttons":[],"errors":[]}
+{"level":2,"frame":0,"time":9.2,"sp":0,"wallet":12000,"rates":[1,1,2],"desired":6,"count":0,"initialized":0,"scan":0,"stop":0,"enemy":0,"priest":0,"temple":0,"buttons":[],"errors":[]}
+{"level":2,"frame":2000,"time":59.175,"sp":6200,"wallet":6200,"rates":[1,1,2],"desired":6,"count":0,"initialized":1,"scan":1,"stop":0,"enemy":1,"priest":15002,"temple":15276,"buttons":[],"errors":[]}
+{"level":2,"frame":4000,"time":109.175,"sp":2400,"wallet":2400,"rates":[1,1,2],"desired":6,"count":1,"initialized":1,"scan":1,"stop":0,"enemy":1,"priest":15002,"temple":15276,"buttons":[],"errors":[]}
+{"level":2,"frame":6000,"time":159.175,"sp":1000,"wallet":1000,"rates":[1,1,2],"desired":6,"count":1,"initialized":1,"scan":1,"stop":0,"enemy":1,"priest":15002,"temple":15276,"buttons":[],"errors":[]}
+{"level":2,"frame":8000,"time":209.175,"sp":-200,"wallet":-200,"rates":[1,1,2],"desired":6,"count":1,"initialized":1,"scan":1,"stop":0,"enemy":1,"priest":15002,"temple":15276,"buttons":[],"errors":[]}
+{"level":3,"frame":0,"time":9.2,"sp":0,"wallet":12000,"rates":[0.5,0.5,1],"desired":6,"count":0,"initialized":0,"scan":0,"stop":0,"enemy":0,"priest":0,"temple":0,"buttons":[],"errors":[]}
+{"level":3,"frame":2000,"time":59.175,"sp":6200,"wallet":6200,"rates":[0.5,0.5,1],"desired":6,"count":0,"initialized":1,"scan":1,"stop":0,"enemy":1,"priest":15002,"temple":15276,"buttons":[],"errors":[]}
+{"level":3,"frame":4000,"time":109.175,"sp":600,"wallet":600,"rates":[0.5,0.5,1],"desired":6,"count":7,"initialized":1,"scan":1,"stop":0,"enemy":1,"priest":15002,"temple":15276,"buttons":[],"errors":[]}
+{"level":3,"frame":6000,"time":159.175,"sp":-600,"wallet":-600,"rates":[0.5,0.5,1],"desired":6,"count":7,"initialized":1,"scan":1,"stop":0,"enemy":1,"priest":15002,"temple":15276,"buttons":[],"errors":[]}
+{"level":3,"frame":8000,"time":209.175,"sp":-1000,"wallet":-1000,"rates":[0.5,0.5,1],"desired":6,"count":7,"initialized":1,"scan":1,"stop":0,"enemy":1,"priest":15002,"temple":15276,"buttons":[],"errors":[]}

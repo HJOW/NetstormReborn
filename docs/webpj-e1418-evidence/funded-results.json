@@ -1,0 +1,7556 @@
+[
+  {
+    "level": 1,
+    "seed": 1,
+    "limit": 8000,
+    "frame": 8100,
+    "launch": {
+      "settings": {
+        "aiCount": 1,
+        "ai": [
+          {
+            "difficulty": 1,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          }
+        ],
+        "bans": []
+      },
+      "islands": [
+        {
+          "fort": "Imp1",
+          "territory": 2
+        },
+        {
+          "fort": "Thundere",
+          "territory": 1
+        }
+      ],
+      "central": [
+        189,
+        9,
+        0,
+        212,
+        0,
+        0
+      ],
+      "mapSize": 1,
+      "script": "[Header]\nmissionType=\"Tutorial\"\n\nmissionNumber=1\nmoreGeysers=1\nrandGeysers=1\n\nmyStartMoney=12000\nmyTech=\"all\"\nmyAllyList=\"\"\ntitle=\"Skirmish\"\n\nai2Name=\"Computer #1\"\nai2Tech=\"all\"\nai2StartMoney=12000\nai2GeyserAttachments=3\nai2Collectors=6\nai2StuffRefreshRate=1\nai2TimeBetweenMoves=2\nai2BridgeDrawRate=1\nai2AllyList=\"2\"\n\n[Options]\n\n[A.]\n<h2>Skirmish</h2>\n<i>1 AI</i>\n\n$Button=Go!,DoNothing,0\n\n[Succeeded][BadTeamDead]\n<h2>Victory!</h2>\n<p>\nEvery enemy has been defeated.\n$Button=Leave,MissionAbort,0\n\n[Failed][GoodTeamDead]\n<h2>Defeat</h2>\n<p>\nYour team has fallen.\n$Button=Leave,MissionAbort,0\n\n[END]\n"
+    },
+    "activation": {
+      "owner": 1,
+      "token": 536892288,
+      "reused": false,
+      "before": {
+        "money": 12000,
+        "allies": 2,
+        "name": [
+          89,
+          111,
+          117
+        ],
+        "technology": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          true,
+          false,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          true,
+          false,
+          true,
+          false,
+          true,
+          false,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      "money": 12000,
+      "allies": 2,
+      "name": [
+        89,
+        111,
+        117
+      ],
+      "technology": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        false,
+        true,
+        false,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "brain": 536892288
+    },
+    "telemetry": {
+      "production": [
+        {
+          "time": 134,
+          "duration": 4,
+          "type": 137,
+          "wallet": 5200,
+          "desired": 3,
+          "collectors": 0
+        }
+      ],
+      "bridges": [
+        {
+          "method": "consume",
+          "time": 28.174999999999997,
+          "next": 32.175,
+          "duration": 4
+        },
+        {
+          "method": "consume",
+          "time": 36.5,
+          "next": 40.5,
+          "duration": 4
+        },
+        {
+          "method": "consume",
+          "time": 52.8,
+          "next": 56.8,
+          "duration": 4
+        },
+        {
+          "method": "consume",
+          "time": 77.14999999999999,
+          "next": 81.14999999999999,
+          "duration": 4
+        },
+        {
+          "method": "consume",
+          "time": 85.425,
+          "next": 89.425,
+          "duration": 4
+        },
+        {
+          "method": "consume",
+          "time": 93.7,
+          "next": 97.7,
+          "duration": 4
+        },
+        {
+          "method": "consume",
+          "time": 109.975,
+          "next": 113.975,
+          "duration": 4
+        },
+        {
+          "method": "consume",
+          "time": 175.15,
+          "next": 179.15,
+          "duration": 4
+        },
+        {
+          "method": "consume",
+          "time": 183.47500000000002,
+          "next": 187.47500000000002,
+          "duration": 4
+        },
+        {
+          "method": "consume",
+          "time": 191.775,
+          "next": 195.775,
+          "duration": 4
+        },
+        {
+          "method": "consume",
+          "time": 200.125,
+          "next": 204.125,
+          "duration": 4
+        },
+        {
+          "method": "consume",
+          "time": 208.47500000000002,
+          "next": 212.47500000000002,
+          "duration": 4
+        }
+      ],
+      "collectorMoves": [
+        {
+          "time": 134,
+          "next": 142,
+          "duration": 8
+        }
+      ],
+      "samples": [
+        {
+          "frame": 0,
+          "time": 9.2,
+          "sp": 0,
+          "wallet": 12000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 0,
+          "scan": 0,
+          "stop": 0,
+          "enemy": 0,
+          "priest": 0,
+          "temple": 0,
+          "buttons": []
+        },
+        {
+          "frame": 100,
+          "time": 11.674999999999999,
+          "sp": 12000,
+          "wallet": 12000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 0,
+          "buttons": []
+        },
+        {
+          "frame": 200,
+          "time": 14.174999999999999,
+          "sp": 12000,
+          "wallet": 12000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 0,
+          "buttons": []
+        },
+        {
+          "frame": 300,
+          "time": 16.674999999999997,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 0,
+          "buttons": []
+        },
+        {
+          "frame": 400,
+          "time": 19.174999999999997,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 0,
+          "buttons": []
+        },
+        {
+          "frame": 500,
+          "time": 21.674999999999997,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 0,
+          "buttons": []
+        },
+        {
+          "frame": 600,
+          "time": 24.174999999999997,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 0,
+          "buttons": []
+        },
+        {
+          "frame": 700,
+          "time": 26.674999999999997,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 0,
+          "buttons": []
+        },
+        {
+          "frame": 800,
+          "time": 29.174999999999997,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 900,
+          "time": 31.674999999999997,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1000,
+          "time": 34.175,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1100,
+          "time": 36.675,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1200,
+          "time": 39.175,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1300,
+          "time": 41.675,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1400,
+          "time": 44.175,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1500,
+          "time": 46.675,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1600,
+          "time": 49.175,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1700,
+          "time": 51.675,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1800,
+          "time": 54.175,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1900,
+          "time": 56.675,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2000,
+          "time": 59.175,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2100,
+          "time": 61.675,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2200,
+          "time": 64.175,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2300,
+          "time": 66.675,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2400,
+          "time": 69.175,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2500,
+          "time": 71.675,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2600,
+          "time": 74.175,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2700,
+          "time": 76.675,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2800,
+          "time": 79.175,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2900,
+          "time": 81.675,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3000,
+          "time": 84.175,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3100,
+          "time": 86.675,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3200,
+          "time": 89.175,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3300,
+          "time": 91.675,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3400,
+          "time": 94.175,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3500,
+          "time": 96.675,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3600,
+          "time": 99.175,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3700,
+          "time": 101.675,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3800,
+          "time": 104.175,
+          "sp": 5200,
+          "wallet": 5200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3900,
+          "time": 106.675,
+          "sp": 5200,
+          "wallet": 5200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4000,
+          "time": 109.175,
+          "sp": 5200,
+          "wallet": 5200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4100,
+          "time": 111.675,
+          "sp": 5200,
+          "wallet": 5200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4200,
+          "time": 114.175,
+          "sp": 5200,
+          "wallet": 5200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4300,
+          "time": 116.675,
+          "sp": 5200,
+          "wallet": 5200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4400,
+          "time": 119.175,
+          "sp": 5200,
+          "wallet": 5200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4500,
+          "time": 121.675,
+          "sp": 5200,
+          "wallet": 5200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4600,
+          "time": 124.175,
+          "sp": 5200,
+          "wallet": 5200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4700,
+          "time": 126.675,
+          "sp": 5200,
+          "wallet": 5200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4800,
+          "time": 129.175,
+          "sp": 5200,
+          "wallet": 5200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4900,
+          "time": 131.675,
+          "sp": 5200,
+          "wallet": 5200,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5000,
+          "time": 134.175,
+          "sp": 4600,
+          "wallet": 4600,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5100,
+          "time": 136.675,
+          "sp": 4600,
+          "wallet": 4600,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5200,
+          "time": 139.175,
+          "sp": 4600,
+          "wallet": 4600,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5300,
+          "time": 141.675,
+          "sp": 4600,
+          "wallet": 4600,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5400,
+          "time": 144.175,
+          "sp": 3800,
+          "wallet": 3800,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5500,
+          "time": 146.675,
+          "sp": 3800,
+          "wallet": 3800,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5600,
+          "time": 149.175,
+          "sp": 3800,
+          "wallet": 3800,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5700,
+          "time": 151.675,
+          "sp": 2800,
+          "wallet": 2800,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5800,
+          "time": 154.175,
+          "sp": 2800,
+          "wallet": 2800,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5900,
+          "time": 156.675,
+          "sp": 2800,
+          "wallet": 2800,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6000,
+          "time": 159.175,
+          "sp": 2000,
+          "wallet": 2000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6100,
+          "time": 161.675,
+          "sp": 2000,
+          "wallet": 2000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6200,
+          "time": 164.175,
+          "sp": 2000,
+          "wallet": 2000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6300,
+          "time": 166.675,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6400,
+          "time": 169.175,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6500,
+          "time": 171.675,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6600,
+          "time": 174.175,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6700,
+          "time": 176.675,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6800,
+          "time": 179.175,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6900,
+          "time": 181.675,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7000,
+          "time": 184.175,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7100,
+          "time": 186.675,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7200,
+          "time": 189.175,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7300,
+          "time": 191.675,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7400,
+          "time": 194.175,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7500,
+          "time": 196.675,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7600,
+          "time": 199.175,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7700,
+          "time": 201.675,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7800,
+          "time": 204.175,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7900,
+          "time": 206.675,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 8000,
+          "time": 209.175,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            4,
+            4,
+            8
+          ],
+          "desired": 3,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        }
+      ]
+    },
+    "errors": []
+  },
+  {
+    "level": 2,
+    "seed": 1,
+    "limit": 8000,
+    "frame": 8100,
+    "launch": {
+      "settings": {
+        "aiCount": 1,
+        "ai": [
+          {
+            "difficulty": 2,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          }
+        ],
+        "bans": []
+      },
+      "islands": [
+        {
+          "fort": "Imp1",
+          "territory": 2
+        },
+        {
+          "fort": "Thundere",
+          "territory": 1
+        }
+      ],
+      "central": [
+        189,
+        9,
+        0,
+        212,
+        0,
+        0
+      ],
+      "mapSize": 1,
+      "script": "[Header]\nmissionType=\"Tutorial\"\n\nmissionNumber=1\nmoreGeysers=1\nrandGeysers=1\n\nmyStartMoney=12000\nmyTech=\"all\"\nmyAllyList=\"\"\ntitle=\"Skirmish\"\n\nai2Name=\"Computer #1\"\nai2Tech=\"all\"\nai2StartMoney=12000\nai2GeyserAttachments=3\nai2Collectors=6\nai2StuffRefreshRate=1\nai2TimeBetweenMoves=2\nai2BridgeDrawRate=1\nai2AllyList=\"2\"\n\n[Options]\n\n[A.]\n<h2>Skirmish</h2>\n<i>1 AI</i>\n\n$Button=Go!,DoNothing,0\n\n[Succeeded][BadTeamDead]\n<h2>Victory!</h2>\n<p>\nEvery enemy has been defeated.\n$Button=Leave,MissionAbort,0\n\n[Failed][GoodTeamDead]\n<h2>Defeat</h2>\n<p>\nYour team has fallen.\n$Button=Leave,MissionAbort,0\n\n[END]\n"
+    },
+    "activation": {
+      "owner": 1,
+      "token": 536892288,
+      "reused": false,
+      "before": {
+        "money": 12000,
+        "allies": 2,
+        "name": [
+          89,
+          111,
+          117
+        ],
+        "technology": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          true,
+          false,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          true,
+          false,
+          true,
+          false,
+          true,
+          false,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      "money": 12000,
+      "allies": 2,
+      "name": [
+        89,
+        111,
+        117
+      ],
+      "technology": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        false,
+        true,
+        false,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "brain": 536892288
+    },
+    "telemetry": {
+      "production": [
+        {
+          "time": 95.55,
+          "duration": 1,
+          "type": 137,
+          "wallet": 5200,
+          "desired": 6,
+          "collectors": 0
+        },
+        {
+          "time": 107.3,
+          "duration": 1,
+          "type": 75,
+          "wallet": 2800,
+          "desired": 6,
+          "collectors": 1
+        }
+      ],
+      "bridges": [
+        {
+          "method": "consume",
+          "time": 28.174999999999997,
+          "next": 29.174999999999997,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 30.5,
+          "next": 31.5,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 32.8,
+          "next": 33.8,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 35.15,
+          "next": 36.15,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 37.425,
+          "next": 38.425,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 39.699999999999996,
+          "next": 40.699999999999996,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 44,
+          "next": 45,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 46.349999999999994,
+          "next": 47.349999999999994,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 48.625,
+          "next": 49.625,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 50.949999999999996,
+          "next": 51.949999999999996,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 53.275,
+          "next": 54.275,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 59.599999999999994,
+          "next": 60.599999999999994,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 61.949999999999996,
+          "next": 62.949999999999996,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 64.3,
+          "next": 65.3,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 66.575,
+          "next": 67.575,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 68.875,
+          "next": 69.875,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 71.14999999999999,
+          "next": 72.14999999999999,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 73.475,
+          "next": 74.475,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 75.8,
+          "next": 76.8,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 80.1,
+          "next": 81.1,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 82.425,
+          "next": 83.425,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 84.75,
+          "next": 85.75,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 87.075,
+          "next": 88.075,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 89.52499999999999,
+          "next": 90.52499999999999,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 102.875,
+          "next": 103.875,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 105.27499999999999,
+          "next": 106.27499999999999,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 109.7,
+          "next": 110.7,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 111.975,
+          "next": 112.975,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 118.325,
+          "next": 119.325,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 120.75,
+          "next": 121.75,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 123.02499999999999,
+          "next": 124.02499999999999,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 125.39999999999999,
+          "next": 126.39999999999999,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 127.675,
+          "next": 128.675,
+          "duration": 1.0000000000000142
+        },
+        {
+          "method": "consume",
+          "time": 130.05,
+          "next": 131.05,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 132.375,
+          "next": 133.375,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 134.65,
+          "next": 135.65,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 136.97500000000002,
+          "next": 137.97500000000002,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 139.3,
+          "next": 140.3,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 141.57500000000002,
+          "next": 142.57500000000002,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 144.05,
+          "next": 145.05,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 146.72500000000002,
+          "next": 147.72500000000002,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 149,
+          "next": 150,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 151.3,
+          "next": 152.3,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 153.60000000000002,
+          "next": 154.60000000000002,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 155.9,
+          "next": 156.9,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 158.20000000000002,
+          "next": 159.20000000000002,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 160.5,
+          "next": 161.5,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 162.875,
+          "next": 163.875,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 165.20000000000002,
+          "next": 166.20000000000002,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 167.47500000000002,
+          "next": 168.47500000000002,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 169.775,
+          "next": 170.775,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 172.15,
+          "next": 173.15,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 174.425,
+          "next": 175.425,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 176.75,
+          "next": 177.75,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 179.025,
+          "next": 180.025,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 181.35000000000002,
+          "next": 182.35000000000002,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 183.675,
+          "next": 184.675,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 186.05,
+          "next": 187.05,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 188.32500000000002,
+          "next": 189.32500000000002,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 192.675,
+          "next": 193.675,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 195,
+          "next": 196,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 197.3,
+          "next": 198.3,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 199.60000000000002,
+          "next": 200.60000000000002,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 201.925,
+          "next": 202.925,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 204.3,
+          "next": 205.3,
+          "duration": 1
+        },
+        {
+          "method": "consume",
+          "time": 208.675,
+          "next": 209.675,
+          "duration": 1
+        }
+      ],
+      "collectorMoves": [
+        {
+          "time": 95.55,
+          "next": 97.55,
+          "duration": 2
+        }
+      ],
+      "samples": [
+        {
+          "frame": 0,
+          "time": 9.2,
+          "sp": 0,
+          "wallet": 12000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 0,
+          "scan": 0,
+          "stop": 0,
+          "enemy": 0,
+          "priest": 0,
+          "temple": 0,
+          "buttons": []
+        },
+        {
+          "frame": 100,
+          "time": 11.674999999999999,
+          "sp": 12000,
+          "wallet": 12000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 0,
+          "buttons": []
+        },
+        {
+          "frame": 200,
+          "time": 14.174999999999999,
+          "sp": 12000,
+          "wallet": 12000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 0,
+          "buttons": []
+        },
+        {
+          "frame": 300,
+          "time": 16.674999999999997,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 0,
+          "buttons": []
+        },
+        {
+          "frame": 400,
+          "time": 19.174999999999997,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 0,
+          "buttons": []
+        },
+        {
+          "frame": 500,
+          "time": 21.674999999999997,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 0,
+          "buttons": []
+        },
+        {
+          "frame": 600,
+          "time": 24.174999999999997,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 0,
+          "buttons": []
+        },
+        {
+          "frame": 700,
+          "time": 26.674999999999997,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 0,
+          "buttons": []
+        },
+        {
+          "frame": 800,
+          "time": 29.174999999999997,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 900,
+          "time": 31.674999999999997,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1000,
+          "time": 34.175,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1100,
+          "time": 36.675,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1200,
+          "time": 39.175,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1300,
+          "time": 41.675,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1400,
+          "time": 44.175,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1500,
+          "time": 46.675,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1600,
+          "time": 49.175,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1700,
+          "time": 51.675,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1800,
+          "time": 54.175,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1900,
+          "time": 56.675,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2000,
+          "time": 59.175,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2100,
+          "time": 61.675,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2200,
+          "time": 64.175,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2300,
+          "time": 66.675,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2400,
+          "time": 69.175,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2500,
+          "time": 71.675,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2600,
+          "time": 74.175,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2700,
+          "time": 76.675,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2800,
+          "time": 79.175,
+          "sp": 5200,
+          "wallet": 5200,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2900,
+          "time": 81.675,
+          "sp": 5200,
+          "wallet": 5200,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3000,
+          "time": 84.175,
+          "sp": 5200,
+          "wallet": 5200,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3100,
+          "time": 86.675,
+          "sp": 5200,
+          "wallet": 5200,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3200,
+          "time": 89.175,
+          "sp": 5200,
+          "wallet": 5200,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3300,
+          "time": 91.675,
+          "sp": 5200,
+          "wallet": 5200,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3400,
+          "time": 94.175,
+          "sp": 5200,
+          "wallet": 5200,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3500,
+          "time": 96.675,
+          "sp": 4600,
+          "wallet": 4600,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3600,
+          "time": 99.175,
+          "sp": 3800,
+          "wallet": 3800,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3700,
+          "time": 101.675,
+          "sp": 2800,
+          "wallet": 2800,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3800,
+          "time": 104.175,
+          "sp": 2800,
+          "wallet": 2800,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3900,
+          "time": 106.675,
+          "sp": 2800,
+          "wallet": 2800,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4000,
+          "time": 109.175,
+          "sp": 2400,
+          "wallet": 2400,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4100,
+          "time": 111.675,
+          "sp": 2400,
+          "wallet": 2400,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4200,
+          "time": 114.175,
+          "sp": 1600,
+          "wallet": 1600,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4300,
+          "time": 116.675,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4400,
+          "time": 119.175,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4500,
+          "time": 121.675,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4600,
+          "time": 124.175,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4700,
+          "time": 126.675,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4800,
+          "time": 129.175,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4900,
+          "time": 131.675,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5000,
+          "time": 134.175,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5100,
+          "time": 136.675,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5200,
+          "time": 139.175,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5300,
+          "time": 141.675,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5400,
+          "time": 144.175,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5500,
+          "time": 146.675,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5600,
+          "time": 149.175,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5700,
+          "time": 151.675,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5800,
+          "time": 154.175,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5900,
+          "time": 156.675,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6000,
+          "time": 159.175,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6100,
+          "time": 161.675,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6200,
+          "time": 164.175,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6300,
+          "time": 166.675,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6400,
+          "time": 169.175,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6500,
+          "time": 171.675,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6600,
+          "time": 174.175,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6700,
+          "time": 176.675,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6800,
+          "time": 179.175,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6900,
+          "time": 181.675,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7000,
+          "time": 184.175,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7100,
+          "time": 186.675,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7200,
+          "time": 189.175,
+          "sp": 1400,
+          "wallet": 1400,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7300,
+          "time": 191.675,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7400,
+          "time": 194.175,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7500,
+          "time": 196.675,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7600,
+          "time": 199.175,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7700,
+          "time": 201.675,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7800,
+          "time": 204.175,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7900,
+          "time": 206.675,
+          "sp": -200,
+          "wallet": -200,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 8000,
+          "time": 209.175,
+          "sp": -200,
+          "wallet": -200,
+          "rates": [
+            1,
+            1,
+            2
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        }
+      ]
+    },
+    "errors": []
+  },
+  {
+    "level": 3,
+    "seed": 1,
+    "limit": 8000,
+    "frame": 8100,
+    "launch": {
+      "settings": {
+        "aiCount": 1,
+        "ai": [
+          {
+            "difficulty": 3,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          }
+        ],
+        "bans": []
+      },
+      "islands": [
+        {
+          "fort": "Imp1",
+          "territory": 2
+        },
+        {
+          "fort": "Thundere",
+          "territory": 1
+        }
+      ],
+      "central": [
+        189,
+        9,
+        0,
+        212,
+        0,
+        0
+      ],
+      "mapSize": 1,
+      "script": "[Header]\nmissionType=\"Tutorial\"\n\nmissionNumber=1\nmoreGeysers=1\nrandGeysers=1\n\nmyStartMoney=12000\nmyTech=\"all\"\nmyAllyList=\"\"\ntitle=\"Skirmish\"\n\nai2Name=\"Computer #1\"\nai2Tech=\"all\"\nai2StartMoney=12000\nai2GeyserAttachments=3\nai2Collectors=6\nai2StuffRefreshRate=1\nai2TimeBetweenMoves=2\nai2BridgeDrawRate=1\nai2AllyList=\"2\"\n\n[Options]\n\n[A.]\n<h2>Skirmish</h2>\n<i>1 AI</i>\n\n$Button=Go!,DoNothing,0\n\n[Succeeded][BadTeamDead]\n<h2>Victory!</h2>\n<p>\nEvery enemy has been defeated.\n$Button=Leave,MissionAbort,0\n\n[Failed][GoodTeamDead]\n<h2>Defeat</h2>\n<p>\nYour team has fallen.\n$Button=Leave,MissionAbort,0\n\n[END]\n"
+    },
+    "activation": {
+      "owner": 1,
+      "token": 536892288,
+      "reused": false,
+      "before": {
+        "money": 12000,
+        "allies": 2,
+        "name": [
+          89,
+          111,
+          117
+        ],
+        "technology": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          true,
+          false,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          true,
+          false,
+          true,
+          false,
+          true,
+          false,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      "money": 12000,
+      "allies": 2,
+      "name": [
+        89,
+        111,
+        117
+      ],
+      "technology": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        false,
+        true,
+        false,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "brain": 536892288
+    },
+    "telemetry": {
+      "production": [
+        {
+          "time": 87.425,
+          "duration": 0.5,
+          "type": 137,
+          "wallet": 5200,
+          "desired": 6,
+          "collectors": 0
+        },
+        {
+          "time": 88.45,
+          "duration": 0.5,
+          "type": 137,
+          "wallet": 4600,
+          "desired": 6,
+          "collectors": 0
+        },
+        {
+          "time": 90.575,
+          "duration": 0.5,
+          "type": 137,
+          "wallet": 4000,
+          "desired": 6,
+          "collectors": 2
+        },
+        {
+          "time": 91.575,
+          "duration": 0.5,
+          "type": 75,
+          "wallet": 3400,
+          "desired": 6,
+          "collectors": 2
+        },
+        {
+          "time": 94.05,
+          "duration": 0.5,
+          "type": 137,
+          "wallet": 3000,
+          "desired": 6,
+          "collectors": 3
+        },
+        {
+          "time": 97.55,
+          "duration": 0.5,
+          "type": 137,
+          "wallet": 2400,
+          "desired": 6,
+          "collectors": 4
+        },
+        {
+          "time": 98.6,
+          "duration": 0.5,
+          "type": 137,
+          "wallet": 1800,
+          "desired": 6,
+          "collectors": 4
+        },
+        {
+          "time": 99.725,
+          "duration": 0.5,
+          "type": 137,
+          "wallet": 1200,
+          "desired": 6,
+          "collectors": 5
+        },
+        {
+          "time": 143.65,
+          "duration": 0.5,
+          "type": 75,
+          "wallet": 1200,
+          "desired": 6,
+          "collectors": 7
+        }
+      ],
+      "bridges": [
+        {
+          "method": "consume",
+          "time": 28.174999999999997,
+          "next": 28.674999999999997,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 29.5,
+          "next": 30,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 30.799999999999997,
+          "next": 31.299999999999997,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 32.15,
+          "next": 32.65,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 33.474999999999994,
+          "next": 33.974999999999994,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 34.775,
+          "next": 35.275,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 36.099999999999994,
+          "next": 36.599999999999994,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 37.425,
+          "next": 37.925,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 38.75,
+          "next": 39.25,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 40.074999999999996,
+          "next": 40.574999999999996,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 42.349999999999994,
+          "next": 42.849999999999994,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 43.675,
+          "next": 44.175,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 45.025,
+          "next": 45.525,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 46.3,
+          "next": 46.8,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 47.724999999999994,
+          "next": 48.224999999999994,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 49.05,
+          "next": 49.55,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 50.425,
+          "next": 50.925,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 51.75,
+          "next": 52.25,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 55.125,
+          "next": 55.625,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 56.425,
+          "next": 56.925,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 57.8,
+          "next": 58.3,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 59.25,
+          "next": 59.75,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 60.65,
+          "next": 61.15,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 62.099999999999994,
+          "next": 62.599999999999994,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 63.425,
+          "next": 63.925,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 64.75,
+          "next": 65.25,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 66.075,
+          "next": 66.575,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 67.39999999999999,
+          "next": 67.89999999999999,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 68.675,
+          "next": 69.175,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 70.125,
+          "next": 70.625,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 71.425,
+          "next": 71.925,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 73.825,
+          "next": 74.325,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 75.175,
+          "next": 75.675,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 76.45,
+          "next": 76.95,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 77.75,
+          "next": 78.25,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 79.02499999999999,
+          "next": 79.52499999999999,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 80.3,
+          "next": 80.8,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 81.64999999999999,
+          "next": 82.14999999999999,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 82.975,
+          "next": 83.475,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 84.3,
+          "next": 84.8,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 92.77499999999999,
+          "next": 93.27499999999999,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 95.1,
+          "next": 95.6,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 96.52499999999999,
+          "next": 97.02499999999999,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 102.075,
+          "next": 102.575,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 103.375,
+          "next": 103.875,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 104.7,
+          "next": 105.2,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 105.975,
+          "next": 106.475,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 107.25,
+          "next": 107.75,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 108.575,
+          "next": 109.075,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 109.85,
+          "next": 110.35,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 111.125,
+          "next": 111.625,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 112.39999999999999,
+          "next": 112.89999999999999,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 113.7,
+          "next": 114.2,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 115,
+          "next": 115.5,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 116.3,
+          "next": 116.8,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 117.625,
+          "next": 118.125,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 119.075,
+          "next": 119.575,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 120.35,
+          "next": 120.85,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 121.625,
+          "next": 122.125,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 123.14999999999999,
+          "next": 123.64999999999999,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 124.475,
+          "next": 124.975,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 125.8,
+          "next": 126.3,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 127.125,
+          "next": 127.625,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 128.5,
+          "next": 129,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 129.82500000000002,
+          "next": 130.32500000000002,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 132.20000000000002,
+          "next": 132.70000000000002,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 134.55,
+          "next": 135.05,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 139.32500000000002,
+          "next": 139.82500000000002,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 141.675,
+          "next": 142.175,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 146.07500000000002,
+          "next": 146.57500000000002,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 148.47500000000002,
+          "next": 148.97500000000002,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 153.3,
+          "next": 153.8,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 154.55,
+          "next": 155.05,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 155.925,
+          "next": 156.425,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 157.375,
+          "next": 157.875,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 158.8,
+          "next": 159.3,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 160.10000000000002,
+          "next": 160.60000000000002,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 161.375,
+          "next": 161.875,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 162.65,
+          "next": 163.15,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 163.95000000000002,
+          "next": 164.45000000000002,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 165.275,
+          "next": 165.775,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 166.625,
+          "next": 167.125,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 168,
+          "next": 168.5,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 169.275,
+          "next": 169.775,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 170.60000000000002,
+          "next": 171.10000000000002,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 172.025,
+          "next": 172.525,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 173.375,
+          "next": 173.875,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 174.65,
+          "next": 175.15,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 175.97500000000002,
+          "next": 176.47500000000002,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 177.275,
+          "next": 177.775,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 178.57500000000002,
+          "next": 179.07500000000002,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 180.875,
+          "next": 181.375,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 182.22500000000002,
+          "next": 182.72500000000002,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 183.57500000000002,
+          "next": 184.07500000000002,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 184.9,
+          "next": 185.4,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 187.22500000000002,
+          "next": 187.72500000000002,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 188.525,
+          "next": 189.025,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 189.875,
+          "next": 190.375,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 191.20000000000002,
+          "next": 191.70000000000002,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 192.55,
+          "next": 193.05,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 193.875,
+          "next": 194.375,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 196.20000000000002,
+          "next": 196.70000000000002,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 197.525,
+          "next": 198.025,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 198.875,
+          "next": 199.375,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 200.175,
+          "next": 200.675,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 202.5,
+          "next": 203,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 203.82500000000002,
+          "next": 204.32500000000002,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 205.15,
+          "next": 205.65,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 206.525,
+          "next": 207.025,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 207.82500000000002,
+          "next": 208.32500000000002,
+          "duration": 0.5
+        },
+        {
+          "method": "consume",
+          "time": 209.15,
+          "next": 209.65,
+          "duration": 0.5
+        }
+      ],
+      "collectorMoves": [
+        {
+          "time": 87.425,
+          "next": 88.425,
+          "duration": 1
+        },
+        {
+          "time": 88.45,
+          "next": 89.45,
+          "duration": 1
+        },
+        {
+          "time": 90.575,
+          "next": 91.575,
+          "duration": 1
+        },
+        {
+          "time": 94.05,
+          "next": 95.05,
+          "duration": 1
+        },
+        {
+          "time": 97.55,
+          "next": 98.55,
+          "duration": 1
+        },
+        {
+          "time": 98.6,
+          "next": 99.6,
+          "duration": 1
+        },
+        {
+          "time": 99.725,
+          "next": 100.725,
+          "duration": 1
+        }
+      ],
+      "samples": [
+        {
+          "frame": 0,
+          "time": 9.2,
+          "sp": 0,
+          "wallet": 12000,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 0,
+          "scan": 0,
+          "stop": 0,
+          "enemy": 0,
+          "priest": 0,
+          "temple": 0,
+          "buttons": []
+        },
+        {
+          "frame": 100,
+          "time": 11.674999999999999,
+          "sp": 12000,
+          "wallet": 12000,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 0,
+          "buttons": []
+        },
+        {
+          "frame": 200,
+          "time": 14.174999999999999,
+          "sp": 12000,
+          "wallet": 12000,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 0,
+          "buttons": []
+        },
+        {
+          "frame": 300,
+          "time": 16.674999999999997,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 0,
+          "buttons": []
+        },
+        {
+          "frame": 400,
+          "time": 19.174999999999997,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 0,
+          "buttons": []
+        },
+        {
+          "frame": 500,
+          "time": 21.674999999999997,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 0,
+          "buttons": []
+        },
+        {
+          "frame": 600,
+          "time": 24.174999999999997,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 0,
+          "buttons": []
+        },
+        {
+          "frame": 700,
+          "time": 26.674999999999997,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 0,
+          "buttons": []
+        },
+        {
+          "frame": 800,
+          "time": 29.174999999999997,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 900,
+          "time": 31.674999999999997,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1000,
+          "time": 34.175,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1100,
+          "time": 36.675,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1200,
+          "time": 39.175,
+          "sp": 7000,
+          "wallet": 7000,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1300,
+          "time": 41.675,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1400,
+          "time": 44.175,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1500,
+          "time": 46.675,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1600,
+          "time": 49.175,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1700,
+          "time": 51.675,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1800,
+          "time": 54.175,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 1900,
+          "time": 56.675,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2000,
+          "time": 59.175,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2100,
+          "time": 61.675,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2200,
+          "time": 64.175,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2300,
+          "time": 66.675,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2400,
+          "time": 69.175,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2500,
+          "time": 71.675,
+          "sp": 6200,
+          "wallet": 6200,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2600,
+          "time": 74.175,
+          "sp": 5200,
+          "wallet": 5200,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2700,
+          "time": 76.675,
+          "sp": 5200,
+          "wallet": 5200,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2800,
+          "time": 79.175,
+          "sp": 5200,
+          "wallet": 5200,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 2900,
+          "time": 81.675,
+          "sp": 5200,
+          "wallet": 5200,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3000,
+          "time": 84.175,
+          "sp": 5200,
+          "wallet": 5200,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3100,
+          "time": 86.675,
+          "sp": 5200,
+          "wallet": 5200,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 0,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3200,
+          "time": 89.175,
+          "sp": 4000,
+          "wallet": 4000,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 1,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3300,
+          "time": 91.675,
+          "sp": 3000,
+          "wallet": 3000,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 2,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3400,
+          "time": 94.175,
+          "sp": 2400,
+          "wallet": 2400,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 3,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3500,
+          "time": 96.675,
+          "sp": 2400,
+          "wallet": 2400,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 4,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3600,
+          "time": 99.175,
+          "sp": 1200,
+          "wallet": 1200,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 5,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3700,
+          "time": 101.675,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3800,
+          "time": 104.175,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 3900,
+          "time": 106.675,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4000,
+          "time": 109.175,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4100,
+          "time": 111.675,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4200,
+          "time": 114.175,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4300,
+          "time": 116.675,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4400,
+          "time": 119.175,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4500,
+          "time": 121.675,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4600,
+          "time": 124.175,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4700,
+          "time": 126.675,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4800,
+          "time": 129.175,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 4900,
+          "time": 131.675,
+          "sp": 600,
+          "wallet": 600,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5000,
+          "time": 134.175,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5100,
+          "time": 136.675,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5200,
+          "time": 139.175,
+          "sp": 400,
+          "wallet": 400,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5300,
+          "time": 141.675,
+          "sp": 800,
+          "wallet": 800,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5400,
+          "time": 144.175,
+          "sp": 800,
+          "wallet": 800,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5500,
+          "time": 146.675,
+          "sp": 1200,
+          "wallet": 1200,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5600,
+          "time": 149.175,
+          "sp": 1200,
+          "wallet": 1200,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5700,
+          "time": 151.675,
+          "sp": 400,
+          "wallet": 400,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5800,
+          "time": 154.175,
+          "sp": -600,
+          "wallet": -600,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 5900,
+          "time": 156.675,
+          "sp": -600,
+          "wallet": -600,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6000,
+          "time": 159.175,
+          "sp": -600,
+          "wallet": -600,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6100,
+          "time": 161.675,
+          "sp": -600,
+          "wallet": -600,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6200,
+          "time": 164.175,
+          "sp": -600,
+          "wallet": -600,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6300,
+          "time": 166.675,
+          "sp": -600,
+          "wallet": -600,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6400,
+          "time": 169.175,
+          "sp": -200,
+          "wallet": -200,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6500,
+          "time": 171.675,
+          "sp": -200,
+          "wallet": -200,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6600,
+          "time": 174.175,
+          "sp": -200,
+          "wallet": -200,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6700,
+          "time": 176.675,
+          "sp": 200,
+          "wallet": 200,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6800,
+          "time": 179.175,
+          "sp": 1400,
+          "wallet": 1400,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 6900,
+          "time": 181.675,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7000,
+          "time": 184.175,
+          "sp": 1000,
+          "wallet": 1000,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7100,
+          "time": 186.675,
+          "sp": 400,
+          "wallet": 400,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7200,
+          "time": 189.175,
+          "sp": 800,
+          "wallet": 800,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7300,
+          "time": 191.675,
+          "sp": 800,
+          "wallet": 800,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7400,
+          "time": 194.175,
+          "sp": 800,
+          "wallet": 800,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7500,
+          "time": 196.675,
+          "sp": 0,
+          "wallet": 0,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7600,
+          "time": 199.175,
+          "sp": 0,
+          "wallet": 0,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7700,
+          "time": 201.675,
+          "sp": -1000,
+          "wallet": -1000,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7800,
+          "time": 204.175,
+          "sp": -1000,
+          "wallet": -1000,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 7900,
+          "time": 206.675,
+          "sp": -1000,
+          "wallet": -1000,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        },
+        {
+          "frame": 8000,
+          "time": 209.175,
+          "sp": -1000,
+          "wallet": -1000,
+          "rates": [
+            0.5,
+            0.5,
+            1
+          ],
+          "desired": 6,
+          "count": 7,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "priest": 15002,
+          "temple": 15276,
+          "buttons": []
+        }
+      ]
+    },
+    "errors": []
+  }
+]

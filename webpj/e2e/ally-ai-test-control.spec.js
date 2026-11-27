@@ -8,6 +8,43 @@ test('아군 AI 검사: 허용 목록 밖 미션은 브라우저 상태를 읽�
   const page = { evaluate: () => { throw new Error('금지 미션에서 페이지 접근'); } };
   // Tutorial·후반 캠페인·알 수 없는 이름은 모두 같은 제한을 적용한다.
   for (const mission of ['Tutorial1', 'Tutorial6', 'thenoose', 'finalconfrontation', 'unknown']) await expect(installAllyAi(page, mission)).rejects.toThrow('허용 미션');
+  // 난이도 보존 선택도 허용 미션 범위를 넓히지 않으며 잘못된 선택값은 페이지 접근 전에 거부한다.
+  await expect(installAllyAi(page, 'TheNoose', { preserveDifficulty: true })).rejects.toThrow('허용 미션');
+  await expect(installAllyAi(page, 'Skirmish', { preserveDifficulty: 1 })).rejects.toThrow('boolean');
+});
+
+// 정량 관찰에서는 공용 활성화기가 스커미시의 적 어려움을 쉬움으로 덮지 않아야 한다.
+test('아군 AI 검사: 스커미시의 원래 개별 난이도를 보존한다', async ({ page }) => {
+  test.setTimeout(240000);
+  // 실제 프레임 오류만 수집하고 현재 자금·기술·동맹을 직접 바꾸지 않는다.
+  const errors = [];
+  page.on('pageerror', (error) => errors.push(error.stack ?? error.message));
+  page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
+  await page.setViewportSize({ width: 1024, height: 768 });
+  await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, autoDemo: 0, sound: 0, music: 0, difficulty: 2, skirmishAiCount: 1, skirmishAi2Diff: 3, skirmishAi2Ally: 0 } })));
+  await page.goto('/debug.html?fixed=25&aspect=4:3&title=1&lang=en');
+  await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 120000 });
+  await page.locator('canvas').click(); await page.evaluate(() => window.netstorm._prepareCampaignAudio());
+  // 실제 시작 그림과 동일한 월드 적재 경로를 실행한다.
+  while (await page.evaluate(() => window.netstorm.state !== 'mainMenu')) await page.evaluate(() => window.netstorm.stepFixedFrames(1));
+  await page.evaluate(() => window.netstorm.stepFixedFrames(1));
+  await installAllyAi(page, 'Skirmish', { preserveDifficulty: true });
+  await page.evaluate(async () => { const app = window.netstorm, { buildSkirmishLaunch } = await import('./core/skirmish-setup.js'); await app._beginSkirmish(buildSkirmishLaunch(app._loadSkirmishSettings(), 1)); });
+  // 비동기 적재를 원래 프레임으로 기다린다. 미션 안내와 실제 Session 준비가 모두 필요하다.
+  for (let frame = 0; frame < 1500; frame += 1) {
+    if (await page.evaluate(() => Boolean(window.netstorm._mainMenu.controlPoint('Go!')) && Boolean(window.netstorm._campaignWorld?.session().localConnectionReady()))) break;
+    await page.evaluate(() => window.netstorm.stepFixedFrames(1));
+  }
+  // 시작 안내만 닫고 이후 모든 조작은 실제 아군 AI가 수행한다.
+  const point = await page.evaluate(() => { const app = window.netstorm, p = app._mainMenu.controlPoint('Go!'), rect = app.canvas.getBoundingClientRect(); if (!p) throw new Error('스커미시 실제 시작 단추 없음'); return { x: rect.left + p.x * rect.width / 1024, y: rect.top + p.y * rect.height / 768 }; });
+  await page.mouse.click(point.x, point.y); await page.evaluate(() => window.netstorm.stepFixedFrames(300));
+  const state = await page.evaluate(() => { const app = window.netstorm, session = app._campaignWorld.session(), raw = session.aiMemory().bytes(session.participation().brain(2)), view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength); return { activated: window.netstormAllyTestState, rates: [0x220, 0x224, 0x228].map((offset) => view.getFloat32(offset, true)), desired: view.getInt32(0x234, true), initialized: view.getUint32(0x258, true) }; });
+  expect(state.activated.brain).toBe(state.activated.token);
+  // 저장된 적 어려움의 배율0.5와 채취6이 실제 AI 본문까지 보존돼야 한다.
+  expect(state.rates).toEqual([0.5, 0.5, 1]); expect(state.desired).toBe(6); expect(state.initialized).toBe(1);
+  expect(state.activated.money).toBe(state.activated.before.money); expect(state.activated.allies).toBe(state.activated.before.allies);
+  expect(state.activated.name).toEqual(state.activated.before.name); expect(state.activated.technology).toEqual(state.activated.before.technology);
+  expect(errors).toEqual([]);
 });
 
 // 새로 허용된1-6에서는 시나리오의 기존 로컬AI를 보존하거나 없는 경우만 생성하며 실제15초를 진행한다.

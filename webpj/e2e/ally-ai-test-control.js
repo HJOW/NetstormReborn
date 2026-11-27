@@ -1,10 +1,12 @@
 // 사용자 허용 미션의 실제 AI만 켜는 e2e 전용 설정이다. debug.html의 ES 모듈 앱에서 미션 진입 전에 설치한다.
-async function installAllyAi(page, mission) {
+// preserveDifficulty=true이면 현재 스커미시/옵션 난이도를 그대로 사용해 배율을 관찰한다. 기본값은 기존 아군 어려움·적 쉬움이다.
+async function installAllyAi(page, mission, { preserveDifficulty = false } = {}) {
   // 사제 포획·특정 적 공격·승리를 AI로 시험할 수 있는 정확한 미션 목록이다.
   const allowed = ['thewarbegins', 'masterofwhirligigs', 'savetheisland', 'fragilefortune', 'thunderingpower', 'dissolvedalliance', 'skirmish'];
   if (typeof mission !== 'string') throw new TypeError('아군 AI 시험의 미션 이름 문자열 필요');
   if (!allowed.includes(mission.toLowerCase())) throw new Error('아군 AI 시험 허용 미션이 아님');
-  await page.evaluate(async (name) => {
+  if (typeof preserveDifficulty !== 'boolean') throw new TypeError('아군 AI 검사 난이도 보존 선택은 boolean이어야 한다');
+  await page.evaluate(async ({ name, preserveDifficulty }) => {
     // 원래 시작 몸체와 설정 초기화기를 그대로 빌린다.
     const { RawCampaignMissionStartBindings } = await import(new URL('./core/raw-campaign-mission-start-bindings.js', location.href));
     const { RawMissionAiSettings, MISSION_AI_SETTINGS_SIZE } = await import(new URL('./core/raw-mission-ai-settings.js', location.href));
@@ -13,7 +15,7 @@ async function installAllyAi(page, mission) {
     if (app._allyAiTestInstalled) throw new Error('같은 페이지의 아군 AI 검사 중복 설치');
     app._allyAiTestInstalled = true; // 한 페이지에는 한 검사 미션만 설치해 prototype/난이도 감싸기를 중복하지 않는다.
     // 현재 조사 미션에서만 C++ 테스트 옵션과 같은 아군 어려움·적 쉬움을 사용한다.
-    app._campaignGameplayServices = function () {
+    if (!preserveDifficulty) app._campaignGameplayServices = function () {
       const services = gameplay.call(this), difficulty = services.ai.difficulty;
       services.ai.difficulty = (owner, enemy) => this._clientGuide?.current()?.script.name.toLowerCase() === name ? (enemy ? 1 : 3) : difficulty(owner, enemy);
       return services;
@@ -48,6 +50,6 @@ async function installAllyAi(page, mission) {
       // 결과를 읽기만 하며 기술·SP·HP·게임 단계·승패를 직접 변경하지 않는다.
       window.netstormAllyTestState = { owner, token, reused: Boolean(existing), before, money: session.sp(owner), allies: players.getUint32(owner * 180 + 0x54, true), name: Array.from(records.subarray(owner * 180 + 12, owner * 180 + 12 + length)), technology: technology(), brain: session.participation().brain(owner) };
     };
-  }, mission.toLowerCase());
+  }, { name: mission.toLowerCase(), preserveDifficulty });
 }
 module.exports = { installAllyAi };

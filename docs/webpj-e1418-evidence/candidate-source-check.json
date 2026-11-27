@@ -1,0 +1,7 @@
+{
+  "candidateToMaintained": "실제 실행한 후보와 유지 도구는 명시된 require/공용난이도보존옵션/출력파일접두/설명/종료프레임표시 교정만 다르고 나머지 LF소스는 같음.",
+  "activationBodyIdentical": true,
+  "maintainedSourceSha256": "e9f4b5ebf80833db93187e9de0b04c5e7455b89bc2f84c5a00eda5b95868da89",
+  "note": "후보의result.frame8100은for종료변수이며 실제마지막samples.frame8000이다. 유지 도구는 실제마지막표본을기록한다.",
+  "caseFrames": 8000
+}

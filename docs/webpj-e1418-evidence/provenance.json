@@ -1,0 +1,219 @@
+{
+  "unit": "WB04-E1418 예약 주기 검증 완료/실제 채취량 절반 미완료",
+  "recordedAt": "2026-11-27T07:22:16.953591+00:00",
+  "host": "HJOW-Athlon",
+  "candidateCommand": "node extracted/e1418-funded.cjs",
+  "candidateExit": 0,
+  "candidateToMaintained": "candidate-source-check.json; 공용옵션/경로/표시 외 소스동일, 활성화몸체동일. 유지도구 자체의 전체3경로 재실행으로 세지 않음.",
+  "fixedInput": {
+    "seed": 1,
+    "initialSpBoth": 12000,
+    "target": "스톰파워 충분 조건의 실제 예약 주기. 기본5000 자연승리 아님.",
+    "ally": "실제보통AI, 현재Player 보존",
+    "enemyDifficulty": [
+      1,
+      2,
+      3
+    ]
+  },
+  "summary": [
+    {
+      "difficulty": 1,
+      "actualLastFrame": 8000,
+      "reportedLoopVariable": 8100,
+      "gameSeconds": 209.175,
+      "eventCounts": {
+        "production": 1,
+        "bridges": 12,
+        "collectorMoves": 1,
+        "samples": 81
+      },
+      "periodValues": {
+        "production": [
+          4
+        ],
+        "bridges": [
+          4
+        ],
+        "collectorMoves": [
+          8
+        ]
+      },
+      "desired": [
+        3
+      ],
+      "actualPeak": 1,
+      "errors": []
+    },
+    {
+      "difficulty": 2,
+      "actualLastFrame": 8000,
+      "reportedLoopVariable": 8100,
+      "gameSeconds": 209.175,
+      "eventCounts": {
+        "production": 2,
+        "bridges": 66,
+        "collectorMoves": 1,
+        "samples": 81
+      },
+      "periodValues": {
+        "production": [
+          1
+        ],
+        "bridges": [
+          1,
+          1.0000000000000142
+        ],
+        "collectorMoves": [
+          2
+        ]
+      },
+      "desired": [
+        6
+      ],
+      "actualPeak": 1,
+      "errors": []
+    },
+    {
+      "difficulty": 3,
+      "actualLastFrame": 8000,
+      "reportedLoopVariable": 8100,
+      "gameSeconds": 209.175,
+      "eventCounts": {
+        "production": 9,
+        "bridges": 111,
+        "collectorMoves": 7,
+        "samples": 81
+      },
+      "periodValues": {
+        "production": [
+          0.5
+        ],
+        "bridges": [
+          0.5
+        ],
+        "collectorMoves": [
+          1
+        ]
+      },
+      "desired": [
+        6
+      ],
+      "actualPeak": 7,
+      "errors": []
+    }
+  ],
+  "checks": {
+    "helperChromium": 3,
+    "helperExit": 0,
+    "eslintBeforeBuild": "exit0",
+    "buildExit": 0
+  },
+  "bundle": {
+    "bytes": 3508534,
+    "sha256": "72ea8d094b55216452615ed982bceb46e82ab3166957eb47a5225108e2bd7b25"
+  },
+  "limits": "채취필드3/6/6/최소1 단위계약을 실제누적생산량/개체상한 증명으로 세지 않음. 실제계수1/1/7과 두 기본5000실패를 보존.",
+  "evidence": [
+    {
+      "file": "build.log",
+      "bytes": 462,
+      "sha256": "35892718028732a2b56ce5440009bce8d7552f63c7f10f6c320a20cccd1abd40"
+    },
+    {
+      "file": "candidate-control.cjs",
+      "bytes": 4825,
+      "sha256": "2902e6d3b2bd70654c3a0c3e3ed15cda8747aa5a2ded0fcb3be4c29a0c923f68"
+    },
+    {
+      "file": "candidate-source-check.json",
+      "bytes": 539,
+      "sha256": "f7100bd1a8ed82e9f83f78948a518ab0c6ce9135fa061dd7b7c4ac50f0c4a50e"
+    },
+    {
+      "file": "default-seed1-failure.json",
+      "bytes": 80515,
+      "sha256": "9fd83871969bd118612abe590d29ac63fe11d1d1b08f4dcbbcbc734fd7f3b9a7"
+    },
+    {
+      "file": "default-seed1-failure.log",
+      "bytes": 1936,
+      "sha256": "b3d9a2beb4318ebd44f48c060bc9bc9f2c30b86a8094dfcec7db3932fbd25b64"
+    },
+    {
+      "file": "first-default-failure.json",
+      "bytes": 51657,
+      "sha256": "7f2f86fd39935940ece6e936df240bd9a67dd0771b826ae324facbdffc6b8dcd"
+    },
+    {
+      "file": "first-default-failure.log",
+      "bytes": 1310,
+      "sha256": "e8f45b2c3301eee5c6c5e39508e4186759292637215c45dc019ab065d52d19a5"
+    },
+    {
+      "file": "first-default-manifest.json",
+      "bytes": 926,
+      "sha256": "d95885d1246ca0177f55e3100c19d12d8e2bdf168a82c923b0a40bd4a5aed993"
+    },
+    {
+      "file": "funded-candidate.cjs",
+      "bytes": 9605,
+      "sha256": "f775691c0de124bfb7d60d8055ba4318548a2e2062d8b90042cbe88bbd671a90"
+    },
+    {
+      "file": "funded-results.json",
+      "bytes": 154508,
+      "sha256": "f430b81c5d9b7eecd21ed89656b1e557b2c3a8bc578a02ff93d50b2982774c3c"
+    },
+    {
+      "file": "funded.log",
+      "bytes": 2996,
+      "sha256": "06e6c2655aae017a0c407f16ce8196fad1ef800b6487871f64c6adf601286abd"
+    },
+    {
+      "file": "helper.log",
+      "bytes": 3599,
+      "sha256": "05369b991d9b779abd50cb5a0d9f0327ed75a925bc8338a93891ad0ec2dca5f1"
+    },
+    {
+      "file": "initial-state-diagnostic.json",
+      "bytes": 13759,
+      "sha256": "6cf01869032131b41070432fed8b35c2baf6eae19108adfa60f6a05f4df6997d"
+    },
+    {
+      "file": "initial-state-diagnostic.log",
+      "bytes": 381,
+      "sha256": "ab65dcc948139283cd48bf1b42840048a0f77407813f682512b7acdf6c3d327a"
+    },
+    {
+      "file": "level-1-dump.tsv",
+      "bytes": 759505,
+      "sha256": "90f0f30c7da1d84be12b177f2a0381972898e28bbd565724523c45111ac3ab5f"
+    },
+    {
+      "file": "level-1-initial.json",
+      "bytes": 7122,
+      "sha256": "94b0d03c8daab34cb5c155c94b4b092ca024fb1ea4ff63095220e7dd02fee880"
+    },
+    {
+      "file": "level-2-dump.tsv",
+      "bytes": 796523,
+      "sha256": "56adb0bc1dd45dc9ddfa6c3a9004c1a6f72ddb9bfcdb8cf610e80d4b64f060fc"
+    },
+    {
+      "file": "level-2-initial.json",
+      "bytes": 7122,
+      "sha256": "d34b57278fc27946874dc45bf143bfec725ef1df0665533522997c404585638f"
+    },
+    {
+      "file": "level-3-dump.tsv",
+      "bytes": 828778,
+      "sha256": "f6e5abfb744d7de28d6b215fe5ef3f553510538f785fbba8d70d8061ebdee6a0"
+    },
+    {
+      "file": "level-3-initial.json",
+      "bytes": 7122,
+      "sha256": "385ab5b475112d4061a80fbb23957a39c199cc1e1df8517141de72658bf0c0ee"
+    }
+  ]
+}

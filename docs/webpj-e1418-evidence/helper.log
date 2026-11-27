@@ -1,0 +1,16 @@
+npm notice run NetstormWeb@1.0.0 npx
+npm notice run ^"playwright^" test e2e/ally-ai-test-control.spec.js --project=chromium --workers=1 --grep 허용 목록 밖|캠페인1-6|스커미시의 원래 --output=extracted/e1418-helper-results --reporter=line
+
+Running 3 tests using 1 worker
+
+
+
+(node:18284) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+[1/3] [chromium] › e2e\ally-ai-test-control.spec.js:6:1 › 아군 AI 검사: 허용 목록 밖 미션은 브라우저 상태를 읽기 전에 거부한다
+[2/3] [chromium] › e2e\ally-ai-test-control.spec.js:17:1 › 아군 AI 검사: 스커미시의 원래 개별 난이도를 보존한다
+[3/3] [chromium] › e2e\ally-ai-test-control.spec.js:51:1 › 아군 AI 검사: 캠페인1-6의 실제 brain과 현재 Player 값을 보존한다
+[chromium] › e2e\ally-ai-test-control.spec.js:51:1 › 아군 AI 검사: 캠페인1-6의 실제 brain과 현재 Player 값을 보존한다
+{"activated":{"owner":1,"token":536913664,"reused":false,"before":{"money":4000,"allies":2,"name":[89,111,117],"technology":[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true,false,false,true,false,false,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true,false,false,false,false,true,false,false,false,true,false,true,true,true,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false]},"money":4000,"allies":2,"name":[89,111,117],"technology":[false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true,false,false,true,false,false,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,true,false,false,false,false,true,false,false,false,true,false,true,true,true,true,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false,false],"brain":536913664},"after":{"mission":"DissolvedAlliance","token":536913664,"initialized":1,"stopped":0,"time":24.15}}
+
+  3 passed (3.0m)
