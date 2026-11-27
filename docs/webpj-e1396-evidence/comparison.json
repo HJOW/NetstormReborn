@@ -1,0 +1,226 @@
+{
+  "unit": "WB04-E1396",
+  "host": "HJOW-Athlon",
+  "recordedAt": "2026-11-27T01:52:49.263121+00:00",
+  "cppSource": "aed29e3d1",
+  "cppExeSha256": "6851dfabaa7f6b8eb98eb4c8b312b9374d3287ae4ee845552d6fd9d78dc0846b",
+  "webProduct": "cdd2e67ec",
+  "cpp": {
+    "requestedFrames": 60000,
+    "exitCode": 0,
+    "outcome": "undecided",
+    "aiDiagnostics": 0,
+    "lastReport": {
+      "frame": 54000,
+      "page": "mission",
+      "popup": "",
+      "paused": "0",
+      "current_dialog": "0",
+      "mission": "savetheisland",
+      "mission_progress": "0"
+    },
+    "lastDumpFrame": 54000,
+    "lastDumpSeconds": 1358.475,
+    "aiState": {
+      "1": {
+        "initialized": 1,
+        "initial_scan": 1,
+        "stopped": 0,
+        "enemy": 2,
+        "capabilities": 65535,
+        "wallet_bits": 600,
+        "goal": 2,
+        "reserve": 400,
+        "desired_collectors": 3,
+        "collectors": 1,
+        "own_graph": 59,
+        "enemy_graph": 59,
+        "priest": 15031,
+        "enemy_priest": 15001,
+        "temple": 15030,
+        "enemy_temple": 15018,
+        "collectors_ready": 1,
+        "geysers_ready": 0,
+        "build_type": 87,
+        "search_count": 0,
+        "search_done": 0,
+        "bridge_target": 0,
+        "bridge_restart": 1,
+        "bridge_path_step": 0,
+        "token": 536892288,
+        "wallet": 600,
+        "deadline_bits": {
+          "5a8": 4652214456831862374,
+          "5b0": 4652220833999303475,
+          "5b8": 0,
+          "5c0": 0,
+          "5c8": 0,
+          "5d0": 4650103614408858010,
+          "5d8": 4653692640264244429,
+          "5e0": 0,
+          "5e8": 0,
+          "630": 4651723195036572058
+        }
+      },
+      "2": {
+        "initialized": 1,
+        "initial_scan": 1,
+        "stopped": 0,
+        "enemy": 1,
+        "capabilities": 65535,
+        "wallet_bits": 5800,
+        "goal": 3,
+        "reserve": 1200,
+        "desired_collectors": 1,
+        "collectors": 2,
+        "own_graph": 59,
+        "enemy_graph": 59,
+        "priest": 15001,
+        "enemy_priest": 15031,
+        "temple": 15018,
+        "enemy_temple": 15030,
+        "collectors_ready": 1,
+        "geysers_ready": 1,
+        "build_type": 88,
+        "search_count": 128,
+        "search_done": 128,
+        "bridge_target": 0,
+        "bridge_restart": 1,
+        "bridge_path_step": 4,
+        "token": 536870912,
+        "wallet": 5800,
+        "deadline_bits": {
+          "5a8": 4653668670910758912,
+          "5b0": 4653673068957270016,
+          "5b8": 0,
+          "5c0": 0,
+          "5c8": 4643110940358528205,
+          "5d0": 4648610697520663757,
+          "5d8": 4653692640264244429,
+          "5e0": 0,
+          "5e8": 0,
+          "630": 4653703855282847744
+        }
+      }
+    },
+    "priestRows": [
+      [
+        "object",
+        "15001",
+        "158",
+        "0",
+        "2",
+        "17",
+        "1120403456",
+        "1121845248",
+        "100"
+      ],
+      [
+        "object",
+        "15031",
+        "158",
+        "0",
+        "1",
+        "49",
+        "1127415808",
+        "1121058816",
+        "100"
+      ]
+    ]
+  },
+  "web": {
+    "cliExitCode": 1,
+    "terminal": {
+      "frame": 60000,
+      "time": 1509.175,
+      "buttons": [],
+      "commands": [],
+      "observation": {
+        "events": [
+          {
+            "method": "priestDead",
+            "owner": 1,
+            "result": false,
+            "time": 9.2
+          },
+          {
+            "method": "priestCaptured",
+            "owner": 1,
+            "result": false,
+            "time": 9.2
+          },
+          {
+            "method": "priestDead",
+            "owner": 2,
+            "result": false,
+            "time": 9.2
+          },
+          {
+            "method": "priestCaptured",
+            "owner": 2,
+            "result": false,
+            "time": 9.2
+          }
+        ],
+        "captured": {
+          "1": false,
+          "2": false
+        },
+        "dead": {
+          "1": false,
+          "2": false
+        }
+      },
+      "sp": 950,
+      "won": false,
+      "reason": "프레임 상한"
+    },
+    "browserGameErrors": [],
+    "aiState": [
+      {
+        "initialized": 1,
+        "stopped": 0,
+        "enemy": 2,
+        "goal": 2,
+        "reserve": 400,
+        "desiredCollectors": 3,
+        "collectors": 2,
+        "ownGraph": 34,
+        "enemyGraph": 34,
+        "buildType": 87,
+        "searchCount": 0,
+        "searchDone": 0,
+        "bridgeTarget": 0,
+        "bridgeStep": 0,
+        "owner": 1,
+        "wallet": 950
+      },
+      {
+        "initialized": 1,
+        "stopped": 0,
+        "enemy": 1,
+        "goal": 3,
+        "reserve": 1200,
+        "desiredCollectors": 1,
+        "collectors": 3,
+        "ownGraph": 34,
+        "enemyGraph": 34,
+        "buildType": 88,
+        "searchCount": 128,
+        "searchDone": 128,
+        "bridgeTarget": 0,
+        "bridgeStep": 4,
+        "owner": 2,
+        "wallet": 10000
+      }
+    ]
+  },
+  "comparisonLimit": "입력 단계표/시드 소비를 정렬한 오라클이 아니다. 각자 기본 자금/아군 어려움/적 쉬움으로 관찰했다. C++프레임6000은158.475초,웹관찰6000은159.175초다. 두실행미승리와 현재AI상태를 비교하며 원인/픽셀/전체상태 동등으로 판정하지 않는다.",
+  "rawSourcesSha256": {
+    "extracted\\webpj-e1396-cpp-savetheisland\\run.json": "3a92c70331dfe3a733e09868827d516c3b29e80b29fa3566ecd1b0fbe0463304",
+    "extracted\\webpj-e1396-cpp-savetheisland\\summary.json": "adee9b2755a659344bef96a0a62a2633a41186e63a564d4bc1e337aa0d7b2aa7",
+    "extracted\\webpj-e1396-cpp-savetheisland\\dump-054000.tsv": "56675b8ca749c03827c6a4e42adce78fbb3330a9d2fb2d31d4dca3fe54c80d40",
+    "webpj\\extracted\\ally-flow-savetheisland.json": "d70f942b34d9260166d8de112324d5ee64f4291ecb2081d1954b08b5ecb75f02"
+  },
+  "previousWeb120000": "webpj/extracted/e1396-previous-savetheisland/preserved.json"
+}

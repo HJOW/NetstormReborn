@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "H:\\Workspace\\git\\NetstormReborn\\cpppj\\build\\bin\\Release\\Netstorm.exe",
+    "--run",
+    "H:\\Workspace\\git\\NetstormReborn\\assets\\game-data",
+    "--mission",
+    "savetheisland",
+    "--window",
+    "--mute-audio",
+    "--frames",
+    "60000",
+    "--set",
+    "SCREENW=1024;SCREENH=768;WelcomeGiven=1;autoDemo=0;tellTips=0;intro=1;currentLanguage=english",
+    "--ui-script",
+    "extracted\\webpj-e1396-cpp-savetheisland\\steps.tsv",
+    "--ui-report",
+    "extracted\\webpj-e1396-cpp-savetheisland\\report.tsv",
+    "--fixed-frame-ms",
+    "25",
+    "--test-ally-ai",
+    "hard",
+    "--test-enemy-ai",
+    "easy"
+  ],
+  "NETSTORM_USER_DATA": "extracted\\webpj-e1396-cpp-savetheisland\\user-data"
+}
