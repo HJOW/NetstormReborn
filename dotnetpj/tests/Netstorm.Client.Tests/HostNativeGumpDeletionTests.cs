@@ -31,8 +31,9 @@ public sealed partial class HostPriestWorldLiveTests
             int parent = process.Form();
             uint token = tree.AllocateNode(new GumpCreateNode()); tree.Factory.Construct(token, 0, 0, 0, 1);
             GumpCreateNode node = tree.Node(token)!;
-            var forms = surface.Storage.GumpForms(); int form = forms.Create();
-            forms.SetOwner(form, node.Id); forms.Attach(form, parent);
+            var forms = surface.Storage.GumpForms();
+            int form = checked((int)HostProductionFormBinding.Bind(surface.Storage, tree, token, (uint)parent));
+            Assert.Equal(node.Id, forms.Owner(form)); Assert.Equal(parent, forms.Parent(form));
             node.Object = (uint)parent; node.Form = (uint)form; node.Flags |= 0x40;
             Assert.True(session.DestroyResourceObject(parent, 0));
             Assert.Equal(1, destroyed); Assert.Equal(1, changed);
