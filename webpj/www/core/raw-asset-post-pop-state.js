@@ -19,7 +19,7 @@ const PLAYER_COUNT = 8;
 
 // Gun/Residence/Geyser/Vortex/Factory 재정의가 사용하는 전역과 목록이다. (2026-11-08 WB04-E61)
 export class AssetPostPopState {
-    // 내부 전투 여부, boss 여부, Fort 모드 여부, 검사 Form 판정 getter(기본 0), 거주 건물 애니메이션 여부이다.
+    // 내부 전투·boss·Fort 모드·검사 Form getter와 독립 fixture의 savedGame 입력이다. residenceAnimation은 기존 관측 입력 이름을 유지한다.
     inBattle = false;
     boss = true;
     fortMode = false;
@@ -43,10 +43,14 @@ export class AssetPostPopState {
     outposts = new SquidPostPopList();
     // 실제 제품이 같은 Client 에서 빌리는 권한(RawAuthorityState)과 장기 목록이다. 없으면 null 이다.
     sharedAuthority = null;
+    // 실제 Session이 같은 Client에서 빌리는 현재 복구 여부 상자다. 없으면 독립 residenceAnimation 입력을 쓴다.
+    sharedSavedGame = null;
     sharedResidences = null;
     sharedTemples = null;
     sharedGeysers = null;
     sharedOutposts = null;
+    // Residence 통지 뒤 현재 복구 값을 읽는다. 값false도 공유 입력이며 독립값으로 대체하지 않는다.
+    readSavedGame() { return this.sharedSavedGame ? Boolean(this.sharedSavedGame.value) : this.residenceAnimation; }
     // WORD setter(004ac220)가 통지를 선택하는 독립 Bridge TYPE DWORD 와 실제 World 의 현재 BridgeState TYPE getter(없으면 null)이다.
     bridgeType = 82;
     currentBridgeType = null;

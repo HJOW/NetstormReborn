@@ -398,6 +398,8 @@ export class RawCampaignSessionOwners {
             // 멤버 선언의 참조는 장기 owner의 현재 칸에 직접 읽고 쓴다.
             for (const [name, key] of Object.entries(ROLE_ALIASES)) Object.defineProperty(this, name, { enumerable: true, get: () => aux[key], set: (value) => { aux[key] = value; } });
             this.state = new RawCampaignSessionState(this);
+            // Residence 잔여 프레임도 World/Contents/Login과 같은005c85d4 복구 상자를 통지 뒤에 조회한다.
+            this.state.assetState.sharedSavedGame = this.localStateGlobals.savedGame();
             Object.assign(this, createCampaignTerrainState());
             Object.assign(this, createCampaignTutorialRoles());
             Object.assign(this, createCampaignAiState());

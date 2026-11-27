@@ -329,9 +329,9 @@ export class RawAssetPostPop {
             this.#regular(sid, 3, 0);
             this.#slot(sid)[WORD_OFFSET] &= 0xf0;
             need(hooks.notifySurface)(sid);
-            // 통지 뒤 현재 프레임·nibble·애니메이션 플래그로 잔여 값을 계산한다.
+            // 통지 뒤 현재 프레임·nibble·같은 Client의 복구 전역으로 잔여 값을 계산한다.
             let value = read(pool.slot(sid), FRAME_OFFSET) | 0;
-            if (state.residenceAnimation) {
+            if (state.readSavedGame()) {
                 value = (Math.trunc(value / 2) * 2 + (pool.slot(sid)[WORD_OFFSET] & 15)) | 0;
                 const group = value < 6 ? 0 : value < 12 ? 1 : value < 18 ? 2 : 3;
                 value = (value - group * 6) | 0;

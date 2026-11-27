@@ -600,6 +600,19 @@ test('asset-post-pop 거주 구역: 확보 실패·늦은 통지 누락·통지 
     }
 });
 
+// 독립 관측의 legacy값과 공유false/true를 구별하고 통지 콜백이 바꾼 현재값을 잔여 프레임에 반영한다.
+test('asset-post-pop 거주 구역: 같은 복구 상자를 통지 뒤 읽고 독립 입력을 보존한다', skip, () => {
+    // shared 초기/통지뒤 값·legacy 입력·기대 잔여다. 두 방향 변경 모두 통지 전 캐시를 검출한다.
+    for (const [initial, current, legacy, expected] of [[false, true, false, 3], [true, false, true, 17], [true, true, false, 3], [false, false, true, 17]]) {
+        const scene = new AssetScene(); scene.prepareCurrent(6); scene.reserveMask = 0;
+        const savedGame = { value: initial }; scene.state.sharedSavedGame = savedGame; scene.state.residenceAnimation = legacy;
+        const notifySurface = (sid) => { const raw = scene.slot(sid); raw[12] |= 5; put(raw, 36, 17); savedGame.value = current; };
+        new CurrentBody(scene, { ...scene.hooks(), surface: () => 0, notifySurface }).run();
+        assert.equal(get(scene.pool.slot(SOURCE), 42, 4), expected); assert.equal(get(scene.pool.slot(SOURCE), 36, 4), 17);
+        assert.equal(scene.state.sharedSavedGame, savedGame); assert.equal(scene.state.residenceAnimation, legacy); assert.equal(scene.baseState.depth, 0);
+    }
+});
+
 test('asset-post-pop 거주 구역: 현재 목록의 signed 가득 참·음수 위치·store 뒤 증가와 중복 유지', skip, () => {
     const unreachable = (text) => () => { throw new Error(text); };
     // signed count>=capacity 면 과거 배열 포인터와 쓰기 장치를 해석하지 않는다(양수 초과와 두 음수 용량 비교).
