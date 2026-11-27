@@ -142,6 +142,8 @@ export const WEB_ONLY = Object.freeze({
     'www/platform/error-reporting.js': '브라우저 콘솔에 게임 예외와 실행 문맥을 남기는 웹 전용 경계(WB04-E862)',
     'www/platform/reset-storage.js': '웹 게임 소유 저장 항목의 확인 후 초기화와 실패 복구 경계(WB04-E863)',
     'www/core/mission-name-alias.js': 'MissionBegin 단추의 원본 오타 미션 이름(BC1Menu)을 웹 자산의 bc1menu76 으로 연결하는 별칭 표(WB04-E1245, 2026-11-23 사용자 결정)',
+    // 일본어 배포 목록은 게임 규칙이 없는 웹 전용 자산 준비 설정이다(E1410).
+    'www/assets/japanese-asset-config.js': '공용 일본어 번역의 웹 배포 목록/묶음/경로 설정(E1410)',
     'www/assets/korean-font-config.js': '한국어 웹 글꼴 등록 이름과 배포 경로를 공유하는 웹 전용 설정',
     'www/assets/menu-assets.js': '메인 메뉴 자산 경로 묶음(웹 자산 준비). 원본 setup.cfg 값과 실행 파일 전역을 근거로 적은 웹 구성',
     'www/assets/terrain-scene.js': '개발용 지형 미리보기의 정적 출력 목록(게임 규칙 없음, WB03-AA)',
