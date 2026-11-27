@@ -16,6 +16,20 @@ public sealed partial class ClientHostGame
     private readonly GumpHelpState _productionHelpState = new();
     /// <summary>미션 생산 패널의 실제 우클릭 도움말 처리기다. 미션 진입 때 만든다.</summary>
     private GumpHelp? _productionHelp;
+    /// <summary>실제 UI 등록표와 장기 GumpForm 통지 대여다.</summary>
+    private HostGumpFormRuntime? _gumpFormRuntime;
+
+    /// <summary>생산 파생의 부모 소실은 해당 패널에, 그 밖의 노드는 공통 수명에 전달한다.</summary>
+    private void InitializeNativeGumpForms()
+    {
+        var tree = (_mainMenu ?? throw new InvalidOperationException("Gump Form의 실제 메뉴 트리 없음")).Tree;
+        _gumpFormRuntime = new HostGumpFormRuntime(_surfaceGlobals.Storage, tree, (token, parent) =>
+        {
+            if (_missionProduction?.Node(token) is null) return false;
+            _missionProduction.ParentGone(token, unchecked((uint)parent));
+            return true;
+        }, () => _menuDirty = true);
+    }
 
     /// <summary>미션 진입에 생산 덱 틀을 만들고 실제 HUD 왼쪽에 부착해 그린다.</summary>
     /// <remarks>2026-11-26 1.079에서 R5-4c2용으로 추가했다. 근거: cpppj RawProductionControls.cpp 184~186행의 예산/격자/배경 생성과 UberRootGump.cpp 86행의 생산 공장 부착, HudDock.cpp의 왼쪽 도킹이다. 격자 내용물 populatation·유지·입력·음향·동기화 본체는 R6/R11에서 잇는다. DN-MP-01 우클릭 메뉴 표시는 이 틀의 HELP 포인터로 검증한다.</remarks>

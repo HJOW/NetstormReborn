@@ -14,6 +14,8 @@ public sealed partial class ClientHostGame
     private uint _hudChatDivider;
     /// <summary>미션 도크 배치 실행기다. 구분선 토큰을 조회한다.</summary>
     private HudDock? _missionHudDock;
+    /// <summary>임시 루트의 채팅·구분선 사건을 실제 도킹 본체로 전달한다.</summary>
+    private HostMissionHudRouting? _missionHudRouting;
     /// <summary>미션 구분선 노드의 소유자 표시다.</summary>
     private readonly object _hudDividerOwner = new();
 
@@ -26,14 +28,21 @@ public sealed partial class ClientHostGame
         var tree = menu.Tree;
         var globals = _hudDockGlobals ?? throw new InvalidOperationException("HUD 구분선의 실제 지도 전역 없음");
         uint fortType = menu.BackgroundType;
+        HudDock? dock = null;
         var hooks = new HudDockHooks
         {
             Node = tree.Node,
             Divider = token => tree.Node(token) as HudDividerNode,
-            ClosePopups = () => { },
+            ClosePopups = () => _htmlMenus?.RequestClosePopups(() => _menuDirty = true),
             BaseAttach = tree.Tree.Attach,
             Push = tree.Tree.Push,
-            Attach = tree.Tree.Attach,
+            Attach = (token, x, y, parent, mode) =>
+            {
+                if (token == _hudVertical || token == _hudMinimapDivider || token == _hudChatDivider)
+                    (dock ?? throw new InvalidOperationException("HUD 실제 구분선 처리기 없음")).Attach(token, x, y, parent, mode);
+                else
+                    (tree.TreeHooks.Attach ?? throw new InvalidOperationException("HUD 자식의 실제 부착 장치 없음"))(token, x, y, parent, mode);
+            },
             Move = tree.Tree.Move,
             ResolveSerial = tree.Reference,
             Bubble = (token, code, first, second) => tree.Events.Bubble(token, code, first, second),
@@ -41,9 +50,9 @@ public sealed partial class ClientHostGame
             Activate = (token, enabled) => tree.Lifetime.SetOverlay(token, enabled != 0),
             Invalidate = (_, _, _, _, _) => _menuDirty = true,
             FinishResize = () => { NativeRenderer.BackgroundRedraw.Value = 1; _menuDirty = true; },
-            ChatVisible = _ => throw new InvalidOperationException("HUD 채팅 표시는 R5-4c에서 잇는다"),
-            ChatInput = _ => throw new InvalidOperationException("HUD 채팅 입력은 R5-4c에서 잇는다"),
-            BaseHandle = (_, _, _) => throw new InvalidOperationException("HUD 기본 입력은 R5 입력 연결에서 잇는다"),
+            ChatVisible = visible => NativeChatWindows.Geometry.SetHelperVisible(NativeChatWindows.CurrentRoot, visible ? 1U : 0U),
+            ChatInput = visible => NativeChatWindows.Geometry.SetInputVisible(NativeChatWindows.CurrentRoot, visible ? 1U : 0U),
+            BaseHandle = (code, first, second) => (_missionHudRouting ?? throw new InvalidOperationException("HUD 실제 기본 입력 장치 없음")).HandleBase(code, first, second),
         };
         var dividers = new HudDividerGump(() => tree.Create.ScreenWidth, () => tree.Create.ScreenHeight, () => (sbyte)55, hooks);
         uint root = tree.Create.Entries[0];
@@ -58,13 +67,16 @@ public sealed partial class ClientHostGame
         _hudChatDivider = tree.WithNodeOwner(_hudDividerOwner, () => tree.AllocateNode(new HudDividerNode()));
         dividers.Construct(_hudChatDivider, 18, width, 5, 0x02a00000, fortType, 0);
         tree.Tree.Attach(_hudChatDivider, 85, height - 96, root, 0);
-        var dock = new HudDock(part => part switch
+        dock = new HudDock(part => part switch
         {
+            HudDockPart.Root => tree.Create.Entries[0],
             HudDockPart.Vertical => _hudVertical,
             HudDockPart.MinimapDivider => _hudMinimapDivider,
             HudDockPart.ChatDivider => _hudChatDivider,
+            HudDockPart.Chat => _nativeChatWindows?.CurrentRoot ?? 0,
             _ => 0,
         }, globals, () => (sbyte)55, hooks);
+        _missionHudRouting = new HostMissionHudRouting(tree, dock);
         dock.RegisterNormalLayout();
         GumpCreateNode vertical = tree.Node(_hudVertical) ?? throw new InvalidOperationException("HUD 세로 구분선 없음");
         GumpCreateNode chat = tree.Node(_hudChatDivider) ?? throw new InvalidOperationException("HUD 채팅 구분선 없음");

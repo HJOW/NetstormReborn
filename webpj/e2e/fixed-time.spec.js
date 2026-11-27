@@ -19,7 +19,7 @@ async function run(browser, missionFrames, aspect = '4:3') {
   const context = await browser.newContext({ viewport: MODES[aspect].viewport, locale: 'en-US' }), page = await context.newPage();
   const errors = []; page.on('pageerror', (error) => errors.push(error.stack ?? error.message)); page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
   await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, autoDemo: 0 } })));
-  await page.goto(`/debug.html?fixed=25&aspect=${aspect}&title=1`);
+  await page.goto(`/debug.html?fixed=25&originalTutorialPresentation=1&aspect=${aspect}&title=1`);
   await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 60000 });
   await page.locator('canvas').click();
   // 효과음 준비는 비동기라 프레임을 세기 전에 마친다(준비가 끝나지 않은 채 프레임을 돌리면 시작 시점이 달라진다).

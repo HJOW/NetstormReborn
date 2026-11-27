@@ -18,7 +18,7 @@
 | 튜토리얼 안내 | 1371~1372 완료: 초기6미션/40단계/39키·영어/한국어/일본어·배경 없는 우측 하단 글자·실제 진행 상태 읽기 전용·집중22/22·GUI19경로 종료0. [요구/범위](#tutorial-next-condition) |
 | LAN | 상대 봇1364~1370, 골렘1373·추가 건설1374·기존 ID 복구1375를 완료했다.1380 최신 제품 실제 TCP 생산/건설/복구에서 공유7,305/로컬51·SP 일치·세 종료0. **D9 사용자 결정: 원본대로 유지하며 전투 중 새 ID 참가를 추가하지 않는다.** [봇 안내](docs/testing/cpp-lan-opponent-guide.md) |
 | 기존 관문 | 최신 M8 관문1327(제품1326)·일본어 최종 관문1362는 당시 범위의 완료 기록으로 유지한다. 이후 집중/실행 검증을 전수 관문 재실행으로 세지 않는다. [3절](#final-gate)·[검사 기준선](#baselines) |
-| DN/WB 후속 | 사용자 지시로 튜토리얼 안내도 두 프로젝트에 필수 적용한다. **아직 구현되지 않았으며** 조건/문구·표시·수명·검증으로 나눴다. [공통 적용 계약](docs/tutorial-objectives-porting-20261127.md)·[DN 작업](LEFT_JOBS.dotnetpj.md#tutorial-objective-port)·[WB 작업](LEFT_JOBS.webpj.md#tutorial-objective-port). 기존 최초 실행/글꼴/아이콘과 다른 후속은 각 인계에서 관리한다. |
+| DN/WB 후속 | 사용자 지시로 튜토리얼 안내도 두 프로젝트에 필수 적용한다. **DN은 후속 구현 대상이며 WB는 E1386~E1389에서 조건/문구·표시·수명·검증을 완료했다**([WB 검증](docs/webpj-tutorial-objective-verification-20261127.md)). [공통 적용 계약](docs/tutorial-objectives-porting-20261127.md)·[DN 작업](LEFT_JOBS.dotnetpj.md#tutorial-objective-port)·[WB 작업](LEFT_JOBS.webpj.md#tutorial-objective-port). 기존 최초 실행/글꼴/아이콘과 다른 후속은 각 인계에서 관리한다. |
 | 보류·사용자 확인 | CD10.72·QuickJS 추가 연동·비행체 보간·D8 한국어 선명도는 보류다. 자연 완주·실물 LAN·물리 입력/다른 모니터·DPI/Windows11·ARM·탐색기 아이콘은 [0.3](#user-checks), 필요한 결정/자료는 [0.2](#decisions)를 따른다. |
 | 재개 시 | 새 지시의 범위를 확인하고 해당 보류/제보 항목을 새 단위로 연다. 자동 플레이는 먼저 [AI 검사 안내](docs/testing/cpp-autoplay-test-guide.md)를 읽고 [도구](tools/cpp_campaign_autoplay.py)를 사용한다. MP 계약은 [DN 후속](docs/dotnet-cpp-lan-followup-20261126.md)과 공유하되 CP 검증을 DN 검증으로 세지 않는다. |
 

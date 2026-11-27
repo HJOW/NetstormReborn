@@ -123,6 +123,8 @@ import { resetClientClockSynchronization } from './core/client-state-storage-cle
 import { resetStateBridgeDecayScan } from './core/raw-state-bridge-reset.js';
 import { RawCampaignMissionStartBindings } from './core/raw-campaign-mission-start-bindings.js';
 import { RawCampaignTutorialOneBindings } from './core/raw-campaign-tutorial-one-bindings.js';
+import { tutorialObjectiveKey } from './core/tutorial-objective.js';
+import { TutorialObjectiveGump } from './ui/tutorial-objective-gump.js';
 import { MISSION_RELOAD_COMMAND, dispatchMissionAbort } from './core/mission-guide-input.js';
 import { resolveMissionBeginName } from './core/mission-name-alias.js';
 import { WORLD_DESTINATION_SELECTED_COMMAND } from './core/raw-user-selection.js';
@@ -154,7 +156,7 @@ import { CampaignSessionAssets } from './core/raw-campaign-session-owners.js';
 import { PriestPlacementAssets } from './core/priest-placement-assets.js';
 import { RawSurfaceStorage } from './core/raw-surface-storage.js';
 import { Kernel } from './core/kernel.js';
-import { bindClientKernelDiagnostics, ClientTraceGlobals, traceClientObject, writeClientDiagnosticLog } from './core/client-diagnostics.js';
+import { bindClientKernelDiagnostics, ClientTraceGlobals, logClientDisplayAssertion, traceClientObject, writeClientDiagnosticLog } from './core/client-diagnostics.js';
 import { ClientTimeSource } from './core/client-time-source.js';
 import { resetGameStorage } from './platform/reset-storage.js';
 import { PRODUCT_RESET_ALL_CONFIRMED_TARGET, PRODUCT_RESET_ALL_TARGET } from './assets/product.js';
@@ -605,6 +607,8 @@ export class Netstorm {
             // 검사 전용 고정 시각 모드의 프레임 밀리초(0 이면 꺼짐)이다. 켜면 Client 시각 공급원이 프레임마다 이 값만큼만 전진하고(원본 cpppj `--fixed-frame-ms` 와 같음) 프레임은 requestAnimationFrame 이 아니라
             // `stepFixedFrames` 로만 진행한다. 같은 입력 단계표의 두 실행을 같은 시계·난수로 비교하는 L2·L3 결정론 대조용이며 주소 `?fixed=25` 로도 켠다. (2026-11-23 WB04-E1271)
             fixedFrameMs: normalizeFixedFrameMs(options.fixedFrameMs ?? params.get('fixed')),
+            // 고정 시각 원본 화면 대조에서만 추가 튜토리얼 표시를 생략한다. 기본 게임과 고정 시각의 기본 표시는 안내를 포함한다.
+            originalTutorialPresentation: normalizeFixedFrameMs(options.fixedFrameMs ?? params.get('fixed')) > 0 && Boolean(options.originalTutorialPresentation ?? (params.get('originalTutorialPresentation') === '1')),
             // 원본 비교 모드이다. 참이면 웹 판본이 빼는 원본 화면 요소(메인 메뉴 Multiplayer·Edit·Quit 버튼, 펼침 메뉴의 Direct Draw·Resolution·Technical Help 등,
             // Campaign 목록의 User Made Campaigns 행)를 원본처럼 보여 cpppj 오라클·원본 스크린샷과 같은 배치로 비교한다. 그 요소들의 동작(Edit·멀티플레이 등)은 여전히 구현하지 않는다.
             // 무브라우저 실행(tools/headless.mjs)의 오라클 비교 전용이며 기본값 false 이다. (2026-11-07 WB02-H)
@@ -660,6 +664,8 @@ export class Netstorm {
         this._clock = new FrameClock();
         // Client 게임 시계와 보정 전역은 init에서 생성하고 destroy에서 반납한다.
         this._clientLocal = null; this._clientNsInfo = null; this._clientHelpPopup = null; this._gameClock = null; this._hiddenGamePause = false;
+        // 실제 앱의 비고정 초기 시계가 UTC초 경계를 준비하는 동안에는 로딩 표시만 갱신한다.
+        this._clientClockPreparing = false;
         // 같은 Client 수명의 구름·HTML과 연결표·연결 활동 전역이다.
         this._clientKencloud = null; this._clientHtml = null; this._clientConnections = null; this._clientConnectionActivity = null;
         // 같은 Client가 장기 소유하는 게임·CRT 난수와 SP 저장소다.
@@ -684,6 +690,8 @@ export class Netstorm {
         this._gameAssets = null; this._surfaceStorage = null; this._clientKernel = null; this._clientTrace = null; this._clientProductionGlobals = null; this._campaignProduction = null;
         // 커널이 소유한 번개 팔레트 프로세스(TYPE 55)의 PID 목록이다. 소멸 콜백에서 제거하며 세션 종료 전 정리한다. (2026-11-24 WB04-E1329)
         this._thunderProcesses = [];
+        // 현재 Client 루트에 소유한 추가 튜토리얼 안내다. State 정리와 루트 반납 전에 자기 노드만 지운다.
+        this._campaignTutorialObjective = null;
         // 미니맵의 장기 dirty 상태와 색 전역은 Client 수명에 둔다. (2026-11-20 WB04-E1082)
         this._clientMinimapState = null; this._clientMinimapGlobals = null; this._gameMenuButton = null; this._lastCampaignMission = null;
         // 게임 메뉴(Pause)가 올린 게임 시계 정지·음소거 깊이다. 미션을 떠날 때 되돌린다. (2026-11-20 WB04-E1089)
@@ -872,6 +880,7 @@ export class Netstorm {
 
         // 원본처럼 공통 SP를 설정·화면 해석보다 먼저 초기화하고 실패 시 루트는 건드리지 않는다.
         this._initializeClientRuntime(doc.hidden);
+        this._clientClockPreparing = true;
         this._root = root;
         this._canvas = canvas;
         this._ctx = ctx;
@@ -976,6 +985,8 @@ export class Netstorm {
         this._clientChatRecords = chatRecords; this._clientChatChannels = chatChannels; this._clientChatWindows = new ClientChatWindowGlobals();
         this._clientChatManager = new ClientChatManagerGlobals(); this._clientDotCommands = new ClientDotCommandGlobals(); this._clientChatInitialized = false;
         this._clientRendererFrame = new ClientRendererFrameGlobals();
+        // 독립 Client 소유자 조립은 기본 상대시계를 사용할 수 있다. 실제init은 이 뒤 준비 관문을 닫고_load에서원본초기화를 마친다.
+        this._clientClockPreparing = false;
     }
 
     // 설정 해석 시 실제 helpWord 값을 같은 Client 캐시에 갱신한다.
@@ -1039,7 +1050,8 @@ export class Netstorm {
         const storage = new RawSurfaceStorage(assets.types, assets.frames, metadata.shapes, { source: game, authority: gameplay.authority(), gameAux: gameplay.gameAux() });
         const kernel = new Kernel(); storage.processes.bindDevices(kernel, clock.time());
         storage.bindChecking(() => gameplay.aiDebug().checking().value);
-        storage.bindDisplayDiagnostics(gameplay.aiDebug().assertionDetail(), (expression, file, line) => console.error(`원본 표시 진단: ${file}:${line} ${expression}`));
+        // 동일 Client가 보유한 현재 상세를 호출 순간에 읽어 기존 표시 진단보다 먼저 기록한다.
+        storage.bindDisplayDiagnostics(gameplay.aiDebug().assertionDetail(), (expression, file, line) => logClientDisplayAssertion(gameplay.aiDebug().assertionDetail().value, expression, file, line));
         storage.enablePatchDestroyDiagnostics();
         storage.bindGraphClock(() => clock.gameSeconds()); bindClientKernelDiagnostics(kernel, storage, (line) => console.info(line));
         this._gameAssets = game; this._surfaceStorage = storage; this._clientKernel = kernel;
@@ -1597,6 +1609,7 @@ export class Netstorm {
 
     // 현재 World의 Session을 반납하고 같은 미션 연결 대기 관문을 해제한다.
     _releaseCampaignWorld() {
+        this._clearCampaignTutorialObjective();
         // World 가 없어도(State7 도중 실패 등) 이미 시작한 장면 음악은 메뉴 곡으로 되돌린다. (2026-11-20 WB04-E1119)
         this._endSceneMusic();
         if (!this._campaignWorld && !this._campaignProduction) return;
@@ -2390,11 +2403,35 @@ export class Netstorm {
             });
     }
 
+    // 미션/State/Client 반납 전에 실제 표시 줄과 장기 루트 참조를 함께 정리한다.
+    _clearCampaignTutorialObjective() {
+        if (!this._campaignTutorialObjective) return;
+        this._campaignTutorialObjective.clear(); this._campaignTutorialObjective = null;
+        this._clientRenderer?.invalidateAll();
+    }
+
+    // 현재 실제 gate를 읽어 창이 없는 지도에만 안내를 제출한다. 진행/예약/승패 판정은 호출하지 않는다.
+    _updateCampaignTutorialObjective() {
+        const root = this._clientGump, current = this._clientGuide?.current(), world = this._campaignWorld;
+        if (!root) { if (this._campaignTutorialObjective) throw new Error('튜토리얼 안내의 Client 루트 반납 순서 오류'); return; }
+        const ui = this._campaignProduction?.ui; let key = '';
+        if (!this.options.originalTutorialPresentation && this._campaignDisplayActive() && current?.runtime.guided
+            && current.runtime.saveToken === this._campaignWorldMissionToken && !this._mainMenu?.dialog && !root.lifetimeState().currentDialog
+            && !this._clientHtml?.window.instances && !ui?.knowledge()?.isOpen() && !ui?.gameMenu()?.isOpen()) {
+            key = tutorialObjectiveKey(current.script.name, current.runtime.gate, current.runtime.mode64);
+        }
+        if (!key && !this._campaignTutorialObjective) return;
+        if (!this._campaignTutorialObjective) this._campaignTutorialObjective = new TutorialObjectiveGump(root, this._resources.fonts);
+        const colors = this._clientPaletteScreen.colors();
+        if (this._campaignTutorialObjective.sync(key ? this._resources.translate(key) : '', world?.mapView() ?? root.mapView(), colors.basic[7], colors.basic[0])) this._clientRenderer.invalidateAll();
+    }
+
     // 현재 미션의 준비·DIB 합성·구름 정리·표시를 원본 순서로 한 번 실행한다.
     _drawCampaignRendererFrame() {
         const world = this._campaignWorld, screen = this._clientPaletteScreen, renderer = this._clientRenderer;
         const clouds = this._clientKencloud, game = this._clientGameplay, data = this._gameData, gump = this._clientGump;
         if (!world || world.connecting || !screen || !renderer || !clouds || !game || !data || !gump || !this._clientRendererFrame || !this._clientRandom) throw new Error('미션 Renderer 출력의 현재 장치 수명 오류');
+        this._updateCampaignTutorialObjective();
         const camera = game.camera();
         const drawing = new CampaignRendererDrawing({ world, screen, camera: camera.snapshot(), globals: this._clientRendererFrame,
             clouds, files: data.files, config: data, random: this._clientRandom.game, denominator: camera.denominator(), clearOutsideMap: true,
@@ -2445,7 +2482,7 @@ export class Netstorm {
         this._clientKencloud = null; this._clientHtml = null; this._clientConnections = null; this._clientConnectionActivity = null;
         this._surfaceStorage?.dispose();
         this._clientSoundDevice?.dispose(); this._clientSoundDevice = null; this._clientSoundPlayer = null; this._clientSoundState = null; this._clientSoundPrepare = null;
-        this._gameClock = null; this._clientLocal = null; this._clientNsInfo = null; this._clientHelpPopup = null; this._hiddenGamePause = false; this._clientSoundNames = null;
+        this._gameClock = null; this._clientClockPreparing = false; this._clientLocal = null; this._clientNsInfo = null; this._clientHelpPopup = null; this._hiddenGamePause = false; this._clientSoundNames = null;
         this._clientSp = null; this._clientRandom = null;
         this._clientChatRecords = null; this._clientChatChannels = null; this._clientChatWindows = null;
         this._clientChatManager = null; this._clientDotCommands = null; this._clientChatInitialized = false;
@@ -2517,6 +2554,13 @@ export class Netstorm {
         this._loadError = null;
         this._setState(AppState.LOADING);
         try {
+            // 같은Client의 SP/RNG 초기화 뒤 원본초경계와 최초Capture를 준비한다. 취소된이전앱의결과는 새수명에 적용하지 않는다.
+            if (this._clientClockPreparing) {
+                const clock = this._gameClock;
+                const ready = await clock.prepareOrigin({ cancelled: () => generation !== this._loadGeneration || !this._root });
+                if (!ready || generation !== this._loadGeneration || clock !== this._gameClock) return;
+                this._clientClockPreparing = false;
+            }
             if (!this._resources) {
                 const loader = this._createAssetLoader();
                 await loader.loadManifest();
@@ -4064,6 +4108,8 @@ export class Netstorm {
         // 원본 프레임 상한(maxFPS, 기본 75)보다 빠르게 오는 표시 주기(rAF)는 건너뛰고 다음 기회에 처리한다. 60Hz 표시에서는 상한이 걸리지 않는다. (2026-11-20 WB04-E1094)
         if (!frameDue(now, this._lastFrameStamp, normalizeFrameRate(this._settings?.get('maxFPS')))) { this._startFrameLoop(); return; }
         this._lastFrameStamp = now;
+        // 비동기InitFullTime 중에는 실제Client 프레임/시계/RNG를 소비하지 않고 로딩화면만 진행한다.
+        if (this._clientClockPreparing) { this._clock.tick(now); this._frameSeconds = now / 1000; this._render(now); this._startFrameLoop(); return; }
         // 원본 Client 순서대로 화면 입력과 갱신 전에 같은 게임 프레임을 고정한다.
         // 고정 시각 모드의 시작 그림 구간은 시각만 전진하고 주 루프 프레임(번호·시간차)으로 세지 않는다(원본 cpppj 의 고정 프레임 실행과 같음). (2026-11-23 WB04-E1271)
         if (this.options.fixedFrameMs > 0 && this._state === AppState.TITLE) {

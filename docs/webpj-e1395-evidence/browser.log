@@ -1,0 +1,19 @@
+npm notice run NetstormWeb@1.0.0 npx
+npm notice run ^"playwright^" test e2e/static-deployment.spec.js --workers=1 --output=extracted/e1395-static-cache --reporter=list
+
+Running 4 tests using 1 worker
+
+(node:2360) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › e2e\static-deployment.spec.js:22:1 › 하위 경로에서 시작하고 새로고침 뒤 사용자 설정을 읽는다 (6.5s)
+(node:11308) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [chrome] › e2e\static-deployment.spec.js:22:1 › 하위 경로에서 시작하고 새로고침 뒤 사용자 설정을 읽는다 (5.7s)
+(node:21224) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [edge] › e2e\static-deployment.spec.js:22:1 › 하위 경로에서 시작하고 새로고침 뒤 사용자 설정을 읽는다 (6.1s)
+(node:19892) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 4 [firefox] › e2e\static-deployment.spec.js:22:1 › 하위 경로에서 시작하고 새로고침 뒤 사용자 설정을 읽는다 (13.0s)
+
+  4 passed (1.3m)

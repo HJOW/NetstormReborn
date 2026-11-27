@@ -54,5 +54,15 @@ test('Session Regular 다리: 같은 현재 이벤트 객체와 캡처한 전체
 });
 
 test('Session Regular 실패: 현재 부모/사건/횟수/float 비트를 기록하고 로그 오류도 원래 예외를 보존한다', () => {
-    const o = scene(); const log = console.error; const handle = o.dudeRegular.handle; try { const logs = []; console.error = (text) => logs.push(text); const sid = o.core.pool.allocate(2); image(o, sid, 83, 0xcafebabe); assert.throws(() => o.worldHooks.regular(sid, 0x123, 0x80000001, 1.25), /실제 Regular 부모 미연결/); assert.deepEqual(logs, ['실제 Regular 실패 SID' + sid + ' TYPE83 event291 count2147483649 payload3fa00000']); image(o, sid, 70, 0x508cc8); assert.equal(o.dudeRegular.handles(sid), true); const stop = new Error('원래 Dude 정기 오류'); o.dudeRegular.handle = () => { throw stop; }; console.error = () => { throw new Error('로그 장치 오류'); }; assert.throws(() => o.worldHooks.regular(sid, 1, 2, 0.25), (error) => error === stop); } finally { console.error = log; o.dudeRegular.handle = handle; o.dispose(); }
+    const o = scene(), log = console.error, handle = o.dudeRegular.handle;
+    try {
+        const logs = []; console.error = (text) => logs.push(text);
+        const sid = o.core.pool.allocate(2), raw = image(o, sid, 83, 0xcafebabe); put(raw, 36, 0xfffffffc, 4); put(raw, 42, 0x89abcdef, 4);
+        assert.throws(() => o.worldHooks.regular(sid, 0x123, 0x80000001, 1.25), /실제 Regular 부모 미연결/);
+        assert.deepEqual(logs, [`Regular failure SID${sid} TYPE83 event291 count2147483649 payload3fa00000 frame-4 raw42=89abcdef`, '실제 Regular 실패 SID' + sid + ' TYPE83 event291 count2147483649 payload3fa00000']);
+        image(o, sid, 70, 0x508cc8); assert.equal(o.dudeRegular.handles(sid), true);
+        const stop = new Error('원래 Dude 정기 오류'); o.dudeRegular.handle = () => { throw stop; };
+        console.error = () => { throw new Error('로그 장치 오류'); };
+        assert.throws(() => o.worldHooks.regular(sid, 1, 2, 0.25), (error) => error === stop);
+    } finally { console.error = log; o.dudeRegular.handle = handle; o.dispose(); }
 });

@@ -23,6 +23,10 @@ test('하위 경로에서 시작하고 새로고침 뒤 사용자 설정을 읽�
   const files = new Set();
   const escapedRequests = [];
   const errors = [];
+  // 브라우저가 합성한 캐시 응답 대신 서버가 실제 보낸 상태와 조건부 요청을 보존한다.
+  const wire = [];
+  const observe = (req, res) => res.on('finish', () => wire.push({ path: req.url.split('?')[0], status: res.statusCode, tag: req.headers['if-none-match'] }));
+  server.on('request', observe);
   page.on('pageerror', (error) => errors.push(error.message));
   page.on('request', (request) => {
     const url = new URL(request.url());
@@ -30,15 +34,23 @@ test('하위 경로에서 시작하고 새로고침 뒤 사용자 설정을 읽�
     else escapedRequests.push(url.href);
   });
 
-  await page.goto(baseUrl.href);
-  await page.waitForFunction(() => window.netstorm?.state === 'clickToStart');
-  // 설정 변경은 앱의 구성 쓰기 경로를 통해 저장한다.
-  await page.evaluate(() => window.netstorm._gameData.set('soundVolume', 3));
-  await page.reload();
-  await page.waitForFunction(() => window.netstorm?.state === 'clickToStart');
-  expect(await page.evaluate(() => window.netstorm._settings.get('soundVolume'))).toBe(3);
-  expect(files.has(`${mount}dist/netstorm.bundle.js`)).toBe(true); // 모든 스크립트는 webpack 번들 하나로 불린다. (2026-11-24 WB04-E1293)
-  expect(files.has(`${mount}data/manifest.json`)).toBe(true);
-  expect(escapedRequests).toEqual([]);
-  expect(errors).toEqual([]);
+  try {
+    await page.goto(baseUrl.href);
+    await page.waitForFunction(() => window.netstorm?.state === 'clickToStart');
+    // 설정 변경은 앱의 구성 쓰기 경로를 통해 저장한다.
+    await page.evaluate(() => window.netstorm._gameData.set('soundVolume', 3));
+    await page.reload();
+    await page.waitForFunction(() => window.netstorm?.state === 'clickToStart');
+    expect(await page.evaluate(() => window.netstorm._settings.get('soundVolume'))).toBe(3);
+    expect(files.has(`${mount}dist/netstorm.bundle.js`)).toBe(true); // 모든 스크립트는 webpack 번들 하나로 불린다. (2026-11-24 WB04-E1293)
+    expect(files.has(`${mount}data/manifest.json`)).toBe(true);
+    expect(escapedRequests).toEqual([]);
+    expect(errors).toEqual([]);
+    // 번들과 매니페스트는 처음200으로 받고 새로고침 때 같은 파일의304로 재사용한다.
+    for (const relative of ['dist/netstorm.bundle.js', 'data/manifest.json']) {
+      const responses = wire.filter((row) => row.path === mount + relative);
+      expect(responses.some((row) => row.status === 200)).toBe(true);
+      expect(responses.some((row) => row.status === 304 && row.tag)).toBe(true);
+    }
+  } finally { server.off('request', observe); }
 });

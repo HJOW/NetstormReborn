@@ -1,0 +1,29 @@
+{
+  "unit": "WB04-E1395",
+  "recordedAt": "2026-11-27T01:15:40.546948+00:00",
+  "host": "HJOW-Athlon",
+  "sourceHead": "cdd2e67ecc62adc6afba0f873ee8af1af21abc22",
+  "results": {
+    "node26": {
+      "pass": 4,
+      "fail": 0,
+      "skip": 0,
+      "durationMs": 766.148
+    },
+    "browser": {
+      "chromium": "pass 6.5s",
+      "chrome": "pass 5.7s",
+      "edge": "pass 6.1s",
+      "firefox": "pass 13.0s"
+    },
+    "wwwChanged": false
+  },
+  "canonicalUtf8LfSha256": {
+    "webpj/server.js": "ae7790e410712f6e2861eabb5f6c7ed40aa34cbbff290ecb68bfc0d89208c2b0",
+    "webpj/tests/static-server-cache.test.mjs": "a51872681b4a67a35aba0dc667b7e14e9880230f2de16ad8209f438088037cad",
+    "webpj/e2e/static-deployment.spec.js": "560c8b329d207dce2cb996e7849fa1416aba4f73d796298fe3959727672d37a4",
+    "webpj/www/data/manifest.json": "5d23f131b5364358a227567db773c8bf8c620530ae4bdee4b3c656410c5fb9e8"
+  },
+  "bundleRawSha256": "2bfd413ced0db5a54178695b435c85456be71795f48599d3feb9b54493515188",
+  "note": "캐시 소스의 줄 들여쓰기만 검사 후 정돈했다. 제품www와번들은 E1393 그대로이며 진행 중E1394는기존 서버를 사용한다."
+}

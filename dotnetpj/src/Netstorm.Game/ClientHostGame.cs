@@ -246,12 +246,19 @@ public sealed partial class ClientHostGame : Game
         {
             if (_missionRuntime is { } runtime && _gameplay.RuntimeCallActive(runtime.Session)) throw new InvalidOperationException("실제 Runtime 배송 종료 전 호스트 종료");
             _connections.ShutdownDevices();
+            // 임시 HUD 사건 연결을 공통 트리와 채팅창보다 먼저 반납한다.
+            _missionHudRouting?.Dispose(); _missionHudRouting = null;
+            // 미니맵의 노드와 월드 알림 대여를 세션 및 공통 트리보다 먼저 반납한다.
+            _nativeMinimap?.Dispose(); _nativeMinimap = null;
+            // 생산 Form과 UI 노드는 해당 물리와 세션을 반납하기 전에 정리한다.
+            _missionProduction?.Dispose(); _missionProduction = null;
+            _nativeChatWindows?.Dispose();
+            _htmlWindows?.CloseAll();
+            _gumpFormRuntime?.Dispose(); _gumpFormRuntime = null;
             _missionSession?.ReleasePlayerRecordViews();
             _missionRuntime?.Dispose(); _missionRuntime = null;
             _missionBurning?.Dispose();
             _missionAudio?.Dispose();
-            _nativeChatWindows?.Dispose();
-            _htmlWindows?.CloseAll();
             _editor?.Dispose();
             _textEntry?.Dispose();
             _htmlFactory?.Dispose();
@@ -299,6 +306,7 @@ public sealed partial class ClientHostGame : Game
                 Redraw = (_, _) => _menuDirty = true,
                 HandleBase = (_, _, _, _) => 0
             }, action => (_menuInput ?? throw new InvalidOperationException("메인 메뉴 입력 소유자 미연결")).Post(action));
+            InitializeNativeGumpForms();
             _htmlWindows = new HostHtmlWindows(_mainMenu, _driver.Input, () => _clock.NowSeconds,
                 _ => throw new InvalidOperationException("HTML 링크 명령 소비자 미연결"));
             _htmlWindows.BindParser(_startup, raw => ScriptCommand.QueueScriptCommand(raw, _driver.Input, _scriptStrings,
@@ -464,6 +472,8 @@ public sealed partial class ClientHostGame : Game
         HostSession? session = null;
         // 적재 실패에서도 이 호출이 만든 외부 연소장치만 반납한다.
         HostMissionBurning? pendingBurning = null;
+        // 이 시작 호출이 설치한 미니맵 월드 알림만 실패 시 반납한다.
+        bool minimapBound = false;
         try
         {
             session = new HostSession(_kernel, _gameRandom, _crtRandom, sharedSp: _spGlobals.Store, sharedCrtBox: _spCrtBox, sharedGameplay: _gameplay, sharedLists: _sidLists, pool: storage.Pool, sharedLocal: _localState, sharedConnections: _connections, sharedPlayerRecords: _gameplay.PlayerRecords, sharedProcessTime: _clientClock.GameTime, sharedPlayerProcesses: _surfaceGlobals.Processes, sharedTemplates: _stateResources.Templates, sharedWorldFrames: assets.Frames, sharedSurface: _surfaceGlobals);
@@ -728,11 +738,14 @@ public sealed partial class ClientHostGame : Game
         EnsureMissionProductionDeck();
         // R5-4c3 미션 미니맵 부착. 왼쪽 아래 80×75에 현재 지형을 갱신해 그린다. 중앙·선택 이동과 입력 모드·폴링은 R5/R6에서 잇는다.
         // 근거: cpppj RawMinimapControls.cpp의 Open 뒤 80×75 부착과 HudDock.cpp의 왼쪽 아래 도킹이다. 시작 덤프에는 닿지 않는다.
+        NativeMinimap.BindStorageExecutors();
+        minimapBound = true;
+        // 같은 세션이 별도로 보유한 지형·Player의 공간 변경도 같은 미니맵 큐로 보낸다.
+        session.BindMinimapNotifications(NativeMinimap);
         EnsureMissionMinimap();
-            // RU-3c 실제 미션 Root에 표시 창을 만들고 같은 트리 루트에 부착한다. 부착 전 Enter는 부모 없음으로 거부된다.
-            // 근거: GumpTree.Push/Attach의 void·부모 규칙과 ChatWindow Native 입력 호출자. 메뉴 경로는 바꾸지 않는다.
-            _ = NativeChatWindows.Create();
-            productionUi.TreeHooks.Attach!(NativeChatWindows.CurrentRoot, 0, _driver.Screen.Height - 100, productionUi.Create.Entries[0], 0);
+            // 실제 구분선의 오른쪽 아래에 채팅창을 부착한다. 채팅 입력도 같은 부모를 사용한다.
+            // 근거: UberRootGump의 세로·채팅 구분선 slave와 HudDock의 크기 및 위치 계산이다.
+            AttachMissionChat();
             // 단일 미션의 첫 지역(+0x78)은 소용돌이→섬 소유자→첫 지역 사슬이 적재 중 기록한다(R6: 신전 Pop·postPop 표시와 함께).
             // 전투섬 배정 region 갈고리는 MP 전투 경로의 makeBattleIsland에서만 쓰므로 시작 흐름에서 직접 기록하지 않는다(0.477 정정).
             _missionRuntime = HostMissionRuntime.CreatePrepared(session, storage, pendingSurface, pendingBurning!, _missionAudio!, _mainMenu!, productionUi, _nativeChatWindows ?? throw new InvalidOperationException("미션 채팅의 실제 공장 없음"), rootFactories);
@@ -743,6 +756,8 @@ public sealed partial class ClientHostGame : Game
         }
         catch
         {
+            // 이번 시작이 설치한 알림만 세션 물리보다 먼저 반납한다.
+            if (minimapBound) NativeMinimap.UnbindWorld();
             // 적재 중 예외에서도 같은 Host 프로세스를 장치보다 먼저 반납한다.
             session?.ReleasePlayerRecordViews();
             pendingBurning?.Dispose();
@@ -780,6 +795,9 @@ public sealed partial class ClientHostGame : Game
             });
             _surfaceGlobals.Storage.UpdateAmbientWind(_gameRandom);
         }
+        // 영상 갱신이 잠기지 않은 미션에서는 현재 카메라와 지도 변경을 매 프레임 미니맵에 반영한다.
+        // 근거: 원문 481320은 지연 삭제·Idle·Kernel보다 먼저 실행하며 게임 시계 정지와 독립적이다.
+        if (_missionSession is not null && !movieLocked && _nativeMinimap?.Refresh() == true) _menuDirty = true;
         // 원문439b13/439b18의지연삭제와Idle은현재입력뒤·Kernel준비앞에서실행한다.
         _menuInput?.FinishFrame();
         // 미션 프레임의 월드·건설 효과(연소 준비·Kernel 정기)는 현재 Runtime pin 안에서 실행한다.

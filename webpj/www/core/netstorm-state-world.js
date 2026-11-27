@@ -16,6 +16,8 @@ export function retireNetstormStateWorld(app) {
 export function cleanupNetstormStateWorld(app, reason) {
     const clock = app._gameClock, storage = app._surfaceStorage, gameplay = app._clientGameplay, gump = app._clientGump;
     if (!clock || !storage || !gameplay || !gump || !app._clientSoundPlayer) throw new Error('앱 전체 State 정리의 실제 장기 수명 누락');
+    // 기존 Gump 일괄 삭제보다 먼저 추가 안내의 serial 등록과 자기 줄을 반납한다.
+    app._clearCampaignTutorialObjective();
     // Scene 구동기가 없을 때는 보유한 음악 기한도 없다. 존재하는 구동기의 현재 기한만 같은 비트로 작성한다.
     const audio = {
         writeSongEndBits: (bits) => { if (app._sceneMusic) app._sceneMusic.writeSongEndBits(bits); },

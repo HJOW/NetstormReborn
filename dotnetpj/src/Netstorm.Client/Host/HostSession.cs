@@ -1699,6 +1699,9 @@ public sealed partial class HostSession
         {
             throw new InvalidOperationException("지형 그래프 결선에 건물 공간 장치가 없다");
         }
+        // 교체 전 실제 쌍을 보관해 같은 세션의 미니맵 대여만 새 실행기로 옮긴다.
+        RawPop previousTerrainPop = _terrainPop;
+        RawUnpop? previousTerrainUnpop = _terrainUnpop;
         if (Pool.Edition == OriginalEdition.Patch1078)
         {
             _worldGraph.BindCurrentTypes(_terrainPopTypes);
@@ -1746,6 +1749,7 @@ public sealed partial class HostSession
             _terrainFrames.BindCurrentTypes(_terrainPopTypes);
         }
         TerrainBookkeeping.GraphsEnabled = true;
+        if (previousTerrainUnpop is not null) RebindMinimapTerrain(previousTerrainPop, previousTerrainUnpop);
     }
 
     /// <summary>세션 지형 공용 후처리와 같은 풀을 쓰는 운반체·피해 몸체다. WireTerrainPostPopGraph에서 연결한다.</summary>

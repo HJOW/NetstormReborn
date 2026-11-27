@@ -1,0 +1,12 @@
+✔ 정적 캐시: GET/HEAD와 ETag 목록 재검증 (140.8517ms)
+✔ 정적 캐시: 수정 날짜와 ETag 우선순위 (67.6945ms)
+✔ 정적 캐시: mtime을 보존한 같은 크기 배포 교체 (60.95ms)
+✔ 정적 캐시: 오류와 하위 경로 경계 유지 (14.1861ms)
+ℹ tests 4
+ℹ suites 0
+ℹ pass 4
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 766.148

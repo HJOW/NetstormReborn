@@ -6,6 +6,7 @@ using Netstorm.Client.Display;
 using Netstorm.Client.Gump;
 using Netstorm.Client.Host;
 using Netstorm.Client.Input;
+using Netstorm.Client.Scripting;
 using Netstorm.Core.Original;
 
 // 전체 실제 공장에 기존 Console/조각/메뉴/수명을 연결하여 경계를 검증한다.
@@ -83,6 +84,81 @@ public sealed class HostChatWindowsTests
         scene.Tree.TreeHooks.Attach!(root, 40, 100, scene.Tree.Create.Entries[0], 0); Assert.Equal(scene.Tree.Create.Entries[0], node.Parent); scene.Drawing.Draw(); scene.Html.CloseAll(); Assert.Same(node, scene.Tree.Node(root)); Assert.NotNull(scene.Entry.FindBuffer(console.Buffer));
         uint payload = scene.Globals.Store("allies:hello"); scene.Tree.EventHooks.Handle!(root, 0x02000115, 0, payload); Assert.Equal("allies:hello", scene.Entry.ReadEntryText(node.Console)); Assert.Equal(1u, scene.Tree.EventHooks.Handle(root, 0x02000038, console.Serial, 0)); Assert.Single(scene.Sent); Assert.Equal(0x61500001u, scene.Sent[0].Manager); Assert.Contains("hello", scene.Sent[0].Text); Assert.Equal("allies:", scene.Entry.ReadEntryText(node.Console));
         scene.Tree.EventHooks.Handle(root, 0x0200002c, scene.Tree.Node(node.Helper)!.Serial, 0); Assert.NotEmpty(scene.Globals.Strings); Assert.Equal(0u, scene.Menus.Menu.Current()); Assert.True(scene.Globals.Strings.Count > 500); scene.Drawing.Draw(); Assert.Equal("allies:hello", scene.Globals.Strings[payload]); scene.Html.CloseAll(); Assert.Same(node, scene.Tree.Node(root));
+    }
+
+    /// <summary>실제 채팅 Enter와 부모 사건이 숨김·재열기·지도 영역을 왕복하며 라우터 반납 뒤에는 전달되지 않는다.</summary>
+    [Fact]
+    public void MissionHudRoutesChatOpenAndHideThroughRealTree()
+    {
+        using var scene = new Scene();
+        var tree = scene.Tree;
+        uint vertical = tree.AllocateNode(new HudDividerNode());
+        uint divider = tree.AllocateNode(new HudDividerNode());
+        uint chat = scene.Chat.Create();
+        var globals = new HudDockGlobals(tree.Create, tree.TreeState, new UIntBox(), new UIntBox());
+        var strings = new ScriptStringRing();
+        using var htmlFactory = new HostHtmlFactory(scene.Menu, scene.Html, scene.Menus, scene.Startup, scene.Screen, scene.Queue, strings, () => 1, _ => 0, _ => { });
+        var input = new HostMenuInput(scene.Menu, scene.Html, htmlFactory, scene.Queue, strings, () => { }, action => throw new InvalidOperationException(action.ToString()));
+        input.BindChatEnter(scene.Chat.OpenInput);
+        scene.Menu.IsMissionActive = () => true;
+        HudDock? dock = null;
+        HostMissionHudRouting? routing = null;
+        var hooks = new HudDockHooks
+        {
+            Node = tree.Node,
+            Divider = token => tree.Node(token) as HudDividerNode,
+            BaseAttach = tree.Tree.Attach,
+            Push = tree.Tree.Push,
+            Attach = (token, x, y, parent, mode) =>
+            {
+                if (token == vertical || token == divider) dock!.Attach(token, x, y, parent, mode);
+                else tree.TreeHooks.Attach!(token, x, y, parent, mode);
+            },
+            Move = tree.Tree.Move,
+            ResolveSerial = tree.Reference,
+            Bubble = (token, code, first, second) => tree.Events.Bubble(token, code, first, second),
+            ClosePopups = () => scene.Menus.RequestClosePopups(() => { }),
+            ConstructBackground = (token, width, height, flags, type, frame) => tree.Backgrounds.Construct(token, width, height, flags, 1, type, frame),
+            Activate = (token, enabled) => tree.Lifetime.SetOverlay(token, enabled != 0),
+            Invalidate = (_, _, _, _, _) => { },
+            ChatVisible = visible => scene.Chat.Geometry.SetHelperVisible(chat, visible ? 1U : 0U),
+            ChatInput = visible => scene.Chat.Geometry.SetInputVisible(chat, visible ? 1U : 0U),
+            BaseHandle = (code, first, second) => routing!.HandleBase(code, first, second),
+        };
+        dock = new HudDock(part => part switch
+        {
+            HudDockPart.Root => tree.Create.Entries[0],
+            HudDockPart.Vertical => vertical,
+            HudDockPart.ChatDivider => divider,
+            HudDockPart.Chat => chat,
+            _ => 0,
+        }, globals, () => 55, hooks);
+        using (routing = new HostMissionHudRouting(tree, dock))
+        {
+            dock.Construct(vertical, 0, 5, 768, 0x03400000, scene.Menu.BackgroundType, 0);
+            dock.Construct(divider, 18, 1024, 5, 0x02a00000, scene.Menu.BackgroundType, 0);
+            tree.Tree.Attach(vertical, 80, 0, tree.Create.Entries[0], 0);
+            tree.Tree.Attach(divider, 85, 672, tree.Create.Entries[0], 0);
+            var chatNode = Assert.IsType<HudChatNode>(tree.Node(chat));
+            chatNode.BaseWidth = chatNode.Width = 939;
+            chatNode.BaseHeight = chatNode.Height = 91;
+            tree.TreeHooks.Attach!(chat, 85, 677, tree.Create.Entries[0], 0);
+            dock.RegisterSlave(vertical, chat, 4);
+            dock.RegisterSlave(divider, chat, 8);
+            dock.Handle(0x0200003a, tree.Node(vertical)!.Serial, 0);
+            dock.Handle(0x02000088, 0, 0);
+            Assert.Equal(768, tree.Node(divider)!.Y);
+            Assert.Equal(768, tree.TreeState.MapView.Bottom);
+            Assert.False(input.Dispatch(new InputEvent(13, 0, 0)));
+            Assert.Equal(672, tree.Node(divider)!.Y);
+            Assert.Equal(672, tree.TreeState.MapView.Bottom);
+            Assert.NotEqual(0U, tree.Node(chatNode.Console)!.Flags & 1U);
+            tree.Events.Bubble(chat, 0x02000088, 0, 0);
+            Assert.Equal(768, tree.Node(divider)!.Y);
+            Assert.Equal(768, tree.TreeState.MapView.Bottom);
+        }
+        scene.Chat.Show();
+        Assert.Equal(768, tree.Node(divider)!.Y);
     }
     /// <summary>표시 교체는 공유 로그/명령/후보를 유지하고 최종 owner만 실제 조각을 반납한다.</summary>
     [Fact]

@@ -58,7 +58,7 @@ test('한국어 Tutorial1 M2:90·130프레임 상태 일치·안내 창 밖0픽�
   try {
     page.on('pageerror', (error) => errors.push(error.message)); page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
     await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, autoDemo: 0 } })));
-    await page.goto('/debug.html?fixed=25&aspect=4:3&title=1&lang=ko');
+    await page.goto('/debug.html?fixed=25&originalTutorialPresentation=1&aspect=4:3&title=1&lang=ko');
     await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 60000 }); await page.locator('canvas').click();
     await page.evaluate(() => window.netstorm._prepareCampaignAudio());
     // 시작 그림을 같은 시계로 마치고 메인 메뉴 한 프레임 뒤 미션을 시작한다.

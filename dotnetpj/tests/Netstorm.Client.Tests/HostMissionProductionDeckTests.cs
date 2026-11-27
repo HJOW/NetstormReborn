@@ -43,11 +43,17 @@ public sealed class HostMissionProductionDeckTests
         /// <summary>실제 우클릭 도움말 처리기다.</summary>
         public GumpHelp? Help;
         /// <summary>새 파일 적재 없이 같은 최초 자산/문자/물리에 모든 UI를 연결한다.</summary>
-        public Scene(int width = 1024, int height = 768)
+        public Scene(int width = 1024, int height = 768, bool nativeForms = false)
         {
             string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data); var startup = new HostStartupScene(data); Screen = new(width, height); Assert.True(Screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); startup.Draw(Screen);
             Menu = new(startup, Screen, new() { Now = () => Wall, Poll = _ => default, Sound = () => { }, Redraw = (_, _) => { }, HandleBase = (_, _, _, _) => 0 }); Html = new(Menu, new Input.InputQueue(), () => Wall, _ => { }); Html.BindParser(startup, _ => { }); Text = new(Menu, Html, Screen, _ => default, (_, _) => { }, _ => { }, _ => { }); Text.Bind(Html);
-            Storage = new(authority: Game.Authority, gameAux: Game.GameAux); var assets = new HostAssetTables(startup, Storage); Text.BindPictures(new(assets.TypeTable, assets.Definitions, new(assets.ShapeImage)), () => SpriteColorMapBuilder.BuildSpriteColorMaps(Screen.LogicalPalette).Shadow, startup.Configuration); Menus = new(Menu, Html, Text, startup, Screen, (_, _) => { }); Menus.BindInput(new(), _ => { }, (_, _) => { }); Globals.BackgroundType = Menu.BackgroundType;
+            Storage = new(authority: Game.Authority, gameAux: Game.GameAux);
+            if (nativeForms)
+            {
+                Storage.BindTransmissionDevices(new() { Broadcast = _ => { }, Connected = _ => false, Send = (_, _) => { } });
+                Storage.BindDisplayDevices(new() { View = () => new() { Zoom = 65536 }, Suppressed = () => false, Invalidate = (_, _) => { } });
+            }
+            var assets = new HostAssetTables(startup, Storage); Text.BindPictures(new(assets.TypeTable, assets.Definitions, new(assets.ShapeImage)), () => SpriteColorMapBuilder.BuildSpriteColorMaps(Screen.LogicalPalette).Shadow, startup.Configuration); Menus = new(Menu, Html, Text, startup, Screen, (_, _) => { }); Menus.BindInput(new(), _ => { }, (_, _) => { }); Globals.BackgroundType = Menu.BackgroundType;
         }
         /// <summary>실제 원문 입력/효과와 우클릭 도움말을 연결한다.</summary>
         public HostProductionWindows NewPanel()
@@ -145,5 +151,26 @@ public sealed class HostMissionProductionDeckTests
         Assert.Equal(deckHeight, root.BaseHeight);
         Assert.Equal(tree.Create.Entries[0], root.Parent);
         panel.Close();
+    }
+
+    /// <summary>장기 Form 통지가 실제 생산 노드와 공통 노드의 수명으로 분배되고 기존 삭제 경계는 복구된다.</summary>
+    [Fact]
+    public void GumpFormNoticeUsesActualRegistryAndRestoresPreviousDelete()
+    {
+        using var s = new Scene(nativeForms: true); var tree = s.Menu.Tree; var panel = s.NewPanel();
+        uint rootToken = panel.Construct(); var root = Assert.IsType<ProductionRootNode>(panel.Node(rootToken));
+        uint budget = root.Budget; uint id = panel.Node(budget)!.Id; int changed = 0; int previous = 0;
+        Action<uint, uint> fallback = (_, _) => previous++; tree.LifetimeHooks.DeleteForm = fallback;
+        using var runtime = new HostGumpFormRuntime(s.Storage, tree, (token, parent) =>
+        {
+            if (panel.Node(token) is null) return false;
+            panel.ParentGone(token, unchecked((uint)parent)); return true;
+        }, () => changed++);
+        var forms = s.Storage.GumpForms(); int form = s.Storage.Pool.Allocate(); Span<byte> raw = s.Storage.Pool.AllocatedBytes(form); raw.Clear(); raw[10] = 3; forms.SetOwner(form, id);
+        forms.Notify(form); Assert.Equal(1, changed); Assert.NotEqual(0u, panel.Node(budget)!.Flags & 0x10000); tree.Lifetime.Cleanup(); Assert.Null(panel.Node(budget));
+        uint plain = tree.AllocateNode(new GumpCreateNode()); tree.Factory.Construct(plain, 0, 0, 0, 1); forms.SetOwner(form, tree.Node(plain)!.Id);
+        forms.Notify(form); Assert.Equal(2, changed); Assert.NotEqual(0u, tree.Node(plain)!.Flags & 0x10000); tree.Lifetime.Cleanup(); Assert.Null(tree.Node(plain));
+        runtime.Dispose(); Assert.Same(fallback, tree.LifetimeHooks.DeleteForm); tree.LifetimeHooks.DeleteForm!(7, 0); Assert.Equal(1, previous);
+        Assert.Throws<InvalidOperationException>(() => forms.Notify(form));
     }
 }

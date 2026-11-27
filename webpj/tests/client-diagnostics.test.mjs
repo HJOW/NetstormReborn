@@ -1,8 +1,29 @@
 // Client 진단의 공유 로그와 웹 console·선택 Chat 전달을 확인한다.
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { ClientTraceGlobals, bindClientKernelDiagnostics, traceClientObject, writeClientDiagnosticLog, writeClientProcessSummary } from '../www/core/client-diagnostics.js';
+import { ClientTraceGlobals, bindClientKernelDiagnostics, logClientDisplayAssertion, logRegularFailure, traceClientObject, writeClientDiagnosticLog, writeClientProcessSummary } from '../www/core/client-diagnostics.js';
 import { Kernel } from '../www/core/kernel.js';
+import { SidPool } from '../www/core/sid-pool.js';
+
+// 상세가 있을 때만 기존 assertion보다 먼저 기록하고 없는 경우에도 기존 위치/조건은 유지한다.
+test('Client 오류 문맥: 표시 상세와 기존 assertion의 출력 순서', () => {
+    const calls = [], devices = { warning: (text) => calls.push(['detail', text]), error: (text) => calls.push(['assertion', text]) };
+    logClientDisplayAssertion('TYPE83 frame-4', 'frame >= 0', 'asset.cpp', 42, devices);
+    logClientDisplayAssertion(null, 'ok', 'next.cpp', 7, devices); logClientDisplayAssertion('', 'empty', 'none.cpp', 8, devices);
+    assert.deepEqual(calls, [['detail', '원본 표시 상세: TYPE83 frame-4'], ['assertion', '원본 표시 진단: asset.cpp:42 frame >= 0'], ['assertion', '원본 표시 진단: next.cpp:7 ok'], ['assertion', '원본 표시 진단: none.cpp:8 empty']]);
+});
+
+// raw42의 비정렬 DWORD와 signed프레임·float32 payload를 현재 실제 풀에서 읽는다. 진단은 풀을 수정하지 않는다.
+test('Client 오류 문맥: 실제 슬롯의 전체 Regular 비트와 범위 밖 SID', () => {
+    const pool = new SidPool(), sid = pool.allocate(1), raw = pool.physical(sid), view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength), calls = [];
+    raw[10] = 83; view.setInt32(36, -4, true); view.setUint32(42, 0x89abcdef, true); const before = pool.bytes().slice();
+    logRegularFailure(pool, sid, 0x123, 0x80000001, 1.25, (text) => calls.push(text));
+    logRegularFailure(pool, -1, 2, 3, -0, (text) => calls.push(text));
+    assert.deepEqual(calls, [`Regular failure SID${sid} TYPE83 event291 count2147483649 payload3fa00000 frame-4 raw42=89abcdef`, 'Regular failure SID4294967295 TYPEunknown event2 count3 payload80000000 (pool capacity 32768)']);
+    assert.deepEqual(pool.bytes(), before);
+    assert.doesNotThrow(() => logRegularFailure(pool, sid, 0, 0, 0, () => { throw new Error('기록 실패'); }));
+    assert.doesNotThrow(() => logRegularFailure({ get capacity() { throw new Error('풀 조회 실패'); } }, sid, 0, 0, 0));
+});
 
 // 필터와 현재 들여쓰기·미러·Chat 관문은 같은 장기 로그 상태를 쓴다.
 test('Client 진단: console·Chat 출력과 원본 필터', () => {

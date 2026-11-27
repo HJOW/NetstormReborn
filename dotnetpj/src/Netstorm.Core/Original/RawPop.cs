@@ -229,6 +229,12 @@ public sealed partial class RawPop
     /// <summary>이 모듈이 쓰는 슬롯 풀. 팩토리·파생 모듈이 같은 풀인지 확인하는 데 쓴다.</summary>
     public RawSidPool Pool => _pool;
 
+    /// <summary>이 등록기가 사용하는 실제 공간 해시다. 같은 월드의 알림 대여를 검증한다.</summary>
+    public RawSquidHash Hash => _hash;
+
+    /// <summary>이 등록기가 사용하는 실제 점유 지도다. 같은 월드의 알림 대여를 검증한다.</summary>
+    public byte[] Spots => _spots;
+
     /// <summary>건물 옆면 등록 몸체를 연결한다. 이 모듈과 같은 풀·같은 공간 해시를 쓰는 몸체만 받는다. null 이면 연결을 푼다.</summary>
     /// <param name="building">건물 공간 몸체.</param>
     public void SetBuildingSide(IRawPopBuildingSide? building)

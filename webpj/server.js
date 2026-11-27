@@ -42,12 +42,40 @@ function sendError(res, status, message) {
   res.end(message);
 }
 
+// 같은 URL의 배포 교체를 다시 확인하게 하는 약한 검증자다. 파일 내용 전체를 매번 읽지 않고 크기·수정/상태변경 시각·파일번호를 사용한다.
+function cacheHeaders(stat) {
+  return {
+    'Cache-Control': 'no-cache',
+    ETag: `W/"${stat.size.toString(16)}-${stat.mtimeMs.toString(16)}-${stat.ctimeMs.toString(16)}-${stat.ino.toString(16)}"`,
+    'Last-Modified': stat.mtime.toUTCString()
+  };
+}
+
+// GET/HEAD의 조건부 검증이다. ETag가 있으면 날짜보다 우선하며, 쉼표를 포함한 다른 따옴표 값도 하나의 태그로 읽는다.
+function notModified(req, stat, headers) {
+  const supplied = req.headers['if-none-match'];
+  if (supplied !== undefined) {
+    if (supplied.trim() === '*') return true;
+    const current = headers.ETag.slice(2);
+    const tags = supplied.match(/(?:W\/)?"[\x21\x23-\x7e\x80-\xff]*"|[^,\s]+/g) || [];
+    return tags.some((tag) => tag.replace(/^W\//, '') === current);
+  }
+  const since = Date.parse(req.headers['if-modified-since'] || '');
+  return Number.isFinite(since) && Math.floor(stat.mtimeMs / 1000) * 1000 <= since;
+}
+
 // 파일 전송 함수
 function serveFile(req, res, filePath, err, stat) {
   if (err || !stat.isFile()) return sendError(res, 404, '404 Not Found');
 
+  const headers = cacheHeaders(stat);
+  if (notModified(req, stat, headers)) {
+    res.writeHead(304, headers);
+    return res.end();
+  }
   const ext = path.extname(filePath).toLowerCase();
   res.writeHead(200, {
+    ...headers,
     'Content-Type': MIME_TYPES[ext] || 'application/octet-stream',
     'Content-Length': stat.size
   });
@@ -60,7 +88,7 @@ function serveFile(req, res, filePath, err, stat) {
 }
 
 // 정적 요청을 처리한다. mountPath는 끝에 슬래시가 붙은 공개 경로다. (2026-11-19 WB04-E945)
-function serveRequest(req, res, mountPath) {
+function serveRequest(req, res, mountPath, rootDirectory) {
   // GET, HEAD 이외의 메서드는 허용하지 않음
   if (req.method !== 'GET' && req.method !== 'HEAD') {
     return sendError(res, 405, '405 Method Not Allowed');
@@ -79,8 +107,8 @@ function serveRequest(req, res, mountPath) {
 
   // 공개 경로 아래의 요청을 웹 루트에 매핑한 뒤 웹 루트 밖 접근을 차단한다.
   if (!urlPath.startsWith(mountPath)) return sendError(res, 404, '404 Not Found');
-  let filePath = path.normalize(path.join(WWW_ROOT, urlPath.slice(mountPath.length)));
-  if (filePath !== WWW_ROOT && !filePath.startsWith(WWW_ROOT + path.sep)) {
+  let filePath = path.normalize(path.join(rootDirectory, urlPath.slice(mountPath.length)));
+  if (filePath !== rootDirectory && !filePath.startsWith(rootDirectory + path.sep)) {
     return sendError(res, 403, '403 Forbidden');
   }
 
@@ -94,12 +122,13 @@ function serveRequest(req, res, mountPath) {
   });
 }
 
-// 웹 루트를 주어진 URL 경로 아래 제공하는 서버를 만든다. 포트와 바인딩 주소는 호출자가 정한다. (2026-11-19 WB04-E945)
-function createStaticServer(mountPath = '/') {
+// 웹 루트를 주어진 URL 경로 아래 제공한다. 포트/주소는 호출자가 정하며 rootDirectory는 분리된 배포 사본 검사용이다(기본 www).
+function createStaticServer(mountPath = '/', { rootDirectory = WWW_ROOT } = {}) {
   if (!mountPath.startsWith('/') || !mountPath.endsWith('/')) {
     throw new RangeError('공개 경로는 슬래시로 시작하고 끝나야 합니다.');
   }
-  return http.createServer((req, res) => serveRequest(req, res, mountPath));
+  const root = path.resolve(rootDirectory);
+  return http.createServer((req, res) => serveRequest(req, res, mountPath, root));
 }
 
 if (require.main === module) {

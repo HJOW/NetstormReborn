@@ -39,7 +39,7 @@ async function runL3({ browser, plan, oracleDir, compare = true, inspect = null,
   const context = await browser.newContext({ viewport: { width: plan.screen.width, height: plan.screen.height }, locale: 'en-US' }), page = await context.newPage();
   const errors = []; page.on('pageerror', (error) => errors.push(error.stack ?? error.message)); page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
   await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, autoDemo: 0 } })));
-  await page.goto('/debug.html?fixed=25&aspect=4:3&title=1');
+  await page.goto('/debug.html?fixed=25&originalTutorialPresentation=1&aspect=4:3&title=1');
   await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 60000 });
   await page.locator('canvas').click();
   await page.evaluate(() => window.netstorm._prepareCampaignAudio());

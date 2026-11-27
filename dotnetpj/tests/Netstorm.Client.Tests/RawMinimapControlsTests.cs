@@ -1,8 +1,11 @@
 using System.Buffers.Binary;
+using System.Reflection;
 using Netstorm.Client.Display;
 using Netstorm.Client.Gump;
+using Netstorm.Client.Host;
 using Netstorm.Client.Input;
 using Netstorm.Core.Original;
+using Netstorm.Core.Simulation;
 using Netstorm.Tests;
 
 namespace Netstorm.Client.Tests; // 실제 공통 미니맵의 입력·부분 출력·통지 대여 수명을 검증한다.
@@ -152,6 +155,129 @@ public sealed class RawMinimapControlsTests
         var other = new RawMetadisplayDirty(rig.Storage.Pool, new()); core.Pop.SetMetadisplay(other); core.Unpop.SetMinimapQueue(other); rig.Mini.UnbindWorld(); Assert.True(core.Pop.ReleaseMetadisplay(other)); Assert.True(core.Unpop.ReleaseMinimapQueue(other));
         rig.Mini.BindWorld(core); rig.Mini.UnbindWorld(); Assert.False(core.Unpop.ReleaseMinimapQueue(other));
         using var different = new Rig(false); using var otherWorld = different.World(); Assert.Throws<ArgumentException>(() => rig.Mini.BindWorld(otherWorld.Core()));
+    }
+    /// <summary>장기 저장소 실행기의 등록과 해제가 미니맵 큐에 도달하고 대여 반납 뒤에는 더 이상 전달되지 않는다.</summary>
+    [Fact]
+    public void StorageExecutorsNotifyMinimapAndUnbindStopsNotifications()
+    {
+        using var rig = new Rig();
+        rig.Storage.BindDisplayDevices(new() { View = () => new() { Zoom = 65536 }, Suppressed = () => false, Invalidate = (_, _) => { } });
+        var pop = rig.Storage.PopExecutor();
+        var unpop = rig.Storage.UnpopExecutor();
+        rig.Mini.BindStorageExecutors();
+        Assert.Throws<InvalidOperationException>(() => rig.Mini.BindStorageExecutors());
+        rig.Mini.Refresh();
+        rig.Storage.Types[74].Flags2 = 0x4002;
+        rig.Storage.Types[74].FootX = 1;
+        rig.Storage.Types[74].FootY = 1;
+        rig.Storage.Shapes[74].Loaded = true;
+        rig.Storage.Shapes[74].FrameCount = 1;
+        rig.Storage.Shapes[74].Frames.Add(new() { Width = 16, Height = 11, CellWidth = 1, CellHeight = 1 });
+        int sid = rig.Storage.FactoryExecutor().Create(74, SidAllocation.Client);
+        Assert.Equal(RawPopResult.Registered, pop.Pop(sid, rig.Storage.Types[74], 1, 1, 120, 80));
+        Assert.True(rig.State.Count > 0);
+        rig.Mini.Refresh();
+        unpop.Unpop(sid, rig.Storage.Types[74]);
+        Assert.True(rig.State.Count > 0);
+        rig.Mini.UnbindWorld();
+        rig.Mini.Refresh();
+        Assert.Equal(RawPopResult.Registered, pop.Pop(sid, rig.Storage.Types[74], 1, 1, 120, 80));
+        Assert.Equal(0, rig.State.Count);
+    }
+    /// <summary>같은 물리의 추가 실행기 알림과 중복·타 월드 거부 및 교체된 큐 보존을 검증한다.</summary>
+    [Fact]
+    public void AdditionalWorldPairNotifiesAndReleasesOnlyItsOwnQueue()
+    {
+        using var rig = new Rig();
+        rig.Storage.BindDisplayDevices(new() { View = () => new() { Zoom = 65536 }, Suppressed = () => false, Invalidate = (_, _) => { } });
+        var display = rig.Storage.DisplayExecutor();
+        var pop = new RawPop(rig.Storage.Pool, rig.Storage.Hash, rig.Storage.Spots, display, rig.Storage.PostPopExecutor());
+        var unpop = new RawUnpop(rig.Storage.Pool, rig.Storage.Hash, rig.Storage.Spots, display);
+        pop.BindDiagnostics(new() { Types = rig.Storage.Types });
+        unpop.BindDiagnostics(new() { Types = rig.Storage.Types });
+        pop.SetBuildingSide(rig.Storage.BuildingExecutor());
+        unpop.SetBuildingSide(rig.Storage.BuildingExecutor());
+        Assert.Throws<InvalidOperationException>(() => rig.Mini.BindAdditionalWorldPair(pop, unpop));
+        rig.Mini.BindStorageExecutors();
+        using var foreign = new Rig(false);
+        var foreignPop = new RawPop(foreign.Storage.Pool, foreign.Storage.Hash, foreign.Storage.Spots);
+        var foreignUnpop = new RawUnpop(foreign.Storage.Pool, foreign.Storage.Hash, foreign.Storage.Spots);
+        Assert.Throws<ArgumentException>(() => rig.Mini.BindAdditionalWorldPairs((pop, unpop), (foreignPop, foreignUnpop)));
+        // 뒤쪽 쌍이 실패해도 앞쪽 쌍은 설치되지 않아 정상 대여가 가능하다.
+        rig.Mini.BindAdditionalWorldPair(pop, unpop);
+        Assert.Throws<ArgumentException>(() => rig.Mini.BindAdditionalWorldPair(pop, unpop));
+        Assert.Throws<ArgumentException>(() => rig.Mini.BindAdditionalWorldPair(pop, foreignUnpop));
+        rig.Mini.Refresh();
+        rig.Storage.Types[74].Flags2 = 0x4002;
+        rig.Storage.Types[74].FootX = rig.Storage.Types[74].FootY = 1;
+        rig.Storage.Shapes[74].Loaded = true;
+        rig.Storage.Shapes[74].FrameCount = 1;
+        rig.Storage.Shapes[74].Frames.Add(new() { Width = 16, Height = 11, CellWidth = 1, CellHeight = 1 });
+        int sid = rig.Storage.FactoryExecutor().Create(74, SidAllocation.Client);
+        Assert.Equal(RawPopResult.Registered, pop.Pop(sid, rig.Storage.Types[74], 1, 1, 120, 80));
+        Assert.True(rig.State.Count > 0);
+        rig.Mini.Refresh();
+        unpop.Unpop(sid, rig.Storage.Types[74]);
+        Assert.True(rig.State.Count > 0);
+        var other = new RawMetadisplayDirty(rig.Storage.Pool, new());
+        pop.SetMetadisplay(other); unpop.SetMinimapQueue(other);
+        var nextPop = new RawPop(rig.Storage.Pool, rig.Storage.Hash, rig.Storage.Spots);
+        var nextUnpop = new RawUnpop(rig.Storage.Pool, rig.Storage.Hash, rig.Storage.Spots);
+        Assert.True(rig.Mini.TryReplaceAdditionalWorldPair(pop, unpop, nextPop, nextUnpop));
+        Assert.True(pop.ReleaseMetadisplay(other));
+        Assert.True(unpop.ReleaseMinimapQueue(other));
+        rig.Mini.UnbindWorld();
+        Assert.False(rig.Mini.TryReplaceAdditionalWorldPair(nextPop, nextUnpop, pop, unpop));
+    }
+    /// <summary>실제 HostSession의 지형과 Player 실행기에서 미니맵 큐까지 변경이 전달된다.</summary>
+    [Fact]
+    public void HostSessionTerrainAndPlayerExecutorsNotifyMinimap()
+    {
+        using var rig = new Rig();
+        rig.Storage.BindDisplayDevices(new() { View = () => new() { Zoom = 65536 }, Suppressed = () => false, Invalidate = (_, _) => { } });
+        var session = new HostSession(new Kernel(), new GameRandom(17), new CrtRandom(23), pool: rig.Storage.Pool);
+        try
+        {
+            _ = HostPostPopRuntimeTests.Build(session, rig.Storage);
+            _ = session.BuildPlayerWorldHooks();
+            rig.Mini.BindStorageExecutors();
+            session.BindMinimapNotifications(rig.Mini);
+            Assert.Throws<ArgumentException>(() => session.BindMinimapNotifications(rig.Mini));
+            rig.Mini.Refresh();
+            rig.Storage.Types[74].Flags2 = 0x4002;
+            rig.Storage.Types[74].FootX = rig.Storage.Types[74].FootY = 1;
+            rig.Storage.Shapes[74].Loaded = true;
+            rig.Storage.Shapes[74].FrameCount = 1;
+            rig.Storage.Shapes[74].Frames.Add(new() { Width = 16, Height = 11, CellWidth = 1, CellHeight = 1 });
+            int sid = rig.Storage.FactoryExecutor().Create(74, SidAllocation.Client);
+            session.PopWorldObject(sid, 120, 80, 0);
+            Assert.True(rig.State.Count > 0);
+            rig.Mini.Refresh();
+            session.UnpopWorldObject(sid, 0);
+            Assert.True(rig.State.Count > 0);
+            rig.Mini.Refresh();
+            // 실제 그래프 재결선이 지형 실행기를 교체해도 같은 미니맵이 변경을 받는다.
+            var oldTerrainPop = Assert.IsType<RawPop>(typeof(HostSession).GetField("_terrainPop", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(session));
+            var oldTerrainUnpop = Assert.IsType<RawUnpop>(typeof(HostSession).GetField("_terrainUnpop", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(session));
+            session.BuildWorldGraphDevices(rig.Storage.Types);
+            session.WireTerrainPostPopGraph();
+            rig.Mini.Refresh();
+            Assert.Equal(RawPopResult.Registered, oldTerrainPop.Pop(sid, rig.Storage.Types[74], 1, 1, 120, 80));
+            oldTerrainUnpop.Unpop(sid, rig.Storage.Types[74]);
+            Assert.Equal(0, rig.State.Count);
+            var terrainPop = Assert.IsType<RawPop>(typeof(HostSession).GetField("_terrainPop", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(session));
+            Assert.Equal(RawPopResult.Registered, terrainPop.Pop(sid, rig.Storage.Types[74], 1, 1, 120, 80));
+            Assert.True(rig.State.Count > 0);
+            rig.Mini.Refresh();
+            var terrainUnpop = Assert.IsType<RawUnpop>(typeof(HostSession).GetField("_terrainUnpop", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(session));
+            terrainUnpop.Unpop(sid, rig.Storage.Types[74]);
+            Assert.True(rig.State.Count > 0);
+            rig.Mini.UnbindWorld();
+            rig.Mini.Refresh();
+            session.PopWorldObject(sid, 120, 80, 0);
+            Assert.Equal(0, rig.State.Count);
+        }
+        finally { session.ReleasePlayerRecordViews(); }
     }
     /// <summary>Capture/Idle 중 닫아도 같은 공통 수명이 둘을 반납하고 독립 bitmap은 남긴다.</summary>
     [Fact]

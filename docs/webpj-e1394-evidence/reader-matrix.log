@@ -1,0 +1,19 @@
+npm notice run NetstormWeb@1.0.0 npx
+npm notice run ^"playwright^" test -c webpj/playwright.config.js webpj/e2e/progress-portability.spec.js --workers=1 --output=webpj/extracted/e1394-progress-reader --reporter=list
+
+Running 4 tests using 1 worker
+
+(node:2688) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › webpj\e2e\progress-portability.spec.js:52:1 › 실제1-1 저장 사본: 제품 번들의 새로고침과 해제된1-2 실제 브리핑 (31.8s)
+(node:13196) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 2 [chrome] › webpj\e2e\progress-portability.spec.js:52:1 › 실제1-1 저장 사본: 제품 번들의 새로고침과 해제된1-2 실제 브리핑 (33.1s)
+(node:8520) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 3 [edge] › webpj\e2e\progress-portability.spec.js:52:1 › 실제1-1 저장 사본: 제품 번들의 새로고침과 해제된1-2 실제 브리핑 (30.2s)
+(node:17892) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 4 [firefox] › webpj\e2e\progress-portability.spec.js:52:1 › 실제1-1 저장 사본: 제품 번들의 새로고침과 해제된1-2 실제 브리핑 (35.4s)
+
+  4 passed (2.5m)

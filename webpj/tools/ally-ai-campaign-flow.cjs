@@ -16,6 +16,16 @@ async function clickLabel(page,label){
  const point=await page.evaluate(text=>{const app=window.netstorm,p=app._mainMenu.controlPoint(text),rect=app.canvas.getBoundingClientRect();if(!p)throw new Error('현재 UI 단추 없음: '+text);return{x:rect.left+p.x*rect.width/app._layout.logicalWidth,y:rect.top+p.y*rect.height/app._layout.logicalHeight};},label);
  await page.mouse.click(point.x,point.y);await page.evaluate(()=>window.netstorm.stepFixedFrames(2));
 }
+// 다음 미션 요청 수락과 실제 World/브리핑 표시를 구분한다. 고정 시각에서도 비동기 적재와 원래 State 프레임을 모두 진행한다.
+async function settledBriefing(page,name){
+ // 읽기 전용 준비 상태를 매 프레임 확인하며 목표·SP·완료값을 쓰지 않는다.
+ for(let frame=0;frame<1000;frame++){
+  const state=await page.evaluate(expected=>{const app=window.netstorm;return{ready:app._clientGuide.current()?.script.name.toLowerCase()===expected&&Boolean(app._campaignWorld?.session().localConnectionReady())&&app._campaignDisplayActive()&&Boolean(app._mainMenu.dialog),mission:app._clientGuide.current()?.script.name??null,buttons:app._mainMenu.dialog?.buttons?.map(button=>button.label)??[]};},name);
+  if(state.ready)return state;
+  await page.evaluate(()=>window.netstorm.stepFixedFrames(1));
+ }
+ throw new Error('다음 미션의 실제 World/브리핑 준비 시간 초과: '+name);
+}
 // 실제 사제 판정과 희생 종료 호출을 감싸 관측하며 반환·효과·인자는 바꾸지 않는다.
 async function observe(page){
  await page.evaluate(async()=>{
@@ -72,13 +82,16 @@ async function run(){
   const saved=await page.evaluate(()=>localStorage.getItem('netstorm.progress'));
   const key='done'+mission,lookup=text=>Object.entries(JSON.parse(text??'{}').values??{}).find(([name])=>name.toLowerCase()===key)?.[1];
   expect(lookup(before)).not.toBe('1');expect(String(lookup(saved))).toBe('1');result.saved=saved;
+  // 긴 실제 플레이 뒤의 후속 검사 실패에도 이미 확인한 저장/이동 증빙을 잃지 않게 각 경계에서 보존한다.
+  const preserve=()=>fs.writeFileSync('extracted/ally-flow-'+mission+'.json',JSON.stringify(result,null,2));preserve();
   // 실제 완료 단추가 다음 미션 브리핑으로 이어지는지 확인한다. 목표 수행 입력은 넣지 않는다.
-  await clickLabel(page,'Next Mission');await page.waitForFunction(name=>window.netstorm._clientGuide.current()?.script.name.toLowerCase()===name,NEXT[mission],{timeout:120000});result.directNext=await page.evaluate(()=>window.netstorm._clientGuide.current().script.name);
-  await page.reload();await ready(page);const reloaded=await page.evaluate(()=>localStorage.getItem('netstorm.progress'));expect(String(lookup(reloaded))).toBe('1');result.reloaded=reloaded;
+  await clickLabel(page,'Next Mission');result.directNextBriefing=await settledBriefing(page,NEXT[mission]);result.directNext=result.directNextBriefing.mission;preserve();
+  await page.screenshot({path:'extracted/ally-flow-'+mission+'-direct-next.png'});
+  await page.reload({waitUntil:'domcontentloaded',timeout:120000});await ready(page);const reloaded=await page.evaluate(()=>localStorage.getItem('netstorm.progress'));expect(String(lookup(reloaded))).toBe('1');result.reloaded=reloaded;preserve();
   await clickLabel(page,'Campaign');await clickLabel(page,'Struggle For Freedom');
   const label=await page.evaluate(name=>window.netstorm._mainMenu.dialog.menu.items.find(item=>item.command?.name==='MissionBegin'&&item.command.argument.toLowerCase()===name)?.label,NEXT[mission]);
-  expect(label).toBeTruthy();await clickLabel(page,label);await page.waitForFunction(name=>window.netstorm._clientGuide.current()?.script.name.toLowerCase()===name,NEXT[mission],{timeout:120000});
-  result.menuNext=await page.evaluate(()=>window.netstorm._clientGuide.current().script.name);expect(errors).toEqual([]);
+  expect(label).toBeTruthy();await clickLabel(page,label);result.menuNextBriefing=await settledBriefing(page,NEXT[mission]);
+  result.menuNext=result.menuNextBriefing.mission;expect(errors).toEqual([]);
   await page.screenshot({path:'extracted/ally-flow-'+mission+'-unlocked-next.png'});fs.writeFileSync('extracted/ally-flow-'+mission+'.json',JSON.stringify(result,null,2));console.log(JSON.stringify({mission,result:'자연 승리·새 완료값 저장·다음 미션·새로고침 뒤 해제 확인',terminal:terminal.frame}));
  }finally{await browser.close();}
 }

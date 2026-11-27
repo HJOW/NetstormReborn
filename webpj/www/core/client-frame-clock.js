@@ -1,18 +1,33 @@
 // Client의 시각 공급원·게임 시계·공유 프레임 값을 같은 수명으로 연결한다.
 // 사용: new ClientFrameClock(source, local.gameTicks()); 매 Client 프레임에서 captureFrame()을 한 번 부른다.
 import { GameClock } from './game-clock.js';
+import { prepareClientClockOrigin } from './client-clock-origin.js';
 
 // 원본 Client의 최초 시계 생성, 현재 보정 DWORD 연결 및 프레임 고정을 제공한다.
 export class ClientFrameClock {
     // 같은 시각 공급원·게임 시계와 주소가 바뀌지 않는 현재 프레임이다.
-    #source; #clock; #frame = { game: 0, wall: 0, delta: 0, number: 0 };
+    #source; #clock; #synchronizationTicks; #frame = { game: 0, wall: 0, delta: 0, number: 0 };
 
     // 시각 원점을 현재 밀리초에서 읽고 기존 Client의 보정 상자를 그대로 빌린다.
     constructor(source, synchronizationTicks) {
         if (!source || ['milliseconds', 'unixSeconds', 'advanceFixed'].some((name) => typeof source[name] !== 'function')) throw new TypeError('Client 시각 공급원 누락');
         this.#source = source;
+        this.#synchronizationTicks = synchronizationTicks;
         this.#clock = new GameClock(source.milliseconds());
         this.#clock.bindSynchronizationTicks(synchronizationTicks);
+    }
+
+    // 실제 앱 시작에서 첫Client 프레임 전에 한 번 호출한다. 고정 모드는 기존 원점/4틱 전진/프레임0을 그대로 유지한다.
+    async prepareOrigin(devices = {}) {
+        if (this.#frame.number !== 0) throw new Error('Client 초기 시계 준비 전 이미 프레임을 실행했습니다.');
+        if (this.#source.fixedEnabled) return true;
+        const origin = await prepareClientClockOrigin(this.#source, devices); if (!origin) return false;
+        const depth = this.#clock.pauseDepth, clock = new GameClock(origin.originMilliseconds, origin.baseSeconds);
+        // Native는 최초Capture 뒤 공유 보정DWORD를 연결한다. 첫 주루프 delta에 epoch 전체가 들어가지 않게 한다.
+        Object.assign(this.#frame, clock.capture(this.#source.milliseconds())); clock.bindSynchronizationTicks(this.#synchronizationTicks);
+        // 초기 창 비활성이 보유한 모든 정지 깊이를 현재 시계로 옮긴다. 게임/오디오의 새 정지를 만들지 않는다.
+        for (let index = 0; index < depth; index += 1) clock.pause(this.#source.milliseconds());
+        this.#clock = clock; return true;
     }
 
     // 고정 시각 검사는 먼저 한 프레임 전진하고 현재 밀리초를 한 번 읽어 같은 프레임 객체를 갱신한다.

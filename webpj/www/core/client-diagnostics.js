@@ -96,3 +96,26 @@ export function bindClientKernelDiagnostics(kernel, surface, write) {
         assertion: (expression, file, line) => surface.assertDisplay(expression, file, line),
     });
 }
+
+// 현재 Client가 보유한 표시 상세를 기존 assertion 행보다 먼저 기록한다. details는 호출 순간의 문자열이며 오래된 사본을 캐시하지 않는다.
+export function logClientDisplayAssertion(detail, expression, file, line, devices = {}) {
+    const warning = devices.warning ?? ((text) => console.warn(text)), error = devices.error ?? ((text) => console.error(text));
+    if (detail !== null && detail !== undefined && detail !== '') warning(`원본 표시 상세: ${detail}`);
+    error(`원본 표시 진단: ${file}:${line} ${expression}`);
+}
+
+// 비정렬raw DWORD와 현재float32 payload를 같은16진수8자리로 기록한다. 로그/슬롯 조회 실패는 원래 Regular 예외를 덮지 않는다.
+export function logRegularFailure(pool, sid, event, count, payload, write = (text) => console.error(text)) {
+    try {
+        const id = sid >>> 0, number = event >>> 0, calls = count >>> 0, bits = new DataView(new ArrayBuffer(4));
+        bits.setFloat32(0, payload, true); const value = bits.getUint32(0, true).toString(16).padStart(8, '0');
+        let message = `Regular failure SID${id} TYPE`;
+        if (id < pool.capacity) {
+            const raw = pool.slot(id), view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength);
+            message += `${raw[10]} event${number} count${calls} payload${value}`;
+            if (pool.edition === 'patch1078') message += ` frame${view.getInt32(36, true)} raw42=${view.getUint32(42, true).toString(16).padStart(8, '0')}`;
+            else message += ` frame${raw[34]}`;
+        } else message += `unknown event${number} count${calls} payload${value} (pool capacity ${pool.capacity})`;
+        write(message);
+    } catch { /* 부가 문맥 기록은 실패해도 기존 stderr/원래 예외 전파를 유지한다. */ }
+}

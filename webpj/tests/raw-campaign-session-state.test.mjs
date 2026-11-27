@@ -25,6 +25,17 @@ function scene(extra = {}) { return new RawCampaignSessionOwners(game, files, 't
 // 관측이 허용되지 않은 효과는 시험에서 선택 시 실패한다.
 function forbidden() { throw new Error('이 공유 입력 검사에서 선택되지 않아야 하는 효과'); }
 
+// 실제 typed Session의 Residence는 다른 복구 소비자와 동일한 Client 상자를 빌리며 false도 직접 반영한다.
+test('Session 거주 구역 상태: World/Contents와 같은 현재 savedGame 상자를 빌린다', () => {
+    const o = scene();
+    try {
+        const state = o.state.assetState, shared = o.localStateGlobals.savedGame(); assert.equal(state.sharedSavedGame, shared);
+        state.residenceAnimation = true; shared.value = false; assert.equal(state.readSavedGame(), false);
+        shared.value = true; assert.equal(state.readSavedGame(), true); assert.equal(o.contentSavedGame, true);
+        o.contentSavedGame = false; assert.equal(state.readSavedGame(), false); assert.equal(state.residenceAnimation, true);
+    } finally { o.dispose(); }
+});
+
 test('Session 플래그 복사: 같은 전역 포인터와 원래 struct의 후속 지역 대입을 구별한다', () => {
     const o = scene(); try { o.initializePlayersAndSp(); const flag = o.gameplayGlobals.aiDebug().checking(); const copied = captureCampaignFlag(o.state.gunState, 'checking'); flag.value = 0x80000000; assert.equal(copied(), 0x80000000); o.state.gunState.checking = 7; const local = captureCampaignFlag(o.state.gunState, 'checking'); flag.value = 9; assert.equal(copied(), 9); assert.equal(local(), 7); o.state.gunState.checking = 11; assert.equal(local(), 7); assert.equal(o.state.gunState.checking, 11); } finally { o.dispose(); }
 });
