@@ -221,9 +221,13 @@ public sealed class RawMinimapControlsTests
         Assert.True(rig.State.Count > 0);
         var other = new RawMetadisplayDirty(rig.Storage.Pool, new());
         pop.SetMetadisplay(other); unpop.SetMinimapQueue(other);
-        rig.Mini.UnbindWorld();
+        var nextPop = new RawPop(rig.Storage.Pool, rig.Storage.Hash, rig.Storage.Spots);
+        var nextUnpop = new RawUnpop(rig.Storage.Pool, rig.Storage.Hash, rig.Storage.Spots);
+        Assert.True(rig.Mini.TryReplaceAdditionalWorldPair(pop, unpop, nextPop, nextUnpop));
         Assert.True(pop.ReleaseMetadisplay(other));
         Assert.True(unpop.ReleaseMinimapQueue(other));
+        rig.Mini.UnbindWorld();
+        Assert.False(rig.Mini.TryReplaceAdditionalWorldPair(nextPop, nextUnpop, pop, unpop));
     }
     /// <summary>실제 HostSession의 지형과 Player 실행기에서 미니맵 큐까지 변경이 전달된다.</summary>
     [Fact]
@@ -252,6 +256,15 @@ public sealed class RawMinimapControlsTests
             session.UnpopWorldObject(sid, 0);
             Assert.True(rig.State.Count > 0);
             rig.Mini.Refresh();
+            // 실제 그래프 재결선이 지형 실행기를 교체해도 같은 미니맵이 변경을 받는다.
+            var oldTerrainPop = Assert.IsType<RawPop>(typeof(HostSession).GetField("_terrainPop", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(session));
+            var oldTerrainUnpop = Assert.IsType<RawUnpop>(typeof(HostSession).GetField("_terrainUnpop", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(session));
+            session.BuildWorldGraphDevices(rig.Storage.Types);
+            session.WireTerrainPostPopGraph();
+            rig.Mini.Refresh();
+            Assert.Equal(RawPopResult.Registered, oldTerrainPop.Pop(sid, rig.Storage.Types[74], 1, 1, 120, 80));
+            oldTerrainUnpop.Unpop(sid, rig.Storage.Types[74]);
+            Assert.Equal(0, rig.State.Count);
             var terrainPop = Assert.IsType<RawPop>(typeof(HostSession).GetField("_terrainPop", BindingFlags.Instance | BindingFlags.NonPublic)!.GetValue(session));
             Assert.Equal(RawPopResult.Registered, terrainPop.Pop(sid, rig.Storage.Types[74], 1, 1, 120, 80));
             Assert.True(rig.State.Count > 0);

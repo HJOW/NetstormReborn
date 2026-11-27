@@ -174,6 +174,28 @@ public sealed class RawMinimapControls : IDisposable
         }
         if (pairs.Length != 0) _state.FullRefresh = 1;
     }
+    /// <summary>현재 대여한 추가 쌍을 새 실제 실행기로 바꾸고 이전 쌍의 자기 큐만 반납한다.</summary>
+    /// <remarks>이전 쌍이 이미 반납됐으면 다른 세션을 건드리지 않고 거짓을 반환한다. 교체는 두 실행기가 모두 새 객체일 때만 허용한다.</remarks>
+    public bool TryReplaceAdditionalWorldPair(RawPop previousPop, RawUnpop previousUnpop, RawPop nextPop, RawUnpop nextUnpop)
+    {
+        ArgumentNullException.ThrowIfNull(previousPop); ArgumentNullException.ThrowIfNull(previousUnpop);
+        ArgumentNullException.ThrowIfNull(nextPop); ArgumentNullException.ThrowIfNull(nextUnpop);
+        if (_disposed || _pop is null || _unpop is null) return false;
+        int index = -1;
+        // 같은 위치에 기록된 두 실행기가 현재 대여인지 함께 확인한다.
+        for (int i = 0; i < _additionalPops.Count; i++)
+        {
+            if (_additionalPops[i].TryGetTarget(out var pop) && ReferenceEquals(pop, previousPop)
+                && _additionalUnpops[i].TryGetTarget(out var unpop) && ReferenceEquals(unpop, previousUnpop)) { index = i; break; }
+        }
+        if (index < 0) return false;
+        if (ReferenceEquals(previousPop, nextPop) && ReferenceEquals(previousUnpop, nextUnpop)) return true;
+        if (ReferenceEquals(previousPop, nextPop) || ReferenceEquals(previousUnpop, nextUnpop)) throw new ArgumentException("미니맵 실행기 쌍은 함께 교체해야 한다");
+        BindAdditionalWorldPair(nextPop, nextUnpop);
+        previousPop.ReleaseMetadisplay(_dirty); previousUnpop.ReleaseMinimapQueue(_dirty);
+        _additionalPops.RemoveAt(index); _additionalUnpops.RemoveAt(index);
+        return true;
+    }
     /// <summary>현재 자기 통지만 expected owner 확인으로 반납하고 장기 물리/bitmap은 유지한다.</summary>
     public void UnbindWorld()
     {
