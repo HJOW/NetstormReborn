@@ -22,6 +22,18 @@ public sealed partial class ClientHostGame
         _stateWorldGlobals = ClientStateWorldGlobals.Bind(_stateResources.Context(_surfaceGlobals, _localState, _connections, startup.Cloud, _nsInfoGlobals));
     }
 
+    /// <summary>현재 공통 UI에서 보존 종류를 제외한 노드의 State 지연 삭제를 요청한다.</summary>
+    public void KillNativeStateGumps() => (_mainMenu ?? throw new InvalidOperationException("State UI의 실제 메뉴 미설치")).Tree.KillStateGumps();
+
+    /// <summary>현재 지연 삭제를 마치고 해제된 메뉴 별칭을 반납한다.</summary>
+    public void CleanupNativeStateGumps()
+    {
+        var menu = _mainMenu ?? throw new InvalidOperationException("State UI의 실제 메뉴 미설치");
+        menu.Tree.Lifetime.Cleanup();
+        menu.ForgetReleasedControls();
+        _menuDirty = true;
+    }
+
     /// <summary>실제같은Root자원으로전체Native State정리를호출한다. 아직설치되지않은UI/음향/저장장치는선택위치에서실패한다.</summary>
     public void CleanupNativeWorld(uint reason, ClientStateWorldDevices devices)
     {

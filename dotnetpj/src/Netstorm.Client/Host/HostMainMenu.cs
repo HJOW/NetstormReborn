@@ -123,6 +123,7 @@ public sealed class HostMainMenu : IUiControlLocator
         for (int index = 0; index < Labels.Length; index++)
         {
             if (!string.Equals(Labels[index], label, StringComparison.Ordinal)) continue;
+            if (_tree.Node(_buttons[index]) is null) return null;
             ScreenRect bounds = _tree.Collection.Bounds(_buttons[index]);
             return new(unchecked(bounds.Left + bounds.Right) / 2, unchecked(bounds.Top + bounds.Bottom) / 2);
         }
@@ -139,7 +140,7 @@ public sealed class HostMainMenu : IUiControlLocator
         for (int index = 0; index < Labels.Length; index++)
         {
             if (!string.Equals(Labels[index], label, StringComparison.Ordinal)) continue;
-            return _tree.Collection.Bounds(_buttons[index]);
+            return _tree.Node(_buttons[index]) is null ? null : _tree.Collection.Bounds(_buttons[index]);
         }
         return null;
     }
@@ -167,6 +168,15 @@ public sealed class HostMainMenu : IUiControlLocator
     /// <remarks>2026-11-26 1.078에서 R5-4c1 메뉴 배경 숨김용으로 추가했다. 근거: cpppj UberGump.cpp의 MainMenu 단계 조건이다.</remarks>
     public bool HidesMainMenuForMission(uint token) => (IsMissionActive?.Invoke() == true) && _modalHidden.Contains(token);
 
+    /// <summary>실제 지연 삭제가 해제한 메뉴 버튼과 숨김 별칭만 반납한다.</summary>
+    public void ForgetReleasedControls()
+    {
+        // 살아 있는 현재 버튼은 유지하고 해제된 토큰만 비운다.
+        for (int index = 0; index < _buttons.Length; index++)
+            if (_tree.Node(_buttons[index]) is null) _buttons[index] = 0;
+        _modalHidden.RemoveWhere(token => _tree.Node(token) is null);
+    }
+
     /// <summary>현재 화면에 배경과 글리프를 같은 실제 팔레트·8비트 표면으로 그린다.</summary>
     /// <param name="screen">시작 타이틀을 그린 논리 화면.</param>
     public void Draw(Screen screen)
@@ -177,7 +187,8 @@ public sealed class HostMainMenu : IUiControlLocator
             var clip = new GumpDrawState(); GumpDraw.SetGumpDrawClip(clip, new(0, 0, screen.Width, screen.Height));
             var target = new GumpPixelTarget(pixels, screen.Pitch, screen.Height, clip);
             // 각 메뉴 버튼의 배경과 부모를 같은 클립·표면에 출력한다.
-            foreach (uint token in _buttons) _tree.DrawStone(token, target, clip, screen.ShadeMaps(), screen.Colors());
+            foreach (uint token in _buttons)
+                if (_tree.Node(token) is not null) _tree.DrawStone(token, target, clip, screen.ShadeMaps(), screen.Colors());
         }
         finally { screen.Unlock(); }
         screen.Update(new(0, 0, screen.Width, screen.Height));

@@ -11,6 +11,25 @@ namespace Netstorm.Client.Tests;
 /// <summary>실제 배포 자산의 설정·팔레트·메뉴 GIF가 논리 화면에 연결되는지 검사한다.</summary>
 public sealed class HostStartupSceneTests
 {
+    /// <summary>State 삭제 뒤 해제된 메뉴 별칭은 조회와 그리기에서 더 이상 사용하지 않는다.</summary>
+    [Fact]
+    public void StateCleanupForgetsReleasedMenuControls()
+    {
+        string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        var startup = new HostStartupScene(data); var screen = new Screen(1024, 768);
+        Assert.True(screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); startup.Draw(screen);
+        var menu = new HostMainMenu(startup, screen, new GumpButtonTreeHooks
+        { Now = () => 1, Poll = _ => default, Sound = () => { }, Redraw = (_, _) => { }, HandleBase = (_, _, _, _) => 0 });
+        Assert.NotNull(menu.ControlPoint("Help"));
+        menu.Tree.StateRetainedType = -1;
+        menu.Tree.KillStateGumps();
+        menu.Tree.Lifetime.Cleanup();
+        menu.ForgetReleasedControls();
+        Assert.Null(menu.ControlPoint("Help")); Assert.Null(menu.ControlBounds("Help"));
+        menu.Draw(screen);
+        Assert.Single(menu.Tree.Create.Entries, token => token != 0);
+    }
+
     /// <summary>실제 자산과 공통 트리에서 이름 모달을 만들고 입력·그리기·취소를 수행한다.</summary>
     [Fact]
     public void HostSaveFortDialogUsesSharedWidgetsAndCloses()
