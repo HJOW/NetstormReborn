@@ -4,6 +4,8 @@ namespace Netstorm.Core.Original;
 /// <summary>cpppj/src/o/RawGameAuxState.h의 네트워크 공용 장기 저장소다.</summary>
 public sealed partial class RawGameAuxState
 {
+    /// <summary>0052ee2e/2f/30의 현재 내용물 수입 패킷 헤더다.</summary>
+    public FormPacketHeader ContentIncomeHeader { get; set; } = new(0x5a, 1, 5);
     /// <summary>0052edce/cf·00544c50의 같은 장기 Path 헤더다. World 교체/Reset에서 새로 만들지 않는다.</summary>
     public RawPathDataHeader PathPacketHeader { get; } = new();
     /// <summary>00540c68의 현재 경로 로그 수준이다. 최초99이며 월드/세션 교체나 일반 Reset으로 바꾸지 않는다.</summary>

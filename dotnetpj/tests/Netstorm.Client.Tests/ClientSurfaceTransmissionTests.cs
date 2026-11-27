@@ -118,6 +118,22 @@ public sealed class ClientSurfaceTransmissionTests
         cursor.Reset(); Assert.Equal(0u, cursor.PreviewBox.Value); Assert.Equal(3u, player.BattleOwnerBox.Value);
     }
 
+    /// <summary>현재 수입 헤더를 실제 내부 연결로 보내고 비활성·NULL 대상을 건너뛴다.</summary>
+    [Fact]
+    public void ContentIncomeUsesCurrentHeaderAndActualConnection()
+    {
+        using var scene = new Scene(); scene.Active(2, true);
+        ClientContentIncomeSender.Send(scene.Game, scene.Surface, scene.Connections, 2); Assert.Empty(scene.Sent);
+        var source = scene.Open(); int observed = 0;
+        source.Dispatch.ObservePacket(0x5a, (packet, _) => { Assert.Equal(8, packet.Length); observed++; });
+        ClientContentIncomeSender.Send(scene.Game, scene.Surface, scene.Connections, 2);
+        byte[] sent = Assert.Single(scene.Sent); Assert.Equal(5, sent.Length); Assert.Equal(new byte[] { 1, 0x5a, 5, 0 }, sent[..4]); Assert.Equal(1, observed);
+        scene.Game.GameAux.ContentIncomeHeader = new(0x5a, 0x81, 6);
+        ClientContentIncomeSender.Send(scene.Game, scene.Surface, scene.Connections, 2);
+        Assert.Equal(2, observed); Assert.Equal(6, scene.Sent[1].Length); Assert.Equal(new byte[] { 1, 0x5a, 6, 0 }, scene.Sent[1][..4]);
+        scene.Active(2, false); ClientContentIncomeSender.Send(scene.Game, scene.Surface, scene.Connections, 2); Assert.Equal(2, scene.Sent.Count);
+    }
+
     /// <summary>활성 Player의 NULL 연결도 Source나 Runtime을 요구하지 않고 자연 반환한다.</summary>
     [Fact]
     public void NullConnectionsAndInactiveTargetsNeedNoSourceOrRuntime()
