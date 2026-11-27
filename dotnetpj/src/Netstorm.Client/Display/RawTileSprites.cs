@@ -21,6 +21,10 @@ public sealed class RawTileDrawModes
     public byte[] OwnerMaps { get; set; } = [];
     /// <summary>소유자 번호의 256색표다. 없으면 소유자 그림을 그리지 않는다.</summary>
     public Func<uint, byte[]?>? OwnerColors { get; set; }
+    /// <summary>실제 TYPE과 소유자로 현재 공통 색표를 조회한다. 독립 검사에서는 기존 OwnerColors를 쓸 수 있다.</summary>
+    public Func<uint, uint, byte[]?>? OwnerColorsByType { get; set; }
+    /// <summary>다리의 현재 수명 숫자 표시 DWORD를 읽는다.</summary>
+    public Func<uint>? BridgeLifeNumbers { get; set; }
     /// <summary>그림자 256색표다. 없으면 그림자를 그리지 않는다.</summary>
     public byte[]? ShadowTable { get; set; }
     /// <summary>죽음 256색표다. 없으면 죽음을 그리지 않는다.</summary>
@@ -99,7 +103,35 @@ public static class RawTileSprites
         }
         if ((extra & 2) != 0)
         {
-            throw new InvalidOperationException($"타일 가상 그리기 미연결(R5-3c2): SID={sid}, TYPE={type}, frame={frame}, flags=0x{extra:x2}");
+            uint vtable = BinaryPrimitives.ReadUInt32LittleEndian(raw);
+            if (!patch || vtable != 0x005034c8)
+                throw new InvalidOperationException($"타일 가상 그리기 미연결(R5-3c2): SID={sid}, TYPE={type}, frame={frame}, flags=0x{extra:x2}");
+            bool abstractShape = (extra & 0x10) != 0;
+            bool filteredBridge = (record.Flags2 & modes.FilteredFlags) != 0 || type == modes.WideOwnerType || type == modes.UnfilteredType;
+            if ((extra & 1) != 0)
+            {
+                Blit(database, type, frame, point, pixels, width, height, clip,
+                    modes.DeadTable ?? throw new InvalidOperationException("타일 죽음 색표 미연결"));
+                return;
+            }
+            if (abstractShape || (modes.SpecialMode != 0 && filteredBridge))
+            {
+                if (!abstractShape || owner == modes.LocalPlayer)
+                    Blit(database, type, frame, point, pixels, width, height, clip,
+                        modes.AbstractTable ?? throw new InvalidOperationException("타일 추상 색표 미연결"));
+            }
+            else
+            {
+                byte[]? color = OwnerTable(modes, type, owner);
+                Blit(database, type, frame, point, pixels, width, height, clip, color);
+            }
+            // 다리의 실제 추가 그림은 005453ac이 0이면 반환하며 비0인 개발용 숫자는 아직 복원하지 않았다.
+            if (modes.SpecialMode == 0 || (!abstractShape && !filteredBridge))
+            {
+                if ((modes.BridgeLifeNumbers ?? throw new InvalidOperationException("다리 수명 표시 전역 미연결"))() != 0)
+                    throw new InvalidOperationException("개발용 다리 수명 숫자 표시 미복원");
+            }
+            return;
         }
         if ((extra & 1) != 0)
         {
@@ -123,18 +155,16 @@ public static class RawTileSprites
                 modes.AbstractTable ?? throw new InvalidOperationException("타일 추상 색표 미연결"));
             return;
         }
-        if (type >= modes.OwnerMaps.Length)
-        {
-            throw new ArgumentOutOfRangeException(nameof(entry), "타일 소유자 표 오류");
-        }
-        if (modes.OwnerMaps[type] != 0 && owner != 0)
-        {
-            byte[] table = (modes.OwnerColors ?? throw new InvalidOperationException("타일 소유자 색표 미연결"))(owner)
-                ?? throw new InvalidOperationException("타일 소유자 색표 미연결");
-            Blit(database, type, frame, point, pixels, width, height, clip, table);
-            return;
-        }
-        Blit(database, type, frame, point, pixels, width, height, clip, null);
+        Blit(database, type, frame, point, pixels, width, height, clip, OwnerTable(modes, type, owner));
+    }
+
+    /// <summary>현재 TYPE과 소유자의 실제 색표를 읽고 표 또는 소유자가 없으면 원색을 선택한다.</summary>
+    private static byte[]? OwnerTable(RawTileDrawModes modes, uint type, uint owner)
+    {
+        if (type >= modes.OwnerMaps.Length) throw new ArgumentOutOfRangeException(nameof(type), "타일 소유자 표 오류");
+        if (modes.OwnerMaps[type] == 0 || owner == 0) return null;
+        return (modes.OwnerColorsByType is { } byType ? byType(type, owner) : modes.OwnerColors?.Invoke(owner))
+            ?? throw new InvalidOperationException("타일 소유자 색표 미연결");
     }
 
     /// <summary>원문 CRT signed64 절삭의 하위 DWORD를 반환한다. 유한 범위 밖은 거부한다.</summary>

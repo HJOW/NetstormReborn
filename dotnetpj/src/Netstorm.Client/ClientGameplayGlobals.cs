@@ -26,6 +26,8 @@ public sealed partial class ClientGameplayGlobals
     public uint[] ProductionRestrictions { get; } = new uint[256];
     /// <summary>0054db14의 현재 전체 Deck 모드 DWORD다.</summary>
     public UIntBox FullDeckBox { get; } = new();
+    /// <summary>005453ac의 현재 다리 수명 숫자 표시 및 붕괴 갱신 진단 DWORD다.</summary>
+    public UIntBox BridgeLifeNumbers { get; } = new();
     /// <summary>005412bc의 무료 기술 역할이며 최초 Mog153이다.</summary>
     public UIntBox FreeTechnologyTypeBox { get; } = new() { Value = 153 };
     /// <summary>00541088의 현재 내용물 Form 역할이며 최초6이다.</summary>

@@ -264,4 +264,35 @@ public sealed class RawTileSpritesTests
         RawTileSprites.DrawTile(entry, scene.Pool, scene.Types, scene.Database, 0, 0, specialPixels, 1024, 768, new(0, 0, 1024, 768), specialModes);
         Assert.Contains(specialPixels, pixel => pixel == 66);
     }
+
+    /// <summary>실제 다리 가상표의 현재 프레임·공통 소유자 색과 수명 숫자 관문을 검증한다.</summary>
+    [Fact]
+    public void BridgeVirtualDrawUsesCurrentFrameOwnerColorsAndLifeFlag()
+    {
+        var scene = new TileScene();
+        var entry = Place(scene, 82, 35, 20, 20);
+        Span<byte> raw = Raw(scene.Pool, 100);
+        BinaryPrimitives.WriteUInt32LittleEndian(raw, 0x005034c8);
+        raw[34] = 2;
+        var maps = new byte[scene.Types.Count]; maps[82] = 1;
+        uint life = 0;
+        var modes = new RawTileDrawModes
+        {
+            OwnerMaps = maps,
+            OwnerColorsByType = (type, owner) => { Assert.Equal(82u, type); Assert.Equal(2u, owner); return ConstantTable(55); },
+            BridgeLifeNumbers = () => life,
+        };
+        var clip = new ScreenRect(0, 0, 1024, 768);
+        var plain = new byte[1024 * 768];
+        RawTileSprites.DrawTile(entry, scene.Pool, scene.Types, scene.Database, 0, 0, plain, 1024, 768, clip, modes);
+        raw[40] = 2;
+        var actual = new byte[plain.Length];
+        RawTileSprites.DrawTile(entry, scene.Pool, scene.Types, scene.Database, 0, 0, actual, 1024, 768, clip, modes);
+        Assert.Contains(actual, pixel => pixel == 55);
+        Assert.Equal(plain, actual);
+        life = 1;
+        Array.Clear(actual);
+        Assert.Throws<InvalidOperationException>(() => RawTileSprites.DrawTile(entry, scene.Pool, scene.Types, scene.Database, 0, 0, actual, 1024, 768, clip, modes));
+        Assert.Equal(plain, actual);
+    }
 }

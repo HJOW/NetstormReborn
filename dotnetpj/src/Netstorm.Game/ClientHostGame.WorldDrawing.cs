@@ -39,7 +39,7 @@ public sealed partial class ClientHostGame
     /// <summary>팔레트가 바뀌면 타일 색표를 다시 만들고 매 프레임 특수·로컬 값을 갱신한다.</summary>
     private void RefreshWorldTileModes()
     {
-        if (_missionSession is null || _worldShapesDb is null)
+        if (_missionSession is not { } mission || _worldShapesDb is null)
         {
             return;
         }
@@ -51,7 +51,17 @@ public sealed partial class ClientHostGame
             _worldTileModes = new RawTileDrawModes
             {
                 OwnerMaps = new byte[_surfaceGlobals.Storage.Types.Count],
-                OwnerColors = _ => throw new InvalidOperationException("월드 소유자 색표 미연결(R5-3)"),
+                OwnerColorsByType = (type, owner) =>
+                {
+                    if (owner >= mission.BridgeState.OwnerColors.Length) throw new ArgumentOutOfRangeException(nameof(owner), "월드 소유자 범위 오류");
+                    int color = mission.BridgeState.OwnerColors[(int)owner];
+                    if (color < 0 || color > 8) throw new ArgumentOutOfRangeException(nameof(owner), "월드 소유자 색 번호 오류");
+                    return ColorSortInput.OwnerTables.Color(type, (uint)color);
+                },
+                BridgeLifeNumbers = () => mission.Gameplay.BridgeLifeNumbers.Value,
+                FilteredFlags = 2421574144u,
+                WideOwnerType = 164,
+                UnfilteredType = 84,
                 ShadowTable = maps.Shadow,
                 DeadTable = maps.Dead,
                 AbstractTable = maps.Bright,
@@ -59,6 +69,10 @@ public sealed partial class ClientHostGame
         }
         if (_worldTileModes is not null)
         {
+            ReadOnlySpan<uint> tokens = ColorSortInput.OwnerTables.Tokens.Span;
+            if (tokens.Length != _worldTileModes.OwnerMaps.Length) throw new InvalidOperationException("월드 소유자 색표 TYPE 수 불일치");
+            // 옵션에 따라 바뀌는 현재 TYPE별 색표 존재 여부를 매 프레임 읽는다.
+            for (int index = 0; index < tokens.Length; index++) _worldTileModes.OwnerMaps[index] = tokens[index] == 0 ? (byte)0 : (byte)1;
             _worldTileModes.SpecialMode = _missionSession.Gameplay.HideBuildings.Value;
             _worldTileModes.LocalPlayer = _missionSession.MissionPlayer.BattleOwner;
         }
