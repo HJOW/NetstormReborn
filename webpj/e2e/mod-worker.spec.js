@@ -4,6 +4,8 @@ const fs = require('node:fs'), path = require('node:path'), http = require('node
 // DN도 같은 원문/출력을 소비한다. 이 검사는 WB 실행만 증명한다.
 const packageText = fs.readFileSync(path.join(__dirname, '../../shared/modding/v0/conformance/core-probe.nsmod.json'), 'utf8');
 const trace = JSON.parse(fs.readFileSync(path.join(__dirname, '../../shared/modding/v0/conformance/core-trace.json'), 'utf8'));
+// 수학 비트는 고정 JS 프로필의 기준 벡터를 두 실제 브라우저의 guest 안에서 검사한다.
+const math = [...JSON.parse(fs.readFileSync(path.join(__dirname, '../../shared/modding/v0/conformance/math-vectors.json'), 'utf8')).vectors, ...JSON.parse(fs.readFileSync(path.join(__dirname, '../../shared/modding/v0/conformance/math-grid.json'), 'utf8')).vectors];
 
 test('단일 번들의 격리 실행은 공통 출력을 보존하고 무한루프/외부 권한/자원 반납을 처리한다', async ({ page }) => {
     test.setTimeout(120000);
@@ -13,22 +15,31 @@ test('단일 번들의 격리 실행은 공통 출력을 보존하고 무한루�
     await new Promise((resolve) => server.listen(0, '127.0.0.1', resolve));
     try {
         await page.goto('/index.html?title=1');
-        const result = await page.evaluate(async ({ packageText, trace, networkUrl }) => {
+        const result = await page.evaluate(async ({ packageText, trace, math, networkUrl }) => {
             const { ModWorker, validateModPackageIsolated } = await import('./modding/mod-worker.js');
             const { loadModWorkerSource } = await import('./modding/mod-worker-source.js');
             const source = await loadModWorkerSource();
+            // 부하에 따른 실제 시간 한도 실패도 어느 요청인지 보존한다. 계약의1000ms는 늘리지 않는다.
+            const timings = [];
+            const measured = async (phase, callback) => { const start = performance.now(); try { return await callback(); } catch (error) { error.message = phase + ': ' + error.message; throw error; } finally { timings.push({ phase, milliseconds: performance.now() - start }); } };
             // index.html의 메인 realm에는 SES lockdown/Compartment가 생성되지 않는다.
             const mainUnchanged = typeof globalThis.Compartment === 'undefined' && !Object.isFrozen(Array.prototype);
             const normalized = await validateModPackageIsolated(packageText), worker = await ModWorker.open();
-            const registration = await worker.register(normalized, trace.sessionSeed), outputs = [];
-            for (const item of trace.cases) outputs.push(await worker.dispatch(item.event, item.snapshot));
+            const registration = await measured('core-register', () => worker.register(normalized, trace.sessionSeed)), outputs = [];
+            for (const item of trace.cases) outputs.push(await measured('core-' + item.event.name, () => worker.dispatch(item.event, item.snapshot)));
             worker.dispose();
             // 순환 정적 모듈과 import 문구가 들어간 문자열의 값 보존을 실제 SES에서 확인한다.
             const pkg = JSON.parse(packageText); pkg.manifest.id = 'test.authority'; pkg.modules = {
-                'main.js': `import {value} from './helper.js'; export const circular = 7; export default function(api) { const keys=['fetch','Worker','postMessage','window','parent','document','navigator','performance','Date','Promise','eval','Function','Compartment','Intl','WeakRef','FinalizationRegistry','Atomics','SharedArrayBuffer','WebAssembly','setTimeout','queueMicrotask']; api.log('info',JSON.stringify(keys.map(key=>typeof globalThis[key]))); let blocked=0; for(const fn of [api.getState,api.on,api.commands.click]) {try{fn.constructor('return globalThis')();}catch(error){blocked++;}} try{Math.random();}catch(error){blocked++;} api.log('info',JSON.stringify({blocked,value:value(),text:"import('https://invalid.example')"})); }`,
+                'main.js': `import {value} from './helper.js'; export const circular = 7; export default function(api) { const keys=['fetch','Worker','postMessage','window','parent','document','navigator','performance','Date','Promise','eval','Function','Compartment','Intl','WeakRef','FinalizationRegistry','Atomics','SharedArrayBuffer','WebAssembly','setTimeout','queueMicrotask']; api.log('info',JSON.stringify(keys.map(key=>typeof globalThis[key]))); let blocked=0; for(const fn of [api.getState,api.on,api.commands.click,Math.sin,Math.cos,Math.atan2,Math.pow]) {try{fn.constructor('return globalThis')();}catch(error){blocked++;}} try{Math.random();}catch(error){blocked++;} api.log('info',JSON.stringify({blocked,value:value(),text:"import('https://invalid.example')"})); }`,
                 'helper.js': "import {circular} from './main.js'; export function value(){return circular;}"
             };
-            const authorityWorker = await ModWorker.open(), authority = await authorityWorker.register(pkg, 1); authorityWorker.dispose();
+            const authorityWorker = await ModWorker.open(), authority = await measured('authority-register', () => authorityWorker.register(pkg, 1)); authorityWorker.dispose();
+            // 같은 Math 입력을 guest의 실제 Float64 비트로 바꾼다. NaN payload만 계약대로 분류한다.
+            pkg.modules = { 'main.js': `export default function(api){const rows=${JSON.stringify(math)};const result=rows.map(row=>{const value=Math[row.name](...row.args.map(Number));if(Number.isNaN(value))return 'NaN';const view=new DataView(new ArrayBuffer(8));view.setFloat64(0,value,false);return view.getUint32(0,false).toString(16).padStart(8,'0')+view.getUint32(4,false).toString(16).padStart(8,'0');});for(let index=0;index<result.length;index+=48)api.log('info',JSON.stringify(result.slice(index,index+48)));}` };
+            const mathWorker = await ModWorker.open(), mathResult = await measured('math-register', () => mathWorker.register(pkg, 1)); mathWorker.dispose();
+            // 아직 ready를 보내지 않은 신뢰 SDK도 앱의 취소 신호로 즉시 정리된다.
+            const controller = new AbortController(), opening = ModWorker.open({ source: 'onmessage=()=>{};', signal: controller.signal }).then(() => 'unexpected', (error) => error.code);
+            setTimeout(() => controller.abort(), 50); const bootCancel = await opening;
             // 검증만으로 엔트리 무한루프를 실행하지 않는다. 동적 import는 설치 때 거절한다.
             pkg.manifest.id = 'test.loop'; pkg.modules = { 'main.js': 'export default function(){while(true){}}' };
             const validatedLoop = await validateModPackageIsolated(JSON.stringify(pkg));
@@ -57,10 +68,11 @@ test('단일 번들의 격리 실행은 공통 출력을 보존하고 무한루�
             // Native debug의 경로도 생산 JS를 평가하지 않고 같은 봉투만 읽는다.
             const debugSource = await loadModWorkerSource({ view: {}, fetch: window.fetch.bind(window) });
             await new Promise((resolve) => setTimeout(resolve, 200));
-            return { mainUnchanged, registration, outputs, authority, heartbeat, loopCode, callbackCode, cancelCode, afterDispose, elapsed, forbiddenImport, fault, healthyOutput, csp, sameSource: source === debugSource, remainingFrames: document.querySelectorAll('iframe[sandbox]').length };
-        }, { packageText, trace, networkUrl: 'http://127.0.0.1:' + server.address().port + '/blocked' });
+            return { mainUnchanged, registration, outputs, authority, timings, math: mathResult.logs.flatMap((log) => JSON.parse(log.text)), bootCancel, heartbeat, loopCode, callbackCode, cancelCode, afterDispose, elapsed, forbiddenImport, fault, healthyOutput, csp, sameSource: source === debugSource, remainingFrames: document.querySelectorAll('iframe[sandbox]').length };
+        }, { packageText, trace, math, networkUrl: 'http://127.0.0.1:' + server.address().port + '/blocked' });
         expect(result.mainUnchanged).toBe(true); expect(result.registration).toEqual(trace.registration); expect(result.outputs).toEqual(trace.expected);
-        expect(JSON.parse(result.authority.logs[0].text)).toEqual(Array(21).fill('undefined')); expect(JSON.parse(result.authority.logs[1].text)).toEqual({ blocked: 4, value: 7, text: "import('https://invalid.example')" });
+        expect(JSON.parse(result.authority.logs[0].text)).toEqual(Array(21).fill('undefined')); expect(JSON.parse(result.authority.logs[1].text)).toEqual({ blocked: 8, value: 7, text: "import('https://invalid.example')" });
+        expect(result.math).toEqual(math.map((row) => row.expected)); expect(result.bootCancel).toBe('disposed');
         expect(result.heartbeat).toBe(true); expect(result.loopCode).toBe('timeLimit'); expect(result.callbackCode).toBe('timeLimit'); expect(result.cancelCode).toBe('disposed'); expect(result.afterDispose).toBe('disposed'); expect(result.elapsed).toBeGreaterThanOrEqual(950); expect(result.elapsed).toBeLessThan(3000);
         expect(result.forbiddenImport).toBe('permissionDenied'); expect(result.fault).toBe('scriptError'); expect(result.healthyOutput).toEqual(trace.registration); expect(result.csp.blocked).toBe(true); expect(requests).toBe(0); expect(result.sameSource).toBe(true); expect(result.remainingFrames).toBe(0);
         await test.info().attach('isolated-worker', { body: JSON.stringify({ browser: test.info().project.name, result, requests }), contentType: 'application/json' });

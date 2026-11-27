@@ -1,5 +1,6 @@
 {
   "apiVersion": "0.1.0",
+  "mathProfile": "stdlib-fdlibm-js-v0",
   "packageFormat": "netstorm-mod-package",
   "packageFormatVersion": 1,
   "entryExport": "default",

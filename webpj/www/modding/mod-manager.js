@@ -12,7 +12,7 @@ export class ModManager {
     // 비동기 사건은 직렬화하며 모든 작업 동안 한 시계 장벽을 유지한다.
     #tail = Promise.resolve(); #jobs = 0; #held = false; #closing = false; #loaded = false; #error = null;
     // 공개 API가 아닌 신뢰 호스트 조립점이다. fixed/oracle 모드는 저장소 읽기/실행을 모두 건너뛴다.
-    constructor({ host, source, store, createWorker = () => ModWorker.open(), report = defaultReport, forcedOff = false }) { this.#host = host; this.#source = source; this.#store = store; this.#create = createWorker; this.#report = report; this.#forcedOff = forcedOff; }
+    constructor({ host, source, store, createWorker = (options) => ModWorker.open(options), report = defaultReport, forcedOff = false }) { this.#host = host; this.#source = source; this.#store = store; this.#create = createWorker; this.#report = report; this.#forcedOff = forcedOff; }
     // 초기 적재 실패를 기존 저장 자료를 덮어쓰는 빈 성공으로 바꾸지 않는다.
     async load() {
         if (this.#closing || this.#loaded || this.#forcedOff) return;
@@ -78,10 +78,11 @@ export class ModManager {
                 for (const item of items) {
                     if (this.#closing || scope.ending) break;
                     try {
-                        item.worker = await this.#create();
+                        item.opening = new AbortController();
+                        item.worker = await this.#create({ signal: item.opening.signal }); item.opening = null;
                         if (this.#closing || scope.ending) { item.worker.dispose(); item.worker = null; break; }
                         this.#output(scope, item, await item.worker.register(item.pkg, scope.seed));
-                    } catch (error) { await this.#fault(item, error, 'register'); }
+                    } catch (error) { item.opening = null; if (!this.#closing && !scope.ending) await this.#fault(item, error, 'register'); }
                 }
                 // 모든 등록이 끝나야 같은 경계의 sessionStart를 보낸다.
                 for (const item of items) { if (this.#closing || scope.ending) break; await this.#dispatch(scope, item, 'sessionStart', snapshot); }
@@ -121,6 +122,8 @@ export class ModManager {
     end(reason = 'leave') {
         const scope = this.#scope; if (!scope) return;
         this.#scope = null; scope.ending = true; scope.staged = [];
+        // 아직 guest를 시작하지 않은 부팅은 이탈 자체를 모드 오류로 저장하지 않고 취소한다.
+        for (const item of scope.items) item.opening?.abort();
         if (!scope.items.length) { this.#scopes.delete(scope); return; }
         this.#schedule(async () => {
             try {

@@ -1,11 +1,12 @@
 // 게임이 소유한 설정과 캠페인 진행 항목만 지운다. 부분 실패 시 이미 지운 항목을 가능한 범위에서 복구한다. (2026-11-19 WB04-E863)
 import { SETTINGS_STORAGE_KEY } from './settings.js';
 import { PROGRESS_STORAGE_KEY } from './progress.js';
+import { MOD_STORAGE_KEY } from '../modding/mod-store.js';
 
 // 저장소 접근이 불가능하거나 삭제에 실패하면 오류를 호출자에게 전달한다. 다른 웹 앱의 항목은 건드리지 않는다.
 export function resetGameStorage(storage) {
     if (!storage) throw new Error('게임 저장소에 접근할 수 없습니다.');
-    const keys = [SETTINGS_STORAGE_KEY, PROGRESS_STORAGE_KEY];
+    const keys = [SETTINGS_STORAGE_KEY, PROGRESS_STORAGE_KEY, MOD_STORAGE_KEY];
     const previous = keys.map((key) => storage.getItem(key));
     let removed = 0;
     try {

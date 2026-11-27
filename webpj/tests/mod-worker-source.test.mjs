@@ -23,3 +23,9 @@ test('누락/HTTP 오류는 실행기 시작 실패로 보고한다', async () =
     await assert.rejects(loadModWorkerSource({ view: {} }), { code: 'scriptError' });
     await assert.rejects(loadModWorkerSource({ view: {}, fetch: async () => ({ ok: false, status: 404 }) }), /404/u);
 });
+
+test('Native debug 번들 읽기는 앱 취소 신호를 같은 fetch로 전달한다', async () => {
+    const controller = new AbortController(); let received;
+    await loadModWorkerSource({ view: {}, signal: controller.signal, fetch: async (url, options) => { received = options.signal; return { ok: true, text: async () => envelope('source') }; } });
+    assert.equal(received, controller.signal);
+});

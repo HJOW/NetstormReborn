@@ -48,3 +48,16 @@ test('Netstorm Client 프레임: 현재 World 재조회와 수신 중 재진입'
     app._campaignWorld = { session: () => ({ connectionCallbackActive: () => true, pollLocalConnectionState: () => calls.push('State'), pumpLocalConnection: () => calls.push('패킷') }) };
     app._onFrame(16); assert.deepEqual(calls, ['Guide']);
 });
+
+test('모드 대기 중 실제 앱 프레임은 시계/Guide/입력/그리기를 실행하지 않는다', () => {
+    const app = new Netstorm(), calls = []; app._canvas = {}; app._mods = { pending: true };
+    app._gameClock = { captureFrame: () => assert.fail('대기 중 capture') }; app._clientGuide = { run: () => assert.fail('대기 중 Guide') };
+    app._runCampaignInputFrame = () => assert.fail('대기 중 입력'); app._render = () => assert.fail('대기 중 그리기'); app._startFrameLoop = () => calls.push('예약');
+    app._onFrame(100); assert.deepEqual(calls, ['예약']);
+});
+
+test('실제 앱은 Guide 뒤 입력 경계와 그리기 뒤 사건 경계를 유지한다', () => {
+    const app = new Netstorm(), calls = []; app._canvas = {}; app._render = () => calls.push('그리기'); app._startFrameLoop = () => calls.push('예약');
+    app._clientGuide = { run: () => calls.push('Guide') }; app._mods = { pending: false, beforeInput: () => calls.push('모드입력'), afterFrame: () => calls.push('모드사건') };
+    app._onFrame(100); assert.deepEqual(calls, ['Guide', '모드입력', '그리기', '모드사건', '예약']);
+});

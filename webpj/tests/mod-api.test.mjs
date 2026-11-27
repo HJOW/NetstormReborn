@@ -1,5 +1,6 @@
 // 공통 계약을 실제 공개 런타임에 적용한다. 게임 구현을 흉내 내는 원시 주소/슬롯 fixture를 만들지 않는다.
 import test from 'node:test';
+import { createModMath } from '../www/modding/mod-math.js';
 import assert from 'node:assert/strict';
 import { readFile } from 'node:fs/promises';
 import { ModRuntime, ModError, MOD_API_VERSION, MOD_ROOT_NAMES, MOD_COMMAND_NAMES, MOD_EVENT_NAMES, MOD_KEY_NAMES, MOD_ERROR_CODES, MOD_LIMITS, modRandomSeed, emptyModSnapshot, copyModJson, validateModSnapshot } from '../www/modding/mod-api.js';
@@ -184,11 +185,11 @@ test('공통 패키지 하나가 다섯 경계의 WB 기준 출력과 일치한�
     assert.deepEqual(actual, trace.expected); assert.equal(runtime.disabled, true);
 });
 
-test('DN에 전달할 V8 수학 격자가 double 비트·부호0·비유한 분류를 보존한다', async () => {
+test('DN에 전달할 고정 JS 수학 격자가 double 비트·부호0·비유한 분류를 보존한다', async () => {
     const golden = JSON.parse(await readFile(new URL('../../shared/modding/v0/conformance/math-vectors.json', import.meta.url)));
     // 허용 오차나 float32 반올림으로 double 차이를 숨기지 않는다.
     for (const vector of golden.vectors) {
-        const result = Math[vector.name](...vector.args.map(Number)), view = new DataView(new ArrayBuffer(8)); view.setFloat64(0, result, false);
+        const result = createModMath(Math)[vector.name](...vector.args.map(Number)), view = new DataView(new ArrayBuffer(8)); view.setFloat64(0, result, false);
         const bits = Number.isNaN(result) ? 'NaN' : view.getBigUint64(0, false).toString(16).padStart(16, '0');
         assert.equal(bits, vector.expected, `${vector.name}(${vector.args})`);
     }

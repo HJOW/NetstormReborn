@@ -18,7 +18,7 @@ export class ModGameHost {
     #current() {
         if (!this.#app) throw new ModError('disposed', '모드 게임 호스트 수명이 끝났습니다.');
         const app = this.#app, world = app._campaignWorld;
-        if (!world || !app._campaignDisplayActive() || world.connecting || !world.session().localConnectionReady() || !world.session().spStorage().initialized) { this.#world = null; this.#sessionId = null; return null; }
+        if (!world || !app._clientGuide?.current()?.script?.name || !app._campaignDisplayActive() || world.connecting || !world.session().localConnectionReady() || !world.session().spStorage().initialized) { this.#world = null; this.#sessionId = null; return null; }
         if (this.#world?.deref() !== world) {
             this.#world = new WeakRef(world); this.#sessionId = `session-${++this.#counter}`;
             this.#seed = app._clientRandom.fortCoreSeed >>> 0;

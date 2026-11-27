@@ -144,6 +144,7 @@ export const WEB_ONLY = Object.freeze({
     'www/modding/mod-worker-source.js': '기준선에 없는 단일 번들의 실행기 데이터 해독·Native debug 읽기(E1478)',
     'www/modding/mod-manager.js': '기준선에 없는 미션별 격리 모드 사건/입력 단계·오류/반납 관리자(E1479)',
     'www/modding/mod-time-source.js': '기준선에 없는 모드 대기 중 game/wall 동시 정지 공급원(E1479)',
+    'www/modding/mod-math.js': '기준선에 없는 모드 전용 고정 JS 수학/엔진별 libm 차이 제거(E1480)',
     'www/core/tutorial-objective.js': '기준선1313 뒤 사용자 추가 요구인 CP1371의40단계/39키 안내 계약(WB-TUT-1/E1386). 원본 이식1,007단위의 완료량에는 가산하지 않는다.',
     'www/ui/tutorial-objective-gump.js': '기준선1313 뒤 사용자 추가 요구인 CP1372의 배경 없는 튜토리얼 안내 표시(WB-TUT-2/E1387). 원본 이식 완료량에 가산하지 않는다.',
     'www/platform/game-agent-host.js': 'WebMCP에서 현재 게임의 값 조회·실제 DOM 입력·PNG와 녹화 장치를 연결하는 웹 전용 경계(WB04-E1372)',

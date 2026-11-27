@@ -14,6 +14,8 @@ export function retireNetstormStateWorld(app) {
 
 // 현재 Client·표면·시계·UI·음향을 빌려 원문 전체 부모의 효과 순서와 실제 Runtime 반납을 실행한다.
 export function cleanupNetstormStateWorld(app, reason) {
+    // 비동기 종료에는 마지막 공개 상태 사본만 남긴다. 원래 Runtime 반납 순서는 그대로 이어간다.
+    app._mods?.end(reason === 1 ? 'replace' : 'leave');
     const clock = app._gameClock, storage = app._surfaceStorage, gameplay = app._clientGameplay, gump = app._clientGump;
     if (!clock || !storage || !gameplay || !gump || !app._clientSoundPlayer) throw new Error('앱 전체 State 정리의 실제 장기 수명 누락');
     // 기존 Gump 일괄 삭제보다 먼저 추가 안내의 serial 등록과 자기 줄을 반납한다.

@@ -73,7 +73,11 @@ DN의 디렉터리형 표현은 Windows `%USERPROFILE%\Saved Games\Netstorm\Mods
 
 모드 전용 RNG는 게임 초기 seed(uint32)의 **십진 문자열** + LF + modId의 UTF-8을 FNV-1a32(offset2166136261, prime16777619, 각 단계 uint32 곱)로 해시해 초기화한다. 상태0은 `0x6d2b79f5`로 바꾼다. 매 호출마다 `s ^= s << 13; s ^= s >>> 17; s ^= s << 5`를 uint32로 보존하고 `s % limit`를 반환한다(편향 제거 재시도 없음). 원래 게임 RNG를 추가 소비하지 않으며 다른 모드의 호출 수에 영향받지 않는다. 최초 미션 seed를 복사해서 쓰고 현 시각의 변하는 RNG 상태를 seed로 재사용하지 않는다.
 
-정수·비트 연산·IEEE754 기본 연산·Math.imul/fround/abs/min/max/floor/ceil/trunc/round/sqrt는 JS 의미를 따른다. Math.sin/cos/atan2/pow의 **double 결과는 WB의 V8 기준**으로 하고 DN MOD-3에서 같은 fdlibm 경로를 주입한다. 단순 float32 변환이나 허용 오차를 비트 일치의 대체로 쓰지 않는다. 수학 격자와 ±0/경계 입력을 공통 적합성 자료에 포함한다. 나머지 초월함수의 엔진 간 비트 일치는 v0에서 보장하지 않으며 재현 명령 판단에 쓰면 안 된다. 이는 DN 실행 검증이 완료되었다는 뜻이 아니다.
+정수·비트 연산·IEEE754 기본 연산·Math.imul/fround/abs/min/max/floor/ceil/trunc/round/sqrt는 JS 의미를 따른다. Math.sin/cos/atan2/pow는**`stdlib-fdlibm-js-v0`** 프로필의 고정 JS 구현을 WB/DN 양쪽에 주입한다. 직접 패키지`@stdlib/math-base-special-sin/cos/atan2/pow` 각0.3.1과 WB lock의 전이 구현을 기준으로 하고, native libm/QuickJS 기본 Math로 대체하지 않는다. DN은 같은 순수 JS 구현을 묶은 신뢰 prelude를 QuickJS에 적재할 수 있으며 런타임 파일/네트워크 권한은 주지 않는다. 단순 float32 변환이나 허용 오차를 비트 일치의 대체로 쓰지 않는다. 수학29경계+256격자·±0/NaN/Infinity를 공통 적합성 자료에 포함한다. 나머지 초월함수의 엔진 간 비트 일치는 v0에서 보장하지 않으며 재현 명령 판단에 쓰면 안 된다. 이는 DN 실행 검증이 완료되었다는 뜻이 아니다.
+
+**E1480 설계 교정:** 초기의 ‘WB V8 native 기준’은 플랫폼/버전 차이를 충분히 고정하지 못했다. 실제 Chromium/Firefox와 Node26은`cos(0.1)`에서1ulp 다르므로 같은 JS 알고리즘을 명시했다. 초기 기준29행과 해시는 보존하고 변경1행/원인을[공통 자료 설명](../shared/modding/v0/conformance/README.md)에 기록했다. [V8 공식 이슈](https://issues.chromium.org/issues/510499297)도 native libm의 플랫폼별 비일치와 구현 전환을 설명한다. JS 포트는[stdlib 공식 원문](https://github.com/stdlib-js/math-base-special-cos)의 Sun/FreeBSD 기반 구현이며 라이선스/원문 고지도 배포한다. 임의 전체 입력의 정확 반올림을 증명하거나 다른 libm을 이름만으로 같은 구현이라 간주하지 않는다.
+
+고정 JS 함수에도 ES의 인수 ToNumber와 특별값 규칙을 적용한다. 특히 pow의`NaN**±0=1`, `±1**±Infinity=NaN`, 음수0/Infinity의 홀수 정수 지수 부호, 비정수 지수의 양수0/Infinity를 C 계열 구현의 최적화보다 먼저 처리한다. WB의`mod-math.js`가 이 의미를 정의하며 DN도 같은 shim을 사용한다. 게임 자체의 Math나 난수 장치는 수정하지 않는다.
 
 ## 6. 오류와 자원·격리
 
@@ -98,7 +102,7 @@ DN은 모드당 QuickJS runtime을 분리하고 quickjs-libc/std/os/파일/네�
 | 사건 | Ready 뒤 sessionStart, 원래 루프 경계의 게임 시간 tick, 종료 전 sessionEnd, 다음 입력 전 결과 확정 | R6 실제 Session 결선이 된 동일 경계에 바인딩 |
 | 실행/로드 | native JS 격리 실행·파일 선택·localStorage·기본 꺼짐 | MOD-2 엔진 → MOD-3 로더/수학 → MOD-4 바인딩 → MOD-5 GUI/LAN |
 
-진행: E1470 명세·E1471 순수API/공통 입력·E1472 실제 사본조회/큐·E1473 패키지/보관·E1474 분류등록·E1475/1476 두 전체를 완료했다. E1477은 AI 참가자 조회와 모드별 sequence/유계 결과16개를 보강한다. E1478은 opaque iframe/SES Worker·1000ms 실시간 중단·단일 번들·실제 Chromium/Firefox의 공통5경계 적합성을 완료했다([실행기/제약](webpj-mod-worker-isolation-20261128.md)). 남은 구현은 **실제 사건/시계 장벽·Options 관리·실제 Session 적합성**이다. 각 단위는 인계 갱신 후 커밋한다. 새 JS 소스는 한국어 설명 주석·ESLint 선행 빌드를 따른다.
+진행: E1470 명세·E1471 순수API/공통 입력·E1472 실제 사본조회/큐·E1473 패키지/보관·E1474 분류등록·E1475/1476 두 전체를 완료했다. E1477은 AI 참가자 조회와 모드별 sequence/유계 결과16개를 보강한다. E1478은 opaque iframe/SES Worker·1000ms 실시간 중단·단일 번들·실제 Chromium/Firefox의 공통5경계 적합성을 완료했다([실행기/제약](webpj-mod-worker-isolation-20261128.md)). E1479 시계/관리자와 E1480 실제Session 사건/장벽·고정JS수학/두브라우저285벡터를 연결했다([실제미션/교정/한계](webpj-mod-session-math-20261128.md)). 남은 WB 구현은 **파일선택/Options 관리 UI와 관리 경계 검증**이며 DN 실행은 중지 범위다. 각 단위는 인계 갱신 후 커밋한다. 새 JS 소스는 한국어 설명 주석·ESLint 선행 빌드를 따른다.
 
 공통 적합성에는 이름 정확 일치·조회 사본·구독 순서·독립 RNG golden·입력 FIFO/포화/수명/모달·오류 모드 단독 해제·기본 꺼짐·허용 모듈/경로 탈출·네트워크/DOM/컴파일 차단·무한 루프 종료·호스트 대기 중 게임 시계 보존을 포함한다. **같은 패키지**와 **같은 정규화 상태/사건/입력열**을 WB와 DN에 공급하고 결과 JSON을 비교한다. WB 통과와 DN 미실행을 분리 기록하며 DN 중지 중에는 양쪽 일치를 완료로 표시하지 않는다.
 

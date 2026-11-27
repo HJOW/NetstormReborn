@@ -162,6 +162,12 @@ import { Kernel } from './core/kernel.js';
 import { bindClientKernelDiagnostics, ClientTraceGlobals, logClientDisplayAssertion, traceClientObject, writeClientDiagnosticLog } from './core/client-diagnostics.js';
 import { ClientTimeSource } from './core/client-time-source.js';
 import { resetGameStorage } from './platform/reset-storage.js';
+// 공개 모드는 원래 Client의 사본/입력 경계와 별도 Worker에만 연결한다.
+import { ModTimeSource } from './modding/mod-time-source.js';
+import { ModGameHost } from './modding/mod-game-host.js';
+import { ModManager } from './modding/mod-manager.js';
+import { ModStore } from './modding/mod-store.js';
+import { ModWorker, validateModPackageIsolated } from './modding/mod-worker.js';
 import { PRODUCT_RESET_ALL_CONFIRMED_TARGET, PRODUCT_RESET_ALL_TARGET } from './assets/product.js';
 import { createCanvasGlyphRasterizer } from './platform/glyph-rasterizer.js';
 import { MainMenuScreen } from './ui/main-menu.js';
@@ -670,6 +676,8 @@ export class Netstorm {
         this._clock = new FrameClock();
         // Client 게임 시계와 보정 전역은 init에서 생성하고 destroy에서 반납한다.
         this._clientLocal = null; this._clientNsInfo = null; this._clientHelpPopup = null; this._gameClock = null; this._hiddenGamePause = false;
+        // 모드 관리자/시계 장벽/설치 검증 취소는 앱 수명마다 새로 만든다.
+        this._mods = null; this._modTimeSource = null; this._modValidation = null;
         // 실제 앱의 비고정 초기 시계가 UTC초 경계를 준비하는 동안에는 로딩 표시만 갱신한다.
         this._clientClockPreparing = false;
         // 같은 Client 수명의 구름·HTML과 연결표·연결 활동 전역이다.
@@ -908,6 +916,10 @@ export class Netstorm {
         this._audioStatus = 'none';
         // 저장된 설정을 읽는다(저장소를 쓸 수 없으면 기본값으로 계속). 호스트가 음량을 정했으면 저장하지 않고 우선 적용한다. (2026-10-29 WB03-F)
         const storage = getLocalStorage(doc.defaultView);
+        // 검증 적재는 앱 종료에 즉시 취소한다. 실행 Worker는 관리자가 마지막 사건 뒤 반납한다.
+        const modView = doc.defaultView, modValidation = new AbortController(); this._modValidation = modValidation;
+        const modStore = new ModStore({ storage, validatePackage: (input) => validateModPackageIsolated(input, { view: modView, signal: modValidation.signal }) });
+        this._mods = new ModManager({ host: new ModGameHost(this), source: this._modTimeSource, store: modStore, createWorker: (options) => ModWorker.open({ view: modView, ...options }), forcedOff: this.options.fixedFrameMs > 0 });
         this._settings = new Settings({ storage, onChange: (key) => this._onSettingChange(key) });
         if (this._settings.loadProblem) console.warn(`Netstorm: ${this._settings.loadProblem}. 기본 설정으로 시작합니다.`);
         if (this.options.soundVolume !== null) this._settings.set('soundVolume', this.options.soundVolume, { persist: false });
@@ -968,9 +980,10 @@ export class Netstorm {
     _initializeClientRuntime(hidden) {
         this._clientTrace = new ClientTraceGlobals();
         this._clientProductionGlobals = new ProductionMaintenanceGlobals();
-        const source = new ClientTimeSource(), random = new ClientRandomGlobals();
+        const nativeSource = new ClientTimeSource(), random = new ClientRandomGlobals();
         // 고정 시각 모드이면 시각 공급원이 프레임마다 정해진 밀리초만 전진한다(난수 초기화 전에 켜서 유닉스 초도 같은 값에서 시작한다). (2026-11-23 WB04-E1271)
-        if (this.options.fixedFrameMs > 0) source.enableFixed({ frameMilliseconds: this.options.fixedFrameMs });
+        if (this.options.fixedFrameMs > 0) nativeSource.enableFixed({ frameMilliseconds: this.options.fixedFrameMs });
+        const source = new ModTimeSource(nativeSource); this._modTimeSource = source;
         const sp = new ClientSpGlobals(random, () => source.unixSeconds()); sp.store().initialize();
         const local = new ClientLocalStateGlobals(), clock = new ClientFrameClock(source, local.gameTicks());
         // 고정 시각 모드: cpppj 고정 실행은 첫 주 루프 프레임 전에 시계가 4틱(0.1초) 흘러 첫 프레임의 게임 시각이 0.125초다. 시계 원점은 위에서 이미 잡았으므로 그 뒤에 4틱 전진해 같은 출발 시각으로 맞춘다. (2026-11-23 WB04-E1281)
@@ -1621,6 +1634,7 @@ export class Netstorm {
 
     // 현재 World의 Session을 반납하고 같은 미션 연결 대기 관문을 해제한다.
     _releaseCampaignWorld() {
+        this._mods?.end('leave');
         this._clearCampaignTutorialObjective();
         // World 가 없어도(State7 도중 실패 등) 이미 시작한 장면 음악은 메뉴 곡으로 되돌린다. (2026-11-20 WB04-E1119)
         this._endSceneMusic();
@@ -2470,6 +2484,9 @@ export class Netstorm {
     // init 도중 실패한 반쪽 상태도 이 함수가 정리하므로 상태 이름이 아니라 루트 요소의 유무로 판단한다.
     destroy() {
         if (!this._root) return;
+        // 저장 검증과 늦은 쓰기를 먼저 취소한다. 비동기 종료는 World/Session 사본만 보유한다.
+        this._modValidation?.abort(); this._modValidation = null;
+        this._mods?.dispose().catch((error) => reportGameError('mod-dispose', error)); this._mods = null;
         // 진행 중인 로딩 결과가 정리 뒤에 상태를 바꾸지 못하게 세대를 올린다.
         this._loadGeneration += 1;
         this._stopFrameLoop();
@@ -2494,7 +2511,7 @@ export class Netstorm {
         this._clientKencloud = null; this._clientHtml = null; this._clientConnections = null; this._clientConnectionActivity = null;
         this._surfaceStorage?.dispose();
         this._clientSoundDevice?.dispose(); this._clientSoundDevice = null; this._clientSoundPlayer = null; this._clientSoundState = null; this._clientSoundPrepare = null;
-        this._gameClock = null; this._clientClockPreparing = false; this._clientLocal = null; this._clientNsInfo = null; this._clientHelpPopup = null; this._hiddenGamePause = false; this._clientSoundNames = null;
+        this._gameClock = null; this._modTimeSource = null; this._clientClockPreparing = false; this._clientLocal = null; this._clientNsInfo = null; this._clientHelpPopup = null; this._hiddenGamePause = false; this._clientSoundNames = null;
         this._clientSp = null; this._clientRandom = null;
         this._clientChatRecords = null; this._clientChatChannels = null; this._clientChatWindows = null;
         this._clientChatManager = null; this._clientDotCommands = null; this._clientChatInitialized = false;
@@ -2566,6 +2583,8 @@ export class Netstorm {
         this._loadError = null;
         this._setState(AppState.LOADING);
         try {
+            // 코드는 검증만 하며 첫 실제 시계 원점/메뉴를 준비하기 전에 저장 목록을 읽는다.
+            await this._mods?.load(); if (generation !== this._loadGeneration || !this._root) return;
             // 같은Client의 SP/RNG 초기화 뒤 원본초경계와 최초Capture를 준비한다. 취소된이전앱의결과는 새수명에 적용하지 않는다.
             if (this._clientClockPreparing) {
                 const clock = this._gameClock;
@@ -3353,6 +3372,7 @@ export class Netstorm {
     // 마지막으로 시작한 미션을 떠난 뒤 같은 이름·모드로 다시 시작한다(원본 `MissionRestart`/Reload). 기록이 없으면 아무것도 하지 않는다. 다시 시작했으면 true 다. (2026-11-20 WB04-E1085)
     _restartCampaignMission() {
         const last = this._lastCampaignMission; if (!last || !this._clientGuide) return false;
+        this._mods?.end('restart');
         this._leaveCampaignMission(); this._clientGuide.begin(last.name, last.demo, last.mode, last.source ?? null); return true;
     }
 
@@ -4137,6 +4157,8 @@ export class Netstorm {
     _onFrame(now) {
         this._frameHandle = 0;
         if (!this._canvas) return;
+        // 대기 동안 Native 프레임/입력/Guide/Kernel/RNG는 진행하지 않고 DOM과 실제 시간 감시는 계속한다.
+        if (this._mods?.pending) { this._startFrameLoop(); return; }
         // 해상도 미디어/resize 알림이 없어도 현재 기기 배율을 맞춘다. 게임 프레임 상한과 시계 처리 전에 표시만 복구한다.
         if (this._root && Number.isFinite(this._layout?.devicePixelRatio) && this._layout.devicePixelRatio > 0) {
             const ratio = this._view()?.devicePixelRatio;
@@ -4179,6 +4201,7 @@ export class Netstorm {
         if (this._campaignDisplayActive() && !this._campaignProduction.worldBound) this._prepareCampaignProductionUi();
         // 원본 루프 8번의 Guide를 상태·패킷 처리 뒤, 입력 처리보다 먼저 실행한다.
         this._clientGuide?.run();
+        this._mods?.beforeInput();
         if (this._campaignDisplayActive()) this._runCampaignInputFrame();
         if (this._state === AppState.MAIN_MENU) {
             // 원본 UserInput 은 매 프레임 마우스 위치를 폴링해 Gump 에 알린다. 그래서 포인터가 멈춰 있어도 그 아래에 새로 열린 펼침 메뉴 행이 바로 강조된다
@@ -4206,6 +4229,7 @@ export class Netstorm {
         this._render(now);
         // 원본 주 루프 13번(439c33): 화면을 그린 뒤 Player 결과 알림을 한다. known 이고 전투 모드일 때만 Session 이 필요하다. (2026-11-22 WB04-E1233)
         if (this._campaignDisplayActive() && this._clientGameplay.player.playerKnown && this._surfaceStorage.ownerMode.battle) this._campaignWorld.session().notifyPlayerResults();
+        this._mods?.afterFrame();
         this._startFrameLoop();
     }
 

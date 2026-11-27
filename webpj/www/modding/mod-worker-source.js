@@ -20,11 +20,11 @@ export function decodeModWorkerPayload(payload) {
 }
 
 // debug.html도 생산 번들의 데이터만 읽으므로 별도 Worker 파일이나 별도 빌드가 필요 없다.
-export async function loadModWorkerSource({ view = globalThis, fetch = view.fetch?.bind(view) } = {}) {
+export async function loadModWorkerSource({ view = globalThis, fetch = view.fetch?.bind(view), signal } = {}) {
     if (typeof view[MOD_WORKER_PAYLOAD_KEY] === 'string') return decodeModWorkerPayload(view[MOD_WORKER_PAYLOAD_KEY]);
     if (import.meta.webpack) throw new ModError('scriptError', '번들에 모드 실행기가 없습니다. 빌드를 갱신하십시오.');
     if (typeof fetch !== 'function') throw new ModError('scriptError', '모드 실행기를 읽을 수 없습니다.');
-    const file = '../dist/netstorm.bundle.js', response = await fetch(new URL(file, MODULE_URL), { cache: 'no-store' });
+    const file = '../dist/netstorm.bundle.js', response = await fetch(new URL(file, MODULE_URL), { cache: 'no-store', ...(signal ? { signal } : {}) });
     if (!response.ok) throw new ModError('scriptError', `모드 실행기 번들 읽기 실패(${response.status})`);
     const bundle = await response.text(), matches = [...bundle.matchAll(/NETSTORM_MOD_WORKER_V0:[A-Za-z0-9+/=]+:END_NETSTORM_MOD_WORKER/gu)];
     if (matches.length !== 1) throw new ModError('scriptError', '번들의 모드 실행기 봉투가 없거나 중복되었습니다.');

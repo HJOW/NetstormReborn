@@ -83,3 +83,10 @@ test('사건 대기 중 이탈은 늦은 명령을 폐기하고 같은 VM에 마
     const newer = structuredClone(trace.cases[0].snapshot); newer.state.sessionId = 'session-9'; f.setSnapshot(newer); gate.resolve(); await f.manager.whenIdle(); f.manager.beforeInput();
     assert.equal(f.commits.length, 0); assert.equal(f.events.at(-1).event.name, 'sessionEnd'); assert.equal(f.events.at(-1).event.sequence, 3); assert.equal(f.events.at(-1).snapshot.state.gameSeconds, 1); assert.equal(worker.disposed, true); assert.equal(f.saves.length, 0); await f.manager.dispose();
 });
+
+test('미션 이탈은 아직 부팅 중인 Worker를 취소하고 오류 활성 저장을 바꾸지 않는다', async () => {
+    const f = fixture({ ids: ['test.a'] }), entered = deferred();
+    const manager = new ModManager({ host: f.host, source: f.source, store: f.store, createWorker: ({ signal }) => new Promise((resolve, reject) => { entered.resolve(); signal.addEventListener('abort', () => reject(new Error('부팅 취소')), { once: true }); }) });
+    await manager.load(); manager.afterFrame(); await entered.promise; manager.end('leave'); await manager.whenIdle();
+    assert.equal(manager.pending, false); assert.equal(f.saves.length, 0); await manager.dispose();
+});

@@ -19,12 +19,26 @@ function visit(directory) {
     fs.mkdirSync(path.join(output, folder), { recursive: true });
     // 원문 바이트를 변경하지 않는다. 상위 인덱스에 라이선스 식별자와 원본 파일명을 적는다.
     for (const name of names) fs.copyFileSync(path.join(directory, name), path.join(output, folder, name));
-    records.push({ name: pkg.name, version: pkg.version, license: pkg.license, files: names.map((name) => folder + '/' + name) });
+    // Sun/FreeBSD 등 이식 원문의 추가 조건도 보존한다. 최소화 때 사라지는 lib JS의 선두 고지를 함께 배포한다.
+    const headers = new Map();
+    // 패키지 자체 lib만 순회하고 node_modules나 개발 의존성의 원문은 중복 수집하지 않는다.
+    function collectHeaders(current) {
+        if (!fs.existsSync(current)) return;
+        for (const entry of fs.readdirSync(current, { withFileTypes: true })) {
+            const full = path.join(current, entry.name);
+            if (entry.isDirectory()) collectHeaders(full);
+            else if (entry.name.endsWith('.js')) { const header = fs.readFileSync(full, 'utf8').match(/^\s*(\/\*[\s\S]*?\*\/)/u)?.[1]; if (header && /@license|copyright/iu.test(header) && !headers.has(header)) headers.set(header, path.relative(directory, full).split(path.sep).join('/')); }
+        }
+    }
+    collectHeaders(path.join(directory, 'lib'));
+    if (headers.size) { const name = 'SOURCE-NOTICES.txt'; fs.writeFileSync(path.join(output, folder, name), [...headers].map(([header, source]) => source + '\n' + header).join('\n\n') + '\n'); names.push(name); }
+    // 같은 배포 패키지가 여러 node_modules 경로에 설치돼도 고지는 한 번만 열거한다.
+    if (!records.some((item) => item.name === pkg.name && item.version === pkg.version)) records.push({ name: pkg.name, version: pkg.version, license: pkg.license, files: names.map((name) => folder + '/' + name) });
     // npm의 선택/개발 의존성은 제외하고 실제 런타임 dependencies만 포함한다.
     for (const name of Object.keys(pkg.dependencies ?? {})) visit(locate(name, directory));
 }
 // SDK 진입점이 직접 import하는 네 패키지가 시작점이다.
-for (const name of ['ses', '@endo/module-source', '@endo/evasive-transform', 'acorn']) visit(locate(name, root));
+for (const name of ['ses', '@endo/module-source', '@endo/evasive-transform', 'acorn', '@stdlib/math-base-special-sin', '@stdlib/math-base-special-cos', '@stdlib/math-base-special-atan2', '@stdlib/math-base-special-pow']) visit(locate(name, root));
 records.sort((a, b) => a.name < b.name ? -1 : a.name > b.name ? 1 : a.version.localeCompare(b.version));
 fs.writeFileSync(path.join(output, 'index.json'), JSON.stringify({ description: '모드 격리 실행기의 직접/전이 의존성 라이선스 원문', packages: records }, null, 2) + '\n');
 process.stdout.write(JSON.stringify({ packages: records.length, output }) + '\n');

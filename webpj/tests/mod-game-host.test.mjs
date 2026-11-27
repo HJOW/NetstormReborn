@@ -13,7 +13,7 @@ function makeHost() {
     const spState = { initialized: true }, session = { localConnectionReady: () => true, spStorage: () => spState, playerRecords: () => records, alliances: () => alliances, sp: (owner) => { moneyReads.push(owner); return owner * 1000; }, localOwner: () => 1, core: () => ({ pool: { capacity: 5 } }), participation: () => participation };
     const world = { connecting: false, session: () => session, mapView: () => ({ left: 85, top: 0, right: 1024, bottom: 768 }), selected: () => 0 };
     const app = { _campaignDisplayActive: () => true, _clientInputQueue: new InputQueue(), _campaignWorld: world, _clientRandom: { fortCoreSeed: 1 }, _layout: { logicalWidth: 1024, logicalHeight: 768 }, _clientGuide: { current: () => ({ script: { name: 'TheWarBegins' } }) }, _gameClock: { time: () => ({ game: 0 }), paused: () => false } };
-    return { host: new ModGameHost(app), records, alliances, participation, moneyReads, spState };
+    return { host: new ModGameHost(app), app, records, alliances, participation, moneyReads, spState };
 }
 
 test('모드 조회: 로그인 없는 실제 AI도 포함하고 반납 뒤 남은 AI bit는 제외한다', () => {
@@ -36,4 +36,9 @@ test('모드 조회: SP 초기화 전에는 참가자 금액을 읽어서 초기
     const { host, spState, moneyReads } = makeHost(); spState.initialized = false;
     assert.equal(host.snapshot().state.sessionId, null); assert.deepEqual(host.snapshot().players, []); assert.deepEqual(moneyReads, []);
     spState.initialized = true; assert.deepEqual(host.snapshot().players.map((player) => player.owner), [1, 2]); host.dispose();
+});
+
+test('Guide 반납 뒤 World가 잠시 남아도 종료된 미션을 노출하지 않는다', () => {
+    const { host, app } = makeHost(); assert.equal(host.snapshot().state.sessionId, 'session-1'); app._clientGuide.current = () => null;
+    assert.equal(host.snapshot().state.sessionId, null); assert.deepEqual(host.snapshot().players, []); host.dispose();
 });

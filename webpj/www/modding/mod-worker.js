@@ -33,13 +33,18 @@ function frameBootstrap() {
 export class ModWorker {
     // DOM/메시지 자원과 단일 대기 요청은 브리지 수명 동안만 유지한다.
     #view; #frame; #port; #pending = null; #nextId = 1; #ready; #boot = null; #closed = false; #closeTimer = null;
+    // 앱 종료 중 SDK 부팅/설치 검증을 즉시 취소하는 호스트 전용 신호다.
+    #signal; #abort;
     // 신뢰 소스를 먼저 읽고 브라우저 장치가 준비된 인스턴스만 반환한다. source는 신뢰 시험 호스트의 주입점이다.
-    static async open({ view = globalThis, source } = {}) {
-        const worker = new ModWorker(view, source ?? await loadModWorkerSource({ view }));
+    static async open({ view = globalThis, source, signal } = {}) {
+        if (signal?.aborted) throw new ModError('disposed', '모드 실행기 적재가 취소되었습니다.');
+        const input = source ?? await loadModWorkerSource({ view, signal });
+        if (signal?.aborted) throw new ModError('disposed', '모드 실행기 적재가 취소되었습니다.');
+        const worker = new ModWorker(view, input, signal);
         await worker.#ready; return worker;
     }
     // sandbox에는 allow-same-origin을 주지 않는다. Worker Blob도 iframe 안에서 만들어 CSP를 상속한다.
-    constructor(view, source) {
+    constructor(view, source, signal) {
         this.#view = view;
         this.#ready = new Promise((resolve, reject) => { this.#boot = { resolve, reject, timer: view.setTimeout(() => this.#fail(new ModError('scriptError', '모드 실행기 시작 시간 초과')), BOOT_TIMEOUT) }; });
         try {
@@ -50,6 +55,9 @@ export class ModWorker {
             this.#port.onmessage = ({ data }) => this.#receive(data); this.#port.start();
             frame.onload = () => { if (!this.#closed) frame.contentWindow.postMessage({ source }, '*', [channel.port2]); };
             view.document.body.append(frame);
+            this.#signal = signal; this.#abort = () => this.dispose();
+            signal?.addEventListener('abort', this.#abort, { once: true });
+            if (signal?.aborted) this.dispose();
         } catch (error) { this.#fail(new ModError('scriptError', String(error?.message ?? error).slice(0, 2048))); }
     }
     // 실제 시간 감시 또는 규약 오류는 해당 Worker만 닫고 대기 Promise를 거절한다.
@@ -109,6 +117,7 @@ export class ModWorker {
     }
     // 반납 확인 이후에도 남는 DOM 콜백/메시지 closure를 끊는다.
     #cleanup() {
+        this.#signal?.removeEventListener('abort', this.#abort); this.#signal = null; this.#abort = null;
         if (this.#closeTimer !== null) this.#view.clearTimeout(this.#closeTimer);
         this.#closeTimer = null;
         if (this.#port) { this.#port.onmessage = null; this.#port.close(); this.#port = null; }

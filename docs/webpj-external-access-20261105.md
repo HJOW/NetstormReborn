@@ -117,3 +117,9 @@ Chromium [브라우저 검사](../webpj/e2e/external-opener.spec.js) 2건과 Nod
 CSS와 폰트 대기는 각각30초 상한이며 실패하면 경고 문맥을 console에 남기고 영어 자원/시작 안내/메뉴로 계속한다. 저장된 일본어 선택은 보존해 다시 선택하거나 새로고침해 재시도할 수 있다. 취소한 적재 세대와 실패는 자신이 만든 스타일시트 링크를 반납한다. 글꼴 TTF를 변환하거나 웹 배포 안에 복사하지 않는다.
 
 소스 감사는 `assets/japanese-asset-config.js`의 **정확한 고정 CSS 상수 선언 한 줄**만 URL 리터럴 검사에서 예외로 둔다. 다른 파일·다른 주소/글꼴·같은 줄에 붙인 추가 네트워크 코드는 계속 거부하는 음성 검사가 있다. 검증/업데이트 서버 요청의 금지는 유지한다. 실제 메뉴/언어 저장·CDN 차단과 진입 검증은 [일본어 구현 단위](webpj-japanese-browser-support-20261127.md)를 따른다.
+
+## 10. 모드 격리 실행기 (2026-11-28 WB04-E1478~E1480)
+
+운영 페이지는 같은 번들에 데이터로 들어 있는 신뢰 실행기를 사용하며 Worker JS를 별도 요청하지 않는다. Native debug만`modding/mod-worker-source.js`에서 같은 출처`dist/netstorm.bundle.js`를 텍스트로 읽어 봉투를 해독한다. 임의 주소/모드 URL을 받거나 읽은 번들을 평가하는 기능은 없다.
+
+불투명`allow-scripts` iframe 내부에서 자체 Blob URL로 Worker 하나를 만든다. iframe CSP는`worker-src blob:; connect-src 'none'`이며 guest에는 fetch/Worker/DOM/호스트 메시지 장치를 제공하지 않는다. Worker 생성 소스 감사 예외는`modding/mod-worker.js`의 정확한 Blob 생성 선언 한 줄뿐이다. 다른 파일·다른 Worker 인자·같은 줄에 붙인 코드의 거부 검사는 유지한다. 실제 Chromium/Firefox에서 신뢰 시험 Worker의 fetch도 차단되고 로컬 서버 도착0건임을 확인했다([실행기](webpj-mod-worker-isolation-20261128.md)). 구 검증 서버/외부 모드 다운로드는 계속 제공하지 않는다.

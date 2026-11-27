@@ -1,8 +1,23 @@
 {
   "provenance": {
-    "reference": "V8 native Math",
+    "reference": "stdlib-fdlibm-js-v0",
+    "packages": {
+      "@stdlib/math-base-special-sin": "0.3.1",
+      "@stdlib/math-base-special-cos": "0.3.1",
+      "@stdlib/math-base-special-atan2": "0.3.1",
+      "@stdlib/math-base-special-pow": "0.3.1"
+    },
+    "semantics": "고정 JS 구현 + ES Math ToNumber/NaN/부호0/Infinity 규칙",
     "node": "v26.13.0",
-    "engine": "14.6.202.34-node.40"
+    "supersedes": {
+      "reference": {
+        "reference": "V8 native Math",
+        "node": "v26.13.0",
+        "engine": "14.6.202.34-node.40"
+      },
+      "sha256": "fd2bcad22ad9c17ecc190fef27c03c496f353bb0a050d4a6ebe24f6fb6eee647",
+      "reason": "Chromium/Firefox와 Node26 native cos(0.1)의1ulp 차이로 엔진 libm 대신 고정 JS 프로필을 사용"
+    }
   },
   "vectors": [
     {
@@ -87,7 +102,7 @@
       "args": [
         "0.1"
       ],
-      "expected": "3fefd712f9a817c0"
+      "expected": "3fefd712f9a817c1"
     },
     {
       "name": "cos",

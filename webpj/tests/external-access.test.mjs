@@ -66,6 +66,21 @@ function allowJapaneseFontConstant(file, line) {
     return file === 'assets/japanese-asset-config.js' && line.trim() === expected ? line.replace(JAPANESE_CSS_URL, '') : line;
 }
 
+// 네트워크 Worker를 일반 허용하지 않는다. 불투명 frame에서 자체 Blob 하나를 만든 정확한 선언만 예외다.
+function allowModWorkerCreation(file, line) {
+    const declaration = "const url = URL.createObjectURL(new Blob([event.data.source], { type: 'text/javascript' })), worker = new Worker(url);";
+    return file === 'modding/mod-worker.js' && line.trim() === declaration ? line.replace('new Worker(url)', 'isolatedWorkerCreation') : line;
+}
+
+test('모드 Worker 감사 예외는 같은 Blob 선언 하나만 허용한다', () => {
+    const declaration = "const url = URL.createObjectURL(new Blob([event.data.source], { type: 'text/javascript' })), worker = new Worker(url);";
+    const caught = (file, line) => FORBIDDEN.some((pattern) => pattern.test(allowModWorkerCreation(file, line)));
+    assert.equal(caught('modding/mod-worker.js', declaration), false); assert.equal(caught('modding/other.js', declaration), true);
+    assert.equal(caught('modding/mod-worker.js', declaration + ' fetch(remote);'), true); assert.equal(caught('modding/mod-worker.js', declaration.replace('new Worker(url)', 'new Worker(remote)')), true);
+    const source = fs.readFileSync(path.join(WWW_ROOT, 'modding/mod-worker.js'), 'utf8');
+    assert.ok(source.includes("frame.setAttribute('sandbox', 'allow-scripts')")); assert.ok(source.includes("worker-src blob:; connect-src 'none'"));
+});
+
 // 소스감사예외가일반외부요청으로넓어지지않고정확한한선언만허용하는지독립예시로확인한다.
 test('일본어CDN소스예외: 고정주소한선언만허용하고추가코드/다른경로는거부한다', () => {
     const declaration = `export const JAPANESE_FONT_STYLESHEET = '${JAPANESE_CSS_URL}';`;
@@ -91,14 +106,14 @@ test('외부 접속 소스 감사: 같은출처자산과명시일본어CDN만허
     // 파일마다 코드 줄을 검사한다.
     for (const file of files) {
         codeLines(file).forEach((line, index) => {
-            for (const pattern of FORBIDDEN) if (pattern.test(allowJapaneseFontConstant(file, line))) violations.push(`${file}:${index + 1}: ${line.trim()}`);
+            for (const pattern of FORBIDDEN) if (pattern.test(allowModWorkerCreation(file, allowJapaneseFontConstant(file, line)))) violations.push(`${file}:${index + 1}: ${line.trim()}`);
             if (/\bfetch\b/i.test(line)) fetchUsers.add(file);
             if (/\bwindow\s*\.\s*open\s*\(/.test(line)) windowOpen.push(file);
             if (/createElement\(\s*['"`]a['"`]\s*\)/.test(line)) anchorUsers.push(file);
         });
     }
     assert.deepEqual(violations, []);
-    assert.deepEqual([...fetchUsers].sort(), ['assets/asset-loader.js', 'netstorm.js']);
+    assert.deepEqual([...fetchUsers].sort(), ['assets/asset-loader.js', 'modding/mod-worker-source.js', 'netstorm.js']);
     // 도움말 창 공장의 `window` 는 HelpWindow 지역 변수이며 window.open(topic) 은 첫 주제 열기이다(브라우저 창 열기 아님).
     assert.deepEqual(windowOpen, ['ui/help-window.js']);
     // 바깥 주소를 여는 앵커 요소(createElement('a'))는 열기 장치 한 파일에서만 만든다(WB03-AD). 다른 곳의 링크 열기·이동은 금지 패턴이 막는다.

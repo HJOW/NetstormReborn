@@ -5,6 +5,7 @@ import { evadeCensorSync } from '@endo/evasive-transform';
 import { parse } from 'acorn';
 import { ModRuntime, ModError, MOD_API_VERSION, copyModJson } from './mod-api.js';
 import { readModPackage, resolveModSpecifier } from './mod-package.js';
+import { createModMath } from './mod-math.js';
 
 // 메시지 권한은 신뢰 closure에만 남기고 guest에게는 공개 API만 전달한다.
 const send = globalThis.postMessage.bind(globalThis);
@@ -20,6 +21,8 @@ function register(text, sessionSeed) {
     // SES의 보수적인 import 문자열 검사를 값 보존 변환으로 피한다. 실제 import AST 검사는 이미 끝났다.
     for (const [name, source] of Object.entries(pkg.modules)) modules[name] = { source: new ModuleSource(evadeCensorSync(source, { sourceType: 'module', sourceUrl: name }).code, name) };
     const compartment = new globalThis.Compartment({ name: pkg.manifest.id, globals: { eval: undefined, Function: undefined, Compartment: undefined, Date: undefined, Promise: undefined }, modules, resolveHook: resolveModSpecifier, __options__: true });
+    // 주 realm의 Math.random이 아닌 이 Compartment의 tamed Math만 바탕으로 쓴다.
+    compartment.globalThis.Math = createModMath(compartment.globalThis.Math);
     Object.freeze(compartment.globalThis);
     const entry = compartment.importNow(pkg.manifest.entry);
     runtime = new ModRuntime({ modId: pkg.manifest.id, sessionSeed });

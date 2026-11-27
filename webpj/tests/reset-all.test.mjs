@@ -5,12 +5,13 @@ import { Netstorm } from '../www/netstorm.js';
 import { Settings, SETTINGS_STORAGE_KEY } from '../www/platform/settings.js';
 import { Progress, PROGRESS_STORAGE_KEY } from '../www/platform/progress.js';
 import { resetGameStorage } from '../www/platform/reset-storage.js';
+import { MOD_STORAGE_KEY } from '../www/modding/mod-store.js';
 import { buildOptionsItems } from '../www/ui/option-menus.js';
 import { PRODUCT_RESET_ALL_CONFIRMED_TARGET, PRODUCT_RESET_ALL_TARGET, productCreditsText } from '../www/assets/product.js';
 
 // 다른 사이트 항목을 포함한 가짜 저장소이다.
 function makeStorage() {
-    const values = new Map([[SETTINGS_STORAGE_KEY, 'settings'], [PROGRESS_STORAGE_KEY, 'progress'], ['other.app', 'other']]);
+    const values = new Map([[SETTINGS_STORAGE_KEY, 'settings'], [PROGRESS_STORAGE_KEY, 'progress'], [MOD_STORAGE_KEY, 'mods'], ['other.app', 'other']]);
     return {
         values,
         getItem: (key) => values.get(key) ?? null,
@@ -58,6 +59,7 @@ test('게임 저장만 초기화하고 새 설정과 진행은 최초 상태다'
     assert.equal(storage.getItem('other.app'), 'other');
     assert.equal(storage.getItem(SETTINGS_STORAGE_KEY), null);
     assert.equal(storage.getItem(PROGRESS_STORAGE_KEY), null);
+    assert.equal(storage.getItem(MOD_STORAGE_KEY), null);
     assert.equal(new Settings({ storage }).get('welcomeGiven'), 0);
     assert.deepEqual(new Progress({ storage }).snapshot(), {});
 });
@@ -72,6 +74,13 @@ test('부분 삭제 실패는 기존 값을 복구하고 원인을 전달한다'
     assert.equal(storage.getItem(SETTINGS_STORAGE_KEY), 'settings');
     assert.equal(storage.getItem(PROGRESS_STORAGE_KEY), 'progress');
     assert.equal(storage.getItem('other.app'), 'other');
+});
+
+test('모드 삭제 실패도 앞서 지운 설정/진행을 복원한다', () => {
+    const storage = makeStorage(), remove = storage.removeItem;
+    storage.removeItem = (key) => { if (key === MOD_STORAGE_KEY) throw new Error('모드 삭제 거부'); remove(key); };
+    assert.throws(() => resetGameStorage(storage), /모드 삭제/u);
+    assert.equal(storage.getItem(SETTINGS_STORAGE_KEY), 'settings'); assert.equal(storage.getItem(PROGRESS_STORAGE_KEY), 'progress'); assert.equal(storage.getItem(MOD_STORAGE_KEY), 'mods'); assert.equal(storage.getItem('other.app'), 'other');
 });
 
 // 확인 창을 거치지 않은 확정은 아무 값도 바꾸지 않는다(다른 Tell·링크가 같은 이름을 보내도 무시).
