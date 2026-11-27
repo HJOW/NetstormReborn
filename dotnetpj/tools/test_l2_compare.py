@@ -1,5 +1,6 @@
 """L2 수집기의 잘못된 필드 위치·메뉴 덤프·누락 경로를 검출한다. 게임은 실행하지 않는다."""
 
+import struct
 import tempfile
 from pathlib import Path
 import unittest
@@ -22,13 +23,29 @@ class L2CompareTests(unittest.TestCase):
             left[36], right[36] = 1, 2
             # 양쪽 프레임 상위WORD는 같고 하위BYTE만 달라 잘못된+38비교를 검출한다.
             for path, raw in ((cpp, left), (dn, right)):
-                path.write_text("netstorm_session_dump\t1\nrandom\t1\t2\nworld\t1\nslot\t6\t" + raw.hex() + "\nend\n", encoding="ascii")
+                path.write_text("netstorm_session_dump\t1\nframe\t40\t4607182418800017408\nrandom\t1\t2\nworld\t1\nslot\t6\t" + raw.hex() + "\nend\n", encoding="ascii")
             result = l2_compare.compare(cpp, dn)
+            self.assertTrue(result["game_time_bits_equal"])
+            self.assertEqual({"frame": 40, "game_bits": 4607182418800017408, "game_seconds": 1.0}, result["cpp_clock"])
             self.assertEqual(1, result["type_equal"])
             self.assertEqual(1, result["owner_equal"])
             self.assertEqual(0, result["frame_equal"])
             self.assertFalse(result["l2_equal"])
             self.assertTrue(l2_compare.compare(cpp, cpp)["l2_equal"])
+
+    def test_clock_detects_different_game_time_and_rejects_invalid_rows(self):
+        """같은 프레임의 다른 실제 시각을 분리하고 손상된 행을 성공으로 처리하지 않는다."""
+        def clock(value):
+            """시험용 배정밀도 값을 실제 덤프의 정수 비트로 바꾼다."""
+            return str(struct.unpack("<Q", struct.pack("<d", value))[0])
+        left = [["frame", "40", clock(9.35)]]
+        right = [["frame", "40", clock(1.0)]]
+        self.assertNotEqual(l2_compare.frame_clock(left)["game_bits"], l2_compare.frame_clock(right)["game_bits"])
+        self.assertEqual(9.35, l2_compare.frame_clock(left)["game_seconds"])
+        # 누락, 중복, 범위 초과와 비유한 시각은 실제 대조에서 오류다.
+        for rows in ([], left + left, [["frame", "40", "18446744073709551616"]], [["frame", "40", clock(float("nan"))]]):
+            with self.assertRaises(ValueError):
+                l2_compare.frame_clock(rows)
 
     def test_menu_dump_is_rejected(self):
         """실행이0종료해도 world0이면 미션 기준선으로 세지 않는다."""

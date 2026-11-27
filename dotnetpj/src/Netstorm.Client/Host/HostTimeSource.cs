@@ -14,7 +14,7 @@ public sealed record HostFixedTime(
 
 /// <summary>호스트가 읽는 OS 시각(밀리초·유닉스 초)의 단일 공급원이다.
 /// 기본은 OS 시계를 그대로 읽어 기존 동작과 같다. 검사 전용 고정 시각 모드(--fixed-frame-ms)를 켜면
-/// 프레임마다 정해진 밀리초만큼만 전진하는 가상 시계를 돌려주어, 같은 입력 단계표의 두 실행이 같은 시각을 쓰게 한다.
+/// 프레임마다 정해진 밀리초만큼만 전진하는 가상 시계를 돌려준다. 시작 대기·정지 경로가 다르면 같은 프레임 번호도 같은 게임 시각을 보장하지 않는다.
 /// 근거: cpppj/src/client/ClientTimeSource.h·ClientTimeSource.cpp. (2026-11-10 L2·L3 장치에서 추가했다)
 /// cpppj와 달리 프로세스 전역이 아니라 호스트가 소유하는 인스턴스다. 같은 프로세스에 호스트는 하나다.</summary>
 public sealed class HostTimeSource

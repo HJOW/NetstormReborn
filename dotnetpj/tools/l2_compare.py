@@ -8,6 +8,7 @@ AGENTS.md 예외 호스트에서만 허용하며 원본 대신 extracted의 사�
 import argparse
 import hashlib
 import json
+import math
 import os
 from pathlib import Path
 import socket
@@ -56,6 +57,23 @@ def read_dump(path):
     return rows
 
 
+def frame_clock(rows):
+    """덤프의 실제 프레임 번호와 배정밀도 게임 시각을 읽어 시간 조건을 분리한다."""
+    frames = [row for row in rows if row[0] == "frame"]
+    if len(frames) != 1 or len(frames[0]) != 3:
+        raise ValueError("프레임 행 누락 또는 중복")
+    try:
+        number, bits = int(frames[0][1]), int(frames[0][2])
+        if not 0 <= number <= 0xffffffffffffffff or not 0 <= bits <= 0xffffffffffffffff:
+            raise ValueError("프레임 또는 시각 비트 범위 초과")
+        seconds = struct.unpack("<d", struct.pack("<Q", bits))[0]
+    except (ValueError, OverflowError, struct.error) as error:
+        raise ValueError("프레임 또는 시각 비트가 잘못됨") from error
+    if not math.isfinite(seconds):
+        raise ValueError("게임 시각이 유한하지 않음")
+    return {"frame": number, "game_bits": bits, "game_seconds": seconds}
+
+
 def slots(rows):
     """SID를 키로 슬롯 전체 바이트를 반환하며 중복 SID를 거부한다."""
     result = {}
@@ -100,11 +118,14 @@ def compare(cpp_path, dn_path):
     """전체 행 일치와 SID/타입/소유자/프레임별 일치 수를 함께 반환한다."""
     cpp_rows, dn_rows = read_dump(cpp_path), read_dump(dn_path)
     cpp, dn = slots(cpp_rows), slots(dn_rows)
+    cpp_clock, dn_clock = frame_clock(cpp_rows), frame_clock(dn_rows)
     common = cpp.keys() & dn.keys()
     graph_cpp = {row[1]: row[2:] for row in cpp_rows if row[0] == "graph"}
     graph_dn = {row[1]: row[2:] for row in dn_rows if row[0] == "graph"}
     return {
         "l2_equal": cpp_rows == dn_rows,
+        "cpp_clock": cpp_clock, "dn_clock": dn_clock,
+        "game_time_bits_equal": cpp_clock["game_bits"] == dn_clock["game_bits"],
         "cpp_slots": len(cpp), "dn_slots": len(dn), "common_slots": len(common),
         "cpp_only": len(cpp.keys() - dn.keys()), "dn_only": len(dn.keys() - cpp.keys()),
         "type_equal": sum(cpp[sid][10] == dn[sid][10] for sid in common),
