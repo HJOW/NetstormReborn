@@ -26,12 +26,30 @@ export function convertIndexedToRgba(pixels, lookup, output) {
 }
 
 // 바뀐 논리 사각형의 색 번호만 같은 전체 RGBA 예약에 쓴다. 바깥 픽셀은 보존한다.
-function convertIndexedRectToRgba(pixels, lookup, output, width, rect) {
+function convertIndexedRectToRgba(pixels, lookup, output, width, rect, previous) {
+    // 네 BYTE의 비교만 하므로 호스트 바이트 순서와 무관하다. 미리 검사한 현재 입력과 예약만 보기를 빌린다.
+    const currentWords = previous ? new Uint32Array(pixels.buffer, pixels.byteOffset, Math.floor(pixels.length / 4)) : null;
+    const previousWords = previous ? new Uint32Array(previous.buffer, previous.byteOffset, Math.floor(previous.length / 4)) : null;
     // 각 행의 exclusive 오른쪽 끝까지 현재 팔레트를 적용한다.
     for (let y = rect.top; y < rect.bottom; y += 1) {
         const end = y * width + rect.right;
-        // 현재 행에서 바뀐 픽셀에만 같은 팔레트 값을 쓴다.
-        for (let index = y * width + rect.left; index < end; index += 1) output[index] = lookup[pixels[index]];
+        let index = y * width + rect.left;
+        if (previous) {
+            // 행 앞의 비정렬 BYTE는 같은 팔레트와 이전 색 번호를 함께 갱신한다.
+            for (; index < end && (index & 3); index += 1) { output[index] = lookup[pixels[index]]; previous[index] = pixels[index]; }
+            // 이전 출력과 색 번호가 같은 네 픽셀은 이미 같은 RGBA이므로 그대로 보존한다.
+            for (; index + 3 < end; index += 4) {
+                const word = index >>> 2, current = currentWords[word];
+                if (previousWords[word] === current) continue;
+                previousWords[word] = current;
+                output[index] = lookup[pixels[index]];
+                output[index + 1] = lookup[pixels[index + 1]];
+                output[index + 2] = lookup[pixels[index + 2]];
+                output[index + 3] = lookup[pixels[index + 3]];
+            }
+        }
+        // 줄 끝과 일반 배열 입력은 기존 한 BYTE씩의 결과/범위를 보존한다.
+        for (; index < end; index += 1) { output[index] = lookup[pixels[index]]; if (previous) previous[index] = pixels[index]; }
     }
 }
 
@@ -58,6 +76,8 @@ export class IndexedPresenter {
         this.imageData = null;
         // imageData 의 Uint32 보기다.
         this.imageWords = null;
+        // 마지막 RGBA에 반영한 색 번호 사본이다. 새 팔레트/크기에서는 전체 복원한다.
+        this.previousIndices = null;
         // 정수 배율 최근접 확대 결과를 담는 Canvas 다('sharp' 방식에서만 쓴다).
         this.scaled = null;
         // scaled 의 2D 컨텍스트다.
@@ -91,6 +111,7 @@ export class IndexedPresenter {
         this.sourceContext = this.source.getContext('2d');
         this.imageData = this.sourceContext.createImageData(width, height);
         this.imageWords = new Uint32Array(this.imageData.data.buffer);
+        this.previousIndices = null;
         this.scaledFactor = 0;
         this.stale = true;
     }
@@ -106,12 +127,19 @@ export class IndexedPresenter {
             right: Math.max(0, Math.min(surface.width, dirtyRect.right | 0)), bottom: Math.max(0, Math.min(surface.height, dirtyRect.bottom | 0)),
         } : null;
         if (changed || this.stale) {
+            // 같은 길이의 독립·정렬된 BYTE 입력만 이전 색 번호와 비교한다. 다른 입력은 기존 변환으로 복원한다.
+            const snapshotSource = surface.pixels instanceof Uint8Array && surface.pixels.byteOffset % 4 === 0 && surface.pixels.length === this.imageWords.length && surface.pixels.buffer !== this.imageWords.buffer;
+            if (!snapshotSource) this.previousIndices = null;
             if (dirty) {
                 if (dirty.right <= dirty.left || dirty.bottom <= dirty.top) return;
-                convertIndexedRectToRgba(surface.pixels, this.lookup, this.imageWords, surface.width, dirty);
+                convertIndexedRectToRgba(surface.pixels, this.lookup, this.imageWords, surface.width, dirty, this.previousIndices);
                 this.sourceContext.putImageData(this.imageData, 0, 0, dirty.left, dirty.top, dirty.right - dirty.left, dirty.bottom - dirty.top);
             } else {
                 convertIndexedToRgba(surface.pixels, this.lookup, this.imageWords);
+                if (snapshotSource) {
+                    this.previousIndices ??= new Uint8Array(this.imageWords.length);
+                    this.previousIndices.set(surface.pixels);
+                }
                 this.sourceContext.putImageData(this.imageData, 0, 0);
             }
             this.stale = false;
@@ -161,6 +189,8 @@ export class IndexedPresenter {
         this.sourceContext = null;
         this.imageData = null;
         this.imageWords = null;
+        // 마지막 RGBA에 반영한 색 번호 사본이다. 새 팔레트/크기에서는 전체 복원한다.
+        this.previousIndices = null;
         this.scaled = null;
         this.scaledContext = null;
         this.scaledFactor = 0;

@@ -24,6 +24,38 @@ test('부분 표시: 팔레트/크기 변경 전체 복원과 비정수 배율 �
  const rgb=new Uint8Array(768);rgb[91*3+1]=225;s.presenter.setPalette(rgb);s.uploads.length=0;s.draws.length=0;s.presenter.present(s.context,s.surface,s.layout,true,{left:2,top:1,right:6,bottom:4});assert.equal(s.uploads[0].length,3);assert.deepEqual(Array.from(s.presenter.imageWords),new Array(48).fill(s.presenter.lookup[91]));assert.equal(s.draws[0].length,5);
  const larger=new IndexedSurface(10,8);larger.fill(91);s.uploads.length=0;s.presenter.present(s.context,larger,{canvasWidth:10,canvasHeight:8},true,{left:2,top:1,right:3,bottom:2});assert.equal(s.uploads[0].length,3);assert.equal(s.presenter.imageWords.length,80);assert.ok(s.presenter.imageWords.every(x=>x===s.presenter.lookup[91]));
 });
+// 행 폭·BYTE 시작 위치·다시 돌아온 색 번호와 팔레트 교체를 섞어 이전 출력과 독립 계산한다.
+test('부분 표시: 76개 비정렬 입력의 반복 변경·외부 영역 보존·팔레트/전체/반납 복원',()=>{
+ // 네 BYTE 경계의 모든 시작 위치와 홀수 행 폭을 포함한다.
+ for(let width=1;width<=19;width++)for(let offset=0;offset<4;offset++){
+  const s=scene(width,5),bytes=new Uint8Array(width*5+offset),pixels=bytes.subarray(offset),expected=new Uint32Array(width*5);s.surface.pixels=pixels;
+  // 독립 기대값은 표시를 요청한 영역에만 현재 팔레트를 적용한다.
+  const apply=(rect)=>{for(let y=0;y<5;y++)for(let x=0;x<width;x++)if(!rect||(x>=rect.left&&x<rect.right&&y>=rect.top&&y<rect.bottom))expected[y*width+x]=s.presenter.lookup[pixels[y*width+x]];};
+  for(let i=0;i<pixels.length;i++)pixels[i]=(i*37+offset)&255;s.presenter.present(s.context,s.surface,s.layout,true);apply(null);
+  // 같은 색·바뀐 색·이전 색으로 돌아온 경우를 실제 present 호출로 번갈아 보낸다.
+  for(let step=0;step<24;step++){
+   const rect={left:step%width,top:step%5,right:width,bottom:5};
+   for(let i=0;i<pixels.length;i++)if((i+step)%7===0)pixels[i]=step%3===0?0:(i*37+step*19)&255;
+   let dirty=rect;
+   if(step===7){const rgb=Uint8Array.from({length:768},(_,i)=>(i*13)&255);s.presenter.setPalette(rgb);dirty=null;}
+   if(step===13)dirty=null;
+   if(step===18){s.presenter.release();dirty=null;}
+   s.presenter.present(s.context,s.surface,s.layout,true,step===7||step===18?rect:dirty);apply(dirty);assert.deepEqual(s.presenter.imageWords,expected,`${width}/${offset}/${step}`);
+  }
+ }
+});
+// 특수 입력에서는 기존 BYTE 변환을 사용하며 그 다음 일반 입력이 이전 사본에 가려지면 안 된다.
+test('부분 표시: 일반 배열·길이 차이·출력과 공유한 입력의 기존 순서 보존',()=>{
+ const s=scene(8,6),rect={left:1,top:1,right:7,bottom:5};
+ for(const pixels of [new Array(48).fill(17),new Uint8Array(52).fill(29),new Uint8Array(48).fill(51)]){
+  s.surface.pixels=pixels;const expected=s.presenter.imageWords.slice();for(let y=rect.top;y<rect.bottom;y++)for(let x=rect.left;x<rect.right;x++)expected[y*8+x]=s.presenter.lookup[pixels[y*8+x]];
+  s.presenter.present(s.context,s.surface,s.layout,true,rect);assert.deepEqual(s.presenter.imageWords,expected);
+ }
+ // 출력과 같은 버퍼를 읽는 경우에는 앞선 DWORD 쓰기가 뒤 BYTE 읽기에 미치는 영향도 같아야 한다.
+ s.surface.pixels=new Uint8Array(s.presenter.imageWords.buffer,0,48);const expected=s.presenter.imageWords.slice(),source=new Uint8Array(expected.buffer,0,48);
+ for(let y=rect.top;y<rect.bottom;y++)for(let x=rect.left;x<rect.right;x++)expected[y*8+x]=s.presenter.lookup[source[y*8+x]];
+ s.presenter.present(s.context,s.surface,s.layout,true,rect);assert.deepEqual(s.presenter.imageWords,expected);
+});
 // 실제 Screen의 행 간격과 변경 경계가 표시기까지 그대로 전달돼야 한다.
 test('Client 부분 표시: DIB 패딩 제외 복사와 같은 변경 사각형 전달',()=>{
  const app=new Netstorm(),surface=new IndexedSurface(7,4),calls=[],rect={left:1,top:1,right:4,bottom:3},pixels=new Uint8Array(32);surface.fill(5);pixels.fill(71);app._surface=surface;app._layout={logicalWidth:7,logicalHeight:4,visible:true};app._ctx={};app._presenter={present(...args){calls.push(args);}};app._presentClientScreen(rect,{width:7,height:4,pitch:8,pixels});

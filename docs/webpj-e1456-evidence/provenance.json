@@ -1,0 +1,321 @@
+{
+  "unit": "WB04-E1456",
+  "verifiedAt": "2026-11-27T22:48:30.048372+09:00",
+  "headBeforeCommit": "723347a1e321f78d0c455530707bf27803b1b093",
+  "sourceSha256": {
+    "www/netstorm.js": "d328528e812750c8213235e4703b5ee6d61002488e0ea81e5a201bd67ded44cf",
+    "www/render/presenter.js": "1512ecaa8abdb53436661938ffb0e90518f72eab146950eeb3a4b7c4f8511176",
+    "www/render/screen.js": "eeff43364764b0a19b03acf59a7a85e3a7810a5f5f4be4f9f9b33335fabb9c50",
+    "www/core/raw-surface-world.js": "31986ce5c01d0dd6f7c5da469279e26f35af6ce64da2f960aafb9130cc9a7b79"
+  },
+  "testSha256": "1762c04034a68a38a8c3b63a7bb9d6a11af38bf3c551af4471e57047fd215e27",
+  "bundleBytes": 3517725,
+  "checks": {
+    "beforeBehavior": 9,
+    "candidateBehavior": 9,
+    "mainFocus": 37,
+    "build": 0,
+    "bundleFresh": 1,
+    "chromiumL2": 1,
+    "canvasCheckpoints": 16,
+    "canvasPixelDifferences": 0,
+    "dumpDifferencesExceptExistingSp0PlayerAddressPolicy": 0,
+    "scalingCases": 72,
+    "scalingPixelDifferences": 0
+  },
+  "mainSamples": [
+    {
+      "rate": 60,
+      "interval": 0,
+      "fps": 54.86410634169315,
+      "seconds": 30.00140000000596,
+      "gameDelta": 30.00099999969825,
+      "heapAfterGc": {
+        "usedSize": 34223084,
+        "totalSize": 38313984,
+        "embedderHeapUsedSize": 5465288,
+        "backingStorageSize": 61556859
+      }
+    },
+    {
+      "rate": 60,
+      "interval": 1,
+      "fps": 54.748718700161724,
+      "seconds": 30.02809999999404,
+      "gameDelta": 30.027999999932945,
+      "heapAfterGc": {
+        "usedSize": 32199824,
+        "totalSize": 38313984,
+        "embedderHeapUsedSize": 5482064,
+        "backingStorageSize": 58196485
+      }
+    },
+    {
+      "rate": 120,
+      "interval": 0,
+      "fps": 54.70525130431958,
+      "seconds": 30.01540000000596,
+      "gameDelta": 30.015999999828637,
+      "heapAfterGc": {
+        "usedSize": 34610836,
+        "totalSize": 38838272,
+        "embedderHeapUsedSize": 5489400,
+        "backingStorageSize": 58513456
+      }
+    },
+    {
+      "rate": 120,
+      "interval": 1,
+      "fps": 52.640165678356055,
+      "seconds": 30.03409999999404,
+      "gameDelta": 30.0339999999851,
+      "heapAfterGc": {
+        "usedSize": 35745620,
+        "totalSize": 40411136,
+        "embedderHeapUsedSize": 5466784,
+        "backingStorageSize": 58602164
+      }
+    }
+  ],
+  "beforeCpuSelfSeconds": {
+    "convertIndexedRectToRgba": 5.189102,
+    "(program)": 2.086398,
+    "collect": 0.862387,
+    "(idle)": 0.717036,
+    "drawIndexedImage": 0.706684,
+    "putImageData": 0.633747,
+    "refreshCampaignObjects": 0.587477,
+    "findKey": 0.545996,
+    "bytes": 0.444764,
+    "#intersects": 0.303814,
+    "(garbage collector)": 0.291976,
+    "draw": 0.183616
+  },
+  "firstCandidateCpuSelfSeconds": {
+    "(idle)": 2.551679,
+    "(program)": 2.377502,
+    "drawIndexedImage": 0.984933,
+    "collect": 0.9726,
+    "refreshCampaignObjects": 0.75283,
+    "convertIndexedRectToRgba": 0.684613,
+    "putImageData": 0.676636,
+    "collectorCapacity": 0.59819,
+    "#intersects": 0.495478,
+    "findKey": 0.397137,
+    "draw": 0.356299,
+    "(garbage collector)": 0.324849
+  },
+  "rawMetadataQualification": "current-profile의product에는복사한옛E1450표기가남음;scope/실행URL은E1454본소스대체0. 첫cache CPU후에입력형식/별칭가드를보강했으므로그CPU를최종소스동일성근거로쓰지않음. 최종판정은고정SHA의main-profile과픽셀/노드검사.",
+  "rawArtifacts": [
+    {
+      "path": "webpj/extracted/e1456-before-focus.log",
+      "bytes": 1260,
+      "sha256": "5207242ae931f40c7a8c092e56a0f6b7eeb71e830e5a9c23a3654663316ed224"
+    },
+    {
+      "path": "webpj/extracted/e1456-build.log",
+      "bytes": 462,
+      "sha256": "7d4dac61868195fbade2719f603bcfd00d3a75893a409375598be11d0b8366da"
+    },
+    {
+      "path": "webpj/extracted/e1456-bundle.log",
+      "bytes": 247,
+      "sha256": "5981562260884d7d0f4c7700842ea773e28da20b875ee4279a3ccb137b7aaac8"
+    },
+    {
+      "path": "webpj/extracted/e1456-cache-1920.cpuprofile",
+      "bytes": 435032,
+      "sha256": "e5c3781c042d9e5b5b29625c76d1642b68a816200d2e2fc2b4aace8611d44dbd"
+    },
+    {
+      "path": "webpj/extracted/e1456-cache-canvas-before-wide.png",
+      "bytes": 1128210,
+      "sha256": "b70b556fe51501f26f7d86798afe4d99aac36e911249f63263e00779d1e583e4"
+    },
+    {
+      "path": "webpj/extracted/e1456-cache-canvas-before.tsv",
+      "bytes": 319909,
+      "sha256": "9d27ee5cda1eaa1caea6e18b85f4b5035f777d69f9b1ebe21ff00fec1c2b6050"
+    },
+    {
+      "path": "webpj/extracted/e1456-cache-canvas-candidate-wide.png",
+      "bytes": 1128210,
+      "sha256": "b70b556fe51501f26f7d86798afe4d99aac36e911249f63263e00779d1e583e4"
+    },
+    {
+      "path": "webpj/extracted/e1456-cache-canvas-candidate.tsv",
+      "bytes": 319909,
+      "sha256": "9d27ee5cda1eaa1caea6e18b85f4b5035f777d69f9b1ebe21ff00fec1c2b6050"
+    },
+    {
+      "path": "webpj/extracted/e1456-cache-canvas-dump-differences.json",
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    {
+      "path": "webpj/extracted/e1456-cache-canvas.cjs",
+      "bytes": 6544,
+      "sha256": "bf8a068859a2300de9385b3a874cc67a3f6dd98a19bc66d7555873312439a7a2"
+    },
+    {
+      "path": "webpj/extracted/e1456-cache-canvas.json",
+      "bytes": 701595,
+      "sha256": "4e5b2d09b4f8b84014a1d330ee64997f462e30ec277e2b48046bf7cc958d7e8b"
+    },
+    {
+      "path": "webpj/extracted/e1456-cache-canvas.log",
+      "bytes": 7346,
+      "sha256": "4e19da40d94a5f317477c390fdb1b3a3813837526afe189478cc65a67d2e8a9e"
+    },
+    {
+      "path": "webpj/extracted/e1456-cache-mission-1920.png",
+      "bytes": 1096714,
+      "sha256": "a3da273b081cd1dfc7db8a8a74d968d8525d30b4346bc5c391159c55ff373dea"
+    },
+    {
+      "path": "webpj/extracted/e1456-cache-profile.cjs",
+      "bytes": 13548,
+      "sha256": "9fd3329162b44f1c137103374c8950e5d17326ee4dcb653ea0fa8829ad1f515b"
+    },
+    {
+      "path": "webpj/extracted/e1456-candidate-eslint.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "path": "webpj/extracted/e1456-candidate-focus.log",
+      "bytes": 1617,
+      "sha256": "14c90906626ca28ac3649ef319436caa4c32a637ce9747afcb60c33f13eacdd9"
+    },
+    {
+      "path": "webpj/extracted/e1456-close.py",
+      "bytes": 9399,
+      "sha256": "8e9ffe1c4156dca086e6d47948daab46b14bde2d6948b608afeb75bb2586fb37"
+    },
+    {
+      "path": "webpj/extracted/e1456-convert-bench.cjs",
+      "bytes": 4061,
+      "sha256": "d4abb8378c3216d59314ead23f3a052018843629e6f68aeccfd08d0cd831615c"
+    },
+    {
+      "path": "webpj/extracted/e1456-convert-bench.json",
+      "bytes": 1915,
+      "sha256": "f31fe4469f42d95468f9ec411fcb87ed993e2b279640e92d7bb04c1a275d24ff"
+    },
+    {
+      "path": "webpj/extracted/e1456-convert-bench.log",
+      "bytes": 1270,
+      "sha256": "f721f17e622ba30a2db226de8016da4caefd2123e9ee9cec8c6e86de694f6657"
+    },
+    {
+      "path": "webpj/extracted/e1456-current-1920.cpuprofile",
+      "bytes": 331252,
+      "sha256": "20f7ccd8ae6f414a783d14a0cbf916bab1a9e4419135f91846460e88cc12cd1f"
+    },
+    {
+      "path": "webpj/extracted/e1456-current-mission-1920.png",
+      "bytes": 1080467,
+      "sha256": "e2fe39b9816a14a36c860683958429a9fc62a4240f3f67aa09a574861812592d"
+    },
+    {
+      "path": "webpj/extracted/e1456-current-profile.cjs",
+      "bytes": 13327,
+      "sha256": "b8448705b44253c934bf91dca4f8672c9f28fe69cda6245fffd8d2cc2772fa38"
+    },
+    {
+      "path": "webpj/extracted/e1456-l2.log",
+      "bytes": 402,
+      "sha256": "1b1b2915a33f3a55ed118f1eeb021e1b6f8401bcfb7bcf604161f00fb285fd62"
+    },
+    {
+      "path": "webpj/extracted/e1456-loader.mjs",
+      "bytes": 443,
+      "sha256": "2aa84c25c2ee010758d024bbf468da1fa4943b4a2524fbdce775e8a187116a64"
+    },
+    {
+      "path": "webpj/extracted/e1456-main-focus.log",
+      "bytes": 5556,
+      "sha256": "b0a4d30dda0978af5dcd58c57143b56f6c17b7b2ec2433b6690b725afe34ea99"
+    },
+    {
+      "path": "webpj/extracted/e1456-main-mission-120.png",
+      "bytes": 1089459,
+      "sha256": "8e7e73edafa5a421730f358914a89031a9a5dfc4cad338766dd347f5b2e747cd"
+    },
+    {
+      "path": "webpj/extracted/e1456-main-mission-60.png",
+      "bytes": 1091840,
+      "sha256": "658e560938c6c7e1311eacfb18e578428ab26cb0b79eae540e953f47849472bf"
+    },
+    {
+      "path": "webpj/extracted/e1456-main-profile.cjs",
+      "bytes": 12439,
+      "sha256": "d666384e8c001c50ae355c2a07d91b7d1025114db79ea5d842553d9125dca8ae"
+    },
+    {
+      "path": "webpj/extracted/e1456-port-map.log",
+      "bytes": 1349,
+      "sha256": "fcc05781df5d08a49f42a34deaf1f1416f1a0bba4bd052726face682528836dd"
+    },
+    {
+      "path": "webpj/extracted/e1456-promotion.json",
+      "bytes": 274,
+      "sha256": "43fc52e281d371a09129a66df964648e62513dded4fb2c23465ca3a0db5684dc"
+    },
+    {
+      "path": "webpj/extracted/e1456-scaling.cjs",
+      "bytes": 3537,
+      "sha256": "cb82eaae3ed9885cee08c20630a0d5cd68f2d67804df61c76923824e5bbad62a"
+    },
+    {
+      "path": "webpj/extracted/e1456-scaling.json",
+      "bytes": 9721,
+      "sha256": "edc2bf4436a5733f46bb6a6684a35c5a2996c62397463be71e9e000646dd767e"
+    },
+    {
+      "path": "webpj/extracted/e1456-scaling.log",
+      "bytes": 84,
+      "sha256": "a7f688ec9d167fc0763728936019729246b0b58b8662f65a73f949a42d0bae47"
+    },
+    {
+      "path": "webpj/extracted/webpj-e1456-cache-profile.json",
+      "bytes": 13445,
+      "sha256": "58596d9687c0f5c02c51d04b9ba01661cb45623dafdbbbed7c90717e9b145258"
+    },
+    {
+      "path": "webpj/extracted/webpj-e1456-cache-profile.log",
+      "bytes": 291,
+      "sha256": "dde951684793ff0d668582f65db1d4530e88e2be49ae242571b1f1b679c703ab"
+    },
+    {
+      "path": "webpj/extracted/webpj-e1456-current-profile.json",
+      "bytes": 13415,
+      "sha256": "4a4d08cac0941b930dc5322290c05c0d0a2362f3926a17209e8cbeb9bb79da10"
+    },
+    {
+      "path": "webpj/extracted/webpj-e1456-current-profile.log",
+      "bytes": 279,
+      "sha256": "084c4065340dd875c3e25f2471cd3c99e05ee311532f5493a856d8bc22ec98e2"
+    },
+    {
+      "path": "webpj/extracted/webpj-e1456-main-profile.json",
+      "bytes": 49453,
+      "sha256": "22826b49addadf99f193308f8df07a3741f0b4c2e90a57aa0f2432edbe245926"
+    },
+    {
+      "path": "webpj/extracted/webpj-e1456-main-profile.log",
+      "bytes": 999,
+      "sha256": "8c7acd0ccaeb33f3e616c67bc695b1b0c93ed96eea684c7bddd6d1848dcb230d"
+    }
+  ],
+  "periodAfterUnit": {
+    "v26": 3,
+    "v22": 3
+  },
+  "limitations": [
+    "60/120FPS달성미확인",
+    "물리120Hz미확인",
+    "짧은메모리표본이며장기무증가주장아님",
+    "DN작업이병행중인현재호스트표본"
+  ]
+}
