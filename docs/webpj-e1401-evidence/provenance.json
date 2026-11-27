@@ -1,0 +1,195 @@
+{
+  "unit": "WB04-E1401",
+  "host": "HJOW-Athlon",
+  "product": "E1400 시작 코드·실제 미션 수명 중 게임 소스 변경 없음",
+  "command": "node tools/ally-ai-campaign-flow.cjs dissolvedalliance 120000",
+  "exitCode": 1,
+  "reason": "자연 승리 미확인 단언",
+  "beforeArchive": "webpj/extracted/e1399-dissolvedalliance-60000-artifacts/manifest.json",
+  "terminal": {
+    "frame": 120000,
+    "time": 3009.175,
+    "buttons": [],
+    "commands": [],
+    "observation": {
+      "events": [
+        {
+          "method": "priestDead",
+          "owner": 1,
+          "result": false,
+          "time": 9.2
+        },
+        {
+          "method": "priestCaptured",
+          "owner": 1,
+          "result": false,
+          "time": 9.2
+        },
+        {
+          "method": "priestDead",
+          "owner": 2,
+          "result": false,
+          "time": 9.2
+        },
+        {
+          "method": "priestCaptured",
+          "owner": 2,
+          "result": false,
+          "time": 9.2
+        },
+        {
+          "method": "priestDead",
+          "owner": 3,
+          "result": false,
+          "time": 9.2
+        },
+        {
+          "method": "priestCaptured",
+          "owner": 3,
+          "result": false,
+          "time": 9.2
+        },
+        {
+          "method": "priestCaptured",
+          "owner": 2,
+          "result": true,
+          "time": 1296.6
+        },
+        {
+          "method": "finishSacrifice",
+          "args": [
+            19528
+          ],
+          "time": 1443.45
+        },
+        {
+          "method": "priestDead",
+          "owner": 2,
+          "result": true,
+          "time": 1443.45
+        },
+        {
+          "method": "priestDead",
+          "owner": 4,
+          "result": true,
+          "time": 1443.45
+        },
+        {
+          "method": "priestDead",
+          "owner": 5,
+          "result": true,
+          "time": 1443.45
+        },
+        {
+          "method": "priestDead",
+          "owner": 6,
+          "result": true,
+          "time": 1443.45
+        },
+        {
+          "method": "priestDead",
+          "owner": 7,
+          "result": true,
+          "time": 1443.45
+        },
+        {
+          "method": "priestDead",
+          "owner": 8,
+          "result": true,
+          "time": 1443.45
+        },
+        {
+          "method": "priestCaptured",
+          "owner": 2,
+          "result": false,
+          "time": 1443.475
+        }
+      ],
+      "captured": {
+        "1": false,
+        "2": false,
+        "3": false
+      },
+      "dead": {
+        "1": false,
+        "2": true,
+        "3": false,
+        "4": true,
+        "5": true,
+        "6": true,
+        "7": true,
+        "8": true
+      }
+    },
+    "sp": 37550,
+    "won": false,
+    "reason": "프레임 상한"
+  },
+  "ais": [
+    {
+      "owner": 1,
+      "token": 536913664,
+      "initialized": 1,
+      "scan": 1,
+      "stop": 0,
+      "enemy": 2,
+      "flags": 65535,
+      "wallet": 37550,
+      "priests": [
+        15001,
+        0
+      ]
+    },
+    {
+      "owner": 2,
+      "token": 536870912,
+      "initialized": 1,
+      "scan": 1,
+      "stop": 0,
+      "enemy": 1,
+      "flags": 65535,
+      "wallet": 1000,
+      "priests": [
+        0,
+        15001
+      ]
+    },
+    {
+      "owner": 3,
+      "token": 536892288,
+      "initialized": 1,
+      "scan": 1,
+      "stop": 0,
+      "enemy": 1,
+      "flags": 65399,
+      "wallet": 350,
+      "priests": [
+        15042,
+        15001
+      ]
+    }
+  ],
+  "errors": [],
+  "observedPrefixComparison": {
+    "otherUnit": "E1399",
+    "rows": 31,
+    "firstFrame": 0,
+    "lastFrame": 60000,
+    "sameObservedJson": true,
+    "limits": "UI/사제 이벤트/SP/오류 관측 행만 비교했다. 전체 상태/RNG 덤프나 C++ 엄격 오라클 일치로 세지 않는다."
+  },
+  "sha256": {
+    "terminal.png": {
+      "raw": "5d8a30c5aee83650ec83d942379eea0c34ffebd2289ef8b22047665721dce421",
+      "lf": "07fa0b256518cb643324cf0f18270b9632cd0e9f66cc947ba8300c949d348c0c"
+    },
+    "web-observation.log": {
+      "raw": "39e9c8d7de05e7061a774a948c80a92a53aff41d7f9de2738c025acb91dcbd9a",
+      "lf": "5dcbeedb35a0731850dbab23f88ff319fd419169aa815045642f8a4df234441a"
+    },
+    "web-result.json": {
+      "raw": "7746054d5657acf03585deca4aec671e14712291b18c9a25c4079d2910bd6784",
+      "lf": "7746054d5657acf03585deca4aec671e14712291b18c9a25c4079d2910bd6784"
+    }
+  }
+}
