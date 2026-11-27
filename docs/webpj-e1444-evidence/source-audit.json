@@ -1,0 +1,289 @@
+{
+  "unit": "WB04-E1444",
+  "head": "327459461a06cb15f83dc7d003c64a179a0e9bcd",
+  "sources": {
+    "webpj/www/core/squid-process.js": {
+      "sha256": "6fe3ee2564bf33ff56db26b212024d8fb69f762c8551ee18f2ce8cc817402a75",
+      "matches": [
+        {
+          "line": 530,
+          "text": "        return this.#withCall(() => {"
+        },
+        {
+          "line": 577,
+          "text": "        this.#withCall((runtime) => {"
+        },
+        {
+          "line": 610,
+          "text": "        return this.#withCall((runtime) => {"
+        },
+        {
+          "line": 667,
+          "text": "            this.#withCall(() => {"
+        },
+        {
+          "line": 698,
+          "text": "    bindDefaultFormTransmission(transmit, assertion) {"
+        },
+        {
+          "line": 705,
+          "text": "    writeFormPacket(form, argument, packet, transmission) {"
+        },
+        {
+          "line": 706,
+          "text": "        return this.#withCall((runtime) => {"
+        },
+        {
+          "line": 726,
+          "text": "            if (typeof device.writeFullData !== 'function') throw new Error('ProcessForm의 실제 전체 파생 writer 미연결');"
+        },
+        {
+          "line": 727,
+          "text": "            const size = device.writeFullData(process, argument >>> 0) | 0;"
+        },
+        {
+          "line": 740,
+          "text": "        this.#withCall(() => {"
+        },
+        {
+          "line": 759,
+          "text": "        this.#withCall(() => {"
+        },
+        {
+          "line": 780,
+          "text": "        this.#withCall(() => {"
+        },
+        {
+          "line": 806,
+          "text": "        this.#withCall(() => process.notify(2, dependForm, watched));"
+        },
+        {
+          "line": 859,
+          "text": "        this.#withCall(() => {"
+        },
+        {
+          "line": 879,
+          "text": "                if (this.#current) return this.#withCall(() => {"
+        },
+        {
+          "line": 887,
+          "text": "                this.#withCall(() => {"
+        }
+      ]
+    },
+    "webpj/www/core/raw-surface-world.js": {
+      "sha256": "a909b7190e8e85614c5ffa0692f317b8a6ddde1d3db4beaadbabe3c54b47ce8b",
+      "matches": [
+        {
+          "line": 311,
+          "text": "            processPacket: (form, packet, argument) => {"
+        },
+        {
+          "line": 313,
+          "text": "                return this.#host.writeFormPacket(form, argument, packet, storage.gameAux.squidTransmission);"
+        }
+      ]
+    },
+    "webpj/www/core/raw-surface-storage.js": {
+      "sha256": "4890a898b23a2472c12d6433c5228c5b96bcd16d202a12379e148df46af46e5c",
+      "matches": [
+        {
+          "line": 362,
+          "text": "        if (!this.#transmission) this.#transmission = new RawSquidTransmission(this.pool, this.#gameAux.squidTransmission, {"
+        },
+        {
+          "line": 369,
+          "text": "            processPacket: (form, packet, argument) => {"
+        },
+        {
+          "line": 372,
+          "text": "                return this.processes.host.writeFormPacket(form, argument, packet, this.#gameAux.squidTransmission);"
+        }
+      ]
+    },
+    "webpj/www/core/raw-campaign-session-transmission.js": {
+      "sha256": "0b2d73ac469543b1148efb1e93529473a1c6f1dc31ff1bc19a79a6e0430e005f",
+      "matches": [
+        {
+          "line": 35,
+          "text": "        const common = this.#native() ? owner.world.storage.gameAux.squidTransmission.buffer : null; // Native만 장기 공통 물리를 빌린다."
+        },
+        {
+          "line": 66,
+          "text": "    #native() { return this.#owner.world.storage.usesNativeTransmissionDevices?.() ?? false; }"
+        },
+        {
+          "line": 75,
+          "text": "        return this.daisTransmission(this.aviaryTransmission(this.constructionTransmission(o.combat.transmission(o.services.formPacket, o.assetBindings.transmission(fallback)))));"
+        },
+        {
+          "line": 81,
+          "text": "        const write = (process, changed, force) => { const aux = this.#aux(); const header = aux.daisProcessHeader; return process.writePacket(aux.squidTransmission.buffer, changed, force, header[1], header[0]); }; // 현재 헤더 재조회다."
+        },
+        {
+          "line": 88,
+          "text": "            packet: (length) => { this.#live(); return this.writingDaisProcess ? packetView(this.#aux().squidTransmission.buffer, length) : call(rest, 'packet', length); },"
+        },
+        {
+          "line": 90,
+          "text": "            transmit: (length) => { this.#live(); if (!this.writingDaisProcess) return call(rest, 'transmit', length); if (this.#native()) { this.#owner.world.storage.broadcastProcessForm(length); return; } this.#owner.services.formPacket(packetView(this.#aux().squidTransmission.buffer, length)); },"
+        },
+        {
+          "line": 97,
+          "text": "        const write = (process, changed, force) => { const aux = this.#aux(); const header = aux.constructionHeader; return writeConstructionProcessData(process, aux.squidTransmission.buffer, changed, force, { protocol: header[1], message: header[0] }); }; // 두 원문 BYTE의 현재 값이다."
+        },
+        {
+          "line": 104,
+          "text": "            packet: (length) => { this.#live(); return this.writingConstruction ? packetView(this.#aux().squidTransmission.buffer, length) : call(rest, 'packet', length); },"
+        },
+        {
+          "line": 106,
+          "text": "            transmit: (length) => { this.#live(); if (!this.writingConstruction) return call(rest, 'transmit', length); if (this.#native()) { this.#owner.world.storage.broadcastProcessForm(length); return; } this.#owner.services.formPacket(packetView(this.#aux().squidTransmission.buffer, length)); },"
+        },
+        {
+          "line": 111,
+          "text": "    aviaryTransmission(fallback) {"
+        },
+        {
+          "line": 120,
+          "text": "            if (this.#native()) return this.#owner.world.storage.serializeProcessForm(process, bytes, changed, force);"
+        },
+        {
+          "line": 121,
+          "text": "            if (this.writingBombTimer) return process.writePacket(bytes, 22);"
+        },
+        {
+          "line": 122,
+          "text": "            return full ? process.writePacket(bytes, false, (force >>> 0) !== 0) : process.writePacket(bytes, changed);"
+        },
+        {
+          "line": 133,
+          "text": "                this.#live(); const bytes = buffer(); if (this.#native() && bytes) { this.#owner.world.storage.broadcastProcessForm(length); return; }"
+        }
+      ]
+    },
+    "webpj/www/core/raw-campaign-session-aviaries.js": {
+      "sha256": "ee21ef4e7ab6c262a4608e6683ca31c2092e1a3eaa86af08f14cb0b4736a0bd5",
+      "matches": [
+        {
+          "line": 58,
+          "text": "    bindSun() {"
+        },
+        {
+          "line": 63,
+          "text": "        hooks.attach = (fields, parent, type, flags) => { this.#live(); if (!fields) throw new Error('SunAviary 실제 할당 실패'); c.processes.attach(new SunAviaryProcess(o.sunAviary, fields), type, parent, flags); }; // 같은 실제 Kernel 래퍼다."
+        },
+        {
+          "line": 64,
+          "text": "        hooks.refreshForm = (fields) => { this.#live(); const process = c.processes.fromForm(fields.form); if (!(process instanceof SunAviaryProcess) || process.fields !== fields) throw new Error('훨리베이스 현재 Host/raw 이미지 불일치'); c.processes.refreshForm(process); }; // 같은 객체의 현재 Form만 갱신한다."
+        },
+        {
+          "line": 72,
+          "text": "    bindWind() {"
+        },
+        {
+          "line": 78,
+          "text": "        hooks.attach = (fields, parent, type) => { this.#live(); if (!fields) throw new Error('WindAviary 실제 할당 실패'); c.processes.attach(new WindAviaryProcess(o.windAviary, fields), type, parent, 8); }; // 원문flags8의 실제 Host 부착이다."
+        },
+        {
+          "line": 101,
+          "text": "    bindRain() {"
+        },
+        {
+          "line": 106,
+          "text": "        hooks.attach = (fields, parent, type, flags) => { this.#live(); if (!fields) throw new Error('RainAviary 실제 할당 실패'); c.processes.attach(new RainAviaryProcess(o.rainAviary, fields), type, parent, flags); }; // 같은 Kernel의 별도 래퍼다."
+        }
+      ]
+    },
+    "webpj/www/core/raw-campaign-session.js": {
+      "sha256": "46c76aecf1d0a6ccb7d8dd4166cab9d7953c0b2750def1ae81e3da030cae62a0",
+      "matches": [
+        {
+          "line": 50,
+          "text": "import { readAviaryProcessData } from './raw-aviary-process-data.js';"
+        },
+        {
+          "line": 718,
+          "text": "    #receiveAviaryPacket(message, packet) {"
+        },
+        {
+          "line": 735,
+          "text": "                const parent = message === 0x74 ? RawWindAviaryState.readProcess(fields, packet) : readAviaryProcessData(fields.bytes, packet);"
+        },
+        {
+          "line": 744,
+          "text": "        else readAviaryProcessData(current instanceof SunAviaryProcess || current instanceof RainAviaryProcess ? current.fields.bytes : new Uint8Array(0), packet);"
+        },
+        {
+          "line": 836,
+          "text": "        for (const type of [0x38, 0x73, 0x74]) {"
+        },
+        {
+          "line": 838,
+          "text": "            dispatch.register(type, (_sender, _connection, packet) => this.#receiveAviaryPacket(type, packet));"
+        }
+      ]
+    },
+    "webpj/www/core/raw-campaign-session-assets.js": {
+      "sha256": "0326314c2813448bb6a92121c20ef5b95122e6aabc6c769a477e61b18d87a2a3",
+      "matches": [
+        {
+          "line": 48,
+          "text": "        this.#started = true; o.rewardCount = (sid) => this.virtualCount(sid) | 0;"
+        },
+        {
+          "line": 77,
+          "text": "        fill(e.factory, 'warnDuplicate'); e.factory.virtualCount = (sid) => this.virtualCount(sid);"
+        },
+        {
+          "line": 91,
+          "text": "        e.regular.virtualCount = (parent) => this.virtualCount(parent) | 0;"
+        },
+        {
+          "line": 116,
+          "text": "    virtualCount(sid) {"
+        },
+        {
+          "line": 119,
+          "text": "        try { if (table === ALTAR) return module(o, 'altarSacrifice', '제단의 실제 가상80 설치 전 호출').count(sid) >>> 0; if (table === DAIS) return module(o, 'templeRitual', '다이스의 실제 가상80 설치 전 호출').count(sid) >>> 0; return module(o, 'level', '공통 가상80 설치 전 호출').get(sid) >>> 0; } finally { this.#counts.delete(sid); }"
+        }
+      ]
+    },
+    "webpj/www/core/content-form-host.js": {
+      "sha256": "b540166a71d1ee13eedeb309731771227f5da149d578d417a6e93406055596c8",
+      "matches": [
+        {
+          "line": 229,
+          "text": "    robust(form) {"
+        }
+      ]
+    },
+    "webpj/www/core/raw-campaign-object-save.js": {
+      "sha256": "d877d918e1e391e62c3d301df69bd31b6e886dda2bd181b752cb6c55b4aea4a6",
+      "matches": [
+        {
+          "line": 32,
+          "text": "        robust: (sid) => { const table = bits(rawAt(o, sid), 0); if (!supportsConstructedVtable(table)) throw new Error('미복원 Fort 저장 가상 함수 표'); if (REJECTED_VTABLES.has(table)) return 0; if (!o.balloonBody) throw new Error('Fort 저장 벌룬 가상 미설치'); if (o.balloonBody.handles(sid)) return o.balloonBody.robust(sid); return !(typeAt(o, sid).flags1 & 0x20000000); },"
+        }
+      ]
+    },
+    "webpj/PORT_MAP.tsv": {
+      "sha256": "5323020897cf5160f0bfded01446e1c404ed96bbf6d1ebd2b2ec124de6f66b1a",
+      "matches": [
+        {
+          "line": 254,
+          "text": "cpppj/src/client/NativeFortSaveVirtual.cpp\tport\twww/core/raw-campaign-object-save.js;www/core/raw-campaign-session-assets.js;www/core/content-form-host.js;www/core/raw-altar-sacrifice.js;www/core/raw-temple-ritual.js\t225553df\tport\t[rebaseline-port] WB04-E1210: 원문이 Fort 저장·보상·의식이 함께 쓰는 가상 조회기 네 개(ObjectRobust·ContentRobust·HasLevel·Level)를 웹은 같은 구성으로 가진다 — ObjectRobust 는 raw-campaign-object-save.js 의 robust(지원 VT 확인→항상 0 인 아홉 VT(0x5070c0·0x508cc8·0x5092d0·0x5096a0·0x509758·0x509810·0x50a8e8·0x50db78·0x50ee08)→벌룬 robust→TYPE flags1 0x20000000 부정)와 같고, ContentRobust 는 content-form-host.js 의 robust(목록 플래그 WORLD 0x80 이면 Squid.cpp 0xbb1 진단 뒤 다시 읽어 0x34 마스크)와 같고, HasLevel 은 level.has, Level(가상 80)은 raw-campaign-session-assets.js 의 virtualCount 가 SID 범위·현재 TYPE 범위·지원 VT·재귀 순환 집합(조회 끝에 반납)을 확인한 뒤 제단(0x5076b8)은 raw-altar-sacrifice.js 의 count(좌표 절삭→다이스 TYPE 의 genus 로 시작 단계(flags2 와 6 이 0 이면 1)→첫 일치 다이스 조회→없으면 0), 다이스(0x507950)는 raw-temple-ritual.js 의 count(방향 13→1·12→2·11→3, 그 밖은 프레임 64 미만 1·119 이하 2·그 위 3), 나머지는 공통 level 이다. 차이는 진단 장치뿐이며(웹 ContentForm 은 ai.assertion, 원문 Native 는 AssertDisplay) 둘 다 표시하고 복귀한다. 호출 지점: Fort 저장(raw-campaign-object-save.js)·보상 개수·의식 단계가 같은 virtualCount 를 쓴다"
+        },
+        {
+          "line": 646,
+          "text": "cpppj/src/o/RawAviaryProcessData.cpp\tport\twww/core/raw-aviary-process-data.js\t225553df\tport\t[rebaseline-port] WB04-E530: Sun/Rain 아비어리 공유 0045b0f0 선택 필드 decoder(9BYTE 접두·dirty 비트 0 부모 DWORD 반환·1 fields[16..23] 8BYTE·2 fields[24..27] 4BYTE 복사, 접두/필드 부족과 실제 저장 없는 필드 명시 거부, 앞선 부분 쓰기 보존). 전용 원본 관측 없음(cpppj는 RawCampaignSession 수신 경로로만 소비), tests/aviary-process-data.test.mjs 계약 시험. 기준선 뒤 cpppj 변경 없음."
+        },
+        {
+          "line": 1152,
+          "text": "cpppj/src/o/SquidProcess.cpp\tport\twww/core/squid-process.js\t417f22d2\tsession\t[o-default] WB04-D5c: SquidProcess/RegularProcess/SquidProcessState/SquidProcessHost·ScheduleBridgeFall. fixture process 시나리오·processform Attach 288·processretake 194·processtransmit·regular-current finder 1232/ctor 32 행. 3.6절 판정(02b00b12): ① 기준선 뒤 ReceiveSharedRegular/WriteFormPacket/shared_/writeFullData 는 LAN 전체 수신·참가자 월드 동기화(웹 제외, 단독 경로 결과 동일), ③ 발사/회전 애니메이션 프로세스 TYPE 두 칸(fireAnimationType·rotateAnimationType)은 애니메이션 소비자(RawCampaignArcherBindings) 이식 때 추가 / 3-E 판정(WB04-E259, 기준 4789039e): 02b00b12 판정 유지 + ③ 4-D — 기본 장치(BindDefaultLifecycle/FormFactory/FormTransmission)·World 없는 Host 폴백·AssertionDevice·Native Kill 진단 복귀. ReceiveSharedRegular/WriteFormPacket 은 LAN 공유 Regular(① 유지)이나 4-C 패킷 writer 이식 때 단독 도달 재확인 / WB04-E561: ③ 발사/회전 애니메이션 프로세스 TYPE 두 칸(SquidProcessState.fireAnimationType·rotateAnimationType, 독립 35/36·빌린 GameAuxState 의 fireAnimationProcessType·rotateAnimationProcessType 현재 값) 반영 완료(소비자 RawCampaignAssetBindings 의 Animation Form 조회) / WB04-E566: AnimationProcessType(fire) 실제 Host getter 추가. 같은 E561 장기 발사/회전 상태를 각 공장이 부착 직전에 재조회 / WB04-E579: JS 예약 Regular의 initializeDetached 추가(미부착/미등록 객체만 event/payload/time/count 재초기화). Session1268의 같은 메모리 예약/placement-new 소비 계약이며 기존 생성/부착 경로 불변 / WB04-E591: RawSurfaceWorld.cpp176..179 단독 Pop의 Process writer 도달을 재확인해 WriteFormPacket의 옛 LAN 전용① 판정을 철회하고 공용 부모로 이식. 현재 부모/PID 재조회·일반/공유 writer 플래그·28BYTE/파생 전체 writer·현재/장기 기본 전송 표·실제 pin/호출 수를 연결(신규15검사, docs/webpj-process-form-writer-20261116.md). ReceiveSharedRegular 단독 도달은 수신기 결선에서 재확인. DefaultLifecycle/FormFactory·장기 Storage/World 전송 부모는 잔여. 기준선 뒤 변경0 / WB04-E594: E591 WriteFormPacket을 Storage/현재 World 송신기에 연결. 외부Kernel은 현재 World Host를 쓰고 Pop 대여가 없으면 같은 장기 Host의 실제 PID/파생 writer를 조회. 일반 Regular0·전체DWORD인자·같은예약·클라이언트 진단을 대조. Native 기본 Form 직렬화/수신·동기화는 잔여; docs/webpj-surface-transmission-20261116.md / WB04-E626: 같은 실제 World/Factory/Display/Pop/Process·공통/가상 PostPop·종속 Unpop의 전체 Runtime pin 전달과 정상/예외 범위 반납. JS 발급 핸들만 명시 release하여 일반 owner의 release는 호출하지 않음. Native 미설치 장기 묶음과 외곽 Session/Load는 잔여. docs/webpj-runtime-pin-20261117.md. 기준선 뒤 변경0 / WB04-E734: 7eh 공유 Regular 수신·시각/횟수 복원과 수신 payload 비트 재송신 연결. 실제 단독 미션 왕복 도달은 후속; docs/webpj-shared-regular-receive-20261118.md [session WB04-E1282 Tutorial1 130프레임 실행]"
+        }
+      ]
+    }
+  },
+  "scope": "정적 연결/기존46개 계약 검사. 추가 원본 실행/공중3종 전용 플레이 없음. GameAux Native 헤더/역할의 수명 판정은 별도."
+}
