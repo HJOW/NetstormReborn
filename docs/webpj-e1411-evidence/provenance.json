@@ -1,0 +1,59 @@
+{
+  "unit": "WB04-E1411",
+  "host": "HJOW-Athlon",
+  "node": "22.23.5",
+  "sourceHead": "b6d9f9446f6e2d57527de94ad9deb7205e22d596",
+  "results": {
+    "tests": 6901,
+    "pass": 6901,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "durationMs": 977043.7513,
+    "exit": 0
+  },
+  "firstRun": {
+    "tests": 6901,
+    "pass": 6899,
+    "fail": 2,
+    "durationMs": 823051.377,
+    "exit": 1,
+    "cause": "E1410 새일본어2모듈의분류등록누락"
+  },
+  "freeze": {
+    "unit": "WB04-E1411",
+    "phase": "retest-finished-exit-0",
+    "recordedAt": "2026-11-27T05:42:39.275329+00:00",
+    "files": 2983,
+    "changed": [],
+    "newlinesOnly": []
+  },
+  "scope": "E1410자산준비+등록보완까지. 격리일본어UI후보/제단예약피해후보는본소스에미적용.",
+  "evidence": {
+    "first-node22.log": {
+      "bytes": 2117378,
+      "sha256": "cd4c3bee6451307c2a5bd693df715f0cf7f23f251705c310c906e5b793a4a49c"
+    },
+    "first-source-freeze-check.json": {
+      "bytes": 181,
+      "sha256": "d11a42be9be84f820c934b9b626be844c6201d1dcb26b650aa0b94ae5b889c12"
+    },
+    "first-source-freeze.json": {
+      "bytes": 606678,
+      "sha256": "2762ca90a1608d2cba22ef444329a51d889cf54ba80074b02d0f15f66e3b76a4"
+    },
+    "node22-retest.log": {
+      "bytes": 2115216,
+      "sha256": "8f9ba9587d1885a2aa43e3b8dce34f29c8252030a3ab4ed4009646a77f9af933"
+    },
+    "source-freeze-check.json": {
+      "bytes": 180,
+      "sha256": "8dde49c74be2836350b60e4e167dea5220ab27f91a02479bde3869e31ec873d3"
+    },
+    "source-freeze.json": {
+      "bytes": 606978,
+      "sha256": "9461895c5829b6d54aed6d7f170bc6afec4751cbd8116cf237bafc0356682a08"
+    }
+  }
+}
