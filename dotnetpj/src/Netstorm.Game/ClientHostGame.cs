@@ -729,10 +729,9 @@ public sealed partial class ClientHostGame : Game
         // R5-4c3 미션 미니맵 부착. 왼쪽 아래 80×75에 현재 지형을 갱신해 그린다. 중앙·선택 이동과 입력 모드·폴링은 R5/R6에서 잇는다.
         // 근거: cpppj RawMinimapControls.cpp의 Open 뒤 80×75 부착과 HudDock.cpp의 왼쪽 아래 도킹이다. 시작 덤프에는 닿지 않는다.
         EnsureMissionMinimap();
-            // RU-3c 실제 미션 Root에 표시 창을 만들고 같은 트리 루트에 부착한다. 부착 전 Enter는 부모 없음으로 거부된다.
-            // 근거: GumpTree.Push/Attach의 void·부모 규칙과 ChatWindow Native 입력 호출자. 메뉴 경로는 바꾸지 않는다.
-            _ = NativeChatWindows.Create();
-            productionUi.TreeHooks.Attach!(NativeChatWindows.CurrentRoot, 0, _driver.Screen.Height - 100, productionUi.Create.Entries[0], 0);
+            // 실제 구분선의 오른쪽 아래에 채팅창을 부착한다. 채팅 입력도 같은 부모를 사용한다.
+            // 근거: UberRootGump의 세로·채팅 구분선 slave와 HudDock의 크기 및 위치 계산이다.
+            AttachMissionChat();
             // 단일 미션의 첫 지역(+0x78)은 소용돌이→섬 소유자→첫 지역 사슬이 적재 중 기록한다(R6: 신전 Pop·postPop 표시와 함께).
             // 전투섬 배정 region 갈고리는 MP 전투 경로의 makeBattleIsland에서만 쓰므로 시작 흐름에서 직접 기록하지 않는다(0.477 정정).
             _missionRuntime = HostMissionRuntime.CreatePrepared(session, storage, pendingSurface, pendingBurning!, _missionAudio!, _mainMenu!, productionUi, _nativeChatWindows ?? throw new InvalidOperationException("미션 채팅의 실제 공장 없음"), rootFactories);
