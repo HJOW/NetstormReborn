@@ -1,3 +1,6 @@
+using System.Buffers.Binary;
+using Netstorm.Core.Simulation;
+
 namespace Netstorm.Core.Original;
 
 /// <summary>
@@ -92,6 +95,12 @@ public sealed class RawGumpFormHost
     /// <summary>공통 Take/Unpop 몸체. 같은 풀을 쓴다.</summary>
     private readonly RawSquidForms _forms;
 
+    /// <summary>Native가 공유하는 현재 Gump TYPE 주소다. 독립 입력에서는 사용하지 않는다.</summary>
+    private UIntBox? _currentType;
+
+    /// <summary>Native의 현재 객체 가상 삭제 분배다.</summary>
+    private Action<int, uint>? _virtualDestroy;
+
     /// <summary>
     /// GumpForm 처리기를 만든다. 풀·팩토리·삭제 본체는 같은 풀이어야 하고, 타입 표는 10.78 의 188개여야 한다.
     /// 알림·fallback 은 나중에 필요해질 수 있으므로 null 을 허용하되, 그 경로에 닿으면 쓰기 전에 예외로 멈춘다.
@@ -137,33 +146,47 @@ public sealed class RawGumpFormHost
     /// <summary>이 처리기가 쓰는 슬롯 풀. 전체 월드 분배기가 같은 풀인지 확인할 때 쓴다.</summary>
     public RawSidPool Pool => _pool;
 
+    /// <summary>같은 현재 TYPE 주소와 실제 가상 삭제를 Native 경로에 연결한다.</summary>
+    public void BindCurrent(UIntBox type, Action<int, uint> destroy)
+    {
+        ArgumentNullException.ThrowIfNull(type); ArgumentNullException.ThrowIfNull(destroy);
+        if (_pool.Edition != OriginalEdition.Patch1078) throw new ArgumentException("Native Gump의 PATCH 판본 필요", nameof(type));
+        _currentType = type; _virtualDestroy = destroy;
+    }
+
+    /// <summary>독립 입력은 3이고 Native는 현재 공유 TYPE DWORD를 읽는다.</summary>
+    public uint CurrentType() => _currentType?.Value ?? GumpFormType;
+
     /// <summary>
     /// 메뉴의 GumpForm 을 실제 팩토리로 만든다(원본 004af530 계열). 기본 flags 2 는 클라이언트 영역 생성이다.
     /// 생성 자체는 부모·소유 ID 를 쓰지 않는다.
     /// </summary>
     /// <param name="flags">생성 영역 플래그(1 예측, 2 클라이언트, 0 서버).</param>
-    public int Create(uint flags = 2) => _factory.CreateGumpForm(flags);
+    public int Create(uint flags = 2) => _currentType is null ? _factory.CreateGumpForm(flags) : _factory.Create(CurrentType(), (SidAllocation)flags);
 
     /// <summary>
     /// 서버·예측 번호를 같은 raw 풀의 지정 Take 로 받는다. 기존 GumpForm 이면 부모에서 해제한 뒤 다시 쓴다.
     /// </summary>
     /// <param name="form">받을 슬롯 번호(서버 영역만).</param>
-    public int Take(int form) => _forms.Take(GumpFormType, form);
+    public int Take(int form) => _currentType is null ? _forms.Take(GumpFormType, form) : _factory.Take(CurrentType(), form);
 
     /// <summary>
-    /// 번호가 GumpForm 인지 판별한다. 반납된 슬롯의 타입 바이트도 보존되므로 free 여부는 여기서 보지 않는다
-    /// (이미 dead 인 중첩 삭제를 원본처럼 건너뛰기 위해서다).
+    /// 번호가 GumpForm 인지 판별한다. Native 사용 중인 슬롯은 현재 가상표로, 반납된 슬롯과 독립 입력은 보존된 타입으로 구별한다.
     /// </summary>
     /// <param name="form">확인할 번호.</param>
-    public bool IsGumpForm(int form) =>
-        form >= RawSidPool.FirstOrdinary && form != RawSidPool.PredictableFirst
-        && form < _pool.Capacity && _pool.Slot(form)[TypeOffset] == GumpFormType;
+    public bool IsGumpForm(int form)
+    {
+        if (form < RawSidPool.FirstOrdinary || form == RawSidPool.PredictableFirst || form >= _pool.Capacity) return false;
+        ReadOnlySpan<byte> raw = _pool.Slot(form);
+        if (_currentType is null || (raw[StateOffset] & FreeBit) != 0) return raw[TypeOffset] == GumpFormType;
+        return BinaryPrimitives.ReadUInt32LittleEndian(raw) == RawSquidForms.VtableFor(GumpFormType);
+    }
 
-    /// <summary>현재 raw DWORD 소유 UI 등록 ID 를 읽는다. free 슬롯은 읽기 계약 밖이므로 거부한다.</summary>
+    /// <summary>현재 raw DWORD 소유 UI 등록 ID를 읽는다. Native는 원문처럼 클래스 선검사를 하지 않는다.</summary>
     /// <param name="form">읽을 GumpForm 번호.</param>
     public uint Owner(int form)
     {
-        ReadOnlySpan<byte> raw = Form(form);
+        ReadOnlySpan<byte> raw = _currentType is null ? Form(form) : _pool.Slot(form);
         uint owner = 0;
         // 높은 두 바이트를 버리지 않고 원본 소유 ID 를 조립한다
         for (int index = 0; index < 4; index++)
@@ -177,7 +200,7 @@ public sealed class RawGumpFormHost
     /// <param name="form">부모를 읽을 GumpForm 번호.</param>
     public int Parent(int form)
     {
-        Form(form);
+        if (_currentType is null) Form(form);
         return Word(form, ParentOffset);
     }
 
@@ -189,20 +212,20 @@ public sealed class RawGumpFormHost
     /// <param name="owner">Gump 등록 ID.</param>
     public void SetOwner(int form, uint owner)
     {
-        Form(form);
-        Put(form, OwnerOffset, owner, 4);
+        if (_currentType is null) { Form(form); Put(form, OwnerOffset, owner, 4); return; }
+        BinaryPrimitives.WriteUInt32LittleEndian(_pool.RawSlot(form)[OwnerOffset..], owner);
     }
 
     /// <summary>
     /// 가상 +0x74 → 공통 contained 부착(원본 004af160). 부모의 종속 머리 앞에 넣고 void 를 끈다.
-    /// 10.78 은 부모 0 부착을 조용히 넘기며, 부모·머리·목록 genus 검사는 쓰기 전에 끝난다.
-    /// 서버 Form 의 실제 Pop 직렬화/전송은 아직 복원하지 않았으므로 그 경로는 쓰기 전에 거부한다.
+    /// 독립 입력은 부모·머리·genus를 검사하고, Native는 같은 현재 공장의 가상 부착을 실행한다.
     /// </summary>
     /// <param name="form">부착할 GumpForm 번호.</param>
     /// <param name="parent">부모 번호. 0 이면 무동작.</param>
     /// <param name="flags">Pop 플래그.</param>
     public void Attach(int form, int parent, uint flags = 0)
     {
+        if (_currentType is not null) { _factory.AttachForm(form, parent, flags); return; }
         if (parent == 0)
         {
             // 10.78 GumpForm 은 부모 0 부착을 조용히 넘긴다
@@ -252,6 +275,7 @@ public sealed class RawGumpFormHost
     /// <param name="form">해제할 GumpForm 번호.</param>
     public void Unpop(int form)
     {
+        if (_currentType is not null) { _factory.UnpopForm(form); return; }
         Form(form);
         _forms.Unpop(form);
     }
@@ -284,6 +308,7 @@ public sealed class RawGumpFormHost
     /// <param name="flags">삭제 플래그.</param>
     public void Destroy(int form, uint flags = 0)
     {
+        if (_virtualDestroy is { } destroy) { destroy(form, flags); return; }
         if (!IsGumpForm(form))
         {
             throw new InvalidOperationException("GumpForm 삭제 타입 오류");

@@ -318,4 +318,33 @@ public sealed class RawGumpFormHostTests
         silent.SetOwner(owned, OwnerId);
         Assert.Throws<InvalidOperationException>(() => silent.Notify(owned));
     }
+
+    /// <summary>Native 생성과 클래스 판별이 현재 TYPE와 실제 가상표를 따르고 삭제는 현재 가상 장치에 전달된다.</summary>
+    [Fact]
+    public void CurrentTypeUsesFactoryVtableAndVirtualDelete()
+    {
+        var scene = new Scene(); scene.Types[4].ConstructorAddress = OriginalConstructors.Address(3);
+        var type = new UIntBox { Value = 4 }; var deleted = new List<(int, uint)>();
+        scene.Gumps.BindCurrent(type, (sid, flags) => deleted.Add((sid, flags)));
+        int alias = scene.Gumps.Create(); Assert.Equal(4, scene.Pool.Slot(alias)[10]);
+        Assert.Equal(GumpVtable, Dword(scene.Pool, alias, 0)); Assert.True(scene.Gumps.IsGumpForm(alias));
+        type.Value = 3; int normal = scene.Gumps.Create(); Assert.Equal(3, scene.Pool.Slot(normal)[10]);
+        int server = scene.Pool.Allocate(SidAllocation.Server); scene.Pool.Release(server); type.Value = 4;
+        Assert.Equal(server, scene.Gumps.Take(server)); Assert.Equal(4, scene.Pool.Slot(server)[10]); Assert.True(scene.Gumps.IsGumpForm(server));
+        int other = scene.NewAsset(12, 14); scene.Gumps.SetOwner(other, OwnerId);
+        Assert.Equal(OwnerId, scene.Gumps.Owner(other)); Assert.False(scene.Gumps.IsGumpForm(other));
+        scene.Gumps.Destroy(other, 0x123); Assert.Equal((other, 0x123u), Assert.Single(deleted));
+        scene.Pool.RawSlot(normal)[0] = 0; Assert.False(scene.Gumps.IsGumpForm(normal));
+    }
+
+    /// <summary>Native 부착과 해제는 동일 공장의 현재 장치와 깊이를 사용한다.</summary>
+    [Fact]
+    public void CurrentAttachmentAndUnpopUseSharedFactory()
+    {
+        var scene = new Scene(); var depth = new UIntBox { Value = 17 }; scene.Factory.BindFormPopDepth(depth);
+        scene.Gumps.BindCurrent(new UIntBox { Value = 3 }, (_, _) => { });
+        int parent = scene.NewAsset(10, 20); int form = scene.Gumps.Create();
+        scene.Gumps.Attach(form, parent); Assert.Equal(form, Word(scene.Pool, parent, 6)); Assert.Equal(parent, scene.Gumps.Parent(form)); Assert.Equal(17u, depth.Value);
+        scene.Gumps.Unpop(form); Assert.Equal(0, Word(scene.Pool, parent, 6)); Assert.NotEqual(0, scene.Pool.Slot(form)[11] & 4);
+    }
 }
