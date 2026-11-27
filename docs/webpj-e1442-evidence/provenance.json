@@ -1,0 +1,52 @@
+{
+  "unit": "WB04-E1442",
+  "host": "HJOW-Athlon",
+  "sourceHead": "38709bc2c7d84160c82324ddb011a893df26e471",
+  "node": "v22.23.5",
+  "nodeExecutable": "H:\\Workspace\\git\\NetstormReborn\\extracted\\webpj-node22\\node_modules\\node-win-x64\\bin\\node.exe",
+  "nodeExecutableSha256": "247e9693d316da9857e44990e5e11709f596f18112251b8026ec6eed80bdf38a",
+  "result": {
+    "unit": "WB04-E1442",
+    "recordedAt": "2026-11-27T11:26:44.192356+00:00",
+    "nodeExit": 0,
+    "files": 3543,
+    "changed": [],
+    "newlinesOnly": [],
+    "results": {
+      "tests": 6919,
+      "pass": 6919,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "durationMs": 1420181.9225
+    },
+    "runnerElapsedSeconds": 1426.3079429999925
+  },
+  "periodAfter": {
+    "v26": "2/4",
+    "v22": "2/8"
+  },
+  "carryUnits": [
+    "E1446",
+    "E1443"
+  ],
+  "evidence": {
+    "node22.log": {
+      "bytes": 2078620,
+      "sha256": "eb53e7a617a928badfeb14060c2f4b50fa78e2c94e433d04291d1c5c48b14dde"
+    },
+    "sequential-run-state.json": {
+      "bytes": 1241,
+      "sha256": "4a6fabaf6c76e40a0c47b82872535b50eecfe770b2370797137264d6d8516511"
+    },
+    "source-freeze-check.json": {
+      "bytes": 372,
+      "sha256": "61da7001fab0213d2b4c8488cadfd7e1d5a699b803ae78dc150944b44ed37b31"
+    },
+    "source-freeze.json": {
+      "bytes": 795107,
+      "sha256": "ab56d471d57b5160eaf1654533cddcdf68e58351065542598bb3df796a16531e"
+    }
+  }
+}
