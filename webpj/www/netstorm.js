@@ -685,7 +685,9 @@ export class Netstorm {
         // 현재 브라우저 효과음 장치와 원본 재생 전역·준비 중인 수명이다.
         this._clientSoundState = null; this._clientSoundDevice = null; this._clientSoundPlayer = null; this._clientSoundPrepare = null;
         // 시작 팔레트와 최초 색 정렬 입력은 Client 수명 동안 같은 객체로 유지한다.
-        this._clientPaletteScreen = null; this._clientColorSort = null;
+        this._clientPaletteScreen = null;
+        // 동기 Renderer 프레임의 Canvas 전송 묶음과 현재 합친 논리 변경 범위다.
+        this._clientScreenPresentBatch = false; this._clientScreenPresentBounds = null; this._clientColorSort = null;
         // 논리 화면에 대응하는 실제 Renderer와 월드 변경 영역 전달 장치다.
         this._clientRenderer = null; this._clientSurfaceDisplay = null; this._clientRendererFrame = null;
         // 설치 폴더에 쓰지 않는 색표 캐시는 같은 페이지의 앱 재시작 사이에 유지한다.
@@ -1110,7 +1112,11 @@ export class Netstorm {
         this._displayDirty = true;
         if (layout.visible) {
             if (!this._ctx) throw new Error('Client Screen의 현재 Canvas 문맥 누락');
-            this._presenter.present(this._ctx, surface, layout, true);
+            // 브라우저는 JS 프레임 종료 뒤 표시하므로 프레임 안의 여러 Screen 복사는 마지막에 한 번 전송한다.
+            if (this._clientScreenPresentBatch) {
+                const previous = this._clientScreenPresentBounds;
+                this._clientScreenPresentBounds = previous ? { left: Math.min(previous.left, rect.left), top: Math.min(previous.top, rect.top), right: Math.max(previous.right, rect.right), bottom: Math.max(previous.bottom, rect.bottom) } : { ...rect };
+            } else this._presenter.present(this._ctx, surface, layout, true, rect);
         }
     }
 
@@ -4289,7 +4295,14 @@ export class Netstorm {
             // 기존 Tell 창은 별도 Gump 이식 전까지 실제 월드 위에 합성한다. 창이 있거나 바뀌면 이전 픽셀을 전체 복구한다.
             const dialog = this._mainMenu.dialog;
             if (dialog || this._mainMenu.dirty || this._displayDirty) this._clientRenderer.invalidateAll();
-            this._drawCampaignRendererFrame();
+            // 같은 동기 프레임의 실제 변경 범위만 합친다. 오류가 나도 앞서 복사한 부분은 finally에서 표시한다.
+            this._clientScreenPresentBatch = true; this._clientScreenPresentBounds = null;
+            try { this._drawCampaignRendererFrame(); }
+            finally {
+                this._clientScreenPresentBatch = false;
+                const dirty = this._clientScreenPresentBounds; this._clientScreenPresentBounds = null;
+                if (dirty) this._presenter.present(ctx, this._surface, layout, true, dirty);
+            }
             if (dialog) { dialog.draw(this._surface); this._presenter.present(ctx, this._surface, layout, true); }
             this._mainMenu.dirty = false; this._displayDirty = false;
             this._campaignCameraDevice().applyCameraFrame();

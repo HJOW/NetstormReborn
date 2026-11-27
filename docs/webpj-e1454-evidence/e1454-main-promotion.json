@@ -1,0 +1,68 @@
+{
+  "names": {
+    "netstorm.js": "webpj/www/netstorm.js",
+    "presenter.js": "webpj/www/render/presenter.js",
+    "screen.js": "webpj/www/render/screen.js",
+    "raw-surface-world.js": "webpj/www/core/raw-surface-world.js"
+  },
+  "test": "webpj/tests/client-screen-present.test.mjs",
+  "sourceSha256": {
+    "webpj/www/netstorm.js": "d328528e812750c8213235e4703b5ee6d61002488e0ea81e5a201bd67ded44cf",
+    "webpj/www/render/presenter.js": "1dfb3a1f2f78784730b7fc5688c2b4e591bf449618a0e260c55dc3605304372b",
+    "webpj/www/render/screen.js": "eeff43364764b0a19b03acf59a7a85e3a7810a5f5f4be4f9f9b33335fabb9c50",
+    "webpj/www/core/raw-surface-world.js": "31986ce5c01d0dd6f7c5da469279e26f35af6ce64da2f960aafb9130cc9a7b79"
+  },
+  "beforeFreeze": {
+    "phase": "complete",
+    "createdAt": "2026-11-27T12:30:25.821134+00:00",
+    "runnerPid": 1512,
+    "sourceMutationForbiddenUntilBothDone": false,
+    "completed": [
+      {
+        "unit": "WB04-E1452",
+        "recordedAt": "2026-11-27T12:43:28.942792+00:00",
+        "nodeExit": 0,
+        "files": 3545,
+        "changed": [],
+        "newlinesOnly": [],
+        "results": {
+          "tests": 6923,
+          "pass": 6923,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "durationMs": 772038.3005
+        },
+        "runnerElapsedSeconds": 779.5831696999958
+      },
+      {
+        "unit": "WB04-E1453",
+        "recordedAt": "2026-11-27T13:03:10.068153+00:00",
+        "nodeExit": 0,
+        "files": 3545,
+        "changed": [],
+        "newlinesOnly": [],
+        "results": {
+          "tests": 6923,
+          "pass": 6923,
+          "fail": 0,
+          "cancelled": 0,
+          "skipped": 0,
+          "todo": 0,
+          "durationMs": 1169688.2885
+        },
+        "runnerElapsedSeconds": 1178.0663933999895
+      }
+    ],
+    "unit": "E1453",
+    "version": "v22.23.5",
+    "childPid": 10888,
+    "log": "H:\\Workspace\\git\\NetstormReborn\\webpj\\extracted\\webpj-e1453-node22.log",
+    "files": 3545
+  },
+  "periodBeforeUnit": {
+    "v26": 1,
+    "v22": 1
+  }
+}

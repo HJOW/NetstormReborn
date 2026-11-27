@@ -25,6 +25,16 @@ export function convertIndexedToRgba(pixels, lookup, output) {
     return output;
 }
 
+// 바뀐 논리 사각형의 색 번호만 같은 전체 RGBA 예약에 쓴다. 바깥 픽셀은 보존한다.
+function convertIndexedRectToRgba(pixels, lookup, output, width, rect) {
+    // 각 행의 exclusive 오른쪽 끝까지 현재 팔레트를 적용한다.
+    for (let y = rect.top; y < rect.bottom; y += 1) {
+        const end = y * width + rect.right;
+        // 현재 행에서 바뀐 픽셀에만 같은 팔레트 값을 쓴다.
+        for (let index = y * width + rect.left; index < end; index += 1) output[index] = lookup[pixels[index]];
+    }
+}
+
 // 확대 방식 이름을 지원하는 값으로 바꾼다. (2026-10-23 WB03-M1)
 export function normalizeScaling(value) {
     return SCALING_MODES.includes(value) ? value : 'sharp';
@@ -86,13 +96,24 @@ export class IndexedPresenter {
     }
 
     // 표면을 Canvas 에 표시한다. changed 가 true 이거나 크기·팔레트가 바뀌었으면 색 변환을 다시 한다.
-    // layout 은 netstorm.js computeLayout 결과이며, 그림은 Canvas 내부 픽셀 전체(canvasWidth×canvasHeight)를 채운다.
-    present(ctx, surface, layout, changed) {
+    // layout 은 netstorm.js computeLayout 결과다. 선택적인 dirtyRect는 같은 논리 화면의 exclusive 변경 사각형이며 생략하면 전체를 갱신한다.
+    present(ctx, surface, layout, changed, dirtyRect = null) {
         if (!this.lookup) return;
         this.ensureSource(surface.width, surface.height);
+        // 새 크기/팔레트는 전체 변환한다. 기존 네 인자 호출도 전체 갱신 계약을 유지한다.
+        const dirty = changed && !this.stale && dirtyRect ? {
+            left: Math.max(0, Math.min(surface.width, dirtyRect.left | 0)), top: Math.max(0, Math.min(surface.height, dirtyRect.top | 0)),
+            right: Math.max(0, Math.min(surface.width, dirtyRect.right | 0)), bottom: Math.max(0, Math.min(surface.height, dirtyRect.bottom | 0)),
+        } : null;
         if (changed || this.stale) {
-            convertIndexedToRgba(surface.pixels, this.lookup, this.imageWords);
-            this.sourceContext.putImageData(this.imageData, 0, 0);
+            if (dirty) {
+                if (dirty.right <= dirty.left || dirty.bottom <= dirty.top) return;
+                convertIndexedRectToRgba(surface.pixels, this.lookup, this.imageWords, surface.width, dirty);
+                this.sourceContext.putImageData(this.imageData, 0, 0, dirty.left, dirty.top, dirty.right - dirty.left, dirty.bottom - dirty.top);
+            } else {
+                convertIndexedToRgba(surface.pixels, this.lookup, this.imageWords);
+                this.sourceContext.putImageData(this.imageData, 0, 0);
+            }
             this.stale = false;
             this.scaledFactor = 0;
         }
@@ -104,7 +125,11 @@ export class IndexedPresenter {
         const isInteger = nearestInteger >= 1 && Math.abs(scale - nearestInteger) < INTEGER_SCALE_EPSILON;
         if (this.scaling === 'nearest' || (this.scaling === 'sharp' && isInteger)) {
             ctx.imageSmoothingEnabled = false;
-            ctx.drawImage(this.source, 0, 0, targetWidth, targetHeight);
+            // 두 축이 정확한 정수 배율일 때만 부분 확대한다. 비정수 샘플링 위상은 기존 전체 표시로 보존한다.
+            if (dirty && targetWidth === surface.width * nearestInteger && targetHeight === surface.height * nearestInteger) {
+                const width = dirty.right - dirty.left, height = dirty.bottom - dirty.top;
+                ctx.drawImage(this.source, dirty.left, dirty.top, width, height, dirty.left * nearestInteger, dirty.top * nearestInteger, width * nearestInteger, height * nearestInteger);
+            } else ctx.drawImage(this.source, 0, 0, targetWidth, targetHeight);
             return;
         }
         if (this.scaling === 'smooth' || scale < 1) {

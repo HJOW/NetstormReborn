@@ -514,6 +514,14 @@ export class Screen {
         const exact = first >= -BigInt(Number.MAX_SAFE_INTEGER) && first <= BigInt(Number.MAX_SAFE_INTEGER);
         if (!exact && width > 0 && height > 0) throw new RangeError('구름 buffer 복사의 실제 물리 범위');
         const origin = exact ? Number(first) : 0;
+        // 서로 다른 실제 BYTE 저장소의 유효 범위만 네이티브 행 복사한다. 겹침/범위 실패의 원래 DWORD 순서와 부분 효과는 아래 경로에 남긴다.
+        const sourceEnd = origin + (height - 1) * sourcePitch + width, destinationStart = target.top * pitch + target.left, destinationEnd = (target.bottom - 1) * pitch + target.left + width;
+        if (width > 0 && height > 0 && source instanceof Uint8Array && this.#buffer instanceof Uint8Array && source.buffer !== this.#buffer.buffer &&
+            source.subarray === Uint8Array.prototype.subarray && this.#buffer.set === Uint8Array.prototype.set && origin >= 0 && sourceEnd <= source.length && destinationStart >= 0 && destinationEnd <= this.#buffer.length) {
+            // 행 간격/패딩은 건드리지 않고 이미 검증한 각 행의 실제 폭만 복사한다.
+            for (let row = 0; row < height; row += 1) this.#buffer.set(source.subarray(origin + row * sourcePitch, origin + row * sourcePitch + width), destinationStart + row * pitch);
+            return;
+        }
         const word = new Uint8Array(4);
         // 행마다 현재 원시 source 와 같은 실제 잠긴 DIB 를 사용한다.
         for (let row = 0; row < height; row += 1) {

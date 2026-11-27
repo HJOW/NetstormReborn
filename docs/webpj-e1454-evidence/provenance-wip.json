@@ -1,0 +1,40 @@
+{
+  "unit": "E1454",
+  "recordedAt": "2026-11-27T13:03:30.919304+00:00",
+  "mainNotApplied": true,
+  "sourceFreeze": "E1452/E1453",
+  "candidateSha256": {
+    "netstorm.js": "d328528e812750c8213235e4703b5ee6d61002488e0ea81e5a201bd67ded44cf",
+    "presenter.js": "1dfb3a1f2f78784730b7fc5688c2b4e591bf449618a0e260c55dc3605304372b",
+    "screen.js": "eeff43364764b0a19b03acf59a7a85e3a7810a5f5f4be4f9f9b33335fabb9c50",
+    "raw-surface-world.js": "31986ce5c01d0dd6f7c5da469279e26f35af6ce64da2f960aafb9130cc9a7b79"
+  },
+  "mainSha256": {
+    "www/netstorm.js": "b7a32661c4c6be49019708030d7306f47dc3f620d480bb037196661e79c577cd",
+    "www/render/presenter.js": "167fcc432f78a4d65b39b4b647257684ce2f861b42604ec06421fe2753fa3c0b",
+    "www/render/screen.js": "b40b466e9a60eb97b23e82c49da226bc1e026ab1e3eccf864eca19a580edb744",
+    "www/core/raw-surface-world.js": "a909b7190e8e85614c5ffa0692f317b8a6ddde1d3db4beaadbabe3c54b47ce8b"
+  },
+  "focus": {
+    "before": "initial3testsfail",
+    "partial": 44,
+    "batch": 46,
+    "fastDifferential128": 47,
+    "final4modulesIncludingWorld": 88,
+    "eslintCandidate4": 0
+  },
+  "canvas": {
+    "threeModules": "e1454-fast-canvas,16checkpointsSHAequal0pixels+gamedump",
+    "fourModules": "e1454-views-canvas,16checkpointsSHAequal0pixels+gamedump"
+  },
+  "scaling": "e1454-scaling.json:72 actualChrome comparisons 0pixel; Presenter unchanged acrossfour-module candidate",
+  "performance": {
+    "baseline": "E1449 11.3..14.1 wide60/120",
+    "partial": "E1454 opt17/13, CPU sampled",
+    "batch": "E1454 batch40/34, CPU sampled",
+    "threeModuleFast": "E1454-fast-profile49/35 CPU sampled plus concurrentpixelcollector; contendednotsteadyclaim",
+    "threeModuleNoCpu": "E1454-final-profile43.3/32.1/39.2/36.1, 30secs each wide",
+    "fourModuleNoCpu": "E1454-views-final-profile running4x30, session45676, nootheractualbrowsercollectorbutNode22fullDNactive"
+  },
+  "todo": "AFTER both full complete/hash checks: promote4modules+7tests; correcttestrelativeimports; mainfocus88, buildlintfirst/bundlefresh/L2; actualmain rerun pixels/perfifneeded. Do not claim60/120target reached from42..48. GameAux24classification stillopen, no E1451implementationwritten."
+}

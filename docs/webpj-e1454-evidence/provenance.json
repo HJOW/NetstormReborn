@@ -1,0 +1,53 @@
+{
+  "unit": "WB04-E1454",
+  "headBeforeCommit": "5a71e1c652ab3512899df9c2e617d02df8ff5597",
+  "candidateEqualsMain": true,
+  "sourceSha256": {
+    "webpj/www/netstorm.js": "d328528e812750c8213235e4703b5ee6d61002488e0ea81e5a201bd67ded44cf",
+    "webpj/www/render/presenter.js": "1dfb3a1f2f78784730b7fc5688c2b4e591bf449618a0e260c55dc3605304372b",
+    "webpj/www/render/screen.js": "eeff43364764b0a19b03acf59a7a85e3a7810a5f5f4be4f9f9b33335fabb9c50",
+    "webpj/www/core/raw-surface-world.js": "31986ce5c01d0dd6f7c5da469279e26f35af6ce64da2f960aafb9130cc9a7b79"
+  },
+  "testSha256": "dc3635f3a326222e40d60e16ba596de6de84a4bd161d097c297e74ee5ca21832",
+  "mainProfileSourcesMatch": true,
+  "mainFocus": 88,
+  "mainBuild": 0,
+  "bundleBytes": 3517008,
+  "freshBundle": 1,
+  "chromiumL2": 1,
+  "canvas": {
+    "checkpoints": 16,
+    "allRawCanvasMismatches": 0,
+    "beforeAndCandidateShaEqual": true,
+    "dumpDifferences": 0,
+    "finalCalls": [
+      {
+        "present": 1104,
+        "screen": 1102,
+        "dirtyArea": 188202880
+      },
+      {
+        "present": 479,
+        "screen": 1113,
+        "dirtyArea": 187700315
+      }
+    ]
+  },
+  "scaling": {
+    "cases": 72,
+    "pixelDifferences": 0
+  },
+  "fixtureFileCheck": {
+    "entries": 1331,
+    "checked": 1319,
+    "unhashed": 12,
+    "missing": [],
+    "mismatches": [],
+    "scope": "원래measure의정규화해시/존재만; Git기준선drift별도기존CLI실행중"
+  },
+  "fullManifestGitAudit": "기존CLI는느린Git CPP기준선재검토로계속실행중, 세션73925. 이 결과를완료로세지않음. 파일해시/존재빠른검사는같은공식measure로완료.",
+  "periodAfterUnit": {
+    "v26": 2,
+    "v22": 2
+  }
+}

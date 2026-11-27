@@ -842,13 +842,18 @@ export class RawSurfaceWorld {
     objects() {
         const pool = this.#storage.pool;
         const result = [];
-        // 현재 살아 있는 자산 번호만 읽는다.
+        // 가상 호출/쓰기 없는 동기 조회이므로 슬롯마다 50BYTE 사본을 만들지 않고 현재 풀의 읽기 뷰를 쓴다.
+        // 매 호출마다 다시 빌려 양수 reset의 새 저장소를 따르며, 반환 객체에는 뷰/풀 참조를 담지 않는다.
+        const first = pool.physical(0), length = pool.capacity * pool.layout.stride;
+        const bytes = new Uint8Array(first.buffer, first.byteOffset, length), view = new DataView(first.buffer, first.byteOffset, length);
+        // 현재 살아 있는 자산을 기존 SID 오름차순과 같은 필드 폭으로 읽는다.
         for (let id = RESERVED_SIDS; id < pool.capacity; id += 1) {
-            const raw = pool.slot(id);
-            if ((raw[SLOT_STATE] & INACTIVE) || raw[SLOT_TYPE] < FIRST_ASSET_TYPE) continue;
-            result.push({ sid: id, object: { type: raw[SLOT_TYPE], owner: raw[SLOT_OWNER], frame: dword(raw, SLOT_FRAME) | 0, x: floatAt(raw, SLOT_X), y: floatAt(raw, SLOT_Y) } });
+            const offset = id * pool.layout.stride;
+            if ((bytes[offset + SLOT_STATE] & INACTIVE) || bytes[offset + SLOT_TYPE] < FIRST_ASSET_TYPE) continue;
+            result.push({ sid: id, object: { type: bytes[offset + SLOT_TYPE], owner: bytes[offset + SLOT_OWNER], frame: view.getUint32(offset + SLOT_FRAME, true) | 0, x: view.getFloat32(offset + SLOT_X, true), y: view.getFloat32(offset + SLOT_Y, true) } });
         }
         return result;
+
     }
 
     // 마지막 PrepareFrame 이 고정한 프레임 시각 사본이다(cpppj Report 첫 줄의 game/number 관측). (2026-11-11 WB04-E299)

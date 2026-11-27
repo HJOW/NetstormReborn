@@ -1,0 +1,86 @@
+(node:22196) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✖ 부분 표시: 바깥 픽셀 보존·정수2배의 정확한 원본/대상 사각형 (22.1492ms)
+✖ 부분 표시: 팔레트/크기 변경 전체 복원과 비정수 배율 표시 (0.6665ms)
+✖ Client 부분 표시: DIB 패딩 제외 복사와 같은 변경 사각형 전달 (5.2326ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 0
+ℹ fail 3
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3501.1246
+
+✖ failing tests:
+
+test at extracted\e1454-perf\presenter-dirty.test.mjs:14:1
+✖ 부분 표시: 바깥 픽셀 보존·정수2배의 정확한 원본/대상 사각형 (22.1492ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + 4278190171
+  - 4278190083
+           ^
+  
+      at TestContext.<anonymous> (file:///H:/Workspace/git/NetstormReborn/webpj/extracted/e1454-perf/presenter-dirty.test.mjs:16:49)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 4278190171,
+    expected: 4278190083,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at extracted\e1454-perf\presenter-dirty.test.mjs:20:1
+✖ 부분 표시: 팔레트/크기 변경 전체 복원과 비정수 배율 표시 (0.6665ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  
+  3 !== 7
+  
+      at TestContext.<anonymous> (file:///H:/Workspace/git/NetstormReborn/webpj/extracted/e1454-perf/presenter-dirty.test.mjs:21:148)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: 3,
+    expected: 7,
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
+
+test at extracted\e1454-perf\presenter-dirty.test.mjs:26:1
+✖ Client 부분 표시: DIB 패딩 제외 복사와 같은 변경 사각형 전달 (5.2326ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + undefined
+  - {
+  -   bottom: 3,
+  -   left: 1,
+  -   right: 4,
+  -   top: 1
+  - }
+  
+      at TestContext.<anonymous> (file:///H:/Workspace/git/NetstormReborn/webpj/extracted/e1454-perf/presenter-dirty.test.mjs:28:140)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async Test.processPendingSubtests (node:internal/test_runner/test:974:7) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: undefined,
+    expected: { left: 1, top: 1, right: 4, bottom: 3 },
+    operator: 'strictEqual',
+    diff: 'simple'
+  }
