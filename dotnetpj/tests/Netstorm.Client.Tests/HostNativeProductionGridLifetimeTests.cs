@@ -5,6 +5,7 @@ using Netstorm.Client.Gump;
 using Netstorm.Client.Host;
 using Netstorm.Client.Input;
 using Netstorm.Core.Original;
+using Netstorm.Core.Simulation;
 
 // 실제 생산 격자와 Native 자산의 부모 삭제 수명을 함께 검사한다.
 namespace Netstorm.Client.Tests;
@@ -64,7 +65,25 @@ public sealed partial class HostPriestWorldLiveTests
             Assert.Equal((0u, 0u, 0u), (bridge.Object, bridge.Form, bridge.Flags & 0x40));
             Assert.Equal((0u, 0u, 0u), (teleport.Object, teleport.Form, teleport.Flags & 0x40));
             Assert.Equal(0u, surface.Storage.BaseDestroy().PreDepth); Assert.Equal(0u, surface.Storage.BaseDestroy().PostDepth);
+            var borrowed = new List<int>(); var reused = new HashSet<int>();
+            // 실제 FIFO 풀을 순회해 반환된 두 Form 번호가 다른 할당에 재사용될 때까지 보유한다.
+            while (reused.Count < 2 && borrowed.Count < 15000)
+            {
+                int sid = session.Pool.Allocate(SidAllocation.Client); borrowed.Add(sid);
+                if (sid == bridgeForm || sid == teleportForm)
+                {
+                    reused.Add(sid); session.Pool.AllocatedBytes(sid)[10] = 80;
+                }
+            }
+            Assert.Equal(2, reused.Count);
             panel.Dispose(); panel = null; html.CloseAll(); session.ReleasePlayerProcesses();
+            // 이전 격자 정리가 재사용된 다른 객체의 슬롯을 건드리지 않아야 한다.
+            foreach (int sid in reused)
+            {
+                Assert.Equal(80, session.Pool.AllocatedBytes(sid)[10]);
+            }
+            // 검사에서 보유한 임시 슬롯은 같은 풀에 반환한다.
+            foreach (int sid in borrowed) session.Pool.Release(sid);
         }
     }
 }
