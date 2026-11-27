@@ -1,0 +1,7 @@
+{
+  "recordedAt": "2026-11-27T09:46:58.405373+00:00",
+  "correction": "별도Normal수집기는이미level[2]였음. 여러로그출력을잘못구분해Easy부터시작했다고오판하여정상수집기를중단함. for치환이놓친것이라는이전설명은잘못됐고assert n==1은0으로실패했으므로파일변경없음.",
+  "wronglyNamedFiles": "e1436-half-normal-first-wrong-level.cjs/log는이름과달리정상Normal실행자료다. 삭제하지않고원문유지.",
+  "nowStopped": "중복Normal재실행과더이상필요없는Easy씨앗탐색만중단.",
+  "authoritativeRemaining": "e1436-half.cjs의실제Easy3개성공후Normal연속수집은계속됨. seed4/양측12000/게임로직count후보한곳외변경없음."
+}

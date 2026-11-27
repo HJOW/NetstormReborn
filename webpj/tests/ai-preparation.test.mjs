@@ -279,3 +279,16 @@ test('AI 준비: 선택되지 않은 누락 하위는 요구하지 않고 선택
     assert.ok(throws(() => new RawAiPreparation(input.memory, input.pool, input.players, input.allies.slice(1), globals, {})));
     assert.ok(throws(() => new RawAiPreparation(input.memory, input.pool, input.players, input.allies, { ...globals, now: undefined }, {})));
 });
+
+// 원문대조와교정정책의다른목록개수를같은명시입력에서구별한다.
+test('AI 준비 교정: 간헐천목록40칸의실제개수로연결2개를세고원문기본은0을유지한다',()=>{
+ const input=new PreparationInput();input.field(0x298,7);input.field(0x32c,2);input.field(0x338,0);input.geyser(0,700);input.geyser(1,701);input.graphs.set(700,7);input.graphs.set(701,7);assert.equal(input.make().countAttachedGeysers(input.token),0);
+ const fixed=new RawAiPreparation(input.memory,input.pool,input.players,input.allies,{localOwner:()=>8,playerKnown:()=>1,noRegion:()=>127,now:()=>0},input.hooks,{correctGeyserCount:true});assert.equal(fixed.countAttachedGeysers(input.token),2);assert.deepEqual(input.graphQueries,[700,701]);
+ // 옛다른목록의큰개수는40칸간헐천블록범위를넘겨읽지않는다.
+ input.field(0x338,500);assert.equal(fixed.countAttachedGeysers(input.token),2);
+});
+test('AI 준비 교정: 그래프조회뒤현재목록개수와새포인터를재조회한다',()=>{
+ const input=new PreparationInput();input.field(0x298,7);input.field(0x32c,1);input.geyser(0,700);const replacement=input.memory.allocate(8);put(input.memory.bytes(replacement),0,700);put(input.memory.bytes(replacement),4,702);const seen=[];
+ input.hooks.graph=(sid)=>{seen.push(sid);if(sid===700){input.field(0x324,replacement);input.field(0x32c,2);}return 7;};
+ const fixed=new RawAiPreparation(input.memory,input.pool,input.players,input.allies,{localOwner:()=>8,playerKnown:()=>1,noRegion:()=>127,now:()=>0},input.hooks,{correctGeyserCount:true});assert.equal(fixed.countAttachedGeysers(input.token),2);assert.deepEqual(seen,[700,702]);
+});

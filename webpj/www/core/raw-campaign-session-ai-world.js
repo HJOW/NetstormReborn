@@ -88,7 +88,7 @@ export class RawCampaignSessionAiWorld {
             storedSp: (owner) => float(o.sp.get(owner)), addLocalSp: (delta) => o.hp.addSp(o.playerState.battleOwner, delta), demo: () => o.services.missionOutcome.demo(), knowledgeOpen: () => o.cursorDrop.lockDepth === 0,
             blockingGumpOpen: () => need(o.services.ai.blockingGumpOpen, '현재 차단 Gump 조회')(), initialScan: (token) => { this.#live(); o.aiWorld.fullScan(token); },
         }; this.preparationHooks = preparation;
-        o.aiPreparation = new RawAiPreparation(o.aiMemory, c.pool, o.players, o.alliances, { localOwner: () => o.playerState.battleOwner, playerKnown: () => o.playerState.playerKnown, noRegion: () => o.noRegion, invalidGraph: () => c.bookkeeping.invalidGraph >>> 0, now: () => c.processState.now }, preparation);
+        o.aiPreparation = new RawAiPreparation(o.aiMemory, c.pool, o.players, o.alliances, { localOwner: () => o.playerState.battleOwner, playerKnown: () => o.playerState.playerKnown, noRegion: () => o.noRegion, invalidGraph: () => c.bookkeeping.invalidGraph >>> 0, now: () => c.processState.now }, preparation, { correctGeyserCount: true });
         const setup = {
             regionBounds: (region) => this.regionBounds(region), temple: (region) => o.islands.temple(region), destroy: (sid, flags) => { this.#live(); o.world.destroy(sid, flags); },
             assertion: (text) => need(o.services.ai.assertion, '전략 준비 진단')(text), demo: () => o.services.missionOutcome.demo() !== 0,

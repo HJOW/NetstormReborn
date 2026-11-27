@@ -62,9 +62,12 @@ export class RawAiPreparation {
     #allies;
     #globals;
     #hooks;
+    // 실제11.01세션은간헐천목록의개수를맞추고독립원문대조는기존불일치를유지한다.
+    #correctGeyserCount;
 
     // 본문이 선택하기 전에는 외부 월드 효과나 목록 포인터에 접근하지 않는다. (2026-11-09 WB04-E181)
-    constructor(memory, pool, players, allies, globals, hooks) {
+    constructor(memory, pool, players, allies, globals, hooks, { correctGeyserCount = false } = {}) {
+        if (typeof correctGeyserCount !== 'boolean') throw new TypeError('AI 준비 간헐천 개수 교정은 논리값이어야 합니다.');
         if (!memory || typeof memory.bytes !== 'function') throw new TypeError('AI 준비 본체 소유자 누락');
         if (pool?.edition !== 'patch1078' || !(players instanceof Uint8Array) || players.length !== PLAYER_SLOTS * PLAYER_BYTES || allies?.length !== PLAYER_SLOTS * PLAYER_SLOTS) {
             throw new TypeError('AI 준비 같은 PATCH/Player9/동맹81 계약 누락');
@@ -78,6 +81,7 @@ export class RawAiPreparation {
         this.#allies = allies;
         this.#globals = globals;
         this.#hooks = hooks ?? {};
+        this.#correctGeyserCount = correctGeyserCount;
     }
 
     // 조립 시 같은 실제 풀인지 확인하기 위한 풀이다. (2026-11-09 WB04-E181)
@@ -129,11 +133,11 @@ export class RawAiPreparation {
         }
     }
 
-    // 00411a80: 원본은 +0x324 목록을 +0x338 개수만 읽는다(이 불일치를 +0x32c 로 교정하지 않음). (2026-11-09 WB04-E181)
+    // 00411a80: 기본 원문대조는+0x338을유지한다. 실제세션의교정정책은+0x324목록의실제개수+0x32c를쓴다. (2026-11-09 WB04-E181)
     countAttachedGeysers(token) {
         let count = 0;
         // graph 하위가 개수/포인터/기준 그래프를 바꿀 수 있으므로 각 원문 위치에서 다시 읽는다.
-        for (let index = 0; index < signed(this.#field(token, 0x338)); index += 1) {
+        for (let index = 0; index < signed(this.#field(token, this.#correctGeyserCount ? 0x32c : 0x338)); index += 1) {
             const list = this.#memory.bytes(this.#field(token, 0x324));
             const sid = read(list, index * 4);
             const graph = need(this.#hooks.graph, 'AI 준비 간헐천 그래프 미연결')(sid);

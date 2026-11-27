@@ -1,0 +1,64 @@
+✔ AI 준비: 강제 대상과 첫 비동맹 선택이 서로 다른 하위 호출/조기 반환 계약을 유지한다 (75.4327ms)
+✔ AI 준비: 같은 최초 스캔 위치·그래프/범위·두 수량 판정과 QWORD 시각을 합쳐 대조한다 (6.6323ms)
+✔ AI 준비: 절반 HP 경계·전체 동맹 거리 방문·현재 적 조기 반환과 HP 선저장을 확인한다 (6.4463ms)
+✔ AI 준비: FILD 정수 비교와 float 차액 저장을 구분하고 두 번째 SP 읽기의 현재 owner/지갑을 보존한다 (3.2663ms)
+✔ AI 준비: +0x324 포인터·+0x338 개수의 실제 조합과 하위 뒤 현재 개수/포인터/기준 그래프를 재조회한다 (1.6694ms)
+✔ AI 준비: 선택되지 않은 누락 하위는 요구하지 않고 선택된 지점에서는 앞선 실제 쓰기를 유지한 채 오류를 낸다 (3.1163ms)
+✔ AI 준비 교정: 간헐천목록40칸의실제개수로연결2개를세고원문기본은0을유지한다 (2.553ms)
+✔ AI 준비 교정: 그래프조회뒤현재목록개수와새포인터를재조회한다 (1.1883ms)
+✖ 수집자생산: 완성5와건설중1이면6목표의추가생산을막고사망뒤한칸을다시허용한다 (7.8169ms)
+✖ 수집자생산: 쉬움3/보통6과미연결최소1·다른소유자/사제/유령후보를구분한다 (1.7222ms)
+✔ AI 수집자: 신전/그래프/후보 관문은 난수와 선택되지 않은 하위를 요구하지 않는다 (115.1014ms)
+✔ AI 수집자: 일반 선택은 1000 → 후보 종류 → y → x 난수와 세 번 생산 조회를 원문 순서로 소비한다 (1.8913ms)
+✔ AI 수집자: 부족하지 않음/기한 전/보류 조각/자금 부족은 각 원문 지점에서만 종료한다 (4.6725ms)
+✔ AI 수집자: 난수로 고른 타입의 생산이 없으면 현재 첫 후보로 바꾸고 다시 두 번 조회한다 (1.389ms)
+✔ AI 수집자: 취약 적용 비행 타입은 일반 충족/보류/자금 관문을 추가하지 않으며 HP 를 최대 HP 하위 전에 저장한다 (3.6658ms)
+✔ AI 수집자: 실패 후보는 최대 20회에서 끝나며 각 시도에서 현재 경계를 따로 저장한다 (2.8621ms)
+✔ AI 수집자: 배치 하위 뒤 현재 rate/시각, 로그 뒤 현재 로컬 소유자를 다시 읽는다 (1.5261ms)
+✔ AI 수집자: 정수 절반 HP/목록 물리 범위/unordered 기한과 선택된 효과 누락을 확인한다 (3.9407ms)
+✔ AI 수집자 생성자: 본체 소유자/PATCH 풀/TYPE 표/난수/현재 전역 조회기가 없으면 거부한다 (1.5492ms)
+✔ Session AI 생산 조립: 선행·반복·반납·같은 실제 Pool/난수와 생성 시 본체 할당0 (760.9096ms)
+✔ Session AI Regular: 같은 실제 확보 객체·내용물 부모/Host·payload·현재 시각과 누락 오류 (132.2806ms)
+✔ Session AI 비용/역할: 같은 현재 지갑·기술 부모·워크샾/신전 역할 변경과 실제 미연결 관문 (69.394ms)
+✔ Session AI 다리: 실제 현재 FrameCodeTable/보호 패턴으로 모양을 만들고 게임 난수는 바꾸지 않는다 (65.3643ms)
+✔ Session AI 에너지/로그: 실제 평가 반환과 현재 장기 진단 DWORD·종류/본문을 보존한다 (103.5259ms)
+✔ Session AI 월드 조립: 선행·반복·반납과 동일 Pool/난수·생성 시 본체 할당0 (658.5875ms)
+✔ Session AI 생성/삭제 통지: 실제 Player 생성/Pop·공통 삭제 전처리가 같은 현재 brain 통계를 바꾼다 (178.4779ms)
+✔ Session AI 장치: 현재 경로 없음·원문 점 거리·SP 비트·현재 UI 잠금/진단 (122.3961ms)
+✔ Session AI 로그: 현재 b00 관문과 실제 종류29·TYPE 이름·signed owner/간헐천 번호 (142.1909ms)
+✔ Session AI 경제·준비: 같은 본체/분산 SP와 강제 적·미준비 전략의 자연 반환 (200.5003ms)
+✔ Session AI 통지 반납: 살아 있는 UI 토큰을 공유하고 몸체가 필요한 때만 미연결 오류 (152.9861ms)
+ℹ tests 30
+ℹ suites 0
+ℹ pass 28
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 11273.7666
+
+✖ failing tests:
+
+test at webpj\extracted\e1436-policy\collector-capacity.test.mjs:11:1
+✖ 수집자생산: 완성5와건설중1이면6목표의추가생산을막고사망뒤한칸을다시허용한다 (7.8169ms)
+  TypeError [Error]: AI 실제 메모리 핸들/미초기화 byte 입력 누락
+      at new RawAiBrainMemory (file:///H:/Workspace/git/NetstormReborn/webpj/www/core/raw-ai-brain.js:62:62)
+      at scene (file:///H:/Workspace/git/NetstormReborn/webpj/extracted/e1436-policy/collector-capacity.test.mjs:8:105)
+      at TestContext.<anonymous> (file:///H:/Workspace/git/NetstormReborn/webpj/extracted/e1436-policy/collector-capacity.test.mjs:11:62)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17)
+
+test at webpj\extracted\e1436-policy\collector-capacity.test.mjs:12:1
+✖ 수집자생산: 쉬움3/보통6과미연결최소1·다른소유자/사제/유령후보를구분한다 (1.7222ms)
+  TypeError [Error]: AI 실제 메모리 핸들/미초기화 byte 입력 누락
+      at new RawAiBrainMemory (file:///H:/Workspace/git/NetstormReborn/webpj/www/core/raw-ai-brain.js:62:62)
+      at scene (file:///H:/Workspace/git/NetstormReborn/webpj/extracted/e1436-policy/collector-capacity.test.mjs:8:105)
+      at TestContext.<anonymous> (file:///H:/Workspace/git/NetstormReborn/webpj/extracted/e1436-policy/collector-capacity.test.mjs:12:90)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.processPendingSubtests (node:internal/test_runner/test:974:18)
+      at Test.postRun (node:internal/test_runner/test:1542:19)
+      at Test.run (node:internal/test_runner/test:1467:12)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3)

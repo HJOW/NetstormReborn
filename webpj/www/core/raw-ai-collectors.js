@@ -204,6 +204,8 @@ export class RawAiCollectors {
             }
         }
         if (this.#field(token, 0x2cc)) return;
+        // 실제 세션의 자원 생산은 건설 중 유닛도 포함한 여유를 확인한다. 독립 원문 대조/특수 포획용 비행 분기는 유지한다.
+        if (this.#hooks.collectorCapacity && !this.#hooks.collectorCapacity(token)) return;
         const index = signed(this.#random.next(this.#field(token, 0x28c)));
         let type = this.#item(token, 0x284, index);
         if (!need(this.#hooks.product, 'AI 수집자 현재 생산 조회 미연결')(token, type)) type = this.#item(token, 0x284, 0);

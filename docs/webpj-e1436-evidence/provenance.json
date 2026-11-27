@@ -1,0 +1,218 @@
+{
+  "unit": "WB04-E1436",
+  "host": "HJOW-Athlon",
+  "candidateSources": {
+    "raw-ai-preparation.js": {
+      "candidateEqualsAppliedRaw": true,
+      "sha256": "c09cd5478a1f4e7ee184a026bca2a3f921b24cbdcab14bc412a56e1b8ffd47ee"
+    },
+    "raw-campaign-session-ai-world.js": {
+      "candidateEqualsAppliedRaw": true,
+      "sha256": "c0d28ad0fced79bb02cea3d33194d78c27c74e9ed942de1765c19254e8fd215f"
+    },
+    "raw-ai-collectors.js": {
+      "candidateEqualsAppliedRaw": true,
+      "sha256": "1be1c3fd0c146a17adc02d9869326e0f4d07f5e9e881c9efb831a6e69b4cb64e"
+    },
+    "raw-campaign-session-ai-production.js": {
+      "candidateEqualsAppliedRaw": true,
+      "sha256": "b86ca73c522532ed46dff2865b08f57500d86a4e0fa3068fd883970c2c581be3"
+    }
+  },
+  "checks": {
+    "mainFocus": "26/26",
+    "preWebpackLintBuild": 0,
+    "bundleFresh": "1/1",
+    "strictChromiumL2": "1/1"
+  },
+  "periodAfter": {
+    "v26": "2/4",
+    "v22": "6/8"
+  },
+  "actual": [
+    {
+      "level": 1,
+      "frame": 11300,
+      "time": 291.675,
+      "quota": {
+        "time": 275.95,
+        "attached": 2,
+        "actual": 3,
+        "desired": 3,
+        "ready": 1,
+        "wallet": 200
+      },
+      "last": {
+        "frame": 11300,
+        "time": 291.675,
+        "sp": 600,
+        "wallet": 600,
+        "rates": [
+          4,
+          4,
+          8
+        ],
+        "desired": 3,
+        "count": 3,
+        "initialized": 1,
+        "scan": 1,
+        "stop": 0,
+        "enemy": 1,
+        "priest": 15002,
+        "temple": 15258,
+        "liveCollectors": {
+          "total": 3,
+          "complete": 3,
+          "pending": 0
+        },
+        "geyserListCount": 38,
+        "legacyLoopCount": 1,
+        "attached": 2,
+        "ready": 1,
+        "buttons": []
+      },
+      "resourceProductionCalls": 3,
+      "independentDumpCount": {
+        "complete": 3
+      },
+      "errors": []
+    },
+    {
+      "level": 2,
+      "frame": 4800,
+      "time": 129.175,
+      "quota": {
+        "time": 112.075,
+        "attached": 2,
+        "actual": 6,
+        "desired": 6,
+        "ready": 1,
+        "wallet": 1200
+      },
+      "last": {
+        "frame": 4800,
+        "time": 129.175,
+        "sp": -400,
+        "wallet": -400,
+        "rates": [
+          1,
+          1,
+          2
+        ],
+        "desired": 6,
+        "count": 6,
+        "initialized": 1,
+        "scan": 1,
+        "stop": 0,
+        "enemy": 1,
+        "priest": 15002,
+        "temple": 15258,
+        "liveCollectors": {
+          "total": 6,
+          "complete": 6,
+          "pending": 0
+        },
+        "geyserListCount": 40,
+        "legacyLoopCount": 1,
+        "attached": 3,
+        "ready": 1,
+        "buttons": []
+      },
+      "resourceProductionCalls": 6,
+      "independentDumpCount": {
+        "complete": 6
+      },
+      "errors": []
+    }
+  ],
+  "bundle": {
+    "bytes": 3511788,
+    "sha256": "b233162c16791c9b5ca1fa2db265352cbd4fadfcdd4ad0dc1e9b67e8e1a8baaf"
+  },
+  "evidence": {
+    "candidate-focus.log": {
+      "bytes": 1934,
+      "sha256": "436c2902d63f43a222439b8ed8f0909ae7d473647fda8036196848f6b36e1f9c"
+    },
+    "e1436-final-quota-level-1-dump.tsv": {
+      "bytes": 774823,
+      "sha256": "e4b352ebab41b07ba51ec29f7ab9899eebe00943b459ce6023a5f56e6660e682"
+    },
+    "e1436-final-quota-level-1-initial.json": {
+      "bytes": 7122,
+      "sha256": "96738bbf2b5331240abfad8709d2fbce10a92d881d149de936e087d027ed2ad6"
+    },
+    "e1436-final-quota-level-2-dump.tsv": {
+      "bytes": 774666,
+      "sha256": "6062248c46f00b3ea7ec792ccdc028476c5c0120c67a4c1c3d9e961fba432eb1"
+    },
+    "e1436-final-quota-level-2-initial.json": {
+      "bytes": 7122,
+      "sha256": "2d5ebe0b0a85aab4473bbcf820a7e22158747dc919ad5a1418a2cac0a9b8b940"
+    },
+    "e1436-final-quota-telemetry.json": {
+      "bytes": 131196,
+      "sha256": "bde1ac2fab7f92f13a2fcb26830425d1a3cf7ee6b8aa1407d102d15a4488afd5"
+    },
+    "e1436-final-quota.cjs": {
+      "bytes": 12982,
+      "sha256": "8cde1cf3c7031471e252410c1de09a755300653dae67613c56ffdbe46f01e5f0"
+    },
+    "e1436-half-telemetry.json": {
+      "bytes": 105733,
+      "sha256": "f27113eae165c215801ad0705c2c3946874a32e9106cf5dca5b272b9d5cc2bfc"
+    },
+    "e1436-redundant-probes-stop.json": {
+      "bytes": 751,
+      "sha256": "a1ad513ff43183ff38e3143f51c16d4df946206fb8f00f2f7384aff7ba16e67d"
+    },
+    "e1436-settled-normal-telemetry.json": {
+      "bytes": 40548,
+      "sha256": "ab57c07f9218b8366bf016efdaa8c8a4dea9d988568da179053a5eb1020e7fbc"
+    },
+    "pending-focus-second.log": {
+      "bytes": 2255,
+      "sha256": "36c72cf0a4589b2233e093df042d2f1ef7d1d68a228ca61f2d1137b7f7a62c5a"
+    },
+    "pending-focus.log": {
+      "bytes": 6055,
+      "sha256": "b8256a79fa4c072d91b4f33b62f1a30648c9ef588c1a4b347f28bd414255cd5e"
+    },
+    "raw-ai-collectors.js": {
+      "bytes": 15295,
+      "sha256": "1be1c3fd0c146a17adc02d9869326e0f4d07f5e9e881c9efb831a6e69b4cb64e"
+    },
+    "raw-ai-preparation.js": {
+      "bytes": 18020,
+      "sha256": "c09cd5478a1f4e7ee184a026bca2a3f921b24cbdcab14bc412a56e1b8ffd47ee"
+    },
+    "raw-campaign-session-ai-production.js": {
+      "bytes": 11745,
+      "sha256": "b86ca73c522532ed46dff2865b08f57500d86a4e0fa3068fd883970c2c581be3"
+    },
+    "raw-campaign-session-ai-world.js": {
+      "bytes": 10221,
+      "sha256": "c0d28ad0fced79bb02cea3d33194d78c27c74e9ed942de1765c19254e8fd215f"
+    },
+    "webpj-e1436-build.log": {
+      "bytes": 461,
+      "sha256": "1e6683d5d8fb799a1a8871007ff24ab862cba1ed1ffe7f480847ed36092a855f"
+    },
+    "webpj-e1436-bundle.log": {
+      "bytes": 246,
+      "sha256": "5b52be478f827d4fc34415c458c70a91386d7755197429705d375d9b9674e399"
+    },
+    "webpj-e1436-final-quota.log": {
+      "bytes": 3668,
+      "sha256": "4bdf8976231b8d29fd3d0a7268067c4d8eed9b6c557b91c4928f5ac0fb763f39"
+    },
+    "webpj-e1436-l2.log": {
+      "bytes": 555,
+      "sha256": "a879dc5db9857b4a1d516352e3b1f5307982f540215c8afc7f6da3e288756e53"
+    },
+    "webpj-e1436-main-focus.log": {
+      "bytes": 3257,
+      "sha256": "435847c87912075aeea706cb5bcb7923699e9eb769321412389a8edc774b76cd"
+    }
+  }
+}

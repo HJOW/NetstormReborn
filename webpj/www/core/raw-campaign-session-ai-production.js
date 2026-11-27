@@ -35,6 +35,24 @@ export class RawCampaignSessionAiProduction {
     priestDead(owner) { this.#live(); const o = this.#owner; if (owner < 1 || owner > 8) need(o.services.ai.assertion, '사제 생존 진단')('playerId > INVALID_PLAYER_ID && playerId < MAX_PLAYERS'); return o.outcome.priestDead(owner); }
     // 현재 장기 AI 진단 DWORD를 매 로그 시점에 읽는다.
     #log(address, token, text) { this.#live(); const o = this.#owner; need(o.services.player.log, '현재 로그')(o.gameplayGlobals.aiDebug().read(address), `AI${dword(o.aiMemory.bytes(token), 0x260) | 0}: ${text}`); }
+    // 실제 자원 수집자 생산의 남은 칸이다. 완성 통지 전인 건설 중 유닛도 세어 기한 사이의 한 개 초과 생산을 막는다.
+    // 포획용 비행 유닛의 별도 판단/기존 준비 완료 상태는 바꾸지 않으며 실제 Pool은 읽기만 한다.
+    collectorCapacity(token) {
+        this.#live(); const o = this.#owner; const c = o.core; const body = o.aiMemory.bytes(token);
+        const desired = dword(body, 0x234) | 0, owner = dword(body, 0x260);
+        const limit = o.aiPreparation.countAttachedGeysers(token) > 0 ? Math.max(0, desired) : desired !== 0 ? 1 : 0;
+        if (!limit) return false;
+        if (owner < 1 || owner > 8) throw new RangeError('AI 수집자 생산의 현재 소유자 범위');
+        // 매 호출의 한 사본만 읽는다. free/dead/void/contained와 묻힌 후보는 실제 생산 유닛으로 세지 않는다.
+        const bytes = c.pool.bytes(); let count = 0;
+        for (let offset = 0; offset < bytes.length; offset += 50) {
+            if ((bytes[offset + 11] & 15) || (bytes[offset + 40] & 8) || bytes[offset + 34] !== owner) continue;
+            const type = bytes[offset + 10]; if (type >= c.types.length) continue;
+            const genus = c.types[type].flags2 >>> 0;
+            if ((genus & 0x30000) && !(genus & 0x200000) && ++count >= limit) return false;
+        }
+        return true;
+    }
     // 실제 일곱 부모를 원문 순서로 구성한다.
     bind() {
         const o = this.#owner; const c = o.core; const s = o.state;
@@ -55,6 +73,8 @@ export class RawCampaignSessionAiProduction {
         const move = { get value() { return s.constructionState.notice.moveLocalBuilder; }, set value(value) { s.constructionState.notice.moveLocalBuilder = value; } };
         o.aiDeployment = new RawAiDeployment(o.aiMemory, c.pool, c.types, o.contained, { authority: () => o.gameplayGlobals.authority().boss, moveLocalBuilder: move, now: () => c.processState.now }, deployment);
         const collectors = {
+            // 실제 생성 전의 완성/건설 중 합계를 같은 세션에서 조회한다.
+            collectorCapacity: (token) => this.collectorCapacity(token),
             product: (token, type) => o.aiStrategySetup.findProduct(token, type), canAfford: (token, type) => o.aiDeployment.canAfford(token, type), maxHitPoints: (sid) => o.hp.maxHitPoints(sid),
             enemyAvailable: (owner) => this.enemyAvailable(owner),
             mayPlace: (query) => { this.#live(); o.assetModules.prepareConstruction(); return o.constructionModules.mayPlace(query); },

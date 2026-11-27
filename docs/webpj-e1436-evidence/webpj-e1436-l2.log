@@ -1,0 +1,10 @@
+npm notice run NetstormWeb@1.0.0 npx
+npm notice run ^"playwright^" test e2e/fixed-time.spec.js --project=chromium --workers=1 --grep 시작 그림은
+
+Running 1 test using 1 worker
+
+(node:19264) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › e2e\fixed-time.spec.js:91:1 › 고정 시각 모드: 시작 그림은 360프레임·9초이고 같은 입력의 두 실행은 같은 덤프를 낸다 (1.3m)
+
+  1 passed (1.4m)
