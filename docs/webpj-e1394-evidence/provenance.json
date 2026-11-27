@@ -1,0 +1,60 @@
+{
+  "unit": "WB04-E1394",
+  "host": "HJOW-Athlon",
+  "recordedAt": "2026-11-27T01:48:26.567668+00:00",
+  "productSource": "cdd2e67ec",
+  "currentHead": "cac7b39034f1688141222ced28f92d25fcaef525",
+  "commands": [
+    "node tools/ally-ai-campaign-flow.cjs thewarbegins 60000",
+    "NETSTORM_E2E_MATRIX=1: playwright test e2e/progress-portability.spec.js --workers=1"
+  ],
+  "firstPass": {
+    "exitCode": 0,
+    "newStore": true,
+    "winObservedFrame": 33800,
+    "captureSeconds": 715.65,
+    "sacrificeSeconds": 854.15,
+    "victorySeconds": 854.175,
+    "storage": "new completion and same-context reload verified",
+    "next": "request accepted; actual World/briefing not awaited"
+  },
+  "secondPass": {
+    "exitCode": 1,
+    "winAndSavedValue": true,
+    "actualDirectNextBriefing": "settledBriefing returned before page.reload at run line87",
+    "failure": "page.reload default load timeout30000ms",
+    "actualReloadAndMenuNext": "not completed in this run"
+  },
+  "readerCompatibility": {
+    "source": "first-pass-result.json saved string exactly",
+    "pass": 4,
+    "fail": 0,
+    "projects": [
+      "chromium",
+      "chrome",
+      "edge",
+      "firefox"
+    ],
+    "actualWorldAndPlayMission": "before and after reloading the actual next-mission World",
+    "newNaturalWin": false
+  },
+  "canonicalUtf8LfSha256": {
+    "webpj/tools/ally-ai-campaign-flow.cjs": "409b2f5d96ddd8bfa956f83c34bcfb5d5d2c07e5135a576e6e84fb5ecc2edafa",
+    "webpj/e2e/progress-portability.spec.js": "27ec07f76a591ff4db4bc61decbb307ed4a12098357408c5c0d806cc63ee6160",
+    "webpj/e2e/fixtures/natural-campaign1-1-progress.json": "deb7d5725cf13b5907004b55c7339fe60dba6c270b10709f981e4ba81a7f78b8",
+    "webpj/www/netstorm.js": "4d40cc551e4fb9ad5e07392a32c32d714eb6aa448174152b9bd0cda9bab5a301",
+    "webpj/www/dist/netstorm.bundle.js": "2bfd413ced0db5a54178695b435c85456be71795f48599d3feb9b54493515188"
+  },
+  "evidenceRawSha256": {
+    "chrome-restored-briefing.png": "c3000774a8be55e354433d7f31fa840f65c96f6b5aad51d3673029ddd86e4aff",
+    "chromium-restored-briefing.png": "ba1db780ed0aa577f4c981d77390a5064ba80606ddfd5777bbf6d18b3d7aa268",
+    "edge-restored-briefing.png": "c3000774a8be55e354433d7f31fa840f65c96f6b5aad51d3673029ddd86e4aff",
+    "firefox-restored-briefing.png": "299874764f8e221a830b50fdbb0a473cf4fad3da3923da74d5e562f2e855e594",
+    "first-pass-result.json": "2eff383323e40a1d5931d1f783cc20f6a1220f34fdcaf4b616d3b8b03c6a8dd3",
+    "first-pass.log": "41327281c363425727a0dd63658032d6f97d88b5801889be17f387758797aa20",
+    "reader-matrix.log": "d25ec7fe452e28ae549363ef1e0043b1cbee10dfaaf9589ae44e2b362d9ec042",
+    "settled-pass-terminal.json": "a4686b5205df3098283233bc06aac9a677945cb2ac9400bab2b79dcaf576e0ce",
+    "settled-pass-timeout.log": "73a284cea745d8c4755a238deb8ecab1c050c39d428136fdfb4084ed0c978168",
+    "victory.png": "f860d35e01dbe65a0699225ed1cb1d91c30966a657b075376058d6bb03a439f9"
+  }
+}
