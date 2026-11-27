@@ -22,6 +22,9 @@ import { registerChatPacket } from '../ui/raw-chat-relay.js';
 import { registerBattleLeavePacket } from './raw-battle-leave.js';
 import { resetAmbientSoundDeadline } from './raw-ambient-sound.js';
 
+// 004477d0의 Editor 정책이 현재 로컬 SP에 쓰는 원본float 금액이다. 웹Editor UI를 활성화하는 설정이 아니다.
+const RECONNECT_EDITOR_SP = 194162;
+
 // 현재 Session을 빌려 원본 Login의 전송 앞단과 Zone 설치만 소유한다.
 export class RawCampaignSessionLoginFront {
     // 실제 부모·장치와 내부 전송 수명, 반납 관문이다.
@@ -118,6 +121,15 @@ export class RawCampaignSessionLoginFront {
     #assertion(expression) { const o = this.#live(); if (typeof o.services.ai?.assertion !== 'function') throw new Error('Login 진단 장치 누락'); o.services.ai.assertion(expression); }
     // 현재 Login이 보관한 실제 MessageBoard 장치에 안내를 전달한다.
     showStatus(kind, owner, value) { this.#live(); this.#need('status', '동맹 안내')(kind, owner, value); }
+    // State13의 재접속 표식이 선택한 현재 금액을 같은 분산SP에 쓴다. Editor/known/owner는 호출 순간에 읽고HUD는 항상 갱신한다.
+    setReconnectSp(amount) {
+        const o = this.#live(), value = o.globals.editor ? RECONNECT_EDITOR_SP : amount;
+        if (o.playerState.playerKnown) {
+            const raw = new DataView(new ArrayBuffer(4)); raw.setFloat32(0, value, true);
+            o.sp.set(o.playerState.battleOwner, raw.getUint32(0, true));
+        }
+        this.#need('refresh', '재접속 SP 표시')();
+    }
     // 같은 장기 State/권한/Player 및 현재 게임·벽시각의 실제 속성을 빌린다.
     #stateGlobals() {
         const o = this.#live(), self = this, local = o.localStateGlobals;
@@ -456,6 +468,7 @@ export class RawCampaignSessionLoginFront {
             loadCurrentFort: () => this.#reloadFort(o.playerState.templateOwner),
             fortCore: (owner) => o.templateState.get(owner), touchFort: (owner) => o.templateState.changed(owner),
             localAddress: () => this.#transport('address')(9), uiMode: (mode) => this.#setUiMode(mode), loginTimer: (start) => this.timer.run(start),
+            setReconnectSp: (amount) => this.setReconnectSp(amount),
             refreshFort: o.services.install.refreshWindowTitle,
             inputMode: (mode) => { this.inputMode = Number(mode); this.#need('refresh', '입력 모드')(); },
         };

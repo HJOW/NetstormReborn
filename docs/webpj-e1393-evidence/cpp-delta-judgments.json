@@ -1,0 +1,151 @@
+{
+  "unit": "WB04-E1393",
+  "date": "2026-11-27",
+  "host": "HJOW-Athlon",
+  "baseline": "225553df",
+  "cppSourceHead": "aed29e3d1",
+  "canonicalPortMapSha256": "59ed5ccf8835653e1d02ad53fe28a2c7a9ce57808adf66236eeb78b36db584cf",
+  "audit": {
+    "checked": {
+      "errors": [],
+      "counts": {
+        "class": {
+          "port": 959,
+          "exclude-host": 37,
+          "adapt": 48,
+          "exclude-mp": 73,
+          "exclude-edit": 42,
+          "exclude-legacy": 1
+        },
+        "status": {
+          "port": 275,
+          "session": 732,
+          "-": 153
+        },
+        "byClassStatus": {
+          "port/port": 263,
+          "port/session": 696,
+          "exclude-host/-": 37,
+          "adapt/session": 36,
+          "exclude-mp/-": 73,
+          "adapt/port": 12,
+          "exclude-edit/-": 42,
+          "exclude-legacy/-": 1
+        }
+      }
+    },
+    "changes": {
+      "changed": [],
+      "added": [
+        "cpppj/src/client/EmbeddedBitmapFont.cpp",
+        "cpppj/src/client/EmbeddedBitmapFont.h",
+        "cpppj/src/client/KoreanFontSettings.h",
+        "cpppj/src/client/ManaPictureData.inc",
+        "cpppj/src/client/ResetAllSettings.cpp",
+        "cpppj/src/client/ResetAllSettings.h",
+        "cpppj/src/client/TextPictureResources.h",
+        "cpppj/src/client/TutorialObjective.cpp",
+        "cpppj/src/client/TutorialObjective.h",
+        "cpppj/src/client/TutorialObjectiveCatalog.inc"
+      ],
+      "removed": []
+    }
+  },
+  "newFileJudgments": [
+    {
+      "cpp": "cpppj/src/client/EmbeddedBitmapFont.cpp",
+      "verdict": "플랫폼 적응 완료",
+      "reason": "외부TTF의EBDT/EBLC 직접 판독은Native비트맵/GDI 경계이며 웹은 외부WOFF2+Canvas/갈무리11로 대체. fallback/크기/일반체와 고해상도층 선택은 E1244~E1288 및 사용자 결정에 따름",
+      "evidence": [
+        "docs/webpj-cpppj-1322-1325-1326-judgment-20261123.md",
+        "LEFT_JOBS.webpj.md#korean-font-change"
+      ]
+    },
+    {
+      "cpp": "cpppj/src/client/EmbeddedBitmapFont.h",
+      "verdict": "플랫폼 적응 완료",
+      "reason": "외부TTF의EBDT/EBLC 직접 판독은Native비트맵/GDI 경계이며 웹은 외부WOFF2+Canvas/갈무리11로 대체. fallback/크기/일반체와 고해상도층 선택은 E1244~E1288 및 사용자 결정에 따름",
+      "evidence": [
+        "docs/webpj-cpppj-1322-1325-1326-judgment-20261123.md",
+        "LEFT_JOBS.webpj.md#korean-font-change"
+      ]
+    },
+    {
+      "cpp": "cpppj/src/client/KoreanFontSettings.h",
+      "verdict": "플랫폼 적응 완료",
+      "reason": "NativeJSON생성family/파일명 상수는 www/assets/korean-font-config.js와 prepare-assets가 담당. 글꼴은 별도data/fonts 배포",
+      "evidence": [
+        "webpj/www/assets/korean-font-config.js",
+        "webpj/tools/prepare-assets.js"
+      ]
+    },
+    {
+      "cpp": "cpppj/src/client/ManaPictureData.inc",
+      "verdict": "웹 반영 완료(E1336)",
+      "reason": "동일8016바이트 자료와별칭/25프레임해석을 mana-picture-data/text-picture 리소스로 반영. 현재생성자료 checker 재검증",
+      "evidence": [
+        "docs/webpj-mana-picture-supplement-20261125.md",
+        "webpj/tools/make-mana-picture-data.mjs"
+      ]
+    },
+    {
+      "cpp": "cpppj/src/client/ResetAllSettings.cpp",
+      "verdict": "플랫폼 적응 완료(E863/E1251)",
+      "reason": "Native 사용자홈파일 초기화는 웹게임소유 localStorage 키의 확인/삭제/destroy/재로딩으로 대응.설치자료와 외부데이터는 변경하지 않음",
+      "evidence": [
+        "docs/webpj-reset-all-tell-20261123.md",
+        "webpj/www/platform/reset-storage.js"
+      ]
+    },
+    {
+      "cpp": "cpppj/src/client/ResetAllSettings.h",
+      "verdict": "플랫폼 적응 완료(E863/E1251)",
+      "reason": "Native 사용자홈파일 초기화는 웹게임소유 localStorage 키의 확인/삭제/destroy/재로딩으로 대응.설치자료와 외부데이터는 변경하지 않음",
+      "evidence": [
+        "docs/webpj-reset-all-tell-20261123.md",
+        "webpj/www/platform/reset-storage.js"
+      ]
+    },
+    {
+      "cpp": "cpppj/src/client/TextPictureResources.h",
+      "verdict": "웹 반영 완료(E1336)",
+      "reason": "동일8016바이트 자료와별칭/25프레임해석을 mana-picture-data/text-picture 리소스로 반영. 현재생성자료 checker 재검증",
+      "evidence": [
+        "docs/webpj-mana-picture-supplement-20261125.md",
+        "webpj/tools/make-mana-picture-data.mjs"
+      ]
+    },
+    {
+      "cpp": "cpppj/src/client/TutorialObjective.cpp",
+      "verdict": "웹 반영 완료(E1386~E1389)",
+      "reason": "40단계/39키·표시·현재gate/창/수명·영어/한국어 실제16경로. 일본어39키는13차 언어지원 작업에 포함",
+      "evidence": [
+        "docs/webpj-tutorial-objective-verification-20261127.md",
+        "docs/tutorial-objectives-porting-20261127.md"
+      ]
+    },
+    {
+      "cpp": "cpppj/src/client/TutorialObjective.h",
+      "verdict": "웹 반영 완료(E1386~E1389)",
+      "reason": "40단계/39키·표시·현재gate/창/수명·영어/한국어 실제16경로. 일본어39키는13차 언어지원 작업에 포함",
+      "evidence": [
+        "docs/webpj-tutorial-objective-verification-20261127.md",
+        "docs/tutorial-objectives-porting-20261127.md"
+      ]
+    },
+    {
+      "cpp": "cpppj/src/client/TutorialObjectiveCatalog.inc",
+      "verdict": "웹 반영 완료(E1386~E1389)",
+      "reason": "40단계/39키·표시·현재gate/창/수명·영어/한국어 실제16경로. 일본어39키는13차 언어지원 작업에 포함",
+      "evidence": [
+        "docs/webpj-tutorial-objective-verification-20261127.md",
+        "docs/tutorial-objectives-porting-20261127.md"
+      ]
+    }
+  ],
+  "additionalTemplate": {
+    "cpp": "cpppj/src/client/KoreanFontSettings.cpp.in",
+    "verdict": "Native 빌드 상수 템플릿의 플랫폼 적응 완료",
+    "reason": "글꼴바이트 없이 family/외부파일명만 생성. korean-font-config.js/prepare-assets로 대응하며 기준선 밖10개 소스확장자 집계에는 .cpp.in이 포함되지 않음"
+  }
+}

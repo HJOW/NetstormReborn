@@ -29,6 +29,35 @@ function loginServerOwner(extra = {}) {
     try { o.connectWorldInstall(fort); o.connectOutcome(); o.connectAiBrains(); return o; } catch (error) { o.dispose(); throw error; }
 }
 
+// 같은 실제 지갑에 float를 보존하며 호출 때마다 Editor/known/owner를 다시 읽고 표시를 갱신한다.
+test('Session Login 재접속SP: 현재 owner와 Editor 정책·float32 비트·반납', () => {
+    const o = campaignOwners(), calls = [], front = new RawCampaignSessionLoginFront(o, { ...devices([]), refresh: () => calls.push('표시') });
+    try {
+        o.playerState.playerKnown = 1; o.playerState.battleOwner = 1; o.globals.editor = false;
+        const other = o.sp.get(2); front.setReconnectSp(1.25); assert.equal(o.sp.get(1), 0x3fa00000);
+        o.playerState.battleOwner = 3; front.setReconnectSp(Math.fround(0x7fffffff)); assert.equal(o.sp.get(3), 0x4f000000); assert.equal(o.sp.get(1), 0x3fa00000);
+        o.globals.editor = true; front.setReconnectSp(-3.25); assert.equal(o.sp.get(3), 0x483d9c80);
+        o.globals.editor = false; front.setReconnectSp(-3.25); assert.equal(o.sp.get(3), 0xc0500000); assert.equal(o.sp.get(2), other);
+        assert.deepEqual(calls, ['표시', '표시', '표시', '표시']);
+        front.dispose(); assert.throws(() => front.setReconnectSp(0), /반납/);
+    } finally { front.dispose(); o.dispose(); }
+});
+
+// known이 없을 때도HUD는 갱신하지만 지갑/RNG는 쓰지 않는다. 필요한 갱신 누락은 SP쓰기 뒤 해당 위치에서 거부한다.
+test('Session Login 재접속SP: unknown 지갑 보존과 필수 표시 갱신 순서', () => {
+    const o = campaignOwners(), calls = [], front = new RawCampaignSessionLoginFront(o, { ...devices([]), refresh: () => calls.push('표시') });
+    try {
+        o.playerState.battleOwner = 1; o.playerState.playerKnown = 0; o.globals.editor = true;
+        const before = o.sp.get(1), seed = o.random.state; front.setReconnectSp(900);
+        assert.equal(o.random.state, seed); assert.equal(o.sp.get(1), before); assert.deepEqual(calls, ['표시']);
+    } finally { front.dispose(); o.dispose(); }
+    const missing = campaignOwners(), incomplete = new RawCampaignSessionLoginFront(missing, devices([]));
+    try {
+        missing.playerState.playerKnown = 1; missing.playerState.battleOwner = 1;
+        assert.throws(() => incomplete.setReconnectSp(2.5), /재접속 SP 표시/); assert.equal(missing.sp.get(1), 0x40200000);
+    } finally { incomplete.dispose(); missing.dispose(); }
+});
+
 // 외부 상태8 연결은 현재 상태와 20BYTE 주소를 확인한 뒤 같은 전송에 원문 인자를 전달한다.
 test('Session Login 앞단: 외부 상태8 연결 인자와 관문', () => {
     const o = campaignOwners(), front = new RawCampaignSessionLoginFront(o, devices([])), calls = [];
@@ -329,6 +358,25 @@ test('Session Login 타이머: 미션 저장 생략과 현재 사제 상태 정�
         assert.equal(o.localStateGlobals.loginEnd().value, 0); assert.equal(o.localStateGlobals.begin().value, 0); assert.equal(o.localStateGlobals.scriptBreak().value, 0);
         assert.deepEqual([...o.priestState.priests.currentOwnerState()].slice(1, 9), Array(8).fill(2)); assert.ok(trace.includes('갱신'));
     } finally { front.dispose(); o.dispose(); }
+});
+
+// 기존 실제 State13 부모가 재접속표식1일 때 새 훅을 선택하고 표식0일 때 선택하지 않음을 확인한다.
+test('Session Login State13: 실제 Fort 이후 재접속SP 훅의 현재 표식 선택', () => {
+    // 두 경우 모두 정규Fort/내부전송을 쓰며 LAN접속이나 저장fort복구 경로를 열지 않는다.
+    for (const marked of [0, 1]) {
+        const archive = new TaffArchive(readData(ARCHIVE_PATH)), bytes = archive.read('\\d\\thewarbegins.fort'), o = campaignOwners({ install: { refreshWindowTitle: () => {} } });
+        const front = new RawCampaignSessionLoginFront(o, { ...devices([]), refresh: () => {} }), observed = [], original = front.setReconnectSp;
+        try {
+            o.templateStorage.installFile(1, {}, bytes, 'd/thewarbegins.fort'); new DataView(o.headers.buffer, o.headers.byteOffset, o.headers.byteLength).setUint32(28, 1, true);
+            o.playerState.playerKnown = 1; o.playerState.battleOwner = 1; front.transport.isOpen = () => true;
+            front.setReconnectSp = function (amount) { observed.push({ amount, known: o.playerState.playerKnown, owner: o.playerState.battleOwner }); return original.call(this, amount); };
+            const blocks = o.localStateGlobals.state(); blocks.current[0] = 13; blocks.current[33] = marked; blocks.current[34] = 0x7fffffff;
+            front.state.run();
+            if (marked) { assert.deepEqual(observed, [{ amount: 2147483648, known: 1, owner: 1 }]); assert.equal(o.sp.get(1), 0x4f000000); }
+            else assert.deepEqual(observed, []);
+            assert.equal(blocks.next[33], 0); assert.equal(blocks.immediate[33], 0);
+        } finally { front.dispose(); o.dispose(); }
+    }
 });
 
 // State13은 현재 연결이 열렸을 때만 같은 로그인 타이머를 시작한다.

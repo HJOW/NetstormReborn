@@ -6,7 +6,7 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-27, 마지막 제품 단위 WB04-E1392·전체 잔여 작업 재개)
+### 0.1 현재 값 (2026-11-27, 마지막 제품 단위 WB04-E1393·전체 잔여 작업 재개)
 
 - **실행·플레이**
   - **화면:** 브라우저 ‘클릭하여 시작’(첫 적재 뒤 최소 6초, E1308), 시작 title 그림, 메인 메뉴·캠페인/데모 목록·도움말·옵션(Reset All 게임 안 확인 창 포함)·Credits와 개발용 지형 미리보기가 동작한다.
@@ -23,8 +23,8 @@
   - **부품:** 월드·UI 부품은 원본 10.78 x86 fixture 또는 독립 계산으로 대조했다(원본 공통 메뉴 788행·Factory 메뉴 39행·Uber 루트 160행·장면 음악 3,113행, 채팅 입력줄 대상 720행(E1265), 파편·건물 캡처 4,474행(E1275~E1276)·골렘/받침 264행(E1312), 실제 Session의 EvilRay·Burning·섬 투하(E1314~E1316) 등). 대응표 1,007단위 중 732행은 Tutorial1 실행에서 웹 모듈의 함수가 모두 실행된 `session`이다(E1283). 좌측 HUD 하단 85×82픽셀은 원본 스크린샷과 일치한다.
   - **한국어 글자:** 갈무리11 12px 격자로 그리되 제목 배율·굵기(사용자 결정으로 보통체)·한글 기준선을 cpppj와 다르게 둔다([0.7절](#korean-font-change)).
   - **미검증:** 세 캠페인 묶음의 목표 수행 L3·자연 완주와 L4b 소리(16개 진입/대기는 완료). Tutorial4 E1~I1·Tutorial5 D 이후·Tutorial6 E 이후의 특정 적 공격·포획·희생·승리는 사용자 지시로 건너뛰고 사용자가 직접 확인한다. Tutorial6 A~D 생산·건설·납품은 E1343~E1346 완료다.
-- **최근 완료 요약:** E1392에서 실제 비고정 부팅에 UTC초 경계·epoch·최초Capture를 연결했다. 준비 중 로딩만 갱신하고 취소/초기 정지 깊이를 보존한다. 집중28/28·통합/번들/대응표46/46·기준값갱신대응표7/7·Chromium 비고정/취소/고정L2 3경로가 통과했다. CP ClientMain/GameClock의 남은 변경을 닫았다. [E1392](docs/webpj-client-clock-epoch-20261127.md).
-- **현재 재개 지점:** 다음 E1393에서 CP1375 RawCampaignSessionLogin의 setReconnectSp hook을 실제 SP/현재PlayerKnown/Editor 정책/HUD refresh에 맞춰 판정/반영한다. 이 변경이 CP 잔여1행이다. 완료 뒤 정기 Node26 전체 회귀를 수행한다. 이후 허용 AI 승리/저장·M4/M5·후순위를 계속한다.
+- **최근 완료 요약:** E1393에서 CP1375 Login의 현재 재접속SP/Editor/known/owner·float32·HUD갱신 훅을 반영했다. 집중59/59·Node26 전체6,891/6,891·실제 서비스연결1/1·비고정 Tutorial2 신전/워크샾 건설1/1이 통과했다. 기존 CP 변경9행은 모두 닫혔고 신규10파일도 개별 판정했다. [E1393](docs/webpj-login-reconnect-sp-20261127.md).
+- **현재 재개 지점:** 다음 E1394에서 캠페인1-1을 신규 저장소의 실제 아군AI로 다시 완료하고 완료값 저장·다음 미션·새로고침 해제를 확인한다. 이후1-3/1-4/스커미시의 실제 AI 목표 수행과 M4/M5·후순위를 계속한다.
 - **다음 안내 자료:** CP 오류 문맥/Residence/epoch 초안은 E1390~E1392 제품에 반영했으므로 재적용하지 않는다. 준비 메모 `webpj/extracted/cpp-post1381-plan-20261127.json`의 clock 판정은 E1392 완료로 대체한다. 실제 비고정 부팅은 원래 UTC초 경계를 비동기로 기다리며 고정 시각0기준/4틱은 유지한다. 일본어39키는13차에 반영한다.
 - **검증 교정(E1385):** 첫 전체 회귀의 새모듈 대응표 등록 누락2건과 옛가짜World 반납시험1건을 수정했다. 실제 Runtime 반납에서 캡처 기한/건물 숨김 초기화를 확인하며 제품 수명 검사는 유지했다. 최종 전체6,870개가 모두 통과했다.
 - **최신 cpppj:** 제품1377/ZIP1378·검증1380이다. 웹 고정 오라클1313/225553df를 자동 교체하지 않는다. CP 튜토리얼 안내1372는 [WB-TUT-1~4](#tutorial-objective-port)의 필수 새 기능이며 E1386~E1389에서 완료했다. 정리 시 대응표는 기존 변경9행·대응표 밖 신규10파일을 보고했다([3.6](#cpp-delta)). 이전 동시 빌드 해시는 당시 자료로 보관하고 최신 해시는 공통 인계를 따른다.
@@ -36,7 +36,7 @@
   - **Node26.13.0 E1372:** 6,860/6,860통과, 실패·취소·미실행0(1102.274초). 최초 전체6,857통과·3실패 뒤 웹 전용 분류와 검사 노드 위치를 고쳐 재검증했다.
   - **Node26.13.0 E1376:** 6,864/6,864통과, 실패·취소·미실행0(742.474초).
   - **Node26·22 E1380:** 각각6,867/6,867통과, 실패·취소·미실행0. 순차 실행 601.122초·821.347초. 검증 중www/tests는 고정했다.
-  - **주기(E1392):** E1389 양대 전체 회귀 뒤3단위로3/4·3/8이다. 다음 정기는 E1393(v26)·E1397(v26/22 순차)다. E1392 집중28/28·통합/번들/대응표46/46·최종대응표7/7·Chromium3경로를 확인했다. 번들은3,500,558바이트다.
+  - **주기(E1393):** E1393 정기Node26 전체6,891/6,891 통과(734.138초·실패/취소/건너뜀0), 제품/Node검사는 실행 중 고정했다. 현재0/4·4/8이며 다음 정기는 E1397(v26/22 순차)다. 집중59/59·Chromium서비스연결1/1·비고정건설1/1도 통과했고 번들은3,500,854바이트다.
   - **Chromium:** E1313 전 미션 시작 상태 옵트인 전체 32/32 통과(24.3분, `webpj/extracted/webpj-e1313-final-e2e.log`). 기존 전체 e2e는 E1312 199건 중 186 통과·12 옵트인 미실행·한국어 브리핑 1건 부하 중 시간 초과(단독·3회 반복 통과)다. 단위별 실패·교정은 [E1313](docs/webpj-l3-mission-starts-20261124.md)과 각 단위 문서, 이전 회귀 이력은 [E1327 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261124-through-wb04-e1327)을 따른다.
 - **브라우저 검사:** 미션 화면은 단위마다 Chromium e2e로 확인한다(최근 전체 실행 E1312, 고정 시각 L2·L3 `e2e/fixed-time.spec.js`·`e2e/l3-tutorial1.spec.js`·`e2e/l3-tutorial2.spec.js`·`e2e/l3-tutorial3.spec.js`·`e2e/l3-tutorial4.spec.js`(E1337부터 345프레임까지만 재실행)·`e2e/l3-tutorial5.spec.js`(E1339), 프레임 예외 뒤 진행 `e2e/error-reporting.spec.js` E1338, 앱 서비스 결선 `e2e/session-services-wiring.spec.js` E1328, 한국어 글자 배치 `e2e/korean-glyph-layout.spec.js` E1288). 메뉴는 2026-11-17 Chromium 2/2(갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체), 최초 실행·진행 잠금/체크·저장 재실행은 E616 Chromium 2/2. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md)
 
@@ -44,15 +44,13 @@
 
 #### 다음 작업
 
-1. **CP1375 재접속SP hook.** E1392 시계/최초Capture는 완료했다. RawCampaignSessionLogin의 setReconnectSp를 실제 현재 PlayerKnown/Editor 정책·분산SP·HUD refresh에 연결/검증한다. 지원하지 않는 LAN 복구/운송 UI를 새로 활성화하지 않는다.
-2. **CP 변경 마감·정기 회귀.** 잔여 Login hook의 변경을 반영한 뒤 전체9행/신규파일 범위를 다시 대조하고 E1393 정기Node26 회귀를 수행한다. 기존 기준선1007단위의 완료량과 이후 변경/추가 기능 검증을 구분한다.
-3. **허용 미션의 실제 AI 목표·승리.** 캠페인16개 진입·대기 L3는 E1350~E1365 완료다.1-1 승리(E1368),1-2·1-5 승리/진행 저장/새로고침 해제(E1369·E1371)도 완료이며 반복하지 않는다. 나머지는 아래와 같다.
+1. **허용 미션의 실제 AI 목표·승리.** 캠페인16개 진입·대기 L3는 E1350~E1365 완료다.1-1 승리(E1368),1-2·1-5 승리/진행 저장/새로고침 해제(E1369·E1371)도 완료이며 반복하지 않는다. 나머지는 아래와 같다.
    - [ ] 1-1 신규 완료값 저장/재실행·다음 미션 해제 확인.
    - [ ] 1-3 목표/승리 — 120000프레임 관찰 오류0·미승리 기록을 원본/실제 AI 상태와 비교하고 허용 범위에서 계속한다.
    - [ ] 1-4 목표/승리 — 60000프레임 관찰 오류0·미승리 기록을 같은 기준으로 비교한다.
    - [ ] 스커미시 승리·후속 흐름 — 120000프레임 관찰 오류0·미승리 뒤 실제 적 전멸/승리 안내를 확인한다.
-4. **스커미시 나머지.** 같은 시드/설정에서 AI별 다리·생산 주기 정량 비교와 소유자별360~600초 다리 정체의 cpp 오라클 대조를 각각 한 단위로 진행한다. [관찰](docs/webpj-skirmish-watch-20261123.md)·[난이도](docs/webpj-skirmish-difficulty-20261121.md)
-5. **남은 관문/후속 요구.** M4→M5와 [3.6 변경 판정](#cpp-delta)·3.7 후순위 요구를 진행한다. 모딩 API는 DN MOD-1 계약 설계 뒤 착수한다. 사람/물리 확인·결정 대기는3.5절이다.
+2. **스커미시 나머지.** 같은 시드/설정에서 AI별 다리·생산 주기 정량 비교와 소유자별360~600초 다리 정체의 cpp 오라클 대조를 각각 한 단위로 진행한다. [관찰](docs/webpj-skirmish-watch-20261123.md)·[난이도](docs/webpj-skirmish-difficulty-20261121.md)
+3. **남은 관문/후속 요구.** M4→M5와 [3.6 변경 판정](#cpp-delta)·3.7 후순위 요구를 진행한다. 모딩 API는 DN MOD-1 계약 설계 뒤 착수한다. 사람/물리 확인·결정 대기는3.5절이다.
 
 **완료 범위:** Tutorial1~6의 자동 검사 허용 범위는 E1346, 캠페인16개 브리핑/시작/대기는 E1365, CP 변경16행 판정은 E1348에서 마쳤다. 입력 좌표·단위별 오라클 폴더·로컬 산출물 경과와 오래된 다음 작업 번호는 [정리 전0.1](LEFT_JOBS.webpj.old.md#archive-webpj-20261127-through-wb04-e1380)에 보존했다. 조사 자료·오라클은 Git 제외 `extracted/`·`webpj/extracted/`에 그대로 두며 지우거나 커밋하지 않는다.
 - **미션 식별.** 공통 fixture의 `thewarbegins.fort`는 캠페인 1-1이고, 실제 `tutorial1`이 선택하는 Fort는 `BridgeTheGap`이다(E753 재대조). [미션명 정정](docs/webpj-session-login-shipped-forts-20261118.md)
@@ -65,7 +63,7 @@
 
 ### 0.2 단계 진행판
 
-`n/m`은 상위 체크 수이며 보관한 완료 항목을 포함한다. 상위 항목 안의 완료 부분(세부 단위 `- [x]`)은 중복 가산하지 않는다. 남은 단위·줄 수는 `PORT_MAP.tsv`의 partial·todo 기준(partial은 파일 전체 줄 수)이며, 2026-11-27 정리 재집계(`node webpj/tools/port-map.mjs`·`python -X utf8 tools/port_inventory.py`)도 **partial 0·todo 0, 0단위 / 0줄**이다(마지막 partial은 E1328, 3.6절 판정 6행은 E1336에서 닫음). cpppj 1345·1363~1370의 변경 판정도 E1347~E1348에서 닫았다. 이 수치는 고정한 이식 대상의 집계다. 이후 CP 변경9행·신규10파일은3.6에서 별도 판정하고 새 튜토리얼4단위는0.8에서 관리한다. 남은 일은 표의 '남은 상위 체크'(3.1절 미체크 상위 항목, 정리 스크립트가 모음)와 3.6절 연결 이월, 3.7절 후순위 요구다. 4-D는 E1346에서 자동 검사 허용 범위85/85를 마쳤다.
+`n/m`은 상위 체크 수이며 보관한 완료 항목을 포함한다. 상위 항목 안의 완료 부분(세부 단위 `- [x]`)은 중복 가산하지 않는다. 남은 단위·줄 수는 `PORT_MAP.tsv`의 partial·todo 기준(partial은 파일 전체 줄 수)이며, 2026-11-27 정리 재집계(`node webpj/tools/port-map.mjs`·`python -X utf8 tools/port_inventory.py`)도 **partial 0·todo 0, 0단위 / 0줄**이다(마지막 partial은 E1328, 3.6절 판정 6행은 E1336에서 닫음). cpppj 1345·1363~1370의 변경 판정도 E1347~E1348에서 닫았다. 이 수치는 고정한 이식 대상의 집계다. 이후 CP 변경9행·신규10파일은 E1393에서 별도 판정을 마쳤으며 새 튜토리얼4단위는0.8에서 관리한다. 남은 일은 표의 '남은 상위 체크'(3.1절 미체크 상위 항목, 정리 스크립트가 모음)와 3.6절 연결 이월, 3.7절 후순위 요구다. 4-D는 E1346에서 자동 검사 허용 범위85/85를 마쳤다.
 
 | 순서 | 단계 | 체크·상태 | 남은 단위 / 줄 | 남은 상위 체크(3.1) |
 | --- | --- | --- | --- | --- |
@@ -271,12 +269,12 @@ M1은 메뉴 관문을 통과했다. 4-D의 Tutorial1 L2 → 5-A/5-B·5-C의 Tut
 ### 3.6 cpppj 변경 재반영
 
 대응표 검사에서 행 base 이후 변경을 확인한다. ① 웹 영향 없음, ② 웹 재반영, ③ 해당 소비 단계에서 처리로 판정한다. ②는 별도 단위로 반영하고 ③은 대상 단계에 남긴다. 판정 근거를 대응표와 단위 문서에 기록한다.
-- **현재 재집계(2026-11-27 정리1381):** `node webpj/tools/port-map.mjs` 종료0·대응표1,160행/오류0·port275/session732·partial/todo0. 기존 새 변경9개 중 GumpEvents·RawMenuControls는 E1387에서 CP1372의 표시 전용 후보 제외/전달을 반영했고 UberGump는 E1388에서 실제 안내 수명을 반영했다. ClientDiagnostics는 E1390에서 CP1377 오류 문맥을 모두 반영했다. RawAssetPostPop/RawCampaignSession도 E1391에서 Residence 현재 savedGame 공유를 반영해 base를84182644a/aed29e3d1로 갱신했다. ClientMain/GameClock도 E1392에서 실제 비고정 epoch/최초Capture를 반영해 base를aed29e3d1/84182644a로 갱신했다. 잔여1개는 RawCampaignSessionLogin(재접속SP hook)이다이며 대응표 밖 신규10파일 중 TutorialObjective.cpp/.h/Catalog.inc가 새로 더해졌다.1372 안내는 사용자 지시로 반드시 웹에 적용하며 [WB-TUT-1~4](#tutorial-objective-port)에 연결한다.1375 LAN 복구·1377 로그의 공통 소비 여부는 행별로 대조하고 CP 전용이라는 이유만으로 일괄 제외하지 않는다. 기존 base/고정 오라클은 이 문서 정리에서 올리지 않았다.
+- **현재 재집계(2026-11-27 E1393):** 대응표1,160행/오류0·port275/session732·partial/todo0·기존 행 변경0·삭제0이다. 정리1381 당시 변경9행은 E1387~E1393에서 모두 반영/판정했다: GumpEvents/RawMenuControls(E1387), UberGump(E1388), ClientDiagnostics(E1390), RawAssetPostPop/RawCampaignSession(E1391), ClientMain/GameClock(E1392), RawCampaignSessionLogin(E1393). 신규10파일과 별도 cpp.in 생성템플릿도 개별로 판정했다. TutorialObjective3파일은 필수 기능으로 E1386~E1389 완료, 외부 글꼴 Native경계/Reset All은 플랫폼 적응, ManaPicture자료2파일은 E1336 반영이다. 일본어39키는13차에 남는다. 고정 기준선225553df/대상1,007단위/오라클은 올리지 않았다. [행·파일별 근거](docs/webpj-login-reconnect-sp-20261127.md)·[감사 JSON](docs/webpj-e1393-evidence/cpp-delta-judgments.json).
 - **판정 끝:** cpppj 1322(갈무리11)·1325(Reset All)·1326(테스트 AI 진단)의 변경 아홉 행(E1241, base `63590635`·`710b9647`·`baf141eb`, [판정표](docs/webpj-cpppj-1322-1325-1326-judgment-20261123.md)), 사용자 추가 요구 1328~1330(E1289~E1291), 1339 주문/포획 교정(E1319, base `13e74579`), SoundMusicSelection base 정정(2026-11-22, `225553df`), 일본어(13차) 커밋 `5238ee833`(1334)·`87324232f`(1335)의 여섯 행(E1336: 마나 그림 별칭 `imana.8`~`11`·`17`→`Imana.4`~`7`·`9`와 CD 마나 25프레임 보충의 `HtmlTextParser`·`Markup`·`StyleTextMarkup`·`UberGump` 행은 ② 반영, `KoreanResources.cpp`(`.japanese` 번들 읽기)·`StyleTextBuffer.cpp`(가나·한자 줄바꿈)는 ③ 13차, [근거](docs/webpj-mana-picture-supplement-20261125.md)). 커밋·행별 경과는 [E1329 보관본 3.6절](LEFT_JOBS.webpj.old.md#archive-webpj-20261124-through-wb04-e1329)과 [E1336 보관본 3.6절](LEFT_JOBS.webpj.old.md#archive-webpj-20261125-through-wb04-e1336)에 있다.
-- **2026-11-26 변경 판정 완료(E1347~E1348):** 공통 도움말·확장 AI 이름은 E1347, 나머지16행은①11·②5로 E1348에서 닫았다. 미션2bh 채널 해제와 Fort 읽기 오류 문맥도 실제 웹 경로에 반영했다. 당시 기존 행 변경 보고0이었으며 현재9행/신규10파일과 구별한다. [16행 판정표](docs/webpj-cpppj-lan-change-audit-20261126.md)
+- **2026-11-26 변경 판정 완료(E1347~E1348):** 공통 도움말·확장 AI 이름은 E1347, 나머지16행은①11·②5로 E1348에서 닫았다. 미션2bh 채널 해제와 Fort 읽기 오류 문맥도 실제 웹 경로에 반영했다. 당시 기존 행 변경 보고0이었으며 E1393에서 마감한 후속9행/신규10파일과 구별한다. [16행 판정표](docs/webpj-cpppj-lan-change-audit-20261126.md)
   - [x] 언어 무관 공통 변경 — E1347: 도움말 LOOK/HELP·빈 값 규칙의 기존 일치를 확인하고 첫 NUL 절단·확장 AI 기본 이름31BYTE 제한을② 반영했다. 한국어에도 적용된다. [근거](docs/webpj-cpppj-common-help-ai-name-20261126.md)
   - [x] LAN 변경16행 — E1348,①11·②5·③0. 미션에도 선택되는2bh removeChat의 선언·장부·수신기·현재 앱과 공통 Fort 물리 읽기 진단을 반영했다. 나머지는 일반 TCP/LAN/외부 시각 보정·진단 전용 경로로 판정하고16행base를 갱신했다. [근거](docs/webpj-cpppj-lan-change-audit-20261126.md)
-- **대응표 밖 기존7파일의 판정:** EmbeddedBitmapFont(.cpp/.h)·KoreanFontSettings.h·ResetAllSettings(.cpp/.h)는 ①이고 `TextPictureResources.h`·`ManaPictureData.inc`는 위 판정을 따른다. 재기준선 때 등록한다.
+- **대응표 밖10파일의 판정:** E1393의 파일별 표/JSON을 따른다. 기존7파일에 더해 TutorialObjective.cpp/.h/Catalog.inc3파일도 반영 완료했다. 다음 재기준선 때 등록하며 현재 이식 완료율에 혼합하지 않는다.
 
 | 처리 단계 | 남은 판정·연결 |
 | --- | --- |
