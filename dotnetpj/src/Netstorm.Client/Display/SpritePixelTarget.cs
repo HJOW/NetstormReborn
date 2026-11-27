@@ -52,6 +52,7 @@ public sealed class SpritePixelTarget
         Resource = rules?.Resource,
         Timers = rules?.Timers,
         StatusProcesses = rules?.StatusProcesses,
+        TypeHitPoints = rules?.TypeHitPoints,
     };
 
     /// <summary>원색·소유자색은 그림을 합성하고 명시 표는 마스크 아래 현재 화면색에 적용한다.</summary>

@@ -165,6 +165,8 @@ public sealed class SpriteDrawHooks
     public Func<int, uint, double[]?>? Timers { get; set; }
     /// <summary>가상 Draw 뒤의 현재 Kernel 프로세스 슬롯을 읽는다.</summary>
     public Func<IReadOnlyList<SpriteStatusProcess>>? StatusProcesses { get; set; }
+    /// <summary>선택한 실제 TYPE의 현재 최대 체력을 공통 getter에서 읽는다.</summary>
+    public Func<uint, int>? TypeHitPoints { get; set; }
 }
 
 /// <summary>일반 객체의 본체·그림자·표식·선택/상태 막대를 원본 순서대로 출력한다.
@@ -374,19 +376,19 @@ public sealed class SpriteDraw
             row++;
         }
         bool hp = (record.Flags2 & 0x400000) != 0 ? (raw[patch ? 40 : 35] & 1) != 0 : (record.Flags1 & 0x10) != 0;
-        int maximum = s.QuarterHitPoints && type == s.ShadowAliasType ? record.MaxHitPoints / 4 : record.MaxHitPoints;
-        int current = patch ? BinaryPrimitives.ReadInt32LittleEndian(raw[26..]) : BinaryPrimitives.ReadInt16LittleEndian(raw[26..]);
         if (hp)
         {
-            if (!patch) { maximum = Math.Max(maximum, 1); current = Math.Clamp(current, 0, maximum); }
-            uint hpColor = current <= maximum / 4 ? s.HitPointColors[2] : current <= maximum / 2 ? s.HitPointColors[1] : s.HitPointColors[0];
-            if (patch) Bar(hpColor, current, maximum);
+            SpriteHitPointResult hpBar = SpriteHitPointBar.Read(_pool.Edition, s.HitPointColors,
+                () => patch ? BinaryPrimitives.ReadInt32LittleEndian(_pool.Slot(sid)[26..]) : BinaryPrimitives.ReadInt16LittleEndian(_pool.Slot(sid)[26..]),
+                () => _hooks.TypeHitPoints is { } read ? read(type) : s.QuarterHitPoints && type == s.ShadowAliasType ? record.MaxHitPoints / 4 : record.MaxHitPoints);
+            if (patch) Bar(hpBar.Color, hpBar.Current, hpBar.Maximum);
             else
             {
                 int bx = unchecked(header.Width / 2 - header.HotspotX + screen.X - 10);
                 int by = unchecked(screen.Y - header.HotspotY);
                 Required(_hooks.Fill)(new(unchecked(bx - 1), unchecked(by - 9), unchecked(bx + 20), unchecked(by - 2)), s.BarBackground);
-                Required(_hooks.Fill)(new(bx, unchecked(by - 8), unchecked(bx + unchecked(current * 19) / maximum), unchecked(by - 3)), hpColor);
+                if (hpBar.Maximum == 0) throw new DivideByZeroException("CD 체력 막대 최대값이 0입니다");
+                Required(_hooks.Fill)(new(bx, unchecked(by - 8), unchecked(bx + unchecked(hpBar.Current * 19) / hpBar.Maximum), unchecked(by - 3)), hpBar.Color);
             }
         }
         if (!patch) return;

@@ -261,6 +261,28 @@ public sealed class SpriteDrawTests
         Assert.Equal(new byte[] { 3, 4, 4, 7, 8, 8, 7, 8, 8 }, pixels);
     }
 
+    /// <summary>픽셀 출력기 경유 선택도 실제 TYPE 최대 체력 getter를 세 번 사용한다.</summary>
+    [Fact]
+    public void PixelTargetForwardsCurrentTypeHitPoints()
+    {
+        var scene = new Scene();
+        scene.Types[70].Flags1 = 0x10;
+        scene.Types[70].MaxHitPoints = 100;
+        scene.Pool.AllocatedBytes(5)[40] = 4;
+        Put(scene.Pool.AllocatedBytes(5), 26, 30);
+        int calls = 0;
+        var rules = new SpriteDrawHooks
+        {
+            VirtualFrame = _ => 0,
+            VirtualDraw = (_, _) => { },
+            Resource = _ => null,
+            TypeHitPoints = type => { Assert.Equal(70U, type); calls++; return 100; },
+        };
+        var target = new SpritePixelTarget(new byte[64], 8, 8, new(0, 0, 8, 8), _ => new(PixelShape(), 0), null);
+        scene.Draw(target.Hooks(rules)).Draw(new(.25F, .25F, SpriteRaw, 0, 0, 0));
+        Assert.Equal(3, calls);
+    }
+
     /// <summary>선 끝점·역순·클립 및 half-open fill의 빈/역전 영역을 검사한다.</summary>
     [Fact]
     public void PixelLinesAndBars()
