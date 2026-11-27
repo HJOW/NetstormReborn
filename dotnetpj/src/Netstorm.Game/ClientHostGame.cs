@@ -572,6 +572,7 @@ public sealed partial class ClientHostGame : Game
                 },
                 Command = (code, first, second) => _driver.Input.PushCommand(code, unchecked((int)first), unchecked((int)second)),
                 Log = (kind, text) => ErrorLog.Note($"미션 생산 종류{kind}: {text}"),
+                CancelCursor = session.CancelCursor,
             });
             // RU-3b Root와 메시지 공장과 바깥 UI 장치를 실제 미션 Root가 만들고 소유한다. 생산 공장은 위 세션 장치, 채팅 공장은 메뉴 경로로 이미 소유한다.
             // 근거: 0.987. 미션 진입 경로에서 NSInfo 창 생성과 메시지 공장 공유를 집중 검사로 확인한다.

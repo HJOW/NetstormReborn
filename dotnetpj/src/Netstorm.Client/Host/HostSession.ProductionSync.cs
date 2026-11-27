@@ -24,6 +24,15 @@ public sealed partial class HostSession
         (_productionCancelCursor ?? throw new InvalidOperationException("생산 동기화 실제 커서 미설치"))();
     }
 
+    /// <summary>생산 항목을 같은 세션의 설치된 실제 커서로 취득한다.</summary>
+    /// <param name="sid">취득할 현재 내용물 SID다.</param>
+    /// <param name="flags">원본 생산 입력이 전달한 취득 플래그다.</param>
+    public void TakeProductionCursor(int sid, uint flags)
+    {
+        if (!_nativeLoaded && !_editorUiInstalling) throw new InvalidOperationException("설치 전 실제 커서 요청");
+        TakeCursor(sid, flags);
+    }
+
     /// <summary>전체 loaded 또는 실제 두 Editor UI 동기 범위에서만 같은 현재 생산 본체를 호출한다.</summary>
     public void SynchronizeProductionContents()
     {

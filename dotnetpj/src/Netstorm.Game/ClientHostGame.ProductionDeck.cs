@@ -80,8 +80,8 @@ public sealed partial class ClientHostGame
             Synchronize = () => ClientProductionSync.SynchronizeProductionControlContents(context),
             UpdateContents = () => context.Gameplay.RequireSession().UpdateProductionContents(),
             Maintenance = (panel, refresh) => context.Gameplay.RequireSession().MakeProductionMaintenance(_productionGlobals, panel, () => _clock.NowSeconds, refresh),
-            CancelCursor = () => throw new InvalidOperationException("생산 커서 실제 취소는 R6 입력에서 잇는다"),
-            Take = (_, _) => throw new InvalidOperationException("생산 내용물 실제 취득은 R6 입력에서 잇는다"),
+            CancelCursor = CancelNativeProductionCursor,
+            Take = TakeNativeProductionContent,
             About = (_, _, _) => throw new InvalidOperationException("생산 항목 실제 정보 메뉴는 R6에서 잇는다"),
             // 생산 구분선도 미니맵과 같은 현재 입력과 Client의 실제 커서를 사용한다.
             Poll = Poll,

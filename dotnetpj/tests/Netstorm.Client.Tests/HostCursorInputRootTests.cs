@@ -1,4 +1,5 @@
 using System.Buffers.Binary;
+using System.Reflection;
 using Netstorm.Assets;
 using Netstorm.Client.Display;
 using Netstorm.Client.Gump;
@@ -200,7 +201,13 @@ public sealed partial class HostPriestWorldLiveTests
         BinaryPrimitives.WriteUInt16LittleEndian(raw[18..], 100);
         BinaryPrimitives.WriteUInt16LittleEndian(raw[12..], 5);
         BinaryPrimitives.WriteUInt16LittleEndian(raw[20..], 0);
-        session.TakeCursor(preview, 0);
+        Assert.Throws<InvalidOperationException>(() => session.TakeProductionCursor(preview, 0));
+        Assert.Throws<InvalidOperationException>(() => session.CancelProductionCursor());
+        // 검사 장면에서만 적재 관문을 열어 실제 커서 수신을 검증한다.
+        FieldInfo loaded = typeof(HostSession).GetField("_nativeLoaded", BindingFlags.NonPublic | BindingFlags.Instance)!;
+        loaded.SetValue(session, true);
+        try { session.TakeProductionCursor(preview, 0); }
+        finally { loaded.SetValue(session, false); }
         Assert.Equal(unchecked((uint)preview), session.Gameplay.Cursor.Preview);
         Assert.Equal(100u, session.Gameplay.Cursor.Type);
         // 원문 Take는 Flags2 bit2가 있는 타입에서만 0x200을 덧붙인다.
