@@ -20,7 +20,7 @@ public sealed partial class ClientHostGame
     private readonly object _hudDividerOwner = new();
 
     /// <summary>미션 진입에 HUD 구분선 세 개를 만들고 도크 배치로 실제 지도 영역을 정한다.</summary>
-    /// <remarks>2026-11-26 1.075에서 R5-4b용으로 추가했다. 근거: cpppj HudDock.cpp의 kMoved 배치와 UberRootGump.Construct의 구분선 기본 배치다. 패널 생성·kHudMode·메뉴 전환은 R5-4c·R5-4d에서 잇는다. 구분선 텍스처 프레임은 0으로 두며 L4a에서 맞춘다.</remarks>
+    /// <remarks>2026-11-26 1.075에서 R5-4b용으로 추가했다. 근거: cpppj HudDock.cpp의 kMoved 배치와 UberRootGump.Construct의 구분선 기본 배치다. 패널 생성·kHudMode·메뉴 전환은 R5-4c·R5-4d에서 잇는다. 세로·미니맵 구분선은 원본00542664의 프레임1을 쓰며 채팅 구분선은 배경 프레임0을 쓴다.</remarks>
     private void EnsureMissionHudDividers()
     {
         if (_hudVertical != 0) return;
@@ -28,6 +28,8 @@ public sealed partial class ClientHostGame
         var tree = menu.Tree;
         var globals = _hudDockGlobals ?? throw new InvalidOperationException("HUD 구분선의 실제 지도 전역 없음");
         uint fortType = menu.BackgroundType;
+        // 원본 00542664의 정적 초기값이며 세로 및 미니맵 구분선에 적용한다.
+        const uint dividerFrame = 1;
         HudDock? dock = null;
         var hooks = new HudDockHooks
         {
@@ -59,10 +61,10 @@ public sealed partial class ClientHostGame
         int height = _driver.Screen.Height;
         int width = _driver.Screen.Width;
         _hudVertical = tree.WithNodeOwner(_hudDividerOwner, () => tree.AllocateNode(new HudDividerNode()));
-        dividers.Construct(_hudVertical, 0, 5, height, 0x03400000, fortType, 0);
+        dividers.Construct(_hudVertical, 0, 5, height, 0x03400000, fortType, dividerFrame);
         tree.Tree.Attach(_hudVertical, 80, 0, root, 0);
         _hudMinimapDivider = tree.WithNodeOwner(_hudDividerOwner, () => tree.AllocateNode(new HudDividerNode()));
-        dividers.Construct(_hudMinimapDivider, 0, 80, 5, 0x02a00000, fortType, 0);
+        dividers.Construct(_hudMinimapDivider, 0, 80, 5, 0x02a00000, fortType, dividerFrame);
         tree.Tree.Attach(_hudMinimapDivider, 0, height - 80, root, 0);
         _hudChatDivider = tree.WithNodeOwner(_hudDividerOwner, () => tree.AllocateNode(new HudDividerNode()));
         dividers.Construct(_hudChatDivider, 18, width, 5, 0x02a00000, fortType, 0);
