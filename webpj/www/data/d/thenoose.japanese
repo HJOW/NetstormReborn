@@ -1,0 +1,67 @@
+﻿[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+
+myStartMoney = 10000
+myTech = "sunWalker;thunderBattery;sunFence;sunArcher;sunCannon;sunBlocker;thunderBlocker;bulf"
+
+aiName = "Chamberlain of Rain"
+aiTech = "sunCannon;rainBattery;thunderBattery;rainCannon;rainBlocker;rainBalloon;rainWalker;thunderCannon"
+aiStartMoney = 0
+aiGeyserAttachments = 2
+aiCollectors = 4
+aiTimeBetweenMoves = 2
+
+title="包囲の輪"
+
+[Options]
+
+[A.]
+<h2>包囲の輪</h2>
+<i>「冷酷で狡猾でないなら、
+十倍勇敢で、十倍大胆でなければならない。
+それでも足りないことは多い。」 --ニンバスの戦略家トロム・インスキネルド</i>
+<p>
+昨夜も、いつもどおり見張りを立てました。
+交代の兵が来てみると、見張りは眠っている間に殺され、
+右舷には敵の島があり、我々の島は敵の橋に囲まれていました！
+<p>
+夜が明ければストーム間欠泉が現れ、敵の攻撃が始まります。
+敵の戦線を<i>必ず</i>突破しなければなりません！
+
+$Button=次へ,Tell,A1.
+
+[A1.]
+<h2>包囲の輪</h2>
+<p>
+罠を破った後は、敵司祭を捕らえ、
+我々の祭壇に彼の血を流さなければなりません。
+そうすれば闇の王子たちも、卑劣な策ですら我々には通じないと知るでしょう！
+
+$Button=知識を確認,ShowTechnology,55
+$Button=ミッション開始,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>成功！</h2>
+<p>
+倒れた見張りたちの仇を討ちました！
+橋を突破し、傲慢な敵を圧倒しました。
+敵の奇襲戦術も、あなたの優れた破壊力にはかないませんでした！
+<$Config,Done{mission.fileName}=1>
+$Button=ミッションを終了,MissionAbort,1
+$Button=次のミッション,MissionBegin,RainVsRain
+
+
+[Failed]
+<h2>失敗！</h2>
+<p>
+眠っている間に殺された見張りたちは、むしろ安らかに逝けたのでしょう。
+残りの兵は、四方から押し寄せる敵に残酷に虐殺されました。
+島が最後の屈辱を受ける間、
+彼らの悲鳴があなたの頭の中に響き渡ります。
+$Button=続ける,Tell,TryAgain
+
+
+[END]

@@ -1,0 +1,102 @@
+﻿[Header]
+missiontype="tutorial"
+
+missionnumber=6
+moregeysers=1
+
+mytech="rainBattery;rainAviary;sunFence;outpost"
+mystartmoney=3000
+
+title="マンオブウォーとバリケード"
+
+ai2name="Lord Ice"
+ai2tech="rainCannon;rainBattery;rainBlocker;rainWalker"
+ai2startmoney=3000
+ai2geyserattachments=2
+ai2collectors=4
+ai2timebetweenmoves= 5
+ai2color=lightblue
+ai2bridgedrawrate= 1
+ai2allylist="3;4;5;6"
+
+ai3name="Count Thunder"
+ai3tech="thunderCannon;thunderBattery;bulf"
+ai3startmoney=3000
+ai3geyserattachments=2
+ai3collectors=4
+ai3timebetweenmoves= 5
+ai3color=Purple
+ai3bridgedrawrate= 1
+ai3stuffRefreshRate=1
+ai3allylist="2;4;5;6"
+
+ai4name="Sir Vortex"
+ai4tech="windArcher;windBattery;windBlocker;windWalker;;"
+ai4startmoney=3000
+ai4geyserattachments=2
+ai4collectors=4
+ai4timebetweenmoves= 6
+ai4color=Green
+ai4bridgedrawrate= 1
+ai4allylist="2;3;5;6"
+
+ai5name="Baron Death"
+ai5tech="sunCannon;sunArcher;sunFence;sunBlocker;windArcher;windBattery;windBlocker;windWalker;thunderCannon;thunderBattery;bulf;rainCannon;rainBattery;rainBlocker;rainWalker"
+ai5startmoney=3000
+ai5geyserattachments=2
+ai5collectors=4
+ai5timebetweenmoves= 3
+ai5color=Red
+ai5bridgedrawrate= 1
+ai5stuffRefreshRate=1
+ai5allylist="2;3;4;6"
+
+ai6name="Mr Sun"
+ai6tech="sunCannon;windBattery;sunArcher;sunFence;sunBlocker"
+ai6startmoney=3000
+ai6geyserattachments=2
+ai6collectors=4
+ai6timebetweenmoves= 5
+ai6color=Yellow
+ai6bridgedrawrate= 1
+ai6stuffRefreshRate=1
+ai6allylist="2;3;4;5"
+
+[Options]
+
+[A.]
+<h2>マンオブウォー</h2>
+<i>~y「この驚くべき生き物は液体のプールから生まれ、容赦なく敵を追い詰める。」<br>
+-ニンバスの科学者</i>
+<p>~w遠く離れた場所で孤立したあなたを、敵対する司祭たちが取り囲みました。簡単に勝てると思い、押し寄せてきます。あなたとの戦いに楽な勝利などないと教えてやりましょう！
+<p>~B~E~r目標：~.~B~w サンバリケードでマンオブウォーを守りながら敵を倒してください。
+<p>~B~E~oヒント：~.~B~w マンオブウォーの「生成プール」は弱いため、攻撃されないよう先にサンバリケードを置き、その後ろにマンオブウォーを配置してください。
+<p>前哨基地も使えます。（司祭を右クリックし、「前哨基地を建設（Build Outpost）」を選択）
+<p><!"rainaviary.*"><!"rainflyer.*">                               <!"sunfence.*">
+<p>「マンオブウォー」                          「サンバリケード」
+$Button=使える知識,ShowTechnology,55
+$Button=始めます！,DoNothing,0
+</?>
+
+[succeeded][badteamdead]
+<h2>おめでとうございます！</h2>
+<p>ニンバスで役立つ戦術を、また一つ身につけました！
+<$Config,Done{mission.fileName}=1>
+$Button=訓練メニュー,MissionBegin,BC1Menu76
+<p>
+$Button=やり直す,Tell,TryAgain
+$Button=次へ,MissionBegin,bc7sun_bars76
+
+<p>
+$Button=ミッションを終了,MissionAbort,0
+
+[Failed]
+<h2>失敗……</h2>
+<p>敵はマンオブウォーをあざ笑い、防御を突破してあなたの島を踏みにじりました……。
+$Button=訓練メニュー,MissionBegin,BC1Menu76
+<p>
+$Button=やり直す,Tell,TryAgain
+<p>
+$Button=ミッションを終了,MissionAbort,0
+
+[END]

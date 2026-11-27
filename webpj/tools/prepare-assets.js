@@ -13,6 +13,8 @@ const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
 const { KOREAN_FONT_PATHS } = require('../www/assets/korean-font-config.js');
+// 공용 일본어 번역 파일의 목록은 런타임과 같은 순수 설정에서 읽는다.
+const { JAPANESE_BUNDLE, JAPANESE_LANGUAGE_PATHS, JAPANESE_TRANSLATIONS_PATH } = require('../www/assets/japanese-asset-config.js');
 
 // webpj 폴더의 절대 경로이다. (2026-10-23 WB03-M1)
 const WEBPJ_ROOT = path.resolve(__dirname, '..');
@@ -38,6 +40,7 @@ const BUNDLES = Object.freeze({
     'menu-music': '메인 메뉴 음악(크기가 커서 화면 표시를 막지 않고 뒤에서 받음)',
     'mission-sound': '미션 효과음 원본(메뉴에 포함된 두 효과음 제외, 미션 재생 준비용)',
     'mission-music': '미션 장면 음악 원본(메인 메뉴 음악 제외, 미션 재생 준비용)',
+    japanese: '일본어 공용 UI 번역표와43개 언어 파일. 일본어 선택 때만 받으며 글꼴은 CDN 제공자가 별도로 준비한다.',
     skirmish: '12차 스커미시 시작 섬 후보 fort 12개(원본 d/*.fort 그대로, 스커미시를 시작할 때만 받음; 2026-11-20 WB04-E1103)',
     korean: '한국어 지원(갈무리11 글꼴 woff2·UI 번역표 xlat.korean·Tell 본문 tell.korean·캠페인 목록 offical*.korean·용어표 config.korean). 언어가 한국어일 때만 받는다(2026-10-31 WB03-N, WB03-O)',
 });
@@ -135,6 +138,9 @@ const ASSET_FILES = Object.freeze([
     { path: KOREAN_FONT_PATHS.license, source: KOREAN_FONT_PATHS.license, bundle: 'korean', use: '갈무리11 글꼴 사용 허가. 글꼴과 함께 배포한다.' },
     { path: 'd/xlat.korean', source: 'webpj/translations/xlat.korean', bundle: 'korean', use: '한국어 UI 문자열 번역표(원본 xlat 형식, UTF-8): 메뉴·도움말 라벨과 미션 설치의 플레이어 이름' },
     ...KOREAN_LANGUAGE_FILES.map(({ name, use }) => ({ path: `d/${name}`, source: `webpj/translations/${name}`, bundle: 'korean', use })),
+    // 공용 번역은 변환 없이 복사한다. 글꼴 원본TTF는 웹 배포에 넣지 않는다.
+    { path: JAPANESE_TRANSLATIONS_PATH, source: 'assets/lang/japanese/xlat.japanese', bundle: JAPANESE_BUNDLE, use: '공용 일본어 UI/튜토리얼 안내39키 번역표(UTF-8)' },
+    ...JAPANESE_LANGUAGE_PATHS.map((assetPath) => ({ path: assetPath, source: `assets/lang/japanese/${assetPath}`, bundle: JAPANESE_BUNDLE, use: '공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존' })),
 ]);
 
 // 자산의 저장소 루트 기준 원본 경로를 돌려준다. source 가 없으면 assets/game-data 아래의 같은 경로이다. (2026-10-31 WB03-N)

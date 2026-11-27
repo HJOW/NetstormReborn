@@ -1,0 +1,10 @@
+﻿title = "ユーザー作成キャンペーン"
+
+[Overview]
+<background="nsstart">
+<h2>{offical6.title}</h2>
+<p>
+どの部分をプレイしますか？<br><br>
+$Timeout=120,Tell,Campaign
+$Menu=%{userSpec},Tell,{cur.file}.overview
+$Button=戻る,Tell,UCampaign

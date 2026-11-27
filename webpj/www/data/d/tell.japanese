@@ -1,0 +1,2565 @@
+﻿[COMMENTS]
+
+[*********]
+
+
+
+[GUILD SYSTEM WAS KILLED IT WAS A BAD IDEA!!!]
+
+[REVISED GUILD SYSTEM V 1.2]
+
+[ADMINZONE]
+
+$Input=ユーザーパスを追加するゾーンを入力,0,ADMINZONE2
+
+[ADMINZONE2]
+<$adminsetzone,{param.1}>
+
+[ADMINGETTAG]
+
+$Input=プレイヤーのタグを入力,1,ADMINGETTAG2
+
+[ADMINGETTAG2]
+<$adminsetTag,{param.1}>
+
+[REGGUILD]
+
+$Input=ギルド名を入力,1,REGGUILD1
+
+[REGGUILD1]
+
+<$Config,GUILDPARAM1={param.1}>
+$Input=ギルドのパスワードを入力,1,REGGUILD2
+
+[REGGUILD2]
+<$Config,GUILDPARAM2={param.1}>
+<$Tell,REGGUILD3>
+
+[REGGUILD3]
+入力した情報は正しいですか？
+ギルド名：{GUILDPARAM1}<br>
+ギルドのパスワード：{GUILDPARAM2}<br>
+$Button=はい,Tell,ZSEND(GUILDNEW,{GUILDPARAM1},{GUILDPARAM2})
+$Button=いいえ,Tell,REGGUILD
+$Button=中止,DoNothing,1
+
+
+[GUILDLOGIN]
+
+<$Config,GUILDPARAM3={param.1}>
+$Input=ギルド名を入力,1,GUILDLOGIN2
+
+[GUILDLOGIN2]
+
+<$Config,GUILDPARAM1={param.1}>
+$Input=ギルドのパスワードを入力,1,GUILDLOGIN3
+
+[GUILDLOGIN3]
+<$Config,GUILDPARAM2={param.1}>
+<$Tell,GUILDLOGIN4>
+
+[GUILDLOGIN4]
+<$Tell,ZSEND({GUILDPARAM3},{GUILDPARAM1},{GUILDPARAM2})>
+
+
+
+[GUILD SYSTEM V 1.0 Disbaneded]
+
+[SSSUPDATEZONE]
+<$RefreshPlayers>
+<$MenuJustClosed,0>
+
+[SSSGuildAdd]
+<$Config,GUILDADDLAST={param.1}>
+<$Tell,GuildAskPass>
+<$MenuJustClosed,0>
+
+[SSSGuildAskPass]
+
+$Input=ギルドのパスワードを入力,1,GuildAskPass2
+<$MenuJustClosed,0>
+
+[SSSGuildAskPass2]
+<$Config,GUILDADDLASTP={param.1}>
+<$Tell,GuildSendData>
+<$MenuJustClosed,0>
+
+[SSSGuildSendData]
+$Zsend=GUILDADD,{GUILDADDLAST},{GUILDADDLASTP}
+<$MenuJustClosed,0>
+
+[SSSYourguildWasAdded]
+<$RequestMenu,GuildAdded>
+
+[SSSYourguildfail]
+<$RequestMenu,GuildAddedFail>
+
+
+[GENERAL SYSTEM]
+[SetIslands]
+<$config,theammode={param.1}>
+<$ReloadTheams,0>
+<$MenuJustClosed,0>
+
+
+[ NETWORK SYSTEM V1.0]
+
+[ZSEND]
+$Zsend={param.1},{param.2},{param.3}
+<$MenuJustClosed,0>
+
+
+[BattleOver6]
+<h2>{H2}戦闘終了</h2>
+{Text}
+<$MoveDialog,br>
+$Button=続ける,GoMultiplayer,1
+
+
+[ChangeFirewall]
+<h2>{H2}サーバー診断状態の切り替え</h2>
+{Text}サーバーの診断状態を切り替えようとしています！<br>
+この変更を正しく適用するには、サーバーからログアウトする必要があります。<br>
+サーバーからログアウトしますか？<br>
+$Button=はい,Tell,ToggleMyFirewall
+$Button=いいえ,DoNothing,0
+
+[ToggleMyFirewall]
+<?{passedDiags}>
+	<$config,passedDiags=0>
+</?>
+<?!{passedDiags}>
+	<$config,passedDiags=1>
+</?>
+<$GoMultiplayer>
+<$MenuJustClosed,0>
+[New GAme system Starts Here]
+
+
+[DENYSALVAGE]
+<h2>{H2}回収できません</h2>
+<p>{Text}
+今、重要な建物を回収するのは賢明ではありません。回収すると、破壊した建物のストームパワー価値の25%だけが戻り、残りは周囲に散らばります。
+<p>
+回収は通常、戦闘中の最後の手段として使います。
+<p>
+$Button=確認,DoNothing,0
+
+
+
+
+[PlayerInfo]
+<h2>{H2}レベルマネージャー            </h2>
+
+{Text}~5{FragIcon}{FragName}{Accent}: {CText}{param.4}<br>
+{Text}{ShardIcon}{ShardName}{Accent}: {CText}{param.3}<a herf="cmd:Tell,CraftWarning({param.1},{param.2},{param.3},{param.4})"> {Accent}({Link}ストーンを作成{Accent})</a>{Text}~5<br>
+{Text}{StoneIcon}{StoneName}{Accent}: {CText}{param.2}<br>
+$Button=確認,DoNothing,0
+
+
+[CraftWarning]
+<?l {param.3}={ShardtoStone}>
+<h2>{H2}今は作成できません</h2>
+{Text}今は{ShardName}が足りないため、{StoneName}を作成できません。<br>
+作成には{ShardtoStone} {ShardName}が必要ですが、今は{param.3} {ShardName}しか持っていません。<br>
+</?>
+<?l! {param.3}={ShardtoStone}>
+作成できます！
+</?>
+$Button=戻る,Tell,PlayerInfo({param.1},{param.2},{param.3},{param.4})
+$Button=確認,DoNothing,0
+
+[PROFILE SYSTEM STARTS HERE]
+
+[LoadProfiles]
+<$tell,ShowProfileList({ProfileSpec})>
+
+
+
+[ShowProfileList]
+<h2>{H2}プロフィール</h2>
+<p>{Text}
+以下の一覧から、プレビューするプロフィールを選んでください。
+$Menu=#{param.1},Tell,PreiverProfile({cur.file})
+$Button=キャンセル,DoNothing,0
+
+
+[PreiverProfile]
+<h2>{H2}プロフィール {{param.1}.Title}</h2>
+<p>
+{Text}作成者{Accent}:{Text} {{param.1}.Author}<br>
+{Text}日付{Accent}:{Text} {{param.1}.Date}<br>
+{Text}ウェブサイト{Accent}:{Text} <a herf="http://{{param.1}.WebSite}">{{param.1}.WebSite}<br>
+$Button=戻る,Tell,LoadProfiles
+$Button=有効にする,Tell,SetProfile({param.1})
+
+[SetProfile]
+
+<$config,MenuTitleColor="{{param.1}.MenuTitleColor}">
+<$config,MenuTitleBGColor="{{param.1}.MenuTitleBGColor}">
+<$config,MenuHeaderColor="{{param.1}.MenuHeaderColor}">
+<$config,MenuHeaderBGColor="{{param.1}.MenuHeaderBGColor}">
+<$config,MenuColor="{{param.1}.MenuColor}">
+<$config,MenuBGColor="{{param.1}.MenuBGColor}">
+<$config,MenuCheckedColor="{{param.1}.MenuCheckedColor}">
+<$config,MenuCheckedBGColor="{{param.1}.MenuCheckedBGColor}">
+<$config,MenuSubColor="{{param.1}.MenuSubColor}">
+<$config,MenuSubBGColor="{{param.1}.MenuSubBGColor}">
+
+<$config,BE="{{param.1}.BE}">
+<$config,H1="{{param.1}.H1}">
+<$config,H2="{{param.1}.H2}">
+<$config,H3="{{param.1}.H3}">
+<$config,Text="{{param.1}.Text}">
+<$config,Link="{{param.1}.Link}">
+<$config,CText="{{param.1}.CText}">
+<$config,Accent="{{param.1}.Accent}">
+<$config,Alert="{{param.1}.Alert}">
+
+<$tell,ProfileDone>
+
+
+
+[this shit was killed]
+
+<$config,BattleIcon="{{param.1}.BattleIcon}">
+<$config,AlliesIcon="{{param.1}.AlliesIcon}">
+<$config,GeneralIcon="{{param.1}.GeneralIcon}">
+<$config,WhisperIcon="{{param.1}.WhisperIcon}">
+<$config,ObserverIcon="{{param.1}.ObserverIcon}">
+<$config,Count1Icon="{{param.1}.Count1Icon}">
+<$config,Count5Icon="{{{param.1}.Count5Icon}">
+<$config,Count10Icon="{{param.1}.Count10Icon}">
+[END OF DEAD SHIT]
+
+[saveingthis]
+<$config,="{{param.1}.}">
+
+[ProfileDone]
+<h2>{H2}プロフィール</h2>
+<p>{Text}
+プロフィールを設定しました！
+$Button= 確認,DoNothing,0
+
+
+[SETSIZE]
+<h1>{H1}~a警告！</h1>
+{BE}{Text}画面解像度を（{CText}{param.1} {Text}x {CText}{param.2}{Text}）に変更しようとしています。<br><br>
+この変更にはNetstormを{Alert}再起動{Text}する必要があります。今変更しますか？
+$Button=はい,Tell,SetSize2({param.1},{param.2})
+$Button=いいえ,DoNothing,0
+
+
+
+
+[SetSize2]
+<$Config,SCREENW={param.1}>
+<$Config,SCREENH={param.2}>
+$OnExit=test,QuitApp,99
+<$MenuJustClosed,0>
+
+
+
+
+
+[SETSIZEold]
+<$Config,SCREENW={param.1}>
+<$Config,SCREENH={param.2}>
+<$MenuJustClosed,0>
+
+[PriestImmobile]
+
+<$Warning,"~B~E~y我々の司祭が動けなくなりました">
+
+[islandUnderAttack]
+
+<$Warning,"~B~E~y我々の島が攻撃されています">
+
+
+
+[AdminBcast]
+
+$Input=公開ブロードキャストのメッセージを入力,1,BcastReturn
+
+[BcastReturn]
+<$adminbcast,{param.1}>
+<$MenuJustClosed,0>
+
+
+[AdminMcast]
+
+$Input=公開マルチキャストのメッセージを入力,1,McastReturn
+
+[McastReturn]
+<$adminmcast,{param.1}>
+<$MenuJustClosed,0>
+
+[***********************************************************]
+[ZoneLocked]
+<h2>{H2}ゾーンへの立ち入り制限</h2>
+<p>{Text}
+入ろうとしているゾーンは現在立ち入りが制限されており、あなたには入る権限がありません。<br>
+$Button=確認,DoNothing,0
+[***********************************************************]
+[UserNotUpdated]
+<h2>{H2}有効性が確認されていません</h2>
+<p>{Text}
+自動更新を実行していないか、自動更新が現時点のバージョンを確認できなかったため、インストール済みのNetstormが最新かどうか確認できません。
+<p>
+マルチプレイヤーは利用できませんが、シングルプレイヤーとLANではプレイできます。
+$Button=確認,DoNothing,0
+[***********************************************************]
+
+[WELCOME]
+<background="nsisles">
+<h2>{H2}NetStorm</h2>
+<p>{Text}
+あなたは今、雲の上高く浮かぶ島の要塞の世界、
+ニンバスに足を踏み入れようとしています。
+<p>
+あなたの使命は、敵司祭を捕らえてフューリーに
+生贄として捧げ、知識と力を得ることです。
+
+$Button=確認,Tell,Welcome2
+
+[***********************************************************]
+[WELCOME2]
+<$config,welcomeGiven=1>
+<background="nsisles">
+<h2>{H2}NetStorm</h2>
+<p>{Text}
+NetStormは、ほかのアクション戦略ゲームとはかなり異なります。
+マルチプレイヤーに挑戦する前に、初期ミッションを
+最後までプレイすることをお勧めします。
+<p>
+初期ミッションでは、シングルプレイヤーとマルチプレイヤーの
+両方で成功の鍵となるエネルギーや
+橋の建設といった、大切な概念を学べます。
+<p>
+$Button=初期ミッションをプレイ,MissionBegin,Tutorial1
+$Button=メインメニュー,Tell,Blank
+
+[***********************************************************]
+[About]
+<h2>{H2}NetStorm</h2>
+<p>{Text}
+バージョン {version}
+<p>
+(c) 1997 Titanic Entertainment, Inc. and Activision Inc.<br>
+{gamemaster}.{gameminor} パッチ：Ticonderoga Entertainment.<br>
+$Button=確認,DoNothing,0
+
+[***********************************************************]
+[NotImplemented]
+<h2>{H2}未実装</h2>
+<p>{Text}
+この機能は未実装か、動作が不安定なため、デモでは一時的に無効になっています。
+<br>
+このメッセージが誤って表示された場合、お使いのバージョンは{version}です。
+$Button=確認,Tell,{global.priorTell}
+
+
+[***********************************************************]
+[PlayerSubIdNotFound]
+<h2>{H2}プレイヤー#{p.handle}の情報がありません</h2>
+<p>{Text}
+このアカウントの情報が見つかりません。
+<p>
+
+$Button=確認,DoNothing,0
+
+
+[***********************************************************]
+[TechSupport]
+<h2>{H2}テクニカルサポート</h2>
+<p>{Text}
+サポートに問い合わせる前に、ゲームに付属する技術ヘルプの
+ファイルを確認してください。Windowsの
+{CText}スタート{Text}メニューで{CText}プログラム{Text} / {CText}NetStorm{Text} / {CText}Technical Help{Text}を
+選ぶと、詳しい情報が表示されます。このプログラムの
+起動には20秒以上かかることがありますので、お待ちください。
+<p>
+サポートが必要な場合は、{SUPPORTNAME}のサポートチームに、
+<a href="mailto:{EMAIL1}">{Link}{EMAIL1}</a>{Text}宛てにメールを送ってください。
+<p>
+
+[***********************************************************]
+[SETUP]
+<h2>{H2}セットアップ</h2>
+<p>{Text}
+NetStormのセットアッププログラムを起動します。表示されるまで待ち、必要な情報を入力してください。
+<p>
+セットアップ中に登録すると、この要塞には登録時の名前が使われます。
+<p>
+準備ができたらセットアッププログラムを終了し、下のボタンを押してください。
+$Button=セットアップ完了,AccountSetup,1
+
+
+[***********************************************************]
+[QUITABANDON]
+<h2>{H2}プログラム終了</h2>
+<p>{Text}
+戦闘中です。今NetStormを終了し、デスクトップに戻りますか？
+<p>
+$Button=終了,QuitApp,99
+$Button=プレイを続ける,DoNothing,0
+
+
+[***********************************************************]
+[BuildNoBucks]
+<h2>{H2}ストームパワーが必要です</h2>
+<p>{Text}
+この建物を作るための<a href="stormPowerHelp">{Link}ストームパワー</a>{Text}が足りません。
+<p>
+画面左上の司祭の建設メニューにある数字を見ると、必要なストームパワーが分かります。数字がこのように赤く表示される場合は、
+~r210{Text}<!"fortgump.3">ストームパワーがさらに必要です。
+
+
+[***********************************************************]
+[NoTechTheme]
+<h2>{H2}建設できません</h2>
+<p>{Text}
+その系統の<a href="factoryHelp">{Link}ワークショップ</a>{Text}を建設するには、同じ系統の<a href="technologyHelp">{Link}知識</a>{Text}が必要です。つまり、レインワークショップで作れるのは、レイン系統の<a href="unitHelp">{Link}ユニット</a>{Text}だけです。
+
+
+[***********************************************************]
+[UpgradeNoBucks]
+<h2>{H2}ストームパワーが必要です</h2>
+<p>{Text}
+このワークショップをアップグレードするための<a href="stormPowerHelp">{Link}ストームパワー</a>{Text}が足りません。
+<p>
+画面左上の司祭の建設メニューにある数字を見ると、必要なストームパワーが分かります。数字がこのように赤く表示される場合は、
+~r210{Text}<!"fortgump.3">ストームパワーがさらに必要です。
+
+
+[***********************************************************]
+[NameRequired]
+<h2>{H2}別の名前が必要です</h2>
+{Text}
+このコンピューターには、同じ名前の要塞がすでにあります。要塞に別の名前を付けてください。
+<p>
+$Button=確認,DoNothing,0
+
+
+
+[***********************************************************]
+[DEMOVILLE]
+<background="nsisles">
+<h2>{H2}NetStorm</h2>
+<p>{Text}
+見たいデモを選んでください：
+<p>
+
+$Timeout=120,Tell,Blank
+
+$Menu=嵐が吹き荒れる,StartDemo,DemoStormRages
+$Menu=デモ「背後を守れ」,StartDemo,GuardMyBack
+$Menu=デモ「崩れた同盟」,StartDemo,DissolvedAlliance
+
+$Button=キャンセル,Tell,Blank
+
+[***********************************************************]
+[DemoAi1TempleDead]
+<$MissionAbort,1>
+
+[DemoGoodTeamDead]
+<$MissionAbort,1>
+
+[DemoBadTeamDead]
+<$MissionAbort,1>
+
+[***********************************************************]
+[Demo]
+<h2>{H2}NetStorm デモ</h2>
+<p>{Text}
+このデモでは、コンピューターが操作する戦闘中の
+あなたの島をお見せします。
+<p>
+実際のゲームと同じようにユニットを配置して、
+島の勝利を手助けすることもできます。
+
+$Timeout=15,DoNothing,0
+
+[***********************************************************]
+[MetaVerDiff]
+<h2>{H2}バージョンが異なります</h2>
+<p>{Text}
+接続しようとしているチャレンジサーバーのバージョンは{param.1}です。
+ゲームのバージョンは{MAJOR_VERSION}.{MINOR_VERSION}で、サーバーのバージョンと互換性がありません。ゲームを更新するか、より新しいチャレンジサーバーを探す必要があります。
+<p>
+バージョンを更新する必要がある場合は、次の場所から更新を入手できます。<br>
+<a href="http://{UPDATEURL}">{Link}{UPDATEURL}</a>{Text}
+<p>
+$Button=確認,SaveGoMain,0
+
+
+[***********************************************************]
+[GameVerDiff]
+<h2>{H2}バージョンが異なります</h2>
+<p>{Text}
+接続しようとしているゲームサーバーのバージョンは{param.1}です。
+ゲームのバージョンは{MAJOR_VERSION}.{MINOR_VERSION}で、このゲームサーバーのバージョンと互換性がありません。ゲームを更新するか、同じバージョンの相手とプレイしてください。
+<p>
+バージョンを更新する必要がある場合は、次の場所から更新を入手できます。<br>
+<a href="http://{UPDATEURL}">{Text}{UPDATEURL}</a>{Text}
+<p>
+$Button=確認,SaveGoMain,0
+
+
+[***********************************************************]
+[PieceDump]
+{Text}
+すべてのピースの一覧を、ゲームの基本ディレクトリにあるHTMLファイル<br>
+<b> "<a href="file:NetStormPieceList.html">{Link}NetStormPieceList</a>"</b>{text}
+<br>
+に保存しました。
+
+
+[***********************************************************]
+[SalvageVortex]
+<h2>{H2}警告</h2>
+<p>{Text}
+この神殿を回収すると、ストームパワーの採集も、橋の建設もできなくなります。
+<p>
+回収しますか？
+<br>
+$Button=回収,Salvage,{global.salvageSid}
+$Button=キャンセル,DoNothing,0
+
+
+[***********************************************************]
+[SalvageInf]
+<h2>{H2}警告</h2>
+<p>{Text}
+これを回収すると、一つ以上の戦闘ユニットを生産できなくなる可能性があります。
+<p>
+回収しますか？
+$Button=回収！,Salvage,{global.salvageSid}
+$Button=キャンセル,DoNothing,0
+
+
+[***********************************************************]
+[BeginCapture]
+<h2>{H2}キャプチャ開始</h2>
+<p>{Text}
+今、動画のキャプチャを開始しますか？
+$Button=キャプチャ開始,Capture,1
+$Button=キャンセル,DoNothing,0
+
+
+[***********************************************************]
+[EndCapture]
+<h2>{H2}キャプチャ終了</h2>
+<p>{Text}
+キャプチャした内容は、{gifSequenceName}000.bmpなどの名前のファイルに保存されました。
+
+[PlacingIslands]
+{Text}
+左側には、このマップの全体が表示されています。新しい島を追加するには、全体表示ウィンドウの下にある島を左クリックし、次にマップをクリックして配置してください。
+<p>
+配置を取り消すには、ウィンドウ下部の島の絵をもう一度クリックしてください。
+
+
+[***********************************************************]
+[CSLGenericFail]
+<h2>{H2}チャレンジサーバーへのログイン失敗！</h2>
+{Text}
+不明な理由でチャレンジサーバーに接続できませんでした。
+<p>
+詳しくは<a href="http://{UPDATEURL}">{Link}{UPDATEURL}</a> {Text}をご覧ください。
+
+
+[***********************************************************]
+[CSLServerFull]
+<h2>{H2}チャレンジサーバーへのログイン失敗！</h2>
+{Text}
+チャレンジサーバーには新たなプレイヤーを受け入れる空きがないため、接続できません。
+<p>
+別のサーバーを使うか、後でもう一度お試しください。
+
+
+[***********************************************************]
+[CSLBadNameLen]
+<h2>{H2}チャレンジサーバーへのログイン失敗！</h2>
+{Text}
+サーバーが受け取った名前の長さが正しくありません。
+<p>
+詳しくは<a href="http://{UPDATEURL}">{Link}{UPDATEURL}</a> {Text}をご覧ください。
+
+[***********************************************************]
+[CSLAlreadyHere]
+<h2>{H2}チャレンジサーバーへのログイン失敗！</h2>
+{Text}
+同じ要塞ID番号を使う別のユーザーがすでに接続しているため、チャレンジサーバーに接続できません。
+<p>
+新しいマルチプレイヤー用の要塞を作り、もう一度ログインしてください。<br>
+
+
+[***********************************************************]
+[TellGifWritten]
+<h2>{H2}スクリーンショット保存完了</h2>
+{Br}
+このスクリーンショットを、次のファイルに保存しました。
+<p>
+{CText}<b>{InstallDir}{GifOutSpec}</b>{Text}
+<p>
+$Button=表示,URL,file:///{InstallDir}{GifOutSpec}
+$Button=確認,DoNothing,0
+
+
+[***********************************************************]
+[WarnPriestTaken]
+
+<$Warning,~B~E~a{param.5}{param.3} ~aの司祭が{param.4}{param.2}~aに捕らえられました！>
+
+[WarnYourPriestTaken]
+
+<$Warning,~B~E~a 我々の司祭が{param.4}{param.2}~aに捕らえられました！>
+
+
+[***********************************************************]
+[WarnNeutralPriestTaken]
+
+<$Warning,~B~E~a 中立の司祭が{param.5}{param.2}~aに捕らえられました！>
+
+[***********************************************************]
+[BecomingServer]
+<h2>{H2}サーバーの役割の引き継ぎ</h2>
+<p>{Text}
+ゲームサーバーとの接続が切れました。あなたのコンピューターが新たなサーバーに選ばれました。ほかのプレイヤーが再接続する間、遅延が発生する場合があります。
+<p>
+ほかのプレイヤーがあなたのコンピューターに接続できない場合、ゲームは途中で終了します。
+
+
+[***********************************************************]
+[ConfirmRetreat]
+<h2>{H2}戦闘から離れる</h2>
+<p>{Text}
+この戦闘から離れますか？
+<p>
+離れると、戻ることはできません。
+
+$Button=離れる,LeaveBattle,1
+$Button=残る,DoNothing,0
+
+
+[***********************************************************]
+[LoadEditable]
+<h2>{H2}戦闘マップを読み込む</h2>
+<p>{Text}
+以下の一覧から、読み込む戦闘を選んでください。
+$Menu=*SOLOLIST*,DoNothing,0
+$Button=新しいマップを作成,tell,LOADLOADFORT
+$Button=キャンセル,Tell,Blank
+
+[LOADLOADFORT]
+<$tell,LoadEditable>
+<$NewFort,0>
+
+
+
+[***********************************************************]
+[LoadMultiplayer]
+<h2>{H2}マルチプレイヤーのゲームを読み込む</h2>
+<p>{Text}
+以下の一覧から、読み込む保存済みゲームを選んでください。
+
+$Menu=*FORTLIST*,DoNothing,0
+$Button=新しいゲームを作成,tell,LOADLOADFORT1
+$Button=キャンセル,DoNothing,0
+
+[LOADLOADFORT1]
+<$tell,LoadMultiplayer>
+<$NewFort,0>
+[***********************************************************]
+[LeaveEditMode]
+<h2>{H2}編集モードを終了</h2>
+<p>{Text}
+今、このマップを保存しますか？
+
+$Button=はい,SaveGoMain,1
+$Button=いいえ,SaveGoMain,0
+$Button=キャンセル,DoNothing,0
+
+
+[***********************************************************]
+[QuitEditMode]
+<h2>{H2}NetStormを終了</h2>
+<p>{Text}
+保存せずに今終了しますか？
+
+$Button=はい,QuitApp,99
+$Button=いいえ,DoNothing,0
+
+[***********************************************************]
+[ABORT]
+<h2>{H2}ミッションを終了しますか？</h2>
+<p>{Text}
+今、このミッションを離れてメインメニューに戻りますか？
+<p>
+$Button=メインメニュー,LeaveBattle,1
+$Button=ミッションをやり直す,MissionRestart,0
+$Button=ミッションを続ける,DoNothing,0
+
+[***********************************************************]
+[TryAgain]
+{Text}
+ミッション{CText}{mission.title}{Text}に、もう一度挑戦しますか？
+<p>
+$Button=ミッションをやり直す,MissionRestart,0
+$Button=ミッションを終了,MissionAbort,1
+
+[***********************************************************]
+[SetOwner]
+<h2>{H2}プレイヤーを指定</h2>
+<p>{Text}
+このユニットを、どのプレイヤーの所有にしますか？
+
+$Menu=~[C.84]人間のプレイヤー,SetOwner,1
+$Menu=~[C.249]コンピューター #1,SetOwner,2
+$Menu=~[C.184]コンピューター #2,SetOwner,3
+$Menu=~[C.140]コンピューター #3,SetOwner,4
+$Menu=~[C.150]コンピューター #4,SetOwner,5
+$Menu=~[C.112]コンピューター #5,SetOwner,6
+$Menu=~[C.156]コンピューター #6,SetOwner,7
+$Menu=~[C.222]コンピューター #7,SetOwner,8
+$Button=所有者なし,SetOwner,0
+$Button=キャンセル,DoNothing,0
+
+[***********************************************************]
+[Campaign]
+<$tell,offical6.Overview>
+[UCampaign]
+<background="nsstart">
+<h2>{H2}キャンペーン</h2>
+<p>{Text}
+どの部分をプレイしますか？<br>
+$Timeout=120,Tell,Blank
+
+$Menu=@{guideSpec},Tell,{cur.file}.overview
+
+$Button=戻る,Tell,Blank
+
+[***********************************************************]
+[Credits]
+<background="nsstart">
+<h2>{H2}クレジット</h2>
+$Menu=NetStorm 10.72 パッチ クレジット,Tell,CreditsNew
+$Menu=NetStorm オリジナル クレジット,Tell,Creditsold
+$Button=キャンセル,Tell,Blank
+
+[CreditsNew]
+<background="nsstart">
+<h2>{H2}NetStorm 10.72 パッチ クレジット</h2>
+<p>{Text}
+パッチ開発：Ticonderoga Entertainment
+<p>
+{CText}プログラミング{Text}<br>
+Fleet_Admiral, プロジェクトリーダー兼リード開発者。<br>
+Wishmaster, アシスタント開発者。<br>
+Rangerone, 自動更新ソフトウェア。<br>
+<br>
+{CText}グラフィックス{Text}<br>
+DWMI, 3Dグラフィックスおよびグラフィックスマネージャー。<br>
+Robban, 3Dグラフィックス。<br>
+Cirrostratus, コンセプトアート。<br> 
+Fleet_Admiral, 2Dアートおよび全体のコンセプト。<br>
+<br>
+{CText}サウンド{Text}<br>
+Dwia, サウンドエンジニア。<br> 
+Dwindlin, サウンドエンジニア。<br>
+<br>
+$Timeout=20,Tell,CreditsNew1
+$Button=続きを見る,Tell,CreditsNew1
+$Button=戻る,Tell,Credits
+$Button=キャンセル,Tell,Blank
+
+[CreditsNew1]
+<background="nsstart">
+<h2>{H2}NetStorm 10.72 パッチ クレジット</h2>
+<p>{Text}
+{CText}スクリプト{Text}<br>
+Fleet_Admiral, 英語スクリプト統括。<br>
+Samthemon, 英語スクリプト作成。<br>
+AmericanEagle, ヘルプファイル作成。<br>
+Dwindlin, ヘルプファイル作成。<br>
+MrBig, ヘルプファイル作成。<br>
+Ventusmori, ヘルプファイル作成。<br>
+Whirlibulf, ヘルプファイル作成。<br>
+Kenzo, ヘルプファイル作成。<br>
+<br>
+{CText}ユニットバランス{Text}<br>
+MrBig, リードテスターおよびユニットバランス。<br> 
+Clif, ユニットバランス。<br>
+Kain, ユニットバランス。<br>
+<br>
+{CText}その他{Text}<br>
+YellowEye, DarkskiesおよびActivision担当コーディネーター。<br>
+<br>
+{CText}特別な感謝{Text}<br>
+Kain<br>
+YellowEye<br>
+NsWorld<br>
+Robban<br>
+ZBS<br>
+Ken<br>
+
+$Timeout=20,Tell,CreditsNew2
+$Button=続きを見る,Tell,CreditsNew2
+$Button=戻る,Tell,CreditsNew
+$Button=キャンセル,Tell,Blank
+
+[CreditsNew2]
+<background="nsstart">
+<h2>{H2}NetStorm 10.72 パッチ クレジット</h2>
+<p>{Text}
+{CText}NSHQピップアイコンコンテスト受賞者{Text}<br>
+1位, IV0。<br>
+2位, mig5。<br>
+3位, Tas。<br>
+<br>
+{CText}NSHQピップアイコンコンテスト参加者{Text}<br>
+Tas<br>
+demon98765<br>
+DWMI<br>
+mig5<br>
+Drunken_Master<br>
+IV0<br>
+<br>
+{CText}アルファテスター{Text}<br>
+Manifesto, CrispyCrab, Deacon, Caesar<br> 
+Ventusmori, Darkwizzard, Dwindlin, Promise<br>
+RickMcCrank, CoWsGoMoO, Dwiggy, AustralianDingo<br>
+Papers, Sudden_Death, BlueCheese, AmericanEagle<br>
+KellJes, NsWorld, Chgirl, Whirlibulf<br>
+$Timeout=20,Tell,CreditsNew3
+$Button=続きを見る,Tell,CreditsNew3
+$Button=戻る,Tell,CreditsNew1
+$Button=キャンセル,Tell,Blank
+
+[CreditsNew3]
+<background="nsstart">
+<h2>{H2}NetStorm 10.72 パッチ クレジット</h2>
+<p>{Text}
+{CText}ベータテスター{Text}<br>
+Besroah, Dahonk, Ingwe, Jaron<br>
+Moonstone, Shoty, Sneakynewbie, stormer<br>
+Tas, Zazu<br> 
+
+{CText}献辞{Text}<br>
+NetStorm 10.70パッチを、Ladybulfの思い出に捧げます。<br> 
+ニンバスへのあなたの献身が、決して忘れられませんように！<br>
+
+$Timeout=20,Tell,Blank
+$Button=戻る,Tell,CreditsNew2
+$Button=キャンセル,Tell,Blank
+
+[Creditsold]
+<background="nsstart">
+<h2>{H2}NetStorm クレジット</h2>
+<p>{Text}
+開発：Titanic Entertainment
+<p>
+{CText}Titanicのチーム（アルファベット順）：{Text}<br>
+Tony Bratton, 主任オタク<br>
+Ken Demarest, 社長兼オタク<br>
+Beverly Garland, アートディレクター<br>
+Jim Greer, マインドコントロール製品担当ディレクター<br>
+Steve Moore, 父親、作家<br>
+Chip Patterson, アーティスト<br>
+Kelcey Privett, アーティスト<br>
+Zack Simpson, 最高経営オタク<br>
+
+$Timeout=20,Tell,Credits1
+$Button=続きを見る,Tell,Credits1
+$Button=戻る,Tell,Credits
+$Button=キャンセル,Tell,Blank
+
+[***********************************************************]
+[Credits1]
+<h2>{H2}NetStorm クレジット</h2>
+<p>{Text}
+{CText}追加協力：{Text}<br>
+Thomas Blom, 映像協力<br>
+Randy Buck, 音声および効果音<br>
+Tom Byrne, 声の出演<br>
+John King, 声の出演<br>
+Richard (Dicko) Mather, コンセプトアート<br>
+John Miles, グラフィックスコード<br>
+Mark Morgan, 音楽<br>
+Morgan Ogburn, コンセプトアート<br>
+Mike Privett, 追加プログラミング<br>
+Purple Frog Software, HTML変換
+Boutros Boutros-Doggie, セキュリティー<br>
+
+$Timeout=20,Tell,Credits2
+$Button=戻る,Tell,Creditsold
+$Button=続きを見る,Tell,Credits2
+$Button=キャンセル,Tell,Blank
+
+[Credits2]
+<h2>{H2}NetStorm クレジット</h2>
+<p>{Text}
+{CText}Activision制作{Text}<br>
+Mitch Lasky, エグゼクティブプロデューサー<br>
+Jonathan Knight, プロデューサー<br>
+Jason Kay, プロデューサー<br>
+John Cibulski, 制作コーディネーター<br>
+Sandi Isaacs, ローカライズ<br>
+<p>
+{CText}ドイツ語ローカライズ{Text}<br>
+Natascha Conrad, Activision Germany<br>
+Maren Bitzer, MB Office Service<br>
+M & S Music, ドイツ語音声収録<br>
+Effective Media, ドイツ語QAテスト<br>
+
+$Timeout=20,Tell,Credits3
+$Button=戻る,Tell,Credits1
+$Button=続きを見る,Tell,Credits3
+$Button=キャンセル,Tell,Blank
+
+[Credits3]
+<h2>{H2}NetStorm クレジット</h2>
+<p>{Text}
+{CText}Activisionマーケティングおよび広報{Text}<br>
+Peter Karpas, プロダクトマネージャー<br>
+Steve Perkins, アシスタントプロダクトマネージャー（インターン）<br>
+Kerstine Johnson, コーポレートコミュニケーションマネージャー<br>
+Elizabeth Capps, ジュニア広報担当<br>
+<p>
+{CText}Activisionドキュメント制作{Text}<br>
+Mark Walker, 著者<br>
+Mike Rivera, ドキュメントマネージャー<br>
+Ronnie Lane, 技術ヘルプ文書<br>
+Belinda Van Sickle, 文書制作／制作アーティスト<br>
+<p>
+{CText}Activisionクリエイティブサービス{Text}<br>
+Ron Gould, クリエイティブディレクター<br>
+Veronica Milito, シニアコピーライター<br>
+Jim Bridges, シニアデザイナー<br>
+
+$Timeout=20,Tell,Credits4
+$Button=戻る,Tell,Credits2
+$Button=続きを見る,Tell,Credits4
+$Button=キャンセル,Tell,Blank
+
+[Credits4]
+<h2>{H2}NetStorm クレジット</h2>
+<p>{Text}
+{CText}Activision品質保証{Text}<br>
+Dave Arnspiger, QAマネージャー<br>
+Tim Vanlaw, シニアQAプロジェクトリーダー<br>
+Mitchell Goldman, プロジェクトリーダー<br>
+Aaron Casillas, テスター<br>
+Christian Campbell, テスター<br>
+Michael Brady, テスター<br>
+Chris Toft, テスター<br>
+Aaron Gray, テスター<br>
+Laurent Slutzky, テスター<br>
+Matt Powers, テスター<br>
+<p>
+ほかにも、ご協力いただいた多くの皆様に感謝します！<br>
+
+$Timeout=20,Tell,Credits5
+$Button=戻る,Tell,Credits3
+$Button=続きを見る,Tell,Credits5
+$Button=キャンセル,Tell,Blank
+
+[Credits5]
+<h2>{H2}NetStorm クレジット</h2>
+<p>{Text}
+{CText}特別な感謝：{Text}<br>
+Bill Anker<br>
+Jamie Bafus<br>
+Tony Bowren<br>
+Christian Casparian<br>
+Scott Cronce<br>
+Scott Culbertson<br>
+Sean Dunn<br>
+Kelly Egan<br>
+Lydia Estrada<br>
+Kevin Gliner<br>
+Eric Johnson<br>
+Sean Kelley<br>
+Brian Kelly<br>
+Gary Knight<br>
+Bobby Kotick<br>
+$Timeout=20,Tell,Credits6
+$Button=戻る,Tell,Credits4
+$Button=続きを見る,Tell,Credits6
+$Button=キャンセル,Tell,Blank
+
+[Credits6]
+<h2>{H2}NetStorm クレジット</h2>
+<p>{Text}
+{CText}特別な感謝：{Text}<br>
+Maryanne Lataif<br>
+Julia Moore<br>
+David Petchey<br>
+Jean Powell<br>
+Paula Sandige<br>
+Wendy Scherdorf<br>
+Ron Scott<br>
+Michael Tracy<br> 
+Denise Walsh<br>
+David Vonderhaar<br>
+$Timeout=20,Tell,Credits7
+$Button=戻る,Tell,Credits5
+$Button=続きを見る,Tell,Credits7
+$Button=キャンセル,Tell,Blank
+
+[Credits7]
+<h2>{H2}NetStorm クレジット</h2>
+<p>{Text}
+{CText}公式ベータテスター：{Text}<br>{Text}
+^ShahaB^	
+__Mike__	
+|}urn()ut	
+Ace4	
+Acid^Warp	
+Adso	<br>
+Agent-X	
+Ahnold	
+Aias	
+AirdoG	
+Airik	
+AL GHU	<br>
+Alagrnn	
+Alakhai	
+Albertaco	
+AltiDude	
+Ando	
+AngelMantis	<br>
+Antok	
+Apocalypse	
+Aquabat0	
+Aralan	
+Arbitrage	
+Arcanar Z	<br>
+ArcherRed	
+Arctic	
+argent	
+Arithon	
+arkaynne	
+art1	<br>
+Artemus	
+Asmodeas	
+asterix	
+AstroSpam	
+aToMs	
+Aurin	<br>
+Avatar	
+Avenger	
+Aviator	
+B4IG0	
+Babs	
+Backlash	<br>
+BAKup	
+Bastage	
+Batman	
+BBlackFIre	
+beak	
+Ben Raines	<br>
+BennyJ	
+Berman	
+Bigred	
+BigT	
+bishdogg	
+Bishop	<br>
+BlackMagi	
+Blades	
+Blasto	
+Blastocyte	
+blink	
+blood
+Blood Poet	
+BloodHawk/Nightstalker	
+Bloodlust	
+Bloodshock	
+Bloodyeye	
+bludlust	<br>
+blue	
+boingo	
+bravheart	
+Brian	
+Bruce	
+Bruenor	<br>
+Bry	
+buck	
+Bug	
+BullsEye	
+Bumpbash	
+butter	<br>
+$Timeout=20,Tell,Credits8
+$Button=戻る,Tell,Credits6
+$Button=続きを見る,Tell,Credits8
+$Button=キャンセル,Tell,Blank
+
+[Credits8]
+{Text}
+Cair	
+camel	
+cancer man	
+Capnjim	
+Captain Canuck	
+CaptCPU	<br>
+Caramon	
+casper	
+Catch22	
+Cecil ~~SoC~~	
+CentSys	
+Chainsaw	<br>
+Chance	
+Cheeser	
+Chewie	
+chrillel	
+christovich	
+chrisw15	<br>
+chrisw73	
+Chrono	
+Chubbs	
+chuckod	
+Chucky	
+Chut	<br>
+Claytonious	
+clerk	
+cloverlief	
+Clownboy	
+CodeRed	
+codezero	<br>
+ColdBlooded187	
+comdot	
+Condor	
+Confucius	
+Conquer5	
+Coolspot	<br>
+Cougar	
+craigm	
+CryogenIce	
+Cutthroat	
+CyborMan	
+Cyrex	<br>
+Cytopia	
+Daax	
+Dagger	
+Dahrien	
+Daika	
+Dalamar	<br>
+Dan	
+Danath	
+danbeck	
+Dandy	
+Danor	
+Dark Legacy	<br>
+Dark_Spawn	
+Darkhat	
+DarkHaven	
+Darkhorse	
+DarkOne	
+DarkStar	<br>
+Data	
+DataJosh	
+davet	
+Dayzed	
+Dea	
+DeadEnd	<br>
+Death-3D	
+Deatha	
+deathblow	
+DeathDragon  
+Deathstalker  	
+Decay	
+Decoy	<br>
+deicide	
+Dela	
+Demon Stalker	
+Dengar	
+Desticato	
+Devastater ~~SoC~~	<br>
+DeVioUS	
+Diet*Crack	
+dlavanty	
+doc	
+DogBeast	
+Dogma	<br>
+Don	
+dougi	
+Doyle	
+Dr.Gambit	
+dragon500	
+DragonKnt	<br>
+dragonsfire	
+Drakkeen	
+Draven	
+Dravus	
+DRDOOM	
+drdoug	<br>
+Dubak	
+Dukat	
+Dwer	
+Dwiggs	
+EarWart	
+echoes	<br>
+Electron	
+EleKTRa	
+Elessar	
+Eliminator01	
+Elmo	
+emmex	<br>
+Ender6	
+Enkidu	
+Euphoric	
+Evil Ernie	
+Expert	
+Extensis~~SoC~~	<br>
+Ez	
+Fabio	
+falcon	
+Farman	
+Fate	
+Faustus	<br>
+$Timeout=20,Tell,Credits9
+$Button=戻る,Tell,Credits7
+$Button=続きを見る,Tell,Credits9
+$Button=キャンセル,Tell,Blank
+
+[Credits9]
+{Text}
+FID	
+Fireball	
+fireball	
+firefox	
+Fizbane	
+Flex	<br>
+flo	
+Fonny	
+FooBunny	
+Fox	
+Franz	
+Frederik	<br>
+frenzy	
+Fruithater	
+Galadin	
+Gargamel	
+geminix	
+ghost	<br>
+ghostrider	
+Ghostwheel	
+Glace	
+glitch	
+Gluestick	
+gogolie	<br>
+Goldcard	
+Goldy	
+goof	
+goosta	
+Gorky	
+GQ~~SoC~~	<br>
+Greebo	
+Greengob	
+Grey Deathstalker	
+griffen8	
+Grignard	
+grymm	<br>
+gulsukat	
+gummer	
+HackAway	
+Hahnbon	
+Hammerhead	
+Haplo	<br>
+Happy	
+Happyfunball	
+Harlequinn	
+hawkeye	
+Hawkeye	
+HEAT-SoC	<br>
+Hedge	
+Hedgehog	
+Heidi	
+Hellblazr	
+Hellder	
+Hellfire	<br>
+Hemlock	
+hepner	
+Here2day	
+herulian	
+Heyhey233	
+Hikarr~~SoC~~	<br>
+HipCheck	
+Hokies	
+Hornet	
+Hudatmon	
+Hummer	
+hungrybear	<br>
+Hunts	
+IceMage	
+ICE-MAN	
+IcePic	
+idea genarator	
+ignatu	<br>
+Immortal	
+InfiniT	
+Infominer	
+IO	
+IPFREELY	
+IRex	<br>
+IronClaw	
+Jack The Knife	
+Jade Monkey	
+Jalthi	
+JaM	
+Jammer	<br>
+Jarish	
+Jaunt	
+Jawz	
+jay	
+Jayce or Korda	
+JeePers	<br>
+Jerky Junky	(sort of)
+Jester	
+jiant	
+JimmDogg	
+jinxter	<br>
+jjbean	
+jkf3	
+JoDax	
+$Timeout=20,Tell,Credits10
+$Button=戻る,Tell,Credits8
+$Button=続きを見る,Tell,Credits10
+$Button=キャンセル,Tell,Blank
+
+[Credits10]
+{Text}
+joe	
+John	
+Joker	<br>
+Joly	
+Jonakand	
+jonboy	
+Jonny_B	
+Jorge	
+Jorus	<br>
+jt	
+Jthon	
+Judge_Dead	
+Juice	
+junkman	
+kabooby	<br>
+Kain	
+Kaiser Sozia	
+kaitsak	
+Kalgash	
+Kali	
+Kane13	<br>
+Kangster	
+Kaphka	
+Kaw-Liga	
+Kenku	
+Kero	
+Kevin	<br>
+Kevlar-X	
+Kevman	
+Khaneric	
+KHawke	
+Khyron	
+Killer	<br>
+Klive	
+KLR_1	
+knight or Wolf	
+knight21	
+Koala	
+Kooldude	<br>
+Korvus	
+kparkera	
+Krafd	
+kram	
+Ksai	
+Kudro	<br>
+Kwagga	
+LAman	
+LandeeJ	
+Lanik	
+LAR	
+Lassk	<br>
+Latta	
+LDespot	
+Leadpipe	
+LeChuck	
+Leppard	
+Lightbringer	<br>
+LightWing	
+Lilandra	
+Lionheart	
+LiPPoPeR	
+ljauthor	
+Lochiel	<br>
+Loenni
+Login	
+Loki	
+loki	
+Loomer	
+Lord 360	
+Lord Alex	<br>
+LordAce	
+Lurch	
+Maallan	
+machu	
+Mad Killa	
+Maddog	<br>
+MadDog	
+MadMan	
+Madrox	
+Malor	
+Mankind	
+Marquette~~SoC~~	<br>
+Master Rahl	
+matt	
+matthew0	
+Matthias	
+Maverick	
+Max	<br>
+Maxfield	
+McBane 	
+Medic	
+medina	
+Megadeth	
+mel	<br>
+melf	
+Menace	
+Merc	
+Methos	
+mike	
+Mike	<br>
+Mirewin~~SOC~~	
+Mitch	
+MLiq	
+Monkytec	
+MoonStryke	
+Morph	<br>
+mouse	
+Mr. E	
+Mr.Dog	
+Mr.EEL	
+MrScott	
+MudMan~~SoC~~	<br>
+Mutsaers	
+mykell	
+MysticMan	
+Mystico	
+nachos	
+Nagash	<br>
+Nat	
+N-Dawg	
+$Timeout=20,Tell,Credits11
+$Button=戻る,Tell,Credits9
+$Button=続きを見る,Tell,Credits11
+$Button=キャンセル,Tell,Blank
+
+[Credits11]
+{Text}
+NecroLyte	
+Nedx	
+neelu	
+NeoN pUP!	<br>
+NexusOne	
+nicadd	
+NiceGuy	
+Nick	
+Nickolis	
+Night Falcon	<br>
+Ninja	
+NocturnaL	
+nogs or theprodigy	
+none	
+Nova	
+nt	<br>
+oather	
+Oberon	
+Oboeist	
+octopus	
+Ogreff	
+oj	<br>
+Oracle	
+oren	
+Ouch	
+Pac Paraco	
+Palindrome	
+Pete	<br>
+pETerCOol	
+Phantasm	
+PhaZe171	
+Pheonix Phire	
+Phil	
+Phobos	<br>
+Phoenix	
+Phook	
+phoric	
+Phred	
+picklers	
+Pimp523	<br>
+Ping	
+PJP	
+Pokey	
+poopmasta general	
+PrayerStorm	
+Probe	<br>
+Pryde	
+Psalm~~{69}	
+Puffy	
+Pulse	
+PUMA	
+Punisher	<br>
+Pythonite	
+Quidam	
+Quoth	
+Rabbit	
+Raff	
+Rage	<br>
+Rakshas	
+Randomizer	
+Ranger Rick	
+Ranma	
+Rascal	
+Rasher	<br>
+Rasputin	
+Raven	
+Razor	
+RedCaseyB	
+Red-Eye	
+Rein	<br>
+reinking	
+Reliant	
+reos	
+repentordie	
+Reptile	
+Reverend	<br>
+Rhuell	
+Rhynno	
+Rich	
+ridlrtim	
+Riff Raff	
+Rilian	<br>
+RingTail	
+Ripper	
+rkm	
+rolice	
+Rommel	
+roy7	<br>
+RoyalHoser	
+Rumruner	
+Rune	
+Rush	
+Rutabaga Boy	
+Ruthless Warrior SoC	<br>
+Ryanag	
+Saber	
+Sadres~~Soc~~	
+Sage	
+Sailor Star Fighter	
+Sam Scam	<br>
+Sam Strohbehn	
+SandWorm	
+Sartre	
+saskman	
+SaXoN	
+Scrag	<br>
+Scream	
+Seamus	
+Sean	
+Seat	
+Seath	
+Seeker	<br>
+Sephiros	
+Sephiroth	
+SHADE	
+Shade	
+$Timeout=20,Tell,Credits12
+$Button=戻る,Tell,Credits10
+$Button=続きを見る,Tell,Credits12
+$Button=キャンセル,Tell,Blank
+
+[Credits12]
+{Text}
+Shadow	
+Shadow999	<br>
+Shadowvox	
+ShAdOwZ	
+shaman	
+Shameless	
+Shen-Lon	
+Shlonglor	<br>
+Shyn	
+Sickboy	
+sid	
+Sigis	
+sigmund	
+Silvergene	<br>
+Simbad	
+Sinnist	
+Sir Court Jesster	
+SirSoccer	
+sk8r	
+Skates	<br>
+SkinTech	
+Skull~~SoC~~	
+Slacker	
+SLASH	
+Slaughterama	
+slayer33	<br>
+slider	
+Slowboat	
+Slugger	
+snafu	
+Sneti	
+SniperX	<br>
+Snoop6	
+Snowball	
+Snowdown	
+SnowyThing	
+soccerbag	
+Sockum	<br>
+Sol'kanar	
+Soltan	
+Someguy	
+Spambone	
+Spanky	
+Sparks	<br>
+Speaker	
+Spectre	
+speedy	
+Spektre	
+spinnaker	
+SpiritWalker~~SoC~~	<br>
+Splash	
+Sposh	
+SquidS	
+SRL	
+S'Rothon	
+Stalker	<br>
+Stark	
+StarMax	
+Statue	
+SternMan	
+stiletto	
+Stix	<br>
+Stony	 
+Storm    
+strahd	
+Strahd	
+Straylight	
+Strokah	
+SurgeMan	<br>
+Surreal Logic 
+Syxx	
+TAD	
+TadiRan	
+Talon	
+Tech Master	<br>
+TecK	
+Ted	
+Teflon Macobb	
+Terran	
+Tha Pimp	
+Thanatos	<br>
+The Apostate	
+The Cook	
+The Maxx	
+The_Prophet	
+the_saint	
+theblack	<br>
+TheMan	
+TheMaster	
+Thexder	
+Thin	
+Thorn	
+Thrawn	<br>
+tiberium	
+tigerx	
+Tim	
+Timewarp	
+Toad	
+tomahawk	<br>
+Tommy The Cat	
+Toonces X	
+Townsaver	
+Tramii	
+Trav	
+Trilox	<br>
+trouth	
+trum	
+Turtle or Toad	
+Twiggy	
+Tziinch	
+UFOria	<br>
+UltraX	
+UnIoNFliP	
+Vader187	
+Vagabond	
+$Timeout=20,Tell,Credits13
+$Button=戻る,Tell,Credits11
+$Button=続きを見る,Tell,Credits13
+$Button=キャンセル,Tell,Blank
+
+[Credits13]
+{Text}
+Valdier	
+Valdin	<br>
+VanatTal	
+vardi_y	
+Varquai	
+Vector	
+Vengeance	
+Vex	<br>
+Vipester~~SoC~~	
+Vision	
+vlad	
+Vodooman	
+Voodoyou	
+w00kie	<br>
+Wag	
+waldo007	
+WallStreet	
+Warhaven	
+Warhawk	
+WARHEADS	<br>
+webv	
+Weedle	
+Weedo	
+whir	
+whiteape	
+Whitey	<br>
+Willard	
+Winky	
+Wintermute	
+wiz473	
+Wizeman	
+Wog	<br>
+Wolf	
+Wolfinjer	
+Wonderer	
+Wongo	
+Wraith	
+Wulf2	<br>
+Wylde	
+Xenon	
+Xerria	
+Xerxes	
+xmen	
+xuric	<br>
+yakman	
+yinjb	
+Yopapa	
+Zaijian	
+Zantar	<br>
+Zaphod	
+ZarQuon	
+Zealot	
+zen	
+Zergo	<br>
+Zero_Signal	
+zipoff	
+zodiak	
+Zorik	
+Zuhkov	
+$Timeout=20,Tell,Blank
+$Button=戻る,Tell,Credits12
+$Button=確認,Tell,Blank
+
+[***********************************************************]
+[NewTech]
+<h2>{H2}知識を獲得！</h2>
+<p>{Text}
+あなたの祭壇は消費されました！ 生贄は受け入れられました！ フューリーたちは慈悲深いのです。あなたの民は、<i>{global.newTechName}</i>{Text}の知識を授かりました。
+<p>
+{global.newTechPic}
+<p>
+今後、このユニットを使えるようになります！
+
+$Timeout=15,DoNothing,0
+$Button=確認,DoNothing,0
+
+[***********************************************************]
+[AltarUpgrade]
+<h2>{H2}祭壇をアップグレード！</h2>
+<p>{Text}
+敵司祭の生贄によって、あなたの祭壇は神聖で強力になりました。次の戦闘では、この祭壇でより強力な知識を得られます。
+
+$Timeout=15,DoNothing,0
+$Button=確認,DoNothing,0
+
+[***********************************************************]
+[MultiplayerPriestDead]
+
+<$Warning,"~B~E~yあなたの司祭が{param.1}{param.2}に生贄として捧げられました">
+
+[AddWarningRemoved]
+<h2>{H2}司祭死亡！</h2>
+<p>{Text}
+あなたの司祭の血が流されました。その場所は、{CText}{param.1}.{Text}の祭壇です。
+
+<?{param.2}>
+$Timeout=15,DoNothing,0
+$Button=確認,DoNothing,0
+</?>
+<?!{param.2}>
+$Timeout=15,DoNothing,0
+$Button=戦闘から離れる,LeaveBattle,1
+$Button=観戦を続ける,DoNothing,0
+</?>
+
+[***********************************************************]
+[MultiplayerOtherPriestDead]
+
+<$Warning,"~B~E~y{param.1}{param.2}の~y司祭が{param.3}{param.4}に生贄として捧げられました">
+
+[AddWarningRemoved]
+<h2>{H2}生贄！</h2>
+<p>{Text}
+司祭が命を落としました。所有者は{CText}{param.1}{Text}で、
+祭壇の所有者は{CText}{param.2}.{Text}です。フューリーたちは大いに喜んでいます。
+
+$Timeout=15,DoNothing,0
+$Button=確認,DoNothing,0
+
+[***********************************************************]
+[AlreadyUpgrading]
+<h2>{H2}すでにアップグレード中です</h2>
+<p>{Text}
+別のアップグレードを始めるには、現在のアップグレードが完了するまで待つ必要があります。
+
+[***********************************************************]
+[ClientDisconnect]
+<h2>{H2}クライアント切断</h2>
+{Text}
+{param.1}のゲーム接続が切れました。
+$Button=確認,DoNothing,0
+
+
+[***********************************************************]
+[QueryDecendToChalLevel]
+<h2>{H2}ゾーン{param.1}に降りますか？</h2>
+{Text}
+$Button=はい,DecendToChalLevel,{param.1}
+$Button=いいえ,DoNothing,0
+
+[***********************************************************]
+[QueryLeaveChalBattle]
+<h2>{H2}現在の戦闘から離れますか？</h2>
+{Text}
+$Button=はい,ChalSailPos,{param.1}
+$Button=いいえ,DoNothing,0
+
+[***********************************************************]
+[QueryLeaveJoinChalBattle]
+<h2>{H2}現在の戦闘から離れますか？</h2>
+{Text}
+$Button=はい,ChalSailJoinBattle,{param.1}
+$Button=いいえ,DoNothing,0
+
+[***********************************************************]
+[NoDirectDraw]
+<h2>{H2}DirectDrawがインストールされていません</h2>
+<p>{Text}
+全画面モードが要求されましたが、DirectDrawがインストールされていないようです。全画面でプレイするにはDirectDrawが必要です。
+<p>
+NetStormを終了し、DirectXをインストールしてください。
+
+$Button=確認,DoNothing,0
+
+
+[***********************************************************]
+[Tips]
+<h2>{H2}ご存じですか？</h2>
+<p>{Text}
+{@tell.tip{tipNumber}|これ以上ヒントはありません！}
+<p>
+<?{tipNumber}>
+$Button=前のヒント,TellTip,1
+</?>
+$Button=次のヒント,TellTip,2
+$Button=今後表示しない,Config,tellTips=0
+$Button=確認,TellTip,3
+
+[***********************************************************]
+[NotInDemo][BreakingThroughMissing][MissingMission]
+[Remvoed]
+<h2>{H2}NetStorm!</h2>
+<p>{Text}
+このミッションは、NetStormのデモには含まれていません。
+<p>
+短いデモを楽しんでいただけたなら幸いです。製品版には、さらに多くのミッションがあります。マルチプレイヤーをまだ試していないなら、ぜひ挑戦してください！
+<p>
+NetStormは、<a href="http://www.titanic.com/netstorm/buynetstormdirect.html">Activision</a>から直接購入できます。
+800-477-3650に電話するか、お近くの販売店へお越しください。
+<p>
+最新のデモは、<a href="http://www.titanic.com/netstorm/demo.html">http://www.titanic.com/netstorm/demo.html</a>
+から入手できます。
+
+$Button=確認,DoNothing,0
+
+<?{param.1}>
+$OnExit=X,Tell,Blank
+</?>
+<?!{param.1}>
+$OnExit=X,Tell,Blank
+</?>
+
+[***********************************************************]
+[DemoNote]
+<h2>{H2}デモ</h2>
+<p>{Text}
+これは、NetStormバージョン{version}のデモです。
+<p>
+このデモには三つのミッションと、すべてのチュートリアルが含まれており、サンの知識だけを使ってマルチプレイヤーをプレイできます。デモで作った保存済みゲームは、製品を購入した後も続けられます！
+<p>
+ゲーム中にF1を押すと、ヘルプとテクニカルサポートを表示できます。
+<p>
+楽しくプレイしてください！
+
+$Button=確認,Tell,{param.1}
+
+[***********************************************************]
+[TipList]
+tip0="<a href=`"http://www.netstormhq.com`">NetstormHQ</a>を訪れ、更新の確認、サポート、新しい友達探し、お気に入りの戦略の議論を楽しみましょう。大会にも参加できます！ スポンサーのサイトもご覧ください。"
+tip1="{CText}F2{Text}キーを使うと、橋をより簡単につなげられます。"
+tip2="何でも{CText}右クリック{Text}すれば、そのヘルプを見ることができます。ゲームのウィンドウも同じです！"
+tip3="最初に失敗しても、もう一度挑戦しましょう！ NetStormを身につける唯一の方法は練習です。何年もプレイしながら、まだ上達の余地がある人もいます。熱心に訓練すれば、すぐに彼らに勝てるでしょう！"
+tip4="{CText}F5{Text}キーで、いつでも司祭を見つけられます。{CText}P{Text}または{CText}R{Text}を押すと司祭を選び、二回押すと司祭の位置に移動して選択します！"
+tip5="敵ユニットをクリックすると、その射程を確認できます。"
+tip6="橋の先にユニットを配置すると、そのユニットの島から、さらに橋を架けられます！"
+tip7="間欠泉に向かってまっすぐ橋を架けると、横から近づく場合よりも、つなぐのが難しくなります。"
+tip8="ゴーレムが採集をやめないように、ストーム間欠泉への橋を架け続けましょう。"
+tip9="ホットキーは、戦闘中の貴重な時間を節約します。{CText}Q W A S Z X{Text}で、マウスを動かさずに橋を取り出せます。また、{CText}U{Text}を押すと、最後に失ったユニットの位置に移動します。"
+tip10="攻撃用の橋を延ばすときは、枝を内側と外側に交互に張り出すと、機動性、攻撃、防御の位置を最大限に生かせます！"
+tip11="タワーは、弱い攻撃ユニットを守るために使えます！"
+tip12="敵ユニットを破壊するたびに、ストームパワーを得られます！"
+tip13="間欠泉につなぐと、その島を所有でき、その島からさらに橋を架けられます！"
+tip14="アップグレードするより、ワークショップを増やすほうが効率的です！"
+tip15="一種類の武器に集中するよりも、さまざまな武器を組み合わせるほうが、たいてい効果的です。"
+tip16="すべてのユニットは、常に最も近い標的を選びます。その標的に、自分の攻撃が効かなくても同じです！"
+tip17="輸送ユニットが枯れた間欠泉に着くと、次は必ず神殿に最も近い間欠泉を選びます。敵の領土にあっても同じです！"
+tip18="射撃ユニットを一か所に集めないようにしましょう。一体が爆発すると、全員が損害を受けます！"
+tip19="敵の橋のすぐ隣に安いユニットを作り、それを回収（Salvage）すると、敵の橋を突破できます。破壊の衝撃で通常の橋はひび割れ、ひび割れた橋は崩れます！"
+tip20="マルチプレイヤーでは、敵の橋の隣にジェネレーターを作り、右クリックして「メルトダウン（Meltdown）」を選ぶと、敵の橋を爆破できます！"
+tip21="高速なグラフィックスカードなら、Direct Drawモードで{CText}オプション / Direct Drawを調整 / 視差のある雲{Text}を使えます。とても見事です！！"
+tip22="敵ユニットを撃つときは、地面と接する部分を狙ってください。高い所を狙うと、弾が通り抜けてしまうことがあります！"
+tip23="橋がつながっていれば、同盟の島や橋の上にも建設できます。"
+tip24="ストームパワーがさらに必要なときは、使っていないものを回収（Salvage）できます。"
+tip25="ユニットは常に最も近い標的を選ぶため、タワーに敵の射撃を引きつけながら、別の方向から攻撃できます！"
+tip26="切れた橋に気をつけてください！ ゴーレムは、動き始めたときに橋があった場所なら、切れた端から歩き出して落ちることがあります！"
+tip27="マルチプレイヤーでは、司祭が祈って強力なスペルを得られます！"
+tip28="マルチプレイヤーモードでは、前哨基地を建てて、さらに多くの島を支配できます！"
+tip29="飛行ユニットは、ほかの飛行ユニットを攻撃できません！"
+tip30="マルチプレイヤーのチャレンジリングで、どの「スロット」を選ぶかによって、戦闘時の自分の島の位置が決まります。"
+tip31="ワーリギグ、ダストデビル、マンオブウォーと戦うこつは、その基地を壊すことです。飛行体そのものに時間を無駄にしないようにしましょう。"
+tip32="資金切れを心配したくないなら、サンユニットを使いましょう。安価です！"
+tip33="輸送ユニットには、それぞれ大切な違いがあります。工夫して使う方法を知っていれば、それを生かせます！"
+tip34="互いを補うように武器を組み合わせられます。一方の弱点を、もう一方の強みで補えます！"
+tip35="マルチプレイヤーで神殿を建てるときは、間欠泉が最も多い場所の近くに置きましょう。ゴーレムが遠くまで歩かずに済みます！"
+tip36="つなごうとする橋が、まだ暗い状態でも、さらに橋を架けられます。"
+tip37="マルチプレイヤーのチャット欄で、ほかのプレイヤーの名前を途中まで入力してTABキーを押すと、残りの名前を補完できます。"
+tip38="同盟の資金が不足したら、その所有ユニットを{CText}右クリック{Text}し、{CText}プレイヤー{Text}から{CText}ストームパワーを送る{Text}を選んで、金額を指定できます。"
+tip39="これ以上ヒントはありません！ さらに多くのヒントは、<a href=`"http://www.netstormhq.com`">NetstormHQ</a>で見つかります。<$Config,tipNumber=0>"
+
+[***********************************************************]
+[AllianceRequested]
+<h2>{H2}同盟の申し出</h2>
+{Text}
+{param.1}{param.2} {Text}が同盟を申し出ています。同意すると互いの橋に建設でき、戦闘ユニットは互いを攻撃しなくなります。
+
+<p>
+同盟に同意しますか？
+$Button=はい,ConfirmAlliance,{param.3}
+$Button=いいえ,DoNothing,0
+
+
+[AllianceSpam]
+<h2>{H2}同盟の申し出を拒否</h2>
+{Text}
+同盟の申し出が上限の{param.1}回を超えました。相手は{param.2}{param.3}{Text}です。しばらくしてから再度お試しください。
+$Button=確認,DoNothing,0
+
+[***********************************************************]
+[AllianceComplete]
+<h2>{H2}同盟成立</h2>
+{Text}
+あなたと{CText}{param.1}{Text}は同盟を結びました。互いの橋に建設でき、戦闘ユニットは互いを攻撃しなくなります。
+<p>
+同盟の橋に建設するには、あなたの橋網と同盟の橋網がつながっている必要があります！
+$Button=確認,DoNothing,0
+
+[***********************************************************]
+[AllianceBroken]
+
+<$Warning,"~B~E~w同盟破棄: {param.2}{param.1}">
+
+[***********************************************************]
+[SacrificeMenu]
+<h2>{H2}生け贄！</h2>
+<p>{Text}
+フューリーに栄光あれ！ レベル{param.2}のユニットを
+<?{param.3}>
+報酬として選ぶか、より高いレベルのユニットを得るためにアップグレードできます。
+</?>
+<?!{param.3}>
+報酬として選べます。
+</?>
+$Timeout=15,RequestStormpower,0
+$Menu=*TECHLIST*,DoNothing,{param.1}
+[***********************************************************]
+[SacrificeForStormpower]
+<h2>{H2}ストームパワー獲得！</h2>
+{Text}
+敵の司祭を生け贄に捧げ、ストームパワーを得ました！
+
+$Timeout=15,DoNothing,0
+$Button=確認,DoNothing,0
+
+
+
+[***********************************************************]
+[DirectDrawManager]
+<?{workingFullScreenFlags}>
+<$ScreenModeAbsChange,{workingFullScreenFlags}>
+</?>
+
+<?!{workingFullScreenFlags}>
+<h2>{H2}Direct Draw</h2>
+<p>{Text}
+このゲームはMicrosoftの「Direct Draw」技術で高速な全画面表示を実現します。当時の多くのゲームもDirectDrawを使用しています。ただしNetStormは最適な性能を得るため、他のゲームではあまり使わない機能も使用しており、すべてのビデオカードで動作するとは限りません。
+<p>
+そのため、ビデオカードに合わせてNetStormを調整するオプションがあります。切り替え時にコンピューターが停止することもあります。その場合は再起動してNetStormを実行すると、最後に正常に動作したモードに戻ります。安全のため、下の{CText}Direct Drawを開始{Text}を選ぶ前に他のプログラムをすべて閉じてください。
+<p>
+{CText}旧Windowsでは、いつでもALT-ENTERでウィンドウ表示に戻れます！{Text}<br>
+{CText}Windows XPではCTRL-ALT-ENTERを押し続けるとウィンドウ表示に戻ります。他のOSではALT-ENTERを使ってください。{Text}
+
+<$Config,shownScreenExplain=1>
+
+$Button=Direct Drawを開始,Tell,DirectDrawManager2
+$Button=サポート,Tell,DirectDrawSupport
+$Button=キャンセル,DoNothing,0
+$Timeout=45,DoNothing,0
+
+</?>
+
+[***********************************************************]
+[DirectDrawManager2]
+
+<$ScreenModeAbsChange,139>
+<$DoNothing,0>
+<$Tell,AdjustDirectDraw>
+
+[***********************************************************]
+[AdjustDirectDraw]
+<h2>{H2}Direct Draw</h2>
+<p>{Text}
+以下のオプションを変更すると、NetStormの性能が大幅に向上する場合があります。各項目を選ぶと、有効にする前に説明が表示されます。
+<p>
+ビデオカードが機能に対応していない場合、一部のオプションでコンピューターが停止することがあります。変更前に他のプログラムをすべて閉じることをお勧めします。
+<p>
+機能を変更するたびに、変更を適用するか確認します。同意しなければ15秒後に以前の状態に戻ります。
+<p>
+コンピューターが停止した場合は再起動してください。NetStormは最後に正常に動作したモードに戻ります。
+<p>
+{CText}マウスが見えないときはF12を押してみてください！{Text}<br>
+{CText}いつでもALT-ENTERでウィンドウ表示に戻れます！{Text}
+
+$Checked=安全だが低速なモード,Tell,ToggleBackBufferDib,{global.ddBackBufferDib},1
+$Checked=安全だがぎこちないマウス,Tell,ToggleMouse,{global.ddSoftwareMouse},1
+$Checked=雲の視差効果,Tell,ToggleParallax,{global.ddParallax},{global.ddFourPage}
+$Checked=画面のちらつきを軽減,Tell,ToggleFlipping,{global.ddFlipping},1
+
+$Button=ヘルプ,Tell,DirectDrawSupport
+$Button=確認,DoNothing,0
+
+
+[***********************************************************]
+[ToggleBackBufferDib]
+<h2>{H2}互換性重視の低速モード</h2>
+<p>{Text}
+互換モードはほぼすべてのビデオカードで動作しますが、通常は大幅に遅くなります。
+<p>
+可能なら互換モードを{CText}オフ{Text}にすることを強くお勧めします。幸い、ほとんどのカードでオフにできます。
+<p>
+互換性重視の低速モードは現在{CText}<?{global.ddBackBufferDib}>オン</?><?!{global.ddBackBufferDib}>オフ</?>{Text}です。
+
+<?{global.ddBackBufferDib}>
+$Button=オフ,ScreenModeChange,2
+</?>
+<?!{global.ddBackBufferDib}>
+$Button=オン,ScreenModeChange,2
+</?>
+$Button=キャンセル,Tell,AdjustDirectDraw
+
+[***********************************************************]
+[ToggleMouse]
+<h2>{H2}互換性重視のぎこちないマウス</h2>
+<p>{Text}
+マウスを動かすと跡が残ったり、マウスがまったく見えなかったりする場合は、このオプションをオンにしてください。
+<p>
+オンにしてもゲームはあまり遅くなりませんが、フレームレートが低いとマウスが引っ掛かったり、急に移動したりすることがあります。
+<p>
+互換性重視のぎこちないマウスは現在{CText}<?{global.ddSoftwareMouse}>オン</?><?!{global.ddSoftwareMouse}>オフ</?>{Text}です。
+
+<?{global.ddSoftwareMouse}>
+$Button=オフ,ScreenModeChange,64
+</?>
+<?!{global.ddSoftwareMouse}>
+$Button=オン,ScreenModeChange,64
+</?>
+$Button=キャンセル,Tell,AdjustDirectDraw
+
+
+[***********************************************************]
+[ToggleFlipping]
+<h2>{H2}画面のちらつきを軽減</h2>
+<p>{Text}
+NetStormで画面を移動したときに映像が裂けて見える場合は、このオプションをオンにしてください。ただし、多くのビデオカードではゲームがかなり遅くなることがあります。
+<p>
+画面のちらつき軽減は現在{CText}<?{global.ddFlipping}>オン</?><?!{global.ddFlipping}>オフ</?>{Text}です。
+
+<?{global.ddFlipping}>
+$Button=オフ,ScreenModeChange,4
+</?>
+<?!{global.ddFlipping}>
+$Button=オン,ScreenModeChange,4
+</?>
+$Button=キャンセル,Tell,AdjustDirectDraw
+
+[***********************************************************]
+[ToggleParallax]
+<h2>{H2}雲の視差効果</h2>
+<p>{Text}
+雲が遠くにあるように動くことで、NetStormの高度感を高めます。ビデオカードに十分なメモリーと速度があれば、ゲームをあまり遅くせず、美しい効果を楽しめます。
+<p>
+雲の視差効果は現在{CText}<?{global.ddParallax}>オン</?><?!{global.ddParallax}>オフ</?>{Text}です。
+
+<?{global.ddParallax}>
+$Button=オフ,ScreenModeChange,16
+</?>
+<?!{global.ddParallax}>
+$Button=オン,ScreenModeChange,16
+</?>
+$Button=キャンセル,Tell,AdjustDirectDraw
+
+
+
+[***********************************************************]
+[DirectDrawSupport]
+<h2>{H2}Direct Drawサポート</h2>
+<p>{Text}
+Direct DrawはMicrosoftの技術ですが、各ビデオカードで動作させる責任はカードの製造元にあります。
+<p>
+コンピューターでDirect Drawが動作しない場合は、グラフィックカードの製造元に問い合わせるか、次のMicrosoftのウェブサイトをご覧ください。<p>
+
+<a href="http://www.microsoft.com">http://www.microsoft.com</a>
+
+$Button=確認,DoNothing,0
+
+
+[***********************************************************]
+[BattleOver1]
+<h2>{H2}勝利！</h2>
+{Text}
+<$MoveDialog,br>
+$Button=続ける,GoMultiplayer,1
+
+[BattleOver2]
+<h2>{H2}敗北！</h2>
+{Text}
+<$MoveDialog,br>
+$Button=続ける,GoMultiplayer,1
+
+[BattleOver3]
+<h2>{H2}戦闘終了</h2>
+{Text}
+<$MoveDialog,br>
+$Button=続ける,GoMultiplayer,1
+
+[BattleOver4]
+<h2>{H2}接続失敗</h2>
+{Text}
+<p>
+一部のプレイヤーがサーバーに接続していないため、NetStormのマルチプレイヤーゲームを開始できません。
+<p>
+$Button=チャレンジエリアに戻る,GoMultiplayer,1
+
+[BattleOver5]
+<h2>{H2}引き分け</h2>
+{Text}
+<$MoveDialog,br>
+$Button=続ける,GoMultiplayer,1
+
+
+[***********************************************************]
+[BattleVersionMismatch]
+<h2>{H2}バージョン不一致</h2>
+<p>{Text}
+同じ戦闘の全プレイヤーは、互換性のあるバージョンを使用する必要があります。
+<p>
+あなたのバージョンは、この戦闘の他のプレイヤーと互換性がありません。相手またはあなたが、より新しいバージョンを使っている可能性があります。
+<p>
+最新パッチは<a href="http://{UPDATEURL}">{Link}{UPDATEURL}</a> {Text}で入手できます。
+<p>
+$Button=了解,DoNothing,0
+
+[***********************************************************]
+[BattleFailedDiags]
+<h2>{H2}お知らせ</h2>
+<p>{Text}
+診断に合格しないとバトルマスターにはなれません。
+<p>
+以前のバトルマスターが退出したため、あなたがバトルマスターになる必要があります。しかし、診断に合格していないため資格がありません。
+<p>
+診断を再実行するか、別の戦闘に参加してください。
+<p>
+$Button=確認,DoNothing,0
+
+[***********************************************************]
+[QueryForceJoinChalBattle]
+<h2>{H2}ファイアウォールの影響の可能性</h2>
+<p>{Text}
+受信診断に合格しませんでした。他のプレイヤーがあなたのコンピューターに接続できないという意味です。他の戦闘には参加できますが、マスターにはなれません。
+<p>
+最後の診断からネットワーク環境が変わった場合は、NetStormを終了して診断を再実行してください。「バトルマスター」を押して、強制的にバトルマスターとして接続することもできます。
+<p>
+$Button=バトルマスター,ChalForceJoinBattle,{param.1}
+$Button=キャンセル,DoNothing,0
+
+[***********************************************************]
+[Player]
+<h2>{H2}プレイヤー「{p.handle}」</h2>
+<p>{Text}
+{p.handle}は{CText}{p.totalGames}{Text}回プレイしています。
+<p>
+信頼度: {CText}{p.reliability}%{Text}
+（{p.handle}がゲーム中に切断または早期退出した割合は
+{CText}{p.unreliability}%{Text}です）。
+
+$Button=確認,DoNothing,0
+
+
+[***********************************************************]
+[MetaPlayer]
+<h2>{H2}プレイヤー「{p.handle}」</h2>
+<p>{Text}
+クライアントのバージョン: {CText}{p.version}{Text}<br>
+クライアントの言語: {CText}{p.language}{Text}
+<p>
+{p.handle}は{CText}{p.totalGames}{Text}回プレイしています。
+<p>
+信頼度: {CText}{p.reliability}%{Text}
+（{p.handle}がゲーム中に切断または早期退出した割合は
+{CText}{p.unreliability}%{Text}です）。
+
+$Button=確認,DoNothing,0
+
+
+[***********************************************************]
+[ChalIntro]
+<h2>{H2}セレニスフィア</h2>
+{Text}
+知識と力を求めてニンバスの部族が戦う、セレニスフィアへようこそ！
+<p>
+<a href="multiQuickHelp">{Link}こちら</a>{Text}を押すと<a href="multiQuickHelp">{Link}マルチプレイヤーのクイックスタート</a>{Text}が表示されます。
+<p>
+{CText}左クリック{Text}で島を移動します。
+<br>
+{CText}右クリック{Text}で<a href="battleIslandType">{Link}チャレンジリング</a>{Text}と<a href="challengeIslandType">{Link}エリア</a>{Text}の情報を確認します。
+<p>
+<?!{DoneTutorial4}>
+<i>{Text}マルチプレイヤーの戦い方を学ぶため、まず「初期ミッション」をプレイすることを強くお勧めします！</i>{Text}
+<p>
+</?>
+いつでも{CText}F8{Text}を押すと、この案内を再表示できます。
+<p>
+$Button=確認,DoNothing,0
+<?{param.1}>
+$Button=今後表示しない,Config,noShowChalIntro=1
+</?>
+
+[***********************************************************]
+[CSLShutdown]
+<h2>{H2}サーバー終了中</h2>
+{Text}
+このサーバーは終了またはリセット中です。この状態では新しいプレイヤーを受け付けません。
+<p>
+数分後に再接続するか、別のサーバーをご利用ください。
+<p>
+$Button=確認,DoNothing,0
+
+[***********************************************************]
+[asksend]
+<h2>{h2}すべて送る</h2>
+<p>{Text}
+ストームパワーをすべて送りますか？
+$Button=はい,SendAllBucks,{param.1}
+$Button=いいえ,DoNothing,0
+
+[NewRank]
+<h2>{H2}新しい階級に到達</h2>
+<p>{Text}
+おめでとうございます！
+<p>
+階級{param.1}に到達しました！
+<p>
+フューリーはあなたの知識を消し、サンディスクスロワーとサンキャノンを再び授けます。
+[***********************************************************]
+[ProdPending]
+<h2>{H2}生産準備中</h2>
+<p>{Text}
+生産の準備を進めています。
+<p>
+別の知識を投入するには、前の知識が生産に入るまで待つ必要があります。まもなく準備が整います。
+
+[***********************************************************]
+[LeaveEarly]
+<h2>{H2}不名誉な退出</h2>
+<p>{Text}
+今すぐ戦闘を離れることはできますが、信頼度が下がり、他のプレイヤーがあなたとの対戦を避けるようになるかもしれません。
+<p>
+次の場合は名誉を保って退出できます。<br>
+* 勝者が決まったか、引き分けが宣言されたとき。<br>
+* あなたの司祭が捕らえられたか、死亡したとき。<br>
+* 神殿が破壊され、別の神殿を建てられないとき。<br>
+* 神殿が破壊され、司祭が移動できないとき。<br>
+<p>
+この戦闘を離れますか？
+
+$Button=それでも退出,LeaveBattle,1
+$Button=残る,DoNothing,0
+
+
+[***********************************************************]
+[LeaveNormal]
+<h2>{H2}名誉ある退出</h2>
+<p>{Text}
+あなたの司祭が捕らえられたか、生け贄にされたか、戦闘にあなたしか残っていません。もう戦闘に残る必要はありません。
+<p>
+今退出しても信頼度は下がりません。
+<p>
+$Button=名誉を保って退出,LeaveBattle,9
+$Button=残る,DoNothing,0
+
+[***********************************************************]
+[NoCaptureNotOnline]
+<h2>{H2}捕獲できません！</h2>
+<p>{Text}
+プレイヤー「{param.1}」はゲームから切断しているため、その司祭を捕らえることはできません。
+<p>
+そのプレイヤーが再接続すれば、司祭を捕らえられます。
+
+[***********************************************************]
+[OnlyOneLeft]
+<h2>{H2}残り一人！</h2>
+<p>{Text}
+このゲームに接続しているのは、あなた一人です。
+<p>
+他のプレイヤーの再接続を待ちながら、プレイを続けることができます。
+
+[***********************************************************]
+[EarlySacrifice]
+<h2>{H2}まだ早すぎます！</h2>
+<p>{Text}
+ゲーム開始から最初の数分間は、司祭を生け贄にできません。
+<p>
+フューリーは短く容易な戦いに知識を与えようとはしません。しばらく待てば、寛大になるかもしれません！
+
+[***********************************************************]
+[DrawNotAccepted]
+
+<$Warning,~B~E~y引き分けが拒否されました>
+
+[***********************************************************]
+[MayNotBattleUpdate]
+<h2>{H2}お知らせ</h2>
+<p>{Text}
+戦闘の説明を変更できるのはバトルマスターだけです。
+<p>
+あなたは戦闘に参加していないか、バトルマスターではありません。
+
+[***********************************************************]
+[WarnCantUpgradeAltarOffHomeIsland]
+<h2>{h2}警告</h2>
+<p>{Text}
+本島以外の島に祭壇を建てました。この祭壇は戦闘後に持ち帰れないため、アップグレードできません。ここでも司祭を生け贄にして、知識やストームパワーを得ることはできます。
+<p>
+$Button=確認,DoNothing,0
+$Button=今後表示しない,Config,noShowWarnCantUpgrade=1
+
+[***********************************************************]
+[NoProtocol]
+<h2>{H2}ネットワークが見つかりません</h2>
+<p>{Text}
+このコンピューターではTCP/IPとIPX/SPXのソケット対応を検出できません。NetStormのマルチプレイヤーには、どちらか一方以上のプロトコルが必要です。
+<p>
+TCP/IP（インターネット用）、IPX/SPX（LAN用）、または両方をインストールしてNetStormの診断を実行してください。診断で検出されれば、このメッセージは表示されなくなります。
+<p>
+診断でプロトコルが見つかっても表示される場合は、サポートにお問い合わせください。
+<p>
+$Button=了解しました,Tell,Blank
+
+[***********************************************************]
+[BridgesKilled]
+<h2>{H2}容量不足</h2>
+<p>
+{Text}
+現在のマップの橋の数が、ゲームが専用に確保したメモリーの上限を超えました。ゲームを続行できるよう、すべての橋を除去しました。
+<p>
+
+[***********************************************************]
+[FinishedDemo]
+[Void]
+<h2>デモ完了</h2>
+<p>
+おめでとうございます。サンの知識をすべて獲得しました！ このNetStormデモで到達できる最終地点です。
+<p>
+ゲームは当社の
+<a href="http://www.titanic.com/netstorm/buynetstormdirect.html">ウェブサイト</a>
+
+またはお近くのソフトウェア販売店で購入できます。
+<p>
+今回の生け贄で5,000 ~[IfortGump.3]を受け取ります。
+<p>
+$Button=確認,DoNothing,0
+
+[***********************************************************]
+[MetaKeepAliveTimeout]
+<h2>{H2}サーバーとの接続終了</h2>
+<p>{Text}
+長時間サーバーから応答がありません。<br>
+再接続をお試しください。接続できない場合は、サーバーが停止しているか、そこまでのネットワークに問題がある可能性があります。
+<p>
+$Button=確認,LeaveBattle,2
+
+[***********************************************************]
+[TooManyPirates]
+<h2>{H2}CDを持たないプレイヤーが多すぎます</h2>
+<p>{Text}
+プレイするには、参加者の半数以上がゲームCDを持っている必要があります。
+<p>
+$Button=確認,DoNothing,0
+
+
+[***********************************************************]
+[DirectDrawVerify]
+<h2>{H2}モード変更の確認</h2>
+{Text}
+Direct Drawのモードを変更しました。
+<p>
+画面に問題がなければ、今{CText}確認{Text}を選んで、このモードを維持してください。選ばない場合は15秒後に以前のモードに戻ります。
+
+$Timeout=15,ScreenModeAbsChange,{param.1}
+$Button=確認,AcceptScreenModeChange,1
+$Button=キャンセル,ScreenModeAbsChange,{param.1}
+
+[***********************************************************]
+[NotRestart]
+<h2>{H2}接続できません</h2>
+<p>{Text}
+残っている全プレイヤーがファイアウォールの影響を受けているため、戦闘を再開できません。あなたも含まれます。
+<p>
+影響を受けていないと思う場合は、WindowsのスタートメニューのNetStormフォルダーから「Netstorm Diagnostics」を選び、いつでも診断を再実行できます。
+<p>
+$Button=確認,LeaveBattle,1
+
+[***********************************************************]
+[AskLaunchRootServer]
+<h2>{H2}チャレンジサーバーを開始しますか？</h2>
+{Text}
+LANでチャレンジサーバーが見つかりません。今サーバーになりますか？
+<p>
+何も選ばなければ、10秒後にサーバーになります。
+<p>
+$Timeout=10,LaunchRootServer,1
+$Button=サーバーになる,LaunchRootServer,1
+$Button=検索を続ける,LaunchRootServer,0
+$Button=キャンセル,LaunchRootServer,2
+
+[***********************************************************]
+[InsertCD]
+[no cd requred]
+<h2>{H2}NetStorm CDを挿入</h2>
+{Text}
+NetStorm CDが必要です。コンピューターのCDROMドライブに挿入してください。
+<p>
+$Button=確認,RecheckCD,0
+$Button=ゲーム終了,QuitApp,99
+
+[***********************************************************]
+[WarnFailedDiags]
+<h2>{H2}診断に不合格</h2>
+{Text}
+診断に合格していないプレイヤーはバトルマスターになれません。
+<p>
+ファイアウォールの影響を受けていないか、<a href="http://www.netstormhq.com/content.php?content.27">ポート転送</a>を設定している場合、対象ポートは<c>6799</c>と<c>6800</c>です。<c>Escapeキー</c>を押し、<c>オプション</c>メニューの<c>ゲーム</c>タブにある<c>サーバー診断合格</c>オプションを選ぶと、診断チェックを無効にできます。これでバトルマスターになれます。
+<p>
+逆にファイアウォールの影響を受けているか、必要なポートを転送していない場合は、このオプションをチェックしたままにしてください。ゲームをホストできる人だけがバトルマスターになります。
+<p>
+$Button=確認,ChalForceJoinBattle,{param.1}
+$Button=今後表示しない,ChalJoinBattleNoWarning,{param.1}
+
+[old junk]
+診断に合格していないプレイヤーはバトルマスターになれません。
+<p>
+NetStormのショートカットを置いたWindowsスタートメニューのサブメニューで「NetStorm Diagnostics」を選ぶと診断を実行できます。<br>
+インストール先のDOSコマンドラインで「NSUTIL diagnose」と入力しても診断を実行できます。
+
+
+[***********************************************************]
+[IPXSucks]
+<h2>{H2}IPX/SPXの警告</h2>
+{Text}
+WindowsのIPX/SPXプロトコルは、ネットワークカードやドライバーによって不安定になることがあります。ゲームの停止や接続不能などの問題が起きたら、可能であればLANゲームにもTCP/IPを使用してください。
+<p>
+NetStormはKali(tm)のようなIPXエミュレーターでは動作しません。独自のTCP/IPネットワーク機能があるため、Kali(tm)などのIPXエミュレーターは不要です。
+
+
+<p>
+$Button=確認,Config,useIPAsLanProtocol=0
+$Button=キャンセル,DoNothing,0
+
+[***********************************************************]
+[ClientCheated]
+[zonked]
+
+<$Warning,~B~E~r警告: プレイヤー{param.1}の不正行為を拒否しました。>
+
+
+[***********************************************************]
+[ServerCheated]
+[zonked]
+
+<$Warning,~B~E~r警告:{param.1}が不正行為をしました。本人か同盟がサーバーのため、今回は処罰できません。> 
+
+
+[***********************************************************]
+[ServerThinksYouCheated]
+[zonked]
+
+<$Warning,~B~E~rサーバーがあなたの不正行為を通知しました!!!>
+
+
+[***********************************************************]
+[PlayerNoMake]
+[zonked]
+
+<$Warning,~B~E~r警告: プレイヤー{param.1}のユニット種別「{param.2}」の不正生成を検出しました。>
+
+
+[***********************************************************]
+[LeaveCheaters]
+[zonked]
+<h2>{H2}名誉ある退出</h2>
+<p>{Text}
+誰かが不正行為をしました。退出すると、あなたの司祭は戦闘から除去されます。
+<p>
+今退出しても信頼度は下がりません。
+<p>
+$Button=名誉を保って退出,LeaveCheater,0
+$Button=残る,DoNothing,0
+
+[END]
+
+
+

@@ -1,0 +1,101 @@
+﻿[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+
+allowAnyCapture = 1
+
+myStartMoney = 10000
+myTech = "sunWalker;windBattery;windWalker;windArcher;sunBlocker;sunAviary;sunCannon"
+
+aiMoneyRechargeRate = 8    // One sun cannon per minute
+
+// 구출 대상 동맹 설정이다.
+ai2Name = "The Traitor"
+ai2Tech = "sunWalker"
+ai2StartMoney = 0
+ai2TimeBetweenMoves = 4
+ai2AllyList = "1"
+ai2Ability = "!COLLECT_STORM_POWER;!ATTACH_TO_ENEMY_ISLAND;!ENCIRCLE_ENEMY_ISLAND"
+ai2Color = white
+
+ai3Name = "Duke of Wind"
+ai3Tech = "sunWalker;sunArcher;sunCannon;windBattery;windAviary;windBlocker;windArcher"
+ai3StartMoney = 6000
+ai3TimeBetweenMoves = 4
+ai3AllyList = "4"
+ai3Ability = "!ATTACH_TO_ENEMY_ISLAND;!ENCIRCLE_ENEMY_ISLAND"
+ai3Color = red
+
+ai4Name = "Duke of Rain"
+ai4Tech = "sunWalker;sunArcher;sunCannon;rainBattery;rainCannon;rainAviary;rainBlocker"
+ai4StartMoney = 6000
+ai4TimeBetweenMoves = 4
+ai4AllyList = "3"
+ai4Ability = "!ATTACH_TO_ENEMY_ISLAND;!ENCIRCLE_ENEMY_ISLAND"
+ai4Color = orange
+
+title="敵の領土"
+
+[Options]
+
+[A.]
+<h2>敵の領土</h2>
+<i>「我が友は、我が敵の敵だけだ。」<br>
+--セティン・ホルク司令官</i>
+<p>
+敵陣に、寝返ろうとしている司祭がいます！
+サンダー公爵の部下が、敵の戦線の内側から救出されることを望んでいます。
+彼の島は、敵の防衛線の近くにあります。
+<p>
+防衛線を突破し、小さな島から彼を救ってください。
+彼は敵帝国の心臓部へ通じる、
+警備のない秘密の通路を知っていると言っています！
+
+$Button=知識を確認,ShowTechnology,55
+$Button=ミッション開始,DoNothing,0
+
+[Ai2PriestCaptured]
+<h2>救出！</h2>
+<p>
+<i>「間に合ってくれて助かりました。
+私をあなたの島に降ろし、安全な場所へ連れていってください。
+そうすれば、秘密の計画をお教えしましょう！」
+</i>
+$Button=続ける,DoNothing,0
+
+
+[Succeeded][Ai2PriestSaved]
+<h2>成功！</h2>
+<p>
+寝返った者を、自分の島へ連れ帰りました！
+<p>
+彼は闇の帝国の心臓部を直接攻撃できる、
+敵領土の中の秘密の通路を教えてくれます。
+究極の勝利は、もう目前かもしれません！
+
+<$Config,Done{mission.fileName}=1>
+
+$Button=ミッションを終了,MissionAbort,1
+$Button=次のミッション,MissionBegin,FinalConfrontation
+
+[Ai2PriestDead]
+<h2>失敗！</h2>
+<p>
+敵は、寝返った司祭を殺しました。
+彼の秘密を知らなければ、闇の帝国の心臓部を
+突破することは決してできません！
+$Button=続ける,Tell,TryAgain
+
+
+[Failed]
+<h2>失敗！</h2>
+<p>
+敵は島を踏みにじり、あなたの司祭を殺しました。
+<p>
+寝返った者が教えてくれるはずだった重要な情報なしには、
+決して成功することはできません！
+$Button=続ける,Tell,TryAgain
+
+
+[END]

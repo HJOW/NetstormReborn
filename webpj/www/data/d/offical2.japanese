@@ -1,0 +1,22 @@
+﻿title = "司祭の訓練"
+
+[Overview]
+<background="nsstart">
+<h2>司祭の訓練</h2>
+<p>いずれマルチプレイヤーで遊びたくなるかもしれません。
+そのときに備えて練習しておきましょう。長年の経験を持つ熟練者が大勢います。
+このチュートリアルでは、実戦で直面する状況を練習できます。
+<p>各項目の詳しい説明を見るには「メニュー」を選んでください。
+<p>~B~E~b-BlueCheese
+
+$Checked=メニュー,MissionBegin,bc1menu76,{Donebc1menu76},1
+$Checked=橋を架ける,MissionBegin,bc2bridging76,{Donebc2bridging76},2
+$Checked=アシッドバー,MissionBegin,bc3acid_bar76,{Donebc3acid_bar76},3
+$Checked=Xボウ,MissionBegin,bc4bow_rush76,{Donebc4bow_rush76},4
+$Checked=死の橋,MissionBegin,bc5walkers76,{Donebc5walkers76},5
+$Checked=マンオブウォー,MissionBegin,bc6mows76,{Donebc6mows76},6
+$Checked=サンバリケード,MissionBegin,bc7sun_bars76,{Donebc7sun_bars76},7
+$Checked=フューリーの戦争,MissionBegin,bc8fury76,{Donebc8fury76},{Donebc7sun_bars76}{Donebc6mows76}{Donebc5walkers76}{Donebc4bow_rush76}{Donebc3acid_bar76}{Donebc2bridging76}
+$Checked=秘密,MissionBegin,bc9ssun_bars76,{Donebc9ssun_bars76},{Donebc9ssun_bars76}
+
+$Button=戻る,Tell,UCampaign

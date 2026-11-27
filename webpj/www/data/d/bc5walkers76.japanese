@@ -1,0 +1,57 @@
+﻿[Header]
+missiontype="tutorial"
+
+denysalvage=1
+missionnumber=5
+moregeysers=0
+
+mystartmoney=0
+mytech=""
+myallylist=""
+
+title="死の橋"
+
+ai2name="Lord NoChance"
+ai2tech=""
+ai2startmoney=0
+
+[Options]
+
+[A.]
+<h2>死の橋</h2>
+<i>~y「いつも最後に選ばれる連中が、思わぬ活躍をすることもある。」<br>
+-ブルフの支持者</i>
+<p>~w邪悪な領主との戦いで、双方とも危うい状況に陥りました。しかし敵司祭が動けなくなり、あなたが有利です……黄色い球の中から領主の笑い声が聞こえます。
+<p>
+~o~B~E「ははは！ お前のウォーカーなど、一体たりとも私の橋の防御を突破できん！」
+<p>
+~.~B~w本当にそうでしょうか？
+<p>~B~E~r目標：~.~B~w 採集ユニットを橋の向こうへ送り、司祭を連れ帰ってください。それぞれのウォーカーの能力を学ぶ訓練です。
+<p>~B~E~oヒント：~.~B~w ~jShiftを押しながら選択~wすればまとめて送れますが、複数のユニットに同時に司祭を拾うよう命令することはできません。一体ずつ送ると、それぞれの採集ユニットの長所と短所がよく分かります。
+<p>     <!"sunwalker.*">          <!"bulf.*">        <!"windwalker.*">                     <!"rainwalker.*">
+<p>「ゴーレム」<!"mana.11">     「ブルフ」<!"mana.10">      「セイルスケーター」<!"mana.8">      「クリスタルクラブ」<!"mana.9">
+$Button=使える知識,ShowTechnology,55
+$Button=始めます！,DoNothing,0
+</?>
+
+[succeeded][ai2priestcaptured]
+<h2>~oそんなあああああ！！！</h2>
+<p>~wあなたが目の前まで歩いてきて司祭を捕らえると、邪悪な領主は悲鳴を上げます。不可能なことなどありません！
+<$Config,Done{mission.fileName}=1>
+$Button=訓練メニュー,MissionBegin,BC1Menu76
+<p>
+$Button=やり直す,Tell,TryAgain
+$Button=次へ,MissionBegin,BC6Mows76
+<p>
+$Button=ミッションを終了,MissionAbort,0
+
+[Failed]
+<h2>あれ……</h2>
+<p>どうしてこんなことに？！
+$Button=訓練メニュー,MissionBegin,BC1Menu76
+<p>
+$Button=やり直す,Tell,TryAgain
+<p>
+$Button=ミッションを終了,MissionAbort,0
+
+[END]

@@ -1,0 +1,63 @@
+﻿[Header]
+missionType = "Tutorial"
+aid=1
+
+missionNumber = 1
+
+myStartMoney = 2000
+myTech = "sunWalker;windBattery;sunArcher;sunCannon"
+
+aiName = "Master of Whirligigs"
+aiTech = "sunWalker;rainBattery;sunAviary"
+aiStartMoney = 2000
+aiGeyserAttachments = 1
+aiCollectors = 1
+aiTimeBetweenMoves = 6
+aiAbility="!CONCENTRATE_FIRE;!REPEAT_SUCCESSFUL_DROPS"
+
+title="ワーリギグの支配者"
+
+[A.]
+<h2>ワーリギグの支配者</h2>
+<p>
+<i>「ニンバスの戦争の祖先と起源は、ニンバスの戦争である。」
+--歴史家ガルトルフ・エンディクス</i>
+<p>
+闇の君主たちは、あなたの島を弱いと思っています。
+領土を奪い、人々を奴隷にするため、
+ワーリギグの支配者を送り込みました。
+<p>
+敵はあなたを無能だと考えています。
+邪悪な敵の大司祭を捕らえてフューリーに生贄として捧げ、
+彼らが間違っていると証明してください。
+
+$Button=知識を確認,ShowTechnology,55
+$Button=ミッション開始,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>成功！</h2>
+<p>
+残忍で激しい攻撃から、見事に人々を守りました！
+自称ワーリギグの「支配者」の大司祭を捕らえ、討ち取りました。
+真の支配者が誰なのか、今や明らかではありませんか？
+<$Config,Done{mission.fileName}=1>
+$Button=ミッションを終了,MissionAbort,1
+$Button=次のミッション,MissionBegin,SaveTheIsland
+
+
+[Failed]
+<h2>失敗！</h2>
+<p>
+この戦いで敵司祭を捕らえることはできませんでした。
+<p>
+ワーリギグの支配者は、あなたの軍を壊滅させました。
+結局、闇の君主たちの評価は正しかったようです。
+<p>
+あなたは今や闇の君主の帝国の、取るに足りない手下です。
+人々は鎖につながれ、かろうじて日々を生き延びながら、
+息をするたびにあなたの哀れな名を呪うことでしょう。
+$Button=続ける,Tell,TryAgain
+
+
+[END]

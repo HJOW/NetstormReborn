@@ -1,0 +1,138 @@
+﻿[Header]
+missiontype="tutorial"
+
+missionnumber=8
+moregeysers=1
+
+mytech="outpost;windBattery"
+mystartmoney=5000
+
+title="フューリーの戦争"
+
+ai2name="Sir Vortex"
+ai2tech="windArcher;windBattery;windBlocker;windAviary;windballoon;windWalker;outpost"
+ai2startmoney=3000
+ai2geyserattachments=3
+ai2collectors=3
+ai2timebetweenmoves= 2
+ai2color=Green
+ai2bridgedrawrate= 2
+ai2stuffRefreshRate=6
+ai2allylist="3;4;5"
+
+ai3name="Lord Ice"
+ai3tech="rainCannon;rainBattery;rainBlocker;rainAviary;rainballoon;rainWalker;rainFence;outpost"
+ai3startmoney=2000
+ai3geyserattachments=3
+ai3collectors=3
+ai3timebetweenmoves= 2
+ai3color=lightblue
+ai3bridgedrawrate=2
+ai3stuffRefreshRate=5
+ai3allylist="2;4;5"
+
+ai4name="Count Thunder"
+ai4tech="thunderCannon;thunderBattery;outpost;thunderArcher;thunderBlocker;thunderFence;bulf"
+ai4startmoney=2000
+ai4geyserattachments=3
+ai4collectors=3
+ai4timebetweenmoves= 2
+ai4color=Purple
+ai4bridgedrawrate= 2
+ai4stuffRefreshRate=6
+ai4allylist="2;3;5"
+
+ai5name="Mr Sun"
+ai5tech="sunCannon;windBattery;sunArcher;sunAviary;sunBalloon;sunFence;sunBlocker;outpost"
+ai5startmoney=3000
+ai5geyserattachments=3
+ai5collectors=3
+ai5timebetweenmoves= 2
+ai5color=Yellow
+ai5bridgedrawrate= 2
+ai5stuffRefreshRate=4
+ai5allylist="2;3;4"
+
+[Options]
+
+[A.]
+<h2>フューリーの戦争</h2>
+<i>~y「フューリーたちの戦争に終わりはない。」<br>
+-最高位の大司祭</i>
+<p>~B~E~r目標：~.~B~w 好きなフューリーの力で、先ほどあなたを苦しめた敵を倒してください。あるいはサンで自分の腕を証明しましょう！
+<p>敵を倒すには、これまでの訓練をすべて生かさなければなりません！
+<p>~o~B~Eヒント： ~.~B~w前哨基地を使えます。
+$Button=始めます！,DoNothing,0
+</?>
+
+[@1]
+<h2>メッセージ</h2>
+<p>使う知識を選んでください。
+<p><!"mana.8">                  <!"mana.9">                  <!"mana.10">                  <!"mana.11">
+
+$Button= ウィンド,tell,W
+$Button= レイン,tell,R
+$Button= サンダー,tell,T
+$Button= サン,tell,S
+
+[W]
+<$CheatAllTechnology,0>
+
+[R]
+<$CheatAllTechnology,1>
+
+[T]
+<$CheatAllTechnology,2>
+
+[S]
+<$CheatAllTechnology,3>
+
+[ai2priestdead]
+<h2>~rフューリーたちは喜んでいます！<h2>
+<p>~gサー・ヴォルテックスを生贄に捧げました！
+<p>~w彼の知識は、今やあなたのものです！
+<p><!"windarcher.*">
+<$CheatAllTechnology,0>
+
+[ai3priestdead]
+<h2>~rフューリーたちは喜んでいます！<h2>
+<p>~lロード・アイスを生贄に捧げました！
+<p>~w彼の知識は、今やあなたのものです！
+<p><!"raincannon.*">
+<$CheatAllTechnology,1>
+
+[ai4priestdead]
+<h2>~rフューリーたちは喜んでいます！<h2>
+<p>~mカウント・サンダーを生贄に捧げました！
+<p>~w彼の知識は、今やあなたのものです！
+<p><!"thundercannon.*">
+<$CheatAllTechnology,2>
+
+[ai5priestdead]
+<h2>~rフューリーたちは喜んでいます！<h2>
+<p>~yミスター・サンを生贄に捧げました！
+<p>~w彼の知識は、今やあなたのものです！
+<p><!"sunarcher.*">
+<$CheatAllTechnology,3>
+
+[Failed]
+<h2>失敗……</h2>
+<p>それでも、ここまで楽しんでいただけたなら幸いです！
+$Button=訓練メニュー,MissionBegin,BC1Menu76
+<p>
+$Button=やり直す,Tell,TryAgain
+<p>
+$Button=ミッションを終了,MissionAbort,0
+
+[Success][badteamdead]
+<h2>勝利！</h2>
+<p>あなたは真の達人です！
+<p>これですべての訓練を終えました。
+<$Config,Done{mission.fileName}=1>
+$Button=訓練メニュー,MissionBegin,BC1Menu76
+<p>
+$Button=やり直す,Tell,TryAgain
+<p>
+$Button=ミッションを終了,MissionAbort,0
+
+[END]

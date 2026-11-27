@@ -1,0 +1,96 @@
+﻿[Header]
+missiontype="tutorial"
+
+missionnumber=7
+moregeysers=1
+
+mystartmoney=20000
+mytech="windBattery;sunFence"
+myallylist=""
+
+title="サンバリケード"
+
+ai2name="Lord Ice"
+ai2tech="rainCannon;rainBattery"
+ai2startmoney=999999
+ai2geyserattachments=0
+ai2collectors=1
+ai2timebetweenmoves= 2
+ai2allylist="3;4;5"
+ai2color=lightblue
+ai2bridgedrawrate= 2
+ai2stuffRefreshRate=1
+
+ai3name="Sir Vortex"
+ai3tech="windArcher;windBattery"
+ai3startmoney=999999
+ai3geyserattachments=0
+ai3collectors=1
+ai3timebetweenmoves= 2
+ai3allylist="2;4;5"
+ai3color=Green
+ai3bridgedrawrate= 2
+ai3stuffRefreshRate=1
+
+ai4name="Count Thunder"
+ai4tech="thunderCannon;thunderBattery"
+ai4startmoney=999999
+ai4geyserattachments=0
+ai4collectors=1
+ai4timebetweenmoves= 2
+ai4allylist="2;3;5"
+ai4color=Purple
+ai4bridgedrawrate= 2
+ai4stuffRefreshRate=1
+
+ai5name="Mr Sun"
+ai5tech="sunCannon;windBattery;sunArcher"
+ai5startmoney=999999
+ai5geyserattachments=0
+ai5collectors=1
+ai5timebetweenmoves= 2
+ai5allylist="2;3;4"
+ai5color=Yellow
+ai5bridgedrawrate= 2
+ai5stuffRefreshRate=1
+
+[Options]
+
+[A.]
+<h2>サンバリケード</h2>
+<i>~y「よい攻撃に出るには、まず防御を固めねばならない。」<br>
+-ニンバスの国防大臣</i>
+<p>~w敗北に怒った敵は、素早く立て直して攻めてきました。今はマンオブウォーを作れず、しかも包囲されています。同盟に救援を求め、味方はこちらへ向かっています。到着まで持ちこたえられることを祈るばかりです……。
+<p>~B~E~r目標：~.~B~w サンバリケードで守り、神殿を破壊されずに5分間持ちこたえてください。
+<p>~B~E~oヒント：~.~B~w 敵が狙う標的を用意し、その前にサンバリケードを置いてみましょう……。
+<p><!"sunfence.*">
+<p>「サンバリケード」
+
+$Button=使える知識,ShowTechnology,55
+$Button=始めます！,DoNothing,0
+</?>
+
+[@300]
+<h2>受信メッセージ</h2>
+<p>~y到着したぞ！
+<p>-同盟
+<p>~w課題を達成しました！
+<$Config,Done{mission.fileName}=1>
+$Button=訓練メニュー,MissionBegin,BC1Menu
+<p>
+$Button=やり直す,Tell,TryAgain
+$Button=敵を倒せ！,MissionBegin,BC8Fury76
+<p>
+$Button=ミッションを終了,MissionAbort,0
+
+
+[Failed][ai1templedead]
+<h2>失敗……</h2>
+<p>敵は防御を突破しました。同盟が到着したときには崩れた島が残るだけで、司祭の姿はありませんでした。
+$Button=訓練メニュー,MissionBegin,BC1Menu76
+<p>
+$Button=やり直す,Tell,TryAgain
+<p>
+$Button=ミッションを終了,MissionAbort,0
+
+[END]

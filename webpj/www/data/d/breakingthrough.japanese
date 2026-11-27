@@ -1,0 +1,73 @@
+﻿[Header]
+missionType = "Tutorial"
+
+loadFort = "BreakingThrough"
+
+missionNumber = 1
+moreGeysers = 0
+
+myStartMoney = 0
+// 사제 포획을 막을 수 없도록 시작 자금0을 유지하는 필수 설정이다.
+myTech = "sunWalker;rainBattery;rainCannon;rainBlocker;rainWalker;sunArcher;sunAviary;sunBlocker"
+
+aiName = "Prince of Wind"
+aiTech = "sunWalker;windBattery;windArcher;windAviary;windBlocker"
+aiStartMoney = 4000
+aiGeyserAttachments = 3
+aiCollectors = 4
+aiTimeBetweenMoves = 4
+aiAbility = "!SACRIFICE_ENEMY_PRIEST"
+
+title="突破"
+
+[Options]
+
+[A.]
+<h2>突破</h2>
+<i>「敵へ戦の手を伸ばせ。
+その体から流れた血で、敵の体を濡らせ。」
+--ニンバスの大司祭キャスパー・グレリン
+</i>
+<p>
+あなたの司祭が、大きな危険にさらされています。
+ウィンドの闇の王子に捕らえられる寸前です！
+<p>
+密偵たちは、ウィンドの神殿から苦痛の叫び声が聞こえると言います。
+王子がかつて邪悪な実験を行ったという噂も、広く流れています。
+
+$Button=次へ,Tell,A1.
+
+[A1.]
+<h2>突破</h2>
+<p>
+あなたの治世では、どの司祭も傷つけられないことを、従う人々に示してください。
+<p>
+敵の防御を突破し、捕らわれた司祭を救い出し、
+報復として敵司祭を討ち取ってください！
+
+$Button=知識を確認,ShowTechnology,55
+$Button=ミッション開始,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>成功！</h2>
+<p>
+司祭は無事に人々のもとへ戻りました！
+闇の王子の軍勢は粉々に打ち砕かれました。
+帝国の聖なる者に手を出す者は、このような運命をたどるのです！
+<$Config,Done{mission.fileName}=1>
+$Button=ミッションを終了,MissionAbort,1
+$Button=次のミッション,MissionBegin,ToTheRescue
+
+
+[Failed]
+<h2>失敗！</h2>
+<p>
+闇の王子は、あなたの司祭を生贄に捧げました。
+人々は愛する司祭を失い、泣き叫びます。
+やがて、あなたの不注意に報復すると誓い、
+あなたを捜し始めます。
+$Button=続ける,Tell,TryAgain
+
+
+[END]

@@ -1,0 +1,79 @@
+﻿[Header]
+missiontype="tutorial"
+
+missionnumber=4
+moregeysers=0
+
+mystartmoney=3000
+mytech="windBattery;windArcher"
+myallylist=""
+
+title="クロスボウ急襲"
+
+ai2name="Lord Ice"
+ai2tech="rainCannon;rainBattery"
+ai2startmoney=3000
+ai2geyserattachments=3
+ai2collectors=4
+ai2timebetweenmoves= 4
+ai2allylist="3;4"
+ai2color=lightblue
+ai2bridgedrawrate= 1
+
+ai3name="Count Thunder"
+ai3tech="thunderCannon;thunderBattery"
+ai3startmoney=3000
+ai3geyserattachments=3
+ai3collectors=4
+ai3timebetweenmoves= 4
+ai3allylist="2;4"
+ai3color=purple
+ai3bridgedrawrate= 1
+
+ai4name="Mr Sun"
+ai4tech="sunCannon;windBattery;sunArcher"
+ai4startmoney=3000
+ai4geyserattachments=3
+ai4collectors=4
+ai4timebetweenmoves= 4
+ai4allylist="2;3"
+ai4color=yellow
+ai4bridgedrawrate= 1
+
+[Options]
+
+[A.]
+<h2>クロスボウ急襲</h2>
+<i>~y「突撃いいいいいい！！！」<br>
+-ニンバスの将軍</i>
+<p>~w三人の敵に囲まれ、危機に陥りました！ 使える知識はウィンドジェネレーターとクロスボウだけです。素早く動き、全員を倒してください！！
+<p>~B~E~r目標：~.~B~w クロスボウで、敵が脅威になる前に素早く倒してください。
+<p>~B~E~oヒント：~.~B~w 放っておくと最も危険になる敵から攻撃するとよいでしょう。攻撃を受け始めても慌てず、クロスボウで効率よく破壊し、敵の神殿とワークショップを素早く攻めてください。
+<p><!"windarcher.*">
+<p>「クロスボウ」
+$Button=使える知識,ShowTechnology,55
+$Button=始めます！,DoNothing,0
+</?>
+
+[succeeded][badteamdead]
+<h2>おめでとうございます！</h2>
+<p>この恐るべき戦術を身につけました……人々が恐れながらあなたの名を叫ぶことでしょう。
+<$Config,Done{mission.fileName}=1>
+$Button=訓練メニュー,MissionBegin,BC1Menu76
+<p>
+$Button=やり直す,Tell,TryAgain
+$Button=次へ,MissionBegin,bc5walkers76
+<p>
+$Button=ミッションを終了,MissionAbort,0
+
+[Failed]
+<h2>失敗……</h2>
+<p>敵はクロスボウの防御を突破し、あなたを倒しました。まだ準備が足りなかったようです……。
+
+$Button=訓練メニュー,MissionBegin,BC1Menu76
+<p>
+$Button=やり直す,Tell,TryAgain
+<p>
+$Button=ミッションを終了,MissionAbort,0
+
+[END]

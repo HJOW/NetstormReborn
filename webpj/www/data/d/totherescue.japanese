@@ -1,0 +1,107 @@
+﻿[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+
+myStartMoney = 4600
+myTech = "sunWalker;rainBattery;rainWalker;rainCannon;sunArcher;sunFence"
+
+// 포위된 동맹 설정이다.
+ai2Name = "Governor Cherok"
+ai2Tech = "sunWalker;rainBattery;rainBlocker;rainBalloon"
+ai2StartMoney = 0
+ai2GeyserAttachments = 2
+ai2Collectors = 3
+ai2Ability = "!COLLECT_STORM_POWER"
+ai2TimeBetweenMoves = 3
+ai2AllyList = 1
+ai2Color = purple
+
+// 왼쪽 아래 적 설정이다.
+ai3Name = "Prince of Thunder"
+ai3Tech = "sunWalker;thunderBattery;thunderCannon;thunderBlocker;sunBlocker"
+ai3StartMoney = 2000
+ai3GeyserAttachments = 2
+ai3Collectors = 3
+ai3TimeBetweenMoves = 3
+ai3AllyList = 4
+ai3Enemy = 2
+ai3Color = red
+
+ai4Name = "Duke of Thunder"
+ai4Tech = "sunWalker;sunBalloon;thunderBattery;thunderCannon;thunderBlocker;sunarcher"
+ai4StartMoney = 2000
+ai4GeyserAttachments = 2
+ai4Collectors = 2
+ai4TimeBetweenMoves = 3
+ai4AllyList = 3
+ai4Enemy = 2
+ai4Color = orange
+
+title="救出作戦！"
+
+[A.]
+<h2>救出作戦！</h2>
+<i>「友のため、忠義のため、
+塵に覆われた海より立ち上がり、
+血を流す戦いの中へ進め。」
+--ニンバスの書
+</i>
+<p>
+チェロク島の総督が、バルーンで救援を求めてきました。
+<p>
+<i>我々は攻撃を受けています！
+<p>
+ストームパワーを求めて航行していたところ、
+敵の島二つが、太陽を背に襲いかかってきました。
+<p>
+資源は乏しく、すでに多くの者が死んでいます。
+
+$Button=次へ,Tell,A1.
+
+[A1.]
+<h2>救出作戦！</h2>
+<p>
+チェロク島が破壊されれば、ほかの総督たちもあなたに従うのを恐れるでしょう。
+敵側に寝返るかもしれません。
+<p>
+襲撃者たちを倒してチェロク島を救い、
+この信頼の危機を防いでください！
+
+$Button=知識を確認,ShowTechnology,55
+$Button=ミッション開始,DoNothing,0
+
+
+[@120]
+チェロク島の総督からメッセージが届きました。
+<p>
+<i>
+偉大なルーサー王の言葉を思い出してください。
+「最後に我々が覚えているのは、敵の行動ではなく、友の無行動だ。」
+</i>
+
+
+[Succeeded][BadTeamDead]
+<h2>成功！</h2>
+<p>
+チェロク島を救いました！
+総督は勝利の宴で、あなたを温かく迎えます。
+帝国のすべての総督が集まり、
+あなたに永遠の忠誠を誓います。
+<$Config,Done{mission.fileName}=1>
+$Button=ミッションを終了,MissionAbort,1
+$Button=次のミッション,MissionBegin,Vicious
+
+
+[Failed][Ai2PriestDead]
+<h2>失敗！</h2>
+<p>
+チェロク島を救う試みは、失敗しました。
+<p>
+帝国のほかの島の総督たちは、あなたに守ってもらえないことを恐れています。
+彼らの支持を失った帝国は、
+敵に突破され、踏みにじられます。
+$Button=続ける,Tell,TryAgain
+
+
+[END]

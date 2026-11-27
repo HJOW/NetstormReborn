@@ -1,0 +1,58 @@
+﻿[Header]
+missiontype="tutorial"
+
+missionnumber=2
+moregeysers=0
+
+mystartmoney=3000
+mytech="windBattery;outpost"
+myallylist=""
+
+title="橋を架ける"
+
+ai2name="Stray"
+ai2tech=""
+ai2startmoney=0
+ai2geyserattachments=0
+ai2collectors=0
+ai2timebetweenmoves= 9
+ai2allylist=""
+ai2color=Red
+ai2bridgedrawrate= 1
+
+[Options]
+
+[A.]
+<h2>橋を架ける</h2>
+<i>~y「何も残っていないなら、橋を架けろ！」<br>--無一文のニンバス人</i>
+<p>~wまた一人、司祭を捕らえる好機です。ゆっくり島へ歩いて連れ帰ろうとしたところ、司祭が島を出発させる準備をしたことに気付きました。
+島は2分後に動きます。急いで捕らえなければなりません！
+<p>~B~E~r目標：~.~w 2分以内に上の島へつなぎ、セイルスケーターに敵司祭を拾わせてください。
+<p>~o~B~Eヒント：~.~B~wワークショップや前哨基地の建設が終わる前でも、司祭を別の場所へ移動させられます。
+今回は司祭を右クリックし、「前哨基地を建設(Build Outpost)」を選んで建てることもできます。
+橋の六つのスロットのショートカットは、~iq, w, s, a, z ~wと~ix ~wです。幸運を祈ります！
+<p><!"sunFactory.*"><br>「サンワークショップ」<br>
+<!"outpost.*"><br>「前哨基地」
+$Button=使える知識,ShowTechnology,55
+$Button=始めます！,DoNothing,0
+</?>
+
+[succeeded][ai2priestcaptured]
+<h2>おめでとうございます！</h2>
+<p>見事な速さです！ この技術は二地点を素早くつなぐだけでなく、敵の橋を~i遮って~w進軍を阻むためにも使えます！
+<$Config,Done{mission.fileName}=1>
+$Button=訓練メニュー,MissionBegin,BC1Menu76
+<p>
+$Button=やり直す,Tell,TryAgain
+$Button=次へ,MissionBegin,bc3acid_bar76
+<p>
+$Button=ミッションを終了,MissionAbort,0
+
+[@120]
+<h2>うーん……</h2>
+<p>遅すぎたようです。敵の島が遠ざかり始めるのを見守るしかありません……。
+$Button=訓練メニュー,MissionBegin,BC1Menu76
+<p>$Button=やり直す,Tell,TryAgain
+<p>$Button=ミッションを終了,MissionAbort,0
+
+[END]

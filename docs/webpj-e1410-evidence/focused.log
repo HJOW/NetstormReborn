@@ -1,0 +1,51 @@
+✔ 자산 복사본과 매니페스트가 assets/game-data 원본과 같다 (6447.4714ms)
+✔ 미션 음향 자산: 원본 전체와 메뉴 묶음의 중복 없는 경로 (83.9241ms)
+✔ 팔레트: COL 해독과 0/255 고정, 버튼 색 검색 (67.494ms)
+✔ 명암 변환표가 원본 캐시 !color.dat 과 512바이트 모두 같다 (66.5197ms)
+✔ GIF: 타이틀 639x480, 구름 512x512, 색 번호 보존 (73.2161ms)
+✔ 셰이프: 116블록, fortGump 프레임 1 메타 200x146·그림 199x145 (35.5409ms)
+✔ 글꼴: 슬롯 0 높이 14, 라벨 측정 폭 (15.7102ms)
+✔ Windows-1252 변환 (0.2706ms)
+✔ 커서: RT_CURSOR_8 32x32, 핫스폿 (10,6), 흰 화살표 (21.637ms)
+✔ 일본어 묶음: 공용43파일과 번역표를 동일 바이트로 복사하고 글꼴TTF를 넣지 않는다 (34.449ms)
+✔ 일본어 번역: 메뉴와 튜토리얼 안내39키를 실제 자원으로 소비한다 (110.7124ms)
+✔ 일본어 미션:32개 실행 헤더를 보존하고 없는 파일은 영어로 대체한다 (316.9854ms)
+✔ 일본어 자원 실패: 필수 번역표와 글꼴 공급자의 오류를 전달한다 (4.9723ms)
+✔ 한국어 Tutorial1: 실행 설정과 단계별 명령은 원본과 같다 (1020.3261ms)
+✔ 한국어 Tutorial2: 실행 설정과 단계별 명령은 원본과 같다 (690.7507ms)
+✔ 한국어 Tutorial3: 실행 설정과 단계별 명령은 원본과 같다 (1221.2051ms)
+✔ 한국어 Tutorial4: 실행 설정과 단계별 명령은 원본과 같다 (352.772ms)
+✔ 한국어 Tutorial5: 실행 설정과 단계별 명령은 원본과 같다 (1278.3013ms)
+✔ 한국어 Tutorial6: 실행 설정과 단계별 명령은 원본과 같다 (1651.8794ms)
+✔ 한국어 미션: 번역하지 않은 개발용 미션 huge 는 영어 원문으로 대체한다 (1848.9845ms)
+✔ 한국어 미션 정보: 유닛 이름과 서식 토큰을 보존한다 (22.9927ms)
+✔ 한국어 캠페인 미션 대본: 실행 설정·섹션·명령은 원본과 같고 안내·제목·적 이름만 한국어이다 (1383.9215ms)
+✔ 한국어 미션 AI 이름 전수: 29BYTE 제한과 기술 문자열 경계를 지킨다 (254.9226ms)
+(node:22064) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ XlatTable: *** / --- / === 블록, CR 제거, 줄바꿈 하나만 떼기, 덮어쓰기, 미완성 블록 버리기 (1.9017ms)
+✔ xlat.korean: UTF-8·중복 없음·메뉴 라벨 전부 번역 (62.8467ms)
+✔ 한국어 글꼴 자산: fonts/ 의 woff2 를 그대로 복사했다 (163.2246ms)
+✔ encodeUtf16Units: 한글·라틴은 코드 단위 그대로, BMP 밖은 U+FFFD (0.7277ms)
+✔ UnicodeGlyphFont: 알파 문턱으로 색 번호 100 글리프를 만들고 폭을 합산한다 (1.0736ms)
+✔ UnicodeGlyphFont: 밑줄과 취소선은 글자 칸 전체에 선을 더한다 (0.674ms)
+✔ UnicodeFontProvider: 슬롯·스타일별 글꼴 사양과 원본 글꼴 기준선 (38.6321ms)
+✔ FontSet: 유니코드 글꼴이 있으면 UI 문구를 UTF-16 으로 부호화하고 그 배열은 유니코드 글꼴로 잰다 (14.0692ms)
+✔ drawGlyphText: 유니코드 글꼴로 그림자 패스 → 본문 패스를 그린다 (1.1353ms)
+✔ StoneButton: 표시 문구와 영어 키를 분리하고 한국어 라벨을 유니코드 글꼴로 잰다 (0.7063ms)
+✔ MainMenuScreen: 한국어 버튼 라벨·배치·그리기 (134.5847ms)
+✔ buildPopupItems: translate 로 Options·Help 라벨을 번역하고 구조는 보존한다 (1.2257ms)
+✔ PopupMenu: 한국어 Options 메뉴 크기·그리기·명령 실행 (13.0594ms)
+✔ buildKoreanSupport: 래스터라이저에 보통체·굵은체 woff2 를 넘기고 누락을 알린다 (99.3224ms)
+✔ 영어 자원: 번역은 원문 그대로이고 글꼴 묶음은 유니코드 글꼴이 없다 (0.3591ms)
+✔ createCanvasGlyphRasterizer: 글꼴 등록·글자 그림 자르기·위치·전진 폭·정리 (9.7054ms)
+✔ Netstorm 연결: 한국어 묶음 적재와 실패 시 영어로 계속, 펼침 메뉴 번역 (16.907ms)
+✔ Netstorm 적재: 언어별 묶음 선택과 한국어 실패 대체 (1428.0604ms)
+ℹ tests 41
+ℹ suites 0
+ℹ pass 41
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 14011.7923

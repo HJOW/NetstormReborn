@@ -1,0 +1,73 @@
+﻿[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+moreGeysers = 1
+
+myStartMoney = 350
+myTech = "sunCannon;windWalker;windBattery;windAviary;windBlocker;sunBlocker"
+
+aiName = "Lord of Rain"
+aiTech = "sunWalker;rainBattery;rainAviary;rainBlocker;rainBalloon"
+aiStartMoney = 0
+aiGeyserAttachments = 2
+aiCollectors = 3
+aiTimeBetweenMoves = 2
+
+title="逃げろ！"
+
+[Init]
+<$ViewSpot,(139x88)>
+
+
+[A.]
+<h2>逃げろ！</h2>
+<i>「兵たちが勇敢だと信じれば、彼らは勇敢になる。<br>
+永遠に生きると信じれば、彼らは決して死なない。」<br>
+--ホルサム・ブレックス大佐</i>
+<p>
+食料とストームパワーを使い果たしたウィンドの島は、何日も漂流していました。
+乗組員の忠誠心と技術だけが、彼らを生かしていました。
+<p>
+静かに流れる島は、気づかれないまま敵の要塞に近づきました。
+側面に橋を架け、勇敢な志願者たちが
+危険な任務に挑みます。
+$Button=次へ,Tell,A1.
+
+[A1.]
+<h2>逃げろ！</h2>
+<p>
+任務は、生産を再開できるだけのストームパワーを盗むことです。
+敵を倒せるかもしれません！
+<p>
+ストームクリスタルを拾った瞬間、見つかってしまいました！
+急いで島に戻らせ、戦いに備えなければなりません。
+
+$Button=知識を確認,ShowTechnology,55
+$Button=ミッション開始,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>成功！</h2>
+<p>
+賢い司祭が生きて帰還し、
+あなたの島は勇敢で驚くべき勝利を収めました！
+何日も祝宴を開けるほど、
+資源とストームパワーは十分にあります。
+<$Config,Done{mission.fileName}=1>
+$Button=ミッションを終了,MissionAbort,1
+$Button=次のミッション,MissionBegin,GuardMyBack
+
+
+[Failed]
+<h2>失敗！</h2>
+<p>
+すべてを失いました！ 乗組員と司祭には、
+勝つだけの勇気と力があったのに、あなたの不手際が彼らを破滅させました。
+<p>
+勇敢で忠実な彼らに残されたのは、死だけです。
+青ざめた唇に、あなたへの呪いを残す死です。
+$Button=続ける,Tell,TryAgain
+
+
+[END]

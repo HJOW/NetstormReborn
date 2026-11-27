@@ -1,0 +1,143 @@
+﻿[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+
+myStartMoney = 1200
+myTech = "sunWalker;windBattery;sunArcher;sunBlocker;sunBalloon;sunAviary;sunCannon"
+
+// 데모 전용 플레이어 설정이다.
+ai1Name = "Player"
+ai1Tech = "sunWalker;windBattery;sunArcher;sunBlocker;sunBalloon;sunAviary;sunCannon"
+ai1TimeBetweenMoves = 3
+ai1AllyList = "2"
+
+
+// 플레이어의 동맹 설정이다.
+ai2Name = "Minister of Sun"
+ai2Tech = "sunWalker;windBattery;sunArcher;sunCannon;sunBlocker;sunAviary"
+ai2StartMoney = 8000
+ai2GeyserAttachments = 2
+ai2Collectors = 4
+ai2TimeBetweenMoves = 4
+ai2AllyList = "1"
+ai2Color = purple
+
+// 동맹이 상대하는 적 설정이다.
+ai3Name = "Marquis de Thunder
+ai3Tech = "sunWalker;thunderBattery;sunArcher;sunBlocker;sunBalloon;sunAviary;sunCannon"
+ai3StartMoney = 8000
+ai3GeyserAttachments = 2
+ai3Collectors = 3
+ai3TimeBetweenMoves = 4
+ai3AllyList = "4"
+ai3Enemy = 2
+ai3Color = orange
+
+// 플레이어가 상대하는 적 설정이다.
+ai4Name = "Knight of Rain"
+ai4Tech = "sunWalker;rainBattery;sunArcher;sunBlocker;sunBalloon;sunAviary;sunCannon"
+ai4StartMoney = 4000
+ai4GeyserAttachments = 3
+ai4Collectors = 4
+ai4TimeBetweenMoves = 4
+ai4AllyList = "3"
+ai4Color = red
+
+demoRestartTimer = 360
+
+title="背後を守れ"
+
+[A.]
+<h2>背後を守れ</h2>
+<i>「人は戦いの中で、最も恐れ、最も孤独になる。<br>
+だが、それほど勇敢で、忠実で、誠実な時もない。」<br>
+--レシス・グレテルテム大尉。</i>
+<p>
+四十の島による大きな戦いが始まりました。
+すさまじい嵐が吹き荒れ、突然あなたはサンの大臣だけを頼りに、
+無防備な場所で孤立してしまいました。
+<p>
+今や二人は背中合わせで戦っています。
+生き残る唯一の希望である友人が、バルーンで伝言を送ってきます。
+<p>
+<i>「急いで敵を倒し、
+<br>
+ともに勝利を祝い、
+<br>
+杯を上げよう！」</i>
+
+$Button=知識を確認,ShowTechnology,55
+$Button=ミッション開始,DoNothing,0
+
+
+[Ai2TempleHalf][Ai2PriestCaptured]
+<h2>大臣からのメッセージ</h2>
+<p>
+<i>「友よ、助けてくれ！
+<br>
+君の助けが、
+<br>
+どうしても必要だ！」
+</i>
+$Timeout=15,DoNothing,0
+
+[Ai3TempleDead]
+<h2>大臣からのメッセージ</h2>
+<p>
+<i>「北の敵を倒したぞ！
+<br>
+勇敢な同盟者よ、
+<br>
+勝利は目前だ！」
+</i>
+$Timeout=15,DoNothing,0
+
+[Ai4TempleDead]
+<h2>大臣からのメッセージ</h2>
+<p>
+<i>「見事だ！
+<br>
+あと少し持ちこたえれば、
+<br>
+もう一方の敵も倒せるぞ！」
+</i>
+$Timeout=15,DoNothing,0
+
+[Succeeded][BadTeamDead]
+<h2>成功！</h2>
+<p>
+共に勝ち取った勝利を祝う大歓声と鐘の音の中、
+サンの大臣があなたの島へ到着します！
+永遠の忠誠の証として彼の手を握ると、
+人々は兄弟のような同盟に熱烈な歓声を送ります。
+<$Config,Done{mission.fileName}=1>
+$Button=ミッションを終了,MissionAbort,1
+$Button=次のミッション,MissionBegin,Surrounded
+
+
+[ai2PriestDead][Failed]
+<h2>失敗！</h2>
+<p>
+短い間でしたが、善良で忠実な友であったサンの大臣を失いました。
+最期の瞬間、顧問はあなたとの同盟を呪いましたが、
+大臣は顧問を剣で貫きました。
+彼はあなたの戦いの腕と友情を、最後まで信じていました。
+しかし、あなたは彼を失望させました。
+そして今、あなたの死ぬ番も近づいています。
+$Button=続ける,Tell,TryAgain
+
+
+[Demo]
+<h2>NetStorm デモ</h2>
+<p>
+この実演では、二つの島が背中合わせになって、
+敵と戦う様子をお見せします。
+<p>
+実際のゲームと同じようにユニットを配置し、
+二つの島の勝利を手助けできます。
+$Timeout=15,DoNothing,0
+
+
+
+[END]

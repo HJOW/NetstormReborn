@@ -1,0 +1,2544 @@
+﻿<a name="sacrificeOutline">
+<h2>捕獲と生け贄の手順</h2>
+<p>
+<q>熱に浮かされた恐れ。<br>
+研ぎ澄まされた骨。<br>
+一滴の血。<br>
+叫び。<br>
+うめき。</q><br>
+<p>
+戦闘で<a href="#transportHelp">輸送ユニット</a>を使って敵の司祭を捕らえ、<a href="#altarType">祭壇</a>で生け贄に捧げると、
+新しい<a href="#technologyHelp">知識</a>を得るか（<a href="#multiplayerHelp">マルチプレイヤーモード</a>）、
+ミッションに勝利します（キャンペーン）。
+<p>
+<B>一連の手順:</B>
+<p>
+1. <a href="#immobileHelp">司祭を動けなくします。</a><br>
+2. <a href="#pickupHelp">敵の司祭を祭壇へ運びます。</a><br>
+3. <a href="#moveyourpriestHelp">自分の司祭を祭壇へ向かわせます。</a><br>
+4. <a href="#performsacrificeHelp">生け贄の儀式を行います。</a><br>
+<p>
+<B>注意: 自分の司祭が倒れたり死んだりすると、儀式は行えません！</B>
+<p>
+<a href="#vesselPriestHelp">司祭の建設能力</a>について詳しく見る。
+<br>
+</a>
+
+<a name="immobileHelp">
+<h2>司祭を動けなくする方法</h2>
+<p>
+<a href="#unitHelp">戦闘ユニット</a>で敵の司祭を攻撃してください。司祭の<a href="#statsHelp">体力</a>が半分になると、
+動きを止め、持っている物を落とします。薄い力場が司祭を包み、生かしておきます。
+<p>
+動けない間、司祭は<a href="#buriedType">呪文</a>を使うことも、<a href="#vesselPriestHelp">建物を建てる</a>こともできません。
+<p>
+司祭の体力は回復し続けるので注意してください。攻撃を続けなければ、逃げられるまで回復してしまいます。
+<p>
+次: <a href="#pickupHelp">輸送ユニットで司祭を乗せ、祭壇へ運びます。</a>
+<br>
+</a>
+
+<a name="pickupHelp">
+<h2>敵の司祭を祭壇へ運ぶ方法</h2>
+<p>
+司祭を動けなくしたら、<a href="#transportHelp">輸送ユニット</a>を送り、乗せることができます。
+（例外: 司祭は他の司祭を乗せられません。）
+<p>
+司祭の体力を少なくとも50パーセントまで減らす必要があります。そうしなければ、捕獲に抵抗します。
+<p>
+輸送ユニットが祭壇に戻ると、敵の司祭は儀式の円に鎖でつながれます。
+<p>
+司祭は乗っている輸送ユニットから新たな生命力を得るため、降ろされた時には体力が
+完全に回復し、麻痺も解けていることに注意してください。
+<p>
+次: <a href="#moveyourpriestHelp">自分の司祭を祭壇へ向かわせます。</a>
+<br>
+</a>
+
+<a name="moveyourpriestHelp">
+<h2>自分の司祭を祭壇へ向かわせる方法</h2>
+<p>
+司祭を生け贄にするには、自分の司祭が必要です。
+<p>
+自分の司祭はいつでも<a href="#altarType">祭壇</a>へ移動できます。敵の司祭が儀式の円につながれている時に、
+自分の司祭がそこにいれば、儀式が始まります。
+司祭を祭壇へ送るには、司祭を左クリックしてから祭壇を左クリックします。敵の司祭が祭壇に
+つながれている場合、祭壇の上ではカーソルが短剣になります。
+<p>
+シングルプレイヤーモードでは、司祭を生け贄にすると勝利します。<a href="#multiQuickHelp">マルチプレイヤー</a>では、生け贄によって
+次の戦闘のための新しい<a href="#technologyHelp">知識</a>を得るか、より良い知識を得られるよう祭壇をアップグレードします。
+<p>
+マルチプレイヤーでは、儀式が始まる時にフューリーの贈り物を選ぶ必要があります。
+<p>
+贈り物として、儀式の終了と同時にフューリーから授けられる新しい知識を選べます。
+<p>
+もう一つの贈り物は祭壇のアップグレードです。良い祭壇ほど、フューリーから良い知識を授かれます。
+戦闘後も残るのは本島だけなので、祭壇のアップグレードは本島でのみ行えます。
+<p>
+次: <a href="#performsacrificeHelp">生け贄の儀式を行います。</a>
+<br>
+</a>
+
+<a name="performsacrificeHelp">
+<h2>生け贄の儀式を行う方法</h2>
+<p>
+儀式を終えるには、司祭が五つのルーンを守り抜く必要があります。儀式の途中で司祭が動けなくなると、
+呪文が解けて敵の司祭が逃げます。祭壇が大きな損害を受けても、敵の司祭は逃げてしまいます。
+<p>
+儀式が終わると、新しい知識またはアップグレードされた祭壇を受け取ります。新しい知識を受け取ると、
+祭壇は消費されます。再び生け贄を捧げるには、新しい祭壇を建ててください。
+<p>
+アップグレードされた祭壇を選んでも、この戦闘で使う機会がなかった場合は心配いりません。その祭壇は
+本島に残り、次のオンライン対戦でも使えます。戦闘後も残るのは本島だけなので、
+祭壇のアップグレードは本島でのみ行えることを覚えておいてください。
+
+<p>
+生け贄で得た知識はすぐに使え、対応するワークショップで生産できます。
+F6キーで新しい知識を確認してください。
+<p>
+<a href="multiQuickHelp">マルチプレイヤーモード</a>で得た知識は永久に自分のものとなり、以後の戦闘でも使えます。
+ただし、次の戦闘ではすぐに生産ウィンドウに現れるわけではありません。使うには<a href="#factoryHelp">ワークショップ</a>での生産に
+あらかじめ登録する必要があります。
+<p>
+<a href="#sacrificeOutline">捕獲と生け贄の手順</a>に戻る
+<br>
+</a>
+
+<a name="sphereHelp">
+<h2>ニンバス</h2>
+<p>
+ニンバスの世界は三つの球層からなります。<a href="#serenisphereHelp">セレニスフィア</a>、
+<a href="#pyrosphereHelp">パイロスフィア</a>、そして<a href="#deusphereHelp">デウスフィア</a>です。
+<p>
+<c>*</c> <a href="#serenisphereHelp">セレニスフィア</a>では、オンラインの対戦相手を探します。
+<br>
+<c>*</c> <a href="#pyrosphereHelp">パイロスフィア</a>では、敵の<a href="#priestType">司祭</a>を捕らえるために戦います。
+<br>
+<c>*</c> <a href="#deusphereHelp">デウスフィア</a>ではフューリーたちが永遠に戦い、絶えず
+<a herf="#geyserType">ストーム間欠泉</a>をパイロスフィアに投げ込み、あなたの戦いに力を与えます。
+<p>
+<a href="#serenisphereHelp">セレニスフィア</a>について詳しく見る...
+<br>
+</a>
+
+<a name="map">
+<!"buried.2">
+<br>
+</a>
+
+<a name="deusphereHelp">
+<h2>デウスフィア</h2>
+<p>
+デウスフィアではフューリーたちが永遠の戦いを繰り広げています。
+<p>
+デウスフィアは<a href="#sphereHelp">ニンバスの球層</a>の最も内側にあり、<a href="#themeHelp">フューリー</a>たちが
+絶えず互いに戦い、下の惑星から大地を空へ投げ上げている場所です。
+その戦いの中へ落ちないよう祈ってください。待つのは苦痛に満ちた即死です。
+<p>
+<a href="#themeHelp">フューリー</a>について詳しく見る...
+<br>
+</a>
+
+<a name="serenisphereHelp">
+<h2>セレニスフィア</h2>
+<p>
+セレニスフィアは<a href="#sphereHelp">ニンバスの球層</a>の最も外側にあり、下のパイロスフィアでの
+戦闘に備えて他のプレイヤーと組み合わせを決める、平和な場所です。
+<p>
+セレニスフィアには<a href="#battleIslandType">チャレンジリング</a>があります。リングを<c>右クリック</c>すると戦闘に参加します。
+選んだ位置で参加します。
+<p>
+下には<a href="zoneHelp">ゾーン</a>が見えます。最初は、おおむねあなたの知識に合うゾーンから始まります。
+別の場所で戦いたければ、どのゾーンでも<c>右クリック</c>して移動できます。
+<p>
+他の場所を<c>左クリック</c>し、空の上で島を航行させることもできます。
+<p>
+最初に戦闘に参加すると、<a href="#battleMasterHelp">バトルマスター</a>になります。ルールを決めたり、他の
+人をリングから追い出したりできます。追い出された人は、バトルマスターが退出するまで再参加できません。
+<p>
+全員の参加と準備が済んだら、バトルマスターは「Start Battle」を押し、パイロスフィアで本格的な戦闘を始めます。
+<p>
+開始前に全プレイヤーが自分の名前の横の色付きボックスを押す必要があります。その色が戦闘で使う色になります。
+<p>
+<a href="#pyrosphereHelp">パイロスフィア</a>について詳しく見る...
+<br>
+</a>
+
+<a name="pyrosphereHelp">
+<h2>パイロスフィア</h2>
+<p>
+パイロスフィアは<a href="#sphereHelp">ニンバス</a>の中央の球層です。ここで相手と戦います。
+<p>
+目標は、相手の<a href="#priestType">司祭</a>を捕らえ、フューリーへの<a href="#sacrificeOutline">生け贄に捧げる</a>ことです。
+<p>
+パイロスフィアで戦っている間、下のデウスフィアから投げ上げられた小さな浮島に
+<a href="#buriedType">オベリスク</a>と<a herf="#geyserType">ストーム間欠泉</a>が現れ、略奪を待っています。
+<p>
+戦いが激しくなるほど、多くの資源が現れます。
+<p>
+<a href="#deusphereHelp">デウスフィア</a>について詳しく見る...
+<br>
+</a>
+
+<a name="bountyislandHelp">
+<h2>中立の島</h2>
+<p>
+中立の島は<a href="multiQuickHelp">マルチプレイヤー</a>の戦闘にのみ現れます。上陸して追加の<a href="#stormpowerHelp">ストームパワー</a>を得たり、
+輸送ユニットが強力な<a href="#buriedType">呪文</a>を使えるようにしたりしましょう。呪文は中立の島に
+<a href="#buriedType">オベリスク</a>として現れます。中立の島は<a href="#outpostType">前哨基地</a>で自分の領土にすることもできます。
+</a>
+
+<a name="F1Help">
+<h2>NetStormヘルプ</h2>
+<p>
+~l青い~.文字を押すと詳しい情報を表示します。押したまま<c>ドラッグ</c>すると、ヘルプウィンドウをスクロールできます。
+<?{global.inMission}>
+~iF8~.キーでミッションの目標を再表示できます。
+</?>
+<p>
+<b>ゲームのヘルプ</b>
+<br>
+<a href="#campaignHelp">* キャンペーンとマルチプレイヤーモード</a>
+<br>
+<a href="#interfaceHelp">* ユーザーインターフェース</a>
+<br>
+<a href="#sphereHelp">* ニンバスの世界</a>
+<br>
+<a href="#themeHelp">* 三柱のフューリー</a>
+<br>
+<a href="#priestType">* 司祭</a>
+<br>
+<a href="#unitHelp">* ユニットの概要</a>
+<br>
+<a href="#vesselpriestHelp">* 司祭の建設能力</a>
+<br>
+<a href="#sacrificeOutline">* 捕獲と生け贄の手順</a>
+<p>
+
+<b>ゲームのサポート</b>
+<br>
+<a href="cmd:Tell,TechSupport">* カスタマーサービス / 技術サポート</a>
+<br>
+<a href="http://www.netstormhq.com">* Netstorm:HQのウェブサイト（更新とパッチ）</a>
+<br>
+<a href="http://te.netstormhq.com">* Ticonderoga Entertainmentのウェブサイト（最新パッチの制作元）</a>
+<p>
+<b>ゲーム情報</b>
+<br>
+<a href="http://www.activision.com">* Activisionのウェブサイト（NetStormの発売元、限定的なサポート）</a>
+<br>
+NetStormを開発したTitanicは、残念ながら今はもう存在しません。
+</a>
+
+<a name="interfaceHelp">
+<h2>NetStormのユーザーインターフェース</h2>
+<p>
+ユニットを<b><c>左クリック</c></b>すると選択します。
+<br>
+ウィンドウやユニットを<b><c>右クリック</c></b>するとコマンドメニューが開きます。
+<br>
+<b><c>ALTキーを押し続ける</c></b>と、カーソルの方向へ画面がスクロールします。全画面表示（またはデスクトップが640 x 480
+の場合のウィンドウ表示）では、カーソルを画面の端へ動かすだけでスクロールします。
+（注意: MicroSoftのIntellimouseTMでは、中央の「ホイール」ボタンを押し続けるとALTキーと同じ効果が
+あります。）
+<br>
+<b><c>Escape</c> は画面上部にオプションメニューを表示します。
+<p>
+<b><c>F1</c></c></b> 一般ヘルプ。
+<br>
+<b><c>F2</c></b> 建物を隠して、その後ろを見られるようにします。
+<br>
+<b><c>F3</c></b> <a href="#chatViewHelp">チャットウィンドウ</a>の表示を切り替えます。
+<br>
+<b><c>F4</c> または <c>H</c></b> 本島の神殿へ移動します。
+<br>
+<b><c>F5</c></b> 自分の司祭へ移動します。
+<br>
+<b><c>F6</c></b> 持っている知識を表示します。
+<br>
+<b><c>F7</c></b> 島の色を切り替えます。
+<br>
+<b><c>F8</c></b> ミッションの目標を再表示します。
+<br>
+<b><c>F9</c></b> 接続中の人を表示します（<a href="multiQuickHelp">マルチプレイヤー</a>）。
+<br>
+<b><c>Shift-F3</c></b> 島のテーマの表示を切り替えます。
+<br>
+<b><c>Shift-F7</c></b> スクリーンショットを保存します。
+<br>
+<b><c>Shift-F9</c> または <c>Pause</c> ボタン</b> ゲームを一時停止します。
+<br>
+<b><c>TAB</c></b> 最後に配置した五つのユニットを順に選択します。
+<br>
+<b><c>Ctrl-F5</c> または <c>N</c></b> 自分の全輸送ユニットを順に選択します。
+<br>
+<b><c>T</c></b> ゲームタイマーの表示を切り替えます。
+<br>
+<b><c>P</c> または <c>R</c></b> 司祭を選択します。二度押すと司祭へ移動して選択します。
+<br>
+<b><c>D</c></b> <a href="#teleportViewHelp">生産ウィンドウ</a>で最後に選んだユニットを持ち上げます。
+<br>
+<b><c>C</c></b> ユニットと橋の回転方向を切り替えます。
+<br>
+<b><c>U</c></b> 最後に失ったユニットの位置へ移動します。
+<br>
+<b><c>E</c></b> 使用可能な最後の橋スロットを選択します。
+<p>
+<b><c> Q  W</c></b>
+<br>
+<b><c> A  S</c></b>  これらのキーで橋の部品を直接カーソルに取れます。
+<br>
+<b><c>(Z  X)</c></b>    （ZとXは、橋の部品を六つ使えるゲームでのみ有効です。）
+<p>
+その他の機能: <c>Shift</c>キーを押しながら<c>0から9</c>の数字を押すと、画面の位置を記憶します。
+その位置へすぐ戻るには、数字キーだけを押してください。
+<p>
+注意: 上記の多くのショートカットは、<a href="#chatViewHelp">チャットウィンドウ</a>を隠している時に使えます。
+<p>
+参考として、ゲーム内でエネルギーを表す記号は次のとおりです。<br>
+<!"mana.8"> - ウィンド<br>
+<!"mana.9"> - レイン<br>
+<!"mana.10"> - サンダー<br>
+<!"mana.11"> - サン<br>
+<p>
+ウィンドウやユニットの役割を知りたい時は、右クリックしてメニューの「About」を選んでください。まだ遊び方を
+学んでいる途中なら、デモを見て<a href="#campaignHelp">初期ミッション</a>をプレイすることをお勧めします。
+<br>
+</a>
+
+<a name="chatViewHelp">
+<h2>チャットウィンドウ</h2>
+<p>
+<c>F3</c>でチャットウィンドウを表示すると、他のプレイヤーと会話できます。メッセージを入力して<b>ENTER</b>を押すと、
+相手のチャットウィンドウへ送信されます！
+<p>
+特定のプレイヤーの発言を見たくない場合は、その人の島やユニットを右クリックして、
+<c>Ignore Chat</c>を選びます。
+<p>
+通常、近くにいる全員があなたのチャットを見られます。相手の名前の後にコロン（:）を付けて入力すると、
+受信者を限定できます。また、<c>battle:</c>と入力すれば、あなたの
+<a href="#battleIslandType">チャレンジリング</a>の全員へ、<c>allies:</c>なら同盟だけへ送れます。
+観戦者の場合は<c>Observer:</c>と入力して、観戦者だけに送れます。
+<p>
+誰かが自分だけに、自分と他の人に、または複数の人にささやいているかを見分ける方法があります。
+チャット欄の名前の前のアイコンで、誰に話しているかが分かります。<br>
+複数の人へのささやきは ~[I93.113] です<br>
+一人へのささやきは ~[I93.111] です<br>
+観戦者へのささやきは ~[I93.112] です<br>
+戦闘全体へのささやきは ~[I93.109] です<br>
+同盟へのささやきは ~[I93.110] です
+<p>
+<c>TAB</c>キーで、入力済みの文字に最も近い名前を自動補完します。例えば、
+「OzTheGreatAndPowerful」に送りたい時、その長い名前をすべて入力する必要はありません！
+「oz」と入力して<c>TAB</c>を押すだけで、名前全体が自動的に現れます。
+<p>
+<a href="#formatCommandHelp">.formatコマンド</a>で色やスタイルを変えると、
+チャットメッセージを目立たせることができます。
+<p>
+その他のオプションは<a href="#chathelperHelp">チャットヘルパー</a>を参照してください。
+<p>
+<a href="#interfaceHelp">インターフェースの説明</a>もお読みください。
+<br>
+</a>
+
+<a name="moneyGumpHelp">
+<h2>ストームパワー残量ウィンドウ</h2>
+<p>
+<q>「ストームパワーこそ真髄！ 創造と破壊が一つになる！」 — 第十の円の教え</q>
+<p>
+この数字は、<a href="#unitHelp">ユニット</a>や建物の建設に使う<a href="#stormPowerHelp">ストームパワー</a>の残量です。
+<p>
+2000<!"fortgump.3">未満では黄色になります（例: <~y>1900<~.><!"fortgump.3">）。
+1000<!"fortgump.3">未満では赤色になります（例: <~r>850<~.><!"fortgump.3">）。
+<p>
+<!"fortgump.3">アイコンはストームパワーの量を示します。建設時に必要な量が赤く
+表示されている場合（例: 「キャノン <~r>1000<~.><!"fortgump.3">」）は、ストームパワーが足りず建設できません。
+<p>
+<a href="#teleportViewHelp">生産ウィンドウ</a>では、残量が足りないユニットを建てようとすると、そのユニットが点滅します。
+<p>
+<a href="#interfaceHelp">インターフェースの説明</a>もお読みください。
+<br>
+</a>
+
+<a name="bridgeType">
+<h2>橋</h2>
+<p>
+<q>「我々は平和を築くために橋を架けるのではない。」 — ヤン・マサリク将軍</q>
+<p>
+<a href="#pyrosphereHelp">パイロスフィア</a>（戦闘）では、自分の島の端から外へ橋を架けていきます。
+<p>
+神殿を建てると、画面左上の
+<a href="#teleportViewHelp">生産ウィンドウ</a>に橋の部品が現れます。
+部品は最初ひび割れていますが、数秒間ウィンドウに残しておくと、より丈夫になります。
+ひび割れた部品と丈夫な部品の使い方や微妙な違いは、
+それぞれを戦闘で使ううちに分かるでしょう。
+<p>
+<a href="#teleportViewHelp">生産ウィンドウ</a>から橋を選ぶ代わりに、Q、W、A、S、Z、X、Eキーを使えます。
+各キーは隣り合う橋の部品に対応します。Eキーでは使用可能な部品のいずれかを選べます。
+橋を90度回すには右クリックを、逆方向に回すにはCキーを押してください。
+その場所に置けない部品は赤くなります。
+<p>
+資源につなげたり、敵の島へ攻めたり、<a href="#unitHelp">ユニット</a>を配置する領域を作ったりするために橋を使いましょう。
+固定ユニットは橋の上へ直接置くのではなく、橋の<i>端</i>に置くことを覚えておいてください！
+<p>
+基本ルール: 島の<a href="#vortexHelp">神殿</a>から今置く橋まで、途切れずにつながっている必要があります。
+また、<a href="#edgeFarmType">エッジファーム</a>に遮られる場所では、橋を島につなげられません。
+<p>
+マルチプレイヤーでは、<a href="generatorHelp">ジェネレーター</a>を右クリックしてMeltdownを選び、爆発させることで、
+敵ユニットに少し損害を与えたり、橋に穴を開けたりできます。
+<br>
+</a>
+
+<a name="teleportViewHelp">
+<h2>生産ウィンドウ</h2>
+<p>
+生産ウィンドウで<a href="unitHelp">ユニット</a>を左クリックして持ち上げ、もう一度左クリックすると島や橋の端へ配置します。
+<p>
+建設に必要な<a href="#stormPowerHelp">ストームパワー</a>が足りないユニットは、このウィンドウで赤く表示されます。
+<p>
+<a href="#factoryHelp">ワークショップ</a>で生産に登録したか、<a href="#sacrificeOutline">生け贄の儀式</a>で得た
+<a href="#technologyHelp">知識</a>は、すべてここに現れます。
+<p>
+どのユニットでも右クリックすれば、その詳細を見ることができます。
+<p>
+<a href="#interfaceHelp">インターフェースの説明</a>もお読みください。
+<br>
+</a>
+
+<a name="minimapGumpHelp">
+<h2>空の全景</h2>
+<p>
+<a href="#pyrosphereHelp">パイロスフィア</a>では、全景ウィンドウに<a href="#bountyislandHelp">中立の島</a>と
+オンラインの対戦相手の島が表示されます。
+<p>
+島と<a href="#bridgeType">橋</a>は、それぞれの色で表示されます。
+間欠泉は茶色の点で目立つようになっています。
+<p>
+全景を左クリックすると、その場所を見ることができます。左ボタンを押したままドラッグして
+画面を動かすこともできます。戦闘中、戦略的な状況を一目で把握するのに便利です！
+<br>
+</a>
+
+<a name="formatCommandHelp">
+<h2>.Formatコマンド</h2>
+<p>
+チャット欄に.formatと入力して文章を続けると、その内容が以後のすべてのチャットメッセージの前に
+付きます。例えば、チャット欄に
+<br>
+.format ~~y~~E
+<br>
+と入力し、<b>ENTER</b>を押してください。以後のメッセージはすべて~y~E黄色のエンボス文字~N~.になります！ 小文字では
+他の色も使えます。
+<br>
+~b~~b  青~.
+<br>
+~l~~l  水色~.
+<br>
+~d~~d  青緑~.
+<br>
+~r~~r  赤~.
+<br>
+~g~~g  緑~.
+<br>
+~u~~u  明るい緑~.
+<br>
+~k~~k  黒~.
+<br>
+~m~~m  マゼンタ~.
+<br>
+~s~~s  暗いマゼンタ~.
+<br>
+~o~~o  オレンジ~.
+<br>
+~a~~a  明るいオレンジ~.
+<br>
+~x~~x  茶色~.
+<br>
+~q~~q  暗い黄褐色~.
+<br>
+~j~~j  明るい黄褐色~.
+<br>
+~p~~p  ピンク~.
+<br>
+~y~~y  黄色~.
+<br>
+~i~~i  明るい黄色~.
+<br>
+~t~~t  銀色~.
+<br>
+~~.  色を元に戻します。（波形記号とピリオドです）
+<p>
+大文字にも意味があります。例えば、
+<br>
+.format ~~E~~y
+<br>
+と入力すると、すべてのメッセージが~y~E黄色のエンボス文字~N~.になります。その他のスタイルは次のとおりです。
+<br>
+~I~~I  斜体にします。~N
+<br>
+~B~~B  太字にします。~N
+<br>
+~E~~E  文字全体をエンボス表示にします。~N
+<br>
+~S~~S  文字全体に取り消し線を引きます。~N
+<br>
+~U~~U  文字全体に下線を引きます。~N
+<br>
+~~N  文字全体を通常の表示に戻します。
+<p>
+その他の色やコマンドコードは<a href="#chathelperHelp">チャットヘルパー</a>で確認できます。書式についての
+詳しいヘルプは<a href="http://www.netstormhq.com">Netstorm:HQ</a>をご覧ください。
+<p>
+注意: <c>.format</c>の代わりに<c>.back</c>を使っても同じ動作になります。名前の前に付く内容を変えるには、
+<c>.format</c>と同じように<c>.front</c>を使ってください。
+<br>
+</a>
+
+<a name="chathelperHelp">
+<h2>チャットヘルパー</h2>
+<p>
+<h3>チャットヘルパーとは？</h3>
+<a href="#chatViewHelp">チャットウィンドウ</a>の左にある小さなボタンです。押すと、表示する内容を選んだり、
+自分の文章に効果を付けたりする機能やオプションのメニューが開きます。
+<p>
+<h3>書式（Format）</h3>
+書式メニューには<c>Edit Back Format</c>と<c>Edit Front Format</c>があります。<c>Edit Back Format</c>は、
+チャット欄で名前の前に表示する文章やコードの入力欄を開きます。<c>Edit Front Format</c>も入力欄を
+開きますが、こちらでは<a href="#chatViewHelp">チャットウィンドウ</a>の名前のさらに前に表示する内容を指定します。<br>
+<br>
+.back、.format、.frontコマンドを使う別の方法です。
+<p>
+<h3>チャット効果（Chat Effects）</h3>
+他のユーザーからコードを含む文章を受け取った時に、表示する効果や音を再生するかどうかを
+設定します。四つのオプションがあります。
+<p>
+<c>Allow Chat Sound:</c> オフにすると、他のユーザーが送った音を再生しません。
+<p>
+<c>Allow Background Colors:</c> オフにすると、受信した背景色を表示しません。~E~[B.3]このような文字です。
+<p>
+<c>Allow Foreground Colors:</c> オフにすると、~~[C.xxx]コードによる前景色を表示しません。~[C.52]このような~[C.156]文字が
+~[C.223]一例です~.。ただし、~y~~y~.や~r~~r~.のような通常の色は残ります。
+<p>
+<c>Allow Embossed Offset:</c> オフにすると、位置を調整したエンボス効果（~~[E.X#xY#]コマンド）を表示しません。
+<p>
+<h3>チャット制御（Chat Controls）</h3>
+ゲーム中のみ使えます。受信するチャンネルや、新しいメッセージを受け取った時の動作を設定します。
+<p>
+<h3>チャンネル制御（Channel Controls）</h3>
+<c>Show General Channel:</c> オフにすると、全員宛ての文章を受信しません。
+<p>
+<c>Show Allies Channel:</c> オフにすると、<c>ALLIES:</c>チャンネルの文章を受信しません。
+<p>
+<c>Show Observer Channel:</c> オフにすると、<c>OBSERVER:</c>チャンネルの文章を受信しません。
+<p>
+<c>Show Whisper Channel:</c> オフにすると、自分宛てのささやきを受信しません。
+<p>
+<h3>プレイヤー制御（Player Controls）</h3>
+<c>Show Allies Chat:</c> オフにすると、ゲーム中の同盟の文章を受信しません。
+<p>
+<c>Show Enemies Chat:</c> オフにすると、ゲーム中の敵の文章を受信しません。
+<p>
+<c>Show Observers Chat:</c> オフにすると、ゲーム中の観戦者の文章を受信しません。
+<p>
+<h3>その他の制御（Other Controls）</h3>
+<c>Open Window on Message:</c> オフにすると、受信時にチャットウィンドウを開きません。
+<p>
+<c>Play sound on Message:</c> オフにすると、受信時に音を再生しません。
+<p>
+<h3>挿入（Insert）</h3>
+文章の色や効果を変えるコードを、チャット欄へ挿入できます。使い方は
+<a href="#formatCommandHelp">.formatの項目</a>をご覧ください。メニューは次のとおりです。
+<p>
+<c>Text Colors:</c> 使用可能な255色から選んで挿入します。
+<p>
+<c>Background Colors:</c> エンボス文字（~~Eコマンド）と共に使う背景色を挿入します。
+<p>
+<c>Icons:</c> 数百種類のアイコンから選んで挿入します。
+<p>
+<c>Keywords:</c> 使用可能なコマンド書式を示します: 「Mimicing」「Sounds」「Icons」「Emboss Offset」
+（~~Eコマンドのエンボス文字と共に使う場合の背景色の位置）。
+<p>
+<c>Styles:</c> 色ではなく文字の形を変える書式コードを示します。
+<p>
+<c>Prefabricated Colors:</c> NetStormの基本色の一覧です。「Allow Foreground Colors」を
+オフにしても有効です。これらの色には、~y~~y~.や~b~~b~.のような簡単なコードがあります。
+<p>
+<c>Commands:</c> チャット欄の名前の前後に表示する内容を変えるコマンドを示します。
+<p>
+<h3>コピー（Copy）</h3>
+<a href="#chatViewHelp">チャットウィンドウ</a>の一番下に入力した文章をクリップボードにコピーします。選択範囲が
+なければ全文を、範囲を選択していればその部分だけをコピーします。
+<p>
+<h3>貼り付け（Paste）</h3>
+コピーした文章を<a href="#chatViewHelp">チャットウィンドウ</a>の入力行のカーソル位置へ貼り付けます。
+<p>
+注意: 書式の詳しいヘルプは<a href="http://www.netstormhq.com">Netstorm:HQ</a>をご覧ください。
+</a>
+
+<a name="tacticHelp">
+
+<a name="tacticsHelp">
+<h2>NetStormの戦術</h2>
+ユニットが戦闘でどう戦うかを理解することは重要です。戦略は、これらの事実に基づきます。
+<p>
+<a href="unitHelp">ユニット</a>は常に最も近い攻撃可能な目標を選び、破壊するまで
+攻撃を続けます。タワーなどの防御ユニットを間に置けば、新しい目標を選ばせることができます。
+最も近い目標は、<i>攻撃者の攻撃が効かなくても</i>選ばれます！
+<p>
+ユニットが爆発すると、近くのひび割れた橋も崩れます。すぐ隣の通常の橋にはひびが入り、
+または端が欠けた状態になります。
+<p>
+射撃ユニットの爆発は、近くの他の全ユニットにも損害を与えます！ 連鎖爆発が起きることもあります。
+神殿も同じように爆発します。
+<p>
+<a href="salvageHelp">回収（Salvage）</a>すれば爆発は起きませんが、橋はユニットが爆発した時と
+同じ影響を受けます。
+<p>
+ユニットは1）本島、2）本島と橋でつながる無所属の島、3）自分の橋から伸びる場所なら、
+どこでも建設できます。
+<p>
+敵を破壊すると、そのストームパワー価値の25%を得ます。ワーリギグとマンオブウォーは個々の建設に追加費用がかからないため、
+破壊しても戻りはありません。基地だけがストームパワーをもたらします。
+<p>
+狙うべき場所は、敵が<i>地面</i>に接する部分です。
+上の部分に当てていても、実際には攻撃できていません。
+</a>
+</a>
+
+<a name="salvageHelp">
+<h2>回収（Salvage）</h2>
+<p>
+ユニットを回収すると、建設に使ったストームパワーの25%を取り戻せます。
+<p>
+<a href="unitHelp">ユニット</a>が損害を受けている場合、戻る量は減ります。例えば、
+400<!"fortgump.3">で建てたユニットは100<!"fortgump.3">で回収できます。しかし体力の3分の1を
+失っていると、得られるのは66<!"fortgump.3">だけです。
+<p>
+最後に、体力の半分を超える損害を受けていると、ストームパワーはまったく戻りません。
+<p>
+注意: 橋の隣のユニットを回収すると、丈夫な橋にはひびが入り、ひび割れた橋は崩れます。
+</a>
+
+<a name="statsHelp">
+<h2>ユニット情報</h2>
+<p>
+<b><c>系統:</c></b> すべての<a href="unitHelp">ユニット</a>は、いずれかの<a href="#themeHelp">フューリー</a>かサンに属します。
+系統によって、どのフューリーから<a href="#technologyHelp">知識</a>を授かるか、
+どの<a href="#factoryHelp">ワークショップ</a>で生産できるか、
+建設にどの種類の<a href="#influenceHelp">エネルギー</a>が必要かが決まります。
+<p>
+<b><c>分類:</c></b> ユニットの役割や使い方を示します。分類の一覧は、このページの下にあります。
+<p>
+<b><c>体力:</c></b> 破壊されるまでに耐えられる損害の量です。
+<p>
+<b><c>射程:</c></b> 射撃や効果が何「マス」先まで届くかを示す数値です。
+参考として、サンディスクスロワーは3x3マスで、画面の高さは40マスです。
+<p>
+<b><c>ダメージ:</c></b> 平均で毎秒与える損害を示します。一発ごとの値ではなく、
+時間あたりの効率を示す絶対的な尺度であることを覚えておいてください。
+<p>
+<b><c>ストームパワー費用:</c></b> 建設に消費するストームパワーの量です。
+<p>
+<b><c>必要エネルギー:</c></b> 建設に必要な<a href="#influenceHelp">エネルギー</a>の量と、
+正確にどの種類のエネルギーが必要かを示します。
+<p>
+<a href="salvageHelp">回収（Salvage）</a>すれば、ストームパワーの一部を取り戻せます。
+<p>
+<b><c>分類一覧:</c></b>
+<p>
+<c>生産:</c><br>
+   <a href="#windVortexType">ウィンドテンプル</a><br>
+   <a href="#rainVortexType">レインテンプル</a><br>
+   <a href="#thunderVortexType">サンダーテンプル</a><br>
+   <a href="#sunFactoryType">サンワークショップ</a><br>
+   <a href="#windFactoryType">ウィンドワークショップ</a><br>
+   <a href="#rainFactoryType">レインワークショップ</a><br>
+   <a href="#thunderFactoryType">サンダーワークショップ</a><br>
+   <a href="#outpostType">前哨基地</a><br>
+<c>聖地:</c><br>
+   <a href="#altarType">祭壇</a><br>
+<c>司祭:</c><br>
+   <a href="#priestType">司祭</a><br>
+<c>エネルギー供給源:</c><br>
+   <a href="#windbatteryType">ウィンドジェネレーター</a><br>
+   <a href="#rainbatteryType">レインジェネレーター</a><br>
+   <a href="#thunderbatteryType">サンダージェネレーター</a><br>
+<c>ストームパワー供給源:</c><br>
+   <a href="#geyserType">ストーム間欠泉</a><br>
+   <a href="#nuggetType">ストームクリスタル</a><br>
+<c>橋:</c><br>
+   <a href="#bridgeType">橋</a><br>
+<c>射撃:</c><br>
+   <a href="#suncannonType">サンキャノン</a><br>
+   <a href="#raincannonType">アイスキャノン</a><br>
+   <a href="#thundercannonType">サンダーキャノン</a><br>
+   <a href="#sunarcherType">サンディスクスロワー</a><br>
+   <a href="#windarcherType">クロスボウ</a><br>
+   <a href="#thunderarcherType">ヴァンダータワー</a><br>
+<c>航空攻撃:</c><br>
+   <a href="#sunflyerType">ワーリギグ</a><br>
+   <a href="#windflyerType">ダストデビル</a><br>
+   <a href="#rainflyerType">マンオブウォー</a><br>
+<c>航空攻撃基地:</c><br>
+   <a href="#sunaviaryType">ワーリベース</a><br>
+   <a href="#windaviaryType">デビルメーカー</a><br>
+   <a href="#rainaviaryType">マンオブウォープール</a><br>
+<c>防御:</c><br>
+   <a href="#sunblockerType">ストーンタワー</a><br>
+   <a href="#windblockerType">ウィンドタワー</a><br>
+   <a href="#rainblockerType">アイスタワー</a><br>
+   <a href="#thunderblockerType">ブルワーク</a><br>
+   <a href="#sunfenceType">サンバリケード</a><br>
+   <a href="#rainfenceType">アシッドバリケード</a><br>
+   <a href="#thunderfenceType">アークスパイア</a><br>
+   <a href="#edgefarmType">エッジファーム</a><br>
+<c>地上輸送:</c><br>
+   <a href="#sunwalkerType">ゴーレム</a><br>
+   <a href="#windwalkerType">セイルスケーター</a><br>
+   <a href="#rainwalkerType">クリスタルクラブ</a><br>
+   <a href="#bulfType">ブルフ</a><br>
+<c>航空輸送:</c><br>
+   <a href="#sunballoonType">バルーン</a><br>
+   <a href="#windballoonType">飛行船</a><br>
+   <a href="#rainballoonType">クラウドフローター</a><br>
+<c>攻撃呪文:</c><br>
+   <a href="#bombExplodeSmallType">ポイントブラスト</a><br>
+   <a href="#bombExplodeMediumType">デバステーション</a><br>
+   <a href="#bombExplodeLargeType">デシメーション</a><br>
+   <a href="#bombTreasonType">トリーズン</a><br>
+   <a href="#bombMeteorType">ボンバードメント</a><br>
+   <a href="#bombGravitonType">グラビトン</a><br>
+   <a href="#bombLightingwaveType">サンダーストーム</a><br>
+   <a href="#bombLightingZapType">サンダーストライク</a><br>
+<c>防御呪文:</c><br>
+   <a href="#bombHardenerType">ブリッジハーデン</a><br>
+   <a href="#bombHealType">ヒール</a><br>
+   <a href="#bombInvisibleType">インビジビリティ</a><br>
+   <a href="#bombParalyzeType">パラリシス</a><br>
+<c>召喚呪文:</c><br>
+   <a href="#bombTwisterType">ワールウィンド</a><br>
+   <a href="#bombIITwisterType">ツイスター</a><br>
+   <a href="#bombIIITwisterType">ボルテックス</a><br>
+   <a href="#bombIManoType">ハイドラ</a><br>
+   <a href="#bombIIManoType">ハイドラウェーブ</a><br>
+   <a href="#bombIIIManoType">ハイドラフラッド</a><br>
+<c>居住区:</c><br>
+   <a href="#residenceType">居住区</a><br>
+<br>
+</a>
+
+<a name="daisType">
+
+<a name="runeType">
+
+<a name="altarType">
+<info>
+<q>「それはあらゆる栄光の中で最も偉大な栄光へ、<br>
+そしてあらゆる忘却の中で最も深い忘却へと開く窓である。」 — アスケルド・ウルボヌス、ニンバスの大司祭</q>
+<p>
+祭壇を使い、捕らえた<a href="#priestType>司祭</a>を<a href="#themeHelp">フューリー</a>への<a href="#sacrificeOutline">生け贄に捧げてください</a>。
+<p>
+司祭は祭壇を建てられます。祭壇にはサン、ウィンド、レイン、サンダー、ストームの五つのルーンがあり、儀式を終えるには、
+すべてを満たす必要があります。一つ満ちるたびに支えの橋が中央から引き、
+五つすべてがなくなると、敵の司祭は深淵に落ちます。
+<p>
+<a href="#campaignHelp">キャンペーン</a>では、敵の司祭を全員生け贄にすると、
+通常はミッションが成功します。
+<p>
+<a href="multiplayerHelp">マルチプレイヤー</a>では、生け贄の意味が少し異なります。フューリーから知識を得るために
+捧げます。上位のユニットを得るには、生け贄によって祭壇をアップグレードする必要があります。
+アップグレードされた祭壇（レベル2とレベル3）は、ゲーム終了後も自分の島に残ります。
+（本島以外の祭壇はアップグレードできないことに注意してください。）
+祭壇のレベルは、フューリーから得たいユニットのレベルと同じである必要があります。
+すべてのユニットとレベルを示す<a href="unitHelp">一覧</a>があります。
+<p>
+注意: 祭壇が破壊されると、捕らえられていた司祭は解放されます。
+<p>
+<a href="#sacrificeOutline">司祭を捕らえて生け贄にする手順</a>を見るには、ここを押してください。
+</a>
+</a>
+</a>
+
+<a name="priestType">
+<info>
+<q>「お前たちの誰がフューリーと対するのか？<br>
+誰が神聖と恐怖を知るのか？<br>
+そして誰が滅びるのか？」 — ニンバスの書</q>
+<p>
+自分の司祭は、<a href="#themeHelp">フューリー</a>からの知識と力を収める究極の器です。
+特別な建物や祭壇を建て、他の司祭をフューリーに捧げる儀式を行えます。
+<p>
+司祭を破壊できるのは祭壇の上だけです。戦闘ユニットでは殺せず、動けなくするだけです。
+また、<a href="#vortexHelp">神殿</a>があれば、戦闘中も傷は徐々に回復します。
+<p>
+司祭は「Pray」で<a href="#bombExplodeMediumType">デバステーションの呪文</a>を得ることもでき、
+100<!"fortgump.3">で使用できます。
+司祭を右クリックし、「Pray」を選んでみてください。（マルチプレイヤー専用）
+<p>
+司祭を見るには<c>F5</c>を押します。選択するには、
+<c>P</c>または<c>R</c>を一度、見ると同時に選択するには二度押してください。
+<p>
+<a href="#vesselPriestHelp">司祭の建設能力</a><br>
+<a href="#sacrificeOutline">司祭を生け贄にし、新しい知識を得る</a><br>
+</a>
+
+<a name="vesselPriestHelp">
+<h2>司祭の建設能力</h2>
+<p>
+司祭は、最初の島を含む大きな島のどこにでも、<a href="#vortexHelp">神殿</a>、<a href="#factoryHelp">ワークショップ</a>、
+<a href="#altarType">祭壇</a>、そして<a href="#multiplayerHelp">マルチプレイヤー</a>では<a href="#outpostType">前哨基地</a>を建設できます。
+司祭を右クリックし、目的の項目を選んでください。建物がカーソルに付き、配置できる状態になります。（司祭が建設場所まで
+歩ける必要があります。）配置すると、司祭がそこへ歩いて建設を始めます。
+<p>
+<a href="#immobileHelp">動けない</a>間は、建設できません。
+<p>
+<a href="#sunWalkerType">ゴーレム</a>と同様に、司祭も<a href="#transportHelp">輸送ユニット</a>として働きます。
+<a href="#buriedType">呪文</a>を得て使ったり、<a href="#nuggetType">ストームクリスタル</a>を運んだりできます。
+足元の<a href="#bridgeType">橋</a>が危険になると、安全な場所へ移動しようとします。
+<p>
+<a href="#sacrificeOutline">司祭を生け贄にして新しい知識を得る手順</a>について詳しく見る<br>
+</a>
+
+<a name="themeHelp">
+<h2>ニンバスの三柱のフューリー</h2>
+<p>
+ニンバスの中心では、絶えず嵐が吹き荒れています。そこでウィンド、レイン、サンダーの三柱のフューリーが、
+<a href="#sphereHelp">世界</a>の支配を巡って果てしなく争います。
+<p>
+その争いが、隠れた惑星の巨大な大地を空へ引き裂きます。こうして生まれた島に、あなたの民であるニンバス人は暮らしています。
+<p>
+死と破壊はフューリーを喜ばせます。そのため、敵の<a href="#unitHelp">ユニット</a>を破壊すると、ストームパワー価値の
+4分の1を得ます。ただし、個々の航空攻撃ユニットは作るのにストームパワーを使わないため例外です。
+<p>
+フューリーがさらに喜ぶのは、<a href="#sacrificeOutline">司祭を生け贄に捧げること</a>です。その贈り物を受けると、
+戦闘の<a href="#technologyHelp">知識</a>を授けてくれます。
+<p>
+各フューリーには、自分の<a href="#influenceHelp">エネルギー</a>を表す記号があります。<br>
+<!"mana.8"> - ウィンド<br>
+<!"mana.9"> - レイン<br>
+<!"mana.10"> - サンダー<br>
+<p>
+「サン」という共通知識もあり、<!"mana.11">で表されます。<a href="#unitHelp">サンのユニット</a>はどの種類の
+<a href="#influenceHelp">エネルギー</a>でも使えますが、比較的弱いものです。
+<p>
+サンを超える知識として、各フューリーは専門知識を授けます。通常は、そのフューリーのエネルギーを必要とします。
+<p>
+ウィンドのフューリーに属するものは、次のとおりです。<br>
+<p>
+1<!"windVortex.*">  2<!"windfactory.*">  3<!"windbattery.*"><br>
+<p>
+1）ウィンドを崇める<a href="#windVortexType">神殿</a>。<br>
+2）ウィンドのユニットを生産する<a href="#windFactoryType">ワークショップ</a>。<br>
+3）ウィンドのエネルギーを生む<a href="#windBatteryType">ウィンドジェネレーター</a>。<br>
+4）<a href="#unitHelp">ウィンドのユニット</a>全般。<br>
+<p>
+レインのフューリーに属するものは、次のとおりです。<br>
+<p>
+1<!"RainVortex.*">  2<!"Rainfactory.*">  3<!"Rainbattery.*"><br>
+<p>
+1）レインを崇める<a href="#RainVortexType">神殿</a>。<br>
+2）レインのユニットを生産する<a href="#RainFactoryType">ワークショップ</a>。<br>
+3）レインのエネルギーを生む<a href="#RainBatteryType">レインジェネレーター</a>。<br>
+4）<a href="#unitHelp">レインのユニット</a>全般。<br>
+<p>
+サンダーのフューリーに属するものは、次のとおりです。<br>
+<p>
+1<!"ThunderVortex.*">  2<!"Thunderfactory.*">  3<!"Thunderbattery.*"><br>
+<p>
+1）サンダーを崇める<a href="#ThunderVortexType">神殿</a>。<br>
+2）サンダーのユニットを生産する<a href="#ThunderFactoryType">ワークショップ</a>。<br>
+3）サンダーのエネルギーを生む<a href="#ThunderBatteryType">サンダージェネレーター</a>。<br>
+4）<a href="#unitHelp">サンダーのユニット</a>全般。<br>
+<p>
+サンは特定のフューリーには属さず、すべてのフューリーから与えられます。そのため、次のものがあります。<br>
+1<!"sunFactory.*"><br>
+<p>
+1）系統を持たないサンのユニットを生産する<a href="#SunFactoryType">ワークショップ</a>。<br>
+2）<a href="#unitHelp">サンのユニット</a>全般。<br>
+<p>
+<a href="#sacrificeOutline">司祭を生け贄にして新しい知識を得る手順</a>について詳しく見る...
+<br>
+</a>
+
+<a name="unitHelp">
+<h2>戦闘ユニット</h2>
+戦闘ユニットにはサン、ウィンド、レイン、サンダーの四種類があります。必要なら<a href="salvageHelp">回収（Salvage）</a>できます。
+攻撃に使う基本的な<a href="tacticsHelp">戦術</a>があります。
+
+<p>
+<h2>サンのユニット</h2>
+レベル1<br>
+<a href="#sunWalkerType">* ゴーレム</a>  /  地上輸送<br>
+<a href="#sunArcherType">* サンディスクスロワー</a>  /  射撃<br>
+<a href="#sunCannonType">* サンキャノン</a>  /  射撃<br>
+<a href="#sunBlockerType">* ストーンタワー</a>  /  防御<br>
+<a href="#sunFenceType">* サンバリケード</a>  /  防御<br>
+レベル2<br>
+<a href="#sunFlyerType">* ワーリギグ</a>  /  航空攻撃<br>
+<a href="#sunAviaryType">* ワーリベース</a>  /  航空攻撃基地<br>
+<a href="#sunBalloonType">* バルーン</a>  /  航空輸送<br>
+<p>
+<h2>ウィンドのユニット</h2>
+レベル1<br>
+<a href="#windBatteryType">* ウィンドジェネレーター</a>  /  エネルギー供給源<br>
+レベル2<br>
+<a href="#windWalkerType">* セイルスケーター</a>  /  地上輸送<br>
+<a href="#windArcherType">* クロスボウ</a>  /  射撃<br>
+<a href="#windBlocker">* ウィンドタワー</a>  /  防御<br>
+レベル3<br>
+<a href="#windFlyerType">* ダストデビル</a>  /  航空攻撃<br>
+<a href="#windAviaryType">* デビルメーカー</a>  /  航空攻撃基地<br>
+<a href="#windBalloonType">* 飛行船</a>  /  航空輸送<br>
+
+<p>
+<h2>レインのユニット</h2>
+レベル1<br>
+<a href="#rainBatteryType">* レインジェネレーター</a>  /  エネルギー供給源<br>
+<a href="#rainWalkerType">* クリスタルクラブ</a>  /  地上輸送<br>
+レベル2<br>
+<a href="#rainCannonType">* アイスキャノン</a>  /  射撃<br>
+<a href="#rainBlockerType">* アイスタワー</a>  /  防御<br>
+<a href="#rainFenceType">* アシッドバリケード</a>  /  防御<br>
+レベル3<br>
+<a href="#rainFlyerType">* マンオブウォー</a>  /  航空攻撃<br>
+<a href="#rainAviaryType">* マンオブウォープール</a>  /  航空攻撃基地<br>
+<a href="#rainBalloonType">* クラウドフローター</a>  /  航空輸送<br>
+
+<p>
+<h2>サンダーのユニット</h2>
+レベル1<br>
+<a href="#thunderBatteryType">* サンダージェネレーター</a>  /  エネルギー供給源<br>
+<a href="#bulfType">* ブルフ</a>  /  地上輸送<br>
+<a href="#thunderFence">* アークスパイア</a>  /  防御<br>
+レベル2<br>
+<a href="#thunderCannonType">* サンダーキャノン</a>  /  射撃<br>
+<a href="#thunderBlockerType">* ブルワーク</a>  /  防御<br>
+レベル3<br>
+<a href="#thunderArcher">* ヴァンダータワー</a>  /  射撃<br>
+<p>
+<a href="#statsHelp">ユニット情報の読み方。</a><br>
+<a href="#themeHelp">その他のユニットと系統。</a>
+<br>
+</a>
+
+<a name="rainVortexType">
+
+<a name="windVortexType">
+
+<a name="thunderVortexType">
+
+<a name="vortexHelp">
+<info>
+<q>聖職者の血は運命の霊薬である。</q>
+<p>
+<a href="#rainVortexType">レインテンプル</a><br>
+<a href="#windVortexType">ウィンドテンプル</a><br>
+<a href="#thunderVortexType">サンダーテンプル</a><br>
+<p>
+神殿は、各島の<a href="#influenceHelp">エネルギー</a>の究極の中心です。
+上に挙げた三つの形のいずれかを取ります。
+<p>
+神殿がある限り、自分の<a href="#priestType">司祭</a>は戦闘中も体力を回復します。また、次の利点があります。
+<p>
+1. 神殿がある島から外へ<a href="#bridgeType">橋</a>を架けられます。
+<br>
+2. 島を敵の建設から守ります。敵はそこへ何も建てられません。
+<br>
+3. 輸送ユニットが<a href="#nuggetType">ストームクリスタル</a>を運び込むと、<a href="#stormpowerHelp">ストームパワー</a>に変わります。
+<br>
+4. 建てた神殿の系統を反映するよう、島の姿が変わります。
+<p>
+これらの利点は、<a href="multiplayerHelp">マルチプレイヤー</a>の重要なユニットである<a href="outpostType">前哨基地</a>と
+ほぼ同じです。
+<p>
+ゲーム中に<c>F4</c>を押すと神殿へ移動します。
+<p>
+神殿の使い方を見る:<br>
+<a href="#spVortexHelp">ストームパワーを得る</a><br>
+<a href="#golemVortexHelp">ゴーレムを作る</a><br>
+<a href="#influenceVortexHelp">エネルギーの生成</a><br>
+</a>
+</a>
+</a>
+</a>
+
+<a name="spVortexHelp">
+<h2>神殿:<br>ストームパワーを得る</h2>
+<p>
+神殿は、戦闘中に<a href="#moneyHelp">ストームパワー</a>を利用可能な資源へと変えます。
+神殿がなければ、ストームパワーを集めたり処理したりできません。
+<p>
+<a href="#geyserType">ストーム間欠泉</a>から、<a href="#nuggetType">ストームクリスタル</a>の
+形で集めます。
+<p>
+<a href="#golemVortexHelp">ゴーレムの作り方</a>について詳しく見る...<br>
+<br>
+</a>
+
+<a name="golemVortexHelp">
+<h2>神殿:<br>ゴーレムを作る</h2>
+<p>
+神殿では、新しい島で<a href="#transportHelp">輸送ユニット</a>として働く<a href="#sunWalkerType">ゴーレム</a>を
+作れます。
+<p>
+<a href="#pyrosphereHelp">パイロスフィア</a>に降りて戦闘を始めると、<a href="#teleportViewHelp">生産ウィンドウ</a>に
+ゴーレムが現れます。<a href="#moneyHelp">ストームパワー</a>が十分なら、いくらでも作れます。
+<p>
+神殿が<a href="#influenceVortexHelp">エネルギーを生成する</a>方法について詳しく見る...<br>
+<br>
+</a>
+
+<a name="influenceVortexHelp">
+<h2>神殿:<br>エネルギーの生成</h2>
+<p>
+ニンバスで何かを建てるには、十分な<a href="#influenceHelp">エネルギー</a>が必要です。
+神殿は、そのエネルギーを供給する二種類の施設の一つです。本島でゴーレム、ワークショップ、
+戦闘<a href="#unitHelp">ユニット</a>などを建設するためのエネルギーを供給します。
+<p>
+神殿を左クリックすると、エネルギーの届く範囲を見ることができます。
+<p>
+<a href="#vortexHelp">神殿のヘルプに戻る。</a>
+</a>
+
+<a name="serverHelp">
+<h2>NetStorm Servers</h2>
+<p>
+
+[[ DO NOT TRANSLATE YET ]]
+
+Here is what a NetStorm server is:
+
+Here is how a local server works:
+
+Here is how an internet server works:
+
+If you have trouble use the troubleshooting guide.
+
+</a>
+
+[[CONTINUE TRANSLATING HERE.]]
+
+<a name="edgeFarmType">
+<info>
+<q>「他の文化では、耕すことはこれほど危険ではない。」 — パーヴェル・ミリュコフ、ニンバスの農夫</q>
+<p>
+エッジファームが育つ場所には<a href="#bridgeType">橋</a>をつなげられないため、
+敵が上陸する試みを阻みます。ただし、自分の島から
+外へ橋を伸ばすことも妨げられる場合があります。
+<p>
+<a href="#vortexHelp">神殿</a>を建てると、その系統がエッジファームにも広がります。
+<p>
+住民は島の端に沿って食料を育て、内側の土地を開発のために空けています。
+<br>
+</a>
+
+<a name="obeliskType">
+
+<a name="buriedType">
+
+<a name="bombHelp">
+<h2>呪文</h2>
+<p>
+<q>「殺戮に少しばかりの風味を添えてくれる。」 — オルトル・ハマーショルド、ニンバスの戦場料理人。</q>
+<p>
+輸送ユニットは、世界に特別な効果を起こす呪文を得て使えます。
+<p>
+呪文はオベリスクの形で現れます。輸送ユニットを左クリックし、オベリスクにカーソルを合わせてください。
+手の形のカーソルになったら再び左クリックすると、そこへ移動して呪文を得ます。
+一つの輸送ユニットは一つの呪文を持てます。呪文のアイコンがユニットに重ねて表示されます。
+<p>
+一度得た呪文は、ストームパワーが十分なら回数制限なく使えます。
+ユニットが破壊されるか、別の呪文を得て置き換わるまで保持します。
+輸送ユニットを左クリックすると呪文の範囲を表示し、右クリックすると呪文を使います。
+<p>
+呪文を使うと、発動するまで輸送ユニットはその場に止まります。数秒かかります。
+<p>
+呪文は、キャンペーンよりも<a href="#multiplayerHelp">マルチプレイヤー</a>で多く見られます。
+<p>
+呪文は使用者自身には影響しません。
+<p>
+呪文の種類:<br>
+<!"bombExplodeSmall.1"><a href="#bombExplodeSmallType">ポイントブラスト</a><br>
+<!"bombExplodeMedium.1"><a href="#bombExplodeMediumType">デバステーション</a><br>
+<!"bombExplodeLarge.1"><a href="#bombExplodeLargeType">デシメーション</a><br>
+<!"bombHardener.1"><a href="#bombHardenerType">ブリッジハーデン</a><br>
+<!"bombHeal.1"><a href="#bombHealType">ヒール</a><br>
+<!"bombInvisible.1"><a href="#bombInvisibleType">インビジビリティ</a><br>
+<!"bombParalyze.1"><a href="#bombParalyzeType">パラリシス</a><br>
+<!"bombTreason.1"><a href="#bombTreasonType">トリーズン</a><br>
+<!"bombMeteor.1"><a href="#bombMeteorType">ボンバードメント</a><br>
+<!"bombGraviton.1"><a href="#bombGravitonType">グラビトン</a><br>
+<!"bombLightingwave.1"><a href="#bombLightingwaveType">サンダーストーム</a><br>
+<!"bombLightingZap.1"><a href="#bombLightingZapType">サンダーストライク</a><br>
+<!"bombTwister.1"><a href="#bombTwisterType">ワールウィンド</a><br>
+<!"bombIITwister.1"><a href="#bombIITwisterType">ツイスター</a><br>
+<!"bombIIITwister.1"><a href="#bombIIITwisterType">ボルテックス</a><br>
+<!"bombIMano.1"><a href="#bombIManoType">ハイドラ</a><br>
+<!"bombIIMano.1"><a href="#bombIIManoType">ハイドラウェーブ</a><br>
+<!"bombIIIMano.1"><a href="#bombIIIManoType">ハイドラフラッド</a><br>
+
+<br>
+</a>
+</a>
+</a>
+
+<a name="bombLightingZapType">
+<info>
+<q>「ニンバスの空が陰鬱な闇に染まり、全身の毛が逆立ち始める。一瞬、ほろ苦くも甘い
+静けさが訪れる…そして、サンダーキャノン千門にも勝る骨を砕くような
+轟音が響き、空から降り注ぐ稲妻が行く手のすべてに破滅をもたらす…」 — ニンバスの艦隊提督</q>
+<p>
+<!"bombLightingZap.1">
+<Br>
+範囲内のすべてに、無作為な量の損害を与える<a href="#buriedType">呪文</a>です。<br>
+</a>
+
+<a name="bombLightingwaveType">
+<info>
+<q>「心清らかな者のため、サンダーのフューリーが鍛え上げた。<br>
+稲妻を呼び、標的に届ける力が来る。<br>
+雲の中が灰色に染まると、多くは逃げ、さらに多くは隠れるだろう。<br>
+だが電流がその体を満たし、やがて死んで倒れる。」 — カンタータ、第三サンダーコアの第4番</q>
+<p>
+<!"bombLightingwave.1>
+<Br>
+範囲内の破壊可能なものをすべて破壊する<a href="#buriedType">呪文</a>です。<br>
+</a>
+
+<a name="bombTwisterType">
+<info>
+<q>「空から落ちた悪魔は、気が済むまで破壊を続ける。」 — ディーコン、神聖委員会</q>
+<p>
+<!"bombTwister.1">
+<Br>
+二体の<a href="#windFlyerType">ダストデビル</a>を呼び、敵を攻撃させる<a href="#buriedType">呪文</a>です。<br>
+</a>
+
+<a name="bombIITwisterType">
+<info>
+<q>「稲妻と雷鳴が轟く大地から<br>
+死の風が吹き上がり、<br>
+それが静まり、静寂が戻った時、<br>
+無傷で残ったものはなかった。」 — DWMI、ニンバスの詩人</q>
+<p>
+<!"bombIITwister.1">
+<Br>
+四体の<a href="#windFlyerType">ダストデビル</a>を呼び、敵を攻撃させる<a href="#buriedType">呪文</a>です。<br>
+</a>
+
+<a name="bombIIITwisterType">
+<info>
+<q>「痛いのは風ではありませんよ…飛んでくる橋に当たったことはありますか？ — ペイパース、ニンバスの安全検査官」</q>
+<p>
+<!"bombIIITwister.1">
+<Br>
+六体の<a href="#windFlyerType">ダストデビル</a>を呼び、敵を攻撃させる<a href="#buriedType">呪文</a>です。<br>
+</a>
+
+<a name="bombIManoType">
+<info>
+<q>「心の毒を洗い流すには、自分自身の恐れという形にして表す必要があることも多い。」
+— ドウィア卿、XIIIBYの大司祭</q>
+<p>
+<!"bombIMano.1">
+<Br>
+一体の<a href="#rainFlyerType">マンオブウォー</a>を呼び、敵を攻撃させる<a href="#buriedType">呪文</a>です。<br>
+</a>
+
+<a name="bombIIManoType">
+<info>
+<q>「ようやく気を抜けると思った時に、破壊を呼ぶ者たちが現れる。」 — ケンゾー、熟練の射手</q>
+<p>
+<!"bombIIMano.1">
+<Br>
+二体の<a href="#rainFlyerType">マンオブウォー</a>を呼び、敵を攻撃させる<a href="#buriedType">呪文</a>です。<br>
+</a>
+
+<a name="bombIIIManoType">
+<info>
+<q>「一つが良ければ、三つならもっと良い。」 — ドウィンドリン、ニンバスの数学者</q>
+<p>
+<!"bombIIIMano.1">
+<Br>
+三体の<a href="#rainFlyerType">マンオブウォー</a>を呼び、敵を攻撃させる<a href="#buriedType">呪文</a>です。<br>
+</a>
+
+<a name="bombGravitonType">
+<info>
+<q>「飛行装置は、特定の重力定数の下で働くよう設計されている。
+それが少し変わるだけで、致命的な故障につながる。」 — ベントゥスモリ、ニンバスの技術者</q>
+<p>
+<!"bombGraviton.1">
+<Br>
+範囲内のすべての航空ユニットを破壊する<a href="#buriedType">呪文</a>です。<br>
+</a>
+
+<a name="bombMeteorType">
+<info>
+<q>「空から降る雨に味方はいない。」 — アンスピークンワン、ニンバスの賢人</q>
+<p>
+<!"bombMeteor.1">
+<Br>
+範囲内のすべてに、無作為な量の損害を与える<a href="#buriedType">呪文</a>です。<br>
+</a>
+
+<a name="bombExplodeSmallType">
+<info>
+<q>「『かわいい』は、君が探している言葉ではないと思うが。」 — アーヴィン・グロッツ、見習い</q>
+<p>
+<!"bombExplodeSmall.1">
+<br>
+範囲内の破壊可能なものをすべて破壊する<a href="#buriedType">呪文</a>です。<br>
+</a>
+
+<a name="bombExplodeMediumType">
+
+<a name="bombSpecialOneType">
+<info>
+<q>「日々の大混乱にうってつけ。」 — テルセン・ロット、</q>
+<p>
+<!"bombExplodeMedium.1">
+<br>
+範囲内の破壊可能なものをすべて破壊する<a href="#buriedType">呪文</a>です。<br>
+</a>
+</a>
+
+<a name="bombExplodeLargeType">
+<info>
+<q>「走れ。もっと速く。」 — クヌート・ハムスン船長、ニンバスの犠牲者。</q>
+<p>
+<!"bombExplodeLarge.1">
+<br>
+範囲内の破壊可能なものをすべて破壊する<a href="#buriedType">呪文</a>です。<br>
+</a>
+
+<a name="bombHardenerType">
+<info>
+<q>「モルタルそのものが、地獄のような頑固さを帯びる。」 — ヒューレ・グンダーソン、石工の親方</q>
+<p>
+<!"bombHardener.1">
+<br>
+範囲内の<a href="#bridgeType">橋</a>を破壊不能にする<a href="#buriedType">呪文</a>です。<br>
+</a>
+
+<a name="bombHealType">
+<info>
+<q>「そして、お前の病は幻であり、<br>
+お前の熱は夢だった。」 — ニンバスの書</q>
+<p>
+<!"bombHeal.1">
+<br>
+範囲内の全ユニットの失った体力を、一部回復する<a href="#buriedType">呪文</a>です。
+<a href="#bombParalyzeType">パラリシス</a>も治します。また、治癒の魔法の虹色の輝きにより、
+<a href="#bombInvisibleType">インビジビリティ</a>を解除します。<br>
+</a>
+
+<a name="bombInvisibleType">
+<info>
+<q>「見ていないのではなく、目が知覚できないだけだ。」 — ルポール・ハギニット、ニンバスの論理学者</q>
+<p>
+<!"bombInvisible.1">
+<br>
+範囲内の全ユニットを、一時的に透明にする<a href="#buriedType">呪文</a>です。
+透明な間は、何からも目標にされたり拾われたりしません。透明な防御ユニットは
+道を塞ぎ続けますが、それを狙っていたものは透明になった時に目標を失います。<br>
+</a>
+
+<a name="bombParalyzeType">
+<info>
+<q>「エーテルそのものとの膠着状態。」 — ダグ・ハバーリンク、ニンバスの勝負師</q>
+<p>
+<!"bombParalyze.1">
+<br>
+範囲内のすべての移動と射撃を止める<a href="#buriedType">呪文</a>です。影響を受けた
+<a href="#TransportHelp">輸送ユニット</a>は呪文を使えません。
+麻痺したユニットは、横に表示される呪文アイコンで見分けられます。<br>
+</a>
+
+<a name="bombTreasonType">
+<info>
+<q>「どんな敵にも最も痛快な勝利は、その右手に左手を切り落とさせることだ。」 — グレイグ・ハムリンケン将軍</q>
+<p>
+<!"bombTreason.1">
+<br>
+範囲内の全ユニットの所有権を得る<a href="#buriedType">呪文</a>です。これには
+<a href="#bridgeType">橋</a>と、<a href="#PriestType">司祭</a>以外のすべての<a href="#transportHelp">輸送ユニット</a>が含まれます。<br>
+</a>
+
+<a name="residenceType">
+<info>
+<q>「地上に暮らすのも構わないが、戦闘の十字砲火で家を焼かれることが多くてね。」 — デイモン・
+ラニアン、普通の男</q>
+<p>
+<a href="#vortexHelp">神殿</a>を建てると、その系統が居住区にも広がります。
+<p>
+ニンバス人は戦闘の混乱の下、水に沈む家で暮らします。居住区は移動も破壊もできず、
+その上に建物を建てることもできません。
+<br>
+</a>
+
+<a name="influenceHelp">
+<h2>エネルギー</h2>
+<p>
+エネルギーは、戦闘で<a href="#unitHelp">ユニット</a>を建設するための力です。<a href="#vortexHelp">神殿</a>と
+「ジェネレーター」が供給するエネルギーには、三種類あります。<br>
+<!"mana.8"> - <!"windvortex.*"> と <!"windbattery.*"> のウィンドエネルギー<br>
+<!"mana.9"> - <!"rainvortex.*"> と <!"rainbattery.*"> のレインエネルギー<br>
+<!"mana.10"> - <!"thundervortex.*"> と <!"thunderbattery.*"> のサンダーエネルギー<br>
+<p>
+<b>エネルギーでユニットを建設する</b>
+<p>
+各建設対象の横のアイコンは、完成に必要なエネルギーを示します。例えば、
+<br>
+<!"mana.2"><!"thunderCannon.0">
+<p>
+は、このサンダーキャノンにサンダーエネルギーが一つ必要という意味です。神殿か
+<a href="#thunderbatteryType">サンダージェネレーター</a>が近くにあれば、その要求を満たせます。
+<p>
+ユニットがサンエネルギー - <!"mana.3"> - を要求する場合、<i>どの</i>種類のエネルギーでも満たせます。例えば、
+<br>
+<!"mana.3"><!"sunCannon.0">
+<p>
+は、このサンキャノンがレイン、ウィンド、サンダーの<i>いずれか</i>一つのエネルギーを受け入れるという意味です。
+<p>
+神殿やジェネレーターを左クリックすると、供給するエネルギーを見ることができます。
+<br>
+</a>
+
+<a name="factoryHelp">
+
+<a name="sunFactoryType">
+
+<a name="windFactoryType">
+
+<a name="rainFactoryType">
+
+<a name="thunderFactoryType">
+<info>
+<q>「複雑な機械にかけて、ニンバス人の才能に並ぶ者はいない。」 — ニンバスの機械工</q>
+<p>
+ワークショップは、戦闘に使う<a href="#unitHelp">ユニット</a>を作ります。
+<p>
+戦闘中にワークショップを建て、<a href="#priestType">司祭</a>を生け贄にして得た<a href="#technologyHelp">知識</a>に
+基づいて戦闘ユニットを作ります。知識は戦闘が終わっても残るため、時とともに
+ユニットの種類や力を増やすことができます。
+<p>
+一つのワークショップで作れる種類はわずかなので、慎重に選んでください！
+<p>
+新しいレベル1のワークショップには、生産スロットが二つあります。生産する知識を選ぶと、一つ埋まります。
+一度生産対象を決めると、変更できません。
+<p>
+<I>ただし</I>、<a href="#upgradeHelp">アップグレード</a>するたびにスロットが一つ増えます。
+アップグレードには、一定量の<a href="#moneyHelp">ストームパワー</a>が必要です。
+<p>
+生産する時は、ワークショップから建設場所へストームパワーの流れが伸びます。適切な
+<a href="#influenceHelp">エネルギー</a>と合わさると、その場でユニットが形になります。ただし、ワークショップが破壊されると、
+代わりを建てるまで、そこで作っていたものは何も作れなくなります。
+<br>
+</a></a></a></a></a>
+
+<a name="upgradeHelp">
+<h2>ワークショップのアップグレード</h2>
+<p>
+<q>「さらなる力、さらなる速さ。絶対の力、光の速さ！」 — スフェン・ロデル、サンの弟子</q>
+<p>
+新たな種類の<a href="#unitHelp">ユニット</a>を戦闘に投入するため、ワークショップをアップグレードしましょう。
+<p>
+生産スロットは、<a href="#moneyHelp">ストームパワー</a>を払ってアップグレードすると増えます。
+必要なストームパワーは、<a href="#factoryHelp">ワークショップ</a>を右クリックして確認できます。
+<p>
+各ワークショップは、三回までアップグレードできます。
+<br>
+</a>
+
+<a name="researchHelp">
+
+<a name="technologyHelp">
+<h2>知識</h2>
+<p>
+<q>「血まみれの内臓を、製図工の設計図のように読み解けるのだ。」<br>
+— ハルドル・フルメン、ニンバスの司祭にして機械技師</q>
+<p>
+知識によって、戦闘中に<a href="#unitHelp">ユニット</a>を作れるようになります。<a href="multiQuickHelp">マルチプレイヤー</a>では、
+蓄積した知識はオンライン対戦の終了後も、次の戦闘に引き継がれます。
+<p>
+<a href="#sacrificeOutline">司祭を生け贄にして</a>得た知識は、対応する<a href="#themeHelp">フューリーの系統</a>の
+<a href="#factoryHelp">ワークショップ</a>であれば、どこでも生産に登録できます。
+<p>
+最初から<a href="#sunarcherType">サンディスクスロワー</a>と<a href="#suncannontype">サンキャノン</a>の知識を持っており、
+最初のワークショップですぐに生産できます。他のすべての知識は、司祭を何人か<a href="#sacrificeOutline">生け贄に捧げる</a>
+代償を払って得る必要があります。
+<p>
+必要な知識と引き換えに司祭を倒したら、対応するワークショップを建てて、その知識を使えます。
+<p>
+例えば、司祭三人の代償でサンダーキャノンの知識を得たとします。サンダーワークショップを建てれば、
+スロットの一つをサンダーキャノンで埋められます。
+<p>
+しかし、ウィンドワークショップではサンダーキャノンを作れません。各ワークショップは、自分の系統の
+ユニットだけを作れます。サンならサンのユニット、サンダーならサンダーのユニットという具合です。
+<p>
+スロットを使い切ったら、<a href="#upgradeHelp">アップグレード</a>するか、もう一つワークショップを建てましょう。
+アップグレードすると、追加の知識を登録できるスロットが増えます。
+<p>
+<a href="#factoryHelp">ワークショップ</a>について詳しく見る...
+<p>
+<a href="#sacrificeOutline">司祭を生け贄にして新しい知識を得る手順</a>について詳しく見る...
+<br>
+</a>
+</a>
+
+<a name="geyserType">
+
+<a name="emptyGeyserType">
+<info>
+<q>間欠泉がクリスタルへと凝固する姿は、白い炎が氷に変わるようだ。</q>
+<p>
+ストーム間欠泉は、<a href="#stormpowerHelp">ストームパワー</a>を<a href="#nuggetType">ストームクリスタル</a>の形で供給します。
+<a href="#transportHelp">輸送ユニット</a>で集められます。間欠泉を右クリックすると、得られる<a href="#stormpowerHelp">ストームパワー</a>の量を確認できます。
+<p>
+戦闘開始時に間欠泉の島がいくつか現れ、下で戦う<a href="#themeHelp">フューリー</a>から
+ストームパワーが投げ上げられる間、さらに島が現れ続けます。
+何かが破壊されるたび、そのエネルギーの一部がフューリーの戦いに落ち、間欠泉の島となって再び現れます。
+<p>
+<a href="#TransportHelp">地上または航空輸送ユニット</a>を間欠泉に送ると、枯れるまで
+ストームクリスタルを集める作業を繰り返します。枯れ始めると、噴き出す蒸気が短くなります。
+<br>
+</a>
+</a>
+
+<a name="nuggetType">
+<info>
+<q>間欠泉がクリスタルへと凝固する姿は、白い炎が氷に変わるようだ。</q>
+<p>
+ストームクリスタルは、<a href="#geyserType">ストーム間欠泉</a>が投げ出す、凝縮された<a href="#stormpowerHelp">ストームパワー</a>です。
+<p>
+<a href="#TransportHelp">地上または航空輸送ユニット</a>を間欠泉に送ると、
+枯れるまでストームクリスタルを集める作業を繰り返します。
+<br>
+</a>
+
+<a name="sunArcherType">
+<info>
+<q>「サンディスクスロワーは、のろまの首を刈る。」 — トーマス・ルルトフ少佐。</q>
+<p>
+サンディスクスロワーは、近距離で全方向に発射します。航空攻撃への防衛に欠かせません。
+<p>
+巨大な回転アームが、爆発するディスクを正確無比に投げます。
+</a>
+
+<a name="sunAviaryType">
+<info>
+<q>ワーリギグ誕生のまばゆい光を収められるのは、黄金の屋根だけだ。</q>
+<p>
+ワーリベースは、航空攻撃ユニットの<a href="#sunFlyerType">ワーリギグ</a>を作り、燃料を補給します。
+<p>
+基地が破壊されると、ワーリギグは燃料を補給する場所を失います。ワーリギグが
+破壊されるたびに、その基地が新しい一体を作ります。
+<p>
+注意: どんな対象でも、同時に狙う航空攻撃ユニットは三体までです。
+</a>
+
+<a name="sunFlyerType">
+<info>
+<q>「この装置は、自らの不可能性によって浮かび、否定の力によって破壊する。」 — ヤーコプ・ハマーショルト、
+ ワーリギグの発明者。</q>
+<p>
+ワーリギグは敵陣へ飛び、上空からユニットを破壊します。
+<p>
+<a href="#sunAviaryType">ワーリベース</a>で作られ、何かに撃ち落とされるまで
+目標を渡り歩きますが、一分に一度は燃料補給が必要です。貨物は運べません。
+<p>
+基本ルール: ワーリギグは<a href="#transporthelp">輸送ユニット</a>を決して目標にしません。
+<p>
+注意: どんな対象でも、同時に狙う航空攻撃ユニットは三体までです。また、地上の
+輸送ユニットを同時に狙う航空攻撃ユニットは一体だけです。
+</a>
+
+<a name="sunBlockerType">
+<info>
+<q>ストーンタワーは外側から内側へ積み上げる。建設者は自らの力と勇気を注ぎ込み、
+三層ごとの一層には、勇敢な男の体さえ使われるほどだ。</q>
+<p>
+ストーンタワーは損害を吸収します。大切なユニットと敵の射撃の間に置き、飛来する弾を防ぎましょう。
+</a>
+
+<a name="sunCannonType">
+<info>
+<q>「人生で無視できないものが二つある。大砲と、その砲弾だ。」 — ペトリック・
+「ボンバード」ロンバード司令官</q>
+<p>
+サンキャノンは、東西南北の四方向にまっすぐ<a href="#shooterHelp">射撃</a>します。
+<p>
+一発あたりの損害は<a href="#sunArcherType">サンディスクスロワー</a>より大きく、耐久力もありますが、
+発射間隔は長くなります。敵の方向へ自動的に旋回します。
+</a>
+
+<a name="sunBalloonType">
+<info>
+<q>「まず、傷一つない若い空クジラの皮を手に入れよ…」<br>
+ハルドル・ラクスネス著『バルーンの作り方』より</q>
+<p>
+バルーンは<a href="#transportHelp">航空輸送ユニット</a>で、<a href="#stormpowerhelp">ストームパワー</a>の収集、
+<a href="#priestType">司祭</a>の捕獲、<a href="#buriedType">呪文</a>の取得と使用に最適です。
+<p>
+空を飛ぶため、移動に
+<a href="#bridgeType">橋</a>は必要ありません。ただし、敵の攻撃を数回受けるだけで、泡のように破裂します。
+<p>
+注意: 輸送ユニットは、司祭とストームクリスタルを同時には運べません。
+</a>
+
+<a name="sunFenceType">
+<info>
+<q>「ニンバスと彼方の間には、永遠に燃える障壁が立つ。」 — ニンバスの書。</q>
+<p>
+バリケードは敵の射撃を防ぎます。
+<p>
+二本の支柱を水平または垂直の一直線に並べると、間に力場が生じ、
+敵の射撃を防ぎながら、自分の<a href="#shooterHelp">射撃ユニット</a>の弾は通します。
+サンバリケードの壁は、本島と同じ色になります。
+<p>
+同盟のサンバリケードと自分のものは、互いにつなげられます。
+また、敵のサンバリケードの壁の間に自分の支柱を置くと、その壁を無効にできます。
+</a>
+
+<a name="sunWalkerType">
+<info>
+<q>「ゴーレムは愚かで、のろく、ユーモアがなく、臭い。<br>
+だが戦時には、かけがえのない親友だ。」 — セイン・ルソー少佐</q>
+<p>
+ゴーレムは貨物を運ぶ<a href="#transportHelp">地上輸送ユニット</a>で、<a href="#stormpowerhelp">ストームパワー</a>の収集、
+<a href="#priestType">司祭</a>の捕獲、<a href="#buriedType">呪文</a>の取得と使用に最適です。
+<p>
+神殿が生み出す超自然の従者であり、<a href="#themeHelp">フューリー</a>からの個人的な贈り物です。
+<p>
+注意: <a href="#sunWalkerType">ゴーレム</a>は愚かなため、壊れた橋からそのまま歩いて落ちます。他の輸送ユニットは、落ちる前に止まります。
+<p>
+注意: 輸送ユニットは、司祭とストームクリスタルを同時には運べません。
+</a>
+
+<a name="windArcherType">
+<info>
+<q>「矢は百ポンドの重さで、よく釣り合っていなければならない。弦が完璧に張られていることは、
+ニンバスの風が中央のドより高いファのシャープで鳴らした時に分かるだろう。」 『第六射手教本』より</q>
+<p>
+クロスボウは、自動照準の<a href="#shooterHelp">射撃ユニット</a>です。
+<p>
+配置前の右クリックで、四方向のいずれかに向きを決められます。
+射界の中の最も近いユニットを狙います。航空攻撃への防衛に
+欠かせず、正確で重い一撃を放ちます。
+</a>
+
+<a name="windAviaryType">
+<info>
+<q>「デビルメーカーの実験は、また壁にぶつかった。今日は島全体を逆さのこまのように回転させ、
+ペットや幼い子供を端から深淵へ飛ばしてしまった。設計を考え直さなければ。」 — 日誌、
+デア・デルカス博士。</q>
+<p>
+デビルメーカーは、荒々しい航空攻撃ユニットの<a href="#windFlyerType">ダストデビル</a>を生み出します。
+<p>
+基地が破壊されると、ダストデビルは
+静まります。ダストデビルが破壊されるたび、その基地が新しい一体を作ります。
+<p>
+注意: どんな対象でも、同時に狙う航空攻撃ユニットは三体までです。
+</a>
+
+<a name="windFlyerType">
+<info>
+<q>「死すべき者は、ダストデビルのうなりの中に、自分の名を呼ぶ声を聞く。」 — ニンバスのことわざ</q>
+<p>
+ダストデビルは敵陣へ飛び、上空から破壊をもたらします。
+<p>
+通過すると<a href="#bridgeType">橋</a>にひびが入ります。
+常に20秒間続き、<a href="#windAviaryType">デビルメーカー</a>から32秒ごとに
+再び生まれます。<a href="#transportHelp">貨物</a>は運べません。
+<p>
+注意: どんな対象でも、同時に狙う航空攻撃ユニットは三体までです。また、地上の
+輸送ユニットを同時に狙う航空攻撃ユニットは一体だけです。
+</a>
+
+<a name="windBatteryType">
+<info>
+<q>「百基のウィンドジェネレーターなら、ハリケーンにも力を与えられる。」 — デフ・イルデリス、ニンバスの賢者。</q>
+<p>
+ウィンドジェネレーターは、周囲の範囲へウィンドの<a href="#influenceHelp">エネルギー</a>を
+供給します。
+<p>
+ウィンドエネルギーの記号は<!"mana.8">です。
+<p>
+左クリックすると、生成するエネルギーを確認できます。
+<p>
+戦闘で<a href="#unitHelp">ウィンドのユニット</a>を建設するには、ウィンドジェネレーターが必要です。
+<p>
+マルチプレイヤーでは、右クリックしてMeltdownを選ぶと爆発させられます。敵に少し損害を与えたり、
+橋に穴を開けたりできます。
+</a>
+
+<a name="windBlockerType">
+<info>
+<q>宇宙は99パーセントが空で、1パーセントが島だ。<br>
+空ではウィンドが支配する。</q>
+<p>
+ウィンドタワーは損害を吸収します。大切なユニットと敵の射撃の間に置くと、敵は目標を変えて
+タワーを攻撃します。
+<p>
+三面は通常の損害を受けますが、湾曲した背面は完全に無敵です。ただし、航空攻撃には弱いままです。
+<p>
+配置前の右クリックで、無敵の面を東西南北のどこへ向けるか選べます。
+</a>
+
+<a name="windBalloonType">
+<info>
+<q>「ニンバスに、これほど優雅で美しいものはない。」 — ギルデン・プラジ、ニンバスの詩人</q>
+<p>
+飛行船は<a href="#transportHelp">航空輸送ユニット</a>で、<a href="#stormpowerhelp">ストームパワー</a>の収集、
+<a href="#priestType">司祭</a>の捕獲、<a href="#buriedType">呪文</a>の取得と使用に最適です。
+<p>
+<a href="#sunballoontype">バルーン</a>と比べて、
+はるかに丈夫で高速です。
+<p>
+空を飛ぶため、移動に
+<a href="#bridgeType">橋</a>は必要ありません。
+<p>
+注意: 輸送ユニットは、司祭とストームクリスタルを同時には運べません。
+</a>
+
+<a name="windWalkerType">
+<info>
+<q>最も優れた操縦士は、そよ風を互いの呼び名で見分ける。</q>
+<p>
+セイルスケーターは<a href="#transportHelp">地上輸送ユニット</a>で、<a href="#stormpowerhelp">ストームパワー</a>の収集、
+<a href="#priestType">司祭</a>の捕獲、<a href="#buriedType">呪文</a>の取得と使用に最適です。
+<p>
+地上輸送ユニットの中で最も高速です。
+<p>
+注意: 輸送ユニットは、司祭とストームクリスタルを同時には運べません。
+</a>
+
+<a name="thunderArcherType">
+<info>
+<q>生のブルフの卵をヴァンダータワーの前に投げると、地面に落ちる頃には固ゆでになっている。</q>
+<p>
+ヴァンダータワーは、航空攻撃ユニットか航空<a href="#transportHelp">輸送ユニット</a>だけを狙う、
+中距離の<a href="#shooterHelp">射撃ユニット</a>です。
+<p>
+電荷を集め、激しいエネルギーの衝撃として放出します。
+どの方向にも発射できます。
+</a>
+
+<a name="thunderBatteryType">
+<info>
+<q>「夜が我らを包み、<br>
+倒れた仲間をいたわった、<br>
+輝くジェネレーターの明かりのそばで。」<br>
+   — 『サンダーの尾根の賛歌』より</q>
+<p>
+サンダージェネレーターは、周囲の範囲へサンダーの<a href="#influenceHelp">エネルギー</a>を
+供給します。
+<p>
+サンダーエネルギーの記号は<!"mana.10">です。
+<p>
+左クリックすると、生成するエネルギーを確認できます。
+<p>
+戦闘で<a href="#unitHelp">サンダーのユニット</a>を建設するには、サンダージェネレーターが必要です。
+<p>
+マルチプレイヤーでは、右クリックしてMeltdownを選ぶと爆発させられます。敵に少し損害を与えたり、
+橋に穴を開けたりできます。
+</a>
+
+<a name="thunderBlockerType">
+<info>
+<q>「ブルワークと君の母親は、どう似ていると思う？」 — ニンバスの芸人バーニー・ラヴェルの最期の言葉。</q>
+<p>
+ブルワークは損害を吸収します。大切なユニットと敵の射撃の間に置くと、敵は目標を変えて
+ブルワークを攻撃します。
+<p>
+ニンバスで最も丈夫な建物です。航空攻撃には完全に無敵で、地上の射撃にも非常に強いものです。
+スポンジのように損害を吸収しますが、安くはありません。
+</a>
+
+<a name="thunderCannonType">
+<info>
+<q>「永久に耳が聞こえなくなる覚悟をせよ。」 — 『第十サンダー砲兵教本』の冒頭</q>
+<p>
+サンダーキャノンはニンバスで最も凶悪な<a href="#shooterHelp">射撃ユニット</a>です。長い射程と大きな損害を誇り、
+打たれ強くもあります。
+<p>
+他の射撃ユニットほど頻繁には発射せず、東西南北の方向にしか
+撃てないため、狙う方向に向きを合わせる必要があります。
+<p>
+配置前の右クリックで、ユニットを回転できます。
+</a>
+
+<a name="thunderFenceType">
+<info>
+<q>「前方にアークスパイアが見えても船長が家へ引き返さないなら、その者は
+とても勇敢か、とても愚かか、失うものが何もないのだ。」 — 空軍提督ハイケ・カマリング</q>
+<p>
+アークスパイアはバリケードを作ります。二本建てると、間に致命的な波動が流れます。
+<p>
+その電荷は、二本の支柱の間にいる<i>すべて</i>の敵ユニットを通して引かれます。
+</a>
+
+<a name="thunderWalkerType">
+
+<a name="bulfType">
+<info>
+<q>「野生のブルフは砲弾ほどの大きさだが、ニッケルと石灰岩だけの厳しい食事を与えると、
+百倍もの大きさに育つ。」 — 野外調査日誌、J・T・キルケン</q>
+<p>
+ブルフは<a href="#transportHelp">地上輸送ユニット</a>で、<a href="#stormpowerhelp">ストームパワー</a>の収集、
+<a href="#priestType">司祭</a>の捕獲、<a href="#buriedType">呪文</a>の取得と使用に最適です。
+<p>
+ニンバスで最も丈夫な輸送ユニットですが、かなり低速です。
+<p>
+注意: 輸送ユニットは、司祭とストームクリスタルを同時には運べません。
+</a>
+</a>
+
+<a name="rainAviaryType">
+<info>
+<q>この製法は古く、主に発酵した雨水と毒の
+胞子を必要とする。かき混ぜる必要はない。</q>
+<p>
+マンオブウォープールは、航空攻撃ユニットの<a href="#rainFlyerType">マンオブウォー</a>を生み出します。
+<p>
+マンオブウォーが破壊されるたびに、基地であるプールが新しい一体を作ります。
+<p>
+注意: どんな対象でも、同時に狙う航空攻撃ユニットは三体までです。
+</a>
+
+<a name="rainFlyerType">
+<info>
+<q>「それを見るだけで互いを切り刻むよう、部下を訓練している。」 — デイセン・トロ、セイリン団の指導者</q>
+<p>
+<a href="#rainAviaryType">マンオブウォープール</a>で作られ、敵陣へ飛んで上空から破壊をもたらします。
+<p>
+一体の寿命は一分で、すべての地上ユニットを狙います。<a href="#shooterHelp">射撃ユニット</a>以外を倒すと、
+放出されたストームパワーを取り込み、残り寿命に15秒を加えて攻撃を続けます。
+<p>
+<a href="#transportHelp">地上輸送ユニット</a>を好んで攻撃しますが、いなければ、
+最も近いユニットを攻撃します。
+<p>
+<a href="#sunballoontype">バルーン</a>の約二倍の耐久力があります。<a href="#transportHelp">貨物</a>は運べません。
+<p>
+注意: どんな対象でも、同時に狙う航空攻撃ユニットは三体までです。また、地上の
+輸送ユニットを同時に狙う航空攻撃ユニットは一体だけです。
+<br><br>
+寿命は一分を超えませんが、<a href="#shooterHelp">射撃ユニット</a>以外を一つ倒すたびに、
+一分に戻るまで15秒ずつ加算されます。
+</a>
+
+<a name="rainBatteryType">
+<info>
+<q>「彼方には、絶えず聞こえる音が一つある。流れ落ちる水の、はるかな音楽だ。」 — ニンバスの
+書</q>
+<p>
+レインジェネレーターは、周囲の範囲へレインの<a href="#influenceHelp">エネルギー</a>を
+供給します。
+<p>
+レインエネルギーの記号は<!"mana.9">です。
+<p>
+左クリックすると、生成するエネルギーを確認できます。
+<p>
+戦闘で<a href="#unitHelp">レインのユニット</a>を建設するには、レインジェネレーターが必要です。
+<p>
+マルチプレイヤーでは、右クリックしてMeltdownを選ぶと爆発させられます。敵に少し損害を与えたり、
+橋に穴を開けたりできます。
+</a>
+
+<a name="rainBlockerType">
+<info>
+<q>水を上り坂へ流す第一歩は、氷を逆さに溶かすよう説得することだ。</q>
+<p>
+アイスタワーは損害を吸収します。大切なユニットと敵の射撃の間に置くと、敵は目標を変えて
+タワーを攻撃します。
+<p>
+<a href="#thunderBlockerType">ブルワーク</a>や
+<a href="#sunBlockerType">ストーンタワー</a>などより弱いものの、破壊されても再生します。
+<p>
+浮島に建てられている場合は、攻撃<a href="#buriedType">呪文</a>で島を破壊して、
+永久に除去できます。
+</a>
+
+<a name="growingrainBlockerType">
+<info>
+<q>水を上り坂へ流す第一歩は、氷を逆さに溶かすよう説得することだ。</q>
+<p>
+<a href="#thunderBlockerType">ブルワーク</a>や
+<a href="#sunBlockerType">ストーンタワー</a>などより弱いものの、破壊されても再生します。
+<p>
+損害を吸収するユニットとしては比較的弱いものの、破壊されても再生します。
+<p>
+浮島に建てられている場合は、攻撃<a href="#buriedType">呪文</a>で島を破壊して、
+永久に除去できます。
+</a>
+
+<a name="rainCannonType">
+<info>
+<q>剃刀のように鋭いつららを投げる、懐かしい雪合戦のようだ。</q>
+<p>
+アイスキャノンは、密集した地上の敵に適した<a href="#shooterHelp">射撃ユニット</a>です。
+<p>
+損害は小さく、撃つ方向へ向きを合わせる必要があります。
+一方、命中すると破片となり、周囲の他の目標にも損害を与えます。それを生かして、
+戦略を立てましょう。
+<p>
+配置前の右クリックで、東西南北へ回転できます。
+</a>
+
+<a name="rainBalloonType">
+<info>
+<q>毎年、最も濃い雨雲がフローターを動かす栄誉を巡り、厳しく競い合う。
+多くは散り、一握りだけが生き残る。</q>
+<p>
+クラウドフローターは<a href="#transportHelp">航空輸送ユニット</a>で、
+<a href="#stormpowerhelp">ストームパワー</a>の収集、<a href="#priestType">司祭</a>の捕獲、
+<a href="#buriedType">呪文</a>の取得と使用に最適です。
+<p>
+かなり丈夫ですが、高価です。実体が希薄なため、敵の射撃が
+実際に命中することはまれです。
+<p>
+空を飛ぶため、移動に
+<a href="#bridgeType">橋</a>は必要ありません。
+<p>
+注意: 輸送ユニットは、司祭とストームクリスタルを同時には運べません。
+</a>
+
+<a name="rainFenceType">
+<info>
+<q>「水さえ、時には火のように燃える。」 — ニンバスの書</q>
+<p>
+アシッドバリケードは、あらゆるバリケードの中で最も隙のない防御を提供します。
+<p>
+二本の支柱を水平または垂直の一直線に並べると、
+酸の障壁が生まれます。支柱の間に入るすべての敵ユニットを、
+溶かしてしまいます。
+<p>
+ただし、敵の射撃は防げません。
+</a>
+
+<a name="rainWalkerType">
+<info>
+<q>「ただの機械かもしれないが、意地悪な機械だ。」 — バートラム・フライリグ、クリスタルクラブに
+初めてひかれたニンバス人</q>
+<p>
+クリスタルクラブは<a href="#transportHelp">地上輸送ユニット</a>で、<a href="#stormpowerhelp">ストームパワー</a>の収集、
+<a href="#priestType">司祭</a>の捕獲、<a href="#buriedType">呪文</a>の取得と使用に最適です。
+<p>
+丈夫で高速です。他のクリスタルクラブ以外の輸送ユニットに出会うと、気絶させ、司祭やストームクリスタルなどの
+貨物を奪います。
+<p>
+足元の<a href="#bridgeType">橋</a>が危険になると、安全な場所へ移動するほど賢くもあります。
+<p>
+注意: 輸送ユニットは、司祭とストームクリスタルを同時には運べません。
+</a>
+
+<a name="transportHelp">
+<h2>輸送ユニット</h2>
+<p>
+貨物を運べるすべての<a href="unitHelp">ユニット</a>です。航空輸送と地上輸送があります。
+<p>
+<h3>輸送ユニットの移動</h3>
+<p>
+左クリックしてからカーソルを動かすと、移動できる場所では照準が、
+移動できない場所では禁止マークが現れます。移動できる場所を左クリックすると、
+そこへ向かいます。
+<p>
+<h3>貨物を積む</h3>
+<p>
+輸送ユニットを左クリックし、積める物にカーソルを合わせると、手の形に変わります。
+その物を左クリックすると、輸送ユニットが移動して積み込みます。
+<p>
+<a href="#nuggetType">ストームクリスタル</a>、<a href="#priestType">司祭</a>、そして
+<a href="#buriedType">オベリスク</a>の形で現れる<a href="#buriedType">呪文</a>を積めます。
+<p>
+注意: 司祭とストームクリスタルは同時には運べません。
+また、司祭は他の司祭を乗せられません。
+<p>
+<h3>貨物を降ろす</h3>
+<p>
+貨物を積んだ輸送ユニットを右クリックし、「Drop ...」を選んでください。
+呪文は降ろせないため、この操作はできません。
+<p>
+<h3>呪文を使う</h3>
+<p>
+一度得た呪文は、ストームパワーが十分なら回数制限なく使えます。
+輸送ユニットが破壊されるか、別の呪文で置き換わるまで、その呪文を保持します。
+右クリックすると、表示されたストームパワーを払って呪文を使う項目が現れます。
+<p>
+<h3>一般事項</h3>
+<p>
+輸送ユニットは一度に一つの呪文だけを持てます。
+<p>
+地上輸送ユニットを同時に狙う航空攻撃ユニットは一体です。
+建物や他のユニットを同時に狙うものは三体です。
+<p>
+<a href="#sunWalkerType">ゴーレム</a>は愚かなため、壊れた橋からそのまま歩いて落ちます。
+他の輸送ユニットは、落ちる前に止まります。
+<p>
+<a href="#priestType">司祭</a>や<a href="#rainWalkerType">クリスタルクラブ</a>は、危険な橋の上では、
+より安全な場所へ自動的に移動しようとします。
+<p>
+覚えておくルール:
+<br>自分の<a href="#priestType">司祭</a>を、自分の輸送ユニットに乗せることはできません。
+<br>
+</a>
+
+<a name="shooterHelp">
+<h2>射撃ユニット</h2>
+<p>
+射撃ユニットは最も近い敵を自動で狙うため、攻撃する相手を指示する必要はありません。
+<p>
+左クリックすると、射程を確認できます。
+<p>
+直線に撃つユニットが、地上または航空<a href="#transportHelp">輸送ユニット</a>を狙う場合は、
+相手が移動している間に外すことが多い点に注意してください。
+</a>
+
+<a name="themeHelp">
+<h2>ニンバスの三柱のフューリー</h2>
+<p>
+ニンバスの中心では嵐が続き、ウィンド、レイン、サンダーの三柱の<a href="#sphereHelp">フューリー</a>が世界の支配を巡って永遠に争います。
+<p>
+争いは隠れた惑星の巨大な大地を空へ引き裂きます。生まれた島に、あなたの民ニンビアンは暮らしています。
+<p>
+死と破壊はフューリーを喜ばせます。敵を破壊すると、その<a href="#unitHelp">ユニット</a>のストームパワー価値の4分の1を得ます。ただし、作る時に消費しない個々の航空攻撃ユニットは例外です。
+<p>
+さらに喜ばせるのは<a href="#sacrificeOutline">司祭の生け贄</a>です。捧げると、戦闘の<a href="#technologyHelp">知識</a>を授けられます。
+<p>
+各フューリーは、自分の<a href="#influenceHelp">エネルギー</a>を表す記号を持ちます。<br>
+<!"mana.8"> - ウィンド<br>
+<!"mana.9"> - レイン<br>
+<!"mana.10"> - サンダー<br>
+<p>
+<!"mana.11">で表す「サン」という共通知識もあります。<a href="#unitHelp">サンのユニット</a>はどの種類の<a href="#influenceHelp">エネルギー</a>でも使えますが、比較的弱いものです。
+<p>
+サンの知識以外に、各フューリーは専門知識も授けます。通常は、そのフューリーのエネルギーを必要とします。
+<p>
+ウィンドのフューリーに属するものは、次のとおりです。<br>
+<p>
+1<!"windVortex.*"> 2<!"windfactory.*"> 3<!"windbattery.*"><br>
+<p>
+1）ウィンドを崇める<a href="#windVortexType">神殿</a>。<br>
+2）ウィンドのユニットを生産する<a href="#windFactoryType">ワークショップ</a>。<br>
+3）ウィンドのエネルギーを生む<a href="#windBatteryType">ウィンドジェネレーター</a>。<br>
+4）すべての<a href="#unitHelp">ウィンドのユニット</a>。<br>
+<p>
+レインのフューリーに属するものは、次のとおりです。<br>
+<p>
+1<!"RainVortex.*"> 2<!"Rainfactory.*"> 3<!"Rainbattery.*"><br>
+<p>
+1）レインを崇める<a href="#RainVortexType">神殿</a>。<br>
+2）レインのユニットを生産する<a href="#RainFactoryType">ワークショップ</a>。<br>
+3）レインのエネルギーを生む<a href="#RainBatteryType">レインジェネレーター</a>。<br>
+4）すべての<a href="#unitHelp">レインのユニット</a>。<br>
+<p>
+サンダーのフューリーに属するものは、次のとおりです。<br>
+<p>
+1<!"ThunderVortex.*"> 2<!"Thunderfactory.*"> 3<!"Thunderbattery.*"><br>
+<p>
+1）サンダーを崇める<a href="#ThunderVortexType">神殿</a>。<br>
+2）サンダーのユニットを生産する<a href="#ThunderFactoryType">ワークショップ</a>。<br>
+3）サンダーのエネルギーを生む<a href="#ThunderBatteryType">サンダージェネレーター</a>。<br>
+4）すべての<a href="#unitHelp">サンダーのユニット</a>。<br>
+<p>
+サンに対応するフューリーはいませんが、すべてのフューリーが知識を授けます。そのため、次のものがあります。<br>
+1<!"sunFactory.*"><br>
+<p>
+1）特定の系統に属さないサンのユニットを生産する<a href="#SunFactoryType">ワークショップ</a>。<br>
+2）すべての<a href="#unitHelp">サンのユニット</a>。<br>
+<p>
+<a href="#sacrificeOutline">司祭を生け贄にして新しい知識を得る手順</a>について詳しく見る...
+<br>
+</a>
+
+<a name="unitHelp">
+<h2>戦闘ユニット</h2>
+戦闘ユニットにはサン、ウィンド、レイン、サンダーの四種類があります。必要なら<a href="salvageHelp">回収</a>できます。攻撃には基本的な<a href="tacticsHelp">戦術</a>を使います。
+
+<p>
+<h2>サンのユニット</h2>
+レベル1<br>
+<a href="#sunWalkerType">* ゴーレム</a>  /  地上輸送<br>
+<a href="#sunArcherType">* サンディスクスロワー</a>  /  射撃<br>
+<a href="#sunCannonType">* サンキャノン</a>  /  射撃<br>
+<a href="#sunBlockerType">* ストーンタワー</a>  /  防御<br>
+レベル2<br>
+<a href="#sunFlyerType">* ワーリギグ</a>  /  航空攻撃<br>
+<a href="#sunBalloonType">* バルーン</a>  /  航空輸送<br>
+レベル3<br>
+<a href="#sunFenceType">* サンバリケード</a>  /  防御<br>
+<p>
+<h2>ウィンドのユニット</h2>
+レベル1<br>
+<a href="#windBatteryType">* ウィンドジェネレーター</a>  /  エネルギー供給<br>
+<a href="#windWalkerType">* セイルスケーター</a>  /  地上輸送<br>
+レベル2<br>
+<a href="#windArcherType">* クロスボウ</a>  /  射撃<br>
+<a href="#windBlocker">* ウィンドタワー</a>  /  防御<br>
+レベル3<br>
+<a href="#windFlyerType">* ダストデビル</a>  /  航空攻撃<br>
+<a href="#windBalloonType">* 飛行船</a>  /  航空輸送<br>
+
+<p>
+<h2>レインのユニット</h2>
+レベル1<br>
+<a href="#rainBatteryType">* レインジェネレーター</a>  /  エネルギー供給<br>
+<a href="#rainFenceType">* アシッドバリケード</a>  /  防御<br>
+レベル2<br>
+<a href="#rainWalkerType">* クリスタルクラブ</a>  /  地上輸送<br>
+<a href="#rainBlockerType">* アイスタワー</a>  /  防御<br>
+<a href="#rainFlyerType">* マンオブウォー</a>  /  航空攻撃<br>
+レベル3<br>
+<a href="#rainCannonType">* アイスキャノン</a>  /  射撃<br>
+<a href="#rainBalloonType">* クラウドフローター</a>  /  航空輸送<br>
+
+<p>
+<h2>サンダーのユニット</h2>
+レベル1<br>
+<a href="#thunderBatteryType">* サンダージェネレーター</a>  /  エネルギー供給<br>
+<a href="#bulfType">* ブルフ</a>  /  地上輸送<br>
+レベル2<br>
+<a href="#thunderCannonType">* サンダーキャノン</a>  /  射撃<br>
+<a href="#thunderFence">* アークスパイア</a>  /  防御<br>
+<a href="#thunderBlockerType">* ブルワーク</a>  /  防御<br>
+レベル3<br>
+<a href="#thunderArcher">* ヴァンダータワー</a>  /  射撃<br>
+<p>
+<a href="#statsHelp">ユニット情報の読み方。</a><br>
+<a href="#themeHelp">その他のユニットと系統。</a>
+<br>
+</a>
+
+<a name="rainVortexType">
+<a name="windVortexType">
+<a name="thunderVortexType">
+<a name="vortexHelp">
+<info>
+<q>聖なる者の血は運命の霊薬である。</q>
+<p>
+<a href="#rainVortexType">レインテンプル</a><br>
+<a href="#windVortexType">ウィンドテンプル</a><br>
+<a href="#thunderVortexType">サンダーテンプル</a><br>
+<p>
+神殿は、各島の究極の<a href="#influenceHelp">エネルギー</a>の中心です。上に挙げた三種類のいずれかの形を取ります。
+<p>
+神殿がある間は、戦闘中も<a href="#priestType">司祭</a>が回復します。
+<p>
+プレイ中に<c>F4</c>を押すと、自分の神殿へ移動します。
+<p>
+神殿の次の使い方をご覧ください。<br>
+<a href="#spVortexHelp">ストームパワーを得る</a><br>
+<a href="#golemVortexHelp">ゴーレムを作る</a><br>
+<a href="#influenceVortexHelp">エネルギーを作る</a><br>
+</a>
+</a>
+</a>
+</a>
+
+<a name="spVortexHelp">
+<h2>神殿:<br>ストームパワーを得る</h2>
+<p>
+神殿は、戦闘中に<a href="#moneyHelp">ストームパワー</a>を利用可能な資源に変えます。神殿がなければ、集めたり処理したりできません。
+<p>
+<a href="#geyserType">ストーム間欠泉</a>から、<a href="#nuggetType">ストームクリスタル</a>の形で採取します。
+<p>
+<a href="#golemVortexHelp">ゴーレムの作り方</a>について詳しく見る...<br>
+<br>
+</a>
+
+<a name="golemVortexHelp">
+<h2>神殿:<br>ゴーレムを作る</h2>
+<p>
+神殿では新しい島の<a href="#sunWalkerType">ゴーレム</a>を作れます。ゴーレムは<a href="#transportHelp">輸送</a>を担います。
+<p>
+最初の戦闘のために<a href="#pyrosphereHelp">パイロスフィア</a>へ降りると、<a href="#teleportViewHelp">生産ウィンドウ</a>に現れます。<a href="#moneyHelp">ストームパワー</a>が十分なら、いくらでも作れます。
+<p>
+神殿の<a href="#influenceVortexHelp">エネルギーの生成方法</a>について詳しく見る...<br>
+<br>
+</a>
+
+<a name="influenceVortexHelp">
+<h2>神殿:<br>エネルギーを作る</h2>
+<p>
+ニンバスで建設するには、適切な<a href="#influenceHelp">エネルギー</a>が必要です。神殿は二つの供給源の一つで、もう一つはジェネレーターです。本島でゴーレム、ワークショップ、戦闘<a href="#unitHelp">ユニット</a>などを作る準備をすると、神殿が必要なエネルギーを供給します。
+<p>
+神殿を左クリックすると、その範囲を確認できます。
+<p>
+<a href="#vortexHelp">神殿のヘルプに戻る。</a>
+</a>
+
+<a name="edgeFarmType">
+<info>
+<q>「他の文化では、畑を耕すのはこれほど危険ではない。」 — パーヴェル・ミリュコフ、ニンビアンの農夫</q>
+<p>
+エッジファームが育つ場所には<a href="#bridgeType">橋</a>をつなげられず、敵の上陸を阻みます。ただし、自分の島から外へ橋を架けることも妨げられます。
+<p>
+<a href="#vortexHelp">神殿</a>を建てると、その系統がエッジファームにも宿ります。
+<p>
+住民は内側を開発のために空け、島の端に沿って食料を育てます。
+<br>
+</a>
+
+<a name="moneyHelp">
+
+<a name="stormPowerHelp">
+<h2>ストームパワー</h2>
+<p>
+ストームパワーは通貨のようなものです。<a href="#bridgeType">橋</a>以外のすべての<a href="#unitHelp">ユニット</a>の建設に使います。
+<p>
+現在の残量は、画面左上の<a href="#moneyGumpHelp">ストームパワー残量ウィンドウ</a>に表示されます。
+<p>
+ストームパワーは、エネルギーと時間の間にある不安定な物質の状態です。<a href="#sphereHelp">ニンバス</a>で生まれ、
+または破壊される、あらゆるものの本質です。
+<p>
+ニンバスのほぼすべてのものを建設できます。ただし、何を建てるにも、
+<a href="#influenceHelp">エネルギー</a>も必要なことを覚えておいてください。
+<p>
+世界には<a href="#geyserType">ストーム間欠泉</a>の姿で現れます: <!"geyser.*">
+<br>
+<a href="#transportHelp">輸送ユニット</a>を左クリックし、間欠泉に送ってください。輸送ユニットは、
+枯れるまで間欠泉と自分の<a href="#vortexHelp">神殿</a>の間を自動的に往復し、
+<a href="#nuggetType">ストームクリスタル</a>の形で採掘します。（ストームクリスタル:
+<!"nugget.*">)<br>
+枯れると、最も近い、まだ枯れていない間欠泉を探して同じ作業を続けます。
+集めている間、<a href="#moneyGumpHelp">ストームパワー残量ウィンドウ</a>の数字が増える様子を見てください！
+<p>
+左の<a href="#teleportViewHelp">生産ウィンドウ</a>では、ストームパワーが足りず作れない<a href="#unitHelp">ユニット</a>は、
+赤く表示されます。
+<p>
+戦闘で敵ユニットを破壊すると、そのストームパワー価値の半分を得ます！ 残り半分は下で続く
+<a href="#themehelp">フューリー</a>の戦争へ落ち、やがて再び<a href="#geyserType">ストーム間欠泉</a>となり、
+空へ噴き上がります。
+<br>
+</a>
+</a>
+
+<a name="outpostType">
+
+<a name="outpostHelp">
+<info>
+<q>島を支配する力が、感じられるほどだ！ — サール・クインセット</q>
+<p>
+前哨基地は、<a href="multiQuickHelp">マルチプレイヤー</a>で島の支配権をもたらします。
+<p>
+<a href="#priestType">司祭</a>で島に前哨基地を建て、占領しましょう。
+四つの利点があります。
+<p>
+1. 前哨基地がある島から、外へ橋を架けられます。
+<br>
+2. 島を敵の建設から守ります。敵はそこへ何も建てられません。
+<br>
+3. 輸送ユニットがストームクリスタルを運び込むと、ストームパワーに変わります。
+<br>
+4. ワークショップから長い距離を移動する代わりに、前哨基地から直接ユニットを転送できます。
+<p>
+島の支配ルールは次のとおりです。最も多くの前哨基地を持つプレイヤーが支配します。二人が
+同時に建てた場合は、どちらかが追加で一つ建てるまで、無所属のままになることがあります。
+<p>
+前哨基地は、<a href="multiplayerHelp">マルチプレイヤー</a>でのみ使えます。
+<p>
+注意: 前哨基地を建てた島は、自分の<a href="#vortexHelp">神殿</a>の系統を反映します。
+</a>
+</a>
+
+<a name="campaignHelp">
+
+<a name="multiplayerHelp">
+<h2>キャンペーンとマルチプレイヤーモード</h2>
+<p>
+NetStormには、多彩なキャンペーンミッションと、無限に遊べるマルチプレイヤーモードがあります。
+「初期ミッション」で、ゲームの仕組みを学べます。
+<p>
+<b>キャンペーン</b>
+<p>
+各ミッションは決められた知識で始まります。通常、勝利するには敵の<a href="#priestType">司祭</a>を、
+<a href="themeHelp">フューリー</a>に捧げる必要があります。敵が退き、次のミッションへ進めます。
+<p>
+<b>マルチプレイヤー</b>
+<p>
+<a href="multiQuickHelp">マルチプレイヤー</a>は少し異なり、ニンバス人は少ない知識から始めます。
+敵の司祭を<a href="#sacrificeOutline">生け贄にする</a>たび、戦闘能力を高める新たな
+<a href="#technologyHelp">知識</a>を得られます。
+<p>
+マップの構成も異なり、敵を倒そうとする間に、数多くの小島を支配することになります。
+<a href="#outpostType">前哨基地</a>（原作のキャンペーンには登場しません）は、
+勝利に不可欠です。
+<p>
+<a href="#altarType">祭壇</a>の働きも異なります。<a href="#challengeIslandType">ゾーン</a>や、
+<a href="#battlemasterHelp">バトルマスター</a>になる方法も知っておきましょう。他のプレイヤーと
+<a href="#chatViewHelp">チャット</a>したい場合は、<a href="#formatCommandHelp">.formatコマンド</a>もお役に立つでしょう。
+</a>
+</a>
+
+<a name="multiQuickHelp">
+<h2>マルチプレイヤーのクイックスタート</h2>
+<p>
+経験豊かな相手に、一方的に負けたくありませんか？
+<a href="#multiSafeHelp">マルチプレイヤー生存ガイド</a>をご覧ください。
+<p>
+その他、知っておくと役立つこと:
+<p>
+* <a href="#chatViewHelp">チャット</a>で他のプレイヤーと会話できます。
+<br>
+* <a href="#reliabilityHelp">信頼度</a>は、相手が最後までゲームを続けるかの目安です。
+<br>
+* <a href="#challengeIslandType">ゾーン</a>では、同じレベルの相手を探せます。
+<br>
+* <a href="#battleIslandType">チャレンジリング</a>で戦闘を開始できます。
+<br>
+* <a href="#battlemasterHelp">バトルマスター</a>になることも、覚えておきたい技能です。
+<br>
+* <a href="#battleOptionsHelp">戦闘オプション</a>でルールを変更できます。
+<br>
+* <a href="#playerOptionsHelp">プレイヤー設定</a>で各プレイヤーの条件を指定できます。
+<br>
+* <a href="#outpostType">前哨基地</a>は領土を占領するために使います。
+<br>
+* <a href="#altarType">祭壇</a>で<a href="#sacrificeOutline">生け贄</a>を捧げ、<a href="#technologyHelp">知識</a>を得られます。
+<br>
+* <a href="#rankHelp">階級</a>は大きな達成を示します。
+<p>
+* <a href="#playerlistView">こちら</a>で、次のウィンドウの情報の解説をご覧ください。<br>
+<a href="#PlayerListView"><!"fortgump.L1"><!"fortgump.L0"><~y><~E><~B>1.43 devo12<~.></a>
+</a>
+
+<a name="rankHelp">
+<h2>階級</h2>
+<p>
+真のベテランと初心者を分けるものは何でしょう？ 階級です。
+<p>
+相手より階級が高くても、戦闘で有利にはなりません。技量や生け贄にした司祭の数を示す
+手段にすぎません。
+<p>
+多くの司祭を捧げ、フューリーが授けるすべての知識を得ると、上の階級へ進めます。
+次の生け贄では、次の選択肢が現れます。
+<p>
+<c>階級Xへ昇進（ADVANCE TO RANK X）</c>
+<p>
+「X」は新しい階級の数字です。選ぶと、レベル43までに得た技能をすべて失い、サンディスクスロワー、
+サンキャノン、ジェネレーター一つから、やり直します。階級は1上がります。
+<p>
+以前のNetStormでは、高階級のユニットは体力と攻撃力が高く、戦闘で有利でした。しかし、不公平と
+考えられました。そのようなユニットの強化は、現在ではハンディキャップに使われ、その効果は<a href="#battlemasterHelp">バトルマスター</a>が
+選べる<a href="playerOptionsHelp">プレイヤー設定</a>で決まります。
+<p>
+<a href="multiQuickHelp">マルチプレイヤーのクイックスタートに戻る</a>
+</a>
+
+<a name="multiSafeHelp">
+<h2>マルチプレイヤー生存ガイド</h2>
+<p>
+高レベルのプレイヤーは、より長く遊び、より多くの戦闘で勝ってきたことを覚えておきましょう。
+参加してきた場合は、注意してください。
+<p>
+低レベルでもベテランの場合があります。名前の横の階級を確認してください。高階級のプレイヤーは、階級が高いほど、
+与える損害が増え、低階級の相手から受ける損害が減ります。
+<p>
+プレイしたゲーム数も確認できます。島を<c>右クリック</c>し、
+<c>View Player Info</c>を選んで詳細を見てください。長く遊んできた人ほど上手なので、
+実力を判断する最良の目安になるでしょう。
+<p>
+自分よりはるかに多く遊んでいれば、経験豊富でしょう。<a href="battleIslandType">チャレンジ
+リング</a>にいなければ、心配はいりません。
+<p>
+同じリングにいて対戦したくなければ、二つの選択肢があります。一つはリング外を<c>左クリック</c>して
+退出すること。もう一つは、自分が<a href="#battlemasterHelp">バトルマスター</a>なら、左のウィンドウで相手の名前を
+右クリックして追い出すことです。ただし、先に丁寧に退出を頼むのが普通の礼儀です。
+<p>
+対戦前に相手の<a href="reliabilityHelp">信頼度</a>を確認するのも賢明です。
+<p>
+<a href="multiQuickHelp">マルチプレイヤーのクイックスタートに戻る</a>
+</a>
+
+<a name="reliabilityHelp">
+<h2>信頼度</h2>
+<p>
+全プレイヤーには、どの程度最後までゲームを続けるかを示す信頼度があります。
+<p>
+最初は重要でないように思えるかもしれません。しかし、決着間際に、負けたくないという理由で相手が切断したら、
+どれほど残念か考えてみてください。
+<p>
+その時に信頼度が役立ちます。未終了の戦闘から切断して戻らないと、
+信頼度が下がります。故意か、接続が悪かったのかは分かりません。切断は切断です。そのため、
+低いからといって必ずしも負けを嫌う人とは限らず、接続が不安定なだけかもしれません。
+<p>
+チャレンジエリアで相手の島を<c>右クリック</c>すると、信頼度を確認できます。
+100%が最高で、0%は最後まで続けたゲームがないことを意味します！
+<p>
+信頼度が低い場合は、インターネットサービス会社の変更も検討してみてください。
+<p>
+<a href="multiQuickHelp">マルチプレイヤーのクイックスタートに戻る</a>
+</a>
+
+<a name="battlemasterHelp">
+<h2>バトルマスター</h2>
+<p>
+バトルマスターは、開始前に戦闘の<a href="battleOptionsHelp">ルール</a>や、
+<a href="playerOptionsHelp">プレイヤー設定</a>を選び、従わないプレイヤーを
+<a href="battleIslandType">チャレンジリング</a>から追い出せます。
+<p>
+ルールは左ウィンドウの下半分、プレイヤー設定は上半分に表示され、押すと変更できます。
+変更すると、自分を含む全プレイヤーの準備完了チェックが外れます。これは、変更が
+見過ごされることを防ぐためです。
+<p>
+参加者全員に良いゲームを用意する責任があります。レベルが高すぎるなど、適さない相手は、
+名前を<c>右クリック</c>し、
+<c>Yes</c>を選ぶと追い出せます。ただし、相手を思いやり、まず退出を頼むことをお勧めします。
+<p>
+ルールの変更を求められた場合も、検討してみてください。長い開始待ちを
+好む人はおらず、要望を聞くことで、皆がより楽しめるでしょう。
+<p>
+もう一つの重要な役割は、他のプレイヤー間の情報を、自分のコンピューターが
+中継することです。接続が遅いか不安定なら、他の人に譲るのが礼儀です。
+<p>
+接続速度も重要です。五人以上のゲームでは、誰が最も高速か尋ねるとよいでしょう。
+高速なバトルマスターは、全員に安定したゲームを提供できます。
+<p>
+<a href="playerOptionsHelp">プレイヤー設定を見る</a>
+<br>
+<a href="battleOptionsHelp">戦闘オプションを見る</a>
+<p>
+<a href="multiQuickHelp">マルチプレイヤーのクイックスタートに戻る</a>
+</a>
+
+<a name="battleIslandType">
+<h2>チャレンジリング</h2>
+<p>
+リングを<c>左クリック</c>すると参加します。
+<p>
+最初の参加者の場合、オプションのGameメニューでサーバー診断合格が選ばれていれば、
+<a href="#battlemasterHelp">バトルマスター</a>になります。この設定はサーバーを務める資格を与えますが、
+ファイアウォールの内側にいるか接続が遅い場合は、解除して<a href="#battlemasterHelp">バトルマスター</a>に
+ならないようにできます。最初でなければ、単に参加者となります。
+<p>
+ファイアウォールの内側からサーバーを務めるには、ポート<c>6799</c>と<c>6800</c>を開くか転送する必要があります。
+詳しくは<a href="http://www.netstormhq.com">Netstorm:HQ</a>をご覧ください。
+<p>
+<i>リング内の位置が、戦闘中の自分の位置になります！</i>
+<p>
+参加すると、左のウィンドウに、色付きボックスや<a href="playerOptionsHelp">プレイヤー設定</a>と共に名前が現れます。
+<a href="#battlemasterHelp">バトルマスター</a>に接続するまで、名前は灰色です。そのままなら、何らかの理由で
+接続できていません。灰色でなくなると、ボックスと名前の色が戦闘で使う色になります。開始の
+準備ができたら、名前の横の色付きボックスを押してください。
+<p>
+最初に押すと、中に黒い丸が現れます:   <!"fortgump.L6">
+<p>
+名前が灰色でなければ、丸が明るくなります。自分のコンピューターがバトルマスターに接続できると確認された
+印です:   <!"fortgump.L7">
+<p>
+丸が暗く、名前も灰色のままなら、何らかの理由で接続できません。
+退出して別の戦闘に参加する方がよいでしょう。まれに、リングを出て再参加すると接続できることもあります。
+<p>
+参加は必須ではなく、いつでもリングを離れられます。<a href="#battlemasterHelp">バトルマスター</a>には
+追放する権限がありますが、先に丁寧に退出を頼むのが普通の礼儀です。
+<p>
+黄色い文字のリングは、互換性のないバージョンを使っており、一緒に遊べないことを示します。
+<p>
+注意: <a href="#battlemasterHelp">バトルマスター</a>はリングの中央を右クリックし、入力欄で説明を設定できます。
+<p>
+<a href="multiQuickHelp">マルチプレイヤーのクイックスタートに戻る</a>
+
+</a>
+</a>
+
+<a name="zoneHelp">
+
+<a name="challengeIslandType">
+<h2>ゾーン</h2>
+<p>
+NetStormには多くのゾーンがあります。最初にパイロスフィアへ入ると、自分のレベルに合う場所へ
+自動的に移動します。誰もいなければ、他の人がいる近いゾーンに現れるでしょう。
+<p>
+各ゾーンからは、<a href="#battleIslandType">チャレンジリング</a>と、さらに別のゾーンが見えます。
+<br>
+<!"battleIsland.*">
+「チャレンジリング」
+<br>
+<!"challengeIsland.*"> 「ゾーン」
+<p>
+移動したければ、ゾーンの下の文字を見てください。「Empty」なら他のプレイヤーはいません。
+ただし、新しい参加者をまだ検出していないこともあります。<c>F9</c>で
+更新し、最近の参加者を確認できます。誰かがいれば、人数と
+平均レベルが表示されます。移動するには、ゾーンを<c>左クリック</c>するだけです。
+<p>
+ゾーン内で左ウィンドウの名前を押すと、相手の場所へ表示が移動します。その近くを
+<c>左クリック</c>すると、自分の島が選んだ場所へ飛びます。
+<p>
+<a href="multiQuickHelp">マルチプレイヤーのクイックスタートに戻る</a>
+</a>
+</a>
+
+<a name="playerListView">
+
+<a name="playerListViewHelp">
+<h2>プレイヤー一覧ウィンドウ</h2>
+<p>
+パイロスフィアを自由に漂っている時は、自分の<a href="challengeIslandType">ゾーン</a>の全プレイヤーが
+表示されます。名前を押すと、その人の場所が分かります。
+<p>
+各プレイヤーの名前には、次の情報の一部または全部が付きます。
+<!"fortgump.L1"><!"fortgump.L0"><~y><~E><~B>1.43 devo12<~.>
+<p>
+<!"fortgump.L1">は、<a href="battleMasterHelp">バトルマスター</a>、つまりゲームのサーバーを務められないことを
+示します。簡単に言えば、ファイアウォールの内側の人が少ないほど、戦闘は安定します。
+自分が内側にいる場合は、他の人の多くがサーバーを務められる、
+ファイアウォールの影響を受けていない戦闘を探しましょう。
+<p>
+名前の横に<!"fortgump.L1">があっても、影響を受けていないと思う場合は、Escからオプション、
+Gameを開き、サーバー診断合格を選ぶと消せます。これで開始時にバトルマスターになれます。
+また、現在のマスターが切断した時に、その<a href="battleMasterHelp">役割</a>を引き継ぐことも
+できます。
+<p>
+<!"fortgump.L1">がなくても、サーバーを務められないと分かっている場合は、前述の
+設定を解除し、ファイアウォールの内側と示してください。バトルマスターにならなくなります。
+<p>
+<!"fortgump.L0">は、CD-RomドライブにNetStorm CDが入っていないことを示します。多くの
+サーバーでは、このアイコンは表示されません。
+<p>
+名前の前の数字（例: <c>1.43</c>）は<a href="rankHelp">階級</a>とレベルです。<c>1.43</c>なら、階級1、レベル43です。
+レベルが高いほど、持っている<a href="unitHelp">ユニット</a>が多く、階級が高いほど、長く遊んでいることを
+示します。
+<p>
+<~y><~E><~B>devo12<~.>は、名前（ハンドル）の例です。
+<p>
+<a href="battleIslandType">チャレンジリング</a>では、~[IfortGump.L9] ~[IfortGump.L11] <!"icon.B0">などのアイコンが現れる
+こともあります。<a href="playerOptionsHelp">プレイヤー設定</a>の項目で確認できます。
+<p>
+詳細は、<a href="multiQuickHelp">マルチプレイヤーのクイックスタート</a>をご覧ください。
+</a>
+</a>
+
+<a name="battleStatusView">
+
+<a name="battleStatusViewHelp">
+<h2>戦闘状態ウィンドウ</h2>
+<p>
+上半分には、戦闘の全プレイヤーと現在の<a href="#playeroptionshelp">プレイヤー設定</a>が表示されます。
+<p>
+下半分には、現在の<a href="#battleoptionshelp">戦闘オプション</a>が表示されます。
+<p>
+<a href="battlemasterhelp">バトルマスター</a>が開始するには、全員が名前の横のボックスを押す必要があります。
+<p>
+参加しても名前が灰色のままなら、接続できていません。ボックスを押しても丸が暗いままなら、
+<a href="battlemasterhelp">バトルマスター</a>と接続できず、そのゲームでは遊べません。
+<a href="#battleIslandType">チャレンジリング</a>を出て再参加すると、接続できる場合もあります。
+<br>
+<!"fortgump.L6"> 暗い印（接続不能）<br>
+<!"fortgump.L7"> 明るい印（接続済み）
+<p>
+<a href="#playerlistView">こちら</a>で、次の情報の解説をご覧ください。<br>
+<a href="#playerlistView"><!"fortgump.L1"><!"fortgump.L0"><~y>devo12<~.></a>
+<p>
+<a href="multiQuickHelp">マルチプレイヤーのクイックスタートに戻る</a>
+</a>
+</a>
+
+<a name="playerOptionsHelp">
+<h2>プレイヤー設定</h2>
+<p>
+<a href="battlemasterhelp">バトルマスター</a>が、各プレイヤーの条件を指定します。
+<p>
+<c>Observer</c> - 参加か観戦かを選びます。~[IfortGump.L9]は参加、
+~[IfortGump.L10]は観戦です。観戦者に島、司祭、ストームパワーはありません。バトルマスターが
+アイコンを押して切り替えます。
+<p>
+<c>Preset Teams</c> - 事前にチームを決めるには、同じチームの人の盾が同じになるまで、色付きの盾を
+押します。右クリックで逆順に切り替わります。
+<br>
+盾は次のとおりです: ~[IfortGump.L11]~[IfortGump.L12]~[IfortGump.L13]~[IfortGump.L14]~[IfortGump.L15]~[IfortGump.L16]~[IfortGump.L17]~[IfortGump.L18]
+<p>
+<c>Handicap</c> - バトルマスターが、指定したプレイヤーのユニットを強くできます。
+アイコンを左または右クリックして切り替えます。
+<br>
+1から10のアイコンです: <!"icon.B0"> <!"icon.B1"> <!"icon.B2"> <!"icon.B3"> <!"icon.B4"> <!"icon.B5"> <!"icon.B6"> <!"icon.B7"> <!"icon.B8"> <!"icon.B9">
+<br>
+階級が上がると二つのアイコンになり、数字のように働きます。値が高いほどユニットが強くなります。
+戦闘中はいつでも<c>F9</c>で一覧を開き、ハンディキャップを確認できます。詳しくは、
+<a href="http://www.netstormhq.com">Netstorm:HQ</a>をご覧ください。
+<p>
+<a href="battleOptionsHelp">戦闘オプションを見る</a>
+<br>
+<a href="multiQuickHelp">マルチプレイヤーのクイックスタートに戻る</a>
+</a>
+
+<a name="battleOptionsHelp">
+<h2>戦闘オプション</h2>
+<p>
+戦闘の初期条件を変更します。
+<p>
+
+<c>Game Options></c>を押すと、全オプションの変更用ドロップダウンメニューが開きます。<p>
+
+<c>(Sort By)</c>で、表示方法を切り替えられます。<br>
+<p><c>The Show All Options</c>は旧版と同じ表示です。白い文字は値を選ぶドロップダウンを開き、黄褐色の文字は旧版のように順に切り替わります。<br>
+<p><c>Show Only Changed Options</c>は既定値と異なる項目だけを表示します。除外ユニットの追加に似た方法で設定項目を追加できます。白や黄褐色の文字を押すと、既定値に戻って表示から消えます。<p>
+<p>
+
+<c>Game Type</c> - 分岐やパッチで変わってきた過去の戦い方を簡単に選べます。メニューを整理し、一部の設定を自動化して準備を早めます。例:<br>
+<p>
+<c>Netstorm Standard</c>は最新の方式です。新しい間欠泉分配と、現代のNetStormで一般的な戦闘設定を含みます。<br>
+<p>
+<c> Netstorm Classic</c>は10.64と10.37の混合で、旧版のランダムマップの間欠泉分配を使います。<br>
+<p>
+<c> Netstorm Flexible</c>は設定の95%を変更でき、10.70の構成に非常によく似ています。<br>
+<p>
+<c> Netstorm Geyserless</c>は資源収集の代わりに、フューリーが少額ずつ資金を授ける新方式です。新しく、面白い遊び方になるでしょう。<br>
+<p>
+<c> Player Customizable</c>では、ほぼすべてを編集して独自の方式を作れます。皆に好まれる方式を生み出せるかもしれません。
+<p>
+
+<c>Bridge Slots</c> - 生産ウィンドウに現れる橋の数。
+<p>
+<c>Unit Rate</c> - 配置後、生産ウィンドウのユニットが再び使えるまでの速さです。
+暗い絵が、値を上げると早く明るくなります。
+<p>
+<c>Generator Range</c> - エネルギーの届く範囲です。広いほど上位ユニットを置きやすくなりますが、
+戦略性は減ります。
+<p>
+<c>Kill Reward</c> - 通常、敵を破壊すると、そのストームパワー価値の4分の1を得ます。
+その報酬を変更します。
+<p>
+<c>Breakable Alliances</c> - 同盟を破棄できるかどうか。通常は不可ですが、自由にするには、
+<c>Yes</c>を選びます。
+<p>
+<c>Allow Send</c> - 他のプレイヤーへのストームパワー送金。通常は可能です。
+禁止するには<c>No</c>を選びます。
+<p>
+<c>Money per Geyser</c> - 間欠泉一つのストームパワー産出量。
+<p>
+<c>Starting Cash</c> - 初期ストームパワー。通常は<c>6500</c>ですが、
+増減したい場合は変更できます。
+<p>
+<c>Geyser Amount</c> - ゲーム内の間欠泉数を増減します。
+<p>
+<c>Spell</c> - 通常は呪文が現れます。禁止するには、
+<c>No</c>を選びます。司祭には影響しません。
+<p>
+<c>Map Mode</c> - マップの種類。通常のマルチプレイヤー用の
+<c>Archipelago</c>から、<c>Single Island</c>へ変更できます。
+<p>
+<c>Map Size</c> - マップを拡大または縮小します。
+<p>
+<c>Map Density</c> - 島の大きさと数。高密度ほど、大きな島や多数の島が現れやすく、
+低密度ほど現れにくくなります。
+<p>
+<c>Island Dynamics</c> - 木、遺跡、記念碑などをランダムに配置します。
+<p>
+<c>Geysers Placement</c> - 開始時はなく途中で補充する方式、どこにでも現れる旧方式、全体に均等に分配する新方式を切り替えます。
+<p>
+<c>Geysers Respawns</c> - 間欠泉が再出現する頻度。<p>
+<p>
+<c>Resource Injections</c> - フューリーが一定間隔でストームパワーを送ります。<p>
+<p>
+<c>Injection Value</c> - 一度に届くストームパワーの量。<p>
+<p>
+
+
+<c>Excluded Units</c> - 建設を禁止したいユニットや建物を選べます。
+呪文を除外すると、マップに現れなくなります。
+<p>
+<a href="playerOptionsHelp">プレイヤー設定を見る</a>
+<br>
+<a href="multiQuickHelp">マルチプレイヤーのクイックスタートに戻る</a>
+

@@ -1,0 +1,16 @@
+﻿title = "国家の誕生"
+
+[Overview]
+<background="nsstart">
+<h2>{offical4.title}</h2>
+<p>
+あなたの島は力をつけました。今こそニンバスの空に暮らす
+すべての善良な人々の自由のために戦ってください。
+
+$Checked=1 包囲の輪,MissionBegin,TheNoose,{DoneTheNoose},{DoneDissolvedAlliance}
+$Checked=2 レイン対レイン,MissionBegin,RainVsRain,{DoneRainVsRain},{DoneTheNoose}
+$Checked=3 逃げろ！,MissionBegin,RunForIt,{DoneRunForIt},{DoneRainVsRain}
+$Checked=4 背後を守れ,MissionBegin,GuardMyBack,{DoneGuardMyBack},{DoneRunForIt}
+$Checked=5 包囲された！,MissionBegin,Surrounded,{DoneSurrounded},{DoneGuardMyBack}
+
+$Button=戻る,Tell,UCampaign

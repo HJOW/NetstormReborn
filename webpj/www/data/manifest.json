@@ -8,6 +8,7 @@
     "menu-music": "메인 메뉴 음악(크기가 커서 화면 표시를 막지 않고 뒤에서 받음)",
     "mission-sound": "미션 효과음 원본(메뉴에 포함된 두 효과음 제외, 미션 재생 준비용)",
     "mission-music": "미션 장면 음악 원본(메인 메뉴 음악 제외, 미션 재생 준비용)",
+    "japanese": "일본어 공용 UI 번역표와43개 언어 파일. 일본어 선택 때만 받으며 글꼴은 CDN 제공자가 별도로 준비한다.",
     "skirmish": "12차 스커미시 시작 섬 후보 fort 12개(원본 d/*.fort 그대로, 스커미시를 시작할 때만 받음; 2026-11-20 WB04-E1103)",
     "korean": "한국어 지원(갈무리11 글꼴 woff2·UI 번역표 xlat.korean·Tell 본문 tell.korean·캠페인 목록 offical*.korean·용어표 config.korean). 언어가 한국어일 때만 받는다(2026-10-31 WB03-N, WB03-O)"
   },
@@ -2675,6 +2676,358 @@
       "size": 2064,
       "sha256": "757b75f879f47f92932eb5954adc60c76f803409fd9b34c416e08faf71eeb30e",
       "use": "한국어 캠페인 미션 대본(UTF-8): 원본 bc9ssun_bars76.english 의 안내·성공·실패 문구와 제목·적 이름, 실행 설정·명령은 원문 그대로"
+    },
+    {
+      "path": "d/xlat.japanese",
+      "source": "assets/lang/japanese/xlat.japanese",
+      "bundle": "japanese",
+      "size": 39537,
+      "sha256": "b34d4522a197cac66ec43518b78f96a0cde1a4a433ae88853d87b920a19dce5d",
+      "use": "공용 일본어 UI/튜토리얼 안내39키 번역표(UTF-8)"
+    },
+    {
+      "path": "d/bc1menu76.japanese",
+      "source": "assets/lang/japanese/d/bc1menu76.japanese",
+      "bundle": "japanese",
+      "size": 1164,
+      "sha256": "7711fef73f5505cf44ca7727d3a91a64d85867652644102cc20314fddf916864",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/bc2bridging76.japanese",
+      "source": "assets/lang/japanese/d/bc2bridging76.japanese",
+      "bundle": "japanese",
+      "size": 2225,
+      "sha256": "389f6f7be83f8cd5f36f282961fa159db9a87a3dd3a254d61e15205301c33862",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/bc3acid_bar76.japanese",
+      "source": "assets/lang/japanese/d/bc3acid_bar76.japanese",
+      "bundle": "japanese",
+      "size": 2818,
+      "sha256": "384617ef35a19a48d0a801e0a22f3e2e02a61d64e916a0e756f3c5523653bd73",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/bc4bow_rush76.japanese",
+      "source": "assets/lang/japanese/d/bc4bow_rush76.japanese",
+      "bundle": "japanese",
+      "size": 2381,
+      "sha256": "80fd7bb98e398a52bd1cb20c6d236705371038fcff362eeb44fb962c4058a36f",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/bc5walkers76.japanese",
+      "source": "assets/lang/japanese/d/bc5walkers76.japanese",
+      "bundle": "japanese",
+      "size": 2291,
+      "sha256": "68375ad819c1719d542730b7f495d9481f35678b6d3f14f4d1da13f1f5c4ad0c",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/bc6mows76.japanese",
+      "source": "assets/lang/japanese/d/bc6mows76.japanese",
+      "bundle": "japanese",
+      "size": 3376,
+      "sha256": "7cc0f504400a74773179dfe1e7f8a41aba874f38b8e4720139a61da1a49a5e61",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/bc7sun_bars76.japanese",
+      "source": "assets/lang/japanese/d/bc7sun_bars76.japanese",
+      "bundle": "japanese",
+      "size": 2680,
+      "sha256": "37ed1bb9ed71bc5c112d1fdc7c796de301d13d48e14dffe0f969f46956b9bfa6",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/bc8fury76.japanese",
+      "source": "assets/lang/japanese/d/bc8fury76.japanese",
+      "bundle": "japanese",
+      "size": 3825,
+      "sha256": "62d642dc6c85a4065a3d9d9f67a944d494a9102a24303672be0ee1b654a19cd6",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/bc9ssun_bars76.japanese",
+      "source": "assets/lang/japanese/d/bc9ssun_bars76.japanese",
+      "bundle": "japanese",
+      "size": 2178,
+      "sha256": "0fd764eb8ec466593634bd69bb5281d0d1211af8a839eec65dad4c1e076f34f3",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/breakingthrough.japanese",
+      "source": "assets/lang/japanese/d/breakingthrough.japanese",
+      "bundle": "japanese",
+      "size": 2209,
+      "sha256": "3c197e8d211fac362c6df9e037bbd0ebb6e4f3efc8eaef5771531b7bd79f8e5b",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/config.japanese",
+      "source": "assets/lang/japanese/d/config.japanese",
+      "bundle": "japanese",
+      "size": 2653,
+      "sha256": "cc3b5f4ce464d2992a1cc520bd03b90505bd4d3b19383e581f53063462f8f03f",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/demostormrages.japanese",
+      "source": "assets/lang/japanese/d/demostormrages.japanese",
+      "bundle": "japanese",
+      "size": 812,
+      "sha256": "bdca11b4c68121e5431c247fb36c4e58c38eb76d160205bf4c7c1fddf0857e43",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/dissolvedalliance.japanese",
+      "source": "assets/lang/japanese/d/dissolvedalliance.japanese",
+      "bundle": "japanese",
+      "size": 2231,
+      "sha256": "6d0f4e1765734f497f0839137460802c87998d3c4d1a980f8645b346d6fa3236",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/enemyterritory.japanese",
+      "source": "assets/lang/japanese/d/enemyterritory.japanese",
+      "bundle": "japanese",
+      "size": 3004,
+      "sha256": "75bf40bded7fc734eb58abb79530518e3f8ebbebb230cc817bf5f600d6599da0",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/finalconfrontation.japanese",
+      "source": "assets/lang/japanese/d/finalconfrontation.japanese",
+      "bundle": "japanese",
+      "size": 2636,
+      "sha256": "b58c393dfd88510d4a16c571d2df01b4ebbe547f9f10175140a6f5be403f5739",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/fragilefortune.japanese",
+      "source": "assets/lang/japanese/d/fragilefortune.japanese",
+      "bundle": "japanese",
+      "size": 2045,
+      "sha256": "0deaeb64a9dc734cc6440b20f04b221f022093c591ff557a13723a5b7691a900",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/guardmyback.japanese",
+      "source": "assets/lang/japanese/d/guardmyback.japanese",
+      "bundle": "japanese",
+      "size": 3987,
+      "sha256": "f01457ded1539a14469a298e663f2fa8873738525a9674d4e021b60bb74b0023",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/help.japanese",
+      "source": "assets/lang/japanese/d/help.japanese",
+      "bundle": "japanese",
+      "size": 131807,
+      "sha256": "b3fb317f0537c5d2388ea8e2c9c699958ac9b85290fa7ccbc5e98cdd3999d7f2",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/masterofwhirligigs.japanese",
+      "source": "assets/lang/japanese/d/masterofwhirligigs.japanese",
+      "bundle": "japanese",
+      "size": 2071,
+      "sha256": "f3cdbf20ed28d7f4f94d90d4bec9d4af8bb4913d21d30f1049b9527b4c43a825",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/offical1.japanese",
+      "source": "assets/lang/japanese/d/offical1.japanese",
+      "bundle": "japanese",
+      "size": 907,
+      "sha256": "1958685442d996dd010f689095687109d459260c706651c3b47697c0bce84ca6",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/offical2.japanese",
+      "source": "assets/lang/japanese/d/offical2.japanese",
+      "bundle": "japanese",
+      "size": 1304,
+      "sha256": "9c514304179d4d84c41fca99167496e988f133b80234cfc588428ae92471a28d",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/offical2sep.japanese",
+      "source": "assets/lang/japanese/d/offical2sep.japanese",
+      "bundle": "japanese",
+      "size": 16,
+      "sha256": "d45d2f1d422415ec99ab2d03a7d8ca811a370689c11e93eb5b998aaacee61beb",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/offical3.japanese",
+      "source": "assets/lang/japanese/d/offical3.japanese",
+      "bundle": "japanese",
+      "size": 1314,
+      "sha256": "35c7dee63a6f1b53674f0ac128a1090eac5696360fa1e3d57df34dab08d9ae6f",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/offical4.japanese",
+      "source": "assets/lang/japanese/d/offical4.japanese",
+      "bundle": "japanese",
+      "size": 723,
+      "sha256": "a74c1c4929911593b88e4d050316fc6852e2a20bb27916272ecaefe7123a625d",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/offical5.japanese",
+      "source": "assets/lang/japanese/d/offical5.japanese",
+      "bundle": "japanese",
+      "size": 664,
+      "sha256": "d4d9cf5e0a76bf9fc964974bc2b5082fb605c777bf95d51eca2b843d2d3591b8",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/offical5sep.japanese",
+      "source": "assets/lang/japanese/d/offical5sep.japanese",
+      "bundle": "japanese",
+      "size": 16,
+      "sha256": "d45d2f1d422415ec99ab2d03a7d8ca811a370689c11e93eb5b998aaacee61beb",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/offical6.japanese",
+      "source": "assets/lang/japanese/d/offical6.japanese",
+      "bundle": "japanese",
+      "size": 273,
+      "sha256": "19bae48002c797b2fff74faacbcf2216221f40e22a50332a3454ebd7f2bfed28",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/rainvsrain.japanese",
+      "source": "assets/lang/japanese/d/rainvsrain.japanese",
+      "bundle": "japanese",
+      "size": 1821,
+      "sha256": "d8ae7c92edb898e4839237c32f346f36d60fbe62cd2fe9b9e9ea5fb975b1912b",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/runforit.japanese",
+      "source": "assets/lang/japanese/d/runforit.japanese",
+      "bundle": "japanese",
+      "size": 2263,
+      "sha256": "554f9e9ed3d759895bdf6dfad2e16b35335d9b655f530115616585c9f3c09982",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/savetheisland.japanese",
+      "source": "assets/lang/japanese/d/savetheisland.japanese",
+      "bundle": "japanese",
+      "size": 1950,
+      "sha256": "2767f286a109a5cffe729afc26c594518419e94406d0a4ce91a53b3b9045df4d",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/surrounded.japanese",
+      "source": "assets/lang/japanese/d/surrounded.japanese",
+      "bundle": "japanese",
+      "size": 2546,
+      "sha256": "61211f15aff1d14eaab5a72a14e473e258d408cf9a518b4e93408432d4de6722",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/tell.japanese",
+      "source": "assets/lang/japanese/d/tell.japanese",
+      "bundle": "japanese",
+      "size": 78008,
+      "sha256": "14b1822642fc59744ebd5e20c4ce749d9deb5fae953d3a64f85785231254305b",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/thenoose.japanese",
+      "source": "assets/lang/japanese/d/thenoose.japanese",
+      "bundle": "japanese",
+      "size": 2242,
+      "sha256": "70bee02d2049109a3153d694149cd75f8e4e760376f3836de6a09523bd5b6276",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/thewarbegins.japanese",
+      "source": "assets/lang/japanese/d/thewarbegins.japanese",
+      "bundle": "japanese",
+      "size": 1997,
+      "sha256": "2c6880ecaf0692b754e17707db0aec28d5b3581717f0830c45e5371a0b9016a6",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/thunderingpower.japanese",
+      "source": "assets/lang/japanese/d/thunderingpower.japanese",
+      "bundle": "japanese",
+      "size": 5810,
+      "sha256": "d64735dc01d3c4b4670cba6cbb2ac3761e4c1bedeba90850c076ef20702b5510",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/totherescue.japanese",
+      "source": "assets/lang/japanese/d/totherescue.japanese",
+      "bundle": "japanese",
+      "size": 2992,
+      "sha256": "b91864fdc2b79cf59db31705398fd98c3dc9ce6c6fa6cc0a4a3b808ed6948b68",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/tutorial1.japanese",
+      "source": "assets/lang/japanese/d/tutorial1.japanese",
+      "bundle": "japanese",
+      "size": 7194,
+      "sha256": "1f274f21d9c6bccdb37c233190c3605e56c22d23360fd0308e5244c26159678b",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/tutorial2.japanese",
+      "source": "assets/lang/japanese/d/tutorial2.japanese",
+      "bundle": "japanese",
+      "size": 10752,
+      "sha256": "38824dc6071f8d1a66ef468d05e3d9138dc708ff2452e15330f23933ce265c64",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/tutorial3.japanese",
+      "source": "assets/lang/japanese/d/tutorial3.japanese",
+      "bundle": "japanese",
+      "size": 8541,
+      "sha256": "738002d6af6e532a8e07b02ac0b63c4e5439aad3b013de29f7dee8fb6fbca7c5",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/tutorial4.japanese",
+      "source": "assets/lang/japanese/d/tutorial4.japanese",
+      "bundle": "japanese",
+      "size": 9466,
+      "sha256": "2460f624a97ade4fcaedabe4f48fc394fbd7ec17383ce919d3eac714de8336dc",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/tutorial5.japanese",
+      "source": "assets/lang/japanese/d/tutorial5.japanese",
+      "bundle": "japanese",
+      "size": 9608,
+      "sha256": "55357f0920fe0cdff00cb56f33383dba255def6d129a8f277161da84eea88480",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/tutorial6.japanese",
+      "source": "assets/lang/japanese/d/tutorial6.japanese",
+      "bundle": "japanese",
+      "size": 8172,
+      "sha256": "82d95b7bcc7122e93012f043f4f5fbadb6b17f53780b8fdfc987c7a698d6ea93",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
+    },
+    {
+      "path": "d/vicious.japanese",
+      "source": "assets/lang/japanese/d/vicious.japanese",
+      "bundle": "japanese",
+      "size": 2006,
+      "sha256": "f925a495545b33fb5d38a7d56da6c2cf3b0699effbb61eaa03bce85f26af77a8",
+      "use": "공용 일본어 공식 미션/목록/Tell/용어/도움말(UTF-8), 원본 실행 명령 보존"
     }
   ]
 }

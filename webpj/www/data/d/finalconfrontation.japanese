@@ -1,0 +1,79 @@
+﻿[Header]
+missionType = "Tutorial"
+
+missionNumber = 1
+
+myStartMoney = 1200
+myTech = "all"
+
+aiName = "Player"
+aiMoneyRechargeRate = 8    // About 3 minutes to get from 0 to reasonable wealth.
+aiTimeBetweenMoves = 2
+aiCollectors = 3
+aiGeyserAttachments = 3
+aiAllyList = "2;3;4;5"
+
+// 오른쪽 위의 첫 번째 적 설정이다.
+ai2Name = "Lord of Thunder"
+ai2Tech = "thunderBattery;bulf;thunderCannon;thunderBlocker;thunderArcher"
+ai2StartMoney = 0
+
+// 지도 중앙의 두 번째 적 설정이다.
+ai3Name = "Lord of Rain"
+ai3Tech = "rainBattery;rainWalker;rainCannon;rainAviary;rainBlocker;rainBalloon"
+ai3StartMoney = 0
+
+// 오른쪽 아래 적 설정이다.
+ai4Name = "Lord of Wind"
+ai4Tech = "windBattery;windWalker;windArcher;windAviary;windBlocker;windBalloon"
+ai4StartMoney = 0
+ai4Ability = "!ATTACH_TO_ENEMY_ISLAND;!ENCIRCLE_ENEMY_ISLAND"
+
+// 오른쪽 아래 적 설정이다.
+ai5Name = "Storm Lord"
+ai5Tech = "sunWalker;thunderBlocker"
+ai5Collectors = 0
+ai5GeyserAttachments = 0
+ai5StartMoney = 0
+ai5Ability = "!COLLECT_STORM_POWER;!ATTACH_TO_ENEMY_ISLAND;!ENCIRCLE_ENEMY_ISLAND"
+
+title="最後の対決"
+
+[A.]
+<h2>最後の対決</h2>
+<i>「要塞に近づくと、すべてが静まり返っていた。しかし空気は、すでに迫る戦いと、
+目前の死の悪臭で、妙に濃くなっていた。」<br>
+--トリン・ハスパーリンツの日記</i>
+<p>
+大胆な機動によって、あなたの島は敵の領土の奥深く、
+邪悪な帝国の心臓部へと入り込みました！
+<p>
+ついにウィンド、レイン、サンダーの闇の王子たちの最後の要塞を見つけました。
+戦いで彼らを打ち破り、
+究極の勝利をつかんでください！
+
+$Button=知識を確認,ShowTechnology,55
+$Button=ミッション開始,DoNothing,0
+
+
+[Succeeded][BadTeamDead]
+<h2>成功！</h2>
+<p>
+今や、あなただけがニンバスを支配することを知らしめよ！
+全世界を、あなたの絶対的な権力の下に置け！
+闇の君主たちを腹ばいにさせ、命乞いさせよ！
+フューリーたちが、永遠にあなたの意志に従うようにせよ！
+<$Config,Done{mission.fileName}=1>
+$Button=確認,MissionAbort,1
+
+
+[Failed]
+<h2>失敗！</h2>
+<p>
+あなたは究極の闇からニンバスを救う最後の希望でしたが、失敗しました。
+闇の君主たちは、あなたの傲慢を罰するため、
+すべてのニンバス人に、永遠の貧困と病、
+そして奴隷の暮らしを宣告しました。
+$Button=続ける,Tell,TryAgain
+
+[END]
