@@ -23,6 +23,13 @@ public sealed partial class ClientHostGame
         node.Height = node.BaseHeight * node.Scale;
         node.Flags |= 0x20000;
         (tree.TreeHooks.Attach ?? throw new InvalidOperationException("채팅창의 실제 부착 장치 없음"))(token, x, y, tree.Create.Entries[0], 0);
+        var dock = _missionHudDock ?? throw new InvalidOperationException("채팅창의 실제 HUD 도킹 없음");
+        // 원본 Root의 세로·채팅 구분선 slave를 등록하고 미션 시작의 채팅 숨김 사건을 적용한다.
+        dock.RegisterSlave(_hudVertical, token, 4);
+        dock.RegisterSlave(_hudChatDivider, token, 8);
+        dock.Handle(0x02000088, 0, 0);
+        // 임시 HUD 부모는 방송을 직접 받지 않으므로 같은 구분선 이동을 지도 작성자에 전달한다.
+        dock.Handle(0x0200003a, divider.Serial, 0);
         _menuDirty = true;
     }
 }
