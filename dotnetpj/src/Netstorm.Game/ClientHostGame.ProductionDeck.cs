@@ -78,7 +78,7 @@ public sealed partial class ClientHostGame
             MenuInstances = () => _htmlMenus?.State.Instances ?? throw new InvalidOperationException("생산 구분선 실제 메뉴 수 미연결"),
             BindForm = (token, parent) => HostProductionFormBinding.Bind(_surfaceGlobals.Storage, tree, token, parent),
             Synchronize = () => ClientProductionSync.SynchronizeProductionControlContents(context),
-            UpdateContents = () => throw new InvalidOperationException("생산 내용물 실제 갱신은 R6에서 잇는다"),
+            UpdateContents = () => context.Gameplay.RequireSession().UpdateProductionContents(),
             Maintenance = (_, _) => throw new InvalidOperationException("생산 유지 실제 본체는 R6에서 잇는다"),
             CancelCursor = () => throw new InvalidOperationException("생산 커서 실제 취소는 R6 입력에서 잇는다"),
             Take = (_, _) => throw new InvalidOperationException("생산 내용물 실제 취득은 R6 입력에서 잇는다"),
@@ -89,8 +89,7 @@ public sealed partial class ClientHostGame
         };
         var panel = new HostProductionWindows(tree, text, context, _productionGlobals, devices);
         uint token = panel.Construct();
-        // R6에서 실제 내용물 갱신·유지를 연결하기 전까지 루트 유지 Idle을 끈다. 예산 Idle은 그대로 둬 SP 표시를 갱신한다.
-        // 근거: 루트 Idle은 Technology가 0이 아닐 때 UpdateContents·Maintenance를 요구하는데, 두 본체는 R6/R11에서 잇는다.
+        // 실제 세션 완전 적재와 생산 유지를 연결하기 전까지 루트 유지 Idle을 끈다. 예산 Idle은 그대로 둬 SP 표시를 갱신한다.
         tree.Lifetime.SetIdle(token, false);
         panel.SetPalette(_driver.Screen.LogicalPalette);
         var root = panel.Node(token) as ProductionRootNode ?? throw new InvalidOperationException("생산 덱 실제 부모 없음");

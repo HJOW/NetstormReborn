@@ -31,6 +31,12 @@ public sealed partial class HostSession
         (_worldProductionSync ?? throw new InvalidOperationException("Session 실제 생산 동기화 본체 미설치")).Synchronize();
     }
 
+    /// <summary>실제 적재 관문과 현재 변경 알림을 거쳐 같은 Deck과 내용물을 갱신한다.</summary>
+    /// <returns>현재 변경 알림을 소비하고 동기화했으면 참이다.</returns>
+    /// <remarks>cpppj RawCampaignSession::UpdateProductionContents의 순서를 따르며 부분 적재를 완료로 취급하지 않는다.</remarks>
+    public bool UpdateProductionContents() => HostProductionUpdate.Update(_nativeLoaded, OwnerMode, TerrainBookkeeping.ProductionDirtyBox,
+        () => PlayerWorld.CurrentTechnology(), () => WorldProduction.Refresh(MissionPlayer.TemplateOwner), SynchronizeProductionContents);
+
     /// <summary>기존 Source 생산 모듈 준비 위치에서 같은 실제 장치로 본체만 만들며 loaded를 공개하지 않는다.</summary>
     private RawProductionSync CreateProductionSync(RawPlayerWorld player, RawProductionDeck deck, RawCarrierPreDestroy carrier, RawContainedCreate create, IReadOnlyList<OriginalTypeRecord> types, ContainedFinderState finder)
     {
