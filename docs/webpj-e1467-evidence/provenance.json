@@ -1,0 +1,112 @@
+{
+  "unit": "WB04-E1467",
+  "recordedAt": "2026-11-27T15:19:35.606615+00:00",
+  "sourceHead": "6ba6e233feec3b9f4e727a5474fcc67e309dc9bb",
+  "sources": [
+    {
+      "path": "webpj/www/ui/help-window.js",
+      "sha256": "2c75d893f8db97333d682f505312e4fabbecc845b0349cca6ea600b9e8364941",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/www/ui/help-topic.js",
+      "sha256": "80a34c97dccf78fb1dbe533770a969cf7e0ac4e69997856b9ce9da291cdcca70",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/www/ui/quick-help-info.js",
+      "sha256": "51de9ca83247b23ad4dd6bc5f742529bcf03743981c977cc719f3c1f221121e8",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/www/ui/tell-window.js",
+      "sha256": "d0fdfbe997de9943f1fb8260130e1e3c23663a51284e10f1cc0a6049f6b8c6de",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/www/ui/html-text.js",
+      "sha256": "adb179ce01753dac92d25bd8cbf63b322525feef9cd0d7264f2afbc936a172fc",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/www/ui/tell-lists.js",
+      "sha256": "10689603e9458c6abc56196654ad96240ac563d46f4ec21a866ef367a927d8d4",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/www/assets/picture-resolver.js",
+      "sha256": "c87e351775f581eb4d225d0429477fcaaaaaaa2f83e580276d712f5a188927c1",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/www/assets/game-data.js",
+      "sha256": "e7887158793b2df8b7a73ccc50e450268bd03fdf23e89f0ee8ff2ac18f65e933",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/www/ui/main-menu.js",
+      "sha256": "915257cac3d6e5c677640780692cf02577529659f34c28575c557d71e75ad1fb",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/tests/help.test.mjs",
+      "sha256": "e72aee12c6d5f3bfa854a87062ed8ed689fe275dcf0dcca7d313dd3bc1b0a603",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/tests/picture.test.mjs",
+      "sha256": "db290c38b23da118428aaf1019b239a98877cbe348174e62fe828b8e96183a35",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/tests/quick-help-info.test.mjs",
+      "sha256": "39ca081e394c5123b1f74e571e5bafa5a46384d7d7d8c622eb5e48d650996aa7",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/tests/quick-help-popup-state.test.mjs",
+      "sha256": "6471b18d278b2613be929c3ae59c94690d0cdef4d421e53cb232a73fb1b35c9e",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/tests/quick-help-asset-type.test.mjs",
+      "sha256": "bb96547c3ca0500b669f3685ba4b54e65e9dbda9e7c9ab6c8d250a75e951cc09",
+      "sameAsE1458": true
+    }
+  ],
+  "inheritedRegression": "E1458 Node26 6932/6932; selected 14 files raw-identical",
+  "newBrowserChecks": {
+    "cases": 4,
+    "viewportsPerCase": 3,
+    "drags": 12,
+    "dpr": 2,
+    "campaignsStarted": 0,
+    "errors": 0,
+    "cursorPhysicalAppearanceVerified": false
+  },
+  "artifacts": [
+    {
+      "path": "webpj/extracted/e1467-overlay-probe.cjs",
+      "bytes": 6677,
+      "sha256": "10cf67d035b4d12836eb3ded1c7c899d518265cd0848df192de798bf5fa44866"
+    },
+    {
+      "path": "webpj/extracted/e1467-overlay-results.json",
+      "bytes": 48681,
+      "sha256": "c5c06412bfc74554f2d39d5c51b318645bd63a246524d389552984f8c98dc4fb"
+    },
+    {
+      "path": "webpj/extracted/e1467-help-data-final.json",
+      "bytes": 6268,
+      "sha256": "720a90ded78b43db78fce5913082a859c0b66b5d7eafa3ec3498e2a3629f0813"
+    },
+    {
+      "path": "webpj/extracted/e1467-overlay-first-browser.log",
+      "bytes": 183,
+      "sha256": "515ddb2c2ecb2b1d434f427f335ca99643f6622cbca2b6599c73fb15fcffef73"
+    }
+  ],
+  "helpInventoryFiles": 138,
+  "fittedPictureExpressions": 0,
+  "nsislesAndNsstartAssetsFound": false
+}
