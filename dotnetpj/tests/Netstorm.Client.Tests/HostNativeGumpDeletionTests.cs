@@ -46,4 +46,36 @@ public sealed partial class HostPriestWorldLiveTests
             session.ReleasePlayerProcesses();
         }
     }
+
+    /// <summary>일반 월드 자산 삭제도 같은 UI 등록표와 부착 Form을 중첩 정리한다.</summary>
+    [Fact]
+    public void NativeAssetDeletionReleasesAttachedGumpThroughActualUi()
+    {
+        var (session, _, surface) = WorldDeletionRootScene(sharedNative: true);
+        session.BuildWorldDeletionRootDevices();
+        string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
+        var startup = new HostStartupScene(data);
+        var screen = new Screen(1024, 768); Assert.True(screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); startup.Draw(screen);
+        var menu = new HostMainMenu(startup, screen, new() { Now = () => 0, Poll = _ => default, Sound = () => { }, Redraw = (_, _) => { }, HandleBase = (_, _, _, _) => 0 });
+        var tree = menu.Tree; int changed = 0;
+        using var ui = new HostGumpFormRuntime(surface.Storage, tree, (_, _) => false, () => changed++);
+        using (var runtime = HostMissionRuntime.Create(session, surface.Storage))
+        {
+            int parent = session.BuildPlayerWorldHooks().Create!(80, 2);
+            Assert.Equal(OriginalConstructors.BaseVtable, System.Buffers.Binary.BinaryPrimitives.ReadUInt32LittleEndian(session.Pool.Slot(parent)));
+            uint token = tree.AllocateNode(new GumpCreateNode()); tree.Factory.Construct(token, 0, 0, 0, 1);
+            GumpCreateNode node = tree.Node(token)!;
+            int form = checked((int)HostProductionFormBinding.Bind(surface.Storage, tree, token, (uint)parent));
+            node.Object = (uint)parent; node.Form = (uint)form; node.Flags |= 0x40;
+            Assert.True(session.DestroyResourceObject(parent, 0));
+            Assert.Equal(1, changed);
+            Assert.NotEqual(0, session.Pool.Slot(parent)[11] & 1);
+            Assert.NotEqual(0, session.Pool.Slot(form)[11] & 1);
+            Assert.NotEqual(0u, node.Flags & 0x10000);
+            Assert.Equal(0u, surface.Storage.BaseDestroy().PreDepth);
+            Assert.Equal(0u, surface.Storage.BaseDestroy().PostDepth);
+            tree.Lifetime.Cleanup(); Assert.Null(tree.Node(token));
+            session.ReleasePlayerProcesses();
+        }
+    }
 }
