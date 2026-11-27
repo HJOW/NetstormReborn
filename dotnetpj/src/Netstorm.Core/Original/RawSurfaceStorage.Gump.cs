@@ -17,6 +17,17 @@ public sealed partial class RawSurfaceStorage
     private WeakReference<RawSurfaceGumpBindings>? _gumpRuntime;
     /// <summary>현재 화면이 소유하는 장기 UI 통지 대여다.</summary>
     private WeakReference<RawSurfaceGumpBindings>? _gumpUiRuntime;
+    /// <summary>Client가 소유하는 실제 현재 Gump TYPE 주소다.</summary>
+    private UIntBox? _gumpType;
+
+    /// <summary>첫 장기 GumpForm 생성 전에 같은 Client의 현재 TYPE 주소를 빌린다.</summary>
+    public void BindGumpType(UIntBox type)
+    {
+        ArgumentNullException.ThrowIfNull(type);
+        if (!UsesNativeTransmissionDevices() || _gumpForms is not null || _gumpType is not null)
+            throw new ArgumentException("장기 Gump의 최초 Native TYPE 주소 필요", nameof(type));
+        _gumpType = type;
+    }
 
     /// <summary>World 통지를 약하게 빌리며 살아 있는 다른 대여를 덮지 않는다.</summary>
     public void BindGumpRuntime(RawSurfaceGumpBindings runtime)

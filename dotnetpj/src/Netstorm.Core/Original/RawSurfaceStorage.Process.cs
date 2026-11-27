@@ -390,7 +390,10 @@ public sealed partial class RawSurfaceStorage
     {
         if (_gumpForms is null)
         {
-            _gumpForms = new RawGumpFormHost(Pool, FactoryExecutor(), Types, BaseDestroy(), DeliverGumpNotice);
+            var forms = new RawGumpFormHost(Pool, FactoryExecutor(), Types, BaseDestroy(), DeliverGumpNotice,
+                _gumpType is null ? null : DefaultProcessAssetHooks());
+            if (_gumpType is { } type) forms.BindCurrent(type, (sid, flags) => _ = DestroyAsset(sid, flags));
+            _gumpForms = forms;
         }
 
         return _gumpForms;

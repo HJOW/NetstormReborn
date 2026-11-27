@@ -14,6 +14,7 @@ public sealed partial class ClientSurfaceGlobals
         if (!ReferenceEquals(connections.LocalState, Clock.LocalState))
             throw new ArgumentException("Squid 전송의 같은 Client 연결/시계 owner 필요", nameof(connections));
         Storage.BindTransmissionDevices(CreateTransmissionDevices(connections));
+        Storage.BindGumpType(Gameplay.GumpFormTypeBox);
         Storage.BindProcessDevices(new()
         {
             Selected = () => Gameplay.Selection.Selected.Value,

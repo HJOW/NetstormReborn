@@ -57,4 +57,19 @@ public sealed class RawSurfaceGumpCurrentTests
         Assert.Throws<InvalidOperationException>(() => forms.Notify(form)); Assert.Equal(new[] { "release" }, effects);
         storage.ReleaseGumpUiRuntime(ui);
     }
+
+    /// <summary>장기 저장소의 실제 Form이 같은 TYPE 주소와 공장을 사용하고 중복 설치를 거부한다.</summary>
+    [Fact]
+    public void StorageGumpFormsBorrowsCurrentTypeAndVirtualDelete()
+    {
+        var storage = Storage(); var type = new UIntBox { Value = 3 };
+        storage.BindGumpType(type); Assert.Throws<ArgumentException>(() => storage.BindGumpType(type));
+        storage.Types[4].ConstructorAddress = OriginalConstructors.Address(3);
+        var forms = storage.GumpForms(); Assert.Same(forms, storage.GumpForms());
+        int first = forms.Create(); Assert.Equal(3, storage.Pool.Slot(first)[10]);
+        type.Value = 4; int second = forms.Create(); Assert.Equal(4, storage.Pool.Slot(second)[10]); Assert.True(forms.IsGumpForm(second));
+        Assert.Throws<ArgumentException>(() => storage.BindGumpType(new()));
+        // 실제 월드 삭제 장치가 없으면 가상 삭제 경로는 성공을 꾸미지 않는다.
+        Assert.Throws<InvalidOperationException>(() => forms.Destroy(second));
+    }
 }
