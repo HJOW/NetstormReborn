@@ -1,0 +1,3805 @@
+[
+  {
+    "scenario": {
+      "name": "construct-main",
+      "candidate": false,
+      "ban": false
+    },
+    "launch": {
+      "script": "[Header]\nmissionType=\"Tutorial\"\n\nmissionNumber=1\nmoreGeysers=1\nrandGeysers=1\n\nmyStartMoney=5000\nmyTech=\"all;outpost\"\nmyAllyList=\"\"\ntitle=\"Skirmish\"\n\nai2Name=\"Computer #1\"\nai2Tech=\"all;outpost\"\nai2StartMoney=5000\nai2GeyserAttachments=3\nai2Collectors=6\nai2StuffRefreshRate=1\nai2TimeBetweenMoves=2\nai2BridgeDrawRate=1\nai2AllyList=\"2\"\n\n[Options]\n\n[A.]\n<h2>Skirmish</h2>\n<i>1 AI</i>\n\n$Button=Go!,DoNothing,0\n\n[Succeeded][BadTeamDead]\n<h2>Victory!</h2>\n<p>\nEvery enemy has been defeated.\n$Button=Leave,MissionAbort,0\n\n[Failed][GoodTeamDead]\n<h2>Defeat</h2>\n<p>\nYour team has fallen.\n$Button=Leave,MissionAbort,0\n\n[END]\n",
+      "settings": {
+        "aiCount": 1,
+        "ai": [
+          {
+            "difficulty": 2,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          }
+        ],
+        "bans": []
+      }
+    },
+    "activation": {
+      "owner": 1,
+      "token": 536892288,
+      "reused": false,
+      "before": {
+        "money": 5000,
+        "allies": 2,
+        "name": [
+          89,
+          111,
+          117
+        ],
+        "technology": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          true,
+          false,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          true,
+          true,
+          false,
+          true,
+          false,
+          true,
+          false,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      "money": 5000,
+      "allies": 2,
+      "name": [
+        89,
+        111,
+        117
+      ],
+      "technology": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        true,
+        true,
+        false,
+        true,
+        false,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "brain": 536892288
+    },
+    "spot": {
+      "priest": 15000,
+      "x": 492,
+      "y": 363
+    },
+    "actual": {
+      "time": 9.325,
+      "technology": [
+        true,
+        true
+      ],
+      "entries": [
+        {
+          "text": "Build Outpost for 600~[IfortGump.3]",
+          "command": 33554528,
+          "parameter": 8272536,
+          "include": true,
+          "enabled": true
+        }
+      ],
+      "activeAI": true
+    },
+    "errors": [],
+    "construction": {
+      "menuPath": [
+        {
+          "token": 96,
+          "row": 0
+        },
+        {
+          "token": 105,
+          "row": 2
+        }
+      ],
+      "selected": {
+        "type": 126,
+        "preview": 162,
+        "lockDepth": 0,
+        "sp": 5000
+      },
+      "probe": {
+        "probes": 3127,
+        "before": 5000,
+        "after": 5000,
+        "placement": {
+          "hotspotX": 83,
+          "hotspotY": 72,
+          "imageWidth": 85,
+          "imageHeight": 74
+        },
+        "snap": 1,
+        "candidates": [
+          {
+            "logicalX": 494,
+            "logicalY": 368,
+            "x": 494,
+            "y": 368,
+            "worldX": 140,
+            "worldY": 185,
+            "distance": 29
+          },
+          {
+            "logicalX": 494,
+            "logicalY": 357,
+            "x": 494,
+            "y": 357,
+            "worldX": 140,
+            "worldY": 184,
+            "distance": 40
+          },
+          {
+            "logicalX": 478,
+            "logicalY": 368,
+            "x": 478,
+            "y": 368,
+            "worldX": 139,
+            "worldY": 185,
+            "distance": 221
+          },
+          {
+            "logicalX": 478,
+            "logicalY": 357,
+            "x": 478,
+            "y": 357,
+            "worldX": 139,
+            "worldY": 184,
+            "distance": 232
+          },
+          {
+            "logicalX": 494,
+            "logicalY": 379,
+            "x": 494,
+            "y": 379,
+            "worldX": 140,
+            "worldY": 186,
+            "distance": 260
+          },
+          {
+            "logicalX": 478,
+            "logicalY": 379,
+            "x": 478,
+            "y": 379,
+            "worldX": 139,
+            "worldY": 186,
+            "distance": 452
+          },
+          {
+            "logicalX": 478,
+            "logicalY": 346,
+            "x": 478,
+            "y": 346,
+            "worldX": 139,
+            "worldY": 183,
+            "distance": 485
+          },
+          {
+            "logicalX": 494,
+            "logicalY": 390,
+            "x": 494,
+            "y": 390,
+            "worldX": 140,
+            "worldY": 187,
+            "distance": 733
+          },
+          {
+            "logicalX": 462,
+            "logicalY": 368,
+            "x": 462,
+            "y": 368,
+            "worldX": 138,
+            "worldY": 185,
+            "distance": 925
+          },
+          {
+            "logicalX": 478,
+            "logicalY": 390,
+            "x": 478,
+            "y": 390,
+            "worldX": 139,
+            "worldY": 187,
+            "distance": 925
+          },
+          {
+            "logicalX": 462,
+            "logicalY": 357,
+            "x": 462,
+            "y": 357,
+            "worldX": 138,
+            "worldY": 184,
+            "distance": 936
+          },
+          {
+            "logicalX": 478,
+            "logicalY": 335,
+            "x": 478,
+            "y": 335,
+            "worldX": 139,
+            "worldY": 182,
+            "distance": 980
+          },
+          {
+            "logicalX": 462,
+            "logicalY": 379,
+            "x": 462,
+            "y": 379,
+            "worldX": 138,
+            "worldY": 186,
+            "distance": 1156
+          },
+          {
+            "logicalX": 462,
+            "logicalY": 346,
+            "x": 462,
+            "y": 346,
+            "worldX": 138,
+            "worldY": 183,
+            "distance": 1189
+          },
+          {
+            "logicalX": 494,
+            "logicalY": 401,
+            "x": 494,
+            "y": 401,
+            "worldX": 140,
+            "worldY": 188,
+            "distance": 1448
+          },
+          {
+            "logicalX": 462,
+            "logicalY": 390,
+            "x": 462,
+            "y": 390,
+            "worldX": 138,
+            "worldY": 187,
+            "distance": 1629
+          },
+          {
+            "logicalX": 478,
+            "logicalY": 401,
+            "x": 478,
+            "y": 401,
+            "worldX": 139,
+            "worldY": 188,
+            "distance": 1640
+          },
+          {
+            "logicalX": 462,
+            "logicalY": 335,
+            "x": 462,
+            "y": 335,
+            "worldX": 138,
+            "worldY": 182,
+            "distance": 1684
+          },
+          {
+            "logicalX": 478,
+            "logicalY": 324,
+            "x": 478,
+            "y": 324,
+            "worldX": 139,
+            "worldY": 181,
+            "distance": 1717
+          },
+          {
+            "logicalX": 446,
+            "logicalY": 368,
+            "x": 446,
+            "y": 368,
+            "worldX": 137,
+            "worldY": 185,
+            "distance": 2141
+          },
+          {
+            "logicalX": 446,
+            "logicalY": 357,
+            "x": 446,
+            "y": 357,
+            "worldX": 137,
+            "worldY": 184,
+            "distance": 2152
+          },
+          {
+            "logicalX": 462,
+            "logicalY": 401,
+            "x": 462,
+            "y": 401,
+            "worldX": 138,
+            "worldY": 188,
+            "distance": 2344
+          },
+          {
+            "logicalX": 446,
+            "logicalY": 379,
+            "x": 446,
+            "y": 379,
+            "worldX": 137,
+            "worldY": 186,
+            "distance": 2372
+          },
+          {
+            "logicalX": 446,
+            "logicalY": 346,
+            "x": 446,
+            "y": 346,
+            "worldX": 137,
+            "worldY": 183,
+            "distance": 2405
+          },
+          {
+            "logicalX": 494,
+            "logicalY": 412,
+            "x": 494,
+            "y": 412,
+            "worldX": 140,
+            "worldY": 189,
+            "distance": 2405
+          },
+          {
+            "logicalX": 462,
+            "logicalY": 324,
+            "x": 462,
+            "y": 324,
+            "worldX": 138,
+            "worldY": 181,
+            "distance": 2421
+          },
+          {
+            "logicalX": 478,
+            "logicalY": 412,
+            "x": 478,
+            "y": 412,
+            "worldX": 139,
+            "worldY": 189,
+            "distance": 2597
+          },
+          {
+            "logicalX": 510,
+            "logicalY": 412,
+            "x": 510,
+            "y": 412,
+            "worldX": 141,
+            "worldY": 189,
+            "distance": 2725
+          },
+          {
+            "logicalX": 446,
+            "logicalY": 390,
+            "x": 446,
+            "y": 390,
+            "worldX": 137,
+            "worldY": 187,
+            "distance": 2845
+          },
+          {
+            "logicalX": 446,
+            "logicalY": 335,
+            "x": 446,
+            "y": 335,
+            "worldX": 137,
+            "worldY": 182,
+            "distance": 2900
+          },
+          {
+            "logicalX": 462,
+            "logicalY": 412,
+            "x": 462,
+            "y": 412,
+            "worldX": 138,
+            "worldY": 189,
+            "distance": 3301
+          },
+          {
+            "logicalX": 446,
+            "logicalY": 401,
+            "x": 446,
+            "y": 401,
+            "worldX": 137,
+            "worldY": 188,
+            "distance": 3560
+          },
+          {
+            "logicalX": 446,
+            "logicalY": 324,
+            "x": 446,
+            "y": 324,
+            "worldX": 137,
+            "worldY": 181,
+            "distance": 3637
+          },
+          {
+            "logicalX": 478,
+            "logicalY": 423,
+            "x": 478,
+            "y": 423,
+            "worldX": 139,
+            "worldY": 190,
+            "distance": 3796
+          },
+          {
+            "logicalX": 430,
+            "logicalY": 368,
+            "x": 430,
+            "y": 368,
+            "worldX": 136,
+            "worldY": 185,
+            "distance": 3869
+          },
+          {
+            "logicalX": 430,
+            "logicalY": 357,
+            "x": 430,
+            "y": 357,
+            "worldX": 136,
+            "worldY": 184,
+            "distance": 3880
+          },
+          {
+            "logicalX": 430,
+            "logicalY": 346,
+            "x": 430,
+            "y": 346,
+            "worldX": 136,
+            "worldY": 183,
+            "distance": 4133
+          },
+          {
+            "logicalX": 462,
+            "logicalY": 423,
+            "x": 462,
+            "y": 423,
+            "worldX": 138,
+            "worldY": 190,
+            "distance": 4500
+          },
+          {
+            "logicalX": 446,
+            "logicalY": 412,
+            "x": 446,
+            "y": 412,
+            "worldX": 137,
+            "worldY": 189,
+            "distance": 4517
+          },
+          {
+            "logicalX": 446,
+            "logicalY": 313,
+            "x": 446,
+            "y": 313,
+            "worldX": 137,
+            "worldY": 180,
+            "distance": 4616
+          },
+          {
+            "logicalX": 430,
+            "logicalY": 335,
+            "x": 430,
+            "y": 335,
+            "worldX": 136,
+            "worldY": 182,
+            "distance": 4628
+          },
+          {
+            "logicalX": 478,
+            "logicalY": 434,
+            "x": 478,
+            "y": 434,
+            "worldX": 139,
+            "worldY": 191,
+            "distance": 5237
+          },
+          {
+            "logicalX": 430,
+            "logicalY": 324,
+            "x": 430,
+            "y": 324,
+            "worldX": 136,
+            "worldY": 181,
+            "distance": 5365
+          },
+          {
+            "logicalX": 446,
+            "logicalY": 423,
+            "x": 446,
+            "y": 423,
+            "worldX": 137,
+            "worldY": 190,
+            "distance": 5716
+          },
+          {
+            "logicalX": 462,
+            "logicalY": 434,
+            "x": 462,
+            "y": 434,
+            "worldX": 138,
+            "worldY": 191,
+            "distance": 5941
+          },
+          {
+            "logicalX": 414,
+            "logicalY": 368,
+            "x": 414,
+            "y": 368,
+            "worldX": 135,
+            "worldY": 185,
+            "distance": 6109
+          },
+          {
+            "logicalX": 414,
+            "logicalY": 357,
+            "x": 414,
+            "y": 357,
+            "worldX": 135,
+            "worldY": 184,
+            "distance": 6120
+          },
+          {
+            "logicalX": 430,
+            "logicalY": 313,
+            "x": 430,
+            "y": 313,
+            "worldX": 136,
+            "worldY": 180,
+            "distance": 6344
+          },
+          {
+            "logicalX": 414,
+            "logicalY": 346,
+            "x": 414,
+            "y": 346,
+            "worldX": 135,
+            "worldY": 183,
+            "distance": 6373
+          },
+          {
+            "logicalX": 414,
+            "logicalY": 335,
+            "x": 414,
+            "y": 335,
+            "worldX": 135,
+            "worldY": 182,
+            "distance": 6868
+          },
+          {
+            "logicalX": 478,
+            "logicalY": 445,
+            "x": 478,
+            "y": 445,
+            "worldX": 139,
+            "worldY": 192,
+            "distance": 6920
+          },
+          {
+            "logicalX": 446,
+            "logicalY": 434,
+            "x": 446,
+            "y": 434,
+            "worldX": 137,
+            "worldY": 191,
+            "distance": 7157
+          },
+          {
+            "logicalX": 430,
+            "logicalY": 302,
+            "x": 430,
+            "y": 302,
+            "worldX": 136,
+            "worldY": 179,
+            "distance": 7565
+          },
+          {
+            "logicalX": 414,
+            "logicalY": 324,
+            "x": 414,
+            "y": 324,
+            "worldX": 135,
+            "worldY": 181,
+            "distance": 7605
+          },
+          {
+            "logicalX": 462,
+            "logicalY": 445,
+            "x": 462,
+            "y": 445,
+            "worldX": 138,
+            "worldY": 192,
+            "distance": 7624
+          },
+          {
+            "logicalX": 414,
+            "logicalY": 313,
+            "x": 414,
+            "y": 313,
+            "worldX": 135,
+            "worldY": 180,
+            "distance": 8584
+          },
+          {
+            "logicalX": 446,
+            "logicalY": 445,
+            "x": 446,
+            "y": 445,
+            "worldX": 137,
+            "worldY": 192,
+            "distance": 8840
+          },
+          {
+            "logicalX": 478,
+            "logicalY": 456,
+            "x": 478,
+            "y": 456,
+            "worldX": 139,
+            "worldY": 193,
+            "distance": 8845
+          },
+          {
+            "logicalX": 398,
+            "logicalY": 368,
+            "x": 398,
+            "y": 368,
+            "worldX": 134,
+            "worldY": 185,
+            "distance": 8861
+          },
+          {
+            "logicalX": 398,
+            "logicalY": 357,
+            "x": 398,
+            "y": 357,
+            "worldX": 134,
+            "worldY": 184,
+            "distance": 8872
+          },
+          {
+            "logicalX": 398,
+            "logicalY": 346,
+            "x": 398,
+            "y": 346,
+            "worldX": 134,
+            "worldY": 183,
+            "distance": 9125
+          },
+          {
+            "logicalX": 462,
+            "logicalY": 456,
+            "x": 462,
+            "y": 456,
+            "worldX": 138,
+            "worldY": 193,
+            "distance": 9549
+          },
+          {
+            "logicalX": 398,
+            "logicalY": 335,
+            "x": 398,
+            "y": 335,
+            "worldX": 134,
+            "worldY": 182,
+            "distance": 9620
+          },
+          {
+            "logicalX": 398,
+            "logicalY": 324,
+            "x": 398,
+            "y": 324,
+            "worldX": 134,
+            "worldY": 181,
+            "distance": 10357
+          },
+          {
+            "logicalX": 446,
+            "logicalY": 456,
+            "x": 446,
+            "y": 456,
+            "worldX": 137,
+            "worldY": 193,
+            "distance": 10765
+          },
+          {
+            "logicalX": 478,
+            "logicalY": 467,
+            "x": 478,
+            "y": 467,
+            "worldX": 139,
+            "worldY": 194,
+            "distance": 11012
+          },
+          {
+            "logicalX": 398,
+            "logicalY": 313,
+            "x": 398,
+            "y": 313,
+            "worldX": 134,
+            "worldY": 180,
+            "distance": 11336
+          },
+          {
+            "logicalX": 462,
+            "logicalY": 467,
+            "x": 462,
+            "y": 467,
+            "worldX": 138,
+            "worldY": 194,
+            "distance": 11716
+          },
+          {
+            "logicalX": 382,
+            "logicalY": 368,
+            "x": 382,
+            "y": 368,
+            "worldX": 133,
+            "worldY": 185,
+            "distance": 12125
+          },
+          {
+            "logicalX": 382,
+            "logicalY": 357,
+            "x": 382,
+            "y": 357,
+            "worldX": 133,
+            "worldY": 184,
+            "distance": 12136
+          },
+          {
+            "logicalX": 382,
+            "logicalY": 346,
+            "x": 382,
+            "y": 346,
+            "worldX": 133,
+            "worldY": 183,
+            "distance": 12389
+          },
+          {
+            "logicalX": 430,
+            "logicalY": 456,
+            "x": 430,
+            "y": 456,
+            "worldX": 136,
+            "worldY": 193,
+            "distance": 12493
+          },
+          {
+            "logicalX": 382,
+            "logicalY": 335,
+            "x": 382,
+            "y": 335,
+            "worldX": 133,
+            "worldY": 182,
+            "distance": 12884
+          },
+          {
+            "logicalX": 446,
+            "logicalY": 467,
+            "x": 446,
+            "y": 467,
+            "worldX": 137,
+            "worldY": 194,
+            "distance": 12932
+          },
+          {
+            "logicalX": 478,
+            "logicalY": 478,
+            "x": 478,
+            "y": 478,
+            "worldX": 139,
+            "worldY": 195,
+            "distance": 13421
+          },
+          {
+            "logicalX": 382,
+            "logicalY": 324,
+            "x": 382,
+            "y": 324,
+            "worldX": 133,
+            "worldY": 181,
+            "distance": 13621
+          },
+          {
+            "logicalX": 462,
+            "logicalY": 478,
+            "x": 462,
+            "y": 478,
+            "worldX": 138,
+            "worldY": 195,
+            "distance": 14125
+          },
+          {
+            "logicalX": 382,
+            "logicalY": 313,
+            "x": 382,
+            "y": 313,
+            "worldX": 133,
+            "worldY": 180,
+            "distance": 14600
+          },
+          {
+            "logicalX": 430,
+            "logicalY": 467,
+            "x": 430,
+            "y": 467,
+            "worldX": 136,
+            "worldY": 194,
+            "distance": 14660
+          },
+          {
+            "logicalX": 414,
+            "logicalY": 456,
+            "x": 414,
+            "y": 456,
+            "worldX": 135,
+            "worldY": 193,
+            "distance": 14733
+          },
+          {
+            "logicalX": 446,
+            "logicalY": 478,
+            "x": 446,
+            "y": 478,
+            "worldX": 137,
+            "worldY": 195,
+            "distance": 15341
+          },
+          {
+            "logicalX": 494,
+            "logicalY": 489,
+            "x": 494,
+            "y": 489,
+            "worldX": 140,
+            "worldY": 196,
+            "distance": 15880
+          },
+          {
+            "logicalX": 366,
+            "logicalY": 368,
+            "x": 366,
+            "y": 368,
+            "worldX": 132,
+            "worldY": 185,
+            "distance": 15901
+          },
+          {
+            "logicalX": 366,
+            "logicalY": 357,
+            "x": 366,
+            "y": 357,
+            "worldX": 132,
+            "worldY": 184,
+            "distance": 15912
+          },
+          {
+            "logicalX": 478,
+            "logicalY": 489,
+            "x": 478,
+            "y": 489,
+            "worldX": 139,
+            "worldY": 196,
+            "distance": 16072
+          },
+          {
+            "logicalX": 366,
+            "logicalY": 346,
+            "x": 366,
+            "y": 346,
+            "worldX": 132,
+            "worldY": 183,
+            "distance": 16165
+          },
+          {
+            "logicalX": 510,
+            "logicalY": 489,
+            "x": 510,
+            "y": 489,
+            "worldX": 141,
+            "worldY": 196,
+            "distance": 16200
+          },
+          {
+            "logicalX": 366,
+            "logicalY": 335,
+            "x": 366,
+            "y": 335,
+            "worldX": 132,
+            "worldY": 182,
+            "distance": 16660
+          },
+          {
+            "logicalX": 462,
+            "logicalY": 489,
+            "x": 462,
+            "y": 489,
+            "worldX": 138,
+            "worldY": 196,
+            "distance": 16776
+          },
+          {
+            "logicalX": 414,
+            "logicalY": 467,
+            "x": 414,
+            "y": 467,
+            "worldX": 135,
+            "worldY": 194,
+            "distance": 16900
+          },
+          {
+            "logicalX": 430,
+            "logicalY": 478,
+            "x": 430,
+            "y": 478,
+            "worldX": 136,
+            "worldY": 195,
+            "distance": 17069
+          },
+          {
+            "logicalX": 366,
+            "logicalY": 324,
+            "x": 366,
+            "y": 324,
+            "worldX": 132,
+            "worldY": 181,
+            "distance": 17397
+          },
+          {
+            "logicalX": 398,
+            "logicalY": 456,
+            "x": 398,
+            "y": 456,
+            "worldX": 134,
+            "worldY": 193,
+            "distance": 17485
+          },
+          {
+            "logicalX": 446,
+            "logicalY": 489,
+            "x": 446,
+            "y": 489,
+            "worldX": 137,
+            "worldY": 196,
+            "distance": 17992
+          },
+          {
+            "logicalX": 366,
+            "logicalY": 313,
+            "x": 366,
+            "y": 313,
+            "worldX": 132,
+            "worldY": 180,
+            "distance": 18376
+          },
+          {
+            "logicalX": 494,
+            "logicalY": 500,
+            "x": 494,
+            "y": 500,
+            "worldX": 140,
+            "worldY": 197,
+            "distance": 18773
+          },
+          {
+            "logicalX": 478,
+            "logicalY": 500,
+            "x": 478,
+            "y": 500,
+            "worldX": 139,
+            "worldY": 197,
+            "distance": 18965
+          },
+          {
+            "logicalX": 510,
+            "logicalY": 500,
+            "x": 510,
+            "y": 500,
+            "worldX": 141,
+            "worldY": 197,
+            "distance": 19093
+          },
+          {
+            "logicalX": 414,
+            "logicalY": 478,
+            "x": 414,
+            "y": 478,
+            "worldX": 135,
+            "worldY": 195,
+            "distance": 19309
+          },
+          {
+            "logicalX": 398,
+            "logicalY": 467,
+            "x": 398,
+            "y": 467,
+            "worldX": 134,
+            "worldY": 194,
+            "distance": 19652
+          }
+        ]
+      },
+      "hovers": [
+        {
+          "point": {
+            "logicalX": 494,
+            "logicalY": 368,
+            "x": 494,
+            "y": 368,
+            "worldX": 140,
+            "worldY": 185,
+            "distance": 29
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 140,
+            "y": 185,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 494,
+            "logicalY": 357,
+            "x": 494,
+            "y": 357,
+            "worldX": 140,
+            "worldY": 184,
+            "distance": 40
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 140,
+            "y": 184,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 478,
+            "logicalY": 368,
+            "x": 478,
+            "y": 368,
+            "worldX": 139,
+            "worldY": 185,
+            "distance": 221
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 139,
+            "y": 185,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 478,
+            "logicalY": 357,
+            "x": 478,
+            "y": 357,
+            "worldX": 139,
+            "worldY": 184,
+            "distance": 232
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 139,
+            "y": 184,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 494,
+            "logicalY": 379,
+            "x": 494,
+            "y": 379,
+            "worldX": 140,
+            "worldY": 186,
+            "distance": 260
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 140,
+            "y": 186,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 478,
+            "logicalY": 379,
+            "x": 478,
+            "y": 379,
+            "worldX": 139,
+            "worldY": 186,
+            "distance": 452
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 139,
+            "y": 186,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 478,
+            "logicalY": 346,
+            "x": 478,
+            "y": 346,
+            "worldX": 139,
+            "worldY": 183,
+            "distance": 485
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 139,
+            "y": 183,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 494,
+            "logicalY": 390,
+            "x": 494,
+            "y": 390,
+            "worldX": 140,
+            "worldY": 187,
+            "distance": 733
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 140,
+            "y": 187,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 462,
+            "logicalY": 368,
+            "x": 462,
+            "y": 368,
+            "worldX": 138,
+            "worldY": 185,
+            "distance": 925
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 138,
+            "y": 185,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 478,
+            "logicalY": 390,
+            "x": 478,
+            "y": 390,
+            "worldX": 139,
+            "worldY": 187,
+            "distance": 925
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 139,
+            "y": 187,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 462,
+            "logicalY": 357,
+            "x": 462,
+            "y": 357,
+            "worldX": 138,
+            "worldY": 184,
+            "distance": 936
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 138,
+            "y": 184,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 478,
+            "logicalY": 335,
+            "x": 478,
+            "y": 335,
+            "worldX": 139,
+            "worldY": 182,
+            "distance": 980
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 139,
+            "y": 182,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 462,
+            "logicalY": 379,
+            "x": 462,
+            "y": 379,
+            "worldX": 138,
+            "worldY": 186,
+            "distance": 1156
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 138,
+            "y": 186,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 462,
+            "logicalY": 346,
+            "x": 462,
+            "y": 346,
+            "worldX": 138,
+            "worldY": 183,
+            "distance": 1189
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 138,
+            "y": 183,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 494,
+            "logicalY": 401,
+            "x": 494,
+            "y": 401,
+            "worldX": 140,
+            "worldY": 188,
+            "distance": 1448
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 140,
+            "y": 188,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 462,
+            "logicalY": 390,
+            "x": 462,
+            "y": 390,
+            "worldX": 138,
+            "worldY": 187,
+            "distance": 1629
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 138,
+            "y": 187,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 478,
+            "logicalY": 401,
+            "x": 478,
+            "y": 401,
+            "worldX": 139,
+            "worldY": 188,
+            "distance": 1640
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 139,
+            "y": 188,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 462,
+            "logicalY": 335,
+            "x": 462,
+            "y": 335,
+            "worldX": 138,
+            "worldY": 182,
+            "distance": 1684
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 138,
+            "y": 182,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 478,
+            "logicalY": 324,
+            "x": 478,
+            "y": 324,
+            "worldX": 139,
+            "worldY": 181,
+            "distance": 1717
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 139,
+            "y": 181,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 446,
+            "logicalY": 368,
+            "x": 446,
+            "y": 368,
+            "worldX": 137,
+            "worldY": 185,
+            "distance": 2141
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 137,
+            "y": 185,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 446,
+            "logicalY": 357,
+            "x": 446,
+            "y": 357,
+            "worldX": 137,
+            "worldY": 184,
+            "distance": 2152
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 137,
+            "y": 184,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 462,
+            "logicalY": 401,
+            "x": 462,
+            "y": 401,
+            "worldX": 138,
+            "worldY": 188,
+            "distance": 2344
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 138,
+            "y": 188,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 446,
+            "logicalY": 379,
+            "x": 446,
+            "y": 379,
+            "worldX": 137,
+            "worldY": 186,
+            "distance": 2372
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 137,
+            "y": 186,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 446,
+            "logicalY": 346,
+            "x": 446,
+            "y": 346,
+            "worldX": 137,
+            "worldY": 183,
+            "distance": 2405
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 137,
+            "y": 183,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 494,
+            "logicalY": 412,
+            "x": 494,
+            "y": 412,
+            "worldX": 140,
+            "worldY": 189,
+            "distance": 2405
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 140,
+            "y": 189,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 462,
+            "logicalY": 324,
+            "x": 462,
+            "y": 324,
+            "worldX": 138,
+            "worldY": 181,
+            "distance": 2421
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 138,
+            "y": 181,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 478,
+            "logicalY": 412,
+            "x": 478,
+            "y": 412,
+            "worldX": 139,
+            "worldY": 189,
+            "distance": 2597
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 139,
+            "y": 189,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 510,
+            "logicalY": 412,
+            "x": 510,
+            "y": 412,
+            "worldX": 141,
+            "worldY": 189,
+            "distance": 2725
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 141,
+            "y": 189,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 446,
+            "logicalY": 390,
+            "x": 446,
+            "y": 390,
+            "worldX": 137,
+            "worldY": 187,
+            "distance": 2845
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 137,
+            "y": 187,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 446,
+            "logicalY": 335,
+            "x": 446,
+            "y": 335,
+            "worldX": 137,
+            "worldY": 182,
+            "distance": 2900
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 137,
+            "y": 182,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 462,
+            "logicalY": 412,
+            "x": 462,
+            "y": 412,
+            "worldX": 138,
+            "worldY": 189,
+            "distance": 3301
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 138,
+            "y": 189,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 446,
+            "logicalY": 401,
+            "x": 446,
+            "y": 401,
+            "worldX": 137,
+            "worldY": 188,
+            "distance": 3560
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 137,
+            "y": 188,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 446,
+            "logicalY": 324,
+            "x": 446,
+            "y": 324,
+            "worldX": 137,
+            "worldY": 181,
+            "distance": 3637
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 137,
+            "y": 181,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 478,
+            "logicalY": 423,
+            "x": 478,
+            "y": 423,
+            "worldX": 139,
+            "worldY": 190,
+            "distance": 3796
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 139,
+            "y": 190,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 430,
+            "logicalY": 368,
+            "x": 430,
+            "y": 368,
+            "worldX": 136,
+            "worldY": 185,
+            "distance": 3869
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 136,
+            "y": 185,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 430,
+            "logicalY": 357,
+            "x": 430,
+            "y": 357,
+            "worldX": 136,
+            "worldY": 184,
+            "distance": 3880
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 136,
+            "y": 184,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 430,
+            "logicalY": 346,
+            "x": 430,
+            "y": 346,
+            "worldX": 136,
+            "worldY": 183,
+            "distance": 4133
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 136,
+            "y": 183,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 462,
+            "logicalY": 423,
+            "x": 462,
+            "y": 423,
+            "worldX": 138,
+            "worldY": 190,
+            "distance": 4500
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 138,
+            "y": 190,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 446,
+            "logicalY": 412,
+            "x": 446,
+            "y": 412,
+            "worldX": 137,
+            "worldY": 189,
+            "distance": 4517
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 137,
+            "y": 189,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 446,
+            "logicalY": 313,
+            "x": 446,
+            "y": 313,
+            "worldX": 137,
+            "worldY": 180,
+            "distance": 4616
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 137,
+            "y": 180,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 430,
+            "logicalY": 335,
+            "x": 430,
+            "y": 335,
+            "worldX": 136,
+            "worldY": 182,
+            "distance": 4628
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 136,
+            "y": 182,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 478,
+            "logicalY": 434,
+            "x": 478,
+            "y": 434,
+            "worldX": 139,
+            "worldY": 191,
+            "distance": 5237
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 139,
+            "y": 191,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 430,
+            "logicalY": 324,
+            "x": 430,
+            "y": 324,
+            "worldX": 136,
+            "worldY": 181,
+            "distance": 5365
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 136,
+            "y": 181,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 446,
+            "logicalY": 423,
+            "x": 446,
+            "y": 423,
+            "worldX": 137,
+            "worldY": 190,
+            "distance": 5716
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 137,
+            "y": 190,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 462,
+            "logicalY": 434,
+            "x": 462,
+            "y": 434,
+            "worldX": 138,
+            "worldY": 191,
+            "distance": 5941
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 138,
+            "y": 191,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 414,
+            "logicalY": 368,
+            "x": 414,
+            "y": 368,
+            "worldX": 135,
+            "worldY": 185,
+            "distance": 6109
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 135,
+            "y": 185,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 414,
+            "logicalY": 357,
+            "x": 414,
+            "y": 357,
+            "worldX": 135,
+            "worldY": 184,
+            "distance": 6120
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 135,
+            "y": 184,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 430,
+            "logicalY": 313,
+            "x": 430,
+            "y": 313,
+            "worldX": 136,
+            "worldY": 180,
+            "distance": 6344
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 136,
+            "y": 180,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 414,
+            "logicalY": 346,
+            "x": 414,
+            "y": 346,
+            "worldX": 135,
+            "worldY": 183,
+            "distance": 6373
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 135,
+            "y": 183,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 414,
+            "logicalY": 335,
+            "x": 414,
+            "y": 335,
+            "worldX": 135,
+            "worldY": 182,
+            "distance": 6868
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 135,
+            "y": 182,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 478,
+            "logicalY": 445,
+            "x": 478,
+            "y": 445,
+            "worldX": 139,
+            "worldY": 192,
+            "distance": 6920
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 139,
+            "y": 192,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 446,
+            "logicalY": 434,
+            "x": 446,
+            "y": 434,
+            "worldX": 137,
+            "worldY": 191,
+            "distance": 7157
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 137,
+            "y": 191,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 430,
+            "logicalY": 302,
+            "x": 430,
+            "y": 302,
+            "worldX": 136,
+            "worldY": 179,
+            "distance": 7565
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 136,
+            "y": 179,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 414,
+            "logicalY": 324,
+            "x": 414,
+            "y": 324,
+            "worldX": 135,
+            "worldY": 181,
+            "distance": 7605
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 135,
+            "y": 181,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 462,
+            "logicalY": 445,
+            "x": 462,
+            "y": 445,
+            "worldX": 138,
+            "worldY": 192,
+            "distance": 7624
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 138,
+            "y": 192,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 414,
+            "logicalY": 313,
+            "x": 414,
+            "y": 313,
+            "worldX": 135,
+            "worldY": 180,
+            "distance": 8584
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 135,
+            "y": 180,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 446,
+            "logicalY": 445,
+            "x": 446,
+            "y": 445,
+            "worldX": 137,
+            "worldY": 192,
+            "distance": 8840
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 137,
+            "y": 192,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 478,
+            "logicalY": 456,
+            "x": 478,
+            "y": 456,
+            "worldX": 139,
+            "worldY": 193,
+            "distance": 8845
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 139,
+            "y": 193,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 398,
+            "logicalY": 368,
+            "x": 398,
+            "y": 368,
+            "worldX": 134,
+            "worldY": 185,
+            "distance": 8861
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 134,
+            "y": 185,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 398,
+            "logicalY": 357,
+            "x": 398,
+            "y": 357,
+            "worldX": 134,
+            "worldY": 184,
+            "distance": 8872
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 134,
+            "y": 184,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 398,
+            "logicalY": 346,
+            "x": 398,
+            "y": 346,
+            "worldX": 134,
+            "worldY": 183,
+            "distance": 9125
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 134,
+            "y": 183,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 462,
+            "logicalY": 456,
+            "x": 462,
+            "y": 456,
+            "worldX": 138,
+            "worldY": 193,
+            "distance": 9549
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 138,
+            "y": 193,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 398,
+            "logicalY": 335,
+            "x": 398,
+            "y": 335,
+            "worldX": 134,
+            "worldY": 182,
+            "distance": 9620
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 134,
+            "y": 182,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 398,
+            "logicalY": 324,
+            "x": 398,
+            "y": 324,
+            "worldX": 134,
+            "worldY": 181,
+            "distance": 10357
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 134,
+            "y": 181,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 446,
+            "logicalY": 456,
+            "x": 446,
+            "y": 456,
+            "worldX": 137,
+            "worldY": 193,
+            "distance": 10765
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 137,
+            "y": 193,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 478,
+            "logicalY": 467,
+            "x": 478,
+            "y": 467,
+            "worldX": 139,
+            "worldY": 194,
+            "distance": 11012
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 139,
+            "y": 194,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 398,
+            "logicalY": 313,
+            "x": 398,
+            "y": 313,
+            "worldX": 134,
+            "worldY": 180,
+            "distance": 11336
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 134,
+            "y": 180,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 462,
+            "logicalY": 467,
+            "x": 462,
+            "y": 467,
+            "worldX": 138,
+            "worldY": 194,
+            "distance": 11716
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 138,
+            "y": 194,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 382,
+            "logicalY": 368,
+            "x": 382,
+            "y": 368,
+            "worldX": 133,
+            "worldY": 185,
+            "distance": 12125
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 133,
+            "y": 185,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 382,
+            "logicalY": 357,
+            "x": 382,
+            "y": 357,
+            "worldX": 133,
+            "worldY": 184,
+            "distance": 12136
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 133,
+            "y": 184,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 382,
+            "logicalY": 346,
+            "x": 382,
+            "y": 346,
+            "worldX": 133,
+            "worldY": 183,
+            "distance": 12389
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 133,
+            "y": 183,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 430,
+            "logicalY": 456,
+            "x": 430,
+            "y": 456,
+            "worldX": 136,
+            "worldY": 193,
+            "distance": 12493
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 136,
+            "y": 193,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 382,
+            "logicalY": 335,
+            "x": 382,
+            "y": 335,
+            "worldX": 133,
+            "worldY": 182,
+            "distance": 12884
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 133,
+            "y": 182,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 446,
+            "logicalY": 467,
+            "x": 446,
+            "y": 467,
+            "worldX": 137,
+            "worldY": 194,
+            "distance": 12932
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 137,
+            "y": 194,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 478,
+            "logicalY": 478,
+            "x": 478,
+            "y": 478,
+            "worldX": 139,
+            "worldY": 195,
+            "distance": 13421
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 139,
+            "y": 195,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 382,
+            "logicalY": 324,
+            "x": 382,
+            "y": 324,
+            "worldX": 133,
+            "worldY": 181,
+            "distance": 13621
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 133,
+            "y": 181,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 462,
+            "logicalY": 478,
+            "x": 462,
+            "y": 478,
+            "worldX": 138,
+            "worldY": 195,
+            "distance": 14125
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 138,
+            "y": 195,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 382,
+            "logicalY": 313,
+            "x": 382,
+            "y": 313,
+            "worldX": 133,
+            "worldY": 180,
+            "distance": 14600
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 133,
+            "y": 180,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 430,
+            "logicalY": 467,
+            "x": 430,
+            "y": 467,
+            "worldX": 136,
+            "worldY": 194,
+            "distance": 14660
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 136,
+            "y": 194,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 414,
+            "logicalY": 456,
+            "x": 414,
+            "y": 456,
+            "worldX": 135,
+            "worldY": 193,
+            "distance": 14733
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 135,
+            "y": 193,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 446,
+            "logicalY": 478,
+            "x": 446,
+            "y": 478,
+            "worldX": 137,
+            "worldY": 195,
+            "distance": 15341
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 137,
+            "y": 195,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 494,
+            "logicalY": 489,
+            "x": 494,
+            "y": 489,
+            "worldX": 140,
+            "worldY": 196,
+            "distance": 15880
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 140,
+            "y": 196,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 366,
+            "logicalY": 368,
+            "x": 366,
+            "y": 368,
+            "worldX": 132,
+            "worldY": 185,
+            "distance": 15901
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 132,
+            "y": 185,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 366,
+            "logicalY": 357,
+            "x": 366,
+            "y": 357,
+            "worldX": 132,
+            "worldY": 184,
+            "distance": 15912
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 132,
+            "y": 184,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 478,
+            "logicalY": 489,
+            "x": 478,
+            "y": 489,
+            "worldX": 139,
+            "worldY": 196,
+            "distance": 16072
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 139,
+            "y": 196,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 366,
+            "logicalY": 346,
+            "x": 366,
+            "y": 346,
+            "worldX": 132,
+            "worldY": 183,
+            "distance": 16165
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 132,
+            "y": 183,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 510,
+            "logicalY": 489,
+            "x": 510,
+            "y": 489,
+            "worldX": 141,
+            "worldY": 196,
+            "distance": 16200
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 141,
+            "y": 196,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 366,
+            "logicalY": 335,
+            "x": 366,
+            "y": 335,
+            "worldX": 132,
+            "worldY": 182,
+            "distance": 16660
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 132,
+            "y": 182,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 462,
+            "logicalY": 489,
+            "x": 462,
+            "y": 489,
+            "worldX": 138,
+            "worldY": 196,
+            "distance": 16776
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 138,
+            "y": 196,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 414,
+            "logicalY": 467,
+            "x": 414,
+            "y": 467,
+            "worldX": 135,
+            "worldY": 194,
+            "distance": 16900
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 135,
+            "y": 194,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 430,
+            "logicalY": 478,
+            "x": 430,
+            "y": 478,
+            "worldX": 136,
+            "worldY": 195,
+            "distance": 17069
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 136,
+            "y": 195,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 366,
+            "logicalY": 324,
+            "x": 366,
+            "y": 324,
+            "worldX": 132,
+            "worldY": 181,
+            "distance": 17397
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 132,
+            "y": 181,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 398,
+            "logicalY": 456,
+            "x": 398,
+            "y": 456,
+            "worldX": 134,
+            "worldY": 193,
+            "distance": 17485
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 134,
+            "y": 193,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 446,
+            "logicalY": 489,
+            "x": 446,
+            "y": 489,
+            "worldX": 137,
+            "worldY": 196,
+            "distance": 17992
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 137,
+            "y": 196,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 366,
+            "logicalY": 313,
+            "x": 366,
+            "y": 313,
+            "worldX": 132,
+            "worldY": 180,
+            "distance": 18376
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 132,
+            "y": 180,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 494,
+            "logicalY": 500,
+            "x": 494,
+            "y": 500,
+            "worldX": 140,
+            "worldY": 197,
+            "distance": 18773
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 140,
+            "y": 197,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 478,
+            "logicalY": 500,
+            "x": 478,
+            "y": 500,
+            "worldX": 139,
+            "worldY": 197,
+            "distance": 18965
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 139,
+            "y": 197,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 510,
+            "logicalY": 500,
+            "x": 510,
+            "y": 500,
+            "worldX": 141,
+            "worldY": 197,
+            "distance": 19093
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 141,
+            "y": 197,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 414,
+            "logicalY": 478,
+            "x": 414,
+            "y": 478,
+            "worldX": 135,
+            "worldY": 195,
+            "distance": 19309
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 135,
+            "y": 195,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        },
+        {
+          "point": {
+            "logicalX": 398,
+            "logicalY": 467,
+            "x": 398,
+            "y": 467,
+            "worldX": 134,
+            "worldY": 194,
+            "distance": 19652
+          },
+          "hover": {
+            "type": 126,
+            "preview": 162,
+            "legal": 0,
+            "legalGump": 0,
+            "x": 134,
+            "y": 194,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        }
+      ],
+      "candidate": null
+    },
+    "constructionFailure": "AssertionError [ERR_ASSERTION]: 실제 커서의 모든 배치 관문을 통과하는 지점 필요\n    at run (H:\\Workspace\\git\\NetstormReborn\\webpj\\extracted\\e1447-outpost\\browser-construction.cjs:58:231)"
+  }
+]

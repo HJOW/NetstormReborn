@@ -1,0 +1,8 @@
+{"phase":"warmup","frame":0,"time":9.2,"providers":[],"sp":5000}
+{"phase":"warmup","frame":2000,"time":59.175,"providers":[],"sp":0}
+{"phase":"warmup","frame":4000,"time":109.175,"providers":[],"sp":600}
+{"phase":"warmup","frame":6000,"time":159.175,"providers":[],"sp":7000}
+{"phase":"warmup","frame":8000,"time":209.175,"providers":[],"sp":0}
+{"phase":"warmup","frame":10000,"time":259.175,"providers":[],"sp":0}
+{"phase":"warmup","frame":12000,"time":309.175,"providers":[],"sp":1000}
+{"name":"construct-main","technology":[true,true],"entries":[{"text":"Build Outpost for 600~[IfortGump.3]","command":33554528,"parameter":8272536,"include":true,"enabled":true}],"errors":[]}

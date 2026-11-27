@@ -1,0 +1,2 @@
+AssertionError [ERR_ASSERTION]: 실제 커서의 모든 배치 관문을 통과하는 지점 필요
+    at run (H:\Workspace\git\NetstormReborn\webpj\extracted\e1447-outpost\browser-construction.cjs:58:231)

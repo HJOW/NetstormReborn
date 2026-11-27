@@ -1,0 +1,5 @@
+page.evaluate: Error: 실제 Outpost 메뉴 행 필요
+    at eval (eval at evaluate (:370:30), <anonymous>:1:656)
+    at UtilityScript.evaluate (<anonymous>:372:16)
+    at UtilityScript.<anonymous> (<anonymous>:1:44)
+    at run (H:\Workspace\git\NetstormReborn\webpj\extracted\e1447-outpost\browser-construction.cjs:40:31)

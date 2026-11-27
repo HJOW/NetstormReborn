@@ -1,0 +1,1807 @@
+{
+  "scope": "대본/시작fort정적감사, 게임실행/후반승리없음",
+  "rows": [
+    {
+      "name": "Tutorial1",
+      "demo": false,
+      "fort": "BridgeTheGap",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "Tutorial2",
+      "demo": false,
+      "fort": "SecretWorkshop",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "sunArcher",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "Tutorial3",
+      "demo": false,
+      "fort": "CaptureThePriest",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "sunArcher;sunWalker",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "Tutorial4",
+      "demo": false,
+      "fort": "TacticalCombat",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "sunArcher;sunWalker;windBattery",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "Tutorial5",
+      "demo": false,
+      "fort": "SubtleDefense",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "sunArcher;sunWalker;sunCannon;sunBlocker;windBattery",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "Tutorial6",
+      "demo": false,
+      "fort": "RawPower",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "windBattery;windBalloon",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "TheWarBegins",
+      "demo": false,
+      "fort": "TheWarBegins",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "sunWalker;rainBattery;sunAviary;sunCannon",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "MasterOfWhirligigs",
+      "demo": false,
+      "fort": "MasterOfWhirligigs",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "sunWalker;windBattery;sunArcher;sunCannon",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "SaveTheIsland",
+      "demo": false,
+      "fort": "SaveTheIsland",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "sunWalker;rainBattery;sunArcher;sunCannon;sunBlocker;sunAviary",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "FragileFortune",
+      "demo": false,
+      "fort": "FragileFortune",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "sunWalker;rainBattery;sunBlocker;sunCannon;sunBalloon",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "ThunderingPower",
+      "demo": false,
+      "fort": "ThunderingPower",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "bulf;thunderBattery;thunderArcher;thunderCannon",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": "sunWalker;thunderArcher;thunderBattery;thunderCannon;bulf",
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": "sunWalker;rainBattery;rainAviary;sunAviary;sunCannon;rainWalker",
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "DissolvedAlliance",
+      "demo": false,
+      "fort": "DissolvedAlliance",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "sunWalker;windArcher;windBlocker;windBattery;windWalker;windBalloon;windAviary;sunBlocker;sunAviary;sunCannon",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": "sunWalker;windBattery;windBlocker;windWalker;windArcher;windBalloon;windAviary;sunBlocker;sunAviary;sunCannon",
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": "sunWalker;sunArcher;thunderBattery;thunderCannon;thunderBlocker;sunAviary",
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": "sunWalker;sunArcher;sunCannon",
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "TheNoose",
+      "demo": false,
+      "fort": "TheNoose",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "sunWalker;thunderBattery;sunFence;sunArcher;sunCannon;sunBlocker;thunderBlocker;bulf",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "RainVsRain",
+      "demo": false,
+      "fort": "RainVsRain",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "sunWalker;sunArcher;rainBattery;rainAviary;rainCannon;rainBalloon;rainBlocker;rainWalker;rainFence",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "RunForIt",
+      "demo": false,
+      "fort": "RunForIt",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "sunCannon;windWalker;windBattery;windAviary;windBlocker;sunBlocker",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "GuardMyBack",
+      "demo": false,
+      "fort": "GuardMyBack",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "sunWalker;windBattery;sunArcher;sunBlocker;sunBalloon;sunAviary;sunCannon",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": "sunWalker;windBattery;sunArcher;sunBlocker;sunBalloon;sunAviary;sunCannon",
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": "sunWalker;windBattery;sunArcher;sunCannon;sunBlocker;sunAviary",
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": "sunWalker;thunderBattery;sunArcher;sunBlocker;sunBalloon;sunAviary;sunCannon",
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": "sunWalker;rainBattery;sunArcher;sunBlocker;sunBalloon;sunAviary;sunCannon",
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "Surrounded",
+      "demo": false,
+      "fort": "Surrounded",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "sunWalker;sunArcher;sunBlocker;sunBalloon;sunFence;sunAviary;sunCannon;rainBattery;windBattery;thunderBattery",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": "sunWalker;sunArcher;sunBlocker;sunBalloon;sunAviary;sunCannon",
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": "sunWalker;thunderBattery;thunderBlocker;thunderCannon;bulf;thunderArcher",
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": "sunWalker;windBattery;windWalker;windAviary;windArcher;windBalloon;windBlocker",
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": "sunWalker;rainBattery;rainCannon;rainAviary;rainBalloon;rainBlocker;rainWalker",
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "BreakingThrough",
+      "demo": false,
+      "fort": "BreakingThrough",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "sunWalker;rainBattery;rainCannon;rainBlocker;rainWalker;sunArcher;sunAviary;sunBlocker",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "ToTheRescue",
+      "demo": false,
+      "fort": "ToTheRescue",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "sunWalker;rainBattery;rainWalker;rainCannon;sunArcher;sunFence",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": "sunWalker;rainBattery;rainBlocker;rainBalloon",
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": "sunWalker;thunderBattery;thunderCannon;thunderBlocker;sunBlocker",
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": "sunWalker;sunBalloon;thunderBattery;thunderCannon;thunderBlocker;sunarcher",
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "Vicious",
+      "demo": false,
+      "fort": "Vicious",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "sunWalker;thunderBattery;rainBattery;rainFence;sunFence;sunCannon;thunderFence;thunderBlocker;thunderArcher",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "EnemyTerritory",
+      "demo": false,
+      "fort": "EnemyTerritory",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "sunWalker;windBattery;windWalker;windArcher;sunBlocker;sunAviary;sunCannon",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": "sunWalker",
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": "sunWalker;sunArcher;sunCannon;windBattery;windAviary;windBlocker;windArcher",
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": "sunWalker;sunArcher;sunCannon;rainBattery;rainCannon;rainAviary;rainBlocker",
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "FinalConfrontation",
+      "demo": false,
+      "fort": "FinalConfrontation",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "all",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": "thunderBattery;bulf;thunderCannon;thunderBlocker;thunderArcher",
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": "rainBattery;rainWalker;rainCannon;rainAviary;rainBlocker;rainBalloon",
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": "windBattery;windWalker;windArcher;windAviary;windBlocker;windBalloon",
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": "sunWalker;thunderBlocker",
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "bc1menu76",
+      "demo": false,
+      "fort": "bc1menu76",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "bc2bridging76",
+      "demo": false,
+      "fort": "bc2bridging76",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "windBattery;outpost",
+          "outpost": true
+        },
+        {
+          "key": "ai1Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": "",
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "bc3acid_bar76",
+      "demo": false,
+      "fort": "bc3acid_bar76",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "RainBattery;RainFence",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": "thunderBattery;thunderCannon",
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "bc4bow_rush76",
+      "demo": false,
+      "fort": "bc4bow_rush76",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "windBattery;windArcher",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": "rainCannon;rainBattery",
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": "thunderCannon;thunderBattery",
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": "sunCannon;windBattery;sunArcher",
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "bc5walkers76",
+      "demo": false,
+      "fort": "bc5walkers76",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": "",
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "bc6mows76",
+      "demo": false,
+      "fort": "bc6mows76",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "rainBattery;rainAviary;sunFence;outpost",
+          "outpost": true
+        },
+        {
+          "key": "ai1Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": "rainCannon;rainBattery;rainBlocker;rainWalker",
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": "thunderCannon;thunderBattery;bulf",
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": "windArcher;windBattery;windBlocker;windWalker;;",
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": "sunCannon;sunArcher;sunFence;sunBlocker;windArcher;windBattery;windBlocker;windWalker;thunderCannon;thunderBattery;bulf;rainCannon;rainBattery;rainBlocker;rainWalker",
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": "sunCannon;windBattery;sunArcher;sunFence;sunBlocker",
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "bc7sun_bars76",
+      "demo": false,
+      "fort": "bc7sun_bars76",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "windBattery;sunFence",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": "rainCannon;rainBattery",
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": "windArcher;windBattery",
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": "thunderCannon;thunderBattery",
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": "sunCannon;windBattery;sunArcher",
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "bc8fury76",
+      "demo": false,
+      "fort": "bc8fury76",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "outpost;windBattery",
+          "outpost": true
+        },
+        {
+          "key": "ai1Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": "windArcher;windBattery;windBlocker;windAviary;windballoon;windWalker;outpost",
+          "outpost": true
+        },
+        {
+          "key": "ai3Tech",
+          "text": "rainCannon;rainBattery;rainBlocker;rainAviary;rainballoon;rainWalker;rainFence;outpost",
+          "outpost": true
+        },
+        {
+          "key": "ai4Tech",
+          "text": "thunderCannon;thunderBattery;outpost;thunderArcher;thunderBlocker;thunderFence;bulf",
+          "outpost": true
+        },
+        {
+          "key": "ai5Tech",
+          "text": "sunCannon;windBattery;sunArcher;sunAviary;sunBalloon;sunFence;sunBlocker;outpost",
+          "outpost": true
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "bc9ssun_bars76",
+      "demo": false,
+      "fort": "bc9ssun_bars76",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "sunFence;windBattery;sunArcher",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": "windBattery;rainBattery;thunderBattery;windArcher;sunArcher;sunCannon;thunderCannon;rainCannon;thunderBlocker",
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "DemoStormRages",
+      "demo": true,
+      "fort": "DemoStormRages",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": "thunderArcher;thunderBattery;thunderCannon;bulf",
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": "sunWalker;rainBattery;rainAviary;sunCannon;rainWalker",
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "GuardMyBack",
+      "demo": true,
+      "fort": "GuardMyBack",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "sunWalker;windBattery;sunArcher;sunBlocker;sunBalloon;sunAviary;sunCannon",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": "sunWalker;windBattery;sunArcher;sunBlocker;sunBalloon;sunAviary;sunCannon",
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": "sunWalker;windBattery;sunArcher;sunCannon;sunBlocker;sunAviary",
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": "sunWalker;thunderBattery;sunArcher;sunBlocker;sunBalloon;sunAviary;sunCannon",
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": "sunWalker;rainBattery;sunArcher;sunBlocker;sunBalloon;sunAviary;sunCannon",
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    },
+    {
+      "name": "DissolvedAlliance",
+      "demo": true,
+      "fort": "DissolvedAlliance",
+      "objects": [],
+      "technology": [
+        {
+          "key": "myTech",
+          "text": "sunWalker;windArcher;windBlocker;windBattery;windWalker;windBalloon;windAviary;sunBlocker;sunAviary;sunCannon",
+          "outpost": false
+        },
+        {
+          "key": "ai1Tech",
+          "text": "sunWalker;windBattery;windBlocker;windWalker;windArcher;windBalloon;windAviary;sunBlocker;sunAviary;sunCannon",
+          "outpost": false
+        },
+        {
+          "key": "ai2Tech",
+          "text": "sunWalker;sunArcher;thunderBattery;thunderCannon;thunderBlocker;sunAviary",
+          "outpost": false
+        },
+        {
+          "key": "ai3Tech",
+          "text": "sunWalker;sunArcher;sunCannon",
+          "outpost": false
+        },
+        {
+          "key": "ai4Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai5Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai6Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai7Tech",
+          "text": null,
+          "outpost": false
+        },
+        {
+          "key": "ai8Tech",
+          "text": null,
+          "outpost": false
+        }
+      ]
+    }
+  ]
+}

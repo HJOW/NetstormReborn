@@ -1,0 +1,1939 @@
+[
+  {
+    "scenario": {
+      "name": "construct-main",
+      "candidate": false,
+      "ban": false
+    },
+    "launch": {
+      "script": "[Header]\nmissionType=\"Tutorial\"\n\nmissionNumber=1\nmoreGeysers=1\nrandGeysers=1\n\nmyStartMoney=5000\nmyTech=\"all;outpost\"\nmyAllyList=\"\"\ntitle=\"Skirmish\"\n\nai2Name=\"Computer #1\"\nai2Tech=\"all;outpost\"\nai2StartMoney=5000\nai2GeyserAttachments=3\nai2Collectors=6\nai2StuffRefreshRate=1\nai2TimeBetweenMoves=2\nai2BridgeDrawRate=1\nai2AllyList=\"2\"\n\n[Options]\n\n[A.]\n<h2>Skirmish</h2>\n<i>1 AI</i>\n\n$Button=Go!,DoNothing,0\n\n[Succeeded][BadTeamDead]\n<h2>Victory!</h2>\n<p>\nEvery enemy has been defeated.\n$Button=Leave,MissionAbort,0\n\n[Failed][GoodTeamDead]\n<h2>Defeat</h2>\n<p>\nYour team has fallen.\n$Button=Leave,MissionAbort,0\n\n[END]\n",
+      "settings": {
+        "aiCount": 1,
+        "ai": [
+          {
+            "difficulty": 2,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          },
+          {
+            "difficulty": 2,
+            "ally": false
+          }
+        ],
+        "bans": []
+      }
+    },
+    "activation": {
+      "owner": 1,
+      "token": 536892288,
+      "reused": false,
+      "before": {
+        "money": 5000,
+        "allies": 2,
+        "name": [
+          89,
+          111,
+          117
+        ],
+        "technology": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          true,
+          false,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          true,
+          true,
+          false,
+          true,
+          false,
+          true,
+          false,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          true,
+          false,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ]
+      },
+      "money": 5000,
+      "allies": 2,
+      "name": [
+        89,
+        111,
+        117
+      ],
+      "technology": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        true,
+        true,
+        false,
+        true,
+        false,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "brain": 536892288
+    },
+    "warmup": [
+      {
+        "frame": 0,
+        "time": 9.2,
+        "providers": [],
+        "sp": 5000
+      },
+      {
+        "frame": 100,
+        "time": 11.674999999999999,
+        "providers": [],
+        "sp": 5000
+      },
+      {
+        "frame": 200,
+        "time": 14.174999999999999,
+        "providers": [],
+        "sp": 5000
+      },
+      {
+        "frame": 300,
+        "time": 16.674999999999997,
+        "providers": [],
+        "sp": 5000
+      },
+      {
+        "frame": 400,
+        "time": 19.174999999999997,
+        "providers": [],
+        "sp": 5000
+      },
+      {
+        "frame": 500,
+        "time": 21.674999999999997,
+        "providers": [],
+        "sp": 5000
+      },
+      {
+        "frame": 600,
+        "time": 24.174999999999997,
+        "providers": [],
+        "sp": 5000
+      },
+      {
+        "frame": 700,
+        "time": 26.674999999999997,
+        "providers": [],
+        "sp": 0
+      },
+      {
+        "frame": 800,
+        "time": 29.174999999999997,
+        "providers": [],
+        "sp": 0
+      },
+      {
+        "frame": 900,
+        "time": 31.674999999999997,
+        "providers": [],
+        "sp": 0
+      },
+      {
+        "frame": 1000,
+        "time": 34.175,
+        "providers": [],
+        "sp": 0
+      },
+      {
+        "frame": 1100,
+        "time": 36.675,
+        "providers": [],
+        "sp": 0
+      },
+      {
+        "frame": 1200,
+        "time": 39.175,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 0
+      },
+      {
+        "frame": 1300,
+        "time": 41.675,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 0
+      },
+      {
+        "frame": 1400,
+        "time": 44.175,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 0
+      },
+      {
+        "frame": 1500,
+        "time": 46.675,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 0
+      },
+      {
+        "frame": 1600,
+        "time": 49.175,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 0
+      },
+      {
+        "frame": 1700,
+        "time": 51.675,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 0
+      },
+      {
+        "frame": 1800,
+        "time": 54.175,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 0
+      },
+      {
+        "frame": 1900,
+        "time": 56.675,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 0
+      },
+      {
+        "frame": 2000,
+        "time": 59.175,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 0
+      },
+      {
+        "frame": 2100,
+        "time": 61.675,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 0
+      },
+      {
+        "frame": 2200,
+        "time": 64.175,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 0
+      },
+      {
+        "frame": 2300,
+        "time": 66.675,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 0
+      },
+      {
+        "frame": 2400,
+        "time": 69.175,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 0
+      },
+      {
+        "frame": 2500,
+        "time": 71.675,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 0
+      },
+      {
+        "frame": 2600,
+        "time": 74.175,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 0
+      },
+      {
+        "frame": 2700,
+        "time": 76.675,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 0
+      },
+      {
+        "frame": 2800,
+        "time": 79.175,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 0
+      },
+      {
+        "frame": 2900,
+        "time": 81.675,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 600
+      },
+      {
+        "frame": 3000,
+        "time": 84.175,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 200
+      },
+      {
+        "frame": 3100,
+        "time": 86.675,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 200
+      },
+      {
+        "frame": 3200,
+        "time": 89.175,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 200
+      },
+      {
+        "frame": 3300,
+        "time": 91.675,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 200
+      },
+      {
+        "frame": 3400,
+        "time": 94.175,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 200
+      },
+      {
+        "frame": 3500,
+        "time": 96.675,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 800
+      },
+      {
+        "frame": 3600,
+        "time": 99.175,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 400
+      },
+      {
+        "frame": 3700,
+        "time": 101.675,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 1000
+      },
+      {
+        "frame": 3800,
+        "time": 104.175,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 600
+      },
+      {
+        "frame": 3900,
+        "time": 106.675,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 600
+      },
+      {
+        "frame": 4000,
+        "time": 109.175,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 600
+      },
+      {
+        "frame": 4100,
+        "time": 111.675,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 600
+      },
+      {
+        "frame": 4200,
+        "time": 114.175,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 600
+      },
+      {
+        "frame": 4300,
+        "time": 116.675,
+        "providers": [
+          {
+            "sid": 15260,
+            "type": 123,
+            "extra": 130
+          }
+        ],
+        "sp": 1200
+      }
+    ],
+    "spot": {
+      "priest": 15000,
+      "x": 498,
+      "y": 363
+    },
+    "actual": {
+      "time": 116.825,
+      "technology": [
+        true,
+        true
+      ],
+      "entries": [
+        {
+          "text": "Build Outpost for 600~[IfortGump.3]",
+          "command": 33554528,
+          "parameter": 8272536,
+          "include": true,
+          "enabled": true
+        }
+      ],
+      "activeAI": true
+    },
+    "errors": [],
+    "construction": {
+      "menuPath": [
+        {
+          "token": 721,
+          "row": 0
+        },
+        {
+          "token": 730,
+          "row": 2
+        }
+      ],
+      "selected": {
+        "type": 126,
+        "preview": 340,
+        "lockDepth": 0,
+        "sp": 1400
+      },
+      "probe": {
+        "probes": 3127,
+        "before": 1400,
+        "after": 1400,
+        "placement": {
+          "hotspotX": 83,
+          "hotspotY": 72,
+          "imageWidth": 85,
+          "imageHeight": 74
+        },
+        "snap": 1,
+        "candidates": [
+          {
+            "logicalX": 574,
+            "logicalY": 368,
+            "x": 574,
+            "y": 368,
+            "worldX": 123,
+            "worldY": 193,
+            "distance": 5801
+          },
+          {
+            "logicalX": 574,
+            "logicalY": 357,
+            "x": 574,
+            "y": 357,
+            "worldX": 123,
+            "worldY": 192,
+            "distance": 5812
+          },
+          {
+            "logicalX": 574,
+            "logicalY": 379,
+            "x": 574,
+            "y": 379,
+            "worldX": 123,
+            "worldY": 194,
+            "distance": 6032
+          },
+          {
+            "logicalX": 574,
+            "logicalY": 346,
+            "x": 574,
+            "y": 346,
+            "worldX": 123,
+            "worldY": 191,
+            "distance": 6065
+          },
+          {
+            "logicalX": 574,
+            "logicalY": 335,
+            "x": 574,
+            "y": 335,
+            "worldX": 123,
+            "worldY": 190,
+            "distance": 6560
+          },
+          {
+            "logicalX": 574,
+            "logicalY": 324,
+            "x": 574,
+            "y": 324,
+            "worldX": 123,
+            "worldY": 189,
+            "distance": 7297
+          },
+          {
+            "logicalX": 574,
+            "logicalY": 313,
+            "x": 574,
+            "y": 313,
+            "worldX": 123,
+            "worldY": 188,
+            "distance": 8276
+          },
+          {
+            "logicalX": 590,
+            "logicalY": 368,
+            "x": 590,
+            "y": 368,
+            "worldX": 124,
+            "worldY": 193,
+            "distance": 8489
+          },
+          {
+            "logicalX": 590,
+            "logicalY": 357,
+            "x": 590,
+            "y": 357,
+            "worldX": 124,
+            "worldY": 192,
+            "distance": 8500
+          },
+          {
+            "logicalX": 590,
+            "logicalY": 379,
+            "x": 590,
+            "y": 379,
+            "worldX": 124,
+            "worldY": 194,
+            "distance": 8720
+          },
+          {
+            "logicalX": 590,
+            "logicalY": 346,
+            "x": 590,
+            "y": 346,
+            "worldX": 124,
+            "worldY": 191,
+            "distance": 8753
+          },
+          {
+            "logicalX": 590,
+            "logicalY": 335,
+            "x": 590,
+            "y": 335,
+            "worldX": 124,
+            "worldY": 190,
+            "distance": 9248
+          },
+          {
+            "logicalX": 574,
+            "logicalY": 302,
+            "x": 574,
+            "y": 302,
+            "worldX": 123,
+            "worldY": 187,
+            "distance": 9497
+          },
+          {
+            "logicalX": 462,
+            "logicalY": 456,
+            "x": 462,
+            "y": 456,
+            "worldX": 116,
+            "worldY": 201,
+            "distance": 9945
+          },
+          {
+            "logicalX": 590,
+            "logicalY": 324,
+            "x": 590,
+            "y": 324,
+            "worldX": 124,
+            "worldY": 189,
+            "distance": 9985
+          },
+          {
+            "logicalX": 590,
+            "logicalY": 313,
+            "x": 590,
+            "y": 313,
+            "worldX": 124,
+            "worldY": 188,
+            "distance": 10964
+          },
+          {
+            "logicalX": 606,
+            "logicalY": 368,
+            "x": 606,
+            "y": 368,
+            "worldX": 125,
+            "worldY": 193,
+            "distance": 11689
+          },
+          {
+            "logicalX": 606,
+            "logicalY": 357,
+            "x": 606,
+            "y": 357,
+            "worldX": 125,
+            "worldY": 192,
+            "distance": 11700
+          },
+          {
+            "logicalX": 606,
+            "logicalY": 379,
+            "x": 606,
+            "y": 379,
+            "worldX": 125,
+            "worldY": 194,
+            "distance": 11920
+          },
+          {
+            "logicalX": 606,
+            "logicalY": 346,
+            "x": 606,
+            "y": 346,
+            "worldX": 125,
+            "worldY": 191,
+            "distance": 11953
+          },
+          {
+            "logicalX": 590,
+            "logicalY": 302,
+            "x": 590,
+            "y": 302,
+            "worldX": 124,
+            "worldY": 187,
+            "distance": 12185
+          },
+          {
+            "logicalX": 606,
+            "logicalY": 335,
+            "x": 606,
+            "y": 335,
+            "worldX": 125,
+            "worldY": 190,
+            "distance": 12448
+          },
+          {
+            "logicalX": 606,
+            "logicalY": 324,
+            "x": 606,
+            "y": 324,
+            "worldX": 125,
+            "worldY": 189,
+            "distance": 13185
+          },
+          {
+            "logicalX": 590,
+            "logicalY": 291,
+            "x": 590,
+            "y": 291,
+            "worldX": 124,
+            "worldY": 186,
+            "distance": 13648
+          },
+          {
+            "logicalX": 606,
+            "logicalY": 313,
+            "x": 606,
+            "y": 313,
+            "worldX": 125,
+            "worldY": 188,
+            "distance": 14164
+          },
+          {
+            "logicalX": 590,
+            "logicalY": 280,
+            "x": 590,
+            "y": 280,
+            "worldX": 124,
+            "worldY": 185,
+            "distance": 15353
+          },
+          {
+            "logicalX": 606,
+            "logicalY": 302,
+            "x": 606,
+            "y": 302,
+            "worldX": 125,
+            "worldY": 187,
+            "distance": 15385
+          },
+          {
+            "logicalX": 622,
+            "logicalY": 368,
+            "x": 622,
+            "y": 368,
+            "worldX": 126,
+            "worldY": 193,
+            "distance": 15401
+          },
+          {
+            "logicalX": 622,
+            "logicalY": 357,
+            "x": 622,
+            "y": 357,
+            "worldX": 126,
+            "worldY": 192,
+            "distance": 15412
+          },
+          {
+            "logicalX": 622,
+            "logicalY": 379,
+            "x": 622,
+            "y": 379,
+            "worldX": 126,
+            "worldY": 194,
+            "distance": 15632
+          },
+          {
+            "logicalX": 622,
+            "logicalY": 346,
+            "x": 622,
+            "y": 346,
+            "worldX": 126,
+            "worldY": 191,
+            "distance": 15665
+          },
+          {
+            "logicalX": 622,
+            "logicalY": 335,
+            "x": 622,
+            "y": 335,
+            "worldX": 126,
+            "worldY": 190,
+            "distance": 16160
+          },
+          {
+            "logicalX": 606,
+            "logicalY": 291,
+            "x": 606,
+            "y": 291,
+            "worldX": 125,
+            "worldY": 186,
+            "distance": 16848
+          },
+          {
+            "logicalX": 622,
+            "logicalY": 324,
+            "x": 622,
+            "y": 324,
+            "worldX": 126,
+            "worldY": 189,
+            "distance": 16897
+          },
+          {
+            "logicalX": 590,
+            "logicalY": 269,
+            "x": 590,
+            "y": 269,
+            "worldX": 124,
+            "worldY": 184,
+            "distance": 17300
+          },
+          {
+            "logicalX": 622,
+            "logicalY": 313,
+            "x": 622,
+            "y": 313,
+            "worldX": 126,
+            "worldY": 188,
+            "distance": 17876
+          },
+          {
+            "logicalX": 606,
+            "logicalY": 280,
+            "x": 606,
+            "y": 280,
+            "worldX": 125,
+            "worldY": 185,
+            "distance": 18553
+          },
+          {
+            "logicalX": 622,
+            "logicalY": 302,
+            "x": 622,
+            "y": 302,
+            "worldX": 126,
+            "worldY": 187,
+            "distance": 19097
+          },
+          {
+            "logicalX": 638,
+            "logicalY": 368,
+            "x": 638,
+            "y": 368,
+            "worldX": 127,
+            "worldY": 193,
+            "distance": 19625
+          },
+          {
+            "logicalX": 638,
+            "logicalY": 357,
+            "x": 638,
+            "y": 357,
+            "worldX": 127,
+            "worldY": 192,
+            "distance": 19636
+          },
+          {
+            "logicalX": 638,
+            "logicalY": 379,
+            "x": 638,
+            "y": 379,
+            "worldX": 127,
+            "worldY": 194,
+            "distance": 19856
+          },
+          {
+            "logicalX": 638,
+            "logicalY": 346,
+            "x": 638,
+            "y": 346,
+            "worldX": 127,
+            "worldY": 191,
+            "distance": 19889
+          },
+          {
+            "logicalX": 638,
+            "logicalY": 335,
+            "x": 638,
+            "y": 335,
+            "worldX": 127,
+            "worldY": 190,
+            "distance": 20384
+          },
+          {
+            "logicalX": 606,
+            "logicalY": 269,
+            "x": 606,
+            "y": 269,
+            "worldX": 125,
+            "worldY": 184,
+            "distance": 20500
+          },
+          {
+            "logicalX": 622,
+            "logicalY": 291,
+            "x": 622,
+            "y": 291,
+            "worldX": 126,
+            "worldY": 186,
+            "distance": 20560
+          },
+          {
+            "logicalX": 638,
+            "logicalY": 324,
+            "x": 638,
+            "y": 324,
+            "worldX": 127,
+            "worldY": 189,
+            "distance": 21121
+          },
+          {
+            "logicalX": 638,
+            "logicalY": 313,
+            "x": 638,
+            "y": 313,
+            "worldX": 127,
+            "worldY": 188,
+            "distance": 22100
+          },
+          {
+            "logicalX": 622,
+            "logicalY": 280,
+            "x": 622,
+            "y": 280,
+            "worldX": 126,
+            "worldY": 185,
+            "distance": 22265
+          },
+          {
+            "logicalX": 606,
+            "logicalY": 258,
+            "x": 606,
+            "y": 258,
+            "worldX": 125,
+            "worldY": 183,
+            "distance": 22689
+          },
+          {
+            "logicalX": 638,
+            "logicalY": 302,
+            "x": 638,
+            "y": 302,
+            "worldX": 127,
+            "worldY": 187,
+            "distance": 23321
+          },
+          {
+            "logicalX": 622,
+            "logicalY": 269,
+            "x": 622,
+            "y": 269,
+            "worldX": 126,
+            "worldY": 184,
+            "distance": 24212
+          },
+          {
+            "logicalX": 654,
+            "logicalY": 368,
+            "x": 654,
+            "y": 368,
+            "worldX": 128,
+            "worldY": 193,
+            "distance": 24361
+          },
+          {
+            "logicalX": 654,
+            "logicalY": 357,
+            "x": 654,
+            "y": 357,
+            "worldX": 128,
+            "worldY": 192,
+            "distance": 24372
+          },
+          {
+            "logicalX": 654,
+            "logicalY": 379,
+            "x": 654,
+            "y": 379,
+            "worldX": 128,
+            "worldY": 194,
+            "distance": 24592
+          },
+          {
+            "logicalX": 654,
+            "logicalY": 346,
+            "x": 654,
+            "y": 346,
+            "worldX": 128,
+            "worldY": 191,
+            "distance": 24625
+          },
+          {
+            "logicalX": 638,
+            "logicalY": 291,
+            "x": 638,
+            "y": 291,
+            "worldX": 127,
+            "worldY": 186,
+            "distance": 24784
+          },
+          {
+            "logicalX": 606,
+            "logicalY": 247,
+            "x": 606,
+            "y": 247,
+            "worldX": 125,
+            "worldY": 182,
+            "distance": 25120
+          },
+          {
+            "logicalX": 654,
+            "logicalY": 335,
+            "x": 654,
+            "y": 335,
+            "worldX": 128,
+            "worldY": 190,
+            "distance": 25120
+          },
+          {
+            "logicalX": 654,
+            "logicalY": 324,
+            "x": 654,
+            "y": 324,
+            "worldX": 128,
+            "worldY": 189,
+            "distance": 25857
+          },
+          {
+            "logicalX": 622,
+            "logicalY": 258,
+            "x": 622,
+            "y": 258,
+            "worldX": 126,
+            "worldY": 183,
+            "distance": 26401
+          },
+          {
+            "logicalX": 638,
+            "logicalY": 280,
+            "x": 638,
+            "y": 280,
+            "worldX": 127,
+            "worldY": 185,
+            "distance": 26489
+          },
+          {
+            "logicalX": 654,
+            "logicalY": 313,
+            "x": 654,
+            "y": 313,
+            "worldX": 128,
+            "worldY": 188,
+            "distance": 26836
+          },
+          {
+            "logicalX": 654,
+            "logicalY": 302,
+            "x": 654,
+            "y": 302,
+            "worldX": 128,
+            "worldY": 187,
+            "distance": 28057
+          },
+          {
+            "logicalX": 638,
+            "logicalY": 269,
+            "x": 638,
+            "y": 269,
+            "worldX": 127,
+            "worldY": 184,
+            "distance": 28436
+          },
+          {
+            "logicalX": 622,
+            "logicalY": 247,
+            "x": 622,
+            "y": 247,
+            "worldX": 126,
+            "worldY": 182,
+            "distance": 28832
+          },
+          {
+            "logicalX": 654,
+            "logicalY": 291,
+            "x": 654,
+            "y": 291,
+            "worldX": 128,
+            "worldY": 186,
+            "distance": 29520
+          },
+          {
+            "logicalX": 670,
+            "logicalY": 368,
+            "x": 670,
+            "y": 368,
+            "worldX": 129,
+            "worldY": 193,
+            "distance": 29609
+          },
+          {
+            "logicalX": 670,
+            "logicalY": 379,
+            "x": 670,
+            "y": 379,
+            "worldX": 129,
+            "worldY": 194,
+            "distance": 29840
+          },
+          {
+            "logicalX": 670,
+            "logicalY": 390,
+            "x": 670,
+            "y": 390,
+            "worldX": 129,
+            "worldY": 195,
+            "distance": 30313
+          },
+          {
+            "logicalX": 638,
+            "logicalY": 258,
+            "x": 638,
+            "y": 258,
+            "worldX": 127,
+            "worldY": 183,
+            "distance": 30625
+          },
+          {
+            "logicalX": 670,
+            "logicalY": 401,
+            "x": 670,
+            "y": 401,
+            "worldX": 129,
+            "worldY": 196,
+            "distance": 31028
+          },
+          {
+            "logicalX": 654,
+            "logicalY": 280,
+            "x": 654,
+            "y": 280,
+            "worldX": 128,
+            "worldY": 185,
+            "distance": 31225
+          },
+          {
+            "logicalX": 670,
+            "logicalY": 412,
+            "x": 670,
+            "y": 412,
+            "worldX": 129,
+            "worldY": 197,
+            "distance": 31985
+          },
+          {
+            "logicalX": 638,
+            "logicalY": 247,
+            "x": 638,
+            "y": 247,
+            "worldX": 127,
+            "worldY": 182,
+            "distance": 33056
+          },
+          {
+            "logicalX": 654,
+            "logicalY": 269,
+            "x": 654,
+            "y": 269,
+            "worldX": 128,
+            "worldY": 184,
+            "distance": 33172
+          },
+          {
+            "logicalX": 670,
+            "logicalY": 423,
+            "x": 670,
+            "y": 423,
+            "worldX": 129,
+            "worldY": 198,
+            "distance": 33184
+          },
+          {
+            "logicalX": 654,
+            "logicalY": 258,
+            "x": 654,
+            "y": 258,
+            "worldX": 128,
+            "worldY": 183,
+            "distance": 35361
+          },
+          {
+            "logicalX": 686,
+            "logicalY": 368,
+            "x": 686,
+            "y": 368,
+            "worldX": 130,
+            "worldY": 193,
+            "distance": 35369
+          },
+          {
+            "logicalX": 686,
+            "logicalY": 379,
+            "x": 686,
+            "y": 379,
+            "worldX": 130,
+            "worldY": 194,
+            "distance": 35600
+          },
+          {
+            "logicalX": 686,
+            "logicalY": 390,
+            "x": 686,
+            "y": 390,
+            "worldX": 130,
+            "worldY": 195,
+            "distance": 36073
+          },
+          {
+            "logicalX": 670,
+            "logicalY": 280,
+            "x": 670,
+            "y": 280,
+            "worldX": 129,
+            "worldY": 185,
+            "distance": 36473
+          },
+          {
+            "logicalX": 686,
+            "logicalY": 401,
+            "x": 686,
+            "y": 401,
+            "worldX": 130,
+            "worldY": 196,
+            "distance": 36788
+          },
+          {
+            "logicalX": 686,
+            "logicalY": 412,
+            "x": 686,
+            "y": 412,
+            "worldX": 130,
+            "worldY": 197,
+            "distance": 37745
+          },
+          {
+            "logicalX": 654,
+            "logicalY": 247,
+            "x": 654,
+            "y": 247,
+            "worldX": 128,
+            "worldY": 182,
+            "distance": 37792
+          },
+          {
+            "logicalX": 670,
+            "logicalY": 269,
+            "x": 670,
+            "y": 269,
+            "worldX": 129,
+            "worldY": 184,
+            "distance": 38420
+          },
+          {
+            "logicalX": 686,
+            "logicalY": 423,
+            "x": 686,
+            "y": 423,
+            "worldX": 130,
+            "worldY": 198,
+            "distance": 38944
+          },
+          {
+            "logicalX": 670,
+            "logicalY": 258,
+            "x": 670,
+            "y": 258,
+            "worldX": 129,
+            "worldY": 183,
+            "distance": 40609
+          },
+          {
+            "logicalX": 702,
+            "logicalY": 368,
+            "x": 702,
+            "y": 368,
+            "worldX": 131,
+            "worldY": 193,
+            "distance": 41641
+          },
+          {
+            "logicalX": 702,
+            "logicalY": 379,
+            "x": 702,
+            "y": 379,
+            "worldX": 131,
+            "worldY": 194,
+            "distance": 41872
+          },
+          {
+            "logicalX": 686,
+            "logicalY": 280,
+            "x": 686,
+            "y": 280,
+            "worldX": 130,
+            "worldY": 185,
+            "distance": 42233
+          },
+          {
+            "logicalX": 702,
+            "logicalY": 390,
+            "x": 702,
+            "y": 390,
+            "worldX": 131,
+            "worldY": 195,
+            "distance": 42345
+          },
+          {
+            "logicalX": 670,
+            "logicalY": 247,
+            "x": 670,
+            "y": 247,
+            "worldX": 129,
+            "worldY": 182,
+            "distance": 43040
+          },
+          {
+            "logicalX": 702,
+            "logicalY": 401,
+            "x": 702,
+            "y": 401,
+            "worldX": 131,
+            "worldY": 196,
+            "distance": 43060
+          },
+          {
+            "logicalX": 702,
+            "logicalY": 412,
+            "x": 702,
+            "y": 412,
+            "worldX": 131,
+            "worldY": 197,
+            "distance": 44017
+          },
+          {
+            "logicalX": 686,
+            "logicalY": 269,
+            "x": 686,
+            "y": 269,
+            "worldX": 130,
+            "worldY": 184,
+            "distance": 44180
+          },
+          {
+            "logicalX": 702,
+            "logicalY": 423,
+            "x": 702,
+            "y": 423,
+            "worldX": 131,
+            "worldY": 198,
+            "distance": 45216
+          },
+          {
+            "logicalX": 670,
+            "logicalY": 236,
+            "x": 670,
+            "y": 236,
+            "worldX": 129,
+            "worldY": 181,
+            "distance": 45713
+          },
+          {
+            "logicalX": 686,
+            "logicalY": 258,
+            "x": 686,
+            "y": 258,
+            "worldX": 130,
+            "worldY": 183,
+            "distance": 46369
+          },
+          {
+            "logicalX": 718,
+            "logicalY": 368,
+            "x": 718,
+            "y": 368,
+            "worldX": 132,
+            "worldY": 193,
+            "distance": 48425
+          },
+          {
+            "logicalX": 702,
+            "logicalY": 280,
+            "x": 702,
+            "y": 280,
+            "worldX": 131,
+            "worldY": 185,
+            "distance": 48505
+          }
+        ]
+      },
+      "hovers": [
+        {
+          "point": {
+            "logicalX": 574,
+            "logicalY": 368,
+            "x": 574,
+            "y": 368,
+            "worldX": 123,
+            "worldY": 193,
+            "distance": 5801
+          },
+          "hover": {
+            "type": 126,
+            "preview": 340,
+            "legal": 1,
+            "legalGump": 0,
+            "x": 123,
+            "y": 193,
+            "argument": 0,
+            "direction": 0,
+            "placementAllowed": 1,
+            "spaceAllowed": 1,
+            "sourceAllowed": 1
+          }
+        }
+      ],
+      "hover": {
+        "type": 126,
+        "preview": 340,
+        "legal": 1,
+        "legalGump": 0,
+        "x": 123,
+        "y": 193,
+        "argument": 0,
+        "direction": 0,
+        "placementAllowed": 1,
+        "spaceAllowed": 1,
+        "sourceAllowed": 1
+      },
+      "candidate": {
+        "logicalX": 574,
+        "logicalY": 368,
+        "x": 574,
+        "y": 368,
+        "worldX": 123,
+        "worldY": 193,
+        "distance": 5801
+      },
+      "afterClick": {
+        "time": 117.52499999999999,
+        "sp": 1200,
+        "outposts": [],
+        "providers": [
+          15258,
+          15260
+        ]
+      },
+      "completed": {
+        "frame": 500,
+        "time": 130.10000000000002,
+        "units": [
+          {
+            "sid": 15459,
+            "extra": 130,
+            "state": 0
+          }
+        ],
+        "outposts": [
+          15459
+        ],
+        "residences": [
+          15001,
+          15003,
+          15258,
+          15260,
+          15459
+        ],
+        "sp": 3600,
+        "ai": true
+      }
+    }
+  }
+]

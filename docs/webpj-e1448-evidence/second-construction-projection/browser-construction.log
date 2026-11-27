@@ -1,0 +1,2 @@
+AssertionError [ERR_ASSERTION]: 실제 커서도 해당 위치를 허용해야 한다
+    at run (H:\Workspace\git\NetstormReborn\webpj\extracted\e1447-outpost\browser-construction.cjs:54:191)

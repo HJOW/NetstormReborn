@@ -1,0 +1,389 @@
+{
+  "unit": "WB04-E1448",
+  "head": "8d02fbc9e2c48d59baabdfa40d756e82b8454847",
+  "sourceFreeze": "E1450/current E1440+E1447 main; no routes/module overrides",
+  "nodeExit": 0,
+  "actualWarmup": {
+    "frame": 4300,
+    "time": 116.675,
+    "providers": [
+      {
+        "sid": 15260,
+        "type": 123,
+        "extra": 130
+      }
+    ],
+    "sp": 1200
+  },
+  "actualConstruction": {
+    "menuPath": [
+      {
+        "token": 721,
+        "row": 0
+      },
+      {
+        "token": 730,
+        "row": 2
+      }
+    ],
+    "selected": {
+      "type": 126,
+      "preview": 340,
+      "lockDepth": 0,
+      "sp": 1400
+    },
+    "hover": {
+      "type": 126,
+      "preview": 340,
+      "legal": 1,
+      "legalGump": 0,
+      "x": 123,
+      "y": 193,
+      "argument": 0,
+      "direction": 0,
+      "placementAllowed": 1,
+      "spaceAllowed": 1,
+      "sourceAllowed": 1
+    },
+    "candidate": {
+      "logicalX": 574,
+      "logicalY": 368,
+      "x": 574,
+      "y": 368,
+      "worldX": 123,
+      "worldY": 193,
+      "distance": 5801
+    },
+    "afterClick": {
+      "time": 117.52499999999999,
+      "sp": 1200,
+      "outposts": [],
+      "providers": [
+        15258,
+        15260
+      ]
+    },
+    "completed": {
+      "frame": 500,
+      "time": 130.10000000000002,
+      "units": [
+        {
+          "sid": 15459,
+          "extra": 130,
+          "state": 0
+        }
+      ],
+      "outposts": [
+        15459
+      ],
+      "residences": [
+        15001,
+        15003,
+        15258,
+        15260,
+        15459
+      ],
+      "sp": 3600,
+      "ai": true
+    }
+  },
+  "errors": [],
+  "audit": {
+    "webpj/www/core/raw-campaign-session-tables.js": {
+      "sha256": "96a1f1a1b732cd9d648d39d8732c7c71f84ec0d2a813ffb9a39065a8d0d94463",
+      "lines": [
+        {
+          "line": 47,
+          "text": "        o.priestState.priests.sharedPriests = lists.priests; s.assetState.sharedResidences = lists.residences;"
+        },
+        {
+          "line": 48,
+          "text": "        s.assetState.sharedTemples = lists.temples; s.assetState.sharedOutposts = lists.outposts; s.assetState.sharedGeysers = lists.geysers;"
+        }
+      ]
+    },
+    "webpj/www/core/raw-factory-post-pop.js": {
+      "sha256": "9e7800d4ec2433c87d9597297cdde4c827d760673917c57c50b6d1f3832a3011",
+      "lines": [
+        {
+          "line": 2,
+          "text": "// 순서: 아웃포스트 wrapper(가상 표 0x509210)의 최초 flag 이고 extra 의 abstract/buried 비트(9)가 없으면 아웃포스트·거주 목록에 중복 없이 추가하고 섬 소유권을 다시 계산한다(regionOwnership)."
+        },
+        {
+          "line": 77,
+          "text": "//   damageable 은 같은 풀의 RawCarrierPostPop, state 는 AssetPostPopState, hooks = { reserveRegular, addRegular(sid, 사건, 지연), setFrame(sid, 프레임, flags), regionOwnership(x, y),"
+        },
+        {
+          "line": 151,
+          "text": "            this.#state.currentOutposts().items();"
+        },
+        {
+          "line": 152,
+          "text": "            this.#state.currentResidences().items();"
+        },
+        {
+          "line": 153,
+          "text": "            if (!this.#hooks.regionOwnership) throw new Error('아웃포스트 실제 섬 소유권 경계 누락');"
+        },
+        {
+          "line": 185,
+          "text": "            addUnique(this.#state.currentOutposts(), sid);"
+        },
+        {
+          "line": 186,
+          "text": "            addUnique(this.#state.currentResidences(), sid);"
+        },
+        {
+          "line": 187,
+          "text": "            need(hooks.regionOwnership)(position(pool.slot(sid), X_OFFSET), position(pool.slot(sid), Y_OFFSET));"
+        },
+        {
+          "line": 194,
+          "text": "        this.#damageable.damageablePostPop(sid, flags);"
+        }
+      ]
+    },
+    "webpj/www/core/raw-campaign-session-assets.js": {
+      "sha256": "0326314c2813448bb6a92121c20ef5b95122e6aabc6c769a477e61b18d87a2a3",
+      "lines": [
+        {
+          "line": 41,
+          "text": "    residence = null; effects = null; factoryRuntime = null; vortexRuntime = null; factoryTypes = null;"
+        },
+        {
+          "line": 48,
+          "text": "        this.#started = true; o.rewardCount = (sid) => this.virtualCount(sid) | 0;"
+        },
+        {
+          "line": 77,
+          "text": "        fill(e.factory, 'warnDuplicate'); e.factory.virtualCount = (sid) => this.virtualCount(sid);"
+        },
+        {
+          "line": 79,
+          "text": "        e.factory.regionOwnership = (x, y) => o.ownership.updateRegion(x, y); e.postPop.setOwner = (sid, owner) => o.ownership.setOwner(sid, owner);"
+        },
+        {
+          "line": 91,
+          "text": "        e.regular.virtualCount = (parent) => this.virtualCount(parent) | 0;"
+        },
+        {
+          "line": 94,
+          "text": "        this.factoryTypes = Object.assign(new FactoryPostPopTypes(), { currentFirstTimer: () => o.gameplayGlobals.firstTimerFactoryType().value, currentSecondTimer: () => o.gameplayGlobals.secondTimerFactoryType().value, currentFixedFrame: () => o.gameplayGlobals.outpostType().value });"
+        },
+        {
+          "line": 95,
+          "text": "        o.assetBindings = new RawCampaignAssetBindings(o.world, o.carrier, s.assetState, o.random, o.islands, o.players, o.playerState, { regular: s.regularState, gun: s.gunState, elements: o.elements, archerNoticeCommand: reference(o, 'archerCommand'), factoryTypes: this.factoryTypes }, e);"
+        },
+        {
+          "line": 116,
+          "text": "    virtualCount(sid) {"
+        }
+      ]
+    },
+    "webpj/www/core/raw-campaign-ownership.js": {
+      "sha256": "9a7daf4365f684bea902c33f4d9c9fc900532613e361bc1737ede7bccd171818",
+      "lines": [
+        {
+          "line": 6,
+          "text": "//   ownership.islandNumber(x, y) 는 float 좌표를 먼저 CRT 절삭한 뒤 현재 hash0 의 지역을 조회한다. ownership.updateRegion(x, y)/updateRegionNative(x, y) 는 지역 투표를 요청한다."
+        },
+        {
+          "line": 75,
+          "text": "        this.ownership = new RawRegionOwnership(core.pool, assets.currentOutposts(), assets.currentTemples(), themes, ownershipState, voteHooks);"
+        },
+        {
+          "line": 76,
+          "text": "        this.vortex = new RawVortexOwner(core.pool, core.owner, players, assets.currentOutposts(), revision, {"
+        },
+        {
+          "line": 142,
+          "text": "    updateRegion(x, y) {"
+        },
+        {
+          "line": 148,
+          "text": "    updateRegionNative(x, y) {"
+        }
+      ]
+    },
+    "webpj/www/core/raw-campaign-session-carrier-routing.js": {
+      "sha256": "28b1123680d0cc89cb870a5bfc9043d6ef41161d82c92f35a42a4873313affcb",
+      "lines": [
+        {
+          "line": 48,
+          "text": "        o.carrierChoice = new RawCarrierChoice(c.pool, c.types, o.players, s.assetState.currentOutposts(), s.assetState.currentGeysers(), () => c.processState.now, checking, o.boardTarget, this.choiceState, choice);"
+        }
+      ]
+    },
+    "webpj/www/core/raw-carrier-choice.js": {
+      "sha256": "1fb2f7a75037740d218b3e384f0a0a7213c9aeb3d0a4042b2686284f03ec179d",
+      "lines": [
+        {
+          "line": 8,
+          "text": "//  - chooseReturn(parent): 현재 Player+0x7c 의 집 신전(유효하면)을 선두에 넣고 별도 outposts 목록(nonzero 수만큼 ring 순회, 용량 500 상한·중복 보존)을 수집해 evaluate(후보, parent, parent)이다."
+        },
+        {
+          "line": 261,
+          "text": "    // 428ea0: 현재 home 을 선두에 넣고 outposts 의 nonzero 수를 세며 원래 500개 상한과 중복을 유지한다. (2026-11-08 WB04-E102)"
+        },
+        {
+          "line": 262,
+          "text": "    chooseReturn(parent) {"
+        },
+        {
+          "line": 297,
+          "text": "        const home = this.chooseReturn(parent);"
+        }
+      ]
+    },
+    "webpj/www/core/raw-campaign-session-damageable.js": {
+      "sha256": "2a91611529d1414066631b6c624caa062f995b64554df853df4708b6b4c6b9c9",
+      "lines": [
+        {
+          "line": 120,
+          "text": "        o.vortexPre = new RawVortexPreDestroy(c.pool, o.players, o.state.assetState.currentTemples(), o.state.assetState.currentResidences(), o.state.assetState.currentOutposts(), () => o.objectState.loadingDepth, vortex);"
+        }
+      ]
+    },
+    "webpj/www/core/raw-campaign-session-factories.js": {
+      "sha256": "3e1215c548edd3a4b04efa6efca744e10676d770bde058065b8b9a18576adaa6",
+      "lines": [
+        {
+          "line": 48,
+          "text": "            boss: () => o.state.assetState.readBoss(), now: () => c.processState.now, outpostType: () => g.outpostType().value,"
+        },
+        {
+          "line": 66,
+          "text": "            level: (parent) => { this.#live(); const table = read(c.pool.slot(parent)); if (table !== 0x509148 && table !== 0x509210) throw new Error('업그레이드 현재Factory level 가상표 미복원'); return o.assetModules.virtualCount(parent); },"
+        },
+        {
+          "line": 81,
+          "text": "        this.upgradeState = { outpost: () => g.outpostType().value, dependType: () => o.flyerDependType, localPlayer: () => o.playerState.battleOwner, checking: () => o.state.gunState.checking, challenge: () => c.ownerMode.challenge, boss: () => o.state.assetState.readBoss() };"
+        }
+      ]
+    },
+    "webpj/www/core/raw-factory-research.js": {
+      "sha256": "db7be9667200cae9a915d0cf2816cbf73d8b968e614bbbc732e02440ba89d4c5",
+      "lines": [
+        {
+          "line": 14,
+          "text": "const OUTPOST_VTABLE = 0x00509210;"
+        },
+        {
+          "line": 65,
+          "text": "// Factory 연구 처리기이다. pool 은 10.78 SidPool, types 는 188칸 TYPE 표(flags2), state = { loadingDepth(), productionDirty: { value }, boss(), now(), outpostType() } 현재 전역(효과 뒤에도 최신 값을 다시 읽음),"
+        },
+        {
+          "line": 91,
+          "text": "        return vtable === FACTORY_VTABLE || vtable === OUTPOST_VTABLE;"
+        },
+        {
+          "line": 137,
+          "text": "        if (!(this.#types[type].flags2 & 0x4000) || this.#read(parent, 34, 1) !== (sender >>> 0) || this.#read(parent, 10, 1) === (this.#state.outpostType() >>> 0)) return;"
+        }
+      ]
+    },
+    "webpj/www/core/raw-factory-upgrade.js": {
+      "sha256": "55208fa736ee58c07f628654a235e289195cd7d39a0a9349787f72722975d0a1",
+      "lines": [
+        {
+          "line": 117,
+          "text": "        if (pool.slot(parent)[10] === this.#state.outpost()) return;"
+        }
+      ]
+    },
+    "webpj/www/core/raw-factory-menu.js": {
+      "sha256": "acfda3636abba5997ec3177c22d683ff0582755131066b2e339c85be40d2bbd7",
+      "lines": [
+        {
+          "line": 110,
+          "text": "        if (this.raw(factory)[34] === (need(this.hooks.localOwner)() >>> 0) && this.raw(factory)[10] !== this.state.outpost) this.available(factory);"
+        }
+      ]
+    },
+    "webpj/www/core/raw-campaign-session-ai-world.js": {
+      "sha256": "c0d28ad0fced79bb02cea3d33194d78c27c74e9ed942de1765c19254e8fd215f",
+      "lines": [
+        {
+          "line": 3,
+          "text": "import { RawAiObjectNotice, AI_OBJECT_LOG } from './raw-ai-object-notice.js';"
+        },
+        {
+          "line": 72,
+          "text": "        o.aiObjects = new RawAiObjectNotice(o.aiMemory, c.pool, c.types, o.players, () => c.processState.now, () => o.gameplayGlobals.gameAux().outpostType, () => c.ownerMode.challenge, objects);"
+        }
+      ]
+    },
+    "webpj/www/core/raw-ai-object-notice.js": {
+      "sha256": "a6fc618290937953e160837d9538ea9524a0c65e3f69a815889bdde49b46003f",
+      "lines": [
+        {
+          "line": 3,
+          "text": "//    players 는 현재 Player 9기록(9×180 BYTE, +0xb0 이 AI 본체 토큰), now()=0055b4d0 현재 게임 시각, outpostType()=00541250 현재 분류 제외 번호, disabled()=00594fc8 현재 모드(Player 조회 전에 읽음),"
+        },
+        {
+          "line": 233,
+          "text": "        if ((genus & 0x4000) && this.#pool.slot(sid)[10] !== (this.#outpostType() >>> 0)) {"
+        }
+      ]
+    },
+    "webpj/www/core/raw-campaign-session-building.js": {
+      "sha256": "21d2c64caf46e835a3d01653835e0d6df169f9dea8acd2978f45d76314d4ed73",
+      "lines": [
+        {
+          "line": 62,
+          "text": "        for (const type of [82, 155, 158, 164, 135, 133, 156, 73, 170, 146, 144, 126]) o.buildingMapTokens[type] = 1;"
+        }
+      ]
+    },
+    "webpj/www/core/raw-campaign-session-deletion.js": {
+      "sha256": "6f1e9ca272885a0fed0b95da211cc8c3b5a397502972330ff8d4febbb352fa5f",
+      "lines": [
+        {
+          "line": 7,
+          "text": "import { RawOutpostLifecycle } from './raw-outpost-lifecycle.js';"
+        },
+        {
+          "line": 22,
+          "text": "const OUTPOST_TABLE = 0x509210;"
+        },
+        {
+          "line": 44,
+          "text": "            outpost: (sid) => table(raw(sid)) === OUTPOST_TABLE,"
+        },
+        {
+          "line": 87,
+          "text": "            if (k.outpost(sid)) {"
+        },
+        {
+          "line": 89,
+          "text": "                    RawOutpostLifecycle.preDestroyNative(c.pool, o.state.assetState.currentOutposts(), o.state.assetState.currentResidences(), sid, flags, {"
+        },
+        {
+          "line": 114,
+          "text": "            if (k.outpost(sid) || k.bridge(sid) || k.connector(sid) || o.geyserLifetime.handles(sid) || k.vortex(sid) || k.fenceCommon(sid) || k.flyer(sid) || o.balloonBody.handles(sid) || k.visualDummy(sid) || k.plainDamageable(sid) || k.blocker(sid) || k.growingIce(sid) || k.sunFence(sid) || k.nugget(sid) || (o.daisLifecycle && o.daisLifecycle.handles(sid)) || (o.dudeBehavior && o.dudeBehavior.handles(sid)) || k.priestForcefield(sid) || k.plainCarrier(sid) || k.priest(sid) || k.buried(sid) || k.bomb(sid) || k.rune(sid) || k.commonOnly(sid) || k.residence(sid) || k.player(sid)) return c.virtualDestroy.destroy(sid, flags, effects);"
+        }
+      ]
+    },
+    "webpj/www/core/skirmish-setup.js": {
+      "sha256": "d0e2541d70a1ba9a087e0776c6486b16a85f3bde7839de911545e42f6fef2202",
+      "lines": [
+        {
+          "line": 36,
+          "text": "    ['bulf', 'Bulf'], ['outpost', 'Outpost'],"
+        },
+        {
+          "line": 282,
+          "text": "    let script = '[Header]\\nmissionType=\"Tutorial\"\\n\\nmissionNumber=1\\nmoreGeysers=1\\nrandGeysers=1\\n\\nmyStartMoney=5000\\nmyTech=\"all;outpost\"\\n';"
+        },
+        {
+          "line": 283,
+          "text": "    if (settings.bans.length) script += `techAllowed=\"deny${settings.bans.map((type) => `;${type}`).join('')}\"\\n`;"
+        },
+        {
+          "line": 295,
+          "text": "        script += `\\nai${owner}Name=\"Computer #${owner - 1}\"\\nai${owner}Tech=\"all;outpost\"\\nai${owner}StartMoney=5000\\n`;"
+        }
+      ]
+    }
+  }
+}
