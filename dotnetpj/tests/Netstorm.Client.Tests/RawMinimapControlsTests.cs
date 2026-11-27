@@ -53,7 +53,7 @@ public sealed class RawMinimapControlsTests
         /// <summary>같은 현재 기본 주소다.</summary>
         public GumpCreateNode Node => Mini.Node(Mini.RootToken)!;
         /// <summary>처음에는 같은 장기 물리/트리만 준비하며 open은 호출자가 선택한다.</summary>
-        public Rig(bool open = true)
+        public Rig(bool open = true, Action<float, float>? center = null)
         {
             var font = new GumpFontFixture("gumptext"); Tree = new(320, 240, GumpBackgroundTestAssets.Assets(), 82, 0, new(9, 243, 57), font.Fonts,
                 new() { Now = () => 1, Poll = _ => Pointer, Sound = () => { }, Redraw = (_, _) => { }, HandleBase = (_, _, _, _) => 0 });
@@ -63,7 +63,7 @@ public sealed class RawMinimapControlsTests
             // 기존 파일 팔레트와 같은 이름색 자리만 공급한다.
             for (int i = 0; i < 20; i++) Palette.Named.Add(new(0, 0, 0, (uint)(100 + i)));
             Hooks = new() { View = () => View, InputMode = () => Mode, Poll = () => Pointer, Move = (_, _) => Moves++, BaseHandle = (_, _, _, _) => 0,
-                Center = (x, y) => { CenterOrder.Add((Rectangles.Count, Tree.LifeState.Focus)); Centers++; View = View with { CameraX = BitConverter.SingleToUInt32Bits(x), CameraY = BitConverter.SingleToUInt32Bits(y) }; if (HideOnCenter) Node.Flags &= ~1U; },
+                Center = (x, y) => { CenterOrder.Add((Rectangles.Count, Tree.LifeState.Focus)); Centers++; View = View with { CameraX = BitConverter.SingleToUInt32Bits(x), CameraY = BitConverter.SingleToUInt32Bits(y) }; center?.Invoke(x, y); if (HideOnCenter) Node.Flags &= ~1U; },
                 Invalidate = (rect, flags) => Rectangles.Add((rect, flags)), Changed = () => Changed++ };
             Mini = new(Tree, Storage, State, Globals, Gameplay.MapRevision, Hooks);
             if (open) { Mini.Open(); Node.BaseWidth = Node.Width = 80; Node.BaseHeight = Node.Height = 75; Tree.Tree.Push(Mini.RootToken); Mini.Attach(Mini.RootToken, 10, 150, Tree.Create.Entries[0], 0); Mini.SetPalette(Palette); Assert.True(Mini.Refresh()); Rectangles.Clear(); }
@@ -117,6 +117,28 @@ public sealed class RawMinimapControlsTests
             rig.Rectangles.Clear(); rig.Pointer = new(0x10000, point.X, point.Y); rig.Tree.Frame.Idle(); Assert.Equal((0, token), rig.CenterOrder[^1]); rig.ComparePartial(pixels);
         }
         rig.Rectangles.Clear(); rig.Tree.Input.Route(0x80010000, 50, 145); Assert.Equal(0U, rig.Tree.LifeState.Focus); Assert.Equal(0U, rig.Node.Flags & 0x80); Assert.Empty(rig.Rectangles); Assert.DoesNotContain(token, rig.Tree.LifeState.Idle);
+    }
+
+    /// <summary>미니맵 클릭과 드래그가 같은 세션의 카메라 목표와 지도 갱신 번호를 바꾼다.</summary>
+    [Fact]
+    public void MinimapInputRequestsCurrentSessionCameraOnClickAndDrag()
+    {
+        HostSession? session = null;
+        using var rig = new Rig(center: (x, y) => session!.RequestMinimapCenter(x, y, 320, 240));
+        session = new HostSession(new Kernel(), new GameRandom(17), new CrtRandom(23), sharedGameplay: rig.Gameplay, pool: rig.Storage.Pool);
+        uint revision = rig.Gameplay.MapRevision.Value;
+        rig.Tree.Input.Route(0x10000, 50, 187);
+        int firstX = rig.Gameplay.Camera.Target.Pixels[0];
+        int firstY = rig.Gameplay.Camera.Target.Pixels[1];
+        Assert.Equal(revision + 1, rig.Gameplay.MapRevision.Value);
+        Assert.NotEqual((0, 0), (firstX, firstY));
+        rig.Pointer = new(0x10000, 105, 187);
+        rig.Tree.Frame.Idle();
+        Assert.Equal(revision + 2, rig.Gameplay.MapRevision.Value);
+        Assert.NotEqual(firstX, rig.Gameplay.Camera.Target.Pixels[0]);
+        rig.Tree.Input.Route(0x80010000, 105, 187);
+        Assert.Equal(0u, rig.Tree.LifeState.Focus);
+        session.ReleasePlayerRecordViews();
     }
     /// <summary>선택 모드2/5와 카메라 반환 중 숨김에서 불필요한 카메라/영역 요청을 하지 않는다.</summary>
     [Fact]

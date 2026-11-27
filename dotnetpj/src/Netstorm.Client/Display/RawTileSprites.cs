@@ -99,7 +99,7 @@ public static class RawTileSprites
         }
         if ((extra & 2) != 0)
         {
-            throw new InvalidOperationException("타일 가상 그리기 미연결(R5-3c2)");
+            throw new InvalidOperationException($"타일 가상 그리기 미연결(R5-3c2): SID={sid}, TYPE={type}, frame={frame}, flags=0x{extra:x2}");
         }
         if ((extra & 1) != 0)
         {
