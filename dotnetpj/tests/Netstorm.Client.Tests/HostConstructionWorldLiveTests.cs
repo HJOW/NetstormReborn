@@ -1,5 +1,6 @@
 using System.Buffers.Binary;
 using System.Runtime.Versioning;
+using Netstorm.Assets;
 using Netstorm.Client.Display;
 using Netstorm.Client.Host;
 using Netstorm.Core.Original;
@@ -10,6 +11,53 @@ namespace Netstorm.Client.Tests;
 /// <summary>동일 세션·공통 목록·SHP·실제 팔레트·8비트 화면의 건설 표시 결선이다.</summary>
 public sealed partial class HostPriestWorldLiveTests
 {
+    /// <summary>실제 건설 효과가 공통 수집·제출과 dirty 클립을 거쳐 현재 화면에 출력된다.</summary>
+    [Fact, SupportedOSPlatform("windows")]
+    public void ProductWorldSubmissionDrawsCollectedConstructionWithRestoredClip()
+    {
+        if (!OperatingSystem.IsWindows()) return;
+        using var scene = new BurningContext();
+        HostSession session = scene.Session;
+        int parent = ConstructionParent(scene);
+        scene.Visuals.SetView(0, 0, new(0, 0, 1024, 768));
+        ConstructionVisualProcess process = session.WorldConstruction.Add(parent, false);
+        // 실제 건설 표시가 픽셀을 만들도록 같은 커널 시각을 전진한다.
+        for (uint frame = 0; frame < 24; frame++)
+        {
+            scene.Visuals.PrepareFrame(frame * .05, frame);
+            session.Kernel.RunFrame();
+        }
+        var shapes = TerrainDisplayShapes.Build(scene.Definitions, scene.SourceShapes);
+        session.BuildWorldDrawingDevices(new RawSquidHash(), session.Pool, scene.Types, shapes, () => new(0, 0, 1024, 768), 1024, 768);
+        var clip = new ScreenRect(0, 0, 1024, 768);
+        var entry = Assert.Single(session.CollectWorldDrawing(clip).Entries);
+        Assert.Equal(3, entry.Kind);
+        Assert.Equal(process.Registration.Token, entry.Token);
+        string? data = GameDataLocator.FindDataDirectory();
+        Assert.NotNull(data);
+        var startup = new HostStartupScene(data);
+        var database = new Netstorm.Client.Display.ShapeDatabase(startup.Files.ReadAllBytes("d/_shapes.shp"));
+        var previous = new ScreenRect(7, 9, 1000, 700);
+        scene.Screen.SetClip(previous.Left, previous.Top, previous.Right, previous.Bottom);
+        byte[] pixels = scene.Screen.Lock();
+        try
+        {
+            session.SubmitWorldDrawing(pixels, scene.Screen.Pitch, scene.Screen.Height, clip, database, new RawTileDrawModes(),
+                effects: scene.Visuals.DrawCollected);
+        }
+        finally { scene.Screen.Unlock(); }
+        Assert.Equal(previous, scene.Screen.Clip);
+        int changed = Array.FindIndex(pixels, pixel => pixel != 0);
+        Assert.True(changed >= 0);
+        byte expected = pixels[changed];
+        Array.Clear(pixels);
+        int x = changed % scene.Screen.Pitch, y = changed / scene.Screen.Pitch;
+        scene.Visuals.DrawCollected(entry.Token, new(x, y, x + 1, y + 1));
+        Assert.Equal(expected, pixels[changed]);
+        Assert.Equal(1, pixels.Count(pixel => pixel != 0));
+        Assert.Equal(previous, scene.Screen.Clip);
+    }
+
     /// <summary>실제 공장 생성자 뒤 독립 건설 상태/HP/좌표를 지정한다. 게임 규칙 요청은 후속 단위다.</summary>
     private static int ConstructionParent(BurningContext scene)
     {

@@ -188,7 +188,8 @@ public sealed partial class ClientHostGame
                     }, cloudHooks);
                 },
                 Submit = (span, pitch, height, clip) => mission.SubmitWorldDrawing(buffer, pitch, height, clip, _worldShapesDb, _worldTileModes,
-                    _worldSprites ?? throw new InvalidOperationException("월드 일반 객체 출력기 미연결")),
+                    _worldSprites ?? throw new InvalidOperationException("월드 일반 객체 출력기 미연결"),
+                    (token, cut) => (_missionBurning ?? throw new InvalidOperationException("월드 효과 실제 장치 미연결")).DrawCollected(token, cut)),
             };
             NativeRenderer.Draw(buffer, _driver.Screen.Pitch, 0, drawing);
         }

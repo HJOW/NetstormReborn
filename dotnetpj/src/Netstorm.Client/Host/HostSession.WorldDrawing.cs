@@ -62,8 +62,9 @@ public sealed partial class HostSession
     /// <param name="database">타입 로딩 순서의 SHP 저장소다.</param>
     /// <param name="modes">타일 소유자 표·색표와 특수 모드 값이다.</param>
     /// <param name="sprites">같은 세션의 일반 객체 출력기다. 객체에 도달할 때 반드시 필요하다.</param>
+    /// <param name="effects">같은 현재 표면과 클립을 사용하는 공통 효과 출력이다.</param>
     /// <remarks>2026-11-26 1.072에서 R5-3c2 Submit용으로 추가했다. 근거: cpppj ClientRendererFrame.cpp의 Submit이 같은 원문 5,000칸을 정렬하고 종류 0..4를 실제 현재 출력기에 분배한다. 배경·매 프레임 구동은 R5-3c3에서 잇는다.</remarks>
-    public void SubmitWorldDrawing(byte[] pixels, int pitch, int height, ScreenRect clip, ShapeDatabase database, RawTileDrawModes modes, SpriteWorldRenderer? sprites = null)
+    public void SubmitWorldDrawing(byte[] pixels, int pitch, int height, ScreenRect clip, ShapeDatabase database, RawTileDrawModes modes, SpriteWorldRenderer? sprites = null, Action<uint, ScreenRect>? effects = null)
     {
         ArgumentNullException.ThrowIfNull(database);
         ArgumentNullException.ThrowIfNull(modes);
@@ -111,7 +112,7 @@ public sealed partial class HostSession
                 ? group
                 : throw new InvalidOperationException("월드 묶음 조회 실패"),
             Ui = _ => throw new InvalidOperationException("월드 UI 그리기 미연결(R5-4)"),
-            Construction = _ => throw new InvalidOperationException("월드 건설 그리기 미연결(R5-3)"),
+            Construction = token => (effects ?? throw new InvalidOperationException("월드 효과 실제 표면 미연결(R5-3)"))(token, clip),
             Preview = _ => throw new InvalidOperationException("월드 미리보기 그리기 미연결(R6)"),
         };
         RawDrawSubmission.DispatchDrawEntries(sorted, false, false, hooks);
@@ -127,8 +128,15 @@ public sealed partial class HostSession
         Func<ScreenRect> mapView = _worldMapView ?? throw new InvalidOperationException("월드 수집 지도 영역 미설정(R5: 전체 viewport 대체 없음)");
         RenderWorldRect visible = RawRendererViewport.CollectionViewport(clip, mapView(), Gameplay.Camera.Snapshot);
         int rowLimit = RawRendererViewport.CollectionRowLimit(_worldScreenWidth, _worldScreenHeight);
+        RenderProcessSystem? rendering = _worldRendering;
         var hooks = new RawDrawCollectionHooks
         {
+            Construction = rendering is null ? null : (view, limit) =>
+            {
+                var work = new RenderCollectionEntry[limit];
+                int count = rendering.Collect(view, work, limit);
+                return work[..count];
+            },
             Groups = (RenderWorldRect view, int limit, ref bool covered) =>
             {
                 bool local = false;

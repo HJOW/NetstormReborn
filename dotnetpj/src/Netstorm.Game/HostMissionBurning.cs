@@ -11,6 +11,8 @@ public sealed class HostMissionBurning : IDisposable
 {
     /// <summary>같은 실제 부모체인과 장기HP/난수 owner다.</summary>
     private readonly HostSession _session;
+    /// <summary>효과가 공유하는 실제 화면과 현재 클립이다.</summary>
+    private readonly Screen _screen;
     /// <summary>파생보다 오래 살아야 하는 실제 색수/인접메모리 소유자다.</summary>
     private readonly ParticlePaletteMemory _memory;
     /// <summary>공유색수와 실제snapshot을 다른 소비자가 복제하지 않게 보관한다.</summary>
@@ -45,7 +47,7 @@ public sealed class HostMissionBurning : IDisposable
         ArgumentNullException.ThrowIfNull(types); ArgumentNullException.ThrowIfNull(definitions); ArgumentNullException.ThrowIfNull(shapes);
         ArgumentNullException.ThrowIfNull(shp); ArgumentNullException.ThrowIfNull(audio);
         if (!OperatingSystem.IsWindows()) throw new PlatformNotSupportedException("현재 연소 팔레트 메모리는 Windows 전용이다");
-        _memory = new(); _session = session; Dirty = new(screen.Width, screen.Height);
+        _memory = new(); _session = session; _screen = screen; Dirty = new(screen.Width, screen.Height);
         var tokens = new uint[types.Count];
         // cpppj 실제 장치 없는 보조표와 같은 일반12종의 등록이다.
         foreach (int type in new[] { 82, 155, 158, 164, 135, 133, 156, 73, 170, 146, 144, 126 }) tokens[type] = 1;
@@ -154,6 +156,18 @@ public sealed class HostMissionBurning : IDisposable
         // 같은 snapshot의 픽셀/월드/float 사본을 실제497490 본체로 함께 갱신한다.
         RawCameraView.SetPixels(_session.Gameplay.Camera.Snapshot, unchecked((int)cameraX), unchecked((int)cameraY));
     }
+    /// <summary>수집한 공통 효과를 현재 dirty 클립에 출력하고 이전 화면 클립을 복원한다.</summary>
+    /// <param name="token">같은 공통 등록소의 현재 효과 토큰이다.</param>
+    /// <param name="clip">현재 제출 중인 화면 dirty 영역이다.</param>
+    public void DrawCollected(uint token, ScreenRect clip)
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        ScreenRect previous = _screen.Clip;
+        _screen.SetClip(clip.Left, clip.Top, clip.Right, clip.Bottom);
+        try { _session.WorldRendering.DrawToken(token); }
+        finally { _screen.SetClip(previous.Left, previous.Top, previous.Right, previous.Bottom); }
+    }
+
     /// <summary>같은 Host의 연소를 먼저 없앤 뒤 외부 실제팔레트 메모리를 반납한다.</summary>
     public void Dispose()
     {
