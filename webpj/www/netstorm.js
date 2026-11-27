@@ -4137,6 +4137,12 @@ export class Netstorm {
     _onFrame(now) {
         this._frameHandle = 0;
         if (!this._canvas) return;
+        // 해상도 미디어/resize 알림이 없어도 현재 기기 배율을 맞춘다. 게임 프레임 상한과 시계 처리 전에 표시만 복구한다.
+        if (this._root && Number.isFinite(this._layout?.devicePixelRatio) && this._layout.devicePixelRatio > 0) {
+            const ratio = this._view()?.devicePixelRatio;
+            const dpr = Number.isFinite(ratio) && ratio > 0 ? ratio : 1;
+            if (this._layout.devicePixelRatio !== dpr) this._applyLayout();
+        }
         // 원본 프레임 상한(maxFPS, 기본 75)보다 빠르게 오는 표시 주기(rAF)는 건너뛰고 다음 기회에 처리한다. 60Hz 표시에서는 상한이 걸리지 않는다. (2026-11-20 WB04-E1094)
         if (!frameDue(now, this._lastFrameStamp, normalizeFrameRate(this._settings?.get('maxFPS')))) { this._startFrameLoop(); return; }
         this._lastFrameStamp = now;

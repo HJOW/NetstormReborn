@@ -1,0 +1,781 @@
+{
+  "unit": "WB04-E1461",
+  "verifiedAt": "2026-11-27T23:47:09.340238+09:00",
+  "headBeforeCommit": "78d8d89561872992d03591c32a58c271b838f463",
+  "sourceSha256": {
+    "webpj/www/netstorm.js": "6e13adff876daa287121cf84b9bf37e1435ff41edae0f12bfce9774819196161",
+    "webpj/www/dist/netstorm.bundle.js": "31ac919a1e31ac072775d9d4119c7e7497f42d5688ea7e2f10c388688ff30ba1",
+    "webpj/tests/pixel-ratio-fallback.test.mjs": "7d659aa4195f6b560fa0cacbc18f18e38711106b56dc5c803761f38ef9e5520b",
+    "webpj/e2e/high-dpi.spec.js": "b054f84f1994d2e7938a8165c6d814e991b16268d2b2524f3683c20ad72b7ffa",
+    "webpj/PORT_MAP.tsv": "afab3de1c642eec909e32d366c2b925c270cd33e2b1633ebb039b2646cb54016"
+  },
+  "bundleBytes": 3517946,
+  "before": {
+    "nodeTests": {
+      "pass": 1,
+      "fail": 1
+    },
+    "initialE2e": {
+      "fail": 2,
+      "qualification": "125%는새검사의DOM CSS 폭 허용오차0.005px에0.00625px차이가걸린시험문제. 200%는실제DPR변경후배치가남는경로의300초timeout. 독립일반운영번들에서같은DPR2→1.25/배치2유지를재현."
+    },
+    "normalRun": {
+      "before": {
+        "state": "mainMenu",
+        "dpr": 2,
+        "layoutDpr": 2,
+        "canvas": [
+          2048,
+          1536
+        ],
+        "inner": [
+          1024,
+          768
+        ],
+        "fixed": null
+      },
+      "after": {
+        "state": "mainMenu",
+        "dpr": 1.25,
+        "layoutDpr": 2,
+        "canvas": [
+          2048,
+          1536
+        ],
+        "inner": [
+          1024,
+          768
+        ],
+        "fixed": null
+      },
+      "resized": {
+        "state": "mainMenu",
+        "dpr": 1.25,
+        "layoutDpr": 1.25,
+        "canvas": [
+          1281,
+          960
+        ],
+        "inner": [
+          1025,
+          768
+        ],
+        "fixed": null
+      }
+    }
+  },
+  "focused": {
+    "pass": 19,
+    "path": "webpj/extracted/e1461-main-focus.log",
+    "sha256": "c2ca1a0ea43691c5e61dc5765a72828ae82f7ebf9730bb68cbab1e184634f274"
+  },
+  "buildExit": 0,
+  "freshBundle": {
+    "pass": 1,
+    "path": "webpj/extracted/e1461-bundle.log",
+    "sha256": "f36ec71bfe864c7fe041353ab6825580711dc1f98c006a62ceb46b0f35c81b5e"
+  },
+  "fixedTimeStartAndDeterministicDumpE2e": 1,
+  "matrix": {
+    "cases": 8,
+    "wholeCanvasCheckpoints": 63,
+    "pixelDifferences": 0,
+    "pointerChecks": 36,
+    "dynamicDprChanges": 12,
+    "normalRafProductionBundleCases": 3,
+    "errors": 0,
+    "casesSummary": [
+      {
+        "browser": "158.0.8127.89",
+        "browserName": "chromium",
+        "dpr": 1.25,
+        "rows": [
+          {
+            "name": "menu",
+            "canvas": [
+              1280,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "option-input",
+            "canvas": [
+              1280,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "mission",
+            "canvas": [
+              1280,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "game-menu",
+            "canvas": [
+              1280,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "resize-1366",
+            "canvas": [
+              1707,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "resize-1280",
+            "canvas": [
+              1600,
+              1000
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          }
+        ],
+        "dynamicDpr": [],
+        "normalBefore": null,
+        "left": true
+      },
+      {
+        "browser": "156.0.8078.4",
+        "browserName": "chromium",
+        "dpr": 1.25,
+        "rows": [
+          {
+            "name": "menu",
+            "canvas": [
+              1280,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "option-input",
+            "canvas": [
+              1280,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "mission",
+            "canvas": [
+              1280,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "game-menu",
+            "canvas": [
+              1280,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "resize-1366",
+            "canvas": [
+              1707,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "resize-1280",
+            "canvas": [
+              1600,
+              1000
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          }
+        ],
+        "dynamicDpr": [],
+        "normalBefore": null,
+        "left": true
+      },
+      {
+        "browser": "158.0.4370.33",
+        "browserName": "chromium",
+        "dpr": 1.25,
+        "rows": [
+          {
+            "name": "menu",
+            "canvas": [
+              1280,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "option-input",
+            "canvas": [
+              1280,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "mission",
+            "canvas": [
+              1280,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "game-menu",
+            "canvas": [
+              1280,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "resize-1366",
+            "canvas": [
+              1707,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "resize-1280",
+            "canvas": [
+              1600,
+              1000
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          }
+        ],
+        "dynamicDpr": [],
+        "normalBefore": null,
+        "left": true
+      },
+      {
+        "browser": "157.0",
+        "browserName": "firefox",
+        "dpr": 1.25,
+        "rows": [
+          {
+            "name": "menu",
+            "canvas": [
+              1280,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "option-input",
+            "canvas": [
+              1280,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "mission",
+            "canvas": [
+              1280,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "game-menu",
+            "canvas": [
+              1280,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "resize-1366",
+            "canvas": [
+              1707,
+              960
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "resize-1280",
+            "canvas": [
+              1600,
+              1000
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          }
+        ],
+        "dynamicDpr": [],
+        "normalBefore": null,
+        "left": true
+      },
+      {
+        "browser": "158.0.8127.89",
+        "browserName": "chromium",
+        "dpr": 2,
+        "rows": [
+          {
+            "name": "menu",
+            "canvas": [
+              2048,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "option-input",
+            "canvas": [
+              2048,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "mission",
+            "canvas": [
+              2048,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "game-menu",
+            "canvas": [
+              2048,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "resize-1366",
+            "canvas": [
+              2732,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "resize-1280",
+            "canvas": [
+              2560,
+              1600
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "dynamic-dpr-1.25",
+            "canvas": [
+              1600,
+              1000
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "dynamic-dpr-2",
+            "canvas": [
+              2560,
+              1600
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "dynamic-dpr-1.5",
+            "canvas": [
+              1920,
+              1200
+            ],
+            "dpr": 1.5,
+            "differences": 0
+          },
+          {
+            "name": "dynamic-dpr-1",
+            "canvas": [
+              1280,
+              800
+            ],
+            "dpr": 1,
+            "differences": 0
+          },
+          {
+            "name": "normal-bundle-dpr-no-notice",
+            "canvas": [
+              1600,
+              1000
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          }
+        ],
+        "dynamicDpr": [
+          1.25,
+          2,
+          1.5,
+          1
+        ],
+        "normalBefore": {
+          "dpr": 2,
+          "layoutDpr": 2,
+          "fixed": 0
+        },
+        "left": true
+      },
+      {
+        "browser": "156.0.8078.4",
+        "browserName": "chromium",
+        "dpr": 2,
+        "rows": [
+          {
+            "name": "menu",
+            "canvas": [
+              2048,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "option-input",
+            "canvas": [
+              2048,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "mission",
+            "canvas": [
+              2048,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "game-menu",
+            "canvas": [
+              2048,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "resize-1366",
+            "canvas": [
+              2732,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "resize-1280",
+            "canvas": [
+              2560,
+              1600
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "dynamic-dpr-1.25",
+            "canvas": [
+              1600,
+              1000
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "dynamic-dpr-2",
+            "canvas": [
+              2560,
+              1600
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "dynamic-dpr-1.5",
+            "canvas": [
+              1920,
+              1200
+            ],
+            "dpr": 1.5,
+            "differences": 0
+          },
+          {
+            "name": "dynamic-dpr-1",
+            "canvas": [
+              1280,
+              800
+            ],
+            "dpr": 1,
+            "differences": 0
+          },
+          {
+            "name": "normal-bundle-dpr-no-notice",
+            "canvas": [
+              1600,
+              1000
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          }
+        ],
+        "dynamicDpr": [
+          1.25,
+          2,
+          1.5,
+          1
+        ],
+        "normalBefore": {
+          "dpr": 2,
+          "layoutDpr": 2,
+          "fixed": 0
+        },
+        "left": true
+      },
+      {
+        "browser": "158.0.4370.33",
+        "browserName": "chromium",
+        "dpr": 2,
+        "rows": [
+          {
+            "name": "menu",
+            "canvas": [
+              2048,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "option-input",
+            "canvas": [
+              2048,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "mission",
+            "canvas": [
+              2048,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "game-menu",
+            "canvas": [
+              2048,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "resize-1366",
+            "canvas": [
+              2732,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "resize-1280",
+            "canvas": [
+              2560,
+              1600
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "dynamic-dpr-1.25",
+            "canvas": [
+              1600,
+              1000
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          },
+          {
+            "name": "dynamic-dpr-2",
+            "canvas": [
+              2560,
+              1600
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "dynamic-dpr-1.5",
+            "canvas": [
+              1920,
+              1200
+            ],
+            "dpr": 1.5,
+            "differences": 0
+          },
+          {
+            "name": "dynamic-dpr-1",
+            "canvas": [
+              1280,
+              800
+            ],
+            "dpr": 1,
+            "differences": 0
+          },
+          {
+            "name": "normal-bundle-dpr-no-notice",
+            "canvas": [
+              1600,
+              1000
+            ],
+            "dpr": 1.25,
+            "differences": 0
+          }
+        ],
+        "dynamicDpr": [
+          1.25,
+          2,
+          1.5,
+          1
+        ],
+        "normalBefore": {
+          "dpr": 2,
+          "layoutDpr": 2,
+          "fixed": 0
+        },
+        "left": true
+      },
+      {
+        "browser": "157.0",
+        "browserName": "firefox",
+        "dpr": 2,
+        "rows": [
+          {
+            "name": "menu",
+            "canvas": [
+              2048,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "option-input",
+            "canvas": [
+              2048,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "mission",
+            "canvas": [
+              2048,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "game-menu",
+            "canvas": [
+              2048,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "resize-1366",
+            "canvas": [
+              2732,
+              1536
+            ],
+            "dpr": 2,
+            "differences": 0
+          },
+          {
+            "name": "resize-1280",
+            "canvas": [
+              2560,
+              1600
+            ],
+            "dpr": 2,
+            "differences": 0
+          }
+        ],
+        "dynamicDpr": [],
+        "normalBefore": null,
+        "left": true
+      }
+    ]
+  },
+  "portMap": {
+    "rows": 1160,
+    "errors": 0,
+    "existingCppChanged": 0,
+    "added10PreviouslyClassified": true
+  },
+  "limitations": [
+    "영어메뉴/1-1;한국어고DPI는후속",
+    "Firefox동적DPR은CDP미지원이라이검사에서수행하지않음;정적125/200%와창크기전환은확인",
+    "실제OS모니터이동/물리주사율/음향검사아님",
+    "같은현재색번호를독립전체RGBA로표시한기대값대조이며새CPP픽셀오라클아님"
+  ],
+  "periodAfterUnit": {
+    "v26": 3,
+    "v22": 7
+  },
+  "nextFullExpectedNodeTests": 6934
+}
