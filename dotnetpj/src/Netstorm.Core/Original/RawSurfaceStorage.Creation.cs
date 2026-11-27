@@ -53,7 +53,12 @@ public sealed partial class RawSurfaceStorage
             {
                 Parent = sid => RawContainedLink.CommonContainedParent(Pool, sid), Previous = sid => RawContainedLink.CommonContainedPrevious(Pool, sid),
                 SetPrevious = (sid, previous) => RawContainedLink.CommonContainedSetPrevious(Pool, sid, previous),
-                ParentNotice = (parent, form, reason) => new RawContentParentNotice(Pool).Notice(parent, form, reason),
+                ParentNotice = (parent, form, reason) =>
+                {
+                    // Native는 현재 World의 파생 소비자를 빌리고 독립 저장소는 기존 빈 몸체를 사용한다.
+                    if (UsesNativeTransmissionDevices()) NoticeContent(parent, form, reason);
+                    else new RawContentParentNotice(Pool).Notice(parent, form, reason);
+                },
                 Command = (code, x, y) => (_contentCommand ?? throw new InvalidOperationException("공통 종속의 실제 입력 장치 미연결"))(code, x, y),
                 Assertion = AssertDisplay,
             };
