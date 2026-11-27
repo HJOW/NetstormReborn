@@ -1,0 +1,9 @@
+{
+  "scope": "정상rAF 최소30분/20회 실제아군AI1-1. 내용물통지getter 약한참조 수정의 실제검증.",
+  "headBeforeFix": "f572a5135",
+  "sources": {
+    "webpj/www/core/raw-campaign-session-contents.js": "d82716bf76eeb15ff485d5a046900d6668177e3c333ccc317ee699cceaede3b6",
+    "webpj/www/dist/netstorm.bundle.js": "72ea8d094b55216452615ed982bceb46e82ab3166957eb47a5225108e2bd7b25"
+  },
+  "note": "debug.html의실제ES모듈. 번들은아직E1416이며이번rAF검사는번들을사용하지않음."
+}

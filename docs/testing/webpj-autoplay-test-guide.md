@@ -25,3 +25,5 @@ node tools/ally-ai-campaign-flow.cjs thunderingpower 60000
 출력은 Git 제외 webpj/extracted 아래에 쓴다. 같은 미션을 다시 실행하면 기본 파일명이 같으므로 이전 결과를 먼저 별도 폴더/해시와 보존한다. 사용자 저장소와 원본 파일은 수정하지 않는다. 현재 범위의 근거와 완료/미완료 상태는 LEFT_JOBS.webpj.md가 기준이다.
 
 실제 AI 수집기 `tools/ally-ai-campaign-flow.cjs`는 프레임 오류를 발견하면 단언/브라우저 종료 전에 `extracted/ally-flow-미션이름-failure.json`에 당시 시각·안내·관측·전체 오류·가능한 Session 덤프를 남긴다. 최종 Canvas 출력만 복구해 `-failure.png`도 저장하며 게임 프레임이나 명령을 추가하지 않는다. 덤프/화면 저장 실패는 원래 프레임 오류를 가리지 않는다. 이 파일은 실제 승리/완료 저장 결과와 구별한다(E1413).
+
+정상 rAF의 장시간 메모리 반복은 `node tools/mission-memory-long-profile.cjs`로 실행한다. 같은 앱에서 실제아군AI1-1을60초씩 진행한 뒤 원래 메뉴로 나가며 최소30분·20회를 모두 충족해야 완료한다. 첫 인자는 반복 상한20~100(기본100)이다. `NETSTORM_MEMORY_HEAP=1`이면 최종 heap도 Git 제외 경로에 저장한다. 기본 결과는 `extracted/webpj-long-mission-memory.json`이며 재실행 전 이전 결과를 보존한다. 회수 실패 때도 단언 전에 원시 heap/추가 task 관찰을 남긴다. 물리120Hz/자연승리 검사와는 별개다. E1435에서 동일 브라우저 알고리즘의27회/30분18초·모든World/Session회수·오류0을 확인했다.

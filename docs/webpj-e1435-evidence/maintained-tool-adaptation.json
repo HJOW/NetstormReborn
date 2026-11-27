@@ -1,0 +1,12 @@
+{
+  "originalExecutedCollector": "e1431-fixed-long-memory.cjs",
+  "promotedTool": "tools/mission-memory-long-profile.cjs",
+  "changes": [
+    "출력 파일명/사용법/고정 제품 라벨 교정",
+    "Node crypto의 읽기 전용 실행 소스 SHA 메타데이터 추가"
+  ],
+  "browserAlgorithmChanged": false,
+  "originalSha256": "257efbaf9ad5367e20cea24e856aa9414604ea9b1b1f62895aee08c06c3e5016",
+  "toolSha256": "8bd1b807d77799fce6962d98e559597dcd2967ecec6c62334a498fd24b4ea19f",
+  "runEvidence": "webpj-e1431-fixed-long-memory.json 27cycles/1818.297s complete true"
+}

@@ -31,7 +31,7 @@ module.exports = [
     },
     {
         // 이 파일들의 evaluate 콜백은 실제 브라우저에서 실행하므로 두 환경을 함께 허용한다.
-        files: ['e2e/**/*.{js,cjs,mjs}', 'tools/ally-ai-campaign-flow.cjs', 'tools/observe-ally-ai.cjs', 'tools/menu-frame-profile.cjs', 'tools/mission-memory-profile.cjs', 'tools/skirmish-ai-telemetry.cjs'],
+        files: ['e2e/**/*.{js,cjs,mjs}', 'tools/ally-ai-campaign-flow.cjs', 'tools/observe-ally-ai.cjs', 'tools/menu-frame-profile.cjs', 'tools/mission-memory-profile.cjs', 'tools/mission-memory-long-profile.cjs', 'tools/skirmish-ai-telemetry.cjs'],
         languageOptions: { globals: globals.browser },
     },
 ];

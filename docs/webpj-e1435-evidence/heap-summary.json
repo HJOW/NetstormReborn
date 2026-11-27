@@ -1,0 +1,43 @@
+{
+  "objects": {
+    "RawSurfaceWorld": 0,
+    "RawCampaignSession": 0,
+    "RawCampaignSessionOwners": 0,
+    "SidPool": 1,
+    "RawSurfaceStorage": 1
+  },
+  "selfBytesByType": {
+    "synthetic": 0,
+    "native": 62144458,
+    "string": 2151688,
+    "object shape": 1367740,
+    "code": 22008812,
+    "array": 1770816,
+    "number": 1076700,
+    "symbol": 68800,
+    "concatenated string": 164260,
+    "object": 3232240,
+    "sliced string": 12740,
+    "closure": 570084,
+    "regexp": 360,
+    "bigint": 880
+  },
+  "sidPoolProperties": [
+    [
+      "SidPool",
+      "#bytes",
+      "#capacity",
+      "#freeCount",
+      "#predictableCursor",
+      "#tails",
+      "#history",
+      "#server",
+      "#serverOwner",
+      "__proto__"
+    ]
+  ],
+  "nodeCount": 777996,
+  "edgeCount": 3049500,
+  "heapBytes": 74824346,
+  "heapSha256": "ae22b7cb5c198c6096d39fc45bc197c9cdc9fe381e4385f26c29753130f8269a"
+}

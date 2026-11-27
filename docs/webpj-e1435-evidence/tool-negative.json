@@ -1,0 +1,12 @@
+[
+  {
+    "argument": "19",
+    "exit": 1,
+    "expectedValidation": true
+  },
+  {
+    "argument": "101",
+    "exit": 1,
+    "expectedValidation": true
+  }
+]

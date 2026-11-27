@@ -1,0 +1,31 @@
+npm notice run NetstormWeb@1.0.0 lint
+npm notice run eslint . --max-warnings 0
+
+H:\Workspace\git\NetstormReborn\webpj\tools\mission-memory-long-profile.cjs
+   32:25   error  'window' is not defined  no-undef
+   35:94   error  'window' is not defined  no-undef
+   48:21   error  'window' is not defined  no-undef
+   61:21   error  'window' is not defined  no-undef
+   77:43   error  'window' is not defined  no-undef
+   79:51   error  'window' is not defined  no-undef
+   82:47   error  'window' is not defined  no-undef
+   86:40   error  'window' is not defined  no-undef
+   86:75   error  'window' is not defined  no-undef
+   96:21   error  'window' is not defined  no-undef
+  105:493  error  'window' is not defined  no-undef
+  105:584  error  'window' is not defined  no-undef
+  126:42   error  'window' is not defined  no-undef
+  127:73   error  'window' is not defined  no-undef
+  129:42   error  'window' is not defined  no-undef
+  132:37   error  'window' is not defined  no-undef
+  132:68   error  'window' is not defined  no-undef
+  140:48   error  'window' is not defined  no-undef
+  140:83   error  'window' is not defined  no-undef
+  143:41   error  'window' is not defined  no-undef
+  143:83   error  'window' is not defined  no-undef
+  143:117  error  'window' is not defined  no-undef
+  143:161  error  'window' is not defined  no-undef
+  145:58   error  'window' is not defined  no-undef
+
+✖ 24 problems (24 errors, 0 warnings)
+

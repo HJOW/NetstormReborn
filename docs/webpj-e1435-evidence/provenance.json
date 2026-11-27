@@ -1,0 +1,76 @@
+{
+  "unit": "WB04-E1435",
+  "host": "HJOW-Athlon",
+  "runtimeBaseline": "E1431내용물getter수정소스. 실행시미커밋해시d82716...는296ce81ac와동일. debug.html은운영번들을쓰지않음.",
+  "sourceQualification": "실행중E1433SID소스를수정/빌드했지만브라우저는시작에적재한ES모듈을재사용. 최종heap의SidPool에#allocation필드없음을확인해E1433할당정책검증으로세지않음. 원시result.product의E1416/E1427라벨은수집기준비때의낡은라벨이며본출처정정이기준.",
+  "wallMs": 1818297.2152,
+  "cycles": 27,
+  "activeWallMs": 1622004.2940000002,
+  "activeGameSeconds": 1625.1039999993518,
+  "finalHeap": {
+    "usedSize": 34130528,
+    "totalSize": 35430400,
+    "embedderHeapUsedSize": 5574632,
+    "backingStorageSize": 46665188
+  },
+  "last10UsedSizeRange": [
+    33843692,
+    34459928
+  ],
+  "objectsAtFinalHeap": {
+    "RawSurfaceWorld": 0,
+    "RawCampaignSession": 0,
+    "RawCampaignSessionOwners": 0,
+    "SidPool": 1,
+    "RawSurfaceStorage": 1
+  },
+  "heap": {
+    "path": "H:\\Workspace\\git\\NetstormReborn\\webpj\\extracted\\webpj-e1431-fixed-long-memory.heapsnapshot",
+    "bytes": 74824346,
+    "sha256": "ae22b7cb5c198c6096d39fc45bc197c9cdc9fe381e4385f26c29753130f8269a",
+    "committed": false
+  },
+  "maintainedTool": "tools/mission-memory-long-profile.cjs:수집동작동일/출력명·라벨·읽기전용소스SHA메타데이터만추가. Node구문/범위음성검사2건/전역ESLint0.",
+  "periodAfter": {
+    "v26": "4/4 (전체즉시필요)",
+    "v22": "4/8"
+  },
+  "evidence": {
+    "executed-collector.cjs": {
+      "bytes": 18426,
+      "sha256": "11fb25fe9991abcfc8c6557bad9f5a6bd05ff648a769a85c7a6ea24a2a338e4f"
+    },
+    "heap-summary.json": {
+      "bytes": 948,
+      "sha256": "df9bbd3eb5ee6133fa6e7a48b48d71c760b6310a0d5e6b770341e8e12b8104f5"
+    },
+    "lint-first.log": {
+      "bytes": 1477,
+      "sha256": "f31c8d0cd1606a1915ddfc9fdca227483855d6883bf8cba26219296989096bbc"
+    },
+    "lint.log": {
+      "bytes": 81,
+      "sha256": "6c1a6c81a3e52bcd73c1f85f06e14798341ce6b8a5bd2fcfffd05c500ae04b4e"
+    },
+    "long-memory.json": {
+      "bytes": 312228,
+      "sha256": "24150a295660a94004164f794916bb38399d78f822dbd776400603f286b62f80"
+    },
+    "long-memory.log": {
+      "bytes": 13383,
+      "sha256": "a4ebff5676422d8e9250093e1e79e575d6694f955f981e8e28a21d259da5d137"
+    },
+    "maintained-tool-adaptation.json": {
+      "bytes": 590,
+      "sha256": "61c53b2ce529ef0212b775f05842b0554a3078c41a6dc744688271456f5d1671"
+    },
+    "source-at-start.json": {
+      "bytes": 530,
+      "sha256": "333ad4ccf4ae7b8ea43e684c536a0d1bdcd51e176f985be9b61a8905b3c3bf9d"
+    },
+    "tool-negative.json": {
+      "bytes": 170,
+      "sha256": "2f07eb3c9b41674cd9066f0714b1a665ce170604f30637038e5a3be31be887e4"
+    }
+  }
+}
