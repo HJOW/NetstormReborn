@@ -14,6 +14,8 @@ public sealed partial class ClientHostGame
     private uint _hudChatDivider;
     /// <summary>미션 도크 배치 실행기다. 구분선 토큰을 조회한다.</summary>
     private HudDock? _missionHudDock;
+    /// <summary>임시 루트의 채팅·구분선 사건을 실제 도킹 본체로 전달한다.</summary>
+    private HostMissionHudRouting? _missionHudRouting;
     /// <summary>미션 구분선 노드의 소유자 표시다.</summary>
     private readonly object _hudDividerOwner = new();
 
@@ -50,7 +52,7 @@ public sealed partial class ClientHostGame
             FinishResize = () => { NativeRenderer.BackgroundRedraw.Value = 1; _menuDirty = true; },
             ChatVisible = visible => NativeChatWindows.Geometry.SetHelperVisible(NativeChatWindows.CurrentRoot, visible ? 1U : 0U),
             ChatInput = visible => NativeChatWindows.Geometry.SetInputVisible(NativeChatWindows.CurrentRoot, visible ? 1U : 0U),
-            BaseHandle = (code, first, second) => (tree.EventHooks.Handle ?? throw new InvalidOperationException("HUD 실제 기본 입력 장치 없음"))(tree.Create.Entries[0], code, first, second),
+            BaseHandle = (code, first, second) => (_missionHudRouting ?? throw new InvalidOperationException("HUD 실제 기본 입력 장치 없음")).HandleBase(code, first, second),
         };
         var dividers = new HudDividerGump(() => tree.Create.ScreenWidth, () => tree.Create.ScreenHeight, () => (sbyte)55, hooks);
         uint root = tree.Create.Entries[0];
@@ -74,6 +76,7 @@ public sealed partial class ClientHostGame
             HudDockPart.Chat => _nativeChatWindows?.CurrentRoot ?? 0,
             _ => 0,
         }, globals, () => (sbyte)55, hooks);
+        _missionHudRouting = new HostMissionHudRouting(tree, dock);
         dock.RegisterNormalLayout();
         GumpCreateNode vertical = tree.Node(_hudVertical) ?? throw new InvalidOperationException("HUD 세로 구분선 없음");
         GumpCreateNode chat = tree.Node(_hudChatDivider) ?? throw new InvalidOperationException("HUD 채팅 구분선 없음");

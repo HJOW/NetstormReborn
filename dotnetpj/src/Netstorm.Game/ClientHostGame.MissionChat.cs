@@ -28,8 +28,6 @@ public sealed partial class ClientHostGame
         dock.RegisterSlave(_hudVertical, token, 4);
         dock.RegisterSlave(_hudChatDivider, token, 8);
         dock.Handle(0x02000088, 0, 0);
-        // 임시 HUD 부모는 방송을 직접 받지 않으므로 같은 구분선 이동을 지도 작성자에 전달한다.
-        dock.Handle(0x0200003a, divider.Serial, 0);
         _menuDirty = true;
     }
 }

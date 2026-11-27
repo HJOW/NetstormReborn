@@ -246,6 +246,8 @@ public sealed partial class ClientHostGame : Game
         {
             if (_missionRuntime is { } runtime && _gameplay.RuntimeCallActive(runtime.Session)) throw new InvalidOperationException("실제 Runtime 배송 종료 전 호스트 종료");
             _connections.ShutdownDevices();
+            // 임시 HUD 사건 연결을 공통 트리와 채팅창보다 먼저 반납한다.
+            _missionHudRouting?.Dispose(); _missionHudRouting = null;
             // 미니맵의 노드와 월드 알림 대여를 세션 및 공통 트리보다 먼저 반납한다.
             _nativeMinimap?.Dispose(); _nativeMinimap = null;
             _missionSession?.ReleasePlayerRecordViews();
