@@ -1,0 +1,5 @@
+page.waitForFunction: Timeout 60000ms exceeded.
+    at run (H:\Workspace\git\NetstormReborn\webpj\extracted\e1449-mission-profile.cjs:114:24) {
+  log: [],
+  name: 'TimeoutError'
+}
