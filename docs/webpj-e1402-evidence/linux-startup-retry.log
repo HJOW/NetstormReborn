@@ -1,0 +1,6 @@
+
+Running 1 test using 1 worker
+
+  ✓  1 [chromium] › e2e/fixed-time.spec.js:113:1 › 고정 시각 모드가 아니면 프레임을 직접 진행할 수 없다 (9.3s)
+
+  1 passed (22.8s)

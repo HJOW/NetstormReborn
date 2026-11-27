@@ -1,0 +1,22 @@
+{
+  "unit": "WB04-E1402",
+  "host": "HJOW-Athlon",
+  "product": "WB04-E1400 4ae2a11cd",
+  "os": "Ubuntu26.04/WSL2 x86_64",
+  "node": "24.21.0",
+  "browser": "Chromium1248 Chrome156.0.8078.4",
+  "headed": true,
+  "display": "Xvfb",
+  "audio": "실제 AudioContext sink none·게임 audio 옵션 유지",
+  "command": "NETSTORM_E2E_SILENT_SINK=1 xvfb-run -a node node_modules/playwright/cli.js test e2e/fixed-time.spec.js --grep 아니면 --workers=1 --project=chromium --headed --trace=off --output=extracted/e1402-linux-startup --reporter=list",
+  "result": {
+    "pass": 1,
+    "fail": 0,
+    "exitCode": 0,
+    "testSeconds": 9.3,
+    "suiteSeconds": 22.8
+  },
+  "limits": "코드/대기 상한/단언을 바꾸지 않은 단독 재시도다. 이전 E1397 시간 초과의 원인/부하 안정성을 확정하지 않는다.",
+  "sha256Raw": "da42b81f0a050f95c94e362101ae1daa619409f1987688925907ed62f343d065",
+  "sha256Lf": "da42b81f0a050f95c94e362101ae1daa619409f1987688925907ed62f343d065"
+}
