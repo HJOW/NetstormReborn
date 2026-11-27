@@ -1,0 +1,32 @@
+{
+  "unit": "WB04-E1445",
+  "nodeExit": 0,
+  "frame": 148000,
+  "gameSeconds": 3709.175,
+  "errors": [],
+  "outcomes": 0,
+  "sampleCount": 75,
+  "secondaryDeadlineDistinctSamples": 75,
+  "firstGeysers": {
+    "deadline": 0,
+    "secondary": 39.2,
+    "ordinary": 0
+  },
+  "lastGeysers": {
+    "deadline": 0,
+    "secondary": 3729.25,
+    "ordinary": 0
+  },
+  "effectiveDifficulty": "localHard/enemiesEasy: helper default overrides nonallied opponents",
+  "inputDifficulty": "allHard: retained raw labels differ from effective difficulty",
+  "runtimeSource": "E1441 freeze (E1436 final4/E1434), before E1440/E1447; ES modules loaded at original launch",
+  "sha256": {
+    "e1445-geyser-hour.cjs": "9f19a5843be99721bae5ab66e04f83a877e1184f445fff7f91aedbba04e8240a",
+    "e1445-geyser-hour.json": "1dde3f750bca38d91ab14feebe7d1c88110bcc7a853168b016883025f2232f4d",
+    "e1445-geyser-hour-initial.json": "08e001f67706e53c74cc561826eafaeb3981a4d630a61a5c081c22007dcd3f08",
+    "e1445-geyser-hour-source.json": "8bcc695fed9f5d4a489fd01ddedc42e18dbd39745a8ef0929c23b3598100b4bd",
+    "e1445-geyser-hour-terminal.png": "bd3bac7e06f4953b60f1d21f45d1502e0211e9b2dafe87cd28ce2a4820c6d5ce",
+    "e1445-geyser-hour-terminal.tsv": "221bff7d7841c69cbdb553da3d128be13db3c3e9355357a64f5bf818141326a8",
+    "webpj-e1445-geyser-hour.log": "2203c41271f3624f24b441881bb7fd75c56d1a8fe83d74fb038efbe120a51208"
+  }
+}

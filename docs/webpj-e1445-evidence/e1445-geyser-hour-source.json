@@ -1,0 +1,7 @@
+{
+  "scope": "실제아군AI·스커미시4Hard·기본SP5000·seed1·148000실제25ms프레임; 자연승패후원래ContinueMission만사용. 목표/자금/HP/사제쓰기없음.",
+  "sourceFreeze": "webpj-e1441-freeze.json",
+  "sourceRule": "현재본소스. GameAux수정후보미포함",
+  "scriptSha256": "cb12ca2ec887749d9fd907a5a9f90f2668ad8e8408efff31219f501a1b29a551",
+  "effectiveDifficultyQualification": "입력메뉴는전원Hard이나installAllyAi 기본설정이비동맹을Easy로선택한다. 실제실행은로컬Hard/적4명Easy다. 설정값을실제적Hard라고보고하지않는다. 실행중스크립트는수정하지않음."
+}
