@@ -33,7 +33,7 @@ public sealed partial class HostSession
 
     /// <summary>제품 Root 미션 흐름에 전체 Native World 자산 가상 삭제 분배를 설치한다.</summary>
     /// <returns>같은 세션 수명으로 공유하는 실제 전체 분배기다. MetaZone 마커 삭제가 이 분배를 사용한다.</returns>
-    /// <remarks>2026-11-26 1.036에서 WP-3 전체 Native World 자산 가상 삭제 분배용으로 추가했다. 근거: cpppj src/client/RawSurfaceWorld.cpp 373행의 BindDeletion과 RawCampaignSession.cpp 3026행의 MakeCampaignDeletionEffects 상당 결선이다. 자산 뿌리는 원문 83개 생성 가상표면 전체를 실제 공통 본체로 보내며, 등록되지 않은 가상표는 명시 거부한다. 일반 삭제 Pre/Post로 대신하지 않는다. 감시 쌍·프로세스 Form은 같은 세션 장치를 등록하고 Gump·내용물 Form은 UI·내용물 본체(R3)에서 잇는다.</remarks>
+    /// <remarks>2026-11-26 1.036에서 WP-3 전체 Native World 자산 가상 삭제 분배용으로 추가했다. 근거: cpppj src/client/RawSurfaceWorld.cpp 373행의 BindDeletion과 RawCampaignSession.cpp 3026행의 MakeCampaignDeletionEffects 상당 결선이다. 자산 뿌리는 원문 83개 생성 가상표면 전체를 실제 공통 본체로 보내며, 등록되지 않은 가상표는 명시 거부한다. 1.096에서 공유 Surface의 같은 GumpForm과 삭제 깊이를 연결했다. 내용물 Form은 R3에서 잇는다.</remarks>
     public RawSquidFormDispatch BuildWorldDeletionRootDevices()
     {
         SquidProcessHost processes = PlayerProcesses ?? throw new InvalidOperationException("월드 전체 삭제의 실제 프로세스 Runtime 미연결");
@@ -41,6 +41,12 @@ public sealed partial class HostSession
         RawSquidFormDispatch dispatch = new(Pool, processes.Destroy(), storage.DefaultProcessAssetHooks(), AssetDestroyFull);
         dispatch.Bind(processes);
         dispatch.Bind(_worldDependencies ?? BuildDependencyWorldDevices());
+        if (_surfaceStorage is not null)
+        {
+            if (!ReferenceEquals(_surfaceStorage, storage) || !ReferenceEquals(storage.BaseDestroy(), processes.Destroy()))
+                throw new InvalidOperationException("Gump 삭제의 실제 장기 저장소/삭제 깊이 불일치");
+            dispatch.Bind(storage.GumpForms());
+        }
         BindWorldDeletion(dispatch);
         return dispatch;
     }

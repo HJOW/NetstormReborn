@@ -12,14 +12,15 @@ namespace Netstorm.Client.Tests;
 public sealed partial class HostPriestWorldLiveTests
 {
     /// <summary>실자산과 시작 때 초기화한 SP·장기 목록을 같은 세션에 연결한다. 공유 표면 지정 시 제품처럼 같은 풀/게임/해시/점유 지도를 빌린다.</summary>
-    private static (HostSession Session, IReadOnlyList<OriginalTypeRecord> Types) Scene(ClientSurfaceGlobals? sharedSurface = null, bool initializeSurfaceAssets = false, Action<List<SquidDisplayShape>>? inspectShapes = null)
+    private static (HostSession Session, IReadOnlyList<OriginalTypeRecord> Types) Scene(ClientSurfaceGlobals? sharedSurface = null, bool initializeSurfaceAssets = false, Action<List<SquidDisplayShape>>? inspectShapes = null, CampaignTemplateStorage? sharedTemplates = null)
     {
         string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
         var startup = new HostStartupScene(data); var random = new GameRandom(1);
         var globals = new ClientSpGlobals(random, new UIntBox { Value = 1 }, new UIntBox(), () => 1760000000);
         globals.Store.Initialize();
         var session = new HostSession(sharedSurface?.Kernel ?? new Kernel(), random, new CrtRandom(), sharedSp: globals.Store,
-            sharedGameplay: sharedSurface?.Gameplay, pool: sharedSurface?.Storage.Pool);
+            sharedGameplay: sharedSurface?.Gameplay, pool: sharedSurface?.Storage.Pool,
+            sharedSurface: sharedTemplates is null ? null : sharedSurface, sharedTemplates: sharedTemplates);
         if (sharedSurface is not null) RawMissionBattleOptions.Reset(OriginalEdition.Patch1078, session.BattleOptions);
         session.MissionPlayer.PlayerKnown = 1; session.MissionPlayer.BattleOwner = 1;
         IReadOnlyList<RiftTypeDefinition> definitions = MissionFortLoad.LoadTypeDefinitions(startup.Files);
@@ -32,7 +33,7 @@ public sealed partial class HostPriestWorldLiveTests
         {
             Assert.NotNull(sharedSurface); sharedSurface.Storage.InitializeAssetTables(types, session.WorldFrames, shapes); types = sharedSurface.Storage.Types;
         }
-        session.BuildTerrainPopDevices(types, shapes, hash: sharedSurface?.Storage.Hash, spots: sharedSurface?.Storage.Spots); session.BuildFortObjectDevices(types, session.WorldFrames);
+        session.BuildTerrainPopDevices(types, sharedTemplates is null ? shapes : sharedSurface!.Storage.Shapes, hash: sharedSurface?.Storage.Hash, spots: sharedSurface?.Storage.Spots); session.BuildFortObjectDevices(types, session.WorldFrames);
         session.BuildWorldGraphDevices(types);
         return (session, types);
     }

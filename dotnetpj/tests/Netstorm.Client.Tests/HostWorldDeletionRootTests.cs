@@ -11,7 +11,7 @@ namespace Netstorm.Client.Tests;
 public sealed partial class HostPriestWorldLiveTests
 {
     /// <summary>제품 흐름과 같은 순서로 사제·패킷 장치를 연결한 세션을 만든다.</summary>
-    private static (HostSession Session, IReadOnlyList<OriginalTypeRecord> Types, ClientSurfaceGlobals Surface) WorldDeletionRootScene()
+    private static (HostSession Session, IReadOnlyList<OriginalTypeRecord> Types, ClientSurfaceGlobals Surface) WorldDeletionRootScene(bool sharedNative = false)
     {
         // 전체 Native 자산 가상 삭제는 Native 전송·선택 계약을 요구한다. typed 경로의 DefaultProcessAssetHooks는 거부한다.
         // 근거: RawSurfaceStorage.EmitDefaultAssetEffect의 UsesNativeTransmissionDevices 관문과
@@ -21,12 +21,16 @@ public sealed partial class HostPriestWorldLiveTests
         var local = new ClientLocalStateGlobals(game, new());
         var clock = new ClientClockGlobals(local);
         var kernel = new Kernel();
+        var templates = sharedNative ? new CampaignTemplateStorage() : null;
         var surface = new ClientSurfaceGlobals(game, clock, kernel, () => 0, installDevices: owner =>
         {
+            if (templates is not null) owner.Storage.BindSerializationGlobals(templates.SerializationGlobals);
             owner.Storage.BindTransmissionDevices(new RawSurfaceTransmissionDevices { Broadcast = _ => { }, Connected = _ => false, Send = (_, _) => { } });
+            if (templates is not null) owner.Storage.BindGumpType(game.GumpFormTypeBox);
             owner.Storage.BindProcessDevices(new RawSurfaceProcessDevices { Selected = () => 0, ClearSelection = () => { } });
+            if (templates is not null) owner.Storage.BindDisplayDevices(new() { View = () => new() { Zoom = 65536 }, Suppressed = () => false, Invalidate = (_, _) => { } });
         });
-        var (session, types) = Scene(surface, initializeSurfaceAssets: true);
+        var (session, types) = Scene(surface, initializeSurfaceAssets: true, sharedTemplates: templates);
         session.BuildPriestWorldDevices();
         surface.Storage.BindDisplayDiagnostics(new(), (text, file, line) => throw new InvalidOperationException($"객체 패킷 진단:{text} {file}:{line:x}"));
         session.BuildIslandPostPopDevices(types, session.WorldFrames);
@@ -86,6 +90,19 @@ public sealed partial class HostPriestWorldLiveTests
         int secondForm = second.Form();
         Assert.True(session.DestroyResourceObject(secondForm, 0));
         Assert.Equal(2, calls); Assert.NotEqual(0, session.Pool.Slot(secondForm)[11] & 1);
+        session.ReleasePlayerProcesses();
+    }
+
+    /// <summary>제품처럼 장기 Surface를 공유하면 같은 삭제 깊이의 GumpForm도 실제 분배를 통과한다.</summary>
+    [Fact]
+    public void WorldDeletionRootSharesNativeGumpFormAndDestroyDepth()
+    {
+        var (session, _, surface) = WorldDeletionRootScene(sharedNative: true);
+        Assert.Same(surface.Storage.BaseDestroy(), session.PlayerProcesses.Destroy());
+        session.BuildWorldDeletionRootDevices(); var forms = surface.Storage.GumpForms();
+        int form = forms.Create(); Assert.True(forms.IsGumpForm(form));
+        Assert.True(session.DestroyResourceObject(form, 0)); Assert.NotEqual(0, session.Pool.Slot(form)[11] & 1);
+        Assert.Equal(0u, surface.Storage.BaseDestroy().PreDepth); Assert.Equal(0u, surface.Storage.BaseDestroy().PostDepth);
         session.ReleasePlayerProcesses();
     }
 

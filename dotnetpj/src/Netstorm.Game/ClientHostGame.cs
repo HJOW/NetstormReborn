@@ -718,7 +718,7 @@ public sealed partial class ClientHostGame : Game
             session.BuildMotionRootDevices(worldDefinitions);
             // WP-3 MetaZone 전체 Native World 자산 가상 삭제 분배 설치. MetaZone 마커 삭제가 이 분배를 사용한다.
             // 근거: cpppj src/client/RawSurfaceWorld.cpp 373행의 BindDeletion이다.
-            // 감시 쌍·프로세스 Form은 같은 세션 장치를 등록하고 Gump·내용물 Form은 UI·내용물 본체(R3)에서 잇는다.
+            // 감시 쌍·프로세스와 같은 장기 GumpForm을 등록하며 내용물 Form은 R3에서 잇는다.
             // 자산 뿌리는 원문 83개 가상표 전체를 실제 공통 본체로 보내며 미복원 표는 명시 거부한다.
             session.BuildWorldDeletionRootDevices();
         // R5-1 미션 카메라 장치 조립. 실제 화면 이동·dirty·다시 그리기를 제품 장치에 잇는다. 배경 시차·투영은 R6·DI-4 범위에서 잇는다.
