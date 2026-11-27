@@ -1,0 +1,171 @@
+{
+  "unit": "WB04-E1468",
+  "recordedAt": "2026-11-27T15:59:48.129293+00:00",
+  "sourceHead": "e26a7f5017c9c9690fe2daf3d731c4d46bb19ebe",
+  "os": "6.18.58.1-microsoft-standard-WSL2",
+  "node": "v24.21.0",
+  "browser": "Chromium1248 Chrome156.0.8078.4",
+  "headed": true,
+  "display": "Xvfb",
+  "audio": "native AudioContext standard sink none, game audio option retained; startup-only repeats do not create an audio context before click",
+  "originalSix": {
+    "pass": 6,
+    "fail": 0,
+    "suiteReporterMinutes": 3.6,
+    "runnerSeconds": 280.78603071300313,
+    "sourceFiles": 3548,
+    "rawChanged": []
+  },
+  "initialRepeat": {
+    "planned": 9,
+    "pass": 4,
+    "fail": 1,
+    "notRun": 4,
+    "failure": "page.goto load wait 60000ms; blank page before app"
+  },
+  "networkDiagnostic": {
+    "planned": 6,
+    "pass": 1,
+    "fail": 1,
+    "notRun": 4,
+    "failure": "page.goto load wait 60000ms; 969 requests, 299 pending at final network sample"
+  },
+  "controlledComparison": [
+    {
+      "variant": "native-debug-a",
+      "readyMs": [
+        4925,
+        4110,
+        3056
+      ],
+      "requests": [
+        1064,
+        1064,
+        1064
+      ],
+      "passed": 3
+    },
+    {
+      "variant": "mounted-debug",
+      "readyMs": [
+        13891,
+        15453,
+        7999
+      ],
+      "requests": [
+        1064,
+        1064,
+        1064
+      ],
+      "passed": 3
+    },
+    {
+      "variant": "native-debug-b",
+      "readyMs": [
+        7036,
+        5254,
+        9114
+      ],
+      "requests": [
+        1064,
+        1064,
+        1064
+      ],
+      "passed": 3
+    },
+    {
+      "variant": "mounted-bundle",
+      "readyMs": [
+        4348,
+        2330,
+        1600
+      ],
+      "requests": [
+        53,
+        53,
+        53
+      ],
+      "passed": 3
+    }
+  ],
+  "copiedFilesVerified": 1454,
+  "nativeRoot": "/tmp/webpj-e1468-native-rjp5832f",
+  "limits": [
+    "No product/test/timeout/oracle changes",
+    "Old E1397 clickToStart timeout cause not proven by these different-stage failures",
+    "Current 12 successful comparison attempts do not cancel the two earlier failures",
+    "No campaign play/win, physical sound or high-refresh proof"
+  ],
+  "artifacts": [
+    {
+      "path": "webpj/extracted/e1468-linux-suite-state.json",
+      "bytes": 423712,
+      "sha256": "c1f4c92c2ae5ba167e2d097d0bd242072be85583d4d648cf9c5b3275a63cd8d6"
+    },
+    {
+      "path": "webpj/extracted/e1468-linux-suite.log",
+      "bytes": 1018,
+      "sha256": "e43546b00913225dfd2b9708f9f09827d555faa3852026150f025be28a371398"
+    },
+    {
+      "path": "webpj/extracted/e1468-linux-startup-repeat.json",
+      "bytes": 19177,
+      "sha256": "b8e52924f11327597a2d4903ad8359745b72723085ea4d587066a65214d6771c"
+    },
+    {
+      "path": "webpj/extracted/e1468-linux-startup-repeat.log",
+      "bytes": 524,
+      "sha256": "2c5a6a3bd19ce294a1ba3f408f12c475c40e333a052e9aa90e11b224b93c3838"
+    },
+    {
+      "path": "webpj/extracted/e1468-linux-startup-diagnostic.json",
+      "bytes": 1153696,
+      "sha256": "b15aa1fe0af926db4275873be0e5a6f851f08dd92b023561006efde2f13097b1"
+    },
+    {
+      "path": "webpj/extracted/e1468-linux-startup-diagnostic.log",
+      "bytes": 8001,
+      "sha256": "5fb00dc501d825f50059e162230bfeb3edec28cd8218ed524487be436d003ddb"
+    },
+    {
+      "path": "webpj/extracted/e1468-native-compare-state.json",
+      "bytes": 1305,
+      "sha256": "55247c94a07ffc37547a477943164c82f09c27d64094ac504ef21ba2a1e0c8f7"
+    },
+    {
+      "path": "webpj/extracted/e1468-native-inputs.json",
+      "bytes": 360,
+      "sha256": "78d3fac94f869aa45ec0bfdcad683156d8beffd0b6f963ca66d034624537117d"
+    },
+    {
+      "path": "webpj/extracted/e1468-native-debug-a.json",
+      "bytes": 1911784,
+      "sha256": "d644d7a7304345d834b3f4fa3de912742b08a74f3cc3dc299e9f1dc33cdbe0ed"
+    },
+    {
+      "path": "webpj/extracted/e1468-mounted-debug.json",
+      "bytes": 1937285,
+      "sha256": "0a2153d80a83764941a64f94e267e3acbbe581365b6afe16f88a0bda8983654e"
+    },
+    {
+      "path": "webpj/extracted/e1468-native-debug-b.json",
+      "bytes": 1924580,
+      "sha256": "5b63144fd61f5ed7572df5a73763d5ce6d25a55cae1e132cb444038cad168c4e"
+    },
+    {
+      "path": "webpj/extracted/e1468-mounted-bundle.json",
+      "bytes": 103346,
+      "sha256": "967cfb9681665e9bd5a2fba0f9718c67719e6ef4d130f5083f6d4e442f95ed9a"
+    },
+    {
+      "path": "webpj/extracted/e1468-linux-process-samples.jsonl",
+      "bytes": 14349,
+      "sha256": "81c75377adef1cb8c0d225753e4f02cf6bb539742f2bb01b3838a954b3694d7b"
+    },
+    {
+      "path": "webpj/extracted/e1468-summary.json",
+      "bytes": 968,
+      "sha256": "f69cfd5c45c33e1103101c33c42771ab9a7e331630f59c50f3f6d62ea097ae7d"
+    }
+  ]
+}
