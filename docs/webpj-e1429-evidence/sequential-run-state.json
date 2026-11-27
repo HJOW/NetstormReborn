@@ -1,0 +1,49 @@
+{
+  "phase": "complete",
+  "createdAt": "2026-11-27T08:27:52.720553+00:00",
+  "runnerPid": 4800,
+  "sourceMutationForbiddenUntilBothDone": false,
+  "completed": [
+    {
+      "unit": "WB04-E1428",
+      "recordedAt": "2026-11-27T08:42:06.281873+00:00",
+      "nodeExit": 0,
+      "files": 3539,
+      "changed": [],
+      "newlinesOnly": [],
+      "results": {
+        "tests": 6910,
+        "pass": 6910,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "durationMs": 846744.9484
+      },
+      "runnerElapsedSeconds": 850.9423363000096
+    },
+    {
+      "unit": "WB04-E1429",
+      "recordedAt": "2026-11-27T08:57:03.105812+00:00",
+      "nodeExit": 0,
+      "files": 3539,
+      "changed": [],
+      "newlinesOnly": [],
+      "results": {
+        "tests": 6910,
+        "pass": 6910,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "durationMs": 891468.9047
+      },
+      "runnerElapsedSeconds": 896.5769305999856
+    }
+  ],
+  "unit": "E1429",
+  "version": "v26.13.0",
+  "childPid": 13732,
+  "log": "H:\\Workspace\\git\\NetstormReborn\\webpj\\extracted\\webpj-e1429-node26.log",
+  "files": 3539
+}

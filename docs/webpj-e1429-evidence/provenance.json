@@ -1,0 +1,48 @@
+{
+  "unit": "WB04-E1429",
+  "host": "HJOW-Athlon",
+  "sourceHead": "f6a55f3a7f955ffc1baac7763bc57ef886c56ccd",
+  "node": "v26.13.0",
+  "nodeExecutable": "C:\\Program Files\\nodejs\\node.exe",
+  "nodeExecutableSha256": "14319838b3f355e0398c13569a90270bce4fc68f25189f58c59b03dadae0e6d5",
+  "result": {
+    "unit": "WB04-E1429",
+    "recordedAt": "2026-11-27T08:57:03.105812+00:00",
+    "nodeExit": 0,
+    "files": 3539,
+    "changed": [],
+    "newlinesOnly": [],
+    "results": {
+      "tests": 6910,
+      "pass": 6910,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "durationMs": 891468.9047
+    },
+    "runnerElapsedSeconds": 896.5769305999856
+  },
+  "periodAfter": {
+    "v26": "0/4",
+    "v22": "0/8"
+  },
+  "evidence": {
+    "node26.log": {
+      "bytes": 910837,
+      "sha256": "befc188e9d09fe6d8d3f1d1abbfdd76fe5b672cbe58d8b0abd87805dec000858"
+    },
+    "sequential-run-state.json": {
+      "bytes": 1238,
+      "sha256": "8fed2d6e601a074444d5574be4caa78c44cf00a3b7cb5e19806fc8a38aa9602e"
+    },
+    "source-freeze-check.json": {
+      "bytes": 370,
+      "sha256": "40af08d1de4cb36ce6d548f0ae6ff71d7b2134e5df2b1fd628ea18f2372fdcb0"
+    },
+    "source-freeze.json": {
+      "bytes": 794104,
+      "sha256": "9cd7482125eec052784d85a976a9fc805c30c5560703adac8645598e8fef97a9"
+    }
+  }
+}
