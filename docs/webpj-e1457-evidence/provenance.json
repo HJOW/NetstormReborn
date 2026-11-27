@@ -1,0 +1,130 @@
+{
+  "unit": "WB04-E1457",
+  "recordedAt": "2026-11-27T23:01:01.485120+09:00",
+  "headBeforeCommit": "d5ee5c313ed27a6f7b8730c0dad3d8d8c15e19d9",
+  "scope": "E1451 뒤14칸의Native/typed 경계 분류. 제품 수정 없음.",
+  "classified": {
+    "typedLocalRoles": [
+      "bulfType",
+      "dudePathType",
+      "priestForcefieldType",
+      "puzzlePieceType",
+      "rainBalloonType",
+      "rainWalkerType",
+      "sunBalloonType",
+      "sunFlyerType",
+      "windBalloonType",
+      "windBlockerType"
+    ],
+    "typedRegularEvents": [
+      "damageRegularEvent",
+      "constructionRegularEvent"
+    ],
+    "typedDiagnostic": [
+      "residenceMaximumScan"
+    ],
+    "excludedDeveloper": [
+      "buildReplayProcessType"
+    ]
+  },
+  "sourceSha256": {
+    "webpj/www/core/game-aux-state.js": "9b93fab6e0bbb8cbf65037d55d7ef08b979b2623fcf6cae44624f946cfefdeba",
+    "webpj/www/core/raw-campaign-session-owners.js": "7e922076039fb0a8bbf06419f12f9411e7cc2cd6a8d94d42783be6a2b0c11948",
+    "webpj/www/core/raw-campaign-session-state.js": "f2d8944593080adb9a8583b519b3109da337df991e20bf00d062aebc90fae779",
+    "webpj/www/core/raw-movement-process-types.js": "2fe0385fc4dfe7ec1708ea30305fd43a2a5792150a7302be4e3676abd85db0b7",
+    "webpj/www/core/raw-priest-forcefield.js": "7919a47ab3ab73918e9159ff923982572429a628ab98c271ae34c59b3665d045",
+    "webpj/www/core/raw-campaign-session-spells.js": "78826fb7cee7e1d110c8c0ee59dd4844042702904666e9773ca4ea2c2afd810d",
+    "webpj/www/core/raw-campaign-session-damageable.js": "2a91611529d1414066631b6c624caa062f995b64554df853df4708b6b4c6b9c9",
+    "webpj/www/core/raw-damageable-post-destroy.js": "0d4fae9a6dbbf7ae771ba221825f11c80652accf9be6edf0211c266212a6174e",
+    "webpj/www/core/raw-asset-regular.js": "e479696990cda00782dd2e12b6b6ca97a0029db6b29ae8026a3ec49fbce32f07",
+    "webpj/www/core/raw-construction-confirm.js": "d54749e4e4ed4b6b1fafdd4e656cc8ad636d3a26a2fd6782621112209178c2d5",
+    "cpppj/src/o/RawGameAuxState.h": "bfdd3b7d5d7e97eb430cda0cf351b003df84ff2259d38d86eb049d666cc658f2",
+    "cpppj/src/client/RawCampaignSession.cpp": "76f8941808539bab2daeb0a74b5da51720558f913f816ff8773a34026b323e5f",
+    "cpppj/src/client/RawPriestWorldBindings.cpp": "e5481457985ff239425a9c015ada756a8e01822be57354c368361242a60bc2e9",
+    "cpppj/src/client/RawSurfaceAttack.cpp": "d6fffd4fe10d056fd3bde654c86ff9f3aa3538b0d095a0eaa2da0dd49ba68523",
+    "cpppj/src/client/RawSurfaceDamageable.cpp": "736eb7f25761e4af1daa28a711d83a8c96cb09619f93754052a446643394d058",
+    "cpppj/src/client/RawSurfacePriestDeletion.cpp": "692fbc19d1f0930f83dcf2df7b9adaf42312092f5276a90b52d54bc239cc0596",
+    "cpppj/src/client/RawSurfaceDudeRegular.cpp": "6a62665f1174a10e11cd950863ffef7889be00d26c366045e81420c46d6244c3",
+    "cpppj/src/client/RawSurfaceResidenceRegular.cpp": "bf9b3b576e58c5e7115ee1e90454d5a03dc9723dfd54bca0c035d7d8b7ce0b92",
+    "cpppj/src/client/RawSurfaceStorage.cpp": "22f2be330ac4a1ffa799ad9521ec30e4ab31bfaf0722e1cb33640ebc8785395a",
+    "cpppj/src/client/ClientConstructionGlobals.cpp": "f6ce91e57931d5dca1e427bbb074894bbd9d7ec732752f66bdc69d24fa763f99",
+    "cpppj/src/client/ClientBuildReplay.cpp": "85764e63e7891da94b883457610569aaad8926030a33d97689e38ef064989619",
+    "cpppj/src/o/RawAssetRegular.cpp": "ded781fdf804783c94bb6a17f3d8086be4f74f1fbd6ccc69bfeb180211d7d437",
+    "cpppj/src/o/RawAssetRegular.h": "6817f9419f1cc83651c471d23a83a0686d60f90cb1086c4b2470dc225fe1ba1e",
+    "cpppj/src/o/RawDamageablePostDestroy.h": "479624f08fe497986fd88e52872e8df32567db8832370d2d337c24477d5bf8c7"
+  },
+  "unchangedWebSourcesSinceE1453": [
+    "webpj/www/core/game-aux-state.js",
+    "webpj/www/core/raw-campaign-session-owners.js",
+    "webpj/www/core/raw-campaign-session-state.js",
+    "webpj/www/core/raw-movement-process-types.js",
+    "webpj/www/core/raw-priest-forcefield.js",
+    "webpj/www/core/raw-campaign-session-spells.js",
+    "webpj/www/core/raw-campaign-session-damageable.js",
+    "webpj/www/core/raw-damageable-post-destroy.js",
+    "webpj/www/core/raw-asset-regular.js",
+    "webpj/www/core/raw-construction-confirm.js"
+  ],
+  "priorRegression": "E1453 Node22 6923/6923. 이번판정대상10웹소스모두원시해시동일. 현재E1458 Node26전체는실행중이며통과로세지않음.",
+  "typedOwnerObservation": {
+    "scope": "실제Client와같은장기Storage/Gameplay와짧은Session생성자. Load/게임플레이없음.",
+    "before": {
+      "nativeTransmission": false,
+      "movement": {
+        "sunWalker": 133,
+        "empty": 187,
+        "rainWalker": 156,
+        "bulf": 135,
+        "dudeProcess": 24
+      },
+      "forcefield": 167,
+      "piece": 107,
+      "patterns": [
+        107,
+        82,
+        94,
+        157,
+        131,
+        129,
+        140,
+        142
+      ],
+      "regular": {
+        "damage": 6699,
+        "construction": 6700
+      },
+      "postDamage": 6699,
+      "maxDecorationScan": 0
+    },
+    "localMutation": {
+      "sharedPriest": 157,
+      "rainWalker": 155,
+      "dudeProcess": 25
+    },
+    "after": {
+      "sharedPriest": 157,
+      "rainWalker": 156,
+      "dudeProcess": 24
+    }
+  },
+  "rawObservation": {
+    "path": "webpj/extracted/e1457-typed-owner-observation.json",
+    "sha256": "fe676f99ed7532778e449042b650e95e8dd5059fa91d65797fd8135370cce745"
+  },
+  "rejectedExperiment": {
+    "path": "webpj/extracted/e1459-before.log",
+    "sha256": "57a5dbb19d5f03017e34a6a7384968b178b69ef4e90830d6693dbb033319392b",
+    "failed": 3,
+    "reason": "Native공용역할주소를현재웹typed에새계약으로요구한실험이었다. CPP는localPriestState/typedAcidTypes/localPiece/localSunFlyerType를UsesNativeTransmissionDevices false에서명시선택한다. 새3칸의부재도포함한실패를제품회귀/수정완료로세지않고코드변경을폐기했다. 기존시험의기대값은바꾸지않았다."
+  },
+  "remaining24ClassificationTotal": {
+    "typedRepresentation": 21,
+    "excludedRemoteOrDeveloper": 3,
+    "additionalProductImplementationRequiredByThisAudit": 0,
+    "native129AddressIdentityProvided": false
+  },
+  "periodCarryAfterE1458": {
+    "v26": 1,
+    "v22": 5
+  }
+}
