@@ -1,0 +1,31 @@
+{
+  "phase": "complete",
+  "createdAt": "2026-11-27T12:06:27.123764+00:00",
+  "runnerPid": 20960,
+  "sourceMutationForbiddenUntilBothDone": false,
+  "completed": [
+    {
+      "unit": "WB04-E1450",
+      "recordedAt": "2026-11-27T12:21:47.386378+00:00",
+      "nodeExit": 0,
+      "files": 3545,
+      "changed": [],
+      "newlinesOnly": [],
+      "results": {
+        "tests": 6923,
+        "pass": 6923,
+        "fail": 0,
+        "cancelled": 0,
+        "skipped": 0,
+        "todo": 0,
+        "durationMs": 847930.4057
+      },
+      "runnerElapsedSeconds": 851.1427344999975
+    }
+  ],
+  "unit": "E1450",
+  "version": "v26.13.0",
+  "childPid": 15220,
+  "log": "H:\\Workspace\\git\\NetstormReborn\\webpj\\extracted\\webpj-e1450-node26.log",
+  "files": 3545
+}
