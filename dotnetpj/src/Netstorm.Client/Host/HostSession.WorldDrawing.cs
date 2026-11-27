@@ -61,8 +61,9 @@ public sealed partial class HostSession
     /// <param name="clip">실제 dirty 사각형이다.</param>
     /// <param name="database">타입 로딩 순서의 SHP 저장소다.</param>
     /// <param name="modes">타일 소유자 표·색표와 특수 모드 값이다.</param>
+    /// <param name="sprites">같은 세션의 일반 객체 출력기다. 객체에 도달할 때 반드시 필요하다.</param>
     /// <remarks>2026-11-26 1.072에서 R5-3c2 Submit용으로 추가했다. 근거: cpppj ClientRendererFrame.cpp의 Submit이 같은 원문 5,000칸을 정렬하고 종류 0..4를 실제 현재 출력기에 분배한다. 배경·매 프레임 구동은 R5-3c3에서 잇는다.</remarks>
-    public void SubmitWorldDrawing(byte[] pixels, int pitch, int height, ScreenRect clip, ShapeDatabase database, RawTileDrawModes modes)
+    public void SubmitWorldDrawing(byte[] pixels, int pitch, int height, ScreenRect clip, ShapeDatabase database, RawTileDrawModes modes, SpriteWorldRenderer? sprites = null)
     {
         ArgumentNullException.ThrowIfNull(database);
         ArgumentNullException.ThrowIfNull(modes);
@@ -86,7 +87,13 @@ public sealed partial class HostSession
         {
             Sprite = entry =>
             {
-                // 타일 외 종류(일반 자산·UI·건설·미리보기)는 그리기 장치가 뒤 조각이다. 제품이 멈추지 않게 건너뛴다.
+                // 일반 객체는 실제 표시기가 설치된 제품 경로에서 같은 현재 표면에 제출한다.
+                if (entry.Kind == 0)
+                {
+                    (sprites ?? throw new InvalidOperationException("월드 일반 객체 출력기 미연결")).Draw(entry, pixels, pitch, height, clip);
+                    return;
+                }
+                // 나머지 비타일 경로는 별도 분배기가 처리한다.
                 if (entry.Kind != 1)
                 {
                     return;

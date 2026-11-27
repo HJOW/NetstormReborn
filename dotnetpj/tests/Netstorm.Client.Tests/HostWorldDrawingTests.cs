@@ -204,9 +204,9 @@ public sealed partial class HostPriestWorldLiveTests
         }
     }
 
-    /// <summary>타일 외 종류는 건너뛰고 타일만 제출한다.</summary>
+    /// <summary>일반 객체를 수집했지만 실제 출력기가 없으면 누락을 숨기지 않는다.</summary>
     [Fact]
-    public void SubmitSkipsNonTileKinds()
+    public void SubmitRequiresRendererForCollectedObjects()
     {
         var (session, _) = Scene();
         session.BuildPlayerWorldHooks();
@@ -239,7 +239,7 @@ public sealed partial class HostPriestWorldLiveTests
         session.BuildWorldDrawingDevices(hash, pool, types, shapes, () => new ScreenRect(0, 0, 1024, 768), 1024, 768);
         var pixels = new byte[1024 * 768];
         var modes = new RawTileDrawModes { OwnerMaps = new byte[types.Count] };
-        session.SubmitWorldDrawing(pixels, 1024, 768, new(0, 0, 1024, 768), database, modes);
-        Assert.True(pixels.Count(pixel => pixel != 0) > 0);
+        var error = Assert.Throws<InvalidOperationException>(() => session.SubmitWorldDrawing(pixels, 1024, 768, new(0, 0, 1024, 768), database, modes));
+        Assert.Contains("객체 출력기 미연결", error.Message);
     }
 }

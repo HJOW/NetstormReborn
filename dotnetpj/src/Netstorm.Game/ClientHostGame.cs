@@ -259,6 +259,8 @@ public sealed partial class ClientHostGame : Game
             _nativeChatWindows?.Dispose();
             _htmlWindows?.CloseAll();
             _gumpFormRuntime?.Dispose(); _gumpFormRuntime = null;
+            // 객체 출력기는 빌린 세션·색표보다 먼저 반납한다.
+            _worldSprites = null; _worldSpriteState = null;
             _missionSession?.ReleasePlayerRecordViews();
             _missionRuntime?.Dispose(); _missionRuntime = null;
             _missionBurning?.Dispose();
@@ -733,7 +735,7 @@ public sealed partial class ClientHostGame : Game
         session.BuildWorldDrawingDevices(storage.Hash, storage.Pool, storage.Types, storage.Shapes, NativeMapView, _driver.Screen.Width, _driver.Screen.Height);
         // R5-3c3 미션 월드 프레임 구동 장치. 앞단·구름·SHP·타일 모드를 묶으며 수집기는 위 세션 조립을 쓴다.
         // 근거: cpppj ClientRendererFrame의 수집기 재생성과 DrawEntry 표시기 소유다. 시작 덤프에는 닿지 않는다.
-        BindMissionWorldDrawing(shpRaw);
+        BindMissionWorldDrawing(shpRaw, session, worldDefinitions);
         // R5-4b 미션 HUD 구분선·도크 배치. 실제 지도 영역을 트리에 기록하며 메뉴·패널은 손대지 않는다.
         // 근거: cpppj HudDock.cpp의 kMoved 배치와 UberRootGump.Construct의 구분선 기본 배치다.
         EnsureMissionHudDividers();
@@ -760,6 +762,8 @@ public sealed partial class ClientHostGame : Game
         }
         catch
         {
+            // 미완성 미션의 객체 출력 참조가 세션 반납 뒤 남지 않게 한다.
+            _worldSprites = null; _worldSpriteState = null;
             // 이번 시작이 설치한 알림만 세션 물리보다 먼저 반납한다.
             if (minimapBound) NativeMinimap.UnbindWorld();
             // 적재 중 예외에서도 같은 Host 프로세스를 장치보다 먼저 반납한다.

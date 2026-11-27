@@ -15,6 +15,10 @@ public sealed partial class ClientHostGame
     private RawTileDrawModes? _worldTileModes;
     /// <summary>타입 로딩 순서의 실제 SHP 저장소다. 미션마다 새로 만든다.</summary>
     private ShapeDatabase? _worldShapesDb;
+    /// <summary>현재 미션의 실제 일반 객체 출력기다.</summary>
+    private SpriteWorldRenderer? _worldSprites;
+    /// <summary>현재 미션과 Client 전역을 공유하는 객체 표시 상태다.</summary>
+    private SpriteDrawState? _worldSpriteState;
     /// <summary>색표를 다시 만들지 않아도 되는 마지막 논리 팔레트다.</summary>
     private uint[]? _worldLogicalPalette;
     /// <summary>앞단이 읽는 화면·카메라·지도 값 상자다. 순서대로 가로·세로·초기높이·카메라Y·지도LTRB다.</summary>
@@ -24,13 +28,25 @@ public sealed partial class ClientHostGame
 
     /// <summary>미션 시작에 앞단·구름·SHP·타일 모드 장치를 묶는다. 수집기는 세션 조립에서 잇는다.</summary>
     /// <param name="shpRaw">타입 로딩 순서의 SHP 원본 바이트다.</param>
+    /// <param name="mission">현재 월드의 실제 세션이다.</param>
+    /// <param name="definitions">같은 자산 로딩의 TYPE 정의다.</param>
     /// <remarks>2026-11-26 1.073에서 R5-3c3 프레임 구동용으로 추가했다. 근거: cpppj ClientRendererFrame의 수집기 재생성과 DrawEntry 표시기 소유다. 배경·제출의 실제 장치는 매 프레임 조회한다.</remarks>
-    private void BindMissionWorldDrawing(byte[] shpRaw)
+    private void BindMissionWorldDrawing(byte[] shpRaw, HostSession mission, IReadOnlyList<RiftTypeDefinition> definitions)
     {
         ArgumentNullException.ThrowIfNull(shpRaw);
         _worldPrelude = new RendererPreludeState(new uint[19]);
         _worldCloudQueue = new RendererCloudQueue();
         _worldShapesDb = new ShapeDatabase(shpRaw);
+        RawSurfaceStorage storage = _surfaceGlobals.Storage;
+        _worldSpriteState = SpriteSessionState.Create(ColorSortInput.OwnerTables, () => _gameplay.PatchDiagnostic.Value);
+        var colors = new SpriteColorBinding(ColorSortInput, owner =>
+        {
+            if (owner >= mission.BridgeState.OwnerColors.Length) throw new ArgumentOutOfRangeException(nameof(owner), "객체 현재 소유자 범위 오류");
+            return mission.BridgeState.OwnerColors[(int)owner];
+        });
+        _worldSprites = new SpriteWorldRenderer(storage.Pool, storage.Types, storage.Shapes, definitions, mission.WorldFrames,
+            _worldShapesDb, _worldSpriteState, colors, mission.BuildSpriteWorldRules(storage.Hash, storage.Types),
+            templeAscend: () => (_missionAudio ?? throw new InvalidOperationException("신전 상승음 실제 장치 미연결")).PlayGlobal("templeAscend.wav"));
         _worldInitialHeight = _driver.Screen.Height;
         _worldLogicalPalette = null;
         RefreshWorldTileModes();
@@ -75,6 +91,9 @@ public sealed partial class ClientHostGame
             for (int index = 0; index < tokens.Length; index++) _worldTileModes.OwnerMaps[index] = tokens[index] == 0 ? (byte)0 : (byte)1;
             _worldTileModes.SpecialMode = _missionSession.Gameplay.HideBuildings.Value;
             _worldTileModes.LocalPlayer = _missionSession.MissionPlayer.BattleOwner;
+            SpriteSessionState.Refresh(_worldSpriteState ?? throw new InvalidOperationException("월드 객체 표시 상태 미연결"),
+                mission.Gameplay.Camera.Snapshot.Pixels[0], mission.Gameplay.Camera.Snapshot.Pixels[1], mission.MissionPlayer.BattleOwner,
+                mission.Gameplay.HideBuildings.Value, mission.OwnerMode.Battle, mission.BridgeState.OwnerColors, _driver.Screen.Colors(), mission.ProcessTime.Value);
         }
     }
 
@@ -167,7 +186,8 @@ public sealed partial class ClientHostGame
                         Denominator = denominator,
                     }, cloudHooks);
                 },
-                Submit = (span, pitch, height, clip) => mission.SubmitWorldDrawing(buffer, pitch, height, clip, _worldShapesDb, _worldTileModes),
+                Submit = (span, pitch, height, clip) => mission.SubmitWorldDrawing(buffer, pitch, height, clip, _worldShapesDb, _worldTileModes,
+                    _worldSprites ?? throw new InvalidOperationException("월드 일반 객체 출력기 미연결")),
             };
             NativeRenderer.Draw(buffer, _driver.Screen.Pitch, 0, drawing);
         }

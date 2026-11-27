@@ -40,6 +40,17 @@ public sealed partial class HostPriestWorldLiveTests
         byte[] pixels = new byte[1024 * 768];
         renderer.Draw(new(x, y, (uint)(priest * RawSidPool.Stride), 0, 0, 0), pixels, 1024, 768, new(0, 0, 1024, 768));
         Assert.Contains(pixels, pixel => pixel != 0);
+        var modes = new RawTileDrawModes
+        {
+            OwnerMaps = input.OwnerTables.Tokens.ToArray().Select(token => token == 0 ? (byte)0 : (byte)1).ToArray(),
+            OwnerColorsByType = (type, owner) => binding.Color(SpriteShapeMode.Owner, type, owner),
+            BridgeLifeNumbers = () => session.Gameplay.BridgeLifeNumbers.Value,
+            ShadowTable = input.Maps[7], DeadTable = input.Maps[6], AbstractTable = input.Maps[4],
+        };
+        session.BuildWorldDrawingDevices(session.TerrainPopHash!, session.Pool, types, shapes!, () => new(0, 0, 1024, 768), 1024, 768);
+        byte[] submitted = new byte[pixels.Length];
+        session.SubmitWorldDrawing(submitted, 1024, 768, new(0, 0, 1024, 768), database, modes, renderer);
+        Assert.Contains(Enumerable.Range(0, pixels.Length), index => pixels[index] != 0 && submitted[index] == pixels[index]);
         session.ReleasePlayerProcesses();
     }
 }
