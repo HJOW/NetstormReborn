@@ -1,0 +1,30 @@
+{
+  "unit": "WB04-E1446",
+  "host": "HJOW-Athlon",
+  "url": "http://localhost:9803/",
+  "result": "실제Chrome전체창상단탭의NS아이콘을직접시각확인",
+  "imageBytesEqualSharedIco": true,
+  "faviconSha256": "bd4c18c5cb5f42bc49a1de0c6d6623643fd5377f575e95a1de60a05f01e4f068",
+  "knownOriginalIdentity": "E894 원본PE그룹102/144·RT_ICON1/2 바이트일치",
+  "skill": "C:/Users/BUZZ/.codex/plugins/cache/openai-bundled/computer-use/26.1120.50957/skills/computer-use/SKILL.md",
+  "runtime": "현재E1434운영번들,게임시작클릭없음",
+  "failureQualification": "초기list_apps시간초과뒤재시도성공. Chrome launch_app두요청시간초과뒤list_windows에실제새탭창이나타나반환id로선정·재관측했다. 미확인창에좌표입력하지않음.",
+  "periodDuringNode22": {
+    "v26": "1/4",
+    "v22": "E1442완료후이월1/8"
+  },
+  "evidence": {
+    "e1446-favicon-attempt.json": {
+      "bytes": 494,
+      "sha256": "7ca87add686fc00571dfdd0c5b5c279dc6d93309d31995cae5c1a8488bd57b86"
+    },
+    "e1446-favicon-native-chrome.json": {
+      "bytes": 412,
+      "sha256": "1bdacc3f08e3d906007296381b6567807310e13b3414fac4992120e7ecfbf9d5"
+    },
+    "e1446-favicon-native-chrome.png": {
+      "bytes": 55326,
+      "sha256": "b3b91c4052e9c57eadd284480522c648feaca127bbe7a8b8ae1df1df1c632c6c"
+    }
+  }
+}

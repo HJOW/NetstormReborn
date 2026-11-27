@@ -1,0 +1,13 @@
+{
+  "unit": "WB04-E1446",
+  "window": {
+    "app": "Chrome",
+    "title": "NetStorm - Chrome",
+    "id": 12780434
+  },
+  "screenshotId": "screenshot-0",
+  "width": 1596,
+  "height": 1013,
+  "observed": "실제 Chrome 창의 localhost:9803 NetStorm 탭 왼쪽에 노랑/파랑 NS favicon 표시를 직접 확인. 클릭하여 시작 화면. 게임 시작 입력 없음.",
+  "savedAt": "2026-11-27T11:12:26.799Z"
+}

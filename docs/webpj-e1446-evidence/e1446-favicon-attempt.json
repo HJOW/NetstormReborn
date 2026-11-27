@@ -1,0 +1,11 @@
+{
+  "unit": "E1446-attempt-only",
+  "skill": "computer-use",
+  "status": "미완료",
+  "listAppsFirst": "timeout",
+  "listAppsRetry": "success; Chrome/Edge targetable windows0",
+  "launchChrome": "C:/Program Files/Google/Chrome/Application/chrome.exe exists; sky.launch_app timeout",
+  "listWindowsAfter": "success; returned Chrome windows0",
+  "actionAfterUnknownLaunch": "새입력없이창선정결과만확인; favicon그림통과로세지않음",
+  "notProductFailure": true
+}
