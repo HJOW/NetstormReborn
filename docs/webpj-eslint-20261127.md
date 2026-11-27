@@ -50,3 +50,5 @@ npm --prefix webpj run lint
 ESLint 적용 전 E1397의 양쪽 Node 전체6,895/6,895 결과는 이전 소스의 회귀 이력이며 이번 변경 뒤 전체를 다시 실행한 결과로 세지 않는다. 이 변경의 최종 검사 범위는 위 표를 따른다.
 
 [집중181건](webpj-e1400-evidence/focused.log), [Node22](webpj-e1400-evidence/node22.log), [브라우저](webpj-e1400-evidence/browser.log), [운영 빌드](webpj-e1400-evidence/production.log), [개발 빌드](webpj-e1400-evidence/development.log), [세 실패 경로의 산출물 비교](webpj-e1400-evidence/build-gate-results.json)를 참조한다. 실패 검사용 임시 파일은 제거했고 정상 운영 번들을 유지했다. 정기 회귀 뒤 완료1개이므로 주기는1/4·1/8이다.
+
+E1406 후속에서 설정만 바뀌어 번들 내용이 같은 경우도 정상 생성 시 출력 시각을 갱신하도록 보완했다. 검사 실패 때의 SHA/mtime 보존은 세 경로로 재확인했다. [자동 갱신 반복 방지](webpj-webpack-fresh-mtime-20261127.md).

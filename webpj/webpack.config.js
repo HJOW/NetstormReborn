@@ -20,6 +20,8 @@ module.exports = (env, argv) => {
             path: path.resolve(__dirname, 'www', 'dist'),
             filename: '[name].bundle.js',
             clean: true, // dist 에는 번들만 있으므로 빌드마다 비운다.
+            // 검사에 통과한 빌드는 같은 바이트여도 출력 시각을 갱신해 ensure-bundle의 반복 재생성을 막는다.
+            compareBeforeEmit: false,
             publicPath: 'auto', // 하위 경로 정적 배포에서도 번들 자신의 주소를 기준으로 한다(번들에는 추가 조각이 없다).
         },
         devtool: production ? false : 'source-map',

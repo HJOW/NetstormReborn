@@ -1,0 +1,11 @@
+{
+  "bundle": 1795749452109081300,
+  "inputs": {
+    "webpack.config.js": 1795749230631347400,
+    "eslint.config.cjs": 1795751525942708600,
+    "eslint-suppressions.json": 1795749230193463400,
+    "tools/eslint-before-build.js": 1795749230193463400,
+    "package.json": 1795749230631347400,
+    "package-lock.json": 1795749259868715900
+  }
+}

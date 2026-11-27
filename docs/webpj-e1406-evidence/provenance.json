@@ -1,0 +1,67 @@
+{
+  "unit": "WB04-E1406",
+  "host": "HJOW-Athlon",
+  "node": "26.13.0",
+  "webpack": "5.113.0",
+  "before": {
+    "bundleMtime": "2026-11-27T12:17:32.109081+09:00",
+    "newerInput": "eslint.config.cjs",
+    "bundleIsFresh": false,
+    "cause": "같은 출력 바이트에서 compareBeforeEmit 기본 true가 실제 기록을 건너뛰었다."
+  },
+  "after": {
+    "outputCompareBeforeEmit": false,
+    "buildExitCode": 0,
+    "emitted": true,
+    "bytes": 3500786,
+    "sha256": "e24f9de39773455070791171f856c830e0f871069329df634ab26b3dd9d1300b",
+    "sameAsE1400": true,
+    "gateFailures": 3,
+    "freshChecks": 2,
+    "mtimeUnchangedByFailuresAndFreshChecks": true,
+    "temporaryProbeRemoved": true
+  },
+  "limits": "게임 소스 변경 없음. 동시 진행 E1404 도구는 전체 lint 범위에 포함하지만 해당 메모리 관문의 완료로 세지 않는다.",
+  "sha256": {
+    "before-mtimes.json": {
+      "raw": "1c4e22f314f3c9097943a6136cf3d3e1693249c449fedf1e7f827e629b87f132",
+      "lf": "5890668e9565770cf1313cb75dfa243197f596285bfb706d31b109ef67075b10"
+    },
+    "build-path-probe.cjs.txt": {
+      "raw": "c69a62066bcfa833f0c0bdfbd945475cb3389efda7e63675354b2d606adb1bc6",
+      "lf": "6404f6dae3c437f902a9aee76d4de0dc54475cf809836c2a2f86b5ff9766126f"
+    },
+    "build.log": {
+      "raw": "7249239d2628109496057fc775bbaf115c91633c239127bed991e9544335e206",
+      "lf": "663b496a45a54b80dea93490a62c1fa0ce16438468c503c71b1c278b28edddbb"
+    },
+    "ensure-first.log": {
+      "raw": "cf17616dcdf3d315c10491d2dbd6b3eb4aaacf35802235c366f4b1cb483b9a10",
+      "lf": "09a11fa54b50d77afbf00bdc397d31ec0581f8cc3059503f3b7a5b3cba1ce6a5"
+    },
+    "ensure-second.log": {
+      "raw": "cf17616dcdf3d315c10491d2dbd6b3eb4aaacf35802235c366f4b1cb483b9a10",
+      "lf": "09a11fa54b50d77afbf00bdc397d31ec0581f8cc3059503f3b7a5b3cba1ce6a5"
+    },
+    "gate-development.log": {
+      "raw": "797898a1fd5730fb940cda1276de926e18ebda235dceaa9750b6380c8db97095",
+      "lf": "797898a1fd5730fb940cda1276de926e18ebda235dceaa9750b6380c8db97095"
+    },
+    "gate-ensure.log": {
+      "raw": "1c3832420628d7946a87a84d3d1380f29580ee1a562f6f5f907a07c65eb3613a",
+      "lf": "1c3832420628d7946a87a84d3d1380f29580ee1a562f6f5f907a07c65eb3613a"
+    },
+    "gate-production.log": {
+      "raw": "c39206c02d6490c10b1b4be23388c86f073b0b19eb34e08de7d74331c97a1fe2",
+      "lf": "c39206c02d6490c10b1b4be23388c86f073b0b19eb34e08de7d74331c97a1fe2"
+    },
+    "gate-results.json": {
+      "raw": "85abc114bd5b8e9dbad5726082a168d31b1981ed6cfd1fddb0987962e62082f6",
+      "lf": "85abc114bd5b8e9dbad5726082a168d31b1981ed6cfd1fddb0987962e62082f6"
+    },
+    "gate-summary.log": {
+      "raw": "504d3063e6423130fe617e1b4001477618c35f384d07967f5971a638389267e8",
+      "lf": "50ce628693c57ad65c1caf3fb5d66a3944cffd0364ce85068ba0aea0520ec890"
+    }
+  }
+}
