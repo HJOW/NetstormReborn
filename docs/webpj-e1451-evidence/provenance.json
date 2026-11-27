@@ -1,0 +1,116 @@
+{
+  "unit": "WB04-E1451",
+  "scope": "Native GameAux 헤더10칸 플랫폼 분류. 실제 제품 변경 없음. 나머지14칸은 별도 판정.",
+  "recordedAt": "2026-11-27T22:51:10.259785+09:00",
+  "headBeforeCommit": "3b2bc9dc04fdb6e64859a90f661f0da403f9d353",
+  "nativeHeaderLastCommit": "8defb347c",
+  "nativeHeaderChangedSinceLastCommit": false,
+  "nameAudit": {
+    "nativePrivateNames": 129,
+    "webNames": 105,
+    "notNamedInWebAux": [
+      "battleStartPeerHeader",
+      "bombTimerHeader",
+      "bombTimerInitialLength",
+      "buildReplayProcessType",
+      "bulfType",
+      "constructionRegularEvent",
+      "contentIncomeHeader",
+      "damageRegularEvent",
+      "dudePathType",
+      "flyerProcessHeader",
+      "gunProcessHeader",
+      "pathPacketHeader",
+      "priestForcefieldType",
+      "puzzlePieceType",
+      "rainAviaryHeader",
+      "rainBalloonType",
+      "rainWalkerType",
+      "residenceMaximumScan",
+      "sunAviaryHeader",
+      "sunBalloonType",
+      "sunFlyerType",
+      "windAviaryHeader",
+      "windBalloonType",
+      "windBlockerType"
+    ],
+    "classifiedHeaders": [
+      "battleStartPeerHeader",
+      "contentIncomeHeader",
+      "gunProcessHeader",
+      "flyerProcessHeader",
+      "sunAviaryHeader",
+      "windAviaryHeader",
+      "rainAviaryHeader",
+      "bombTimerHeader",
+      "bombTimerInitialLength",
+      "pathPacketHeader"
+    ],
+    "remaining14": [
+      "buildReplayProcessType",
+      "bulfType",
+      "constructionRegularEvent",
+      "damageRegularEvent",
+      "dudePathType",
+      "priestForcefieldType",
+      "puzzlePieceType",
+      "rainBalloonType",
+      "rainWalkerType",
+      "residenceMaximumScan",
+      "sunBalloonType",
+      "sunFlyerType",
+      "windBalloonType",
+      "windBlockerType"
+    ],
+    "limitation": "이름만으로 구현 누락/129개 공용 주소 동일성을 판정하지 않음"
+  },
+  "classifications": {
+    "excludedRemoteOrDeveloper": [
+      "battleStartPeerHeader",
+      "contentIncomeHeader"
+    ],
+    "typedWebOwner": [
+      "gunProcessHeader",
+      "flyerProcessHeader",
+      "sunAviaryHeader",
+      "windAviaryHeader",
+      "rainAviaryHeader",
+      "bombTimerHeader",
+      "bombTimerInitialLength",
+      "pathPacketHeader"
+    ]
+  },
+  "bombTimerQualification": "Native 초기 선언 DWORD0→최소4; typed Session은22. 실제 peer가 있으면 송신 확정에서22+2*n. peer없을때typed콜백의22도기존검사에서명시검증됨. 중간헤더/모든wire동일성주장아님.",
+  "focusedTests": 126,
+  "focusCommand": "node --test tests/raw-campaign-session-transmission.test.mjs tests/raw-gun-process.test.mjs tests/raw-flyer-process.test.mjs tests/raw-sun-aviary-process.test.mjs tests/wind-aviary-process.test.mjs tests/raw-rain-aviary-process.test.mjs tests/raw-path-data.test.mjs",
+  "sourceSha256": {
+    "cpppj/src/o/RawGameAuxState.h": "bfdd3b7d5d7e97eb430cda0cf351b003df84ff2259d38d86eb049d666cc658f2",
+    "cpppj/src/o/RawPathData.h": "c66de7d33a6b359bc949121bc2167910a549362f98185f4e02353f71cb6f8129",
+    "cpppj/src/client/NativeJoinTestBattle.cpp": "fae10a13c4a1c0f9eeccb0a121c3c805977c65a86dc79c0e28121ac94cc91a48",
+    "cpppj/src/client/ClientMain.cpp": "fad3502fdce61263e6975f70af7e446ee65eb4231d58856a34f401861312a892",
+    "webpj/www/core/game-aux-state.js": "9b93fab6e0bbb8cbf65037d55d7ef08b979b2623fcf6cae44624f946cfefdeba",
+    "webpj/www/core/client-campaign-transport.js": "6a32388ec3937148f412564197da510025fe7140a0254716a62a72eaa09fcc22",
+    "webpj/www/core/raw-surface-storage.js": "4890a898b23a2472c12d6433c5228c5b96bcd16d202a12379e148df46af46e5c",
+    "webpj/www/core/raw-campaign-session-contents.js": "d82716bf76eeb15ff485d5a046900d6668177e3c333ccc317ee699cceaede3b6",
+    "webpj/www/core/raw-campaign-session-transmission.js": "0b2d73ac469543b1148efb1e93529473a1c6f1dc31ff1bc19a79a6e0430e005f",
+    "webpj/www/core/raw-campaign-session-motion-runtime.js": "2bf28c556b65922fce4839ff581a9328d6f75c3e625dbfc2012a21b4b746a534",
+    "webpj/www/core/raw-campaign-path-bindings.js": "e2e2a7743d43c0ca1ce11c0792bf65b237ce46ae0fb0c05776d201d0bc28ee42",
+    "webpj/www/core/raw-path-data.js": "cf564162c9811f3545e5434a8ea94ca63240debcb74e59623e668438f0eb4a2a",
+    "webpj/www/core/raw-gun-process.js": "acdfc84381a59570d253f0a566265c0e0fa8e3aa97b14baedd8ebd600ed1b801",
+    "webpj/www/core/raw-flyer-process.js": "f9dd8e4fc7bfbc9a235a73235bcf8a731a87ed182d9b9cfb9d366a65fe99fe82",
+    "webpj/www/core/raw-sun-aviary-process.js": "cf5182dbac4d6399841f5d42c4da13924bf4b47be58c214200809897a2139734",
+    "webpj/www/core/raw-wind-aviary-process.js": "dc100b272d61c687d5bdf6bfac4633799d42d7468dfb3b110bdae67034691107",
+    "webpj/www/core/raw-rain-aviary-process.js": "d3827b8b4d4674dae6999284eb0372af8b2a2eae5aa50871226359ff58437b62",
+    "webpj/www/core/raw-bomb-effect-timer.js": "4681df1382d9096441e77cfe6a5a67bfc9f1ca118c7663062ab532835ae43ba6",
+    "webpj/www/core/raw-bomb-timer-packet.js": "d09171c6087e5a208841eef04193024a7b1e44314b4eac18a2d52cf1cec3452b",
+    "webpj/tests/raw-campaign-session-transmission.test.mjs": "b07eb68ad27e054dd19e721ce4a97acb3ee469f5d52df52f4e5efce6f3525096"
+  },
+  "rawFocusLog": {
+    "path": "webpj/extracted/e1451-header-focus.log",
+    "sha256": "18c82465f241cf925a8e429301269611ed9577b77543fc90181011f4839ab8d0"
+  },
+  "periodAfterUnit": {
+    "v26": 4,
+    "v22": 4
+  }
+}
