@@ -125,3 +125,21 @@ test('설치 수 한도에서 교체/삭제·초기화는 여전히 가능하다
     const { backing, mods } = await store(); for (let index = 0; index < 8; index += 1) await mods.install(source(`test.mod${index}`));
     await assert.rejects(mods.install(source('test.ninth')), code('quotaExceeded')); await mods.install(source('test.mod0'), { replace: true }); await mods.remove('test.mod0'); assert.equal(mods.list().length, 7); await mods.clear(); assert.deepEqual(mods.list(), []); assert.equal(backing.getItem(MOD_STORAGE_KEY), null);
 });
+
+test('ResetAll 반납 뒤 늦은 설치 검증/대기 쓰기는 삭제한 키를 복원하지 않는다', async () => {
+    const backing = storage(); let release, started;
+    const gate = new Promise((resolve) => { release = resolve; }), entered = new Promise((resolve) => { started = resolve; });
+    const mods = new ModStore({ storage: backing, validatePackage: async (text) => { started(); await gate; return validate(text); } });
+    await mods.load(); const install = mods.install(source()), queued = mods.setEnabled('test.package', true);
+    const checks = [assert.rejects(install, code('disposed')), assert.rejects(queued, code('disposed'))];
+    await entered; mods.dispose(); backing.removeItem(MOD_STORAGE_KEY); release(); await Promise.all(checks);
+    assert.equal(backing.getItem(MOD_STORAGE_KEY), null); assert.deepEqual(mods.list(), []); await assert.rejects(mods.load(), code('disposed'));
+});
+
+test('앱 반납 도중 저장 로드 검증이 끝나도 메모리/저장 자료를 다시 설치하지 않는다', async () => {
+    const { backing, mods } = await store(); await mods.install(source()); const before = backing.getItem(MOD_STORAGE_KEY); let release, started;
+    const gate = new Promise((resolve) => { release = resolve; }), entered = new Promise((resolve) => { started = resolve; });
+    const pending = new ModStore({ storage: backing, validatePackage: async (text) => { started(); await gate; return validate(text); } });
+    const load = pending.load(), checked = assert.rejects(load, code('disposed')); await entered; pending.dispose(); release(); await checked;
+    assert.deepEqual(pending.list(), []); assert.equal(backing.getItem(MOD_STORAGE_KEY), before);
+});

@@ -1,0 +1,92 @@
+{
+  "unit": "WB04-E1479",
+  "sourceParent": "8956180401941606bdb5b11b4a63d4bce726e6bf",
+  "node26Related": {
+    "pass": 71,
+    "fail": 0
+  },
+  "node22Changed": {
+    "pass": 36,
+    "fail": 0
+  },
+  "firstRun": {
+    "pass": 31,
+    "fail": 1,
+    "cause": "검사가 필수 slot 없이 produceBridge 호출; 실제 API의 거절은 정상, 올바른 slot=0으로 검사 수정"
+  },
+  "build": {
+    "exit": 0,
+    "webpackSeconds": 67.9,
+    "bundleBytes": 5780002,
+    "unchangedFromE1478": true,
+    "finalLintExit": 0
+  },
+  "scope": "시계/관리자 기반과 유계 호스트 검사, 실제 앱 결선은 다음 단위",
+  "counters": {
+    "node26": 3,
+    "node22": 3,
+    "nextFullExpected": 7011
+  },
+  "files": {
+    "webpj/www/modding/mod-time-source.js": {
+      "bytes": 1673,
+      "sha256": "27183e9539d39807e9d71ddd7588bc64d20ffffb53ad49e7019c24d1fe2adebe"
+    },
+    "webpj/www/modding/mod-manager.js": {
+      "bytes": 10743,
+      "sha256": "3316b432aa41899cf113960e22a5d9d99b832544a03da821983877788962234f"
+    },
+    "webpj/www/modding/mod-store.js": {
+      "bytes": 8661,
+      "sha256": "811e86b3ca6f2c3273a9bb8f2a4a8e564ee392744444c5654653a1ce86f75f42"
+    },
+    "webpj/tests/mod-time-source.test.mjs": {
+      "bytes": 2985,
+      "sha256": "68370919467c1a8280c60c0fd07eb45a4333dd89955053a8b97c62844df24827"
+    },
+    "webpj/tests/mod-manager.test.mjs": {
+      "bytes": 11351,
+      "sha256": "d95f43941596cba69eaa02866418c3dbfe07067d0ace9639fb1ba438ba324b6c"
+    },
+    "webpj/tests/mod-package-store.test.mjs": {
+      "bytes": 15088,
+      "sha256": "ea9be398990a90828cf793cfbae7adc96a28ec24b8c6f3f0538cddbcdfce74f8"
+    },
+    "webpj/tools/port-map.mjs": {
+      "bytes": 43124,
+      "sha256": "560cf71d56583f24dd9ead3751c7eb29bccf90a86f502d38a096a1d96de3f813"
+    },
+    "webpj/www/dist/netstorm.bundle.js": {
+      "bytes": 5780002,
+      "sha256": "fd91e5fbb784d8b64074103fbf592eb6d163088907b5329ab330897378bfa425"
+    },
+    "webpj/extracted/webpj-e1479-first.log": {
+      "bytes": 4007,
+      "sha256": "102dac15d6ceea1f3691fe53c880fc2b048265fb6cdc7fdb29358a8615340655"
+    },
+    "webpj/extracted/webpj-e1479-unit.log": {
+      "bytes": 3482,
+      "sha256": "76b628eb1b2e96bf6fd20ac1c0b523b1c0d01a38afdf4301d44d2265e4a81ed7"
+    },
+    "webpj/extracted/webpj-e1479-related.log": {
+      "bytes": 7208,
+      "sha256": "15f769b2c30d43d398af39020c2c89bbdeb2a28a739562f98454c89aa2d24928"
+    },
+    "webpj/extracted/webpj-e1479-node22.log": {
+      "bytes": 8809,
+      "sha256": "5e7a09e183556e00788ebb19b035e937adc943bfdde1def7326a151afe449bd8"
+    },
+    "webpj/extracted/webpj-e1479-build.log": {
+      "bytes": 461,
+      "sha256": "cfda07f195c50fe34fe506452782b4736e8b5bc8b4e963a3e670c02da577a5ce"
+    },
+    "webpj/extracted/webpj-e1479-lint.log": {
+      "bytes": 81,
+      "sha256": "6c1a6c81a3e52bcd73c1f85f06e14798341ce6b8a5bd2fcfffd05c500ae04b4e"
+    },
+    "webpj/extracted/webpj-e1479-port-map.log": {
+      "bytes": 698,
+      "sha256": "45f3ce8789485a1fe481437f336f3caa93b86c3dd62005c1c615145c7c84fbe5"
+    }
+  }
+}

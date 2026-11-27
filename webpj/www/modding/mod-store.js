@@ -14,17 +14,19 @@ export class ModStore {
     #storage; #validate; #items = new Map(); #raw = null; #loaded = false;
     // 가져오기/켜기/교체가 겹쳐 이전 상태를 덮어쓰지 않도록 작업을 직렬화한다.
     #tail = Promise.resolve();
+    // 앱 초기화/ResetAll 뒤 대기 중인 검증 결과가 저장소를 다시 쓰지 못하게 한다.
+    #disposed = false;
     // 브라우저 localStorage가 없으면 실패를 명시하고 메모리 저장 성공으로 꾸미지 않는다.
     constructor({ storage, validatePackage }) {
         if (typeof validatePackage !== 'function') throw new TypeError('모드 저장소의 패키지 검증기가 필요합니다.');
         this.#storage = storage; this.#validate = validatePackage;
     }
     // 이전 작업 실패도 다음 명시 조작을 막지 않는다.
-    #enqueue(callback) { const result = this.#tail.then(callback); this.#tail = result.catch(() => {}); return result; }
+    #enqueue(callback) { const result = this.#tail.then(() => { if (this.#disposed) throw new ModError('disposed', '모드 저장소 수명이 끝났습니다.'); return callback(); }); this.#tail = result.catch(() => {}); return result; }
     // 숨겨진 읽기 실패를 빈 목록으로 저장하지 않는다.
     #read() { try { if (!this.#storage) throw new Error('브라우저 저장소를 사용할 수 없습니다.'); return this.#storage.getItem(MOD_STORAGE_KEY); } catch (error) { throw storageError(error); } }
     // 명시 초기 읽기가 성공하기 전에는 기존 자료가 없는 것으로 가정하지 않는다.
-    #ready() { if (!this.#loaded) throw new ModError('permissionDenied', '모드 저장소를 먼저 읽어야 합니다.'); }
+    #ready() { if (this.#disposed) throw new ModError('disposed', '모드 저장소 수명이 끝났습니다.'); if (!this.#loaded) throw new ModError('permissionDenied', '모드 저장소를 먼저 읽어야 합니다.'); }
     // 현재 인스턴스가 읽은 뒤 다른 탭이 변경했다면 사용자 자료를 덮어쓰지 않는다.
     #unchanged() { this.#ready(); if (this.#read() !== this.#raw) throw new ModError('permissionDenied', '다른 창에서 모드 저장소가 바뀌었습니다. 다시 읽으십시오.'); }
     // 목록 전체를 단일 키에 저장한 뒤에만 메모리 상태를 확정한다.
@@ -51,6 +53,7 @@ export class ModStore {
                     items.set(id, { pkg, text: JSON.stringify(pkg), enabled: item.enabled, lastError: item.lastError });
                 }
             }
+            if (this.#disposed) throw new ModError('disposed', '모드 저장소 수명이 끝났습니다.');
             this.#items = items; this.#raw = raw; this.#loaded = true; return this.list();
         });
     }
@@ -80,4 +83,6 @@ export class ModStore {
     remove(id) { return this.#enqueue(() => { this.#ready(); const items = new Map(this.#items); if (!items.delete(id)) throw new ModError('invalidArgument', '설치되지 않은 모드 id'); this.#save(items); return this.list(); }); }
     // 정상 상태의 전체 삭제다. 손상 저장소의 강제 Reset All은 앱의 기존 초기화 절차가 직접 키를 지운다.
     clear() { return this.#enqueue(() => { this.#unchanged(); try { this.#storage.removeItem(MOD_STORAGE_KEY); } catch (error) { throw storageError(error); } this.#items = new Map(); this.#raw = null; return []; }); }
+    // 이미 진행 중인 검증과 이후 대기 작업 모두 쓰기를 금지한다. 원래 저장 자료는 지우지 않는다.
+    dispose() { this.#disposed = true; this.#items = new Map(); }
 }
