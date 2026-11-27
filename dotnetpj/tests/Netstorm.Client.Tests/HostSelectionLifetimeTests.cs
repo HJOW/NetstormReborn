@@ -74,6 +74,7 @@ public sealed class HostSelectionLifetimeTests
         Assert.Contains(50, working.Refreshed);
         Assert.Equal(["select.wav"], working.Sounds);
         Assert.Equal(1, working.Dumped);
+        GC.KeepAlive(selection);
     }
 
     /// <summary>다른 선택 owner의 상태는 설치 전 거부하고 연결을 만들지 않는다.</summary>
@@ -96,10 +97,11 @@ public sealed class HostSelectionLifetimeTests
         var types = Types();
         session.MakeUserSelection(types, game.Selection.SelectionState(), new UserSelectionHooks { Paused = () => throw new InvalidOperationException("이전 선택 호출") });
         var working = new WorkingHooks();
-        session.MakeUserSelection(types, game.Selection.SelectionState(), working.Hooks);
+        var selection = session.MakeUserSelection(types, game.Selection.SelectionState(), working.Hooks);
         PrepareTarget(session);
         Assert.Equal(50u, session.SelectViaActiveSelection(50, 0, 0));
         Assert.Equal(50u, game.Selection.Selected.Value);
+        GC.KeepAlive(selection);
     }
 
     /// <summary>선택을 반납하면 약한 연결이 만료되고 이후 선택은 명시 실패한다.</summary>
@@ -156,14 +158,18 @@ public sealed class HostSelectionLifetimeTests
         var game = new ClientGameplayGlobals();
         var session = Session(game);
         var working = new WorkingHooks();
-        session.MakeUserSelection(Types(), game.Selection.SelectionState(), working.Hooks);
+        var selection = session.MakeUserSelection(Types(), game.Selection.SelectionState(), working.Hooks);
         PrepareTarget(session);
         game.Selection.MouseType.Value = 7;
+        // 약한 세션 연결을 검사하는 동안 실제 UI가 소유할 선택 객체를 보존한다.
+        GC.Collect();
+        GC.WaitForPendingFinalizers();
         var found = new List<(uint X, uint Y, uint Type)>();
         session.RecheckActiveSelection((x, y, type) => { found.Add((x, y, type)); return 50u; });
         Assert.Equal([(0u, 0u, 7u)], found);
         Assert.Equal(50u, game.Selection.Selected.Value);
         Assert.Equal(0u, game.Selection.MouseType.Value);
+        GC.KeepAlive(selection);
     }
 
     /// <summary>살아 있는 선택의 해제는 단일 선택을 지우고 이전 선택 통지를 남긴다.</summary>
@@ -173,11 +179,12 @@ public sealed class HostSelectionLifetimeTests
         var game = new ClientGameplayGlobals();
         var session = Session(game);
         var working = new WorkingHooks();
-        session.MakeUserSelection(Types(), game.Selection.SelectionState(), working.Hooks);
+        var selection = session.MakeUserSelection(Types(), game.Selection.SelectionState(), working.Hooks);
         PrepareTarget(session);
         Assert.Equal(50u, session.SelectViaActiveSelection(50, 0, 0));
         session.ClearActiveSelection();
         Assert.Equal(0u, game.Selection.Selected.Value);
         Assert.Contains((50, 0u), working.Noticed);
+        GC.KeepAlive(selection);
     }
 }
