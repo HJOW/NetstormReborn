@@ -156,7 +156,7 @@ import { CampaignSessionAssets } from './core/raw-campaign-session-owners.js';
 import { PriestPlacementAssets } from './core/priest-placement-assets.js';
 import { RawSurfaceStorage } from './core/raw-surface-storage.js';
 import { Kernel } from './core/kernel.js';
-import { bindClientKernelDiagnostics, ClientTraceGlobals, traceClientObject, writeClientDiagnosticLog } from './core/client-diagnostics.js';
+import { bindClientKernelDiagnostics, ClientTraceGlobals, logClientDisplayAssertion, traceClientObject, writeClientDiagnosticLog } from './core/client-diagnostics.js';
 import { ClientTimeSource } from './core/client-time-source.js';
 import { resetGameStorage } from './platform/reset-storage.js';
 import { PRODUCT_RESET_ALL_CONFIRMED_TARGET, PRODUCT_RESET_ALL_TARGET } from './assets/product.js';
@@ -1045,7 +1045,8 @@ export class Netstorm {
         const storage = new RawSurfaceStorage(assets.types, assets.frames, metadata.shapes, { source: game, authority: gameplay.authority(), gameAux: gameplay.gameAux() });
         const kernel = new Kernel(); storage.processes.bindDevices(kernel, clock.time());
         storage.bindChecking(() => gameplay.aiDebug().checking().value);
-        storage.bindDisplayDiagnostics(gameplay.aiDebug().assertionDetail(), (expression, file, line) => console.error(`원본 표시 진단: ${file}:${line} ${expression}`));
+        // 동일 Client가 보유한 현재 상세를 호출 순간에 읽어 기존 표시 진단보다 먼저 기록한다.
+        storage.bindDisplayDiagnostics(gameplay.aiDebug().assertionDetail(), (expression, file, line) => logClientDisplayAssertion(gameplay.aiDebug().assertionDetail().value, expression, file, line));
         storage.enablePatchDestroyDiagnostics();
         storage.bindGraphClock(() => clock.gameSeconds()); bindClientKernelDiagnostics(kernel, storage, (line) => console.info(line));
         this._gameAssets = game; this._surfaceStorage = storage; this._clientKernel = kernel;

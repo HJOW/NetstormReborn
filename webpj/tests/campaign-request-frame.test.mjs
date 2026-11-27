@@ -127,6 +127,14 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
     app._layout = { logicalWidth: 1024, logicalHeight: 768, visible: false }; app._surface = new IndexedSurface(1024, 768); app._presenter = new IndexedPresenter(null);
     app._mainMenu = new MainMenuScreen({ resources: app._resources }); app._mainMenu.resize(1024, 768); app._initializeClientGump();
     app._initializeClientWorldStorage(game, data.files); app._syncClientCloudOptions(); app._initializeClientPalette(game); app._initializeClientPaletteCache(game); app._initializeClientGuide();
+    // 실제 장기 표시 장치는 호출 순간의 같은 상세 상자를 읽는다. 미션을 시작하기 전에 진단 부가 기록만 검증한다.
+    const detail = app._clientGameplay.aiDebug().assertionDetail(), previousDetail = detail.value, warning = console.warn, errorOutput = console.error, diagnosticLines = [];
+    try {
+        console.warn = (text) => diagnosticLines.push(['detail', text]); console.error = (text) => diagnosticLines.push(['assertion', text]);
+        app._surfaceStorage.recordAssertionDetail('첫 현재 상세'); app._surfaceStorage.assertDisplay('first', 'first.cpp', 1);
+        app._surfaceStorage.recordAssertionDetail('바뀐 현재 상세'); app._surfaceStorage.assertDisplay('second', 'second.cpp', 2);
+        assert.deepEqual(diagnosticLines, [['detail', '원본 표시 상세: 첫 현재 상세'], ['assertion', '원본 표시 진단: first.cpp:1 first'], ['detail', '원본 표시 상세: 바뀐 현재 상세'], ['assertion', '원본 표시 진단: second.cpp:2 second']]);
+    } finally { console.warn = warning; console.error = errorOutput; detail.value = previousDetail; }
     app._canvas = {}; app._render = () => {}; app._startFrameLoop = () => {}; app._applyCursor = () => {};
     const guide = app._clientGuide;
     try {

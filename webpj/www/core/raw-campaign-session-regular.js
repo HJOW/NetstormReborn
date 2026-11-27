@@ -9,6 +9,7 @@ import { handleHealBurstRegular, handleGravityBurstRegular } from './raw-bomb-he
 import { COMMON_DAMAGEABLE_REGULAR_TABLES } from './campaign-damageable-regular-tables.js';
 import { connectedCampaignBombTable } from './raw-campaign-session-particles.js';
 import { PRIEST_VTABLE } from './raw-priest-owner.js';
+import { logRegularFailure } from './client-diagnostics.js';
 
 // 현재 raw 슬롯의 비정렬 가상 표 DWORD다.
 function table(raw) { return new DataView(raw.buffer, raw.byteOffset, raw.byteLength).getUint32(0, true); }
@@ -89,6 +90,8 @@ export class RawCampaignSessionRegular {
                 if (o.devastationRegular && connectedCampaignBombTable(table(c.pool.slot(sid)))) { o.runtimeModules.prepareDevastation(); return o.devastationRegular.handle(sid, event, count, payload); }
                 return actual(sid, event, count, payload);
             } catch (error) {
+                // CP1377의 현재 객체/프레임 문맥을 추가 기록하고 기존 stderr 대응 행과 원래 예외도 보존한다.
+                logRegularFailure(c.pool, sid, event, count, payload);
                 // C++ fprintf처럼 로그 장치 자체의 실패가 원래 게임 예외를 덮지 못한다.
                 try { const type = sid >= 0 && sid < c.pool.capacity ? c.pool.slot(sid)[10] : 0xffff; console.error('실제 Regular 실패 SID' + (sid >>> 0) + ' TYPE' + type + ' event' + (event >>> 0) + ' count' + (count >>> 0) + ' payload' + floatBits(payload).toString(16).padStart(8, '0')); } finally { throw error; }
             }
