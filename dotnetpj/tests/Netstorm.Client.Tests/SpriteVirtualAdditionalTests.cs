@@ -38,8 +38,8 @@ public sealed class SpriteVirtualAdditionalTests
         Set(pool, sid, 0x0050c9f0, 94);
         draw.Draw(sid, point);
         Assert.Equal(new[] { ("bridge", sid, point), ("meta", sid, point) }, calls);
-        Set(pool, sid, 0x0050b888, 130);
-        Assert.Contains("0046A6E0", Assert.Throws<InvalidOperationException>(() => draw.Draw(sid, point)).Message);
+        Set(pool, sid, 0x00509b98, 130);
+        Assert.Contains("0045BCD0", Assert.Throws<InvalidOperationException>(() => draw.Draw(sid, point)).Message);
         var missing = new SpriteVirtualAdditional(pool, frames, _ => { });
         Set(pool, sid, 0x005034c8, 82);
         Assert.Throws<InvalidOperationException>(() => missing.Draw(sid, point));
@@ -190,6 +190,45 @@ public sealed class SpriteVirtualAdditionalTests
         BinaryPrimitives.WriteUInt32LittleEndian(pool.AllocatedBytes(sid)[26..], 0x4000);
         draw.Draw(sid, new(1, 2));
         Assert.Equal(2, requests.Count);
+    }
+
+    /// <summary>발사기는 실제 포구 좌표와 현재 출력 비트·소유자 상태를 각 그림에서 사용한다.</summary>
+    [Fact]
+    public void BurningArcherUsesCurrentMuzzleAndOutputState()
+    {
+        var pool = new RawSidPool(24000, server: false);
+        int sid = pool.Allocate(SidAllocation.Client);
+        var frames = Enumerable.Range(0, 188).Select(_ => new RiftTypeFrames([])).ToArray();
+        var assets = Enumerable.Range(0, 188).Select(_ => new SquidDisplayShape()).ToArray();
+        assets[71].Frames.Add(new SquidDisplayFrame());
+        assets[71].Frames.Add(new SquidDisplayFrame { MuzzleX = 3, MuzzleY = -4 });
+        var definitions = Enumerable.Range(0, 118).Select(_ => new RiftTypeDefinition()).ToArray();
+        definitions[1].SpecialFrames.BaseFrame = 0;
+        var requests = new List<SpriteShapeRequest>();
+        var draw = new SpriteVirtualAdditional(pool, frames, request =>
+        {
+            requests.Add(request);
+            if (requests.Count == 1) { pool.AllocatedBytes(sid)[40] = 0x10; pool.AllocatedBytes(sid)[34] = 2; }
+        }, definitions: definitions, localOwner: () => 2, shapes: assets);
+        Set(pool, sid, 0x0050b888, 71, 1);
+        draw.Draw(sid, new(10, 20));
+        Assert.Equal(new SpriteShapeRequest(71, 1, new(10, 20), SpriteShapeMode.Plain), requests[0]);
+        Assert.Equal(new SpriteShapeRequest(83, 0, new(13, 16), SpriteShapeMode.Abstract), requests[1]);
+        requests.Clear();
+        Set(pool, sid, 0x0050b888, 71, 0);
+        draw.Draw(sid, new(10, 20));
+        Assert.Empty(requests);
+        Set(pool, sid, 0x0050b888, 71, 1);
+        pool.AllocatedBytes(sid)[40] = 1;
+        draw.Draw(sid, new(10, 20));
+        Assert.Single(requests);
+        requests.Clear();
+        Set(pool, sid, 0x0050b888, 71, 1);
+        pool.AllocatedBytes(sid)[12] = 1;
+        draw.Draw(sid, new(10, 20));
+        Assert.Single(requests);
+        Set(pool, sid, 0x0050b888, 70, 1);
+        Assert.Throws<ArgumentException>(() => draw.Draw(sid, new(10, 20)));
     }
 
     /// <summary>주문의 도움말 프레임과 추상 소유자 조건을 실제 현재 슬롯으로 분기한다.</summary>

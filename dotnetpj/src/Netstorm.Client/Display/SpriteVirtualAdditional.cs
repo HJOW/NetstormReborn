@@ -96,6 +96,9 @@ public sealed class SpriteVirtualAdditional
             case 0x00479340:
                 DrawScaledMeta(sid, point);
                 return;
+            case 0x0046a6e0:
+                DrawBurningArcher(sid, point);
+                return;
             case 0x00485f90:
                 ReadOnlySpan<byte> raw = _pool.Slot(sid);
                 _shape(new(raw[10], BinaryPrimitives.ReadUInt32LittleEndian(raw[36..]), point, SpriteShapeMode.Abstract));
@@ -210,5 +213,41 @@ public sealed class SpriteVirtualAdditional
         uint frame = BinaryPrimitives.ReadUInt32LittleEndian(raw[36..]);
         _shape(new(raw[10], frame, point, SpriteShapeMode.Plain)
             { Scaled = true, ScaleX = unchecked((int)scale), ScaleY = unchecked((int)scale) });
+    }
+
+    /// <summary>발사기의 현재 그림과 조건부 포구 디스크를 실제 자산 기준으로 표시한다.</summary>
+    /// <param name="sid">현재 발사기 객체 SID다.</param>
+    /// <param name="point">현재 화면 기준점이다.</param>
+    /// <remarks>cpppj RawBurningLifetimeDraw의 TYPE 71 전용 분기와 매 그림의 현재 소유자 관문을 따른다.</remarks>
+    private void DrawBurningArcher(int sid, ScreenPoint point)
+    {
+        ReadOnlySpan<byte> raw = _pool.Slot(sid);
+        if (raw[10] != 71) throw new ArgumentException("발사기 추가 그림 TYPE 불일치", nameof(sid));
+        var definitions = _definitions ?? throw new InvalidOperationException("발사기 TYPE 정의 미연결");
+        var shapes = _shapes ?? throw new InvalidOperationException("발사기 셰이프 표 미연결");
+        if (definitions.Count <= 1 || shapes.Count <= 71 || shapes[71] is null)
+            throw new InvalidOperationException("발사기 실제 자산 범위 오류");
+        uint frame = BinaryPrimitives.ReadUInt32LittleEndian(raw[36..]);
+        if (frame >= shapes[71].Frames.Count) throw new ArgumentOutOfRangeException(nameof(sid), "발사기 현재 프레임 범위 오류");
+        SquidDisplayFrame header = shapes[71].Frames[(int)frame];
+        int muzzleX = header.MuzzleX, muzzleY = header.MuzzleY;
+        if ((raw[40] & 9) != 0) { DrawGated(sid, 71, frame, point); return; }
+        if (frame == unchecked((uint)definitions[1].SpecialFrames.BaseFrame)) return;
+        DrawGated(sid, 71, frame, point);
+        if ((_pool.Slot(sid)[12] & 1) == 0)
+            DrawGated(sid, 83, 0, new(unchecked(point.X + muzzleX), unchecked(point.Y + muzzleY)));
+    }
+
+    /// <summary>지정된 그림에 현재 객체의 추상 상태와 로컬 소유자 관문을 적용한다.</summary>
+    /// <param name="sid">상태를 다시 읽을 현재 객체 SID다.</param>
+    /// <param name="type">출력할 그림 TYPE이다.</param>
+    /// <param name="frame">출력할 물리 프레임이다.</param>
+    /// <param name="point">현재 화면 기준점이다.</param>
+    private void DrawGated(int sid, uint type, uint frame, ScreenPoint point)
+    {
+        ReadOnlySpan<byte> raw = _pool.Slot(sid);
+        if ((raw[40] & 0x10) == 0) _shape(new(type, frame, point, SpriteShapeMode.Plain));
+        else if (raw[34] == (_localOwner ?? throw new InvalidOperationException("추가 그림 현재 로컬 소유자 미연결"))())
+            _shape(new(type, frame, point, SpriteShapeMode.Abstract));
     }
 }
