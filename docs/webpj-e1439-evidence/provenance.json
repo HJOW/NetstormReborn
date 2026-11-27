@@ -1,0 +1,74 @@
+{
+  "unit": "WB04-E1439",
+  "host": "HJOW-Athlon",
+  "baseInput": "E1438 고정 입력/E1433 게임 본체. 후보 두 모듈은 본 소스와 동일바이트. 이후 E1436의 건설 중 수집자 제한 두 모듈은 이 실행에 포함되지 않음.",
+  "result": {
+    "exit": 0,
+    "frame": 47700,
+    "time": 1199.3999999999999,
+    "won": true,
+    "errors": 0
+  },
+  "runtimeSourceEquality": {
+    "raw-ai-preparation.js": "c09cd5478a1f4e7ee184a026bca2a3f921b24cbdcab14bc412a56e1b8ffd47ee",
+    "raw-campaign-session-ai-world.js": "c0d28ad0fced79bb02cea3d33194d78c27c74e9ed942de1765c19254e8fd215f"
+  },
+  "periodAfter": {
+    "v26": "1/4",
+    "v22": "5/8"
+  },
+  "evidence": {
+    "e1426-skirmish-win.cjs": {
+      "bytes": 9433,
+      "sha256": "fc414c820f5fba860fb507c68c4ee46cbfb8d9a26d05b85fe1e2ec2fcdf2101b"
+    },
+    "e1426-skirmish-win.json": {
+      "bytes": 8682,
+      "sha256": "059afe207368767259437b2cd8a49a457a7499fbb743f0fdf32d0f0ccb2867cd"
+    },
+    "e1439-coop-source.json": {
+      "bytes": 511,
+      "sha256": "ecf719d40ef48bac71f8a6281e306efd12f5b4c60817c848e243ae56fb5ead2e"
+    },
+    "e1439-coop-win-initial.json": {
+      "bytes": 7831,
+      "sha256": "efd2669920960bcffb01bbf4aa0a651ee9fb8132afa30dc3ef7b34ed473ec0bc"
+    },
+    "e1439-coop-win-menu.png": {
+      "bytes": 644128,
+      "sha256": "456a6d0819e8f7b08792c3de58ab1b96febd6aea82c0a9dee550c8ac94760308"
+    },
+    "e1439-coop-win-terminal.png": {
+      "bytes": 747543,
+      "sha256": "a88e19ba8487d6bfa3dab3c8d217fd28a0861aec2bd0b70ff49a9471812169c7"
+    },
+    "e1439-coop-win-terminal.tsv": {
+      "bytes": 1974599,
+      "sha256": "cce065bb0810bb8a292738e48cf29fb64c6d4a01784db4e160e73325e5e0666b"
+    },
+    "e1439-coop-win.cjs": {
+      "bytes": 10020,
+      "sha256": "977f32be6924ce22b1c45582b1580a4c885f34c6cab7c29bf95368bea1744e3a"
+    },
+    "e1439-coop-win.json": {
+      "bytes": 11675,
+      "sha256": "ee0255628fe9c8510cbddbf8a4f6d63371056e5ac37f30154e75b3b593010c3d"
+    },
+    "raw-ai-preparation.js": {
+      "bytes": 18020,
+      "sha256": "c09cd5478a1f4e7ee184a026bca2a3f921b24cbdcab14bc412a56e1b8ffd47ee"
+    },
+    "raw-campaign-session-ai-world.js": {
+      "bytes": 10221,
+      "sha256": "c0d28ad0fced79bb02cea3d33194d78c27c74e9ed942de1765c19254e8fd215f"
+    },
+    "webpj-e1426-skirmish-win.log": {
+      "bytes": 22667,
+      "sha256": "5ee0f8fc9950b1302c03b523ae49c13fbe74c3edbc1db164b4171931b0f1e90b"
+    },
+    "webpj-e1439-coop-win.log": {
+      "bytes": 24607,
+      "sha256": "e8f8fa21f6cbaf8cb0d38874c3b1b1b75ecbf804c66fe86aa5e851ebff0397d1"
+    }
+  }
+}

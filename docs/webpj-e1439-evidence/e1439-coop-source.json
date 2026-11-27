@@ -1,0 +1,8 @@
+{
+  "scope": "스커미시 아군AI만. 로컬Hard+동맹2명Hard/적1명Easy. 로컬시작20000/그외기본5000. mapseed1. 실제목표/승패에쓰기없음.",
+  "policyCandidate": {
+    "raw-ai-preparation.js": "c09cd5478a1f4e7ee184a026bca2a3f921b24cbdcab14bc412a56e1b8ffd47ee",
+    "raw-campaign-session-ai-world.js": "c0d28ad0fced79bb02cea3d33194d78c27c74e9ed942de1765c19254e8fd215f"
+  },
+  "baseProduct": "E1433 +ignoredE1436policycandidate. main not yet applied; must hash-match onpromotion."
+}
