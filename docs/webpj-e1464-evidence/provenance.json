@@ -1,0 +1,55 @@
+{
+  "unit": "WB04-E1464",
+  "recordedAt": "2026-11-27T15:32:08.285366+00:00",
+  "sourceHead": "c21679cdaa07a749b140d63e28582239c53a2ce6",
+  "node": "v22.23.5",
+  "nodeExecutable": "H:\\Workspace\\git\\NetstormReborn\\extracted\\webpj-node22\\node_modules\\node-win-x64\\bin\\node.exe",
+  "nodeExecutableSha256": "247e9693d316da9857e44990e5e11709f596f18112251b8026ec6eed80bdf38a",
+  "command": "node --test --test-concurrency=2 tests/*.test.mjs",
+  "files": 3548,
+  "changed": [],
+  "newlinesOnly": [],
+  "results": {
+    "tests": 6934,
+    "pass": 6934,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "durationMs": 1240523.691
+  },
+  "nodeExit": 0,
+  "artifacts": [
+    {
+      "path": "webpj/extracted/webpj-e1464-freeze.json",
+      "bytes": 796235,
+      "sha256": "4b584b9defd9b21d55da78cfb5478b13efff20ad2e9d0ac2576521622acbe06f"
+    },
+    {
+      "path": "webpj/extracted/webpj-e1464-freeze-check.json",
+      "bytes": 371,
+      "sha256": "078a846046003001edd82068128c726907110a28b739e494d782c2efa564eb3f"
+    },
+    {
+      "path": "webpj/extracted/webpj-e1464-node22.log",
+      "bytes": 2082329,
+      "sha256": "5b1e74445849febe3fe9567cb7752cae707238d38e5cf61059d0fae7c68c979e"
+    },
+    {
+      "path": "webpj/extracted/e1463-1464-run-state.json",
+      "bytes": 1238,
+      "sha256": "2c5987672b74e990e52b2c24e2145843736bb38d37bd2689cc68b86d4b6631ba"
+    }
+  ],
+  "sequence": "Node26 E1463 -> Node22 E1464, never concurrent",
+  "carryUnits": [
+    "E1465",
+    "E1466",
+    "E1467"
+  ],
+  "periodAfterPair": {
+    "v26": 3,
+    "v22": 3
+  },
+  "sourceFreezeReleased": true
+}
