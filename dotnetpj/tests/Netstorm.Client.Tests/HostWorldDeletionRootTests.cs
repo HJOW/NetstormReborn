@@ -25,6 +25,7 @@ public sealed partial class HostPriestWorldLiveTests
         var surface = new ClientSurfaceGlobals(game, clock, kernel, () => 0, installDevices: owner =>
         {
             if (templates is not null) owner.Storage.BindSerializationGlobals(templates.SerializationGlobals);
+            if (templates is not null) { owner.Storage.EnablePatchDestroyDiagnostics(); owner.Storage.BindGraphTrace((_, _) => { }); }
             owner.Storage.BindTransmissionDevices(new RawSurfaceTransmissionDevices { Broadcast = _ => { }, Connected = _ => false, Send = (_, _) => { } });
             if (templates is not null) owner.Storage.BindGumpType(game.GumpFormTypeBox);
             owner.Storage.BindProcessDevices(new RawSurfaceProcessDevices { Selected = () => 0, ClearSelection = () => { } });
@@ -99,8 +100,11 @@ public sealed partial class HostPriestWorldLiveTests
     {
         var (session, _, surface) = WorldDeletionRootScene(sharedNative: true);
         Assert.Same(surface.Storage.BaseDestroy(), session.PlayerProcesses.Destroy());
+        Assert.True(surface.Storage.BaseDestroy().HasPatchDiagnostics);
         session.BuildWorldDeletionRootDevices(); var forms = surface.Storage.GumpForms();
-        int form = forms.Create(); Assert.True(forms.IsGumpForm(form));
+        surface.Storage.Types[4].ConstructorAddress = OriginalConstructors.Address(3);
+        session.Gameplay.GumpFormTypeBox.Value = 4;
+        int form = forms.Create(); Assert.True(forms.IsGumpForm(form)); Assert.Equal(4, session.Pool.Slot(form)[10]);
         Assert.True(session.DestroyResourceObject(form, 0)); Assert.NotEqual(0, session.Pool.Slot(form)[11] & 1);
         Assert.Equal(0u, surface.Storage.BaseDestroy().PreDepth); Assert.Equal(0u, surface.Storage.BaseDestroy().PostDepth);
         session.ReleasePlayerProcesses();

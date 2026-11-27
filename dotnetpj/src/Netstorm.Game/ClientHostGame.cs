@@ -194,6 +194,8 @@ public sealed partial class ClientHostGame : Game
             owner.Storage.BindSerializationGlobals(_stateResources.Templates.SerializationGlobals);
             owner.BindDisplayDiagnostics(ErrorLog.RecordAssertion);
             owner.Storage.BindGraphTrace((level, text) => ErrorLog.Note($"원본 로그 {level}: {text}"));
+            // 첫 공통 삭제기 전에 PATCH 원본의 현재 가상표와 진단 경로를 선택한다.
+            owner.Storage.EnablePatchDestroyDiagnostics();
             owner.BindNativeTransmission(_connections, ClearNativeUserSelection);
             // RU-1 Root 첫 장치 나머지: PostPop·Resource·Reward/현재 데모·Deletion·PlayerRecords를 실제 owner로 조립한다.
             // 근거: cpppj ClientMain.cpp 447~455·468~488·525행. Transmission·Process 선택은 0.838에서 완료했다.
