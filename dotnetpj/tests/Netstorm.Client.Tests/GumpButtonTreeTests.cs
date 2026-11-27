@@ -7,6 +7,27 @@ namespace Netstorm.Tests;
 /// <summary>한 실제 Gump 트리에서 여러 버튼의 입력·캡처·등록·자식 삭제를 확인한다.</summary>
 public sealed class GumpButtonTreeTests
 {
+    /// <summary>State 삭제는 실제 공통 트리에서 보존 종류만 남기고 지연 정리한다.</summary>
+    [Fact]
+    public void StateKillUsesCurrentRetainedTypeAndRealLifetime()
+    {
+        var fixture = new GumpFontFixture("gumptext");
+        var tree = new GumpButtonTree(640, 480, GumpBackgroundTestAssets.Assets(), 82, 0, new(9, 243, 57), fixture.Fonts,
+            new() { Now = () => 1, Poll = _ => default, Sound = () => { }, Redraw = (_, _) => { }, HandleBase = (_, _, _, _) => 0 });
+        uint retained = tree.AllocateNode(new GumpCreateNode()), removed = tree.AllocateNode(new GumpCreateNode());
+        tree.Factory.Construct(retained, 11, 10, 10, 1); tree.Factory.Construct(removed, 12, 10, 10, 1);
+        tree.Tree.Attach(retained, 0, 0, tree.Create.Entries[0], 0); tree.Tree.Attach(removed, 20, 0, tree.Create.Entries[0], 0);
+        Assert.Equal((sbyte)11, tree.StateRetainedType);
+        tree.KillStateGumps();
+        Assert.Equal(0u, tree.Node(retained)!.Flags & 0x10000);
+        Assert.NotEqual(0u, tree.Node(removed)!.Flags & 0x10000);
+        Assert.NotNull(tree.Node(removed));
+        tree.Lifetime.Cleanup();
+        Assert.NotNull(tree.Node(retained)); Assert.Null(tree.Node(removed));
+        tree.StateRetainedType = 12;
+        tree.KillStateGumps(); tree.Lifetime.Cleanup(); Assert.Null(tree.Node(retained));
+    }
+
     /// <summary>서로 다른 두 버튼의 등록과 클릭을 분리하고 한 버튼 삭제가 다른 버튼을 보존한다.</summary>
     [Fact]
     public void MultipleButtonsShareTreeInputAndLifetime()

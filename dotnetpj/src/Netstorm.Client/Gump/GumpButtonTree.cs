@@ -27,6 +27,8 @@ public sealed partial class GumpButtonTree
     private readonly Dictionary<uint, GumpCreateNode> _nodes = [];
     /// <summary>다음에 할당할 비영 토큰.</summary>
     private uint _nextToken;
+    /// <summary>State 정리에서 보존할 원본 00540426의 현재 signed 종류다.</summary>
+    private sbyte _stateRetainedType = 11;
     /// <summary>같은 원본 등록표와 화면 크기.</summary>
     public GumpCreateState Create { get; }
     /// <summary>같은 캡처·idle·삭제 표.</summary>
@@ -116,6 +118,12 @@ public sealed partial class GumpButtonTree
         foreach (uint token in Create.Entries) if (token != 0 && Node(token)?.Serial == serial) return token;
         return 0;
     }
+
+    /// <summary>State 정리가 다음 등록 칸마다 다시 읽는 실제 보존 종류다.</summary>
+    public ref sbyte StateRetainedType => ref _stateRetainedType;
+
+    /// <summary>현재 보존 종류를 제외한 등록 Gump에만 원본 지연 삭제를 요청한다.</summary>
+    public void KillStateGumps() => Lifetime.KillExceptType(ref _stateRetainedType);
 
     /// <summary>같은 배경의 실제 플래그 저장 위치를 버튼에 빌려준다.</summary>
     private ref uint BackgroundFlags(uint token)
