@@ -1,0 +1,31 @@
+{
+  "unit": "WB04-E1405",
+  "host": "HJOW-Athlon",
+  "head": "928a4353dd77c53377681280bda0cc713530cb8d",
+  "node": "v26.13.0",
+  "result": {
+    "tests": 6897,
+    "pass": 6897,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "exitCode": 0,
+    "durationMs": 1174101.605
+  },
+  "sourceNote": "E1400/E1406 ESLint 적용 뒤 본소스2222파일을 고정했다. E1404 미커밋 계측도구/ESLint 등록은 freeze에 포함하며 메모리 후보는 extracted에서만 제공했다.",
+  "files": {
+    "node26.log": {
+      "bytes": 916724,
+      "sha256": "6b95a26aaac3b430c68a816c8f862e63fec60dcd1fda6f6197665be55cf2d537"
+    },
+    "source-freeze-check.json": {
+      "bytes": 172,
+      "sha256": "a257813d6ba6f2a1ca21b884c2d0e9e2e4d9781b6cbe1458eba28f26e7dab88f"
+    },
+    "source-freeze.json": {
+      "bytes": 486410,
+      "sha256": "ae5528a0fc486029af133fe1d560fa8f427ce81f32ee0feba093443501c9134f"
+    }
+  }
+}
