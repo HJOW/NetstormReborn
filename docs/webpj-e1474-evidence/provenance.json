@@ -1,0 +1,33 @@
+{
+  "unit": "WB04-E1474",
+  "firstFull": {
+    "unit": "WB04-E1474",
+    "recordedAt": "2026-11-27T17:41:54.141375+00:00",
+    "nodeExit": 1,
+    "files": 3568,
+    "changed": [],
+    "newlinesOnly": [],
+    "results": {
+      "tests": 6982,
+      "pass": 6980,
+      "fail": 2,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "durationMs": 583587.5359
+    },
+    "runnerElapsedSeconds": 585.8769559999928
+  },
+  "runState": "webpj\\extracted\\e1474-1464-run-state.json",
+  "rawLog": "webpj/extracted/webpj-e1474-node26.log",
+  "rawLogSha256": "4fdf59e53b36f3efc6a760d1545301a7437e7936b58e4fa626ae709e7aa53e2d",
+  "failure": "port-map WEB_ONLY 신규5모듈 분류 누락으로 기존 대응표 검사2실패. 다른6980통과/전체6982. 3568입력 원시해시 불변. Node22 전체 미실행.",
+  "fix": "기준선에 없는 WB 모딩5모듈을 기존 WEB_ONLY 사유 목록에 명시 등록. CPP 대응표/원본1,007단위/기존검사/fixture/게임코드 불변.",
+  "focused": {
+    "pass": 7,
+    "fail": 0,
+    "durationMs": 14827.3773,
+    "eslintExit": 0
+  },
+  "toolSha256": "3a7dd80f4285df8e8f3cd3a3fe022be82892def6d8053f4ae90fcfa036dcaf84"
+}

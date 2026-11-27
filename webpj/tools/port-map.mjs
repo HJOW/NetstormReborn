@@ -133,6 +133,12 @@ export const RULES = Object.freeze([
 
 // cpppj 단위에 대응하지 않는 웹 전용 모듈(webpj 기준 경로)과 사유이다. www 의 모든 .js 모듈은 대응표의 web 칸이나 이 목록 중 한 곳에 있어야 한다. (2026-11-06 WB02-G)
 export const WEB_ONLY = Object.freeze({
+    // 공통 모드 계약의 WB 구현은 원본 이식1,007단위에 가산하지 않는 추가 기능이다(E1470~E1474).
+    'www/modding/mod-api.js': '기준선에 없는 공통 모드 공개 API/값 경계·독립 난수의 웹 기준 구현(E1471)',
+    'www/modding/mod-game-host.js': '기준선에 없는 모드용 현재 Client 사본 조회·미션 수명/입력 어댑터(E1472)',
+    'www/modding/mod-input.js': '기준선에 없는 모드 출력 재검증·기존 입력 큐의 원자적 예약 경계(E1472)',
+    'www/modding/mod-package.js': '기준선에 없는 공통 패키지/정적 ES 모듈·경로/선언 검증 경계(E1473)',
+    'www/modding/mod-store.js': '기준선에 없는 기본 꺼짐 모드 설치/활성/오류의 브라우저 저장 경계(E1473)',
     'www/core/tutorial-objective.js': '기준선1313 뒤 사용자 추가 요구인 CP1371의40단계/39키 안내 계약(WB-TUT-1/E1386). 원본 이식1,007단위의 완료량에는 가산하지 않는다.',
     'www/ui/tutorial-objective-gump.js': '기준선1313 뒤 사용자 추가 요구인 CP1372의 배경 없는 튜토리얼 안내 표시(WB-TUT-2/E1387). 원본 이식 완료량에 가산하지 않는다.',
     'www/platform/game-agent-host.js': 'WebMCP에서 현재 게임의 값 조회·실제 DOM 입력·PNG와 녹화 장치를 연결하는 웹 전용 경계(WB04-E1372)',
