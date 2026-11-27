@@ -1,3 +1,4 @@
+using System.Buffers.Binary;
 using Netstorm.Core.Original;
 
 // 현재 객체 가상표의 +a4 추가 그림을 실제 하위 출력기로 분배한다.
@@ -16,6 +17,12 @@ public sealed class SpriteVirtualAdditional
     private readonly Action<int, ScreenPoint>? _bridge;
     /// <summary>실제 메타 객체 표시 장치다. 도달 전에는 없어도 된다.</summary>
     private readonly Action<int, ScreenPoint>? _meta;
+    /// <summary>주문 표시의 현재 TYPE 속성이다. 도달 전에는 없어도 된다.</summary>
+    private readonly IReadOnlyList<OriginalTypeRecord>? _types;
+    /// <summary>주문 도움말 프레임을 읽을 파일 자산 정의다.</summary>
+    private readonly IReadOnlyList<RiftTypeDefinition>? _definitions;
+    /// <summary>주문 추상 그림의 현재 로컬 소유자다.</summary>
+    private readonly Func<uint>? _localOwner;
 
     /// <summary>같은 실제 풀·프레임과 호출 위치에서 사용할 출력 장치를 빌린다.</summary>
     /// <param name="pool">10.78 객체 풀이다.</param>
@@ -23,8 +30,12 @@ public sealed class SpriteVirtualAdditional
     /// <param name="shape">실제 현재 SHP 그림 소비자다.</param>
     /// <param name="bridge">다리 추가 그림 소비자다.</param>
     /// <param name="meta">메타 추가 그림 소비자다.</param>
+    /// <param name="types">현재 TYPE 속성이다.</param>
+    /// <param name="definitions">파일 TYPE 정의다.</param>
+    /// <param name="localOwner">현재 로컬 소유자 조회다.</param>
     public SpriteVirtualAdditional(RawSidPool pool, IReadOnlyList<RiftTypeFrames> frames, Action<SpriteShapeRequest> shape,
-        Action<int, ScreenPoint>? bridge = null, Action<int, ScreenPoint>? meta = null)
+        Action<int, ScreenPoint>? bridge = null, Action<int, ScreenPoint>? meta = null,
+        IReadOnlyList<OriginalTypeRecord>? types = null, IReadOnlyList<RiftTypeDefinition>? definitions = null, Func<uint>? localOwner = null)
     {
         ArgumentNullException.ThrowIfNull(pool);
         ArgumentNullException.ThrowIfNull(frames);
@@ -34,12 +45,15 @@ public sealed class SpriteVirtualAdditional
         _shape = shape;
         _bridge = bridge;
         _meta = meta;
+        _types = types;
+        _definitions = definitions;
+        _localOwner = localOwner;
     }
 
     /// <summary>현재 객체의 +a4를 조회해 해당 실제 추가 그림만 호출한다.</summary>
     /// <param name="sid">현재 객체 SID다.</param>
     /// <param name="point">현재 화면 기준점이다.</param>
-    /// <remarks>cpppj RawCampaignFactoryDisplay::Additional의 확인된 네 경로를 따른다. 다른 함수는 후속 이식 전 명시 오류다.</remarks>
+    /// <remarks>cpppj RawCampaignFactoryDisplay::Additional의 확인된 경로를 따른다. 다른 함수는 후속 이식 전 명시 오류다.</remarks>
     public void Draw(int sid, ScreenPoint point)
     {
         uint address = SpriteVtableLookup.Read(_pool, sid).Additional;
@@ -53,6 +67,9 @@ public sealed class SpriteVirtualAdditional
             case 0x00478d10:
                 (_meta ?? throw new InvalidOperationException("메타 실제 추가 그림 장치 미연결"))(sid, point);
                 return;
+            case 0x0041e3d0:
+                DrawSpell(sid, point);
+                return;
             case 0x00454cf0:
                 _factory.Additional(sid, point.X, point.Y, (x, y, type, frame) =>
                 {
@@ -63,5 +80,24 @@ public sealed class SpriteVirtualAdditional
             default:
                 throw new InvalidOperationException($"객체 추가 그림 미복원: 0x{address:X8}");
         }
+    }
+
+    /// <summary>주문의 도움말 프레임을 제외하고 현재 추상·로컬 소유자 관문을 적용한다.</summary>
+    /// <param name="sid">현재 주문 객체 SID다.</param>
+    /// <param name="point">현재 화면 기준점이다.</param>
+    /// <remarks>cpppj SpellFrameVisibility와 실제 0041e3d0 출력 순서다. 도움말 프레임 제외는 기존 사용자 요청에 따른 표시 규칙이다.</remarks>
+    private void DrawSpell(int sid, ScreenPoint point)
+    {
+        ReadOnlySpan<byte> raw = _pool.Slot(sid);
+        int type = raw[10];
+        var types = _types ?? throw new InvalidOperationException("주문 현재 TYPE 표 미연결");
+        var definitions = _definitions ?? throw new InvalidOperationException("주문 실제 TYPE 정의 미연결");
+        if (type >= types.Count || type < 70 || type - 70 >= definitions.Count) throw new ArgumentOutOfRangeException(nameof(sid), "주문 TYPE 범위 오류");
+        uint frame = BinaryPrimitives.ReadUInt32LittleEndian(raw[36..]);
+        int helpFrame = definitions[type - 70].SpecialFrames.HelpFrame;
+        if ((types[type].Flags2 & TypeFlag2.Bomb) != 0 && helpFrame >= 0 && frame == (uint)helpFrame) return;
+        if ((raw[40] & 0x10) == 0) _shape(new((uint)type, frame, point, SpriteShapeMode.Plain));
+        else if (raw[34] == (_localOwner ?? throw new InvalidOperationException("주문 현재 로컬 소유자 미연결"))())
+            _shape(new((uint)type, frame, point, SpriteShapeMode.Abstract));
     }
 }

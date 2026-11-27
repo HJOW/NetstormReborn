@@ -38,11 +38,45 @@ public sealed class SpriteVirtualAdditionalTests
         Set(pool, sid, 0x0050c9f0, 94);
         draw.Draw(sid, point);
         Assert.Equal(new[] { ("bridge", sid, point), ("meta", sid, point) }, calls);
-        Set(pool, sid, 0x00502370, 117);
-        Assert.Contains("0041E3D0", Assert.Throws<InvalidOperationException>(() => draw.Draw(sid, point)).Message);
+        Set(pool, sid, 0x0050db78, 122);
+        Assert.Contains("00485F90", Assert.Throws<InvalidOperationException>(() => draw.Draw(sid, point)).Message);
         var missing = new SpriteVirtualAdditional(pool, frames, _ => { });
         Set(pool, sid, 0x005034c8, 82);
         Assert.Throws<InvalidOperationException>(() => missing.Draw(sid, point));
+    }
+
+    /// <summary>주문의 도움말 프레임과 추상 소유자 조건을 실제 현재 슬롯으로 분기한다.</summary>
+    [Fact]
+    public void SpellAdditionalSuppressesHelpAndUsesCurrentOwner()
+    {
+        var pool = new RawSidPool(24000, server: false);
+        int sid = pool.Allocate(SidAllocation.Client);
+        var frames = Enumerable.Range(0, 188).Select(_ => new RiftTypeFrames([])).ToArray();
+        var types = Enumerable.Range(0, 188).Select(_ => new OriginalTypeRecord()).ToArray();
+        var definitions = Enumerable.Range(0, 118).Select(_ => new RiftTypeDefinition()).ToArray();
+        types[117].Flags2 = TypeFlag2.Bomb;
+        definitions[47].SpecialFrames.HelpFrame = 10;
+        var shapes = new List<SpriteShapeRequest>();
+        uint localOwner = 2;
+        var draw = new SpriteVirtualAdditional(pool, frames, shapes.Add, types: types, definitions: definitions, localOwner: () => localOwner);
+        Set(pool, sid, 0x00502370, 117, 10);
+        draw.Draw(sid, new(7, 8));
+        Assert.Empty(shapes);
+        Set(pool, sid, 0x00502370, 117, 11);
+        draw.Draw(sid, new(7, 8));
+        Assert.Equal(new SpriteShapeRequest(117, 11, new(7, 8), SpriteShapeMode.Plain), Assert.Single(shapes));
+        pool.AllocatedBytes(sid)[40] = 0x10;
+        pool.AllocatedBytes(sid)[34] = 2;
+        draw.Draw(sid, new(7, 8));
+        Assert.Equal(SpriteShapeMode.Abstract, shapes[1].Mode);
+        localOwner = 1;
+        draw.Draw(sid, new(7, 8));
+        Assert.Equal(2, shapes.Count);
+        types[117].Flags2 = 0;
+        pool.AllocatedBytes(sid)[40] = 0;
+        BinaryPrimitives.WriteInt32LittleEndian(pool.AllocatedBytes(sid)[36..], 10);
+        draw.Draw(sid, new(7, 8));
+        Assert.Equal(3, shapes.Count);
     }
 
     /// <summary>공장 본체의 실제 억제와 현재 프레임을 같은 픽셀 그림 소비자에 전달한다.</summary>
