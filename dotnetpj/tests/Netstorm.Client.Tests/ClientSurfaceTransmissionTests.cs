@@ -91,6 +91,20 @@ public sealed class ClientSurfaceTransmissionTests
         Assert.Throws<ArgumentOutOfRangeException>(scene.Broadcast);
     }
 
+    /// <summary>같은 현재 Gump TYPE과 실제 명령 큐로 종속 UI 갱신을 전달한다.</summary>
+    [Fact]
+    public void ContentNoticeUsesCurrentGumpTypeAndActualInputQueue()
+    {
+        using var scene = new Scene(); var storage = scene.Surface.Storage; var input = new Input.InputQueue();
+        scene.Surface.BindNativeContentCommand(input); int parent = storage.Pool.Allocate(); int form = storage.Pool.Allocate();
+        Span<byte> head = storage.Pool.AllocatedBytes(parent); head.Clear(); head[6] = (byte)form; head[7] = (byte)(form >> 8);
+        Span<byte> child = storage.Pool.AllocatedBytes(form); child.Clear(); child[10] = 4;
+        var terminal = storage.ContainedUnpopExecutor(); scene.Game.GumpFormTypeBox.Value = 4; terminal.NotifyUi(parent);
+        Assert.Equal(new Input.InputEvent(0x02000039, parent, 0), input.Pop(false));
+        scene.Game.GumpFormTypeBox.Value = 3; terminal.NotifyUi(parent); Assert.True(input.Empty);
+        child[10] = 3; terminal.NotifyUi(parent); Assert.Equal(new Input.InputEvent(0x02000039, parent, 0), input.Pop(false));
+    }
+
     /// <summary>활성 Player의 NULL 연결도 Source나 Runtime을 요구하지 않고 자연 반환한다.</summary>
     [Fact]
     public void NullConnectionsAndInactiveTargetsNeedNoSourceOrRuntime()

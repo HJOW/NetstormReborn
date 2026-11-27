@@ -1,5 +1,6 @@
 using Netstorm.Core.Original;
 using Netstorm.Net;
+using Netstorm.Client.Input;
 
 // 같은 Client의 현재 Player·Registry·Source를 장기 Squid 송신 장치에 연결한다.
 namespace Netstorm.Client;
@@ -7,6 +8,13 @@ namespace Netstorm.Client;
 /// <summary>cpppj/src/client/ClientMain.cpp의 최초 Native 방송·대상 송신 조립이다.</summary>
 public sealed partial class ClientSurfaceGlobals
 {
+    /// <summary>종속 내용물의 UI 통지를 같은 실제 Client 입력 큐의 명령으로 예약한다.</summary>
+    public void BindNativeContentCommand(InputQueue input)
+    {
+        ArgumentNullException.ThrowIfNull(input);
+        Storage.BindContentCommand((code, x, y) => input.PushCommand(code, unchecked((int)x), unchecked((int)y)));
+    }
+
     /// <summary>첫 Host 전에 실제 전송과 현재 선택 장치를 설치한다. 송신·선택·게임값 초기화는 실행하지 않는다.</summary>
     public void BindNativeTransmission(ClientConnectionGlobals connections, Action clearSelection)
     {

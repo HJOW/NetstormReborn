@@ -46,7 +46,7 @@ public sealed partial class RawSurfaceStorage
         {
             var state = new SquidContainedUnpopState
             {
-                ContentFormType = ContainedType, GumpFormType = ContainedGumpType, UiEvent = ContainedUiEvent,
+                ContentFormType = _contentDevices.ContentType ?? ContainedType, GumpFormType = _gumpType ?? ContainedGumpType, UiEvent = ContainedUiEvent,
                 CheckingDead = new(() => Checking().Read()), InMetamapMode = () => OwnerMode.Challenge, Boss = () => Authority().Boss,
             };
             var hooks = new SquidContainedUnpopHooks
