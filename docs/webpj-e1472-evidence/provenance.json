@@ -1,0 +1,37 @@
+{
+  "unit": "WB04-E1472",
+  "focused": {
+    "pass": 31,
+    "fail": 0,
+    "command": "node --test tests/mod-api.test.mjs tests/mod-input.test.mjs tests/input-queue-batch.test.mjs"
+  },
+  "actual": {
+    "command": "npx playwright test e2e/mod-game-host.spec.js --project=chromium --workers=1 --reporter=line",
+    "firstRun": {
+      "exit": 1,
+      "reason": "검사 기대 TYPE163/실제158 불일치. native 사제 조회와 대조하도록 검사 수정",
+      "preserved": "webpj/extracted/e1472-first-run/"
+    },
+    "finalRun": {
+      "exit": 0,
+      "pass": 1,
+      "reportedSeconds": 35.8,
+      "scope": "실제1-1 아군AI·동기조회 전후 풀/RNG/프레임 불변·큐2사건 수용·원래 사제 조회와 선택 일치·게임 오류0. 승리 검사 없음"
+    }
+  },
+  "sources": {
+    "webpj/www/modding/mod-api.js": "745129d7651333acf676cc1c2a8e20d8b4ee7f373b1f6b492a040809dba4978e",
+    "webpj/www/modding/mod-input.js": "b464cf014e84b36663c55eee94771fc2baf9366c553557eecbe5d541a9d2554d",
+    "webpj/www/modding/mod-game-host.js": "49dea54f892d15469ed673f8405f87c899cb8889a42761ee9faac4f28b792f30",
+    "webpj/tests/mod-api.test.mjs": "82cc5fb99a687e340702844adf5124a880f295d8bc0abc5c31d975c845a9a14c",
+    "webpj/tests/mod-input.test.mjs": "e8e0916b1dbaa8c600fe6fed795c1c7dc1e6bb0293bf1fa43588a64fcc4ceef2",
+    "webpj/e2e/mod-game-host.spec.js": "db18d394b0f5769148e23181205852536a22a5d066db859678b0dc99c3e2c0b6"
+  },
+  "finalBuild": {
+    "exit": 0,
+    "webpackSeconds": 67.237,
+    "bundleBytes": 3517946,
+    "bundleTrackedDiff": false,
+    "eslintBeforeWebpack": true
+  }
+}
