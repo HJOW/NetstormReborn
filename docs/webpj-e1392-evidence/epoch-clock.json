@@ -1,0 +1,38 @@
+{
+  "first": {
+    "game": 3151718.882,
+    "wall": 3151718.882,
+    "delta": 0.01500000013038516,
+    "number": 33,
+    "currentWall": 3151718.891,
+    "currentGame": 3151718.891,
+    "expectedWall": 3151718.894,
+    "preparing": false,
+    "paused": false,
+    "fixed": 0
+  },
+  "paused": {
+    "game": 3151721.306,
+    "wall": 3151722.324,
+    "delta": 0,
+    "number": 126,
+    "currentWall": 3151722.4,
+    "currentGame": 3151721.306,
+    "expectedWall": 3151722.403,
+    "preparing": false,
+    "paused": true,
+    "fixed": 0
+  },
+  "later": {
+    "game": 3151721.306,
+    "wall": 3151722.961,
+    "delta": 0,
+    "number": 134,
+    "currentWall": 3151723.025,
+    "currentGame": 3151721.306,
+    "expectedWall": 3151723.027,
+    "preparing": false,
+    "paused": true,
+    "fixed": 0
+  }
+}

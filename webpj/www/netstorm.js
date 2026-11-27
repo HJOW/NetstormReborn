@@ -664,6 +664,8 @@ export class Netstorm {
         this._clock = new FrameClock();
         // Client 게임 시계와 보정 전역은 init에서 생성하고 destroy에서 반납한다.
         this._clientLocal = null; this._clientNsInfo = null; this._clientHelpPopup = null; this._gameClock = null; this._hiddenGamePause = false;
+        // 실제 앱의 비고정 초기 시계가 UTC초 경계를 준비하는 동안에는 로딩 표시만 갱신한다.
+        this._clientClockPreparing = false;
         // 같은 Client 수명의 구름·HTML과 연결표·연결 활동 전역이다.
         this._clientKencloud = null; this._clientHtml = null; this._clientConnections = null; this._clientConnectionActivity = null;
         // 같은 Client가 장기 소유하는 게임·CRT 난수와 SP 저장소다.
@@ -878,6 +880,7 @@ export class Netstorm {
 
         // 원본처럼 공통 SP를 설정·화면 해석보다 먼저 초기화하고 실패 시 루트는 건드리지 않는다.
         this._initializeClientRuntime(doc.hidden);
+        this._clientClockPreparing = true;
         this._root = root;
         this._canvas = canvas;
         this._ctx = ctx;
@@ -982,6 +985,8 @@ export class Netstorm {
         this._clientChatRecords = chatRecords; this._clientChatChannels = chatChannels; this._clientChatWindows = new ClientChatWindowGlobals();
         this._clientChatManager = new ClientChatManagerGlobals(); this._clientDotCommands = new ClientDotCommandGlobals(); this._clientChatInitialized = false;
         this._clientRendererFrame = new ClientRendererFrameGlobals();
+        // 독립 Client 소유자 조립은 기본 상대시계를 사용할 수 있다. 실제init은 이 뒤 준비 관문을 닫고_load에서원본초기화를 마친다.
+        this._clientClockPreparing = false;
     }
 
     // 설정 해석 시 실제 helpWord 값을 같은 Client 캐시에 갱신한다.
@@ -2477,7 +2482,7 @@ export class Netstorm {
         this._clientKencloud = null; this._clientHtml = null; this._clientConnections = null; this._clientConnectionActivity = null;
         this._surfaceStorage?.dispose();
         this._clientSoundDevice?.dispose(); this._clientSoundDevice = null; this._clientSoundPlayer = null; this._clientSoundState = null; this._clientSoundPrepare = null;
-        this._gameClock = null; this._clientLocal = null; this._clientNsInfo = null; this._clientHelpPopup = null; this._hiddenGamePause = false; this._clientSoundNames = null;
+        this._gameClock = null; this._clientClockPreparing = false; this._clientLocal = null; this._clientNsInfo = null; this._clientHelpPopup = null; this._hiddenGamePause = false; this._clientSoundNames = null;
         this._clientSp = null; this._clientRandom = null;
         this._clientChatRecords = null; this._clientChatChannels = null; this._clientChatWindows = null;
         this._clientChatManager = null; this._clientDotCommands = null; this._clientChatInitialized = false;
@@ -2549,6 +2554,13 @@ export class Netstorm {
         this._loadError = null;
         this._setState(AppState.LOADING);
         try {
+            // 같은Client의 SP/RNG 초기화 뒤 원본초경계와 최초Capture를 준비한다. 취소된이전앱의결과는 새수명에 적용하지 않는다.
+            if (this._clientClockPreparing) {
+                const clock = this._gameClock;
+                const ready = await clock.prepareOrigin({ cancelled: () => generation !== this._loadGeneration || !this._root });
+                if (!ready || generation !== this._loadGeneration || clock !== this._gameClock) return;
+                this._clientClockPreparing = false;
+            }
             if (!this._resources) {
                 const loader = this._createAssetLoader();
                 await loader.loadManifest();
@@ -4096,6 +4108,8 @@ export class Netstorm {
         // 원본 프레임 상한(maxFPS, 기본 75)보다 빠르게 오는 표시 주기(rAF)는 건너뛰고 다음 기회에 처리한다. 60Hz 표시에서는 상한이 걸리지 않는다. (2026-11-20 WB04-E1094)
         if (!frameDue(now, this._lastFrameStamp, normalizeFrameRate(this._settings?.get('maxFPS')))) { this._startFrameLoop(); return; }
         this._lastFrameStamp = now;
+        // 비동기InitFullTime 중에는 실제Client 프레임/시계/RNG를 소비하지 않고 로딩화면만 진행한다.
+        if (this._clientClockPreparing) { this._clock.tick(now); this._frameSeconds = now / 1000; this._render(now); this._startFrameLoop(); return; }
         // 원본 Client 순서대로 화면 입력과 갱신 전에 같은 게임 프레임을 고정한다.
         // 고정 시각 모드의 시작 그림 구간은 시각만 전진하고 주 루프 프레임(번호·시간차)으로 세지 않는다(원본 cpppj 의 고정 프레임 실행과 같음). (2026-11-23 WB04-E1271)
         if (this.options.fixedFrameMs > 0 && this._state === AppState.TITLE) {
