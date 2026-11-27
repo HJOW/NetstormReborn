@@ -91,6 +91,50 @@ public sealed class SpriteVirtualAdditionalTests
         Assert.Throws<ArgumentException>(() => draw.Draw(sid, new(1, 2)));
     }
 
+    /// <summary>세 전용 추가 그림이 현재 프레임과 소유자별 상태색을 사용한다.</summary>
+    [Theory]
+    [InlineData(0x0050da88u, (byte)122)]
+    [InlineData(0x0050bad0u, (byte)131)]
+    [InlineData(0x00509930u, (byte)72)]
+    public void CurrentOverlaysUseActualFrameAndOwner(uint table, byte type)
+    {
+        var pool = new RawSidPool(24000, server: false);
+        int sid = pool.Allocate(SidAllocation.Client);
+        var frames = Enumerable.Range(0, 188).Select(_ => new RiftTypeFrames([])).ToArray();
+        var shapes = new List<SpriteShapeRequest>();
+        uint owner = 3;
+        var draw = new SpriteVirtualAdditional(pool, frames, shapes.Add, localOwner: () => owner);
+        var point = new ScreenPoint(7, 8);
+        Set(pool, sid, table, type, 15);
+        draw.Draw(sid, point);
+        Assert.Equal(new SpriteShapeRequest(type, 15, point, SpriteShapeMode.Plain), Assert.Single(shapes));
+        pool.AllocatedBytes(sid)[40] = 0x10;
+        pool.AllocatedBytes(sid)[34] = 3;
+        draw.Draw(sid, point);
+        Assert.Equal(new SpriteShapeRequest(type, 15, point, SpriteShapeMode.Abstract), shapes[1]);
+        owner = 4;
+        draw.Draw(sid, point);
+        Assert.Equal(2, shapes.Count);
+        pool.AllocatedBytes(sid)[10] = 70;
+        Assert.Throws<ArgumentException>(() => draw.Draw(sid, point));
+    }
+
+    /// <summary>훨리베이스의 1·8 상태 비트는 로컬 소유자 조회 전에 추가 그림을 억제한다.</summary>
+    [Theory]
+    [InlineData((byte)1)]
+    [InlineData((byte)8)]
+    [InlineData((byte)0x19)]
+    public void AviarySuppressesExtraForEitherStateBit(byte flags)
+    {
+        var pool = new RawSidPool(24000, server: false);
+        int sid = pool.Allocate(SidAllocation.Client);
+        var frames = Enumerable.Range(0, 188).Select(_ => new RiftTypeFrames([])).ToArray();
+        var draw = new SpriteVirtualAdditional(pool, frames, _ => throw new InvalidOperationException("예상하지 않은 그림"));
+        Set(pool, sid, 0x00509930, 72, 6);
+        pool.AllocatedBytes(sid)[40] = flags;
+        draw.Draw(sid, new(1, 2));
+    }
+
     /// <summary>주문의 도움말 프레임과 추상 소유자 조건을 실제 현재 슬롯으로 분기한다.</summary>
     [Fact]
     public void SpellAdditionalSuppressesHelpAndUsesCurrentOwner()

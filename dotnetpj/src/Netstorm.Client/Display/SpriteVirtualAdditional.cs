@@ -4,7 +4,7 @@ using Netstorm.Core.Original;
 // 현재 객체 가상표의 +a4 추가 그림을 실제 하위 출력기로 분배한다.
 namespace Netstorm.Client.Display;
 
-/// <summary>10.78 기본 빈 함수와 공장·다리·메타 추가 그림 경계다.</summary>
+/// <summary>10.78 객체 가상표가 선택한 추가 그림을 실제 출력 장치에 분배한다.</summary>
 public sealed class SpriteVirtualAdditional
 {
     /// <summary>현재 가상표와 데이터를 읽는 실제 SID 풀이다.</summary>
@@ -76,6 +76,15 @@ public sealed class SpriteVirtualAdditional
             case 0x0045ac40:
                 DrawManaBolt(sid, point);
                 return;
+            case 0x00485480:
+                DrawCurrentOverlay(sid, point, 122, false);
+                return;
+            case 0x0046ae30:
+                DrawCurrentOverlay(sid, point, 131, false);
+                return;
+            case 0x0045b560:
+                DrawCurrentOverlay(sid, point, 72, true);
+                return;
             case 0x00485f90:
                 ReadOnlySpan<byte> raw = _pool.Slot(sid);
                 _shape(new(raw[10], BinaryPrimitives.ReadUInt32LittleEndian(raw[36..]), point, SpriteShapeMode.Abstract));
@@ -139,5 +148,22 @@ public sealed class SpriteVirtualAdditional
         uint frame = BinaryPrimitives.ReadUInt32LittleEndian(raw[36..]);
         _shape(new(105, frame, new(unchecked(point.X + 10), unchecked(point.Y + 10)), SpriteShapeMode.Shadow));
         _shape(new(105, frame, point, SpriteShapeMode.Plain));
+    }
+
+    /// <summary>간헐천·썬더 캐논·훨리베이스의 현재 그림에 추상 소유자 관문을 적용한다.</summary>
+    /// <param name="sid">현재 객체 SID다.</param>
+    /// <param name="point">현재 화면 기준점이다.</param>
+    /// <param name="type">실제 가상표에서 요구하는 TYPE이다.</param>
+    /// <param name="aviary">훨리베이스의 상태 비트 억제 여부다.</param>
+    /// <remarks>cpppj의 각 Capture 추가 그림과 00497280 상태색 분기를 따른다.</remarks>
+    private void DrawCurrentOverlay(int sid, ScreenPoint point, byte type, bool aviary)
+    {
+        ReadOnlySpan<byte> raw = _pool.Slot(sid);
+        if (raw[10] != type) throw new ArgumentException("추가 그림 TYPE 불일치", nameof(sid));
+        if (aviary && (raw[40] & 9) != 0) return;
+        uint frame = BinaryPrimitives.ReadUInt32LittleEndian(raw[36..]);
+        if ((raw[40] & 0x10) == 0) _shape(new(type, frame, point, SpriteShapeMode.Plain));
+        else if (raw[34] == (_localOwner ?? throw new InvalidOperationException("추가 그림 현재 로컬 소유자 미연결"))())
+            _shape(new(type, frame, point, SpriteShapeMode.Abstract));
     }
 }
