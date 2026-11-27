@@ -1,0 +1,23 @@
+{"cycle":1,"activeHeap":{"usedSize":32767788,"totalSize":38838272,"embedderHeapUsedSize":5483440,"backingStorageSize":49759791},"releasedHeap":{"usedSize":26127116,"totalSize":27303936,"embedderHeapUsedSize":5401728,"backingStorageSize":46312133},"worldRefsAlive":[false],"sessionRefsAlive":[false],"errors":[]}
+{"cycle":2,"activeHeap":{"usedSize":37080500,"totalSize":46178304,"embedderHeapUsedSize":5434528,"backingStorageSize":52279438},"releasedHeap":{"usedSize":27468636,"totalSize":28614656,"embedderHeapUsedSize":5540512,"backingStorageSize":66207323},"worldRefsAlive":[false,false],"sessionRefsAlive":[false,false],"errors":[]}
+{"cycle":3,"activeHeap":{"usedSize":36287304,"totalSize":40935424,"embedderHeapUsedSize":5438104,"backingStorageSize":49965832},"releasedHeap":{"usedSize":28188032,"totalSize":29401088,"embedderHeapUsedSize":5536104,"backingStorageSize":46389009},"worldRefsAlive":[false,false,false],"sessionRefsAlive":[false,false,false],"errors":[]}
+{"cycle":4,"activeHeap":{"usedSize":38294908,"totalSize":42508288,"embedderHeapUsedSize":5550200,"backingStorageSize":51107521},"releasedHeap":{"usedSize":28442608,"totalSize":29925376,"embedderHeapUsedSize":5526632,"backingStorageSize":46400520},"worldRefsAlive":[false,false,false,false],"sessionRefsAlive":[false,false,false,false],"errors":[]}
+{"cycle":5,"activeHeap":{"usedSize":36959868,"totalSize":42770432,"embedderHeapUsedSize":5473208,"backingStorageSize":49983173},"releasedHeap":{"usedSize":29567692,"totalSize":30711808,"embedderHeapUsedSize":5455168,"backingStorageSize":46404712},"worldRefsAlive":[false,false,false,false,false],"sessionRefsAlive":[false,false,false,false,false],"errors":[]}
+{"cycle":6,"activeHeap":{"usedSize":38105808,"totalSize":43294720,"embedderHeapUsedSize":5465896,"backingStorageSize":50003151},"releasedHeap":{"usedSize":29814896,"totalSize":31236096,"embedderHeapUsedSize":5461168,"backingStorageSize":46421640},"worldRefsAlive":[false,false,false,false,false,false],"sessionRefsAlive":[false,false,false,false,false,false],"errors":[]}
+{"cycle":7,"activeHeap":{"usedSize":38700880,"totalSize":44867584,"embedderHeapUsedSize":5492712,"backingStorageSize":50829381},"releasedHeap":{"usedSize":30024952,"totalSize":31498240,"embedderHeapUsedSize":5470328,"backingStorageSize":46422632},"worldRefsAlive":[false,false,false,false,false,false,false],"sessionRefsAlive":[false,false,false,false,false,false,false],"errors":[]}
+{"cycle":8,"activeHeap":{"usedSize":40467292,"totalSize":45391872,"embedderHeapUsedSize":5499288,"backingStorageSize":52928587},"releasedHeap":{"usedSize":30169908,"totalSize":31498240,"embedderHeapUsedSize":5470936,"backingStorageSize":46422824},"worldRefsAlive":[false,false,false,false,false,false,false,false],"sessionRefsAlive":[false,false,false,false,false,false,false,false],"errors":[]}
+{"cycle":9,"activeHeap":{"usedSize":40719468,"totalSize":46178304,"embedderHeapUsedSize":5517864,"backingStorageSize":50305215},"releasedHeap":{"usedSize":32704696,"totalSize":33857536,"embedderHeapUsedSize":5487640,"backingStorageSize":46423400},"worldRefsAlive":[false,false,false,false,false,false,false,false,false],"sessionRefsAlive":[false,false,false,false,false,false,false,false,false],"errors":[]}
+{"cycle":10,"activeHeap":{"usedSize":42363184,"totalSize":46702592,"embedderHeapUsedSize":5549752,"backingStorageSize":51858591},"releasedHeap":{"usedSize":32959296,"totalSize":34381824,"embedderHeapUsedSize":5552104,"backingStorageSize":46423400},"worldRefsAlive":[false,false,false,false,false,false,false,false,false,false],"sessionRefsAlive":[false,false,false,false,false,false,false,false,false,false],"errors":[]}
+{"cycle":11,"activeHeap":{"usedSize":45865072,"totalSize":52207616,"embedderHeapUsedSize":5585208,"backingStorageSize":52129413},"releasedHeap":{"usedSize":37176424,"totalSize":38051840,"embedderHeapUsedSize":5635104,"backingStorageSize":46464522},"worldRefsAlive":[false,false,false,false,false,false,false,false,false,false,true],"sessionRefsAlive":[false,false,false,false,false,false,false,false,false,false,true],"errors":[]}
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert.ok(released.worldRefsAlive.every((alive) => !alive))
+
+    at run (H:\Workspace\git\NetstormReborn\webpj\extracted\e1431-long-memory.cjs:174:20) {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}

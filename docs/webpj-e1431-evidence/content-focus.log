@@ -1,0 +1,22 @@
+✔ Session Contents: Runtime 앞/반복/반납 관문과 같은 실제 모듈·World 미공개를 보존한다 (144.3669ms)
+✔ Session Contents: Gump 소유 통지는 현재 서비스로 가고 ID0은 조회를 생략한다 (60.8413ms)
+✔ Session Contents: 공통 삭제는 같은 현재 선택/파생 효과로 연결하고 초기 emit 참조를 보존한다 (78.2035ms)
+✔ Session Contents: 삭제 설치 전 실제 객체가 있으면 Gump 등록 뒤에서 실패하고 재시도 성공으로 숨기지 않는다 (58.6112ms)
+✔ Session Contents: Player UI 함수는 값 복사하며 현재 TYPE/사건·다음 링크의 조회 순서를 유지한다 (128.3578ms)
+✔ Session Contents: Player SP는 bit_cast float이고 PlayerKnown·현재 소유자·현재 표본/횟수를 공유한다 (49.0406ms)
+✔ Session Contents: Player는 SP Get 효과 뒤 현재 표본을 재조회하고 cursor 차이를 같은 진단에 기록한다 (56.4959ms)
+✔ Session Contents: 빈 Player UI 장치는 생성 때 성공 대역을 만들지 않고 선택 지점에서 실패한다 (122.8191ms)
+✔ Session Contents: 내용물 부모는 실제 현재VT와 호출 때 설치된 같은 수명 포인터를 선택한다 (52.776ms)
+✔ Session Contents: Form 상태는 현재 finder/battle/checking을 조회하며 진단은 현재 서비스에 표현식만 넘긴다 (63.4417ms)
+✔ Session Contents: 포획 안내 하위 경계는 현재 참여/벽시각/Tell에 원문 인자를 전달한다 (63.0427ms)
+✔ Session Contents: 포획 이름은 현재64BYTE의 NUL 앞 원문 바이트이며 누락/비종결을 구별한다 (50.054ms)
+✔ Session Contents: 포획 소리는 현재 이름표와 전역 재생의6인자를 사용하며 미선택 장치는 호출하지 않는다 (55.5855ms)
+✔ Session 내용물: unit-lost 억제 두 전역은 현재 적재 깊이와 fort 모드를 따른다(E1216) (50.8449ms)
+ℹ tests 14
+ℹ suites 0
+ℹ pass 14
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 2861.6876

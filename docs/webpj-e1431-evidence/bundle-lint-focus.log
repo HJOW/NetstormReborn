@@ -1,0 +1,11 @@
+✔ 커밋된 번들은 현재 소스로 다시 만든 운영 번들과 같고 크기 한도 안에 있다 (152413.8287ms)
+✔ production: 미사용 소스 오류가 생성을 막고 수정 뒤 같은 compiler 설정이 통과한다 (50769.0918ms)
+✔ development: 미사용 소스 오류가 생성을 막고 수정 뒤 같은 compiler 설정이 통과한다 (37347.9001ms)
+ℹ tests 3
+ℹ suites 0
+ℹ pass 3
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 250123.6896

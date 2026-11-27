@@ -1,0 +1,90 @@
+{
+  "unit": "WB04-E1431",
+  "host": "HJOW-Athlon",
+  "sourceBefore": "f572a5135",
+  "diagnosis": "실제rAF 반복 두 번 모두11회차의World/Session잔류. 두번째는추가1초/GC뒤에도참. 약한간선/WeakMap조건부간선을제외한실제heap경로: FeedbackVector/AllocationSite->Map/AccessorPair->get problemCode->o->Owners/World/Session.",
+  "heap": {
+    "localPath": "H:\\Workspace\\git\\NetstormReborn\\webpj\\extracted\\webpj-e1431-retained-cycle-11.heapsnapshot",
+    "bytes": 85150127,
+    "sha256": "4fd6a7db59548851ece99653124da030ee431091943ec7cd457d3c10de80f8a1",
+    "committed": false
+  },
+  "fixedProgress": {
+    "cycles": 15,
+    "allWorldSessionCollected": true,
+    "gameErrors": 0,
+    "fullThirtyMinuteValidation": "실행중 E1435로별도기록"
+  },
+  "validation": {
+    "nodeFocus": "14/14",
+    "buildExit": 0,
+    "bundleFreshAndLintGate": "3/3",
+    "chromiumUnchangedL2": "1/1"
+  },
+  "bundle": {
+    "bytes": 3508979,
+    "sha256": "11a920aa8c8ebb4d914fb2421541eb74335e2cf7f17cd646edec46b1a9f5f12d"
+  },
+  "periodAfter": {
+    "v26": "2/4",
+    "v22": "2/8"
+  },
+  "evidence": {
+    "build.log": {
+      "bytes": 462,
+      "sha256": "d32e4ef8201ea0f4dcfcc10e459e5dacc8baf6a4d99227ed5d638d259c798e71"
+    },
+    "bundle-lint-focus.log": {
+      "bytes": 501,
+      "sha256": "de7d5b670d96b8b324ed85c90800cc4670a30c58bc441ecb8a09396cfc9bcf17"
+    },
+    "chromium-l2.log": {
+      "bytes": 604,
+      "sha256": "18bffd4e18a4975c8a6f98e9164e6268047b3e5d0cd7577dd774d5ab063f1787"
+    },
+    "content-focus.log": {
+      "bytes": 2016,
+      "sha256": "6a68e1b3dfa53cbfd6965883efcbee8351bc6b6d350fc32dd41301a2ff96c994"
+    },
+    "first-failure.json": {
+      "bytes": 115210,
+      "sha256": "0538b0e60baf2e05956b268b8647b64bbf1b37b3d4fc572b7db332ceebbf7882"
+    },
+    "first-failure.log": {
+      "bytes": 4469,
+      "sha256": "0f34d343d61a713e58723ec38b6591de7bb33b86d4f9fd32c0902808104633b0"
+    },
+    "fixed-collector.cjs": {
+      "bytes": 18426,
+      "sha256": "11fb25fe9991abcfc8c6557bad9f5a6bd05ff648a769a85c7a6ea24a2a338e4f"
+    },
+    "fixed-progress.log": {
+      "bytes": 5961,
+      "sha256": "8722eac9f26ae4d9affa8e393c38ef7d5c106dc765af3ca63deac043cbf69227"
+    },
+    "fixed-source.json": {
+      "bytes": 530,
+      "sha256": "333ad4ccf4ae7b8ea43e684c536a0d1bdcd51e176f985be9b61a8905b3c3bf9d"
+    },
+    "heap-strong-path.py": {
+      "bytes": 1894,
+      "sha256": "7284cbb30231fa8e258e25b57556eb78f1d9ef4a43a8909bec83c5ab039d64b7"
+    },
+    "heap-strong-path.txt": {
+      "bytes": 5627,
+      "sha256": "79b189e9e3a1868a09eeed4274d0de0cbb89cef7f0b53c68454308175d58de6c"
+    },
+    "retainer-collector.cjs": {
+      "bytes": 18402,
+      "sha256": "4c7cc4791b30d46440e1527ef4d82286d2587951598306fdd32e79b00394b5da"
+    },
+    "second-failure.json": {
+      "bytes": 116504,
+      "sha256": "caa7bf81df9f0eedfe82043a7060eaab3172bfcc9902357d3325e1e685704a6d"
+    },
+    "second-failure.log": {
+      "bytes": 5142,
+      "sha256": "ae69000e9080867e0226a4fb048f6faa6a54b49d282b7930c4fecf19596e3a56"
+    }
+  }
+}

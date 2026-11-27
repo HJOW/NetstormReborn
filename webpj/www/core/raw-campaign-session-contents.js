@@ -4,7 +4,6 @@ import { GumpFormHost } from './gump-form-host.js';
 import { RawPlayerContentNotice } from './raw-player-content-notice.js';
 import { RawContentParentNotice } from './content-parent-notice.js';
 import { RawPriestTakenNotice } from './raw-priest-taken-notice.js';
-import { bindSpStoreNotice } from './raw-sp-store-notice-bindings.js';
 import { makeCampaignDeletionEffects, RawCampaignLifetimeBindings } from './raw-campaign-lifetime-bindings.js';
 import { ContentFormHost } from './content-form-host.js';
 import { RawCarrierContentNotice } from './raw-carrier-content-notice.js';
@@ -21,6 +20,33 @@ function missing(line) { return () => { throw new Error(`실제 세션 하위 �
 function spFloat(bits) { const bytes = new DataView(new ArrayBuffer(4)); bytes.setUint32(0, bits, true); return bytes.getFloat32(0, true); }
 // 선택 지점의 현재 서비스만 요구한다. 생성 때 미선택 장치를 실행하지 않는다.
 function need(fn, message) { if (typeof fn !== 'function') throw new Error(message); return fn; }
+
+// 회수된 세션의 접근을 명시 거부하며 현재 호출 task 동안만 실제 owner를 빌린다.
+function contentBorrow(reference) { const value = reference.deref(); if (!value) throw new Error('회수된 내용물 통지의 세션 전역'); return value; }
+// JIT의 accessor/객체 형상 보관이 이전 세션을 붙잡지 않도록 약한 주소만 캡처한다.
+// SP·진단·남은 횟수의 원래 주소는 유지하고 Player/TYPE/사건은 호출 때 owner에서 읽는다.
+function playerContentState(reference) {
+    const store = new WeakRef(contentBorrow(reference).sp);
+    const patch = new WeakRef(contentBorrow(reference).priestState.regen.patch);
+    const globals = new WeakRef(contentBorrow(reference).gameplayGlobals);
+    // 원래 바인딩과 같이 설치 전에 추적 전역이 연결됐는지 확인한다.
+    void contentBorrow(store).trackingOffset;
+    return {
+        cursorA: () => contentBorrow(store).offset >>> 0,
+        cursorB: () => contentBorrow(store).trackingOffset >>> 0,
+        firstSpPool: () => contentBorrow(store).firstPoolReady ? 1 : 0,
+        firstPermutation: () => contentBorrow(store).permutation()[0],
+        get problemCode() { return contentBorrow(globals).patchDiagnostic().value; },
+        set problemCode(value) { contentBorrow(globals).patchDiagnostic().value = value; },
+        fallbackCode: () => contentBorrow(patch).readSample(),
+        get moneyChecks() { return contentBorrow(patch).remaining; },
+        set moneyChecks(value) { contentBorrow(patch).remaining = value; },
+        battleShown: () => contentBorrow(reference).playerState.playerKnown,
+        localPlayer: () => contentBorrow(reference).playerState.battleOwner,
+        gumpFormType: () => contentBorrow(reference).contentGumpType,
+        contentEvent: () => contentBorrow(reference).contentEvent,
+    };
+}
 
 // 같은 Impl의 Gump/Player/내용물/포획 통지 부모를 소유하는 초기화 단계다.
 export class RawCampaignSessionContents {
@@ -55,16 +81,7 @@ export class RawCampaignSessionContents {
         suppressed('unitLostSuppressed1', () => (o.objectState.loadingDepth >>> 0) !== 0); suppressed('unitLostSuppressed2', () => Boolean(c.ownerMode.fort));
         const hooks = { ...o.services.playerContent, money: (owner) => { this.#live(); return spFloat(o.sp.get(owner)); } };
         if (!hooks.gump) hooks.gump = missing(3030); if (!hooks.handle) hooks.handle = missing(3030);
-        const reads = bindSpStoreNotice(o.sp); const patch = o.priestState.regen.patch;
-        o.playerContent = new RawPlayerContentNotice(c.pool, {
-            ...reads,
-            // 진단 상자와 남은 횟수는 같은 주소에 쓰며 그 밖의 전역은 현재 조회기다.
-            get problemCode() { return g.patchDiagnostic().value; }, set problemCode(value) { g.patchDiagnostic().value = value; },
-            fallbackCode: () => patch.readSample(),
-            get moneyChecks() { return patch.remaining; }, set moneyChecks(value) { patch.remaining = value; },
-            battleShown: () => o.playerState.playerKnown, localPlayer: () => o.playerState.battleOwner,
-            gumpFormType: () => o.contentGumpType, contentEvent: () => o.contentEvent,
-        }, hooks);
+        o.playerContent = new RawPlayerContentNotice(c.pool, playerContentState(new WeakRef(o)), hooks);
         o.contentNotice = new RawContentParentNotice(c.pool, (parent, form, reason) => {
             this.#live(); if (!o.lifetime) throw new Error('현재 내용물 수명 부모 미설치'); o.lifetime.parentNotice(parent, form, reason);
         });
