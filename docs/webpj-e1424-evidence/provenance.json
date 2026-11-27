@@ -1,0 +1,185 @@
+{
+  "unit": "WB04-E1424",
+  "caseNote": "E1425는1-4수집caseID. 같은입력조건/수집기의하위case로별도완료횟수중복가산안함.",
+  "recordedAt": "2026-11-27T08:07:29.980759+00:00",
+  "host": "HJOW-Athlon",
+  "source": "실행당시본소스ES모듈. 원래Getter값중선택미션의시작자금키만변경;실제AI조작.",
+  "results": {
+    "campaign1-3": {
+      "frame": 45300,
+      "gameSeconds": 1140.925,
+      "won": false,
+      "gameErrors": 0,
+      "toolExit": 1,
+      "budget": {
+        "mission": "savetheisland",
+        "localStartSp": 20000,
+        "enemyStartSp": 1000,
+        "reads": [
+          {
+            "key": "mystartmoney",
+            "original": "2000",
+            "requested": 20000
+          },
+          {
+            "key": "ai2startmoney",
+            "original": null,
+            "requested": 1000
+          }
+        ]
+      },
+      "ai": [
+        {
+          "owner": 1,
+          "token": 536892288,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 2,
+          "flags": 65535,
+          "wallet": 2600,
+          "priests": [
+            0,
+            15001
+          ]
+        },
+        {
+          "owner": 2,
+          "token": 536870912,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "flags": 65535,
+          "wallet": 9000,
+          "priests": [
+            15001,
+            0
+          ]
+        }
+      ]
+    },
+    "campaign1-4": {
+      "frame": 60000,
+      "gameSeconds": 1509.175,
+      "won": false,
+      "gameErrors": 0,
+      "toolExit": 1,
+      "budget": {
+        "mission": "fragilefortune",
+        "localStartSp": 20000,
+        "enemyStartSp": 1000,
+        "reads": [
+          {
+            "key": "mystartmoney",
+            "original": "2000",
+            "requested": 20000
+          },
+          {
+            "key": "ai2startmoney",
+            "original": null,
+            "requested": 1000
+          }
+        ]
+      },
+      "ai": [
+        {
+          "owner": 1,
+          "token": 536892288,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 2,
+          "flags": 65535,
+          "wallet": 22600,
+          "priests": [
+            15000,
+            15067
+          ]
+        },
+        {
+          "owner": 2,
+          "token": 536870912,
+          "initialized": 1,
+          "scan": 1,
+          "stop": 0,
+          "enemy": 1,
+          "flags": 65527,
+          "wallet": 1100,
+          "priests": [
+            15067,
+            15000
+          ]
+        }
+      ]
+    }
+  },
+  "screenshotsInspected": true,
+  "limits": "목표/승리/저장/Next 미완료. 기본자금/원본World동일성아님.1-6미실행.",
+  "periodAfter": {
+    "v26": 3,
+    "v22": 8
+  },
+  "evidence": [
+    {
+      "file": "ally-control-at-start.cjs",
+      "bytes": 5578,
+      "sha256": "535d8613940ffffa93c5c5ea11669412ee5480dc0caf84977a95b6d69a959de1"
+    },
+    {
+      "file": "campaign1-3/flow.log",
+      "bytes": 10983,
+      "sha256": "d8d778025d4e5a8310e3966b3a09d442db41679de2726bd3704cd7f1b95df06b"
+    },
+    {
+      "file": "campaign1-3/initial.json",
+      "bytes": 5949,
+      "sha256": "71c61ab82e6f0574977ae85659681ee917523e108bfbe16cc93d34734fbfe7a1"
+    },
+    {
+      "file": "campaign1-3/result.json",
+      "bytes": 82959,
+      "sha256": "5605cde1dbd6ce11f4b0690aedbff0d4934247c7e6137b5fd06c05edd77674e6"
+    },
+    {
+      "file": "campaign1-3/terminal.png",
+      "bytes": 713826,
+      "sha256": "6fd0d2d2eda661d0cf7ad669ce62bbdc5b12bffcf92460657690a26bb962b59c"
+    },
+    {
+      "file": "campaign1-3/terminal.tsv",
+      "bytes": 514487,
+      "sha256": "cd0665f41e2582ed81addd82644b25a9088b687927c3455a2caf67afc265fba4"
+    },
+    {
+      "file": "campaign1-4/flow.log",
+      "bytes": 14416,
+      "sha256": "e62e73332f31c0404e8dcb8120481b758aacd11ccd1f92f8bfc44b3d19a1a37b"
+    },
+    {
+      "file": "campaign1-4/initial.json",
+      "bytes": 5952,
+      "sha256": "2cfa7990d66690f8ee8bb018c80ccf1310ffd063691eaca13f625f32c67c234b"
+    },
+    {
+      "file": "campaign1-4/result.json",
+      "bytes": 81955,
+      "sha256": "b65442030258caf286f9cdfe2a6c37012141ca8f523a39b374822cb875a31fe0"
+    },
+    {
+      "file": "campaign1-4/terminal.png",
+      "bytes": 664734,
+      "sha256": "0280c814a48e02f895f7991abb39155f4c1c3cf29f070e25cbae3095e96e91e4"
+    },
+    {
+      "file": "campaign1-4/terminal.tsv",
+      "bytes": 568182,
+      "sha256": "62d9663a5fdf9a03bb01e2c6a8c99106e8fa6b201204eda645f61ff638e175dc"
+    },
+    {
+      "file": "funded-collector.cjs",
+      "bytes": 15299,
+      "sha256": "4da5b85e149f00481635f9cdb12351be5bedb284722e43366a7d2bb2f9441862"
+    }
+  ]
+}
