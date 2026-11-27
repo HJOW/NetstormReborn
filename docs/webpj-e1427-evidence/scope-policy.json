@@ -1,0 +1,28 @@
+{
+  "scope": "수집기 선언만 평가;실제미션/브라우저미실행",
+  "playable": [
+    "thewarbegins",
+    "masterofwhirligigs",
+    "thunderingpower"
+  ],
+  "userVerified": [
+    "savetheisland",
+    "fragilefortune",
+    "dissolvedalliance"
+  ],
+  "briefing": [
+    "thewarbegins",
+    "masterofwhirligigs",
+    "savetheisland",
+    "fragilefortune",
+    "thunderingpower",
+    "dissolvedalliance"
+  ],
+  "next": {
+    "thewarbegins": "masterofwhirligigs",
+    "masterofwhirligigs": "savetheisland",
+    "savetheisland": "fragilefortune",
+    "fragilefortune": "thunderingpower",
+    "thunderingpower": "dissolvedalliance"
+  }
+}

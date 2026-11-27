@@ -1,14 +1,16 @@
 const fs=require('node:fs'), {chromium,expect}=require('@playwright/test');
 const {installAllyAi}=require('../e2e/ally-ai-test-control');
-// 승리를 검사할 다섯 캠페인과 실제 다음 미션이다. 사용자 지시로1-6 승리는 제외하고1-5 뒤 첫 안내만 허용한다.
+// 실제 다음 미션의 연결이다. 승리 검사 허용 여부는 아래 사용자 이월 집합과 분리한다.
 const NEXT={thewarbegins:'masterofwhirligigs',masterofwhirligigs:'savetheisland',savetheisland:'fragilefortune',fragilefortune:'thunderingpower',thunderingpower:'dissolvedalliance'};
-// 실제 목표 수행을 허용한 캠페인만 고른다. 일반적인 모든 캠페인 진입/안내 검사와 별도의 관문이다.
-const PLAYABLE=new Set(Object.keys(NEXT));
+// 사용자가 직접 승리를 확인하기로 한 미션이다. 실제 승리 수집은 시작 전에 거부한다.
+const USER_VERIFIED=new Set(['savetheisland','fragilefortune','dissolvedalliance']);
+// 자동 승리는 이미 허용된1-1/1-2/1-5만 남긴다. 실제 다음 미션 연결은 바꾸지 않는다.
+const PLAYABLE=new Set(Object.keys(NEXT).filter(name=>!USER_VERIFIED.has(name)));
 // 다음 미션의 진입/첫 안내는 승리 검사와 별개다.1-5 다음1-6도 시작 단추를 누르지 않고 확인할 수 있다.
-const BRIEFING=new Set([...PLAYABLE,...Object.values(NEXT)]);
+const BRIEFING=new Set([...Object.keys(NEXT),...Object.values(NEXT)]);
 // 실행할 미션과 실제 논리 프레임 상한이다.
 const mission=(process.argv[2]??'masterofwhirligigs').toLowerCase(),limit=Number(process.argv[3]??60000);
-if(mission==='dissolvedalliance')throw new Error('사용자 지시:1-6 승리 검사는 사용자 직접 확인으로 이월했습니다. 단순 진입/첫 안내만 허용합니다.');
+if(USER_VERIFIED.has(mission))throw new Error('사용자 지시:1-3/1-4/1-6 승리 검사는 사용자 직접 확인으로 이월했습니다. 단순 진입/첫 안내만 허용합니다.');
 if(!PLAYABLE.has(mission)||!Number.isInteger(limit)||limit<100||limit>120000)throw new Error('아군 AI 캠페인 관찰 인자 오류');
 // 실제 시작 그림·메뉴의 모든 프레임을 통과한다.
 async function ready(page){
