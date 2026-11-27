@@ -26,7 +26,7 @@ function newestSource(directory, newest = 0) {
 // 번들이 최신이면 true, 없거나 오래됐으면 false 이다.
 function bundleIsFresh() {
     if (!fs.existsSync(BUNDLE_PATH)) return false;
-    const newest = Math.max(newestSource(path.join(ROOT, 'www')), ...['webpack.config.js', 'eslint.config.cjs', 'eslint-suppressions.json', 'tools/eslint-before-build.js', 'package.json', 'package-lock.json'].map((name) => fs.statSync(path.join(ROOT, name)).mtimeMs));
+    const newest = Math.max(newestSource(path.join(ROOT, 'www')), ...['webpack.config.js', 'eslint.config.cjs', 'eslint-suppressions.json', 'tools/eslint-before-build.js', 'tools/mod-worker-bundle.js', 'package.json', 'package-lock.json'].map((name) => fs.statSync(path.join(ROOT, name)).mtimeMs));
     return fs.statSync(BUNDLE_PATH).mtimeMs >= newest;
 }
 

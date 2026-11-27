@@ -1,0 +1,274 @@
+{
+  "unit": "WB04-E1478",
+  "sourceParent": "822f3b8366b336984608ba2706d599bd0381c8a7",
+  "node26Related": {
+    "pass": 69,
+    "fail": 0
+  },
+  "node22New": {
+    "pass": 6,
+    "fail": 0
+  },
+  "firstUnitRun": {
+    "pass": 5,
+    "fail": 1,
+    "cause": "자식 컴파일 오류가 stats 대신 Promise 거절로 전달됨; 거절과 기존 출력 보존을 함께 단언하도록 수정"
+  },
+  "browserFinal": {
+    "startTime": "2026-11-27T18:45:40.845Z",
+    "duration": 56896.316,
+    "expected": 2,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "build": {
+    "exit": 0,
+    "webpackSeconds": 90.06,
+    "bundleBytes": 5780002,
+    "rebuildPass": 1,
+    "eslintBeforeBuild": true,
+    "separateWorkerAssets": 0
+  },
+  "limitations": [
+    "게임 자동 Session/시계/UI 연결은 후속",
+    "DN 구현 중지/실행 미검증",
+    "tagged template raw 검열 패턴은 SES runtime 거절 가능",
+    "브라우저 hard heap/stack 제한 없음"
+  ],
+  "counters": {
+    "node26": 2,
+    "node22": 2,
+    "nextFullExpected": 6994
+  },
+  "files": {
+    "webpj/extracted/webpj-e1478-unit-first.log": {
+      "bytes": 2990,
+      "sha256": "fccb7a7d2c0403cebdbaac24438e8052bb37edcc57cb34ecb16bee99ecb36f06"
+    },
+    "webpj/extracted/webpj-e1478-unit.log": {
+      "bytes": 717,
+      "sha256": "e4b3c9e4b9cb7eaf9a454b84392f7b0d1f152659b6af344a36dab02013eb44e1"
+    },
+    "webpj/extracted/webpj-e1478-node22-unit.log": {
+      "bytes": 1556,
+      "sha256": "b88236152fbebc4b55be153510d39b1cbbf785b9a58e71814a2e910fb18dea9b"
+    },
+    "webpj/extracted/webpj-e1478-related.log": {
+      "bytes": 6927,
+      "sha256": "de4e65fa479e2345b252246928fa6a077c5265b59e528e40df8dc21150b948b9"
+    },
+    "webpj/extracted/webpj-e1478-build.log": {
+      "bytes": 461,
+      "sha256": "06d895a94e4e1f53b60a7d51ae37799b939718833c63ed9897230593613c7eb2"
+    },
+    "webpj/extracted/webpj-e1478-build-final.log": {
+      "bytes": 461,
+      "sha256": "4da564d6a0bb642cae9f8f5e1f496bbcded17f12bb060ce9b51c1e6237f465b0"
+    },
+    "webpj/extracted/webpj-e1478-browser-first.log": {
+      "bytes": 900,
+      "sha256": "a0d16f7ea0022b65f5d05bef5bd336c901eab2a5d0151d66ecf23e2f56a4fc75"
+    },
+    "webpj/extracted/webpj-e1478-browser-final.json": {
+      "bytes": 18912,
+      "sha256": "7d622411ce0cd291aebd48a40f46e116469c19fb30d17214ef1a1ffc5124eaec"
+    },
+    "webpj/extracted/webpj-e1478-browser-final.stderr.log": {
+      "bytes": 201,
+      "sha256": "181015684ae01a791d73bc44517151d5cc81f3598361fff4153c30328c818aa3"
+    },
+    "webpj/extracted/webpj-e1478-rebuild.log": {
+      "bytes": 246,
+      "sha256": "63df85e2553cbdb50d5b8c90748c681f76aedd8f56ee663fbd7ed9dec199a198"
+    },
+    "webpj/www/dist/netstorm.bundle.js": {
+      "bytes": 5780002,
+      "sha256": "fd91e5fbb784d8b64074103fbf592eb6d163088907b5329ab330897378bfa425"
+    },
+    "webpj/package.json": {
+      "bytes": 1132,
+      "sha256": "d0bfff1d8caa8861a7e5a006815cc6a7d163dcf2911415e17c56922f042e8246"
+    },
+    "webpj/package-lock.json": {
+      "bytes": 84499,
+      "sha256": "5ce9e5fbfa22b230a5505a6f6a374d3e754e6c17f02ac1838ae70f8f9e4ad559"
+    },
+    "webpj/webpack.config.js": {
+      "bytes": 3176,
+      "sha256": "5bfb4a3293e86107699fb81c7164713140941fa3f6dd498255e557016784ca98"
+    },
+    "webpj/tools/mod-worker-bundle.js": {
+      "bytes": 4432,
+      "sha256": "ecbac3306727164edb2547c3c9d808891f7d891aa81b7f6e741f2fae7b5a1b9d"
+    },
+    "webpj/tools/mod-worker-licenses.cjs": {
+      "bytes": 2846,
+      "sha256": "25bc0c3d1e8c316fa3f9c98748aad1a01a9d90c290fa521f129f8f9d30a3a941"
+    },
+    "webpj/tools/ensure-bundle.js": {
+      "bytes": 2799,
+      "sha256": "987009033c912947e1fb24bdc40b2935451318afea41a9d4db179a3f0a6d8192"
+    },
+    "webpj/tools/port-map.mjs": {
+      "bytes": 42868,
+      "sha256": "f571c294454a2d1e48a4d8a7c355d9c5c2e4833c5958ac722ee7ce433d0fa041"
+    },
+    "webpj/tests/mod-worker-source.test.mjs": {
+      "bytes": 2220,
+      "sha256": "af048e1383d8b721ca97076aa54095a32c05246b8ce4301eeb423fa2189bed0c"
+    },
+    "webpj/tests/mod-worker-bundle.test.mjs": {
+      "bytes": 4268,
+      "sha256": "308b834c6a7f595664adc1347017967ecea352e1b1ef4946618a00b0a4268c70"
+    },
+    "webpj/e2e/mod-worker.spec.js": {
+      "bytes": 8349,
+      "sha256": "f9502f0f0621390cff468c1b7b3a828de674c6da10ed27a1727e99e8bc1354a2"
+    },
+    "webpj/www/modding/mod-worker-entry.js": {
+      "bytes": 3158,
+      "sha256": "7647a5c89ff36273c5a5272f34183244ed9a6362303e6d34b4c4d0b5cfe16261"
+    },
+    "webpj/www/modding/mod-worker-source.js": {
+      "bytes": 2938,
+      "sha256": "edbc7d9775538a65c7f250a096acb180e9d75acd91aa34fe9b856259529f3fd4"
+    },
+    "webpj/www/modding/mod-worker.js": {
+      "bytes": 9554,
+      "sha256": "a62cf67cba1a620875a52cbe5b369ae18616a5d1c0d1f345dfc738b4808ddabd"
+    },
+    "webpj/www/licenses/mod-worker/index.json": {
+      "bytes": 5104,
+      "sha256": "76e880a727c40ed37d3c1d4d28f98d00262a58bf2a5a784b72d56e90a12a82d7"
+    },
+    "webpj/www/licenses/mod-worker/@babel__code-frame@7.29.7/LICENSE": {
+      "bytes": 1106,
+      "sha256": "117da2af0d4ce0fe1c8e19b5cff9dcd806adf973d328d27b11d4448c4ff24f76"
+    },
+    "webpj/www/licenses/mod-worker/@babel__generator@7.29.15/LICENSE": {
+      "bytes": 1106,
+      "sha256": "117da2af0d4ce0fe1c8e19b5cff9dcd806adf973d328d27b11d4448c4ff24f76"
+    },
+    "webpj/www/licenses/mod-worker/@babel__helper-globals@7.29.7/LICENSE": {
+      "bytes": 1106,
+      "sha256": "117da2af0d4ce0fe1c8e19b5cff9dcd806adf973d328d27b11d4448c4ff24f76"
+    },
+    "webpj/www/licenses/mod-worker/@babel__helper-string-parser@7.29.15/LICENSE": {
+      "bytes": 1106,
+      "sha256": "117da2af0d4ce0fe1c8e19b5cff9dcd806adf973d328d27b11d4448c4ff24f76"
+    },
+    "webpj/www/licenses/mod-worker/@babel__helper-validator-identifier@7.29.7/LICENSE": {
+      "bytes": 1106,
+      "sha256": "117da2af0d4ce0fe1c8e19b5cff9dcd806adf973d328d27b11d4448c4ff24f76"
+    },
+    "webpj/www/licenses/mod-worker/@babel__parser@7.28.6/LICENSE": {
+      "bytes": 1086,
+      "sha256": "2e97627cb278aa7556fb9e8817368302301a595b6c7582512b8d74c57b773652"
+    },
+    "webpj/www/licenses/mod-worker/@babel__parser@7.29.15/LICENSE": {
+      "bytes": 1086,
+      "sha256": "2e97627cb278aa7556fb9e8817368302301a595b6c7582512b8d74c57b773652"
+    },
+    "webpj/www/licenses/mod-worker/@babel__template@7.29.7/LICENSE": {
+      "bytes": 1106,
+      "sha256": "117da2af0d4ce0fe1c8e19b5cff9dcd806adf973d328d27b11d4448c4ff24f76"
+    },
+    "webpj/www/licenses/mod-worker/@babel__traverse@7.28.6/LICENSE": {
+      "bytes": 1106,
+      "sha256": "117da2af0d4ce0fe1c8e19b5cff9dcd806adf973d328d27b11d4448c4ff24f76"
+    },
+    "webpj/www/licenses/mod-worker/@babel__types@7.28.6/LICENSE": {
+      "bytes": 1106,
+      "sha256": "117da2af0d4ce0fe1c8e19b5cff9dcd806adf973d328d27b11d4448c4ff24f76"
+    },
+    "webpj/www/licenses/mod-worker/@babel__types@7.29.15/LICENSE": {
+      "bytes": 1106,
+      "sha256": "117da2af0d4ce0fe1c8e19b5cff9dcd806adf973d328d27b11d4448c4ff24f76"
+    },
+    "webpj/www/licenses/mod-worker/@endo__cache-map@1.1.0/LICENSE": {
+      "bytes": 11347,
+      "sha256": "1de956720a375077cf11b2f0d884f31d4e7fe1e0ec7c19851411542ed14c00c2"
+    },
+    "webpj/www/licenses/mod-worker/@endo__env-options@1.1.11/LICENSE": {
+      "bytes": 11347,
+      "sha256": "3b970379f61b4245574b8c622a3ea39ca7d22411c9ee0a2c59c8e86bf2e50c47"
+    },
+    "webpj/www/licenses/mod-worker/@endo__evasive-transform@2.3.1/LICENSE": {
+      "bytes": 11347,
+      "sha256": "3b970379f61b4245574b8c622a3ea39ca7d22411c9ee0a2c59c8e86bf2e50c47"
+    },
+    "webpj/www/licenses/mod-worker/@endo__immutable-arraybuffer@2.0.0/LICENSE": {
+      "bytes": 11347,
+      "sha256": "99b7c93a4acc92a35a0e9c2efbff2c0c9993498459c2337389b6f539e48d946d"
+    },
+    "webpj/www/licenses/mod-worker/@endo__module-source@1.5.0/LICENSE": {
+      "bytes": 11347,
+      "sha256": "99b7c93a4acc92a35a0e9c2efbff2c0c9993498459c2337389b6f539e48d946d"
+    },
+    "webpj/www/licenses/mod-worker/@jridgewell__gen-mapping@0.3.13/LICENSE": {
+      "bytes": 1080,
+      "sha256": "769d154fbde32a915af110b1123650bc79f4cbe675acc66e005265bf069c6c6c"
+    },
+    "webpj/www/licenses/mod-worker/@jridgewell__resolve-uri@3.1.3/LICENSE": {
+      "bytes": 1079,
+      "sha256": "b8778b155bfde5a28b023a558753c0fa058a52bb9de35c343c250be1bbcdedab"
+    },
+    "webpj/www/licenses/mod-worker/@jridgewell__sourcemap-codec@1.6.0/LICENSE": {
+      "bytes": 1080,
+      "sha256": "769d154fbde32a915af110b1123650bc79f4cbe675acc66e005265bf069c6c6c"
+    },
+    "webpj/www/licenses/mod-worker/@jridgewell__trace-mapping@0.3.31/LICENSE": {
+      "bytes": 1080,
+      "sha256": "769d154fbde32a915af110b1123650bc79f4cbe675acc66e005265bf069c6c6c"
+    },
+    "webpj/www/licenses/mod-worker/@types__babel__traverse@7.28.0/LICENSE": {
+      "bytes": 1141,
+      "sha256": "c2cfccb812fe482101a8f04597dfc5a9991a6b2748266c47ac91b6a5aae15383"
+    },
+    "webpj/www/licenses/mod-worker/acorn@8.19.0/LICENSE": {
+      "bytes": 1099,
+      "sha256": "76a876cf886ff9be2a8b5e2e86514fed06223c8c9f0c1e9ee9606e93841e00b7"
+    },
+    "webpj/www/licenses/mod-worker/debug@4.4.3/LICENSE": {
+      "bytes": 1139,
+      "sha256": "3a61c6c96caf5c1d9b623fb9b04c822b783dfcb78aa7e49c76a3f643e6ed7f95"
+    },
+    "webpj/www/licenses/mod-worker/js-tokens@4.0.0/LICENSE": {
+      "bytes": 1103,
+      "sha256": "2213d91c606205c71eb051a199478cdc2adde945893404d7f1421436dd6d5cc1"
+    },
+    "webpj/www/licenses/mod-worker/jsesc@3.1.0/LICENSE-MIT.txt": {
+      "bytes": 1077,
+      "sha256": "483acb265f182907d1caf6cff9c16c96f31325ed23792832cc5d8b12d5f88c8a"
+    },
+    "webpj/www/licenses/mod-worker/ms@2.1.3/license.md": {
+      "bytes": 1079,
+      "sha256": "1662fae9b5314d11cf51284e2dcd1f006a354f7343f08712a730fcff9a359801"
+    },
+    "webpj/www/licenses/mod-worker/picocolors@1.1.1/LICENSE": {
+      "bytes": 787,
+      "sha256": "6582629e2979466878f6014313dcc2f3756c9616148682227ce3063dde310750"
+    },
+    "webpj/www/licenses/mod-worker/ses@2.3.0/LICENSE": {
+      "bytes": 11347,
+      "sha256": "597e83726ebc5d154b9c2e4259a35fefa9c054304829b8b5d32190b79d8f27a1"
+    },
+    "webpj/www/licenses/mod-worker/ses@2.3.0/LICENSE-aura": {
+      "bytes": 646,
+      "sha256": "0c40d2bf25ddfd79e7e5dc36b2828355cf93106d1d9eb367a0b11af09064a421"
+    },
+    "webpj/www/licenses/mod-worker/ses@2.3.0/LICENSE-caja": {
+      "bytes": 562,
+      "sha256": "450e14ef079ae98aceb82086dbed42f638c49249eef83289ffdcf84545cb8e2d"
+    },
+    "webpj/www/licenses/mod-worker/ses@2.3.0/LICENSE-corejs": {
+      "bytes": 1064,
+      "sha256": "816ef443abfd73df4d8da0b8027ef16705afdef321fb810a5c9c766ca7bc0327"
+    },
+    "webpj/www/licenses/mod-worker/ses@2.3.0/LICENSE-v8": {
+      "bytes": 1463,
+      "sha256": "7d1e91adf59b9d0ec6f8f86b6b519206d5df59ef4dfff8f070fe14c28e802a6f"
+    }
+  }
+}
