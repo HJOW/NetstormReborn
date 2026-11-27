@@ -79,7 +79,7 @@ public sealed partial class ClientHostGame
             BindForm = (token, parent) => HostProductionFormBinding.Bind(_surfaceGlobals.Storage, tree, token, parent),
             Synchronize = () => ClientProductionSync.SynchronizeProductionControlContents(context),
             UpdateContents = () => context.Gameplay.RequireSession().UpdateProductionContents(),
-            Maintenance = (_, _) => throw new InvalidOperationException("생산 유지 실제 본체는 R6에서 잇는다"),
+            Maintenance = (panel, refresh) => context.Gameplay.RequireSession().MakeProductionMaintenance(_productionGlobals, panel, () => _clock.NowSeconds, refresh),
             CancelCursor = () => throw new InvalidOperationException("생산 커서 실제 취소는 R6 입력에서 잇는다"),
             Take = (_, _) => throw new InvalidOperationException("생산 내용물 실제 취득은 R6 입력에서 잇는다"),
             About = (_, _, _) => throw new InvalidOperationException("생산 항목 실제 정보 메뉴는 R6에서 잇는다"),
