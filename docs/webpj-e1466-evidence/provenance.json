@@ -1,0 +1,123 @@
+{
+  "unit": "WB04-E1466",
+  "recordedAt": "2026-11-27T15:08:36.836493+00:00",
+  "head": "d0ef7cdef00852cd4b8b5a73a839efc22db39c64",
+  "kind": "read-only current wiring audit; no new game/test execution",
+  "sources": [
+    {
+      "path": "webpj/www/core/client-sp-globals.js",
+      "sha256": "49952a27363a2b705a2a64ef5d9c0048b111e51cda5b7731a4cdb9c46151170f",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/www/core/sp-store.js",
+      "sha256": "45dce73f26f439757a35002f9d8bb59db1759ff9951b6cb74d98627197a8733e",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/www/core/random.js",
+      "sha256": "ada2359e4d4627d0a7b25da5b034e88152274a8aa4fced4d0148ed6ac748c3ce",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/www/core/squid-reward.js",
+      "sha256": "a00cab48733cef651eee58f6a3306e6ba98ef8bd281a8f190d648dd6c456e8db",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/www/core/content-form-lifetime.js",
+      "sha256": "608338bd72bcb2371cc9c5692e660527f8778fc3e402a13435d9f243b5680f8b",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/www/core/raw-campaign-lifetime-bindings.js",
+      "sha256": "f255048e897ddf4c6da2d5190c6c730f21cee31308d887cc7742aa855bda5d96",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/www/core/raw-campaign-session-owners.js",
+      "sha256": "7e922076039fb0a8bbf06419f12f9411e7cc2cd6a8d94d42783be6a2b0c11948",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/www/core/raw-campaign-session-state.js",
+      "sha256": "f2d8944593080adb9a8583b519b3109da337df991e20bf00d062aebc90fae779",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/www/core/raw-campaign-session-contents.js",
+      "sha256": "d82716bf76eeb15ff485d5a046900d6668177e3c333ccc317ee699cceaede3b6",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/www/core/raw-campaign-session-ai.js",
+      "sha256": "8d50f6a205a17611cdd215e8aa0cfc3a5e3d22d6348f1659da34e838704f46a5",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/www/core/raw-campaign-session-ritual.js",
+      "sha256": "36f4c5e333929c7184c4867908dd5dde25e935e8f6290a08bf6203af64077f10",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/www/core/raw-ai-wallet.js",
+      "sha256": "080c9928383d90e1bdeb42a856d938a5dc2a82d136c14d048cf7356c4658bc53",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/tests/client-sp-globals.test.mjs",
+      "sha256": "ccebc03ba9acd5d9851172b80b6f3692bb32c7f45f283e23625c47b8b6945f45",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/tests/squid-reward.test.mjs",
+      "sha256": "12d98a3737c2ba05567126249666314cf249c987bafeb4308c3d6cb2021145a2",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/tests/content-form-lifetime.test.mjs",
+      "sha256": "5819639b7df5a997b8ed53570a482eb015479f96dbbe859dc7c29a015efbe498",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/tests/raw-campaign-lifetime-bindings.test.mjs",
+      "sha256": "a22707311921b14ae5b94e90829c7837adcea23967d106b79bca7f231594625f",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/tests/raw-campaign-session-content-lifetime.test.mjs",
+      "sha256": "bcac7261642c10c30bac83a95053ecbe2d0928f0cb65062c0b5d44d0aa9b9804",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/tests/raw-campaign-session-ai.test.mjs",
+      "sha256": "f22430e34b07ea782321e7798f59ffeae8fb25f68f5a45b41fca66a9ccb6128f",
+      "sameAsE1458": true
+    },
+    {
+      "path": "webpj/tests/raw-campaign-session-ritual.test.mjs",
+      "sha256": "96a0397d49b5d9eaab870b36d9bfc5eabede416861ee99ba0cf3dee636b624cb",
+      "sameAsE1458": true
+    }
+  ],
+  "appSegments": [
+    {
+      "file": "webpj/www/netstorm.js",
+      "method": "_campaignSharedServices",
+      "lfSha256": "6bfa19603807524a576c3b9d32e208040ac207252afe9bb53d5c0310bbc2a2a7",
+      "sameAsE1458": true
+    },
+    {
+      "file": "webpj/www/netstorm.js",
+      "method": "_campaignGameplayServices",
+      "lfSha256": "99d22c6dd8be9453051c6c46610943bf765e33a44b7b8d7f4f06e0f546d99a84",
+      "sameAsE1458": true
+    }
+  ],
+  "inheritedRegression": "E1458 Node26 6932/6932",
+  "limitations": [
+    "new sacrifice/combat/victory not executed",
+    "connected remote 5a unsupported by original web scope",
+    "audible sound requires user"
+  ]
+}
