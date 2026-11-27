@@ -8,6 +8,21 @@ const good = packageText('test.good', "export default function(api){let sent=fal
 // 한 번의 실제 사건이 무한 반복한다. 호스트는 이 Worker만 종료해야 한다.
 const bad = packageText('test.bad', "export default function(api){api.on('tick',()=>{if(!api.getState().paused){while(true){}}});}");
 
+// 현재 Native 메뉴의 실제 좌표를 눌러 하위 메뉴나 Tell을 연다. 명령 분배 자체는 우회하지 않는다.
+async function clickGameMenuRow(page, token, label) {
+    const point = await page.evaluate(({ token, label }) => {
+        const app = window.netstorm, root = app._clientGump, bar = app._campaignProduction.ui.gameMenu(), row = bar.labels(token).indexOf(label), node = root.node(token);
+        if (row < 0) throw new Error('게임 메뉴 행 없음: ' + label);
+        const bounds = root.collection().bounds(token), rect = app.canvas.getBoundingClientRect(), horizontal = (node.menuFlags & 0x40000) !== 0;
+        return { child: node.items[row].childId ? root.createState().entries[node.items[row].childId] : 0,
+            x: rect.left + (bounds.left + (horizontal ? node.itemWidth * (row + .5) : 20)) * rect.width / app._layout.logicalWidth,
+            y: rect.top + (bounds.top + (horizontal ? (bounds.bottom - bounds.top) / 2 : node.offsets[row] + node.heights[row] / 2)) * rect.height / app._layout.logicalHeight };
+    }, { token, label });
+    await page.mouse.move(point.x, point.y); await page.mouse.click(point.x, point.y, { delay: 60 });
+    if (point.child) await page.waitForFunction((child) => { const node = window.netstorm._clientGump.node(child); return node && (node.flags & 1) && !node.expanding; }, point.child);
+    return point.child;
+}
+
 test('실제 1-1에서 모드 대기 중 Native 상태를 보존하고 다른 모드/이탈을 계속한다', async ({ page }) => {
     test.setTimeout(180000); const errors = [], logs = [];
     page.on('pageerror', (error) => errors.push(error.message)); page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); if (message.text().startsWith('[mod:test.good]')) logs.push(message.text()); });
@@ -41,8 +56,18 @@ test('실제 1-1에서 모드 대기 중 Native 상태를 보존하고 다른 �
     await expect.poll(() => logs.some((line) => line.includes('selection:{'))).toBe(true);
     const finished = await page.evaluate(() => { const app = window.netstorm; return { mods: app._mods.store.list(), frame: { ...app._gameClock.time() }, selected: app._campaignWorld.selected() }; });
     expect(finished.mods.find((item) => item.manifest.id === 'test.good').enabled).toBe(true); expect(finished.frame.number).toBeGreaterThan(stable.after.frame.number);
+    // 실제 미션에서 DOM 관리가 원래 정지 한 단계만 빌리고 변경은 다음 미션용으로 저장되는지 확인한다.
+    await page.locator('[data-netstorm="game-menu-button"]').click(); await page.waitForFunction(() => window.netstorm._campaignProduction.ui.gameMenu().isOpen());
+    const barToken = await page.evaluate(() => window.netstorm._campaignProduction.ui.gameMenu().token()), optionsToken = await clickGameMenuRow(page, barToken, 'Options');
+    await clickGameMenuRow(page, optionsToken, 'Mods'); let panel = page.getByRole('dialog', { name: 'Mods', exact: true }); await expect(panel).toBeVisible();
+    expect(await page.evaluate(() => window.netstorm._gameClock.paused())).toBe(true); await expect(panel.getByText(/timeLimit/)).toBeVisible();
+    await panel.getByRole('checkbox', { name: 'Enabled: test.good', exact: true }).uncheck(); await expect.poll(() => page.evaluate(() => window.netstorm._mods.store.list().find((item) => item.manifest.id === 'test.good').enabled)).toBe(false);
+    const priorLogs = logs.filter((line) => line.includes('selection:')).length; await page.keyboard.press('Escape'); await expect(panel).toHaveCount(0);
+    await expect.poll(() => logs.filter((line) => line.includes('selection:')).length).toBeGreaterThan(priorLogs);
+    await page.evaluate(() => window.netstorm._openTell('Patch1101.Mods')); panel = page.getByRole('dialog', { name: 'Mods', exact: true }); await expect(panel).toBeVisible();
     await page.evaluate(() => window.netstorm._leaveCampaignMission());
     await page.waitForFunction(() => !window.netstorm._mods.pending && !window.netstorm._campaignWorld && document.querySelectorAll('iframe[sandbox]').length === 0);
+    await expect(panel).toHaveCount(0); expect(await page.evaluate(() => window.netstorm._gameClock.paused())).toBe(false);
     await test.info().attach('actual-mod-session', { body: JSON.stringify({ stable, finished, logs, errors }), contentType: 'application/json' });
     expect(logs.some((line) => line.endsWith('end:leave'))).toBe(true); expect(errors).toEqual([]);
 });

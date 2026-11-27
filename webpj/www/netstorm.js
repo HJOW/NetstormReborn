@@ -168,6 +168,8 @@ import { ModGameHost } from './modding/mod-game-host.js';
 import { ModManager } from './modding/mod-manager.js';
 import { ModStore } from './modding/mod-store.js';
 import { ModWorker, validateModPackageIsolated } from './modding/mod-worker.js';
+import { MOD_LIMITS } from './modding/mod-api.js';
+import { ModPanel, MOD_PANEL_TARGET, modPanelTexts } from './ui/mod-panel.js';
 import { PRODUCT_RESET_ALL_CONFIRMED_TARGET, PRODUCT_RESET_ALL_TARGET } from './assets/product.js';
 import { createCanvasGlyphRasterizer } from './platform/glyph-rasterizer.js';
 import { MainMenuScreen } from './ui/main-menu.js';
@@ -678,6 +680,8 @@ export class Netstorm {
         this._clientLocal = null; this._clientNsInfo = null; this._clientHelpPopup = null; this._gameClock = null; this._hiddenGamePause = false;
         // 모드 관리자/시계 장벽/설치 검증 취소는 앱 수명마다 새로 만든다.
         this._mods = null; this._modTimeSource = null; this._modValidation = null;
+        // 웹 전용 모드 관리 DOM과 그 정지 한 단계는 같은 앱 수명에만 유지한다.
+        this._modPanel = null;
         // 실제 앱의 비고정 초기 시계가 UTC초 경계를 준비하는 동안에는 로딩 표시만 갱신한다.
         this._clientClockPreparing = false;
         // 같은 Client 수명의 구름·HTML과 연결표·연결 활동 전역이다.
@@ -1634,6 +1638,7 @@ export class Netstorm {
 
     // 현재 World의 Session을 반납하고 같은 미션 연결 대기 관문을 해제한다.
     _releaseCampaignWorld() {
+        this._closeModPanel(false);
         this._mods?.end('leave');
         this._clearCampaignTutorialObjective();
         // World 가 없어도(State7 도중 실패 등) 이미 시작한 장면 음악은 메뉴 곡으로 되돌린다. (2026-11-20 WB04-E1119)
@@ -1838,6 +1843,8 @@ export class Netstorm {
             demo: () => Boolean(this._clientGuide?.current()?.runtime.gate.demo),
             // 옵션 메뉴 Frame Rate 하위 항목(60·75·120 FPS)이다. (2026-11-20 WB04-E1094)
             frameRates: () => frameRateChoices(this._settings?.get('maxFPS')), languages: () => languageChoices(this.options.language), difficulties: () => difficultyChoices(this._settings?.get('difficulty')),
+            // 모드 관리는 웹 추가 기능이며 비교용 고정 오라클에는 제공하지 않는다.
+            modMenuLabel: this.options.fixedFrameMs > 0 || this.options.originalComparison ? undefined : () => modPanelTexts(this._gameData?.language ?? this.options.language).menu,
             player: (owner) => this._clientPlayers.records().subarray(owner * 180, owner * 180 + 180),
             // Player 이름은 표시 부호화 바이트이므로 한국어 이름이 깨지지 않게 디코딩한다. (2026-11-21 WB04-E1166)
             decodeName: (bytes) => displayTextCodec.decode(Uint8Array.from(bytes)),
@@ -2242,6 +2249,8 @@ export class Netstorm {
 
     // 현재 포인터 폴링과 지원된 큐 사건을 Guide→Gump→World 순서로 처리한다.
     _runCampaignInputFrame() {
+        // DOM 모달 동안 기존 큐는 보류한다. 패널의 입력을 가짜 Gump 토큰으로 전달하지 않는다.
+        if (this._modPanel) return;
         const world = this._campaignWorld, queue = this._clientInputQueue, tutorial = this._clientGuide?.current()?.runtime.tutorial, gump = this._clientGump, user = this._campaignUserInput;
         if (!world || !queue || !tutorial || !gump || !user) throw new Error('미션 입력 프레임의 현재 장치 수명 누락');
         // 대본 `<$ViewSpot>` 이 맡겨 둔 시작 카메라 위치를 월드가 도는 첫 프레임에 적용한다. (2026-11-22 WB04-E1190)
@@ -2257,6 +2266,7 @@ export class Netstorm {
         const cameraPan = this._campaignCameraDevice().pollCameraPan(mouse);
         // 원본 큐의 순서를 지키며 미구현 사건 앞을 추월하지 않는다.
         for (;;) {
+            if (this._modPanel) return;
             const next = queue.peek(); if (!next) break;
             if (cameraPan) { queue.pop(false); continue; }
             // Send X 숫자 창 같은 Gump 모달이 열려 있으면 모든 사건이 그 창으로만 가고 월드·단축키로는 가지 않는다(원본의 모달 dialog 우선 전달). (2026-11-22 WB04-E1168)
@@ -2484,6 +2494,7 @@ export class Netstorm {
     // init 도중 실패한 반쪽 상태도 이 함수가 정리하므로 상태 이름이 아니라 루트 요소의 유무로 판단한다.
     destroy() {
         if (!this._root) return;
+        this._closeModPanel(false);
         // 저장 검증과 늦은 쓰기를 먼저 취소한다. 비동기 종료는 World/Session 사본만 보유한다.
         this._modValidation?.abort(); this._modValidation = null;
         this._mods?.dispose().catch((error) => reportGameError('mod-dispose', error)); this._mods = null;
@@ -2919,6 +2930,24 @@ export class Netstorm {
         view.location.reload();
     }
 
+    // Options의 웹 전용 관리 화면이다. 같은 게임 시계의 정지 한 단계만 빌린다.
+    _openModPanel() {
+        if (!this._root || !this._mods || !this._clientGump || this._state !== AppState.MAIN_MENU) return false;
+        if (this._modPanel) { this._modPanel.focus(); return true; }
+        this._closeCampaignPopups();
+        const clock = this._gameClock, view = this._view(); let held = true;
+        clock.pushGamePause();
+        try {
+            this._modPanel = new ModPanel({ parent: this._root, manager: this._mods, language: this._gameData?.language ?? this.options.language, maxPackageBytes: MOD_LIMITS.maxPackageBytes,
+                validatePackage: (input, signal) => validateModPackageIsolated(input, { view, signal }),
+                onClose: () => { this._modPanel = null; if (held) { held = false; clock.popGamePause(); } this._displayDirty = true; if (this._mainMenu) this._mainMenu.dirty = true; } });
+            return true;
+        } catch (error) { if (held) { held = false; clock.popGamePause(); } reportGameError('mod-panel', error); return false; }
+    }
+
+    // World/App 반납 때는 숨겨질 캔버스에 초점을 돌리지 않는다. 여러 번 호출해도 한 번만 반납한다.
+    _closeModPanel(restoreFocus = false) { this._modPanel?.close({ restoreFocus }); }
+
     // 설정 값이 바뀌었을 때 소리·음악·음량과 미션 효과음의 좌우 교환을 바로 적용한다.
     // 바뀐 값은 게임 데이터 설정 층에도 옮겨 적어 두 곳이 어긋나지 않게 한다(되돌아오는 통지는 막는다). (2026-10-30 WB03-H)
     _onSettingChange(key) {
@@ -2979,6 +3008,7 @@ export class Netstorm {
             if (!resetArmed) { console.warn('Netstorm: 확인 창을 거치지 않은 Reset All 확정은 무시합니다.'); return false; }
             this._resetAll(); return true;
         }
+        if (resetTarget === MOD_PANEL_TARGET.toLowerCase()) return this._openModPanel();
         if (!this._mainMenu || !this._gameData || !this._resources) return false;
         // 옵션 메뉴 Frame Rate 항목의 대상(`Patch1101.SetFrameRate(n)`)은 창을 열지 않고 maxFPS 설정에 써서 바로 반영한다(cpppj 후순위 F1). (2026-11-20 WB04-E1094)
         const frameRate = parseFrameRateTarget(name);

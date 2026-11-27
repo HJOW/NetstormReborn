@@ -26,6 +26,9 @@ test('Reset All 게임 안 확인 창: 취소와 확정 후 최초 실행', asyn
   await page.evaluate(() => {
     localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, soundVolume: 2 } }));
     localStorage.setItem('netstorm.progress', JSON.stringify({ version: 1, values: { DoneTheWarBegins: '1' } }));
+    // 설치한 모드도 확인 창 취소 때 유지되고 확정 때 함께 삭제되어야 한다.
+    const pkg = { format: 'netstorm-mod-package', formatVersion: 1, manifest: { id: 'test.reset', name: 'Reset test', version: '1.0.0', apiVersion: '0.1.0', entry: 'main.js' }, modules: { 'main.js': 'export default function(){}' } };
+    localStorage.setItem('netstorm.mods.v0', JSON.stringify({ version: 1, mods: [{ package: JSON.stringify(pkg), enabled: false, lastError: null }] }));
     localStorage.setItem('other.app', 'keep');
   });
   await page.reload();
@@ -41,6 +44,7 @@ test('Reset All 게임 안 확인 창: 취소와 확정 후 최초 실행', asyn
   await clickLabel(page, 'Cancel');
   await expect.poll(() => buttons(page), { timeout: 10000 }).toBeNull();
   expect(await page.evaluate(() => [window.netstorm.state, window.netstorm._settings.get('soundVolume'), window.netstorm.progress.get('DoneTheWarBegins'), window.netstorm._resetAllArmed])).toEqual(['mainMenu', 2, '1', false]);
+  expect(await page.evaluate(() => JSON.parse(localStorage.getItem('netstorm.mods.v0')).mods.length)).toBe(1);
   // 확인 창 밖에서 확정 대상을 보내도 무시된다(원본의 제출 토큰 가드).
   await page.evaluate(() => window.netstorm._openTell('Patch1101.ResetAllConfirmed'));
   expect(await page.evaluate(() => [window.netstorm.state, window.netstorm._settings.get('soundVolume')])).toEqual(['mainMenu', 2]);
@@ -52,7 +56,7 @@ test('Reset All 게임 안 확인 창: 취소와 확정 후 최초 실행', asyn
   await clickLabel(page, 'Reset All');
   await loaded;
   await page.waitForFunction(() => window.netstorm?.state === 'clickToStart');
-  expect(await page.evaluate(() => [localStorage.getItem('netstorm.settings'), localStorage.getItem('netstorm.progress'), localStorage.getItem('other.app')])).toEqual([null, null, 'keep']);
+  expect(await page.evaluate(() => [localStorage.getItem('netstorm.settings'), localStorage.getItem('netstorm.progress'), localStorage.getItem('netstorm.mods.v0'), localStorage.getItem('other.app')])).toEqual([null, null, null, 'keep']);
   await page.locator('canvas').click();
   await page.waitForFunction(() => window.netstorm?.state === 'mainMenu');
   expect(await page.evaluate(() => window.netstorm._gameData.currentTell)).toBe('Welcome');

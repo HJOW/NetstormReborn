@@ -21,6 +21,8 @@ export class ModStore {
         if (typeof validatePackage !== 'function') throw new TypeError('모드 저장소의 패키지 검증기가 필요합니다.');
         this.#storage = storage; this.#validate = validatePackage;
     }
+    // UI는 준비 전/반납 뒤 쓰기를 막되 일반 quota 오류 때 삭제/재시도를 허용한다.
+    get loaded() { return this.#loaded && !this.#disposed; }
     // 이전 작업 실패도 다음 명시 조작을 막지 않는다.
     #enqueue(callback) { const result = this.#tail.then(() => { if (this.#disposed) throw new ModError('disposed', '모드 저장소 수명이 끝났습니다.'); return callback(); }); this.#tail = result.catch(() => {}); return result; }
     // 숨겨진 읽기 실패를 빈 목록으로 저장하지 않는다.
@@ -72,10 +74,13 @@ export class ModStore {
         });
     }
     // 켜기/끄기는 저장이 성공해야 확정한다. 런타임의 즉시 비활성화는 실행 관리자가 먼저 수행한다.
-    setEnabled(id, enabled, { error = null } = {}) {
+    setEnabled(id, enabled, { error = null, expectedPackageText = null } = {}) {
         return this.#enqueue(() => {
-            this.#ready(); if (typeof enabled !== 'boolean' || !(error === null || (typeof error === 'string' && error.length <= 2048))) throw new ModError('invalidArgument', '모드 활성/오류 값 형식 오류');
-            const item = this.#items.get(id); if (!item) throw new ModError('invalidArgument', '설치되지 않은 모드 id');
+            this.#ready(); if (typeof enabled !== 'boolean' || !(error === null || (typeof error === 'string' && error.length <= 2048)) || !(expectedPackageText === null || (typeof expectedPackageText === 'string' && expectedPackageText.length <= MOD_LIMITS.maxPackageBytes))) throw new ModError('invalidArgument', '모드 활성/오류 값 형식 오류');
+            const item = this.#items.get(id);
+            // 설치 검증과 같은 직렬 경계 안에서 비교해야 옛 VM의 늦은 오류가 새 교체본/삭제를 덮지 않는다.
+            if (expectedPackageText !== null && (!item || item.text !== expectedPackageText)) return this.list();
+            if (!item) throw new ModError('invalidArgument', '설치되지 않은 모드 id');
             const items = new Map(this.#items); items.set(id, { ...item, enabled, lastError: error }); this.#save(items); return this.list();
         });
     }

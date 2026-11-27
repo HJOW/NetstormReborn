@@ -14,6 +14,8 @@ export function retireNetstormStateWorld(app) {
 
 // 현재 Client·표면·시계·UI·음향을 빌려 원문 전체 부모의 효과 순서와 실제 Runtime 반납을 실행한다.
 export function cleanupNetstormStateWorld(app, reason) {
+    // 모드 DOM이 빌린 정지를 원래 부모의 정지/Runtime 정리보다 먼저 돌려준다.
+    app._closeModPanel?.(false);
     // 비동기 종료에는 마지막 공개 상태 사본만 남긴다. 원래 Runtime 반납 순서는 그대로 이어간다.
     app._mods?.end(reason === 1 ? 'replace' : 'leave');
     const clock = app._gameClock, storage = app._surfaceStorage, gameplay = app._clientGameplay, gump = app._clientGump;

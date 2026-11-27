@@ -143,3 +143,25 @@ test('앱 반납 도중 저장 로드 검증이 끝나도 메모리/저장 자�
     const load = pending.load(), checked = assert.rejects(load, code('disposed')); await entered; pending.dispose(); release(); await checked;
     assert.deepEqual(pending.list(), []); assert.equal(backing.getItem(MOD_STORAGE_KEY), before);
 });
+
+// 현재 미션의 옛 VM 오류가 다음 미션용 교체/삭제를 덮지 않아야 한다.
+test('조건부 오류 저장은 교체된 패키지와 삭제된 id를 다시 바꾸지 않는다', async () => {
+    const { mods, backing } = await store(); await mods.install(source()); await mods.setEnabled('test.package', true);
+    const old = JSON.stringify(mods.getPackage('test.package')), next = packageObject(); next.manifest.version = '2.0.0';
+    await mods.install(JSON.stringify(next), { replace: true }); await mods.setEnabled('test.package', true); const saved = backing.getItem(MOD_STORAGE_KEY);
+    await mods.setEnabled('test.package', false, { error: 'old VM failed', expectedPackageText: old });
+    assert.equal(backing.getItem(MOD_STORAGE_KEY), saved); assert.equal(mods.list()[0].enabled, true); assert.equal(mods.list()[0].lastError, null);
+    await mods.remove('test.package'); const removed = backing.getItem(MOD_STORAGE_KEY);
+    await mods.setEnabled('test.package', false, { error: 'late failure', expectedPackageText: old }); assert.equal(backing.getItem(MOD_STORAGE_KEY), removed); assert.deepEqual(mods.list(), []);
+});
+
+// 비교를 관리자에서 먼저 수행하면 대기 중인 설치 뒤의 오류 쓰기와 경쟁하므로 저장 큐 안에서 판정한다.
+test('새 패키지 설치/켜기 뒤에 대기한 옛 오류 통지는 새 활성 상태를 보존한다', async () => {
+    const backing = storage(); let release, started;
+    const gate = new Promise((resolve) => { release = resolve; }), entered = new Promise((resolve) => { started = resolve; });
+    const mods = new ModStore({ storage: backing, validatePackage: async (text) => { const pkg = validate(text); if (pkg.manifest.version === '2.0.0') { started(); await gate; } return pkg; } });
+    await mods.load(); await mods.install(source()); await mods.setEnabled('test.package', true); const old = JSON.stringify(mods.getPackage('test.package'));
+    const next = packageObject(); next.manifest.version = '2.0.0'; const replacing = mods.install(JSON.stringify(next), { replace: true }); await entered;
+    const enabling = mods.setEnabled('test.package', true), failing = mods.setEnabled('test.package', false, { error: 'old VM failed', expectedPackageText: old });
+    release(); await replacing; await enabling; await failing; assert.equal(mods.list()[0].manifest.version, '2.0.0'); assert.equal(mods.list()[0].enabled, true); assert.equal(mods.list()[0].lastError, null);
+});

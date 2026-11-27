@@ -54,7 +54,7 @@ test('같은 경계의 결과8+tick8은 다음 결과사건16개 하나에 머�
 });
 test('한 모드 예외/저장 실패는 해당 실행만 끄고 정상 모드는 계속한다', async () => {
     const f = fixture({ failSave: true, handlers: { 'test.a': (api) => api.on('sessionStart', () => { api.commands.selectPriest(); throw new Error('bad'); }), 'test.b': (api) => api.on('tick', () => api.commands.nextUnit()) } });
-    await f.manager.load(); f.manager.afterFrame(); await f.manager.whenIdle(); f.manager.beforeInput(); assert.equal(f.commits.length, 0); assert.equal(f.workers[0].disposed, true); assert.equal(f.saves[0].id, 'test.a'); assert.equal(f.saves[0].enabled, false); assert.match(f.manager.error, /quota/u);
+    await f.manager.load(); f.manager.afterFrame(); await f.manager.whenIdle(); f.manager.beforeInput(); assert.equal(f.commits.length, 0); assert.equal(f.workers[0].disposed, true); assert.equal(f.saves[0].id, 'test.a'); assert.equal(f.saves[0].enabled, false); assert.equal(f.saves[0].options.expectedPackageText, JSON.stringify(f.store.getPackage('test.a'))); assert.match(f.manager.error, /quota/u);
     f.advanceGame(1); f.manager.afterFrame(); await f.manager.whenIdle(); f.manager.beforeInput(); assert.equal(f.commits.length, 1); assert.equal(f.events.at(-1).id, 'test.b'); await f.manager.dispose();
 });
 test('실행 중 설정 변경은 다음 미션에 반영하고 종료는 마지막 사본/새 VM을 사용한다', async () => {

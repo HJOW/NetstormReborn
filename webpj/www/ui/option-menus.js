@@ -12,6 +12,7 @@
 import { frameRateChoices } from '../core/frame-rate-option.js';
 import { languageChoices } from '../platform/language-choice.js';
 import { difficultyChoices } from '../core/difficulty-option.js';
+import { MOD_PANEL_TARGET, modPanelTexts } from './mod-panel.js';
 
 // 메뉴 항목 정의 도우미들이다. (2026-10-29 WB03-F)
 const command = (name, argument) => Object.freeze({ name, argument });
@@ -86,7 +87,7 @@ export function buildOptionsItems(settings, { includeAll = false, language = 'en
         ],
         includeAll ? [check('Pass Server Diagnostic ', false, 'Tell', 'ChangeFirewall')] : [],
         // 마지막 행은 초기화를 직접 실행하지 않고 게임 안 확인 창(Tell `Patch1101.ResetAll`)을 연다(cpppj 15차). 확정은 그 창의 단추가 한다. (2026-11-23 WB04-E1251)
-        includeAll ? [] : [text('Reset All', 'Tell', 'Patch1101.ResetAll')],
+        includeAll ? [] : [text(modPanelTexts(language).menu, 'Tell', MOD_PANEL_TARGET), text('Reset All', 'Tell', 'Patch1101.ResetAll')],
     ]);
 }
 

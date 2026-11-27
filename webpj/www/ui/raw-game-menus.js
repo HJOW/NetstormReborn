@@ -7,6 +7,8 @@
 //   vertical(), fancy(), separator(), title(문구), take(), current(), node(토큰), attachCurrent(x, y, 부모), playerMenu(subscriber) → 토큰, refreshPriest(owner) }(도달한 경계만 요구).
 // 원본 전역 주소는 원문 조건을 추적하기 위한 식별자이며 호스트 포인터로 읽지 않는다. 이 모듈은 DOM 을 쓰지 않는다. (2026-11-20 WB04-E1084: ESC 게임 메뉴막대의 하위 메뉴로 추가)
 
+import { MOD_PANEL_TARGET } from './mod-panel.js';
+
 // 원본 전역 주소 식별자다(cpppj RawGameMenus.cpp 의 상수).
 const G = Object.freeze({ editor: 0x5c85a4, missionPost: 0x594fa4, battle: 0x594fbc, fort: 0x594fb8, challenge: 0x594fc8, missionBridge: 0x594fa0, hideBuildings: 0x59a8ac,
     owner: 0x540c70, pausedTime: 0x55b4b0, soundDevice: 0x5c7b14, soundVolume: 0x531900, musicVolume: 0x531904, observer: 0x52f81e });
@@ -119,6 +121,11 @@ export class RawGameMenus {
         if (this.#global(G.missionPost) || this.#global(G.editor)) { const label = this.#text('Pause - ~iShift-F9~.'); this.#check((this.#global(G.pausedTime) | 0) > 0, label, C.pause); }
         separator();
         if (!this.#global(G.fort) && !this.#global(G.challenge)) this.#toggle('rotmode', 'Counterclockwise Piece Rotation - ~iC~.');
+        // 일반 웹 실행의 호스트만 관리 행을 제공한다. 원본/고정 오라클의 메뉴와 명령 순서는 유지한다.
+        if (typeof hooks.modMenuLabel === 'function') {
+            separator(); const code = this.#global(C.tell);
+            hooks.item(hooks.modMenuLabel(), code, MOD_PANEL_TARGET, 1, this.#wired(code, 1) ? 1 : 0);
+        }
         return hooks.take();
     }
     // Players: 현재 Player 1..8 을 원본 stride 180 순서로 방문한다. 메타맵은 작성 전에 0 을 반환한다. 각 하위는 기존 Player 메뉴가 만든다.

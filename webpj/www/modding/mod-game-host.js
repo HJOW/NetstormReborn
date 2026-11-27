@@ -57,7 +57,7 @@ export class ModGameHost {
     inputBlocked() {
         if (!this.#current()) return true;
         const app = this.#app;
-        return Boolean(app._gameClock.paused() || app._mainMenu?.dialog || app._campaignInputDialogOpen() || app._campaignChatInputActive() || app._input.pointer.buttons || app._clientComposing);
+        return Boolean(app._modPanel || app._gameClock.paused() || app._mainMenu?.dialog || app._campaignInputDialogOpen() || app._campaignChatInputActive() || app._input.pointer.buttons || app._clientComposing);
     }
     // 출력이 생성된 미션 번호를 별도로 받아 현재 미션으로 바뀐 요청을 거절한다.
     commit(output, { eventSequence, sessionId }) {

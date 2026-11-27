@@ -50,6 +50,8 @@ export class ClientGameMenuBar {
         if (typeof devices.languages === 'function') menus.languages = () => devices.languages();
         // 난이도(Difficulty) 하위 메뉴 항목 장치다. 없으면 하위 메뉴를 만들지 않는다. (2026-11-20 WB04-E1096)
         if (typeof devices.difficulties === 'function') menus.difficulties = () => devices.difficulties();
+        // 일반 웹 실행이 제공한 모드 관리 행을 실제 Options 부모까지 전달한다.
+        if (typeof devices.modMenuLabel === 'function') menus.modMenuLabel = () => devices.modMenuLabel();
         const parents = new RawGameMenus(menus);
         // 막대 자체의 현재 조회·번역·하위 부모 경계다. Edit·Cheat 는 웹 범위 밖이라 읽기 값이 0 이다.
         Object.assign(bar, { prepare: () => devices.prepare?.(), translate: (key) => devices.translate(key), about: () => devices.about(), technicalHelp: () => devices.technicalHelp(),

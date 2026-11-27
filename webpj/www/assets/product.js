@@ -56,13 +56,13 @@ const SKIRMISH_SECTIONS = ['[Skirmish]', '<h2>Skirmish</h2>', '[SkirmishCount]',
 export const PRODUCT_RESET_ALL_TARGET = `${PRODUCT_CREDITS_OBJECT}.ResetAll`;
 export const PRODUCT_RESET_ALL_CONFIRMED_TARGET = `${PRODUCT_CREDITS_OBJECT}.ResetAllConfirmed`;
 
-// 언어별 Reset All 확인 창 섹션 원문이다. 영어는 cpppj 의 `[ResetAll]` 본문과 같고(웹은 게임을 종료하는 대신 다시 불러오므로 마지막 줄만 reload 로 적는다),
-// 한국어는 cpppj ProductTellBody 의 한국어 본문과 같은 구성이다. 단추는 확정(`Patch1101.ResetAllConfirmed`)과 취소(`Blank`) 두 개이다. (2026-11-23 WB04-E1251)
+// 언어별 Reset All 확인 창이다. 웹은 설치한 모드 삭제와 종료 대신 재로딩을 함께 안내한다.
+// 공통 확정(`Patch1101.ResetAllConfirmed`)과 취소(`Blank`) 단추 두 개는 유지한다.
 const RESET_ALL_SECTIONS = Object.freeze({
-    english: ['[ResetAll]', '<h2>Reset All</h2>', '<p>Reset all settings and campaign progress?<br>', 'The game will reload after resetting.', `$Button=Reset All,Tell,${PRODUCT_RESET_ALL_CONFIRMED_TARGET}`, '$Button=Cancel,Tell,Blank', ''].join('\n'),
-    korean: ['[ResetAll]', '<h2>설정 초기화</h2>', '<p>모든 설정과 캠페인 진행 상황을 초기화하시겠습니까?<br>', '초기화 후 게임을 다시 불러옵니다.', `$Button=초기화,Tell,${PRODUCT_RESET_ALL_CONFIRMED_TARGET}`, '$Button=취소,Tell,Blank', ''].join('\n'),
+    english: ['[ResetAll]', '<h2>Reset All</h2>', '<p>Reset all settings and campaign progress?<br>', 'Installed mods will also be deleted.<br>', 'The game will reload after resetting.', `$Button=Reset All,Tell,${PRODUCT_RESET_ALL_CONFIRMED_TARGET}`, '$Button=Cancel,Tell,Blank', ''].join('\n'),
+    korean: ['[ResetAll]', '<h2>설정 초기화</h2>', '<p>모든 설정과 캠페인 진행 상황을 초기화하시겠습니까?<br>', '설치된 모드도 삭제됩니다.<br>', '초기화 후 게임을 다시 불러옵니다.', `$Button=초기화,Tell,${PRODUCT_RESET_ALL_CONFIRMED_TARGET}`, '$Button=취소,Tell,Blank', ''].join('\n'),
     // 웹은 종료 대신 다시 불러온다는 기존 초기화 동작을 일본어로 안내한다.
-    japanese: ["[ResetAll]", "<h2>すべてリセット</h2>", "<p>設定とキャンペーンの進行状況をすべてリセットしますか？<br>", "リセット後にゲームを再読み込みします。", "$Button=リセット,Tell,Patch1101.ResetAllConfirmed", "$Button=キャンセル,Tell,Blank", ""].join('\n'),
+    japanese: ["[ResetAll]", "<h2>すべてリセット</h2>", "<p>設定とキャンペーンの進行状況をすべてリセットしますか？<br>", "インストールしたモッドも削除されます。<br>", "リセット後にゲームを再読み込みします。", "$Button=リセット,Tell,Patch1101.ResetAllConfirmed", "$Button=キャンセル,Tell,Blank", ""].join('\n'),
 });
 
 // 제품 Credits 를 제공하는 언어(파일 확장자 이름)별 목록 행 이름이다. 영어는 AGENTS.md 가 정한 표기 그대로이고,

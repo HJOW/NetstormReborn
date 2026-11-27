@@ -41,15 +41,16 @@ test('Reset All 메뉴는 웹 메뉴 최하단에서 확인 창 Tell 을 연다'
 });
 
 // 확인 창 섹션은 제품 설정 객체(Patch1101)에 있고 확정·취소 단추를 가진다(cpppj ProductPresentation 의 [ResetAll] 과 같은 구성).
-test('Reset All 확인 창 섹션은 영어·한국어 본문과 확정·취소 단추를 가진다', () => {
-    const english = productCreditsText('english'), korean = productCreditsText('korean');
-    for (const text of [english, korean]) {
+test('Reset All 확인 창은 세 언어의 모드 삭제 안내와 확정·취소 단추를 가진다', () => {
+    const english = productCreditsText('english'), korean = productCreditsText('korean'), japanese = productCreditsText('japanese');
+    for (const text of [english, korean, japanese]) {
         assert.ok(text.includes('\n[ResetAll]\n'), '[ResetAll] 섹션');
         assert.ok(text.includes(`,Tell,${PRODUCT_RESET_ALL_CONFIRMED_TARGET}\n`), '확정 단추 대상');
         assert.ok(text.includes(',Tell,Blank\n'), '취소 단추 대상');
     }
-    assert.match(english, /<h2>Reset All<\/h2>\n<p>Reset all settings and campaign progress\?<br>\nThe game will reload after resetting\.\n\$Button=Reset All,Tell,Patch1101\.ResetAllConfirmed\n\$Button=Cancel,Tell,Blank\n/u);
-    assert.match(korean, /<h2>설정 초기화<\/h2>\n<p>모든 설정과 캠페인 진행 상황을 초기화하시겠습니까\?<br>\n?초기화 후 게임을 다시 불러옵니다\.\n\$Button=초기화,Tell,Patch1101\.ResetAllConfirmed\n\$Button=취소,Tell,Blank\n/u);
+    assert.match(english, /<h2>Reset All<\/h2>\n<p>Reset all settings and campaign progress\?<br>\nInstalled mods will also be deleted\.<br>\nThe game will reload after resetting\.\n\$Button=Reset All,Tell,Patch1101\.ResetAllConfirmed\n\$Button=Cancel,Tell,Blank\n/u);
+    assert.match(korean, /<h2>설정 초기화<\/h2>\n<p>모든 설정과 캠페인 진행 상황을 초기화하시겠습니까\?<br>\n설치된 모드도 삭제됩니다\.<br>\n초기화 후 게임을 다시 불러옵니다\.\n\$Button=초기화,Tell,Patch1101\.ResetAllConfirmed\n\$Button=취소,Tell,Blank\n/u);
+    assert.match(japanese, /インストールしたモッドも削除されます。<br>/u);
 });
 
 // 지정한 두 항목만 지우며 게임을 새로 만들면 최초 실행 기본값과 빈 진행값이 된다.

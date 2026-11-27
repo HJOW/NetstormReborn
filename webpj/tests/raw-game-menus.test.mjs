@@ -65,6 +65,15 @@ test('Options: 소리·음량·화면 이동·정지·회전 항목을 원본 �
     assert.equal(body[4].child, 1); assert.equal(body[4].enabled, 1);
 });
 
+test('Options의 웹 관리 행은 실제 Tell 명령을 사용하며 호스트가 제공할 때만 붙는다', () => {
+    const globals = { 0x5c85a4: 0, 0x594fbc: 1, 0x594fa4: 1, 0x594fb8: 0, 0x594fc8: 0, 0x5c7b14: 1, 0x531900: 3, 0x531904: 5, 0x55b4b0: 0 };
+    const options = recorder(globals); options.hooks.modMenuLabel = () => '모드 관리';
+    new RawGameMenus(options.hooks).options(); const last = options.menus.at(-1).at(-1);
+    assert.deepEqual(last, { label: '모드 관리', code: gameMenuCommandValue(0x542948), parameter: 'Patch1101.Mods', include: 1, enabled: 1 });
+    const original = recorder(globals); new RawGameMenus(original.hooks).options();
+    assert.equal(original.menus.at(-1).some((row) => row.parameter === 'Patch1101.Mods'), false);
+});
+
 test('Players: 현재 Player 1..8 중 subscriber 가 있는 행만 이름과 하위 메뉴로 만들고 메타맵은 만들지 않는다', () => {
     const players = recorder({ 0x594fc8: 0, 0x594fa4: 1 }); players.hooks.global = ((original) => (address) => address > 0x52f81e && address < 0x52f827 ? 0 : original(address))(players.hooks.global);
     new RawGameMenus(players.hooks).players(); const rows = players.menus[0];
@@ -81,7 +90,7 @@ function barScene() {
         const stack = [];
         Object.assign(bar, { horizontal: () => { stack.push([]); return 0; }, vertical: () => { stack.push([]); }, take: () => { stack.pop(); return ++next; }, separator: () => {}, submenu: () => {}, item: () => {},
             width: (token, width) => log.push(['width', width]), serial: (token) => nodes.get(token).serial });
-        Object.assign(menus, { vertical: bar.vertical, fancy: bar.vertical, take: bar.take, separator: () => {}, submenu: () => {}, item: () => {}, checked: () => {}, title: () => {}, node: () => null, current: () => 1, attachCurrent: () => {} });
+        Object.assign(menus, { vertical: bar.vertical, fancy: bar.vertical, take: bar.take, separator: () => {}, submenu: () => {}, item: (...args) => log.push(['menuItem', ...args]), checked: () => {}, title: () => {}, node: () => null, current: () => 1, attachCurrent: () => {} });
         // 가로 막대의 토큰은 새 노드로 등록해 attach 훅이 부모에 붙인다.
         bar.horizontal = () => { const token = 99; nodes.set(token, { serial: 500, flags: 0 }); entries[3] = token; return token; }; bar.attach = (token, x, y, parent, mode) => log.push(['attach', x, y, parent, mode]);
     } };
@@ -97,4 +106,10 @@ test('ClientGameMenuBar: 같은 생성순번의 막대가 있으면 지우고 �
     assert.equal(bar.open(), 99);
     assert.equal(bar.toggle(), false); assert.equal(bar.isOpen(), false); assert.ok(scene.log.includes('closePopups')); assert.equal(bar.close(), false);
     assert.throws(() => new ClientGameMenuBar(scene.root, scene.menu, {}), /장치 누락/u); assert.throws(() => new ClientGameMenuBar(null, scene.menu, devices()), /필요/u);
+});
+
+test('ClientGameMenuBar는 선택 관리 장치를 실제 Options 부모까지 전달한다', () => {
+    const scene = barScene(), bar = new ClientGameMenuBar(scene.root, scene.menu, devices({ modMenuLabel: () => '모드 관리' }));
+    bar.open(); assert.ok(scene.log.some((entry) => entry[0] === 'menuItem' && entry[1] === '모드 관리' && entry[3] === 'Patch1101.Mods' && entry[4] === 1 && entry[5] === 1));
+    assert.equal(bar.close(), true);
 });

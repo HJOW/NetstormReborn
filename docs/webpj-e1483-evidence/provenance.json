@@ -1,0 +1,303 @@
+{
+  "unit": "WB04-E1483",
+  "host": "HJOW-Athlon",
+  "recordedAt": "2026-11-28T05:39:43.604637+09:00",
+  "sourceHeadBeforeCommit": "38b5c0fed00a59bb321d586e5a9246c7cbc2f7fc",
+  "node26Related": {
+    "tests": 111,
+    "pass": 111,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "durationMs": 22420.8547
+  },
+  "node22Focused": {
+    "tests": 56,
+    "pass": 56,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "durationMs": 3475.8788
+  },
+  "bundleFresh": {
+    "tests": 1,
+    "pass": 1,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "durationMs": 65796.9434
+  },
+  "browser": {
+    "intermediateChromium": {
+      "startTime": "2026-11-27T20:24:00.112Z",
+      "duration": 94062.139,
+      "expected": 7,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "panelChromeEdgeFirefox": {
+      "startTime": "2026-11-27T20:29:36.514Z",
+      "duration": 174119.709,
+      "expected": 9,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    },
+    "connectedChromium": {
+      "startTime": "2026-11-27T20:36:34.228Z",
+      "duration": 77997.658,
+      "expected": 3,
+      "skipped": 0,
+      "unexpected": 0,
+      "flaky": 0
+    }
+  },
+  "bundle": {
+    "bytes": 5857520,
+    "sha256": "dfb91187341ed2e0395d8db2aa90e9843868e2c9780b172a43c50758536dece6"
+  },
+  "sourceFiles": {
+    "LEFT_JOBS.dotnetpj.md": {
+      "bytes": 139107,
+      "sha256": "3a749f8fa3ca773be5aad27afb530993685da9c933517bc02225d9638ef98278"
+    },
+    "docs/netstorm-common-mod-api-v0-20261128.md": {
+      "bytes": 22039,
+      "sha256": "8971cb8e8c2d25cea45eb7253edd3092a15a52c9e2fd7896c025eb83c322c85d"
+    },
+    "shared/modding/v0/conformance/README.md": {
+      "bytes": 3315,
+      "sha256": "e2d97aceff733a2bc621fd95a41081506eae6e234a19fe061191461d09be06db"
+    },
+    "webpj/e2e/mod-panel.spec.js": {
+      "bytes": 12069,
+      "sha256": "680ae53a52ff49734e0979572941562c804f9606ae44b248b4796e9b3ab5e81b"
+    },
+    "webpj/e2e/mod-session.spec.js": {
+      "bytes": 10401,
+      "sha256": "9dca74c501d39770fed777187014ba925e158ee0afb9ef9fa2e8f9573e8e2753"
+    },
+    "webpj/e2e/reset-all.spec.js": {
+      "bytes": 6739,
+      "sha256": "febe3a7e095bdcfd519db7e95fcf999c24c534da1c7ae6a12cd5e00af314db50"
+    },
+    "webpj/tests/mod-game-host.test.mjs": {
+      "bytes": 4857,
+      "sha256": "2988e896113d528eca4ae63c8da058b67179272691d77d1835ce7d32d90c72aa"
+    },
+    "webpj/tests/mod-manager.test.mjs": {
+      "bytes": 12136,
+      "sha256": "786eff801dee2b47b03e6a74e496480bb06b83627d24d9802d3496533dc3f4b4"
+    },
+    "webpj/tests/mod-package-store.test.mjs": {
+      "bytes": 17576,
+      "sha256": "50d37b7f269b3226f8a7a9a6890cd900346306e3f77f60f1060d32595007fe7f"
+    },
+    "webpj/tests/mod-panel.test.mjs": {
+      "bytes": 1819,
+      "sha256": "eb521a4eaeac8b7e0d3e1696ebd86f17ca26f456818db9da70730fd236679b6e"
+    },
+    "webpj/tests/raw-game-menus.test.mjs": {
+      "bytes": 12163,
+      "sha256": "44381953724998a2dd3bee2890225e4cd405c0be4428936819aa552f9ac41701"
+    },
+    "webpj/tests/reset-all.test.mjs": {
+      "bytes": 9378,
+      "sha256": "f161cccc19ef2ae6adc36af35afbe9b845934b0f8c0354fc79d1dce2d12e4040"
+    },
+    "webpj/tools/port-map.mjs": {
+      "bytes": 43378,
+      "sha256": "b78cf3cb5a374fb2a18e88409dca6fdfcfdd18abc81b92badbe7d454151d1356"
+    },
+    "webpj/www/assets/product.js": {
+      "bytes": 14488,
+      "sha256": "f0c9fdcec76399048b3983722dc76e5b742739d5366daae7741060aac7fe677f"
+    },
+    "webpj/www/core/netstorm-state-world.js": {
+      "bytes": 4531,
+      "sha256": "c6914d779732ca9cb2e62387dcca8d5a5c5e98a81739bf6d273beb50e2242ad2"
+    },
+    "webpj/www/dist/netstorm.bundle.js": {
+      "bytes": 5857520,
+      "sha256": "dfb91187341ed2e0395d8db2aa90e9843868e2c9780b172a43c50758536dece6"
+    },
+    "webpj/www/modding/mod-game-host.js": {
+      "bytes": 5542,
+      "sha256": "1377922d05b6b897de68e6618185af5b0ba81575d125870c240b3b23b4387327"
+    },
+    "webpj/www/modding/mod-manager.js": {
+      "bytes": 11164,
+      "sha256": "d00ac076d39a1a61ab23953b69eb663bdbfd56e701099384da79d38db4cf8772"
+    },
+    "webpj/www/modding/mod-store.js": {
+      "bytes": 9271,
+      "sha256": "79fae4df8472dce58c51e5cfa6c36e8113dc4768beef791c0afdcd3ed1610a19"
+    },
+    "webpj/www/netstorm.js": {
+      "bytes": 380057,
+      "sha256": "3015d4080392d95d14559449723906c18817f7c5bad3e73f126e794704e1f61e"
+    },
+    "webpj/www/ui/client-game-menu-bar.js": {
+      "bytes": 9526,
+      "sha256": "337833bbab68416b8089db6d2734a171c47e276a4df282c3a36b4b11c3e95c08"
+    },
+    "webpj/www/ui/mod-panel.js": {
+      "bytes": 15739,
+      "sha256": "8dd7c31266c06dd1ec4b20ed5c33e3e993ffd4566dd98bcf71988c1131d9ae78"
+    },
+    "webpj/www/ui/option-menus.js": {
+      "bytes": 9612,
+      "sha256": "c8c7af8f1f8a1d48e6a052f0093607b4e2b1f3ba79df65c83acfe4c66345ce6b"
+    },
+    "webpj/www/ui/raw-game-menus.js": {
+      "bytes": 17552,
+      "sha256": "aa9d2147b9a42bec53db36b2f4d77887e866a76ea88460cd819cf590e8e569d5"
+    }
+  },
+  "artifacts": {
+    "webpj/extracted/webpj-e1483-build-connected.log": {
+      "bytes": 461,
+      "sha256": "c84429088431aef9b4bf2eb0cfa1a73e3ca9ae956cb807a6a176efb1c3ab1549"
+    },
+    "webpj/extracted/webpj-e1483-build-final.log": {
+      "bytes": 1529,
+      "sha256": "ecea41a5efdb565c1670d568590488026e59572f83892d52e34251eec43da4ff"
+    },
+    "webpj/extracted/webpj-e1483-build-first.log": {
+      "bytes": 461,
+      "sha256": "d92a1a5ce401da0b0387a3442d9dad4050379548028e2fda9788bcd81cf0b905"
+    },
+    "webpj/extracted/webpj-e1483-build-release.log": {
+      "bytes": 461,
+      "sha256": "325c4a4cd4b78c0cd5b1edadfa9b63bbcd56326250c06453abc5587297cbfb80"
+    },
+    "webpj/extracted/webpj-e1483-build-reset.log": {
+      "bytes": 461,
+      "sha256": "9986b3ad28a00a32a8d905f557e2a480646ec6084b0e731809da39de0165b6a8"
+    },
+    "webpj/extracted/webpj-e1483-build-ui.log": {
+      "bytes": 461,
+      "sha256": "585647ca2ebe5103d654ea39dcbeb5a6de1d21da67d2c8f9bce9a1d9c9de9ab0"
+    },
+    "webpj/extracted/webpj-e1483-bundle-fresh.log": {
+      "bytes": 246,
+      "sha256": "4f66da95042b0509ea59f50346d29f507d9769085eab13c39bfb4fa4d9bb94cc"
+    },
+    "webpj/extracted/webpj-e1483-chromium.json": {
+      "bytes": 17061,
+      "sha256": "f227ec69010f2dfca8f8e64f259697e749ef21bf874f43b78d7f4bfc150c312e"
+    },
+    "webpj/extracted/webpj-e1483-chromium.log": {
+      "bytes": 1416,
+      "sha256": "f691114ffc52403af16e95655bf7d1bbf377a1662292e648586051abda1708a2"
+    },
+    "webpj/extracted/webpj-e1483-focused.log": {
+      "bytes": 4553,
+      "sha256": "d61b43e325e8c6fe9a5713f2f5002f94f7808c29f8718b24550ebde554eb7bcd"
+    },
+    "webpj/extracted/webpj-e1483-matrix.json": {
+      "bytes": 19161,
+      "sha256": "2125f8ce01abd21e897832538396e2ae53f6ac59021b95d7670c67380d93795f"
+    },
+    "webpj/extracted/webpj-e1483-matrix.log": {
+      "bytes": 2113,
+      "sha256": "a79dc362fc04631b439e3ee16403860ddd4fbb753c1dbf80b657c91902e601bc"
+    },
+    "webpj/extracted/webpj-e1483-node22-connected.log": {
+      "bytes": 14541,
+      "sha256": "1f6cb90b502975443235f8ebd662b22a8ebc00f3d12eaf30073873ea17963348"
+    },
+    "webpj/extracted/webpj-e1483-node22.log": {
+      "bytes": 14292,
+      "sha256": "e64da54a9d5625d44eb9471c77262cfe43e63960d5051548b96e28de2427ab85"
+    },
+    "webpj/extracted/webpj-e1483-panel-first.json": {
+      "bytes": 6466,
+      "sha256": "9a3e6b42cffed66a2d6825dcc32b11c89b36e0a0baeb5206151b84222bd63488"
+    },
+    "webpj/extracted/webpj-e1483-panel-first.stderr.log": {
+      "bytes": 180,
+      "sha256": "310da8b139121589a05ca02a4e7e16a1d0ae168a6ce6f45637ffcc626f219ec9"
+    },
+    "webpj/extracted/webpj-e1483-related-connected.log": {
+      "bytes": 11557,
+      "sha256": "e353e85c5d56ae61c7af6eef7d18308a4386e59562a4432529916cea8b7e0b8b"
+    },
+    "webpj/extracted/webpj-e1483-related-final.log": {
+      "bytes": 12522,
+      "sha256": "848d073b918ef4c3c08a44272ae1a793de18671ca58db15bd7938723161f0935"
+    },
+    "webpj/extracted/webpj-e1483-related-first.log": {
+      "bytes": 9270,
+      "sha256": "d20febe6cf9530b5304d76d52a8187931a186ef57ecabe45d95f4473401af049"
+    },
+    "webpj/extracted/webpj-e1483-related-release.log": {
+      "bytes": 11452,
+      "sha256": "e663853d0d6248327f8ae205bba34855e83c0d66e6a93688a821b6d8b9a1337a"
+    },
+    "webpj/extracted/webpj-e1483-related.log": {
+      "bytes": 9814,
+      "sha256": "11de5f7baef913a6f17828facb2d04285d9d581e3a21391ed0b7d82f5dd84e13"
+    },
+    "webpj/extracted/webpj-e1483-session-connected.json": {
+      "bytes": 11964,
+      "sha256": "5b805cc50fdea330bca6945bf23d129d1b189dd0c97950bf721e7be8b51afda5"
+    },
+    "webpj/extracted/webpj-e1483-session-connected.log": {
+      "bytes": 961,
+      "sha256": "ef434bb19842f5b6e3585d85b2eea40f5df118b3b1f19fa272d4ae8862bbdb27"
+    },
+    "webpj/extracted/webpj-e1483-session-release.json": {
+      "bytes": 10366,
+      "sha256": "a8b5ff505c11e96dc957f53d8b728265867785a34fd0925bd312c079c48326fa"
+    },
+    "webpj/extracted/webpj-e1483-session-release.log": {
+      "bytes": 3863,
+      "sha256": "e0c33548f26585690bfcedd6ec247086f94daef3809e5e001723106ce07c5324"
+    },
+    "webpj/extracted/webpj-e1483-store-after.log": {
+      "bytes": 3546,
+      "sha256": "2b5ba134bca17cef91b5f635c27622f73b2373011463d879b6c2e2f9717a62c9"
+    },
+    "webpj/extracted/webpj-e1483-store-before.log": {
+      "bytes": 7385,
+      "sha256": "115dec2e9299cfebb37744227c6e0aa62f1ee2c3ddd06cd0e075edc3f1265d57"
+    },
+    "webpj/extracted/e1483-session-release/mod-session-실제-1-1에서-모드-대기-중-Native-상태를-보존하고-다른-모드-이탈을-계속한다-chromium/error-context.md": {
+      "bytes": 708,
+      "sha256": "c1e89988f90d2672022305c7f472c31c499ed2d8927a3619d2a96ae12bfeb06a"
+    },
+    "webpj/extracted/e1483-session-release/mod-session-실제-1-1에서-모드-대기-중-Native-상태를-보존하고-다른-모드-이탈을-계속한다-chromium/test-failed-1.png": {
+      "bytes": 667129,
+      "sha256": "27357bd75d92b4d9ed4662f17d45ca7fce9c6c5528440fade2063aaf68d17919"
+    },
+    "webpj/extracted/e1483-session-release/mod-session-실제-1-1에서-모드-대기-중-Native-상태를-보존하고-다른-모드-이탈을-계속한다-chromium/trace.zip": {
+      "bytes": 19634137,
+      "sha256": "d19faa0531fb203b64d058cccd9e96846dcf880272903eb1d30a6a385c92b5d4"
+    },
+    "webpj/extracted/e1483-matrix/mod-panel-한국어-좁은-화면에서-글꼴-줄바꿈-키보드-모달과-앱-반납을-유지한다-chrome/korean-mod-panel.png": {
+      "bytes": 80979,
+      "sha256": "8ebb5fc250598bd9f443e0d5ed7a3ba91feb69285b150e7c3179dbce435a6c46"
+    },
+    "docs/webpj-e1483-evidence/korean-mod-panel.png": {
+      "bytes": 80979,
+      "sha256": "8ebb5fc250598bd9f443e0d5ed7a3ba91feb69285b150e7c3179dbce435a6c46"
+    }
+  },
+  "periodAfter": {
+    "node26": 1,
+    "node22": 6
+  },
+  "scope": "최신 전체는 E1482의 수정 전 7023/7023이다. 이번 집중 검사는 전체가 아니다. DN은 문서만 반영했으며 구현/빌드/실행은 중지다. 자연 승리/사람 검수/물리 표시·청취 범위는 확대하지 않았다.",
+  "preservedFailures": [
+    "저장 경계 보완 전 30/33: 새 교체/삭제 및 직렬 대기 검사와 강화한 오류 원문 비교 단언의 실패.",
+    "build-final: 새 미션 메뉴 문구 import 누락을 ESLint 선행 관문이 출력 생성 전에 거부. 수정 후 connected 빌드 통과.",
+    "related-final 109/110: 새 RawGameMenus 검사 장면의 필수 전역 누락. 기존 단언은 유지하고 새 장면 초기값 보완.",
+    "session-release 2/3: 실제 미션 Options에 Mods 행 없음. ClientGameMenuBar의 선택 장치 전달 누락을 수정하고 부모 통합 검사 추가. connected 3/3 통과."
+  ],
+  "matrixSourceNote": "관리 UI 9/9은 build-release 5857447바이트이다. 뒤의 수정은 ClientGameMenuBar 선택 장치 전달 두 줄/관련 새 검사이며 패널 자체는 동일하다. 최종 5857520바이트는 connected 3/3·bundleFresh 1/1로 확인했다."
+}

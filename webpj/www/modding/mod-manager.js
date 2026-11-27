@@ -43,7 +43,7 @@ export class ModManager {
         if (this.#closing) return;
         const message = `${phase}: ${error?.code ?? 'scriptError'}: ${String(error?.message ?? error)}`.slice(0, 2048);
         this.#report('runtimeError', { modId: item.id, message });
-        try { await this.#store.setEnabled(item.id, false, { error: message }); }
+        try { await this.#store.setEnabled(item.id, false, { error: message, expectedPackageText: JSON.stringify(item.pkg) }); }
         catch (failure) { if (!this.#closing) { this.#error = String(failure?.message ?? failure).slice(0, 2048); this.#report('storageError', { modId: item.id, message: this.#error }); } }
     }
     // 로그는 콜백 성공 뒤에만, 입력은 다음 원래 입력 직전까지 사본으로 보관한다.

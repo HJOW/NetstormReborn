@@ -42,3 +42,9 @@ test('Guide 반납 뒤 World가 잠시 남아도 종료된 미션을 노출하�
     const { host, app } = makeHost(); assert.equal(host.snapshot().state.sessionId, 'session-1'); app._clientGuide.current = () => null;
     assert.equal(host.snapshot().state.sessionId, null); assert.deepEqual(host.snapshot().players, []); host.dispose();
 });
+
+// DOM 패널은 Gump 토큰 대신 자체 존재 상태로 입력을 차단한다.
+test('웹 모드 관리 패널이 열려 있으면 게임 정지 판정과 독립적으로 모드 입력을 막는다', () => {
+    const { host, app } = makeHost(); app._modPanel = {};
+    assert.equal(app._gameClock.paused(), false); assert.equal(host.inputBlocked(), true); host.dispose();
+});
