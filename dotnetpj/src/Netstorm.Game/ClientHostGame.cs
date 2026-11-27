@@ -466,6 +466,8 @@ public sealed partial class ClientHostGame : Game
         HostSession? session = null;
         // 적재 실패에서도 이 호출이 만든 외부 연소장치만 반납한다.
         HostMissionBurning? pendingBurning = null;
+        // 이 시작 호출이 설치한 미니맵 월드 알림만 실패 시 반납한다.
+        bool minimapBound = false;
         try
         {
             session = new HostSession(_kernel, _gameRandom, _crtRandom, sharedSp: _spGlobals.Store, sharedCrtBox: _spCrtBox, sharedGameplay: _gameplay, sharedLists: _sidLists, pool: storage.Pool, sharedLocal: _localState, sharedConnections: _connections, sharedPlayerRecords: _gameplay.PlayerRecords, sharedProcessTime: _clientClock.GameTime, sharedPlayerProcesses: _surfaceGlobals.Processes, sharedTemplates: _stateResources.Templates, sharedWorldFrames: assets.Frames, sharedSurface: _surfaceGlobals);
@@ -730,6 +732,8 @@ public sealed partial class ClientHostGame : Game
         EnsureMissionProductionDeck();
         // R5-4c3 미션 미니맵 부착. 왼쪽 아래 80×75에 현재 지형을 갱신해 그린다. 중앙·선택 이동과 입력 모드·폴링은 R5/R6에서 잇는다.
         // 근거: cpppj RawMinimapControls.cpp의 Open 뒤 80×75 부착과 HudDock.cpp의 왼쪽 아래 도킹이다. 시작 덤프에는 닿지 않는다.
+        NativeMinimap.BindStorageExecutors();
+        minimapBound = true;
         EnsureMissionMinimap();
             // 실제 구분선의 오른쪽 아래에 채팅창을 부착한다. 채팅 입력도 같은 부모를 사용한다.
             // 근거: UberRootGump의 세로·채팅 구분선 slave와 HudDock의 크기 및 위치 계산이다.
@@ -744,6 +748,8 @@ public sealed partial class ClientHostGame : Game
         }
         catch
         {
+            // 이번 시작이 설치한 알림만 세션 물리보다 먼저 반납한다.
+            if (minimapBound) NativeMinimap.UnbindWorld();
             // 적재 중 예외에서도 같은 Host 프로세스를 장치보다 먼저 반납한다.
             session?.ReleasePlayerRecordViews();
             pendingBurning?.Dispose();

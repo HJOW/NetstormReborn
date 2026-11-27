@@ -3,6 +3,7 @@ using Netstorm.Client.Display;
 using Netstorm.Client.Gump;
 using Netstorm.Client.Input;
 using Netstorm.Core.Original;
+using Netstorm.Core.Simulation;
 using Netstorm.Tests;
 
 namespace Netstorm.Client.Tests; // 실제 공통 미니맵의 입력·부분 출력·통지 대여 수명을 검증한다.
@@ -152,6 +153,34 @@ public sealed class RawMinimapControlsTests
         var other = new RawMetadisplayDirty(rig.Storage.Pool, new()); core.Pop.SetMetadisplay(other); core.Unpop.SetMinimapQueue(other); rig.Mini.UnbindWorld(); Assert.True(core.Pop.ReleaseMetadisplay(other)); Assert.True(core.Unpop.ReleaseMinimapQueue(other));
         rig.Mini.BindWorld(core); rig.Mini.UnbindWorld(); Assert.False(core.Unpop.ReleaseMinimapQueue(other));
         using var different = new Rig(false); using var otherWorld = different.World(); Assert.Throws<ArgumentException>(() => rig.Mini.BindWorld(otherWorld.Core()));
+    }
+    /// <summary>장기 저장소 실행기의 등록과 해제가 미니맵 큐에 도달하고 대여 반납 뒤에는 더 이상 전달되지 않는다.</summary>
+    [Fact]
+    public void StorageExecutorsNotifyMinimapAndUnbindStopsNotifications()
+    {
+        using var rig = new Rig();
+        rig.Storage.BindDisplayDevices(new() { View = () => new() { Zoom = 65536 }, Suppressed = () => false, Invalidate = (_, _) => { } });
+        var pop = rig.Storage.PopExecutor();
+        var unpop = rig.Storage.UnpopExecutor();
+        rig.Mini.BindStorageExecutors();
+        Assert.Throws<InvalidOperationException>(() => rig.Mini.BindStorageExecutors());
+        rig.Mini.Refresh();
+        rig.Storage.Types[74].Flags2 = 0x4002;
+        rig.Storage.Types[74].FootX = 1;
+        rig.Storage.Types[74].FootY = 1;
+        rig.Storage.Shapes[74].Loaded = true;
+        rig.Storage.Shapes[74].FrameCount = 1;
+        rig.Storage.Shapes[74].Frames.Add(new() { Width = 16, Height = 11, CellWidth = 1, CellHeight = 1 });
+        int sid = rig.Storage.FactoryExecutor().Create(74, SidAllocation.Client);
+        Assert.Equal(RawPopResult.Registered, pop.Pop(sid, rig.Storage.Types[74], 1, 1, 120, 80));
+        Assert.True(rig.State.Count > 0);
+        rig.Mini.Refresh();
+        unpop.Unpop(sid, rig.Storage.Types[74]);
+        Assert.True(rig.State.Count > 0);
+        rig.Mini.UnbindWorld();
+        rig.Mini.Refresh();
+        Assert.Equal(RawPopResult.Registered, pop.Pop(sid, rig.Storage.Types[74], 1, 1, 120, 80));
+        Assert.Equal(0, rig.State.Count);
     }
     /// <summary>Capture/Idle 중 닫아도 같은 공통 수명이 둘을 반납하고 독립 bitmap은 남긴다.</summary>
     [Fact]

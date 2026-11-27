@@ -125,7 +125,20 @@ public sealed class RawMinimapControls : IDisposable
     {
         CheckAlive(); ArgumentNullException.ThrowIfNull(core);
         if (_pop is not null || _unpop is not null || !ReferenceEquals(core.Pool, _storage.Pool) || !ReferenceEquals(core.Hash, _storage.Hash) || !ReferenceEquals(core.Unpop.Pool, _storage.Pool) || !ReferenceEquals(core.OwnerMode, _storage.OwnerMode) || !ReferenceEquals(core.Types, _storage.Types) || !ReferenceEquals(core.Spots, _storage.Spots)) throw new ArgumentException("미니맵의 현재 월드 물리/대여 불일치", nameof(core));
-        _pop = new(core.Pop); _unpop = new(core.Unpop); core.Pop.SetMetadisplay(_dirty); core.Unpop.SetMinimapQueue(_dirty); _state.FullRefresh = 1;
+        BindPair(core.Pop, core.Unpop);
+    }
+    /// <summary>장기 저장소의 실제 Pop/Unpop 실행기에 같은 미니맵 큐를 연결한다.</summary>
+    /// <remarks>제품 HostSession은 RawWorldCore 대신 같은 저장소 실행기를 사용한다. 별도 세션 전용 실행기는 해당 소유자에 연결해야 한다.</remarks>
+    public void BindStorageExecutors()
+    {
+        CheckAlive();
+        if (_pop is not null || _unpop is not null) throw new InvalidOperationException("미니맵 월드 대여 중복");
+        BindPair(_storage.PopExecutor(), _storage.UnpopExecutor());
+    }
+    /// <summary>검증된 같은 물리의 두 실행기에 큐를 설치하고 전체 재그리기를 예약한다.</summary>
+    private void BindPair(RawPop pop, RawUnpop unpop)
+    {
+        _pop = new(pop); _unpop = new(unpop); pop.SetMetadisplay(_dirty); unpop.SetMinimapQueue(_dirty); _state.FullRefresh = 1;
     }
     /// <summary>현재 자기 통지만 expected owner 확인으로 반납하고 장기 물리/bitmap은 유지한다.</summary>
     public void UnbindWorld()
