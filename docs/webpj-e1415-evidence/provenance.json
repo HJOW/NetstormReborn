@@ -1,0 +1,49 @@
+{
+  "unit": "WB04-E1415",
+  "host": "HJOW-Athlon",
+  "node": "26.13.0",
+  "sourceHead": "4f580d3cb138f0c18147856815bdd20a18a1f297",
+  "results": {
+    "tests": 6902,
+    "pass": 6902,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "durationMs": 796963.6741,
+    "exit": 0
+  },
+  "freeze": {
+    "unit": "WB04-E1415",
+    "phase": "finished-exit-0",
+    "recordedAt": "2026-11-27T06:06:11.682754+00:00",
+    "files": 2983,
+    "changed": [],
+    "newlinesOnly": []
+  },
+  "scope": "E1413 제단예약피해연결/계약/오류수집기포함. 일본어10모듈후보는미적용.",
+  "periodAfter": {
+    "v26": 0,
+    "v22": 1
+  },
+  "aiFollowup": {
+    "throughFrame": 60000,
+    "time": 1509.175,
+    "errors": 0,
+    "scope": "기존오류지점통과만확인. 자연승리/저장은미완료,120000상한관찰계속."
+  },
+  "evidence": {
+    "node26.log": {
+      "bytes": 917063,
+      "sha256": "02011b2ecd293a58d5de4957cce60f8e37f7427fcd38e1100229687c01f66ec9"
+    },
+    "source-freeze-check.json": {
+      "bytes": 173,
+      "sha256": "0b75425001f67f5a99f63caec8bd2ba7771a08d2c0e9c00bd3468788563689e7"
+    },
+    "source-freeze.json": {
+      "bytes": 606855,
+      "sha256": "22ef4235f8d0a62297ffe59c84b100dd2192cd1b8d1240ff77e39afb7d6e3718"
+    }
+  }
+}

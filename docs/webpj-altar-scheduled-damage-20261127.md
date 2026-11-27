@@ -15,3 +15,5 @@ WB04-E1413, 2026-11-27, HJOW-Athlon. 실제 아군AI의 캠페인1-6에서 발�
 [요약](webpj-e1413-evidence/failure-summary.json), [실제 오류 원문/덤프](webpj-e1413-evidence/failure.json), [오류 화면](webpj-e1413-evidence/failure.png), [활성화 원본 값](webpj-e1413-evidence/activation.json), [재현 로그](webpj-e1413-evidence/error-reproduction.log), [집중 검사](webpj-e1413-evidence/focused.log), [선행 검사/빌드](webpj-e1413-evidence/build.log), [대응표](webpj-e1413-evidence/port-map.log)를 보존했다. 초기 실패·재현 수집기와 원래 ForceEnemy 제어기도 같은 증빙 폴더에 있다.
 
 [Chromium L2](webpj-e1413-evidence/browser.log), [환경·소스·증빙 해시](webpj-e1413-evidence/provenance.json)도 보존했다. 운영 번들은3,501,033바이트다. 구현/집중 검증 단위를 마치며 E1411 뒤 v26 주기는4/4·v22는1/8이므로 Node26 전체 회귀를 바로 실행한다. 실제 AI의 오류 지점 이후 검증은 별도 진행으로 명시한다.
+
+E1415 검증 시점의 후속 관측: 수정 후보2모듈로 실제AI60,000프레임·1509.175초까지 게임오류0으로 진행해 기존 오류 수집55,500구간을 통과했다. [상한60,000까지만 자른 원문](webpj-e1413-evidence/fixed-candidate-through-60000.log)을 보존한다. 이 로그는120,000상한 실행의 중간 관측이며 자연 승리/저장을 뜻하지 않는다. E1415 Node26 전체6,902/6,902도 통과했다.
