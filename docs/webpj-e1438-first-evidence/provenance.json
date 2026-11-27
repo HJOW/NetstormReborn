@@ -1,0 +1,286 @@
+{
+  "scope": "E1433추적목록후속. E1438첫전체는실패1건관찰뒤사용자입력변경없이중단. 전체통과/총검사수는미확정.",
+  "firstHashCheck": {
+    "unit": "WB04-E1438",
+    "recordedAt": "2026-11-27T10:06:06.392336+00:00",
+    "nodeExit": 1,
+    "files": 3541,
+    "changed": [],
+    "newlinesOnly": [],
+    "results": {
+      "tests": null,
+      "pass": null,
+      "fail": null,
+      "cancelled": null,
+      "skipped": null,
+      "todo": null,
+      "durationMs": null
+    },
+    "runnerElapsedSeconds": 457.30846559998463
+  },
+  "manifestEntries": 1331,
+  "newFixture": "cpppj/tests/fixtures/sid-allocation-recovery-x86.tsv",
+  "existingCalculatedFieldsOnly": [
+    {
+      "id": "cpppj-product1370-campaign1-1-ai-ai1000-png",
+      "fields": {
+        "fixtureCommit": [
+          null,
+          "e7b8f35bd"
+        ],
+        "webCommit": [
+          "worktree",
+          "a8a318d8a"
+        ]
+      }
+    },
+    {
+      "id": "cpppj-product1370-campaign1-1-ai-ai1000-tsv",
+      "fields": {
+        "fixtureCommit": [
+          null,
+          "e7b8f35bd"
+        ],
+        "webCommit": [
+          "worktree",
+          "a8a318d8a"
+        ]
+      }
+    },
+    {
+      "id": "cpppj-product1370-campaign1-1-ai-ai10000-png",
+      "fields": {
+        "fixtureCommit": [
+          null,
+          "e7b8f35bd"
+        ],
+        "webCommit": [
+          "worktree",
+          "a8a318d8a"
+        ]
+      }
+    },
+    {
+      "id": "cpppj-product1370-campaign1-1-ai-ai10000-tsv",
+      "fields": {
+        "fixtureCommit": [
+          null,
+          "e7b8f35bd"
+        ],
+        "webCommit": [
+          "worktree",
+          "a8a318d8a"
+        ]
+      }
+    },
+    {
+      "id": "cpppj-product1370-campaign1-1-ai-ai12000-png",
+      "fields": {
+        "fixtureCommit": [
+          null,
+          "e7b8f35bd"
+        ],
+        "webCommit": [
+          "worktree",
+          "a8a318d8a"
+        ]
+      }
+    },
+    {
+      "id": "cpppj-product1370-campaign1-1-ai-ai12000-tsv",
+      "fields": {
+        "fixtureCommit": [
+          null,
+          "e7b8f35bd"
+        ],
+        "webCommit": [
+          "worktree",
+          "a8a318d8a"
+        ]
+      }
+    },
+    {
+      "id": "cpppj-product1370-campaign1-1-ai-ai6000-png",
+      "fields": {
+        "fixtureCommit": [
+          null,
+          "e7b8f35bd"
+        ],
+        "webCommit": [
+          "worktree",
+          "a8a318d8a"
+        ]
+      }
+    },
+    {
+      "id": "cpppj-product1370-campaign1-1-ai-ai6000-tsv",
+      "fields": {
+        "fixtureCommit": [
+          null,
+          "e7b8f35bd"
+        ],
+        "webCommit": [
+          "worktree",
+          "a8a318d8a"
+        ]
+      }
+    },
+    {
+      "id": "cpppj-product1370-campaign1-1-ai-ai7000-png",
+      "fields": {
+        "fixtureCommit": [
+          null,
+          "e7b8f35bd"
+        ],
+        "webCommit": [
+          "worktree",
+          "a8a318d8a"
+        ]
+      }
+    },
+    {
+      "id": "cpppj-product1370-campaign1-1-ai-ai7000-tsv",
+      "fields": {
+        "fixtureCommit": [
+          null,
+          "e7b8f35bd"
+        ],
+        "webCommit": [
+          "worktree",
+          "a8a318d8a"
+        ]
+      }
+    },
+    {
+      "id": "cpppj-product1370-campaign1-1-ai-ai8000-png",
+      "fields": {
+        "fixtureCommit": [
+          null,
+          "e7b8f35bd"
+        ],
+        "webCommit": [
+          "worktree",
+          "a8a318d8a"
+        ]
+      }
+    },
+    {
+      "id": "cpppj-product1370-campaign1-1-ai-ai8000-tsv",
+      "fields": {
+        "fixtureCommit": [
+          null,
+          "e7b8f35bd"
+        ],
+        "webCommit": [
+          "worktree",
+          "a8a318d8a"
+        ]
+      }
+    },
+    {
+      "id": "cpppj-product1370-campaign1-1-ai-ai9000-png",
+      "fields": {
+        "fixtureCommit": [
+          null,
+          "e7b8f35bd"
+        ],
+        "webCommit": [
+          "worktree",
+          "a8a318d8a"
+        ]
+      }
+    },
+    {
+      "id": "cpppj-product1370-campaign1-1-ai-ai9000-tsv",
+      "fields": {
+        "fixtureCommit": [
+          null,
+          "e7b8f35bd"
+        ],
+        "webCommit": [
+          "worktree",
+          "a8a318d8a"
+        ]
+      }
+    },
+    {
+      "id": "cpppj-product1370-campaign1-1-ai-oracle-json",
+      "fields": {
+        "fixtureCommit": [
+          null,
+          "e7b8f35bd"
+        ],
+        "webCommit": [
+          "worktree",
+          "a8a318d8a"
+        ]
+      }
+    },
+    {
+      "id": "cpppj-product1370-campaign1-1-ai-report-tsv",
+      "fields": {
+        "fixtureCommit": [
+          null,
+          "e7b8f35bd"
+        ],
+        "webCommit": [
+          "worktree",
+          "a8a318d8a"
+        ]
+      }
+    },
+    {
+      "id": "cpppj-product1370-campaign1-1-ai-steps-json",
+      "fields": {
+        "fixtureCommit": [
+          null,
+          "e7b8f35bd"
+        ],
+        "webCommit": [
+          "worktree",
+          "a8a318d8a"
+        ]
+      }
+    }
+  ],
+  "focusedAfterFix": "5/5",
+  "period": "구현추가단위아님. v26=4/4·v22=4/8 유지; 다음E1438전체재실행필요.",
+  "evidence": {
+    "manifest-focus.log": {
+      "bytes": 622,
+      "sha256": "f578ea6922a9be6c12b58f1733bc67d53d242f6cc4fedf43d41bfdf868b10bd9"
+    },
+    "manifest-write.log": {
+      "bytes": 45,
+      "sha256": "416ead19961559de66afa2194b1e5976458f2d48d62a0ed5b1714aa593344b9c"
+    },
+    "manual-stop.json": {
+      "bytes": 411,
+      "sha256": "54d801d00b54b2f52219a76622d958ad05be862024c5bc5af2e58d43088d1441"
+    },
+    "node26.log": {
+      "bytes": 526721,
+      "sha256": "b38f37a90553c774aa300518f2c75f985f95862765111718164b5bf353c0da5b"
+    },
+    "registered-fixture.json": {
+      "bytes": 1261,
+      "sha256": "1936fa6471e8360e41b5b1019168a07b26a2703812a11994c78c578fe0a5c034"
+    },
+    "run-state.json": {
+      "bytes": 798,
+      "sha256": "74bd20ac574902acf8baa1b26f147b2a38053755a4f591039bc2009397e02ec9"
+    },
+    "runner.py": {
+      "bytes": 6152,
+      "sha256": "c23935c136ea7f940ac5e06e878335b87351025852e7564f4904a4a584609005"
+    },
+    "source-freeze-check.json": {
+      "bytes": 376,
+      "sha256": "024c501b4f33d2ea070bcd87863789f4e6a7123de70e5e8867e79a03c72c0b38"
+    },
+    "source-freeze.json": {
+      "bytes": 794572,
+      "sha256": "d99bc1878d944cf357e964e0e0d76ab3be0e2ad27e3a7e20dc82c27cac24f700"
+    }
+  }
+}

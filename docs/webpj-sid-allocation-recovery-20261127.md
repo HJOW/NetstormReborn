@@ -11,3 +11,5 @@ Storage는 이미 있는 `RawProcessHostStorage.reclaimForAllocation`으로 현�
 격리 후보75/75 뒤 본소스 관련/대응표84/84, 선행 ESLint/운영 빌드 종료0, 재번들 바이트 동일성1/1, 기존 C++ 화면/덤프 단언을 유지한 Chromium L2 1/1을 통과했다. 번들은 3,510,896바이트·SHA-256 `0da5a46c2978732ac114f0b83c0a6ba10b392603d2408f6afc4f2f564ef63741`다. v26=3/4·v22=3/8이다.
 
 [Node84](webpj-e1433-evidence/node-focus.log)·[빌드](webpj-e1433-evidence/build.log)·[재번들](webpj-e1433-evidence/bundle-fresh.log)·[Chromium](webpj-e1433-evidence/chromium-l2.log)·[Native47 후보](webpj-e1433-evidence/candidate-native47.log)·[출처/해시](webpj-e1433-evidence/provenance.json). 3.6절의 SID 잔여를 닫고 GameAux의 다른 미확인 소비 경계는 유지한다.
+
+전체 회귀 E1438에서 새47행 자료의 추적 등록 누락을 확인해 목록1331개로 보완했다. 자료/원본 단언은 유지했고 추적+회복5/5를 통과했다. 첫 전체는 부분 실패/중단으로 보존하며 E1438을 다시 실행한다. [보완/원문](webpj-node26-sid-fixture-registration-20261127.md).

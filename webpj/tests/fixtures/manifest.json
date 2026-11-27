@@ -40781,8 +40781,8 @@
       "sha256": "baac85f3c68ab3554836e4ca26d0f3c78837ca03205276a84f263585ec5f3538",
       "bytes": 216165,
       "lines": null,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "e7b8f35bd",
+      "webCommit": "a8a318d8a",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/client/CampaignTestPlay.cpp": "382ec33fe",
@@ -40815,8 +40815,8 @@
       "sha256": "c73c06daecb15394af10a8008dd0e69a2cce4d8cb725b006146467a567a253c4",
       "bytes": 322368,
       "lines": 4241,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "e7b8f35bd",
+      "webCommit": "a8a318d8a",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/client/CampaignTestPlay.cpp": "382ec33fe",
@@ -40849,8 +40849,8 @@
       "sha256": "9f18b60aa1f15d7b66afc615244ab8a821b4e9d5df7f5ad553a52ca1c12451ef",
       "bytes": 252142,
       "lines": null,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "e7b8f35bd",
+      "webCommit": "a8a318d8a",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/client/CampaignTestPlay.cpp": "382ec33fe",
@@ -40883,8 +40883,8 @@
       "sha256": "919196ab2d5589681b31b022333c50a5a99584a65f5cdff019e34e8f18b068d2",
       "bytes": 380406,
       "lines": 4990,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "e7b8f35bd",
+      "webCommit": "a8a318d8a",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/client/CampaignTestPlay.cpp": "382ec33fe",
@@ -40917,8 +40917,8 @@
       "sha256": "7c6f79dd9c025ea005ffb794aeefa5752090ed403c2809674defb72f85a74c80",
       "bytes": 253520,
       "lines": null,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "e7b8f35bd",
+      "webCommit": "a8a318d8a",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/client/CampaignTestPlay.cpp": "382ec33fe",
@@ -40951,8 +40951,8 @@
       "sha256": "99c1394631fd10b4af88800833c428eacbcbdd10e5f3fb853185ee56d3a9e330",
       "bytes": 400408,
       "lines": 5240,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "e7b8f35bd",
+      "webCommit": "a8a318d8a",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/client/CampaignTestPlay.cpp": "382ec33fe",
@@ -40985,8 +40985,8 @@
       "sha256": "3b36c093c764bdb205b7a41c7166fed450107bffadfb5325e270d29e44476b22",
       "bytes": 240216,
       "lines": null,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "e7b8f35bd",
+      "webCommit": "a8a318d8a",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/client/CampaignTestPlay.cpp": "382ec33fe",
@@ -41019,8 +41019,8 @@
       "sha256": "848fc0d67b0d4d7ba3cef2b6dfad559b215c3d54842c21fed507bc2b2e6057ca",
       "bytes": 353035,
       "lines": 4631,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "e7b8f35bd",
+      "webCommit": "a8a318d8a",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/client/CampaignTestPlay.cpp": "382ec33fe",
@@ -41053,8 +41053,8 @@
       "sha256": "16910438b3f8bd03f041c6bb9e7df000169f3eec6373d856cb217ff1034b0b01",
       "bytes": 243345,
       "lines": null,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "e7b8f35bd",
+      "webCommit": "a8a318d8a",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/client/CampaignTestPlay.cpp": "382ec33fe",
@@ -41087,8 +41087,8 @@
       "sha256": "3cfeb70d65da644730b17c0e0015de2f8cf49833d63a27a7bc3c2e5e14207d3b",
       "bytes": 359186,
       "lines": 4711,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "e7b8f35bd",
+      "webCommit": "a8a318d8a",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/client/CampaignTestPlay.cpp": "382ec33fe",
@@ -41121,8 +41121,8 @@
       "sha256": "b5dcf2f46074b48b449d9a0942877689916d37fd72b0aa244ed34ca5bfc7dbe3",
       "bytes": 246572,
       "lines": null,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "e7b8f35bd",
+      "webCommit": "a8a318d8a",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/client/CampaignTestPlay.cpp": "382ec33fe",
@@ -41155,8 +41155,8 @@
       "sha256": "4935648fa27a68162369b33a575ab29a26599a536c29249565b0ee1df126b041",
       "bytes": 367378,
       "lines": 4817,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "e7b8f35bd",
+      "webCommit": "a8a318d8a",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/client/CampaignTestPlay.cpp": "382ec33fe",
@@ -41189,8 +41189,8 @@
       "sha256": "dd15c85d9abfc51cd58716a45cc0947e934e6cbf30c43f2bc790c24af8548449",
       "bytes": 247709,
       "lines": null,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "e7b8f35bd",
+      "webCommit": "a8a318d8a",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/client/CampaignTestPlay.cpp": "382ec33fe",
@@ -41223,8 +41223,8 @@
       "sha256": "867a387a97bcdaaab90200da2dee74ed001fe6c54be286bab8a445ba66278ab9",
       "bytes": 376413,
       "lines": 4933,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "e7b8f35bd",
+      "webCommit": "a8a318d8a",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/client/CampaignTestPlay.cpp": "382ec33fe",
@@ -41257,8 +41257,8 @@
       "sha256": "ceaf7344d331d061d95795b05202eca8d3d754226c8454e09ab51eced86b8f8b",
       "bytes": 799,
       "lines": 33,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "e7b8f35bd",
+      "webCommit": "a8a318d8a",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/client/CampaignTestPlay.cpp": "382ec33fe",
@@ -41291,8 +41291,8 @@
       "sha256": "abb061d69fa625d574c1fe9dd3634558db1a1b59acbeb0049585483d64932cd9",
       "bytes": 2325804,
       "lines": 62308,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "e7b8f35bd",
+      "webCommit": "a8a318d8a",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/client/CampaignTestPlay.cpp": "382ec33fe",
@@ -41325,12 +41325,46 @@
       "sha256": "d2c840c1aa1390431efd514a59c3364b48d63570d922fe49be627590ed2ced1c",
       "bytes": 1789,
       "lines": 131,
-      "fixtureCommit": null,
-      "webCommit": "worktree",
+      "fixtureCommit": "e7b8f35bd",
+      "webCommit": "a8a318d8a",
       "cpppjBasis": {
         "cpppj/src/client/SessionStateDump.cpp": "baf141ebe",
         "cpppj/src/client/CampaignTestPlay.cpp": "382ec33fe",
         "cpppj/src/client/RawCampaignMissionStartBindings.cpp": "382ec33fe"
+      }
+    },
+    {
+      "id": "sid-allocation-recovery",
+      "path": "cpppj/tests/fixtures/sid-allocation-recovery-x86.tsv",
+      "kind": "original-x86",
+      "edition": "10.78",
+      "required": true,
+      "producer": "cpppj 독립 PATCH PE 관측의 할당 진단 정상 복귀·최대50개 회수·예외 부분 상태47행",
+      "consumers": [
+        "webpj/tests/sid-allocation-recovery.test.mjs"
+      ],
+      "modules": [
+        "webpj/www/core/sid-pool.js",
+        "webpj/www/core/raw-surface-storage.js"
+      ],
+      "unit": "WB04-E1433",
+      "doc": "docs/webpj-sid-allocation-recovery-20261127.md",
+      "cpppjSources": [
+        "cpppj/src/o/SidPool.cpp",
+        "cpppj/src/client/RawSurfaceStorage.cpp",
+        "cpppj/src/client/RawSurfaceWorld.cpp"
+      ],
+      "scope": "PATCH47행의 반환·전체 풀/삭제 기록 Adler·진단/회수 사건·현재 TYPE/금지 전역과 예외 부분 상태 전체. CD는 제외.",
+      "text": true,
+      "sha256": "1527716c4194bc879f0bab5cb6352a378951f7beb049b730cf503485426fd5d8",
+      "bytes": 7066,
+      "lines": 48,
+      "fixtureCommit": "7b78cc20d",
+      "webCommit": "6d89cb288",
+      "cpppjBasis": {
+        "cpppj/src/o/SidPool.cpp": "9cb0547f5",
+        "cpppj/src/client/RawSurfaceStorage.cpp": "14fd017c3",
+        "cpppj/src/client/RawSurfaceWorld.cpp": "a7509bbc7"
       }
     }
   ]

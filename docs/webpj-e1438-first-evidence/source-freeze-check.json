@@ -1,0 +1,18 @@
+{
+  "unit": "WB04-E1438",
+  "recordedAt": "2026-11-27T10:06:06.392336+00:00",
+  "nodeExit": 1,
+  "files": 3541,
+  "changed": [],
+  "newlinesOnly": [],
+  "results": {
+    "tests": null,
+    "pass": null,
+    "fail": null,
+    "cancelled": null,
+    "skipped": null,
+    "todo": null,
+    "durationMs": null
+  },
+  "runnerElapsedSeconds": 457.30846559998463
+}
