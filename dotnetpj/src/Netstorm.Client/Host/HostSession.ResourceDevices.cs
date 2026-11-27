@@ -45,8 +45,7 @@ public sealed partial class HostSession
     {
         // 근거: cpppj RawCampaignSession.cpp 4692행의 impl_->world.Destroy.
         // 실제 가상10의 bool과 부분 효과를 같은 호출자에게 돌려준다.
-        // DN의 장기 삭제는 같은 Surface 물리를 빌리며 세션 삭제 본체는 R6에서 잇는다.
-        throw new InvalidOperationException("호스트 자원 삭제의 실제 월드 삭제 본체 미연결(R6)");
+        return DestroyForState(sid, flags);
     }
 
     /// <summary>기존 최초 Pop/삭제와 동일한 실제 AI 목록 본문이다. 0.901에서 추가됐다.</summary>

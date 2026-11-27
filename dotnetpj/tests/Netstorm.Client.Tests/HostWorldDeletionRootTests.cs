@@ -59,6 +59,7 @@ public sealed partial class HostPriestWorldLiveTests
         session.ReleasePlayerProcesses();
         var bare = new HostSession(new Kernel(), new GameRandom(1u), new CrtRandom());
         Assert.Throws<InvalidOperationException>(() => bare.BuildWorldDeletionRootDevices());
+        Assert.Throws<InvalidOperationException>(() => bare.DestroyResourceObject(1, 0));
         bare.ReleasePlayerRecordViews();
     }
 
@@ -79,6 +80,12 @@ public sealed partial class HostPriestWorldLiveTests
         session.DestroyWorldObject(form, 0);
         Assert.Equal(1, calls);
         Assert.NotEqual(0, session.Pool.Slot(form)[11] & 1);
+        int secondParent = session.BuildPlayerWorldHooks().Create!(152, 2);
+        var second = new ObservedWorldDeletionProcess(_ => calls++);
+        Assert.Same(second, session.PlayerProcesses.Attach(second, 11, secondParent, 0x50));
+        int secondForm = second.Form();
+        Assert.True(session.DestroyResourceObject(secondForm, 0));
+        Assert.Equal(2, calls); Assert.NotEqual(0, session.Pool.Slot(secondForm)[11] & 1);
         session.ReleasePlayerProcesses();
     }
 
@@ -104,6 +111,7 @@ public sealed partial class HostPriestWorldLiveTests
         int sid = MakeWorldDeletionSlot(session, 158, 50, 60, 1, 0xDEADBEEFu);
         var failure = Assert.Throws<InvalidOperationException>(() => session.DestroyWorldObject(sid, 0));
         Assert.Contains("미복원 가상표", failure.Message);
+        Assert.Contains("미복원 가상표", Assert.Throws<InvalidOperationException>(() => session.DestroyResourceObject(sid, 0)).Message);
         session.ReleasePlayerProcesses();
     }
 }
