@@ -135,6 +135,40 @@ public sealed class SpriteVirtualAdditionalTests
         draw.Draw(sid, new(1, 2));
     }
 
+    /// <summary>제단은 별도 TYPE 169의 현재 프레임 수와 소유자 상태를 사용한다.</summary>
+    [Fact]
+    public void DaisUsesCurrentExtraShapeFrameCountAndOwner()
+    {
+        var pool = new RawSidPool(24000, server: false);
+        int sid = pool.Allocate(SidAllocation.Client);
+        var frames = Enumerable.Range(0, 188).Select(_ => new RiftTypeFrames([])).ToArray();
+        var assets = Enumerable.Range(0, 188).Select(_ => new SquidDisplayShape()).ToArray();
+        assets[165].FrameCount = 99;
+        assets[169].FrameCount = 4;
+        var requests = new List<SpriteShapeRequest>();
+        uint owner = 2;
+        var draw = new SpriteVirtualAdditional(pool, frames, requests.Add, localOwner: () => owner, shapes: assets);
+        Set(pool, sid, 0x00507950, 165, 11);
+        draw.Draw(sid, new(3, 4));
+        Assert.Equal(new SpriteShapeRequest(169, 3, new(3, 4), SpriteShapeMode.Plain), Assert.Single(requests));
+        assets[169].FrameCount = 5;
+        pool.AllocatedBytes(sid)[40] = 0x10;
+        pool.AllocatedBytes(sid)[34] = 2;
+        draw.Draw(sid, new(3, 4));
+        Assert.Equal(new SpriteShapeRequest(169, 1, new(3, 4), SpriteShapeMode.Abstract), requests[1]);
+        owner = 1;
+        draw.Draw(sid, new(3, 4));
+        Assert.Equal(2, requests.Count);
+        BinaryPrimitives.WriteInt32LittleEndian(pool.AllocatedBytes(sid)[36..], -1);
+        Assert.Throws<ArgumentOutOfRangeException>(() => draw.Draw(sid, new(3, 4)));
+        assets[169].FrameCount = 0;
+        Assert.Throws<InvalidOperationException>(() => draw.Draw(sid, new(3, 4)));
+        var missing = new SpriteVirtualAdditional(pool, frames, requests.Add);
+        Assert.Throws<InvalidOperationException>(() => missing.Draw(sid, new(3, 4)));
+        pool.AllocatedBytes(sid)[10] = 166;
+        Assert.Throws<ArgumentException>(() => draw.Draw(sid, new(3, 4)));
+    }
+
     /// <summary>주문의 도움말 프레임과 추상 소유자 조건을 실제 현재 슬롯으로 분기한다.</summary>
     [Fact]
     public void SpellAdditionalSuppressesHelpAndUsesCurrentOwner()

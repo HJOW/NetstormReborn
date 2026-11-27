@@ -23,6 +23,8 @@ public sealed class SpriteVirtualAdditional
     private readonly IReadOnlyList<RiftTypeDefinition>? _definitions;
     /// <summary>주문 추상 그림의 현재 로컬 소유자다.</summary>
     private readonly Func<uint>? _localOwner;
+    /// <summary>제단 추가 자산의 현재 프레임 수를 포함하는 실제 셰이프 표다.</summary>
+    private readonly IReadOnlyList<SquidDisplayShape>? _shapes;
 
     /// <summary>같은 실제 풀·프레임과 호출 위치에서 사용할 출력 장치를 빌린다.</summary>
     /// <param name="pool">10.78 객체 풀이다.</param>
@@ -33,9 +35,11 @@ public sealed class SpriteVirtualAdditional
     /// <param name="types">현재 TYPE 속성이다.</param>
     /// <param name="definitions">파일 TYPE 정의다.</param>
     /// <param name="localOwner">현재 로컬 소유자 조회다.</param>
+    /// <param name="shapes">현재 TYPE 순서의 실제 셰이프 표다.</param>
     public SpriteVirtualAdditional(RawSidPool pool, IReadOnlyList<RiftTypeFrames> frames, Action<SpriteShapeRequest> shape,
         Action<int, ScreenPoint>? bridge = null, Action<int, ScreenPoint>? meta = null,
-        IReadOnlyList<OriginalTypeRecord>? types = null, IReadOnlyList<RiftTypeDefinition>? definitions = null, Func<uint>? localOwner = null)
+        IReadOnlyList<OriginalTypeRecord>? types = null, IReadOnlyList<RiftTypeDefinition>? definitions = null, Func<uint>? localOwner = null,
+        IReadOnlyList<SquidDisplayShape>? shapes = null)
     {
         ArgumentNullException.ThrowIfNull(pool);
         ArgumentNullException.ThrowIfNull(frames);
@@ -48,6 +52,7 @@ public sealed class SpriteVirtualAdditional
         _types = types;
         _definitions = definitions;
         _localOwner = localOwner;
+        _shapes = shapes;
     }
 
     /// <summary>현재 객체의 +a4를 조회해 해당 실제 추가 그림만 호출한다.</summary>
@@ -84,6 +89,9 @@ public sealed class SpriteVirtualAdditional
                 return;
             case 0x0045b560:
                 DrawCurrentOverlay(sid, point, 72, true);
+                return;
+            case 0x004484b0:
+                DrawDais(sid, point);
                 return;
             case 0x00485f90:
                 ReadOnlySpan<byte> raw = _pool.Slot(sid);
@@ -165,5 +173,23 @@ public sealed class SpriteVirtualAdditional
         if ((raw[40] & 0x10) == 0) _shape(new(type, frame, point, SpriteShapeMode.Plain));
         else if (raw[34] == (_localOwner ?? throw new InvalidOperationException("추가 그림 현재 로컬 소유자 미연결"))())
             _shape(new(type, frame, point, SpriteShapeMode.Abstract));
+    }
+
+    /// <summary>제단 프레임을 별도 자산의 프레임 수로 나눈 나머지 그림을 표시한다.</summary>
+    /// <param name="sid">현재 제단 객체 SID다.</param>
+    /// <param name="point">현재 화면 기준점이다.</param>
+    /// <remarks>cpppj RawDaisDraw의 signed 나머지와 실제 00497280 소유자 관문을 따른다.</remarks>
+    private void DrawDais(int sid, ScreenPoint point)
+    {
+        ReadOnlySpan<byte> raw = _pool.Slot(sid);
+        if (raw[10] != 165) throw new ArgumentException("제단 추가 그림 TYPE 불일치", nameof(sid));
+        var shapes = _shapes ?? throw new InvalidOperationException("제단 추가 그림 셰이프 표 미연결");
+        if (shapes.Count <= 169 || shapes[169] is null || shapes[169].FrameCount <= 0)
+            throw new InvalidOperationException("제단 추가 그림 프레임 수 오류");
+        int frame = BinaryPrimitives.ReadInt32LittleEndian(raw[36..]) % shapes[169].FrameCount;
+        if (frame < 0) throw new ArgumentOutOfRangeException(nameof(sid), "제단 추가 그림 음수 프레임");
+        if ((raw[40] & 0x10) == 0) _shape(new(169, (uint)frame, point, SpriteShapeMode.Plain));
+        else if (raw[34] == (_localOwner ?? throw new InvalidOperationException("제단 현재 로컬 소유자 미연결"))())
+            _shape(new(169, (uint)frame, point, SpriteShapeMode.Abstract));
     }
 }
