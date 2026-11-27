@@ -1,0 +1,138 @@
+{"mission":"Tutorial1","title":"간극에 다리 놓기!","language":"korean","x":356.5,"width":396,"logicalWidth":1024,"maxLine":294,"bodyWidth":296,"buttons":["다음"],"time":3181598.342,"started":1}
+{"mission":"Tutorial2","title":"비밀 워크샾","language":"korean","x":376.5,"width":356,"logicalWidth":1024,"maxLine":280,"bodyWidth":296,"buttons":["다음"],"time":3181600.506,"started":1}
+{"mission":"Tutorial3","title":"사제 포획","language":"korean","x":346.5,"width":416,"logicalWidth":1024,"maxLine":315,"bodyWidth":316,"buttons":["다음"],"time":3181601.47,"started":1}
+{"mission":"Tutorial4","title":"전술 전투","language":"korean","x":326.5,"width":456,"logicalWidth":1024,"maxLine":351,"bodyWidth":356,"buttons":["다음"],"time":3181603.469,"started":1}
+{"mission":"Tutorial5","title":"교묘한 방어","language":"korean","x":366.5,"width":376,"logicalWidth":1024,"maxLine":276,"bodyWidth":276,"buttons":["다음"],"time":3181605.249,"started":1}
+{"mission":"Tutorial6","title":"순수한 힘!","language":"korean","x":336.5,"width":436,"logicalWidth":1024,"maxLine":378,"bodyWidth":376,"buttons":["다음"],"time":3181606.822,"started":1}
+{"mission":"TheWarBegins","title":"전쟁의 시작!","language":"korean","x":334,"width":441,"logicalWidth":1024,"maxLine":371,"bodyWidth":381,"buttons":["지식 보기","미션 시작"],"time":3181608.411,"started":1}
+{"mission":"MasterOfWhirligigs","title":"훨리기그의 지배자","language":"korean","x":374,"width":361,"logicalWidth":1024,"maxLine":261,"bodyWidth":261,"buttons":["지식 보기","미션 시작"],"time":3181610.57,"started":1}
+{"mission":"SaveTheIsland","title":"섬을 구하라!","language":"korean","x":344,"width":421,"logicalWidth":1024,"maxLine":315,"bodyWidth":321,"buttons":["지식 보기","미션 시작"],"time":3181611.937,"started":1}
+{"mission":"FragileFortune","title":"위태로운 보물!","language":"korean","x":364,"width":381,"logicalWidth":1024,"maxLine":273,"bodyWidth":281,"buttons":["지식 보기","미션 시작"],"time":3181614.454,"started":1}
+{"mission":"ThunderingPower","title":"천둥 같은 힘!","language":"korean","x":386.5,"width":336,"logicalWidth":1024,"maxLine":237,"bodyWidth":236,"buttons":["다음"],"time":3181617.281,"started":1}
+{"mission":"DissolvedAlliance","title":"깨어진 동맹!","language":"korean","x":354,"width":401,"logicalWidth":1024,"maxLine":327,"bodyWidth":341,"buttons":["지식 보기","미션 시작"],"time":3181619.384,"started":1}
+{"mission":"TheNoose","title":"올가미","language":"korean","x":346.5,"width":416,"logicalWidth":1024,"maxLine":318,"bodyWidth":316,"buttons":["다음"],"time":3181622.032,"started":1}
+{"mission":"RainVsRain","title":"레인 대 레인!","language":"korean","x":384,"width":341,"logicalWidth":1024,"maxLine":237,"bodyWidth":241,"buttons":["지식 보기","미션 시작"],"time":3181626.162,"started":1}
+{"mission":"RunForIt","title":"도망쳐라!","language":"korean","x":336.5,"width":436,"logicalWidth":1024,"maxLine":375,"bodyWidth":376,"buttons":["다음"],"time":3181627.86,"started":1}
+{"mission":"GuardMyBack","title":"내 등을 지켜 줘","language":"korean","x":334,"width":441,"logicalWidth":1024,"maxLine":342,"bodyWidth":341,"buttons":["지식 보기","미션 시작"],"time":3181629.254,"started":1}
+{"mission":"Surrounded","title":"포위!","language":"korean","x":384,"width":341,"logicalWidth":1024,"maxLine":278,"bodyWidth":281,"buttons":["지식 보기","미션 시작"],"time":3181632.171,"started":1}
+{"mission":"BreakingThrough","title":"돌파!","language":"korean","x":356.5,"width":396,"logicalWidth":1024,"maxLine":327,"bodyWidth":336,"buttons":["다음"],"time":3181634.808,"started":1}
+{"mission":"ToTheRescue","title":"구출 작전!","language":"korean","x":336.5,"width":436,"logicalWidth":1024,"maxLine":335,"bodyWidth":336,"buttons":["다음"],"time":3181637.35,"started":1}
+{"mission":"Vicious","title":"잔혹한 힘!","language":"korean","x":376.5,"width":356,"logicalWidth":1024,"maxLine":252,"bodyWidth":256,"buttons":["다음"],"time":3181640.575,"started":1}
+{"mission":"EnemyTerritory","title":"적진!","language":"korean","x":374,"width":361,"logicalWidth":1024,"maxLine":252,"bodyWidth":261,"buttons":["지식 보기","미션 시작"],"time":3181642.316,"started":1}
+{"mission":"FinalConfrontation","title":"최후의 대결","language":"korean","x":374,"width":361,"logicalWidth":1024,"maxLine":255,"bodyWidth":261,"buttons":["지식 보기","미션 시작"],"time":3181646.187,"started":1}
+{"mission":"bc1menu76","title":"메뉴","language":"korean","x":415,"width":279,"logicalWidth":1024,"maxLine":183,"bodyWidth":219,"buttons":["사용 가능한 기술","확인"],"time":3181650.774,"started":1}
+{"mission":"bc2bridging76","title":"다리 놓기","language":"korean","x":285,"width":539,"logicalWidth":1024,"maxLine":434,"bodyWidth":439,"buttons":["사용 가능한 기술","시작하자!"],"time":3181652.075,"started":1}
+{"mission":"bc3acid_bar76","title":"애시드 바","language":"korean","x":356.5,"width":396,"logicalWidth":1024,"maxLine":333,"bodyWidth":336,"buttons":["다음"],"time":3181653.289,"started":1}
+{"mission":"bc4bow_rush76","title":"크로스보우 돌격","language":"korean","x":375,"width":359,"logicalWidth":1024,"maxLine":258,"bodyWidth":259,"buttons":["사용 가능한 기술","시작하자!"],"time":3181656.705,"started":1}
+{"mission":"bc5walkers76","title":"죽음의 다리","language":"korean","x":325,"width":459,"logicalWidth":1024,"maxLine":360,"bodyWidth":359,"buttons":["사용 가능한 기술","시작하자!"],"time":3181658.373,"started":1}
+{"mission":"bc6mows76","title":"맨 오 워와 바","language":"korean","x":335,"width":439,"logicalWidth":1024,"maxLine":336,"bodyWidth":339,"buttons":["사용 가능한 기술","시작하자!"],"time":3181660.636,"started":1}
+{"mission":"bc7sun_bars76","title":"썬 바리케이드","language":"korean","x":285,"width":539,"logicalWidth":1024,"maxLine":433,"bodyWidth":439,"buttons":["사용 가능한 기술","시작하자!"],"time":3181665.64,"started":1}
+{"mission":"bc8fury76","title":"퓨리 전쟁","language":"korean","x":393,"width":323,"logicalWidth":1024,"maxLine":217,"bodyWidth":223,"buttons":["시작하자!"],"time":3181667.1,"started":1}
+{"mission":"bc9ssun_bars76","title":"썬 바리케이드","language":"korean","x":335,"width":439,"logicalWidth":1024,"maxLine":381,"bodyWidth":379,"buttons":["사용 가능한 기술","시작하자!"],"time":3181670.119,"started":1}
+AssertionError [ERR_ASSERTION]: 한국어 첫 안내 폭 초과
++ actual - expected
+
++ [
++   {
++     bodyWidth: 376,
++     buttons: [
++       '다음'
++     ],
++     language: 'korean',
++     logicalWidth: 1024,
++     maxLine: 378,
++     mission: 'Tutorial6',
++     overflow: 2,
++     started: 1,
++     time: 3181606.822,
++     title: '순수한 힘!',
++     width: 436,
++     x: 336.5
++   },
++   {
++     bodyWidth: 236,
++     buttons: [
++       '다음'
++     ],
++     language: 'korean',
++     logicalWidth: 1024,
++     maxLine: 237,
++     mission: 'ThunderingPower',
++     overflow: 1,
++     started: 1,
++     time: 3181617.281,
++     title: '천둥 같은 힘!',
++     width: 336,
++     x: 386.5
++   },
++   {
++     bodyWidth: 316,
++     buttons: [
++       '다음'
++     ],
++     language: 'korean',
++     logicalWidth: 1024,
++     maxLine: 318,
++     mission: 'TheNoose',
++     overflow: 2,
++     started: 1,
++     time: 3181622.032,
++     title: '올가미',
++     width: 416,
++     x: 346.5
++   },
++   {
++     bodyWidth: 341,
++     buttons: [
++       '지식 보기',
++       '미션 시작'
++     ],
++     language: 'korean',
++     logicalWidth: 1024,
++     maxLine: 342,
++     mission: 'GuardMyBack',
++     overflow: 1,
++     started: 1,
++     time: 3181629.254,
++     title: '내 등을 지켜 줘',
++     width: 441,
++     x: 334
++   },
++   {
++     bodyWidth: 359,
++     buttons: [
++       '사용 가능한 기술',
++       '시작하자!'
++     ],
++     language: 'korean',
++     logicalWidth: 1024,
++     maxLine: 360,
++     mission: 'bc5walkers76',
++     overflow: 1,
++     started: 1,
++     time: 3181658.373,
++     title: '죽음의 다리',
++     width: 459,
++     x: 325
++   },
++   {
++     bodyWidth: 379,
++     buttons: [
++       '사용 가능한 기술',
++       '시작하자!'
++     ],
++     language: 'korean',
++     logicalWidth: 1024,
++     maxLine: 381,
++     mission: 'bc9ssun_bars76',
++     overflow: 2,
++     started: 1,
++     time: 3181670.119,
++     title: '썬 바리케이드',
++     width: 439,
++     x: 335
++   }
++ ]
+- []
+
+    at run (H:\Workspace\git\NetstormReborn\webpj\extracted\e1430-korean-initial.cjs:29:123)

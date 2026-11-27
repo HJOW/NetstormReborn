@@ -1,0 +1,6749 @@
+{
+  "scope": "운영번들 한국어31미션진입/첫안내만",
+  "rows": [
+    {
+      "mission": "Tutorial1",
+      "title": "간극에 다리 놓기!",
+      "language": "korean",
+      "x": 356.5,
+      "width": 396,
+      "logicalWidth": 1024,
+      "maxLine": 294,
+      "visibleMaxLine": 291,
+      "lines": [
+        {
+          "logical": 74,
+          "visible": 74,
+          "fragments": [
+            {
+              "text": "NetStorm!",
+              "fullWidth": 74,
+              "contentWidth": 74,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 74
+            }
+          ]
+        },
+        {
+          "logical": 293,
+          "visible": 290,
+          "fragments": [
+            {
+              "text": "\"평화를 바라는 자는 전쟁을 준비해야 한다.\" -작자 미상",
+              "fullWidth": 290,
+              "contentWidth": 290,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 290
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 293
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 267,
+          "visible": 264,
+          "fragments": [
+            {
+              "text": "NetStorm의 목표는 간단합니다. 적 사제를 붙잡아 ",
+              "fullWidth": 267,
+              "contentWidth": 264,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 276,
+          "visible": 273,
+          "fragments": [
+            {
+              "text": "퓨리에게 제물로 바치고 비밀 지식과 힘을 얻으세요. ",
+              "fullWidth": 276,
+              "contentWidth": 273,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 276
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 174,
+          "visible": 171,
+          "fragments": [
+            {
+              "text": "NetStorm의 조작도 간단합니다. ",
+              "fullWidth": 174,
+              "contentWidth": 171,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 174
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 234,
+          "visible": 231,
+          "fragments": [
+            {
+              "text": "왼쪽 클릭",
+              "fullWidth": 51,
+              "contentWidth": 51,
+              "advance": 0
+            },
+            {
+              "text": "으로 물체를 집거나 내려놓습니다. ",
+              "fullWidth": 183,
+              "contentWidth": 180,
+              "advance": 51
+            }
+          ]
+        },
+        {
+          "logical": 273,
+          "visible": 270,
+          "fragments": [
+            {
+              "text": "오른쪽 클릭",
+              "fullWidth": 63,
+              "contentWidth": 63,
+              "advance": 0
+            },
+            {
+              "text": "으로 추가 선택지와 정보를 확인합니다. ",
+              "fullWidth": 210,
+              "contentWidth": 207,
+              "advance": 63
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 273
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 275,
+          "visible": 272,
+          "fragments": [
+            {
+              "text": "화면 끝으로 마우스를 움직이거나 ",
+              "fullWidth": 180,
+              "contentWidth": 177,
+              "advance": 0
+            },
+            {
+              "text": "ALT",
+              "fullWidth": 23,
+              "contentWidth": 23,
+              "advance": 180
+            },
+            {
+              "text": " 키를 누른 채 ",
+              "fullWidth": 72,
+              "contentWidth": 69,
+              "advance": 203
+            }
+          ]
+        },
+        {
+          "logical": 225,
+          "visible": 222,
+          "fragments": [
+            {
+              "text": "커서 방향으로 화면을 이동할 수 있습니다. ",
+              "fullWidth": 225,
+              "contentWidth": 222,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 225
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 294,
+          "visible": 291,
+          "fragments": [
+            {
+              "text": "Escape",
+              "fullWidth": 39,
+              "contentWidth": 39,
+              "advance": 0
+            },
+            {
+              "text": " 키를 누르면 화면 위에 옵션 메뉴가 나타납니다. ",
+              "fullWidth": 255,
+              "contentWidth": 252,
+              "advance": 39
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 296,
+      "buttons": [
+        "다음"
+      ],
+      "time": 3181734.482,
+      "started": 1
+    },
+    {
+      "mission": "Tutorial2",
+      "title": "비밀 워크샾",
+      "language": "korean",
+      "x": 376.5,
+      "width": 356,
+      "logicalWidth": 1024,
+      "maxLine": 280,
+      "visibleMaxLine": 277,
+      "lines": [
+        {
+          "logical": 135,
+          "visible": 135,
+          "fragments": [
+            {
+              "text": "건물, 첫 번째",
+              "fullWidth": 135,
+              "contentWidth": 135,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 135
+            }
+          ]
+        },
+        {
+          "logical": 269,
+          "visible": 266,
+          "fragments": [
+            {
+              "text": "\"사제들이 알 수 없는 말을 중얼거리면 갑자기 크고 ",
+              "fullWidth": 269,
+              "contentWidth": 266,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 273,
+          "visible": 270,
+          "fragments": [
+            {
+              "text": "완벽한 건물이 생겨납니다. 사람들이 그들을 죽이고 ",
+              "fullWidth": 273,
+              "contentWidth": 270,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 280,
+          "visible": 277,
+          "fragments": [
+            {
+              "text": "싶어 하는 것도 당연하지요.\" --니크로 후박스, 실직한 ",
+              "fullWidth": 280,
+              "contentWidth": 277,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 66,
+          "visible": 63,
+          "fragments": [
+            {
+              "text": "님버스 목수",
+              "fullWidth": 63,
+              "contentWidth": 63,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 63
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 66
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 270,
+          "visible": 267,
+          "fragments": [
+            {
+              "text": "사제는 스톰 파워를 신전, 워크샾, 제단 같은 특별한 ",
+              "fullWidth": 270,
+              "contentWidth": 267,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 135,
+          "visible": 132,
+          "fragments": [
+            {
+              "text": "건물로 바꿀 수 있습니다. ",
+              "fullWidth": 135,
+              "contentWidth": 132,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 296,
+      "buttons": [
+        "다음"
+      ],
+      "time": 3181736.473,
+      "started": 1
+    },
+    {
+      "mission": "Tutorial3",
+      "title": "사제 포획",
+      "language": "korean",
+      "x": 346.5,
+      "width": 416,
+      "logicalWidth": 1024,
+      "maxLine": 315,
+      "visibleMaxLine": 312,
+      "lines": [
+        {
+          "logical": 178,
+          "visible": 178,
+          "fragments": [
+            {
+              "text": "사제를 포획하라!",
+              "fullWidth": 178,
+              "contentWidth": 178,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 178
+            }
+          ]
+        },
+        {
+          "logical": 296,
+          "visible": 293,
+          "fragments": [
+            {
+              "text": "\"적을 호되게 두들겨 팬 뒤에 찾아오는 고요함보다 더 큰 ",
+              "fullWidth": 296,
+              "contentWidth": 293,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 235,
+          "visible": 232,
+          "fragments": [
+            {
+              "text": "평온은 없습니다.\" --에벤스 릴펜스토르 장군",
+              "fullWidth": 232,
+              "contentWidth": 232,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 232
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 235
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 285,
+          "visible": 282,
+          "fragments": [
+            {
+              "text": "이제 워크샾을 짓고 생산을 지정하는 방법을 알았으니 ",
+              "fullWidth": 285,
+              "contentWidth": 282,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 252,
+          "visible": 249,
+          "fragments": [
+            {
+              "text": "워크샾이 만든 무기로 적을 공격할 수 있습니다! ",
+              "fullWidth": 252,
+              "contentWidth": 249,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 252
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 303,
+          "visible": 300,
+          "fragments": [
+            {
+              "text": "진행을 빠르게 하려고 윈드 신전과 썬 워크샾을 미리 지어 ",
+              "fullWidth": 303,
+              "contentWidth": 300,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 291,
+          "visible": 288,
+          "fragments": [
+            {
+              "text": "두었습니다. 평소에는 이 건물들을 직접 지어야 합니다. ",
+              "fullWidth": 291,
+              "contentWidth": 288,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 291
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 306,
+          "visible": 303,
+          "fragments": [
+            {
+              "text": "왼쪽의 생산 창에 이제 골렘을 만들 수 있다고 나오는 것을 ",
+              "fullWidth": 306,
+              "contentWidth": 303,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 315,
+          "visible": 312,
+          "fragments": [
+            {
+              "text": "보세요. 골렘은 신전을 섬기는 특별한 하인이며 스톰 파워를 ",
+              "fullWidth": 315,
+              "contentWidth": 312,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 150,
+          "visible": 147,
+          "fragments": [
+            {
+              "text": "수확하는 데 쓸 수 있습니다. ",
+              "fullWidth": 150,
+              "contentWidth": 147,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 316,
+      "buttons": [
+        "다음"
+      ],
+      "time": 3181737.439,
+      "started": 1
+    },
+    {
+      "mission": "Tutorial4",
+      "title": "전술 전투",
+      "language": "korean",
+      "x": 326.5,
+      "width": 456,
+      "logicalWidth": 1024,
+      "maxLine": 351,
+      "visibleMaxLine": 348,
+      "lines": [
+        {
+          "logical": 188,
+          "visible": 188,
+          "fragments": [
+            {
+              "text": "고급 전투, 첫 번째",
+              "fullWidth": 188,
+              "contentWidth": 188,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 188
+            }
+          ]
+        },
+        {
+          "logical": 335,
+          "visible": 332,
+          "fragments": [
+            {
+              "text": "\"앞을 보지 않고 나아가는 자는 곤경에 빠집니다. 승리는 언제나 ",
+              "fullWidth": 335,
+              "contentWidth": 332,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 250,
+          "visible": 247,
+          "fragments": [
+            {
+              "text": "모퉁이에 숨어 있습니다.\" --달릭 마리델트 장군",
+              "fullWidth": 247,
+              "contentWidth": 247,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 247
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 250
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 351,
+          "visible": 348,
+          "fragments": [
+            {
+              "text": "언제나처럼 목표는 적 사제를 포획하는 것입니다. 하지만 이번에는 ",
+              "fullWidth": 351,
+              "contentWidth": 348,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 306,
+          "visible": 303,
+          "fragments": [
+            {
+              "text": "적의 섬을 썬 캐논과 썬 디스크 발사기가 지키고 있습니다. ",
+              "fullWidth": 306,
+              "contentWidth": 303,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 64,
+          "visible": 64,
+          "fragments": [
+            {
+              "text": "     ",
+              "fullWidth": 15,
+              "contentWidth": 0,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 49,
+              "contentWidth": 49,
+              "advance": 15
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 64
+            }
+          ]
+        },
+        {
+          "logical": 52,
+          "visible": 49,
+          "fragments": [
+            {
+              "text": "\"썬 캐논\" ",
+              "fullWidth": 52,
+              "contentWidth": 49,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 52
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 321,
+          "visible": 318,
+          "fragments": [
+            {
+              "text": "썬 캐논은 사거리가 길지만 큰 약점이 있습니다. 북, 남, 동, 서 ",
+              "fullWidth": 321,
+              "contentWidth": 318,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 345,
+          "visible": 342,
+          "fragments": [
+            {
+              "text": "직선으로만 쏠 수 있다는 것입니다. 캐논의 사거리가 더 길어도 썬 ",
+              "fullWidth": 345,
+              "contentWidth": 342,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 315,
+          "visible": 312,
+          "fragments": [
+            {
+              "text": "디스크 발사기로 이 캐논들을 부수는 방법을 배우게 됩니다. ",
+              "fullWidth": 315,
+              "contentWidth": 312,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 356,
+      "buttons": [
+        "다음"
+      ],
+      "time": 3181739.293,
+      "started": 1
+    },
+    {
+      "mission": "Tutorial5",
+      "title": "교묘한 방어",
+      "language": "korean",
+      "x": 366.5,
+      "width": 376,
+      "logicalWidth": 1024,
+      "maxLine": 276,
+      "visibleMaxLine": 273,
+      "lines": [
+        {
+          "logical": 135,
+          "visible": 135,
+          "fragments": [
+            {
+              "text": "방어, 첫 번째",
+              "fullWidth": 135,
+              "contentWidth": 135,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 135
+            }
+          ]
+        },
+        {
+          "logical": 276,
+          "visible": 273,
+          "fragments": [
+            {
+              "text": "\"전략은 머릿수로 강해지지 않습니다.\" -- 쯔, 썬 전사",
+              "fullWidth": 273,
+              "contentWidth": 273,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 273
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 234,
+          "visible": 231,
+          "fragments": [
+            {
+              "text": "이번에는 압도적인 화력에 시달리게 됩니다. ",
+              "fullWidth": 234,
+              "contentWidth": 231,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 234
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 271,
+          "visible": 268,
+          "fragments": [
+            {
+              "text": "적의 섬에는 사거리와 위력이 엄청난 \"썬더 캐논\"이 ",
+              "fullWidth": 271,
+              "contentWidth": 268,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 273,
+          "visible": 270,
+          "fragments": [
+            {
+              "text": "있습니다. 또한 하늘에서 공격하는 훨리기그를 띄워 ",
+              "fullWidth": 273,
+              "contentWidth": 270,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 178,
+          "visible": 175,
+          "fragments": [
+            {
+              "text": "보내는 \"훨리베이스\"도 있습니다! ",
+              "fullWidth": 178,
+              "contentWidth": 175,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 221,
+          "visible": 218,
+          "fragments": [
+            {
+              "text": "   ",
+              "fullWidth": 9,
+              "contentWidth": 0,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 85,
+              "contentWidth": 85,
+              "advance": 9
+            },
+            {
+              "text": "                         ",
+              "fullWidth": 75,
+              "contentWidth": 0,
+              "advance": 94
+            },
+            {
+              "text": "",
+              "fullWidth": 49,
+              "contentWidth": 49,
+              "advance": 169
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 218
+            }
+          ]
+        },
+        {
+          "logical": 177,
+          "visible": 174,
+          "fragments": [
+            {
+              "text": "  썬더 캐논                   훨리베이스 ",
+              "fullWidth": 177,
+              "contentWidth": 174,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 276,
+      "buttons": [
+        "다음"
+      ],
+      "time": 3181740.905,
+      "started": 1
+    },
+    {
+      "mission": "Tutorial6",
+      "title": "순수한 힘!",
+      "language": "korean",
+      "x": 336.5,
+      "width": 436,
+      "logicalWidth": 1024,
+      "maxLine": 378,
+      "visibleMaxLine": 375,
+      "lines": [
+        {
+          "logical": 102,
+          "visible": 102,
+          "fragments": [
+            {
+              "text": "속성 유닛",
+              "fullWidth": 102,
+              "contentWidth": 102,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 102
+            }
+          ]
+        },
+        {
+          "logical": 327,
+          "visible": 324,
+          "fragments": [
+            {
+              "text": "\"이런 힘을 얻을 만큼 우리가 무슨 죄를 지었습니까?\" --빌루스 ",
+              "fullWidth": 327,
+              "contentWidth": 324,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 291,
+          "visible": 288,
+          "fragments": [
+            {
+              "text": "스페이크스미어 대장, 피비린내 나는 승리를 두고 한 말",
+              "fullWidth": 288,
+              "contentWidth": 288,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 288
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 291
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 378,
+          "visible": 375,
+          "fragments": [
+            {
+              "text": "이번에는 새로운 종류의 방어물과 맞서게 됩니다. 하지만 당신에게도 더 ",
+              "fullWidth": 378,
+              "contentWidth": 375,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 144,
+          "visible": 141,
+          "fragments": [
+            {
+              "text": "발전된 무기가 주어집니다. ",
+              "fullWidth": 144,
+              "contentWidth": 141,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 144
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 366,
+          "visible": 363,
+          "fragments": [
+            {
+              "text": "님버스의 세계는 세 퓨리, 즉 윈드, 레인, 썬더가 다스립니다. 지금까지 ",
+              "fullWidth": 366,
+              "contentWidth": 363,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 318,
+          "visible": 315,
+          "fragments": [
+            {
+              "text": "당신의 유닛은 이 셋 중 어느 쪽에도 속하지 않았으며 그래서 ",
+              "fullWidth": 318,
+              "contentWidth": 315,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 364,
+          "visible": 361,
+          "fragments": [
+            {
+              "text": "\"썬\"이라고 부릅니다. 썬 유닛은 유연하고 쓰기 쉽지만 속성 유닛만큼 ",
+              "fullWidth": 364,
+              "contentWidth": 361,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 192,
+          "visible": 189,
+          "fragments": [
+            {
+              "text": "특화되었거나 강력하지는 않습니다. ",
+              "fullWidth": 192,
+              "contentWidth": 189,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 376,
+      "buttons": [
+        "다음"
+      ],
+      "time": 3181742.353,
+      "started": 1
+    },
+    {
+      "mission": "TheWarBegins",
+      "title": "전쟁의 시작!",
+      "language": "korean",
+      "x": 334,
+      "width": 441,
+      "logicalWidth": 1024,
+      "maxLine": 371,
+      "visibleMaxLine": 368,
+      "lines": [
+        {
+          "logical": 130,
+          "visible": 130,
+          "fragments": [
+            {
+              "text": "전쟁의 시작!",
+              "fullWidth": 130,
+              "contentWidth": 130,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 130
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 371,
+          "visible": 368,
+          "fragments": [
+            {
+              "text": "\"어둠과 폭정은 우리의 족쇄에 채워진 자물쇠입니다. 열쇠가 될 용기는 ",
+              "fullWidth": 371,
+              "contentWidth": 368,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 175,
+          "visible": 172,
+          "fragments": [
+            {
+              "text": "누구에게 있습니까?\" --빛의 탄식",
+              "fullWidth": 172,
+              "contentWidth": 172,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 172
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 175
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 351,
+          "visible": 348,
+          "fragments": [
+            {
+              "text": "님버스의 백성을 정복해 노예로 만든 어둠의 군주들은 이제 하늘의 ",
+              "fullWidth": 351,
+              "contentWidth": 348,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 195,
+          "visible": 192,
+          "fragments": [
+            {
+              "text": "도전받지 않는 통치자가 되었습니다. ",
+              "fullWidth": 195,
+              "contentWidth": 192,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 195
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 363,
+          "visible": 360,
+          "fragments": [
+            {
+              "text": "그들은 당신의 섬에 경비병을 세우고 사제를 사슬로 묶었지만 과감한 ",
+              "fullWidth": 363,
+              "contentWidth": 360,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 351,
+          "visible": 348,
+          "fragments": [
+            {
+              "text": "습격으로 성직자를 풀어 냈습니다! 지금이 속박에서 벗어나 님버스 ",
+              "fullWidth": 351,
+              "contentWidth": 348,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 198,
+          "visible": 195,
+          "fragments": [
+            {
+              "text": "전체를 위해 일격을 가할 기회입니다! ",
+              "fullWidth": 198,
+              "contentWidth": 195,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 381,
+      "buttons": [
+        "지식 보기",
+        "미션 시작"
+      ],
+      "time": 3181744.133,
+      "started": 1
+    },
+    {
+      "mission": "MasterOfWhirligigs",
+      "title": "훨리기그의 지배자",
+      "language": "korean",
+      "x": 374,
+      "width": 361,
+      "logicalWidth": 1024,
+      "maxLine": 261,
+      "visibleMaxLine": 258,
+      "lines": [
+        {
+          "logical": 198,
+          "visible": 198,
+          "fragments": [
+            {
+              "text": "훨리기그의 지배자",
+              "fullWidth": 198,
+              "contentWidth": 198,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 198
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 212,
+          "visible": 209,
+          "fragments": [
+            {
+              "text": "\"님버스 전쟁의 조상과 기원은 님버스의 ",
+              "fullWidth": 212,
+              "contentWidth": 209,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 223,
+          "visible": 220,
+          "fragments": [
+            {
+              "text": "전쟁입니다.\" --갈트루프 엔딕스, 역사학자",
+              "fullWidth": 220,
+              "contentWidth": 220,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 220
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 223
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 261,
+          "visible": 258,
+          "fragments": [
+            {
+              "text": "어둠의 군주들은 당신의 섬이 약하다고 믿습니다. ",
+              "fullWidth": 261,
+              "contentWidth": 258,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 222,
+          "visible": 219,
+          "fragments": [
+            {
+              "text": "그들은 당신의 땅을 빼앗고 백성을 노예로 ",
+              "fullWidth": 222,
+              "contentWidth": 219,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 231,
+          "visible": 228,
+          "fragments": [
+            {
+              "text": "삼으려고 훨리기그의 지배자를 보냈습니다. ",
+              "fullWidth": 231,
+              "contentWidth": 228,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 231
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 246,
+          "visible": 243,
+          "fragments": [
+            {
+              "text": "적들은 당신이 무능하다고 생각합니다. 그들의 ",
+              "fullWidth": 246,
+              "contentWidth": 243,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 231,
+          "visible": 228,
+          "fragments": [
+            {
+              "text": "사악한 대사제를 포획해 퓨리에게 희생시켜 ",
+              "fullWidth": 231,
+              "contentWidth": 228,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 159,
+          "visible": 156,
+          "fragments": [
+            {
+              "text": "그들이 틀렸음을 보여 주세요. ",
+              "fullWidth": 159,
+              "contentWidth": 156,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 261,
+      "buttons": [
+        "지식 보기",
+        "미션 시작"
+      ],
+      "time": 3181746.174,
+      "started": 1
+    },
+    {
+      "mission": "SaveTheIsland",
+      "title": "섬을 구하라!",
+      "language": "korean",
+      "x": 344,
+      "width": 421,
+      "logicalWidth": 1024,
+      "maxLine": 315,
+      "visibleMaxLine": 312,
+      "lines": [
+        {
+          "logical": 130,
+          "visible": 130,
+          "fragments": [
+            {
+              "text": "섬을 구하라!",
+              "fullWidth": 130,
+              "contentWidth": 130,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 130
+            }
+          ]
+        },
+        {
+          "logical": 305,
+          "visible": 302,
+          "fragments": [
+            {
+              "text": "\"우리는 천성이 야만적인 민족이 아닙니다. 끝없는 절박한 ",
+              "fullWidth": 305,
+              "contentWidth": 302,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 313,
+          "visible": 310,
+          "fragments": [
+            {
+              "text": "상황이 우리를 그렇게 만들었습니다.\" --압스텍 볼티킨 장군",
+              "fullWidth": 310,
+              "contentWidth": 310,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 310
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 313
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 297,
+          "visible": 294,
+          "fragments": [
+            {
+              "text": "하이드러스 대사의 섬이 갑작스러운 공격을 받았습니다. ",
+              "fullWidth": 297,
+              "contentWidth": 294,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 291,
+          "visible": 288,
+          "fragments": [
+            {
+              "text": "골렘들이 간신히 시간에 맞춰 모여 썬 방벽을 세워 섬이 ",
+              "fullWidth": 291,
+              "contentWidth": 288,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 183,
+          "visible": 180,
+          "fragments": [
+            {
+              "text": "완전히 파괴되는 것은 막았습니다. ",
+              "fullWidth": 183,
+              "contentWidth": 180,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 183
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 315,
+          "visible": 312,
+          "fragments": [
+            {
+              "text": "자원은 바닥나고 등 뒤는 벼랑인 대사는 위기의 순간에 그를 ",
+              "fullWidth": 315,
+              "contentWidth": 312,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 276,
+          "visible": 273,
+          "fragments": [
+            {
+              "text": "구해 달라고 당신의 뛰어난 군사 지략을 청했습니다. ",
+              "fullWidth": 276,
+              "contentWidth": 273,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 276
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 312,
+          "visible": 309,
+          "fragments": [
+            {
+              "text": "이 섬을 지켜 낼 수 있다면 대사는 값진 동맹이 될 것입니다! ",
+              "fullWidth": 312,
+              "contentWidth": 309,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 321,
+      "buttons": [
+        "지식 보기",
+        "미션 시작"
+      ],
+      "time": 3181747.538,
+      "started": 1
+    },
+    {
+      "mission": "FragileFortune",
+      "title": "위태로운 보물!",
+      "language": "korean",
+      "x": 364,
+      "width": 381,
+      "logicalWidth": 1024,
+      "maxLine": 273,
+      "visibleMaxLine": 270,
+      "lines": [
+        {
+          "logical": 154,
+          "visible": 154,
+          "fragments": [
+            {
+              "text": "위태로운 보물!",
+              "fullWidth": 154,
+              "contentWidth": 154,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 154
+            }
+          ]
+        },
+        {
+          "logical": 95,
+          "visible": 95,
+          "fragments": [
+            {
+              "text": "\"진흙에서 일어나!",
+              "fullWidth": 95,
+              "contentWidth": 95,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 93,
+          "visible": 93,
+          "fragments": [
+            {
+              "text": "그리고 탑 속으로!",
+              "fullWidth": 93,
+              "contentWidth": 93,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 78,
+          "visible": 78,
+          "fragments": [
+            {
+              "text": "바로 오늘이다!",
+              "fullWidth": 78,
+              "contentWidth": 78,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 83,
+          "visible": 83,
+          "fragments": [
+            {
+              "text": "바로 지금이다!\"",
+              "fullWidth": 83,
+              "contentWidth": 83,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 269,
+          "visible": 266,
+          "fragments": [
+            {
+              "text": "--불가능한 싸움에서 승리한 윈드의 알투스의 함성.",
+              "fullWidth": 266,
+              "contentWidth": 266,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 266
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 269
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 271,
+          "visible": 268,
+          "fragments": [
+            {
+              "text": "정찰 섬 \"패스파인더\"가 거대한 스톰 파워 저장고를 ",
+              "fullWidth": 271,
+              "contentWidth": 268,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 246,
+          "visible": 243,
+          "fragments": [
+            {
+              "text": "발견했습니다. 그런데 안타깝게도 어둠의 윈드 ",
+              "fullWidth": 246,
+              "contentWidth": 243,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 249,
+          "visible": 246,
+          "fragments": [
+            {
+              "text": "왕자가 이미 도착해 수확을 시작했습니다. 그가 ",
+              "fullWidth": 249,
+              "contentWidth": 246,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 222,
+          "visible": 219,
+          "fragments": [
+            {
+              "text": "군대를 강화하지 못하도록 막아야 합니다! ",
+              "fullWidth": 222,
+              "contentWidth": 219,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 222
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 261,
+          "visible": 258,
+          "fragments": [
+            {
+              "text": "정찰병의 보고에 따르면 적은 스톰 파워를 모으러 ",
+              "fullWidth": 261,
+              "contentWidth": 258,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 273,
+          "visible": 270,
+          "fragments": [
+            {
+              "text": "가는 길이 무방비 상태입니다. 캐논으로 간헐천으로 ",
+              "fullWidth": 273,
+              "contentWidth": 270,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 135,
+          "visible": 132,
+          "fragments": [
+            {
+              "text": "가는 적 골렘을 부수세요! ",
+              "fullWidth": 135,
+              "contentWidth": 132,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 281,
+      "buttons": [
+        "지식 보기",
+        "미션 시작"
+      ],
+      "time": 3181749.838,
+      "started": 1
+    },
+    {
+      "mission": "ThunderingPower",
+      "title": "천둥 같은 힘!",
+      "language": "korean",
+      "x": 386.5,
+      "width": 336,
+      "logicalWidth": 1024,
+      "maxLine": 237,
+      "visibleMaxLine": 234,
+      "lines": [
+        {
+          "logical": 135,
+          "visible": 135,
+          "fragments": [
+            {
+              "text": "천둥 같은 힘!",
+              "fullWidth": 135,
+              "contentWidth": 135,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 135
+            }
+          ]
+        },
+        {
+          "logical": 200,
+          "visible": 197,
+          "fragments": [
+            {
+              "text": "\"천둥을 친구로 두려면 번개가 되어야 ",
+              "fullWidth": 200,
+              "contentWidth": 197,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 133,
+          "visible": 130,
+          "fragments": [
+            {
+              "text": "합니다.\" --님버스의 속담",
+              "fullWidth": 130,
+              "contentWidth": 130,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 130
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 133
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 216,
+          "visible": 213,
+          "fragments": [
+            {
+              "text": "당신의 동맹인 선한 썬더 공작이 맨 오 워 ",
+              "fullWidth": 216,
+              "contentWidth": 213,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 159,
+          "visible": 156,
+          "fragments": [
+            {
+              "text": "후작의 공격을 받고 있습니다. ",
+              "fullWidth": 159,
+              "contentWidth": 156,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 159
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 237,
+          "visible": 234,
+          "fragments": [
+            {
+              "text": "공작의 섬으로 가서 방어를 지휘하다 보면 한 ",
+              "fullWidth": 237,
+              "contentWidth": 234,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 237,
+          "visible": 234,
+          "fragments": [
+            {
+              "text": "가지가 분명해집니다. 이 동맹을 잃으면 썬더 ",
+              "fullWidth": 237,
+              "contentWidth": 234,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 234,
+          "visible": 231,
+          "fragments": [
+            {
+              "text": "속성의 힘이 사라져 전쟁 전체가 절름발이가 ",
+              "fullWidth": 234,
+              "contentWidth": 231,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 135,
+          "visible": 132,
+          "fragments": [
+            {
+              "text": "될 수도 있다는 것입니다. ",
+              "fullWidth": 135,
+              "contentWidth": 132,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 236,
+      "buttons": [
+        "다음"
+      ],
+      "time": 3181752.395,
+      "started": 1
+    },
+    {
+      "mission": "DissolvedAlliance",
+      "title": "깨어진 동맹!",
+      "language": "korean",
+      "x": 354,
+      "width": 401,
+      "logicalWidth": 1024,
+      "maxLine": 327,
+      "visibleMaxLine": 324,
+      "lines": [
+        {
+          "logical": 130,
+          "visible": 130,
+          "fragments": [
+            {
+              "text": "깨어진 동맹!",
+              "fullWidth": 130,
+              "contentWidth": 130,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 130
+            }
+          ]
+        },
+        {
+          "logical": 322,
+          "visible": 319,
+          "fragments": [
+            {
+              "text": "\"그의 말은 기름보다 매끄러웠으나 가시와 독이 있었습니다.\" ",
+              "fullWidth": 322,
+              "contentWidth": 319,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 203,
+          "visible": 200,
+          "fragments": [
+            {
+              "text": "--프로모스 아브레스크, 님버스의 시인",
+              "fullWidth": 200,
+              "contentWidth": 200,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 200
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 203
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 327,
+          "visible": 324,
+          "fragments": [
+            {
+              "text": "당신의 동맹인 레인 공작이 어둠의 썬더 왕자와의 격렬한 전투 ",
+              "fullWidth": 327,
+              "contentWidth": 324,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 324,
+          "visible": 321,
+          "fragments": [
+            {
+              "text": "한가운데에서 배신했습니다! 이제 당신은 사방이 막혔습니다. ",
+              "fullWidth": 324,
+              "contentWidth": 321,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 324
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 312,
+          "visible": 309,
+          "fragments": [
+            {
+              "text": "전세를 뒤집어 배신자 공작을 군홧발로 짓밟으세요! 그리고 ",
+              "fullWidth": 312,
+              "contentWidth": 309,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 327,
+          "visible": 324,
+          "fragments": [
+            {
+              "text": "어둠의 썬더 왕자에게 당신의 필연적인 승리를 아무도 막을 수 ",
+              "fullWidth": 327,
+              "contentWidth": 324,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 120,
+          "visible": 117,
+          "fragments": [
+            {
+              "text": "없음을 가르쳐 주세요. ",
+              "fullWidth": 120,
+              "contentWidth": 117,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 341,
+      "buttons": [
+        "지식 보기",
+        "미션 시작"
+      ],
+      "time": 3181754.533,
+      "started": 1
+    },
+    {
+      "mission": "TheNoose",
+      "title": "올가미",
+      "language": "korean",
+      "x": 346.5,
+      "width": 416,
+      "logicalWidth": 1024,
+      "maxLine": 318,
+      "visibleMaxLine": 315,
+      "lines": [
+        {
+          "logical": 73,
+          "visible": 73,
+          "fragments": [
+            {
+              "text": "올가미",
+              "fullWidth": 73,
+              "contentWidth": 73,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 73
+            }
+          ]
+        },
+        {
+          "logical": 305,
+          "visible": 302,
+          "fragments": [
+            {
+              "text": "\"무자비하고 교활하지 못하다면 열 배로 용감하고 열 배로 ",
+              "fullWidth": 305,
+              "contentWidth": 302,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 261,
+          "visible": 258,
+          "fragments": [
+            {
+              "text": "대담해야 합니다. 하지만 그것으로도 모자랄 때가 ",
+              "fullWidth": 261,
+              "contentWidth": 258,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 250,
+          "visible": 247,
+          "fragments": [
+            {
+              "text": "많습니다.\" --트롬 인스키넬드, 님버스의 전략가",
+              "fullWidth": 247,
+              "contentWidth": 247,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 247
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 250
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 285,
+          "visible": 282,
+          "fragments": [
+            {
+              "text": "어젯밤에도 평소처럼 보초를 세웠습니다. 교대하러 간 ",
+              "fullWidth": 285,
+              "contentWidth": 282,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 318,
+          "visible": 315,
+          "fragments": [
+            {
+              "text": "이들은 보초가 잠든 채 살해된 것을 발견했고, 우현에는 적의 ",
+              "fullWidth": 318,
+              "contentWidth": 315,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 303,
+          "visible": 300,
+          "fragments": [
+            {
+              "text": "섬이 있으며 우리 섬은 적의 다리로 둘러싸여 있었습니다! ",
+              "fullWidth": 303,
+              "contentWidth": 300,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 303
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 288,
+          "visible": 285,
+          "fragments": [
+            {
+              "text": "해가 뜨면 스톰 간헐천이 몰려와 그들의 공격이 시작될 ",
+              "fullWidth": 288,
+              "contentWidth": 285,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 264,
+          "visible": 261,
+          "fragments": [
+            {
+              "text": "것입니다. 반드시 그들의 전선을 ",
+              "fullWidth": 171,
+              "contentWidth": 168,
+              "advance": 0
+            },
+            {
+              "text": "돌파해야",
+              "fullWidth": 48,
+              "contentWidth": 48,
+              "advance": 171
+            },
+            {
+              "text": " 합니다! ",
+              "fullWidth": 45,
+              "contentWidth": 42,
+              "advance": 219
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 316,
+      "buttons": [
+        "다음"
+      ],
+      "time": 3181756.982,
+      "started": 1
+    },
+    {
+      "mission": "RainVsRain",
+      "title": "레인 대 레인!",
+      "language": "korean",
+      "x": 384,
+      "width": 341,
+      "logicalWidth": 1024,
+      "maxLine": 237,
+      "visibleMaxLine": 234,
+      "lines": [
+        {
+          "logical": 135,
+          "visible": 135,
+          "fragments": [
+            {
+              "text": "레인 대 레인!",
+              "fullWidth": 135,
+              "contentWidth": 135,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 135
+            }
+          ]
+        },
+        {
+          "logical": 212,
+          "visible": 209,
+          "fragments": [
+            {
+              "text": "\"그러니 비가 당신의 무시무시한 분노의 ",
+              "fullWidth": 212,
+              "contentWidth": 209,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 146,
+          "visible": 146,
+          "fragments": [
+            {
+              "text": "화관을 되살리게 하십시오.\"",
+              "fullWidth": 146,
+              "contentWidth": 146,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 113,
+          "visible": 110,
+          "fragments": [
+            {
+              "text": "--할무크 펠리탄 대사",
+              "fullWidth": 110,
+              "contentWidth": 110,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 110
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 113
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 234,
+          "visible": 231,
+          "fragments": [
+            {
+              "text": "마침내 최후의 대결에 이르렀습니다. 당신의 ",
+              "fullWidth": 234,
+              "contentWidth": 231,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 237,
+          "visible": 234,
+          "fragments": [
+            {
+              "text": "가장 강력한 레인 신전을 어둠의 레인 왕자의 ",
+              "fullWidth": 237,
+              "contentWidth": 234,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 147,
+          "visible": 144,
+          "fragments": [
+            {
+              "text": "본거지 섬에 보내야 합니다. ",
+              "fullWidth": 147,
+              "contentWidth": 144,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 147
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 225,
+          "visible": 222,
+          "fragments": [
+            {
+              "text": "그의 사악한 신전 안에는 님버스의 영혼 만 ",
+              "fullWidth": 225,
+              "contentWidth": 222,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 213,
+          "visible": 210,
+          "fragments": [
+            {
+              "text": "명이 갇혀 있습니다. 신전을 부수고 그의 ",
+              "fullWidth": 213,
+              "contentWidth": 210,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 237,
+          "visible": 234,
+          "fragments": [
+            {
+              "text": "대사제를 희생시켜 만 명의 죽음을 갚으세요! ",
+              "fullWidth": 237,
+              "contentWidth": 234,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 241,
+      "buttons": [
+        "지식 보기",
+        "미션 시작"
+      ],
+      "time": 3181760.619,
+      "started": 1
+    },
+    {
+      "mission": "RunForIt",
+      "title": "도망쳐라!",
+      "language": "korean",
+      "x": 336.5,
+      "width": 436,
+      "logicalWidth": 1024,
+      "maxLine": 375,
+      "visibleMaxLine": 372,
+      "lines": [
+        {
+          "logical": 101,
+          "visible": 101,
+          "fragments": [
+            {
+              "text": "도망쳐라!",
+              "fullWidth": 101,
+              "contentWidth": 101,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 101
+            }
+          ]
+        },
+        {
+          "logical": 311,
+          "visible": 311,
+          "fragments": [
+            {
+              "text": "\"부하들이 용감하리라 기대하면 그들은 용감해질 것입니다.",
+              "fullWidth": 311,
+              "contentWidth": 311,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 344,
+          "visible": 344,
+          "fragments": [
+            {
+              "text": "그들이 영원히 살리라 기대하면 그들은 결코 죽지 않을 것입니다.\"",
+              "fullWidth": 344,
+              "contentWidth": 344,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 101,
+          "visible": 98,
+          "fragments": [
+            {
+              "text": "--할숨 브렉스 대령",
+              "fullWidth": 98,
+              "contentWidth": 98,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 98
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 101
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 306,
+          "visible": 303,
+          "fragments": [
+            {
+              "text": "식량과 스톰 파워가 바닥난 채 당신의 윈드 섬은 여러 날을 ",
+              "fullWidth": 306,
+              "contentWidth": 303,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 351,
+          "visible": 348,
+          "fragments": [
+            {
+              "text": "떠돌았습니다. 선원들의 충성과 기량만이 그들을 살려 두었습니다. ",
+              "fullWidth": 351,
+              "contentWidth": 348,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 351
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 369,
+          "visible": 366,
+          "fragments": [
+            {
+              "text": "이제 소리 없이 떠돌던 섬이 아무에게도 들키지 않고 적의 요새 근처에 ",
+              "fullWidth": 369,
+              "contentWidth": 366,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 375,
+          "visible": 372,
+          "fragments": [
+            {
+              "text": "이르렀습니다. 측면으로 다리를 놓고 용감한 지원자들이 위험한 임무에 ",
+              "fullWidth": 375,
+              "contentWidth": 372,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 54,
+          "visible": 51,
+          "fragments": [
+            {
+              "text": "나섭니다. ",
+              "fullWidth": 54,
+              "contentWidth": 51,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 376,
+      "buttons": [
+        "다음"
+      ],
+      "time": 3181761.817,
+      "started": 1
+    },
+    {
+      "mission": "GuardMyBack",
+      "title": "내 등을 지켜 줘",
+      "language": "korean",
+      "x": 334,
+      "width": 441,
+      "logicalWidth": 1024,
+      "maxLine": 342,
+      "visibleMaxLine": 339,
+      "lines": [
+        {
+          "logical": 160,
+          "visible": 160,
+          "fragments": [
+            {
+              "text": "내 등을 지켜 줘",
+              "fullWidth": 160,
+              "contentWidth": 160,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 160
+            }
+          ]
+        },
+        {
+          "logical": 320,
+          "visible": 320,
+          "fragments": [
+            {
+              "text": "\"전투 중의 사람만큼 두려운 존재도, 외로운 존재도 없습니다.",
+              "fullWidth": 320,
+              "contentWidth": 320,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 338,
+          "visible": 338,
+          "fragments": [
+            {
+              "text": "그러면서도 그만큼 용감하고 충직하며 진실한 존재도 없습니다.\"",
+              "fullWidth": 338,
+              "contentWidth": 338,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 128,
+          "visible": 125,
+          "fragments": [
+            {
+              "text": "--레시스 그레텔템 대위.",
+              "fullWidth": 125,
+              "contentWidth": 125,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 125
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 128
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 342,
+          "visible": 339,
+          "fragments": [
+            {
+              "text": "섬 마흔 개가 얽힌 거대한 전투가 시작되었습니다. 엄청난 폭풍이 ",
+              "fullWidth": 342,
+              "contentWidth": 339,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 318,
+          "visible": 315,
+          "fragments": [
+            {
+              "text": "일어 갑자기 당신은 탁 트인 곳에서 썬의 대신 하나만을 믿고 ",
+              "fullWidth": 318,
+              "contentWidth": 315,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 171,
+          "visible": 168,
+          "fragments": [
+            {
+              "text": "버텨야 하는 처지가 되었습니다. ",
+              "fullWidth": 171,
+              "contentWidth": 168,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 171
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 315,
+          "visible": 312,
+          "fragments": [
+            {
+              "text": "이제 등을 맞대고 싸웁니다. 친구가 당신이 살아남을 유일한 ",
+              "fullWidth": 315,
+              "contentWidth": 312,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 225,
+          "visible": 222,
+          "fragments": [
+            {
+              "text": "기회입니다. 그가 기구로 전갈을 보냅니다. ",
+              "fullWidth": 225,
+              "contentWidth": 222,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 225
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 113,
+          "visible": 110,
+          "fragments": [
+            {
+              "text": "\"적을 빨리 끝내세요. ",
+              "fullWidth": 113,
+              "contentWidth": 110,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 66,
+          "visible": 63,
+          "fragments": [
+            {
+              "text": "그리고 함께 ",
+              "fullWidth": 66,
+              "contentWidth": 63,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 140,
+          "visible": 137,
+          "fragments": [
+            {
+              "text": "승리를 위해 잔을 듭시다!\"",
+              "fullWidth": 137,
+              "contentWidth": 137,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 137
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 341,
+      "buttons": [
+        "지식 보기",
+        "미션 시작"
+      ],
+      "time": 3181763.385,
+      "started": 1
+    },
+    {
+      "mission": "Surrounded",
+      "title": "포위!",
+      "language": "korean",
+      "x": 384,
+      "width": 341,
+      "logicalWidth": 1024,
+      "maxLine": 278,
+      "visibleMaxLine": 275,
+      "lines": [
+        {
+          "logical": 53,
+          "visible": 53,
+          "fragments": [
+            {
+              "text": "포위!",
+              "fullWidth": 53,
+              "contentWidth": 53,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 53
+            }
+          ]
+        },
+        {
+          "logical": 278,
+          "visible": 275,
+          "fragments": [
+            {
+              "text": "\"하지만 님버스에 영원한 평화가 온다면 우리는 대체 ",
+              "fullWidth": 278,
+              "contentWidth": 275,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 173,
+          "visible": 173,
+          "fragments": [
+            {
+              "text": "무엇으로 시간을 보내겠습니까?\"",
+              "fullWidth": 173,
+              "contentWidth": 173,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 131,
+          "visible": 128,
+          "fragments": [
+            {
+              "text": "--인툼 루카트, 전쟁 대신",
+              "fullWidth": 128,
+              "contentWidth": 128,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 128
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 131
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 273,
+          "visible": 270,
+          "fragments": [
+            {
+              "text": "당신의 거듭된 승리에 분노한 썬, 윈드, 레인, 썬더의 ",
+              "fullWidth": 273,
+              "contentWidth": 270,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 252,
+          "visible": 249,
+          "fragments": [
+            {
+              "text": "어둠의 군주들이 기습 공격을 해 왔습니다. 모든 ",
+              "fullWidth": 252,
+              "contentWidth": 249,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 210,
+          "visible": 207,
+          "fragments": [
+            {
+              "text": "지혜를 짜내 그들을 쓰러뜨려야 합니다! ",
+              "fullWidth": 210,
+              "contentWidth": 207,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 281,
+      "buttons": [
+        "지식 보기",
+        "미션 시작"
+      ],
+      "time": 3181765.751,
+      "started": 1
+    },
+    {
+      "mission": "BreakingThrough",
+      "title": "돌파!",
+      "language": "korean",
+      "x": 356.5,
+      "width": 396,
+      "logicalWidth": 1024,
+      "maxLine": 327,
+      "visibleMaxLine": 324,
+      "lines": [
+        {
+          "logical": 53,
+          "visible": 53,
+          "fragments": [
+            {
+              "text": "돌파!",
+              "fullWidth": 53,
+              "contentWidth": 53,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 53
+            }
+          ]
+        },
+        {
+          "logical": 323,
+          "visible": 320,
+          "fragments": [
+            {
+              "text": "\"적에게 전쟁의 손길을 얹으십시오. 그의 몸에 그 자신의 피를 ",
+              "fullWidth": 323,
+              "contentWidth": 320,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 265,
+          "visible": 259,
+          "fragments": [
+            {
+              "text": "부으십시오.\" --카스파르 그렐린, 님버스의 대사제 ",
+              "fullWidth": 262,
+              "contentWidth": 259,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 262
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 265
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 327,
+          "visible": 324,
+          "fragments": [
+            {
+              "text": "당신의 대사제가 큰 위험에 처했습니다. 어둠의 윈드 왕자에게 ",
+              "fullWidth": 327,
+              "contentWidth": 324,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 129,
+          "visible": 126,
+          "fragments": [
+            {
+              "text": "사로잡히기 직전입니다! ",
+              "fullWidth": 129,
+              "contentWidth": 126,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 129
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 327,
+          "visible": 324,
+          "fragments": [
+            {
+              "text": "첩자들은 윈드 신전에서 고통에 찬 비명이 들렸다고 하며 많은 ",
+              "fullWidth": 327,
+              "contentWidth": 324,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 261,
+          "visible": 258,
+          "fragments": [
+            {
+              "text": "이들이 어둠의 왕자가 과거에 벌인 사악한 실험을 ",
+              "fullWidth": 261,
+              "contentWidth": 258,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 78,
+          "visible": 75,
+          "fragments": [
+            {
+              "text": "이야기합니다. ",
+              "fullWidth": 78,
+              "contentWidth": 75,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 336,
+      "buttons": [
+        "다음"
+      ],
+      "time": 3181768.507,
+      "started": 1
+    },
+    {
+      "mission": "ToTheRescue",
+      "title": "구출 작전!",
+      "language": "korean",
+      "x": 336.5,
+      "width": 436,
+      "logicalWidth": 1024,
+      "maxLine": 335,
+      "visibleMaxLine": 332,
+      "lines": [
+        {
+          "logical": 106,
+          "visible": 106,
+          "fragments": [
+            {
+              "text": "구출 작전!",
+              "fullWidth": 106,
+              "contentWidth": 106,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 106
+            }
+          ]
+        },
+        {
+          "logical": 335,
+          "visible": 332,
+          "fragments": [
+            {
+              "text": "\"친구를 위해, 그리고 헌신을 위해, 먼지투성이 바다에서 올라와 ",
+              "fullWidth": 335,
+              "contentWidth": 332,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 280,
+          "visible": 274,
+          "fragments": [
+            {
+              "text": "피 흘리는 난투 속으로 뛰어드십시오.\" --님버스의 서 ",
+              "fullWidth": 277,
+              "contentWidth": 274,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 277
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 280
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 288,
+          "visible": 285,
+          "fragments": [
+            {
+              "text": "체로크 섬의 총독에게서 기구로 구조 신호가 왔습니다. ",
+              "fullWidth": 288,
+              "contentWidth": 285,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 288
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 159,
+          "visible": 156,
+          "fragments": [
+            {
+              "text": "우리가 공격을 받고 있습니다! ",
+              "fullWidth": 159,
+              "contentWidth": 156,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 159
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 309,
+          "visible": 306,
+          "fragments": [
+            {
+              "text": "스톰 파워를 찾아 항해하던 중 적의 섬 두 개가 해를 등지고 ",
+              "fullWidth": 309,
+              "contentWidth": 306,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 105,
+          "visible": 102,
+          "fragments": [
+            {
+              "text": "우리를 덮쳤습니다. ",
+              "fullWidth": 105,
+              "contentWidth": 102,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 105
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 237,
+          "visible": 234,
+          "fragments": [
+            {
+              "text": "자원이 바닥났고 벌써 많은 이가 죽었습니다. ",
+              "fullWidth": 237,
+              "contentWidth": 234,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 336,
+      "buttons": [
+        "다음"
+      ],
+      "time": 3181771.089,
+      "started": 1
+    },
+    {
+      "mission": "Vicious",
+      "title": "잔혹한 힘!",
+      "language": "korean",
+      "x": 376.5,
+      "width": 356,
+      "logicalWidth": 1024,
+      "maxLine": 252,
+      "visibleMaxLine": 249,
+      "lines": [
+        {
+          "logical": 106,
+          "visible": 106,
+          "fragments": [
+            {
+              "text": "잔혹한 힘!",
+              "fullWidth": 106,
+              "contentWidth": 106,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 106
+            }
+          ]
+        },
+        {
+          "logical": 242,
+          "visible": 239,
+          "fragments": [
+            {
+              "text": "\"그리고 섬들은 어둡고 귀먹은 하늘을 향해 제 ",
+              "fullWidth": 242,
+              "contentWidth": 239,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 107,
+          "visible": 107,
+          "fragments": [
+            {
+              "text": "상처를 울부짖었다.\"",
+              "fullWidth": 107,
+              "contentWidth": 107,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 74,
+          "visible": 71,
+          "fragments": [
+            {
+              "text": "--님버스의 서",
+              "fullWidth": 71,
+              "contentWidth": 71,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 71
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 74
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 232,
+          "visible": 229,
+          "fragments": [
+            {
+              "text": "적이 \"스톰의 섬\"이라 부르는 끔찍한 괴물을 ",
+              "fullWidth": 232,
+              "contentWidth": 229,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 246,
+          "visible": 243,
+          "fragments": [
+            {
+              "text": "만들어 냈습니다. 윈드, 레인, 썬더를 한데 모아 ",
+              "fullWidth": 246,
+              "contentWidth": 243,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 177,
+          "visible": 174,
+          "fragments": [
+            {
+              "text": "막을 수 없는 힘을 만든 곳입니다. ",
+              "fullWidth": 177,
+              "contentWidth": 174,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 177
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 252,
+          "visible": 249,
+          "fragments": [
+            {
+              "text": "이 요새는 각 속성의 잔혹하고 해로운 모든 것을 ",
+              "fullWidth": 252,
+              "contentWidth": 249,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 249,
+          "visible": 246,
+          "fragments": [
+            {
+              "text": "상징하며 지금 당신을 향해 다가오고 있습니다. ",
+              "fullWidth": 249,
+              "contentWidth": 246,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 256,
+      "buttons": [
+        "다음"
+      ],
+      "time": 3181774.659,
+      "started": 1
+    },
+    {
+      "mission": "EnemyTerritory",
+      "title": "적진!",
+      "language": "korean",
+      "x": 374,
+      "width": 361,
+      "logicalWidth": 1024,
+      "maxLine": 252,
+      "visibleMaxLine": 249,
+      "lines": [
+        {
+          "logical": 53,
+          "visible": 53,
+          "fragments": [
+            {
+              "text": "적진!",
+              "fullWidth": 53,
+              "contentWidth": 53,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 53
+            }
+          ]
+        },
+        {
+          "logical": 220,
+          "visible": 220,
+          "fragments": [
+            {
+              "text": "\"내 유일한 친구는 내 적의 적들뿐입니다.\"",
+              "fullWidth": 220,
+              "contentWidth": 220,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 113,
+          "visible": 110,
+          "fragments": [
+            {
+              "text": "--세틴 호르크 사령관",
+              "fullWidth": 110,
+              "contentWidth": 110,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 110
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 113
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 252,
+          "visible": 249,
+          "fragments": [
+            {
+              "text": "적 가운데 배신한 사제가 있습니다! 썬더 공작의 ",
+              "fullWidth": 252,
+              "contentWidth": 249,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 252,
+          "visible": 249,
+          "fragments": [
+            {
+              "text": "부하 한 명이 적진 안에서 구출되기를 바랍니다. ",
+              "fullWidth": 252,
+              "contentWidth": 249,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 213,
+          "visible": 210,
+          "fragments": [
+            {
+              "text": "그의 섬은 적의 방어선 근처에 있습니다. ",
+              "fullWidth": 213,
+              "contentWidth": 210,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 213
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 198,
+          "visible": 195,
+          "fragments": [
+            {
+              "text": "방어선을 뚫고 그의 작은 섬에서 그를 ",
+              "fullWidth": 198,
+              "contentWidth": 195,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 249,
+          "visible": 246,
+          "fragments": [
+            {
+              "text": "구출하세요. 그는 적 제국의 심장부로 이어지는 ",
+              "fullWidth": 249,
+              "contentWidth": 246,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 243,
+          "visible": 240,
+          "fragments": [
+            {
+              "text": "지키는 이 없는 비밀 길을 알고 있다고 합니다! ",
+              "fullWidth": 243,
+              "contentWidth": 240,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 261,
+      "buttons": [
+        "지식 보기",
+        "미션 시작"
+      ],
+      "time": 3181776.961,
+      "started": 1
+    },
+    {
+      "mission": "FinalConfrontation",
+      "title": "최후의 대결",
+      "language": "korean",
+      "x": 374,
+      "width": 361,
+      "logicalWidth": 1024,
+      "maxLine": 255,
+      "visibleMaxLine": 252,
+      "lines": [
+        {
+          "logical": 126,
+          "visible": 126,
+          "fragments": [
+            {
+              "text": "최후의 대결",
+              "fullWidth": 126,
+              "contentWidth": 126,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 126
+            }
+          ]
+        },
+        {
+          "logical": 239,
+          "visible": 236,
+          "fragments": [
+            {
+              "text": "\"요새에 다가가는 동안 모든 것이 고요했지만 ",
+              "fullWidth": 239,
+              "contentWidth": 236,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 234,
+          "visible": 231,
+          "fragments": [
+            {
+              "text": "공기에는 이미 어쩐지 다가올 전투와 임박한 ",
+              "fullWidth": 234,
+              "contentWidth": 231,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 215,
+          "visible": 215,
+          "fragments": [
+            {
+              "text": "우리의 죽음의 악취가 짙게 배어 있었다.\"",
+              "fullWidth": 215,
+              "contentWidth": 215,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 137,
+          "visible": 134,
+          "fragments": [
+            {
+              "text": "--트린 허스퍼린츠의 일기",
+              "fullWidth": 134,
+              "contentWidth": 134,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 134
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 137
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 225,
+          "visible": 222,
+          "fragments": [
+            {
+              "text": "대담한 기동으로 당신의 섬이 적진 깊숙이, ",
+              "fullWidth": 225,
+              "contentWidth": 222,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 246,
+          "visible": 243,
+          "fragments": [
+            {
+              "text": "그들의 사악한 제국의 심장부로 들어왔습니다! ",
+              "fullWidth": 246,
+              "contentWidth": 243,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 246
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 255,
+          "visible": 252,
+          "fragments": [
+            {
+              "text": "이제 윈드, 레인, 썬더의 어둠의 왕자들이 지키는 ",
+              "fullWidth": 255,
+              "contentWidth": 252,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 234,
+          "visible": 231,
+          "fragments": [
+            {
+              "text": "마지막 요새를 찾았습니다. 전투에서 그들을 ",
+              "fullWidth": 234,
+              "contentWidth": 231,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 195,
+          "visible": 192,
+          "fragments": [
+            {
+              "text": "물리치고 궁극의 승리를 차지하세요! ",
+              "fullWidth": 195,
+              "contentWidth": 192,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 261,
+      "buttons": [
+        "지식 보기",
+        "미션 시작"
+      ],
+      "time": 3181780.772,
+      "started": 1
+    },
+    {
+      "mission": "bc1menu76",
+      "title": "메뉴",
+      "language": "korean",
+      "x": 415,
+      "width": 279,
+      "logicalWidth": 1024,
+      "maxLine": 183,
+      "visibleMaxLine": 180,
+      "lines": [
+        {
+          "logical": 49,
+          "visible": 49,
+          "fragments": [
+            {
+              "text": "메뉴",
+              "fullWidth": 49,
+              "contentWidth": 49,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 49
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 183,
+          "visible": 180,
+          "fragments": [
+            {
+              "text": "관심 있는 기술에 해당하는 사제를 ",
+              "fullWidth": 183,
+              "contentWidth": 180,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 66,
+          "visible": 63,
+          "fragments": [
+            {
+              "text": "포획하세요. ",
+              "fullWidth": 66,
+              "contentWidth": 63,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 219,
+      "buttons": [
+        "사용 가능한 기술",
+        "확인"
+      ],
+      "time": 3181785.555,
+      "started": 1
+    },
+    {
+      "mission": "bc2bridging76",
+      "title": "다리 놓기",
+      "language": "korean",
+      "x": 285,
+      "width": 539,
+      "logicalWidth": 1024,
+      "maxLine": 434,
+      "visibleMaxLine": 431,
+      "lines": [
+        {
+          "logical": 102,
+          "visible": 102,
+          "fragments": [
+            {
+              "text": "다리 놓기",
+              "fullWidth": 102,
+              "contentWidth": 102,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 102
+            }
+          ]
+        },
+        {
+          "logical": 232,
+          "visible": 232,
+          "fragments": [
+            {
+              "text": "\"가진 게 아무것도 없다면 다리를 놓으세요!\"",
+              "fullWidth": 232,
+              "contentWidth": 232,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 106,
+          "visible": 103,
+          "fragments": [
+            {
+              "text": "-빈털터리 님버스인",
+              "fullWidth": 103,
+              "contentWidth": 103,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 103
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 106
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 381,
+          "visible": 378,
+          "fragments": [
+            {
+              "text": "또 다른 사제를 손아귀에 넣었습니다. 하지만 그의 섬까지 가볍게 걸어가 ",
+              "fullWidth": 381,
+              "contentWidth": 378,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 405,
+          "visible": 402,
+          "fragments": [
+            {
+              "text": "데려오려고 마음먹은 순간 그가 섬을 멀어지게 해 두었음을 알아챕니다. 섬이 ",
+              "fullWidth": 405,
+              "contentWidth": 402,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 306,
+          "visible": 303,
+          "fragments": [
+            {
+              "text": "움직이기까지 2분이 걸리니 서둘러 그를 포획해야 합니다! ",
+              "fullWidth": 306,
+              "contentWidth": 303,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 306
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 424,
+          "visible": 421,
+          "fragments": [
+            {
+              "text": "목표:",
+              "fullWidth": 28,
+              "contentWidth": 28,
+              "advance": 0
+            },
+            {
+              "text": "  위쪽 섬까지 다리를 이어 세일 스케이터로 2분 안에 적 사제를 데려오세요. ",
+              "fullWidth": 396,
+              "contentWidth": 393,
+              "advance": 28
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 424
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 406,
+          "visible": 403,
+          "fragments": [
+            {
+              "text": "힌트: ",
+              "fullWidth": 31,
+              "contentWidth": 28,
+              "advance": 0
+            },
+            {
+              "text": "사제가 걸어 나가기 전에 워크샾/아웃포스트의 건설이 끝나기를 기다릴 ",
+              "fullWidth": 375,
+              "contentWidth": 372,
+              "advance": 31
+            }
+          ]
+        },
+        {
+          "logical": 432,
+          "visible": 429,
+          "fragments": [
+            {
+              "text": "필요는 없습니다. 이번 게임에서는 원하면 아웃포스트를 지을 수 있습니다. 사제를 ",
+              "fullWidth": 432,
+              "contentWidth": 429,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 434,
+          "visible": 431,
+          "fragments": [
+            {
+              "text": "오른쪽 클릭하고 \"Build Outpost\"를 선택하세요. 다리 슬롯 여섯 개를 모두 쓸 때의 ",
+              "fullWidth": 434,
+              "contentWidth": 431,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 313,
+          "visible": 310,
+          "fragments": [
+            {
+              "text": "다리 단축키는 ",
+              "fullWidth": 78,
+              "contentWidth": 75,
+              "advance": 0
+            },
+            {
+              "text": "q, w, s, a, z ",
+              "fullWidth": 63,
+              "contentWidth": 60,
+              "advance": 78
+            },
+            {
+              "text": "그리고 ",
+              "fullWidth": 39,
+              "contentWidth": 36,
+              "advance": 141
+            },
+            {
+              "text": "x ",
+              "fullWidth": 10,
+              "contentWidth": 7,
+              "advance": 180
+            },
+            {
+              "text": "입니다. 행운을 빕니다! ",
+              "fullWidth": 123,
+              "contentWidth": 120,
+              "advance": 190
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 313
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 231,
+          "visible": 228,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 113,
+              "contentWidth": 113,
+              "advance": 0
+            },
+            {
+              "text": "          ",
+              "fullWidth": 30,
+              "contentWidth": 0,
+              "advance": 113
+            },
+            {
+              "text": "",
+              "fullWidth": 85,
+              "contentWidth": 85,
+              "advance": 143
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 228
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 231
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 203,
+          "visible": 200,
+          "fragments": [
+            {
+              "text": "   \"썬 워크샾\"                    \"아웃포스트\" ",
+              "fullWidth": 203,
+              "contentWidth": 200,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 439,
+      "buttons": [
+        "사용 가능한 기술",
+        "시작하자!"
+      ],
+      "time": 3181786.583,
+      "started": 1
+    },
+    {
+      "mission": "bc3acid_bar76",
+      "title": "애시드 바",
+      "language": "korean",
+      "x": 356.5,
+      "width": 396,
+      "logicalWidth": 1024,
+      "maxLine": 333,
+      "visibleMaxLine": 330,
+      "lines": [
+        {
+          "logical": 102,
+          "visible": 102,
+          "fragments": [
+            {
+              "text": "애시드 바",
+              "fullWidth": 102,
+              "contentWidth": 102,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 102
+            }
+          ]
+        },
+        {
+          "logical": 301,
+          "visible": 301,
+          "fragments": [
+            {
+              "text": "\"애시드 바는 돈이 들지 않아요, 오히려 돈을 벌어 줍니다\"",
+              "fullWidth": 301,
+              "contentWidth": 301,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 82,
+          "visible": 79,
+          "fragments": [
+            {
+              "text": "-님버스의 상인",
+              "fullWidth": 79,
+              "contentWidth": 79,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 79
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 82
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 309,
+          "visible": 306,
+          "fragments": [
+            {
+              "text": "당신은 포로가 되었습니다. 탈출을 막는 것은 맨 오 워 요새 ",
+              "fullWidth": 309,
+              "contentWidth": 306,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 333,
+          "visible": 330,
+          "fragments": [
+            {
+              "text": "하나뿐입니다. 기술은 모두 빼앗겼고 남은 것은 쓸 일이 있을 줄 ",
+              "fullWidth": 333,
+              "contentWidth": 330,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 330,
+          "visible": 327,
+          "fragments": [
+            {
+              "text": "몰라 깊이 숨겨 둔 애시드 바뿐입니다. 하지만 이것으로 탈출할 ",
+              "fullWidth": 330,
+              "contentWidth": 327,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 159,
+          "visible": 156,
+          "fragments": [
+            {
+              "text": "수 있을 리는 없겠죠.. 그렇죠? ",
+              "fullWidth": 159,
+              "contentWidth": 156,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 159
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 144,
+          "visible": 141,
+          "fragments": [
+            {
+              "text": "밖에서 목소리가 들립니다: ",
+              "fullWidth": 144,
+              "contentWidth": 141,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 336,
+      "buttons": [
+        "다음"
+      ],
+      "time": 3181787.672,
+      "started": 1
+    },
+    {
+      "mission": "bc4bow_rush76",
+      "title": "크로스보우 돌격",
+      "language": "korean",
+      "x": 375,
+      "width": 359,
+      "logicalWidth": 1024,
+      "maxLine": 258,
+      "visibleMaxLine": 255,
+      "lines": [
+        {
+          "logical": 174,
+          "visible": 174,
+          "fragments": [
+            {
+              "text": "크로스보우 돌격",
+              "fullWidth": 174,
+              "contentWidth": 174,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 174
+            }
+          ]
+        },
+        {
+          "logical": 139,
+          "visible": 139,
+          "fragments": [
+            {
+              "text": "\"도오오오옥겨어어어억!!!\"",
+              "fullWidth": 139,
+              "contentWidth": 139,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 82,
+          "visible": 79,
+          "fragments": [
+            {
+              "text": "-님버스의 장군",
+              "fullWidth": 79,
+              "contentWidth": 79,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 79
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 82
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 252,
+          "visible": 249,
+          "fragments": [
+            {
+              "text": "적 셋이 당신을 가두었고 위험한 처지입니다! 쓸 ",
+              "fullWidth": 252,
+              "contentWidth": 249,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 246,
+          "visible": 243,
+          "fragments": [
+            {
+              "text": "수 있는 기술은 윈드 제네레이터와 크로스보우 ",
+              "fullWidth": 246,
+              "contentWidth": 243,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 225,
+          "visible": 222,
+          "fragments": [
+            {
+              "text": "둘뿐이니 서둘러 모두 쓰러뜨려야 합니다!! ",
+              "fullWidth": 225,
+              "contentWidth": 222,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 225
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 229,
+          "visible": 226,
+          "fragments": [
+            {
+              "text": "목표:",
+              "fullWidth": 28,
+              "contentWidth": 28,
+              "advance": 0
+            },
+            {
+              "text": "  크로스보우로 적이 위협이 되기 전에 ",
+              "fullWidth": 201,
+              "contentWidth": 198,
+              "advance": 28
+            }
+          ]
+        },
+        {
+          "logical": 93,
+          "visible": 90,
+          "fragments": [
+            {
+              "text": "재빨리 없애세요. ",
+              "fullWidth": 93,
+              "contentWidth": 90,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 93
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 247,
+          "visible": 244,
+          "fragments": [
+            {
+              "text": "힌트:",
+              "fullWidth": 28,
+              "contentWidth": 28,
+              "advance": 0
+            },
+            {
+              "text": "  먼저 내버려 두면 가장 위협이 될 적부터 ",
+              "fullWidth": 219,
+              "contentWidth": 216,
+              "advance": 28
+            }
+          ]
+        },
+        {
+          "logical": 249,
+          "visible": 246,
+          "fragments": [
+            {
+              "text": "공격하는 것이 좋습니다. 공격을 받기 시작해도 ",
+              "fullWidth": 249,
+              "contentWidth": 246,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 258,
+          "visible": 255,
+          "fragments": [
+            {
+              "text": "걱정하지 말고 크로스보우로 효과적으로 부순 뒤 ",
+              "fullWidth": 258,
+              "contentWidth": 255,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 222,
+          "visible": 219,
+          "fragments": [
+            {
+              "text": "그들의 신전/워크샾을 재빨리 공격하세요. ",
+              "fullWidth": 222,
+              "contentWidth": 219,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 222
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 52,
+          "visible": 49,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 49,
+              "contentWidth": 49,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 49
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 52
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 73,
+          "visible": 70,
+          "fragments": [
+            {
+              "text": "\"크로스보우\" ",
+              "fullWidth": 73,
+              "contentWidth": 70,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 259,
+      "buttons": [
+        "사용 가능한 기술",
+        "시작하자!"
+      ],
+      "time": 3181790.621,
+      "started": 1
+    },
+    {
+      "mission": "bc5walkers76",
+      "title": "죽음의 다리",
+      "language": "korean",
+      "x": 325,
+      "width": 459,
+      "logicalWidth": 1024,
+      "maxLine": 360,
+      "visibleMaxLine": 357,
+      "lines": [
+        {
+          "logical": 126,
+          "visible": 126,
+          "fragments": [
+            {
+              "text": "죽음의 다리",
+              "fullWidth": 126,
+              "contentWidth": 126,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 126
+            }
+          ]
+        },
+        {
+          "logical": 295,
+          "visible": 295,
+          "fragments": [
+            {
+              "text": "\"보통 마지막에 고르는 쪽이 의외로 놀라울 수 있습니다\"",
+              "fullWidth": 295,
+              "contentWidth": 295,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 70,
+          "visible": 67,
+          "fragments": [
+            {
+              "text": "-벌프 동조자",
+              "fullWidth": 67,
+              "contentWidth": 67,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 67
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 70
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 342,
+          "visible": 339,
+          "fragments": [
+            {
+              "text": "사악한 군주와의 싸움 끝에 두 사람 모두 아주 아슬아슬한 처지가 ",
+              "fullWidth": 342,
+              "contentWidth": 339,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 354,
+          "visible": 351,
+          "fragments": [
+            {
+              "text": "되었지만, 당신이 유리합니다. 그의 사제가 움직이지 못하게 되었기 ",
+              "fullWidth": 354,
+              "contentWidth": 351,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 360,
+          "visible": 357,
+          "fragments": [
+            {
+              "text": "때문입니다... 노란 구체 안에서 사악한 군주의 웃음소리가 들립니다: ",
+              "fullWidth": 360,
+              "contentWidth": 357,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 320,
+          "visible": 317,
+          "fragments": [
+            {
+              "text": "\"하하하, 내 다리 방어를 뚫고 워커를 보내는 건 불가능하다!\" ",
+              "fullWidth": 320,
+              "contentWidth": 317,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 320
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 84,
+          "visible": 81,
+          "fragments": [
+            {
+              "text": "과연 그럴까요? ",
+              "fullWidth": 84,
+              "contentWidth": 81,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 84
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 352,
+          "visible": 349,
+          "fragments": [
+            {
+              "text": "목표:",
+              "fullWidth": 28,
+              "contentWidth": 28,
+              "advance": 0
+            },
+            {
+              "text": "  운반 유닛을 다리 너머로 걸어가게 해 사제를 데려오세요. 각 ",
+              "fullWidth": 324,
+              "contentWidth": 321,
+              "advance": 28
+            }
+          ]
+        },
+        {
+          "logical": 294,
+          "visible": 291,
+          "fragments": [
+            {
+              "text": "워커가 무엇을 할 수 있는지 감을 잡기 위한 연습입니다. ",
+              "fullWidth": 294,
+              "contentWidth": 291,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 294
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 349,
+          "visible": 346,
+          "fragments": [
+            {
+              "text": "힌트:",
+              "fullWidth": 28,
+              "contentWidth": 28,
+              "advance": 0
+            },
+            {
+              "text": "  ",
+              "fullWidth": 6,
+              "contentWidth": 0,
+              "advance": 28
+            },
+            {
+              "text": "Shift 선택",
+              "fullWidth": 54,
+              "contentWidth": 54,
+              "advance": 34
+            },
+            {
+              "text": "으로 한꺼번에 보낼 수 있지만 이렇게는 모두에게 ",
+              "fullWidth": 261,
+              "contentWidth": 258,
+              "advance": 88
+            }
+          ]
+        },
+        {
+          "logical": 342,
+          "visible": 339,
+          "fragments": [
+            {
+              "text": "사제를 집으라고 명령할 수 없습니다. 하나씩 보내면 운반 유닛의 ",
+              "fullWidth": 342,
+              "contentWidth": 339,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 198,
+          "visible": 195,
+          "fragments": [
+            {
+              "text": "강점과 약점이 더 뚜렷하게 보입니다. ",
+              "fullWidth": 198,
+              "contentWidth": 195,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 198
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 322,
+          "visible": 319,
+          "fragments": [
+            {
+              "text": "     ",
+              "fullWidth": 15,
+              "contentWidth": 0,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 24,
+              "contentWidth": 24,
+              "advance": 15
+            },
+            {
+              "text": "          ",
+              "fullWidth": 30,
+              "contentWidth": 0,
+              "advance": 39
+            },
+            {
+              "text": "",
+              "fullWidth": 57,
+              "contentWidth": 57,
+              "advance": 69
+            },
+            {
+              "text": "        ",
+              "fullWidth": 24,
+              "contentWidth": 0,
+              "advance": 126
+            },
+            {
+              "text": "",
+              "fullWidth": 57,
+              "contentWidth": 57,
+              "advance": 150
+            },
+            {
+              "text": "                     ",
+              "fullWidth": 63,
+              "contentWidth": 0,
+              "advance": 207
+            },
+            {
+              "text": "",
+              "fullWidth": 49,
+              "contentWidth": 49,
+              "advance": 270
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 319
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 322
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 360,
+          "visible": 357,
+          "fragments": [
+            {
+              "text": "\"골렘\"",
+              "fullWidth": 34,
+              "contentWidth": 34,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 17,
+              "contentWidth": 17,
+              "advance": 34
+            },
+            {
+              "text": "     \"벌프\"",
+              "fullWidth": 49,
+              "contentWidth": 49,
+              "advance": 51
+            },
+            {
+              "text": "",
+              "fullWidth": 17,
+              "contentWidth": 17,
+              "advance": 100
+            },
+            {
+              "text": "      \"세일 스케이터\"",
+              "fullWidth": 103,
+              "contentWidth": 103,
+              "advance": 117
+            },
+            {
+              "text": "",
+              "fullWidth": 17,
+              "contentWidth": 17,
+              "advance": 220
+            },
+            {
+              "text": "      \"크리스탈 크랩\"",
+              "fullWidth": 103,
+              "contentWidth": 103,
+              "advance": 237
+            },
+            {
+              "text": "",
+              "fullWidth": 17,
+              "contentWidth": 17,
+              "advance": 340
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 357
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 359,
+      "buttons": [
+        "사용 가능한 기술",
+        "시작하자!"
+      ],
+      "time": 3181792.449,
+      "started": 1
+    },
+    {
+      "mission": "bc6mows76",
+      "title": "맨 오 워와 바",
+      "language": "korean",
+      "x": 335,
+      "width": 439,
+      "logicalWidth": 1024,
+      "maxLine": 336,
+      "visibleMaxLine": 333,
+      "lines": [
+        {
+          "logical": 83,
+          "visible": 83,
+          "fragments": [
+            {
+              "text": "맨 오 워",
+              "fullWidth": 83,
+              "contentWidth": 83,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 83
+            }
+          ]
+        },
+        {
+          "logical": 320,
+          "visible": 317,
+          "fragments": [
+            {
+              "text": "\"이 놀라운 생물들은 액체 웅덩이에서 태어나 적을 가차 없이 ",
+              "fullWidth": 320,
+              "contentWidth": 317,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 104,
+          "visible": 104,
+          "fragments": [
+            {
+              "text": "쫓아가 사냥합니다\"",
+              "fullWidth": 104,
+              "contentWidth": 104,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 94,
+          "visible": 91,
+          "fragments": [
+            {
+              "text": "-님버스의 과학자",
+              "fullWidth": 91,
+              "contentWidth": 91,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 91
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 94
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 336,
+          "visible": 333,
+          "fragments": [
+            {
+              "text": "세상의 외진 곳에 고립된 당신은 적대적인 사제들에게 둘러싸여 ",
+              "fullWidth": 336,
+              "contentWidth": 333,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 318,
+          "visible": 315,
+          "fragments": [
+            {
+              "text": "있습니다. 그들은 쉬운 승리라고 보고 떼로 덤빕니다. 당신과 ",
+              "fullWidth": 318,
+              "contentWidth": 315,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 228,
+          "visible": 225,
+          "fragments": [
+            {
+              "text": "싸우면 그런 것은 없다는 것을 보여 주세요! ",
+              "fullWidth": 228,
+              "contentWidth": 225,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 228
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 322,
+          "visible": 319,
+          "fragments": [
+            {
+              "text": "목표:",
+              "fullWidth": 28,
+              "contentWidth": 28,
+              "advance": 0
+            },
+            {
+              "text": "  썬 바리케이드로 지키는 맨 오 워로 적을 쓰러뜨리세요 ",
+              "fullWidth": 294,
+              "contentWidth": 291,
+              "advance": 28
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 322
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 319,
+          "visible": 316,
+          "fragments": [
+            {
+              "text": "힌트:",
+              "fullWidth": 28,
+              "contentWidth": 28,
+              "advance": 0
+            },
+            {
+              "text": " 맨 오 워의 '부화 웅덩이'는 약합니다. 사격을 받지 않게 ",
+              "fullWidth": 291,
+              "contentWidth": 288,
+              "advance": 28
+            }
+          ]
+        },
+        {
+          "logical": 327,
+          "visible": 324,
+          "fragments": [
+            {
+              "text": "하세요. 먼저 썬 바리케이드를 놓고 그 뒤에 맨 오 워를 두세요. ",
+              "fullWidth": 327,
+              "contentWidth": 324,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 327
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 321,
+          "visible": 318,
+          "fragments": [
+            {
+              "text": "아웃포스트를 쓸 수 있습니다(사제를 오른쪽 클릭하고 \"Build ",
+              "fullWidth": 321,
+              "contentWidth": 318,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 85,
+          "visible": 82,
+          "fragments": [
+            {
+              "text": "Outpost\" 선택) ",
+              "fullWidth": 85,
+              "contentWidth": 82,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 85
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 212,
+          "visible": 209,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 42,
+              "contentWidth": 42,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 34,
+              "contentWidth": 34,
+              "advance": 42
+            },
+            {
+              "text": "                               ",
+              "fullWidth": 93,
+              "contentWidth": 0,
+              "advance": 76
+            },
+            {
+              "text": "",
+              "fullWidth": 40,
+              "contentWidth": 40,
+              "advance": 169
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 209
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 212
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 218,
+          "visible": 215,
+          "fragments": [
+            {
+              "text": "\"맨 오 워\"                          \"썬 바리케이드\" ",
+              "fullWidth": 218,
+              "contentWidth": 215,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 339,
+      "buttons": [
+        "사용 가능한 기술",
+        "시작하자!"
+      ],
+      "time": 3181794.836,
+      "started": 1
+    },
+    {
+      "mission": "bc7sun_bars76",
+      "title": "썬 바리케이드",
+      "language": "korean",
+      "x": 285,
+      "width": 539,
+      "logicalWidth": 1024,
+      "maxLine": 433,
+      "visibleMaxLine": 430,
+      "lines": [
+        {
+          "logical": 150,
+          "visible": 150,
+          "fragments": [
+            {
+              "text": "썬 바리케이드",
+              "fullWidth": 150,
+              "contentWidth": 150,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 150
+            }
+          ]
+        },
+        {
+          "logical": 319,
+          "visible": 319,
+          "fragments": [
+            {
+              "text": "\"좋은 공격을 하려면 먼저 방어가 튼튼한지 확인해야 합니다\"",
+              "fullWidth": 319,
+              "contentWidth": 319,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 109,
+          "visible": 106,
+          "fragments": [
+            {
+              "text": "-님버스의 국방 장관",
+              "fullWidth": 106,
+              "contentWidth": 106,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 106
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 109
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 429,
+          "visible": 426,
+          "fragments": [
+            {
+              "text": "패배에 분노한 적들이 재빨리 다시 모여 공격합니다. 이제 맨 오 워를 만들 수 없고 ",
+              "fullWidth": 429,
+              "contentWidth": 426,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 393,
+          "visible": 390,
+          "fragments": [
+            {
+              "text": "당신은 포위되었습니다. 동맹에게 구원 요청을 보냈고 그들이 오고 있으니, ",
+              "fullWidth": 393,
+              "contentWidth": 390,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 222,
+          "visible": 219,
+          "fragments": [
+            {
+              "text": "그때까지 버틸 수 있기를 바랄 뿐입니다.... ",
+              "fullWidth": 222,
+              "contentWidth": 219,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 222
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 370,
+          "visible": 367,
+          "fragments": [
+            {
+              "text": "목표:",
+              "fullWidth": 28,
+              "contentWidth": 28,
+              "advance": 0
+            },
+            {
+              "text": "  썬 바리케이드로 방어해 5분 동안 신전이 파괴되지 않게 하세요. ",
+              "fullWidth": 342,
+              "contentWidth": 339,
+              "advance": 28
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 370
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 433,
+          "visible": 430,
+          "fragments": [
+            {
+              "text": "힌트:",
+              "fullWidth": 28,
+              "contentWidth": 28,
+              "advance": 0
+            },
+            {
+              "text": "  적이 쏠 대상을 먼저 하나 내어 준 뒤 그 앞에 썬 바리케이드를 놓아 보세요... ",
+              "fullWidth": 405,
+              "contentWidth": 402,
+              "advance": 28
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 433
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 43,
+          "visible": 40,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 40,
+              "contentWidth": 40,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 40
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 43
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 88,
+          "visible": 85,
+          "fragments": [
+            {
+              "text": "\"썬 바리케이드\" ",
+              "fullWidth": 88,
+              "contentWidth": 85,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 439,
+      "buttons": [
+        "사용 가능한 기술",
+        "시작하자!"
+      ],
+      "time": 3181799.366,
+      "started": 1
+    },
+    {
+      "mission": "bc8fury76",
+      "title": "퓨리 전쟁",
+      "language": "korean",
+      "x": 393,
+      "width": 323,
+      "logicalWidth": 1024,
+      "maxLine": 217,
+      "visibleMaxLine": 214,
+      "lines": [
+        {
+          "logical": 102,
+          "visible": 102,
+          "fragments": [
+            {
+              "text": "퓨리 전쟁",
+              "fullWidth": 102,
+              "contentWidth": 102,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 102
+            }
+          ]
+        },
+        {
+          "logical": 214,
+          "visible": 214,
+          "fragments": [
+            {
+              "text": "\"퓨리들의 싸움은 결코 그치지 않습니다\"",
+              "fullWidth": 214,
+              "contentWidth": 214,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 55,
+          "visible": 52,
+          "fragments": [
+            {
+              "text": "-대사제장",
+              "fullWidth": 52,
+              "contentWidth": 52,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 52
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 55
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 217,
+          "visible": 214,
+          "fragments": [
+            {
+              "text": "목표:",
+              "fullWidth": 28,
+              "contentWidth": 28,
+              "advance": 0
+            },
+            {
+              "text": "  방금 전까지 당신을 두들긴 적들을 ",
+              "fullWidth": 189,
+              "contentWidth": 186,
+              "advance": 28
+            }
+          ]
+        },
+        {
+          "logical": 213,
+          "visible": 210,
+          "fragments": [
+            {
+              "text": "당신이 고른 퓨리의 힘으로, 혹은 썬으로 ",
+              "fullWidth": 213,
+              "contentWidth": 210,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 168,
+          "visible": 165,
+          "fragments": [
+            {
+              "text": "실력을 증명하며 쓰러뜨리세요! ",
+              "fullWidth": 168,
+              "contentWidth": 165,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 168
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 210,
+          "visible": 207,
+          "fragments": [
+            {
+              "text": "이기려면 모든 훈련이 필요할 것입니다! ",
+              "fullWidth": 210,
+              "contentWidth": 207,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 210
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 193,
+          "visible": 190,
+          "fragments": [
+            {
+              "text": "힌트:  ",
+              "fullWidth": 34,
+              "contentWidth": 28,
+              "advance": 0
+            },
+            {
+              "text": "아웃포스트를 쓸 수 있습니다. ",
+              "fullWidth": 159,
+              "contentWidth": 156,
+              "advance": 34
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 223,
+      "buttons": [
+        "시작하자!"
+      ],
+      "time": 3181800.615,
+      "started": 1
+    },
+    {
+      "mission": "bc9ssun_bars76",
+      "title": "썬 바리케이드",
+      "language": "korean",
+      "x": 335,
+      "width": 439,
+      "logicalWidth": 1024,
+      "maxLine": 381,
+      "visibleMaxLine": 378,
+      "lines": [
+        {
+          "logical": 150,
+          "visible": 150,
+          "fragments": [
+            {
+              "text": "썬 바리케이드",
+              "fullWidth": 150,
+              "contentWidth": 150,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 150
+            }
+          ]
+        },
+        {
+          "logical": 304,
+          "visible": 304,
+          "fragments": [
+            {
+              "text": "\"좋은 공격을 시작하기 전에 방어가 튼튼한지 확인하세요\"",
+              "fullWidth": 304,
+              "contentWidth": 304,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 90,
+          "visible": 87,
+          "fragments": [
+            {
+              "text": "신중한 님버스인",
+              "fullWidth": 87,
+              "contentWidth": 87,
+              "advance": 0
+            },
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 87
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 90
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 381,
+          "visible": 378,
+          "fragments": [
+            {
+              "text": "잡았습니다! 움직이지 못하는 사제 둘레로 다리를 돌려 놓았고 그 다리는 ",
+              "fullWidth": 381,
+              "contentWidth": 378,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 372,
+          "visible": 369,
+          "fragments": [
+            {
+              "text": "부술 수 없습니다. 하지만 이제 문제가 있습니다. 서두르다 보니 무기를 ",
+              "fullWidth": 372,
+              "contentWidth": 369,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 369,
+          "visible": 366,
+          "fragments": [
+            {
+              "text": "제대로 정비하지 못했습니다.. 거의 아무것도 없는 상태입니다. 골렘이 ",
+              "fullWidth": 369,
+              "contentWidth": 366,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 273,
+          "visible": 270,
+          "fragments": [
+            {
+              "text": "사제를 집을 때까지 다리를 지켜 낼 수만 있다면....... ",
+              "fullWidth": 273,
+              "contentWidth": 270,
+              "advance": 0
+            },
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 273
+            }
+          ]
+        },
+        {
+          "logical": 3,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": " ",
+              "fullWidth": 3,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        },
+        {
+          "logical": 163,
+          "visible": 160,
+          "fragments": [
+            {
+              "text": "목표:",
+              "fullWidth": 28,
+              "contentWidth": 28,
+              "advance": 0
+            },
+            {
+              "text": "  적 사제를 희생시키세요 ",
+              "fullWidth": 135,
+              "contentWidth": 132,
+              "advance": 28
+            }
+          ]
+        },
+        {
+          "logical": 0,
+          "visible": 0,
+          "fragments": [
+            {
+              "text": "",
+              "fullWidth": 0,
+              "contentWidth": 0,
+              "advance": 0
+            }
+          ]
+        }
+      ],
+      "bodyWidth": 379,
+      "buttons": [
+        "사용 가능한 기술",
+        "시작하자!"
+      ],
+      "time": 3181803.467,
+      "started": 1
+    }
+  ],
+  "errors": []
+}

@@ -1,0 +1,8 @@
+{"mission":"Tutorial1","title":"간극에 다리 놓기!","language":"korean","x":356.5,"width":396,"logicalWidth":1024,"maxLine":294,"bodyWidth":296,"buttons":["다음"],"time":3181555.873,"started":1}
+{"mission":"Tutorial2","title":"비밀 워크샾","language":"korean","x":376.5,"width":356,"logicalWidth":1024,"maxLine":280,"bodyWidth":296,"buttons":["다음"],"time":3181558.205,"started":1}
+{"mission":"Tutorial3","title":"사제 포획","language":"korean","x":346.5,"width":416,"logicalWidth":1024,"maxLine":315,"bodyWidth":316,"buttons":["다음"],"time":3181559.434,"started":1}
+{"mission":"Tutorial4","title":"전술 전투","language":"korean","x":326.5,"width":456,"logicalWidth":1024,"maxLine":351,"bodyWidth":356,"buttons":["다음"],"time":3181561.247,"started":1}
+{"mission":"Tutorial5","title":"교묘한 방어","language":"korean","x":366.5,"width":376,"logicalWidth":1024,"maxLine":276,"bodyWidth":276,"buttons":["다음"],"time":3181563.262,"started":1}
+{"mission":"Tutorial6","title":"순수한 힘!","language":"korean","x":336.5,"width":436,"logicalWidth":1024,"maxLine":378,"bodyWidth":376,"buttons":["다음"],"time":3181565.095,"started":1}
+AssertionError [ERR_ASSERTION]: Tutorial6줄폭
+    at run (H:\Workspace\git\NetstormReborn\webpj\extracted\e1430-korean-initial.cjs:26:116)

@@ -1,0 +1,140 @@
+{
+  "unit": "WB04-E1430",
+  "host": "HJOW-Athlon",
+  "sourceHead": "b4827c48d",
+  "bundle": {
+    "bytes": 3508534,
+    "sha256": "72ea8d094b55216452615ed982bceb46e82ab3166957eb47a5225108e2bd7b25"
+  },
+  "scope": "실제운영번들/한국어31미션첫안내만. 안내단추/Play/Start/Next/유닛조작없음. runtime gate.started는부팅중1이므로사용자가미션시작단추를누른것으로해석하지않음.",
+  "rows": 31,
+  "pageErrors": 0,
+  "maxPanelWidth": 539,
+  "largestVisibleOverflow": -1,
+  "logicalTrailingSpaceCases": [
+    {
+      "mission": "Tutorial6",
+      "full": 378,
+      "visible": 375,
+      "width": 376
+    },
+    {
+      "mission": "ThunderingPower",
+      "full": 237,
+      "visible": 234,
+      "width": 236
+    },
+    {
+      "mission": "TheNoose",
+      "full": 318,
+      "visible": 315,
+      "width": 316
+    },
+    {
+      "mission": "GuardMyBack",
+      "full": 342,
+      "visible": 339,
+      "width": 341
+    },
+    {
+      "mission": "bc5walkers76",
+      "full": 360,
+      "visible": 357,
+      "width": 359
+    },
+    {
+      "mission": "bc9ssun_bars76",
+      "full": 381,
+      "visible": 378,
+      "width": 379
+    }
+  ],
+  "visualInspection": [
+    "Tutorial6",
+    "ThunderingPower",
+    "TheNoose",
+    "bc9ssun_bars76"
+  ],
+  "periodAfter": {
+    "v26": "1/4",
+    "v22": "1/8"
+  },
+  "evidence": {
+    "bc5walkers76.png": {
+      "bytes": 613336,
+      "sha256": "aee76241f76cf05cd32c4a83669e9b9f1c3c2257c3e2529b7589c28fb129f295"
+    },
+    "bc6mows76.png": {
+      "bytes": 665107,
+      "sha256": "5f1dcefa561f4de701af70d18906234c637d044b67bcc576f7ea5d547f903bf9"
+    },
+    "bc9ssun_bars76.png": {
+      "bytes": 624709,
+      "sha256": "bd6c717f1b9dfbdad1cabebc6d125b61990f90f2a42be33029a9b341cfe1e91d"
+    },
+    "collector.cjs": {
+      "bytes": 5164,
+      "sha256": "e570c987176797ca3622ae511390693c7870e743bd87a14095dfa0a9592b0885"
+    },
+    "FinalConfrontation.png": {
+      "bytes": 623406,
+      "sha256": "045bf010c4d9f323d5bfc4b48dac4461a1b1d4e012e7c15614ec68e8ec5989d3"
+    },
+    "first-collector.cjs": {
+      "bytes": 4111,
+      "sha256": "fdb1553403ad66262efe5eb6d8f8b1ca10384f580c8daad1faade9c8756ed04f"
+    },
+    "first-failure.log": {
+      "bytes": 1319,
+      "sha256": "5ea53e6dee2c056eccfb7e8271368d7c36a1c1a694d9a91c74a0ab9c45c90f59"
+    },
+    "geometry-issues.json": {
+      "bytes": 2,
+      "sha256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+    },
+    "GuardMyBack.png": {
+      "bytes": 741442,
+      "sha256": "a3487a25f5d4d058d55f41614d1c344588843ae30de2941b7f9b71e1fc239724"
+    },
+    "initial-missions.json": {
+      "bytes": 164071,
+      "sha256": "62702e3429852ab7d541525707db9c536f27872fc5c76878a7629e9f9c10863c"
+    },
+    "korean31.log": {
+      "bytes": 77479,
+      "sha256": "4b392588c37752e9083bb593ba9fe377ae262a03046e8531290270fdcd2d2167"
+    },
+    "logical-width-collector.cjs": {
+      "bytes": 4322,
+      "sha256": "fd4d90cf972db45336aebdf8f56733e95b33556f7f187b660aa792c09dc5247c"
+    },
+    "logical-width-failure.log": {
+      "bytes": 8814,
+      "sha256": "a9a715b71836756b5d999fbb06dc6a7088d3ffb71f0dd85b5f48af6c474b8df0"
+    },
+    "logical-width-issues.json": {
+      "bytes": 1910,
+      "sha256": "12d9e8e77b54dc418ca0d7620033a3fbf4c6a96964464be31e26a8a60483c3f4"
+    },
+    "TheNoose.png": {
+      "bytes": 679757,
+      "sha256": "1dbe1d34d7c3272d838753e679236b46a15423a7723492b2ab6af245bf0a7ddb"
+    },
+    "TheWarBegins.png": {
+      "bytes": 589219,
+      "sha256": "de6b51d6ef8b453615ee5e563e88dd71e600897bc8ddb2ce02d4e955f523965b"
+    },
+    "ThunderingPower.png": {
+      "bytes": 661976,
+      "sha256": "3c26d899b504c4ca3b84476936b6527fb732a1a8c9063474f0862d37b0fb6bd9"
+    },
+    "Tutorial1.png": {
+      "bytes": 562493,
+      "sha256": "d24e78a2ee60cbd5cea0dba0d231dc4af2fdd1331acaf85c6b2df4ce028ef624"
+    },
+    "Tutorial6.png": {
+      "bytes": 583343,
+      "sha256": "d8984fbbdac4c0f30b1b8799ad98ae9e9acc99afa05f3eb19e91213e755b44d1"
+    }
+  }
+}
