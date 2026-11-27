@@ -54,7 +54,7 @@ public sealed partial class HostSession
         _worldScreenWidth = screenWidth;
     }
 
-    /// <summary>수집한 타일 묶음·일반 자산을 정렬 뒤 종류별로 제출한다. 타일 멤버는 SHP 픽셀로 직접 합성한다.</summary>
+    /// <summary>수집한 타일 묶음·일반 자산을 정렬 뒤 현재 객체 출력기에 제출한다.</summary>
     /// <param name="pixels">그리기 화면(행 간격 포함 8비트 버퍼). ref 구조체 캡처 제한 탓에 배열로 받는다.</param>
     /// <param name="pitch">한 행의 바이트 간격이다.</param>
     /// <param name="height">화면 세로 크기다.</param>
@@ -98,6 +98,13 @@ public sealed partial class HostSession
                 {
                     return;
                 }
+                // 제품에서는 타일도 일반 객체와 같은 가상 프레임·추가 그림 경로를 사용한다.
+                if (sprites is not null)
+                {
+                    sprites.Draw(entry, pixels, pitch, height, clip);
+                    return;
+                }
+                // 독립 타일 검사에는 기존 단독 출력기를 사용할 수 있다.
                 RawTileSprites.DrawTile(entry, pool, types, database, cameraX, cameraY, pixels, pitch, height, clip, modes);
             },
             Group = token => groups.TryGetValue(token, out RawTileGroupView? group)

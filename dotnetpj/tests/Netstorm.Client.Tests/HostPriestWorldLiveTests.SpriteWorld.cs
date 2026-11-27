@@ -42,7 +42,8 @@ public sealed partial class HostPriestWorldLiveTests
         Assert.Contains(pixels, pixel => pixel != 0);
         var modes = new RawTileDrawModes
         {
-            OwnerMaps = input.OwnerTables.Tokens.ToArray().Select(token => token == 0 ? (byte)0 : (byte)1).ToArray(),
+            // 타일 단독 출력기에 필요한 표를 비워 공통 객체 출력 경로를 검증한다.
+            OwnerMaps = [],
             OwnerColorsByType = (type, owner) => binding.Color(SpriteShapeMode.Owner, type, owner),
             BridgeLifeNumbers = () => session.Gameplay.BridgeLifeNumbers.Value,
             ShadowTable = input.Maps[7], DeadTable = input.Maps[6], AbstractTable = input.Maps[4],
