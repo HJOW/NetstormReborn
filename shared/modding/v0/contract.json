@@ -1,0 +1,31 @@
+{
+  "apiVersion": "0.1.0",
+  "packageFormat": "netstorm-mod-package",
+  "packageFormatVersion": 1,
+  "entryExport": "default",
+  "rootNames": ["apiVersion", "modId", "on", "off", "getState", "getPlayers", "getSelection", "randomInt", "log", "commands"],
+  "commandNames": ["click", "pressKey", "selectPriest", "nextUnit", "produceBridge", "repeatProduction", "rotatePiece"],
+  "eventNames": ["sessionStart", "tick", "sessionEnd", "commandResult"],
+  "keyNames": ["p", "r", "n", "h", "q", "w", "a", "s", "z", "x", "e", "d", "c", "ArrowLeft", "ArrowRight", "ArrowUp", "ArrowDown"],
+  "errorCodes": ["invalidArgument", "unsupportedVersion", "invalidPackage", "moduleNotFound", "permissionDenied", "quotaExceeded", "noSession", "staleSession", "inputBlocked", "queueFull", "scriptError", "timeLimit", "disposed"],
+  "limits": {
+    "maxInstalledMods": 8,
+    "maxPackageBytes": 1048576,
+    "maxModuleBytes": 262144,
+    "maxModules": 32,
+    "maxHandlers": 32,
+    "maxCommandsPerEvent": 8,
+    "maxLogsPerEvent": 8,
+    "maxLogCharacters": 1024,
+    "maxMessageBytes": 65536,
+    "timeLimitMilliseconds": 1000,
+    "quickJsMemoryBytes": 16777216,
+    "quickJsStackBytes": 262144,
+    "tickGameSeconds": 1
+  },
+  "rng": {"algorithm": "xorshift32", "zeroSeedReplacement": 1831565813, "shifts": [13, 17, 5], "seedHash": "fnv1a32-utf8", "seedMaterial": "sessionSeed + LF + modId"},
+  "profiles": {
+    "web": {"isolation": "opaque-frame-dedicated-worker", "hardMemoryLimit": false, "hardStackLimit": false},
+    "dotnet": {"isolation": "quickjs-runtime-per-mod", "hardMemoryLimit": true, "hardStackLimit": true}
+  }
+}

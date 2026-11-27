@@ -442,7 +442,7 @@ AGENTS.md 지정에 따라0.807에서 공통 [assets/Netstorm.ico](assets/Netsto
 - dotnetpj에 QuickJS(quickjs-ng, cpppj와 같은 v0.18.0 소스·provenance `cpppj/third_party/quickjs-ng`)를 탑재해 다른 사용자가 기능을 더하는 모딩을 지원한다.
 - 모드 API는 webpj의 함수·클래스 이름 체계를 따른다. webpj 내부 모듈(`Raw*`·원문 주소식 이름 등)을 그대로 노출하지 않고, 이름·형태를 webpj에 맞춘 얇은 공개 계약을 정한다. webpj가 기준 구현이고(브라우저 JS라 엔진 불필요) dotnetpj는 같은 계약을 QuickJS 바인딩으로 제공한다. 계약 설계 뒤 webpj도 맞춰 바뀔 수 있다([WB 모딩 API](LEFT_JOBS.webpj.md#modding-api)).
 - 게임 로직은 C#을 유지한다(로직을 JS로 옮겨 webpj 코드를 재사용하는 안은 채택하지 않음). cpppj 모딩은 아직 진행하지 않는다(LEFT_JOBS.md D7 그대로).
-- 착수 시점은 사용자 지시를 따르며 현 재개 순서(R4)는 바꾸지 않는다. MOD-1~3은 월드 연결과 독립이라 먼저 할 수 있고, MOD-4는 해당 기능이 DN에 연결된 뒤 한다.
+- **2026-11-28 사용자 변경:** DN 구현은 중지한다. WB가 공통 명세를 먼저 설계해 [공통 API v0.1.0](docs/netstorm-common-mod-api-v0-20261128.md)으로 확정했다(E1470). MOD-1은 이 산출물로 완료이며 WB가 기준 구현을 계속한다. DN 재개 후 MOD-2/3 → R6 해당 기능 결선 → MOD-4/5 순서로 적용한다. 이 문서 반영을 DN 엔진/게임 구현 완료로 세지 않는다.
 
 **검토 근거(2026-11-23 측정, scratchpad 임시 실행기·헤드리스 Chromium).**
 - QuickJS-ng 0.18(cpppj Release 정적 라이브러리)이 webpj 실제 ES 모듈(상대 import 포함)을 고치지 않고 불러 실행했다.
@@ -450,9 +450,9 @@ AGENTS.md 지정에 따라0.807에서 공통 [assets/Netstorm.ico](assets/Netsto
 - 결정론: `Math.sin`·`cos`·`atan2`·`pow`의 double 결과가 V8과 각각 2.6%·2.7%·17.3%·0.15% 다르다(2만 입력, float32로 줄이면 0건). 엔진의 이 함수들을 V8과 같은 fdlibm 구현으로 바꾼다.
 
 **세부 단위(각각 완료 기준).**
-- [ ] **MOD-1 공통 모드 API 계약 v0.** `docs/`에 범위(이벤트 훅·읽기 전용 상태 조회·원본 입력 큐로 들어가는 명령), 이름(webpj 클래스·함수 이름과 camelCase), 버전 규칙, 오류 처리, 결정론 규칙(게임 시계·난수만 사용, Math 함수 동일 구현), 보안(파일·네트워크·OS 미노출, 메모리·시간·스택 한도), 모드 위치(`%USERPROFILE%\Saved Games\Netstorm\Mods\`, Linux `$HOME/.netstorm/Mods/`), 기본 꺼짐·원본 대조 시험은 모드 꺼짐 상태를 적는다. 완료 기준: webpj 기준 구현 범위와 함께 확정해 두 인계 문서에서 링크한다.
+- [x] **MOD-1 공통 모드 API 계약 v0 — WB E1470.** [확정 명세](docs/netstorm-common-mod-api-v0-20261128.md)·[API 이름/한도](shared/modding/v0/contract.json)·[선언 스키마](shared/modding/v0/manifest.schema.json)·[공통 예제](shared/modding/v0/examples/session-observer.nsmod.json). 이벤트/읽기 전용 조회/원래 입력 큐 명령·camelCase·정확 버전·오류/순서·독립 결정론 RNG·Math 비트 규칙·격리/자원 프로필·기본 꺼짐·DN 모드 경로를 확정했다. DN의 실제 엔진/바인딩/양쪽 적합성은 MOD-2~5 미완료로 유지한다. 브라우저의 hardMemoryLimit/hardStackLimit=false와 DN의16MiB/256KiB 강제 한도를 구분한다.
 - [ ] **MOD-2 QuickJS 엔진 탑재.** quickjs-ng를 win-x64 네이티브 라이브러리로 빌드해(ARM64·Linux는 후순위) `Netstorm.Game` 배포에 넣고 얇은 C 래퍼 + P/Invoke로 런타임·컨텍스트·평가를 감싼다. quickjs-libc는 넣지 않고 한도는 cpppj `ScriptEngineLimits`와 같게 둔다. 완료 기준: cpppj `--quickjs-selftest` 6항목과 같은 자체 검사 통과, 배포 ZIP에 라이브러리·라이선스 포함.
-- [ ] **MOD-3 모듈 로더·호스트 shim.** 모드 폴더 안 ES 모듈만 불러오는 로더, `console`/`print` → 7차 로그, 계약이 요구하는 최소 전역, `Math.sin/cos/atan2/pow`의 fdlibm 구현 주입. 완료 기준: 같은 수학 격자에서 V8과 비트 일치, 모드 폴더 밖 import 거부.
+- [ ] **MOD-3 모듈 로더·호스트 shim.** 모드 폴더 안 ES 모듈만 불러오는 로더, `console`/`print` → 7차 로그, 계약이 요구하는 최소 전역, `Math.sin/cos/atan2/pow`의 fdlibm 구현 주입. 완료 기준: 공통 v0 계약의 같은 수학 격자에서 V8과 비트 일치, 모드 폴더 밖/동적/URL import 거부. 공통 패키지 정규화·모드별 RNG·동기 핸들러·전역 차단·시계/명령 장벽도 명세를 따른다.
 - [ ] **MOD-4 API 바인딩.** 계약 v0의 이벤트·조회·명령을 DN Client/Core에 연결한다(명령은 원본 입력 큐 경유, 원본 호출 순서 보존). 완료 기준: 공통 적합성 시험 모드 스크립트가 DN과 webpj에서 같은 결과를 낸다.
 - [ ] **MOD-5 모드 관리·멀티플레이.** Options에서 모드 목록·켜기/끄기(기본 꺼짐), 모드 오류 시 그 모드만 끄고 로그, LAN(R11)에서는 참가자 모드 목록·해시 일치 검사. 완료 기준: 실제 GUI에서 켜기·끄기·오류 격리와 해시 불일치 시 접속 거부 확인.
 

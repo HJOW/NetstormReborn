@@ -1,0 +1,15 @@
+{
+  "format": "netstorm-mod-package",
+  "formatVersion": 1,
+  "manifest": {
+    "id": "example.session-observer",
+    "name": "미션 상태 관찰 예제",
+    "version": "1.0.0",
+    "apiVersion": "0.1.0",
+    "entry": "main.js",
+    "description": "게임을 변경하지 않고 미션 시작과 게임 시각을 기록합니다."
+  },
+  "modules": {
+    "main.js": "// 공통 API를 받아 미션 시작과 1게임초 사건을 기록한다.\nexport default function registerMod(netstorm) {\n    // 현재 사건의 읽기 전용 상태를 로그에 기록한다.\n    netstorm.on('sessionStart', () => netstorm.log('info', JSON.stringify(netstorm.getState())));\n    // 게임 시계와 분리된 모드 전용 결정론 난수를 기록한다.\n    netstorm.on('tick', (event) => netstorm.log('info', JSON.stringify({ second: event.gameSeconds, sample: netstorm.randomInt(100) })));\n}\n"
+  }
+}
