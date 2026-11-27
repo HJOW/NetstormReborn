@@ -104,6 +104,7 @@ cpppj/src/client/ClientGameplayGlobals.h	Netstorm.Client/ClientGameplayGlobals.P
 cpppj/src/client/ClientGameplayGlobals.h	Netstorm.Client/ClientGameplayGlobals.Runtime.cs	ae0e58b3ac0f34697eac6954cce7913a759247e3	port
 cpppj/src/client/ClientGameplayGlobals.h	Netstorm.Client/ClientGameplayGlobals.State.cs	ae0e58b3ac0f34697eac6954cce7913a759247e3	port
 cpppj/src/client/ClientGameplayGlobals.h	Netstorm.Client/ClientGameplayGlobals.cs	4a9cc0f0c6198e567d2a2b68ac73d401d6274251	port
+cpppj/src/client/ClientHelpWord.cpp	Netstorm.Client/ClientHelpWord.cs	06e27fe39d0f0282e31921aae9e431da715057a2	port
 cpppj/src/client/ClientKencloudGlobals.cpp	Netstorm.Client/Display/ClientKencloudGlobals.cs	3fc1de7db1eda0d8b62e6df38831e07f0a6c8a15	port
 cpppj/src/client/ClientKencloudGlobals.h	Netstorm.Client/Display/ClientKencloudGlobals.cs	3fc1de7db1eda0d8b62e6df38831e07f0a6c8a15	port
 cpppj/src/client/ClientLocalStateGlobals.h	Netstorm.Client/ClientLocalStateGlobals.cs	c551d159d8ba9b69ab082e6f4adf3930667a1e98	port
@@ -569,6 +570,8 @@ cpppj/src/client/RawNormalTerrainWorldBinding.cpp	Netstorm.Core/Original/RawNorm
 cpppj/src/client/RawNormalTerrainWorldBinding.h	Netstorm.Core/Original/RawNormalTerrainBinding.cs	2d50804c8e2796f498c79cb79956848b54c5e5f0	port
 cpppj/src/client/RawNormalTerrainWorldBinding.h	Netstorm.Core/Original/RawNormalTerrainRequest.cs	2d50804c8e2796f498c79cb79956848b54c5e5f0	port
 cpppj/src/client/RawNsInfoContext.h	Netstorm.Client/Host/HostNsInfoWindows.cs	080c977d6be0b1c19cde69ac844b03f3d4e23b7c	port
+cpppj/src/client/RawObjectMenuInfo.cpp	Netstorm.Client/Gump/RawObjectMenuInfo.cs	06e27fe39d0f0282e31921aae9e431da715057a2	L1
+cpppj/src/client/RawPlayerMenu.cpp	Netstorm.Client/Gump/PlayerMenuText.cs	06e27fe39d0f0282e31921aae9e431da715057a2	port
 cpppj/src/client/RawPriestMenu.h	Netstorm.Client/Gump/QuickHelpHtml.cs	c58ddc1f7a2e1e9cc2e97500bc06a51bb36fc817	port
 cpppj/src/client/RawPriestWorldBindings.cpp	Netstorm.Client/Mission/RawMovementProcessTypes.cs	30523aaf2d90489101b737d142fdf046c042cdb3	port
 cpppj/src/client/RawPriestWorldBindings.cpp	Netstorm.Client/Mission/RawPriestWorldBindings.cs	f7e81025d1b1d019a5a4d6bffb0a4cbae9d7a473	port

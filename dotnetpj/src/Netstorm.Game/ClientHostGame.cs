@@ -182,6 +182,8 @@ public sealed partial class ClientHostGame : Game
         _gameRandom = startup?.Random ?? new GameRandom();
         _clock = clock ?? new HostTimeSource();
         _localState = new ClientLocalStateGlobals(_gameplay, _ambientSound);
+        // 원본 옵션 해석에서 helpWord를 표시 바이트로 한 번 부호화해 같은 Client 캐시에 둔다.
+        if (_startup is { } helpStartup) _localState.HelpWord.ReadOptions(helpStartup.Configuration);
         _connections = new ClientConnectionGlobals(_localState);
         _clientClock = new ClientClockGlobals(_localState);
         // cpppj ClientMain 349행의 실제 공통 SP 초기화와 같은 위치다: 클라이언트 시작 때 1회만 reseed+초기화하고 미션 시작 때는 다시 하지 않는다(0.464, 원본 004391ed).

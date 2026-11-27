@@ -5,9 +5,11 @@ using Netstorm.Net;
 namespace Netstorm.Client;
 
 /// <summary>다섯 실제 상태 블록과 로그인/시계 전역의 장기 소유자다.</summary>
-/// <remarks>ClientHelpWord/MonitorTime의 형식과 해당 실제 소비자는 후속이다.</remarks>
+/// <remarks>MonitorTime의 형식과 해당 실제 소비자는 후속이다.</remarks>
 public sealed class ClientLocalStateGlobals
 {
+    /// <summary>옵션 해석과 메뉴가 공유하는 실제 helpWord 문구다.</summary>
+    public ClientHelpWord HelpWord { get; } = new();
     /// <summary>원본 다섯0x90바이트 블록의 유일한 실제720바이트다.</summary>
     private readonly byte[] _blocks = new byte[720];
     /// <summary>실제8바이트 Zone이며 첫6바이트만 원문 Zone이다.</summary>
