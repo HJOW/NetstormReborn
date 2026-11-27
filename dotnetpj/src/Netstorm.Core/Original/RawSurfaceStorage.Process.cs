@@ -390,7 +390,7 @@ public sealed partial class RawSurfaceStorage
     {
         if (_gumpForms is null)
         {
-            _gumpForms = new RawGumpFormHost(Pool, FactoryExecutor(), Types, BaseDestroy());
+            _gumpForms = new RawGumpFormHost(Pool, FactoryExecutor(), Types, BaseDestroy(), DeliverGumpNotice);
         }
 
         return _gumpForms;
