@@ -225,6 +225,26 @@ public sealed class SpriteDrawTests
         Assert.Equal(new byte[] { 40, 11, 42, 255 }, pixels);
     }
 
+    /// <summary>고휘도 그림은 추상 표와 구별되는 실제 색표를 화면색에 적용한다.</summary>
+    [Fact]
+    public void PixelTargetRequestsBright160Map()
+    {
+        byte[] raw = new byte[48];
+        Put(raw, 0, 0x30312e31); Put(raw, 4, 1); Put(raw, 8, 16);
+        Put(raw, 32, 1); Put(raw, 36, 1);
+        new byte[] { 5, 3, 4, 0, 5, 7, 8, 0 }.CopyTo(raw, 40);
+        var database = new ShapeDatabase(raw);
+        byte[] pixels = [10, 11, 12, 13];
+        byte[] colors = Enumerable.Range(0, 256).Select(i => unchecked((byte)(i + 20))).ToArray();
+        var target = new SpritePixelTarget(pixels, 2, 2, new(0, 0, 2, 2), _ => new(database, 0), (mode, _, _) =>
+        {
+            Assert.Equal(SpriteShapeMode.Bright160, mode);
+            return colors;
+        });
+        target.Hooks().Shape!(new(70, 0, new(0, 0), SpriteShapeMode.Bright160));
+        Assert.Equal(new byte[] { 30, 31, 32, 33 }, pixels);
+    }
+
     /// <summary>픽셀 장치가 전달된 배율을 실제 SHP 변환기에 전달한다.</summary>
     [Fact]
     public void PixelTargetUsesRequestedScale()

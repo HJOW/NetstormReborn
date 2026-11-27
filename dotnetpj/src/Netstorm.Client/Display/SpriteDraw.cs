@@ -16,6 +16,8 @@ public enum SpriteShapeMode
     Dead,
     /// <summary>그림 마스크 아래 화면색에 그림자 표를 쓴다.</summary>
     Shadow,
+    /// <summary>그림 마스크 아래 화면색에 원본 1.6배 밝기 표를 쓴다.</summary>
+    Bright160,
 }
 
 /// <summary>실제 타입의 표시 헤더·기본 프레임·상태 막대 속성이다. cpppj/src/client/SpriteDraw.h 대응.</summary>

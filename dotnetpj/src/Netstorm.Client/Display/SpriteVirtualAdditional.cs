@@ -103,6 +103,11 @@ public sealed class SpriteVirtualAdditional
             case 0x00479340:
                 DrawScaledMeta(sid, point);
                 return;
+            case 0x0045bcd0:
+                ReadOnlySpan<byte> bright = _pool.Slot(sid);
+                if ((bright[11] & 2) == 0)
+                    _shape(new(bright[10], BinaryPrimitives.ReadUInt32LittleEndian(bright[36..]), point, SpriteShapeMode.Bright160));
+                return;
             case 0x0046a6e0:
                 DrawBurningArcher(sid, point);
                 return;

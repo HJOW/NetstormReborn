@@ -19,7 +19,7 @@ public sealed class SpriteVirtualAdditionalTests
         BinaryPrimitives.WriteInt32LittleEndian(raw[36..], frame);
     }
 
-    /// <summary>빈 함수만 자연 반환하고 실제 다리·메타 장치와 미복원 함수는 구별한다.</summary>
+    /// <summary>빈 함수만 자연 반환하고 실제 다리·메타 장치가 없으면 오류를 낸다.</summary>
     [Fact]
     public void RoutesOnlyKnownAdditionalFunctions()
     {
@@ -38,8 +38,6 @@ public sealed class SpriteVirtualAdditionalTests
         Set(pool, sid, 0x0050c9f0, 94);
         draw.Draw(sid, point);
         Assert.Equal(new[] { ("bridge", sid, point), ("meta", sid, point) }, calls);
-        Set(pool, sid, 0x00509b98, 130);
-        Assert.Contains("0045BCD0", Assert.Throws<InvalidOperationException>(() => draw.Draw(sid, point)).Message);
         var missing = new SpriteVirtualAdditional(pool, frames, _ => { });
         Set(pool, sid, 0x005034c8, 82);
         Assert.Throws<InvalidOperationException>(() => missing.Draw(sid, point));
@@ -288,6 +286,23 @@ public sealed class SpriteVirtualAdditionalTests
         draw.Draw(sid, new(3, 4));
         Assert.Equal(new uint[] { 0, 1, 3 }, requests.Select(request => request.Frame));
         Assert.Equal(new[] { SpriteShapeMode.Plain, SpriteShapeMode.Abstract, SpriteShapeMode.Abstract }, requests.Select(request => request.Mode));
+    }
+
+    /// <summary>고휘도 추가 그림은 1.6배 전용 표를 요청하고 죽음 비트에서 생략한다.</summary>
+    [Fact]
+    public void BrightAdditionalUsesDistinctMapAndDeadGate()
+    {
+        var pool = new RawSidPool(24000, server: false);
+        int sid = pool.Allocate(SidAllocation.Client);
+        var frames = Enumerable.Range(0, 188).Select(_ => new RiftTypeFrames([])).ToArray();
+        var requests = new List<SpriteShapeRequest>();
+        var draw = new SpriteVirtualAdditional(pool, frames, requests.Add);
+        Set(pool, sid, 0x00509b98, 130, 8);
+        draw.Draw(sid, new(4, 5));
+        Assert.Equal(new SpriteShapeRequest(130, 8, new(4, 5), SpriteShapeMode.Bright160), Assert.Single(requests));
+        pool.AllocatedBytes(sid)[11] = 2;
+        draw.Draw(sid, new(4, 5));
+        Assert.Single(requests);
     }
 
     /// <summary>주문의 도움말 프레임과 추상 소유자 조건을 실제 현재 슬롯으로 분기한다.</summary>
