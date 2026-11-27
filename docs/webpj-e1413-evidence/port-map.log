@@ -1,0 +1,13 @@
+대응표 1160행 (기준선 225553df 단위 1160개), 오류 0개
+분류: port 959, adapt 48, exclude-mp 73, exclude-edit 42, exclude-host 37, exclude-legacy 1
+상태: todo 0, partial 0, port 275, session 732, oracle 0, - 153
+새 파일	cpppj/src/client/EmbeddedBitmapFont.cpp	기준선 뒤 추가(대응표 밖, 재기준선 때 등록)
+새 파일	cpppj/src/client/EmbeddedBitmapFont.h	기준선 뒤 추가(대응표 밖, 재기준선 때 등록)
+새 파일	cpppj/src/client/KoreanFontSettings.h	기준선 뒤 추가(대응표 밖, 재기준선 때 등록)
+새 파일	cpppj/src/client/ManaPictureData.inc	기준선 뒤 추가(대응표 밖, 재기준선 때 등록)
+새 파일	cpppj/src/client/ResetAllSettings.cpp	기준선 뒤 추가(대응표 밖, 재기준선 때 등록)
+새 파일	cpppj/src/client/ResetAllSettings.h	기준선 뒤 추가(대응표 밖, 재기준선 때 등록)
+새 파일	cpppj/src/client/TextPictureResources.h	기준선 뒤 추가(대응표 밖, 재기준선 때 등록)
+새 파일	cpppj/src/client/TutorialObjective.cpp	기준선 뒤 추가(대응표 밖, 재기준선 때 등록)
+새 파일	cpppj/src/client/TutorialObjective.h	기준선 뒤 추가(대응표 밖, 재기준선 때 등록)
+새 파일	cpppj/src/client/TutorialObjectiveCatalog.inc	기준선 뒤 추가(대응표 밖, 재기준선 때 등록)

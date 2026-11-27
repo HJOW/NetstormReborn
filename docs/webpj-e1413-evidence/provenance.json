@@ -1,0 +1,111 @@
+{
+  "unit": "WB04-E1413",
+  "host": "HJOW-Athlon",
+  "baselineCommit": "4d61540a4",
+  "recordedAt": "2026-11-27T05:49:33.437189+00:00",
+  "results": {
+    "focused": 29,
+    "focusedFail": 0,
+    "buildExit": 0,
+    "portMapRows": 1160,
+    "portMapErrors": 0,
+    "browser": 1,
+    "browserFail": 0,
+    "browserDurationSeconds": 55.7
+  },
+  "scope": "기존원문제단피격몸체를예약콜백에도연결한구현/집중/L2완료. 실제AI후보120000상한은계속관측중이며실패지점통과/승리/저장으로세지않는다.",
+  "sourceOverrideNote": "실제AI는후보2모듈만URL주입한다. 두후보와현재본소스의LF해시가동일함을확인했다.",
+  "sourceFiles": {
+    "webpj/www/core/raw-campaign-hit-bindings.js": {
+      "raw": "93c8deb96c28e861470cec06c9e05cc34ea673301f2a8942d39088a85e7345dc",
+      "lf": "a6cb05242d490e1782a7481361c1e2149fee49085a71a892a59876de8bf73411",
+      "bytes": 12437
+    },
+    "webpj/www/core/raw-campaign-session-assets.js": {
+      "raw": "0326314c2813448bb6a92121c20ef5b95122e6aabc6c769a477e61b18d87a2a3",
+      "lf": "47bcf8614634584d50e749a1920fbaaaf83f2bd1ce7b8259771d8dd88ea522ca",
+      "bytes": 16290
+    },
+    "webpj/tests/raw-campaign-session-assets.test.mjs": {
+      "raw": "eae2c388893fe337e5ad6085db40eaaf5670e94dbc2cb4a191a07e4e5c052d44",
+      "lf": "8ad8a4d55f457ffbec830b0f2611ecc781d276d37bfe76d635f083178d9d2b39",
+      "bytes": 16938
+    },
+    "webpj/tools/ally-ai-campaign-flow.cjs": {
+      "raw": "864b13931ef9d333269eb1180d1cc72f7d9ee78c06018f1a2c72f3e8071cefeb",
+      "lf": "8d128e688431777dfa981bcfed43c984ad4d9ae668b834badb06531362edf209",
+      "bytes": 13874
+    },
+    "webpj/www/dist/netstorm.bundle.js": {
+      "raw": "47e9ec944004bdd126b049e3eb05fe892bd6f99fac947dafb8665a8f3bf15d10",
+      "lf": "47e9ec944004bdd126b049e3eb05fe892bd6f99fac947dafb8665a8f3bf15d10",
+      "bytes": 3501033
+    }
+  },
+  "evidence": {
+    "activation.json": {
+      "bytes": 5685,
+      "sha256": "ed720de776aff4cee9b383b7dfed8fe11f79b689fc780998ac3ed47945199e5b"
+    },
+    "browser-selector-first.log": {
+      "bytes": 347,
+      "sha256": "74302551d0bef6390aea6b80b8243fa45f1f91ae65855f4cbaee91bab4d5641d"
+    },
+    "browser.log": {
+      "bytes": 580,
+      "sha256": "f29907f4d6da86ce203ce4b6299997be1d59d3c1f442d23f161e7d23ff86ac05"
+    },
+    "build.log": {
+      "bytes": 461,
+      "sha256": "9c3126f5784a02a558c88a070692a536d91be74b0bb2ffb9a7010ed78b7ad198"
+    },
+    "diagnostic-collector.cjs.txt": {
+      "bytes": 14556,
+      "sha256": "5c29a1e0e0495a6aaf0ff450fa46d640a424b85e9ce6b7d5dccb515ebd11cc68"
+    },
+    "error-reproduction.log": {
+      "bytes": 212359,
+      "sha256": "13dcf8be15757bc27ddddf5e2457313ef75be84f2cf28d991102bff9b34a5efa"
+    },
+    "failure-summary.json": {
+      "bytes": 763,
+      "sha256": "348ad7b80bc114d24276bc9f9d2ca9642c47e999df42ab46d393fabdc8de582b"
+    },
+    "failure.json": {
+      "bytes": 1011171,
+      "sha256": "7c85eeb730ec54666efda75d0ed636a1d3c26269aeabc9d1101e8421eb172557"
+    },
+    "failure.png": {
+      "bytes": 960804,
+      "sha256": "e30ab502873cd22259559cb9cbf92269abcced3eeb5e20335ab2949e8ac2c8bd"
+    },
+    "first-observation.log": {
+      "bytes": 17537,
+      "sha256": "42719f284e8507540bfa0c84ac9807e0621bc96345c7fdb293583949a22b32a9"
+    },
+    "fixed-candidate-collector.cjs.txt": {
+      "bytes": 14865,
+      "sha256": "be1c9e1743fc024f318dff03570089a94201aa0f4965a22985097922c96f9359"
+    },
+    "focused.log": {
+      "bytes": 3802,
+      "sha256": "39c190174018a38a5766dee072367ea96bdefe53a445c21164fcadb2c232f682"
+    },
+    "force3-controller.cjs.txt": {
+      "bytes": 5865,
+      "sha256": "7b4aaa2b2ed1b83323142b9612486ca5be70d371a0cf99f4914334fd6d429dc6"
+    },
+    "port-map.log": {
+      "bytes": 1349,
+      "sha256": "fcc05781df5d08a49f42a34deaf1f1416f1a0bba4bd052726face682528836dd"
+    },
+    "raw-campaign-hit-bindings.js.txt": {
+      "bytes": 12437,
+      "sha256": "93c8deb96c28e861470cec06c9e05cc34ea673301f2a8942d39088a85e7345dc"
+    },
+    "raw-campaign-session-assets.js.txt": {
+      "bytes": 16290,
+      "sha256": "0326314c2813448bb6a92121c20ef5b95122e6aabc6c769a477e61b18d87a2a3"
+    }
+  }
+}

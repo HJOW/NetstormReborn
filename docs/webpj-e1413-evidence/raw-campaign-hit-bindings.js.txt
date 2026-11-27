@@ -1,0 +1,172 @@
+// 캠페인 피격·충돌·주변 Dude 반응을 같은 실제 World/사제/HP/Host에 조립한다(cpppj client/RawCampaignHitBindings, 225553df).
+// 사용: 생성 뒤 damageHooks/missileHooks/handler/destroyHooks/destroy를 상위 월드에 연결한다. Kernel을 비운 뒤 이 몸체를 반납한다.
+// Native 장기 Storage의 Dude 경로 TYPE 대여는 해당 Storage 설치 단계(4-D E)에서 연결한다. 현재는 독립 typed 경로다. (2026-11-16 WB04-E564)
+import { RawContainedLookup } from './raw-contained-lookup.js';
+import { RawDamageableBurning } from './raw-damageable-burning.js';
+import { RawPriestDamage, makePriestGunHitHooks } from './raw-priest-damage.js';
+import { RawDamageableHit, makeDamageableGunHitHooks, makeDamageableHitBurningHooks } from './raw-damageable-hit.js';
+import { rawVortexDamage, rawWindTowerDefense } from './raw-special-damage.js';
+import { rawBulwarkHit } from './raw-bulwark-hit.js';
+import { RawDudeNotice, createDudeNoticeState, makeDudeNoticeHostHooks } from './raw-dude-notice.js';
+import { RawGunImpact, makeGunImpactRuntimeHooks, makeMissileGunImpactHooks } from './raw-gun-impact.js';
+import { makeMissileGunHitHooks } from './raw-gun-hit.js';
+import { makeRawSquidDefenseHooks } from './raw-squid-defense.js';
+import { rawPathSurfaceAt } from './raw-path-surface.js';
+import { pathDirection } from './raw-path-animation.js';
+import { CAMPAIGN_DAMAGE_HIT_ENTRIES, CAMPAIGN_DAMAGE_DEFENSE_ENTRIES } from './campaign-damage-vtables.js';
+import { SQUID_DESTROY_EFFECT } from './squid-destroy.js';
+
+// 원문 가상 +98의 여섯 실제 진입과 윈드 타워 VT, 공통 삭제 자산 VT다. (2026-11-16 WB04-E564)
+const BASE_HIT = 0x4add10;
+const GENERAL_HIT = 0x44c8e0;
+const PRIEST_HIT = 0x494380;
+const VORTEX_HIT = 0x4dba40;
+const BULWARK_HIT = 0x48ef20;
+const ALTAR_HIT = 0x448b70;
+const WIND_TOWER = 0x50ead0;
+const SUN_DISK = 0x50b570;
+const BASE_TABLE = 0x501dd0;
+
+// 정렬되지 않은 현재 DWORD를 읽는다. 프레임은 호출자가 signed로 바꾼다. (2026-11-16 WB04-E564)
+function dword(raw, offset = 0) { return (raw[offset] | (raw[offset + 1] << 8) | (raw[offset + 2] << 16) | (raw[offset + 3] << 24)) >>> 0; }
+
+// 제단의 투명·희생 방향11/12는피해를무시하고1을반환한다. 다른방향은hit()을부른다. 총기/예약6699가같은실제448b70을공유한다. (2026-11-16 WB04-E564)
+export function rawAltarHit(pool, frames, victim, hit) {
+    const raw = pool.slot(victim);
+    if (raw[10] >= frames.length) throw new RangeError('현재448b70 피해의TYPE 프레임 물리 부족');
+    const direction = pathDirection(frames[raw[10]], dword(raw, 36) | 0);
+    return direction === 11 || direction === 12 ? 1 : hit();
+}
+
+// 실제 하위 모듈만 소유하고 외부 World/상태/표/난수의 주소는 빌린다. (2026-11-16 WB04-E564)
+export class RawCampaignHitBindings {
+    // 같은 월드·Core와 사제 HP 변경 처리기다.
+    #world; #core; #priests;
+    // 피격/주변 통지/충돌의 실제 몸체와 신전 선택 훅이다.
+    #burning; #priestDamage; #generalDamage; #vortex; #dudes; #impact;
+
+    // 외부 effects는 priest/burning/dudes/general/vortex의 선택 효과이며 도달 시에만 필요한 장치를 요구한다. (2026-11-16 WB04-E564)
+    constructor(world, priests, hp, random, speeds, residences, priestState, generalState, burningState, impactState, effects = {}) {
+        const core = world.core(); const pool = core.pool;
+        if (priests?.priestState?.pool !== pool || hp?.pool !== pool) throw new TypeError('캠페인 피격 현재 Pool 불일치');
+        this.#world = world; this.#core = core; this.#priests = priests;
+        const contained = new RawContainedLookup(pool, (sid, flags) => { world.destroy(sid, flags); });
+        this.#burning = new RawDamageableBurning(pool, core.types, hp, burningState, {
+            ...effects.burning, find: (victim, type, index) => contained.find(victim, type, index, false),
+            destroy: (form, flags) => { world.destroy(form, flags); },
+        });
+        this.#priestDamage = new RawPriestDamage(pool, core.types, core.frames, priestState, {
+            ...effects.priest, hasRegenEvent: (victim) => core.processes.findEvent(victim, 0x25d) !== null,
+            cancelEvent: (victim, event) => {
+                // 현재 첫 일치 프로세스를 다시 찾아 실제 Host에서 모두 삭제한다.
+                let process;
+                while ((process = core.processes.findEvent(victim, event)) !== null) core.processes.kill(process, 0);
+            },
+            setFrame: (victim, frame, flags) => { core.frame.set(victim, frame, flags); },
+            setHitPoints: (victim, value) => { priests.setHitPoints(victim, value); },
+            damageableRefresh: (victim) => { this.#burning.refresh(victim); },
+        }, core.dependencies);
+        const rejectDamage = effects.general?.rejectDamage;
+        const general = {
+            ...effects.general, destroy: (sid, flags) => { world.destroy(sid, flags); },
+            unrealize: (sid) => { core.display.update(pool.slot(sid), 0); },
+            islandAt: (x, y) => rawPathSurfaceAt(core.hash, x, y),
+            rejectDamage: (victim, attacker) => {
+                if (dword(pool.slot(victim)) === WIND_TOWER) return rawWindTowerDefense(pool, core.types, core.frames, victim, attacker);
+                if (typeof rejectDamage !== 'function') throw new Error('캠페인 다른 파생 실제 방어 미연결');
+                return rejectDamage(victim, attacker);
+            },
+        };
+        this.#generalDamage = new RawDamageableHit(pool, core.types, generalState,
+            makeDamageableHitBurningHooks(pool, this.#burning, makeRawSquidDefenseHooks(pool, CAMPAIGN_DAMAGE_DEFENSE_ENTRIES, general)));
+        this.#vortex = {
+            ...effects.vortex, find: (victim, type, index, remove) => contained.find(victim, type, index, remove),
+            general: (victim, amount, owner, attacker) => this.#generalDamage.hit(victim, amount, owner, attacker),
+        };
+        this.#dudes = new RawDudeNotice(pool, core.hash, core.types, core.frames, speeds, residences, createDudeNoticeState(core.processState),
+            makeDudeNoticeHostHooks(pool, core.processes, {
+                ...effects.dudes, setFrame: (sid, frame, flags) => { core.frame.set(sid, frame, flags); },
+                notifySurface: (sid) => { core.building.notifySurface(sid); },
+            }));
+        this.#impact = new RawGunImpact(pool, core.frames, core.frame, random, impactState,
+            makeGunImpactRuntimeHooks(pool, core.factory, core.kernel, core.processes, {
+                pop: (sid, x, y, flags) => { world.pop(sid, x, y, flags); }, destroy: (sid, flags) => { world.destroy(sid, flags); },
+                notifyDudes: (x, y) => { this.#dudes.around(x, y); },
+            }));
+    }
+
+    // 현재 VT가 가리키는 가상 +98의 첫 진입을 조회한다. TYPE 이름으로 대신하지 않는다. (2026-11-16 WB04-E564)
+    #entry(table) { return CAMPAIGN_DAMAGE_HIT_ENTRIES.find((entry) => entry.vtable === table)?.address ?? 0; }
+
+    // 원문 특수 파생 셋을 기존 일반 피해와 같은 슬롯/소유자/프레임으로 실행한다. (2026-11-16 WB04-E564)
+    #special(address, victim, amount, owner, attacker) {
+        if (address === VORTEX_HIT) return rawVortexDamage(this.pool, victim, amount, owner, attacker, this.#vortex);
+        if (address === BULWARK_HIT) return rawBulwarkHit(this.pool, this.#core.types, victim, amount, owner, attacker,
+            (target, value, sourceOwner, source) => this.#generalDamage.hit(target, value, sourceOwner, source) >>> 0);
+        if (address === ALTAR_HIT) return rawAltarHit(this.pool, this.#core.frames, victim, () => this.#generalDamage.hit(victim, amount, owner, attacker) >>> 0);
+        throw new Error('현재 특수 가상 피해 진입 미연결');
+    }
+
+    // 일반 → 특수 파생 → 사제의 원문 훅 합성 순서를 보존한다. (2026-11-16 WB04-E564)
+    damageHooks(hooks = {}) {
+        const general = makeDamageableGunHitHooks(this.#generalDamage, CAMPAIGN_DAMAGE_HIT_ENTRIES, hooks);
+        const fallback = (victim, amount, owner, attacker) => {
+            const address = this.#entry(dword(this.pool.slot(victim)));
+            if ([VORTEX_HIT, BULWARK_HIT, ALTAR_HIT].includes(address)) { this.#special(address, victim, amount, owner, attacker); return; }
+            if (typeof general.damage !== 'function') throw new Error('캠페인 다른 실제 피해 미연결');
+            general.damage(victim, amount, owner, attacker);
+        };
+        return makePriestGunHitHooks(this.pool, this.#priestDamage, general, fallback);
+    }
+
+    // Rain이 읽는 실제 target+98 반환 DWORD다. target VT 뒤 source owner BYTE를 읽는 순서를 유지한다. (2026-11-16 WB04-E564)
+    damageResult(victim, amount, attacker) {
+        const table = dword(this.pool.slot(victim)); const owner = this.pool.slot(attacker)[34]; const address = this.#entry(table);
+        if (address === BASE_HIT) return this.#generalDamage.baseHit(victim, amount, owner, attacker) >>> 0;
+        if (address === GENERAL_HIT) return this.#generalDamage.hit(victim, amount, owner, attacker) >>> 0;
+        if (address === PRIEST_HIT) return this.#priestDamage.hit(victim, amount, owner, attacker) >>> 0;
+        if ([VORTEX_HIT, BULWARK_HIT, ALTAR_HIT].includes(address)) return this.#special(address, victim, amount, owner, attacker) >>> 0;
+        throw new Error('현재target+98의실제반환형피해장치미연결');
+    }
+
+    // 같은 실제 GunHit과 Missile 시각을 충돌 효과/피해/시각 갱신에 연결한다. (2026-11-16 WB04-E564)
+    missileHooks(hit, clock, hooks = {}) {
+        if (hit?.pool !== this.pool) throw new TypeError('캠페인 Missile/GunHit Pool 불일치');
+        return makeMissileGunHitHooks(hit, clock, makeMissileGunImpactHooks(this.#impact, hooks));
+    }
+    // Kernel의 실제 anim160 사건만 추가한다. (2026-11-16 WB04-E564)
+    handler(fallback = null) { return this.#impact.handler(fallback); }
+
+    // 같은 실제 공통 Pre/Post를 사용하는 썬 디스크·빈 투사체·anim VT만 허용한다. (2026-11-16 WB04-E564)
+    #commonAsset(sid) {
+        const raw = this.pool.slot(sid); const table = dword(raw);
+        return ((raw[10] === 83 || raw[10] === 132) && table === SUN_DISK)
+            || ([80, 81, 130].includes(raw[10]) && table === BASE_TABLE) || this.#impact.handles(sid);
+    }
+    // 기존 Form/선택/재귀 효과를 보존하며 확인된 공통 자산 Pre/Post만 표면 수명으로 넘긴다. (2026-11-16 WB04-E564)
+    destroyHooks(fallback = {}) {
+        const common = this.#core.surfaces.hooks();
+        // C++ 값 캡처처럼 기존 함수 사본을 보관한다. 호출자의 묶음 재대입은 등록된 함수를 바꾸지 않는다.
+        const emit = fallback.emit;
+        return { ...fallback, emit: (event) => {
+            if (this.#commonAsset(event.sid) && [SQUID_DESTROY_EFFECT.preDestroy, SQUID_DESTROY_EFFECT.postDestroy].includes(event.effect)) { common.emit(event); return; }
+            if (typeof emit !== 'function') throw new Error('캠페인 다른 실제 자산 삭제 효과 미연결');
+            emit(event);
+        } };
+    }
+    // 공통 자산은 같은 가상 삭제기로 보내고 다른 파생은 호출자의 분배를 보존한다. (2026-11-16 WB04-E564)
+    destroy(fallback = null) {
+        return (sid, flags, hooks) => {
+            if (this.#commonAsset(sid)) return this.#core.virtualDestroy.destroy(sid, flags, hooks);
+            if (typeof fallback !== 'function') throw new Error(`캠페인 다른 실제 자산 가상 삭제 미연결 TYPE${this.pool.slot(sid)[10]} SID${sid}`);
+            return fallback(sid, flags, hooks);
+        };
+    }
+    // 후속 소비자가 같은 모듈·풀을 다시 쓰는 접근자다. (2026-11-16 WB04-E564)
+    get priestDamage() { return this.#priestDamage; }
+    get impact() { return this.#impact; }
+    get dudes() { return this.#dudes; }
+    get burning() { return this.#burning; }
+    get generalDamage() { return this.#generalDamage; }
+    get pool() { return this.#core.pool; }
+}

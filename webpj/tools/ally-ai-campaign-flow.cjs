@@ -43,6 +43,19 @@ async function observe(page){
   RawDaisRegular.prototype.finishSacrifice=function(...args){window.allyObservation.events.push({method:'finishSacrifice',args,time:window.netstorm._gameClock.gameSeconds()});return finish.apply(this,args);};
  });
 }
+// 긴실제AI진행중오류가나도단언/브라우저종료전에당시상태·전체오류·덤프·화면을보존한다.
+async function preserveFrameFailure(page, result) {
+ // 프레임상태는읽기만하고같은결과파일을각경계에남긴다. 덤프실패도원래오류를가리지않는다.
+ const base='extracted/ally-flow-'+result.mission+'-failure';
+ try{result.dump=await page.evaluate(()=>window.netstorm.sessionDump());}catch(error){result.dumpError=String(error);}
+ fs.writeFileSync(base+'.json',JSON.stringify(result,null,2));
+ console.error(JSON.stringify({mission:result.mission,frame:result.frame,errorCount:result.errors.length,firstErrors:result.errors.slice(0,3)}));
+ try{
+  // 생략하던최종Canvas출력만복구하며게임프레임/명령은추가하지않는다.
+  await page.evaluate(()=>{const app=window.netstorm;app._presenter.present=window.originalFlowPresent;app._presenter.present(app._ctx,app._surface,app._layout,true);});
+  await page.screenshot({path:base+'.png'});
+ }catch(error){console.error('실제AI오류화면보존실패',String(error));}
+}
 // AI 자연 승리·새 완료값 저장·새로고침 뒤 다음 미션 해제를 같은 브라우저 저장소에서 확인한다.
 async function run(){
  const browser=await chromium.launch({headless:true});
@@ -66,7 +79,7 @@ async function run(){
    if(frame)await page.evaluate(()=>window.netstorm.stepFixedFrames(100));
    const current=await page.evaluate(()=>{const app=window.netstorm;return{time:app._gameClock.gameSeconds(),buttons:app._mainMenu.dialog?.buttons?.map(button=>button.label)??[],commands:app._mainMenu.dialog?.buttons?.map(button=>({label:button.label,command:button.command}))??[],observation:window.allyObservation,sp:app._campaignWorld.session().sp(1)};});
    if(frame%2000===0)console.log(JSON.stringify({mission,frame,...current,errors}));
-   if(errors.length)throw new Error('실제 게임 프레임 오류');
+   if(errors.length){await preserveFrameFailure(page,{mission,limit,frame,before,activation,current,errors}).catch(error=>console.error('실제AI오류증빙보존실패',error));throw new Error('실제 게임 프레임 오류: '+errors[0]);}
    // 실제1-5 시간 안내는 항복하지 않는 DoNothing 단추, 승리 뒤 편지는 VictoryNote 단추만 누른다.
    if(mission==='thunderingpower'&&current.buttons.length&&!current.buttons.includes('Next Mission')){const safe=current.commands.findLast(button=>button.command?.name==='DoNothing')??current.commands.find(button=>button.command?.name==='Tell'&&button.command.argument==='VictoryNote');if(safe){await clickLabel(page,safe.label);continue;}}
    if(frame===limit)terminal={frame,...current,won:false,reason:'프레임 상한'};

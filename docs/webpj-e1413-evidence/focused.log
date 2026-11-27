@@ -1,0 +1,37 @@
+✔ CampaignHitBindings: 다른 HP/사제 Pool과 하위 배열을 효과 전에 거부한다 (210.7307ms)
+✔ CampaignHitBindings: 사제 HP 변경·두 회복 사건 취소·현재 기본 프레임·소유자 통지 (222.914ms)
+✔ CampaignHitBindings: Base/일반 진입의 HP·source owner BYTE와 미지원 VT fallback (55.9735ms)
+✔ CampaignHitBindings: 현재 지면·Player 주 섬·실제 시각 경고 장치가 일반 피해에 연결된다 (210.2628ms)
+✔ CampaignHitBindings: 불워크의 현재 비행 genus와 윈드 타워의 실제 방어 방향 (170.8029ms)
+✔ CampaignHitBindings: 제단 방향 11/12의 무피해 반환과 다이스의 다른 VT를 구분한다 (59.3636ms)
+✔ CampaignHitBindings: 건설 중 신전은 실제 내용물 Form을 찾아 끝 시각/표시만 알린다 (47.0013ms)
+✔ CampaignHitBindings: burning의 현재 Form 조회와 실제 Host 삭제를 같은 풀에서 수행한다 (18.5362ms)
+✔ CampaignHitBindings: Dude 통지는 현재 Host의 task Regular와 외부 burning 요청을 연결한다 (78.7018ms)
+✔ CampaignHitBindings: 일반 피해의 다른 가상 방어는 명시 장치만 사용한다 (96.156ms)
+✔ CampaignHitBindings: 등록된 방어/삭제 함수는 C++ 값 캡처의 사본이다 (16.7669ms)
+✔ CampaignHitBindings: 충돌 anim은 실제 Factory·Pop·Regular·프레임·가상 삭제를 공유한다 (33.8515ms)
+✔ CampaignHitBindings: Missile은 현재 시각·피해·충돌 효과를 공유하고 다른 풀을 거부한다 (18.1507ms)
+✔ CampaignHitBindings: 확인된 공통 자산만 삭제를 분배하고 나머지 효과/fallback을 보존한다 (51.4275ms)
+✔ Session 자산 표: 원본83VT의 +5c/+98 정적 데이터와 공통13·일반31·기본45 범위가 같다 (3.2681ms)
+✔ Session 자산: 선행/한 번 결선·같은 상태/난수·실제 PostPop 등록과 반납을 보존한다 (172.6612ms)
+✔ Session 자산: 네 서비스 표를 값으로 복사하고 사용자 지정 실제 피해/지면 효과를 보존한다 (66.2599ms)
+✔ Session 자산 실패: 효과/공유 피해 사본 뒤 다른 Carrier Pool은 실제 등록 전에 거부한다 (137.6847ms)
+✔ Session 자산 가상80: 현재 VT/TYPE·레벨과 의식 설치/재귀·예외 뒤 활성 사슬 정리를 보존한다 (97.0342ms)
+✔ Session 자산 피해: 같은 실제 일반/기본 HP와 불워크 공격자0 관문을 사용한다 (21.6898ms)
+✔ Session 자산 피해: 공격자 폭을 먼저 거부하고 미복원 가상98을 넓은 다른 피격기로 우회하지 않는다 (72.6208ms)
+✔ Session 자산 신전 피해: 현재 건설 Form 없음은 자연 반환하고 발견 후에만 실제 건설 장치를 요구한다 (56.5105ms)
+✔ Session 자산 거주 구역: 현재 Fort/Dude/공급원 수 관문 뒤 실제 입구와 누락 생성기/작업기를 선택한다 (62.3203ms)
+✔ Session 자산 신전 Regular: missionPost 대신 현재 mission·섬 순회·이탈 로그/이름/예약 WORD를 연결한다 (27.18ms)
+✔ Session 자산 후처리: 현재 impactSound/Graph/청크 BYTE와 선택되지 않은 실제 장치 오류를 유지한다 (40.9674ms)
+✔ Session 자산 Factory: 현재 두 타이머/제외 TYPE와 늦은 건설/업그레이드·플레어 경계를 공유한다 (31.1127ms)
+✔ Session 자산 준비: 같은 현재 건설 시각/로컬 owner/동맹·패턴 주소를 실제 상태에 기록한다 (30.1566ms)
+✔ Session 자산 실제 분배: 등록된 자산 후처리가 같은 공통 장부 깊이로 복귀한다 (16.5018ms)
+✔ Session 제단 예약 피해: 방향11/12 면역·일반피해·명시소유자를보존한다 (53.4232ms)
+ℹ tests 29
+ℹ suites 0
+ℹ pass 29
+ℹ fail 0
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 3722.146

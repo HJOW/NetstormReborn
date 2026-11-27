@@ -62,7 +62,7 @@ test('Session 자산 피해: 같은 실제 일반/기본 HP와 불워크 공격�
 
 test('Session 자산 피해: 공격자 폭을 먼저 거부하고 미복원 가상98을 넓은 다른 피격기로 우회하지 않는다', () => {
     const o = scene();
-    try { assert.throws(() => o.developerDamage(999999, 1, 1, 65536), /공격자 SID 범위/); const altar = actor(o, 164); assert.throws(() => o.developerDamage(altar, 1, 1, 0), /미복원 TYPE164/); assert.equal(get(o.core.pool.slot(altar), 26), 10000); const priest = actor(o, 158); o.globals.missionPost = 1; assert.equal(o.developerDamage(priest, 3, 3, 0), 1); assert.equal(get(o.core.pool.slot(priest), 26), 9997); } finally { o.dispose(); }
+    try { assert.throws(() => o.developerDamage(999999, 1, 1, 65536), /공격자 SID 범위/); const altar = actor(o, 164); const original = get(o.core.pool.slot(altar), 0); put(o.core.pool.allocated(altar), 0, 0x12345678); try { assert.throws(() => o.developerDamage(altar, 1, 1, 0), /미복원 TYPE164/); } finally { put(o.core.pool.allocated(altar), 0, original); } assert.equal(get(o.core.pool.slot(altar), 26), 10000); const priest = actor(o, 158); o.globals.missionPost = 1; assert.equal(o.developerDamage(priest, 3, 3, 0), 1); assert.equal(get(o.core.pool.slot(priest), 26), 9997); } finally { o.dispose(); }
 });
 
 test('Session 자산 신전 피해: 현재 건설 Form 없음은 자연 반환하고 발견 후에만 실제 건설 장치를 요구한다', () => {
@@ -98,4 +98,24 @@ test('Session 자산 준비: 같은 현재 건설 시각/로컬 owner/동맹·�
 test('Session 자산 실제 분배: 등록된 자산 후처리가 같은 공통 장부 깊이로 복귀한다', () => {
     const o = scene();
     try { const sid = actor(o); const calls = []; const body = o.assetBindings.postPop; const post = body.postPop.bind(body); body.postPop = (parent, flags) => { calls.push([parent, flags]); post(parent, flags); }; ++o.core.bookkeeping.depth; o.core.postPop.postPopVirtual(sid, 0); assert.deepEqual(calls, [[sid, 0]]); assert.equal(o.core.bookkeeping.depth, 0); } finally { o.dispose(); }
+});
+
+// 실제448b70의L/M방향은예약피해도무시하고나머지는같은일반HP함수를소유자그대로호출한다.
+test('Session 제단 예약 피해: 방향11/12 면역·일반피해·명시소유자를보존한다', () => {
+    const o = scene();
+    try {
+        const altar = actor(o, 164), calls = [], general = o.hits.generalDamage;
+        const original = general.hit;
+        // 실제HP변경을그대로실행하며일반피해가선택되는인자/횟수만관찰한다.
+        general.hit = function (...args) { calls.push(args); return original.apply(this, args); };
+        // 원본프레임표의L/M방향을직접선택해두면역분기를구별한다.
+        for (const letter of ['L', 'M']) {
+            put(o.core.pool.allocated(altar), 36, o.core.frames[164].run(letter).first);
+            assert.equal(o.developerDamage(altar, 9, 3, 0), 1);
+            assert.equal(get(o.core.pool.slot(altar), 26), 10000); assert.equal(calls.length, 0);
+        }
+        put(o.core.pool.allocated(altar), 36, 0); o.core.pool.allocated(altar)[40] = 0;
+        assert.equal(o.developerDamage(altar, 9, 3, 0), 1); assert.equal(get(o.core.pool.slot(altar), 26), 9991);
+        assert.deepEqual(calls, [[altar, 9, 3, 0]]);
+    } finally { o.dispose(); }
 });

@@ -1,0 +1,18 @@
+{
+  "unit": "WB04-E1413",
+  "firstObservedAt": 1395.5,
+  "collectedAt": 1396.675,
+  "observationFrame": 55500,
+  "firstFixedFrame": 55935,
+  "sid": 21289,
+  "type": 164,
+  "vtable": "005076b8",
+  "hitEntry": "00448b70",
+  "event": 6699,
+  "errors": 144,
+  "samePrefixSamples": 28,
+  "lastSharedFrame": 54000,
+  "prefixScope": "오류전 시각/이벤트/SP/안내/오류 관측 JSON만 같은 값이다. 전체World/RNG/C++엄격일치는아니다.",
+  "fix": "기존rawAltarHit의현재방향11/12면역과그외일반피해를예약+98에도공유하고명시owner/attacker를보존한다.",
+  "runtimeFollowup": "후보두모듈의LF해시는본소스와같다. 새실제AI120000상한검증진행중이며완료/승리로세지않는다."
+}

@@ -30,8 +30,8 @@ const BASE_TABLE = 0x501dd0;
 // 정렬되지 않은 현재 DWORD를 읽는다. 프레임은 호출자가 signed로 바꾼다. (2026-11-16 WB04-E564)
 function dword(raw, offset = 0) { return (raw[offset] | (raw[offset + 1] << 8) | (raw[offset + 2] << 16) | (raw[offset + 3] << 24)) >>> 0; }
 
-// 제단/다이스의 투명·희생 방향 11/12는 피해를 무시하고 1을 반환한다. 다른 방향은 일반 피격이다. (2026-11-16 WB04-E564)
-function altarHit(pool, frames, victim, hit) {
+// 제단의 투명·희생 방향11/12는피해를무시하고1을반환한다. 다른방향은hit()을부른다. 총기/예약6699가같은실제448b70을공유한다. (2026-11-16 WB04-E564)
+export function rawAltarHit(pool, frames, victim, hit) {
     const raw = pool.slot(victim);
     if (raw[10] >= frames.length) throw new RangeError('현재448b70 피해의TYPE 프레임 물리 부족');
     const direction = pathDirection(frames[raw[10]], dword(raw, 36) | 0);
@@ -103,7 +103,7 @@ export class RawCampaignHitBindings {
         if (address === VORTEX_HIT) return rawVortexDamage(this.pool, victim, amount, owner, attacker, this.#vortex);
         if (address === BULWARK_HIT) return rawBulwarkHit(this.pool, this.#core.types, victim, amount, owner, attacker,
             (target, value, sourceOwner, source) => this.#generalDamage.hit(target, value, sourceOwner, source) >>> 0);
-        if (address === ALTAR_HIT) return altarHit(this.pool, this.#core.frames, victim, () => this.#generalDamage.hit(victim, amount, owner, attacker) >>> 0);
+        if (address === ALTAR_HIT) return rawAltarHit(this.pool, this.#core.frames, victim, () => this.#generalDamage.hit(victim, amount, owner, attacker) >>> 0);
         throw new Error('현재 특수 가상 피해 진입 미연결');
     }
 

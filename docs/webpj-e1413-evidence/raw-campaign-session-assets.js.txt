@@ -1,0 +1,137 @@
+// Session1538..1610의 거주 구역/자산 효과와 실제 PostPop 등록을 연결한다(225553df, WB04-E590).
+// 사용: connectVortex 뒤 connectAssets(). 후속 건설/이동/의식은 같은 현재 슬롯을 선택할 때 요구한다.
+import { typeString } from '../assets/type-table.js';
+import { RawCampaignAssetBindings } from './raw-campaign-asset-bindings.js';
+import { runResidenceDudeSpawn } from './raw-residence-regular.js';
+import { makeAssetGunImpactHooks } from './raw-gun-impact.js';
+import { rawAltarHit } from './raw-campaign-hit-bindings.js';
+import { rawBulwarkHit } from './raw-bulwark-hit.js';
+import { rawVortexDamage } from './raw-special-damage.js';
+import { RawContainedLookup } from './raw-contained-lookup.js';
+import { makeCampaignGunQueryHooks } from './raw-campaign-gun-queries.js';
+import { makeGunTargetHooks } from './raw-gun-target.js';
+import { checkRawObjectForms } from './raw-checking-diagnostics.js';
+import { makeSquidLevelAssertion } from './raw-squid-level.js';
+import { patchGunGraphFromFrame } from './raw-gun-angle.js';
+import { FactoryPostPopTypes } from './raw-factory-post-pop.js';
+import { SquidFactory } from './squid-factory.js';
+import { PRIEST_TYPE, PRIEST_VTABLE } from './raw-priest-owner.js';
+import { GENERAL_DAMAGEABLE_HIT_TABLES, BASE_DAMAGEABLE_HIT_TABLES } from './campaign-damageable-regular-tables.js';
+
+// 현재 가상80의 두 의식 진입과 신전 네 VT다. TYPE 이름으로 범위를 넓히지 않는다.
+const ALTAR = 0x5076b8; const DAIS = 0x507950; const VORTEX = Object.freeze([0x5196f0, 0x5197a8, 0x519860, 0x519918]);
+// 현재 raw DWORD를 부호 없는 비트로 읽는다.
+function dword(raw, at = 0) { return (raw[at] | (raw[at + 1] << 8) | (raw[at + 2] << 16) | (raw[at + 3] << 24)) >>> 0; }
+// 함수 누락은 선택한 위치에서만 거부한다.
+function need(fn, message) { if (typeof fn !== 'function') throw new Error(message); return fn; }
+// 지연 설치 슬롯은 현재 owner에서 매번 읽는다. 미설치를 빈 성공으로 바꾸지 않는다.
+function module(o, name, message) { if (!o[name]) throw new Error(message); return o[name]; }
+// 실제 owner 칸을 현재 읽고 쓰는 참조 상자다.
+function reference(owner, key) { return { get value() { return owner[key]; }, set value(value) { owner[key] = value; } }; }
+// 원문 FillMissing의 선택 오류다. 이미 주어진 실제 함수는 보존한다.
+function fill(hooks, name) { if (typeof hooks[name] !== 'function') hooks[name] = () => { throw new Error(`실제 세션 하위 소비자 미연결: 자산 ${name}`); }; }
+// C++ 값형 효과 구조의 네 함수 표를 복사한다. 함수가 빌리는 물리는 복제하지 않는다.
+export function copyCampaignAssetEffects(input = {}) { return { ...input, postPop: { ...input.postPop }, regular: { ...input.regular }, factory: { ...input.factory }, gun: { ...input.gun } }; }
+
+// 같은 실제 자산/Regular/Gun/Factory와 후속 Runtime용 함수 사본을 소유하는 생성 구간이다.
+export class RawCampaignSessionAssets {
+    // 기반 owner와 한 번 결선/정상 복귀/반납 상태, 재귀를 막는 현재 가상80 호출 집합이다.
+    #owner; #started = false; #ready = false; #disposed = false; #counts = new Set();
+    // 원문의 지역 Residence 훅/assetEffects와 move 전 큰 후단 함수 사본이다.
+    residence = null; effects = null; factoryRuntime = null; vortexRuntime = null; factoryTypes = null;
+    // 같은 현재 Session을 빌리며 실제 하위 생성은 bind에서 수행한다.
+    constructor(owner) { this.#owner = owner; }
+    // 같은 World/Template/상태를 원문 순서로 묶고 마지막에 실제 공통 PostPop 분배기에 등록한다.
+    bind() {
+        const o = this.#owner; const c = o.core; const s = o.state;
+        if (this.#disposed || !o.vortexModules?.ready || this.#started) throw new Error('Session 자산의 초기화 전/반복 결선');
+        this.#started = true; o.rewardCount = (sid) => this.virtualCount(sid) | 0;
+        this.residence = {
+            entrance: (source) => o.hits.dudes.residencePoint(source),
+            spawn: (x, y, owner) => module(o, 'dudeSpawn', '거주 구역의 실제 Dude 생성기 미설치').spawn(x, y, owner),
+            task: (born, event, delay) => module(o, 'dudeTask', '거주 구역의 실제 Dude 작업기 미설치').set(born, event, delay),
+            assertion: () => o.world.storage.assertDisplay('srcSid', '.\\Dude.cpp', 0x1b5),
+        };
+        let e = copyCampaignAssetEffects(o.services.assets); this.effects = e; e.postPop.reserveRegular = () => true;
+        e.regular.residenceEvent2 = (parent) => runResidenceDudeSpawn(c.pool, () => c.ownerMode.fort, o.dudePopulation, c.bookkeeping.currentProviders(), parent, this.residence);
+        e.regular.state = (sid, state) => o.vortexModules.setState(sid, state); e.regular.suppressLeaveRequest = () => c.bridgeState.mission;
+        e.regular.ascendTick = (sid, count) => o.vortexAscend.tick(sid, count); e.regular.countForeignOwnedIslands = (owner) => o.vortexAscend.countForeignOwnedIslands(owner);
+        e.regular.playerLeavingNotice = (owner) => { const log = need(o.services.player.log, '신전 상승의 실제 이탈 로그 미연결'); log(29, `Player ${o.vortexModules.playerName(owner)} is leaving!\n`); };
+        e.regular.requestLeave = (sid, island) => o.vortexModules.requestDeparture(sid, island); e.regular.descend = (x, y) => o.vortexModules.queueDescend(x, y);
+        e.postPop.startBlocker = (sid) => o.gunBlocker.notify(sid);
+        e.postPop.nuggetPostPop = (sid, flags) => module(o, 'nuggetPostPop', '현재 너겟 PostPop 미설치').postPop(sid, flags);
+        e.postPop.growingIcePostPop = (sid, flags) => module(o, 'iceTower', '성장형 아이스 전체 후처리 설치 전 호출').postPop(sid, flags);
+        if (!e.regular.damageGround) e.regular = makeAssetGunImpactHooks(o.hits.impact, e.regular);
+        e.regular.hitPoints ??= (victim, amount, owner, attacker) => this.scheduledDamage(victim, amount, owner, attacker);
+        o.developerDamage = e.regular.hitPoints;
+        e.regular.startConstruction = (parent, duration) => { const building = module(o, 'building', '실제 건설 시작의 세션 처리기 미설치'); this.prepareBuilding(c.processState.now); building.start(parent, duration); };
+        e.regular.beginFactoryUpgrade = (parent, duration) => module(o, 'factoryUpgrade', 'Factory 실제 업그레이드 그림 미설치').begin(parent, duration);
+        e.regular.finishFactoryUpgrade = (parent) => module(o, 'factoryUpgrade', 'Factory 실제 업그레이드 완료 미설치').finish(parent);
+        e.regular.factoryFlare = (parent, count, event) => module(o, 'flare', 'Factory 상위 상태 실제 플레어 미설치').spawn(parent, count, event);
+        e.regular.themeMode ??= o.services.ownership.themeMode; fill(e.regular, 'themeMode');
+        e.postPop.checkForms = (sid) => checkRawObjectForms(c.pool, sid);
+        e.postPop.assertion = (expression, file, line) => need(o.services.ai.assertion, `Gun postPop 실제 진단 장치 미연결 ${line}`)(expression);
+        e.gun = makeCampaignGunQueryHooks(c, o.gunMode, o.gunTarget, o.gunHit, s.gunState, o.firingIntervals, e.gun);
+        e.gun = makeGunTargetHooks(c.pool, o.gunTarget, e.gun); e.gun = o.combat.gunHooks(e.gun);
+        e.gun.assertion = (expression, file, line) => need(o.services.ai.assertion, `GunProcess 통지 실제 진단 장치 미연결 ${line}`)(expression);
+        fill(e.factory, 'warnDuplicate'); e.factory.virtualCount = (sid) => this.virtualCount(sid);
+        e.levelAssertion = makeSquidLevelAssertion((expression) => need(o.services.ai.assertion, 'Factory level 실제 진단 장치 미연결')(expression));
+        e.factory.regionOwnership = (x, y) => o.ownership.updateRegion(x, y); e.postPop.setOwner = (sid, owner) => o.ownership.setOwner(sid, owner);
+        e.postPop.gunFrame = (frame) => patchGunGraphFromFrame(frame, () => s.gunState.checking, (expression, file, line) => need(o.services.ai.assertion, `Gunanim 인덱스 원문 진단 장치 미연결 ${line}`)(expression));
+        e.postPop.setGraph = (sid, number) => c.graph.setNumber(sid, number & 255);
+        e.postPop.regionNumber = (x, y) => o.chunks.at(Math.trunc(Math.trunc(Math.fround(x)) / 16), Math.trunc(Math.trunc(Math.fround(y)) / 16)).island;
+        e.postPop.hasContent = (parent, type) => o.priests.carrier.findContained(parent, 0x10, type, 0) !== 0;
+        e.postPop.createSlot = (parent, type) => { module(o, 'contained', '현재 내용물 생성기 미설치').create(parent, type, 0, 0x10, 0x10, 0); };
+        e.postPop.typeDword = (sid, offset) => { if (offset !== 0x74) throw new Error('세션 TYPE 사운드 필드 미지원'); const type = c.pool.slot(sid)[10]; const asset = o.assets.game.types()[type - 70]; if (!asset?.definition) throw new RangeError('세션 TYPE 사운드 정의 물리 범위'); const name = typeString(asset.definition, 'impactSound'); return name ? o.soundNames.lookup(name) : 0; };
+        fill(e.postPop, 'playImpactSound'); fill(e, 'queueCommand'); fill(e, 'sendGunPacket');
+        e.postPop.sunAviaryPostPop = (sid, flags) => module(o, 'sunAviary', '현재 훨리베이스 PostPop 미설치').postPop(sid, flags);
+        e.postPop.rainAviaryPostPop = (sid, flags) => module(o, 'rainAviary', '현재 맨오워 풀 PostPop 미설치').postPop(sid, flags);
+        e.postPop.windAviaryPostPop = (sid, flags) => module(o, 'windAviary', '현재 데빌메이커 PostPop 미설치').postPop(sid, flags);
+        e.postPop.sunFencePostPop = (sid, flags) => module(o, 'fencePostPop', '현재 펜스 전체 후처리 미설치').postPop(sid, flags);
+        e.regular.virtualCount = (parent) => this.virtualCount(parent) | 0;
+        this.factoryRuntime = { begin: e.regular.beginFactoryUpgrade, finish: e.regular.finishFactoryUpgrade, flare: e.regular.factoryFlare };
+        o.decorationHit = e.regular.hitPoints; this.vortexRuntime = { leavingNotice: e.regular.playerLeavingNotice, leave: e.regular.requestLeave, descend: e.regular.descend };
+        this.factoryTypes = Object.assign(new FactoryPostPopTypes(), { currentFirstTimer: () => o.gameplayGlobals.firstTimerFactoryType().value, currentSecondTimer: () => o.gameplayGlobals.secondTimerFactoryType().value, currentFixedFrame: () => o.gameplayGlobals.outpostType().value });
+        o.assetBindings = new RawCampaignAssetBindings(o.world, o.carrier, s.assetState, o.random, o.islands, o.players, o.playerState, { regular: s.regularState, gun: s.gunState, elements: o.elements, archerNoticeCommand: reference(o, 'archerCommand'), factoryTypes: this.factoryTypes }, e);
+        o.assetBindings.activatePostPop(); this.#ready = true;
+    }
+    // 예약6699의 실제 현재+98 분배다. 사용자 지정 함수가 있으면 이 기본 함수는 선택되지 않는다.
+    scheduledDamage(victim, amount, owner, attacker) {
+        this.#live(); const o = this.#owner; const c = o.core; attacker >>>= 0; if (attacker > 65535) throw new RangeError('예약 피해의 공격자 SID 범위 오류');
+        const table = dword(c.pool.slot(victim)); amount |= 0; owner >>>= 0;
+        if (table === 0x50ea08) return rawBulwarkHit(c.pool, c.types, victim, amount, owner, attacker, (target, value, sourceOwner, source) => o.hits.generalDamage.hit(target, value, sourceOwner, source) >>> 0) | 0;
+        // 제단의현재VT도총기와같은448b70관문을사용하며예약에담긴소유자를보존한다.
+        if (table === ALTAR) return rawAltarHit(c.pool, c.frames, victim, () => o.hits.generalDamage.hit(victim, amount, owner, attacker)) | 0;
+        if (GENERAL_DAMAGEABLE_HIT_TABLES.includes(table)) return o.hits.generalDamage.hit(victim, amount, owner, attacker) | 0;
+        if (BASE_DAMAGEABLE_HIT_TABLES.includes(table)) return o.hits.generalDamage.baseHit(victim, amount, owner, attacker) | 0;
+        const raw = c.pool.slot(victim); if (raw[10] === PRIEST_TYPE && dword(raw) === PRIEST_VTABLE) return o.hits.priestDamage.hit(victim, amount, owner, attacker) | 0;
+        if (VORTEX.includes(dword(c.pool.slot(victim)))) return rawVortexDamage(c.pool, victim, amount, owner, attacker, {
+            constructionType: () => o.state.buildingState.currentType(), find: (parent, type, index, remove) => new RawContainedLookup(c.pool, (sid, flags) => o.world.destroy(sid, flags)).find(parent, type, index, remove),
+            resetEnd: (form, value) => { const building = module(o, 'building', '예약 신전 피해의 건설 연결 누락'); this.prepareConstruction(); building.resetEndFromForm(form, value); },
+            refresh: (sid) => c.display.update(c.pool.slot(sid), 0), general: (sid, value, sourceOwner, source) => o.hits.generalDamage.hit(sid, value, sourceOwner, source),
+        }) | 0;
+        throw new Error(`예약 피해의 다른 실제 가상98 미복원 TYPE${c.pool.slot(victim)[10]}`);
+    }
+    // typed 가상80의 실제 VT/재귀/의식/공통 레벨 경계다(원문967..985). Native 대여는 장기 저장소 통합에 남는다.
+    virtualCount(sid) {
+        this.#live(); const o = this.#owner; const c = o.core; if (!sid || sid >= c.pool.capacity) throw new RangeError('가상80 SID 범위 오류'); const raw = c.pool.slot(sid); if (raw[10] >= c.types.length) throw new RangeError('가상80 현재 TYPE 범위 오류'); const table = dword(raw);
+        if (!SquidFactory.supportsConstructedVtable(table)) throw new Error('현재 가상80 VT 미연결'); if (this.#counts.has(sid)) throw new Error('현재 가상80 조회의 SID 재귀 순환'); this.#counts.add(sid);
+        try { if (table === ALTAR) return module(o, 'altarSacrifice', '제단의 실제 가상80 설치 전 호출').count(sid) >>> 0; if (table === DAIS) return module(o, 'templeRitual', '다이스의 실제 가상80 설치 전 호출').count(sid) >>> 0; return module(o, 'level', '공통 가상80 설치 전 호출').get(sid) >>> 0; } finally { this.#counts.delete(sid); }
+    }
+    // 기존 건설 시작이 현재 시각/로컬 owner/동맹을 소비하기 직전에 같은 상태를 준비한다(원문3654).
+    prepareBuilding(now) { const o = this.#owner; o.state.buildingState.now = now; o.state.buildingState.localPlayer = o.playerState.battleOwner; o.state.buildingEffectsState.alliances = o.alliances; }
+    // 신전 예약 피해의 건설 끝 시각이 같은 현재 배치/요청 상태를 소비하게 한다(원문2708..2720).
+    prepareConstruction() {
+        const o = this.#owner; const c = o.core; const s = o.state.constructionState;
+        s.place.chargeBlocked = Boolean(o.globals.missionPost); s.place.localPlayer = s.notice.localPlayer = o.playerState.battleOwner; s.request.editor = c.ownerMode.fort; s.request.localPlayer = o.playerState.battleOwner;
+        s.request.displaceGenus = o.state.buildingState.read('pushGenus'); s.request.patternTypes = s.confirm.patternTypes; s.command.localPlayer = o.playerState.battleOwner; s.command.chargeBlocked = s.place.chargeBlocked; s.place.battleShown = o.playerState.playerKnown !== 0; s.geyser.fort = c.ownerMode.fort;
+        s.place.noIslandType = s.geyser.noIslandType = c.bridgeState.noIslandType; s.place.bridgeType = s.clear.bridgeType = c.bridgeState.bridgeType; s.confirm.patternTypes[0] = o.piece; s.confirm.patternTypes[1] = c.bridgeState.bridgeType; s.confirm.patternTypes[2] = c.bridgeState.islandType; s.confirm.patternTypes[3] = c.bridgeState.noIslandType;
+        s.clear.patternTypes = s.place.patternTypes = s.request.patternTypes = s.confirm.patternTypes;
+    }
+    // 반납된 owner의 실제 물리에 다시 접근하지 않는다.
+    #live() { if (this.#disposed) throw new Error('반납한 Session 자산 장치'); }
+    // 실제 자산/Factory PostPop 등록만 해제하고 장기 상태는 초기화하지 않는다.
+    dispose() { if (this.#disposed) return; this.#disposed = true; this.#owner.assetBindings?.dispose(); }
+    // 이 생성 구간의 정상 복귀이며 전체 Session/Load 완료를 뜻하지 않는다.
+    get ready() { return this.#ready; }
+}

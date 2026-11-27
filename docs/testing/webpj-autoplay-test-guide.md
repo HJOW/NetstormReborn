@@ -20,3 +20,5 @@ node tools/ally-ai-campaign-flow.cjs dissolvedalliance 60000
 검사 제어기의 집중 검사는 npx playwright test e2e/ally-ai-test-control.spec.js --workers=1이다. 허용 밖 미션은 실제 페이지 접근 전에 거부한다.1-6의 초기 SP4000/이름/동맹/기술 보존과15초 실제AI 진행,1-1의6000프레임 자연 진행을 확인한다. 이 제어기 검증을 미션 승리 완료로 사용하지 않는다.
 
 출력은 Git 제외 webpj/extracted 아래에 쓴다. 같은 미션을 다시 실행하면 기본 파일명이 같으므로 이전 결과를 먼저 별도 폴더/해시와 보존한다. 사용자 저장소와 원본 파일은 수정하지 않는다. 현재 범위의 근거와 완료/미완료 상태는 LEFT_JOBS.webpj.md가 기준이다.
+
+실제 AI 수집기 `tools/ally-ai-campaign-flow.cjs`는 프레임 오류를 발견하면 단언/브라우저 종료 전에 `extracted/ally-flow-미션이름-failure.json`에 당시 시각·안내·관측·전체 오류·가능한 Session 덤프를 남긴다. 최종 Canvas 출력만 복구해 `-failure.png`도 저장하며 게임 프레임이나 명령을 추가하지 않는다. 덤프/화면 저장 실패는 원래 프레임 오류를 가리지 않는다. 이 파일은 실제 승리/완료 저장 결과와 구별한다(E1413).

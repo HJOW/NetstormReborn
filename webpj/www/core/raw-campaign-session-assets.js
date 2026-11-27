@@ -4,6 +4,7 @@ import { typeString } from '../assets/type-table.js';
 import { RawCampaignAssetBindings } from './raw-campaign-asset-bindings.js';
 import { runResidenceDudeSpawn } from './raw-residence-regular.js';
 import { makeAssetGunImpactHooks } from './raw-gun-impact.js';
+import { rawAltarHit } from './raw-campaign-hit-bindings.js';
 import { rawBulwarkHit } from './raw-bulwark-hit.js';
 import { rawVortexDamage } from './raw-special-damage.js';
 import { RawContainedLookup } from './raw-contained-lookup.js';
@@ -99,6 +100,8 @@ export class RawCampaignSessionAssets {
         this.#live(); const o = this.#owner; const c = o.core; attacker >>>= 0; if (attacker > 65535) throw new RangeError('예약 피해의 공격자 SID 범위 오류');
         const table = dword(c.pool.slot(victim)); amount |= 0; owner >>>= 0;
         if (table === 0x50ea08) return rawBulwarkHit(c.pool, c.types, victim, amount, owner, attacker, (target, value, sourceOwner, source) => o.hits.generalDamage.hit(target, value, sourceOwner, source) >>> 0) | 0;
+        // 제단의현재VT도총기와같은448b70관문을사용하며예약에담긴소유자를보존한다.
+        if (table === ALTAR) return rawAltarHit(c.pool, c.frames, victim, () => o.hits.generalDamage.hit(victim, amount, owner, attacker)) | 0;
         if (GENERAL_DAMAGEABLE_HIT_TABLES.includes(table)) return o.hits.generalDamage.hit(victim, amount, owner, attacker) | 0;
         if (BASE_DAMAGEABLE_HIT_TABLES.includes(table)) return o.hits.generalDamage.baseHit(victim, amount, owner, attacker) | 0;
         const raw = c.pool.slot(victim); if (raw[10] === PRIEST_TYPE && dword(raw) === PRIEST_VTABLE) return o.hits.priestDamage.hit(victim, amount, owner, attacker) | 0;
