@@ -22,6 +22,8 @@ public sealed partial class HostPriestWorldLiveTests
         var clock = new ClientClockGlobals(local);
         var kernel = new Kernel();
         var templates = sharedNative ? new CampaignTemplateStorage() : null;
+        var sp = sharedNative ? new ClientSpGlobals(new GameRandom(17), new UIntBox { Value = 1 }, new UIntBox(), () => 1760000000) : null;
+        sp?.Store.Initialize();
         var surface = new ClientSurfaceGlobals(game, clock, kernel, () => 0, installDevices: owner =>
         {
             if (templates is not null) owner.Storage.BindSerializationGlobals(templates.SerializationGlobals);
@@ -30,6 +32,12 @@ public sealed partial class HostPriestWorldLiveTests
             if (templates is not null) owner.Storage.BindGumpType(game.GumpFormTypeBox);
             owner.Storage.BindProcessDevices(new RawSurfaceProcessDevices { Selected = () => 0, ClearSelection = () => { } });
             if (templates is not null) owner.Storage.BindDisplayDevices(new() { View = () => new() { Zoom = 65536 }, Suppressed = () => false, Invalidate = (_, _) => { } });
+            if (templates is not null)
+            {
+                owner.Storage.BindRewardDevices(new() { Sp = sp!.Store, Editor = game.World.EditorBox, RefreshSp = () => { }, CreditWallet = (_, _) => { } });
+                owner.Storage.BindContentDevices(new() { Cursor = game.Cursor.PreviewBox, LocalOwner = game.Player.BattleOwnerBox, ContentType = game.ContentFormTypeBox,
+                    Effects = new() { CancelCursor = () => game.Cursor.Preview = 0, LocalNotice = _ => { }, RemoteNotice = _ => { }, Sound = (_, _) => { } } });
+            }
         });
         var (session, types) = Scene(surface, initializeSurfaceAssets: true, sharedTemplates: templates);
         session.BuildPriestWorldDevices();
@@ -106,6 +114,8 @@ public sealed partial class HostPriestWorldLiveTests
         session.Gameplay.GumpFormTypeBox.Value = 4;
         int form = forms.Create(); Assert.True(forms.IsGumpForm(form)); Assert.Equal(4, session.Pool.Slot(form)[10]);
         Assert.True(session.DestroyResourceObject(form, 0)); Assert.NotEqual(0, session.Pool.Slot(form)[11] & 1);
+        int content = surface.Storage.FactoryExecutor().CreateContained(2); session.Gameplay.Cursor.Preview = (uint)content;
+        Assert.True(session.DestroyResourceObject(content, 0)); Assert.Equal(0u, session.Gameplay.Cursor.Preview); Assert.NotEqual(0, session.Pool.Slot(content)[11] & 1);
         Assert.Equal(0u, surface.Storage.BaseDestroy().PreDepth); Assert.Equal(0u, surface.Storage.BaseDestroy().PostDepth);
         session.ReleasePlayerProcesses();
     }

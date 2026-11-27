@@ -31,7 +31,10 @@ public sealed partial class HostPriestWorldLiveTests
         IReadOnlyList<OriginalTypeRecord> types = table.Types;
         if (initializeSurfaceAssets)
         {
-            Assert.NotNull(sharedSurface); sharedSurface.Storage.InitializeAssetTables(types, session.WorldFrames, shapes); types = sharedSurface.Storage.Types;
+            Assert.NotNull(sharedSurface);
+            if (sharedTemplates is null) sharedSurface.Storage.InitializeAssetTables(types, session.WorldFrames, shapes);
+            else _ = new HostAssetTables(startup, sharedSurface.Storage);
+            types = sharedSurface.Storage.Types;
         }
         session.BuildTerrainPopDevices(types, sharedTemplates is null ? shapes : sharedSurface!.Storage.Shapes, hash: sharedSurface?.Storage.Hash, spots: sharedSurface?.Storage.Spots); session.BuildFortObjectDevices(types, session.WorldFrames);
         session.BuildWorldGraphDevices(types);
