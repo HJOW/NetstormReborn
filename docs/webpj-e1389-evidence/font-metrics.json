@@ -1,0 +1,60 @@
+{
+  "english": {
+    "modes": [
+      {
+        "width": 1024,
+        "height": 768,
+        "keys": 39,
+        "maximumLines": 2,
+        "maximumUnwrappedWidth": 507,
+        "ink": 50560
+      },
+      {
+        "width": 1366,
+        "height": 768,
+        "keys": 39,
+        "maximumLines": 2,
+        "maximumUnwrappedWidth": 507,
+        "ink": 50560
+      },
+      {
+        "width": 1280,
+        "height": 800,
+        "keys": 39,
+        "maximumLines": 2,
+        "maximumUnwrappedWidth": 507,
+        "ink": 50560
+      }
+    ],
+    "sameGame": true
+  },
+  "korean": {
+    "modes": [
+      {
+        "width": 1024,
+        "height": 768,
+        "keys": 39,
+        "maximumLines": 1,
+        "maximumUnwrappedWidth": 432,
+        "ink": 51309
+      },
+      {
+        "width": 1366,
+        "height": 768,
+        "keys": 39,
+        "maximumLines": 1,
+        "maximumUnwrappedWidth": 432,
+        "ink": 51309
+      },
+      {
+        "width": 1280,
+        "height": 800,
+        "keys": 39,
+        "maximumLines": 1,
+        "maximumUnwrappedWidth": 432,
+        "ink": 51309
+      }
+    ],
+    "sameGame": true
+  }
+}

@@ -17,6 +17,17 @@ async function dismissTell(page) {
     await page.mouse.click(point.x, point.y); await step(page, 25);
   }
 }
+// 기존 도움말은 ESC 대신 자기 OK 돌 버튼으로 닫는다. 실제 현재 언어 라벨과 좌표를 사용한다.
+async function closeHelp(page) {
+  const point = await page.evaluate(() => {
+    const app = window.netstorm, label = app._mainMenu.dialog?.okButton?.label;
+    if (!label) throw new Error('현재 실제 도움말 OK 버튼 없음');
+    const logical = app._mainMenu.controlPoint(label), rect = app.canvas.getBoundingClientRect();
+    if (!logical) throw new Error('현재 도움말 OK 버튼 좌표 없음');
+    return { x: rect.left + logical.x * rect.width / app._layout.logicalWidth, y: rect.top + logical.y * rect.height / app._layout.logicalHeight };
+  });
+  await page.mouse.click(point.x, point.y); await step(page, 2);
+}
 // 현재 실제 제출 문구와 gate를 읽는다. 기대 문구는 현재 번역표에서 직접 조회해 언어별로 대조한다.
 async function objective(page, english = '') {
   return page.evaluate((key) => {
@@ -40,4 +51,4 @@ async function startTutorial(page, { aspect = '4:3', language = 'english', viewp
   const first = await objective(page, 'Press F4 to return to your island, or place a bridge.');
   expect(first.original).toBe(false); expect(first.gate.stage).toBe(65); expect(first.text).toBe(first.expected); expect(first.text).not.toBe('');
 }
-module.exports = { step, dismissTell, objective, startTutorial };
+module.exports = { step, dismissTell, closeHelp, objective, startTutorial };

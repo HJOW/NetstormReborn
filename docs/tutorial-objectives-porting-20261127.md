@@ -21,4 +21,4 @@
 
 상태·진행 값을 주입하지 않는 실제 F4 단계 변경과 F8 안내 재열기, 재시작·미션 전환·이탈을 확인한다. 전체40단계 조건 대응은 집중 검사로 확인하고, 포획/희생·특정 적 공격·승리 자연 전환의 실제 검사는 기존 사용자 허용 범위를 따른다. 튜토리얼 후반 해당 전환은 사용자 확인으로 남긴다. 다른 언어/화면비의 문구·줄바꿈·위치·배경 없음·입력 보존을 기록하며 cpppj의22검사/19GUI경로 통과를 DN/WB 검증 결과로 대신하지 않는다.
 
-DN은 R5-4c3 중단 검증을 복구한 뒤 R5 표시/R6 수명에 맞춰 진행한다. WB는 보존된 HUD 앱 생성/World 도킹 초안과 State7 수명 연결을 검증한 뒤 이 기능을 별도 단위로 적용한다. 두 프로젝트의 목표 재개는 각 사용자의 재개 지시를 따른다. 현재 작업판은 [DN 인계](../LEFT_JOBS.dotnetpj.md#tutorial-objective-port)·[WB 인계](../LEFT_JOBS.webpj.md#tutorial-objective-port)에 있다.
+DN은 R5-4c3 중단 검증을 복구한 뒤 R5 표시/R6 수명에 맞춰 진행한다. WB는 HUD/State7 수명을 연결한 뒤 E1386~E1389에서 TUT-1~4를 완료했다. 영어/한국어3화면비·실제 F4/F8/수명·39키 글꼴 등 Chromium16경로와 Node26/22 전체 각각6,878검사가 통과했다([검증·한계](webpj-tutorial-objective-verification-20261127.md)). 일본어39키는13차에 반영하며 허용 밖 후반 목표 수행은 사용자 확인으로 남긴다. 두 프로젝트의 목표 재개는 각 사용자의 재개 지시를 따른다. 현재 작업판은 [DN 인계](../LEFT_JOBS.dotnetpj.md#tutorial-objective-port)·[WB 인계](../LEFT_JOBS.webpj.md#tutorial-objective-port)에 있다.
