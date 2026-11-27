@@ -1,0 +1,114 @@
+{
+  "unit": "WB04-E1403",
+  "host": "HJOW-Athlon",
+  "product": "E1400·게임 소스 변경 없음",
+  "node": "v26.13.0",
+  "browser": "156.0.8078.4",
+  "platform": "win32",
+  "command": "node tools/menu-frame-profile.cjs",
+  "exitCode": 0,
+  "scope": "실제 메뉴만·60/120 두 회씩·실제 rAF/호스트 시간·게임 시계 읽기·미션 미진입",
+  "concurrentWork": [
+    "E1401 실제1-6 AI 관찰",
+    "E1403 webpack 빌드",
+    "다른 DN 작업"
+  ],
+  "samples": [
+    {
+      "rate": 60,
+      "seconds": 4.003799999982118,
+      "processedFps": 60.19281682428601,
+      "rafHz": 60.19281682428601,
+      "clockDriftMs": 0.20000020787147577,
+      "gcUsedBytes": 9585820,
+      "gcBackingStorageBytes": 39579834,
+      "rendererMetricWindowSeconds": 4.018022000003839,
+      "rendererTaskSeconds": 0.062213000000000004,
+      "rendererTaskShare": 0.015483489139666374
+    },
+    {
+      "rate": 120,
+      "seconds": 4.007799999982119,
+      "processedFps": 60.13274115501653,
+      "rafHz": 60.13274115501653,
+      "clockDriftMs": 0.19999993219954604,
+      "gcUsedBytes": 9679256,
+      "gcBackingStorageBytes": 39579834,
+      "rendererMetricWindowSeconds": 4.068483000010019,
+      "rendererTaskSeconds": 0.06007499999999999,
+      "rendererTaskShare": 0.014765945931162068,
+      "transition": {
+        "hostSeconds": 0.9087000000178814,
+        "gameSeconds": 0.9079999998211861
+      }
+    },
+    {
+      "rate": 60,
+      "seconds": 4.000799999982118,
+      "processedFps": 60.23795240978733,
+      "rafHz": 60.23795240978733,
+      "clockDriftMs": 0.20000018179455736,
+      "gcUsedBytes": 9713320,
+      "gcBackingStorageBytes": 39579834,
+      "rendererMetricWindowSeconds": 4.0693650000030175,
+      "rendererTaskSeconds": 0.062326999999999966,
+      "rendererTaskShare": 0.01531614883402048,
+      "transition": {
+        "hostSeconds": 1.100100000023842,
+        "gameSeconds": 1.1000000000931323
+      }
+    },
+    {
+      "rate": 120,
+      "seconds": 4.006599999994039,
+      "processedFps": 60.15075126050979,
+      "rafHz": 60.15075126050979,
+      "clockDriftMs": 0.3999997563663982,
+      "gcUsedBytes": 9721992,
+      "gcBackingStorageBytes": 39579834,
+      "rendererMetricWindowSeconds": 4.169685000000754,
+      "rendererTaskSeconds": 0.053259999999999974,
+      "rendererTaskShare": 0.012773147132215104,
+      "transition": {
+        "hostSeconds": 1.159,
+        "gameSeconds": 1.1589999999850988
+      }
+    }
+  ],
+  "errors": [],
+  "gcUsedGrowthBetweenFirstAndLastPostSample": 136172,
+  "backingStorageConstant": true,
+  "limits": [
+    "실제 rAF 약60Hz이므로 물리120FPS 확인이 아니다.",
+    "회수 후 짧은 메뉴 표본이며 미션/장시간 누수 해소의 증거가 아니다.",
+    "renderer TaskDuration 구간은 metric Timestamp 차이이며 페이지 표본 구간과 구별한다."
+  ],
+  "build": {
+    "exitCode": 0,
+    "bytes": 3500786,
+    "sha256": "e24f9de39773455070791171f856c830e0f871069329df634ab26b3dd9d1300b",
+    "sameAsE1400": true
+  },
+  "sha256": {
+    "build.log": {
+      "raw": "597dad4664f230c470132a31177ca4a424b3a9e0dd7dc01e0c203f5c31fe0709",
+      "lf": "efecb19947f56dd85e82ae3fca74f975938d601b80f7eb50d120ec32f1bf9863"
+    },
+    "first-collector-failure.log": {
+      "raw": "5a3a1736f0e862bd196bc8821795c63fcfee194fe68be4860f2238b5b12c094e",
+      "lf": "c6c9f40fef2d2b51d3612870ec0e80d7ba81d5581197ac16e50afe26ad7b7b92"
+    },
+    "menu-profile.json": {
+      "raw": "94491097e9785e229518255d91dbb6f6df5c160e5a7156b84c7f1e54418af12b",
+      "lf": "94491097e9785e229518255d91dbb6f6df5c160e5a7156b84c7f1e54418af12b"
+    },
+    "menu-profile.log": {
+      "raw": "3169976973be6d35614669a0f9db2bf783c5713a2df3b3a87e992dde4850999e",
+      "lf": "ca39976478a0ecb95549a233da897265aa15f3d8acabecaff36d700393e4f092"
+    },
+    "tool-lint.log": {
+      "raw": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "lf": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  }
+}
