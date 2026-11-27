@@ -1,0 +1,47 @@
+{
+  "unit": "WB04-E1420",
+  "recordedAt": "2026-11-27T07:46:24.452664+00:00",
+  "host": "HJOW-Athlon",
+  "node": "v26.13.0",
+  "sourceHead": "d0c9784ea71e04e708f30c5f3e72e44cbfcf442e",
+  "results": {
+    "tests": 6910,
+    "pass": 6910,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "durationMs": 1103009.0267,
+    "exit": 0
+  },
+  "freeze": {
+    "unit": "WB04-E1420",
+    "phase": "finished-exit-0",
+    "recordedAt": "2026-11-27T07:45:08.417684+00:00",
+    "files": 3539,
+    "changed": [],
+    "newlinesOnly": []
+  },
+  "scope": "일본어UI/CDN/줄바꿈/외부감사·실제월드FullPool복구·AI난이도보존/정량도구. Node22전체와순차. 검사중Git제외실제AI와문서만진행.",
+  "completedDuringRun": [
+    "E1419 관찰/1-6사용자이월 문서만;입력변경없음"
+  ],
+  "periodAfter": {
+    "v26": 1,
+    "v22": 6
+  },
+  "evidence": {
+    "node26.log": {
+      "bytes": 917965,
+      "sha256": "81d6ea752c464400691072ff2d324c4d24591444f0a3b273bc63bea1231a8618"
+    },
+    "source-freeze-check.json": {
+      "bytes": 274,
+      "sha256": "72fd7330fc5ca267762dec42671ba7805aed9f67b0dfff324cb4d7bf756bed7c"
+    },
+    "source-freeze.json": {
+      "bytes": 794302,
+      "sha256": "aceebf1c15959612e742fe7913913b3f5b3804640a07cc63e70ac38c28c3d63a"
+    }
+  }
+}

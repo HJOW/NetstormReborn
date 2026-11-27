@@ -1,0 +1,15 @@
+{
+  "unit": "WB04-E1420",
+  "phase": "finished-exit-0",
+  "recordedAt": "2026-11-27T07:45:08.417684+00:00",
+  "files": 3539,
+  "changed": [],
+  "newlinesOnly": [],
+  "completedDuringRun": [
+    "E1419"
+  ],
+  "periodAfter": {
+    "v26": 1,
+    "v22": 6
+  }
+}
