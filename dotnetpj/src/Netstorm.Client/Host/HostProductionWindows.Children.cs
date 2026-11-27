@@ -34,7 +34,7 @@ public sealed partial class HostProductionWindows
         _grid = new(_tree.Create, _tree.Factory, storage.Pool, game.ProductionFinder, new() { CursorPoint = () => new(game.Cursor.ScreenX, game.Cursor.ScreenY), CursorFlags = () => game.Cursor.InputFlags }, new()
         {
             Grid = token => Node(token) as InventoryGridNode, Item = token => Node(token) as InventoryItemNode, ClearChildren = ClearChildren, BaseAttach = _tree.Tree.Attach,
-            AllocateItem = bytes => bytes == 0xc0 ? Allocate(new InventoryItemNode()) : throw new ArgumentOutOfRangeException(nameof(bytes), "생산 항목 할당 크기"), Attach = VirtualAttach, Push = _tree.Tree.Push, Bind = BindForm, Idle = _tree.Lifetime.SetIdle, Now = _devices.Now,
+            AllocateItem = bytes => bytes == 0xc0 ? Allocate(new InventoryItemNode()) : throw new ArgumentOutOfRangeException(nameof(bytes), "생산 항목 할당 크기"), Attach = VirtualAttach, Push = _tree.Tree.Push, Bind = UnbindLostGridParent, Idle = _tree.Lifetime.SetIdle, Now = _devices.Now,
             ContentParent = sid => Word(sid, 16), Forward = _tree.Events.Bubble, BaseHandle = _devices.BaseHandle, Local = (token, _, point) => _tree.Collection.ScreenToLocal(token, point), Inside = (token, point) => { var node = _tree.Node(token)!; return point.X >= 0 && point.Y >= 0 && point.X < node.Width && point.Y < node.Height; },
             CancelCursor = () => { _ = game.RequireSession(); Need(_devices.CancelCursor)(); }, Assertion = message => throw new InvalidOperationException(message), Redraw = _devices.Redraw,
             ClearBlink = content => { if (content >= storage.Pool.Capacity || content > ushort.MaxValue) throw new ArgumentOutOfRangeException(nameof(content), "생산 점멸 내용물 SID 범위"); storage.Pool.AllocatedBytes((ushort)content)[21] &= 0xfd; },
@@ -68,6 +68,15 @@ public sealed partial class HostProductionWindows
     private void BindForm(uint token, uint parent)
     {
         if (parent == 0) return; uint form = Need(_devices.BindForm)(token, parent); var node = Node(token) ?? throw new InvalidOperationException("생산 Form 실제 Gump 없음"); node.Flags |= 0x40; node.Object = parent; node.Form = form;
+    }
+    /// <summary>부모 소실 통지 중 아직 살아 있는 Form을 반납하고 격자의 오래된 참조를 지운다.</summary>
+    /// <remarks>현행 cpppj의 부모0 무동작은 부모가 Form을 반납한 뒤 격자 종료 시 재사용된 슬롯을 다시 삭제한다. 실제 공유 수명 검사에서 확인한 종료 오류를 막기 위해 이 경계만 보완한다.</remarks>
+    private void UnbindLostGridParent(uint token, uint parent)
+    {
+        if (parent != 0) { BindForm(token, parent); return; }
+        var node = Node(token) ?? throw new InvalidOperationException("생산 격자의 실제 Gump 없음");
+        if ((node.Flags & 0x40) != 0) Need(_tree.LifetimeHooks.DeleteForm)(node.Form, 0);
+        node.Flags &= ~0x40u; node.Object = 0; node.Form = 0;
     }
     /// <summary>같은 전체 등록표에서 현재 serial로 살아 있는 노드만 찾는다.</summary>
     private uint Reference(uint serial)
