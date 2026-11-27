@@ -1,6 +1,5 @@
 using System.Buffers.Binary;
 using System.Globalization;
-using System.Text;
 using Netstorm.Client.Gump;
 using Netstorm.Core.Original;
 using static Netstorm.Client.Tests.InventoryRawSupport;
@@ -82,19 +81,7 @@ public sealed class RawObjectMenuInfoTests
         /// <summary>원본 검사 경계의 %s·%d·%% 서식만 순서대로 실행한다.</summary>
         private string Format(string pattern, IReadOnlyList<PriestMenuArgument> values)
         {
-            var output = new StringBuilder(); int argument = 0;
-            // 입력 서식을 왼쪽부터 읽으며 인자 본문을 다시 서식으로 해석하지 않는다.
-            for (int index = 0; index < pattern.Length; index++)
-            {
-                if (pattern[index] != '%') { output.Append(pattern[index]); continue; }
-                if (++index == pattern.Length) throw new InvalidOperationException("검사 서식 끝 오류");
-                if (pattern[index] == '%') { output.Append('%'); continue; }
-                PriestMenuArgument value = values[argument++];
-                if (pattern[index] == 's' && value.IsText) output.Append(value.Text);
-                else if (pattern[index] == 'd' && !value.IsText) output.Append(value.Number.ToString(CultureInfo.InvariantCulture));
-                else throw new InvalidOperationException("검사 서식 인자 오류");
-            }
-            Assert.Equal(values.Count, argument); string result = output.ToString(); Event("F", Hex(result)); return result;
+            string result = PlayerMenuText.Format(pattern, values); Event("F", Hex(result)); return result;
         }
         /// <summary>실제 본체가 선택한 조회와 출력 효과만 제공한다.</summary>
         public ObjectMenuInfoHooks Hooks() => new()
