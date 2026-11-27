@@ -1,0 +1,51 @@
+{
+  "unit": "WB04-E1417 관찰 완료/자연 승리 미완료",
+  "recordedAt": "2026-11-27T07:17:56.959573+00:00",
+  "host": "HJOW-Athlon",
+  "command": "node extracted/e1417-ally-flow.cjs fragilefortune 120000",
+  "toolExit": 1,
+  "gameErrors": 0,
+  "frame": 120000,
+  "gameSeconds": 3009.175,
+  "reason": "상한/자연승리단언실패. 성공/저장/Next는실행하지않음.",
+  "controller": "기존아군어려움/적쉬움. 원래시작SP2000/이름/동맹/기술보존. ES모듈본소스/가로채기없음.",
+  "helperSource": "git75fbec224의e2e/ally-ai-test-control.js. 현재난이도보존선택추가는이실행에포함하지않음.",
+  "screenshotInspected": true,
+  "evidence": [
+    {
+      "file": "ally-control-at-start.cjs",
+      "bytes": 5150,
+      "sha256": "71e812e1b0f789b4493b14dcd7cd7a7e5d9db8003a04f69c864a11b2ba34822d"
+    },
+    {
+      "file": "collector.cjs",
+      "bytes": 13928,
+      "sha256": "ed3897344a17e3c975fbbf522285c58fb65937fd51819df2023002df625c0c36"
+    },
+    {
+      "file": "flow.log",
+      "bytes": 27764,
+      "sha256": "bb3d763e1d1156ee56c6b08ab12c25c0ad95d0cfaac1d0492400473ed1147213"
+    },
+    {
+      "file": "result.json",
+      "bytes": 81724,
+      "sha256": "fbdd5811c1c365b4378cebcb20f953d5730a1c87c4fb69daad49d4834e851258"
+    },
+    {
+      "file": "source-freeze-check.json",
+      "bytes": 230,
+      "sha256": "17912985da1ab3f6316efdf1234189acc5882ea2f7755ddb5e07cb5527e2e143"
+    },
+    {
+      "file": "terminal.png",
+      "bytes": 631191,
+      "sha256": "5a82686ab175313d8a72b99ed9181f6d7b92be7efe0eb13858a03871f0306871"
+    },
+    {
+      "file": "terminal.tsv",
+      "bytes": 540019,
+      "sha256": "a76f1161e5d650615531ac280c9fa20b796caef01287e71dca3e9e06ab8dd663"
+    }
+  ]
+}
