@@ -48,6 +48,8 @@ public sealed partial class HostSession
     private RawContentFormHost? _worldContentForms;
     /// <summary>같은 생산 Form과 자산 수신이 현재 UI 통지에 공유하는 실제 종속 종단이다.</summary>
     private RawSquidContainedUnpop? _worldContentDetach;
+    /// <summary>같은 장기 저장소가 약하게 빌리는 현재 세션의 내용물 통지다.</summary>
+    private RawSurfaceContentBindings? _nativeContentRuntime;
     /// <summary>AI와 생산이 함께 사용하는 현재 내용물 역할/권한 뷰다.</summary>
     private ContainedFinderState? _worldProductionFinder;
     /// <summary>현재 생산 Deck을 빌린다. 반납 뒤에는 기존 Player에 접근하지 않는다.</summary>
@@ -160,6 +162,12 @@ public sealed partial class HostSession
                 UpgradeReceive = packet => WorldFactoryUpgradeCommand.Receive(packet),
                 Assertion = text => throw new InvalidOperationException($"연구 원본 진단: {text}"),
             });
+            // Native 저장소는 현재 세션 본체와 외곽 Runtime만 빌린다. 포획 안내는 미복원 상태를 유지한다.
+            if (_surfaceStorage is { } storage && storage.UsesNativeTransmissionDevices())
+            {
+                var contentRuntime = new RawSurfaceContentBindings { Notice = NotifyProductionParentContent, Pin = () => PinRuntime() };
+                storage.BindContentRuntime(contentRuntime); _nativeContentRuntime = contentRuntime;
+            }
             _worldProductionDeck = deck; _worldProductionTotals = totals; _worldProduction = production;
             _worldProductionSync = sync; _productionCancelCursor = devices.CancelCursor;
             _worldPlayerContent = playerNotice; _worldCarrierContent = carrierNotice; _worldContentForms = forms; _worldContentDetach = detach; _worldResearch = research;
@@ -194,6 +202,8 @@ public sealed partial class HostSession
     {
         if (_worldProductionDeck is not { } deck) return;
         if (!deck.PlayerLinksReturnedForState) deck.ReturnPlayerLinksForState(deck.CleanupPlayerLinksForState(() => PlayerRecords));
+        // 다른 세션의 대여는 지우지 않고 현재 세션의 내용물 후단만 반납한다.
+        if (_nativeContentRuntime is { } contentRuntime) { _surfaceStorage!.ReleaseContentRuntime(contentRuntime); _nativeContentRuntime = null; }
         deck.Dispose(); _worldProductionDeck = null; _worldProductionTotals = null; _worldProduction = null;
         _worldProductionSync = null; _productionCancelCursor = null;
         _worldResearch = null; _worldPlayerContent = null; _worldCarrierContent = null; _worldContentForms = null; _worldContentDetach = null; _worldProductionFinder = null;

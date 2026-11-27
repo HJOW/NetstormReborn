@@ -106,6 +106,14 @@ public sealed partial class RawSurfaceStorage
         _contentRuntime = new(runtime);
     }
 
+    /// <summary>현재 세션이 소유한 같은 Content 대여만 결정적으로 반납한다.</summary>
+    /// <param name="runtime">반납할 현재 세션의 대여다.</param>
+    public void ReleaseContentRuntime(RawSurfaceContentBindings runtime)
+    {
+        if (!ReferenceEquals(ContentRuntime(), runtime)) throw new ArgumentException("Content의 같은 현재 대여 반납 필요", nameof(runtime));
+        _contentRuntime = null;
+    }
+
     /// <summary>현재 살아 있는 같은 Content 대여만 선택 호출 동안 강하게 빌린다. 0.570에서 추가됐다.</summary>
     private RawSurfaceContentBindings? ContentRuntime()
     {
