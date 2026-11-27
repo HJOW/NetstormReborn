@@ -1,0 +1,10 @@
+{
+  "recordedAt": "2026-11-27T08:02:10.752382+00:00",
+  "purpose": "웹스커미시와같은지도씨앗1의C++오라클비교입력. cpppj원본소스/기존빌드폴더불변;별도BinaryDir와복사소스만사용.",
+  "originalSource": "cpppj\\src\\client\\UberGump.cpp",
+  "originalSha256": "5b2e0ef45c09d70ec048c03f375e3e18aa9314edcc83e18a120e3b63787ea19e",
+  "copySource": "UberGump.seed1.cpp",
+  "copySha256": "4165b03fab041b6d9d6be1877072a2a69579244f647caf229f85337eba729835",
+  "onlySemanticDifference": "std::random_device의선택값을지도생성입력1u로대체. device수명은유지. 게임로직/AI/목표/HP/SP는변경하지않음.",
+  "plannedScenario": "Skirmish actual allyAI, no campaign1-6. Other inputs/clock/budget must be recorded; strict World/RNG identity not presumed."
+}

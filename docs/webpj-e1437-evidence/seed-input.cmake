@@ -1,0 +1,63 @@
+# 별도 BinaryDir의 비교 입력만 고정한다. 실제 cpppj 소스나 기존 빌드에는 쓰지 않는다.
+if(NOT CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+    return()
+endif()
+
+# 모든 하위 디렉토리가 생성한 대상에서 원래 UberGump 소스 하나만 복사본으로 바꾼다.
+function(webpj_e1426_visit directory)
+    # 이 디렉토리의 실제 빌드 대상과 하위 디렉토리를 읽는다.
+    get_property(targets DIRECTORY "${directory}" PROPERTY BUILDSYSTEM_TARGETS)
+    # 대상별 소스 목록에서 정확한 파일 이름/원본 경로를 검증한다.
+    foreach(target IN LISTS targets)
+        get_target_property(sources "${target}" SOURCES)
+        if(NOT sources)
+            continue()
+        endif()
+        set(replaced)
+        set(touched FALSE)
+        # 기존 순서와 나머지 파일/생성 표현식은 보존한다.
+        foreach(source IN LISTS sources)
+            get_filename_component(filename "${source}" NAME)
+            if(filename STREQUAL "UberGump.cpp")
+                get_target_property(source_directory "${target}" SOURCE_DIR)
+                get_filename_component(absolute_source "${source}" ABSOLUTE BASE_DIR "${source_directory}")
+                if(NOT absolute_source STREQUAL "${CMAKE_SOURCE_DIR}/src/client/UberGump.cpp")
+                    message(FATAL_ERROR "웹 오라클의 예상 밖 UberGump 원본: ${absolute_source}")
+                endif()
+                list(APPEND replaced "${WEBPJ_E1426_SEED_SOURCE}")
+                set(touched TRUE)
+                get_property(count GLOBAL PROPERTY WEBPJ_E1426_REPLACEMENTS)
+                math(EXPR count "${count} + 1")
+                set_property(GLOBAL PROPERTY WEBPJ_E1426_REPLACEMENTS "${count}")
+            else()
+                list(APPEND replaced "${source}")
+            endif()
+        endforeach()
+        if(touched)
+            set_property(TARGET "${target}" PROPERTY SOURCES "${replaced}")
+            target_include_directories("${target}" PRIVATE "${CMAKE_SOURCE_DIR}/src")
+            message(STATUS "웹 스커미시 오라클: ${target}의 지도 씨앗 입력만1로 고정")
+        endif()
+    endforeach()
+    get_property(children DIRECTORY "${directory}" PROPERTY SUBDIRECTORIES)
+    # 처리된 하위 디렉토리만 순회한다.
+    foreach(child IN LISTS children)
+        webpj_e1426_visit("${child}")
+    endforeach()
+endfunction()
+
+# 구성 완료 경계에서 정확히 한 파일이 바뀌었는지 검사한다.
+function(webpj_e1426_apply)
+    set_property(GLOBAL PROPERTY WEBPJ_E1426_REPLACEMENTS 0)
+    webpj_e1426_visit("${CMAKE_SOURCE_DIR}")
+    get_property(count GLOBAL PROPERTY WEBPJ_E1426_REPLACEMENTS)
+    if(NOT count EQUAL 1)
+        message(FATAL_ERROR "웹 오라클 입력 교체 수가1이 아님: ${count}")
+    endif()
+endfunction()
+
+# 소스 트리를 고치지 않는 공식 project include/deferred call 경계를 사용한다.
+if(NOT EXISTS "${WEBPJ_E1426_SEED_SOURCE}")
+    message(FATAL_ERROR "웹 오라클 비교 입력 복사본이 없습니다")
+endif()
+cmake_language(DEFER CALL webpj_e1426_apply)

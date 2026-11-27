@@ -1,0 +1,11 @@
+--- cpppj/src/client/UberGump.cpp
++++ test-only/UberGump.seed1.cpp
+@@ -851,7 +851,7 @@
+ // 시작 섬 fort를 읽지 못하면 거짓이고 화면은 그대로다.
+ bool UberGump::StartSkirmish(const SkirmishSettings& settings) {
+     std::random_device device;
+-    const auto launch=BuildSkirmishLaunch(settings,device());
++    const auto launch=BuildSkirmishLaunch(settings,(static_cast<void>(device),1u));
+     if (launch.islands.empty()) { std::clog<<"Skirmish: not enough start islands for "<<settings.aiCount<<" AI players.\n";return false; }
+     auto& config=client_.Configuration();
+     auto plan=std::make_shared<SkirmishWorldPlan>(); // 참가자별 시작 섬의 원본 fort를 미리 읽어 세션이 파일 시스템 없이 지역 Template로 쓰게 한다.

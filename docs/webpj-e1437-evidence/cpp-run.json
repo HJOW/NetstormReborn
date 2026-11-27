@@ -1,0 +1,26 @@
+{
+  "argv": [
+    "webpj/extracted/e1426-skirmish-oracle/fast/bin/Release/Netstorm.exe",
+    "--run",
+    "assets/game-data",
+    "--window",
+    "--mute-audio",
+    "--frames",
+    "26000",
+    "--set",
+    "SCREENW=1024;SCREENH=768;WelcomeGiven=1;autoDemo=0;tellTips=0;intro=1;currentLanguage=english;skirmishAiCount=4;skirmishBans=;skirmishAi2Diff=3;skirmishAi2Ally=0;skirmishAi3Diff=3;skirmishAi3Ally=0;skirmishAi4Diff=3;skirmishAi4Ally=0;skirmishAi5Diff=3;skirmishAi5Ally=0;skirmishAi6Diff=2;skirmishAi6Ally=0;skirmishAi7Diff=2;skirmishAi7Ally=0;skirmishAi8Diff=2;skirmishAi8Ally=0",
+    "--ui-script",
+    "webpj\\extracted\\e1437-cpp-long\\steps.tsv",
+    "--ui-report",
+    "webpj\\extracted\\e1437-cpp-long\\report.tsv",
+    "--fixed-frame-ms",
+    "25",
+    "--test-ally-ai",
+    "hard",
+    "--test-start-sp",
+    "5000",
+    "--test-enemy-start-sp",
+    "5000"
+  ],
+  "NETSTORM_USER_DATA": "webpj\\extracted\\e1437-cpp-long\\user-data"
+}

@@ -1,0 +1,8 @@
+msbuild 버전 18.12.2-1.26514.2+04f6ca984(.NET Framework용)
+
+  Auto build dll exports
+  NetstormSmacker.vcxproj -> H:\Workspace\git\NetstormReborn\webpj\extracted\e1426-skirmish-oracle\fast\bin\Release\NetstormSmacker.dll
+  UberGump.seed1.cpp
+  RawCampaignSession.world-input.cpp
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.52.37025\include\type_traits(1625): fatal error C1128: 섹션 수가 개체 파일 형식 한도를 초과했습니다. /bigobj를 사용하여 컴파일하십시오. [H:\Workspace\git\NetstormReborn\webpj\extracted\e1426-skirmish-oracle\fast\src\netstorm.vcxproj]
+C:\Program Files\Microsoft Visual Studio\18\Community\VC\Tools\MSVC\14.52.37025\include\type_traits(1625,1): error C1128: 섹션 수가 개체 파일 형식 한도를 초과했습니다. /bigobj를 사용하여 컴파일하십시오. [H:\Workspace\git\NetstormReborn\webpj\extracted\e1426-skirmish-oracle\fast\src\netstorm.vcxproj]

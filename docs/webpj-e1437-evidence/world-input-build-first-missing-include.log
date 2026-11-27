@@ -1,0 +1,7 @@
+msbuild 버전 18.12.2-1.26514.2+04f6ca984(.NET Framework용)
+
+  1>Checking Build System
+  Auto build dll exports
+  NetstormSmacker.vcxproj -> H:\Workspace\git\NetstormReborn\webpj\extracted\e1426-skirmish-oracle\fast\bin\Release\NetstormSmacker.dll
+  RawCampaignSession.world-input.cpp
+H:\Workspace\git\NetstormReborn\webpj\extracted\e1426-skirmish-oracle\RawCampaignSession.world-input.cpp(3337,14): error C1083: 포함 파일을 열 수 없습니다. 'RawCampaignNewFort.inc': No such file or directory [H:\Workspace\git\NetstormReborn\webpj\extracted\e1426-skirmish-oracle\fast\src\netstorm.vcxproj]

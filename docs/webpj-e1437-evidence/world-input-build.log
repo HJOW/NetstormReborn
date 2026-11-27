@@ -1,0 +1,9 @@
+msbuild 버전 18.12.2-1.26514.2+04f6ca984(.NET Framework용)
+
+  Auto build dll exports
+  NetstormSmacker.vcxproj -> H:\Workspace\git\NetstormReborn\webpj\extracted\e1426-skirmish-oracle\fast\bin\Release\NetstormSmacker.dll
+  UberGump.seed1.cpp
+  RawCampaignSession.world-input.cpp
+  netstorm.vcxproj -> H:\Workspace\git\NetstormReborn\webpj\extracted\e1426-skirmish-oracle\fast\lib\Release\netstorm.lib
+  NetstormRoot.vcxproj -> H:\Workspace\git\NetstormReborn\webpj\extracted\e1426-skirmish-oracle\fast\bin\Release\R.exe
+  NetstormCpp.vcxproj -> H:\Workspace\git\NetstormReborn\webpj\extracted\e1426-skirmish-oracle\fast\bin\Release\Netstorm.exe

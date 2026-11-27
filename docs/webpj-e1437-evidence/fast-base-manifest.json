@@ -1,0 +1,18 @@
+{
+  "note": "공통인계의기존cpppj1377빌드(코드최신AED29E3D1,CP제품중지). 원래경로는읽기전용. 추가컴파일입력은지도씨앗한차이의UberGump복사본뿐. 실제초기지도검증이필수.",
+  "sourceStatus": "git status --short -- cpppj 결과없음",
+  "files": {
+    "cpppj/build/lib/Release/netstorm.lib": {
+      "bytes": 427777476,
+      "sha256": "db0533da15689ca1e0d5f603233e4fc35c5a8e70b87368568bbb3e8acf5f253f"
+    },
+    "cpppj/build/bin/Release/Netstorm.exe": {
+      "bytes": 16132096,
+      "sha256": "6851dfabaa7f6b8eb98eb4c8b312b9374d3287ae4ee845552d6fd9d78dc0846b"
+    },
+    "cpppj/build/lib/Release/NetstormQuickJs.lib": {
+      "bytes": 2910328,
+      "sha256": "e54205d8150e20802e1e98dbb8e7faf604624f3c28dc197a33a2825b77019754"
+    }
+  }
+}

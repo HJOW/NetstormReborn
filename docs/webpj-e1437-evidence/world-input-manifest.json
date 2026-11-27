@@ -1,0 +1,15 @@
+{
+  "purpose": "지도씨앗만같아도원래메뉴경과RNG가달라초기World가달랐음. World생성경계에같은초기game/CRT입력만지정한다.",
+  "input": {
+    "mapSeed": 1,
+    "beforeBuildWorldGame": 305419896,
+    "beforeBuildWorldCrt": 591751049
+  },
+  "originalRawSessionSha256": "76f8941808539bab2daeb0a74b5da51720558f913f816ff8773a34026b323e5f",
+  "copyRawSessionSha256": "2d40f133aa1689f62cba4644c113eaf923753424b1bb05b630d2a10731980f7f",
+  "originalExecutedSeedOnlyBinary": {
+    "path": "H:\\Workspace\\git\\NetstormReborn\\webpj\\extracted\\e1426-skirmish-oracle\\seed-only-runtime\\Netstorm.exe",
+    "sha256": "c87b7581da17677b4edb1625854e1fe3340c428cb83e7c638dddac049c054d81"
+  },
+  "logicChanges": "초기입력2개대입과관측로그외변경없음. 모든생성/AI/플레이는기존코드."
+}

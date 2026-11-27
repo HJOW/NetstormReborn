@@ -1,0 +1,13 @@
+--- original/RawCampaignSession.cpp
++++ input-copy/RawCampaignSession.cpp
+@@ -5702,6 +5702,10 @@
+     auto& s=*impl_;
+     const SkirmishWorldPlan* plan=s.services.ai.skirmishWorld ? s.services.ai.skirmishWorld() : nullptr;
+     if (!plan) return;
++    // 비교 전용 외부 초기 입력이다. 실제 생성/AI/자금/HP/목표 로직은 원문 그대로 실행한다.
++    s.random.SetState(0x12345678U);s.crt=0x23456789U;
++    std::clog<<"WB oracle BuildSkirmishWorld input: game="<<s.random.State()<<" crt="<<s.crt<<"\n";
++
+     if (!s.loaded) throw std::logic_error("실제 Session 설치 전 스커미시 월드 생성 요청");
+     if (plan->islands.empty() || plan->islands.size()>8) throw std::out_of_range("스커미시 월드 계획의 참가자 수 범위");
+     s.PrepareConstruction();

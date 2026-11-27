@@ -1,0 +1,33 @@
+{
+  "mapSize": 3,
+  "central": [
+    189,
+    9,
+    0,
+    212,
+    0,
+    0
+  ],
+  "islands": [
+    {
+      "fort": "Imp1",
+      "territory": 6
+    },
+    {
+      "fort": "Razorianwar6",
+      "territory": 5
+    },
+    {
+      "fort": "Thundere",
+      "territory": 2
+    },
+    {
+      "fort": "Imp1",
+      "territory": 1
+    },
+    {
+      "fort": "Imp1",
+      "territory": 4
+    }
+  ]
+}
