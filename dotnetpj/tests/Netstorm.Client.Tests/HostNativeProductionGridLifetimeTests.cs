@@ -38,6 +38,7 @@ public sealed partial class HostPriestWorldLiveTests
             if (panel?.Node(token) is null) return false;
             notices++; panel.ParentGone(token, unchecked((uint)parent)); return true;
         }, () => { });
+        menus.BindObjectForms(surface.Storage.GumpForms());
         using (var runtime = HostMissionRuntime.Create(session, surface.Storage))
         {
             panel = new HostProductionWindows(tree, text, context, new() { BackgroundType = menu.BackgroundType }, new()
@@ -58,12 +59,22 @@ public sealed partial class HostPriestWorldLiveTests
             var teleport = Assert.IsType<InventoryGridNode>(panel.Node(root.TeleportGrid));
             uint bridgeForm = bridge.Form, teleportForm = teleport.Form;
             Assert.NotEqual(0u, bridgeForm); Assert.NotEqual(0u, teleportForm); Assert.NotEqual(bridgeForm, teleportForm);
+            uint popup = menus.Widgets.BeginFancy();
+            menus.Widgets.Reference(popup, (uint)parent);
+            menus.Menu.AttachCurrent(20, 20, tree.Create.Collection.Root);
+            var popupNode = Assert.IsType<MenuGumpNode>(tree.Node(popup)); uint popupForm = popupNode.Form;
+            Assert.NotEqual(0u, popupForm);
+            Assert.Equal((uint)parent, popupNode.Object);
+            Assert.Equal(popupNode.Id, surface.Storage.GumpForms().Owner((int)popupForm));
+            Assert.Equal(parent, surface.Storage.GumpForms().Parent((int)popupForm));
             Assert.True(session.DestroyResourceObject(parent, 0));
             Assert.Equal(2, notices);
             Assert.NotEqual(0, session.Pool.Slot((int)bridgeForm)[11] & 1);
             Assert.NotEqual(0, session.Pool.Slot((int)teleportForm)[11] & 1);
             Assert.Equal((0u, 0u, 0u), (bridge.Object, bridge.Form, bridge.Flags & 0x40));
             Assert.Equal((0u, 0u, 0u), (teleport.Object, teleport.Form, teleport.Flags & 0x40));
+            Assert.NotEqual(0, session.Pool.Slot((int)popupForm)[11] & 1);
+            tree.Lifetime.Cleanup(); Assert.Null(tree.Node(popup));
             Assert.Equal(0u, surface.Storage.BaseDestroy().PreDepth); Assert.Equal(0u, surface.Storage.BaseDestroy().PostDepth);
             var borrowed = new List<int>(); var reused = new HashSet<int>();
             // 실제 FIFO 풀을 순회해 반환된 두 Form 번호가 다른 할당에 재사용될 때까지 보유한다.

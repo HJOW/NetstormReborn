@@ -1,6 +1,7 @@
 using Netstorm.Client.Display;
 using Netstorm.Client.Gump;
 using Netstorm.Client.Input;
+using Netstorm.Core.Original;
 
 namespace Netstorm.Client.Host; // HTML 창과 같은 실제 트리의 controlled 메뉴 열 소유 영역이다.
 
@@ -12,6 +13,10 @@ public sealed class HostHtmlMenus
     private readonly GumpButtonTree _tree;
     /// <summary>생성 전 실패와 미부착 메뉴도 추적하는 HTML 소유자.</summary>
     private readonly HostHtmlWindows _windows;
+    /// <summary>객체 Form 종류를 공유하는 실제 메뉴 상태다.</summary>
+    private readonly MenuGumpWidgetState _widgetState;
+    /// <summary>현재 메뉴가 사용하는 실제 객체 Form 연결이다.</summary>
+    private readonly MenuGumpWidgetHooks _widgetHooks;
     /// <summary>실제 controlled 스택과 인스턴스 수.</summary>
     public MenuGumpState State { get; } = new();
     /// <summary>현재 메뉴의 크기와 controlled 스택.</summary>
@@ -45,17 +50,22 @@ public sealed class HostHtmlMenus
         var layout = Layout = new MenuGumpLayout(_tree.Create, Menu, layoutHooks);
         var palette = screen.Colors();
         var dim = palette.Named.First(color => color.Red == 47 && color.Green == 24 && color.Blue == 17);
-        Widgets = new MenuGumpWidgets(_tree.Create, State, new() { BackgroundType = menu.BackgroundType, BackgroundFrame = 1,
-            Foreground = palette.Basic[7], Shadow = dim.Index, ObjectFormType = 3 }, _tree.Backgrounds,
+        _widgetState = new() { BackgroundType = menu.BackgroundType, BackgroundFrame = 1,
+            Foreground = palette.Basic[7], Shadow = dim.Index, ObjectFormType = 3 };
+        _widgetHooks = new() { Node = hooks.Node, Base = _tree.Node, Allocate = Allocate, Attach = Attach,
+            SelectionNotice = (_, _) => throw new InvalidOperationException("메뉴 선택 통지 미연결") };
+        Widgets = new MenuGumpWidgets(_tree.Create, State, _widgetState, _tree.Backgrounds,
             menu.Decoration.CreateDevice(), text.Widgets, layout, text.Style, _tree.Lifetime, _tree.Collection, _tree.Tree,
-            new() { Node = hooks.Node, Base = _tree.Node, Allocate = Allocate, Attach = Attach,
-                SelectionNotice = (_, _) => throw new InvalidOperationException("메뉴 선택 통지 미연결") });
+            _widgetHooks);
         Controls = new MenuGumpControls(_tree.Create, State, Menu, layout, text.Parser,
             new() { Node = hooks.Node, Base = _tree.Node, ReadInt = (string key, ref int value) => { startup.Configuration.ReadInt(key, ref value); } });
         MenuGumpWidgets.BindMenuGumpWidgets(_tree.TreeHooks, _tree.LifetimeHooks, token => _tree.Node(token) is MenuGumpNode ? Widgets : null);
         MenuGump.BindMenuGumpFrame(_tree.FrameHooks, token => _tree.Node(token) is MenuGumpNode ? Menu : null);
         windows.BindMenus(Menu);
     }
+
+    /// <summary>메뉴 객체 참조를 현재 물리의 실제 Form 생성·소유·부착에 연결한다.</summary>
+    public void BindObjectForms(RawGumpFormHost forms) => GumpFormBinding.BindMenuGumpForms(_tree.Create, _widgetState, _widgetHooks, forms);
 
     /// <summary>원본 크기에 맞는 메뉴·장식·제목을 공통 트리에 할당하고 부분 생성 수명도 추적한다.</summary>
     private uint Allocate(int size)

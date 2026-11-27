@@ -330,6 +330,8 @@ public sealed partial class ClientHostGame : Game
             InitializeNativeChatEditing();
             InitializeNativeChatGeometry();
             _htmlMenus = new HostHtmlMenus(_mainMenu, _htmlWindows, _htmlText, _startup, _driver.Screen, (_, _) => _menuDirty = true);
+            // 메뉴 객체 참조와 장기 UI 삭제 통지가 같은 실제 Form 풀을 사용한다.
+            _htmlMenus.BindObjectForms(_surfaceGlobals.Storage.GumpForms());
             _htmlMenus.BindInput(_driver.Input, _buttonSound.PlayByName, (_, _) => _menuDirty = true);
             InitializeNativeChatWindows();
             InitializeNativeChatSubmit();
