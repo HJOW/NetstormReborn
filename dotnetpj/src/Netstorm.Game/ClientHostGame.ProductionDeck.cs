@@ -83,8 +83,9 @@ public sealed partial class ClientHostGame
             CancelCursor = () => throw new InvalidOperationException("생산 커서 실제 취소는 R6 입력에서 잇는다"),
             Take = (_, _) => throw new InvalidOperationException("생산 내용물 실제 취득은 R6 입력에서 잇는다"),
             About = (_, _, _) => throw new InvalidOperationException("생산 항목 실제 정보 메뉴는 R6에서 잇는다"),
-            Poll = _ => throw new InvalidOperationException("생산 구분선 실제 폴링은 R5-5/R6 입력에서 잇는다"),
-            Cursor = _ => throw new InvalidOperationException("생산 구분선 실제 커서는 R5-5/R6 입력에서 잇는다"),
+            // 생산 구분선도 미니맵과 같은 현재 입력과 Client의 실제 커서를 사용한다.
+            Poll = Poll,
+            Cursor = SelectNativeCursor,
         };
         var panel = new HostProductionWindows(tree, text, context, _productionGlobals, devices);
         uint token = panel.Construct();

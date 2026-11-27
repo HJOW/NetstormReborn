@@ -58,7 +58,8 @@ public sealed class HostMissionProductionDeckTests
             var assets = new HostAssetTables(startup, Storage); Text.BindPictures(new(assets.TypeTable, assets.Definitions, new(assets.ShapeImage)), () => SpriteColorMapBuilder.BuildSpriteColorMaps(Screen.LogicalPalette).Shadow, startup.Configuration); Menus = new(Menu, Html, Text, startup, Screen, (_, _) => { }); Menus.BindInput(new(), _ => { }, (_, _) => { }); Globals.BackgroundType = Menu.BackgroundType;
         }
         /// <summary>실제 원문 입력/효과와 우클릭 도움말을 연결한다.</summary>
-        public HostProductionWindows NewPanel(Func<uint, uint, uint>? bindForm = null, Action? synchronize = null)
+        public HostProductionWindows NewPanel(Func<uint, uint, uint>? bindForm = null, Action? synchronize = null,
+            Func<uint, Input.InputEvent>? poll = null, Action<uint>? cursor = null)
         {
             var tree = Menu.Tree;
             Help = new(tree.Create, new GumpHelpState(), new GumpHelpHooks
@@ -75,11 +76,33 @@ public sealed class HostMissionProductionDeckTests
             return Panel = new(tree, Text, new() { Storage = Storage, Gameplay = Game, Players = Game.PlayerRecords, Options = Options, Sp = Sp }, Globals, new()
             {
                 Now = () => Wall, Sound = _ => { }, Tell = _ => { }, ConfigInt = (_, fallback) => fallback, Translate = value => value, Changed = () => { }, BaseHandle = (token, code, first, second) => help.Handle(token, code, first, second), Redraw = (_, _) => { }, ClosePopups = () => Menus.RequestClosePopups(() => { }), MenuInstances = () => Menus.State.Instances,
-                BindForm = bindForm, Synchronize = synchronize,
+                BindForm = bindForm, Synchronize = synchronize, Poll = poll, Cursor = cursor,
             });
         }
         /// <summary>자기 생산 세대와 실제 기존 UI를 각각 반납한다.</summary>
         public void Dispose() { Panel?.Dispose(); Html.CloseAll(); }
+    }
+
+    /// <summary>생산 구분선의 실제 입력 분배가 현재 커서 번호와 마우스 놓기 폴링을 장치에 전달한다.</summary>
+    [Fact]
+    public void ProductionDividerForwardsCursorAndReleasePolling()
+    {
+        using var s = new Scene();
+        var cursorCalls = new List<uint>();
+        var polls = new List<uint>();
+        var panel = s.NewPanel(poll: code => { polls.Add(code); return new(Input.InputCode.LeftButton | Input.InputCode.Release, 40, 32); }, cursor: cursorCalls.Add);
+        uint token = panel.Construct();
+        var root = Assert.IsType<ProductionRootNode>(panel.Node(token));
+        var divider = Assert.IsType<HudDividerNode>(panel.Node(root.Separator));
+        divider.Axis = 2;
+        Assert.Equal(1u, panel.Handle(root.Separator, 0x0200003b, 40, 22));
+        Assert.Equal(new uint[] { 5 }, cursorCalls);
+        Assert.Equal(1u, panel.Handle(root.Separator, Input.InputCode.LeftButton, 40, 22));
+        Assert.NotEqual(0u, divider.Flags & 0x100);
+        s.Menu.Tree.FrameHooks.Broadcast!(root.Separator, 0, 40, 32);
+        Assert.Equal(new uint[] { Input.InputCode.LeftButton }, polls);
+        Assert.Equal(0u, divider.Flags & 0x100);
+        Assert.NotEqual(21f, divider.Y);
     }
 
     /// <summary>생산 사건은 현재 기술 부모로 두 격자를 연결한 뒤 동기화를 실행한다.</summary>
