@@ -60,10 +60,10 @@ DN의 디렉터리형 표현은 Windows `%USERPROFILE%\Saved Games\Netstorm\Mods
 | --- | --- |
 | `sessionStart` | `{sessionId,mission,gameSeconds}`. 실제 Session Ready/미션 시작 준비 완료 뒤 첫 경계. 모드 인스턴스/구독/RNG를 미션마다 새로 만든 후 통지 |
 | `tick` | `{sessionId,gameSeconds}`. 시작 시각으로부터 처음1게임초 뒤, 이후 1초 간격. 프레임이 여러 간격을 넘으면 현재 상태로 **한 번만** 통지하고 다음 기한을 현재 시각+1로 정함. 매 유닛/매 표시 프레임 호출 금지 |
-| `commandResult` | `{sessionId,results:[{commandId,status,code}]}`. 다음 입력 단계에서 확정한 모드별 결과를 다음 모드 경계에 한 번 통지. status=queued/rejected, queued의 code=null. 자체적으로 매초 tick을 발생시키지 않음 |
+| `commandResult` | `{sessionId,results:[{eventSequence,commandId,status,code}]}`. eventSequence는 요청을 만든 사건 번호다. 다음 입력 단계에서 확정한 모드별 결과를 다음 모드 경계에 한 번 통지. status=queued/rejected, queued의 code=null. 자체적으로 매초 tick을 발생시키지 않음 |
 | `sessionEnd` | `{sessionId,mission,gameSeconds,reason}`. reason=leave/restart/replace/destroy. 마지막 사본으로 한 번 통지하고 명령은 거절. 남은 입력 요청을 staleSession으로 폐기한 뒤 컨텍스트·포트·구독·난수·타이머·강한 Session 참조를 반납 |
 
-모든 사건은 `{name,sequence,...}`이며 sequence는 미션 안에서 1부터 증가한다. 결과 사건 때문에 다시 생성되는 결과는 다음 경계로 미루어 한 경계에서 무한 재진입하지 않는다. 종료 뒤 늦게 도착한 메시지는 세션/인스턴스 번호로 폐기한다.
+모든 사건은 `{name,sequence,...}`이며 sequence는 미션 안에서 1부터 정확히 1씩 증가한다. gameSeconds는 이전 경계보다 작을 수 없다. 결과 사건 때문에 다시 생성되는 결과는 다음 경계로 미루어 한 경계에서 무한 재진입하지 않는다. 종료 뒤 늦게 도착한 메시지는 세션/인스턴스 번호로 폐기한다. 한 결과 사건에는 명령 결과를 최대8개 담고 원래 요청 사건 번호도 보존한다.
 
 웹 Worker는 비동기이므로 미완료 사건을 둔 채 다음 게임 입력/시계/Kernel을 진행하지 않는다. 호스트가 대기 동안 게임 일시 정지를 유지하고 완료 뒤 원래 다음 프레임에서 재개한다. 이 장벽이 있어야 CPU/메시지 도착 순서가 명령을 넣는 프레임을 바꾸지 않는다. 화면/관리 UI는 계속 응답해야 한다. DN은 같은 사건 경계를 동기로 처리할 수 있으나 명령을 즉시 원본 객체에 실행해서는 안 된다.
 
@@ -83,7 +83,7 @@ DN의 디렉터리형 표현은 Windows `%USERPROFILE%\Saved Games\Netstorm\Mods
 
 패키지 최대1MiB, 모듈 하나256KiB/총32개, 설치8개, 구독32개, 사건당 명령8개·로그8개, 경계 메시지64KiB, 등록/사건 한 번1000ms다. 시간 제한은 복잡도/지연에 따른 안전 중단 장치이며 같은 입력의 시간 초과 여부까지 엔진 간 결정론으로 주장하지 않는다. 전송 크기·행 수·명령 개수를 호스트도 다시 검사한다.
 
-DN은 모드당 QuickJS runtime을 분리하고 quickjs-libc/std/os/파일/네트워크/프로세스를 등록하지 않는다. 메모리16MiB·스택256KiB·평가1000ms는 CPP `ScriptEngineLimits`와 같다. 웹은 불투명 origin iframe(`sandbox=allow-scripts`) 안에서 전용 Worker를 만들고 CSP로 외부 연결/외부 스크립트·추가 Worker를 막는다. 모드 코드를 메인 페이지/iframe DOM에서 실행하지 않고, 검증된 메시지 전용 포트만 준다. 초과/비정상 종료는 Worker와 iframe을 폐기한다. 네트워크 함수 이름을 지우는 것만으로 격리를 대신하지 않는다.
+DN은 모드당 QuickJS runtime을 분리하고 quickjs-libc/std/os/파일/네트워크/프로세스를 등록하지 않는다. 메모리16MiB·스택256KiB·평가1000ms는 CPP `ScriptEngineLimits`와 같다. 웹은 불투명 origin iframe(`sandbox=allow-scripts`) 안에서 전용 Worker를 만들고 CSP로 외부 연결/외부 스크립트를 막는다. 추가 Worker 생성 capability도 모드에 주지 않는다. 모드 코드를 메인 페이지/iframe DOM에서 실행하지 않고, 검증된 메시지 전용 포트만 준다. 초과/비정상 종료는 Worker와 iframe을 폐기한다. 네트워크 함수 이름을 지우는 것만으로 격리를 대신하지 않는다.
 
 **플랫폼 보장 차이:** 표준 브라우저 Worker에는 QuickJS와 같은 JS 힙/네이티브 스택 바이트 상한 설정 API가 없다. 따라서 웹은 시간·패키지·메시지·호스트 객체 한도를 적용하고 `hardMemoryLimit=false`, `hardStackLimit=false`로 기록한다. DN의 16MiB를 웹에서도 강제한다고 주장하지 않는다. 웹 VM 내부 OOM까지 페이지 생존을 보장하는 계약은 아니다. 공통 적합성은 이 차이를 프로필로 확인하고 숨기지 않는다.
 

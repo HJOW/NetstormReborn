@@ -1,0 +1,14 @@
+{
+  "format": "netstorm-mod-package",
+  "formatVersion": 1,
+  "manifest": {
+    "id": "conformance.core",
+    "name": "공통 핵심 적합성",
+    "version": "1.0.0",
+    "apiVersion": "0.1.0",
+    "entry": "main.js"
+  },
+  "modules": {
+    "main.js": "// 양쪽 호스트가 같은 패키지/상태/사건을 실행해 결과 JSON을 대조한다.\nexport default function registerMod(netstorm) {\n    // 공개 이름과 사본 조회·정규화 명령을 하나의 시작 사건에서 점검한다.\n    netstorm.on('sessionStart', () => {\n        netstorm.log('info', JSON.stringify({ names: Object.keys(netstorm), commands: Object.keys(netstorm.commands), state: netstorm.getState(), players: netstorm.getPlayers(), selection: netstorm.getSelection() }));\n        const changed = netstorm.getPlayers(); changed[0].stormPower = 0;\n        netstorm.log('info', JSON.stringify({ originalPower: netstorm.getPlayers()[0].stormPower, random: netstorm.randomInt(100) }));\n        netstorm.commands.click(200, 300); netstorm.commands.pressKey('ArrowLeft'); netstorm.commands.selectPriest(); netstorm.commands.nextUnit(true); netstorm.commands.produceBridge(2); netstorm.commands.repeatProduction(); netstorm.commands.rotatePiece();\n    });\n    // 다음 입력 단계가 수용한 명령 번호와 요청 사건 번호를 보존한다.\n    netstorm.on('commandResult', (event) => netstorm.log('info', JSON.stringify(event.results)));\n    // 호스트 시간과 독립한 사건 시계와 모드 RNG를 기록한다.\n    netstorm.on('tick', (event) => netstorm.log('info', JSON.stringify({ gameSeconds: event.gameSeconds, random: netstorm.randomInt(100) })));\n    // 종료 전에 읽을 수 있는 마지막 상태를 기록한다.\n    netstorm.on('sessionEnd', (event) => netstorm.log('info', JSON.stringify({ reason: event.reason, state: netstorm.getState() })));\n}\n"
+  }
+}

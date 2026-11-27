@@ -1,0 +1,123 @@
+{
+  "algorithm": "xorshift32/fnv1a32-utf8",
+  "generator": "Python 3 독립 정수 계산",
+  "vectors": [
+    {
+      "sessionSeed": 0,
+      "modId": "example.session-observer",
+      "initialState": 3111246834,
+      "samples": [
+        {
+          "limit": 100,
+          "value": 81
+        },
+        {
+          "limit": 100,
+          "value": 62
+        },
+        {
+          "limit": 1,
+          "value": 0
+        },
+        {
+          "limit": 4294967295,
+          "value": 3452661506
+        },
+        {
+          "limit": 65536,
+          "value": 40439
+        },
+        {
+          "limit": 100,
+          "value": 30
+        },
+        {
+          "limit": 8,
+          "value": 5
+        },
+        {
+          "limit": 2147483648,
+          "value": 1265310152
+        }
+      ]
+    },
+    {
+      "sessionSeed": 1,
+      "modId": "example.session-observer",
+      "initialState": 4100227991,
+      "samples": [
+        {
+          "limit": 100,
+          "value": 16
+        },
+        {
+          "limit": 100,
+          "value": 15
+        },
+        {
+          "limit": 1,
+          "value": 0
+        },
+        {
+          "limit": 4294967295,
+          "value": 3653695139
+        },
+        {
+          "limit": 65536,
+          "value": 12394
+        },
+        {
+          "limit": 100,
+          "value": 52
+        },
+        {
+          "limit": 8,
+          "value": 6
+        },
+        {
+          "limit": 2147483648,
+          "value": 1971465329
+        }
+      ]
+    },
+    {
+      "sessionSeed": 4294967295,
+      "modId": "test.other",
+      "initialState": 3717560868,
+      "samples": [
+        {
+          "limit": 100,
+          "value": 52
+        },
+        {
+          "limit": 100,
+          "value": 60
+        },
+        {
+          "limit": 1,
+          "value": 0
+        },
+        {
+          "limit": 4294967295,
+          "value": 4079565995
+        },
+        {
+          "limit": 65536,
+          "value": 59477
+        },
+        {
+          "limit": 100,
+          "value": 53
+        },
+        {
+          "limit": 8,
+          "value": 7
+        },
+        {
+          "limit": 2147483648,
+          "value": 2059471204
+        }
+      ]
+    }
+  ]
+}

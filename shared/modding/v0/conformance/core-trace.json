@@ -1,0 +1,445 @@
+{
+  "provenance": {
+    "reference": "WB ModRuntime",
+    "node": "v26.13.0",
+    "engine": "14.6.202.34-node.40",
+    "note": "WB 기준 출력이며 원본 게임 또는 DN 실행 오라클이 아님"
+  },
+  "sessionSeed": 1,
+  "registration": {
+    "eventSequence": 0,
+    "commands": [],
+    "logs": []
+  },
+  "cases": [
+    {
+      "event": {
+        "name": "sessionStart",
+        "sequence": 1,
+        "sessionId": "session-1",
+        "mission": "firstblood",
+        "gameSeconds": 0
+      },
+      "snapshot": {
+        "state": {
+          "sessionId": "session-1",
+          "mission": "firstblood",
+          "gameSeconds": 0,
+          "localOwner": 1,
+          "paused": false,
+          "logicalSize": {
+            "width": 1024,
+            "height": 768
+          },
+          "mapRect": {
+            "left": 85,
+            "top": 0,
+            "right": 1024,
+            "bottom": 768
+          }
+        },
+        "players": [
+          {
+            "owner": 1,
+            "stormPower": 1000,
+            "allies": [
+              2
+            ]
+          },
+          {
+            "owner": 2,
+            "stormPower": 500,
+            "allies": [
+              1
+            ]
+          }
+        ],
+        "selection": {
+          "typeId": 163,
+          "owner": 1,
+          "health": 100
+        }
+      }
+    },
+    {
+      "event": {
+        "name": "commandResult",
+        "sequence": 2,
+        "sessionId": "session-1",
+        "results": [
+          {
+            "eventSequence": 1,
+            "commandId": 1,
+            "status": "queued",
+            "code": null
+          },
+          {
+            "eventSequence": 1,
+            "commandId": 2,
+            "status": "queued",
+            "code": null
+          },
+          {
+            "eventSequence": 1,
+            "commandId": 3,
+            "status": "queued",
+            "code": null
+          },
+          {
+            "eventSequence": 1,
+            "commandId": 4,
+            "status": "queued",
+            "code": null
+          },
+          {
+            "eventSequence": 1,
+            "commandId": 5,
+            "status": "queued",
+            "code": null
+          },
+          {
+            "eventSequence": 1,
+            "commandId": 6,
+            "status": "queued",
+            "code": null
+          },
+          {
+            "eventSequence": 1,
+            "commandId": 7,
+            "status": "queued",
+            "code": null
+          }
+        ]
+      },
+      "snapshot": {
+        "state": {
+          "sessionId": "session-1",
+          "mission": "firstblood",
+          "gameSeconds": 0,
+          "localOwner": 1,
+          "paused": false,
+          "logicalSize": {
+            "width": 1024,
+            "height": 768
+          },
+          "mapRect": {
+            "left": 85,
+            "top": 0,
+            "right": 1024,
+            "bottom": 768
+          }
+        },
+        "players": [
+          {
+            "owner": 1,
+            "stormPower": 1000,
+            "allies": [
+              2
+            ]
+          },
+          {
+            "owner": 2,
+            "stormPower": 500,
+            "allies": [
+              1
+            ]
+          }
+        ],
+        "selection": {
+          "typeId": 163,
+          "owner": 1,
+          "health": 100
+        }
+      }
+    },
+    {
+      "event": {
+        "name": "tick",
+        "sequence": 3,
+        "sessionId": "session-1",
+        "gameSeconds": 1
+      },
+      "snapshot": {
+        "state": {
+          "sessionId": "session-1",
+          "mission": "firstblood",
+          "gameSeconds": 1,
+          "localOwner": 1,
+          "paused": false,
+          "logicalSize": {
+            "width": 1024,
+            "height": 768
+          },
+          "mapRect": {
+            "left": 85,
+            "top": 0,
+            "right": 1024,
+            "bottom": 768
+          }
+        },
+        "players": [
+          {
+            "owner": 1,
+            "stormPower": 1000,
+            "allies": [
+              2
+            ]
+          },
+          {
+            "owner": 2,
+            "stormPower": 500,
+            "allies": [
+              1
+            ]
+          }
+        ],
+        "selection": {
+          "typeId": 163,
+          "owner": 1,
+          "health": 100
+        }
+      }
+    },
+    {
+      "event": {
+        "name": "tick",
+        "sequence": 4,
+        "sessionId": "session-1",
+        "gameSeconds": 2
+      },
+      "snapshot": {
+        "state": {
+          "sessionId": "session-1",
+          "mission": "firstblood",
+          "gameSeconds": 2,
+          "localOwner": 1,
+          "paused": false,
+          "logicalSize": {
+            "width": 1024,
+            "height": 768
+          },
+          "mapRect": {
+            "left": 85,
+            "top": 0,
+            "right": 1024,
+            "bottom": 768
+          }
+        },
+        "players": [
+          {
+            "owner": 1,
+            "stormPower": 1000,
+            "allies": [
+              2
+            ]
+          },
+          {
+            "owner": 2,
+            "stormPower": 500,
+            "allies": [
+              1
+            ]
+          }
+        ],
+        "selection": {
+          "typeId": 163,
+          "owner": 1,
+          "health": 100
+        }
+      }
+    },
+    {
+      "event": {
+        "name": "sessionEnd",
+        "sequence": 5,
+        "sessionId": "session-1",
+        "mission": "firstblood",
+        "gameSeconds": 2,
+        "reason": "leave"
+      },
+      "snapshot": {
+        "state": {
+          "sessionId": "session-1",
+          "mission": "firstblood",
+          "gameSeconds": 2,
+          "localOwner": 1,
+          "paused": false,
+          "logicalSize": {
+            "width": 1024,
+            "height": 768
+          },
+          "mapRect": {
+            "left": 85,
+            "top": 0,
+            "right": 1024,
+            "bottom": 768
+          }
+        },
+        "players": [
+          {
+            "owner": 1,
+            "stormPower": 1000,
+            "allies": [
+              2
+            ]
+          },
+          {
+            "owner": 2,
+            "stormPower": 500,
+            "allies": [
+              1
+            ]
+          }
+        ],
+        "selection": {
+          "typeId": 163,
+          "owner": 1,
+          "health": 100
+        }
+      }
+    }
+  ],
+  "expected": [
+    {
+      "eventSequence": 1,
+      "commands": [
+        {
+          "commandId": 1,
+          "sessionId": "session-1",
+          "name": "click",
+          "args": {
+            "modifiers": {
+              "shift": false,
+              "control": false
+            },
+            "x": 200,
+            "y": 300,
+            "button": "left"
+          }
+        },
+        {
+          "commandId": 2,
+          "sessionId": "session-1",
+          "name": "pressKey",
+          "args": {
+            "modifiers": {
+              "shift": false,
+              "control": false
+            },
+            "key": "ArrowLeft"
+          }
+        },
+        {
+          "commandId": 3,
+          "sessionId": "session-1",
+          "name": "pressKey",
+          "args": {
+            "modifiers": {
+              "shift": false,
+              "control": false
+            },
+            "key": "p"
+          }
+        },
+        {
+          "commandId": 4,
+          "sessionId": "session-1",
+          "name": "pressKey",
+          "args": {
+            "modifiers": {
+              "shift": true,
+              "control": false
+            },
+            "key": "n"
+          }
+        },
+        {
+          "commandId": 5,
+          "sessionId": "session-1",
+          "name": "pressKey",
+          "args": {
+            "modifiers": {
+              "shift": false,
+              "control": false
+            },
+            "key": "a"
+          }
+        },
+        {
+          "commandId": 6,
+          "sessionId": "session-1",
+          "name": "pressKey",
+          "args": {
+            "modifiers": {
+              "shift": false,
+              "control": false
+            },
+            "key": "d"
+          }
+        },
+        {
+          "commandId": 7,
+          "sessionId": "session-1",
+          "name": "pressKey",
+          "args": {
+            "modifiers": {
+              "shift": false,
+              "control": false
+            },
+            "key": "c"
+          }
+        }
+      ],
+      "logs": [
+        {
+          "level": "info",
+          "text": "{\"names\":[\"apiVersion\",\"modId\",\"on\",\"off\",\"getState\",\"getPlayers\",\"getSelection\",\"randomInt\",\"log\",\"commands\"],\"commands\":[\"click\",\"pressKey\",\"selectPriest\",\"nextUnit\",\"produceBridge\",\"repeatProduction\",\"rotatePiece\"],\"state\":{\"sessionId\":\"session-1\",\"mission\":\"firstblood\",\"gameSeconds\":0,\"localOwner\":1,\"paused\":false,\"logicalSize\":{\"width\":1024,\"height\":768},\"mapRect\":{\"left\":85,\"top\":0,\"right\":1024,\"bottom\":768}},\"players\":[{\"owner\":1,\"stormPower\":1000,\"allies\":[2]},{\"owner\":2,\"stormPower\":500,\"allies\":[1]}],\"selection\":{\"typeId\":163,\"owner\":1,\"health\":100}}"
+        },
+        {
+          "level": "info",
+          "text": "{\"originalPower\":1000,\"random\":75}"
+        }
+      ]
+    },
+    {
+      "eventSequence": 2,
+      "commands": [],
+      "logs": [
+        {
+          "level": "info",
+          "text": "[{\"eventSequence\":1,\"commandId\":1,\"status\":\"queued\",\"code\":null},{\"eventSequence\":1,\"commandId\":2,\"status\":\"queued\",\"code\":null},{\"eventSequence\":1,\"commandId\":3,\"status\":\"queued\",\"code\":null},{\"eventSequence\":1,\"commandId\":4,\"status\":\"queued\",\"code\":null},{\"eventSequence\":1,\"commandId\":5,\"status\":\"queued\",\"code\":null},{\"eventSequence\":1,\"commandId\":6,\"status\":\"queued\",\"code\":null},{\"eventSequence\":1,\"commandId\":7,\"status\":\"queued\",\"code\":null}]"
+        }
+      ]
+    },
+    {
+      "eventSequence": 3,
+      "commands": [],
+      "logs": [
+        {
+          "level": "info",
+          "text": "{\"gameSeconds\":1,\"random\":71}"
+        }
+      ]
+    },
+    {
+      "eventSequence": 4,
+      "commands": [],
+      "logs": [
+        {
+          "level": "info",
+          "text": "{\"gameSeconds\":2,\"random\":75}"
+        }
+      ]
+    },
+    {
+      "eventSequence": 5,
+      "commands": [],
+      "logs": [
+        {
+          "level": "info",
+          "text": "{\"reason\":\"leave\",\"state\":{\"sessionId\":\"session-1\",\"mission\":\"firstblood\",\"gameSeconds\":2,\"localOwner\":1,\"paused\":false,\"logicalSize\":{\"width\":1024,\"height\":768},\"mapRect\":{\"left\":85,\"top\":0,\"right\":1024,\"bottom\":768}}}"
+        }
+      ]
+    }
+  ]
+}
