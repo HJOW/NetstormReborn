@@ -2,6 +2,7 @@
 // 하드웨어 장치가 없는 환경에서는 소프트웨어(WARP)로 대신하므로 장치 생성 자체가 실패하는 환경에서만 건너뛴다.
 #include "TestSupport.h"
 #include "client/GpuPresenter.h"
+#include "client/ScreenResolutions.h"
 #include <array>
 #include <cstdint>
 #include <string>
@@ -11,6 +12,7 @@
 #include <windows.h>
 
 using namespace netstorm::client;
+
 
 namespace { // 숨은 검사 창과 합성 프레임 보조다.
 // 클라이언트 영역이 width×height인 숨은 팝업 창을 만든다.
@@ -106,4 +108,22 @@ TEST_CASE(GpuPresenter_ResizesWithTheClientAreaAndRejectsBadArguments) {
     CHECK(presenter->Present(frame.data(), 16, 16, 9, palette.data(), {0, 0, client.right, client.bottom}, options) && presenter->LastError().empty()); // 다음 성공이 오류를 지운다.
     presenter.reset();
     DestroyWindow(window);
+}
+
+// 네 화면비의 실제1280 입력과 세 출력 폭을 모두 GPU로 확대해 표시/읽기 크기와 내부 색을 확인한다.
+TEST_CASE(GpuPresenter_AllFsrOutputsRenderFrom1280WithMatchingAspect) {
+    CHECK(GpuPresenter::Probe());
+    HWND window=MakeWindow(1280,720);CHECK(window!=nullptr);
+    std::string error;auto presenter=GpuPresenter::Create(window,error);CHECK(presenter!=nullptr);
+    if (!presenter) {DestroyWindow(window);return;}
+    const auto palette=Palette();GpuPresentOptions options;options.fsr=true;
+    for (const auto& size:kFsrScreenResolutionChoices) { // 같은 출력기에서 모든 크기 변경과 실제 EASU/RCAS를 검증한다.
+        SetWindowPos(window,nullptr,0,0,static_cast<int>(size[0]),static_cast<int>(size[1]),SWP_NOMOVE|SWP_NOACTIVATE|SWP_NOZORDER);
+        const auto logical=LogicalScreenSize(size[0],size[1]);std::vector<std::uint8_t> frame(static_cast<std::size_t>(logical[0])*logical[1],1);
+        CHECK(presenter->Present(frame.data(),logical[0],logical[0],logical[1],palette.data(),{0,0,static_cast<int>(size[0]),static_cast<int>(size[1])},options));
+        std::vector<std::uint8_t> pixels;int width=0,height=0;CHECK(presenter->ReadBack(pixels,width,height));
+        CHECK(width==static_cast<int>(size[0]) && height==static_cast<int>(size[1]));
+        if (width>0 && height>0 && !pixels.empty()) {const auto color=At(pixels,width,width/2,height/2);CHECK(color[0]>240 && color[1]<15 && color[2]<15);}
+    }
+    presenter.reset();DestroyWindow(window);
 }

@@ -857,8 +857,10 @@ void Client::InterpretOptions() {
     std::int32_t width = presentWidth_>0 ? presentWidth_:screenWidth_, height = presentHeight_>0 ? presentHeight_:screenHeight_;
     configuration_.ReadInt("SCREENW", width);
     configuration_.ReadInt("SCREENH", height);
-    // 7차: SCREENW/SCREENH는 표시(목표) 크기다. FSR 해상도(2560x1440, 3840x2160)는 논리 1920x1080으로 그려 FSR이 늘리며, 후처리 장치가 없으면 1920x1080으로 낮춘다.
-    if (IsFsrScreenResolution(width, height) && !PostProcessAvailable()) { width = kFsrLogicalWidth; height = kFsrLogicalHeight; }
+    // 저장된 옛 해상도와 사용할 수 없는 FSR 출력을1280 폭 정책으로 정리한다.
+    const auto normalizedSize=NormalizeScreenResolution(width,height,PostProcessAvailable());
+    width=static_cast<std::int32_t>(normalizedSize[0]);height=static_cast<std::int32_t>(normalizedSize[1]);
+    configuration_.Configuration().Set("SCREENW",std::to_string(width));configuration_.Configuration().Set("SCREENH",std::to_string(height));
     const auto logicalSize = LogicalScreenSize(width, height);
     const int logicalWidth = static_cast<int>(logicalSize[0]), logicalHeight = static_cast<int>(logicalSize[1]);
     if (logicalWidth != screenWidth_ || logicalHeight != screenHeight_ || width != presentWidth_ || height != presentHeight_) {
@@ -1159,7 +1161,7 @@ std::size_t Client::ThunderFlashCount() const { return thunderProcesses_.size();
 void Client::ChangeResolution(int width, int height) {
     if (!IsSupportedScreenResolution(width, height, PostProcessAvailable())) // 원본 세 해상도와 Windows10/11 호환 추가 해상도(4차 와이드 포함)만 허용하며 FSR 해상도(7차)는 후처리 장치가 있을 때만 허용한다.
         throw std::invalid_argument("Unsupported resolution");
-    const auto logicalSize = LogicalScreenSize(width, height); // 7차: FSR 해상도는 논리 1920x1080이다.
+    const auto logicalSize = LogicalScreenSize(width, height); // FSR 출력은 같은 화면비의1280 폭으로 렌더링한다.
     const int logicalWidth = static_cast<int>(logicalSize[0]), logicalHeight = static_cast<int>(logicalSize[1]);
     if (screenWidth_ == logicalWidth && screenHeight_ == logicalHeight && presentWidth_ == width && presentHeight_ == height) return;
     ClearThunderFlashes();

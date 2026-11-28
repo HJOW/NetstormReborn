@@ -119,7 +119,7 @@ std::uint32_t RawGameMenus::Options() const {
         const auto check=present[0]==size[0] && present[1]==size[1];const auto label=Text(std::to_string(size[0])+" by "+std::to_string(size[1]));
         Check(check,label,0x542948,std::string("SETSIZE(")+std::to_string(size[0])+','+std::to_string(size[1])+')');
     }
-    for (const auto& size:hooks_.fsrResolutions) { // 7차: FSR 해상도는 같은 SETSIZE 흐름을 쓰며 선택하면 논리 1920x1080을 FSR 1.0으로 늘려 표시한다.
+    for (const auto& size:hooks_.fsrResolutions) { // 같은 SETSIZE 흐름으로1280 폭의 화면을 해당 화면비의FSR 출력으로 확대한다.
         const auto present=hooks_.presentSize ? hooks_.presentSize() : std::array<std::uint32_t,2>{Global(0x531860),Global(0x531864)};
         const auto check=present[0]==size[0] && present[1]==size[1];const auto label=Text(std::to_string(size[0])+" by "+std::to_string(size[1]));
         Check(check,label,0x542948,std::string("SETSIZE(")+std::to_string(size[0])+','+std::to_string(size[1])+')');
