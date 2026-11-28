@@ -65,8 +65,8 @@ public:
     void TakeObject(std::uint32_t source,std::uint32_t flags); //447340의 실제Unpop→현재TYPE/WORD의Form→flags|100 Take를 동일 커서에 연결한다.
     void CancelForState(); //00446e70만실행하며외곽game.prepare를Native효과로추가하지않는다.
     void Cancel(); // 잠긴 상태에서도 실제 꼬리 정리/프로세스 반납을 실행한다.
-    void Update(std::int32_t x,std::int32_t y); // 실제00446b50으로 현재 마우스/카메라를 반영한다.
-    void GumpsChanged(); // 호스트 UI 트리 교체 뒤 정지한 마우스의 현재 Gump/표시 경계만 다시 조회한다.
+    void Update(std::int32_t x,std::int32_t y); // 현재 마우스/카메라와 정지 포인터의 건설 조건을 반영한다.
+    void GumpsChanged(); // 정지한 마우스의 에너지·공간·Gump/표시 경계를 다시 조회한다.
     void Lock(std::uint32_t skipCursor); // 실제446a10의 현재 중첩 깊이를 증가시킨다.
     void Unlock(); // 실제446a40의 목록 재생성/커서 선택을 실행한다.
     void Rotate(std::int32_t step); // 실제446a70의 signed 방향·사정거리 수명을 실행한다.

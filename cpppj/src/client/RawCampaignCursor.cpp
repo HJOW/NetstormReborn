@@ -157,9 +157,13 @@ void RawCampaignCursor::TakeObject(std::uint32_t source,std::uint32_t flags) {
 void RawCampaignCursor::CancelForState() { impl_->lifecycle->Cancel(); }
 // 일반입력의기존호스트준비와NativeCancel leaf를구별한다.
 void RawCampaignCursor::Cancel() { impl_->Prepare();impl_->lifecycle->Cancel(); }
-// 같은 현재 카메라 비트를 읽는 실제 위치 몸체를 호출한다.
-void RawCampaignCursor::Update(std::int32_t x,std::int32_t y) { impl_->Prepare();impl_->position->Update(x,y); }
-// 원본의 장기 UI 포인터 대신 교체되는 호스트 토큰이므로 이전 깊이를 다음 수집에 넘기지 않는다.
+// 현재 카메라/스냅을 반영하고 정지한 포인터의 에너지·공간 조건도 다시 조회한다. 기존 미리보기 SID는 보존한다.
+void RawCampaignCursor::Update(std::int32_t x,std::int32_t y) {
+    const auto oldX=impl_->data.drop.x,oldY=impl_->data.drop.y; // 이동 몸체가 이미 판정을 갱신했는지 구별할 이전 월드 좌표다.
+    impl_->Prepare();impl_->position->Update(x,y);
+    if (impl_->data.drop.x==oldX && impl_->data.drop.y==oldY) GumpsChanged();
+}
+// 현재 에너지·공간·호스트 UI를 조회하고 이전/현재 경고 범위를 함께 갱신한다.
 void RawCampaignCursor::GumpsChanged() {
     if (impl_->data.drop.lockDepth || !impl_->data.drop.preview) return;
     impl_->Prepare();impl_->placement->Prepare();impl_->placement->Query();impl_->placement->Prepare();

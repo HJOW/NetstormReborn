@@ -2211,6 +2211,34 @@ TEST_CASE(CampaignSession_CursorMenuUsesActualStateAndCancel) {
     for (const auto number:previews) if (number) CHECK((core.pool.Slot(CursorPreviewSid(number))[11]&3)!=0);
     CHECK(ui.dirty>0 && ui.highlights>0 && ui.cursors.back()==1 && ui.sent.empty());
 }
+// 실제 공급원이 제거·완성되어도 정지한 커서의 허용/경고와 미리보기 SID가 현재 월드를 따른다.
+TEST_CASE(CampaignSession_StationaryCursorRefreshesActualEnergyProviders) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078); // 실제 TYPE/SHP와 저장 지형을 빌린다.
+    SessionServicesFixture external; // 화면·소리·통신만 대체하는 기존 장치 경계다.
+    auto services=external.Services();Sid lost{}; // 실제 공급원 삭제의 외부 소리 통지 대상을 관찰한다.
+    services.unitLost=[&](Sid sid) { lost=sid; }; // 게임 삭제를 대체하지 않고 장치에 전달된 SID만 기록한다.
+    auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());ReadyCursorFactoryInput(fort); // 준비된 Wind 제네레이터 조각을 적재한다.
+    GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",std::move(services),{1024,768}); // 창 없는 실제 Session/월드다.
+    auto& session=world.Session();auto core=session.Core();auto& cursor=session.Cursor(); // 같은 현재 공급 장부와 커서를 공유한다.
+    SessionCursorUi ui;cursor.SetEffects(ui.Effects());cursor.SnapToGrid()=1;session.SetSp(1,5000); // 고정 장치·자금·스냅 입력이다.
+    auto& providers=core.bookkeeping.Providers(); // 저장 지도에 있던 다른 공급원의 중첩을 배제할 실제 장부다.
+    const std::vector<std::uint32_t> existingProviders(providers.Items().begin(),providers.Items().end()); // 검사 종료 때 다시 등록할 기존 공급원이다.
+    providers.SetCount(0); // 이 짧은 월드 검사에서는 새 공급원 하나만 유효한 초기 입력으로 둔다.
+    const auto source=CursorEnergyInput(session); // 실제 완성 Rain 제네레이터를 공급 장부에 등록한다.
+    const auto raw=core.pool.Slot(source);const auto sourceX=std::bit_cast<float>(Get(raw,14)),sourceY=std::bit_cast<float>(Get(raw,18)); // 같은 위치에 공급원을 복구할 좌표다.
+    cursor.Take(ReadyCursorFactoryForm(session),0x41);const auto point=CursorPlacementPoint(session,ui); // 에너지/공간/출처가 모두 허용되는 실제 칸이다.
+    const auto previews=cursor.Lifecycle().previews;const auto count=cursor.Lifecycle().previewCount;const auto balance=session.Sp(1); // 재생성·차감이 없어야 하는 값이다.
+    CHECK(session.World().Destroy(source,0));CHECK(lost==source);cursor.Update(ui.mouse.x,ui.mouse.y);
+    CHECK(!cursor.Placement().descriptionAllowed && !session.CursorDropSettings().legal);
+    const auto completed=session.World().Create(76);core.owner.Set(completed,1);session.World().Pop(completed,sourceX,sourceY,0); // 완성 객체의 실제 Pop 등록으로 공급을 복원한다.
+    cursor.Update(ui.mouse.x,ui.mouse.y);
+    CHECK(cursor.Placement().descriptionAllowed && session.CursorDropSettings().legal);
+    CHECK(session.CursorDropSettings().x==point.x && session.CursorDropSettings().y==point.y);
+    CHECK(cursor.Lifecycle().previews==previews && cursor.Lifecycle().previewCount==count);
+    CHECK(session.Sp(1)==balance && ui.sent.empty());cursor.Cancel();
+    for (const auto provider:existingProviders) { providers.Append(provider); } // 완성 공급원을 유지하고 기존 장부 입력도 복원한다.
+}
+
 // 현재 잡힌 Form의 외부 삭제가 값형0 사본 대신 실제 커서를 찾아 잠긴 꼬리 정리까지 수행한다.
 TEST_CASE(CampaignSession_CursorContentDestroyReadsCurrentPreview) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078);SessionServicesFixture external;auto fort=FortTemplate::Parse(assets.files.Read("d/thewarbegins.fort"),assets.game.TypeTable());GameWorld world(assets.game,assets.files,std::move(fort),MissionPlayers{},"thewarbegins",external.Services(),{1024,768});auto& session=world.Session();auto core=session.Core();SessionCursorUi ui;auto& cursor=session.Cursor();cursor.SetEffects(ui.Effects());SessionPriestMenuUi menuUi;auto menu=CursorMenu(session,menuUi);session.AddTechnology(1,core.types[75].assetName);session.SetSp(1,5000);const Sid priest{static_cast<std::uint16_t>(session.FindPriestParticipation(1))};CHECK(menu->SelectBuild(75,priest));auto& drop=session.CursorDropSettings();const auto form=CursorPreviewSid(drop.preview);const auto previews=cursor.Lifecycle().previews;drop.lockDepth=3;const auto dirty=ui.dirty;
@@ -2357,8 +2385,8 @@ TEST_CASE(CampaignSession_CursorRequeriesReplacedGumpsAtStationaryMouse) {
     const auto old=cursor.Lifecycle().currentGump;const auto x=session.CursorDropSettings().x,y=session.CursorDropSettings().y;
     CHECK(old && old==controls.PickGump({session.CursorDropSettings().screenX,session.CursorDropSettings().screenY}));
     controls.SetControls(buttons,labels,1024,768,background);const auto current=controls.PickGump({session.CursorDropSettings().screenX,session.CursorDropSettings().screenY});
-    CHECK(current && current!=old);cursor.Update(ui.mouse.x,ui.mouse.y); // 원본446b50의 위치 불변 경로는 Query하지 않는다.
-    CHECK(cursor.Lifecycle().currentGump==old);cursor.GumpsChanged();
+    CHECK(current && current!=old);cursor.Update(ui.mouse.x,ui.mouse.y); // 게임 조립 계층이 위치 불변 경로에서도 현재 판정을 갱신한다.
+    CHECK(cursor.Lifecycle().currentGump==current);cursor.GumpsChanged();
     CHECK(cursor.Lifecycle().currentGump==current && session.CursorDropSettings().x==x && session.CursorDropSettings().y==y);
     cursor.Display().Sprites({0,0,1024,768},2); // 폐기 토큰 조회라면 여기서 out_of_range로 실패한다.
     controls.SetControls({},labels,1024,768,background);cursor.GumpsChanged();CHECK(cursor.Lifecycle().currentGump==0);
