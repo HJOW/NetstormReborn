@@ -29,8 +29,15 @@ public sealed partial class ClientHostGame
     private HostAssetTables PrepareStartupColorAssets()
     {
         HostStartupScene startup = _startup ?? throw new InvalidOperationException("실제 색표의 시작 자산 미연결");
-        _missionAudio ??= new HostMissionAudio(startup, Window.Handle, _options.MuteAudio,
-            () => _clientClock.Clock.WallSeconds(_clock.Milliseconds), _stateResources.Music);
+        if (_missionAudio is null)
+        {
+            // 최종 DesktopGL 창이 생성된 UI 스레드에서 같은 SDL 창의 실제 Windows HWND를 빌린다.
+            nint soundWindow = OperatingSystem.IsWindows() ? WindowsSdlWindow.NativeHandle(Window.Handle) : Window.Handle;
+            if (OperatingSystem.IsWindows())
+                ErrorLog.Note($"미션 음향 창 준비: SDL=0x{Window.Handle.ToInt64():X}, HWND=0x{soundWindow.ToInt64():X}");
+            _missionAudio = new HostMissionAudio(startup, soundWindow, _options.MuteAudio,
+                () => _clientClock.Clock.WallSeconds(_clock.Milliseconds), _stateResources.Music);
+        }
         _buttonSound ??= new HostButtonSound(startup); _cursor ??= new HostOriginalCursor(startup);
         PrepareNativeAssetTables(); return AssetTables;
     }

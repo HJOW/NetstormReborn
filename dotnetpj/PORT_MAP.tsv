@@ -1937,3 +1937,5 @@ cpppj/src/client/SoundMusicRuntime.cpp	Netstorm.Client/Audio/MusicChannel.Runtim
 cpppj/src/client/SoundMusic.h	Netstorm.Client/Audio/MusicChannel.Runtime.cs	225f2322cf7936604306b6534fd4edf18f246c12	port
 cpppj/src/client/SoundMusicRuntime.cpp	Netstorm.Game/WindowsMusicRuntime.cs	225f2322cf7936604306b6534fd4edf18f246c12	port
 cpppj/src/client/SoundMusicRuntime.h	Netstorm.Game/WindowsMusicRuntime.cs	225f2322cf7936604306b6534fd4edf18f246c12	port
+cpppj/src/client/SoundDevice.cpp	Netstorm.Game/WindowsSdlWindow.cs	225f2322cf7936604306b6534fd4edf18f246c12	port
+cpppj/src/client/SoundDevice.h	Netstorm.Game/WindowsSdlWindow.cs	225f2322cf7936604306b6534fd4edf18f246c12	port

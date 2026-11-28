@@ -41,9 +41,28 @@ public sealed class HostMissionAudio : IDisposable
         _device = new WindowsSoundDevice(_list, _state,
             WindowsSoundFiles.MakeDiskResolver(startup.Files.BaseDirectory, startup.Files.SecondaryDirectory ?? ""),
             startup.Configuration.Configuration.Get("currentLanguage") ?? "english");
-        if (_state.Enabled && OperatingSystem.IsWindows() && !_device.Initialize(window))
-            ErrorLog.Note("미션 소리 장치 초기화 실패: " + _device.LastInitializationFailure);
-        _player = new SoundPlayer(_list, _state, _device.Hooks());
+        try
+        {
+            if (_state.Enabled && OperatingSystem.IsWindows())
+            {
+                bool initialized = _device.Initialize(window);
+                ErrorLog.Note(initialized ? $"미션 소리 장치 초기화 완료: HWND=0x{window.ToInt64():X}"
+                    : "미션 소리 장치 초기화 실패: " + _device.LastInitializationFailure);
+            }
+            _player = new SoundPlayer(_list, _state, _device.Hooks());
+        }
+        catch (Exception initializationError)
+        {
+            // 초기화 뒤 로그/재생기 생성이 실패해도 아직 외부 owner에 설치되지 않은 자기 장치를 반납한다.
+            try { _device.Dispose(); }
+            catch (Exception cleanupError)
+            {
+                // 정리 오류는 최초 예외의 진단에만 추가하며 실패한 로그를 다시 호출하지 않는다.
+                try { initializationError.Data["HostMissionAudio.DeviceDisposeException"] = cleanupError; }
+                catch { /* 진단 저장 실패도 최초 생성 예외와 스택을 바꾸지 않는다. */ }
+            }
+            throw;
+        }
     }
 
     /// <summary>실제 소리 프로세스를 같은 미션 Host에 붙이고 보호막/낙하에 같은 이름·재생기를 제공한다.</summary>
