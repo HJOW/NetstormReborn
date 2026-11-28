@@ -19,8 +19,19 @@ node tools/ally-ai-campaign-flow.cjs fragilefortune 60000 40 guard-priest
 
 Node의 조건/거부·원본 AI 설정/능력 관련 **7/7**, Chromium의 범위 거부·기본1-3/1-4·사제 보호1-3의 실제600프레임 **4/4**, 변경 파일 lint가 통과했다. 실제 능력63487·원래2000SP·동맹/이름/기술 보존·brain 초기화/비정지·오류0을 확인했다. 로그는 `webpj/extracted/webpj-e1495-condition-node-related.log`, `webpj-e1495-condition-e2e.log`, `webpj-e1495-lint.log`, `webpj-e1495-cli-lint.log`다. 제품 `www`/운영 번들 변경은 없다.
 
-## 다음 관찰 — 진행 중
+## E1496 사제 보호 관찰 — 완료, 두 승리는 미완료
 
-위 두 명령을 독립 Chromium/저장소에서 실행 중이다.1-3은 사제 보호만,1-4는 사제 보호와 메뉴40프레임 대기를 사용한다. 실제 시작 관측은 각각 `(game=9.125, unix=946684809, random=2892766120)`·`(10.125, 946684810, 4143987439)`이며, 두 AI 능력63487을 확인했다. 결과는 완료 뒤 별도 단위로 기록한다.
+위 두 명령을 독립 Chromium/저장소에서 각각60,000프레임 실행했다.1-3은 사제 보호만,1-4는 사제 보호와 메뉴40프레임 대기를 사용했다. 실제 시작 관측은 각각 `(game=9.125, unix=946684809, random=2892766120)`·`(10.125, 946684810, 4143987439)`이며, 두 AI 능력63487·초기2000SP·기술/이름/동맹 보존을 확인했다.
+
+| 미션 | 종료 게임 시각 | SP | 실제 결과 |
+| --- | ---: | ---: | --- |
+| 1-3 Save The Island | 1509.175초 | -800 | 양쪽 사제 생존·미포획, 완료 창 없음, 프레임 상한 |
+| 1-4 Fragile Fortune | 1510.175초 | 1750 | 양쪽 사제 생존·미포획, 완료 창 없음, 프레임 상한 |
+
+게임 프레임 오류는 각각0이다. 아군/적 brain은 모두 초기화1·정지0이며 관측상 돈이 부족한1-3의 경제 정체를 사제 보호만으로 해소하지 못했다. SP -800의 원인이나 제품 결함 여부는 이 결과만으로 단정하지 않는다. 두 CLI는 실제 자연 승리 단언에서 예상대로 종료1이며 저장/새로고침/다음 미션 해제 검사는 실행하지 않았다. 승리·저장 항목은 미완료다.
+
+기록과 최종 화면은 [1-3 JSON](webpj-e1496-evidence/campaign1-3.json)·[화면](webpj-e1496-evidence/campaign1-3.png), [1-4 JSON](webpj-e1496-evidence/campaign1-4.json)·[화면](webpj-e1496-evidence/campaign1-4.png)에 보존했다. 전체 로그/Session TSV는 Git 제외 `webpj/extracted/webpj-e1495-guard-campaign1-{3,4}.log`·`ally-flow-*-guard-priest-terminal.tsv`다. Chromium156.0.8078.4 headless·Windows10 build19045·1024×768·DPR1·25ms·영어·음향끔 조건이며 실제 음향 청취/물리 모니터 검증을 대신하지 않는다. 제품 소스/운영 번들은 바뀌지 않았다.
+
+다음 조건은 원래 AI `Collectors` 목표를3에서1로 줄이고 사제 보호를 함께 적용하는 방식이다. 실제 설정 로더를 사용하며 자금·가격·기술·HP·목표/승패를 바꾸지 않는다. 사용자의 다른 AI 조건 계속 시도 선택을 유지한다.
 
 원래 Kernel·Renderer·Screen 프레임은 모두 실행한다. 실제 Next Mission 안내가 있어야 승리→신규 저장→새로고침→다음 미션 해제 검사를 수행하며, 패배/상한/오류는 성공으로 표시하지 않는다.
