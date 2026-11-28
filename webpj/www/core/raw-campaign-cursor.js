@@ -126,9 +126,13 @@ export class RawCampaignCursor {
     cancelForState() { this.#lifecycle.cancel(); }
     // 일반 취소는 현재 게임 준비를 먼저 실행한다.
     cancel() { this.#prepare(); this.#lifecycle.cancel(); }
-    // 같은 카메라 float비트와 현재 snap을 사용한다.
-    update(x, y) { this.#prepare(); this.#position.update(x, y); }
-    // 정지 마우스의 UI 교체도 현재 Gump/dirty를 다시 수집한다.
+    // 현재 카메라와 snap을 반영하고 정지한 포인터의 에너지·공간 조건도 매 입력 프레임 다시 조회한다. 미리보기 목록을 재생성하지 않는다.
+    update(x, y) {
+        const d = this.#data.drop, oldX = d.x, oldY = d.y; // 위치 몸체가 이미 판정을 갱신했는지 구별할 이전 월드 좌표이다.
+        this.#prepare(); this.#position.update(x, y);
+        if (d.x === oldX && d.y === oldY) this.gumpsChanged();
+    }
+    // 정지 마우스의 에너지·공간·Gump 변경과 이전/현재 경고 범위를 다시 수집한다.
     gumpsChanged() { const d = this.#data.drop; if (d.lockDepth || !d.preview) return; this.#prepare(); this.#placement.prepare(); this.#placement.query(); this.#placement.prepare(); current(() => this.#effects.lifecycle.selectCursor, '하드웨어 커서 선택')(d.legalGump ? 3 : 2); }
     // 실제 중첩 잠금과 처음 진입의 커서 선택이다.
     lock(skipCursor) { this.#prepare(); this.#actions.lock(skipCursor); }

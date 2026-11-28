@@ -2272,8 +2272,8 @@ export class Netstorm {
             // Send X 숫자 창 같은 Gump 모달이 열려 있으면 모든 사건이 그 창으로만 가고 월드·단축키로는 가지 않는다(원본의 모달 dialog 우선 전달). (2026-11-22 WB04-E1168)
             if (this._campaignInputDialogOpen()) { const modal = queue.pop(false); gump.input().route(modal.code, modal.x, modal.y); this._displayDirty = true; continue; }
             const code = (next.code & 0x03ffffff) >>> 0, release = Boolean(next.code & InputCode.release);
-            // 채팅 입력줄이 보이는 동안 키보드 사건(마우스·명령 사건과 ESC 제외)은 입력줄로만 간다. 입력줄이 처리하지 않은 키도 월드 단축키로는 가지 않는다. (2026-11-22 WB04-E1170)
-            if (!(next.code & InputCode.command) && code !== InputCode.leftButton && code !== InputCode.rightButton && code !== InputCode.middleButton && code !== 0x1b && this._campaignChatInputActive()) {
+            // 채팅 입력줄의 키는 편집기로 보내되 ESC와 F3는 일반 분배기로 보낸다. F3는 입력줄이 보여도 채팅창을 다시 닫을 수 있어야 한다. (2026-11-28 WB04-E1486)
+            if (!(next.code & InputCode.command) && code !== InputCode.leftButton && code !== InputCode.rightButton && code !== InputCode.middleButton && code !== 0x1b && code !== 0x720000 && this._campaignChatInputActive()) {
                 const typed = queue.pop(false); gump.input().route(typed.code, typed.x, typed.y); this._displayDirty = true; continue;
             }
             // 선택 키: P/R(사제)·N(다음 운반체)·H(집으로 점프, 원본 도움말 "F4 or H Jump to your Home Temple"). H 가 빠져 있어 F4 만 집으로 점프했다. (2026-11-21 WB04-E1146)

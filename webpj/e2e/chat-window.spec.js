@@ -109,8 +109,17 @@ test('채팅 입력줄: Enter 로 열리고 문자만 입력줄로 가며 빈 En
   await page.keyboard.type('qwa1 hello'); await page.waitForTimeout(400);
   const typed = await input(); expect(typed.text).toBe('qwa1 hello'); expect(typed.queue).toBeNull();
   expect(await page.evaluate(() => window.netstorm._clientGameplay.camera().snapshot().data.getUint32(0, true))).toBe(camera);
+  // 입력줄이 활성인 상태에서도 F3로 창을 닫고 다시 열며 작성 중인 문장을 보존한다. 원본처럼 입력줄은 Enter로 다시 표시한다.
+  await page.keyboard.press('F3');
+  await expect.poll(input).toMatchObject({ visible: false, text: 'qwa1 hello', mapBottom: 768, queue: null });
+  await page.keyboard.press('F3');
+  await expect.poll(input).toMatchObject({ visible: false, text: 'qwa1 hello', mapBottom: 672, queue: null });
+  await page.keyboard.press('Enter');
+  await expect.poll(input).toMatchObject({ visible: true, text: 'qwa1 hello', mapBottom: 672, queue: null });
   // Backspace 와 방향 키 편집이 된다.
-  await page.keyboard.press('Backspace'); await page.keyboard.press('Backspace'); expect((await input()).text).toBe('qwa1 hel');
+  await page.keyboard.press('Backspace'); await page.keyboard.press('Backspace');
+  // 브라우저 사건은 다음 게임 입력 프레임에서 처리되므로 두 키가 적용된 실제 문장을 기다린다.
+  await expect.poll(async () => (await input()).text).toBe('qwa1 hel');
   // Enter 제출: 단독 미션은 보낼 manager 가 없어 줄이 비워지고 입력줄은 남는다.
   await page.keyboard.press('Enter'); await page.waitForTimeout(500);
   expect(await input()).toMatchObject({ visible: true, text: '' });

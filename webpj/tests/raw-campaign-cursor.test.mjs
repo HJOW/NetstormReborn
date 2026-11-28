@@ -28,6 +28,26 @@ test('CampaignCursor 구성: 같은 풀과 필수 game만 요구하고 실제 �
     const state = new ClientCursorGlobals(); state.lifecycle().previews[29] = 0xfedcba98; const other = s.make({ currentState: state }); assert.equal(other.lifecycle.previews[29], 0xfedcba98);
 });
 
+// 정지한 포인터에서도 공급·공간 조건을 다시 읽고 기존 미리보기와 비용을 보존한다.
+test('CampaignCursor 정지 포인터: 에너지 공급과 공간 변경을 이동 없이 반영한다', () => {
+    const s = new CampaignCursorScene(); // 실제 커서/미리보기 수명과 교체 가능한 게임 판정 경계를 조립한다.
+    let energy = false, space = true; // 같은 위치에서 바뀌는 외부 공급·충돌 조건이다.
+    s.game.placement.describe = (text) => { text.value = energy ? '건설 가능' : '에너지 부족'; return energy ? 1 : 0; };
+    s.game.placement.mayPlace = () => space ? 1 : 0;
+    s.cursor = s.make(); s.cursor.setEffects(s.ui()); s.cursor.snapToGrid.value = 1;
+    s.cursor.take(s.form(), 0x100); s.point();
+    assert.equal(s.drop.legal, 0); assert.equal(s.cursor.placement.description, '에너지 부족');
+    const position = [s.drop.x, s.drop.y], previews = s.cursor.lifecycle.previews.slice(), count = s.cursor.lifecycle.previewCount, balance = s.sp.get(1); // 재조회 전후 같아야 하는 좌표·미리보기·자금이다.
+    energy = true; s.cursor.update(s.mouse.x, s.mouse.y);
+    assert.equal(s.drop.legal, 1); assert.equal(s.cursor.placement.description, '건설 가능');
+    space = false; s.cursor.update(s.mouse.x, s.mouse.y); assert.equal(s.drop.legal, 0);
+    space = true; energy = false; s.cursor.update(s.mouse.x, s.mouse.y); assert.equal(s.drop.legal, 0);
+    assert.equal(s.cursor.placement.description, '에너지 부족');
+    assert.deepEqual([s.drop.x, s.drop.y], position); assert.deepEqual(s.cursor.lifecycle.previews, previews);
+    assert.equal(s.cursor.lifecycle.previewCount, count); assert.equal(s.sp.get(1), balance); assert.equal(s.sent.length, 0);
+    s.cursor.cancel(); s.cursor.update(s.mouse.x, s.mouse.y); assert.equal(s.drop.preview, 0);
+});
+
 test('CampaignCursor 실제 취득·마우스·취소: Form·Canon·미리보기·SHP와 같은 목록이 반납된다', () => {
     const s = new CampaignCursorScene(); const form = s.form(); s.cursor.take(form, 0x100); s.point();
     assert.equal(s.drop.preview, form); assert.equal(s.drop.type, 157); assert.equal(s.drop.lockDepth, 0); assert.equal(s.drop.legal, 1); assert.equal(s.drop.x, 20); assert.equal(s.drop.y, 21);
