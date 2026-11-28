@@ -110,7 +110,7 @@ public static class MusicFileLookup
     }
 }
 
-/// <summary>원문 두 Select 부모다. 실제 채널/파일 열기/worker는 미이식이며 선택된 장치 누락은 제어 본체가 해당 위치에서 거부한다.</summary>
+/// <summary>원문 두 Select 부모다. 실제 채널/파일 장치는 호출자가 연결하고 선택된 누락 장치는 제어 본체가 해당 위치에서 거부한다. worker와 제품 음악 소유자는 별도로 조립한다.</summary>
 public sealed class MusicSelection
 {
     /// <summary>같은 현재256BYTE 이름과 음악 옵션 소유자다.</summary>

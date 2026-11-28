@@ -1920,3 +1920,6 @@ cpppj/src/client/SoundMusic.h	Netstorm.Client/Audio/MusicChannel.cs	225f2322cf79
 cpppj/src/client/SoundMusic.h	Netstorm.Client/Audio/MusicFileTypes.cs	225f2322cf7936604306b6534fd4edf18f246c12	port
 cpppj/src/client/SoundMusicFile.cpp	Netstorm.Game/WindowsMusicFileStore.cs	225f2322cf7936604306b6534fd4edf18f246c12	port
 cpppj/src/client/SoundMusicFile.h	Netstorm.Game/WindowsMusicFileStore.cs	225f2322cf7936604306b6534fd4edf18f246c12	port
+cpppj/src/client/SoundMusic.cpp	Netstorm.Client/Audio/MusicChannel.Open.cs	07885f694e556881a8544ad27a34bc3f79a27aa9	port
+cpppj/src/client/SoundMusic.h	Netstorm.Client/Audio/MusicChannel.Open.cs	225f2322cf7936604306b6534fd4edf18f246c12	port
+cpppj/src/client/SoundMusic.h	Netstorm.Client/Audio/MusicBufferTypes.cs	225f2322cf7936604306b6534fd4edf18f246c12	port
