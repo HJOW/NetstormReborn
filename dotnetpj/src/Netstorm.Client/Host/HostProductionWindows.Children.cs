@@ -69,14 +69,13 @@ public sealed partial class HostProductionWindows
     {
         if (parent == 0) return; uint form = Need(_devices.BindForm)(token, parent); var node = Node(token) ?? throw new InvalidOperationException("생산 Form 실제 Gump 없음"); node.Flags |= 0x40; node.Object = parent; node.Form = form;
     }
-    /// <summary>부모 소실 통지 중 아직 살아 있는 Form을 반납하고 격자의 오래된 참조를 지운다.</summary>
-    /// <remarks>현행 cpppj의 부모0 무동작은 부모가 Form을 반납한 뒤 격자 종료 시 재사용된 슬롯을 다시 삭제한다. 실제 공유 수명 검사에서 확인한 종료 오류를 막기 위해 이 경계만 보완한다.</remarks>
+    /// <summary>부모 소실 통지에서 연결 표식과 Form 번호만 지운다. 부모 번호는 Idle 비교에 남기고 Form은 통지 뒤 원래 종속 삭제에 맡긴다.</summary>
+    /// <remarks>cpppj CP1386의 UnbindLostParent에 맞춰 조기 Form 반납과 소멸한 부모로의 Idle 재연결을 막는다. 일반 Bind의 부모0 무동작은 유지한다.</remarks>
     private void UnbindLostGridParent(uint token, uint parent)
     {
         if (parent != 0) { BindForm(token, parent); return; }
         var node = Node(token) ?? throw new InvalidOperationException("생산 격자의 실제 Gump 없음");
-        if ((node.Flags & 0x40) != 0) Need(_tree.LifetimeHooks.DeleteForm)(node.Form, 0);
-        node.Flags &= ~0x40u; node.Object = 0; node.Form = 0;
+        node.Flags &= ~0x40u; node.Form = 0;
     }
     /// <summary>같은 전체 등록표에서 현재 serial로 살아 있는 노드만 찾는다.</summary>
     private uint Reference(uint serial)

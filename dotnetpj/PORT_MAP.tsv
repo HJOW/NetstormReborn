@@ -589,7 +589,7 @@ cpppj/src/client/RawProcessHostStorage.h	Netstorm.Core/Original/RawProcessHostSt
 cpppj/src/client/RawProcessHostStorage.h	Netstorm.Core/Original/RawProcessHostStorage.Defaults.cs	43faa0b9f0a95fddb45e9a0cfd2370d2075f1822	port
 cpppj/src/client/RawProcessHostStorage.h	Netstorm.Core/Original/RawProcessHostStorage.cs	122c82364e280ff071ab7561bd3151bbc20e6d37	port
 cpppj/src/client/RawProductionControls.cpp	Netstorm.Client/Gump/ProductionInventoryBindings.cs	4ee69f4f8f38835ce5b48213e55d98e162636aba	port
-cpppj/src/client/RawProductionControls.cpp	Netstorm.Client/Host/HostProductionWindows.Children.cs	4ee69f4f8f38835ce5b48213e55d98e162636aba	port
+cpppj/src/client/RawProductionControls.cpp	Netstorm.Client/Host/HostProductionWindows.Children.cs	0cca2c8dd36ebcc2f447722cf16cf35a41d3c31d	port
 cpppj/src/client/RawProductionControls.cpp	Netstorm.Client/Host/HostProductionWindows.Drawing.cs	4ee69f4f8f38835ce5b48213e55d98e162636aba	port
 cpppj/src/client/RawProductionControls.cpp	Netstorm.Client/Host/HostProductionWindows.Events.cs	4ee69f4f8f38835ce5b48213e55d98e162636aba	port
 cpppj/src/client/RawProductionControls.cpp	Netstorm.Client/Host/HostProductionWindows.Root.cs	4ee69f4f8f38835ce5b48213e55d98e162636aba	port

@@ -59,11 +59,13 @@ public sealed partial class HostPriestWorldLiveTests
         finally { loaded.SetValue(session, false); html.CloseAll(); session.ReleasePlayerProcesses(); }
     }
 
-    /// <summary>생산 사건으로 두 격자를 연결한 뒤 공간 자산 삭제가 파생 통지에 도달한다.</summary>
+    /// <summary>실제 부모 삭제·Idle·교체·Form 번호 재사용 뒤에도 종속 삭제 순서와 다른 슬롯을 보존한다.</summary>
     [Theory]
-    [InlineData(80u)]
-    [InlineData(152u)]
-    public void NativeProductionGridsReceiveActualParentDeletion(uint type)
+    [InlineData(80u, false)]
+    [InlineData(80u, true)]
+    [InlineData(152u, false)]
+    [InlineData(152u, true)]
+    public void NativeProductionGridsReceiveActualParentDeletion(uint type, bool replacement)
     {
         var (session, _, surface) = WorldDeletionRootScene(sharedNative: true);
         session.BuildWorldDeletionRootDevices();
@@ -78,11 +80,16 @@ public sealed partial class HostPriestWorldLiveTests
         text.BindPictures(new(assets.TypeTable, assets.Definitions, new(assets.ShapeImage)), () => SpriteColorMapBuilder.BuildSpriteColorMaps(screen.LogicalPalette).Shadow, startup.Configuration);
         var menus = new HostHtmlMenus(menu, html, text, startup, screen, (_, _) => { }); menus.BindInput(new(), _ => { }, (_, _) => { });
         var context = new ProductionControlContext { Storage = surface.Storage, Gameplay = session.Gameplay, Players = session.Gameplay.PlayerRecords, Options = new byte[87] };
-        HostProductionWindows? panel = null; int notices = 0;
+        HostProductionWindows? panel = null; int notices = 0, bindings = 0;
+        // 종속 Form은 통지 복귀 뒤 공통 삭제가 반납하는지 관측한다.
+        var liveFormsAfterNotice = new List<bool>();
         using var ui = new HostGumpFormRuntime(surface.Storage, tree, (token, parent) =>
         {
             if (panel?.Node(token) is null) return false;
-            notices++; panel.ParentGone(token, unchecked((uint)parent)); return true;
+            uint form = panel.Node(token)!.Form;
+            notices++; panel.ParentGone(token, unchecked((uint)parent));
+            liveFormsAfterNotice.Add((session.Pool.Slot((int)form)[11] & 1) == 0);
+            return true;
         }, () => { });
         menus.BindObjectForms(surface.Storage.GumpForms());
         using (var runtime = HostMissionRuntime.Create(session, surface.Storage))
@@ -92,7 +99,10 @@ public sealed partial class HostPriestWorldLiveTests
                 Now = () => 0, Sound = _ => { }, Tell = _ => { }, ConfigInt = (_, fallback) => fallback, Translate = value => value,
                 Changed = () => { }, BaseHandle = (_, _, _, _) => 0, Redraw = (_, _) => { },
                 ClosePopups = () => menus.RequestClosePopups(() => { }), MenuInstances = () => menus.State.Instances,
-                BindForm = (token, parent) => HostProductionFormBinding.Bind(surface.Storage, tree, token, parent),
+                BindForm = (token, parent) => { bindings++; return HostProductionFormBinding.Bind(surface.Storage, tree, token, parent); },
+                // Idle의 부모 비교 뒤 유지 경계에서 멈춰 실제 재연결 여부를 독립 관측한다.
+                UpdateContents = () => false,
+                Maintenance = (_, _) => throw new InvalidOperationException("검사의 생산 유지 경계 도달"),
             });
             uint rootToken = panel.Construct(); var root = Assert.IsType<ProductionRootNode>(panel.Node(rootToken));
             int parent = session.BuildPlayerWorldHooks().Create!(type, 2);
@@ -115,15 +125,39 @@ public sealed partial class HostPriestWorldLiveTests
             Assert.Equal(parent, surface.Storage.GumpForms().Parent((int)popupForm));
             Assert.True(session.DestroyResourceObject(parent, 0));
             Assert.Equal(2, notices);
+            Assert.Equal(new[] { true, true }, liveFormsAfterNotice);
             Assert.NotEqual(0, session.Pool.Slot((int)bridgeForm)[11] & 1);
             Assert.NotEqual(0, session.Pool.Slot((int)teleportForm)[11] & 1);
-            Assert.Equal((0u, 0u, 0u), (bridge.Object, bridge.Form, bridge.Flags & 0x40));
-            Assert.Equal((0u, 0u, 0u), (teleport.Object, teleport.Form, teleport.Flags & 0x40));
+            Assert.Equal(((uint)parent, 0u, 0u), (bridge.Object, bridge.Form, bridge.Flags & 0x40));
+            Assert.Equal(((uint)parent, 0u, 0u), (teleport.Object, teleport.Form, teleport.Flags & 0x40));
             Assert.NotEqual(0, session.Pool.Slot((int)popupForm)[11] & 1);
             tree.Lifetime.Cleanup(); Assert.Null(tree.Node(popup));
             Assert.Equal(0u, surface.Storage.BaseDestroy().PreDepth); Assert.Equal(0u, surface.Storage.BaseDestroy().PostDepth);
+            // 삭제 장면의 모드와 별도로, Player가 오래된 부모를 보존한 전투 입력을 명시한다.
+            surface.Storage.OwnerMode.Fort = false; surface.Storage.OwnerMode.Challenge = false; surface.Storage.OwnerMode.Battle = true;
+            session.MissionPlayer.PlayerKnown = 1; session.MissionPlayer.BattleOwner = 1;
+            BinaryPrimitives.WriteUInt32LittleEndian(session.PlayerRecords.AsSpan(180 + 0x9c), (uint)parent);
+            int previousBindings = bindings;
+            Exception? idleError = Record.Exception(() => panel.Idle(rootToken));
+            var idleFailure = Assert.IsType<InvalidOperationException>(idleError);
+            Assert.Equal("검사의 생산 유지 경계 도달", idleFailure.Message);
+            Assert.Equal(previousBindings, bindings);
+            Assert.Equal(0u, bridge.Form); Assert.Equal(0u, teleport.Form);
+            if (replacement)
+            {
+                // 새로 살아 있는 부모를 선택하면 보존한 옛 번호와 달라져 두 격자를 다시 연결한다.
+                int nextParent = session.BuildPlayerWorldHooks().Create!(80, 2);
+                BinaryPrimitives.WriteUInt32LittleEndian(session.PlayerRecords.AsSpan(180 + 0x9c), (uint)nextParent);
+                var nextFailure = Assert.Throws<InvalidOperationException>(() => panel.Idle(rootToken));
+                Assert.Equal("검사의 생산 유지 경계 도달", nextFailure.Message);
+                Assert.Equal(previousBindings + 2, bindings);
+                Assert.Equal((uint)nextParent, bridge.Object); Assert.Equal((uint)nextParent, teleport.Object);
+                Assert.NotEqual(0u, bridge.Form); Assert.NotEqual(0u, teleport.Form);
+                Assert.Equal(nextParent, surface.Storage.GumpForms().Parent((int)bridge.Form));
+                Assert.Equal(nextParent, surface.Storage.GumpForms().Parent((int)teleport.Form));
+            }
             var borrowed = new List<int>(); var reused = new HashSet<int>();
-            // 실제 FIFO 풀을 순회해 반환된 두 Form 번호가 다른 할당에 재사용될 때까지 보유한다.
+            // 새 부모/Form을 먼저 만든 뒤 FIFO 풀을 순회해 옛 번호를 다른 할당에 재사용한다.
             while (reused.Count < 2 && borrowed.Count < 15000)
             {
                 int sid = session.Pool.Allocate(SidAllocation.Client); borrowed.Add(sid);
