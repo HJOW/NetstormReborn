@@ -79,7 +79,9 @@ internal static class Program
             HostStartupScene? startup = data is null ? null : new HostStartupScene(data, options.SettingsText, null, userOptions);
             startup?.SaveOptions();
             if (startup != null) options.ApplyStartupConfiguration(startup.Configuration);
-            var screen = new Screen(options.Width, options.Height);
+            // 같은 Client의 팔레트 읽음 DWORD를 화면 교체보다 오래 소유한다.
+            var palette = new ClientPaletteGlobals();
+            var screen = new Screen(options.Width, options.Height, palette.Loaded);
             var input = new InputQueue();
             UiScriptRunner? runner = options.UiScriptPath is null ? null : new UiScriptRunner(UiScript.ParseFile(options.UiScriptPath), input, screen);
             // 고정 시각 모드는 호스트 시계 원점보다 먼저 켠다. 기본 모드에서는 OS 시계를 그대로 읽는다.
@@ -88,7 +90,7 @@ internal static class Program
             if (options.FixedFrameMs != 0)
                 clock.EnableFixed(new HostFixedTime(options.FixedFrameMs, UnixSeconds: options.FixedUnixSeconds ?? HostTimeSource.DefaultUnixSeconds));
             driver = new HostFrameDriver(screen, input, runner, clock);
-            using var game = new ClientHostGame(driver, options, startup, clock);
+            using var game = new ClientHostGame(driver, options, startup, clock, palette);
             game.Run();
         }
         catch (Exception exception)

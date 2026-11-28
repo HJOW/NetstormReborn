@@ -20,7 +20,16 @@ public sealed class ColorSortStartupGlobals
     public uint Count;
 
     /// <summary>현재 팔레트 불러옴 여부(00555e08). 0이면 진단 뒤 계속한다.</summary>
-    public uint PaletteLoaded;
+    public uint PaletteLoaded { get => PaletteLoadedOwner.Value; set => PaletteLoadedOwner.Value = value; }
+
+    /// <summary>같은 Client/Screen의 00555e08 DWORD를 값 사본 없이 빌린다.</summary>
+    public UIntBox PaletteLoadedOwner { get; }
+
+    /// <summary>독립 원문 검사 API의 처음0인 저장소를 유지한다.</summary>
+    public ColorSortStartupGlobals() : this(new UIntBox()) { }
+
+    /// <summary>명시 실제 저장소의 현재값을 초기화하거나 미리 읽지 않는다.</summary>
+    public ColorSortStartupGlobals(UIntBox paletteLoaded) => PaletteLoadedOwner = paletteLoaded ?? throw new ArgumentNullException(nameof(paletteLoaded));
 }
 
 /// <summary>

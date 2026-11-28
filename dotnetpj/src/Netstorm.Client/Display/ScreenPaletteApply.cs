@@ -1,3 +1,5 @@
+using Netstorm.Core.Original;
+
 namespace Netstorm.Client.Display;
 
 /// <summary>
@@ -47,6 +49,20 @@ public static class ScreenPaletteApply
     public static void ApplyScreenPaletteClear(uint clear, uint flags, ref uint loaded, ScreenPaletteApplyHooks hooks)
     {
         loaded = 1;
+        ApplyClearBody(clear, flags, hooks);
+    }
+
+    /// <summary>같은 Client DWORD에 먼저1을 직접 쓴다. callback의 변경/예외 뒤 값을 임시1로 되쓰지 않는다.</summary>
+    public static void ApplyScreenPaletteClear(uint clear, uint flags, UIntBox loaded, ScreenPaletteApplyHooks hooks)
+    {
+        ArgumentNullException.ThrowIfNull(loaded);
+        loaded.Value = 1;
+        ApplyClearBody(clear, flags, hooks);
+    }
+
+    /// <summary>기존 ref API와 실제 live box API가 공유하는 원문 clear 관문/필수 장치 순서다.</summary>
+    private static void ApplyClearBody(uint clear, uint flags, ScreenPaletteApplyHooks hooks)
+    {
         if (clear != 0 && flags != 0)
         {
             ScreenPaletteApplyHooks.Need(hooks.Lock, nameof(hooks.Lock));

@@ -22,10 +22,12 @@ public sealed class HostStartupScene
     private readonly string? _userOptionsPath;
     /// <summary>같은 클라이언트 수명에서 현재 Tell 이름을 보존한다.</summary>
     public TellSectionState TellState { get; } = new();
-    /// <summary>설정의 fortPal 파일 팔레트.</summary>
-    private readonly GamePalette _palette;
-    /// <summary>입자 첫색표가 실제 게임 자산과 같은 불변COL 색번호를 빌린다.</summary>
-    public GamePalette Palette => _palette;
+    /// <summary>최초 팔레트 적용 위치에서 선택한 자산 경로다. 화면의 현재 날씨 팔레트와 구별한다.</summary>
+    private string _palettePath;
+    /// <summary>입자 색 띠가 빌리는 최초 불변 자산이다. 실제 FILE 화면 로더와 별도로 필요할 때만 해독한다.</summary>
+    private GamePalette? _palette;
+    /// <summary>CPP GameAssets.Palette처럼 최초 자산을 유지하며 화면 파일 적재를 대신하지 않는다.</summary>
+    public GamePalette Palette => _palette ??= new GamePalette(Files.ReadAllBytes(_palettePath));
     /// <summary>새 제품 Credits 상세를 같은 Config 수명에 보관하는 등록 객체다.</summary>
     private readonly Config _productCredits;
     /// <summary>구름(Kencloud) 전역·주소 공간 소유자다. 메인 메뉴 진입의 팔레트 전환이 구름을 만들고 이동시킨다(0.381).</summary>
@@ -66,7 +68,7 @@ public sealed class HostStartupScene
         if (palettePath.Length == 0 || titlePath.Length == 0) throw new InvalidDataException("시작 화면 팔레트 또는 타이틀 경로 설정이 없다");
         // 구름 옵션(cloudiness·cloudSpeed·cloudFury 등)을 읽는다. 구름 파일은 메인 메뉴 진입의 팔레트 전환에서 읽는다(원문 435220 위치, 0.381).
         Cloud.ReadOptions(Configuration);
-        _palette = new GamePalette(Files.ReadAllBytes(palettePath));
+        _palettePath = palettePath;
         _title = Netstorm.Client.Display.GifImage.DecodeGif(Files.ReadAllBytes(titlePath));
     }
 
@@ -180,16 +182,24 @@ public sealed class HostStartupScene
     /// </remarks>
     /// <param name="prepareColors">최초 팔레트 직후 실제 Client의 초기화·색표 소유자를 연결한다. 독립 장면에는 생략한다.</param>
     /// <param name="rebuildColors">fort 팔레트 전환 뒤 같은 고정 입력으로 실제9표를 갱신한다.</param>
-    public void Draw(Screen screen, Action<Screen>? prepareColors = null, Action<Screen>? rebuildColors = null)
+    /// <param name="loadPalette">실제10.78 Game가 공급하는 현재 FILE 로더다. 없으면 독립 장면의 값형 입구를 쓴다.</param>
+    public void Draw(Screen screen, Action<Screen>? prepareColors = null, Action<Screen>? rebuildColors = null,
+        Action<Screen, string, uint>? loadPalette = null)
     {
         ArgumentNullException.ThrowIfNull(screen);
         if (!ReferenceEquals(_preparedScreen, screen))
         {
             // 모드가 정해지지 않은 화면에서는 검정 채움(clear)을 쓸 수 없어 0으로 읽는다. 호스트는 모드를 정한 뒤 불러 원문대로 1이다.
-            screen.LoadPalette(_palette, (screen.Flags & ScreenMode.ModeSet) != 0 ? 1u : 0u);
+            string path = Configuration.PathSpec("GamePalSpec", Configuration.PathSpec("fortPal"));
+            if (path.Length == 0) throw new InvalidDataException("시작 화면 팔레트 경로 설정이 없다");
+            // 최초 실제 선택 경로를 입자용 고정 자산에도 빌린다. 재생성은 이미 만든 자산을 바꾸지 않는다.
+            if (_preparedScreen is null && _palette is null) _palettePath = path;
+            uint clear = (screen.Flags & ScreenMode.ModeSet) != 0 ? 1u : 0u;
+            if (loadPalette is null) screen.LoadPalette(Palette, clear);
+            else loadPalette(screen, path, clear);
             prepareColors?.Invoke(screen);
             _preparedScreen = screen;
-            ChangeFortPalette(screen, rebuildColors);
+            ChangeFortPalette(screen, rebuildColors, loadPalette);
         }
         // 구름: 원문 렌더러 앞단이 모드 변경·force 때 하는 전체 표시 요청 → 현재 화면 전체(카메라 원점 0) 표시 → 정리 순서다.
         Cloud.MarkDirty();
@@ -228,7 +238,7 @@ public sealed class HostStartupScene
     /// 실제 Game은 같은 최초 ColorSort 입력과9표를 갱신한다. 독립 장면은 Screen의 독립 계산을 사용한다.
     /// 진단 로그(<c>Palette 29 init palette</c>)는 아직 호스트 로그 장치가 없어 남기지 않는다.
     /// </remarks>
-    private void ChangeFortPalette(Screen screen, Action<Screen>? rebuildColors)
+    private void ChangeFortPalette(Screen screen, Action<Screen>? rebuildColors, Action<Screen, string, uint>? loadPalette)
     {
         byte[] name = Encoding.Latin1.GetBytes(Configuration.PathSpec("fortPal") + '\0');
         var devices = new FortPaletteTransitionHooks
@@ -239,7 +249,9 @@ public sealed class HostStartupScene
                 int end = path.IndexOf((byte)0);
                 if (end < 0) throw new ArgumentOutOfRangeException(nameof(path), "전체 팔레트 현재 경로 NUL 누락");
                 string file = Encoding.Latin1.GetString(path[..end]);
-                screen.LoadPalette(new GamePalette(Files.ReadAllBytes(file)), (screen.Flags & ScreenMode.ModeSet) != 0 ? clear : 0u);
+                uint selectedClear = (screen.Flags & ScreenMode.ModeSet) != 0 ? clear : 0u;
+                if (loadPalette is null) screen.LoadPalette(new GamePalette(Files.ReadAllBytes(file)), selectedClear);
+                else loadPalette(screen, file, selectedClear);
             },
             BuildMaps = () => rebuildColors?.Invoke(screen),
         };

@@ -164,19 +164,19 @@ public sealed partial class ClientHostGame : Game
     /// <summary>
     /// 화면·큐·실행기 골격과 인자로 만든다.
     /// </summary>
-    /// <param name="driver">프레임 골격.</param>
-    /// <param name="options">실행 인자.</param>
-    /// <param name="startup">실제 파일에서 읽은 시작 화면.</param>
-    /// <param name="clock">메뉴·위젯이 쓰는 현재 시각 공급원(없으면 기본 OS 시계).</param>
-    public ClientHostGame(HostFrameDriver driver, HostOptions options, HostStartupScene? startup = null, HostTimeSource? clock = null)
+    /// <param name="construction">base Game 생성 전에 같은 팔레트 소유자 인계를 확인한 원래 인자다.</param>
+    private ClientHostGame(PaletteConstruction construction)
     {
-        ArgumentNullException.ThrowIfNull(driver);
-        ArgumentNullException.ThrowIfNull(options);
+        HostFrameDriver driver = construction.Driver;
+        HostOptions options = construction.Options;
+        HostStartupScene? startup = construction.Startup;
+        HostTimeSource? clock = construction.Clock;
+        _paletteGlobals = construction.Palette;
         _driver = driver;
         _options = options;
         _startup = startup;
         _staticStrings = new ClientStaticStrings(startup?.Files.FileNameOwner);
-        _startupColors = startup is null ? null : new HostStartupColorMaps(startup, InitializeNativePrefix, PrepareStartupColorAssets);
+        _startupColors = startup is null ? null : new HostStartupColorMaps(startup, InitializeNativePrefix, PrepareStartupColorAssets, null, _paletteGlobals);
         _gameplay = new(_subscriberGlobals);
         _chatGlobals = new(OriginalEdition.Patch1078, () => _subscriberGlobals.MySubscriber.Value);
         InterpretNsInfoOptions();

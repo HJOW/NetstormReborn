@@ -1,3 +1,6 @@
+using System.Runtime.InteropServices;
+using Netstorm.Core.Original;
+
 namespace Netstorm.Client.Display;
 
 /// <summary>
@@ -23,7 +26,7 @@ public interface IScreenOutput
 /// 사용: 생성 → <see cref="SetMode"/> → <see cref="LoadPalette"/> → <see cref="Lock"/>으로 얻은 버퍼에 그린 뒤 <see cref="Unlock"/> → <see cref="Update"/>.
 /// 근거: 원본 004a1270·004a4570·004a4fe0·004a2640·004a14e0·004a1580·004a1800, cpppj/src/client/Screen.cpp. (2026-10-28 R1에서 이식)
 /// </summary>
-public sealed class Screen
+public sealed partial class Screen
 {
     /// <summary>논리 팔레트 항목의 플래그(원본이 쓰는 4 = PC_NOCOLLAPSE).</summary>
     private const byte PaletteEntryFlags = 4;
@@ -40,8 +43,11 @@ public sealed class Screen
     /// <summary>현재 표시 팔레트(DAT_0059afe0).</summary>
     private readonly ScreenColor[] _current = new ScreenColor[256];
 
-    /// <summary>저장 팔레트(DAT_005acd28). 파일 팔레트와 모드 전환 때 복구하는 값이다.</summary>
-    private ScreenColor[] _saved = new ScreenColor[256];
+    /// <summary>같은 저장 팔레트(DAT_005acd28)의 실제1024BYTE다. FILE이 이 배열을 직접 기록하며 모드 전환도 배열을 교체하지 않는다.</summary>
+    private readonly byte[] _saved = new byte[1024];
+
+    /// <summary>동일1024BYTE의 BGRX256칸 뷰다. 전체 decoder 사본이나 성공 뒤 복사로 부분 읽기를 지연하지 않는다.</summary>
+    private Span<ScreenColor> SavedPaletteColors => MemoryMarshal.Cast<byte, ScreenColor>(_saved.AsSpan());
 
     /// <summary>논리 팔레트(DAT_005c7954): 빨강·초록·파랑·플래그 DWORD 256개. 색 검색은 이 값을 읽는다.</summary>
     private readonly uint[] _logical = new uint[256];
@@ -58,8 +64,8 @@ public sealed class Screen
     /// <summary>현재 자르기 영역(DAT_005c7a44~50). Right·Bottom은 포함하지 않는다.</summary>
     private ScreenRect _clip;
 
-    /// <summary>팔레트 읽음 DWORD(00555e08). 실제 Client가 소유하게 되면 R4에서 그 전역을 빌린다.</summary>
-    private uint _paletteLoaded;
+    /// <summary>같은 Client가 소유하는 팔레트 읽음 DWORD(00555e08)를 빌린다. 모드 변경/화면 재생성에서 초기화하지 않는다.</summary>
+    private readonly UIntBox _paletteLoaded;
 
     /// <summary>파일 팔레트에서 계산한 기본·날씨 색 번호 표. 일시 팔레트 효과에는 갱신하지 않는다.</summary>
     private PaletteColorTable _colors = new();
@@ -76,8 +82,12 @@ public sealed class Screen
     /// <summary>논리 화면을 만든다. 모든 픽셀은 0번 색, 팔레트는 검정이며 모드는 아직 정해지지 않았다(flags 0).</summary>
     /// <param name="width">논리 폭(양수).</param>
     /// <param name="height">논리 높이(양수).</param>
-    public Screen(int width, int height)
+    public Screen(int width, int height) : this(width, height, new UIntBox()) { }
+
+    /// <summary>같은 Client의 DWORD를 빌려 새 화면을 만든다. 현재 팔레트 배열은 새 화면 소유이며 loaded 값은 읽거나 초기화하지 않는다.</summary>
+    public Screen(int width, int height, UIntBox paletteLoaded)
     {
+        _paletteLoaded = paletteLoaded ?? throw new ArgumentNullException(nameof(paletteLoaded));
         if (width <= 0 || height <= 0) throw new ArgumentOutOfRangeException(nameof(width), "화면 크기는 양수여야 한다.");
         Width = width;
         Height = height;
@@ -102,7 +112,10 @@ public sealed class Screen
     public uint Flags => _flags;
 
     /// <summary>팔레트 읽음 DWORD. 파일 팔레트를 읽은 뒤 1이다.</summary>
-    public uint PaletteLoaded => _paletteLoaded;
+    public uint PaletteLoaded => _paletteLoaded.Value;
+
+    /// <summary>Screen/색표/Client 사이에 identity로 공유하는 실제 DWORD 소유자다.</summary>
+    public UIntBox PaletteLoadedOwner => _paletteLoaded;
 
     /// <summary>현재 표시 팔레트. 호스트가 인덱스를 색으로 바꿀 때 읽는다.</summary>
     public ReadOnlySpan<ScreenColor> Palette => _current;
@@ -133,7 +146,7 @@ public sealed class Screen
         _buffer = null;
         if (flags == _flags) return true;
         if (!ScreenGeometry.ScreenModeIsLegal(flags, true)) return false;
-        _saved = (ScreenColor[])_current.Clone();
+        MemoryMarshal.AsBytes(_current.AsSpan()).CopyTo(_saved);
         _flags = flags;
         SetPalette(0, PaletteSize, null, true);
         return true;
@@ -151,24 +164,24 @@ public sealed class Screen
     /// <param name="apply">현재 표시 팔레트에 반영할지.</param>
     public void SetPalette(uint start, uint count, ScreenColor[]? colors, bool apply)
     {
-        colors ??= _saved;
+        Span<ScreenColor> selected = colors is null ? SavedPaletteColors : colors.AsSpan();
         uint end = unchecked(start + count);
         // 논리 팔레트 항목: 빨강·초록·파랑·플래그 순서.
         for (uint i = start; i < end && i < PaletteSize; i++)
         {
-            ScreenColor color = colors[i - start];
+            ScreenColor color = selected[unchecked((int)(i - start))];
             _logical[i] = color.Red | ((uint)color.Green << 8) | ((uint)color.Blue << 16) | ((uint)PaletteEntryFlags << 24);
         }
         // 0번은 검정, 255번은 흰색으로 고정한다(플래그 없음).
         _logical[0] = 0;
         _logical[255] = 0x00ffffff;
-        if (start == 0) colors[0] = default;
+        if (start == 0) selected[0] = default;
         // 원본은 colors[255]에 쓴다(start가 0이라고 가정한 코드). 부분 배열을 넘겨도 범위를 넘지 않게 끝 항목에 쓴다.
-        if (end == PaletteSize) colors[PaletteSize - 1 - start] = new ScreenColor(0xff, 0xff, 0xff, 0);
+        if (end == PaletteSize) selected[unchecked((int)(PaletteSize - 1 - start))] = new ScreenColor(0xff, 0xff, 0xff, 0);
         if (!apply) return;
         if (count == 0) { start = 0; count = PaletteSize; }
         // 현재 표시 팔레트에 복사한다.
-        for (uint i = 0; i < count && start + i < PaletteSize; i++) _current[start + i] = colors[i];
+        for (uint i = 0; i < count && start + i < PaletteSize; i++) _current[start + i] = selected[unchecked((int)i)];
         if ((_flags & ScreenMode.FullScreen) != 0) Update(new ScreenRect(0, 0, Width, Height));
     }
 
@@ -182,13 +195,20 @@ public sealed class Screen
     /// <param name="patch1078">10.78이면 참이다. 거짓이면 CD판처럼 12~19번 추가 색을 빼고 색 표를 계산한다.</param>
     public void LoadPalette(GamePalette palette, uint clear = 0, bool patch1078 = true)
     {
-        // 색 번호를 그대로 유지한다.
-        for (int i = 0; i < _saved.Length; i++)
+        // 같은 저장 물리의 색 번호를 그대로 유지한다.
+        Span<ScreenColor> saved = SavedPaletteColors;
+        for (int i = 0; i < saved.Length; i++)
         {
             PaletteColor color = palette.Color((byte)i);
-            byte reserved = palette.Reserved((byte)i) ?? _saved[i].Reserved;
-            _saved[i] = new ScreenColor(color.Blue, color.Green, color.Red, reserved);
+            byte reserved = palette.Reserved((byte)i) ?? saved[i].Reserved;
+            saved[i] = new ScreenColor(color.Blue, color.Green, color.Red, reserved);
         }
+        ApplySavedPalette(clear, patch1078);
+    }
+
+    /// <summary>완성 값/CD와 실제 FILE 입구가 공유하는 기존 clear→현재/논리 팔레트→색표/명암 후단이다.</summary>
+    private void ApplySavedPalette(uint clear, bool patch1078)
+    {
         var devices = new ScreenPaletteApplyHooks
         {
             Lock = () => Lock(),
@@ -210,7 +230,7 @@ public sealed class Screen
                 if ((_flags & ScreenMode.Flipping) != 0) throw new InvalidOperationException("팔레트전환 DirectDraw flip 장치 미복원");
             },
         };
-        ScreenPaletteApply.ApplyScreenPaletteClear(clear, _flags, ref _paletteLoaded, devices);
+        ScreenPaletteApply.ApplyScreenPaletteClear(clear, _flags, _paletteLoaded, devices);
         SetPalette(0, PaletteSize, null, true);
         // 파일 로더에서만 색 표를 다시 계산한다. 일시 팔레트 효과(SetPalette·번개)는 표를 바꾸지 않는다
         _colors = PaletteColors.BuildPaletteColorTable(_logical, patch1078);

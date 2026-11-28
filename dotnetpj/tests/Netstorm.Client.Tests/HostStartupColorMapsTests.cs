@@ -12,9 +12,9 @@ public sealed class HostStartupColorMapsTests
     /// <summary>실제 게임 자산을 읽기 전용으로 여는 시작 자료다.</summary>
     private static HostStartupScene Startup() => new(GameDataLocator.FindDataDirectory() ?? throw new InvalidOperationException("실제 시작 자산 부재"));
     /// <summary>현재 모드가 확정된 실제 논리 화면이다.</summary>
-    private static Screen Screen()
+    private static Screen Screen(UIntBox? loaded = null)
     {
-        var screen = new Screen(1024, 768); Assert.True(screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); return screen;
+        var screen = loaded is null ? new Screen(1024, 768) : new Screen(1024, 768, loaded); Assert.True(screen.SetMode(ScreenMode.BackBufferDib | ScreenMode.ModeSet)); return screen;
     }
     /// <summary>다른 검사/사용자 저장물과 섞이지 않는 검사 소유 폴더다.</summary>
     private static UserDataRoot Root() => new(Path.Combine(Path.GetTempPath(), "Netstorm-StartupColors-" + Guid.NewGuid().ToString("N")));
@@ -46,7 +46,7 @@ public sealed class HostStartupColorMapsTests
             byte[] bridge = owner.Input.OwnerTables.Color(82, 1); Assert.Equal(256, bridge.Length);
             GumpShadeMaps shades = screen.ShadeMaps(); Assert.Equal(maps[4], shades.Bright); Assert.Equal(maps[6], shades.Dark); Assert.NotSame(maps[4], shades.Bright);
             uint playerBase = game.PlayerRecords.Base; startup.Draw(screen, owner.PrepareScreen, owner.Rebuild);
-            var next = Screen(); startup.Draw(next, owner.PrepareScreen, owner.Rebuild);
+            var next = Screen(owner.PaletteGlobals.Loaded); startup.Draw(next, owner.PrepareScreen, owner.Rebuild);
             Assert.Equal(1, prefixes); Assert.Equal(1, types); Assert.Equal(playerBase, game.PlayerRecords.Base);
             Assert.Same(primary, owner.Input.Primary); Assert.Equal(primaryBytes, primary.Bytes.ToArray()); Assert.Equal(first, owner.Input.Logical.ToArray());
             Assert.Same(maps, owner.Input.Maps); Assert.True(tokens.Equals(owner.Input.OwnerTables.Tokens)); Assert.Same(bridge, owner.Input.OwnerTables.Color(82, 1));
@@ -90,7 +90,7 @@ public sealed class HostStartupColorMapsTests
         int[] fileOrder = [2, 7, 6, 4, 3, 5, 1, 0, 8];
         // 파일의 각256BYTE가 원문 순서의 같은 출력 행에 들어갔는지 독립 입력과 비교한다.
         for (int index = 0; index < fileOrder.Length; index++) Assert.Equal(cache.AsSpan(index * 256, 256).ToArray(), maps[fileOrder[index]]);
-        var next = Screen(); owner.PrepareScreen(next); owner.PrepareScreen(screen);
+        var next = Screen(owner.PaletteGlobals.Loaded); owner.PrepareScreen(next); owner.PrepareScreen(screen);
         Assert.Equal(1, prefixes); Assert.Equal(1, types); Assert.Equal(logical, owner.Input.Logical.ToArray()); Assert.Same(primary, owner.Input.Primary);
         Assert.Same(maps, owner.Input.Maps); Assert.Equal(cache, File.ReadAllBytes(path)); Assert.Equal(maps[4], next.ShadeMaps().Bright); Assert.Equal(maps[6], next.ShadeMaps().Dark);
     }

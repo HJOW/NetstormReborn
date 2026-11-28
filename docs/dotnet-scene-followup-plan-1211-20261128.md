@@ -2,7 +2,7 @@
 
 2026-11-28, HJOW-Athlon. AGENTS.md·LEFT_JOBS.md·LEFT_JOBS.dotnetpj.md를 다시 읽고 현재 DN 제품 소스와 CPP 복원 소스, 기존 [1.206 장기 음향 계획](dotnet-audio-owner-followup-1206-20261128.md)을 대조했다. 기존 ignored 읽기 메모 `extracted/dotnet-1212-scene-plan.md`의 실제 getter/호출 순서 조사를 추적 가능한 문서로 옮기고,1.211의 제품 반영 상태를 다시 확인했다. getter 부분은 독립 읽기 검토와도 교차 확인했다. 이 문서 작성에서는 제품 src/tests·다른 docs·LEFT·PORT_MAP·원본 자료를 수정하지 않았고 빌드·검사·게임 실행을 하지 않았다.
 
-**2026-11-28 사용자 요청으로1.214 검증·문서·커밋 뒤 목표를 일시 중지한다.** 1.213 A의 공유 값,1.214 B의 원문 두 조회/실제 월드 대여를 마쳤다. B의 감독 hook 설치와 C–H는 남은 후속이며 실제 Start/Frame·전체 State 부모 완료와 구별한다. 구현 번호는 각 단위를 시작할 때 현행 인수인계에서 정한다. 기존 ignored 파일명의1212를 실제 Scene 구현 완료/진행 번호로 해석하지 않는다.
+**2026-11-28 새 사용자 goal로 재개했다. Scene C의 실제 FILE·공유 loaded는 [1.217](dotnet-canon-1217-20261128.md)에서 검증했다.** 이전1.214 중지 시점: 1.213 A의 공유 값,1.214 B의 원문 두 조회/실제 월드 대여를 마쳤다. B의 감독 hook 설치와 C–H는 남은 후속이며 실제 Start/Frame·전체 State 부모 완료와 구별한다. 구현 번호는 각 단위를 시작할 때 현행 인수인계에서 정한다. 기존 ignored 파일명의1212를 실제 Scene 구현 완료/진행 번호로 해석하지 않는다.
 
 ## 1. 범위와 현재 기준
 
@@ -172,11 +172,11 @@ Getter/월드 조회와 palette/Thunder는 독립 집중 단위로 나눌 수 �
 
 ## 9. 1.214 중지 시점의 재개 준비물
 
-사용자 요청으로1.214를 마친 뒤 중지한다. 다음은 모두 이 PC의 ignored 초안이며 제품 수입/빌드/검사 완료가 아니다. 재개 때 source SHA를 재대조하며 C→D/E→F/G/H 순서와 기존 R5/State 우선순위를 유지한다.
+사용자 요청으로1.214를 마친 뒤 중지한다. 다음은 모두 이 PC의 ignored 초안이며 제품 수입/빌드/검사 완료가 아니다. 1.217에서 C의 source SHA 대조·실제 반영/검증을 마쳤다. 아래 C 행의 미구현 설명은 중지 당시 기록이며 현행은1.217 문서다. 다음 D/E→F/G/H 순서와 기존 R5/State 우선순위를 유지한다.
 
 | 준비물 | 경로·현재 한계 |
 | --- | --- |
-| C 공유 loaded/파일 부모17파일 | `extracted/dotnet-scene-palette-draft/CLIENT_PALETTE_WIRING.md`, `STARTUP_NATIVE_PALETTE_FOLLOWUP.md`. 최초/fort가 여전히 cached GamePalette decoder를 선택한다. native 실제 입구, 중복 읽기와 Construction/Burning의 Palette 소비자, assertion callback 정책을 함께 정리해야 한다. 미빌드·미실행, 핵심4범위 peer만 확인했다. |
+| C 공유 loaded/파일 부모17파일 — 1.217 반영·검증 완료 | `extracted/dotnet-scene-palette-draft/CLIENT_PALETTE_WIRING.md`, `STARTUP_NATIVE_PALETTE_FOLLOWUP.md`. 최초/fort가 여전히 cached GamePalette decoder를 선택한다. native 실제 입구, 중복 읽기와 Construction/Burning의 Palette 소비자, assertion callback 정책을 함께 정리해야 한다. 미빌드·미실행, 핵심4범위 peer만 확인했다. |
 | D 소비자10파일 | `extracted/dotnet-scene-refresh-draft/README.md`. 같은 UI/스타일/entry의 setter4개와 공통 갱신/현재9maps 별칭, 검사5case 초안이다. 실제 종단 연결·SoftwareMouse·meta/감독은 미완료다. 기본 창/fallback과 명시 SoftwareMouse 선택을 구별한다. |
 | E 실제 Thunder4파일 | `extracted/dotnet-scene-thunder-draft/README.md`, 기존 process3파일은 `extracted/dotnet-thunder-draft/`. 같은 현재 기술DWORD/Surface/Host/Kernel/Screen 부착, 실제 모드3입구·최종 종료 삽입 위치와 검사8case를 준비했다. 미빌드·미실행·추가 peer 미실시다. |
 | F 초기 순서1파일 | `extracted/dotnet-scene-start-draft/README.md`. 코드·검사0이다. 현재 Prefix가 Clock/Player, Chat bool이 Issue/Chat을 함께 묶고 intro가 늦다. LoadContent의 GPU와 domain 초기화 분리 및 실패 재진입 정책을 먼저 정한 뒤 성공 단계를 구별해야 한다. |

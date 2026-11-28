@@ -63,7 +63,16 @@ public sealed partial class ClientHostGame
     {
         HostStartupScene startup = _startup ?? throw new InvalidOperationException("실제 시작 장면 미연결");
         HostStartupColorMaps colors = _startupColors ?? throw new InvalidOperationException("실제 시작 색표 장치 미연결");
-        startup.Draw(_driver.Screen, colors.PrepareScreen, colors.Rebuild);
+        startup.Draw(_driver.Screen, colors.PrepareScreen, colors.Rebuild, LoadNativeStartupPalette);
         if (_buttonSound is null || _cursor is null) throw new InvalidOperationException("실제 시작 색표의 음향/커서 준비 미완료");
+    }
+
+    /// <summary>완성 경로와 원래 clear를 같은 현재 Screen/FILE 장치에 전달한다. 진단 복귀도 중앙 정책을 따른다.</summary>
+    private void LoadNativeStartupPalette(Screen screen, string path, uint clear)
+    {
+        HostStartupScene startup = _startup ?? throw new InvalidOperationException("실제 팔레트의 시작 파일 장치 미연결");
+        _paletteGlobals.RequireScreen(screen);
+        screen.LoadNativePaletteFile(startup.Files, path, clear, () => new WindowsBaseFileDevice(),
+            line => ErrorLog.RecordAssertion("팔레트 파일 길이 진단", @".\Screen.cpp", line));
     }
 }
