@@ -136,6 +136,7 @@ cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.RootFactories.cs	28
 cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.StateResources.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Game/HostStartupColorMaps.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	port
+cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.Pause.cs	dd69e40b22dd3f22387d12cbaa4de5f53abca2fe	port
 cpppj/src/client/ClientMain.h	Netstorm.Client/ClientClockGlobals.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
 cpppj/src/client/ClientMain.h	Netstorm.Client/ClientStaticStrings.cs	fca7f52127165cf67c20a8dafd7e56182839de30	port
 cpppj/src/client/ClientMain.h	Netstorm.Client/ClientSurfaceGlobals.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
@@ -143,6 +144,7 @@ cpppj/src/client/ClientMain.h	Netstorm.Client/Host/HostFrameDriver.cs	635906357c
 cpppj/src/client/ClientMain.h	Netstorm.Game/ClientHostGame.NativePrefix.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
 cpppj/src/client/ClientMain.h	Netstorm.Game/ClientHostGame.NsInfo.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
 cpppj/src/client/ClientMain.h	Netstorm.Game/ClientHostGame.PacketRecord.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
+cpppj/src/client/ClientMain.h	Netstorm.Game/ClientHostGame.Pause.cs	dd69e40b22dd3f22387d12cbaa4de5f53abca2fe	port
 cpppj/src/client/ClientNsInfoGlobals.cpp	Netstorm.Client/ClientNsInfoGlobals.cs	d97301dc5ffef7abd58a701a06efa1dc9151fd77	port
 cpppj/src/client/ClientNsInfoGlobals.h	Netstorm.Client/ClientNsInfoGlobals.cs	080c977d6be0b1c19cde69ac844b03f3d4e23b7c	port
 cpppj/src/client/ClientOptionsFile.cpp	Netstorm.Client/Host/HostOptionsFile.cs	0c2990694b50d216e2e58e5681de483b2b0bb581	port
