@@ -35,6 +35,8 @@ public sealed class SoundPlayer
     }
     /// <summary>원문의 투영/판정/좌우/음량 위치마다 현재 카메라/영역을 값으로 읽는다.</summary>
     public SoundView CurrentView() => _state.CurrentView?.Invoke() ?? _state.View;
+    /// <summary>공유 음소거 제어가 이 재생기와 같은 실제 전역을 빌리는지 확인한다.</summary>
+    internal bool UsesState(SoundState state) => ReferenceEquals(_state, state);
     /// <summary>원문 표의 실제 범위 검사를 통해 현재 머리 필드를 읽는다.</summary>
     private uint Get(uint entry, SoundField field) => _list.Field(entry, field);
     /// <summary>원문 표의 현재 머리 필드만 쓴다.</summary>
