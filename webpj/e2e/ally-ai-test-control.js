@@ -1,11 +1,12 @@
 // 사용자 허용 미션의 실제 AI만 켜는 e2e 전용 설정이다. debug.html의 ES 모듈 앱에서 미션 진입 전에 설치한다.
-const { assertAllyAiMission } = require('./ally-ai-scope');
+const { assertAllyAiMission, allyAiCondition } = require('./ally-ai-scope');
 // preserveDifficulty=true이면 현재 스커미시/옵션 난이도를 그대로 사용해 배율을 관찰한다. 기본값은 기존 아군 어려움·적 쉬움이다.
-async function installAllyAi(page, mission, { preserveDifficulty = false } = {}) {
+async function installAllyAi(page, mission, { preserveDifficulty = false, profile = 'default' } = {}) {
   // 최신 사용자 범위를 공용 CLI와 공유하고 실제 페이지 접근 전에 검사한다.
   const normalized = assertAllyAiMission(mission);
+  allyAiCondition(0, profile);
   if (typeof preserveDifficulty !== 'boolean') throw new TypeError('아군 AI 검사 난이도 보존 선택은 boolean이어야 한다');
-  await page.evaluate(async ({ name, preserveDifficulty }) => {
+  await page.evaluate(async ({ name, preserveDifficulty, profile }) => {
     // 원래 시작 몸체와 설정 초기화기를 그대로 빌린다.
     const { RawCampaignMissionStartBindings } = await import(new URL('./core/raw-campaign-mission-start-bindings.js', location.href));
     const { RawMissionAiSettings, MISSION_AI_SETTINGS_SIZE } = await import(new URL('./core/raw-mission-ai-settings.js', location.href));
@@ -25,7 +26,7 @@ async function installAllyAi(page, mission, { preserveDifficulty = false } = {})
       if (app._clientGuide?.current()?.script.name.toLowerCase() !== name) return;
       const session = app._campaignWorld.session(), owner = session.localOwner(), records = session.playerRecords();
       if (owner < 1 || owner > 8 || session.editor() || !this.findLivePriest(owner)) throw new Error('검사 아군 AI 생성 전제 오류');
-      // 현재 이름·동맹·SP·기술을 먼저 읽는다.1-6처럼 원래 시나리오가 로컬AI를 만든 경우 그 실제brain을 재사용한다.
+      // 현재 이름·동맹·SP·기술을 먼저 읽고 기본 전략에서는 시나리오의 기존 brain을 재사용한다.
       const currentName = records.subarray(owner * 180 + 12, owner * 180 + 44), nul = currentName.indexOf(0), length = Math.min(nul < 0 ? currentName.length : nul, 29);
       const players = new DataView(records.buffer, records.byteOffset, records.byteLength), money = session.sp(owner);
       // 실제 기술 목록과 첫 NUL까지의 이름을 읽어 생성 자체가 진행을 바꾸지 않았는지 확인한다.
@@ -33,10 +34,14 @@ async function installAllyAi(page, mission, { preserveDifficulty = false } = {})
       const technology = () => Array.from({ length: session.core().types.length - 1 }, (_, index) => Boolean(session.findTechnology(owner, index + 1)));
       const before = { money, allies: players.getUint32(owner * 180 + 0x54, true), name: Array.from(currentName.subarray(0, length)), technology: technology() };
       const existing = session.participation().brain(owner);
+      if (existing && profile !== 'default') throw new Error('기존 아군 AI의 전략 변경은 지원하지 않는다');
       let token = existing;
       if (!token) {
         const settings = new Uint8Array(MISSION_AI_SETTINGS_SIZE);
-        new RawMissionAiSettings(session.missionAiSettings(), { get: () => { throw new Error('아군 AI는 미션 공통 ai 키를 읽지 않는다'); } }).initialize(settings);
+        const initializer = new RawMissionAiSettings(session.missionAiSettings(), { get: () => { throw new Error('아군 AI는 미션 공통 ai 키를 읽지 않는다'); } });
+        initializer.initialize(settings);
+        // 원래 aiAbility 설정의 사제 채취 능력만 끈다. 사제 이동/건설·운반체·적 AI의 규칙은 그대로다.
+        if (profile === 'guard-priest') initializer.setAbility(settings, 'USE_PRIEST_TO_COLLECT', false);
         // 초기 갱신이 현재 이름·동맹·SP를 덮어 바꾸지 않게 C++ PrepareLocalTestAiSettings와 같이 준비한다.
         settings.fill(0, 0, 30); settings.set(currentName.subarray(0, length), 0); settings[0x1e] = 0;
         const view = new DataView(settings.buffer);
@@ -47,8 +52,9 @@ async function installAllyAi(page, mission, { preserveDifficulty = false } = {})
         token = session.createAi(owner, settings);
       }
       // 결과를 읽기만 하며 기술·SP·HP·게임 단계·승패를 직접 변경하지 않는다.
-      window.netstormAllyTestState = { owner, token, reused: Boolean(existing), before, money: session.sp(owner), allies: players.getUint32(owner * 180 + 0x54, true), name: Array.from(records.subarray(owner * 180 + 12, owner * 180 + 12 + length)), technology: technology(), brain: session.participation().brain(owner) };
+      const brain = session.aiMemory().bytes(token), abilities = new DataView(brain.buffer, brain.byteOffset, brain.byteLength).getUint32(0x248, true);
+      window.netstormAllyTestState = { owner, token, reused: Boolean(existing), profile, abilities, before, money: session.sp(owner), allies: players.getUint32(owner * 180 + 0x54, true), name: Array.from(records.subarray(owner * 180 + 12, owner * 180 + 12 + length)), technology: technology(), brain: session.participation().brain(owner) };
     };
-  }, { name: normalized, preserveDifficulty });
+  }, { name: normalized, preserveDifficulty, profile });
 }
 module.exports = { installAllyAi };

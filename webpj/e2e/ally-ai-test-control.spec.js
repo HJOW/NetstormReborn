@@ -49,8 +49,8 @@ test('아군 AI 검사: 스커미시의 원래 개별 난이도를 보존한다'
 
 // 다시 허용된1-3/1-4에서 현재 Player 값을 유지한 실제 아군 AI로15초를 진행한다.
 // 각 미션은 독립 페이지에서 설치해 prototype 감싸기와 저장 상태를 공유하지 않는다.
-for (const mission of ['savetheisland', 'fragilefortune']) {
-test(`아군 AI 검사: ${mission}의 실제 brain과 현재 Player 값을 보존한다`, async ({ page }) => {
+for (const [mission, profile] of [['savetheisland', 'default'], ['fragilefortune', 'default'], ['savetheisland', 'guard-priest']]) {
+test(`아군 AI 검사: ${mission} ${profile}의 실제 brain과 현재 Player 값을 보존한다`, async ({ page }) => {
   test.setTimeout(240000);
   const errors = [];
   page.on('pageerror', (error) => errors.push(error.stack ?? error.message));
@@ -63,13 +63,15 @@ test(`아군 AI 검사: ${mission}의 실제 brain과 현재 Player 값을 보�
   // 실제 시작 그림을 처리하고 원래 미션의 브리핑 단추만 누른다.
   while (await page.evaluate(() => window.netstorm.state !== 'mainMenu')) await page.evaluate(() => window.netstorm.stepFixedFrames(1));
   await page.evaluate(() => window.netstorm.stepFixedFrames(1));
-  await installAllyAi(page, mission);
+  await installAllyAi(page, mission, { profile });
   await page.evaluate(name => window.netstorm._beginCampaignFromDialog(name), mission);
   await page.evaluate(() => window.netstorm.stepFixedFrames(120));
   const point = await page.evaluate(() => { const app = window.netstorm, p = app._mainMenu.controlPoint('Play Mission'), r = app.canvas.getBoundingClientRect(); if (!p) throw new Error('실제 브리핑 단추 없음'); return { x: r.left + p.x * r.width / 1024, y: r.top + p.y * r.height / 768 }; });
   await page.mouse.click(point.x, point.y); await page.evaluate(() => window.netstorm.stepFixedFrames(1));
   const activated = await page.evaluate(() => window.netstormAllyTestState);
   expect(activated.owner).toBe(1); expect(activated.token).toBeGreaterThan(0); expect(activated.brain).toBe(activated.token);
+  // 전략 선택은 사제 채취 능력만 바꾸며 실제 자금·기술 보존 검사는 그대로 유지한다.
+  if (profile === 'guard-priest') expect(activated.abilities & 0x800).toBe(0);
   expect(activated.money).toBe(activated.before.money); expect(activated.allies).toBe(activated.before.allies);
   expect(activated.name).toEqual(activated.before.name); expect(activated.technology).toEqual(activated.before.technology);
   // 모든 실제 Kernel/Renderer 프레임을 실행하며 수동 건설/공격이나 목표 값 변경은 하지 않는다.
@@ -77,7 +79,7 @@ test(`아군 AI 검사: ${mission}의 실제 brain과 현재 Player 값을 보�
   const after = await page.evaluate(() => { const app = window.netstorm, session = app._campaignWorld.session(), token = session.participation().brain(1), raw = session.aiMemory().bytes(token), view = new DataView(raw.buffer, raw.byteOffset, raw.byteLength); return { mission: app._clientGuide.current().script.name, token, initialized: view.getUint32(0x258, true), stopped: view.getUint32(0x254, true), time: app._gameClock.gameSeconds() }; });
   expect(after.mission.toLowerCase()).toBe(mission); expect(after.token).toBe(activated.token);
   expect(after.initialized).toBe(1); expect(after.stopped).toBe(0); expect(after.time).toBeGreaterThan(10); expect(errors).toEqual([]);
-  await page.screenshot({ path: test.info().outputPath(mission + '-ally-ai.png') });
+  await page.screenshot({ path: test.info().outputPath(mission + '-' + profile + '-ally-ai.png') });
   // 기존 AI 재사용 여부도 관측해 기록하지만 승리 완료의 근거로 사용하지 않는다.
   console.log(JSON.stringify({ activated, after }));
 });
