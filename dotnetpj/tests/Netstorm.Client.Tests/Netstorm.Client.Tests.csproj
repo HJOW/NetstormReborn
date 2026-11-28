@@ -1,5 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <!-- 실제 썬 캐논 자산의 독립 원본 사정선48행을 이 소비자에서만 읽는다. -->
+    <None Include="../../../cpppj/tests/fixtures/cannon-asset-ray-x86.tsv" Link="X86/cannon-asset-ray-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
     <!-- 최초 고정 입력6행과 캐시 부모/catch/cleanup130행의 독립 관측이다. -->
     <None Include="../../../cpppj/tests/fixtures/colorsort-fixed-input-x86.tsv" Link="X86/colorsort-fixed-input-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/colorsort-cache-parent-x86.tsv" Link="X86/colorsort-cache-parent-x86.tsv" CopyToOutputDirectory="PreserveNewest" />

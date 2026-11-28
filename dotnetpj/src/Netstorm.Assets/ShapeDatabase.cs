@@ -132,6 +132,14 @@ public sealed class ShapeDatabase
             BinaryPrimitives.ReadInt16LittleEndian(prefix[28..]), BinaryPrimitives.ReadInt16LittleEndian(prefix[30..]));
     }
 
+    /// <summary>같은 프레임의 원본 추가 헤더36바이트를 복사한다. 표시 기준점과 다른 포구 좌표 등 미해석 필드도 제품 어댑터에 공급한다.</summary>
+    public byte[] SquidHeader(int block, int frame)
+    {
+        int offset = Blocks[block].Frames[frame].Offset;
+        if (offset - _headerEnd < SquidHeaderSize) throw new InvalidDataException("Squid SHP 추가 헤더가 없습니다.");
+        return _raw.AsSpan(offset - SquidHeaderSize, SquidHeaderSize).ToArray();
+    }
+
     /// <summary>타입 이름(대소문자 무시)으로 블록을 찾는다</summary>
     /// <param name="typeName">예: "sunCannon"</param>
     public ShapeBlock? FindBlock(string typeName)

@@ -1,3 +1,4 @@
+using System.Buffers.Binary;
 using Netstorm.Assets;
 using Netstorm.Core.Original;
 
@@ -48,6 +49,8 @@ public static class TerrainDisplayShapes
             for (int frame = 0; frame < block.Frames.Count; frame++)
             {
                 SquidFrameMetrics metrics = shapes.SquidMetrics(block.Index, frame);
+                // 원본 추가 헤더의 마지막 두 WORD는 그림 기준점과 별도인 signed 포구 좌표다.
+                byte[] header = shapes.SquidHeader(block.Index, frame);
                 // VFX 압축영역의 경계와 다른 원본 Squid 표시폭/높이를 사용한다.
                 shape.Frames.Add(new SquidDisplayFrame
                 {
@@ -57,6 +60,8 @@ public static class TerrainDisplayShapes
                     HotspotY = metrics.HotspotY,
                     CellWidth = metrics.CellWidth,
                     CellHeight = metrics.CellHeight,
+                    MuzzleX = BinaryPrimitives.ReadInt16LittleEndian(header.AsSpan(32)),
+                    MuzzleY = BinaryPrimitives.ReadInt16LittleEndian(header.AsSpan(34)),
                 });
             }
         }
