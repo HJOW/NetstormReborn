@@ -1,0 +1,69 @@
+{
+  "mission": "savetheisland",
+  "limit": 60000,
+  "frame": 36400,
+  "gameSeconds": 919.125,
+  "won": false,
+  "buttons": [
+    "Continue"
+  ],
+  "events": [
+    {
+      "method": "priestDead",
+      "owner": 1,
+      "result": false,
+      "time": 9.2
+    },
+    {
+      "method": "priestCaptured",
+      "owner": 1,
+      "result": false,
+      "time": 9.2
+    },
+    {
+      "method": "priestDead",
+      "owner": 2,
+      "result": false,
+      "time": 9.2
+    },
+    {
+      "method": "priestCaptured",
+      "owner": 2,
+      "result": false,
+      "time": 9.2
+    },
+    {
+      "method": "priestCaptured",
+      "owner": 1,
+      "result": true,
+      "time": 772.025
+    },
+    {
+      "method": "finishSacrifice",
+      "args": [
+        16326
+      ],
+      "time": 919.1
+    },
+    {
+      "method": "priestDead",
+      "owner": 1,
+      "result": true,
+      "time": 919.125
+    },
+    {
+      "method": "priestCaptured",
+      "owner": 1,
+      "result": false,
+      "time": 919.125
+    }
+  ],
+  "errors": [],
+  "before": null,
+  "activationPreserved": {
+    "money": true,
+    "allies": true,
+    "name": true,
+    "technology": true
+  }
+}

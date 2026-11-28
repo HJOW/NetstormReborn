@@ -1,0 +1,73 @@
+{
+  "mission": "fragilefortune",
+  "limit": 60000,
+  "frame": 60000,
+  "gameSeconds": 1509.175,
+  "won": false,
+  "reason": "프레임 상한",
+  "buttons": [],
+  "events": [
+    {
+      "method": "priestDead",
+      "owner": 1,
+      "result": false,
+      "time": 9.2
+    },
+    {
+      "method": "priestCaptured",
+      "owner": 1,
+      "result": false,
+      "time": 9.2
+    },
+    {
+      "method": "priestDead",
+      "owner": 2,
+      "result": false,
+      "time": 9.2
+    },
+    {
+      "method": "priestCaptured",
+      "owner": 2,
+      "result": false,
+      "time": 9.2
+    }
+  ],
+  "errors": [],
+  "before": null,
+  "activationPreserved": {
+    "money": true,
+    "allies": true,
+    "name": true,
+    "technology": true
+  },
+  "ais": [
+    {
+      "owner": 1,
+      "token": 536892288,
+      "initialized": 1,
+      "scan": 1,
+      "stop": 0,
+      "enemy": 2,
+      "flags": 65535,
+      "wallet": 1450,
+      "priests": [
+        15000,
+        15067
+      ]
+    },
+    {
+      "owner": 2,
+      "token": 536870912,
+      "initialized": 1,
+      "scan": 1,
+      "stop": 0,
+      "enemy": 1,
+      "flags": 65527,
+      "wallet": 1100,
+      "priests": [
+        15067,
+        15000
+      ]
+    }
+  ]
+}

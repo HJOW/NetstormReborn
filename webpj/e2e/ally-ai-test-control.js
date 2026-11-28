@@ -1,10 +1,9 @@
 // 사용자 허용 미션의 실제 AI만 켜는 e2e 전용 설정이다. debug.html의 ES 모듈 앱에서 미션 진입 전에 설치한다.
+const { assertAllyAiMission } = require('./ally-ai-scope');
 // preserveDifficulty=true이면 현재 스커미시/옵션 난이도를 그대로 사용해 배율을 관찰한다. 기본값은 기존 아군 어려움·적 쉬움이다.
 async function installAllyAi(page, mission, { preserveDifficulty = false } = {}) {
-  // 사제 포획·특정 적 공격·승리를 AI로 시험할 수 있는 정확한 미션 목록이다.
-  const allowed = ['thewarbegins', 'masterofwhirligigs', 'savetheisland', 'fragilefortune', 'thunderingpower', 'dissolvedalliance', 'skirmish'];
-  if (typeof mission !== 'string') throw new TypeError('아군 AI 시험의 미션 이름 문자열 필요');
-  if (!allowed.includes(mission.toLowerCase())) throw new Error('아군 AI 시험 허용 미션이 아님');
+  // 최신 사용자 범위를 공용 CLI와 공유하고 실제 페이지 접근 전에 검사한다.
+  const normalized = assertAllyAiMission(mission);
   if (typeof preserveDifficulty !== 'boolean') throw new TypeError('아군 AI 검사 난이도 보존 선택은 boolean이어야 한다');
   await page.evaluate(async ({ name, preserveDifficulty }) => {
     // 원래 시작 몸체와 설정 초기화기를 그대로 빌린다.
@@ -50,6 +49,6 @@ async function installAllyAi(page, mission, { preserveDifficulty = false } = {})
       // 결과를 읽기만 하며 기술·SP·HP·게임 단계·승패를 직접 변경하지 않는다.
       window.netstormAllyTestState = { owner, token, reused: Boolean(existing), before, money: session.sp(owner), allies: players.getUint32(owner * 180 + 0x54, true), name: Array.from(records.subarray(owner * 180 + 12, owner * 180 + 12 + length)), technology: technology(), brain: session.participation().brain(owner) };
     };
-  }, { name: mission.toLowerCase(), preserveDifficulty });
+  }, { name: normalized, preserveDifficulty });
 }
 module.exports = { installAllyAi };
