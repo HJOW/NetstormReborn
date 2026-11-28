@@ -25,6 +25,14 @@ public sealed partial class ClientHostGame
     {
         var menu = _mainMenu ?? throw new InvalidOperationException("HUD 구분선의 실제 공통 트리 없음");
         var tree = menu.Tree;
+        if (CurrentNativeMissionHud() is not null)
+        {
+            // 전체 부모가 이미 만든 구분선과 열 slave의 기하/소유권을 그대로 유지한다.
+            _missionHudRouting?.Dispose();
+            _missionHudRouting = null;
+            _missionHudDock = null;
+            return;
+        }
         // 등록 토큰만 남고 실제 노드가 반납된 State 전환을 구별한다.
         bool Alive(uint token) => token != 0 && ReferenceEquals(tree.NodeOwner(token), _hudDividerOwner)
             && tree.Node(token) is { } node && (node.Flags & 0x10000) == 0;

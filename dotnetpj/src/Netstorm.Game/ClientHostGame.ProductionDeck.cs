@@ -36,6 +36,17 @@ public sealed partial class ClientHostGame
     /// <remarks>2026-11-26 1.079에서 R5-4c2용으로 추가했다. 근거: cpppj RawProductionControls.cpp 184~186행의 예산/격자/배경 생성과 UberRootGump.cpp 86행의 생산 공장 부착, HudDock.cpp의 왼쪽 도킹이다. 격자 내용물 populatation·유지·입력·음향·동기화 본체는 R6/R11에서 잇는다. DN-MP-01 우클릭 메뉴 표시는 이 틀의 HELP 포인터로 검증한다.</remarks>
     private void EnsureMissionProductionDeck()
     {
+        if (CurrentNativeMissionHud() is { } native)
+        {
+            var nativePanel = _missionProduction ?? throw new InvalidOperationException("현재 HUD의 실제 생산 공장 없음");
+            var nativeTree = (_mainMenu ?? throw new InvalidOperationException("현재 HUD의 실제 공통 트리 없음")).Tree;
+            var nativePanelRoot = HostUberRoot.RequireChild(nativeTree, native, native.Production, nativePanel.RootToken, nativePanel) as ProductionRootNode
+                ?? throw new InvalidOperationException("현재 HUD의 실제 생산 자식 종류 불일치");
+            nativePanel.SetPalette(_driver.Screen.LogicalPalette);
+            nativePanel.Idle(nativePanelRoot.Budget);
+            _menuDirty = true;
+            return;
+        }
         if (_missionProduction is { RootToken: not 0 })
         {
             int height = _driver.Screen.Height;

@@ -24,9 +24,14 @@ public sealed partial class ClientHostGame
     /// <remarks>2026-11-25 0.987에서 RU-3b용으로 추가했다. 근거: cpppj RawMenuControls.cpp의 BindNs와 UberGump.cpp 2200행의 바깥 읽기. 생산 공장은 세션 장치(0.825~0.837·BuildProductionWorldDevices), 채팅 공장은 메뉴 경로(_nativeChatWindows)로 이미 소유하므로 여기서는 Root와 메시지 공장만 만든다.</remarks>
     private HostRootFactorySet EnsureRootFactories(RawSurfaceStorage storage)
     {
-        if (_rootFactories is not null) throw new InvalidOperationException("미션 Root 공장 중복 설치");
         var menu = _mainMenu ?? throw new InvalidOperationException("Root 공장의 실제 메뉴 owner 없음");
         var text = _htmlText ?? throw new InvalidOperationException("Root 공장의 실제 본문 owner 없음");
+        if (_rootFactories is { } current)
+        {
+            if (!current.Borrows(menu.Tree, text, _nsInfoGlobals, _gameplay, storage))
+                throw new InvalidOperationException("미션 Root 공장 재사용의 같은 장기 소유자 필요");
+            return current;
+        }
         var menus = _htmlMenus ?? throw new InvalidOperationException("Root 공장의 실제 메뉴 열 owner 없음");
         var startup = _startup ?? throw new InvalidOperationException("미션 진입에 시작 화면 없음");
         var audio = _missionAudio ?? throw new InvalidOperationException("Root 음향의 실제 미션 음향 없음");
@@ -55,9 +60,9 @@ public sealed partial class ClientHostGame
             if (HostNsInfoExternalRead.TryRead(address, menu.BackgroundType, _driver.Screen.Colors(), out uint value)) return value;
             return address switch
             {
-            // 0x5ca920은 생산 배경 TYPE, 0x5ca924는 그 프레임이다(RawMenuControls 441행). 생산 공장이 아직 없으므로 메뉴의 같은 값을 빌린다.
-            0x5ca920u => menu.BackgroundType,
-            0x5ca924u => 1u,
+            // 전체 부모가 준비한 뒤에는 같은 생산 전역을 현재 조회한다. 부모가 없는 기존 직접 진입에서만 종전 메뉴 준비값을 쓴다.
+            0x5ca920u => _productionGlobals.BackgroundType != 0 ? _productionGlobals.BackgroundType : menu.BackgroundType,
+            0x5ca924u => _productionGlobals.BackgroundType != 0 ? _productionGlobals.BackgroundFrame : 1u,
             // 0x5c85c8은 원본 MetadataMode다. 시험의 Basic[5] 대신 실제 전역을 읽는다.
             0x5c85c8u => _localState.MetadataMode.Value,
             0x542714u => _nsInfoGlobals.LeaveMenuCommand,

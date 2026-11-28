@@ -47,6 +47,11 @@ public sealed class HostRootFactorySet : IDisposable
     /// <summary>살아 있는 NSInfo 창 수다. 첫 창과 추가 창을 합친다.</summary>
     public int Count => _tokens.Count;
 
+    /// <summary>반납되지 않은 같은 장기 트리·문자·NSInfo·Gameplay·물리 소유자를 재사용하는지 확인한다. 창을 생성하거나 현재값을 초기화하지 않는다.</summary>
+    public bool Borrows(GumpButtonTree tree, HostHtmlText text, ClientNsInfoGlobals globals, ClientGameplayGlobals gameplay, RawSurfaceStorage storage)
+        => !_disposed && ReferenceEquals(_tree, tree) && ReferenceEquals(_text, text) && ReferenceEquals(_globals, globals)
+            && ReferenceEquals(_gameplay, gameplay) && ReferenceEquals(_storage, storage);
+
     /// <summary>같은 실제 트리와 문자와 NSInfo와 월드 저장소로 첫 창과 메시지 공장을 만든다. 값을 복사하거나 초기화하지 않는다.</summary>
     /// <param name="tree">같은 실제 노드와 등록 소유자다.</param>
     /// <param name="text">동일 스크롤과 스타일과 한 줄 문자 본체다.</param>

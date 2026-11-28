@@ -82,6 +82,39 @@ public sealed class HostUberRootDevices
 /// <remarks>cpppj UberHud.inc의 EnsureHudFactories가 묶는 네 공장·메시지·전역 결선의 DN 진입점이다. 생성·교체·배치는 호출자가 `RawUberRootControls`로 수행한다. 2026-11-26 1.074에서 R5-4a용으로 추가했다.</remarks>
 public static class HostUberRoot
 {
+    /// <summary>현재 등록0의 실제 전체 HUD를 검증한다. 일반 메뉴 루트는 null이며, 손상되거나 다른 소유자의 Native 루트는 재생성으로 숨기지 않는다.</summary>
+    public static UberRootNode? CurrentRoot(GumpButtonTree tree, RawUberRootControls? controls)
+    {
+        ArgumentNullException.ThrowIfNull(tree);
+        uint token = tree.Create.Entries[0];
+        var current = tree.Node(token) ?? throw new InvalidOperationException("HUD 재사용의 현재 공통 루트 없음");
+        if (current is not UberRootNode root) return null;
+        if (controls is null || !ReferenceEquals(controls.Node(token), root) || !controls.Current())
+            throw new InvalidOperationException("HUD 재사용의 실제 전체 부모/자식 수명 불일치");
+        // 같은 전체 공장이 소유한 세 구분선만 허용하며 다른 생성기의 같은 종류로 대신하지 않는다.
+        foreach (uint child in new[] { root.Vertical, root.MinimapDivider, root.ChatDivider })
+        {
+            var node = RequireChild(tree, root, child, child, controls);
+            if (node is not HudDividerNode || !ReferenceEquals(controls.Node(child), node))
+                throw new InvalidOperationException("HUD 재사용의 실제 구분선 소유자 불일치");
+        }
+        return root;
+    }
+
+    /// <summary>현재 부모의 자식 토큰과 실제 공장 현재값/소유자/부착/생존을 함께 확인하고 같은 노드를 빌린다.</summary>
+    public static GumpCreateNode RequireChild(GumpButtonTree tree, UberRootNode root, uint token, uint current, object owner)
+    {
+        ArgumentNullException.ThrowIfNull(tree);
+        ArgumentNullException.ThrowIfNull(root);
+        ArgumentNullException.ThrowIfNull(owner);
+        uint parent = tree.Create.Entries[0];
+        var node = tree.Node(token);
+        if (!ReferenceEquals(tree.Node(parent), root) || token == 0 || token != current || node is null
+            || !ReferenceEquals(tree.NodeOwner(token), owner) || node.Parent != parent || (node.Flags & 0x10000) != 0)
+            throw new InvalidOperationException("HUD 재사용의 현재 자식/공장/부모 불일치");
+        return node;
+    }
+
     /// <summary>같은 실제 트리/메뉴/지도 owner와 외부 장치로 전체 부모 조립기를 만든다.</summary>
     /// <param name="tree">같은 실제 노드/자산 소유자다.</param>
     /// <param name="menus">현재 메뉴 인스턴스 owner다.</param>

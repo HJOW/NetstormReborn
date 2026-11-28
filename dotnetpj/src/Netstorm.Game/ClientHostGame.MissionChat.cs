@@ -11,6 +11,14 @@ public sealed partial class ClientHostGame
     private void AttachMissionChat()
     {
         var tree = (_mainMenu ?? throw new InvalidOperationException("채팅창의 실제 공통 트리 없음")).Tree;
+        if (CurrentNativeMissionHud() is { } native)
+        {
+            if (HostUberRoot.RequireChild(tree, native, native.Chat, NativeChatWindows.CurrentRoot, NativeChatWindows) is not HudChatNode)
+                throw new InvalidOperationException("현재 HUD의 실제 채팅 자식 종류 불일치");
+            NativeUberRoot.Handle(tree.Create.Entries[0], 0x02000088, 0, 0);
+            _menuDirty = true;
+            return;
+        }
         var vertical = tree.Node(_hudVertical) ?? throw new InvalidOperationException("채팅창의 세로 구분선 없음");
         var divider = tree.Node(_hudChatDivider) ?? throw new InvalidOperationException("채팅창의 가로 구분선 없음");
         uint token = NativeChatWindows.Create();

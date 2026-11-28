@@ -109,6 +109,8 @@ public sealed class HostRootFactorySetTests
     public void CreatesPrimaryAndMessageProbeSharingRing()
     {
         using var scene = new Scene();
+        Assert.True(scene.Set.Borrows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, scene.Storage));
+        Assert.False(scene.Set.Borrows(scene.Menu.Tree, scene.Text, scene.Globals, scene.Game, new RawSurfaceStorage()));
         Assert.Equal(1, scene.Set.Count);
         Assert.NotNull(scene.Set.Primary);
         Assert.NotNull(scene.Set.MessageProbe);

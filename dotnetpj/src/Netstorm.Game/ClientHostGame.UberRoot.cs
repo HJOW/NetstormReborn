@@ -13,6 +13,18 @@ public sealed partial class ClientHostGame
     /// <summary>동일 메뉴·지도·입력으로 설치한 전체 HUD 장치다.</summary>
     public RawUberRootControls NativeUberRoot => _nativeUberRoot ?? throw new InvalidOperationException("실제 전체 HUD 분배 미설치");
 
+    /// <summary>전체 State가 만든 현재 HUD를 재사용한다. 일반 진입의 임시 루트와 구별하고 실제 참가자 창 소유자도 확인한다.</summary>
+    private UberRootNode? CurrentNativeMissionHud()
+    {
+        var tree = (_mainMenu ?? throw new InvalidOperationException("현재 HUD의 실제 공통 트리 없음")).Tree;
+        var root = HostUberRoot.CurrentRoot(tree, _nativeUberRoot);
+        if (root is null) return null;
+        var factory = _rootFactories ?? throw new InvalidOperationException("현재 HUD의 실제 NSInfo 공장 없음");
+        if (HostUberRoot.RequireChild(tree, root, root.Knowledge, root.Knowledge, factory.Primary) is not HudNsInfoNode)
+            throw new InvalidOperationException("현재 HUD의 실제 NSInfo 자식 종류 불일치");
+        return root;
+    }
+
     /// <summary>현재 HTML 파서가 실제로 작성한 같은80BYTE 배경 이름을 읽는다.</summary>
     private string NativeHudBackgroundName() => HtmlTextParser.HtmlBackgroundName(
         (_htmlWindows?.Parser ?? throw new InvalidOperationException("전체 HUD의 실제 HTML 배경 소유자 없음")).Globals);
