@@ -54,19 +54,7 @@ public sealed partial class ClientHostGame
     {
         var minimap = _nativeMinimap ?? throw new InvalidOperationException("미션 미니맵의 실제 공장 없음");
         minimap.SetPalette(_driver.Screen.Colors());
-        var node = minimap.Node(minimap.RootToken) ?? throw new InvalidOperationException("미션 미니맵 실제 노드 없음");
-        if (node.Parent == 0)
-        {
-            node.BaseWidth = node.Width = 80;
-            node.BaseHeight = node.Height = 75;
-            minimap.Attach(minimap.RootToken, 0, _driver.Screen.Height - 75, _mainMenu?.Tree.Create.Entries[0] ?? throw new InvalidOperationException("미니맵 부착의 실제 루트 없음"), 0);
-        }
-        else
-        {
-            minimap.Resize(_driver.Screen.Height);
-        }
-
-        minimap.Refresh();
+        minimap.AttachToMissionHud(_driver.Screen.Height);
         _menuDirty = true;
     }
 }

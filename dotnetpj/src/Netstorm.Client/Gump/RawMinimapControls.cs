@@ -218,6 +218,21 @@ public sealed class RawMinimapControls : IDisposable
     }
     /// <summary>현재 같은 공통 노드 토큰이다.</summary>
     public uint RootToken => _token;
+    /// <summary>현재 실제 노드를 미션 HUD 왼쪽 아래에 부착한다. State 정리로 노드가 반납됐으면 같은 장기 bitmap/월드 통지를 유지하며 다시 생성한다.</summary>
+    public void AttachToMissionHud(int screenHeight)
+    {
+        CheckAlive();
+        if (screenHeight < 75) throw new ArgumentOutOfRangeException(nameof(screenHeight), "미니맵 HUD 화면 높이 부족");
+        if (_token == 0) Construct();
+        if (_node.Parent == 0)
+        {
+            _node.BaseWidth = _node.Width = 80;
+            _node.BaseHeight = _node.Height = 75;
+            Attach(_token, 0, screenHeight - 75, _tree.Create.Entries[0], 0);
+        }
+        else Resize(screenHeight);
+        Refresh();
+    }
     /// <summary>bitmap 최초 준비→생성→128크기/현재 표시/갱신→실제 기본 부착 순서다.</summary>
     public void Open()
     {

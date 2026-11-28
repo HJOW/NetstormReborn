@@ -116,4 +116,38 @@ public sealed class HostMissionMinimapDeckTests
         Assert.Equal(token, scene.Mini.RootToken);
         Assert.Equal(token, scene.Globals.Current);
     }
+
+    /// <summary>실제 State 지연 삭제 뒤 노드만 새로 만들고 장기 bitmap/현재 표시와 실제 출력을 복구한다.</summary>
+    [Fact]
+    public void StateCleanupRecreatesMinimapOnSameSharedBitmap()
+    {
+        using var scene = new Scene();
+        var tree = scene.Menu.Tree;
+        var minimap = scene.Mini;
+        minimap.AttachToMissionHud(scene.Screen.Height);
+        byte[] bitmap = scene.State.Bitmap;
+        uint previous = minimap.RootToken;
+        uint previousSerial = scene.Globals.Serial;
+        // 여러 차례 같은 실제 공통 정리를 거쳐 옛 노드/도움말이 남지 않는지 확인한다.
+        for (int generation = 0; generation < 3; generation++)
+        {
+            tree.KillStateGumps();
+            tree.Lifetime.Cleanup();
+            scene.Menu.ForgetReleasedControls();
+            Assert.Equal(0u, minimap.RootToken);
+            Assert.Null(tree.Node(previous));
+            Assert.False(scene.State.DisplayPresent);
+            minimap.AttachToMissionHud(scene.Screen.Height);
+            Assert.NotEqual(previous, minimap.RootToken);
+            Assert.NotEqual(previousSerial, scene.Globals.Serial);
+            Assert.Equal(minimap.RootToken, scene.Globals.Current);
+            Assert.True(scene.State.DisplayPresent);
+            Assert.Same(bitmap, scene.State.Bitmap);
+            Assert.Equal(new ScreenPoint(0, 693), tree.Collection.Position(minimap.RootToken));
+            Assert.Equal("Sky Overview", tree.ReadOwnedText(minimap.Node(minimap.RootToken)!.TextPointer));
+            scene.Drawing.Draw();
+            previous = minimap.RootToken;
+            previousSerial = scene.Globals.Serial;
+        }
+    }
 }
