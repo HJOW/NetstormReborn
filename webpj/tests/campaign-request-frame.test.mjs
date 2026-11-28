@@ -239,11 +239,14 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         app._root.clientWidth = 1366; app._root.clientHeight = 768; app._aspect = '16:9'; app._canvas = { style: {} }; app._applyCursor = () => {};
         const beforeRenderer = app._clientRenderer, frameGlobals = app._clientRendererFrame, cameraDevice = app._campaignCameraDevice(); frameGlobals.scan()[3] = 17; frameGlobals.cloudDirtyCount().value = 2;
         app._applyLayout();
-        assert.equal(app._clientPaletteScreen.width, 1366); assert.notEqual(app._clientRenderer, beforeRenderer);
+        // 큰 CSS 창에서도 같은 16:9의1280 논리 상한으로 모든 화면 장치를 검증한다.
+        const logicalWidth = 1280, logicalHeight = 720;
+        assert.equal(app._layout.logicalWidth, logicalWidth); assert.equal(app._layout.logicalHeight, logicalHeight);
+        assert.equal(app._clientPaletteScreen.width, logicalWidth); assert.notEqual(app._clientRenderer, beforeRenderer);
         assert.equal(app._clientRendererFrame, frameGlobals); assert.equal(frameGlobals.scan()[3], 17); assert.equal(frameGlobals.cloudDirtyCount().value, 2);
         assert.equal(app._campaignCameraDevice(), cameraDevice);
         // 실제 Uber HUD 도킹 뒤의 지도 영역은 세로 구분선(x80, 폭5) 오른쪽 전체다(2026-11-20 WB04-E1082: 예전 임시 상단 28 값에서 교체).
-        assert.deepEqual(app._campaignWorld.mapView(), { left: 85, top: 0, right: 1366, bottom: 768 });
+        assert.deepEqual(app._campaignWorld.mapView(), { left: 85, top: 0, right: logicalWidth, bottom: logicalHeight });
         // 웹 전용 게임 메뉴 버튼은 화면 크기 변경 뒤 새 Canvas 오른쪽 위에 맞춰진다.
         assert.equal(app._gameMenuButton.element.style.display, 'block'); assert.equal(app._gameMenuButton.element.style.right, '8px');
         assert.deepEqual(app._clientGump.mapView(), app._campaignWorld.mapView());
@@ -253,9 +256,9 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         app._clientRenderer.clearDirty(); app._clientRenderer.invalidate({ left: 10, top: 20, right: 30, bottom: 40 });
         app._prepareCampaignRendererFrame();
         assert.equal(frameGlobals.scan()[18], app._clientPaletteScreen.flags); assert.equal(frameGlobals.cloudDirtyCount().value, 0);
-        assert.deepEqual(frameGlobals.cloudRectangles()[2], { left: 0, top: 0, right: 1366, bottom: 768 });
-        assert.deepEqual(frameGlobals.cloudRectangles()[3], { left: 0, top: 0, right: 1366, bottom: 768 });
-        assert.deepEqual(app._clientRenderer.cameraDirtyEntries(), [{ rect: { left: 0, top: 0, right: 1366, bottom: 768 }, flags: 0 }]);
+        assert.deepEqual(frameGlobals.cloudRectangles()[2], { left: 0, top: 0, right: logicalWidth, bottom: logicalHeight });
+        assert.deepEqual(frameGlobals.cloudRectangles()[3], { left: 0, top: 0, right: logicalWidth, bottom: logicalHeight });
+        assert.deepEqual(app._clientRenderer.cameraDirtyEntries(), [{ rect: { left: 0, top: 0, right: logicalWidth, bottom: logicalHeight }, flags: 0 }]);
         assert.equal(redraw.value, 1); redraw.value = 0;
         // 실제 월드 객체의 현재 풀 좌표와 같은 카메라 snapshot으로 부착 Gump를 투영한다.
         const object = app._campaignWorld.objects()[0]; assert.ok(object);
@@ -268,24 +271,24 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         assert.deepEqual(gump.collection().position(attached), { x: projected.x + 3 - 17, y: projected.y + 4 - 11 });
         snap.bytes.set(savedCamera); gump.remove(attached);
         // 현재 Tutorial1의 실제 지면 묶음·객체·입자·커서를 같은 원본 표시 목록에 모은다.
-        const collectedUi = [], collector = new CampaignRenderCollection(app._campaignWorld, camera.snapshot(), 1366, 768, (clip, output, limit) => {
+        const collectedUi = [], collector = new CampaignRenderCollection(app._campaignWorld, camera.snapshot(), logicalWidth, logicalHeight, (clip, output, limit) => {
             collectedUi.push({ clip, limit }); const view = new DataView(output.buffer, output.byteOffset, output.byteLength);
             view.setFloat32(0, 1, true); view.setFloat32(4, 2, true); view.setUint32(8, 123, true); output[14] = 2; return 1;
         });
-        const pixels = new Uint8Array(1366 * 768), fullClip = { left: 0, top: 0, right: 1366, bottom: 768 };
-        assert.throws(() => collector.submit(pixels, 1366, 768, fullClip), /수집 누락/);
-        const all = collector.collect({ left: 0, top: 0, right: 1366, bottom: 768 }, 0), kinds = [];
+        const pixels = new Uint8Array(logicalWidth * logicalHeight), fullClip = { left: 0, top: 0, right: logicalWidth, bottom: logicalHeight };
+        assert.throws(() => collector.submit(pixels, logicalWidth, logicalHeight, fullClip), /수집 누락/);
+        const all = collector.collect({ left: 0, top: 0, right: logicalWidth, bottom: logicalHeight }, 0), kinds = [];
         for (let at = 14; at < all.entries.length; at += 16) kinds.push(all.entries[at]);
         assert.equal(kinds[0], 2); assert.ok(kinds.includes(1)); assert.ok(kinds.includes(0));
         const groupAt = kinds.indexOf(1) * 16, group = collector.group(new DataView(all.entries.buffer, all.entries.byteOffset).getUint32(groupAt + 8, true));
         assert.ok(group.count.value > 0); assert.equal(collectedUi.length, 1);
-        const renderedUi = []; collector.submit(pixels, 1366, 768, fullClip, { drawUi: (token) => renderedUi.push(token) });
+        const renderedUi = []; collector.submit(pixels, logicalWidth, logicalHeight, fullClip, { drawUi: (token) => renderedUi.push(token) });
         assert.deepEqual(renderedUi, [123]); assert.ok(pixels.some((value) => value !== 0));
         const hiddenPixels = new Uint8Array(pixels.length); collector.collect(fullClip, 0);
-        collector.submit(hiddenPixels, 1366, 768, fullClip, { drawUi: () => {}, hideGroups: () => true }); assert.notDeepEqual(hiddenPixels, pixels);
+        collector.submit(hiddenPixels, logicalWidth, logicalHeight, fullClip, { drawUi: () => {}, hideGroups: () => true }); assert.notDeepEqual(hiddenPixels, pixels);
         const uiOnly = collector.collect({ left: 0, top: 0, right: 20, bottom: 20 }, 4);
         assert.equal(uiOnly.entries.length, 16); assert.equal(uiOnly.entries[14], 2); assert.equal(uiOnly.covered, false);
-        assert.throws(() => collector.submit(pixels, 1366, 768, fullClip), /분배 콜백 누락/);
+        assert.throws(() => collector.submit(pixels, logicalWidth, logicalHeight, fullClip), /분배 콜백 누락/);
         // 실제 Screen DIB와 구름·Renderer·표시기를 같은 미션 화면에 연결한다.
         const screen = app._clientPaletteScreen, renderer = app._clientRenderer;
         const drawing = new CampaignRendererDrawing({ world: app._campaignWorld, screen, camera: camera.snapshot(), globals: frameGlobals,
@@ -296,7 +299,7 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         gump.move(parent, 100, 0); let uiDraws = 0; gump.bindDraw(parent, (_token, target) => { uiDraws += 1; target.fill({ left: 101, top: 1, right: 105, bottom: 5 }, 241); });
         app._drawCampaignRendererFrame();
         assert.ok(renderer.presentCount > beforePresent); assert.equal(redraw.value, 0); assert.equal(renderer.cameraDirtyEntries().length, 0);
-        assert.ok(uiDraws > 0); assert.equal(app._surface.pixels[1366 + 101], 241); gump.bindDraw(parent, null);
+        assert.ok(uiDraws > 0); assert.equal(app._surface.pixels[logicalWidth + 101], 241); gump.bindDraw(parent, null);
         assert.ok(app._surface.pixels.some((value) => value !== 0));
         // 빈 지면의 구름은 지도 영역에만, UI 전용 dirty는 배경을 건드리지 않는다.
         screen.clear(fullClip, 55); drawing.collect(fullClip, 0); const sky = screen.lock();
@@ -418,7 +421,7 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         // 실제 배치 판정으로 신전 주변의 유효한 화면점을 찾는다.
         for (let y = home.y - 150; y <= home.y + 150 && !legal; y += 11) {
             for (let x = home.x - 200; x <= home.x + 200; x += 16) {
-                if (x < 0 || y < 28 || x >= 1366 || y >= 768) continue;
+                if (x < 0 || y < 28 || x >= logicalWidth || y >= logicalHeight) continue;
                 cursor.update(x, y); if (drop.legal) { legal = { x, y }; break; }
             }
         }
@@ -469,14 +472,14 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         for (let item = gridNode.child; item; item = gump.node(item).next) { const raw = session.core().pool.slot(gump.node(item).content); assert.ok((raw[20] | (raw[21] << 8)) & 0x40); items += 1; }
         assert.ok(items > 0); assert.equal(gump.handle(gridToken, 0x0200005f, 0, 0), 0x40);
         const firstItemToken = gridNode.child, firstItem = gump.node(firstItemToken), icon = firstItem.child; assert.ok(icon); assert.equal(gump.node(icon).command, 3);
-        const draw = new GumpDrawState(); setGumpDrawClip(draw, { left: 0, top: 0, right: 1366, bottom: 768 });
-        const iconPixels = new Uint8Array(1366 * 768).fill(255); gump.draw(icon, draw, new GumpPixelTarget(iconPixels, 1366, 768, draw));
+        const draw = new GumpDrawState(); setGumpDrawClip(draw, { left: 0, top: 0, right: logicalWidth, bottom: logicalHeight });
+        const iconPixels = new Uint8Array(logicalWidth * logicalHeight).fill(255); gump.draw(icon, draw, new GumpPixelTarget(iconPixels, logicalWidth, logicalHeight, draw));
         assert.ok(iconPixels.some((value) => value !== 255)); let hitPoint = null;
-        firstItem.decoration = 1; const decoration = new Uint8Array(1366 * 768).fill(255);
-        gump.draw(firstItemToken, draw, new GumpPixelTarget(decoration, 1366, 768, draw)); assert.ok(decoration.some((value) => value !== 255)); firstItem.decoration = 0;
+        firstItem.decoration = 1; const decoration = new Uint8Array(logicalWidth * logicalHeight).fill(255);
+        gump.draw(firstItemToken, draw, new GumpPixelTarget(decoration, logicalWidth, logicalHeight, draw)); assert.ok(decoration.some((value) => value !== 255)); firstItem.decoration = 0;
         // 실제 아이콘의 불투명 픽셀을 항목 로컬 적중으로 찾아 클릭한다.
         for (let y = 240; y < 340 && !hitPoint; y += 1) for (let x = 240; x < 340; x += 1) {
-            if (iconPixels[y * 1366 + x] === 255) continue; const local = gump.collection().screenToLocal(firstItemToken, { x, y });
+            if (iconPixels[y * logicalWidth + x] === 255) continue; const local = gump.collection().screenToLocal(firstItemToken, { x, y });
             if (images.hit(icon, local[0], local[1])) { hitPoint = { x, y }; break; }
         }
         assert.ok(hitPoint); assert.equal(gump.handle(firstItemToken, 0x10000, hitPoint.x, hitPoint.y), 1);
@@ -488,16 +491,16 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         // 실제 Client 글꼴과 TextGump 스타일 체인을 같은 Gump 픽셀에 출력한다.
         const text = new ClientTextGump(gump, app._resources.fonts, () => 0), textToken = text.allocate();
         text.construct(textToken, 0, 0, 0, 241); text.style(textToken, 'Storm Power'); text.fit(textToken); gump.attach(textToken, 350, 350);
-        const textPixels = new Uint8Array(1366 * 768).fill(255); gump.draw(textToken, draw, new GumpPixelTarget(textPixels, 1366, 768, draw));
+        const textPixels = new Uint8Array(logicalWidth * logicalHeight).fill(255); gump.draw(textToken, draw, new GumpPixelTarget(textPixels, logicalWidth, logicalHeight, draw));
         assert.ok(textPixels.some((value) => value !== 255)); text.clear(textToken); assert.equal(gump.node(textToken).head, 0); gump.remove(textToken);
         // 생산 예산의 실제 색·그림 명령을 한 줄 조각과 같은 화면에 출력하고 수명을 반납한다.
         const pictureColors = Uint8Array.from({ length: 256 }, (_, index) => index);
         const rich = new ClientTextGump(gump, app._resources.fonts, () => 0, makeClientTextMarkup(game, () => screen.colors(), () => pictureColors, () => { throw new Error('예산 문자열에 소리 없음'); }));
         const richToken = rich.allocate(); rich.construct(richToken, 0, 0, 0, 241); rich.style(richToken, '~3~E~w100~[I92.3]'); rich.fit(richToken); gump.attach(richToken, 350, 350);
         const fragments = rich.styleState().fragments; assert.equal([...fragments.values()].filter((part) => part.kind === StyleTextFragmentKind.EXTERNAL).length, 1);
-        const richPixels = new Uint8Array(1366 * 768).fill(255); gump.draw(richToken, draw, new GumpPixelTarget(richPixels, 1366, 768, draw));
+        const richPixels = new Uint8Array(logicalWidth * logicalHeight).fill(255); gump.draw(richToken, draw, new GumpPixelTarget(richPixels, logicalWidth, logicalHeight, draw));
         rich.clear(richToken); rich.style(richToken, '~3~E~w100');
-        const plainPixels = new Uint8Array(1366 * 768).fill(255); gump.draw(richToken, draw, new GumpPixelTarget(plainPixels, 1366, 768, draw));
+        const plainPixels = new Uint8Array(logicalWidth * logicalHeight).fill(255); gump.draw(richToken, draw, new GumpPixelTarget(plainPixels, logicalWidth, logicalHeight, draw));
         assert.ok(richPixels.some((value, index) => value !== plainPixels[index])); rich.clear(richToken); assert.equal(fragments.size, 0); gump.remove(richToken);
         // 실제 Session의 자본을 원본 100/10/1 단계로 표시하고 점멸 수명을 확인한다.
         let budgetNow = 0, budgetChanges = 0, immediate = false;
@@ -518,8 +521,8 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         let hintNow = 0; const hint = new ClientProductionHint(gump, budgetText, { now: () => hintNow, translate: (value) => app._resources.translate(value),
             palette: () => screen.colors(), changed: () => {} });
         const reference = gump.createBase(0, 36, 36, 1, () => 0); gump.attach(reference, 500, 400);
-        const notice = hint.show(false, gump.node(reference).serial), noticePixels = new Uint8Array(1366 * 768).fill(255);
-        gump.draw(notice, draw, new GumpPixelTarget(noticePixels, 1366, 768, draw)); assert.ok(noticePixels.some((value) => value !== 255));
+        const notice = hint.show(false, gump.node(reference).serial), noticePixels = new Uint8Array(logicalWidth * logicalHeight).fill(255);
+        gump.draw(notice, draw, new GumpPixelTarget(noticePixels, logicalWidth, logicalHeight, draw)); assert.ok(noticePixels.some((value) => value !== 255));
         hintNow = 4; gump.idle(); assert.ok(gump.node(notice).flags & 0x10000); gump.lifetime().cleanup(); assert.equal(gump.node(notice), null); gump.remove(reference);
         // 실제 생산 유지 상태에 예산·배경·구분선·두 격자를 같은 트리로 조립한다.
         const panelBudget = new ClientProductionBudget(gump, budgetText, { now: () => app._gameClock.wallSeconds(), money: () => session.sp(session.localOwner()),
@@ -533,10 +536,10 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         const actualItem = gump.node(gump.node(assembledNode.bridge).child), actualSlot = session.core().pool.slot(actualItem.content)[23];
         assert.equal(gump.handle(assembledToken, 0x020000f4, actualSlot, 0), 1); assert.equal(drop.preview, actualItem.content); cursor.cancel();
         const clickedToken = gump.node(assembledNode.bridge).child, clickedItem = gump.node(clickedToken), clickedIcon = clickedItem.child;
-        const panelPixels = new Uint8Array(1366 * 768).fill(255); gump.draw(clickedIcon, draw, new GumpPixelTarget(panelPixels, 1366, 768, draw)); let panelHit = null;
+        const panelPixels = new Uint8Array(logicalWidth * logicalHeight).fill(255); gump.draw(clickedIcon, draw, new GumpPixelTarget(panelPixels, logicalWidth, logicalHeight, draw)); let panelHit = null;
         // 현재 패널의 실제 불투명 아이콘을 적중하고 공통 입력 경로로 누른다.
         for (let y = 26; y < 250 && !panelHit; y += 1) for (let x = 0; x < 80; x += 1) {
-            if (panelPixels[y * 1366 + x] === 255) continue; const local = gump.collection().screenToLocal(clickedToken, { x, y });
+            if (panelPixels[y * logicalWidth + x] === 255) continue; const local = gump.collection().screenToLocal(clickedToken, { x, y });
             if (images.hit(clickedIcon, local[0], local[1])) { panelHit = { x, y }; break; }
         }
         assert.ok(panelHit); gump.input().route(0x10000, panelHit.x, panelHit.y); assert.equal(drop.preview, clickedItem.content); cursor.cancel();
@@ -552,12 +555,12 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         });
         const completeToken = complete.open(), completeNode = complete.node(); assert.ok(gump.node(completeNode.bridge).child);
         const completeItem = gump.node(gump.node(completeNode.bridge).child), completeSlot = session.core().pool.slot(completeItem.content)[23];
-        const completePixels = new Uint8Array(1366 * 768).fill(255); gump.draw(completeItem.child, draw, new GumpPixelTarget(completePixels, 1366, 768, draw));
+        const completePixels = new Uint8Array(logicalWidth * logicalHeight).fill(255); gump.draw(completeItem.child, draw, new GumpPixelTarget(completePixels, logicalWidth, logicalHeight, draw));
         assert.ok(completePixels.some((value) => value !== 255));
         assert.equal(gump.handle(completeToken, 0x020000f4, completeSlot, 0), 1); assert.equal(drop.preview, completeItem.content); cursor.cancel();
         const bridgeForm = gump.node(completeNode.bridge).form, budgetId = gump.node(completeNode.budget).id;
         complete.resize(700); assert.equal(completeNode.height, 620); assert.equal(gump.node(completeNode.bridge).form, bridgeForm); assert.equal(gump.node(completeNode.budget).id, budgetId);
-        complete.resize(768); assert.equal(completeNode.height, 688);
+        complete.resize(logicalHeight); assert.equal(completeNode.height, logicalHeight - 80);
         // 실제 기술 항목의 설명·비용·도움말을 원본 작성 순서로 수집한다.
         const aboutCalls = [], aboutItem = gump.node(gump.node(completeNode.bridge).child), writer = {
             begin: () => { aboutCalls.push(['begin']); return 99; }, root: () => gump.createState().collection.root,
@@ -591,9 +594,9 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         const scrollWidgetState = new ScrollingTextGumpWidgetState(); Object.assign(scrollWidgetState, { changeEvent: 0x02000036, stepEvent: 0x0200002e });
         const multi = new ClientScrollingText(gump, app._resources.fonts, bufferText, buffers, scroll, bufferMarkup, scrollWidgetState, (number) => { app._campaignCursor = number; });
         const multiToken = multi.allocate(); multi.construct(multiToken, 160, 60, 0, 241); gump.attach(multiToken, 600, 300); multi.style(multiToken, 'A~[I92.3]B\n');
-        const multiPixels = new Uint8Array(1366 * 768).fill(255); gump.draw(multiToken, draw, new GumpPixelTarget(multiPixels, 1366, 768, draw));
+        const multiPixels = new Uint8Array(logicalWidth * logicalHeight).fill(255); gump.draw(multiToken, draw, new GumpPixelTarget(multiPixels, logicalWidth, logicalHeight, draw));
         assert.ok(multiPixels.some((value) => value !== 255)); multi.setSlider(multiToken, true);
-        const sliderNode = gump.node(gump.node(multiToken).slider), scrollPixels = new Uint8Array(1366 * 768).fill(255), scrollTarget = new GumpPixelTarget(scrollPixels, 1366, 768, draw);
+        const sliderNode = gump.node(gump.node(multiToken).slider), scrollPixels = new Uint8Array(logicalWidth * logicalHeight).fill(255), scrollTarget = new GumpPixelTarget(scrollPixels, logicalWidth, logicalHeight, draw);
         // 두 화살표·돌 배경·손잡이는 각각 실제 픽셀을 남긴다.
         for (const child of [sliderNode.decrement, gump.node(sliderNode.decrement).background, sliderNode.increment, sliderNode.thumb]) {
             scrollPixels.fill(255); gump.draw(child, draw, scrollTarget); assert.ok(scrollPixels.some((value) => value !== 255));
@@ -605,7 +608,7 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
             session, config: data, backgroundType: 92, foreground: screen.colors().basic[7], disabled: screen.colors().basic[8], shadow: screen.colors().basic[0],
             sound: (name) => app._clientSoundPlayer.play(app._clientSoundNames.lookup(name), 0, 0, 0, 0, 0), command: (...args) => commands.push(args), invalidate: (rect) => app._clientRenderer.invalidate(rect, 0) });
         const menuToken = menus.beginVertical(); menus.entry('Help', 0x02000017, 82); menus.attach({ x: 700, y: 400 }, menus.root());
-        const menuPixels = new Uint8Array(1366 * 768).fill(255); gump.draw(menuToken, draw, new GumpPixelTarget(menuPixels, 1366, 768, draw)); assert.ok(menuPixels.some((value) => value !== 255));
+        const menuPixels = new Uint8Array(logicalWidth * logicalHeight).fill(255); gump.draw(menuToken, draw, new GumpPixelTarget(menuPixels, logicalWidth, logicalHeight, draw)); assert.ok(menuPixels.some((value) => value !== 255));
         const menuBounds = gump.collection().bounds(menuToken), menuX = menuBounds.left + 8, menuY = menuBounds.top + 5;
         gump.broadcast(0, menuX, menuY); assert.equal(gump.input().route(0x10000, menuX, menuY), menuToken);
         assert.equal(commands[0][0], 0x02000017); gump.lifetime().cleanup(); assert.equal(gump.node(menuToken), null); scroll.close();
@@ -613,7 +616,7 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         const fancyToken = menus.beginFancy(); menus.title('Bridge'); menus.header('\nCost: ~i100~[I92.3]~.\n'); menus.entry('Help', 0x02000017, 82);
         menus.idle(fancyToken, true); menus.reference(fancyToken, aboutItem.content); menus.attach({ x: 750, y: 420 }, menus.root());
         const fancyNode = gump.node(fancyToken); assert.equal(session.gumpFormHost().parent(fancyNode.form), aboutItem.content);
-        const fancyPixels = new Uint8Array(1366 * 768).fill(255), fancyTarget = new GumpPixelTarget(fancyPixels, 1366, 768, draw);
+        const fancyPixels = new Uint8Array(logicalWidth * logicalHeight).fill(255), fancyTarget = new GumpPixelTarget(fancyPixels, logicalWidth, logicalHeight, draw);
         // 장식·제목·항목은 별도 Gump 수집 항목으로 각각 출력한다.
         for (const token of [fancyNode.fancy, fancyNode.title, fancyToken]) gump.draw(token, draw, fancyTarget);
         assert.ok(fancyPixels.some((value) => value !== 255)); gump.remove(fancyToken); scroll.close(); assert.equal(bufferText.styleState().fragments.size, 0);
@@ -712,7 +715,7 @@ test('미션 요청 프레임: 실제 Tutorial1 요청이 앱 Session의 로그�
         assert.equal(productionMenu.open(aboutItem, { x: 750, y: 420 }), 1); productionMenu.close(); assert.equal(productionMenu.instances(), 0);
         // 공유 메뉴·Chat은 독립 실제 Gump 루트에서 World 없이 먼저 만들고 같은 자식/점멸 기한을 Ready 뒤에도 보존한다.
         let sharedNow = 9.2, sharedReady = false, sharedHostReads = 0;
-        const sharedRoot = new ClientGumpRoot(1366, 768, () => sharedNow, () => {}), sharedGlobals = new ClientChatWindowGlobals();
+        const sharedRoot = new ClientGumpRoot(logicalWidth, logicalHeight, () => sharedNow, () => {}), sharedGlobals = new ClientChatWindowGlobals();
         const sharedBackground = new ClientGumpBackground(sharedRoot, game, () => 35, () => screen.shadeMaps(), () => screen.colors(), () => 0);
         const sharedMenu = createClientSharedProductionMenu(sharedRoot, game, data, app._resources.fonts, screen, app._clientColorSort, sharedBackground, 92, {
             formHost: () => { sharedHostReads++; if (!sharedReady) throw new Error('아직 World 없음'); return session.gumpFormHost(); },

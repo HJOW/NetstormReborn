@@ -627,9 +627,12 @@ test('Netstorm Client 공통 수명: 실제 Session 교체와 Player·Template �
 // 같은 앱 장기 월드 물리와 Kernel을 실제 Session이 빌리고 반납 뒤에도 소유자가 보존된다.
 test('Netstorm Client 월드 저장소: 실제 Session 적재와 반납', () => {
     const app = new Netstorm(); app._initializeClientRuntime(false);
+    // 실제 앱처럼 설정을 먼저 설치해 월드 생성의 튜토리얼 가격 연결도 같은 Config에 기록한다.
+    app._gameData = GameData.build({ files: new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)]]), language: 'english' });
     app._initializeClientWorldStorage(game, { read: forbidden('파일') });
     assert.throws(() => app._initializeClientWorldStorage(game, { read: forbidden('파일') }), /중복/);
     const shared = app._campaignSharedServices(), storage = shared.surfaceStorage, kernel = shared.processKernel;
+    assert.equal(app._gameData.readInt('global.crossbowCost', 0).value, storage.types[game.typeTable.find('windArcher')].cost);
     assert.equal(storage.source, game); assert.equal(storage.authority, shared.gameplayGlobals.authority());
     assert.equal(storage.processes.usesKernel(kernel), true); assert.equal(storage.borrowed, false);
     const { s } = scene(shared, parseFort(entry.bytes, createFortTypes(game.typeTable)));

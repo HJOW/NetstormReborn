@@ -20,6 +20,7 @@ import { MAIN_MENU_SLOTS, MainMenuScreen } from '../www/ui/main-menu.js';
 import { StoneButton } from '../www/ui/stone-button.js';
 import { PopupMenu } from '../www/ui/popup-menu.js';
 import { buildHelpItems, buildOptionsItems, buildPopupItems } from '../www/ui/option-menus.js';
+import { SETTINGS_LOAD_TARGET, SETTINGS_COPY_TARGET } from '../www/ui/settings-transfer-panel.js';
 import { Settings } from '../www/platform/settings.js';
 import { MAIN_MENU_WINDOW_TITLE, Netstorm } from '../www/netstorm.js';
 import { createCanvasGlyphRasterizer } from '../www/platform/glyph-rasterizer.js';
@@ -93,14 +94,20 @@ test('xlat.korean: UTF-8·중복 없음·메뉴 라벨 전부 번역', () => {
     // 코드가 만들 수 있는 모든 라벨(원본 비교용 항목 포함)을 모은다.
     // 일반 도움말 창의 Back·OK 단추도 번역 키다(2026-10-31 WB03-O).
     const labels = new Set([...MAIN_MENU_SLOTS.map((slot) => slot.label), MAIN_MENU_WINDOW_TITLE, 'Back', 'OK', 'You']);
+    // 별도 언어 표를 쓰는 JSON 두 행도 번역 누락으로 제외하지 않고 실제 한국어 메뉴와 명령을 대조한다.
+    const settings = new Settings(), directLabels = new Map([[SETTINGS_LOAD_TARGET, ['Load Settings', '설정 불러오기']], [SETTINGS_COPY_TARGET, ['Copy Settings', '설정 복사']]]);
     const collect = (items) => {
         for (const item of items) {
             if (item.kind === 'separator') continue;
-            labels.add(item.label);
+            const direct = directLabels.get(item.command?.argument);
+            if (direct) {
+                assert.equal(item.label, direct[0]);
+                const localized = buildOptionsItems(settings, { language: 'korean' }).find(entry => entry.command?.argument === item.command.argument);
+                assert.equal(localized.label, direct[1]); assert.deepEqual(localized.command, item.command);
+            } else labels.add(item.label);
             if (item.items) collect(item.items);
         }
     };
-    const settings = new Settings();
     collect(buildOptionsItems(settings, { includeAll: true }));
     collect(buildOptionsItems(settings));
     collect(buildHelpItems({ includeAll: true }));
@@ -368,7 +375,7 @@ test('MainMenuScreen: 한국어 버튼 라벨·배치·그리기', () => {
 test('buildPopupItems: translate 로 Options·Help 라벨을 번역하고 구조는 보존한다', () => {
     const settings = new Settings();
     const plain = buildPopupItems('options', settings);
-    const translated = buildPopupItems('options', settings, { translate: korean.translate });
+    const translated = buildPopupItems('options', settings, { language: 'korean', translate: korean.translate });
     assert.equal(translated.length, plain.length);
     translated.forEach((item, index) => {
         assert.equal(item.kind, plain[index].kind);
@@ -376,16 +383,16 @@ test('buildPopupItems: translate 로 Options·Help 라벨을 번역하고 구조
         assert.equal(item.checked, plain[index].checked);
     });
     assert.deepEqual(translated.filter((item) => item.kind !== 'separator').map((item) => item.label), [
-        '언어', '프레임 속도', '난이도', '소리 켜기', '음악 재생', '바람 소리', '스피커 좌우 바꾸기', '효과음 음량', '음악 음량', '전체 화면 가장자리 스크롤', '자동 데모', '시작 시 팁 표시', '모드', '모두 초기화',
+        '언어', '프레임 속도', '난이도', '소리 켜기', '음악 재생', '바람 소리', '스피커 좌우 바꾸기', '효과음 음량', '음악 음량', '전체 화면 가장자리 스크롤', '자동 데모', '시작 시 팁 표시', '모드 관리', '모두 초기화', '설정 불러오기', '설정 복사',
     ]);
     // 하위 음량 목록도 번역되고 현재 단계 체크는 그대로다.
     const volume = translated.find((item) => item.kind === 'submenu' && item.label === '효과음 음량');
     assert.deepEqual(volume.items.map((item) => item.label), ['음량 1', '음량 2', '음량 3', '음량 4', '음량 5']);
     assert.deepEqual(volume.items.map((item) => item.checked), plain.find((item) => item.kind === 'submenu' && item.label === 'Sound Effect Volume').items.map((item) => item.checked));
-    assert.deepEqual(buildPopupItems('help', settings, { translate: korean.translate }).map((item) => item.label), ['일반 도움말 - ~iF1~.', '버전']);
+    assert.deepEqual(buildPopupItems('help', settings, { language: 'korean', translate: korean.translate }).map((item) => item.label), ['일반 도움말 - ~iF1~.', '버전']);
     // 원문은 바뀌지 않고, 모르는 대상은 null 이며, translate 가 없으면 영어 그대로다.
     assert.equal(plain[0].label, 'Language'); assert.equal(plain.find((item) => item.kind === 'check').label, 'Sound On');
-    assert.equal(buildPopupItems('nothing', settings, { translate: korean.translate }), null);
+    assert.equal(buildPopupItems('nothing', settings, { language: 'korean', translate: korean.translate }), null);
     assert.equal(buildPopupItems('help', settings)[0].label, 'General Help - ~iF1~.');
 });
 
@@ -398,7 +405,7 @@ test('PopupMenu: 한국어 Options 메뉴 크기·그리기·명령 실행', () 
         popup.open(items, { x: 100, y: 100 });
         return popup;
     };
-    const popup = open(koreanResources, buildPopupItems('options', settings, { translate: korean.translate }));
+    const popup = open(koreanResources, buildPopupItems('options', settings, { language: 'korean', translate: korean.translate }));
     const list = popup.levels[0].list;
     assert.equal(list.items.length, buildPopupItems('options', settings).length);
     assert.ok(list.items.filter((item) => item.kind !== 'separator').every((item) => item.fragments.some((fragment) => fragment.bytes instanceof Uint16Array)));

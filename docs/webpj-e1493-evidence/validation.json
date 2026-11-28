@@ -1,0 +1,32 @@
+{
+  "files": 2280,
+  "changed": [],
+  "bundleBytes": 5866967,
+  "bundleSha256": "3cb6137503d6607ba918373351e8b2c1caeb24d58b85b6fcb4442d198b8690b3",
+  "host": "HJOW-Athlon",
+  "os": "Windows 10 build 19045",
+  "runs": [
+    {
+      "node": "26.13.0",
+      "tests": 7046,
+      "pass": 7046,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "durationMs": 877123.0101
+    },
+    {
+      "node": "22.23.3",
+      "tests": 7046,
+      "pass": 7046,
+      "fail": 0,
+      "cancelled": 0,
+      "skipped": 0,
+      "todo": 0,
+      "durationMs": 843407.4299
+    }
+  ],
+  "inputBeforeSha256": "157534f6d4ee31a01ef53efb4689812cac2ebda891807169272699d8f1257f60",
+  "inputAfterSha256": "157534f6d4ee31a01ef53efb4689812cac2ebda891807169272699d8f1257f60"
+}
