@@ -77,7 +77,8 @@ internal static class Program
             try { userOptions = UserDataRoot.Resolve().OptionsFile(); }
             catch (InvalidOperationException) { }
             HostStartupScene? startup = data is null ? null : new HostStartupScene(data, options.SettingsText, null, userOptions,
-                (owner, names) => owner.InitializeStartup(WindowsCdPresence.CreateHooks(names)));
+                (owner, names) => owner.InitializeStartup(WindowsCdPresence.CreateHooks(names)),
+                owner => owner.Detected.Value = WindowsLanguageOptions.Detect());
             startup?.SaveOptions();
             if (startup != null) options.ApplyStartupConfiguration(startup.Configuration);
             // 같은 Client의 팔레트 읽음 DWORD를 화면 교체보다 오래 소유한다.

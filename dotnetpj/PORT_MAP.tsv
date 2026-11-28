@@ -2000,3 +2000,11 @@ cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.ValueOptions.cs	3f1
 cpppj/src/client/ClientMain.h	Netstorm.Game/ClientHostGame.ValueOptions.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	session
 cpppj/src/o/ConfigInterface.cpp	Netstorm.Core/Original/ConfigInterface.ByteString.cs	86b37fff4948f3b7b0529c5fcdf38622a6c39719	port
 cpppj/src/o/ConfigInterface.h	Netstorm.Core/Original/ConfigInterface.ByteString.cs	86b37fff4948f3b7b0529c5fcdf38622a6c39719	port
+cpppj/src/client/LanguageOptions.cpp	Netstorm.Client/LanguageOptions.cs	5a2cd047486b18fb1d3978f8bbd4b1dee6924413	session
+cpppj/src/client/LanguageOptions.h	Netstorm.Client/LanguageOptions.cs	0444b4b6c163de9b6ee48fbbc8e17a7e9b2bbd19	session
+cpppj/src/client/ClientMain.cpp	Netstorm.Client/ClientLanguageGlobals.cs	3f12a2bd4f539e3e30fc029d2cfb999bb9476a33	session
+cpppj/src/client/ClientMain.h	Netstorm.Client/ClientLanguageGlobals.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	session
+cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.Language.cs	3f12a2bd4f539e3e30fc029d2cfb999bb9476a33	session
+cpppj/src/client/ClientMain.h	Netstorm.Game/ClientHostGame.Language.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	session
+cpppj/src/client/LanguageOptions.cpp	Netstorm.Game/WindowsLanguageOptions.cs	5a2cd047486b18fb1d3978f8bbd4b1dee6924413	session
+cpppj/src/client/ClientMain.cpp	Netstorm.Game/WindowsLanguageOptions.cs	3f12a2bd4f539e3e30fc029d2cfb999bb9476a33	session

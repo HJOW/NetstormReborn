@@ -38,6 +38,8 @@ public static class RootLanguageNumbers
             return 0;
         }
 
+        int end = name.IndexOf('\0'); if (end >= 0) name = name[..end]; // 원문 strcmp는 첫NUL 뒤 문자열을 비교하지 않는다.
+
         for (uint index = 0; index < Names.Length; index++)
         {
             if (name == Names[(int)index])

@@ -16,6 +16,8 @@ public sealed class HostStartupScene
     public GameFileSystem Files { get; }
     /// <summary>설정 적재 전 최초 확인과 이후 State가 공유하는 같은 Client CD 소유자다.</summary>
     public ClientCdGlobals CdGlobals { get; } = new();
+    /// <summary>설정 적재 전 감지와 이후 Game가 공유하는 같은 Client 언어 전역이다.</summary>
+    public ClientLanguageGlobals LanguageGlobals { get; } = new();
     /// <summary>같은 파일 장치에서 초기화한 원본 설정.</summary>
     public ConfigInterface Configuration { get; }
     /// <summary>원본 options.cfg가 놓인 실제 설치 경로다.</summary>
@@ -57,12 +59,18 @@ public sealed class HostStartupScene
     /// <param name="initializeCd">설정 전에 CD를 확인하는 실제 플랫폼 경계다. null이면 독립 조합의 BSS 값을 유지한다.</param>
     public HostStartupScene(string dataDirectory, string settings, GameRandom? random, string? userOptionsPath,
         Action<ClientCdGlobals, RawFileName>? initializeCd)
+        : this(dataDirectory, settings, random, userOptionsPath, initializeCd, null) { }
+
+    /// <summary>같은 파일 이름 생성→최초 CD 확인→OS 언어 감지→설정 적재의 실제 상대 순서다.</summary>
+    public HostStartupScene(string dataDirectory, string settings, GameRandom? random, string? userOptionsPath,
+        Action<ClientCdGlobals, RawFileName>? initializeCd, Action<ClientLanguageGlobals>? detectLanguage)
     {
         Random = random ?? new GameRandom();
         ArgumentException.ThrowIfNullOrEmpty(dataDirectory);
         if (!GameDataLocator.IsDataDirectory(dataDirectory)) throw new DirectoryNotFoundException("게임 데이터 디렉터리 또는 netstorm.tarc가 없다: " + dataDirectory);
         Files = GameFileSystem.Open(dataDirectory);
         initializeCd?.Invoke(CdGlobals, Files.FileNameOwner);
+        detectLanguage?.Invoke(LanguageGlobals);
         _optionsPath = Path.Combine(Path.GetFullPath(dataDirectory), "d", "options.cfg");
         _userOptionsPath = string.IsNullOrEmpty(userOptionsPath) ? null : Path.GetFullPath(userOptionsPath);
         Configuration = new ConfigInterface(Files.TryReadAllBytes);

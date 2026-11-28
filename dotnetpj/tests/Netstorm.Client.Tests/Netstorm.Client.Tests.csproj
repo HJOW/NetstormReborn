@@ -264,4 +264,8 @@
   <ItemGroup>
     <None Update="Fixtures/scene-world-queries-x86.tsv" TargetPath="X86/scene-world-queries-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 원문 언어 감지/선택4655행을 사본 없이 같은 경로에서 대조한다. -->
+  <ItemGroup>
+    <None Include="../../../cpppj/tests/fixtures/language-options-x86.tsv" Link="X86/language-options-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

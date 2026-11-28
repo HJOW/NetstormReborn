@@ -176,6 +176,7 @@ public sealed partial class ClientHostGame : Game
         _options = options;
         _startup = startup;
         _nativeCdGlobals = startup?.CdGlobals ?? new ClientCdGlobals();
+        _nativeLanguageGlobals = startup?.LanguageGlobals ?? new ClientLanguageGlobals();
         _staticStrings = new ClientStaticStrings(startup?.Files.FileNameOwner);
         _startupColors = startup is null ? null : new HostStartupColorMaps(startup, InitializeNativePrefix, PrepareStartupColorAssets, null, _paletteGlobals);
         _gameplay = new(_subscriberGlobals);
@@ -190,6 +191,7 @@ public sealed partial class ClientHostGame : Game
         _monitorOptions = startup is null ? null : new ClientMonitorOptions(_localState.MonitorTime, _connections.Activity, startup.Configuration);
         if (startup is not null)
         {
+            _nativeLanguageOptions = new(_nativeLanguageGlobals, startup.Configuration);
             _nativeValueOptions = new(startup.Configuration, _gameplay, _localState, _connections, _nsInfoGlobals, _stateResources.ReadOnlyForts);
             InterpretNativeValueOptions();
         }
@@ -284,6 +286,7 @@ public sealed partial class ClientHostGame : Game
             _packetRecord?.Dispose();
             _startupColors?.Dispose();
             _monitorOptions?.Dispose();
+            _nativeLanguageOptions?.Dispose();
             _driver.Screen.Output = null;
             _output?.Dispose(); _output = null;
             _batch?.Dispose(); _batch = null;
