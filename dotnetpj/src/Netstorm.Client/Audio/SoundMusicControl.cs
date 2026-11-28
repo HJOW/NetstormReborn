@@ -18,7 +18,7 @@ public sealed partial class SoundMusicControl
     /// <summary>원문 recursive_mutex처럼 재진입과 중첩 음소거를 허용하는 실제 명령 잠금이다.</summary>
     private readonly object _gate = new();
     /// <summary>CPP SoundMusic::stopping_의 초기false를 이 제어 소유자에 보관한다.
-    /// MusicInitialized와 다른 값이며, 아직 미이식인 실제 Runtime의 초기화·종료가 같은 소유자를 변경해야 한다.</summary>
+    /// MusicInitialized와 다른 값이며 실제 Runtime의 초기화·종료가 같은 명령 잠금으로 변경한다.</summary>
     public bool Stopping { get; set; }
 
     /// <summary>같은 실제 전역·효과음 재생기만 결합하며 음악 채널의 존재나 준비 상태를 합성하지 않는다.</summary>
