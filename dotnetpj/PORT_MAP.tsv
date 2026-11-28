@@ -1994,3 +1994,9 @@ cpppj/src/client/CdDirectory.cpp	Netstorm.Game/WindowsCdPresence.cs	86b37fff4948
 cpppj/src/client/CdDirectory.h	Netstorm.Game/WindowsCdPresence.cs	86b37fff4948f3b7b0529c5fcdf38622a6c39719	port
 cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.CdPresence.cs	3f12a2bd4f539e3e30fc029d2cfb999bb9476a33	session
 cpppj/src/client/ClientMain.h	Netstorm.Game/ClientHostGame.CdPresence.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	session
+cpppj/src/client/ClientMain.cpp	Netstorm.Client/ClientValueOptions.cs	3f12a2bd4f539e3e30fc029d2cfb999bb9476a33	session
+cpppj/src/client/ClientMain.h	Netstorm.Client/ClientValueOptions.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	session
+cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.ValueOptions.cs	3f12a2bd4f539e3e30fc029d2cfb999bb9476a33	session
+cpppj/src/client/ClientMain.h	Netstorm.Game/ClientHostGame.ValueOptions.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	session
+cpppj/src/o/ConfigInterface.cpp	Netstorm.Core/Original/ConfigInterface.ByteString.cs	86b37fff4948f3b7b0529c5fcdf38622a6c39719	port
+cpppj/src/o/ConfigInterface.h	Netstorm.Core/Original/ConfigInterface.ByteString.cs	86b37fff4948f3b7b0529c5fcdf38622a6c39719	port

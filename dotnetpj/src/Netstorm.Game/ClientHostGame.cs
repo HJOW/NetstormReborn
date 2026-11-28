@@ -180,7 +180,6 @@ public sealed partial class ClientHostGame : Game
         _startupColors = startup is null ? null : new HostStartupColorMaps(startup, InitializeNativePrefix, PrepareStartupColorAssets, null, _paletteGlobals);
         _gameplay = new(_subscriberGlobals);
         _chatGlobals = new(OriginalEdition.Patch1078, () => _subscriberGlobals.MySubscriber.Value);
-        InterpretNsInfoOptions();
         if (_startup is { } diagnosticStartup) _gameplay.AiDebug.ReadOptions(diagnosticStartup.Configuration);
         _gameRandom = startup?.Random ?? new GameRandom();
         _clock = clock ?? new HostTimeSource();
@@ -189,6 +188,11 @@ public sealed partial class ClientHostGame : Game
         if (_startup is { } helpStartup) _localState.HelpWord.ReadOptions(helpStartup.Configuration);
         _connections = new ClientConnectionGlobals(_localState);
         _monitorOptions = startup is null ? null : new ClientMonitorOptions(_localState.MonitorTime, _connections.Activity, startup.Configuration);
+        if (startup is not null)
+        {
+            _nativeValueOptions = new(startup.Configuration, _gameplay, _localState, _connections, _nsInfoGlobals, _stateResources.ReadOnlyForts);
+            InterpretNativeValueOptions();
+        }
         _clientClock = new ClientClockGlobals(_localState);
         // cpppj ClientMain 349행의 실제 공통 SP 초기화와 같은 위치다: 클라이언트 시작 때 1회만 reseed+초기화하고 미션 시작 때는 다시 하지 않는다(0.464, 원본 004391ed).
         // 세션 시작 흐름의 미션별 reseed는 원본에 없어 0.463에서 근본 원인으로 확정했다.

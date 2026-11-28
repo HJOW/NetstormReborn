@@ -12,6 +12,8 @@ public sealed class ClientStateResources
 {
     /// <summary>전체State와 실제 파일/메뉴 소비자가 공유할 현재9개manager 소유자다.</summary>
     public CampaignTemplateStorage Templates { get; } = new();
+    /// <summary>Client의 현재 readOnlyForts DWORD다. State·Session 교체로 초기화하지 않으며 후속 파일 저장 관문도 이 같은 상자를 빌려야 한다.</summary>
+    public UIntBox ReadOnlyForts { get; } = new();
     /// <summary>마지막 도움말표식의 같은 명령DWORD/인자80BYTE다.</summary>
     public QuickHelpPopupState Popup { get; } = new();
     /// <summary>005c89b4의 실제전체DWORD다. 새Client만0이며State는lowWORD만지운다.</summary>

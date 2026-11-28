@@ -9,7 +9,7 @@ namespace Netstorm.Core.Original;
 /// (R3k-11, 2026-10-31)
 /// CRT atol·`;` 목록 함수는 기존 <see cref="ConfigNumbers"/>를 그대로 쓴다.
 /// </summary>
-public sealed class ConfigInterface
+public sealed partial class ConfigInterface
 {
     /// <summary>시작 순서(원본 FUN_00441790의 설정 부분)에 필요한 값.</summary>
     public sealed class StartupOptions
