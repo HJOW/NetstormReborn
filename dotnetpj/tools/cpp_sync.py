@@ -35,8 +35,8 @@ MANIFEST = ROOT / "dotnetpj" / "tests" / "Shared" / "cpp-fixture-manifest.tsv"
 CPP_FIXTURES = ROOT / "cpppj" / "tests" / "fixtures"
 # 기존 복원 관찰 TSV가 있는 cpppj 최상위.사본 생성 없이 읽기 전용 Link로 연결한다.
 CPP_OBSERVATIONS = ROOT / "cpppj"
-# dotnetpj 가 직접 소유한 fixture 폴더 (벽/게임 시계 관찰 자료).
-LOCAL_FIXTURES = ROOT / "dotnetpj" / "tests" / "Netstorm.Core.Tests" / "Fixtures"
+# dotnetpj가 직접 소유한 fixture를 소비자별로 찾는 검사 프로젝트 루트다.
+LOCAL_TESTS = ROOT / "dotnetpj" / "tests"
 # 목록 파일에서 '반영한 cpppj 커밋'을 적는 주석 머리말.
 REFLECT_KEY = "# reflected-commit:"
 # 목록의 사용 프로젝트 이름. 테스트 어셈블리 Netstorm.<이름>.Tests 와 일치해야 한다.
@@ -93,7 +93,9 @@ def digest(path: Path) -> tuple[str, int]:
 
 def source_path(entry: Entry) -> Path:
     """목록 출처별 실제 기대값 경로.최상위 기존 관찰도 복사하거나 수정하지 않고 원문을 읽는다."""
-    return {"cpppj": CPP_FIXTURES, "cpppj-root": CPP_OBSERVATIONS, "dotnetpj": LOCAL_FIXTURES}[entry.origin] / entry.file
+    if entry.origin == "dotnetpj":
+        return LOCAL_TESTS / f"Netstorm.{entry.consumer}.Tests" / "Fixtures" / entry.file
+    return {"cpppj": CPP_FIXTURES, "cpppj-root": CPP_OBSERVATIONS}[entry.origin] / entry.file
 
 
 def load_manifest() -> tuple[str, list[Entry]]:

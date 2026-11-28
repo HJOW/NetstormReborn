@@ -243,4 +243,8 @@
     <None Include="../../../cpppj/tests/fixtures/inventory-item-x86.tsv" Link="X86/inventory-item-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/production-hint-x86.tsv" Link="X86/production-hint-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
+  <!-- 두 실제 PE 함수의 새로운 독립 관측984행을 기존 기대값과 분리해 소유한다. -->
+  <ItemGroup>
+    <None Update="Fixtures/scene-world-queries-x86.tsv" TargetPath="X86/scene-world-queries-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

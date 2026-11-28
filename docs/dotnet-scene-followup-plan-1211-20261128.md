@@ -2,7 +2,7 @@
 
 2026-11-28, HJOW-Athlon. AGENTS.md·LEFT_JOBS.md·LEFT_JOBS.dotnetpj.md를 다시 읽고 현재 DN 제품 소스와 CPP 복원 소스, 기존 [1.206 장기 음향 계획](dotnet-audio-owner-followup-1206-20261128.md)을 대조했다. 기존 ignored 읽기 메모 `extracted/dotnet-1212-scene-plan.md`의 실제 getter/호출 순서 조사를 추적 가능한 문서로 옮기고,1.211의 제품 반영 상태를 다시 확인했다. getter 부분은 독립 읽기 검토와도 교차 확인했다. 이 문서 작성에서는 제품 src/tests·다른 docs·LEFT·PORT_MAP·원본 자료를 수정하지 않았고 빌드·검사·게임 실행을 하지 않았다.
 
-**1.212 Client 전체3,105통과 뒤1.213에서 A의 실제 공유 값 연결/집중41건/대표 진입 검증을 마쳤다.** 아래 B–H는 남은 후속이며 A의 범위도 실제 감독 Start/Frame·전체 State 부모 완료와 구별한다. 구현 번호는 각 단위를 시작할 때 현행 인수인계에서 정한다. 기존 ignored 파일명의1212를 실제 Scene 구현 완료/진행 번호로 해석하지 않는다.
+**2026-11-28 사용자 요청으로1.214 검증·문서·커밋 뒤 목표를 일시 중지한다.** 1.213 A의 공유 값,1.214 B의 원문 두 조회/실제 월드 대여를 마쳤다. B의 감독 hook 설치와 C–H는 남은 후속이며 실제 Start/Frame·전체 State 부모 완료와 구별한다. 구현 번호는 각 단위를 시작할 때 현행 인수인계에서 정한다. 기존 ignored 파일명의1212를 실제 Scene 구현 완료/진행 번호로 해석하지 않는다.
 
 ## 1. 범위와 현재 기준
 
@@ -145,10 +145,10 @@ Game 최종 Dispose에서 Screen/output/장기 process binding이 살아 있을 
 
 ## 7. 1.212 Client 전체 재검증 이후의 후속 A–H
 
-1.211의 집중/실제 진입과1.212 Client 전체3,105통과 재검증을 마쳤다([전체 결과](dotnet-canon-1212-20261128.md)). 다음 A–H는 실행 순서의 후보이며 아직 구현·완료 단위 번호가 아니다. 각 단위는 현재 부족한 부모를 감추는 빈 callback이나 가짜 Session을 만들지 않는다.
+1.211의 집중/실제 진입과1.212 Client 전체3,105통과 재검증을 마쳤다([전체 결과](dotnet-canon-1212-20261128.md)). 다음 A–H는 완료 범위와 남은 실제 부모를 함께 기록하는 작업판이다. A와 B 조회/대여의 완료를 나머지 부모 완료로 세지 않는다. 각 단위는 현재 부족한 부모를 감추는 빈 callback이나 가짜 Session을 만들지 않는다.
 
 - **A — 현재 공유 값 결선,1.213 완료.** SceneMusicState의 현재 Player getter·Cloud box·단일 결과 box와 실제 Game의 identity 검증을 연결했다. 기존/실제 owner 모드의9,339행·집중41/41·대표3진입/실제 Main을 확인했다. 결과 부모와 실제 감독은 남은 B–H 범위다.
-- **B — 실제 월드 음악 조회, 미완료.** Raw Player→제단→룬 단계 및 대기실의 원문 getter를 작은 독립 본체로 복원/결선한다. 기존 BattleSession.IsSacrificeInProgress를 빌리지 않는다. ordinary 조기 반환/PlayerKnown 관문/현재 owner 재조회와 선택된 미복원 challenge 경계를 구별한다. 이 선행이 끝나기 전 actual Scene hooks가 모두 구현됐다고 표시하지 않는다.
+- **B — 조회 본체/현재 월드 대여1.214 완료, 감독 hook 설치 F 대기.** 같은 현재 사제 목록→반경3 finder→프레임 선저장→현재 VT Count→단계와 Challenge/Known/현재 owner 뒤 현재CS+a4를 복원했다. 새 상위984행과 실제83VT 분배·current Surface 대여를 검증했다(집중69/Core2/목록4). Game의 기존 장기CS를 빌리며 BattleSession/고정 TYPE165/별도 기술 부모를 사용하지 않는다. 실제 감독 생성/Start/Frame과 일반 Session/FortLoad의 Count 소비자는 미완료다. [1.214](dotnet-canon-1214-20261128.md)
 - **C — 파일 팔레트 경계, 미완료.** 10.78 native 파일/부분 읽기 로더를 기존 Screen 저장소에 연결하고 정상/부분 실패의 효과를 대조한다. 먼저 기존 값 decoder의 검사 범위를 native 파일 수명과 구분한다.
 - **D — 팔레트 소비자 갱신, 미완료.** 현재 Tints 공급, Cloud dirty, 실제 메뉴/생산/미니맵/텍스트 등 캡처색 갱신, 현재 renderer invalidate를 한 실제 RefreshPaletteConsumers 입구로 모은다. 소프트웨어 커서의 실제 미완료는 별도 표시한다. 이 입구를 최초/fort/weather 변경이 공유한다.
 - **E — Thunder 본체와 실제 부착, 미완료.** PaletteFlash→SquidProcess→TYPE55/Form/Kernel, 실제 기술 DWORD 부모, 자연 종료/부모 삭제/State Kernel 정리/표시 모드 변경/최종 Dispose를 집중 검사한다. 기존 PaletteFlash 계산 검사를 반복하는 데 그치지 않는다.
@@ -167,4 +167,18 @@ Getter/월드 조회와 palette/Thunder는 독립 집중 단위로 나눌 수 �
 * 1.187의 난수5회 추적에서 Scene Start1회가 관측됐다는 사실은 임의1회 보정의 허가가 아니다. 실제 State cleanup reason0/1과 State7의 Start 및 네 Wind가 원문 위치에서 실행되는지 확인한다. 겉보기 RNG 일치를 위해 state/seed/호출 횟수를 조작하지 않는다.
 * 이후 실제 화면/덤프 검증은 기존1.173~1.176에 따라 같은 게임 시각·현재 상태를 확인한다. 고정 프레임 수만 같거나 음악 소리가 들리는 것으로 전체 L4a/State/시나리오 완료를 주장하지 않는다.
 
-이 문서는1.212 이후 구현 단위를 선택하기 위한 현재 소스 조사와 인수인계다. A–H의 SceneMusic 제품 조립·전체 State 부모·GUI 왕복·희생/승리 재현을 이번 문서 작성으로 실행하거나 완료 처리하지 않았다.
+이 문서는1.212 이후 구현과 중지 시점의 재개 인수인계다.1.213/1.214의 좁은 완료 범위 외 SceneMusic 감독·전체 State 부모·GUI 왕복·희생/승리 재현은 미완료로 유지한다.
+
+
+## 9. 1.214 중지 시점의 재개 준비물
+
+사용자 요청으로1.214를 마친 뒤 중지한다. 다음은 모두 이 PC의 ignored 초안이며 제품 수입/빌드/검사 완료가 아니다. 재개 때 source SHA를 재대조하며 C→D/E→F/G/H 순서와 기존 R5/State 우선순위를 유지한다.
+
+| 준비물 | 경로·현재 한계 |
+| --- | --- |
+| C 공유 loaded/파일 부모17파일 | `extracted/dotnet-scene-palette-draft/CLIENT_PALETTE_WIRING.md`, `STARTUP_NATIVE_PALETTE_FOLLOWUP.md`. 최초/fort가 여전히 cached GamePalette decoder를 선택한다. native 실제 입구, 중복 읽기와 Construction/Burning의 Palette 소비자, assertion callback 정책을 함께 정리해야 한다. 미빌드·미실행, 핵심4범위 peer만 확인했다. |
+| D 소비자10파일 | `extracted/dotnet-scene-refresh-draft/README.md`. 같은 UI/스타일/entry의 setter4개와 공통 갱신/현재9maps 별칭, 검사5case 초안이다. 실제 종단 연결·SoftwareMouse·meta/감독은 미완료다. 기본 창/fallback과 명시 SoftwareMouse 선택을 구별한다. |
+| E 실제 Thunder4파일 | `extracted/dotnet-scene-thunder-draft/README.md`, 기존 process3파일은 `extracted/dotnet-thunder-draft/`. 같은 현재 기술DWORD/Surface/Host/Kernel/Screen 부착, 실제 모드3입구·최종 종료 삽입 위치와 검사8case를 준비했다. 미빌드·미실행·추가 peer 미실시다. |
+| F 초기 순서1파일 | `extracted/dotnet-scene-start-draft/README.md`. 코드·검사0이다. 현재 Prefix가 Clock/Player, Chat bool이 Issue/Chat을 함께 묶고 intro가 늦다. LoadContent의 GPU와 domain 초기화 분리 및 실패 재진입 정책을 먼저 정한 뒤 성공 단계를 구별해야 한다. |
+
+정기1.210 뒤 제품211·213·214 세 단위를 마쳤으므로 다음 제품 단위 뒤 전체 회귀를 수행한다.1.212의7,609합산은 당시 결과이며 변경된 Core의 현재 전체 재검증이 아니다. 최근 실행과 단위 결과의 범위는1.214 문서를 따른다. NativeLoaded/게임 시각/RNG를 강제로 보정하지 않는다.

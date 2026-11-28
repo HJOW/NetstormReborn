@@ -97,10 +97,17 @@ public sealed class RawTempleRitual
     private uint Owner(int sid) => _pool.Slot(sid)[_pool.Edition == OriginalEdition.Patch1078 ? 34 : 32];
     /// <summary>선택된 실제 Dais +0x80은 TYPE165를 강제하지 않고 현재 TYPE 코드와 프레임을 읽는다. 상태 BYTE는 읽기의 거부 조건이 아니다.</summary>
     public uint Count(int temple)
+        => CountIn(_pool, _types, _frames, temple);
+
+    /// <summary>현재 가상표가 실제 Dais 몸체를 선택한 호출자도 같은 현재 TYPE/프레임 판정을 빌린다. 조회만 하며 TYPE165를 강제하거나 의식 장치를 생성하지 않는다.</summary>
+    public static uint CountIn(RawSidPool pool, IReadOnlyList<OriginalTypeRecord> types,
+        IReadOnlyList<RiftTypeFrames> frames, int temple)
     {
-        ReadOnlySpan<byte> raw = _pool.Slot(temple);
-        if (raw[10] >= _types.Count || raw[10] >= _frames.Count) throw new ArgumentOutOfRangeException(nameof(temple), "Dais Count 현재 TYPE/프레임 표 범위 오류");
-        int frame = CurrentFrame(temple); int direction = RawPathAnimation.Direction(_frames[raw[10]], frame);
+        ArgumentNullException.ThrowIfNull(pool); ArgumentNullException.ThrowIfNull(types); ArgumentNullException.ThrowIfNull(frames);
+        ReadOnlySpan<byte> raw = pool.Slot(temple);
+        if (raw[10] >= types.Count || raw[10] >= frames.Count) throw new ArgumentOutOfRangeException(nameof(temple), "Dais Count 현재 TYPE/프레임 표 범위 오류");
+        int frame = pool.Edition == OriginalEdition.Patch1078 ? BinaryPrimitives.ReadInt32LittleEndian(raw[36..]) : raw[34];
+        int direction = RawPathAnimation.Direction(frames[raw[10]], frame);
         if (direction == 13) return 1; if (direction == 12) return 2; if (direction == 11) return 3;
         return frame < 64 ? 1u : frame <= 119 ? 2u : 3u;
     }
