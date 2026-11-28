@@ -147,6 +147,9 @@ import { parseFort } from './assets/fort.js';
 import { createFortTypes } from './assets/type-flags.js';
 import { PATCH_TYPE_COUNT } from './assets/type-table.js';
 import { ClientCampaignGuide } from './core/client-campaign-guide.js';
+import { bindTutorialUnitCosts } from './core/tutorial-init.js';
+import { parseSettingsTransfer, serializeSettingsTransfer, storeSettingsTransfer } from './platform/settings-transfer.js';
+import { SettingsTransferPanel, SETTINGS_LOAD_TARGET, SETTINGS_COPY_TARGET } from './ui/settings-transfer-panel.js';
 import { ClientFortGlobals } from './core/client-fort-globals.js';
 import { ClientFortCurrentName } from './core/client-fort-current-name.js';
 import { refreshWindowTitle } from './core/window-title.js';
@@ -682,6 +685,8 @@ export class Netstorm {
         this._mods = null; this._modTimeSource = null; this._modValidation = null;
         // 웹 전용 모드 관리 DOM과 그 정지 한 단계는 같은 앱 수명에만 유지한다.
         this._modPanel = null;
+        // 메인 메뉴의 설정 JSON 창과, 복원 뒤 초기 화면을 한 번만 건너뛸 표시다.
+        this._settingsPanel = null; this._resumeSettingsToMainMenu = false;
         // 실제 앱의 비고정 초기 시계가 UTC초 경계를 준비하는 동안에는 로딩 표시만 갱신한다.
         this._clientClockPreparing = false;
         // 같은 Client 수명의 구름·HTML과 연결표·연결 활동 전역이다.
@@ -1071,6 +1076,7 @@ export class Netstorm {
     _initializeClientWorldStorage(game, files) {
         if (this._surfaceStorage || !this._clientGameplay || !this._gameClock) throw new Error('Client 월드 저장소의 중복 또는 공통 수명 누락');
         const assets = new CampaignSessionAssets(game, files), metadata = new PriestPlacementAssets(game.typeTable, game.shapes, assets.loadedTypes);
+        bindTutorialUnitCosts(this._gameData, game.typeTable, assets.loadedTypes); // 실제 안내 대본의 가격 변수가 원본 TYPE 비용을 읽도록 연결한다.
         const gameplay = this._clientGameplay, clock = this._gameClock;
         const storage = new RawSurfaceStorage(assets.types, assets.frames, metadata.shapes, { source: game, authority: gameplay.authority(), gameAux: gameplay.gameAux() });
         const kernel = new Kernel(); storage.processes.bindDevices(kernel, clock.time());
@@ -1842,7 +1848,7 @@ export class Netstorm {
             },
             demo: () => Boolean(this._clientGuide?.current()?.runtime.gate.demo),
             // 옵션 메뉴 Frame Rate 하위 항목(60·75·120 FPS)이다. (2026-11-20 WB04-E1094)
-            frameRates: () => frameRateChoices(this._settings?.get('maxFPS')), languages: () => languageChoices(this.options.language), difficulties: () => difficultyChoices(this._settings?.get('difficulty')),
+            frameRates: () => frameRateChoices(this._settings?.get('maxFPS')), languages: () => languageChoices(this.options.language), difficulties: () => this._campaignWorld ? [] : difficultyChoices(this._settings?.get('difficulty')),
             // 모드 관리는 웹 추가 기능이며 비교용 고정 오라클에는 제공하지 않는다.
             modMenuLabel: this.options.fixedFrameMs > 0 || this.options.originalComparison ? undefined : () => modPanelTexts(this._gameData?.language ?? this.options.language).menu,
             player: (owner) => this._clientPlayers.records().subarray(owner * 180, owner * 180 + 180),
@@ -2494,6 +2500,7 @@ export class Netstorm {
     // init 도중 실패한 반쪽 상태도 이 함수가 정리하므로 상태 이름이 아니라 루트 요소의 유무로 판단한다.
     destroy() {
         if (!this._root) return;
+        this._settingsPanel?.close(); // 입력 중인 JSON과 DOM 사건이 이전 앱 수명을 붙잡지 않게 한다.
         this._closeModPanel(false);
         // 저장 검증과 늦은 쓰기를 먼저 취소한다. 비동기 종료는 World/Session 사본만 보유한다.
         this._modValidation?.abort(); this._modValidation = null;
@@ -2660,6 +2667,10 @@ export class Netstorm {
         await this._awaitStartReadiness();
         if (generation !== this._loadGeneration) return;
         this._setState(AppState.CLICK_TO_START);
+        if (this._resumeSettingsToMainMenu) { // 같은 문서에서 사용자가 설정을 적용한 뒤에는 메인 메뉴로 바로 복귀한다.
+            this._resumeSettingsToMainMenu = false; this._unlockAudio(); this._installIntroStateEffects();
+            this._firstMenuPending = false; this._enterMainMenu(); this._openTell('Blank');
+        }
     }
 
     // '클릭하여 시작'을 열기 전에 시작 때 필요한 나머지 자원이 준비되기를 기다린다: 문서 글꼴 적재(`document.fonts.ready`)와 뒤에서 받는 메뉴 음악 묶음(성공이든 실패든 끝날 때까지).
@@ -2948,6 +2959,37 @@ export class Netstorm {
     // World/App 반납 때는 숨겨질 캔버스에 초점을 돌리지 않는다. 여러 번 호출해도 한 번만 반납한다.
     _closeModPanel(restoreFocus = false) { this._modPanel?.close({ restoreFocus }); }
 
+    // 메인 메뉴 Options의 두 JSON 동작을 연다. 기존 모드 창과 동시에 입력을 받지 않는다.
+    _openSettingsTransfer(mode) {
+        if (!this._root || !this._settings || !this._progress || this._state !== AppState.MAIN_MENU || this._campaignWorld || this._clientGuide?.current()) return false;
+        if (this._settingsPanel) { this._settingsPanel.focus(); return true; }
+        this._closeModPanel(false); this._closeCampaignPopups();
+        const clock = this._gameClock; let held = true; clock.pushGamePause(); // 편집 중 자동 데모와 게임 시계를 정지하는 한 단계다.
+        try {
+            this._settingsPanel = new SettingsTransferPanel({ parent: this._root, language: this._gameData?.language ?? this.options.language, mode,
+                value: mode === 'copy' ? serializeSettingsTransfer(this._settings, this._progress) : '',
+                onApply: (source) => this._restoreSettingsTransfer(source),
+                onClose: () => { this._settingsPanel = null; if (held) { held = false; clock.popGamePause(); } this._input.keys.clear(); this._input.pointer.buttons = 0; this._canvas?.focus({ preventScroll: true }); this._displayDirty = true; } });
+        } catch (error) { if (held) { held = false; clock.popGamePause(); } throw error; }
+        return true;
+    }
+
+    // 입력 전체를 검증·저장한 뒤 같은 앱을 다시 초기화한다. 언어·사운드·진행 캐시도 새 값으로 읽는다.
+    _restoreSettingsTransfer(source) {
+        const value = parseSettingsTransfer(source); // 빈 문자열은 취소이며 어떤 값도 바꾸지 않는다.
+        if (!value) { this._settingsPanel?.close(); return; }
+        if (this._campaignWorld || this._clientGuide?.current()) throw new Error('설정은 메인 메뉴에서만 불러올 수 있습니다.');
+        const view = this._view(), root = this._root; // 다시 초기화할 같은 문서/게임 루트다.
+        storeSettingsTransfer(getLocalStorage(view), value);
+        const language = languageOfChoice(value.settings.language) ?? normalizeLanguage(detectBrowserLanguage(view.navigator)); // 명시 언어 또는 현재 브라우저 자동 선택이다.
+        const params = new URLSearchParams(view.location.search); // 이전 lang 주소가 복원된 설정보다 우선하지 않게 지운다.
+        if (params.has('lang')) { params.delete('lang'); const query = params.toString(); view.history.replaceState(null, '', `${view.location.pathname}${query ? `?${query}` : ''}${view.location.hash}`); }
+        this._settingsPanel?.close(); this.destroy();
+        this._resources = null; this._gameData = null; this.options.language = language;
+        this.options.soundVolume = null; this.options.musicVolume = null;
+        this._resumeSettingsToMainMenu = true; this.init(root);
+    }
+
     // 설정 값이 바뀌었을 때 소리·음악·음량과 미션 효과음의 좌우 교환을 바로 적용한다.
     // 바뀐 값은 게임 데이터 설정 층에도 옮겨 적어 두 곳이 어긋나지 않게 한다(되돌아오는 통지는 막는다). (2026-10-30 WB03-H)
     _onSettingChange(key) {
@@ -3009,6 +3051,8 @@ export class Netstorm {
             this._resetAll(); return true;
         }
         if (resetTarget === MOD_PANEL_TARGET.toLowerCase()) return this._openModPanel();
+        if (resetTarget === SETTINGS_LOAD_TARGET.toLowerCase()) return this._openSettingsTransfer('load');
+        if (resetTarget === SETTINGS_COPY_TARGET.toLowerCase()) return this._openSettingsTransfer('copy');
         if (!this._mainMenu || !this._gameData || !this._resources) return false;
         // 옵션 메뉴 Frame Rate 항목의 대상(`Patch1101.SetFrameRate(n)`)은 창을 열지 않고 maxFPS 설정에 써서 바로 반영한다(cpppj 후순위 F1). (2026-11-20 WB04-E1094)
         const frameRate = parseFrameRateTarget(name);
@@ -3016,9 +3060,9 @@ export class Netstorm {
         // 언어 선택(`Patch1101.SetLanguage(n)`)은 설정에 저장하고 페이지를 다시 불러 적용한다. 이미 그 언어이면 아무것도 하지 않는다. (2026-11-20 WB04-E1095)
         const languageChoice = parseLanguageTarget(name);
         if (languageChoice !== null) return this._chooseLanguage(languageChoice);
-        // 난이도 선택(`Patch1101.SetDifficulty(n)`)은 창 없이 difficulty 설정에 써서 저장한다. 새 미션의 적 AI 생성 때 적용된다. (2026-11-20 WB04-E1096)
+        // 난이도 선택은 메인 메뉴에서만 저장한다. 미션 중의 오래된 메뉴/직접 Tell도 같은 관문에서 막는다.
         const difficulty = parseDifficultyTarget(name);
-        if (difficulty !== null) { this._settings?.set('difficulty', difficulty); this._displayDirty = true; return true; }
+        if (difficulty !== null) { if (!this._campaignWorld && !this._clientGuide?.current()) this._settings?.set('difficulty', difficulty); this._displayDirty = true; return true; }
         // 스커미시 설정 변경(`Patch1101.SkirmishSet(...)`)은 창 없이 설정에 쓰고 알맞은 화면을 다시 연다. 시작(`Patch1101.SkirmishStart`)은 창 없이 미션 시작으로 간다(cpppj UberGump TryTell). (2026-11-20 WB04-E1102)
         const skirmish = parseSkirmishTarget(name);
         if (skirmish.kind === 'set' || skirmish.kind === 'start') {
@@ -3372,7 +3416,7 @@ export class Netstorm {
         const now = () => this._frameSeconds, here = this._input.pointer;
         if (!state.armed) { state.armed = true; state.deadline = now() + 45; state.pointer = { x: here.x, y: here.y }; }
         let demo = false;
-        idleMainMenuActivity(state, () => settings.get('autoDemo') === 1, () => menu.dialog ? 1 : 0, () => this._input.pointer, () => menu.dialog ? 1 : 0, 0,
+        idleMainMenuActivity(state, () => settings.get('autoDemo') === 1, () => menu.dialog || this._settingsPanel ? 1 : 0, () => this._input.pointer, () => menu.dialog || this._settingsPanel ? 1 : 0, 0,
             { popup: () => Boolean(menu.popup?.isOpen), now, queue: () => { demo = true; }, kill: () => {} });
         // 큐 예약 뒤 같은 프레임에서 데모를 시작한다(원본은 입력 큐에 StartDemo 를 올린다). 재무장해 데모 뒤 메인 메뉴로 돌아오면 45초를 다시 센다.
         if (demo) { state.armed = false; this._beginCampaignDemo('DemoStormRages'); }

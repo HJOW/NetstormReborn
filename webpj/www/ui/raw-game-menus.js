@@ -94,8 +94,10 @@ export class RawGameMenus {
         // 난이도(Difficulty) 하위 메뉴다. 항목은 번역하고 선택은 Tell 대상 `Patch1101.SetDifficulty(n)` 으로 가서 앱이 difficulty 설정에 쓴다(cpppj 11차). 장치가 없으면 만들지 않는다. 프레임 상한 하위 메뉴 다음에 둔다. (2026-11-20 WB04-E1096)
         const difficultyMenu = () => {
             if (typeof hooks.difficulties !== 'function') return;
+            const levels = hooks.difficulties(); // 미션 문맥이 빈 목록을 주면 제목/하위 메뉴도 만들지 않는다.
+            if (!levels.length) return;
             hooks.vertical();
-            for (const level of hooks.difficulties()) this.#check(level.checked, this.#text(level.label), C.tell, `Patch1101.SetDifficulty(${level.number})`);
+            for (const level of levels) this.#check(level.checked, this.#text(level.label), C.tell, `Patch1101.SetDifficulty(${level.number})`);
             need(hooks.submenu, '게임 메뉴의 하위 작성 연결 누락')(this.#text('Difficulty'), hooks.take(), 1, 0);
         };
         // 프레임 상한(Frame Rate) 하위 메뉴다. 선택은 Tell 대상 `Patch1101.SetFrameRate(n)` 이며 앱이 maxFPS 설정에 쓴다(cpppj 후순위 F1). 장치가 없으면 만들지 않는다. (2026-11-20 WB04-E1094)

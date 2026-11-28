@@ -30,13 +30,13 @@ function makeApp({ language = 'english', storage = makeStorage(), view = null } 
     return { app, actions, storage };
 }
 
-// 웹 메뉴의 마지막 항목은 초기화를 직접 실행하지 않고 게임 안 확인 창(Tell)을 열며 원본 비교 메뉴에는 추가하지 않는다.
-test('Reset All 메뉴는 웹 메뉴 최하단에서 확인 창 Tell 을 연다', () => {
+// 초기화 항목은 JSON 복사/불러오기 두 행 앞에서 기존 확인 창을 열고 원본 비교 메뉴에는 추가하지 않는다.
+test('Reset All 메뉴는 설정 전송 두 행 앞에서 확인 창 Tell 을 연다', () => {
     const settings = new Settings();
     const web = buildOptionsItems(settings);
-    assert.deepEqual(web.at(-1).command, { name: 'Tell', argument: PRODUCT_RESET_ALL_TARGET });
+    assert.deepEqual(web.at(-3).command, { name: 'Tell', argument: PRODUCT_RESET_ALL_TARGET });
     assert.equal(PRODUCT_RESET_ALL_TARGET, 'Patch1101.ResetAll');
-    assert.equal(web.at(-1).label, 'Reset All');
+    assert.equal(web.at(-3).label, 'Reset All');
     assert.equal(buildOptionsItems(settings, { includeAll: true }).some((item) => item.label === 'Reset All'), false);
 });
 

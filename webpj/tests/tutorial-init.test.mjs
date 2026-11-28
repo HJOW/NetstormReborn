@@ -4,10 +4,31 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import path from 'node:path';
-import { REPO_ROOT } from './helpers.mjs';
+import { REPO_ROOT, readData } from './helpers.mjs';
 import { readRows } from './raw-support.mjs';
 import { resetMissionBattleOptions } from '../www/core/raw-mission-battle-options.js';
-import { initializeTutorialMission } from '../www/core/tutorial-init.js';
+import { bindTutorialUnitCosts, initializeTutorialMission } from '../www/core/tutorial-init.js';
+import { ARCHIVE_PATH, SETUP_PATH, GameData } from '../www/assets/game-data.js';
+import { realPlayerAssets } from './player-scene-support.mjs';
+import { TaffArchive } from '../www/assets/taff.js';
+import { TypeTable } from '../www/assets/type-table.js';
+import { decodeOriginalText } from '../www/assets/text-encoding.js';
+import { MissionScript } from '../www/core/mission-script.js';
+
+// 실제 마지막 초기 미션의 D 안내 대본과 실제 TYPE 가격을 같은 설정 치환기로 연결한다.
+test('Tutorial6 크로스보우 안내는 실제 비용을 표시하고 전역 변수 표기를 남기지 않는다', () => {
+    const files = new Map([[ARCHIVE_PATH, readData(ARCHIVE_PATH)], [SETUP_PATH, readData(SETUP_PATH)]]); // 실제 원본 대본/기본 설정 자료다.
+    const data = GameData.build({ files, language: 'english' }), types = TypeTable.fromArchive(new TaffArchive(readData(ARCHIVE_PATH)), decodeOriginalText); // 현재 설정 등록부와 실제 TYPE 조회다.
+    const mission = new MissionScript(data, 'tutorial6'), price = Math.trunc(realPlayerAssets().types[types.find('windArcher')].cost); // 안내 대본과 실제 정수 건설 비용이다.
+    try {
+        const body = mission.section('D.'); // Crossbows, Part 2의 실제 안내 본문이다.
+        assert.match(body, /\{global\.crossbowCost\}/iu);
+        bindTutorialUnitCosts(data, types, realPlayerAssets().types);
+        assert.equal(data.substitute('{GLOBAL.CROSSBOWCOST}'), String(price));
+        assert.ok(data.substitute(body).includes(`${price} Storm Power`));
+        assert.doesNotMatch(data.substitute(body), /crossbowcost/iu);
+    } finally { mission.dispose(); }
+});
 
 // 원본 관측 행이다. 파일이 없으면 검사를 건너뛴다. (2026-11-08 WB04-E38)
 const rows = readRows(path.join(REPO_ROOT, 'cpppj', 'tests', 'fixtures', 'tutorial-init-x86.tsv'));

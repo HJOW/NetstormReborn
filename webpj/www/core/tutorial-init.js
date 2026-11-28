@@ -12,6 +12,13 @@ import { asciiLower, configParseLong } from '../assets/config.js';
 const NAME_BUFFER = 80;
 const FORT_BUFFER = 256;
 
+// 실제 windArcher TYPE의 정수 건설 비용을 대본 전역에 공개한다. 설정 파일/진행 저장 변경 통지는 만들지 않는다.
+export function bindTutorialUnitCosts(configuration, types, records) {
+    const crossbow = types.find('windArcher'); // 화면 이름 Crossbow에 대응하는 실제 자산 TYPE 번호이다.
+    if (crossbow < 0 || !records[crossbow]) throw new Error('튜토리얼 크로스보우 TYPE 미설치');
+    configuration.set('global.crossbowCost', String(Math.trunc(records[crossbow].cost)), { silent: true });
+}
+
 // 도달한 실제 효과를 빈 성공으로 대체하지 않는다. (2026-11-08 WB04-E38)
 function effect(hook) {
     if (typeof hook !== 'function') throw new TypeError('Tutorial Init 실제 효과 누락');

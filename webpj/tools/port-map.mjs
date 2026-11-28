@@ -146,6 +146,7 @@ export const WEB_ONLY = Object.freeze({
     'www/modding/mod-time-source.js': '기준선에 없는 모드 대기 중 game/wall 동시 정지 공급원(E1479)',
     'www/modding/mod-math.js': '기준선에 없는 모드 전용 고정 JS 수학/엔진별 libm 차이 제거(E1480)',
     'www/ui/mod-panel.js': '기준선에 없는 모드 파일 가져오기/명시교체·활성/삭제·오류 관리 DOM(E1483)',
+    'www/ui/settings-transfer-panel.js': '사용자 추가 요구의 설정 JSON 입력/클립보드 복사 DOM 창(E1487, 웹 전용)',
     'www/core/tutorial-objective.js': '기준선1313 뒤 사용자 추가 요구인 CP1371의40단계/39키 안내 계약(WB-TUT-1/E1386). 원본 이식1,007단위의 완료량에는 가산하지 않는다.',
     'www/ui/tutorial-objective-gump.js': '기준선1313 뒤 사용자 추가 요구인 CP1372의 배경 없는 튜토리얼 안내 표시(WB-TUT-2/E1387). 원본 이식 완료량에 가산하지 않는다.',
     'www/platform/game-agent-host.js': 'WebMCP에서 현재 게임의 값 조회·실제 DOM 입력·PNG와 녹화 장치를 연결하는 웹 전용 경계(WB04-E1372)',
@@ -154,6 +155,7 @@ export const WEB_ONLY = Object.freeze({
     'www/bootstrap.js': 'webpack 번들의 진입 모듈로 Netstorm 을 만들어 시작하고 window.netstorm 을 노출하는 웹 전용 경계(WB04-E1293)',
     'www/platform/error-reporting.js': '브라우저 콘솔에 게임 예외와 실행 문맥을 남기는 웹 전용 경계(WB04-E862)',
     'www/platform/reset-storage.js': '웹 게임 소유 저장 항목의 확인 후 초기화와 실패 복구 경계(WB04-E863)',
+    'www/platform/settings-transfer.js': '사용자 추가 요구의 전체 설정/진행 JSON 검증·복사·원문 복구 저장 경계(E1487, 웹 전용)',
     'www/core/mission-name-alias.js': 'MissionBegin 단추의 원본 오타 미션 이름(BC1Menu)을 웹 자산의 bc1menu76 으로 연결하는 별칭 표(WB04-E1245, 2026-11-23 사용자 결정)',
     // 일본어 배포 목록은 게임 규칙이 없는 웹 전용 자산 준비 설정이다(E1410).
     'www/platform/japanese-font.js': 'WOFF2가 없는일본어글꼴을Google Fonts CSS/FontFaceSet으로준비하고실패/취소를처리하는웹전용경계(E1412)',
