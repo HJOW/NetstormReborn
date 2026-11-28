@@ -2,6 +2,8 @@ using System.Buffers.Binary;
 using System.Globalization;
 using System.Text;
 using Netstorm.Client.Audio;
+// 같은 실제 Player/구름 소유자에 원문 명시 입력을 설치하고 getter/box 경로도 대조한다.
+using Netstorm.Client.Display;
 using Netstorm.Core.Original;
 using Netstorm.Tests;
 
@@ -43,10 +45,35 @@ public sealed class SceneMusicTests
         X86Fixture.CheckRows(rows, Replay);
     }
 
+    /// <summary>같은9339행을 실제 Player getter/Cloud box 보기로도 대조하며 fallback의 값 복사를 사용하지 않는다.</summary>
+    [Theory]
+    [InlineData("originals")]
+    [InlineData("originalCD")]
+    [InlineData("original1037")]
+    public void EveryOriginalSceneSequenceMatchesBoundCurrentOwners(string edition)
+    {
+        string[][] all = X86Fixture.Read("scenemusic"); Assert.Equal(9339, all.Length);
+        string[][] rows = all.Where(row => row[0] == edition).ToArray(); Assert.Equal(3113, rows.Length);
+        X86Fixture.CheckRows(rows, row => Replay(row, true));
+    }
+
+    /// <summary>기존 독립 입력은 getter를 설치하지 않고 원래 Replay와 같은 경로를 유지한다.</summary>
+    private static bool Replay(string[] row) => Replay(row, false);
+
     /// <summary>한행의각설정과호출을정확한순서로음악본체에전달하고원문기대값과비교한다.</summary>
-    private static bool Replay(string[] row)
+    private static bool Replay(string[] row, bool bindCurrentOwners)
     {
         var state = new SceneMusicState(); new uint[] { 0x1111, 0x2222, 0x3333, 0x4444 }.CopyTo(state.Tints, 0); var random = new GameRandom();
+        ClientGameplayGlobals? game = null;
+        if (bindCurrentOwners)
+        {
+            var currentGame = new ClientGameplayGlobals(); game = currentGame; var cloud = new ClientKencloudGlobals();
+            // 실제 Player 기본 owner1과 달리 원문 명시 local 입력의 초기값은0이다.
+            currentGame.Player.BattleOwnerBox.Value = 0;
+            state.CurrentPlayersReady = () => currentGame.Player.PlayerKnown;
+            state.CurrentLocalPlayer = () => currentGame.Player.BattleOwnerBox.Value;
+            state.BindPaletteDirty(cloud.WorldRedrawBox);
+        }
         byte[] current = new byte[256]; double duration = 0; var events = new List<string>(); var tokens = new List<string>();
         var clock = new Feed(); var durations = new Feed(); var sacrifice = new Feed(); var waiting = new Feed(); var option = new Feed();
         // 조회마다현재실제256BYTE의첫NUL앞을다시읽는다.
@@ -75,7 +102,9 @@ public sealed class SceneMusicTests
                     switch (op[1])
                     {
                         case "index": state.Index = unchecked((int)value); break; case "result": state.ResultState = value; break;
-                        case "battle": state.Battle = value; break; case "players": state.PlayersReady = value; break; case "local": state.LocalPlayer = value; break;
+                        case "battle": state.Battle = value; break;
+                        case "players": if (game is not null) game.Player.PlayerKnown = value; else state.PlayersReady = value; break;
+                        case "local": if (game is not null) game.Player.BattleOwnerBox.Value = value; else state.LocalPlayer = value; break;
                         case "tint": state.Tint = value; break; case "dirty": state.PaletteDirty = value; break; default: throw new InvalidDataException("음악fixture전역종류");
                     }
                     break;

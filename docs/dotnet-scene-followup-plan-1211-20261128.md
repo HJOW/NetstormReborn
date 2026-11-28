@@ -2,7 +2,7 @@
 
 2026-11-28, HJOW-Athlon. AGENTS.md·LEFT_JOBS.md·LEFT_JOBS.dotnetpj.md를 다시 읽고 현재 DN 제품 소스와 CPP 복원 소스, 기존 [1.206 장기 음향 계획](dotnet-audio-owner-followup-1206-20261128.md)을 대조했다. 기존 ignored 읽기 메모 `extracted/dotnet-1212-scene-plan.md`의 실제 getter/호출 순서 조사를 추적 가능한 문서로 옮기고,1.211의 제품 반영 상태를 다시 확인했다. getter 부분은 독립 읽기 검토와도 교차 확인했다. 이 문서 작성에서는 제품 src/tests·다른 docs·LEFT·PORT_MAP·원본 자료를 수정하지 않았고 빌드·검사·게임 실행을 하지 않았다.
 
-**다음 숫자 단위1.212는 Client 전체 회귀와1.210 첫 실패의 교정 재검증이다. Scene 구현 번호가 아니다.** 아래 A–H는 그 관문 이후의 작은 후속 후보이며 전부 미완료 계획이다. 구현 번호는 각 단위를 시작할 때 현행 인수인계에서 정한다. 기존 ignored 파일명의1212를 실제 Scene 구현 완료/진행 번호로 해석하지 않는다.
+**1.212 Client 전체3,105통과 뒤1.213에서 A의 실제 공유 값 연결/집중41건/대표 진입 검증을 마쳤다.** 아래 B–H는 남은 후속이며 A의 범위도 실제 감독 Start/Frame·전체 State 부모 완료와 구별한다. 구현 번호는 각 단위를 시작할 때 현행 인수인계에서 정한다. 기존 ignored 파일명의1212를 실제 Scene 구현 완료/진행 번호로 해석하지 않는다.
 
 ## 1. 범위와 현재 기준
 
@@ -10,7 +10,7 @@
 
 1.211에서 장기 음악 owner가 실제 제품 소스에 반영됐다. 현재 [HostMissionAudio.cs](../dotnetpj/src/Netstorm.Game/HostMissionAudio.cs)는 partial이며, window 생성자는 준비 생성자 뒤 InitializeStartup을 호출하고 최종 Dispose는 DisposeAudioOwners를 호출한다. [HostMissionAudio.Music.cs](../dotnetpj/src/Netstorm.Game/HostMissionAudio.Music.cs)는 동일 device/player→files→두 채널→ForPrimary→Runtime→Selection을 조립하고, [HostMissionAudio.Options.cs](../dotnetpj/src/Netstorm.Game/HostMissionAudio.Options.cs)는 실제 최초 초기화·옵션 재해석·재열기·최종 반납을 구별한다. 순수 옵션 정책은 [ClientAudioOptions.cs](../dotnetpj/src/Netstorm.Client/Audio/ClientAudioOptions.cs), nonthrow 실제 로그 어댑터는 [HostAudioLog.cs](../dotnetpj/src/Netstorm.Game/HostAudioLog.cs)에 있다. 후속 Scene 작업은 이 같은 장기 owner를 빌리며 다시 만들지 않는다.
 
-제품 반영과 최종 관문 통과는 다르다.1.211의 첫 집중 실패·검사 조립 교정·별도 Explicit 실제 하드웨어 관측·최종 재검증 상태는 [1.211 근거 문서](dotnet-canon-1211-20261128.md)를 따른다. 이 문서 작성 시에는 첫 집중 실패 뒤 검사 조립 교정/재검증이 진행 중이다. 별도 하드웨어의 실제 파일/버퍼/worker 진행은 Scene 감독·Start/Frame·State 부모 완료를 증명하지 않는다.1.210의 로그 첫 실패와1.210a 집중 교정도1.212 Client 전체에서 별도로 종결해야 한다.
+1.211의 최초 실패·교정·별도 하드웨어·집중/진입 검증은 [1.211](dotnet-canon-1211-20261128.md), 이후 Client전체3,105통과는 [1.212](dotnet-canon-1212-20261128.md)에 보존했다. 공유 값 연결은 [1.213](dotnet-canon-1213-20261128.md)에서 검증했다. 실제 파일/버퍼/worker 또는 현재 getter 검증을 Scene 감독·Start/Frame·State 부모 완료로 확대하지 않는다.
 
 현재 [PORT_MAP](../dotnetpj/PORT_MAP.tsv)의 실제 대응은 다음 좁은 범위다.1.211 준비 초안을 완료로 간주하거나 아래 대응을 ClientAudio/ClientMain 전체의 완료 표시로 확대하지 않는다.
 
@@ -27,7 +27,7 @@
 `docs/dotnet-audio-owner-followup-1206-20261128.md`의 큰 방향은 유지되지만 다음 세부 누락을 보완해야 한다.
 
 * 최초 Issue·intro·Scene Start·Chat은 현재 DN에서 원문 순서로 끼울 수 있는 네 개의 독립 입구가 아니다.
-* `PlayersReady`·`LocalPlayer`·`PaletteDirty`는 현재 SceneMusicState의 별도 scalar다. 실제 owner가 존재하는 것과 연결돼 있는 것은 다르다. 결과 DWORD도 실제 상자를 먼저 합쳐야 한다.
+* PlayersReady/LocalPlayer의 실제 getter·PaletteDirty 공유 box와 하나의 결과 DWORD는1.213에서 연결/준비했다. 결과 메뉴/이탈/로그인 등 실제 부모가 그 상자를 빌리는 조립은 H에서 남는다.
 * DN의 기존 `Screen.LoadPalette(GamePalette)`는 전체 값 decoder 경로다. CPP 10.78의 실제 파일/부분 읽기 경로 및 모든 팔레트 소비자 갱신을 그대로 대신하지 않는다.
 * Thunder는 계산 본체만 있고 실제 TYPE55 부모·Form·Kernel·삭제 등록은 없다.
 * true Start는 임의의 세션 생성 직후가 아니라 실제 State7 앞단에 있다. State 정리의 Start도 battle을 0으로 쓰기 전의 현재값을 소비한다.
@@ -39,14 +39,14 @@
 | --- | --- | --- |
 | SceneMusicState | `ClientStateResources.Music`; `ClientHostGame.ColorMaps.cs:38~39`가 같은 객체를 HostMissionAudio에 전달 | 1.211 뒤에도 이 객체를 그대로 사용한다. Session별 새 SceneMusicState를 만들지 않는다. |
 | 게임 RNG | `ClientHostGame.cs` 생성자의 `_gameRandom = startup?.Random ?? new GameRandom()`; 실제 시작 자료가 있으면 startup.Random과 동일 | 실제 SceneMusic 생성자가 이 같은 객체를 빌린다. 새 시드·복사본·소비 횟수 보정은 금지한다. 생성/바인딩 자체는 난수를 소비하지 않는다. |
-| 현재 battle 00594fbc | `ClientHostGame.StateResources.cs:20`의 `Music.CurrentBattle = () => _surfaceGlobals.Storage.OwnerMode.Battle ? 1u : 0u` | 이미 제품 연결이다. `StartScene(bool)`은 CPP처럼 fallback Battle만 기록하고 Start를 전달한다. 현재 Storage.OwnerMode.Battle을 인자로 덮어쓰거나 과거 Start 인자를 진단상의 현재값으로 쓰지 않는다. |
+| 현재 battle 00594fbc | `ClientHostGame.StateResources.cs:20`의 `Music.CurrentBattle = () => _surfaceGlobals.Storage.OwnerMode.Battle ? 1u : 0u` | 1.213의 ClientStateResources.BindCurrentMusicOwners가 같은 실제 storage를 연결한다. `StartScene(bool)`은 CPP처럼 fallback Battle만 기록하고 Start를 전달한다. 현재 Storage.OwnerMode.Battle을 인자로 덮어쓰거나 과거 Start 인자를 진단상의 현재값으로 쓰지 않는다. |
 | 현재 벽시각 | ColorMaps의 기존 `_clientClock.Clock.WallSeconds(_clock.Milliseconds)` delegate | SceneMusic의 요청/비교 위치마다 재조회한다. FrameTime의 캐시로 바꾸거나 미리 한 번 읽어서 전달하지 않는다. 게임 Pause와 독립이다. |
 | 현재 이름·길이·선택 | 1.211 제품 `HostMissionAudio.Music.cs:91~95`의 `CurrentMusicName`·`CurrentMusicDuration`·`SelectMusic` | 같은 SelectionState.Current/primary.Duration/Selection을 재사용한다. 이름은 좁은 영어 자산 이름 그대로다. sound/music 옵션이나 mute로 Scene 판단 자체를 생략하지 않는다. |
 | SongEnd 00565e68 | `SceneMusicState.SongEnd` DoubleBox; `ClientStateResources.cs:31`이 State context에 같은 참조 전달 | 이미 공유다. State의 8BYTE 초기화와 Scene 요청이 같은 저장소를 쓴다. 새 double 복사나 다른 기한의 동시 초기화를 넣지 않는다. |
-| PlayersReady 00595344 | `RawPlayerWorldState.cs:10`의 `_gameplay.Player.PlayerKnown` 전체 DWORD | Scene의 현재 값속성은 아직 연결 안 됐다. 소비 위치에서 읽는 선택적 getter와 제품의 필수 바인딩을 추가하는 것이 작은 후보다. `PlayerRecords.Initialized`·세션 존재·bool 상수로 대체하지 않는다. PlayerKnown 전체를 위해 별도 PlayerState를 만들지 않는다. |
+| PlayersReady 00595344 | `RawPlayerWorldState.cs:10`의 `_gameplay.Player.PlayerKnown` 전체 DWORD | 1.213에서 소비 위치의 선택적 CurrentPlayersReady와 제품 바인딩을 연결했다. 독립 fallback은 보존한다. `PlayerRecords.Initialized`·세션 존재·bool 상수로 대체하지 않는다. PlayerKnown 전체를 위해 별도 PlayerState를 만들지 않는다. |
 | LocalPlayer 00540c70 | 같은 Player의 `BattleOwnerBox`(`RawPlayerWorldState.cs:13`) | 현재 owner 조회/같은 상자를 빌린다. TemplateOwner와 다르다. Next는 PlayersReady를 먼저 읽고 참인 경우에만 LocalPlayer를 조회하여 희생 판정에 넘겨야 한다. |
-| PaletteDirty 0059a8b0 | `ClientKencloudGlobals.cs:94`의 `startup.Cloud.WorldRedrawBox`; StateWorldGlobals도 같은 상자를 읽고 씀 | Scene의 현재 독립 setter를 같은 상자 view로 연결할 API가 필요하다. 매 프레임 값 복사나 MapRevision005949d4에 쓰는 방식은 다르다. |
-| ResultState 005c85ac | Scene.ResultState 값속성 외에 `NativeMainMenuStateGlobals.Outcome`, `RawBattleLeave`의 Outcome, `MissionLoginTimerState.RequestPhase`가 UIntBox API | 현재 Game에서 이들을 통합한 실제 owner는 검색되지 않았다. SceneMusicState가 하나의 실제 UIntBox를 소유하고 기존 ResultState 속성을 그 view로 유지한 뒤 세 부모가 같은 상자를 빌리는 것이 최소 후보다. 실제 State/로그인/결과 호출자도 그 상자를 사용해야 제품 결선이 된다. |
+| PaletteDirty 0059a8b0 | `ClientKencloudGlobals.cs:94`의 `startup.Cloud.WorldRedrawBox`; StateWorldGlobals도 같은 상자를 읽고 씀 | 1.213의 BindPaletteDirty가 같은 상자 참조만 빌리고 PaletteDirty 속성은 그 view다. 매 프레임 값 복사나 MapRevision005949d4에 쓰는 방식은 다르다. |
+| ResultState 005c85ac | Scene.ResultState 값속성 외에 `NativeMainMenuStateGlobals.Outcome`, `RawBattleLeave`의 Outcome, `MissionLoginTimerState.RequestPhase`가 UIntBox API | 1.213에서 SceneMusicState.ResultStateBox를 단일 owner로 준비하고 기존 ResultState 속성을 같은 view로 보존했다. Game의 세 실제 부모는 아직 미조립이므로 이후 같은 상자를 빌려야 한다. 실제 State/로그인/결과 호출자도 그 상자를 사용해야 제품 결선이 된다. |
 | 날씨 Tint/Tints | Screen.Colors().Weather는 현재 팔레트의 네 색 번호; 배경은 `ClientHostGame.WorldDrawing.cs:168`에서 `_missionAudio?.Scene.Tint`를 읽음 | 최초 색표 준비와 이후 팔레트 변경에 Tints 네 칸만 갱신한다. LoadPalette 안에서 현재 Tint까지 덮어쓰면 원문 ApplyWeather의 쓰기 순서를 바꾼다. |
 | SP Refresh | `ClientHostGame.ProductionDeck.cs:133`의 실제 RefreshNativeStormPower와 장기 예산 등록표 | CPP처럼 메뉴가 준비된 경우 실제 Refresh에 연결한다. 해당 함수의 초기 준비 전 호출과 메뉴 없음 분기는 원문 위치에서 구별한다. |
 | WeatherSound | 동일 HostMissionAudio의 `PlayGlobal(name)`는 `_player.Play(_list.Lookup(name), 0, 0, 0, 0, 0)` | 현재 같은 player/list를 그대로 쓸 수 있다. 1.211의 공통 음량/mute 관문을 우회하는 두 번째 SoundPlayer는 만들지 않는다. |
@@ -147,7 +147,7 @@ Game 최종 Dispose에서 Screen/output/장기 process binding이 살아 있을 
 
 1.211의 집중/실제 진입과1.212 Client 전체3,105통과 재검증을 마쳤다([전체 결과](dotnet-canon-1212-20261128.md)). 다음 A–H는 실행 순서의 후보이며 아직 구현·완료 단위 번호가 아니다. 각 단위는 현재 부족한 부모를 감추는 빈 callback이나 가짜 Session을 만들지 않는다.
 
-- **A — 현재 공유 값 결선, 미완료.** SceneMusicState의 PlayersReady/LocalPlayer 소비 위치 getter, 실제 Cloud.WorldRedrawBox view, 하나의 ResultState UIntBox를 준비하고 기존 독립 fixture fallback API는 보존한다. 실제 Game 조립에 공유 owner identity 검사를 둔다. 실제 선택 없는 생성/바인딩에서 시각·RNG·파일·채널 변화가 없음을 검사한다.
+- **A — 현재 공유 값 결선,1.213 완료.** SceneMusicState의 현재 Player getter·Cloud box·단일 결과 box와 실제 Game의 identity 검증을 연결했다. 기존/실제 owner 모드의9,339행·집중41/41·대표3진입/실제 Main을 확인했다. 결과 부모와 실제 감독은 남은 B–H 범위다.
 - **B — 실제 월드 음악 조회, 미완료.** Raw Player→제단→룬 단계 및 대기실의 원문 getter를 작은 독립 본체로 복원/결선한다. 기존 BattleSession.IsSacrificeInProgress를 빌리지 않는다. ordinary 조기 반환/PlayerKnown 관문/현재 owner 재조회와 선택된 미복원 challenge 경계를 구별한다. 이 선행이 끝나기 전 actual Scene hooks가 모두 구현됐다고 표시하지 않는다.
 - **C — 파일 팔레트 경계, 미완료.** 10.78 native 파일/부분 읽기 로더를 기존 Screen 저장소에 연결하고 정상/부분 실패의 효과를 대조한다. 먼저 기존 값 decoder의 검사 범위를 native 파일 수명과 구분한다.
 - **D — 팔레트 소비자 갱신, 미완료.** 현재 Tints 공급, Cloud dirty, 실제 메뉴/생산/미니맵/텍스트 등 캡처색 갱신, 현재 renderer invalidate를 한 실제 RefreshPaletteConsumers 입구로 모은다. 소프트웨어 커서의 실제 미완료는 별도 표시한다. 이 입구를 최초/fort/weather 변경이 공유한다.

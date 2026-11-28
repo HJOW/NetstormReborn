@@ -14,10 +14,10 @@ public sealed partial class ClientHostGame
     private StateWorldCleanupGlobals? _stateWorldGlobals;
     /// <summary>전체State부모가빌릴실제전역접근이다. 하위효과나정리를임의실행하지않는다.</summary>
     public StateWorldCleanupGlobals StateWorldGlobals => _stateWorldGlobals ?? throw new InvalidOperationException("실제State장기전역미설치");
-    /// <summary>물리소유자가준비된뒤현재battle조회와동일State주소공간을한번설치한다.</summary>
+    /// <summary>실제 물리 소유자 검증 뒤 현재 Player/battle/Cloud와 같은 State 주소 공간을 연결한다. 장면 감독은 실행하지 않는다.</summary>
     private void BindStateResourceOwners()
     {
-        _stateResources.Music.CurrentBattle = () => _surfaceGlobals.Storage.OwnerMode.Battle ? 1u : 0u;
+        _stateResources.BindCurrentMusicOwners(_gameplay, _surfaceGlobals, _localState, _connections, _startup?.Cloud);
         if (_startup is not { } startup) return;
         _stateWorldGlobals = ClientStateWorldGlobals.Bind(_stateResources.Context(_surfaceGlobals, _localState, _connections, startup.Cloud, _nsInfoGlobals));
     }

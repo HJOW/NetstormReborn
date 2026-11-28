@@ -15,22 +15,37 @@ public sealed class SceneMusicState
     public double DefeatEnd { get; set; }
     /// <summary>00565e68의 실제8BYTE를 State 정리와 음악 감독이 함께 빌린다.</summary>
     public DoubleBox SongEnd { get; } = new();
-    /// <summary>승리 곡 허용 판정의 현재 결과DWORD다.</summary>
-    public uint ResultState { get; set; }
+    /// <summary>005c85ac의 단일 결과DWORD를 제공한다. State/이탈/로그인의 같은 상자 대여 결선은 별도다.</summary>
+    public UIntBox ResultStateBox { get; } = new();
+    /// <summary>기존 독립 입력 API도 같은 결과DWORD를 읽고 쓴다. 값 사본을 두지 않는다.</summary>
+    public uint ResultState { get => ResultStateBox.Value; set => ResultStateBox.Value = value; }
     /// <summary>현재 조회가 없는 독립/CD 경로의 명시 전투DWORD다.</summary>
     public uint Battle { get; set; }
-    /// <summary>Player 표가 준비됐는지 나타내는 현재DWORD다.</summary>
+    /// <summary>현재 조회가 없는 독립 입력의00595344다. Player 기록 배열의 할당 여부와 구별한다.</summary>
     public uint PlayersReady { get; set; }
-    /// <summary>희생 판정에 전달할 현재 로컬Player번호다.</summary>
+    /// <summary>현재 조회가 없는 독립 입력의00540c70이며 희생 판정에 전달한다.</summary>
     public uint LocalPlayer { get; set; }
+    /// <summary>설치되면 희생 준비 관문에서 실제 현재00595344를 읽는다. 독립 입력의 PlayersReady는 보존한다.</summary>
+    public Func<uint>? CurrentPlayersReady { get; set; }
+    /// <summary>준비 관문이 비영일 때만 실제 현재00540c70를 읽는다. 독립 입력의 LocalPlayer는 보존한다.</summary>
+    public Func<uint>? CurrentLocalPlayer { get; set; }
     /// <summary>설치되면 원문 소비 위치마다 실제 현재00594fbc를 다시 조회한다.</summary>
     public Func<uint>? CurrentBattle { get; set; }
     /// <summary>현재 날씨색이다. 원문 최초값은167이다.</summary>
     public uint Tint { get; set; } = 167;
     /// <summary>팔레트 초기화가 채우는 원소별 실제 색번호4개다.</summary>
     public uint[] Tints { get; } = new uint[4];
-    /// <summary>날씨 팔레트 적용 뒤 세우는 화면 갱신DWORD다.</summary>
-    public uint PaletteDirty { get; set; }
+    /// <summary>독립 입력은 자체DWORD를 쓰며 실제 바인딩 뒤에는 같은 Cloud.WorldRedrawBox를 빌린다.</summary>
+    public UIntBox PaletteDirtyBox { get; private set; } = new();
+    /// <summary>날씨 팔레트 적용 뒤 세우는 현재0059a8b0 보기다. 전체DWORD를 보존한다.</summary>
+    public uint PaletteDirty { get => PaletteDirtyBox.Value; set => PaletteDirtyBox.Value = value; }
+
+    /// <summary>같은 실제 구름DWORD의 참조만 빌린다. 이전/현재 값 복사·초기화·외부 효과는 수행하지 않는다.</summary>
+    public void BindPaletteDirty(UIntBox current)
+    {
+        ArgumentNullException.ThrowIfNull(current);
+        PaletteDirtyBox = current;
+    }
 }
 
 /// <summary>시계/곡 선택/실제 월드/설정/표시/효과음의 필수 장치다. 생성 시 모두 검증한다.</summary>
@@ -138,7 +153,7 @@ public sealed class SceneMusic
     public void Next()
     {
         _state.Index = unchecked(_state.Index + 1) % 4;
-        if (_state.PlayersReady != 0 && _hooks.Sacrificing!(_state.LocalPlayer)) { Request(SacrificeMusic); return; }
+        if ((_state.CurrentPlayersReady?.Invoke() ?? _state.PlayersReady) != 0 && _hooks.Sacrificing!(_state.CurrentLocalPlayer?.Invoke() ?? _state.LocalPlayer)) { Request(SacrificeMusic); return; }
         Request(At(ElementMusic, _state.Index)); ApplyWeather();
     }
     /// <summary>시각이 만료되고 비교가능할때만 현재battle을 읽어 다음곡/대기실/메뉴를 선택한다.</summary>
