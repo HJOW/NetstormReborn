@@ -1955,3 +1955,9 @@ cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.PaletteRefresh.cs	3
 cpppj/src/client/ClientMain.h	Netstorm.Game/ClientHostGame.PaletteRefresh.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	session
 cpppj/src/client/UberGump.cpp	Netstorm.Game/ClientHostGame.PaletteRefresh.cs	fd8173a4188950135acb4a30eab2a53598f837d6	session
 cpppj/src/client/UberGump.h	Netstorm.Game/ClientHostGame.PaletteRefresh.cs	b4b434534b43769a6c0030b882a27bae5b5762bf	session
+cpppj/src/client/ThunderProcess.cpp	Netstorm.Client/Display/ThunderProcess.cs	890219ac6a95eb4489d52f238b81c1671bfdd8d3	session
+cpppj/src/client/ThunderProcess.h	Netstorm.Client/Display/ThunderProcess.cs	890219ac6a95eb4489d52f238b81c1671bfdd8d3	session
+cpppj/src/client/ClientMain.cpp	Netstorm.Game/HostThunderFlashes.cs	3f12a2bd4f539e3e30fc029d2cfb999bb9476a33	session
+cpppj/src/client/ClientMain.h	Netstorm.Game/HostThunderFlashes.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	session
+cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.Thunder.cs	3f12a2bd4f539e3e30fc029d2cfb999bb9476a33	session
+cpppj/src/client/ClientMain.h	Netstorm.Game/ClientHostGame.Thunder.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	session

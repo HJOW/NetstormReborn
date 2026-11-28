@@ -249,6 +249,7 @@ public sealed partial class ClientHostGame : Game
         if (disposing)
         {
             if (_missionRuntime is { } runtime && _gameplay.RuntimeCallActive(runtime.Session)) throw new InvalidOperationException("실제 Runtime 배송 종료 전 호스트 종료");
+            ClearNativeThunderFlashes();
             _connections.ShutdownDevices();
             // 전체 HUD의 파생 분배와 소유 노드를 자식 공장보다 먼저 반납한다.
             ReleaseNativeUberRoot();
@@ -808,7 +809,7 @@ public sealed partial class ClientHostGame : Game
                 // SL-3c: 미션 음향이 있을 때만 주변음을 실제 재생기에 전달한다. 메뉴에서는 종전처럼 조용하다.
                 Sound = (name, loop, volume, pan, priority, limit) => { _missionAudio?.PlayAmbient(name, loop, volume, pan, priority, limit); },
                 CurrentDialog = () => 0u,
-                Flash = _ => { },
+                Flash = brightness => RequestNativeThunderFlash(brightness),
             });
             _surfaceGlobals.Storage.UpdateAmbientWind(_gameRandom);
         }
@@ -997,6 +998,7 @@ public sealed partial class ClientHostGame : Game
         if (!ScreenGeometry.ScreenModeIsLegal(ScreenPresentation.ModernScreenMode(requested), true)) throw new InvalidOperationException("지원하지 않는 화면 모드 조합");
         bool currentFull = (_driver.Screen.Flags & ScreenMode.FullScreen) != 0, nextFull = (requested & ScreenMode.FullScreen) != 0;
         if (nextFull != currentFull) { if (nextFull) ApplyFullscreen(false); else ApplyWindowed(); }
+        else if (ScreenPresentation.ModernScreenMode(requested) != _driver.Screen.Flags) ClearNativeThunderFlashes();
         if (!_driver.Screen.SetMode(requested)) throw new InvalidOperationException("지원하지 않는 화면 모드 조합");
         uint actual = _driver.Screen.Flags;
         if (_startup != null)
@@ -1037,6 +1039,7 @@ public sealed partial class ClientHostGame : Game
     /// <summary>창 모드로 돌린다. 모드 전환은 저장 팔레트를 다시 적용한다(원본과 같은 순서).</summary>
     private void ApplyWindowed()
     {
+        ClearNativeThunderFlashes();
         _graphics.HardwareModeSwitch = false;
         Window.IsBorderless = false;
         _graphics.PreferredBackBufferWidth = _windowedSize.X;
@@ -1049,6 +1052,7 @@ public sealed partial class ClientHostGame : Game
     /// <param name="first">시작부터 전체화면인지.</param>
     private void ApplyFullscreen(bool first)
     {
+        ClearNativeThunderFlashes();
         if (!first)
         {
             _windowedSize = new Point(

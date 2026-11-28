@@ -19,6 +19,7 @@ public sealed partial class ClientHostGame
     {
         _stateResources.BindCurrentMusicOwners(_gameplay, _surfaceGlobals, _localState, _connections, _startup?.Cloud);
         BindSceneMusicWorld();
+        BindNativeThunderOwner();
         if (_startup is not { } startup) return;
         _stateWorldGlobals = ClientStateWorldGlobals.Bind(_stateResources.Context(_surfaceGlobals, _localState, _connections, startup.Cloud, _nsInfoGlobals));
     }
