@@ -109,6 +109,18 @@ public sealed class HostRootFactorySet : IDisposable
         }
     }
 
+    /// <summary>State 정리로 첫 창이 실제 해제된 뒤 같은 첫 공장으로 새 창을 생성하고 장부를 갱신한다.</summary>
+    public uint RecreatePrimary()
+    {
+        ObjectDisposedException.ThrowIf(_disposed, this);
+        if (_tokens.Count != 0 && _tree.Node(_tokens[0]) is not null)
+            throw new InvalidOperationException("살아 있는 첫 NSInfo 창의 중복 생성 금지");
+        uint token = Primary.Create();
+        if (_tokens.Count == 0) _tokens.Add(token);
+        else _tokens[0] = token;
+        return token;
+    }
+
     /// <summary>살아 있는 창이 소유한 실제 NSInfo 루트 토큰인지 판정한다. F6 등 바깥 토큰은 거짓이다.</summary>
     /// <param name="token">검사할 토큰이다.</param>
     public bool OwnsToken(uint token)

@@ -36,7 +36,7 @@ public sealed partial class ClientHostGame
     /// <remarks>2026-11-26 1.079에서 R5-4c2용으로 추가했다. 근거: cpppj RawProductionControls.cpp 184~186행의 예산/격자/배경 생성과 UberRootGump.cpp 86행의 생산 공장 부착, HudDock.cpp의 왼쪽 도킹이다. 격자 내용물 populatation·유지·입력·음향·동기화 본체는 R6/R11에서 잇는다. DN-MP-01 우클릭 메뉴 표시는 이 틀의 HELP 포인터로 검증한다.</remarks>
     private void EnsureMissionProductionDeck()
     {
-        if (_missionProduction is not null)
+        if (_missionProduction is { RootToken: not 0 })
         {
             int height = _driver.Screen.Height;
             if (height > 80)
@@ -47,6 +47,25 @@ public sealed partial class ClientHostGame
             return;
         }
 
+        uint token = CreateNativeProductionPanel();
+        var panel = _missionProduction ?? throw new InvalidOperationException("생산 덱 실제 공장 결과 없음");
+        var tree = (_mainMenu ?? throw new InvalidOperationException("생산 덱 실제 공통 트리 없음")).Tree;
+        var root = panel.Node(token) as ProductionRootNode ?? throw new InvalidOperationException("생산 덱 실제 부모 없음");
+        root.BaseWidth = root.Width = 80;
+        float deckHeight = _driver.Screen.Height - 80;
+        root.BaseHeight = root.Height = deckHeight;
+        panel.Attach(token, 0, 0, tree.Create.Entries[0], 0);
+        panel.Idle(root.Budget);
+        _menuDirty = true;
+    }
+
+    /// <summary>실제 생산 패널을 원문 Construct로 생성해 토큰을 돌려준다. 부착/크기는 호출한 HUD 부모가 정하며 반납된 이전 출력 대여만 먼저 정리한다.</summary>
+    private uint CreateNativeProductionPanel()
+    {
+        if (_missionProduction is { RootToken: not 0 }) throw new InvalidOperationException("살아 있는 생산 패널의 공장 중복 호출");
+        _missionProduction?.Dispose();
+        _missionProduction = null;
+        _productionHelp = null;
         var menu = _mainMenu ?? throw new InvalidOperationException("생산 덱의 실제 공통 트리 없음");
         var text = _htmlText ?? throw new InvalidOperationException("생산 덱의 실제 문자 owner 없음");
         var menus = _htmlMenus ?? throw new InvalidOperationException("생산 덱의 실제 메뉴 열 없음");
@@ -89,18 +108,14 @@ public sealed partial class ClientHostGame
             Cursor = SelectNativeCursor,
         };
         var panel = new HostProductionWindows(tree, text, context, _productionGlobals, devices);
+        // 부분 생성 실패도 같은 현재 소유자가 반납할 수 있도록 생성 전에 기록한다.
+        _missionProduction = panel;
         uint token = panel.Construct();
         // 실제 세션 완전 적재와 생산 유지를 연결하기 전까지 루트 유지 Idle을 끈다. 예산 Idle은 그대로 둬 SP 표시를 갱신한다.
         tree.Lifetime.SetIdle(token, false);
         panel.SetPalette(_driver.Screen.LogicalPalette);
-        var root = panel.Node(token) as ProductionRootNode ?? throw new InvalidOperationException("생산 덱 실제 부모 없음");
-        root.BaseWidth = root.Width = 80;
-        float deckHeight = _driver.Screen.Height - 80;
-        root.BaseHeight = root.Height = deckHeight;
-        panel.Attach(token, 0, 0, tree.Create.Entries[0], 0);
-        panel.Idle(root.Budget);
-        _missionProduction = panel;
         _menuDirty = true;
+        return token;
     }
 
     /// <summary>같은 현재 등록표에서 예산 창을 찾아 실제 가상 부착으로 갱신한다.</summary>

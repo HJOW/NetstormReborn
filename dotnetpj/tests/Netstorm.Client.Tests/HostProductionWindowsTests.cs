@@ -114,6 +114,40 @@ public sealed class HostProductionWindowsTests
         using var s = new Scene(); var panel = s.NewPanel(); uint token = panel.Construct(); var root = Assert.IsType<ProductionRootNode>(panel.Node(token)); var budget = Assert.IsType<ProductionBudgetNode>(panel.Node(root.Budget)); s.Sp.Store.Initialize(); s.Sp.Store.Set(1, BitConverter.SingleToUInt32Bits(5000)); s.Game.Player.PlayerKnown = 1; panel.Idle(root.Budget); Assert.Equal(100, budget.Amount); s.Storage.OwnerMode.Fort = true; panel.Idle(root.Budget); Assert.Equal(5000, budget.Amount); s.Sp.Store.Set(1, BitConverter.SingleToUInt32Bits(0)); s.Storage.OwnerMode.Fort = false; panel.Idle(root.Budget); Assert.Equal(4900, budget.Amount); Assert.False(s.Game.Borrowed()); Assert.Equal(0u, s.Game.PlayerRecords.Base);
         s.Game.Player.PlayerKnown = 0; uint budgetToken = root.Budget; uint serial = root.Serial; panel.Attach(token, 0, 0, s.Menu.Tree.Create.Collection.Root, 0); panel.Resize(700); Assert.Equal(620, root.BaseHeight); Assert.Equal(token, panel.RootToken); Assert.Equal(budgetToken, root.Budget); Assert.Equal(serial, root.Serial); var depths = s.Menu.Tree.OwnedNodes(panel).Select(current => (current, panel.Node(current)!.Depth)).ToArray(); panel.Resize(700); Assert.Equal(depths, s.Menu.Tree.OwnedNodes(panel).Select(current => (current, panel.Node(current)!.Depth)).ToArray());
     }
+
+    /// <summary>실제 State 정리 뒤 생산 공장을 교체하며 옛 출력 반납이 새 예산/노드를 지우지 않는지 확인한다.</summary>
+    [Fact]
+    public void StateCleanupAllowsNextProductionFactoryOnSameTree()
+    {
+        using var scene = new Scene();
+        var tree = scene.Menu.Tree;
+        var first = scene.NewPanel();
+        uint previous = first.Construct();
+        first.Attach(previous, 0, 0, tree.Create.Collection.Root, 0);
+        uint previousBudget = scene.Globals.BudgetSerial;
+        tree.KillStateGumps();
+        tree.Lifetime.Cleanup();
+        scene.Menu.ForgetReleasedControls();
+        Assert.Equal(0u, first.RootToken);
+        Assert.False(first.HasNodes);
+        Assert.Null(tree.Node(previous));
+        first.Dispose();
+
+        var next = scene.NewPanel();
+        uint current = next.Construct();
+        next.SetPalette(scene.Screen.LogicalPalette);
+        next.Attach(current, 0, 0, tree.Create.Collection.Root, 0);
+        Assert.NotEqual(previous, current);
+        Assert.NotEqual(previousBudget, scene.Globals.BudgetSerial);
+        Assert.Equal(8, tree.OwnedNodes(next).Length);
+        uint budget = tree.Reference(scene.Globals.BudgetSerial);
+        Assert.NotEqual(0u, budget);
+        Assert.IsType<ProductionBudgetNode>(next.Node(budget));
+        first.Dispose();
+        Assert.NotNull(next.Node(current));
+        Assert.Equal(budget, tree.Reference(scene.Globals.BudgetSerial));
+        scene.Drawing.Draw();
+    }
     /// <summary>중간 번역 실패의 실제2등록과 부분 owner를 Close하고 세 생산 세대를 독립 반납한다.</summary>
     [Fact]
     public void PartialFailureAndRepeatedGenerationsRetireActualNodes()

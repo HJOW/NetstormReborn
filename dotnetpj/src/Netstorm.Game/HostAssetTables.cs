@@ -22,6 +22,14 @@ public sealed class HostAssetTables : IRawSurfaceAssetSource
     /// <summary>비용등은수정가능한현재사본대신실제최초자산의TYPE를조회한다.</summary>
     public IReadOnlyList<OriginalTypeRecord> LoadedTypes => TypeTable.Types;
 
+    /// <summary>실제 자산 번호의 icon TYPE를 찾아 현재 공유 프레임 표의 B/C 구간 수를 읽는다.</summary>
+    public int IconFrameCount(byte kind)
+    {
+        int type = TypeTable.Find("icon");
+        if (type < 0 || type >= Frames.Length) throw new InvalidDataException("icon 실제 TYPE 프레임 표가 없다");
+        return Frames[type].Run(kind).Count;
+    }
+
     /// <summary>실제TYPE/정의/SHP를준비한뒤빈장기물리에한번설치한다. 실패한입력을임의빈표로대체하지않는다.</summary>
     public HostAssetTables(HostStartupScene startup, RawSurfaceStorage storage)
     {

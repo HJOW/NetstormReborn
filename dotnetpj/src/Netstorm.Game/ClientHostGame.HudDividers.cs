@@ -23,9 +23,20 @@ public sealed partial class ClientHostGame
     /// <remarks>2026-11-26 1.075에서 R5-4b용으로 추가했다. 근거: cpppj HudDock.cpp의 kMoved 배치와 UberRootGump.Construct의 구분선 기본 배치다. 패널 생성·kHudMode·메뉴 전환은 R5-4c·R5-4d에서 잇는다. 세로·미니맵 구분선은 원본00542664의 프레임1을 쓰며 채팅 구분선은 배경 프레임0을 쓴다.</remarks>
     private void EnsureMissionHudDividers()
     {
-        if (_hudVertical != 0) return;
         var menu = _mainMenu ?? throw new InvalidOperationException("HUD 구분선의 실제 공통 트리 없음");
         var tree = menu.Tree;
+        // 등록 토큰만 남고 실제 노드가 반납된 State 전환을 구별한다.
+        bool Alive(uint token) => token != 0 && ReferenceEquals(tree.NodeOwner(token), _hudDividerOwner)
+            && tree.Node(token) is { } node && (node.Flags & 0x10000) == 0;
+        if (Alive(_hudVertical) && Alive(_hudMinimapDivider) && Alive(_hudChatDivider)) return;
+        _missionHudRouting?.Dispose();
+        _missionHudRouting = null;
+        _missionHudDock = null;
+        // 부분 정리에 남은 자기 구분선만 반납하고 다른 UI 토큰은 건드리지 않는다.
+        foreach (uint token in new[] { _hudVertical, _hudMinimapDivider, _hudChatDivider })
+            if (Alive(token)) tree.Lifetime.Kill(token);
+        tree.Lifetime.Cleanup();
+        _hudVertical = _hudMinimapDivider = _hudChatDivider = 0;
         var globals = _hudDockGlobals ?? throw new InvalidOperationException("HUD 구분선의 실제 지도 전역 없음");
         uint fortType = menu.BackgroundType;
         // 원본 00542664의 정적 초기값이며 세로 및 미니맵 구분선에 적용한다.

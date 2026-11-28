@@ -248,6 +248,8 @@ public sealed partial class ClientHostGame : Game
         {
             if (_missionRuntime is { } runtime && _gameplay.RuntimeCallActive(runtime.Session)) throw new InvalidOperationException("실제 Runtime 배송 종료 전 호스트 종료");
             _connections.ShutdownDevices();
+            // 전체 HUD의 파생 분배와 소유 노드를 자식 공장보다 먼저 반납한다.
+            ReleaseNativeUberRoot();
             // 임시 HUD 사건 연결을 공통 트리와 채팅창보다 먼저 반납한다.
             _missionHudRouting?.Dispose(); _missionHudRouting = null;
             // 미니맵의 노드와 월드 알림 대여를 세션 및 공통 트리보다 먼저 반납한다.
@@ -333,6 +335,7 @@ public sealed partial class ClientHostGame : Game
             InitializeNativeChatSubmit();
             InitializeNativeMinimap();
             InitializeNativeHudDock();
+            InitializeNativeUberRoot();
             _htmlFactory = new HostHtmlFactory(_mainMenu, _htmlWindows, _htmlMenus, _startup, _driver.Screen, _driver.Input,
                 _scriptStrings, () => _clock.NowSeconds, _ => 0,
                 name => Debug.WriteLine("HTML 메타 명령 미연결: " + name));

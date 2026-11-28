@@ -9,6 +9,18 @@ namespace Netstorm.Client;
 /// <summary>ClientChatRuntime.cpp의 Issue/Chat 초기화 부모를 실제 장기 소유자에 연결한다.</summary>
 public static class ClientChatRuntime
 {
+    /// <summary>같은 현재 manager·Core 관문 뒤 실제 Core와 아이콘 수를 조회해 랭크 접두를 갱신한다.</summary>
+    public static void RefreshClientChatRankPrefix(ClientChatManagerGlobals manager, ClientSubscriberGlobals subscribers,
+        UIntBox coreActive, Func<ReadOnlyMemory<byte>> core, Func<int> minorCount, Func<int> maximumRank, Action<uint> assertion)
+    {
+        var hooks = manager.MakePrefixHooks();
+        hooks.Core = core;
+        hooks.MinorCount = minorCount;
+        hooks.MaximumRank = maximumRank;
+        hooks.Assertion = assertion;
+        RawChatManagerPrefix.RefreshChatManagerRankPrefix(new(manager.Current, subscribers.MySubscriber, coreActive), hooks,
+            GC.AllocateUninitializedArray<byte>(256), GC.AllocateUninitializedArray<byte>(256));
+    }
     /// <summary>원문 좁은 명령 이름에 첫NUL을 붙여 같은 실제 표에 등록한다.</summary>
     private static void Register(ClientDotCommandGlobals commands, string name, uint callback, uint flag) => commands.Register(Encoding.Latin1.GetBytes(name + '\0'), callback, flag);
     /// <summary>map mode의 Chat 세 등록보다 앞서 원문 Issue 네 등록을 실행한다.</summary>

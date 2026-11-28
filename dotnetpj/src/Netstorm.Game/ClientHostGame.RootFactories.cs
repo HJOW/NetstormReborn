@@ -87,7 +87,7 @@ public sealed partial class ClientHostGame
                 return storage.Pool.Slot(unchecked((int)sid))[0x22];
             },
             TechWeight = core => ClientMetaCoreWeight.Weight(core.Span, () => storage.Types.Count, index => (storage.Types[index].TechBitIndex, storage.Types[index].Level)),
-            RankPicture = rank => RankPicture(startup, rank),
+            RankPicture = RankPicture,
             Describe = type => DescribeType(startup, storage, type, Translate),
             Assertion = line => ErrorLog.Note("NSInfo 원문 진단 줄: " + line),
             PlayerSubscriber = () => _subscriberGlobals.MySubscriber.Value,
@@ -119,7 +119,7 @@ public sealed partial class ClientHostGame
         };
         var messageHooks = new UberMessageProbeHooks
         {
-            BackgroundName = () => "titleMenu",
+            BackgroundName = NativeHudBackgroundName,
             StoredText = token => strings[token],
             StoreText = StoreString,
             TryRead = startup.Files.TryReadAllBytes,
@@ -135,24 +135,19 @@ public sealed partial class ClientHostGame
     }
 
     /// <summary>같은 순위 아이콘 자산을 현재 TYPE 프레임에서 읽는다.</summary>
-    /// <param name="startup">같은 실제 파일 장치다.</param>
     /// <param name="rank">표시할 순위다.</param>
-    private string RankPicture(HostStartupScene startup, int rank)
+    private string RankPicture(int rank)
     {
-        var catalog = new Netstorm.Assets.TypeCatalog(startup.Files);
-        var icon = catalog.Find("icon") ?? throw new InvalidDataException("icon 타입이 없다");
-        int iconLoad = icon.RuntimeIndex - Netstorm.Assets.TypeCatalog.RuntimeIndexBase;
-        var iconFrames = AssetTables.Frames[iconLoad];
         byte[] output = new byte[256];
         byte[] temporary = new byte[256];
         var hooks = new ChatManagerPrefixHooks
         {
-            MinorCount = () => iconFrames.Run((byte)'B').Count,
+            MinorCount = () => AssetTables.IconFrameCount((byte)'B'),
             MaximumRank = () =>
             {
-                int minor = iconFrames.Run((byte)'B').Count;
-                int major = iconFrames.Run((byte)'C').Count;
-                return minor * major - 1;
+                int minor = AssetTables.IconFrameCount((byte)'B');
+                int major = AssetTables.IconFrameCount((byte)'C');
+                return unchecked(minor * major - 1);
             },
             Assertion = line => ErrorLog.Note("NSInfo 랭크 원문 진단 줄: " + line),
         };

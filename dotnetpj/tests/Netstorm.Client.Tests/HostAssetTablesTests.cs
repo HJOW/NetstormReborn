@@ -8,6 +8,23 @@ namespace Netstorm.Client.Tests;
 /// <summary>게임 창 없이 실제 TYPE/SHP 입력과 장기 저장소의 수명 경계를 검증한다.</summary>
 public sealed class HostAssetTablesTests
 {
+    /// <summary>랭크 아이콘은 적재 인덱스가 아닌 실제 TYPE 번호와 현재 공유 프레임 변경을 사용한다.</summary>
+    [Fact]
+    public void RankIconsUseRuntimeTypeAndCurrentFrameStorage()
+    {
+        var storage = new RawSurfaceStorage();
+        var assets = new HostAssetTables(Startup(), storage);
+        int icon = assets.TypeTable.Find("icon");
+        Assert.True(icon >= RiftTypeTable.FirstAssetTypeNumber);
+        int loaded = icon - RiftTypeTable.FirstAssetTypeNumber;
+        Assert.Equal(assets.Definitions[loaded].Clusters.Count(frame => frame.Code.Side == (byte)'B'), assets.IconFrameCount((byte)'B'));
+        Assert.Equal(assets.Definitions[loaded].Clusters.Count(frame => frame.Code.Side == (byte)'C'), assets.IconFrameCount((byte)'C'));
+        Assert.True(assets.IconFrameCount((byte)'B') > 0);
+        Assert.True(assets.IconFrameCount((byte)'C') > 0);
+        storage.Frames[icon] = new RiftTypeFrames([new((byte)'B', (byte)'A', 0, 0), new((byte)'B', (byte)'A', 1, 0), new((byte)'C', (byte)'A', 0, 0)]);
+        Assert.Equal(2, assets.IconFrameCount((byte)'B'));
+        Assert.Equal(1, assets.IconFrameCount((byte)'C'));
+    }
     /// <summary>읽기 전용 실제 자료와 시작 설정을 준비한다. 옵션 저장은 호출하지 않는다.</summary>
     private static HostStartupScene Startup()
     {

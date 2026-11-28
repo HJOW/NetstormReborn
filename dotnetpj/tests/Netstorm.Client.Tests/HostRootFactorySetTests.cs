@@ -116,6 +116,26 @@ public sealed class HostRootFactorySetTests
         Assert.True(scene.Set.OwnsToken(scene.Globals.Current.Value));
     }
 
+    /// <summary>State 지연 삭제가 실제 첫 창을 반납한 뒤 같은 공장·전역으로 새 첫 창을 만든다.</summary>
+    [Fact]
+    public void RecreatePrimaryAfterStateCleanupUsesSameFactoryAndUpdatesToken()
+    {
+        using var scene = new Scene();
+        uint old = scene.Globals.Current.Value;
+        var primary = scene.Set.Primary;
+        Assert.Throws<InvalidOperationException>(() => scene.Set.RecreatePrimary());
+        scene.Menu.Tree.KillStateGumps();
+        scene.Menu.Tree.Lifetime.Cleanup();
+        Assert.Null(scene.Menu.Tree.Node(old));
+        uint made = scene.Set.RecreatePrimary();
+        Assert.NotEqual(old, made);
+        Assert.Same(primary, scene.Set.Primary);
+        Assert.Equal(made, scene.Globals.Current.Value);
+        Assert.True(scene.Set.OwnsToken(made));
+        Assert.False(scene.Set.OwnsToken(old));
+        Assert.Equal(1, scene.Set.Count);
+    }
+
     /// <summary>둘째와 세째 NSInfo창을 만들고 세 토큰을 구별한다.</summary>
     [Fact]
     public void CreateExtraAddsSecondAndThirdWindows()
