@@ -1948,6 +1948,9 @@ cpppj/src/client/ClientAudio.cpp	Netstorm.Game/HostMissionAudio.Options.cs	bd294
 cpppj/src/client/ClientAudio.h	Netstorm.Game/HostMissionAudio.Options.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	port
 cpppj/src/client/NativeFortSaveVirtual.cpp	Netstorm.Client/Audio/SceneMusicVirtualCount.cs	2736c2d3fccaf3b3ac74c4e2d041f913ccdac701	port
 cpppj/src/client/NativeFortSaveVirtual.h	Netstorm.Client/Audio/SceneMusicVirtualCount.cs	2736c2d3fccaf3b3ac74c4e2d041f913ccdac701	port
+cpppj/src/client/NativeFortSaveVirtual.cpp	Netstorm.Client/NativeFortSaveVirtual.cs	8912d1ed1f3d890f226cb10416d65f0b513013df	port
+cpppj/src/client/NativeFortSaveVirtual.h	Netstorm.Client/NativeFortSaveVirtual.cs	8912d1ed1f3d890f226cb10416d65f0b513013df	port
+cpppj/src/client/NativeFortSnapshot.cpp	Netstorm.Client/Host/NativeFortContentSave.cs	93d891ac8a1d3205ee73a30033094086c71cf730	port
 cpppj/src/client/PaletteFileRead.cpp	Netstorm.Client/Display/PaletteFileRead.cs	15a914d3f95c4d451d7760a208f863e71b439929	L1
 cpppj/src/client/PaletteFileRead.h	Netstorm.Client/Display/PaletteFileRead.cs	15a914d3f95c4d451d7760a208f863e71b439929	L1
 cpppj/src/client/ClientMain.cpp	Netstorm.Client/Display/ClientPaletteConsumers.cs	3f12a2bd4f539e3e30fc029d2cfb999bb9476a33	session
