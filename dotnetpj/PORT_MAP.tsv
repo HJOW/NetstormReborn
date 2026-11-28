@@ -1975,3 +1975,11 @@ cpppj/src/client/RawMonitorTime.cpp	Netstorm.Game/WindowsMonitorCalendar.cs	8f60
 cpppj/src/client/RawMonitorTime.h	Netstorm.Game/WindowsMonitorCalendar.cs	8f60c53d047e08eeea99d288c04716e062bc3ae2	port
 cpppj/src/o/RawBridgeCarriers.cpp	Netstorm.Core/Original/RawBridgeCarriers.cs	140ed3a310964abb8fe6c3b35881898a2a8c108a	port
 cpppj/src/o/RawBridgeCarriers.h	Netstorm.Core/Original/RawBridgeCarriers.cs	140ed3a310964abb8fe6c3b35881898a2a8c108a	port
+cpppj/src/client/ClientBridgeDecay.cpp	Netstorm.Client/ClientBridgeDecay.cs	29dbc48c27414d6fea5531be24635612abfa56ff	port
+cpppj/src/client/ClientBridgeDecay.h	Netstorm.Client/ClientBridgeDecay.cs	29dbc48c27414d6fea5531be24635612abfa56ff	port
+cpppj/src/client/RawCampaignSession.cpp	Netstorm.Client/Host/HostSession.BridgeDecay.cs	aed29e3d1540271664d155e80162d66ac0ac7d84	session
+cpppj/src/client/RawCampaignSession.h	Netstorm.Client/Host/HostSession.BridgeDecay.cs	baf141ebe8d2893459a1b18ea74a6caa88504468	session
+cpppj/src/client/RawSurfaceWorld.cpp	Netstorm.Client/Host/HostSession.BridgeDecay.cs	a7509bbc750503ddd6f2121303c2b0c532bf20a9	session
+cpppj/src/client/RawSurfaceWorld.h	Netstorm.Client/Host/HostSession.BridgeDecay.cs	14fd017c3b6ca87880374e044e3ac00bf0575c2e	session
+cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.SceneFrame.cs	3f12a2bd4f539e3e30fc029d2cfb999bb9476a33	session
+cpppj/src/client/ClientMain.h	Netstorm.Game/ClientHostGame.SceneFrame.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	session

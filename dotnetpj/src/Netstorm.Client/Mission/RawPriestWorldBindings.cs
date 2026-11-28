@@ -303,6 +303,8 @@ public sealed class RawPriestWorldBindings : IDisposable
     public bool FallWalker(int sid) => RawPriestFall.MakePriestFallWalker(_core.Pool, _fall, _effects.OtherWalkerFall)(sid);
     /// <summary>현재 TYPE·프로세스 상자를 호출마다 읽는다.</summary>
     public uint MovementProcessType(uint type) => RawMovementProcessTypes.Select(_core.Pool.Edition, _core.Types, _state.Movement, type);
+    /// <summary>다리 대피가 사제 이동 선택과 같은 현재 TYPE 역할을 빌린다.</summary>
+    public RawMovementProcessTypes Movement => _state.Movement;
     /// <summary>free·damageEffect0은 자연 반환하며 나머지는 원래 burning 전체 몸체를 요구한다.</summary>
     public void DamageableRefresh(int sid)
     {

@@ -1,7 +1,9 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-28 사용자 goal로 장기 복원 재개 · G2 선행1.222 다리 대피 본체·G1/1.221 실제 MonitorTime 완료·F/1.220 정기7,720통과 · C/D/E1.217~1.219 완료 · 해상도 계획1.216·제품1.222 · 미니맵 드래그 놓기 뒤 추가 960픽셀 차이 교정, 기존 1픽셀·전환 수명 미완료 · R5-4c3 전체 검증 미완료 · 1.116 생산 격자 부모 소실 재삭제 수정·CPP/원본 추가 대조 필요 · 1.117 Form SID 재사용 슬롯 보호 확인 · 1.215 F3 여닫기·문장 보존 검증, 물리 키 별도 확인 · 다음 R5-4c3c 남은 픽셀·전환 수명 및 R5-4c4 → R5-4d → R5-3 → R5-5 → R6 · R5 2/5, R4 2/8 · 최신 전체1.220(Assets383·Core4,121·Client3,216 합계7,720통과·실패0·기본 옵트인 음향2미실행), 1.184 Client1실패는 1.186a 재검증으로 교정, 마지막 완료 관문1.076(7,379통과), 중단 회귀1.080(7,385통과·L2 세 종료1) · cpppj 제품1383/이전ZIP1378·집중검증1382/1383 · 튜토리얼 안내 DN-TUT-1~4 필수 미완료**
+**2026-11-28 사용자 goal로 장기 복원 재개 · G2/1.223 실제 붕괴·SceneFrame 연결·G1/1.221 MonitorTime 완료·F/1.220 정기7,720통과 · C/D/E1.217~1.219 완료 · 해상도 계획1.216·제품1.223 · 미니맵 드래그 놓기 뒤 추가 960픽셀 차이 교정, 기존 1픽셀·전환 수명 미완료 · R5-4c3 전체 검증 미완료 · 1.116 생산 격자 부모 소실 재삭제 수정·CPP/원본 추가 대조 필요 · 1.117 Form SID 재사용 슬롯 보호 확인 · 1.215 F3 여닫기·문장 보존 검증, 물리 키 별도 확인 · 다음 R5-4c3c 남은 픽셀·전환 수명 및 R5-4c4 → R5-4d → R5-3 → R5-5 → R6 · R5 2/5, R4 2/8 · 최신 전체1.220(Assets383·Core4,121·Client3,216 합계7,720통과·실패0·기본 옵트인 음향2미실행), 1.184 Client1실패는 1.186a 재검증으로 교정, 마지막 완료 관문1.076(7,379통과), 중단 회귀1.080(7,385통과·L2 세 종료1) · cpppj 제품1383/이전ZIP1378·집중검증1382/1383 · 튜토리얼 안내 DN-TUT-1~4 필수 미완료**
 
+
+**1.223 G2 실제 주 프레임 연결.** 같은 실제 Surface·세션의 붕괴/대피·현재 모달을 Wind→MonitorTime→붕괴→SceneFrame→미니맵 순서에 연결했다. 메뉴 Kernel도 같은 위치에서 실행한다. 실제1-1에서 게임 Pause 중 곡/기한 갱신, Movie 잠금 중 보존과 해제 후 갱신을 확인했다. 대표3미션 진입/90프레임 덤프·여섯 화면은 기존과 같다. 전체 State/자연 붕괴 플레이는 남는다. 다음 H의 State7/정리 Start와 실제 미션 시작/반납 부모를 잇는다. [근거](docs/dotnet-canon-1223-20261128.md).
 
 **1.222 G2 선행 다리 이동체 대피.** 원본258행의 중첩 탐색·거리/그래프/수명 선택·현재 이동 Form·진단 순서와 네 전체 슬롯을 전수 대조했다. 주 프레임 붕괴 스캔은 칸 효과 뒤에도 같은 현재 프레임 시각을 읽을 수 있게 보완했다. 실제 Client 스캔·세션 칸 처리·SceneFrame 결선은 다음 G2 잔여이며 아직 완료로 세지 않는다. [근거](docs/dotnet-canon-1222-20261128.md).
 
@@ -228,7 +230,7 @@ D의 실제 UI setter/갱신 후단은1.218, E의 실제 TYPE55/현재 기술 �
 | 월드/입력/수명(1.034~1.061) | WP-1~4·DI-1/3/4·SL-1~8, 5차 사용자 데이터 | WP-5·SL-9와 단계별 소비자 |
 | 월드 표시(1.062~1.076) | 카메라·수집/타일·Submit·프레임, HUD 도크와 입장 카메라 | R5-3·R5-4·R5-5 |
 | 공통 도움말·메뉴·생산 틀(1.077~1.079) | DN-MP-01·메뉴 배경/입력 숨김·생산 덱 틀/우클릭 확인 | 격자 내용물·유지/입력은 R6/R11 |
-| R5-4c3·R5-3 진행(1.080~1.221) | 미니맵 입력·다리 가상 그리기 및 실제 드래그 정상 종료, 대표 L2 불변 | 기존 1픽셀·미션 전환·다른 가상표와 전체 표시 미완료(1.121에서 추가 960픽셀 교정), 완료 수에 미포함 |
+| R5-4c3·R5-3 진행(1.080~1.223) | 미니맵 입력·다리 가상 그리기 및 실제 드래그 정상 종료, 대표 L2 불변 | 기존 1픽셀·미션 전환·다른 가상표와 전체 표시 미완료(1.121에서 추가 960픽셀 교정), 완료 수에 미포함 |
 
 <a id="first-run"></a>
 
@@ -302,7 +304,7 @@ AGENTS.md 지정에 따라0.807에서 공통 [assets/Netstorm.ico](assets/Netsto
 
 ### 1.1 R4 세션 조립 체크 (2/8 완료)
 
-Scene C/D/E/F의FILE/loaded·현재팔레트/Thunder·감독/최초시작은1.217~1.220에서 검증했다. [최신정기7,720통과](docs/dotnet-canon-1220-20261128.md). 주 프레임 MonitorTime은1.221에서 검증했고 다리 붕괴/SceneFrame·전체 State는 미완료다. 단위별 완료 문장은 [1.076 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261126-through-1076)·[1.030 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261125-through-1030)·[0.983 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261124-through-0983)·[0.950 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261124-through-0950)·[0.900 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261123-through-0900)·[0.797 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0797)·[0.732 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0732)·[0.635 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635)과 각 단위 문서에 있다. 아래에는 하위 단계별 완료 범위와 남은 일만 둔다. 통합 조각을 마칠 때 같은 조건의 일괄 덤프로 M1 진척을 확인한다.
+Scene C/D/E/F의FILE/loaded·현재팔레트/Thunder·감독/최초시작은1.217~1.220에서 검증했다. [최신정기7,720통과](docs/dotnet-canon-1220-20261128.md). 주 프레임 MonitorTime은1.221, 실제 붕괴/SceneFrame 연결은1.223에서 검증했고 전체 State/자연 붕괴 플레이는 미완료다. 단위별 완료 문장은 [1.076 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261126-through-1076)·[1.030 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261125-through-1030)·[0.983 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261124-through-0983)·[0.950 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261124-through-0950)·[0.900 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261123-through-0900)·[0.797 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0797)·[0.732 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0732)·[0.635 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635)과 각 단위 문서에 있다. 아래에는 하위 단계별 완료 범위와 남은 일만 둔다. 통합 조각을 마칠 때 같은 조건의 일괄 덤프로 M1 진척을 확인한다.
 
 - [x] **R4-1 객체 수명 공통층(0.546~0.600).** 미션에서 `HostSession` 별도 풀을 제거했다. 풀·공장·공간·건물 저장소 공유는 live 슬롯 바이트 대조로 확인했다. Dais·Player·Aviary 개별 몸체, 장기 Unpop·Pop·Display·Graph·Host 실행기, 실제 전송·파생 Runtime pin은 R6 장치 결선에서 잇는다. [마감 감사](docs/dotnet-r4-1-close-20261117.md)
 - [ ] **R4-2 적재 Pop 전체 상태 일치.** cpp 근거는 `RawNormalTerrainWorldBinding`·`RawRegionPaint`·`RawRegionOwnership`·`Islandbuilder`·`SquidPostPop`이다.

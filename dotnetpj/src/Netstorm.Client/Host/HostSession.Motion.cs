@@ -41,6 +41,8 @@ public sealed partial class HostSession
 {
     /// <summary>같은 실제 지면 RegionAt을 쓰는 도착 전용 getter다.</summary>
     private RawCanonPlacementTerrain? _motionTerrain;
+    /// <summary>다리 대피도 이동 부모와 같은 현재 그래프 기준점을 빌린다.</summary>
+    private RawPlayerPlacementAnchor? _motionAnchor;
     /// <summary>미설치/반납 뒤에는 실패하는 실제 도착용 지면 getter다.</summary>
     public RawCanonPlacementTerrain MotionTerrain => FixedPacketNeed(_motionTerrain);
     /// <summary>같은 실제 풀/시계의 정리→정지→Carrier→사제→경로를 순서대로 설치한다. 정리 예약·의식은 비어 있으면 실제 세션 장치를 쓴다.</summary>
@@ -72,7 +74,7 @@ public sealed partial class HostSession
             _ = BuildPriestHaltWorldDevices(effects.Halt, state.Halt);
             _ = BuildCarrierArrivalWorldDevices(cleanup, anchor, state.Carrier, effects.Carrier with { Destroy = effects.VirtualDestroy });
             _ = BuildPriestArrivalWorldDevices(terrain, islands, state.Priest, effects.Priest with { Destroy = effects.VirtualDestroy });
-            RawPathStart starter = BuildPathWorldDevices(cleanup, effects.Path, start, process); _motionTerrain = terrain; return starter;
+            RawPathStart starter = BuildPathWorldDevices(cleanup, effects.Path, start, process); _motionTerrain = terrain; _motionAnchor = anchor; return starter;
         }
         catch
         {

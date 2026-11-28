@@ -744,6 +744,7 @@ public sealed partial class ClientHostGame : Game
             // 감시 쌍·프로세스와 같은 장기 Gump·내용물 Form을 등록한다.
             // 자산 뿌리는 원문 83개 가상표 전체를 실제 공통 본체로 보내며 미복원 표는 명시 거부한다.
             session.BuildWorldDeletionRootDevices();
+            BindNativeBridgeDecay(session, pendingBurning ?? throw new InvalidOperationException("다리 붕괴의 실제 입자 시각 미설치"));
         // R5-1 미션 카메라 장치 조립. 실제 화면 이동·dirty·다시 그리기를 제품 장치에 잇는다. 배경 시차·투영은 R6·DI-4 범위에서 잇는다.
         // 근거: cpppj UberGumpCamera.cpp의 CommitCameraNow·ApplyCameraFrame 결선이다. 시작 덤프에는 닿지 않는다.
         BindMissionCameraDevices(session);
@@ -809,17 +810,18 @@ public sealed partial class ClientHostGame : Game
         if (_clientClock.Initialized && !movieLocked)
         {
             // 원문439aeb/439af0의주변음→바람은입력/설정저장뒤이며Kernel보다먼저같은난수를소비한다.
-            // 같은장기바람은메뉴에서도진행한다. 실제소리/모달/번쩍임은후속연결범위다.
+            // 같은 장기 바람과 현재 실제 모달/번쩍임도 메뉴에서 진행한다.
             RawAmbientSound.Step(_ambientSound, _gameRandom, new AmbientSoundHooks
             {
                 WallSeconds = () => _clientClock.Clock.WallSeconds(_clock.Milliseconds),
                 // SL-3c: 미션 음향이 있을 때만 주변음을 실제 재생기에 전달한다. 메뉴에서는 종전처럼 조용하다.
                 Sound = (name, loop, volume, pan, priority, limit) => { _missionAudio?.PlayAmbient(name, loop, volume, pan, priority, limit); },
-                CurrentDialog = () => 0u,
+                CurrentDialog = () => _mainMenu?.Tree.LifeState.CurrentDialog ?? 0u,
                 Flash = brightness => RequestNativeThunderFlash(brightness),
             });
             _surfaceGlobals.Storage.UpdateAmbientWind(_gameRandom);
             UpdateNativeMonitorTime();
+            UpdateNativeWorldScene();
         }
         // 영상 갱신이 잠기지 않은 미션에서는 현재 카메라와 지도 변경을 매 프레임 미니맵에 반영한다.
         // 근거: 원문 481320은 지연 삭제·Idle·Kernel보다 먼저 실행하며 게임 시계 정지와 독립적이다.
@@ -841,6 +843,8 @@ public sealed partial class ClientHostGame : Game
             // R5-3c3: 미션 월드의 앞단·수집·제출을 실제 화면 버퍼에 합성한다. 메뉴 그리기는 뒤에 덮는다.
             RenderMissionWorldFrame();
         }
+        // 메뉴의 번개/장기 프로세스도 같은 원문 Kernel 위치에서 실행한다. Movie 잠금은 그대로 건너뛴다.
+        else if (_clientClock.Initialized && !movieLocked) _kernel.RunFrame();
         bool menuDrew = false;
         if (_menuDirty && _gumpDrawing is not null && _startup is not null)
         {

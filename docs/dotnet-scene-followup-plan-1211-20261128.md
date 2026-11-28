@@ -189,3 +189,10 @@ Getter/월드 조회와 palette/Thunder는 독립 집중 단위로 나눌 수 �
 현재 DN HostSession에는 CPP RawSurfaceWorld와 같은 World() 소유자가 없다. 새 독립 World를 만들거나 무효 칸 콜백으로 스캔 완료를 꾸미지 않는다. CPP RawCampaignSession의 실제 대피 부모인 RawBridgeCarriers도 없어서 먼저 같은 RawSquidFinder/Hash/Pool에 본체를 이식하고 독립 원문258행을 전수 대조했다. 현재 프레임 참조는 RawBridgeDecayScan.Frame(FrameTimeBox)로 제공한다. 값형 독립 호출 경로도 유지한다.
 
 다음에는 같은 세션의 실제 삭제·Building.NotifySurface·Display.Update·현재 Carrier 이동과 위치 소리로 RawBridgeDecay를 조립한다. Client 전역 스캔은 메뉴의 빈 저장소에서도 실행하되 적격 칸이 선택됐을 때만 현재 Runtime을 빌린다. Wind→MonitorTime→BridgeDecay→SceneFrame→Minimap 순서와 실제 모달을 연결하고 Movie 잠금/게임 Pause/정상 진입을 검증한다.1.222는 대피 본체·시각 참조 선행만 완료이며 실제 G2와 H는 남는다.
+
+
+## 1.223 G2 실제 Frame 연결
+
+ClientBridgeDecay.Run은 실제 같은 Surface/권한과 FrameTimeBox를 사용해 메뉴에서도 전역 스캔을 수행한다. 적격 칸에서만 현재 전체 Runtime을 빌리고 HostSession.DecayBridgeCell로 전달한다. 세션은 같은 Native Surface·지형/Graph·현재 사제 이동 역할·현재 회피 경계·실제 가상 삭제/표면 통지/표시와 균열 음향을 사용한다. 풀만 공유하고 Graph/장부를 따로 가진 조합은 거부한다.
+
+제품 Update에서 현재 모달을 읽고 Wind→MonitorTime→BridgeDecay→SceneFrame→Minimap/Gump/Kernel 순서를 연결했다. 메뉴 Kernel도 실행하며 Movie 잠금에서 생략한다. 게임 Pause에서도 Scene은 동적 벽시각을 읽는다. 실제1-1 Pause/벽시각·Movie 잠금/해제 관측과 대표3진입·화면 비교는1.223 문서를 따른다. 자연 붕괴/대피 플레이·전체 State·카메라/AI 전체 프레임 완료를 의미하지 않는다. 다음은 H State7/정리 Start·결과 공유와 실제 Load/cleanup 부모다.

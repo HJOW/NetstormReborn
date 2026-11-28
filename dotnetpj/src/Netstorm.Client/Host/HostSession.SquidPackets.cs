@@ -77,6 +77,7 @@ public sealed partial class HostSession
     /// <summary>실제 프로세스 수명이 끝날 때 수신 전용 이름/외부 효과/종속 UI의 참조를 함께 반납한다.</summary>
     private void ReleaseSquidPacketDevices()
     {
+        ReleaseBridgeDecayDevices();
         _squidPacketStorage = null; _squidPacketNames = null; _squidPacketEffects = null; _squidPacketUi = null;
         _daisPacketTransmission = null;
         ReleasePathDevices();
