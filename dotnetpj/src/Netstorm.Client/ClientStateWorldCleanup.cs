@@ -49,9 +49,10 @@ public static class ClientStateWorldCleanup
     /// <summary>미선택장치를미리요구하지않고선택된실제자식만해당위치에서검증한다.</summary>
     private static T Need<T>(T? value) where T : Delegate => value ?? throw new InvalidOperationException("전체State정리의선택된실제외부장치누락");
 
-    /// <summary>같은실제소유자검증뒤원문부모를실행한다. Root는현재실제커서/채팅을직접제공하며독립장치입력보다우선한다. 실패한부분쓰기는되돌리지않는다.</summary>
+    /// <summary>같은실제소유자검증뒤원문부모를실행한다. Root의현재커서/채팅/Runtime반납은독립장치입력보다우선한다. 실패한부분쓰기는되돌리지않는다.</summary>
     public static void Cleanup(uint reason, ClientStateWorldContext context, ClientSurfaceGlobals surface,
-        ClientSpGlobals sp, ClientStateWorldDevices devices, Action<uint>? selectCursor = null, Action? cancelCursor = null, Action? resetChatChannels = null)
+        ClientSpGlobals sp, ClientStateWorldDevices devices, Action<uint>? selectCursor = null, Action? cancelCursor = null, Action? resetChatChannels = null,
+        Action? retireRuntime = null)
     {
         ArgumentNullException.ThrowIfNull(context); ArgumentNullException.ThrowIfNull(surface); ArgumentNullException.ThrowIfNull(sp);
         ArgumentNullException.ThrowIfNull(devices);
@@ -78,7 +79,7 @@ public static class ClientStateWorldCleanup
                 new() { ClientActive = () => game.Player.PlayerKnown, LocalOwner = () => game.Player.BattleOwner, Editor = () => game.World.Editor }, () => Need(devices.RefreshSp)()),
             SetSp = (owner, value) => sp.Store.Set(owner, BitConverter.SingleToUInt32Bits(value)),
             SelectCore = (owner, template) => game.CoreData.Select(game.Player, surface.Storage.OwnerMode.Challenge ? 1u : 0u, owner, template),
-            ResetPool = capacity => { runtime.Retire(devices.RetireRuntime); physical.ResetPool(unchecked((int)capacity)); },
+            ResetPool = capacity => { runtime.Retire(retireRuntime ?? devices.RetireRuntime); physical.ResetPool(unchecked((int)capacity)); },
             WallSeconds = surface.WallSeconds,
             Effect = effect =>
             {

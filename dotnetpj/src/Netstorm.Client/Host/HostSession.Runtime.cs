@@ -61,7 +61,7 @@ public sealed partial class HostSession
         using (PinRuntime()) frame();
     }
     /// <summary>전체 State 자식을 실행하기 전에 같은 실제 배송·프로세스·공장 호출 관문을 확인한다.</summary>
-    internal void EnsureStateRuntimeIdle() => EnsureRuntimeCanRelease();
+    public void EnsureStateRuntimeIdle() => EnsureRuntimeCanRelease();
     /// <summary>배송 중 실제 Pool/Player/장치를 명시 반납하는 전체 정리를 거부한다.</summary>
     private void EnsureRuntimeCanRelease()
     {

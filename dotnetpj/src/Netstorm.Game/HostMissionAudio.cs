@@ -72,11 +72,27 @@ public sealed class HostMissionAudio : IDisposable
         return new RawPriestWorldEffects { Shield = shield, FallSound = SoundProcessSystem.MakePriestFallSound(_player) };
     }
 
+    /// <summary>같은 현재 미션의 실제 프로세스 처리기 반납 뒤에만 음향의 세션 참조를 끊는다. 다른 미션이나 늦은 이전 반납은 현재 연결을 보존하고 false다.</summary>
+    public bool UnbindMissionForState(HostSession expected)
+    {
+        ArgumentNullException.ThrowIfNull(expected);
+        if (!ReferenceEquals(expected, _soundSession)) return false;
+        expected.EnsureStateRuntimeIdle();
+        if (!expected.ProcessBindingsReturned()) throw new InvalidOperationException("음향 미션 반납 전 실제 단일 Kernel Clear 처리기 반납 필요");
+        _soundSession = null;
+        _soundProcesses = null;
+        _processState = null;
+        return true;
+    }
+
     /// <summary>같은 Client 프레임 카운터를 연결된 소리 상태에 반영한다.</summary>
     public void SetFrame(uint frame) { if (_processState is not null) _processState.Frame = frame; }
 
     /// <summary>실제 연소가 소유한 비영 소리만 같은 원문 재생기로 정지한다.</summary>
     public void StopEffect(uint sound) { if (sound != 0) _player.Stop(sound); }
+
+    /// <summary>장기 이름표와 같은 실제 재생기에서 반복 중인 버퍼만 정지한다. 음향 장치와 미션 연결 수명은 유지한다.</summary>
+    public void StopLoops() => _player.StopLoops();
 
     /// <summary>저HP 벌프의 실제 파일명/현재좌표를 같은 이름표·위치 재생기로 보낸다.</summary>
     public void BulfHurt(int sid, float x, float y) => _player.PlayOnceAt(x, y, _list.Lookup("bulfHurt.wav"), 0, 0);

@@ -39,6 +39,31 @@ public sealed partial class ClientHostGame
     {
         var startup = _startup ?? throw new InvalidOperationException("전체State정리의실제시작자산미설치");
         ClientStateWorldCleanup.Cleanup(reason, _stateResources.Context(_surfaceGlobals, _localState, _connections, startup.Cloud, _nsInfoGlobals),
-            _surfaceGlobals, _spGlobals, devices, SelectNativeCursor, () => CancelNativeCursorForState(), () => ChatChannels.ResetOccupied());
+            _surfaceGlobals, _spGlobals, devices, SelectNativeCursor, () => CancelNativeCursorForState(), () => ChatChannels.ResetOccupied(),
+            RetireNativeMissionRuntimeForState);
+    }
+
+    /// <summary>실제 State 자식 정리 뒤 이전 미션의 관측·표시·물리 알림만 끊고 같은 Runtime을 동기 반납한다. 새 HUD와 장기 음향/Renderer는 유지한다.</summary>
+    private void RetireNativeMissionRuntimeForState()
+    {
+        var runtime = _missionRuntime ?? throw new InvalidOperationException("State 반납의 실제 현재 Runtime 없음");
+        var session = runtime.Session;
+        if (!ReferenceEquals(session, _missionSession)) throw new InvalidOperationException("State 반납의 실제 현재 Session 불일치");
+        session.EnsureStateRuntimeIdle();
+        if (!session.ProcessBindingsReturned()) throw new InvalidOperationException("State 미션 장치 반납 전 실제 Kernel 반납 필요");
+        _sessionDump?.UnbindSession(session);
+        _worldSprites = null; _worldSpriteState = null; _worldTileModes = null;
+        _worldPrelude = null; _worldCloudQueue = null; _worldShapesDb = null; _worldLogicalPalette = null;
+        NativeMinimap.UnbindWorld();
+        _missionBurning?.Dispose();
+        _missionBurning = null;
+        _missionAudio?.UnbindMissionForState(session);
+        runtime.RetireForState();
+        if (!runtime.Released || _gameplay.Borrowed() || _surfaceGlobals.Storage.Borrowed())
+            throw new InvalidOperationException("State 미션 Runtime의 실제 동기 반납 미완료");
+        _missionRuntime = null;
+        _missionSession = null;
+        _missionDemo = 0;
+        _menuDirty = true;
     }
 }

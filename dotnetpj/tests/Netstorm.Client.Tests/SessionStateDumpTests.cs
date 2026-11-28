@@ -262,4 +262,30 @@ public sealed class SessionStateDumpTests
         }
         finally { File.Delete(path); }
     }
+
+    /// <summary>늦은 미션 반납은 다음 관측을 보존하고 현재 미션 반납만 실제 world0 출력으로 전환한다.</summary>
+    [Fact]
+    public void UnbindExpectedSessionPreservesNewMissionAndReturnsWorldZero()
+    {
+        var kernel = new Kernel();
+        var game = new GameRandom();
+        var crt = new CrtRandom();
+        var dump = new HostSessionDump(kernel, game, crt, () => 90, () => 0);
+        var previous = new HostSession(kernel, game, crt);
+        var current = new HostSession(kernel, game, crt);
+        string path = Path.Combine(Path.GetTempPath(), "netstorm-session-retire-" + Guid.NewGuid().ToString("N") + ".tsv");
+        try
+        {
+            dump.BindSession(previous);
+            dump.BindSession(current);
+            Assert.False(dump.UnbindSession(previous));
+            dump.Write(path);
+            Assert.Contains("\nworld\t1\n", File.ReadAllText(path));
+            Assert.True(dump.UnbindSession(current));
+            dump.Write(path);
+            Assert.Contains("\nworld\t0\n", File.ReadAllText(path));
+            Assert.False(dump.UnbindSession(current));
+        }
+        finally { File.Delete(path); }
+    }
 }

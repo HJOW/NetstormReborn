@@ -72,6 +72,8 @@ public sealed partial class ClientHostGame : Game
     private RawPacketDispatch? _packetDispatch;
     /// <summary>완성한 실제 세션/같은 물리/음향·표시·UI 전체를 보유하는 현재 Runtime이다.</summary>
     private HostMissionRuntime? _missionRuntime;
+    /// <summary>현재 미션의 관측 연결이다. 실제 미션 반납에서 같은 연결을 끊을 수 있도록 호스트가 보관한다.</summary>
+    private HostSessionDump? _sessionDump;
     /// <summary>미션/메뉴보다 오래 같은 표면과 프로세스 장치를 소유한다.</summary>
     private readonly ClientSurfaceGlobals _surfaceGlobals;
 
@@ -261,6 +263,7 @@ public sealed partial class ClientHostGame : Game
             _gumpFormRuntime?.Dispose(); _gumpFormRuntime = null;
             // 객체 출력기는 빌린 세션·색표보다 먼저 반납한다.
             _worldSprites = null; _worldSpriteState = null;
+            _sessionDump?.BindSession(null);
             _missionSession?.ReleasePlayerRecordViews();
             _missionRuntime?.Dispose(); _missionRuntime = null;
             _missionBurning?.Dispose();
@@ -379,12 +382,12 @@ public sealed partial class ClientHostGame : Game
             _driver.BindInputHandler(_menuInput.Dispatch);
             // 메뉴/미션모두같은Client Frame번호/게임시각을기록한다. world1의ProcessTime도같은Frame주소를빌린다.
             // 근거: cpppj SessionStateDump.cpp의 DumpSessionState(world 0 부분). (2026-11-10 L2·L3 장치에서 추가했다)
-            var sessionDump = new HostSessionDump(_kernel, _gameRandom, _crtRandom, () => _clientClock.Frame.Value.Number, () => BitConverter.DoubleToUInt64Bits(_clientClock.Frame.Value.Game));
+            _sessionDump = new HostSessionDump(_kernel, _gameRandom, _crtRandom, () => _clientClock.Frame.Value.Number, () => BitConverter.DoubleToUInt64Bits(_clientClock.Frame.Value.Game));
             // --mission 진입이면 세션 데이터를 조립해 world 1 덤프에 연결한다. 월드 본체 조립은 다음 단위다.
             // (2026-11-12 0.398에서 미션 시작 흐름으로 추가했다)
             if (!string.IsNullOrEmpty(_options.Mission) && _startup is not null)
-                sessionDump.BindSession(StartMission(_options.Mission, _options.Handle ?? "Player", _options.Demo ? 1u : null));
-            _driver.BindSessionDump(sessionDump.Write);
+                _sessionDump.BindSession(StartMission(_options.Mission, _options.Handle ?? "Player", _options.Demo ? 1u : null));
+            _driver.BindSessionDump(_sessionDump.Write);
             _gumpDrawing.Draw();
             _menuDirty = false;
         }

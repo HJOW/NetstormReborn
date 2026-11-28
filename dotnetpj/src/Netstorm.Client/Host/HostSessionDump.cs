@@ -67,6 +67,15 @@ public sealed class HostSessionDump
     /// 근거: cpppj SessionStateDump.cpp의 client.Time().game이며 DN의 미션 경로에 같은 역할의 시계가 없어 0만 나가고 있었다(timeline-0631에서 frame 90 시각 0.0 확인).</remarks>
     public void BindSession(HostSession? session) => _session = session;
 
+    /// <summary>같은 이전 미션만 연결 해제한다. 늦게 도착한 반납은 이미 연결한 다음 미션을 지우지 않는다.</summary>
+    public bool UnbindSession(HostSession expected)
+    {
+        ArgumentNullException.ThrowIfNull(expected);
+        if (!ReferenceEquals(_session, expected)) return false;
+        _session = null;
+        return true;
+    }
+
     /// <summary>그 프레임의 그리기 뒤 현재 world 0 상태를 인자 경로에 쓴다. 난수·Kernel을 전진시키지 않는다.</summary>
     /// <param name="path">덤프를 쓸 파일 경로.</param>
     public void Write(string path)
