@@ -3,6 +3,7 @@
 #include "client/ProductPresentation.h"
 #include "client/FrameRateOption.h"
 #include "client/SkirmishSetup.h"
+#include "client/HtmlWindowMetadata.h"
 #include <algorithm>
 #include <map>
 
@@ -151,15 +152,71 @@ TEST_CASE(Skirmish_ScreenBodies) {
     CHECK(Has(korean, "스커미시") && Has(korean, "인공지능 수: 2") && Has(korean, "어려움 / 동맹"));
     CHECK(Has(BuildSkirmishScreen(ParseSkirmishTarget("Patch1101.Skirmish"), settings, 5, {}), "スカーミッシュ"));
     const auto count = BuildSkirmishScreen(ParseSkirmishTarget("Patch1101.SkirmishCount"), settings, 0, {});
-    CHECK(Has(count, "$Menu=* 2,Tell,Patch1101.SkirmishSet(count,2)") && Has(count, "SkirmishSet(count,7)"));
+    CHECK(Has(count, "$Checked=2,Tell,Patch1101.SkirmishSet(count;2),1,1") && Has(count, "$Checked=7,Tell,Patch1101.SkirmishSet(count;7),0,1"));
     const auto ai = BuildSkirmishScreen(ParseSkirmishTarget("Patch1101.SkirmishAi(2)"), settings, 0, {});
-    CHECK(Has(ai, "$Menu=* Hard,Tell,Patch1101.SkirmishSet(diff,2,3)") && Has(ai, "$Menu=* Ally,Tell,Patch1101.SkirmishSet(ally,2,1)"));
+    CHECK(Has(ai, "$Checked=Hard,Tell,Patch1101.SkirmishSet(diff;2;3),1,1") && Has(ai, "$Checked=Ally,Tell,Patch1101.SkirmishSet(ally;2;1),1,1"));
     const auto translate = [](std::string_view text) { return std::string(text) + "!"; };
     const auto bans = BuildSkirmishScreen(ParseSkirmishTarget("Patch1101.SkirmishBans(0)"), settings, 0, translate);
-    CHECK(Has(bans, "[X] Wind Generator! - windBattery") && Has(bans, "[ ] Rain Generator! - rainBattery") && Has(bans, "Patch1101.SkirmishBans(1)") && !Has(bans, "Previous"));
-    CHECK(Has(BuildSkirmishScreen(ParseSkirmishTarget("Patch1101.SkirmishBans(2)"), settings, 0, translate), "Outpost!") && Has(BuildSkirmishScreen(ParseSkirmishTarget("Patch1101.SkirmishBans(2)"), settings, 0, translate), "$Menu=Previous page,"));
+    CHECK(Has(bans, "$Checked=Wind Generator! - windBattery,Tell,Patch1101.SkirmishSet(ban;0;0),1,1") && Has(bans, "$Checked=Rain Generator! - rainBattery,Tell,Patch1101.SkirmishSet(ban;1;0),0,1") && Has(bans, "Patch1101.SkirmishBans(1)") && !Has(bans, "Previous"));
+    CHECK(Has(BuildSkirmishScreen(ParseSkirmishTarget("Patch1101.SkirmishBans(2)"), settings, 0, translate), "Outpost!") && Has(BuildSkirmishScreen(ParseSkirmishTarget("Patch1101.SkirmishBans(2)"), settings, 0, translate), "$Checked=Previous page,"));
     settings.bans = {"windBattery", "rainBattery", "thunderBattery", "sunArcher", "windArcher"};
     CHECK(Has(BuildSkirmishScreen(ParseSkirmishTarget("Patch1101.SkirmishBans(0)"), settings, 0, translate), "Five units are banned"));
+}
+
+// 생성한 선택 행을 실제 HTML 메타 처리기에 통과시켜 선택 비트와 명령 인자 전체를 확인한다.
+TEST_CASE(Skirmish_CheckedMetadataKeepsSelectionAndActionArguments) {
+    SkirmishSettings settings; // 화면과 각 선택 동작이 공유하는 현재 설정이다.
+    settings.aiCount = 2;
+    settings.ai[0] = {AiDifficulty::Hard, true};
+    settings.bans = {"windBattery"};
+    // 세 언어의 수·난이도/동맹·금지 목록 첫쪽과 마지막쪽을 같은 실제 처리기로 해석한다.
+    for (const auto language : {0U, 7U, 5U}) {
+        for (const auto target : {"Patch1101.SkirmishCount", "Patch1101.SkirmishAi(2)", "Patch1101.SkirmishBans(0)", "Patch1101.SkirmishBans(2)"}) {
+            const auto screen = ParseSkirmishTarget(target); // 화면별 후보와 선택 행 수를 정한다.
+            HtmlWindowGumpNode node; // 메타 처리기가 메뉴 열 수를 갱신하는 현재 부모다.
+            std::vector<std::string> stored; // 실제 명령 해석 뒤 선택 행이 참조하는 문자열 고리다.
+            std::size_t rows{}, selected{}; // 선택 행 전체 수와 선택 아이콘을 켠 행 수다.
+            HtmlWindowMetadataHooks hooks; // 실제 버튼·일반 행은 관찰하고 선택 행은 아래에서 검증한다.
+            hooks.node = [&](auto token) { return token == 1 ? &node : nullptr; };
+            hooks.clearButtons = [](auto) {};
+            hooks.addButton = [](auto, auto, auto, auto, auto) {};
+            hooks.beginMenu = [](auto flags) { CHECK(flags == 0x40000); };
+            hooks.menuText = [](auto, auto, auto) {};
+            hooks.commands.lookup = [](auto name) { CHECK(name == "Tell"); return 1U; };
+            hooks.storeText = [&](auto text) { stored.emplace_back(text); return static_cast<std::uint32_t>(stored.size()); };
+            hooks.checked = [&](auto checked, auto label, auto command, auto parameter, bool enabled) { // 옵션과 같은 checked 경계에서 전체 인자를 검증한다.
+                CHECK(command == 1 && enabled && (checked == 0 || checked == 1));
+                CHECK(!label.empty() && label.front() != '*' && label.front() != '[');
+                const auto parsed = ParseSkirmishTarget(stored.at(parameter - 1)); // 쉼표 없는 메타 열이 원래 인자들로 복원돼야 한다.
+                const auto candidates = screen.kind == SkirmishScreen::Count ? 7U : screen.kind == SkirmishScreen::Ai ? 5U : screen.args[0] == "0" ? 12U : 3U; // 후보 뒤 이동·해제 순서도 보존한다.
+                if (rows >= candidates) {
+                    CHECK(checked == 0);
+                    if (rows == candidates) CHECK(parsed.kind == SkirmishScreen::Bans);
+                    else CHECK(parsed.kind == SkirmishScreen::Set && parsed.args == std::vector<std::string>{"clearbans"});
+                    ++rows;
+                    return;
+                }
+                CHECK(parsed.kind == SkirmishScreen::Set);
+                CHECK(parsed.args.size() == (parsed.args[0] == "count" ? 2U : 3U));
+                auto changed = settings; // 원래 화면은 보존하고 실제 클릭 적용 결과만 확인한다.
+                ApplySkirmishAction(changed, parsed.args);
+                if (parsed.args[0] == "count") CHECK((changed.aiCount == settings.aiCount) == (checked != 0));
+                else if (parsed.args[0] == "diff") CHECK((changed.ai[0].difficulty == settings.ai[0].difficulty) == (checked != 0));
+                else if (parsed.args[0] == "ally") CHECK((changed.ai[0].ally == settings.ai[0].ally) == (checked != 0));
+                else { CHECK(parsed.args[0] == "ban"); CHECK(changed.bans.size() == (checked ? 0U : 2U)); }
+                ++rows;
+                selected += checked != 0;
+            };
+            const auto source = BuildSkirmishScreen(screen, settings, language, {});
+            std::array<char, 8192> buffer{}; // 제품 메타 처리기와 같은 물리 본문 버퍼다.
+            CHECK(source.size() < buffer.size());
+            std::copy(source.begin(), source.end(), buffer.begin());
+            HtmlWindowMetadata metadata(std::move(hooks)); // 생성된 화면을 실제 선택 메뉴 작성 경계까지 진행한다.
+            CHECK(metadata.Process(1, buffer) == 1);
+            CHECK(rows == (screen.kind == SkirmishScreen::Count ? 7U : screen.kind == SkirmishScreen::Ai ? 5U : screen.args[0] == "0" ? 14U : 5U));
+            CHECK(selected == (screen.kind == SkirmishScreen::Ai ? 2U : screen.kind == SkirmishScreen::Bans && screen.args[0] == "2" ? 0U : 1U));
+        }
+    }
 }
 
 // 후순위 F1: Frame Rate 옵션은 60/75/120만 받고 설정이 없으면 원본 기본 75로 본다.

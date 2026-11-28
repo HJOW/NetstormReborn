@@ -39,17 +39,17 @@ struct Words {
 // 영어 문구다.
 constexpr Words kEnglish{"Skirmish", "Choose your opponents and press Start. Islands and geysers are random.", "AI players: {n}",
     "AI {a}: {b} / {c}", "Banned units: {n}/5", "Start", "Cancel", "Back", "Number of AI players", "Pick how many AI players join this game.",
-    "AI {a}", "Choose this AI's difficulty and side.", "Banned units", "Select up to 5 units or buildings that nobody may build. Selected items are marked [X].",
+    "AI {a}", "Choose this AI's difficulty and side.", "Banned units", "Select up to 5 units or buildings that nobody may build. Selected items use the selection icon.",
     "Easy", "Normal", "Hard", "Enemy", "Ally", "Next page", "Previous page", "Clear all", "Five units are banned. Unmark one to choose another."};
 // 한국어 문구다(건물·유닛 이름은 번역 hook이 맡는다).
 constexpr Words kKorean{"스커미시", "상대를 고른 뒤 시작을 누르세요. 섬과 간헐천은 무작위입니다.", "인공지능 수: {n}",
     "AI {a}: {b} / {c}", "금지 유닛: {n}/5", "시작", "취소", "뒤로", "인공지능 수", "이 게임에 참가할 인공지능 수를 고르세요.",
-    "AI {a}", "이 인공지능의 난이도와 진영을 고르세요.", "금지 유닛", "아무도 지을 수 없는 건물·유닛을 최대 5개까지 고르세요. 고른 항목은 [X]로 표시됩니다.",
+    "AI {a}", "이 인공지능의 난이도와 진영을 고르세요.", "금지 유닛", "아무도 지을 수 없는 건물·유닛을 최대 5개까지 고르세요. 고른 항목은 선택 아이콘으로 표시됩니다.",
     "쉬움", "보통", "어려움", "적", "동맹", "다음 쪽", "이전 쪽", "모두 해제", "금지 유닛이 5개입니다. 다른 것을 고르려면 하나를 해제하세요."};
 // 일본어 문구다.
 constexpr Words kJapanese{"スカーミッシュ", "対戦相手を選んで<br>開始を押してください。<br>島と間欠泉は<br>ランダムです。", "AI人数: {n}",
     "AI {a}: {b} / {c}", "禁止ユニット: {n}/5", "開始", "キャンセル", "戻る", "AIの人数", "このゲームに参加する<br>AIの人数を選んでください。",
-    "AI {a}", "このAIの難易度と<br>陣営を選んでください。", "禁止ユニット", "誰も建てられない建物や<br>ユニットを最大5つまで<br>選びます。選んだ項目は<br>[X]で表示されます。",
+    "AI {a}", "このAIの難易度と<br>陣営を選んでください。", "禁止ユニット", "誰も建てられない建物や<br>ユニットを最大5つまで<br>選びます。選んだ項目には<br>選択アイコンが付きます。",
     "易しい", "通常", "硬い", "敵", "同盟", "次のページ", "前のページ", "すべて解除", "禁止ユニットが5つです。<br>別のものを選ぶには<br>1つ解除してください。"};
 // 언어에 맞는 문구 묶음을 돌려준다.
 const Words& WordsFor(std::uint32_t language) { const auto lang = LangOf(language); return lang == Lang::Korean ? kKorean : lang == Lang::Japanese ? kJapanese : kEnglish; }
@@ -137,6 +137,8 @@ SkirmishTarget ParseSkirmishTarget(std::string_view target) {
         if (close != std::string_view::npos && close > open) args = std::string(rest.substr(open + 1, close - open - 1));
         rest = rest.substr(0, open);
     }
+    // $Checked의 쉼표 열을 피한 새 Tell 대상의 세미콜론을 기존 쉼표 인자와 같게 해석한다.
+    std::replace(args.begin(), args.end(), ';', ',');
     result.args = SplitCommas(args);
     if (rest.empty()) result.kind = SkirmishScreen::Main;
     else if (rest == "count") result.kind = SkirmishScreen::Count;
@@ -182,7 +184,7 @@ std::string BuildSkirmishScreen(const SkirmishTarget& target, const SkirmishSett
     case SkirmishScreen::Count: { // AI 수 고르기
         body = Head(words.countTitle, words.countIntro);
         // 1..7 항목을 만들고 현재 값에 표시한다.
-        for (int count = 1; count <= kSkirmishMaxAi; ++count) body += std::string("$Menu=") + (count == settings.aiCount ? "* " : "") + Str(count) + ",Tell,Patch1101.SkirmishSet(count," + Str(count) + ")\n";
+        for (int count = 1; count <= kSkirmishMaxAi; ++count) body += "$Checked=" + Str(count) + ",Tell,Patch1101.SkirmishSet(count;" + Str(count) + ")," + (count == settings.aiCount ? "1" : "0") + ",1\n";
         body += "$Button=" + std::string(words.back) + ",Tell,Patch1101.Skirmish\n";
         break;
     }
@@ -192,10 +194,10 @@ std::string BuildSkirmishScreen(const SkirmishTarget& target, const SkirmishSett
         body = Head(Fill(words.aiTitle, Str(owner - 1)), words.aiIntro);
         // 세 난이도 항목이다.
         for (const auto level : {o::AiDifficulty::Easy, o::AiDifficulty::Normal, o::AiDifficulty::Hard})
-            body += std::string("$Menu=") + (level == ai.difficulty ? "* " : "") + std::string(DifficultyName(words, level)) + ",Tell,Patch1101.SkirmishSet(diff," + Str(owner) + "," + Str(static_cast<int>(o::AiDifficultyToValue(level))) + ")\n";
+            body += "$Checked=" + std::string(DifficultyName(words, level)) + ",Tell,Patch1101.SkirmishSet(diff;" + Str(owner) + ";" + Str(static_cast<int>(o::AiDifficultyToValue(level))) + ")," + (level == ai.difficulty ? "1" : "0") + ",1\n";
         // 두 진영 항목이다.
         for (const bool ally : {false, true})
-            body += std::string("$Menu=") + (ally == ai.ally ? "* " : "") + std::string(side(ally)) + ",Tell,Patch1101.SkirmishSet(ally," + Str(owner) + "," + (ally ? "1" : "0") + ")\n";
+            body += "$Checked=" + std::string(side(ally)) + ",Tell,Patch1101.SkirmishSet(ally;" + Str(owner) + ";" + (ally ? "1" : "0") + ")," + (ally == ai.ally ? "1" : "0") + ",1\n";
         body += "$Button=" + std::string(words.back) + ",Tell,Patch1101.Skirmish\n";
         break;
     }
@@ -203,15 +205,16 @@ std::string BuildSkirmishScreen(const SkirmishTarget& target, const SkirmishSett
         const auto pageCount = (kBannable.size() + kSkirmishBansPerPage - 1) / kSkirmishBansPerPage;
         const auto page = std::min<std::size_t>(target.args.empty() ? 0 : static_cast<std::size_t>(std::max(0, ToInt(target.args[0], 0))), pageCount - 1);
         body = Head(words.bansTitle, settings.bans.size() >= kSkirmishMaxBans ? words.maxNote : words.bansIntro);
-        // 이 쪽의 항목을 만든다. 금지 상태는 [X]/[ ]로 표시하고 내부 이름을 함께 보인다.
+        // 이 쪽의 항목을 만든다. 금지 상태는 옵션과 같은 선택 아이콘으로 표시하고 내부 이름을 함께 보인다.
         for (std::size_t index = page * kSkirmishBansPerPage; index < std::min(kBannable.size(), (page + 1) * kSkirmishBansPerPage); ++index) {
             const bool banned = std::find(settings.bans.begin(), settings.bans.end(), std::string(kBannable[index].type)) != settings.bans.end();
             const auto name = translate ? translate(kBannable[index].label) : std::string(kBannable[index].label);
-            body += std::string("$Menu=") + (banned ? "[X] " : "[ ] ") + name + " - " + std::string(kBannable[index].type) + ",Tell,Patch1101.SkirmishSet(ban," + Str(static_cast<int>(index)) + "," + Str(static_cast<int>(page)) + ")\n";
+            body += "$Checked=" + name + " - " + std::string(kBannable[index].type) + ",Tell,Patch1101.SkirmishSet(ban;" + Str(static_cast<int>(index)) + ";" + Str(static_cast<int>(page)) + ")," + (banned ? "1" : "0") + ",1\n";
         }
-        if (page + 1 < pageCount) body += "$Menu=" + std::string(words.next) + ",Tell,Patch1101.SkirmishBans(" + Str(static_cast<int>(page + 1)) + ")\n";
-        if (page > 0) body += "$Menu=" + std::string(words.previous) + ",Tell,Patch1101.SkirmishBans(" + Str(static_cast<int>(page - 1)) + ")\n";
-        body += "$Menu=" + std::string(words.clear) + ",Tell,Patch1101.SkirmishSet(clearbans)\n$Button=" + std::string(words.back) + ",Tell,Patch1101.Skirmish\n";
+        // 메타 처리기의 종류별 우선순위로 순서가 바뀌지 않도록 이동·해제 행도 아이콘이 꺼진 같은 종류로 만든다.
+        if (page + 1 < pageCount) body += "$Checked=" + std::string(words.next) + ",Tell,Patch1101.SkirmishBans(" + Str(static_cast<int>(page + 1)) + "),0,1\n";
+        if (page > 0) body += "$Checked=" + std::string(words.previous) + ",Tell,Patch1101.SkirmishBans(" + Str(static_cast<int>(page - 1)) + "),0,1\n";
+        body += "$Checked=" + std::string(words.clear) + ",Tell,Patch1101.SkirmishSet(clearbans),0,1\n$Button=" + std::string(words.back) + ",Tell,Patch1101.Skirmish\n";
         break;
     }
     default: { // 첫 설정 화면
