@@ -319,7 +319,7 @@ AGENTS.md 지정에 따라0.807에서 공통 [assets/Netstorm.ico](assets/Netsto
 | 9 시나리오 Edit | 새 맵 기본 `.english` 자동 생성, 누락 시 Test Battle 종료 오류 교정, 편집 UI에서 초기 SP·테크·플레이어·동맹 수정. [cpppj 편집](docs/exe/cpp-scenario-s3-ui-20261111.md) |
 | 10 알려진 버그 | cpppj의 34건 판정과 수정 10건을 해당 파일의 이식·검증에 반영하고 NB 번호를 기록한다. [판정표](docs/exe/cpp-known-bugs-status-20261111.md) |
 | 11 난이도 | Options 행과 AI 배율 부품 선행. 기본은 보통(원본), 쉬움은 적 AI의 다리·생산 주기 ×4와 채취 유닛 절반(최소 1), 어려움은 적 AI의 주기 ×½. 동맹 판정 포함. [cpppj 난이도](docs/exe/cpp-difficulty-d-20261111.md) |
-| 12 스커미시 | Campaign에서 시작/취소, 적 수·AI별 난이도/동맹, 금지 유닛 최대 5개(Outpost 포함). 멀티플레이 규칙의 임의 섬·간헐천. [cpppj 스커미시](docs/exe/cpp-skirmish-sk-20261111.md) |
+| 12 스커미시 | Campaign에서 시작/취소, 적 수·AI별 난이도/동맹, 금지 유닛 최대 5개(Outpost 포함). 멀티플레이 규칙의 임의 섬·간헐천. **2026-11-29 사용자 표시 요구:** 선택 표시는 `*` 문자열 대신 기존 Options와 같은 `$Checked=라벨,명령,인자,선택값,활성값` → `MenuGumpControls.AddChecked` → `MenuGumpDraw`의 선택 아이콘을 재사용한다. 현재 DN에는 Campaign의 `Patch1101.Skirmish` 항목 삽입만 있고 해당 설정 화면·선택 표시 생성기가 없어 이번에 교체할 구현은 없었다. 화면 구현 시 AI 수·개별 난이도·동맹·금지 유닛 모두 이 계약으로 확인한다. [조사 근거](docs/dotnet-skirmish-selection-scope-20261129.md) · [cpppj 스커미시](docs/exe/cpp-skirmish-sk-20261111.md) |
 | 13 일본어 | 외부 Noto Sans JP, 일본어 UI와 본문 영어 대체. 번역 범위는 cpppj D3. [cpppj 일본어](docs/exe/cpp-japanese-l1-l3-20261111.md) |
 | 14 QuickJS | quickjs-ng 엔진 탑재·자체 검사·라이선스 동봉. **2026-11-23 사용자 결정: 모딩 지원** — webpj 이름 체계의 공통 모드 API를 QuickJS로 제공하고 게임 로직은 C#을 유지한다. 결정·세부 단위는 [3.1](#dotnet-modding). [cpppj 엔진 계약](docs/exe/cpp-quickjs-engine-20261111.md) |
 | **15 Reset All** | **미착수.** Options 맨 아래에 Reset All을 제공한다. 취소 시 현재 설정·진행을 보존하고 확인 시 `options.cfg`를 포함한 설정·게임 진행을 초기화한 뒤 종료한다. 다시 실행해 최초 상태를 검증한다. cpppj1325에서 확인/취소·초기화·종료와 최초 상태 복원을 구현했다(2026-11-22). DN은 해당 Source를 옮길 때 대조한다. [AGENTS.md](AGENTS.md) |
