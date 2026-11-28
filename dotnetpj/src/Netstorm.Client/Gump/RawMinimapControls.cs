@@ -223,7 +223,12 @@ public sealed class RawMinimapControls : IDisposable
     {
         CheckAlive();
         if (screenHeight < 75) throw new ArgumentOutOfRangeException(nameof(screenHeight), "미니맵 HUD 화면 높이 부족");
-        if (_token == 0) Construct();
+        if (_token == 0)
+        {
+            Construct();
+            // 원본 Open처럼 새 표시의 첫 갱신을 예약해 공유 캐시와 별개로 초기화된 crop을 현재 카메라에 맞춘다.
+            _state.FullRefresh = 1;
+        }
         if (_node.Parent == 0)
         {
             _node.BaseWidth = _node.Width = 80;

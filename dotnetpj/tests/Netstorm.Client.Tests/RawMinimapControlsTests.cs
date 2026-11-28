@@ -105,6 +105,41 @@ public sealed class RawMinimapControlsTests
         using var rig = new Rig(); Assert.Equal(new uint[] { 111, 11, 17, 110, 14, 15, 112, 16 }, rig.Globals.Colors.Owners); Assert.Equal(118U, rig.Globals.Colors.NeutralIsle); Assert.Equal(119U, rig.Globals.Colors.NeutralNoIsland);
         rig.Gameplay.MapRevision.Value = 37; rig.Mini.SetPalette(rig.Palette); Assert.Equal(37U, rig.Gameplay.MapRevision.Value); rig.Palette.Named[11] = new(0, 0, 0, 233); rig.Mini.SetPalette(rig.Palette); Assert.Equal(38U, rig.Gameplay.MapRevision.Value); Assert.Equal(233U, rig.Globals.Colors.Owners[0]);
     }
+    /// <summary>같은 카메라의 State 재생성에서 새 crop을 복구하고 반복 부착은 공유 갱신값을 늘리지 않는다.</summary>
+    [Fact]
+    public void StateRecreationRebuildsCropWithUnchangedCameraAndViewport()
+    {
+        using var rig = new Rig(false);
+        rig.View = new(BitConverter.SingleToUInt32Bits(256), BitConverter.SingleToUInt32Bits(192), new(84, 0, 320, 240));
+        rig.Mini.SetPalette(rig.Palette);
+        rig.Mini.AttachToMissionHud(240);
+        string[] before = rig.Mini.Report().Split('\t');
+        Assert.True(int.Parse(before[6]) > 0);
+        Assert.True(int.Parse(before[7]) > 0);
+        byte[] bitmap = rig.State.Bitmap;
+        var pixels = new byte[327 * 240];
+        rig.Draw(pixels, new(0, 0, 320, 240));
+        Assert.Equal(0u, rig.Gameplay.MapRevision.Value);
+        Assert.Equal(0, rig.State.Count);
+
+        rig.Tree.KillStateGumps();
+        rig.Tree.Lifetime.Cleanup();
+        Assert.Equal(0u, rig.Mini.RootToken);
+        rig.Mini.AttachToMissionHud(240);
+        string[] after = rig.Mini.Report().Split('\t');
+        Assert.Equal(before[6], after[6]);
+        Assert.Equal(before[7], after[7]);
+        Assert.Same(bitmap, rig.State.Bitmap);
+        var recreated = new byte[327 * 240];
+        rig.Draw(recreated, new(0, 0, 320, 240));
+        Assert.Equal(pixels, recreated);
+
+        // 같은 실제 노드의 반복 부착은 카메라 이동 때와 마찬가지로 전체 갱신을 추가하지 않는다.
+        rig.Rectangles.Clear();
+        rig.Mini.AttachToMissionHud(240);
+        Assert.Equal(0u, rig.Gameplay.MapRevision.Value);
+        Assert.Empty(rig.Rectangles);
+    }
     /// <summary>실제 Route/Frame의 카메라→영역→캡처 순서와 바깥 드래그 후 부분 출력 전체 일치를 확인한다.</summary>
     [Fact]
     public void ActualInputFrameAndPartialDrawingKeepCaptureOrderAndEveryPixel()
