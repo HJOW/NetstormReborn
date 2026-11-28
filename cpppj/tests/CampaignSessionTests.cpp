@@ -3744,9 +3744,11 @@ struct ProductionLifetimeScene {
     SessionServicesFixture external;double wall{100};FontStore fonts{assets.files,"Arial"}; // Session과 글꼴보다 UI를 먼저 반납한다.
     std::unique_ptr<RawCampaignSession> session;std::unique_ptr<RawButtonControls> controls;RawMenuControls* menus{}; // 실제 제품 처리기의 유일 소유자다.
     std::uint32_t baseCount{}; // 패널 설치 전 공통 등록 개수다.
+    std::uint32_t objectNotices{}; // objectNotice 장면에서 실제 UI까지 전달한 GumpForm 부모 소실 통지 수다(2026-11-29 단위1386 추가).
     std::vector<std::pair<ScreenRect,std::uint32_t>> dirtyRectangles;std::uint32_t fullRequests{}; // 실제 기본 Redraw/구조 변경이 외부 Renderer에 전달한 서로 다른 요청이다.
     // 기본 Tutorial2 또는 명시 Tutorial5 덱의 로그인/영어 Start를 실행하며 SP/내용물을 주입하지 않는다.
-    ProductionLifetimeScene(bool trainingDeck=false) {
+    // objectNotice는 제품 CampaignClientServices처럼 Session의 GumpForm 부모 소실 통지를 같은 UI의 ObjectNotice로 보낸다(2026-11-29 단위1386 추가).
+    ProductionLifetimeScene(bool trainingDeck=false,bool objectNotice=false) {
         auto services=external.Services();UseWorldTestLogin(services);
         if (trainingDeck) { services.ai.allocationBytes=[](auto bytes) { std::fill(bytes.begin(),bytes.end(),std::uint8_t{0xa7}); };services.ai.defaultName=[] { return std::string("AI"); }; } // Tutorial5의 실제 AI 생성자에 할당 입력/현재 영어 이름만 공급하며 UI 검사에서 게임 프레임은 진행하지 않는다.
         services.sound.wallSeconds=[this] { return wall; };
@@ -3755,6 +3757,7 @@ struct ProductionLifetimeScene {
         services.production.effects.modeAssertion=[] { throw std::logic_error("생산 수명 검사의 예상 밖 생산 모드 진단"); };
         services.playerContent.gump=[this](auto id) { return controls ? controls->RegisteredGump(id) : 0U; };
         services.playerContent.handle=[this](auto token,auto event,auto first,auto second) { CHECK(controls);return controls->HandleGump(token,event,first,second); };
+        if (objectNotice) services.gumpNotice=[this](std::uint32_t owner,Sid parent) { if (!controls) return;++objectNotices;controls->ObjectNotice()(owner,parent); }; // UI를 먼저 반납한 장면 소멸 뒤 통지는 검사 장치 한계로 건너뛴다. 2026-11-29 단위1386 추가.
         ConfigInterface config([this](std::string_view path) { return assets.files.TryRead(path); });
         config.Configuration().Assign("DataDir=\"d\"\ncurrentLanguage=\"english\"\nmissionSpec=\"{DataDir}\\{local.1}.{currentLanguage}\"\nfortSpec=\"{DataDir}\\{local.1}.fort\"\n[END]\n");
         MissionScript script(config,trainingDeck ? "Tutorial5" : "Tutorial2");CHECK(script.Loaded());auto fort=FortTemplate::Parse(assets.files.Read(script.FortPath()),assets.game.TypeTable());
@@ -3784,6 +3787,12 @@ struct ProductionLifetimeScene {
         for (std::uint32_t id=1;id<1000;++id) { // 공통 수명과 동일한 실제999칸을 읽는다.
             const auto token=controls->RegisteredGump(id);const auto* node=controls->Production()->Node(token);if (node && node->vtable==vtable) return token;
         }return 0;
+    }
+    // 활성 등록표에서 생산 격자(실제 가상표0x506800)의 토큰을 등록 순서대로 모두 찾는다. 2026-11-29 단위1386의 부모 소실 검사에서 추가했다.
+    std::vector<std::uint32_t> Grids() const {
+        std::vector<std::uint32_t> result; // bridge/teleport 두 격자의 현재 토큰이다.
+        for (std::uint32_t id=1;id<1000;++id) { const auto token=controls->RegisteredGump(id);const auto* node=controls->Production()->Node(token);if (node && node->vtable==0x506800U) result.push_back(token); } // 공통 수명과 같은 실제999칸을 읽는다.
+        return result;
     }
     // 파생 소멸자가 끝난 뒤 공통 TextGump가 죽은 예산 주소를 거부하는지 확인한다.
     bool TextRetired(std::uint32_t token) const { try { menus->TextBackend().Fit(token);return false; } catch (const std::runtime_error&) { return true; } }
@@ -3825,6 +3834,36 @@ TEST_CASE(CampaignProductionLifetime_DuplicateOpenAndProviderRecreation) {
         CHECK(scene.session->Sp(1)==10000 && scene.session->PlayerKnown()==1);
     }
     scene.controls->DisableProduction();scene.controls->CleanupGumps();CHECK(scene.Count()==scene.baseCount);
+}
+
+// 생산 격자가 연결한 부모가 삭제된 뒤 패널을 닫을 때 이미 반납된 Form 번호를 다시 삭제하지 않는지 확인한다.
+// 배치 자산(TYPE80)을 현재 Player+9c 기술 부모로 지정해 두 격자를 다시 연결하고, 반납 직후 닫기와 같은 번호가 다른 할당에 재사용된 뒤 닫기를 나눈다.
+// 시작 Player 객체(TYPE152)의 삭제는 이 로컬 캠페인 세션에서 "캠페인 다른 실제 자산 가상 삭제 미연결" 명시 오류라 격자에 도달하지 않으므로 쓰지 않는다.
+// 2026-11-29 단위1386에서 dotnetpj 1.116의 의도적 차이(부모 소실 때 Form 즉시 반납)를 cpppj 현행 동작과 대조하려고 추가했다.
+TEST_CASE(CampaignProductionLifetime_GridParentLossKeepsReturnedFormNumbers) {
+    for (const bool reuse:{false,true}) { // 반납된 번호를 그대로 두는 경우와 다른 할당이 다시 받은 경우를 나눈다.
+        { // 경우마다 새 장면을 만들어 이전 패널·Session 수명을 섞지 않는다.
+            ProductionLifetimeScene scene(false,true);auto& panel=*scene.controls->Production();auto core=scene.session->Core();const auto root=scene.Token(0x5069c0); // 실제 Tutorial2 시작과 제품 UI 통지를 사용한다.
+            const auto owner=scene.session->LocalOwner();auto players=scene.session->PlayerRecords(); // 생산 루트가 읽는 현재 Player+9c 기술 부모 기록이다.
+            const auto parent=scene.session->World().Create(80,2);core.owner.Set(parent,owner);scene.session->World().Pop(parent,50,60,0);Put(players,owner*180+0x9c,parent.value);CHECK(panel.Handle(root,0x0200003d,0,0)==0); // 원본 HUD 사건으로 두 격자를 새 부모에 다시 연결한다.
+            CHECK(root && parent.value && core.pool.Slot(parent)[10]==80);const auto grids=scene.Grids();CHECK(grids.size()==2);if (grids.size()!=2 || !parent.value) return;
+            std::vector<std::uint16_t> forms; // 부모 삭제 전 두 격자가 보유한 실제 Form 번호다.
+            for (const auto grid:grids) { const auto* node=panel.Node(grid);CHECK((node->flags&0x40) && node->object==parent.value && node->form);forms.push_back(static_cast<std::uint16_t>(node->form)); } // 각 격자의 연결 플래그·부모·Form을 읽는다.
+            const auto notices=scene.objectNotices;CHECK(scene.session->World().Destroy(parent,0));CHECK(scene.objectNotices==notices+2); // 실제 공통 삭제가 두 격자에 부모 소실을 통지한다.
+            for (const auto form:forms) CHECK(core.pool.Slot(Sid{form})[11]&1U); // 통지 뒤 종속 삭제가 두 Form 슬롯을 풀에 반납했다.
+            for (const auto grid:grids) { const auto* node=panel.Node(grid);std::cout<<"생산 격자"<<grid<<" 부모 소실 뒤 연결"<<((node->flags&0x40) ? 1 : 0)<<"/부모"<<node->object<<"/Form"<<node->form<<std::endl;CHECK(!(node->flags&0x40) && node->object==parent.value && !node->form); } // 반납된 Form 번호와 연결 플래그는 지우고 Idle 재연결 비교용 부모 값은 원본처럼 유지한다.
+            std::vector<Sid> borrowed;std::vector<std::uint16_t> reused; // 재사용 검사에서 잠시 보유하는 실제 클라이언트 번호다.
+            while (reuse && reused.size()<forms.size() && borrowed.size()<15000) { // 같은 FIFO 풀을 순회해 반납된 두 번호가 다시 할당될 때까지 보유한다.
+                const auto sid=core.pool.Allocate(2);borrowed.push_back(sid);if (std::ranges::find(forms,sid.value)!=forms.end()) { reused.push_back(sid.value);core.pool.AllocatedBytes(sid)[10]=80; } // 다른 객체가 받은 것처럼 TYPE 표식을 남긴다.
+            }
+            if (reuse) CHECK(reused.size()==forms.size());
+            std::string failure;try { scene.controls->DisableProduction(); } catch (const std::exception& error) { failure=error.what(); } // 제품 Close의 실제 격자 Kill과 Form 삭제를 실행한다.
+            std::cout<<"생산 격자 부모80/재사용"<<reuse<<"/닫기 예외:"<<(failure.empty() ? std::string("없음") : failure)<<std::endl; // 이후 장면 소멸 실패로 프로세스가 끝나도 기록이 남게 즉시 비운다.
+            CHECK(failure.empty());
+            for (const auto sid:reused) CHECK(core.pool.Slot(Sid{sid})[10]==80 && !(core.pool.Slot(Sid{sid})[11]&1U)); // 이전 격자 정리가 재사용된 다른 슬롯을 지우지 않았다.
+            for (const auto sid:borrowed) core.pool.Release(sid); // 검사에서 보유한 임시 번호를 같은 풀에 반환한다.
+        }
+    }
 }
 
 // 실제 Early2 로그인/영어 Start와 같은 판정기가 현재 옵션/공급 범위/제작 장부를 공유한다.

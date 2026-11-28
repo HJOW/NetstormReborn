@@ -76,7 +76,7 @@ struct RawProductionControls::Impl {
         ImageGumpHooks ih;ih.node=[this](auto token) { return Find(images,token); };BindImageGumpAssets(ih,assets);ih.position=[this](auto token) { return common.collection.Position(token); };ih.attach=[this](auto token,float x,float y,auto parent,auto mode) { common.tree.Attach(token,x,y,parent,mode); };
         ih.hit=hitRaster->Hooks({}).hit;ih.draw=[this](auto request) { activeImage.draw(request); };ih.color=[this](auto token) { activeImage.color(token); };image=std::make_unique<ImageGump>(common.create,common.factory,ImageGumpState{owner,context.ownerColorTables ? context.ownerColorTables->Tokens() : std::span<const std::uint32_t>(ownerMaps),shadow},std::move(ih));
         InventoryGumpHooks gh;gh.grid=[this](auto token) { return Find(grids,token); };gh.item=[this](auto token) { return Find(items,token); };gh.clearChildren=[this](auto token) { ClearChildren(token); };gh.baseAttach=[this](auto token,float x,float y,auto parent,auto mode) { common.tree.Attach(token,x,y,parent,mode); };
-        gh.allocateItem=[this](auto size) { if (size!=0xc0) throw std::logic_error("생산 항목 할당 크기 오류");const auto token=common.token();items.emplace(token,std::make_unique<InventoryItemNode>());return token; };gh.attach=common.attach;gh.push=[this](auto token) { common.tree.Push(token); };gh.bind=[this](auto token,auto object) { Bind(token,object); };
+        gh.allocateItem=[this](auto size) { if (size!=0xc0) throw std::logic_error("생산 항목 할당 크기 오류");const auto token=common.token();items.emplace(token,std::make_unique<InventoryItemNode>());return token; };gh.attach=common.attach;gh.push=[this](auto token) { common.tree.Push(token); };gh.bind=[this](auto token,auto object) { UnbindLostParent(token,object); };
         gh.idle=[this](auto token,bool enabled) { common.lifetime.SetIdle(token,enabled); };gh.now=hooks.now;gh.contentParent=[this](auto sid) { return Word(context.storage->pool.Slot({static_cast<std::uint16_t>(sid)}),16); };
         gh.forward=[this](auto token,auto event,auto first,auto second) { return common.events.Bubble(token,event,first,second); };gh.baseHandle=[this](auto token,auto event,auto first,auto second) { return menus.BaseHandle(token,event,first,second); }; // 원본 격자도 같은 실제 기본 도움말을 사용한다.
         gh.local=[this](auto token,auto,ScreenPoint p) { return common.collection.ScreenToLocal(token,p); };gh.inside=[this](auto token,auto p) { const auto& n=*common.node(token);return p[0]>=0 && p[1]>=0 && p[0]<n.width && p[1]<n.height; };
@@ -150,6 +150,15 @@ struct RawProductionControls::Impl {
     TextGumpNode* Text(std::uint32_t token) const { if (token==budgetToken && token) return const_cast<BudgetNode*>(&budget);if (auto* n=Find(hints,token)) return n;return Find(texts,token); }
     // 삭제 중 머리가 바뀌므로 매번 현재 실제 child를 읽는다.
     void ClearChildren(std::uint32_t token) { while (common.node(token)->child) common.lifetime.Kill(common.node(token)->child); }
+    // InventoryGump 부모 소실(ParentGone)의 bind(token,0) 전용 경계다. 부모가 있으면 원본 Bind를 그대로 실행한다.
+    // 부모0이면 격자의 연결 플래그0x40과 Form 번호만 지운다. 이 통지 직후 공통 삭제가 같은 Form을 원본 순서대로 종속 삭제하므로
+    // Form 수명과 +0x24 부모 값(Idle의 재연결 비교)은 원본과 같고, 패널 Close의 Kill이 반납된 번호를 다시 삭제하는 것만 막는다.
+    // 2026-11-29 단위1386에서 추가했다: 원본004644e0/Bind의 부모0 무동작은 반납된 번호를 다시 지워 예외/재사용 슬롯 삭제가 났다
+    // (CampaignProductionLifetime_GridParentLossKeepsReturnedFormNumbers). Handle/Idle의 일반 Bind 부모0 무동작은 바꾸지 않는다.
+    void UnbindLostParent(std::uint32_t token,std::uint32_t object) {
+        if (object) { Bind(token,object);return; }
+        auto& n=*common.node(token);n.flags&=~0x40U;n.form=0;
+    }
     // 4644e0은0부모에 무동작이며 이전 Form을 먼저 지우지 않는다.
     void Bind(std::uint32_t token,std::uint32_t object) {
         if (!object) return;auto& forms=context.storage->UsesNativeTransmissionDevices() ? context.storage->GumpForms():Session().GumpForms();const auto form=forms.Create(2);auto& n=*common.node(token);forms.SetOwner(form,n.id);forms.Attach(form,{static_cast<std::uint16_t>(object)},0);n.flags|=0x40;n.object=object;n.form=form.value; // Native의 Form 생성/연결은 Session 대체 상태 없이 같은 장기 공장을 사용한다.
