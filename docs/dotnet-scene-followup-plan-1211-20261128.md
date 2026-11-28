@@ -210,3 +210,8 @@ Prepare는 독립 호출자가 next→current 복사를 직접 맡는 경로이�
 ## 1.225 현재 Guide의 별도 Fort 요청
 
 WriteCurrentGuide와 HostTutorialInitialization.RequestCurrentGuideFort를 같은 실제 세션의 Subscriber 본체/Template/설정에 연결했다. 같은 Guide를 보존하고 Subscriber 복귀 뒤 현재 한 슬롯/주소/포트, 복제 뒤 순번, 제목 효과 뒤 현재 Fort 이름을 관측한다. 미소비 요청은 덮지 않고 소비된 이전 요청은 정상 새 요청 뒤에만 교체한다. 원문144요청/54Subscriber를 독립/실제 결선 모두에 적용하고 실제 세션과 실패 접두까지 집중14/14를 확인했다. 현재 Game의 State1/7 호출자 교체와 전체 정리/적재 완료가 아니다. 다음 H의 실제 CD 확인·cleanup/UI/옵션·State7 몸체/즉시8 접속 순서를 유지한다.
+
+
+## 1.226 실제 CD 장치와 최초 설정 순서
+
+같은128BYTE 캐시/별도 결과·serial과 현재 파일 이름 고리를 Windows 드라이브/파일 속성에 연결했다. 실제 Program은 설정 적재 전에 최초 확인하고 Game가 같은 소유자를 인계받는다. 독립492행 포함 집중63/63, 실제 메뉴/1-1 재확인·콘텐츠 재적재와 대표3진입 회귀를 확인했다. 전체 Native 시작/SP 선행 순서나 State7의 현재 CdPresent 대입까지 완료한 것이 아니다. 다음 H는 실제 cleanup/UI/옵션을 연결하고 CD→명령창→시각/출처→현재 battle/Scene Start→Zone/세션→즉시8 순서를 유지한다. 단위 근거는1.226 문서를 따른다.

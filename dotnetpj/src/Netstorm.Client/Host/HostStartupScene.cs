@@ -14,6 +14,8 @@ public sealed class HostStartupScene
     private static readonly UTF8Encoding UserOptionsUtf8 = new(false, true);
     /// <summary>게임 데이터의 파일과 아카이브를 공유하는 읽기 장치.</summary>
     public GameFileSystem Files { get; }
+    /// <summary>설정 적재 전 최초 확인과 이후 State가 공유하는 같은 Client CD 소유자다.</summary>
+    public ClientCdGlobals CdGlobals { get; } = new();
     /// <summary>같은 파일 장치에서 초기화한 원본 설정.</summary>
     public ConfigInterface Configuration { get; }
     /// <summary>원본 options.cfg가 놓인 실제 설치 경로다.</summary>
@@ -45,11 +47,22 @@ public sealed class HostStartupScene
     /// <param name="random">구름 생성이 소비할 같은 게임 난수다. null이면 새로 만든다(0.381에서 추가).</param>
     /// <param name="userOptionsPath">사용자 루트의 옵션 파일 경로. 지정하면 설치 options.cfg 위에 덧읽고 저장도 여기로 한다(5차). null이면 종전 설치 경로를 쓴다.</param>
     public HostStartupScene(string dataDirectory, string settings = "", GameRandom? random = null, string? userOptionsPath = null)
+        : this(dataDirectory, settings, random, userOptionsPath, null) { }
+
+    /// <summary>같은 파일 이름 소유자를 만든 뒤 최초 CD 확인→설정 Startup 순서로 실제 시작 자료를 적재한다.</summary>
+    /// <param name="dataDirectory">실제 게임 자료 디렉터리다.</param>
+    /// <param name="settings">원문 시작 설정 인자다.</param>
+    /// <param name="random">구름/게임이 공유할 같은 난수다.</param>
+    /// <param name="userOptionsPath">설치 경로에 덧읽을 사용자 설정 경로다.</param>
+    /// <param name="initializeCd">설정 전에 CD를 확인하는 실제 플랫폼 경계다. null이면 독립 조합의 BSS 값을 유지한다.</param>
+    public HostStartupScene(string dataDirectory, string settings, GameRandom? random, string? userOptionsPath,
+        Action<ClientCdGlobals, RawFileName>? initializeCd)
     {
         Random = random ?? new GameRandom();
         ArgumentException.ThrowIfNullOrEmpty(dataDirectory);
         if (!GameDataLocator.IsDataDirectory(dataDirectory)) throw new DirectoryNotFoundException("게임 데이터 디렉터리 또는 netstorm.tarc가 없다: " + dataDirectory);
         Files = GameFileSystem.Open(dataDirectory);
+        initializeCd?.Invoke(CdGlobals, Files.FileNameOwner);
         _optionsPath = Path.Combine(Path.GetFullPath(dataDirectory), "d", "options.cfg");
         _userOptionsPath = string.IsNullOrEmpty(userOptionsPath) ? null : Path.GetFullPath(userOptionsPath);
         Configuration = new ConfigInterface(Files.TryReadAllBytes);

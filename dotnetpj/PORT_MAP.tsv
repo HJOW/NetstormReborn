@@ -1987,3 +1987,10 @@ cpppj/src/client/CampaignClientServices.cpp	Netstorm.Client/Mission/CampaignMiss
 cpppj/src/client/CampaignClientServices.h	Netstorm.Client/Mission/CampaignMissionStarting.cs	2f123aae9999c4a453c79b562487c6bda272c457	session
 cpppj/src/client/MissionFortRequest.h	Netstorm.Client/Mission/MissionFortRequest.cs	a76499e35e6792f6039adda9a29d6328ac46cba9	session
 cpppj/src/client/UberGump.cpp	Netstorm.Client/Host/HostTutorialInitialization.cs	fd8173a4188950135acb4a30eab2a53598f837d6	session
+cpppj/src/client/CdPresence.cpp	Netstorm.Client/CdPresence.cs	614e0f3d56484f0e9a8c0a9fb4ac55fb08ce76c5	port
+cpppj/src/client/CdPresence.h	Netstorm.Client/CdPresence.cs	614e0f3d56484f0e9a8c0a9fb4ac55fb08ce76c5	port
+cpppj/src/client/ClientCdGlobals.h	Netstorm.Client/ClientCdGlobals.cs	8dad3239889ed6aad49ec58c3bad52fc785b36f6	port
+cpppj/src/client/CdDirectory.cpp	Netstorm.Game/WindowsCdPresence.cs	86b37fff4948f3b7b0529c5fcdf38622a6c39719	port
+cpppj/src/client/CdDirectory.h	Netstorm.Game/WindowsCdPresence.cs	86b37fff4948f3b7b0529c5fcdf38622a6c39719	port
+cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.CdPresence.cs	3f12a2bd4f539e3e30fc029d2cfb999bb9476a33	session
+cpppj/src/client/ClientMain.h	Netstorm.Game/ClientHostGame.CdPresence.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	session

@@ -175,6 +175,7 @@ public sealed partial class ClientHostGame : Game
         _driver = driver;
         _options = options;
         _startup = startup;
+        _nativeCdGlobals = startup?.CdGlobals ?? new ClientCdGlobals();
         _staticStrings = new ClientStaticStrings(startup?.Files.FileNameOwner);
         _startupColors = startup is null ? null : new HostStartupColorMaps(startup, InitializeNativePrefix, PrepareStartupColorAssets, null, _paletteGlobals);
         _gameplay = new(_subscriberGlobals);
