@@ -182,3 +182,10 @@ Getter/월드 조회와 palette/Thunder는 독립 집중 단위로 나눌 수 �
 | F 초기 순서 — 1.220 실제 반영·검증 | `extracted/dotnet-scene-start-draft/README.md`. 코드·검사0이다. 현재 Prefix가 Clock/Player, Chat bool이 Issue/Chat을 함께 묶고 intro가 늦다. LoadContent의 GPU와 domain 초기화 분리 및 실패 재진입 정책을 먼저 정한 뒤 성공 단계를 구별해야 한다. |
 
 정기1.210 뒤 제품211·213·214 세 단위를 마쳤으므로 다음 제품 단위 뒤 전체 회귀를 수행한다.1.212의7,609합산은 당시 결과이며 변경된 Core의 현재 전체 재검증이 아니다. 최근 실행과 단위 결과의 범위는1.214 문서를 따른다. NativeLoaded/게임 시각/RNG를 강제로 보정하지 않는다.
+
+
+## 1.222 G2의 실제 붕괴 선행
+
+현재 DN HostSession에는 CPP RawSurfaceWorld와 같은 World() 소유자가 없다. 새 독립 World를 만들거나 무효 칸 콜백으로 스캔 완료를 꾸미지 않는다. CPP RawCampaignSession의 실제 대피 부모인 RawBridgeCarriers도 없어서 먼저 같은 RawSquidFinder/Hash/Pool에 본체를 이식하고 독립 원문258행을 전수 대조했다. 현재 프레임 참조는 RawBridgeDecayScan.Frame(FrameTimeBox)로 제공한다. 값형 독립 호출 경로도 유지한다.
+
+다음에는 같은 세션의 실제 삭제·Building.NotifySurface·Display.Update·현재 Carrier 이동과 위치 소리로 RawBridgeDecay를 조립한다. Client 전역 스캔은 메뉴의 빈 저장소에서도 실행하되 적격 칸이 선택됐을 때만 현재 Runtime을 빌린다. Wind→MonitorTime→BridgeDecay→SceneFrame→Minimap 순서와 실제 모달을 연결하고 Movie 잠금/게임 Pause/정상 진입을 검증한다.1.222는 대피 본체·시각 참조 선행만 완료이며 실제 G2와 H는 남는다.

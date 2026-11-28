@@ -58,7 +58,14 @@ public sealed class RawBridgeDecayScan
     /// <param name="time">현재 프레임 시각이다.</param>
     /// <param name="paused">정지 중이면 참이다.</param>
     public void Frame(FrameTime time, bool paused)
+        => Frame(new FrameTimeBox { Value = time }, paused);
+
+    /// <summary>실제 Client 프레임 상자를 빌려 칸 효과 뒤에도 원문 const 참조의 현재 시각을 다시 읽는다.</summary>
+    /// <param name="time">현재 Client 시각을 담는 같은 상자다.</param>
+    /// <param name="paused">입구의 정지 상태다.</param>
+    public void Frame(FrameTimeBox time, bool paused)
     {
+        ArgumentNullException.ThrowIfNull(time);
         BridgeDecayMode mode = _mode();
         if (paused || mode.Editor || !mode.Authority)
         {
@@ -68,9 +75,9 @@ public sealed class RawBridgeDecayScan
         int range = Add(_state.Last, unchecked((uint)-_state.First));
         int remaining = range;
         // 기한을 넘겼으면 델타·주기를 읽지 않는 원문 분기다.
-        if (_state.Next - time.Game > 0.0)
+        if (_state.Next - time.Value.Game > 0.0)
         {
-            remaining = Budget(time.Delta / _period() * range);
+            remaining = Budget(time.Value.Delta / _period() * range);
         }
 
         while (remaining > 0 && _state.Cursor <= _state.Last)
@@ -106,10 +113,10 @@ public sealed class RawBridgeDecayScan
             _state.Cursor = Add(_state.Cursor, 1u);
         }
 
-        if (time.Game >= _state.Next)
+        if (time.Value.Game >= _state.Next)
         {
             // 기한과 현재 주기도 칸 효과 뒤 다시 읽으며 밀린 옛 기한에 누적하지 않는다.
-            double next = _period() + time.Game;
+            double next = _period() + time.Value.Game;
             _state.Cursor = _state.First;
             _state.Next = next;
         }
