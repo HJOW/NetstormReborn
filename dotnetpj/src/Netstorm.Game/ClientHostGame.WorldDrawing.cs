@@ -63,7 +63,8 @@ public sealed partial class ClientHostGame
         uint[] logical = _driver.Screen.LogicalPalette.ToArray();
         if (_worldLogicalPalette is null || !logical.AsSpan().SequenceEqual(_worldLogicalPalette))
         {
-            SpriteColorMaps maps = SpriteColorMapBuilder.BuildSpriteColorMaps(logical);
+            // 같은 최초 ColorSort의 현재9표를 빌리며 파일 RGB로 별도 명도표를 다시 만들지 않는다.
+            var maps = new SpriteColorMaps { Bright = ColorSortInput.Maps[4], Dead = ColorSortInput.Maps[6], Shadow = ColorSortInput.Maps[7] };
             _worldLogicalPalette = logical;
             _worldTileModes = new RawTileDrawModes
             {

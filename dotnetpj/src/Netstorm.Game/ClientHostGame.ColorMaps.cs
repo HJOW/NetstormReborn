@@ -63,7 +63,11 @@ public sealed partial class ClientHostGame
     {
         HostStartupScene startup = _startup ?? throw new InvalidOperationException("실제 시작 장면 미연결");
         HostStartupColorMaps colors = _startupColors ?? throw new InvalidOperationException("실제 시작 색표 장치 미연결");
-        startup.Draw(_driver.Screen, colors.PrepareScreen, colors.Rebuild, LoadNativeStartupPalette);
+        startup.Draw(_driver.Screen, colors.PrepareScreen, screen =>
+        {
+            colors.Rebuild(screen);
+            RefreshPaletteConsumers();
+        }, LoadNativeStartupPalette);
         if (_buttonSound is null || _cursor is null) throw new InvalidOperationException("실제 시작 색표의 음향/커서 준비 미완료");
     }
 

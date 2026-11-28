@@ -1,6 +1,6 @@
 # LEFT_JOBS.dotnetpj — 현행 상태와 남은 작업
 
-**2026-11-28 사용자 goal로 장기 복원 재개 · Scene C/1.217 실제 FILE·공유 loaded 완료 · 해상도 계획1.216·제품1.217 · 미니맵 드래그 놓기 뒤 추가 960픽셀 차이 교정, 기존 1픽셀·전환 수명 미완료 · R5-4c3 전체 검증 미완료 · 1.116 생산 격자 부모 소실 재삭제 수정·CPP/원본 추가 대조 필요 · 1.117 Form SID 재사용 슬롯 보호 확인 · 1.215 F3 여닫기·문장 보존 검증, 물리 키 별도 확인 · 다음 R5-4c3c 남은 픽셀·전환 수명 및 R5-4c4 → R5-4d → R5-3 → R5-5 → R6 · R5 2/5, R4 2/8 · 최신 Client 전체1.215(3,153통과·실패0·기본 옵트인 음향2미실행; Assets/Core 전수는 이전 기록), 1.184 Client1실패는 1.186a 재검증으로 교정, 마지막 완료 관문1.076(7,379통과), 중단 회귀1.080(7,385통과·L2 세 종료1) · cpppj 제품1383/이전ZIP1378·집중검증1382/1383 · 튜토리얼 안내 DN-TUT-1~4 필수 미완료**
+**2026-11-28 사용자 goal로 장기 복원 재개 · Scene D/1.218 현재 팔레트 소비자 완료 · Scene C/1.217 완료 · 해상도 계획1.216·제품1.218 · 미니맵 드래그 놓기 뒤 추가 960픽셀 차이 교정, 기존 1픽셀·전환 수명 미완료 · R5-4c3 전체 검증 미완료 · 1.116 생산 격자 부모 소실 재삭제 수정·CPP/원본 추가 대조 필요 · 1.117 Form SID 재사용 슬롯 보호 확인 · 1.215 F3 여닫기·문장 보존 검증, 물리 키 별도 확인 · 다음 R5-4c3c 남은 픽셀·전환 수명 및 R5-4c4 → R5-4d → R5-3 → R5-5 → R6 · R5 2/5, R4 2/8 · 최신 Client 전체1.215(3,153통과·실패0·기본 옵트인 음향2미실행; Assets/Core 전수는 이전 기록), 1.184 Client1실패는 1.186a 재검증으로 교정, 마지막 완료 관문1.076(7,379통과), 중단 회귀1.080(7,385통과·L2 세 종료1) · cpppj 제품1383/이전ZIP1378·집중검증1382/1383 · 튜토리얼 안내 DN-TUT-1~4 필수 미완료**
 
 
 **해상도 후속 계획1.216(2026-11-28).** 사용자 지시로 R8의 새1280 폭 정책과FSR 출력은 계획에 반영했다. 현재 R5/R6·제품1.215를 유지한다. 다음에는 공유 목록/설정과 표시·논리 분리(DN-RES-1) → 실제GPU EASU/RCAS와 지원 판정(2) → 메뉴/SETSIZE/현재 호스트 수명(3) → 실제12출력/입력/전체 회귀(4)를 진행한다. 준비한11파일은 ignored 후보로 보관했으며 검정 GPU 입력 등 검증 실패가 남아 제품에서 제거했다. 정기 주기0/4 유지. [요구·연결 순서·완료 기준·실패 원문](docs/dotnet-resolution-1280-plan-20261128.md).
@@ -11,7 +11,7 @@
 
 **최신1.214 Scene 월드 조회와 현재 VT 분배.** 같은 현재 사제 목록·반경3 finder·프레임 선저장/가상Count·현재CS 대기실 조회를 복원하고 실제 Game의 기존 Surface/Player/CS에 대여했다. Dais CountIn을 기존 의식과 공유하며, 현재83VT의 공통81/제단/Dais를 TYPE 생성자와 독립해 선택한다. 새 PE 상위984행을 독립 관측하고 C# 대조했으며 집중69·Core의식2·fixture목록4로 **75통과·실패0**이다. 선택 빌드 오류0, 같은 Core/Client/Game 참조 SHA 일치, 대표3미션 종료0·기존 덤프/여섯 화면·보호1,392파일 불변이다. fixture522/PORT1,944이며 기존 기준 커밋/floor는 올리지 않았다. 감독 hook 설치/Start·Frame과 일반 HostSession/FortLoad Count 소비자는 아직 미완료다. [근거](docs/dotnet-canon-1214-20261128.md)
 
-**재개 완료·다음 작업 — Scene C/1.217 완료, D 소비자.** 최초/fort 실제 FILE과 같은 Client의 loaded 상자를 제품에 연결했다. Game 빌드·대표3미션 종료0·기존 덤프/여섯 화면·보호1,392파일 불변이다. 집중 첫166통과·새 검사 경로 기대2실패 뒤 검사만 교정했고 관련4/4·Core2/2가 통과했다(Client 고유168·Core2). [실제 범위·실패·다음](docs/dotnet-canon-1217-20261128.md). 다음 D 소비자 → E Thunder → F/G/H 감독·State를 원래 R5/R6 순서에 맞춰 잇는다. 정기1.215 뒤1/4이며 이번은 전체 회귀가 아니다. fixture523/PORT1,946이며 전체 CPP 기준은 유지했다.
+**재개 완료·다음 작업 — C/1.217·D/1.218 완료, E Thunder.** 최초/fort 실제 FILE과 같은 Client의 loaded 상자를 제품에 연결했다. Game 빌드·대표3미션 종료0·기존 덤프/여섯 화면·보호1,392파일 불변이다. 집중 첫166통과·새 검사 경로 기대2실패 뒤 검사만 교정했고 관련4/4·Core2/2가 통과했다(Client 고유168·Core2). [실제 범위·실패·다음](docs/dotnet-canon-1217-20261128.md). D의 현재 날씨4색/UI·같은 월드9표와 fort 후단을 연결했고 Game 오류0·대표3진입/여섯 화면·덤프 불변이다. 집중 첫52/53 뒤 검사 Bind 누락 교정·해당1/1 통과(고유53)다. [실제 범위·실패](docs/dotnet-canon-1218-20261128.md). SoftwareMouse/메타맵·감독은 미완료다. 다음 E Thunder → F/G/H 감독·State를 원래 R5/R6 순서에 맞춰 잇는다. 정기1.215 뒤2/4이며 이번은 전체 회귀가 아니다. fixture523/PORT1,952이며 전체 CPP 기준은 유지했다.
 
 다음 미수입 준비물도 실제 완료가 아니다. D의 UI setter/공통 갱신10파일은 `extracted/dotnet-scene-refresh-draft/README.md`(5case 미실행), E의 실제 부착 helper/Game partial/검사4파일은 `extracted/dotnet-scene-thunder-draft/README.md`와 기존 `extracted/dotnet-thunder-draft/`의 process3파일(각 미빌드·미실행), F의 순서/실패 인계는 `extracted/dotnet-scene-start-draft/README.md`1파일(코드·검사0)이다. 모두 이 PC의 ignored 준비물이며 Git 배포물이나 제품 검증 결과가 아니다. 수입 전 현행 source SHA와 다시 대조한다. [전체 후속 순서](docs/dotnet-scene-followup-plan-1211-20261128.md)
 
@@ -226,7 +226,7 @@
 | 월드/입력/수명(1.034~1.061) | WP-1~4·DI-1/3/4·SL-1~8, 5차 사용자 데이터 | WP-5·SL-9와 단계별 소비자 |
 | 월드 표시(1.062~1.076) | 카메라·수집/타일·Submit·프레임, HUD 도크와 입장 카메라 | R5-3·R5-4·R5-5 |
 | 공통 도움말·메뉴·생산 틀(1.077~1.079) | DN-MP-01·메뉴 배경/입력 숨김·생산 덱 틀/우클릭 확인 | 격자 내용물·유지/입력은 R6/R11 |
-| R5-4c3·R5-3 진행(1.080~1.217) | 미니맵 입력·다리 가상 그리기 및 실제 드래그 정상 종료, 대표 L2 불변 | 기존 1픽셀·미션 전환·다른 가상표와 전체 표시 미완료(1.121에서 추가 960픽셀 교정), 완료 수에 미포함 |
+| R5-4c3·R5-3 진행(1.080~1.218) | 미니맵 입력·다리 가상 그리기 및 실제 드래그 정상 종료, 대표 L2 불변 | 기존 1픽셀·미션 전환·다른 가상표와 전체 표시 미완료(1.121에서 추가 960픽셀 교정), 완료 수에 미포함 |
 
 <a id="first-run"></a>
 
@@ -300,7 +300,7 @@ AGENTS.md 지정에 따라0.807에서 공통 [assets/Netstorm.ico](assets/Netsto
 
 ### 1.1 R4 세션 조립 체크 (2/8 완료)
 
-Scene C의 FILE/loaded 연결과 실제 범위는 [1.217](docs/dotnet-canon-1217-20261128.md)이다. 감독·전체 State는 미완료다. 단위별 완료 문장은 [1.076 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261126-through-1076)·[1.030 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261125-through-1030)·[0.983 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261124-through-0983)·[0.950 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261124-through-0950)·[0.900 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261123-through-0900)·[0.797 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0797)·[0.732 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0732)·[0.635 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635)과 각 단위 문서에 있다. 아래에는 하위 단계별 완료 범위와 남은 일만 둔다. 통합 조각을 마칠 때 같은 조건의 일괄 덤프로 M1 진척을 확인한다.
+Scene C/D의FILE/loaded·현재 팔레트 소비자 연결은 [1.217](docs/dotnet-canon-1217-20261128.md)·[1.218](docs/dotnet-canon-1218-20261128.md)이다. 감독·전체 State는 미완료다. 단위별 완료 문장은 [1.076 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261126-through-1076)·[1.030 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261125-through-1030)·[0.983 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261124-through-0983)·[0.950 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261124-through-0950)·[0.900 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261123-through-0900)·[0.797 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0797)·[0.732 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261121-through-0732)·[0.635 보관본](LEFT_JOBS.dotnetpj.old.md#archive-dotnet-20261119-through-0635)과 각 단위 문서에 있다. 아래에는 하위 단계별 완료 범위와 남은 일만 둔다. 통합 조각을 마칠 때 같은 조건의 일괄 덤프로 M1 진척을 확인한다.
 
 - [x] **R4-1 객체 수명 공통층(0.546~0.600).** 미션에서 `HostSession` 별도 풀을 제거했다. 풀·공장·공간·건물 저장소 공유는 live 슬롯 바이트 대조로 확인했다. Dais·Player·Aviary 개별 몸체, 장기 Unpop·Pop·Display·Graph·Host 실행기, 실제 전송·파생 Runtime pin은 R6 장치 결선에서 잇는다. [마감 감사](docs/dotnet-r4-1-close-20261117.md)
 - [ ] **R4-2 적재 Pop 전체 상태 일치.** cpp 근거는 `RawNormalTerrainWorldBinding`·`RawRegionPaint`·`RawRegionOwnership`·`Islandbuilder`·`SquidPostPop`이다.

@@ -230,4 +230,6 @@ public sealed partial class GumpButtonTree
     /// <summary>현재 버튼과 배경을 원본 자식 우선 수명으로 삭제 요청한 뒤 정리한다.</summary>
     /// <param name="token">등록된 돌 버튼 토큰.</param>
     public void Remove(uint token) { if (Node(token) is not StoneButtonGumpNode) throw new ArgumentException("돌 버튼 토큰 필요", nameof(token)); Lifetime.Kill(token); Lifetime.Cleanup(); }
+    /// <summary>같은 돌 버튼 본체의 현재 팔레트만 교체한다. 노드/serial/수명은 보존하고 전체재합성은 상위 메뉴가 예약한다.</summary>
+    public void SetPalette(ButtonPalette palette) => _stoneState.Palette = palette;
 }

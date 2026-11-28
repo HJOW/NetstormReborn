@@ -1949,3 +1949,9 @@ cpppj/src/client/NativeFortSaveVirtual.cpp	Netstorm.Client/Audio/SceneMusicVirtu
 cpppj/src/client/NativeFortSaveVirtual.h	Netstorm.Client/Audio/SceneMusicVirtualCount.cs	2736c2d3fccaf3b3ac74c4e2d041f913ccdac701	port
 cpppj/src/client/PaletteFileRead.cpp	Netstorm.Client/Display/PaletteFileRead.cs	15a914d3f95c4d451d7760a208f863e71b439929	L1
 cpppj/src/client/PaletteFileRead.h	Netstorm.Client/Display/PaletteFileRead.cs	15a914d3f95c4d451d7760a208f863e71b439929	L1
+cpppj/src/client/ClientMain.cpp	Netstorm.Client/Display/ClientPaletteConsumers.cs	3f12a2bd4f539e3e30fc029d2cfb999bb9476a33	session
+cpppj/src/client/ClientMain.h	Netstorm.Client/Display/ClientPaletteConsumers.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	session
+cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.PaletteRefresh.cs	3f12a2bd4f539e3e30fc029d2cfb999bb9476a33	session
+cpppj/src/client/ClientMain.h	Netstorm.Game/ClientHostGame.PaletteRefresh.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	session
+cpppj/src/client/UberGump.cpp	Netstorm.Game/ClientHostGame.PaletteRefresh.cs	fd8173a4188950135acb4a30eab2a53598f837d6	session
+cpppj/src/client/UberGump.h	Netstorm.Game/ClientHostGame.PaletteRefresh.cs	b4b434534b43769a6c0030b882a27bae5b5762bf	session

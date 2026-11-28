@@ -8,6 +8,8 @@ namespace Netstorm.Client.Host;
 public sealed class HostTextEntry : IDisposable
 {
     private readonly GumpButtonTree _tree;
+    /// <summary>실제 편집기와 같은 팔레트 문맥이며 재바인딩 때 객체/버퍼를 만들지 않는다.</summary>
+    private readonly TextEntryGumpState _paletteState;
     private readonly HostHtmlWindows _windows;
     private readonly TextEntryStorage _storage;
     /// <summary>이미 생성한 같은 편집기에도 실제 Chat 대상/완성 장치를 설치하는 공유 경계다.</summary>
@@ -27,7 +29,7 @@ public sealed class HostTextEntry : IDisposable
         _tree = menu.Tree; _windows = windows; _storage = new(clipboardRead, clipboardWrite);
         var metrics = new GumpText(_tree.Fonts); var slider = text.Slider; var widgets = text.SliderWidgets;
         var palette = screen.Colors();
-        var state = new TextEntryGumpState { Brown = palette.Named[9].Index, Black = palette.Basic[0], Yellow = palette.Basic[5] };
+        var state = _paletteState = new TextEntryGumpState { Brown = palette.Named[9].Index, Black = palette.Basic[0], Yellow = palette.Basic[5] };
         var hooks = new TextEntryGumpHooks
         {
             Node = token => _tree.Node(token) as TextEntryGumpNode, Console = token => _tree.Node(token) as ConsoleGumpNode,
@@ -116,5 +118,11 @@ public sealed class HostTextEntry : IDisposable
     public void Dispose()
     {
         foreach (uint token in _buffers.ToArray()) { var buffer = _storage.Find(token) ?? throw new InvalidOperationException("문자 버퍼 소유권 불일치"); buffer.Destroy(); _storage.ReleaseBuffer(token); _buffers.Remove(token); }
+    }
+    /// <summary>같은 실제 TextEntry본체의 현재 선택/화살표/배경 색만 교체한다. 편집 버퍼와 선택구간은 유지한다.</summary>
+    public void SetPalette(PaletteColorTable palette)
+    {
+        ArgumentNullException.ThrowIfNull(palette);
+        _paletteState.Brown = palette.Named[9].Index; _paletteState.Black = palette.Basic[0]; _paletteState.Yellow = palette.Basic[5];
     }
 }

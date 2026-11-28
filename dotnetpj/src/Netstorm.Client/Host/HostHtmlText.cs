@@ -48,11 +48,13 @@ public sealed partial class HostHtmlText
     /// <summary>같은 실제 다중 줄 스타일 명령 파서.</summary>
     public ScrollingTextGumpMarkup Parser { get; }
     /// <summary>본문에 사용하는 파일 팔레트의 기본 흰색.</summary>
-    private readonly uint _bodyColor;
+    private uint _bodyColor;
+    /// <summary>실제 StyleText가 사본 없이 읽는 같은 현재 hooks이며 색 재바인딩에도 교체하지 않는다.</summary>
+    private readonly StyleTextHooks _styleHooks = new();
     /// <summary>ScrollingText 슬라이더 화살표에 전달하는 현재 팔레트의 갈색 색 번호.</summary>
-    public uint SliderArrowType { get; }
+    public uint SliderArrowType { get; private set; }
     /// <summary>ScrollingText 슬라이더 화살표에 전달하는 현재 팔레트의 검정 색 번호.</summary>
-    public uint SliderArrowFrame { get; }
+    public uint SliderArrowFrame { get; private set; }
     /// <summary>같은 본문 위젯이 슬라이더 생성에 쓰는 실제 상태(화살표 색 포함).</summary>
     internal ScrollingTextGumpWidgetState WidgetState { get; }
 
@@ -63,7 +65,7 @@ public sealed partial class HostHtmlText
         ArgumentNullException.ThrowIfNull(menu); ArgumentNullException.ThrowIfNull(windows); ArgumentNullException.ThrowIfNull(screen); ArgumentNullException.ThrowIfNull(poll);
         ArgumentNullException.ThrowIfNull(redraw); ArgumentNullException.ThrowIfNull(cursor); ArgumentNullException.ThrowIfNull(sound);
         _tree = menu.Tree; _windows = windows; _screen = screen; _bodyColor = screen.Colors().Basic[7];
-        var font = new GumpText(_tree.Fonts); var styleHooks = new StyleTextHooks();
+        var font = new GumpText(_tree.Fonts); var styleHooks = _styleHooks;
         StyleText.BindStyleTextFonts(styleHooks, font); StyleText.BindStyleTextPalette(styleHooks, screen.Colors());
         styleHooks.TextDraw = (bytes, position, context) =>
             (_activeText ?? throw new InvalidOperationException("HTML 본문 실제 출력 문맥 없음"))
@@ -190,5 +192,15 @@ public sealed partial class HostHtmlText
             (token, text) => Parser.Parse(token, Encoding.Latin1.GetBytes(text)),
             (token, value) => Widgets.SetScrollable(token, unchecked((uint)value)));
         windows.BindFit(this, _screen, () => new ScreenRect(0, 0, _screen.Width, _screen.Height));
+    }
+    /// <summary>같은 스타일/markup/힌트/본문/새슬라이더 기본색을 현재 파일명명색에 다시 연결한다. 기존 명시markup 조각과 노드는 다시 파싱하지 않는다.</summary>
+    public void SetPalette(PaletteColorTable palette)
+    {
+        ArgumentNullException.ThrowIfNull(palette);
+        StyleText.BindStyleTextPalette(_styleHooks, palette);
+        StyleTextMarkup.BindStyleTextMarkupPalette(_markupHooks, palette);
+        _bodyColor = ProductionHints.White = palette.Basic[7]; ProductionHints.Black = palette.Basic[0];
+        SliderArrowType = palette.Named[9].Index; SliderArrowFrame = palette.Basic[0];
+        WidgetState.SliderType = SliderArrowType; WidgetState.SliderFrame = SliderArrowFrame;
     }
 }

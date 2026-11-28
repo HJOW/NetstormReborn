@@ -172,12 +172,12 @@ Getter/월드 조회와 palette/Thunder는 독립 집중 단위로 나눌 수 �
 
 ## 9. 1.214 중지 시점의 재개 준비물
 
-사용자 요청으로1.214를 마친 뒤 중지한다. 다음은 모두 이 PC의 ignored 초안이며 제품 수입/빌드/검사 완료가 아니다. 1.217에서 C의 source SHA 대조·실제 반영/검증을 마쳤다. 아래 C 행의 미구현 설명은 중지 당시 기록이며 현행은1.217 문서다. 다음 D/E→F/G/H 순서와 기존 R5/State 우선순위를 유지한다.
+사용자 요청으로1.214를 마친 뒤 중지한다. 다음은 모두 이 PC의 ignored 초안이며 제품 수입/빌드/검사 완료가 아니다. 1.217에서 C의 source SHA 대조·실제 반영/검증을 마쳤다. 아래 C 행의 미구현 설명은 중지 당시 기록이며 현행은1.217 문서다. 1.218에서 D의현재 UI·날씨4색·공통 후단을 검증했다(software/메타맵·감독은 미완료). 다음 E→F/G/H 순서와 기존 R5/State 우선순위를 유지한다.
 
 | 준비물 | 경로·현재 한계 |
 | --- | --- |
 | C 공유 loaded/파일 부모17파일 — 1.217 반영·검증 완료 | `extracted/dotnet-scene-palette-draft/CLIENT_PALETTE_WIRING.md`, `STARTUP_NATIVE_PALETTE_FOLLOWUP.md`. 최초/fort가 여전히 cached GamePalette decoder를 선택한다. native 실제 입구, 중복 읽기와 Construction/Burning의 Palette 소비자, assertion callback 정책을 함께 정리해야 한다. 미빌드·미실행, 핵심4범위 peer만 확인했다. |
-| D 소비자10파일 | `extracted/dotnet-scene-refresh-draft/README.md`. 같은 UI/스타일/entry의 setter4개와 공통 갱신/현재9maps 별칭, 검사5case 초안이다. 실제 종단 연결·SoftwareMouse·meta/감독은 미완료다. 기본 창/fallback과 명시 SoftwareMouse 선택을 구별한다. |
+| D 소비자10파일 — 1.218 공통 후단 검증 | `extracted/dotnet-scene-refresh-draft/README.md`. 같은 UI/스타일/entry의 setter4개와 공통 갱신/현재9maps 별칭, 검사5case 초안이다. 실제 종단 연결·SoftwareMouse·meta/감독은 미완료다. 기본 창/fallback과 명시 SoftwareMouse 선택을 구별한다. |
 | E 실제 Thunder4파일 | `extracted/dotnet-scene-thunder-draft/README.md`, 기존 process3파일은 `extracted/dotnet-thunder-draft/`. 같은 현재 기술DWORD/Surface/Host/Kernel/Screen 부착, 실제 모드3입구·최종 종료 삽입 위치와 검사8case를 준비했다. 미빌드·미실행·추가 peer 미실시다. |
 | F 초기 순서1파일 | `extracted/dotnet-scene-start-draft/README.md`. 코드·검사0이다. 현재 Prefix가 Clock/Player, Chat bool이 Issue/Chat을 함께 묶고 intro가 늦다. LoadContent의 GPU와 domain 초기화 분리 및 실패 재진입 정책을 먼저 정한 뒤 성공 단계를 구별해야 한다. |
 

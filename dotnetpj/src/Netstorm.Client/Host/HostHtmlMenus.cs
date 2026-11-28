@@ -134,4 +134,11 @@ public sealed class HostHtmlMenus
             throw new InvalidOperationException("객체 메뉴가 실제 루트에 부착되지 않았다");
         Popup = root; changed();
     }
+    /// <summary>같은 현재 메뉴 생성문맥의 흰글씨/음영만 교체한다. Form/항목/노드/스타일 조각은 보존한다.</summary>
+    public void SetPalette(PaletteColorTable palette)
+    {
+        ArgumentNullException.ThrowIfNull(palette);
+        var dim = palette.Named.First(color => color.Red == 47 && color.Green == 24 && color.Blue == 17);
+        _widgetState.Foreground = palette.Basic[7]; _widgetState.Shadow = dim.Index;
+    }
 }
