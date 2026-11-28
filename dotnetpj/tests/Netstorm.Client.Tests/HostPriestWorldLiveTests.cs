@@ -149,7 +149,9 @@ public sealed partial class HostPriestWorldLiveTests
         if (!OperatingSystem.IsWindows()) return;
         var (session, types) = Scene();
         string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
-        using var audio = new HostMissionAudio(new HostStartupScene(data), 0, true, () => 1);
+        // HWND 없이 실제 준비 소유자를 만들고 명시 보류로 보호막 소리의 수명만 검사한다.
+        using var audio = new HostMissionAudio(new HostStartupScene(data), () => 1);
+        audio.PushMute();
         RawPriestWorldEffects effects = audio.BindPriest(session); string? notice = null;
         // 아직 이식하지 않은 UI 출력만 단위 관측기로 받으며 보호막/소리 몸체는 제품과 동일하다.
         effects.Shield.Translate = key => key; effects.Shield.Tell = text => notice = text;

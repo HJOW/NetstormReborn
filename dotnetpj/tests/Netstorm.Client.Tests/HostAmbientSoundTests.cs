@@ -16,7 +16,10 @@ public sealed class HostAmbientSoundTests
         if (!OperatingSystem.IsWindows()) Assert.Fail("주변음 검사는 Windows 전용이다");
         string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
         var startup = new HostStartupScene(data);
-        return (startup, new HostMissionAudio(startup, 0, true, () => 1));
+        // 실제 준비 소유자를 구성한 뒤 음소거 보류만 적용하고 OS 자원은 열지 않는다.
+        var audio = new HostMissionAudio(startup, () => 1);
+        audio.PushMute();
+        return (startup, audio);
     }
 
     /// <summary>음소거에서는 주변음 요청이 장치 없이 0으로 끝난다.</summary>

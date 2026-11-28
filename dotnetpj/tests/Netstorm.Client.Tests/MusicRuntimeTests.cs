@@ -328,16 +328,20 @@ public sealed class MusicRuntimeTests
             return 0;
         };
         using MusicRuntime runtime = scene.Runtime(hooks); runtime.Initialize();
-        Task stopping = Task.Run(runtime.Shutdown, TestContext.Current.CancellationToken);
+        // 블로킹 종료 관측은 검사 실행기의 ThreadPool 공급량과 독립된 전용 스레드에서 시작한다.
+        Task stopping = Task.Factory.StartNew(runtime.Shutdown, TestContext.Current.CancellationToken,
+            TaskCreationOptions.LongRunning | TaskCreationOptions.DenyChildAttach, TaskScheduler.Default);
         try
         {
             Assert.True(waiting.Wait(TimeSpan.FromSeconds(3), TestContext.Current.CancellationToken));
-            Task<bool> command = Task.Run(() =>
+            // 명령 잠금 획득도 종료 대기와 별도 전용 스레드에서 관측한다.
+            Task<bool> command = Task.Factory.StartNew(() =>
             {
                 bool playing = scene.Music.Play("track.mus", 1, new(), _ => throw new InvalidOperationException("종료 중 파일 조회"), null);
                 scene.Music.SetVolume(-1500);
                 return playing;
-            }, TestContext.Current.CancellationToken);
+            }, TestContext.Current.CancellationToken,
+                TaskCreationOptions.LongRunning | TaskCreationOptions.DenyChildAttach, TaskScheduler.Default);
             Assert.False(await command.WaitAsync(TimeSpan.FromSeconds(3), TestContext.Current.CancellationToken));
         }
         finally { finish.Set(); await stopping.WaitAsync(TimeSpan.FromSeconds(3), TestContext.Current.CancellationToken); }

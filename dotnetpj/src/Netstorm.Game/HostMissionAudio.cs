@@ -6,13 +6,13 @@ using Netstorm.Core.Original;
 namespace Netstorm.Client.Host;
 
 /// <summary>Windows 실제 소리 장치를 미션보다 오래 소유한다. 음소거는 원문 재생 관문으로 처리한다.</summary>
-public sealed class HostMissionAudio : IDisposable
+public sealed partial class HostMissionAudio : IDisposable
 {
     /// <summary>클라이언트 수명 동안 이름/복제 항목을 보존하는 실제 표다.</summary>
     private readonly SoundList _list = new(OriginalEdition.Patch1078);
     /// <summary>실제 장치 준비·소리 옵션·음량을 같은 재생기가 읽는다.</summary>
     private readonly SoundState _state = new();
-    /// <summary>실제 파일·DirectSound 경계다. 음소거 시 초기화하지 않는다.</summary>
+    /// <summary>실제 파일·DirectSound 경계다. 최초에는 sound와 무관하게 열고 음소거는 같은 공통 음량 보류로 적용한다.</summary>
     private readonly WindowsSoundDevice _device;
     /// <summary>같은 이름/전역/실제 장치를 사용하는 재생 몸체다.</summary>
     private readonly SoundPlayer _player;
@@ -28,41 +28,11 @@ public sealed class HostMissionAudio : IDisposable
     /// <summary>장치보다오래사는실제장면음악상태다. State의songEnd쓰기와동일8BYTE를사용한다.</summary>
     public SceneMusicState Scene { get; }
 
-    /// <summary>실제 파일 경계를 조립하고 음소거가 아니며 옵션이 켜진 Windows에서만 장치를 연다.</summary>
+    /// <summary>생존하는 실제 HWND로 최초 장치·worker를 열고 별도 음소거는 같은 공통 음량 보류로 적용한다.</summary>
     public HostMissionAudio(HostStartupScene startup, nint window, bool muted, Func<double> wallSeconds, SceneMusicState? scene = null)
+        : this(startup, wallSeconds, scene)
     {
-        ArgumentNullException.ThrowIfNull(startup); ArgumentNullException.ThrowIfNull(wallSeconds);
-        Scene = scene ?? new SceneMusicState();
-        if (!OperatingSystem.IsWindows()) throw new PlatformNotSupportedException("현재 미션 소리 장치는 Windows 전용이다");
-        _wallSeconds = wallSeconds; _list.Initialize();
-        _state.Enabled = !muted && startup.Configuration.GetInt("sound") != 0;
-        _state.MasterVolume = startup.Configuration.GetInt("soundVolume") switch
-        { 1 => -4000, 2 => -2000, 3 => -1000, 4 => -500, _ => 0 };
-        _device = new WindowsSoundDevice(_list, _state,
-            WindowsSoundFiles.MakeDiskResolver(startup.Files.BaseDirectory, startup.Files.SecondaryDirectory ?? ""),
-            startup.Configuration.Configuration.Get("currentLanguage") ?? "english");
-        try
-        {
-            if (_state.Enabled && OperatingSystem.IsWindows())
-            {
-                bool initialized = _device.Initialize(window);
-                ErrorLog.Note(initialized ? $"미션 소리 장치 초기화 완료: HWND=0x{window.ToInt64():X}"
-                    : "미션 소리 장치 초기화 실패: " + _device.LastInitializationFailure);
-            }
-            _player = new SoundPlayer(_list, _state, _device.Hooks());
-        }
-        catch (Exception initializationError)
-        {
-            // 초기화 뒤 로그/재생기 생성이 실패해도 아직 외부 owner에 설치되지 않은 자기 장치를 반납한다.
-            try { _device.Dispose(); }
-            catch (Exception cleanupError)
-            {
-                // 정리 오류는 최초 예외의 진단에만 추가하며 실패한 로그를 다시 호출하지 않는다.
-                try { initializationError.Data["HostMissionAudio.DeviceDisposeException"] = cleanupError; }
-                catch { /* 진단 저장 실패도 최초 생성 예외와 스택을 바꾸지 않는다. */ }
-            }
-            throw;
-        }
+        InitializeStartup(window, muted);
     }
 
     /// <summary>실제 소리 프로세스를 같은 미션 Host에 붙이고 보호막/낙하에 같은 이름·재생기를 제공한다.</summary>
@@ -169,6 +139,6 @@ public sealed class HostMissionAudio : IDisposable
         };
     }
 
-    /// <summary>모든 미션 프로세스 반납 뒤 실제 장치·버퍼 소유권을 반납한다.</summary>
-    public void Dispose() { if (OperatingSystem.IsWindows()) _device.Dispose(); }
+    /// <summary>모든 미션 프로세스 반납 뒤 실제 worker 완전 합류→장치 종료→파일 저장소 폐기 순서로 반납한다.</summary>
+    public void Dispose() => DisposeAudioOwners();
 }

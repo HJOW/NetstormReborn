@@ -36,7 +36,8 @@ public sealed partial class HostPriestWorldLiveTests
         public BurningContext(Action<int>? overrideRegen = null, ClientSurfaceGlobals? sharedSurface = null)
         {
             (Session, Types) = Scene(sharedSurface); string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data);
-            var startup = new HostStartupScene(data); Audio = new(startup, 0, true, static () => 0);
+            // 실제 준비 소유자와 공통 음량 보류로 장면을 구성하며 이 검사는 창/장치를 열지 않는다.
+            var startup = new HostStartupScene(data); Audio = new(startup, static () => 0); Audio.PushMute();
             RawPriestWorldEffects effects = Audio.BindPriest(Session);
             effects.Shield.Translate = key => key; effects.Shield.Tell = Messages.Add; effects.Regen.Damageable = overrideRegen;
             Session.BuildPriestWorldDevices(effects);

@@ -55,7 +55,12 @@ public sealed class ClientStateResourcesTests
     {
         if (!OperatingSystem.IsWindows()) return;
         string? data = GameDataLocator.FindDataDirectory(); Assert.NotNull(data); var resources = new ClientStateResources(); resources.Music.SongEnd.Value = 123.5;
-        using (var audio = new HostMissionAudio(new HostStartupScene(data), 0, true, () => throw new IOException("생성중벽시계"), resources.Music)) Assert.Same(resources.Music, audio.Scene);
+        // 창/장치/worker를 열지 않는 실제 준비 생성자와 명시 보류로 기존 수명 목적을 유지한다.
+        using (var audio = new HostMissionAudio(new HostStartupScene(data), () => throw new IOException("생성중벽시계"), resources.Music))
+        {
+            audio.PushMute();
+            Assert.Same(resources.Music, audio.Scene);
+        }
         Assert.Equal(123.5, resources.Music.SongEnd.Value);
     }
 }

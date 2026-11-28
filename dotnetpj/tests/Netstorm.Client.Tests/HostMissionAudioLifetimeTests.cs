@@ -45,7 +45,10 @@ public sealed class HostMissionAudioLifetimeTests
         string? data = GameDataLocator.FindDataDirectory();
         Assert.NotNull(data);
         var startup = new HostStartupScene(data);
-        return (startup, new HostMissionAudio(startup, 0, true, () => 1));
+        // 실제 준비 소유자를 구성한 뒤 음소거 보류만 적용하고 OS 자원은 열지 않는다.
+        var audio = new HostMissionAudio(startup, () => 1);
+        audio.PushMute();
+        return (startup, audio);
     }
 
     /// <summary>Kernel Clear 전과 실제 Runtime 배송 중의 반납 실패는 현재 소리 공장 연결을 보존한다.</summary>
