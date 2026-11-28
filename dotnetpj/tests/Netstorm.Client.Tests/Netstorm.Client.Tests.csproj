@@ -1,5 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <!-- 현재 Guide 요청144/Subscriber54의 독립 원문을 사본 없이 공유한다. -->
+    <None Include="../../../cpppj/tests/fixtures/guide-fort-request-x86.tsv" Link="X86/guide-fort-request-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
     <!-- 시간 알림1176행과 임시 Chat 서식12행의 기존 독립 원문 관측이다. -->
     <None Include="../../../cpppj/tests/fixtures/monitor-time-hardware-x86.tsv" Link="X86/monitor-time-hardware-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
     <None Include="../../../cpppj/tests/fixtures/temporary-chat-format-hardware-x86.tsv" Link="X86/temporary-chat-format-hardware-x86.tsv" CopyToOutputDirectory="PreserveNewest" />

@@ -54,6 +54,29 @@ public sealed class HostTutorialInitialization
         });
     }
 
+    /// <summary>살아 있는 같은 Guide에서 실제 세션 Subscriber/handle과 현재 Fort 이름으로 새 요청만 보관한다.</summary>
+    public MissionFortLoadRequest RequestCurrentGuideFort(HostSession session, ClientFortGlobals fort)
+    {
+        ArgumentNullException.ThrowIfNull(session); ArgumentNullException.ThrowIfNull(fort);
+        if (_guide.Mission is null || _pending() || Request is { Consumed: false })
+            throw new InvalidOperationException("현재 Guide Fort 요청의 수명·지연 큐 중복");
+        var request = new MissionFortLoadRequest();
+        MissionFortRequest.WriteCurrentGuide(_requestGlobals, new()
+        {
+            Subscriber = (id, name) => session.ChangeFortSubscriber(id, System.Text.Encoding.Latin1.GetBytes(name + '\0')),
+            Handle = () =>
+            {
+                int end = Array.IndexOf(session.HandleBuffer, (byte)0);
+                if (end < 0) throw new ArgumentException("현재 Guide handle의 NUL 누락");
+                return System.Text.Encoding.Latin1.GetString(session.HandleBuffer, 0, end);
+            },
+            Duplicate = packet => MissionFortRequest.CaptureZone(request, packet),
+        });
+        _requestGlobals.CopyNextTo(request.NextSnapshot); request.Sequence = _requestGlobals.Sequence;
+        request.Fort = ExtendedText.DecodeDisplayText(System.Text.Encoding.Latin1.GetBytes(fort.Current()));
+        Request = request; return request;
+    }
+
     /// <summary>호스트가 자신의 지연 전환을 취소한 뒤 현재 요청을 반납한다.</summary>
     public void ReleaseRequest() => Request = null;
 }

@@ -88,8 +88,8 @@ public sealed partial class HostSession
             Write = (token, bytes) => { if (token != 1 || stream is null) throw new InvalidOperationException("신규 Subscriber 고정 stream 누락"); Templates.WriteSection(stream.Value, bytes); },
         });
     }
-    /// <summary>실제 변경 본체는 현재 Template/owner/handle/Subscriber를 각 효과 뒤 다시 조회한다.</summary>
-    private void DeveloperChangeSubscriber(uint id, byte[] name)
+    /// <summary>현재 Template/owner/handle/Subscriber를 각 효과 뒤 다시 조회한다. Guide 요청과 개발자 명령이 같은 본체를 공유한다.</summary>
+    public void ChangeFortSubscriber(uint id, byte[]? name)
     {
         RawFortSubscriberChange.ChangeFortSubscriber(id, name, ref WorldGlobals.MySubscriberStorage, new()
         {
@@ -137,7 +137,7 @@ public sealed partial class HostSession
         }
         if (key is "setsubid" or "ssi")
         {
-            input.BeginArguments(); if (input.Integer(out first) && input.Word() is { } name) DeveloperChangeSubscriber(unchecked((uint)first), DeveloperBytes(name));
+            input.BeginArguments(); if (input.Integer(out first) && input.Word() is { } name) ChangeFortSubscriber(unchecked((uint)first), DeveloperBytes(name));
             Log($"subid = {unchecked((int)WorldGlobals.MySubscriber)} handle = {DeveloperCString(HandleBuffer)}\n"); return;
         }
         if (key is "setbridgekillperiod" or "sbkp")

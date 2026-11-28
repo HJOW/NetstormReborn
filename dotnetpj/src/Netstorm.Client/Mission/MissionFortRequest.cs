@@ -1,6 +1,7 @@
 using System.Buffers.Binary;
 using System.Text;
 using Netstorm.Core.Original;
+using Netstorm.Net;
 
 namespace Netstorm.Client.Mission;
 
@@ -82,6 +83,17 @@ public sealed class MissionFortRequestHooks
     public Func<byte[], uint>? Duplicate { get; init; }
 }
 
+/// <summary>현재 Guide의 Subscriber 변경과 복귀 뒤 handle·Zone 복제를 실제 세션에 위임한다.</summary>
+public sealed class GuideFortRequestHooks
+{
+    /// <summary>같은 Template/설정/My를 변경하는 실제 Subscriber 부모다.</summary>
+    public Action<uint, string>? Subscriber { get; init; }
+    /// <summary>Subscriber 효과가 돌아온 뒤 현재 원문 handle을 읽는다.</summary>
+    public Func<string>? Handle { get; init; }
+    /// <summary>선언 길이4의512BYTE를 관찰·복제하고 소유 토큰을 반환한다.</summary>
+    public Func<byte[], uint>? Duplicate { get; init; }
+}
+
 /// <summary>원본 004b51e0 요새 요청과 로컬 Zone 패킷을 작성한다.</summary>
 public static class MissionFortRequest
 {
@@ -110,6 +122,19 @@ public static class MissionFortRequest
         if (globals.Address.Length < 9) throw new ArgumentException("Fort 요청 현재9BYTE 주소 누락", nameof(globals));
         int nul = name.IndexOf('\0'); Need(hooks.SelectFort)(nul < 0 ? name : name[..nul]);
         byte[] packet = MakeLocalMissionZone(); packet[2] = 4; packet[3] = 0;
+        globals.WriteNext(0x54 / 4, BinaryPrimitives.ReadUInt32LittleEndian(globals.Address.Span[..4]));
+        globals.WriteNext(0x58 / 4, BinaryPrimitives.ReadUInt32LittleEndian(globals.Address.Span.Slice(4, 4)));
+        globals.WriteNext(0x5c / 4, (globals.ReadNext(0x5c / 4) & 0xffffff00u) | globals.Address.Span[8]);
+        globals.WriteNext(0, 7); globals.WriteNext(0x7c / 4, globals.Port);
+        globals.WriteNext(0x80 / 4, Need(hooks.Duplicate)(packet)); globals.Sequence = unchecked(globals.Sequence + 1);
+    }
+
+    /// <summary>Fort를 재선택하지 않고 Champion 변경 뒤 현재 한 슬롯과 실제 next/예약 순번을 작성한다.</summary>
+    public static void WriteCurrentGuide(MissionFortRequestGlobals globals, GuideFortRequestHooks hooks)
+    {
+        if (globals.Address.Length < 9) throw new ArgumentException("Guide Fort 요청 현재9BYTE 주소 누락", nameof(globals));
+        Need(hooks.Subscriber)(1, "Champion");
+        byte[] packet = LocalMissionPackets.MakeGuideMissionZone(Need(hooks.Handle)()).Storage;
         globals.WriteNext(0x54 / 4, BinaryPrimitives.ReadUInt32LittleEndian(globals.Address.Span[..4]));
         globals.WriteNext(0x58 / 4, BinaryPrimitives.ReadUInt32LittleEndian(globals.Address.Span.Slice(4, 4)));
         globals.WriteNext(0x5c / 4, (globals.ReadNext(0x5c / 4) & 0xffffff00u) | globals.Address.Span[8]);

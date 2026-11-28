@@ -205,3 +205,8 @@ CPP CampaignClientServices의 실제 RunCampaignMissionStarting은 현재 Client
 Prepare는 독립 호출자가 next→current 복사를 직접 맡는 경로이며 Run과 순차 호출하지 않는다. Run의 실제 body는 이미 next를 current로 복사받으므로 Capture부터 시작한다. request.NextSnapshot은 Init 관측 캡처일 뿐 현재 Native 상태를 다시 덮는 근거가 아니다. 큰 몸체 실패의 선행 쓰기를 되돌리거나 임의7/8을 합성하지 않는다.
 
 다음 H에서 실제 Game의 cleanup/UI·옵션/State7 시작 몸체·현재 접속을 연결한다. 개발용 StartMission을 먼저 감싸거나 StartScene(true)를 진입 뒤에 임의 추가하지 않는다. 전체 Native Load9단계와 미션 플레이 완료는 여전히 별도 R6 의존이며1.224는 Game의 실제 진입 호출자를 교체한 단위가 아니다.
+
+
+## 1.225 현재 Guide의 별도 Fort 요청
+
+WriteCurrentGuide와 HostTutorialInitialization.RequestCurrentGuideFort를 같은 실제 세션의 Subscriber 본체/Template/설정에 연결했다. 같은 Guide를 보존하고 Subscriber 복귀 뒤 현재 한 슬롯/주소/포트, 복제 뒤 순번, 제목 효과 뒤 현재 Fort 이름을 관측한다. 미소비 요청은 덮지 않고 소비된 이전 요청은 정상 새 요청 뒤에만 교체한다. 원문144요청/54Subscriber를 독립/실제 결선 모두에 적용하고 실제 세션과 실패 접두까지 집중14/14를 확인했다. 현재 Game의 State1/7 호출자 교체와 전체 정리/적재 완료가 아니다. 다음 H의 실제 CD 확인·cleanup/UI/옵션·State7 몸체/즉시8 접속 순서를 유지한다.

@@ -1985,3 +1985,5 @@ cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.SceneFrame.cs	3f12a
 cpppj/src/client/ClientMain.h	Netstorm.Game/ClientHostGame.SceneFrame.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	session
 cpppj/src/client/CampaignClientServices.cpp	Netstorm.Client/Mission/CampaignMissionStarting.cs	205fa2c07631f91de8dac8fbc4ec90f3eb74dc25	session
 cpppj/src/client/CampaignClientServices.h	Netstorm.Client/Mission/CampaignMissionStarting.cs	2f123aae9999c4a453c79b562487c6bda272c457	session
+cpppj/src/client/MissionFortRequest.h	Netstorm.Client/Mission/MissionFortRequest.cs	a76499e35e6792f6039adda9a29d6328ac46cba9	session
+cpppj/src/client/UberGump.cpp	Netstorm.Client/Host/HostTutorialInitialization.cs	fd8173a4188950135acb4a30eab2a53598f837d6	session
