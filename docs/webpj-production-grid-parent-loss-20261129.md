@@ -17,6 +17,14 @@ Form 통지 전후에 슬롯의 free 비트를 읽어 둘 다 false임을 확인
 
 이 단위의 검사는 수정 전 결함을 고정한다. WB-GRID-2에서 성공 계약으로 단언을 바꾸고 실패 재현 → 수정 후 통과를 함께 남긴다. 제품 소스·운영 번들은 아직 바꾸지 않았다.
 
-## WB-GRID-2 보완
+## WB-GRID-2 보완 — E1492 완료
 
-다음 단위에서 격자 `bind(token,0)` 경계의 `0x40`·Form만 지우고 object와 공통 Form 삭제 시점은 유지한다. 일반 `ClientGumpRoot.bindObject(token,0)`의 원본 무동작도 보존한다.
+`ClientInventoryGrid`의 격자 전용 bind 훅에서 부모 0일 때만 `flags & ~0x40`·`form=0`을 적용했다. object와 공통 종속 Form 삭제 시점은 유지하며 일반 `ClientGumpRoot.bindObject(token,0)`의 원본 무동작도 보존한다. 부모가 0이 아니면 원래 연결기로 전달한다. CP1386과 같은 의도적 원본 차이이며 다른 Gump에는 적용하지 않는다.
+
+- 재현 세 경로의 단언을 성공 계약으로 바꾸고 일반 부모 0 무동작 검사도 더했다. 통지 전후 Form 생존·통지 뒤 반납·두 재사용 슬롯의 전체 바이트 보존·새 두 Form의 실제 부모/종료 반납을 확인했다.
+- 새 4건과 InventoryGump·GumpLifetime·Client 생산 문맥/동기화·Form 호스트의 관련 Node 검사 **44/44** 통과. 로그: `webpj/extracted/webpj-e1492-grid-after.log`.
+- 실제 Chromium Tutorial2의 Session·Client Gump·제품 가상 삭제와 UI 통지로 세 경로를 확인했다. 미션에 별도 빈 TYPE80/검사 격자를 추가하며 원래 기술 부모/패널·목표/승패는 변경하지 않는다. **3/3** 통과, 오류 0. 새 부모 연결의 패널 `handleHudMode` 경로는 Node 검사에서 확인하고 브라우저에서는 같은 Root 연결기를 사용한다. 로그: `webpj/extracted/webpj-e1492-e2e.log`.
+- 전역 lint·운영 build 성공. 번들 **5,866,967바이트**, 크기 관문 9,900,000바이트 이내.
+- 대응표 `RawProductionControls.cpp`에 `client-inventory-grid.js`·② 판정·base `0cca2c8dd`를 기록했다. 전체 대응표 1,160행·오류 0이며 이식 대상의 변경 보고는 사라졌다. 제외된 `ScreenResolutions.h`의 ① 자동 기록만 남는다(`webpj/extracted/webpj-e1492-port-map.log`).
+
+E1490 경계 첫 Node26 전체에서 이전 1280 정책/JSON 메뉴 변경의 낡은 기대값 4건을 발견해 중단했다. 해당 집중 검사는 수정 전20/24 → 기대값 교정 뒤24/24이며 E1493에서 전체를 다시 수행한다. 이번 격자 보완과 별개인 검사 유지보수다.

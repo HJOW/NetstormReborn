@@ -63,7 +63,9 @@ function scene() {
     const tokens = [panel.node().bridge, panel.node().teleport];
     const oldParent = technology, oldForms = tokens.map(token => root.node(token).form);
     return { root, pool, forms, factory, panel, tokens, notices, oldParent, oldForms,
+        // 실제 공통 삭제가 부모 통지와 종속 반납을 순서대로 실행한다.
         lose() { destroy.destroy(oldParent, 0, forms.hooks()); },
+        // HUD 모드 처리기를 통해 살아 있는 새 기술 부모를 연결한다.
         reconnect() { technology = factory.create(80, 2); panel.handleHudMode(3); return technology; },
     };
 }
@@ -71,33 +73,47 @@ function scene() {
 // 두 격자의 연결 플래그·부모·Form을 읽기만 한다.
 function states(s) { return s.tokens.map(token => { const node = s.root.node(token); return [node.flags & 0x40, node.object, node.form]; }); }
 
-// 부모 소실 뒤 즉시 Close의 결과를 고정한다. E1491은 수정 전 결함 재현이며 다음 단위에서 올바른 계약으로 바꾼다.
-test('생산 격자 부모 소실: 즉시 닫기의 수정 전 상태', () => {
+// 부모 소실 통지에서는 소유 표시만 지우고 실제 Form은 공통 삭제 순서에서 반납해야 한다.
+test('생산 격자 부모 소실: Form 삭제 순서와 object 보존 및 즉시 닫기', () => {
     const s = scene(); s.lose();
-    assert.deepEqual(states(s), s.oldForms.map(form => [0x40, s.oldParent, form]));
+    assert.deepEqual(states(s), s.oldForms.map(() => [0, s.oldParent, 0]));
+    assert.equal(s.notices.length, 2);
+    // 통지 안에서는 살아 있는 Form을 먼저 삭제하지 않아야 한다.
+    for (const notice of s.notices) assert.deepEqual([notice.before, notice.after, notice.flags, notice.object, notice.currentForm], [false, false, 0, s.oldParent, 0]);
     assert.ok(s.oldForms.every(form => s.pool.slot(form)[11] & 1));
     assert.doesNotThrow(() => s.panel.close()); s.root.dispose();
-    console.log('부모 소실 즉시 닫기: 예외 없음, 통지', JSON.stringify(s.notices));
 });
 
 // 실제 FIFO 번호를 모두 보유해 반납 Form 번호가 다른 TYPE에 넘어간 뒤 Close를 시도한다.
-test('생산 격자 부모 소실: 반납 번호 재사용 뒤 닫기 결함 재현', () => {
+test('생산 격자 부모 소실: 반납 번호 재사용 뒤 닫기가 새 슬롯을 보존한다', () => {
     const s = scene(); s.lose(); const reused = new Set();
     // 중간 할당을 반납하지 않아 동일 슬롯을 인위적으로 지정하지 않고 FIFO 재사용에 도달한다.
     for (let count = 0; count < s.pool.capacity && reused.size < s.oldForms.length; count++) {
         const sid = s.factory.create(80, 2); if (s.oldForms.includes(sid)) reused.add(sid);
     }
     assert.equal(reused.size, 2); const before = s.oldForms.map(form => s.pool.slot(form).slice());
-    assert.throws(() => s.panel.close(), /Client Gump의 실제 Form 삭제 장치 누락/);
+    assert.doesNotThrow(() => s.panel.close());
     assert.deepEqual(s.oldForms.map(form => s.pool.slot(form)), before);
-    console.log('반납 번호 재사용 뒤 닫기: Form 삭제 장치 오류, 재사용 슬롯 보존');
+    s.root.dispose();
 });
 
-// 새 기술 부모의 HUD 모드 연결이 오래된 0x40에 막히는 경계를 실제 처리기로 재현한다.
-test('생산 격자 부모 소실: 새 기술 부모 연결 결함 재현', () => {
+// 새 기술 부모의 실제 Form 부착과 패널 종료 시 반납이 모두 성공해야 한다.
+test('생산 격자 부모 소실: 새 기술 부모 연결과 새 Form 반납', () => {
     const s = scene(); s.lose();
-    assert.throws(() => s.reconnect(), /Client Gump 객체 부착의 현재 수명 오류/);
-    assert.deepEqual(states(s), s.oldForms.map(form => [0x40, s.oldParent, form]));
+    const parent = s.reconnect(), newForms = s.tokens.map(token => s.root.node(token).form);
+    assert.notEqual(parent, s.oldParent);
+    assert.deepEqual(states(s), newForms.map(form => [0x40, parent, form]));
+    // 새 연결은 두 실제 Form의 살아 있는 부모 체인에 기록돼야 한다.
+    for (const form of newForms) { assert.equal(s.forms.parent(form), parent); assert.equal(s.pool.slot(form)[11] & 1, 0); }
     s.panel.close(); s.root.dispose();
-    console.log('새 기술 부모 연결: 현재 수명 오류');
+    assert.ok(newForms.every(form => s.pool.slot(form)[11] & 1));
+});
+
+// 일반 Gump 부모 0 부착은 원본 무동작이고 격자의 실제 소실 통지만 보완해야 한다.
+test('생산 격자 부모 소실: 일반 bindObject의 부모 0 무동작 보존', () => {
+    const s = scene(), before = states(s);
+    // 같은 격자라도 일반 API 호출은 소유 표시·부모·Form·할당 상태를 바꾸지 않는다.
+    for (const token of s.tokens) s.root.bindObject(token, 0);
+    assert.deepEqual(states(s), before); assert.ok(s.oldForms.every(form => !(s.pool.slot(form)[11] & 1)));
+    s.panel.close(); s.root.dispose();
 });

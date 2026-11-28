@@ -17,7 +17,7 @@ export class ClientInventoryGrid {
             clearChildren: (token) => { while (node(token).child) root.lifetime().kill(node(token).child); },
             baseAttach: (token, x, y, parent, mode) => root.attachBase(token, x, y, parent, mode),
             allocateItem: (size) => devices.allocateItem(size), attach: (...args) => root.attach(...args), push: (token) => root.tree().push(token),
-            bind: (token, object) => root.bindObject(token, object), idle: (token, enabled) => root.lifetime().setIdle(token, enabled),
+            bind: (token, object) => this.#unbindLostParent(token, object), idle: (token, enabled) => root.lifetime().setIdle(token, enabled),
             now: () => devices.now(), contentParent: (sid) => { const raw = pool.slot(sid); return raw[16] | (raw[17] << 8); },
             forward: (...args) => root.events().bubble(...args), baseHandle: (...args) => devices.baseHandle(...args),
             local: (token, _event, point) => root.collection().screenToLocal(token, point),
@@ -26,6 +26,13 @@ export class ClientInventoryGrid {
             redraw: (token, erase) => root.redraw(token, erase), clearBlink: (sid) => { pool.allocated(sid)[21] &= ~2; },
         };
         this.#inventory = new InventoryGump(root.createState(), root.factory(), pool, context.gameplay.finder, state, hooks);
+    }
+    // 격자 부모 소실 통지에서만 반납 예정 Form의 소유 표시를 지운다. object는 유지하고 Form 삭제는 원래 종속 삭제에 맡긴다.
+    #unbindLostParent(token, object) {
+        if (object) return this.#root.bindObject(token, object);
+        const node = this.#root.node(token);
+        if (!(node instanceof InventoryGridNode)) throw new TypeError('Client 생산 격자 노드 오류');
+        node.flags = (node.flags & ~0x40) >>> 0; node.form = 0;
     }
     // 실제 파생 노드와 원본 가상 입력·부착·객체 소멸 경계를 생성한다.
     create(columns, rows, mask) {
