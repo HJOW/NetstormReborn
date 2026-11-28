@@ -6,7 +6,7 @@
 
 ## 0. 한눈에 보기
 
-### 0.1 현재 값 (2026-11-29, 마지막 완료 단위 WB04-E1489·스커미시 구분선과 선택 아이콘)
+### 0.1 현재 값 (2026-11-29, 마지막 완료 단위 WB04-E1490·CP1384 메뉴 변경 판정)
 
 - **실행·플레이**
   - **화면:** 브라우저 ‘클릭하여 시작’(첫 적재 뒤 최소 6초, E1308), 시작 title 그림, 메인 메뉴·캠페인/데모 목록·도움말·옵션·Credits와 개발용 지형 미리보기가 동작한다. 옵션에는 Reset All 게임 안 확인 창, 영어/한국어/일본어 선택(E1412), 모드 관리(E1483), 설정·진행 JSON 복사/불러오기(E1487)가 있다.
@@ -25,7 +25,7 @@
   - **한국어 글자:** 갈무리11 12px 격자로 그리되 제목 배율·굵기(사용자 결정으로 보통체)·한글 기준선을 cpppj와 다르게 둔다([0.7절](#korean-font-change)).
   - **미검증:** 세 캠페인 묶음의 목표 수행 L3·자연 완주와 L4b 소리(16개 진입/대기는 완료, 1-1·1-2·1-5의 실제 아군 AI 승리는 오라클 대조가 아닌 자연 진행 확인). Tutorial4 E1~I1·Tutorial5 D 이후·Tutorial6 E 이후의 특정 적 공격·포획·희생·승리는 사용자 지시로 건너뛰고 사용자가 직접 확인한다. Tutorial6 A~D 생산·건설·납품은 E1343~E1346 완료다.
 - **기준 값(2026-11-29 정리 재확인)**
-  - **마지막 완료 단위:** E1489(스커미시 구분선·Options 선택 아이콘, 사용자 요청). E1382~E1488의 주제별 완료 내용은 [완료 이력 요약](#e951-e1081), 단위별 완료 문장 원문은 [E1488 정리 전 전문](LEFT_JOBS.webpj.old.md#archive-webpj-20261129-through-wb04-e1488)의 0.1절에 있다.
+  - **마지막 완료 단위:** E1490(CP1384 메뉴 주석 변경 ① 판정, [근거](docs/webpj-cpp1384-menu-judgment-20261129.md)). E1489는 스커미시 구분선·Options 선택 아이콘이다. E1382~E1488의 주제별 완료 내용은 [완료 이력 요약](#e951-e1081), 단위별 완료 문장 원문은 [E1488 정리 전 전문](LEFT_JOBS.webpj.old.md#archive-webpj-20261129-through-wb04-e1488)의 0.1절에 있다.
   - **최신 cpppj:** 제품 1387(스커미시 선택 아이콘, E1489 반영)·1386(생산 격자 부모 소실 보완, 웹 다음 작업 2)·1384(1280 폭 상한·화면비별 FSR), 최신 ZIP 1378, 제품 검증 1380이다. 웹 이식 기준선 `225553df`(제품 1313)와 고정 오라클은 자동 교체하지 않으며, E1488은 16:9 1280 확인용 CP1384 오라클(`3f12a2bd4`)만 따로 추가했다. 변경 판정은 [3.6](#cpp-delta)을 따른다.
   - **운영 번들·자료:** `www/dist/netstorm.bundle.js` 5,866,770바이트(E1489, 크기 관문 9,900,000바이트; E1478 격리 Worker 단일 번들부터 약 5.8MB), fixture manifest 1,337항목(E1488).
   - **작업 지시(2026-11-27 최신 사용자 선택, 유지):** 단위별 문서와 로컬 커밋을 유지한다. 단순 진입/첫 안내 확인은 모든 캠페인에 허용한다. 자동 승리 검사는 1-1·1-2·1-5·스커미시만 대상이며 모두 완료했다. 1-3·1-4·1-6 승리와 그 이후 플레이는 사용자가 직접 확인한다(승리 수집 CLI가 명시 거부, E1423·E1427).
@@ -33,7 +33,7 @@
   - **재적용 금지:** CP 오류 문맥/Residence/epoch 초안은 E1390~E1392 제품에 반영했다. `webpj/extracted/cpp-post1381-plan-20261127.json`의 clock 판정은 E1392로 대체됐다.
 - **전체 회귀**
   - **최신 전체:** Node26.13.0 E1486 7,033/7,033(1,391.475초), Node22.23.3 E1485 7,032/7,032(758.026초), 모두 실패/취소/건너뜀/todo 0. E1487~E1489 소스의 전수 결과는 아직 없다.
-  - **주기:** E1489 뒤 v26=3/4·v22=4/8이다. 완료 단위 한 개 뒤 Node26 전체, 네 개 뒤 Node22 전체가 필요하며 두 버전이 겹치면 순차 실행한다(0.5절 5). E1397~E1486의 전체 회귀 경과는 아래 [완료 이력 요약](#e951-e1081)의 전체 회귀 행과 보관본에 있다.
+  - **주기:** E1490 뒤 v26=4/4·v22=5/8이다. 지금 Node26 전체, 완료 단위 세 개 뒤 Node22 전체가 필요하며 두 버전이 겹치면 순차 실행한다(0.5절 5). E1397~E1486의 전체 회귀 경과는 아래 [완료 이력 요약](#e951-e1081)의 전체 회귀 행과 보관본에 있다.
   - **Chromium:** E1313 전 미션 시작 상태 옵트인 전체 32/32 통과(24.3분, `webpj/extracted/webpj-e1313-final-e2e.log`). 기존 전체 e2e는 E1312 199건 중 186 통과·12 옵트인 미실행·한국어 브리핑 1건 부하 중 시간 초과(단독·3회 반복 통과)다. 단위별 실패·교정은 [E1313](docs/webpj-l3-mission-starts-20261124.md)과 각 단위 문서, 이전 회귀 이력은 [E1327 보관본](LEFT_JOBS.webpj.old.md#archive-webpj-20261124-through-wb04-e1327)을 따른다.
 - **브라우저 검사:** 미션 화면은 단위마다 Chromium e2e로 확인한다(최근 전체 실행 E1312, 고정 시각 L2·L3 `e2e/fixed-time.spec.js`·`e2e/l3-tutorial1.spec.js`·`e2e/l3-tutorial2.spec.js`·`e2e/l3-tutorial3.spec.js`·`e2e/l3-tutorial4.spec.js`(E1337부터 345프레임까지만 재실행)·`e2e/l3-tutorial5.spec.js`(E1339), 프레임 예외 뒤 진행 `e2e/error-reporting.spec.js` E1338, 앱 서비스 결선 `e2e/session-services-wiring.spec.js` E1328, 한국어 글자 배치 `e2e/korean-glyph-layout.spec.js` E1288). 메뉴는 2026-11-17 Chromium 2/2(갈무리11 일반·굵은 글꼴, 한국어 메뉴·도움말, 적재 실패 시 영어 대체), 최초 실행·진행 잠금/체크·저장 재실행은 E616 Chromium 2/2. [갈무리11](docs/webpj-korean-galmuri11-20261117.md) · [최초 실행](docs/webpj-first-run-20261116.md)
 
@@ -41,11 +41,11 @@
 
 #### 다음 작업
 
-1. **CP1384 변경 1행 판정(3.6).** `node webpj/tools/port-map.mjs`가 `cpppj/src/client/RawGameMenus.cpp`(base `840d92a8`)를 ②/③ 판정 필요로 보고한다. CP1384 `3f12a2bd4`의 이 파일 변경은 FSR 해상도 반복문의 주석 1줄뿐이라 ① 후보다. 완료 기준: 대응표 메모에 판정·근거를 적고 base를 `3f12a2bd`로 올려 같은 검사에서 이 행이 판정 필요로 나오지 않는다(`ScreenResolutions.h`는 제외 분류의 ① 자동 기록이다).
+1. **완료 E1490 — CP1384 변경 1행 판정(3.6).** `node webpj/tools/port-map.mjs`가 `cpppj/src/client/RawGameMenus.cpp`(base `840d92a8`)를 ②/③ 판정 필요로 보고한다. CP1384 `3f12a2bd4`의 이 파일 변경은 FSR 해상도 반복문의 주석 1줄뿐이라 ① 후보다. 완료: 실행 코드가 같은 주석 1줄로 확인해 ① 판정하고 대응표 메모·base `3f12a2bd`를 갱신했다. 같은 검사에서 이 행이 판정 필요로 나오지 않는다(`ScreenResolutions.h`는 제외 분류의 ① 자동 기록이다).
 2. **CP1386 생산 격자 부모 소실 판정·반영(3.6, 2026-11-29 사용자 지시).** `node webpj/tools/port-map.mjs`가 `cpppj/src/client/RawProductionControls.cpp`(base `225553df`)를 ②/③ 판정 필요로 보고한다. CP1386 `0cca2c8dd`는 생산 격자의 부모가 삭제된 뒤 패널 Close가 이미 반납된 Form 번호를 다시 지우는 결함(번호 재사용 시 `GumpForm 삭제 타입 오류`)을 재현하고, 부모 소실 `bind(token,0)` 경계에서만 `0x40`·Form 번호를 지우도록 보완했다(원본과의 의도적 차이, Object와 Form 삭제 시점은 원본 유지). 웹은 `client-inventory-grid.js`의 격자 `bind` 훅이 `client-gump-root.js` `bindObject(token,0)`(원본처럼 무동작)으로 가므로 같은 결함이 있을 수 있다. 또 `bindObject`는 `0x40`이 남은 노드에 새 부모를 붙이면 수명 오류를 던지므로, 부모 소실 뒤 `client-production-panel.js` `handleHudMode`의 재연결도 막힐 수 있다. [CP1386](docs/exe/cpp-production-grid-parent-loss-1386-20261129.md)
    - [ ] **WB-GRID-1 재현.** 웹 생산 패널에서 ① 부모 삭제 → 패널 닫기, ② 부모 삭제 → 반납 번호 재사용 → 패널 닫기, ③ 부모 삭제 → 새 기술 부모 연결(`handleHudMode`)을 Node 검사로 확인한다. 완료 기준: 수정 전 결과(예외·격자 상태·재사용 슬롯 상태)를 단위 문서에 남긴다.
    - [ ] **WB-GRID-2 보완·판정 기록.** 격자 부모 소실 경계에서만 `0x40`·form을 지우고 object는 유지한다(일반 `bindObject`의 부모 0 무동작은 유지). 완료 기준: WB-GRID-1 검사와 `inventory-gump.test.mjs` 등 관련 Node 검사 통과, 운영 번들 재생성, 대응표 `RawProductionControls.cpp` 행 base를 `0cca2c8dd`로 올리고 메모에 판정·근거를 적어 같은 도구에서 판정 필요로 나오지 않는다.
-3. **정기 전체 회귀.** 다음 완료 단위 한 개 뒤 Node26 전체(v26 4/4), 네 개 뒤 Node22 전체(v22 8/8)를 순차 실행한다. E1487~E1489 소스는 아직 전수 검사 전이다.
+3. **정기 전체 회귀.** E1490 뒤 Node26 전체(v26 4/4)를 실행하고, 완료 단위 세 개 뒤 Node22 전체(v22 8/8)를 실행한다. E1487~E1489 소스는 아직 전수 검사 전이다.
 4. **사용자 확인 대기 — M4(3.1절 8단계).** 1-3·1-4·1-6 승리·저장과 그 이후 플레이, 자동 허용 밖 미션의 자연 완주, 한국어 중간 안내 화면·문장 사람 검수. 사용자가 결과나 지적 사항을 주면 해당 항목부터 단위를 연다. 같은 자동 검사를 반복해 완료로 바꾸지 않는다.
 5. **물리 환경 대기 — M5(3.2절).** 고주사율 실제 모니터의 60/120Hz(M5-a), 물리 모니터 이동·OS 배율(M5-b), 와이드 전투 전체 육안과 효과음·음악·위치음향 청취(M5-c). 원격 32Hz(E1460)·headless·Xvfb 결과로 대체하지 않는다.
 6. **DN 재개 대기 — 모딩 공통 적합성(3.7절 14차).** DN 중지가 풀리면 같은 패키지·정규화 입력의 DN MOD-2~4 결과를 WB 결과와 대조한다.
@@ -83,7 +83,7 @@ E951~E1380의 단위별 완료 문장·근거 표는 [E1380 보관본](LEFT_JOBS
 
 ### 0.2 단계 진행판
 
-`n/m`은 상위 체크 수이며 보관한 완료 항목을 포함한다. 상위 항목 안의 완료 부분(세부 단위 `- [x]`)은 중복 가산하지 않는다. 남은 단위·줄 수는 `PORT_MAP.tsv`의 partial·todo 기준(partial은 파일 전체 줄 수)이며, 2026-11-29 정리 재집계(`node webpj/tools/port-map.mjs`·`python -X utf8 tools/port_inventory.py`)도 **partial 0·todo 0, 0단위 / 0줄**이다(마지막 partial은 E1328). 이 수치는 고정한 이식 대상(기준선 `225553df`)의 집계다. 기준선 뒤 cpppj 변경은 3.6절에서 판정하며 지금 판정이 남은 것은 CP1384의 `RawGameMenus.cpp` 1행이다(대응표 밖 신규 10파일은 E1393 판정). 튜토리얼 안내 WB-TUT-1~4(0.8절)와 모딩(3.7절 14차)은 이식 대상 밖 추가 기능이다. 남은 일은 표의 '남은 상위 체크'(3.1절 미체크 상위 항목), 3.2절 M5, 3.7절 후순위 요구다. 4-D는 E1346에서 자동 검사 허용 범위85/85를 마쳤다.
+`n/m`은 상위 체크 수이며 보관한 완료 항목을 포함한다. 상위 항목 안의 완료 부분(세부 단위 `- [x]`)은 중복 가산하지 않는다. 남은 단위·줄 수는 `PORT_MAP.tsv`의 partial·todo 기준(partial은 파일 전체 줄 수)이며, 2026-11-29 정리 재집계(`node webpj/tools/port-map.mjs`·`python -X utf8 tools/port_inventory.py`)도 **partial 0·todo 0, 0단위 / 0줄**이다(마지막 partial은 E1328). 이 수치는 고정한 이식 대상(기준선 `225553df`)의 집계다. 기준선 뒤 cpppj 변경은 3.6절에서 판정하며 지금 판정이 남은 것은 CP1386의 `RawProductionControls.cpp` 1행이다(CP1384 메뉴 주석은 E1490 ① 판정 완료)(대응표 밖 신규 10파일은 E1393 판정). 튜토리얼 안내 WB-TUT-1~4(0.8절)와 모딩(3.7절 14차)은 이식 대상 밖 추가 기능이다. 남은 일은 표의 '남은 상위 체크'(3.1절 미체크 상위 항목), 3.2절 M5, 3.7절 후순위 요구다. 4-D는 E1346에서 자동 검사 허용 범위85/85를 마쳤다.
 
 | 순서 | 단계 | 체크·상태 | 남은 단위 / 줄 | 남은 상위 체크(3.1) |
 | --- | --- | --- | --- | --- |
@@ -288,7 +288,7 @@ M1은 메뉴 관문을 통과했다. 4-D의 Tutorial1 L2 → 5-A/5-B·5-C의 Tut
 ### 3.6 cpppj 변경 재반영
 
 대응표 검사에서 행 base 이후 변경을 확인한다. ① 웹 영향 없음, ② 웹 재반영, ③ 해당 소비 단계에서 처리로 판정한다. ②는 별도 단위로 반영하고 ③은 대상 단계에 남긴다. 판정 근거를 대응표와 단위 문서에 기록한다.
-- **현재 재집계(2026-11-29 정리):** 대응표1,160행/오류0·port275/session732·partial/todo0이다. `node webpj/tools/port-map.mjs`의 cpppj 변경 보고는 3행이다(2026-11-29 CP1386 뒤 재실행): `RawGameMenus.cpp`(base `840d92a8`, CP1384 `3f12a2bd4`의 FSR 해상도 반복문 주석 1줄 → ① 후보, [다음 작업 1](#next)), `RawProductionControls.cpp`(base `225553df`, CP1386 `0cca2c8dd`의 생산 격자 부모 소실 보완 → ②/③ 판정 필요, [다음 작업 2](#next))와 `ScreenResolutions.h`(제외 분류의 ① 자동 기록, E1488 메모). CP1382 `RawCampaignCursor.cpp`는 E1486(base `28290a62`), CP1383 `TutorialInit.cpp`·`UberGump.cpp`는 E1487(base `fd8173a4`), CP1384 `ClientMain.cpp`는 E1488(base `3f12a2bd4`)에서 반영했다. 정리1381 당시 변경9행은 E1387~E1393에서 모두 반영/판정했다: GumpEvents/RawMenuControls(E1387), UberGump(E1388), ClientDiagnostics(E1390), RawAssetPostPop/RawCampaignSession(E1391), ClientMain/GameClock(E1392), RawCampaignSessionLogin(E1393). 고정 기준선225553df/대상1,007단위/오라클은 올리지 않았다. [행·파일별 근거](docs/webpj-login-reconnect-sp-20261127.md)·[감사 JSON](docs/webpj-e1393-evidence/cpp-delta-judgments.json).
+- **현재 재집계(2026-11-29 정리):** 대응표1,160행/오류0·port275/session732·partial/todo0이다. `node webpj/tools/port-map.mjs`의 cpppj 변경 보고는 3행이다(2026-11-29 CP1386 뒤 재실행): `RawGameMenus.cpp`(base `840d92a8`, CP1384 `3f12a2bd4`의 FSR 해상도 반복문 주석 1줄 → E1490 ① 완료, 현행 base `3f12a2bd`, [근거](docs/webpj-cpp1384-menu-judgment-20261129.md)), `RawProductionControls.cpp`(base `225553df`, CP1386 `0cca2c8dd`의 생산 격자 부모 소실 보완 → ②/③ 판정 필요, [다음 작업 2](#next))와 `ScreenResolutions.h`(제외 분류의 ① 자동 기록, E1488 메모). CP1382 `RawCampaignCursor.cpp`는 E1486(base `28290a62`), CP1383 `TutorialInit.cpp`·`UberGump.cpp`는 E1487(base `fd8173a4`), CP1384 `ClientMain.cpp`는 E1488(base `3f12a2bd4`)에서 반영했다. 정리1381 당시 변경9행은 E1387~E1393에서 모두 반영/판정했다: GumpEvents/RawMenuControls(E1387), UberGump(E1388), ClientDiagnostics(E1390), RawAssetPostPop/RawCampaignSession(E1391), ClientMain/GameClock(E1392), RawCampaignSessionLogin(E1393). 고정 기준선225553df/대상1,007단위/오라클은 올리지 않았다. [행·파일별 근거](docs/webpj-login-reconnect-sp-20261127.md)·[감사 JSON](docs/webpj-e1393-evidence/cpp-delta-judgments.json).
 - **판정 끝:** cpppj 1322(갈무리11)·1325(Reset All)·1326(테스트 AI 진단)의 변경 아홉 행(E1241, base `63590635`·`710b9647`·`baf141eb`, [판정표](docs/webpj-cpppj-1322-1325-1326-judgment-20261123.md)), 사용자 추가 요구 1328~1330(E1289~E1291), 1339 주문/포획 교정(E1319, base `13e74579`), SoundMusicSelection base 정정(2026-11-22, `225553df`), 일본어(13차) 커밋 `5238ee833`(1334)·`87324232f`(1335)의 여섯 행(E1336: 마나 그림 별칭 `imana.8`~`11`·`17`→`Imana.4`~`7`·`9`와 CD 마나 25프레임 보충의 `HtmlTextParser`·`Markup`·`StyleTextMarkup`·`UberGump` 행은 ② 반영, `KoreanResources.cpp`(`.japanese` 번들 읽기)·`StyleTextBuffer.cpp`(가나·한자 줄바꿈)는 ③ 13차(E1410·E1412 반영), [근거](docs/webpj-mana-picture-supplement-20261125.md)). 커밋·행별 경과는 [E1329 보관본 3.6절](LEFT_JOBS.webpj.old.md#archive-webpj-20261124-through-wb04-e1329)과 [E1336 보관본 3.6절](LEFT_JOBS.webpj.old.md#archive-webpj-20261125-through-wb04-e1336)에 있다.
 - **2026-11-26 변경 판정 완료(E1347~E1348):** 공통 도움말·확장 AI 이름은 E1347, 나머지16행은①11·②5로 E1348에서 닫았다. 미션2bh 채널 해제와 Fort 읽기 오류 문맥도 실제 웹 경로에 반영했다. 당시 기존 행 변경 보고0이었으며 E1393에서 마감한 후속9행/신규10파일과 구별한다. [16행 판정표](docs/webpj-cpppj-lan-change-audit-20261126.md)
   - [x] 언어 무관 공통 변경 — E1347: 도움말 LOOK/HELP·빈 값 규칙의 기존 일치를 확인하고 첫 NUL 절단·확장 AI 기본 이름31BYTE 제한을② 반영했다. 한국어에도 적용된다. [근거](docs/webpj-cpppj-common-help-ai-name-20261126.md)
