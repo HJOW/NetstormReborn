@@ -145,7 +145,7 @@ Game 최종 Dispose에서 Screen/output/장기 process binding이 살아 있을 
 
 ## 7. 1.212 Client 전체 재검증 이후의 후속 A–H
 
-먼저1.211의 남은 집중/실제 진입 관문과1.212 Client 전체 재검증을 완료한다. 다음 A–H는 실행 순서의 후보이며 아직 구현·완료 단위 번호가 아니다. 각 단위는 현재 부족한 부모를 감추는 빈 callback이나 가짜 Session을 만들지 않는다.
+1.211의 집중/실제 진입과1.212 Client 전체3,105통과 재검증을 마쳤다([전체 결과](dotnet-canon-1212-20261128.md)). 다음 A–H는 실행 순서의 후보이며 아직 구현·완료 단위 번호가 아니다. 각 단위는 현재 부족한 부모를 감추는 빈 callback이나 가짜 Session을 만들지 않는다.
 
 - **A — 현재 공유 값 결선, 미완료.** SceneMusicState의 PlayersReady/LocalPlayer 소비 위치 getter, 실제 Cloud.WorldRedrawBox view, 하나의 ResultState UIntBox를 준비하고 기존 독립 fixture fallback API는 보존한다. 실제 Game 조립에 공유 owner identity 검사를 둔다. 실제 선택 없는 생성/바인딩에서 시각·RNG·파일·채널 변화가 없음을 검사한다.
 - **B — 실제 월드 음악 조회, 미완료.** Raw Player→제단→룬 단계 및 대기실의 원문 getter를 작은 독립 본체로 복원/결선한다. 기존 BattleSession.IsSacrificeInProgress를 빌리지 않는다. ordinary 조기 반환/PlayerKnown 관문/현재 owner 재조회와 선택된 미복원 challenge 경계를 구별한다. 이 선행이 끝나기 전 actual Scene hooks가 모두 구현됐다고 표시하지 않는다.
