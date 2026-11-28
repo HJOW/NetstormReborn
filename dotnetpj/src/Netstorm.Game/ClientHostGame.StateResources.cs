@@ -36,6 +36,25 @@ public sealed partial class ClientHostGame
         _menuDirty = true;
     }
 
+    /// <summary>현재 제품의 정지·공통 UI·HUD·SP·장면 음향·옵션을 실제 State 정리 위치에 연결한다. 선택된 저장/메타 장치가 없는 갈래는 기존 명시 오류를 유지한다.</summary>
+    /// <param name="reason">원문 reason0은 전체 연결을 닫고 reason1은 현재 전환 연결만 반납한다.</param>
+    public void CleanupNativeWorld(uint reason) => CleanupNativeWorld(reason, new ClientStateWorldDevices
+    {
+        ResumeGame = PopNativeGamePause,
+        ResumeAudio = () => NativeStateAudio.PopMute(),
+        KillGumps = KillNativeStateGumps,
+        CleanupGumps = CleanupNativeStateGumps,
+        ReplaceUber = ReplaceNativeUberRoot,
+        RefreshSp = RefreshNativeStormPower,
+        Assertion = line => throw new InvalidOperationException($"원문 State 중복 모드 진단:{line}"),
+        StartSceneMusic = battle => NativeStateAudio.StartScene(battle),
+        StopSoundLoops = () => NativeStateAudio.StopLoops(),
+        InterpretOptions = InterpretNativeOptions,
+    });
+
+    /// <summary>실제로 선택된 음향 효과 위치에서만 같은 장기 소유자를 요구한다. 조회로 재생기를 만들거나 상태를 초기화하지 않는다.</summary>
+    private HostMissionAudio NativeStateAudio => _missionAudio ?? throw new InvalidOperationException("State 정리의 실제 장기 음향 미설치");
+
     /// <summary>실제같은Root자원으로전체Native State정리를호출한다. 아직설치되지않은UI/음향/저장장치는선택위치에서실패한다.</summary>
     public void CleanupNativeWorld(uint reason, ClientStateWorldDevices devices)
     {

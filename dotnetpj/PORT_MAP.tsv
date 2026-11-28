@@ -820,6 +820,7 @@ cpppj/src/client/TutorialInit.cpp	Netstorm.Client/Mission/TutorialInit.cs	825a1a
 cpppj/src/client/UberGump.cpp	Netstorm.Client/Host/HostHtmlWindows.cs	635906357ca59e96fdae54d6a3ee48cc9fa69075	port
 cpppj/src/client/UberGump.cpp	Netstorm.Game/ClientHostGame.RootFactories.cs	287d1c47ca98fc5d8aa218e588540f8c9f360a26	port
 cpppj/src/client/UberGump.cpp	Netstorm.Game/ClientHostGame.UberRoot.cs	82753d7b6bc95f3fbe3ef0ae2cd3f636e8d26d3c	port
+cpppj/src/client/UberGump.cpp	Netstorm.Game/ClientHostGame.StateResources.cs	fd8173a4188950135acb4a30eab2a53598f837d6	session
 cpppj/src/client/UberHud.inc	Netstorm.Client/Gump/RawUberMessageProbe.cs	3a325a2597e7436ad40a868cd30ed80b170a945d	port
 cpppj/src/client/UberHud.inc	Netstorm.Client/Host/HostChatReceive.cs	16431ec18a3f7518d7aaa55929b280ab1cc6a8fb	port
 cpppj/src/client/UberHud.inc	Netstorm.Game/ClientHostGame.ChatReceive.cs	16431ec18a3f7518d7aaa55929b280ab1cc6a8fb	port
