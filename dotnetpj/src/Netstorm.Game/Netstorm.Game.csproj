@@ -11,6 +11,8 @@
     <Copyright>Copyright 2026 HJOW</Copyright>
     <ApplicationIcon>../../../assets/Netstorm.ico</ApplicationIcon>
     <ApplicationHighDpiMode>PerMonitorV2</ApplicationHighDpiMode>
+    <!-- DirectSound의 실제 Lock 구간을 복사 없는 Span으로 빌리는 좁은 플랫폼 경계에 사용한다. -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <GameDataSourceDirectory>$(MSBuildProjectDirectory)/../../../assets/game-data</GameDataSourceDirectory>
   </PropertyGroup>
   <ItemGroup>

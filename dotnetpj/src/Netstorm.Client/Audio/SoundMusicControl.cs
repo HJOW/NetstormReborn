@@ -4,8 +4,8 @@ using Netstorm.Core.Original;
 namespace Netstorm.Client.Audio;
 
 /// <summary>cpppj/src/client/SoundMusic.cpp의 공개 Play·Stop·SetVolume·PushMute·PopMute 부분 이식이다.
-/// 실제 채널 생성·재생·스트리밍·Runtime은 구현하거나 성공으로 대체하지 않으며 선택된 외부 장치를 요구한다.</summary>
-public sealed class SoundMusicControl
+/// 실제 채널과 파일·버퍼 장치는 호스트가 조립하며 같은 primary의 Update와 명령 잠금을 공유한다.</summary>
+public sealed partial class SoundMusicControl
 {
     /// <summary>Patch의 마지막 음량 복원 재조회와 CD 분기를 선택하는 실제 판본이다.</summary>
     private readonly OriginalEdition _edition;

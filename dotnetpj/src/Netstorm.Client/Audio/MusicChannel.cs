@@ -87,7 +87,7 @@ public sealed class MusicChannelHooks
 }
 
 /// <summary>cpppj/src/client/SoundMusic.cpp의 실제 채널 제어·읽기·되감기·시작 부분 이식이다.
-/// Open·버퍼 생성/Fill·worker는 미이식이며 해당 성공이나 열린 파일을 합성하지 않는다.</summary>
+/// Open·버퍼 확보·Fill은 같은 partial의 실제 파일/COM 경계를 사용하고 worker 수명은 별도로 조립한다.</summary>
 public sealed partial class MusicChannel
 {
     /// <summary>진단 줄 번호를 선택하는 원문 판본이다.</summary>
@@ -251,6 +251,6 @@ public sealed partial class MusicChannel
         _state.SetField(MusicField.StopDepth, 0);
     }
 
-    /// <summary>같은 실제 채널의 활성/시작/정지만 공개 음악 제어에 빌린다. 미이식 Open/버퍼 확보는 null로 남긴다.</summary>
+    /// <summary>같은 실제 채널의 활성/시작/정지만 빌린다. 이 오버로드의 Open/버퍼는 null이며 실제 파일/버퍼를 주는 오버로드와 구별한다.</summary>
     public MusicPlaybackDevices BindPlaybackDevices() => new() { Active = Active, Start = Start, Stop = Stop };
 }
