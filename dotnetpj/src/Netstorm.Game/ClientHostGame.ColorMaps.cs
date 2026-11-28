@@ -52,6 +52,7 @@ public sealed partial class ClientHostGame
                 throw;
             }
             _missionAudio = audio;
+            BindNativeSceneMusic();
         }
         _buttonSound ??= new HostButtonSound(startup); _cursor ??= new HostOriginalCursor(startup);
         PrepareNativeAssetTables(); return AssetTables;

@@ -8,8 +8,6 @@ public sealed partial class ClientHostGame
 {
     /// <summary>같은Client의실제시계/Frame/보정owner다.</summary>
     private readonly ClientClockGlobals _clientClock;
-    /// <summary>같은호스트의콘텐츠재연결이Native초기화를반복하지않게하는수명표식이다.</summary>
-    private bool _nativePrefixInitialized;
     /// <summary>같은Frame캡처/음향프레임/메뉴Tick/편집Poll을스크립트입력전에원문순서로실행한다.</summary>
     private void PrepareNativeFrameInput()
     {
@@ -21,7 +19,7 @@ public sealed partial class ClientHostGame
     /// <summary>팔레트뒤Clock값대입/보정연결/실제Player초기화를순서대로실행하고정상복귀뒤만완료를기록한다.</summary>
     private void InitializeNativePrefix()
     {
-        if (_nativePrefixInitialized) return;
-        _clientClock.InitializeFullTime(_clock.Milliseconds); ClientPlayerRuntime.Initialize(_gameplay); _nativePrefixInitialized = true;
+        _nativeClockStartup.Run(() => _clientClock.InitializeFullTime(_clock.Milliseconds));
+        _nativePlayerStartup.Run(() => ClientPlayerRuntime.Initialize(_gameplay));
     }
 }

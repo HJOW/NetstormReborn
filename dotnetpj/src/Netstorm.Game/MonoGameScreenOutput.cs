@@ -9,7 +9,7 @@ namespace Netstorm.Client.Host;
 /// 원본 GDI BitBlt 자리에 인덱스를 현재 팔레트로 풀어 <see cref="ScreenTextureConverter"/>로 바꾼 뒤 부분 업로드한다.
 /// 근거: cpppj/src/client/Screen.cpp 의 004a1800 창 복사. (R1-2a, 2026-10-28)
 /// </summary>
-public sealed class MonoGameScreenOutput : IScreenOutput
+public sealed class MonoGameScreenOutput : IScreenOutput, IDisposable
 {
     /// <summary>논리 화면 전체를 담는 RGBA 텍스처.</summary>
     private readonly Texture2D _texture;
@@ -51,4 +51,7 @@ public sealed class MonoGameScreenOutput : IScreenOutput
     public void WaitVerticalBlank(Screen screen)
     {
     }
+
+    /// <summary>같은 논리 화면의 GPU 출력 텍스처만 반납한다. Client 팔레트/메뉴/미션은 건드리지 않는다.</summary>
+    public void Dispose() => _texture.Dispose();
 }

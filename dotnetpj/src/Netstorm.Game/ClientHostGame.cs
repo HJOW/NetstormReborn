@@ -277,6 +277,9 @@ public sealed partial class ClientHostGame : Game
             _cursor?.Dispose();
             _packetRecord?.Dispose();
             _startupColors?.Dispose();
+            _driver.Screen.Output = null;
+            _output?.Dispose(); _output = null;
+            _batch?.Dispose(); _batch = null;
         }
         base.Dispose(disposing);
     }
@@ -299,103 +302,105 @@ public sealed partial class ClientHostGame : Game
     /// <summary>텍스처 출력을 붙이고 첫 화면 전체를 올린다.</summary>
     protected override void LoadContent()
     {
+        // 같은 Client domain은 보존하고 새 GPU 출력만 연결한다. 이전 출력이 가진 텍스처도 함께 반납한다.
+        _driver.Screen.Output = null;
+        _output?.Dispose(); _batch?.Dispose();
         _batch = new SpriteBatch(GraphicsDevice);
         _output = new MonoGameScreenOutput(GraphicsDevice, _driver.Screen);
         _driver.Screen.Output = _output;
-        if (_startup is null) _driver.Screen.Update(new ScreenRect(0, 0, _driver.Screen.Width, _driver.Screen.Height));
-        else
-        {
-            DrawStartupScreen();
-            PrepareNativeRenderer();
-            InitializeNativeChat();
-            _mainMenu = new HostMainMenu(_startup, _driver.Screen, new GumpButtonTreeHooks
-            {
-                Now = () => _clock.NowSeconds,
-                Poll = Poll,
-                Sound = _buttonSound.Play,
-                Redraw = (_, _) => _menuDirty = true,
-                HandleBase = (_, _, _, _) => 0
-            }, action => (_menuInput ?? throw new InvalidOperationException("메인 메뉴 입력 소유자 미연결")).Post(action));
-            InitializeNativeGumpForms();
-            _htmlWindows = new HostHtmlWindows(_mainMenu, _driver.Input, () => _clock.NowSeconds,
-                _ => throw new InvalidOperationException("HTML 링크 명령 소비자 미연결"));
-            _htmlWindows.BindParser(_startup, raw => ScriptCommand.QueueScriptCommand(raw, _driver.Input, _scriptStrings,
-                new ScriptCommandHooks { Lookup = DialogScriptCommands.Lookup, Unknown = name => Debug.WriteLine("HTML 스크립트 명령 미연결: " + name) }));
-            _htmlText = new HostHtmlText(_mainMenu, _htmlWindows, _driver.Screen, Poll, (_, _) => _menuDirty = true,
-                cursor => _cursor.Set((GameCursor)cursor), _buttonSound.PlayByName);
-            _htmlText.Bind(_htmlWindows);
-            InitializeNativeTextPictures();
-            InitializeNativeProductionContext();
-            BindNativeMapView(() => (_mainMenu ?? throw new InvalidOperationException("현재 지도 영역의 실제 메뉴 owner 미설치")).CurrentMapView);
-            _textEntry = new HostTextEntry(_mainMenu, _htmlWindows, _htmlText, _driver.Screen,
-                () => _clock.NowSeconds, (_, _) => _menuDirty = true);
-            InitializeNativeChatEditing();
-            InitializeNativeChatGeometry();
-            _htmlMenus = new HostHtmlMenus(_mainMenu, _htmlWindows, _htmlText, _startup, _driver.Screen, (_, _) => _menuDirty = true);
-            // 메뉴 객체 참조와 장기 UI 삭제 통지가 같은 실제 Form 풀을 사용한다.
-            _htmlMenus.BindObjectForms(_surfaceGlobals.Storage.GumpForms());
-            _htmlMenus.BindInput(_driver.Input, _buttonSound.PlayByName, (_, _) => _menuDirty = true);
-            InitializeNativeChatWindows();
-            InitializeNativeChatSubmit();
-            InitializeNativeMinimap();
-            InitializeNativeHudDock();
-            InitializeNativeUberRoot();
-            _htmlFactory = new HostHtmlFactory(_mainMenu, _htmlWindows, _htmlMenus, _startup, _driver.Screen, _driver.Input,
-                _scriptStrings, () => _clock.NowSeconds, _ => 0,
-                name => Debug.WriteLine("HTML 메타 명령 미연결: " + name));
-            InitializeNativeChatReceive();
-            InstallClientPacketDispatch();
-            _menuInput = new HostMenuInput(_mainMenu, _htmlWindows, _htmlFactory, _driver.Input, _scriptStrings,
-                () => _menuDirty = true, action => throw new InvalidOperationException("메뉴 상위 명령 미연결: " + action));
-            _menuInput.BindPopup(new HostPopupMenu(_mainMenu, _htmlWindows, _htmlMenus, _driver.Screen, _startup, () => _menuDirty = true, _buttonSound.ApplyOptions, _scriptStrings, () => !_options.MuteAudio, _stateResources.Popup)
-                { CanEditDifficulty = () => _missionSession is null }); // 미션 수명 동안에는 선택지와 직접 명령을 모두 제한한다.
-            // RU-3c 숨은 입력줄의 문자 Enter를 실제 Chat 창의 표시·열기로 연결한다. 표시 중이면 아래로 넘긴다.
-            _menuInput.BindChatEnter(input => NativeChatWindows.OpenInput(input));
-            _menuInput.ChatToggleKey = input => _missionSession is not null && NativeChatWindows.ToggleKey(input); // F3는 표시 중인 입력줄보다 먼저 같은 도킹 부모로 보낸다.
-            _menuInput.BindScreenMode(() => _driver.Screen.Flags, ChangeScreenMode, AcceptScreenMode);
-            // WP-5b: Edit 작업본 루트를 사용자 CustomMaps로 둔다. 설치 경로는 읽기만 하고 새 맵은 CustomMaps에 저장된다.
-            // 사용자 루트를 정할 수 없으면 종전 형제 작업본 동작으로 둔다.
-            EditorCatalogWorkspace? editorWorkspace = null;
-            try { editorWorkspace = new EditorCatalogWorkspace(_startup.Files, UserDataRoot.Resolve().CustomMaps()); }
-            catch (InvalidOperationException) { }
-            _editor = new HostEditorSelection(_startup, _scriptStrings, _menuInput.ShowTell, workspace: editorWorkspace, sharedTemplates: _stateResources.Templates);
-            _htmlFactory.BindMapCatalog(_editor.Catalog, _htmlMenus, _scriptStrings, () => _editor.CurrentName, () => _editor.PendingName);
-            _menuInput.BindEditor(_editor);
-            var fortConfirmation = new HostFortNameConfirmation(_startup, _mainMenu, _textEntry, _driver.Input, _scriptStrings, _editor.Workspace, _menuInput.ShowTell);
-            _saveFortDialog = new HostSaveFortDialog(_mainMenu, _htmlWindows, _htmlText, _textEntry, _startup, _driver.Screen,
-                fortConfirmation.Confirm, _menuInput.ShowTell);
-            _menuInput.BindNewFort(mode => _saveFortDialog.Show(mode, 1, _editor.CurrentName));
-            // SL-2a: 시작 detect intro — 실제 파일 존재만으로 Intro 표시값을 정한다. 빈 경로면 조회 없이 0을 둔다.
-            // 근거: cpppj ClientMain.cpp 547행의 DetectIntroAvailability(00435de0).
-            RawIntroMenu.DetectIntroMovie(_localState.IntroAvailable,
-                () => { string path = ""; _startup.Configuration.ReadString("introMovie", ref path); return path; },
-                name => _startup.Files.TryReadAllBytes(name) is not null ? 1u : 0u);
-            // DI-3: 실제 포인터 이동을 현재 커서 위치에 반영하고, Esc는 잡은 커서가 있을 때만 놓는다.
-            _menuInput.CursorPosition = (x, y) => { _gameplay.Cursor.ScreenX = x; _gameplay.Cursor.ScreenY = y; _missionSession?.RefreshCursorPlacement(); }; // 정지한 포인터도 공급원 완성/소실을 다음 입력 프레임에 반영한다.
-            _menuInput.CursorCancel = () => _missionSession?.TryCancelCursor() == true;
-            // DI-4d: 이동 전용 경로는 미션 세션의 Pan에, 숫자·기호 입력은 저장 카메라 분배에 맡긴다. 미션 없으면 거짓으로 종전 흐름을 유지한다.
-            _menuInput.CameraPan = pointer => _missionSession?.ProcessCameraPan(pointer) == true;
-            _menuInput.SavedCameraKey = input => _missionSession?.DispatchSavedCameraKey(input) == true;
-            _gumpDrawing = new HostGumpDrawing(_mainMenu, _htmlText, _htmlMenus, _driver.Screen, _textEntry);
-            // R5-4c1: 미션 중 메인 메뉴 배경 숨김. 같은 트리의 임무 UI는 그대로 그리고 입력도 그대로 전달한다.
-            // 근거: cpppj UberGump.cpp 2111~2112행의 MainMenu 단계 조건이다. 미션 세션이 생기면 메뉴 돌 버튼·배경을 건너뛴다.
-            _mainMenu.IsMissionActive = () => _missionSession is not null;
-            _gumpDrawing.IsMissionActive = () => _missionSession is not null;
-            _driver.BindControlLocator(_mainMenu);
-            _driver.BindInputHandler(_menuInput.Dispatch);
-            // 메뉴/미션모두같은Client Frame번호/게임시각을기록한다. world1의ProcessTime도같은Frame주소를빌린다.
-            // 근거: cpppj SessionStateDump.cpp의 DumpSessionState(world 0 부분). (2026-11-10 L2·L3 장치에서 추가했다)
-            _sessionDump = new HostSessionDump(_kernel, _gameRandom, _crtRandom, () => _clientClock.Frame.Value.Number, () => BitConverter.DoubleToUInt64Bits(_clientClock.Frame.Value.Game));
-            // --mission 진입이면 세션 데이터를 조립해 world 1 덤프에 연결한다. 월드 본체 조립은 다음 단위다.
-            // (2026-11-12 0.398에서 미션 시작 흐름으로 추가했다)
-            if (!string.IsNullOrEmpty(_options.Mission) && _startup is not null)
-                _sessionDump.BindSession(StartMission(_options.Mission, _options.Handle ?? "Player", _options.Demo ? 1u : null));
-            _driver.BindSessionDump(_sessionDump.Write);
-            _gumpDrawing.Draw();
-            _menuDirty = false;
-        }
+        _nativeDomainStartup.Run(InitializeNativeDomain);
+        _driver.Screen.Update(new ScreenRect(0, 0, _driver.Screen.Width, _driver.Screen.Height));
         _previousKeys = Keyboard.GetState();
         _previousMouse = Mouse.GetState();
+    }
+
+    /// <summary>장기 Native 메뉴/입력/미션을 한 번 만든다. 부분 실패 뒤 전체 domain을 다시 만들지 않는다.</summary>
+    private void InitializeNativeDomain()
+    {
+        if (_startup is null) return;
+        DrawStartupScreen();
+        PrepareNativeRenderer();
+        InitializeNativeMenuPrefix();
+        _mainMenu = new HostMainMenu(_startup, _driver.Screen, new GumpButtonTreeHooks
+        {
+            Now = () => _clock.NowSeconds,
+            Poll = Poll,
+            Sound = _buttonSound.Play,
+            Redraw = (_, _) => _menuDirty = true,
+            HandleBase = (_, _, _, _) => 0
+        }, action => (_menuInput ?? throw new InvalidOperationException("메인 메뉴 입력 소유자 미연결")).Post(action));
+        InitializeNativeGumpForms();
+        _htmlWindows = new HostHtmlWindows(_mainMenu, _driver.Input, () => _clock.NowSeconds,
+            _ => throw new InvalidOperationException("HTML 링크 명령 소비자 미연결"));
+        _htmlWindows.BindParser(_startup, raw => ScriptCommand.QueueScriptCommand(raw, _driver.Input, _scriptStrings,
+            new ScriptCommandHooks { Lookup = DialogScriptCommands.Lookup, Unknown = name => Debug.WriteLine("HTML 스크립트 명령 미연결: " + name) }));
+        _htmlText = new HostHtmlText(_mainMenu, _htmlWindows, _driver.Screen, Poll, (_, _) => _menuDirty = true,
+            cursor => _cursor.Set((GameCursor)cursor), _buttonSound.PlayByName);
+        _htmlText.Bind(_htmlWindows);
+        InitializeNativeTextPictures();
+        InitializeNativeProductionContext();
+        BindNativeMapView(() => (_mainMenu ?? throw new InvalidOperationException("현재 지도 영역의 실제 메뉴 owner 미설치")).CurrentMapView);
+        _textEntry = new HostTextEntry(_mainMenu, _htmlWindows, _htmlText, _driver.Screen,
+            () => _clock.NowSeconds, (_, _) => _menuDirty = true);
+        InitializeNativeChatEditing();
+        InitializeNativeChatGeometry();
+        _htmlMenus = new HostHtmlMenus(_mainMenu, _htmlWindows, _htmlText, _startup, _driver.Screen, (_, _) => _menuDirty = true);
+        // 메뉴 객체 참조와 장기 UI 삭제 통지가 같은 실제 Form 풀을 사용한다.
+        _htmlMenus.BindObjectForms(_surfaceGlobals.Storage.GumpForms());
+        _htmlMenus.BindInput(_driver.Input, _buttonSound.PlayByName, (_, _) => _menuDirty = true);
+        InitializeNativeChatWindows();
+        InitializeNativeChatSubmit();
+        InitializeNativeMinimap();
+        InitializeNativeHudDock();
+        InitializeNativeUberRoot();
+        _htmlFactory = new HostHtmlFactory(_mainMenu, _htmlWindows, _htmlMenus, _startup, _driver.Screen, _driver.Input,
+            _scriptStrings, () => _clock.NowSeconds, _ => 0,
+            name => Debug.WriteLine("HTML 메타 명령 미연결: " + name));
+        InitializeNativeChatReceive();
+        InstallClientPacketDispatch();
+        _menuInput = new HostMenuInput(_mainMenu, _htmlWindows, _htmlFactory, _driver.Input, _scriptStrings,
+            () => _menuDirty = true, action => throw new InvalidOperationException("메뉴 상위 명령 미연결: " + action));
+        _menuInput.BindPopup(new HostPopupMenu(_mainMenu, _htmlWindows, _htmlMenus, _driver.Screen, _startup, () => _menuDirty = true, _buttonSound.ApplyOptions, _scriptStrings, () => !_options.MuteAudio, _stateResources.Popup)
+            { CanEditDifficulty = () => _missionSession is null }); // 미션 수명 동안에는 선택지와 직접 명령을 모두 제한한다.
+        // RU-3c 숨은 입력줄의 문자 Enter를 실제 Chat 창의 표시·열기로 연결한다. 표시 중이면 아래로 넘긴다.
+        _menuInput.BindChatEnter(input => NativeChatWindows.OpenInput(input));
+        _menuInput.ChatToggleKey = input => _missionSession is not null && NativeChatWindows.ToggleKey(input); // F3는 표시 중인 입력줄보다 먼저 같은 도킹 부모로 보낸다.
+        _menuInput.BindScreenMode(() => _driver.Screen.Flags, ChangeScreenMode, AcceptScreenMode);
+        // WP-5b: Edit 작업본 루트를 사용자 CustomMaps로 둔다. 설치 경로는 읽기만 하고 새 맵은 CustomMaps에 저장된다.
+        // 사용자 루트를 정할 수 없으면 종전 형제 작업본 동작으로 둔다.
+        EditorCatalogWorkspace? editorWorkspace = null;
+        try { editorWorkspace = new EditorCatalogWorkspace(_startup.Files, UserDataRoot.Resolve().CustomMaps()); }
+        catch (InvalidOperationException) { }
+        _editor = new HostEditorSelection(_startup, _scriptStrings, _menuInput.ShowTell, workspace: editorWorkspace, sharedTemplates: _stateResources.Templates);
+        _htmlFactory.BindMapCatalog(_editor.Catalog, _htmlMenus, _scriptStrings, () => _editor.CurrentName, () => _editor.PendingName);
+        _menuInput.BindEditor(_editor);
+        var fortConfirmation = new HostFortNameConfirmation(_startup, _mainMenu, _textEntry, _driver.Input, _scriptStrings, _editor.Workspace, _menuInput.ShowTell);
+        _saveFortDialog = new HostSaveFortDialog(_mainMenu, _htmlWindows, _htmlText, _textEntry, _startup, _driver.Screen,
+            fortConfirmation.Confirm, _menuInput.ShowTell);
+        _menuInput.BindNewFort(mode => _saveFortDialog.Show(mode, 1, _editor.CurrentName));
+        // DI-3: 실제 포인터 이동을 현재 커서 위치에 반영하고, Esc는 잡은 커서가 있을 때만 놓는다.
+        _menuInput.CursorPosition = (x, y) => { _gameplay.Cursor.ScreenX = x; _gameplay.Cursor.ScreenY = y; _missionSession?.RefreshCursorPlacement(); }; // 정지한 포인터도 공급원 완성/소실을 다음 입력 프레임에 반영한다.
+        _menuInput.CursorCancel = () => _missionSession?.TryCancelCursor() == true;
+        // DI-4d: 이동 전용 경로는 미션 세션의 Pan에, 숫자·기호 입력은 저장 카메라 분배에 맡긴다. 미션 없으면 거짓으로 종전 흐름을 유지한다.
+        _menuInput.CameraPan = pointer => _missionSession?.ProcessCameraPan(pointer) == true;
+        _menuInput.SavedCameraKey = input => _missionSession?.DispatchSavedCameraKey(input) == true;
+        _gumpDrawing = new HostGumpDrawing(_mainMenu, _htmlText, _htmlMenus, _driver.Screen, _textEntry);
+        // R5-4c1: 미션 중 메인 메뉴 배경 숨김. 같은 트리의 임무 UI는 그대로 그리고 입력도 그대로 전달한다.
+        // 근거: cpppj UberGump.cpp 2111~2112행의 MainMenu 단계 조건이다. 미션 세션이 생기면 메뉴 돌 버튼·배경을 건너뛴다.
+        _mainMenu.IsMissionActive = () => _missionSession is not null;
+        _gumpDrawing.IsMissionActive = () => _missionSession is not null;
+        _driver.BindControlLocator(_mainMenu);
+        _driver.BindInputHandler(_menuInput.Dispatch);
+        // 메뉴/미션모두같은Client Frame번호/게임시각을기록한다. world1의ProcessTime도같은Frame주소를빌린다.
+        // 근거: cpppj SessionStateDump.cpp의 DumpSessionState(world 0 부분). (2026-11-10 L2·L3 장치에서 추가했다)
+        _sessionDump = new HostSessionDump(_kernel, _gameRandom, _crtRandom, () => _clientClock.Frame.Value.Number, () => BitConverter.DoubleToUInt64Bits(_clientClock.Frame.Value.Game));
+        // --mission 진입이면 세션 데이터를 조립해 world 1 덤프에 연결한다. 월드 본체 조립은 다음 단위다.
+        // (2026-11-12 0.398에서 미션 시작 흐름으로 추가했다)
+        if (!string.IsNullOrEmpty(_options.Mission) && _startup is not null)
+            _sessionDump.BindSession(StartMission(_options.Mission, _options.Handle ?? "Player", _options.Demo ? 1u : null));
+        _driver.BindSessionDump(_sessionDump.Write);
+        _gumpDrawing.Draw();
+        _menuDirty = false;
     }
 
     /// <summary>미션 표를 장기 저장소에 독립 사본으로 넣어 공장 일원화의 바탕을 둔다. 풀 바이트는 바꾸지 않는다.</summary>

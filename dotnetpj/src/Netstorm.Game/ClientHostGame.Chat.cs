@@ -18,17 +18,14 @@ public sealed partial class ClientHostGame
     private readonly ClientDotCommandGlobals _dotCommandGlobals = new();
     /// <summary>같은 실제 이름/함수/표시/count와 분배 검색 상태다.</summary>
     public ClientDotCommandGlobals DotCommandGlobals => _dotCommandGlobals;
-    /// <summary>콘텐츠 재연결에서 성공한 Issue/Chat 초기화를 반복하지 않는 수명 표식이다.</summary>
-    private bool _nativeChatInitialized;
-    /// <summary>첫 메뉴 전에 원문 Issue 네 등록→같은 실제 Chat manager 초기화를 실행한다.</summary>
-    private void InitializeNativeChat()
+    /// <summary>원문 Issue 네 명령을 등록한다. 성공/실패 표식과 뒤 Intro/Scene 순서는 시작 소유자가 관리한다.</summary>
+    private void InitializeNativeIssueCommands() => ClientChatRuntime.InitializeClientIssueCommands(_dotCommandGlobals);
+    /// <summary>앞선 Issue/Intro/Scene 뒤 같은 실제 Chat manager를 초기화한다. 재시도 여부는 시작 소유자가 결정한다.</summary>
+    private void InitializeNativeChatManager()
     {
-        if (_nativeChatInitialized) return;
         var startup = _startup ?? throw new InvalidOperationException("Chat 공통 시작의 실제 설정 미설치");
-        ClientChatRuntime.InitializeClientIssueCommands(_dotCommandGlobals);
         ClientChatRuntime.InitializeClientChatManager(_chatManagerGlobals, _dotCommandGlobals, _subscriberGlobals, _gameplay.CoreData.ActiveBox, startup.Configuration,
             line => ErrorLog.RecordAssertion("Chat 원문 진단", ".\\Chat.cpp", line));
-        _nativeChatInitialized = true;
     }
     /// <summary>실제 현재 Chat root의 장기 슬롯이며 나머지 창/공유 로그는 후속이다.</summary>
     private readonly ClientChatWindowGlobals _chatWindowGlobals = new();

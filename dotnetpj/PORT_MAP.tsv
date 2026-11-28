@@ -1961,3 +1961,7 @@ cpppj/src/client/ClientMain.cpp	Netstorm.Game/HostThunderFlashes.cs	3f12a2bd4f53
 cpppj/src/client/ClientMain.h	Netstorm.Game/HostThunderFlashes.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	session
 cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.Thunder.cs	3f12a2bd4f539e3e30fc029d2cfb999bb9476a33	session
 cpppj/src/client/ClientMain.h	Netstorm.Game/ClientHostGame.Thunder.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	session
+cpppj/src/client/ClientAudio.cpp	Netstorm.Game/HostMissionAudio.SceneMusic.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	session
+cpppj/src/client/ClientAudio.h	Netstorm.Game/HostMissionAudio.SceneMusic.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	session
+cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.Startup.cs	3f12a2bd4f539e3e30fc029d2cfb999bb9476a33	session
+cpppj/src/client/ClientMain.h	Netstorm.Game/ClientHostGame.Startup.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	session
