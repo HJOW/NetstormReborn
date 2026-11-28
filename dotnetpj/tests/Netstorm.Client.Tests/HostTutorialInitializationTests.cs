@@ -37,6 +37,9 @@ public sealed class HostTutorialInitializationTests
             Assert.Equal(1u, guide.Runtime.State.Flags); Assert.Equal(1u, guide.InitGlobals.LoginSubscriber);
             Assert.NotNull(init.Request); Assert.Equal(init.Request!.Fort, pending); Assert.NotEmpty(pending!);
             Assert.Equal(7u, requestGlobals.Next[0]); Assert.Equal((uint)index, requestGlobals.Sequence); Assert.Equal(86, init.Request.Zone.Length);
+            Assert.Equal((uint)index, init.Request.Sequence);
+            Assert.Equal(7u, System.Buffers.Binary.BinaryPrimitives.ReadUInt32LittleEndian(init.Request.NextSnapshot));
+            Assert.Equal(1u, System.Buffers.Binary.BinaryPrimitives.ReadUInt32LittleEndian(init.Request.NextSnapshot.AsSpan(128)));
             Assert.Equal((byte)2, options[1]); Assert.Equal((byte)3, options[4]); Assert.Equal(0x7391u, restrictions[255]);
             Assert.Equal(0u, restrictions[Find("windVortex")]);
             if (index <= 2) Assert.Equal(index == 1 ? 1u : 0u, restrictions[Find("sunArcher")]);

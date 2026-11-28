@@ -196,3 +196,12 @@ Getter/월드 조회와 palette/Thunder는 독립 집중 단위로 나눌 수 �
 ClientBridgeDecay.Run은 실제 같은 Surface/권한과 FrameTimeBox를 사용해 메뉴에서도 전역 스캔을 수행한다. 적격 칸에서만 현재 전체 Runtime을 빌리고 HostSession.DecayBridgeCell로 전달한다. 세션은 같은 Native Surface·지형/Graph·현재 사제 이동 역할·현재 회피 경계·실제 가상 삭제/표면 통지/표시와 균열 음향을 사용한다. 풀만 공유하고 Graph/장부를 따로 가진 조합은 거부한다.
 
 제품 Update에서 현재 모달을 읽고 Wind→MonitorTime→BridgeDecay→SceneFrame→Minimap/Gump/Kernel 순서를 연결했다. 메뉴 Kernel도 실행하며 Movie 잠금에서 생략한다. 게임 Pause에서도 Scene은 동적 벽시각을 읽는다. 실제1-1 Pause/벽시각·Movie 잠금/해제 관측과 대표3진입·화면 비교는1.223 문서를 따른다. 자연 붕괴/대피 플레이·전체 State·카메라/AI 전체 프레임 완료를 의미하지 않는다. 다음은 H State7/정리 Start·결과 공유와 실제 Load/cleanup 부모다.
+
+
+## 1.224 H의 실제 요청과 공통 시작 부모
+
+CPP CampaignClientServices의 실제 RunCampaignMissionStarting은 현재 Client/Surface/로컬720BYTE를 빌린 RawLocalMissionState.PollStarting(body)로7의 큰 몸체와 즉시8의 접속을 확정한다. 기존 DN의 MissionFortRequestGlobals.Next는 별도 배열뿐이어서 실제 State7으로 넘길 수 없었다.1.224에서 실제 next144BYTE/ZonePending/현재 주소·포트 대여와 요청의 관측 캡처를 추가했다. 독립 원문144행을 독립/실제 결선 모두에 적용했고, Prepare/Capture와 현재 모드·프레임/제목/Player 별칭 및7→즉시8 확정을 확인했다.
+
+Prepare는 독립 호출자가 next→current 복사를 직접 맡는 경로이며 Run과 순차 호출하지 않는다. Run의 실제 body는 이미 next를 current로 복사받으므로 Capture부터 시작한다. request.NextSnapshot은 Init 관측 캡처일 뿐 현재 Native 상태를 다시 덮는 근거가 아니다. 큰 몸체 실패의 선행 쓰기를 되돌리거나 임의7/8을 합성하지 않는다.
+
+다음 H에서 실제 Game의 cleanup/UI·옵션/State7 시작 몸체·현재 접속을 연결한다. 개발용 StartMission을 먼저 감싸거나 StartScene(true)를 진입 뒤에 임의 추가하지 않는다. 전체 Native Load9단계와 미션 플레이 완료는 여전히 별도 R6 의존이며1.224는 Game의 실제 진입 호출자를 교체한 단위가 아니다.

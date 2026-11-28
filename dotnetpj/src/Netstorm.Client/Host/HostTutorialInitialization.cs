@@ -47,6 +47,7 @@ public sealed class HostTutorialInitialization
                     SelectFort = selected => request.Fort = _selectFort(selected),
                     Duplicate = packet => MissionFortRequest.CaptureZone(request, packet)
                 });
+                _requestGlobals.CopyNextTo(request.NextSnapshot); request.Sequence = _requestGlobals.Sequence;
                 Request = request; _postFort(request.Fort);
             },
             Header = () => MissionTechnology.Apply(_guide.Mission ?? throw new InvalidOperationException("현재 미션 없음"), _findType, _restrictions)
