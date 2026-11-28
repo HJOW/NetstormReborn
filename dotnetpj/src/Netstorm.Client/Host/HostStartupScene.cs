@@ -10,6 +10,8 @@ namespace Netstorm.Client.Host;
 /// 근거: cpppj/src/client/ClientMain.cpp와 UberGump.cpp의 fortPal 및 titleMenu 적재.</summary>
 public sealed class HostStartupScene
 {
+    /// <summary>서명 뒤 UTF-8 BOM을 명시한 사용자 파일은 잘못된 바이트를 치환하지 않고 전체 덧읽기를 거부한다.</summary>
+    private static readonly UTF8Encoding UserOptionsUtf8 = new(false, true);
     /// <summary>게임 데이터의 파일과 아카이브를 공유하는 읽기 장치.</summary>
     public GameFileSystem Files { get; }
     /// <summary>같은 파일 장치에서 초기화한 원본 설정.</summary>
@@ -51,6 +53,9 @@ public sealed class HostStartupScene
         Configuration = new ConfigInterface(Files.TryReadAllBytes);
         Configuration.Startup(new ConfigInterface.StartupOptions { InstallDir = Path.GetFullPath(dataDirectory), CommandLine = settings });
         OverlayUserOptions();
+        // 원문 Startup의 최종 경로 쓰기처럼 오래된 사용자 END 저장값보다 이번 실제 설치 루트를 우선한다.
+        Configuration.Set("InstallDir", Path.GetFullPath(dataDirectory));
+        Configuration.Set("CDDir", Path.GetFullPath(dataDirectory));
         // 새 제품 표기 11.01을 적용하고 추가 Credits 상세를 같은 수명에 등록한다
         // (2026-11-03 11.01 요구에서 추가했다. 원본 데이터 판본은 바꾸지 않는다)
         ProductPresentation.ApplyProductVersion(Configuration);
@@ -65,8 +70,8 @@ public sealed class HostStartupScene
         _title = Netstorm.Client.Display.GifImage.DecodeGif(Files.ReadAllBytes(titlePath));
     }
 
-    /// <summary>사용자 루트의 옵션 파일을 설치 설정 위에 덧읽는다. 없거나 읽을 수 없으면 설치 값을 그대로 쓴다.</summary>
-    /// <remarks>5차 요구: 읽기 전용 설치에서도 게임이 정상 동작하도록 설치 경로는 읽기만 한다. 사용자 값이 있으면 항상 이긴다.</remarks>
+    /// <summary>사용자 파일 전체를 먼저 해석한 뒤 options.cfg 이후의 유효 키 중복만 지우고 같은 옵션 위치에 원문 본문을 넣는다.</summary>
+    /// <remarks>5차 사용자 덮어쓰기를 Host에서 처리하고 Core의 첫 키 우선·Append 문법은 바꾸지 않는다. 실패한 파일은 설치 값을 보존한다.</remarks>
     private void OverlayUserOptions()
     {
         if (_userOptionsPath is null) return;
@@ -79,14 +84,67 @@ public sealed class HostStartupScene
         {
             return;
         }
+        using var user = new Config(new ConfigRegistry());
+        var keys = new List<string>();
         try
         {
-            Configuration.LoadBytes(bytes);
+            ValidateUserOptionsEncoding(bytes);
+            user.LoadBytes(bytes);
+            // 값은 다시 쓰지 않고 원문 GetRaw가 인식하는 선언의 키만 수집한다. 중복 본문은 원래 순서를 유지한다.
+            foreach (string line in user.Text.Split('\n'))
+            {
+                string? key = UserOptionDeclaration(user, line);
+                if (key is not null) keys.Add(key);
+            }
         }
         catch (Exception exception) when (exception is ArgumentException or InvalidDataException or DecoderFallbackException)
         {
             return;
         }
+        // ARGS와 앞선 user.cfg는 원문 우선순위를 보존한다. 사용자 루트는 설치 options.cfg 위치에서만 우선한다.
+        string original = Configuration.Configuration.Text;
+        int? options = Config.FindSection(original, 0, "[options.cfg]");
+        if (options is null) return;
+        string installedBody = Configuration.Configuration.Section("options.cfg") ?? "";
+        using var installed = new Config(new ConfigRegistry());
+        installed.Assign(installedBody);
+        using var fallback = new Config(new ConfigRegistry());
+        // 설치의 실제 원시 선언만 보충한다. 설치 주석/빈줄/단독서명을 매 재개 때 사용자 저장물에 복제하지 않는다.
+        foreach (string line in installedBody.Split('\n'))
+            if (UserOptionDeclaration(installed, line) is not null) fallback.Append(line);
+        using var suffix = new Config(new ConfigRegistry());
+        suffix.Assign(fallback.Text + original[(options.Value + installedBody.Length)..]);
+        // 전체 디코드/선언 확인 뒤에도 실제 설정은 아직 바꾸지 않는다. 옵션 이후 같은 키의 중복만 모두 제거한다.
+        foreach (string key in keys) suffix.RemoveKey(key);
+        using var merged = new Config(new ConfigRegistry());
+        merged.Assign(original[..options.Value]);
+        merged.Append(user.Text);
+        merged.Append(suffix.Text);
+        Configuration.Configuration.Assign(merged.Text);
+    }
+
+    /// <summary>선언의 키만 찾고 원문 GetRaw로 확인한다. 원시 값·주석·백틱·중복 순서는 다시 직렬화하지 않는다.</summary>
+    private static string? UserOptionDeclaration(Config config, string line)
+    {
+        int equal = line.IndexOf('=');
+        if (equal < 0) return null;
+        string key = line[..equal].Trim(' ', '\t');
+        if (key.Length == 0 || key.StartsWith("//", StringComparison.Ordinal) || key[0] == '[') return null;
+        return config.GetRaw(key) is not null ? key : null;
+    }
+
+    /// <summary>원문 XOR와 첫NUL 경계를 유지하고 명시 UTF-8 BOM 본문만 엄격검증한다. BOM 없는 원본 CP1252는 그대로 허용한다.</summary>
+    private static void ValidateUserOptionsEncoding(byte[] bytes)
+    {
+        byte[] plain = (byte[])bytes.Clone();
+        bool encoded = plain.Length >= 3 && plain[0] == 0 && plain[2] == 0;
+        if (encoded) XorCipher.Apply(plain);
+        int nul = Array.IndexOf(plain, (byte)0);
+        ReadOnlySpan<byte> text = plain.AsSpan(0, nul < 0 ? plain.Length : nul);
+        bool signature = text.StartsWith("mQdsT"u8);
+        if (encoded && !signature) throw new InvalidDataException("사용자 옵션 파일의 실제 XOR 서명 누락");
+        if (signature) text = text[ConfigTextOps.Signature.Length..];
+        if (text.StartsWith(new byte[] { 0xef, 0xbb, 0xbf })) _ = UserOptionsUtf8.GetString(text[3..]);
     }
 
     /// <summary>현재 설정을 옵션 파일에 기록한다. 사용자 경로가 있으면 그곳에만 쓰고 설치 경로는 건드리지 않는다.</summary>
