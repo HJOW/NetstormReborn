@@ -1,3 +1,4 @@
+using System.Globalization;
 using Netstorm.Client.Display;
 using Netstorm.Core.Original;
 
@@ -70,6 +71,11 @@ public sealed class HostOptions
         int width = config.GetInt("SCREENW"), height = config.GetInt("SCREENH"), fps = config.GetInt("maxFPS");
         if (!_widthExplicit && width > 0) Width = width;
         if (!_heightExplicit && height > 0) Height = height;
+        // 실제 FSR 장치 연결 전에는 기본7행만 허용해 큰 저장값/옛 선택을 화면 할당 전에 복구한다.
+        var normalized = ScreenResolutions.Normalize(Width, Height, false);
+        Width = unchecked((int)normalized.Width); Height = unchecked((int)normalized.Height);
+        config.Configuration.Set("SCREENW", Width.ToString(CultureInfo.InvariantCulture));
+        config.Configuration.Set("SCREENH", Height.ToString(CultureInfo.InvariantCulture));
         if (!_fpsExplicit && fps > 0) FramesPerSecond = fps;
         if (!_fullscreenExplicit && config.Configuration.Get("startInFullScreen") != null) Fullscreen = config.GetInt("startInFullScreen") != 0;
     }

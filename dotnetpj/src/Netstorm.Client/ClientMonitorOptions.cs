@@ -22,11 +22,15 @@ public sealed class ClientMonitorOptions : IDisposable
         Interpret(); _configuration.OnChanged += Interpret;
     }
     /// <summary>원문 AutoRestart1→monitor→alert 순서다. 누락 값·기한·초기화 비트는 유지한다.</summary>
-    private void Interpret()
+    public void Interpret()
     {
+        ObjectDisposedException.ThrowIf(_disposed, this);
         _activity.AutoRestart.Value = 1;
         _configuration.ReadInt("monitor", ref _state.Monitor); _configuration.ReadInt("alert", ref _state.Alert);
     }
+    /// <summary>상태를 읽거나 변경하지 않고 부모가 같은 감독/활동/설정을 빌리는지 확인한다.</summary>
+    internal bool Borrows(MonitorTimeState state, ClientConnectionActivityGlobals activity, ConfigInterface configuration) =>
+        ReferenceEquals(_state, state) && ReferenceEquals(_activity, activity) && ReferenceEquals(_configuration, configuration);
     /// <summary>같은 Config에서 자기 해석만 해제하고 다른 구독/상태/기한은 유지한다.</summary>
     public void Dispose() { if (_disposed) return; _configuration.OnChanged -= Interpret; _disposed = true; }
 }

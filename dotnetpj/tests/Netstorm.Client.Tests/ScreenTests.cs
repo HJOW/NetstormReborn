@@ -165,13 +165,13 @@ public sealed class ScreenTests
         ScreenPresentation.ScrollScreenPixels([], 8, 8, 8, 0, 0, 5, 5, 5, 0);
     }
 
-    /// <summary>해상도 목록은 원본 4:3 세 항목 뒤에 호환 세 항목이 이어진다.</summary>
+    /// <summary>해상도 목록은 원본 세 항목 뒤 최대 폭1280의 네 화면비가 이어진다.</summary>
     [Fact]
     public void ResolutionChoicesKeepOriginalOrder()
     {
-        Assert.Equal(6, ScreenResolutions.Choices.Length);
+        Assert.Equal(7, ScreenResolutions.Choices.Length);
         Assert.Equal([(640u, 480u), (800u, 600u), (1024u, 768u)], ScreenResolutions.Original.ToArray());
-        Assert.Equal([(1280u, 720u), (1280u, 800u), (1366u, 768u)], ScreenResolutions.Compatibility.ToArray());
+        Assert.Equal([(1280u, 720u), (1280u, 800u), (1280u, 960u), (1280u, 1024u)], ScreenResolutions.Compatibility.ToArray());
     }
 
     /// <summary>실제 Win32 DIB처럼 행 간격이 4바이트로 정렬된다(폭 1366 → 1368). 끝 행 쓰기가 옆 행과 섞이지 않는다.</summary>

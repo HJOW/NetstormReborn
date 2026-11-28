@@ -173,6 +173,8 @@ public sealed partial class ClientHostGame : Game
         HostTimeSource? clock = construction.Clock;
         _paletteGlobals = construction.Palette;
         _driver = driver;
+        _nativeOptionGlobals.Window.LogicalWidth = driver.Screen.Width; _nativeOptionGlobals.Window.LogicalHeight = driver.Screen.Height;
+        _nativeOptionGlobals.Window.PresentWidth = driver.Screen.Width; _nativeOptionGlobals.Window.PresentHeight = driver.Screen.Height;
         _options = options;
         _startup = startup;
         _nativeCdGlobals = startup?.CdGlobals ?? new ClientCdGlobals();
@@ -180,6 +182,12 @@ public sealed partial class ClientHostGame : Game
         _staticStrings = new ClientStaticStrings(startup?.Files.FileNameOwner);
         _startupColors = startup is null ? null : new HostStartupColorMaps(startup, InitializeNativePrefix, PrepareStartupColorAssets, null, _paletteGlobals);
         _gameplay = new(_subscriberGlobals);
+        if (startup is not null)
+        {
+            int compress = _gameplay.GameAux.SquidTransmission.Compress, trace = _nativeOptionGlobals.Trace.Log.Level;
+            startup.Configuration.ReadInt("cs", ref compress); _gameplay.GameAux.SquidTransmission.Compress = compress;
+            startup.Configuration.ReadInt("tracelevel", ref trace); _nativeOptionGlobals.Trace.Log.Level = trace;
+        }
         _chatGlobals = new(OriginalEdition.Patch1078, () => _subscriberGlobals.MySubscriber.Value);
         if (_startup is { } diagnosticStartup) _gameplay.AiDebug.ReadOptions(diagnosticStartup.Configuration);
         _gameRandom = startup?.Random ?? new GameRandom();
@@ -205,7 +213,7 @@ public sealed partial class ClientHostGame : Game
         {
             owner.Storage.BindSerializationGlobals(_stateResources.Templates.SerializationGlobals);
             owner.BindDisplayDiagnostics(ErrorLog.RecordAssertion);
-            owner.Storage.BindGraphTrace((level, text) => ErrorLog.Note($"원본 로그 {level}: {text}"));
+            owner.Storage.BindGraphTrace(WriteNativeDiagnosticLog);
             // 첫 공통 삭제기 전에 PATCH 원본의 현재 가상표와 진단 경로를 선택한다.
             owner.Storage.EnablePatchDestroyDiagnostics();
             owner.BindNativeTransmission(_connections, ClearNativeUserSelection);
@@ -236,6 +244,9 @@ public sealed partial class ClientHostGame : Game
         });
         _sidLists = _surfaceGlobals.Storage.SidLists;
         BindStateResourceOwners();
+        if (startup is not null)
+            _nativeOptionsInterpreter = new(startup.Configuration, _gameplay, _localState, _connections, _chatWindowGlobals,
+                _monitorOptions!, _nativeLanguageOptions!, _nativeValueOptions!, startup.Cloud, _nativeOptionGlobals, PacketRecordOwner.Requested);
         // 원문SP초기화정상복귀뒤서버파일을읽어잘못된목록의실패prefix도같이보존한다.
         LoadRootServerList();
         _graphics = new GraphicsDeviceManager(this);

@@ -36,6 +36,9 @@ public sealed class ClientValueOptions
     {
         int value = unchecked((int)owner.Value); _configuration.ReadInt(key, ref value); owner.Value = unchecked((uint)value);
     }
+    /// <summary>효과를 실행하지 않고 전체 부모의 같은 Config/Client/연결 대여를 검증한다.</summary>
+    internal bool Borrows(ConfigInterface configuration, ClientGameplayGlobals game, ClientLocalStateGlobals local, ClientConnectionGlobals connections) =>
+        ReferenceEquals(_configuration, configuration) && ReferenceEquals(_game, game) && ReferenceEquals(_local, local) && ReferenceEquals(_connections, connections);
     /// <summary>원문은 해석마다 회전 모드를0으로 쓴 뒤 현재 rotmode를 읽는다.</summary>
     public void InterpretCursor()
     {

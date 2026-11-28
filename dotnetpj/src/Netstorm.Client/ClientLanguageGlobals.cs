@@ -42,6 +42,8 @@ public sealed class ClientLanguageOptions : IDisposable
             Load = _configuration.LoadLanguage,
         });
     }
+    /// <summary>설정을 읽지 않고 현재 부모의 같은 Registry인지 확인한다.</summary>
+    internal bool Borrows(ConfigInterface configuration) => ReferenceEquals(_configuration, configuration);
     /// <summary>다른 Config 구독자와 현재 언어/용어표를 보존하며 자기 구독만 해제한다.</summary>
     public void Dispose() { if (_disposed) return; _configuration.OnChanged -= Interpret; _disposed = true; }
 }
