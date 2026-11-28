@@ -14,6 +14,8 @@ async function clickLabel(page, label) {
 // 현재 대화상자의 목록 항목·버튼 라벨이다.
 const menuLabels = (page) => page.evaluate(() => window.netstorm._mainMenu.dialog?.menu?.items.map((item) => item.label) ?? []);
 const buttonLabels = (page) => page.evaluate(() => window.netstorm._mainMenu.dialog?.buttons.map((button) => button.label) ?? []);
+// Options와 같은 메뉴 위젯이 표시할 실제 선택 상태를 읽는다.
+const checkedLabels = (page) => page.evaluate(() => window.netstorm._mainMenu.dialog?.menu?.items.filter((item) => item.kind === 'checked' && item.checked).map((item) => item.label) ?? []);
 
 async function openMain(page, url) {
   await page.setViewportSize({ width: 1024, height: 768 }); await page.goto(url);
@@ -29,6 +31,7 @@ test('주소에 ?skirmish=0 이 있으면 Campaign 목록에 Skirmish 항목이 
   const errors = []; page.on('pageerror', (error) => errors.push(error.message));
   await openMain(page, '/?skirmish=0&aspect=4:3'); await clickLabel(page, 'Campaign');
   expect(await menuLabels(page)).not.toContain('Skirmish'); expect(await menuLabels(page)).toContain('Early Missions');
+  expect(await page.evaluate(() => window.netstorm._mainMenu.dialog.menu.items.at(-1).kind)).not.toBe('separator');
   expect(errors).toEqual([]);
 });
 
@@ -36,16 +39,25 @@ test('기본 판본에서 Campaign 의 Skirmish 설정 화면 흐름과 저장�
   const errors = []; page.on('pageerror', (error) => errors.push(error.message));
   await openMain(page, '/?aspect=4:3'); await clickLabel(page, 'Campaign');
   expect(await menuLabels(page)).toContain('Skirmish');
+  expect(await page.evaluate(() => window.netstorm._mainMenu.dialog.menu.items.at(-2).kind)).toBe('separator');
+  await page.screenshot({ path: test.info().outputPath('campaign-separator.png') });
   await clickLabel(page, 'Skirmish');
   expect(await menuLabels(page)).toEqual(['AI players: 1', 'AI 1: Normal / Enemy', 'Banned units: 0/5']); expect(await buttonLabels(page)).toEqual(['Start', 'Cancel']);
   // AI 수를 3 으로, AI 2 를 어려움·동맹으로 바꾼다.
-  await clickLabel(page, 'AI players: 1'); await clickLabel(page, '3');
+  await clickLabel(page, 'AI players: 1'); expect(await checkedLabels(page)).toEqual(['1']); await clickLabel(page, '3');
   expect(await menuLabels(page)).toEqual(['AI players: 3', 'AI 1: Normal / Enemy', 'AI 2: Normal / Enemy', 'AI 3: Normal / Enemy', 'Banned units: 0/5']);
-  await clickLabel(page, 'AI 2: Normal / Enemy'); await clickLabel(page, 'Hard'); await clickLabel(page, 'Ally'); await clickLabel(page, 'Back');
+  await clickLabel(page, 'AI 2: Normal / Enemy'); await clickLabel(page, 'Hard'); await clickLabel(page, 'Ally');
+  expect(await checkedLabels(page)).toEqual(['Hard', 'Ally']);
+  await page.screenshot({ path: test.info().outputPath('skirmish-selection-icons.png') });
+  await clickLabel(page, 'Back');
   expect(await menuLabels(page)).toContain('AI 2: Hard / Ally');
   // 금지 유닛 두 개를 고르고 되돌아온다.
   await clickLabel(page, 'Banned units: 0/5');
-  await clickLabel(page, '[ ] Wind Generator - windBattery'); await clickLabel(page, '[ ] Sun Cannon - sunCannon'); await clickLabel(page, 'Back');
+  await clickLabel(page, 'Wind Generator - windBattery'); await clickLabel(page, 'Sun Cannon - sunCannon');
+  expect(await checkedLabels(page)).toEqual(['Wind Generator - windBattery', 'Sun Cannon - sunCannon']);
+  expect((await menuLabels(page)).at(-1)).toBe('Clear all');
+  await page.screenshot({ path: test.info().outputPath('skirmish-ban-icons.png') });
+  await clickLabel(page, 'Back');
   expect(await menuLabels(page)).toContain('Banned units: 2/5');
   // 설정은 로컬 저장소에 쓰인다(화면의 'AI 2' 는 소유자 3 이다).
   const saved = await page.evaluate(() => JSON.parse(localStorage.getItem('netstorm.settings')).values);
@@ -60,10 +72,18 @@ test('한국어 화면의 스커미시 설정 화면이 번역되고 금지 유�
   test.setTimeout(90000);
   const errors = []; page.on('pageerror', (error) => errors.push(error.message));
   await openMain(page, '/?lang=ko&aspect=4:3'); await clickLabel(page, '캠페인');
+  expect(await page.evaluate(() => window.netstorm._mainMenu.dialog.menu.items.at(-2).kind)).toBe('separator');
   expect(await menuLabels(page)).toContain('스커미시'); await clickLabel(page, '스커미시');
   expect(await menuLabels(page)).toContain('인공지능 수: 1'); expect(await buttonLabels(page)).toEqual(['시작', '취소']);
   await clickLabel(page, '금지 유닛: 0/5');
   const labels = await menuLabels(page);
   expect(labels.length).toBeGreaterThan(5); expect(labels.some((label) => label.includes('windBattery') && !label.includes('Wind Generator'))).toBe(true);
   expect(errors).toEqual([]);
+});
+
+test('일본어 Campaign 구분선과 인공지능 수 선택 아이콘이 실제 메뉴에 연결된다', async ({ page }) => {
+  await openMain(page, '/?lang=ja&aspect=4:3'); await clickLabel(page, 'キャンペーン');
+  expect(await page.evaluate(() => window.netstorm._mainMenu.dialog.menu.items.at(-2).kind)).toBe('separator');
+  await clickLabel(page, 'スカーミッシュ'); await clickLabel(page, 'AI人数: 1');
+  expect(await checkedLabels(page)).toEqual(['1']);
 });

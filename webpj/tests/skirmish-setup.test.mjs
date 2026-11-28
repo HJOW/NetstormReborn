@@ -20,6 +20,7 @@ test('Tell 대상 해석: 종류와 인자를 소문자 기준으로 읽고 스�
     assert.equal(parseSkirmishTarget('Patch1101.SkirmishCount').kind, 'count');
     assert.deepEqual(parseSkirmishTarget('Patch1101.SkirmishAi(3)'), { kind: 'ai', args: ['3'] });
     assert.deepEqual(parseSkirmishTarget('Patch1101.SkirmishSet(ban,4,1)'), { kind: 'set', args: ['ban', '4', '1'] });
+    assert.deepEqual(parseSkirmishTarget('Patch1101.SkirmishSet(ban;4;1)'), { kind: 'set', args: ['ban', '4', '1'] });
     assert.equal(parseSkirmishTarget('Patch1101.SkirmishStart').kind, 'start');
     assert.equal(parseSkirmishTarget('patch1101.skirmishbans(2)').kind, 'bans');
     assert.equal(parseSkirmishTarget('Patch1101.Credits').kind, 'none'); assert.equal(parseSkirmishTarget('UCampaign').kind, 'none');
@@ -198,22 +199,22 @@ test('화면 본문: 시작/취소와 현재 값, 금지 표시와 쪽 이동, �
     assert.ok(has(buildSkirmishScreen(target('Patch1101.Skirmish'), settings, 5, null), 'スカーミッシュ'));
     assert.ok(has(buildSkirmishScreen(target('Patch1101.Skirmish'), settings, 1, null), '$Button=Start,')); // 언어 1 도 영어다.
     const count = buildSkirmishScreen(target('Patch1101.SkirmishCount'), settings, 0, null);
-    assert.ok(has(count, '$Menu=* 2,Tell,Patch1101.SkirmishSet(count,2)') && has(count, 'SkirmishSet(count,7)') && has(count, '$Menu=1,Tell,') && has(count, '$Button=Back,Tell,Patch1101.Skirmish\n'));
+    assert.ok(has(count, '$Checked=2,Tell,Patch1101.SkirmishSet(count;2),1,1') && has(count, 'SkirmishSet(count;7),0,1') && has(count, '$Checked=1,Tell,Patch1101.SkirmishSet(count;1),0,1') && has(count, '$Button=Back,Tell,Patch1101.Skirmish\n'));
     const ai = buildSkirmishScreen(target('Patch1101.SkirmishAi(2)'), settings, 0, null);
-    assert.ok(has(ai, '$Menu=* Hard,Tell,Patch1101.SkirmishSet(diff,2,3)') && has(ai, '$Menu=* Ally,Tell,Patch1101.SkirmishSet(ally,2,1)') && has(ai, '$Menu=Easy,Tell,Patch1101.SkirmishSet(diff,2,1)') && has(ai, '<h2>{H2}AI 1</h2>'));
-    assert.ok(has(buildSkirmishScreen(target('Patch1101.SkirmishAi'), settings, 0, null), 'SkirmishSet(diff,2,')); // 소유자를 안 주면 2 이다.
+    assert.ok(has(ai, '$Checked=Hard,Tell,Patch1101.SkirmishSet(diff;2;3),1,1') && has(ai, '$Checked=Ally,Tell,Patch1101.SkirmishSet(ally;2;1),1,1') && has(ai, '$Checked=Easy,Tell,Patch1101.SkirmishSet(diff;2;1),0,1') && has(ai, '<h2>{H2}AI 1</h2>'));
+    assert.ok(has(buildSkirmishScreen(target('Patch1101.SkirmishAi'), settings, 0, null), 'SkirmishSet(diff;2;')); // 소유자를 안 주면 2 이다.
     const translate = (text) => `${text}!`;
     const bans = buildSkirmishScreen(target('Patch1101.SkirmishBans(0)'), settings, 0, translate);
-    assert.ok(has(bans, '[X] Wind Generator! - windBattery') && has(bans, '[ ] Rain Generator! - rainBattery') && has(bans, 'Patch1101.SkirmishBans(1)') && !has(bans, 'Previous'));
-    assert.ok(has(bans, '$Menu=Clear all,Tell,Patch1101.SkirmishSet(clearbans)') && has(bans, 'Select up to 5 units'));
+    assert.ok(has(bans, '$Checked=Wind Generator! - windBattery,Tell,Patch1101.SkirmishSet(ban;0;0),1,1') && has(bans, '$Checked=Rain Generator! - rainBattery,Tell,Patch1101.SkirmishSet(ban;1;0),0,1') && has(bans, 'Patch1101.SkirmishBans(1)') && !has(bans, 'Previous'));
+    assert.ok(has(bans, '$Checked=Clear all,Tell,Patch1101.SkirmishSet(clearbans),0,1') && has(bans, 'Select up to 5 units'));
     // 쪽당 12개이고 마지막 쪽(2)에 Outpost 와 이전 쪽 이동이 있으며 쪽 번호가 넘치면 마지막 쪽으로 줄인다.
-    assert.equal((bans.match(/\$Menu=\[/gu) ?? []).length, 12);
+    assert.equal((bans.match(/\$Checked=[^\n]+SkirmishSet\(ban;/gu) ?? []).length, 12);
     const lastPage = buildSkirmishScreen(target('Patch1101.SkirmishBans(2)'), settings, 0, translate);
-    assert.ok(has(lastPage, 'Outpost!') && has(lastPage, '$Menu=Previous page,Tell,Patch1101.SkirmishBans(1)') && !has(lastPage, 'Next page'));
+    assert.ok(has(lastPage, 'Outpost!') && has(lastPage, '$Checked=Previous page,Tell,Patch1101.SkirmishBans(1),0,1') && !has(lastPage, 'Next page'));
     const middle = buildSkirmishScreen(target('Patch1101.SkirmishBans(1)'), settings, 0, translate); // 가운데 쪽은 양쪽 이동이 모두 있고 0 쪽으로 돌아갈 수 있다.
-    assert.ok(has(middle, '$Menu=Next page,Tell,Patch1101.SkirmishBans(2)') && has(middle, '$Menu=Previous page,Tell,Patch1101.SkirmishBans(0)'));
+    assert.ok(has(middle, '$Checked=Next page,Tell,Patch1101.SkirmishBans(2),0,1') && has(middle, '$Checked=Previous page,Tell,Patch1101.SkirmishBans(0),0,1'));
     assert.equal(buildSkirmishScreen(target('Patch1101.SkirmishBans(9)'), settings, 0, translate), lastPage);
-    assert.ok(has(buildSkirmishScreen(target('Patch1101.SkirmishBans(0)'), settings, 0, null), '[X] Wind Generator - windBattery')); // 번역 함수가 없으면 영어 이름 그대로다.
+    assert.ok(has(buildSkirmishScreen(target('Patch1101.SkirmishBans(0)'), settings, 0, null), '$Checked=Wind Generator - windBattery,Tell,Patch1101.SkirmishSet(ban;0;0),1,1')); // 번역 함수가 없으면 영어 이름 그대로다.
     settings.bans = ['windBattery', 'rainBattery', 'thunderBattery', 'sunArcher', 'windArcher'];
     assert.ok(has(buildSkirmishScreen(target('Patch1101.SkirmishBans(0)'), settings, 0, translate), 'Five units are banned'));
     // 후보 표는 27개이고 내부 타입 이름이 서로 다르다.

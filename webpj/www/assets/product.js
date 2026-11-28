@@ -167,7 +167,7 @@ export function productCreditsLabel(language) {
 // 메인 Credits 섹션 본문에 세 번째 행 하나만 덧붙인 본문을 돌려준다. 다른 섹션이거나, 본문에 이미 제품 대상이 있으면(중복 확장 방지) 원문 그대로이다.
 // target 은 지역 인자를 뗀 Tell 섹션 이름이며 대소문자를 무시해 비교한다(원본 Tell 이름 비교 규칙). 원본 두 행·Cancel 버튼은 그대로 둔다.
 // 사용: productTellBody('Credits', 원본본문, 'english') → 원본본문 + "\n$Menu=Netstorm 11.01 Patch Credits,Tell,Patch1101.Credits\n". (2026-11-05 WB03-AC)
-// 12차 스커미시: skirmish 가 참이면 Campaign 목록(UCampaign)에도 Skirmish 항목을 원문 목록과 첫 버튼 사이에 한 번만 넣는다(cpppj ProductTellBody). 스커미시를 켜지 않은 판본은 원문 그대로이다. (2026-11-20 WB04-E1102)
+// 12차 스커미시: skirmish 가 참이면 Campaign 목록(UCampaign)의 원문 목록과 첫 버튼 사이에 구분선 파일 목록과 Skirmish 항목을 한 번만 넣는다. 스커미시를 켜지 않은 판본은 원문 그대로이다. (2026-11-20 WB04-E1102, 2026-11-29 E1489 구분선 복원)
 // 버전 창(About): 첫 `$Button=` 앞에 "NetStorm 11.01 Patch by HJOW." 와 "Copyright 2026 HJOW" 두 줄을 한 번만 넣는다(버튼이 없으면 끝). 한국어는 "NetStorm 11.01 패치: HJOW." 이다. (2026-11-23 WB04-E1289, 사용자 요구)
 export function productTellBody(target, body, language, { skirmish = false } = {}) {
     const lower = asciiLower(String(target));
@@ -178,7 +178,8 @@ export function productTellBody(target, body, language, { skirmish = false } = {
     }
     if (skirmish && lower === CAMPAIGN_SECTION) {
         if (body.includes(PRODUCT_SKIRMISH_TARGET)) return body;
-        const entry = `$Menu=${PRODUCT_SKIRMISH_LABELS[productLanguage(language)]},Tell,${PRODUCT_SKIRMISH_TARGET}\n`, back = body.indexOf('$Button=');
+        // 사용자 제작 캠페인을 제외하며 잘린 끝 구분선을 원본 목록 파일로 다시 넣어 세 캠페인 묶음과 스커미시를 나눈다.
+        const entry = `$Menu=@\\D\\offical5sep.${productLanguage(language)},Tell,{cur.file}.overview\n$Menu=${PRODUCT_SKIRMISH_LABELS[productLanguage(language)]},Tell,${PRODUCT_SKIRMISH_TARGET}\n`, back = body.indexOf('$Button=');
         return back === -1 ? `${body}${entry}` : `${body.slice(0, back)}${entry}${body.slice(back)}`;
     }
     if (lower !== CREDITS_SECTION || body.includes(PRODUCT_CREDITS_TARGET)) return body;

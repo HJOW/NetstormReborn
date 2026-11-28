@@ -14,7 +14,7 @@ import { DATA_ROOT, readDataMap } from './helpers.mjs';
 // 메뉴 묶음 파일(한국어 묶음 포함 가능)과 GameData 를 만든다. (2026-11-20 WB04-E1102)
 function menuFiles() {
     const manifest = JSON.parse(fs.readFileSync(path.join(DATA_ROOT, 'manifest.json'), 'utf8'));
-    return readDataMap(manifest.files.filter((entry) => entry.bundle === 'menu' || entry.bundle === 'korean').map((entry) => entry.path));
+    return readDataMap(manifest.files.filter((entry) => entry.bundle === 'menu' || entry.bundle === 'korean' || entry.bundle === 'japanese').map((entry) => entry.path));
 }
 // 메인 메뉴 위에 Tell 을 열 수 있는 최소 앱을 만든다. storage 는 설정 저장소 흉내이다. (2026-11-20 WB04-E1102)
 function makeApp({ language = 'english', skirmish = true, startSkirmish = null, storage = null } = {}) {
@@ -35,17 +35,19 @@ function clickLabel(app, label) {
 function fakeStorage() { const map = new Map(); return { map, getItem: (key) => map.get(key) ?? null, setItem: (key, value) => { map.set(key, String(value)); } }; }
 // 현재 대화상자의 메뉴 항목 라벨 목록이다. (2026-11-20 WB04-E1102)
 const menuLabels = (app) => app._mainMenu.dialog.menu.items.map((item) => item.label);
+// 현재 창의 체크 상태를 실제 메뉴 항목에서 읽는다.
+const checkedLabels = (app) => app._mainMenu.dialog.menu.items.filter((item) => item.kind === 'checked' && item.checked).map((item) => item.label);
 const buttonLabels = (app) => app._mainMenu.dialog.buttons.map((button) => button.label);
 
 test('제품 본문: 스커미시를 켠 판본만 Campaign 목록에 Skirmish 항목을 첫 버튼 앞에 한 번 넣는다', () => {
     const original = '<h2>Campaign</h2>\n$Menu=Early Missions,Tell,x\n$Button=Back,Tell,Blank\n';
     const english = productTellBody('UCampaign', original, 'english', { skirmish: true });
-    assert.ok(english.includes('$Menu=Skirmish,Tell,Patch1101.Skirmish\n$Button=Back')); assert.equal(english.indexOf('$Menu=Skirmish'), english.lastIndexOf('$Menu=Skirmish'));
+    assert.ok(english.includes('$Menu=@\\D\\offical5sep.english,Tell,{cur.file}.overview\n$Menu=Skirmish,Tell,Patch1101.Skirmish\n$Button=Back')); assert.equal(english.indexOf('$Menu=Skirmish'), english.lastIndexOf('$Menu=Skirmish'));
     assert.equal(productTellBody('ucampaign', english, 'english', { skirmish: true }), english); // 두 번 가공해도 한 번만 들어간다.
     assert.ok(productTellBody('UCampaign', original, 'korean', { skirmish: true }).includes('$Menu=스커미시,Tell,Patch1101.Skirmish\n'));
     assert.equal(productTellBody('UCampaign', original, 'english'), original); assert.equal(productTellBody('UCampaign', original, 'english', { skirmish: false }), original); // 켜지 않으면 원문 그대로이다.
     assert.equal(productTellBody('Blank', original, 'english', { skirmish: true }), original); // 다른 섹션은 건드리지 않는다.
-    assert.equal(productTellBody('UCampaign', '<h2>x</h2>\n$Menu=a,Tell,b\n', 'english', { skirmish: true }), '<h2>x</h2>\n$Menu=a,Tell,b\n$Menu=Skirmish,Tell,Patch1101.Skirmish\n'); // 버튼이 없으면 끝에 붙는다.
+    assert.equal(productTellBody('UCampaign', '<h2>x</h2>\n$Menu=a,Tell,b\n', 'english', { skirmish: true }), '<h2>x</h2>\n$Menu=a,Tell,b\n$Menu=@\\D\\offical5sep.english,Tell,{cur.file}.overview\n$Menu=Skirmish,Tell,Patch1101.Skirmish\n'); // 버튼이 없으면 끝에 붙는다.
     assert.equal(PRODUCT_SKIRMISH_TARGET, 'Patch1101.Skirmish');
     // Patch1101 객체에는 네 화면의 자리 틀 섹션이 모든 언어에 있다.
     for (const language of ['english', 'korean']) for (const section of ['[Skirmish]', '[SkirmishCount]', '[SkirmishAi]', '[SkirmishBans]']) assert.ok(productCreditsText(language).includes(`\n${section}\n`), `${language} ${section}`);
@@ -59,14 +61,14 @@ test('앱 연결: 실제 Campaign 목록에 Skirmish 가 있고 설정 화면이
     clickLabel(app, 'Skirmish');
     assert.ok(menuLabels(app).includes('AI players: 1') && menuLabels(app).includes('AI 1: Normal / Enemy') && menuLabels(app).includes('Banned units: 0/5')); assert.deepEqual(buttonLabels(app), ['Start', 'Cancel']);
     // AI 수 화면에서 3 을 고르면 첫 화면으로 돌아오고 AI 줄이 3개가 된다.
-    clickLabel(app, 'AI players: 1'); assert.ok(menuLabels(app).includes('* 1')); clickLabel(app, '3');
+    clickLabel(app, 'AI players: 1'); assert.deepEqual(checkedLabels(app), ['1']); clickLabel(app, '3');
     assert.ok(menuLabels(app).includes('AI players: 3') && menuLabels(app).includes('AI 3: Normal / Enemy'));
     // AI 2 의 난이도를 어려움으로, 진영을 동맹으로 바꾼다(같은 AI 화면에서 이어서 고른다).
-    clickLabel(app, 'AI 2: Normal / Enemy'); clickLabel(app, 'Hard'); assert.ok(menuLabels(app).includes('* Hard')); clickLabel(app, 'Ally'); assert.ok(menuLabels(app).includes('* Ally')); assert.ok(menuLabels(app).includes('* Hard'));
+    clickLabel(app, 'AI 2: Normal / Enemy'); clickLabel(app, 'Hard'); assert.deepEqual(checkedLabels(app), ['Hard', 'Enemy']); clickLabel(app, 'Ally'); assert.deepEqual(checkedLabels(app), ['Hard', 'Ally']);
     clickLabel(app, 'Back'); assert.ok(menuLabels(app).includes('AI 2: Hard / Ally'));
     // 금지 유닛 화면에서 두 항목을 고른다.
-    clickLabel(app, 'Banned units: 0/5'); assert.ok(menuLabels(app).some((label) => label.startsWith('[ ] Wind Generator - windBattery')));
-    clickLabel(app, '[ ] Wind Generator - windBattery'); clickLabel(app, '[ ] Sun Cannon - sunCannon'); assert.ok(menuLabels(app).includes('[X] Wind Generator - windBattery') && menuLabels(app).includes('[X] Sun Cannon - sunCannon'));
+    clickLabel(app, 'Banned units: 0/5'); assert.deepEqual(checkedLabels(app), []);
+    clickLabel(app, 'Wind Generator - windBattery'); clickLabel(app, 'Sun Cannon - sunCannon'); assert.deepEqual(checkedLabels(app), ['Wind Generator - windBattery', 'Sun Cannon - sunCannon']);
     clickLabel(app, 'Back'); assert.ok(menuLabels(app).includes('Banned units: 2/5'));
     // 설정은 저장소에 쓰이고 새 앱이 읽는다.
     const saved = JSON.parse(storage.map.get(SETTINGS_STORAGE_KEY)).values;
@@ -100,4 +102,19 @@ test('앱 연결: 스커미시를 켜지 않으면 Campaign 목록에 항목이 
     const original = korean._resources.translate; korean._resources = { ...korean._resources, translate: (text) => (text === 'Wind Generator' ? '윈드 제네레이터' : original(text)) };
     korean._openTell('Patch1101.SkirmishBans(0)'); assert.ok(menuLabels(korean).some((label) => label.includes('윈드 제네레이터') && label.includes('windBattery')), menuLabels(korean).join('|'));
     korean._openTell('Patch1101.Skirmish'); assert.ok(menuLabels(korean).includes('인공지능 수: 1')); assert.deepEqual(buttonLabels(korean), ['시작', '취소']);
+});
+
+test('실제 세 언어 Campaign 목록은 스커미시 바로 위를 구분하고 스커미시 꺼짐에서는 끝 구분선을 남기지 않는다', () => {
+    // 언어별 원본 구분선 자산과 웹 제외 목록을 함께 통과한 최종 행을 확인한다.
+    for (const language of ['english', 'korean', 'japanese']) {
+        const app = makeApp({ language }); app._openTell('UCampaign');
+        const items = app._mainMenu.dialog.menu.items;
+        assert.equal(items.at(-1).command.argument, 'Patch1101.Skirmish', language);
+        assert.equal(items.at(-2).kind, 'separator', language);
+        assert.equal(items.filter((item) => item.kind === 'separator').length, 2, language);
+        const off = makeApp({ language, skirmish: false }); off._openTell('UCampaign');
+        assert.notEqual(off._mainMenu.dialog.menu.items.at(-1).kind, 'separator', language);
+        app._openTell('Patch1101.SkirmishCount');
+        assert.deepEqual(checkedLabels(app), ['1'], language);
+    }
 });

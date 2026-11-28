@@ -48,7 +48,7 @@ const ENGLISH = Object.freeze({
     title: 'Skirmish', intro: 'Choose your opponents and press Start. Islands and geysers are random.', countLine: 'AI players: {n}',
     aiLine: 'AI {a}: {b} / {c}', bansLine: 'Banned units: {n}/5', start: 'Start', cancel: 'Cancel', back: 'Back', countTitle: 'Number of AI players',
     countIntro: 'Pick how many AI players join this game.', aiTitle: 'AI {a}', aiIntro: "Choose this AI's difficulty and side.", bansTitle: 'Banned units',
-    bansIntro: 'Select up to 5 units or buildings that nobody may build. Selected items are marked [X].', easy: 'Easy', normal: 'Normal', hard: 'Hard',
+    bansIntro: 'Select up to 5 units or buildings that nobody may build. Selected items use the selection icon.', easy: 'Easy', normal: 'Normal', hard: 'Hard',
     enemy: 'Enemy', ally: 'Ally', next: 'Next page', previous: 'Previous page', clear: 'Clear all', maxNote: 'Five units are banned. Unmark one to choose another.',
 });
 // 한국어 문구이다(건물·유닛 이름은 번역 hook 이 맡는다). (2026-11-20 WB04-E1101)
@@ -56,7 +56,7 @@ const KOREAN = Object.freeze({
     title: '스커미시', intro: '상대를 고른 뒤 시작을 누르세요. 섬과 간헐천은 무작위입니다.', countLine: '인공지능 수: {n}',
     aiLine: 'AI {a}: {b} / {c}', bansLine: '금지 유닛: {n}/5', start: '시작', cancel: '취소', back: '뒤로', countTitle: '인공지능 수',
     countIntro: '이 게임에 참가할 인공지능 수를 고르세요.', aiTitle: 'AI {a}', aiIntro: '이 인공지능의 난이도와 진영을 고르세요.', bansTitle: '금지 유닛',
-    bansIntro: '아무도 지을 수 없는 건물·유닛을 최대 5개까지 고르세요. 고른 항목은 [X]로 표시됩니다.', easy: '쉬움', normal: '보통', hard: '어려움',
+    bansIntro: '아무도 지을 수 없는 건물·유닛을 최대 5개까지 고르세요. 고른 항목은 선택 아이콘으로 표시됩니다.', easy: '쉬움', normal: '보통', hard: '어려움',
     enemy: '적', ally: '동맹', next: '다음 쪽', previous: '이전 쪽', clear: '모두 해제', maxNote: '금지 유닛이 5개입니다. 다른 것을 고르려면 하나를 해제하세요.',
 });
 // 일본어 문구이다(13차 일본어 지원 때 다시 점검한다). (2026-11-20 WB04-E1101)
@@ -64,7 +64,7 @@ const JAPANESE = Object.freeze({
     title: 'スカーミッシュ', intro: '対戦相手を選んで<br>開始を押してください。<br>島と間欠泉は<br>ランダムです。', countLine: 'AI人数: {n}',
     aiLine: 'AI {a}: {b} / {c}', bansLine: '禁止ユニット: {n}/5', start: '開始', cancel: 'キャンセル', back: '戻る', countTitle: 'AIの人数',
     countIntro: 'このゲームに参加する<br>AIの人数を選んでください。', aiTitle: 'AI {a}', aiIntro: 'このAIの難易度と<br>陣営を選んでください。', bansTitle: '禁止ユニット',
-    bansIntro: '誰も建てられない建物や<br>ユニットを最大5つまで<br>選びます。選んだ項目は<br>[X]で表示されます。', easy: '易しい', normal: '通常', hard: '硬い',
+    bansIntro: '誰も建てられない建物や<br>ユニットを最大5つまで<br>選びます。選んだ項目には<br>選択アイコンが付きます。', easy: '易しい', normal: '通常', hard: '硬い',
     enemy: '敵', ally: '同盟', next: '次のページ', previous: '前のページ', clear: 'すべて解除', maxNote: '禁止ユニットが5つです。<br>別のものを選ぶには<br>1つ解除してください。',
 });
 
@@ -130,7 +130,7 @@ export function saveSkirmishSettings(set, settings) {
     set('skirmishBans', settings.bans.join(','));
 }
 
-// Tell 대상 문자열을 해석한다: "Patch1101.Skirmish"(Main)·Count·Ai(2)·Bans(0)·Set(ban,1,0)·Start. 스커미시 대상이 아니면 kind 가 'none' 이다. 인자는 소문자로 읽는다. (2026-11-20 WB04-E1101)
+// Tell 대상 문자열을 해석한다: "Patch1101.Skirmish"(Main)·Count·Ai(2)·Bans(0)·Set(ban;1;0)·Start. 스커미시 대상이 아니면 kind 가 'none' 이다. 인자는 소문자로 읽고 기존 쉼표 구분도 허용한다. (2026-11-20 WB04-E1101)
 export function parseSkirmishTarget(target) {
     const result = { kind: 'none', args: [] };
     const text = lower(target);
@@ -143,7 +143,7 @@ export function parseSkirmishTarget(target) {
         if (close !== -1 && close > open) args = rest.slice(open + 1, close);
         rest = rest.slice(0, open);
     }
-    result.args = splitCommas(args);
+    result.args = splitCommas(args.replaceAll(';', ','));
     const kinds = { '': 'main', count: 'count', ai: 'ai', bans: 'bans', set: 'set', start: 'start' };
     if (Object.hasOwn(kinds, rest)) result.kind = kinds[rest];
     return result;
@@ -185,8 +185,8 @@ export function buildSkirmishScreen(target, settings, language, translate = null
     let body;
     if (target.kind === 'count') { // AI 수 고르기
         body = head(words.countTitle, words.countIntro);
-        // 1..7 항목을 만들고 현재 값에 표시한다.
-        for (let count = 1; count <= SKIRMISH_MAX_AI; count += 1) body += `$Menu=${count === settings.aiCount ? '* ' : ''}${count},Tell,Patch1101.SkirmishSet(count,${count})\n`;
+        // 1..7 항목을 만들고 현재 값은 Options와 같은 선택 아이콘으로 표시한다. 대상 인자는 $Checked 필드의 쉼표와 구별하도록 세미콜론으로 나눈다.
+        for (let count = 1; count <= SKIRMISH_MAX_AI; count += 1) body += `$Checked=${count},Tell,Patch1101.SkirmishSet(count;${count}),${count === settings.aiCount ? 1 : 0},1\n`;
         body += `$Button=${words.back},Tell,Patch1101.Skirmish\n`;
     } else if (target.kind === 'ai') { // 한 AI 의 난이도/진영 고르기
         const owner = Math.min(Math.max(target.args.length ? toInt(target.args[0], 2) : 2, 2), 8);
@@ -194,24 +194,25 @@ export function buildSkirmishScreen(target, settings, language, translate = null
         body = head(fill(words.aiTitle, String(owner - 1)), words.aiIntro);
         // 세 난이도 항목이다.
         for (const level of [AiDifficulty.Easy, AiDifficulty.Normal, AiDifficulty.Hard]) {
-            body += `$Menu=${level === ai.difficulty ? '* ' : ''}${difficultyName(words, level)},Tell,Patch1101.SkirmishSet(diff,${owner},${aiDifficultyToValue(level)})\n`;
+            body += `$Checked=${difficultyName(words, level)},Tell,Patch1101.SkirmishSet(diff;${owner};${aiDifficultyToValue(level)}),${level === ai.difficulty ? 1 : 0},1\n`;
         }
         // 두 진영 항목이다.
-        for (const ally of [false, true]) body += `$Menu=${ally === ai.ally ? '* ' : ''}${side(ally)},Tell,Patch1101.SkirmishSet(ally,${owner},${ally ? 1 : 0})\n`;
+        for (const ally of [false, true]) body += `$Checked=${side(ally)},Tell,Patch1101.SkirmishSet(ally;${owner};${ally ? 1 : 0}),${ally === ai.ally ? 1 : 0},1\n`;
         body += `$Button=${words.back},Tell,Patch1101.Skirmish\n`;
     } else if (target.kind === 'bans') { // 금지 유닛 고르기
         const pageCount = Math.ceil(SKIRMISH_BANNABLE.length / SKIRMISH_BANS_PER_PAGE);
         const page = Math.min(target.args.length ? Math.max(0, toInt(target.args[0], 0)) : 0, pageCount - 1);
         body = head(words.bansTitle, settings.bans.length >= SKIRMISH_MAX_BANS ? words.maxNote : words.bansIntro);
-        // 이 쪽의 항목을 만든다. 금지 상태는 [X]/[ ]로 표시하고 내부 이름을 함께 보인다.
+        // 이 쪽의 항목을 만든다. 금지 상태는 Options와 같은 선택 아이콘으로 표시하고 내부 이름을 함께 보인다.
         for (let index = page * SKIRMISH_BANS_PER_PAGE; index < Math.min(SKIRMISH_BANNABLE.length, (page + 1) * SKIRMISH_BANS_PER_PAGE); index += 1) {
             const { type, label } = SKIRMISH_BANNABLE[index];
             const banned = settings.bans.includes(type), name = translate ? translate(label) : label;
-            body += `$Menu=${banned ? '[X] ' : '[ ] '}${name} - ${type},Tell,Patch1101.SkirmishSet(ban,${index},${page})\n`;
+            body += `$Checked=${name} - ${type},Tell,Patch1101.SkirmishSet(ban;${index};${page}),${banned ? 1 : 0},1\n`;
         }
-        if (page + 1 < pageCount) body += `$Menu=${words.next},Tell,Patch1101.SkirmishBans(${page + 1})\n`;
-        if (page > 0) body += `$Menu=${words.previous},Tell,Patch1101.SkirmishBans(${page - 1})\n`;
-        body += `$Menu=${words.clear},Tell,Patch1101.SkirmishSet(clearbans)\n$Button=${words.back},Tell,Patch1101.Skirmish\n`;
+        // 메타 지시문은 종류별로 추출하므로 이동·해제도 선택되지 않은 $Checked로 만들어 유닛 목록 뒤의 순서를 유지한다.
+        if (page + 1 < pageCount) body += `$Checked=${words.next},Tell,Patch1101.SkirmishBans(${page + 1}),0,1\n`;
+        if (page > 0) body += `$Checked=${words.previous},Tell,Patch1101.SkirmishBans(${page - 1}),0,1\n`;
+        body += `$Checked=${words.clear},Tell,Patch1101.SkirmishSet(clearbans),0,1\n$Button=${words.back},Tell,Patch1101.Skirmish\n`;
     } else { // 첫 설정 화면
         body = head(words.title, words.intro);
         body += `$Menu=${fill(words.countLine, '', '', '', String(settings.aiCount))},Tell,Patch1101.SkirmishCount\n`;
