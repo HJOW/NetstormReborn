@@ -40,8 +40,8 @@
 
 ## dotnetpj·webpj와의 관계
 
-- **dotnetpj 1.116**은 통지 안에서 살아 있는 Form을 `DeleteForm`으로 먼저 반납하고 `Flags 0x40`·`Object`·`Form`을 모두 0으로 만든다. 재삭제는 막지만 Form 삭제 시점이 원본보다 앞선다. 또 `HostProductionWindows.Events.cs`의 `Idle`은 `Object != parent`일 때 다시 연결하므로, Player `+0x9c`가 소멸한 번호를 그대로 가리키면 죽은 부모에 새 Form을 붙일 수 있다. R5-4c4a 재개 때 CP1386 방식(0x40·Form만 지우고 Object 유지)으로 맞출지 판정한다.
-- **webpj**의 `client-gump-root.js` `bindObject(token,0)`도 원본처럼 무동작이라 같은 구조다. 또 `0x40`이 켜진 노드에 새 부모를 붙이면 수명 오류를 던지므로, 부모 소실 뒤 `Idle` 재연결도 막힌다. 3.6절 cpppj 변경 판정에서 해당 여부를 정한다.
+- **dotnetpj 1.116**은 통지 안에서 살아 있는 Form을 `DeleteForm`으로 먼저 반납하고 `Flags 0x40`·`Object`·`Form`을 모두 0으로 만든다. 재삭제는 막지만 Form 삭제 시점이 원본보다 앞선다. 또 `HostProductionWindows.Events.cs`의 `Idle`은 `Object != parent`일 때 다시 연결하므로, Player `+0x9c`가 소멸한 번호를 그대로 가리키면 죽은 부모에 새 Form을 붙일 수 있다. CP1386 방식(0x40·Form만 지우고 Object 유지)으로 맞출지는 [LEFT_JOBS.dotnetpj.md 0.1 6번](../../LEFT_JOBS.dotnetpj.md#now) DN-GRID-1~2에서 판정한다.
+- **webpj**의 `client-gump-root.js` `bindObject(token,0)`도 원본처럼 무동작이라 같은 구조다. 또 `0x40`이 켜진 노드에 새 부모를 붙이면 수명 오류를 던지므로, 부모 소실 뒤 `Idle` 재연결도 막힌다. 재현과 보완은 [LEFT_JOBS.webpj.md 다음 작업 2](../../LEFT_JOBS.webpj.md#next) WB-GRID-1~2에서 진행한다.
 
 ## 검증
 
