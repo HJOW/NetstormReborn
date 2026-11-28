@@ -1,13 +1,15 @@
 using Netstorm.Core.Original;
+using Netstorm.Client.Chat;
 using Netstorm.Net;
 
 // 같은 Client 수명에서 State/로그인/내용물/주변음/시계가 현재 저장소를 공유한다.
 namespace Netstorm.Client;
 
 /// <summary>다섯 실제 상태 블록과 로그인/시계 전역의 장기 소유자다.</summary>
-/// <remarks>MonitorTime의 형식과 해당 실제 소비자는 후속이다.</remarks>
 public sealed class ClientLocalStateGlobals
 {
+    /// <summary>옵션/주 프레임이 공유하는 현재 시간 알림의 초기화·기한·두 signed DWORD다.</summary>
+    public MonitorTimeState MonitorTime { get; } = new();
     /// <summary>옵션 해석과 메뉴가 공유하는 실제 helpWord 문구다.</summary>
     public ClientHelpWord HelpWord { get; } = new();
     /// <summary>원본 다섯0x90바이트 블록의 유일한 실제720바이트다.</summary>

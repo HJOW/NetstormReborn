@@ -1,5 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
+    <!-- 시간 알림1176행과 임시 Chat 서식12행의 기존 독립 원문 관측이다. -->
+    <None Include="../../../cpppj/tests/fixtures/monitor-time-hardware-x86.tsv" Link="X86/monitor-time-hardware-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../cpppj/tests/fixtures/temporary-chat-format-hardware-x86.tsv" Link="X86/temporary-chat-format-hardware-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+  <ItemGroup>
     <!-- 현재 FILE 팔레트 부모의 독립 원문92행을 같은 소비자에 연결한다. -->
     <None Include="../../../cpppj/tests/fixtures/palette-file-read-x86.tsv" Link="X86/palette-file-read-x86.tsv" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>

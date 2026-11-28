@@ -187,6 +187,7 @@ public sealed partial class ClientHostGame : Game
         // 원본 옵션 해석에서 helpWord를 표시 바이트로 한 번 부호화해 같은 Client 캐시에 둔다.
         if (_startup is { } helpStartup) _localState.HelpWord.ReadOptions(helpStartup.Configuration);
         _connections = new ClientConnectionGlobals(_localState);
+        _monitorOptions = startup is null ? null : new ClientMonitorOptions(_localState.MonitorTime, _connections.Activity, startup.Configuration);
         _clientClock = new ClientClockGlobals(_localState);
         // cpppj ClientMain 349행의 실제 공통 SP 초기화와 같은 위치다: 클라이언트 시작 때 1회만 reseed+초기화하고 미션 시작 때는 다시 하지 않는다(0.464, 원본 004391ed).
         // 세션 시작 흐름의 미션별 reseed는 원본에 없어 0.463에서 근본 원인으로 확정했다.
@@ -277,6 +278,7 @@ public sealed partial class ClientHostGame : Game
             _cursor?.Dispose();
             _packetRecord?.Dispose();
             _startupColors?.Dispose();
+            _monitorOptions?.Dispose();
             _driver.Screen.Output = null;
             _output?.Dispose(); _output = null;
             _batch?.Dispose(); _batch = null;
@@ -817,6 +819,7 @@ public sealed partial class ClientHostGame : Game
                 Flash = brightness => RequestNativeThunderFlash(brightness),
             });
             _surfaceGlobals.Storage.UpdateAmbientWind(_gameRandom);
+            UpdateNativeMonitorTime();
         }
         // 영상 갱신이 잠기지 않은 미션에서는 현재 카메라와 지도 변경을 매 프레임 미니맵에 반영한다.
         // 근거: 원문 481320은 지연 삭제·Idle·Kernel보다 먼저 실행하며 게임 시계 정지와 독립적이다.

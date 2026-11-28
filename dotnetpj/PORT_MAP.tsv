@@ -1965,3 +1965,11 @@ cpppj/src/client/ClientAudio.cpp	Netstorm.Game/HostMissionAudio.SceneMusic.cs	bd
 cpppj/src/client/ClientAudio.h	Netstorm.Game/HostMissionAudio.SceneMusic.cs	bd2941f45080bdd3254baaa727a14ac4137d64cf	session
 cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.Startup.cs	3f12a2bd4f539e3e30fc029d2cfb999bb9476a33	session
 cpppj/src/client/ClientMain.h	Netstorm.Game/ClientHostGame.Startup.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	session
+cpppj/src/client/RawMonitorTime.cpp	Netstorm.Client/Chat/RawMonitorTime.cs	8f60c53d047e08eeea99d288c04716e062bc3ae2	L1
+cpppj/src/client/RawMonitorTime.h	Netstorm.Client/Chat/RawMonitorTime.cs	8f60c53d047e08eeea99d288c04716e062bc3ae2	L1
+cpppj/src/client/ClientMain.cpp	Netstorm.Client/ClientMonitorOptions.cs	3f12a2bd4f539e3e30fc029d2cfb999bb9476a33	session
+cpppj/src/client/ClientMain.h	Netstorm.Client/ClientMonitorOptions.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	session
+cpppj/src/client/ClientMain.cpp	Netstorm.Game/ClientHostGame.MonitorTime.cs	3f12a2bd4f539e3e30fc029d2cfb999bb9476a33	session
+cpppj/src/client/ClientMain.h	Netstorm.Game/ClientHostGame.MonitorTime.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	session
+cpppj/src/client/RawMonitorTime.cpp	Netstorm.Game/WindowsMonitorCalendar.cs	8f60c53d047e08eeea99d288c04716e062bc3ae2	port
+cpppj/src/client/RawMonitorTime.h	Netstorm.Game/WindowsMonitorCalendar.cs	8f60c53d047e08eeea99d288c04716e062bc3ae2	port
