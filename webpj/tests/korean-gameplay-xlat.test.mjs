@@ -8,6 +8,7 @@ import path from 'node:path';
 import { REPO_ROOT } from './helpers.mjs';
 import { XlatTable } from '../www/assets/xlat.js';
 import { formatPlayerMenuText } from '../www/core/raw-player-menu.js';
+import { formatFortPriestCount } from '../www/core/raw-campaign-session-install.js';
 import { NO_HELP_TEXT, renderHelpTopic } from '../www/ui/help-topic.js';
 
 // 웹·cpppj 한국어 번역표이다. (2026-11-23 WB04-E1249)
@@ -15,6 +16,13 @@ const korean = new XlatTable(fs.readFileSync(path.join(REPO_ROOT, 'webpj', 'tran
 const cpppj = new XlatTable(fs.readFileSync(path.join(REPO_ROOT, 'assets', 'lang', 'korean', 'xlat.korean'), 'utf8'));
 // 소스 파일 본문을 읽는다. 줄바꿈 형식(LF/CRLF)에 영향받지 않게 CR 을 지운다.
 const source = (relative) => fs.readFileSync(path.join(REPO_ROOT, 'webpj', relative), 'utf8').replaceAll('\r', '');
+
+// 사제 수 번역은 단수/복수 모두 한국어로 표시하고 영어 복수 접미사를 출력하지 않는다.
+test('미션 사제 수와 채팅 도우미의 키워드·번호 범위가 한국어이다', () => {
+    const format = new Uint8Array(Buffer.from(korean.translate('%d Priest%s') + '\0', 'utf8'));
+    for (const count of [0, 1, 2, 8]) assert.equal(Buffer.from(formatFortPriestCount(format, count)).toString('utf8').split('\0', 1)[0], `사제 ${count}명`);
+    for (const key of ['Mimic', 'Sound', 'Icon', 'Emboss Offset', 'Colors %d to %d', 'BGColors %d to %d', 'Icons %d to %d', 'Mods']) assert.match(korean.translate(key), /[가-힣]/u, key);
+});
 // JS 문자열 리터럴 본문의 \n·\t·\\·\' 이스케이프를 푼다.
 const unescape = (body) => body.replace(/\\(.)/gu, (_, letter) => (letter === 'n' ? '\n' : letter === 't' ? '\t' : letter));
 // 소스에서 `이름 = [ '…', '…' ]` 형태 배열의 문자열 원소를 모두 읽는다(작은따옴표·큰따옴표).

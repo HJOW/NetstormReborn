@@ -1802,7 +1802,7 @@ export class Netstorm {
                 return { camera: [data.getUint32(0, true), data.getUint32(4, true)], viewport: { left: map.left, top: map.top, right: map.right, bottom: map.bottom }, pixelsX: data.getInt32(8, true), pixelsY: data.getInt32(12, true) };
             },
             center: (x, y) => currentWorld().centerCamera(x, y), move: (x, y) => currentWorld().moveFromMinimap(x, y), inputMode: () => currentWorld().inputMode(), poll: () => this._clientInputPoll.poll(0xffff),
-            baseHandle: devices.baseHandle, changed: devices.changed, setNodeHelp: devices.setNodeHelp });
+            baseHandle: devices.baseHandle, changed: devices.changed, setNodeHelp: devices.setNodeHelp, translate: devices.translate });
         const hud = new ClientUberHud(root, { setNodeHelp: devices.setNodeHelp, translate: devices.translate, assets: this._gameAssets, panelGlobals: this._clientProductionGlobals, divider, minimap,
             // 채팅 창은 생산 UI 조립이 만든 `ui.chat()` 이다(Uber 루트가 생산 패널 뒤에 `createChat` 을 부른다). (2026-11-22 WB04-E1169)
             chat: { create: () => ui.chat().create(), setVisible: (visible) => ui?.chat()?.setVisible(visible), setInput: (visible) => ui?.chat()?.setInput(visible), refreshTechnology: () => ui.chat().refreshTechnology() },

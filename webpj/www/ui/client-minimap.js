@@ -33,7 +33,8 @@ export class ClientMinimap {
         const menus = {
             registerExternalGumps: () => 1, unregisterExternalGumps: () => {},
             // 이 훅은 미니맵 노드를 만드는 도중(construct, 아직 #token 대입 전)에 불리므로 토큰 일치를 검사하지 않는다. 이전 검사는 항상 거짓이라 문구가 기록되지 않았다. (2026-11-22 WB04-E1236)
-            setHelpText: (token, text) => { self.#helpText = text; devices.setNodeHelp?.(token, text, false); }, setHelpWord: (token, word) => { self.#helpWord = word; devices.setNodeHelp?.(token, word, true); },
+            // 표시 제목만 현재 언어로 바꾸고 도움말 주제 키는 보존한다.
+            setHelpText: (token, text) => { const translated = devices.translate?.(text) ?? text; self.#helpText = translated; devices.setNodeHelp?.(token, translated, false); }, setHelpWord: (token, word) => { self.#helpWord = word; devices.setNodeHelp?.(token, word, true); },
             baseHandle: (token, event, first, second) => devices.baseHandle(token, event, first, second),
         };
         this.#control = new RawMinimapControls(tree, menus, devices.storage, devices.dirty, devices.globals, devices);

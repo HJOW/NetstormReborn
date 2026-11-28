@@ -1,0 +1,44 @@
+npm notice run NetstormWeb@1.0.0 npx
+npm notice run ^"playwright^" test e2e/korean-ingame.spec.js --grep=공통 안내 --project=chromium --workers=1 --reporter=list --output=extracted/e1485-layout-final
+
+Running 1 test using 1 worker
+
+(node:16104) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  x  1 [chromium] › e2e\korean-ingame.spec.js:10:1 › 한국어 공통 안내 23개가 실제 글꼴로 번역되고 화면 안에 배치된다 (6.7s)
+
+
+  1) [chromium] › e2e\korean-ingame.spec.js:10:1 › 한국어 공통 안내 23개가 실제 글꼴로 번역되고 화면 안에 배치된다 ───────────
+
+    Error: EarlySacrifice 실제 글자 줄폭
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 196
+    Received:    243
+
+      47 |       expect(row.text, name).toMatch(/[가-힣]/u);
+      48 |       expect(row.labels.every((label) => /[가-힣]/u.test(label)), `${name} 단추`).toBe(true);
+    > 49 |       expect(row.maxLine, `${name} 실제 글자 줄폭`).toBeLessThanOrEqual(row.bodyWidth);
+         |                                               ^
+      50 |       expect(row.bounds.left, name).toBeGreaterThanOrEqual(0); expect(row.bounds.top, name).toBeGreaterThanOrEqual(0);
+      51 |       expect(row.bounds.right, name).toBeLessThanOrEqual(row.width); expect(row.bounds.bottom, name).toBeLessThanOrEqual(row.height);
+      52 |       if (['ABORT', 'SalvageVortex', 'BuildNoBucks'].includes(name)) await page.screenshot({ path: test.info().outputPath(`${size.width}-${name}.png`) });
+        at H:\Workspace\git\NetstormReborn\webpj\e2e\korean-ingame.spec.js:49:47
+
+    attachment #1: screenshot (image/png) ──────────────────────────────────────────────────────────
+    extracted\e1485-layout-final\korean-ingame-한국어-공통-안내-23개가-실제-글꼴로-번역되고-화면-안에-배치된다-chromium\test-failed-1.png
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+    Error Context: extracted\e1485-layout-final\korean-ingame-한국어-공통-안내-23개가-실제-글꼴로-번역되고-화면-안에-배치된다-chromium\error-context.md
+
+    attachment #3: trace (application/zip) ─────────────────────────────────────────────────────────
+    extracted\e1485-layout-final\korean-ingame-한국어-공통-안내-23개가-실제-글꼴로-번역되고-화면-안에-배치된다-chromium\trace.zip
+    Usage:
+
+        npx playwright show-trace extracted\e1485-layout-final\korean-ingame-한국어-공통-안내-23개가-실제-글꼴로-번역되고-화면-안에-배치된다-chromium\trace.zip
+
+    ────────────────────────────────────────────────────────────────────────────────────────────────
+
+  1 failed
+    [chromium] › e2e\korean-ingame.spec.js:10:1 › 한국어 공통 안내 23개가 실제 글꼴로 번역되고 화면 안에 배치된다 ────────────

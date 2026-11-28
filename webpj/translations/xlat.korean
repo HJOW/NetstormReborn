@@ -3205,3 +3205,63 @@ Wait for the next tutorial message.
 ---
 다음 튜토리얼 안내를 기다리십시오.
 ===
+
+***
+%d Priest%s
+---
+사제 %d명%.0s
+===
+
+***
+Sky Overview
+---
+하늘 전체 보기
+===
+
+***
+Mimic
+---
+흉내 내기
+===
+
+***
+Sound
+---
+소리
+===
+
+***
+Icon
+---
+아이콘
+===
+
+***
+Emboss Offset
+---
+엠보스 위치
+===
+
+***
+Colors %d to %d
+---
+색상 %d ~ %d
+===
+
+***
+BGColors %d to %d
+---
+배경색 %d ~ %d
+===
+
+***
+Icons %d to %d
+---
+아이콘 %d ~ %d
+===
+
+***
+Mods
+---
+모드
+===

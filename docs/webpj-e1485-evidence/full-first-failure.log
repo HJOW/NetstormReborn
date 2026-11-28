@@ -1,0 +1,70 @@
+# Subtest: 펼침 메뉴 항목: 웹 항목과 원본 전체 항목, 켜짐 표시
+not ok 3538 - 펼침 메뉴 항목: 웹 항목과 원본 전체 항목, 켜짐 표시
+  ---
+  duration_ms: 10.7716
+  type: 'test'
+  location: 'H:\\Workspace\\git\\NetstormReborn\\webpj\\tests\\popup.test.mjs:160:1'
+  failureType: 'testCodeFailure'
+  error: |-
+    Expected values to be strictly deep-equal:
+    + actual - expected
+    ... Skipped lines
+    
+      [
+        'Language',
+        'Frame Rate',
+        'Difficulty',
+        '---',
+    ...
+        '---',
+    +   'Mods',
+        'Reset All'
+      ]
+    
+  code: 'ERR_ASSERTION'
+  name: 'AssertionError'
+  expected:
+    0: 'Language'
+    1: 'Frame Rate'
+    2: 'Difficulty'
+    3: '---'
+    4: 'Sound On'
+    5: 'Play Music'
+    6: 'Wind Noise'
+    7: 'Speaker Swap L/R'
+    8: 'Sound Effect Volume'
+    9: 'Music Volume'
+    10: '---'
+    11: 'Edge Scroll in Fullscreen'
+    12: 'Auto-Demo'
+    13: 'Tell Tips at Startup'
+    14: '---'
+    15: 'Reset All'
+  actual:
+    0: 'Language'
+    1: 'Frame Rate'
+    2: 'Difficulty'
+    3: '---'
+    4: 'Sound On'
+    5: 'Play Music'
+    6: 'Wind Noise'
+    7: 'Speaker Swap L/R'
+    8: 'Sound Effect Volume'
+    9: 'Music Volume'
+    10: '---'
+    11: 'Edge Scroll in Fullscreen'
+    12: 'Auto-Demo'
+    13: 'Tell Tips at Startup'
+    14: '---'
+    15: 'Mods'
+    16: 'Reset All'
+  operator: 'deepStrictEqual'
+  stack: |-
+    TestContext.<anonymous> (file:///H:/Workspace/git/NetstormReborn/webpj/tests/popup.test.mjs:163:12)
+    Test.runInAsyncScope (node:async_hooks:214:14)
+    Test.run (node:internal/test_runner/test:1047:25)
+    Test.processPendingSubtests (node:internal/test_runner/test:744:18)
+    Test.postRun (node:internal/test_runner/test:1173:19)
+    Test.run (node:internal/test_runner/test:1101:12)
+    async Test.processPendingSubtests (node:internal/test_runner/test:744:7)
+  ...

@@ -20,6 +20,9 @@ test('커밋된 번들은 현재 소스로 다시 만든 운영 번들과 같고
     const committed = fs.readFileSync(committedPath);
     // 출력만 임시 폴더로 바꿔 같은 설정으로 다시 만든다(clean 을 끄고 www/dist 를 지우지 않는다).
     const output = fs.mkdtempSync(path.join(os.tmpdir(), 'netstorm-bundle-'));
+    // 저장소 루트에서 호출해도 npm의 webpj 작업 디렉터리와 같은 모듈 ID를 만들어야 한다.
+    const callerDirectory = process.cwd();
+    process.chdir(path.dirname(WEBPJ_ROOT));
     try {
         const base = makeConfig({}, { mode: 'production' });
         const stats = await new Promise((resolve, reject) => webpack({ ...base, output: { ...base.output, path: output, clean: false } }, (error, result) => (error ? reject(error) : resolve(result))));
@@ -27,5 +30,5 @@ test('커밋된 번들은 현재 소스로 다시 만든 운영 번들과 같고
         const rebuilt = fs.readFileSync(path.join(output, 'netstorm.bundle.js'));
         assert.ok(committed.equals(rebuilt), `커밋된 번들(${committed.length}바이트)이 현재 소스의 번들(${rebuilt.length}바이트)과 다릅니다: npm --prefix webpj run build 후 번들을 함께 커밋하세요.`);
         assert.ok(rebuilt.length <= LIMIT_BYTES, `번들이 크기 한도(${LIMIT_BYTES}바이트)를 넘었습니다: ${rebuilt.length}`);
-    } finally { fs.rmSync(output, { recursive: true, force: true }); }
+    } finally { process.chdir(callerDirectory); fs.rmSync(output, { recursive: true, force: true }); }
 });

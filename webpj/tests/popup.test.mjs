@@ -161,7 +161,7 @@ test('펼침 메뉴 항목: 웹 항목과 원본 전체 항목, 켜짐 표시', 
     const settings = new Settings();
     const labels = (items) => items.map((item) => (item.kind === 'separator' ? '---' : item.label));
     assert.deepEqual(labels(buildOptionsItems(settings)), [
-        'Language', 'Frame Rate', 'Difficulty', '---', 'Sound On', 'Play Music', 'Wind Noise', 'Speaker Swap L/R', 'Sound Effect Volume', 'Music Volume', '---', 'Edge Scroll in Fullscreen', 'Auto-Demo', 'Tell Tips at Startup', '---', 'Reset All',
+        'Language', 'Frame Rate', 'Difficulty', '---', 'Sound On', 'Play Music', 'Wind Noise', 'Speaker Swap L/R', 'Sound Effect Volume', 'Music Volume', '---', 'Edge Scroll in Fullscreen', 'Auto-Demo', 'Tell Tips at Startup', '---', 'Mods', 'Reset All',
     ]);
     assert.deepEqual(labels(buildOptionsItems(settings, { includeAll: true })), [
         'Direct Draw / Full Screen', 'Resolution', '---', 'Sound On', 'Play Music', 'Wind Noise', 'Speaker Swap L/R', 'Sound Effect Volume', 'Music Volume', '---',

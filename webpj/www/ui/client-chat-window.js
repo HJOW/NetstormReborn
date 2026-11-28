@@ -163,9 +163,13 @@ export class ClientChatWindow {
             log: (level, format, value) => { if (typeof devices.log === 'function') devices.log(level, format, value); else console.warn(`Netstorm: ${format.replace('%d', String(value))}`); },
             config: (key) => devices.config(key),
             menuBegin: () => menu.beginVertical(0), menuFinalize: () => { menu.current(); }, menuTitle: (text) => menu.title(text),
-            menuItem: (label, command, payload) => menu.entry(label, command, payload === null ? 0 : parts.globals.store(payload), true, true, false),
+            // 원본에서 번역을 생략한 키워드 라벨도 표시할 때 번역하고 삽입 명령은 그대로 둔다.
+            menuItem: (label, command, payload) => menu.entry(['Mimic', 'Sound', 'Icon', 'Emboss Offset'].includes(label) ? devices.translate(label) : label, command, payload === null ? 0 : parts.globals.store(payload), true, true, false),
             menuChecked: (checked, label, command, payload) => menu.checked(checked !== 0, label, command, parts.globals.store(payload), true, true),
-            menuTake: () => menu.takeCurrent(), menuSubmenu: (label, child) => menu.submenu(label, child, true, false),
+            menuTake: () => menu.takeCurrent(),
+            // 자동완성의 색/아이콘 번호 범위는 고정 원문 키로 번역하여 모든 번호에 적용한다.
+            menuSubmenu: (label, child) => menu.submenu(label.replace(/^(Colors|BGColors|Icons) (\d+) to (\d+)$/u,
+                (_, kind, first, last) => devices.translate(`${kind} %d to %d`).replace('%d', first).replace('%d', last)), child, true, false),
             menuOpen: (x, y, parent) => { menu.attach({ x: x | 0, y: y | 0 }, parent); devices.changed(); },
             assertion: (line) => { throw new Error(`ChatWindow 원본 진단: ${line}`); },
         };

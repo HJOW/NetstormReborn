@@ -1,0 +1,52 @@
+{
+  "unit": "WB04-E1485",
+  "date": "2026-11-28",
+  "host": "HJOW-Athlon",
+  "webBase": "7e491743b",
+  "cppOracleBase": "225553df",
+  "headBeforeCommit": "b477705c8a21c9985ca9c62da8b71bef3468e232",
+  "node22": {
+    "version": "v22.23.3",
+    "command": [
+      "C:/Program Files/nodejs22/node.exe",
+      "--test",
+      "webpj/tests/*.test.mjs"
+    ],
+    "tests": 7032,
+    "pass": 7032,
+    "fail": 0,
+    "cancelled": 0,
+    "skipped": 0,
+    "todo": 0,
+    "durationMs": 758025.5911,
+    "inputCount": 2443,
+    "inputChanges": [],
+    "logSha256": "2a30025e69b1719d6583f1d411b4370eb2799747393aa78ccaf9712ba74e3044"
+  },
+  "browser": {
+    "startTime": "2026-11-28T06:56:05.621Z",
+    "duration": 66786.935,
+    "expected": 6,
+    "skipped": 0,
+    "unexpected": 0,
+    "flaky": 0
+  },
+  "files": {
+    "webpj/www/dist/netstorm.bundle.js": {
+      "bytes": 5857763,
+      "sha256": "3af7db4e4d250712f25f35c11eadb83aceb9bf073486ac8314731f8f91e88221"
+    },
+    "webpj/www/data/manifest.json": {
+      "bytes": 128520,
+      "sha256": "65e46feb33b9c9fa302877cc8650e155481596e625ceed858e5f709ba303e857"
+    },
+    "webpj/translations/tell.korean": {
+      "bytes": 32390,
+      "sha256": "0837e48316081dd4f174d2b510d570c6ee40da7ce89568d2a48765830c5562b9"
+    },
+    "webpj/translations/xlat.korean": {
+      "bytes": 35440,
+      "sha256": "0b9dffc8f8fe7e5958f8a86afb4c9b792646f6d740e591dc60acc93afa047219"
+    }
+  }
+}

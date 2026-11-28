@@ -1,0 +1,7 @@
+npm notice run NetstormWeb@1.0.0 build
+npm notice run webpack --mode production && node tools/check-bundle-size.js
+asset netstorm.bundle.js 5.59 MiB [emitted] [minimized] [big] (name: netstorm)
+orphan modules 10.1 MiB [orphan] 1021 modules
+./www/bootstrap.js + 1020 modules 10.1 MiB [built] [code generated]
+webpack 5.113.0 compiled successfully in 88681 ms
+[번들 크기] 5,857,763바이트 (5.86MB / 5.59MiB), 한도 9,900,000바이트(9.9MB): 통과

@@ -1,0 +1,90 @@
+✖ 커밋된 번들은 현재 소스로 다시 만든 운영 번들과 같고 크기 한도 안에 있다 (240576.6121ms)
+✖ 미션 사제 수와 채팅 도우미의 키워드·번호 범위가 한국어이다 (2.6709ms)
+✔ 커서 배치 경고 다섯 문구가 모두 한국어 번역표에 있다 (95.1759ms)
+✔ 생산 힌트 두 문구가 한국어 번역표에 있고 색 서식을 보존한다 (2.5714ms)
+✔ 객체 정보의 포획 가능·연결되지 않음 줄이 줄바꿈까지 번역된다 (3.0577ms)
+✔ Players 메뉴의 Send 다섯 줄이 모두 한국어이고 색 서식과 금액이 서식 함수로 이어진다 (2.1798ms)
+✔ 도움말 본문이 비면 번역 장치로 바꾼 안내를 쓰고 번역 장치가 없으면 영어 그대로이다 (0.9591ms)
+✔ 채팅 도우미 메뉴가 번역 호출로 받는 고정 라벨이 모두 한국어 번역표에 있다 (1.856ms)
+(node:22536) ExperimentalWarning: localStorage is not available because --localstorage-file was not provided.
+(Use `node --trace-warnings ...` to show where the warning was created)
+✔ XlatTable: *** / --- / === 블록, CR 제거, 줄바꿈 하나만 떼기, 덮어쓰기, 미완성 블록 버리기 (3.228ms)
+✔ xlat.korean: UTF-8·중복 없음·메뉴 라벨 전부 번역 (55.2123ms)
+✔ 한국어 글꼴 자산: fonts/ 의 woff2 를 그대로 복사했다 (625.2021ms)
+✔ encodeUtf16Units: 한글·라틴은 코드 단위 그대로, BMP 밖은 U+FFFD (0.5035ms)
+✔ UnicodeGlyphFont: 알파 문턱으로 색 번호 100 글리프를 만들고 폭을 합산한다 (0.9253ms)
+✔ UnicodeGlyphFont: 밑줄과 취소선은 글자 칸 전체에 선을 더한다 (0.563ms)
+✔ UnicodeFontProvider: 슬롯·스타일별 글꼴 사양과 원본 글꼴 기준선 (5.3729ms)
+✔ FontSet: 유니코드 글꼴이 있으면 UI 문구를 UTF-16 으로 부호화하고 그 배열은 유니코드 글꼴로 잰다 (50.7923ms)
+✔ drawGlyphText: 유니코드 글꼴로 그림자 패스 → 본문 패스를 그린다 (1.2025ms)
+✔ StoneButton: 표시 문구와 영어 키를 분리하고 한국어 라벨을 유니코드 글꼴로 잰다 (0.8308ms)
+✔ MainMenuScreen: 한국어 버튼 라벨·배치·그리기 (337.0143ms)
+✔ buildPopupItems: translate 로 Options·Help 라벨을 번역하고 구조는 보존한다 (0.9929ms)
+✔ PopupMenu: 한국어 Options 메뉴 크기·그리기·명령 실행 (21.3937ms)
+✔ buildKoreanSupport: 래스터라이저에 보통체·굵은체 woff2 를 넘기고 누락을 알린다 (279.8968ms)
+✔ 영어 자원: 번역은 원문 그대로이고 글꼴 묶음은 유니코드 글꼴이 없다 (0.4447ms)
+✔ createCanvasGlyphRasterizer: 글꼴 등록·글자 그림 자르기·위치·전진 폭·정리 (17.3726ms)
+✔ Netstorm 연결: 한국어 묶음 적재와 실패 시 영어로 계속, 펼침 메뉴 번역 (78.5922ms)
+✔ Netstorm 적재: 언어별 묶음 선택과 한국어 실패 대체 (13352.7966ms)
+ℹ tests 26
+ℹ suites 0
+ℹ pass 24
+ℹ fail 2
+ℹ cancelled 0
+ℹ skipped 0
+ℹ todo 0
+ℹ duration_ms 242728.6265
+
+✖ failing tests:
+
+test at webpj\tests\bundle-fresh.test.mjs:16:1
+✖ 커밋된 번들은 현재 소스로 다시 만든 운영 번들과 같고 크기 한도 안에 있다 (240576.6121ms)
+  AssertionError [ERR_ASSERTION]: 커밋된 번들(5857708바이트)이 현재 소스의 번들(5857736바이트)과 다릅니다: npm --prefix webpj run build 후 번들을 함께 커밋하세요.
+      at TestContext.<anonymous> (file:///H:/Workspace/git/NetstormReborn/webpj/tests/bundle-fresh.test.mjs:28:16)
+      at async Test.run (node:internal/test_runner/test:1409:7)
+      at async startSubtestAfterBootstrap (node:internal/test_runner/harness:387:3) {
+    generatedMessage: false,
+    code: 'ERR_ASSERTION',
+    actual: false,
+    expected: true,
+    operator: '==',
+    diff: 'simple'
+  }
+
+test at webpj\tests\korean-gameplay-xlat.test.mjs:21:1
+✖ 미션 사제 수와 채팅 도우미의 키워드·번호 범위가 한국어이다 (2.6709ms)
+  AssertionError [ERR_ASSERTION]: Expected values to be strictly equal:
+  + actual - expected
+  
+  + Uint8Array(12) [
+  +   236,
+  +   130,
+  +   172,
+  +   236,
+  +   160,
+  +   156,
+  +   32,
+  +   48,
+  +   235,
+  +   170,
+  +   133,
+  +   0
+  + ]
+  - '사제 0명'
+  
+      at TestContext.<anonymous> (file:///H:/Workspace/git/NetstormReborn/webpj/tests/korean-gameplay-xlat.test.mjs:23:46)
+      at Test.runInAsyncScope (node:async_hooks:226:14)
+      at Test.run (node:internal/test_runner/test:1402:25)
+      at Test.start (node:internal/test_runner/test:1262:17)
+      at startSubtestAfterBootstrap (node:internal/test_runner/harness:387:17) {
+    generatedMessage: true,
+    code: 'ERR_ASSERTION',
+    actual: Uint8Array(12) [
+      236, 130, 172, 236, 160,
+      156,  32,  48, 235, 170,
+      133,   0
+    ],
+    expected: '사제 0명',
+    operator: 'strictEqual',
+    diff: 'simple'
+  }

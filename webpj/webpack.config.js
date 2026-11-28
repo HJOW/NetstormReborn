@@ -17,6 +17,8 @@ const webpack = require('webpack');
 module.exports = (env, argv) => {
     const production = argv.mode !== 'development';
     return {
+        // CLI와 외부 디렉터리의 webpack API 호출에서 내장 실행기의 모듈 ID도 같게 만든다.
+        context: __dirname,
         mode: production ? 'production' : 'development',
         entry: { netstorm: path.resolve(__dirname, 'www', 'bootstrap.js') },
         output: {

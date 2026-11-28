@@ -1,7 +1,7 @@
 // 한국어 모드에서 생산 창·스톰 파워 표시의 우클릭 도움말 문구와 채팅 채널 이름이 번역표로 번역되는지 고정한다. (2026-11-23 WB04-E1246)
 // 원본(cpppj RawProductionControls.cpp:179~186)은 생산 패널을 만들 때 "Storm Power Available"·"Production Window" 를 번역 호출로 받아 노드 도움말 문구로 쓰고,
 // 채팅 입력의 채널 이름(ChatRecipients.cpp·RawChatSubmit.cpp 의 여덟 키)은 입력을 현재 언어의 번역 이름과 비교한다. 웹은 이 호출들을 이미 하고 있었지만 웹 번역표(xlat.korean)에 항목이 없어 영어로 남았다.
-// 미니맵 도움말 "Sky Overview" 는 원본(RawMinimapControls.cpp:67)이 번역 호출 없이 고정 문자열로 노드에 넣으므로 번역표에 넣지 않는다(영어 유지).
+// 미니맵은 원본 본체의 영어 제목을 보존하며 웹 조립부에서 표시 제목을 번역한다.
 // 게임·브라우저를 실행하지 않고 번역표와 소스 파일만 읽는다.
 import test from 'node:test';
 import assert from 'node:assert/strict';
@@ -47,9 +47,11 @@ test('채팅 채널 키 가운데 번역 항목이 있는 것과 없는 것이 c
     assert.equal(korean.has('OBSERVER'), false); assert.equal(cpppj.has('OBSERVER'), false);
 });
 
-test('미니맵 도움말 Sky Overview 는 원본처럼 번역 호출 없이 고정 영어로 노드에 들어간다', () => {
-    // 원본 RawMinimapControls.cpp:67 은 SetHelpText 에 영어 리터럴을 직접 넣는다. 웹도 번역 장치를 거치지 않는 setHelpText 를 쓰고 번역표에도 넣지 않는다.
+test('미니맵 도움말 Sky Overview 는 웹 조립부에서 번역하고 주제 키는 보존한다', () => {
+    // 원본 본체는 영어 리터럴을 직접 넣고 웹 ClientMinimap 조립부가 표시 번역을 맡는다.
     const text = source('www/ui/raw-minimap-controls.js');
     assert.match(text, /this\.#menus\.setHelpText\(this\.#token, 'Sky Overview'\)/u);
-    assert.equal(korean.has('Sky Overview'), false);
+    assert.equal(korean.translate('Sky Overview'), '하늘 전체 보기');
+    assert.match(source('www/ui/client-minimap.js'), /devices\.translate\?\.\(text\)/u);
+    assert.match(source('www/netstorm.js'), /setNodeHelp: devices\.setNodeHelp, translate: devices\.translate/u);
 });

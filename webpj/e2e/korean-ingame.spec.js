@@ -1,6 +1,61 @@
 // 한국어 모드의 미션 화면에서 ESC 메뉴 막대·Game/View/Options 항목과 Shift-F9 정지 안내가 한국어로 나오는지 실제 Chromium 에서 확인한다. (2026-11-20 WB04-E1118)
 const { test, expect } = require('@playwright/test');
 
+// 공통 Tell의 실제 글꼴/줄폭을 검사할 표시 창 목록이다. HUD 전용 Warning은 별도 Node 검사에서 다룬다.
+const COMMON_DIALOGS = ['ABORT', 'TryAgain', 'DenySalvage', 'BuildNoBucks', 'NoTechTheme', 'UpgradeNoBucks', 'SalvageVortex', 'SalvageInf', 'NewTech', 'AltarUpgrade',
+  'AlreadyUpgrading', 'AskSend', 'SacrificeForStormpower', 'WarnCantUpgradeAltarOffHomeIsland', 'EarlySacrifice', 'AllianceRequested', 'AllianceSpam', 'AllianceComplete',
+  'TellGifWritten', 'NewRank', 'ProdPending', 'BridgesKilled', 'NotImplemented'];
+
+// 공통 대화창은 목표 달성·희생을 자동 수행하지 않고 실제 표시 입구만 호출해 확인한다.
+test('한국어 공통 안내 23개가 실제 글꼴로 번역되고 화면 안에 배치된다', async ({ page }) => {
+  test.setTimeout(180000);
+  const errors = []; page.on('pageerror', (error) => errors.push(error.message));
+  await page.addInitScript(() => localStorage.setItem('netstorm.settings', JSON.stringify({ version: 1, values: { welcomeGiven: 1, tellTips: 0, sound: 0, music: 0, autoDemo: 0 } })));
+  await page.goto('/?lang=ko&mute&aspect=4:3');
+  await page.waitForFunction(() => window.netstorm?.state === 'clickToStart', null, { timeout: 60000 }); await page.locator('canvas').click();
+  await page.waitForFunction(() => window.netstorm?.state === 'mainMenu', null, { timeout: 60000 });
+  const rows = [];
+  // 최소 화면과 기본 화면에서 같은 표시 입구와 실제 글꼴로 검사한다.
+  for (const size of [{ width: 640, height: 480 }, { width: 1024, height: 768 }]) {
+    await page.setViewportSize(size);
+    // 4:3의 논리 화면은 1024×768이며 640×480에서는 같은 화면을 축소 표시한다.
+    await page.waitForFunction((width) => window.netstorm.canvas.getBoundingClientRect().width === width, size.width);
+    for (const name of COMMON_DIALOGS) {
+      const row = await page.evaluate((section) => {
+        const app = window.netstorm;
+        // 공통 창을 단독으로 열 때도 미션이 공급하는 치환값을 명시하여 미해결 키 문자열의 폭을 재지 않는다.
+        app._gameData.set('mission.title', '전쟁의 시작!'); app._gameData.set('global.newTechName', '썬 디스크 발사기'); app._gameData.set('global.newTechPic', '');
+        app._gameData.set('InstallDir', ''); app._gameData.set('GifOutSpec', 'pic0.gif');
+        const targets = { AllianceRequested: 'AllianceRequested(~b,간수,2)', AllianceSpam: 'AllianceSpam(3,~b,간수)', AllianceComplete: 'AllianceComplete(간수)', AskSend: 'AskSend(2)', NewRank: 'NewRank(2)' };
+        app._openTell('Blank'); app._openTell(targets[section] ?? section); const dialog = app._mainMenu.dialog;
+        if (!dialog) return { section, missing: true };
+        // 줄끝 공백을 빼고 마지막 실제 글자까지의 폭을 측정한다.
+        const lines = dialog.body.softLines.map((line) => {
+          let advance = 0, visible = 0;
+          for (const fragment of line.fragments) {
+            const full = fragment.picture ? { width: fragment.picture.width ?? 0 } : dialog.body.fonts.measure(fragment.bytes, fragment.context);
+            let end = fragment.bytes?.length ?? 0; while (end > 0 && fragment.bytes[end - 1] === 32) end -= 1;
+            const content = fragment.picture ? full : dialog.body.fonts.measure(fragment.bytes.subarray(0, end), fragment.context);
+            if (fragment.picture || end > 0) visible = Math.max(visible, advance + content.width); advance += full.width;
+          }
+          return visible;
+        });
+        return { section, bounds: dialog.bounds(), width: app._layout.logicalWidth, height: app._layout.logicalHeight,
+          maxLine: Math.max(0, ...lines), bodyWidth: dialog.body.baseWidth, labels: dialog.buttons.map((button) => button.label), text: dialog.content.styleText };
+      }, name);
+      rows.push(row); expect(row.missing, name).not.toBe(true);
+      expect(row.text, name).toMatch(/[가-힣]/u);
+      expect(row.labels.every((label) => /[가-힣]/u.test(label)), `${name} 단추`).toBe(true);
+      expect(row.maxLine, `${name} 실제 글자 줄폭`).toBeLessThanOrEqual(row.bodyWidth);
+      expect(row.bounds.left, name).toBeGreaterThanOrEqual(0); expect(row.bounds.top, name).toBeGreaterThanOrEqual(0);
+      expect(row.bounds.right, name).toBeLessThanOrEqual(row.width); expect(row.bounds.bottom, name).toBeLessThanOrEqual(row.height);
+      if (['ABORT', 'SalvageVortex', 'BuildNoBucks'].includes(name)) await page.screenshot({ path: test.info().outputPath(`${size.width}-${name}.png`) });
+    }
+  }
+  await test.info().attach('common-dialogs.json', { body: JSON.stringify(rows, null, 2), contentType: 'application/json' });
+  expect(errors).toEqual([]);
+});
+
 // 실제 게임 조작부의 논리 좌표를 브라우저 마우스 좌표로 바꿔 누른다.
 async function clickLabel(page, label) {
   await page.waitForFunction((text) => Boolean(window.netstorm?._mainMenu?.controlPoint(text)), label, { timeout: 30000 });
@@ -59,10 +114,29 @@ test('한국어 미션 화면: ESC 막대·Game/View/Options 항목과 정지 �
   expect(report).toContain('게임 일시 정지!');
   await page.screenshot({ path: test.info().outputPath('korean-ingame-paused.png') });
   await page.keyboard.press('Shift+F9'); await page.waitForFunction(() => !window.netstorm._gameClock.paused(), null, { timeout: 10000 });
+  // 실제 ESC → 게임 → 미션 나가기에서 공통 Tell도 한국어이며 계속/나가기 명령이 유지된다.
+  await page.keyboard.press('Escape');
+  await page.waitForFunction(() => window.netstorm._campaignProduction.ui.gameMenu().isOpen());
+  let token = await page.evaluate(() => window.netstorm._campaignProduction.ui.gameMenu().token());
+  let leaveGame = await clickRow(page, token, 0);
+  await clickRow(page, leaveGame, (await labelsOf(page, leaveGame)).indexOf('미션 나가기'));
+  await expect.poll(() => page.evaluate(() => window.netstorm._mainMenu.dialog?.buttons.map((button) => button.label))).toEqual(['메인 메뉴', '미션 다시 시작', '미션 계속']);
+  // 명시적 줄바꿈은 표시 문장을 바꾸지 않으므로 공백을 정규화하여 본문을 비교한다.
+  expect((await page.evaluate(() => window.netstorm._mainMenu.dialog.content.styleText)).replace(/\s+/gu, ' ')).toContain('메인 메뉴로 돌아가시겠습니까?');
+  await page.screenshot({ path: test.info().outputPath('korean-leave-mission.png') });
+  await clickLabel(page, '미션 계속');
+  await page.waitForFunction(() => !window.netstorm._mainMenu.dialog && window.netstorm._campaignDisplayActive());
+  await page.keyboard.press('Escape');
+  await page.waitForFunction(() => window.netstorm._campaignProduction.ui.gameMenu().isOpen());
+  token = await page.evaluate(() => window.netstorm._campaignProduction.ui.gameMenu().token());
+  leaveGame = await clickRow(page, token, 0);
+  await clickRow(page, leaveGame, (await labelsOf(page, leaveGame)).indexOf('미션 나가기'));
+  await clickLabel(page, '메인 메뉴');
+  await page.waitForFunction(() => !window.netstorm._campaignWorld && window.netstorm.state === 'mainMenu');
   expect(errors).toEqual([]);
 });
 
-// 한국어 미션 화면의 HUD 우클릭 도움말: 스톰 파워 표시와 생산 창의 제목이 한국어이고(원본이 번역 호출로 받는 문구), 미니맵 제목은 원본처럼 고정 영어이며, 채팅 채널 이름은 번역표로 번역된다. (2026-11-23 WB04-E1246)
+// 한국어 미션 화면의 HUD 우클릭 도움말: 스톰 파워·생산 창·미니맵 제목이 한국어이며 채팅 채널 이름도 번역표로 번역된다.
 test('한국어 미션 화면: 스톰 파워·생산 창 우클릭 도움말 제목과 채팅 채널 이름이 한국어이다', async ({ page }) => {
   test.setTimeout(180000);
   const errors = []; page.on('pageerror', (error) => errors.push(error.message)); page.on('console', (message) => { if (message.type() === 'error') errors.push(message.text()); });
@@ -87,8 +161,8 @@ test('한국어 미션 화면: 스톰 파워·생산 창 우클릭 도움말 제
   });
   expect(titles.budget.title).toBe('사용 가능한 스톰 파워'); expect(titles.budget.word).toBe('moneyGump');
   for (const name of ['bridge', 'middle', 'bottom']) { expect(titles[name].title, `${name} 제목`).toBe('생산 창'); expect(titles[name].word, `${name} 주제`).toBe('teleportView'); }
-  // 미니맵 제목은 원본이 번역 호출 없이 영어 리터럴을 넣으므로 한국어 모드에서도 영어이다.
-  expect(titles.minimap.title).toBe('Sky Overview'); expect(titles.minimap.word).toBe('minimapGump');
+  // 원본 본체의 고정 제목을 웹 조립부에서 번역하며 주제 이름은 그대로다.
+  expect(titles.minimap.title).toBe('하늘 전체 보기'); expect(titles.minimap.word).toBe('minimapGump');
   for (const name of Object.keys(titles)) { expect(titles[name].handled, `${name} 우클릭 처리`).toBe(1); expect(titles[name].popup, `${name} 팝업`).toBe(true); }
   // 채팅 채널 이름(원본이 입력과 비교하는 여덟 키 가운데 번역 항목이 있는 것)은 번역표로 번역된다.
   const channels = await page.evaluate(() => ['BATTLE', 'EVERYONE', 'ALLIES', 'OBSERVER'].map((key) => window.netstorm._resources.translate(key)));
@@ -143,7 +217,7 @@ test('한국어 채팅 도우미 메뉴: 고정 라벨이 한국어로 번역된
   expect(await page.evaluate(() => window.netstorm._clientGump.blockingPopups()), 'Chat Helper 메뉴').toBe(true);
   const recorded = new Map(await page.evaluate(() => window.__tr));
   const expected = [['Chat Helper:', '채팅 도우미:'], ['Edit Back Format', 'Back 서식 편집'], ['Edit Front Format', 'Front 서식 편집'], ['Format', '서식'], ['Allow Chat Sound', '채팅 소리 허용'], ['Chat Effects ', '채팅 효과 '],
-    ['Text Colors', '글자색'], ['Background Colors', '배경색'], ['Icons', '아이콘'], ['KeyWords', '키워드'], ['~BBold', '~B굵게'], ['~rRed', '~r빨강'], ['Styles', '스타일'], ['Prefabricated Colors', '미리 정한 색'], ['Commands', '명령'], ['Insert', '삽입'], ['Copy', '복사'], ['Paste', '붙여넣기']];
+    ['Text Colors', '글자색'], ['Background Colors', '배경색'], ['Icons', '아이콘'], ['KeyWords', '키워드'], ['~BBold', '~B굵게'], ['~rRed', '~r빨강'], ['Styles', '스타일'], ['Prefabricated Colors', '미리 정한 색'], ['Commands', '명령'], ['Insert', '삽입'], ['Copy', '복사'], ['Paste', '붙여넣기'], ['Mimic', '흉내 내기'], ['Sound', '소리'], ['Icon', '아이콘'], ['Emboss Offset', '엠보스 위치'], ['Colors %d to %d', '색상 %d ~ %d'], ['BGColors %d to %d', '배경색 %d ~ %d'], ['Icons %d to %d', '아이콘 %d ~ %d']];
   for (const [key, text] of expected) expect(recorded.get(key), key).toBe(text);
   // 요청된 고정 라벨(범위 라벨 제외)에 영어로 남은 것이 없다.
   const english = [...recorded].filter(([key, text]) => key === text && /[A-Za-z]{3,}/u.test(key) && !/^(?:Colors|BGColors|Icons) \d+ to \d+$/u.test(key) && !key.startsWith('.'));

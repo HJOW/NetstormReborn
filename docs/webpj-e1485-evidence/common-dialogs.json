@@ -1,0 +1,802 @@
+[
+  {
+    "section": "ABORT",
+    "bounds": {
+      "left": 342,
+      "top": 295,
+      "right": 682,
+      "bottom": 472
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 147,
+    "bodyWidth": 148,
+    "labels": [
+      "메인 메뉴",
+      "미션 다시 시작",
+      "미션 계속"
+    ],
+    "text": "~N~3~E~w미션 나가기?~*~N~.\n~*\n~w 지금 이 미션을 나가고 메인\n메뉴로 돌아가시겠습니까? ~*\n \n\n\n"
+  },
+  {
+    "section": "TryAgain",
+    "bounds": {
+      "left": 394,
+      "top": 302,
+      "right": 629,
+      "bottom": 466
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 129,
+    "bodyWidth": 133,
+    "labels": [
+      "미션 다시 시작",
+      "미션 나가기"
+    ],
+    "text": "~w\n미션\n~i{MISSION.TITLE}~w에\n다시 도전하시겠습니까? ~*\n \n\n\n"
+  },
+  {
+    "section": "DenySalvage",
+    "bounds": {
+      "left": 374,
+      "top": 253,
+      "right": 650,
+      "bottom": 514
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 165,
+    "bodyWidth": 176,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w회수할 수 없음~*~N~.\n~*\n~w 지금 중요한 건물을 회수하는\n것은 현명하지 않습니다.\n회수하면 파괴하는 건물의 스톰\n파워 가치 중 25%만 돌려받고\n나머지는 주변으로 흩어집니다. ~*\n \n회수는 보통 전투 중 최후의\n수단으로 사용합니다. ~*\n \n\n\n"
+  },
+  {
+    "section": "BuildNoBucks",
+    "bounds": {
+      "left": 374,
+      "top": 231,
+      "right": 650,
+      "bottom": 537
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 168,
+    "bodyWidth": 176,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w스톰 파워 필요~*~N~.\n~*\n~w 이 건물을 만들\n~[T1]~l~E~l스톰\n파워~[T0]~N~.~w가\n부족합니다. ~*\n \n화면 왼쪽 위의 사제 건설\n메뉴에 있는 숫자를 보면 필요한\n스톰 파워를 알 수 있습니다.\n숫자가 이처럼 빨간색으로\n표시되면\n~r210~w~[Ifortgump.3] 스톰\n파워가 더 필요합니다. \n\n\n"
+  },
+  {
+    "section": "NoTechTheme",
+    "bounds": {
+      "left": 374,
+      "top": 259,
+      "right": 650,
+      "bottom": 509
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 159,
+    "bodyWidth": 176,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w건설할 수 없음~*~N~.\n~*\n~w 해당 원소의\n~[T1]~l~E~l워크샾~[T0]~N~.~w을\n건설하려면 같은 원소의\n~[T2]~l~E~l지식~[T0]~N~.~w이\n필요합니다. 즉, 레인 워크샾은\n레인 원소의\n~[T3]~l~E~l유닛~[T0]~N~.~w만\n만들 수 있습니다. \n\n\n"
+  },
+  {
+    "section": "UpgradeNoBucks",
+    "bounds": {
+      "left": 374,
+      "top": 231,
+      "right": 650,
+      "bottom": 537
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 168,
+    "bodyWidth": 176,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w스톰 파워 필요~*~N~.\n~*\n~w 이 워크샾을 업그레이드할\n~[T1]~l~E~l스톰\n파워~[T0]~N~.~w가\n부족합니다. ~*\n \n화면 왼쪽 위의 사제 건설\n메뉴에 있는 숫자를 보면 필요한\n스톰 파워를 알 수 있습니다.\n숫자가 이처럼 빨간색으로\n표시되면\n~r210~w~[Ifortgump.3] 스톰\n파워가 더 필요합니다. \n\n\n"
+  },
+  {
+    "section": "SalvageVortex",
+    "bounds": {
+      "left": 368,
+      "top": 281,
+      "right": 655,
+      "bottom": 486
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 171,
+    "bodyWidth": 187,
+    "labels": [
+      "회수",
+      "취소"
+    ],
+    "text": "~N~3~E~w경고~*~N~.\n~*\n~w 이 신전을 회수하면 스톰 파워를\n더 모을 수 없으며 다리도\n건설할 수 없게 됩니다. ~*\n \n회수하시겠습니까? \n\n\n"
+  },
+  {
+    "section": "SalvageInf",
+    "bounds": {
+      "left": 375,
+      "top": 288,
+      "right": 648,
+      "bottom": 479
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 159,
+    "bodyWidth": 173,
+    "labels": [
+      "회수!",
+      "취소"
+    ],
+    "text": "~N~3~E~w경고~*~N~.\n~*\n~w 이것을 회수하면 하나 이상의\n전투 유닛을 생산할 수 없게 될\n수 있습니다. ~*\n \n회수하시겠습니까? \n\n"
+  },
+  {
+    "section": "NewTech",
+    "bounds": {
+      "left": 374,
+      "top": 246,
+      "right": 650,
+      "bottom": 521
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 168,
+    "bodyWidth": 176,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w지식 획득!~*~N~.\n~*\n~w 당신의 제단이 소모되었습니다!\n희생이 받아들여졌습니다!\n퓨리들은 자비롭습니다. 당신의\n백성에게\n~N~j썬 디스크 발사기~.~w의\n지식이 깃들었습니다. ~*\n \n~*\n \n이제부터 이 유닛을 사용할 수\n있습니다! \n\n"
+  },
+  {
+    "section": "AltarUpgrade",
+    "bounds": {
+      "left": 364,
+      "top": 288,
+      "right": 660,
+      "bottom": 479
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 178,
+    "bodyWidth": 196,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w제단 업그레이드!~*~N~.\n~*\n~w 적 사제의 희생으로 당신의\n제단이 신성해지고\n강해졌습니다. 다음 전투에서는\n이 제단으로 더 강력한 지식을\n얻을 수 있습니다. \n\n"
+  },
+  {
+    "section": "AlreadyUpgrading",
+    "bounds": {
+      "left": 364,
+      "top": 295,
+      "right": 660,
+      "bottom": 472
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 203,
+    "bodyWidth": 236,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w이미 업그레이드 중~*~N~.\n~*\n~w 다른 업그레이드를 시작하려면\n현재 업그레이드가 끝날 때까지\n기다려야 합니다. \n\n\n"
+  },
+  {
+    "section": "AskSend",
+    "bounds": {
+      "left": 396,
+      "top": 309,
+      "right": 627,
+      "bottom": 458
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 126,
+    "bodyWidth": 171,
+    "labels": [
+      "예",
+      "아니오"
+    ],
+    "text": "~N~3~E~w모두 보내기~*~N~.\n~*\n~w 스톰 파워를 모두\n보내시겠습니까? \n\n"
+  },
+  {
+    "section": "SacrificeForStormpower",
+    "bounds": {
+      "left": 394,
+      "top": 309,
+      "right": 630,
+      "bottom": 458
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 168,
+    "bodyWidth": 176,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w스톰 파워 획득!~*~N~.\n~w\n적 사제를 희생하여 스톰 파워를\n얻었습니다! \n\n"
+  },
+  {
+    "section": "WarnCantUpgradeAltarOffHomeIsland",
+    "bounds": {
+      "left": 370,
+      "top": 260,
+      "right": 653,
+      "bottom": 507
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 168,
+    "bodyWidth": 169,
+    "labels": [
+      "확인",
+      "다시 표시하지 않기"
+    ],
+    "text": "~N~3~E~w경고~*~N~.\n~*\n~w 당신의 본섬이 아닌 다른 섬에\n제단을 지었습니다. 이 제단은\n전투 후 함께 돌아오지 않으므로\n업그레이드할 수 없습니다.\n이곳에서도 사제를 희생하여\n지식이나 스톰 파워를 얻을 수는\n있습니다. ~*\n \n\n\n"
+  },
+  {
+    "section": "EarlySacrifice",
+    "bounds": {
+      "left": 374,
+      "top": 267,
+      "right": 650,
+      "bottom": 500
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 165,
+    "bodyWidth": 176,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w너무 이릅니다!~*~N~.\n~*\n~w 게임 시작 후 처음 몇 분 동안은\n사제를 희생할 수 없습니다. ~*\n \n퓨리들은 짧고 쉬운 전투에\n지식을 주려 하지 않습니다.\n잠시 기다리면 더\n너그러워질지도 모릅니다! \n\n\n"
+  },
+  {
+    "section": "AllianceRequested",
+    "bounds": {
+      "left": 376,
+      "top": 267,
+      "right": 647,
+      "bottom": 500
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 165,
+    "bodyWidth": 171,
+    "labels": [
+      "예",
+      "아니오"
+    ],
+    "text": "~N~3~E~w동맹 요청~*~N~.\n~w\n~b간수\n~w플레이어가\n동맹을 요청했습니다. 동의하면\n서로의 다리에서 건설할 수\n있으며 전투 유닛들이 서로를\n공격하지 않습니다. ~*\n \n동맹에 동의하시겠습니까? \n\n"
+  },
+  {
+    "section": "AllianceSpam",
+    "bounds": {
+      "left": 364,
+      "top": 288,
+      "right": 660,
+      "bottom": 479
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 179,
+    "bodyWidth": 196,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w동맹 요청 거부됨~*~N~.\n~w\n동맹 요청 제한\n3회를\n넘겼습니다. 상대는\n~b간수~w입니다.\n나중에 다시 시도하십시오. \n\n"
+  },
+  {
+    "section": "AllianceComplete",
+    "bounds": {
+      "left": 374,
+      "top": 239,
+      "right": 650,
+      "bottom": 528
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 168,
+    "bodyWidth": 176,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w동맹 성립~*~N~.\n~w\n당신과\n~i간수~w\n플레이어가 서로 동맹을\n맺었습니다. 이제 서로의\n다리에서 건설할 수 있으며 전투\n유닛들이 서로를 공격하지\n않습니다. ~*\n \n동맹의 다리에서 건설하려면\n당신의 다리망이 동맹의\n다리망에 연결되어 있어야\n합니다! \n\n"
+  },
+  {
+    "section": "TellGifWritten",
+    "bounds": {
+      "left": 358,
+      "top": 281,
+      "right": 665,
+      "bottom": 486
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 203,
+    "bodyWidth": 207,
+    "labels": [
+      "보기",
+      "확인"
+    ],
+    "text": "~N~3~E~w스크린샷 저장 완료~*~N~.\n{BR}\n이 스크린샷을 다음 파일에\n기록했습니다. ~*\n \n~i~N~Bpic0.gif~N~w ~*\n \n\n\n"
+  },
+  {
+    "section": "NewRank",
+    "bounds": {
+      "left": 374,
+      "top": 260,
+      "right": 650,
+      "bottom": 507
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 165,
+    "bodyWidth": 176,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w새 계급 달성~*~N~.\n~*\n~w 축하합니다! ~*\n \n계급 2에\n도달했습니다! ~*\n \n퓨리들이 당신의 지식을 없애고\n썬 디스크 발사기와 썬 캐논을\n다시 부여합니다. \n\n\n"
+  },
+  {
+    "section": "ProdPending",
+    "bounds": {
+      "left": 374,
+      "top": 274,
+      "right": 650,
+      "bottom": 493
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 171,
+    "bodyWidth": 176,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w생산 작업 중~*~N~.\n~*\n~w 생산 작업을 진행하고 있습니다. ~*\n \n다른 지식을 투입하려면 이전\n지식이 생산에 들어갈 때까지\n기다려야 합니다. 잠시 후\n생산이 준비됩니다. \n\n\n"
+  },
+  {
+    "section": "BridgesKilled",
+    "bounds": {
+      "left": 374,
+      "top": 260,
+      "right": 650,
+      "bottom": 507
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 168,
+    "bodyWidth": 176,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w공간 부족~*~N~.\n~*\n~w\n현재 맵의 다리 수가 게임에서\n따로 할당한 메모리의 한도를\n넘었습니다. 게임을 계속 진행할\n수 있도록 모든 다리를\n제거했습니다. ~*\n \n\n\n\n"
+  },
+  {
+    "section": "NotImplemented",
+    "bounds": {
+      "left": 354,
+      "top": 281,
+      "right": 670,
+      "bottom": 486
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 203,
+    "bodyWidth": 216,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w아직 구현되지 않음~*~N~.\n~*\n~w 이 기능은 아직 구현되지\n않았거나 불안정하여 데모에서\n일시적으로 비활성화되었습니다. \n이 메시지가 잘못 표시되었다면\n사용 중인 버전은\nv11.01입니다. \n\n"
+  },
+  {
+    "section": "ABORT",
+    "bounds": {
+      "left": 342,
+      "top": 295,
+      "right": 682,
+      "bottom": 472
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 147,
+    "bodyWidth": 148,
+    "labels": [
+      "메인 메뉴",
+      "미션 다시 시작",
+      "미션 계속"
+    ],
+    "text": "~N~3~E~w미션 나가기?~*~N~.\n~*\n~w 지금 이 미션을 나가고 메인\n메뉴로 돌아가시겠습니까? ~*\n \n\n\n"
+  },
+  {
+    "section": "TryAgain",
+    "bounds": {
+      "left": 394,
+      "top": 302,
+      "right": 629,
+      "bottom": 466
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 129,
+    "bodyWidth": 133,
+    "labels": [
+      "미션 다시 시작",
+      "미션 나가기"
+    ],
+    "text": "~w\n미션\n~i{MISSION.TITLE}~w에\n다시 도전하시겠습니까? ~*\n \n\n\n"
+  },
+  {
+    "section": "DenySalvage",
+    "bounds": {
+      "left": 374,
+      "top": 253,
+      "right": 650,
+      "bottom": 514
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 165,
+    "bodyWidth": 176,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w회수할 수 없음~*~N~.\n~*\n~w 지금 중요한 건물을 회수하는\n것은 현명하지 않습니다.\n회수하면 파괴하는 건물의 스톰\n파워 가치 중 25%만 돌려받고\n나머지는 주변으로 흩어집니다. ~*\n \n회수는 보통 전투 중 최후의\n수단으로 사용합니다. ~*\n \n\n\n"
+  },
+  {
+    "section": "BuildNoBucks",
+    "bounds": {
+      "left": 374,
+      "top": 231,
+      "right": 650,
+      "bottom": 537
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 168,
+    "bodyWidth": 176,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w스톰 파워 필요~*~N~.\n~*\n~w 이 건물을 만들\n~[T1]~l~E~l스톰\n파워~[T0]~N~.~w가\n부족합니다. ~*\n \n화면 왼쪽 위의 사제 건설\n메뉴에 있는 숫자를 보면 필요한\n스톰 파워를 알 수 있습니다.\n숫자가 이처럼 빨간색으로\n표시되면\n~r210~w~[Ifortgump.3] 스톰\n파워가 더 필요합니다. \n\n\n"
+  },
+  {
+    "section": "NoTechTheme",
+    "bounds": {
+      "left": 374,
+      "top": 259,
+      "right": 650,
+      "bottom": 509
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 159,
+    "bodyWidth": 176,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w건설할 수 없음~*~N~.\n~*\n~w 해당 원소의\n~[T1]~l~E~l워크샾~[T0]~N~.~w을\n건설하려면 같은 원소의\n~[T2]~l~E~l지식~[T0]~N~.~w이\n필요합니다. 즉, 레인 워크샾은\n레인 원소의\n~[T3]~l~E~l유닛~[T0]~N~.~w만\n만들 수 있습니다. \n\n\n"
+  },
+  {
+    "section": "UpgradeNoBucks",
+    "bounds": {
+      "left": 374,
+      "top": 231,
+      "right": 650,
+      "bottom": 537
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 168,
+    "bodyWidth": 176,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w스톰 파워 필요~*~N~.\n~*\n~w 이 워크샾을 업그레이드할\n~[T1]~l~E~l스톰\n파워~[T0]~N~.~w가\n부족합니다. ~*\n \n화면 왼쪽 위의 사제 건설\n메뉴에 있는 숫자를 보면 필요한\n스톰 파워를 알 수 있습니다.\n숫자가 이처럼 빨간색으로\n표시되면\n~r210~w~[Ifortgump.3] 스톰\n파워가 더 필요합니다. \n\n\n"
+  },
+  {
+    "section": "SalvageVortex",
+    "bounds": {
+      "left": 368,
+      "top": 281,
+      "right": 655,
+      "bottom": 486
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 171,
+    "bodyWidth": 187,
+    "labels": [
+      "회수",
+      "취소"
+    ],
+    "text": "~N~3~E~w경고~*~N~.\n~*\n~w 이 신전을 회수하면 스톰 파워를\n더 모을 수 없으며 다리도\n건설할 수 없게 됩니다. ~*\n \n회수하시겠습니까? \n\n\n"
+  },
+  {
+    "section": "SalvageInf",
+    "bounds": {
+      "left": 375,
+      "top": 288,
+      "right": 648,
+      "bottom": 479
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 159,
+    "bodyWidth": 173,
+    "labels": [
+      "회수!",
+      "취소"
+    ],
+    "text": "~N~3~E~w경고~*~N~.\n~*\n~w 이것을 회수하면 하나 이상의\n전투 유닛을 생산할 수 없게 될\n수 있습니다. ~*\n \n회수하시겠습니까? \n\n"
+  },
+  {
+    "section": "NewTech",
+    "bounds": {
+      "left": 374,
+      "top": 246,
+      "right": 650,
+      "bottom": 521
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 168,
+    "bodyWidth": 176,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w지식 획득!~*~N~.\n~*\n~w 당신의 제단이 소모되었습니다!\n희생이 받아들여졌습니다!\n퓨리들은 자비롭습니다. 당신의\n백성에게\n~N~j썬 디스크 발사기~.~w의\n지식이 깃들었습니다. ~*\n \n~*\n \n이제부터 이 유닛을 사용할 수\n있습니다! \n\n"
+  },
+  {
+    "section": "AltarUpgrade",
+    "bounds": {
+      "left": 364,
+      "top": 288,
+      "right": 660,
+      "bottom": 479
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 178,
+    "bodyWidth": 196,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w제단 업그레이드!~*~N~.\n~*\n~w 적 사제의 희생으로 당신의\n제단이 신성해지고\n강해졌습니다. 다음 전투에서는\n이 제단으로 더 강력한 지식을\n얻을 수 있습니다. \n\n"
+  },
+  {
+    "section": "AlreadyUpgrading",
+    "bounds": {
+      "left": 364,
+      "top": 295,
+      "right": 660,
+      "bottom": 472
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 203,
+    "bodyWidth": 236,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w이미 업그레이드 중~*~N~.\n~*\n~w 다른 업그레이드를 시작하려면\n현재 업그레이드가 끝날 때까지\n기다려야 합니다. \n\n\n"
+  },
+  {
+    "section": "AskSend",
+    "bounds": {
+      "left": 396,
+      "top": 309,
+      "right": 627,
+      "bottom": 458
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 126,
+    "bodyWidth": 171,
+    "labels": [
+      "예",
+      "아니오"
+    ],
+    "text": "~N~3~E~w모두 보내기~*~N~.\n~*\n~w 스톰 파워를 모두\n보내시겠습니까? \n\n"
+  },
+  {
+    "section": "SacrificeForStormpower",
+    "bounds": {
+      "left": 394,
+      "top": 309,
+      "right": 630,
+      "bottom": 458
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 168,
+    "bodyWidth": 176,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w스톰 파워 획득!~*~N~.\n~w\n적 사제를 희생하여 스톰 파워를\n얻었습니다! \n\n"
+  },
+  {
+    "section": "WarnCantUpgradeAltarOffHomeIsland",
+    "bounds": {
+      "left": 370,
+      "top": 260,
+      "right": 653,
+      "bottom": 507
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 168,
+    "bodyWidth": 169,
+    "labels": [
+      "확인",
+      "다시 표시하지 않기"
+    ],
+    "text": "~N~3~E~w경고~*~N~.\n~*\n~w 당신의 본섬이 아닌 다른 섬에\n제단을 지었습니다. 이 제단은\n전투 후 함께 돌아오지 않으므로\n업그레이드할 수 없습니다.\n이곳에서도 사제를 희생하여\n지식이나 스톰 파워를 얻을 수는\n있습니다. ~*\n \n\n\n"
+  },
+  {
+    "section": "EarlySacrifice",
+    "bounds": {
+      "left": 374,
+      "top": 267,
+      "right": 650,
+      "bottom": 500
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 165,
+    "bodyWidth": 176,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w너무 이릅니다!~*~N~.\n~*\n~w 게임 시작 후 처음 몇 분 동안은\n사제를 희생할 수 없습니다. ~*\n \n퓨리들은 짧고 쉬운 전투에\n지식을 주려 하지 않습니다.\n잠시 기다리면 더\n너그러워질지도 모릅니다! \n\n\n"
+  },
+  {
+    "section": "AllianceRequested",
+    "bounds": {
+      "left": 376,
+      "top": 267,
+      "right": 647,
+      "bottom": 500
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 165,
+    "bodyWidth": 171,
+    "labels": [
+      "예",
+      "아니오"
+    ],
+    "text": "~N~3~E~w동맹 요청~*~N~.\n~w\n~b간수\n~w플레이어가\n동맹을 요청했습니다. 동의하면\n서로의 다리에서 건설할 수\n있으며 전투 유닛들이 서로를\n공격하지 않습니다. ~*\n \n동맹에 동의하시겠습니까? \n\n"
+  },
+  {
+    "section": "AllianceSpam",
+    "bounds": {
+      "left": 364,
+      "top": 288,
+      "right": 660,
+      "bottom": 479
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 179,
+    "bodyWidth": 196,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w동맹 요청 거부됨~*~N~.\n~w\n동맹 요청 제한\n3회를\n넘겼습니다. 상대는\n~b간수~w입니다.\n나중에 다시 시도하십시오. \n\n"
+  },
+  {
+    "section": "AllianceComplete",
+    "bounds": {
+      "left": 374,
+      "top": 239,
+      "right": 650,
+      "bottom": 528
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 168,
+    "bodyWidth": 176,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w동맹 성립~*~N~.\n~w\n당신과\n~i간수~w\n플레이어가 서로 동맹을\n맺었습니다. 이제 서로의\n다리에서 건설할 수 있으며 전투\n유닛들이 서로를 공격하지\n않습니다. ~*\n \n동맹의 다리에서 건설하려면\n당신의 다리망이 동맹의\n다리망에 연결되어 있어야\n합니다! \n\n"
+  },
+  {
+    "section": "TellGifWritten",
+    "bounds": {
+      "left": 358,
+      "top": 281,
+      "right": 665,
+      "bottom": 486
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 203,
+    "bodyWidth": 207,
+    "labels": [
+      "보기",
+      "확인"
+    ],
+    "text": "~N~3~E~w스크린샷 저장 완료~*~N~.\n{BR}\n이 스크린샷을 다음 파일에\n기록했습니다. ~*\n \n~i~N~Bpic0.gif~N~w ~*\n \n\n\n"
+  },
+  {
+    "section": "NewRank",
+    "bounds": {
+      "left": 374,
+      "top": 260,
+      "right": 650,
+      "bottom": 507
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 165,
+    "bodyWidth": 176,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w새 계급 달성~*~N~.\n~*\n~w 축하합니다! ~*\n \n계급 2에\n도달했습니다! ~*\n \n퓨리들이 당신의 지식을 없애고\n썬 디스크 발사기와 썬 캐논을\n다시 부여합니다. \n\n\n"
+  },
+  {
+    "section": "ProdPending",
+    "bounds": {
+      "left": 374,
+      "top": 274,
+      "right": 650,
+      "bottom": 493
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 171,
+    "bodyWidth": 176,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w생산 작업 중~*~N~.\n~*\n~w 생산 작업을 진행하고 있습니다. ~*\n \n다른 지식을 투입하려면 이전\n지식이 생산에 들어갈 때까지\n기다려야 합니다. 잠시 후\n생산이 준비됩니다. \n\n\n"
+  },
+  {
+    "section": "BridgesKilled",
+    "bounds": {
+      "left": 374,
+      "top": 260,
+      "right": 650,
+      "bottom": 507
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 168,
+    "bodyWidth": 176,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w공간 부족~*~N~.\n~*\n~w\n현재 맵의 다리 수가 게임에서\n따로 할당한 메모리의 한도를\n넘었습니다. 게임을 계속 진행할\n수 있도록 모든 다리를\n제거했습니다. ~*\n \n\n\n\n"
+  },
+  {
+    "section": "NotImplemented",
+    "bounds": {
+      "left": 354,
+      "top": 281,
+      "right": 670,
+      "bottom": 486
+    },
+    "width": 1024,
+    "height": 768,
+    "maxLine": 203,
+    "bodyWidth": 216,
+    "labels": [
+      "확인"
+    ],
+    "text": "~N~3~E~w아직 구현되지 않음~*~N~.\n~*\n~w 이 기능은 아직 구현되지\n않았거나 불안정하여 데모에서\n일시적으로 비활성화되었습니다. \n이 메시지가 잘못 표시되었다면\n사용 중인 버전은\nv11.01입니다. \n\n"
+  }
+]

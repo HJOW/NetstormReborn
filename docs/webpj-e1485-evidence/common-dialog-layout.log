@@ -1,0 +1,10 @@
+npm notice run NetstormWeb@1.0.0 npx
+npm notice run ^"playwright^" test e2e/korean-ingame.spec.js --grep=공통 안내 --project=chromium --workers=1 --reporter=list --output=extracted/e1485-layout-br
+
+Running 1 test using 1 worker
+
+(node:13552) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ok 1 [chromium] › e2e\korean-ingame.spec.js:10:1 › 한국어 공통 안내 23개가 실제 글꼴로 번역되고 화면 안에 배치된다 (7.3s)
+
+  1 passed (23.5s)

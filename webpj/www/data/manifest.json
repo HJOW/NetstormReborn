@@ -2329,16 +2329,16 @@
       "path": "d/xlat.korean",
       "source": "webpj/translations/xlat.korean",
       "bundle": "korean",
-      "size": 35056,
-      "sha256": "8566a0b8b36273ce42338b927747fe038811925ba12e18d4c2f1c44533f4fcd9",
+      "size": 35440,
+      "sha256": "0b9dffc8f8fe7e5958f8a86afb4c9b792646f6d740e591dc60acc93afa047219",
       "use": "한국어 UI 문자열 번역표(원본 xlat 형식, UTF-8): 메뉴·도움말 라벨과 미션 설치의 플레이어 이름"
     },
     {
       "path": "d/tell.korean",
       "source": "webpj/translations/tell.korean",
       "bundle": "korean",
-      "size": 24302,
-      "sha256": "3d962957b3d8bb07f9b084c795ebc2969f8f34c1c78f3d84276e3a56fe74ebc8",
+      "size": 32390,
+      "sha256": "0837e48316081dd4f174d2b510d570c6ee40da7ce89568d2a48765830c5562b9",
       "use": "한국어 Tell 대화상자 본문(UTF-8, 부분 번역): 환영·팁·캠페인·크레딧·데모·버전·기술 지원 섹션과 팁 목록"
     },
     {

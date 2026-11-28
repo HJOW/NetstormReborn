@@ -40,7 +40,7 @@ async function collect(page, token, path, out, depth = 0) {
 }
 
 // 영문 낱말 3자 이상이 남은 라벨을 찾는다. 단축키 표기(~iF4~.)·서식 자리표시자는 먼저 뗀다. 허용 목록은 번역하지 않는 고유 이름이다.
-const ALLOWED = new Set(['FPS', 'English', 'Deutsch', 'NetStorm', 'Netstorm']);
+const ALLOWED = new Set(['FPS', 'English', 'Deutsch', 'Japanese', 'NetStorm', 'Netstorm']);
 function englishLeft(label) {
   const stripped = label.replace(/~i[^~]*~\./gu, '').replace(/~[a-zA-Z.]/gu, '').replace(/%[sd]\d*/gu, '');
   return (stripped.match(/[A-Za-z]{3,}/gu) ?? []).filter((word) => !ALLOWED.has(word));
