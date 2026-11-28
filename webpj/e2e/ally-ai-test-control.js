@@ -38,10 +38,13 @@ async function installAllyAi(page, mission, { preserveDifficulty = false, profil
       let token = existing;
       if (!token) {
         const settings = new Uint8Array(MISSION_AI_SETTINGS_SIZE);
-        const initializer = new RawMissionAiSettings(session.missionAiSettings(), { get: () => { throw new Error('아군 AI는 미션 공통 ai 키를 읽지 않는다'); } });
+        // lean-guard는 원래 owner 설정의 Collectors 한 키만 제공하며 미션 공통/적 설정을 빌리지 않는다.
+        const initializer = new RawMissionAiSettings(session.missionAiSettings(), { get: (key) => profile === 'lean-guard' && key === `ai${owner}Collectors` ? '1' : '' });
         initializer.initialize(settings);
+        // 실제 설정 로더로 수집자 목표만3→1로 줄인다. 자금·기술 키는 빈값이므로 바뀌지 않는다.
+        if (profile === 'lean-guard') initializer.apply(settings, owner);
         // 원래 aiAbility 설정의 사제 채취 능력만 끈다. 사제 이동/건설·운반체·적 AI의 규칙은 그대로다.
-        if (profile === 'guard-priest') initializer.setAbility(settings, 'USE_PRIEST_TO_COLLECT', false);
+        if (profile === 'guard-priest' || profile === 'lean-guard') initializer.setAbility(settings, 'USE_PRIEST_TO_COLLECT', false);
         // 초기 갱신이 현재 이름·동맹·SP를 덮어 바꾸지 않게 C++ PrepareLocalTestAiSettings와 같이 준비한다.
         settings.fill(0, 0, 30); settings.set(currentName.subarray(0, length), 0); settings[0x1e] = 0;
         const view = new DataView(settings.buffer);
@@ -52,8 +55,10 @@ async function installAllyAi(page, mission, { preserveDifficulty = false, profil
         token = session.createAi(owner, settings);
       }
       // 결과를 읽기만 하며 기술·SP·HP·게임 단계·승패를 직접 변경하지 않는다.
-      const brain = session.aiMemory().bytes(token), abilities = new DataView(brain.buffer, brain.byteOffset, brain.byteLength).getUint32(0x248, true);
-      window.netstormAllyTestState = { owner, token, reused: Boolean(existing), profile, abilities, before, money: session.sp(owner), allies: players.getUint32(owner * 180 + 0x54, true), name: Array.from(records.subarray(owner * 180 + 12, owner * 180 + 12 + length)), technology: technology(), brain: session.participation().brain(owner) };
+      const brain = session.aiMemory().bytes(token), view = new DataView(brain.buffer, brain.byteOffset, brain.byteLength);
+      // 실제 본체의 능력·수집자 목표도 읽어 CLI의 조건/장시간 관찰과 연결한다.
+      const abilities = view.getUint32(0x248, true), collectors = view.getInt32(0x234, true);
+      window.netstormAllyTestState = { owner, token, reused: Boolean(existing), profile, abilities, collectors, before, money: session.sp(owner), allies: players.getUint32(owner * 180 + 0x54, true), name: Array.from(records.subarray(owner * 180 + 12, owner * 180 + 12 + length)), technology: technology(), brain: session.participation().brain(owner) };
     };
   }, { name: normalized, preserveDifficulty, profile });
 }

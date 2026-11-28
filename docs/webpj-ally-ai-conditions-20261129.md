@@ -34,4 +34,17 @@ Node의 조건/거부·원본 AI 설정/능력 관련 **7/7**, Chromium의 범�
 
 다음 조건은 원래 AI `Collectors` 목표를3에서1로 줄이고 사제 보호를 함께 적용하는 방식이다. 실제 설정 로더를 사용하며 자금·가격·기술·HP·목표/승패를 바꾸지 않는다. 사용자의 다른 AI 조건 계속 시도 선택을 유지한다.
 
+## E1497 수집자 목표 조절 — 완료
+
+`lean-guard`를 추가했다. 원래 `RawMissionAiSettings.apply(settings, owner)`의 `ai<owner>Collectors=1` 한 키만 제공하고 `USE_PRIEST_TO_COLLECT`를 끈다. 다른 설정 키는 빈값으로 두며 초기 자금·이름·동맹·기술을 기존처럼 보존한다. 제품 AI/규칙 소스는 바뀌지 않는다. 생성 결과에 실제 본체의 `collectors`를 추가하고 CLI가1인지 단언한다.
+
+Node 범위/조건3/3·원본 MakeAi/설정 관련4/4, Chromium6/6(기존 범위 거부·기본1-3/1-4·guard1-3·lean1-3/1-4 각 실제600프레임), 변경 파일과 전체 lint가 통과했다. 실제 lean 본체의 능력63487·수집자 목표1·2000SP/이름/동맹/기술 보존·초기화1·정지0·오류0을 확인했다. 로그는 `webpj/extracted/webpj-e1497-{lean-node,settings-node,lean-e2e,lean-lint,full-lint}.log`다. `www`/운영 번들은 변경하지 않았다.
+
+장시간 관찰은 아래 두 조건으로 진행한다. 각 조건의 생성/진행 증빙을 별도 파일명으로 남긴다.
+
+```powershell
+node tools/ally-ai-campaign-flow.cjs savetheisland 60000 80 lean-guard
+node tools/ally-ai-campaign-flow.cjs fragilefortune 60000 120 lean-guard
+```
+
 원래 Kernel·Renderer·Screen 프레임은 모두 실행한다. 실제 Next Mission 안내가 있어야 승리→신규 저장→새로고침→다음 미션 해제 검사를 수행하며, 패배/상한/오류는 성공으로 표시하지 않는다.

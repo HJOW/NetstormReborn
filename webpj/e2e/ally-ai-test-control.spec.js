@@ -49,7 +49,7 @@ test('아군 AI 검사: 스커미시의 원래 개별 난이도를 보존한다'
 
 // 다시 허용된1-3/1-4에서 현재 Player 값을 유지한 실제 아군 AI로15초를 진행한다.
 // 각 미션은 독립 페이지에서 설치해 prototype 감싸기와 저장 상태를 공유하지 않는다.
-for (const [mission, profile] of [['savetheisland', 'default'], ['fragilefortune', 'default'], ['savetheisland', 'guard-priest']]) {
+for (const [mission, profile] of [['savetheisland', 'default'], ['fragilefortune', 'default'], ['savetheisland', 'guard-priest'], ['savetheisland', 'lean-guard'], ['fragilefortune', 'lean-guard']]) {
 test(`아군 AI 검사: ${mission} ${profile}의 실제 brain과 현재 Player 값을 보존한다`, async ({ page }) => {
   test.setTimeout(240000);
   const errors = [];
@@ -70,8 +70,9 @@ test(`아군 AI 검사: ${mission} ${profile}의 실제 brain과 현재 Player �
   await page.mouse.click(point.x, point.y); await page.evaluate(() => window.netstorm.stepFixedFrames(1));
   const activated = await page.evaluate(() => window.netstormAllyTestState);
   expect(activated.owner).toBe(1); expect(activated.token).toBeGreaterThan(0); expect(activated.brain).toBe(activated.token);
-  // 전략 선택은 사제 채취 능력만 바꾸며 실제 자금·기술 보존 검사는 그대로 유지한다.
-  if (profile === 'guard-priest') expect(activated.abilities & 0x800).toBe(0);
+  // 보호 전략은 사제 채취 능력, lean은 원래 설정 로더의 수집자 목표도 바꾼다.
+  if (profile !== 'default') expect(activated.abilities & 0x800).toBe(0);
+  expect(activated.collectors).toBe(profile === 'lean-guard' ? 1 : 3);
   expect(activated.money).toBe(activated.before.money); expect(activated.allies).toBe(activated.before.allies);
   expect(activated.name).toEqual(activated.before.name); expect(activated.technology).toEqual(activated.before.technology);
   // 모든 실제 Kernel/Renderer 프레임을 실행하며 수동 건설/공격이나 목표 값 변경은 하지 않는다.

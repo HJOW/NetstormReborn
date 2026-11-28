@@ -82,9 +82,10 @@ async function run(){
   await clickLabel(page,'Play Mission');
   const activation=await page.evaluate(()=>window.netstormAllyTestState);
   expect(activation.money).toBe(activation.before.money);expect(activation.allies).toBe(activation.before.allies);expect(activation.name).toEqual(activation.before.name);expect(activation.technology).toEqual(activation.before.technology);
-  if(condition.profile==='guard-priest')expect(activation.abilities&0x800,'사제 채취 능력 해제').toBe(0);
+  if(condition.profile!=='default')expect(activation.abilities&0x800,'사제 채취 능력 해제').toBe(0);
+  if(condition.profile==='lean-guard')expect(activation.collectors,'원래 설정의 수집자 목표').toBe(1);
   // 실제 시작 시각·난수와 생성 직후 능력 비트를 관찰값으로 남긴다.
-  console.log(JSON.stringify({mission,condition,startingCondition,abilities:activation.abilities}));
+  console.log(JSON.stringify({mission,condition,startingCondition,abilities:activation.abilities,collectors:activation.collectors}));
   // 최종 Canvas 출력만 미루며 Screen·Renderer·Kernel은 모두 매 프레임 실행한다.
   await page.evaluate(()=>{const app=window.netstorm;window.originalFlowPresent=app._presenter.present;app._presenter.present=()=>{};});
   let terminal=null;
