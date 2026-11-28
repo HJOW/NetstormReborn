@@ -594,16 +594,16 @@ public sealed class HostStartupSceneTests
         router.NotifyPointer(new(0, x, y)); Assert.Equal(14, column.Selection); queue.Push(InputCode.LeftButton, x, y); Assert.False(driver.ProcessInput()); router.Tick();
         Assert.Equal(oldDemo == 0 ? 1 : 0, startup.Configuration.GetInt("autoDemo")); router.FinishFrame();
         // 하위 메뉴는 원문처럼 부모 행 선택에 펼친다. cpppj RawMenuControls.cpp 1042~1056행(0.384에서 중앙 팝업 방식 폐기).
-        // 해상도 자식 6행을 펼친다.
+        // 현재 기본 해상도7행을 펼친다. 원본3개와1280 폭의 네 화면비를 제공한다(1.229 공통 정책).
         windows.CloseAll(); router.Post(new("Menu", "options")); router.Tick();
         column = Assert.Single(menu.Tree.Create.Entries.Select(token => menu.Tree.Node(token)).OfType<MenuGumpNode>(), node => node.ItemCount == 20);
         position = menu.Tree.Collection.Position(menu.Tree.Create.Entries[column.Id]); x = position.X + 8; y = position.Y + (int)column.Offsets[1] + 3;
         router.NotifyPointer(new(0, x, y)); queue.Push(InputCode.LeftButton, x, y); Assert.False(driver.ProcessInput()); router.FinishFrame();
-        var child = Assert.Single(menu.Tree.Create.Entries.Select(token => menu.Tree.Node(token)).OfType<MenuGumpNode>(), node => node.ItemCount == 10);
+        var child = Assert.Single(menu.Tree.Create.Entries.Select(token => menu.Tree.Node(token)).OfType<MenuGumpNode>(), node => node.ItemCount == 7 && node.Items[0].Command == 0x542948U);
         // 펼친 자식은 보이게 된다.
         Assert.NotEqual(0U, ((GumpCreateNode)child).Flags & 1U);
         // 해상도 자식 행은 실제 명령(0x542948 + SETSIZE 인자)을 직접 carry 한다.
-        Assert.All(child.Items.Take(6), item => Assert.Equal(0x542948U, item.Command));
+        Assert.All(child.Items.Take(7), item => Assert.Equal(0x542948U, item.Command));
         // 음량 자식 5행을 펼치고 Volume 2를 골라 기존 동작(설정 쓰기·음향 반영)을 확인한다.
         windows.CloseAll(); router.Post(new("Menu", "options")); router.Tick();
         column = Assert.Single(menu.Tree.Create.Entries.Select(token => menu.Tree.Node(token)).OfType<MenuGumpNode>(), node => node.ItemCount == 20);

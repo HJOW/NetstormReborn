@@ -30,6 +30,8 @@ public sealed class ClientStateWorldCleanupTests
         public readonly ClientStateResources Resources = new();
         /// <summary>같은현재NSInfo zone이다.</summary>
         public readonly ClientNsInfoGlobals NsInfo = new();
+        /// <summary>메타 이탈이 빌리는 같은 실제 CS 소유자다. 비메타 검사에서는 할당하지 않는다.</summary>
+        public readonly ClientChallengeGlobals Challenge = new();
         /// <summary>같은현재구름dirty소유자다.</summary>
         public readonly ClientKencloudGlobals Cloud = new();
         /// <summary>외부선택효과의순서를보존한다.</summary>
@@ -79,7 +81,7 @@ public sealed class ClientStateWorldCleanupTests
             CancelCursor = () => Events.Add("cursor"), ResetChatChannels = () => { Events.Add("chat"); Chat.ResetOccupied(); },
             SelectCursor = cursor => Events.Add("select-cursor:" + cursor), KillGumps = () => Events.Add("kill"), CleanupGumps = () => Events.Add("cleanup"), ReplaceUber = () => Events.Add("uber"),
             RefreshSp = () => Events.Add("sp"), RetireRuntime = () => throw new IOException("무Runtime에서owner반납선택"),
-            LeaveMetamap = () => throw new IOException("비메타에서Leave선택"), SaveFort = _ => throw new IOException("빈manager에서Save선택"), SaveBattle = _ => throw new IOException("초기phase에서전투Save선택"),
+            LeaveMetamap = () => { Events.Add("leave"); NativeMetaDisplayCleanup.LeaveCurrent(Challenge, Surface, Local); }, SaveFort = _ => throw new IOException("빈manager에서Save선택"), SaveBattle = _ => throw new IOException("초기phase에서전투Save선택"),
             Assertion = line => throw new IOException("정상모드에서진단:" + line),
             StartSceneMusic = battle => { Events.Add("music:" + battle); Resources.Music.Battle = battle ? 1u : 0u; Music.Start(); },
             StopSoundLoops = () => Events.Add("loops"), InterpretOptions = () => Events.Add("options"),
@@ -107,6 +109,19 @@ public sealed class ClientStateWorldCleanupTests
         Assert.True(scene.Events.IndexOf("kill") < scene.Events.IndexOf("cleanup")); Assert.True(scene.Events.IndexOf("cleanup") < scene.Events.IndexOf("uber"));
         Assert.False(scene.Game.Authority.Server); Assert.False(scene.Game.Authority.Boss); Assert.Equal(0, scene.Game.Selection.MultipleCount.Value); Assert.Equal(0xdeadbeefu, scene.Game.Selection.PriestSelections.Value);
         Assert.Equal(0u, scene.Game.Selection.Mode.Value); Assert.Equal(0u, scene.Game.Selection.Selected.Value); Assert.Equal(0u, scene.Game.Selection.MouseType.Value); Assert.Contains("root-cursor:1", scene.Events); Assert.DoesNotContain("select-cursor:1", scene.Events);
+    }
+
+    /// <summary>전체 State가 같은 CS의 SID0 배열을 보존하며 실제 메타 이탈 뒤 모드/Player를 재구성한다.</summary>
+    [Fact]
+    public void MetamapCleanupUsesActualChallengeWithoutRequiringAnEmptyRuntime()
+    {
+        var scene = new Scene(); Assert.True(scene.Challenge.Prepare()); scene.Surface.Storage.OwnerMode.Challenge = true;
+        uint current = scene.Challenge.Current, array = scene.Challenge.AllocateArray(8);
+        BinaryPrimitives.WriteUInt32LittleEndian(scene.Challenge.Participant(0).Span.Slice(0xbc, 4), array);
+        scene.Cleanup(scene.Devices());
+        Assert.Equal(current, scene.Challenge.Current); Assert.Equal(8, scene.Challenge.ArrayBytes(array).Length);
+        Assert.Contains("leave", scene.Events); Assert.False(scene.Surface.Storage.OwnerMode.Challenge);
+        Assert.False(scene.Game.Borrowed()); Assert.Equal(1u, scene.Game.Player.PlayerKnown);
     }
 
     /// <summary>실제 Root 취소가 독립 장치보다 우선하며 같은 전체 부모 위치에서 실제 Prepare/dirty를 실행한다.</summary>

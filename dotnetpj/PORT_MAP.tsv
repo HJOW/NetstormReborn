@@ -2019,3 +2019,4 @@ cpppj/src/client/ClientMain.cpp	Netstorm.Game/WindowsClientWindowOptions.cs	3f12
 cpppj/src/client/ClientMain.h	Netstorm.Game/WindowsClientWindowOptions.cs	710b9647b89d10986cb4adccdb104b1731aa87a9	session
 cpppj/src/client/ScreenResolutions.h	Netstorm.Client/Host/HostOptions.cs	3f12a2bd4f539e3e30fc029d2cfb999bb9476a33	session
 cpppj/src/client/ScreenResolutions.h	Netstorm.Client/Host/HostPopupMenu.cs	3f12a2bd4f539e3e30fc029d2cfb999bb9476a33	session
+cpppj/src/client/NativeMetaDisplay.cpp	Netstorm.Client/NativeMetaDisplayCleanup.cs	aebe0f128aabbed592f132f57c5d8b87264ddacf	port

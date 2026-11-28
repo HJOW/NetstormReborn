@@ -36,7 +36,7 @@ public sealed partial class ClientHostGame
         _menuDirty = true;
     }
 
-    /// <summary>현재 제품의 정지·공통 UI·HUD·SP·장면 음향·옵션을 실제 State 정리 위치에 연결한다. 선택된 저장/메타 장치가 없는 갈래는 기존 명시 오류를 유지한다.</summary>
+    /// <summary>현재 제품의 정지·공통 UI·HUD·SP·메타 이탈·장면 음향·옵션을 실제 State 정리 위치에 연결한다. 선택된 저장 장치가 없는 갈래는 기존 명시 오류를 유지한다.</summary>
     /// <param name="reason">원문 reason0은 전체 연결을 닫고 reason1은 현재 전환 연결만 반납한다.</param>
     public void CleanupNativeWorld(uint reason) => CleanupNativeWorld(reason, new ClientStateWorldDevices
     {
@@ -46,6 +46,7 @@ public sealed partial class ClientHostGame
         CleanupGumps = CleanupNativeStateGumps,
         ReplaceUber = ReplaceNativeUberRoot,
         RefreshSp = RefreshNativeStormPower,
+        LeaveMetamap = () => NativeMetaDisplayCleanup.LeaveCurrent(_challenge, _surfaceGlobals, _localState),
         Assertion = line => throw new InvalidOperationException($"원문 State 중복 모드 진단:{line}"),
         StartSceneMusic = battle => NativeStateAudio.StartScene(battle),
         StopSoundLoops = () => NativeStateAudio.StopLoops(),
