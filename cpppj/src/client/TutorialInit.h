@@ -7,7 +7,11 @@
 #include <string>
 #include <string_view>
 
+namespace netstorm::o { class ConfigInterface; class RiftTypeTable; } // 튜토리얼 문구가 빌리는 현재 설정/실제 TYPE 표의 선언이다.
+
 namespace netstorm::client {
+// 실제 windArcher 비용을 global.crossbowCost에 공개해 세 언어의 안내 문구 치환에 사용한다.
+void BindTutorialUnitCosts(o::ConfigInterface& configuration,const o::RiftTypeTable& types);
 // 한 미션의 원본 이름과 Init이 남긴 첫DWORD·지역 문자열을 보유한다.
 struct TutorialInitState {
     std::string name; // 원본 객체+4의 이름이다. 정규화는 이 원문을 바꾸지 않고 지역 사본에서만 수행한다.

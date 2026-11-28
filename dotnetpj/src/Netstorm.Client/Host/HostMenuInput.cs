@@ -36,6 +36,8 @@ public sealed class HostMenuInput
     public Func<InputEvent, bool>? SavedCameraKey { get; set; }
     /// <summary>숨은 입력줄의 문자 Enter를 실제 Chat 공장으로 연결한다.</summary>
     private Func<InputEvent, bool>? _chatEnter;
+    /// <summary>미션의 F3 채팅 전환을 입력줄보다 먼저 처리하는 현재 장치다.</summary>
+    public Func<InputEvent, bool>? ChatToggleKey { get; set; }
     /// <summary>새 이름 창을 여는 실제 현재 호스트 장치다.</summary>
     private Action<uint>? _newFort;
     private Func<uint>? _screenFlags;
@@ -81,6 +83,7 @@ public sealed class HostMenuInput
     /// <summary>Blank는 기존 창을 지연 삭제하고, 나머지는 같은 실제 Tell 공장에 전달한다.</summary>
     public void ShowTell(string target)
     {
+        if (_popup?.TrySetDifficulty(target) == true) return; // 현재 문맥에서 설정하거나 차단한 난이도 명령은 HTML로 다시 보내지 않는다.
         if (string.Equals(target, "Blank", StringComparison.OrdinalIgnoreCase)) _windows.RequestCloseAll();
         else if (!_factory.ShowTell(target).Found) throw new InvalidOperationException("Tell 섹션 없음: " + target);
         _changed();
@@ -89,6 +92,7 @@ public sealed class HostMenuInput
     /// <summary>버전 차이 Tell을 실제 HTML 공장에 알린다. 없으면 거짓만 돌려주고 예외로 꾸미지 않는다.</summary>
     public bool TryShowTell(string target)
     {
+        if (_popup?.TrySetDifficulty(target) == true) return true; // 큐/직접 Tell도 동일한 메인 메뉴 제한을 적용한다.
         if (string.Equals(target, "Blank", StringComparison.OrdinalIgnoreCase)) { _windows.RequestCloseAll(); _changed(); return true; }
         var (found, _) = _factory.ShowTell(target);
         if (found) _changed();
@@ -98,6 +102,7 @@ public sealed class HostMenuInput
     /// <summary>공통 Gump가 먼저 소비한 입력을 제외하고 복원된 일반 명령을 처리한다. true는 앱 종료다.</summary>
     public bool Dispatch(InputEvent input)
     {
+        if (_menu.Tree.LifeState.DialogCount == 0 && ChatToggleKey?.Invoke(input) == true) { _changed(); return false; } // 모달을 보존하면서 F3가 활성 채팅 입력줄에 갇히지 않게 한다.
         if (_menu.Route(input) != 0) { _changed(); return false; }
         if (_editor?.Dispatch(input) == true) { _changed(); return false; }
         // 숨은 입력줄의 문자 Enter는 실제 Chat 창의 표시·열기가 먼저 소비한다. 표시 중이면 아래로 넘긴다.

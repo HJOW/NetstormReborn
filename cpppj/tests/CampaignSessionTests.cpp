@@ -1,4 +1,5 @@
 #include "o/RawFortObjectSave.h"
+#include "client/TutorialInit.h"
 #include "ReadyConstructionInput.h" //검사 사본의 원시 저장 stream에만 준비 부품을 삽입한다.
 #include "CameraTestDevices.h"
 #include "client/RawCampaignTutorialOneBindings.h"
@@ -2211,6 +2212,20 @@ TEST_CASE(CampaignSession_CursorMenuUsesActualStateAndCancel) {
     for (const auto number:previews) if (number) CHECK((core.pool.Slot(CursorPreviewSid(number))[11]&3)!=0);
     CHECK(ui.dirty>0 && ui.highlights>0 && ui.cursors.back()==1 && ui.sent.empty());
 }
+// 마지막 초기 미션의 실제 안내 대본이 원본 TYPE의 현재 정수 비용을 읽는지 확인한다.
+TEST_CASE(TutorialCrossbowCost_ActualAssetsAndMissionText) {
+    const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078); // 원본 자산과 영어 대본이다.
+    ConfigInterface config([&](auto path) { return assets.files.TryRead(path); }); // 미션과 global이 공유하는 실제 등록부다.
+    config.Configuration().Assign("DataDir=\"d\"\ncurrentLanguage=\"english\"\nmissionSpec=\"{DataDir}\\{local.1}.{currentLanguage}\"\n[END]\n");
+    MissionScript mission(config,"tutorial6");const auto body=mission.Section("D."); // Crossbows, Part 2의 실제 본문이다.
+    const auto type=assets.game.TypeTable().Find("windArcher"); // 화면 이름 Crossbow의 실제 TYPE 번호다.
+    const auto price=std::to_string(static_cast<int>(assets.game.TypeTable().Types()[type].cost)); // 건설 메뉴와 같은 정수 가격이다.
+    CHECK(body && body->find("{global.crossbowCost}")!=std::string::npos);
+    BindTutorialUnitCosts(config,assets.game.TypeTable());
+    CHECK(config.SubstituteLocal("{GLOBAL.CROSSBOWCOST}")==price);
+    if (body) { const auto text=config.SubstituteLocal(*body);CHECK(text.find(price+" Storm Power")!=std::string::npos && text.find("crossbowCost")==std::string::npos); } // 실제 본문에도 미해결 변수 없이 숫자가 들어가야 한다.
+}
+
 // 실제 공급원이 제거·완성되어도 정지한 커서의 허용/경고와 미리보기 SID가 현재 월드를 따른다.
 TEST_CASE(CampaignSession_StationaryCursorRefreshesActualEnergyProviders) {
     const auto& assets=netstorm::test::dudespawn::Assets(OriginalEdition::Patch1078); // 실제 TYPE/SHP와 저장 지형을 빌린다.

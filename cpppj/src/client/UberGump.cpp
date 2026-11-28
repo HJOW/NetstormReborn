@@ -805,6 +805,7 @@ bool UberGump::TryTell(std::string target,bool briefing,bool* windowCreated,std:
         client_.Pause(false);RebuildControls();return true;
     }
     if (o::AsciiLower(target)=="patch1101.resetallconfirmed") return true; // 15차: 직접 Tell/검사 호출은 확인 버튼 제출이 아니므로 초기화하지 않는다. 실제 토큰은 일반 Tell 입력에서만 소비한다.
+    if (o::AsciiLower(target).starts_with("patch1101.setdifficulty(") && (world_ || mission_)) return true; // 미션/편집 중에는 오래된 메뉴나 직접 Tell을 통해서도 난이도를 바꾸지 않는다.
     if (const auto rate=ParseFrameRateTarget(target)) { client_.Configuration().SetInt("maxFPS",*rate);client_.ApplyPresentationOptions();return true; } // 후순위 F1: 프레임 상한을 저장하고 바로 반영한다.
     if (const auto skirmish=ParseSkirmishTarget(target);skirmish.kind==SkirmishScreen::Set || skirmish.kind==SkirmishScreen::Start) { // 12차 스커미시: 설정 변경과 시작은 창 본문 없이 먼저 처리한다.
         auto settings=CurrentSkirmishSettings();
@@ -955,6 +956,7 @@ GuideMissionTransitionHooks UberGump::MissionTransitionEffects() {
 // 원본 Init은 현재 전역/Config를 쓰고 로드 요청 뒤 Header/flags를 수행한다. 실제 월드는 다음 루프에 설치한다.
 void UberGump::InitializeMission() {
     if (!mission_ || !missionRuntime_ || !missionRuntime_->guided) throw std::logic_error("Tutorial Init의 현재 Guide 계약 위반");
+    BindTutorialUnitCosts(client_.Configuration(),client_.Assets().TypeTable()); // 안내 창이 열리기 전에 실제 크로스보우 가격을 공개한다.
     TutorialInitHooks hooks;hooks.clearTemplates=[this] { templateStorage_->ClearAll(); }; //원문004c3290 첫 호출은 살아 있는 Editor/Session과 별개로 같은9개 manager를 반납한다. Session은 현재 헤더를 다시 조회하며 Template 참조를 고정 보유하지 않는다.
     hooks.resetOptions=[this] { o::ResetMissionBattleOptions(o::OriginalEdition::Patch1078,*missionOptions_); };
     hooks.get=[this](std::string_view key,std::optional<std::string_view> fallback) { auto value=FontBytes(mission_->Get(key).value_or(""));if (const auto end=value.find('\0');end!=std::string::npos) value.resize(end);if (value.empty() && fallback) value=*fallback;return value; };
@@ -1278,7 +1280,7 @@ void UberGump::OpenGameMenu(bool playerList) {
         if (client_.GameplayGlobals()->world.editor) hooks.scenarioCommand=kEditorScenarioOpen; // 일반 전투/캠페인 메뉴에는 노출하지 않는다.
         hooks.compatibilityResolutions=kCompatibilityScreenResolutions; // 원본과 다른Windows10/11 DIB 호환 화면비만 명시 추가하며 기본 원문 검사는 빈 목록을 유지한다.
         hooks.compatibilityLanguages=LanguageMenuChoices(client_.LanguageNumber()); // 6차: 게임 중 옵션 메뉴에도 같은 Language 하위 메뉴를 둔다.
-        hooks.compatibilityDifficulty=DifficultyMenuChoices(client_.Configuration().GetInt(std::string(o::kDifficultyConfigKey))); // 11차: 게임 중 옵션 메뉴에도 같은 Difficulty 하위 메뉴를 둔다(다음 AI 생성부터 적용).
+        hooks.compatibilityDifficulty.clear(); // 난이도 선택은 메인 메뉴 Options에서만 제공한다.
         hooks.compatibilityFrameRates=FrameRateMenuChoices(client_.Configuration().GetInt("maxFPS")); // 후순위 F1: 게임 중 옵션 메뉴에도 같은 Frame Rate 하위 메뉴를 둔다.
         ConnectPostProcessMenu(hooks); // 7차: 게임 중 옵션 메뉴에도 같은 후처리 항목을 둔다.
         RawGameMenus children(std::move(hooks));

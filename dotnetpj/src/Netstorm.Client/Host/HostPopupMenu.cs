@@ -26,6 +26,20 @@ public sealed class HostPopupMenu
     private readonly ScriptStringRing _strings;
     /// <summary>음향 장치 준비 판정이다. 거짓이면 소리 행을 사용 안 함으로 그린다.</summary>
     private readonly Func<bool> _soundReady;
+    /// <summary>난이도 변경을 허용하는 현재 메인 메뉴 문맥이다. 게임 호스트는 미션 수명을 조회한다.</summary>
+    public Func<bool> CanEditDifficulty { get; set; } = () => true;
+
+    /// <summary>메인 메뉴의 난이도 Tell을 처리하며 미션 중의 오래된 선택 명령도 소비하고 차단한다.</summary>
+    public bool TrySetDifficulty(string target)
+    {
+        const string prefix = "Patch1101.SetDifficulty("; // 실제 메뉴가 보내는 설정 대상 접두어다.
+        if (!target.StartsWith(prefix, StringComparison.OrdinalIgnoreCase) || !target.EndsWith(')')) return false;
+        if (CanEditDifficulty() && int.TryParse(target.AsSpan(prefix.Length, target.Length - prefix.Length - 1), out int level) && level is >= 1 and <= 3)
+        {
+            _startup.Configuration.SetInt("difficulty", level); _changed();
+        }
+        return true;
+    }
 
     /// <summary>실제State와전용Help Back/지식카드가공유하는같은마지막도움말표식이다.</summary>
     public QuickHelpPopupState PopupState { get; }
@@ -116,15 +130,18 @@ public sealed class HostPopupMenu
         });
         ParentSubmenu(Utf8("Frame Rate"), frameRates);
         // 11차 난이도 항목이다. 설정이 없거나 범위 밖이면 보통에 체크한다.
-        uint difficulty = TakeChild(() =>
+        if (CanEditDifficulty())
         {
-            int configured = 0; _startup.Configuration.ReadInt("difficulty", ref configured);
-            AiDifficultyLevel level = AiDifficulty.FromValue(unchecked((uint)configured));
-            ChildChecked(level == AiDifficultyLevel.Easy, Utf8("Easy"), 0x542948U, _strings.Store("Patch1101.SetDifficulty(1)"));
-            ChildChecked(level == AiDifficultyLevel.Normal, Utf8("Normal"), 0x542948U, _strings.Store("Patch1101.SetDifficulty(2)"));
-            ChildChecked(level == AiDifficultyLevel.Hard, Utf8("Hard"), 0x542948U, _strings.Store("Patch1101.SetDifficulty(3)"));
-        });
-        ParentSubmenu(Utf8("Difficulty"), difficulty);
+            uint difficulty = TakeChild(() => // 메인 메뉴에서만 만드는 난이도 하위 메뉴 토큰이다.
+            {
+                int configured = 0; _startup.Configuration.ReadInt("difficulty", ref configured);
+                AiDifficultyLevel level = AiDifficulty.FromValue(unchecked((uint)configured));
+                ChildChecked(level == AiDifficultyLevel.Easy, Utf8("Easy"), 0x542948U, _strings.Store("Patch1101.SetDifficulty(1)"));
+                ChildChecked(level == AiDifficultyLevel.Normal, Utf8("Normal"), 0x542948U, _strings.Store("Patch1101.SetDifficulty(2)"));
+                ChildChecked(level == AiDifficultyLevel.Hard, Utf8("Hard"), 0x542948U, _strings.Store("Patch1101.SetDifficulty(3)"));
+            });
+            ParentSubmenu(Utf8("Difficulty"), difficulty);
+        }
         ParentGap();
         // 소리 4행과 음량 하위 2행은 음향 장치 준비 판정을 사용한다(RawGameMenus.cpp 144·150행의 0x5c7b14).
         // 음소거(--mute-audio) 실행이면 거짓이다.

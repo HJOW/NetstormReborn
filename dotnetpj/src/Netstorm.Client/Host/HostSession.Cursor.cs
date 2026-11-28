@@ -13,6 +13,8 @@ public sealed partial class HostSession
 
     /// <summary>같은 실제 풀·TYPE·게임 커서로 조립한 내려놓기 조회·준비 본체다. 미연결 hook은 R6에서 잇는다.</summary>
     private RawCursorPlacement? _cursorPlacement;
+    /// <summary>현재 판정 결과에 따라 하드웨어 커서를 고르는 실제 장치다.</summary>
+    private Action<uint>? _cursorSelect;
 
     /// <summary>실제 입력 경로가 취득·취소를 요청하는 같은 세션 커서 수명이다.</summary>
     public RawCursorLifecycle CursorLifecycle => _cursorLifecycle ?? throw new InvalidOperationException("세션 커서 수명 미연결");
@@ -91,6 +93,7 @@ public sealed partial class HostSession
         };
         live.Assertion ??= (expression, file, line) => throw new InvalidOperationException($"커서 원본 진단: {expression} {file}:{line}");
         _cursorPlacement = placementBody;
+        _cursorSelect = live.SelectCursor;
         _cursorLifecycle = new RawCursorLifecycle(Pool, types, drop, life, live);
     }
 
@@ -107,6 +110,15 @@ public sealed partial class HostSession
 
     /// <summary>현재 커서 위치의 dirty 준비를 실행한다. 입력 경로의 Prepare 호출자다.</summary>
     public void PrepareCursor() => CursorPlacement.Prepare();
+
+    /// <summary>입력 프레임마다 활성 커서의 에너지·공간·경고를 재조회한다. 빈/잠금 커서는 건드리지 않는다.</summary>
+    public bool RefreshCursorPlacement()
+    {
+        if (_cursorPlacement is null || Gameplay.Cursor.Preview == 0 || Gameplay.Cursor.LockDepth != 0) return false;
+        _cursorPlacement.Prepare(); _cursorPlacement.Query(); _cursorPlacement.Prepare();
+        (_cursorSelect ?? throw new InvalidOperationException("현재 커서 선택 장치 미연결"))(Gameplay.Cursor.LegalGump != 0 ? 3u : 2u);
+        return true;
+    }
 
     /// <summary>잡은 커서가 있으면 놓고 참을 돌려준다. 없으면 거짓이다.</summary>
     public bool TryCancelCursor()

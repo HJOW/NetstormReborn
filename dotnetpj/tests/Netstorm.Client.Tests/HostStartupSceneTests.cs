@@ -566,7 +566,8 @@ public sealed class HostStartupSceneTests
         using var factory = new HostHtmlFactory(menu, windows, menus, startup, screen, queue, strings, () => 1, _ => 0, _ => throw new InvalidOperationException());
         router = new HostMenuInput(menu, windows, factory, queue, strings, () => { }, action => throw new InvalidOperationException(action.ToString()));
         int audioUpdates = 0;
-        router.BindPopup(new HostPopupMenu(menu, windows, menus, screen, startup, () => { }, () => audioUpdates++, strings));
+        var popup = new HostPopupMenu(menu, windows, menus, screen, startup, () => { }, () => audioUpdates++, strings); // 현재 메뉴 문맥을 전환할 실제 옵션 소유자다.
+        router.BindPopup(popup);
         var screenChanges = new List<(uint Mode, bool Remember)>(); int accepts = 0;
         router.BindScreenMode(() => screen.Flags, (mode, remember) => { screenChanges.Add((mode, remember)); Assert.True(screen.SetMode(mode)); }, () => accepts++);
         var driver = new HostFrameDriver(screen, queue); driver.BindInputHandler(router.Dispatch);
@@ -622,6 +623,12 @@ public sealed class HostStartupSceneTests
         Assert.Equal("DirectDrawVerify", System.Text.Encoding.Latin1.GetString(startup.TellState.Current).Split('\0')[0]);
         windows.CloseAll(); queue.PushCommand(0x020000e4, 0, 1); Assert.False(driver.ProcessInput()); Assert.Equal(1, accepts);
         Assert.Equal("AdjustDirectDraw", System.Text.Encoding.Latin1.GetString(startup.TellState.Current).Split('\0')[0]); windows.CloseAll();
+        Assert.True(router.TryShowTell("Patch1101.SetDifficulty(1)")); Assert.Equal(1, startup.Configuration.GetInt("difficulty"));
+        popup.CanEditDifficulty = () => false; // 같은 앱이 미션 문맥으로 바뀐 뒤의 선택/직접 Tell을 검사한다.
+        router.ShowTell("Patch1101.SetDifficulty(3)"); Assert.Equal(1, startup.Configuration.GetInt("difficulty"));
+        router.Post(new("Menu", "options")); router.Tick();
+        Assert.Single(menu.Tree.Create.Entries.Select(token => menu.Tree.Node(token)).OfType<MenuGumpNode>(), node => node.ItemCount == 19);
+        windows.CloseAll();
     }
 
     /// <summary>실제 Edit 버튼은 같은 Fort 선택·파일 목록·Tell 메뉴까지 도달한다.</summary>

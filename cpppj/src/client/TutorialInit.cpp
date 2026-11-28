@@ -2,6 +2,7 @@
 #include "client/TutorialInit.h"
 #include "o/ConfigInterface.h"
 #include "o/OriginalText.h"
+#include "o/RiftType.h"
 #include <algorithm>
 #include <bit>
 #include <stdexcept>
@@ -11,6 +12,12 @@ namespace {
 template<class F> const F& Effect(const F& effect) { if (!effect) throw std::logic_error("Tutorial Init 실제 효과 누락");return effect; }
 // 원본 C문자열의 첫NUL 뒤는 이름/설정/로드로 해석하지 않는다.
 std::string_view CString(std::string_view value) { return value.substr(0,value.find('\0')); }
+}
+// 가격을 대본에 고정하지 않고 현재 적재된 타입의 정수 건설 비용을 원본 전역 키로 제공한다.
+void BindTutorialUnitCosts(o::ConfigInterface& configuration,const o::RiftTypeTable& types) {
+    const auto crossbow=types.Find("windArcher"); // 화면 이름 Crossbow에 대응하는 원본 자산 TYPE 번호다.
+    if (crossbow<0) throw std::logic_error("튜토리얼 크로스보우 TYPE 미설치");
+    configuration.Configuration().Set("global.crossbowCost",std::to_string(static_cast<std::int32_t>(types.Types()[crossbow].cost))); // 표시 전역은 옵션 변경 통지를 발생시키지 않는다.
 }
 // 이름 지역80BYTE·로드256BYTE 범위 밖의 원본 오버런만 안전한 호스트에서 명시 거부한다.
 void InitializeTutorialMission(TutorialInitState& state,std::uint32_t& flags,std::uint32_t& demo,TutorialInitGlobals globals,const TutorialInitHooks& hooks) {

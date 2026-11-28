@@ -39,5 +39,6 @@ public sealed class HostAssetTables : IRawSurfaceAssetSource
         _storage = storage; TypeTable = MissionFortLoad.LoadTypeTable(startup.Files); Definitions = MissionFortLoad.LoadTypeDefinitions(startup.Files);
         ShapeImage = startup.Files.ReadAllBytes("d/_shapes.shp"); var shapes = TerrainDisplayShapes.Build(Definitions, new ShapeDatabase(ShapeImage));
         _storage.InitializeAssetTables(TypeTable.Types, WorldFrameTables.Create(Definitions, TypeTable.Types.Count), shapes, this);
+        Netstorm.Client.Mission.TutorialInit.BindUnitCosts(startup.Configuration, TypeTable); // 실제 안내 대본이 같은 적재 TYPE의 가격을 사용한다.
     }
 }

@@ -154,6 +154,13 @@ public sealed class HostChatWindows : IDisposable
         () => Geometry.SetInputVisible(_globals.Current.Value, 1), () => Show());
     /// <summary>사용 시점의 현재 root를 같은 실제 부모 체인에 전달한다.</summary>
     public void Show() { uint token = _globals.Current.Value; if (token != 0) _tree.Events.Bubble(token, 0x02000088, 0, 1); }
+    /// <summary>수정키 없는 F3로 채팅창을 열고 닫는다. 작성 중인 입력 버퍼는 보존하며 뗌은 전환하지 않는다.</summary>
+    public bool ToggleKey(InputEvent input)
+    {
+        if ((input.Code & 0x03ffffff) != 0x720000 || (input.Code & (InputCode.Control | InputCode.Shift | InputCode.Alt)) != 0 || _globals.Current.Value == 0) return false;
+        if ((input.Code & InputCode.Release) == 0) _tree.Events.Bubble(_globals.Current.Value, 0x02000088, 0, 2);
+        return true;
+    }
     /// <summary>현재 root가 있는 경우 같은 실제 공유 버퍼/스타일/스크롤 부모에 추가한다.</summary>
     public void Print(string value) { uint token = _globals.Current.Value; if (token != 0) Window.AppendLog(token, value); }
     /// <summary>원문 clear는 완료 줄만 지우고 quit는 현재 전체 사건 DWORD를 실제 큐에 예약한다.</summary>

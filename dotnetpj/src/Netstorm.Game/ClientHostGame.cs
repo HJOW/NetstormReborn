@@ -346,9 +346,11 @@ public sealed partial class ClientHostGame : Game
             InstallClientPacketDispatch();
             _menuInput = new HostMenuInput(_mainMenu, _htmlWindows, _htmlFactory, _driver.Input, _scriptStrings,
                 () => _menuDirty = true, action => throw new InvalidOperationException("메뉴 상위 명령 미연결: " + action));
-            _menuInput.BindPopup(new HostPopupMenu(_mainMenu, _htmlWindows, _htmlMenus, _driver.Screen, _startup, () => _menuDirty = true, _buttonSound.ApplyOptions, _scriptStrings, () => !_options.MuteAudio, _stateResources.Popup));
+            _menuInput.BindPopup(new HostPopupMenu(_mainMenu, _htmlWindows, _htmlMenus, _driver.Screen, _startup, () => _menuDirty = true, _buttonSound.ApplyOptions, _scriptStrings, () => !_options.MuteAudio, _stateResources.Popup)
+                { CanEditDifficulty = () => _missionSession is null }); // 미션 수명 동안에는 선택지와 직접 명령을 모두 제한한다.
             // RU-3c 숨은 입력줄의 문자 Enter를 실제 Chat 창의 표시·열기로 연결한다. 표시 중이면 아래로 넘긴다.
             _menuInput.BindChatEnter(input => NativeChatWindows.OpenInput(input));
+            _menuInput.ChatToggleKey = input => _missionSession is not null && NativeChatWindows.ToggleKey(input); // F3는 표시 중인 입력줄보다 먼저 같은 도킹 부모로 보낸다.
             _menuInput.BindScreenMode(() => _driver.Screen.Flags, ChangeScreenMode, AcceptScreenMode);
             // WP-5b: Edit 작업본 루트를 사용자 CustomMaps로 둔다. 설치 경로는 읽기만 하고 새 맵은 CustomMaps에 저장된다.
             // 사용자 루트를 정할 수 없으면 종전 형제 작업본 동작으로 둔다.
@@ -368,7 +370,7 @@ public sealed partial class ClientHostGame : Game
                 () => { string path = ""; _startup.Configuration.ReadString("introMovie", ref path); return path; },
                 name => _startup.Files.TryReadAllBytes(name) is not null ? 1u : 0u);
             // DI-3: 실제 포인터 이동을 현재 커서 위치에 반영하고, Esc는 잡은 커서가 있을 때만 놓는다.
-            _menuInput.CursorPosition = (x, y) => { _gameplay.Cursor.ScreenX = x; _gameplay.Cursor.ScreenY = y; };
+            _menuInput.CursorPosition = (x, y) => { _gameplay.Cursor.ScreenX = x; _gameplay.Cursor.ScreenY = y; _missionSession?.RefreshCursorPlacement(); }; // 정지한 포인터도 공급원 완성/소실을 다음 입력 프레임에 반영한다.
             _menuInput.CursorCancel = () => _missionSession?.TryCancelCursor() == true;
             // DI-4d: 이동 전용 경로는 미션 세션의 Pan에, 숫자·기호 입력은 저장 카메라 분배에 맡긴다. 미션 없으면 거짓으로 종전 흐름을 유지한다.
             _menuInput.CameraPan = pointer => _missionSession?.ProcessCameraPan(pointer) == true;

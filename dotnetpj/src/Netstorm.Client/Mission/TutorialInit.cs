@@ -48,6 +48,13 @@ public sealed class TutorialInitHooks
 /// <summary>원본 004c3290 튜토리얼 Init의 순서와 현재 상태를 재현한다.</summary>
 public static class TutorialInit
 {
+    /// <summary>실제 windArcher의 정수 비용을 안내 대본의 global.crossbowCost로 공개한다.</summary>
+    public static void BindUnitCosts(ConfigInterface configuration, RiftTypeTable types)
+    {
+        int crossbow = types.Find("windArcher"); // 화면 이름 Crossbow에 대응하는 실제 자산 번호다.
+        if (crossbow < 0) throw new InvalidOperationException("튜토리얼 크로스보우 TYPE 미설치");
+        configuration.Configuration.Set("global.crossbowCost", ((int)types.Types[crossbow].Cost).ToString(System.Globalization.CultureInfo.InvariantCulture)); // 표시용 전역은 옵션 변경 알림/저장을 발생시키지 않는다.
+    }
     private static T Need<T>(T? effect) where T : Delegate => effect ?? throw new InvalidOperationException("Tutorial Init 실제 효과 누락");
     private static string CString(string value) { int end = value.IndexOf('\0'); return end < 0 ? value : value[..end]; }
 

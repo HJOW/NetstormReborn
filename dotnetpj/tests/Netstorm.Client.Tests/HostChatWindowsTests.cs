@@ -100,6 +100,7 @@ public sealed class HostChatWindowsTests
         using var htmlFactory = new HostHtmlFactory(scene.Menu, scene.Html, scene.Menus, scene.Startup, scene.Screen, scene.Queue, strings, () => 1, _ => 0, _ => { });
         var input = new HostMenuInput(scene.Menu, scene.Html, htmlFactory, scene.Queue, strings, () => { }, action => throw new InvalidOperationException(action.ToString()));
         input.BindChatEnter(scene.Chat.OpenInput);
+        input.ChatToggleKey = scene.Chat.ToggleKey; // F3도 같은 실제 도킹/입력줄을 왕복한다.
         scene.Menu.IsMissionActive = () => true;
         HudDock? dock = null;
         HostMissionHudRouting? routing = null;
@@ -153,9 +154,16 @@ public sealed class HostChatWindowsTests
             Assert.Equal(672, tree.Node(divider)!.Y);
             Assert.Equal(672, tree.TreeState.MapView.Bottom);
             Assert.NotEqual(0U, tree.Node(chatNode.Console)!.Flags & 1U);
-            tree.Events.Bubble(chat, 0x02000088, 0, 0);
+            tree.EventHooks.Handle!(chat, 0x02000115, 0, scene.Globals.Store("draft message"));
+            string draft = scene.Entry.ReadEntryText(chatNode.Console); // 숨겨도 보존해야 할 실제 입력 버퍼다.
+            Assert.False(input.Dispatch(new InputEvent(0x720000, 0, 0)));
             Assert.Equal(768, tree.Node(divider)!.Y);
             Assert.Equal(768, tree.TreeState.MapView.Bottom);
+            Assert.Equal(draft, scene.Entry.ReadEntryText(chatNode.Console));
+            Assert.False(input.Dispatch(new InputEvent(0x720000 | InputCode.Release, 0, 0))); Assert.Equal(768, tree.Node(divider)!.Y);
+            Assert.False(input.Dispatch(new InputEvent(0x720000, 0, 0))); Assert.Equal(672, tree.Node(divider)!.Y);
+            Assert.Equal(draft, scene.Entry.ReadEntryText(chatNode.Console));
+            Assert.False(input.Dispatch(new InputEvent(0x720000, 0, 0))); Assert.Equal(768, tree.Node(divider)!.Y);
         }
         scene.Chat.Show();
         Assert.Equal(768, tree.Node(divider)!.Y);

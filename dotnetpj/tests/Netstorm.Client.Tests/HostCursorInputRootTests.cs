@@ -150,6 +150,7 @@ public sealed partial class HostPriestWorldLiveTests
     [Fact]
     public void TakeAndQueryReachSessionPlacementEntries()
     {
+        bool energyAvailable = true; // 같은 정지 위치에서 공급원 완료/소실만 바뀌는 입력이다.
         var calls = new List<string>();
         var invalidated = new List<(ScreenRect Rect, uint Flags)>();
         int preview = 0, source = 0;
@@ -182,7 +183,7 @@ public sealed partial class HostPriestWorldLiveTests
         };
         var placement = new CursorPlacementHooks
         {
-            Describe = (ref string text, float _, float _, uint _, uint _) => { calls.Add("Qd"); text = "ok"; return 1; },
+            Describe = (ref string text, float _, float _, uint _, uint _) => { calls.Add("Qd"); text = energyAvailable ? "ok" : "에너지 부족"; return energyAvailable ? 1u : 0u; },
             Walk = (_, _) => calls.Add("Qw"),
             GumpAt = (_, _) => 0u,
             MayPlace = _ => 1u,
@@ -223,5 +224,11 @@ public sealed partial class HostPriestWorldLiveTests
         session.QueryCursor();
         session.PrepareCursor();
         Assert.True(invalidated.Count >= 1);
+        var previews = session.Gameplay.CursorGlobals.Lifecycle.Previews.ToArray(); // 재판정이 다시 만들면 안 되는 미리보기 목록이다.
+        var position = (session.Gameplay.Cursor.X, session.Gameplay.Cursor.Y); // 공급원 상태만 바뀌고 포인터는 정지한다.
+        energyAvailable = false; Assert.True(session.RefreshCursorPlacement()); Assert.Equal(0u, session.Gameplay.Cursor.Legal);
+        energyAvailable = true; Assert.True(session.RefreshCursorPlacement()); Assert.Equal(1u, session.Gameplay.Cursor.Legal);
+        Assert.Equal(previews, session.Gameplay.CursorGlobals.Lifecycle.Previews); Assert.Equal(position, (session.Gameplay.Cursor.X, session.Gameplay.Cursor.Y));
+        session.Gameplay.Cursor.LockDepth = 1; Assert.False(session.RefreshCursorPlacement());
     }
 }

@@ -8,6 +8,17 @@ namespace Netstorm.Client.Tests;
 /// <summary>게임 창 없이 실제 TYPE/SHP 입력과 장기 저장소의 수명 경계를 검증한다.</summary>
 public sealed class HostAssetTablesTests
 {
+    /// <summary>실제 자산 설치가 안내 대본에 쓰는 크로스보우 가격을 global 등록부에 공개한다.</summary>
+    [Fact]
+    public void TutorialCrossbowPriceUsesActualLoadedCost()
+    {
+        HostStartupScene startup = Startup(); // 미션 대본도 같은 등록부의 global을 읽는다.
+        var assets = new HostAssetTables(startup, new RawSurfaceStorage()); // 실제 TYPE 비용을 설치하는 게임 시작 경계다.
+        int type = assets.TypeTable.Find("windArcher"); // 화면 이름 Crossbow의 원본 자산 번호다.
+        string price = ((int)assets.LoadedTypes[type].Cost).ToString(System.Globalization.CultureInfo.InvariantCulture); // 건설 메뉴와 같은 정수 가격이다.
+        Assert.Equal(price, startup.Configuration.SubstituteLocal("{GLOBAL.CROSSBOWCOST}"));
+        Assert.Equal("Crossbow " + price, startup.Configuration.SubstituteLocal("Crossbow {global.crossbowCost}"));
+    }
     /// <summary>랭크 아이콘은 적재 인덱스가 아닌 실제 TYPE 번호와 현재 공유 프레임 변경을 사용한다.</summary>
     [Fact]
     public void RankIconsUseRuntimeTypeAndCurrentFrameStorage()
