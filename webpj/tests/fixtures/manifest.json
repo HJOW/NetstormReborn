@@ -5562,7 +5562,7 @@
       "bytes": 93038,
       "lines": 153,
       "fixtureCommit": "8ba4af11b",
-      "webCommit": "worktree",
+      "webCommit": "5a831ad38",
       "cpppjBasis": {
         "cpppj/src/client/TutorialInit.cpp": "fd8173a41"
       }
@@ -41365,6 +41365,192 @@
         "cpppj/src/o/SidPool.cpp": "9cb0547f5",
         "cpppj/src/client/RawSurfaceStorage.cpp": "14fd017c3",
         "cpppj/src/client/RawSurfaceWorld.cpp": "a7509bbc7"
+      }
+    },
+    {
+      "id": "resolution-1280-0",
+      "path": "webpj/tests/fixtures/cpppj/resolution-1280-20261128/m1-scenarios.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "CP1384/3f12a2bd4 Netstorm.exe; webpj/tools/cpp-oracle.mjs",
+      "consumers": [
+        "webpj/e2e/fixed-time.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js"
+      ],
+      "unit": "WB04-E1488",
+      "doc": "docs/resolution-policy-1280-20261128.md",
+      "cpppjSources": [
+        "cpppj/src/client/ScreenResolutions.h",
+        "cpppj/src/client/ClientMain.cpp"
+      ],
+      "scope": "1280x720의 Tutorial1 고정90/130프레임; 옛1366 기준선은 보존",
+      "text": true,
+      "sha256": "9f57ead021c81f5e42a0cb0369c68215fc6b7bbeed10cc75242e77187bd6b647",
+      "bytes": 995,
+      "lines": 57,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ScreenResolutions.h": "3f12a2bd4",
+        "cpppj/src/client/ClientMain.cpp": "3f12a2bd4"
+      }
+    },
+    {
+      "id": "resolution-1280-1",
+      "path": "webpj/tests/fixtures/cpppj/resolution-1280-20261128/oracle/oracle.json",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "CP1384/3f12a2bd4 Netstorm.exe; webpj/tools/cpp-oracle.mjs",
+      "consumers": [
+        "webpj/e2e/fixed-time.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js"
+      ],
+      "unit": "WB04-E1488",
+      "doc": "docs/resolution-policy-1280-20261128.md",
+      "cpppjSources": [
+        "cpppj/src/client/ScreenResolutions.h",
+        "cpppj/src/client/ClientMain.cpp"
+      ],
+      "scope": "1280x720의 Tutorial1 고정90/130프레임; 옛1366 기준선은 보존",
+      "text": true,
+      "sha256": "49191b95437a91093ebeebb75e2e7024f9d1d2fa9cc6d1bc1496c079522c01e8",
+      "bytes": 2208,
+      "lines": 70,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ScreenResolutions.h": "3f12a2bd4",
+        "cpppj/src/client/ClientMain.cpp": "3f12a2bd4"
+      }
+    },
+    {
+      "id": "resolution-1280-2",
+      "path": "webpj/tests/fixtures/cpppj/resolution-1280-20261128/oracle/tutorial1/load.png",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "CP1384/3f12a2bd4 Netstorm.exe; webpj/tools/cpp-oracle.mjs",
+      "consumers": [
+        "webpj/e2e/fixed-time.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js"
+      ],
+      "unit": "WB04-E1488",
+      "doc": "docs/resolution-policy-1280-20261128.md",
+      "cpppjSources": [
+        "cpppj/src/client/ScreenResolutions.h",
+        "cpppj/src/client/ClientMain.cpp"
+      ],
+      "scope": "1280x720의 Tutorial1 고정90/130프레임; 옛1366 기준선은 보존",
+      "text": false,
+      "sha256": "9535c4748d82a97eedbfbd11c1e58f4377779d78796aa208969d93187c8d219a",
+      "bytes": 204206,
+      "lines": null,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ScreenResolutions.h": "3f12a2bd4",
+        "cpppj/src/client/ClientMain.cpp": "3f12a2bd4"
+      }
+    },
+    {
+      "id": "resolution-1280-3",
+      "path": "webpj/tests/fixtures/cpppj/resolution-1280-20261128/oracle/tutorial1/load.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "CP1384/3f12a2bd4 Netstorm.exe; webpj/tools/cpp-oracle.mjs",
+      "consumers": [
+        "webpj/e2e/fixed-time.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js"
+      ],
+      "unit": "WB04-E1488",
+      "doc": "docs/resolution-policy-1280-20261128.md",
+      "cpppjSources": [
+        "cpppj/src/client/ScreenResolutions.h",
+        "cpppj/src/client/ClientMain.cpp"
+      ],
+      "scope": "1280x720의 Tutorial1 고정90/130프레임; 옛1366 기준선은 보존",
+      "text": true,
+      "sha256": "c7b074fe04e03959e7f1591e2c66da901ef6e64139e5790a4000c9aa26b83a58",
+      "bytes": 142237,
+      "lines": 1963,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ScreenResolutions.h": "3f12a2bd4",
+        "cpppj/src/client/ClientMain.cpp": "3f12a2bd4"
+      }
+    },
+    {
+      "id": "resolution-1280-4",
+      "path": "webpj/tests/fixtures/cpppj/resolution-1280-20261128/oracle/tutorial1/later.tsv",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "CP1384/3f12a2bd4 Netstorm.exe; webpj/tools/cpp-oracle.mjs",
+      "consumers": [
+        "webpj/e2e/fixed-time.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js"
+      ],
+      "unit": "WB04-E1488",
+      "doc": "docs/resolution-policy-1280-20261128.md",
+      "cpppjSources": [
+        "cpppj/src/client/ScreenResolutions.h",
+        "cpppj/src/client/ClientMain.cpp"
+      ],
+      "scope": "1280x720의 Tutorial1 고정90/130프레임; 옛1366 기준선은 보존",
+      "text": true,
+      "sha256": "5674ea15c3fec8887be14085080013e7ddee60cdf99d485e89f4e48c2cfb56d1",
+      "bytes": 142346,
+      "lines": 1964,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ScreenResolutions.h": "3f12a2bd4",
+        "cpppj/src/client/ClientMain.cpp": "3f12a2bd4"
+      }
+    },
+    {
+      "id": "resolution-1280-5",
+      "path": "webpj/tests/fixtures/cpppj/resolution-1280-20261128/oracle/tutorial1/report.txt",
+      "kind": "cpppj-oracle",
+      "edition": "10.78",
+      "required": true,
+      "producer": "CP1384/3f12a2bd4 Netstorm.exe; webpj/tools/cpp-oracle.mjs",
+      "consumers": [
+        "webpj/e2e/fixed-time.spec.js"
+      ],
+      "modules": [
+        "webpj/www/netstorm.js"
+      ],
+      "unit": "WB04-E1488",
+      "doc": "docs/resolution-policy-1280-20261128.md",
+      "cpppjSources": [
+        "cpppj/src/client/ScreenResolutions.h",
+        "cpppj/src/client/ClientMain.cpp"
+      ],
+      "scope": "1280x720의 Tutorial1 고정90/130프레임; 옛1366 기준선은 보존",
+      "text": true,
+      "sha256": "dac0c9b526c0f8371aaf33c45671777691476a8b0175d349802effd06af559ca",
+      "bytes": 135939,
+      "lines": 3766,
+      "fixtureCommit": null,
+      "webCommit": "worktree",
+      "cpppjBasis": {
+        "cpppj/src/client/ScreenResolutions.h": "3f12a2bd4",
+        "cpppj/src/client/ClientMain.cpp": "3f12a2bd4"
       }
     }
   ]

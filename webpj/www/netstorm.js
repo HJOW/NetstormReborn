@@ -242,19 +242,16 @@ const TUTORIAL_NOTICE_COMMANDS = new Set([0x030000b0, 0x030000b1, 0x020000b5, 0x
 
 // 지원하는 화면비 목록이다. name 은 설정·URL 에서 쓰는 이름, ratio 는 명목 가로세로비,
 // width/height 는 그 화면비에서의 논리 화면 크기(픽셀, 가로는 짝수)다.
-// 작거나 세로가 짧은 창의 기본 논리 크기다. 큰 16:9 창의 상위 크기는 WIDE_LOGICAL_SIZES에서 고른다. (2026-11-19 WB04-E943)
+// 논리 폭 상한은1280이다. 4:3은 작은 창에서 원본1024x768을 유지한다.
 export const SCREEN_MODES = Object.freeze([
     Object.freeze({ name: '4:3', ratio: 4 / 3, width: 1024, height: LOGICAL_HEIGHT }),
     Object.freeze({ name: '16:10', ratio: 16 / 10, width: 1280, height: 800 }),
-    Object.freeze({ name: '16:9', ratio: 16 / 9, width: 1366, height: LOGICAL_HEIGHT }),
+    Object.freeze({ name: '16:9', ratio: 16 / 9, width: 1280, height: 720 }),
+    Object.freeze({ name: '5:4', ratio: 5 / 4, width: 1280, height: 1024 }),
 ]);
 
-// 16:9 창의 논리 크기 후보들이다. CSS 픽셀로 담을 수 있는 가장 큰 후보를 사용한다.
-// 고정 단계로 선택해 창을 세밀하게 조절할 때마다 논리 표면을 다시 만들지 않게 한다. (2026-11-19 WB04-E943)
-const WIDE_LOGICAL_SIZES = Object.freeze([
-    Object.freeze({ width: 1920, height: 1080 }),
-    Object.freeze({ width: 1600, height: 900 }),
-]);
+// 큰4:3 창에서 사용하는 최대 논리 크기다. Canvas 표시 확대는FSR 없이 기존 브라우저 출력으로 처리한다.
+const LARGE_CLASSIC_SIZE = Object.freeze({ width: 1280, height: 960 });
 
 // 컨테이너 비율에 가장 가까운 화면비를 자동으로 고르라는 설정값이다. (2026-10-23 WB01)
 export const AUTO_ASPECT = 'auto';
@@ -416,10 +413,8 @@ export function computeLayout(
     const dpr = Number.isFinite(devicePixelRatio) && devicePixelRatio > 0 ? devicePixelRatio : 1;
     const mode = pickScreenMode(containerWidth, containerHeight, aspect);
     // 고DPI 기기에서도 창의 CSS 크기에 맞춰 논리 좌표를 고른다. 기기 픽셀 배율은 Canvas 내부 크기에만 반영한다.
-    const wide = mode.name === '16:9' ? WIDE_LOGICAL_SIZES.find(
-        (size) => containerWidth >= size.width && containerHeight >= size.height,
-    ) : undefined;
-    const { width, height } = wide ?? mode;
+    const large = mode.name === '4:3' && containerWidth >= LARGE_CLASSIC_SIZE.width && containerHeight >= LARGE_CLASSIC_SIZE.height;
+    const { width, height } = large ? LARGE_CLASSIC_SIZE : mode;
     const hidden = {
         visible: false,
         mode: mode.name,

@@ -27,7 +27,7 @@ test('캠페인 목록에서 첫 Tutorial의 월드와 안내를 표시한다', 
     return { title: document.title, frame: app._clientRenderer.drawCount, paused: app._gameClock.paused(), width: app._surface.width,
       visiblePixels: app._surface.pixels.some((pixel) => pixel !== 0) };
   });
-  expect(state.frame).toBeGreaterThan(0); expect(state.paused).toBe(true); expect(state.width).toBe(1366); expect(state.visiblePixels).toBe(true);
+  expect(state.frame).toBeGreaterThan(0); expect(state.paused).toBe(true); expect(state.width).toBe(1280); expect(state.visiblePixels).toBe(true);
   // 첫 안내를 실제 버튼으로 닫고 월드의 사제 그림을 마우스로 선택한다.
   // 여러 안내 페이지의 실제 버튼을 끝까지 누른다.
   for (let pageIndex = 0; pageIndex < 8; pageIndex += 1) {

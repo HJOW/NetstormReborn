@@ -12,7 +12,7 @@ const { installSilentAudioSink } = require('./silent-audio-sink');
 const ORACLE_ROOT = path.join(__dirname, '..', 'tests', 'fixtures', 'cpppj', 'candidate-225553df', 'tutorial1');
 const MODES = {
   '4:3': { viewport: { width: 1024, height: 768 }, oracle: path.join(ORACLE_ROOT, 'oracle', 'tutorial1'), scenarios: path.join(ORACLE_ROOT, 'm1-scenarios.json') },
-  '16:9': { viewport: { width: 1366, height: 768 }, oracle: path.join(ORACLE_ROOT, 'oracle-1366x768', 'tutorial1'), scenarios: path.join(ORACLE_ROOT, 'm1-scenarios-1366x768.json') },
+  '16:9': { viewport: { width: 1366, height: 768 }, oracle: path.join(__dirname,'..','tests','fixtures','cpppj','resolution-1280-20261128','oracle','tutorial1'), scenarios: path.join(__dirname,'..','tests','fixtures','cpppj','resolution-1280-20261128','m1-scenarios.json'), commit:'3f12a2bd4', report:true },
   '16:10': { viewport: { width: 1280, height: 800 }, oracle: path.join(ORACLE_ROOT, '16x10', 'oracle', 'tutorial1'), scenarios: path.join(ORACLE_ROOT, '16x10', 'm1-scenarios.json'), report: true },
 };
 
@@ -62,7 +62,7 @@ async function expectMatchesOracle(result, mode) {
   // 오라클 수집 조건: 수집 시나리오의 해상도 설정과 오라클 메타(oracle.json)의 기준선 커밋·화면 크기가 웹 화면 모드와 같다.
   const scenarios = JSON.parse(fs.readFileSync(mode.scenarios, 'utf8')), meta = JSON.parse(fs.readFileSync(path.join(oracle, '..', 'oracle.json'), 'utf8'));
   expect([scenarios.settings.SCREENW, scenarios.settings.SCREENH], '수집 시나리오의 해상도').toEqual([result.screen.width, result.screen.height]);
-  expect(meta.cpppjCommit, '오라클 기준선 커밋').toBe('225553df');
+  expect(meta.cpppjCommit, '오라클 기준선 커밋').toBe(mode.commit ?? '225553df');
   // 새16:10 보고서의 실제 지도 영역도 수집 설정/웹 논리 크기와 일치해야 한다.
   if (mode.report) {
     const report = fs.readFileSync(path.join(oracle, 'report.txt'), 'utf8');
@@ -102,10 +102,12 @@ test('고정 시각 모드: 시작 그림은 360프레임·9초이고 같은 입
   await expectMatchesOracle(first, MODES['4:3']);
 });
 
-test('고정 시각 모드 16:9(1366×768): 90·130프레임 화면과 덤프가 cpppj 오라클과 같다', async ({ browser }) => {
+test('고정 시각 모드 16:9(1280×720): 90·130프레임 화면과 덤프가 cpppj 오라클과 같다', async ({ browser }) => {
   test.setTimeout(300000);
+  const legacy=JSON.parse(fs.readFileSync(path.join(ORACLE_ROOT,'m1-scenarios-1366x768.json'),'utf8')); // 옛1366 표시 크기는 보존하고 같은 창에서 새1280 논리 상한을 확인한다.
+  expect(MODES['16:9'].viewport).toEqual({width:legacy.settings.SCREENW,height:legacy.settings.SCREENH});
   const result = await run(browser, 90, '16:9');
-  expect(result.screen.width).toBe(1366); expect(result.screen.height).toBe(768);
+  expect(result.screen.width).toBe(1280); expect(result.screen.height).toBe(720);
   expect(result.errors).toEqual([]);
   await expectMatchesOracle(result, MODES['16:9']);
 });

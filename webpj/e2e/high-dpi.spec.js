@@ -118,7 +118,7 @@ for (const dpr of [1.25, 2]) test.describe(`고DPI ${dpr}`, () => {
       await page.keyboard.press('Escape'); await step(page); await inspect(page, 'game-menu', evidence.rows); await page.keyboard.press('Escape'); await step(page);
       // 같은 미션에서 실제 창 크기만 바꾸고 화면비/입력/전체 출력을 다시 확인한다.
       for (const viewport of [{ width: 1366, height: 768 }, { width: 1280, height: 800 }]) {
-        await page.setViewportSize(viewport); await page.waitForFunction((size) => window.netstorm._layout.logicalWidth === size.width && window.netstorm._layout.logicalHeight === size.height, viewport); await step(page);
+        await page.setViewportSize(viewport); await page.waitForFunction((size) => window.netstorm._layout.logicalWidth === 1280 && window.netstorm._layout.logicalHeight === (size.width === 1366 ? 720 : 800), viewport); await step(page);
         evidence.pointers.push(await pointer(page)); await inspect(page, `resize-${viewport.width}`, evidence.rows);
       }
       if (dpr === 2 && browserName === 'chromium') {
@@ -207,7 +207,7 @@ for (const dpr of [1.25, 2]) test.describe(`한국어 고DPI ${dpr}`, () => {
       await inspect(page, 'korean-first-dialog', evidence.rows);
       // 같은 첫 안내를 유지하고 두 와이드 배치로 전환한다.
       for (const viewport of [{ width: 1366, height: 768 }, { width: 1280, height: 800 }]) {
-        await page.setViewportSize(viewport); await page.waitForFunction((size) => window.netstorm._layout.logicalWidth === size.width && window.netstorm._layout.logicalHeight === size.height, viewport); await step(page);
+        await page.setViewportSize(viewport); await page.waitForFunction((size) => window.netstorm._layout.logicalWidth === 1280 && window.netstorm._layout.logicalHeight === (size.width === 1366 ? 720 : 800), viewport); await step(page);
         evidence.pointers.push(await pointer(page)); await inspect(page, `korean-resize-${viewport.width}`, evidence.rows);
         expect(await page.evaluate(() => window.netstorm._gameData.currentTell)).toBe(evidence.dialog.tell);
       }

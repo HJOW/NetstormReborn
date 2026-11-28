@@ -206,15 +206,15 @@ test('화면 배치 계산', () => {
     assert.equal(exact.drawScaleX, 1);
     const wide = computeLayout(1920, 1080, 1, 'auto');
     assert.equal(wide.mode, '16:9');
-    assert.equal(wide.logicalWidth, 1920);
-    assert.equal(wide.logicalHeight, 1080);
+    assert.equal(wide.logicalWidth, 1280);
+    assert.equal(wide.logicalHeight, 720);
     assert.equal(wide.cssWidth, 1920);
     const middle = computeLayout(1919, 1079, 1, 'auto');
-    assert.deepEqual([middle.logicalWidth, middle.logicalHeight], [1600, 900]);
+    assert.deepEqual([middle.logicalWidth, middle.logicalHeight], [1280, 720]);
     const compact = computeLayout(1599, 899, 2, 'auto');
-    assert.deepEqual([compact.logicalWidth, compact.logicalHeight], [1366, 768]);
+    assert.deepEqual([compact.logicalWidth, compact.logicalHeight], [1280, 720]);
     const highDpi = computeLayout(2560, 1440, 2, 'auto');
-    assert.deepEqual([highDpi.logicalWidth, highDpi.logicalHeight], [1920, 1080]);
+    assert.deepEqual([highDpi.logicalWidth, highDpi.logicalHeight], [1280, 720]);
     assert.deepEqual([highDpi.canvasWidth, highDpi.canvasHeight], [5120, 2880]);
     const forced = computeLayout(1920, 1080, 1, '16:10');
     assert.deepEqual([forced.logicalWidth, forced.logicalHeight], [1280, 800]);
@@ -225,7 +225,12 @@ test('화면 배치 계산', () => {
     assert.deepEqual(clientToLogical(320, 200, { left: 0, top: 0, width: tenDpi.cssWidth, height: tenDpi.cssHeight }, 1280, 800), { x: 640, y: 400, inside: true });
     const point = clientToLogical(1280, 720, { left: 0, top: 0, width: highDpi.cssWidth, height: highDpi.cssHeight },
         highDpi.logicalWidth, highDpi.logicalHeight);
-    assert.deepEqual(point, { x: 960, y: 540, inside: true });
+    assert.deepEqual(point, { x: 640, y: 360, inside: true });
+    for(const [width,height,logicalHeight] of [[1280,960,960],[1280,1024,1024],[3840,2400,800],[3840,2880,960],[3840,3072,1024]]) { // 큰 네 화면비도1280 상한과 같은 비율을 지킨다.
+        const layout=computeLayout(width,height,1,'auto');
+        assert.deepEqual([layout.logicalWidth,layout.logicalHeight],[1280,logicalHeight]);
+        assert.equal(layout.logicalWidth*height,layout.logicalHeight*width);
+    }
 });
 
 // 원본 음량 단계 → 1/100 dB → 증폭률 변환을 확인한다.
