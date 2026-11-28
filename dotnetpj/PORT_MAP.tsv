@@ -775,7 +775,11 @@ cpppj/src/client/SoundDevice.h	Netstorm.Client/Audio/SoundWave.cs	51b0068827c4bd
 cpppj/src/client/SoundDevice.h	Netstorm.Game/WindowsSoundDevice.cs	51b0068827c4bd3114f82da39579f6aa6aa69e7c	port
 cpppj/src/client/SoundDevice.h	Netstorm.Game/WindowsSoundFiles.cs	51b0068827c4bd3114f82da39579f6aa6aa69e7c	port
 cpppj/src/client/SoundMusic.cpp	Netstorm.Client/Audio/SoundMusicControl.cs	07885f694e556881a8544ad27a34bc3f79a27aa9	port
+cpppj/src/client/SoundMusic.cpp	Netstorm.Client/Audio/MusicSelection.cs	07885f694e556881a8544ad27a34bc3f79a27aa9	port
 cpppj/src/client/SoundMusic.h	Netstorm.Client/Audio/SoundMusicControl.cs	225f2322cf7936604306b6534fd4edf18f246c12	port
+cpppj/src/client/SoundMusic.h	Netstorm.Client/Audio/MusicSelection.cs	225f2322cf7936604306b6534fd4edf18f246c12	port
+cpppj/src/client/SoundMusicSelection.cpp	Netstorm.Client/Audio/MusicSelection.cs	50ca1acf67cc76967daac10b0bbf95a483b89bd1	port
+cpppj/src/client/SoundMusicSelection.h	Netstorm.Client/Audio/MusicSelection.cs	225f2322cf7936604306b6534fd4edf18f246c12	port
 cpppj/src/client/SoundProcess.cpp	Netstorm.Client/Audio/SoundProcess.cs	0c24d0181e17933b23f8dbbd4ef84874a26939f2	port
 cpppj/src/client/SoundProcess.h	Netstorm.Client/Audio/SoundProcess.cs	0c24d0181e17933b23f8dbbd4ef84874a26939f2	port
 cpppj/src/client/SoundSceneMusic.cpp	Netstorm.Client/Audio/SceneMusic.cs	99b9d5e332d20a8962b8ef206f1bb6e807be36fc	port
